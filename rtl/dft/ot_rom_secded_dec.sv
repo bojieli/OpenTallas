@@ -1,0 +1,79 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------
+// SECDED (extended Hamming) decoder for ROM codewords, combinational.
+//
+// Identical to tools/mem_compiler/ecc.py:
+//   cw = { overall_parity, check[R-1:0], data[K-1:0] }
+//   data bit j carries the j-th positive integer that is not a power of two
+//   (3, 5, 6, 7, 9, ...) as its Hamming position; check bit i is the parity of
+//   the data bits whose position has bit i set; the overall parity makes the
+//   whole codeword even.
+// Outputs the corrected data, `corrected` for a single-bit error anywhere in
+// the codeword (data, check or parity bit), and `uncorrectable` for an even
+// number of errors (double error) or a syndrome naming no bit.
+// ---------------------------------------------------------------------------
+module ot_rom_secded_dec #(
+    parameter integer K = 64,
+    parameter integer R = secded_r(K),
+    parameter integer N = K + R + 1
+) (
+    input  wire [N-1:0] cw,
+    output wire [K-1:0] data,
+    output wire         corrected,
+    output wire         uncorrectable
+);
+    function automatic integer secded_r(input integer k);
+        integer r;
+        begin
+            r = 1;
+            while ((1 << r) < k + r + 1) r = r + 1;
+            secded_r = r;
+        end
+    endfunction
+
+    // Hamming position of data bit j
+    function automatic integer pos_of(input integer j);
+        integer p, n;
+        begin
+            p = 3; n = 0; pos_of = 3;
+            while (n <= j) begin
+                if ((p & (p - 1)) != 0) begin
+                    if (n == j) pos_of = p;
+                    n = n + 1;
+                end
+                p = p + 1;
+            end
+        end
+    endfunction
+
+    // data bits covered by check bit i (constant masks, evaluated at elaboration)
+    function automatic [K-1:0] chk_mask(input integer i);
+        integer jj;
+        begin
+            chk_mask = {K{1'b0}};
+            for (jj = 0; jj < K; jj = jj + 1)
+                if (((pos_of(jj) >> i) & 1) != 0) chk_mask[jj] = 1'b1;
+        end
+    endfunction
+
+    wire [R-1:0] syn;
+    wire [K-1:0] fix;
+    genvar gi;
+    generate
+        for (gi = 0; gi < R; gi = gi + 1) begin : g_chk
+            localparam [K-1:0] M = chk_mask(gi);
+            assign syn[gi] = cw[K + gi] ^ (^(cw[K-1:0] & M));
+        end
+        for (gi = 0; gi < K; gi = gi + 1) begin : g_fix
+            localparam integer P = pos_of(gi);
+            assign fix[gi] = (syn == P[R-1:0]);
+        end
+    endgenerate
+    wire overall = ^cw;
+    wire syn_zero = (syn == {R{1'b0}});
+    wire syn_pow2 = ((syn & (syn - 1'b1)) == {R{1'b0}});   // includes zero
+    wire hit_data = |fix;
+    assign data = cw[K-1:0] ^ (overall ? fix : {K{1'b0}});
+    assign corrected = overall & (syn_pow2 | hit_data);
+    assign uncorrectable = (~overall & ~syn_zero) | (overall & ~syn_pow2 & ~hit_data);
+endmodule

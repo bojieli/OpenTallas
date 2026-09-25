@@ -1,0 +1,6263 @@
+{
+  "algorithm": "March C- (reset default of ot_mbist_ctrl), solid background: {(w0); up(r0,w1); up(r1,w0); down(r0,w1); down(r1,w0); (r0)}",
+  "claim_boundary": "cycle-accurate Verilator simulation of the BIST/repair RTL against the compiled macros' behavioural models with injected faults; the fault model is the one in tools/mem_compiler/behav.py, not a defect simulation of a layout",
+  "input_sha256": {
+    "physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8.v": "1600a13368baa346c82fe80c95e4dd12185232cd81e6496ad5a20c810514a5f6",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "66712c5edeee585f04170bfdd84cd984d16e145c68b7d391a94e54f7ec0f8c37",
+    "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v": "e7f18880248ff71fb067a65a255efef99b947e188fc5f20f29056611b0b1b7d2",
+    "rtl/dft/ot_mbist_bira.sv": "a6092e34420d9c1d485414d50ee3f8af662e417294578a29148687c18c9aaa13",
+    "rtl/dft/ot_mbist_ctrl.sv": "6d67ba107d43f5855783bfcb791c1cfe377e22577d1cb9b8d75ac7d51ffec129",
+    "rtl/dft/ot_mbist_rom_collar.sv": "3d79dd6a8ff385aba150b3221af529b1681d60a96061a1237c410028f325e9db",
+    "rtl/dft/ot_mbist_sram_collar.sv": "00bc7a2106d794c6209b74f97ad701c56a204342455dd8b75936d2d6ec4e40b4",
+    "rtl/dft/ot_rom_secded_dec.sv": "79795dbb0cc73cac275778f43ea2ff2e0e8a7c66ca5a021a0e029870491af91f",
+    "rtl/test/mbist_harness.cpp": "90420c77e6084eac93d74cd104aaa8743269c07bcc5efa404d4982896ce8d44a",
+    "rtl/test/tb_mbist.sv": "04927fc213a3efe54316096085c7d5fcfad2122e76778966a55513c2cabdaa42",
+    "rtl/test/tb_secded.sv": "ceaae722a40b15f4ad5f792c20f5c3221f8554c574cb260efd0df1e202637f11",
+    "tools/mem_compiler/ecc.py": "ed2d874e102f9b08ee951faf583d12c142e77cfd5e3e1a2511af1430e3f10cdf",
+    "tools/mem_compiler/rom_gen.py": "8c5f65c92d42106855894ee16d070a2c2b8e232f9bb757da5b0558bcc3fc0ffa",
+    "tools/rtl_mbist_campaign.py": "bc07c6e2cf7092bfacb1c30d172830936aec91373c6f3d20e478136a1c3bd23c"
+  },
+  "macros": {
+    "m0": "ot_sram_1rw_256x64_m4_r2c2",
+    "m1": "ot_sram_1r1w_512x128_m4_r2c2",
+    "m2": "ot_rom_1024x72_m8"
+  },
+  "rom_personalisation": {
+    "instance": "trom_r0_c0",
+    "macro": "ot_rom_1024x72_m8",
+    "signature_crc32": "e3d51e32",
+    "signature_definition": "tools/mem_compiler/ecc.py: CRC-32 0x04C11DB7, init 0xFFFFFFFF, every word of the macro in address order, LSB first",
+    "via_density": 0.4979112413194444,
+    "viamap": "trom_r0_c0.viamap.hex",
+    "viamap_sha256": "35ad63b5f279dadb9eed89498b9e4e422386f6fa96293407241cd5e78005b4c4",
+    "vias_present": 36710,
+    "words_programmed": 1024
+  },
+  "scenario_count": 74,
+  "scenarios": [
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "rom": "match",
+        "sram": {
+          "0": "pass",
+          "1": "pass"
+        }
+      },
+      "faults": [],
+      "hold": false,
+      "name": "fault_free",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {},
+        "bist_cycles": 8727,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 13,
+          "kind": "SA0",
+          "macro": 0,
+          "row": 5,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_SA0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              3
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                3
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0034000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 255,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 63,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_SA1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              63
+            ],
+            "events": 3,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                63
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "03f4000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 44,
+          "kind": "TF_UP",
+          "macro": 0,
+          "row": 17,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_TF_UP",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              11
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                11
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "00b4000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 51,
+          "kind": "TF_DOWN",
+          "macro": 0,
+          "row": 18,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_TF_DOWN",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              12
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                12
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "00c4000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 9,
+          "col": 30,
+          "kind": "CFIN",
+          "macro": 0,
+          "row": 10,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFIN_up_aggr_below",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 11,
+          "col": 30,
+          "kind": "CFIN",
+          "macro": 0,
+          "row": 10,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFIN_down_aggr_above",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 11,
+          "col": 30,
+          "kind": "CFIN",
+          "macro": 0,
+          "row": 10,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFIN_up_aggr_above",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 9,
+          "col": 30,
+          "kind": "CFIN",
+          "macro": 0,
+          "row": 10,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFIN_down_aggr_below",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 3,
+          "col": 30,
+          "kind": "CFID",
+          "macro": 0,
+          "row": 12,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFID_up_to0_aggr_below",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 30,
+          "col": 30,
+          "kind": "CFID",
+          "macro": 0,
+          "row": 12,
+          "value": 3
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFID_up_to1_aggr_above",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 31,
+          "col": 30,
+          "kind": "CFID",
+          "macro": 0,
+          "row": 12,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFID_down_to0_aggr_above",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 2,
+          "col": 30,
+          "kind": "CFID",
+          "macro": 0,
+          "row": 12,
+          "value": 2
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFID_down_to1_aggr_below",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 37,
+          "aggr_row": 20,
+          "col": 30,
+          "kind": "CFST",
+          "macro": 0,
+          "row": 14,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFST_a0_v0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 37,
+          "aggr_row": 8,
+          "col": 30,
+          "kind": "CFST",
+          "macro": 0,
+          "row": 14,
+          "value": 2
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFST_a0_v1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 37,
+          "aggr_row": 21,
+          "col": 30,
+          "kind": "CFST",
+          "macro": 0,
+          "row": 14,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFST_a1_v0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 37,
+          "aggr_row": 6,
+          "col": 30,
+          "kind": "CFST",
+          "macro": 0,
+          "row": 14,
+          "value": 3
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFST_a1_v1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0074000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 20,
+          "aggr_row": 20,
+          "col": 21,
+          "kind": "CFIN",
+          "macro": 0,
+          "row": 20,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFIN_same_row_other_word",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              5
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                5
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0054000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 23,
+          "aggr_row": 20,
+          "col": 22,
+          "kind": "CFID",
+          "macro": 0,
+          "row": 20,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFID_same_row_other_word",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              5
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                5
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0054000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 25,
+          "aggr_row": 21,
+          "col": 24,
+          "kind": "CFST",
+          "macro": 0,
+          "row": 21,
+          "value": 2
+        }
+      ],
+      "hold": false,
+      "name": "m0_CFST_same_row_other_word",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              6
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                6
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0064000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "AF_NONE",
+          "macro": 0,
+          "row": 7,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_AF_NONE",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 8,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                7
+              ]
+            },
+            "rows": [
+              7
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "000001d",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 13,
+          "col": 0,
+          "kind": "AF_ALIAS",
+          "macro": 0,
+          "row": 12,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_AF_ALIAS",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 16,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                12,
+                13
+              ]
+            },
+            "rows": [
+              12,
+              13
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000c37",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 31,
+          "col": 0,
+          "kind": "AF_MULTI",
+          "macro": 0,
+          "row": 30,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_AF_MULTI",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 12,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                30,
+                31
+              ]
+            },
+            "rows": [
+              30,
+              31
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0001e7f",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 40,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_ROW_SA0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 8,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                40
+              ]
+            },
+            "rows": [
+              40
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "00000a1",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 41,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_ROW_SA1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 12,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                41
+              ]
+            },
+            "rows": [
+              41
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "00000a5",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 38,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_COL_SA0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              9
+            ],
+            "events": 3,
+            "must_repair_cols": 1,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                9
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0094000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 249,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_COL_SA1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              62
+            ],
+            "events": 3,
+            "must_repair_cols": 1,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                62
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "03e4000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 13,
+          "kind": "SA0",
+          "macro": 1,
+          "row": 5,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_SA0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              3
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                3
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "000d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 511,
+          "kind": "SA1",
+          "macro": 1,
+          "row": 127,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_SA1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              127
+            ],
+            "events": 3,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                127
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "01fd0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 44,
+          "kind": "TF_UP",
+          "macro": 1,
+          "row": 17,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_TF_UP",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              11
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                11
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "002d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 51,
+          "kind": "TF_DOWN",
+          "macro": 1,
+          "row": 18,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_TF_DOWN",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              12
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                12
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00310000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 9,
+          "col": 30,
+          "kind": "CFIN",
+          "macro": 1,
+          "row": 10,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFIN_up_aggr_below",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 11,
+          "col": 30,
+          "kind": "CFIN",
+          "macro": 1,
+          "row": 10,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFIN_down_aggr_above",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 11,
+          "col": 30,
+          "kind": "CFIN",
+          "macro": 1,
+          "row": 10,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFIN_up_aggr_above",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 9,
+          "col": 30,
+          "kind": "CFIN",
+          "macro": 1,
+          "row": 10,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFIN_down_aggr_below",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 3,
+          "col": 30,
+          "kind": "CFID",
+          "macro": 1,
+          "row": 12,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFID_up_to0_aggr_below",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 30,
+          "col": 30,
+          "kind": "CFID",
+          "macro": 1,
+          "row": 12,
+          "value": 3
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFID_up_to1_aggr_above",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 31,
+          "col": 30,
+          "kind": "CFID",
+          "macro": 1,
+          "row": 12,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFID_down_to0_aggr_above",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 30,
+          "aggr_row": 2,
+          "col": 30,
+          "kind": "CFID",
+          "macro": 1,
+          "row": 12,
+          "value": 2
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFID_down_to1_aggr_below",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 37,
+          "aggr_row": 20,
+          "col": 30,
+          "kind": "CFST",
+          "macro": 1,
+          "row": 14,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFST_a0_v0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 37,
+          "aggr_row": 8,
+          "col": 30,
+          "kind": "CFST",
+          "macro": 1,
+          "row": 14,
+          "value": 2
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFST_a0_v1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 37,
+          "aggr_row": 21,
+          "col": 30,
+          "kind": "CFST",
+          "macro": 1,
+          "row": 14,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFST_a1_v0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 37,
+          "aggr_row": 6,
+          "col": 30,
+          "kind": "CFST",
+          "macro": 1,
+          "row": 14,
+          "value": 3
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFST_a1_v1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              7
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                7
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "001d0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 20,
+          "aggr_row": 20,
+          "col": 21,
+          "kind": "CFIN",
+          "macro": 1,
+          "row": 20,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFIN_same_row_other_word",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              5
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                5
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00150000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 23,
+          "aggr_row": 20,
+          "col": 22,
+          "kind": "CFID",
+          "macro": 1,
+          "row": 20,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFID_same_row_other_word",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              5
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                5
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00150000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 25,
+          "aggr_row": 21,
+          "col": 24,
+          "kind": "CFST",
+          "macro": 1,
+          "row": 21,
+          "value": 2
+        }
+      ],
+      "hold": false,
+      "name": "m1_CFST_same_row_other_word",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              6
+            ],
+            "events": 2,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                6
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00190000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "AF_NONE",
+          "macro": 1,
+          "row": 7,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_AF_NONE",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [],
+            "events": 8,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                7
+              ]
+            },
+            "rows": [
+              7
+            ]
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "0000001d",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 13,
+          "col": 0,
+          "kind": "AF_ALIAS",
+          "macro": 1,
+          "row": 12,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_AF_ALIAS",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [],
+            "events": 16,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                12,
+                13
+              ]
+            },
+            "rows": [
+              12,
+              13
+            ]
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00001837",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 31,
+          "col": 0,
+          "kind": "AF_MULTI",
+          "macro": 1,
+          "row": 30,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_AF_MULTI",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [],
+            "events": 12,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                30,
+                31
+              ]
+            },
+            "rows": [
+              30,
+              31
+            ]
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00003c7f",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 1,
+          "row": 40,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_ROW_SA0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [],
+            "events": 8,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                40
+              ]
+            },
+            "rows": [
+              40
+            ]
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "000000a1",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 1,
+          "row": 41,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_ROW_SA1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [],
+            "events": 12,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                41
+              ]
+            },
+            "rows": [
+              41
+            ]
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "000000a5",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 38,
+          "kind": "COL_SA",
+          "macro": 1,
+          "row": 0,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_COL_SA0",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              9
+            ],
+            "events": 3,
+            "must_repair_cols": 1,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                9
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00250000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 505,
+          "kind": "COL_SA",
+          "macro": 1,
+          "row": 0,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_COL_SA1",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              126
+            ],
+            "events": 3,
+            "must_repair_cols": 1,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                126
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "01f90000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "cols_used": true,
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true,
+        "rows_used": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "cols": 0,
+        "rows": 2,
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 5,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 40,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_rows_only",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 20,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                5,
+                40
+              ]
+            },
+            "rows": [
+              5,
+              40
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0002817",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "cols_used": true,
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true,
+        "rows_used": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "cols": 2,
+        "rows": 0,
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 70,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 200,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_cols_only",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              17,
+              50
+            ],
+            "events": 6,
+            "must_repair_cols": 2,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                17,
+                50
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "c91c000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "cols_used": true,
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true,
+        "rows_used": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "cols": 1,
+        "rows": 1,
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 37,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 22,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_must_col_and_must_row",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              9
+            ],
+            "events": 11,
+            "must_repair_cols": 1,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                9
+              ],
+              "ok": true,
+              "rows": [
+                22
+              ]
+            },
+            "rows": [
+              22
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0094059",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 8,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 10,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 100,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 10,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 8,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 33,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 163,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 50,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_sparse_mixed",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              2,
+              40
+            ],
+            "events": 9,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                2,
+                40
+              ],
+              "ok": true,
+              "rows": [
+                10
+              ]
+            },
+            "rows": [
+              10
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "a02c029",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "unrepairable"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 3,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 20,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 45,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_unrepairable_three_rows",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 9,
+            "must_repair_cols": 0,
+            "ok": false,
+            "online_unrepairable": true,
+            "reference": {
+              "cols": [],
+              "ok": false,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 8730,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 12,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "unrepairable"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "unrepairable"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 4,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 121,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 243,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_unrepairable_three_cols",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 9,
+            "must_repair_cols": 2,
+            "ok": false,
+            "online_unrepairable": true,
+            "reference": {
+              "cols": [],
+              "ok": false,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 8730,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 64,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "unrepairable"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "unrepairable"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 4,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 1,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 36,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 9,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 68,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 17,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 100,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 25,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 132,
+          "kind": "SA1",
+          "macro": 0,
+          "row": 33,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_unrepairable_scattered",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 15,
+            "must_repair_cols": 0,
+            "ok": false,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": false,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 8795,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 1,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "unrepairable"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "pass"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "SA0",
+          "macro": 0,
+          "row": 64,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 65,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 257,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_spare_faults_unused",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {},
+        "bist_cycles": 8727,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true,
+        "rows_used": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "rows": 1,
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 5,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 65,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_spare_row1_faulty_row0_used",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 12,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                5
+              ]
+            },
+            "rows": [
+              5
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000015",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "unrepairable"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 5,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 18,
+          "kind": "SA0",
+          "macro": 0,
+          "row": 64,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_spare_row0_faulty_and_used",
+      "note": "known limitation: the BIRA allocates spares without testing them first, so a defective spare is caught by the verification pass and the macro is reported unrepairable",
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [],
+            "events": 12,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [],
+              "ok": true,
+              "rows": [
+                5
+              ]
+            },
+            "rows": [
+              5
+            ]
+          }
+        },
+        "bist_cycles": 11496,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 4,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "unrepairable"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "cols_used": true,
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true,
+        "rows_used": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "cols": 2,
+        "rows": 0,
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 403,
+          "kind": "COL_SA",
+          "macro": 1,
+          "row": 0,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 12,
+          "kind": "COL_SA",
+          "macro": 1,
+          "row": 0,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_cols_only",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              3,
+              100
+            ],
+            "events": 6,
+            "must_repair_cols": 2,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                3,
+                100
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "c80f0000",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "cols_used": true,
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true,
+        "rows_used": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "cols": 1,
+        "rows": 1,
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 257,
+          "kind": "COL_SA",
+          "macro": 1,
+          "row": 0,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 1,
+          "row": 99,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m1_must_col_and_must_row",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              64
+            ],
+            "events": 14,
+            "must_repair_cols": 1,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                64
+              ],
+              "ok": true,
+              "rows": [
+                99
+              ]
+            },
+            "rows": [
+              99
+            ]
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "0101018d",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "cols_used": true,
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true,
+        "rows_used": true
+      },
+      "detected": {
+        "0": false,
+        "1": true,
+        "rom": false
+      },
+      "expect": {
+        "cols": 2,
+        "rows": 2,
+        "sram": {
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 257,
+          "kind": "COL_SA",
+          "macro": 1,
+          "row": 0,
+          "value": 0
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 262,
+          "kind": "COL_SA",
+          "macro": 1,
+          "row": 0,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 1,
+          "row": 99,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "AF_NONE",
+          "macro": 1,
+          "row": 7,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m1_two_rows_two_cols",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "1": {
+            "cols": [
+              64,
+              65
+            ],
+            "events": 25,
+            "must_repair_cols": 2,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                64,
+                65
+              ],
+              "ok": true,
+              "rows": [
+                7,
+                99
+              ]
+            },
+            "rows": [
+              7,
+              99
+            ]
+          }
+        },
+        "bist_cycles": 14056,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "83030f8f",
+            "status": "repaired"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 122,
+          "aggr_row": 9,
+          "col": 122,
+          "kind": "CFIN",
+          "macro": 0,
+          "row": 10,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "m0_programmed_all_four_backgrounds",
+      "note": "background register reprogrammed through cfg: solid, checkerboard, row and column stripes, so the March C- program runs four times",
+      "pass": true,
+      "plusargs": [
+        "+BG=f"
+      ],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              30
+            ],
+            "events": 8,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                30
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 42216,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "01e4000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 51,
+          "kind": "SA0",
+          "macro": 0,
+          "row": 44,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "m0_programmed_mats_plus",
+      "note": "program register reloaded with MATS+ {(w0); up(r0,w1); down(r1,w0)}: 5N per pass",
+      "pass": true,
+      "plusargs": [
+        "+ALG1=90c0",
+        "+ALG2=d090",
+        "+ALG3=0",
+        "+ALG4=0",
+        "+ALG5=0"
+      ],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              12
+            ],
+            "events": 1,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                12
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          }
+        },
+        "bist_cycles": 6376,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "00c4000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "cols_used": true,
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true,
+        "rows_used": true
+      },
+      "detected": {
+        "0": true,
+        "1": false,
+        "rom": false
+      },
+      "expect": {
+        "cols": 1,
+        "rows": 1,
+        "sram": {
+          "0": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 37,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 0,
+          "row": 22,
+          "value": 0
+        }
+      ],
+      "hold": true,
+      "name": "m0_repair_under_stall",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              9
+            ],
+            "events": 11,
+            "must_repair_cols": 1,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                9
+              ],
+              "ok": true,
+              "rows": [
+                22
+              ]
+            },
+            "rows": [
+              22
+            ]
+          }
+        },
+        "bist_cycles": 13129,
+        "bist_pass": 1,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "e3d51e32",
+          "status": "match"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0094059",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": false,
+        "rom": true
+      },
+      "expect": {
+        "rom": "mismatch"
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 3,
+          "kind": "SA0",
+          "macro": 2,
+          "row": 3,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "rom_via_missing",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {},
+        "bist_cycles": 8727,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "b9ed1fef",
+          "status": "mismatch"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": false,
+        "rom": true
+      },
+      "expect": {
+        "rom": "mismatch"
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 2,
+          "kind": "SA1",
+          "macro": 2,
+          "row": 4,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "rom_via_extra",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {},
+        "bist_cycles": 8727,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "72f80ae9",
+          "status": "mismatch"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": false,
+        "rom": true
+      },
+      "expect": {
+        "rom": "mismatch"
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 2,
+          "row": 7,
+          "value": 0
+        }
+      ],
+      "hold": false,
+      "name": "rom_wordline_open",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {},
+        "bist_cycles": 8727,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "73ade697",
+          "status": "mismatch"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": false,
+        "1": false,
+        "rom": true
+      },
+      "expect": {
+        "rom": "mismatch"
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 17,
+          "kind": "COL_SA",
+          "macro": 2,
+          "row": 0,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "rom_bitline_short",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {},
+        "bist_cycles": 8727,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "b18e0cdb",
+          "status": "mismatch"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0000000",
+            "status": "pass"
+          },
+          "1": {
+            "repair_register": "00000000",
+            "status": "pass"
+          }
+        }
+      }
+    },
+    {
+      "checks": {
+        "fuse_chain_rotation": true,
+        "m0_bira_matches_reference": true,
+        "m0_functional_readback_clean": true,
+        "m0_status": true,
+        "m1_bira_matches_reference": true,
+        "m1_functional_readback_clean": true,
+        "m1_status": true,
+        "rom": true
+      },
+      "detected": {
+        "0": true,
+        "1": true,
+        "rom": true
+      },
+      "expect": {
+        "rom": "mismatch",
+        "sram": {
+          "0": "repaired",
+          "1": "repaired"
+        }
+      },
+      "faults": [
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 37,
+          "kind": "COL_SA",
+          "macro": 0,
+          "row": 0,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 1,
+          "row": 50,
+          "value": 0
+        },
+        {
+          "aggr_col": 9,
+          "aggr_row": 2,
+          "col": 9,
+          "kind": "CFIN",
+          "macro": 1,
+          "row": 3,
+          "value": 1
+        },
+        {
+          "aggr_col": 0,
+          "aggr_row": 0,
+          "col": 0,
+          "kind": "ROW_SA",
+          "macro": 2,
+          "row": 100,
+          "value": 1
+        }
+      ],
+      "hold": false,
+      "name": "all_macros_faulty",
+      "note": null,
+      "pass": true,
+      "plusargs": [],
+      "result": {
+        "bira": {
+          "0": {
+            "cols": [
+              9
+            ],
+            "events": 3,
+            "must_repair_cols": 1,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                9
+              ],
+              "ok": true,
+              "rows": []
+            },
+            "rows": []
+          },
+          "1": {
+            "cols": [
+              2
+            ],
+            "events": 10,
+            "must_repair_cols": 0,
+            "ok": true,
+            "online_unrepairable": false,
+            "reference": {
+              "cols": [
+                2
+              ],
+              "ok": true,
+              "rows": [
+                50
+              ]
+            },
+            "rows": [
+              50
+            ]
+          }
+        },
+        "bist_cycles": 16825,
+        "bist_pass": 0,
+        "functional_mismatches": {
+          "0": 0,
+          "1": 0
+        },
+        "fuse_rotate_ok": true,
+        "rom": {
+          "expected": "e3d51e32",
+          "signature": "dcf70e84",
+          "status": "mismatch"
+        },
+        "sram": {
+          "0": {
+            "repair_register": "0094000",
+            "status": "repaired"
+          },
+          "1": {
+            "repair_register": "000900c9",
+            "status": "repaired"
+          }
+        }
+      }
+    }
+  ],
+  "scenarios_passed": 74,
+  "schema": "opentallas.mbist-campaign.v1",
+  "secded": {
+    "256": {
+      "clean_and_single_error_vectors": 1068,
+      "codeword_bits": 266,
+      "double_error_vectors": 35245,
+      "errors": 0,
+      "pass": true,
+      "vectors": 36313
+    },
+    "64": {
+      "clean_and_single_error_vectors": 292,
+      "codeword_bits": 72,
+      "double_error_vectors": 2556,
+      "errors": 0,
+      "pass": true,
+      "vectors": 2848
+    }
+  },
+  "single_fault_coverage": {
+    "AF_ALIAS": {
+      "detected": 2,
+      "injected": 2,
+      "repaired": 2
+    },
+    "AF_MULTI": {
+      "detected": 2,
+      "injected": 2,
+      "repaired": 2
+    },
+    "AF_NONE": {
+      "detected": 2,
+      "injected": 2,
+      "repaired": 2
+    },
+    "CFID": {
+      "detected": 10,
+      "injected": 10,
+      "repaired": 10
+    },
+    "CFIN": {
+      "detected": 11,
+      "injected": 11,
+      "repaired": 11
+    },
+    "CFST": {
+      "detected": 10,
+      "injected": 10,
+      "repaired": 10
+    },
+    "COL_SA": {
+      "detected": 4,
+      "injected": 4,
+      "repaired": 4
+    },
+    "ROW_SA": {
+      "detected": 4,
+      "injected": 4,
+      "repaired": 4
+    },
+    "SA0": {
+      "detected": 3,
+      "injected": 3,
+      "repaired": 3
+    },
+    "SA1": {
+      "detected": 2,
+      "injected": 2,
+      "repaired": 2
+    },
+    "TF_DOWN": {
+      "detected": 2,
+      "injected": 2,
+      "repaired": 2
+    },
+    "TF_UP": {
+      "detected": 2,
+      "injected": 2,
+      "repaired": 2
+    }
+  },
+  "status": "pass",
+  "verilator_lint": {
+    "ot_mbist_ctrl": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_mbist_rom_collar": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_mbist_sram_collar": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_mbist_sram_collar-GPORTS=1-GNSR=0-GNSC=0": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_rom_secded_dec-GK=256": {
+      "messages": [],
+      "returncode": 0
+    }
+  }
+}
