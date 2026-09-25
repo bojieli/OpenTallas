@@ -967,7 +967,8 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
              netlists: dict[str, Path], include_dirs: list[Path], liberty: list[Path],
              plusargs: list[str], scopes: dict[str, Any], window: tuple[int, ...] | None,
              half_period_ps: int, extra_verilator: list[str] | None = None,
-             jobs: int = 8, trace_only_netlists: bool = False, engine: str = "verilator") -> dict[str, Any]:
+             jobs: int = 8, trace_only_netlists: bool = False, engine: str = "verilator",
+             reuse_nets: bool = False) -> dict[str, Any]:
     """Simulate `bench` with some modules replaced by routed netlists and write
     one SAIF per entry of `scopes` (name -> dotted VCD scope).
 
@@ -982,6 +983,10 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
     """
     work = Path(work)
     work.mkdir(parents=True, exist_ok=True)
+    if reuse_nets and (work / "activity_sim.json").exists() and \
+            all((work / f"{n}.nets.saif").exists() for n in scopes):
+        # the simulation is done; only the mapping onto (new) routed netlists is redone
+        return finish_saifs(work, scopes, json.loads((work / "activity_sim.json").read_text()))
     t0 = time.time()
     meta: dict[str, Any] = {"bench": rel(bench), "bench_top": bench_top, "plusargs": plusargs,
                             "window_cycles": list(window) if window else None,
@@ -1098,11 +1103,27 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
     meta["simulation_seconds"] = time.time() - t1
     meta["simulation_stdout_tail"] = sim.stdout.strip().splitlines()[-12:]
     meta["simulation_stderr_tail"] = sim.stderr.strip().splitlines()[-6:]
-    meta["saif"] = {}
+    errs = {}
     for name, saif, p in readers:
         _, err = p.communicate()
-        spec = scopes[name]
-        entry = {"nets_path": str(saif), "scope": spec, "converter": err.strip()[-400:],
+        errs[name] = err.strip()[-400:]
+    meta["converter"] = errs
+    (work / "activity_sim.json").write_text(json.dumps(meta, indent=2, default=str))
+    finish_saifs(work, scopes, meta)
+    for f in [fifo, *tee_fifos]:
+        f.unlink(missing_ok=True)
+    if sim.returncode != 0:
+        raise RuntimeError(f"simulation failed ({sim.returncode}): {sim.stderr[-2000:]}")
+    return meta
+
+
+def finish_saifs(work: Path, scopes: dict[str, Any], meta: dict[str, Any]) -> dict[str, Any]:
+    """Turn each scope's net SAIF into the pin SAIF OpenSTA reads: expand a
+    gate-level dump through its netlist, or map an RTL dump onto routed flops."""
+    meta["saif"] = {}
+    for name, spec in scopes.items():
+        saif = work / f"{name}.nets.saif"
+        entry = {"nets_path": str(saif), "scope": spec, "converter": meta.get("converter", {}).get(name),
                  "bytes": saif.stat().st_size if saif.exists() else 0, "path": str(saif)}
         mod = spec.get("netlist") if isinstance(spec, dict) else None
         if mod and saif.exists():
@@ -1117,10 +1138,6 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
                                                        netlist_prefix=spec.get("netlist_prefix", ""))
             entry["path"] = str(pins)
         meta["saif"][name] = entry
-    for f in [fifo, *tee_fifos]:
-        f.unlink(missing_ok=True)
-    if sim.returncode != 0:
-        raise RuntimeError(f"simulation failed ({sim.returncode}): {sim.stderr[-2000:]}")
     return meta
 
 
@@ -1151,7 +1168,8 @@ def campaign_sources(spec: str) -> list[Path]:
     return out
 
 
-def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dry_run: bool = False) -> dict:
+def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dry_run: bool = False,
+             activity_only: bool = False) -> dict:
     """Execute a sign-off plan (configs/signoff/*.json): per block, an optional
     gate-level activity capture and the analysis sessions."""
     plan = json.loads(Path(plan_path).read_text())
@@ -1186,7 +1204,10 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                 scopes = {}
                 for sname, sp in a["scopes"].items():
                     if isinstance(sp, dict) and sp.get("map_netlist"):
-                        sp = dict(sp, map_netlist=str(find_results_dir(_resolve(sp["map_netlist"])) / "6_final.v"))
+                        if activity_only:
+                            sp = {k: v for k, v in sp.items() if k != "map_netlist"}
+                        else:
+                            sp = dict(sp, map_netlist=str(find_results_dir(_resolve(sp["map_netlist"])) / "6_final.v"))
                     scopes[sname] = sp
                 a["scopes"] = scopes
                 if a.get("rtl_from"):
@@ -1200,9 +1221,14 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                     scopes=a["scopes"], window=tuple(a["window"]) if a.get("window") else None,
                     half_period_ps=a["half_period_ps"], extra_verilator=a.get("verilator_args"),
                     trace_only_netlists=a.get("trace_only_netlists", False),
-                    engine=a.get("engine", "verilator"))
-                (work / "activity" / "activity.json").write_text(json.dumps(act_meta, indent=2))
-            act_meta = dict(act_meta, source="gate-level simulation of the routed netlist in the campaign bench")
+                    engine=a.get("engine", "verilator"), reuse_nets=True)
+                (work / "activity" / "activity.json").write_text(json.dumps(act_meta, indent=2, default=str))
+            if activity_only:
+                continue
+            act_meta = dict(act_meta, source=(
+                "gate-level simulation of the routed netlist in the campaign bench" if a.get("netlists") else
+                "RTL simulation of the campaign bench, registers mapped by name onto the routed flops; "
+                "OpenSTA propagates through the combinational logic"))
             saifs = {s: Path(v["path"]) for s, v in act_meta["saif"].items()}
         analyses = blk.get("analyses") or [blk]
         for an in analyses:
@@ -1251,6 +1277,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--only", action="append")
     p.add_argument("--output")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--activity-only", action="store_true",
+                   help="run the simulations only (the routes may not exist yet); a later run reuses them")
     args = ap.parse_args(argv)
     if args.cmd == "cell-models":
         only = netlist_cell_types(Path(args.netlist)) if args.netlist else None
@@ -1270,7 +1298,7 @@ def main(argv: list[str] | None = None) -> int:
         Path(args.output).write_text(json.dumps(r, indent=2, sort_keys=True) + "\n")
     elif args.cmd == "plan":
         run_plan(Path(args.plan), only=args.only, output=Path(args.output) if args.output else None,
-                 dry_run=args.dry_run)
+                 dry_run=args.dry_run, activity_only=args.activity_only)
     return 0
 
 
