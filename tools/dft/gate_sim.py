@@ -286,7 +286,7 @@ def build_bench(
         lines.append(decl(p, "reg"))
     for p in out_ports:
         lines.append(decl(p, "wire"))
-    conns = ",\n    ".join(f".{nl.verilog_name(p).rstrip()}({nl.verilog_name('tbs_' + p).rstrip()} )" for p in mod.ports)
+    conns = ",\n    ".join(f".{nl.verilog_name(p)}({nl.verilog_name('tbs_' + p).rstrip()} )" for p in mod.ports)
     lines.append(f"  {nl.verilog_name(top)} dut ({conns});")
     P = len(patterns)
     npi = len(drive)
