@@ -614,7 +614,8 @@ module ot_host_if #(
                         if (b_cnt == 3'd7) begin arr_rst_n <= 1'b1; b_st <= B_RUN; end
                     end
                     B_RUN:
-                        if (arr_rst_n && users_done == cfg_users && ev_n == 0 && d_st == D_IDLE) begin
+                        // the last user's token arrives with users_done: wait for its event to post
+                        if (arr_rst_n && users_done == cfg_users && !tok_valid && ev_n == 0 && d_st == D_IDLE) begin
                             b_st <= B_IDLE;
                             for (j = 0; j < NSLOT; j = j + 1)
                                 if (j < cfg_users) sl_st[j] <= SL_FREE;

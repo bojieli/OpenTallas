@@ -205,10 +205,13 @@ class HdcRuntime:
             r.submit_cycle = self.dev.cycle
             self._active[s] = r
             self.drv.submit(s, r.tag, r.prompt, r.max_new, eos if r.stop_eos else ())
-        # the descriptors must be loaded before the batch starts
-        while self.dev.read32(0x020) != self.drv.sq_tail:
-            self.dev.wait_irq(64)
+        # every slot must be loaded (descriptor fetched and prompt DMA'd: slot state RUN)
+        # before the batch starts, or BATCH_GO is refused
+        while any(self.dev.read32(0x100 + 8 * s) & 3 != 1 for s in range(len(batch))):
+            self.dev.wait_irq(256)
         self.drv.batch_go(len(batch))
+        if (self.dev.read32(0x050) >> 10) & 3:
+            raise RuntimeError("BATCH_GO refused by the host interface")
 
     def _complete(self, c) -> None:
         r = self._active.get(c.slot)

@@ -39,11 +39,12 @@ def test_campaign_passes_on_all_three_architectures():
         assert t["pass"], name
         for r in t["requests"]:
             assert r["token_ids"] == r["expected_token_ids"], name
-        assert t["counters"]["status"] & 0x17 == 0, name          # no fault, DMA error or event overflow
+        assert t["counters"]["status"] & 0x1F == 0, name   # idle; no fault, DMA error or event overflow
     assert rec["targets"]["qwen3-rom"]["requests"][0]["token_ids"] == ORACLE
     assert rec["targets"]["v41-rom"]["requests"][0]["token_ids"][0] == 3118
     assert len(rec["targets"]["qwen3-rom"]["requests"]) == 3
     assert len(rec["targets"]["qwen3-array"]["requests"]) == 4
+    assert rec["targets"]["qwen3-array"]["second_batch"]["token_ids"] == ORACLE
     assert all(v["returncode"] == 0 and not v["messages"] for v in rec["lint"].values())
 
 

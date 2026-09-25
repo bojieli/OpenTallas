@@ -22,7 +22,8 @@ results/rtl/hdc_v41_decode_campaign.json):
   error completion;
 * qwen3-hbm: two users one after the other (one user's state at a time; the
   engine is cleared between them);
-* qwen3-array: a batch of four users through the package controllers;
+* qwen3-array: a batch of four users through the package controllers, then
+  a second batch of one user in a reused slot;
 * v41-rom: one user, three generated tokens (the chip stops at the cap).
 
 Writes results/rtl/host_if_campaign.json.
@@ -100,6 +101,10 @@ def run_target(name: str, n_users: int, port: int = 0) -> dict:
     reqs = [rt.submit(prompt, max_new) for _ in range(n_users)]
     rec["requests"] = [request_record(rt, r.result(), want) for r in reqs]
     rec["decoded_text"] = tok.decode(reqs[0].tokens_out)
+    if name == "qwen3-array":
+        # a second batch on the same array: slots are freed when a batch ends and are reused
+        again = rt.submit(prompt, max_new).result()
+        rec["second_batch"] = request_record(rt, again, want)
     if name == "qwen3-rom":
         rec["endpoint"] = endpoint_check(rt, want)
         rec["fail_closed"] = fail_closed(rt, prompt)
@@ -109,7 +114,8 @@ def run_target(name: str, n_users: int, port: int = 0) -> dict:
     rec["pass"] = (all(r["pass"] for r in rec["requests"])
                    and rec.get("endpoint", {}).get("pass", True)
                    and rec.get("fail_closed", {}).get("pass", True)
-                   and rec["counters"]["status"] & 0x17 == 0)
+                   and rec.get("second_batch", {}).get("pass", True)
+                   and rec["counters"]["status"] & 0x1F == 0)
     return rec
 
 
