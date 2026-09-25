@@ -120,7 +120,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 729: docs/ANALYTICAL_REPORT.md section 9 binds the decode core (two).
     # 801: docs/ANALYTICAL_REPORT.md gains the serial-latency section (the
     # before/after per-target table and the candidate-model tables), 80 -> 142.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 801
+    # 818: docs/WAFER_VS_ARRAY_ISO_AREA.md binds its verdict (17) to
+    # results/roofline/critical_path/wafer_vs_array_iso_area.json.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 818
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
