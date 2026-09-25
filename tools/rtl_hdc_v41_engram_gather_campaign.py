@@ -94,9 +94,9 @@ def streams(rng):
     from tokenizers import Tokenizer
     tok = Tokenizer.from_file(str(G.TOKENIZER))
     text = [int(red.token_map[i]) for i in tok.encode(EC.TEXT).ids if i < len(red.token_map)]
-    out = [("reduced_workload_prompt_and_gold", real), ("reduced_tokenised_text", text),
-           ("pad_ids", [2] * 5), ("single_position", [CV - 1]),
-           ("extremes", [0, CV - 1, (1 << ES.ID_W) - 1, 2, 0, CV - 1, 1, (1 << ES.ID_W) - 1, 0])]
+    out = [("reduced_workload_prompt_and_gold", real), ("pad_ids", [2] * 5), ("single_position", [CV - 1]),
+           ("extremes", [0, CV - 1, (1 << ES.ID_W) - 1, 2, 0, CV - 1, 1, (1 << ES.ID_W) - 1, 0]),
+           ("reduced_tokenised_text", text)]      # the mutation subset (first 150 tokens) holds the extremes
     k = 0
     while sum(len(s) for _, s in out) < 1800:
         n = int(rng.integers(1, 50))

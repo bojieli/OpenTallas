@@ -1,0 +1,351 @@
+{
+  "claim_boundary": "functional cycle-level Verilator simulation of the shipped-table hash unit and the row gather/prefetch against the golden, with BEHAVIOURAL column banks and a behavioural buffer; table CONTENT is synthetic (the shipped tables are not in this repository) and the bank latencies are parameters, not ROM measurements.  Area and clock are in results/physical_abi3/asap7/hdc/v41/.",
+  "contract": {
+    "decode": "every E4M3 code (NaN codes give the golden's +-0x7FC0) and every UE8M0 scale byte 0..255 (255 = 2^128, as the golden's exp2) -- no code is outside the contract",
+    "hash_ids": "any 17-bit compressed id (the model's are < 99,092); pad id 2"
+  },
+  "elements_per_token": 12288,
+  "input_sha256": {
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "51932aaf7fb00ebdac715ccac13ed238319f43f04ef8998900706bdcca8110a6",
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv": "aa1931c171c0b4c78d463debb138b583afc9a2d1715101712f101707c9ecd43a",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+    "rtl/test/tb_hdc_engram_gather.sv": "ae0899500999ee12e04a64d9021e2c9e3939fbbd806cefb66631c9da3f89d172",
+    "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
+    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
+    "tools/hdc_v41_engram_shipped.py": "28713b421c5a350166598b35ea111df98a0c86ce61094f96d4ee979b2fe2c5b5",
+    "tools/rtl_hdc_v41_engram_campaign.py": "6d8e8f6967f3a91d1b8515e7a7667552253bf0a782200a34a2f97efb3d88410a",
+    "tools/rtl_hdc_v41_engram_gather_campaign.py": "fa3e969b93f958007588addecd48addada2f1831fd29189d0508f395d3022042"
+  },
+  "modes": {
+    "board_hop_pair_209_cycles": {
+      "all_dumps_present": true,
+      "bank_model": {
+        "LAT": 209,
+        "SPACED": 1
+      },
+      "bench_pass": true,
+      "buffer_dumps_compared": 800,
+      "cycles": 167625,
+      "dumps": 800,
+      "element_mismatches": 0,
+      "elements_compared": 4915200,
+      "hash_checked": 400,
+      "hash_errors": 0,
+      "latency_cycles": {
+        "layer_1": {
+          "max": 418,
+          "mean": 418.0,
+          "min": 418
+        },
+        "layer_14": {
+          "max": 418,
+          "mean": 418.0,
+          "min": 418
+        }
+      },
+      "pass": true,
+      "ready_errors": 0,
+      "tokens": 400
+    },
+    "ideal_bank_4_cycles": {
+      "all_dumps_present": true,
+      "bank_model": {
+        "LAT": 4
+      },
+      "bench_pass": true,
+      "buffer_dumps_compared": 3606,
+      "cycles": 346223,
+      "dumps": 3606,
+      "element_mismatches": 0,
+      "elements_compared": 22155264,
+      "hash_checked": 1803,
+      "hash_errors": 0,
+      "latency_cycles": {
+        "layer_1": {
+          "max": 390,
+          "mean": 380.91,
+          "min": 213
+        },
+        "layer_14": {
+          "max": 390,
+          "mean": 380.91,
+          "min": 213
+        }
+      },
+      "pass": true,
+      "ready_errors": 0,
+      "tokens": 1803
+    },
+    "isolated_token_4_cycles": {
+      "all_dumps_present": true,
+      "bank_model": {
+        "LAT": 4,
+        "SPACED": 1
+      },
+      "bench_pass": true,
+      "buffer_dumps_compared": 800,
+      "cycles": 85625,
+      "dumps": 800,
+      "element_mismatches": 0,
+      "elements_compared": 4915200,
+      "hash_checked": 400,
+      "hash_errors": 0,
+      "latency_cycles": {
+        "layer_1": {
+          "max": 213,
+          "mean": 213.0,
+          "min": 213
+        },
+        "layer_14": {
+          "max": 213,
+          "mean": 213.0,
+          "min": 213
+        }
+      },
+      "pass": true,
+      "ready_errors": 0,
+      "tokens": 400
+    },
+    "stressed": {
+      "all_dumps_present": true,
+      "bank_model": {
+        "BUB": 40,
+        "CDEL": 400,
+        "GAP": 30,
+        "JIT": 60,
+        "LAT": 30,
+        "STALL": 30
+      },
+      "bench_pass": true,
+      "buffer_dumps_compared": 3606,
+      "cycles": 753790,
+      "dumps": 3606,
+      "element_mismatches": 0,
+      "elements_compared": 22155264,
+      "hash_checked": 1803,
+      "hash_errors": 0,
+      "latency_cycles": {
+        "layer_1": {
+          "max": 438,
+          "mean": 270.88,
+          "min": 244
+        },
+        "layer_14": {
+          "max": 438,
+          "mean": 272.59,
+          "min": 245
+        }
+      },
+      "pass": true,
+      "ready_errors": 0,
+      "tokens": 1803
+    },
+    "ucie_hop_pair_23_cycles": {
+      "all_dumps_present": true,
+      "bank_model": {
+        "LAT": 23,
+        "SPACED": 1
+      },
+      "bench_pass": true,
+      "buffer_dumps_compared": 800,
+      "cycles": 93225,
+      "dumps": 800,
+      "element_mismatches": 0,
+      "elements_compared": 4915200,
+      "hash_checked": 400,
+      "hash_errors": 0,
+      "latency_cycles": {
+        "layer_1": {
+          "max": 232,
+          "mean": 232.0,
+          "min": 232
+        },
+        "layer_14": {
+          "max": 232,
+          "mean": 232.0,
+          "min": 232
+        }
+      },
+      "pass": true,
+      "ready_errors": 0,
+      "tokens": 400
+    }
+  },
+  "mutations": [
+    {
+      "caught": false,
+      "control": true,
+      "mutation": "none (control)"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": true,
+        "element_mismatches": 303,
+        "hash_errors": 0,
+        "ready_errors": 0
+      },
+      "mutation": "subnormal tie rounds away from even"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": true,
+        "element_mismatches": 1584594,
+        "hash_errors": 0,
+        "ready_errors": 0
+      },
+      "mutation": "scale not latched for beats 1..7"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": true,
+        "element_mismatches": 128,
+        "hash_errors": 0,
+        "ready_errors": 0
+      },
+      "mutation": "layer ready one beat early"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": true,
+        "element_mismatches": 1765343,
+        "hash_errors": 0,
+        "ready_errors": 0
+      },
+      "mutation": "column offset not subtracted"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": false,
+        "element_mismatches": 0,
+        "hash_errors": 0,
+        "ready_errors": 0
+      },
+      "mutation": "slot tag ignored at the buffer"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": true,
+        "element_mismatches": 1810,
+        "hash_errors": 0,
+        "ready_errors": 0
+      },
+      "mutation": "overflow threshold one binade late"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": true,
+        "element_mismatches": 7216,
+        "hash_errors": 0,
+        "ready_errors": 0
+      },
+      "mutation": "NaN sign dropped"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": true,
+        "element_mismatches": 1635,
+        "hash_errors": 0,
+        "ready_errors": 0
+      },
+      "mutation": "subnormal boundary one binade low"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "bench_pass": false,
+        "element_mismatches": 106429,
+        "hash_errors": 9,
+        "ready_errors": 0
+      },
+      "mutation": "hash: top digit shifted as a 4-bit digit"
+    }
+  ],
+  "prefetch_slack": {
+    "clock_hz": 1033900000.0,
+    "designs": {
+      "array_batch1": {
+        "board_hop_pair_209_cycles": {
+          "rows_ready_us_layer_1": 0.4043,
+          "rows_ready_us_layer_14": 0.4043,
+          "slack_us_layer_1": 3.5687,
+          "slack_us_layer_14": 66.5882
+        },
+        "layer_14_start_us": 66.9925,
+        "layer_1_start_us": 3.973,
+        "ucie_hop_pair_23_cycles": {
+          "rows_ready_us_layer_1": 0.2244,
+          "rows_ready_us_layer_14": 0.2244,
+          "slack_us_layer_1": 3.7486,
+          "slack_us_layer_14": 66.7681
+        }
+      },
+      "wafer_batch1": {
+        "board_hop_pair_209_cycles": {
+          "rows_ready_us_layer_1": 0.4043,
+          "rows_ready_us_layer_14": 0.4043,
+          "slack_us_layer_1": 11.6408,
+          "slack_us_layer_14": 169.7353
+        },
+        "layer_14_start_us": 170.1396,
+        "layer_1_start_us": 12.0451,
+        "ucie_hop_pair_23_cycles": {
+          "rows_ready_us_layer_1": 0.2244,
+          "rows_ready_us_layer_14": 0.2244,
+          "slack_us_layer_1": 11.8207,
+          "slack_us_layer_14": 169.9152
+        }
+      }
+    },
+    "note": "slack of the ROW GATHER alone; the Engram wkv matvec, key norm and delivery that follow the rows run on the same side branch and are priced by tools/decode_critical_path.py",
+    "source": "results/roofline/critical_path/decode_critical_path.json deepseek_v41_flash.<design>.per_layer_critical_path_us (embedding + layers before L)"
+  },
+  "released_layout": {
+    "primes_offsets_multipliers_equal": true,
+    "reference": "tools/build_a3_v41_ngram_hash_vectors.released_layout + PINNED_MULTIPLIERS",
+    "released_rows": [
+      384006168,
+      384016682
+    ]
+  },
+  "rows_per_token": 48,
+  "schema": "opentallas.hdc-v41-engram-gather-campaign.v1",
+  "status": "pass",
+  "tokens": 1803,
+  "tokens_by_stream": {
+    "extremes": 9,
+    "pad_ids": 5,
+    "random": 1598,
+    "reduced_tokenised_text": 166,
+    "reduced_workload_prompt_and_gold": 24,
+    "single_position": 1
+  },
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH",
+      "-Wno-BLKSEQ",
+      "-Wno-PINCONNECTEMPTY",
+      "-Wno-IMPORTSTAR"
+    ],
+    "ot_hdc_engram_gather": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_hdc_engram_hash_shipped": {
+      "messages": [],
+      "returncode": 0
+    }
+  }
+}
