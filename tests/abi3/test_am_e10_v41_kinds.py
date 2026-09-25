@@ -1170,3 +1170,164 @@ def test_the_mask_admits_no_third_state(bench: Bench) -> None:
             symbols={int(Symbol.PHASE): int(Phase.PREFILL)},
         )
     assert "third" in str(raised.value)
+
+
+# ---------------------------------------------------------------------------
+# The whole candidate pool against the released ``select_candidate_blocks``
+# ---------------------------------------------------------------------------
+def released_candidate_blocks(
+    logits: np.ndarray, compress_len: int, topk_blocks: int, block: int
+) -> np.ndarray:
+    """``inference/model.py::select_candidate_blocks`` for one query, in NumPy.
+
+    ``logits`` is the query's score row over the positions it was scored
+    against, with the unreachable ones (``>= compress_len``) already at -inf,
+    as ``Indexer.forward`` leaves them.  The block holding the newest reachable
+    position is pinned at +inf, the top ``topk_blocks`` blocks are kept unless
+    their score is -inf, and the keep flags are expanded back to positions.
+    """
+    width = logits.shape[-1]
+    padded = np.concatenate(
+        (logits, np.full(-width % block, -np.inf, dtype=np.float64))
+    )
+    scores = padded.reshape(-1, block).max(axis=-1)
+    last = (compress_len - 1) // block
+    scores[last] = np.inf
+    order = sorted(range(scores.size), key=lambda b: (-scores[b], b))
+    top = order[: min(topk_blocks, scores.size)]
+    keep = np.zeros(scores.size, dtype=bool)
+    for chosen in top:
+        keep[chosen] = scores[chosen] > -np.inf
+    return np.repeat(keep, block)[:width]
+
+
+def _candidate_pool(
+    bench: Bench,
+    scores: np.ndarray,
+    *,
+    block: int,
+    topk_blocks: int,
+    symbols: dict[int, int],
+    ranks_blocks: bool = True,
+) -> np.ndarray:
+    """BLOCK_MAX -> block-ranking INDEX_TOPK -> CANDIDATE_MASK, as V4.1 lowers it.
+
+    The score plane is presented at its CAPACITY (``scores.shape[1]``), wider
+    than the context, which is how both V4.1 lanes present it; the columns past
+    the context hold whatever the plane last held.
+    """
+    span, capacity = scores.shape
+    blocks = -(-capacity // block)
+    score_view = bench.input_view(scores.astype(np.float32), DType.FP32)
+    block_scores = bench.output_view((span, blocks), DType.FP32)
+    ratio = bench.input_view(np.array([block], dtype=np.uint32), DType.U32)
+    ids = bench.output_view((span, topk_blocks), DType.U32)
+    admission = bench.output_view((span, capacity), DType.U8)
+    maximum = bench.operator(
+        Major.ROUTE, Route.BLOCK_MAX, [score_view], [block_scores], aux=[block]
+    )
+    select = bench.operator(
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        [block_scores, NO_ID, ratio],
+        [ids],
+        aux=[
+            topk_blocks,
+            route_engine.RANKS_BLOCKS if ranks_blocks else 0,
+            int(Symbol.CONTEXT_LENGTH),
+            int(Symbol.POSITION_START),
+        ],
+    )
+    mask = bench.operator(
+        Major.ROUTE, Route.CANDIDATE_MASK, [ids], [admission], aux=[block]
+    )
+    bench.run(Major.ROUTE, Route.BLOCK_MAX, maximum, symbols=symbols)
+    bench.run(Major.ROUTE, Route.INDEX_TOPK, select)
+    bench.run(Major.ROUTE, Route.CANDIDATE_MASK, mask)
+    return bench.result(admission)
+
+
+@pytest.mark.parametrize("topk_blocks", [2, 8])
+def test_prefill_pool_admits_what_the_release_admits(
+    bench: Bench, topk_blocks: int
+) -> None:
+    """Every prefill row keeps the block holding its own newest position.
+
+    Before the pin moved into the block ranking, a row counted only its
+    COMPLETE blocks (the compression-group rule, ``(p + 1) // block``), so the
+    partial block holding the query itself was admitted by nobody: the mask's
+    own pin is the last block of the PLANE, which at capacity is past the
+    context.  At the V4.1 geometry (block 8, P10) that left rows 0-6 with an
+    empty pool and rows 8-9 without positions 8 and 9.
+    """
+    span, context, capacity, block = 10, 10, 16, 4
+    rng = np.random.default_rng(41)
+    scores = rng.standard_normal((span, capacity))
+    result = _candidate_pool(
+        bench,
+        scores,
+        block=block,
+        topk_blocks=topk_blocks,
+        symbols={
+            int(Symbol.PHASE): int(Phase.PREFILL),
+            int(Symbol.CONTEXT_LENGTH): context,
+            int(Symbol.POSITION_START): 0,
+        },
+    )
+    for row in range(span):
+        position = row
+        logits = scores[row, :context].copy()
+        logits[position + 1 :] = -np.inf
+        expected = released_candidate_blocks(logits, position + 1, topk_blocks, block)
+        # Only what the query can reach is a selection; the final INDEX_TOPK's
+        # causal horizon removes the rest whatever the plane says.
+        assert result[row, : position + 1].tolist() == expected[
+            : position + 1
+        ].astype(np.uint8).tolist(), row
+
+
+def test_decode_pool_admits_what_the_release_admits(bench: Bench) -> None:
+    """One query at POSITION_START 13 of a 14-position context, plane at 16."""
+    context, capacity, block, topk_blocks = 14, 16, 4, 2
+    rng = np.random.default_rng(43)
+    scores = rng.standard_normal((1, capacity))
+    result = _candidate_pool(
+        bench,
+        scores,
+        block=block,
+        topk_blocks=topk_blocks,
+        symbols={
+            int(Symbol.PHASE): int(Phase.DECODE),
+            int(Symbol.CONTEXT_LENGTH): context,
+            int(Symbol.POSITION_START): context - 1,
+        },
+    )
+    expected = released_candidate_blocks(
+        scores[0, :context].copy(), context, topk_blocks, block
+    )
+    assert result[0, :context].tolist() == expected.astype(np.uint8).tolist()
+
+
+def test_an_unrebased_block_ranking_is_what_the_pool_needs(bench: Bench) -> None:
+    """Without RANKS_BLOCKS the block IDs are rebased by the context.
+
+    That is the HBM lane's pool before it set the bit: block 0 at a 10-position
+    prefill came back as block 10, so the plane admitted positions 40-43 of a
+    16-wide axis here (80-87 of 512 in the shipped cell) and nothing the query
+    could reach.  This pins the failure mode the lowering tests guard.
+    """
+    span, context, capacity, block = 10, 10, 64, 4
+    scores = np.random.default_rng(47).standard_normal((span, capacity))
+    result = _candidate_pool(
+        bench,
+        scores,
+        block=block,
+        topk_blocks=16,
+        ranks_blocks=False,
+        symbols={
+            int(Symbol.PHASE): int(Phase.PREFILL),
+            int(Symbol.CONTEXT_LENGTH): context,
+            int(Symbol.POSITION_START): 0,
+        },
+    )
+    assert not result[:, :context].any()
