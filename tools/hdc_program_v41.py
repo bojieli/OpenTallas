@@ -38,13 +38,12 @@ HD = 32
 STR = TMAX                       # S-region stride per head
 # Where a sublayer's own mixes are finished (the mix passes and the Sinkhorn):
 # in attention after ATTN_HOOK ("qkv", "scores", "softmax" or "pv"), in the MoE
-# before routed expert MOE_HOOK (7: after the shared expert).  Swept with
-# tools/hdc_timing_v41.py: late enough that the HE's 5,120-cycle chain has run,
-# early enough that the Sinkhorn (the routed unit, 41 steps x 7 core cycles)
-# hides behind the rest.  (With the simple sequential Sinkhorn, ~3,700 cycles,
-# MOE_HOOK = 1 is best.)
-ATTN_HOOK = "softmax"
-MOE_HOOK = 6
+# before the SiLU of routed expert MOE_HOOK (k_exp: after the last).  Swept with
+# tools/hdc_timing_v41.py: late enough that the HE's chain (80 x 8 cycles with
+# the 8-chunk split) has run, early enough that the Sinkhorn (the routed unit,
+# 41 steps x 7 core cycles) hides behind the rest.
+ATTN_HOOK = "scores"
+MOE_HOOK = 1
 KT_WORDS = (TMAX // W) * HD      # transposed rows of one layer (words)
 KR_WORDS = TMAX * HD // W        # row-major rows of one layer (words)
 
@@ -383,7 +382,14 @@ class Builder:
     def su(self, reads, writes, tag, **f):
         f = dict(f, unit=I.UNIT_SU)
         f.setdefault("su_vec", su_vec_mode(f))
+        if f.get("red"):                             # the region the reducer writes
+            f["_redw"] = {self.region_of(f.get("r_base", 0))} & set(writes)
+            assert f["_redw"], (tag, f.get("r_base"))
         self.emit(f, reads, writes, tag)
+
+    def region_of(self, addr):
+        name, base = max(((n, b) for n, b in self.V.items() if b <= addr), key=lambda nb: nb[1])
+        return name
 
     def qe(self, reads, writes, tag, **f):
         f = dict(f, unit=I.UNIT_QE)
@@ -679,9 +685,37 @@ class Builder:
         self.linq(lay.qmat[(L, "wo_b")], "ZA", "Y", set(), set(), to)
 
     def moe(self, L, hook=None):
+        """The router, then the experts software-pipelined across the quantised
+        engine and the stream unit: w13 of expert k+1 runs while expert k's SiLU
+        does, and w2 of expert k while expert k+1's SiLU does (the engine is
+        sequential, so issuing its next op proves the previous one complete).
+        The shared expert reads only x, so it runs beside the router."""
         m, V_, lay = self.m, self.V, self.lay
         t = f"L{L}.router"
+        stride = lay.qmat[(L, "exp_stride")]
+
+        def expert(k):
+            shared = k == m.k_exp
+            te = f"L{L}.shared" if shared else f"L{L}.experts"
+            if shared:
+                w13, w2, ind = lay.qmat[(L, "shared", "w13")], lay.qmat[(L, "shared", "w2")], {}
+            else:
+                w13, w2 = lay.qmat[(L, "exp", 0, "w13")], lay.qmat[(L, "exp", 0, "w2")]
+                ind = dict(qe_ind=1, qe_ibase=V_["EID"] + k, qe_istride=stride)
+            gu = V_[f"GU{k}"]
+            f = dict(su_nout=1, su_nin=64, a_base=gu, a_si=1, a_min=1, imm3=f32(m.limit), c_base=gu + 64, c_si=1,
+                     c_clip=1, sfu=I.SFU_SILU, e1=I.E1_MULC, rnd=1, dst=I.DST_VM, o_base=V_[f"ACT{k}"], o_si=1)
+            if not shared:
+                f.update(b_base=V_["WGT"] + k, e2=I.E2_MULB)
+            return (lambda: self.linq(w13, "XN", f"GU{k}", {"EID"}, set(), te, **ind),
+                    lambda: self.su({f"GU{k}", "WGT"}, {f"ACT{k}"}, te, **f),
+                    lambda: self.linq(w2, f"ACT{k}", f"E{k}", {"EID"}, set(), te, **ind))
+
+        sh = expert(m.k_exp)
+        sh[0]()                                        # shared w13 beside the router
         self.me(lay.mat[(L, "gate")], V_["XN"], V_["G12"], {"XN"}, {"G12"}, t)
+        sh[1]()
+        sh[2]()
         self.su({"G12"}, {"SC"}, t, su_nout=1, su_nin=m.n_exp, a_base=V_["G12"], a_si=1, sfu=I.SFU_SPSQRT,
                 dst=I.DST_VM, o_base=V_["SC"], o_si=1)
         self.su({"SC"}, {"BI"}, t, su_nout=1, su_nin=m.n_exp, a_base=V_["SC"], a_si=1, d_src=I.SRC_CLO,
@@ -695,26 +729,20 @@ class Builder:
         self.su({"SC", "EID", "DEN1"}, {"WGT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1,
                 a_ind=I.IND_I, a_ibase=V_["EID"], b_base=V_["DEN1"], m1=I.M1_DIVB, m2=I.M2_IMM,
                 imm1=f32(m.route_scale), dst=I.DST_VM, o_base=V_["WGT"], o_si=1)
-        stride = lay.qmat[(L, "exp_stride")]
-        for k in range(m.k_exp + 1):
+        ex = [expert(k) for k in range(m.k_exp)]
+        ex[0][0]()
+        if m.k_exp > 1:
+            ex[1][0]()
+        for k in range(m.k_exp):
             if hook and k == MOE_HOOK:
                 hook()
-            shared = k == m.k_exp
-            te = f"L{L}.shared" if shared else f"L{L}.experts"
-            if shared:
-                w13, w2, ind = lay.qmat[(L, "shared", "w13")], lay.qmat[(L, "shared", "w2")], {}
-            else:
-                w13, w2 = lay.qmat[(L, "exp", 0, "w13")], lay.qmat[(L, "exp", 0, "w2")]
-                ind = dict(qe_ind=1, qe_ibase=V_["EID"] + k, qe_istride=stride)
-            self.linq(w13, "XN", f"GU{k}", {"EID"}, set(), te, **ind)
-            gu = V_[f"GU{k}"]
-            f = dict(su_nout=1, su_nin=64, a_base=gu, a_si=1, a_min=1, imm3=f32(m.limit), c_base=gu + 64, c_si=1,
-                     c_clip=1, sfu=I.SFU_SILU, e1=I.E1_MULC, rnd=1, dst=I.DST_VM, o_base=V_[f"ACT{k}"], o_si=1)
-            if not shared:
-                f.update(b_base=V_["WGT"] + k, e2=I.E2_MULB)
-            self.su({f"GU{k}", "WGT"}, {f"ACT{k}"}, te, **f)
-            self.linq(w2, f"ACT{k}", f"E{k}", {"EID"}, set(), te, **ind)
-        if hook and MOE_HOOK > m.k_exp:
+            if k > 0:
+                ex[k - 1][2]()                         # w2 of the previous expert (its SiLU drained)
+            ex[k][1]()                                 # SiLU k (its w13 completed: a later QE op issued)
+            if k + 2 < m.k_exp:
+                ex[k + 2][0]()                         # w13 two ahead
+        ex[m.k_exp - 1][2]()
+        if hook and MOE_HOOK >= m.k_exp:
             hook()
         ty = f"L{L}.moe_sum"
         for k in range(1, m.k_exp + 1):
@@ -756,27 +784,63 @@ class Builder:
         return schedule(self.prog)
 
 
+def never_skipped(f):
+    """An op that issues at every position: no predicate and no count from a DYN value."""
+    if f.get("pred", 0) != I.PRED_ALWAYS:
+        return False
+    if f["unit"] == I.UNIT_XU and f.get("xu_op", 0) == I.XU_SEL:
+        return f.get("xu_d_n", 0) == 0 and f.get("xu_n", 0) > 0
+    return True
+
+
 def schedule(prog):
     """Wait masks: an instruction waits for every unit holding an in-flight
-    instruction it conflicts with (it reads what that unit writes, or writes what
-    it reads or writes).  A unit executes in order, so waiting for it to drain
-    covers all its older work."""
+    instruction it conflicts with.  On ANOTHER unit a conflict is any overlap (it
+    reads what that unit writes, or writes what it reads or writes).  On its OWN
+    unit only a read of what the unit writes conflicts: a unit starts an op after
+    the previous op's last element has been read, and writes in issue order --
+    the stream unit because a class change drains it and a class fixes the depth
+    (its reducer writes later, so a write over a reducer's output still waits),
+    the matrix engine when consecutive ops share the split and weight source
+    (the result latency).  A unit executes in order, so waiting for it to drain
+    covers all its older work.  The quantised engine and the auxiliary unit are
+    SEQUENTIAL (an op is accepted only once the previous one has written
+    everything), so once an op that is never skipped has issued on one of them,
+    every older op there is complete: its conflicts are forgotten."""
     out = []
     rd = {u: set() for u in I.UNITS}
     wr = {u: set() for u in I.UNITS}
+    rw = {u: set() for u in I.UNITS}              # reducer outputs (stream unit)
+    last = {}
+    sequential = (I.UNIT_QE, I.UNIT_XU)
     for f, reads, writes, tag in prog:
         f = dict(f)
         wait = f.get("wait", 0)
+        own = f["unit"]
+        red = set(f.pop("_redw", ()))
         for u in I.UNITS:
-            if (reads & wr[u]) or (writes & (rd[u] | wr[u])):
+            if u == own:
+                c = reads & wr[u]
+                if u == I.UNIT_SU:
+                    c = c or (writes & rw[u])
+                if u == I.UNIT_ME and last.get(u) != (f.get("me_split", 0), f.get("me_wsrc", 0)):
+                    c = c or (writes & wr[u])
+            else:
+                c = (reads & wr[u]) or (writes & (rd[u] | wr[u]))
+            if c:
                 wait |= 1 << (u - 1)
         for u in I.UNITS:
             if wait >> (u - 1) & 1:
-                rd[u], wr[u] = set(), set()
+                rd[u], wr[u], rw[u] = set(), set(), set()
         f["wait"] = wait
-        if f["unit"] in rd:
-            rd[f["unit"]] |= reads
-            wr[f["unit"]] |= writes
+        if own in sequential and never_skipped(f):
+            rd[own], wr[own] = set(), set()
+        if own in rd:
+            rd[own] |= reads
+            wr[own] |= writes
+            rw[own] |= red
+            if own == I.UNIT_ME:
+                last[own] = (f.get("me_split", 0), f.get("me_wsrc", 0))
         f["_tag"] = tag
         out.append(f)
     return out

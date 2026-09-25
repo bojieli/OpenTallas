@@ -156,7 +156,8 @@ module ot_hdc_v41_su_lane #(
     localparam integer D_EXP = 92, D_RSQ = 61, D_SQRT = 31, D_DIV = 31, D_SP = 259;
     localparam integer D_SIGC = D_EXP + 5 + D_DIV;          // sigmoid chain: exp, +1, divide
     localparam integer D_EGIN = 1 + D_SQRT + 1;             // |x| max, sqrt, sign
-    localparam integer SFU_MAX = D_SP;
+    //: a vector lane's deepest class is the sigmoid chain: its tag lines stop there
+    localparam integer SFU_MAX = (FULL != 0) ? D_SP : D_SIGC;
     localparam integer LW = $clog2(WR);
     localparam integer OPW = 2*4 + 1+1+1+1 + 3+2+3+3+3+2 + 1 + 2 + 2 + 1 + 32*3;
 
@@ -407,7 +408,8 @@ module ot_hdc_v41_su_lane #(
     wire        v_r = vad[5];
     // -- SFU -----------------------------------------------------------------------------------------
     wire [2:0]  sfu = cls[2:0];
-    wire [15:0] d_sfu = sfu_depth(sfu);
+    wire [15:0] d_sfu_c = sfu_depth(sfu);
+    wire [15:0] d_sfu = (d_sfu_c > SFU_MAX) ? SFU_MAX[15:0] : d_sfu_c;   // (a vector lane never runs deeper classes)
     wire [31:0] y_exp, y_rsq, y_sqrt, y_spr, y_div;
     wire f_e, f_r, f_s, f_sp, f_den, f_div;
     // sigmoid chain: exp(-x); +1; (1 | x) / that.  Input: R (sigmoid, silu) or the gate's signed root.

@@ -1,4 +1,12 @@
 {
+  "iteration": {
+    "number": 4,
+    "name": "overlap scheduling",
+    "summary": "Wait masks refined, no RTL change: no drain for a same-unit write after write or write after read (units write in issue order; reducer outputs excepted); the quantised engine and the auxiliary unit are sequential, so issuing a never-skipped op there proves older ones complete; the shared expert runs beside the router and the routed experts are software-pipelined across the quantised engine and the stream unit; hooks re-swept (ATTN_HOOK scores, MOE_HOOK 1).",
+    "cycles_per_token": 470798,
+    "previous_cycles_per_token": 546393,
+    "cycles_saved": 75595
+  },
   "schema": "opentallas.hdc-v41-decode-campaign.v1",
   "status": "pass",
   "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) with behavioural synchronous-read memories (many-ported vector memory: four operand reads, an element write and a reducer write per stream lane); the Sinkhorn is the routed one-normalisation-per-step unit (ot_hdc_sinkhorn) run as a 7-core-cycle multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here.",
