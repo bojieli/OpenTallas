@@ -46,6 +46,8 @@ static std::vector<Var> vars;
 static unsigned long long skipped_names = 0;
 static std::unordered_map<std::string, std::vector<size_t>> by_code;   // code -> var indices
 static unsigned long long now = 0, t_begin = 0, t_end = ~0ULL;
+static bool active = true, suspended_seen = false;
+static unsigned long long active_since = 0, active_time = 0;
 
 static inline void account(Bit &b, unsigned long long upto) {
     unsigned long long lo = b.since < t_begin ? t_begin : b.since;
@@ -198,11 +200,31 @@ int main(int argc, char **argv) {
         char c = *p;
         if (c == '#') {
             now = strtoull(p + 1, nullptr, 10);
-            if (auto_begin) { t_begin = now; for (auto &b : bits) b.since = now; auto_begin = false; }
+            if (auto_begin) {
+                t_begin = now; active_since = now;
+                for (auto &b : bits) b.since = now;
+                auto_begin = false;
+            }
             if (now >= t_end) break;
             continue;
         }
-        if (c == '$' || c == '\n' || c == 0) continue;
+        if (c == '$') {
+            // $dumpoff / $dumpon (Icarus windows): the time between them is not
+            // observed -- no T0/T1/TX, and it is excluded from DURATION
+            if (!strncmp(p, "$dumpoff", 8) && active) {
+                for (auto &b : bits) account(b, now);
+                if (now > active_since) active_time += now - (active_since > t_begin ? active_since : t_begin);
+                active = false;
+                suspended_seen = true;
+            } else if (!strncmp(p, "$dumpon", 7) && !active) {
+                active = true;
+                active_since = now;
+                for (auto &b : bits) b.since = now;
+            }
+            continue;
+        }
+        if (c == '\n' || c == 0) continue;
+        if (!active) continue;
         if (c == 'b' || c == 'B') {
             char *sp = strchr(p, ' ');
             if (!sp) continue;
@@ -239,8 +261,12 @@ int main(int argc, char **argv) {
     if (f != stdin) fclose(f);
     unsigned long long stop = t_end == ~0ULL ? now : t_end;
     if (stop > t_end) stop = t_end;
-    for (auto &b : bits) account(b, stop);
-    unsigned long long dur = stop > t_begin ? stop - t_begin : 0;
+    if (active) {
+        for (auto &b : bits) account(b, stop);
+        unsigned long long from = active_since > t_begin ? active_since : t_begin;
+        if (stop > from) active_time += stop - from;
+    }
+    unsigned long long dur = suspended_seen ? active_time : (stop > t_begin ? stop - t_begin : 0);
     FILE *o = fopen(out, "w");
     if (!o) { perror(out); return 1; }
     fprintf(o, "(SAIFILE\n(SAIFVERSION \"2.0\")\n(DIRECTION \"backward\")\n(DESIGN \"%s\")\n", root.name.c_str());

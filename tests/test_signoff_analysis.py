@@ -302,3 +302,28 @@ def test_rtl_without_modules_keeps_helpers(tmp_path):
     assert mods == ["ot_hdc_v41_csa"]
     assert S.rtl_without_modules(ROOT / "rtl/hdc/ot_hdc_fpu.sv", {"ot_hdc_blockdot"}, tmp_path) == \
         ROOT / "rtl/hdc/ot_hdc_fpu.sv"
+
+
+def test_rtl_register_names_map_onto_routed_flops(tmp_path):
+    net = tmp_path / "n.v"
+    net.write_text("module top (clk,\n    y);\n input clk;\n output y;\n"
+                   " DFFHQNx1_ASAP7_75t_R \\u_d.genblk1.g_line.line[3]$_DFF_P_  (.CLK(clk),\n    .D(y),\n"
+                   "    .QN(_1_));\n"
+                   " DFFHQNx1_ASAP7_75t_R \\st[0]$_DFFE_PN0P_  (.CLK(clk),\n    .D(y),\n    .QN(_2_));\n"
+                   " DFFHQNx1_ASAP7_75t_R \\gone[0]$_DFF_P_  (.CLK(clk),\n    .D(y),\n    .QN(_3_));\n"
+                   "endmodule\n")
+    saif = tmp_path / "r.saif"
+    saif.write_text('(SAIFILE\n(DESIGN "dut")\n(DIVIDER / )\n(TIMESCALE 1ps)\n(DURATION 100)\n(INSTANCE dut\n'
+                    '  (NET\n    (clk (T0 50) (T1 50) (TX 0) (TC 20))\n    (y (T0 50) (T1 50) (TX 0) (TC 7))\n'
+                    '    (st\\[0\\] (T0 70) (T1 30) (TX 0) (TC 4))\n  )\n'
+                    '  (INSTANCE u_d\n    (INSTANCE g_line\n      (NET\n'
+                    '        (line\\[3\\] (T0 90) (T1 10) (TX 0) (TC 2))\n      )\n    )\n  )\n)\n)\n')
+    flat, _ = S.read_nested_saif(saif)
+    assert flat["u_d.g_line.line[3]"] == (90, 10, 0, 2) and flat["st[0]"] == (70, 30, 0, 4)
+    out = tmp_path / "m.saif"
+    st = S.map_rtl_saif_to_netlist(saif, net, out)
+    assert st["flops"] == 3 and st["flops_matched"] == 2 and st["ports_matched"] == 2
+    text = out.read_text()
+    # QN is the inverted register: T0 and T1 swap, the toggle count is the register's
+    assert "(QN (T0 10) (T1 90) (TX 0) (TC 2))" in text
+    assert "(INSTANCE u_d.genblk1.g_line.line\\[3\\]$_DFF_P_" in text

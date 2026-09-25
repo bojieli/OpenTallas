@@ -967,7 +967,7 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
              netlists: dict[str, Path], include_dirs: list[Path], liberty: list[Path],
              plusargs: list[str], scopes: dict[str, Any], window: tuple[int, ...] | None,
              half_period_ps: int, extra_verilator: list[str] | None = None,
-             jobs: int = 8, trace_only_netlists: bool = False) -> dict[str, Any]:
+             jobs: int = 8, trace_only_netlists: bool = False, engine: str = "verilator") -> dict[str, Any]:
     """Simulate `bench` with some modules replaced by routed netlists and write
     one SAIF per entry of `scopes` (name -> dotted VCD scope).
 
@@ -1020,35 +1020,63 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
                          encoding="utf-8")
             sources[i] = q
         meta["trace_only_netlists"] = True
-    harness = ROOT / "tools/signoff/activity_harness.cpp"
-    vtop = f"V{bench_top}"
-    obj = work / "obj"
-    cmd = [verilator_bin(), "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
-           "-Wno-BLKSEQ", "-Wno-UNOPTFLAT", "-Wno-PINMISSING", "-Wno-IMPORTSTAR", "-Wno-MULTIDRIVEN",
-           "--trace", "--trace-underscore", "--top-module", bench_top, "-Mdir", str(obj),
-           *[f"-I{d}" for d in include_dirs], *(extra_verilator or []),
-           *map(str, sources), str(harness),
-           "-CFLAGS", f"-O1 -DVTOP={vtop} -DVTOP_H='\"{vtop}.h\"'", "-j", str(jobs)]
-    exe = obj / vtop
-    if not exe.exists():
-        b = subprocess.run(cmd, capture_output=True, text=True)
-        (work / "build.log").write_text(b.stdout[-200000:] + b.stderr[-200000:])
-        if b.returncode != 0:
-            raise RuntimeError(f"verilator build failed; see {work / 'build.log'}")
+    meta["engine"] = engine
+    if engine == "icarus":
+        top = work / "so_icarus_top.sv"
+        dump_scopes = ", ".join(
+            "bench." + (sp["scope"] if isinstance(sp, dict) else sp).split(".", 2)[2]
+            for sp in scopes.values())
+        top.write_text((ROOT / "tools/signoff/icarus_top.sv.in").read_text()
+                       .replace("@BENCH@", bench_top).replace("@HALF_PS@", str(half_period_ps))
+                       .replace("@SCOPES@", dump_scopes))
+        exe = work / "sim.vvp"
+        cmd = ["iverilog", "-g2012", "-o", str(exe), "-s", "so_icarus_top", "-DSYNTHESIS_SIGNOFF",
+               *[f"-I{d}" for d in include_dirs], str(top), *map(str, sources)]
+        if not exe.exists():
+            b = subprocess.run(cmd, capture_output=True, text=True)
+            (work / "build.log").write_text(b.stdout[-200000:] + b.stderr[-200000:])
+            if b.returncode != 0:
+                raise RuntimeError(f"iverilog build failed; see {work / 'build.log'}")
+        run_prefix = ["vvp", "-n", str(exe)]
+    else:
+        harness = ROOT / "tools/signoff/activity_harness.cpp"
+        vtop = f"V{bench_top}"
+        obj = work / "obj"
+        # a flat netlist verilates to ~1 GB of C++ per 0.85 M cells; -O0 at least
+        # keeps the compile finite (RTL benches compile quickly either way)
+        opt = "-O0" if netlists else "-O1"
+        cmd = [verilator_bin(), "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
+               "-Wno-BLKSEQ", "-Wno-UNOPTFLAT", "-Wno-PINMISSING", "-Wno-IMPORTSTAR", "-Wno-MULTIDRIVEN",
+               "--trace", "--trace-underscore", "--trace-max-array", "1000000", "--trace-max-width", "1000000",
+               "--top-module", bench_top, "-Mdir", str(obj),
+               *[f"-I{d}" for d in include_dirs], *(extra_verilator or []),
+               *map(str, sources), str(harness),
+               "-CFLAGS", f"{opt} -DVTOP={vtop} -DVTOP_H='\"{vtop}.h\"'",
+               "-MAKEFLAGS", f"OPT_FAST={opt} OPT_SLOW={opt} OPT_GLOBAL={opt}", "-j", str(jobs)]
+        exe = obj / vtop
+        if not exe.exists():
+            b = subprocess.run(cmd, capture_output=True, text=True)
+            (work / "build.log").write_text(b.stdout[-200000:] + b.stderr[-200000:])
+            if b.returncode != 0:
+                raise RuntimeError(f"verilator build failed; see {work / 'build.log'}")
+        run_prefix = [str(exe)]
     meta["build_seconds"] = time.time() - t0
     conv = build_vcd2saif(work)
     fifo = work / "trace.fifo"
     if fifo.exists():
         fifo.unlink()
     os.mkfifo(fifo)
-    # the dump is in traced time (tools/signoff/activity_harness.cpp), so the
-    # accounting starts at its first timestamp and runs to its end
+    # Verilator dumps in traced time and Icarus brackets its windows with
+    # $dumpoff/$dumpon, so either way the accounting starts at the first
+    # timestamp and DURATION is the observed time only
     begin_t, end_t = "auto", None
     # one converter per scope, fed by a tee of the FIFO
     readers = []
     tee_fifos = []
     for name, spec in scopes.items():
         scope = spec["scope"] if isinstance(spec, dict) else spec
+        if engine == "icarus":   # TOP.<bench>.<path> -> so_icarus_top.bench.<path>
+            scope = "so_icarus_top.bench." + scope.split(".", 2)[2]
         f = work / f"trace_{name}.fifo"
         if f.exists():
             f.unlink()
@@ -1059,7 +1087,7 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
         readers.append((name, saif, subprocess.Popen(args, stderr=subprocess.PIPE, text=True)))
     tee = subprocess.Popen(f"cat {fifo} | tee {' '.join(str(f) for f in tee_fifos[1:])} > {tee_fifos[0]}",
                            shell=True)
-    sim_args = [str(exe), f"+VCD={fifo}", f"+HALF_PS={half_period_ps}", *plusargs]
+    sim_args = [*run_prefix, f"+VCD={fifo}", f"+HALF_PS={half_period_ps}", *plusargs]
     if window:
         sim_args += [f"+VCD_BEGIN={window[0]}", f"+VCD_END={window[1]}"]
         if len(window) == 4:
@@ -1081,6 +1109,11 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
             pins = work / f"{name}.saif"
             entry["expansion"] = expand_saif_to_pins(saif, work / f"{mod}_gl.v", pins,
                                                      top=spec.get("saif_top", "dut"))
+            entry["path"] = str(pins)
+        rtl_map = spec.get("map_netlist") if isinstance(spec, dict) else None
+        if rtl_map and saif.exists():
+            pins = work / f"{name}.saif"
+            entry["rtl_map"] = map_rtl_saif_to_netlist(saif, Path(rtl_map), pins, top=spec.get("saif_top", "dut"))
             entry["path"] = str(pins)
         meta["saif"][name] = entry
     for f in [fifo, *tee_fifos]:
@@ -1149,6 +1182,12 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                 if a.get("plusargs_file"):
                     plusargs += Path(a["plusargs_file"].format(**sub)).read_text().split()
                 a = dict(a, plusargs=plusargs)
+                scopes = {}
+                for sname, sp in a["scopes"].items():
+                    if isinstance(sp, dict) and sp.get("map_netlist"):
+                        sp = dict(sp, map_netlist=str(find_results_dir(_resolve(sp["map_netlist"])) / "6_final.v"))
+                    scopes[sname] = sp
+                a["scopes"] = scopes
                 if a.get("rtl_from"):
                     a["rtl"] = [str(p) for p in campaign_sources(a["rtl_from"])] + list(a.get("rtl", []))
                 act_meta = activity(
@@ -1159,7 +1198,8 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                     liberty=[_resolve(p) for p in a["liberty"]], plusargs=a.get("plusargs", []),
                     scopes=a["scopes"], window=tuple(a["window"]) if a.get("window") else None,
                     half_period_ps=a["half_period_ps"], extra_verilator=a.get("verilator_args"),
-                    trace_only_netlists=a.get("trace_only_netlists", False))
+                    trace_only_netlists=a.get("trace_only_netlists", False),
+                    engine=a.get("engine", "verilator"))
                 (work / "activity" / "activity.json").write_text(json.dumps(act_meta, indent=2))
             act_meta = dict(act_meta, source="gate-level simulation of the routed netlist in the campaign bench")
             saifs = {s: Path(v["path"]) for s, v in act_meta["saif"].items()}
@@ -1342,4 +1382,125 @@ def expand_saif_to_pins(net_saif: Path, netlist: Path, out: Path, top: str = "du
             o.writelines(lines)
             o.write("    )\n  )\n")
         o.write(")\n)\n")
+    return stats
+
+
+# ---------------------------------------------------------------------------
+# RTL-name matching: register activity of an RTL simulation -> routed flops
+# ---------------------------------------------------------------------------
+# A flat 0.85 M-cell netlist cannot be simulated gate-level here (Verilator's
+# C++ for it does not compile on a loaded machine; Icarus runs ~2 cycles/s).
+# Yosys keeps the RTL register path in every flop's instance name
+# (`\u_me.g_grp[1].g_lane[6].u_mul.s1_a[2]$_DFF_P_`), so the register toggles
+# of the fast RTL simulation of the SAME campaign map one-to-one onto the
+# routed flops' outputs; OpenSTA then propagates activity through the
+# combinational logic from those annotated registers and the ports.  Its error
+# against true gate-level activity is measured on blocks small enough to
+# simulate both ways (docs/POWER_CLOCK_SIGNOFF.md).
+_FLOP_SUFFIX = re.compile(r"\$_[A-Z0-9_]+_$")
+
+
+def read_nested_saif(path: Path) -> tuple[dict[str, tuple[int, int, int, int]], dict[str, str]]:
+    """A vcd2saif file -> {dotted path below the top instance: (T0, T1, TX, TC)}."""
+    rec = re.compile(r"^\s*\((\S+) \(T0 (\d+)\) \(T1 (\d+)\) \(TX (\d+)\) \(TC (\d+)\)\)")
+    inst = re.compile(r"^\s*\(INSTANCE (\S+)")
+    out: dict[str, tuple[int, int, int, int]] = {}
+    header: dict[str, str] = {}
+    stack: list[str] = []
+    depth_of: list[int] = []   # paren depth at which each INSTANCE opened
+    depth = 0
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            m = rec.match(line)
+            if m:
+                name = re.sub(r"\\(.)", r"\1", m.group(1))
+                prefix = ".".join(stack[1:])
+                out[f"{prefix}.{name}" if prefix else name] = (int(m.group(2)), int(m.group(3)), int(m.group(4)),
+                                                               int(m.group(5)))
+                continue
+            m = inst.match(line)
+            if m:
+                stack.append(re.sub(r"\\(.)", r"\1", m.group(1)))
+                depth_of.append(depth)
+                depth += line.count("(") - line.count(")")
+                continue
+            h = re.match(r"^\((TIMESCALE|DURATION|DIVIDER|DESIGN) (.*)\)\s*$", line)
+            if h:
+                header[h.group(1)] = h.group(2)
+                continue
+            depth += line.count("(") - line.count(")")
+            while depth_of and depth <= depth_of[-1]:
+                depth_of.pop()
+                stack.pop()
+    return out, header
+
+
+def _rtl_candidates(reg: str) -> list[str]:
+    """RTL-record spellings a yosys register name may correspond to."""
+    c = [reg]
+    # yosys names an unnamed generate scope genblkN where Verilator (and the
+    # VCD) has no scope at all
+    if ".genblk" in reg:
+        c.append(re.sub(r"\.genblk\d+", "", reg))
+    # an unpacked array element: yosys `mem[3][5]`, Verilator VCD `mem(3)[5]` or `mem[3][5]`
+    m = re.match(r"^(.*)\[(\d+)\]\[(\d+)\]$", reg)
+    if m:
+        c.append(f"{m.group(1)}({m.group(2)})[{m.group(3)}]")
+    # a scalar register: no bit index in the netlist
+    return c
+
+
+def map_rtl_saif_to_netlist(rtl_saif: Path, netlist: Path, out: Path, top: str = "dut",
+                            flop_output_pins: tuple[str, ...] = ("QN", "Q")) -> dict[str, Any]:
+    """Write a pin SAIF annotating every routed flop's output (and the ports)
+    from the RTL register it implements."""
+    rtl, header = read_nested_saif(rtl_saif)
+    text = Path(netlist).read_text(encoding="utf-8", errors="replace")
+    stats = {"rtl_records": len(rtl), "flops": 0, "flops_matched": 0, "ports": 0, "ports_matched": 0,
+             "unmatched_examples": []}
+    lines: list[str] = []
+    for m in re.finditer(r"^\s*(input|output|inout)\s+(?:\[(\d+):(\d+)\]\s+)?(\\\S+|\w+)\s*;", text, re.M):
+        name = _netkey(m.group(4))
+        bits = [f"{name}[{i}]" for i in range(min(int(m.group(2)), int(m.group(3))),
+                                              max(int(m.group(2)), int(m.group(3))) + 1)] \
+            if m.group(2) is not None else [name]
+        for b in bits:
+            stats["ports"] += 1
+            r = rtl.get(b)
+            if r:
+                stats["ports_matched"] += 1
+                lines.append(f"    ({_saif_escape(b)} (T0 {r[0]}) (T1 {r[1]}) (TX {r[2]}) (TC {r[3]}))\n")
+    inst_lines: list[str] = []
+    for stmt in text.split(";"):
+        m = _INST.match(stmt)
+        if not m:
+            continue
+        inst = _netkey(m.group(2))
+        if not _FLOP_SUFFIX.search(inst):
+            continue
+        pins = dict(_CONN.findall(stmt))
+        out_pin = next((p for p in flop_output_pins if p in pins), None)
+        if out_pin is None:
+            continue
+        stats["flops"] += 1
+        reg = _FLOP_SUFFIX.sub("", inst)
+        r = next((rtl[c] for c in _rtl_candidates(reg) if c in rtl), None)
+        if r is None:
+            if len(stats["unmatched_examples"]) < 12:
+                stats["unmatched_examples"].append(reg)
+            continue
+        stats["flops_matched"] += 1
+        t0, t1 = (r[1], r[0]) if out_pin == "QN" else (r[0], r[1])
+        inst_lines.append(f"  (INSTANCE {_saif_instance(inst)}\n    (NET\n"
+                          f"      ({out_pin} (T0 {t0}) (T1 {t1}) (TX {r[2]}) (TC {r[3]}))\n    )\n  )\n")
+    with open(out, "w", encoding="utf-8") as o:
+        o.write('(SAIFILE\n(SAIFVERSION "2.0")\n(DIRECTION "backward")\n')
+        o.write(f'(DESIGN "{top}")\n(PROGRAM_NAME "opentallas signoff_analysis rtl-map")\n(DIVIDER / )\n')
+        o.write(f'(TIMESCALE {header.get("TIMESCALE", "1ps")})\n(DURATION {header.get("DURATION", "0")})\n')
+        o.write(f"(INSTANCE {top}\n  (NET\n")
+        o.writelines(lines)
+        o.write("  )\n")
+        o.writelines(inst_lines)
+        o.write(")\n)\n")
+    stats["flop_match_fraction"] = stats["flops_matched"] / stats["flops"] if stats["flops"] else None
     return stats

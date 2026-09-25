@@ -1,6 +1,6 @@
 {
   "architecture": "deepseek-v41-rom-array",
-  "description": "Reduced DeepSeek-V4.1-Flash hardwired decode core (ot_hdc_core_v41), one die of the ROM array: the routed netlists of its matrix engine and of the V4.1 units (activation quantiser, FP4 quantise-dequantise, the 16 block-dot lanes, the top-16 select, the Engram hash, the softplus/sqrt unit) run gate-level inside rtl/test/tb_hdc_core_v41.sv (tools/rtl_hdc_v41_decode_campaign.py single step, position 7, token 3118), the rest of the core in RTL.  The step is 1,088,551 cycles, so activity is sampled uniformly: 1,000 cycles of every 10,000.",
+  "description": "Reduced DeepSeek-V4.1-Flash hardwired decode core (ot_hdc_core_v41), one die of the ROM array.  The routed matrix engine and V4.1 units (activation quantiser, FP4 quantise-dequantise, block-dot lanes, top-16 select, Engram hash, softplus/sqrt) take their activity from the RTL simulation of rtl/test/tb_hdc_core_v41.sv (tools/rtl_hdc_v41_decode_campaign.py single step, position 7, token 3118), every register mapped by name onto its routed flop (RTL-name matching; the propagation error is measured on the Qwen core, which shares the matrix engine).  The step is 1,088,551 cycles, so activity is sampled uniformly: 1,000 cycles of every 10,000.",
   "output": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
   "scratch": "${OT_SIGNOFF_SCRATCH}",
   "blocks": {
@@ -11,16 +11,10 @@
         "dut_module": "ot_hdc_core_v41",
         "rtl_from": "tools/rtl_hdc_v41_decode_campaign.py:RTL",
         "rtl": [],
-        "netlists": {
-          "ot_hdc_matvec": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/wd",
-          "ot_hdc_actquant": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_actquant/wd",
-          "ot_hdc_fp4qdq": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_fp4qdq/wd",
-          "ot_hdc_blockdot": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/wd",
-          "ot_hdc_select": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_select_k16/wd",
-          "ot_hdc_engram_hash": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_engram_hash/wd",
-          "ot_hdc_softplus": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_softplus/wd"
-        },
-        "include_dirs": ["rtl/hdc/v41", "rtl/hdc"],
+        "include_dirs": [
+          "rtl/hdc/v41",
+          "rtl/hdc"
+        ],
         "liberty": [
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
@@ -28,59 +22,228 @@
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
         ],
-        "prepare": [["{python}", "tools/hdc_program_v41.py", "--out", "{work}/img"]],
-        "plusargs": ["+DIR={work}/img"],
+        "prepare": [
+          [
+            "{python}",
+            "tools/hdc_program_v41.py",
+            "--out",
+            "{work}/img"
+          ]
+        ],
+        "plusargs": [
+          "+DIR={work}/img"
+        ],
         "plusargs_file": "{work}/img/run.args",
-        "trace_only_netlists": true,
-        "window": [0, 1100000, 10000, 1000],
+        "window": [
+          0,
+          1100000,
+          10000,
+          1000
+        ],
         "scopes": {
-          "matvec": {"scope": "TOP.tb_hdc_core_v41.dut.u_me", "netlist": "ot_hdc_matvec", "saif_top": "u_me"},
-          "actquant": {"scope": "TOP.tb_hdc_core_v41.dut.u_qe.u_aq", "netlist": "ot_hdc_actquant", "saif_top": "u_aq"},
-          "fp4qdq": {"scope": "TOP.tb_hdc_core_v41.dut.u_qe.u_fq", "netlist": "ot_hdc_fp4qdq", "saif_top": "u_fq"},
-          "blockdot_lane0": {"scope": "TOP.tb_hdc_core_v41.dut.u_qe.g_lane[0].u_bd", "netlist": "ot_hdc_blockdot",
-                             "saif_top": "u_bd"},
-          "blockdot_lane15": {"scope": "TOP.tb_hdc_core_v41.dut.u_qe.g_lane[15].u_bd", "netlist": "ot_hdc_blockdot",
-                              "saif_top": "u_bd"},
-          "select": {"scope": "TOP.tb_hdc_core_v41.dut.u_xu.u_sel", "netlist": "ot_hdc_select", "saif_top": "u_sel"},
-          "engram_hash": {"scope": "TOP.tb_hdc_core_v41.dut.u_xu.u_hash", "netlist": "ot_hdc_engram_hash",
-                          "saif_top": "u_hash"},
-          "softplus": {"scope": "TOP.tb_hdc_core_v41.dut.u_su.u_sp", "netlist": "ot_hdc_softplus", "saif_top": "u_sp"}
+          "matvec": {
+            "scope": "TOP.tb_hdc_core_v41.dut.u_me",
+            "saif_top": "u_me",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/wd"
+          },
+          "actquant": {
+            "scope": "TOP.tb_hdc_core_v41.dut.u_qe.u_aq",
+            "saif_top": "u_aq",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_actquant/wd"
+          },
+          "fp4qdq": {
+            "scope": "TOP.tb_hdc_core_v41.dut.u_qe.u_fq",
+            "saif_top": "u_fq",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_fp4qdq/wd"
+          },
+          "blockdot_lane0": {
+            "scope": "TOP.tb_hdc_core_v41.dut.u_qe.g_lane[0].u_bd",
+            "saif_top": "u_bd",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/wd"
+          },
+          "blockdot_lane15": {
+            "scope": "TOP.tb_hdc_core_v41.dut.u_qe.g_lane[15].u_bd",
+            "saif_top": "u_bd",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/wd"
+          },
+          "select": {
+            "scope": "TOP.tb_hdc_core_v41.dut.u_xu.u_sel",
+            "saif_top": "u_sel",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_select_k16/wd"
+          },
+          "engram_hash": {
+            "scope": "TOP.tb_hdc_core_v41.dut.u_xu.u_hash",
+            "saif_top": "u_hash",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_engram_hash/wd"
+          },
+          "softplus": {
+            "scope": "TOP.tb_hdc_core_v41.dut.u_su.u_sp",
+            "saif_top": "u_sp",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_softplus/wd"
+          }
         },
-        "half_period_ps": 450
+        "half_period_ps": 450,
+        "netlists": {},
+        "engine": "verilator"
       },
       "analyses": [
-        {"key": "v41_matvec", "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/wd",
-         "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/physical.json", "saif": "matvec", "saif_scope": "u_me",
-         "corners": ["TT", "SS", "FF"], "derate": 0.05, "ir_sources": ["PINS", "BUMPS"], "cycles": {"token": 1088551},
-         "instances": 1},
-        {"key": "v41_actquant", "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_actquant/wd",
-         "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_actquant/physical.json", "saif": "actquant",
-         "saif_scope": "u_aq", "corners": ["TT", "SS", "FF"], "derate": 0.05, "ir_sources": ["PINS"],
-         "cycles": {"token": 1088551}, "instances": 1},
-        {"key": "v41_fp4qdq", "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_fp4qdq/wd",
-         "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_fp4qdq/physical.json", "saif": "fp4qdq",
-         "saif_scope": "u_fq", "corners": ["TT", "SS", "FF"], "derate": 0.05, "ir_sources": ["PINS"],
-         "cycles": {"token": 1088551}, "instances": 1},
-        {"key": "v41_blockdot_lane0", "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/wd",
-         "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/physical.json", "saif": "blockdot_lane0",
-         "saif_scope": "u_bd", "corners": ["TT", "SS", "FF"], "derate": 0.05, "ir_sources": ["PINS"],
-         "cycles": {"token": 1088551}, "instances": 8},
-        {"key": "v41_blockdot_lane15", "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/wd",
-         "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/physical.json", "saif": "blockdot_lane15",
-         "saif_scope": "u_bd", "corners": ["TT"], "derate": 0.0, "ir_sources": [],
-         "cycles": {"token": 1088551}, "instances": 8},
-        {"key": "v41_select", "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_select_k16/wd",
-         "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_select_k16/physical.json", "saif": "select",
-         "saif_scope": "u_sel", "corners": ["TT", "SS", "FF"], "derate": 0.05, "ir_sources": ["PINS"],
-         "cycles": {"token": 1088551}, "instances": 1},
-        {"key": "v41_engram_hash", "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_engram_hash/wd",
-         "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_engram_hash/physical.json", "saif": "engram_hash",
-         "saif_scope": "u_hash", "corners": ["TT", "SS", "FF"], "derate": 0.05, "ir_sources": ["PINS"],
-         "cycles": {"token": 1088551}, "instances": 1},
-        {"key": "v41_softplus", "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_softplus/wd",
-         "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_softplus/physical.json", "saif": "softplus",
-         "saif_scope": "u_sp", "corners": ["TT", "SS", "FF"], "derate": 0.05, "ir_sources": ["PINS"],
-         "cycles": {"token": 1088551}, "instances": 1}
+        {
+          "key": "v41_matvec",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/physical.json",
+          "saif": "matvec",
+          "saif_scope": "u_me",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 1
+        },
+        {
+          "key": "v41_actquant",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_actquant/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_actquant/physical.json",
+          "saif": "actquant",
+          "saif_scope": "u_aq",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS"
+          ],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 1
+        },
+        {
+          "key": "v41_fp4qdq",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_fp4qdq/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_fp4qdq/physical.json",
+          "saif": "fp4qdq",
+          "saif_scope": "u_fq",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS"
+          ],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 1
+        },
+        {
+          "key": "v41_blockdot_lane0",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/physical.json",
+          "saif": "blockdot_lane0",
+          "saif_scope": "u_bd",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS"
+          ],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 8
+        },
+        {
+          "key": "v41_blockdot_lane15",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_blockdot/physical.json",
+          "saif": "blockdot_lane15",
+          "saif_scope": "u_bd",
+          "corners": [
+            "TT"
+          ],
+          "derate": 0.0,
+          "ir_sources": [],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 8
+        },
+        {
+          "key": "v41_select",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_select_k16/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_select_k16/physical.json",
+          "saif": "select",
+          "saif_scope": "u_sel",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS"
+          ],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 1
+        },
+        {
+          "key": "v41_engram_hash",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_engram_hash/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_engram_hash/physical.json",
+          "saif": "engram_hash",
+          "saif_scope": "u_hash",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS"
+          ],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 1
+        },
+        {
+          "key": "v41_softplus",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_softplus/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_softplus/physical.json",
+          "saif": "softplus",
+          "saif_scope": "u_sp",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS"
+          ],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 1
+        }
       ]
     }
   }

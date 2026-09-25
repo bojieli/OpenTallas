@@ -1,6 +1,6 @@
 {
   "architecture": "qwen3-8b-rom-reticle",
-  "description": "Reduced-Qwen3 hardwired decode core (ot_hdc_core, G=4 x W=16 lanes) routed on ASAP7 at 0.9 ns: gate-level activity of one decode step (tools/rtl_hdc_decode_campaign.py single step, position 15) simulated on the routed netlist inside rtl/test/tb_hdc_core.sv, then power at the routed SPEF, clock tree, SS/TT/FF timing with OCV derate, and static IR drop / EM on the routed PDN.",
+  "description": "Reduced-Qwen3 hardwired decode core (ot_hdc_core, G=4 x W=16 lanes) routed on ASAP7 at 0.9 ns.  Activity of one whole decode step (tools/rtl_hdc_decode_campaign.py single step, position 15, 32,246 cycles) comes from the RTL simulation of the campaign bench, every register mapped by name onto its routed flop (RTL-name matching) with OpenSTA propagating through the logic; a 1,000-cycle window of the same step is also simulated gate-level on the routed netlist (Icarus) to measure the propagation error on this design.  Then power at the routed SPEF, clock tree, SS/TT/FF timing with an OCV derate, and static IR drop / EM on the routed PDN.",
   "output": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
   "scratch": "${OT_SIGNOFF_SCRATCH}",
   "blocks": {
@@ -9,9 +9,12 @@
         "bench": "rtl/test/tb_hdc_core.sv",
         "bench_top": "tb_hdc_core",
         "dut_module": "ot_hdc_core",
+        "rtl_from": "tools/rtl_hdc_decode_campaign.py:HDC+PIPES",
         "rtl": [],
-        "netlists": {"ot_hdc_core": "${OT_SIGNOFF_ROUTES}/core/wd"},
-        "include_dirs": ["rtl/hdc"],
+        "netlists": {},
+        "include_dirs": [
+          "rtl/hdc"
+        ],
         "liberty": [
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
@@ -19,11 +22,27 @@
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
         ],
-        "prepare": [["{python}", "tools/hdc_program.py", "--out", "{work}/img"]],
-        "plusargs": ["+DIR={work}/img"],
+        "prepare": [
+          [
+            "{python}",
+            "tools/hdc_program.py",
+            "--out",
+            "{work}/img"
+          ]
+        ],
+        "plusargs": [
+          "+DIR={work}/img"
+        ],
         "plusargs_file": "{work}/img/run.args",
-        "scopes": {"core": {"scope": "TOP.tb_hdc_core.dut", "netlist": "ot_hdc_core", "saif_top": "dut"}},
-        "half_period_ps": 450
+        "scopes": {
+          "core": {
+            "scope": "TOP.tb_hdc_core.dut",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/core/wd",
+            "saif_top": "dut"
+          }
+        },
+        "half_period_ps": 450,
+        "engine": "verilator"
       },
       "analyses": [
         {
@@ -32,12 +51,89 @@
           "record": "${OT_SIGNOFF_ROUTES}/core/physical.json",
           "saif": "core",
           "saif_scope": "dut",
-          "groups": ["u_me.", "u_su."],
-          "corners": ["TT", "SS", "FF"],
+          "groups": [
+            "u_me.",
+            "u_su."
+          ],
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
           "derate": 0.05,
-          "ir_sources": ["PINS", "BUMPS"],
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ],
           "bump_pitch_um": 140,
-          "cycles": {"token": 32246}
+          "cycles": {
+            "token": 32246
+          }
+        }
+      ]
+    },
+    "ot_hdc_core_calibration": {
+      "activity": {
+        "bench": "rtl/test/tb_hdc_core.sv",
+        "bench_top": "tb_hdc_core",
+        "dut_module": "ot_hdc_core",
+        "rtl": [],
+        "include_dirs": [
+          "rtl/hdc"
+        ],
+        "liberty": [
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
+        ],
+        "prepare": [
+          [
+            "{python}",
+            "tools/hdc_program.py",
+            "--out",
+            "{work}/img"
+          ]
+        ],
+        "plusargs": [
+          "+DIR={work}/img",
+          "+VCD_STOP"
+        ],
+        "plusargs_file": "{work}/img/run.args",
+        "window": [
+          200,
+          1200
+        ],
+        "netlists": {
+          "ot_hdc_core": "${OT_SIGNOFF_ROUTES}/core/wd"
+        },
+        "scopes": {
+          "core_gl": {
+            "scope": "TOP.tb_hdc_core.dut",
+            "netlist": "ot_hdc_core",
+            "saif_top": "dut"
+          }
+        },
+        "half_period_ps": 450,
+        "engine": "icarus"
+      },
+      "analyses": [
+        {
+          "key": "qwen_core_window_gate_level",
+          "routed": "${OT_SIGNOFF_ROUTES}/core/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/core/physical.json",
+          "saif": "core_gl",
+          "saif_scope": "dut",
+          "groups": [
+            "u_me.",
+            "u_su."
+          ],
+          "corners": [
+            "TT"
+          ],
+          "derate": 0.0,
+          "ir_sources": []
         }
       ]
     }

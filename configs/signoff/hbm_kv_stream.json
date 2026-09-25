@@ -1,6 +1,6 @@
 {
   "architecture": "hbm-comparator",
-  "description": "HBM comparator: the reduced-Qwen3 decode core with its KV cache in HBM behind ot_hdc_kv_stream (tools/rtl_hdc_kv_stream_campaign.py single step, 4 pseudo-channels, fetch lead 512).  The routed streamer netlist runs gate-level inside rtl/test/tb_hdc_core_hbm.sv (core RTL, HBM timing model behavioural); its activity drives power at the routed SPEF, clock tree, corners and IR drop.  The core itself is signed off in qwen_core.json; HBM device and PHY energy come from the analytical model's measured HBM path energy.",
+  "description": "HBM comparator: the reduced-Qwen3 decode core with its KV cache in HBM behind ot_hdc_kv_stream (tools/rtl_hdc_kv_stream_campaign.py single step, 4 pseudo-channels, fetch lead 512).  The streamer's registers, from the RTL simulation of rtl/test/tb_hdc_core_hbm.sv (HBM timing model behavioural), are mapped by name onto its routed flops; that activity drives power at the routed SPEF, clock tree, corners and IR drop.  The core itself is signed off in qwen_core.json; HBM device and PHY energy come from the analytical model's measured HBM path energy.",
   "output": "results/physical_abi3/asap7/signoff/hbm_kv_stream_signoff.json",
   "scratch": "${OT_SIGNOFF_SCRATCH}",
   "blocks": {
@@ -11,8 +11,9 @@
         "dut_module": "ot_hdc_core",
         "rtl_from": "tools/rtl_hdc_kv_stream_campaign.py:core.HDC+core.PIPES+KV_RTL+HBM",
         "rtl": [],
-        "netlists": {"ot_hdc_kv_stream": "${OT_SIGNOFF_ROUTES}/blocks/hdc__kv__ot_hdc_kv_stream/wd"},
-        "include_dirs": ["rtl/hdc"],
+        "include_dirs": [
+          "rtl/hdc"
+        ],
         "liberty": [
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
@@ -20,12 +21,29 @@
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
           "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
         ],
-        "prepare": [["{python}", "tools/hdc_program.py", "--out", "{work}/img"]],
-        "plusargs": ["+DIR={work}/img", "+LEAD=512"],
+        "prepare": [
+          [
+            "{python}",
+            "tools/hdc_program.py",
+            "--out",
+            "{work}/img"
+          ]
+        ],
+        "plusargs": [
+          "+DIR={work}/img",
+          "+LEAD=512"
+        ],
         "plusargs_file": "{work}/img/run.args",
-        "scopes": {"kv_stream": {"scope": "TOP.tb_hdc_core_hbm.u_kvs", "netlist": "ot_hdc_kv_stream",
-                                 "saif_top": "u_kvs"}},
-        "half_period_ps": 450
+        "scopes": {
+          "kv_stream": {
+            "scope": "TOP.tb_hdc_core_hbm.u_kvs",
+            "saif_top": "u_kvs",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__kv__ot_hdc_kv_stream/wd"
+          }
+        },
+        "half_period_ps": 450,
+        "netlists": {},
+        "engine": "verilator"
       },
       "analyses": [
         {
@@ -34,11 +52,22 @@
           "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__kv__ot_hdc_kv_stream/physical.json",
           "saif": "kv_stream",
           "saif_scope": "u_kvs",
-          "groups": ["u_walk", "u_"],
-          "corners": ["TT", "SS", "FF"],
+          "groups": [
+            "u_walk",
+            "u_"
+          ],
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
           "derate": 0.05,
-          "ir_sources": ["PINS"],
-          "cycles": {"token": 32275}
+          "ir_sources": [
+            "PINS"
+          ],
+          "cycles": {
+            "token": 32275
+          }
         }
       ]
     }
