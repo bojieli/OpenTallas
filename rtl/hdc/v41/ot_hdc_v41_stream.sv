@@ -42,13 +42,16 @@
 //
 // sigmoid(R) = 1 / (exp(-R) + 1), silu(R) = R / (exp(-R) + 1) and the Engram gate
 // sigmoid(+-sqrt(max(|R|, 1e-6))) divide with the correctly rounded pipe
-// ot_hdc_fdiv, exactly as tools/hdc_golden_v41.py does.  Lane 0 is FULL (every
+// ot_hdc_fdiv, exactly as tools/hdc_golden_v41.py does.  A stage an op does not
+// use costs no cycles: M1 (unless it multiplies, divides or Q is formed), M2
+// (unless it multiplies or Q is added: Q's multiply spans it), AD, E1 and E2
+// pass their input through.  Lane 0 is FULL (every
 // SFU function); lanes 1.. carry exp, the sigmoid/SiLU chain and the M1
 // divider only -- rsqrt, sqrt, sqrt(softplus) and the Engram gate act on at
 // most a dozen elements per op, so the program issues those ops SCALAR.  The
-// depth of an element depends on its op's CLASS (M1 divides or not, and the
-// SFU function); a new op of another class waits for the unit to drain, so
-// writes stay in order.  Everything travelling beside the data rides tapped
+// depth of an element depends on its op's CLASS (M1 divides or not, the SFU
+// function, and which of M1, M2, AD, E1, E2 it uses); a new op of another class
+// waits for the unit to drain, so writes stay in order.  Everything travelling beside the data rides tapped
 // delay lines whose tap is the class depth.  Lanes run in lockstep.
 //
 // Reductions: each lane's reducer (ot_hdc_reduce) takes out, or out*out, per
@@ -64,12 +67,12 @@ module ot_hdc_v41_tapline #(
 ) (
     input  wire         clk,
     input  wire [W-1:0] d,
-    input  wire [15:0]  depth,          // 1 .. D, constant while data is in flight
+    input  wire [15:0]  depth,          // 0 (a wire) .. D, constant while data is in flight
     output wire [W-1:0] q
 );
     reg [W*D-1:0] line;                 // tap n (1-based) = line[W*n-1 -: W]
     always @(posedge clk) line <= {line[W*(D-1)-1:0], d};
-    assign q = line[W*depth-1 -: W];
+    assign q = (depth == 0) ? d : line[W*depth-1 -: W];
 endmodule
 
 module ot_hdc_v41_vtap #(
@@ -88,7 +91,7 @@ module ot_hdc_v41_vtap #(
         else if (clr) line <= {D{1'b0}};
         else line <= {line[D-1:1], v};
     end
-    assign q = line[depth];
+    assign q = (depth == 0) ? v : line[depth];
 endmodule
 
 // One lane: the element datapath from the loop position to the writes and the
@@ -117,7 +120,7 @@ module ot_hdc_v41_su_lane #(
     input  wire [AW-1:0]     abase, aso, asi, aibase, bso, bsi, cso, csi, dso, dsi, oso, osi, rso, obase,
     input  wire [1:0]        aind, dst,
     input  wire              bhalf, cpair, redwhole, redtree, redrnd,
-    input  wire [3:0]        cls,
+    input  wire [8:0]        cls,           // {E2, E1, AD, M2, M1 used; M1 divides; sfu}
     input  wire              clrv,
     input  wire [2*4+1+1+1+1+3+2+3+3+3+2+1+2+2+1+32*3-1:0] op_now,
     // memories
@@ -349,7 +352,8 @@ module ot_hdc_v41_su_lane #(
     wire [31:0] p_imm1 = p_tail[33 +: 32];
     // -- M1 (5 or 31) and Q -------------------------------------------------------------------
     wire        m1div = cls[3];
-    wire [15:0] d_m1 = m1div ? 16'd31 : 16'd5;
+    wire        m1u = cls[4], m2u = cls[5], adu = cls[6], e1u = cls[7], e2u = cls[8];   // stages used
+    wire [15:0] d_m1 = m1div ? 16'd31 : m1u ? 16'd5 : 16'd0;
     wire [31:0] mul1_y, div1_y, byp1;
     wire f_m1, f_d1, dv1;
     ot_hdc_fmul u_m1 (clk, rst_n, p_v && (p_m1 == M1_AB || p_m1 == M1_AA || p_m1 == M1_AIMM), p_a,
@@ -360,7 +364,7 @@ module ot_hdc_v41_su_lane #(
     ot_hdc_delay #(.W(32), .D(5)) u_b1 (.clk(clk), .rst_n(rst_n), .d(byp_in), .q(byp1));
     wire [2:0] m1_5;
     ot_hdc_delay #(.W(3), .D(5)) u_m1k (.clk(clk), .rst_n(rst_n), .d(p_m1), .q(m1_5));
-    wire [31:0] P = m1div ? div1_y : (m1_5 == M1_BYP || m1_5 == M1_MAXB) ? byp1 : mul1_y;
+    wire [31:0] P = m1div ? div1_y : !m1u ? byp_in : (m1_5 == M1_BYP || m1_5 == M1_MAXB) ? byp1 : mul1_y;
     // Q = C' * (+-D)
     wire        qneg = (p_qm == QM_NEG) || (p_qm == QM_ALT_NP && !p_tail[0]) || (p_qm == QM_ALT_PN && p_tail[0]);
     wire [31:0] q_y, q_d;
@@ -380,16 +384,19 @@ module ot_hdc_v41_su_lane #(
     wire [31:0] t1_imm1 = t1_tail[33 +: 32];
     wire [31:0] m2_y, m2_byp;
     wire [31:0] m2_q = q_d;             // Q already meets P2 (delayed by the M1 depth)
-    wire [31:0] a2_b, a2_c, a2_d;
-    wire [TT-1:0] a2_tail;
-    wire [1:0] a2_m2;
+    wire [31:0] a2_b, a2_c, a2_d, d2_b, d2_c, d2_d;
+    wire [TT-1:0] a2_tail, d2_tail;
+    wire [1:0] a2_m2, d2_m2;
     wire f_m2;
     ot_hdc_fmul u_m2 (clk, rst_n, v_m1 && t1_m2 != M2_BYP, P, (t1_m2 == M2_C) ? t1_c : t1_imm1, m2_y, f_m2);
     ot_hdc_delay #(.W(32 * 4 + TT + 2), .D(5)) u_d2 (.clk(clk), .rst_n(rst_n),
-        .d({P, t1_b, t1_c, t1_d, t1_tail, t1_m2}), .q({m2_byp, a2_b, a2_c, a2_d, a2_tail, a2_m2}));
+        .d({P, t1_b, t1_c, t1_d, t1_tail, t1_m2}), .q({m2_byp, d2_b, d2_c, d2_d, d2_tail, d2_m2}));
     wire [5:0] vm2;
-    ot_hdc_vline #(.D(5)) u_vm2 (.clk(clk), .rst_n(rst_n), .v(v_m1), .vd(vm2));
-    wire [31:0] P2 = (a2_m2 == M2_BYP) ? m2_byp : m2_y;
+    ot_hdc_vline #(.D(5)) u_vm2 (.clk(clk), .rst_n(rst_n), .v(v_m1 && m2u), .vd(vm2));
+    assign {a2_b, a2_c, a2_d, a2_tail, a2_m2} = m2u ? {d2_b, d2_c, d2_d, d2_tail, d2_m2}
+                                                    : {t1_b, t1_c, t1_d, t1_tail, t1_m2};
+    wire        v_a2 = m2u ? vm2[5] : v_m1;
+    wire [31:0] P2 = !m2u ? P : (a2_m2 == M2_BYP) ? m2_byp : m2_y;
     // -- AD ----------------------------------------------------------------------------------------
     wire [2:0]  a2_ad = a2_tail[TT-6 -: 3];
     wire [31:0] a2_imm2 = a2_tail[1 +: 32];
@@ -405,16 +412,17 @@ module ot_hdc_v41_su_lane #(
     end
     wire [31:0] add_y, add_byp;
     wire f_ad;
-    ot_hdc_fadd u_ad (clk, rst_n, vm2[5] && a2_ad != AD_BYP, P2, ad_y, add_y, f_ad);
-    wire [31:0] r_b, r_c;
-    wire [TT-1:0] r_tail;
+    ot_hdc_fadd u_ad (clk, rst_n, v_a2 && a2_ad != AD_BYP, P2, ad_y, add_y, f_ad);
+    wire [31:0] r_b, r_c, d3_b, d3_c;
+    wire [TT-1:0] r_tail, d3_tail;
     wire [2:0] r_ad;
     ot_hdc_delay #(.W(32 + 32 + 32 + TT + 3), .D(5)) u_d3 (.clk(clk), .rst_n(rst_n),
-        .d({P2, a2_b, a2_c, a2_tail, a2_ad}), .q({add_byp, r_b, r_c, r_tail, r_ad}));
+        .d({P2, a2_b, a2_c, a2_tail, a2_ad}), .q({add_byp, d3_b, d3_c, d3_tail, r_ad}));
     wire [5:0] vad;
-    ot_hdc_vline #(.D(5)) u_vad (.clk(clk), .rst_n(rst_n), .v(vm2[5]), .vd(vad));
-    wire [31:0] R = (r_ad == AD_BYP) ? add_byp : add_y;
-    wire        v_r = vad[5];
+    ot_hdc_vline #(.D(5)) u_vad (.clk(clk), .rst_n(rst_n), .v(v_a2 && adu), .vd(vad));
+    assign {r_b, r_c, r_tail} = adu ? {d3_b, d3_c, d3_tail} : {a2_b, a2_c, a2_tail};
+    wire [31:0] R = !adu ? P2 : (r_ad == AD_BYP) ? add_byp : add_y;
+    wire        v_r = adu ? vad[5] : v_a2;
     // -- SFU -----------------------------------------------------------------------------------------
     wire [2:0]  sfu = cls[2:0];
     wire [15:0] d_sfu_c = sfu_depth(sfu);
@@ -506,27 +514,31 @@ module ot_hdc_v41_su_lane #(
                        (s_e1t == E1_MULC) ? s_c : s_imm2t, e1m, f_e1m);
     ot_hdc_fadd u_e1a (clk, rst_n, v_s && (s_e1t == E1_ADDC || s_e1t == E1_ADDIMM), S,
                        (s_e1t == E1_ADDC) ? s_c : s_imm2t, e1a, f_e1a);
-    wire [31:0] e_b;
-    wire [TT-1:0] e_tail;
+    wire [31:0] e_b, d5_b;
+    wire [TT-1:0] e_tail, d5_tail;
     ot_hdc_delay #(.W(32 + 32 + TT), .D(5)) u_d5 (.clk(clk), .rst_n(rst_n), .d({S, s_b, s_tail}),
-                                                 .q({e1_byp, e_b, e_tail}));
+                                                 .q({e1_byp, d5_b, d5_tail}));
     wire [5:0] ve1;
-    ot_hdc_vline #(.D(5)) u_ve1 (.clk(clk), .rst_n(rst_n), .v(v_s), .vd(ve1));
+    ot_hdc_vline #(.D(5)) u_ve1 (.clk(clk), .rst_n(rst_n), .v(v_s && e1u), .vd(ve1));
+    assign {e_b, e_tail} = e1u ? {d5_b, d5_tail} : {s_b, s_tail};
+    wire        v_e1 = e1u ? ve1[5] : v_s;
     wire [2:0]  e_e1t = e_tail[TT-3 -: 3];
-    wire [31:0] T = (e_e1t == E1_MULC || e_e1t == E1_MULIMM) ? e1m :
+    wire [31:0] T = !e1u ? S : (e_e1t == E1_MULC || e_e1t == E1_MULIMM) ? e1m :
                     (e_e1t == E1_ADDC || e_e1t == E1_ADDIMM) ? e1a : e1_byp;
     // -- E2 --------------------------------------------------------------------------------------------------
     wire [1:0]  e_e2t = e_tail[TT-9 -: 2];
     wire [31:0] e_imm1 = e_tail[33 +: 32];
     wire [31:0] e2m, e2_byp;
     wire f_e2;
-    wire [TT-1:0] u_tail;
-    ot_hdc_fmul u_e2 (clk, rst_n, ve1[5] && e_e2t != E2_BYP, T, (e_e2t == E2_MULB) ? e_b : e_imm1, e2m, f_e2);
-    ot_hdc_delay #(.W(32 + TT), .D(5)) u_d6 (.clk(clk), .rst_n(rst_n), .d({T, e_tail}), .q({e2_byp, u_tail}));
+    wire [TT-1:0] u_tail, d6_tail;
+    ot_hdc_fmul u_e2 (clk, rst_n, v_e1 && e_e2t != E2_BYP, T, (e_e2t == E2_MULB) ? e_b : e_imm1, e2m, f_e2);
+    ot_hdc_delay #(.W(32 + TT), .D(5)) u_d6 (.clk(clk), .rst_n(rst_n), .d({T, e_tail}), .q({e2_byp, d6_tail}));
     wire [5:0] ve2;
-    ot_hdc_vline #(.D(5)) u_ve2 (.clk(clk), .rst_n(rst_n), .v(ve1[5]), .vd(ve2));
+    ot_hdc_vline #(.D(5)) u_ve2 (.clk(clk), .rst_n(rst_n), .v(v_e1 && e2u), .vd(ve2));
+    assign u_tail = e2u ? d6_tail : e_tail;
+    wire        v_e2 = e2u ? ve2[5] : v_e1;
     wire [1:0]  u_e2t = u_tail[TT-9 -: 2];
-    wire [31:0] U = (u_e2t == E2_BYP) ? e2_byp : e2m;
+    wire [31:0] U = !e2u ? T : (u_e2t == E2_BYP) ? e2_byp : e2m;
     // -- RND and write --------------------------------------------------------------------------------------------
     wire        u_rnd = u_tail[TT-11];
     wire [1:0]  u_dst = u_tail[TT-12 -: 2];
@@ -544,7 +556,7 @@ module ot_hdc_v41_su_lane #(
     reg  [2:0]  o_p;
     reg  [AW+1:0] o_r;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) ov <= 1'b0; else ov <= ve2[5];
+        if (!rst_n) ov <= 1'b0; else ov <= v_e2;
     end
     always @(posedge clk) begin
         out <= u_rnd ? bf16(U) : U;
@@ -669,10 +681,12 @@ module ot_hdc_v41_stream #(
 
     // -- class and issue ---------------------------------------------------------------
     reg              active;
-    reg [3:0]        cls;                   // {m1 divides, sfu}
+    reg [8:0]        cls;                   // {E2, E1, AD, M2, M1 used; m1 divides; sfu}
     reg [15:0]       inflight;
     reg              tree_busy;
-    wire [3:0]       i_cls = {(i_m1 == M1_DIVB || i_m1 == M1_DIVIMM), i_sfu};
+    localparam [2:0] M1_BYP = 0, M1_MAXB = 6;
+    wire [8:0]       i_cls = {i_e2 != 2'd0, i_e1 != 3'd0, i_ad != 3'd0, i_m2 != 2'd0 || i_qm != 3'd0,
+                              !(i_m1 == M1_BYP || i_m1 == M1_MAXB), (i_m1 == M1_DIVB || i_m1 == M1_DIVIMM), i_sfu};
     assign ready = !active && !tree_busy && ((i_cls == cls) || (inflight == 0));
     wire   accept = go && ready;
     wire   retire;
@@ -699,7 +713,7 @@ module ot_hdc_v41_stream #(
     wire [NW-1:0] i_ostep = (i_vec == V_VO) ? SW[NW-1:0] : {{(NW-1){1'b0}}, 1'b1};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            active <= 1'b0; cls <= 4'd0; inflight <= 0; gap <= 0;
+            active <= 1'b0; cls <= 9'd0; inflight <= 0; gap <= 0;
         end else begin
             inflight <= inflight + (emit ? 16'd1 : 16'd0) - (retire ? 16'd1 : 16'd0);
             if (accept) begin

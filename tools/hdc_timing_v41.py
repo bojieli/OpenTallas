@@ -45,8 +45,9 @@ K = dict(
     me_drain=29,        # last element -> idle seen by the sequencer
     me_next=0,          # last element -> a following op may be accepted
     su_start=1,
-    su_base=28,         # emit -> retire without M1 divide and SFU (F0..F4, PRE, M1, M2, AD, E1, E2, RND)
+    su_base=28,         # emit -> retire with every stage, no M1 divide, no SFU (F0..F4, PRE, M1, M2, AD, E1, E2, RND)
     su_div=26,          # extra depth of an M1 divide (31 vs 5)
+    su_stage=5,         # an unused M1 (no multiply or divide), M2, AD, E1 or E2 stage: skipped
     su_cls=5,           # a class change: last retire -> the new op accepted
     su_idle=7,          # last retire -> idle seen (no reduction)
     su_red=35,          # last retire -> idle seen, with a reduction
@@ -118,7 +119,9 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
                 ready = max(ready, idle[b + 1])
         go = max(ready, free[unit])
         if unit == I.UNIT_SU:
-            cls = (f["m1"] in (I.M1_DIVB, I.M1_DIVIMM), f["sfu"])
+            stages = (f["m1"] not in (I.M1_BYP, I.M1_MAXB), f["m2"] != I.M2_BYP or f["qm"] != I.QM_OFF,
+                      f["ad"] != I.AD_BYP, f["e1"] != I.E1_BYP, f["e2"] != I.E2_BYP)
+            cls = (f["m1"] in (I.M1_DIVB, I.M1_DIVIMM), f["sfu"]) + stages
             if su_cls is not None and cls != su_cls:
                 go = max(go, su_last_retire + k["su_cls"])
         issues.append((go, n, u))
@@ -136,7 +139,8 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
             e = (no * -(-ni // I.SU_LANES) if vec == I.VEC_I else
                  -(-no // I.SU_LANES) * ni if vec == I.VEC_O else no * ni)
             step = 8 if f["red"] == I.RED_SEQ else 1
-            depth = k["su_base"] + (k["su_div"] if cls[0] else 0) + SFU_DEPTH[cls[1]]
+            depth = (k["su_base"] + (k["su_div"] if cls[0] else 0) + SFU_DEPTH[cls[1]] -
+                     k["su_stage"] * sum(1 for used in cls[2:] if not used))
             first = s + k["su_start"]
             if f.get("su_chase", 0) and su_cls == cls:   # vector 0 waits for the in-flight count to fall below D
                 first = max(first, su_last_emit + depth + k["su_chase"] - f["su_chase"])

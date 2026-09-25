@@ -865,7 +865,15 @@ CHASE = True                     # stream ops chase the previous stream op (su_c
 
 
 def su_class(f):
-    return (f.get("m1", 0) in (I.M1_DIVB, I.M1_DIVIMM), f.get("sfu", 0))
+    """The stream unit's class: the depth an element of the op takes (ot_hdc_v41_stream)."""
+    return (f.get("m1", 0) in (I.M1_DIVB, I.M1_DIVIMM), f.get("sfu", 0)) + su_stages(f)
+
+
+def su_stages(f):
+    """Which 5-cycle stages an op uses: M1 (a multiply or divide), M2 (a multiply, or
+    Q's multiply, which spans it), AD, E1, E2."""
+    return (f.get("m1", 0) not in (I.M1_BYP, I.M1_MAXB), f.get("m2", 0) != I.M2_BYP or f.get("qm", 0) != I.QM_OFF,
+            f.get("ad", 0) != I.AD_BYP, f.get("e1", 0) != I.E1_BYP, f.get("e2", 0) != I.E2_BYP)
 
 
 def schedule(prog):
