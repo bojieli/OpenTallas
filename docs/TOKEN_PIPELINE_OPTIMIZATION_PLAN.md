@@ -415,3 +415,218 @@ Status is tracked per workstream in its own document:
 - `docs/HOST_INTERFACE_AND_RUNTIME.md`
 
 A workstream is complete only when it covers all three columns.
+
+## 7. DeepSeek-V4.1 core: cutting cycles per token
+
+The V4.1 core (`rtl/hdc/v41/ot_hdc_core_v41.sv`, format `tools/hdc_isa_v41.py`,
+program `tools/hdc_program_v41.py`) decodes the reduced DeepSeek-V4.1-Flash
+bit-exactly. Every iteration below is measured by
+`tools/rtl_hdc_v41_decode_campaign.py`:
+
+- one Verilator step at position 7 (the oracle prompt's last token), checked
+  bit for bit against the ISA-level model: every logit, the whole vector
+  memory and the whole KV cache;
+- an end-to-end run from an empty state: the 8 prompt tokens, then 3 generated
+  tokens, each step's logits bit-exact with the golden;
+- one step at position 39, where the index top-k selects;
+- the cycle model `tools/hdc_timing_v41.py`, whose constants were refitted
+  jointly to the traces of iterations 2–4 and then extended.
+
+Each iteration's campaign record is kept in `results/rtl/hdc_v41_iterations/`;
+`results/rtl/hdc_v41_decode_campaign.json` is the current one.
+
+| Iteration | Change | Arithmetic | Cycles per token (position 7) |
+|---|---|---|---|
+| 1 | baseline: one-element stream unit | golden as before | 1,088,551 |
+| 2 | stream unit 8 lanes wide | unchanged | 737,483 |
+| 3 | K-split sums in the golden | changed, specified | 546,393 |
+| 4 | overlap: same-unit hazards, sequential units, expert pipelining | unchanged | 470,798 |
+| 5 | head groups on the matrix engine | unchanged | 384,830 |
+| 6 | stream-unit chaining | unchanged | 370,399 |
+| 7 | stream-unit stage skipping | unchanged | 344,109 |
+
+- Iteration 1: 1,088,551 cycles. <!-- figure: 1088551 src="results/rtl/hdc_v41_iterations/iter1_baseline.json#single_step.cycles" name="HDC V4.1 cycles per token, baseline" -->
+- Iteration 2: 737,483 cycles. <!-- figure: 737483 src="results/rtl/hdc_v41_iterations/iter2_vector_stream_unit.json#single_step.cycles" name="HDC V4.1 cycles per token, 8-lane stream unit" -->
+- Iteration 3: 546,393 cycles. <!-- figure: 546393 src="results/rtl/hdc_v41_iterations/iter3_golden_ksplits.json#single_step.cycles" name="HDC V4.1 cycles per token, K-split sums" -->
+- Iteration 4: 470,798 cycles. <!-- figure: 470798 src="results/rtl/hdc_v41_iterations/iter4_overlap_scheduling.json#single_step.cycles" name="HDC V4.1 cycles per token, overlap scheduling" -->
+- Iteration 5: 384,830 cycles. <!-- figure: 384830 src="results/rtl/hdc_v41_iterations/iter5_me_head_groups.json#single_step.cycles" name="HDC V4.1 cycles per token, head groups" -->
+- Iteration 6: 370,399 cycles. <!-- figure: 370399 src="results/rtl/hdc_v41_iterations/iter6_stream_chaining.json#single_step.cycles" name="HDC V4.1 cycles per token, stream chaining" -->
+- Iteration 7: 344,109 cycles. <!-- figure: 344109 src="results/rtl/hdc_v41_iterations/iter7_stage_skipping.json#single_step.cycles" name="HDC V4.1 cycles per token, stage skipping" -->
+
+Every iteration decodes the oracle's token 3118 at position 7, bit-exact in
+every logit, the vector memory and the KV cache, and passes the end-to-end and
+position-39 checks. The timing model tracks every iteration's RTL token to
+within 0.01% and every issue time to within a few tens of cycles.
+
+**Iteration 1: the baseline.** The program has 4,416 instructions. Busy cycles:
+
+- stream unit: 729,128; <!-- figure: 729128 src="results/rtl/hdc_v41_iterations/iter1_baseline.json#single_step.unit_busy_cycles.su" name="HDC V4.1 stream-unit busy cycles, baseline" -->
+- hyper-connection projection engine: 410,800. <!-- figure: 410800 src="results/rtl/hdc_v41_iterations/iter1_baseline.json#single_step.unit_busy_cycles.he" name="HDC V4.1 projection-engine busy cycles, baseline" -->
+
+The stream unit takes one element per cycle over the 4 × 160 residual, and
+the projection engine's 640-term sequential sums take 5,120 cycles each, 80
+times per token.
+
+**Iteration 2: a vector stream unit.** `ot_hdc_v41_stream` now has SW lanes.
+Each lane is the whole scalar datapath (`ot_hdc_v41_su_lane`), with its own four
+operand ports, write port and reducer. An instruction's `su_vec` field picks
+the lane axis:
+
+- SCALAR: one element per cycle, on lane 0;
+- VI: the lanes take consecutive inner indices of one row, for elementwise
+  work;
+- VO: the lanes take consecutive rows. Each lane then owns whole segments, so
+  a per-segment sum or max (softmax, index-head sums, Engram norms) keeps the
+  golden's order: P=8 interleaved partials, then the pairwise tree.
+
+A long sum over one segment cannot go wider under that order. Its eight
+partial chains already take one element per cycle, the adder's loop latency.
+So iteration 2 leaves those sums scalar, and iteration 3 changes their order.
+Lane 0 keeps every special function. The other lanes carry the exponential,
+the sigmoid/SiLU chain and the divider only: rsqrt, sqrt, sqrt(softplus) and
+the Engram gate act on at most a dozen elements per op.
+
+The arithmetic is unchanged, and the program, images and golden are the same
+at every width. Sweep of the single step:
+
+- 4 lanes: 778,071 cycles; <!-- figure: 778071 src="results/rtl/hdc_v41_iterations/iter2_vector_stream_unit.json#su_lane_sweep[su_lanes=4].cycles" name="HDC V4.1 cycles per token, 4-lane stream unit" -->
+- 8 lanes: 737,483 cycles (the configuration carried forward);
+- 16 lanes: 717,325 cycles. <!-- figure: 717325 src="results/rtl/hdc_v41_iterations/iter2_vector_stream_unit.json#su_lane_sweep[su_lanes=16].cycles" name="HDC V4.1 cycles per token, 16-lane stream unit" -->
+
+Past 8 lanes little changes. The projection engine's serial sums and the
+latency of dependent stream ops set the token.
+
+**Iteration 3: K-split sums, a change to the golden.**
+`tools/hdc_golden_v41.py` now specifies these accumulation orders:
+
+- *Hyper-connection mixes.* fn [24, 640] is summed in `HC_SPLIT` = 8 chunks
+  of 80, each chunk sequential, with a pairwise tree over the chunk sums. The
+  projection engine (`ot_hdc_v41_hcproj`) has 8 × 3 lanes and a tree, and a
+  mix takes 640 cycles instead of 5,120.
+- *Matrix-engine matvecs.* These take `hdc_golden.split_for`, as the Qwen3
+  core does: the router gate, indexer and compressor projections are split 4
+  ways, and the grouped wo_a 2 ways (`WO_A_SPLIT`). The engine already had
+  the tree.
+- *RMSNorm sums of squares.* These are `split_sum` over 8 contiguous
+  segments. The hyper-connection norm is split over its 4 copies. The stream
+  unit's `red_tree` sums each segment in its own lane, then adds the segment
+  sums by a pairwise tree.
+
+The golden still decodes the oracle's first token, 3118. Free-running from
+the prompt:
+
+- in the specified two-pass attention order, tokens 1–2 are unchanged (3118,
+  2400); token 3 moves from 318 to 64, where the old golden's margin was
+  0.0056. Agreement with the oracle is the same: one leading token;
+- in the release's decode block order, the first seven tokens still equal the
+  oracle's; both goldens diverge at the eighth.
+
+The end-to-end check therefore now generates 3118, 2400, 64.
+
+**Iteration 4: overlap.** The program generator's wait masks are refined, and
+nothing changes in the RTL:
+
+- *Same-unit hazards.* A unit starts an op only after the previous op's last
+  element was read, and writes in issue order. So a write-after-write or
+  write-after-read on the same unit needs no drain; the stream unit's reducer
+  outputs are the exception.
+- *Sequential units.* The quantised engine and the auxiliary unit accept an
+  op only once the previous one has written everything. Issuing an op that is
+  never skipped therefore proves every older op there complete.
+- *Expert pipelining.* The shared expert runs beside the router. The routed
+  experts are software-pipelined across the quantised engine and the stream
+  unit: w13 of expert k+2 and w2 of expert k−1 run while expert k's SiLU does.
+- *Hooks.* The sublayer's own mix finish moved to after the attention scores,
+  and before the second routed SiLU.
+
+**Iteration 5: head groups on the matrix engine.** At position 7 an attention
+op has 8 to 16 rows. The matrix engine gave each lane group a 16-row tile, so
+three of its four groups sat masked. `ot_hdc_v41_matvec` is `ot_hdc_matvec`
+plus head groups for KV-sourced ops: the four groups take four different head
+blocks of the same rows. The Qwen3 core keeps `ot_hdc_matvec` untouched.
+
+- Scores and the index scores: 32 heads per op instead of 8.
+- The weighted sum over positions: 16 heads per op (2 head groups × 2 tiles of
+  16 dimensions).
+
+Every product and its order are unchanged. Matrix-engine busy cycles:
+
+- iteration 4: 200,259; <!-- figure: 200259 src="results/rtl/hdc_v41_iterations/iter4_overlap_scheduling.json#single_step.unit_busy_cycles.me" name="HDC V4.1 matrix-engine busy cycles, iteration 4" -->
+- iteration 5: 114,163. <!-- figure: 114163 src="results/rtl/hdc_v41_iterations/iter5_me_head_groups.json#single_step.unit_busy_cycles.me" name="HDC V4.1 matrix-engine busy cycles, head groups" -->
+
+**Iteration 6: stream-unit chaining.** A stream op that reads the previous
+stream op's element writes, in the same class, may chase it (`su_chase` = D).
+It is accepted as soon as the previous op has emitted its last vector. It
+emits its first vector once fewer than D vectors are in flight, and then one
+per cycle.
+
+The program generator derives D from both ops' vector write and read maps.
+The previous op retires one vector per cycle ahead of the chaser, so no read
+overtakes its write.
+
+A first version stalled every vector that found D or more in flight. That
+starved the chaser, and it broke the reducer, which needs a segment's elements
+without gaps. The RTL check caught it: every logit differed. Only the first vector waits now. 646 ops chase: the hyper-connection
+expansion, the hc_pre collapse, the norms and the expert sum.
+
+**Iteration 7: stage skipping.** An op skips the 5-cycle stages it does not
+use: M1 (no multiply or divide), M2, AD, E1, E2. The class now records the
+stages used, so writes stay in order. Most dependent ops lose 15 to 25 cycles
+of latency.
+
+**Area of the stream unit.** Lanes synthesised alone on ASAP7 at a 1 ns
+target:
+
+- a vector lane: 34,451 µm²; <!-- figure: 34451 src="results/physical_abi3/asap7/hdc/v41/ot_hdc_v41_su_lane/physical.json#synthesis.cell_area_um2" name="HDC V4.1 stream vector lane cell area" -->
+- lane 0, with every special function: 82,607 µm². <!-- figure: 82607 src="results/physical_abi3/asap7/hdc/v41/ot_hdc_v41_su_lane_full/physical.json#synthesis.cell_area_um2" name="HDC V4.1 stream full lane cell area" -->
+
+An SW-lane unit is therefore about one full lane plus SW−1 vector lanes, before
+the segment tree and the controller:
+
+| Lanes | Lane cell area (µm², synthesis) | Cycles per token, iteration 2 |
+|---|---|---|
+| 4 | 185,960 | 778,071 |
+| 8 | 323,764 | 737,483 |
+| 16 | 599,372 | 717,325 |
+
+Eight lanes take 95% of the 16-lane gain for 54% of its lane area. Most of a
+lane is flops (60% of a vector lane's cell area): its tag lines carry B, C and
+the element's tail through the special-function depth.
+
+The simulation's vector memory is many-ported: four operand reads, one
+element write and one reducer write per lane. In a memory of 8 word-interleaved
+banks, a share of 0.62 of the token's stream vector-cycles would be conflict-free. <!-- figure: 0.6237 src="results/rtl/hdc_v41_iterations/iter7_stage_skipping.json#single_step.vector_memory_banking.conflict_free_share" name="HDC V4.1 conflict-free vector share, 8 banks" -->
+The rest are per-segment ops whose segment stride (160, 144, 32) is a multiple
+of 8. An odd layout stride would remove those conflicts.
+
+The same program at other widths (iteration 7):
+
+- 4 lanes: 400,702 cycles; <!-- figure: 400702 src="results/rtl/hdc_v41_iterations/iter7_stage_skipping.json#su_lane_sweep[su_lanes=4].cycles" name="HDC V4.1 cycles per token, 4 lanes, iteration 7" -->
+- 16 lanes: 318,906 cycles. <!-- figure: 318906 src="results/rtl/hdc_v41_iterations/iter7_stage_skipping.json#su_lane_sweep[su_lanes=16].cycles" name="HDC V4.1 cycles per token, 16 lanes, iteration 7" -->
+
+With the serial sums split and the latency chains shortened, 16 lanes now
+save 7% over 8 lanes, for about 1.85x the lane area.
+
+**What bounds the token now** (iteration 7, position 7, per-operator
+attribution of the issue trace):
+
+- *wo_a* on the matrix engine: 1,024 cycles per layer (65,536 MACs at 64 per
+  cycle), and nothing else can run beside it.
+- *The experts*: twelve quantised-engine ops per MoE sublayer. Each carries
+  about 45 cycles of fixed overhead (index read, quantiser, alignment, drain),
+  and each SiLU carries the 156-cycle sigmoid chain.
+- *Dependent short ops* elsewhere: hyper-connection mixes, softmax, router
+  and norms. These are latency chains of ops of 1 to 80 vectors, each paying
+  its pipeline depth (13 to 290 cycles) and a drain.
+
+Busy cycles per unit:
+
+- matrix engine: 114,163; <!-- figure: 114163 src="results/rtl/hdc_v41_iterations/iter7_stage_skipping.json#single_step.unit_busy_cycles.me" name="HDC V4.1 matrix-engine busy cycles, iteration 7" -->
+- stream unit: 232,581. <!-- figure: 232581 src="results/rtl/hdc_v41_iterations/iter7_stage_skipping.json#single_step.unit_busy_cycles.su" name="HDC V4.1 stream-unit busy cycles, iteration 7" -->
+
+No single unit is saturated. The next levers are:
+
+- a quantised engine that overlaps consecutive ops;
+- more matrix-engine groups, which help wo_a;
+- a shallower sigmoid chain, which would change the golden;
+- issue beyond one instruction per unit in order.
