@@ -328,3 +328,20 @@ def test_a_wafer_point_chooses_between_the_mesh_and_the_express_network(tech):
     assert best["step_s"] <= mesh_only
     # a field crossing on the express network is ~17x shorter than on the core mesh, so at batch 1 it wins
     assert step.metrics["intra_link"] == "rom_wafer_express"
+
+
+def test_sinkhorn_agrees_with_the_standalone_study(tech):
+    """The roofline graph and tools/decode_critical_path.py price the Sinkhorn by one rule: the faster of
+    the routed ot_hdc_sinkhorn unit and the pipelined fadd/fdiv chain, from the same artifacts."""
+    import decode_critical_path as DCP
+    rom = C.RomDatapath.from_technology(tech)
+    assert rom.sinkhorn_clocks == DCP.SK["clocks"]
+    assert rom.sinkhorn_step_s == pytest.approx(DCP.SK["step_s"], rel=1e-12)
+    for mb in (1.0, 8.0, 64.0):
+        sg = graph(tech, mb=mb)
+        node = sg.graph.nodes["L3.attn.hc.sinkhorn"]
+        ops = type("O", (), {})()
+        ops.clock, ops.mb = rom.clock_hz, mb
+        ops.p = replace(DCP.Params(), clock_hz=rom.clock_hz)
+        cycles, _ = DCP.sinkhorn_cycles(ops, 20, 2 + rom.fadd + rom.su_exp)
+        assert node["depth"] == pytest.approx(cycles / rom.clock_hz, rel=1e-12), mb
