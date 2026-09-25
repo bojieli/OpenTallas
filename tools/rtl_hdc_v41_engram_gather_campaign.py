@@ -61,9 +61,10 @@ RE_G = re.compile(r"GATHER tokens=(\d+) hash_checked=(\d+) hash_errors=(\d+) dum
 # name, plusargs, token limit (None = all)
 MODES = [
     ("ideal_bank_4_cycles", dict(LAT=4), None),
+    ("isolated_token_4_cycles", dict(LAT=4, SPACED=1), 400),
     ("stressed", dict(LAT=30, JIT=60, STALL=30, GAP=30, BUB=40, CDEL=400), None),
-    ("ucie_hop_pair_23_cycles", dict(LAT=23), 400),
-    ("board_hop_pair_209_cycles", dict(LAT=209), 400),
+    ("ucie_hop_pair_23_cycles", dict(LAT=23, SPACED=1), 400),
+    ("board_hop_pair_209_cycles", dict(LAT=209, SPACED=1), 400),
 ]
 MUT_MODE = ("mutation", dict(LAT=30, JIT=60, STALL=30, GAP=30, BUB=40, CDEL=100), 150)
 GATHER_MUTATIONS = [

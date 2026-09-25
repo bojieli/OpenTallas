@@ -78,6 +78,7 @@ def shipped_tables():
         G.compressed_token_map = orig
     rows = [int(r) for r in t.primes.reshape(len(t.layer_ids), -1).sum(1)]
     assert rows == RELEASED_ROWS, rows
+    t.token_map = np.arange(1 << ID_W, dtype=np.int64)   # identity over every 17-bit id
     return t
 
 

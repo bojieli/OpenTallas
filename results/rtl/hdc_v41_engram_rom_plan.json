@@ -1,0 +1,124 @@
+{
+  "area": {
+    "bits": {
+      "codes_and_scale_257B": 1579054979600,
+      "macro_capacity": 1622742663168,
+      "packed_264B": 1622064259200
+    },
+    "by_node": {
+      "4NP": {
+        "area_mm2": {
+          "codes_and_scale_257B": 21043.9,
+          "macro_capacity": 21626.2,
+          "packed_264B": 21617.1
+        },
+        "column_bank_mm2": 450.4,
+        "column_banks_per_reticle_die": 1,
+        "reticle_dies_one_column_each": 48,
+        "rom_bits_per_mm2": 75036075.03607504
+      },
+      "N5": {
+        "area_mm2": {
+          "codes_and_scale_257B": 21043.9,
+          "macro_capacity": 21626.2,
+          "packed_264B": 21617.1
+        },
+        "column_bank_mm2": 450.4,
+        "column_banks_per_reticle_die": 1,
+        "reticle_dies_one_column_each": 48,
+        "rom_bits_per_mm2": 75036075.03607504
+      },
+      "N6": {
+        "area_mm2": {
+          "codes_and_scale_257B": 27056.5,
+          "macro_capacity": 27805.1,
+          "packed_264B": 27793.4
+        },
+        "column_bank_mm2": 579.0,
+        "column_banks_per_reticle_die": 1,
+        "reticle_dies_one_column_each": 48,
+        "rom_bits_per_mm2": 58361391.69472503
+      },
+      "N7": {
+        "area_mm2": {
+          "codes_and_scale_257B": 27056.5,
+          "macro_capacity": 27805.1,
+          "packed_264B": 27793.4
+        },
+        "column_bank_mm2": 579.0,
+        "column_banks_per_reticle_die": 1,
+        "reticle_dies_one_column_each": 48,
+        "rom_bits_per_mm2": 58361391.69472503
+      }
+    },
+    "hc1_envelope": {
+      "area_mm2": {
+        "codes_and_scale_257B": 45788.6,
+        "macro_capacity": 47055.4,
+        "packed_264B": 47035.7
+      },
+      "basis": "Llama-3.1-8B 8030261248 parameters x 3.5 bits (assumed) / 815.0 mm2 (HC1, self-reported)",
+      "bits_per_mm2": 34485784.500613496
+    },
+    "reticle_die_mm2": 815.0
+  },
+  "claim_boundary": "arithmetic on the released table extents and the analytical model's ROM density; no ROM macro was compiled or placed",
+  "organisation": {
+    "banking": "by hash column: 48 column banks (24 per layer), bank b = layer*24 + column holds that column's prime-sized region and is addressed by the residue; one row per bank per token, so the 48 reads of a token are conflict free and issue in one cycle",
+    "bytes_read_per_token": 12672,
+    "gather_port": {
+      "beat_bits": 264,
+      "beat_layout": "[255:0] 32 E4M3 codes, [263:256] side byte = scale on beat 0",
+      "beats_per_row": 8,
+      "response_ports": "one per layer in ot_hdc_engram_gather (24 banks round-robin), one beat per cycle, 192 beats per layer per token"
+    },
+    "macro": {
+      "bits": 64,
+      "rows": 8192,
+      "why": "the deepest ROMA instance, the one rom.array_efficiency 0.52 is taken at"
+    },
+    "macros_total": 3095136,
+    "prefetch_buffer": {
+      "bytes_per_slot": 24576,
+      "bytes_total": 49152,
+      "slots": 2,
+      "why": "BF16 rows of token t are read by layers 1 and 14 while token t+1's are fetched",
+      "word_bits": 512
+    },
+    "read": "one row group (33 macros) per read -> 2,112-bit row register -> 8 gather beats",
+    "read_energy_basis": "energy.rom_read_j_per_byte (assumed) x bytes per token",
+    "read_energy_j_per_token": 1.01376e-09,
+    "row_group_macros": 33,
+    "row_groups_per_bank": {
+      "max": 1954,
+      "min": 1954
+    },
+    "row_groups_total": 93792
+  },
+  "placement": "a column bank is 450-580 mm2 at the model's N5-N7 density, so each fits one reticle-class die and no two do: the Engram ROM is 48 column dies (24 per layer) or the equivalent wafer region, each answering one 4-byte request with one 264-byte row per token",
+  "schema": "opentallas.hdc-v41-engram-rom-plan.v1",
+  "tables": {
+    "column_rows_max": 16000889,
+    "column_rows_min": 16000057,
+    "columns_per_layer": 24,
+    "layers": [
+      1,
+      14
+    ],
+    "released_rows": [
+      384006168,
+      384016682
+    ],
+    "row": {
+      "code_format": "E4M3 (E4M3fn)",
+      "codes": 256,
+      "packed_bytes": 264,
+      "scale": "1 byte UE8M0",
+      "stored_bits": 2112
+    },
+    "rows_per_layer": [
+      384006168,
+      384016682
+    ]
+  }
+}

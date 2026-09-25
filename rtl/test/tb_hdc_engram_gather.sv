@@ -16,7 +16,9 @@
 // Row content is tools/hdc_v41_engram_shipped.row_bytes: word j of global row r
 // of layer l is splitmix64(l << 40 | r << 6 | j).
 // Consumer: checks layer 0 then layer 1 of each token in order, each after a
-// random delay of up to +CDEL cycles, then releases the slot.
+// random delay of up to +CDEL cycles, then releases the slot.  +SPACED=1 issues a
+// token only after the previous one was consumed (one token per decode step: the
+// latency of an isolated prefetch).
 module tb_hdc_engram_gather (input wire clk);
     import ot_hdc_engram_tables_shipped_pkg::*;
     localparam integer MAXV = 1 << 14;
@@ -30,7 +32,7 @@ module tb_hdc_engram_gather (input wire clk);
     reg [NB*RW-1:0]   vrow   [0:MAXV-1];
     integer nvec = 0, fd, fo, rc, c;
     reg [31:0] fld;
-    integer LAT, JIT, STALL, GAP, BUB, CDEL;
+    integer LAT, JIT, STALL, GAP, BUB, CDEL, SPACED;
 
     function automatic [63:0] smix(input [63:0] x);
         reg [63:0] z;
@@ -79,6 +81,7 @@ module tb_hdc_engram_gather (input wire clk);
         if (!$value$plusargs("GAP=%d", GAP)) GAP = 0;
         if (!$value$plusargs("BUB=%d", BUB)) BUB = 0;
         if (!$value$plusargs("CDEL=%d", CDEL)) CDEL = 0;
+        if (!$value$plusargs("SPACED=%d", SPACED)) SPACED = 0;
         fd = $fopen(path, "r");
         if (fd == 0) begin $display("cannot open vectors"); $finish; end
         rc = 1;
@@ -110,14 +113,16 @@ module tb_hdc_engram_gather (input wire clk);
 
     // -- driver + hash check --------------------------------------------------------
     integer cyc = 0, sent = 0, hgot = 0, herr = 0, inflight = 0, acc_n = 0, rerr = 0;
+    integer ct = 0, cl = 0, wait_n = -1, dumped = 0, idle = 0, a;
     integer tiss [0:MAXV-1];
     integer slot_tok [0:1];
+    reg seen [0:1][0:NL-1];
     always @(posedge clk) begin
         cyc <= cyc + 1;
         if (cyc == 4) rst_n <= 1'b1;
         seed = xs(seed);
         h_valid <= 1'b0;
-        if (rst_n && sent < nvec && inflight == 0 && in_ready && (seed % 100) >= BUB) begin
+        if (rst_n && sent < nvec && inflight == 0 && in_ready && (seed % 100) >= BUB && (SPACED == 0 || ct == sent)) begin
             h_valid <= 1'b1; h_first <= vfirst[sent]; h_cid <= vcid[sent];
             tiss[sent] = cyc;
             sent <= sent + 1;
@@ -131,6 +136,7 @@ module tb_hdc_engram_gather (input wire clk);
             end
             if (!in_ready) rerr = rerr + 1;
             slot_tok[in_slot] = hgot;
+            seen[in_slot][0] = 0; seen[in_slot][1] = 0;
             hgot = hgot + 1;
         end
     end
@@ -187,7 +193,6 @@ module tb_hdc_engram_gather (input wire clk);
             if (wr_en[l2]) buffer[l2][wr_addr[BAW*l2 +: BAW]] <= wr_data[512*l2 +: 512];
 
     // -- latency: first cycle each (slot, layer) is ready ------------------------------
-    reg seen [0:1][0:NL-1];
     integer lmin [0:NL-1], lmax [0:NL-1], lsum [0:NL-1], lat, s2, l3;
     initial for (l3 = 0; l3 < NL; l3 = l3 + 1) begin lmin[l3] = 1 << 30; lmax[l3] = 0; lsum[l3] = 0; end
     initial begin seen[0][0] = 0; seen[0][1] = 0; seen[1][0] = 0; seen[1][1] = 0; end
@@ -203,7 +208,6 @@ module tb_hdc_engram_gather (input wire clk);
                 end
 
     // -- consumer ----------------------------------------------------------------------
-    integer ct = 0, cl = 0, wait_n = -1, dumped = 0, idle = 0, a;
     always @(posedge clk) begin
         rel_valid <= 1'b0;
         if (rst_n && ct < nvec) begin
@@ -217,7 +221,6 @@ module tb_hdc_engram_gather (input wire clk);
                     wait_n = -1;
                     if (cl == NL - 1) begin
                         rel_valid <= 1'b1; rel_slot <= ct[0];
-                        seen[ct % 2][0] = 0; seen[ct % 2][1] = 0;
                         cl = 0; ct = ct + 1;
                     end else cl = cl + 1;
                 end else wait_n = wait_n - 1;
