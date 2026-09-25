@@ -121,15 +121,11 @@ module ot_rom_oneshot_die #(
     // heads
     reg  [N-1:0] nonempty;
     reg  [PW-1:0] head [0:N-1];
-    reg  agree;
     always @(*) begin
-        agree = 1'b1;
         for (r = 0; r < N; r = r + 1) begin
             nonempty[r] = (cnt[r] != 0);
             head[r] = mem[r*DEPTH + rp[r]];
         end
-        for (r = 1; r < N; r = r + 1)
-            if (head[r][PW-1 -: TAGW + 1] != head[0][PW-1 -: TAGW + 1]) agree = 1'b0;
     end
     wire head_mode = head[0][FW + 1];
 
@@ -182,7 +178,18 @@ module ot_rom_oneshot_die #(
             if (pop) begin s0_mode <= head_mode; s0_last <= head[0][FW]; end
         end
     end
-    always @(posedge clk) if (pop) for (r = 0; r < N; r = r + 1) s0_d[r] <= head[r][FW-1:0];
+    // the popped words and their {tag, mode}; the sources' tags are compared
+    // from these registers, a cycle after the pop (the fault is sticky)
+    reg [TAGW:0] s0_t [0:N-1];
+    always @(posedge clk) if (pop) for (r = 0; r < N; r = r + 1) begin
+        s0_d[r] <= head[r][FW-1:0];
+        s0_t[r] <= head[r][PW-1 -: TAGW + 1];
+    end
+    reg agree;
+    always @(*) begin
+        agree = 1'b1;
+        for (r = 1; r < N; r = r + 1) if (s0_t[r] != s0_t[0]) agree = 1'b0;
+    end
 
     // -- all-reduce: ((p0 + p1) + p2) + ... in rank order ---------------------------------------
     wire red_in = s0_v && !s0_mode;
@@ -261,17 +268,18 @@ module ot_rom_oneshot_die #(
     assign out_err   = red_out && serr[N-1];
 
     // -- faults ---------------------------------------------------------------------------
+    // a push into a full FIFO leaves its count past DEPTH (seen a cycle later)
     reg ovf;
     always @(*) begin
         ovf = 1'b0;
-        for (r = 0; r < N; r = r + 1) if (push[r] && !pop && cnt[r] == DEPTH) ovf = 1'b1;
+        for (r = 0; r < N; r = r + 1) if (cnt[r] > DEPTH) ovf = 1'b1;
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             fault <= 1'b0; fault_code <= 3'b0;
         end else begin
             if (out_err) begin fault <= 1'b1; fault_code[0] <= 1'b1; end
-            if (pop && !agree) begin fault <= 1'b1; fault_code[1] <= 1'b1; end
+            if (s0_v && !agree) begin fault <= 1'b1; fault_code[1] <= 1'b1; end
             if (ovf) begin fault <= 1'b1; fault_code[2] <= 1'b1; end
         end
     end

@@ -12,6 +12,7 @@
 // its rank.  +INJECT=m: die 2 corrupts word 0 lane 3 of message m (+IVAL, a
 // NaN by default) -- the bench then expects every die to fault instead.
 // +SKEW=c: die d starts c*d cycles late (arrival order differs per die).
+// +TAGBAD=m: die 1 tags message m wrongly -- every die must fault (code bit 1).
 // Prints cycles from the first send to the last result and the words per
 // cycle sustained.
 // ---------------------------------------------------------------------------
@@ -26,7 +27,7 @@ module tb_rom_oneshot_allreduce #(
     reg [FW-1:0] part [0:MAXW-1];
     reg [FW-1:0] sum  [0:MAXW-1];
     reg          mode [0:4095];
-    integer NMSG, WORDS, GAP, SEED, INJECT, SKEW;
+    integer NMSG, WORDS, GAP, SEED, INJECT, SKEW, TAGBAD;
     reg [31:0] IVAL;
     string dir;
     reg [3:0] rcnt = 0;
@@ -77,7 +78,7 @@ module tb_rom_oneshot_allreduce #(
             assign id[g*FW +: FW] = word;
             assign il[g] = (w == WORDS - 1);
             assign im[g] = mode[m];
-            assign it[g*TAGW +: TAGW] = m;
+            assign it[g*TAGW +: TAGW] = (TAGBAD == m && g == 1) ? (m ^ 32'h8000) : m;
             // checker
             integer rm = 0, rk = 0;      // message, output word within it
             reg [FW-1:0] exp;
@@ -120,16 +121,21 @@ module tb_rom_oneshot_allreduce #(
         if (!$value$plusargs("INJECT=%d", INJECT)) INJECT = -1;
         if (!$value$plusargs("IVAL=%h", IVAL)) IVAL = 32'h7fc00000;
         if (!$value$plusargs("SKEW=%d", SKEW)) SKEW = 0;
+        if (!$value$plusargs("TAGBAD=%d", TAGBAD)) TAGBAD = -1;
         $readmemh({dir, "/part.hex"}, part);
         $readmemh({dir, "/sum.hex"}, sum);
         $readmemh({dir, "/mode.hex"}, mode);
     end
 
     always @(posedge clk) begin
-        if (done_n == N || (INJECT >= 0 && cyc > 2000 + NMSG * WORDS * 8)) begin
+        if ((done_n == N && INJECT < 0 && TAGBAD < 0) ||
+            ((INJECT >= 0 || TAGBAD >= 0) && cyc > 2000 + NMSG * WORDS * 8)) begin
             $display("ONESHOT n=%0d depth=%0d lat=%0d msgs=%0d words=%0d gap=%0d skew=%0d inject=%0d mismatches=%0d out_err=%0d fault=%b code=%b words_out=%0d first=%0d last=%0d link_stalls=%0d",
                      N, DEPTH, LAT, NMSG, WORDS, GAP, SKEW, INJECT, bad, errs, flt, fc, words_out, first, lastc, stalls);
-            if (INJECT < 0) begin
+            if (TAGBAD >= 0) begin
+                // every die sees die 1's stray tag: a tag fault on all four
+                if (flt == {N{1'b1}} && fc[1] && fc[4] && fc[7] && fc[10]) $display("PASS"); else $display("FAIL");
+            end else if (INJECT < 0) begin
                 if (bad == 0 && flt == 0 && errs == 0 && done_n == N) $display("PASS"); else $display("FAIL");
             end else begin
                 if (flt == {N{1'b1}} && errs >= N) $display("PASS"); else $display("FAIL");
