@@ -837,29 +837,31 @@ by measuring rather than by arguing.**
 
 | the claim | was | is | why it moved |
 |---|---:|---:|---|
-| Pro @1M, 554,700 mm², batch 1 | 54.2× → 35.4× | **6.68×** | GPU denied a topology; then per-user latency conflated with throughput; the corrected physical/energy assumptions lowered it again | <!-- figure: 6.68 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Pro-0813;mm2=554700" name="Pro batch-1 iso-area ratio at 554,700 mm2, N6" -->
+| Pro @1M, 554,700 mm², batch 1 | 54.2× → 35.4× | **12.84×** | GPU denied a topology; then per-user latency conflated with throughput; the corrected physical/energy assumptions lowered it again | <!-- figure: 12.84 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Pro-0813;mm2=554700" name="Pro batch-1 iso-area ratio at 554,700 mm2, N6" -->
 | Flash weight:KV @200K | 113.2:1 | **35.3:1** | two KV entry sizes read off the implementation, not measured | <!-- figure: 35.3 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].weight_to_kv_read_ratio_b1" name="Flash W:KV at 200K" -->
 | Pro weight:KV @1M | 58.9:1 | **18.0:1** | the same two constants, by analogy | <!-- figure: 18.0 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].weight_to_kv_read_ratio_b1" name="Pro W:KV at 1M" -->
 | on-wafer tensor-parallel | 116,278 tok/s | **6,000–7,200** | an all-reduce charged one flat hop however far it reached | <!-- figure: 7,200 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1" tol="1%" name="on-wafer tensor hard ceiling, Qwen3-8B" why="the row states a deliberately rounded band; the artifact's Qwen on-wafer hard ceiling is 7,215.0 tok/s and Flash's is 6,040.5. The tolerance is the rounding the band declares, not slack." -->
-| N5 vs B200, Pro @1M | 27.3× | **1.49×** | both of the above, plus the corrected physical/energy assumptions | <!-- figure: 1.49 src="results/roofline/n5_vs_b200/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Pro-0813;mm2=554700" name="Pro batch-1 iso-area ratio at 554,700 mm2, N5" -->
-| per-region over broadcast @b64 | 27× | **5.98×** | busiest-region load plus the corrected model inputs | <!-- figure: 5.98 src="results/roofline/n6_vs_a100/REPORT.md#Per-region over broadcast" table="batch-amortisation" where="Model=DeepSeek-V4-Flash-0731;B=64;Spare silicon=sram" name="per-region over broadcast, Flash b64 sram" -->
+| N5 vs B200, Pro @1M | 27.3× | **5.04×** | both of the above, plus the corrected physical/energy assumptions | <!-- figure: 5.04 src="results/roofline/n5_vs_b200/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Pro-0813;mm2=554700" name="Pro batch-1 iso-area ratio at 554,700 mm2, N5" -->
+| per-region over broadcast @b64 | 27× | **2.63×** | busiest-region load plus the corrected model inputs | <!-- figure: 2.63 src="results/roofline/n6_vs_a100/REPORT.md#Per-region over broadcast" table="batch-amortisation" where="Model=DeepSeek-V4-Flash-0731;B=64;Spare silicon=sram" name="per-region over broadcast, Flash b64 sram" -->
 
 **Two conclusions inverted rather than shrank**, which matters more than the
 magnitudes:
 
 - *"The ROM advantage erodes with batch"* holds only for the **dense** model.
-  Qwen goes 33.33× at batch 1 to **3.98× at 256** — more than half the lead is gone, though it no longer inverts now that the array class is sampled on its own device-count ladder. Both <!-- figure: 33.33 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=fastest" name="Qwen per-user iso-area ratio at B=1" --> <!-- figure: 3.98 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=256;Pick=fastest" name="Qwen per-user iso-area ratio at B=256" -->
-  sparse models now **rise**: Flash 13.32× → **11.87×**, because a GPU's per-user <!-- figure: 13.32 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=DeepSeek-V4-Flash-0731;B=1;Pick=fastest" name="Flash per-user iso-area ratio at B=1" --> <!-- figure: 11.87 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=DeepSeek-V4-Flash-0731;B=256;Pick=fastest" name="Flash per-user iso-area ratio at B=256" -->
+  Qwen goes 22.67× at batch 1 to **4.50× at 256** — more than half the lead is gone, though it no longer inverts now that the array class is sampled on its own device-count ladder. Both <!-- figure: 22.67 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=fastest" name="Qwen per-user iso-area ratio at B=1" --> <!-- figure: 4.50 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=256;Pick=fastest" name="Qwen per-user iso-area ratio at B=256" -->
+  sparse models now **rise**: Flash 11.84× → **11.75×**, because a GPU's per-user <!-- figure: 11.84 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=DeepSeek-V4-Flash-0731;B=1;Pick=fastest" name="Flash per-user iso-area ratio at B=1" --> <!-- figure: 11.75 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=DeepSeek-V4-Flash-0731;B=256;Pick=fastest" name="Flash per-user iso-area ratio at B=256" -->
   rate collapses faster than a ROM machine's once KV dominates. The original
   thesis — that sparsity is what makes ROM worth building — survives in a
   stronger form than it was stated.
 - *"Bigger is better"* is false for latency. ROM per-user throughput falls
-  **monotonically** with area, 6,464.4 tok/s at one wafer to 4,992.6 at twelve, so <!-- figure: 6,464.4 src="results/roofline/n6_vs_a100/REPORT.md#ROM after" table="latency separation" where="Model=Qwen3-8B;mm2=46225" name="Qwen ROM user tok/s at one wafer" --> <!-- figure: 4,992.6 src="results/roofline/n6_vs_a100/REPORT.md#ROM after" table="latency separation" where="Model=Qwen3-8B;mm2=554700" name="Qwen ROM user tok/s at twelve wafers" -->
+  **monotonically** with area, 9,289.5 tok/s at one wafer to 5,948.1 at twelve, so <!-- figure: 9,289.5 src="results/roofline/n6_vs_a100/REPORT.md#ROM after" table="latency separation" where="Model=Qwen3-8B;mm2=46225" name="Qwen ROM user tok/s at one wafer" --> <!-- figure: 5,948.1 src="results/roofline/n6_vs_a100/REPORT.md#ROM after" table="latency separation" where="Model=Qwen3-8B;mm2=554700" name="Qwen ROM user tok/s at twelve wafers" -->
   the best latency machine is the **smallest one that holds the model**.
 
 **What the gates say.** The A100 gate is arithmetic and holds at 1.000000× <!-- figure: 1.000000 src="results/roofline/n6_vs_a100/REPORT.md#Ratio" table="Validation gates" where="Gate=A100 80GB weight-bound, Llama-3.1-8B FP8 batch 1 on 826 mm2" name="A100 validation gate ratio" -->
-through every correction. The Taalas HC1 gate **passes** at ratio 1.45× <!-- figure: 1.45 src="results/roofline/n6_vs_a100/REPORT.md#Ratio" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="Taalas HC1 validation gate ratio" -->
-(24,675 modelled against 16,960 published tokens/s) since the 2026-09-23 revision
+through every correction. The Taalas HC1 gate **passes** at ratio 0.63× <!-- figure: 0.63 src="results/roofline/n6_vs_a100/REPORT.md#Ratio" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="Taalas HC1 validation gate ratio" -->
+(10,723 modelled against 16,960 published tokens/s; 24,675, or 1.45×, under the flat
+per-layer floor) since the serial path became the Llama decode graph priced with our own RTL
+depths (2026-09-24), landing below the part and reported, not tuned. The 2026-09-23 revision
 charges one compute-in-ROM select cell per <=4-bit weight rather than one enlarged
 cell per bit ([review](ANALYTICAL_REPORT.md), finding 4). The
 cell width comes from the vendor the gate checks, so the pass is not independent
@@ -867,8 +869,8 @@ on capacity; the legacy per-bit rule still fails it and is kept as a test.
 
 **What the power gates say, without smoothing the asymmetry.** The corrected
 A100 saturating-load reconstruction is 461.7 W against 400 W (1.15×), inside
-the declared 2× gate. HC1 is 87.6 W against its published 200–250 W band
-(0.44×–0.35×), so that gate fails by 2.3–2.9× even after ROM-array leakage is
+the declared 2× gate. HC1 is 77.6 W against its published 200–250 W band
+(0.39×–0.31×), so that gate fails by 2.6–3.2× even after ROM-array leakage is
 charged. Static power is paid whether traffic moves or not, and thermal scaling
 now binds where the generated study reports it. The capacity-infeasible HC1
 reconstruction delivers no admitted tokens, so its attempted-step energy cannot
@@ -1027,7 +1029,7 @@ lanes are a precondition for it, not the product. These items are the product.
   has an exact expected match count and the audit refuses stale or ambiguous
   selectors. The initial conservative pass resolves **8** <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="W11.3 explicitly triaged normative/example candidates" --> ABI shape/algebraic
   examples and rejected legacy proxies as `normative_or_example`.
-  **2,228** candidates remain explicitly `untriaged`. <!-- figure: 2228 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
+  **2,238** candidates remain explicitly `untriaged`. <!-- figure: 2238 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
   `make check-figures` fails on annotation, census, policy, or classification
   drift. This remains partial: triage is not proof, produced figures still need
   resolving annotations, and the remaining population must be classified as

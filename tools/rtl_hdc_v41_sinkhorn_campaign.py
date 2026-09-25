@@ -135,8 +135,8 @@ def real_cases(positions):
         pre, post, comb = orig(self, x, L, which)
         fn, scale, base = (self.lw(L, f"hc_{which}_{s}") for s in ("fn", "scale", "base"))
         flat = x.reshape(-1)
-        r = G.rsqrt(G.add(G.div(G.reduce_rows(G.mul(flat, flat)[None, :])[0], F(flat.size)), self.eps))
-        mixes = G.mul(G.matvec_fp32(fn, flat), r)
+        r = G.rsqrt(G.add(G.div(G.split_sum(G.mul(flat, flat), G.HC_SS_SPLIT), F(flat.size)), self.eps))
+        mixes = G.mul(G.matvec(fn, flat, G.HC_SPLIT), r)                # hc_mixes' order
         hc = self.hc
         cm = G.add(G.mul(mixes[2 * hc:], scale[2]), base[2 * hc:]).reshape(hc, hc)
         m = np.max(cm, axis=1, keepdims=True)
