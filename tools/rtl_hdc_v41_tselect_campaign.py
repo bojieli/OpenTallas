@@ -75,8 +75,9 @@ CONFIGS = [
 MUTATION_CONFIG = ("mutation_w8", 8, 16, 16, 8, 400, (), 8)
 MUTATIONS = [
     ("tie to the higher index", "c2_pre[(LW+1)*l +: LW+1]} < rem", "c2_pre[(LW+1)*l +: LW+1]} <= rem"),
-    ("walk takes the right subtree only on a strict excess", "wsum} >= {{(CW + 1){1'b0}}, wkq}",
-     "wsum} > {{(CW + 1){1'b0}}, wkq}"),
+    # (walking right only on a strict excess, `>` for `>=`, is an EQUIVALENT mutant: it lands on a lower
+    # bucket with quota 0 and threshold {B, max lo}, which selects the same set -- so it is not listed)
+    ("boundary quota ignores the count above it", "mq <= wrest;", "mq <= wkq;"),
     ("-0 not canonicalised to +0", "fkey = (v[VW-2:0] == 0) ?", "fkey = (v[VW-1:0] == 0) ?"),
     ("strict threshold compare dropped", "c1_gt[l] <= lv && (k > tkey);", "c1_gt[l] <= lv && (k >= tkey);"),
     ("pass-2 histogram ignores the boundary bucket", "k[VW-1 -: RB] == bsel);", "1'b1);"),

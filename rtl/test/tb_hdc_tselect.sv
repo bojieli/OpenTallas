@@ -94,7 +94,6 @@ module tb_hdc_tselect
                     f_val[VW*i +: VW] = t0[VW-1:0];
                     f_idx[IW*i +: IW] = t1[IW-1:0];
                 end
-                rc = $fscanf(fin, "\n");
             end
         end
     endtask

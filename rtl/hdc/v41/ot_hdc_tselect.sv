@@ -223,30 +223,33 @@ module ot_hdc_tselect #(
     reg [W*NL0-1:0] h1_lo;
     wire hs_ing = s0_v;
     wire hs_p2  = rv && !rph3;
-    integer l;
-    always @(posedge clk) begin
-        for (l = 0; l < W; l = l + 1) begin : hpre
-            reg [VW-1:0] v, k;
-            reg          e;
-            reg [RB-1:0] dg;
-            v  = hs_ing ? s0_val[VW*l +: VW] : mem_rdata[EW*l + IW +: VW];
-            k  = fkey(v);
-            e  = hs_ing ? s0_lv[l] : (hs_p2 && mem_rdata[EW*l + EW - 1] && k[VW-1 -: RB] == bsel);
-            dg = hs_ing ? k[VW-1 -: RB] : k[RB-1:0];
-            h1_hi[NH*l +: NH]   <= e ? ({{(NH-1){1'b0}}, 1'b1} << dg[RB-1 -: HA]) : {NH{1'b0}};
-            h1_lo[NL0*l +: NL0] <= {{(NL0-1){1'b0}}, 1'b1} << dg[RB-HA-1:0];
+    wire [W*NH-1:0]  h1_hi_d;
+    wire [W*NL0-1:0] h1_lo_d;
+    generate
+        for (gl = 0; gl < W; gl = gl + 1) begin : g_hpre
+            wire [VW-1:0] v  = hs_ing ? s0_val[VW*gl +: VW] : mem_rdata[EW*gl + IW +: VW];
+            wire [VW-1:0] k  = fkey(v);
+            wire          e  = hs_ing ? s0_lv[gl] : (hs_p2 && mem_rdata[EW*gl + EW - 1] && k[VW-1 -: RB] == bsel);
+            wire [RB-1:0] dg = hs_ing ? k[VW-1 -: RB] : k[RB-1:0];
+            assign h1_hi_d[NH*gl +: NH]   = e ? ({{(NH-1){1'b0}}, 1'b1} << dg[RB-1 -: HA]) : {NH{1'b0}};
+            assign h1_lo_d[NL0*gl +: NL0] = {{(NL0-1){1'b0}}, 1'b1} << dg[RB-HA-1:0];
         end
-    end
-    reg [NB*(LW+1)-1:0] h2;
-    integer b;
-    always @(posedge clk) begin
-        for (b = 0; b < NB; b = b + 1) begin : hcnt
-            reg [W-1:0] x;
-            integer q;
-            for (q = 0; q < W; q = q + 1) x[q] = h1_hi[NH*q + (b >> (RB - HA))] && h1_lo[NL0*q + (b % NL0)];
-            h2[(LW+1)*b +: LW+1] <= popc(x);
+    endgenerate
+    always @(posedge clk) begin h1_hi <= h1_hi_d; h1_lo <= h1_lo_d; end
+    reg  [NB*(LW+1)-1:0] h2;
+    wire [NB*(LW+1)-1:0] h2_d;
+    genvar gb, gq;
+    generate
+        for (gb = 0; gb < NB; gb = gb + 1) begin : g_hcnt
+            wire [W-1:0] x;
+            for (gq = 0; gq < W; gq = gq + 1) begin : g_x
+                assign x[gq] = h1_hi[NH*gq + (gb >> (RB - HA))] && h1_lo[NL0*gq + (gb % NL0)];
+            end
+            assign h2_d[(LW+1)*gb +: LW+1] = popc(x);
         end
-    end
+    endgenerate
+    always @(posedge clk) h2 <= h2_d;
+    integer l, b;
     wire hclr;
     reg [NB*CW-1:0] hb;                             // bins = tree leaves
     reg [NB*CW-1:0] tn;                             // internal nodes 1..NB-1
@@ -327,18 +330,19 @@ module ot_hdc_tselect #(
         if (!rst_n) begin c1_v <= 1'b0; c1_l <= 1'b0; end
         else begin c1_v <= rv && rph3; c1_l <= rv && rph3 && rlast; end
     end
-    always @(posedge clk) begin
-        for (l = 0; l < W; l = l + 1) begin : cmp
-            reg [VW-1:0] v, k;
-            reg          lv;
-            v  = mem_rdata[EW*l + IW +: VW];
-            lv = mem_rdata[EW*l + EW - 1];
-            k  = fkey(v);
-            c1_gt[l] <= lv && (k > tkey);
-            c1_eq[l] <= lv && (k == tkey);
-            c1_p[PW*l +: PW] <= {v == {1'b1, 8'hFF, {(VW-9){1'b0}}}, v, mem_rdata[EW*l +: IW]};
+    wire [W-1:0]   c1_gt_d, c1_eq_d;
+    wire [W*PW-1:0] c1_p_d;
+    generate
+        for (gl = 0; gl < W; gl = gl + 1) begin : g_cmp
+            wire [VW-1:0] v  = mem_rdata[EW*gl + IW +: VW];
+            wire          lv = mem_rdata[EW*gl + EW - 1];
+            wire [VW-1:0] k  = fkey(v);
+            assign c1_gt_d[gl] = lv && (k > tkey);
+            assign c1_eq_d[gl] = lv && (k == tkey);
+            assign c1_p_d[PW*gl +: PW] = {v == {1'b1, 8'hFF, {(VW-9){1'b0}}}, v, mem_rdata[EW*gl +: IW]};
         end
-    end
+    endgenerate
+    always @(posedge clk) begin c1_gt <= c1_gt_d; c1_eq <= c1_eq_d; c1_p <= c1_p_d; end
     reg          c2_v, c2_l;
     reg [W-1:0]  c2_gt, c2_eq;
     reg [W*PW-1:0] c2_p;
@@ -378,14 +382,23 @@ module ot_hdc_tselect #(
         if (!rst_n) begin c4_v <= 1'b0; c4_l <= 1'b0; end
         else begin c4_v <= c3_v; c4_l <= c3_l; end
     end
+    wire [W*CE-1:0] c4_e_d;
+    generate
+        for (gl = 0; gl < W; gl = gl + 1) begin : g_zl
+            localparam integer LANEI = gl;
+            localparam [LW:0]  LANE = LANEI[LW:0];
+            wire [LW:0] below;
+            if (gl == 0) begin : g_first
+                assign below = {(LW+1){1'b0}};
+            end else begin : g_rest
+                assign below = sel_inc[(LW+1)*(gl-1) +: LW+1];
+            end
+            assign c4_e_d[CE*gl +: CE] = {c3_sel[gl], LANE[LW-1:0] - below[LW-1:0], c3_p[PW*gl +: PW]};
+        end
+    endgenerate
     always @(posedge clk) begin
         c4_cnt <= sel_inc[(LW+1)*(W-1) +: LW+1];
-        for (l = 0; l < W; l = l + 1) begin : zl
-            reg [LW:0] below, lane;
-            lane  = l[LW:0];
-            below = (l == 0) ? {(LW+1){1'b0}} : sel_inc[(LW+1)*(l-1) +: LW+1];
-            c4_e[CE*l +: CE] <= {c3_sel[l], lane[LW-1:0] - below[LW-1:0], c3_p[PW*l +: PW]};
-        end
+        c4_e   <= c4_e_d;
     end
     localparam integer NCR = (LW + 1) / 2;          // compaction register stages
     wire [NCR*W*CE-1:0]   crf;
