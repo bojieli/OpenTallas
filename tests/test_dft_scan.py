@@ -149,3 +149,23 @@ def test_atpg_end_to_end_on_the_gates(tmp_path, cells, mixing):
     assert gl["good_machine_mismatches"] == 0
     assert gl["capture_faults_confirmed"] == gl["capture_faults_injected"] > 0
     assert gl["chain_faults_confirmed"] == gl["chain_faults_injected"] > 0
+
+
+YOSYS = Path.home() / ".local/opentallas-tools/yosys-0.68/bin/yosys"
+
+
+@pytest.mark.skipif(not YOSYS.is_file(), reason="needs the pinned Yosys")
+@pytest.mark.parametrize("mixing", ["no_mix", "mix"])
+def test_scan_off_is_formally_equivalent(tmp_path, cells, mixing):
+    from dft import check_scan_equivalence as eq
+
+    text, rep = _insert(cells, chains=2, clock_mixing=mixing)
+    (tmp_path / "pre.v").write_text(TOY)
+    (tmp_path / "scan.v").write_text(text)
+    res = eq.check(tmp_path / "pre.v", tmp_path / "scan.v", rep, tmp_path / "ok", cells, YOSYS)
+    assert res["proven"] and res["unproven_cells"] == 0
+    assert res["equiv_cells"] >= 6 + 3   # every flop state and every output
+    # negative control: a changed gate must not prove
+    (tmp_path / "bad.v").write_text(text.replace("NAND2xp5_ASAP7_75t_R g0", "NOR2xp33_ASAP7_75t_R g0"))
+    res = eq.check(tmp_path / "pre.v", tmp_path / "bad.v", rep, tmp_path / "bad", cells, YOSYS)
+    assert not res["proven"]
