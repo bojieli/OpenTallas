@@ -681,6 +681,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
 <!-- 7 -->
 <section id="s7">
   <h2><span class="num">7</span>DeepSeek-V4.1 package</h2>
+  <p class="note"><b>Status: one V4.1 decode token runs bit-exact in RTL.</b> The V4.1 configuration of the decode core (<code>rtl/hdc/v41/ot_hdc_core_v41.sv</code>) shares the matrix engine and adds a four-operand stream unit, an FP8/FP4 quantised engine, an auxiliary unit (top-k select, Sinkhorn, Engram hash and gather) and a hyper-connection projection engine. It runs a 4,416-instruction program over all 40 layers of the reduced model. It decodes token 3118 (the golden's and the oracle's) in 1,088,551 cycles, bit-exact in every logit, the vector memory and the KV cache. From an empty state it consumes the prompt and generates three tokens identical to the golden. The timing model agrees to 0.002%. The token is bound by the one-element-per-cycle stream unit (729 K busy cycles) and by the golden's sequential 640-term hyper-connection sums, which are the current optimisation targets. The core has not been routed yet.</p>
   <p>A V4.1 package is the decode core plus the units below, each specified by a V4.1 golden written in the same style (every operation one binary32 op in hardware order). The golden reproduces the reduced model's first oracle token and is bit-exact layer by layer at every prompt position.</p>
   <div class="tablebox"><table class="data">
     <caption>Table 7-1. V4.1 units (all II = 1, bit-exact vs the golden, routed at a 0.9 ns target unless noted)</caption>
@@ -810,6 +811,8 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <tbody>
       <tr><td class="m">rtl_hdc_decode_campaign</td><td>SFU 18,010 vectors; multipliers 20 M vectors; single step (logits, VM, KV bit-exact); end to end from empty KV; position 59; 8-group scaling</td><td><span class="status s-done">pass</span></td></tr>
       <tr><td class="m">rtl_hdc_array_campaign</td><td>4/5/6/10/12-package arrays, every user token-exact, link stalls</td><td><span class="status s-done">pass</span></td></tr>
+      <tr><td class="m">rtl_hdc_v41_decode_campaign</td><td>one reduced V4.1 token at positions 7 and 39 (top-k live), 8-token prompt + 3 generated from empty state; every logit, vector memory and KV cache vs the ISA model; ISA model vs golden</td><td><span class="status s-done">pass</span></td></tr>
+      <tr><td class="m">rtl_hdc_v41_sinkhorn_campaign</td><td>3,840 real + 1,000,000 random 4×4 Sinkhorns (≈645 M quotients), fail-closed classes, 14/14 mutations caught</td><td><span class="status s-done">pass</span></td></tr>
       <tr><td class="m">rtl_hdc_v41_blockdot_campaign</td><td>36,573 quantiser blocks, 100,592 dot rows, ties, subnormals, mutation check</td><td><span class="status s-done">pass</span></td></tr>
       <tr><td class="m">rtl_hdc_v41_select_campaign</td><td>8 configurations, tie-heavy random + 2,349 real reduced-V4.1 selections</td><td><span class="status s-done">pass</span></td></tr>
       <tr><td class="m">rtl_hdc_v41_engram_campaign</td><td>divider/sqrt 20 M each; hash 18,861 positions; softplus 53,552 arguments</td><td><span class="status s-done">pass</span></td></tr>
