@@ -1595,6 +1595,8 @@ def floorplan_extra_lines(floorplan: dict[str, Any] | None) -> list[str]:
         low, high = floorplan["routing_layers"]
         lines.append(f"export MIN_ROUTING_LAYER = {low}")
         lines.append(f"export MAX_ROUTING_LAYER = {high}")
+    for hook in floorplan.get("step_tcl", []):
+        lines.append(f"export {hook['hook']}_TCL = /work/hooks/{hook['name']}")
     return lines
 
 
@@ -1626,6 +1628,7 @@ def resolve_floorplan(
     core_area: list[float] | None,
     pin_regions: list[str] | None,
     routing_layers: list[str] | None,
+    step_tcl: list[str] | None = None,
 ) -> dict[str, Any] | None:
     """Validate the floorplan options into the block recorded under
     place_and_route.floorplan, or None when none was given."""
@@ -1651,6 +1654,25 @@ def resolve_floorplan(
         floorplan["pin_regions"] = regions
     if routing_layers:
         floorplan["routing_layers"] = list(routing_layers)
+    if step_tcl:
+        hooks = []
+        for item in step_tcl:
+            hook, sep, path = item.partition("=")
+            if not sep or not re.fullmatch(r"(PRE|POST)_[A-Z_]+", hook):
+                raise ValueError(f"--step-tcl {item!r}: expected (PRE|POST)_STEP=FILE")
+            source = Path(path)
+            if not source.is_absolute():
+                source = ROOT / source
+            if not source.is_file():
+                raise ValueError(f"--step-tcl {item!r}: no such file {source}")
+            hooks.append({
+                "hook": hook,
+                "path": path,
+                "name": f"{hook.lower()}_{source.name}",
+                "sha256": sha256_file(source),
+                "source": str(source),
+            })
+        floorplan["step_tcl"] = hooks
     return floorplan or None
 
 
@@ -1775,6 +1797,10 @@ def run_pnr(
         (case / "io_constraints.tcl").write_text(
             io_constraints_tcl(floorplan["pin_regions"]), encoding="utf-8"
         )
+    if floorplan and floorplan.get("step_tcl"):
+        (case / "hooks").mkdir(exist_ok=True)
+        for hook in floorplan["step_tcl"]:
+            shutil.copy2(hook["source"], case / "hooks" / hook["name"])
 
     def orfs_make(goal: str, log_name: str, timeout: int) -> subprocess.CompletedProcess:
         cmd = [
@@ -2457,6 +2483,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--routing-layers", nargs=2, default=None, metavar=("MIN", "MAX"),
         help="override the platform's MIN_ROUTING_LAYER / MAX_ROUTING_LAYER",
     )
+    parser.add_argument(
+        "--step-tcl", action="append", default=None, metavar="HOOK=FILE",
+        help="source FILE at ORFS step hook HOOK (e.g. POST_PDN), repeatable; "
+             "its sha256 is recorded under place_and_route.floorplan.step_tcl",
+    )
     parser.add_argument("--output", required=True)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--keep-workdir", default=None, help="directory to retain intermediate files in")
@@ -2628,13 +2659,14 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         floorplan = resolve_floorplan(
-            args.die_area, args.core_area, args.pin_region, args.routing_layers
+            args.die_area, args.core_area, args.pin_region, args.routing_layers,
+            args.step_tcl,
         )
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2
     if floorplan and "pnr" not in stages:
-        print("--die-area/--core-area/--pin-region/--routing-layers require stage pnr",
+        print("--die-area/--core-area/--pin-region/--routing-layers/--step-tcl require stage pnr",
               file=sys.stderr)
         return 2
 

@@ -78,27 +78,34 @@ module ot_rom_express_link #(
     always @(posedge clk) launch_data <= in_data;
 
     // ---- STAGES repeater registers along the span ----------------------------
+    // Flat vectors at module scope, so the synthesised flops keep the names
+    // chain_data[s*W + b] and chain_valid[s]: a placement script can then put
+    // stage s's column at its distance along the die.
+    localparam integer CW = (STAGES > 0) ? STAGES : 1;
+    reg [CW*W-1:0] chain_data;
+    reg [CW-1:0]   chain_valid;
     wire         span_valid;
     wire [W-1:0] span_data;
     generate
         if (STAGES == 0) begin : g_direct
             assign span_valid = launch_valid;
             assign span_data  = launch_data;
-        end else begin : g_chain
-            reg         v [0:STAGES-1];
-            reg [W-1:0] d [0:STAGES-1];
-            genvar s;
-            for (s = 0; s < STAGES; s = s + 1) begin : g_stage
-                wire         prev_v = (s == 0) ? launch_valid : v[(s == 0) ? 0 : s-1];
-                wire [W-1:0] prev_d = (s == 0) ? launch_data  : d[(s == 0) ? 0 : s-1];
-                always @(posedge clk or negedge rst_n) begin
-                    if (!rst_n) v[s] <= 1'b0;
-                    else        v[s] <= prev_v;
-                end
-                always @(posedge clk) d[s] <= prev_d;
+        end else if (STAGES == 1) begin : g_one
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) chain_valid <= 1'b0;
+                else        chain_valid <= launch_valid;
             end
-            assign span_valid = v[STAGES-1];
-            assign span_data  = d[STAGES-1];
+            always @(posedge clk) chain_data <= launch_data;
+            assign span_valid = chain_valid[0];
+            assign span_data  = chain_data;
+        end else begin : g_chain
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) chain_valid <= {CW{1'b0}};
+                else        chain_valid <= {chain_valid[CW-2:0], launch_valid};
+            end
+            always @(posedge clk) chain_data <= {chain_data[(CW-1)*W-1:0], launch_data};
+            assign span_valid = chain_valid[CW-1];
+            assign span_data  = chain_data[CW*W-1 -: W];
         end
     endgenerate
 

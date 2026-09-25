@@ -89,3 +89,17 @@ def test_floorplan_options_need_pnr(tmp_path):
     ]
     assert flow.main(argv) == 2
     assert not (tmp_path / "x.json").exists()
+
+
+def test_step_tcl_hook_is_emitted_and_hashed():
+    fp = flow.resolve_floorplan(
+        None, None, None, None, ["POST_PDN=tools/rom_express_link_place.tcl"]
+    )
+    hook = fp["step_tcl"][0]
+    assert hook["hook"] == "POST_PDN"
+    assert len(hook["sha256"]) == 64
+    assert "export POST_PDN_TCL = /work/hooks/post_pdn_rom_express_link_place.tcl" in _config(fp)
+    with pytest.raises(ValueError):
+        flow.resolve_floorplan(None, None, None, None, ["PDN=tools/rom_express_link_place.tcl"])
+    with pytest.raises(ValueError):
+        flow.resolve_floorplan(None, None, None, None, ["POST_PDN=tools/no_such_hook.tcl"])
