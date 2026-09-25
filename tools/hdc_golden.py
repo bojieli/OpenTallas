@@ -201,11 +201,25 @@ def silu(g):
 
 
 # -- the decode step ------------------------------------------------------------
+def fold(parts):
+    """The one-shot all-reduce of a tensor group (rtl/rom/ot_rom_oneshot_allreduce.sv):
+    every die sums the partials in RANK order, ((p0 + p1) + p2) + p3, so all
+    replicas hold the same bits."""
+    acc = parts[0]
+    for p in parts[1:]:
+        acc = add(acc, p)
+    return acc
+
+
 class Model:
-    def __init__(self, groups=1):
+    def __init__(self, groups=1, tp=1):
         """`groups`: matrix-engine lane groups of the decode core; it fixes each
-        matrix's K-split (split_for) and therefore the accumulation order."""
+        matrix's K-split (split_for) and therefore the accumulation order.
+        `tp`: dies of the tensor group (1: one core holds every matrix).  With
+        tp > 1 every die is a decode core of `groups` groups holding a slice of
+        every matrix, Megatron style (see decode_token_tp)."""
         self.groups = groups
+        self.tp = tp
         self.cfg = json.loads(CONFIG.read_text())
         self.w = load_weights()
         c = self.cfg
@@ -226,9 +240,109 @@ class Model:
         s = self.split(*mats)
         return [matvec(m, x, s) for m in mats]
 
+    # -- tensor-parallel group ------------------------------------------------------
+    def die_heads(self, d):
+        """Query heads of die d, and the KV heads they read (replicated on every
+        die whose query heads use them when tp exceeds the KV head count)."""
+        nh = self.heads // self.tp
+        hs = list(range(d * nh, (d + 1) * nh))
+        group = self.heads // self.kv_heads
+        return hs, sorted({h // group for h in hs})
+
+    def die_slices(self, d):
+        """Rows (column-split) / columns (row-split) of every matrix held by die d:
+        QKV, gate and up are split by output rows (heads / FFN rows); o and down
+        by input columns, their partial outputs summed by the one-shot all-reduce;
+        lm_head by vocabulary rows, the argmax combined by an all-gather."""
+        hs, kvs = self.die_heads(d)
+        ff = self.cfg["intermediate_size"] // self.tp
+        vocab = self.w["lm_head.weight"].shape[0] // self.tp
+        return dict(heads=hs, kv=kvs,
+                    q_rows=np.concatenate([np.arange(h * self.hd, (h + 1) * self.hd) for h in hs]),
+                    kv_rows=np.concatenate([np.arange(g * self.hd, (g + 1) * self.hd) for g in kvs]),
+                    ff=np.arange(d * ff, (d + 1) * ff), vocab=np.arange(d * vocab, (d + 1) * vocab))
+
+    def decode_token_tp(self, token, position, cache, trace=None):
+        """One decode step of a tensor group of `tp` dies (docs/ARCHITECTURE_ATLAS.html
+        6.6: one package, one tensor group).  Each die runs the same program on
+        its slice; the arithmetic that changes relative to one core:
+
+        * a column-split matrix (QKV, gate/up) keeps every output's own K sum,
+          but the die's matrix is smaller, so split_for may choose another
+          K-split for it and the output rounds differently;
+        * a row-split matrix (o, down) gives each die a K-slice partial
+          (its own split_for), and the all-reduce adds the partials in die order
+          (`fold`);
+        * lm_head rows are split by vocabulary: every logit is exactly the one
+          core's (same K, same split), and the argmax over parts in die order,
+          ties to the lower die, is the full argmax.
+
+        Everything else (norms, residuals, the embedding) is replicated; KV heads
+        are replicated where two dies' query heads share one, and both dies
+        compute them bit-identically (asserted)."""
+        tp, hd = self.tp, self.hd
+        assert self.heads % tp == 0
+        x = self.w["model.embed_tokens.weight"][token].astype(F)
+        cos, sin, half = rope_tables(position, hd, self.theta)
+        group = self.heads // self.kv_heads
+        sl = [self.die_slices(d) for d in range(tp)]
+        for L in range(self.layers):
+            h = rmsnorm(x, self.lw(L, "input_layernorm.weight"), self.eps)
+            qw, kw_, vw = (self.lw(L, f"self_attn.{n}_proj.weight") for n in "qkv")
+            qn, kn = self.lw(L, "self_attn.q_norm.weight"), self.lw(L, "self_attn.k_norm.weight")
+            ow = self.lw(L, "self_attn.o_proj.weight")
+            kv_new = {}
+            parts = []
+            for d, s in enumerate(sl):
+                q, k, v = self.mv(h, qw[s["q_rows"]], kw_[s["kv_rows"]], vw[s["kv_rows"]])
+                q, k, v = q.reshape(-1, hd), k.reshape(-1, hd), v.reshape(-1, hd)
+                q = np.stack([rope(rmsnorm(q[i], qn, self.eps), cos, sin, half) for i in range(len(q))])
+                k = np.stack([rope(rmsnorm(k[i], kn, self.eps), cos, sin, half) for i in range(len(k))])
+                for i, g in enumerate(s["kv"]):
+                    kb, vb = to_bf16(k[i]), to_bf16(v[i])
+                    if g in kv_new:
+                        assert np.array_equal(bits(kv_new[g][0]), bits(kb)) and \
+                            np.array_equal(bits(kv_new[g][1]), bits(vb)), "replicated KV head differs"
+                    kv_new[g] = (kb, vb)
+                parts.append((d, q))
+            cache[L].append((np.stack([kv_new[g][0] for g in range(self.kv_heads)]),
+                             np.stack([kv_new[g][1] for g in range(self.kv_heads)])))
+            scale = F(1.0 / np.sqrt(hd))
+            partial = []
+            for d, q in parts:
+                s = sl[d]
+                attn = np.zeros((len(s["heads"]), hd), dtype=F)
+                for i, hh in enumerate(s["heads"]):
+                    g = hh // group
+                    keys = np.stack([kv[0][g] for kv in cache[L]])
+                    vals = np.stack([kv[1][g] for kv in cache[L]])
+                    sc = mul(matvec_fp32(keys, to_bf16(q[i])), scale)
+                    attn[i] = matvec_fp32(vals.T, to_bf16(softmax(sc)))
+                partial.append(self.mv(attn.reshape(-1), ow[:, s["q_rows"]])[0])
+            x = add(x, fold(partial))
+            h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
+            gw, uw = self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight")
+            dw = self.lw(L, "mlp.down_proj.weight")
+            partial = []
+            for s in sl:
+                gate, up = self.mv(h, gw[s["ff"]], uw[s["ff"]])
+                partial.append(self.mv(mul(silu(gate), up), dw[:, s["ff"]])[0])
+            x = add(x, fold(partial))
+            if trace is not None:
+                trace[f"layer{L}"] = x.copy()
+        xf = rmsnorm(x, self.w["model.norm.weight"], self.eps)
+        lm = self.w["lm_head.weight"]
+        logits = np.concatenate([self.mv(xf, lm[s["vocab"]])[0] for s in sl])
+        if trace is not None:
+            trace["final_norm"] = xf
+            trace["logits"] = logits
+        return logits
+
     def decode_token(self, token, position, cache, trace=None):
         """One decode step.  `cache[layer]` is a list of (k, v) per earlier position
         (each [kv_heads, hd] float32); the step appends its own row."""
+        if self.tp > 1:
+            return self.decode_token_tp(token, position, cache, trace)
         x = self.w["model.embed_tokens.weight"][token].astype(F)
         cos, sin, half = rope_tables(position, self.hd, self.theta)
         group = self.heads // self.kv_heads

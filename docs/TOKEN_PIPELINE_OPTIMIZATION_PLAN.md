@@ -292,17 +292,17 @@ array and generates 1073, 382, 93. The links never stalled.
 
 | Packages / users | Cycles per token-step | Busy per step (layer packages / last) |
 |---|---|---|
-| 4 / 4 (lm_head on layer 3's package) | 14,496 | 5,899 / 14,250 |
-| 5 / 5 (lm_head alone) | 8,806 | 5,899 / 8,545 |
-| 6 / 6 (lm_head split by vocabulary) | 6,162 | 5,899 / 4,449 and 4,138 |
-| 10 / 10 (layers split into attention and MLP packages) | 4,614 | 2,954 and 3,139 / 4,449 and 4,138 |
-| 12 / 12 (as 10, lm_head split over four packages) | 3,301 | 2,954 and 3,139 / 2,401, then 2,090 each |
+| 4 / 4 (lm_head on layer 3's package) | 14,510 | 5,911 / 14,264 |
+| 5 / 5 (lm_head alone) | 8,809 | 5,911 / 8,547 |
+| 6 / 6 (lm_head split by vocabulary) | 6,174 | 5,911 / 4,451 and 4,140 |
+| 10 / 10 (layers split into attention and MLP packages) | 4,616 | 2,962 and 3,143 / 4,451 and 4,140 |
+| 12 / 12 (as 10, lm_head split over four packages) | 3,306 | 2,962 and 3,143 / 2,403, then 2,092 each |
 
-- 4 / 4 aggregate speed-up over one core: 2.221× <!-- figure: 2.221 src="results/rtl/hdc_array_campaign.json#configurations[packages=4,users=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
-- 5 / 5 aggregate speed-up over one core: 3.656× <!-- figure: 3.656 src="results/rtl/hdc_array_campaign.json#configurations[packages=5,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 5-package aggregate speed-up" -->
-- 5 / 5 cycles per token-step: 8,806. <!-- figure: 8806.2 src="results/rtl/hdc_array_campaign.json#configurations[packages=5,fabric=p2p].cycles_per_token_step" name="HDC array 5-package cycles per token step" -->
+- 4 / 4 aggregate speed-up over one core: 2.219× <!-- figure: 2.219 src="results/rtl/hdc_array_campaign.json#configurations[packages=4,users=4].aggregate_speedup_vs_single_core" name="HDC array 4-package aggregate speed-up" -->
+- 5 / 5 aggregate speed-up over one core: 3.655× <!-- figure: 3.655 src="results/rtl/hdc_array_campaign.json#configurations[packages=5,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 5-package aggregate speed-up" -->
+- 5 / 5 cycles per token-step: 8,809. <!-- figure: 8808.8 src="results/rtl/hdc_array_campaign.json#configurations[packages=5,fabric=p2p].cycles_per_token_step" name="HDC array 5-package cycles per token step" -->
 
-- 6 / 6 aggregate speed-up over one core: 5.225× <!-- figure: 5.225 src="results/rtl/hdc_array_campaign.json#configurations[packages=6,users=6,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 6-package aggregate speed-up" -->
+- 6 / 6 aggregate speed-up over one core: 5.214× <!-- figure: 5.214 src="results/rtl/hdc_array_campaign.json#configurations[packages=6,users=6,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 6-package aggregate speed-up" -->
 
 In the 6-package array lm_head is split by vocabulary:
 
@@ -311,13 +311,13 @@ In the 6-package array lm_head is split by vocabulary:
 - The second does rows 2048–4095 and keeps its own best only when it is
   strictly greater, so a tie keeps the lower row, as numpy's argmax does.
 
-- 10 / 10 aggregate speed-up over one core: 6.979× <!-- figure: 6.979 src="results/rtl/hdc_array_campaign.json#configurations[packages=10,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 10-package aggregate speed-up" -->
+- 10 / 10 aggregate speed-up over one core: 6.975× <!-- figure: 6.975 src="results/rtl/hdc_array_campaign.json#configurations[packages=10,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 10-package aggregate speed-up" -->
 
 The 10-package array also splits every layer at the residual after o_proj,
 into an attention package and an MLP package. That cut is as exact as a layer
 boundary: the MLP package opens with the sum of squares of the X it receives.
 
-- 12 / 12 aggregate speed-up over one core: 9.754× <!-- figure: 9.754 src="results/rtl/hdc_array_campaign.json#configurations[packages=12,users=12,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 12-package aggregate speed-up" -->
+- 12 / 12 aggregate speed-up over one core: 9.739× <!-- figure: 9.739 src="results/rtl/hdc_array_campaign.json#configurations[packages=12,users=12,fabric=p2p].aggregate_speedup_vs_single_core" name="HDC array 12-package aggregate speed-up" -->
 
 With more than two lm_head packages, each one carries the running best
 {row, logit} forward and replaces it only when strictly greater.
