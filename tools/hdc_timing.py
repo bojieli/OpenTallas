@@ -39,7 +39,7 @@ IL = I.INTERLEAVE
 K = dict(seq_gap=5,        # go -> next go, sequencer fetch/decode (S_GO..S_ISSUE)
          me_start=1,       # go -> first element issued
          me_lat=16,        # element issue -> its result written (memory stage, lanes, output registers)
-         me_tree=5,        # per split-tree level
+         me_tree=6,        # per split-tree level (5 in the adder + the level's output register)
          su_start=1,
          su_depth={I.SFU_NONE: 29, I.SFU_EXP: 121, I.SFU_RECIP: 75, I.SFU_RSQRT: 90, I.SFU_SIGM: 172},
          red_tail=32,      # last element retired -> reducer result written

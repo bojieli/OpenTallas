@@ -103,18 +103,18 @@ def test_sinkhorn_is_priced_from_the_routed_unit(env):
     b = v41(env)
     n = b.g.nodes["L3.attn.hc.sinkhorn"]
     assert n["depth"] == pytest.approx((front + D.SK["clocks"] * per) / env["clock"])
-    old = v41(env, sinkhorn="pipelined").g.nodes["L3.attn.hc.sinkhorn"]["depth"]
+    old = v41(env, sinkhorn_impl="pipelined").g.nodes["L3.attn.hc.sinkhorn"]["depth"]
     nits = env["c"]["hc_sinkhorn_iters"]
     assert old == pytest.approx((front + 2 * nits * (4 * D.FADD + 31)) / env["clock"])
     assert n["depth"] < old
     # users queue for the units in rounds when there are fewer units than users in flight
-    few = v41(env, kind="wafer", g=57, batch=64, sinkhorn="unit", sinkhorn_units=1)
+    few = v41(env, kind="wafer", g=57, batch=64, sinkhorn_impl="unit", sinkhorn_units=1)
     rounds = math.ceil(few.mach.microbatch)
     assert few.g.nodes["L3.attn.hc.sinkhorn"]["depth"] == pytest.approx(
         (front + rounds * D.SK["clocks"] * per) / env["clock"])
     # the default takes the faster datapath at the machine's users in flight
     for batch in (64, 4096):
-        depth = {m: v41(env, batch=batch, sinkhorn=m).g.nodes["L3.attn.hc.sinkhorn"]["depth"]
+        depth = {m: v41(env, batch=batch, sinkhorn_impl=m).g.nodes["L3.attn.hc.sinkhorn"]["depth"]
                  for m in ("best", "unit", "pipelined")}
         assert depth["best"] == min(depth["unit"], depth["pipelined"])
 

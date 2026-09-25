@@ -31,7 +31,8 @@
 //
 // Timing from an issue cycle c: memories return at c+1, operands are captured
 // at c+2 and conditioned at c+3, products leave at c+8, sums at c+13, the
-// split tree adds 5 per level, and a result is written one cycle later.
+// split tree adds 6 per level (5 in the adder, 1 output register), and a result
+// is written one cycle later.
 // ---------------------------------------------------------------------------
 module ot_hdc_matvec #(
     parameter integer W  = 16,
@@ -96,7 +97,8 @@ module ot_hdc_matvec #(
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
     localparam integer FB = IL - 5;       // circulation delay after the adder
-    localparam integer OD = 5 * LG;       // split tree
+    localparam integer TL = 6;            // split-tree cycles per level: 5 in the adder + 1 output register
+    localparam integer OD = TL * LG;      // split tree
 
     // -- issue loop -----------------------------------------------------------
     integer gi;
@@ -270,31 +272,39 @@ module ot_hdc_matvec #(
     endgenerate
 
     // -- split tree: level L adds word pairs when split >= L, else delays ----------
+    //: Each level ends in a register: the sum-or-held select fans out to every
+    //: word bit, and unregistered it shared a cycle with the next level's
+    //: exponent alignment (me_iter12: -91 ps on that path).
     wire [G*W*32-1:0] lvl [0:LG];
     wire [LG:0]       tfault;
     assign lvl[0] = sum;
     assign tfault[0] = 1'b0;
-    wire [LG*2+1:0] split_at;                       // split, delayed to each level
+    wire [LG*2+1:0] split_at;                       // split at each level's input
     assign split_at[1:0] = t_split;
     genvar lv, p;
     generate
         for (lv = 1; lv <= LG; lv = lv + 1) begin : g_lvl
-            ot_hdc_delay #(.W(2), .D(5)) u_sd (.clk(clk), .rst_n(rst_n), .d(split_at[2*lv-1 -: 2]),
-                                               .q(split_at[2*lv+1 -: 2]));
+            wire [1:0] sp_sel;                      // split when the level's sums emerge
+            ot_hdc_delay #(.W(2), .D(5)) u_sd (.clk(clk), .rst_n(rst_n), .d(split_at[2*lv-1 -: 2]), .q(sp_sel));
+            reg  [1:0] sp_out;
+            always @(posedge clk) sp_out <= sp_sel;
+            assign split_at[2*lv+1 -: 2] = sp_out;
             wire [G*W*32-1:0] held;
             ot_hdc_delay #(.W(G*W*32), .D(5)) u_hold (.clk(clk), .rst_n(rst_n), .d(lvl[lv-1]), .q(held));
             wire [(G >> lv)*W-1:0] pf;
+            reg  [G*W*32-1:0] lq;
             for (p = 0; p < (G >> lv) * W; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
-                ot_hdc_fadd u_add (clk, rst_n, vline[10 + 5*(lv-1)] && (split_at[2*lv-1 -: 2] >= lv),
+                ot_hdc_fadd u_add (clk, rst_n, vline[10 + TL*(lv-1)] && (split_at[2*lv-1 -: 2] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
-                assign lvl[lv][32*p +: 32] = (split_at[2*lv+1 -: 2] >= lv) ? s_out : held[32*p +: 32];
+                always @(posedge clk) lq[32*p +: 32] <= (sp_sel >= lv) ? s_out : held[32*p +: 32];
             end
             if ((G >> lv) < G) begin : g_rest
-                assign lvl[lv][G*W*32-1 : (G >> lv)*W*32] = held[G*W*32-1 : (G >> lv)*W*32];
+                always @(posedge clk) lq[G*W*32-1 : (G >> lv)*W*32] <= held[G*W*32-1 : (G >> lv)*W*32];
             end
+            assign lvl[lv] = lq;
             assign tfault[lv] = |pf;
         end
     endgenerate

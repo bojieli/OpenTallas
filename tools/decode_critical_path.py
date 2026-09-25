@@ -144,11 +144,11 @@ def sinkhorn_cycles(ops, nits, front):
     unit_desc = (f"row max + exp (SFU), then ot_hdc_sinkhorn: {SK['clocks']} unit clocks ({2 * nits} "
                  f"normalisations, one per clock) x {per_step} core cycles"
                  + (f" x {rounds} rounds ({units} unit{'s' if units > 1 else ''})" if rounds > 1 else ""))
-    step = max(4 * FADD + ops.p.fdiv_cycles, math.ceil(ops.mb))
+    step = max(ops.p.sinkhorn_step_cycles or (4 * FADD + ops.p.fdiv_cycles), math.ceil(ops.mb))
     pipe = front + 2 * nits * step
     pipe_desc = (f"4x4 softmax + {nits} Sinkhorn iterations ({2 * nits} dependent normalisations x {step} "
                  f"cycles on the pipelined fadd/fdiv)")
-    if ops.p.sinkhorn == "unit" or (ops.p.sinkhorn == "best" and unit <= pipe):
+    if ops.p.sinkhorn_impl == "unit" or (ops.p.sinkhorn_impl == "best" and unit <= pipe):
         return unit, unit_desc
     return pipe, pipe_desc
 
@@ -196,7 +196,10 @@ class Params:
     kv_mode: str = "broadcast"       # "broadcast": each die reads 1/g of the shared KV rows and the group
                                      # all-gathers them; "replicated": every head-split die reads every row
     fdiv_cycles: int = 31            # divider depth (ot_hdc_fdiv); prices the "pipelined" Sinkhorn and the divides
-    sinkhorn: str = "best"           # "unit": the routed ot_hdc_sinkhorn (one normalisation per unit clock);
+    sinkhorn_step_cycles: int = 0    # 0: one pipelined normalisation = 3 sequential fadd + eps fadd + fdiv (derived);
+                                     # >0: a what-if for a redesigned (still bit-exact) pipelined step
+    sinkhorn: bool = True            # False: the Sinkhorn chain costs nothing (HYPOTHETICAL; isolates fabric)
+    sinkhorn_impl: str = "best"      # "unit": the routed ot_hdc_sinkhorn (one normalisation per unit clock);
                                      # "pipelined": 3 fadd + eps fadd + fdiv per normalisation (the earlier
                                      # pricing); "best": the faster of the two for the machine's users in flight
     sinkhorn_units: int = 1          # ot_hdc_sinkhorn instances per sublayer engine; 0 = one per user in flight
@@ -823,8 +826,8 @@ def v41_graph(ops: Ops, c, ctx):
             nits = c["hc_sinkhorn_iters"]
             front = 2 + FADD + SU["EXP"]
             cyc_sk, desc = sinkhorn_cycles(ops, nits, front)
-            sk = g.add(f"{P}.hc.sinkhorn", [mx], layer=L, ctrl=ops.bctrl, kind="sinkhorn",
-                       depth=ops.cyc(cyc_sk), desc=desc)
+            sk = g.add(f"{P}.hc.sinkhorn", [mx], layer=L, ctrl=ops.bctrl if ops.p.sinkhorn else 0.0,
+                       kind="sinkhorn", depth=ops.cyc(cyc_sk) if ops.p.sinkhorn else 0.0, desc=desc)
             x = ops.ew(f"{P}.hc_pre", [h, pre_ready], HC * D, SU_BASE + 3 * FADD, L,
                        desc="collapse the 4 copies with the pending pre mix")
             x = ops.rmsnorm(f"{P}.norm", [x], D, L, fold=True)
@@ -1153,11 +1156,19 @@ def lanes(p, clock, compute_mm2, analytical_bf16_ops_per_die):
     return su, mac
 
 
-def v41_machine(kind, g, batch, points, designs, p, clock):
+def v41_machine(kind, g, batch, points, designs, p, clock, *, design=None, units=None, per_layer=None,
+                g_ref=None):
+    """The critical-path machine of one analytical design.  Defaults: the x188 array and the x12 wafer.
+    `design`/`units`/`per_layer`/`g_ref` price any other analytical design (units = dies, or fields for a
+    wafer at 57 per wafer; per_layer = units one layer's weights occupy; g_ref = the design's tensor group)."""
     if kind == "array":
-        dn, g_ref, units, per_layer = ARRAY_DESIGN, 4, 188, 4.0
+        dn, g0, u0, pl0 = ARRAY_DESIGN, 4, 188, 4.0
     else:
-        dn, g_ref, units, per_layer = WAFER_DESIGN, 57, 12 * 57, 684 / 40
+        dn, g0, u0, pl0 = WAFER_DESIGN, 57, 12 * 57, 684 / 40
+    dn = design or dn
+    g_ref = g_ref or g0
+    units = units or u0
+    per_layer = per_layer or pl0
     q = point(points, dn, batch)
     d = designs[dn]
     NL = 40
@@ -1181,10 +1192,10 @@ def v41_machine(kind, g, batch, points, designs, p, clock):
     su, mac = lanes(p, clock, compute_mm2, d["compute_ops_s"]["bf16"] / units)
     note = ""
     if kind == "wafer":
-        used = 12 * (57 // g) * g
-        if used < 684:
-            note = f"groups of {g} tile {used} of 684 fields: {684 - used} idle fields hold no weights " \
-                   f"({(684 - used) / 684:.1%} capacity short unless spare ROM elsewhere)"
+        used = (units // 57) * (57 // g) * g
+        if used < units:
+            note = f"groups of {g} tile {used} of {units} fields: {units - used} idle fields hold no weights " \
+                   f"({(units - used) / units:.1%} capacity short unless spare ROM elsewhere)"
     ref = dict(step_time_s=q["step_time_s"], tokens_s_per_user=q["per_user_tokens_s"],
                aggregate_tokens_s=q["aggregate_tokens_s"], component_times_s=ct, stage_balance=beta,
                service_time_s=S, hop_breakdown=q.get("hop_breakdown"), microbatch_per_slot=mb_ref,
@@ -1300,7 +1311,7 @@ def build(p: Params, quick=False):
             s = summarize(b, r, layers=None if bt == 1 else {2, 3, 20})
             s["reference_analytical"] = m_.reference
             skn = b.g.nodes["L3.attn.hc.sinkhorn"]
-            pp_ = replace(p, sinkhorn="pipelined")
+            pp_ = replace(p, sinkhorn_impl="pipelined")
             mp_ = v41_machine(kind, g_ref, bt, points, designs, pp_, clock)
             bp_ = Built(mp_, pp_, clock, v41_graph, c, mp_.context)
             s["sinkhorn"] = dict(branch_ns=skn["depth"] * 1e9, desc=skn["desc"],
@@ -1325,7 +1336,7 @@ def build(p: Params, quick=False):
                                  ("fused_not_bit_exact", replace(p, fuse=True)),
                                  ("kv_rows_replicated", replace(p, kv_mode="replicated")),
                                  ("fdiv_12_cycles_hypothetical", replace(p, fdiv_cycles=12)),
-                                 ("sinkhorn_pipelined_fadd_fdiv", replace(p, sinkhorn="pipelined"))):
+                                 ("sinkhorn_pipelined_fadd_fdiv", replace(p, sinkhorn_impl="pipelined"))):
                     mm = v41_machine(kind, g_ref, 1, points, designs, pp, clock)
                     sens[name] = 1 / Built(mm, pp, clock, v41_graph, c, mm.context).evaluate(fab)["period"]
                 s["sensitivity_tokens_s_per_user"] = sens
