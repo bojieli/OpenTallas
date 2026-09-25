@@ -14,7 +14,10 @@
 // ---------------------------------------------------------------------------
 module ot_rom_secded_dec #(
     parameter integer K = 64,
-    parameter integer R = secded_r(K),
+    // closed form of the smallest r with 2^r >= K + r + 1; a constant function here was
+    // evaluated once and reused for every K by Verilator 4.038
+    parameter integer R = (K <= 1) ? 2 : (K <= 4) ? 3 : (K <= 11) ? 4 : (K <= 26) ? 5 : (K <= 57) ? 6 : (K <= 120) ? 7 :
+                          (K <= 247) ? 8 : (K <= 502) ? 9 : (K <= 1013) ? 10 : 11,
     parameter integer N = K + R + 1
 ) (
     input  wire [N-1:0] cw,
@@ -22,14 +25,6 @@ module ot_rom_secded_dec #(
     output wire         corrected,
     output wire         uncorrectable
 );
-    function automatic integer secded_r(input integer k);
-        integer r;
-        begin
-            r = 1;
-            while ((1 << r) < k + r + 1) r = r + 1;
-            secded_r = r;
-        end
-    endfunction
 
     // Hamming position of data bit j
     function automatic integer pos_of(input integer j);
