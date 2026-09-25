@@ -81,8 +81,10 @@ from compiler.ir.v3.kernel_ir import (
 )
 from compiler.ir.v3.lowering import (
     ABSENT_OPERANDS,
+    INDEX_TOPK_DECODE_REBASE_SHIFT,
     abi_input_slots as _shared_input_slots,
     engine_for,
+    separated_join_window,
 )
 from compiler.ir.v3.numeric import canonical_contract_id
 from runtime.abi3.capability import Capability, canonical_json, digest_of
@@ -4605,6 +4607,12 @@ def _aux_ids(
             mode = int(attributes.get("mask_mode", 0))
             if "block" in attributes:
                 mode |= _TOPK_RANKS_BLOCKS
+            # A separated window join (V4.1) leaves the operator no window to
+            # rebase a DECODE selection above; state its capacity.  Zero for
+            # every other form, so no other descriptor changes.
+            mode |= separated_join_window(graph, kernel) << (
+                INDEX_TOPK_DECODE_REBASE_SHIFT
+            )
             aux = [
                 _index_topk_capacity(kernel, tensors, span_max),
                 mode,

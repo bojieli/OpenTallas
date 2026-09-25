@@ -57,6 +57,7 @@ from compiler.backends.numeric_contracts import (
     reduction_order_for,
 )
 from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
+from compiler.ir.v3.lowering import compressed_rope_gather
 from compiler.ir.v3.lowering import phase_inputs as _phase_inputs
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
@@ -4695,7 +4696,7 @@ class _Emitter:
         compressed_rope = bool(
             plan.engine_family == int(Major.DMA)
             and plan.engine_sub == int(Dma.GATHER)
-            and kernel.attributes.get("compressed", False)
+            and compressed_rope_gather(kernel)
         )
         if compressed_rope:
             stride = int(kernel.attributes.get("position_stride", 0) or 0)

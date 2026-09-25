@@ -454,6 +454,21 @@ def expert_dispatch(ctx: EngineContext, sub: int, descriptor: Descriptor) -> Non
 RANKS_BLOCKS = 0x4
 
 
+#: ``aux_id_1`` bits 16 and up: the DECODE rebase of a selection whose window
+#: join is a separate operator.  A19 rebases a decode selection above the joined
+#: window's capacity, which it reads off ``in1``; a graph that separates the join
+#: (V4.1: the select declares ``in1`` absent and a CONCAT joins behind a 128-row
+#: window) leaves the operator nothing to measure, so the lowering states the
+#: capacity here (``compiler.ir.v3.lowering.separated_join_window``).  Zero -- every
+#: descriptor written before this field -- keeps the rebase it always had.
+DECODE_REBASE_SHIFT = 16
+
+
+def _decode_rebase(descriptor: Descriptor, slot: int) -> int:
+    value = _aux(descriptor, slot)
+    return 0 if value is None else int(value) >> DECODE_REBASE_SHIFT
+
+
 def _ranks_blocks(descriptor: Descriptor, slot: int) -> bool:
     value = _aux(descriptor, slot)
     return bool(value is not None and int(value) & RANKS_BLOCKS)
@@ -461,7 +476,11 @@ def _ranks_blocks(descriptor: Descriptor, slot: int) -> bool:
 
 def _mask_mode(descriptor: Descriptor, slot: int) -> int:
     mode = _aux(descriptor, slot)
-    mode = MASK_CAUSAL if mode is None else int(mode) & ~RANKS_BLOCKS
+    mode = (
+        MASK_CAUSAL
+        if mode is None
+        else int(mode) & ((1 << DECODE_REBASE_SHIFT) - 1) & ~RANKS_BLOCKS
+    )
     _require(mode in (MASK_CAUSAL, MASK_FULL), f"ROUTE: unknown mask mode {mode}")
     return mode
 
@@ -639,8 +658,9 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     # that prefix.  ``context`` is the complete prefill length even when the
     # score plane is streamed as one physical query row; ``window`` is the
     # physical circular-window capacity even before all of its slots are valid.
+    decode_window = window if window_view is not None else _decode_rebase(descriptor, 1)
     rebase = (
-        (context if phase is Phase.PREFILL else window)
+        (context if phase is Phase.PREFILL else decode_window)
         if ratio_view is not None and not _ranks_blocks(descriptor, 1)
         else 0
     )

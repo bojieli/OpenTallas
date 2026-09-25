@@ -1331,3 +1331,90 @@ def test_an_unrebased_block_ranking_is_what_the_pool_needs(bench: Bench) -> None
         },
     )
     assert not result[:, :context].any()
+
+
+# ---------------------------------------------------------------------------
+# A separated window join: the decode rebase rides in aux_id_1
+# ---------------------------------------------------------------------------
+@pytest.mark.parametrize("stated", [True, False])
+def test_a_separated_join_rebases_decode_above_the_window(
+    bench: Bench, stated: bool
+) -> None:
+    """V4.1's select declares ``in1`` absent; a CONCAT joins it behind the window.
+
+    The released ``Attention._compress_kv`` passes ``offset = kv.size(1)``: the
+    current rows in prefill, the whole 128-row window ring in decode.  With no
+    window operand the operator rebased a decode selection by zero, so compressed
+    group ``j`` was emitted as KV row ``j`` -- a window row -- and every decode
+    query on layers 2-39 attended window rows ``0..k`` twice and no compressed
+    row at all.  The lowering now states the window capacity above bit 16 of
+    ``aux_id_1``; without it (``stated=False``) the old result is pinned.
+    """
+    window, ratio, k, context = 128, 2, 8, 14
+    groups = context // ratio  # a decode query at position 13 sees 7 groups
+    scores = np.random.default_rng(53).standard_normal((1, k)).astype(np.float32)
+    source = bench.input_view(scores, DType.FP32)
+    ratio_view = bench.input_view(np.array([ratio], dtype=np.uint32), DType.U32)
+    out = bench.output_view((1, k), DType.U32)
+    mode = (window << route_engine.DECODE_REBASE_SHIFT) if stated else 0
+    operator = bench.operator(
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        [source, NO_ID, ratio_view],
+        [out],
+        aux=[k, mode, int(Symbol.CONTEXT_LENGTH), int(Symbol.POSITION_START)],
+    )
+    bench.run(
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        operator,
+        symbols={
+            int(Symbol.PHASE): int(Phase.DECODE),
+            int(Symbol.CONTEXT_LENGTH): context,
+            int(Symbol.POSITION_START): context - 1,
+        },
+    )
+    chosen = sorted(range(groups), key=lambda g: (-float(scores[0, g]), g))[:k]
+    expected = np.full(k, np.uint32(PAD_INDEX), dtype=np.uint32)
+    expected[: len(chosen)] = np.asarray(
+        sorted(g + (window if stated else 0) for g in chosen), dtype=np.uint32
+    )
+    assert bench.result(out)[0].tolist() == expected.tolist()
+
+
+def test_the_decode_rebase_field_leaves_prefill_alone(bench: Bench) -> None:
+    """Prefill rebases above the current rows (``context``) whatever the field says."""
+    window, ratio, k, span = 128, 2, 4, 6
+    scores = np.random.default_rng(59).standard_normal((span, k)).astype(np.float32)
+    source = bench.input_view(scores, DType.FP32)
+    ratio_view = bench.input_view(np.array([ratio], dtype=np.uint32), DType.U32)
+    out = bench.output_view((span, k), DType.U32)
+    operator = bench.operator(
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        [source, NO_ID, ratio_view],
+        [out],
+        aux=[
+            k,
+            window << route_engine.DECODE_REBASE_SHIFT,
+            int(Symbol.CONTEXT_LENGTH),
+            int(Symbol.POSITION_START),
+        ],
+    )
+    bench.run(
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        operator,
+        symbols={
+            int(Symbol.PHASE): int(Phase.PREFILL),
+            int(Symbol.CONTEXT_LENGTH): span,
+            int(Symbol.POSITION_START): 0,
+        },
+    )
+    result = bench.result(out)
+    for row in range(span):
+        limit = (row + 1) // ratio
+        chosen = sorted(range(limit), key=lambda g: (-float(scores[row, g]), g))[:k]
+        want = sorted(g + span for g in chosen)
+        assert result[row, : len(want)].tolist() == want
+        assert all(v == PAD_INDEX for v in result[row, len(want) :].tolist())

@@ -70,8 +70,11 @@ from compiler.ir.v3.lowering import (
     EngineOp,
     KERNEL_TO_ENGINE,
     abi_input_slots as _shared_input_slots,
+    INDEX_TOPK_DECODE_REBASE_SHIFT,
     canonical_cache_row,
+    compressed_rope_gather,
     phase_inputs as _phase_inputs,
+    separated_join_window,
 )
 from compiler.backends.schedule_rule import (
     dispatch_rows as _e9_dispatch_rows,
@@ -6329,6 +6332,13 @@ class RomLowering:
                 mode = 0 if attributes.get("mask_mode", "causal") == "causal" else 1
                 if "block" in attributes:
                     mode |= _TOPK_RANKS_BLOCKS
+                # A separated window join (V4.1) leaves the operator no window
+                # to rebase a DECODE selection above; state its capacity (see
+                # ``compiler.ir.v3.lowering.separated_join_window``).  Zero for
+                # every other form, so no other descriptor changes.
+                mode |= separated_join_window(self.graph, kernel) << (
+                    INDEX_TOPK_DECODE_REBASE_SHIFT
+                )
                 return [
                     self._index_topk_capacity(kernel),
                     mode,
@@ -9315,12 +9325,12 @@ class RomLowering:
             extra_wait_events=path_inputs["prefill"],
         )
 
-        compressed_rope_gather = (
+        is_compressed_rope = (
             family is Major.DMA
             and sub == int(Dma.GATHER)
-            and bool(kernel.attributes.get("compressed", False))
+            and compressed_rope_gather(kernel)
         )
-        if compressed_rope_gather:
+        if is_compressed_rope:
             stride = int(kernel.attributes.get("position_stride", 0) or 0)
             if stride != ratio or len(order) != 2:
                 raise RomLoweringError(
