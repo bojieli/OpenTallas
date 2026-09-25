@@ -166,18 +166,24 @@ module ot_hdc_wstream #(
     wire [31:0] ngrp = cfg_ntot >> LPC;
     wire [HAW-1:0] base_gc = cfg_base >> (2 + LPC);
     reg  [NPC-1:0] s_elig;
-    reg  [31:0]    s_n [0:NPC-1];
+    reg  [31:0]    c_n [0:NPC-1];      // each sub-stream's next word, computed from its counters ...
+    reg  [HAW-1:0] c_addr [0:NPC-1];
+    reg  [31:0]    s_n [0:NPC-1];      // ... and registered (nx_v): the pick reads registers only
     reg  [HAW-1:0] s_addr [0:NPC-1];
+    reg  [NPC-1:0] nx_v;
     reg  [HAW-1:0] s_gc;
     reg  [LPC:0]   s_r;
+    reg  [LWIN+1:0] s_d;
     integer sp;
     always @(*) begin
         for (sp = 0; sp < NPC; sp = sp + 1) begin
             s_gc = base_gc + sgp[sp][HAW-1:0];
             s_r = (sp ^ (s_gc ^ (s_gc >> LPC))) & (NPC - 1);
-            s_n[sp] = (sg[sp] << LPC) + s_r;
-            s_addr[sp] = ((s_gc << LPC) + s_r) << 2;
-            s_elig[sp] = run && !emb_req && hq_room[sp] && (s_n[sp] - cons < WIN);
+            c_n[sp] = (sg[sp] << LPC) + s_r;
+            c_addr[sp] = ((s_gc << LPC) + s_r) << 2;
+            //: the next word is at most WIN + NPC ahead of the consumer: LWIN + 2 bits hold the distance
+            s_d = s_n[sp][LWIN+1:0] - cons[LWIN+1:0];
+            s_elig[sp] = run && !emb_req && nx_v[sp] && hq_room[sp] && (s_d < WIN);
         end
     end
     reg  [LPC:0] s_rr;                 // rotating priority
@@ -197,7 +203,11 @@ module ot_hdc_wstream #(
         if (!rst_n) begin
             hq_v <= 1'b0; fp <= 0; fpos <= 0; run <= 1'b0; emb_req <= 1'b0; s_rr <= 0;
             for (si = 0; si < NPC; si = si + 1) begin sg[si] <= 0; sgp[si] <= 0; end
+            nx_v <= 0;
         end else begin
+            //: a sub-stream's next word is registered the cycle after its counters move
+            for (si = 0; si < NPC; si = si + 1)
+                if (!nx_v[si]) begin s_n[si] <= c_n[si]; s_addr[si] <= c_addr[si]; nx_v[si] <= 1'b1; end
             if (tok_start) begin
                 run <= 1'b1; emb_req <= 1'b1;
                 emb_addr <= cfg_emb_base + token * EMBS;
@@ -213,6 +223,7 @@ module ot_hdc_wstream #(
                     hq_tag <= {1'b0, s_n[s_pick][LWIN-1:0]};
                     fp <= fp + 1'b1;
                     sg[s_pick] <= sg[s_pick] + 1'b1;
+                    nx_v[s_pick] <= 1'b0;
                     sgp[s_pick] <= (sgp[s_pick] + 1'b1 == ngrp) ? 0 : sgp[s_pick] + 1'b1;
                     s_rr <= (s_pick + 1'b1) % NPC;
                 end else if (s_req && !tok_start) begin
