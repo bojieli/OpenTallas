@@ -7,7 +7,7 @@
 // --scope (a dotted VCD scope path) are kept; the SAIF top instance is that
 // scope's last component, nested INSTANCE blocks follow the VCD scopes below it.
 //
-// Usage: vcd2saif IN.vcd OUT.saif SCOPE [BEGIN [END]]
+// Usage: vcd2saif IN.vcd OUT.saif SCOPE [BEGIN|auto [END]]   (auto: the first timestamp)
 //
 // A var that the VCD declares as a vector [msb:lsb] is written bit by bit as
 // NAME[i]; a scalar as NAME.  Names are written SAIF-escaped (\ before any
@@ -43,6 +43,7 @@ struct Scope {
 
 static std::vector<Bit> bits;
 static std::vector<Var> vars;
+static unsigned long long skipped_names = 0;
 static std::unordered_map<std::string, std::vector<size_t>> by_code;   // code -> var indices
 static unsigned long long now = 0, t_begin = 0, t_end = ~0ULL;
 
@@ -87,6 +88,13 @@ static void write_scope(FILE *f, const Scope &s, int depth) {
                     int idx = v.lsb <= v.msb ? v.lsb + k : v.lsb - k;
                     n += "[" + std::to_string(idx) + "]";
                 }
+                // OpenSTA's SAIF reader rejects '/' and ':' even escaped; such
+                // names are synthesis temporaries (a function's source path),
+                // left for OpenSTA to propagate through.
+                if (n.find('/') != std::string::npos || n.find(':') != std::string::npos) {
+                    skipped_names++;
+                    continue;
+                }
                 fprintf(f, "%s    (%s (T0 %llu) (T1 %llu) (TX %llu) (TC %llu))\n", ind.c_str(), esc(n).c_str(),
                         b.t0, b.t1, b.tx, b.tc);
             }
@@ -104,7 +112,8 @@ int main(int argc, char **argv) {
     }
     const char *in = argv[1], *out = argv[2];
     std::string want = argv[3];
-    if (argc > 4) t_begin = strtoull(argv[4], nullptr, 10);
+    bool auto_begin = argc > 4 && !strcmp(argv[4], "auto");
+    if (argc > 4 && !auto_begin) t_begin = strtoull(argv[4], nullptr, 10);
     if (argc > 5) t_end = strtoull(argv[5], nullptr, 10);
     FILE *f = strcmp(in, "-") ? fopen(in, "r") : stdin;
     if (!f) { perror(in); return 1; }
@@ -189,6 +198,7 @@ int main(int argc, char **argv) {
         char c = *p;
         if (c == '#') {
             now = strtoull(p + 1, nullptr, 10);
+            if (auto_begin) { t_begin = now; for (auto &b : bits) b.since = now; auto_begin = false; }
             if (now >= t_end) break;
             continue;
         }
@@ -239,7 +249,8 @@ int main(int argc, char **argv) {
     write_scope(o, root, 0);
     fprintf(o, ")\n");
     fclose(o);
-    fprintf(stderr, "vcd2saif: %zu vars, %zu bits, %llu value changes, duration %llu (%s)\n", vars.size(), bits.size(),
-            changes, dur, timescale.c_str());
+    fprintf(stderr, "vcd2saif: %zu vars, %zu bits, %llu value changes, duration %llu (%s), %llu bits not written (name)\n",
+            vars.size(), bits.size(),
+            changes, dur, timescale.c_str(), skipped_names);
     return 0;
 }

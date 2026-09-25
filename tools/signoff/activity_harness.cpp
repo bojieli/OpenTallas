@@ -13,6 +13,7 @@
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 #include <cstdio>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -50,7 +51,7 @@ int main(int argc, char** argv) {
         top->clk = !top->clk;
         top->eval();
         half++;
-        if (tfp) tfp->dump(half * hp);
+        if (tfp) tfp->dump(static_cast<uint64_t>(half * hp));
     }
     if (tfp) {
         tfp->close();

@@ -1,0 +1,45 @@
+{
+  "architecture": "qwen3-8b-rom-reticle",
+  "description": "Reduced-Qwen3 hardwired decode core (ot_hdc_core, G=4 x W=16 lanes) routed on ASAP7 at 0.9 ns: gate-level activity of one decode step (tools/rtl_hdc_decode_campaign.py single step, position 15) simulated on the routed netlist inside rtl/test/tb_hdc_core.sv, then power at the routed SPEF, clock tree, SS/TT/FF timing with OCV derate, and static IR drop / EM on the routed PDN.",
+  "output": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+  "scratch": "${OT_SIGNOFF_SCRATCH}",
+  "blocks": {
+    "ot_hdc_core": {
+      "activity": {
+        "bench": "rtl/test/tb_hdc_core.sv",
+        "bench_top": "tb_hdc_core",
+        "dut_module": "ot_hdc_core",
+        "rtl": [],
+        "netlists": {"ot_hdc_core": "${OT_SIGNOFF_ROUTES}/core/wd"},
+        "include_dirs": ["rtl/hdc"],
+        "liberty": [
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
+        ],
+        "prepare": [["{python}", "tools/hdc_program.py", "--out", "{work}/img"]],
+        "plusargs": ["+DIR={work}/img"],
+        "plusargs_file": "{work}/img/run.args",
+        "scopes": {"core": "TOP.tb_hdc_core.dut"},
+        "half_period_ps": 450
+      },
+      "analyses": [
+        {
+          "key": "qwen_core",
+          "routed": "${OT_SIGNOFF_ROUTES}/core/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/core/physical.json",
+          "saif": "core",
+          "saif_scope": "dut",
+          "groups": ["u_me.", "u_su."],
+          "corners": ["TT", "SS", "FF"],
+          "derate": 0.05,
+          "ir_sources": ["PINS", "BUMPS"],
+          "bump_pitch_um": 140,
+          "cycles": {"token": 32246}
+        }
+      ]
+    }
+  }
+}

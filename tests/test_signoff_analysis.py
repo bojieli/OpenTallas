@@ -269,3 +269,36 @@ def test_design_nickname_default_unchanged_and_tagged():
         P.design_nickname("ot_hdc_core", "asap7", "bad tag")
     args = P.build_parser().parse_args(["--view", "asap7", "--clock-period-ns", "1", "--output", "x"])
     assert args.nickname_tag is None
+
+
+def test_expand_net_saif_to_cell_pins(tmp_path):
+    net = tmp_path / "n.v"
+    net.write_text("module top (clk,\n    a,\n    y);\n input clk;\n input [1:0] a;\n output y;\n"
+                   " wire _1_;\n wire \\u_me.q ;\n"
+                   " NAND2x1_ASAP7_75t_R _5_ (.A(a[0]),\n    .B(a[1]),\n    .Y(_1_));\n"
+                   " DFFHQNx1_ASAP7_75t_R \\u_me.q$_DFF_P_  (.CLK(clk),\n    .D(_1_),\n    .QN(\\u_me.q ));\n"
+                   " INVx1_ASAP7_75t_R _6_ (.A(\\u_me.q ),\n    .Y(y));\n"
+                   " TIEHIx1_ASAP7_75t_R _7_ (.H(1'b1));\nendmodule\n")
+    saif = tmp_path / "n.saif"
+    saif.write_text('(SAIFILE\n(DESIGN "dut")\n(DIVIDER / )\n(TIMESCALE 1ps)\n(DURATION 100)\n(INSTANCE dut\n'
+                    '  (NET\n    (clk (T0 50) (T1 50) (TX 0) (TC 20))\n    (a\\[0\\] (T0 60) (T1 40) (TX 0) (TC 3))\n'
+                    '    (a\\[1\\] (T0 70) (T1 30) (TX 0) (TC 2))\n    (y (T0 10) (T1 90) (TX 0) (TC 1))\n'
+                    '    (_1_ (T0 80) (T1 20) (TX 0) (TC 4))\n    (u_me\\.q (T0 90) (T1 10) (TX 0) (TC 1))\n  )\n)\n)\n')
+    out = tmp_path / "p.saif"
+    st = S.expand_saif_to_pins(saif, net, out)
+    assert st["ports_written"] == 4 and st["instances"] == 3 and st["pins_written"] == 8
+    text = out.read_text()
+    # the flop instance keeps '.' and '$' raw (what OpenSTA's reader matches); brackets escaped
+    assert "(INSTANCE u_me.q$_DFF_P_" in text
+    assert "(QN (T0 90) (T1 10) (TX 0) (TC 1))" in text
+    assert "(a\\[1\\] (T0 70) (T1 30) (TX 0) (TC 2))" in text
+    assert "_7_" not in text   # a tie cell has no activity to carry
+
+
+def test_rtl_without_modules_keeps_helpers(tmp_path):
+    src = ROOT / "rtl/hdc/v41/ot_hdc_blockdot.sv"
+    out = S.rtl_without_modules(src, {"ot_hdc_blockdot"}, tmp_path)
+    mods = re.findall(r"^\s*module\s+(\w+)", out.read_text(), re.M)
+    assert mods == ["ot_hdc_v41_csa"]
+    assert S.rtl_without_modules(ROOT / "rtl/hdc/ot_hdc_fpu.sv", {"ot_hdc_blockdot"}, tmp_path) == \
+        ROOT / "rtl/hdc/ot_hdc_fpu.sv"
