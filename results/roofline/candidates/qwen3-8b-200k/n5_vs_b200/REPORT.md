@@ -10,10 +10,10 @@ bandwidth and compute roof are derived from it.
 ## What the model says
 
 1. **The ROM path has a hard per-token ceiling that is a technology constant, not a design choice.** The full-array sweep time is the ROM capacity density divided by its read-bandwidth density, so it does not depend on model size, batch, or expert coverage: 34.5 us, or 29,015 tok/s per user. Under this derivation both densities scale with the same published bitcell-area ratio, so that ceiling is the same at every node: process scaling buys a ROM design capacity, not per-token speed.
-2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 2,814x (ROM-N5-native-HBMKV-wafer-pipeline-x139, 7,884 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 1 device. On the GPU side the correction reaches 12x (b200_sxm-x4016-pipeline, 4,016 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 58 devices. Both validation gates are single-slot machines and are unchanged to the digit.
+2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 2,795x (ROM-N5-native-HBMKV-wafer-pipeline-x139, 7,884 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 1 device. On the GPU side the correction reaches 12x (b200_sxm-x4016-pipeline, 4,016 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 58 devices. Both validation gates are single-slot machines and are unchanged to the digit.
 3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. Qwen3-8B takes 21 x 815 mm2 (17,115 mm2, array, KV in SRAM) at 5,781 tok/s per user and 338 tok/s per 1,000 mm2, holding 1 session, against 11 copies of one unified HBM die at the same silicon: 7.9x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
-4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Qwen3-8B on 46,225 mm2 of ROM silicon at 11,397 tok/s per user against 46,400 mm2 of b200_sxm-x29-nvl72-tensor at 1,018 tok/s: **11.2x**, ROM binding on `layer_fixed_latency` and the GPU on `layer_fixed_latency`. It holds 1 resident session against the GPU cluster's 158. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
-5. **A token cannot cross more stage boundaries than the model has layers, and charging it as though it could was most of the reported advantage at scale.** At 6,425,275 mm2 on Qwen3-8B at batch 1, the iso-area GPU cluster is 4,016 devices. Cut as one serial pipeline that is 56 stages and 300 us of link latency per token; but the model has 36 layers, so at most 36 of those boundaries can exist and the rest of the silicon is replication, which adds bandwidth and no serial event: 257 us. The iso-area per-user ratio at that point falls from 3.6x to 3.5x. The same cap is applied to the ROM side, where it is worth more still because a twelve-wafer machine spans 681 reticle fields.
+4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Qwen3-8B on 46,225 mm2 of ROM silicon at 9,135 tok/s per user against 46,400 mm2 of b200_sxm-x29-nvl72-tensor at 1,018 tok/s: **9.0x**, ROM binding on `layer_fixed_latency` and the GPU on `layer_fixed_latency`. It holds 1 resident session against the GPU cluster's 158. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
+5. **A token cannot cross more stage boundaries than the model has layers, and charging it as though it could was most of the reported advantage at scale.** At 6,425,275 mm2 on Qwen3-8B at batch 1, the iso-area GPU cluster is 4,016 devices. Cut as one serial pipeline that is 56 stages and 300 us of link latency per token; but the model has 36 layers, so at most 36 of those boundaries can exist and the rest of the silicon is replication, which adds bandwidth and no serial event: 257 us. The iso-area per-user ratio at that point falls from 3.1x to 3.0x. The same cap is applied to the ROM side, where it is worth more still because a twelve-wafer machine spans 681 reticle fields.
 6. **Letting the GPU choose its own parallelism is worth up to 8.78x to it.** At 554,700 mm2 on Qwen3-8B the pipeline-only GPU delivers 133.30 tok/s and the same silicon running hybrid delivers 1,170 tok/s.
 7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 4096 the aggregate ratio at equal area spans 0.02x (Qwen3-8B, ROM binding on `weight_read`) to 0.23x (Qwen3-8B, ROM binding on `kv_read`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
 8. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 794 us over NVLink, capping per-user decode at 1,259 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 313.1 us and cap it at 3,194 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least 3.5x cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
@@ -74,8 +74,8 @@ The GPU's own best machine at **any** area is `b200_sxm-x347-nvl72-hybrid` at 55
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,396.6 | 246.5 | 1 | 11.19x |
-| rank on per-user rate alone | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,396.6 | 246.5 | 1 | 11.19x |
+| before -- smallest within 5% of peak rate | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 9,134.8 | 197.6 | 1 | 8.97x |
+| rank on per-user rate alone | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 9,134.8 | 197.6 | 1 | 8.97x |
 | smallest feasible machine | `ROM-N5-native-SRAMKV-array-hw-tensor-x19-romfill` | 15,485 | 4,648.4 | 300.2 | 1 | 6.66x |
 | **after -- this report's rule** | `ROM-N5-native-SRAMKV-array-hw-tensor-x21` | 17,115 | 5,780.8 | 337.8 | 1 | 7.92x |
 
@@ -84,14 +84,16 @@ The GPU's own best machine at **any** area is `b200_sxm-x347-nvl72-hybrid` at 55
 | design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | incumbent average | verdict |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | `ROM-N5-native-SRAMKV-array-hw-tensor-x21` | 17,115 | 5,780.8 | 337.8 | -- | 337.8 | ACCEPT |
-| `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,396.6 | 246.5 | 192.9 | 337.8 | stop |
+| `ROM-N5-native-SRAMKV-array-hw-tensor-x32-romfill` | 26,080 | 6,136.2 | 235.3 | 39.6 | 337.8 | stop |
+| `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 9,134.8 | 197.6 | 115.2 | 337.8 | stop |
 
 **The frontier at batch 1, published in full.** Every design here is one that nothing else beats on both axes at once, so a reader with a latency target this report does not know about can read their own point off it. An honest curve beats a false single answer, and the rows above and below the recommendation are the ones that show what the rule is doing.
 
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
 | `ROM-N5-native-SRAMKV-array-hw-tensor-x21` **<-- recommended** | 17,115 | 21 | 5,780.8 | 5,781 | 337.8 | 1 | `layer_fixed_latency` | 1,831 | 316.7 | `b200_sxm-x11-nvl72-tensor` | 7.92x |
-| `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 1 | 11,396.6 | 11,397 | 246.5 | 1 | `layer_fixed_latency` | 4,594 | 403.1 | `b200_sxm-x29-nvl72-tensor` | 11.19x |
+| `ROM-N5-native-SRAMKV-array-hw-tensor-x32-romfill` | 26,080 | 32 | 6,136.2 | 6,136 | 235.3 | 1 | `layer_fixed_latency` | 2,383 | 388.4 | `b200_sxm-x16-nvl72-tensor` | 7.21x |
+| `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 1 | 9,134.8 | 9,135 | 197.6 | 1 | `layer_fixed_latency` | 4,383 | 479.8 | `b200_sxm-x29-nvl72-tensor` | 8.97x |
 
 **Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
 
@@ -100,27 +102,27 @@ The GPU's own best machine at **any** area is `b200_sxm-x347-nvl72-hybrid` at 55
 | array | 150 | densest | `ROM-N5-native-SRAMKV-array-hw-tensor-x21` | 17,115 | 5,780.8 | 337.8 | 1 |
 | array | 150 | fastest | `ROM-N5-native-SRAMKV-array-hw-hybrid-x60-romfill` | 48,900 | 7,120.3 | 145.6 | 1 |
 | array | 150 | smallest | `ROM-N5-native-SRAMKV-array-hw-tensor-x19-romfill` | 15,485 | 4,648.4 | 300.2 | 1 |
-| wafer | 46 | densest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,396.6 | 246.5 | 1 |
-| wafer | 46 | fastest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,396.6 | 246.5 | 1 |
-| wafer | 46 | smallest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,396.6 | 246.5 | 1 |
+| wafer | 46 | densest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 9,134.8 | 197.6 | 1 |
+| wafer | 46 | fastest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 9,134.8 | 197.6 | 1 |
+| wafer | 46 | smallest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 9,134.8 | 197.6 | 1 |
 
 **Three classes at iso-area, batch by batch.** Each ROM class enters at its fastest feasible design for that batch and is read against the GPU comparator at *its own* silicon area (the area ratio is stated). The `array @ wafer area` row is the fastest reticle array within 5% of the wafer's silicon, which is the wafer-versus-array comparison at iso-area. Read resident sessions before the ratio.
 
 | batch | class | design | mm2 | user tok/s | aggregate tok/s | resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | J/token ratio |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | 1 | array | `ROM-N5-native-SRAMKV-array-hw-hybrid-x60-romfill` | 48,900 | 7,120.3 | 7,120 | 1 | 4,424 | 621.3 | `layer_fixed_latency` | `b200_sxm-x31-nvl72-tensor` | 1,034.4 | 169 | 15,197.7 | 0.986 | 6.88x | 24.5x |
-| 1 | wafer | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,396.6 | 11,397 | 1 | 4,594 | 403.1 | `layer_fixed_latency` | `b200_sxm-x29-nvl72-tensor` | 1,018.3 | 158 | 14,675.9 | 0.996 | 11.19x | 36.4x |
+| 1 | wafer | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 9,134.8 | 9,135 | 1 | 4,383 | 479.8 | `layer_fixed_latency` | `b200_sxm-x29-nvl72-tensor` | 1,018.3 | 158 | 14,675.9 | 0.996 | 8.97x | 30.6x |
 | 1 | array @ wafer area | `ROM-N5-native-SRAMKV-array-hw-hybrid-x57-romfill` | 46,455 | 7,119.6 | 7,120 | 1 | 4,215 | 592.0 | `layer_fixed_latency` | `b200_sxm-x29-nvl72-tensor` | 1,018.3 | 158 | 14,675.9 | 1.001 | 6.99x | 24.8x |
-| 1 | wafer reference | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 11,396.6 | -- | 1 | -- | 403.1 | -- | -- | -- | -- | -- | 1.005 | 1.60x wafer/array | -- |
-| 2 | wafer | `ROM-N5-native-HBMKV-wafer-tensor-x139-romfill` | 6,425,275 | 3,452.5 | 6,905 | 4,104 | 591,339 | 85,639.0 | `link_latency` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 651,686.6 | 1.000 | 3.17x | 7.6x |
-| 4 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 3,104.5 | 108,656 | 4,104 | 907,754 | 49,001.8 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 328,191.3 | 1.000 | 2.85x | 6.7x |
-| 8 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 3,104.5 | 108,656 | 4,104 | 907,754 | 26,055.7 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 166,443.6 | 1.000 | 2.85x | 6.4x |
-| 16 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 3,104.5 | 108,656 | 4,104 | 907,754 | 14,582.6 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 85,569.7 | 1.000 | 2.85x | 5.9x |
-| 32 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 3,104.5 | 108,656 | 4,104 | 907,754 | 8,846.1 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 45,132.8 | 1.000 | 2.85x | 5.1x |
-| 64 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 1,957.9 | 125,305 | 4,104 | 959,257 | 7,655.4 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,075.6 | 22,059 | 24,940.9 | 1.000 | 1.82x | 3.3x |
-| 256 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 607.7 | 155,577 | 4,104 | 1,053,629 | 6,772.4 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 851.3 | 22,059 | 10,345.8 | 1.000 | 0.71x | 1.5x |
-| 1024 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 158.5 | 162,308 | 4,104 | 1,074,557 | 6,620.5 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 481.1 | 22,059 | 6,157.2 | 1.000 | 0.33x | 0.9x |
-| 4096 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 40.0 | 163,735 | 4,104 | 1,078,994 | 6,589.9 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 177.1 | 22,059 | 5,142.3 | 1.000 | 0.23x | 0.8x |
+| 1 | wafer reference | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 9,134.8 | -- | 1 | -- | 479.8 | -- | -- | -- | -- | -- | 1.005 | 1.28x wafer/array | -- |
+| 2 | wafer | `ROM-N5-native-HBMKV-wafer-tensor-x139-romfill` | 6,425,275 | 3,018.8 | 6,038 | 4,104 | 588,644 | 97,497.3 | `link_latency` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 651,686.6 | 1.000 | 2.78x | 6.7x |
+| 4 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 2,737.9 | 95,825 | 4,104 | 867,854 | 55,147.0 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 328,191.3 | 1.000 | 2.52x | 6.0x |
+| 8 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 2,737.9 | 95,825 | 4,104 | 867,854 | 29,128.3 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 166,443.6 | 1.000 | 2.52x | 5.7x |
+| 16 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 2,737.9 | 95,825 | 4,104 | 867,854 | 16,118.9 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 85,569.7 | 1.000 | 2.52x | 5.3x |
+| 32 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 2,737.9 | 95,825 | 4,104 | 867,854 | 9,614.2 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,087.6 | 22,059 | 45,132.8 | 1.000 | 2.52x | 4.7x |
+| 64 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 1,809.5 | 115,810 | 4,104 | 929,752 | 8,028.3 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 1,075.6 | 22,059 | 24,940.9 | 1.000 | 1.68x | 3.1x |
+| 256 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 602.2 | 154,155 | 4,104 | 1,049,208 | 6,806.2 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 851.3 | 22,059 | 10,345.8 | 1.000 | 0.71x | 1.5x |
+| 1024 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 158.3 | 162,132 | 4,104 | 1,074,011 | 6,624.3 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 481.1 | 22,059 | 6,157.2 | 1.000 | 0.33x | 0.9x |
+| 4096 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6,425,275 | 40.0 | 163,721 | 4,104 | 1,078,950 | 6,590.2 | `kv_read` | `b200_sxm-x4016-nvl72-hybrid` | 177.1 | 22,059 | 5,142.3 | 1.000 | 0.23x | 0.8x |
 
 **The best design differs by batch, and here is where it changes.**
 
@@ -429,16 +431,16 @@ One row per (model, batch). The ROM design is the smallest silicon within 5% of 
 
 | Model | B | mm2 | ROM design | ROM J/token | ROM W | ROM binds | iso-area GPU | GPU J/token | GPU W | GPU binds | ROM tokens/joule |
 |---|---:|---:|---|---:|---:|---|---|---:|---:|---|---:|
-| Qwen3-8B | 1 | 46,225 | `Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 0.403082 | 4,593.8 | layer_fixed_latency | `Qwen3-8B/b200_sxm-x29-nvl72-tensor` | 14.675853 | 14,944.6 | layer_fixed_latency | 36.41x |
-| Qwen3-8B | 2 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139-romfill` | 85.639032 | 591,339.5 | link_latency | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 651.686641 | 1,693,377.9 | layer_fixed_latency | 7.61x |
-| Qwen3-8B | 4 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 49.001840 | 907,753.6 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 328.191251 | 1,693,377.9 | layer_fixed_latency | 6.70x |
-| Qwen3-8B | 8 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 26.055682 | 907,753.6 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 166.443556 | 1,693,377.9 | layer_fixed_latency | 6.39x |
-| Qwen3-8B | 16 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 14.582602 | 907,753.6 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 85.569708 | 1,693,377.9 | layer_fixed_latency | 5.87x |
-| Qwen3-8B | 32 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 8.846063 | 907,753.6 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 45.132785 | 1,693,377.9 | layer_fixed_latency | 5.10x |
-| Qwen3-8B | 64 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 7.655373 | 959,256.9 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 24.940942 | 1,716,940.4 | layer_fixed_latency | 3.26x |
-| Qwen3-8B | 256 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6.772396 | 1,053,628.9 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 10.345820 | 2,254,658.1 | layer_fixed_latency | 1.53x |
-| Qwen3-8B | 1024 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6.620473 | 1,074,557.4 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 6.157233 | 3,033,463.6 | kv_read | 0.93x |
-| Qwen3-8B | 4096 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6.589871 | 1,078,993.9 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 5.142256 | 3,730,571.5 | kv_read | 0.78x |
+| Qwen3-8B | 1 | 46,225 | `Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 0.479820 | 4,383.1 | layer_fixed_latency | `Qwen3-8B/b200_sxm-x29-nvl72-tensor` | 14.675853 | 14,944.6 | layer_fixed_latency | 30.59x |
+| Qwen3-8B | 2 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139-romfill` | 97.497345 | 588,644.1 | link_latency | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 651.686641 | 1,693,377.9 | layer_fixed_latency | 6.68x |
+| Qwen3-8B | 4 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 55.147013 | 867,854.2 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 328.191251 | 1,693,377.9 | layer_fixed_latency | 5.95x |
+| Qwen3-8B | 8 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 29.128268 | 867,854.2 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 166.443556 | 1,693,377.9 | layer_fixed_latency | 5.71x |
+| Qwen3-8B | 16 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 16.118895 | 867,854.2 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 85.569708 | 1,693,377.9 | layer_fixed_latency | 5.31x |
+| Qwen3-8B | 32 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 9.614209 | 867,854.2 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 45.132785 | 1,693,377.9 | layer_fixed_latency | 4.69x |
+| Qwen3-8B | 64 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 8.028260 | 929,751.5 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 24.940942 | 1,716,940.4 | layer_fixed_latency | 3.11x |
+| Qwen3-8B | 256 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6.806180 | 1,049,208.1 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 10.345820 | 2,254,658.1 | layer_fixed_latency | 1.52x |
+| Qwen3-8B | 1024 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6.624281 | 1,074,010.6 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 6.157233 | 3,033,463.6 | kv_read | 0.93x |
+| Qwen3-8B | 4096 | 6,425,275 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill` | 6.590169 | 1,078,950.3 | kv_read | `Qwen3-8B/b200_sxm-x4016-nvl72-hybrid` | 5.142256 | 3,730,571.5 | kv_read | 0.78x |
 
 **Read this with the power gates beside it.** The ROM side's energy
 rests on `energy.rom_read_j_per_byte`, which is `assumed` over a
@@ -507,15 +509,15 @@ rungs of silicon.
 
 | Model | Wafer-eq | mm2 | ROM before | topo | ROM after | topo | ROM /x | GPU before | topo | GPU after | topo | GPU /x | Ratio before | Ratio after | Ratio change |
 |---|---:|---:|---:|---|---:|---|---:|---:|---|---:|---|---:|---:|---:|---:|
-| Qwen3-8B | 1 | 46,225 | 11,396.6 | wafer-tensor | 11,396.6 | wafer-tensor | 1.00x | 1,186.1 | pipeline | 1,018.3 | tensor | 1.16x | 9.61x | 11.19x | 1.16x |
-| Qwen3-8B | 2 | 92,450 | 11,560.5 | wafer-pipeline | 10,108.6 | wafer-hybrid | 1.14x | 1,362.7 | pipeline | 1,158.3 | tensor | 1.18x | 8.48x | 8.73x | 1.03x |
-| Qwen3-8B | 3 | 138,675 | 11,535.9 | wafer-pipeline | 9,148.7 | wafer-hybrid | 1.26x | 1,440.4 | pipeline | 1,102.4 | hybrid | 1.31x | 8.01x | 8.30x | 1.04x |
-| Qwen3-8B | 4 | 184,900 | 11,522.7 | wafer-pipeline | 8,653.9 | wafer-tensor | 1.33x | 1,482.7 | pipeline | 1,152.7 | hybrid | 1.29x | 7.77x | 7.51x | 0.97x |
-| Qwen3-8B | 6 | 277,350 | 11,507.6 | wafer-pipeline | 8,076.3 | wafer-tensor | 1.42x | 1,527.0 | pipeline | 1,148.9 | hybrid | 1.33x | 7.54x | 7.03x | 0.93x |
-| Qwen3-8B | 8 | 369,800 | 11,500.0 | wafer-pipeline | 7,932.9 | wafer-hybrid | 1.45x | 1,550.6 | pipeline | 1,146.2 | hybrid | 1.35x | 7.42x | 6.92x | 0.93x |
-| Qwen3-8B | 12 | 554,700 | 11,492.3 | wafer-pipeline | 7,327.9 | wafer-hybrid | 1.57x | 1,575.0 | pipeline | 1,170.1 | hybrid | 1.35x | 7.30x | 6.26x | 0.86x |
+| Qwen3-8B | 1 | 46,225 | 10,381.6 | wafer-pipeline | 9,134.8 | wafer-tensor | 1.14x | 1,186.1 | pipeline | 1,018.3 | tensor | 1.16x | 8.75x | 8.97x | 1.02x |
+| Qwen3-8B | 2 | 92,450 | 11,470.3 | wafer-pipeline | 8,288.4 | wafer-hybrid | 1.38x | 1,362.7 | pipeline | 1,158.3 | tensor | 1.18x | 8.42x | 7.16x | 0.85x |
+| Qwen3-8B | 3 | 138,675 | 11,446.1 | wafer-pipeline | 7,631.8 | wafer-hybrid | 1.50x | 1,440.4 | pipeline | 1,102.4 | hybrid | 1.31x | 7.95x | 6.92x | 0.87x |
+| Qwen3-8B | 4 | 184,900 | 11,433.1 | wafer-pipeline | 7,070.9 | wafer-hybrid | 1.62x | 1,482.7 | pipeline | 1,152.7 | hybrid | 1.29x | 7.71x | 6.13x | 0.80x |
+| Qwen3-8B | 6 | 277,350 | 11,418.2 | wafer-pipeline | 6,164.1 | wafer-hybrid | 1.85x | 1,527.0 | pipeline | 1,148.9 | hybrid | 1.33x | 7.48x | 5.37x | 0.72x |
+| Qwen3-8B | 8 | 369,800 | 11,410.7 | wafer-pipeline | 5,910.5 | wafer-hybrid | 1.93x | 1,550.6 | pipeline | 1,146.2 | hybrid | 1.35x | 7.36x | 5.16x | 0.70x |
+| Qwen3-8B | 12 | 554,700 | 11,403.2 | wafer-pipeline | 5,568.0 | wafer-hybrid | 2.05x | 1,575.0 | pipeline | 1,170.1 | hybrid | 1.35x | 7.24x | 4.76x | 0.66x |
 
-**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 0.86x to 1.16x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
+**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 0.66x to 1.02x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
 
 
 ## Iso-area comparison
@@ -548,17 +550,17 @@ is the error this study made.
 
 | Model | B | Pick | ROM design | ROM mm2 | ROM user tok/s | ROM aggregate tok/s | ROM binds on | GPU | GPU mm2 | Area ratio | GPU parallelism | GPU link us | GPU user tok/s | GPU aggregate tok/s | GPU binds on | Per-user ratio | Aggregate ratio | PP-only ratio | Ratio without the layer cap |
 |---|---:|---|---|---:|---:|---:|---|---|---:|---:|---|---:|---:|---:|---|---:|---:|---:|---:|
-| Qwen3-8B | 1 | fastest | Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 11,396.6 | 11,396.6 | layer_fixed_latency | Qwen3-8B/b200_sxm-x29-nvl72-tensor | 46,400 | 1.00x | tensor | 177.73 | 1,018.3 | 1,018.3 | layer_fixed_latency | 11.19x | 2.94x | 85.39x | 11.19x |
+| Qwen3-8B | 1 | fastest | Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 9,134.8 | 9,134.8 | layer_fixed_latency | Qwen3-8B/b200_sxm-x29-nvl72-tensor | 46,400 | 1.00x | tensor | 177.73 | 1,018.3 | 1,018.3 | layer_fixed_latency | 8.97x | 2.36x | 68.44x | 8.97x |
 | Qwen3-8B | 1 | smallest silicon | Qwen3-8B/ROM-N5-native-SRAMKV-array-hw-tensor-x19-romfill | 15,485 | 4,648.4 | 4,648.4 | layer_fixed_latency | Qwen3-8B/b200_sxm-x10-nvl72-tensor | 16,000 | 0.97x | tensor | 177.56 | 697.8 | 697.8 | layer_fixed_latency | 6.66x | 3.47x | 34.71x | 6.66x |
-| Qwen3-8B | 2 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139-romfill | 6,425,275 | 3,452.5 | 6,905.0 | link_latency | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 3.17x | 0.01x | 25.90x | 3.33x |
-| Qwen3-8B | 4 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 3,104.5 | 108,656.3 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.85x | 0.20x | 23.29x | 2.99x |
-| Qwen3-8B | 8 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 3,104.5 | 108,656.3 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.85x | 0.20x | 23.29x | 2.99x |
-| Qwen3-8B | 16 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 3,104.5 | 108,656.3 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.85x | 0.20x | 23.29x | 2.99x |
-| Qwen3-8B | 32 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 3,104.5 | 108,656.3 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.85x | 0.20x | 23.29x | 2.99x |
-| Qwen3-8B | 64 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,957.9 | 125,305.1 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 257.79 | 1,075.6 | 68,840.2 | layer_fixed_latency | 1.82x | 0.23x | 14.69x | 1.91x |
-| Qwen3-8B | 256 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 607.7 | 155,577.0 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 244.49 | 851.3 | 217,929.4 | layer_fixed_latency | 0.71x | 0.29x | 4.56x | 0.81x |
-| Qwen3-8B | 1024 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 158.5 | 162,308.3 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 277.95 | 481.1 | 492,666.7 | kv_read | 0.33x | 0.30x | 1.19x | 0.36x |
-| Qwen3-8B | 4096 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 40.0 | 163,735.2 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 291.38 | 177.1 | 725,473.6 | kv_read | 0.23x | 0.23x | 0.30x | 0.24x |
+| Qwen3-8B | 2 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139-romfill | 6,425,275 | 3,018.8 | 6,037.5 | link_latency | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.78x | 0.01x | 22.65x | 2.91x |
+| Qwen3-8B | 4 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 2,737.9 | 95,824.9 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.52x | 0.18x | 20.54x | 2.64x |
+| Qwen3-8B | 8 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 2,737.9 | 95,824.9 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.52x | 0.18x | 20.54x | 2.64x |
+| Qwen3-8B | 16 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 2,737.9 | 95,824.9 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.52x | 0.18x | 20.54x | 2.64x |
+| Qwen3-8B | 32 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 2,737.9 | 95,824.9 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 256.60 | 1,087.6 | 60,907.0 | layer_fixed_latency | 2.52x | 0.18x | 20.54x | 2.64x |
+| Qwen3-8B | 64 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,809.5 | 115,809.8 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 257.79 | 1,075.6 | 68,840.2 | layer_fixed_latency | 1.68x | 0.22x | 13.58x | 1.76x |
+| Qwen3-8B | 256 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 602.2 | 154,155.2 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 244.49 | 851.3 | 217,929.4 | layer_fixed_latency | 0.71x | 0.29x | 4.52x | 0.80x |
+| Qwen3-8B | 1024 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 158.3 | 162,132.4 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 277.95 | 481.1 | 492,666.7 | kv_read | 0.33x | 0.30x | 1.19x | 0.36x |
+| Qwen3-8B | 4096 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 40.0 | 163,721.2 | kv_read | Qwen3-8B/b200_sxm-x4016-nvl72-hybrid | 6,425,600 | 1.00x | hybrid | 291.38 | 177.1 | 725,473.6 | kv_read | 0.23x | 0.23x | 0.30x | 0.24x |
 
 ## The NVLink domain is a published number, and there are two of them
 
@@ -752,15 +754,15 @@ given more silicon.
 
 | Model | B | Winner on rate | Winner per mm2 | Best design | Best mm2 | Best user tok/s | tok/s per mm2 | Best array tok/s (mm2) | Best wafer tok/s (mm2) | Wafer/array | Binds on |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
-| Qwen3-8B | 1 | wafer | array | Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 11,396.6 | 0.247 | 7,117.8 (41,565) | 11,396.6 (46,225) | 1.60x | layer_fixed_latency |
-| Qwen3-8B | 2 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139-romfill | 6,425,275 | 3,452.5 | 0.001 | — (—) | 3,452.5 (6,425,275) | — | link_latency |
-| Qwen3-8B | 4 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 3,104.5 | 0.000 | — (—) | 3,104.5 (6,425,275) | — | kv_read |
-| Qwen3-8B | 8 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 3,104.5 | 0.000 | — (—) | 3,104.5 (6,425,275) | — | kv_read |
-| Qwen3-8B | 16 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 3,104.5 | 0.000 | — (—) | 3,104.5 (6,425,275) | — | kv_read |
-| Qwen3-8B | 32 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 3,104.5 | 0.000 | — (—) | 3,104.5 (6,425,275) | — | kv_read |
-| Qwen3-8B | 64 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,957.9 | 0.000 | — (—) | 1,957.9 (6,425,275) | — | kv_read |
-| Qwen3-8B | 256 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 607.7 | 0.000 | — (—) | 607.7 (6,425,275) | — | kv_read |
-| Qwen3-8B | 1024 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 158.5 | 0.000 | — (—) | 158.5 (6,425,275) | — | kv_read |
+| Qwen3-8B | 1 | wafer | array | Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 9,134.8 | 0.198 | 7,117.8 (41,565) | 9,134.8 (46,225) | 1.28x | layer_fixed_latency |
+| Qwen3-8B | 2 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139-romfill | 6,425,275 | 3,018.8 | 0.000 | — (—) | 3,018.8 (6,425,275) | — | link_latency |
+| Qwen3-8B | 4 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 2,737.9 | 0.000 | — (—) | 2,737.9 (6,425,275) | — | kv_read |
+| Qwen3-8B | 8 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 2,737.9 | 0.000 | — (—) | 2,737.9 (6,425,275) | — | kv_read |
+| Qwen3-8B | 16 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 2,737.9 | 0.000 | — (—) | 2,737.9 (6,425,275) | — | kv_read |
+| Qwen3-8B | 32 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 2,737.9 | 0.000 | — (—) | 2,737.9 (6,425,275) | — | kv_read |
+| Qwen3-8B | 64 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,809.5 | 0.000 | — (—) | 1,809.5 (6,425,275) | — | kv_read |
+| Qwen3-8B | 256 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 602.2 | 0.000 | — (—) | 602.2 (6,425,275) | — | kv_read |
+| Qwen3-8B | 1024 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 158.3 | 0.000 | — (—) | 158.3 (6,425,275) | — | kv_read |
 | Qwen3-8B | 4096 | wafer | wafer | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 40.0 | 0.000 | — (—) | 40.0 (6,425,275) | — | kv_read |
 
 ## The two ROM floorplans on one die
@@ -821,26 +823,26 @@ distribution rather than from the mean engaged region.
 
 | Model | B | Spare silicon | Batched aggregate | Per-stream aggregate | Per-region aggregate | Per-stream penalty | Per-region over broadcast | Batched binds on | Per-stream binds on | Per-region binds on |
 |---|---:|---|---:|---:|---:|---:|---:|---|---|---|
-| Qwen3-8B | 1 | sram | 26,134.9 | 24,288.6 | 24,288.6 | 1.08x | 1.00x | weight_read | weight_read | weight_read |
-| Qwen3-8B | 2 | sram | 26,134.9 | 24,288.6 | 24,288.6 | 1.08x | 1.00x | weight_read | weight_read | weight_read |
-| Qwen3-8B | 4 | sram | 26,134.9 | 24,288.6 | 24,288.6 | 1.08x | 1.00x | weight_read | weight_read | weight_read |
-| Qwen3-8B | 8 | sram | 26,134.9 | 24,288.6 | 24,288.6 | 1.08x | 1.00x | weight_read | weight_read | weight_read |
-| Qwen3-8B | 16 | sram | 29,484.1 | 24,288.6 | 24,288.6 | 1.21x | 1.00x | link_latency | weight_read | weight_read |
-| Qwen3-8B | 32 | sram | 37,717.4 | 24,288.6 | 24,288.6 | 1.55x | 1.00x | layer_fixed_latency | weight_read | weight_read |
-| Qwen3-8B | 64 | sram | 47,686.1 | 25,051.5 | 25,051.5 | 1.90x | 1.00x | weight_read | weight_read | weight_read |
-| Qwen3-8B | 256 | sram | 152,162.6 | 25,920.4 | 25,920.4 | 5.87x | 1.00x | kv_read | weight_read | weight_read |
-| Qwen3-8B | 1024 | sram | 161,933.6 | 26,068.6 | 26,068.6 | 6.21x | 1.00x | kv_read | weight_read | weight_read |
-| Qwen3-8B | 4096 | sram | 163,631.1 | 26,101.8 | 26,101.8 | 6.27x | 1.00x | kv_read | weight_read | weight_read |
-| Qwen3-8B | 1 | rom | 108,656.3 | 108,481.5 | 108,481.5 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 2 | rom | 108,656.3 | 108,481.5 | 108,481.5 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 4 | rom | 108,656.3 | 108,481.5 | 108,481.5 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 8 | rom | 108,656.3 | 108,481.5 | 108,481.5 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 16 | rom | 108,656.3 | 108,481.5 | 108,481.5 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 32 | rom | 108,656.3 | 108,481.5 | 108,481.5 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 64 | rom | 125,305.1 | 125,181.8 | 125,181.8 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 256 | rom | 155,577.0 | 155,282.8 | 155,282.8 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 1024 | rom | 162,308.3 | 162,117.4 | 162,117.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
-| Qwen3-8B | 4096 | rom | 163,735.2 | 163,690.3 | 163,690.3 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 1 | sram | 25,319.4 | 23,582.7 | 23,582.7 | 1.07x | 1.00x | weight_read | weight_read | weight_read |
+| Qwen3-8B | 2 | sram | 25,319.4 | 23,582.7 | 23,582.7 | 1.07x | 1.00x | weight_read | weight_read | weight_read |
+| Qwen3-8B | 4 | sram | 25,319.4 | 23,582.7 | 23,582.7 | 1.07x | 1.00x | weight_read | weight_read | weight_read |
+| Qwen3-8B | 8 | sram | 25,319.4 | 23,582.7 | 23,582.7 | 1.07x | 1.00x | weight_read | weight_read | weight_read |
+| Qwen3-8B | 16 | sram | 28,721.9 | 23,582.7 | 23,582.7 | 1.22x | 1.00x | link_latency | weight_read | weight_read |
+| Qwen3-8B | 32 | sram | 38,716.5 | 23,582.7 | 23,582.7 | 1.64x | 1.00x | layer_fixed_latency | weight_read | weight_read |
+| Qwen3-8B | 64 | sram | 46,655.4 | 24,647.4 | 24,647.4 | 1.89x | 1.00x | layer_fixed_latency | weight_read | weight_read |
+| Qwen3-8B | 256 | sram | 149,186.8 | 25,880.7 | 25,880.7 | 5.76x | 1.00x | kv_read | weight_read | weight_read |
+| Qwen3-8B | 1024 | sram | 161,502.1 | 26,064.0 | 26,064.0 | 6.20x | 1.00x | kv_read | weight_read | weight_read |
+| Qwen3-8B | 4096 | sram | 163,612.1 | 26,101.4 | 26,101.4 | 6.27x | 1.00x | kv_read | weight_read | weight_read |
+| Qwen3-8B | 1 | rom | 95,824.9 | 95,688.9 | 95,688.9 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 2 | rom | 95,824.9 | 95,688.9 | 95,688.9 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 4 | rom | 95,824.9 | 95,688.9 | 95,688.9 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 8 | rom | 95,824.9 | 95,688.9 | 95,688.9 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 16 | rom | 95,824.9 | 95,688.9 | 95,688.9 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 32 | rom | 95,824.9 | 95,688.9 | 95,688.9 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 64 | rom | 115,809.8 | 115,704.5 | 115,704.5 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 256 | rom | 154,155.2 | 153,866.4 | 153,866.4 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 1024 | rom | 162,132.4 | 161,942.0 | 161,942.0 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
+| Qwen3-8B | 4096 | rom | 163,721.2 | 163,676.3 | 163,676.3 | 1.00x | 1.00x | kv_read | kv_read | kv_read |
 
 ## The floorplan sweep: where the recovered silicon goes
 
@@ -869,66 +871,66 @@ where that is controlled for.
 
 | Model | B | Amortisation | Spare | Design | mm2 | R | Sweeps | Aggregate | tok/s/mm2 | Binds on | vs ROM+MAC/sram |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---|---:|
-| Qwen3-8B | 1 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 26,134.9 | 0.004 | weight_read | 1.00x |
-| Qwen3-8B | 1 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 108,656.3 | 0.017 | kv_read | 4.16x |
-| Qwen3-8B | 1 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.93x |
-| Qwen3-8B | 1 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 4.15x |
-| Qwen3-8B | 1 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.93x |
-| Qwen3-8B | 1 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 4.15x |
-| Qwen3-8B | 2 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 26,134.9 | 0.004 | weight_read | 1.00x |
-| Qwen3-8B | 2 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 108,656.3 | 0.017 | kv_read | 4.16x |
-| Qwen3-8B | 2 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.93x |
-| Qwen3-8B | 2 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 4.15x |
-| Qwen3-8B | 2 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.93x |
-| Qwen3-8B | 2 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 4.15x |
-| Qwen3-8B | 4 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 26,134.9 | 0.004 | weight_read | 1.00x |
-| Qwen3-8B | 4 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 108,656.3 | 0.017 | kv_read | 4.16x |
-| Qwen3-8B | 4 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.93x |
-| Qwen3-8B | 4 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 4.15x |
-| Qwen3-8B | 4 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.93x |
-| Qwen3-8B | 4 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 4.15x |
-| Qwen3-8B | 8 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 26,134.9 | 0.004 | weight_read | 1.00x |
-| Qwen3-8B | 8 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 108,656.3 | 0.017 | kv_read | 4.16x |
-| Qwen3-8B | 8 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.93x |
-| Qwen3-8B | 8 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 4.15x |
-| Qwen3-8B | 8 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.93x |
-| Qwen3-8B | 8 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 4.15x |
-| Qwen3-8B | 16 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139 | 6,425,275 | 1.00 | 1.00 | 29,484.1 | 0.005 | link_latency | 1.00x |
-| Qwen3-8B | 16 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 108,656.3 | 0.017 | kv_read | 3.69x |
-| Qwen3-8B | 16 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.82x |
-| Qwen3-8B | 16 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 3.68x |
-| Qwen3-8B | 16 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.82x |
-| Qwen3-8B | 16 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 3.68x |
-| Qwen3-8B | 32 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139 | 6,425,275 | 1.00 | 1.00 | 37,717.4 | 0.006 | layer_fixed_latency | 1.00x |
-| Qwen3-8B | 32 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 108,656.3 | 0.017 | kv_read | 2.88x |
-| Qwen3-8B | 32 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.64x |
-| Qwen3-8B | 32 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 2.88x |
-| Qwen3-8B | 32 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 24,288.6 | 0.004 | weight_read | 0.64x |
-| Qwen3-8B | 32 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 108,481.5 | 0.017 | kv_read | 2.88x |
-| Qwen3-8B | 64 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 47,686.1 | 0.007 | weight_read | 1.00x |
-| Qwen3-8B | 64 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 125,305.1 | 0.020 | kv_read | 2.63x |
-| Qwen3-8B | 64 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.83 | 25,051.5 | 0.004 | weight_read | 0.53x |
-| Qwen3-8B | 64 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.83 | 125,181.8 | 0.019 | kv_read | 2.63x |
-| Qwen3-8B | 64 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.83 | 25,051.5 | 0.004 | weight_read | 0.53x |
-| Qwen3-8B | 64 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.83 | 125,181.8 | 0.019 | kv_read | 2.63x |
-| Qwen3-8B | 256 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 152,162.6 | 0.024 | kv_read | 1.00x |
-| Qwen3-8B | 256 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 155,577.0 | 0.024 | kv_read | 1.02x |
-| Qwen3-8B | 256 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.04 | 25,920.4 | 0.004 | weight_read | 0.17x |
-| Qwen3-8B | 256 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.04 | 155,282.8 | 0.024 | kv_read | 1.02x |
-| Qwen3-8B | 256 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.04 | 25,920.4 | 0.004 | weight_read | 0.17x |
-| Qwen3-8B | 256 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.04 | 155,282.8 | 0.024 | kv_read | 1.02x |
-| Qwen3-8B | 1024 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 161,933.6 | 0.025 | kv_read | 1.00x |
-| Qwen3-8B | 1024 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 162,308.3 | 0.025 | kv_read | 1.00x |
-| Qwen3-8B | 1024 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.04 | 26,068.6 | 0.004 | weight_read | 0.16x |
-| Qwen3-8B | 1024 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.04 | 162,117.4 | 0.025 | kv_read | 1.00x |
-| Qwen3-8B | 1024 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.04 | 26,068.6 | 0.004 | weight_read | 0.16x |
-| Qwen3-8B | 1024 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.04 | 162,117.4 | 0.025 | kv_read | 1.00x |
-| Qwen3-8B | 4096 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 163,631.1 | 0.025 | kv_read | 1.00x |
-| Qwen3-8B | 4096 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 163,735.2 | 0.025 | kv_read | 1.00x |
-| Qwen3-8B | 4096 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.04 | 26,101.8 | 0.004 | weight_read | 0.16x |
-| Qwen3-8B | 4096 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.04 | 163,690.3 | 0.025 | kv_read | 1.00x |
-| Qwen3-8B | 4096 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.04 | 26,101.8 | 0.004 | weight_read | 0.16x |
-| Qwen3-8B | 4096 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.04 | 163,690.3 | 0.025 | kv_read | 1.00x |
+| Qwen3-8B | 1 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 25,319.4 | 0.004 | weight_read | 1.00x |
+| Qwen3-8B | 1 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 95,824.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 1 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.93x |
+| Qwen3-8B | 1 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 1 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.93x |
+| Qwen3-8B | 1 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 2 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 25,319.4 | 0.004 | weight_read | 1.00x |
+| Qwen3-8B | 2 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 95,824.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 2 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.93x |
+| Qwen3-8B | 2 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 2 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.93x |
+| Qwen3-8B | 2 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 4 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 25,319.4 | 0.004 | weight_read | 1.00x |
+| Qwen3-8B | 4 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 95,824.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 4 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.93x |
+| Qwen3-8B | 4 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 4 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.93x |
+| Qwen3-8B | 4 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 8 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 25,319.4 | 0.004 | weight_read | 1.00x |
+| Qwen3-8B | 8 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 95,824.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 8 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.93x |
+| Qwen3-8B | 8 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 8 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.93x |
+| Qwen3-8B | 8 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.78x |
+| Qwen3-8B | 16 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139 | 6,425,275 | 1.00 | 1.00 | 28,721.9 | 0.004 | link_latency | 1.00x |
+| Qwen3-8B | 16 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 95,824.9 | 0.015 | kv_read | 3.34x |
+| Qwen3-8B | 16 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.82x |
+| Qwen3-8B | 16 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.33x |
+| Qwen3-8B | 16 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.82x |
+| Qwen3-8B | 16 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 3.33x |
+| Qwen3-8B | 32 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139 | 6,425,275 | 1.00 | 1.00 | 38,716.5 | 0.006 | layer_fixed_latency | 1.00x |
+| Qwen3-8B | 32 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 95,824.9 | 0.015 | kv_read | 2.48x |
+| Qwen3-8B | 32 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.61x |
+| Qwen3-8B | 32 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 2.47x |
+| Qwen3-8B | 32 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.00 | 23,582.7 | 0.004 | weight_read | 0.61x |
+| Qwen3-8B | 32 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.00 | 95,688.9 | 0.015 | kv_read | 2.47x |
+| Qwen3-8B | 64 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-tensor-x139 | 6,425,275 | 1.00 | 1.00 | 46,655.4 | 0.007 | layer_fixed_latency | 1.00x |
+| Qwen3-8B | 64 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 115,809.8 | 0.018 | kv_read | 2.48x |
+| Qwen3-8B | 64 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.83 | 24,647.4 | 0.004 | weight_read | 0.53x |
+| Qwen3-8B | 64 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.83 | 115,704.5 | 0.018 | kv_read | 2.48x |
+| Qwen3-8B | 64 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.83 | 24,647.4 | 0.004 | weight_read | 0.53x |
+| Qwen3-8B | 64 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.83 | 115,704.5 | 0.018 | kv_read | 2.48x |
+| Qwen3-8B | 256 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 149,186.8 | 0.023 | kv_read | 1.00x |
+| Qwen3-8B | 256 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 154,155.2 | 0.024 | kv_read | 1.03x |
+| Qwen3-8B | 256 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.04 | 25,880.7 | 0.004 | weight_read | 0.17x |
+| Qwen3-8B | 256 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.04 | 153,866.4 | 0.024 | kv_read | 1.03x |
+| Qwen3-8B | 256 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.04 | 25,880.7 | 0.004 | weight_read | 0.17x |
+| Qwen3-8B | 256 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.04 | 153,866.4 | 0.024 | kv_read | 1.03x |
+| Qwen3-8B | 1024 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 161,502.1 | 0.025 | kv_read | 1.00x |
+| Qwen3-8B | 1024 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 162,132.4 | 0.025 | kv_read | 1.00x |
+| Qwen3-8B | 1024 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.04 | 26,064.0 | 0.004 | weight_read | 0.16x |
+| Qwen3-8B | 1024 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.04 | 161,942.0 | 0.025 | kv_read | 1.00x |
+| Qwen3-8B | 1024 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.04 | 26,064.0 | 0.004 | weight_read | 0.16x |
+| Qwen3-8B | 1024 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.04 | 161,942.0 | 0.025 | kv_read | 1.00x |
+| Qwen3-8B | 4096 | batched | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139 | 6,425,275 | 1.00 | 1.00 | 163,612.1 | 0.025 | kv_read | 1.00x |
+| Qwen3-8B | 4096 | batched | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-romfill | 6,425,275 | 1,726.21 | 1.00 | 163,721.2 | 0.025 | kv_read | 1.00x |
+| Qwen3-8B | 4096 | per_stream | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream | 6,425,275 | 1.00 | 1.04 | 26,101.4 | 0.004 | weight_read | 0.16x |
+| Qwen3-8B | 4096 | per_stream | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perstream-romfill | 6,425,275 | 5,800.70 | 1.04 | 163,676.3 | 0.025 | kv_read | 1.00x |
+| Qwen3-8B | 4096 | per_region | sram | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion | 6,425,275 | 1.00 | 1.04 | 26,101.4 | 0.004 | weight_read | 0.16x |
+| Qwen3-8B | 4096 | per_region | rom | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x139-perregion-romfill | 6,425,275 | 5,800.70 | 1.04 | 163,676.3 | 0.025 | kv_read | 1.00x |
 
 ## What the completeness corrections cost
 
@@ -993,7 +995,7 @@ large fraction of one and a rounding error on the other.
 | Family | Model | B | Fixed latency (us) | Share of the fastest step |
 |---|---|---:|---:|---:|
 | gpu | Qwen3-8B | 1 | 566.80 | 66.3% |
-| rom | Qwen3-8B | 1 | 69.05 | 78.7% |
+| rom | Qwen3-8B | 1 | 69.05 | 63.1% |
 
 ### 4. KV access granularity, which is a layout choice
 
@@ -1057,9 +1059,9 @@ reduces the bytes fetched.
 | gpu | thermal | 34 |
 | rom | infeasible | 2426 |
 | rom | kv_read | 82 |
-| rom | layer_fixed_latency | 178 |
-| rom | link_latency | 82 |
-| rom | weight_read | 112 |
+| rom | layer_fixed_latency | 164 |
+| rom | link_latency | 99 |
+| rom | weight_read | 109 |
 
 Why the infeasible points are infeasible:
 
@@ -1133,8 +1135,8 @@ Why the infeasible points are infeasible:
 |---|---:|
 | measured | 4 |
 | published | 75 |
-| derived | 50 |
-| assumed | 85 |
+| derived | 49 |
+| assumed | 84 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -1192,7 +1194,6 @@ failure mode this program exists to prevent:
 - `links.rom_package_ucie.domain_size`
 - `links.rom_package_ucie.fabric`
 - `links.rom_wafer_express.fabric`
-- `links.rom_wafer_express.hop_latency_s`
 - `links.rom_wafer_express.router_latency_s`
 - `links.rom_wafer_express.wire_clock_hz`
 - `links.rom_wafer_express.wire_layers`

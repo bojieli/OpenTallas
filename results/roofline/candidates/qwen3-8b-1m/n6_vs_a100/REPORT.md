@@ -10,9 +10,9 @@ bandwidth and compute roof are derived from it.
 ## What the model says
 
 1. **The ROM path has a hard per-token ceiling that is a technology constant, not a design choice.** The full-array sweep time is the ROM capacity density divided by its read-bandwidth density, so it does not depend on model size, batch, or expert coverage: 34.5 us, or 29,015 tok/s per user. Under this derivation both densities scale with the same published bitcell-area ratio, so that ceiling is the same at every node: process scaling buys a ROM design capacity, not per-token speed.
-2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 193x (ROM-N6-native-SRAMKV-wafer-pipeline-x12, 681 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 2 devices. On the GPU side the correction reaches 148x (a100_sxm_80gb-x8389-pipeline, 8,389 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 304 devices. Both validation gates are single-slot machines and are unchanged to the digit.
-3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. Qwen3-8B takes 2 x 46,225 mm2 (92,450 mm2, wafer, KV in SRAM) at 9,986 tok/s per user and 108 tok/s per 1,000 mm2, holding 1 session, against 112 copies of one unified HBM die at the same silicon: 25.6x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
-4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Qwen3-8B on 92,450 mm2 of ROM silicon at 9,986 tok/s per user against 92,512 mm2 of a100_sxm_80gb-x112-tensor at 389 tok/s: **25.6x**, ROM binding on `layer_fixed_latency` and the GPU on `link_latency`. It holds 1 resident session against the GPU cluster's 54. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
+2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 192x (ROM-N6-native-SRAMKV-wafer-pipeline-x12, 681 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 2 devices. On the GPU side the correction reaches 148x (a100_sxm_80gb-x8389-pipeline, 8,389 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 304 devices. Both validation gates are single-slot machines and are unchanged to the digit.
+3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. Qwen3-8B takes 2 x 46,225 mm2 (92,450 mm2, wafer, KV in SRAM) at 8,205 tok/s per user and 89 tok/s per 1,000 mm2, holding 1 session, against 112 copies of one unified HBM die at the same silicon: 21.1x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
+4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Qwen3-8B on 92,450 mm2 of ROM silicon at 8,205 tok/s per user against 92,512 mm2 of a100_sxm_80gb-x112-tensor at 389 tok/s: **21.1x**, ROM binding on `layer_fixed_latency` and the GPU on `link_latency`. It holds 1 resident session against the GPU cluster's 54. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
 5. **The layer cap on serial stage boundaries is still applied and is no longer visible in the headline, because no comparator it binds on wins any more.** A token cannot cross more stage boundaries than the model has layers, and this study charges at most that many. With per-user latency separated from aggregate throughput, both families now pick a topology with a tensor group at batch 1, and a tensor group has one stage and no boundary for the cap to remove. The `Ratio without the layer cap` column in the iso-area table therefore equals the stated ratio wherever the winner is tensor-parallel; it still differs wherever a pipeline wins.
 6. **Letting the GPU choose its own parallelism is worth up to 49.12x to it.** At 251,020 mm2 on Qwen3-8B the pipeline-only GPU delivers 10.09 tok/s and the same silicon running tensor delivers 496 tok/s.
 7. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 1,021 us over NVLink, capping per-user decode at 980 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 154.6 us and cap it at 6,469 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least nanx cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
@@ -46,20 +46,20 @@ The GPU comparator at each ROM area is N copies of one unified HBM die, N chosen
 
 **Recommended: `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill`** -- 2 x 46,225 mm2 wafers, 92,450 mm2 total, `hybrid`-parallel, KV in SRAM, spare silicon to `rom`.
 
-- **9,985.6 tok/s per user** (0.10 ms/token), binding on `layer_fixed_latency`
-- **108.0 tok/s per 1,000 mm2** -- the quantity the rule maximises
-- 9,986 tok/s aggregate with every slot full, over 1 resident session (fill limited by `kv_capacity`)
-- 9,627 W at 0.104 W/mm2, 964.1 mJ/token, thermal scale 1.000
+- **8,205.5 tok/s per user** (0.12 ms/token), binding on `layer_fixed_latency`
+- **88.8 tok/s per 1,000 mm2** -- the quantity the rule maximises
+- 8,205 tok/s aggregate with every slot full, over 1 resident session (fill limited by `kv_capacity`)
+- 8,867 W at 0.096 W/mm2, 1,080.7 mJ/token, thermal scale 1.000
 
 **Iso-area, at the area the rule chose.** The comparator is 112 copies of one unified HBM die -- `a100_sxm_80gb-x112-tensor`, 92,512 mm2, area ratio 0.9993 -- running the `tensor` topology it chose for itself.
 
 | | ROM | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: |
 | silicon mm2 | 92,450 | 92,512 | 0.9993 |
-| user tok/s | 9,985.6 | 389.3 | 25.65x |
-| aggregate tok/s | 9,986 | 389 | 17.21x |
+| user tok/s | 8,205.5 | 389.3 | 21.08x |
+| aggregate tok/s | 8,205 | 389 | 14.14x |
 | resident sessions | 1 | 54 | -- |
-| J/token | 0.9641 | 58.6314 | 60.8x |
+| J/token | 1.0807 | 58.6314 | 54.3x |
 
 The areas match to within 2%, so no granularity correction is needed on this row.
 
@@ -71,10 +71,10 @@ The GPU's own best machine at **any** area is `a100_sxm_80gb-x8389-tensor` at 6,
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 9,985.6 | 108.0 | 1 | 25.65x |
-| rank on per-user rate alone | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 9,985.6 | 108.0 | 1 | 25.65x |
+| before -- smallest within 5% of peak rate | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 8,205.5 | 88.8 | 1 | 21.08x |
+| rank on per-user rate alone | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 8,205.5 | 88.8 | 1 | 21.08x |
 | smallest feasible machine | `ROM-N6-native-SRAMKV-array-hw-hybrid-x89-romfill` | 72,535 | 1,477.9 | 20.4 | 1 | 4.15x |
-| **after -- this report's rule** | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 9,985.6 | 108.0 | 1 | 25.65x |
+| **after -- this report's rule** | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 8,205.5 | 88.8 | 1 | 21.08x |
 
 **There is nothing to walk to.** The frontier is a single row, which is what it means for one design to beat every other feasible design of this model on BOTH axes at once. No trade-off has to be argued and no threshold is doing any work here: the recommendation is simply the only non-dominated machine. What it beat is in the class table below.
 
@@ -82,7 +82,7 @@ The GPU's own best machine at **any** area is `a100_sxm_80gb-x8389-tensor` at 6,
 
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
-| `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` **<-- recommended** | 92,450 | 2 | 9,985.6 | 9,986 | 108.0 | 1 | `layer_fixed_latency` | 9,627 | 964.1 | `a100_sxm_80gb-x112-tensor` | 25.65x |
+| `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` **<-- recommended** | 92,450 | 2 | 8,205.5 | 8,205 | 88.8 | 1 | `layer_fixed_latency` | 8,867 | 1,080.7 | `a100_sxm_80gb-x112-tensor` | 21.08x |
 
 **Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
 
@@ -91,18 +91,18 @@ The GPU's own best machine at **any** area is `a100_sxm_80gb-x8389-tensor` at 6,
 | array | 120 | densest | `ROM-N6-native-SRAMKV-array-hw-tensor-x116` | 94,540 | 3,247.1 | 34.3 | 1 |
 | array | 120 | fastest | `ROM-N6-native-SRAMKV-array-hw-tensor-x227` | 185,005 | 3,567.0 | 19.3 | 1 |
 | array | 120 | smallest | `ROM-N6-native-SRAMKV-array-hw-hybrid-x89-romfill` | 72,535 | 1,477.9 | 20.4 | 1 |
-| wafer | 36 | densest | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 9,985.6 | 108.0 | 1 |
-| wafer | 36 | fastest | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 9,985.6 | 108.0 | 1 |
-| wafer | 36 | smallest | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 9,985.6 | 108.0 | 1 |
+| wafer | 36 | densest | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 8,205.5 | 88.8 | 1 |
+| wafer | 36 | fastest | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 8,205.5 | 88.8 | 1 |
+| wafer | 36 | smallest | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 8,205.5 | 88.8 | 1 |
 
 **Three classes at iso-area, batch by batch.** Each ROM class enters at its fastest feasible design for that batch and is read against the GPU comparator at *its own* silicon area (the area ratio is stated). The `array @ wafer area` row is the fastest reticle array within 5% of the wafer's silicon, which is the wafer-versus-array comparison at iso-area. Read resident sessions before the ratio.
 
 | batch | class | design | mm2 | user tok/s | aggregate tok/s | resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | J/token ratio |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | 1 | array | `ROM-N6-native-SRAMKV-array-hw-tensor-x227` | 185,005 | 3,567.0 | 3,567 | 1 | 21,832 | 6,120.4 | `layer_fixed_latency` | `a100_sxm_80gb-x224-tensor` | 468.9 | 109 | 86,062.5 | 1.000 | 7.61x | 14.1x |
-| 1 | wafer | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 9,985.6 | 9,986 | 1 | 9,627 | 964.1 | `layer_fixed_latency` | `a100_sxm_80gb-x112-tensor` | 389.3 | 54 | 58,631.4 | 0.999 | 25.65x | 60.8x |
+| 1 | wafer | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 8,205.5 | 8,205 | 1 | 8,867 | 1,080.7 | `layer_fixed_latency` | `a100_sxm_80gb-x112-tensor` | 389.3 | 54 | 58,631.4 | 0.999 | 21.08x | 54.3x |
 | 1 | array @ wafer area | `ROM-N6-native-SRAMKV-array-hw-tensor-x116` | 94,540 | 3,247.1 | 3,247 | 1 | 8,578 | 2,641.6 | `layer_fixed_latency` | `a100_sxm_80gb-x114-tensor` | 391.6 | 55 | 59,126.6 | 1.004 | 8.29x | 22.4x |
-| 1 | wafer reference | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 9,985.6 | -- | 1 | -- | 964.1 | -- | -- | -- | -- | -- | 1.023 | 3.08x wafer/array | -- |
+| 1 | wafer reference | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 92,450 | 8,205.5 | -- | 1 | -- | 1,080.7 | -- | -- | -- | -- | -- | 1.023 | 2.53x wafer/array | -- |
 | 2 | -- | *no feasible ROM design* | | | | | | | | | | | | | | |
 | 4 | -- | *no feasible ROM design* | | | | | | | | | | | | | | |
 | 8 | -- | *no feasible ROM design* | | | | | | | | | | | | | | |
@@ -144,7 +144,7 @@ replaced.
 
 | Model | Design | Batch | Group | Coll./layer | Algorithms | Chain (us) | Comm. (us) | Sweep (us) | Legacy serial (us) | tok/s/user |
 |---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| Qwen3-8B | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 1 | 57 on `rom_wafer_express` | 2.03 | centre_mesh, one_shot | 70.90 | 11.79 | 20.61 | 15.97 | 9,985.6 |
+| Qwen3-8B | `ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 1 | 57 on `rom_wafer_express` | 2.03 | one_shot, rec_doubling | 70.90 | 33.52 | 20.61 | 40.32 | 8,205.5 |
 | Qwen3-8B | `a100_sxm_80gb-x112-tensor` | 1 | 112 | 2.03 | hierarchical | 566.80 | 1,122.77 | 878.99 | 730.02 | 389.3 |
 
 ## The overlap and serialisation rule
@@ -371,12 +371,12 @@ both studies.
 - **0 of 597 feasible points (0.0%) are power-limited.**
 - 0 points are uncoolable at any speed (static power alone at or above the cooling budget).
 
-Nothing in this study is power-limited. That is a statement about these designs and not an artifact of the energy model: static power is charged per mm2 per second, so a design cannot escape it by moving fewer bytes. The busiest point reaches 78% of its cooling budget, and the busiest wafer-scale ROM design 28%. The companion study at the other node, whose HBM generation delivers more than twice the bandwidth per stack, does have power-limited points.
+Nothing in this study is power-limited. That is a statement about these designs and not an artifact of the energy model: static power is charged per mm2 per second, so a design cannot escape it by moving fewer bytes. The busiest point reaches 78% of its cooling budget, and the busiest wafer-scale ROM design 27%. The companion study at the other node, whose HBM generation delivers more than twice the bandwidth per stack, does have power-limited points.
 
 | Family | Area class | Points | Throttled | Median power / budget | Worst power / budget | Peak W/mm2 | Median static share |
 |---|---|---:|---:|---:|---:|---:|---:|
 | gpu | wafer (>=40,000 mm2) | 381 | 0 | 57.2% | 78.5% | 0.380 | 63% |
-| rom | wafer (>=40,000 mm2) | 216 | 0 | 15.3% | 27.6% | 0.138 | 95% |
+| rom | wafer (>=40,000 mm2) | 216 | 0 | 15.3% | 27.4% | 0.137 | 95% |
 
 ### Energy per token, both sides, at equal area
 
@@ -391,7 +391,7 @@ One row per (model, batch). The ROM design is the smallest silicon within 5% of 
 
 | Model | B | mm2 | ROM design | ROM J/token | ROM W | ROM binds | iso-area GPU | GPU J/token | GPU W | GPU binds | ROM tokens/joule |
 |---|---:|---:|---|---:|---:|---|---|---:|---:|---|---:|
-| Qwen3-8B | 1 | 92,450 | `Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 0.964131 | 9,627.4 | layer_fixed_latency | `Qwen3-8B/a100_sxm_80gb-x112-tensor` | 58.631356 | 22,826.6 | link_latency | 60.81x |
+| Qwen3-8B | 1 | 92,450 | `Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill` | 1.080660 | 8,867.3 | layer_fixed_latency | `Qwen3-8B/a100_sxm_80gb-x112-tensor` | 58.631356 | 22,826.6 | link_latency | 54.26x |
 
 **Read this with the power gates beside it.** The ROM side's energy
 rests on `energy.rom_read_j_per_byte`, which is `assumed` over a
@@ -460,14 +460,14 @@ rungs of silicon.
 
 | Model | Wafer-eq | mm2 | ROM before | topo | ROM after | topo | ROM /x | GPU before | topo | GPU after | topo | GPU /x | Ratio before | Ratio after | Ratio change |
 |---|---:|---:|---:|---|---:|---|---:|---:|---|---:|---|---:|---:|---:|---:|
-| Qwen3-8B | 2 | 92,450 | 10,838.7 | wafer-hybrid | 9,985.6 | wafer-hybrid | 1.09x | 651.2 | pipeline | 389.3 | tensor | 1.67x | 16.64x | 25.65x | 1.54x |
-| Qwen3-8B | 3 | 138,675 | 10,909.6 | wafer-hybrid | 9,149.6 | wafer-hybrid | 1.19x | 804.8 | pipeline | 439.0 | tensor | 1.83x | 13.56x | 20.84x | 1.54x |
-| Qwen3-8B | 4 | 184,900 | 9,144.9 | wafer-hybrid | 8,533.7 | wafer-tensor | 1.07x | 912.3 | pipeline | 468.9 | tensor | 1.95x | 10.02x | 18.20x | 1.82x |
-| Qwen3-8B | 6 | 277,350 | 8,485.8 | wafer-hybrid | 7,957.0 | wafer-tensor | 1.07x | 1,053.1 | pipeline | 437.9 | tensor | 2.40x | 8.06x | 18.17x | 2.25x |
-| Qwen3-8B | 8 | 369,800 | 8,535.8 | wafer-hybrid | 7,878.0 | wafer-hybrid | 1.08x | 1,141.1 | pipeline | 452.3 | tensor | 2.52x | 7.48x | 17.42x | 2.33x |
-| Qwen3-8B | 12 | 554,700 | 8,513.6 | wafer-hybrid | 7,278.7 | wafer-hybrid | 1.17x | 1,245.2 | pipeline | 467.7 | tensor | 2.66x | 6.84x | 15.56x | 2.28x |
+| Qwen3-8B | 2 | 92,450 | 8,772.9 | wafer-hybrid | 8,205.5 | wafer-hybrid | 1.07x | 651.2 | pipeline | 389.3 | tensor | 1.67x | 13.47x | 21.08x | 1.56x |
+| Qwen3-8B | 3 | 138,675 | 8,819.3 | wafer-hybrid | 7,632.4 | wafer-hybrid | 1.16x | 804.8 | pipeline | 439.0 | tensor | 1.83x | 10.96x | 17.39x | 1.59x |
+| Qwen3-8B | 4 | 184,900 | 8,768.1 | wafer-hybrid | 7,058.5 | wafer-hybrid | 1.24x | 912.3 | pipeline | 468.9 | tensor | 1.95x | 9.61x | 15.05x | 1.57x |
+| Qwen3-8B | 6 | 277,350 | 8,717.0 | wafer-hybrid | 6,145.8 | wafer-hybrid | 1.42x | 1,053.1 | pipeline | 437.9 | tensor | 2.40x | 8.28x | 14.03x | 1.70x |
+| Qwen3-8B | 8 | 369,800 | 7,928.9 | wafer-pipeline | 5,880.0 | wafer-hybrid | 1.35x | 1,141.1 | pipeline | 452.3 | tensor | 2.52x | 6.95x | 13.00x | 1.87x |
+| Qwen3-8B | 12 | 554,700 | 7,928.9 | wafer-pipeline | 5,539.6 | wafer-hybrid | 1.43x | 1,245.2 | pipeline | 467.7 | tensor | 2.66x | 6.37x | 11.84x | 1.86x |
 
-**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 1.54x to 2.33x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
+**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 1.56x to 1.87x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
 
 
 ## Iso-area comparison
@@ -500,7 +500,7 @@ is the error this study made.
 
 | Model | B | Pick | ROM design | ROM mm2 | ROM user tok/s | ROM aggregate tok/s | ROM binds on | GPU | GPU mm2 | Area ratio | GPU parallelism | GPU link us | GPU user tok/s | GPU aggregate tok/s | GPU binds on | Per-user ratio | Aggregate ratio | PP-only ratio | Ratio without the layer cap |
 |---|---:|---|---|---:|---:|---:|---|---|---:|---:|---|---:|---:|---:|---|---:|---:|---:|---:|
-| Qwen3-8B | 1 | fastest | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill | 92,450 | 9,985.6 | 9,985.6 | layer_fixed_latency | Qwen3-8B/a100_sxm_80gb-x112-tensor | 92,512 | 1.00x | tensor | 1,122.77 | 389.3 | 389.3 | link_latency | 25.65x | 17.21x | 989.60x | 25.65x |
+| Qwen3-8B | 1 | fastest | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill | 92,450 | 8,205.5 | 8,205.5 | layer_fixed_latency | Qwen3-8B/a100_sxm_80gb-x112-tensor | 92,512 | 1.00x | tensor | 1,122.77 | 389.3 | 389.3 | link_latency | 21.08x | 14.14x | 813.19x | 21.08x |
 | Qwen3-8B | 1 | smallest silicon | Qwen3-8B/ROM-N6-native-SRAMKV-array-hw-hybrid-x89-romfill | 72,535 | 1,477.9 | 1,477.9 | layer_fixed_latency | Qwen3-8B/a100_sxm_80gb-x88-tensor | 72,688 | 1.00x | tensor | 1,120.94 | 356.3 | 356.3 | link_latency | 4.15x | 2.90x | 146.47x | 4.15x |
 | Qwen3-8B | 2 | no feasible ROM design | Qwen3-8B/ROM-N6-native-SRAMKV-array-hw-pipeline-x92 | 74,980 | infeasible | — | capacity_or_format | Qwen3-8B/a100_sxm_80gb-x91-tensor | 75,166 | 1.00x | tensor | 1,221.92 | 259.6 | 519.3 | kv_read | — | — | — | — |
 | Qwen3-8B | 4 | no feasible ROM design | Qwen3-8B/ROM-N6-native-SRAMKV-array-hw-pipeline-x92 | 74,980 | infeasible | — | capacity_or_format | Qwen3-8B/a100_sxm_80gb-x91-hybrid | 75,166 | 1.00x | hybrid | 1,218.77 | 169.2 | 676.7 | kv_read | — | — | — | — |
@@ -641,7 +641,7 @@ given more silicon.
 
 | Model | B | Winner on rate | Winner per mm2 | Best design | Best mm2 | Best user tok/s | tok/s per mm2 | Best array tok/s (mm2) | Best wafer tok/s (mm2) | Wafer/array | Binds on |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
-| Qwen3-8B | 1 | wafer | wafer | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill | 92,450 | 9,985.6 | 0.108 | 3,567.0 (185,005) | 9,985.6 (92,450) | 2.80x | layer_fixed_latency |
+| Qwen3-8B | 1 | wafer | wafer | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill | 92,450 | 8,205.5 | 0.089 | 3,567.0 (185,005) | 8,205.5 (92,450) | 2.30x | layer_fixed_latency |
 | Qwen3-8B | 2 | no feasible ROM design | — | — | — | — | — | — (—) | — (—) | — | — |
 | Qwen3-8B | 4 | no feasible ROM design | — | — | — | — | — | — (—) | — (—) | — | — |
 | Qwen3-8B | 8 | no feasible ROM design | — | — | — | — | — | — (—) | — (—) | — | — |
@@ -711,7 +711,7 @@ distribution rather than from the mean engaged region.
 
 | Model | B | Spare silicon | Batched aggregate | Per-stream aggregate | Per-region aggregate | Per-stream penalty | Per-region over broadcast | Batched binds on | Per-stream binds on | Per-region binds on |
 |---|---:|---|---:|---:|---:|---:|---:|---|---|---|
-| Qwen3-8B | 1 | sram | 7,904.2 | 7,728.9 | 7,728.9 | 1.02x | 1.00x | layer_fixed_latency | layer_fixed_latency | layer_fixed_latency |
+| Qwen3-8B | 1 | sram | 6,004.1 | 5,801.4 | 5,801.4 | 1.03x | 1.00x | weight_read | weight_read | weight_read |
 | Qwen3-8B | 2 | sram | — | — | — | — | — | — | — | — |
 | Qwen3-8B | 4 | sram | — | — | — | — | — | — | — | — |
 | Qwen3-8B | 8 | sram | — | — | — | — | — | — | — | — |
@@ -721,7 +721,7 @@ distribution rather than from the mean engaged region.
 | Qwen3-8B | 256 | sram | — | — | — | — | — | — | — | — |
 | Qwen3-8B | 1024 | sram | — | — | — | — | — | — | — | — |
 | Qwen3-8B | 4096 | sram | — | — | — | — | — | — | — | — |
-| Qwen3-8B | 1 | rom | 9,985.6 | 10,089.3 | 10,089.3 | 0.99x | 1.00x | layer_fixed_latency | layer_fixed_latency | layer_fixed_latency |
+| Qwen3-8B | 1 | rom | 8,205.5 | 8,275.4 | 8,275.4 | 0.99x | 1.00x | layer_fixed_latency | layer_fixed_latency | layer_fixed_latency |
 | Qwen3-8B | 2 | rom | — | — | — | — | — | — | — | — |
 | Qwen3-8B | 4 | rom | — | — | — | — | — | — | — | — |
 | Qwen3-8B | 8 | rom | — | — | — | — | — | — | — | — |
@@ -759,12 +759,12 @@ where that is controlled for.
 
 | Model | B | Amortisation | Spare | Design | mm2 | R | Sweeps | Aggregate | tok/s/mm2 | Binds on | vs ROM+MAC/sram |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---|---:|
-| Qwen3-8B | 1 | batched | sram | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-tensor-x2 | 92,450 | 1.00 | 1.00 | 7,904.2 | 0.085 | layer_fixed_latency | 1.00x |
-| Qwen3-8B | 1 | batched | rom | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill | 92,450 | 6.41 | 1.00 | 9,985.6 | 0.108 | layer_fixed_latency | 1.26x |
-| Qwen3-8B | 1 | per_stream | sram | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-tensor-x2-perstream | 92,450 | 1.00 | 1.00 | 7,728.9 | 0.084 | layer_fixed_latency | 0.98x |
-| Qwen3-8B | 1 | per_stream | rom | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perstream-romfill | 92,450 | 11.32 | 1.00 | 10,089.3 | 0.109 | layer_fixed_latency | 1.28x |
-| Qwen3-8B | 1 | per_region | sram | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-tensor-x2-perregion | 92,450 | 1.00 | 1.00 | 7,728.9 | 0.084 | layer_fixed_latency | 0.98x |
-| Qwen3-8B | 1 | per_region | rom | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 11.32 | 1.00 | 10,089.3 | 0.109 | layer_fixed_latency | 1.28x |
+| Qwen3-8B | 1 | batched | sram | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2 | 92,450 | 1.00 | 1.00 | 6,004.1 | 0.065 | weight_read | 1.00x |
+| Qwen3-8B | 1 | batched | rom | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-romfill | 92,450 | 6.41 | 1.00 | 8,205.5 | 0.089 | layer_fixed_latency | 1.37x |
+| Qwen3-8B | 1 | per_stream | sram | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perstream | 92,450 | 1.00 | 1.00 | 5,801.4 | 0.063 | weight_read | 0.97x |
+| Qwen3-8B | 1 | per_stream | rom | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perstream-romfill | 92,450 | 11.32 | 1.00 | 8,275.4 | 0.090 | layer_fixed_latency | 1.38x |
+| Qwen3-8B | 1 | per_region | sram | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 1.00 | 5,801.4 | 0.063 | weight_read | 0.97x |
+| Qwen3-8B | 1 | per_region | rom | Qwen3-8B/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 11.32 | 1.00 | 8,275.4 | 0.090 | layer_fixed_latency | 1.38x |
 
 ## What the completeness corrections cost
 
@@ -820,7 +820,7 @@ large fraction of one and a rounding error on the other.
 | Family | Model | B | Fixed latency (us) | Share of the fastest step |
 |---|---|---:|---:|---:|
 | gpu | Qwen3-8B | 1 | 566.80 | 28.3% |
-| rom | Qwen3-8B | 1 | 68.95 | 69.6% |
+| rom | Qwen3-8B | 1 | 68.95 | 57.1% |
 
 ### 4. KV access granularity, which is a layout choice
 
@@ -871,9 +871,9 @@ reduces the bytes fetched.
 | gpu | link_latency | 51 |
 | rom | infeasible | 1944 |
 | rom | kv_read | 8 |
-| rom | layer_fixed_latency | 120 |
-| rom | link_latency | 56 |
-| rom | weight_read | 32 |
+| rom | layer_fixed_latency | 103 |
+| rom | link_latency | 76 |
+| rom | weight_read | 29 |
 
 Why the infeasible points are infeasible:
 
@@ -947,8 +947,8 @@ Why the infeasible points are infeasible:
 |---|---:|
 | measured | 4 |
 | published | 75 |
-| derived | 50 |
-| assumed | 85 |
+| derived | 49 |
+| assumed | 84 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -1006,7 +1006,6 @@ failure mode this program exists to prevent:
 - `links.rom_package_ucie.domain_size`
 - `links.rom_package_ucie.fabric`
 - `links.rom_wafer_express.fabric`
-- `links.rom_wafer_express.hop_latency_s`
 - `links.rom_wafer_express.router_latency_s`
 - `links.rom_wafer_express.wire_clock_hz`
 - `links.rom_wafer_express.wire_layers`

@@ -10,9 +10,9 @@ bandwidth and compute roof are derived from it.
 ## What the model says
 
 1. **The ROM path has a hard per-token ceiling that is a technology constant, not a design choice.** The full-array sweep time is the ROM capacity density divided by its read-bandwidth density, so it does not depend on model size, batch, or expert coverage: 34.5 us, or 29,015 tok/s per user. Under this derivation both densities scale with the same published bitcell-area ratio, so that ceiling is the same at every node: process scaling buys a ROM design capacity, not per-token speed.
-2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 466x (ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream, 1,759 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 1 device. On the GPU side the correction reaches 11x (a100_sxm_80gb-x1735-pipeline, 1,735 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `expert` on 22 devices. Both validation gates are single-slot machines and are unchanged to the digit.
-3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. MiMo-V2.6-Flash takes 1 x 46,225 mm2 (46,225 mm2, wafer, KV in SRAM) at 7,142 tok/s per user and 155 tok/s per 1,000 mm2, holding 1 session, against 56 copies of one unified HBM die at the same silicon: 21.4x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
-4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is MiMo-V2.6-Flash on 46,225 mm2 of ROM silicon at 7,142 tok/s per user against 46,256 mm2 of a100_sxm_80gb-x56-hybrid at 334 tok/s: **21.4x**, ROM binding on `layer_fixed_latency` and the GPU on `layer_fixed_latency`. It holds 1 resident session against the GPU cluster's 832. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
+2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 463x (ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream, 1,759 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 1 device. On the GPU side the correction reaches 11x (a100_sxm_80gb-x1735-pipeline, 1,735 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `expert` on 22 devices. Both validation gates are single-slot machines and are unchanged to the digit.
+3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. MiMo-V2.6-Flash takes 1 x 46,225 mm2 (46,225 mm2, wafer, KV in SRAM) at 5,440 tok/s per user and 118 tok/s per 1,000 mm2, holding 1 session, against 56 copies of one unified HBM die at the same silicon: 16.3x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
+4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is MiMo-V2.6-Flash on 46,225 mm2 of ROM silicon at 5,440 tok/s per user against 46,256 mm2 of a100_sxm_80gb-x56-hybrid at 334 tok/s: **16.3x**, ROM binding on `layer_fixed_latency` and the GPU on `layer_fixed_latency`. It holds 1 resident session against the GPU cluster's 832. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
 5. **The layer cap on serial stage boundaries is still applied and is no longer visible in the headline, because no comparator it binds on wins any more.** A token cannot cross more stage boundaries than the model has layers, and this study charges at most that many. With per-user latency separated from aggregate throughput, both families now pick a topology with a tensor group at batch 1, and a tensor group has one stage and no boundary for the cap to remove. The `Ratio without the layer cap` column in the iso-area table therefore equals the stated ratio wherever the winner is tensor-parallel; it still differs wherever a pipeline wins.
 6. **Letting the GPU choose its own parallelism is worth up to 3.98x to it.** At 233,905 mm2 on MiMo-V2.6-Flash the pipeline-only GPU delivers 86.69 tok/s and the same silicon running tensor delivers 345 tok/s.
 7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 4096 the aggregate ratio at equal area spans 0.06x (MiMo-V2.6-Flash, ROM binding on `link_latency`) to 1.49x (MiMo-V2.6-Flash, ROM binding on `kv_read`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
@@ -50,20 +50,20 @@ The GPU comparator at each ROM area is N copies of one unified HBM die, N chosen
 
 **Recommended: `ROM-N6-native-SRAMKV-wafer-tensor-x1`** -- 1 x 46,225 mm2 wafer, 46,225 mm2 total, `tensor`-parallel, KV in SRAM, spare silicon to `sram`.
 
-- **7,142.1 tok/s per user** (0.14 ms/token), binding on `layer_fixed_latency`
-- **154.5 tok/s per 1,000 mm2** -- the quantity the rule maximises
-- 7,142 tok/s aggregate with every slot full, over 1 resident session (fill limited by `batch`)
-- 3,681 W at 0.080 W/mm2, 515.4 mJ/token, thermal scale 1.000
+- **5,440.2 tok/s per user** (0.18 ms/token), binding on `layer_fixed_latency`
+- **117.7 tok/s per 1,000 mm2** -- the quantity the rule maximises
+- 5,440 tok/s aggregate with every slot full, over 1 resident session (fill limited by `batch`)
+- 3,645 W at 0.079 W/mm2, 670.1 mJ/token, thermal scale 1.000
 
 **Iso-area, at the area the rule chose.** The comparator is 56 copies of one unified HBM die -- `a100_sxm_80gb-x56-hybrid`, 46,256 mm2, area ratio 0.9993 -- running the `hybrid` topology it chose for itself.
 
 | | ROM | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: |
 | silicon mm2 | 46,225 | 46,256 | 0.9993 |
-| user tok/s | 7,142.1 | 334.2 | 21.37x |
-| aggregate tok/s | 7,142 | 2,339 | 1.47x |
+| user tok/s | 5,440.2 | 334.2 | 16.28x |
+| aggregate tok/s | 5,440 | 2,339 | 1.12x |
 | resident sessions | 1 | 832 | -- |
-| J/token | 0.5154 | 26.0409 | 50.5x |
+| J/token | 0.6701 | 26.0409 | 38.9x |
 
 The areas match to within 2%, so no granularity correction is needed on this row.
 
@@ -75,10 +75,10 @@ The GPU's own best machine at **any** area is `a100_sxm_80gb-x283-tensor` at 233
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 7,142.1 | 154.5 | 1 | 21.37x |
-| rank on per-user rate alone | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 7,142.1 | 154.5 | 1 | 21.37x |
+| before -- smallest within 5% of peak rate | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 5,440.2 | 117.7 | 1 | 16.28x |
+| rank on per-user rate alone | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 5,440.2 | 117.7 | 1 | 16.28x |
 | smallest feasible machine | `ROM-N6-native-SRAMKV-array-hw-tensor-x46` | 37,490 | 4,233.4 | 112.9 | 1 | 13.03x |
-| **after -- this report's rule** | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 7,142.1 | 154.5 | 1 | 21.37x |
+| **after -- this report's rule** | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 5,440.2 | 117.7 | 1 | 16.28x |
 
 **There is nothing to walk to.** The frontier is a single row, which is what it means for one design to beat every other feasible design of this model on BOTH axes at once. No trade-off has to be argued and no threshold is doing any work here: the recommendation is simply the only non-dominated machine. What it beat is in the class table below.
 
@@ -86,7 +86,7 @@ The GPU's own best machine at **any** area is `a100_sxm_80gb-x283-tensor` at 233
 
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
-| `ROM-N6-native-SRAMKV-wafer-tensor-x1` **<-- recommended** | 46,225 | 1 | 7,142.1 | 7,142 | 154.5 | 1 | `layer_fixed_latency` | 3,681 | 515.4 | `a100_sxm_80gb-x56-hybrid` | 21.37x |
+| `ROM-N6-native-SRAMKV-wafer-tensor-x1` **<-- recommended** | 46,225 | 1 | 5,440.2 | 5,440 | 117.7 | 1 | `layer_fixed_latency` | 3,645 | 670.1 | `a100_sxm_80gb-x56-hybrid` | 16.28x |
 
 **Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
 
@@ -95,36 +95,36 @@ The GPU's own best machine at **any** area is `a100_sxm_80gb-x283-tensor` at 233
 | array | 228 | densest | `ROM-N6-native-SRAMKV-array-hw-tensor-x46` | 37,490 | 4,233.4 | 112.9 | 1 |
 | array | 228 | fastest | `ROM-N6-native-SRAMKV-array-hw-hybrid-x64` | 52,160 | 5,173.0 | 99.2 | 1 |
 | array | 228 | smallest | `ROM-N6-native-SRAMKV-array-hw-tensor-x46` | 37,490 | 4,233.4 | 112.9 | 1 |
-| wafer | 46 | densest | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 7,142.1 | 154.5 | 1 |
-| wafer | 46 | fastest | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 7,142.1 | 154.5 | 1 |
-| wafer | 46 | smallest | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 7,142.1 | 154.5 | 1 |
+| wafer | 46 | densest | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 5,440.2 | 117.7 | 1 |
+| wafer | 46 | fastest | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 5,440.2 | 117.7 | 1 |
+| wafer | 46 | smallest | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 5,440.2 | 117.7 | 1 |
 
 **Three classes at iso-area, batch by batch.** Each ROM class enters at its fastest feasible design for that batch and is read against the GPU comparator at *its own* silicon area (the area ratio is stated). The `array @ wafer area` row is the fastest reticle array within 5% of the wafer's silicon, which is the wafer-versus-array comparison at iso-area. Read resident sessions before the ratio.
 
 | batch | class | design | mm2 | user tok/s | aggregate tok/s | resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | J/token ratio |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | 1 | array | `ROM-N6-native-SRAMKV-array-hw-hybrid-x64` | 52,160 | 5,173.0 | 5,173 | 1 | 4,500 | 870.0 | `layer_fixed_latency` | `a100_sxm_80gb-x63-hybrid` | 331.6 | 941 | 29,276.0 | 1.002 | 15.60x | 33.7x |
-| 1 | wafer | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 7,142.1 | 7,142 | 1 | 3,681 | 515.4 | `layer_fixed_latency` | `a100_sxm_80gb-x56-hybrid` | 334.2 | 832 | 26,040.9 | 0.999 | 21.37x | 50.5x |
+| 1 | wafer | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 5,440.2 | 5,440 | 1 | 3,645 | 670.1 | `layer_fixed_latency` | `a100_sxm_80gb-x56-hybrid` | 334.2 | 832 | 26,040.9 | 0.999 | 16.28x | 38.9x |
 | 1 | array @ wafer area | `ROM-N6-native-SRAMKV-array-hw-hybrid-x57` | 46,455 | 4,936.2 | 4,936 | 1 | 3,668 | 743.1 | `layer_fixed_latency` | `a100_sxm_80gb-x56-hybrid` | 334.2 | 832 | 26,040.9 | 1.004 | 14.77x | 35.0x |
-| 1 | wafer reference | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 7,142.1 | -- | 1 | -- | 515.4 | -- | -- | -- | -- | -- | 1.005 | 1.45x wafer/array | -- |
+| 1 | wafer reference | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 46,225 | 5,440.2 | -- | 1 | -- | 670.1 | -- | -- | -- | -- | -- | 1.005 | 1.10x wafer/array | -- |
 | 2 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 3,903.2 | 27,323 | 6,153 | 62,891 | 6,818.7 | `link_latency` | `a100_sxm_80gb-x391-hybrid` | 327.2 | 6,038 | 88,106.1 | 0.999 | 11.93x | 12.9x |
-| 2 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 4,054.3 | 32,435 | 4,142 | 224,594 | 26,213.0 | `layer_fixed_latency` | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 26,922 | 388,501.4 | 1.000 | 12.52x | 14.8x |
+| 2 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 3,134.8 | 25,079 | 4,142 | 220,953 | 33,756.6 | `link_latency` | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 26,922 | 388,501.4 | 1.000 | 9.68x | 11.5x |
 | 4 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 3,903.2 | 27,323 | 6,153 | 62,891 | 3,656.8 | `link_latency` | `a100_sxm_80gb-x391-hybrid` | 327.2 | 6,038 | 44,975.4 | 0.999 | 11.93x | 12.3x |
-| 4 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 4,054.3 | 32,435 | 4,142 | 224,594 | 13,354.0 | `layer_fixed_latency` | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 26,922 | 195,173.1 | 1.000 | 12.52x | 14.6x |
+| 4 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 3,134.8 | 25,079 | 4,142 | 220,953 | 17,125.8 | `link_latency` | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 26,922 | 195,173.1 | 1.000 | 9.68x | 11.4x |
 | 8 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x287` | 233,905 | 3,860.3 | 34,743 | 4,459 | 52,157 | 1,627.0 | `layer_fixed_latency` | `a100_sxm_80gb-x283-hybrid` | 324.2 | 4,360 | 17,596.8 | 1.001 | 11.91x | 10.8x |
-| 8 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 4,054.3 | 32,435 | 4,142 | 224,594 | 6,924.5 | `layer_fixed_latency` | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 26,922 | 98,508.9 | 1.000 | 12.52x | 14.2x |
+| 8 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 3,134.8 | 25,079 | 4,142 | 220,953 | 8,810.4 | `link_latency` | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 26,922 | 98,508.9 | 1.000 | 9.68x | 11.2x |
 | 16 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 3,415.0 | 54,639 | 6,153 | 76,389 | 1,398.1 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 323.4 | 6,038 | 12,756.4 | 0.999 | 10.56x | 9.1x |
-| 16 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 3,167.7 | 50,683 | 4,142 | 233,628 | 4,609.6 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 26,922 | 50,176.8 | 1.000 | 9.78x | 10.9x |
+| 16 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 2,577.1 | 41,234 | 4,142 | 228,950 | 5,552.5 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 323.9 | 26,922 | 50,176.8 | 1.000 | 7.96x | 9.0x |
 | 32 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 2,658.9 | 85,086 | 6,153 | 91,441 | 1,074.7 | `kv_read` | `a100_sxm_80gb-x391-hybrid` | 323.4 | 6,038 | 7,300.6 | 0.999 | 8.22x | 6.8x |
-| 32 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 2,172.1 | 69,508 | 4,142 | 242,942 | 3,495.2 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 323.6 | 26,922 | 26,033.9 | 1.000 | 6.71x | 7.4x |
+| 32 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 1,983.5 | 63,473 | 4,142 | 239,955 | 3,780.4 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 323.6 | 26,922 | 26,033.9 | 1.000 | 6.13x | 6.9x |
 | 64 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,676.6 | 107,302 | 6,153 | 102,427 | 954.6 | `kv_read` | `a100_sxm_80gb-x391-hybrid` | 301.0 | 6,038 | 4,584.3 | 0.999 | 5.57x | 4.8x |
-| 64 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 1,260.9 | 80,695 | 4,142 | 248,458 | 3,079.0 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 323.6 | 26,922 | 13,939.3 | 1.000 | 3.90x | 4.5x |
+| 64 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 1,213.9 | 77,689 | 4,142 | 246,971 | 3,179.0 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 323.6 | 26,922 | 13,939.3 | 1.000 | 3.75x | 4.4x |
 | 256 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 503.9 | 129,011 | 6,153 | 113,160 | 877.1 | `kv_read` | `a100_sxm_80gb-x391-hybrid` | 162.2 | 6,038 | 2,521.1 | 0.999 | 3.11x | 2.9x |
-| 256 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 357.8 | 91,598 | 4,142 | 253,851 | 2,771.4 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 310.1 | 26,922 | 4,876.2 | 1.000 | 1.15x | 1.8x |
+| 256 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 356.1 | 91,167 | 4,142 | 253,638 | 2,782.1 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 310.1 | 26,922 | 4,876.2 | 1.000 | 1.15x | 1.8x |
 | 1024 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 131.0 | 134,190 | 6,153 | 115,594 | 861.4 | `kv_read` | `a100_sxm_80gb-x391-hybrid` | 62.0 | 6,038 | 1,832.2 | 0.999 | 2.11x | 2.1x |
-| 1024 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 92.0 | 94,217 | 4,142 | 255,147 | 2,708.1 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 172.4 | 26,922 | 2,600.8 | 1.000 | 0.53x | 1.0x |
+| 1024 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x31` | 1,432,975 | 92.0 | 94,183 | 4,142 | 255,130 | 2,708.9 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 172.4 | 26,922 | 2,600.8 | 1.000 | 0.53x | 1.0x |
 | 4096 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 33.0 | 135,359 | 6,153 | 116,055 | 857.4 | `kv_read` | `a100_sxm_80gb-x391-hybrid` | 22.2 | 6,038 | 1,332.6 | 0.999 | 1.49x | 1.6x |
-| 4096 | wafer | `ROM-N6-native-HBMKV-wafer-pipeline-x31` | 1,432,975 | 23.1 | 94,818 | 4,142 | 255,345 | 2,693.0 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 67.0 | 26,922 | 1,871.4 | 1.000 | 0.35x | 0.7x |
+| 4096 | wafer | `ROM-N6-native-HBMKV-wafer-pipeline-x31` | 1,432,975 | 23.1 | 94,817 | 4,142 | 255,344 | 2,693.0 | `kv_read` | `a100_sxm_80gb-x1735-hybrid` | 67.0 | 26,922 | 1,871.4 | 1.000 | 0.35x | 0.7x |
 
 **The best design differs by batch, and here is where it changes.**
 
@@ -160,7 +160,7 @@ replaced.
 
 | Model | Design | Batch | Group | Coll./layer | Algorithms | Chain (us) | Comm. (us) | Sweep (us) | Legacy serial (us) | tok/s/user |
 |---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 1 | 57 on `rom_wafer_express` | 3.00 | centre_mesh, one_shot | 110.36 | 20.21 | 11.84 | 22.90 | 7,142.1 |
+| MiMo-V2.6-Flash | `ROM-N6-native-SRAMKV-wafer-tensor-x1` | 1 | 57 on `rom_wafer_express` | 3.00 | one_shot, rec_doubling | 110.36 | 64.02 | 11.84 | 55.37 | 5,440.2 |
 | MiMo-V2.6-Flash | `a100_sxm_80gb-x56-hybrid` | 1 | 8 | 3.00 | measured_floor | 937.30 | 745.49 | 1,309.75 | 511.86 | 334.2 |
 | MiMo-V2.6-Flash | `a100_sxm_80gb-x56-hybrid` | 64 | 8 | 3.00 | measured_floor | 937.30 | 837.36 | 6,852.33 | 583.90 | 115.9 |
 
@@ -410,10 +410,10 @@ One row per (model, batch). The ROM design is the smallest silicon within 5% of 
 
 | Model | B | mm2 | ROM design | ROM J/token | ROM W | ROM binds | iso-area GPU | GPU J/token | GPU W | GPU binds | ROM tokens/joule |
 |---|---:|---:|---|---:|---:|---|---|---:|---:|---|---:|
-| MiMo-V2.6-Flash | 1 | 46,225 | `MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-wafer-tensor-x1` | 0.515440 | 3,681.3 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x56-hybrid` | 26.040901 | 12,400.5 | layer_fixed_latency | 50.52x |
-| MiMo-V2.6-Flash | 2 | 233,905 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x287` | 4.974962 | 44,615.6 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x283-hybrid` | 64.132749 | 43,886.0 | link_latency | 12.87x |
-| MiMo-V2.6-Flash | 4 | 233,905 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x287` | 2.735000 | 44,615.6 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x283-hybrid` | 32.988722 | 43,886.0 | link_latency | 12.06x |
-| MiMo-V2.6-Flash | 8 | 233,905 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x287` | 1.627003 | 52,157.4 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x283-hybrid` | 17.596764 | 62,393.8 | layer_fixed_latency | 10.82x |
+| MiMo-V2.6-Flash | 1 | 46,225 | `MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-wafer-tensor-x1` | 0.670097 | 3,645.4 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x56-hybrid` | 26.040901 | 12,400.5 | layer_fixed_latency | 38.86x |
+| MiMo-V2.6-Flash | 2 | 215,160 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 4.652018 | 41,420.7 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x260-hybrid` | 59.377851 | 40,549.0 | link_latency | 12.69x |
+| MiMo-V2.6-Flash | 4 | 215,160 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 2.573528 | 41,420.7 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x260-hybrid` | 30.611273 | 40,549.0 | link_latency | 11.89x |
+| MiMo-V2.6-Flash | 8 | 215,160 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264` | 1.559070 | 48,624.3 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x260-hybrid` | 16.269337 | 57,343.1 | layer_fixed_latency | 10.44x |
 | MiMo-V2.6-Flash | 16 | 322,740 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1.398065 | 76,389.2 | layer_fixed_latency | `MiMo-V2.6-Flash/a100_sxm_80gb-x391-hybrid` | 12.756421 | 85,682.5 | layer_fixed_latency | 9.12x |
 | MiMo-V2.6-Flash | 32 | 322,740 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 1.074693 | 91,441.5 | kv_read | `MiMo-V2.6-Flash/a100_sxm_80gb-x391-hybrid` | 7.300559 | 85,682.5 | layer_fixed_latency | 6.79x |
 | MiMo-V2.6-Flash | 64 | 322,740 | `MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 0.954574 | 102,427.3 | kv_read | `MiMo-V2.6-Flash/a100_sxm_80gb-x391-hybrid` | 4.584251 | 88,314.8 | weight_read | 4.80x |
@@ -488,15 +488,15 @@ rungs of silicon.
 
 | Model | Wafer-eq | mm2 | ROM before | topo | ROM after | topo | ROM /x | GPU before | topo | GPU after | topo | GPU /x | Ratio before | Ratio after | Ratio change |
 |---|---:|---:|---:|---|---:|---|---:|---:|---|---:|---|---:|---:|---:|---:|
-| MiMo-V2.6-Flash | 1 | 46,225 | 7,850.9 | wafer-pipeline | 7,142.1 | wafer-tensor | 1.10x | 803.6 | pipeline | 334.2 | hybrid | 2.40x | 9.77x | 21.37x | 2.19x |
-| MiMo-V2.6-Flash | 2 | 92,450 | 8,217.7 | wafer-pipeline | 6,795.9 | wafer-hybrid | 1.21x | 868.9 | pipeline | 338.7 | tensor | 2.57x | 9.46x | 20.07x | 2.12x |
-| MiMo-V2.6-Flash | 3 | 138,675 | 8,330.6 | wafer-pipeline | 6,431.6 | wafer-hybrid | 1.30x | 893.1 | pipeline | 341.9 | tensor | 2.61x | 9.33x | 18.81x | 2.02x |
-| MiMo-V2.6-Flash | 4 | 184,900 | 8,330.6 | wafer-pipeline | 6,103.9 | wafer-hybrid | 1.36x | 905.8 | pipeline | 343.6 | tensor | 2.64x | 9.20x | 17.76x | 1.93x |
-| MiMo-V2.6-Flash | 6 | 277,350 | 8,330.6 | wafer-pipeline | 5,477.7 | wafer-hybrid | 1.52x | 918.7 | pipeline | 327.5 | hybrid | 2.81x | 9.07x | 16.72x | 1.84x |
-| MiMo-V2.6-Flash | 8 | 369,800 | 8,330.6 | wafer-pipeline | 5,258.9 | wafer-hybrid | 1.58x | 925.4 | pipeline | 329.8 | hybrid | 2.81x | 9.00x | 15.95x | 1.77x |
-| MiMo-V2.6-Flash | 12 | 554,700 | 8,330.6 | wafer-pipeline | 5,037.9 | wafer-hybrid | 1.65x | 932.1 | pipeline | 327.9 | hybrid | 2.84x | 8.94x | 15.36x | 1.72x |
+| MiMo-V2.6-Flash | 1 | 46,225 | 7,795.5 | wafer-pipeline | 5,440.2 | wafer-tensor | 1.43x | 803.6 | pipeline | 334.2 | hybrid | 2.40x | 9.70x | 16.28x | 1.68x |
+| MiMo-V2.6-Flash | 2 | 92,450 | 8,157.0 | wafer-pipeline | 5,269.4 | wafer-hybrid | 1.55x | 868.9 | pipeline | 338.7 | tensor | 2.57x | 9.39x | 15.56x | 1.66x |
+| MiMo-V2.6-Flash | 3 | 138,675 | 8,268.2 | wafer-pipeline | 5,017.9 | wafer-hybrid | 1.65x | 893.1 | pipeline | 341.9 | tensor | 2.61x | 9.26x | 14.67x | 1.59x |
+| MiMo-V2.6-Flash | 4 | 184,900 | 8,268.2 | wafer-pipeline | 4,816.2 | wafer-hybrid | 1.72x | 905.8 | pipeline | 343.6 | tensor | 2.64x | 9.13x | 14.02x | 1.54x |
+| MiMo-V2.6-Flash | 6 | 277,350 | 8,268.2 | wafer-pipeline | 4,417.7 | wafer-hybrid | 1.87x | 918.7 | pipeline | 327.5 | hybrid | 2.81x | 9.00x | 13.49x | 1.50x |
+| MiMo-V2.6-Flash | 8 | 369,800 | 8,268.2 | wafer-pipeline | 4,069.8 | wafer-hybrid | 2.03x | 925.4 | pipeline | 329.8 | hybrid | 2.81x | 8.94x | 12.34x | 1.38x |
+| MiMo-V2.6-Flash | 12 | 554,700 | 8,268.2 | wafer-pipeline | 3,692.2 | wafer-hybrid | 2.24x | 932.1 | pipeline | 327.9 | hybrid | 2.84x | 8.87x | 11.26x | 1.27x |
 
-**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 1.72x to 2.19x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
+**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 1.27x to 1.68x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
 
 
 ## Iso-area comparison
@@ -529,13 +529,13 @@ is the error this study made.
 
 | Model | B | Pick | ROM design | ROM mm2 | ROM user tok/s | ROM aggregate tok/s | ROM binds on | GPU | GPU mm2 | Area ratio | GPU parallelism | GPU link us | GPU user tok/s | GPU aggregate tok/s | GPU binds on | Per-user ratio | Aggregate ratio | PP-only ratio | Ratio without the layer cap |
 |---|---:|---|---|---:|---:|---:|---|---|---:|---:|---|---:|---:|---:|---|---:|---:|---:|---:|
-| MiMo-V2.6-Flash | 1 | fastest | MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-wafer-tensor-x1 | 46,225 | 7,142.1 | 7,142.1 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x56-hybrid | 46,256 | 1.00x | hybrid | 745.49 | 334.2 | 2,339.2 | layer_fixed_latency | 21.37x | 1.47x | 82.39x | 21.37x |
+| MiMo-V2.6-Flash | 1 | fastest | MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-wafer-tensor-x1 | 46,225 | 5,440.2 | 5,440.2 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x56-hybrid | 46,256 | 1.00x | hybrid | 745.49 | 334.2 | 2,339.2 | layer_fixed_latency | 16.28x | 1.12x | 62.75x | 16.28x |
 | MiMo-V2.6-Flash | 1 | smallest silicon | MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-array-hw-tensor-x46 | 37,490 | 4,233.4 | 4,233.4 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x45-hybrid | 37,170 | 1.01x | hybrid | 743.13 | 324.9 | 1,949.6 | layer_fixed_latency | 13.03x | 1.08x | 48.80x | 13.03x |
-| MiMo-V2.6-Flash | 2 | fastest | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31 | 1,432,975 | 4,054.3 | 32,434.5 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x1735-hybrid | 1,433,110 | 1.00x | hybrid | 1,980.60 | 323.9 | 9,070.3 | link_latency | 12.52x | 0.22x | 46.77x | 12.52x |
+| MiMo-V2.6-Flash | 2 | fastest | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 3,903.2 | 27,322.7 | link_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x391-hybrid | 322,966 | 1.00x | hybrid | 1,931.09 | 327.2 | 2,290.6 | link_latency | 11.93x | 0.81x | 45.02x | 11.93x |
 | MiMo-V2.6-Flash | 2 | smallest silicon | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264 | 215,160 | 3,839.1 | 19,195.5 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x260-hybrid | 214,760 | 1.00x | hybrid | 1,926.38 | 326.2 | 1,631.2 | link_latency | 11.77x | 0.85x | 44.29x | 11.77x |
-| MiMo-V2.6-Flash | 4 | fastest | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31 | 1,432,975 | 4,054.3 | 32,434.5 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x1735-hybrid | 1,433,110 | 1.00x | hybrid | 1,980.60 | 323.9 | 9,070.3 | link_latency | 12.52x | 0.22x | 46.77x | 12.52x |
+| MiMo-V2.6-Flash | 4 | fastest | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 3,903.2 | 27,322.7 | link_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x391-hybrid | 322,966 | 1.00x | hybrid | 1,931.09 | 327.2 | 2,290.6 | link_latency | 11.93x | 0.81x | 45.02x | 11.93x |
 | MiMo-V2.6-Flash | 4 | smallest silicon | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264 | 215,160 | 3,839.1 | 19,195.5 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x260-hybrid | 214,760 | 1.00x | hybrid | 1,926.38 | 326.2 | 1,631.2 | link_latency | 11.77x | 0.85x | 44.29x | 11.77x |
-| MiMo-V2.6-Flash | 8 | fastest | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31 | 1,432,975 | 4,054.3 | 32,434.5 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x1735-hybrid | 1,433,110 | 1.00x | hybrid | 1,980.60 | 323.9 | 9,070.3 | link_latency | 12.52x | 0.22x | 46.77x | 12.52x |
+| MiMo-V2.6-Flash | 8 | fastest | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x287 | 233,905 | 3,860.3 | 34,743.1 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x283-hybrid | 233,758 | 1.00x | hybrid | 813.86 | 324.2 | 11,673.0 | layer_fixed_latency | 11.91x | 1.42x | 44.53x | 11.91x |
 | MiMo-V2.6-Flash | 8 | smallest silicon | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264 | 215,160 | 3,749.7 | 33,747.1 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x260-hybrid | 214,760 | 1.00x | hybrid | 806.79 | 325.3 | 10,735.2 | layer_fixed_latency | 11.53x | 1.50x | 43.25x | 11.53x |
 | MiMo-V2.6-Flash | 16 | fastest | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 3,415.0 | 54,639.2 | layer_fixed_latency | MiMo-V2.6-Flash/a100_sxm_80gb-x391-hybrid | 322,966 | 1.00x | hybrid | 842.16 | 323.4 | 15,844.5 | layer_fixed_latency | 10.56x | 1.61x | 39.39x | 10.57x |
 | MiMo-V2.6-Flash | 16 | smallest silicon | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264 | 215,160 | 3,096.2 | 52,634.9 | kv_read | MiMo-V2.6-Flash/a100_sxm_80gb-x260-hybrid | 214,760 | 1.00x | hybrid | 806.79 | 325.3 | 10,735.2 | layer_fixed_latency | 9.52x | 2.34x | 35.72x | 9.52x |
@@ -751,14 +751,14 @@ given more silicon.
 
 | Model | B | Winner on rate | Winner per mm2 | Best design | Best mm2 | Best user tok/s | tok/s per mm2 | Best array tok/s (mm2) | Best wafer tok/s (mm2) | Wafer/array | Binds on |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
-| MiMo-V2.6-Flash | 1 | wafer | wafer | MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-wafer-tensor-x1 | 46,225 | 7,142.1 | 0.155 | 4,936.2 (46,455) | 7,142.1 (46,225) | 1.45x | layer_fixed_latency |
-| MiMo-V2.6-Flash | 2 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x287 | 233,905 | 3,901.7 | 0.017 | 3,839.1 (215,160) | 4,054.3 (1,432,975) | 1.06x | layer_fixed_latency |
-| MiMo-V2.6-Flash | 4 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x287 | 233,905 | 3,901.7 | 0.017 | 3,839.1 (215,160) | 4,054.3 (1,432,975) | 1.06x | layer_fixed_latency |
-| MiMo-V2.6-Flash | 8 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x287 | 233,905 | 3,860.3 | 0.017 | 3,749.7 (215,160) | 4,054.3 (1,432,975) | 1.08x | layer_fixed_latency |
-| MiMo-V2.6-Flash | 16 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 3,415.0 | 0.011 | 3,415.0 (322,740) | 3,167.7 (1,432,975) | 0.93x | layer_fixed_latency |
-| MiMo-V2.6-Flash | 32 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 2,658.9 | 0.008 | 2,658.9 (322,740) | 2,172.1 (1,432,975) | 0.82x | kv_read |
-| MiMo-V2.6-Flash | 64 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 1,676.6 | 0.005 | 1,676.6 (322,740) | 1,260.9 (1,432,975) | 0.75x | kv_read |
-| MiMo-V2.6-Flash | 256 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 503.9 | 0.002 | 503.9 (322,740) | 357.8 (1,432,975) | 0.71x | kv_read |
+| MiMo-V2.6-Flash | 1 | wafer | wafer | MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-wafer-tensor-x1 | 46,225 | 5,440.2 | 0.118 | 4,936.2 (46,455) | 5,440.2 (46,225) | 1.10x | layer_fixed_latency |
+| MiMo-V2.6-Flash | 2 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264 | 215,160 | 3,839.1 | 0.018 | 3,839.1 (215,160) | 3,134.8 (1,432,975) | 0.82x | layer_fixed_latency |
+| MiMo-V2.6-Flash | 4 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264 | 215,160 | 3,839.1 | 0.018 | 3,839.1 (215,160) | 3,134.8 (1,432,975) | 0.82x | layer_fixed_latency |
+| MiMo-V2.6-Flash | 8 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264 | 215,160 | 3,749.7 | 0.017 | 3,749.7 (215,160) | 3,134.8 (1,432,975) | 0.84x | layer_fixed_latency |
+| MiMo-V2.6-Flash | 16 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 3,415.0 | 0.011 | 3,415.0 (322,740) | 2,577.1 (1,432,975) | 0.75x | layer_fixed_latency |
+| MiMo-V2.6-Flash | 32 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 2,658.9 | 0.008 | 2,658.9 (322,740) | 1,983.5 (1,432,975) | 0.75x | kv_read |
+| MiMo-V2.6-Flash | 64 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 1,676.6 | 0.005 | 1,676.6 (322,740) | 1,213.9 (1,432,975) | 0.72x | kv_read |
+| MiMo-V2.6-Flash | 256 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x396 | 322,740 | 503.9 | 0.002 | 503.9 (322,740) | 356.1 (1,432,975) | 0.71x | kv_read |
 | MiMo-V2.6-Flash | 1024 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 131.0 | 0.000 | 131.0 (322,740) | 92.0 (1,432,975) | 0.70x | kv_read |
 | MiMo-V2.6-Flash | 4096 | array | array | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 33.0 | 0.000 | 33.0 (322,740) | 23.1 (1,432,975) | 0.70x | kv_read |
 
@@ -833,26 +833,26 @@ distribution rather than from the mean engaged region.
 
 | Model | B | Spare silicon | Batched aggregate | Per-stream aggregate | Per-region aggregate | Per-stream penalty | Per-region over broadcast | Batched binds on | Per-stream binds on | Per-region binds on |
 |---|---:|---|---:|---:|---:|---:|---:|---|---|---|
-| MiMo-V2.6-Flash | 1 | sram | 131,682.9 | 26,076.3 | 26,076.3 | 5.05x | 1.00x | kv_read | weight_read | weight_read |
-| MiMo-V2.6-Flash | 2 | sram | 131,682.9 | 26,076.3 | 26,076.3 | 5.05x | 1.00x | kv_read | weight_read | weight_read |
-| MiMo-V2.6-Flash | 4 | sram | 131,682.9 | 26,076.3 | 26,076.3 | 5.05x | 1.00x | kv_read | weight_read | weight_read |
-| MiMo-V2.6-Flash | 8 | sram | 131,682.9 | 26,076.3 | 30,695.2 | 5.05x | 1.18x | kv_read | weight_read | layer_fixed_latency |
-| MiMo-V2.6-Flash | 16 | sram | 131,682.9 | 26,076.3 | 29,548.3 | 5.05x | 1.13x | kv_read | weight_read | weight_read |
-| MiMo-V2.6-Flash | 32 | sram | 131,682.9 | 26,076.3 | 43,772.9 | 5.05x | 1.68x | kv_read | weight_read | weight_read |
-| MiMo-V2.6-Flash | 64 | sram | 131,682.9 | 26,076.3 | 69,039.4 | 5.05x | 2.65x | kv_read | weight_read | weight_read |
-| MiMo-V2.6-Flash | 256 | sram | 131,682.9 | 26,076.3 | 88,635.7 | 5.05x | 3.40x | kv_read | weight_read | kv_read |
-| MiMo-V2.6-Flash | 1024 | sram | 134,189.7 | 26,076.3 | 93,941.6 | 5.15x | 3.60x | kv_read | weight_read | kv_read |
-| MiMo-V2.6-Flash | 4096 | sram | 135,358.8 | 26,095.7 | 94,761.7 | 5.19x | 3.63x | kv_read | weight_read | kv_read |
-| MiMo-V2.6-Flash | 1 | rom | 127,026.4 | 94,536.7 | 94,536.7 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 2 | rom | 127,026.4 | 94,536.7 | 94,536.7 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 4 | rom | 127,026.4 | 94,536.7 | 94,536.7 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 8 | rom | 127,026.4 | 94,536.7 | 94,536.7 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 16 | rom | 127,026.4 | 94,536.7 | 94,536.7 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 32 | rom | 127,026.4 | 94,536.7 | 94,536.7 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 64 | rom | 127,026.4 | 94,536.7 | 94,536.7 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 256 | rom | 127,026.4 | 94,536.7 | 94,536.7 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 1024 | rom | 129,241.4 | 94,536.7 | 94,536.7 | 1.37x | 1.00x | kv_read | kv_read | kv_read |
-| MiMo-V2.6-Flash | 4096 | rom | 130,313.8 | 94,792.0 | 94,791.8 | 1.37x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 1 | sram | 131,682.9 | 26,076.0 | 26,076.0 | 5.05x | 1.00x | kv_read | weight_read | weight_read |
+| MiMo-V2.6-Flash | 2 | sram | 131,682.9 | 26,076.0 | 26,076.0 | 5.05x | 1.00x | kv_read | weight_read | weight_read |
+| MiMo-V2.6-Flash | 4 | sram | 131,682.9 | 26,076.0 | 26,076.0 | 5.05x | 1.00x | kv_read | weight_read | weight_read |
+| MiMo-V2.6-Flash | 8 | sram | 131,682.9 | 26,076.0 | 26,907.5 | 5.05x | 1.03x | kv_read | weight_read | layer_fixed_latency |
+| MiMo-V2.6-Flash | 16 | sram | 131,682.9 | 26,076.0 | 28,542.3 | 5.05x | 1.09x | kv_read | weight_read | weight_read |
+| MiMo-V2.6-Flash | 32 | sram | 131,682.9 | 26,076.0 | 43,501.0 | 5.05x | 1.67x | kv_read | weight_read | weight_read |
+| MiMo-V2.6-Flash | 64 | sram | 131,682.9 | 26,076.0 | 64,963.9 | 5.05x | 2.49x | kv_read | weight_read | weight_read |
+| MiMo-V2.6-Flash | 256 | sram | 131,682.9 | 26,076.0 | 86,987.2 | 5.05x | 3.34x | kv_read | weight_read | kv_read |
+| MiMo-V2.6-Flash | 1024 | sram | 134,189.7 | 26,076.0 | 93,868.0 | 5.15x | 3.60x | kv_read | weight_read | kv_read |
+| MiMo-V2.6-Flash | 4096 | sram | 135,358.8 | 26,095.6 | 94,758.2 | 5.19x | 3.63x | kv_read | weight_read | kv_read |
+| MiMo-V2.6-Flash | 1 | rom | 127,026.4 | 94,532.1 | 94,532.1 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 2 | rom | 127,026.4 | 94,532.1 | 94,532.1 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 4 | rom | 127,026.4 | 94,532.1 | 94,532.1 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 8 | rom | 127,026.4 | 94,532.1 | 94,532.1 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 16 | rom | 127,026.4 | 94,532.1 | 94,532.1 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 32 | rom | 127,026.4 | 94,532.1 | 94,532.1 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 64 | rom | 127,026.4 | 94,532.1 | 94,532.1 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 256 | rom | 127,026.4 | 94,532.1 | 94,532.1 | 1.34x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 1024 | rom | 129,241.4 | 94,532.1 | 94,532.1 | 1.37x | 1.00x | kv_read | kv_read | kv_read |
+| MiMo-V2.6-Flash | 4096 | rom | 130,313.8 | 94,790.5 | 94,790.3 | 1.37x | 1.00x | kv_read | kv_read | kv_read |
 
 ## The floorplan sweep: where the recovered silicon goes
 
@@ -883,64 +883,64 @@ where that is controlled for.
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---|---:|
 | MiMo-V2.6-Flash | 1 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 131,682.9 | 0.408 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 1 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 127,026.4 | 0.394 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 1 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 1 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
-| MiMo-V2.6-Flash | 1 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 1 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 1 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 1 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 1 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 1 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
 | MiMo-V2.6-Flash | 2 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 131,682.9 | 0.408 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 2 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 127,026.4 | 0.394 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 2 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 2 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
-| MiMo-V2.6-Flash | 2 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 2 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 2 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 2 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 2 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 2 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
 | MiMo-V2.6-Flash | 4 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 131,682.9 | 0.408 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 4 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 127,026.4 | 0.394 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 4 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 4 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
-| MiMo-V2.6-Flash | 4 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 4 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 4 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 4 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 4 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 4 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
 | MiMo-V2.6-Flash | 8 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 131,682.9 | 0.408 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 8 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 127,026.4 | 0.394 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 8 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 8 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
-| MiMo-V2.6-Flash | 8 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-wafer-tensor-x1-perregion | 46,225 | 1.00 | 2.34 | 30,695.2 | 0.664 | layer_fixed_latency | 0.23x |
-| MiMo-V2.6-Flash | 8 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 8 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 8 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 8 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-SRAMKV-wafer-tensor-x1-perregion | 46,225 | 1.00 | 2.34 | 26,907.5 | 0.582 | layer_fixed_latency | 0.20x |
+| MiMo-V2.6-Flash | 8 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
 | MiMo-V2.6-Flash | 16 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 131,682.9 | 0.408 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 16 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 127,026.4 | 0.394 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 16 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 16 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
-| MiMo-V2.6-Flash | 16 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 1.22 | 29,548.3 | 0.021 | weight_read | 0.22x |
-| MiMo-V2.6-Flash | 16 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 16 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 16 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 16 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264-perregion | 215,160 | 1.00 | 1.58 | 28,542.3 | 0.133 | weight_read | 0.22x |
+| MiMo-V2.6-Flash | 16 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
 | MiMo-V2.6-Flash | 32 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 131,682.9 | 0.408 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 32 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 127,026.4 | 0.394 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 32 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 32 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
-| MiMo-V2.6-Flash | 32 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 1.79 | 43,772.9 | 0.031 | weight_read | 0.33x |
-| MiMo-V2.6-Flash | 32 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 32 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 32 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 32 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-hybrid-x264-perregion | 215,160 | 1.00 | 2.15 | 43,501.0 | 0.202 | weight_read | 0.33x |
+| MiMo-V2.6-Flash | 32 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
 | MiMo-V2.6-Flash | 64 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 131,682.9 | 0.408 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 64 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 127,026.4 | 0.394 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 64 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 64 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
-| MiMo-V2.6-Flash | 64 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 2.34 | 69,039.4 | 0.048 | weight_read | 0.52x |
-| MiMo-V2.6-Flash | 64 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 64 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 64 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 64 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 2.34 | 64,963.9 | 0.045 | weight_read | 0.49x |
+| MiMo-V2.6-Flash | 64 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
 | MiMo-V2.6-Flash | 256 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 131,682.9 | 0.408 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 256 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 127,026.4 | 0.394 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 256 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.20x |
-| MiMo-V2.6-Flash | 256 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
-| MiMo-V2.6-Flash | 256 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 2.48 | 88,635.7 | 0.062 | kv_read | 0.67x |
-| MiMo-V2.6-Flash | 256 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 256 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.20x |
+| MiMo-V2.6-Flash | 256 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
+| MiMo-V2.6-Flash | 256 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 2.48 | 86,987.2 | 0.061 | kv_read | 0.66x |
+| MiMo-V2.6-Flash | 256 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.72x |
 | MiMo-V2.6-Flash | 1024 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 134,189.7 | 0.416 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 1024 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 129,241.4 | 0.400 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 1024 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.3 | 0.018 | weight_read | 0.19x |
-| MiMo-V2.6-Flash | 1024 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.70x |
-| MiMo-V2.6-Flash | 1024 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 2.50 | 93,941.6 | 0.066 | kv_read | 0.70x |
-| MiMo-V2.6-Flash | 1024 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,536.7 | 0.066 | kv_read | 0.70x |
+| MiMo-V2.6-Flash | 1024 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 1.00 | 26,076.0 | 0.018 | weight_read | 0.19x |
+| MiMo-V2.6-Flash | 1024 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.70x |
+| MiMo-V2.6-Flash | 1024 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 2.50 | 93,868.0 | 0.066 | kv_read | 0.70x |
+| MiMo-V2.6-Flash | 1024 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.00 | 94,532.1 | 0.066 | kv_read | 0.70x |
 | MiMo-V2.6-Flash | 4096 | batched | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396 | 322,740 | 1.00 | 1.00 | 135,358.8 | 0.419 | kv_read | 1.00x |
 | MiMo-V2.6-Flash | 4096 | batched | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-array-hw-pipeline-x396-romfill | 322,740 | 5.54 | 1.00 | 130,313.8 | 0.404 | kv_read | 0.96x |
-| MiMo-V2.6-Flash | 4096 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 2.33 | 26,095.7 | 0.018 | weight_read | 0.19x |
-| MiMo-V2.6-Flash | 4096 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 2.33 | 94,792.0 | 0.066 | kv_read | 0.70x |
-| MiMo-V2.6-Flash | 4096 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 2.50 | 94,761.7 | 0.066 | kv_read | 0.70x |
-| MiMo-V2.6-Flash | 4096 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.32 | 94,791.8 | 0.066 | kv_read | 0.70x |
+| MiMo-V2.6-Flash | 4096 | per_stream | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream | 1,432,975 | 1.00 | 2.33 | 26,095.6 | 0.018 | weight_read | 0.19x |
+| MiMo-V2.6-Flash | 4096 | per_stream | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perstream-romfill | 1,432,975 | 95.32 | 2.33 | 94,790.5 | 0.066 | kv_read | 0.70x |
+| MiMo-V2.6-Flash | 4096 | per_region | sram | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-hybrid-x31-perregion | 1,432,975 | 1.00 | 2.50 | 94,758.2 | 0.066 | kv_read | 0.70x |
+| MiMo-V2.6-Flash | 4096 | per_region | rom | MiMo-V2.6-Flash/ROM-N6-native-HBMKV-wafer-pipeline-x31-perregion-romfill | 1,432,975 | 95.32 | 1.32 | 94,790.3 | 0.066 | kv_read | 0.70x |
 
 ## What the completeness corrections cost
 
@@ -1257,7 +1257,7 @@ large fraction of one and a rounding error on the other.
 | Family | Model | B | Fixed latency (us) | Share of the fastest step |
 |---|---|---:|---:|---:|
 | gpu | MiMo-V2.6-Flash | 1 | 937.30 | 32.3% |
-| rom | MiMo-V2.6-Flash | 1 | 110.30 | 81.0% |
+| rom | MiMo-V2.6-Flash | 1 | 110.30 | 61.3% |
 
 ### 4. KV access granularity, which is a layout choice
 
@@ -1324,9 +1324,9 @@ reduces the bytes fetched.
 | rom | compute | 26 |
 | rom | infeasible | 2580 |
 | rom | kv_read | 522 |
-| rom | layer_fixed_latency | 310 |
-| rom | link_latency | 447 |
-| rom | weight_read | 135 |
+| rom | layer_fixed_latency | 280 |
+| rom | link_latency | 478 |
+| rom | weight_read | 134 |
 
 Why the infeasible points are infeasible:
 
@@ -1400,8 +1400,8 @@ Why the infeasible points are infeasible:
 |---|---:|
 | measured | 4 |
 | published | 75 |
-| derived | 50 |
-| assumed | 85 |
+| derived | 49 |
+| assumed | 84 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -1459,7 +1459,6 @@ failure mode this program exists to prevent:
 - `links.rom_package_ucie.domain_size`
 - `links.rom_package_ucie.fabric`
 - `links.rom_wafer_express.fabric`
-- `links.rom_wafer_express.hop_latency_s`
 - `links.rom_wafer_express.router_latency_s`
 - `links.rom_wafer_express.wire_clock_hz`
 - `links.rom_wafer_express.wire_layers`
