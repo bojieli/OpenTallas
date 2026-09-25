@@ -54,11 +54,11 @@ priced, and this plan has to deliver or refute:
 
 1. **The packaged array holds its per-user rate as users are added.** With
    hardware-limited links, striped expert banks and one layer per package, the
-   N5 array serves 4,179 <!-- figure: 4,179 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].rom_per_user_tokens_s" name="V4.1 array rate B1" -->
-   tok/s per user at batch 1 and 3,417 <!-- figure: 3,417 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].rom_per_user_tokens_s" name="V4.1 array rate B64" -->
+   N5 array serves 4,176 <!-- figure: 4,176 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].rom_per_user_tokens_s" name="V4.1 array rate B1" -->
+   tok/s per user at batch 1 and 3,402 <!-- figure: 3,402 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].rom_per_user_tokens_s" name="V4.1 array rate B64" -->
    at batch 64, now that its serial path is the per-token operator graph (the
-   hyper-connection Sinkhorn chains dominate it). V4-Flash goes from 3,374 <!-- figure: 3,374 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x56,batch_size=1].rom_per_user_tokens_s" name="V4-Flash array rate B1" -->
-   to 2,436 <!-- figure: 2,436 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x56,batch_size=64].rom_per_user_tokens_s" name="V4-Flash array rate B64" -->,
+   hyper-connection Sinkhorn chains dominate it). V4-Flash goes from 3,370 <!-- figure: 3,370 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x56,batch_size=1].rom_per_user_tokens_s" name="V4-Flash array rate B1" -->
+   to 2,431 <!-- figure: 2,431 src="results/roofline/n5_vs_b200/analytical.json#comparisons[rom_design=DSV4-Flash/ROM-N5-native-HBMKV-array-hw-pipeline-x56,batch_size=64].rom_per_user_tokens_s" name="V4-Flash array rate B64" -->,
    because its KV reads are larger. Striping and the link latency are what this
    plan's cycle model and RTL must confirm (gate C3, section 4.4).
 2. **The machine is a capacity problem, not a bandwidth one.** The checkpoint
@@ -69,7 +69,7 @@ priced, and this plan has to deliver or refute:
    whether an array is 51 reticles or 84. Section 3 decides it.
 3. **The packaged array is now the winning class for this model.** At N5 the
    best array is 5.99× <!-- figure: 5.99 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].per_user_speed_ratio" name="V4.1 N5 array ratio B1" -->
-   B200 on NVL72 per user at batch 1 and 7.25× <!-- figure: 7.25 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].per_user_speed_ratio" name="V4.1 N5 array ratio B64" -->
+   B200 on NVL72 per user at batch 1 and 7.22× <!-- figure: 7.22 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].per_user_speed_ratio" name="V4.1 N5 array ratio B64" -->
    at batch 64 ([analytical report](ANALYTICAL_REPORT.md)). With GPU-class
    NVLink and InfiniBand it would only tie: both would pay hundreds of µs of
    collectives per token. The array target exists

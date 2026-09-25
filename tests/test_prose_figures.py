@@ -309,13 +309,14 @@ def test_an_ambiguous_row_is_disambiguated_by_its_table(tmp_path) -> None:
     # the same discipline the checker imposes on prose. It was 9.50 before the
     # per-model design rule, 8.98 after it, 5.76 after the scale-out link
     # evidence was corrected, 6.16 after the 2026-09-23 framework revision, and
-    # 6.58 once the serial path came from the per-token operator graph.
+    # 6.58 once the serial path came from the per-token operator graph, and
+    # 10.42 once the ROM wafer could use the express collective network.
     document = tmp_path / "ok.md"
     document.write_text(
         "# x\n\n"
-        '<!-- figure: 6.58 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
+        '<!-- figure: 10.42 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
         ' table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" -->\n'
-        "The ratio is 6.58x.\n")
+        "The ratio is 10.42x.\n")
     code, out = _run(document)
     assert code == 0, out
 
