@@ -1,0 +1,17 @@
+{
+  "_comment": "Macros compiled by tools/mem_compiler/{sram_gen,rom_gen}.py into physical/asap7_memory_macros/. Regenerate with: python3 tools/mem_compiler/build_library.py",
+  "sram": [
+    {"name": "ot_sram_1r1w_1024x256_m2_r2c2", "words": 1024, "bits": 256, "mux": 2, "ports": "1r1w", "spare_rows": 2, "spare_cols": 2},
+    {"name": "ot_sram_1rw_256x64_m4_r2c2", "words": 256, "bits": 64, "mux": 4, "ports": "1rw", "spare_rows": 2, "spare_cols": 2},
+    {"name": "ot_sram_1rw_2048x128_m4_r2c2", "words": 2048, "bits": 128, "mux": 4, "ports": "1rw", "spare_rows": 2, "spare_cols": 2},
+    {"name": "ot_sram_1rw_2048x128_m4", "words": 2048, "bits": 128, "mux": 4, "ports": "1rw"},
+    {"name": "ot_sram_1r1w_512x128_m4_r2c2", "words": 512, "bits": 128, "mux": 4, "ports": "1r1w", "spare_rows": 2, "spare_cols": 2},
+    {"name": "ot_sram_2rw_512x64_m4_r2c2", "words": 512, "bits": 64, "mux": 4, "ports": "2rw", "spare_rows": 2, "spare_cols": 2}
+  ],
+  "rom": [
+    {"name": "ot_rom_8192x266_m8", "words": 8192, "bits": 266, "mux": 8},
+    {"name": "ot_rom_4096x266_m8", "words": 4096, "bits": 266, "mux": 8},
+    {"name": "ot_rom_4096x72_m8", "words": 4096, "bits": 72, "mux": 8},
+    {"name": "ot_rom_1024x72_m8", "words": 1024, "bits": 72, "mux": 8}
+  ]
+}
