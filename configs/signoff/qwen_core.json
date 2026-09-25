@@ -22,7 +22,7 @@
         "prepare": [["{python}", "tools/hdc_program.py", "--out", "{work}/img"]],
         "plusargs": ["+DIR={work}/img"],
         "plusargs_file": "{work}/img/run.args",
-        "scopes": {"core": "TOP.tb_hdc_core.dut"},
+        "scopes": {"core": {"scope": "TOP.tb_hdc_core.dut", "netlist": "ot_hdc_core", "saif_top": "dut"}},
         "half_period_ps": 450
       },
       "analyses": [

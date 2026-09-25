@@ -965,9 +965,9 @@ def build_vcd2saif(dest: Path) -> Path:
 
 def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: list[Path],
              netlists: dict[str, Path], include_dirs: list[Path], liberty: list[Path],
-             plusargs: list[str], scopes: dict[str, str], window: tuple[int, int] | None,
+             plusargs: list[str], scopes: dict[str, Any], window: tuple[int, ...] | None,
              half_period_ps: int, extra_verilator: list[str] | None = None,
-             jobs: int = 8) -> dict[str, Any]:
+             jobs: int = 8, trace_only_netlists: bool = False) -> dict[str, Any]:
     """Simulate `bench` with some modules replaced by routed netlists and write
     one SAIF per entry of `scopes` (name -> dotted VCD scope).
 
@@ -976,7 +976,9 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
     * rtl: RTL sources for everything that is not replaced.
     * netlists: module -> routed 6_final.v.  A netlist whose module the RTL
       instantiates with a parameter override gets dummy parameter slots.
-    * window: [begin, end) in clock cycles, or None for the whole run.
+    * window: [begin, end) in clock cycles, optionally [begin, end, every, len]
+      to dump only len cycles of every `every` (uniform sampling), or None
+      for the whole run.
     """
     work = Path(work)
     work.mkdir(parents=True, exist_ok=True)
@@ -1004,6 +1006,20 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
     sources.append(cells)
     for p in rtl:
         sources.append(rtl_without_modules(Path(p), set(netlists), work / "rtl"))
+    if trace_only_netlists:
+        # the RTL around the replaced modules (and the bench) is not traced:
+        # the dump carries only the netlists' nets
+        quiet = work / "rtl_untraced"
+        quiet.mkdir(parents=True, exist_ok=True)
+        netlist_files = {work / f"{m}_gl.v" for m in netlists} | {cells}
+        for i, s in enumerate(sources):
+            if Path(s) in netlist_files:
+                continue
+            q = quiet / Path(s).name
+            q.write_text("/* verilator tracing_off */\n" + Path(s).read_text(encoding="utf-8", errors="replace"),
+                         encoding="utf-8")
+            sources[i] = q
+        meta["trace_only_netlists"] = True
     harness = ROOT / "tools/signoff/activity_harness.cpp"
     vtop = f"V{bench_top}"
     obj = work / "obj"
@@ -1025,10 +1041,9 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
     if fifo.exists():
         fifo.unlink()
     os.mkfifo(fifo)
-    # the first value change inside the window is stamped one half period after
-    # its opening edge; "auto" starts the accounting at the first timestamp
-    begin_t = str((2 * window[0] + 1) * half_period_ps) if window else "auto"
-    end_t = (2 * window[1] * half_period_ps) if window else None
+    # the dump is in traced time (tools/signoff/activity_harness.cpp), so the
+    # accounting starts at its first timestamp and runs to its end
+    begin_t, end_t = "auto", None
     # one converter per scope, fed by a tee of the FIFO
     readers = []
     tee_fifos = []
@@ -1047,6 +1062,8 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
     sim_args = [str(exe), f"+VCD={fifo}", f"+HALF_PS={half_period_ps}", *plusargs]
     if window:
         sim_args += [f"+VCD_BEGIN={window[0]}", f"+VCD_END={window[1]}"]
+        if len(window) == 4:
+            sim_args += [f"+VCD_EVERY={window[2]}", f"+VCD_LEN={window[3]}"]
     t1 = time.time()
     sim = subprocess.run(sim_args, capture_output=True, text=True)
     tee.wait()
@@ -1141,7 +1158,8 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                     include_dirs=[_resolve(p) for p in a.get("include_dirs", [])],
                     liberty=[_resolve(p) for p in a["liberty"]], plusargs=a.get("plusargs", []),
                     scopes=a["scopes"], window=tuple(a["window"]) if a.get("window") else None,
-                    half_period_ps=a["half_period_ps"], extra_verilator=a.get("verilator_args"))
+                    half_period_ps=a["half_period_ps"], extra_verilator=a.get("verilator_args"),
+                    trace_only_netlists=a.get("trace_only_netlists", False))
                 (work / "activity" / "activity.json").write_text(json.dumps(act_meta, indent=2))
             act_meta = dict(act_meta, source="gate-level simulation of the routed netlist in the campaign bench")
             saifs = {s: Path(v["path"]) for s, v in act_meta["saif"].items()}

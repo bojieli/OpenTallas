@@ -23,7 +23,8 @@
         "prepare": [["{python}", "tools/hdc_program.py", "--out", "{work}/img"]],
         "plusargs": ["+DIR={work}/img", "+LEAD=512"],
         "plusargs_file": "{work}/img/run.args",
-        "scopes": {"kv_stream": "TOP.tb_hdc_core_hbm.u_kvs"},
+        "scopes": {"kv_stream": {"scope": "TOP.tb_hdc_core_hbm.u_kvs", "netlist": "ot_hdc_kv_stream",
+                                 "saif_top": "u_kvs"}},
         "half_period_ps": 450
       },
       "analyses": [
