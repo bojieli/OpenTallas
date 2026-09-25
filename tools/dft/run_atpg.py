@@ -61,16 +61,21 @@ def engine(build_dir: Path) -> Path:
     return exe
 
 
+REUSE = False
+
+
 def run_engine(exe: Path, model: Path, faults: Path, out: Path, threads: int, extra: list[str]) -> dict[str, Any]:
     t0 = time.time()
-    proc = subprocess.run(
-        [str(exe), "--model", str(model), "--faults", str(faults), "--out", str(out),
-         "--threads", str(threads), *extra],
-        capture_output=True, text=True,
-    )
-    Path(str(out) + ".log").write_text(proc.stdout + proc.stderr)
-    if proc.returncode != 0:
-        raise RuntimeError(f"otatpg failed: {proc.stderr[-2000:]}")
+    done = all(Path(str(out) + ext).is_file() for ext in (".log", ".summary.json", ".faults"))
+    if not (REUSE and done):
+        proc = subprocess.run(
+            [str(exe), "--model", str(model), "--faults", str(faults), "--out", str(out),
+             "--threads", str(threads), *extra],
+            capture_output=True, text=True,
+        )
+        Path(str(out) + ".log").write_text(proc.stdout + proc.stderr)
+        if proc.returncode != 0:
+            raise RuntimeError(f"otatpg failed: {proc.stderr[-2000:]}")
     summary = json.loads(Path(str(out) + ".summary.json").read_text())
     summary["log"] = Path(str(out) + ".log").read_text().strip().splitlines()[-3:]
     summary["wall_seconds"] = round(time.time() - t0, 1)
@@ -98,8 +103,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--sample-chain-faults", type=int, default=16,
                     help="chain-test faults injected in gate-level simulation")
     ap.add_argument("--no-gate-sim", action="store_true")
+    ap.add_argument("--simulator", default="verilator", choices=["verilator", "icarus"])
+    ap.add_argument("--reuse", action="store_true",
+                    help="reuse engine outputs already in --work (same model, same fault list)")
     ap.add_argument("--liberty", action="append", default=None)
     args = ap.parse_args(argv)
+    global REUSE
+    REUSE = args.reuse
 
     work = Path(args.work)
     work.mkdir(parents=True, exist_ok=True)
@@ -231,7 +241,8 @@ def main(argv: list[str] | None = None) -> int:
         bench.mkdir(exist_ok=True)
         gate_sim.build_bench(bench, netlist, scan, names, cells, pats, srcs, obs, faults, scan["top"])
         t0 = time.time()
-        res = gate_sim.run_bench(bench)
+        res = gate_sim.run_bench(bench, simulator=args.simulator,
+                                 heavy=model_info["instances"] > 100000)
         confirmed = {"DT": [0, 0], "DS": [0, 0], "DS-clock": [0, 0]}
         misses = []
         for k, f in enumerate(faults):
@@ -242,7 +253,8 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 misses.append({k2: f[k2] for k2 in ("inst", "pin", "value", "pattern", "class")})
         record["gate_level"] = {
-            "simulator": "Icarus Verilog, cell models generated from Liberty",
+            "simulator": ("Verilator 5 (--timing)" if args.simulator == "verilator" else "Icarus Verilog")
+                         + ", cell models generated from Liberty",
             "good_machine_patterns": res["good_patterns"],
             "good_machine_mismatches": res["good_mismatches"],
             "capture_faults_injected": confirmed["DT"][1],

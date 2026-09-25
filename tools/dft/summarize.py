@@ -48,7 +48,8 @@ def _phys(rec):
     out = {
         "status": rec["status"],
         "fmax_mhz": round(float(m["fmax_hz"]) / 1e6, 2) if m.get("fmax_hz") else None,
-        "design_area_um2": m.get("design_area_um2"),
+        "standard_cell_area_um2": m.get("standard_cell_area_um2"),
+        "sequential_area_um2": m.get("sequential_area_um2"),
         "core_area_um2": m.get("core_area_um2"),
         "instance_count": m.get("instance_count") or m.get("cell_count"),
         "routed_wirelength_um": m.get("routed_wirelength_um"),
@@ -101,7 +102,8 @@ def main() -> int:
             row["route"] = {"noscan": ns, "scan": sc}
             if ns and sc:
                 row["route"]["overhead"] = {
-                    "design_area": _ratio(sc["design_area_um2"], ns["design_area_um2"]),
+                    "standard_cell_area": _ratio(sc["standard_cell_area_um2"], ns["standard_cell_area_um2"]),
+                    "core_area": _ratio(sc["core_area_um2"], ns["core_area_um2"]),
                     "routed_wirelength": _ratio(sc["routed_wirelength_um"], ns["routed_wirelength_um"]),
                     "fmax": _ratio(sc["fmax_mhz"], ns["fmax_mhz"]),
                     "instances": _ratio(sc["instance_count"], ns["instance_count"]),
@@ -118,7 +120,7 @@ def main() -> int:
         a = r.get("atpg") or {}
         o = (r.get("route") or {}).get("overhead") or {}
         print(f"{b:14s} FC={a.get('fault_coverage')} TC={a.get('test_coverage')} pat={a.get('capture_patterns')} "
-              f"area={o.get('design_area')} wl={o.get('routed_wirelength')} fmax={o.get('fmax')}")
+              f"area={o.get('standard_cell_area')} wl={o.get('routed_wirelength')} fmax={o.get('fmax')}")
     return 0
 
 

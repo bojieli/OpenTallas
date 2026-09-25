@@ -25,6 +25,7 @@ credited to the chain test injected during a flush (a mismatch expected).
 from __future__ import annotations
 
 import json
+import os
 import random
 import re
 import shutil
@@ -400,14 +401,35 @@ def build_bench(
     return work / "tb.v"
 
 
-def run_bench(work: Path, timeout: int = 36000) -> dict[str, Any]:
-    comp = subprocess.run(
-        ["iverilog", "-g2012", "-o", "sim.vvp", "cells.v", "dut.v", "tb.v"],
-        cwd=work, capture_output=True, text=True, timeout=timeout,
-    )
-    if comp.returncode != 0:
-        raise RuntimeError("iverilog failed:\n" + comp.stderr[-4000:])
-    sim = subprocess.run(["vvp", "-n", "sim.vvp"], cwd=work, capture_output=True, text=True, timeout=timeout)
+VERILATOR = Path(os.environ.get(
+    "OPENTALLAS_VERILATOR", Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
+# Machine-wide gate for heavy builds, when the host provides one.
+HEAVY_GATE = Path(os.environ.get("OT_HEAVY_GATE", "/tmp/claude-1000/orfs_gate.sh"))
+
+
+def run_bench(work: Path, timeout: int = 172800, simulator: str = "verilator",
+              heavy: bool = False) -> dict[str, Any]:
+    """Compile and run the bench.  Verilator (5, --timing) is the default: it
+    gives the same per-fault results as Icarus on the test netlists and is
+    orders of magnitude faster on a 10^5-cell block; Icarus remains available."""
+    if simulator == "verilator":
+        cmd = [str(VERILATOR), "--binary", "--timing", "-Wno-fatal", "-Wno-lint", "-Wno-style",
+               "-j", "8", "--top-module", "tb", "-Mdir", "vl", "cells.v", "dut.v", "tb.v"]
+        if heavy and HEAVY_GATE.is_file():
+            cmd = [str(HEAVY_GATE), *cmd]
+        comp = subprocess.run(cmd, cwd=work, capture_output=True, text=True, timeout=timeout)
+        if comp.returncode != 0:
+            raise RuntimeError("verilator failed:\n" + comp.stderr[-4000:])
+        run_cmd = ["./vl/Vtb"]
+    else:
+        comp = subprocess.run(
+            ["iverilog", "-g2012", "-o", "sim.vvp", "cells.v", "dut.v", "tb.v"],
+            cwd=work, capture_output=True, text=True, timeout=timeout,
+        )
+        if comp.returncode != 0:
+            raise RuntimeError("iverilog failed:\n" + comp.stderr[-4000:])
+        run_cmd = ["vvp", "-n", "sim.vvp"]
+    sim = subprocess.run(run_cmd, cwd=work, capture_output=True, text=True, timeout=timeout)
     (work / "sim.log").write_text(sim.stdout + sim.stderr)
     good = re.search(r"GOOD patterns (\d+) mismatches (\d+)", sim.stdout)
     faults = {int(m.group(1)): (m.group(2), int(m.group(3)))
