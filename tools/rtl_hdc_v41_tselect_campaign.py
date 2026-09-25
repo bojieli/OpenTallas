@@ -82,7 +82,7 @@ MUTATIONS = [
     ("pass-2 histogram ignores the boundary bucket", "k[VW-1 -: RB] == bsel);", "1'b1);"),
     ("tie remainder not carried across beats", "else if (c2_v) rem <=", "else if (1'b0) rem <="),
     ("compaction shift counts the lane itself", "sel_inc[(LW+1)*(l-1) +: LW+1];", "sel_inc[(LW+1)*l +: LW+1];"),
-    ("tree drain one edge short", "localparam integer DRAIN = 3 + RB - 1;", "localparam integer DRAIN = 3 + RB - 3;"),
+    ("tree walk starts two edges early", "localparam integer DRAIN = 3 + RB - 1;", "localparam integer DRAIN = 3 + RB - 3;"),
     ("empty lanes counted in the histogram", "e  = hs_ing ? s0_lv[l] :", "e  = hs_ing ? 1'b1 :"),
     ("rotate ignores the running fill", "if (cp_v) frun <= cp_l ?", "if (1'b0) frun <= cp_l ?"),
 ]
@@ -290,8 +290,15 @@ def run_config(ci, cfg, sets, s: Path, rtl=RTL, icarus=False, modes=None):
 
 
 def mutations(s: Path, sets):
+    """The unmutated RTL must pass the mutation configuration (the control), each mutant must fail it."""
     out = []
     src = RTL.read_text()
+    cdir = s / "mut_control"
+    cdir.mkdir()
+    ctrl = run_config(90, MUTATION_CONFIG, sets, cdir, modes=(("back_to_back", 0, 0, 1),))
+    out.append({"mutation": "none (control)", "caught": not ctrl["pass"], "control": True,
+                "detail": {k: v.get("errors") for k, v in ctrl["runs"].items()}})
+    print("mutation control", "pass" if ctrl["pass"] else "FAIL", flush=True)
     for i, (what, a, b) in enumerate(MUTATIONS):
         assert src.count(a) == 1, (what, src.count(a))
         mdir = s / f"mut{i}"
@@ -328,7 +335,7 @@ def run(positions, quick=False) -> dict:
                   {m: (r.get("errors"), r.get("lat0_min"), r.get("lat0_max")) for m, r in rec["runs"].items()},
                   "two-level", None if rec["two_level"] is None else rec["two_level"]["pass"], flush=True)
         muts = [] if quick else mutations(s, sets)
-        ok &= all(m["caught"] for m in muts)
+        ok &= all(m["caught"] != bool(m.get("control")) for m in muts)
     status = "pass" if ok and all(checks[k] > 0 for k in checks) else "fail"
     return {
         "schema": "opentallas.hdc-v41-tselect-campaign.v1",

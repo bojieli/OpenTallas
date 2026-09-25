@@ -46,9 +46,14 @@
 // Latency, in clock edges from the edge that accepts the last beat of a
 // segment of NL beats to the edge that registers its `out_last` beat:
 //   LAT = 2 NL + LAT0 (+1 when the final pass-3 beat overflows the partial
-//   output line and the remainder takes one more beat), LAT0 below.
-// The next segment is accepted as soon as pass 3 has issued its last read
-// (in_ready is low from the last accept for LAT - (LAT0 - 36) edges).
+//   output line and the remainder takes one more beat),
+//   LAT0 = 2 x (DRAIN 10 + RB 8 walk steps) + 5 + 2 ceil(log2(W) / 2)
+//        = 47 at W = 64 (read, compare, tie prefix, select, shift counts,
+//          3 compaction + 3 rotate register stages, output register).
+// The next segment is accepted once pass 3 has issued its last read: in_ready
+// is low for 2 NL + 36 edges after the last accept.  Area is linear in W
+// (2^RB bins x W-lane popcounts, W log W compaction/rotate muxes) and
+// independent of K and of the segment length (the lines are in the memory).
 // Every segment emits at least one beat; the one with `out_last` may be empty.
 // ---------------------------------------------------------------------------
 module ot_hdc_tselect #(
@@ -182,7 +187,8 @@ module ot_hdc_tselect #(
     reg           oflush;
     reg           pipe_busy;
 
-    assign in_ready = (state == S_ING);
+    reg  [2:0]    init;                             // clear the bins for a few edges after reset
+    assign in_ready = (state == S_ING) && (init == 0);
     wire acc_in = in_valid && in_ready;
     assign mem_we    = acc_in;
     assign mem_waddr = wptr;
@@ -263,7 +269,6 @@ module ot_hdc_tselect #(
     wire [CW:0]   wacc_n = wgo ? wacc : wsum;
     wire          wlast  = (dc == 0) && (wstep == RBM1);
     wire [QW-1:0] wrest  = wkq - wacc_n[QW-1:0];    // quota left for the boundary bucket (<= wkq)
-    reg  [2:0]    init;                             // clear the bins for a few edges after reset
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) init <= 3'd7;
         else if (init != 0) init <= init - 1'b1;
