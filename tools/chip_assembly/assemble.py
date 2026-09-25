@@ -171,10 +171,17 @@ def tile_spec(arch: str, work: Path) -> cs.CaseSpec:
 
 
 def die_spec(arch: str, work: Path) -> cs.CaseSpec:
-    die = fp.die2x2(arch)
+    prof = fp.tile_profile(arch)
+    die = fp.die2x2_v41() if arch == "v41_rom" else fp.die2x2(arch)
     tres = orfs.results_dir(BLOCK_WORK / f"tile_{arch}", f"chip_tile_{arch}")
-    tile_view = cs.MacroView("ot_chip_hdc_tile", tres / "ot_chip_hdc_tile.lef",
-                             tres / "ot_chip_hdc_tile_typ.lib", tres / "6_final.gds")
+    tile_view = cs.MacroView(prof.top, tres / f"{prof.top}.lef",
+                             tres / f"{prof.top}_typ.lib", tres / "6_final.gds")
+    extra_blocks = []
+    if arch == "v41_rom":
+        for name in ("ot_chip_v41_coll_moe", "ot_chip_v41_coll_ar"):
+            res = orfs.results_dir(BLOCK_WORK / name, f"chip_{name}")
+            extra_blocks.append(cs.MacroView(name, res / f"{name}.lef", res / f"{name}_typ.lib",
+                                             res / "6_final.gds"))
     phys = []
     for name, spec in die.phys.items():
         v = mc.write_views(spec, work / "phy_views")
@@ -192,10 +199,12 @@ def die_spec(arch: str, work: Path) -> cs.CaseSpec:
         "",
     ])
     return cs.CaseSpec(
-        nickname=f"chip_die2x2_{arch}", top="ot_chip_die2x2", sources=["rtl/chip/ot_chip_die2x2.sv"],
+        nickname=f"chip_die2x2_{arch}",
+        top="ot_chip_v41_die2x2" if arch == "v41_rom" else "ot_chip_die2x2",
+        sources=["rtl/chip/ot_chip_v41_die2x2.sv" if arch == "v41_rom" else "rtl/chip/ot_chip_die2x2.sv"],
         die_um=(snap(die.width_um), snap(die.height_um)), core_margin_um=5.0, sdc=sdc,
         pdn_tcl=cs.TCL_DIR / "pdn_die.tcl", max_layer="M9", io_layers=("M4", "M5"),
-        place_density=0.5, macros=[tile_view, *phys],
+        place_density=0.5, macros=[tile_view, *extra_blocks, *phys],
         macro_placement_tcl=placement_tcl(die.placements),
         extra={"SLEW_MARGIN": 20, "HOLD_SLACK_MARGIN": 5, "MACRO_ROWS_HALO_X": 2,
                "MACRO_ROWS_HALO_Y": 2},
@@ -229,6 +238,74 @@ close $out
 """
 
 
+def boundary_report(work: Path) -> dict[str, Any]:
+    """Parse the post-route macro-pin timing written by BOUNDARY_TCL."""
+    buses: dict[str, dict[str, Any]] = {}
+    clocks: dict[str, float] = {}
+    path = work / "boundary_report.txt"
+    if not path.is_file():
+        return {}
+    for line in path.read_text().splitlines():
+        f = line.split()
+        if f[:1] == ["OTB"] and len(f) == 5:
+            inst, ref, bus, slack = f[1], f[2], f[3], float(f[4])
+            buses.setdefault(inst, {"master": ref, "buses": {}})["buses"][bus] = round(slack, 1)
+        elif f[:1] == ["OTC"] and len(f) == 3:
+            clocks[f[1]] = round(float(f[2]), 1)
+    worst = min((v for b in buses.values() for v in b["buses"].values()), default=None)
+    negative = sorted(((inst, bus, v) for inst, b in buses.items() for bus, v in b["buses"].items()
+                       if v < 0), key=lambda t: t[2])
+    lat = list(clocks.values())
+    return {
+        "macro_pins": buses,
+        "worst_macro_pin_slack_ps": worst,
+        "negative": [{"instance": i, "bus": b, "slack_ps": v} for i, b, v in negative],
+        "macro_clock_arrival_ps": clocks,
+        "macro_clock_skew_ps": round(max(lat) - min(lat), 1) if lat else None,
+        "basis": ("post-route OpenSTA in the parent: the macros' extracted timing models, the "
+                  "parent's extracted parasitics, propagated clock; per macro bus the worst slack of "
+                  "any path through it, and the clock arrival at each macro's clock pin"),
+    }
+
+
+def level_record(level: str, arch: str, work: Path, spec: cs.CaseSpec, elapsed: float) -> dict[str, Any]:
+    m = cs.metrics(work, spec.nickname)
+    b = boundary_report(work)
+    closed = (m.get("setup_wns_ps") is not None and m["setup_wns_ps"] >= 0
+              and (m.get("hold_wns_ps") or 0) >= 0 and not m.get("drc_errors")
+              and not m.get("max_slew_violations") and not m.get("max_cap_violations"))
+    rec = {
+        "schema": "opentallas-chip-level-v1",
+        "level": level, "arch": arch, "top": spec.top,
+        "clock_period_ns": fp.CLOCK_PERIOD_NS,
+        "die_um": list(spec.die_um),
+        "metrics": m,
+        "closed": closed,
+        "boundary": b,
+        "macros": [{"name": mv.name, "lef_sha256": orfs.sha256_file(mv.lef)} for mv in spec.macros],
+        "sources": orfs.source_digests(spec.sources),
+        "git": orfs.git_identity(),
+        "toolchain": orfs.orfs_identity(),
+        "elapsed_seconds": round(elapsed, 1),
+        "work_dir": str(work),
+    }
+    if level == "tile":
+        res = orfs.results_dir(work, spec.nickname)
+        views = RESULTS / "abstracts" / spec.top / arch
+        views.mkdir(parents=True, exist_ok=True)
+        abstract = {}
+        for f in (res / f"{spec.top}.lef", res / f"{spec.top}_typ.lib"):
+            if f.is_file():
+                (views / f.name).write_bytes(f.read_bytes())
+                abstract[f.suffix[1:]] = {"path": str((views / f.name).relative_to(orfs.ROOT)),
+                                          "sha256": orfs.sha256_file(f)}
+        rec["abstract"] = abstract
+    out = RESULTS / ("tiles" if level == "tile" else "dies") / f"{arch}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return rec
+
+
 def run_level(level: str, arch: str, work: Path, timeout: int) -> dict[str, Any]:
     spec = tile_spec(arch, work) if level == "tile" else die_spec(arch, work)
     cs.write_case(work, spec)
@@ -251,7 +328,11 @@ def run_level(level: str, arch: str, work: Path, timeout: int) -> dict[str, Any]
             proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200)
             if proc.returncode != 0:
                 raise orfs.FlowError(f"tile abstract failed; see {work}/abstract.log")
-    return {"elapsed_seconds": round(time.time() - t0, 1), "spec": spec}
+        (work / "boundary.tcl").write_text(BOUNDARY_TCL, encoding="utf-8")
+        orfs.docker_make(work, "run RUN_SCRIPT=/work/boundary.tcl", "boundary.log", 7200)
+    elapsed = time.time() - t0
+    level_record(level, arch, work, spec, elapsed)
+    return {"elapsed_seconds": round(elapsed, 1), "spec": spec}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -260,6 +341,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--arch", required=True, choices=budgets.ARCHS)
     ap.add_argument("--work", required=True, type=Path)
     ap.add_argument("--write-only", action="store_true", help="write the case and stop")
+    ap.add_argument("--record-only", action="store_true",
+                    help="re-run the boundary report and rewrite the record of a finished run")
     args = ap.parse_args(argv)
     timeout = int(os.environ.get("OT_FLOW_TIMEOUT_SECONDS", "86400"))
     work = args.work.resolve()
@@ -267,6 +350,13 @@ def main(argv: list[str] | None = None) -> int:
         spec = tile_spec(args.arch, work) if args.level == "tile" else die_spec(args.arch, work)
         cs.write_case(work, spec)
         print(f"wrote {work}")
+        return 0
+    if args.record_only:
+        spec = tile_spec(args.arch, work) if args.level == "tile" else die_spec(args.arch, work)
+        (work / "boundary.tcl").write_text(BOUNDARY_TCL, encoding="utf-8")
+        orfs.docker_make(work, "run RUN_SCRIPT=/work/boundary.tcl", "boundary.log", 7200)
+        rec = level_record(args.level, args.arch, work, spec, 0.0)
+        print(json.dumps({"closed": rec["closed"], "worst": rec["boundary"].get("worst_macro_pin_slack_ps")}))
         return 0
     out = run_level(args.level, args.arch, work, timeout)
     print(json.dumps({"level": args.level, "arch": args.arch, "elapsed": out["elapsed_seconds"]}))

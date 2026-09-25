@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -36,7 +37,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from chip_assembly import boundary, case as cs, floorplans as fp, orfs  # noqa: E402
+from chip_assembly import boundary, case as cs, etm, floorplans as fp, orfs  # noqa: E402
 
 RESULTS = orfs.ROOT / "results/physical_abi3/asap7/chip"
 PERIOD_PS = fp.CLOCK_PERIOD_NS * 1000.0
@@ -134,22 +135,35 @@ def phase_synth(block: fp.Block, work: Path, timeout: int) -> dict[str, Any]:
     return char
 
 
-def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int) -> dict[str, Any]:
+def flow_seconds(work: Path, nickname: str) -> float:
+    """Wall time of the stages, from ORFS's per-stage logs."""
+    total = 0.0
+    for log in orfs.logs_dir(work, nickname).glob("*.log"):
+        m = re.search(r"Elapsed time: (?:(\d+):)?(\d+):(\d+(?:\.\d+)?)", log.read_text(errors="replace"))
+        if m:
+            total += int(m.group(1) or 0) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
+    return total
+
+
+def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int,
+              record_only: bool = False) -> dict[str, Any]:
     budget = json.loads(budget_path.read_text(encoding="utf-8"))
     char = json.loads((work / "boundary.json").read_text(encoding="utf-8"))
     spec = spec_for(block, budget_sdc(block.name, budget), char["ports"])
-    cs.write_case(work, spec)
-    cs.ensure_constraints(work, spec.nickname, spec.sdc)
+    if not record_only:
+        cs.write_case(work, spec)
+        cs.ensure_constraints(work, spec.nickname, spec.sdc)
     res = orfs.results_dir(work, spec.nickname)
     t0 = time.time()
-    with orfs.slot(f"pnr {block.name}"):
-        proc = orfs.docker_make(work, "finish metadata-generate", "flow.log", timeout)
-        if proc.returncode != 0:
-            raise orfs.FlowError(f"place-and-route of {block.name} failed; see {work}/flow.log")
-        proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200)
-        if proc.returncode != 0:
-            raise orfs.FlowError(f"abstract generation of {block.name} failed; see {work}/abstract.log")
-    elapsed = time.time() - t0
+    if not record_only:
+        with orfs.slot(f"pnr {block.name}"):
+            proc = orfs.docker_make(work, "finish metadata-generate", "flow.log", timeout)
+            if proc.returncode != 0:
+                raise orfs.FlowError(f"place-and-route of {block.name} failed; see {work}/flow.log")
+            proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200)
+            if proc.returncode != 0:
+                raise orfs.FlowError(f"abstract generation of {block.name} failed; see {work}/abstract.log")
+    elapsed = flow_seconds(work, spec.nickname) if record_only else time.time() - t0
     lef, lib = res / f"{block.name}.lef", res / f"{block.name}_typ.lib"
     views = RESULTS / "abstracts" / block.name
     views.mkdir(parents=True, exist_ok=True)
@@ -161,6 +175,27 @@ def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int) -> d
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return record
+
+
+def budget_check(block: str, budget: dict[str, Any], lib: Path) -> dict[str, Any]:
+    """Each budgeted port's routed internal delay (the extracted timing model)
+    against its budget."""
+    model = etm.read(lib)
+    rows, over = {}, []
+    for port, b in sorted(budget["blocks"][block]["ports"].items()):
+        if b["status"] in ("static", "untimed") or port == "rst_n":
+            continue
+        m = model.get(port, {})
+        actual = m.get("setup_ps") if b["direction"] == "input" else m.get("clk_to_out_ps")
+        through = max(m.get("through", {}).values(), default=None) if b["direction"] == "output" else None
+        within = actual is None or actual <= b["internal_budget_ps"] + 0.05
+        rows[port] = {"budget_ps": b["internal_budget_ps"], "routed_ps": None if actual is None else round(actual, 1),
+                      "through_ps": None if through is None else round(through, 1), "within_budget": within}
+        if not within:
+            over.append(port)
+    return {"ports": rows, "over_budget": over,
+            "basis": ("routed delay from the block's write_timing_model liberty: an input's worst setup "
+                      "constraint (pin to register, setup included), an output's worst clock-to-output")}
 
 
 def block_record(block, spec, budget, budget_path, m, lef, lib, work, elapsed) -> dict[str, Any]:
@@ -180,6 +215,7 @@ def block_record(block, spec, budget, budget_path, m, lef, lib, work, elapsed) -
                         "paths), clock uncertainty from the budget, max transition 320 ps"),
         "metrics": m,
         "closed_against_budget": closed,
+        "budget_check": budget_check(block.name, budget, lib),
         "closed_basis": ("setup and hold met with the budgeted I/O constraints, zero DRC, zero "
                          "max-slew / max-cap / max-fanout violations"),
         "abstract": {
@@ -204,7 +240,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--block", required=True, choices=sorted(fp.BLOCKS))
     ap.add_argument("--work", required=True, type=Path)
-    ap.add_argument("--phase", required=True, choices=["synth", "pnr"])
+    ap.add_argument("--phase", required=True, choices=["synth", "pnr", "record"])
     ap.add_argument("--budget", type=Path)
     args = ap.parse_args(argv)
     timeout = int(os.environ.get("OT_FLOW_TIMEOUT_SECONDS", "86400"))
@@ -214,8 +250,9 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"block": block.name, "ports": len(char["ports"])}))
     else:
         if not args.budget:
-            ap.error("--phase pnr needs --budget")
-        rec = phase_pnr(block, args.work.resolve(), args.budget.resolve(), timeout)
+            ap.error("--phase pnr / record needs --budget")
+        rec = phase_pnr(block, args.work.resolve(), args.budget.resolve(), timeout,
+                        record_only=args.phase == "record")
         print(json.dumps({"block": block.name, "closed": rec["closed_against_budget"],
                           "setup_wns_ps": rec["metrics"].get("setup_wns_ps")}))
     return 0

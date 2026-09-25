@@ -192,6 +192,28 @@ BLOCKS.update({
 })
 
 
+COLL_SOURCES = [
+    "rtl/rom/collectives/ot_rom_coll_pkg.sv", "rtl/rom/collectives/ot_rom_coll_skid.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/rom/collectives/ot_rom_moe_dispatch.sv",
+    "rtl/rom/collectives/ot_rom_moe_expert_port.sv", "rtl/rom/collectives/ot_rom_moe_combine.sv",
+    "rtl/rom/collectives/ot_rom_argmax_reduce.sv", "rtl/rom/collectives/ot_rom_mcast_node.sv",
+    "rtl/chip/ot_chip_mesh_link.sv", "rtl/chip/ot_chip_v41_coll.sv",
+]
+_COLL_EDGES = [(r"^t_", "N"),
+               (r"^u_(tx|rx)_data$", "W", 0, 511), (r"^u_(tx|rx)_data$", "E", 512, 1023),
+               (r"^u_(tx|rx)_(valid|last|cr)$", "W", 0, 0), (r"^u_(tx|rx)_(valid|last|cr)$", "E", 1, 1)]
+BLOCKS.update({
+    "ot_chip_v41_coll_moe": Block(
+        "ot_chip_v41_coll_moe", COLL_SOURCES, 460.0, 460.0, _COLL_EDGES, default_edge="N",
+        record="results/physical_abi3/asap7/rom/collectives/ot_rom_moe_combine/physical.json",
+        notes="MoE dispatch + expert port + combine (TAGS 2) with four link adapters"),
+    "ot_chip_v41_coll_ar": Block(
+        "ot_chip_v41_coll_ar", COLL_SOURCES, 330.0, 330.0, _COLL_EDGES, default_edge="N",
+        record="results/physical_abi3/asap7/rom/collectives/ot_rom_argmax_reduce/physical.json",
+        notes="argmax reduce + multicast node with four link adapters"),
+})
+
+
 def edge_of(block: Block, port: str, bit: int | None) -> str:
     import re
     for rule in block.pin_edges:
@@ -480,8 +502,8 @@ def v41_tile() -> TileFloorplan:
             {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (0, 0), "edge": "N", "range": (1470, 1640)},
             {"regex": r"^m_(out|in)_data$", "bits": (512, 1023), "edge": "E", "range": (10, 280)},
             {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (1, 1), "edge": "E", "range": (10, 280)},
-            {"regex": r"^m_(out|in)_data$", "bits": (1024, 1535), "edge": "S", "range": (10, 380)},
-            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (2, 2), "edge": "S", "range": (10, 380)},
+            {"regex": r"^m_(out|in)_data$", "bits": (1024, 1535), "edge": "S", "range": (1270, 1640)},
+            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (2, 2), "edge": "S", "range": (1270, 1640)},
             {"regex": r"^m_(out|in)_data$", "bits": (1536, 2047), "edge": "W", "range": (10, 260)},
             {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (3, 3), "edge": "W", "range": (10, 260)},
             {"regex": r".", "edge": "W", "range": (280, 1200)},
@@ -594,6 +616,56 @@ def die2x2(arch: str) -> DieFloorplan:
         place.append(Placement("g_edge[%d].u_serdes" % t, "ot_phy_serdes", xs, ys, orient))
     return DieFloorplan(arch, round(die_w, 3), round(die_h, 3), place, phys, tile,
                         notes="tiles mirrored MY in column 1 and MX in row 1 (tile flipping)")
+
+
+def die2x2_v41() -> DieFloorplan:
+    """The reduced V4.1 die: 2 x 2 mirrored V4.1 tiles; in the south strip the
+    MoE collectives node between two UCIe modules under the two tiles' inner
+    S ports, in the north strip the argmax / multicast node likewise; HBM
+    slices in the outer strip corners; board SerDes west and east."""
+    tile = v41_tile()
+    tw, th = tile.width_um, tile.height_um
+    x0 = EDGE_UM + SERDES_W_UM + GAP_UM
+    x1 = x0 + tw + GAP_UM
+    y0 = EDGE_UM + PHY_STRIP_UM + GAP_UM
+    y1 = y0 + th + GAP_UM
+    die_w = x1 + tw + GAP_UM + SERDES_W_UM + EDGE_UM
+    die_h = y1 + th + GAP_UM + PHY_STRIP_UM + EDGE_UM
+    base = die2x2("qwen_rom").phys
+    phys = {k: v for k, v in base.items()}
+    rng = {g.get("bits", g["regex"]): g["range"] for g in tile.pin_groups}
+    w_lo, w_hi = rng[(1536, 2047)]
+    phys["ot_phy_serdes"] = mc.MacroSpec(
+        "ot_phy_serdes", SERDES_W_UM, SERDES_H_UM, _link_pins((w_lo + 5, w_hi - 5), "E"),
+        clk_to_q_ns=PHY_CLK_TO_Q_NS, setup_ns=PHY_SETUP_NS, kind="phy",
+        basis="8-lane board SerDes slice (package-to-package ring link), 0.6 mm x 0.26 mm")
+    ex = EDGE_UM
+    top = die_h - ex - PHY_STRIP_UM
+    mid = x0 + tw + GAP_UM / 2
+    place = [
+        Placement("g_tile[0].u_tile", "ot_chip_v41_tile", x0, y0, "R0"),
+        Placement("g_tile[1].u_tile", "ot_chip_v41_tile", x1, y0, "MY"),
+        Placement("g_tile[2].u_tile", "ot_chip_v41_tile", x0, y1, "MX"),
+        Placement("g_tile[3].u_tile", "ot_chip_v41_tile", x1, y1, "R180"),
+    ]
+    for row, (node, y_strip, orient) in enumerate((("u_coll_moe", ex, "R0"), ("u_coll_ar", top, "MX"))):
+        blk = BLOCKS["ot_chip_v41_coll_moe" if row == 0 else "ot_chip_v41_coll_ar"]
+        yb = y_strip + (PHY_STRIP_UM - blk.height_um if row == 0 else 0.0)
+        place.append(Placement(node, blk.name, mid - blk.width_um / 2, yb, orient))
+        place.append(Placement(f"g_ucie[{2 * row}].u_ucie", "ot_phy_ucie",
+                               mid - blk.width_um / 2 - GAP_UM - UCIE_W_UM, y_strip, orient))
+        place.append(Placement(f"g_ucie[{2 * row + 1}].u_ucie", "ot_phy_ucie",
+                               mid + blk.width_um / 2 + GAP_UM, y_strip, "MY" if row == 0 else "R180"))
+    for k, (c, r) in enumerate(((0, 0), (1, 0), (0, 1), (1, 1))):
+        orient = {(0, 0): "R0", (1, 0): "MY", (0, 1): "MX", (1, 1): "R180"}[(c, r)]
+        y_strip = ex if r == 0 else top
+        xh = x0 + 10.0 if c == 0 else x1 + tw - 10.0 - HBM_SLICE_W_UM
+        place.append(Placement(f"g_hbm[{k}].u_hbm", "ot_phy_hbm", xh, y_strip, orient))
+        xs = ex if c == 0 else die_w - ex - SERDES_W_UM
+        ys = y0 if r == 0 else y1 + th - SERDES_H_UM
+        place.append(Placement(f"g_edge[{k}].u_serdes", "ot_phy_serdes", xs, ys, orient))
+    return DieFloorplan("v41_rom", round(die_w, 3), round(die_h, 3), place, phys, tile,
+                        notes="V4.1 tiles mirrored; collectives nodes at the package edges")
 
 
 # --------------------------------------------------------------------------
