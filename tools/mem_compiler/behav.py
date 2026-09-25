@@ -117,31 +117,37 @@ HELPERS = r"""
     endtask
 
     // ---- decoder: the physical rows an access selects -------------------------
-    // sel_n is 0 (no row: an open decoder output), 1 or 2 (a multi-select).
-    task automatic decode(input integer a, output integer r0, output integer r1, output integer sel_n);
+    // returns {sel_n[1:0], r1[31:0], r0[31:0]}; sel_n is 0 (no row: an open decoder
+    // output), 1, or 2 (a multi-select).
+    function automatic [65:0] decode(input integer a);
+        integer r0, r1;
+        reg [1:0] sel_n;
 `ifdef OT_MEM_FAULTS
         integer k;
 `endif
         begin
             r0 = phys_row(a);
             r1 = r0;
-            sel_n = 1;
+            sel_n = 2'd1;
 `ifdef OT_MEM_FAULTS
             if (r0 < ROWS)
                 for (k = 0; k < NF; k = k + 1) begin
-                    if (f_kind[k] == 4'd8 && f_r[k] == r0) sel_n = 0;
+                    if (f_kind[k] == 4'd8 && f_r[k] == r0) sel_n = 2'd0;
                     if (f_kind[k] == 4'd9 && f_r[k] == r0) begin r0 = f_ar[k]; r1 = r0; end
-                    if (f_kind[k] == 4'd10 && f_r[k] == r0) begin r1 = f_ar[k]; sel_n = 2; end
+                    if (f_kind[k] == 4'd10 && f_r[k] == r0) begin r1 = f_ar[k]; sel_n = 2'd2; end
                 end
 `endif
+            decode = {sel_n, r1[31:0], r0[31:0]};
         end
-    endtask
+    endfunction
 
     function automatic [BITS-1:0] word_read(input integer a);
         integer b, s, r0, r1, n;
         reg [BITS-1:0] q;
+        reg [65:0] dsel;
         begin
-            decode(a, r0, r1, n);
+            dsel = decode(a);
+            r0 = dsel[31:0]; r1 = dsel[63:32]; n = dsel[65:64];
             s = a % MUX;
             for (b = 0; b < BITS; b = b + 1)
                 if (n == 0) q[b] = 1'b0;
@@ -155,8 +161,10 @@ HELPERS = r"""
 WRITE_TASK = r"""
     task automatic word_write(input integer a, input [BITS-1:0] d, input [BITS-1:0] m);
         integer b, s, r0, r1, n;
+        reg [65:0] dsel;
         begin
-            decode(a, r0, r1, n);
+            dsel = decode(a);
+            r0 = dsel[31:0]; r1 = dsel[63:32]; n = dsel[65:64];
             s = a % MUX;
             for (b = 0; b < BITS; b = b + 1)
                 if (m[b] && n != 0) begin
@@ -194,7 +202,7 @@ def module_text(name: str, pins: list[Pin], params: dict[str, int], body: str, h
         tie.append("    wire [0:0] rr_en = 1'b0;\n    wire [RA-1:0] rr_addr = {RA{1'b0}};")
     if not nsc:
         tie.append("    wire [0:0] cr_en = 1'b0;\n    wire [CB-1:0] cr_sel = {CB{1'b0}};")
-    return (f"{header}\n"
+    return ("`timescale 1ns/1ps\n" f"{header}\n"
             "// verilator lint_off BLKSEQ\n// verilator lint_off WIDTH\n// verilator lint_off UNUSED\n"
             f"module {name} {module_params}(\n" + ",\n".join(decl) + "\n);\n" + lp + "\n" + "\n".join(tie) + "\n" + body +
             "endmodule\n// verilator lint_on BLKSEQ\n// verilator lint_on WIDTH\n// verilator lint_on UNUSED\n")

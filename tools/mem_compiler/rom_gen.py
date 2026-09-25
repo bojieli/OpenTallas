@@ -175,7 +175,7 @@ def behavioural(spec: RomSpec, pins: list[Pin], header: str) -> str:
         "        if (ce_in) rd_out <= word_read(addr_in);",
     ]
     return behav.module_text(spec.name, pins, params, "\n".join(body) + "\n", header, 0, 0,
-                             module_params='#(parameter VIAMAP = "", parameter INSTANCE = "") ')
+                             module_params='#(parameter string VIAMAP = "", parameter string INSTANCE = "") ')
 
 
 def analytical_comparison(sheet: dict[str, Any]) -> dict[str, Any]:

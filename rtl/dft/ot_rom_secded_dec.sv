@@ -46,23 +46,22 @@ module ot_rom_secded_dec #(
         end
     endfunction
 
-    // data bits covered by check bit i (constant masks, evaluated at elaboration)
-    function automatic [K-1:0] chk_mask(input integer i);
-        integer jj;
-        begin
-            chk_mask = {K{1'b0}};
-            for (jj = 0; jj < K; jj = jj + 1)
-                if (((pos_of(jj) >> i) & 1) != 0) chk_mask[jj] = 1'b1;
-        end
-    endfunction
-
     wire [R-1:0] syn;
     wire [K-1:0] fix;
     genvar gi;
     generate
+        // The covered-bit selection is built per (check bit, data bit) from pos_of,
+        // which does not depend on K: a K-dependent constant function (chk_mask)
+        // was miscompiled by Verilator 4.038 when two K were elaborated in one
+        // design (it reused one instance's masks for the other).
         for (gi = 0; gi < R; gi = gi + 1) begin : g_chk
-            localparam [K-1:0] M = chk_mask(gi);
-            assign syn[gi] = cw[K + gi] ^ (^(cw[K-1:0] & M));
+            wire [K-1:0] t;
+            genvar gj;
+            for (gj = 0; gj < K; gj = gj + 1) begin : g_bit
+                localparam integer PJ = pos_of(gj);
+                assign t[gj] = (((PJ >> gi) & 1) != 0) ? cw[gj] : 1'b0;
+            end
+            assign syn[gi] = cw[K + gi] ^ (^t);
         end
         for (gi = 0; gi < K; gi = gi + 1) begin : g_fix
             localparam integer P = pos_of(gi);

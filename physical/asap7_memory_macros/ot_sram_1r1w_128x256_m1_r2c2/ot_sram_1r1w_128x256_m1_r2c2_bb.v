@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // ot_sram_1r1w_128x256_m1_r2c2: ASAP7 1R1W SRAM 128 x 256, mux 1, 1 bank(s), 2 spare row(s), 2 spare IO column(s); OpenTallas tools/mem_compiler/sram_gen.py v1.0
 // Blackbox view for synthesis and place-and-route (the hard macro).
 (* blackbox *)
