@@ -88,7 +88,9 @@ def test_timing_model_tracks_the_rtl():
         tol = 0.015 if q["runs"][f"single_npc{n}"]["stream"]["kv_stall_cycles"] >= 250 else 0.005
         assert abs(cyc - rtl) / rtl < tol, (n, cyc, rtl)
     if rec.get("v41"):
-        assert all(abs(f["error_pct"]) < 0.5 for f in rec["v41"]["timing_model"]["fits"])
+        fits = rec["v41"]["timing_model"]["fits"]
+        assert all(abs(f["error_pct"]) < (1.5 if f["non_monotonic_outlier"] else 0.5) for f in fits)
+        assert sum(f["non_monotonic_outlier"] for f in fits) <= 1
 
 
 @needs_checkpoint

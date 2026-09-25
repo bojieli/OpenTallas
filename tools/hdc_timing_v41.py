@@ -90,20 +90,23 @@ def sink_cycles(iters=20):
     return total + 2               # P_DONE, out_valid
 
 
-# QE weights in HBM, fitted to the reduced vehicle's Verilator runs at 8 and 32
-# pseudo-channels: sec_per_pc, the effective sectors (32 B) per cycle per
-# pseudo-channel of the QE stream (its 17-sector words span up to 5 channels, so
-# a refreshing channel holds back the words that touch it: well below the
-# 128-byte-word stream's rate); lat, request to arrival; c_ann, announce to
-# issue; rel, a release instruction's issue to the routed expert's first word
-# being fetchable (the walker reaching the entry, the id read, the cold rows).
-QH = dict(npc=8, sec_per_pc=0.30, lat=80, c_ann=6, rel=240, lead=512, win=1024, margin=0.9)
+# QE weights in HBM: sec_per_pc, the probed sectors (32 B) per cycle of one
+# pseudo-channel; sec_cap, the most the QE stream takes in (its 17-sector words
+# span up to 5 channels and go one request a cycle through an 8-word look-
+# ahead) -- fitted with lat (request to arrival) and rel (a release
+# instruction's issue to the routed expert's first word being fetchable: the
+# walker reaching the entry, the id read) to the reduced vehicle's Verilator
+# runs at 4, 16 and 32 pseudo-channels; c_ann, announce to issue.
+# rate_sec_per_pc: the conservative per-channel rate behind the guaranteed
+# rate (q_rate) the streamer is configured with.
+QH = dict(npc=8, sec_per_pc=0.877, sec_cap=2.8, lat=80, c_ann=6, rel=120, lead=512, win=1024, margin=0.9,
+          rate_sec_per_pc=0.30)
 SPW8, SPW4 = 17, 9
 
 
 def q_rate(q):
     """The QE streamer's guaranteed rate (FP8 words per cycle x 256)."""
-    return min(256, int(256 * q["margin"] * q["npc"] * q["sec_per_pc"] / SPW8))
+    return min(256, int(256 * q["margin"] * q["npc"] * q["rate_sec_per_pc"] / SPW8))
 
 
 class QStream:
@@ -111,7 +114,7 @@ class QStream:
 
     def __init__(self, q, prog, pos, rate=None):
         self.q = q
-        self.s = q["npc"] * q["sec_per_pc"]
+        self.s = min(q["npc"] * q["sec_per_pc"], q.get("sec_cap", 1e9))
         self.rate = q_rate(q) if rate is None else rate
         self.words = []                 # (spw, entry) per stream word
         self.ent = []                   # (first word, n, release group)
