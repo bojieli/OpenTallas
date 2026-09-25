@@ -118,7 +118,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # figures (36) to the per-iteration records in results/rtl/hdc_iterations/
     # and the routed records in results/physical_abi3/asap7/hdc/.
     # 729: docs/ANALYTICAL_REPORT.md section 9 binds the decode core (two).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 739
+    # 756: docs/WAFER_VS_ARRAY_ISO_AREA.md binds its verdict (17) to
+    # results/roofline/critical_path/wafer_vs_array_iso_area.json.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 756
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
