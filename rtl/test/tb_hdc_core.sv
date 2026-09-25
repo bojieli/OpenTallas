@@ -163,7 +163,26 @@ module tb_hdc_core #(
 `endif
     reg [8*512-1:0] dir;
     reg [8*1024-1:0] dir_rom;
-    integer f_a, f_b, f_c;
+`ifdef OT_HDC_MEMSYS
+`ifdef OT_MEM_FAULTS
+    integer fkv_k, fkv_r, fkv_c, fwr_k, fwr_r, fwr_c;
+    reg fkv = 1'b0, fwr = 1'b0;
+    always @(posedge clk) if (cyc == 1) begin
+        if (fkv) begin
+            u_mem.g_kvrep[0].g_kvcol[0].u_sram.f_kind[0] = fkv_k[3:0];
+            u_mem.g_kvrep[0].g_kvcol[0].u_sram.f_r[0] = fkv_r;
+            u_mem.g_kvrep[0].g_kvcol[0].u_sram.f_c[0] = fkv_c;
+            $display("FAULT kv kind=%0d row=%0d col=%0d", fkv_k, fkv_r, fkv_c);
+        end
+        if (fwr) begin
+            u_mem.g_wrow[0].g_wcol[0].u_rom.f_kind[0] = fwr_k[3:0];
+            u_mem.g_wrow[0].g_wcol[0].u_rom.f_r[0] = fwr_r;
+            u_mem.g_wrow[0].g_wcol[0].u_rom.f_c[0] = fwr_c;
+            $display("FAULT wrom kind=%0d row=%0d col=%0d", fwr_k, fwr_r, fwr_c);
+        end
+    end
+`endif
+`endif
     integer cyc = 0, lc = 0, i, bad_lg, bad_vm, bad_kv;
     reg go = 1'b1;
     reg trace = 1'b0, multi = 1'b0;
@@ -198,17 +217,13 @@ module tb_hdc_core #(
             if ($value$plusargs("OT_ROM_DIR=%s", dir_rom)) $readmemh({dir_rom, "/signatures.hex"}, exp_sig_mem);
         end
 `ifdef OT_MEM_FAULTS
-        // one stuck cell in KV replica 0 / column tile 0 and one via defect in weight ROM tile r0 c0
-        if ($value$plusargs("FAULT_KV_KIND=%d", f_a) && $value$plusargs("FAULT_KV_ROW=%d", f_b) && $value$plusargs("FAULT_KV_COL=%d", f_c)) begin
-            u_mem.g_kvrep[0].g_kvcol[0].u_sram.f_kind[0] = f_a[3:0];
-            u_mem.g_kvrep[0].g_kvcol[0].u_sram.f_r[0] = f_b;
-            u_mem.g_kvrep[0].g_kvcol[0].u_sram.f_c[0] = f_c;
-        end
-        if ($value$plusargs("FAULT_WROM_KIND=%d", f_a) && $value$plusargs("FAULT_WROM_ROW=%d", f_b) && $value$plusargs("FAULT_WROM_COL=%d", f_c)) begin
-            u_mem.g_wrow[0].g_wcol[0].u_rom.f_kind[0] = f_a[3:0];
-            u_mem.g_wrow[0].g_wcol[0].u_rom.f_r[0] = f_b;
-            u_mem.g_wrow[0].g_wcol[0].u_rom.f_c[0] = f_c;
-        end
+        // one stuck cell in KV replica 0 / column tile 0 and one via defect in weight ROM
+        // tile r0 c0; applied on the first clock (the macro models clear their slots in
+        // their own initial blocks)
+        fkv = $value$plusargs("FAULT_KV_KIND=%d", fkv_k) && $value$plusargs("FAULT_KV_ROW=%d", fkv_r)
+              && $value$plusargs("FAULT_KV_COL=%d", fkv_c);
+        fwr = $value$plusargs("FAULT_WROM_KIND=%d", fwr_k) && $value$plusargs("FAULT_WROM_ROW=%d", fwr_r)
+              && $value$plusargs("FAULT_WROM_COL=%d", fwr_c);
 `endif
 `endif
         if (!$value$plusargs("NPROMPT=%d", n_prompt)) n_prompt = 0;
