@@ -98,6 +98,14 @@ class Model:
         raise ValueError(kind)
 
 
+def _traces_to(design: Design, inst: nl.Instance, pin: str, target: str) -> bool:
+    net = design.pin_net(inst, pin)
+    if net is None:
+        return False
+    root, _inv, _ = design.trace_root(net)
+    return root == target
+
+
 def build_models(
     netlist: Path,
     scan: dict[str, Any],
@@ -164,6 +172,7 @@ def build_models(
             return m.constant(0)
         return net_node[net]
 
+    scan_en_net = design.net(scan["ports"]["scan_enable"])
     faults: list[tuple[int, int, str, str]] = []   # (node, stuck, instance, pin)
     clock_pin_faults: list[tuple[str, str, int]] = []
     clock_pin_effect: list[str] = []
@@ -207,7 +216,16 @@ def build_models(
             ff = cell["ff"]
             if len(ff["vars"]) > 1:
                 env[ff["vars"][1]] = m.add(T_NOT, [state])
-            ns = m.expr(role["next_state"], env)
+            ns_expr = role["next_state"]
+            # A scan cell's next state is rebuilt as a multiplexer on its scan
+            # enable, with minimal-support cofactors, so that with scan_en held
+            # the functional input is structurally cut off and not only
+            # logically (the chain-test simulator relies on it).
+            se_pins = [p for p in role["data_pins"]
+                       if p not in role["async"] and _traces_to(design, inst, p, scan_en_net)]
+            for p in se_pins:
+                ns_expr = lib.shannon(ns_expr, p)
+            ns = m.expr(ns_expr, env)
             clear = preset = None
             for pin, meta in role["async"].items():
                 active = m.expr(lib.parse_function(ff[meta["kind"]]), env)
@@ -296,6 +314,11 @@ def build_models(
                 for c, chain in enumerate(scan["chains"]):
                     bit = f"{ports['scan_out']}[{c}]"
                     fh.write(f"FLUSHOBS {node_of([bit])} {len(chain['cells'])}\n")
+                ppo_of = dict(ppo_nodes)
+                for chain in scan["chains"]:
+                    n = len(chain["cells"])
+                    for k, cellrec in enumerate(chain["cells"]):
+                        fh.write(f"SCANPOS {ppo_of[cellrec['instance']]} {k} {n}\n")
         return {"path": str(path), "constrained_inputs": constrained, "observed": len(obs)}
 
     capture = write("capture", scan["capture_constraints"], observe_po=True)

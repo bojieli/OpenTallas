@@ -192,6 +192,49 @@ def to_verilog(expr: tuple, rename: dict[str, str] | None = None) -> str:
     raise ValueError(kind)
 
 
+def minimal_support_expr(expr: tuple, fixed: dict[str, int]) -> tuple:
+    """``expr`` with ``fixed`` variables substituted, rebuilt over its true support.
+
+    Constant folding alone leaves a consensus term such as ``!D * !SI`` in a
+    scan cell's next state with SE = 1, so D still reaches it structurally
+    although it no longer matters.  The cofactor is rebuilt as a sum of
+    minterms over only the variables it actually depends on.
+    """
+    names = sorted(expr_vars(expr) - set(fixed))
+    support = []
+    for n in names:
+        for row in range(1 << len(names)):
+            env = {m: (row >> i) & 1 for i, m in enumerate(names)}
+            env.update(fixed)
+            a = evaluate(expr, env)
+            env[n] ^= 1
+            if evaluate(expr, env) != a:
+                support.append(n)
+                break
+    terms = []
+    for row in range(1 << len(support)):
+        env = {m: (row >> i) & 1 for i, m in enumerate(support)}
+        full = dict(fixed)
+        full.update(env)
+        for n in names:
+            full.setdefault(n, 0)
+        if evaluate(expr, full):
+            lits = [("var", m) if env[m] else ("not", ("var", m)) for m in support]
+            terms.append(lits[0] if len(lits) == 1 else ("and", lits) if lits else ("const", 1))
+    if not terms:
+        return ("const", 0)
+    if len(terms) == 1:
+        return terms[0]
+    return ("or", terms)
+
+
+def shannon(expr: tuple, var: str) -> tuple:
+    """``var & f|var=1  |  !var & f|var=0`` with minimal-support cofactors."""
+    f1 = minimal_support_expr(expr, {var: 1})
+    f0 = minimal_support_expr(expr, {var: 0})
+    return ("or", [("and", [("var", var), f1]), ("and", [("not", ("var", var)), f0])])
+
+
 def truth_table(expr: tuple, names: list[str]) -> int:
     """The function as an integer bitmask over all assignments of ``names``."""
     mask = 0

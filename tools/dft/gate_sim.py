@@ -50,18 +50,19 @@ else:
 # --------------------------------------------------------------------------
 
 
-def cell_model(name: str, cell: dict[str, Any]) -> str:
+def cell_model(name: str, cell: dict[str, Any], pin_buffers: bool = True) -> str:
     ins = [p for p, i in cell["pins"].items() if i["direction"] == "input"]
     outs = [p for p, i in cell["pins"].items() if i["direction"] == "output"]
     ports = ", ".join(ins + outs)
     lines = [f"module {name} ({ports});"]
     for p in ins:
         lines.append(f"  input {p};")
-        lines.append(f"  wire {p}__i;")
-        lines.append(f"  assign {p}__i = {p};")
+        if pin_buffers:
+            lines.append(f"  wire {p}__i;")
+            lines.append(f"  assign {p}__i = {p};")
     for p in outs:
         lines.append(f"  output {p};")
-    rename = {p: f"{p}__i" for p in ins}
+    rename = {p: f"{p}__i" for p in ins} if pin_buffers else {}
     ff, latch = cell.get("ff"), cell.get("latch")
     if ff:
         role = sequential_role(cell)
@@ -71,7 +72,7 @@ def cell_model(name: str, cell: dict[str, Any]) -> str:
             lines.append(f"  wire {ff['vars'][1]} = ~{v0};")
             rename[ff["vars"][1]] = ff["vars"][1]
         edge = "posedge" if role["edge"] == "pos" else "negedge"
-        clk = f"{role['clock_pin']}__i"
+        clk = rename.get(role["clock_pin"], role["clock_pin"])
         ns = lib.to_verilog(role["next_state"], rename)
         sens = [f"{edge} {clk}"]
         body = []
@@ -108,10 +109,11 @@ def cell_model(name: str, cell: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def write_cell_models(cells: dict[str, dict[str, Any]], used: set[str], path: Path) -> None:
+def write_cell_models(cells: dict[str, dict[str, Any]], used: set[str], path: Path,
+                      pin_buffers: bool = True) -> None:
     body = ["`timescale 1ns/1ps", "// generated from Liberty by tools/dft/gate_sim.py"]
     for name in sorted(used):
-        body.append(cell_model(name, cells[name]))
+        body.append(cell_model(name, cells[name], pin_buffers))
     path.write_text("\n".join(body) + "\n")
 
 

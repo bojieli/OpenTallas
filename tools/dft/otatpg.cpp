@@ -25,6 +25,7 @@
 // values and expected observation values, hex), and a JSON summary.
 
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <cstdint>
@@ -62,6 +63,7 @@ struct Circuit {
   std::vector<std::pair<u32, u32>> seq;        // state node -> next-state node
   std::vector<u32> flush_in;                   // scan-in inputs
   std::vector<std::pair<u32, u32>> flush_obs;  // scan-out node, chain length
+  std::vector<std::array<u32, 3>> scanpos;     // next-state node, chain position, chain length
 };
 
 static void die(const std::string& msg) {
@@ -126,6 +128,10 @@ static Circuit read_model(const std::string& path) {
       u32 a;
       in >> a;
       c.flush_in.push_back(a);
+    } else if (tag == "SCANPOS") {
+      u32 a, pos, len;
+      in >> a >> pos >> len;
+      c.scanpos.push_back({a, pos, len});
     } else if (tag == "FLUSHOBS") {
       u32 a, len;
       in >> a >> len;
@@ -864,6 +870,11 @@ struct FlushFault {
   bool detected = false;
   int cycle = -1;
   std::vector<std::pair<u32, uint8_t>> diff;   // PPI node -> faulty value
+  // 0: full sequential simulation; 1: the fault reaches one scan cell's next
+  // state only (first-divergence rule); 2: it reaches one scan output only
+  int mode = 0;
+  int pos = -1, len = -1;
+  bool done = false;
 };
 
 static int run_flush(const Circuit& c, const std::string& faults_path, const std::string& only,
@@ -905,6 +916,90 @@ static int run_flush(const Circuit& c, const std::string& faults_path, const std
   }
   std::vector<FlushScratch> scratch(threads);
   for (auto& s : scratch) s.init(c);
+  // Values that are constant through the whole flush (held inputs, inputs
+  // driven 0, and whatever they force), for structural blocking.
+  std::vector<uint8_t> cval(c.n, 2);
+  for (u32 v : c.order) {
+    int si = c.source_index[v];
+    if (si >= 0) {
+      int con = c.source_constraint[si];
+      cval[v] = (is_ppi[v] || is_flush_in[v]) ? 2 : (con >= 0 ? (uint8_t)con : 0);
+    } else {
+      cval[v] = eval3_node(c, v, cval.data());
+    }
+  }
+  std::vector<int> spos(c.n, -1), slen(c.n, -1);
+  for (auto& sp : c.scanpos) { spos[sp[0]] = (int)sp[1]; slen[sp[0]] = (int)sp[2]; }
+  // Which next states and scan outputs can the fault reach before anything
+  // else differs?  A gate passes a difference unless an input that does not
+  // differ holds its controlling constant.
+  size_t n_single = 0, n_obs = 0, n_full = 0;
+  {
+    std::vector<u32> mark(c.n, 0), lvl_q;
+    std::vector<std::vector<u32>> bucket(c.max_level + 1);
+    u32 ep = 0;
+    for (size_t i = 0; i < faults.size(); i++) {
+      if (!active[i]) continue;
+      FlushFault& f = faults[i];
+      ep++;
+      std::vector<u32> targets;
+      u32 lo = c.max_level + 1, hi = 0;
+      auto push_fanouts = [&](u32 v) {
+        for (u32 j = 0; j < c.fout_count[v]; j++) {
+          u32 w = c.fanouts[c.fout_begin[v] + j];
+          if (mark[w] == ep || mark[w] == ep + 0x80000000u) continue;
+          mark[w] = ep + 0x80000000u;   // queued
+          bucket[c.level[w]].push_back(w);
+          lo = std::min(lo, c.level[w]);
+          hi = std::max(hi, c.level[w]);
+        }
+      };
+      mark[f.site] = ep;
+      if (spos[f.site] >= 0 || obs_len[f.site] >= 0) targets.push_back(f.site);
+      push_fanouts(f.site);
+      bool multi = false;
+      for (u32 l = lo; l <= hi && l <= c.max_level && !multi; l++) {
+        for (size_t h = 0; h < bucket[l].size(); h++) {
+          u32 w = bucket[l][h];
+          if (c.source_index[w] >= 0) { mark[w] = 0; continue; }
+          const u32* fi = &c.fanins[c.fin_begin[w]];
+          bool blocked = false;
+          uint8_t t = c.type[w];
+          for (u32 j = 0; j < c.fin_count[w]; j++) {
+            u32 u = fi[j];
+            if (mark[u] == ep) continue;   // differs
+            if ((t == T_AND || t == T_NAND) && cval[u] == 0) blocked = true;
+            if ((t == T_OR || t == T_NOR) && cval[u] == 1) blocked = true;
+          }
+          if (blocked) { mark[w] = 0; continue; }
+          mark[w] = ep;
+          if (spos[w] >= 0 || obs_len[w] >= 0) {
+            targets.push_back(w);
+            if (targets.size() > 1) { multi = true; break; }
+          }
+          push_fanouts(w);
+        }
+      }
+      for (u32 l = 0; l <= c.max_level; l++) {
+        if (l >= lo && l <= hi) {
+          for (u32 w : bucket[l]) if (mark[w] != ep) mark[w] = 0;
+          bucket[l].clear();
+        }
+      }
+      if (multi || targets.empty()) {
+        f.mode = 0;
+        n_full++;
+      } else if (spos[targets[0]] >= 0) {
+        f.mode = 1;
+        f.pos = spos[targets[0]];
+        f.len = slen[targets[0]];
+        n_single++;
+      } else {
+        f.mode = 2;
+        n_obs++;
+      }
+    }
+  }
   std::vector<u32> live;
   for (u32 i = 0; i < faults.size(); i++) if (active[i]) live.push_back(i);
   auto t0 = std::chrono::steady_clock::now();
@@ -955,9 +1050,11 @@ static int run_flush(const Circuit& c, const std::string& faults_path, const std
         else if (is_ppi[f.site] || c.source_index[f.site] >= 0) { s.fval[f.site] = f.stuck; s.stamp[f.site] = ep; }
         std::vector<std::pair<u32, uint8_t>> ndiff;
         bool det = false;
+        bool known_div = false;
         auto consider_output = [&](u32 v, uint8_t fv) {
           int p = ppi_of_ppo[v];
           if (p >= 0 && fv != good[v]) ndiff.push_back({(u32)p, fv});
+          if (p >= 0 && fv != good[v] && fv != 2 && good[v] != 2) known_div = true;
           if (obs_len[v] >= 0 && t >= obs_len[v] && fv != 2 && good[v] != 2 && fv != good[v]) det = true;
         };
         // the site or a state may itself be an observed / next-state node
@@ -1006,6 +1103,19 @@ static int run_flush(const Circuit& c, const std::string& faults_path, const std
           }
           b.clear();
         }
+        if (f.mode == 1) {
+          // the first divergence at scan cell pos travels, unchanged, through
+          // fault-free cells to the scan output len - pos cycles later
+          if (!ndiff.empty()) {
+            int t_obs = t + f.len - f.pos;
+            // a difference against an unknown good value can never be observed
+            // as a known mismatch downstream, so only a known one counts
+            if (known_div && t >= f.pos && t_obs < T) { f.detected = true; f.cycle = t_obs; }
+            else if (known_div && t < f.pos) { f.mode = 0; f.diff.swap(ndiff); }
+            else if (known_div) { f.done = true; }
+          }
+          continue;
+        }
         if (det) { f.detected = true; f.cycle = t; }
         f.diff.swap(ndiff);
       }
@@ -1015,7 +1125,7 @@ static int run_flush(const Circuit& c, const std::string& faults_path, const std
     work(0);
     for (auto& th : pool) th.join();
     std::vector<u32> keep;
-    for (u32 i : live) if (!faults[i].detected) keep.push_back(i);
+    for (u32 i : live) if (!faults[i].detected && !faults[i].done) keep.push_back(i);
     live.swap(keep);
     // advance the good machine
     for (auto& sp : c.seq) next_state[sp.first] = good[sp.second];
@@ -1035,6 +1145,8 @@ static int run_flush(const Circuit& c, const std::string& faults_path, const std
     std::ofstream o(out_prefix + ".summary.json");
     o << "{\n  \"mode\": \"flush\",\n  \"cycles\": " << T << ",\n  \"longest_chain\": " << maxlen
       << ",\n  \"faults_simulated\": " << act << ",\n  \"detected\": " << det
+      << ",\n  \"first_divergence_faults\": " << n_single << ",\n  \"scan_out_faults\": " << n_obs
+      << ",\n  \"full_simulation_faults\": " << n_full
       << ",\n  \"seconds\": " << secs << "\n}\n";
   }
   std::cerr << "otatpg: flush " << T << " cycles, " << det << "/" << act << " faults detected (" << secs << " s)\n";
@@ -1054,6 +1166,7 @@ struct Options {
   bool compact = true;
   std::string only_faults;      // optional file: subset of fault indices to target
   bool flush = false;           // chain-test fault simulation instead of ATPG
+  int abort_retry_factor = 16;  // aborted faults are retried once with this x the limit
 };
 
 static void write_hex(std::ostream& o, const std::vector<uint8_t>& bits) {
@@ -1088,6 +1201,7 @@ int main(int argc, char** argv) {
     else if (a == "--no-compact") opt.compact = false;
     else if (a == "--only-faults") opt.only_faults = next();
     else if (a == "--flush") opt.flush = true;
+    else if (a == "--abort-retry-factor") opt.abort_retry_factor = std::stoi(next());
     else die("unknown option " + a);
   }
   if (opt.model.empty() || opt.faults.empty() || opt.out_prefix.empty()) die("need --model --faults --out");
@@ -1240,6 +1354,31 @@ int main(int argc, char** argv) {
     return claimed[fi].compare_exchange_strong(expect, 1);
   };
   double last_report = 0;
+  // later passes pick up faults that were claimed as secondary targets,
+  // released, and passed by the cursor before they got a primary attempt
+  // The last pass retries every aborted fault with a backtrack limit
+  // --abort-retry-factor times larger.
+  int cur_limit = opt.backtrack_limit;
+  size_t retried_aborts = 0;
+  bool retry_done = false;
+  for (int pass = 0; pass < 9; pass++) {
+  if (pass > 0) {
+    order.clear();
+    for (u32 fi : remaining)
+      if (faults[fi].status == ST_UND && !claimed[fi].load()) order.push_back(fi);
+    if (order.empty() || pass == 8) {
+      if (retry_done || opt.abort_retry_factor <= 1) break;
+      retry_done = true;
+      order.clear();
+      for (u32 fi : remaining)
+        if (faults[fi].status == ST_AU) { faults[fi].status = ST_UND; claimed[fi].store(0); order.push_back(fi); }
+      retried_aborts = order.size();
+      aborted_calls.store(0);
+      cur_limit = opt.backtrack_limit * opt.abort_retry_factor;
+      if (order.empty()) break;
+    }
+    cursor.store(0);
+  }
   while (cursor.load() < order.size()) {
     std::vector<std::vector<std::vector<uint8_t>>> made(opt.threads);
     std::vector<std::vector<std::vector<u32>>> made_targets(opt.threads);
@@ -1253,7 +1392,7 @@ int main(int argc, char** argv) {
         if (faults[fi].status != ST_UND || !claim(fi)) continue;
         podem_calls++;
         int bt;
-        int res = pd.run(faults[fi].node, faults[fi].stuck, opt.backtrack_limit, bt);
+        int res = pd.run(faults[fi].node, faults[fi].stuck, cur_limit, bt);
         total_backtracks += bt;
         if (res == 0) { faults[fi].status = ST_UT; untestable++; pd.release(); continue; }
         if (res < 0) { faults[fi].status = ST_AU; aborted_calls++; pd.release(); continue; }
@@ -1331,6 +1470,7 @@ int main(int argc, char** argv) {
                 << order.size() << " (" << secs() << " s)\n";
     }
   }
+  }  // passes
   std::cerr << "otatpg: PODEM " << podem_calls.load() << " calls, " << untestable.load() << " untestable, "
             << aborted_calls.load() << " aborted, " << det_patterns << " deterministic patterns, "
             << podem_fail_confirm << " unconfirmed (" << secs() << " s)\n";
@@ -1423,6 +1563,8 @@ int main(int argc, char** argv) {
     o << "  \"podem_unconfirmed\": " << podem_fail_confirm << ",\n";
     o << "  \"untestable_but_detected\": " << ut_contradictions << ",\n";
     o << "  \"backtrack_limit\": " << opt.backtrack_limit << ",\n";
+    o << "  \"abort_retry_backtrack_limit\": " << opt.backtrack_limit * opt.abort_retry_factor << ",\n";
+    o << "  \"aborted_retried\": " << retried_aborts << ",\n";
     o << "  \"seed\": " << opt.seed << ",\n";
     o << "  \"threads\": " << opt.threads << ",\n";
     o << "  \"seconds\": " << secs() << "\n";
