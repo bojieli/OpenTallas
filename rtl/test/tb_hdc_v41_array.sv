@@ -52,11 +52,14 @@ module tb_hdc_v41_array #(
     reg [BL*QLB-1:0]  qrom [0:QROM_WORDS-1];
     reg [263:0]       erom [0:EROM_WORDS-1];
     reg [63:0]        crom [0:CROM_WORDS-1];
-    reg [NW-1:0]      prompt [0:NPR*NPROMPT-1];
-    reg [NW-1:0]      e_tok [0:NPR*STEPS-1];
-    reg [31:0]        e_lg [0:NPR*STEPS*VOCAB-1];
+    localparam integer NPMAX = 8, SMAX = 16;         // prompt tokens and steps provisioned per prompt
+    reg [NW-1:0]      prompt [0:NPR*NPMAX-1];
+    reg [NW-1:0]      e_tok [0:NPR*SMAX-1];
+    reg [31:0]        e_lg [0:NPR*SMAX*VOCAB-1];
     reg [8*512-1:0]   dir, romdir;
-    integer n_gen = NGEN, n_users = USERS, n_prompt = NPROMPT, hb = 0;   // +HB=n: heartbeat every n cycles
+    // +NPROMPT / +NGEN: prompt tokens (a prefix of each prompt) and generated tokens per user;
+    // +HB=n: heartbeat every n cycles
+    integer n_gen = 3, n_users = USERS, n_prompt = NPMAX, hb = 0;
     reg rst_n = 1'b0;
     integer cyc = 0;
 
@@ -340,7 +343,7 @@ module tb_hdc_v41_array #(
                 // controller word ports (physical word addresses)
                 if (c_we) for (l = 0; l < W; l = l + 1) vm[{c_waddr, 4'b0} + l] <= c_wdata[32*l +: 32];
                 if (c_re) for (l = 0; l < W; l = l + 1) c_rq[32*l +: 32] <= vm[{c_raddr, 4'b0} + l];
-                if (pr_re) pr_q <= prompt[(pr_user % NPR) * NPROMPT + pr_pos];
+                if (pr_re) pr_q <= prompt[(pr_user % NPR) * NPMAX + pr_pos];
                 // lm_head part: the unwritten matrix-vector op's result words are its logits
                 if (HEAD && me_ov && vw_me_we == 0)
                     for (q = 0; q < G; q = q + 1)
@@ -369,10 +372,10 @@ module tb_hdc_v41_array #(
                     if (HEAD) begin
                         lb = 0;
                         for (e = 0; e < PROWS; e = e + 1)
-                            if (lg[e] !== e_lg[((cur_u % NPR) * STEPS + job_pos) * VOCAB + ROW0 + e]) begin
+                            if (lg[e] !== e_lg[((cur_u % NPR) * SMAX + job_pos) * VOCAB + ROW0 + e]) begin
                                 if (lb < 3) $display("LOGIT pkg=%0d user=%0d pos=%0d row=%0d rtl=%h gold=%h", n,
                                                      cur_u, job_pos, ROW0 + e, lg[e],
-                                                     e_lg[((cur_u % NPR) * STEPS + job_pos) * VOCAB + ROW0 + e]);
+                                                     e_lg[((cur_u % NPR) * SMAX + job_pos) * VOCAB + ROW0 + e]);
                                 lb = lb + 1;
                             end
                         lg_bad = lg_bad + lb;
@@ -415,10 +418,10 @@ module tb_hdc_v41_array #(
     integer i, u;
     always @(posedge clk) if (rst_n) begin
         if (tok_v) begin
-            if (tok_i != e_tok[(tok_u % NPR) * STEPS + tok_p]) begin
+            if (tok_i != e_tok[(tok_u % NPR) * SMAX + tok_p]) begin
                 bad = bad + 1;
                 $display("MISMATCH user=%0d pos=%0d got=%0d gold=%0d", tok_u, tok_p, tok_i,
-                         e_tok[(tok_u % NPR) * STEPS + tok_p]);
+                         e_tok[(tok_u % NPR) * SMAX + tok_p]);
             end
             $display("TOK user=%0d pos=%0d token=%0d cycle=%0d", tok_u, tok_p, tok_i, cyc);
             if (tok_p >= n_prompt - 1) begin
@@ -438,6 +441,8 @@ module tb_hdc_v41_array #(
         if (!$value$plusargs("ROMS=%s", romdir)) romdir = dir;
         if (!$value$plusargs("NUSERS=%d", n_users)) n_users = USERS;
         if (!$value$plusargs("HB=%d", hb)) hb = 0;
+        if (!$value$plusargs("NPROMPT=%d", n_prompt)) n_prompt = NPMAX;
+        if (!$value$plusargs("NGEN=%d", n_gen)) n_gen = 3;
         $readmemh({romdir, "/wrom.hex"}, wrom);
         $readmemh({romdir, "/qrom.hex"}, qrom);
         $readmemh({romdir, "/hrom.hex"}, hrom);

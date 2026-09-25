@@ -73,11 +73,15 @@ ITEM = {"ckv": 32, "ik": 32, "sel": 16}
 SCAL_WORD = 40             # hop word of the scalars (SSX, PF): T[0..4]
 
 
-def prompts():
+NPMAX, SMAX = 8, 16        # prompt tokens and steps the RTL bench provisions per prompt
+
+
+def prompts(length=NPMAX):
     """Two prompts: the oracle's, and its first eight generated ids (a
-    different context, so per-user state mixing cannot go unseen)."""
+    different context, so per-user state mixing cannot go unseen); a shorter
+    `length` takes a prefix of each."""
     prompt, expected = V.prompt_and_expected()
-    return [list(prompt), list(expected[:len(prompt)])]
+    return [list(prompt)[:length], list(expected[:len(prompt)])[:length]]
 
 
 # -- partition -----------------------------------------------------------------------------
@@ -370,7 +374,7 @@ class Pipeline:
     def step(self, token, pos):
         """Returns (argmax, value bits, full logits) of the step."""
         plan = self.plan
-        nb, hp = plan.nb, plan.hp
+        nb = plan.nb
         best = None
         parts = []
         for k in range(plan.n):
@@ -391,12 +395,16 @@ class Pipeline:
         return best[0], int(G.bits(np.float32(best[1]))), np.concatenate(parts)
 
 
-def golden_runs(model, n_gen=NGEN, cache=None):
+def golden_runs(model, n_gen=NGEN, cache=None, prompt_len=NPMAX):
     """Per prompt: every step's input token, argmax, logit bits (golden)."""
-    if cache and Path(cache).exists():
-        return json.loads(Path(cache).read_text())
+    if cache:
+        cache = Path(cache)
+        if (prompt_len, n_gen) != (NPMAX, NGEN):
+            cache = cache.with_name(f"{cache.stem}_p{prompt_len}g{n_gen}{cache.suffix}")
+    if cache and cache.exists():
+        return json.loads(cache.read_text())
     out = []
-    for pr in prompts():
+    for pr in prompts(prompt_len):
         st = model.new_state()
         seq, steps = list(pr), []
         for p in range(len(pr) + n_gen - 1):
@@ -441,9 +449,14 @@ def write_config(out, plan, progs, gold, states):
         (out / f"prog_stage{k:02d}_tags.txt").write_text("".join(f"{n} {f['_tag']}\n" for n, f in enumerate(prog)))
     npr = len(gold)
     steps = len(gold[0]["steps"])
-    (out / "prompts.hex").write_text(P.hexwords([t for g in gold for t in g["prompt"]], 16))
-    (out / "expect_tokens.hex").write_text(P.hexwords([s["argmax"] for g in gold for s in g["steps"]], 16))
-    (out / "expect_logits.hex").write_text(P.hexwords([x for g in gold for s in g["steps"] for x in s["logits"]], 32))
+    assert steps <= SMAX and len(gold[0]["prompt"]) <= NPMAX
+    pad = [0] * len(gold[0]["steps"][0]["logits"])
+    (out / "prompts.hex").write_text(P.hexwords(
+        [t for g in gold for t in g["prompt"] + [0] * (NPMAX - len(g["prompt"]))], 16))
+    (out / "expect_tokens.hex").write_text(P.hexwords(
+        [s["argmax"] for g in gold for s in g["steps"] + [dict(argmax=0)] * (SMAX - steps)], 16))
+    (out / "expect_logits.hex").write_text(P.hexwords(
+        [x for g in gold for s in g["steps"] + [dict(logits=pad)] * (SMAX - steps) for x in s["logits"]], 32))
     for k in range(plan.n):
         for p in range(npr):
             kv, vm = states[p][k]

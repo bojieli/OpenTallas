@@ -49,18 +49,19 @@ def test_shared_state_consumers():
 def test_committed_record_passes_and_is_current():
     record = json.loads(RECORD.read_text())
     assert record["status"] == "pass"
-    gold = record["golden_generated"]
-    assert gold[0] == [3118, 2400, 318]                     # the single core's (and golden's) tokens
     packages = set()
+    full = [c for c in record["configurations"] if c["prompt_tokens"] == 8 and c["generated_tokens_per_user"] == 3]
+    assert full and full[0]["golden_generated"][0] == [3118, 2400, 318]   # the single core's tokens
     for c in record["configurations"]:
         assert c["pass"], c["name"]
+        gold = c["golden_generated"]
         assert all(r["logits_bit_exact_every_step"] and r["argmax_and_value_every_step"] for r in c["isa_pipeline"])
         for r in c["runs"]:
             assert r["pass"] and r["token_mismatches"] == 0 and r["logit_mismatches"] == 0
             assert r["state_mismatches"] == 0 and r["users_completed"] == r["users"]
             gen = {}
             for t in r["tokens"]:
-                if t["position"] >= 7:
+                if t["position"] >= c["prompt_tokens"] - 1:
                     gen.setdefault(t["user"], []).append(t["token"])
             assert all(gen[u] == gold[u % 2] for u in gen) and len(gen) == r["users"]
             packages.add(r["packages"])
