@@ -48,9 +48,11 @@ OUT = ROOT / "results/rtl/hdc_decode_campaign.json"
 OUT_MEMSYS = ROOT / "results/rtl/hdc_decode_campaign_memory_macros.json"
 MACROS = ROOT / "physical/asap7_memory_macros"
 MEMSYS_MACROS = ("ot_rom_4096x266_m8", "ot_rom_4096x72_m8", "ot_rom_8192x266_m8", "ot_sram_1r1w_1024x256_m2_r2c2")
-MEMSYS_RTL = [ROOT / "rtl/hdc/ot_hdc_memsys.sv", ROOT / "rtl/dft/ot_rom_secded_dec.sv",
+MEMSYS_RTL = [ROOT / "rtl/hdc/ot_hdc_memsys.sv", *(ROOT / f"rtl/dft/{n}.sv" for n in (
+                  "ot_rom_secded_dec", "ot_mbist_ctrl", "ot_mbist_bira", "ot_mbist_sram_collar", "ot_mbist_rom_collar")),
               *(MACROS / m / f"{m}.v" for m in MEMSYS_MACROS)]
 WROM_ROWS = 6
+VERILATOR5 = Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 ISA_SVH = ROOT / "rtl/hdc/ot_hdc_isa.svh"
 HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
@@ -122,6 +124,11 @@ def personalise(img: Path, groups: int) -> dict:
 def run(memsys: bool = False) -> dict:
     extra_rtl = [str(p) for p in MEMSYS_RTL] if memsys else []
     extra_def = ["+define+OT_HDC_MEMSYS", "+define+OT_MEM_FAULTS"] if memsys else []
+    # The memory-macro build needs Verilator 5: 4.038 mis-evaluates the SECDED
+    # decoders' flags inside this design (spurious "corrected" on clean codewords
+    # with the data itself unchanged); 5.050 counts zero.  The default build keeps
+    # the verilator on PATH so its record is unchanged.
+    vl = str(VERILATOR5) if memsys and VERILATOR5.is_file() else "verilator"
     pers: dict = {}
     with tempfile.TemporaryDirectory() as scratch:
         s = Path(scratch)
@@ -165,7 +172,7 @@ def run(memsys: bool = False) -> dict:
 
         img_rom = rom_args(img, I.GROUPS)
         obj = s / "obj"
-        subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
+        subprocess.run([vl, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
                         "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-Mdir", str(obj),
                         f"-I{ISA_SVH.parent}", *extra_def,
                         *map(str, HDC), *map(str, PIPES), *extra_rtl, str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
@@ -213,7 +220,7 @@ def run(memsys: bool = False) -> dict:
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img8)], check=True,
                        capture_output=True, env=env8)
         img8_rom = rom_args(img8, 8)
-        subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
+        subprocess.run([vl, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
                         "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-GG=8", "-Mdir", str(obj8),
                         f"-I{ISA_SVH.parent}", *extra_def,
                         *map(str, HDC), *map(str, PIPES), *extra_rtl, str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
@@ -287,6 +294,7 @@ def run(memsys: bool = False) -> dict:
             "wrapper": "rtl/hdc/ot_hdc_memsys.sv (+define+OT_HDC_MEMSYS)",
             "macros": list(MEMSYS_MACROS),
             "macro_views_sha256": {m: sha(MACROS / m / f"{m}.v") for m in MEMSYS_MACROS},
+            "verilator": subprocess.run([vl, "--version"], capture_output=True, text=True).stdout.strip(),
             "rom_ecc": "SECDED (266,256) on program and weight ROM tiles, (72,64) on the constant ROM",
             "rom_ecc_events_per_run": [{"corrected": c, "uncorrectable": u} for c, u in ecc_seen],
             "personalisation": pers,
