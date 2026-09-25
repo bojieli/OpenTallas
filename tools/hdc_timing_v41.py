@@ -21,8 +21,8 @@ Constants are the RTL's (`K`); `--calibrate TRACE` fits them to a Verilator
 issue trace (tb_hdc_core_v41 +TRACE) and reports every issue's error.  The
 model needs only the program's shapes and the position, so it prices what the
 RTL simulator reaches only slowly (long contexts), and design options:
-`--sinkhorn-fast` (the latency-optimised Sinkhorn unit, one normalisation a
-cycle).
+`--sinkhorn-seq` (the simple sequential Sinkhorn instead of the routed
+one-normalisation-per-step unit, ot_hdc_sinkhorn_mc).
 """
 import argparse
 import json
@@ -43,21 +43,23 @@ K = dict(
     me_next=-2,         # last element -> a following op may be accepted
     su_start=1,
     su_base=28,         # emit -> retire without M1 divide and SFU (F0..F4, PRE, M1, M2, AD, E1, E2, RND)
-    su_div=27,          # extra depth of an M1 divide (31 vs 5)
-    su_cls=4,           # a class change: last retire -> the new op accepted
+    su_div=26,          # extra depth of an M1 divide (31 vs 5)
+    su_cls=5,           # a class change: last retire -> the new op accepted
     su_idle=7,          # last retire -> idle seen (no reduction)
     su_red=35,          # last retire -> idle seen, with a reduction
     qe_start=-3,
     qe_idx=3,
     qe_load=16,         # after the nb block reads: the quantiser's latency and the state step
     qe_rows_lat=25,     # last word -> last result written -> idle seen
-    qe_qdq_lat=19,      # QDQ: after the reads
+    qe_qdq_lat=21,      # QDQ: after the reads
     qe_phase0=-2,        # absolute-cycle offset of the lanes' slot counter
-    xu_sel=47,          # SELECT: after the n reads, to the last index written (plus k)
-    xu_sink=4,          # Sinkhorn (simple unit): computed by sink_cycles() + this
+    xu_sel=46,          # SELECT: after the n reads, to the last index written (plus k)
+    xu_sink=4,          # simple Sinkhorn: sink_cycles() + this
+    sk_step=7,          # routed Sinkhorn: core cycles per unit step (ot_hdc_sinkhorn_mc STEP_CYC)
+    xu_skmc=10,         # routed Sinkhorn: (2 ITERS + 1) steps + this          # Sinkhorn (simple unit): computed by sink_cycles() + this
     xu_ehash=18,
     xu_egather=5,
-    he_start=1,
+    he_start=-1,
     he_drain=17,        # last element -> the last word written -> idle seen
 )
 SFU_DEPTH = {I.SFU_NONE: 1, I.SFU_EXP: 92, I.SFU_RSQRT: 61, I.SFU_SQRT: 31, I.SFU_SIGM: 128, I.SFU_SILU: 128,
@@ -77,7 +79,7 @@ def sink_cycles(iters=20):
     return total + 2               # P_DONE, out_valid
 
 
-def simulate(prog, pos, k=K, trace=False, sinkhorn_fast=False, t0=30):
+def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
     dyn = I.dyn_values(0, pos)
     t = 0                                     # sequencer: earliest next issue cycle
     free = {u: 0 for u in (1, 2, 3, 4, 5)}    # unit accepts a new op from here
@@ -150,7 +152,7 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_fast=False, t0=30):
                 kk = min(f["xu_k"] + dyn[f["xu_d_k"]], nn)
                 done = s + nn + kk + k["xu_sel"]
             elif op == I.XU_SINK:
-                done = s + (45 if sinkhorn_fast else sink_cycles()) + k["xu_sink"]
+                done = s + (sink_cycles() + k["xu_sink"] if sinkhorn_seq else 41 * k["sk_step"] + k["xu_skmc"])
             elif op == I.XU_EHASH:
                 done = s + k["xu_ehash"]
             else:
@@ -207,7 +209,7 @@ def main():
     ap.add_argument("--pos", type=int, default=7)
     ap.add_argument("--calibrate", type=Path, help="Verilator +TRACE log of this image")
     ap.add_argument("--rtl-cycles", type=int)
-    ap.add_argument("--sinkhorn-fast", action="store_true")
+    ap.add_argument("--sinkhorn-seq", action="store_true")
     a = ap.parse_args()
     prog = load_prog(a.img)
     if a.calibrate:
@@ -218,7 +220,7 @@ def main():
         print(f"model {total} rtl {a.rtl_cycles} ({(total - a.rtl_cycles) / a.rtl_cycles:+.4%}); issue errors: "
               f"max |e| {max(map(abs, err))}, mean |e| {sum(map(abs, err)) / len(err):.1f}")
         return
-    print(simulate(prog, a.pos, sinkhorn_fast=a.sinkhorn_fast))
+    print(simulate(prog, a.pos, sinkhorn_seq=a.sinkhorn_seq))
 
 
 if __name__ == "__main__":

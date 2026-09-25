@@ -40,10 +40,11 @@ STR = TMAX                       # S-region stride per head
 # in attention after ATTN_HOOK ("qkv", "scores", "softmax" or "pv"), in the MoE
 # before routed expert MOE_HOOK (7: after the shared expert).  Swept with
 # tools/hdc_timing_v41.py: late enough that the HE's 5,120-cycle chain has run,
-# early enough that the simple Sinkhorn's ~3,700 cycles hide behind the rest.
-# (With the one-step-per-cycle Sinkhorn, MOE_HOOK = 6 is best.)
+# early enough that the Sinkhorn (the routed unit, 41 steps x 7 core cycles)
+# hides behind the rest.  (With the simple sequential Sinkhorn, ~3,700 cycles,
+# MOE_HOOK = 1 is best.)
 ATTN_HOOK = "softmax"
-MOE_HOOK = 1
+MOE_HOOK = 6
 KT_WORDS = (TMAX // W) * HD      # transposed rows of one layer (words)
 KR_WORDS = TMAX * HD // W        # row-major rows of one layer (words)
 

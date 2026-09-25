@@ -7,8 +7,10 @@
 //          out); the k indices are written back as integers.  Router top-6 and
 //          the indexer's top-16.
 // SINK     the 40 Sinkhorn normalisations of a 4 x 4 mix (after the row-max
-//          exponential): 16 values in, 16 out (ot_hdc_sinkhorn_seq, or the
-//          latency-optimised ot_hdc_sinkhorn with HDC_SINKHORN_FAST).
+//          exponential): 16 values in, 16 out.  The latency-optimised unit
+//          ot_hdc_sinkhorn (one normalisation per unit clock) as a multicycle
+//          path of SK_STEP core cycles a step (ot_hdc_sinkhorn_mc); with
+//          HDC_SINKHORN_SEQ the simple sequential unit ot_hdc_sinkhorn_seq.
 // EHASH    the new token's compressed id (constant-ROM token map) into the
 //          Engram hash unit ot_hdc_engram_hash; its row addresses for both
 //          Engram layers are held until the next EHASH.
@@ -22,7 +24,8 @@
 module ot_hdc_v41_xu #(
     parameter integer AW = 24,
     parameter integer NW = 16,
-    parameter integer K = 16
+    parameter integer K = 16,
+    parameter integer SK_STEP = 7          // core cycles per Sinkhorn step (ot_hdc_sinkhorn_mc)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -90,16 +93,15 @@ module ot_hdc_v41_xu #(
         .in_k(kk), .out_valid(so_v), .out_last(so_last), .out_idx(so_idx), .out_ninf(so_ninf), .busy(sel_busy));
 
     // -- Sinkhorn -----------------------------------------------------------------------------------
-    reg          sk_in;
+    reg          sk_in;                     // request, held until the unit is busy
     wire         sk_ready, sk_ov, sk_f, sk_busy;
     wire [511:0] sk_y;
-    //: HDC_SINKHORN_FAST selects the latency-optimised unit (rtl/hdc/v41/ot_hdc_sinkhorn.sv)
-`ifdef HDC_SINKHORN_FAST
-    ot_hdc_sinkhorn u_sk (.clk(clk), .rst_n(rst_n), .in_valid(sk_in), .in_ready(sk_ready),
-        .in_e(xr_q[511:0]), .out_valid(sk_ov), .y(sk_y), .fault(sk_f), .busy(sk_busy));
-`else
+`ifdef HDC_SINKHORN_SEQ
     ot_hdc_sinkhorn_seq u_sk (.clk(clk), .rst_n(rst_n), .in_valid(sk_in), .in_ready(sk_ready),
         .in_e(xr_q[511:0]), .out_valid(sk_ov), .y(sk_y), .fault(sk_f), .busy(sk_busy));
+`else
+    ot_hdc_sinkhorn_mc #(.STEP_CYC(SK_STEP)) u_sk (.clk(clk), .rst_n(rst_n), .req(sk_in), .in_e(xr_q[511:0]),
+        .busy(sk_busy), .done(sk_ov), .y(sk_y), .fault(sk_f));
 `endif
 
     // -- Engram hash ------------------------------------------------------------------------------------
@@ -141,7 +143,8 @@ module ot_hdc_v41_xu #(
             st <= S_IDLE; vr_re <= 0; xr_re <= 0; vw_we <= 0; w_we <= 0; cr_re <= 0; er_re <= 0;
             s_v <= 0; sk_in <= 0; h_v <= 0; flt <= 0; fault <= 0;
         end else begin
-            vr_re <= 0; xr_re <= 0; vw_we <= 0; w_we <= 0; cr_re <= 0; er_re <= 0; sk_in <= 0; h_v <= 0;
+            vr_re <= 0; xr_re <= 0; vw_we <= 0; w_we <= 0; cr_re <= 0; er_re <= 0; h_v <= 0;
+            if (sk_busy) sk_in <= 1'b0;
             s_v <= r1_v; s_last <= r1_last; s_idx <= r1_idx;
             r1_v <= 0;
             fault <= flt;
@@ -204,6 +207,7 @@ module ot_hdc_v41_xu #(
     always @(posedge clk) begin eg_i1 <= eg_c - 1'b1; eg_i2 <= eg_i1; end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
-        else idle <= (st == S_IDLE) && !accept && !sel_busy && !vw_we && !w_we && !sk_busy && !eg_v1 && !eg_v2;
+        else idle <= (st == S_IDLE) && !accept && !sel_busy && !vw_we && !w_we && !sk_busy && !sk_in && !eg_v1 &&
+                     !eg_v2;
     end
 endmodule
