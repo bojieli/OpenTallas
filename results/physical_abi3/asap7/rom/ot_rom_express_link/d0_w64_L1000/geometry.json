@@ -1,0 +1,38 @@
+{
+ "def_sha256": "1b5719b13cb6ee3bbbd6d3e552587452005cf1d4adf199e9c4a361b410a3e766",
+ "flop_count": 130,
+ "register_columns_um": [
+  {
+   "count": 65,
+   "x_max": 4.05,
+   "x_min": 4.05
+  },
+  {
+   "count": 65,
+   "x_max": 997.92,
+   "x_min": 997.92
+  }
+ ],
+ "repeater_cell_count": 832,
+ "repeater_cells_by_master": {
+  "BUFx10_ASAP7_75t_R": 2,
+  "BUFx12_ASAP7_75t_R": 1,
+  "BUFx12f_ASAP7_75t_R": 346,
+  "BUFx16f_ASAP7_75t_R": 49,
+  "BUFx24_ASAP7_75t_R": 56,
+  "BUFx2_ASAP7_75t_R": 196,
+  "BUFx3_ASAP7_75t_R": 5,
+  "BUFx5_ASAP7_75t_R": 1,
+  "BUFx6f_ASAP7_75t_R": 110,
+  "INVx1_ASAP7_75t_R": 66
+ },
+ "signal_wirelength_um_by_layer": {
+  "M2": 22546.3,
+  "M3": 2183.6,
+  "M4": 1014.6,
+  "M5": 153.7,
+  "M6": 45958.7,
+  "M7": 192.1
+ },
+ "source": "6_final.def of this route, read by the staging script"
+}
