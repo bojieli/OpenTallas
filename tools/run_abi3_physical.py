@@ -1760,6 +1760,16 @@ def orfs_config_lines(
     return config
 
 
+def design_nickname(block_name: str, view_name: str, tag: str | None = None) -> str:
+    """ORFS DESIGN_NICKNAME; a tag lets two concurrent routes of one top coexist."""
+    base = f"opentallas_{block_name}_{view_name}"
+    if not tag:
+        return base
+    if not re.fullmatch(r"[A-Za-z0-9_]+", tag):
+        raise ValueError(f"--nickname-tag {tag!r} must be [A-Za-z0-9_]+")
+    return f"{base}_{tag}"
+
+
 def run_pnr(
     view_name: str,
     view: dict[str, Any],
@@ -1774,6 +1784,7 @@ def run_pnr(
     constraints: dict[str, Any] | None = None,
     memory_macros: dict[str, Any] | None = None,
     floorplan: dict[str, Any] | None = None,
+    nickname_tag: str | None = None,
 ) -> dict[str, Any]:
     pnr = view["pnr"]
     platform_name = pnr["platform"]
@@ -1787,7 +1798,7 @@ def run_pnr(
         sdc_text(view, block, clock_period_ns, constraints), encoding="utf-8"
     )
 
-    nickname = f"opentallas_{block_name}_{view_name}"
+    nickname = design_nickname(block_name, view_name, nickname_tag)
     config = orfs_config_lines(
         nickname, block, platform_name, pnr, core_utilization, place_density,
         constraints, memory_macros, floorplan,
@@ -2492,6 +2503,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--keep-workdir", default=None, help="directory to retain intermediate files in")
     parser.add_argument(
+        "--nickname-tag",
+        default=None,
+        help=(
+            "suffix appended to the ORFS DESIGN_NICKNAME, so a route of a top that is "
+            "already being routed elsewhere (e.g. a sign-off re-route with --keep-workdir) "
+            "does not share its results namespace; default: none (nickname unchanged)"
+        ),
+    )
+    parser.add_argument(
         "--lanes",
         type=int,
         default=None,
@@ -2806,6 +2826,7 @@ def main(argv: list[str] | None = None) -> int:
                 constraints,
                 memory_macros,
                 floorplan,
+                args.nickname_tag,
             )
             if args.cts_cluster_size is not None:
                 record["place_and_route"]["clock_tree_config"] = {
