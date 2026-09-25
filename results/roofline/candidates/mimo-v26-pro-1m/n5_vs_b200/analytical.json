@@ -249997,6 +249997,8 @@
       "serial_latency.rom_datapath.reducer_tail_cycles",
       "serial_latency.rom_datapath.select_extra_cycles",
       "serial_latency.rom_datapath.sequencer_gap_cycles",
+      "serial_latency.rom_datapath.sinkhorn_unit_clocks",
+      "serial_latency.rom_datapath.sinkhorn_unit_step_s",
       "serial_latency.rom_datapath.softplus_cycles",
       "serial_latency.rom_datapath.stream_depth_exp_cycles",
       "serial_latency.rom_datapath.stream_depth_none_cycles",
@@ -250149,7 +250151,7 @@
     ],
     "rom_node": "N5",
     "technology_config": "configs/hardware/technology.json",
-    "technology_sha256": "8449295d9e2bc86e31886dee2e32d3974e4763f67e99d54aef5a8e54157fd01f",
+    "technology_sha256": "440a6057485ebccb401c83fd5cd1c2b9852f0305ad2f91c65b540b298c2751e6",
     "wafer_area_mm2": 46225.0
   },
   "latency_correction_ladder": [
