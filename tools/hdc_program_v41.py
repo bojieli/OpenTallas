@@ -317,7 +317,12 @@ class Layout:
 
 # -- program -------------------------------------------------------------------------
 class Builder:
-    def __init__(self, lay):
+    def __init__(self, lay, qchunk=None):
+        """qchunk (HBM weights): a LINQ op of more than qchunk words is issued as
+        chunks of whole rounds, so its start threshold fits the QE streamer's
+        window (rounds are independent output rows; each chunk re-quantises the
+        same activation, deterministically)."""
+        self.qchunk = qchunk
         self.lay, self.m = lay, lay.m
         self.prog = []
         self.V = lay.vm.map
@@ -394,6 +399,14 @@ class Builder:
         f = dict(pred=pred, qe_mode=I.QE_LINQ, qe_fp4=mat["fp4"], qe_xbase=self.V[x], qe_nb=mat["nb"],
                  qe_nout=mat["n"], qe_tiles=mat["tiles"], qe_wbase=mat["base"], qe_obase=self.V[out])
         f.update(over)
+        rw = f["qe_nb"] * IL                               # words per round
+        if self.qchunk and f["qe_tiles"] * rw > self.qchunk:
+            rc = max(1, self.qchunk // rw)
+            for r0 in range(0, f["qe_tiles"], rc):
+                c = dict(f, qe_tiles=min(rc, f["qe_tiles"] - r0), qe_wbase=f["qe_wbase"] + r0 * rw,
+                         qe_obase=f["qe_obase"] + r0 * IL * BL, qe_nout=f["qe_nout"] - r0 * IL * BL)
+                self.qe(reads | {x}, writes | {out}, tag, **c)
+            return
         self.qe(reads | {x}, writes | {out}, tag, **f)
 
     def qdq(self, mode, src, nb, dst_base, writes, tag, pred=0, dsel=0):
@@ -639,8 +652,11 @@ class Builder:
                 d_base=lay.cb[(L, "bias")], d_si=1, ad=I.AD_D, dst=I.DST_VM, o_base=V_["BI"], o_si=1)
         self.xu({"BI"}, {"EID"}, t, xu_op=I.XU_SEL, xu_src=V_["BI"], xu_dst=V_["EID"], xu_n=m.n_exp,
                 xu_k=m.k_exp)
+        # wrel: this op waits for the SELECT that wrote EID, so its issue releases
+        # the HBM fetch of the routed experts' weights (tools/hdc_program_v41.py
+        # qe_fetch_list; rtl/hdc/hbm/ot_hdc_qstream.sv)
         self.su({"SC", "EID"}, {"TOT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1, a_ind=I.IND_I,
-                a_ibase=V_["EID"], red=I.RED_SEQ, r_base=V_["TOT"])
+                a_ibase=V_["EID"], red=I.RED_SEQ, r_base=V_["TOT"], wrel=1)
         self.su({"TOT"}, {"DEN1"}, t, su_nout=1, su_nin=1, a_base=V_["TOT"], ad=I.AD_IMM, imm2=f32(1e-20),
                 dst=I.DST_VM, o_base=V_["DEN1"])
         self.su({"SC", "EID", "DEN1"}, {"WGT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1,
@@ -1038,6 +1054,99 @@ QLANE_BITS = 256 + 16          # 32 codes, then the block exponent (signed, 16 b
 EROW_BITS = 256 + 8
 
 
+# -- HBM image of the quantised weights (rtl/hdc/hbm/ot_hdc_qstream.sv) --------------------
+QSEC = 256                                  # HBM sector (burst) bits
+QSPW8 = QLANE_BITS * BL // QSEC             # an FP8 word: 17 sectors
+QSPW4 = (128 + 16) * BL // QSEC             # an FP4 word, packed (32 nibbles + exponent per lane): 9 sectors
+LIST_BITS = 128
+QCHUNK = 512                                # LINQ chunk (words): the QE streamer's window less its lead
+
+
+def qe_word_formats(lay):
+    """FP4 flag of every quantised-ROM word (each placed matrix is one format)."""
+    fmt = np.zeros(len(lay.qcodes), dtype=np.uint8)
+    for k, m in lay.qmat.items():
+        if isinstance(m, dict):
+            fmt[m["base"]:m["base"] + m["tiles"] * m["nb"] * IL] = m["fp4"]
+    return fmt
+
+
+def qe_hbm_image(lay):
+    """The quantised weights as the HBM holds them: the ROM's words in ROM order
+    (the routed experts sit at a fixed stride, as in the ROM), an FP8 word as
+    its 17 sectors, an FP4 word packed into 9 (per lane 32 E2M1 nibbles and the
+    16-bit exponent: the ROM's 8-bit code slots hold 4-bit codes).  Returns the
+    sectors and each word's first sector."""
+    fmt = qe_word_formats(lay)
+    sectors, first = [], np.zeros(len(lay.qcodes) + 1, dtype=np.int64)
+    for w, (cw, ew) in enumerate(zip(lay.qcodes, lay.qexp)):
+        first[w] = len(sectors)
+        if fmt[w]:
+            assert int(cw.max()) < 16
+            lanes = [pack_lanes(cw[l], 4) | ((int(ew[l]) & 0xFFFF) << 128) for l in range(BL)]
+            word, spw = pack_lanes(lanes, 144), QSPW4
+        else:
+            lanes = [pack_lanes(cw[l], 8) | ((int(ew[l]) & 0xFFFF) << 256) for l in range(BL)]
+            word, spw = pack_lanes(lanes, QLANE_BITS), QSPW8
+        sectors.extend((word >> (QSEC * j)) & ((1 << QSEC) - 1) for j in range(spw))
+    first[len(lay.qcodes)] = len(sectors)
+    return sectors, first
+
+
+def qe_fetch_list(lay, prog, first):
+    """The QE's weight fetches in consumption order: every LINQ op, in program
+    order, as (HBM sector base, ROM word base, words, FP4, predicate, indexed,
+    index element, stride in words, release group).  An expert-indexed op adds
+    id * stride (the id read from the vector memory once the program's release
+    instruction `grp` has issued)."""
+    fmt = qe_word_formats(lay)
+    ents, grp = [], 0
+    for f in prog:
+        if f.get("wrel"):
+            assert f["wait"] >> (I.UNIT_XU - 1) & 1, "a release must wait for the XU (the expert ids)"
+            grp += 1
+        if f["unit"] != I.UNIT_QE or f.get("qe_mode", 0) != I.QE_LINQ:
+            continue
+        b, n = f["qe_wbase"], f["qe_tiles"] * f["qe_nb"] * IL
+        ind = f.get("qe_ind", 0)
+        assert all(fmt[b:b + n] == f["qe_fp4"])
+        if ind:
+            spw = QSPW4 if f["qe_fp4"] else QSPW8
+            assert first[b + f["qe_istride"]] - first[b] == f["qe_istride"] * spw
+        ents.append(dict(hbm=int(first[b]), rom=b, n=n, fp4=f["qe_fp4"], pred=f.get("pred", 0), ind=ind,
+                         ibase=f.get("qe_ibase", 0), istride=f.get("qe_istride", 0), grp=grp if ind else 0))
+    return ents
+
+
+def encode_list(ents):
+    """128-bit fetch-list words: [23:0] HBM sector base, [47:24] ROM word base,
+    [63:48] words (0 ends the list), [64] FP4, [66:65] predicate, [67] indexed,
+    [91:68] index element, [115:92] stride (words), [123:116] release group."""
+    out = []
+    for e in ents + [dict(hbm=0, rom=0, n=0, fp4=0, pred=0, ind=0, ibase=0, istride=0, grp=0)]:
+        assert e["hbm"] < 1 << 24 and e["n"] < 1 << 16 and e["grp"] < 1 << 8
+        out.append(e["hbm"] | e["rom"] << 24 | e["n"] << 48 | e["fp4"] << 64 | e["pred"] << 65 | e["ind"] << 67 |
+                   e["ibase"] << 68 | e["istride"] << 92 | e["grp"] << 116)
+    return out
+
+
+def write_hbm_images(out, lay, prog):
+    sectors, first = qe_hbm_image(lay)
+    ents = qe_fetch_list(lay, prog, first)
+    (out / "hbm_q.hex").write_text(hexwords(sectors, QSEC))
+    (out / "qlist.hex").write_text(hexwords(encode_list(ents), LIST_BITS))
+    fmt = qe_word_formats(lay)
+    meta = {"qrom_words": len(lay.qcodes), "fp4_words": int(fmt.sum()), "hbm_sectors": len(sectors),
+            "list_entries": len(ents), "indexed_entries": sum(e["ind"] for e in ents),
+            "release_groups": max(e["grp"] for e in ents),
+            "words_per_token_by_pred": {str(p): sum(e["n"] for e in ents if e["pred"] == p) for p in (0, 1, 2)},
+            "fp8_words_per_token_pred0": sum(e["n"] for e in ents if not e["fp4"] and e["pred"] == 0),
+            "fp4_words_per_token_pred0": sum(e["n"] for e in ents if e["fp4"] and e["pred"] == 0)}
+    (out / "hbm_q.json").write_text(json.dumps(meta))
+    (out / "hbm_q.args").write_text(f"+QSEC={len(sectors)}\n")
+    return meta
+
+
 def write_images(out, lay, prog, roms_from=None):
     out.mkdir(parents=True, exist_ok=True)
     words = [I.encode(**{k: v for k, v in f.items() if not k.startswith("_")}) for f in prog]
@@ -1074,13 +1183,15 @@ def main():
     ap.add_argument("--stop", type=int, help="debug: run only this many instructions")
     ap.add_argument("--roms-from", type=Path, help="debug: symlink the ROM images from this directory")
     ap.add_argument("--check-layers", action="store_true", help="debug: compare the residual after every layer")
+    ap.add_argument("--hbm", action="store_true", help="also write the HBM image of the quantised weights and the "
+                                                        "QE fetch list (hbm_q.hex, qlist.hex)")
     args = ap.parse_args()
     model = V.Model()
     prompt, expected = V.prompt_and_expected()
     if args.context:
         prompt = (list(prompt) * (-(-args.context // len(prompt))))[:args.context]
     lay = Layout(model)
-    prog = Builder(lay).build()
+    prog = Builder(lay, qchunk=QCHUNK if args.hbm else None).build()
     if args.stop is not None:
         prog = prog[:args.stop] + [dict(unit=I.UNIT_END, wait=31, _tag="end")]
     for f in prog:                                    # every field fits its width
@@ -1128,6 +1239,8 @@ def main():
     if args.out:
         out = args.out
         n_words = write_images(out, lay, prog, args.roms_from)
+        if args.hbm:
+            print("HBM quantised weights:", write_hbm_images(out, lay, prog))
         (out / "kv.hex").write_text(hexwords(G.bits(kv).reshape(-1), 32))
         (out / "vm_init.hex").write_text(hexwords(G.bits(vm), 32))
         (out / "expect_logits.hex").write_text(hexwords(G.bits(mach.logits), 32))

@@ -220,3 +220,5 @@ localparam integer O_HE_XBASE = 1307;
 localparam integer W_HE_XBASE = 24;
 localparam integer O_HE_OBASE = 1331;
 localparam integer W_HE_OBASE = 24;
+localparam integer O_WREL = 1355;
+localparam integer W_WREL = 1;

@@ -22,6 +22,14 @@
 // ready.  Every unit is a fixed pipeline that never stalls on its own data.
 //
 // Memories sit outside the core behind synchronous-read ports.
+//
+// W_HBM = 1: the quantised (FP8/FP4) weights live in HBM behind the QE weight
+// streamer (rtl/hdc/hbm/ot_hdc_qstream.sv), which serves the same qrom port
+// from its window.  A LINQ op announces its shape (qd_*) when the sequencer
+// reaches it (and it will not be skipped) and issues only once the streamer
+// raises q_ok (its start threshold is in the window: the QE never stalls); the
+// issue of an instruction marked wrel pulses wrel_v, releasing the fetch of the
+// expert-indexed ops whose ids it waited for.
 // ---------------------------------------------------------------------------
 module ot_hdc_core_v41 #(
     parameter integer INSTR_BITS = 1536,
@@ -35,7 +43,8 @@ module ot_hdc_core_v41 #(
     parameter integer PAW  = 14,
     parameter integer DIM  = 160,
     parameter integer TOPK = 16,
-    parameter integer HNL  = 3             // HE lanes
+    parameter integer HNL  = 3,            // HE lanes
+    parameter integer W_HBM = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -144,7 +153,14 @@ module ot_hdc_core_v41 #(
     output wire [G*W*32-1:0] me_odata,
     // per-unit activity (cycle accounting)
     output wire [4:0]        unit_busy,
-    output reg  [2:0]        issue_unit       // unit of the instruction issued this cycle (0: none)
+    output reg  [2:0]        issue_unit,      // unit of the instruction issued this cycle (0: none)
+    // QE weight-streaming handshake (W_HBM = 1 only)
+    output reg               qd_v,            // shape of the LINQ op now waiting to issue
+    output wire [AW-1:0]     qd_wbase,
+    output wire [7:0]        qd_nb,
+    output wire [NW-1:0]     qd_tiles,
+    input  wire              q_ok,
+    output reg               wrel_v           // an instruction marked wrel issued
 );
     `include "ot_hdc_isa_v41.svh"
     localparam integer LG = $clog2(W * G);
@@ -170,6 +186,7 @@ module ot_hdc_core_v41 #(
 
     reg [2:0]  d_unit;
     reg [4:0]  d_wait;
+    reg        d_wrel;
     reg        d_skip;
     // ME
     reg [NW-1:0] me_nout, me_tiles, me_k;
@@ -216,7 +233,7 @@ module ot_hdc_core_v41 #(
             issue_unit <= 0;
         end else begin
             me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; he_go <= 1'b0; prog_re <= 1'b0;
-            issue_unit <= 0;
+            issue_unit <= 0; wrel_v <= 1'b0;
             if (st != S_IDLE) cycles <= cycles + 1;
             case (st)
                 S_IDLE: if (start) begin
@@ -235,7 +252,8 @@ module ot_hdc_core_v41 #(
                         end
                     end else if (d_skip) begin
                         pc <= pc + 1'b1; st <= S_FETCH;
-                    end else if (waited && unit_ready) begin
+                    end else if (waited && unit_ready && q_gate) begin
+                        wrel_v <= d_wrel;
                         me_go <= (d_unit == 3'd1); su_go <= (d_unit == 3'd2);
                         qe_go <= (d_unit == 3'd3); xu_go <= (d_unit == 3'd4); he_go <= (d_unit == 3'd5);
                         issue_unit <= d_unit;
@@ -296,7 +314,7 @@ module ot_hdc_core_v41 #(
                          (c_unit == 3'd2 && (c_su_nout == 0 || c_su_nin == 0)) ||
                          (c_unit == 3'd4 && `F(XU_OP) == 2'd0 && c_xu_n == 0);
     always @(posedge clk) if (st == S_DEC) begin
-        d_unit <= c_unit; d_wait <= `F(WAIT); d_skip <= !pred_ok || zero;
+        d_unit <= c_unit; d_wait <= `F(WAIT); d_skip <= !pred_ok || zero; d_wrel <= `F(WREL);
         me_nout <= c_me_nout; me_tiles <= c_me_tiles; me_k <= c_me_k;
         me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
         me_wbase <= `F(ME_WBASE) + `DY(ME_D_WBASE);
@@ -332,6 +350,15 @@ module ot_hdc_core_v41 #(
     end
     `undef F
     `undef DY
+
+    //: W_HBM: a LINQ op waits for the QE weight streamer; never on the cycle its
+    //: shape is announced, when q_ok may still describe the previous op
+    wire q_gate = (W_HBM == 0) || !(d_unit == 3'd3 && qe_mode == 2'd0) || (q_ok && !qd_v);
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) qd_v <= 1'b0;
+        else qd_v <= (W_HBM != 0) && (st == S_DEC) && c_unit == 3'd3 && ir[O_QE_MODE +: W_QE_MODE] == 2'd0 && pred_ok;
+    end
+    assign qd_wbase = qe_wbase; assign qd_nb = qe_nb; assign qd_tiles = qe_tiles;
 
     // -- units -----------------------------------------------------------------------------------------
     wire me_wrom_re;
