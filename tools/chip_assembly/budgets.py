@@ -23,7 +23,10 @@ Method (the standard budgeting step of a hierarchical flow):
    ``internal + S * internal / (internal + external + wire)``; when S < 0 the
    path does not fit the cycle at this floorplan and is reported as an
    architectural violation (a pipeline stage or a move), with the block
-   budgeted at its pre-layout delay.  A port on a combinational path through
+   budgeted at its pre-layout delay.  Every block keeps at least
+   ``max(1.3 x internal + 40 ps, 150 ps)`` when the outside can afford it
+   (``tight`` when it cannot): the pin-to-register wire and repair buffering
+   a pre-layout delay does not contain.  A port on a combinational path through
    the block (``feedthrough_ps``) gets the through-budget instead: the block
    keeps 1.5 x its through delay + 40 ps and the two outside halves share the
    rest equally.
@@ -54,12 +57,21 @@ RESULTS = orfs.ROOT / "results/physical_abi3/asap7/chip"
 PERIOD_PS = fp.CLOCK_PERIOD_NS * 1000.0
 UNCERTAINTY_PS = 30.0          # clock skew + jitter allowance at a block boundary
 TILE_IO_FRACTION = 0.3         # the tile's own pins: 30% of the cycle outside the tile
-GLUE_WIRE_UM = 200.0           # a glue register sits within this of the macro pin it serves
+GLUE_WIRE_UM = 200.0           # glue logic sits within this of the macro pin it serves
+CAPTURE_WIRE_UM = 50.0         # a capture register fed only by a macro pin sits beside it
+# Tile pins whose far side at the die is a register a channel away: the mesh
+# links (a register in the neighbour tile) and the PHY slices (registered
+# interfaces under the tile).  They get half the conventional external time.
+DIE_REGISTERED_RE = r"^(m_in_|m_out_|hq_|hr_)"
+DIE_REGISTERED_EXTERNAL_PS = 150.0
+# A block keeps at least this for a boundary path, whatever its pre-layout
+# delay: the pin-to-register wire and the repair buffering inside the block.
+MIN_BLOCK_PS = 150.0
+GROWTH = 1.3                   # pre-layout -> routed delay growth inside a block
+GROWTH_ADD_PS = 40.0
 # Quasi-static configuration (written only while the tile is idle): false paths.
 STATIC_PORT_RE = r"^(cfg_\w*|rcfg_\w*)$"
-HARDENED = ["ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_kv_stream", "ot_chip_pkg_ctrl", "ot_chip_router"]
-TILE_SOURCES = ["rtl/chip/ot_chip_hdc_tile.sv", "rtl/chip/ot_chip_mesh_link.sv"]
-CORE_SOURCE = "rtl/hdc/ot_hdc_core.sv"
+ARCHS = ["qwen_rom", "hbm", "v41_rom"]
 
 
 def load_boundary(block: str) -> dict[str, Any]:
@@ -93,19 +105,24 @@ def block_stub(block: fp.Block, char: dict[str, Any]) -> mc.MacroSpec:
                         basis="pre-layout timing model from the boundary characterisation")
 
 
-def derived_core() -> tuple[str, list[str]]:
-    text = (orfs.ROOT / CORE_SOURCE).read_text(encoding="utf-8")
-    return cs.strip_param_overrides(text, ["ot_hdc_matvec", "ot_hdc_stream"])
+def derived_core(prof: fp.TileProfile) -> tuple[str, list[str]]:
+    text = (orfs.ROOT / prof.core_source).read_text(encoding="utf-8")
+    return cs.strip_param_overrides(text, [h for h in prof.hardened if h in text])
 
 
 def tile_io_sdc(uncertainty_ps: float) -> str:
+    """The tile's boundary as the die sees it: the conventional 30% outside,
+    except the pins whose far side is a register one channel away."""
     ext = PERIOD_PS * TILE_IO_FRACTION
+    reg = DIE_REGISTERED_EXTERNAL_PS
     return "\n".join([
         f"set clk_period {PERIOD_PS:g}",
         "create_clock -name clk -period $clk_period [get_ports clk]",
         f"set_clock_uncertainty {uncertainty_ps:g} [get_clocks clk]",
         f"set_input_delay {ext:g} -clock clk [all_inputs -no_clocks]",
         f"set_output_delay {ext:g} -clock clk [all_outputs]",
+        f"set_input_delay {reg:g} -clock clk [get_ports {{m_in_* hr_* hq_rdy}}]",
+        f"set_output_delay {reg:g} -clock clk [get_ports {{m_out_* hq_* hr_rdy}}]",
         "set_false_path -from [get_ports rst_n]",
         "set_false_path -from [get_ports {cfg_* rcfg_*}]",
         "set_max_fanout 32 [current_design]",
@@ -115,27 +132,29 @@ def tile_io_sdc(uncertainty_ps: float) -> str:
 
 def tile_views(arch: str, out: Path) -> dict[str, dict[str, Path]]:
     """Stub views of the hardened blocks and the placeholder memories."""
+    prof = fp.tile_profile(arch)
     views: dict[str, dict[str, Path]] = {}
-    for name in HARDENED:
+    for name in prof.hardened:
         spec = block_stub(fp.BLOCKS[name], load_boundary(name))
         views[name] = mc.write_views(spec, out)
-    for name, spec in fp.tile_memories(arch).items():
+    for name, spec in prof.memories().items():
         views[name] = mc.write_views(spec, out)
     return views
 
 
 def synth_tile(arch: str, work: Path, views: dict[str, dict[str, Path]], timeout: int) -> Path:
-    core_text, removed = derived_core()
-    tile = fp.hdc_tile(arch)
+    prof = fp.tile_profile(arch)
+    core_text, removed = derived_core(prof)
+    tile = prof.floorplan()
     spec = cs.CaseSpec(
-        nickname=f"chip_tile_{arch}_budget", top="ot_chip_hdc_tile", sources=TILE_SOURCES,
+        nickname=f"chip_tile_{arch}_budget", top=prof.top, sources=prof.sources,
         die_um=(tile.width_um, tile.height_um), sdc=tile_io_sdc(UNCERTAINTY_PS),
         macros=[cs.MacroView(n, v["lef"], v["lib"]) for n, v in views.items()],
-        derived_sources={"ot_hdc_core.sv": core_text}, include_dirs=["rtl/hdc"],
+        derived_sources={prof.core_file: core_text}, include_dirs=prof.include_dirs,
         extra={"SYNTH_HIERARCHICAL": 0},
     )
     cs.write_case(work, spec)
-    (work / "derived_edits.json").write_text(json.dumps({"ot_hdc_core.sv": removed}, indent=2))
+    (work / "derived_edits.json").write_text(json.dumps({prof.core_file: removed}, indent=2))
     netlist = orfs.results_dir(work, spec.nickname) / "1_2_yosys.v"
     if not netlist.is_file():
         with orfs.slot(f"synth tile {arch}"):
@@ -222,9 +241,11 @@ def _edge_point(x: float, y: float, w: float, h: float, edge: str) -> tuple[floa
 
 
 def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Path]]) -> dict[str, Any]:
-    tile = fp.hdc_tile(arch)
+    prof = fp.tile_profile(arch)
+    HARDENED = prof.hardened
+    tile = prof.floorplan()
     wire = fp.wire_delay_model()
-    mems = fp.tile_memories(arch)
+    mems = prof.memories()
     sizes = {n: (fp.BLOCKS[n].width_um, fp.BLOCKS[n].height_um) for n in HARDENED}
     sizes.update({n: (s.width_um, s.height_um) for n, s in mems.items()})
     place = {p.inst: p for p in tile.placements}
@@ -285,15 +306,25 @@ def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Pat
             there = tile.glue_center
         dist = abs(here[0] - there[0]) + abs(here[1] - there[1])
         if far_kind == "glue":
-            # timing-driven placement puts the glue register near the pin it
-            # serves; the post-route tile STA checks this assumption
-            dist = min(dist, GLUE_WIRE_UM)
+            # timing-driven placement puts glue near the pin it serves, and a
+            # capture register fed only by this pin beside it; the post-route
+            # tile STA checks both assumptions
+            capture = e["direction"] == "output" and re.search(r"/D$", far)
+            dist = min(dist, CAPTURE_WIRE_UM if capture else GLUE_WIRE_UM)
         wire_ps = dist * wire["ps_per_um"]
         slack = PERIOD_PS - UNCERTAINTY_PS - internal - max(external, 0.0) - wire_ps
         total = internal + max(external, 0.0) + wire_ps
         if slack >= 0:
             budget = internal + slack * internal / total if total > 0 else internal
             status = "fits"
+            # floor: room for the in-block wire and repair; the outside keeps
+            # what its own path needs
+            floor = max(GROWTH * internal + GROWTH_ADD_PS, MIN_BLOCK_PS)
+            outside = max(external, 0.0) + wire_ps
+            if budget < floor:
+                budget = min(floor, PERIOD_PS - UNCERTAINTY_PS - outside)
+                if budget < floor:
+                    status = "tight"
         else:
             budget = internal
             status = "violates"
@@ -343,7 +374,7 @@ def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Pat
                 "internal_budget_ps": round(PERIOD_PS * 0.8 - UNCERTAINTY_PS, 1),
             }
     return {
-        "name": f"hdc_tile_{arch}",
+        "name": f"tile_{arch}",
         "arch": arch,
         "period_ps": PERIOD_PS,
         "uncertainty_ps": UNCERTAINTY_PS,
@@ -391,7 +422,7 @@ def markdown(budget: dict[str, Any]) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--arch", required=True, choices=["qwen_rom", "hbm"])
+    ap.add_argument("--arch", required=True, choices=ARCHS)
     ap.add_argument("--work", required=True, type=Path)
     ap.add_argument("--timeout", type=int, default=14400)
     args = ap.parse_args(argv)
@@ -399,11 +430,11 @@ def main(argv: list[str] | None = None) -> int:
     work.mkdir(parents=True, exist_ok=True)
     views = tile_views(args.arch, work / "stub_views")
     netlist = synth_tile(args.arch, work, views, args.timeout)
-    analysis = analyse(netlist, work, views, "ot_chip_hdc_tile", work / "constraint.sdc")
+    analysis = analyse(netlist, work, views, fp.tile_profile(args.arch).top, work / "constraint.sdc")
     (work / "analysis.json").write_text(json.dumps(analysis, indent=1))
     budget = allocate(args.arch, analysis, views)
     budget["tile_netlist"] = {"path": str(netlist), "sha256": orfs.sha256_file(netlist)}
-    out = RESULTS / "budgets" / f"hdc_tile_{args.arch}.json"
+    out = RESULTS / "budgets" / f"tile_{args.arch}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(budget, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (out.with_suffix(".md")).write_text(markdown(budget), encoding="utf-8")

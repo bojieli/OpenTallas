@@ -139,6 +139,7 @@ def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int) -> d
     char = json.loads((work / "boundary.json").read_text(encoding="utf-8"))
     spec = spec_for(block, budget_sdc(block.name, budget), char["ports"])
     cs.write_case(work, spec)
+    cs.ensure_constraints(work, spec.nickname, spec.sdc)
     res = orfs.results_dir(work, spec.nickname)
     t0 = time.time()
     with orfs.slot(f"pnr {block.name}"):

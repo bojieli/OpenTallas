@@ -119,6 +119,8 @@ def tile_sdc(uncertainty_ps: float) -> str:
         f"set_clock_uncertainty {uncertainty_ps:g} [get_clocks clk]",
         f"set_input_delay {T * 0.3:g} -clock clk [all_inputs -no_clocks]",
         f"set_output_delay {T * 0.3:g} -clock clk [all_outputs]",
+        f"set_input_delay {budgets.DIE_REGISTERED_EXTERNAL_PS:g} -clock clk [get_ports -quiet {{m_in_* hr_* hq_rdy}}]",
+        f"set_output_delay {budgets.DIE_REGISTERED_EXTERNAL_PS:g} -clock clk [get_ports -quiet {{m_out_* hq_* hr_rdy}}]",
         "set_false_path -from [get_ports rst_n]",
         "set_false_path -from [get_ports {cfg_* rcfg_*}]",
         "set_max_fanout 32 [current_design]",
@@ -129,9 +131,9 @@ def tile_sdc(uncertainty_ps: float) -> str:
     ])
 
 
-def block_views() -> list[cs.MacroView]:
+def block_views(prof: fp.TileProfile) -> list[cs.MacroView]:
     views = []
-    for name in budgets.HARDENED:
+    for name in prof.hardened:
         res = orfs.results_dir(BLOCK_WORK / name, f"chip_{name}")
         lef, lib, gds = res / f"{name}.lef", res / f"{name}_typ.lib", res / "6_final.gds"
         if not (lef.is_file() and lib.is_file()):
@@ -142,26 +144,27 @@ def block_views() -> list[cs.MacroView]:
 
 def memory_views(arch: str, out: Path) -> list[cs.MacroView]:
     views = []
-    for name, spec in fp.tile_memories(arch).items():
+    for name, spec in fp.tile_profile(arch).memories().items():
         v = mc.write_views(spec, out)
         views.append(cs.MacroView(name, v["lef"], v["lib"]))
     return views
 
 
 def tile_spec(arch: str, work: Path) -> cs.CaseSpec:
-    tile = fp.hdc_tile(arch)
-    core_text, _ = budgets.derived_core()
-    ports = module_ports(orfs.ROOT / "rtl/chip/ot_chip_hdc_tile.sv", "ot_chip_hdc_tile")
+    prof = fp.tile_profile(arch)
+    tile = prof.floorplan()
+    core_text, _ = budgets.derived_core(prof)
+    ports = module_ports(orfs.ROOT / prof.sources[0], prof.top)
     return cs.CaseSpec(
-        nickname=f"chip_tile_{arch}", top="ot_chip_hdc_tile", sources=budgets.TILE_SOURCES,
+        nickname=f"chip_tile_{arch}", top=prof.top, sources=prof.sources,
         die_um=(snap(tile.width_um), snap(tile.height_um)), core_margin_um=4.0,
         sdc=tile_sdc(budgets.UNCERTAINTY_PS),
         pin_groups=tile_pin_groups(tile, ports),
         pdn_tcl=cs.TCL_DIR / "pdn_tile.tcl",
         max_layer="M8", io_layers=("M6", "M7"), place_density=0.55,
-        macros=block_views() + memory_views(arch, work / "mem_views"),
+        macros=block_views(prof) + memory_views(arch, work / "mem_views"),
         macro_placement_tcl=placement_tcl(tile.placements),
-        derived_sources={"ot_hdc_core.sv": core_text}, include_dirs=["rtl/hdc"],
+        derived_sources={prof.core_file: core_text}, include_dirs=prof.include_dirs,
         extra={"SLEW_MARGIN": 20, "HOLD_SLACK_MARGIN": 5, "MACRO_ROWS_HALO_X": 2,
                "MACRO_ROWS_HALO_Y": 2, "GPL_TIMING_DRIVEN": 1, "GPL_ROUTABILITY_DRIVEN": 1},
     )
@@ -229,6 +232,8 @@ close $out
 def run_level(level: str, arch: str, work: Path, timeout: int) -> dict[str, Any]:
     spec = tile_spec(arch, work) if level == "tile" else die_spec(arch, work)
     cs.write_case(work, spec)
+    if (orfs.results_dir(work, spec.nickname) / "1_2_yosys.v").is_file():
+        cs.ensure_constraints(work, spec.nickname, spec.sdc)
     res = orfs.results_dir(work, spec.nickname)
     t0 = time.time()
     with orfs.slot(f"{level} {arch}"):
@@ -252,7 +257,7 @@ def run_level(level: str, arch: str, work: Path, timeout: int) -> dict[str, Any]
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--level", required=True, choices=["tile", "die"])
-    ap.add_argument("--arch", required=True, choices=["qwen_rom", "hbm"])
+    ap.add_argument("--arch", required=True, choices=budgets.ARCHS)
     ap.add_argument("--work", required=True, type=Path)
     ap.add_argument("--write-only", action="store_true", help="write the case and stop")
     args = ap.parse_args(argv)

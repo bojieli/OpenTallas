@@ -187,7 +187,7 @@ def test_block_stub_models_the_boundary_delays():
 
 
 def test_committed_budget_tables_are_consistent():
-    table = ROOT / "results/physical_abi3/asap7/chip/budgets/hdc_tile_qwen_rom.json"
+    table = ROOT / "results/physical_abi3/asap7/chip/budgets/tile_qwen_rom.json"
     if not table.is_file():
         pytest.skip("no budget table yet")
     import json
@@ -201,6 +201,7 @@ def test_committed_budget_tables_are_consistent():
                 (name, port)
             if r["status"] == "fits" and "feedthrough_ps" not in r:
                 assert r["internal_budget_ps"] >= r["internal_ps"] - 0.1, (name, port)
+                assert r["internal_budget_ps"] >= budgets.MIN_BLOCK_PS - 0.1, (name, port)
 
 
 # -- RTL ------------------------------------------------------------------------------

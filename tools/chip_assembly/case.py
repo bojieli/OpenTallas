@@ -217,3 +217,43 @@ def metrics(case: Path, nickname: str) -> dict[str, Any]:
     out = {k: meta.get(v) for k, v in keys.items()}
     out["flow_errors"] = {k: v for k, v in meta.items() if k.endswith("__flow__errors__count") and v}
     return out
+
+
+KEEP_AFTER_SYNTH = {"1_1_yosys_canonicalize.rtlil", "1_2_yosys.v", "mem.json", "clock_period.txt"}
+
+
+def purge_after_synthesis(case: Path, nickname: str) -> list[str]:
+    """Remove every flow product downstream of the synthesised netlist.
+
+    ORFS reads the SDC into 1_2_yosys.sdc / 1_synth.sdc once; a new budget
+    must restart the flow from the netlist, not resume on the old constraints.
+    """
+    import shutil as _sh
+    removed = []
+    for sub in ("results", "logs", "reports", "objects"):
+        d = case / sub / "asap7" / nickname / "base"
+        if not d.is_dir():
+            continue
+        for f in d.iterdir():
+            if sub == "results" and f.name in KEEP_AFTER_SYNTH:
+                continue
+            if sub == "objects":
+                continue
+            if sub == "logs" and f.name.startswith("1_1") or f.name.startswith("1_2_yosys.log"):
+                continue
+            (_sh.rmtree if f.is_dir() else Path.unlink)(f)
+            removed.append(f"{sub}/{f.name}")
+    return removed
+
+
+def ensure_constraints(case: Path, nickname: str, sdc_text: str) -> bool:
+    """Purge downstream products when the constraints changed since the last run."""
+    import hashlib
+    digest = hashlib.sha256(sdc_text.encode()).hexdigest()
+    marker = case / "flow_sdc.sha256"
+    if marker.is_file() and marker.read_text().strip() == digest:
+        return False
+    purge_after_synthesis(case, nickname)
+    marker.write_text(digest + "\n")
+    return True
+
