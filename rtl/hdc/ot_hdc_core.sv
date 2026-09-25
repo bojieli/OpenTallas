@@ -242,7 +242,7 @@ module ot_hdc_core #(
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
         .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
-        .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax),
+        .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax), .i_f32(1'b0),
         .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(wrom_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
