@@ -150,6 +150,7 @@ UNIT_CASES = [
     ("fault_nan", 16, 4, 8, 0, 0, "r", 1, "7fc00000", False),
     ("fault_inf", 16, 4, 8, 0, 0, "r", 2, "ff800000", False),
     ("fault_overflow", 16, 4, 8, 0, 0, "r", 0, "7f000000", True),
+    ("fault_tag_mismatch", 16, 4, 8, 0, 0, "r", -1, None, False),
 ]
 
 
@@ -182,7 +183,8 @@ def run_unit(scratch: Path, lp: dict) -> list:
         vec = scratch / f"unit_{name}"
         unit_vectors(vec, nmsg, words, modes, 1000 + i, big)
         args = [str(exes[depth]), f"+VEC={vec}", f"+NMSG={nmsg}", f"+WORDS={words}", f"+GAP={gap}",
-                f"+SKEW={skew}", f"+SEED={7 + i}", f"+INJECT={inj}"] + ([f"+IVAL={ival}"] if ival else [])
+                f"+SKEW={skew}", f"+SEED={7 + i}", f"+INJECT={inj}"] + ([f"+IVAL={ival}"] if ival else []) + \
+            (["+TAGBAD=2"] if name == "fault_tag_mismatch" else [])
         txt = sh(args)
         m = UNIT.search(txt)
         if not m:
@@ -197,9 +199,10 @@ def run_unit(scratch: Path, lp: dict) -> list:
                "fault_bits": g[10], "fault_code_bits": g[11], "words_out_all_dies": int(g[12]),
                "cycles_first_send_to_last_result": last - first,
                "link_hold_cycles": int(g[15]), "pass": "PASS" in txt}
-        if inj < 0 and not gap and mk == "r":
+        if name == "fault_tag_mismatch":
+            rec["tag_mismatch_message"] = 2
+        elif inj < 0 and not gap and mk == "r":
             rec["words_per_cycle_per_die"] = round(words_in / (last - first), 4)
-            rec["single_message_latency_cycles"] = None if nmsg > 4 else None
         out.append(rec)
     return out
 
