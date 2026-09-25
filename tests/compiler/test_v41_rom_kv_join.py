@@ -192,3 +192,55 @@ def test_decode_join_resolves_the_context_it_holds(graph, target) -> None:
         checked += 1
     # One representative per layer run: at least the ratio-2 and ratio-1 joins.
     assert checked >= 2
+
+
+@pytest.mark.parametrize("target", ["wafer", "array64"])
+def test_decode_sparse_attention_reads_the_whole_join(graph, target) -> None:
+    """ATTENTION.SPARSE's decode KV operand is the join's decode row space.
+
+    The sparse attention consumes the phase-split join and also binds the fused
+    KV as a request-sized plane that leads on the SPAN, so its context loop was
+    opened on the span and the ratio-2 decode KV view resolved to
+    ``floor(1/2) + 128`` = the window alone.  Hidden while decode selections were
+    rebased by zero; with the rebase fixed the first compressed row (128) was
+    refused as "outside the 128 valid rows".  Ratio-1 layers were already
+    context-led.
+    """
+    from runtime.abi3.descriptors import Symbol
+
+    deployment = _deployment(graph, target)
+    context = 14
+    symbols = {
+        int(Symbol.SPAN_TOKENS): 1,
+        int(Symbol.POSITION_START): context - 1,
+        int(Symbol.CONTEXT_LENGTH): context,
+    }
+    producer = {
+        kernel.outputs[0]: kernel.index
+        for kernel in graph.kernels
+        if kernel.kind == "CONCAT" and "phase_inputs" in kernel.attributes
+    }
+    table = deployment.table
+    checked = 0
+    for kernel in graph.kernels:
+        if kernel.kind != "ATTENTION_SPARSE" or kernel.inputs[1] not in producer:
+            continue
+        join = _join_operators(deployment, producer[kernel.inputs[1]])
+        operators = [
+            dict(table[i].payload)
+            for i in range(len(table))
+            if "output_view_0" in dict(table[i].payload or {})
+            and int(dict(table[i].payload).get("source_kernel_id", NO_ID))
+            == kernel.index
+        ]
+        if not join or not operators:
+            continue
+        rows = _resolve(deployment, join["decode"]["output_view_0"], symbols).dims[0]
+        assert rows > 128
+        seen = {
+            _resolve(deployment, op["input_view_1"], symbols).dims[0]
+            for op in operators
+        }
+        assert rows in seen, (kernel.kernel_id, rows, sorted(seen))
+        checked += 1
+    assert checked >= 2
