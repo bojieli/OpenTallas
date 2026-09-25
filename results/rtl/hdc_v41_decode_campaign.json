@@ -27,7 +27,7 @@
     "program: 4416 instructions (ME 769, SU 2649, QE 786, XU 131, HE 80); ME ROM 169844 words; QE ROM 54080 words; CROM 28492",
     "ISA simulator at pos 7: token 3118 golden 3118 oracle 3118; logits bit-exact with golden: True",
     "multi-token from empty state: ISA [3118, 2400, 318] golden [3118, 2400, 318] oracle [3118, 3583, 2357] every step's logits bit-exact: True",
-    "wrote /tmp/tmpqxxskl9k/img"
+    "wrote /tmp/tmpvq2p_py_/img"
   ],
   "single_step": {
     "token": 3582,
@@ -339,7 +339,7 @@
     "rtl/hdc/v41/ot_hdc_core_v41.sv": "72dcef09ed7a007d98c7bbf51dfa83151d324f8414cca543341a63785c07ebde",
     "rtl/test/tb_hdc_core_v41.sv": "b00d4e2fa1c4de70f6c09fe2d544bd4a89dcf43eab51e20550d9f995abbf8ab6",
     "rtl/test/hdc_core_v41_harness.cpp": "f5ebdcd4c0500eea8ce8c19e053fbb2f1232beabb71c757bb3f21fdddded40ce",
-    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
+    "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
     "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
     "tools/hdc_isa_v41.py": "c8af579daa1e9c6b16f0f7959f894de40b4c07ed438545bb3d933c2e33f32e04",
     "tools/hdc_program_v41.py": "c8206cac134f92eb9e16915d633aad7069f69855cd0402eee293aabe00ca80e2",

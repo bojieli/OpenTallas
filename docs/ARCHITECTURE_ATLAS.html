@@ -772,7 +772,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <caption>Table 10-1. Block records</caption>
     <thead><tr><th>Block</th><th class="r">Cells</th><th class="r">Area µm²</th><th class="r">Seq. µm²</th><th class="r">Target ns</th><th class="r">Routed</th><th class="r">Slew viol.</th><th>Worst reg→reg path</th></tr></thead>
     <tbody>
-      <tr><td class="m">ot_hdc_matvec</td><td class="r m">360,206</td><td class="r m">54,792</td><td class="r m">29,900</td><td class="r m">0.9</td><td class="r m">1,067 MHz</td><td class="r m">61</td><td class="m">first-k flag → lane adder s1 (fan-out 64)</td></tr>
+      <tr><td class="m">ot_hdc_matvec</td><td class="r m">373,000</td><td class="r m">56,838</td><td class="r m">31,700</td><td class="r m">0.9</td><td class="r m">1,099 MHz</td><td class="r m">37</td><td class="m">first-select register fan-out (−10 ps); first-select retimed and split-tree levels registered (1,009 → 1,099 MHz)</td></tr>
       <tr><td class="m">ot_hdc_stream</td><td class="r m">242,220</td><td class="r m">35,300</td><td class="r m">17,090</td><td class="r m">0.85</td><td class="r m">1,111 MHz</td><td class="r m">0</td><td class="m">rsqrt multiplier stage 3</td></tr>
       <tr><td class="m">ot_hdc_fp32_mul_pipe</td><td class="r m">4,632</td><td class="r m">615</td><td class="r m">136</td><td class="r m">0.7</td><td class="r m">1,275 MHz</td><td class="r m">0</td><td class="m">s1_b → s2 partial product</td></tr>
       <tr><td class="m">ot_fp32_mul_rne_pipe (qualified)</td><td class="r m">4,646</td><td class="r m">588</td><td class="r m">105</td><td class="r m">0.7</td><td class="r m">1,052 MHz</td><td class="r m">0</td><td class="m">s1_a → s2 24×24 product</td></tr>
@@ -1305,7 +1305,7 @@ function drawAll(){
     {max:26,ticks:[0,5,10,15,20,25],fmt:v=>v+" M",L:190});
   hbars("arraybars",[["1 core",1,"--faint"],["4 packages",2.22],["5 packages",3.66],["6 packages",5.22],["10 packages",6.96],["12 packages",9.72]],
     {max:11,ticks:[0,2,4,6,8,10],fmt:v=>v.toFixed(2)+"×",L:110,tfmt:t=>t+"×"});
-  hbars("fmax",[["FP32 adder",1447],["rebalanced FP32 mul",1275],["qualified FP32 mul",1052,"--faint"],["reciprocal",1223],["rsqrt",1210],["exp",1196],["stream unit",1111],["matrix engine (slew open)",1067,"--warn"],["package link",1339,"--hbm"],["V4.1 block dot",1196],["V4.1 act. quantiser",1126],["V4.1 SELECT K=6",1618],["V4.1 SELECT K=512",1115],["V4.1 Engram hash",1524],["V4.1 softplus",1034]],
+  hbars("fmax",[["FP32 adder",1447],["rebalanced FP32 mul",1275],["qualified FP32 mul",1052,"--faint"],["reciprocal",1223],["rsqrt",1210],["exp",1196],["stream unit",1111],["matrix engine (−10 ps open)",1099,"--warn"],["package link",1339,"--hbm"],["V4.1 block dot",1196],["V4.1 act. quantiser",1126],["V4.1 SELECT K=6",1618],["V4.1 SELECT K=512",1115],["V4.1 Engram hash",1524],["V4.1 softplus",1034]],
     {W:520,max:1700,ticks:[0,500,1000,1500],fmt:v=>v+" MHz",L:170,bh:16,gap:7,ref:1000});
 }
 drawAll();

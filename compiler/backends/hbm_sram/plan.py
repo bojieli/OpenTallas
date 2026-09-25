@@ -81,8 +81,10 @@ from compiler.ir.v3.kernel_ir import (
 )
 from compiler.ir.v3.lowering import (
     ABSENT_OPERANDS,
+    INDEX_TOPK_DECODE_REBASE_SHIFT,
     abi_input_slots as _shared_input_slots,
     engine_for,
+    separated_join_window,
 )
 from compiler.ir.v3.numeric import canonical_contract_id
 from runtime.abi3.capability import Capability, canonical_json, digest_of
@@ -101,6 +103,11 @@ from runtime.abi3.constants import (
     Vector,
 )
 from runtime.abi3.descriptors import Comparison, Symbol
+
+#: ``ROUTE.INDEX_TOPK`` ``aux_id_1`` bit above the mask mode: the ranked axis is
+#: candidate BLOCKS, not KV rows.  Mirrors ``runtime.sim.engines.route.RANKS_BLOCKS``
+#: and the ROM lane's ``_TOPK_RANKS_BLOCKS``.
+_TOPK_RANKS_BLOCKS = 0x4
 
 PLAN_SCHEMA = "opentallas.hbm_sram.physical_plan.v3"
 PLAN_VERSION = "3.0.0"
@@ -4586,9 +4593,29 @@ def _aux_ids(
                 )
             aux = [int(experts)]
         elif sub == int(Route.INDEX_TOPK):
+            # A kernel that declares a ``block`` ranks candidate BLOCKS (the
+            # AM-E10 pool's block select): its IDs index the candidate mask's
+            # block axis, not the joined KV rows, so they must not be rebased,
+            # and the block holding the query's newest position is pinned.
+            # Both ride as ``runtime.sim.engines.route.RANKS_BLOCKS`` above the
+            # mask mode -- the bit the ROM lane has set since the pool landed
+            # (``compiler/backends/rom/common/program.py``) and this lane never
+            # did, so every block ID here came back rebased by the context
+            # (block 0 at P10 was block 10, positions 80-87) and the pool
+            # admitted nothing the query could reach.  Only a kernel declaring
+            # a block sets it, so no other INDEX_TOPK changes.
+            mode = int(attributes.get("mask_mode", 0))
+            if "block" in attributes:
+                mode |= _TOPK_RANKS_BLOCKS
+            # A separated window join (V4.1) leaves the operator no window to
+            # rebase a DECODE selection above; state its capacity.  Zero for
+            # every other form, so no other descriptor changes.
+            mode |= separated_join_window(graph, kernel) << (
+                INDEX_TOPK_DECODE_REBASE_SHIFT
+            )
             aux = [
                 _index_topk_capacity(kernel, tensors, span_max),
-                int(attributes.get("mask_mode", 0)),
+                mode,
                 int(Symbol.CONTEXT_LENGTH),
                 int(Symbol.POSITION_START),
             ]
