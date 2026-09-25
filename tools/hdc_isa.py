@@ -93,6 +93,11 @@ FIELDS = [
     ("dst", 2), ("d_base", A), ("d_so", A), ("d_si", A), ("d_d", D),
     ("red", 2), ("r_base", A), ("r_so", A), ("red_sq", 1),
     ("imm1", 32), ("imm2", 32),
+    # ME, HBM weights (tools/hdc_program.py --wchunk): an op split into round
+    # chunks; me_row0 is the chunk's first row (its argmax index offset) and
+    # me_amc continues the running argmax of the previous chunk (the core folds
+    # the drained chunk's argmax, strictly greater wins, before issuing it)
+    ("me_row0", N), ("me_amc", 1),
 ]
 
 

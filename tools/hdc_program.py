@@ -173,10 +173,18 @@ class Layout:
 
 
 # -- program -----------------------------------------------------------------------
-def build_program(lay, layers=None, embed=True, head=True):
+def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
     """The decode program; with `layers`/`embed`/`head` one pipeline stage of it
     (layer-per-package ROM array): a stage without the embedding starts from
-    the hidden state X delivered by the previous package."""
+    the hidden state X delivered by the previous package.
+
+    wchunk (HBM weights, rtl/hdc/hbm/ot_hdc_wstream.sv): a weight op of more
+    than `wchunk` words is issued as chunks of whole rounds (at least one) so
+    that each chunk's start threshold fits the streamer's window; a chunk of an
+    argmax op carries its first row (me_row0), and every chunk after the first
+    continues the running argmax (me_amc) behind a barrier, so the core folds
+    the previous chunk's drained argmax.  The arithmetic is unchanged: rounds
+    are independent output tiles."""
     layers = range(lay.L) if layers is None else layers
     prog = []          # (fields, reads, writes)
 
@@ -187,6 +195,30 @@ def build_program(lay, layers=None, embed=True, head=True):
                  me_amax=int(amax), me_split=mat.get("split", 1).bit_length() - 1,
                  me_xcs=mat["k"])
         f.update(over)
+        rw = f["me_k"] * IL                               # words per round of a weight op
+        if wchunk and not f["me_wsrc"] and f["me_tiles"] * rw > wchunk:
+            assert f["me_ts"] == rw and f["me_ks"] == IL and f["me_js"] == 1 and not f.get("me_jsh")
+            per_round = GR >> f["me_split"]
+            rc = max(1, wchunk // rw)
+            prev = set()                                  # elements written by the earlier chunks
+            for r0 in range(0, f["me_tiles"], rc):
+                c = dict(f, me_tiles=min(rc, f["me_tiles"] - r0), me_wbase=f["me_wbase"] + r0 * rw,
+                         me_obase=f["me_obase"] + r0 * f["me_ots"] * per_round,
+                         me_nout=f["me_nout"] - r0 * per_round * W * IL)
+                if f["me_amax"]:
+                    c["me_row0"] = r0 * per_round * W * IL
+                    if r0:
+                        c["me_amc"], c["barrier"] = 1, 1
+                # the first chunk carries the op's writes; the unit retires in
+                # order, so a later chunk adds no hazard of its own, and a
+                # consumer chasing it needs only chase_n >= 1 for what the
+                # earlier chunks wrote (_prev_slots)
+                if r0:
+                    c["_prev_slots"] = set(prev)
+                if c["me_oen"]:
+                    prev |= set(me_write_slots(c))
+                prog.append((c, set(reads), set(writes) if r0 == 0 else set()))
+            return
         prog.append((f, set(reads), set(writes)))
 
     def coll(kind, region):
@@ -362,6 +394,7 @@ def build_program(lay, layers=None, embed=True, head=True):
             main[f["unit"]] |= writes - red
     for f in out:
         f.pop("_red_regions", None)
+        f.pop("_prev_slots", None)
         if lay.tp == 1:
             f.pop("_coll", None)
     return out
@@ -409,6 +442,9 @@ def chase_threshold(f, prod):
         if prod.get("me_wsrc") or f.get("su_d_nin"):
             return None
         slots = me_write_slots(prod)
+        # elements an earlier chunk of the same op wrote are complete once the
+        # latest chunk has written anything
+        slots.update({a: 1 for a in prod.get("_prev_slots", ()) if a not in slots})
         need = 0
         for s_ in "abc":
             if f.get(f"{s_}_src", 0) != I.SRC_VM or (s_ == "b" and not (f.get("ma") == I.MA_AB or f.get("md") or f.get("ad") == I.AD_NEGB)):
@@ -489,8 +525,10 @@ class Machine:
             self.vm[(ob + t * f["me_ots"] + j * f["me_ojs"]) * W + l] = acc
         if f["me_amax"]:
             order = np.argsort(nidx)
-            self.logits = acc[order]
-            self.argmax = int(nidx[order][np.argmax(acc[order])])
+            # a continuation chunk (me_amc) extends the previous chunks' rows;
+            # the argmax is over all of them (the lower row wins a tie)
+            self.logits = np.concatenate([self.logits, acc[order]]) if f["me_amc"] else acc[order]
+            self.argmax = int(np.argmax(self.logits))
 
     def stream(self, f, dyn, s, n_out, n_in):
         base = f[f"{s}_base"] + dyn[f[f"{s}_d"]]
@@ -535,6 +573,46 @@ class Machine:
                 self.vm[ed] = out
             else:
                 self.kv[ed] = G.to_bf16(out)          # the KV cache holds BF16
+
+
+# -- HBM weight image (rtl/hdc/hbm/ot_hdc_wstream.sv) ------------------------------------
+def weight_stream(prog):
+    """ROM word addresses the matrix engine reads, in consumption order: every
+    weight op's words, op by op in program order (each op reads its words
+    base, base + 1, ... -- place_matrix lays them out in engine order)."""
+    words = []
+    for f in prog:
+        if f.get("unit") == I.UNIT_ME and not f.get("me_wsrc"):
+            assert f["me_ts"] == f["me_k"] * IL and f["me_ks"] == IL and f["me_js"] == 1
+            assert not f.get("me_d_wbase") and not f.get("me_d_tiles") and not f.get("me_d_k")
+            words.extend(range(f["me_wbase"], f["me_wbase"] + f["me_tiles"] * f["me_k"] * IL))
+    return words
+
+
+def hbm_weight_image(lay, prog, sector_bits=256):
+    """The weights as the HBM holds them: the STREAM region (every word the
+    matrix engine reads in one token, in the order it reads them -- a word read
+    twice is stored twice) and then the embedding table (read by row: the token
+    selects it).  Sectors are 32 B (one HBM3 burst); a word of G*W BF16 lanes
+    is G*W*16/256 consecutive sectors.  The HBM's address map interleaves
+    pseudo-channels every 128 B and bank groups every sector, so the sequential
+    stream spreads over every channel and bank group (the controller's XOR
+    permutation keeps long runs from aliasing on one bank)."""
+    stream = weight_stream(prog)
+    wbits = 16 * W * GR
+    spw = wbits // sector_bits
+    emb_words = list(range(lay.emb_word, len(lay.words)))
+    sectors = []
+    for a in stream + emb_words:
+        word = pack_lanes(lay.words[a], 16)
+        sectors.extend((word >> (sector_bits * j)) & ((1 << sector_bits) - 1) for j in range(spw))
+    row_words = lay.H // (W * GR)
+    meta = {"stream_words": len(stream), "sectors_per_word": spw, "emb_hbm_word": len(stream),
+            "emb_rom_word": lay.emb_word, "emb_row_words": row_words, "emb_table_words": len(emb_words),
+            "weight_ops": sum(1 for f in prog if f.get("unit") == I.UNIT_ME and not f.get("me_wsrc")),
+            "distinct_rom_words_streamed": len(set(stream)), "hbm_sectors": len(sectors)}
+    args = {"ntot": len(stream), "embh": len(stream), "embr": lay.emb_word, "hsec": len(sectors)}
+    return {"sectors": sectors, "meta": meta, "args": args}
 
 
 # -- images ----------------------------------------------------------------------------
@@ -736,6 +814,8 @@ def main():
     ap.add_argument("--tp", type=int, default=1,
                     help="tensor group: N dies per package, every matrix split over them (writes *_dD.hex)")
     ap.add_argument("--ngen", type=int, default=3, help="--tp: tokens generated in the end-to-end expectation")
+    ap.add_argument("--wchunk", type=int, help="HBM weights: issue weight ops in chunks of at most N words "
+                                               "(whole rounds) and write the HBM weight image (hbm_w.hex, hbm.args)")
     args = ap.parse_args()
     if args.tp > 1:
         return tp_main(args)
@@ -743,7 +823,7 @@ def main():
     lay = Layout(model)
     token, pos = prompt[-1], len(prompt) - 1
     kv = lay.kv_image(cache)
-    prog = build_program(lay)
+    prog = build_program(lay, wchunk=args.wchunk)
     if args.stop is not None:
         prog = prog[:args.stop] + [dict(unit=I.UNIT_END, barrier=1)]
     mach = Machine(lay, kv)
@@ -792,6 +872,11 @@ def main():
         (out / "prompt.hex").write_text(hexwords(prompt, 16))
         (out / "generated.hex").write_text(hexwords(expected, 16))
         (out / "run.args").write_text(f"+TOKEN={token} +POS={pos} +EXPECT={got}\n")   # EXPECT: ISA argmax
+        if args.wchunk:
+            img = hbm_weight_image(lay, prog)
+            (out / "hbm_w.hex").write_text(hexwords(img["sectors"], 256))
+            (out / "hbm.args").write_text(" ".join(f"+{k.upper()}={v}" for k, v in img["args"].items()) + "\n")
+            (out / "hbm.json").write_text(json.dumps(img["meta"]))
         (out / "expect.json").write_text(json.dumps({
             "token": token, "pos": pos, "argmax": got, "oracle": expected[0],
             "logits": [int(b) for b in G.bits(mach.logits)],

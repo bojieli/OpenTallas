@@ -34,6 +34,12 @@
 // room (backpressure).  Beats of one read return per pseudo-channel, in order
 // within it, on NPC response ports (valid/ready); a pseudo-channel stops
 // issuing reads when its return queue is full.
+// PC_RDY = 1 (per-channel ready, as a controller with a queue per pseudo-
+// channel behind independent ports presents it): the request is accepted when
+// the pseudo-channels IT targets have room for its beats, and pc_room tells a
+// requester, one cycle stale, which pseudo-channels can take PC_ROOM more
+// beats -- so a channel held by a refresh backs up only its own requests.
+// PC_RDY = 0 (default): ready when every queue can take LENMAX beats.
 //
 // Parameters: bandwidth from configs/hardware/technology.json
 // (hbm.hbm3e.stack_bandwidth_bytes_s = 1.0 TB/s over 32 pseudo-channels of
@@ -76,12 +82,15 @@ module ot_hdc_hbm_model #(
     parameter integer RFC_PS   = 350000,
     parameter integer REFI_PS  = 3900000,
     parameter integer REQ_PS   = 10000,       // controller + PHY, request path (assumed)
-    parameter integer RSP_PS   = 10000        // PHY + controller, response path (assumed)
+    parameter integer RSP_PS   = 10000,       // PHY + controller, response path (assumed)
+    parameter integer PC_RDY   = 0,
+    parameter integer PC_ROOM  = 8
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
     input  wire                 req_v,
-    output reg                  req_rdy,
+    output wire                 req_rdy,
+    output reg  [NPC-1:0]       pc_room,
     input  wire                 req_we,
     input  wire [AW-1:0]        req_addr,
     input  wire [LENW-1:0]      req_len,
@@ -157,6 +166,22 @@ module ot_hdc_hbm_model #(
 
     integer pi;
     localparam integer LENMAX = 1 << (LENW - 1);
+    // ready: every queue has room for a maximal request, or (PC_RDY) the
+    // targeted queues have room for this request's beats (queue state as of
+    // the end of the previous cycle: exactly what this edge's accept sees)
+    reg     rdy_all;
+    integer q_free [0:NPC-1];
+    reg     rdy_tgt;
+    integer tb_i, tb_p;
+    integer tb_need [0:NPC-1];
+    always @(*) begin
+        for (tb_p = 0; tb_p < NPC; tb_p = tb_p + 1) tb_need[tb_p] = 0;
+        rdy_tgt = 1'b1;
+        for (tb_i = 0; tb_i < LENMAX; tb_i = tb_i + 1)
+            if (tb_i < req_len) tb_need[pc_of(req_addr + tb_i)] = tb_need[pc_of(req_addr + tb_i)] + 1;
+        for (tb_p = 0; tb_p < NPC; tb_p = tb_p + 1) if (tb_need[tb_p] > q_free[tb_p]) rdy_tgt = 1'b0;
+    end
+    assign req_rdy = (PC_RDY != 0) ? rdy_tgt : rdy_all;
 
     // Earliest column-command time of a queued burst, without committing it.
     function automatic longint estimate(input integer p, input reg we, input [AW-1:0] s, input longint arr,
@@ -254,7 +279,8 @@ module ot_hdc_hbm_model #(
     longint now;
     always @(posedge clk) begin
         if (!rst_n) begin
-            cyc <= 0; rsp_v <= 0; req_rdy <= 1'b0;
+            cyc <= 0; rsp_v <= 0; rdy_all <= 1'b0; pc_room <= 0;
+            for (p = 0; p < NPC; p = p + 1) q_free[p] <= 0;
             for (p = 0; p < NPC; p = p + 1) begin
                 q_rp[p] = 0; q_n[p] = 0; r_rp[p] = 0; r_n[p] = 0; h_sched[p] = 1'b0; h_skip[p] = 0;
                 last_act[p] = -1000000; last_col[p] = -1000000; last_rd[p] = -1; last_wr[p] = -1;
@@ -358,7 +384,11 @@ module ot_hdc_hbm_model #(
             end
             ok = 1'b1;
             for (p = 0; p < NPC; p = p + 1) if (q_n[p] + LENMAX > QD) ok = 1'b0;
-            req_rdy <= ok;
+            rdy_all <= ok;
+            for (p = 0; p < NPC; p = p + 1) begin
+                q_free[p] <= QD - q_n[p];
+                pc_room[p] <= (QD - q_n[p] >= PC_ROOM);
+            end
         end
     end
 endmodule

@@ -13,6 +13,16 @@
 // Memories sit outside the core behind synchronous-read ports: program ROM,
 // weight ROM (W x BF16 per word), constant ROM (FP32 pairs), KV SRAM (W x FP32
 // per word, element write) and the vector memory (FP32 elements).
+//
+// W_HBM = 1: the weights live in HBM behind the weight streamer
+// (rtl/hdc/hbm/ot_hdc_wstream.sv), which serves the same wrom port from its
+// window.  A weight-sourced matrix op announces its shape (wd_*) when the
+// sequencer reaches it and issues only once the streamer raises w_ok (its
+// start threshold is in the window: the engine never stalls); the stream
+// unit's embedding read (wrom_su) waits for emb_ok (the token's row fetched).
+// An argmax op may be issued as chunks (me_row0, me_amc: tools/hdc_program.py
+// --wchunk): the core folds each drained chunk's argmax into a running best,
+// strictly greater wins, so the result equals the unchunked op's.
 // ---------------------------------------------------------------------------
 module ot_hdc_core #(
     parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
@@ -31,7 +41,8 @@ module ot_hdc_core #(
     // sequencer reaches it and issues only once the streamer raises kv_ok
     // (its prefetch window covers the op; the engine never stalls).  With
     // KV_HBM = 0 the kvd_* outputs are unused and kv_ok is ignored.
-    parameter integer KV_HBM = 0
+    parameter integer KV_HBM = 0,
+    parameter integer W_HBM = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -97,7 +108,14 @@ module ot_hdc_core #(
     output wire [NW-1:0]     kvd_tiles, kvd_k, kvd_nout,
     output wire              kvd_kindk,       // positions tile the lanes (scores); else positions are k (weighted sum)
     output wire [NW-1:0]     kvd_pos,
-    input  wire              kv_ok
+    input  wire              kv_ok,
+    // weight-streaming handshake (W_HBM = 1 only)
+    output wire              wrom_su,         // this wrom read is the stream unit's (embedding row)
+    output reg               wd_v,            // shape of the weight op now waiting to issue
+    output wire [AW-1:0]     wd_wbase,
+    output wire [NW-1:0]     wd_tiles, wd_k,
+    input  wire              w_ok,
+    input  wire              emb_ok
 );
     `include "ot_hdc_isa.svh"
     localparam integer LW = $clog2(W);
@@ -125,7 +143,8 @@ module ot_hdc_core #(
     reg [1:0]    d_unit;
     reg          d_barrier;
     reg [NW-1:0] me_nout, me_tiles, me_k;
-    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase;
+    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase, me_amc;
+    reg [NW-1:0] me_row0;
     reg [15:0]   d_chase_n;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs;
     reg [2:0]    me_jsh;
@@ -147,6 +166,11 @@ module ot_hdc_core #(
     //: KV_HBM: a KV op waits for the streamer; never on the cycle its
     //: descriptor is announced, when kv_ok may still describe the previous op.
     wire kv_gate = (KV_HBM == 0) || !(d_unit == 2'd1 && me_wsrc) || (kv_ok && !kvd_v);
+    //: W_HBM: a weight op waits for the weight streamer likewise; the stream
+    //: unit's embedding read waits for the token's row
+    wire w_gate = (W_HBM == 0) || ((d_unit == 2'd1) ? (me_wsrc || (w_ok && !wd_v)) : (!a_src || emb_ok));
+    //: a continued argmax chunk folds the previous chunk's result: it waits for the drain
+    wire d_drain = d_barrier || (d_unit == 2'd1 && me_amc);
     wire drained = me_idle && su_idle && !me_go && !su_go;
     //: A chasing op waits only until the OTHER unit's latest op has made
     //: chase_n progress; a go on that cycle would make the count stale.
@@ -173,9 +197,9 @@ module ot_hdc_core #(
                 S_ISSUE: begin
                     if (d_unit == 2'd0) begin
                         if (drained) begin
-                            done <= 1'b1; next_token <= am_idx; next_val <= am_val; st <= S_IDLE;
+                            done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; st <= S_IDLE;
                         end
-                    end else if ((d_barrier ? drained : (!d_chase || chased)) && unit_ready && kv_gate) begin
+                    end else if ((d_drain ? drained : (!d_chase || chased)) && unit_ready && kv_gate && w_gate) begin
                         me_go <= (d_unit == 2'd1); su_go <= (d_unit == 2'd2);
                         st <= S_GO;
                     end
@@ -187,8 +211,34 @@ module ot_hdc_core #(
     end
 
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) kvd_v <= 1'b0;
-        else kvd_v <= (st == S_DEC) && ir[O_UNIT +: W_UNIT] == 2'd1 && ir[O_ME_WSRC];
+        if (!rst_n) begin kvd_v <= 1'b0; wd_v <= 1'b0; end
+        else begin
+            kvd_v <= (st == S_DEC) && ir[O_UNIT +: W_UNIT] == 2'd1 && ir[O_ME_WSRC];
+            wd_v <= (W_HBM != 0) && (st == S_DEC) && ir[O_UNIT +: W_UNIT] == 2'd1 && !ir[O_ME_WSRC];
+        end
+    end
+    assign wd_wbase = me_wbase; assign wd_tiles = me_tiles; assign wd_k = me_k;
+
+    // Running argmax over the chunks of a chunked argmax op (me_amc).  Keys
+    // order binary32 values as unsigned integers, as the engine's do.
+    function automatic [31:0] okey(input [31:0] v);
+        okey = v[31] ? ~v : {1'b1, v[30:0]};
+    endfunction
+    reg          run_any;
+    reg [31:0]   run_key, run_val;
+    reg [NW-1:0] run_idx, last_row0;
+    wire         am_wins = am_any && (!run_any || okey(am_val) > run_key);
+    wire [NW-1:0] fin_idx = am_wins ? am_idx + last_row0 : run_idx;
+    wire [31:0]  fin_val = am_wins ? am_val : run_val;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin run_any <= 1'b0; last_row0 <= 0; end
+        else if (me_go && me_amax) begin
+            last_row0 <= me_row0;
+            if (!me_amc) run_any <= 1'b0;
+            else if (am_wins) begin
+                run_any <= 1'b1; run_key <= okey(am_val); run_idx <= am_idx + last_row0; run_val <= am_val;
+            end
+        end
     end
     assign kvd_wbase = me_wbase; assign kvd_ts = me_ts; assign kvd_ks = me_ks; assign kvd_js = me_js;
     assign kvd_jsh = me_jsh; assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
@@ -214,6 +264,7 @@ module ot_hdc_core #(
         me_k <= `F(ME_K) + dyn[`F(ME_D_K)];
         me_kindk <= (`F(ME_D_TILES) == 3'd6);        // DYN_TTILES: rounds of position tiles
         me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
+        me_row0 <= `F(ME_ROW0); me_amc <= `F(ME_AMC);
         me_wbase <= `F(ME_WBASE) + dyn[`F(ME_D_WBASE)];
         me_ts <= `F(ME_TS); me_ks <= `F(ME_KS); me_js <= `F(ME_JS);
         me_xbase <= `F(ME_XBASE) + dyn[`F(ME_D_XBASE)];
@@ -274,6 +325,7 @@ module ot_hdc_core #(
     // The embedding read is the only stream use of the weight ROM; a barrier
     // keeps it apart from matrix-vector reads.
     assign wrom_re = me_wrom_re | su_wrom_re;
+    assign wrom_su = su_wrom_re;
     assign wrom_addr = su_wrom_re ? su_wrom_addr : me_wrom_addr;
 
     always @(posedge clk or negedge rst_n) begin
