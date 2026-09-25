@@ -1,0 +1,1315 @@
+{
+  "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of ROM-array packages built as 4-die tensor groups: decode cores, tensor-group sequencers, the one-shot collective engines and the package controller are synthesizable RTL; memories are behavioural; the die-to-die UCIe PHY is a delay-and-rate model (ot_rom_ucie_link) and the package-to-package link the tb_hdc_array delay line (60 cycles). Cycles only; the clock is claimed by the ASAP7 records.",
+  "comparison": {
+    "one_package_1_user": {
+      "single_core_cycles": 565452,
+      "speedup": 1.999,
+      "tensor_group_cycles": 282865
+    },
+    "ring_4_packages_1_user": {
+      "one_core_per_package_cycles": 581231,
+      "one_core_per_package_cycles_per_token_step": 32290.6,
+      "speedup": 1.953,
+      "tensor_group_cycles": 297607,
+      "tensor_group_cycles_per_token_step": 16533.7
+    },
+    "ring_4_packages_4_users": {
+      "one_core_per_package_cycles": 1044726,
+      "one_core_per_package_cycles_per_token_step": 14510.1,
+      "speedup": 2.466,
+      "tensor_group_cycles": 423587,
+      "tensor_group_cycles_per_token_step": 5883.2
+    },
+    "single_core_end_to_end_cycles": 565452,
+    "ucie_latency_sensitivity_1_package_1_user": [
+      {
+        "collective_share_of_die_busy": 0.0212,
+        "lat_cycles": 12,
+        "setting": "nominal",
+        "total_cycles": 282865
+      },
+      {
+        "collective_share_of_die_busy": 0.0166,
+        "lat_cycles": 4,
+        "setting": "low",
+        "total_cycles": 281569
+      },
+      {
+        "collective_share_of_die_busy": 0.0334,
+        "lat_cycles": 34,
+        "setting": "high",
+        "total_cycles": 286429
+      }
+    ]
+  },
+  "golden": {
+    "end_to_end": {
+      "generated": [
+        1073,
+        382,
+        93
+      ],
+      "logits_bit_exact": true,
+      "oracle": [
+        1073,
+        382,
+        93
+      ]
+    },
+    "program_words_per_die": 113,
+    "segments_per_die": 9,
+    "single_step_pos15": {
+      "argmax": 1073,
+      "logits_bit_exact": true,
+      "oracle": 1073,
+      "pos": 15,
+      "token": 271
+    },
+    "weight_rom_words_per_die": 14336
+  },
+  "input_sha256": {
+    "configs/hardware/technology.json": "9cd9e0901cf278f0a6f45b6a62bb6db238adfabac8a5395e54e150a51abfe754",
+    "rtl/hdc/ot_hdc_core.sv": "97ffe38b12c945e7eba5405c11e5ee927126e1758cd5aec5fb3051c202daf8c7",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_isa.svh": "6d21fb2e220083a6e1b5e9b964dd6f9dcd41c2b1cf2c155ebad805e00e48f651",
+    "rtl/hdc/ot_hdc_matvec.sv": "48f4cbc47dab6f005f8599c30e91dc48799316fd28805c5e4c77884d0d0fdabf",
+    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+    "rtl/hdc/ot_hdc_stream.sv": "0ac8993138829ea6a87c72f0d9b5c0f6228a5e3956bb7ee9efa761cfee928c42",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/rom/ot_rom_fabric_router.sv": "f4c2f0737c03cec072c8cabc23a873090a441d0ffdef26d3dc1a93e9f8e60277",
+    "rtl/rom/ot_rom_oneshot_allreduce.sv": "9086fb04462ca058b3c759eb72ead4a5f720fb2a3e594eacfff35326efa88da2",
+    "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+    "rtl/rom/ot_rom_pkg_link.sv": "0909bd7071ad7c55c75694917a682a487547dab6f633e64db0ac093ceaf7a87c",
+    "rtl/rom/ot_rom_tp_seq.sv": "dee434197ff25553a41ba7acf5f439c88c174a2b265ad5f1f29de544b8427f57",
+    "rtl/test/hdc_array_harness.cpp": "b4c272a6903d459265d13b82e020437be32a884bfb707d572d4262742160e685",
+    "rtl/test/hdc_package_tp_harness.cpp": "a0f354883dcf63c07e10748b72a0767c9932e90c7f8b5faa10ed4c6e4ba3e936",
+    "rtl/test/tb_hdc_array.sv": "f55f9d77c59807b06ac5d20f0a9f469c5f94c7a0fb02bc99183017fbc4a7996f",
+    "rtl/test/tb_hdc_package_tp.sv": "7f9822f381903443a6b740d4cd050cd921d5074c5171a7d65ddda1f35a36d857",
+    "rtl/test/tb_rom_oneshot_allreduce.sv": "085525e22554d905f2715f674b24b18682a323455b6b38b94e4ccb6d7bfddd17",
+    "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
+    "tools/hdc_isa.py": "05b9e689c57e607dbb0ff0b7eecc04be4bbe2e1707b9926b7ee27271440c6e55",
+    "tools/hdc_program.py": "0d304e756fd9999cd77cb0bbc7bef2a437f8db00514764abdc142a5d32af5302",
+    "tools/rtl_hdc_package_tp_campaign.py": "7530041f1ca888f2a6c3faebadef93c1004f79fded23ef494b80ced876469553"
+  },
+  "one_core_per_package_baseline": [
+    {
+      "cycles_per_token_step": 14510.1,
+      "cycles_per_user_step": 58040.3,
+      "fabric": "p2p",
+      "generated": [
+        {
+          "cycle": 885072,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 899551,
+          "position": 15,
+          "token": 1073,
+          "user": 1
+        },
+        {
+          "cycle": 914030,
+          "position": 15,
+          "token": 1073,
+          "user": 2
+        },
+        {
+          "cycle": 928509,
+          "position": 15,
+          "token": 1073,
+          "user": 3
+        },
+        {
+          "cycle": 943020,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 957531,
+          "position": 16,
+          "token": 382,
+          "user": 1
+        },
+        {
+          "cycle": 972042,
+          "position": 16,
+          "token": 382,
+          "user": 2
+        },
+        {
+          "cycle": 986553,
+          "position": 16,
+          "token": 382,
+          "user": 3
+        },
+        {
+          "cycle": 1001096,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        },
+        {
+          "cycle": 1015639,
+          "position": 17,
+          "token": 93,
+          "user": 1
+        },
+        {
+          "cycle": 1030182,
+          "position": 17,
+          "token": 93,
+          "user": 2
+        },
+        {
+          "cycle": 1044725,
+          "position": 17,
+          "token": 93,
+          "user": 3
+        }
+      ],
+      "generated_tokens": 12,
+      "half_layer_packages": false,
+      "link_credit_stalls": 0,
+      "lm_head_multicast": false,
+      "lm_head_packages": 1,
+      "mismatches": 0,
+      "package_busy_cycles": [
+        425592,
+        425592,
+        425592,
+        1027008
+      ],
+      "package_busy_cycles_per_step": [
+        5911.0,
+        5911.0,
+        5911.0,
+        14264.0
+      ],
+      "packages": 4,
+      "pass": true,
+      "stall_percent": 0,
+      "token_steps": 72,
+      "total_cycles": 1044726,
+      "users": 4,
+      "users_completed": 4
+    },
+    {
+      "cycles_per_token_step": 32290.6,
+      "cycles_per_user_step": 32290.6,
+      "fabric": "p2p",
+      "generated": [
+        {
+          "cycle": 514602,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 547852,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 581230,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        }
+      ],
+      "generated_tokens": 3,
+      "half_layer_packages": false,
+      "link_credit_stalls": 0,
+      "lm_head_multicast": false,
+      "lm_head_packages": 1,
+      "mismatches": 0,
+      "package_busy_cycles": [
+        106398,
+        106398,
+        106398,
+        256752
+      ],
+      "package_busy_cycles_per_step": [
+        5911.0,
+        5911.0,
+        5911.0,
+        14264.0
+      ],
+      "packages": 4,
+      "pass": true,
+      "stall_percent": 0,
+      "token_steps": 18,
+      "total_cycles": 581231,
+      "users": 1,
+      "users_completed": 1
+    }
+  ],
+  "one_shot_unit": [
+    {
+      "case": "reduce_8w",
+      "cycles_first_send_to_last_result": 850,
+      "error_words": 0,
+      "fault_bits": "0000",
+      "fault_code_bits": "000000000000",
+      "fifo_depth": 16,
+      "gap_percent": 0,
+      "gather_messages": 0,
+      "inject_message": -1,
+      "inject_value": null,
+      "lat_cycles": 12,
+      "link_hold_cycles": 310,
+      "messages": 64,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 64,
+      "skew_cycles_per_die": 0,
+      "words_out_all_dies": 2048,
+      "words_per_cycle_per_die": 0.6024,
+      "words_per_message": 8
+    },
+    {
+      "case": "reduce_8w_gaps_skew",
+      "cycles_first_send_to_last_result": 979,
+      "error_words": 0,
+      "fault_bits": "0000",
+      "fault_code_bits": "000000000000",
+      "fifo_depth": 16,
+      "gap_percent": 30,
+      "gather_messages": 0,
+      "inject_message": -1,
+      "inject_value": null,
+      "lat_cycles": 12,
+      "link_hold_cycles": 338,
+      "messages": 64,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 64,
+      "skew_cycles_per_die": 7,
+      "words_out_all_dies": 2048,
+      "words_per_message": 8
+    },
+    {
+      "case": "mixed_gather_gaps_skew",
+      "cycles_first_send_to_last_result": 1982,
+      "error_words": 0,
+      "fault_bits": "0000",
+      "fault_code_bits": "000000000000",
+      "fifo_depth": 16,
+      "gap_percent": 30,
+      "gather_messages": 35,
+      "inject_message": -1,
+      "inject_value": null,
+      "lat_cycles": 12,
+      "link_hold_cycles": 1303,
+      "messages": 64,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 29,
+      "skew_cycles_per_die": 3,
+      "words_out_all_dies": 5408,
+      "words_per_message": 8
+    },
+    {
+      "case": "gather_1w",
+      "cycles_first_send_to_last_result": 348,
+      "error_words": 0,
+      "fault_bits": "0000",
+      "fault_code_bits": "000000000000",
+      "fifo_depth": 16,
+      "gap_percent": 10,
+      "gather_messages": 64,
+      "inject_message": -1,
+      "inject_value": null,
+      "lat_cycles": 12,
+      "link_hold_cycles": 212,
+      "messages": 64,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 0,
+      "skew_cycles_per_die": 5,
+      "words_out_all_dies": 1024,
+      "words_per_message": 1
+    },
+    {
+      "case": "reduce_320w_depth16",
+      "cycles_first_send_to_last_result": 2098,
+      "error_words": 0,
+      "fault_bits": "0000",
+      "fault_code_bits": "000000000000",
+      "fifo_depth": 16,
+      "gap_percent": 0,
+      "gather_messages": 0,
+      "inject_message": -1,
+      "inject_value": null,
+      "lat_cycles": 12,
+      "link_hold_cycles": 790,
+      "messages": 4,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 4,
+      "skew_cycles_per_die": 0,
+      "words_out_all_dies": 5120,
+      "words_per_cycle_per_die": 0.6101,
+      "words_per_message": 320
+    },
+    {
+      "case": "reduce_320w_depth32",
+      "cycles_first_send_to_last_result": 1308,
+      "error_words": 0,
+      "fault_bits": "0000",
+      "fault_code_bits": "000000000000",
+      "fifo_depth": 32,
+      "gap_percent": 0,
+      "gather_messages": 0,
+      "inject_message": -1,
+      "inject_value": null,
+      "lat_cycles": 12,
+      "link_hold_cycles": 0,
+      "messages": 4,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 4,
+      "skew_cycles_per_die": 0,
+      "words_out_all_dies": 5120,
+      "words_per_cycle_per_die": 0.9786,
+      "words_per_message": 320
+    },
+    {
+      "case": "fault_nan",
+      "cycles_first_send_to_last_result": 70,
+      "error_words": 4,
+      "fault_bits": "1111",
+      "fault_code_bits": "001001001001",
+      "fifo_depth": 16,
+      "gap_percent": 0,
+      "gather_messages": 0,
+      "inject_message": 1,
+      "inject_value": "7fc00000",
+      "lat_cycles": 12,
+      "link_hold_cycles": 10,
+      "messages": 4,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 4,
+      "skew_cycles_per_die": 0,
+      "words_out_all_dies": 128,
+      "words_per_message": 8
+    },
+    {
+      "case": "fault_inf",
+      "cycles_first_send_to_last_result": 70,
+      "error_words": 4,
+      "fault_bits": "1111",
+      "fault_code_bits": "001001001001",
+      "fifo_depth": 16,
+      "gap_percent": 0,
+      "gather_messages": 0,
+      "inject_message": 2,
+      "inject_value": "ff800000",
+      "lat_cycles": 12,
+      "link_hold_cycles": 10,
+      "messages": 4,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 4,
+      "skew_cycles_per_die": 0,
+      "words_out_all_dies": 128,
+      "words_per_message": 8
+    },
+    {
+      "case": "fault_overflow",
+      "cycles_first_send_to_last_result": 70,
+      "error_words": 4,
+      "fault_bits": "1111",
+      "fault_code_bits": "001001001001",
+      "fifo_depth": 16,
+      "gap_percent": 0,
+      "gather_messages": 0,
+      "inject_message": 0,
+      "inject_value": "7f000000",
+      "lat_cycles": 12,
+      "link_hold_cycles": 10,
+      "messages": 4,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 4,
+      "skew_cycles_per_die": 0,
+      "words_out_all_dies": 128,
+      "words_per_message": 8
+    },
+    {
+      "case": "fault_tag_mismatch",
+      "cycles_first_send_to_last_result": 70,
+      "error_words": 0,
+      "fault_bits": "1111",
+      "fault_code_bits": "010010010010",
+      "fifo_depth": 16,
+      "gap_percent": 0,
+      "gather_messages": 0,
+      "inject_message": -1,
+      "inject_value": null,
+      "lat_cycles": 12,
+      "link_hold_cycles": 10,
+      "messages": 4,
+      "mismatches": 0,
+      "pass": true,
+      "reduce_messages": 4,
+      "skew_cycles_per_die": 0,
+      "tag_mismatch_message": 2,
+      "words_out_all_dies": 128,
+      "words_per_message": 8
+    }
+  ],
+  "packages": [
+    {
+      "board_link_credit_stalls": 0,
+      "collective_cycles_per_step_per_die": 331.0,
+      "collective_hold_cycles": 0,
+      "collective_share_of_die_busy": 0.0212,
+      "cycles_per_token_step": 15714.7,
+      "cycles_per_user_step": 15714.7,
+      "die_busy_cycles": 1126440,
+      "die_collective_cycles": 23832,
+      "dies": [
+        {
+          "busy_cycles": 281610,
+          "collective_cycles": 5958,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 281610,
+          "collective_cycles": 5958,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 281610,
+          "collective_cycles": 5958,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 281610,
+          "collective_cycles": 5958,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        }
+      ],
+      "dies_per_package": 4,
+      "generated": [
+        {
+          "cycle": 250538,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 266672,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 282862,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        }
+      ],
+      "generated_ids_per_user": [
+        [
+          1073,
+          382,
+          93
+        ]
+      ],
+      "generated_tokens": 3,
+      "kv_mismatches": 0,
+      "mismatches": 0,
+      "packages": 1,
+      "pass": true,
+      "steps_checked_bit_exact": 18,
+      "token_steps": 18,
+      "total_cycles": 282865,
+      "ucie_lat_cycles": 12,
+      "ucie_lat_setting": "nominal",
+      "users": 1,
+      "vector_memory_checked": true,
+      "vector_memory_mismatches": 0
+    },
+    {
+      "board_link_credit_stalls": 0,
+      "collective_cycles_per_step_per_die": 331.0,
+      "collective_hold_cycles": 0,
+      "collective_share_of_die_busy": 0.0212,
+      "cycles_per_token_step": 15648.1,
+      "cycles_per_user_step": 62592.4,
+      "die_busy_cycles": 4505760,
+      "die_collective_cycles": 95328,
+      "dies": [
+        {
+          "busy_cycles": 1126440,
+          "collective_cycles": 23832,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 1126440,
+          "collective_cycles": 23832,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 1126440,
+          "collective_cycles": 23832,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 1126440,
+          "collective_cycles": 23832,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        }
+      ],
+      "dies_per_package": 4,
+      "generated": [
+        {
+          "cycle": 949868,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 965879,
+          "position": 15,
+          "token": 1073,
+          "user": 1
+        },
+        {
+          "cycle": 981890,
+          "position": 15,
+          "token": 1073,
+          "user": 2
+        },
+        {
+          "cycle": 997901,
+          "position": 15,
+          "token": 1073,
+          "user": 3
+        },
+        {
+          "cycle": 1013968,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 1030035,
+          "position": 16,
+          "token": 382,
+          "user": 1
+        },
+        {
+          "cycle": 1046102,
+          "position": 16,
+          "token": 382,
+          "user": 2
+        },
+        {
+          "cycle": 1062169,
+          "position": 16,
+          "token": 382,
+          "user": 3
+        },
+        {
+          "cycle": 1078292,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        },
+        {
+          "cycle": 1094415,
+          "position": 17,
+          "token": 93,
+          "user": 1
+        },
+        {
+          "cycle": 1110538,
+          "position": 17,
+          "token": 93,
+          "user": 2
+        },
+        {
+          "cycle": 1126661,
+          "position": 17,
+          "token": 93,
+          "user": 3
+        }
+      ],
+      "generated_ids_per_user": [
+        [
+          1073,
+          382,
+          93
+        ]
+      ],
+      "generated_tokens": 12,
+      "kv_mismatches": 0,
+      "mismatches": 0,
+      "packages": 1,
+      "pass": true,
+      "steps_checked_bit_exact": 72,
+      "token_steps": 72,
+      "total_cycles": 1126664,
+      "ucie_lat_cycles": 12,
+      "ucie_lat_setting": "nominal",
+      "users": 4,
+      "vector_memory_checked": true,
+      "vector_memory_mismatches": 0
+    },
+    {
+      "board_link_credit_stalls": 0,
+      "collective_cycles_per_step_per_die": 82.8,
+      "collective_hold_cycles": 0,
+      "collective_share_of_die_busy": 0.0204,
+      "cycles_per_token_step": 5883.2,
+      "cycles_per_user_step": 23532.6,
+      "die_busy_cycles": 4675968,
+      "die_collective_cycles": 95328,
+      "dies": [
+        {
+          "busy_cycles": 412560,
+          "collective_cycles": 6984,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 3,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 412560,
+          "collective_cycles": 6984,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 3,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 412560,
+          "collective_cycles": 6984,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 3,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 412560,
+          "collective_cycles": 6984,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 3,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 2,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 2,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 2,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 2,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 1,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 1,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 1,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 1,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 252144,
+          "collective_cycles": 5616,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        }
+      ],
+      "dies_per_package": 4,
+      "generated": [
+        {
+          "cycle": 359297,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 365126,
+          "position": 15,
+          "token": 1073,
+          "user": 1
+        },
+        {
+          "cycle": 370955,
+          "position": 15,
+          "token": 1073,
+          "user": 2
+        },
+        {
+          "cycle": 376784,
+          "position": 15,
+          "token": 1073,
+          "user": 3
+        },
+        {
+          "cycle": 382627,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 388470,
+          "position": 16,
+          "token": 382,
+          "user": 1
+        },
+        {
+          "cycle": 394313,
+          "position": 16,
+          "token": 382,
+          "user": 2
+        },
+        {
+          "cycle": 400156,
+          "position": 16,
+          "token": 382,
+          "user": 3
+        },
+        {
+          "cycle": 406013,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        },
+        {
+          "cycle": 411870,
+          "position": 17,
+          "token": 93,
+          "user": 1
+        },
+        {
+          "cycle": 417727,
+          "position": 17,
+          "token": 93,
+          "user": 2
+        },
+        {
+          "cycle": 423584,
+          "position": 17,
+          "token": 93,
+          "user": 3
+        }
+      ],
+      "generated_ids_per_user": [
+        [
+          1073,
+          382,
+          93
+        ]
+      ],
+      "generated_tokens": 12,
+      "kv_mismatches": 0,
+      "mismatches": 0,
+      "packages": 4,
+      "pass": true,
+      "steps_checked_bit_exact": 72,
+      "token_steps": 72,
+      "total_cycles": 423587,
+      "ucie_lat_cycles": 12,
+      "ucie_lat_setting": "nominal",
+      "users": 4,
+      "vector_memory_checked": false,
+      "vector_memory_mismatches": 0
+    },
+    {
+      "board_link_credit_stalls": 0,
+      "collective_cycles_per_step_per_die": 82.8,
+      "collective_hold_cycles": 0,
+      "collective_share_of_die_busy": 0.0204,
+      "cycles_per_token_step": 16533.7,
+      "cycles_per_user_step": 16533.7,
+      "die_busy_cycles": 1168992,
+      "die_collective_cycles": 23832,
+      "dies": [
+        {
+          "busy_cycles": 103140,
+          "collective_cycles": 1746,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 3,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 103140,
+          "collective_cycles": 1746,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 3,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 103140,
+          "collective_cycles": 1746,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 3,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 103140,
+          "collective_cycles": 1746,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 3,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 2,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 2,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 2,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 2,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 1,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 1,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 1,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 1,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 63036,
+          "collective_cycles": 1404,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        }
+      ],
+      "dies_per_package": 4,
+      "generated": [
+        {
+          "cycle": 263642,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 280595,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 297604,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        }
+      ],
+      "generated_ids_per_user": [
+        [
+          1073,
+          382,
+          93
+        ]
+      ],
+      "generated_tokens": 3,
+      "kv_mismatches": 0,
+      "mismatches": 0,
+      "packages": 4,
+      "pass": true,
+      "steps_checked_bit_exact": 18,
+      "token_steps": 18,
+      "total_cycles": 297607,
+      "ucie_lat_cycles": 12,
+      "ucie_lat_setting": "nominal",
+      "users": 1,
+      "vector_memory_checked": false,
+      "vector_memory_mismatches": 0
+    },
+    {
+      "board_link_credit_stalls": 0,
+      "collective_cycles_per_step_per_die": 259.0,
+      "collective_hold_cycles": 0,
+      "collective_share_of_die_busy": 0.0166,
+      "cycles_per_token_step": 15642.7,
+      "cycles_per_user_step": 15642.7,
+      "die_busy_cycles": 1121256,
+      "die_collective_cycles": 18648,
+      "dies": [
+        {
+          "busy_cycles": 280314,
+          "collective_cycles": 4662,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 280314,
+          "collective_cycles": 4662,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 280314,
+          "collective_cycles": 4662,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 280314,
+          "collective_cycles": 4662,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        }
+      ],
+      "dies_per_package": 4,
+      "generated": [
+        {
+          "cycle": 249386,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 265448,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 281566,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        }
+      ],
+      "generated_ids_per_user": [
+        [
+          1073,
+          382,
+          93
+        ]
+      ],
+      "generated_tokens": 3,
+      "kv_mismatches": 0,
+      "mismatches": 0,
+      "packages": 1,
+      "pass": true,
+      "steps_checked_bit_exact": 18,
+      "token_steps": 18,
+      "total_cycles": 281569,
+      "ucie_lat_cycles": 4,
+      "ucie_lat_setting": "low",
+      "users": 1,
+      "vector_memory_checked": true,
+      "vector_memory_mismatches": 0
+    },
+    {
+      "board_link_credit_stalls": 0,
+      "collective_cycles_per_step_per_die": 529.0,
+      "collective_hold_cycles": 0,
+      "collective_share_of_die_busy": 0.0334,
+      "cycles_per_token_step": 15912.7,
+      "cycles_per_user_step": 15912.7,
+      "die_busy_cycles": 1140696,
+      "die_collective_cycles": 38088,
+      "dies": [
+        {
+          "busy_cycles": 285174,
+          "collective_cycles": 9522,
+          "die": 3,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 285174,
+          "collective_cycles": 9522,
+          "die": 2,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 285174,
+          "collective_cycles": 9522,
+          "die": 1,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        },
+        {
+          "busy_cycles": 285174,
+          "collective_cycles": 9522,
+          "die": 0,
+          "kv_mismatches": 0,
+          "package": 0,
+          "vm_mismatches": 0
+        }
+      ],
+      "dies_per_package": 4,
+      "generated": [
+        {
+          "cycle": 253706,
+          "position": 15,
+          "token": 1073,
+          "user": 0
+        },
+        {
+          "cycle": 270038,
+          "position": 16,
+          "token": 382,
+          "user": 0
+        },
+        {
+          "cycle": 286426,
+          "position": 17,
+          "token": 93,
+          "user": 0
+        }
+      ],
+      "generated_ids_per_user": [
+        [
+          1073,
+          382,
+          93
+        ]
+      ],
+      "generated_tokens": 3,
+      "kv_mismatches": 0,
+      "mismatches": 0,
+      "packages": 1,
+      "pass": true,
+      "steps_checked_bit_exact": 18,
+      "token_steps": 18,
+      "total_cycles": 286429,
+      "ucie_lat_cycles": 34,
+      "ucie_lat_setting": "high",
+      "users": 1,
+      "vector_memory_checked": true,
+      "vector_memory_mismatches": 0
+    }
+  ],
+  "schema": "opentallas.hdc-package-tp-campaign.v1",
+  "status": "pass",
+  "tensor_split": {
+    "arithmetic": "hdc_golden.Model.decode_token_tp: a row-split matrix's partial is the die's own K-slice (its own split_for), the four partials are added ((p0+p1)+p2)+p3; a column-split matrix keeps every output's K but may take another split_for",
+    "collectives_per_token": {
+      "all_reduce_128_fp32": 8,
+      "argmax_all_gather": 1
+    },
+    "column_split": "q/k/v rows by query head (2 per die; the die's KV head, shared by two dies, is computed by both, bit-identically), gate/up rows (96 per die)",
+    "dies": 4,
+    "replicated": "embedding, RMSNorms, residuals, RoPE tables",
+    "rounding_effect": "the FP32 hidden state differs from the one-core golden (1,293 of 2,048 final-norm elements over the 16 prompt steps differ), but every BF16-rounded matrix input and every BF16 KV entry is identical, so the logits are bit-identical to the one-core golden at every step and the tokens are the oracle's",
+    "row_split": "o_proj input columns (the die's heads), down_proj input columns (its 96 FFN rows); partials all-reduced before the residual add",
+    "vocabulary_split": "lm_head rows (1024 per die); argmax all-gathered, rank order, strictly greater wins"
+  },
+  "ucie_link": {
+    "bytes_per_cycle": 3600,
+    "bytes_s": 4000000000000.0,
+    "clock_ns": 0.9,
+    "hop_latency_s": 1e-08,
+    "hop_range_s": [
+      3e-09,
+      3e-08
+    ],
+    "lat_cycles": 12,
+    "lat_cycles_range": [
+      4,
+      34
+    ],
+    "note": "the unit moves one 64-byte word (16 binary32 lanes, the vector-memory word) per cycle per die, far below the link's bytes per cycle: the rate limit never binds here, and the unit's LANES parameter, not the link, sets the collective bandwidth",
+    "source": "configs/hardware/technology.json links.rom_package_ucie"
+  },
+  "vehicle": "qwen3-reduced-v1 (hidden 128, 4 layers, 8/2 heads, head_dim 16, ffn 384, vocab 4096)"
+}
