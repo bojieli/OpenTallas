@@ -31,6 +31,9 @@ PLATFORM = "asap7"
 SLOT_DIR = Path(os.environ.get("OT_CHIP_SLOT_DIR", "/tmp/claude-1000/ot_chip_slots"))
 SLOTS = int(os.environ.get("OT_CHIP_SLOTS", "2"))
 MIN_MEM_GB = float(os.environ.get("OT_CHIP_MIN_MEM_GB", "60"))
+# The machine-wide gate every heavy job on the shared machine goes through
+# (a flock slot plus a free-memory floor), when it exists.
+GATE = Path(os.environ.get("OT_CHIP_GATE", "/tmp/claude-1000/orfs_gate.sh"))
 _SIGNED_RE = re.compile(r"^(\s*(?:input|output|inout|wire|reg)\s+)signed\s+", re.M)
 
 
@@ -84,6 +87,8 @@ def docker_make(case: Path, goal: str, log_name: str, timeout: int,
                 extra_mounts: list[tuple[Path, str]] | None = None,
                 env: dict[str, str] | None = None) -> subprocess.CompletedProcess:
     cmd = ["docker", "run", "--rm", "-v", f"{ROOT}:/src:ro", "-v", f"{case}:/work"]
+    if GATE.is_file():
+        cmd = [str(GATE)] + cmd
     for host, container in extra_mounts or []:
         cmd += ["-v", f"{host}:{container}:ro"]
     for key, value in (env or {}).items():
