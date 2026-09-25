@@ -42,6 +42,47 @@ def test_select_latency_is_the_campaigns():
         assert D.select_latency(cfg["K"], asc) == cfg["latency_cycles"], cfg["name"]
 
 
+def test_tselect_latency_is_the_campaigns():
+    camp = json.loads((ROOT / "results/rtl/hdc_v41_tselect_campaign.json").read_text())
+    assert camp["status"] == "pass"
+    for cfg in camp["configurations"]:
+        W = cfg["lanes"]
+        assert D.tselect_lat0(W) == cfg["lat0"], cfg["name"]
+        for run in cfg["runs"].values():
+            # the priced worst case bounds every measured segment: 2 x beats + LAT0 (+1)
+            assert D.tselect_lat0(W) <= run["lat0_min"] <= run["lat0_max"] <= D.tselect_lat0(W) + 1, cfg["name"]
+    assert D.tselect_latency(512 * 4, 64) == 2 * 32 + 47 + 1
+    assert all(m["caught"] != bool(m.get("control")) for m in camp["mutations"])
+    assert sum(1 for m in camp["mutations"] if m.get("control")) == 1
+
+
+def test_threshold_select_needs_no_order_pass_and_is_faster(env):
+    thr, ins = v41(env), v41(env, select_impl="insertion")
+    fab = D.default_fabric("array", env["links"], 4)
+    rt, ri = thr.evaluate(fab), ins.evaluate(fab)
+    a, b = D.index_select_report(thr, rt), D.index_select_report(ins, ri)
+    assert sorted(a, key=int) == [str(L) for L in env["c"]["index_source_layer_ids"]]
+    for L in a:
+        assert "ascending" not in a[L]["steps"]["topk_final"]["desc"]
+        assert "ascending-index pass" in b[L]["steps"]["topk_final"]["desc"]
+        assert a[L]["total_us"] < b[L]["total_us"]
+    assert rt["period"] < ri["period"]
+    # one die: the local select is the whole top-k (no gather, no final pass)
+    single = v41(env, g=1)
+    assert not any(n.endswith("idx.topk_final") for n in single.g.nodes)
+
+
+def test_tselect_split_takes_the_best_unit_count(env):
+    b = v41(env)
+    ops = b.ops
+    n, k = 50000, 512
+    iss, dep, P = ops._tsel_split(n, k)
+    one = ops._tsel(n)
+    assert iss + dep <= sum(one)
+    assert 1 <= P <= b.p.tselect_units
+    assert one == (math.ceil(n / 64), D.tselect_latency(n, 64))
+
+
 def test_clock_is_the_slowest_routed_block():
     clock, rows = D.routed_clock()
     assert clock == min(r["fmax_hz"] for r in rows)

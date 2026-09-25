@@ -92,6 +92,9 @@ RTL_SOURCES = {
     "fadd/fmul latency 5": "rtl/hdc/ot_hdc_fpu.sv LATENCY",
     "select: K+2 cycles (rank order) or 2K+2 (ascending index) after the last element, 1 element/cycle in":
         "rtl/hdc/v41/ot_hdc_select.sv header; results/rtl/hdc_v41_select_campaign.json latency_cycles",
+    "threshold select: 2 x ceil(n/W) + LAT0 (+1) cycles after the last beat, W elements/cycle in, output in "
+    "position order (LAT0 = 47 at W = 64)":
+        "rtl/hdc/v41/ot_hdc_tselect.sv header; results/rtl/hdc_v41_tselect_campaign.json lat0",
     "fdiv 31, fsqrt 31, softplus 259 (all II 1)": "rtl/hdc/v41/ot_hdc_fdiv.sv, ot_hdc_fsqrt.sv, ot_hdc_softplus.sv",
     "blockdot 15, actquant 13, fp4qdq 8, engram_hash 12":
         "rtl/hdc/v41/*.sv; results/rtl/hdc_v41_blockdot_campaign.json, hdc_v41_engram_campaign.json",
@@ -107,16 +110,32 @@ def select_latency(k, ascending_index):
     return k + 2 + (k if ascending_index else 0)
 
 
-CLOCK_BLOCKS = ["ot_hdc_matvec", "ot_hdc_stream", "v41/ot_hdc_softplus", "v41/ot_hdc_select_k512",
+def tselect_lat0(lanes):
+    """ot_hdc_tselect LAT0: two (drain 10 + walk 8) tree walks and the pass-3 pipeline (read, compare,
+    prefix, select, shift counts, then ceil(lg W / 2) compaction and as many rotate stages, output)."""
+    return 41 + 2 * ((int(math.log2(lanes)) + 1) // 2)
+
+
+def tselect_latency(n, lanes):
+    """ot_hdc_tselect, worst case: edges from the last beat's accept to the out_last beat (n elements
+    in ceil(n/W) beats; two re-reads of the line memory, +1 when the final line overflows)."""
+    return 2 * math.ceil(max(1, n) / lanes) + tselect_lat0(lanes) + 1
+
+
+TSELECT_BLOCK = "v41/ot_hdc_tselect_w64"
+CLOCK_BLOCKS = ["ot_hdc_matvec", "ot_hdc_stream", "v41/ot_hdc_softplus", TSELECT_BLOCK, "v41/ot_hdc_select_k6",
                 "v41/ot_hdc_blockdot", "v41/ot_hdc_actquant", "v41/ot_hdc_fp4qdq"]
+CLOCK_BLOCKS_INSERTION = ["ot_hdc_matvec", "ot_hdc_stream", "v41/ot_hdc_softplus", "v41/ot_hdc_select_k512",
+                          "v41/ot_hdc_blockdot", "v41/ot_hdc_actquant", "v41/ot_hdc_fp4qdq"]
 
 
 def physical(block):
     return json.loads((PHYS / block / "physical.json").read_text())["design"]
 
 
-def routed_clock():
-    rows = [dict(block=b, fmax_hz=physical(b)["fmax_hz"], closed=physical(b)["closed"]) for b in CLOCK_BLOCKS]
+def routed_clock(blocks=None):
+    rows = [dict(block=b, fmax_hz=physical(b)["fmax_hz"], closed=physical(b)["closed"])
+            for b in (blocks or CLOCK_BLOCKS)]
     return min(r["fmax_hz"] for r in rows), rows
 
 
@@ -133,6 +152,10 @@ class Params:
     su_area_fraction: float = 0.10   # share of the compute area given to stream-unit lanes
     su_width: int = 0                # 0: derived from the area; else elements/cycle per die
     select_units: int = 64           # ot_hdc_select instances per die (first level of a top-k)
+    select_impl: str = "threshold"   # index / candidate top-k: "threshold" (ot_hdc_tselect) or "insertion"
+                                     # (ot_hdc_select units + merge + ascending-index pass, the earlier pricing)
+    tselect_lanes: int = 64          # ot_hdc_tselect lanes (W elements per beat)
+    tselect_units: int = 8           # up to this many ot_hdc_tselect per die on disjoint position ranges
     chaining: bool = True            # streamable consumers chase their producer (the HDC `chase`)
     algorithm: str = "best"          # reduction algorithm (see ALGORITHMS) or "best" per collective
     moe: str = "striped"             # "striped" (every expert split across the group) or "expert_parallel"
@@ -623,6 +646,45 @@ class Ops:
         return self.g.add(name, deps, layer=layer, issue=self.cyc(stream), depth=self.cyc(tail), ctrl=self.bctrl,
                           kind="select", desc=desc or f"top-{k} of {n} on {P} select units + merge")
 
+    def _tsel(self, n):
+        """(issue, depth) cycles of ot_hdc_tselect over segments of n elements, one per user: users queue
+        on the unit (ingest, then the two re-reads), the last user's tail is the depth."""
+        u = max(1, math.ceil(self.mb))
+        beats, t = math.ceil(max(1, n) / self.p.tselect_lanes), tselect_latency(n, self.p.tselect_lanes)
+        return beats + (u - 1) * (beats + t), t
+
+    def _tsel_split(self, n, k):
+        """Best (issue, depth, P): P ot_hdc_tselect units over contiguous position ranges of n, then (P > 1)
+        one more pass over the P x k survivors streamed in range order (= position order)."""
+        best, P = None, 1
+        while P <= self.p.tselect_units:
+            n_p = math.ceil(n / P)
+            iss, dep = self._tsel(n_p)
+            if P > 1:
+                m_iss, m_dep = self._tsel(P * min(k, n_p))
+                dep += m_iss + m_dep
+            if best is None or iss + dep < best[0] + best[1]:
+                best = (iss, dep, P)
+            if n_p <= self.p.tselect_lanes:
+                break
+            P *= 2
+        return best
+
+    def tselect_local(self, name, deps, layer, *, n, k, desc=""):
+        """Top-k of a die's n positions on up to tselect_units ot_hdc_tselect units."""
+        iss, dep, P = self._tsel_split(n, k)
+        return self.g.add(name, deps, layer=layer, issue=self.cyc(iss), depth=self.cyc(dep), ctrl=self.bctrl,
+                          kind="select", select_units=P,
+                          desc=desc or f"top-{k} of {n} on {P} threshold select unit(s)" + (" + on-die pass" if P > 1 else ""))
+
+    def tselect_final(self, name, deps, layer, *, k, ways, desc=""):
+        """Top-k of the `ways` gathered lists of k (range order = position order) on the same unit(s): the
+        result is already in position order, so no ascending-index pass."""
+        iss, dep, P = self._tsel_split(ways * k, k)
+        return self.g.add(name, deps, layer=layer, depth=self.cyc(iss + dep), ctrl=self.bctrl, kind="select",
+                          select_units=P,
+                          desc=desc or f"threshold select over {ways} x {k} candidates on {P} unit(s), position order")
+
     def select_final(self, name, deps, layer, *, k, ways, ascending, desc=""):
         """Merge `ways` sorted lists of k (k + lg ways, streaming) into, if position order is required,
         one ascending-index ot_hdc_select pass (2k+2 latency, k emitted)."""
@@ -859,20 +921,34 @@ def v41_attention(ops, c, L, mode, ratio, x, xq, sel, ctx, hpd):
                 sdeps.append(g.add(f"{P}.idx.newkey", [newk, iq], layer=L, ctrl=ops.bctrl,
                                    depth=ops.cyc(K["me_lat"] + K["me_tree"] * 2 + SU_BASE + 8 * FADD),
                                    desc="score of the just-compressed key"))
-            s = ops.select_local(f"{P}.idx.topk_local", sdeps, L, n=per_die, k=TOPK,
-                                 desc=f"local top-{TOPK} of {per_die} keys")
+            thr = ops.p.select_impl == "threshold"
+            if thr:
+                s = ops.tselect_local(f"{P}.idx.topk_local", sdeps, L, n=per_die, k=TOPK)
+            else:
+                s = ops.select_local(f"{P}.idx.topk_local", sdeps, L, n=per_die, k=TOPK,
+                                     desc=f"local top-{TOPK} of {per_die} keys")
             s = ops.collective(f"{P}.idx.topk_merge", [s], L, op="all_gather", payload=G * TOPK * 8,
                                desc=f"{G} x {TOPK} (score, position) candidates") or s
-            s = ops.select_final(f"{P}.idx.topk_final", [s], L, k=TOPK, ways=G, ascending=ops.p.index_order_pass,
-                                 desc=f"{G}-way merge" + (" + ascending-index pass (K=512)" if ops.p.index_order_pass else ""))
+            if thr and G > 1:
+                s = ops.tselect_final(f"{P}.idx.topk_final", [s], L, k=TOPK, ways=G)
+            elif not thr:
+                s = ops.select_final(f"{P}.idx.topk_final", [s], L, k=TOPK, ways=G, ascending=ops.p.index_order_pass,
+                                     desc=f"{G}-way merge" + (" + ascending-index pass (K=512)" if ops.p.index_order_pass else ""))
             ops.sel_node = s
             if L == c["candidate_source_layer_id"]:     # candidate blocks for the reindex layers: side branch
                 nb = math.ceil(per_die / CB)
-                cs = ops.select_local(f"{P}.cand.topk_local", [sc], L, n=nb, k=CK,
-                                      desc=f"block max over {CB} + local top-{CK} of {nb} blocks")
+                if thr:
+                    cs = ops.tselect_local(f"{P}.cand.topk_local", [sc], L, n=nb, k=CK,
+                                           desc=f"block max over {CB} + local top-{CK} of {nb} blocks (threshold)")
+                else:
+                    cs = ops.select_local(f"{P}.cand.topk_local", [sc], L, n=nb, k=CK,
+                                          desc=f"block max over {CB} + local top-{CK} of {nb} blocks")
                 cs = ops.collective(f"{P}.cand.merge", [cs], L, op="all_gather", payload=G * CK * 8,
                                     desc=f"{G} x {CK} candidate blocks") or cs
-                ops.select_final(f"{P}.cand.final", [cs], L, k=CK, ways=G, ascending=False)
+                if thr and G > 1:
+                    ops.tselect_final(f"{P}.cand.final", [cs], L, k=CK, ways=G)
+                elif not thr:
+                    ops.select_final(f"{P}.cand.final", [cs], L, k=CK, ways=G, ascending=False)
             rows_dep.append(g.add(f"{P}.gather", [s], layer=L, depth=ops.p.hbm_gather_s, ctrl=ops.ctrl,
                                   desc="selected compressed rows: the address exists only now (HBM round trip)"))
         else:                                       # reuse: the source's selection; rows prefetched
@@ -1066,6 +1142,27 @@ def summarize(b: Built, r, keep_steps=True, per_layer_top=10, layers=None):
     return out
 
 
+def index_select_report(b: Built, r):
+    """Per index-source layer: the indexer top-k's own node costs (local select, all-gather, final
+    select) and how much of it lies on the token's critical path."""
+    g, on = b.g, set(r["path"])
+    out = {}
+    for n in g.nodes.values():
+        if ".attn.idx." not in n["name"] or n["name"].split(".")[-1] not in ("topk_local", "topk_merge", "topk_final"):
+            continue
+        cost = n["ctrl"] + n["issue"] + n["depth"]
+        row = out.setdefault(str(n["layer"]), dict(steps={}, total_us=0.0, on_critical_path_us=0.0))
+        row["steps"][n["name"].split(".")[-1]] = dict(us=round(cost * 1e6, 4), cycles=round(cost * b.clock, 1),
+                                                      desc=n["desc"], units=n.get("select_units"))
+        row["total_us"] += cost * 1e6
+        if n["name"] in on:
+            row["on_critical_path_us"] += sum(g.contrib[n["name"]].values()) * 1e6
+    for row in out.values():
+        row["total_us"] = round(row["total_us"], 4)
+        row["on_critical_path_us"] = round(row["on_critical_path_us"], 4)
+    return out
+
+
 def collective_census(r):
     per = {}
     for e in r["events"]:
@@ -1209,10 +1306,27 @@ def default_fabric(kind, links, g):
     return WaferFabric(links, g, "square")
 
 
+def select_clock(p: Params):
+    return routed_clock(CLOCK_BLOCKS if p.select_impl == "threshold" else CLOCK_BLOCKS_INSERTION)
+
+
+def tselect_area(p: Params):
+    """Routed ot_hdc_tselect (ASAP7) and the line memory it needs, per die, vs the insertion units."""
+    t, old = physical(TSELECT_BLOCK), physical("v41/ot_hdc_select_k512")
+    return dict(tselect_block=TSELECT_BLOCK, tselect_um2=t["area_um2"], tselect_fmax_hz=t["fmax_hz"],
+                tselect_closed=t["closed"], tselect_parameters=t.get("parameters"),
+                units_max_per_die=p.tselect_units,
+                line_memory_bits_per_element=1 + 16 + 16,
+                line_memory_note="the segment's lines live in an on-die SRAM outside the routed unit "
+                                 "(W x 33 bits per line, one line per beat, 2^AW lines per unit)",
+                insertion_block="v41/ot_hdc_select_k512", insertion_um2=old["area_um2"],
+                insertion_units_per_die=p.select_units, insertion_um2_per_die=old["area_um2"] * p.select_units)
+
+
 def build(p: Params, quick=False):
     tech = json.loads(TECH.read_text())
     links = link_consts(tech)
-    clock, clock_rows = routed_clock()
+    clock, clock_rows = select_clock(p)
     clock = p.clock_hz or clock
     p = replace(p, clock_hz=clock)
     rec = dict(schema=SCHEMA, tool="tools/decode_critical_path.py", params=asdict(p),
@@ -1238,6 +1352,20 @@ def build(p: Params, quick=False):
             s = summarize(b, r, layers=None if bt == 1 else {2, 3, 20})
             s["reference_analytical"] = m_.reference
             if bt == 1:
+                s["index_select_per_source_layer"] = index_select_report(b, r)
+                pb = replace(p, select_impl="insertion" if p.select_impl == "threshold" else "threshold",
+                             clock_hz=0.0)
+                cb = select_clock(pb)[0]
+                pb = replace(pb, clock_hz=cb)
+                mb_ = v41_machine(kind, g_ref, 1, points, designs, pb, cb)
+                bb = Built(mb_, pb, cb, v41_graph, c, mb_.context)
+                rb = bb.evaluate(fab)
+                s["index_select_other_impl"] = dict(
+                    select_impl=pb.select_impl, clock_hz=cb, tokens_s_per_user=1 / rb["period"],
+                    token_period_s=rb["period"], per_source_layer=index_select_report(bb, rb),
+                    per_layer_critical_path_us={str(L): round(sum(sum(bb.g.contrib[n].values()) for n in rb["path"]
+                                                                  if bb.g.nodes[n]["layer"] == L) * 1e6, 4)
+                                                for L in c["index_source_layer_ids"]})
                 s["collectives_per_layer"] = collective_census(r)
                 s["no_chaining_tokens_s_per_user"] = 1 / b.evaluate(fab, chaining=False)["period"]
                 for alg in ALGORITHMS:
@@ -1249,6 +1377,10 @@ def build(p: Params, quick=False):
                 for name, pp in (("su_width_64", replace(p, su_width=64)), ("su_width_4096", replace(p, su_width=4096)),
                                  ("select_units_16", replace(p, select_units=16)),
                                  ("select_units_256", replace(p, select_units=256)),
+                                 ("tselect_units_1", replace(p, tselect_units=1)),
+                                 ("tselect_units_32", replace(p, tselect_units=32)),
+                                 ("tselect_lanes_32", replace(p, tselect_lanes=32)),
+                                 ("tselect_lanes_128", replace(p, tselect_lanes=128)),
                                  ("no_index_order_pass", replace(p, index_order_pass=False)),
                                  ("lanes_from_analytical", replace(p, lanes_from="analytical")),
                                  ("expert_parallel", replace(p, moe="expert_parallel")),
@@ -1260,6 +1392,7 @@ def build(p: Params, quick=False):
                 s["sensitivity_tokens_s_per_user"] = sens
             rows[f"{kind}_batch{bt}"] = s
     rec["deepseek_v41_flash"] = rows
+    rec["index_select_area"] = tselect_area(p)
     if not quick:
         rec["topology_sweep"] = topology_sweep(p, clock, links, points, designs, c)
     rec["assumptions"] = ASSUMPTIONS
@@ -1388,9 +1521,16 @@ ASSUMPTIONS = [
     "stage balance), apportioned to each matvec by bytes (weight-bound) or MACs (compute-bound); other group "
     "sizes scale it by g_ref/g (the compute term also by users per stage).",
     "A reduction over n costs ceil(n*m/W) + red_tail 32 + 5*lg W cycles; SU classes cost 29 + the unit's depth.",
-    "Top-k: first level on up to 64 ot_hdc_select units in rank order and a sorted merge, then one "
-    "ascending-index pass (the golden emits positions in order); the merge tree and the ascending pass on "
-    "merged input are not built RTL.",
+    "Index and candidate top-k (select_impl threshold, the default): ot_hdc_tselect, a W = 64-lane radix "
+    "select (hi-digit histogram while the scores stream in, a lo-digit histogram of the boundary bucket, one "
+    "compaction pass) whose output is already in position order; up to 8 units per die on contiguous "
+    "position ranges plus one on-die pass over their survivors, then the cross-die all-gather and one more "
+    "pass over the G x k candidates (each die owns a contiguous position range, so range order is position "
+    "order). Priced at the worst case, 2 x ceil(n/W) + LAT0 + 1 per pass, users queued on the unit. The "
+    "scores are kept in a line memory (33 bits per element) that is not in the routed area. The router's "
+    "FP32 top-6 of 384 stays on ot_hdc_select. select_impl insertion reproduces the earlier pricing: up to 64 "
+    "ot_hdc_select units in rank order, a sorted merge and an ascending-index pass (the merge tree and the "
+    "ascending pass on merged input were never built RTL).",
     "Partitioning: q_a|kv|index-weights output-split (all-gather), heads split for attention, index keys "
     "split by position (local top-k + all-gather merge), wo_b K-split (all-reduce), router experts split "
     "(all-gather of 384 scores), experts striped over the group (default) or expert-parallel (combine "
