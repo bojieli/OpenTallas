@@ -509,13 +509,13 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tr><td>Board fabric / pipeline</td><td class="r m">ring · 40 stages</td><td>one layer per package; the 4-copy residual is 41 KB per hop</td></tr>
       <tr><td>Die area split</td><td class="r m">ROM 289 · compute 329 · HBM PHY 50 · links 65 · overhead 82 mm²</td><td>weights at 7.4 bits per parameter, FP8 execution</td></tr>
       <tr><td>KV store</td><td class="r m">5 × HBM3E per die</td><td>ROM holds no per-user state</td></tr>
-      <tr><td>Per-user rate, batch 1 / 64 (critical path)</td><td class="r m">4,136 / 4,024 tok/s</td><td>bottom-up, measured RTL depths (§6.8); the analytical model's 15,556 / 12,208 omits most serial latency</td></tr>
+      <tr><td>Per-user rate, batch 1 / 64 (critical path)</td><td class="r m">5,005 / 4,436 tok/s</td><td>bottom-up, measured RTL depths, with the routed Sinkhorn unit (§6.8); the analytical model's 15,556 / 12,208 omitted most serial latency</td></tr>
       <tr><td>Aggregate at 4,096 users</td><td class="r m">≈504 K tok/s</td><td>bound by stage occupancy; 3.6 MB per hop at this load</td></tr>
     </tbody>
   </table></div>
   <figure class="fig">
     <div class="svgbox"><svg id="v41array" viewBox="0 0 1000 720" role="img" aria-label="DeepSeek-V4.1 ROM array physical layout"></svg></div>
-    <figcaption><b>Figure 6-7.</b> <b>A</b>: the 47-package ring. Each package holds 1/47 of the weights, and a token crosses 39 package boundaries, one per layer boundary. The lettered dots show that with 47 or more users every package works on a different user's token at once. <b>B</b>: one MoE layer inside a package. The token's vector goes to all four dies. Each die reads its quarter of the six routed experts and the shared expert; the router's choice changes only which ROM rows are read. A fixed-order one-shot reduction over UCIe then combines the partial sums, so every transfer has the same size, destination and order for every token. <b>C</b>: the die floorplan and one token's critical path at batch 1, which is dominated by the hyper-connection Sinkhorn chain rather than by the network.</figcaption>
+    <figcaption><b>Figure 6-7.</b> <b>A</b>: the 47-package ring. Each package holds 1/47 of the weights, and a token crosses 39 package boundaries, one per layer boundary. The lettered dots show that with 47 or more users every package works on a different user's token at once. <b>B</b>: one MoE layer inside a package. The token's vector goes to all four dies. Each die reads its quarter of the six routed experts and the shared expert; the router's choice changes only which ROM rows are read. A fixed-order one-shot reduction over UCIe then combines the partial sums, so every transfer has the same size, destination and order for every token. <b>C</b>: the die floorplan and one token's critical path at batch 1 with the Sinkhorn unit: the compute chain and the ROM sweep, not the network.</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
     <caption>Table 6-3. Communication per V4.1 layer in the selected array (batch 1)</caption>
@@ -548,7 +548,8 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <tbody>
       <tr><td>Taalas HC1, Llama-3.1-8B (published 16,960)</td><td class="r m">24,675</td><td class="r m">10,103</td><td>compute chain 61 µs + sweep 34 µs</td></tr>
       <tr><td>Qwen3-8B, one reticle</td><td class="r m">24,222</td><td class="r m">8,680</td><td>compute chain</td></tr>
-      <tr><td>V4.1 array: 4-die group, ring (selected)</td><td class="r m">15,556</td><td class="r m">4,136</td><td>Sinkhorn chain, 224 µs of a 242 µs token</td></tr>
+      <tr><td>V4.1 array: 4-die group, ring (selected), pipelined Sinkhorn</td><td class="r m">15,556</td><td class="r m">4,136</td><td>Sinkhorn chain, 224 µs of a 242 µs token</td></tr>
+      <tr><td>V4.1 array: as above with the routed Sinkhorn unit</td><td class="r m">—</td><td class="r m">5,005</td><td>compute chain 138 µs + ROM sweep 43 µs of a 200 µs token</td></tr>
       <tr><td>V4.1 wafer, 57-field group</td><td class="r m">5,653</td><td class="r m">1,992</td><td>collective latency, 336 µs</td></tr>
       <tr><td>V4.1 wafer: 19-field groups (selected)</td><td class="r m">—</td><td class="r m">2,768</td><td>collectives 169 µs + chain 131 µs</td></tr>
     </tbody>
@@ -564,14 +565,14 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <caption>Table 6-5. Selected topologies and sensitivities</caption>
     <thead><tr><th>Target</th><th>Physical</th><th>Logical</th><th class="r">Batch 1 / 64 per user</th><th class="r">Aggregate, 4,096 users</th></tr></thead>
     <tbody>
-      <tr><td>V4.1 array (selected)</td><td>4-die package, board ring, 40 stages</td><td>one-shot inside the package; experts striped</td><td class="r m">4,136 / 4,024</td><td class="r m">504 K</td></tr>
-      <tr><td>V4.1 array, per-user optimum</td><td>8-die package, 8-die group, ring</td><td>one-shot</td><td class="r m">4,260 / 3,895</td><td class="r m">379 K</td></tr>
+      <tr><td>V4.1 array (selected)</td><td>4-die package, board ring, 40 stages</td><td>one-shot inside the package; experts striped</td><td class="r m">5,005 / 4,436</td><td class="r m">504 K</td></tr>
+      <tr><td>V4.1 array, per-user optimum</td><td>8-die package, 8-die group, ring</td><td>one-shot</td><td class="r m">5,603 / 4,095</td><td class="r m">379 K</td></tr>
       <tr><td>V4.1 wafer (selected)</td><td>3 × 19-field square groups per wafer, 37 stages</td><td>one-shot inside the group</td><td class="r m">2,768 / 2,422</td><td class="r m">1.00 M</td></tr>
       <tr><td>Wafer + dedicated reduction network (sensitivity)</td><td>express tree, 10 ns per level</td><td>tree</td><td class="r m">3,929 at batch 1</td><td class="r m">—</td></tr>
-      <tr><td>V4.1 array with a 12-cycle divider (hypothetical)</td><td>as selected</td><td>as selected</td><td class="r m">4,995 at batch 1</td><td class="r m">—</td></tr>
+      <tr><td>V4.1 array before the Sinkhorn unit (pipelined adders + 31-cycle divider)</td><td>as selected</td><td>as selected</td><td class="r m">4,136 / 4,024</td><td class="r m">504 K</td></tr>
     </tbody>
   </table></div>
-  <p><b>What this changes in the design.</b> The per-user bound for V4.1 is not bandwidth, links or control. It is the hyper-connection Sinkhorn: 39 dependent normalisation steps of 4×4 per sublayer, 80 per token. Each step is a sequential four-term FP32 sum, an eps add and an IEEE divide, ≈51 cycles or ≈2.1 µs per sublayer at our unit depths, which caps the rate near 6,000 tok/s whatever the silicon. A latency-optimised Sinkhorn unit, bit-exact to the golden, is therefore the next RTL priority. After it come the index top-k merge (≈3.8 µs on each of the eight index-source layers) and the stream-unit functions on the norm and softmax chains (sigmoid 172, exp 121, rsqrt 90 cycles). The analytical model is being corrected to use this critical path and collective census for every target, including the GPU side, and the tables above will be regenerated from it.</p>
+  <p><b>What this changed in the design.</b> Before the Sinkhorn unit, V4.1's per-user rate was bound by the hyper-connection Sinkhorn. Its 39 dependent 4×4 normalisations per sublayer took ≈2.0 µs, 80 times per token, on pipelined adders and a 31-cycle divider. The <b>Sinkhorn unit</b> (<code>rtl/hdc/v41/ot_hdc_sinkhorn.sv</code>) now does one whole normalisation per clock: positive-only chained adders, and a table-seeded reciprocal with an exact remainder correction that is bit-identical to IEEE division. That brings a step to 6.6 ns and a Sinkhorn to 270 ns, verified bit-exact on 3,840 real and 1,000,000 random Sinkhorns. The Sinkhorn is now off the critical path. The selected array rises to <b>5,005 / 4,436 tok/s per user at batch 1 / 64</b>, where the token is set by the compute chain (norms, softmax, SiLU and the matrix passes, 138 µs) and the ROM sweep (43 µs). The next RTL priorities are the stream-unit function depths (sigmoid, exp, rsqrt) and the index top-k merge. The per-user optimum at batch 1 is now an 8-die group, 12% faster, but it loses 8% at batch 64 and 25% of the aggregate, so the 4-die package stays selected.</p>
   <h3 id="s6-9">6.9 Wafer vs array at equal silicon: the wafer is rejected</h3>
   <p>The ×12 wafer design of §6.7 uses 3.6× the array's silicon, so comparing it with the array directly flatters the wafer. <code>tools/wafer_vs_array_study.py</code> (report: <code>docs/WAFER_VS_ARRAY_ISO_AREA.md</code>) sizes wafers of 2, 3, 4 and 12 against arrays of the same area, rounded down to whole 4-die packages. Both are sized with the analytical model's own rules, and both are priced on the bottom-up critical path. Every size holds the weights; a single wafer does not.</p>
   <div class="tablebox"><table class="data">
@@ -1054,10 +1055,10 @@ function drawV41Array(){
   const parts=[["ROM",289.4,Rs,R],["compute",328.9,P,R],["PHY",50,Bs,B],["links",65.2,G,M],["overhead",81.5,G,M]];
   let xx=10; const fw=440/815; parts.forEach(([n,a,f,st])=>{const w=a*fw; el("rect",{x:xx,y:cy0+26,width:w,height:22,fill:f,stroke:st},svg);
     txt(svg,xx+w/2,cy0+62,n,{anchor:"middle",fs:9.5,fill:I}); txt(svg,xx+w/2,cy0+74,a.toFixed(0)+" mm²",{anchor:"middle",fs:9.5,cls:"t-mono"}); xx+=w;});
-  const sc=460/241.6;
-  budgetBar(svg,520,cy0+26,460,sc,"",[[223.7,Rs,R,"compute chain 223.7 µs (Sinkhorn-bound)"],[4.9+2.1,P,M,""],[7.0,R,R,""],[3.3,G,M,""],[0.6,B,B,""]]);
-  txt(svg,520,cy0+62,"241.8 µs per token → 4,136 tokens/s per user (critical path)",{fs:10,fill:I});
-  txt(svg,520,cy0+76,"sweep + KV 7.0 · stage hops 7.0 · control 3.3 · collectives 0.6 µs",{fs:10,fill:R});
+  const sc=460/199.8;
+  budgetBar(svg,520,cy0+26,460,sc,"",[[137.5,Rs,R,"compute chain 137.5 µs"],[42.8+2.1,P,M,"ROM sweep + KV"],[7.0,R,R,""],[7.3,G,M,""],[3.0,B,B,""]]);
+  txt(svg,520,cy0+62,"199.8 µs per token → 5,005 tokens/s per user (critical path, Sinkhorn unit)",{fs:10,fill:I});
+  txt(svg,520,cy0+76,"sweep + KV 44.9 · stage hops 7.0 · control 7.3 · collectives 3.0 µs",{fs:10,fill:R});
 }
 
 function drawV41Wafer(){
@@ -1099,12 +1100,12 @@ function drawV41Wafer(){
   // C: time budget comparison
   const y=490; head(svg,10,y,"C · One token's critical path at batch 1 (200K context), same scale");
   const sc=(1000-20-170)/500.8;
-  const rowsC=[["array, 4-die groups",[[223.7,Rs,R,"compute chain 223.7"],[7.0,P,M,""],[7.0,R,R,""],[3.9,G,M,""]],"241.8 µs · 4,136 tok/s"],
+  const rowsC=[["array, 4-die groups",[[137.5,Rs,R,"chain 137.5"],[44.9,P,M,""],[7.0,R,R,""],[10.3,G,M,""]],"199.8 µs · 5,005 tok/s"],
     ["wafer, 57-field group",[[140.2,Rs,R,"chain 140.2"],[4.1,P,M,""],[336.2,B,B,"collectives 336.2"],[12.8,R,R,""],[7.4,G,M,""]],"502.0 µs · 1,992 tok/s"],
     ["wafer, 3 × 19 fields",[[130.5,Rs,R,"chain 130.5"],[32.8,P,M,"sweep"],[169.0,B,B,"collectives 169.0"],[20.2,R,R,""],[7.4,G,M,""]],"361.3 µs · 2,768 tok/s"]];
   rowsC.forEach(([lab,segs,tot],i)=>{const yy=y+24+i*36; txt(svg,10,yy+15,lab,{fs:10.5,fw:600,fill:I});
     const end=budgetBar(svg,170,yy,0,sc,"",segs); txt(svg,990,yy-3,tot,{fs:10,fill:R,anchor:"end"});});
-  txt(svg,10,y+140,"copper: compute chain (Sinkhorn-bound) · grey: weight/KV sweep on the path · blue: collectives · dark copper: pipeline hops · pale: control",{fs:9.5});
+  txt(svg,10,y+140,"copper: compute chain · grey: weight/KV sweep on the path · blue: collectives · dark copper: pipeline hops · pale: control",{fs:9.5});
 }
 
 function drawAll(){
