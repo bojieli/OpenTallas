@@ -63,7 +63,7 @@ K = dict(
     xu_ehash=18,
     xu_egather=5,
     he_start=-1,
-    he_drain=17,        # last element -> the last word written -> idle seen
+    he_drain=32,        # last element -> the chunk tree -> the last word written -> idle seen
 )
 SFU_DEPTH = {I.SFU_NONE: 1, I.SFU_EXP: 92, I.SFU_RSQRT: 61, I.SFU_SQRT: 31, I.SFU_SIGM: 128, I.SFU_SILU: 128,
              I.SFU_SPSQRT: 259, I.SFU_EGATE: 161}

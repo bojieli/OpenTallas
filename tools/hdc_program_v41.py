@@ -212,48 +212,59 @@ class Layout:
         self.crom.extend((F(x), F(0)) for x in np.asarray(v, dtype=F).reshape(-1))
         return base
 
-    # ME placement: words in (round, k, slot) order; lane g*W+l holds row_of(t, j, l)
-    def place_rows(self, w, row_of, tiles_total):
+    # ME placement: words in (round, k', slot) order; lane g*W+l of group g = q*S + c
+    # holds row_of(t, j, l), column c*kc + k' of tile t = round*(GR/S) + q
+    def place_rows(self, w, row_of, tiles_total, split=1):
         n, k = w.shape
-        rounds = -(-tiles_total // GR)
+        kc = k // split
+        assert kc * split == k
+        per_round = GR // split
+        rounds = -(-tiles_total // per_round)
         base = len(self.words)
         wb = (G.bits(np.asarray(w, dtype=F)) >> 16).astype(np.uint16)
         for r in range(rounds):
-            for kk in range(k):
+            for kk in range(kc):
                 for j in range(IL):
                     word = np.zeros(W * GR, dtype=np.uint16)
                     for g in range(GR):
-                        t = r * GR + g
+                        q, c = divmod(g, split)
+                        t = r * per_round + q
                         for l in range(W):
                             row = row_of(t, j, l)
                             if 0 <= row < n:
-                                word[g * W + l] = wb[row, kk]
+                                word[g * W + l] = wb[row, c * kc + kk]
                     self.words.append(word)
-        return dict(base=base, n=n, k=k, tiles=rounds)
+        return dict(base=base, n=n, k=kc, tiles=rounds, split=split)
 
     def place(self, w):
-        n = w.shape[0]
-        return self.place_rows(w, lambda t, j, l: (t * IL + j) * W + l, -(-n // (W * IL)))
+        """A matrix with the golden's engine split (hdc_golden_v41.mv)."""
+        n, k = w.shape
+        return self.place_rows(w, lambda t, j, l: (t * IL + j) * W + l, -(-n // (W * IL)),
+                               G.split_for(n, k, GR, W, IL))
 
     def place_wo_a(self, w):
         """Grouped wo_a: slot j is group j, tile t its rows t*W .. t*W+15, so every
-        slot reads its own group's 256 attention outputs (xjs = 256)."""
+        slot reads its own group's 256 attention outputs (xjs = 256), in
+        WO_A_SPLIT chunks (xcs = the chunk length)."""
         o_rank = self.m.o_rank
         assert w.shape == (self.m.groups * o_rank, 256) and self.m.groups == IL
         return self.place_rows(w, lambda t, j, l: j * o_rank + t * W + l if t * W + l < o_rank else -1,
-                               o_rank // W)
+                               o_rank // W, V.WO_A_SPLIT)
 
     def hplace(self, w):
-        """HE placement (FP32 weights): word k*IL + j holds rows j*NL + l, lane l."""
+        """HE placement (FP32 weights), K in HC_SPLIT chunks of kc: word k'*IL + j
+        holds, in lane c*NL + l, row j*NL + l at column c*kc + k'."""
         n, k = w.shape
-        assert n <= I.HE_LANES * IL
+        S, NL = V.HC_SPLIT, I.HE_LANES
+        kc = k // S
+        assert n <= NL * IL and kc * S == k
         base = len(self.hwords)
-        wf = np.zeros((I.HE_LANES * IL, k), dtype=F)
+        wf = np.zeros((NL * IL, k), dtype=F)
         wf[:n] = w
-        for kk in range(k):
+        for kk in range(kc):
             for j in range(IL):
-                self.hwords.append(wf[j * I.HE_LANES:(j + 1) * I.HE_LANES, kk].copy())
-        return dict(base=base, n=n, k=k)
+                self.hwords.append(np.concatenate([wf[j * NL:(j + 1) * NL, c * kc + kk] for c in range(S)]))
+        return dict(base=base, n=n, k=kc)
 
     # QE placement: word (round r, block kb, slot j), lane l: row (r*IL + j)*BL + l
     def qplace(self, q8, fp4=False):
@@ -320,17 +331,6 @@ SCALAR_SFU = (I.SFU_RSQRT, I.SFU_SQRT, I.SFU_SPSQRT, I.SFU_EGATE)   # lane 0 onl
 DYN_GUESS = 16                   # a count taken from a DYN value: assume a short context
 
 
-def split_tree(parts):
-    """The segment tree of a red_tree op: ((s0+s1)+(s2+s3))+... over the segment
-    sums, padded with +0 to a power of two (x + 0 = x exactly)."""
-    parts = [F(p) for p in parts]
-    while len(parts) & (len(parts) - 1):
-        parts.append(F(0))
-    while len(parts) > 1:
-        parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
-    return F(parts[0])
-
-
 def su_vec_mode(f, lanes=None):
     """The stream unit's lane axis for one op: SCALAR where only lane 0 can do the
     op (lane-0-only SFU functions, SEQ, the whole-op P=8 reduction), VEC_O where
@@ -350,6 +350,18 @@ def su_vec_mode(f, lanes=None):
     return I.VEC_I if vi <= vo else I.VEC_O
 
 
+def segmented(f, segs):
+    """An op over n elements whose sum (of squares) is one long sum, cut into
+    `segs` contiguous segments of n/segs (one per outer index, so every lane owns
+    one) and summed by the segment tree: the golden's split_sum."""
+    n = f["su_nin"]
+    assert f.get("su_nout", 1) == 1 and n % segs == 0 and f.get("red") == I.RED_SUM
+    f = dict(f, su_nout=segs, su_nin=n // segs, red_tree=1)
+    for x in "abcdo":
+        f[f"{x}_so"] = f.get(f"{x}_si", 0) * (n // segs)
+    return f
+
+
 class Builder:
     def __init__(self, lay):
         self.lay, self.m = lay, lay.m
@@ -363,7 +375,8 @@ class Builder:
     def me(self, mat, x, out, reads, writes, tag, **over):
         f = dict(unit=I.UNIT_ME, me_nout=mat["n"], me_tiles=mat["tiles"], me_k=mat["k"], me_wsrc=0,
                  me_wbase=mat["base"], me_ts=mat["k"] * IL, me_ks=IL, me_js=1, me_xbase=x, me_xks=1,
-                 me_round=1, me_obase=out // W, me_ots=IL, me_ojs=1, me_oen=1, me_xcs=mat["k"])
+                 me_round=1, me_obase=out // W, me_ots=IL, me_ojs=1, me_oen=1, me_xcs=mat["k"],
+                 me_split=mat.get("split", 1).bit_length() - 1)
         f.update(over)
         self.emit(f, reads, writes, tag)
 
@@ -396,8 +409,8 @@ class Builder:
         self.su({src, r}, wr, tag, **f)
 
     def sumsq(self, src, n, dst, tag, pred=0):
-        self.su({src}, {dst}, tag, pred=pred, su_nout=1, su_nin=n, a_base=self.V[src], a_si=1, red=I.RED_SUM,
-                red_sq=1, r_base=self.V[dst])
+        self.su({src}, {dst}, tag, **segmented(dict(pred=pred, su_nout=1, su_nin=n, a_base=self.V[src], a_si=1,
+                                                     red=I.RED_SUM, red_sq=1, r_base=self.V[dst]), V.RMS_SPLIT))
 
     def rmsnorm(self, src, n, w, dst, tag, pred=0, have_ss=None):
         ss = have_ss or "SS"
@@ -411,7 +424,7 @@ class Builder:
                  o_base=self.V[dst], o_si=1)
         wr = {dst}
         if sq:
-            f.update(red=I.RED_SUM, red_sq=1, r_base=self.V[sq])
+            f = segmented(dict(f, red=I.RED_SUM, red_sq=1, r_base=self.V[sq]), V.RMS_SPLIT)
             wr.add(sq)
         self.su({src}, wr, tag, **f)
 
@@ -474,9 +487,10 @@ class Builder:
                 o_si=1)
         self.su({"H", pre, "T"}, {"T"}, tag, su_nout=1, su_nin=160, a_base=h + 320, a_si=1, b_base=V_[pre] + 2,
                 m1=I.M1_AB, c_base=V_["T"], c_si=1, ad=I.AD_C, dst=I.DST_VM, o_base=V_["T"], o_si=1)
-        self.su({"H", pre, "T"}, {dst, ss}, tag, su_nout=1, su_nin=160, a_base=h + 480, a_si=1,
-                b_base=V_[pre] + 3, m1=I.M1_AB, c_base=V_["T"], c_si=1, ad=I.AD_C, rnd=1, dst=I.DST_VM,
-                o_base=V_[dst], o_si=1, red=I.RED_SUM, red_sq=1, r_base=V_[ss])
+        self.su({"H", pre, "T"}, {dst, ss}, tag, **segmented(dict(
+            su_nout=1, su_nin=160, a_base=h + 480, a_si=1, b_base=V_[pre] + 3, m1=I.M1_AB, c_base=V_["T"],
+            c_si=1, ad=I.AD_C, rnd=1, dst=I.DST_VM, o_base=V_[dst], o_si=1, red=I.RED_SUM, red_sq=1,
+            r_base=V_[ss]), V.RMS_SPLIT))
 
     def hc_post(self, y, post, comb, tag):
         V_ = self.V
@@ -490,7 +504,7 @@ class Builder:
                     dst=I.DST_VM, o_base=T, o_so=160, o_si=1)
         self.su({y, post, "T"}, {"H", "SSX"}, tag, su_nout=4, su_nin=160, a_base=V_[y], a_si=1,
                 b_base=V_[post], b_so=1, m1=I.M1_AB, c_base=T, c_so=160, c_si=1, ad=I.AD_C, rnd=1,
-                dst=I.DST_VM, o_base=h, o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_whole=1,
+                dst=I.DST_VM, o_base=h, o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1,
                 r_base=V_["SSX"])
 
     def engram(self, L):
@@ -517,7 +531,7 @@ class Builder:
                 dst=I.DST_VM, o_base=V_["EG"], o_si=1)
         self.su({"EKV", "EG", "H"}, {"H", "SSX"}, t, su_nout=4, su_nin=160, a_base=V_["EKV"] + 640, a_si=1,
                 b_base=V_["EG"], b_so=1, m1=I.M1_AB, c_base=h, c_so=160, c_si=1, ad=I.AD_C, rnd=1,
-                dst=I.DST_VM, o_base=h, o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_whole=1,
+                dst=I.DST_VM, o_base=h, o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1,
                 r_base=V_["SSX"])
 
     def kvt_write(self, src, region, base, rowsel, tag, pred=0, n=1, ind=False):
@@ -544,10 +558,10 @@ class Builder:
                     c_base=V_["CE"] + 32, c_si=1, ad=I.AD_C, dst=I.DST_VM, o_base=V_["CD"], o_si=1)
             self.su({"CE", "CD"}, {"CP"}, t, pred=pred, su_nout=2, su_nin=32, a_base=V_["CE"], a_so=32, a_si=1,
                     b_base=V_["CD"], b_si=1, m1=I.M1_DIVB, dst=I.DST_VM, o_base=V_["CP"], o_so=32, o_si=1)
-            self.su({slot, "CP"}, {"POOL", "SS"}, t, pred=pred, su_nout=1, su_nin=32, a_base=s0, a_si=1,
-                    b_base=V_["CP"], b_si=1, m1=I.M1_AB, c_base=s1, c_si=1, d_base=V_["CP"] + 32, d_si=1,
-                    qm=I.QM_POS, ad=I.AD_Q, rnd=1, dst=I.DST_VM, o_base=V_["POOL"], o_si=1, red=I.RED_SUM,
-                    red_sq=1, r_base=V_["SS"])
+            self.su({slot, "CP"}, {"POOL", "SS"}, t, **segmented(dict(
+                pred=pred, su_nout=1, su_nin=32, a_base=s0, a_si=1, b_base=V_["CP"], b_si=1, m1=I.M1_AB,
+                c_base=s1, c_si=1, d_base=V_["CP"] + 32, d_si=1, qm=I.QM_POS, ad=I.AD_Q, rnd=1, dst=I.DST_VM,
+                o_base=V_["POOL"], o_si=1, red=I.RED_SUM, red_sq=1, r_base=V_["SS"]), V.RMS_SPLIT))
             self.rmsnorm("POOL", 32, lay.cb[(L, "cnorm")], "LAT", t, pred, have_ss="SS")
         else:
             self.me(mat, V_["XN"], V_["CKA"], {"XN"}, {"CKA"}, t)
@@ -718,7 +732,7 @@ class Builder:
                     dst=I.DST_VM, o_base=V_["PF"], o_si=1)
             self.su(set(), {"H", "SSX"}, "embed", su_nout=4, su_nin=160, a_src=I.SRC_WROM,
                     a_base=lay.emb_word * W * GR, a_d=DY["EMBED"], a_si=1, dst=I.DST_VM, o_base=V_["H"], o_so=160,
-                    o_si=1, red=I.RED_SUM, red_sq=1, red_whole=1, r_base=V_["SSX"])
+                    o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1, r_base=V_["SSX"])
         for L in layers:
             if L in m.engram.layer_ids:
                 self.engram(L)
@@ -858,13 +872,19 @@ class Machine:
 
     # -- hyper-connection projection engine ------------------------------------------------
     def he(self, f):
-        """out[row] = sum_k w[row, k] * x[k], sequential from +0 (binary32)."""
-        n, K = f["he_nout"], f["he_k"]
-        acc = np.zeros(I.HE_LANES * IL, dtype=F)
+        """out[row] = sum_k w[row, k] * x[k]: chunk c (he_k terms from x[c*he_k])
+        sequential from +0 in lane group c, the HC_SPLIT chunk sums a pairwise tree."""
+        n, K, S, NL = f["he_nout"], f["he_k"], V.HC_SPLIT, I.HE_LANES
+        acc = np.zeros((S, NL * IL), dtype=F)
         for k in range(K):
-            w = self.hrom[f["he_wbase"] + k * IL: f["he_wbase"] + (k + 1) * IL].reshape(-1)
-            acc = G.add(acc, G.mul(w, self.vm[f["he_xbase"] + k]))
-        self.vm[f["he_obase"]:f["he_obase"] + n] = acc[:n]
+            w = self.hrom[f["he_wbase"] + k * IL: f["he_wbase"] + (k + 1) * IL].reshape(IL, S, NL)
+            w = w.transpose(1, 0, 2).reshape(S, IL * NL)               # [chunk, row j*NL + l]
+            x = self.vm[f["he_xbase"] + np.arange(S) * K + k]
+            acc = G.add(acc, G.mul(w, x[:, None]))
+        parts = list(acc)
+        while len(parts) > 1:
+            parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+        self.vm[f["he_obase"]:f["he_obase"] + n] = parts[0][:n]
 
     # -- stream unit -------------------------------------------------------------------------
     def addr(self, f, s, no, ni, idx=None):
@@ -941,7 +961,7 @@ class Machine:
             out = G.to_bf16(out)
         if f["red"] and f["red_tree"]:
             v = G.mul(out, out) if f["red_sq"] else out
-            x = split_tree([G.reduce_sum(sg) for sg in v.reshape(no, ni)])
+            x = V.split_sum_parts([G.reduce_sum(sg) for sg in v.reshape(no, ni)])
             if f["red_rnd"]:
                 x = G.to_bf16(x)
             self.vm[f["r_base"]] = x
@@ -1090,7 +1110,8 @@ def write_images(out, lay, prog, roms_from=None):
             (out / n).symlink_to(Path(roms_from).resolve() / n)
         return len(words)
     (out / "wrom.hex").write_text(hexwords((pack_lanes(w, 16) for w in lay.words), 16 * W * GR))
-    (out / "hrom.hex").write_text(hexwords((pack_lanes(G.bits(w), 32) for w in lay.hwords), 32 * I.HE_LANES))
+    (out / "hrom.hex").write_text(hexwords((pack_lanes(G.bits(w), 32) for w in lay.hwords),
+                                           32 * I.HE_LANES * V.HC_SPLIT))
     (out / "crom.hex").write_text(hexwords(((f32(hi) << 32) | f32(lo) for lo, hi in lay.crom), 64))
     qw = []
     for cw, ew in zip(lay.qcodes, lay.qexp):

@@ -7,9 +7,11 @@ matrix-vector engine (ot_hdc_matvec, unchanged: exact BF16 lanes) and keeps its
 field semantics; the other units are:
 
 * HE, the hyper-connection projection engine (ot_hdc_v41_hcproj): the FP32-
-  weight mixes matvec_fp32(fn, flat), NL lanes x IL interleaved outputs of the
-  qualified binary32 multiplier and adder, sequential over K per output; word
-  wbase + k*IL + j holds rows j*NL + l.  It runs beside the matrix engine.
+  weight mixes matvec(fn, flat, HC_SPLIT), HC_SPLIT x NL lanes x IL
+  interleaved outputs of the qualified binary32 multiplier and adder; K is cut
+  into HC_SPLIT chunks of he_k, each sequential in its lane, the chunk sums a
+  pairwise tree; word wbase + k*IL + j holds, in lane c*NL + l, row j*NL + l at
+  column c*he_k + k.  It runs beside the matrix engine.
 
 * SU, the V4.1 stream unit (ot_hdc_v41_stream): a 2-D element loop (outer o,
   inner i) over SU_LANES lanes.  `su_vec` picks what a cycle issues: SCALAR

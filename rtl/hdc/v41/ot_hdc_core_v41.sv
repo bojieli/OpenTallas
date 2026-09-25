@@ -36,7 +36,8 @@ module ot_hdc_core_v41 #(
     parameter integer DIM  = 160,
     parameter integer TOPK = 16,
     parameter integer HNL  = 3,            // HE lanes
-    parameter integer SW   = 8             // stream-unit lanes (elements per cycle)
+    parameter integer SW   = 8,            // stream-unit lanes (elements per cycle)
+    parameter integer HS   = 8             // HE K chunks (hdc_golden_v41.HC_SPLIT)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -63,10 +64,10 @@ module ot_hdc_core_v41 #(
     output wire [SW-1:0]     ewrom_re,
     output wire [SW*AW-1:0]  ewrom_addr,
     input  wire [SW*G*W*16-1:0] ewrom_q,
-    // HE weight ROM (HNL binary32 lanes per word)
+    // HE weight ROM (HS x HNL binary32 lanes per word)
     output wire              hrom_re,
     output wire [AW-1:0]     hrom_addr,
-    input  wire [HNL*32-1:0] hrom_q,
+    input  wire [HS*HNL*32-1:0] hrom_q,
     // quantised weight ROM, Engram table ROM
     output wire              qrom_re,
     output wire [AW-1:0]     qrom_addr,
@@ -107,9 +108,9 @@ module ot_hdc_core_v41 #(
     output wire              wqr_re,          // QE 32-element read
     output wire [AW-1:0]     wqr_addr,
     input  wire [1023:0]     wqr_q,
-    output wire              vh_re,           // HE x read
-    output wire [AW-1:0]     vh_addr,
-    input  wire [31:0]       vh_q,
+    output wire [HS-1:0]     vh_re,           // HE x reads, one per K chunk
+    output wire [HS*AW-1:0]  vh_addr,
+    input  wire [HS*32-1:0]  vh_q,
     output wire              wxr_re,          // XU 32-element read
     output wire [AW-1:0]     wxr_addr,
     input  wire [1023:0]     wxr_q,
@@ -392,7 +393,7 @@ module ot_hdc_core_v41 #(
         .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
         .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
 
-    ot_hdc_v41_hcproj #(.NL(HNL), .IL(IL), .AW(AW), .NW(NW)) u_he (
+    ot_hdc_v41_hcproj #(.NL(HNL), .IL(IL), .S(HS), .AW(AW), .NW(NW)) u_he (
         .clk(clk), .rst_n(rst_n), .go(he_go), .ready(he_ready), .idle(he_idle),
         .i_nout(he_nout), .i_k(he_k), .i_wbase(he_wbase), .i_xbase(he_xbase), .i_obase(he_obase),
         .hr_re(hrom_re), .hr_addr(hrom_addr), .hr_q(hrom_q), .x_re(vh_re), .x_addr(vh_addr), .x_q(vh_q),

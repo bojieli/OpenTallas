@@ -19,12 +19,13 @@ module tb_hdc_core_v41 (input wire clk);
     localparam integer INSTR_BITS = 1536;
     localparam integer W = 16, G = 4, BL = 16, QLB = 272, AW = 24, NW = 16, PAW = 14, HNL = 3;
     localparam integer SW = `HDC_SW;          // stream-unit lanes
-    localparam integer HROM_WORDS = 1 << 19;
+    localparam integer HS = 8;                // HE K chunks
+    localparam integer HROM_WORDS = 1 << 16;
     localparam integer WROM_WORDS = 1 << 19, QROM_WORDS = 1 << 16, EROM_WORDS = 1 << 19, CROM_WORDS = 1 << 15;
     localparam integer KV_WORDS = 32768, VM_ELEMS = 65536, VOCAB = 4040, PROG_WORDS = 1 << PAW;
 
     reg [G*W*16-1:0]    wrom [0:WROM_WORDS-1];
-    reg [HNL*32-1:0]    hrom [0:HROM_WORDS-1];
+    reg [HS*HNL*32-1:0] hrom [0:HROM_WORDS-1];
     reg [BL*QLB-1:0]    qrom [0:QROM_WORDS-1];
     reg [263:0]         erom [0:EROM_WORDS-1];
     reg [63:0]          crom [0:CROM_WORDS-1];
@@ -49,8 +50,8 @@ module tb_hdc_core_v41 (input wire clk);
     wire wrom_re; wire [AW-1:0] wrom_addr; reg [G*W*16-1:0] wrom_q;
     wire [SW-1:0] ewrom_re; wire [SW*AW-1:0] ewrom_addr; reg [SW*G*W*16-1:0] ewrom_q;
     wire qrom_re; wire [AW-1:0] qrom_addr; reg [BL*QLB-1:0] qrom_q;
-    wire hrom_re; wire [AW-1:0] hrom_addr; reg [HNL*32-1:0] hrom_q;
-    wire vh_re; wire [AW-1:0] vh_addr; reg [31:0] vh_q;
+    wire hrom_re; wire [AW-1:0] hrom_addr; reg [HS*HNL*32-1:0] hrom_q;
+    wire [HS-1:0] vh_re; wire [HS*AW-1:0] vh_addr; reg [HS*32-1:0] vh_q;
     wire ww_h_we; wire [AW-1:0] ww_h_addr; wire [31:0] ww_h_mask; wire [1023:0] ww_h_data;
     wire erom_re; wire [AW-1:0] erom_addr; reg [263:0] erom_q;
     wire [4*SW-1:0] crom_re; wire [4*SW*AW-1:0] crom_addr; reg [4*SW*64-1:0] crom_q;
@@ -73,7 +74,7 @@ module tb_hdc_core_v41 (input wire clk);
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
     wire [4:0] unit_busy; wire [2:0] issue_unit;
 
-    ot_hdc_core_v41 #(.SW(SW)) dut (
+    ot_hdc_core_v41 #(.SW(SW), .HS(HS)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
         .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -107,8 +108,8 @@ module tb_hdc_core_v41 (input wire clk);
         if (wrom_re) wrom_q <= wrom[wrom_addr[18:0]];
         for (q = 0; q < SW; q = q + 1) if (ewrom_re[q]) ewrom_q[q*G*W*16 +: G*W*16] <= wrom[ewrom_addr[q*AW +: 19]];
         if (qrom_re) qrom_q <= qrom[qrom_addr[15:0]];
-        if (hrom_re) hrom_q <= hrom[hrom_addr[18:0]];
-        if (vh_re) vh_q <= vm[vh_addr[15:0]];
+        if (hrom_re) hrom_q <= hrom[hrom_addr[15:0]];
+        for (q = 0; q < HS; q = q + 1) if (vh_re[q]) vh_q[32*q +: 32] <= vm[vh_addr[q*AW +: 16]];
         if (ww_h_we) for (q = 0; q < 32; q = q + 1) if (ww_h_mask[q]) vm[ww_h_addr[15:0] + q] <= ww_h_data[32*q +: 32];
         if (erom_re) erom_q <= erom[erom_addr[18:0]];
         for (q = 0; q < 4*SW; q = q + 1) if (crom_re[q]) crom_q[64*q +: 64] <= crom[crom_addr[q*AW +: 15]];
