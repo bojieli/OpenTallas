@@ -80,7 +80,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--output", type=Path, default=S.OUTPUT_ROOT)
     ap.add_argument("--jobs", type=int, default=8, help="concurrent study processes")
     ap.add_argument("--primary-workers", type=int, default=4, help="sensitivity workers per primary study")
-    ap.add_argument("--speculative-workers", type=int, default=8)
+    ap.add_argument("--speculative-workers", type=int, default=4,
+                    help="each worker peaks at 6-10 GB; 4 keeps the layer under ~30 GB")
     ap.add_argument("--logs", type=Path, default=Path(os.environ.get("TMPDIR", "/tmp")) / "roofline-regen-logs")
     ap.add_argument("--skip-layers", action="store_true",
                     help="stop after the studies (no critical-path report, no speculative layer)")

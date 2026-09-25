@@ -2468,12 +2468,12 @@ def build_payload(
         raise SystemExit(f"profile {profile_name}: acceptance_length carries no grade or no source")
 
     # One study per source, in parallel worker processes when more than one CPU
-    # is offered (SPECULATIVE_WORKERS, default a quarter of the machine): each
+    # is offered (SPECULATIVE_WORKERS, default at most 4: each peaks at 6-10 GB): each
     # study is independent and the result list keeps the source order, so the
     # artifact is byte-identical to a serial run.
     jobs = [(source, profile_name, profile, [int(value) for value in config["gamma_ladder"]], verify_shas)
             for source in sources]
-    workers = max(1, int(os.environ.get("SPECULATIVE_WORKERS", max(1, (os.cpu_count() or 1) // 4))))
+    workers = max(1, int(os.environ.get("SPECULATIVE_WORKERS", min(4, max(1, (os.cpu_count() or 1) // 4)))))
     if workers > 1 and len(jobs) > 1:
         import multiprocessing
         with multiprocessing.get_context("fork").Pool(min(workers, len(jobs))) as pool:
