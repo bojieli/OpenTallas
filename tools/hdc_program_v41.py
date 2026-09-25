@@ -600,11 +600,12 @@ class Builder:
         self.me(lay.mat[(L, "iwp")], V_["XN"], V_["WP"], {"XN"}, {"WP"}, t, pred=pred)
         self.su({"WP"}, {"WTS"}, t, pred=pred, su_nout=1, su_nin=32, a_base=V_["WP"], a_si=1, a_rnd=1,
                 m1=I.M1_AIMM, imm1=f32(m.index_w_scale), rnd=1, dst=I.DST_VM, o_base=V_["WTS"], o_si=1)
-        for hb in range(0, m.ih, IL):
+        rnds16 = DY["RND16_N2"] if r == 2 else DY["RND16_POS1"]
+        for hb in range(0, m.ih, IL * GR):         # 4 head groups of 8 heads: one 16-row tile per round
             self.me(dict(n=0, tiles=0, k=HD, base=self.K[f"IK{src}"] // W), V_["IQQ"] + hb * HD,
-                    V_["S"] + hb * STR, {"IQQ", f"IK{src}"}, {"S"}, t, pred=pred, me_xcs=0, me_wsrc=1,
+                    V_["S"] + hb * STR, {"IQQ", f"IK{src}"}, {"S"}, t, pred=pred, me_xcs=IL * HD, me_wsrc=1,
                     me_ts=HD, me_ks=1, me_js=0, me_jsh=3, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=STR // W,
-                    me_mmode=1, me_d_nout=nsel, me_d_tiles=rnds)
+                    me_mmode=1, me_d_nout=nsel, me_d_tiles=rnds16, me_hg=2, me_ogs=IL * STR // W)
         self.su({"S", "WTS"}, {"IS"}, t, pred=pred, su_nout=0, su_d_nout=nsel, su_nin=m.ih, a_base=V_["S"], a_so=1,
                 a_si=STR, a_rnd=1, a_relu=1, b_base=V_["WTS"], b_si=1, m1=I.M1_AB, rnd=1, red=I.RED_SUM,
                 red_rnd=1, r_base=V_["IS"], r_so=1)
@@ -650,10 +651,12 @@ class Builder:
         if hook and ATTN_HOOK == "qkv":
             hook()
         ts = f"L{L}.scores"
-        for hb in range(0, m.heads, IL):
+        T16 = {0: DY["RND16_POS1"], 1: DY["RND16_T1"], 2: DY["RND16_T2"]}[r]
+        for hb in range(0, m.heads, IL * GR):      # 4 head groups of 8 heads: one 16-row tile per round
             self.me(dict(n=0, tiles=0, k=HD, base=K[f"KT{L}"] // W), V_["Q"] + hb * HD, V_["S"] + hb * STR,
-                    {"Q", f"KT{L}"}, {"S"}, ts, me_xcs=0, me_wsrc=1, me_ts=HD, me_ks=1, me_js=0, me_jsh=3,
-                    me_xks=1, me_xjs=HD, me_ots=1, me_ojs=STR // W, me_mmode=1, me_d_nout=T, me_d_tiles=TR)
+                    {"Q", f"KT{L}"}, {"S"}, ts, me_xcs=IL * HD, me_wsrc=1, me_ts=HD, me_ks=1, me_js=0, me_jsh=3,
+                    me_xks=1, me_xjs=HD, me_ots=1, me_ojs=STR // W, me_mmode=1, me_d_nout=T, me_d_tiles=T16,
+                    me_hg=2, me_ogs=IL * STR // W)
         if hook and ATTN_HOOK == "scores":
             hook()
         sm = dict(su_nout=m.heads, su_nin=0, su_d_nin=T, a_base=V_["S"], a_so=STR, a_si=1, dst=I.DST_VM,
@@ -666,10 +669,11 @@ class Builder:
         if hook and ATTN_HOOK == "softmax":
             hook()
         tp = f"L{L}.pv"
-        for hb in range(0, m.heads, IL):
+        for hb in range(0, m.heads, IL * 2):       # 2 head groups of 8 heads x 2 tiles of 16 dimensions
             self.me(dict(n=HD, tiles=1, k=0, base=K[f"KR{L}"] // W), V_["S"] + hb * STR, V_["ACC"] + hb * HD,
-                    {"S", f"KR{L}"}, {"ACC"}, tp, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=HD // W, me_js=0,
-                    me_jsh=3, me_xks=1, me_xjs=STR, me_ots=1, me_ojs=HD // W, me_mmode=1, me_d_k=T)
+                    {"S", f"KR{L}"}, {"ACC"}, tp, me_xcs=IL * STR, me_wsrc=1, me_ts=1, me_ks=HD // W, me_js=0,
+                    me_jsh=3, me_xks=1, me_xjs=STR, me_ots=1, me_ojs=HD // W, me_mmode=1, me_d_k=T,
+                    me_hg=1, me_ogs=IL * HD // W)
         self.su({"M", "Z"}, {"DEN"}, tsm, su_nout=1, su_nin=m.heads, a_src=I.SRC_CLO, a_base=lay.cb[(L, "sink")],
                 a_si=1, b_base=V_["M"], b_si=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, c_base=V_["Z"], c_si=1,
                 e1=I.E1_ADDC, dst=I.DST_VM, o_base=V_["DEN"], o_si=1)
@@ -900,14 +904,15 @@ class Machine:
         xb = f["me_xbase"] + d[f["me_d_xbase"]]
         ob = f["me_obase"] + d[f["me_d_obase"]]
         split = 0 if f["me_wsrc"] else f["me_split"]
+        hg = f["me_hg"] if f["me_wsrc"] else 0
         S = 1 << split
-        per_round = GR // S
-        r, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(per_round), np.arange(IL),
-                                                         np.arange(W), indexing="ij"))
+        per_round = GR // S >> hg                    # tiles one round covers
+        r, h, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(1 << hg), np.arange(per_round),
+                                                            np.arange(IL), np.arange(W), indexing="ij"))
         t = r * per_round + q
         nidx = (t * IL + j) * W + l
         keep = (nidx < n) if f["me_mmode"] == 0 else (t * W + l < n)
-        r, q, t, j, l, nidx = r[keep], q[keep], t[keep], j[keep], l[keep], nidx[keep]
+        r, h, q, t, j, l, nidx = r[keep], h[keep], q[keep], t[keep], j[keep], l[keep], nidx[keep]
         parts = []
         for c in range(S):
             g = q * S + c
@@ -919,7 +924,7 @@ class Machine:
                 else:
                     word = wb + r * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
                     w = self.wrom_f32(word * (W * GR) + g * W + l)
-                x = self.vm[xb + c * f["me_xcs"] + k * f["me_xks"] + j * f["me_xjs"]]
+                x = self.vm[xb + (c + h) * f["me_xcs"] + k * f["me_xks"] + j * f["me_xjs"]]
                 if f["me_round"]:
                     x = G.to_bf16(x)
                 acc = G.add(acc, G.mul(w, x))
@@ -928,7 +933,7 @@ class Machine:
             parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
         acc = parts[0]
         if f["me_oen"]:
-            self.vm[(ob + t * f["me_ots"] + j * f["me_ojs"]) * W + l] = acc
+            self.vm[(ob + t * f["me_ots"] + h * f["me_ogs"] + j * f["me_ojs"]) * W + l] = acc
         if f["me_amax"]:
             order = np.argsort(nidx)
             self.logits = acc[order]

@@ -1,4 +1,12 @@
 {
+  "iteration": {
+    "number": 5,
+    "name": "matrix-engine head groups",
+    "summary": "ot_hdc_v41_matvec (ot_hdc_matvec plus me_hg/me_ogs): a KV-sourced op's four lane groups take four head blocks of the same 16-row tile, so attention scores and index scores run 32 heads per op and the weighted sum 16; ot_hdc_matvec and the Qwen3 core untouched. Arithmetic unchanged.",
+    "cycles_per_token": 384830,
+    "previous_cycles_per_token": 470798,
+    "cycles_saved": 85968
+  },
   "schema": "opentallas.hdc-v41-decode-campaign.v1",
   "status": "pass",
   "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) with behavioural synchronous-read memories (many-ported vector memory: four operand reads, an element write and a reducer write per stream lane); the Sinkhorn is the routed one-normalisation-per-step unit (ot_hdc_sinkhorn) run as a 7-core-cycle multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here.",

@@ -34,14 +34,14 @@ import hdc_isa_v41 as I
 ROOT = Path(__file__).resolve().parents[1]
 IL, W, G = I.INTERLEAVE, I.W_LANES, I.GROUPS
 
-# RTL constants (cycles), fitted by `calibrate` jointly against the reduced vehicle's traces
-# (stream-unit widths 4, 8, 16; before and after the K-splits and the overlap scheduling).
+# RTL constants (cycles), fitted by `calibrate` against the reduced vehicle's trace.
 K = dict(
     gap=6,              # go -> next go of a following instruction (S_GO, FETCH, WAIT, CAP, DEC, ISSUE)
     skip=5,             # a skipped instruction (predicate / zero count): ISSUE -> FETCH ..
     me_start=2,         # go -> first element
     me_drain=29,        # last element -> idle seen by the sequencer
-    me_next=0,          # last element -> a following op may be accepted
+    me_next=0,         # last element -> a following op may be accepted
+    me_drain_kv=0,      # extra drain of a KV-sourced op
     su_start=1,
     su_base=28,         # emit -> retire without M1 divide and SFU (F0..F4, PRE, M1, M2, AD, E1, E2, RND)
     su_div=26,          # extra depth of an M1 divide (31 vs 5)
@@ -50,12 +50,12 @@ K = dict(
     su_red=35,          # last retire -> idle seen, with a reduction
     su_tree=25,         # red_tree: the segment tree after the last segment sum
     su_tree_free=-1,    # red_tree: idle seen -> the unit accepts again
-    qe_start=-2,
+    qe_start=-3,
     qe_idx=2,
     qe_load=16,         # after the nb block reads: the quantiser's latency and the state step
     qe_rows_lat=25,     # last word -> last result written -> idle seen
-    qe_qdq_lat=20,      # QDQ: after the reads
-    qe_phase0=-3,       # absolute-cycle offset of the lanes' slot counter
+    qe_qdq_lat=21,      # QDQ: after the reads
+    qe_phase0=-3,        # absolute-cycle offset of the lanes' slot counter
     xu_sel=47,          # SELECT: after the n reads, to the last index written (plus k)
     xu_sink=4,          # simple Sinkhorn: sink_cycles() + this
     sk_step=7,          # routed Sinkhorn: core cycles per unit step (ot_hdc_sinkhorn_mc STEP_CYC)
@@ -127,7 +127,7 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
         elif unit == I.UNIT_ME:
             e = cnt[1] * cnt[2] * IL
             free[unit] = s + k["me_start"] + e - 1 + k["me_next"]
-            idle[unit] = s + k["me_start"] + e + k["me_drain"]
+            idle[unit] = s + k["me_start"] + e + k["me_drain"] + (k["me_drain_kv"] if f["me_wsrc"] else 0)
         elif unit == I.UNIT_SU:
             vec = f.get("su_vec", 0)
             e = (no * -(-ni // I.SU_LANES) if vec == I.VEC_I else

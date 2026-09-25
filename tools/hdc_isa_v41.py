@@ -2,10 +2,15 @@
 """Instruction set of the DeepSeek-V4.1 configuration of the hardwired decode core.
 
 The V4.1 core (rtl/hdc/v41/ot_hdc_core_v41.sv) is the reduced-Qwen3 core
-(tools/hdc_isa.py) with more units and a wider stream pipeline.  It shares the
-matrix-vector engine (ot_hdc_matvec, unchanged: exact BF16 lanes) and keeps its
-field semantics; the other units are:
+(tools/hdc_isa.py) with more units and a wider stream pipeline.  Its matrix-
+vector engine is the Qwen3 core's (exact BF16 lanes, ot_hdc_matvec's field
+semantics) with head groups added (ot_hdc_v41_matvec, below); the other units
+are:
 
+* The matrix engine's KV-sourced ops may take HEAD GROUPS (`me_hg`, H = 2^hg,
+  ot_hdc_v41_matvec): the G lane groups form H head groups of G/H groups; head
+  group h reads x at + h*xcs and writes at + h*ogs (words), and a round covers
+  G/H tiles of 16 rows instead of G.  With hg = 0 it is ot_hdc_matvec.
 * HE, the hyper-connection projection engine (ot_hdc_v41_hcproj): the FP32-
   weight mixes matvec(fn, flat, HC_SPLIT), HC_SPLIT x NL lanes x IL
   interleaved outputs of the qualified binary32 multiplier and adder; K is cut
@@ -91,7 +96,7 @@ PRED_ALWAYS, PRED_ODD, PRED_NZ = range(3)
 DYN_NAMES = [
     "ZERO", "EMBED", "ROPE", "ROPE_G2", "POS", "POS1", "N2", "N2M1",
     "NSEL1", "NSEL2", "T1", "T2", "RND_POS1", "RND_N2", "RND_T1", "RND_T2",
-    "ROW", "ROW1", "SLOTW", "SLOTE", "CKV2", "ZERO21", "ZERO22", "ZERO23",
+    "ROW", "ROW1", "SLOTW", "SLOTE", "CKV2", "RND16_POS1", "RND16_N2", "RND16_T1", "RND16_T2",
 ]
 DYN = {n: i for i, n in enumerate(DYN_NAMES)}
 TOPK, RH, HDIM, DIM = 16, 2, 32, 160
@@ -101,9 +106,11 @@ def dyn_values(token, pos):
     n2 = (pos + 1) >> 1
     ns1, ns2 = min(TOPK, pos + 1), min(TOPK, n2)
     rnd = lambda x: (x - 1) // (W_LANES * GROUPS) + 1 if x > 0 else 0
+    rnd16 = lambda x: (x - 1) // W_LANES + 1 if x > 0 else 0          # 16-row tiles (head-group KV ops)
     v = [0, token * DIM, pos * RH, (pos - 1) * RH if pos else 0, pos, pos + 1, n2, n2 - 1 if n2 else 0,
          ns1, ns2, pos + 1 + ns1, pos + 1 + ns2, rnd(pos + 1), rnd(n2), rnd(pos + 1 + ns1), rnd(pos + 1 + ns2),
-         pos * HDIM, (pos + 1) * HDIM, (pos & 1) * 4, (pos & 1) * 64, (n2 - 1) * HDIM if n2 else 0, 0, 0, 0]
+         pos * HDIM, (pos + 1) * HDIM, (pos & 1) * 4, (pos & 1) * 64, (n2 - 1) * HDIM if n2 else 0,
+         rnd16(pos + 1), rnd16(n2), rnd16(pos + 1 + ns1), rnd16(pos + 1 + ns2)]
     return v + [0] * (32 - len(v))
 
 
@@ -133,7 +140,7 @@ FIELDS = [
     ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
     ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
     ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
-    ("me_split", 2), ("me_xcs", A),
+    ("me_split", 2), ("me_xcs", A), ("me_hg", 2), ("me_ogs", A),
     # SU
     ("su_nout", N), ("su_nin", N), ("su_d_nout", D), ("su_d_nin", D),
     ("a_src", 2), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D), ("a_ind", 2), ("a_ibase", A),

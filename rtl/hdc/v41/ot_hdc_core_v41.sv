@@ -4,12 +4,13 @@
 // reduced DeepSeek-V4.1-Flash (tools/hdc_program_v41.py, format
 // tools/hdc_isa_v41.py).
 //
-// The sibling of ot_hdc_core (the reduced Qwen3 core).  It shares the matrix-
-// vector engine (ot_hdc_matvec, unchanged) and the arithmetic primitives, and
-// adds four units:
+// The sibling of ot_hdc_core (the reduced Qwen3 core).  Its matrix-vector
+// engine is ot_hdc_v41_matvec: the Qwen3 core's ot_hdc_matvec plus head groups
+// for KV-sourced ops (attention and index scores, the weighted sum over
+// positions).  It shares the arithmetic primitives, and adds four units:
 //
-//   SU  ot_hdc_v41_stream  the four-operand stream pipeline (norms, RoPE,
-//                          softmax, divides, sigmoid/SiLU/softplus, mixes)
+//   SU  ot_hdc_v41_stream  the four-operand stream pipeline, SW lanes (norms,
+//                          RoPE, softmax, divides, sigmoid/SiLU/softplus, mixes)
 //   QE  ot_hdc_v41_qe      activation quantiser + block-dot lanes (FP8/FP4)
 //   XU  ot_hdc_v41_xu      top-k SELECT, Sinkhorn, Engram hash and gather
 //   HE  ot_hdc_v41_hcproj  the FP32-weight hyper-connection projections,
@@ -178,7 +179,8 @@ module ot_hdc_core_v41 #(
     reg          me_wsrc, me_round, me_oen, me_amax, me_mmode;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs, me_xcs;
     reg [2:0]    me_jsh;
-    reg [1:0]    me_split;
+    reg [1:0]    me_split, me_hg;
+    reg [AW-1:0] me_ogs;
     // SU
     reg [NW-1:0] su_nout, su_nin;
     reg [1:0]    a_src, b_src, c_src, d_src, a_ind, dst, red, m2, e2, su_vec;
@@ -258,6 +260,9 @@ module ot_hdc_core_v41 #(
     function automatic [AW-1:0] rnds(input [NW-1:0] x);
         rnds = (x == 0) ? 0 : ((x - 1) >> LG) + 1;
     endfunction
+    function automatic [AW-1:0] rnd16(input [NW-1:0] x);      // 16-row tiles: head-group KV ops
+        rnd16 = (x == 0) ? 0 : ((x - 1) >> $clog2(W)) + 1;
+    endfunction
     integer di;
     always @(posedge clk) if (st == S_DYN) begin
         for (di = 0; di < 32; di = di + 1) dyn[di] <= 0;
@@ -281,6 +286,10 @@ module ot_hdc_core_v41 #(
         dyn[18] <= pos_r[0] ? 4 : 0;
         dyn[19] <= pos_r[0] ? 64 : 0;
         dyn[20] <= (n2 == 0) ? 0 : (n2 - 1) * 32;
+        dyn[21] <= rnd16(p1);
+        dyn[22] <= rnd16(n2);
+        dyn[23] <= rnd16(p1 + ns1);
+        dyn[24] <= rnd16(p1 + ns2);
     end
 
     // Decode: bases and counts add their DYN value.
@@ -307,7 +316,7 @@ module ot_hdc_core_v41 #(
         me_obase <= `F(ME_OBASE) + `DY(ME_D_OBASE);
         me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
         me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE);
-        me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS);
+        me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS); me_hg <= `F(ME_HG); me_ogs <= `F(ME_OGS);
         su_nout <= c_su_nout; su_nin <= c_su_nin; su_vec <= `F(SU_VEC);
         a_src <= `F(A_SRC); a_base <= `F(A_BASE) + `DY(A_D); a_so <= `F(A_SO); a_si <= `F(A_SI);
         a_ind <= `F(A_IND); a_ibase <= `F(A_IBASE);
@@ -338,11 +347,11 @@ module ot_hdc_core_v41 #(
     // -- units -----------------------------------------------------------------------------------------
     wire me_wrom_re;
     wire [AW-1:0] me_wrom_addr;
-    ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW)) u_me (
+    ot_hdc_v41_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW)) u_me (
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
-        .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_round(me_round), .i_obase(me_obase),
+        .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_hg(me_hg), .i_ogs(me_ogs), .i_round(me_round), .i_obase(me_obase),
         .i_ots(me_ots), .i_ojs(me_ojs), .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
