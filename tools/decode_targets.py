@@ -2,7 +2,7 @@
 
 Shared by the legacy snapshot (``results/roofline/critical_path/legacy_serial_model_targets.json``,
 read from the artifacts of commit ae4d7487, the last ones priced with the flat per-layer floor and
-two all-reduces per layer) and by ``tools/decode_critical_path.py``, which applies the SAME selection
+two all-reduces per layer) and by ``tools/serial_latency_report.py``, which applies the SAME selection
 to the regenerated tree so the before/after table compares like with like.
 """
 from __future__ import annotations

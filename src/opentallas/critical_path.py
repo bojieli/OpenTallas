@@ -129,6 +129,8 @@ class RomDatapath:
     su_area_fraction: float
     select_units: int
     hbm_gather_s: float
+    sinkhorn_step_s: float
+    sinkhorn_clocks: int
     rom_row_s: float
 
     @classmethod
@@ -154,6 +156,7 @@ class RomDatapath:
             su_area_fraction=_val(r["stream_area_fraction"]),
             select_units=int(_val(r["select_units_per_die"])),
             hbm_gather_s=_val(r["hbm_random_row_latency_s"]), rom_row_s=_val(r["rom_row_access_s"]),
+            sinkhorn_step_s=_val(r["sinkhorn_unit_step_s"]), sinkhorn_clocks=int(_val(r["sinkhorn_unit_clocks"])),
         )
 
     def su_width(self, compute_mm2_per_device: float) -> int:
@@ -1084,8 +1087,14 @@ class Pricer:
                 P *= 2
             return self.cyc(best[0]), self.cyc(best[1]), 0.0, {"units": best[2]}
         if kind == "sink":
-            nits, half, pre = recipe[1], recipe[2], recipe[3]
-            return 0.0, self.cyc(pre + 2 * nits * max(half, math.ceil(self.mb))), 0.0, None
+            # The routed ot_hdc_sinkhorn unit (one normalisation per unit clock, one user at a time,
+            # users in flight queue in rounds) or the stream unit's pipelined fadd/fdiv (users
+            # interleave, a normalisation costs max(depth, users) cycles), whichever is faster -- the
+            # same rule as tools/decode_critical_path.py sinkhorn_impl="best".
+            nits, half, pre, clocks, unit_step = recipe[1:6]
+            pipe = pre + 2 * nits * max(half, math.ceil(self.mb))
+            unit = pre + math.ceil(self.mb) * clocks * unit_step
+            return 0.0, self.cyc(min(pipe, unit)), 0.0, None
         if kind == "coll":
             op, payload, span = recipe[1], recipe[2], recipe[3]
             rec = self.fab.collective(op, payload * self.mb, span)
@@ -1204,7 +1213,9 @@ class Ops:
         r = self.r
         if self.rom:
             half = 3 * r.fadd + r.fadd + r.fdiv     # 4-term sequential sum, +eps, one pipelined divide
-            return self._add(name, deps, layer, ("sink", iterations, half, 2 + r.fadd + r.su_exp),
+            unit_step = math.ceil(r.sinkhorn_step_s * self.m.clock_hz - 1e-9)
+            return self._add(name, deps, layer,
+                             ("sink", iterations, half, 2 + r.fadd + r.su_exp, r.sinkhorn_clocks, unit_step),
                              ctrl=self.bctrl, kind="sinkhorn", desc=desc)
         gstep = (4 * self.gp.fp32_dep_cycles + self.gp.fp32_div_cycles) / self.m.clock_hz
         return self.g.add(name, deps, layer=layer, depth=2 * iterations * gstep, kind="sinkhorn", desc=desc)

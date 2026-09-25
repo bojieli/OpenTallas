@@ -64,6 +64,9 @@ def expected() -> dict[str, float]:
         "stream_depth_rsqrt_cycles": su[I.SFU_RSQRT],
         "stream_depth_sigmoid_cycles": su[I.SFU_SIGM],
         "stream_lane_area_um2": _design("ot_hdc_stream")["area_um2"],
+        "sinkhorn_unit_step_s": 1.0 / _design("v41/ot_hdc_sinkhorn")["fmax_hz"],
+        "sinkhorn_unit_clocks": json.loads(
+            (ROOT / "results" / "rtl" / "hdc_v41_sinkhorn_campaign.json").read_text())["latency_cycles"],
     }
 
 

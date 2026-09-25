@@ -7,7 +7,7 @@ operator graph.  This splits it into its independent pieces -- the two primary
 studies (each re-running its sensitivity tables on ``ROOFLINE_WORKERS``
 workers), the two quantised variants, the two context ladders and one process
 per candidate model -- runs them ``--jobs`` at a time, longest first, and then
-the two layers that read their output: ``tools/decode_critical_path.py`` and
+the two layers that read their output: ``tools/serial_latency_report.py`` and
 ``tools/run_speculative_roofline.py`` (``SPECULATIVE_WORKERS`` workers).  Every
 piece writes disjoint files by the code path ``run_all`` uses, so the bytes are
 the same as a single-process run.
@@ -90,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     if args.skip_layers or args.output.resolve() != S.OUTPUT_ROOT.resolve():
         return 0
-    subprocess.run([sys.executable, str(ROOT / "tools" / "decode_critical_path.py")], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, str(ROOT / "tools" / "serial_latency_report.py")], cwd=ROOT, check=True)
     env = dict(os.environ, SPECULATIVE_WORKERS=str(args.speculative_workers))
     subprocess.run([sys.executable, str(ROOT / "tools" / "run_speculative_roofline.py"), "--force"],
                    cwd=ROOT, env=env, check=True)
