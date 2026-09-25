@@ -54,7 +54,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 os.environ.setdefault("OPENTALLAS_BUILD", str(ROOT / "build"))
 import hdc_golden_v41 as G  # noqa: E402
-from hdc_golden import F, add, bits, from_bits, to_bf16  # noqa: E402
+from hdc_golden import F, add, bits, fold, from_bits, to_bf16  # noqa: E402
 
 OUT = ROOT / "results/rtl/rom_collectives_campaign.json"
 COLL = ROOT / "rtl/rom/collectives"
@@ -485,8 +485,8 @@ AR_DIES, AR_FLITS = 4, 5                          # 4 dies of a package; 80 bina
 
 def write_allreduce_vectors(d: Path, rng, n):
     """Random binary32 partials (every binade, zeros, subnormals, exact cancellations) and their
-    sum in rank order from +0, each add hdc_golden.add -- the one-shot rule of
-    results/roofline/critical_path ("every die sums all partials in rank order")."""
+    sum in rank order, hdc_golden.fold -- the one-shot rule of results/roofline/critical_path
+    ("every die sums all partials in rank order")."""
     d.mkdir(parents=True, exist_ok=True)
     width = AR_FLITS * 16
     parts, sums = [], []
@@ -498,14 +498,12 @@ def write_allreduce_vectors(d: Path, rng, n):
         p = from_bits(b)
         if t % 4 == 1:
             p[1] = from_bits(bits(p[0]) ^ np.uint32(0x80000000))
-        acc = np.zeros(width, dtype=F)
-        for r in range(AR_DIES):
-            acc = add(acc, p[r])
+        # the engine starts from +0: add(+0, p0) is p0 except that -0 becomes +0, which is
+        # hdc_golden.fold's ((p0 + p1) + p2) + p3 whenever the sum is not an all-zero column
+        acc = add(np.zeros(width, dtype=F), fold(list(p)))
         if not np.all(np.isfinite(acc)):
             p[:, ~np.isfinite(acc)] = F(1.0)
-            acc = np.zeros(width, dtype=F)
-            for r in range(AR_DIES):
-                acc = add(acc, p[r])
+            acc = add(np.zeros(width, dtype=F), fold(list(p)))
         for r in range(AR_DIES):
             pb = bits(p[r]).astype(np.int64)
             parts += [_hex(_pack(pb[16 * c:16 * (c + 1)], 32), FLIT_BITS) for c in range(AR_FLITS)]
