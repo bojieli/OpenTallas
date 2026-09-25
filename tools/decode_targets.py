@@ -50,6 +50,7 @@ def design_summary(points: list, design: str) -> dict[str, Any] | None:
         "aggregate_b64": rate(64, "aggregate_tokens_s"),
         "aggregate_max": max((float(q["aggregate_tokens_s"]) for q in rows.values() if q["feasible"]), default=None),
         "tensor_group_b1": rows[1].get("tensor_group") if 1 in rows else None,
+        "intra_link_b1": rows[1].get("intra_link") if 1 in rows else None,
         "tensor_group_b64": rows[64].get("tensor_group") if 64 in rows else None,
         "pipeline_stages_b1": rows[1].get("pipeline_stages") if 1 in rows else None,
         "collective_algorithms_b1": rows[1].get("collective_algorithms") if 1 in rows else None,
@@ -64,7 +65,7 @@ def fastest(points: list, family: str, batch: int) -> dict[str, Any] | None:
     best = max(rows, key=lambda q: q["per_user_tokens_s"])
     return {"design": best["design"], "per_user": best["per_user_tokens_s"],
             "aggregate": best["aggregate_tokens_s"], "tensor_group": best.get("tensor_group"),
-            "parallelism": best.get("parallelism"),
+            "parallelism": best.get("parallelism"), "intra_link": best.get("intra_link"),
             "collective_algorithms": best.get("collective_algorithms")}
 
 

@@ -854,6 +854,77 @@
         "note": "Same hardware floor as rom_board_serdes: SerDes, light FEC, short flight, router; no software.",
         "source": "component decomposition in docs/ANALYTICAL_REPORT.md"
       }
+    },
+    "rom_wafer_express": {
+      "alternative_to": [
+        "on_wafer",
+        "on_wafer_n5"
+      ],
+      "fabric": {
+        "grade": "assumed",
+        "value": "mesh",
+        "source": "docs/ANALYTICAL_REPORT.md, Serial latency and collectives",
+        "note": "A dedicated collective/express network on the wafer: pipelined, repeated global wires between neighbouring reticle fields with one router per field boundary, not per core. A 2-D mesh of fields, so a collective still pays the field-mesh diameter, but each field crossing is a wire flight plus one router rather than ~125 hops of a 0.23 mm core grid."
+      },
+      "domain_size": {
+        "grade": "derived",
+        "value": 57.0,
+        "source": "wafer.area_mm2 / reticle.area_mm2, as the wafer regions of every ROM wafer plan",
+        "note": "one wafer's reticle fields; the network does not leave the wafer"
+      },
+      "router_latency_s": {
+        "grade": "assumed",
+        "value": 3e-09,
+        "range_low": 2e-09,
+        "range_high": 5e-09,
+        "source": "no product; a two-to-five-stage flit router at ~1 GHz",
+        "note": "Per field boundary: buffer, route compute and switch traversal of a simple dimension-ordered router, 2-5 cycles at the ~1 GHz fabric clock this program's routed units close at. Assumed; no wafer-scale express network is published."
+      },
+      "bytes_s": {
+        "grade": "derived",
+        "value": 1784262802952.5247,
+        "source": "sqrt(reticle.area_mm2) x 1000 / links.rom_wafer_express.wire_track_pitch_um x wire_layers x wire_track_share x wire_clock_hz / 8",
+        "note": "Payload per field edge per direction, one link of the field mesh: 14,275 wires x 1 GHz / 8 = 1.78 TB/s. Forty times less than the Cerebras mesh's per-field-edge share (links.on_wafer_n5.bytes_s / 57 / 4 = 117 TB/s): this network trades bandwidth for latency, and the collective search takes whichever network is faster at each point's payload."
+      },
+      "hop_latency_s": {
+        "grade": "assumed",
+        "value": 7.28223072708606e-09,
+        "range_low": 4.85482048472404e-09,
+        "range_high": 1.2137051211810099e-08,
+        "source": "latency.global_wire_delay_s_per_mm x sqrt(reticle.area_mm2) + links.rom_wafer_express.router_latency_s",
+        "note": "One reticle-field crossing: a 28.55 mm repeated-wire flight at latency.global_wire_delay_s_per_mm (150 ps/mm, range 100-250) = 4.28 ns (2.86-7.14), plus one router, 3 ns (2-5): 7.28 ns, range 4.86-12.14 ns. Graded assumed because both inputs are. The Cerebras-style mesh's 125 ns per field crossing (links.on_wafer_n5.hop_latency_s) is kept, unchanged, as the conservative case and the sensitivity."
+      },
+      "alternative_note": "This network may carry a ROM wafer's collectives and pipeline hops INSTEAD OF the Cerebras-style fine-grained core mesh (links.on_wafer, links.on_wafer_n5, both unchanged); roofline.evaluate prices each wafer point on both and keeps the faster, reported per point as intra_link.",
+      "wire_track_pitch_um": {
+        "grade": "assumed",
+        "value": 1.0,
+        "range_low": 0.5,
+        "range_high": 2.0,
+        "source": "assumed thick-top-metal global routing; the pitch is an assumption, not a published foundry figure",
+        "note": "track pitch of the two thick top-metal layers the network is routed on along a field edge"
+      },
+      "wire_layers": {
+        "grade": "assumed",
+        "value": 2.0,
+        "source": "assumed thick-top-metal global routing; the pitch is an assumption, not a published foundry figure",
+        "note": "thick top-metal layers used"
+      },
+      "wire_track_share": {
+        "grade": "assumed",
+        "value": 0.25,
+        "range_low": 0.1,
+        "range_high": 0.5,
+        "source": "assumed thick-top-metal global routing; the pitch is an assumption, not a published foundry figure",
+        "note": "share of those layers' tracks along a field edge given to this network"
+      },
+      "wire_clock_hz": {
+        "grade": "assumed",
+        "value": 1000000000.0,
+        "range_low": 800000000.0,
+        "range_high": 1200000000.0,
+        "source": "serial_latency.rom_datapath.clock_hz (the routed clock of this program's units)",
+        "note": "every wire is pipelined and clocked at the fabric clock"
+      }
     }
   },
   "nodes": {
@@ -1701,6 +1772,14 @@
         "note": "wafers on direct neighbour SerDes; bytes_s is per wafer",
         "links_per_node": 4,
         "bandwidth_scope": "per_node"
+      },
+      "rom_wafer_express": {
+        "value": "mesh",
+        "grade": "assumed",
+        "links_per_node": 4,
+        "bandwidth_scope": "per_link",
+        "source": "links.rom_wafer_express.fabric note",
+        "note": "reticle fields on a dedicated express mesh; bytes_s is one field-edge link"
       }
     }
   }

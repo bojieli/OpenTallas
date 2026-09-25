@@ -1242,7 +1242,11 @@ def _step_row(
         "topology_kind": budget.topology.kind,
         "parallelism": budget.topology.parallelism,
         "link": budget.topology.link,
-        "intra_link": budget.topology.inner_link,
+        # The CHOSEN in-domain link: a wafer point is priced on its core mesh
+        # and on the express network (links.rom_wafer_express) and keeps the
+        # faster.
+        "intra_link": metrics["intra_link"],
+        "intra_link_declared": budget.topology.inner_link,
         "intra_domain_size": budget.topology.intra_domain_size,
         # The CHOSEN tensor group: a hybrid layout searches its group per point.
         "tensor_group": metrics["tensor_group"],
@@ -1266,7 +1270,8 @@ def _step_row(
         "serial_sweep_s": metrics["serial_latency"]["sweep_s"],
         "serial_kv_share_of_sweep": metrics["serial_latency"]["kv_share_of_sweep"],
         "tensor_group_search": [
-            {"tensor_group": row["tensor_group"], "step_s": _finite(row["step_s"])}
+            {"tensor_group": row["tensor_group"], "intra_link": row["intra_link"],
+             "step_s": _finite(row["step_s"])}
             for row in metrics["serial_latency"]["tensor_group_search"]
         ],
         "legacy_layer_fixed_latency_s": metrics["legacy_layer_fixed_latency_s"],
@@ -1694,6 +1699,11 @@ def _emit_rom_design(
         )
 
 
+#: ROM-only links a design may choose instead of its declared one (the wafer
+#: express network); their bands belong to the ROM side.
+ROM_ALTERNATIVE_LINKS = ("rom_wafer_express",)
+
+
 def _link_latency_scopes(config: dict[str, Any]) -> dict[str, tuple[str, ...]]:
     """The link bands that belong to each side, and the two together.
 
@@ -1710,7 +1720,8 @@ def _link_latency_scopes(config: dict[str, Any]) -> dict[str, tuple[str, ...]]:
     """
 
     return {
-        "rom": (str(config["rom_intra_link"]), str(config["rom_inter_link"])),
+        "rom": (str(config["rom_intra_link"]), str(config["rom_inter_link"]))
+        + tuple(ROM_ALTERNATIVE_LINKS),
         "gpu": (str(config["intra_link"]), str(config["inter_link"])),
         "joint": None,  # type: ignore[dict-item]
     }
@@ -6212,7 +6223,9 @@ def _render_serial_latency(result: dict[str, Any]) -> list[str]:
                 rows += 1
                 lines.append(
                     f"| {row['model']} | `{design.split('/')[-1]}` | {batch} | "
-                    f"{row['tensor_group']} | {row['collectives_per_layer']:.2f} | "
+                    f"{row['tensor_group']}"
+                    + (f" on `{row['intra_link']}`" if row["intra_link"] != row["intra_link_declared"] else "")
+                    + f" | {row['collectives_per_layer']:.2f} | "
                     f"{', '.join(row['collective_algorithms']) or '--'} | "
                     f"{row['serial_chain_s'] * 1e6:,.2f} | {row['link_latency_s'] * 1e6:,.2f} | "
                     f"{row['serial_sweep_s'] * 1e6:,.2f} | "

@@ -207,11 +207,13 @@ def named_design_after(tech: Technology, entry: dict) -> dict:
         rows[batch] = dict(per_user=step.per_user_tokens_s if step.feasible else None,
                            aggregate=step.aggregate_tokens_s if step.feasible else None,
                            tensor_group=step.metrics["tensor_group"], pipeline_stages=step.metrics["pipeline_stages"],
+                           intra_link=step.metrics["intra_link"],
                            chain_s=step.component_times_s["layer_fixed_latency"],
                            communication_s=step.component_times_s["link_latency"], sweep_s=sl["sweep_s"],
                            collectives_per_layer=sl["collectives_per_layer"],
                            collective_algorithms=sl["collective_algorithms"],
-                           tensor_group_search=[dict(tensor_group=r["tensor_group"], tokens_s_per_user=1 / r["step_s"])
+                           tensor_group_search=[dict(tensor_group=r["tensor_group"], intra_link=r["intra_link"],
+                                                     tokens_s_per_user=1 / r["step_s"])
                                                 for r in sl["tensor_group_search"]])
     aggs = [r["aggregate"] for r in rows.values() if r["aggregate"]]
     return {"design": entry["design"], "per_user_b1": rows[1]["per_user"], "per_user_b64": rows[64]["per_user"],

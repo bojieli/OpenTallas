@@ -296,3 +296,35 @@ def test_committed_result_reproduces(tech):
         # split of the sweep is quantised to 1/16 decade, so equality is to 1e-6)
         assert row["tokens_s_per_user"] == pytest.approx(row["study_tokens_s_per_user"], rel=1e-6), key
     assert math.isclose(fresh["clock"]["hz"], rec["clock"]["hz"])
+
+
+# -- the wafer express network ---------------------------------------------------------------------------
+def test_express_link_is_derived_from_the_wire_delay_and_the_field_pitch(tech):
+    e = tech.raw["links"]["rom_wafer_express"]
+    wire = tech.raw["latency"]["global_wire_delay_s_per_mm"]
+    pitch_mm = math.sqrt(tech.raw["reticle"]["area_mm2"]["value"])
+    for key in ("value", "range_low", "range_high"):
+        assert e["hop_latency_s"][key] == pytest.approx(pitch_mm * wire[key] + e["router_latency_s"][key], rel=1e-12)
+    wires = pitch_mm * 1000 / e["wire_track_pitch_um"]["value"] * e["wire_layers"]["value"] * e["wire_track_share"]["value"]
+    assert e["bytes_s"]["value"] == pytest.approx(wires * e["wire_clock_hz"]["value"] / 8, rel=1e-12)
+    # the Cerebras-style core mesh stays as it was: the conservative case
+    assert tech.raw["links"]["on_wafer_n5"]["hop_latency_s"]["value"] == pytest.approx(125e-9)
+    assert set(e["alternative_to"]) == {"on_wafer", "on_wafer_n5"}
+
+
+def test_a_wafer_point_chooses_between_the_mesh_and_the_express_network(tech):
+    prof = ModelProfile.load(V41)
+    topo = Topology(kind="wafer", device_count=12, parallelism="hybrid", link="rom_wafer_serdes",
+                    on_wafer_regions=684, intra_link="on_wafer_n5", intra_domain_size=57, tensor_group_size=57)
+    budget = rom_device_budget(tech, name="probe", node="N5", area_mm2_per_device=46225.0, topology=topo,
+                               stored_weight_bytes=prof.checkpoint_bytes, resident_kv_bytes=0.0, kv_store="hbm",
+                               hbm_stacks=1)
+    step = evaluate(budget, prof, context_tokens=200_000, batch_size=1, technology=tech)
+    search = step.metrics["serial_latency"]["tensor_group_search"]
+    assert {row["intra_link"] for row in search} == {"on_wafer_n5", "rom_wafer_express"}
+    best = min(search, key=lambda row: row["step_s"])
+    assert step.metrics["intra_link"] == best["intra_link"]
+    mesh_only = min(row["step_s"] for row in search if row["intra_link"] == "on_wafer_n5")
+    assert best["step_s"] <= mesh_only
+    # a field crossing on the express network is ~17x shorter than on the core mesh, so at batch 1 it wins
+    assert step.metrics["intra_link"] == "rom_wafer_express"

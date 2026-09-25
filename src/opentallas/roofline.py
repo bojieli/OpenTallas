@@ -3393,6 +3393,24 @@ def _tensor_group_candidates(topology: Topology) -> list[Topology]:
     return out
 
 
+def _inner_link_candidates(topology: Topology, technology: Technology) -> list[Topology]:
+    """The declared in-domain link, then every link that declares itself an
+    ``alternative_to`` it (links.rom_wafer_express for the on-wafer meshes).
+
+    A wafer's collectives and stage hops can run on the Cerebras-style core
+    mesh or on a dedicated express network of repeated global wires; each
+    point is priced on both and the faster is kept and reported."""
+
+    out = [topology]
+    if topology.kind != "wafer" or topology.parallelism == "none":
+        return out
+    for name, node in technology.raw["links"].items():
+        alternatives = node.get("alternative_to") if isinstance(node, Mapping) else None
+        if isinstance(alternatives, list) and topology.inner_link in alternatives:
+            out.append(replace(topology, intra_link=name))
+    return out
+
+
 def machine_family(budget: DeviceBudget) -> str:
     """``gpu`` for a published HBM part, ``rom`` for a modelled hardwired design."""
 
@@ -3637,7 +3655,11 @@ def evaluate(
     # opposite.  Every candidate is priced on the same serial path and the
     # fastest per-user latency at THIS batch is kept; ``tensor`` and
     # ``pipeline`` layouts have one group by definition and are not searched.
-    candidates = _tensor_group_candidates(budget.topology)
+    candidates = [
+        variant
+        for group in _tensor_group_candidates(budget.topology)
+        for variant in _inner_link_candidates(group, technology)
+    ]
     choice = None
     searched: list[dict[str, Any]] = []
     for topology_c in candidates:
@@ -3677,6 +3699,7 @@ def evaluate(
         searched.append(
             {
                 "tensor_group": topology_c.tensor_group,
+                "intra_link": topology_c.inner_link,
                 "token_slots": slots_c,
                 "step_s": serial_c["step_s"],
             }
