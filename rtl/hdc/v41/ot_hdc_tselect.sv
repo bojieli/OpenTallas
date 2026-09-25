@@ -113,65 +113,6 @@ module ot_hdc_tselect #(
         fkey = (v[VW-2:0] == 0) ? {1'b1, {(VW-1){1'b0}}} : v[VW-1] ? ~v : {1'b1, v[VW-2:0]};
     endfunction
 
-    // balanced popcount of W bits
-    function automatic [LW:0] popc(input [W-1:0] x);
-        reg [(LW+1)*W-1:0] s;
-        integer d, l;
-        begin
-            s = 0;
-            for (l = 0; l < W; l = l + 1) s[(LW+1)*l +: LW+1] = {{LW{1'b0}}, x[l]};
-            for (d = 1; d < W; d = d * 2)
-                for (l = 0; l + d < W; l = l + 2 * d)
-                    s[(LW+1)*l +: LW+1] = s[(LW+1)*l +: LW+1] + s[(LW+1)*(l+d) +: LW+1];
-            popc = s[LW:0];
-        end
-    endfunction
-
-    // inclusive prefix counts of W bits (Kogge-Stone)
-    function automatic [(LW+1)*W-1:0] prefix(input [W-1:0] x);
-        reg [(LW+1)*W-1:0] s, n;
-        integer d, l;
-        begin
-            s = 0;
-            for (l = 0; l < W; l = l + 1) s[(LW+1)*l +: LW+1] = {{LW{1'b0}}, x[l]};
-            for (d = 1; d < W; d = d * 2) begin
-                n = s;
-                for (l = d; l < W; l = l + 1)
-                    n[(LW+1)*l +: LW+1] = s[(LW+1)*l +: LW+1] + s[(LW+1)*(l-d) +: LW+1];
-                s = n;
-            end
-            prefix = s;
-        end
-    endfunction
-
-    // one compaction stage: a lane whose z has bit `s` set moves 2^s lanes down
-    function automatic [W*CE-1:0] cstage(input [W*CE-1:0] a, input integer s);
-        integer j;
-        reg [CE-1:0] up, me;
-        begin
-            cstage = 0;
-            for (j = 0; j < W; j = j + 1) begin
-                me = a[CE*j +: CE];
-                up = (j + (1 << s) < W) ? a[CE*(j + (1 << s)) +: CE] : {CE{1'b0}};
-                if (up[CE-1] && up[PW + s])
-                    cstage[CE*j +: CE] = up;
-                else if (me[CE-1] && !me[PW + s])
-                    cstage[CE*j +: CE] = me;
-            end
-        end
-    endfunction
-
-    // one rotate stage over 2W lanes: every lane moves 2^s up when `sh` is set
-    function automatic [2*W*RE-1:0] rstage(input [2*W*RE-1:0] a, input sh, input integer s);
-        integer j;
-        begin
-            rstage = 0;
-            for (j = 0; j < 2 * W; j = j + 1)
-                if (!sh) rstage[RE*j +: RE] = a[RE*j +: RE];
-                else if (j >= (1 << s)) rstage[RE*j +: RE] = a[RE*(j - (1 << s)) +: RE];
-        end
-    endfunction
-
     // -- control ---------------------------------------------------------------------
     reg  [2:0]    state;
     reg  [AW-1:0] wptr, nlast, rptr;
@@ -245,7 +186,7 @@ module ot_hdc_tselect #(
             for (gq = 0; gq < W; gq = gq + 1) begin : g_x
                 assign x[gq] = h1_hi[NH*gq + (gb >> (RB - HA))] && h1_lo[NL0*gq + (gb % NL0)];
             end
-            assign h2_d[(LW+1)*gb +: LW+1] = popc(x);
+            ot_hdc_tsel_popc #(.N(W), .OW(LW + 1)) u_pc (.x(x), .y(h2_d[(LW+1)*gb +: LW+1]));
         end
     endgenerate
     always @(posedge clk) h2 <= h2_d;
@@ -348,7 +289,8 @@ module ot_hdc_tselect #(
     reg [W*PW-1:0] c2_p;
     reg [(LW+1)*W-1:0] c2_pre;                      // equal keys in lanes below (exclusive)
     reg [LW:0]   c2_cnt;
-    wire [(LW+1)*W-1:0] eq_inc = prefix(c1_eq);
+    wire [(LW+1)*W-1:0] eq_inc;
+    ot_hdc_tsel_prefix #(.N(W), .OW(LW + 1)) u_eqpre (.x(c1_eq), .y(eq_inc));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin c2_v <= 1'b0; c2_l <= 1'b0; end
         else begin c2_v <= c1_v; c2_l <= c1_l; end
@@ -374,7 +316,8 @@ module ot_hdc_tselect #(
     end
 
     // -- compaction: z = unselected lanes below; LSB-first shifts, registered every 2 stages
-    wire [(LW+1)*W-1:0] sel_inc = prefix(c3_sel);
+    wire [(LW+1)*W-1:0] sel_inc;
+    ot_hdc_tsel_prefix #(.N(W), .OW(LW + 1)) u_selpre (.x(c3_sel), .y(sel_inc));
     reg          c4_v, c4_l;
     reg [LW:0]   c4_cnt;
     reg [W*CE-1:0] c4_e;
@@ -415,8 +358,13 @@ module ot_hdc_tselect #(
     generate
         for (gr = 0; gr < NCR; gr = gr + 1) begin : g_cst
             wire [W*CE-1:0] a0 = (gr == 0) ? c4_e : crf[W*CE*(gr == 0 ? 0 : gr - 1) +: W*CE];
-            wire [W*CE-1:0] a1 = cstage(a0, 2 * gr);
-            wire [W*CE-1:0] a2 = (2 * gr + 1 < LW) ? cstage(a1, 2 * gr + 1) : a1;
+            wire [W*CE-1:0] a1, a2;
+            ot_hdc_tsel_cstage #(.W(W), .CE(CE), .ZB(PW + 2 * gr), .S(2 * gr)) u_c0 (.a(a0), .y(a1));
+            if (2 * gr + 1 < LW) begin : g_c1
+                ot_hdc_tsel_cstage #(.W(W), .CE(CE), .ZB(PW + 2 * gr + 1), .S(2 * gr + 1)) u_c1 (.a(a1), .y(a2));
+            end else begin : g_c1n
+                assign a2 = a1;
+            end
             reg  [W*CE-1:0] q;
             reg  [LW:0]     qc;
             always @(posedge clk) begin
@@ -454,8 +402,13 @@ module ot_hdc_tselect #(
         for (gr = 0; gr < NCR; gr = gr + 1) begin : g_rst
             wire [2*W*RE-1:0] a0 = (gr == 0) ? rin : rof[2*W*RE*(gr == 0 ? 0 : gr - 1) +: 2*W*RE];
             wire [LW-1:0]     f  = (gr == 0) ? frun : rff[LW*(gr == 0 ? 0 : gr - 1) +: LW];
-            wire [2*W*RE-1:0] a1 = rstage(a0, f[2 * gr], 2 * gr);
-            wire [2*W*RE-1:0] a2 = (2 * gr + 1 < LW) ? rstage(a1, f[(2 * gr + 1 < LW) ? 2 * gr + 1 : 0], 2 * gr + 1) : a1;
+            wire [2*W*RE-1:0] a1, a2;
+            ot_hdc_tsel_rstage #(.N(2 * W), .RE(RE), .S(2 * gr)) u_r0 (.a(a0), .sh(f[2 * gr]), .y(a1));
+            if (2 * gr + 1 < LW) begin : g_r1
+                ot_hdc_tsel_rstage #(.N(2 * W), .RE(RE), .S(2 * gr + 1)) u_r1 (.a(a1), .sh(f[2 * gr + 1]), .y(a2));
+            end else begin : g_r1n
+                assign a2 = a1;
+            end
             reg  [2*W*RE-1:0] q;
             reg  [LW-1:0]     qf;
             reg  [LW:0]       qc;
@@ -518,4 +471,117 @@ module ot_hdc_tselect #(
         else if (out_valid && out_last) pipe_busy <= 1'b0;
     end
     assign busy = pipe_busy || state != S_ING;
+endmodule
+
+
+// -- structural helpers (generate-level, so synthesis does not inline loops) -------------
+
+// balanced popcount of N bits (pairwise tree)
+module ot_hdc_tsel_popc #(
+    parameter integer N  = 64,
+    parameter integer OW = 7
+) (
+    input  wire [N-1:0]  x,
+    output wire [OW-1:0] y
+);
+    localparam integer NP = 1 << $clog2(N);
+    // heap: node n (1 .. 2NP-1) at t[OW*n +: OW]; leaves NP .. 2NP-1
+    /* verilator lint_off UNOPTFLAT */
+    wire [2*NP*OW-1:0] t;
+    /* verilator lint_on UNOPTFLAT */
+    genvar n;
+    generate
+        for (n = 0; n < NP; n = n + 1) begin : g_leaf
+            if (n < N) begin : g_x
+                assign t[OW*(NP+n) +: OW] = {{(OW-1){1'b0}}, x[n]};
+            end else begin : g_0
+                assign t[OW*(NP+n) +: OW] = {OW{1'b0}};
+            end
+        end
+        for (n = 1; n < NP; n = n + 1) begin : g_node
+            assign t[OW*n +: OW] = t[OW*(2*n) +: OW] + t[OW*(2*n+1) +: OW];
+        end
+    endgenerate
+    assign y = t[OW +: OW];
+    assign t[OW-1:0] = {OW{1'b0}};
+endmodule
+
+// inclusive prefix counts of N bits (Kogge-Stone): y[OW*l +: OW] = popcount(x[l:0])
+module ot_hdc_tsel_prefix #(
+    parameter integer N  = 64,
+    parameter integer OW = 7
+) (
+    input  wire [N-1:0]    x,
+    output wire [N*OW-1:0] y
+);
+    localparam integer LV = $clog2(N);
+    /* verilator lint_off UNOPTFLAT */
+    wire [(LV+1)*N*OW-1:0] s;                      // level d at s[N*OW*d +: N*OW]
+    /* verilator lint_on UNOPTFLAT */
+    genvar d, l;
+    generate
+        for (l = 0; l < N; l = l + 1) begin : g_in
+            assign s[OW*l +: OW] = {{(OW-1){1'b0}}, x[l]};
+        end
+        for (d = 0; d < LV; d = d + 1) begin : g_lv
+            for (l = 0; l < N; l = l + 1) begin : g_l
+                if (l >= (1 << d)) begin : g_add
+                    assign s[N*OW*(d+1) + OW*l +: OW] = s[N*OW*d + OW*l +: OW] + s[N*OW*d + OW*(l - (1 << d)) +: OW];
+                end else begin : g_pass
+                    assign s[N*OW*(d+1) + OW*l +: OW] = s[N*OW*d + OW*l +: OW];
+                end
+            end
+        end
+    endgenerate
+    assign y = s[N*OW*LV +: N*OW];
+endmodule
+
+// one compaction stage: lane j takes lane j + 2^S when that lane is valid (bit CE-1) and its shift
+// count has bit S set (bit ZB), else keeps its own lane when that is valid and does not move
+module ot_hdc_tsel_cstage #(
+    parameter integer W  = 64,
+    parameter integer CE = 40,
+    parameter integer ZB = 33,
+    parameter integer S  = 0
+) (
+    input  wire [W*CE-1:0] a,
+    output wire [W*CE-1:0] y
+);
+    genvar j;
+    generate
+        for (j = 0; j < W; j = j + 1) begin : g_lane
+            wire [CE-1:0] me = a[CE*j +: CE];
+            wire [CE-1:0] up;
+            if (j + (1 << S) < W) begin : g_up
+                assign up = a[CE*(j + (1 << S)) +: CE];
+            end else begin : g_none
+                assign up = {CE{1'b0}};
+            end
+            wire take = up[CE-1] && up[ZB];
+            wire keep = me[CE-1] && !me[ZB];
+            assign y[CE*j +: CE] = take ? up : keep ? me : {CE{1'b0}};
+        end
+    endgenerate
+endmodule
+
+// one rotate stage over N lanes: every lane moves 2^S up when `sh` is set
+module ot_hdc_tsel_rstage #(
+    parameter integer N  = 128,
+    parameter integer RE = 34,
+    parameter integer S  = 0
+) (
+    input  wire [N*RE-1:0] a,
+    input  wire            sh,
+    output wire [N*RE-1:0] y
+);
+    genvar j;
+    generate
+        for (j = 0; j < N; j = j + 1) begin : g_lane
+            if (j >= (1 << S)) begin : g_mv
+                assign y[RE*j +: RE] = sh ? a[RE*(j - (1 << S)) +: RE] : a[RE*j +: RE];
+            end else begin : g_lo
+                assign y[RE*j +: RE] = sh ? {RE{1'b0}} : a[RE*j +: RE];
+            end
+        end
+    endgenerate
 endmodule
