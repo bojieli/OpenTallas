@@ -4,12 +4,13 @@
 // reduced DeepSeek-V4.1-Flash (tools/hdc_program_v41.py, format
 // tools/hdc_isa_v41.py).
 //
-// The sibling of ot_hdc_core (the reduced Qwen3 core).  It shares the matrix-
-// vector engine (ot_hdc_matvec, unchanged) and the arithmetic primitives, and
-// adds four units:
+// The sibling of ot_hdc_core (the reduced Qwen3 core).  Its matrix-vector
+// engine is ot_hdc_v41_matvec: the Qwen3 core's ot_hdc_matvec plus head groups
+// for KV-sourced ops (attention and index scores, the weighted sum over
+// positions).  It shares the arithmetic primitives, and adds four units:
 //
-//   SU  ot_hdc_v41_stream  the four-operand stream pipeline (norms, RoPE,
-//                          softmax, divides, sigmoid/SiLU/softplus, mixes)
+//   SU  ot_hdc_v41_stream  the four-operand stream pipeline, SW lanes (norms,
+//                          RoPE, softmax, divides, sigmoid/SiLU/softplus, mixes)
 //   QE  ot_hdc_v41_qe      activation quantiser + block-dot lanes (FP8/FP4)
 //   XU  ot_hdc_v41_xu      top-k SELECT, Sinkhorn, Engram hash and gather
 //   HE  ot_hdc_v41_hcproj  the FP32-weight hyper-connection projections,
@@ -35,7 +36,9 @@ module ot_hdc_core_v41 #(
     parameter integer PAW  = 14,
     parameter integer DIM  = 160,
     parameter integer TOPK = 16,
-    parameter integer HNL  = 3             // HE lanes
+    parameter integer HNL  = 3,            // HE lanes
+    parameter integer SW   = 8,            // stream-unit lanes (elements per cycle)
+    parameter integer HS   = 8             // HE K chunks (hdc_golden_v41.HC_SPLIT)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -59,13 +62,13 @@ module ot_hdc_core_v41 #(
     output wire              wrom_re,
     output wire [AW-1:0]     wrom_addr,
     input  wire [G*W*16-1:0] wrom_q,
-    output wire              ewrom_re,
-    output wire [AW-1:0]     ewrom_addr,
-    input  wire [G*W*16-1:0] ewrom_q,
-    // HE weight ROM (HNL binary32 lanes per word)
+    output wire [SW-1:0]     ewrom_re,
+    output wire [SW*AW-1:0]  ewrom_addr,
+    input  wire [SW*G*W*16-1:0] ewrom_q,
+    // HE weight ROM (HS x HNL binary32 lanes per word)
     output wire              hrom_re,
     output wire [AW-1:0]     hrom_addr,
-    input  wire [HNL*32-1:0] hrom_q,
+    input  wire [HS*HNL*32-1:0] hrom_q,
     // quantised weight ROM, Engram table ROM
     output wire              qrom_re,
     output wire [AW-1:0]     qrom_addr,
@@ -73,10 +76,10 @@ module ot_hdc_core_v41 #(
     output wire              erom_re,
     output wire [AW-1:0]     erom_addr,
     input  wire [263:0]      erom_q,
-    // constant ROM: four stream ports and one auxiliary port
-    output wire [3:0]        crom_re,
-    output wire [4*AW-1:0]   crom_addr,
-    input  wire [4*64-1:0]   crom_q,
+    // constant ROM: four stream ports per stream lane and one auxiliary port
+    output wire [4*SW-1:0]   crom_re,
+    output wire [4*SW*AW-1:0] crom_addr,
+    input  wire [4*SW*64-1:0] crom_q,
     output wire              xcrom_re,
     output wire [AW-1:0]     xcrom_addr,
     input  wire [63:0]       xcrom_q,
@@ -84,19 +87,19 @@ module ot_hdc_core_v41 #(
     output wire              kv_re,
     output wire [G*AW-1:0]   kv_raddr,
     input  wire [G*W*32-1:0] kv_q,
-    output wire              kv_we,
-    output wire [AW-1:0]     kv_waddr,
-    output wire [31:0]       kv_wdata,
+    output wire [SW-1:0]     kv_we,
+    output wire [SW*AW-1:0]  kv_waddr,
+    output wire [SW*32-1:0]  kv_wdata,
     // vector memory
     output wire [G-1:0]      vx_re,           // matrix-engine x reads
     output wire [G*AW-1:0]   vx_addr,
     input  wire [G*32-1:0]   vx_q,
-    output wire [3:0]        vs_re,           // stream operand reads A..D
-    output wire [4*AW-1:0]   vs_addr,
-    input  wire [4*32-1:0]   vs_q,
-    output wire              vi_re,           // stream gather index
-    output wire [AW-1:0]     vi_addr,
-    input  wire [31:0]       vi_q,
+    output wire [4*SW-1:0]   vs_re,           // stream operand reads A..D, per lane
+    output wire [4*SW*AW-1:0] vs_addr,
+    input  wire [4*SW*32-1:0] vs_q,
+    output wire [SW-1:0]     vi_re,           // stream gather index, per lane
+    output wire [SW*AW-1:0]  vi_addr,
+    input  wire [SW*32-1:0]  vi_q,
     output wire              vq_re,           // QE expert index
     output wire [AW-1:0]     vq_addr,
     input  wire [31:0]       vq_q,
@@ -106,9 +109,9 @@ module ot_hdc_core_v41 #(
     output wire              wqr_re,          // QE 32-element read
     output wire [AW-1:0]     wqr_addr,
     input  wire [1023:0]     wqr_q,
-    output wire              vh_re,           // HE x read
-    output wire [AW-1:0]     vh_addr,
-    input  wire [31:0]       vh_q,
+    output wire [HS-1:0]     vh_re,           // HE x reads, one per K chunk
+    output wire [HS*AW-1:0]  vh_addr,
+    input  wire [HS*32-1:0]  vh_q,
     output wire              wxr_re,          // XU 32-element read
     output wire [AW-1:0]     wxr_addr,
     input  wire [1023:0]     wxr_q,
@@ -116,12 +119,12 @@ module ot_hdc_core_v41 #(
     output wire [G*AW-1:0]   vw_me_addr,
     output wire [G*W-1:0]    vw_me_mask,
     output wire [G*W*32-1:0] vw_me_data,
-    output wire              vw_su_we,
-    output wire [AW-1:0]     vw_su_addr,
-    output wire [31:0]       vw_su_data,
-    output wire              vw_rd_we,
-    output wire [AW-1:0]     vw_rd_addr,
-    output wire [31:0]       vw_rd_data,
+    output wire [SW-1:0]     vw_su_we,        // stream element writes, per lane
+    output wire [SW*AW-1:0]  vw_su_addr,
+    output wire [SW*32-1:0]  vw_su_data,
+    output wire [SW-1:0]     vw_rd_we,        // stream reducer writes, per lane
+    output wire [SW*AW-1:0]  vw_rd_addr,
+    output wire [SW*32-1:0]  vw_rd_data,
     output wire              vw_xe_we,        // XU element write
     output wire [AW-1:0]     vw_xe_addr,
     output wire [31:0]       vw_xe_data,
@@ -176,13 +179,14 @@ module ot_hdc_core_v41 #(
     reg          me_wsrc, me_round, me_oen, me_amax, me_mmode;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs, me_xcs;
     reg [2:0]    me_jsh;
-    reg [1:0]    me_split;
+    reg [1:0]    me_split, me_hg;
+    reg [AW-1:0] me_ogs;
     // SU
-    reg [NW-1:0] su_nout, su_nin;
-    reg [1:0]    a_src, b_src, c_src, d_src, a_ind, dst, red, m2, e2;
+    reg [NW-1:0] su_nout, su_nin, su_chase;
+    reg [1:0]    a_src, b_src, c_src, d_src, a_ind, dst, red, m2, e2, su_vec;
     reg [AW-1:0] a_base, a_so, a_si, a_ibase, b_base, b_so, b_si, c_base, c_so, c_si, d_base, d_so, d_si;
     reg [AW-1:0] o_base, o_so, o_si, o_row, r_base, r_so;
-    reg          b_half, c_pair, a_rnd, a_relu, a_min, c_clip, rnd, red_sq, red_whole, red_rnd;
+    reg          b_half, c_pair, a_rnd, a_relu, a_min, c_clip, rnd, red_sq, red_whole, red_tree, red_rnd;
     reg [2:0]    m1, qm, ad, sfu, e1;
     reg [31:0]   imm1, imm2, imm3;
     // QE
@@ -256,6 +260,9 @@ module ot_hdc_core_v41 #(
     function automatic [AW-1:0] rnds(input [NW-1:0] x);
         rnds = (x == 0) ? 0 : ((x - 1) >> LG) + 1;
     endfunction
+    function automatic [AW-1:0] rnd16(input [NW-1:0] x);      // 16-row tiles: head-group KV ops
+        rnd16 = (x == 0) ? 0 : ((x - 1) >> $clog2(W)) + 1;
+    endfunction
     integer di;
     always @(posedge clk) if (st == S_DYN) begin
         for (di = 0; di < 32; di = di + 1) dyn[di] <= 0;
@@ -279,6 +286,10 @@ module ot_hdc_core_v41 #(
         dyn[18] <= pos_r[0] ? 4 : 0;
         dyn[19] <= pos_r[0] ? 64 : 0;
         dyn[20] <= (n2 == 0) ? 0 : (n2 - 1) * 32;
+        dyn[21] <= rnd16(p1);
+        dyn[22] <= rnd16(n2);
+        dyn[23] <= rnd16(p1 + ns1);
+        dyn[24] <= rnd16(p1 + ns2);
     end
 
     // Decode: bases and counts add their DYN value.
@@ -305,8 +316,8 @@ module ot_hdc_core_v41 #(
         me_obase <= `F(ME_OBASE) + `DY(ME_D_OBASE);
         me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
         me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE);
-        me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS);
-        su_nout <= c_su_nout; su_nin <= c_su_nin;
+        me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS); me_hg <= `F(ME_HG); me_ogs <= `F(ME_OGS);
+        su_nout <= c_su_nout; su_nin <= c_su_nin; su_vec <= `F(SU_VEC); su_chase <= `F(SU_CHASE);
         a_src <= `F(A_SRC); a_base <= `F(A_BASE) + `DY(A_D); a_so <= `F(A_SO); a_si <= `F(A_SI);
         a_ind <= `F(A_IND); a_ibase <= `F(A_IBASE);
         b_src <= `F(B_SRC); b_base <= `F(B_BASE) + `DY(B_D); b_so <= `F(B_SO); b_si <= `F(B_SI); b_half <= `F(B_HALF);
@@ -318,7 +329,7 @@ module ot_hdc_core_v41 #(
         //: transposed-KV writes take the DYN value as a row, not an offset
         o_base <= `F(O_BASE) + ((`F(DST) == 2'd3) ? {AW{1'b0}} : `DY(O_D));
         o_row <= `DY(O_D); o_so <= `F(O_SO); o_si <= `F(O_SI);
-        red <= `F(RED); red_sq <= `F(RED_SQ); red_whole <= `F(RED_WHOLE); red_rnd <= `F(RED_RND);
+        red <= `F(RED); red_sq <= `F(RED_SQ); red_whole <= `F(RED_WHOLE); red_tree <= `F(RED_TREE); red_rnd <= `F(RED_RND);
         r_base <= `F(R_BASE); r_so <= `F(R_SO);
         imm1 <= `F(IMM1); imm2 <= `F(IMM2); imm3 <= `F(IMM3);
         qe_mode <= `F(QE_MODE); qe_fp4 <= `F(QE_FP4); qe_ind <= `F(QE_IND);
@@ -336,11 +347,11 @@ module ot_hdc_core_v41 #(
     // -- units -----------------------------------------------------------------------------------------
     wire me_wrom_re;
     wire [AW-1:0] me_wrom_addr;
-    ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW)) u_me (
+    ot_hdc_v41_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW)) u_me (
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
-        .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_round(me_round), .i_obase(me_obase),
+        .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_hg(me_hg), .i_ogs(me_ogs), .i_round(me_round), .i_obase(me_obase),
         .i_ots(me_ots), .i_ojs(me_ojs), .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
@@ -351,9 +362,9 @@ module ot_hdc_core_v41 #(
     assign me_omask = vw_me_mask;
     assign me_odata = vw_me_data;
 
-    ot_hdc_v41_stream #(.AW(AW), .NW(NW), .WR(G * W)) u_su (
+    ot_hdc_v41_stream #(.AW(AW), .NW(NW), .WR(G * W), .SW(SW)) u_su (
         .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
-        .i_nout(su_nout), .i_nin(su_nin), .i_asrc(a_src), .i_bsrc(b_src), .i_csrc(c_src), .i_dsrc(d_src),
+        .i_nout(su_nout), .i_nin(su_nin), .i_vec(su_vec), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src), .i_csrc(c_src), .i_dsrc(d_src),
         .i_abase(a_base), .i_aso(a_so), .i_asi(a_si), .i_aibase(a_ibase), .i_aind(a_ind),
         .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si), .i_bhalf(b_half),
         .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si), .i_cpair(c_pair),
@@ -361,7 +372,7 @@ module ot_hdc_core_v41 #(
         .i_arnd(a_rnd), .i_arelu(a_relu), .i_amin(a_min), .i_cclip(c_clip),
         .i_m1(m1), .i_m2(m2), .i_qm(qm), .i_ad(ad), .i_sfu(sfu), .i_e1(e1), .i_e2(e2), .i_rnd(rnd),
         .i_dst(dst), .i_obase(o_base), .i_oso(o_so), .i_osi(o_si), .i_orow(o_row),
-        .i_red(red), .i_redsq(red_sq), .i_redwhole(red_whole), .i_redrnd(red_rnd), .i_rbase(r_base), .i_rso(r_so),
+        .i_red(red), .i_redsq(red_sq), .i_redwhole(red_whole), .i_redtree(red_tree), .i_redrnd(red_rnd), .i_rbase(r_base), .i_rso(r_so),
         .i_imm1(imm1), .i_imm2(imm2), .i_imm3(imm3),
         .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q),
         .vm_re(vs_re), .vm_addr(vs_addr), .vm_q(vs_q),
@@ -391,7 +402,7 @@ module ot_hdc_core_v41 #(
         .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
         .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
 
-    ot_hdc_v41_hcproj #(.NL(HNL), .IL(IL), .AW(AW), .NW(NW)) u_he (
+    ot_hdc_v41_hcproj #(.NL(HNL), .IL(IL), .S(HS), .AW(AW), .NW(NW)) u_he (
         .clk(clk), .rst_n(rst_n), .go(he_go), .ready(he_ready), .idle(he_idle),
         .i_nout(he_nout), .i_k(he_k), .i_wbase(he_wbase), .i_xbase(he_xbase), .i_obase(he_obase),
         .hr_re(hrom_re), .hr_addr(hrom_addr), .hr_q(hrom_q), .x_re(vh_re), .x_addr(vh_addr), .x_q(vh_q),

@@ -28,8 +28,15 @@ kept because they are the model, not an implementation accident):
 
 Orders the model CHOOSES (the reference leaves them to a GPU library):
 
-* BF16/FP32 matvec: per output, products accumulated sequentially over K from
-  +0 (hdc_golden.matvec_fp32; BF16 x BF16 products are exact);
+* BF16/FP32 matvec: per output, K is cut into S contiguous chunks, each chunk
+  accumulated sequentially from +0 and the chunk sums added by a pairwise tree
+  (hdc_golden.matvec(split=S); BF16 x BF16 products are exact).  S is the
+  matrix engine's split, hdc_golden.split_for(n, k) -- the fewest engine
+  cycles on 4 groups of 16 lanes x 8 interleaved outputs (the router gate,
+  indexer and compressor projections: S = 4; lm_head: S = 1) -- except the
+  grouped wo_a, each group's 256 terms in WO_A_SPLIT = 2 chunks, and the
+  hyper-connection mixes fn [24, 640], HC_SPLIT = 8 chunks of 80 (their own
+  engine, NL x HC_SPLIT lanes);
 * FP8/FP4 linear: per 32-wide K block the dot product of the two quantised
   operands is formed EXACTLY and rounded once to FP32 (every product has at most
   8 significant bits and the block sum spans < 42 bits, so a small fixed-point
@@ -38,7 +45,10 @@ Orders the model CHOOSES (the reference leaves them to a GPU library):
   outer order;
 * every long sum (sums of squares, softmax denominators, the index-head sum,
   hyper-connection norms) is hdc_golden.reduce_sum: P=8 interleaved partials
-  then a pairwise tree; sums of 2-6 terms (hyper-connection mixes, Sinkhorn
+  then a pairwise tree; an RMSNorm's sum of squares is split_sum over
+  RMS_SPLIT = 8 contiguous segments and the hyper-connection norm's over its 4
+  copies (HC_SS_SPLIT): each segment reduce_sum, the segment sums a pairwise
+  tree -- so the stream unit's lanes each own a segment; sums of 2-6 terms (hyper-connection mixes, Sinkhorn
   rows/columns, routing-weight sums, the compressor's 2-slot pooling) are
   sequential from the first term, in index order;
 * where the reference divides (attention normalisation, Sinkhorn, the
@@ -85,7 +95,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from hdc_golden import (  # noqa: E402
-    F, add, bits, exp, from_bits, matvec_fp32, mul, neg, reduce_sum, rsqrt, to_bf16, z,
+    F, add, bits, exp, from_bits, matvec, matvec_fp32, mul, neg, reduce_sum, rsqrt, split_for, to_bf16, z,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -109,6 +119,12 @@ E2M1_VALUES = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0])
 E2M1_MIDPOINTS = (E2M1_VALUES[:-1] + E2M1_VALUES[1:]) / 2   # 0.25 .. 5.0
 # log1p(t) = 2*atanh(u) = 2*(u + u^3/3 + u^5/5 + ...), u = t/(2+t) <= 1/3
 LOG1P_ODD = [F(1.0 / (2 * i + 1)) for i in range(8, -1, -1)]  # 1/17 .. 1/1, Horner in u^2
+# accumulation splits (see "Orders the model CHOOSES")
+HC_SPLIT = 8             # hyper-connection mixes: K = 640 in 8 chunks of 80
+HC_SS_SPLIT = 4          # hyper-connection norm: one segment per copy
+RMS_SPLIT = 8            # RMSNorm sums of squares
+WO_A_SPLIT = 2           # grouped wo_a: 256 terms per group in 2 chunks
+ME_GROUPS, ME_LANES, ME_IL = 4, 16, 8
 
 
 # -- storage formats -------------------------------------------------------------
@@ -264,9 +280,16 @@ def linear_q(w: Q8, x):
     return to_bf16(acc)
 
 
+def mv(w, x):
+    """A matrix-engine matvec: the engine's K-split (hdc_golden.split_for), each
+    chunk sequential from +0, the chunks a pairwise tree; x BF16-rounded."""
+    n, k = w.shape
+    return matvec(w, x, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL))
+
+
 def linear_bf16(w, x):
-    """BF16 weight, BF16 activation: exact products, sequential FP32 sum, BF16 out."""
-    return to_bf16(matvec_fp32(w, to_bf16(x)))
+    """BF16 weight, BF16 activation: exact products, split FP32 sum (mv), BF16 out."""
+    return to_bf16(mv(w, to_bf16(x)))
 
 
 def dots(a, b):
@@ -288,6 +311,24 @@ def reduce_rows(v):
     while part.shape[1] > 1:
         part = add(part[:, 0::2], part[:, 1::2])
     return part[:, 0]
+
+
+def split_sum_parts(parts):
+    """The pairwise tree ((s0+s1)+(s2+s3))+... over segment sums, padded with +0
+    to a power of two (x + 0 = x exactly, so the padding changes nothing)."""
+    parts = [F(p) for p in parts]
+    while len(parts) & (len(parts) - 1):
+        parts.append(F(0))
+    while len(parts) > 1:
+        parts = [add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return F(parts[0])
+
+
+def split_sum(v, s):
+    """A long sum cut into s contiguous segments: each segment is reduce_sum (P=8
+    interleaved partials, pairwise tree), the segment sums a pairwise tree."""
+    v = np.asarray(v, dtype=F).reshape(s, -1)
+    return split_sum_parts([reduce_sum(seg) for seg in v])
 
 
 def seqsum(terms):
@@ -338,7 +379,7 @@ def softplus(x):
 
 def rmsnorm_bf16(x, w, eps):
     """The release's RMSNorm: x * rsqrt(mean(x^2) + eps), times the gain, stored BF16."""
-    r = rsqrt(add(div(reduce_rows(mul(x, x)[None, :])[0], F(len(x))), F(eps)))
+    r = rsqrt(add(div(split_sum(mul(x, x), RMS_SPLIT), F(len(x))), F(eps)))
     return to_bf16(mul(w, mul(x, r)))
 
 
@@ -531,8 +572,9 @@ class Model:
         """x: [hc, dim] BF16-valued.  Returns pre [hc], post [hc], comb [hc, hc]."""
         fn, scale, base = (self.lw(L, f"hc_{which}_{s}") for s in ("fn", "scale", "base"))
         flat = x.reshape(-1)
-        r = rsqrt(add(div(reduce_rows(mul(flat, flat)[None, :])[0], F(flat.size)), self.eps))
-        mixes = mul(matvec_fp32(fn, flat), r)
+        assert np.array_equal(to_bf16(flat), flat)          # the residual is BF16: x rounding is exact
+        r = rsqrt(add(div(split_sum(mul(flat, flat), HC_SS_SPLIT), F(flat.size)), self.eps))
+        mixes = mul(matvec(fn, flat, HC_SPLIT), r)
         h = self.hc
         pre = add(sigmoid(add(mul(mixes[:h], scale[0]), base[:h])), self.hc_eps)
         post = mul(sigmoid(add(mul(mixes[h:2 * h], scale[1]), base[h:2 * h])), F(2.0))
@@ -647,8 +689,8 @@ class Model:
         if r == 1:
             return rmsnorm_bf16(linear_bf16(self.lw(L, "attn.compressor.wkv.weight"), x),
                                 self.lw(L, "attn.compressor.norm.weight"), self.eps)
-        kv = matvec_fp32(self.lw(L, "attn.compressor.wkv.weight"), x)       # FP32 weights, FP32 out
-        sc = matvec_fp32(self.lw(L, "attn.compressor.wgate.weight"), x)
+        wkv = np.concatenate([self.lw(L, "attn.compressor.wkv.weight"), self.lw(L, "attn.compressor.wgate.weight")])
+        kv, sc = np.split(mv(wkv, x), 2)                                  # one engine op, FP32 out
         slots = state["slots"][L]
         slots.append((kv, sc))
         if (pos + 1) % r:
@@ -709,9 +751,8 @@ class Model:
         o = rope_tail(o, cs, inverse=True)
         og = o.reshape(self.groups, -1)
         wa = self.lw(L, "attn.wo_a.weight").reshape(self.groups, self.o_rank, -1)
-        z = np.zeros((self.groups, self.o_rank), dtype=F)       # grouped wo_a: each group sequential over its K
-        for d in range(og.shape[1]):
-            z = add(z, mul(wa[:, :, d], og[:, d][:, None]))
+        # grouped wo_a: each group's K in WO_A_SPLIT chunks (o is BF16: x rounding is exact)
+        z = np.stack([matvec(wa[g], og[g], WO_A_SPLIT) for g in range(self.groups)])
         z = to_bf16(z.reshape(-1))
         return linear_q(self.lw(L, "attn.wo_b.weight"), z)
 
@@ -727,7 +768,7 @@ class Model:
         return linear_q(self.w[prefix + "w2.weight"], to_bf16(a))
 
     def moe(self, L, x, trace):
-        scores = sqrt(softplus(matvec_fp32(self.lw(L, "ffn.gate.weight"), x)))
+        scores = sqrt(softplus(mv(self.lw(L, "ffn.gate.weight"), x)))
         chosen = topk_lowest_index(add(scores, self.lw(L, "ffn.gate.bias")), self.k_exp)
         ids = sorted(int(i) for i in chosen)                     # experts run and sum in id order
         total = seqsum([scores[i] for i in ids])
@@ -773,7 +814,7 @@ class Model:
             if trace is not None:
                 trace[f"L{L}.ffn_norm"], trace[f"L{L}.ffn"], trace[f"block{L}"], trace[f"pre{L}"] = x, y, h, f_pre
         xf = rmsnorm_bf16(self.hc_pre(h, pre_mix), self.w["norm.weight"], self.eps)
-        logits = matvec_fp32(self.w["head.weight"], xf)
+        logits = mv(self.w["head.weight"], xf)
         if trace is not None:
             trace["final_norm"], trace["logits"] = xf, logits
         return logits

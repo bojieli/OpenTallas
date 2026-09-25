@@ -24,147 +24,75 @@
     },
     "shards": [
       {
-        "add": 183421,
-        "add_chained": 156942,
-        "div": 196271,
-        "div_steady": 194870,
+        "add": 366940,
+        "add_chained": 313858,
+        "div": 392408,
+        "div_steady": 389801,
         "errors": 0,
-        "ops": 731504,
+        "ops": 1463007,
         "pass": true
       },
       {
-        "add": 183519,
-        "add_chained": 156916,
-        "div": 196138,
-        "div_steady": 194931,
+        "add": 366550,
+        "add_chained": 314555,
+        "div": 392503,
+        "div_steady": 389399,
         "errors": 0,
-        "ops": 731504,
+        "ops": 1463007,
         "pass": true
       },
       {
-        "add": 183117,
-        "add_chained": 156929,
-        "div": 196033,
-        "div_steady": 195425,
+        "add": 367504,
+        "add_chained": 313656,
+        "div": 392397,
+        "div_steady": 389450,
         "errors": 0,
-        "ops": 731504,
+        "ops": 1463007,
         "pass": true
       },
       {
-        "add": 183433,
-        "add_chained": 157626,
-        "div": 196469,
-        "div_steady": 193976,
+        "add": 367443,
+        "add_chained": 314825,
+        "div": 392868,
+        "div_steady": 387871,
         "errors": 0,
-        "ops": 731504,
+        "ops": 1463007,
         "pass": true
       },
       {
-        "add": 183745,
-        "add_chained": 157131,
-        "div": 196189,
-        "div_steady": 194439,
+        "add": 367898,
+        "add_chained": 314591,
+        "div": 392564,
+        "div_steady": 387954,
         "errors": 0,
-        "ops": 731504,
+        "ops": 1463007,
         "pass": true
       },
       {
-        "add": 183759,
-        "add_chained": 156525,
-        "div": 196211,
-        "div_steady": 195009,
+        "add": 367677,
+        "add_chained": 314505,
+        "div": 392445,
+        "div_steady": 388380,
         "errors": 0,
-        "ops": 731504,
+        "ops": 1463007,
         "pass": true
       },
       {
-        "add": 184263,
-        "add_chained": 156737,
-        "div": 196469,
-        "div_steady": 194035,
+        "add": 368306,
+        "add_chained": 314633,
+        "div": 392040,
+        "div_steady": 388028,
         "errors": 0,
-        "ops": 731504,
+        "ops": 1463007,
         "pass": true
       },
       {
-        "add": 183180,
-        "add_chained": 158088,
-        "div": 196400,
-        "div_steady": 193836,
+        "add": 367706,
+        "add_chained": 314368,
+        "div": 392799,
+        "div_steady": 388133,
         "errors": 0,
-        "ops": 731504,
-        "pass": true
-      },
-      {
-        "add": 184730,
-        "add_chained": 156764,
-        "div": 196072,
-        "div_steady": 193938,
-        "errors": 0,
-        "ops": 731504,
-        "pass": true
-      },
-      {
-        "add": 183169,
-        "add_chained": 157827,
-        "div": 196491,
-        "div_steady": 194017,
-        "errors": 0,
-        "ops": 731504,
-        "pass": true
-      },
-      {
-        "add": 184134,
-        "add_chained": 156896,
-        "div": 195982,
-        "div_steady": 194492,
-        "errors": 0,
-        "ops": 731504,
-        "pass": true
-      },
-      {
-        "add": 183543,
-        "add_chained": 157609,
-        "div": 196461,
-        "div_steady": 193891,
-        "errors": 0,
-        "ops": 731504,
-        "pass": true
-      },
-      {
-        "add": 183889,
-        "add_chained": 157381,
-        "div": 196228,
-        "div_steady": 194006,
-        "errors": 0,
-        "ops": 731504,
-        "pass": true
-      },
-      {
-        "add": 184417,
-        "add_chained": 157253,
-        "div": 195812,
-        "div_steady": 194022,
-        "errors": 0,
-        "ops": 731504,
-        "pass": true
-      },
-      {
-        "add": 183453,
-        "add_chained": 157178,
-        "div": 197030,
-        "div_steady": 193843,
-        "errors": 0,
-        "ops": 731504,
-        "pass": true
-      },
-      {
-        "add": 184252,
-        "add_chained": 157189,
-        "div": 195768,
-        "div_steady": 194286,
-        "errors": 0,
-        "ops": 731495,
+        "ops": 1463006,
         "pass": true
       }
     ],
@@ -202,7 +130,7 @@
       "errors": 0,
       "ops": 400,
       "pass": true,
-      "seconds": 199
+      "seconds": 427
     },
     "unit_real_slice": {
       "cases": 2,
@@ -214,7 +142,7 @@
       "latency_min": 41,
       "outputs": 2,
       "pass": true,
-      "seconds": 701,
+      "seconds": 1463,
       "word_errors": 0
     }
   },
@@ -225,9 +153,9 @@
     "rtl/test/hdc_sinkhorn_harness.cpp": "1be6f98e872c6bba270de28d085d62e1f977dd090c4b92ecc83ac97f7a709ef3",
     "rtl/test/tb_hdc_sinkhorn.sv": "dca7e264712b2f72ca0f75d41180d124fd3aa5574d3e17abf69caf6d32f81dc8",
     "tools/gen_hdc_sinkhorn_recip_rom.py": "f15e0d351a2168cfad6cd7d78639e106d20a47aa12773bd836e43666631a7291",
-    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
-    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
-    "tools/rtl_hdc_v41_sinkhorn_campaign.py": "9897c936b4968c96059d1320fd8af81def239c6b5dbaafd468e5db7ad7b3fbc0"
+    "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
+    "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
+    "tools/rtl_hdc_v41_sinkhorn_campaign.py": "96769a374db35a819a39811b2345057fb1e272bb1f918daa864b8f32b55ef2a9"
   },
   "latency_cycles": 41,
   "latency_definition": "clock edges from the accepting edge to the edge that registers out_valid: 2 ITERS + 1 (A: row sums; B: step-0 divide + eps; 2 ITERS - 1 steady steps, one per clock)",
@@ -252,7 +180,7 @@
         "latency_max": 41,
         "latency_min": 41,
         "pass": false,
-        "word_errors": 15192
+        "word_errors": 15246
       }
     },
     {
@@ -271,11 +199,11 @@
       "id": "add_carry_round_ignores_shifted_out",
       "source": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
       "unit": {
-        "errors": 1231,
+        "errors": 1229,
         "latency_max": 41,
         "latency_min": 41,
         "pass": false,
-        "word_errors": 12582
+        "word_errors": 12563
       }
     },
     {
@@ -342,7 +270,7 @@
         "latency_max": 41,
         "latency_min": 41,
         "pass": false,
-        "word_errors": 19592
+        "word_errors": 19595
       }
     },
     {
@@ -386,7 +314,7 @@
         "latency_max": 41,
         "latency_min": 41,
         "pass": false,
-        "word_errors": 15765
+        "word_errors": 15846
       }
     },
     {
@@ -431,7 +359,7 @@
         "latency_max": 41,
         "latency_min": 41,
         "pass": false,
-        "word_errors": 19599
+        "word_errors": 19588
       }
     },
     {
@@ -483,11 +411,11 @@
       "id": "steady_sum_order_swapped",
       "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
       "unit": {
-        "errors": 1250,
+        "errors": 1249,
         "latency_max": 41,
         "latency_min": 41,
         "pass": false,
-        "word_errors": 12489
+        "word_errors": 12453
       }
     },
     {
@@ -578,11 +506,11 @@
       "id": "one_iteration_short",
       "source": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
       "unit": {
-        "errors": 637,
+        "errors": 638,
         "latency_max": 39,
         "latency_min": 39,
         "pass": false,
-        "word_errors": 9052
+        "word_errors": 9058
       }
     }
   ],
@@ -630,31 +558,31 @@
       1289,
       2967,
       2084,
-      106,
-      1236,
-      1183,
-      267,
-      1607,
-      2176,
-      3012,
-      3341,
-      2719,
-      4014,
-      3545,
-      1685,
-      786,
-      289,
-      1889,
-      1233,
-      2413,
-      1515,
-      2588,
-      1141,
-      1386,
-      2008,
-      1635,
-      1053,
-      2476
+      3275,
+      422,
+      2318,
+      1997,
+      2659,
+      655,
+      258,
+      3471,
+      866,
+      1713,
+      1009,
+      2799,
+      477,
+      346,
+      3319,
+      3847,
+      952,
+      3768,
+      2266,
+      2686,
+      3554,
+      1480,
+      415,
+      1165,
+      2678
     ]
   },
   "schema": "opentallas.hdc-v41-sinkhorn-campaign.v1",
@@ -674,259 +602,131 @@
     },
     "runs": {
       "random_shard0": {
-        "cases": 62500,
-        "cycles": 2625006,
+        "cases": 125000,
+        "cycles": 5250006,
         "early_percent": 0,
         "errors": 0,
-        "faults": 4939,
+        "faults": 10044,
         "gap_percent": 0,
         "latency_expected": 41,
         "latency_max": 41,
         "latency_min": 41,
-        "outputs": 62500,
+        "outputs": 125000,
         "pass": true,
-        "seconds": 193.8,
+        "seconds": 847.1,
         "seed": 11,
         "word_errors": 0
       },
       "random_shard1": {
-        "cases": 62500,
-        "cycles": 2680045,
+        "cases": 125000,
+        "cycles": 5360174,
         "early_percent": 40,
         "errors": 0,
-        "faults": 5105,
+        "faults": 10147,
         "gap_percent": 20,
         "latency_expected": 41,
         "latency_max": 41,
         "latency_min": 41,
-        "outputs": 62500,
+        "outputs": 125000,
         "pass": true,
-        "seconds": 191.4,
+        "seconds": 1011.8,
         "seed": 12,
         "word_errors": 0
       },
-      "random_shard10": {
-        "cases": 62500,
-        "cycles": 2625006,
-        "early_percent": 0,
-        "errors": 0,
-        "faults": 4900,
-        "gap_percent": 0,
-        "latency_expected": 41,
-        "latency_max": 41,
-        "latency_min": 41,
-        "outputs": 62500,
-        "pass": true,
-        "seconds": 220.3,
-        "seed": 21,
-        "word_errors": 0
-      },
-      "random_shard11": {
-        "cases": 62500,
-        "cycles": 2680499,
-        "early_percent": 40,
-        "errors": 0,
-        "faults": 5208,
-        "gap_percent": 20,
-        "latency_expected": 41,
-        "latency_max": 41,
-        "latency_min": 41,
-        "outputs": 62500,
-        "pass": true,
-        "seconds": 228.0,
-        "seed": 22,
-        "word_errors": 0
-      },
-      "random_shard12": {
-        "cases": 62500,
-        "cycles": 2625006,
-        "early_percent": 0,
-        "errors": 0,
-        "faults": 5005,
-        "gap_percent": 0,
-        "latency_expected": 41,
-        "latency_max": 41,
-        "latency_min": 41,
-        "outputs": 62500,
-        "pass": true,
-        "seconds": 213.2,
-        "seed": 23,
-        "word_errors": 0
-      },
-      "random_shard13": {
-        "cases": 62500,
-        "cycles": 2680391,
-        "early_percent": 40,
-        "errors": 0,
-        "faults": 4998,
-        "gap_percent": 20,
-        "latency_expected": 41,
-        "latency_max": 41,
-        "latency_min": 41,
-        "outputs": 62500,
-        "pass": true,
-        "seconds": 219.5,
-        "seed": 24,
-        "word_errors": 0
-      },
-      "random_shard14": {
-        "cases": 62500,
-        "cycles": 2625006,
-        "early_percent": 0,
-        "errors": 0,
-        "faults": 5090,
-        "gap_percent": 0,
-        "latency_expected": 41,
-        "latency_max": 41,
-        "latency_min": 41,
-        "outputs": 62500,
-        "pass": true,
-        "seconds": 231.1,
-        "seed": 25,
-        "word_errors": 0
-      },
-      "random_shard15": {
-        "cases": 62500,
-        "cycles": 2679752,
-        "early_percent": 40,
-        "errors": 0,
-        "faults": 5026,
-        "gap_percent": 20,
-        "latency_expected": 41,
-        "latency_max": 41,
-        "latency_min": 41,
-        "outputs": 62500,
-        "pass": true,
-        "seconds": 226.6,
-        "seed": 26,
-        "word_errors": 0
-      },
       "random_shard2": {
-        "cases": 62500,
-        "cycles": 2625006,
+        "cases": 125000,
+        "cycles": 5250006,
         "early_percent": 0,
         "errors": 0,
-        "faults": 5098,
+        "faults": 10148,
         "gap_percent": 0,
         "latency_expected": 41,
         "latency_max": 41,
         "latency_min": 41,
-        "outputs": 62500,
+        "outputs": 125000,
         "pass": true,
-        "seconds": 228.1,
+        "seconds": 1293.4,
         "seed": 13,
         "word_errors": 0
       },
       "random_shard3": {
-        "cases": 62500,
-        "cycles": 2679118,
+        "cases": 125000,
+        "cycles": 5359024,
         "early_percent": 40,
         "errors": 0,
-        "faults": 5049,
+        "faults": 10103,
         "gap_percent": 20,
         "latency_expected": 41,
         "latency_max": 41,
         "latency_min": 41,
-        "outputs": 62500,
+        "outputs": 125000,
         "pass": true,
-        "seconds": 198.0,
+        "seconds": 1354.5,
         "seed": 14,
         "word_errors": 0
       },
       "random_shard4": {
-        "cases": 62500,
-        "cycles": 2625006,
+        "cases": 125000,
+        "cycles": 5250006,
         "early_percent": 0,
         "errors": 0,
-        "faults": 5135,
+        "faults": 10134,
         "gap_percent": 0,
         "latency_expected": 41,
         "latency_max": 41,
         "latency_min": 41,
-        "outputs": 62500,
+        "outputs": 125000,
         "pass": true,
-        "seconds": 205.0,
+        "seconds": 931.6,
         "seed": 15,
         "word_errors": 0
       },
       "random_shard5": {
-        "cases": 62500,
-        "cycles": 2679311,
+        "cases": 125000,
+        "cycles": 5358952,
         "early_percent": 40,
         "errors": 0,
-        "faults": 5013,
+        "faults": 10108,
         "gap_percent": 20,
         "latency_expected": 41,
         "latency_max": 41,
         "latency_min": 41,
-        "outputs": 62500,
+        "outputs": 125000,
         "pass": true,
-        "seconds": 216.3,
+        "seconds": 810.8,
         "seed": 16,
         "word_errors": 0
       },
       "random_shard6": {
-        "cases": 62500,
-        "cycles": 2625006,
+        "cases": 125000,
+        "cycles": 5250006,
         "early_percent": 0,
         "errors": 0,
-        "faults": 5050,
+        "faults": 10003,
         "gap_percent": 0,
         "latency_expected": 41,
         "latency_max": 41,
         "latency_min": 41,
-        "outputs": 62500,
+        "outputs": 125000,
         "pass": true,
-        "seconds": 210.0,
+        "seconds": 769.6,
         "seed": 17,
         "word_errors": 0
       },
       "random_shard7": {
-        "cases": 62500,
-        "cycles": 2679704,
+        "cases": 125000,
+        "cycles": 5358742,
         "early_percent": 40,
         "errors": 0,
-        "faults": 5053,
+        "faults": 10116,
         "gap_percent": 20,
         "latency_expected": 41,
         "latency_max": 41,
         "latency_min": 41,
-        "outputs": 62500,
+        "outputs": 125000,
         "pass": true,
-        "seconds": 216.4,
+        "seconds": 794.5,
         "seed": 18,
-        "word_errors": 0
-      },
-      "random_shard8": {
-        "cases": 62500,
-        "cycles": 2625006,
-        "early_percent": 0,
-        "errors": 0,
-        "faults": 5024,
-        "gap_percent": 0,
-        "latency_expected": 41,
-        "latency_max": 41,
-        "latency_min": 41,
-        "outputs": 62500,
-        "pass": true,
-        "seconds": 210.8,
-        "seed": 19,
-        "word_errors": 0
-      },
-      "random_shard9": {
-        "cases": 62500,
-        "cycles": 2680394,
-        "early_percent": 40,
-        "errors": 0,
-        "faults": 5110,
-        "gap_percent": 20,
-        "latency_expected": 41,
-        "latency_max": 41,
-        "latency_min": 41,
-        "outputs": 62500,
-        "pass": true,
-        "seconds": 207.4,
-        "seed": 20,
         "word_errors": 0
       },
       "real_back_to_back": {
@@ -941,7 +741,7 @@
         "latency_min": 41,
         "outputs": 3840,
         "pass": true,
-        "seconds": 10.6,
+        "seconds": 27.8,
         "seed": 1,
         "word_errors": 0
       },
@@ -957,12 +757,12 @@
         "latency_min": 41,
         "outputs": 3840,
         "pass": true,
-        "seconds": 12.3,
+        "seconds": 41.1,
         "seed": 5,
         "word_errors": 0
       }
     },
-    "vectors_sha256": "8485a4c86283c0bc90609c246700b726c83ce35adb791bccd1b0cf30c5f10e1e"
+    "vectors_sha256": "5fb5afe11fd37ba3dcdeb01b787cda87c452c30b40546b34df6c4ef4f2e7e7db"
   },
   "verilator_lint": {
     "flags": [
@@ -989,5 +789,5 @@
       }
     }
   },
-  "wall_seconds": 1973
+  "wall_seconds": 5495
 }
