@@ -24,6 +24,8 @@ config and walks its longest path:
   stream unit's per-class depths, reducer tail) and the V4.1 units' pipeline
   depths (rtl/hdc/v41/*.sv and their campaigns), at the slowest routed clock
   among the units the token path uses (results/physical_abi3/asap7/hdc/).
+  The Sinkhorn is the routed latency-optimised unit ot_hdc_sinkhorn (one
+  normalisation per unit clock), run as a multicycle path of that clock.
   Lane counts per die come from the analytical design's compute area divided
   by our routed lane areas.  Matrix-vector occupancy is the analytical design's
   own sweep (points.json component times) apportioned by bytes or MACs; that is
@@ -93,6 +95,10 @@ RTL_SOURCES = {
     "select: K+2 cycles (rank order) or 2K+2 (ascending index) after the last element, 1 element/cycle in":
         "rtl/hdc/v41/ot_hdc_select.sv header; results/rtl/hdc_v41_select_campaign.json latency_cycles",
     "fdiv 31, fsqrt 31, softplus 259 (all II 1)": "rtl/hdc/v41/ot_hdc_fdiv.sv, ot_hdc_fsqrt.sv, ot_hdc_softplus.sv",
+    "Sinkhorn: ot_hdc_sinkhorn, 2 iters + 1 unit clocks per 4x4 Sinkhorn, one normalisation per clock at the "
+    "routed step period":
+        "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json fmax_hz; "
+        "results/rtl/hdc_v41_sinkhorn_campaign.json latency_cycles",
     "blockdot 15, actquant 13, fp4qdq 8, engram_hash 12":
         "rtl/hdc/v41/*.sv; results/rtl/hdc_v41_blockdot_campaign.json, hdc_v41_engram_campaign.json",
     "ME lane area 1,051 um2/MAC (BF16, 64-lane ot_hdc_matvec incl. sequencing, not closed)":
@@ -100,6 +106,51 @@ RTL_SOURCES = {
     "SU lane area 42,443 um2 per element/cycle (ot_hdc_stream incl. SFU, not closed)":
         "results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json design.area_um2",
 }
+
+
+SINKHORN_BLOCK = "v41/ot_hdc_sinkhorn"
+SINKHORN_CAMPAIGN = ROOT / "results/rtl/hdc_v41_sinkhorn_campaign.json"
+
+
+def sinkhorn_unit():
+    """The routed latency-optimised Sinkhorn unit (rtl/hdc/v41/ot_hdc_sinkhorn.sv): its step time is one
+    period at the routed fmax, and a whole Sinkhorn is the campaign's latency in unit clocks."""
+    d = json.loads((PHYS / SINKHORN_BLOCK / "physical.json").read_text())["design"]
+    camp = json.loads(SINKHORN_CAMPAIGN.read_text())
+    return dict(step_s=1.0 / d["fmax_hz"], fmax_hz=d["fmax_hz"], clocks=camp["latency_cycles"],
+                closed=d["closed"], target_period_ns=d["clock_period_ns"], area_um2=d["area_um2"],
+                campaign_status=camp["status"],
+                sources=dict(physical=f"results/physical_abi3/asap7/hdc/{SINKHORN_BLOCK}/physical.json",
+                             campaign=str(SINKHORN_CAMPAIGN.relative_to(ROOT))))
+
+
+SK = sinkhorn_unit()
+
+
+def sinkhorn_cycles(ops, nits, front):
+    """Core cycles of one sublayer's Sinkhorn branch after the mixes, and a description.
+
+    unit: ot_hdc_sinkhorn does one whole normalisation per unit clock; run as a multicycle path of the
+    core clock, a unit step costs ceil(step_ns x f_core) core cycles.  It holds one user's Sinkhorn at a
+    time, so with `sinkhorn_units` units per sublayer engine the users in flight queue in rounds.
+    pipelined: each normalisation is a 4-term sequential sum (3 fadd, the golden's seqsum order), + eps
+    and one pipelined divide on the stream unit's pipes; users interleave, so a normalisation costs
+    max(depth, users) cycles.
+    best: the faster of the two (both datapaths exist: the stream unit keeps its fadd/fdiv pipes)."""
+    per_step = math.ceil(SK["step_s"] * ops.clock - 1e-9)
+    units = ops.p.sinkhorn_units or max(1, math.ceil(ops.mb))
+    rounds = math.ceil(ops.mb / units)
+    unit = front + rounds * SK["clocks"] * per_step
+    unit_desc = (f"row max + exp (SFU), then ot_hdc_sinkhorn: {SK['clocks']} unit clocks ({2 * nits} "
+                 f"normalisations, one per clock) x {per_step} core cycles"
+                 + (f" x {rounds} rounds ({units} unit{'s' if units > 1 else ''})" if rounds > 1 else ""))
+    step = max(4 * FADD + ops.p.fdiv_cycles, math.ceil(ops.mb))
+    pipe = front + 2 * nits * step
+    pipe_desc = (f"4x4 softmax + {nits} Sinkhorn iterations ({2 * nits} dependent normalisations x {step} "
+                 f"cycles on the pipelined fadd/fdiv)")
+    if ops.p.sinkhorn == "unit" or (ops.p.sinkhorn == "best" and unit <= pipe):
+        return unit, unit_desc
+    return pipe, pipe_desc
 
 
 def select_latency(k, ascending_index):
@@ -144,7 +195,11 @@ class Params:
                                      # use an online (single-pass) softmax; a labelled what-if only
     kv_mode: str = "broadcast"       # "broadcast": each die reads 1/g of the shared KV rows and the group
                                      # all-gathers them; "replicated": every head-split die reads every row
-    fdiv_cycles: int = 31            # divider depth (ot_hdc_fdiv); a what-if knob for the Sinkhorn chain
+    fdiv_cycles: int = 31            # divider depth (ot_hdc_fdiv); prices the "pipelined" Sinkhorn and the divides
+    sinkhorn: str = "best"           # "unit": the routed ot_hdc_sinkhorn (one normalisation per unit clock);
+                                     # "pipelined": 3 fadd + eps fadd + fdiv per normalisation (the earlier
+                                     # pricing); "best": the faster of the two for the machine's users in flight
+    sinkhorn_units: int = 1          # ot_hdc_sinkhorn instances per sublayer engine; 0 = one per user in flight
     seed: int = 0
 
 
@@ -761,16 +816,15 @@ def v41_graph(ops: Ops, c, ctx):
                             desc="mixes [24, 20480] FP32 (replicated on every die: 1.97 MB)")
             mx = ops.ew(f"{P}.hc.pre_post", [fn, rs], 6 * HC, FADD * 3 + SU["SIGM"], L, stream=False,
                         desc="mixes*r, scale+base, sigmoid pre/post")
-            # 4x4 softmax + 20 Sinkhorn normalisations on a 16-entry unit: each normalisation is a 4-term
-            # sequential sum (3 fadd, the golden's seqsum order), +eps, one pipelined divide
-            half = 3 * FADD + FADD + ops.p.fdiv_cycles
+            # 4x4 row max + exp on the stream unit's SFU, then 2 x iters dependent normalisations.
+            # The Sinkhorn depends only on this sublayer's input h (through fn and the rsqrt), and h is
+            # hc_post of the previous sublayer, which waits on the previous Sinkhorn: no earlier start is
+            # legal, so the branch is priced from mx, and it overlaps only this sublayer's body.
             nits = c["hc_sinkhorn_iters"]
-            # users interleave through the pipelined unit: a step costs max(depth, users) cycles
-            step = max(half, math.ceil(ops.mb))
+            front = 2 + FADD + SU["EXP"]
+            cyc_sk, desc = sinkhorn_cycles(ops, nits, front)
             sk = g.add(f"{P}.hc.sinkhorn", [mx], layer=L, ctrl=ops.bctrl, kind="sinkhorn",
-                       depth=ops.cyc(2 + FADD + SU["EXP"] + 2 * nits * step),
-                       desc=f"4x4 softmax + {nits} Sinkhorn iterations ({2 * nits} dependent normalisations x "
-                            f"{step} cycles)")
+                       depth=ops.cyc(cyc_sk), desc=desc)
             x = ops.ew(f"{P}.hc_pre", [h, pre_ready], HC * D, SU_BASE + 3 * FADD, L,
                        desc="collapse the 4 copies with the pending pre mix")
             x = ops.rmsnorm(f"{P}.norm", [x], D, L, fold=True)
@@ -1219,7 +1273,15 @@ def build(p: Params, quick=False):
                clock=dict(hz=clock, basis="slowest routed fmax among the token path's units (ASAP7, TT, 0.7 V)",
                           blocks=clock_rows),
                lane_areas_um2=lane_areas_um2(),
-               rtl_constants=dict(K=dict(K, su_depth=SU), v41=V41, sources=RTL_SOURCES),
+               rtl_constants=dict(K=dict(K, su_depth=SU), v41=V41, sources=RTL_SOURCES,
+                                  sinkhorn_unit=dict(SK, core_cycles_per_step=math.ceil(SK["step_s"] * clock - 1e-9),
+                                                     ns_per_step=SK["step_s"] * 1e9,
+                                                     ns_per_sinkhorn=SK["step_s"] * SK["clocks"] * 1e9,
+                                                     core_cycles_per_sinkhorn=SK["clocks"] * math.ceil(
+                                                         SK["step_s"] * clock - 1e-9),
+                                                     pipelined_normalisation_cycles_b1=4 * FADD + p.fdiv_cycles,
+                                                     pipelined_cycles_per_sinkhorn_b1=2 * v41_shape()[
+                                                         "hc_sinkhorn_iters"] * (4 * FADD + p.fdiv_cycles))),
                links=links, switch_latency=SWITCH_LATENCY_S, determinism=DETERMINISM)
     rec["hc1_llama31_8b"] = headline_hc1(p, clock)
     rec["qwen3_8b_single_reticle"] = headline_qwen(p, clock)
@@ -1237,6 +1299,14 @@ def build(p: Params, quick=False):
             r = b.evaluate(fab)
             s = summarize(b, r, layers=None if bt == 1 else {2, 3, 20})
             s["reference_analytical"] = m_.reference
+            skn = b.g.nodes["L3.attn.hc.sinkhorn"]
+            pp_ = replace(p, sinkhorn="pipelined")
+            mp_ = v41_machine(kind, g_ref, bt, points, designs, pp_, clock)
+            bp_ = Built(mp_, pp_, clock, v41_graph, c, mp_.context)
+            s["sinkhorn"] = dict(branch_ns=skn["depth"] * 1e9, desc=skn["desc"],
+                                 on_critical_path=any(n.endswith("hc.sinkhorn") for n in b.g.path(b.sink)),
+                                 tokens_s_per_user_with_pipelined_sinkhorn=1 / bp_.evaluate(fab)["period"],
+                                 pipelined_branch_ns=bp_.g.nodes["L3.attn.hc.sinkhorn"]["depth"] * 1e9)
             if bt == 1:
                 s["collectives_per_layer"] = collective_census(r)
                 s["no_chaining_tokens_s_per_user"] = 1 / b.evaluate(fab, chaining=False)["period"]
@@ -1254,7 +1324,8 @@ def build(p: Params, quick=False):
                                  ("expert_parallel", replace(p, moe="expert_parallel")),
                                  ("fused_not_bit_exact", replace(p, fuse=True)),
                                  ("kv_rows_replicated", replace(p, kv_mode="replicated")),
-                                 ("fdiv_12_cycles_hypothetical", replace(p, fdiv_cycles=12))):
+                                 ("fdiv_12_cycles_hypothetical", replace(p, fdiv_cycles=12)),
+                                 ("sinkhorn_pipelined_fadd_fdiv", replace(p, sinkhorn="pipelined"))):
                     mm = v41_machine(kind, g_ref, 1, points, designs, pp, clock)
                     sens[name] = 1 / Built(mm, pp, clock, v41_graph, c, mm.context).evaluate(fab)["period"]
                 s["sensitivity_tokens_s_per_user"] = sens
@@ -1397,7 +1468,15 @@ ASSUMPTIONS = [
     "all-to-all), shared expert split on its intermediate dimension. The hc fn matrix and the indexer wq_b "
     "are replicated (1.97 MB, 5.2 MB) to avoid two collectives.",
     "Hyper-connection mixes and the 20-iteration Sinkhorn run redundantly on every die from the replicated "
-    "residual, on a 16-entry fadd/fdiv unit (each normalisation 3 sequential adds + eps + one divide).",
+    "residual. The row max and exp use the stream unit's SFU; the 40 normalisations run on ot_hdc_sinkhorn "
+    "(one normalisation per unit clock, bit-exact to the golden), as a multicycle path of the core clock: "
+    "41 unit clocks x ceil(routed step period x core clock) core cycles; one unit per sublayer engine, "
+    "users in flight queue for it in rounds, and the machine uses whichever of the unit and the stream "
+    "unit's pipelined fadd/fdiv is faster at its users in flight (the pipes interleave users). "
+    "The Sinkhorn of a sublayer depends only on that sublayer's input h, which is hc_post of the previous "
+    "sublayer (itself waiting on the previous Sinkhorn), so it cannot start earlier; it overlaps the "
+    "sublayer body and hc_post waits for it. Sensitivity 'sinkhorn_pipelined_fadd_fdiv' keeps the earlier "
+    "pricing (3 fadd + eps fadd + the 31-deep fdiv per normalisation).",
     "Array: 188 reticle dies at every dies-per-package choice; a layer per 4 dies at g=4; the remaining "
     "silicon holds Engram tables and the lm_head (one extra hop). Package SerDes lanes scale with the "
     "package edge (128 x sqrt(dies/4)) and are split evenly over the topology's neighbour links; a topology "

@@ -90,6 +90,35 @@ def test_sinkhorn_is_a_side_branch_joined_at_hc_post(env):
     assert "L3.attn.hc.sinkhorn" not in b.g.nodes["L3.attn.hc_pre"]["deps"]
 
 
+def test_sinkhorn_is_priced_from_the_routed_unit(env):
+    """The Sinkhorn node is the SFU front plus ot_hdc_sinkhorn's campaign latency in unit clocks, each
+    unit clock the routed step period rounded up to core cycles; the earlier pipelined pricing is slower."""
+    camp = json.loads(D.SINKHORN_CAMPAIGN.read_text())
+    phys = json.loads((D.PHYS / D.SINKHORN_BLOCK / "physical.json").read_text())["design"]
+    assert camp["status"] == "pass"
+    assert D.SK["clocks"] == camp["latency_cycles"] == 2 * env["c"]["hc_sinkhorn_iters"] + 1
+    assert D.SK["step_s"] == pytest.approx(1.0 / phys["fmax_hz"])
+    per = math.ceil(D.SK["step_s"] * env["clock"] - 1e-9)
+    front = 2 + D.FADD + D.SU["EXP"]
+    b = v41(env)
+    n = b.g.nodes["L3.attn.hc.sinkhorn"]
+    assert n["depth"] == pytest.approx((front + D.SK["clocks"] * per) / env["clock"])
+    old = v41(env, sinkhorn="pipelined").g.nodes["L3.attn.hc.sinkhorn"]["depth"]
+    nits = env["c"]["hc_sinkhorn_iters"]
+    assert old == pytest.approx((front + 2 * nits * (4 * D.FADD + 31)) / env["clock"])
+    assert n["depth"] < old
+    # users queue for the units in rounds when there are fewer units than users in flight
+    few = v41(env, kind="wafer", g=57, batch=64, sinkhorn="unit", sinkhorn_units=1)
+    rounds = math.ceil(few.mach.microbatch)
+    assert few.g.nodes["L3.attn.hc.sinkhorn"]["depth"] == pytest.approx(
+        (front + rounds * D.SK["clocks"] * per) / env["clock"])
+    # the default takes the faster datapath at the machine's users in flight
+    for batch in (64, 4096):
+        depth = {m: v41(env, batch=batch, sinkhorn=m).g.nodes["L3.attn.hc.sinkhorn"]["depth"]
+                 for m in ("best", "unit", "pipelined")}
+        assert depth["best"] == min(depth["unit"], depth["pipelined"])
+
+
 def test_weight_sweep_is_the_analytical_one(env):
     b = v41(env)
     # the shares partition the analytical sweep; a matvec whose share is below its lane-walk floor
