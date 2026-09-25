@@ -386,3 +386,32 @@ Those are the next RTL iterations for that target.
   vehicle). At 16,384 lanes and position 1,024, 24.7 M cycles per token become
   8.2 M. The next limits are the weighted sum over positions, whose K is the
   whole context, and the one-element stream unit.
+
+## 6. Tape-out readiness, for all three architectures
+
+The decode cores, their units and the array fabric are designed, simulated
+bit-exactly and routed block by block. A real chip needs five more
+workstreams. Each applies to **all three architectures**:
+
+- **HBM comparator:** the same decode core, with weights and KV streamed from HBM through the prefetching streamers.
+- **Qwen3-8B ROM reticle:** one die, with the weights in mask ROM.
+- **DeepSeek-V4.1-Flash ROM array:** one universal die, personalised per die by via mask, four dies per package, packages in a board ring.
+
+| Workstream | What "done" means | HBM comparator | Qwen3-8B ROM | V4.1 ROM array |
+|---|---|---|---|---|
+| Memory compilers | SRAM and via-programmed ROM macro generators with LEF, Liberty and Verilog views; ROM layout and timing independent of content, content as a per-die via map with a hash | SRAM only (vector memory, KV tail, prefetch buffers); HBM PHY as a hard macro | ROM banks and SRAM | ROM banks, SRAM, Engram table ROM |
+| Memory self-test and repair | SRAM March BIST with redundant rows and columns, and BIST-driven repair; ROM signature BIST with ECC or spare rows | yes | yes | yes, plus a per-die content signature |
+| Scan and test | scan insertion option in the physical flow, a JTAG TAP, ATPG stuck-at coverage, and area and Fmax cost | yes | yes | yes, including the collectives and links |
+| Power and clock sign-off | activity-based power from the real decode campaigns, energy per token, power grid and IR drop, clock skew and latency, multi-corner timing | yes, including the HBM interface power | yes | yes, per die and per package |
+| Full-chip hierarchical implementation | hardened blocks with abstracts, timing budgets at block boundaries, re-closure against the budgets, and top-level floorplan, power grid, clock and route (a reduced die where a full one is intractable, with the scaling argument) | die with streamers and HBM PHY | single die | the universal die, then the package |
+| Host interface and runtime | host command and completion interface in RTL, a runtime driving the RTL simulation, an OpenAI-compatible endpoint with the model's tokenizer, and end-to-end tokens equal to the oracle | yes | yes | yes, multi-package sessions |
+
+Status is tracked per workstream in its own document:
+
+- `docs/MEMORY_COMPILERS_AND_BIST.md`
+- `docs/DFT.md`
+- `docs/POWER_CLOCK_SIGNOFF.md`
+- `docs/FULL_CHIP_IMPLEMENTATION.md`
+- `docs/HOST_INTERFACE_AND_RUNTIME.md`
+
+A workstream is complete only when it covers all three columns.

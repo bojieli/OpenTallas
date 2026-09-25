@@ -1139,6 +1139,30 @@ def collective_census(r):
 
 
 # -- machines from the analytical artifacts ---------------------------------------------------------------------------
+def v41_study_rows():
+    """The V4.1 study's points and the two named designs' entries.
+
+    The x188 array and the x12 wafer are the designs this study describes.  The
+    roofline's device-count sweep need not emit either count (it sizes each
+    layout by its own rule), so a missing one is built by that same code path
+    (tools/wafer_vs_array_study.analytical_design: run_roofline_studies' budget
+    and evaluate at the study's context) at batches 1, 64 and 4,096."""
+    points = json.loads(V41_POINTS.read_text())
+    designs = {d_["name"]: d_ for d_ in json.loads(V41_ANALYTICAL.read_text())["designs"]
+               if d_["name"] in (ARRAY_DESIGN, WAFER_DESIGN)}
+    missing = [(kind, n, name) for kind, n, name in (("array", 188, ARRAY_DESIGN), ("wafer", 12, WAFER_DESIGN))
+               if name not in designs]
+    if missing:
+        import wafer_vs_array_study as W
+        env = W._roofline_env()
+        for kind, n, name in missing:
+            _summary, d, pts = W.analytical_design(env, kind, n)
+            assert d["name"] == name and pts, (name, d.get("reasons"))
+            designs[name] = d
+            points = points + pts
+    return points, designs
+
+
 def point(points, design, batch):
     for q in points:
         if q["design"] == design and q["batch_size"] == batch:
@@ -1171,6 +1195,9 @@ def v41_machine(kind, g, batch, points, designs, p, clock, *, design=None, units
     per_layer = per_layer or pl0
     q = point(points, dn, batch)
     d = designs[dn]
+    # The analytical row's service terms are for the tensor group the roofline CHOSE at this point
+    # (roofline.evaluate searches it); the group scaling below starts from that one.
+    g_ref = int(q.get("tensor_group") or g_ref)
     NL = 40
     if g >= per_layer:
         lps, sub = g / per_layer, 1
@@ -1184,7 +1211,10 @@ def v41_machine(kind, g, batch, points, designs, p, clock, *, design=None, units
         slots = max(float(stages), slots_ref * stages / q["pipeline_stages"])
         mb = max(1.0, batch / slots)
     ct = q["component_times_s"]
-    S = q["step_time_s"] - ct["layer_fixed_latency"] - ct["link_latency"]
+    # The sweep a token waits for: the roofline publishes it as serial_sweep_s since the serial path
+    # became its own operator graph (older artifacts: the step less its two serial terms).
+    S = q["serial_sweep_s"] if q.get("serial_sweep_s") else \
+        q["step_time_s"] - ct["layer_fixed_latency"] - ct["link_latency"]
     beta = max(ct["compute"], ct["weight_read"], ct["kv_read"]) / S
     c_ = ct["compute"] * (g_ref / g) * (mb / mb_ref)
     w_ = ct["weight_read"] * (g_ref / g)
@@ -1297,9 +1327,7 @@ def build(p: Params, quick=False):
     rec["hc1_llama31_8b"] = headline_hc1(p, clock)
     rec["qwen3_8b_single_reticle"] = headline_qwen(p, clock)
 
-    points = json.loads(V41_POINTS.read_text())
-    designs = {d_["name"]: d_ for d_ in json.loads(V41_ANALYTICAL.read_text())["designs"]
-               if d_["name"] in (ARRAY_DESIGN, WAFER_DESIGN)}
+    points, designs = v41_study_rows()
     c = v41_shape()
     rows = {}
     for kind, g_ref in (("array", 4), ("wafer", 57)):
