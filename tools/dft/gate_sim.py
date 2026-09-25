@@ -286,7 +286,7 @@ def build_bench(
         lines.append(decl(p, "reg"))
     for p in out_ports:
         lines.append(decl(p, "wire"))
-    conns = ", ".join(f".{nl.verilog_name(p).rstrip()}({nl.verilog_name('tbs_' + p).rstrip()} )" for p in mod.ports)
+    conns = ",\n    ".join(f".{nl.verilog_name(p).rstrip()}({nl.verilog_name('tbs_' + p).rstrip()} )" for p in mod.ports)
     lines.append(f"  {nl.verilog_name(top)} dut ({conns});")
     P = len(patterns)
     npi = len(drive)
@@ -297,7 +297,7 @@ def build_bench(
         f"  reg [L-1:0] mask_m [0:{max(P * C - 1, 0)}];",
         f"  reg [NPI-1:0] pi_m [0:{max(P - 1, 0)}];",
         f"  reg [NPO-1:0] po_m [0:{max(P - 1, 0)}];",
-        "  wire [NPO-1:0] po_now = {" + ", ".join(spell(b) for b in names["po"]) + "};" if n_po else "  wire [0:0] po_now = 1'b0;",
+        "  wire [NPO-1:0] po_now = {" + ",\n    ".join(spell(b) for b in names["po"]) + "};" if n_po else "  wire [0:0] po_now = 1'b0;",
         "  integer p, t, c, mism, total_mism, f;",
         "  task pulse; begin",
     ]
@@ -310,7 +310,7 @@ def build_bench(
     # apply pi vector (excluding clocks)
     lines.append("  task apply_pi(input integer pp); begin")
     if npi:
-        lines.append("    {" + ", ".join(spell(b) for b in drive) + "} = pi_m[pp];")
+        lines.append("    {" + ",\n     ".join(spell(b) for b in drive) + "} = pi_m[pp];")
     for b, v in scan["capture_constraints"].items():
         lines.append(f"    {spell(b)} = 1'b{v};")
     lines.append("  end endtask")
