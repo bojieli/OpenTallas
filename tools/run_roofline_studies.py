@@ -26,6 +26,7 @@ import io
 import json
 from collections.abc import Mapping, Sequence
 import math
+import os
 from pathlib import Path
 import sys
 from typing import Any
@@ -1241,24 +1242,51 @@ def _step_row(
         "topology_kind": budget.topology.kind,
         "parallelism": budget.topology.parallelism,
         "link": budget.topology.link,
-        "intra_link": budget.topology.inner_link,
+        # The CHOSEN in-domain link: a wafer point is priced on its core mesh
+        # and on the express network (links.rom_wafer_express) and keeps the
+        # faster.
+        "intra_link": metrics["intra_link"],
+        "intra_link_declared": budget.topology.inner_link,
         "intra_domain_size": budget.topology.intra_domain_size,
-        "tensor_group": budget.topology.tensor_group,
+        # The CHOSEN tensor group: a hybrid layout searches its group per point.
+        "tensor_group": metrics["tensor_group"],
+        "tensor_group_declared": budget.topology.tensor_group,
         "pipeline_stages": metrics["pipeline_stages"],
         "pipeline_stages_uncapped": metrics["pipeline_stages_uncapped"],
-        "hop_breakdown": "; ".join(
-            f"{d['count']:,.0f}x {d['kind']} span {d['span']} on {d['link']} "
-            f"({d['seconds'] * 1e6:,.2f} us)"
-            for d in metrics["link_breakdown"]
+        "hop_breakdown": (
+            f"{metrics['serial_latency']['collectives_per_layer']:.2f} collectives per layer "
+            f"({', '.join(metrics['serial_latency']['collective_algorithms']) or 'none'}), "
+            f"{metrics['serial_latency']['pipeline_hops']} pipeline hops; "
+            f"collectives {metrics['serial_latency']['collective_s'] * 1e6:,.2f} us, "
+            f"hops {metrics['serial_latency']['pipeline_hop_s'] * 1e6:,.2f} us on the path"
         ),
-        "link_latency_s": step.component_times_s["link_latency"],
-        "link_latency_without_stage_cap_s": metrics[
-            "link_latency_without_stage_cap_s"
+        "serial_chain_s": metrics["serial_latency"]["chain_s"],
+        "serial_critical_path_s": metrics["serial_latency"]["critical_path_s"],
+        "serial_binding": metrics["serial_latency"]["binding"],
+        "collectives_per_layer": metrics["serial_latency"]["collectives_per_layer"],
+        "collective_algorithms": list(metrics["serial_latency"]["collective_algorithms"]),
+        "stream_unit_width": metrics["serial_latency"]["stream_unit_width"],
+        "serial_clock_hz": metrics["serial_latency"]["clock_hz"],
+        "serial_sweep_s": metrics["serial_latency"]["sweep_s"],
+        "serial_kv_share_of_sweep": metrics["serial_latency"]["kv_share_of_sweep"],
+        "tensor_group_search": [
+            {"tensor_group": row["tensor_group"], "intra_link": row["intra_link"],
+             "step_s": _finite(row["step_s"])}
+            for row in metrics["serial_latency"]["tensor_group_search"]
         ],
+        "legacy_layer_fixed_latency_s": metrics["legacy_layer_fixed_latency_s"],
+        "legacy_link_latency_s": metrics["legacy_link_latency_s"],
+        "link_latency_s": step.component_times_s["link_latency"],
+        # What the stage cap removes: the extra boundaries a token would cross
+        # if it visited every partition, priced by the legacy per-hop rule and
+        # added to this step.
+        "link_latency_without_stage_cap_s": step.component_times_s["link_latency"]
+        + metrics["link_latency_without_stage_cap_s"]
+        - metrics["legacy_link_latency_s"],
         "step_time_without_stage_cap_s": (
             step.step_time_s
-            - step.component_times_s["link_latency"]
             + metrics["link_latency_without_stage_cap_s"]
+            - metrics["legacy_link_latency_s"]
             if math.isfinite(step.step_time_s)
             else None
         ),
@@ -1671,6 +1699,11 @@ def _emit_rom_design(
         )
 
 
+#: ROM-only links a design may choose instead of its declared one (the wafer
+#: express network); their bands belong to the ROM side.
+ROM_ALTERNATIVE_LINKS = ("rom_wafer_express",)
+
+
 def _link_latency_scopes(config: dict[str, Any]) -> dict[str, tuple[str, ...]]:
     """The link bands that belong to each side, and the two together.
 
@@ -1687,7 +1720,8 @@ def _link_latency_scopes(config: dict[str, Any]) -> dict[str, tuple[str, ...]]:
     """
 
     return {
-        "rom": (str(config["rom_intra_link"]), str(config["rom_inter_link"])),
+        "rom": (str(config["rom_intra_link"]), str(config["rom_inter_link"]))
+        + tuple(ROM_ALTERNATIVE_LINKS),
         "gpu": (str(config["intra_link"]), str(config["inter_link"])),
         "joint": None,  # type: ignore[dict-item]
     }
@@ -1714,8 +1748,7 @@ def _link_latency_sensitivity(
     for scope, links in scopes.items():
         for bound in ("low", "high"):
             bounded = technology.at_link_latency_bound(bound, links)
-            result = _simulate_study(study_id, bounded, with_sensitivity=False)
-            for row in _headline_rows(result):
+            for row in _variant_headline_rows(study_id, bounded):
                 rows.append(
                     {
                         "scope": scope,
@@ -1930,11 +1963,10 @@ def _fabric_clock_sensitivity(
     rows: list[dict[str, Any]] = []
     for point in _fabric_clock_points(technology):
         variant = _fabric_clock_variant(technology, point["fabric_clock_hz"])
-        result = _simulate_study(study_id, variant, with_sensitivity=False)
         fixed = layer_fixed_latency(
             variant, ModelProfile.load(STUDY_MODELS[0][1])
         )[0]
-        for row in _headline_rows(result):
+        for row in _variant_headline_rows(study_id, variant):
             rows.append(
                 {
                     **{
@@ -2094,10 +2126,9 @@ def _rom_cell_ratio_sensitivity(
         variant = _rom_cell_ratio_variant(
             technology, point["cell_to_sram_cell_area_ratio"]
         )
-        result = _simulate_study(study_id, variant, with_sensitivity=False)
         capacity = variant.rom_bits_per_mm2(node).value / BITS_PER_BYTE
         sweep_s = _rom_sweep_time_s(variant, node)
-        for row in _headline_rows(result):
+        for row in _variant_headline_rows(study_id, variant):
             rows.append(
                 {
                     **{
@@ -2725,6 +2756,72 @@ def _design_selection(
     }
 
 
+# --------------------------------------------------------------------------
+# parallel regeneration
+# --------------------------------------------------------------------------
+
+#: Worker processes a primary study may use for its sensitivity re-runs
+#: (``ROOFLINE_WORKERS``; 1, the default, is the old serial behaviour).  Each
+#: re-run is an independent ``_simulate_study`` on a varied technology table
+#: and only its headline rows are kept, so the result is identical either way.
+_HEADLINE_CACHE: dict[tuple[str, str], list[dict[str, Any]]] = {}
+
+
+def _technology_key(technology: Technology) -> str:
+    return hashlib.sha256(
+        json.dumps([technology.raw, technology.efficiency_override], sort_keys=True, default=str).encode()
+    ).hexdigest()
+
+
+def _headline_job(job: tuple[str, dict[str, Any], Any]) -> list[dict[str, Any]]:
+    study_id, raw, efficiency_override = job
+    variant = Technology(raw=raw, efficiency_override=efficiency_override)
+    return _headline_rows(_simulate_study(study_id, variant, with_sensitivity=False))
+
+
+def _variant_headline_rows(study_id: str, technology: Technology) -> list[dict[str, Any]]:
+    key = (study_id, _technology_key(technology))
+    if key not in _HEADLINE_CACHE:
+        _HEADLINE_CACHE[key] = _headline_job(
+            (study_id, technology.raw, technology.efficiency_override)
+        )
+    return _HEADLINE_CACHE[key]
+
+
+def _sensitivity_variants(study_id: str, technology: Technology) -> list[Technology]:
+    """Every technology table the three sensitivity tables re-run the study on."""
+
+    variants: list[Technology] = []
+    for _scope, links in _link_latency_scopes(STUDIES[study_id]).items():
+        for bound in ("low", "high"):
+            variants.append(technology.at_link_latency_bound(bound, links))
+    for point in _fabric_clock_points(technology):
+        variants.append(_fabric_clock_variant(technology, point["fabric_clock_hz"]))
+    for point in _rom_cell_ratio_points(technology):
+        variants.append(_rom_cell_ratio_variant(technology, point["cell_to_sram_cell_area_ratio"]))
+    return variants
+
+
+def _prefetch_sensitivity(study_id: str, technology: Technology) -> None:
+    workers = int(os.environ.get("ROOFLINE_WORKERS", "1"))
+    if workers <= 1:
+        return
+    jobs, keys = [], []
+    for variant in _sensitivity_variants(study_id, technology):
+        key = (study_id, _technology_key(variant))
+        if key in _HEADLINE_CACHE or key in keys:
+            continue
+        keys.append(key)
+        jobs.append((study_id, variant.raw, variant.efficiency_override))
+    if not jobs:
+        return
+    import multiprocessing
+
+    with multiprocessing.get_context("fork").Pool(min(workers, len(jobs))) as pool:
+        for key, rows in zip(keys, pool.map(_headline_job, jobs, chunksize=1)):
+            _HEADLINE_CACHE[key] = rows
+
+
 def _simulate_study(
     study_id: str,
     technology: Technology,
@@ -2747,6 +2844,8 @@ def _simulate_study(
     # artifact -- densities, designs, sweeps, sensitivities -- is priced at one
     # ratio.  Refuses a node it has no entry for.
     technology = _node_technology(technology, node)
+    if with_sensitivity:
+        _prefetch_sensitivity(study_id, technology)
     hbm_generation = str(config["hbm_generation"])
     reticle_area = technology.graded("reticle", "area_mm2").value
     wafer_area = technology.graded("wafer", "area_mm2").value
@@ -6088,6 +6187,57 @@ def _render_hc1_residual(hc1: dict[str, Any]) -> list[str]:
     ]
 
 
+def _render_serial_latency(result: dict[str, Any]) -> list[str]:
+    """The serial part of the step at the recommended designs, from the operator graph."""
+
+    points = result.get("points") or []
+    by_key = {(row["design"], row["batch_size"]): row for row in points}
+    lines = [
+        "## Serial latency and collectives",
+        "",
+        "The serial part of every step is the longest path of one token's operator",
+        "dependency graph (`src/opentallas/critical_path.py`): the dependent-operator",
+        "chain priced with measured RTL depths (ROM) or a published CUDA-graph launch gap",
+        "per dependent kernel (GPU), every collective the weight split needs with its",
+        "latency and real payload, and every pipeline hop. A hybrid layout's tensor",
+        "group and every collective's reduction algorithm are searched per point.",
+        "`legacy` is the flat per-layer floor plus two all-reduces per layer this",
+        "replaced.",
+        "",
+        "| Model | Design | Batch | Group | Coll./layer | Algorithms | Chain (us) | Comm. (us) | Sweep (us) | Legacy serial (us) | tok/s/user |",
+        "|---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|",
+    ]
+    rows = 0
+    for entry in result.get("design_selection", {}).get("models", []):
+        best = entry.get("recommended")
+        if not best:
+            continue
+        designs = [best["design"]]
+        if best.get("iso_area_gpu_design"):
+            designs.append(best["iso_area_gpu_design"])
+        for design in designs:
+            for batch in (1, 64):
+                row = by_key.get((design, batch))
+                if row is None or not row.get("feasible") or "serial_chain_s" not in row:
+                    continue
+                rows += 1
+                lines.append(
+                    f"| {row['model']} | `{design.split('/')[-1]}` | {batch} | "
+                    f"{row['tensor_group']}"
+                    + (f" on `{row['intra_link']}`" if row["intra_link"] != row["intra_link_declared"] else "")
+                    + f" | {row['collectives_per_layer']:.2f} | "
+                    f"{', '.join(row['collective_algorithms']) or '--'} | "
+                    f"{row['serial_chain_s'] * 1e6:,.2f} | {row['link_latency_s'] * 1e6:,.2f} | "
+                    f"{row['serial_sweep_s'] * 1e6:,.2f} | "
+                    f"{(row['legacy_layer_fixed_latency_s'] + row['legacy_link_latency_s']) * 1e6:,.2f} | "
+                    f"{_fmt(row['per_user_tokens_s'])} |"
+                )
+    if not rows:
+        return []
+    lines.append("")
+    return lines
+
+
 def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
     study_id = result["study_id"]
     derivations = result["technology_derivations"]
@@ -6115,13 +6265,16 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
         ),
         "",
         *_render_design_selection(result),
+        *_render_serial_latency(result),
         "## The overlap and serialisation rule",
         "",
         "```",
         "t_memory  = t_weight + t_kv        weights and KV share one memory system",
         "t_memory  = max(t_weight, t_kv)    weights and KV are separate arrays",
         "t_service = max(t_memory, t_compute)      on the AGGREGATE machine",
-        "t_user    = token_slots * t_service / stage_balance + t_link",
+        "S         = token_slots * t_service / stage_balance      the sweep a token waits for",
+        "t_user    = max(S, longest path of the token's operator graph with S spread",
+        "                over its operators by bytes, + every pipeline hop)",
         "t_user   *= thermal_scale",
         "",
         "per_user_tokens_s  = 1 / t_user",
@@ -6147,8 +6300,8 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
         "N stages holds 1/N of the weights and reads them with 1/N of the bandwidth --",
         "so adding devices buys aggregate throughput and buys one user nothing.",
         "Tensor parallelism is different in kind: every partition is on the same token,",
-        "`token_slots` is 1, and the price is two all-reduces per layer, charged in",
-        "`t_link`.",
+        "`token_slots` is 1, and the price is every collective the weight split needs,",
+        "charged on the token's operator graph (see *Serial latency and collectives*).",
         "",
         "**`aggregate = batch x per-user rate` no longer holds and its removal is the",
         "point.** The aggregate rate is the machine's rate with every slot occupied,",
@@ -6231,20 +6384,19 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "read-bandwidth density derived from Cerebras WSE-2",
             f"({derivations['sram_read_bytes_s_per_mm2']['value']:.3e} B/s/mm2).",
             "",
-            "### The per-layer latency band, and why the gate is not fitted",
+            "### The serial-latency band, and why the gate is not fitted",
             "",
-            "Every term in the per-layer latency block is `assumed` and carries",
-            "a stated range. Reporting the gate at one point inside a wide band",
-            "would invite the point to be read as measured, which is how a gate",
-            "becomes a one-parameter curve fit. The terms are derived from",
-            "primitives independent of this anchor -- SRAM access time,",
-            "sequencer issue and decode, pipeline fill and drain across a",
-            "dependent array-pass boundary, the layer barrier, and an on-die",
-            "wire delay over a distance taken from the floorplan -- and the gate",
-            "is evaluated at both ends.",
+            "The serial part of the step is the dependent-operator chain of the",
+            "Llama-3.1-8B decode graph (`src/opentallas/critical_path.py`), priced",
+            "with this repository's measured RTL depths",
+            "(`serial_latency.rom_datapath`). Nothing in it is fitted to this",
+            "anchor. Its few assumed inputs -- the clock the RTL is applied at,",
+            "the stream-unit share of the compute area, the select units, the",
+            "row-access latency -- carry ranges, and the gate is evaluated at both",
+            "ends. The flat per-layer floor this chain replaced is shown beside it.",
             "",
-            "| Per-layer latency | Value | Per token | Modelled tok/s | Ratio | Binds on |",
-            "|---|---:|---:|---:|---:|---|",
+            "| Serial chain | Per layer | Per token | Legacy floor per token | Modelled tok/s | Ratio | Binds on |",
+            "|---|---:|---:|---:|---:|---:|---|",
         ]
     )
     band = anchors["taalas_hc1"]["detail"]["layer_fixed_latency_band"]
@@ -6254,6 +6406,7 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"| range {bound} | "
             f"{entry['layer_fixed_latency_s_per_layer'] * 1e9:,.1f} ns/layer | "
             f"{_fmt_us(entry['layer_fixed_latency_s_per_token'])} us | "
+            f"{_fmt_us(entry['legacy_floor_s_per_token'])} us | "
             f"{_fmt(entry['modelled_tokens_s'])} | "
             f"{_fmt_ratio(entry['ratio_to_published'])} | "
             f"{entry['binding_constraint']} |"
@@ -6262,15 +6415,17 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "The per-layer cost that would land the model exactly on the",
+            "The per-layer serial cost that would land the model exactly on the",
             f"published figure is **{closing * 1e9:,.1f} ns/layer**. It is"
             + (
                 " negative, which means no positive latency term could close the"
                 " gate. The current result is decided earlier by the reported"
                 " capacity failure."
                 if closing < 0
-                else " reported so the distance between the derived value and"
-                " the fitted one is visible. It is never used as an input."
+                else " reported so the distance between the measured chain and"
+                " the one the shipping part implies is visible. It is never used"
+                " as an input: a chain longer than it means the hardwired"
+                " datapath modelled here is serially slower than HC1's."
             ),
             "",
             "### Anchor sensitivity",
@@ -8134,119 +8289,113 @@ def _study_files(destination: Path, result: dict[str, Any]) -> list[tuple[Path, 
         ),
     ]
 
-def run_all(
-    output_root: Path = OUTPUT_ROOT, *, force: bool = False
-) -> dict[str, dict[str, Any]]:
-    technology = Technology.load(TECHNOLOGY_PATH)
-    anchors = run_anchors(technology)
-    results: dict[str, dict[str, Any]] = {}
-    variants: dict[str, dict[str, Any]] = {}
+def _plan_primary(
+    output_root: Path, technology: Technology, anchors: dict[str, Any], study_id: str
+) -> tuple[dict[str, Any], list[tuple[Path, str]]]:
+    result = _simulate_study(study_id, technology)
+    result["validation_gates"] = anchors
+    destination = output_root / study_id
+    planned = list(_study_files(destination, result))
+    planned.append((destination / "sweep.csv", render_csv(result)))
+    planned.append(
+        (destination / "REPORT.md", render_report(result, anchors).rstrip() + "\n")
+    )
+    return result, planned
+
+
+def _plan_quantised(
+    output_root: Path,
+    technology: Technology,
+    anchors: dict[str, Any],
+    study_id: str,
+    primary: dict[str, Any] | None = None,
+) -> list[tuple[Path, str]]:
+    """The quantised variant of one primary.
+
+    It is deliberately NOT another entry in ``STUDIES``: a secondary result
+    that lands in the same directory as the primary, under the same file names,
+    is one copy-paste away from being quoted as the primary.  It gets its own
+    directory, its own short report that opens with what it is not, and no
+    sweep.csv at all.  Its report reads only the primary's design selection,
+    which does not depend on the primary's sensitivity tables, so a standalone
+    run re-simulates the primary without them."""
+
+    if primary is None:
+        primary = _simulate_study(study_id, technology, with_sensitivity=False)
+    config = dict(STUDIES[study_id])
+    config.update(QUANTISED_VARIANT)
+    config["contract"] = (
+        f"SECONDARY VARIANT of {study_id}. "
+        + str(STUDIES[study_id]["contract"])
+        + " Both sides re-quantised to "
+        f"{QUANTISED_VARIANT['bits_per_parameter']:g} bits per parameter. "
+        "A projection: no token has been produced at this precision on "
+        "either backend."
+    )
+    variant = _simulate_study(study_id, technology, with_sensitivity=False, config=config)
+    variant["study_id"] = f"{study_id}-{QUANTISED_VARIANT['variant_id']}"
+    variant["primary_study_id"] = study_id
+    variant["representation_variant"] = {
+        key: value
+        for key, value in QUANTISED_VARIANT.items()
+        if key not in ("models", "representation")
+    }
+    variant["representation_variant"]["representation"] = list(
+        QUANTISED_VARIANT["representation"]
+    )
+    variant["validation_gates"] = anchors
+    destination = variant_output_root(output_root) / study_id
+    planned = list(_study_files(destination, variant))
+    planned.append(
+        (
+            destination / "REPORT.md",
+            render_variant_report(variant, primary).rstrip() + "\n",
+        )
+    )
+    return planned
+
+
+def _plan_ladder(
+    output_root: Path, technology: Technology, anchors: dict[str, Any], study_id: str
+) -> list[tuple[Path, str]]:
+    """One single-model study per (model, context) that is not the primary
+    context, selected by the same rule on the same code path.  Kept out of the
+    primary results for the same reason the quantised variant is."""
+
     planned: list[tuple[Path, str]] = []
-    for study_id in STUDIES:
-        result = _simulate_study(study_id, technology)
-        result["validation_gates"] = anchors
-        results[study_id] = result
-        destination = output_root / study_id
-        planned.extend(_study_files(destination, result))
-        planned.append((destination / "sweep.csv", render_csv(result)))
-        planned.append(
-            (
-                destination / "REPORT.md",
-                render_report(result, anchors).rstrip() + "\n",
+    for model_name, model_path, primary_context in STUDY_MODELS:
+        for context in CONTEXT_LADDER.get(model_name, ()):
+            if context == primary_context:
+                continue
+            config = dict(STUDIES[study_id])
+            config["models"] = ((model_name, model_path, context),)
+            config["contract"] = (
+                f"CONTEXT-LADDER RUNG of {study_id}: {model_name} at "
+                f"{context:,} tokens. "
+                + str(STUDIES[study_id]["contract"])
+                + " Same rule, same code path as the primary; only the "
+                "context differs, and the primary artifact is unchanged."
             )
-        )
-
-    # --- the quantised variant, in its own tree ---------------------------
-    # It is deliberately NOT another entry in ``STUDIES``: a secondary result
-    # that lands in the same directory as the primary, under the same file
-    # names, is one copy-paste away from being quoted as the primary.  It gets
-    # its own directory, its own short report that opens with what it is not,
-    # and no sweep.csv at all -- there is no row here anyone should be reading
-    # into a spreadsheet.
-    for study_id in STUDIES:
-        config = dict(STUDIES[study_id])
-        config.update(QUANTISED_VARIANT)
-        config["contract"] = (
-            f"SECONDARY VARIANT of {study_id}. "
-            + str(STUDIES[study_id]["contract"])
-            + " Both sides re-quantised to "
-            f"{QUANTISED_VARIANT['bits_per_parameter']:g} bits per parameter. "
-            "A projection: no token has been produced at this precision on "
-            "either backend."
-        )
-        variant = _simulate_study(
-            study_id, technology, with_sensitivity=False, config=config
-        )
-        variant["study_id"] = f"{study_id}-{QUANTISED_VARIANT['variant_id']}"
-        variant["primary_study_id"] = study_id
-        variant["representation_variant"] = {
-            key: value
-            for key, value in QUANTISED_VARIANT.items()
-            if key not in ("models", "representation")
-        }
-        variant["representation_variant"]["representation"] = list(
-            QUANTISED_VARIANT["representation"]
-        )
-        variant["validation_gates"] = anchors
-        # Deliberately NOT added to ``results``: every consumer of that mapping
-        # -- the report, the tests, the printed summary -- treats its entries as
-        # the study's result, and a secondary projection sitting in that
-        # mapping is one loop away from being read as one.  The variant is
-        # written, and it is found by path.
-        variants[variant["study_id"]] = variant
-        destination = variant_output_root(output_root) / study_id
-        planned.extend(_study_files(destination, variant))
-        planned.append(
-            (
-                destination / "REPORT.md",
-                render_variant_report(variant, results[study_id]).rstrip() + "\n",
+            rung = _simulate_study(study_id, technology, with_sensitivity=False, config=config)
+            label = context_rung_label(model_name, context)
+            rung["study_id"] = f"{study_id}-{label}"
+            rung["primary_study_id"] = study_id
+            rung["context_ladder"] = {
+                "model": model_name,
+                "context_tokens": context,
+                "primary_context_tokens": primary_context,
+                "label": label,
+            }
+            rung["validation_gates"] = anchors
+            destination = context_ladder_output_root(output_root) / study_id / label
+            planned.extend(_study_files(destination, rung))
+            planned.append(
+                (destination / "REPORT.md", render_report(rung, anchors).rstrip() + "\n")
             )
-        )
+    return planned
 
-    # --- the context ladder, in its own tree ------------------------------
-    # One single-model study per (model, context) that is not the primary
-    # context, selected by the same rule on the same code path.  Kept out of
-    # ``results`` for the same reason the quantised variant is: a rung sitting
-    # in that mapping is one loop away from being read as the primary.
-    for study_id in STUDIES:
-        for model_name, model_path, primary_context in STUDY_MODELS:
-            for context in CONTEXT_LADDER.get(model_name, ()):
-                if context == primary_context:
-                    continue
-                config = dict(STUDIES[study_id])
-                config["models"] = ((model_name, model_path, context),)
-                config["contract"] = (
-                    f"CONTEXT-LADDER RUNG of {study_id}: {model_name} at "
-                    f"{context:,} tokens. "
-                    + str(STUDIES[study_id]["contract"])
-                    + " Same rule, same code path as the primary; only the "
-                    "context differs, and the primary artifact is unchanged."
-                )
-                rung = _simulate_study(
-                    study_id, technology, with_sensitivity=False, config=config
-                )
-                label = context_rung_label(model_name, context)
-                rung["study_id"] = f"{study_id}-{label}"
-                rung["primary_study_id"] = study_id
-                rung["context_ladder"] = {
-                    "model": model_name,
-                    "context_tokens": context,
-                    "primary_context_tokens": primary_context,
-                    "label": label,
-                }
-                rung["validation_gates"] = anchors
-                destination = context_ladder_output_root(output_root) / study_id / label
-                planned.extend(_study_files(destination, rung))
-                planned.append(
-                    (
-                        destination / "REPORT.md",
-                        render_report(rung, anchors).rstrip() + "\n",
-                    )
-                )
 
-    # --- candidate models, each in its own tree ---------------------------
-    planned.extend(_candidate_files(output_root, technology, anchors))
-
+def _write_planned(planned: list[tuple[Path, str]], force: bool) -> None:
     existing = [path for path, _ in planned if path.exists()]
     if existing and not force:
         raise SystemExit(
@@ -8256,6 +8405,61 @@ def run_all(
     for path, payload in planned:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(payload, encoding="utf-8", newline="")
+
+
+#: The independent pieces of a full regeneration, for ``--part``.  Every
+#: piece writes disjoint files by the same code path ``run_all`` uses, so
+#: running them as separate processes (tools/regenerate_roofline.py) produces
+#: the same bytes as one ``run_all``.
+PARTS = ("primary", "quantised", "ladder")
+
+
+def run_part(output_root: Path, part: str, *, force: bool = False) -> list[Path]:
+    kind, _, study_id = part.partition(":")
+    if kind not in PARTS or study_id not in STUDIES:
+        raise SystemExit(
+            f"--part must be one of {PARTS} followed by ':' and a study id in "
+            f"{sorted(STUDIES)}; got {part!r}"
+        )
+    technology = Technology.load(TECHNOLOGY_PATH)
+    anchors = run_anchors(technology)
+    if kind == "primary":
+        _result, planned = _plan_primary(output_root, technology, anchors, study_id)
+    elif kind == "quantised":
+        planned = _plan_quantised(output_root, technology, anchors, study_id)
+    else:
+        planned = _plan_ladder(output_root, technology, anchors, study_id)
+    _write_planned(planned, force)
+    return [path for path, _ in planned]
+
+
+def run_all(
+    output_root: Path = OUTPUT_ROOT, *, force: bool = False, candidates: bool = True
+) -> dict[str, dict[str, Any]]:
+    technology = Technology.load(TECHNOLOGY_PATH)
+    anchors = run_anchors(technology)
+    results: dict[str, dict[str, Any]] = {}
+    planned: list[tuple[Path, str]] = []
+    for study_id in STUDIES:
+        result, files = _plan_primary(output_root, technology, anchors, study_id)
+        results[study_id] = result
+        planned.extend(files)
+    # The quantised variant and the context ladder are deliberately NOT added
+    # to ``results``: every consumer of that mapping treats its entries as the
+    # study's result, and a secondary projection sitting in it is one loop
+    # away from being read as one.  They are written, and found by path.
+    for study_id in STUDIES:
+        planned.extend(
+            _plan_quantised(output_root, technology, anchors, study_id, results[study_id])
+        )
+    for study_id in STUDIES:
+        planned.extend(_plan_ladder(output_root, technology, anchors, study_id))
+    # --- candidate models, each in its own tree ---------------------------
+    # ``--no-candidates`` leaves them to separate ``--candidates`` runs, so the
+    # two halves of a full regeneration can run as parallel processes.
+    if candidates:
+        planned.extend(_candidate_files(output_root, technology, anchors))
+    _write_planned(planned, force)
     return results
 
 
@@ -8351,12 +8555,32 @@ def main(argv: list[str] | None = None) -> int:
             "and leave every other artifact untouched"
         ),
     )
+    parser.add_argument(
+        "--no-candidates",
+        action="store_true",
+        help=(
+            "run the primaries, their variants and context ladders but not the "
+            "candidate models (run those with --candidates, possibly in parallel)"
+        ),
+    )
+    parser.add_argument(
+        "--part",
+        metavar="KIND:STUDY",
+        help=(
+            "write only one independent piece: primary:<study>, "
+            "quantised:<study> or ladder:<study> (see tools/regenerate_roofline.py)"
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.part:
+        for path in run_part(args.output, args.part, force=args.force):
+            print(path.resolve())
+        return 0
     if args.candidates:
         for path in run_candidates(args.output, args.candidates, force=args.force):
             print(path.resolve())
         return 0
-    results = run_all(args.output, force=args.force)
+    results = run_all(args.output, force=args.force, candidates=not args.no_candidates)
     for study_id, result in results.items():
         audit = result["consistency_audit"]
         print(
