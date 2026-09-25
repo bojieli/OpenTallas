@@ -10,10 +10,10 @@
 // second column (MY) and the second row (MX), the usual tile-flipping, so
 //   * horizontal neighbours face each other with their E ports (column 0 E,
 //     column 1 mirrored E) and vertical neighbours with their N ports;
-//   * every tile's HBM pins (its W edge) face a die edge: column 0 the west
-//     HBM PHY, column 1 the east one;
-//   * the outward W ports go to board SerDes on the west and east edges, the
-//     outward S ports to UCIe die-to-die modules on the south and north edges.
+//   * every tile's S edge faces a die edge (south for row 0, north for the
+//     mirrored row 1), where a PHY strip holds its UCIe module (the outward S
+//     mesh port) and its HBM slice (the KV request/response port);
+//   * the outward W ports go to board SerDes on the west and east edges.
 // Mesh port index: [0] N, [1] E, [2] S, [3] W.
 //
 // Every mesh pin is a register inside its tile (ot_chip_mesh_link), so the
@@ -117,18 +117,15 @@ module ot_chip_die2x2 (
         end
     endgenerate
 
-    // -- HBM: column 0 tiles (0, 2) to the west PHY, column 1 tiles (1, 3) to the east --
+    // -- HBM: one PHY + controller slice under each tile ----------------------------------
     generate
-        for (k = 0; k < 2; k = k + 1) begin : g_hbm
-            localparam integer A = k, B = k + 2;   // the column's two tiles (rows 0, 1)
+        for (k = 0; k < 4; k = k + 1) begin : g_hbm
             ot_phy_hbm u_hbm (
                 .clk(clk),
-                .hq_v({hq_v[B], hq_v[A]}), .hq_rdy({hq_rdy[B], hq_rdy[A]}), .hq_we({hq_we[B], hq_we[A]}),
-                .hq_addr({hq_addr[B], hq_addr[A]}), .hq_len({hq_len[B], hq_len[A]}),
-                .hq_tag({hq_tag[B], hq_tag[A]}), .hq_wdata({hq_wdata[B], hq_wdata[A]}),
-                .hr_v({hr_v[B], hr_v[A]}), .hr_rdy({hr_rdy[B], hr_rdy[A]}),
-                .hr_tag({hr_tag[B], hr_tag[A]}), .hr_beat({hr_beat[B], hr_beat[A]}),
-                .hr_data({hr_data[B], hr_data[A]}));
+                .hq_v(hq_v[k]), .hq_rdy(hq_rdy[k]), .hq_we(hq_we[k]), .hq_addr(hq_addr[k]),
+                .hq_len(hq_len[k]), .hq_tag(hq_tag[k]), .hq_wdata(hq_wdata[k]),
+                .hr_v(hr_v[k]), .hr_rdy(hr_rdy[k]), .hr_tag(hr_tag[k]), .hr_beat(hr_beat[k]),
+                .hr_data(hr_data[k]));
         end
     endgenerate
 endmodule

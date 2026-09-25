@@ -72,6 +72,10 @@ def budget_sdc(block: str, budget: dict[str, Any]) -> str:
     for port, b in sorted(entry["ports"].items()):
         if port in ("clk", "rst_n"):
             continue
+        if b["status"] == "static":
+            sel = f"[get_ports {{{port}}}]" if b["width"] == 1 else f"[get_ports {{{port}[*]}}]"
+            lines.append(f"set_false_path -from {sel}")
+            continue
         sel = f"[get_ports {{{port}}}]" if b["width"] == 1 else f"[get_ports {{{port}[*]}}]"
         if b["direction"] == "input":
             lines.append(f"set_input_delay {b['external_ps']:.1f} -clock clk {sel}")

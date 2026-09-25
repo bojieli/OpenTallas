@@ -195,8 +195,10 @@ def test_committed_budget_tables_are_consistent():
     T, U = b["period_ps"], b["uncertainty_ps"]
     for name, blk in b["blocks"].items():
         for port, r in blk["ports"].items():
-            assert r["external_ps"] + r["internal_budget_ps"] == pytest.approx(T - U, abs=0.2) or \
-                r["status"] == "untimed", (name, port)
+            if r["status"] in ("untimed", "static"):
+                continue
+            assert r["external_ps"] + r["internal_budget_ps"] == pytest.approx(T - U, abs=0.2), \
+                (name, port)
             if r["status"] == "fits" and "feedthrough_ps" not in r:
                 assert r["internal_budget_ps"] >= r["internal_ps"] - 0.1, (name, port)
 

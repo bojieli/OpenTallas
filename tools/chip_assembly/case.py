@@ -53,6 +53,7 @@ class CaseSpec:
     macro_halo_um: tuple[float, float] = (2.0, 2.0)
     extra: dict[str, Any] = field(default_factory=dict)
     derived_sources: dict[str, str] = field(default_factory=dict)   # file name -> text
+    include_dirs: list[str] = field(default_factory=list)          # repository-relative
 
 
 def io_constraints_tcl(groups: list[dict[str, Any]]) -> str:
@@ -119,6 +120,8 @@ def write_case(case: Path, spec: CaseSpec) -> None:
         f"export IO_PLACER_V = {spec.io_layers[1]}",
         "export PLACE_PINS_ARGS = -min_distance 1 -min_distance_in_tracks",
     ]
+    if spec.include_dirs:
+        cfg.append("export VERILOG_INCLUDE_DIRS = " + " ".join(f"/src/{d}" for d in spec.include_dirs))
     if spec.params:
         cfg.append("export VERILOG_TOP_PARAMS = " + " ".join(f"{k} {v}" for k, v in spec.params.items()))
     if spec.pdn_tcl:

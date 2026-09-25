@@ -118,7 +118,7 @@ HDC_SU_SOURCES = [
 BLOCKS: dict[str, Block] = {
     "ot_hdc_matvec": Block(
         "ot_hdc_matvec", HDC_ME_SOURCES, 400.0, 400.0,
-        [(r"^wrom_", "N"), (r"^kv_", "W"), (r"^(x_|o_|ov$)", "E")],
+        [(r"^wrom_", "N"), (r"^(x_|o_|ov$)", "E")],
         record="results/physical_abi3/asap7/hdc/ot_hdc_matvec/physical.json",
         notes="64-lane matrix-vector engine; 68.6k um2 of cells flat, so ~43% utilisation"),
     "ot_hdc_stream": Block(
@@ -129,8 +129,8 @@ BLOCKS: dict[str, Block] = {
     "ot_hdc_kv_stream": Block(
         "ot_hdc_kv_stream", ["rtl/hdc/kv/ot_hdc_kv_walk.sv", "rtl/hdc/kv/ot_hdc_kv_stream.sv"],
         200.0, 200.0,
-        [(r"^(kv_re|kv_raddr|kv_q)", "E"), (r"^(hq_|hr_)", "W"), (r"^(win_|tl_)", "S")],
-        default_edge="E",
+        [(r"^(hq_|hr_)", "S"), (r"^(win_|tl_)", "E")],
+        default_edge="N",
         record="results/physical_abi3/asap7/hdc/kv/ot_hdc_kv_stream/physical.json",
         notes="KV streaming engine; 6.5k um2 of cells but ~7,500 pins, so pin-limited"),
     "ot_chip_pkg_ctrl": Block(
@@ -151,6 +151,43 @@ BLOCKS: dict[str, Block] = {
         record="results/physical_abi3/asap7/rom/ot_rom_fabric_router/physical.json",
         notes="5-port 512-bit mesh router; 10.1k um2 of cells, ~5,200 pins"),
 }
+
+
+V41_COMMON = [
+    "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/proto/ot_fp32_mul_rne_pipe.sv", "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_reduce.sv",
+]
+BLOCKS.update({
+    "ot_hdc_v41_stream": Block(
+        "ot_hdc_v41_stream", V41_COMMON + [
+            "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_softplus.sv",
+            "rtl/hdc/v41/ot_hdc_v41_stream.sv"],
+        460.0, 460.0,
+        [(r"^(vm_|vi_|red_)", "W"), (r"^(wrom_|cr_)", "N"), (r"^kv_", "W")],
+        notes="V4.1 four-operand stream unit; 88.1k um2 of cells flat (routed at 848 MHz flat)"),
+    "ot_hdc_v41_qe": Block(
+        "ot_hdc_v41_qe", V41_COMMON + [
+            "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/hdc/v41/ot_hdc_actquant.sv", "rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+            "rtl/hdc/v41/ot_hdc_v41_qe.sv"],
+        420.0, 420.0,
+        [(r"^qr_", "N"), (r"^(vi_|xr_|w_)", "W")],
+        notes="V4.1 quantised block-dot engine; 53.8k um2 of cells after synthesis"),
+    "ot_hdc_v41_xu": Block(
+        "ot_hdc_v41_xu", V41_COMMON + [
+            "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv", "rtl/hdc/v41/ot_hdc_engram_hash.sv",
+            "rtl/hdc/v41/ot_hdc_select.sv", "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+            "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv", "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+            "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv", "rtl/hdc/v41/ot_hdc_v41_xu.sv"],
+        480.0, 480.0,
+        [(r"^er_", "N"), (r"^(vr_|xr_|vw_|w_)", "W")],
+        notes="V4.1 select / Sinkhorn / Engram unit; the Sinkhorn runs on a divided clock (1/7)"),
+    "ot_hdc_v41_hcproj": Block(
+        "ot_hdc_v41_hcproj", V41_COMMON + ["rtl/hdc/v41/ot_hdc_v41_hcproj.sv"],
+        160.0, 160.0,
+        [(r"^hr_", "N"), (r"^(x_|o_)", "W")],
+        notes="V4.1 hyper-connection projection (3 FP32 lanes)"),
+})
 
 
 def edge_of(block: Block, port: str, bit: int | None) -> str:
@@ -186,8 +223,8 @@ def tile_memories(arch: str) -> dict[str, mc.MacroSpec]:
         out[name] = spec
 
     fit("ot_mem_prog", 4096 * 1024,
-        P(("re", "input", 1, "N"), ("addr", "input", 12, "N"), ("q", "output", 1024, "N")),
-        "rom", rom=True, aspect=3.0,
+        P(("re", "input", 1, "S"), ("addr", "input", 12, "S"), ("q", "output", 1024, "S")),
+        "rom", rom=True, aspect=200 / 272, min_w=200,
         basis="program ROM, 4,096 x 1,024-bit instructions, via-programmed ROM density")
     fit("ot_mem_crom", 4096 * 64,
         P(("re", "input", 1, "W"), ("addr", "input", 12, "W"), ("q", "output", 64, "W")),
@@ -208,15 +245,15 @@ def tile_memories(arch: str) -> dict[str, mc.MacroSpec]:
                "2 element write ports, 1 word read and 1 word write port for the controller; "
                "fakeram7 bit density x 2.5 for the ports"))
     fit("ot_mem_kvwin", 4 * 256 * 256,
-        P(("we", "input", 4, "E"), ("waddr", "input", 32, "E"), ("wdata", "input", 1024, "E"),
-          ("re", "input", 1, "N"), ("raddr", "input", 8, "N"), ("q", "output", 1024, "N")),
-        "sram", factor=1.3, aspect=200 / 80, min_w=200,
+        P(("we", "input", 4, "W"), ("waddr", "input", 32, "W"), ("wdata", "input", 1024, "W"),
+          ("re", "input", 1, "W"), ("raddr", "input", 8, "W"), ("q", "output", 1024, "W")),
+        "sram", factor=1.3, aspect=70 / 200, min_h=200,
         basis="KV window, 4 banks x 256 x 256 bits, one read and one write port (x1.3)")
     fit("ot_mem_kvtail", 2 * 128 * 256,
-        P(("we", "input", 2, "N"), ("waddr", "input", 14, "N"), ("wmask", "input", 32, "N"),
-          ("wdata", "input", 512, "N"), ("re", "input", 2, "N"), ("raddr", "input", 14, "N"),
-          ("q", "output", 512, "N")),
-        "sram", factor=1.3, aspect=200 / 30, min_w=200,
+        P(("we", "input", 2, "W"), ("waddr", "input", 14, "W"), ("wmask", "input", 32, "W"),
+          ("wdata", "input", 512, "W"), ("re", "input", 2, "W"), ("raddr", "input", 14, "W"),
+          ("q", "output", 512, "W")),
+        "sram", factor=1.3, aspect=25 / 200, min_h=200,
         basis="KV tail, 2 banks x 128 x 256 bits with a 16-bit lane write mask (x1.3)")
     if arch in ("qwen_rom", "v41_rom"):
         cap_bits = WEIGHT_STORE_BITS[arch]
@@ -281,11 +318,11 @@ def hdc_tile(arch: str) -> TileFloorplan:
     place = [
         Placement("u_router", "ot_chip_router", 10, 10),
         Placement("u_ctrl", "ot_chip_pkg_ctrl", 230, 40),
-        Placement("u_prog", "ot_mem_prog", 720, 20),
-        Placement("u_crom", "ot_mem_crom", 1095, 190),
-        Placement("u_kvtail", "ot_mem_kvtail", 10, 280),
-        Placement("u_kvwin", "ot_mem_kvwin", 10, 320),
-        Placement("u_kvs", "ot_hdc_kv_stream", 10, 420),
+        Placement("u_kvs", "ot_hdc_kv_stream", 620, 20),
+        Placement("u_kvwin", "ot_mem_kvwin", 840, 20),
+        Placement("u_kvtail", "ot_mem_kvtail", 930, 20),
+        Placement("u_crom", "ot_mem_crom", 1080, 20),
+        Placement("u_prog", "ot_mem_prog", 10, 330),
         Placement("u_core.u_me", "ot_hdc_matvec", 230, 270),
         Placement("u_vmem", "ot_mem_vmem", 650, 270),
         Placement("u_core.u_su", "ot_hdc_stream", 810, 310),
@@ -295,22 +332,22 @@ def hdc_tile(arch: str) -> TileFloorplan:
     height = round(690 + ws.height_um + 12, 1)
     return TileFloorplan(
         arch=arch, width_um=width, height_um=height, placements=place,
-        glue_center=(545.0, 130.0),
+        glue_center=(500.0, 140.0),
         pin_groups=[
             # mesh port p: [0] N, [1] E, [2] S, [3] W, 512-bit data per port
             {"regex": r"^m_(out|in)_data$", "bits": (0, 511), "edge": "N", "range": (995, 1150)},
             {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (0, 0), "edge": "N", "range": (995, 1150)},
-            {"regex": r"^m_(out|in)_data$", "bits": (512, 1023), "edge": "E", "range": (10, 680)},
-            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (1, 1), "edge": "E", "range": (10, 680)},
-            {"regex": r"^m_(out|in)_data$", "bits": (1024, 1535), "edge": "S", "range": (10, 700)},
-            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (2, 2), "edge": "S", "range": (10, 700)},
+            {"regex": r"^m_(out|in)_data$", "bits": (512, 1023), "edge": "E", "range": (250, 680)},
+            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (1, 1), "edge": "E", "range": (250, 680)},
+            {"regex": r"^m_(out|in)_data$", "bits": (1024, 1535), "edge": "S", "range": (10, 580)},
+            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (2, 2), "edge": "S", "range": (10, 580)},
             {"regex": r"^m_(out|in)_data$", "bits": (1536, 2047), "edge": "W", "range": (10, 260)},
             {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (3, 3), "edge": "W", "range": (10, 260)},
-            {"regex": r"^(hq_|hr_)", "edge": "W", "range": (280, 680)},
-            {"regex": r".", "edge": "W", "range": (700, 1200)},
+            {"regex": r"^(hq_|hr_)", "edge": "S", "range": (600, 1150)},
+            {"regex": r".", "edge": "W", "range": (270, 680)},
         ],
-        notes=("router and controller in the south-west corner; the weight store fills the north; "
-               "the north mesh port runs up the east channel beside it"),
+        notes=("router, controller and KV streamer in the south row; the weight store fills the "
+               "north; the north mesh port runs up the east channel beside it"),
     )
 
 
@@ -320,8 +357,9 @@ def hdc_tile(arch: str) -> TileFloorplan:
 
 GAP_UM = 20.0
 EDGE_UM = 10.0
-HBM_PHY_DEPTH_UM = 600.0
-UCIE_W_UM, UCIE_H_UM = 1100.0, 450.0      # UCIe-A x64 module: ~1.1 mm shoreline
+PHY_STRIP_UM = 900.0                       # south / north PHY strip depth
+UCIE_W_UM = 560.0                          # UCIe-A x64 module: ~0.5 mm2, folded to the tile's S port
+HBM_SLICE_W_UM = 550.0                     # HBM3E PHY + controller slice serving one tile
 SERDES_W_UM, SERDES_H_UM = 600.0, 260.0   # 8-lane board SerDes slice
 PHY_CLK_TO_Q_NS = 0.100                    # registered digital interface of a PHY
 PHY_SETUP_NS = 0.050
@@ -350,70 +388,69 @@ def _link_pins(span: tuple[float, float] | None, edge: str) -> list[mc.Pin]:
 
 
 def die2x2(arch: str) -> DieFloorplan:
-    """The reduced die: 2 x 2 mirrored tiles, HBM PHYs west and east, board
-    SerDes at the four west/east corners, UCIe modules south and north."""
+    """The reduced die: 2 x 2 mirrored tiles; south and north PHY strips
+    holding, under each tile, a UCIe module (its S mesh port) and an HBM
+    slice (its KV request/response port); board SerDes on the west and east
+    edges beside each tile's W mesh port."""
     tile = hdc_tile(arch)
     tw, th = tile.width_um, tile.height_um
-    x0 = EDGE_UM + HBM_PHY_DEPTH_UM + GAP_UM
+    x0 = EDGE_UM + SERDES_W_UM + GAP_UM
     x1 = x0 + tw + GAP_UM
-    y0 = EDGE_UM + UCIE_H_UM + GAP_UM
+    y0 = EDGE_UM + PHY_STRIP_UM + GAP_UM
     y1 = y0 + th + GAP_UM
-    die_w = x1 + tw + GAP_UM + HBM_PHY_DEPTH_UM + EDGE_UM
-    die_h = y1 + th + GAP_UM + UCIE_H_UM + EDGE_UM
-    # HBM pin region of the tile (its W edge), in tile coordinates, and mirrored for row 1
-    hlo, hhi = next(g["range"] for g in tile.pin_groups if g["regex"] == r"^(hq_|hr_)")
-    serdes_y0 = y0
-    hbm_y0 = serdes_y0 + SERDES_H_UM + GAP_UM / 2
-    hbm_h = (y1 + th - SERDES_H_UM - GAP_UM / 2) - hbm_y0
-    span_a = (y0 + hlo - hbm_y0, y0 + hhi - hbm_y0)
-    span_b = (y1 + th - hhi - hbm_y0, y1 + th - hlo - hbm_y0)
-    hbm_pins = []
-    for name, d, w in (("hq_v", "input", 1), ("hq_rdy", "output", 1), ("hq_we", "input", 1),
-                       ("hq_addr", "input", 24), ("hq_len", "input", 5), ("hq_tag", "input", 14),
-                       ("hq_wdata", "input", 256), ("hr_v", "output", 4), ("hr_rdy", "input", 4),
-                       ("hr_tag", "output", 56), ("hr_beat", "output", 16),
-                       ("hr_data", "output", 1024)):
-        hbm_pins.append(mc.Pin(name, d, 2 * w, [(0, w - 1, "E", span_a), (w, 2 * w - 1, "E", span_b)]))
-    s_lo, s_hi = next(g["range"] for g in tile.pin_groups
-                      if g.get("bits") == (1024, 1535) and g["edge"] == "S")
-    w_lo, w_hi = next(g["range"] for g in tile.pin_groups
-                      if g.get("bits") == (1536, 2047) and g["edge"] == "W")
+    die_w = x1 + tw + GAP_UM + SERDES_W_UM + EDGE_UM
+    die_h = y1 + th + GAP_UM + PHY_STRIP_UM + EDGE_UM
+    rng = {g.get("bits", g["regex"]): g["range"] for g in tile.pin_groups}
+    s_lo, s_hi = rng[(1024, 1535)]
+    w_lo, w_hi = rng[(1536, 2047)]
+    h_lo, h_hi = rng[r"^(hq_|hr_)"]
+    hbm_pins = [mc.Pin(n, d, w, "N", span=(5.0, HBM_SLICE_W_UM - 5.0)) for n, d, w in (
+        ("hq_v", "input", 1), ("hq_rdy", "output", 1), ("hq_we", "input", 1), ("hq_addr", "input", 24),
+        ("hq_len", "input", 5), ("hq_tag", "input", 14), ("hq_wdata", "input", 256),
+        ("hr_v", "output", 4), ("hr_rdy", "input", 4), ("hr_tag", "output", 56),
+        ("hr_beat", "output", 16), ("hr_data", "output", 1024))]
     phys = {
         "ot_phy_hbm": mc.MacroSpec(
-            "ot_phy_hbm", HBM_PHY_DEPTH_UM, mc.snap(hbm_h, mc.SITE_H), hbm_pins,
+            "ot_phy_hbm", HBM_SLICE_W_UM, PHY_STRIP_UM, hbm_pins,
             clk_to_q_ns=PHY_CLK_TO_Q_NS, setup_ns=PHY_SETUP_NS, kind="phy",
-            basis=("HBM3E PHY and controller slice serving two tiles (their KV request/response "
-                   "ports); 0.6 mm deep; the full die's PHY area is in the full-die floorplan")),
+            basis=("HBM3E PHY and controller slice serving one tile's KV request/response port, "
+                   "0.55 mm x 0.9 mm; the full die's PHY area is in the full-die floorplan")),
         "ot_phy_ucie": mc.MacroSpec(
-            "ot_phy_ucie", UCIE_W_UM, UCIE_H_UM, _link_pins((s_lo, s_hi), "N"),
+            "ot_phy_ucie", UCIE_W_UM, PHY_STRIP_UM, _link_pins((5.0, UCIE_W_UM - 5.0), "N"),
             clk_to_q_ns=PHY_CLK_TO_Q_NS, setup_ns=PHY_SETUP_NS, kind="phy",
-            basis="UCIe-A x64 die-to-die module (package link), 1.1 mm x 0.45 mm"),
+            basis="UCIe-A x64 die-to-die module (package link), ~0.5 mm2, 0.56 mm x 0.9 mm here"),
         "ot_phy_serdes": mc.MacroSpec(
-            "ot_phy_serdes", SERDES_W_UM, SERDES_H_UM,
-            _link_pins((w_lo + 5, w_hi - 5), "E"),
+            "ot_phy_serdes", SERDES_W_UM, SERDES_H_UM, _link_pins((w_lo + 5, w_hi - 5), "E"),
             clk_to_q_ns=PHY_CLK_TO_Q_NS, setup_ns=PHY_SETUP_NS, kind="phy",
             basis="8-lane board SerDes slice (package-to-package ring link), 0.6 mm x 0.26 mm"),
     }
     for spec in phys.values():
         mc.pin_rects(spec)
     ex = EDGE_UM
+    top = die_h - ex - PHY_STRIP_UM
+
+    def col_x(c: int, lo: float, width: float) -> float:
+        # column 1 is mirrored (MY): a tile-local x maps to x1 + tw - x
+        return x0 + lo if c == 0 else x1 + tw - lo - width
+
     place = [
         Placement("g_tile[0].u_tile", "ot_chip_hdc_tile", x0, y0, "R0"),
         Placement("g_tile[1].u_tile", "ot_chip_hdc_tile", x1, y0, "MY"),
         Placement("g_tile[2].u_tile", "ot_chip_hdc_tile", x0, y1, "MX"),
         Placement("g_tile[3].u_tile", "ot_chip_hdc_tile", x1, y1, "R180"),
-        Placement("g_hbm[0].u_hbm", "ot_phy_hbm", ex, hbm_y0, "R0"),
-        Placement("g_hbm[1].u_hbm", "ot_phy_hbm", die_w - ex - HBM_PHY_DEPTH_UM, hbm_y0, "MY"),
-        # W ports: tiles 0, 2 west, 1, 3 east; S ports: tiles 0, 1 south, 2, 3 north
-        Placement("g_edge[0].u_serdes", "ot_phy_serdes", ex, serdes_y0, "R0"),
-        Placement("g_edge[1].u_serdes", "ot_phy_serdes", die_w - ex - SERDES_W_UM, serdes_y0, "MY"),
-        Placement("g_edge[2].u_serdes", "ot_phy_serdes", ex, y1 + th - SERDES_H_UM, "MX"),
-        Placement("g_edge[3].u_serdes", "ot_phy_serdes", die_w - ex - SERDES_W_UM,
-                  y1 + th - SERDES_H_UM, "R180"),
-        Placement("g_edge[0].u_ucie", "ot_phy_ucie", x0, ex, "R0"),
-        Placement("g_edge[1].u_ucie", "ot_phy_ucie", x1 + tw - UCIE_W_UM, ex, "MY"),
-        Placement("g_edge[2].u_ucie", "ot_phy_ucie", x0, die_h - ex - UCIE_H_UM, "MX"),
-        Placement("g_edge[3].u_ucie", "ot_phy_ucie", x1 + tw - UCIE_W_UM, die_h - ex - UCIE_H_UM, "R180"),
     ]
+    orients = {(0, 0): "R0", (1, 0): "MY", (0, 1): "MX", (1, 1): "R180"}
+    for t, (c, r) in enumerate(((0, 0), (1, 0), (0, 1), (1, 1))):
+        orient = orients[(c, r)]
+        y_strip = ex if r == 0 else top
+        u_mid = (s_lo + s_hi) / 2
+        place.append(Placement("g_edge[%d].u_ucie" % t, "ot_phy_ucie",
+                               col_x(c, u_mid - UCIE_W_UM / 2, UCIE_W_UM), y_strip, orient))
+        h_mid = (h_lo + h_hi) / 2
+        place.append(Placement("g_hbm[%d].u_hbm" % t, "ot_phy_hbm",
+                               col_x(c, h_mid - HBM_SLICE_W_UM / 2, HBM_SLICE_W_UM), y_strip, orient))
+        xs = ex if c == 0 else die_w - ex - SERDES_W_UM
+        ys = y0 if r == 0 else y1 + th - SERDES_H_UM
+        place.append(Placement("g_edge[%d].u_serdes" % t, "ot_phy_serdes", xs, ys, orient))
     return DieFloorplan(arch, round(die_w, 3), round(die_h, 3), place, phys, tile,
                         notes="tiles mirrored MY in column 1 and MX in row 1 (tile flipping)")

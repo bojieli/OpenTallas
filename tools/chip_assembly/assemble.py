@@ -120,6 +120,7 @@ def tile_sdc(uncertainty_ps: float) -> str:
         f"set_input_delay {T * 0.3:g} -clock clk [all_inputs -no_clocks]",
         f"set_output_delay {T * 0.3:g} -clock clk [all_outputs]",
         "set_false_path -from [get_ports rst_n]",
+        "set_false_path -from [get_ports {cfg_* rcfg_*}]",
         "set_max_fanout 32 [current_design]",
         "set_max_transition 320 [current_design]",
         "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y [all_inputs -no_clocks]",
@@ -160,7 +161,7 @@ def tile_spec(arch: str, work: Path) -> cs.CaseSpec:
         max_layer="M8", io_layers=("M6", "M7"), place_density=0.55,
         macros=block_views() + memory_views(arch, work / "mem_views"),
         macro_placement_tcl=placement_tcl(tile.placements),
-        derived_sources={"ot_hdc_core.sv": core_text},
+        derived_sources={"ot_hdc_core.sv": core_text}, include_dirs=["rtl/hdc"],
         extra={"SLEW_MARGIN": 20, "HOLD_SLACK_MARGIN": 5, "MACRO_ROWS_HALO_X": 2,
                "MACRO_ROWS_HALO_Y": 2, "GPL_TIMING_DRIVEN": 1, "GPL_ROUTABILITY_DRIVEN": 1},
     )

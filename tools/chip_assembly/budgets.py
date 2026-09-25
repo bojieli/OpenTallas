@@ -54,6 +54,9 @@ RESULTS = orfs.ROOT / "results/physical_abi3/asap7/chip"
 PERIOD_PS = fp.CLOCK_PERIOD_NS * 1000.0
 UNCERTAINTY_PS = 30.0          # clock skew + jitter allowance at a block boundary
 TILE_IO_FRACTION = 0.3         # the tile's own pins: 30% of the cycle outside the tile
+GLUE_WIRE_UM = 200.0           # a glue register sits within this of the macro pin it serves
+# Quasi-static configuration (written only while the tile is idle): false paths.
+STATIC_PORT_RE = r"^(cfg_\w*|rcfg_\w*)$"
 HARDENED = ["ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_kv_stream", "ot_chip_pkg_ctrl", "ot_chip_router"]
 TILE_SOURCES = ["rtl/chip/ot_chip_hdc_tile.sv", "rtl/chip/ot_chip_mesh_link.sv"]
 CORE_SOURCE = "rtl/hdc/ot_hdc_core.sv"
@@ -104,6 +107,7 @@ def tile_io_sdc(uncertainty_ps: float) -> str:
         f"set_input_delay {ext:g} -clock clk [all_inputs -no_clocks]",
         f"set_output_delay {ext:g} -clock clk [all_outputs]",
         "set_false_path -from [get_ports rst_n]",
+        "set_false_path -from [get_ports {cfg_* rcfg_*}]",
         "set_max_fanout 32 [current_design]",
         "",
     ])
@@ -127,7 +131,7 @@ def synth_tile(arch: str, work: Path, views: dict[str, dict[str, Path]], timeout
         nickname=f"chip_tile_{arch}_budget", top="ot_chip_hdc_tile", sources=TILE_SOURCES,
         die_um=(tile.width_um, tile.height_um), sdc=tile_io_sdc(UNCERTAINTY_PS),
         macros=[cs.MacroView(n, v["lef"], v["lib"]) for n, v in views.items()],
-        derived_sources={"ot_hdc_core.sv": core_text},
+        derived_sources={"ot_hdc_core.sv": core_text}, include_dirs=["rtl/hdc"],
         extra={"SYNTH_HIERARCHICAL": 0},
     )
     cs.write_case(work, spec)
@@ -253,6 +257,8 @@ def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Pat
     violations = []
     for e in analysis["pins"]:
         inst, master, bus = e["inst"], e["master"], e["bus"]
+        if re.match(STATIC_PORT_RE, bus):
+            continue
         spec = specs[master]
         sp = next((p for p in spec.pins if p.name == bus), None)
         if sp is None or e["slack_ps"] is None:
@@ -278,6 +284,10 @@ def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Pat
         if there is None:
             there = tile.glue_center
         dist = abs(here[0] - there[0]) + abs(here[1] - there[1])
+        if far_kind == "glue":
+            # timing-driven placement puts the glue register near the pin it
+            # serves; the post-route tile STA checks this assumption
+            dist = min(dist, GLUE_WIRE_UM)
         wire_ps = dist * wire["ps_per_um"]
         slack = PERIOD_PS - UNCERTAINTY_PS - internal - max(external, 0.0) - wire_ps
         total = internal + max(external, 0.0) + wire_ps
@@ -320,6 +330,12 @@ def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Pat
     for name in HARDENED:
         for port, p in chars[name]["ports"].items():
             if port in ("clk",) or port in blocks[name]["ports"]:
+                continue
+            if re.match(STATIC_PORT_RE, port):
+                blocks[name]["ports"][port] = {
+                    "direction": p["direction"], "width": p["width"], "status": "static",
+                    "external_ps": None, "internal_budget_ps": None,
+                    "note": "quasi-static configuration: false path at every level"}
                 continue
             blocks[name]["ports"][port] = {
                 "direction": p["direction"], "width": p["width"], "status": "untimed",
@@ -364,7 +380,7 @@ def markdown(budget: dict[str, Any]) -> str:
              "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|"]
     for name, b in budget["blocks"].items():
         for port, r in sorted(b["ports"].items()):
-            if r["status"] == "untimed":
+            if r["status"] in ("untimed", "static"):
                 continue
             lines.append(
                 f"| {name} | {port} | {r['direction'][:2]} | {r['width']} | {r['internal_ps']} | "
