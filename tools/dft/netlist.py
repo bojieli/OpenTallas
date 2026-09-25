@@ -328,8 +328,9 @@ def is_const_bit(bit: str) -> bool:
 class NetAliases:
     """Union-find over bit nets, merging the two sides of every ``assign``."""
 
-    def __init__(self) -> None:
+    def __init__(self, rank: dict[str, int] | None = None) -> None:
         self.parent: dict[str, str] = {}
+        self.rank = rank or {}
 
     def find(self, x: str) -> str:
         parent = self.parent
@@ -344,8 +345,11 @@ class NetAliases:
         ra, rb = self.find(a), self.find(b)
         if ra == rb:
             return
-        # constants always win as representatives
+        # constants always win as representatives, then port names, so a net
+        # is known by its port's name whatever the assign's direction
         if is_const_bit(rb) and not is_const_bit(ra):
+            ra, rb = rb, ra
+        elif not is_const_bit(ra) and self.rank.get(rb, 0) > self.rank.get(ra, 0):
             ra, rb = rb, ra
         if is_const_bit(ra) and is_const_bit(rb) and ra != rb:
             raise ValueError(f"netlist: assign ties {ra} to {rb}")
@@ -353,7 +357,9 @@ class NetAliases:
 
 
 def build_aliases(mod: Module) -> NetAliases:
-    aliases = NetAliases()
+    rank = {b: 1 for b in mod.port_bits("output")}
+    rank.update({b: 2 for b in mod.port_bits("input")})   # an input names its net first
+    aliases = NetAliases(rank)
     for lhs, rhs, _ in mod.assigns:
         if len(lhs) != len(rhs):
             # Verilog zero-extends / truncates; align at the LSB

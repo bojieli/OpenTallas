@@ -125,11 +125,14 @@ def build_models(
     m = Model()
     net_node: dict[str, int] = {}
     pi_nodes: list[tuple[str, int]] = []
-    for bit in design.inputs:
-        if bit in net_node:
+    for bit in mod.port_bits("input"):
+        # the port's own name for the pattern file; its net (which an assign
+        # may have merged under another name) for connectivity
+        net = design.net(bit)
+        if net in net_node:
             continue
         node = m.add(T_INPUT)
-        net_node[bit] = node
+        net_node[net] = node
         pi_nodes.append((bit, node))
 
     # flops and output nodes first, so nets have driver nodes before any fanin is built
@@ -278,12 +281,12 @@ def build_models(
         constrained = {}
         for bit, node in pi_nodes:
             value = -1
-            base = bit.split("[")[0]
+            net = design.net(bit)
             if bit in constraints:
                 value = constraints[bit]
-            elif base in constraints and base == bit:
-                value = constraints[base]
-            if bit in clock_ports:
+            elif net in constraints:
+                value = constraints[net]
+            if bit in clock_ports or net in clock_ports:
                 value = 0
             if value >= 0:
                 constrained[bit] = value
