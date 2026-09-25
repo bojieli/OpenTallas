@@ -43,8 +43,9 @@
         "scopes": {
           "matvec": {
             "scope": "TOP.tb_hdc_core_v41.dut.u_me",
-            "saif_top": "u_me",
-            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/wd"
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/core/wd",
+            "netlist_prefix": "u_me.",
+            "saif_top": "dut"
           },
           "actquant": {
             "scope": "TOP.tb_hdc_core_v41.dut.u_qe.u_aq",
@@ -89,24 +90,25 @@
       "analyses": [
         {
           "key": "v41_matvec",
-          "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/wd",
-          "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__ot_hdc_matvec/physical.json",
+          "routed": "${OT_SIGNOFF_ROUTES}/core/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/core/physical.json",
           "saif": "matvec",
-          "saif_scope": "u_me",
+          "saif_scope": "dut",
           "corners": [
             "TT",
             "SS",
             "FF"
           ],
           "derate": 0.05,
-          "ir_sources": [
-            "PINS",
-            "BUMPS"
-          ],
+          "ir_sources": [],
           "cycles": {
             "token": 1088551
           },
-          "instances": 1
+          "instances": 1,
+          "groups": [
+            "u_me."
+          ],
+          "note": "the V4.1 core's matrix engine is ot_hdc_matvec with the Qwen core's parameters; its V4.1 register activity is mapped onto u_me of the routed Qwen core and only the u_me. group is read"
         },
         {
           "key": "v41_actquant",

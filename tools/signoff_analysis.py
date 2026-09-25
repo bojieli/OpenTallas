@@ -1113,7 +1113,8 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
         rtl_map = spec.get("map_netlist") if isinstance(spec, dict) else None
         if rtl_map and saif.exists():
             pins = work / f"{name}.saif"
-            entry["rtl_map"] = map_rtl_saif_to_netlist(saif, Path(rtl_map), pins, top=spec.get("saif_top", "dut"))
+            entry["rtl_map"] = map_rtl_saif_to_netlist(saif, Path(rtl_map), pins, top=spec.get("saif_top", "dut"),
+                                                       netlist_prefix=spec.get("netlist_prefix", ""))
             entry["path"] = str(pins)
         meta["saif"][name] = entry
     for f in [fifo, *tee_fifos]:
@@ -1451,15 +1452,22 @@ def _rtl_candidates(reg: str) -> list[str]:
 
 
 def map_rtl_saif_to_netlist(rtl_saif: Path, netlist: Path, out: Path, top: str = "dut",
-                            flop_output_pins: tuple[str, ...] = ("QN", "Q")) -> dict[str, Any]:
+                            flop_output_pins: tuple[str, ...] = ("QN", "Q"),
+                            netlist_prefix: str = "") -> dict[str, Any]:
     """Write a pin SAIF annotating every routed flop's output (and the ports)
-    from the RTL register it implements."""
+    from the RTL register it implements.
+
+    netlist_prefix: map the RTL scope onto the flops of ONE instance of a larger
+    routed netlist (e.g. the V4.1 core's matrix engine onto `u_me.` of the
+    routed Qwen core, the same module with the same parameters); ports are
+    then skipped."""
     rtl, header = read_nested_saif(rtl_saif)
     text = Path(netlist).read_text(encoding="utf-8", errors="replace")
     stats = {"rtl_records": len(rtl), "flops": 0, "flops_matched": 0, "ports": 0, "ports_matched": 0,
              "unmatched_examples": []}
     lines: list[str] = []
-    for m in re.finditer(r"^\s*(input|output|inout)\s+(?:\[(\d+):(\d+)\]\s+)?(\\\S+|\w+)\s*;", text, re.M):
+    for m in ([] if netlist_prefix else
+              re.finditer(r"^\s*(input|output|inout)\s+(?:\[(\d+):(\d+)\]\s+)?(\\\S+|\w+)\s*;", text, re.M)):
         name = _netkey(m.group(4))
         bits = [f"{name}[{i}]" for i in range(min(int(m.group(2)), int(m.group(3))),
                                               max(int(m.group(2)), int(m.group(3))) + 1)] \
@@ -1476,14 +1484,14 @@ def map_rtl_saif_to_netlist(rtl_saif: Path, netlist: Path, out: Path, top: str =
         if not m:
             continue
         inst = _netkey(m.group(2))
-        if not _FLOP_SUFFIX.search(inst):
+        if not _FLOP_SUFFIX.search(inst) or not inst.startswith(netlist_prefix):
             continue
         pins = dict(_CONN.findall(stmt))
         out_pin = next((p for p in flop_output_pins if p in pins), None)
         if out_pin is None:
             continue
         stats["flops"] += 1
-        reg = _FLOP_SUFFIX.sub("", inst)
+        reg = _FLOP_SUFFIX.sub("", inst)[len(netlist_prefix):]
         r = next((rtl[c] for c in _rtl_candidates(reg) if c in rtl), None)
         if r is None:
             if len(stats["unmatched_examples"]) < 12:
