@@ -60,7 +60,7 @@ def test_pin_regions_and_layers():
     assert "export MIN_ROUTING_LAYER = M2" in lines
     assert "export MAX_ROUTING_LAYER = M9" in lines
     tcl = flow.io_constraints_tcl(fp["pin_regions"])
-    assert "set_io_pin_constraint -order -region left:* -pin_names [ot_match_pins {^in_}]" in tcl
+    assert "set_io_pin_constraint -group -order -region left:* -pin_names [ot_match_pins {^in_}]" in tcl
     assert "-region right:* -pin_names [ot_match_pins {^(out|local)_}]" in tcl
 
 

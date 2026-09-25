@@ -1615,7 +1615,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
     ]
     for region in pin_regions:
         lines.append(
-            f"set_io_pin_constraint -order -region {region['edge']}:* "
+            f"set_io_pin_constraint -group -order -region {region['edge']}:* "
             f"-pin_names [ot_match_pins {{{region['regex']}}}]"
         )
     return "\n".join(lines) + "\n"
