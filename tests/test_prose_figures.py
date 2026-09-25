@@ -313,13 +313,14 @@ def test_an_ambiguous_row_is_disambiguated_by_its_table(tmp_path) -> None:
     # evidence was corrected, 6.16 after the 2026-09-23 framework revision, and
     # 6.58 once the serial path came from the per-token operator graph, and
     # 10.42 once the ROM wafer could use the express collective network, and
-    # 12.17 with the routed Sinkhorn unit.
+    # 12.17 with the routed Sinkhorn unit, and 9.79 with the express link at
+    # its routed (measured) field crossing.
     document = tmp_path / "ok.md"
     document.write_text(
         "# x\n\n"
-        '<!-- figure: 12.17 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
+        '<!-- figure: 9.79 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
         ' table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" -->\n'
-        "The ratio is 12.17x.\n")
+        "The ratio is 9.79x.\n")
     code, out = _run(document)
     assert code == 0, out
 
