@@ -116,6 +116,7 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <a class="l2" href="#s6-6">6.6 V4.1 array: physical layout</a>
   <a class="l2" href="#s6-7">6.7 V4.1 wafer: datapath &amp; layout</a>
   <a class="l2" href="#s6-8">6.8 Topology selection &amp; critical path</a>
+  <a class="l2" href="#s6-9">6.9 Wafer vs array at equal silicon</a>
   <a href="#s7">7 DeepSeek-V4.1 package</a>
   <a href="#s8">8 HBM comparator</a>
   <a href="#s9">9 System performance</a>
@@ -168,7 +169,7 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     <tbody>
       <tr><td><b>ROM reticle</b></td><td>Qwen3-8B (8.2B params)</td><td>one die; engines in an on-die layer pipeline; ROM beside each engine's lanes</td><td>per-user latency, energy</td><td><span class="status s-part">core RTL; die concept</span></td></tr>
       <tr><td><b>ROM array</b></td><td>DeepSeek-V4.1-Flash (552B + 197B Engram)</td><td>packages in a layer pipeline over SerDes links (≈100 ns hops)</td><td>per-user speed, flexibility, yield</td><td><span class="status s-part">units built; integration</span></td></tr>
-      <tr><td><b>ROM wafer</b></td><td>DeepSeek-V4.1-Flash</td><td>the array package as reticle tiles stitched on one wafer (≈10 ns hops)</td><td>aggregate throughput, tokens/J</td><td><span class="status s-open">architecture only</span></td></tr>
+      <tr><td><b>ROM wafer</b></td><td>DeepSeek-V4.1-Flash</td><td>the array package as reticle tiles stitched on one wafer (≈10 ns hops)</td><td>aggregate throughput, tokens/J</td><td><span class="status s-open">rejected: no gain at equal silicon (§6.9)</span></td></tr>
       <tr><td><b>ROM array (later)</b></td><td>DeepSeek-V4-Flash (284B)</td><td>separate chip; reuses the engine library</td><td>—</td><td><span class="status s-open">analysis only</span></td></tr>
       <tr style="background:var(--hbm-soft)"><td><b>HBM machine</b></td><td>any</td><td>general accelerator; B200/NVL72 class, NVLink, TP/PP/EP</td><td>the comparator</td><td><span class="status s-part">ABI 3.0 RTL</span></td></tr>
     </tbody>
@@ -467,6 +468,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
   </div>
 
   <h3 id="s6-3">6.3 ROM wafer</h3>
+  <p class="note"><b>Status: rejected as an implementation target</b> (§6.9). At equal silicon the wafer is no faster than the array. It is kept here as an analysed comparison only.</p>
   <div class="two">
     <figure class="fig narrow">
       <div class="svgbox"><svg id="wafer" viewBox="0 0 360 360" role="img" aria-label="Wafer tiles"></svg></div>
@@ -507,7 +509,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tr><td>Board fabric / pipeline</td><td class="r m">ring · 40 stages</td><td>one layer per package; the 4-copy residual is 41 KB per hop</td></tr>
       <tr><td>Die area split</td><td class="r m">ROM 289 · compute 329 · HBM PHY 50 · links 65 · overhead 82 mm²</td><td>weights at 7.4 bits per parameter, FP8 execution</td></tr>
       <tr><td>KV store</td><td class="r m">5 × HBM3E per die</td><td>ROM holds no per-user state</td></tr>
-      <tr><td>Per-user rate, batch 1 / 64 (critical path)</td><td class="r m">4,139 / 4,034 tok/s</td><td>bottom-up, measured RTL depths (§6.8); the analytical model's 15,556 / 12,208 omits most serial latency</td></tr>
+      <tr><td>Per-user rate, batch 1 / 64 (critical path)</td><td class="r m">4,136 / 4,024 tok/s</td><td>bottom-up, measured RTL depths (§6.8); the analytical model's 15,556 / 12,208 omits most serial latency</td></tr>
       <tr><td>Aggregate at 4,096 users</td><td class="r m">≈504 K tok/s</td><td>bound by stage occupancy; 3.6 MB per hop at this load</td></tr>
     </tbody>
   </table></div>
@@ -544,17 +546,17 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <caption>Table 6-4. Per-user decode rate, analytical model against the critical path (tok/s, batch 1)</caption>
     <thead><tr><th>Target</th><th class="r">Analytical</th><th class="r">Critical path</th><th>What binds on the critical path</th></tr></thead>
     <tbody>
-      <tr><td>Taalas HC1, Llama-3.1-8B (published 16,960)</td><td class="r m">24,675</td><td class="r m">10,161</td><td>compute chain 61 µs + sweep 34 µs</td></tr>
-      <tr><td>Qwen3-8B, one reticle</td><td class="r m">24,222</td><td class="r m">8,728</td><td>compute chain</td></tr>
-      <tr><td>V4.1 array: 4-die group, ring (selected)</td><td class="r m">15,556</td><td class="r m">4,139</td><td>Sinkhorn chain, 224 µs of a 242 µs token</td></tr>
-      <tr><td>V4.1 wafer, 57-field group</td><td class="r m">5,653</td><td class="r m">1,997</td><td>collective latency, 336 µs</td></tr>
-      <tr><td>V4.1 wafer: 19-field groups (selected)</td><td class="r m">—</td><td class="r m">2,779</td><td>collectives 169 µs + chain 131 µs</td></tr>
+      <tr><td>Taalas HC1, Llama-3.1-8B (published 16,960)</td><td class="r m">24,675</td><td class="r m">10,103</td><td>compute chain 61 µs + sweep 34 µs</td></tr>
+      <tr><td>Qwen3-8B, one reticle</td><td class="r m">24,222</td><td class="r m">8,680</td><td>compute chain</td></tr>
+      <tr><td>V4.1 array: 4-die group, ring (selected)</td><td class="r m">15,556</td><td class="r m">4,136</td><td>Sinkhorn chain, 224 µs of a 242 µs token</td></tr>
+      <tr><td>V4.1 wafer, 57-field group</td><td class="r m">5,653</td><td class="r m">1,992</td><td>collective latency, 336 µs</td></tr>
+      <tr><td>V4.1 wafer: 19-field groups (selected)</td><td class="r m">—</td><td class="r m">2,768</td><td>collectives 169 µs + chain 131 µs</td></tr>
     </tbody>
   </table></div>
   <p><b>The sweep.</b> 2,038 configurations at fixed silicon. The array was swept over 2, 4 or 8 dies per package; board fabrics chain, ring, mesh, torus, fully connected groups of 2, 4 or 8 packages, or one switch; tensor groups of 1–32 dies; and six reduction algorithms. The wafer was swept over groups of 4–57 fields in square and rectangular shapes. Both were run with experts either striped across the group or placed one per device. The results:</p>
   <ul>
     <li><b>The array is insensitive to its network.</b> The best configuration (8-die packages, 8-die group, ring) reaches 4,262 tok/s per user, only 3% above the selected 4-die ring. That group gives up a quarter of the aggregate at 4,096 users (379 K against 504 K tok/s) and needs a 6,520 mm² interposer. A single switch tier costs 3–6%.</li>
-    <li><b>The wafer is sensitive to its group size.</b> The per-user rate goes from 1,997 tok/s with one 57-field group to 2,779 with three 19-field groups. Groups of 8–12 fields reach about 2,950 but leave 2–16% of the fields holding no weights.</li>
+    <li><b>The wafer is sensitive to its group size.</b> The per-user rate goes from 1,992 tok/s with one 57-field group to 2,768 with three 19-field groups. Groups of 8–12 fields reach about 2,950 but leave 2–16% of the fields holding no weights.</li>
     <li><b>One-shot wins</b> almost everywhere at decode payloads (1.5–68 KB). Every static algorithm keeps a fixed summation order, so results stay reproducible.</li>
     <li><b>Placing each expert on its own device is 11% slower</b> than striping at batch 64. It also needs arrivals buffered and summed in expert-id order to stay bit-exact.</li>
   </ul>
@@ -562,14 +564,34 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     <caption>Table 6-5. Selected topologies and sensitivities</caption>
     <thead><tr><th>Target</th><th>Physical</th><th>Logical</th><th class="r">Batch 1 / 64 per user</th><th class="r">Aggregate, 4,096 users</th></tr></thead>
     <tbody>
-      <tr><td>V4.1 array (selected)</td><td>4-die package, board ring, 40 stages</td><td>one-shot inside the package; experts striped</td><td class="r m">4,139 / 4,034</td><td class="r m">504 K</td></tr>
-      <tr><td>V4.1 array, per-user optimum</td><td>8-die package, 8-die group, ring</td><td>one-shot</td><td class="r m">4,262 / 3,905</td><td class="r m">379 K</td></tr>
-      <tr><td>V4.1 wafer (selected)</td><td>3 × 19-field square groups per wafer, 37 stages</td><td>one-shot inside the group</td><td class="r m">2,779 / 2,430</td><td class="r m">1.00 M</td></tr>
+      <tr><td>V4.1 array (selected)</td><td>4-die package, board ring, 40 stages</td><td>one-shot inside the package; experts striped</td><td class="r m">4,136 / 4,024</td><td class="r m">504 K</td></tr>
+      <tr><td>V4.1 array, per-user optimum</td><td>8-die package, 8-die group, ring</td><td>one-shot</td><td class="r m">4,260 / 3,895</td><td class="r m">379 K</td></tr>
+      <tr><td>V4.1 wafer (selected)</td><td>3 × 19-field square groups per wafer, 37 stages</td><td>one-shot inside the group</td><td class="r m">2,768 / 2,422</td><td class="r m">1.00 M</td></tr>
       <tr><td>Wafer + dedicated reduction network (sensitivity)</td><td>express tree, 10 ns per level</td><td>tree</td><td class="r m">3,929 at batch 1</td><td class="r m">—</td></tr>
       <tr><td>V4.1 array with a 12-cycle divider (hypothetical)</td><td>as selected</td><td>as selected</td><td class="r m">4,995 at batch 1</td><td class="r m">—</td></tr>
     </tbody>
   </table></div>
   <p><b>What this changes in the design.</b> The per-user bound for V4.1 is not bandwidth, links or control. It is the hyper-connection Sinkhorn: 39 dependent normalisation steps of 4×4 per sublayer, 80 per token. Each step is a sequential four-term FP32 sum, an eps add and an IEEE divide, ≈51 cycles or ≈2.1 µs per sublayer at our unit depths, which caps the rate near 6,000 tok/s whatever the silicon. A latency-optimised Sinkhorn unit, bit-exact to the golden, is therefore the next RTL priority. After it come the index top-k merge (≈3.8 µs on each of the eight index-source layers) and the stream-unit functions on the norm and softmax chains (sigmoid 172, exp 121, rsqrt 90 cycles). The analytical model is being corrected to use this critical path and collective census for every target, including the GPU side, and the tables above will be regenerated from it.</p>
+  <h3 id="s6-9">6.9 Wafer vs array at equal silicon: the wafer is rejected</h3>
+  <p>The ×12 wafer design of §6.7 uses 3.6× the array's silicon, so comparing it with the array directly flatters the wafer. <code>tools/wafer_vs_array_study.py</code> (report: <code>docs/WAFER_VS_ARRAY_ISO_AREA.md</code>) sizes wafers of 2, 3, 4 and 12 against arrays of the same area, rounded down to whole 4-die packages. Both are sized with the analytical model's own rules, and both are priced on the bottom-up critical path. Every size holds the weights; a single wafer does not.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-6. Wafer ÷ array at equal silicon (divider as built, Cerebras-style mesh at 125 ns per field)</caption>
+    <thead><tr><th>Wafers</th><th class="r">Silicon</th><th class="r">Wafer / array per user, batch 1 (tok/s)</th><th class="r">Ratio, batch 1</th><th class="r">Ratio, batch 64</th><th class="r">Aggregate ratio, 4,096 users</th></tr></thead>
+    <tbody>
+      <tr><td>2</td><td class="r m">92,450 mm²</td><td class="r m">3,487 / 4,196</td><td class="r m">0.83</td><td class="r m">1.05</td><td class="r m">1.20</td></tr>
+      <tr><td>3</td><td class="r m">138,675 mm²</td><td class="r m">3,814 / 4,279</td><td class="r m">0.89</td><td class="r m">0.56</td><td class="r m">0.92</td></tr>
+      <tr><td>4</td><td class="r m">184,900 mm²</td><td class="r m">3,705 / 4,254</td><td class="r m">0.87</td><td class="r m">0.56</td><td class="r m">0.90</td></tr>
+      <tr><td>12</td><td class="r m">554,700 mm²</td><td class="r m">3,083 / 4,216</td><td class="r m">0.73</td><td class="r m">0.61</td><td class="r m">1.03</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>Wafer fabric is the only lever for batch 1.</b> The wafer only matches the array when a field crossing costs about 13–18 ns or less, which needs a designed long-wire network that has not been built, instead of Cerebras' fine-grained mesh. Even at the wire limit (≈5 ns) the wafer's lead is 2–3%.</li>
+    <li><b>Up to 16%, and only with two unbuilt parts.</b> The lead reaches 6–16% only when the Sinkhorn chain is also cut in half, from ≈168 µs to ≈84 µs per token with a 4-cycle bit-exact divider. Even then the wafer is slower at batch 64 at three of the four sizes.</li>
+    <li><b>Aggregate throughput is a wash.</b> At 4,096 users it is set by pipeline occupancy, not the fabric: 0.90–1.20.</li>
+    <li><b>HBM is the wafer's hard limit.</b> A wafer edge carries 43 HBM3E stacks against 5 per die, so the array has 6.5× the stacks at every size.</li>
+    <li><b>Manufacturing:</b> everything is harder on the wafer. It needs in-place defect tolerance instead of discarding bad dies, stitching across fields, HBM limited to the wafer edge, and whole-wafer test.</li>
+  </ul>
+  <p><b>Decision.</b> The wafer's advantage is at most a few percent at batch 1, only there, and it depends on two parts that have not been built. That does not justify its manufacturing risk. DeepSeek-V4.1 is implemented on the <b>ROM array</b> with the topology of §6.6: 4-die tensor-group packages, one-shot fixed-order collectives on UCIe, and a board ring. The wafer stays in the analytical model as a comparison, with Cerebras' mesh as the conservative control, but it is no longer a simulation target.</p>
 </section>
 
 <!-- 7 -->
@@ -1034,7 +1056,7 @@ function drawV41Array(){
     txt(svg,xx+w/2,cy0+62,n,{anchor:"middle",fs:9.5,fill:I}); txt(svg,xx+w/2,cy0+74,a.toFixed(0)+" mm²",{anchor:"middle",fs:9.5,cls:"t-mono"}); xx+=w;});
   const sc=460/241.6;
   budgetBar(svg,520,cy0+26,460,sc,"",[[223.7,Rs,R,"compute chain 223.7 µs (Sinkhorn-bound)"],[4.9+2.1,P,M,""],[7.0,R,R,""],[3.3,G,M,""],[0.6,B,B,""]]);
-  txt(svg,520,cy0+62,"241.6 µs per token → 4,139 tokens/s per user (critical path)",{fs:10,fill:I});
+  txt(svg,520,cy0+62,"241.8 µs per token → 4,136 tokens/s per user (critical path)",{fs:10,fill:I});
   txt(svg,520,cy0+76,"sweep + KV 7.0 · stage hops 7.0 · control 3.3 · collectives 0.6 µs",{fs:10,fill:R});
 }
 
@@ -1077,9 +1099,9 @@ function drawV41Wafer(){
   // C: time budget comparison
   const y=490; head(svg,10,y,"C · One token's critical path at batch 1 (200K context), same scale");
   const sc=(1000-20-170)/500.8;
-  const rowsC=[["array, 4-die groups",[[223.7,Rs,R,"compute chain 223.7"],[7.0,P,M,""],[7.0,R,R,""],[3.9,G,M,""]],"241.6 µs · 4,139 tok/s"],
-    ["wafer, 57-field group",[[140.2,Rs,R,"chain 140.2"],[4.1,P,M,""],[336.2,B,B,"collectives 336.2"],[12.8,R,R,""],[7.4,G,M,""]],"500.8 µs · 1,997 tok/s"],
-    ["wafer, 3 × 19 fields",[[130.5,Rs,R,"chain 130.5"],[32.8,P,M,"sweep"],[169.0,B,B,"collectives 169.0"],[20.2,R,R,""],[7.4,G,M,""]],"359.9 µs · 2,779 tok/s"]];
+  const rowsC=[["array, 4-die groups",[[223.7,Rs,R,"compute chain 223.7"],[7.0,P,M,""],[7.0,R,R,""],[3.9,G,M,""]],"241.8 µs · 4,136 tok/s"],
+    ["wafer, 57-field group",[[140.2,Rs,R,"chain 140.2"],[4.1,P,M,""],[336.2,B,B,"collectives 336.2"],[12.8,R,R,""],[7.4,G,M,""]],"502.0 µs · 1,992 tok/s"],
+    ["wafer, 3 × 19 fields",[[130.5,Rs,R,"chain 130.5"],[32.8,P,M,"sweep"],[169.0,B,B,"collectives 169.0"],[20.2,R,R,""],[7.4,G,M,""]],"361.3 µs · 2,768 tok/s"]];
   rowsC.forEach(([lab,segs,tot],i)=>{const yy=y+24+i*36; txt(svg,10,yy+15,lab,{fs:10.5,fw:600,fill:I});
     const end=budgetBar(svg,170,yy,0,sc,"",segs); txt(svg,990,yy-3,tot,{fs:10,fill:R,anchor:"end"});});
   txt(svg,10,y+140,"copper: compute chain (Sinkhorn-bound) · grey: weight/KV sweep on the path · blue: collectives · dark copper: pipeline hops · pale: control",{fs:9.5});
