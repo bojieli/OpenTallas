@@ -31,7 +31,7 @@
 // previous segment is still being selected) holds the whole front end.
 //
 // Latency, from the edge that accepts the last input beat to the out_last
-// beat: 4 + tselect's 2 NL + LAT0 (+1), NL = ceil(blocks / WB); LAT0 = 47 at
+// beat: 4 + tselect's 2 NL + LAT0 (+1), NL = ceil(blocks / WB); LAT0 = 63 at
 // WB = 64.  At WB = 64 the tselect ingests one line per 8 input beats, so the
 // block rate matches a 64-position score stream exactly and the two passes
 // after the stream cost 2 x blocks / 64 cycles.

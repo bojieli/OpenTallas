@@ -47,11 +47,11 @@
 // segment of NL beats to the edge that registers its `out_last` beat:
 //   LAT = 2 NL + LAT0 (+1 when the final pass-3 beat overflows the partial
 //   output line and the remainder takes one more beat),
-//   LAT0 = 2 x (DRAIN 10 + RB 8 walk steps) + 5 + 2 ceil(log2(W) / 2)
-//        = 47 at W = 64 (read, compare, tie prefix, select, shift counts,
+//   LAT0 = 2 x (DRAIN 10 + 2 x RB 8 walk steps) + 5 + 2 ceil(log2(W) / 2)
+//        = 63 at W = 64 (a walk step is two edges: mux register, then add/compare) (read, compare, tie prefix, select, shift counts,
 //          3 compaction + 3 rotate register stages, output register).
 // The next segment is accepted once pass 3 has issued its last read: in_ready
-// is low for 2 NL + 36 edges after the last accept.  Area is linear in W
+// is low for 2 NL + 52 edges after the last accept.  Area is linear in W
 // (2^RB bins x W-lane popcounts, W log W compaction/rotate muxes) and
 // independent of K and of the segment length (the lines are in the memory).
 // Every segment emits at least one beat; the one with `out_last` may be empty.
@@ -207,11 +207,17 @@ module ot_hdc_tselect #(
     // -- tree walk ---------------------------------------------------------------------
     wire [RB:0]   wright = {wp, 1'b1};              // right child of the current node
     wire [CW-1:0] wc     = tv[CW*wright +: CW];
-    wire [CW:0]   wsum   = wacc + {1'b0, wc};
+    // a walk step takes two edges: the first registers the child count (a 2^RB-way mux), the second
+    // adds, compares and descends -- the one-edge step was the unit's critical path (wp -> mux -> add ->
+    // compare -> subtract -> rem, -0.72 ns at a 0.9 ns target in the routed ot_hdc_tselect_cand)
+    reg  [CW-1:0] wc_q;
+    reg           wph;
+    always @(posedge clk) wc_q <= wc;
+    wire [CW:0]   wsum   = wacc + {1'b0, wc_q};
     wire          wgo    = ({{(QW){1'b0}}, wsum} >= {{(CW + 1){1'b0}}, wkq});
     wire [RB-1:0] wp_n   = {wp[RB-2:0], wgo};
     wire [CW:0]   wacc_n = wgo ? wacc : wsum;
-    wire          wlast  = (dc == 0) && (wstep == RBM1);
+    wire          wlast  = (dc == 0) && wph && (wstep == RBM1);
     wire [QW-1:0] wrest  = wkq - wacc_n[QW-1:0];    // quota left for the boundary bucket (<= wkq)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) init <= 3'd7;
@@ -221,8 +227,9 @@ module ot_hdc_tselect #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            state <= S_ING; wptr <= 0; rptr <= 0; dc <= 0; wstep <= 0;
+            state <= S_ING; wptr <= 0; rptr <= 0; dc <= 0; wstep <= 0; wph <= 1'b0;
         end else begin
+            wph <= (state == S_W1 || state == S_W2) && dc == 0 && !wph;
             case (state)
                 S_ING: if (acc_in) begin
                     wptr <= in_last ? {AW{1'b0}} : wptr + 1'b1;
@@ -230,7 +237,7 @@ module ot_hdc_tselect #(
                 end
                 S_W1, S_W2: begin
                     if (dc != 0) dc <= dc - 1'b1;
-                    else begin
+                    else if (wph) begin
                         wstep <= wstep + 1'b1;
                         if (wlast) begin
                             state <= (state == S_W1) ? S_P2 : S_P3; rptr <= 0; wstep <= 0;
@@ -255,7 +262,7 @@ module ot_hdc_tselect #(
             wp <= {{(RB-1){1'b0}}, 1'b1}; wacc <= 0;
         end else if ((state == S_P2) && rptr == nlast) begin
             wkq <= mq; wp <= {{(RB-1){1'b0}}, 1'b1}; wacc <= 0;
-        end else if ((state == S_W1 || state == S_W2) && dc == 0) begin
+        end else if ((state == S_W1 || state == S_W2) && dc == 0 && wph) begin
             wp <= wp_n; wacc <= wacc_n;
             if (wlast && state == S_W1) begin bsel <= wp_n; mq <= wrest; end
             if (wlast && state == S_W2) begin lsel <= wp_n; end

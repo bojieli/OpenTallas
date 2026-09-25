@@ -58,10 +58,10 @@ VW = 16
 
 
 def lat0(w):
-    """LAT0 for W lanes: walk 1 (DRAIN 10 + 8 steps), walk 2 (10 + 8), pass-3 pipeline:
+    """LAT0 for W lanes: walk 1 (DRAIN 10 + 8 two-edge steps), walk 2 (10 + 16), pass-3 pipeline:
     read, compare, prefix, select, z, NCR compaction stages, NCR rotate stages, output."""
     ncr = (int(np.log2(w)) + 1) // 2
-    return 18 + 18 + 5 + 2 * ncr
+    return 26 + 26 + 5 + 2 * ncr
 
 
 # name, W, IW, K, AW, random segments, real sets, hierarchy trials
