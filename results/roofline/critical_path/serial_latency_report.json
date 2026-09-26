@@ -281,20 +281,22 @@
   "hardware_links": {
    "purpose": "Links priced as hardware traversals with no software stack, on which the collective's logical algorithm (two-step, one-shot, ring, recursive doubling, tree, centre-rooted mesh; hierarchical across link classes) is searched per collective. Every other link's hop_latency_s is half a MEASURED small-message collective (see links.nvlink3), so a collective on it is priced as its measured floor per switch tier and no algorithm is credited beyond the measured best kernel.",
    "rom_package_ucie": {
-    "value": "full",
+    "value": "ring2x2",
     "grade": "assumed",
     "source": "links.rom_package_ucie.fabric note",
-    "note": "every die in a package has a direct link to every other; bytes_s is per link",
-    "links_per_node": 3,
-    "bandwidth_scope": "per_link"
+    "note": "dies link only to edge-adjacent dies: two dies are one link; three or four sit in a 2 x 2 (a ring of four) whose diagonal partner is reached through a relay die (2 hops + links.rom_package_ucie.relay_latency_s) or on the diagonal_link, whichever prices faster per collective; bytes_s is per link. Was 'full' (every die linked to every other).",
+    "links_per_node": 2,
+    "bandwidth_scope": "per_link",
+    "diagonal_link": "rom_package_ucie_diagonal"
    },
    "rom_board_serdes": {
     "value": "mesh",
     "grade": "assumed",
     "source": "links.rom_board_serdes.fabric note",
-    "note": "packages on a 2-D board mesh; bytes_s is per package, split over its 4 neighbour links",
+    "note": "packages on a 2-D board mesh; bytes_s is per four-die-class package, scaled by sqrt(dies per package / reference_domain) for the package edge and split over its 4 neighbour links",
     "links_per_node": 4,
-    "bandwidth_scope": "per_node"
+    "bandwidth_scope": "per_node",
+    "reference_domain": 4
    },
    "on_wafer": {
     "value": "mesh",
@@ -648,17 +650,17 @@
    "stream_unit_width": 512,
    "study_tokens_s_per_user": 5228.286613727206,
    "study_aggregate_tokens_s": 120250.59211572574,
-   "tokens_s_per_user": 5228.286613727206,
-   "token_period_s": 0.00019126724946073826,
-   "critical_path_s": 0.00019126724946073826,
+   "tokens_s_per_user": 4624.758418736191,
+   "token_period_s": 0.0002162275105978985,
+   "critical_path_s": 0.0002162275105978985,
    "sweep_s": 2.4751185119343686e-05,
    "breakdown_s": {
     "compute_chain": 0.00013842646290743738,
     "weight_sweep": 1.614175177857646e-05,
     "kv_sweep": 1.1093766023079127e-06,
-    "collective_latency": 2.1430653834993735e-05,
-    "collective_bytes": 2.4791031666666666e-06,
-    "pipeline_hops": 4.549617777777777e-06,
+    "collective_latency": 4.267765383499364e-05,
+    "collective_bytes": 3.5346785842718803e-06,
+    "pipeline_hops": 7.207303497332543e-06,
     "control": 7.130283392978147e-06,
     "kernel_launch": 0.0
    },
@@ -670,47 +672,47 @@
    "legacy_link_latency_s": 2.266862222222222e-05,
    "per_layer_critical_path_us": {
     "-1": 0.0368196150498114,
-    "0": 3.804875414144875,
-    "1": 4.277907428846491,
-    "2": 7.864571493606189,
-    "3": 3.8246869895689266,
-    "4": 3.8246869895689266,
-    "5": 3.8246869895689266,
-    "6": 3.8246869895689266,
-    "7": 3.8246869895689266,
-    "8": 7.864571493606189,
-    "9": 3.8246869895689266,
-    "10": 3.8246869895689266,
-    "11": 3.8246869895689266,
-    "12": 3.8246869895689266,
-    "13": 3.8246869895689266,
-    "14": 8.351078892774387,
-    "15": 3.8246869895689266,
-    "16": 3.8246869895689266,
-    "17": 3.8246869895689266,
-    "18": 3.8246869895689266,
-    "19": 3.8246869895689266,
-    "20": 8.3085990820267,
-    "21": 3.8246869895689266,
-    "22": 3.8246869895689266,
-    "23": 3.8246869895689266,
-    "24": 7.43560802983592,
-    "25": 3.8246869895689266,
-    "26": 3.8246869895689266,
-    "27": 3.8246869895689266,
-    "28": 7.43560802983592,
-    "29": 3.8246869895689266,
-    "30": 3.8246869895689266,
-    "31": 3.8246869895689266,
-    "32": 7.43560802983592,
-    "33": 3.8246869895689266,
-    "34": 3.8246869895689266,
-    "35": 3.8246869895689266,
-    "36": 7.43560802983592,
-    "37": 3.8246869895689266,
-    "38": 3.8246869895689266,
-    "39": 3.8246869895689266,
-    "40": 1.7261664564944783
+    "0": 4.307015909962567,
+    "1": 4.7800479246641805,
+    "2": 8.63093499989612,
+    "3": 4.326827485386619,
+    "4": 4.326827485386619,
+    "5": 4.326827485386619,
+    "6": 4.326827485386619,
+    "7": 4.326827485386619,
+    "8": 8.63093499989612,
+    "9": 4.326827485386619,
+    "10": 4.326827485386619,
+    "11": 4.326827485386619,
+    "12": 4.326827485386619,
+    "13": 4.326827485386619,
+    "14": 9.117442399064318,
+    "15": 4.326827485386619,
+    "16": 4.326827485386619,
+    "17": 4.326827485386619,
+    "18": 4.326827485386619,
+    "19": 4.326827485386619,
+    "20": 9.073726001080907,
+    "21": 4.326827485386619,
+    "22": 4.326827485386619,
+    "23": 4.326827485386619,
+    "24": 8.200322753144883,
+    "25": 4.326827485386619,
+    "26": 4.326827485386619,
+    "27": 4.326827485386619,
+    "28": 8.200322753144883,
+    "29": 4.326827485386619,
+    "30": 4.326827485386619,
+    "31": 4.326827485386619,
+    "32": 8.200322753144883,
+    "33": 4.326827485386619,
+    "34": 4.326827485386619,
+    "35": 4.326827485386619,
+    "36": 8.200322753144883,
+    "37": 4.326827485386619,
+    "38": 4.326827485386619,
+    "39": 4.326827485386619,
+    "40": 1.837169676773738
    },
    "top_serial_steps": {
     "-1": [
@@ -722,34 +724,34 @@
     ],
     "0": [
      {
+      "node": "L0.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L0.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
+     {
       "node": "L0.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L0.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L0.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L0.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L0.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L0.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L0.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L0.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "1": [
@@ -759,29 +761,29 @@
       "desc": "rsqrt, scale, signed sqrt, sigmoid"
      },
      {
+      "node": "L1.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L1.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
+     {
       "node": "L1.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
-      "node": "L1.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
+      "node": "L1.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
      },
      {
-      "node": "L1.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L1.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L1.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
+      "node": "L1.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
      }
     ],
     "2": [
@@ -796,184 +798,184 @@
       "desc": "local top-512 of 12500 keys"
      },
      {
+      "node": "L2.attn.rows_allgather",
+      "us": 0.327170497479832,
+      "desc": "640 shared KV rows, read once per group"
+     },
+     {
+      "node": "L2.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L2.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
+     {
       "node": "L2.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
-     },
-     {
-      "node": "L2.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L2.attn.cmp.pool",
-      "us": 0.19827836347809266,
-      "desc": "softmax pooling over the compression window"
-     },
-     {
-      "node": "L2.attn.rows_allgather",
-      "us": 0.18800939097914046,
-      "desc": "640 shared KV rows, read once per group"
      }
     ],
     "3": [
+     {
+      "node": "L3.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L3.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L3.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L3.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L3.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L3.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L3.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L3.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L3.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L3.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "4": [
+     {
+      "node": "L4.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L4.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L4.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L4.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L4.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L4.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L4.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L4.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L4.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L4.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "5": [
+     {
+      "node": "L5.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L5.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L5.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L5.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L5.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L5.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L5.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L5.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L5.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L5.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "6": [
+     {
+      "node": "L6.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L6.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L6.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L6.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L6.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L6.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L6.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L6.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L6.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L6.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "7": [
+     {
+      "node": "L7.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L7.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L7.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L7.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L7.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L7.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L7.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L7.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L7.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L7.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "8": [
@@ -988,184 +990,184 @@
       "desc": "local top-512 of 12500 keys"
      },
      {
+      "node": "L8.attn.rows_allgather",
+      "us": 0.327170497479832,
+      "desc": "640 shared KV rows, read once per group"
+     },
+     {
+      "node": "L8.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L8.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
+     {
       "node": "L8.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
-     },
-     {
-      "node": "L8.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L8.attn.cmp.pool",
-      "us": 0.19827836347809266,
-      "desc": "softmax pooling over the compression window"
-     },
-     {
-      "node": "L8.attn.rows_allgather",
-      "us": 0.18800939097914046,
-      "desc": "640 shared KV rows, read once per group"
      }
     ],
     "9": [
+     {
+      "node": "L9.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L9.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L9.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L9.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L9.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L9.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L9.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L9.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L9.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L9.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "10": [
+     {
+      "node": "L10.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L10.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L10.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L10.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L10.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L10.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L10.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L10.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L10.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L10.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "11": [
+     {
+      "node": "L11.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L11.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L11.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L11.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L11.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L11.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L11.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L11.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L11.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L11.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "12": [
+     {
+      "node": "L12.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L12.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L12.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L12.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L12.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L12.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L12.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L12.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L12.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L12.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "13": [
+     {
+      "node": "L13.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L13.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L13.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L13.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L13.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L13.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L13.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L13.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L13.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L13.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "14": [
@@ -1185,179 +1187,179 @@
       "desc": "rsqrt, scale, signed sqrt, sigmoid"
      },
      {
-      "node": "L14.ffn.score",
-      "us": 0.27855692039849117,
-      "desc": "sqrtsoftplus"
+      "node": "L14.attn.rows_allgather",
+      "us": 0.327170497479832,
+      "desc": "640 shared KV rows, read once per group"
      },
      {
-      "node": "L14.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
+      "node": "L14.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
      },
      {
-      "node": "L14.attn.cmp.pool",
-      "us": 0.19827836347809266,
-      "desc": "softmax pooling over the compression window"
+      "node": "L14.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "15": [
+     {
+      "node": "L15.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L15.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L15.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L15.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L15.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L15.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L15.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L15.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L15.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L15.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "16": [
+     {
+      "node": "L16.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L16.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L16.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L16.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L16.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L16.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L16.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L16.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L16.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L16.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "17": [
+     {
+      "node": "L17.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L17.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L17.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L17.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L17.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L17.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L17.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L17.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L17.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L17.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "18": [
+     {
+      "node": "L18.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L18.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L18.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L18.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L18.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L18.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L18.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L18.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L18.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L18.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "19": [
+     {
+      "node": "L19.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L19.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L19.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L19.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L19.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L19.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L19.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L19.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L19.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L19.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "20": [
@@ -1377,115 +1379,115 @@
       "desc": "index scores: 25000 keys per partition x 32 heads"
      },
      {
-      "node": "L20.ffn.score",
-      "us": 0.27855692039849117,
-      "desc": "sqrtsoftplus"
-     },
-     {
-      "node": "L20.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
-     },
-     {
       "node": "L20.attn.rows_allgather",
-      "us": 0.18800939097914046,
+      "us": 0.327170497479832,
       "desc": "640 shared KV rows, read once per group"
+     },
+     {
+      "node": "L20.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L20.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "21": [
+     {
+      "node": "L21.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L21.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L21.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L21.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L21.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L21.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L21.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L21.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L21.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L21.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "22": [
+     {
+      "node": "L22.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L22.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L22.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L22.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L22.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L22.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L22.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L22.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L22.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L22.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "23": [
+     {
+      "node": "L23.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L23.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L23.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L23.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L23.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L23.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L23.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L23.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L23.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L23.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "24": [
@@ -1500,120 +1502,120 @@
       "desc": "local top-512 of 2048 keys"
      },
      {
-      "node": "L24.ffn.score",
-      "us": 0.27855692039849117,
-      "desc": "sqrtsoftplus"
-     },
-     {
-      "node": "L24.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
-     },
-     {
       "node": "L24.attn.rows_allgather",
-      "us": 0.18800939097914046,
+      "us": 0.327170497479832,
       "desc": "640 shared KV rows, read once per group"
      },
      {
-      "node": "L24.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
+      "node": "L24.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L24.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
+     {
+      "node": "L24.ffn.score",
+      "us": 0.27855692039849117,
+      "desc": "sqrtsoftplus"
      }
     ],
     "25": [
+     {
+      "node": "L25.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L25.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L25.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L25.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L25.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L25.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L25.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L25.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L25.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L25.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "26": [
+     {
+      "node": "L26.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L26.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L26.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L26.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L26.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L26.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L26.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L26.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L26.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L26.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "27": [
+     {
+      "node": "L27.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L27.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L27.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L27.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L27.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L27.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L27.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L27.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L27.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L27.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "28": [
@@ -1628,120 +1630,120 @@
       "desc": "local top-512 of 2048 keys"
      },
      {
-      "node": "L28.ffn.score",
-      "us": 0.27855692039849117,
-      "desc": "sqrtsoftplus"
-     },
-     {
-      "node": "L28.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
-     },
-     {
       "node": "L28.attn.rows_allgather",
-      "us": 0.18800939097914046,
+      "us": 0.327170497479832,
       "desc": "640 shared KV rows, read once per group"
      },
      {
-      "node": "L28.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
+      "node": "L28.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L28.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
+     {
+      "node": "L28.ffn.score",
+      "us": 0.27855692039849117,
+      "desc": "sqrtsoftplus"
      }
     ],
     "29": [
+     {
+      "node": "L29.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L29.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L29.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L29.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L29.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L29.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L29.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L29.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L29.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L29.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "30": [
+     {
+      "node": "L30.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L30.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L30.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L30.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L30.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L30.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L30.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L30.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L30.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L30.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "31": [
+     {
+      "node": "L31.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L31.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L31.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L31.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L31.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L31.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L31.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L31.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L31.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L31.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "32": [
@@ -1756,120 +1758,120 @@
       "desc": "local top-512 of 2048 keys"
      },
      {
-      "node": "L32.ffn.score",
-      "us": 0.27855692039849117,
-      "desc": "sqrtsoftplus"
-     },
-     {
-      "node": "L32.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
-     },
-     {
       "node": "L32.attn.rows_allgather",
-      "us": 0.18800939097914046,
+      "us": 0.327170497479832,
       "desc": "640 shared KV rows, read once per group"
      },
      {
-      "node": "L32.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
+      "node": "L32.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L32.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
+     {
+      "node": "L32.ffn.score",
+      "us": 0.27855692039849117,
+      "desc": "sqrtsoftplus"
      }
     ],
     "33": [
+     {
+      "node": "L33.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L33.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L33.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L33.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L33.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L33.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L33.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L33.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L33.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L33.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "34": [
+     {
+      "node": "L34.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L34.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L34.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L34.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L34.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L34.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L34.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L34.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L34.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L34.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "35": [
+     {
+      "node": "L35.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L35.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L35.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L35.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L35.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L35.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L35.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L35.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L35.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L35.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "36": [
@@ -1884,120 +1886,120 @@
       "desc": "local top-512 of 2048 keys"
      },
      {
-      "node": "L36.ffn.score",
-      "us": 0.27855692039849117,
-      "desc": "sqrtsoftplus"
-     },
-     {
-      "node": "L36.ffn.experts_gu",
-      "us": 0.20213687272564404,
-      "desc": "routed gate|up of 6 experts"
-     },
-     {
       "node": "L36.attn.rows_allgather",
-      "us": 0.18800939097914046,
+      "us": 0.327170497479832,
       "desc": "640 shared KV rows, read once per group"
      },
      {
-      "node": "L36.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
+      "node": "L36.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L36.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
+     {
+      "node": "L36.ffn.score",
+      "us": 0.27855692039849117,
+      "desc": "sqrtsoftplus"
      }
     ],
     "37": [
+     {
+      "node": "L37.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L37.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L37.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L37.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L37.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L37.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L37.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L37.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L37.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L37.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "38": [
+     {
+      "node": "L38.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L38.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L38.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L38.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L38.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L38.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L38.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L38.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L38.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L38.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "39": [
+     {
+      "node": "L39.attn.out_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "attention output partial sums (FP32)"
+     },
+     {
+      "node": "L39.ffn.combine_allreduce",
+      "us": 0.29998888578970945,
+      "desc": "MoE combine: routed + shared partial sums (FP32)"
+     },
      {
       "node": "L39.ffn.score",
       "us": 0.27855692039849117,
       "desc": "sqrtsoftplus"
      },
      {
+      "node": "L39.attn.a_allgather",
+      "us": 0.22854583832156294,
+      "desc": "q_a | kv | index weights (+ compressor) rows"
+     },
+     {
+      "node": "L39.ffn.router_allgather",
+      "us": 0.2269770179303359,
+      "desc": "384 FP32 router scores"
+     },
+     {
       "node": "L39.ffn.experts_gu",
       "us": 0.20213687272564404,
       "desc": "routed gate|up of 6 experts"
-     },
-     {
-      "node": "L39.ffn.swiglu",
-      "us": 0.17603249830737983,
-      "desc": "silu(g)*u"
-     },
-     {
-      "node": "L39.ffn.down",
-      "us": 0.16114771929283472,
-      "desc": "routed down + shared down, summed in expert-id order"
-     },
-     {
-      "node": "L39.attn.out_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "attention output partial sums (FP32)"
-     },
-     {
-      "node": "L39.ffn.combine_allreduce",
-      "us": 0.16096200836100633,
-      "desc": "MoE combine: routed + shared partial sums (FP32)"
      }
     ],
     "40": [
@@ -2008,7 +2010,7 @@
      },
      {
       "node": "head.argmax_merge",
-      "us": 0.11483877986802934,
+      "us": 0.22584200014728906,
       "desc": "best {logit, id} per partition"
      },
      {
@@ -2039,8 +2041,8 @@
      "op": "hop",
      "span": 2,
      "payload_bytes": 51200.0,
-     "latency_ns": 100.0,
-     "bytes_ns": 113.77777777777777,
+     "latency_ns": 209.0,
+     "bytes_ns": 121.39893301719027,
      "algo": "point_to_point",
      "where": "rom_board_serdes x1",
      "desc": "Engram keys + value to the layer's stage (prefetchable)",
@@ -2054,10 +2056,10 @@
      "op": "all_gather",
      "span": 8,
      "payload_bytes": 3648.0,
-     "latency_ns": 109.99999999999999,
-     "bytes_ns": 1.2413333333333334,
+     "latency_ns": 221.0,
+     "bytes_ns": 2.7097806757557796,
      "algo": "hierarchical",
-     "where": "4 x rom_package_ucie (one_shot) then 2 x rom_board_serdes (one_shot)",
+     "where": "4 x rom_package_ucie (two_step, diagonal by diagonal) then 2 x rom_board_serdes (one_shot)",
      "desc": "q_a | kv | index weights (+ compressor) rows",
      "layers": "every layer"
     },
@@ -2066,10 +2068,10 @@
      "op": "all_gather",
      "span": 8,
      "payload_bytes": 67584.0,
-     "latency_ns": 109.99999999999999,
-     "bytes_ns": 22.997333333333334,
+     "latency_ns": 233.0,
+     "bytes_ns": 28.07653823355068,
      "algo": "hierarchical",
-     "where": "4 x rom_package_ucie (one_shot) then 2 x rom_board_serdes (one_shot)",
+     "where": "4 x rom_package_ucie (two_step, diagonal by relay) then 2 x rom_board_serdes (one_shot)",
      "desc": "128 shared KV rows, read once per group",
      "layers": "every layer"
     },
@@ -2078,10 +2080,10 @@
      "op": "all_reduce",
      "span": 8,
      "payload_bytes": 20480.0,
-     "latency_ns": 134.50817293742142,
-     "bytes_ns": 21.61777777777778,
+     "latency_ns": 263.5081729374214,
+     "bytes_ns": 31.644655206480934,
      "algo": "hierarchical",
-     "where": "4 x rom_package_ucie (one_shot) then 2 x rom_board_serdes (one_shot)",
+     "where": "4 x rom_package_ucie (rec_doubling) then 2 x rom_board_serdes (one_shot)",
      "desc": "attention output partial sums (FP32)",
      "layers": "every layer"
     },
@@ -2090,10 +2092,10 @@
      "op": "all_gather",
      "span": 8,
      "payload_bytes": 1536.0,
-     "latency_ns": 109.99999999999999,
-     "bytes_ns": 0.5226666666666666,
+     "latency_ns": 221.0,
+     "bytes_ns": 1.1409602845287492,
      "algo": "hierarchical",
-     "where": "4 x rom_package_ucie (one_shot) then 2 x rom_board_serdes (one_shot)",
+     "where": "4 x rom_package_ucie (two_step, diagonal by diagonal) then 2 x rom_board_serdes (one_shot)",
      "desc": "384 FP32 router scores",
      "layers": "every layer"
     },
@@ -2102,10 +2104,10 @@
      "op": "all_reduce",
      "span": 8,
      "payload_bytes": 20480.0,
-     "latency_ns": 134.50817293742142,
-     "bytes_ns": 21.61777777777778,
+     "latency_ns": 263.5081729374214,
+     "bytes_ns": 31.644655206480934,
      "algo": "hierarchical",
-     "where": "4 x rom_package_ucie (one_shot) then 2 x rom_board_serdes (one_shot)",
+     "where": "4 x rom_package_ucie (rec_doubling) then 2 x rom_board_serdes (one_shot)",
      "desc": "MoE combine: routed + shared partial sums (FP32)",
      "layers": "every layer"
     },
@@ -2114,10 +2116,10 @@
      "op": "all_gather",
      "span": 8,
      "payload_bytes": 32768.0,
-     "latency_ns": 109.99999999999999,
-     "bytes_ns": 11.150222222222222,
+     "latency_ns": 229.0,
+     "bytes_ns": 15.563343212803792,
      "algo": "hierarchical",
-     "where": "4 x rom_package_ucie (one_shot) then 2 x rom_board_serdes (one_shot)",
+     "where": "4 x rom_package_ucie (rec_doubling) then 2 x rom_board_serdes (one_shot)",
      "desc": "8 x 512 (score, position) candidates",
      "layers": [
       2,
@@ -2135,10 +2137,10 @@
      "op": "all_gather",
      "span": 8,
      "payload_bytes": 131072.0,
-     "latency_ns": 109.99999999999999,
-     "bytes_ns": 44.60088888888889,
+     "latency_ns": 233.0,
+     "bytes_ns": 54.45146808931041,
      "algo": "hierarchical",
-     "where": "4 x rom_package_ucie (one_shot) then 2 x rom_board_serdes (one_shot)",
+     "where": "4 x rom_package_ucie (two_step, diagonal by relay) then 2 x rom_board_serdes (one_shot)",
      "desc": "8 x 2048 candidate blocks",
      "layers": [
       20
@@ -2149,10 +2151,10 @@
      "op": "all_gather",
      "span": 8,
      "payload_bytes": 8.0,
-     "latency_ns": 109.99999999999999,
-     "bytes_ns": 0.0027222222222222222,
+     "latency_ns": 221.0,
+     "bytes_ns": 0.00594250148192057,
      "algo": "hierarchical",
-     "where": "4 x rom_package_ucie (one_shot) then 2 x rom_board_serdes (one_shot)",
+     "where": "4 x rom_package_ucie (two_step, diagonal by diagonal) then 2 x rom_board_serdes (one_shot)",
      "desc": "best {logit, id} per partition",
      "layers": [
       40
@@ -2192,11 +2194,11 @@
     }
    ],
    "algorithm_tokens_s_per_user": {
-    "two_step": 4755.36359034089,
-    "one_shot": 5228.286613727206,
-    "ring": 4662.898928614212,
-    "rec_doubling": 5012.569960015612,
-    "tree": 4238.223083739813,
+    "two_step": 4169.5929197677815,
+    "one_shot": 4610.978058141613,
+    "ring": 4073.9966582927937,
+    "rec_doubling": 4509.393643486971,
+    "tree": 3589.378221475181,
     "centre_mesh": null
    }
   },
@@ -2210,17 +2212,17 @@
    "stream_unit_width": 512,
    "study_tokens_s_per_user": 4485.397797465166,
    "study_aggregate_tokens_s": 287065.45903777063,
-   "tokens_s_per_user": 4485.397797465166,
-   "token_period_s": 0.0002229456661714888,
-   "critical_path_s": 0.0002229456661714888,
+   "tokens_s_per_user": 4355.26635510791,
+   "token_period_s": 0.00022960708219996412,
+   "critical_path_s": 0.00022960708219996412,
    "sweep_s": 6.887286294078243e-05,
    "breakdown_s": {
     "compute_chain": 0.00014449386493521756,
     "weight_sweep": 5.1927206314980785e-05,
     "kv_sweep": 6.5991936554761365e-06,
-    "collective_latency": 2.5437692233291354e-06,
-    "collective_bytes": 7.500584347826093e-07,
-    "pipeline_hops": 9.562224541062797e-06,
+    "collective_latency": 3.6337692233291516e-06,
+    "collective_bytes": 1.5889010351966908e-06,
+    "pipeline_hops": 1.4294797969124502e-05,
     "control": 7.069349066640975e-06,
     "kernel_launch": 0.0
    },
@@ -2232,47 +2234,47 @@
    "legacy_link_latency_s": 6.449797101449276e-06,
    "per_layer_critical_path_us": {
     "-1": 0.0368196150498114,
-    "0": 4.3166637563753545,
-    "1": 4.789695771076969,
-    "2": 9.146914255353964,
-    "3": 4.349144799016535,
-    "4": 4.349144799016535,
-    "5": 4.349144799016535,
-    "6": 4.349144799016535,
-    "7": 4.349144799016535,
-    "8": 9.146914255353964,
-    "9": 4.349144799016535,
-    "10": 4.349144799016535,
-    "11": 4.349144799016535,
-    "12": 4.349144799016535,
-    "13": 4.349144799016535,
-    "14": 9.648897038988748,
-    "15": 4.349144799016535,
-    "16": 4.349144799016535,
-    "17": 4.349144799016535,
-    "18": 4.349144799016535,
-    "19": 4.349144799016535,
-    "20": 10.605185466060634,
-    "21": 4.349144799016535,
-    "22": 4.349144799016535,
-    "23": 4.349144799016535,
-    "24": 7.87689100897877,
-    "25": 4.349144799016535,
-    "26": 4.349144799016535,
-    "27": 4.349144799016535,
-    "28": 7.87689100897877,
-    "29": 4.349144799016535,
-    "30": 4.349144799016535,
-    "31": 4.349144799016535,
-    "32": 7.87689100897877,
-    "33": 4.349144799016535,
-    "34": 4.349144799016535,
-    "35": 4.349144799016535,
-    "36": 7.87689100897877,
-    "37": 4.349144799016535,
-    "38": 4.349144799016535,
-    "39": 4.349144799016535,
-    "40": 3.7104434657568386
+    "0": 4.356322953062725,
+    "1": 4.829354967764339,
+    "2": 9.230431340240093,
+    "3": 4.388803995703906,
+    "4": 4.388803995703906,
+    "5": 4.388803995703906,
+    "6": 4.388803995703906,
+    "7": 4.388803995703906,
+    "8": 9.230431340240093,
+    "9": 4.388803995703906,
+    "10": 4.388803995703906,
+    "11": 4.388803995703906,
+    "12": 4.388803995703906,
+    "13": 4.388803995703906,
+    "14": 9.732414123874872,
+    "15": 4.388803995703906,
+    "16": 4.388803995703906,
+    "17": 4.388803995703906,
+    "18": 4.388803995703906,
+    "19": 4.388803995703906,
+    "20": 10.687061606847383,
+    "21": 4.388803995703906,
+    "22": 4.388803995703906,
+    "23": 4.388803995703906,
+    "24": 7.95822016839906,
+    "25": 4.388803995703906,
+    "26": 4.388803995703906,
+    "27": 4.388803995703906,
+    "28": 7.95822016839906,
+    "29": 4.388803995703906,
+    "30": 4.388803995703906,
+    "31": 4.388803995703906,
+    "32": 7.95822016839906,
+    "33": 4.388803995703906,
+    "34": 4.388803995703906,
+    "35": 4.388803995703906,
+    "36": 7.95822016839906,
+    "37": 4.388803995703906,
+    "38": 4.388803995703906,
+    "39": 4.388803995703906,
+    "40": 3.712447739048764
    },
    "top_serial_steps": {
     "2": [
@@ -2378,8 +2380,8 @@
      "op": "hop",
      "span": 2,
      "payload_bytes": 71234.78260869565,
-     "latency_ns": 100.0,
-     "bytes_ns": 158.29951690821255,
+     "latency_ns": 209.0,
+     "bytes_ns": 168.90286332826471,
      "algo": "point_to_point",
      "where": "rom_board_serdes x1",
      "desc": "Engram keys + value to the layer's stage (prefetchable)",
@@ -2393,10 +2395,10 @@
      "op": "all_gather",
      "span": 4,
      "payload_bytes": 5075.478260869565,
-     "latency_ns": 10.0,
-     "bytes_ns": 0.31721739130434784,
-     "algo": "one_shot",
-     "where": "4 x rom_package_ucie: one_shot",
+     "latency_ns": 12.0,
+     "bytes_ns": 2.26583850931677,
+     "algo": "two_step",
+     "where": "4 x rom_package_ucie: two_step, diagonal by diagonal",
      "desc": "q_a | kv | index weights (+ compressor) rows",
      "layers": "every layer"
     },
@@ -2405,10 +2407,10 @@
      "op": "all_gather",
      "span": 4,
      "payload_bytes": 94029.91304347826,
-     "latency_ns": 10.0,
-     "bytes_ns": 5.87686956521739,
-     "algo": "one_shot",
-     "where": "4 x rom_package_ucie: one_shot",
+     "latency_ns": 24.0,
+     "bytes_ns": 11.194037267080745,
+     "algo": "two_step",
+     "where": "4 x rom_package_ucie: two_step, diagonal by relay",
      "desc": "128 shared KV rows, read once per group",
      "layers": "every layer"
     },
@@ -2417,10 +2419,10 @@
      "op": "all_reduce",
      "span": 4,
      "payload_bytes": 28493.91304347826,
-     "latency_ns": 19.672115291614276,
-     "bytes_ns": 7.123478260869565,
-     "algo": "one_shot",
-     "where": "4 x rom_package_ucie: one_shot",
+     "latency_ns": 29.672115291614276,
+     "bytes_ns": 13.568530020703934,
+     "algo": "rec_doubling",
+     "where": "4 x rom_package_ucie: rec_doubling",
      "desc": "attention output partial sums (FP32)",
      "layers": "every layer"
     },
@@ -2429,10 +2431,10 @@
      "op": "all_gather",
      "span": 4,
      "payload_bytes": 2137.0434782608695,
-     "latency_ns": 10.0,
-     "bytes_ns": 0.13356521739130434,
-     "algo": "one_shot",
-     "where": "4 x rom_package_ucie: one_shot",
+     "latency_ns": 12.0,
+     "bytes_ns": 0.9540372670807454,
+     "algo": "two_step",
+     "where": "4 x rom_package_ucie: two_step, diagonal by diagonal",
      "desc": "384 FP32 router scores",
      "layers": "every layer"
     },
@@ -2441,10 +2443,10 @@
      "op": "all_reduce",
      "span": 4,
      "payload_bytes": 28493.91304347826,
-     "latency_ns": 19.672115291614276,
-     "bytes_ns": 7.123478260869565,
-     "algo": "one_shot",
-     "where": "4 x rom_package_ucie: one_shot",
+     "latency_ns": 29.672115291614276,
+     "bytes_ns": 13.568530020703934,
+     "algo": "rec_doubling",
+     "where": "4 x rom_package_ucie: rec_doubling",
      "desc": "MoE combine: routed + shared partial sums (FP32)",
      "layers": "every layer"
     },
@@ -2453,10 +2455,10 @@
      "op": "all_gather",
      "span": 4,
      "payload_bytes": 22795.130434782608,
-     "latency_ns": 10.0,
-     "bytes_ns": 1.4246956521739131,
-     "algo": "one_shot",
-     "where": "4 x rom_package_ucie: one_shot",
+     "latency_ns": 12.0,
+     "bytes_ns": 10.17639751552795,
+     "algo": "two_step",
+     "where": "4 x rom_package_ucie: two_step, diagonal by diagonal",
      "desc": "4 x 512 (score, position) candidates",
      "layers": [
       2,
@@ -2474,10 +2476,10 @@
      "op": "all_gather",
      "span": 4,
      "payload_bytes": 91180.52173913043,
-     "latency_ns": 10.0,
-     "bytes_ns": 5.698782608695653,
-     "algo": "one_shot",
-     "where": "4 x rom_package_ucie: one_shot",
+     "latency_ns": 24.0,
+     "bytes_ns": 10.854824016563148,
+     "algo": "two_step",
+     "where": "4 x rom_package_ucie: two_step, diagonal by relay",
      "desc": "4 x 2048 candidate blocks",
      "layers": [
       20
@@ -2488,10 +2490,10 @@
      "op": "all_gather",
      "span": 4,
      "payload_bytes": 11.130434782608695,
-     "latency_ns": 10.0,
-     "bytes_ns": 0.0006956521739130435,
-     "algo": "one_shot",
-     "where": "4 x rom_package_ucie: one_shot",
+     "latency_ns": 12.0,
+     "bytes_ns": 0.004968944099378882,
+     "algo": "two_step",
+     "where": "4 x rom_package_ucie: two_step, diagonal by diagonal",
      "desc": "best {logit, id} per partition",
      "layers": [
       40
@@ -2541,17 +2543,17 @@
    "stream_unit_width": 512,
    "study_tokens_s_per_user": 200.88936180239918,
    "study_aggregate_tokens_s": 822842.825942627,
-   "tokens_s_per_user": 200.88936180239918,
-   "token_period_s": 0.0049778643877799265,
-   "critical_path_s": 0.0049778643877799265,
+   "tokens_s_per_user": 200.64149223621067,
+   "token_period_s": 0.004984013968669664,
+   "critical_path_s": 0.004984013968669664,
    "sweep_s": 0.0044078632282100755,
    "breakdown_s": {
-    "compute_chain": 0.0007326259475311178,
+    "compute_chain": 0.0007326681456594781,
     "weight_sweep": 0.0030269371355870754,
     "kv_sweep": 0.001082066140924367,
     "collective_latency": 1.7568846116645715e-06,
-    "collective_bytes": 2.9060986434782605e-05,
-    "pipeline_hops": 9.908302438647346e-05,
+    "collective_bytes": 2.7677129937888248e-05,
+    "pipeline_hops": 0.00010657426364475142,
     "control": 6.33426830447828e-06,
     "kernel_launch": 0.0
    },
@@ -2564,47 +2566,47 @@
    "legacy_link_latency_s": 2.4468896618357485e-05,
    "per_layer_critical_path_us": {
     "-1": 0.0368196150498114,
-    "0": 85.94210605588808,
-    "1": 86.4151380705897,
-    "2": 291.22344818389615,
-    "3": 89.05339717821217,
-    "4": 89.05339717821217,
-    "5": 89.05339717821217,
-    "6": 89.05339717821217,
-    "7": 89.05339717821217,
-    "8": 291.2234481838961,
-    "9": 89.05339717821207,
-    "10": 89.05339717821207,
-    "11": 89.05339717821207,
-    "12": 89.05339717821207,
-    "13": 89.05339717821207,
-    "14": 293.3938708553344,
-    "15": 89.05339717821207,
-    "16": 89.05339717821228,
-    "17": 89.05339717821228,
-    "18": 89.05339717821228,
-    "19": 89.05339717821228,
-    "20": 478.0386881812955,
-    "21": 89.05339717821228,
-    "22": 89.05339717821228,
-    "23": 89.05339717821228,
-    "24": 126.21253949701489,
-    "25": 89.05339717821228,
-    "26": 89.05339717821228,
-    "27": 89.05339717821228,
-    "28": 126.21253949701489,
-    "29": 89.05339717821228,
-    "30": 89.05339717821228,
-    "31": 89.05339717821228,
-    "32": 126.21253949701489,
-    "33": 89.05339717821228,
-    "34": 89.05339717821228,
-    "35": 89.05339717821228,
-    "36": 126.21253949701489,
-    "37": 89.05339717821228,
-    "38": 89.05339717821228,
-    "39": 89.05339717821228,
-    "40": 176.0557709131079
+    "0": 85.92039640785497,
+    "1": 86.39342842255658,
+    "2": 291.1425797449727,
+    "3": 89.03168753017908,
+    "4": 89.03168753017908,
+    "5": 89.03168753017908,
+    "6": 89.03168753017908,
+    "7": 89.03168753017908,
+    "8": 291.1425797449727,
+    "9": 89.03168753017886,
+    "10": 89.03168753017886,
+    "11": 89.03168753017886,
+    "12": 89.03168753017886,
+    "13": 89.03168753017886,
+    "14": 293.3130024164108,
+    "15": 89.03168753017886,
+    "16": 89.0316875301793,
+    "17": 89.0316875301793,
+    "18": 89.0316875301793,
+    "19": 89.0316875301793,
+    "20": 477.9578197423719,
+    "21": 89.0316875301793,
+    "22": 89.0316875301793,
+    "23": 89.0316875301793,
+    "24": 126.13167105809167,
+    "25": 89.0316875301793,
+    "26": 89.0316875301793,
+    "27": 89.0316875301793,
+    "28": 126.13167105809167,
+    "29": 89.0316875301793,
+    "30": 89.0316875301793,
+    "31": 89.0316875301793,
+    "32": 126.1316710580908,
+    "33": 89.03168753017843,
+    "34": 89.03168753017843,
+    "35": 89.03168753017843,
+    "36": 126.1316710580908,
+    "37": 89.03168753017843,
+    "38": 89.03168753017843,
+    "39": 89.03168753017843,
+    "40": 176.0557687930251
    },
    "top_serial_steps": {
     "2": [
@@ -2710,8 +2712,8 @@
      "op": "hop",
      "span": 2,
      "payload_bytes": 2279513.0434782607,
-     "latency_ns": 100.0,
-     "bytes_ns": 5065.584541062802,
+     "latency_ns": 209.0,
+     "bytes_ns": 5404.891626504471,
      "algo": "point_to_point",
      "where": "rom_board_serdes x1",
      "desc": "Engram keys + value to the layer's stage (prefetchable)",
@@ -2726,7 +2728,7 @@
      "span": 2,
      "payload_bytes": 162415.30434782608,
      "latency_ns": 10.0,
-     "bytes_ns": 20.30191304347826,
+     "bytes_ns": 19.335155279503105,
      "algo": "two_step",
      "where": "2 x rom_package_ucie: two_step",
      "desc": "q_a | kv | index weights (+ compressor) rows",
@@ -2738,7 +2740,7 @@
      "span": 2,
      "payload_bytes": 3008957.217391304,
      "latency_ns": 10.0,
-     "bytes_ns": 376.11965217391304,
+     "bytes_ns": 358.20919254658384,
      "algo": "two_step",
      "where": "2 x rom_package_ucie: two_step",
      "desc": "128 shared KV rows, read once per group",
@@ -2750,7 +2752,7 @@
      "span": 2,
      "payload_bytes": 911805.2173913043,
      "latency_ns": 14.836057645807138,
-     "bytes_ns": 227.95130434782607,
+     "bytes_ns": 217.09648033126294,
      "algo": "one_shot",
      "where": "2 x rom_package_ucie: one_shot",
      "desc": "attention output partial sums (FP32)",
@@ -2762,7 +2764,7 @@
      "span": 2,
      "payload_bytes": 68385.39130434782,
      "latency_ns": 10.0,
-     "bytes_ns": 8.548173913043478,
+     "bytes_ns": 8.14111801242236,
      "algo": "two_step",
      "where": "2 x rom_package_ucie: two_step",
      "desc": "384 FP32 router scores",
@@ -2774,7 +2776,7 @@
      "span": 2,
      "payload_bytes": 911805.2173913043,
      "latency_ns": 14.836057645807138,
-     "bytes_ns": 227.95130434782607,
+     "bytes_ns": 217.09648033126294,
      "algo": "one_shot",
      "where": "2 x rom_package_ucie: one_shot",
      "desc": "MoE combine: routed + shared partial sums (FP32)",
@@ -2786,7 +2788,7 @@
      "span": 2,
      "payload_bytes": 364722.0869565217,
      "latency_ns": 10.0,
-     "bytes_ns": 45.59026086956522,
+     "bytes_ns": 43.41929606625259,
      "algo": "two_step",
      "where": "2 x rom_package_ucie: two_step",
      "desc": "2 x 512 (score, position) candidates",
@@ -2807,7 +2809,7 @@
      "span": 2,
      "payload_bytes": 1458888.347826087,
      "latency_ns": 10.0,
-     "bytes_ns": 182.36104347826088,
+     "bytes_ns": 173.67718426501037,
      "algo": "two_step",
      "where": "2 x rom_package_ucie: two_step",
      "desc": "2 x 2048 candidate blocks",
@@ -2821,7 +2823,7 @@
      "span": 2,
      "payload_bytes": 356.17391304347825,
      "latency_ns": 10.0,
-     "bytes_ns": 0.044521739130434786,
+     "bytes_ns": 0.0424016563146998,
      "algo": "two_step",
      "where": "2 x rom_package_ucie: two_step",
      "desc": "best {logit, id} per partition",
@@ -2873,9 +2875,9 @@
    "stream_unit_width": 65536,
    "study_tokens_s_per_user": 4640.598470682883,
    "study_aggregate_tokens_s": 199545.73423936398,
-   "tokens_s_per_user": 4640.598470682883,
-   "token_period_s": 0.00021548944738863517,
-   "critical_path_s": 0.00021548944738863517,
+   "tokens_s_per_user": 4607.468823674032,
+   "token_period_s": 0.00021703890753678332,
+   "critical_path_s": 0.00021703890753678332,
    "sweep_s": 4.206384706957348e-05,
    "breakdown_s": {
     "compute_chain": 0.00013186496547054795,
@@ -2883,7 +2885,7 @@
     "kv_sweep": 5.586751447375684e-06,
     "collective_latency": 3.48009807524907e-05,
     "collective_bytes": 5.390587760551597e-07,
-    "pipeline_hops": 5.018293452154159e-06,
+    "pipeline_hops": 6.567753600302306e-06,
     "control": 7.262791372473259e-06,
     "kernel_launch": 0.0
    },
@@ -4264,8 +4266,8 @@
      "op": "hop",
      "span": 2,
      "payload_bytes": 51200.0,
-     "latency_ns": 100.0,
-     "bytes_ns": 34.13333333333333,
+     "latency_ns": 209.0,
+     "bytes_ns": 36.119929453262785,
      "algo": "point_to_point",
      "where": "rom_wafer_serdes x1",
      "desc": "Engram keys + value to the layer's stage (prefetchable)",
@@ -4489,12 +4491,12 @@
     }
    ],
    "algorithm_tokens_s_per_user": {
-    "two_step": 4329.144080321135,
-    "one_shot": 4640.598470682883,
-    "ring": 3329.0882689460486,
-    "rec_doubling": 4636.712190202733,
-    "tree": 4008.42898109274,
-    "centre_mesh": 4571.633193622343
+    "two_step": 4300.298383035985,
+    "one_shot": 4607.468823674032,
+    "ring": 3312.003993184898,
+    "rec_doubling": 4603.637811226107,
+    "tree": 3983.686697547111,
+    "centre_mesh": 4539.477516624056
    }
   },
   "wafer_batch64": {
@@ -4507,9 +4509,9 @@
    "stream_unit_width": 65536,
    "study_tokens_s_per_user": 4385.196381045706,
    "study_aggregate_tokens_s": 280652.5683869252,
-   "tokens_s_per_user": 4385.196381045706,
-   "token_period_s": 0.00022803995832942314,
-   "critical_path_s": 0.00022803995832942314,
+   "tokens_s_per_user": 4355.38408419952,
+   "token_period_s": 0.00022960087575922504,
+   "critical_path_s": 0.00022960087575922504,
    "sweep_s": 4.909193113818564e-05,
    "breakdown_s": {
     "compute_chain": 0.00014232996928316085,
@@ -4517,7 +4519,7 @@
     "kv_sweep": 8.021857948154974e-06,
     "collective_latency": 3.48009807524907e-05,
     "collective_bytes": 8.023200387797723e-07,
-    "pipeline_hops": 5.261646068322468e-06,
+    "pipeline_hops": 6.822563498124363e-06,
     "control": 7.262791372473259e-06,
     "kernel_launch": 0.0
    },
@@ -4675,8 +4677,8 @@
      "op": "hop",
      "span": 2,
      "payload_bytes": 76204.6511627907,
-     "latency_ns": 100.0,
-     "bytes_ns": 50.8031007751938,
+     "latency_ns": 209.0,
+     "bytes_ns": 53.759895000205084,
      "algo": "point_to_point",
      "where": "rom_wafer_serdes x1",
      "desc": "Engram keys + value to the layer's stage (prefetchable)",
@@ -4910,9 +4912,9 @@
    "stream_unit_width": 65536,
    "study_tokens_s_per_user": 685.767189284082,
    "study_aggregate_tokens_s": 2808902.4073075997,
-   "tokens_s_per_user": 685.767189284082,
-   "token_period_s": 0.001458220830080784,
-   "critical_path_s": 0.001458220830080784,
+   "tokens_s_per_user": 685.5729416796761,
+   "token_period_s": 0.001458633996770595,
+   "critical_path_s": 0.001458633996770595,
    "sweep_s": 0.001273887754127803,
    "breakdown_s": {
     "compute_chain": 0.0002983630149272988,
@@ -4920,7 +4922,7 @@
     "kv_sweep": 0.0004141607807127991,
     "collective_latency": 1.1393769223329145e-05,
     "collective_bytes": 3.0879486836336757e-06,
-    "pipeline_hops": 7.258389853142281e-06,
+    "pipeline_hops": 7.671556542953228e-06,
     "control": 7.069349066640975e-06,
     "kernel_launch": 0.0
    },
@@ -5078,8 +5080,8 @@
      "op": "hop",
      "span": 2,
      "payload_bytes": 1226404.678362573,
-     "latency_ns": 100.0,
-     "bytes_ns": 817.603118908382,
+     "latency_ns": 209.0,
+     "bytes_ns": 865.1884856173355,
      "algo": "point_to_point",
      "where": "rom_wafer_serdes x1",
      "desc": "Engram keys + value to the layer's stage (prefetchable)",
@@ -6111,111 +6113,113 @@
     },
     "after": {
      "design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188",
-     "per_user_b1": 5226.522454460281,
-     "per_user_b64": 4552.499225484887,
-     "aggregate_b64": 291359.95043103275,
-     "aggregate_max_of_1_64_1024_4096": 861594.4466883217,
+     "per_user_b1": 4959.456594345095,
+     "per_user_b64": 4419.006554549789,
+     "aggregate_b64": 282816.4194911865,
+     "aggregate_max_of_1_64_1024_4096": 860496.6254309766,
      "by_batch": {
       "1": {
-       "per_user": 5226.522454460281,
-       "aggregate": 125436.53890704674,
-       "tensor_group": 8,
-       "pipeline_stages": 24,
+       "per_user": 4959.456594345095,
+       "aggregate": 233094.45993421949,
+       "tensor_group": 4,
+       "pipeline_stages": 40,
        "intra_link": "rom_package_ucie",
-       "chain_s": 0.000145556746300416,
-       "communication_s": 2.8666930334993728e-05,
-       "sweep_s": 2.4536083965265937e-05,
+       "chain_s": 0.0001435478479543476,
+       "communication_s": 1.7401427882685004e-05,
+       "sweep_s": 4.8049831098645796e-05,
        "collectives_per_layer": 5.25,
        "collective_algorithms": [
-        "hierarchical"
+        "rec_doubling",
+        "two_step"
        ],
        "tensor_group_search": [
         {
          "tensor_group": 4,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 5119.953113362098
+         "tokens_s_per_user": 4959.456594345095
         },
         {
          "tensor_group": 2,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 4235.449835728563
+         "tokens_s_per_user": 4195.153905196985
         },
         {
          "tensor_group": 8,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 5226.522454460281
+         "tokens_s_per_user": 4620.89538266319
         },
         {
          "tensor_group": 16,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 4923.653323497377
+         "tokens_s_per_user": 4058.496419580957
         },
         {
          "tensor_group": 32,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 4153.017057132827
+         "tokens_s_per_user": 3092.2868813627974
         },
         {
          "tensor_group": 64,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 3495.0072709163883
+         "tokens_s_per_user": 2413.9798516433607
         }
        ]
       },
       "64": {
-       "per_user": 4552.499225484887,
-       "aggregate": 291359.95043103275,
+       "per_user": 4419.006554549789,
+       "aggregate": 282816.4194911865,
        "tensor_group": 4,
        "pipeline_stages": 40,
        "intra_link": "rom_package_ucie",
-       "chain_s": 0.00015137407091100915,
-       "communication_s": 1.2721748306071456e-05,
+       "chain_s": 0.00015137407091100931,
+       "communication_s": 1.9357389525430728e-05,
        "sweep_s": 6.542955724070917e-05,
        "collectives_per_layer": 5.25,
        "collective_algorithms": [
-        "one_shot"
+        "rec_doubling",
+        "two_step"
        ],
        "tensor_group_search": [
         {
          "tensor_group": 4,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 4552.499225484887
+         "tokens_s_per_user": 4419.006554549789
         },
         {
          "tensor_group": 2,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 4235.449835728563
+         "tokens_s_per_user": 4195.153905196985
         },
         {
          "tensor_group": 8,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 3910.3498777784384
+         "tokens_s_per_user": 3535.8067080180494
         },
         {
          "tensor_group": 16,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 2865.5201699553973
+         "tokens_s_per_user": 2514.682049217022
         },
         {
          "tensor_group": 32,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 1772.5133242047352
+         "tokens_s_per_user": 1520.2967363626838
         },
         {
          "tensor_group": 64,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 1022.9906677587453
+         "tokens_s_per_user": 883.560897527623
         }
        ]
       },
       "1024": {
-       "per_user": 784.5857967917416,
-       "aggregate": 803415.8559147434,
+       "per_user": 782.6507320929153,
+       "aggregate": 801434.3496631453,
        "tensor_group": 2,
        "pipeline_stages": 40,
        "intra_link": "rom_package_ucie",
-       "chain_s": 0.0002705820687214166,
-       "communication_s": 3.4156145812610226e-05,
+       "chain_s": 0.00027058206872141637,
+       "communication_s": 3.7307426243080464e-05,
        "sweep_s": 0.0010468729158513467,
        "collectives_per_layer": 5.25,
        "collective_algorithms": [
@@ -6226,43 +6230,43 @@
         {
          "tensor_group": 4,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 700.3134008500494
+         "tokens_s_per_user": 692.7911702094705
         },
         {
          "tensor_group": 2,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 784.5857967917416
+         "tokens_s_per_user": 782.6507320929153
         },
         {
          "tensor_group": 8,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 565.4758000882898
+         "tokens_s_per_user": 551.7267107350707
         },
         {
          "tensor_group": 16,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 336.9746455291619
+         "tokens_s_per_user": 327.7184619441609
         },
         {
          "tensor_group": 32,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 165.2631985323837
+         "tokens_s_per_user": 159.90565381345417
         },
         {
          "tensor_group": 64,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 83.81446581454362
+         "tokens_s_per_user": 80.7193588977713
         }
        ]
       },
       "4096": {
-       "per_user": 210.35020671101603,
-       "aggregate": 861594.4466883217,
+       "per_user": 210.08218394310953,
+       "aggregate": 860496.6254309766,
        "tensor_group": 2,
        "pipeline_stages": 40,
        "intra_link": "rom_package_ucie",
-       "chain_s": 0.0007268254603000632,
-       "communication_s": 0.00012595392941544718,
+       "chain_s": 0.0007268254603000589,
+       "communication_s": 0.0001320190511373282,
        "sweep_s": 0.004187491663405387,
        "collectives_per_layer": 5.25,
        "collective_algorithms": [
@@ -6273,32 +6277,32 @@
         {
          "tensor_group": 4,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 186.3635807398445
+         "tokens_s_per_user": 185.03979689158518
         },
         {
          "tensor_group": 2,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 210.35020671101603
+         "tokens_s_per_user": 210.08218394310953
         },
         {
          "tensor_group": 8,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 142.86959410807353
+         "tokens_s_per_user": 141.15947726429332
         },
         {
          "tensor_group": 16,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 80.90936257015818
+         "tokens_s_per_user": 79.66891027637844
         },
         {
          "tensor_group": 32,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 40.31039961467506
+         "tokens_s_per_user": 39.42802136897979
         },
         {
          "tensor_group": 64,
          "intra_link": "rom_package_ucie",
-         "tokens_s_per_user": 20.855815530979655
+         "tokens_s_per_user": 20.31343106058366
         }
        ]
       }
@@ -6321,19 +6325,19 @@
     },
     "after": {
      "design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x12",
-     "per_user_b1": 4640.598470682883,
-     "per_user_b64": 4385.196381045706,
-     "aggregate_b64": 280652.5683869252,
-     "aggregate_max_of_1_64_1024_4096": 2808902.4073075997,
+     "per_user_b1": 4607.468823674032,
+     "per_user_b64": 4355.38408419952,
+     "aggregate_b64": 278744.58138876926,
+     "aggregate_max_of_1_64_1024_4096": 2808106.7691199533,
      "by_batch": {
       "1": {
-       "per_user": 4640.598470682883,
-       "aggregate": 199545.73423936398,
+       "per_user": 4607.468823674032,
+       "aggregate": 198121.15941798338,
        "tensor_group": 16,
        "pipeline_stages": 40,
        "intra_link": "rom_wafer_express",
        "chain_s": 0.00013912775684301893,
-       "communication_s": 4.035833298069991e-05,
+       "communication_s": 4.190779312884805e-05,
        "sweep_s": 4.206384706957348e-05,
        "collectives_per_layer": 6.25,
        "collective_algorithms": [
@@ -6343,103 +6347,103 @@
         {
          "tensor_group": 57,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 2041.606292670158
+         "tokens_s_per_user": 2036.0871743333955
         },
         {
          "tensor_group": 57,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 4213.55009597419
+         "tokens_s_per_user": 4190.109165771524
         },
         {
          "tensor_group": 2,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 2144.1413031352404
+         "tokens_s_per_user": 2143.1309239139623
         },
         {
          "tensor_group": 2,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 2238.69124160793
+         "tokens_s_per_user": 2237.5898114171077
         },
         {
          "tensor_group": 4,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 2929.4885745668253
+         "tokens_s_per_user": 2926.654165652503
         },
         {
          "tensor_group": 4,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 3322.997601131239
+         "tokens_s_per_user": 3319.351048356208
         },
         {
          "tensor_group": 8,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 3221.07737582054
+         "tokens_s_per_user": 3214.2124385718644
         },
         {
          "tensor_group": 8,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 4217.897121830466
+         "tokens_s_per_user": 4206.133531932978
         },
         {
          "tensor_group": 16,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 3029.9730889252182
+         "tokens_s_per_user": 3015.814375584338
         },
         {
          "tensor_group": 16,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 4640.598470682883
+         "tokens_s_per_user": 4607.468823674032
         },
         {
          "tensor_group": 32,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 2525.437515949289
+         "tokens_s_per_user": 2509.9988777259687
         },
         {
          "tensor_group": 32,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 4561.990400852704
+         "tokens_s_per_user": 4511.859127744864
         },
         {
          "tensor_group": 64,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1543.1598050363248
+         "tokens_s_per_user": 1495.2485229144877
         },
         {
          "tensor_group": 64,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 3450.1319393494646
+         "tokens_s_per_user": 3219.4909856360136
         },
         {
          "tensor_group": 114,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1522.0317067279093
+         "tokens_s_per_user": 1476.593345737362
         },
         {
          "tensor_group": 114,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 3433.021936521991
+         "tokens_s_per_user": 3210.205385067293
         },
         {
          "tensor_group": 228,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1448.2012039413396
+         "tokens_s_per_user": 1369.8976939006086
         },
         {
          "tensor_group": 228,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 3190.132396714555
+         "tokens_s_per_user": 2833.3721031912955
         }
        ]
       },
       "64": {
-       "per_user": 4385.196381045706,
-       "aggregate": 280652.5683869252,
+       "per_user": 4355.38408419952,
+       "aggregate": 278744.58138876926,
        "tensor_group": 16,
        "pipeline_stages": 40,
        "intra_link": "rom_wafer_express",
        "chain_s": 0.0001495927606556308,
-       "communication_s": 4.08649468595928e-05,
+       "communication_s": 4.24258642893947e-05,
        "sweep_s": 4.909193113818564e-05,
        "collectives_per_layer": 6.25,
        "collective_algorithms": [
@@ -6449,103 +6453,103 @@
         {
          "tensor_group": 57,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1708.2731609744665
+         "tokens_s_per_user": 1704.1594181456135
         },
         {
          "tensor_group": 57,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 2967.9946438614
+         "tokens_s_per_user": 2955.598740346822
         },
         {
          "tensor_group": 2,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 2144.1413031352404
+         "tokens_s_per_user": 2143.1309239139623
         },
         {
          "tensor_group": 2,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 2238.69124160793
+         "tokens_s_per_user": 2237.5898114171077
         },
         {
          "tensor_group": 4,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 2929.4885745668253
+         "tokens_s_per_user": 2926.654165652503
         },
         {
          "tensor_group": 4,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 3322.997601131239
+         "tokens_s_per_user": 3319.351048356208
         },
         {
          "tensor_group": 8,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 3221.07737582054
+         "tokens_s_per_user": 3214.2124385718644
         },
         {
          "tensor_group": 8,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 4217.897121830466
+         "tokens_s_per_user": 4206.133531932978
         },
         {
          "tensor_group": 16,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 2921.5908322309224
+         "tokens_s_per_user": 2908.3278044743565
         },
         {
          "tensor_group": 16,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 4385.196381045706
+         "tokens_s_per_user": 4355.38408419952
         },
         {
          "tensor_group": 32,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 2296.9963408293233
+         "tokens_s_per_user": 2283.8432770612103
         },
         {
          "tensor_group": 32,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 3845.304898988471
+         "tokens_s_per_user": 3808.5855627440374
         },
         {
          "tensor_group": 64,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1338.3349487477785
+         "tokens_s_per_user": 1301.7070933996968
         },
         {
          "tensor_group": 64,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 2521.7557055481875
+         "tokens_s_per_user": 2396.0579442967974
         },
         {
          "tensor_group": 114,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1177.8765390852025
+         "tokens_s_per_user": 1149.8010526960575
         },
         {
          "tensor_group": 114,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 2021.7269762433625
+         "tokens_s_per_user": 1941.2503871905467
         },
         {
          "tensor_group": 228,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 900.3542364523786
+         "tokens_s_per_user": 867.6047345807578
         },
         {
          "tensor_group": 228,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 1328.2346461071447
+         "tokens_s_per_user": 1258.8961699528081
         }
        ]
       },
       "1024": {
-       "per_user": 1756.5911294119003,
-       "aggregate": 1798749.316517786,
+       "per_user": 1754.242965636685,
+       "aggregate": 1796344.7968119655,
        "tensor_group": 8,
        "pipeline_stages": 40,
        "intra_link": "rom_wafer_express",
        "chain_s": 0.0002382859903998752,
-       "communication_s": 3.1560911486334736e-05,
+       "communication_s": 3.2322934267352744e-05,
        "sweep_s": 0.00037367834828721147,
        "collectives_per_layer": 5.25,
        "collective_algorithms": [
@@ -6555,103 +6559,103 @@
         {
          "tensor_group": 57,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 471.15464636767956
+         "tokens_s_per_user": 470.4919663783919
         },
         {
          "tensor_group": 57,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 526.9374770143863
+         "tokens_s_per_user": 526.1087285041204
         },
         {
          "tensor_group": 2,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1452.8307548262082
+         "tokens_s_per_user": 1452.358866716067
         },
         {
          "tensor_group": 2,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 1487.6520808838409
+         "tokens_s_per_user": 1487.15730519463
         },
         {
          "tensor_group": 4,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1613.870804214629
+         "tokens_s_per_user": 1612.9635102574164
         },
         {
          "tensor_group": 4,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 1722.9939062298745
+         "tokens_s_per_user": 1721.959808790105
         },
         {
          "tensor_group": 8,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1565.3397290483035
+         "tokens_s_per_user": 1563.4747779755203
         },
         {
          "tensor_group": 8,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 1756.5911294119003
+         "tokens_s_per_user": 1754.242965636685
         },
         {
          "tensor_group": 16,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 1178.5059100863666
+         "tokens_s_per_user": 1175.6176451588537
         },
         {
          "tensor_group": 16,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 1345.08269360579
+         "tokens_s_per_user": 1341.3215401788025
         },
         {
          "tensor_group": 32,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 742.0267994619737
+         "tokens_s_per_user": 739.7508619270735
         },
         {
          "tensor_group": 32,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 843.1533994181282
+         "tokens_s_per_user": 840.2160687078539
         },
         {
          "tensor_group": 64,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 402.6867663628191
+         "tokens_s_per_user": 398.5987334370935
         },
         {
          "tensor_group": 64,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 459.8690530910028
+         "tokens_s_per_user": 454.54524469830193
         },
         {
          "tensor_group": 114,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 253.68422608771513
+         "tokens_s_per_user": 251.83919439217658
         },
         {
          "tensor_group": 114,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 272.7876453806744
+         "tokens_s_per_user": 270.6554425885104
         },
         {
          "tensor_group": 228,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 131.7159753874498
+         "tokens_s_per_user": 130.34612806526354
         },
         {
          "tensor_group": 228,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 134.8103406901522
+         "tokens_s_per_user": 133.37572499698467
         }
        ]
       },
       "4096": {
-       "per_user": 685.767189284082,
-       "aggregate": 2808902.4073075997,
+       "per_user": 685.5729416796761,
+       "aggregate": 2808106.7691199533,
        "tensor_group": 4,
        "pipeline_stages": 40,
        "intra_link": "rom_wafer_express",
-       "chain_s": 0.000305432363993942,
-       "communication_s": 2.174010776010512e-05,
+       "chain_s": 0.0003054323639939422,
+       "communication_s": 2.2153274449916067e-05,
        "sweep_s": 0.001273887754127803,
        "collectives_per_layer": 5.25,
        "collective_algorithms": [
@@ -6661,92 +6665,92 @@
         {
          "tensor_group": 57,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 139.7089190452956
+         "tokens_s_per_user": 139.5522881414609
         },
         {
          "tensor_group": 57,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 142.73872025730714
+         "tokens_s_per_user": 142.57522610360675
         },
         {
          "tensor_group": 2,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 616.6664787705619
+         "tokens_s_per_user": 616.5750123137656
         },
         {
          "tensor_group": 2,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 622.2573367500244
+         "tokens_s_per_user": 622.1642043830299
         },
         {
          "tensor_group": 4,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 669.6965741701687
+         "tokens_s_per_user": 669.5113228531277
         },
         {
          "tensor_group": 4,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 685.767189284082
+         "tokens_s_per_user": 685.5729416796761
         },
         {
          "tensor_group": 8,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 627.0820465523703
+         "tokens_s_per_user": 626.6552515600797
         },
         {
          "tensor_group": 8,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 650.3516862019966
+         "tokens_s_per_user": 649.8926402585635
         },
         {
          "tensor_group": 16,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 411.16246702188903
+         "tokens_s_per_user": 410.52768240805494
         },
         {
          "tensor_group": 16,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 425.3173752797946
+         "tokens_s_per_user": 424.63816752926294
         },
         {
          "tensor_group": 32,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 236.3169386140499
+         "tokens_s_per_user": 235.793653451174
         },
         {
          "tensor_group": 32,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 243.59885645236636
+         "tokens_s_per_user": 243.04286313022678
         },
         {
          "tensor_group": 64,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 123.08803967703209
+         "tokens_s_per_user": 122.47898423421445
         },
         {
          "tensor_group": 64,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 125.72946734980529
+         "tokens_s_per_user": 125.09405865019366
         },
         {
          "tensor_group": 114,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 71.54062493182298
+         "tokens_s_per_user": 71.25680072596053
         },
         {
          "tensor_group": 114,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 71.4610633552478
+         "tokens_s_per_user": 71.17786884055917
         },
         {
          "tensor_group": 228,
          "intra_link": "on_wafer_n5",
-         "tokens_s_per_user": 35.23074453116033
+         "tokens_s_per_user": 34.98128914937413
         },
         {
          "tensor_group": 228,
          "intra_link": "rom_wafer_express",
-         "tokens_s_per_user": 34.629528468355865
+         "tokens_s_per_user": 34.388485275637166
         }
        ]
       }

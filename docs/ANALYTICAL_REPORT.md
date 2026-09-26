@@ -14,12 +14,16 @@ projections, not silicon or workload measurements.
 **ROM machine (model-specific).** Weights are masked into ROM on reticle-class
 dies at N5 or N6.
 
-- **Packaging:** four dies share an interposer package over UCIe-class links.
-  Packages connect to neighbours over direct SerDes links in a board mesh.
+- **Packaging:** two dies share an interposer package (the class of a shipping
+  B200-type package) over one advanced-package UCIe link; UCIe reaches ~2 mm, so
+  only edge-adjacent dies connect. Packages connect to neighbours over direct
+  SerDes links in a board mesh.
 - **Link latency:** priced from hardware primitives with no software stack.
   About 10 ns per die-to-die hop (a UCIe PHY under 2 ns, on-die routing and
-  flit synchronisation) and about 100 ns per package hop (SerDes, light FEC,
-  flight time, a router stage). These are assumed and swept, not measured.
+  flit synchronisation) and 209 ns per package hop (a 200 ns channel of 112G
+  PAM4 SerDes, KP4 FEC and flight, 4 cycles of clock-domain crossing and a
+  5-cycle digital endpoint; band 129-409 ns). These are assumed and swept, not
+  measured.
 - **Expert storage:** each expert is striped across every read bank of a die,
   so a token's selected experts are read at the die's full rate rather than
   sweeping the whole array.
@@ -106,7 +110,7 @@ sides:
   runs on the routed `ot_hdc_sinkhorn` unit (one normalisation per unit clock)
   or on the stream unit's pipelined divider, whichever is faster for the users
   in flight -- the same rule as `tools/decode_critical_path.py`. On V4.1 that
-  leaves about 3.7 µs of dependent chain per layer (146 µs of chain on the ×188 array's 40 layers at batch 1 <!-- figure: 146 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.by_batch.1.chain_s" scale="1e6" name="V4.1 x188 chain us b1" -->).
+  leaves about 3.7 µs of dependent chain per layer (144 µs of chain on the ×188 array's 40 layers at batch 1 <!-- figure: 144 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.by_batch.1.chain_s" scale="1e6" name="V4.1 x188 chain us b1" -->).
 - **GPU nodes** pay a published CUDA-graph launch gap (1.3 µs, band 0.5–2.1 µs)
   per dependent kernel and published FP32 latencies for in-kernel chains, so the
   comparison stays fair: the flat floor charged the GPU nothing for launches.
@@ -127,8 +131,8 @@ ae4d7487):
 
 | Target | Fastest ROM, batch 1: before → after (tok/s/user) | Batch 64: before → after (tok/s/user) | Batch 64 aggregate: before → after | Fastest B200, batch 1: before → after | Chosen ROM topology at batch 1 (group, algorithm) |
 |---|---:|---:|---:|---:|---|
-| V4.1-Flash array ×188 (`array-hw-hybrid-x188`) | 15,556 → **5,227 <!-- figure: 5,227 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.per_user_b1" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b1 after" -->** | 12,208 → **4,552 <!-- figure: 4,552 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.per_user_b64" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b64 after" -->** | 781,337 → 291,360 <!-- figure: 291,360 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.aggregate_b64" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b64 aggregate after" --> | -- | group 8, 24 stages, hierarchical |
-| V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) | 5,653 → **4,641 <!-- figure: 4,641 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.per_user_b1" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b1 after" -->** | 5,158 → **4,385 <!-- figure: 4,385 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.per_user_b64" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b64 after" -->** | 330,104 → 280,653 <!-- figure: 280,653 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.aggregate_b64" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b64 aggregate after" --> | -- | group 16 on the express network, 40 stages, one_shot |
+| V4.1-Flash array ×188 (`array-hw-hybrid-x188`) | 15,556 → **4,959 <!-- figure: 4,959 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.per_user_b1" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b1 after" -->** | 12,208 → **4,419 <!-- figure: 4,419 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.per_user_b64" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b64 after" -->** | 781,337 → 282,816 <!-- figure: 282,816 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.aggregate_b64" name="V4.1-Flash array ×188 (`array-hw-hybrid-x188`) b64 aggregate after" --> | -- | group 4, 40 stages, recursive doubling and two-step |
+| V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) | 5,653 → **4,607 <!-- figure: 4,607 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.per_user_b1" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b1 after" -->** | 5,158 → **4,355 <!-- figure: 4,355 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.per_user_b64" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b64 after" -->** | 330,104 → 278,745 <!-- figure: 278,745 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_wafer_x12.after.aggregate_b64" name="V4.1-Flash wafer ×12 (`wafer-hybrid-x12`) b64 aggregate after" --> | -- | group 16 on the express network, 40 stages, one_shot |
 | Qwen3-8B 8K | 42,248 → **11,102 <!-- figure: 11,102 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b.after.fastest_rom_b1.per_user" name="Qwen3-8B 8K fastest ROM b1 after" -->** | 9,373 → **7,119 <!-- figure: 7,119 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b.after.fastest_rom_b64.per_user" name="Qwen3-8B 8K fastest ROM b64 after" -->** | 796,702 → 455,616 <!-- figure: 455,616 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b.after.fastest_rom_b64.aggregate" name="Qwen3-8B 8K fastest ROM b64 aggregate after" --> | 4,444 → 1,269 <!-- figure: 1,269 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b.after.fastest_gpu_b1.per_user" name="Qwen3-8B 8K fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-array-hw-tensor-x8-perstream-romfill`: group 8, hierarchical |
 | V4-Flash 200K | 18,119 → **4,202 <!-- figure: 4,202 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_flash.after.fastest_rom_b1.per_user" name="V4-Flash 200K fastest ROM b1 after" -->** | 13,829 → **3,914 <!-- figure: 3,914 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_flash.after.fastest_rom_b64.per_user" name="V4-Flash 200K fastest ROM b64 after" -->** | 1,175,496 → 332,693 <!-- figure: 332,693 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_flash.after.fastest_rom_b64.aggregate" name="V4-Flash 200K fastest ROM b64 aggregate after" --> | 3,972 → 608 <!-- figure: 608 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_flash.after.fastest_gpu_b1.per_user" name="V4-Flash 200K fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-array-hw-hybrid-x56`: group 4, one_shot |
 | V4-Pro 1M | 6,111 → **2,052 <!-- figure: 2,052 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_pro.after.fastest_rom_b1.per_user" name="V4-Pro 1M fastest ROM b1 after" -->** | 4,226 → **1,701 <!-- figure: 1,701 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_pro.after.fastest_rom_b64.per_user" name="V4-Pro 1M fastest ROM b64 after" -->** | 422,634 → 142,856 <!-- figure: 142,856 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_pro.after.fastest_rom_b64.aggregate" name="V4-Pro 1M fastest ROM b64 aggregate after" --> | 2,456 → 379 <!-- figure: 379 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v4_pro.after.fastest_gpu_b1.per_user" name="V4-Pro 1M fastest GPU b1 after" --> | `ROM-N5-native-SRAMKV-wafer-hybrid-x6`: group 16 on the express network, one_shot |
@@ -282,9 +286,11 @@ Two things still limit the ratio:
   package hop is now simulated in RTL (`rtl/rom/ot_rom_pkg_link.sv`,
   `python3 tools/rtl_rom_pkg_link_campaign.py`): cut-through forwarding with
   credits costs 5 cycles of framing, <!-- figure: 5 src="results/rtl/rom_pkg_link_campaign.json#digital_endpoint_cycles" name="link digital endpoint cycles" -->
-  and one user's hidden state arrives 70 ns after it is sent with a 60-cycle PHY, <!-- figure: 70 src="results/rtl/rom_pkg_link_campaign.json#one_user_hidden_state_latency_ns" name="link one-user latency" -->
-  with no loss under random back-pressure. So the ~100 ns per hop assumed above
-  leaves about 95 ns for SerDes, FEC and flight, which remains unmeasured.
+  and one user's hidden state arrives 214 ns after it is sent through a 204-cycle <!-- figure: 214 src="results/rtl/rom_pkg_link_campaign.json#one_user_hidden_state_latency_ns" name="link one-user latency" -->
+  channel stand-in (200 ns of 112G PAM4 SerDes, KP4 FEC and flight plus 4 cycles
+  of clock-domain crossing), with no loss under random back-pressure. The package
+  hop is priced at that 209 ns (band 129-409 ns); the SerDes, FEC and flight part
+  remains unmeasured.
 - The ROM power model reads HC1 low.
 - Hot-expert skew is uniform-random plus a derate for ROM; the GPU is assumed to
   replicate hot experts.
