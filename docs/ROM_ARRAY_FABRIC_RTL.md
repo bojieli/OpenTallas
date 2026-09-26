@@ -281,11 +281,83 @@ Both blocks were routed on ASAP7 with `tools/run_abi3_physical.py` at a
 Both records are acceptance `pass`: setup and hold met, and zero DRC,
 antenna, max-slew, max-cap and max-fanout violations.
 
+## 10. The DeepSeek-V4.1 array
+
+`rtl/test/tb_hdc_v41_array.sv` runs the reduced DeepSeek-V4.1 decode across
+several packages. It is a layer-range pipeline of V4.1 decode cores
+(`rtl/hdc/v41/ot_hdc_core_v41.sv`). Body package k holds a contiguous range of
+the 40 layers; package 0 also holds the embedding. The final norm and lm_head
+either share the last body package or are split by vocabulary over packages
+of their own. `tools/hdc_program_v41_array.py` plans the split and builds each
+package's program from the single-core program's own pieces.
+
+**What crosses a boundary.** Per user and step, the hop (HIDDEN message) to
+the next package carries the 4-copy hyper-connection residual (640 FP32, 40
+flits). It also carries one flit of scalars: the residual's sum of squares
+and the pending pre-mix of the last FFN sublayer. V4.1 layers also share
+state. Source layers 2, 8, 14 and 20 serve their compressed KV rows to
+layers 2-7, 8-13, 14-19 and 20-39. The indexers at 24, 28, 32 and 36 read
+layer 20's index keys. Each index source's selection serves the layers up to
+the next source. A consumer package keeps its own copy of a source's rows,
+so only the step's new row crosses (32 FP32 per compressed row or index key
+row, 16 ids per selection). Two ways are built:
+
+* **relay** (point-to-point ring): the items ride in the hop, and every
+  package between producer and last consumer forwards them. This adds 2
+  flits per row and 1 per selection.
+* **multicast** (the switch): the producing package sends one SIDE message
+  with its items to a router multicast group of its consumer packages. Each
+  receiver's controller writes the payload into that user's staging slot. A
+  step starts only once its SIDE messages have arrived; a per-user count
+  gates the start.
+
+Engram (layers 1 and 14) hashes the token history, so every package holding
+an Engram layer hashes the token itself. The token travels in the HIDDEN
+header, and the package restores that user's last three token ids into the
+hash unit before the step starts. The restore must also wait for the primed
+hash results to drain. Otherwise the step's own hash wait takes a prime's
+result.
+
+**Controller.** `rtl/rom/ot_rom_pkg_ctrl_x.sv` is `ot_rom_pkg_ctrl` plus three
+additions: `FWD_TOKEN` (the token in HIDDEN headers), `RXWORDS` (a received
+length of its own) and SIDE messages (`SEND_SIDE`, `SIDE_IN`: per-user
+staging and arrival counts). With every new parameter at its default it
+behaves as `ot_rom_pkg_ctrl`, whose routed and campaign records stay pinned
+to that file.
+
+**Per-user state.** Each package has a KV slice per user (`kv_base`). Its
+persistent vector-memory segment has a copy per user: compressor slots,
+compressed rows and SIDE staging. The memory adds user x 16,384 elements to
+every core address in the segment. The Engram history is restored per user
+as above.
+
+**Verification.** `tools/rtl_hdc_v41_array_campaign.py` (record:
+`results/rtl/hdc_v41_array_campaign.json`) first runs an ISA-level pipeline:
+one ISA machine per package, moving exactly the message payloads. It checks
+every step's 4,040 logits against `hdc_golden_v41` for two prompts, the
+oracle's and a different one. Users alternate between the two prompts. It
+then runs the RTL and checks, bit for bit:
+
+* every step's reduced token at package 0;
+* every step's logits in every lm_head package;
+* at the end, every user's KV slice and persistent segment in every package,
+  against the ISA pipeline's final state.
+
+The record gives cycles per token-step (aggregate over users) and the
+speed-up over one core at the same positions. It also gives per-package busy,
+starved, waiting-for-SIDE and waiting-to-send cycles, and link credit stalls.
+Throughput is bounded by the slowest package's compute per step. The rest is
+pipeline fill and drain, and the token's return to package 0.
+
+`tests/test_hdc_v41_array.py` checks that the record passes and is current,
+and that the generated tokens match the single-core record's.
+
 ## Reproduce
 
 ```
 python3 tools/rtl_rom_fabric_campaign.py
 python3 tools/rtl_hdc_array_campaign.py
+python3 tools/rtl_hdc_v41_array_campaign.py
 python3 tools/run_abi3_physical.py --view asap7 --top ot_rom_fabric_router \
     --source rtl/rom/ot_rom_fabric_router.sv --clock-period-ns 0.9 --false-path-io \
     --slew-margin-percent 40 --stages synth,pnr --output <dir>/physical.json
@@ -293,5 +365,5 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_rom_pkg_ctrl --source r
     --param SOURCE=1 --param RESULT_PARTS=4 --param SEND_HIDDEN=1 --param SEND_RESULT=1 \
     --param COMBINE_IN=1 --param ROW0=1024 --param TXB=8 \
     --clock-period-ns 0.9 --false-path-io --stages synth,pnr --output <dir>/physical.json
-python3 -m pytest tests/test_rom_fabric_rtl.py tests/test_hdc_rtl.py
+python3 -m pytest tests/test_rom_fabric_rtl.py tests/test_hdc_rtl.py tests/test_hdc_v41_array.py
 ```
