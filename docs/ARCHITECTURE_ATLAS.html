@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- OT-TR-001. Published copy: https://claude.ai/artifact/KYaA9ov7ZL3u2pMAi7LKMU . Figures from committed records on main, 2026-09-26. -->
 <title>OpenTallas Technical Report</title>
-<!-- OT-TR-001 rev 1.3. Reorganised from docs/ARCHITECTURE_ATLAS.html (OT-ARCH-001). Figures from committed records on main, 2026-09-26. -->
+<!-- OT-TR-001 rev 1.4. Reorganised from docs/ARCHITECTURE_ATLAS.html (OT-ARCH-001). Figures from committed records on main, 2026-09-26. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -172,7 +172,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   <p class="lead">Mask-ROM weights beside the multipliers and a compiled, fully pipelined decode dataflow give one user roughly 7–11× the tokens per second of the best GPU design at equal silicon in our models, for a small interactive model (Qwen3-8B) and a large sparse long-context model (DeepSeek-V4.1-Flash). Reduced versions of both decode bit-exactly in RTL today; the full chips are in implementation.</p>
   <div class="control" role="table" aria-label="Document control">
     <div><b>Document</b>OT-TR-001 (supersedes OT-ARCH-001)</div>
-    <div><b>Revision</b>1.3 draft · 2026-09-26</div>
+    <div><b>Revision</b>1.4 draft · 2026-09-26</div>
     <div><b>Status</b>pre-tape-out research</div>
     <div><b>RTL process</b>ASAP7 (7 nm predictive PDK)</div>
     <div><b>Evidence</b>tagged measured / modelled / pending</div>
@@ -183,7 +183,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
 <section id="s1">
   <h2><span class="num">1</span>Abstract</h2>
   <div class="abstract">
-    <p>Interactive and agentic use of language models is gated by per-user decode speed, which batching does not improve. We find that on HBM accelerators this speed is bounded twice: by streaming every active weight across the memory interface once per token, and on GPUs by the microsecond cost of each dependent operator boundary. We present OpenTallas, a model-specific architecture that stores weights in mask ROM beside the multiply-accumulate lanes and executes decode as a compiled dataflow of fixed-latency pipelined units. We build it for two representative workload classes, a small interactive model (Qwen3-8B) and a large sparse model with compressed KV for long context (DeepSeek-V4.1-Flash), and add the pipelined units their irregular operators require. Reduced configurations of both decode bit-exactly in RTL, and the token-path units route at about 1 GHz on ASAP7. At equal silicon our models give one user about 11× (Qwen3-8B) and 7.5× (DeepSeek-V4.1) the decode rate of the best B200 design, and energy per token improves by about an order of magnitude; the GPU side is being re-priced with measured boundary costs and the multi-die design with realistic packaging.</p>
+    <p>Interactive and agentic use of language models is gated by per-user decode speed, which batching does not improve. We find that on HBM accelerators this speed is bounded twice: by streaming every active weight across the memory interface once per token, and on GPUs by the microsecond cost of each dependent operator boundary. We present OpenTallas, a model-specific architecture that stores weights in mask ROM beside the multiply-accumulate lanes and executes decode as a compiled dataflow of fixed-latency pipelined units. We build it for two representative workload classes, a small interactive model (Qwen3-8B) and a large sparse model with compressed KV for long context (DeepSeek-V4.1-Flash), and add the pipelined units their irregular operators require. Reduced configurations of both decode bit-exactly in RTL, and the token-path units route at about 1 GHz on ASAP7. At equal silicon our models give one user about 11× (Qwen3-8B) and 7.5× (DeepSeek-V4.1) the decode rate of the best B200 design, and on the same core, keeping weights in ROM rather than HBM cuts energy per step 15.9× on the ASAP7 sign-off; the GPU side is being re-priced with measured boundary costs and the multi-die design with realistic packaging.</p>
   </div>
 </section>
 
@@ -197,7 +197,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
     <div class="svgbox"><svg id="teaser" viewBox="0 0 1000 330" role="img" aria-label="Per-user decode rate, GPU against OpenTallas"></svg></div>
     <figcaption><b>Figure 2-1.</b> <b>Per-user decode rate at batch 1: OpenTallas against the best B200 design at equal silicon.</b> Log scale. Qwen3-8B at 8 K context, DeepSeek-V4.1-Flash at 200 K (docs/ANALYTICAL_REPORT.md, N5 vs B200; the single-reticle point is the critical-path model; the single-B200 point is the first-order weight-streaming ceiling). All values are modelled. The GPU side is pending re-pricing with measured boundary costs, and the V4.1 ROM array with realistic packaging (§6.5).</figcaption>
   </figure>
-  <p>Two objections follow immediately, and we address them early rather than late. <i>Is it more expensive?</i> Per token served it is not: energy per token falls by about an order of magnitude and aggregate throughput at equal silicon is on par or better, while the mask-set cost is amortised over the model's deployment (§10.1). <i>Why build silicon for one model?</i> Because the interactive layer of a paired system changes slowly, frontier architectures are converging, and everything except the ROM contents is reused across models (§10.2).</p>
+  <p>Two objections follow immediately, and we address them early rather than late. <i>Is it more expensive?</i> Per token served it is not: on the same decode core, keeping weights in ROM uses 15.9× less energy per step than streaming them from HBM, aggregate throughput at equal silicon is on par or better in our models, and the mask-set cost is amortised over the model's deployment (§10.1). <i>Why build silicon for one model?</i> Because the interactive layer of a paired system changes slowly, frontier architectures are converging, and everything except the ROM contents is reused across models (§10.2).</p>
   <p>Our thesis is that when a model is fixed, both its weights and its schedule can be hardware. Mask ROM beside the lanes makes weight bandwidth a function of silicon area, and a schedule compiled before fabrication replaces run-time synchronisation with sequencing measured in cycles. Per-user latency then becomes the critical path of the decode dependency chain, and the design problem becomes shortening that path while keeping every operator exact. The approach has real costs, a mask set per model and capacity that scales with die count, which we treat as first-class constraints (§5, §10).</p>
   <p>This report makes the following contributions:</p>
   <ul>
@@ -218,6 +218,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
       <tr><td>Qwen3-8B, one reticle, per user, batch 1</td><td class="r m">8,680 tok/s</td><td><span class="tag mod">modelled</span></td><td>§8.4</td></tr>
       <tr><td>Qwen3-8B on one B200, weight-streaming ceiling</td><td class="r m">≈488 tok/s</td><td><span class="tag mod">first-order</span></td><td>§4</td></tr>
       <tr><td>GPU all-SM boundary, vector delivered</td><td class="r m">1,004–1,151 ns</td><td><span class="tag meas">measured</span></td><td>§4, §8.4</td></tr>
+      <tr><td>Energy per step, same core: HBM ÷ ROM (reduced Qwen3, ASAP7)</td><td class="r m">15.9×</td><td><span class="tag meas">measured</span> (activity upper bound)</td><td>§8.4</td></tr>
       <tr><td>Per user at batch 1, ROM ÷ best B200 design at equal silicon (Qwen3-8B / V4.1)</td><td class="r m">11.3× / 7.5×</td><td><span class="tag mod">modelled</span>; GPU re-pricing <span class="tag pend">pending</span></td><td>§2, §10.1</td></tr>
       <tr><td>DeepSeek-V4.1 array, per user, batch 1</td><td class="r m">—</td><td><span class="tag pend">pending</span>; 5,475 <span class="tag sup">optimistic links</span></td><td>§8.4</td></tr>
     </tbody>
@@ -429,12 +430,12 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
     <thead><tr><th>Property</th><th class="r">ROM beside the lanes</th><th class="r">On-die SRAM</th><th class="r">HBM</th><th>Consequence</th></tr></thead>
     <tbody>
       <tr><td>Weight bandwidth</td><td class="r m">macros × width × clock</td><td class="r m">macros × width × clock</td><td class="r m">8.0 TB/s (B200)</td><td>scales with area, not pins (Challenge 1)</td></tr>
-      <tr><td>Read energy</td><td class="r m">0.08 pJ/B</td><td class="r m">2.6 pJ/B</td><td class="r m">104.9 pJ/B</td><td>≈1,300× less weight-movement energy than HBM (Appendix D)</td></tr>
+      <tr><td>Read energy</td><td class="r m">0.08 pJ/B</td><td class="r m">2.6 pJ/B</td><td class="r m">104.9 pJ/B</td><td>measured on the same core: 15.9× less energy per step than HBM (§8.4)</td></tr>
       <tr><td>Density (ASAP7 macros)</td><td class="r m">149–154 Mb/mm²</td><td class="r m">21–34 Mb/mm²</td><td class="r m">off-chip</td><td>tens of dies, not wafers (Challenge 1)</td></tr>
       <tr><td>Updateability</td><td class="r m">new mask set</td><td class="r m">reload</td><td class="r m">reload</td><td>the cost of the approach</td></tr>
     </tbody>
   </table></div>
-  <div class="pending"><div class="ph">Pending · energy per token</div><p>Activity-based power, energy per token and IR drop for all three architectures. Settled by: the power, IR-drop and clock sign-off workstream (<code>docs/POWER_CLOCK_SIGNOFF.md</code>, not yet on main).</p></div>
+    <p>The energy argument is borne out on silicon models: on the same decode core and the same token step, keeping weights in ROM uses 15.9× less energy than streaming them from HBM, and moving weights accounts for 88% of the difference (§8.4, Figure 8-5).</p>
 
   <h3 id="s5-2">5.2 Design principles</h3>
   <p>Five principles follow from the insight, each answering named challenges; two further rules govern how we build and report. Table 5-2 maps them.</p>
@@ -1010,13 +1011,51 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
   </table></div>
   <div class="pending"><div class="ph">Pending · whole-core routes</div><p>The whole Qwen HDC core (running, 24 h flow limit) and the whole V4.1 core (queued at 50 GB) set the achieved clock; the V4.1 token time is 344,109 cycles × that period. Settled by: <code>results/physical_abi3/asap7/hdc/</code> core records.</p></div>
 
-  <div class="pending"><div class="ph">Pending · power, IR drop, clock and multi-corner timing</div><p>Activity-based power from the decode campaigns, energy per token, power-grid IR drop, clock skew and latency, and SS/FF corners for every block and die. Settled by: the sign-off workstream (<code>docs/POWER_CLOCK_SIGNOFF.md</code>).</p></div>
+    <h4>Power, IR drop, clock and corners</h4>
+  <p>We find that clock and register power dominate every block, that a block-level power grid must be backed by an upper grid to hold IR drop, and that the design has setup margin at the slow corner only with a relaxed clock and fails hold at the fast corner. Power is computed from the switching activity of the real decode campaigns: RTL register activity is mapped onto the routed flops and propagated through the logic by OpenSTA. Checked against a full gate-level simulation of one collective, this method matches the register and clock power within 1.4% but overstates combinational power 2.1×, so every total is an upper bound on its combinational part (docs/POWER_CLOCK_SIGNOFF.md). The Qwen core is analysed after clock-tree synthesis with placement-estimated wires, because its full route has not finished.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 8-5. Clock and registers dominate block power; no block has clock gating (TT 0.70 V, routed 0.9 ns clock, RTL-mapped activity; POWER_CLOCK_SIGNOFF.md)</caption>
+    <thead><tr><th>Block</th><th>Architecture</th><th class="r">Power mW</th><th class="r">Clock-network share</th><th class="r">Insertion ns</th><th class="r">Setup / hold skew ps</th></tr></thead>
+    <tbody>
+      <tr><td class="m">qwen_core (post-CTS)</td><td>Qwen ROM</td><td class="r m">654.0</td><td class="r m">32%</td><td class="r m">0.80–0.91</td><td class="r m">71 / 101</td></tr>
+      <tr><td class="m">hbm_kv_stream</td><td>HBM comparator</td><td class="r m">20.3</td><td class="r m">54%</td><td class="r m">0.23–0.27</td><td class="r m">26 / 33</td></tr>
+      <tr><td class="m">v41 matrix engine (post-CTS)</td><td>V4.1 die</td><td class="r m">845.0</td><td class="r m">25%</td><td class="r m">0.80–0.91</td><td class="r m">71 / 101</td></tr>
+      <tr><td class="m">v41_softplus</td><td>V4.1 die</td><td class="r m">197.3</td><td class="r m">36%</td><td class="r m">0.31–0.35</td><td class="r m">38 / 45</td></tr>
+      <tr><td class="m">rom_fabric_router (vectorless)</td><td>V4.1 package</td><td class="r m">126.8</td><td class="r m">14%</td><td class="r m">0.21–0.25</td><td class="r m">25 / 37</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tablebox"><table class="data">
+    <caption>Table 8-6. Slow-corner Fmax is about two-thirds of typical; hold fails at FF and under OCV on the core (reg-to-reg, MHz; OCV = flat 5% derate)</caption>
+    <thead><tr><th>Block</th><th class="r">SS 0.63 V 100 °C</th><th class="r">SS + OCV</th><th class="r">TT 0.70 V</th><th class="r">TT + OCV</th><th class="r">FF 0.77 V 0 °C</th><th class="r">FF + OCV</th><th class="r">Hold WNS ns (SS / TT / FF)</th></tr></thead>
+    <tbody>
+      <tr><td class="m">qwen_core / v41 matrix engine</td><td class="r m">688</td><td class="r m">640</td><td class="r m">1,051</td><td class="r m">954</td><td class="r m">1,374</td><td class="r m">1,243</td><td class="r m">+0.014 / +0.000 / −0.012</td></tr>
+      <tr><td class="m">hbm_kv_stream</td><td class="r m">740</td><td class="r m">698</td><td class="r m">1,128</td><td class="r m">1,062</td><td class="r m">1,569</td><td class="r m">1,475</td><td class="r m">+0.051 / +0.030 / +0.014</td></tr>
+      <tr><td class="m">v41_softplus</td><td class="r m">678</td><td class="r m">641</td><td class="r m">1,034</td><td class="r m">976</td><td class="r m">1,438</td><td class="r m">1,354</td><td class="r m">+0.028 / +0.011 / −0.009</td></tr>
+      <tr><td class="m">v41_select</td><td class="r m">1,019</td><td class="r m">959</td><td class="r m">1,526</td><td class="r m">1,435</td><td class="r m">2,104</td><td class="r m">1,976</td><td class="r m">+0.033 / +0.009 / −0.004</td></tr>
+      <tr><td class="m">v41_engram_hash</td><td class="r m">1,016</td><td class="r m">953</td><td class="r m">1,524</td><td class="r m">1,427</td><td class="r m">2,054</td><td class="r m">1,898</td><td class="r m">+0.048 / +0.030 / −0.004</td></tr>
+      <tr><td class="m">rom_pkg_ctrl</td><td class="r m">761</td><td class="r m">719</td><td class="r m">1,162</td><td class="r m">1,100</td><td class="r m">1,592</td><td class="r m">1,507</td><td class="r m">+0.069 / +0.048 / +0.033</td></tr>
+      <tr><td class="m">rom_fabric_router</td><td class="r m">797</td><td class="r m">750</td><td class="r m">1,195</td><td class="r m">1,123</td><td class="r m">1,633</td><td class="r m">1,527</td><td class="r m">+0.077 / +0.052 / +0.036</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tablebox"><table class="data">
+    <caption>Table 8-7. The block grid alone cannot hold IR drop when fed from bumps; an M7/M8 upper grid brings it to 9 mV (Qwen core, 641 × 641 µm, TT, static)</caption>
+    <thead><tr><th>Power grid and feed</th><th class="r">VDD worst mV</th><th class="r">VDD average mV</th></tr></thead>
+    <tbody>
+      <tr><td>M1/M2/M5/M6 block grid, fed at its pins (ideal)</td><td class="r m">3.0</td><td class="r m">0.22</td></tr>
+      <tr><td>same grid, fed from 140 µm bumps</td><td class="r m">224.0</td><td class="r m">101.0</td></tr>
+      <tr><td>+ M7/M8 upper grid, 140 µm bumps</td><td class="r m">122.0</td><td class="r m">56.6</td></tr>
+      <tr><td>+ M7/M8 upper grid, 70 µm bumps</td><td class="r m">18.2</td><td class="r m">3.95</td></tr>
+      <tr><td>+ wide (2 µm) M7/M8 straps, 70 µm bumps</td><td class="r m">9.0</td><td class="r m">1.75</td></tr>
+    </tbody>
+  </table></div>
+  <p>The sign-off yields six recommendations that the full-chip work now carries: add clock gating (the V4.1 units are idle for over 90% of a step, and the clock network is 22–54% of every block's power); isolate operands of units on shared buses; repair hold at an FF and a derated scenario; start the die grid from the M7/M8 upper grid at 70 µm bump pitch; widen follow-pins over dense register columns; and plan a mesh or H-tree top-level clock, since a 0.64 mm core already has about one period of insertion delay.</p>
+
 
   <h3 id="s8-4">8.4 Per-token latency against GPU and the HBM comparator</h3>
   <p class="finding">The single-reticle System-1 design is modelled at more than an order of magnitude above a B200's weight-streaming ceiling for one user, with its token bound by the compute chain rather than by weights. The System-2 array figure is withheld until the packaging study under realistic links completes; the comparison with the GPU uses only measured boundary costs.</p>
   <h4>Qwen3-8B on one reticle</h4>
   <div class="tablebox"><table class="data">
-    <caption>Table 8-5. The System-1 reticle is bound by its compute chain, not its weights. Per-user decode at batch 1 (results/roofline/critical_path/*.json)</caption>
+    <caption>Table 8-8. The System-1 reticle is bound by its compute chain, not its weights. Per-user decode at batch 1 (results/roofline/critical_path/*.json)</caption>
     <thead><tr><th>Target</th><th class="r">Critical path</th><th class="r">Analytical (graph-priced)</th><th class="r">Published</th><th>Binding</th></tr></thead>
     <tbody>
       <tr><td>Qwen3-8B, HC1-class reticle</td><td class="r m">8,680 tok/s (115.2 µs)</td><td class="r m">9,195</td><td class="r m">—</td><td>compute chain 77.3 µs + ROM sweep 34.5 µs + control 3.4 µs</td></tr>
@@ -1027,7 +1066,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
   <h4>DeepSeek-V4.1 ROM array</h4>
   <div class="pending"><div class="ph">Pending · headline per-user and aggregate rates</div><p>Re-derivation with realistic links (ring-of-4 UCIe with diagonal relay, 200 ns package hop, 1.69 TB/s net, CDC) across packaging options (a) 2 dies + HBM per package, tensor group 2; (b) 2-die packages, tensor group 4 across a package pair; (c) 4-die package (future packaging). Reported per option: tok/s per user at batch 1 and 64, aggregate at 4,096 users, package count, ROM-placement feasibility and the critical-path breakdown. Settled by: <code>results/roofline/critical_path/decode_critical_path.json</code> (<code>tools/decode_critical_path.py</code>).</p></div>
   <div class="tablebox"><table class="data">
-    <caption>Table 8-6. Superseded: option (c) with optimistic links (all-to-all UCIe at 10 ns, 100 ns package hop)</caption>
+    <caption>Table 8-9. Superseded: option (c) with optimistic links (all-to-all UCIe at 10 ns, 100 ns package hop)</caption>
     <thead><tr><th>Batch</th><th class="r">Per user</th><th class="r">Aggregate</th><th>Critical-path breakdown (batch 1)</th></tr></thead>
     <tbody>
       <tr><td>1</td><td class="r m">5,475 tok/s <span class="tag sup">optimistic</span></td><td class="r m">5,475</td><td rowspan="3">compute chain 117.0 · weight sweep 43.7 · pipeline hops 9.4 · control 7.3 · collectives 3.1 · KV 2.1 µs = 182.6 µs</td></tr>
@@ -1037,10 +1076,26 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
   </table></div>
   <p class="note">Two further caveats carry into the pending figure: the model's 1.034 GHz clock is the slowest routed unit, not a closed whole core, and the threshold select is priced at 64 lanes, which does not yet route (at the 16 lanes that do, the batch-1 figure would be lower).</p>
 
+  <h4>Energy per step: ROM against HBM on the same core</h4>
+  <p class="finding">The key energy result is an apples-to-apples comparison: the same decode core, the same reduced Qwen3 step, with weights in mask ROM or streamed from HBM. Keeping weights in ROM uses 15.9× less energy, and moving weights is 88% of the difference.</p>
+  <figure class="fig">
+    <div class="svgbox"><svg id="energybars" viewBox="0 0 1000 250" role="img" aria-label="Energy per decode step by architecture"></svg></div>
+    <figcaption><b>Figure 8-5.</b> <b>Streaming weights from HBM costs 15.9× the energy of reading them from ROM beside the lanes.</b> Energy per decode step of each reduced vehicle, TT, ASAP7 (results/physical_abi3/asap7/signoff/energy_per_token.json). Logic from campaign activity (upper bound on the combinational part); memory, HBM and UCIe bytes priced with graded per-byte constants. V4.1 excludes the unrouted sequencer, V4.1 stream unit, hc projection and Sinkhorn unit and uses the pre-8-lane V4.1 core (1,088,551 cycles).</figcaption>
+  </figure>
+  <div class="tablebox"><table class="data">
+    <caption>Table 8-10. Energy per step and per weight MAC (ASAP7 predictive, not N5; energy_per_token.json)</caption>
+    <thead><tr><th>Architecture</th><th class="r">Logic µJ</th><th class="r">Memory, HBM, links µJ</th><th class="r">Static µJ</th><th class="r">Total µJ</th><th class="r">Matrix engine pJ/MAC</th><th class="r">Whole step pJ/MAC</th></tr></thead>
+    <tbody>
+      <tr><td>Qwen3-8B ROM reticle (reduced step)</td><td class="r m">19.0</td><td class="r m">2.2</td><td class="r m">—</td><td class="r m">21.1</td><td class="r m">3.97</td><td class="r m">16.5</td></tr>
+      <tr><td>HBM comparator (same core and step)</td><td class="r m">19.6</td><td class="r m">305.6</td><td class="r m">10.2</td><td class="r m">335.3</td><td class="r m">3.97</td><td class="r m">262</td></tr>
+      <tr><td>DeepSeek-V4.1, one die (partial)</td><td class="r m">543.3</td><td class="r m">139.7</td><td class="r m">—</td><td class="r m">683.0</td><td class="r m">11.5</td><td class="r m">66.5</td></tr>
+      <tr><td>DeepSeek-V4.1, one package (partial)</td><td class="r m">900.3</td><td class="r m">5.7</td><td class="r m">—</td><td class="r m">906.0</td><td class="r m">—</td><td class="r m">—</td></tr>
+    </tbody>
+  </table></div>
   <h4>GPU baseline</h4>
   <p>The GPU comparator executes decode the way state-of-the-art stacks do — fused kernels chained by PDL or a persistent megakernel — and pays, at each remaining dependent boundary, its measured cost on a Blackwell GPU (RTX PRO 6000, GB202, 188 SMs; measured, not a B200).</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 8-7. Only intra-SM dependencies are cheap on a GPU. Measured dependent-boundary costs (results/gpu/*.json)</caption>
+    <caption>Table 8-11. Only intra-SM dependencies are cheap on a GPU. Measured dependent-boundary costs (results/gpu/*.json)</caption>
     <thead><tr><th>Dependency</th><th class="r">Cost</th><th>Note</th></tr></thead>
     <tbody>
       <tr><td>inside one SM (<code>__syncthreads</code>)</td><td class="r m">7 ns</td><td>fused work is free</td></tr>
@@ -1065,7 +1120,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
   <p><b>What it was.</b> The V4.1 package logic laid out as reticle fields stitched on one wafer, so a die-to-die hop becomes an on-wafer crossing, with KV in HBM stacks around the wafer edge.</p>
   <p><b>First principles.</b> The per-user rate is bound by the serial dependency chain and the ROM sweep, not by link bandwidth (C4: interconnect is under a tenth of the token). A wafer's advantage is shorter wires, but a wafer-sized tensor group spans many more fields, so every collective crosses more of them; a 125 ns field crossing on a published mesh makes collectives two-thirds of the token. The wafer only matches the array when a crossing costs about 13–18 ns, which needs a designed long-wire fabric; our routed express link (605 ps/mm with a register per mm) makes a 28.55 mm crossing ≈30–35 ns.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 8-8. At equal silicon the wafer is slower than the array at batch 1. Wafer ÷ array at equal silicon (docs/WAFER_VS_ARRAY_ISO_AREA.md; Cerebras-style mesh as the conservative control)</caption>
+    <caption>Table 8-12. At equal silicon the wafer is slower than the array at batch 1. Wafer ÷ array at equal silicon (docs/WAFER_VS_ARRAY_ISO_AREA.md; Cerebras-style mesh as the conservative control)</caption>
     <thead><tr><th>Wafers</th><th class="r">Silicon mm²</th><th class="r">Ratio, batch 1</th><th class="r">Ratio, batch 64</th><th class="r">Aggregate ratio, 4,096 users</th></tr></thead>
     <tbody>
       <tr><td>2</td><td class="r m">92,450</td><td class="r m">0.83</td><td class="r m">1.05</td><td class="r m">1.20</td></tr>
@@ -1079,7 +1134,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
 
   <h4>Other ablations</h4>
   <div class="tablebox"><table class="data">
-    <caption>Table 8-9. Every rejected alternative either lowers the per-user rate or breaks exactness. Ablations (per-user tok/s at batch 1 on the V4.1 array unless noted; decode_critical_path.json, optimistic links)</caption>
+    <caption>Table 8-13. Every rejected alternative either lowers the per-user rate or breaks exactness. Ablations (per-user tok/s at batch 1 on the V4.1 array unless noted; decode_critical_path.json, optimistic links)</caption>
     <thead><tr><th>Alternative</th><th>Evidence</th><th>Decision</th></tr></thead>
     <tbody>
       <tr class="rej"><td>GPU-style HBM accelerator</td><td>Qwen3-8B weight-streaming ceiling ≈488 tok/s per user on a B200 (C1) against 8,680 modelled for the ROM reticle; ≈1.0 µs per exposed all-SM boundary (§8.4)</td><td>kept only as the comparator (§6.6)</td></tr>
@@ -1102,9 +1157,9 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
   </table></div>
 
   <h3 id="s8-6">8.6 Sensitivity</h3>
-  <p class="finding">The per-user rate is robust to most secondary parameters: only the stream-unit width and progress chaining move it by more than a few percent (Table 8-10).</p>
+  <p class="finding">The per-user rate is robust to most secondary parameters: only the stream-unit width and progress chaining move it by more than a few percent (Table 8-14).</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 8-10. One-at-a-time sensitivities, V4.1 array, per-user tok/s at batch 1 (base 5,475, optimistic links; decode_critical_path.json)</caption>
+    <caption>Table 8-14. One-at-a-time sensitivities, V4.1 array, per-user tok/s at batch 1 (base 5,475, optimistic links; decode_critical_path.json)</caption>
     <thead><tr><th>Change</th><th class="r">Per user</th><th class="r">vs base</th></tr></thead>
     <tbody>
       <tr><td>no progress chaining between dependent operations</td><td class="r m">5,192</td><td class="r m">−5.2%</td></tr>
@@ -1144,29 +1199,32 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
 <section id="s10">
   <h2><span class="num">10</span>Discussion</h2>
   <h3 id="s10-1">10.1 Economics: is it more expensive?</h3>
-  <p>We find that per token served, a hardwired machine is not more expensive to run, and that its fixed cost is a question of deployment volume. Removing weight movement removes most of decode's energy: the analytical model gives about an order of magnitude more tokens per joule than the best B200 design for both workloads, and aggregate throughput at equal silicon is on par or better (Table 10-1). The fixed cost is the mask set and design. Leading-edge mask sets are estimated in the tens of millions of dollars and complete designs at 7 nm at $50–75 M [<a href="#r-semi">SemiAnalysis</a>]. Because the ROM is via-programmed, a new model or version changes the via layers and the ROM contents, not the logic (docs/MEMORY_COMPILERS_AND_BIST.md), so the per-model cost is a partial mask set [citation needed for its price] on a design that is otherwise reused.</p>
-  <p>The fixed cost is amortised over tokens served in the model's deployment life. A System-1 model that serves an interactive product for a year, or a System-2 model deployed at data-centre scale, serves many trillions of tokens [citation needed]; at that volume the mask cost per token is small next to the energy and silicon cost of streaming weights. Latency also has value of its own for the workloads of Table 4-1, which a cost-per-token metric does not capture.</p>
+  <p>We find that per token served, a hardwired machine is cheaper to run, and that its fixed cost is a question of deployment volume. The primary evidence is measured: on the same decode core and the same step, weights in mask ROM use 15.9× less energy than weights streamed from HBM, with 88% of the gap in moving weights (§8.4). That comparison holds the logic fixed, so it isolates the memory technology; its absolute values are ASAP7-predictive, not N5.</p>
+  <p>The analytical model's tokens-per-joule ratios against the B200 (9.04× for Qwen3-8B, 12.33× for V4.1) should be read as optimistic and superseded. They assume 0.33 pJ per MAC, while the routed ASAP7 matrix engine measures 3.97 pJ per MAC on the Qwen step and the whole step 16.5 pJ per MAC, about 50× the assumption. Part of that gap is the predictive PDK and the upper-bound activity method, part is clock and register power without clock gating (§8.3); until a foundry-grade estimate exists, the same-core ratio is the figure to use.</p>
+  <p>The fixed cost is the mask set and design. Leading-edge mask sets are estimated in the tens of millions of dollars and complete designs at 7 nm at $50–75 M [<a href="#r-semi">SemiAnalysis</a>]. Because the ROM is via-programmed, a new model or version changes the via layers and the ROM contents, not the logic (docs/MEMORY_COMPILERS_AND_BIST.md), so the per-model cost is a partial mask set [citation needed for its price] on an otherwise reused design. The fixed cost is amortised over the tokens served in the model's deployment [citation needed for typical volumes], and latency has value of its own for the workloads of Table 4-1, which a cost-per-token metric does not capture.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 10-1. Energy and throughput per unit silicon favour ROM; the fixed cost is the mask set (analytical model N5 vs B200, docs/ANALYTICAL_REPORT.md; external estimates cited)</caption>
-    <thead><tr><th>Measure</th><th class="r">Qwen3-8B, 8 K</th><th class="r">DeepSeek-V4.1-Flash, 200 K</th><th>Status</th></tr></thead>
+    <caption>Table 10-1. The measured same-core energy ratio is the primary evidence; analytical ratios are optimistic</caption>
+    <thead><tr><th>Measure</th><th class="r">Qwen3-8B</th><th class="r">DeepSeek-V4.1-Flash</th><th>Status</th></tr></thead>
     <tbody>
-      <tr><td>Best tokens per joule, ROM ÷ B200</td><td class="r m">9.04×</td><td class="r m">12.33×*</td><td><span class="tag mod">modelled</span></td></tr>
+      <tr><td>Energy per step, HBM ÷ ROM, same core (ASAP7)</td><td class="r m">15.9×</td><td class="r m">—</td><td><span class="tag meas">measured</span></td></tr>
+      <tr><td>Matrix engine / whole step, pJ per MAC (ASAP7)</td><td class="r m">3.97 / 16.5</td><td class="r m">11.5 / 66.5 (partial)</td><td><span class="tag meas">measured</span></td></tr>
+      <tr><td>Analytical MAC energy assumption</td><td colspan="2" class="r m">0.33 pJ (0.13–0.70)</td><td>assumed</td></tr>
+      <tr><td>Best tokens per joule, ROM ÷ B200 (analytical)</td><td class="r m">9.04×</td><td class="r m">12.33×*</td><td><span class="tag sup">optimistic</span></td></tr>
       <tr><td>Best aggregate throughput at equal silicon, ROM ÷ B200</td><td class="r m">1.21×</td><td class="r m">4.30×*</td><td><span class="tag mod">modelled</span></td></tr>
-      <tr><td>Per-user rate at batch 1, ROM ÷ B200</td><td class="r m">11.33×</td><td class="r m">7.49×</td><td><span class="tag mod">modelled</span></td></tr>
       <tr><td>Leading-edge mask set (3 nm class)</td><td colspan="2" class="r m">≈$40 M range (2022 estimate)</td><td>[<a href="#r-semi">SemiAnalysis</a>]</td></tr>
       <tr><td>Complete leading-edge design, 7 nm</td><td colspan="2" class="r m">$50–75 M</td><td>[<a href="#r-semi">SemiAnalysis</a>]</td></tr>
       <tr><td>Per-model re-spin (via layers + ROM contents)</td><td colspan="2" class="r m">—</td><td>[citation needed]</td></tr>
     </tbody>
   </table></div>
-  <p class="note">* The V4.1 best-throughput and best-tokens-per-joule designs in the analytical report are wafer configurations, which we reject (§8.5); the corresponding array figures are pending with the packaging study. The GPU side of every ratio is pending re-pricing with measured boundary costs.</p>
-  <div class="pending"><div class="ph">Pending · cost per token</div><p>Dollars per million tokens for each design, combining die cost, yield, packaging, energy and amortised NRE over a stated deployment volume. Settled by: an economics study added to the analytical model (not yet in the repository).</p></div>
+  <p class="note">* The V4.1 best-throughput and best-tokens-per-joule designs in the analytical report are wafer configurations, which we reject (§8.5). The GPU side of every analytical ratio is pending re-pricing with measured boundary costs.</p>
+  <div class="pending"><div class="ph">Pending · cost per token</div><p>Dollars per million tokens for each design, combining die cost, yield, packaging, measured energy and amortised NRE over a stated deployment volume. Settled by: an economics study added to the analytical model (not yet in the repository).</p></div>
 
   <h3 id="s10-2">10.2 Why build silicon for one model?</h3>
   <p>Three observations make a model-specific chip reasonable. First, the paired System-1/System-2 structure separates a slowly changing interaction layer from a replaceable background model; OpenAI describes the background model of GPT-Live as swappable without replacing the real-time layer [<a href="#r-gptlive">GPT-Live</a>], so the model that most needs speed is also the one that changes least. Second, frontier open architectures are converging: latent or compressed KV, learned sparse attention and mixtures of experts recur across successive generations [<a href="#r-dsv2">DS-V2</a>, <a href="#r-dsv32">DS-V3.2</a>, <a href="#r-dsv4">DS-V4</a>], so the units a model like V4.1 needs are likely to be needed again. Third, only the ROM contents are model-specific: the matrix engine is shared between the Qwen3 and V4.1 cores, and the unit library, compiler, verification chain and physical flow carry over.</p>
   <p>The costs are real. A model cannot be updated in the field; a new version needs new via masks and a new die run; capacity is fixed at fabrication; and a model whose value lies in frequent retraining is a poor fit. Deployment lifetimes of production models are not well documented publicly [citation needed], and the economics of §10.1 depend on them.</p>
 
   <h3 id="s10-3">10.3 Limitations</h3>
-  <p>The per-user rates are model outputs calibrated only against one self-reported product; the clock is the slowest routed unit rather than a closed core; memory macros are model-grade views on a predictive PDK; and the GPU boundary costs are measured on a workstation Blackwell (GB202), not a B200. ROM removes weight traffic, not per-user state traffic, so models whose state grows with context (Table 3-1) gain less.</p>
+  <p>The per-user rates are model outputs calibrated only against one self-reported product; the clock is the slowest routed unit rather than a closed core; memory macros are model-grade views on a predictive PDK; the GPU boundary costs are measured on a workstation Blackwell (GB202), not a B200; and the Qwen core's power is analysed after clock-tree synthesis with placement-estimated wires, because its full route has not finished, with an activity method that overstates combinational power up to about 2×. ROM removes weight traffic, not per-user state traffic, so models whose state grows with context (Table 3-1) gain less.</p>
   <div class="tablebox"><table class="data">
     <thead><tr><th>ID</th><th>Risk</th><th>Impact</th><th>Plan</th><th>State</th></tr></thead>
     <tbody>
@@ -1277,7 +1335,7 @@ collectives on the path                  210
   per collective: 10–30 ns (ring-of-4 UCIe, diagonal relayed)
   collectives                            ≈ 2.1–6.3 µs
 share of a ≈183 µs token                 ≈ 7–9%</div>
-  <h4>D.5 Energy of moving weights (§5.1)</h4>
+  <h4>D.5 Energy of moving weights (§5.1) — first-order; superseded by the measured same-core ratio in §8.4</h4>
 <div class="calc">Energy of moving Qwen3-8B's weights once (first-order; weight movement only)
 HBM   104.9 pJ/B × 16.38 GB  = 1.72 J/token
 SRAM    2.6 pJ/B × 16.38 GB  = 42.6 mJ/token
@@ -1681,8 +1739,23 @@ function drawTeaser(){
     el("text",{x:W-R+60,y:y-(bh+gap)*rows.length/2,"font-size":17,"font-weight":700,fill:css("--rom"),"text-anchor":"middle"},svg,(r/g0).toFixed(1)+"×");
     y+=8;});
 }
+
+function drawEnergy(){
+  const svg=document.getElementById("energybars"); if(!svg) return; svg.innerHTML="";
+  const rows=[["Qwen3-8B ROM reticle",[[19.0,"--rom","logic"],[2.2,"--hbm-soft","memory"]],21.1],["HBM comparator, same core",[[19.6,"--rom","logic"],[305.6,"--hbm","HBM + memory"],[10.2,"--faint","HBM idle"]],335.3],["V4.1, one die (partial)",[[543.3,"--rom","logic"],[139.7,"--hbm-soft","memory"]],683.0],["V4.1, one package (partial)",[[900.3,"--rom","logic"],[5.7,"--hbm","UCIe"]],906.0]];
+  const W=1000,L=230,R=120,T=10,bh=26,gap=12,H=T+rows.length*(bh+gap)+40; svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const X=v=>L+v/1000*(W-L-R);
+  [0,250,500,750,1000].forEach(t=>{el("line",{x1:X(t),x2:X(t),y1:T-4,y2:H-34,stroke:css("--grid")},svg);el("text",{x:X(t),y:H-18,"text-anchor":"middle","font-size":12,fill:css("--muted"),class:"t-mono"},svg,t+" µJ");});
+  rows.forEach(([n,segs,tot],i)=>{const y=T+i*(bh+gap); let x=0;
+    el("text",{x:L-10,y:y+bh*0.68,"text-anchor":"end","font-size":12.5,fill:css("--ink")},svg,n);
+    segs.forEach(([v,c])=>{el("rect",{x:X(x),y:y,width:Math.max(1.5,X(x+v)-X(x)),height:bh,fill:css(c),stroke:css("--panel"),"stroke-width":0.5},svg); x+=v;});
+    el("text",{x:X(tot)+6,y:y+bh*0.68,"font-size":12,fill:css("--ink"),class:"t-mono"},svg,tot.toFixed(1)+" µJ");});
+  const lg=[["logic","--rom"],["on-die memory","--hbm-soft"],["HBM / UCIe bytes","--hbm"],["HBM idle","--faint"]];
+  lg.forEach(([t,c],i)=>{el("rect",{x:L+i*170,y:H-12,width:11,height:11,fill:css(c)},svg);el("text",{x:L+i*170+16,y:H-3,"font-size":11.5,fill:css("--muted")},svg,t);});
+  el("text",{x:X(335.3)+80,y:T+1*(bh+gap)+bh*0.68,"font-size":15,"font-weight":700,fill:css("--rom")},svg,"15.9×");
+}
 function drawAll(){
-  drawTeaser(); drawCeiling(); drawLadder();
+  drawEnergy(); drawTeaser(); drawCeiling(); drawLadder();
   drawISA(); drawModelGraphs(); drawV41Logical(); drawV41Array(); drawMEPipe(); drawChase(); drawFlits(); drawArray(); drawReticle(); drawChain();
   const grp=document.getElementById("grp"); grp.innerHTML="";
   for(let g=0;g<4;g++){const x0=250+g*103;
