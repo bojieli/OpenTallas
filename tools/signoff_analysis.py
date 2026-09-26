@@ -1590,9 +1590,11 @@ def map_rtl_saif_to_netlist(rtl_saif: Path, netlist: Path, out: Path, top: str =
         o.write('(SAIFILE\n(SAIFVERSION "2.0")\n(DIRECTION "backward")\n')
         o.write(f'(DESIGN "{top}")\n(PROGRAM_NAME "opentallas signoff_analysis rtl-map")\n(DIVIDER / )\n')
         o.write(f'(TIMESCALE {header.get("TIMESCALE", "1ps")})\n(DURATION {header.get("DURATION", "0")})\n')
-        o.write(f"(INSTANCE {top}\n  (NET\n")
-        o.writelines(lines)
-        o.write("  )\n")
+        o.write(f"(INSTANCE {top}\n")
+        if lines:   # OpenSTA's reader rejects an empty NET group
+            o.write("  (NET\n")
+            o.writelines(lines)
+            o.write("  )\n")
         o.writelines(inst_lines)
         o.write(")\n)\n")
     stats["flop_match_fraction"] = stats["flops_matched"] / stats["flops"] if stats["flops"] else None
