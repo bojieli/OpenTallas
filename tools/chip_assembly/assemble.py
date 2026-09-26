@@ -341,6 +341,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--level", required=True, choices=["tile", "die"])
     ap.add_argument("--arch", required=True, choices=budgets.ARCHS)
     ap.add_argument("--work", required=True, type=Path)
+    ap.add_argument("inputs", nargs="*", type=Path,
+                    help="staged input directories (named so a remote runner copies them); unused here")
     ap.add_argument("--write-only", action="store_true", help="write the case and stop")
     ap.add_argument("--record-only", action="store_true",
                     help="re-run the boundary report and rewrite the record of a finished run")
