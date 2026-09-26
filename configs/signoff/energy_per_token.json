@@ -304,6 +304,63 @@
         "signoff": "results/physical_abi3/asap7/signoff/v41_core_signoff.json",
         "key": "v41_actquant"
       }
+    },
+    "deepseek_v41_rom_array_package": {
+      "description": "One package of the DeepSeek-V4.1 ROM array: four dies as one tensor group on UCIe, plus the package's fabric logic.  Die energy is one die-step (four dies each do a quarter of the matrix work in about a quarter of the time; the replicated vector work is not counted); fabric logic is vectorless (default 0.1 input activity, propagated), which overstates idle fabric; the UCIe bytes follow the Qwen package campaign's tensor-split rule (two all-reduces of the hc x dim FP32 residual per layer, each die sending its partial to the three others), derived, not simulated for V4.1.",
+      "token_cycles": 1088551,
+      "clock_period_ns": 0.9,
+      "logic": [
+        {
+          "name": "four-die tensor group (one die-step equivalent)",
+          "from_architecture": "deepseek_v41_rom_array_die",
+          "count": 1,
+          "note": "four dies each doing a quarter of every matrix for about a quarter of the step spend about one die-step of energy; the replicated vector work (norms, residuals, RoPE) on the other three dies is not counted, so this is a lower bound on the dies"
+        },
+        {
+          "name": "package controller",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_pkg_ctrl"
+        },
+        {
+          "name": "fabric router",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_fabric_router"
+        },
+        {
+          "name": "KV multicast node",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_mcast_node"
+        },
+        {
+          "name": "MoE dispatch",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_moe_dispatch"
+        },
+        {
+          "name": "MoE expert port",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_moe_expert_port"
+        },
+        {
+          "name": "argmax collective",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_argmax_reduce_gate_level"
+        },
+        {
+          "name": "express link",
+          "signoff": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+          "key": "rom_express_link"
+        }
+      ],
+      "memory": [
+        {
+          "name": "UCIe die-to-die all-reduce",
+          "energy": "ucie_j_per_bit",
+          "bytes_per_token": 2457600,
+          "basis": "4 dies x 3 peers x 2 all-reduces per layer x 40 layers x (4 hc x 160 x 4 B) = 2,457,600 B per package per token"
+        }
+      ],
+      "static": []
     }
   }
 }

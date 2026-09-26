@@ -1753,6 +1753,23 @@ def summarize(cfg_path: Path) -> dict[str, Any]:
         a["token_time_s"] = token_s
         totals = {c: 0.0 for c in ("TT", "SS", "FF")}
         for item in arch.get("logic", []):
+            if item.get("from_architecture"):
+                # a whole architecture's step, e.g. four dies of a package
+                sub = out["architectures"].get(item["from_architecture"])
+                if not sub:
+                    a["missing"].append(f"{item['name']}: {item['from_architecture']} not summarised yet")
+                    continue
+                n = item.get("count", 1)
+                row = {"source": f"architectures.{item['from_architecture']}", "instances": n,
+                       "note": item.get("note")}
+                for c in totals:
+                    j = sub["totals_j"][f"logic_{c}"] + (sub["totals_j"]["memory_and_links"] +
+                                                          sub["totals_j"]["static"])
+                    row[c] = {"total_j": j * n, "dynamic_j": None, "leakage_j": None}
+                    totals[c] += j * n
+                a["logic"][item["name"]] = row
+                a["missing"] += [f"{item['name']}: {m}" for m in sub.get("missing", [])]
+                continue
             src = ROOT / item["signoff"]
             if not src.exists():
                 a["missing"].append(f"{item['name']}: {item['signoff']} not produced")
