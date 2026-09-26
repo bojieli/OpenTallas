@@ -21,7 +21,7 @@ RESULT = ROOT / "results/roofline/critical_path/decode_critical_path.json"
 def env():
     tech = json.loads(D.TECH.read_text())
     links = D.link_consts(tech)
-    clock, _ = D.routed_clock()
+    clock, _ = D.select_clock(D.Params())
     p = replace(D.Params(), clock_hz=clock)
     points, designs = D.v41_study_rows()
     return dict(links=links, clock=clock, p=p, points=points, designs=designs, c=D.v41_shape())
@@ -78,11 +78,12 @@ def test_tselect_split_takes_the_best_unit_count(env):
     one = ops._tsel(n)
     assert iss + dep <= sum(one)
     assert 1 <= P <= b.p.tselect_units
-    assert one == (math.ceil(n / 64), D.tselect_latency(n, 64))
+    W = b.p.tselect_lanes
+    assert one == (math.ceil(n / W), D.tselect_latency(n, W))
 
 
 def test_clock_is_the_slowest_routed_block():
-    clock, rows = D.routed_clock()
+    clock, rows = D.select_clock(D.Params())
     assert clock == min(r["fmax_hz"] for r in rows)
     assert 0.9e9 < clock < 1.2e9
 

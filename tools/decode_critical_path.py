@@ -173,9 +173,12 @@ def tselect_latency(n, lanes):
     return 2 * math.ceil(max(1, n) / lanes) + tselect_lat0(lanes) + 1
 
 
-TSELECT_BLOCK = "v41/ot_hdc_tselect_w64"
-CLOCK_BLOCKS = ["ot_hdc_matvec", "ot_hdc_stream", "v41/ot_hdc_softplus", TSELECT_BLOCK, "v41/ot_hdc_select_k6",
-                "v41/ot_hdc_blockdot", "v41/ot_hdc_actquant", "v41/ot_hdc_fp4qdq"]
+def tselect_block(lanes):
+    return f"v41/ot_hdc_tselect_w{lanes}"
+
+
+CLOCK_BLOCKS = ["ot_hdc_matvec", "ot_hdc_stream", "v41/ot_hdc_softplus", "v41/ot_hdc_select_k6",
+                "v41/ot_hdc_blockdot", "v41/ot_hdc_actquant", "v41/ot_hdc_fp4qdq"]   # + tselect_block(W)
 CLOCK_BLOCKS_INSERTION = ["ot_hdc_matvec", "ot_hdc_stream", "v41/ot_hdc_softplus", "v41/ot_hdc_select_k512",
                           "v41/ot_hdc_blockdot", "v41/ot_hdc_actquant", "v41/ot_hdc_fp4qdq"]
 
@@ -1402,13 +1405,16 @@ def default_fabric(kind, links, g):
 
 
 def select_clock(p: Params):
-    return routed_clock(CLOCK_BLOCKS if p.select_impl == "threshold" else CLOCK_BLOCKS_INSERTION)
+    if p.select_impl == "threshold":
+        return routed_clock(CLOCK_BLOCKS[:3] + [tselect_block(p.tselect_lanes)] + CLOCK_BLOCKS[3:])
+    return routed_clock(CLOCK_BLOCKS_INSERTION)
 
 
 def tselect_area(p: Params):
     """Routed ot_hdc_tselect (ASAP7) and the line memory it needs, per die, vs the insertion units."""
-    t, old = physical(TSELECT_BLOCK), physical("v41/ot_hdc_select_k512")
-    return dict(tselect_block=TSELECT_BLOCK, tselect_um2=t["area_um2"], tselect_fmax_hz=t["fmax_hz"],
+    blk = tselect_block(p.tselect_lanes)
+    t, old = physical(blk), physical("v41/ot_hdc_select_k512")
+    return dict(tselect_block=blk, tselect_um2=t["area_um2"], tselect_fmax_hz=t["fmax_hz"],
                 tselect_closed=t["closed"], tselect_parameters=t.get("parameters"),
                 units_max_per_die=p.tselect_units,
                 line_memory_bits_per_element=1 + 16 + 16,
