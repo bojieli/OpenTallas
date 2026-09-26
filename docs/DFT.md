@@ -261,6 +261,7 @@ settings: 0.9 ns target, `--false-path-io`, `--slew-margin-percent 20`,
 
 | Block | Std-cell area, no scan → scan (µm²) | Area | Routed Fmax, no scan → scan (MHz) | Fmax | Routed wirelength | Status, no scan / scan |
 |---|---|---|---|---|---|---|
+| KV streamer `ot_hdc_kv_stream` | 6,423.88 → 7,073.21 | +10.1 <!-- figure: 10.1 src="results/dft/summary.json#blocks.kv_stream.route.overhead.standard_cell_area" scale="100" name="kv_stream scan area overhead %" -->% | 1,106.8 <!-- figure: 1106.8 src="results/dft/summary.json#blocks.kv_stream.route.noscan.fmax_mhz" name="kv_stream Fmax no scan" --> → 1,122.1 <!-- figure: 1122.1 src="results/dft/summary.json#blocks.kv_stream.route.scan.fmax_mhz" name="kv_stream Fmax scan" --> | +1.4 <!-- figure: 1.4 src="results/dft/summary.json#blocks.kv_stream.route.overhead.fmax" scale="100" name="kv_stream scan Fmax change %" -->% | +19.3 <!-- figure: 19.3 src="results/dft/summary.json#blocks.kv_stream.route.overhead.routed_wirelength" scale="100" name="kv_stream scan wirelength overhead %" -->% | not_met / pass |
 | package controller `ot_rom_pkg_ctrl` | 3,444.39 → 3,919.07 | +13.8 <!-- figure: 13.8 src="results/dft/summary.json#blocks.pkg_ctrl.route.overhead.standard_cell_area" scale="100" name="pkg_ctrl scan area overhead %" -->% | 1,161.8 <!-- figure: 1161.8 src="results/dft/summary.json#blocks.pkg_ctrl.route.noscan.fmax_mhz" name="pkg_ctrl Fmax no scan" --> → 1,132.6 <!-- figure: 1132.6 src="results/dft/summary.json#blocks.pkg_ctrl.route.scan.fmax_mhz" name="pkg_ctrl Fmax scan" --> | -2.5 <!-- figure: -2.5 src="results/dft/summary.json#blocks.pkg_ctrl.route.overhead.fmax" scale="100" name="pkg_ctrl scan Fmax change %" -->% | +15.0 <!-- figure: 15.0 src="results/dft/summary.json#blocks.pkg_ctrl.route.overhead.routed_wirelength" scale="100" name="pkg_ctrl scan wirelength overhead %" -->% | pass / pass |
 <!-- dft-tables:end -->
 
@@ -290,7 +291,9 @@ What the numbers say:
   the cell area of these register-heavy blocks.
 - **Fmax.** The scan multiplexer sits in every D path. The functional clock
   moves only a few percent, because the critical paths of these pipelined
-  blocks are not flop-to-flop without logic.
+  blocks are not flop-to-flop without logic. A change that small is within
+  the placer's run-to-run spread, so the sign can go either way: the KV
+  streamer's scanned route came out slightly faster than its unscanned one.
 - **Wirelength.** The chains are ordered by instance name, not by placement:
   OpenROAD in this image has no scan-chain reordering after placement. A
   placement-aware order would recover part of the wirelength cost.

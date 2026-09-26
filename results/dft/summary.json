@@ -124,6 +124,46 @@
     "tester_cycles": 4080599,
     "top": "ot_hdc_kv_stream"
    },
+   "route": {
+    "noscan": {
+     "core_area_um2": 37518.9,
+     "drc_errors": 0,
+     "fmax_mhz": 1106.77,
+     "instance_count": 207873,
+     "routed_wirelength_um": 442741,
+     "sequential_area_um2": 2226.31,
+     "setup_wns_ns": -0.0035261800000000003,
+     "standard_cell_area_um2": 6423.88,
+     "status": "not_met"
+    },
+    "overhead": {
+     "core_area": 0.108449,
+     "fmax": 0.013851,
+     "instances": 0.091123,
+     "routed_wirelength": 0.192731,
+     "standard_cell_area": 0.101081
+    },
+    "scan": {
+     "core_area_um2": 41587.8,
+     "drc_errors": 0,
+     "fmax_mhz": 1122.1,
+     "instance_count": 226815,
+     "routed_wirelength_um": 528071,
+     "scan": {
+      "cell_area_added_fraction": 0.1077,
+      "chain_count": 8,
+      "chain_length_max": 903,
+      "flops": 7222,
+      "lockup_latches": 0,
+      "scan_cells": 5846,
+      "scan_mux_cells": 1376
+     },
+     "sequential_area_um2": 2652.48,
+     "setup_wns_ns": 0.008813280000000001,
+     "standard_cell_area_um2": 7073.21,
+     "status": "pass"
+    }
+   },
    "scan_off_equivalence": {
     "equiv_cells": 11187,
     "proven": true,

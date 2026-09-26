@@ -134,7 +134,8 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # results/dft/gate_bench_build_memory.json.
     # 910: docs/DFT.md's coverage table gains the three MoE/multicast
     # collectives (15).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 910
+    # 915: docs/DFT.md's scan-cost table gains the KV streamer's routed pair (5).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 915
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
