@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "purpose": "Structural fields the per-token operator dependency graph (src/opentallas/critical_path.py) needs and that a model profile does not already carry. The graph is built from ModelProfile fields first -- hidden size, layer count, experts, attention groups and the per-layer attention_sequence, plus metadata.operator_config and the head fields where the profile states them -- and from the entry here only for what the profile leaves out. A model with no entry here, or an entry that leaves a required field unstated, is REFUSED by critical_path.decode_shape: an unknown structure is never defaulted to another architecture's. Every value below is copied from the model's pinned Hugging Face config.json (revision and sha256 given per entry, byte-identical to the file the profile adapter hashed) unless its own note says otherwise. Model profiles are deliberately not edited, because their digests are bound elsewhere.",
+  "grade_definitions": "published: copied from the released config.json at the pinned revision. assumed: a structural reading the config does not state; the note says why.",
+  "models": {
+    "Llama-3.1-8B": {
+      "family": "gqa",
+      "grade": "published",
+      "source": "meta-llama/Llama-3.1-8B-Instruct config.json; intermediate_size, vocab_size and the head fields are already in the anchor profile's metadata",
+      "qk_norm": false,
+      "attention_sink": false
+    },
+    "Qwen3-8B": {
+      "family": "gqa",
+      "grade": "published",
+      "source": "Qwen/Qwen3-8B config.json at b968826d9c46dd6066d109eabc6255188de91218, sha256 f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+      "intermediate_size": 12288,
+      "vocab_size": 151936,
+      "qk_norm": true,
+      "qk_norm_note": "Qwen3Attention applies q_norm and k_norm (RMSNorm over head_dim) before RoPE; model_type qwen3",
+      "attention_sink": false
+    },
+    "DeepSeek-V4-Flash-0731": {
+      "family": "deepseek_v4",
+      "grade": "published",
+      "source": "deepseek-ai/DeepSeek-V4-Flash-0731 config.json at 7872f01b1d1fe23eabc4c98b48bffcef5a386062, sha256 6c8f3d2d3b48707541b88f32f22ef3f0f8a6b57d8523281e2b8d3cdb0ae9a023",
+      "score_function": "sqrtsoftplus",
+      "num_hash_layers": 3,
+      "num_hash_layers_note": "the first num_hash_layers MoE layers route by a token-id hash table, so their expert selection needs no router pass and is known at token start",
+      "shared_experts": 1,
+      "router_format": "fp32"
+    },
+    "DeepSeek-V4-Pro-0813": {
+      "family": "deepseek_v4",
+      "grade": "published",
+      "source": "deepseek-ai/DeepSeek-V4-Pro-0813 config.json at 72e1d3230f6c080a530b0a1d46f8eb4602340597, sha256 9dd2a89255469e120b333668ef5a169b7ae46c00f6bbab786bf0be457546aec0",
+      "score_function": "sqrtsoftplus",
+      "num_hash_layers": 3,
+      "shared_experts": 1,
+      "router_format": "fp32"
+    },
+    "DeepSeek-V4.1-Flash": {
+      "family": "deepseek_v4",
+      "grade": "published",
+      "source": "deepseek-ai/DeepSeek-V4.1-Flash config.json at dba1be0a40aa45a94ad051997016db3960a90277, sha256 8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+      "score_function": "sqrtsoftplus",
+      "num_hash_layers": 0,
+      "num_hash_layers_note": "the V4.1 config has no num_hash_layers key and its golden (tools/hdc_golden_v41.py) routes every layer through the gate; stated 0 rather than inherited from V4",
+      "shared_experts": 1,
+      "router_format": "fp32"
+    },
+    "DeepSeek-V4.1-Flash-engram-host": {
+      "inherits": "DeepSeek-V4.1-Flash",
+      "note": "placement variant: same decoder, Engram tables in host memory; the lookup is token-addressed and prefetched, so the graph is the base model's"
+    },
+    "DeepSeek-V4.1-Flash-engram-hbm": {
+      "inherits": "DeepSeek-V4.1-Flash",
+      "note": "placement variant: same decoder, Engram tables in the KV store; the lookup is token-addressed and prefetched, so the graph is the base model's"
+    },
+    "Kimi-K3": {
+      "family": "kimi_linear",
+      "grade": "published",
+      "source": "moonshotai/Kimi-K3 config.json (text_config) at a590ce090cb049c93a33dfe8c208ec652aa20503, sha256 9710e121a58d03ac92c8d6da287a19541994319afbbe6d6202af001ffd379213 (equal to data/inventory/kimi-k3.json config_sha256)",
+      "vocab_size": 163840,
+      "intermediate_size": 33792,
+      "first_k_dense_replace": 1,
+      "num_attention_heads": 96,
+      "q_lora_rank": 1536,
+      "kv_lora_rank": 512,
+      "qk_nope_head_dim": 128,
+      "qk_rope_head_dim": 64,
+      "v_head_dim": 128,
+      "mla_use_output_gate": true,
+      "kda_heads": 96,
+      "kda_head_dim": 128,
+      "kda_short_conv_kernel": 4,
+      "kda_full_rank_gate": true,
+      "moe_intermediate_size": 3072,
+      "num_shared_experts": 2,
+      "routed_expert_hidden_size": 3584,
+      "latent_moe_use_norm": true,
+      "score_function": "sigmoid",
+      "attn_res_block_size": 12,
+      "structure_notes": {
+        "grade": "assumed",
+        "note": "Two config keys have no public reference implementation pinned in this repository and are read structurally, not measured. routed_expert_hidden_size 3584 with latent_moe_use_norm is read as a LATENT MoE: the hidden state is projected 7168 -> 3584 and normalised before the routed experts, which run at 3584, and projected back after the combine (two extra dependent matrix passes per MoE layer). attn_res_block_size 12 is read as a block attention-residual: each layer's input is a softmax-weighted mix over up to 12 earlier block outputs, one dependent reduce-exp-reduce-scale chain per layer. Both are charged on the critical path; if either reading is wrong K3's serial chain is over-charged, never under-charged."
+      },
+      "router_format": "bf16"
+    },
+    "MiMo-V2.6-Pro": {
+      "family": "mimo_v2",
+      "grade": "published",
+      "source": "XiaomiMiMo/MiMo-V2.6-Pro-RL config.json at 73875d00b30a89ef8cc353a0b60b0e9f9561952d, sha256 a9dc00e2a0c2c172efd198f42e81e41c95472021b57c65366c06587d44038b62",
+      "dense_layers": [0],
+      "dense_layers_note": "moe_layer_freq[0] = 0: layer 0 has a dense FFN of intermediate_size",
+      "score_function": "sigmoid",
+      "shared_experts": 0,
+      "swa_attention_sink": true,
+      "global_attention_sink": false,
+      "router_format": "bf16"
+    },
+    "MiMo-V2.6-Flash": {
+      "family": "mimo_v2",
+      "grade": "published",
+      "source": "XiaomiMiMo/MiMo-V2.6-Flash-RL config.json at 5711b268169967567844e1e560e8a3966da959b1, sha256 61bea4a0f7a0dd8969f8cae528761e26b697dd12ff63e98804c3f0945492e621",
+      "dense_layers": [0],
+      "score_function": "sigmoid",
+      "shared_experts": 0,
+      "swa_attention_sink": true,
+      "global_attention_sink": false,
+      "router_format": "bf16"
+    }
+  }
+}

@@ -131,7 +131,7 @@ def test_rtl_param_overrides(tmp_path):
 def test_gate_level_bench_strips_hierarchy_peeks_and_override():
     bench = (ROOT / "rtl/test/tb_hdc_core.sv").read_text()
     text, removed = S.gate_level_bench(bench, "ot_hdc_core")
-    assert "ot_hdc_core dut (" in text and "#(.W(W)" not in text
+    assert "ot_hdc_core dut (" in text and not re.search(r"ot_hdc_core\s*#", text)
     assert not re.search(r"\bdut\.", text)
     assert len(removed) == 4
     # the checks that decide PASS survive

@@ -158,6 +158,34 @@ def select_latency(k, ascending_index):
     return k + 2 + (k if ascending_index else 0)
 
 
+TSELECT_SCALE_CAMPAIGN = ROOT / "results/rtl/hdc_v41_tselect_scale_campaign.json"
+TSELECT_CAND_CAMPAIGN = ROOT / "results/rtl/hdc_v41_cand_campaign.json"
+
+
+def tselect_consts():
+    """ot_hdc_tselect at the shipped index top-k parameters and the candidate-block front end, both from
+    their RTL campaigns: lanes per beat, LAT0 and the front-end depth; latency after the last beat is
+    2 x beats + LAT0 (+ front)."""
+    sc = json.loads(TSELECT_SCALE_CAMPAIGN.read_text())
+    cd = json.loads(TSELECT_CAND_CAMPAIGN.read_text())
+    ship = next(c for c in cd["configurations"] if c["name"] == "candidate_shipped_p64_wb64")
+    return dict(lanes=sc["parameters"]["W"], lat0=sc["parameters"]["lat0"],
+                max_positions=sc["parameters"]["max_positions"],
+                cand_lanes=ship["tselect_lanes"], cand_score_lanes=ship["score_lanes"],
+                cand_front=ship["lat0"] - sc["parameters"]["lat0"], rows=sc["shipped_context_rows"],
+                cand_rows=cd["latency_at_shipped_context"]["rows"],
+                status=dict(scale=sc["status"], cand=cd["status"]))
+
+
+TS = tselect_consts()
+
+
+def tselect_latency(n, lanes=None):
+    """ot_hdc_tselect: edges from a segment's last beat (n elements, `lanes` per beat) to its out_last beat."""
+    beats = math.ceil(n / (lanes or TS["lanes"]))
+    return 2 * beats + TS["lat0"]
+
+
 CLOCK_BLOCKS = ["ot_hdc_matvec", "ot_hdc_stream", "v41/ot_hdc_softplus", "v41/ot_hdc_select_k512",
                 "v41/ot_hdc_blockdot", "v41/ot_hdc_actquant", "v41/ot_hdc_fp4qdq"]
 
@@ -184,6 +212,9 @@ class Params:
     su_area_fraction: float = 0.10   # share of the compute area given to stream-unit lanes
     su_width: int = 0                # 0: derived from the area; else elements/cycle per die
     select_units: int = 64           # ot_hdc_select instances per die (first level of a top-k)
+    select_impl: str = "tselect"     # index top-k and candidate blocks: "tselect" (ot_hdc_tselect, position-
+                                     # order output, RTL-measured) or "insertion" (ot_hdc_select units + merge)
+    tselect_units: int = 0           # ot_hdc_tselect instances per die for the index top-k; 0 = one per user
     chaining: bool = True            # streamable consumers chase their producer (the HDC `chase`)
     algorithm: str = "best"          # reduction algorithm (see ALGORITHMS) or "best" per collective
     moe: str = "striped"             # "striped" (every expert split across the group) or "expert_parallel"
@@ -681,6 +712,53 @@ class Ops:
         return self.g.add(name, deps, layer=layer, issue=self.cyc(stream), depth=self.cyc(tail), ctrl=self.bctrl,
                           kind="select", desc=desc or f"top-{k} of {n} on {P} select units + merge")
 
+    def tselect_local(self, name, deps, layer, *, n, k, cand=False, desc=""):
+        """The die's top-k on ot_hdc_tselect.  The n scores stream in position order (one beat of 64 per
+        cycle per unit, chased by the scorer); with U units each owns a contiguous 1/U of the positions,
+        so the last unit's two passes (2 x beats + LAT0) start when the last score arrives, and one more
+        tselect selects over the U x k local outputs concatenated in range order (ingest + 2 x beats +
+        LAT0) -- the two-level form the RTL campaigns verify bit-exactly.  U is the fastest power of two up
+        to select_units.  cand: the candidate-block front end (8-position block max, pin) feeding a
+        64-lane tselect of the n/8 blocks.  A unit holds one segment for beats + 2 beats + 36 edges, so
+        users beyond tselect_units (default one set per user in flight) queue."""
+        best = None
+        U = 1
+        while U <= self.p.select_units:
+            m = math.ceil(n / U)
+            if cand:
+                beats = math.ceil(m / TS["cand_score_lanes"])
+                lines = math.ceil(math.ceil(m / 8) / TS["cand_lanes"])
+                depth = TS["cand_front"] + 2 * lines + TS["lat0"]
+                occ = beats + 2 * lines + 36
+            else:
+                beats = math.ceil(m / TS["lanes"])
+                depth = tselect_latency(m)
+                occ = 3 * beats + 36
+            if U > 1:
+                mb_ = math.ceil(U * min(k, m) / TS["lanes"])
+                depth += mb_ + tselect_latency(U * min(k, m))
+            if best is None or depth < best[0]:
+                best = (depth, beats, occ, U)
+            U *= 2
+        depth, beats, occ, U = best
+        units = self.p.tselect_units or max(1, math.ceil(self.mb))
+        issue = max(beats * self.mb, math.ceil(self.mb / units) * occ)
+        return self.g.add(name, deps, layer=layer, issue=self.cyc(issue), depth=self.cyc(depth), ctrl=self.bctrl,
+                          kind="select", tselect_units=U,
+                          desc=desc or f"ot_hdc_tselect top-{k} of {n} on {U} unit(s): {depth} edges after the "
+                          "last score")
+
+    def tselect_final(self, name, deps, layer, *, k, ways, desc=""):
+        """The cross-die level: the `ways` local selections concatenated in die (= position) order stream
+        into one ot_hdc_tselect: ingest ceil(ways k / W) beats, then 2 x beats + LAT0.  Its output is
+        already in position order, so there is no ascending-index pass."""
+        if ways <= 1:
+            return None
+        beats = math.ceil(ways * k / TS["lanes"])
+        return self.g.add(name, deps, layer=layer, depth=self.cyc(beats + tselect_latency(ways * k)),
+                          ctrl=self.bctrl, kind="select",
+                          desc=desc or f"ot_hdc_tselect over {ways} x {k} local selections (position order)")
+
     def select_final(self, name, deps, layer, *, k, ways, ascending, desc=""):
         """Merge `ways` sorted lists of k (k + lg ways, streaming) into, if position order is required,
         one ascending-index ot_hdc_select pass (2k+2 latency, k emitted)."""
@@ -916,20 +994,36 @@ def v41_attention(ops, c, L, mode, ratio, x, xq, sel, ctx, hpd):
                 sdeps.append(g.add(f"{P}.idx.newkey", [newk, iq], layer=L, ctrl=ops.bctrl,
                                    depth=ops.cyc(K["me_lat"] + K["me_tree"] * 2 + SU_BASE + 8 * FADD),
                                    desc="score of the just-compressed key"))
-            s = ops.select_local(f"{P}.idx.topk_local", sdeps, L, n=per_die, k=TOPK,
-                                 desc=f"local top-{TOPK} of {per_die} keys")
+            tsel = ops.p.select_impl == "tselect"
+            if tsel:
+                s = ops.tselect_local(f"{P}.idx.topk_local", sdeps, L, n=per_die, k=TOPK,
+                                      desc=f"ot_hdc_tselect local top-{TOPK} of {per_die} keys (position order)")
+            else:
+                s = ops.select_local(f"{P}.idx.topk_local", sdeps, L, n=per_die, k=TOPK,
+                                     desc=f"local top-{TOPK} of {per_die} keys")
             s = ops.collective(f"{P}.idx.topk_merge", [s], L, op="all_gather", payload=G * TOPK * 8,
                                desc=f"{G} x {TOPK} (score, position) candidates") or s
-            s = ops.select_final(f"{P}.idx.topk_final", [s], L, k=TOPK, ways=G, ascending=ops.p.index_order_pass,
-                                 desc=f"{G}-way merge" + (" + ascending-index pass (K=512)" if ops.p.index_order_pass else ""))
+            if tsel:
+                s = ops.tselect_final(f"{P}.idx.topk_final", [s], L, k=TOPK, ways=G) or s
+            else:
+                s = ops.select_final(f"{P}.idx.topk_final", [s], L, k=TOPK, ways=G, ascending=ops.p.index_order_pass,
+                                     desc=f"{G}-way merge" + (" + ascending-index pass (K=512)" if ops.p.index_order_pass else ""))
             ops.sel_node = s
             if L == c["candidate_source_layer_id"]:     # candidate blocks for the reindex layers: side branch
                 nb = math.ceil(per_die / CB)
-                cs = ops.select_local(f"{P}.cand.topk_local", [sc], L, n=nb, k=CK,
-                                      desc=f"block max over {CB} + local top-{CK} of {nb} blocks")
+                if tsel:
+                    cs = ops.tselect_local(f"{P}.cand.topk_local", [sc], L, n=per_die, k=CK, cand=True,
+                                           desc=f"ot_hdc_tselect_cand: block max over {CB} + local top-{CK} of "
+                                                f"{nb} blocks")
+                else:
+                    cs = ops.select_local(f"{P}.cand.topk_local", [sc], L, n=nb, k=CK,
+                                          desc=f"block max over {CB} + local top-{CK} of {nb} blocks")
                 cs = ops.collective(f"{P}.cand.merge", [cs], L, op="all_gather", payload=G * CK * 8,
                                     desc=f"{G} x {CK} candidate blocks") or cs
-                ops.select_final(f"{P}.cand.final", [cs], L, k=CK, ways=G, ascending=False)
+                if tsel:
+                    ops.tselect_final(f"{P}.cand.final", [cs], L, k=CK, ways=G)
+                else:
+                    ops.select_final(f"{P}.cand.final", [cs], L, k=CK, ways=G, ascending=False)
             rows_dep.append(g.add(f"{P}.gather", [s], layer=L, depth=ops.p.hbm_gather_s, ctrl=ops.ctrl,
                                   desc="selected compressed rows: the address exists only now (HBM round trip)"))
         else:                                       # reuse: the source's selection; rows prefetched
@@ -1139,6 +1233,30 @@ def collective_census(r):
 
 
 # -- machines from the analytical artifacts ---------------------------------------------------------------------------
+def v41_study_rows():
+    """The V4.1 study's points and the two named designs' entries.
+
+    The x188 array and the x12 wafer are the designs this study describes.  The
+    roofline's device-count sweep need not emit either count (it sizes each
+    layout by its own rule), so a missing one is built by that same code path
+    (tools/wafer_vs_array_study.analytical_design: run_roofline_studies' budget
+    and evaluate at the study's context) at batches 1, 64 and 4,096."""
+    points = json.loads(V41_POINTS.read_text())
+    designs = {d_["name"]: d_ for d_ in json.loads(V41_ANALYTICAL.read_text())["designs"]
+               if d_["name"] in (ARRAY_DESIGN, WAFER_DESIGN)}
+    missing = [(kind, n, name) for kind, n, name in (("array", 188, ARRAY_DESIGN), ("wafer", 12, WAFER_DESIGN))
+               if name not in designs]
+    if missing:
+        import wafer_vs_array_study as W
+        env = W._roofline_env()
+        for kind, n, name in missing:
+            _summary, d, pts = W.analytical_design(env, kind, n)
+            assert d["name"] == name and pts, (name, d.get("reasons"))
+            designs[name] = d
+            points = points + pts
+    return points, designs
+
+
 def point(points, design, batch):
     for q in points:
         if q["design"] == design and q["batch_size"] == batch:
@@ -1171,6 +1289,9 @@ def v41_machine(kind, g, batch, points, designs, p, clock, *, design=None, units
     per_layer = per_layer or pl0
     q = point(points, dn, batch)
     d = designs[dn]
+    # The analytical row's service terms are for the tensor group the roofline CHOSE at this point
+    # (roofline.evaluate searches it); the group scaling below starts from that one.
+    g_ref = int(q.get("tensor_group") or g_ref)
     NL = 40
     if g >= per_layer:
         lps, sub = g / per_layer, 1
@@ -1184,7 +1305,10 @@ def v41_machine(kind, g, batch, points, designs, p, clock, *, design=None, units
         slots = max(float(stages), slots_ref * stages / q["pipeline_stages"])
         mb = max(1.0, batch / slots)
     ct = q["component_times_s"]
-    S = q["step_time_s"] - ct["layer_fixed_latency"] - ct["link_latency"]
+    # The sweep a token waits for: the roofline publishes it as serial_sweep_s since the serial path
+    # became its own operator graph (older artifacts: the step less its two serial terms).
+    S = q["serial_sweep_s"] if q.get("serial_sweep_s") else \
+        q["step_time_s"] - ct["layer_fixed_latency"] - ct["link_latency"]
     beta = max(ct["compute"], ct["weight_read"], ct["kv_read"]) / S
     c_ = ct["compute"] * (g_ref / g) * (mb / mb_ref)
     w_ = ct["weight_read"] * (g_ref / g)
@@ -1297,9 +1421,7 @@ def build(p: Params, quick=False):
     rec["hc1_llama31_8b"] = headline_hc1(p, clock)
     rec["qwen3_8b_single_reticle"] = headline_qwen(p, clock)
 
-    points = json.loads(V41_POINTS.read_text())
-    designs = {d_["name"]: d_ for d_ in json.loads(V41_ANALYTICAL.read_text())["designs"]
-               if d_["name"] in (ARRAY_DESIGN, WAFER_DESIGN)}
+    points, designs = v41_study_rows()
     c = v41_shape()
     rows = {}
     for kind, g_ref in (("array", 4), ("wafer", 57)):
@@ -1331,6 +1453,7 @@ def build(p: Params, quick=False):
                                  ("select_units_16", replace(p, select_units=16)),
                                  ("select_units_256", replace(p, select_units=256)),
                                  ("no_index_order_pass", replace(p, index_order_pass=False)),
+                                 ("insertion_select", replace(p, select_impl="insertion")),
                                  ("lanes_from_analytical", replace(p, lanes_from="analytical")),
                                  ("expert_parallel", replace(p, moe="expert_parallel")),
                                  ("fused_not_bit_exact", replace(p, fuse=True)),
@@ -1342,10 +1465,56 @@ def build(p: Params, quick=False):
                 s["sensitivity_tokens_s_per_user"] = sens
             rows[f"{kind}_batch{bt}"] = s
     rec["deepseek_v41_flash"] = rows
+    rec["index_select_by_context"] = index_select_by_context(p, clock, links, points, designs, c)
     if not quick:
         rec["topology_sweep"] = topology_sweep(p, clock, links, points, designs, c)
     rec["assumptions"] = ASSUMPTIONS
     return rec
+
+
+SELECT_CONTEXTS = (8192, 200000, 1048576)
+SELECT_NODES = ("L20.attn.idx.topk_local", "L20.attn.idx.topk_final", "L20.attn.cand.topk_local",
+                "L20.attn.cand.final")
+
+
+def index_select_by_context(p, clock, links, points, designs, c):
+    """The index top-512 / candidate-block selects at 8K / 200K / 1M context: the RTL-measured cycles of
+    one unit on the whole score array, the per-die local + merge nodes on the graph, and the batch-1
+    token rate with the graph rebuilt at that context (both select implementations)."""
+    rows = []
+    for ctx in SELECT_CONTEXTS:
+        meas = {r["layer_kind"]: r for r in TS["rows"] if r["context"] == ctx}
+        cand = next((r for r in TS["cand_rows"] if r["context"] == ctx), None)
+        row = dict(context=ctx, clock_hz=clock,
+                   rtl_single_unit={k: dict(scores=v["scores"], cycles_after_last_score=v["cycles_after_last_beat"],
+                                            ns_after_last_score=v["cycles_after_last_beat"] / clock * 1e9,
+                                            cycles_from_first_score=v["cycles_from_first_beat"],
+                                            ns_from_first_score=v["cycles_from_first_beat"] / clock * 1e9)
+                                    for k, v in meas.items()},
+                   rtl_candidate_blocks=None if cand is None else dict(
+                       cycles_after_last_score=cand["cycles_after_last_beat"],
+                       ns_after_last_score=cand["cycles_after_last_beat"] / clock * 1e9,
+                       cycles_from_first_score=cand["cycles_from_first_beat"],
+                       ns_from_first_score=cand["cycles_from_first_beat"] / clock * 1e9))
+        for kind, g_ref in (("array", 4), ("wafer", 57)):
+            m_ = v41_machine(kind, g_ref, 1, points, designs, p, clock)
+            fab = default_fabric(kind, links, g_ref)
+            out = {}
+            for impl in ("tselect", "insertion"):
+                pp = replace(p, select_impl=impl)
+                b = Built(m_, pp, clock, v41_graph, c, ctx)
+                r = b.evaluate(fab)
+                out[impl] = dict(tokens_s_per_user=1 / r["period"],
+                                 select_nodes_ns={n: dict(issue=b.g.nodes[n]["issue"] * 1e9,
+                                                          depth=b.g.nodes[n]["depth"] * 1e9)
+                                                  for n in SELECT_NODES if n in b.g.nodes},
+                                 local_units={n: b.g.nodes[n].get("tselect_units") for n in SELECT_NODES
+                                              if n in b.g.nodes and "local" in n},
+                                 index_select_steps_on_critical_path=[n for n in r["path"]
+                                                                      if ".idx." in n or ".cand." in n])
+            row[f"{kind}_batch1"] = out
+        rows.append(row)
+    return rows
 
 
 ARRAY_GROUPS = (1, 2, 4, 8, 16, 32)
@@ -1470,9 +1639,12 @@ ASSUMPTIONS = [
     "stage balance), apportioned to each matvec by bytes (weight-bound) or MACs (compute-bound); other group "
     "sizes scale it by g_ref/g (the compute term also by users per stage).",
     "A reduction over n costs ceil(n*m/W) + red_tail 32 + 5*lg W cycles; SU classes cost 29 + the unit's depth.",
-    "Top-k: first level on up to 64 ot_hdc_select units in rank order and a sorted merge, then one "
-    "ascending-index pass (the golden emits positions in order); the merge tree and the ascending pass on "
-    "merged input are not built RTL.",
+    "Top-k: the index top-512 and the layer-20 candidate blocks run on ot_hdc_tselect (64 lanes, output in "
+    "position order; latency 2 x beats + 65 after the last score, RTL-measured to 1M context in "
+    "results/rtl/hdc_v41_tselect_scale_campaign.json and hdc_v41_cand_campaign.json), local per die then one "
+    "tselect over the all-gathered G x k selections; the router top-6 stays on ot_hdc_select. Sensitivity "
+    "'insertion_select' keeps the earlier pricing (up to 64 ot_hdc_select units in rank order, a sorted merge "
+    "and an ascending-index pass).",
     "Partitioning: q_a|kv|index-weights output-split (all-gather), heads split for attention, index keys "
     "split by position (local top-k + all-gather merge), wo_b K-split (all-reduce), router experts split "
     "(all-gather of 384 scores), experts striped over the group (default) or expert-parallel (combine "

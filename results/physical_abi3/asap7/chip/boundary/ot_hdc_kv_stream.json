@@ -1,0 +1,320 @@
+{
+  "basis": "OpenSTA, ideal clock, zero wire load, ASAP7 RVT TT liberty; inputs arrive at 0 and outputs are required at the period, so a port's worst slack gives in2reg = period - slack (setup included) for an input and reg2out = period - slack (clock-to-q included) for an output; a combinational input-to-output path, when present, is feedthrough_ps on both ends; unused_bits are ports with no connection inside the block",
+  "netlists": [
+    "<work>/results/asap7/chip_ot_hdc_kv_stream/base/1_2_yosys.v"
+  ],
+  "period_ps": 1000.0,
+  "ports": {
+    "cfg_lead": {
+      "direction": "input",
+      "in2reg_ps": 638.37,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "fault": {
+      "direction": "output",
+      "reg2out_ps": 62.8,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "hq_addr": {
+      "direction": "output",
+      "reg2out_ps": 59.46,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "hq_len": {
+      "direction": "output",
+      "reg2out_ps": 55.55,
+      "unused_bits": 0,
+      "width": 5
+    },
+    "hq_rdy": {
+      "direction": "input",
+      "in2reg_ps": 289.37,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "hq_tag": {
+      "direction": "output",
+      "reg2out_ps": 59.36,
+      "unused_bits": 0,
+      "width": 14
+    },
+    "hq_v": {
+      "direction": "output",
+      "reg2out_ps": 66.72,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "hq_wdata": {
+      "direction": "output",
+      "reg2out_ps": 59.36,
+      "unused_bits": 0,
+      "width": 256
+    },
+    "hq_we": {
+      "direction": "output",
+      "reg2out_ps": 53.17,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "hr_beat": {
+      "direction": "input",
+      "feedthrough_ps": 464.03,
+      "in2reg_ps": 593.32,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "hr_data": {
+      "direction": "input",
+      "in2reg_ps": 106.66,
+      "unused_bits": 0,
+      "width": 1024
+    },
+    "hr_rdy": {
+      "direction": "output",
+      "feedthrough_ps": 494.79,
+      "reg2out_ps": 609.93,
+      "unused_bits": 0,
+      "width": 4
+    },
+    "hr_tag": {
+      "direction": "input",
+      "feedthrough_ps": 494.79,
+      "in2reg_ps": 624.08,
+      "unused_bits": 0,
+      "width": 56
+    },
+    "hr_v": {
+      "direction": "input",
+      "feedthrough_ps": 392.07,
+      "in2reg_ps": 526.16,
+      "unused_bits": 0,
+      "width": 4
+    },
+    "kv_ok": {
+      "direction": "output",
+      "reg2out_ps": 60.65,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "kv_q": {
+      "direction": "output",
+      "feedthrough_ps": 57.75,
+      "reg2out_ps": 205.55,
+      "unused_bits": 0,
+      "width": 2048
+    },
+    "kv_raddr": {
+      "direction": "input",
+      "feedthrough_ps": 108.7,
+      "in2reg_ps": 108.7,
+      "unused_bits": 68,
+      "width": 96
+    },
+    "kv_re": {
+      "direction": "input",
+      "feedthrough_ps": 265.8,
+      "in2reg_ps": 600.88,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "kv_waddr": {
+      "direction": "input",
+      "in2reg_ps": 384.38,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "kv_wdata": {
+      "direction": "input",
+      "in2reg_ps": 102.28,
+      "unused_bits": 16,
+      "width": 32
+    },
+    "kv_we": {
+      "direction": "input",
+      "in2reg_ps": 249.61,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "kvd_js": {
+      "direction": "input",
+      "in2reg_ps": 56.94,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "kvd_jsh": {
+      "direction": "input",
+      "in2reg_ps": 681.52,
+      "unused_bits": 0,
+      "width": 3
+    },
+    "kvd_k": {
+      "direction": "input",
+      "in2reg_ps": 56.94,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "kvd_kindk": {
+      "direction": "input",
+      "in2reg_ps": 56.94,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "kvd_ks": {
+      "direction": "input",
+      "in2reg_ps": 142.83,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "kvd_nout": {
+      "direction": "input",
+      "in2reg_ps": 304.4,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "kvd_pos": {
+      "direction": "input",
+      "in2reg_ps": 57.01,
+      "unused_bits": 4,
+      "width": 16
+    },
+    "kvd_tiles": {
+      "direction": "input",
+      "in2reg_ps": 56.94,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "kvd_ts": {
+      "direction": "input",
+      "in2reg_ps": 142.83,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "kvd_v": {
+      "direction": "input",
+      "in2reg_ps": 292.9,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "kvd_wbase": {
+      "direction": "input",
+      "in2reg_ps": 56.99,
+      "unused_bits": 0,
+      "width": 24
+    },
+    "rst_n": {
+      "direction": "input",
+      "in2reg_ps": 242.28,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "tl_q": {
+      "direction": "input",
+      "feedthrough_ps": 57.75,
+      "in2reg_ps": 80.29,
+      "unused_bits": 0,
+      "width": 512
+    },
+    "tl_raddr": {
+      "direction": "output",
+      "feedthrough_ps": 265.8,
+      "reg2out_ps": 401.07,
+      "unused_bits": 0,
+      "width": 14
+    },
+    "tl_re": {
+      "direction": "output",
+      "feedthrough_ps": 232.13,
+      "reg2out_ps": 367.4,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "tl_waddr": {
+      "direction": "output",
+      "reg2out_ps": 69.67,
+      "unused_bits": 0,
+      "width": 14
+    },
+    "tl_wdata": {
+      "direction": "output",
+      "reg2out_ps": 69.67,
+      "unused_bits": 0,
+      "width": 512
+    },
+    "tl_we": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 2
+    },
+    "tl_wmask": {
+      "direction": "output",
+      "reg2out_ps": 69.67,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "tok_pos": {
+      "direction": "input",
+      "in2reg_ps": 220.03,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "tok_start": {
+      "direction": "input",
+      "in2reg_ps": 113.51,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "win_q": {
+      "direction": "input",
+      "feedthrough_ps": 57.75,
+      "in2reg_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1024
+    },
+    "win_raddr": {
+      "direction": "output",
+      "reg2out_ps": 248.56,
+      "unused_bits": 0,
+      "width": 8
+    },
+    "win_re": {
+      "direction": "output",
+      "feedthrough_ps": 13.76,
+      "reg2out_ps": 13.76,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "win_waddr": {
+      "direction": "output",
+      "reg2out_ps": 99.23,
+      "unused_bits": 0,
+      "width": 32
+    },
+    "win_wdata": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 1024
+    },
+    "win_we": {
+      "direction": "output",
+      "reg2out_ps": 97.78,
+      "unused_bits": 0,
+      "width": 4
+    }
+  },
+  "sources": [
+    {
+      "path": "rtl/hdc/kv/ot_hdc_kv_walk.sv",
+      "sha256": "2e79a4bc0d7109302b421bc9e1f08ce7a8714028c375ba083612dc8e3df0c9b6"
+    },
+    {
+      "path": "rtl/hdc/kv/ot_hdc_kv_stream.sv",
+      "sha256": "7fd0224313630d283525afb1df8f1b6ea5fa4534fa7669afa153698b7131c7e6"
+    }
+  ],
+  "top": "ot_hdc_kv_stream"
+}
