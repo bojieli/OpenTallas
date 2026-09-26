@@ -127,10 +127,66 @@ def test_weight_sweep_is_the_analytical_one(env):
 
 
 def test_one_shot_beats_two_step_on_a_small_crossbar(env):
-    fab = D.ArrayFabric(env["links"], 4, "mesh", 4)
+    """On the earlier every-die-to-every-die package (the optimistic sensitivity)."""
+    fab = D.ArrayFabric(D.optimistic_links(env["links"]), 4, "mesh", 4)
+    assert fab.pkg_topo == "full"
     one = fab.collective("all_reduce", 20480, 4, "one_shot")
     two = fab.collective("all_reduce", 20480, 4, "two_step")
     assert one["latency_s"] < two["latency_s"]
+
+
+def test_package_dies_link_only_to_edge_neighbours(env):
+    """UCIe reaches ~2 mm: a pair is one hop; a 2 x 2's one-shot reaches the diagonal die through a relay
+    (2 hops + relay) or on the standard-package diagonal link, and recursive doubling needs neither."""
+    u, d = env["links"]["rom_package_ucie"], env["links"]["rom_package_ucie_diagonal"]
+    pair = D.ArrayFabric(env["links"], 2, "mesh", 2)
+    assert pair.pkg_topo == "pair"
+    assert pair.collective("all_reduce", 20480, 2)["latency_s"] == pytest.approx(u["hop"])
+    ring = D.ArrayFabric(env["links"], 4, "mesh", 4)
+    lv = ring._in_pkg(4)
+    assert lv.price_mode("all_reduce", 8, "one_shot", "relay")[0] == pytest.approx(2 * u["hop"] + u["relay"])
+    assert lv.price_mode("all_reduce", 8, "one_shot", "diagonal")[0] == pytest.approx(max(u["hop"], d["hop"]))
+    assert lv.price("all_reduce", 20480, "rec_doubling")[0] == pytest.approx(2 * u["hop"])
+    relay_only = D.ArrayFabric(env["links"], 4, "mesh", 4, diagonal=False)._in_pkg(4)
+    assert relay_only.modes() == ("relay",)
+    # the package hop is the realistic one; the optimistic set is the earlier one
+    assert env["links"]["rom_board_serdes"]["hop"] == pytest.approx(209e-9)
+    assert D.optimistic_links(env["links"])["rom_board_serdes"]["hop"] == pytest.approx(100e-9)
+    # the wafer-to-wafer link is the same link class, priced symmetrically; its earlier 100 ns is optimistic
+    for k in ("hop", "hop_low", "hop_high"):
+        assert env["links"]["rom_wafer_serdes"][k] == pytest.approx(env["links"]["rom_board_serdes"][k])
+    assert D.optimistic_links(env["links"])["rom_wafer_serdes"]["hop"] == pytest.approx(100e-9)
+
+
+def test_packed_placement_fills_the_dies_exactly():
+    cfg = json.loads(D.V41_CONFIG.read_text())
+    for g in (2, 4):
+        pl = D.packed_placement(188, g, 2)
+        assert pl["fits"] and pl["layer_dies"] + pl["non_layer_dies"] == pytest.approx(188)
+        assert pl["per_die_capacity_bytes"] == pytest.approx(cfg["checkpoint_bytes"] / 188)
+        plan = pl["hop_plan"]
+        crossed = sum(len(v[1]) for v in plan.values()) + sum(1 for L in range(1, 40) if plan[L][0] != (
+            plan[L - 1][1][-1] if plan[L - 1][1] else plan[L - 1][0]))
+        assert crossed == pl["layer_groups"] - 1 == math.ceil(pl["layer_dies"] / g - 1e-9) - 1
+
+
+def test_packaging_options_and_the_headline(env):
+    rec = json.loads(RESULT.read_text())["packaging_options"]
+    opts = rec["options"]
+    assert [o["id"] for o in opts.values()] == ["a", "b", "c"]
+    assert [o["packages"] for o in opts.values()] == [94, 94, 47]
+    assert [o["shipping_packaging"] for o in opts.values()] == [True, True, False]
+    assert rec["chosen"]["id"] == D.HEADLINE_PACKAGING and rec["chosen"]["matches_headline"]
+    best = max((o for o in opts.values() if o["shipping_packaging"]), key=lambda o: o["batch1"]["tokens_s_per_user"])
+    assert best["id"] == D.HEADLINE_PACKAGING
+    head = json.loads(RESULT.read_text())["deepseek_v41_flash"]["array_batch1"]
+    assert head["tokens_s_per_user"] == pytest.approx(opts[rec["chosen"]["key"]]["batch1"]["tokens_s_per_user"],
+                                                      rel=1e-9)
+    for o in opts.values():
+        assert o["capacity_feasible"]
+        sens = o["sensitivity_tokens_s_per_user"]
+        assert sens["links_hop_low_b1"] >= o["batch1"]["tokens_s_per_user"] >= sens["links_hop_high_b1"]
+        assert sens["optimistic_links_b1"] >= o["batch1"]["tokens_s_per_user"]
 
 
 def test_centre_mesh_is_1p1_diameter(env):

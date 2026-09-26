@@ -34,9 +34,15 @@ This campaign runs, under Verilator:
    results/rtl/hdc_decode_campaign.json end_to_end.
 
 Link model (ot_rom_ucie_link): configs/hardware/technology.json
-links.rom_package_ucie, hop 10 ns (range 3-30 ns) and 4 TB/s per die pair and
-direction, converted to cycles at the 0.9 ns physical target.  The package
-ring keeps tb_hdc_array's 60-cycle board link.
+links.rom_package_ucie, hop 10 ns (range 3-30 ns) per neighbour link, converted
+to cycles at the 0.9 ns physical target.  This bench gives EVERY die pair its
+own link at that latency, i.e. the four-die package with every die linked to
+every other -- the optimistic end.  Advanced-package UCIe reaches ~2 mm, so a
+real 2 x 2 package reaches its diagonal die through a relay die (2 hops + 4 ns)
+or a standard-package diagonal link, and the shipping package holds two dies
+(decode_critical_path.json packaging_options); the bits are the same, only the
+cycle counts of the diagonal transfers differ.  The package ring keeps
+tb_hdc_array's 60-cycle board link (the analytical hop is now 209 ns).
 
 Writes results/rtl/hdc_package_tp_campaign.json.
 """

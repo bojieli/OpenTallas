@@ -872,6 +872,86 @@ class Level:
         return lat, byt
 
 
+@dataclass(frozen=True)
+class PackageLevel:
+    """Three or four dies of a 2 x 2 package on reach-limited links (a ring of four).
+
+    Advanced-package UCIe reaches ~2 mm, so a die links only to the two dies it
+    shares an edge with.  Its diagonal partner is reached either through a relay
+    die (two hops plus the relay's re-timing, over the neighbour links) or on a
+    direct standard-package diagonal link (longer reach, far less bandwidth per
+    mm), and each collective is priced on whichever is faster.  The 2 x 2 is a
+    2-cube, so recursive doubling (pair across one edge, then across the other)
+    never needs the diagonal.  Three dies are priced as the full 2 x 2."""
+    p: int
+    alpha: float                 # one neighbour traversal
+    B_link: float                # one neighbour link, per direction
+    relay_s: float               # added by the relay die on a diagonal
+    diag_alpha: float | None     # the direct diagonal link, if the package has one
+    diag_B: float | None
+    name: str
+    mesh_like: bool = True
+
+    @property
+    def relay_alpha(self) -> float:
+        return 2 * self.alpha + self.relay_s
+
+    @property
+    def D(self) -> float:
+        """Diameter in neighbour traversals, the diagonal at its faster path."""
+        return min(self.relay_alpha, self.diag_alpha or math.inf) / self.alpha
+
+    @property
+    def Dsum(self) -> float:
+        return 2.0
+
+    @property
+    def B_node(self) -> float:
+        return 2 * self.B_link + (self.diag_B or 0.0)
+
+    def modes(self) -> tuple[str, ...]:
+        return ("relay", "diagonal") if self.diag_alpha else ("relay",)
+
+    def price_mode(self, op: str, n: float, algo: str, mode: str) -> tuple[float, float]:
+        a, B = self.alpha, self.B_link
+        if mode == "diagonal":
+            ad, Bd = float(self.diag_alpha), float(self.diag_B)
+            lat_d = max(a, ad)
+
+            def spread(x: float) -> float:          # x on every neighbour link and on the diagonal at once
+                return max(x / B, x / Bd)
+        else:
+            lat_d = self.relay_alpha
+
+            def spread(x: float) -> float:          # the diagonal's x rides a neighbour link: 2x per link
+                return 2 * x / B
+        if algo == "centre_mesh":
+            return math.inf, math.inf
+        if op == "all_reduce":
+            lat = {"one_shot": lat_d, "two_step": 2 * lat_d, "ring": 6 * a, "rec_doubling": 2 * a,
+                   "tree": 4 * a}[algo]
+            byt = {"one_shot": spread(n), "two_step": 2 * spread(n / 4), "ring": 1.5 * n / B,
+                   "rec_doubling": 2 * n / B, "tree": 4 * n / B}[algo]
+        else:
+            lat = {"one_shot": lat_d, "two_step": lat_d, "ring": 3 * a, "rec_doubling": 2 * a,
+                   "tree": 4 * a}[algo]
+            byt = {"one_shot": spread(n / 4), "two_step": spread(n / 4), "ring": 0.75 * n / B,
+                   "rec_doubling": 0.75 * n / B, "tree": 2 * n / B}[algo]
+        return lat, byt
+
+    def best_mode(self, op: str, n: float, algo: str) -> tuple[float, float, str]:
+        best = None
+        for mode in self.modes():
+            lat, byt = self.price_mode(op, n, algo, mode)
+            if best is None or lat + byt < best[0] + best[1]:
+                best = (lat, byt, mode)
+        return best
+
+    def price(self, op: str, n: float, algo: str) -> tuple[float, float]:
+        lat, byt, _ = self.best_mode(op, n, algo)
+        return lat, byt
+
+
 def direct_level(p: int, alpha: float, B_link: float, links_per_node: float, topo: str, name: str) -> Level:
     """A direct network embedding of p consecutive nodes: chain, ring, mesh, torus or full crossbar."""
     if topo in ("chain", "ring"):
@@ -914,14 +994,14 @@ class Fabric:
         node = self.hw.get(link)
         return node if isinstance(node, Mapping) and "value" in node else None
 
-    def _level(self, link: str, p: int) -> Level:
+    def _level(self, link: str, p: int) -> "Level | PackageLevel":
         key = ("level", link, p)
         hit = self._memo.get(key)
         if hit is None:
             hit = self._memo[key] = self._level_uncached(link, p)
         return hit
 
-    def _level_uncached(self, link: str, p: int) -> Level:
+    def _level_uncached(self, link: str, p: int) -> "Level | PackageLevel":
         hop, bw = self.t.link(link)
         spec = self._hw(link)
         assert spec is not None
@@ -934,6 +1014,20 @@ class Fabric:
             b_link = bw.value / lpn
         else:
             b_link = bw.value
+        if spec.get("reference_domain") and link == self.outer:
+            # a package's SerDes lanes scale with its edge: sqrt(dies per package / the reference package)
+            b_link *= math.sqrt(self.domain / float(spec["reference_domain"]))
+        if topo == "ring2x2":
+            if p <= 2:      # one edge-adjacent pair: a single link
+                return direct_level(p, hop.value, b_link, 1, "full", link)
+            if p > 4:
+                raise ValidationError(f"{link}: a 2 x 2 package holds at most 4 dies, not {p}")
+            relay = self.t.graded("links", link, "relay_latency_s").value
+            diag = spec.get("diagonal_link")
+            d_hop, d_bw = self.t.link(str(diag)) if diag else (None, None)
+            return PackageLevel(p=p, alpha=hop.value, B_link=b_link, relay_s=relay,
+                                diag_alpha=d_hop.value if d_hop else None, diag_B=d_bw.value if d_bw else None,
+                                name=link)
         return direct_level(p, hop.value, b_link, min(lpn, max(1, p - 1)) if topo == "full" else lpn,
                             topo if p > 1 else "full", link)
 
@@ -960,6 +1054,13 @@ class Fabric:
                 best = (lat, byt, a)
         return best
 
+    def _mode(self, link: str, op: str, n: float, p: int, algo: str) -> str:
+        """How a 2 x 2 package reaches the diagonal die for this collective ('' elsewhere)."""
+        if p <= 2 or self._hw(link) is None or algo not in ("one_shot", "two_step"):
+            return ""
+        lv = self._level(link, p)
+        return f", diagonal by {lv.best_mode(op, n, algo)[2]}" if isinstance(lv, PackageLevel) else ""
+
     # -- collectives ---------------------------------------------------------
     def collective(self, op: str, n: float, span: int) -> dict[str, Any]:
         """One all_reduce / all_gather over ``span`` partitions of the group."""
@@ -976,7 +1077,8 @@ class Fabric:
         across = math.ceil(span / self.domain)
         if across <= 1:
             lat, byt, a = self._one_level(self.inner, op, n, inside, self.algorithm)
-            return dict(latency_s=lat, bytes_s=byt, algo=a, where=f"{span} x {self.inner}: {a}")
+            return dict(latency_s=lat, bytes_s=byt, algo=a,
+                        where=f"{span} x {self.inner}: {a}{self._mode(self.inner, op, n, inside, a)}")
         # hierarchical: reduce (or gather) in the domain, across domains, broadcast in the domain
         l1, b1, a1 = self._one_level(self.inner, op, n, inside, self.algorithm)
         l2, b2, a2 = self._one_level(self.outer, op, n, across, self.algorithm)
@@ -985,7 +1087,8 @@ class Fabric:
         else:
             lat, byt = l1 + l2, b1 + b2
         return dict(latency_s=lat, bytes_s=byt, algo="hierarchical",
-                    where=f"{inside} x {self.inner} ({a1}) then {across} x {self.outer} ({a2})")
+                    where=f"{inside} x {self.inner} ({a1}{self._mode(self.inner, op, n, inside, a1)}) "
+                          f"then {across} x {self.outer} ({a2})")
 
     def all_to_all(self, n_per_node: float, span: int) -> dict[str, Any]:
         """Expert dispatch or combine: every node sends its tokens' copies to their experts."""
