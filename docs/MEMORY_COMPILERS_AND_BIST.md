@@ -369,7 +369,7 @@ correct it.
   and 29 ROM collars. The ROM expected signatures are the per-instance CRCs
   that `personalise` wrote to `signatures.hex`. The campaign runs the BIST
   before the token twice (`memory_macros.bist` in the record):
-  - **clean:** all 37 macros pass, in 299,219 BIST cycles;
+  - **clean:** all 37 macros pass, in 299,248 BIST cycles;
   - **with a stuck-at-1 KV cell and a missing weight-ROM via:** the KV macro
     is reported *repaired* (status `10`) and re-verifies. The weight-ROM tile
     fails its signature (status `11`), so the die would be flagged. Its one
