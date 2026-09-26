@@ -9920,19 +9920,19 @@
     ]
    },
    "reference_analytical": {
-    "step_time_s": 0.00021548944738863517,
-    "tokens_s_per_user": 4640.598470682883,
-    "aggregate_tokens_s": 199545.73423936398,
+    "step_time_s": 0.00021703890753678332,
+    "tokens_s_per_user": 4607.468823674032,
+    "aggregate_tokens_s": 198121.15941798338,
     "component_times_s": {
      "compute": 6.189154506757275e-06,
      "kv_read": 5.7981653703703704e-06,
      "layer_fixed_latency": 0.00013912775684301893,
-     "link_latency": 4.035833298069991e-05,
+     "link_latency": 4.190779312884805e-05,
      "weight_read": 3.785746236261613e-05
     },
     "stage_balance": 0.8999999999999999,
     "service_time_s": 4.206384706957348e-05,
-    "hop_breakdown": "6.25 collectives per layer (one_shot), 40 pipeline hops; collectives 35.34 us, hops 5.02 us on the path",
+    "hop_breakdown": "6.25 collectives per layer (one_shot), 40 pipeline hops; collectives 35.34 us, hops 6.57 us on the path",
     "microbatch_per_slot": 1.0,
     "token_slots": 43.0
    },
@@ -10534,19 +10534,19 @@
     ]
    },
    "reference_analytical": {
-    "step_time_s": 0.00022803995832942314,
-    "tokens_s_per_user": 4385.196381045706,
-    "aggregate_tokens_s": 280652.5683869252,
+    "step_time_s": 0.00022960087575922504,
+    "tokens_s_per_user": 4355.38408419952,
+    "aggregate_tokens_s": 278744.58138876926,
     "component_times_s": {
      "compute": 9.211764847266642e-06,
      "kv_read": 8.62982752799311e-06,
      "layer_fixed_latency": 0.0001495927606556308,
-     "link_latency": 4.08649468595928e-05,
+     "link_latency": 4.24258642893947e-05,
      "weight_read": 4.418273802436708e-05
     },
     "stage_balance": 0.9000000000000001,
     "service_time_s": 4.909193113818564e-05,
-    "hop_breakdown": "6.25 collectives per layer (one_shot), 40 pipeline hops; collectives 35.60 us, hops 5.26 us on the path",
+    "hop_breakdown": "6.25 collectives per layer (one_shot), 40 pipeline hops; collectives 35.60 us, hops 6.82 us on the path",
     "microbatch_per_slot": 1.4883720930232558,
     "token_slots": 43.0
    },
@@ -10918,19 +10918,19 @@
     ]
    },
    "reference_analytical": {
-    "step_time_s": 0.001458220830080784,
-    "tokens_s_per_user": 685.767189284082,
-    "aggregate_tokens_s": 2808902.4073075997,
+    "step_time_s": 0.001458633996770595,
+    "tokens_s_per_user": 685.5729416796761,
+    "aggregate_tokens_s": 2808106.7691199533,
     "component_times_s": {
      "compute": 0.0005895529502250651,
      "kv_read": 0.0005523089617915591,
-     "layer_fixed_latency": 0.000305432363993942,
-     "link_latency": 2.174010776010512e-05,
+     "layer_fixed_latency": 0.0003054323639939422,
+     "link_latency": 2.2153274449916067e-05,
      "weight_read": 0.0011464989787150228
     },
     "stage_balance": 0.9000000000000001,
     "service_time_s": 0.001273887754127803,
-    "hop_breakdown": "5.25 collectives per layer (one_shot), 40 pipeline hops; collectives 14.48 us, hops 7.26 us on the path",
+    "hop_breakdown": "5.25 collectives per layer (one_shot), 40 pipeline hops; collectives 14.48 us, hops 7.67 us on the path",
     "microbatch_per_slot": 23.953216374269005,
     "token_slots": 171.0
    },
