@@ -90,11 +90,17 @@ module ot_mbist_bira #(
     reg [DMAX-1:0]   mustcol;
     reg [7:0]        ncols;
 
+    // Popcount as a balanced adder tree: level by level, pairs are summed, so the
+    // depth is log2(DMAX) adders rather than a DMAX-long increment chain.
+    localparam integer PT = (DMAX <= 1) ? 1 : (1 << $clog2(DMAX));
     function automatic [15:0] pop(input [DMAX-1:0] v);
-        integer i;
+        reg [15:0] t [0:PT-1];
+        integer i, w;
         begin
-            pop = 16'd0;
-            for (i = 0; i < DMAX; i = i + 1) pop = pop + {15'd0, v[i]};
+            for (i = 0; i < PT; i = i + 1) t[i] = (i < DMAX) ? {15'd0, v[i]} : 16'd0;
+            for (w = PT / 2; w >= 1; w = w / 2)
+                for (i = 0; i < w; i = i + 1) t[i] = t[2 * i] + t[2 * i + 1];
+            pop = t[0];
         end
     endfunction
 
@@ -207,19 +213,13 @@ module ot_mbist_bira #(
                 end
                 // ---- P3: popcount, clear the must-repair columns ----
                 if (ph[1] && !p_sum) begin                 // P3a: chunk counts, clear columns
-                    for (c = 0; c < NCH; c = c + 1) begin
-                        cnt = 8'd0;
-                        for (i = 0; i < 16; i = i + 1)
-                            if (c * 16 + i < DMAX) cnt = cnt + {7'd0, p_new[c * 16 + i]};
-                        p_part[c] <= cnt[4:0];
-                    end
+                    for (c = 0; c < NCH; c = c + 1)
+                        p_part[c] <= pop16(p_new, c);
                     for (i = 0; i <= E; i = i + 1) p_tm[i] <= p_tm[i] & ~p_new;
                     p_sum <= 1'b1;
                 end
                 if (ph[1] && p_sum) begin                  // P3b: sum the chunks
-                    spop = 16'd0;
-                    for (c = 0; c < NCH; c = c + 1) spop = spop + {11'd0, p_part[c]};
-                    p_npop <= spop;
+                    p_npop <= parts_sum;
                     p_sum <= 1'b0;
                     ph <= 4'b0100;
                 end
@@ -269,9 +269,7 @@ module ot_mbist_bira #(
                     st <= S_SRCH2;
                 end
                 S_SRCH2: begin                                 // popcount of the uncovered columns
-                    spop = 16'd0;
-                    for (c = 0; c < DMAX; c = c + 1) spop = spop + {15'd0, cm_r[c]};
-                    cm_pop_r <= spop;
+                    cm_pop_r <= pop(cm_r);
                     st <= S_SRCH3;
                 end
                 S_SRCH3: begin                                 // feasibility, best
@@ -321,6 +319,30 @@ module ot_mbist_bira #(
                 end
             endcase
         end
+    end
+
+    // popcount of the 16-bit chunk c of v, as a tree
+    function automatic [4:0] pop16(input [DMAX-1:0] v, input integer ch);
+        reg [4:0] t [0:15];
+        integer n, w;
+        begin
+            for (n = 0; n < 16; n = n + 1) t[n] = (ch * 16 + n < DMAX) ? {4'd0, v[ch * 16 + n]} : 5'd0;
+            for (w = 8; w >= 1; w = w / 2)
+                for (n = 0; n < w; n = n + 1) t[n] = t[2 * n] + t[2 * n + 1];
+            pop16 = t[0];
+        end
+    endfunction
+
+    // sum of the chunk counts, as a tree
+    localparam integer NCP = (NCH <= 1) ? 1 : (1 << $clog2(NCH));
+    reg [15:0] parts_sum;
+    reg [15:0] pst [0:NCP-1];
+    integer pn, pw;
+    always @* begin
+        for (pn = 0; pn < NCP; pn = pn + 1) pst[pn] = (pn < NCH) ? {11'd0, p_part[pn]} : 16'd0;
+        for (pw = NCP / 2; pw >= 1; pw = pw / 2)
+            for (pn = 0; pn < pw; pn = pn + 1) pst[pn] = pst[2 * pn] + pst[2 * pn + 1];
+        parts_sum = pst[0];
     end
 
     function automatic [DMAX-1:0] cm_best(input [E-1:0] b);
