@@ -439,3 +439,54 @@ python3 tools/rtl_hdc_decode_campaign.py             # default memories (bit-exa
 python3 tools/rtl_hdc_decode_campaign.py --memory-macros
 python3 -m pytest tests/test_mem_compiler.py tests/test_mem_compiler_mbist.py
 ```
+
+## HBM comparator integration
+
+**KV streamer buffers.** `rtl/hdc/kv/ot_hdc_kv_bufs.sv` builds the on-die
+buffers of `ot_hdc_kv_stream` from compiled macros. Each macro sits behind an
+`ot_mbist_sram_collar`, and one shared `ot_mbist_ctrl` covers all six
+(March C-, repair analysis, spare rows and columns, one repair scan chain).
+
+| Buffer | Organisation | Macros |
+|---|---|---|
+| prefetch window | 4 banks × 256 × 256 bits, shared read address, per-bank write | 4 × `ot_sram_1r1w_256x256_m2_r2c2` (172.8 × 41.0 µm, 2,632 / 2,086 MHz TT / SS) |
+| tail (open K tiles) | 2 banks × 128 × 256 bits, 16-bit lane write mask | 2 × `ot_sram_1r1w_128x256_m1_r2c2` (94.8 × 41.0 µm, 2,979 / 2,298 MHz TT / SS) |
+
+The lane mask expands to a bit mask at the collar. The macros' read-before-write
+and hold-on-idle behaviour equals the behavioural arrays they replace.
+`rtl/test/tb_hdc_core_hbm.sv` selects them with `+define+OT_HDC_KV_MACROS`.
+In that mode the core, the streamer and the HBM model stay in reset while the
+optional self-test (`+BIST`) runs and the golden tail tiles are written
+through the buffers' test port. Every cycle count is therefore measured from
+the same reset release as the default build.
+
+`python3 tools/rtl_hdc_kv_stream_campaign.py --memory-macros` builds with
+Verilator 5.050 and writes `results/rtl/hdc_kv_stream_campaign_memory_macros.json`.
+It re-runs every core run of the default record: single step, long context,
+end to end, prompt-60 from empty, the three 2-pseudo-channel runs and the
+three fetch-lead runs. Each parsed run must equal the default record's field
+for field. It then runs the self-test before the token twice: once clean, and
+once with a stuck-at-1 cell in window bank 0. The clean run passes all six
+macros in 12,850 BIST cycles. The faulty run reports bank 0 *repaired* (status `10`), and the token
+run after it equals the default single step.
+
+**HBM PHY.** `tools/mem_compiler/hbm_phy_gen.py` writes
+`physical/asap7_memory_macros/ot_hbm3e_phy/`, a placement and connection
+abstract for the licensed PHY and controller:
+
+- **Footprint.** 12.0 mm along the die edge by 0.83 mm deep, which is 10 mm².
+  Both numbers come from `configs/hardware/technology.json`:
+  `hbm.hbm3e.stack_beachfront_mm` and `phy_area_mm2_per_stack`, and both are
+  graded *assumed*.
+- **Pins.** 9,209 controller-side signal pins on M5 along the core-facing
+  edge. They are the request port and the 32 pseudo-channel response ports of
+  `rtl/hdc/kv/ot_hdc_hbm_model.sv`, which is the functional and timing model
+  of this macro.
+- **Power.** VDD and VSS as M4 straps.
+- **Liberty.** Boundary timing only, per corner, graded *assumed*.
+- **Package side.** The package side (1,024 DQ per JEDEC JESD238 HBM3, 16
+  channels × 2 pseudo-channels, plus CA, clocks and bumps) is not in the
+  abstract.
+
+The weight streamer (`rtl/hdc/hbm*`) is not on main yet, so its prefetch
+buffers are not mapped.
