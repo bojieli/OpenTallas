@@ -24,7 +24,7 @@ Method (the standard budgeting step of a hierarchical flow):
    path does not fit the cycle at this floorplan and is reported as an
    architectural violation (a pipeline stage or a move), with the block
    budgeted at its pre-layout delay.  Every block keeps at least
-   ``max(1.3 x internal + 40 ps, 150 ps)`` when the outside can afford it
+   ``max(1.3 x internal + 40 ps, 300 ps)`` when the outside can afford it
    (``tight`` when it cannot): the pin-to-register wire and repair buffering
    a pre-layout delay does not contain.  A port on a combinational path through
    the block (``feedthrough_ps``) gets the through-budget instead: the block
@@ -66,7 +66,8 @@ DIE_REGISTERED_RE = r"^(m_in_|m_out_|hq_|hr_)"
 DIE_REGISTERED_EXTERNAL_PS = 150.0
 # A block keeps at least this for a boundary path, whatever its pre-layout
 # delay: the pin-to-register wire and the repair buffering inside the block.
-MIN_BLOCK_PS = 150.0
+MIN_BLOCK_PS = 300.0           # measured: the router's registered 512-bit outputs needed ~270 ps
+                               # from clock to pin after routing (results/.../chip/blocks/ot_chip_router.json)
 GROWTH = 1.3                   # pre-layout -> routed delay growth inside a block
 GROWTH_ADD_PS = 40.0
 # Quasi-static configuration (written only while the tile is idle): false paths.

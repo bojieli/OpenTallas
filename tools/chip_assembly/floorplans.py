@@ -240,6 +240,12 @@ def clock_latency_ps(block: Block, netlist: Path | None = None) -> dict[str, Any
     110 ps + 80 ps x log2(cells / 10,000).
     """
     import re as _re
+    routed = ROOT / "results/physical_abi3/asap7/chip/blocks" / f"{block.name}.json"
+    if routed.is_file():
+        rec = json.loads(routed.read_text(encoding="utf-8"))
+        if rec.get("routed_clock_insertion_ps"):
+            return {"latency_ps": rec["routed_clock_insertion_ps"],
+                    "basis": f"measured: this block's previous budgeted route ({routed.relative_to(ROOT)})"}
     if block.record:
         rpt = ROOT / Path(block.record).parent / "physical_artifacts" / "6_finish.rpt"
         if rpt.is_file():
