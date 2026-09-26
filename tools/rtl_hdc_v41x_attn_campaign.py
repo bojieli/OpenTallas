@@ -117,6 +117,82 @@ def golden_dot(a, b):
         return V.dots(np.asarray(a, dtype=F), np.asarray(b, dtype=F))
 
 
+# -- the engine's summation order, in numpy (checks the csum equivalence claim without RTL) ----------------
+def _tree(parts):
+    parts = list(parts)
+    while len(parts) > 1:
+        parts = [V.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return parts[0]
+
+
+def _tile_sum(prod):
+    """One tile beat: TD products -> TD/8 sequential chunks (from the first term) -> pairwise tree."""
+    nc = prod.shape[-1] // 8
+    cs = []
+    for c in range(nc):
+        acc = prod[..., 8 * c]
+        for i in range(1, 8):
+            acc = V.add(acc, prod[..., 8 * c + i])
+        cs.append(acc)
+    return _tree(cs)
+
+
+def engine_order_model(q, kvm, p, TD):
+    """Scores and pv in the ENGINE's order: q.k = tile sums over TD-dim slices + the lane tree; p.v = tile sums
+    over TD-row blocks (rows past T are +0 terms) + the streaming binary-counter merge (level l adds its stored
+    2^l-block sum when bit l of the block index is set; the last block flushes upward, adding +0 elsewhere)."""
+    q, kvm, p = (np.asarray(a, dtype=F) for a in (q, kvm, p))
+    H, D = q.shape
+    T = kvm.shape[0]
+    with np.errstate(over="ignore", invalid="ignore"):
+        prod = V.mul(q[:, None, :], kvm[None, :, :])                     # [H, T, D]
+        sc = _tree([_tile_sum(prod[..., s * TD:(s + 1) * TD]) for s in range(D // TD)])
+        nb = -(-T // TD)
+        pad = np.zeros((nb * TD - T, D), dtype=F)
+        kp = np.concatenate([kvm, pad]) if len(pad) else kvm
+        pp = np.concatenate([p, np.zeros((H, nb * TD - T), dtype=F)], axis=1)
+        mlev = max(1, int(np.ceil(np.log2(max(nb, 1)))))
+        stack = [None] * mlev
+        out = None
+        for b in range(nb):
+            prod = V.mul(pp[:, None, b * TD:(b + 1) * TD], kp[None, b * TD:(b + 1) * TD, :].transpose(0, 2, 1))
+            x = _tile_sum(prod)                                            # [H, D]
+            final = b == nb - 1
+            for lvl in range(mlev):
+                if (b >> lvl) & 1:
+                    x = V.add(stack[lvl], x)
+                elif final:
+                    x = V.add(F(0), x)
+                else:
+                    stack[lvl] = x
+                    x = None
+                    break
+            if final:
+                out = x
+    return sc, out
+
+
+def check_order_model(rng, trials=40):
+    """engine_order_model == golden dots (chunk8), bitwise where the golden is finite, over random shapes and
+    every T class (partial chunks, partial blocks, 1 .. 1024 rows)."""
+    bad = 0
+    cases = []
+    for i in range(trials):
+        TD = [8, 16, 32, 64][i % 4]
+        D = TD * [1, 2, 4, 8][(i // 4) % 4]
+        T = int(rng.integers(1, 1100)) if i % 3 else int(rng.choice([1, 7, 8, 9, 63, 64, 65, 640, 1023, 1024]))
+        q = from_bf16(rand_bf16(rng, (2, D), "coarse" if i % 2 else "wide"))
+        kv = from_bf16(rand_bf16(rng, (T, D), "coarse" if i % 2 else "wide"))
+        p = from_bf16(rand_bf16(rng, (2, T), "prob"))
+        sc, pv = engine_order_model(q, kv, p, TD)
+        gs, gp = golden_dot(q, kv), golden_dot(p, kv.T)
+        fin_s, fin_p = np.isfinite(gs), np.isfinite(gp)
+        ok = (np.array_equal(u32(sc)[fin_s], u32(gs)[fin_s]) and np.array_equal(u32(pv)[fin_p], u32(gp)[fin_p]))
+        bad += not ok
+        cases.append({"TD": TD, "D": D, "T": T, "bit_exact": bool(ok)})
+    return {"trials": trials, "mismatching_trials": bad, "cases": cases}
+
+
 # -- random operand distributions ------------------------------------------------------------
 def rand_bf16(rng, shape, kind="wide"):
     n = int(np.prod(shape))
@@ -238,11 +314,15 @@ def write_hex(path: Path, words, width_bits):
     path.write_text("".join(f"{w:0{nd}x}\n" for w in words))
 
 
-def verilator_build(tb: Path, top: str, srcs, obj: Path, params: dict, jobs: int = 8):
+VL_EXTRA = os.environ.get("OT_ATTN_VL_EXTRA", "--output-split 20000 --output-split-cfuncs 2000").split()
+VL_CFLAGS = os.environ.get("OT_ATTN_VL_CFLAGS", "-O1")
+
+
+def verilator_build(tb: Path, top: str, srcs, obj: Path, params: dict, jobs: int = 16):
     cmd = [VERILATOR, "--cc", "--exe", "--build", "-j", str(jobs), "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
            "-Wno-BLKSEQ", "--top-module", top, "--prefix", "Vtb", "-Mdir", str(obj),
            *[f"-G{k}={v}" for k, v in params.items()], *map(str, srcs), str(tb), str(HARNESS),
-           "-CFLAGS", "-O1", "--x-assign", "fast", "--x-initial", "fast"]
+           "-CFLAGS", VL_CFLAGS, "--x-assign", "fast", "--x-initial", "fast", *VL_EXTRA]
     t0 = time.time()
     r = subprocess.run(cmd, capture_output=True, text=True)
     print(f"[verilator] {top} {params} built in {time.time() - t0:.0f} s", file=sys.stderr, flush=True)
@@ -272,6 +352,286 @@ def run_tile(scratch: Path, H=16, TD=64, nbeats=200, seed=1):
     return {"H": H, "TD": TD, "seed": seed, "beats": beats, "expected_beats": len(exp), "checked": checked,
             "errors": errors, "faults_expected_and_raised": faults, "status": "pass" if errors == 0 and
             beats == len(exp) else "fail", "log_tail": out.strip().splitlines()[-12:]}
+
+
+
+# -- engine jobs --------------------------------------------------------------------------------
+class Job:
+    """One layer's attention on one die: q [H, D] BF16, the KV rows in stored format, probabilities [H, T] BF16."""
+
+    def __init__(self, q, fmt, codes, scales, p, source):
+        self.q = np.asarray(q, dtype=F)                 # [H, D]
+        self.fmt = np.asarray(fmt, dtype=np.int64)      # [T]
+        self.codes = np.asarray(codes, dtype=np.int64)  # [T, D]
+        self.scales = np.asarray(scales, dtype=np.int64)  # [T, D // 16]: FP8 rows repeat the per-32 scale
+        self.p = np.asarray(p, dtype=F)                 # [H, T]
+        self.source = source
+        self.T = len(self.fmt)
+
+    def kvm(self):
+        """The golden's stored rows (dequantised), [T, D]."""
+        f = np.repeat(self.fmt[:, None], self.codes.shape[1], axis=1)
+        sc = np.repeat(self.scales, 16, axis=1)
+        return deq_value(f, self.codes, sc)
+
+    def expected(self):
+        kvm = self.kvm()
+        return golden_dot(self.q, kvm), golden_dot(self.p, kvm.T)   # [H, T], [H, D]
+
+
+def row_word(fmt, codes, scales):
+    """A staging-buffer row: D/32 group words of 265 bits {fmt, payload}."""
+    D = len(codes)
+    w = 0
+    for g in range(D // 32):
+        c = codes[g * 32:(g + 1) * 32]
+        if fmt == 0:
+            gw = sum(int(c[x]) << (8 * x) for x in range(32)) | (int(scales[2 * g]) << 256)
+        else:
+            gw = sum((int(c[x]) & 15) << (4 * x) for x in range(32)) | (int(scales[2 * g]) << 128) | \
+                (int(scales[2 * g + 1]) << 136) | (1 << 264)
+        w |= gw << (265 * g)
+    return w
+
+
+def random_job(rng, H, D, T, n_win, kind="wide"):
+    fmt = np.array([0 if t < n_win else 1 for t in range(T)], dtype=np.int64)
+    codes = np.zeros((T, D), dtype=np.int64)
+    scales = np.zeros((T, D // 16), dtype=np.int64)
+    for t in range(T):
+        f, c, sc = rand_kv_elems(rng, (D // 16, 16), int(fmt[t]), kind)
+        c = c.reshape(-1)
+        if fmt[t] == 0:
+            u = sc[0::2, 0]                                       # one UE8M0 per 32
+            codes[t] = c
+            scales[t] = np.repeat(u, 2)
+        else:
+            codes[t] = c & 15
+            scales[t] = sc[:, 0]
+    q = from_bf16(rand_bf16(rng, (H, D), "wide" if kind == "wide" else "coarse"))
+    p = from_bf16(rand_bf16(rng, (H, T), "prob" if kind == "wide" else "coarse"))
+    j = Job(q, fmt, codes, scales, p, f"random T={T} win={n_win} {kind}")
+    assert np.all(deq_in_domain(np.repeat(fmt[:, None], D, 1), codes, np.repeat(scales, 16, 1)))
+    return j
+
+
+def write_jobs(d: Path, jobs, H, D, TD):
+    R = TD // H
+    d.mkdir(parents=True, exist_ok=True)
+    jl, ql, kl, pl, sl, vl = [], [], [], [], [], []
+    stats = {"scores": 0, "pv": 0, "score_faults": 0, "pv_faults": 0, "macs": 0}
+    for j in jobs:
+        sc, pv = j.expected()
+        jl.append((len(vl) << 128) | (len(sl) << 96) | (len(pl) << 64) | (len(kl) << 32) | j.T)
+        for h in range(H):
+            ql.append(sum(int(b) << (16 * k) for k, b in enumerate(bf16_bits(j.q[h]))))
+        for t in range(j.T):
+            kl.append(row_word(int(j.fmt[t]), j.codes[t], j.scales[t]))
+        pb = bf16_bits(j.p)
+        for w in range(-(-j.T // R)):
+            word = 0
+            for jj in range(R):
+                t = w * R + jj
+                for h in range(H):
+                    if t < j.T:
+                        word |= int(pb[h, t]) << (16 * (jj * H + h))
+            pl.append(word)
+        for t in range(j.T):
+            sl.append(pack_vals(sc[:, t]))
+        for dd in range(D):
+            vl.append(pack_vals(pv[:, dd]))
+        stats["scores"] += sc.size
+        stats["pv"] += pv.size
+        stats["score_faults"] += int(np.sum(~np.isfinite(sc)))
+        stats["pv_faults"] += int(np.sum(~np.isfinite(pv)))
+        stats["macs"] += 2 * H * j.T * D
+    write_hex(d / "jobs.hex", jl, 160)
+    write_hex(d / "q.hex", ql, D * 16)
+    write_hex(d / "kv.hex", kl, 265 * (D // 32))
+    write_hex(d / "p.hex", pl, TD * 16)
+    write_hex(d / "sc.hex", sl, 33 * H)
+    write_hex(d / "pv.hex", vl, 33 * H)
+    return {"NJOB": len(jobs), "NKV": len(kl), "NP": len(pl), "NSC": len(sl), "NPV": len(vl)}, stats
+
+
+def pack_vals(v):
+    w = 0
+    for h, x in enumerate(np.asarray(v, dtype=F)):
+        fin = bool(np.isfinite(x))
+        w |= (((0 if fin else 1) << 32) | (int(u32(x)) if fin else 0)) << (33 * h)
+    return w
+
+
+JOB_RE = re.compile(r"V41XJOB job=(\d+) T=(\d+) qk_first=(-?\d+) qk_last=(-?\d+) qk_beats=(\d+) pv_first=(-?\d+) "
+                    r"pv_last=(-?\d+) pv_beats=(\d+) last_score=(-?\d+) last_p=(-?\d+) last_pv=(-?\d+)")
+ENG_RE = re.compile(r"V41XATTN jobs=(\d+) sc_checked=(\d+) sc_errors=(\d+) pv_checked=(\d+) pv_errors=(\d+) "
+                    r"faults=(\d+) lat_score_max=(-?\d+) lat_score_min=(-?\d+) lat_pv_max=(-?\d+) cycles=(\d+) "
+                    r"timeout=(\d+)")
+
+
+def build_engine(scratch: Path, cfg: dict, counts: dict, extra: dict):
+    cap = {("NJOBMAX" if k == "NJOB" else k): 1 << max(4, int(v - 1).bit_length()) for k, v in counts.items()}
+    params = {"H": cfg["H"], "D": cfg["D"], "TD": cfg["TD"], "NL": cfg["NL"], "TROWS": cfg["TROWS"], **cap,
+              **extra}
+    tag = "_".join(f"{k}{v}" for k, v in sorted(params.items()))
+    obj = scratch / ("obj_" + hashlib.sha1(tag.encode()).hexdigest()[:12])
+    exe = obj / "Vtb"
+    if not exe.is_file():
+        verilator_build(TB_ENG, "tb_hdc_v41x_attn", [RTL_TILE, RTL_ENG, *LIB], obj, params, jobs=16)
+    return exe
+
+
+def run_engine(scratch: Path, name: str, cfg: dict, jobs, extra=None, seed=1):
+    extra = dict(extra or {})
+    d = scratch / name
+    counts, stats = write_jobs(d, jobs, cfg["H"], cfg["D"], cfg["TD"])
+    exe = build_engine(scratch, cfg, counts, extra)
+    t0 = time.time()
+    out = subprocess.run([str(exe), f"+dir={d}", f"+seed={seed}", f"+njob={counts['NJOB']}"], capture_output=True,
+                         text=True, check=True).stdout
+    sim_s = time.time() - t0
+    m = ENG_RE.search(out)
+    assert m, out[-3000:]
+    njob, scc, sce, pvc, pve, flt, lsmax, lsmin, lpmax, cyc, tmo = map(int, m.groups())
+    per = [dict(zip(("job", "T", "qk_first", "qk_last", "qk_beats", "pv_first", "pv_last", "pv_beats",
+                     "last_score", "last_p", "last_pv"), map(int, g.groups()))) for g in JOB_RE.finditer(out)]
+    H, D, TD, NL = cfg["H"], cfg["D"], cfg["TD"], cfg["NL"]
+    NT = NL * (D // TD)
+    macs_beat = NT * H * TD
+    for pj in per:
+        pj["qk_cycles"] = pj["qk_last"] - pj["qk_first"] + 1
+        pj["pv_cycles"] = pj["pv_last"] - pj["pv_first"] + 1
+        pj["qk_macs_per_cycle"] = H * pj["T"] * D / pj["qk_cycles"]
+        pj["pv_macs_per_cycle"] = H * pj["T"] * D / pj["pv_cycles"]
+        pj["qk_beat_bubbles"] = pj["qk_cycles"] - pj["qk_beats"]
+        pj["pv_beat_bubbles"] = pj["pv_cycles"] - pj["pv_beats"]
+        pj["last_pv_after_last_p"] = pj["last_pv"] - pj["last_p"]
+    rec = {"name": name, "config": cfg, "extra": extra, "jobs": njob, "expected_jobs": len(jobs),
+           "sources": sorted({j.source.split(" T=")[0] for j in jobs}),
+           "T_values": sorted({j.T for j in jobs}),
+           "scores_checked": scc, "score_errors": sce, "pv_checked": pvc, "pv_errors": pve,
+           "faults_expected_and_raised": flt, "expected": stats,
+           "latency": {"first_score_after_row_entry_max": lsmax, "first_score_after_row_entry_min": lsmin,
+                       "last_pv_after_last_probability_max": lpmax},
+           "cycles": cyc, "timeout": bool(tmo), "sim_seconds": round(sim_s, 1),
+           "macs_per_issue_beat": macs_beat, "per_job": per,
+           "log_tail": [x for x in out.strip().splitlines() if not x.startswith("V41XJOB")][-12:]}
+    rec["bit_exact"] = (sce == 0 and pve == 0 and njob == len(jobs) and scc == stats["scores"] and
+                        pvc == stats["pv"] and not tmo)
+    return rec
+
+
+
+# -- vehicle capture -------------------------------------------------------------------------------
+_E4M3_CODE = {}
+for _c in range(256):
+    if (_c & 0x7F) != 0x7F:
+        _E4M3_CODE.setdefault((float(abs(V.E4M3[_c])), _c >> 7), _c)
+
+
+def e4m3_code(v):
+    return _E4M3_CODE[(abs(float(v)), int(np.signbit(v)))]
+
+
+def fp8_row_codes(x):
+    """(codes, per-16 scale codes) of qdq_fp8(x): the golden's own quant_fp8, E4M3 codes + UE8M0 scale."""
+    q, e = V.quant_fp8(x)
+    codes = np.array([e4m3_code(v) for v in q], dtype=np.int64)
+    return codes, np.repeat(np.asarray(e, dtype=np.int64) + 127, 2)
+
+
+def fp4_row_codes(x, block=16):
+    """(codes, per-16 E4M3 scale codes) of qdq_fp4_e4m3(x): the golden function's own lines."""
+    x = np.asarray(x, dtype=F).reshape(-1, block)
+    amax = np.maximum(np.max(np.abs(x), axis=1), V.FP4_AMAX_FLOOR_E4M3).astype(F)
+    s = V._e4m3_round(amax.astype(np.float64) / V.FP4_MAX)
+    a = np.abs(x.astype(np.float64))
+    code = np.zeros(a.shape, dtype=np.int64)
+    for i, m in enumerate(V.E2M1_MIDPOINTS):
+        t = m * s[:, None]
+        code = np.where((a > t) | ((a == t) & ((i + 1) % 2 == 0)), i + 1, code)
+    code = code + 8 * np.signbit(x)
+    sc = np.array([e4m3_code(v) for v in s], dtype=np.int64)       # KeyError: scale beyond E4M3
+    return code.reshape(-1), sc
+
+
+def capture_vehicle(n_positions, keep, log=print):
+    """Decode the reduced vehicle greedily for n_positions and capture every attention call at the positions in
+    `keep`: q, the rows' stored codes, and the probabilities the golden feeds its p.v product."""
+    M = V.Model()
+    rows8, rows4 = {}, {}
+    o8, o4 = V.qdq_fp8, V.qdq_fp4_e4m3
+
+    def w8(x, block=32):
+        y = o8(x, block)
+        rows8[y.tobytes()] = fp8_row_codes(x)
+        return y
+
+    def w4(x, block=16):
+        y = o4(x, block)
+        rows4[y.tobytes()] = fp4_row_codes(x, block)
+        return y
+    V.qdq_fp8, V.qdq_fp4_e4m3 = w8, w4
+    calls = []
+    cur = {"pos": -1}
+    orig_attention, orig_attend = M.attention, M.attend
+
+    def attention(L, x, pos, state, trace, ctx):
+        cur["pos"], cur["L"] = pos, L
+        return orig_attention(L, x, pos, state, trace, ctx)
+
+    def attend(L, q, kvm, cs, blocks=None):
+        if cur["pos"] in keep:
+            calls.append((cur["pos"], L, np.array(q, dtype=F), np.array(kvm, dtype=F)))
+        return orig_attend(L, q, kvm, cs, blocks)
+    M.attention, M.attend = attention, attend
+    try:
+        prompt, _ = V.prompt_and_expected()
+        st = M.new_state()
+        toks = list(prompt)
+        t0 = time.time()
+        for pos in range(n_positions):
+            lg = M.decode_token(toks[pos], pos, st)
+            if pos + 1 >= len(toks):
+                toks.append(int(np.argmax(lg)))
+            if pos % 16 == 0:
+                log(f"[vehicle] position {pos} ({time.time() - t0:.0f} s)")
+    finally:
+        V.qdq_fp8, V.qdq_fp4_e4m3 = o8, o4
+    jobs = []
+    unmatched = 0
+    for pos, L, q, kvm in calls:
+        T, D = kvm.shape
+        fmt, codes, scales, ok = [], [], [], True
+        for t in range(T):
+            key = kvm[t].tobytes()
+            if key in rows8:
+                c, sc = rows8[key]
+                fmt.append(0)
+            elif key in rows4:
+                c, sc = rows4[key]
+                fmt.append(1)
+            else:
+                ok = False
+                break
+            codes.append(c)
+            scales.append(sc)
+        if not ok:
+            unmatched += 1
+            continue
+        # the probabilities exactly as Model.attend forms them (one block: the two-pass softmax)
+        s = V.mul(V.dots(q, kvm), M.attn_scale)
+        mb = np.max(s, axis=1)
+        e = V.exp(V.add(s, V.neg(mb)[:, None]))
+        p = V.to_bf16(e)
+        for g in range(q.shape[0] // 16):
+            j = Job(q[16 * g:16 * (g + 1)], fmt, codes, scales, p[16 * g:16 * (g + 1)],
+                    f"vehicle pos={pos} L={L} heads={16 * g}-{16 * g + 15} T={T}")
+            assert np.array_equal(u32(j.kvm()), u32(kvm)), "stored codes do not dequantise to the golden's rows"
+            jobs.append(j)
+    return jobs, {"attention_calls": len(calls), "calls_without_captured_codes": unmatched,
+                  "positions_decoded": n_positions, "positions_kept": sorted(keep), "jobs": len(jobs),
+                  "tokens": toks[:n_positions]}
 
 
 def main():
