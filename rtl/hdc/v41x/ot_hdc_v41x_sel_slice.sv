@@ -6,7 +6,7 @@
 //
 // Ingest.  A beat (W lanes {lv, BF16 value, index}) is registered (i0), each lane's
 // order-preserving key is compared with the unit's running bound T (i1): a lane
-// SURVIVES when key > T (a later key equal to T loses the tie to the k earlier ones).  Survivors are counted in the coarse histogram (hi digit)
+// SURVIVES when key >= T.  Survivors are counted in the coarse histogram (hi digit)
 // and, when their hi digit equals the tracked bucket Bt, in the fine histogram (lo
 // digit); they are compacted and packed into full W-lane lines appended to the line
 // memory at `head` (the write port gives ingest lines priority).  A line that finds
@@ -167,10 +167,10 @@ module ot_hdc_v41x_sel_slice #(
         for (gl = 0; gl < W; gl = gl + 1) begin : g_i1
             wire [15:0] k = fkey(i0_val[16*gl +: 16]);
             assign i1_k_d[16*gl +: 16] = k;
-            // strict: the k elements that verified T all arrived earlier, so a later key == T
-            // loses to every one of them (ties go to the lower index)
-            assign i1_s_d[gl]  = i0_lv[gl] && (k > r_T);
-            assign i1_fm_d[gl] = i0_lv[gl] && (k > r_T) && (k[15:8] == r_Bt);
+            // not strict: the elements that verified T arrived earlier but, across quarters,
+            // not necessarily at lower positions, so a key equal to T can still win its tie
+            assign i1_s_d[gl]  = i0_lv[gl] && (k >= r_T);
+            assign i1_fm_d[gl] = i0_lv[gl] && (k >= r_T) && (k[15:8] == r_Bt);
             assign i0_lane[EW*gl +: EW] = {i0_lv[gl], i0_val[16*gl +: 16], i0_idx[IW*gl +: IW]};
         end
     endgenerate

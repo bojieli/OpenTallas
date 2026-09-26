@@ -333,8 +333,8 @@ def real_reduced_segments(rng, real, K, Q, W):
 
 
 MUTATIONS = [
-    ("filter drops keys equal to T + 1 as well", "assign i1_s_d[gl]  = i0_lv[gl] && (k > r_T);",
-     "assign i1_s_d[gl]  = i0_lv[gl] && (k > r_T + 16'd1);"),
+    ("filter keeps only strictly greater keys", "assign i1_s_d[gl]  = i0_lv[gl] && (k >= r_T);",
+     "assign i1_s_d[gl]  = i0_lv[gl] && (k > r_T);"),
     ("coarse bound one bucket high", "wire [15:0]   tc = {cres_b, 8'h00};", "wire [15:0]   tc = {cres_b + 8'd1, 8'h00};"),
     ("fine bound used right after a bucket change", "wire          use_f = (st == C_ING) && kseen && (hold_c == 0) && (hold_f == 0) && fres_ok;",
      "wire          use_f = (st == C_ING) && kseen && (hold_c == 0) && fres_ok;"),
