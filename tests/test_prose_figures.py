@@ -137,7 +137,10 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 915: docs/DFT.md's scan-cost table gains the KV streamer's routed pair (5).
     # 945: docs/DFT.md gains the multicast-node, expert-port, MoE-dispatch,
     # argmax, package-link and fabric-router routed pairs (30).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 945
+    # 976: docs/ANALYTICAL_REPORT.md gains the measured/cited speculative
+    # acceptance subsection (31), bound to results/speculative/acceptance_tau.json
+    # and results/speculative/v41_flash_dspark_feasibility.json, 142 -> 173.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 976
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
