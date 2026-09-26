@@ -406,6 +406,19 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
       A scratch run (not in the record) at the worst-case tRFCpb of 350 ns gives aware REFpb 0.864 at 4
       pseudo-channels. The die therefore uses at least 8 pseudo-channels per stream, or the all-bank-512
       option, to keep the 90% margin against tRFCpb uncertainty.
+
+      The tie-break among equally eligible banks depends on the workload. The index-key scan is one long
+      sequential stream, so it breaks ties toward the MOST RECENTLY ACTIVATED bank, the set the stream has
+      just left. The record's closed-bank-first tie-break was measured on the QE weight streams; on a
+      sequential scan it refreshes the next bank set just before the stream needs it. The indexer agent
+      (ac9ca93f; its campaign record will carry these) measured, per stack, 64-beat queues, 1M keys:
+      - MRU tie-break: 0.956 of peak;
+      - closed-first tie-break: 0.851;
+      - all-bank refresh with 512-beat queues: 0.901, the fallback;
+      - refresh-free: 0.998.
+
+      On five stacks, layer 20's 1M scan (262,144 keys) takes 4.08 µs with MRU, 0.989 of refresh-free,
+      against 5.09 µs with closed-first.
     - **Prefetch:** window rows and reuse-layer selections have static addresses, so they are prefetched one
       layer ahead.
     - **Gathers:** an index-source layer's gather is exposed, and its first row is budgeted at 250 ns.
