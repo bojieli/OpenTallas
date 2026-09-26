@@ -47,11 +47,12 @@
 // segment of NL beats to the edge that registers its `out_last` beat:
 //   LAT = 2 NL + LAT0 (+1 when the final pass-3 beat overflows the partial
 //   output line and the remainder takes one more beat),
-//   LAT0 = 2 x (DRAIN 10 + 2 x RB 8 walk steps) + 5 + 2 ceil(log2(W) / 2)
-//        = 63 at W = 64 (a walk step is two edges: mux register, then add/compare) (read, compare, tie prefix, select, shift counts,
+//   LAT0 = 2 x (DRAIN 11 + 2 x RB 8 walk steps) + 5 + 2 ceil(log2(W) / 2)
+//        = 65 at W = 64 (a walk step is two edges: mux register, then add/compare;
+//        the histogram popcount is two registered halves) (read, compare, tie prefix, select, shift counts,
 //          3 compaction + 3 rotate register stages, output register).
 // The next segment is accepted once pass 3 has issued its last read: in_ready
-// is low for 2 NL + 52 edges after the last accept.  Area is linear in W
+// is low for 2 NL + 54 edges after the last accept.  Area is linear in W
 // (2^RB bins x W-lane popcounts, W log W compaction/rotate muxes) and
 // independent of K and of the segment length (the lines are in the memory).
 // Every segment emits at least one beat; the one with `out_last` may be empty.
@@ -98,7 +99,9 @@ module ot_hdc_tselect #(
     localparam integer EW  = 1 + VW + IW;          // stored lane {lv, value, index}
     localparam integer PW  = 1 + VW + IW;          // payload {ninf, value, index}
     localparam integer QW  = (KW > LW + 1 ? KW : LW + 1) + 1;
-    localparam integer DRAIN = 3 + RB - 1;         // histogram (3) + tree levels below level 1
+    localparam integer DRAIN = 4 + RB - 1;         // histogram (4) + tree levels below level 1
+    localparam integer PS  = (W >= 16) ? 8 : 1;    // popcount partial sums per bin
+    localparam integer PW_ = $clog2(W / PS);       // partial popcount width - 1
     localparam integer CE  = 1 + LW + PW;          // compaction lane {v, z, payload}
     localparam integer RE  = 1 + PW;               // rotate lane {v, payload}
     localparam integer KQI = K;
@@ -186,7 +189,16 @@ module ot_hdc_tselect #(
             for (gq = 0; gq < W; gq = gq + 1) begin : g_x
                 assign x[gq] = h1_hi[NH*gq + (gb >> (RB - HA))] && h1_lo[NL0*gq + (gb % NL0)];
             end
-            ot_hdc_tsel_popc #(.N(W), .OW(LW + 1)) u_pc (.x(x), .y(h2_d[(LW+1)*gb +: LW+1]));
+            // two registered halves: PS partial popcounts of W/PS lanes, then their sum (the one-edge
+            // 64-lane popcount behind the predecode AND was the routed critical path, -0.31 ns at 0.9 ns)
+            wire [PS*(PW_+1)-1:0] part_d;
+            reg  [PS*(PW_+1)-1:0] part;
+            for (gq = 0; gq < PS; gq = gq + 1) begin : g_ps
+                ot_hdc_tsel_popc #(.N(W / PS), .OW(PW_ + 1)) u_pp (.x(x[(W / PS)*gq +: W / PS]),
+                                                                   .y(part_d[(PW_+1)*gq +: PW_+1]));
+            end
+            always @(posedge clk) part <= part_d;
+            ot_hdc_tsel_sum #(.N(PS), .IW(PW_ + 1), .OW(LW + 1)) u_ps (.x(part), .y(h2_d[(LW+1)*gb +: LW+1]));
         end
     endgenerate
     always @(posedge clk) h2 <= h2_d;
@@ -485,6 +497,38 @@ endmodule
 
 
 // -- structural helpers (generate-level, so synthesis does not inline loops) -------------
+
+// sum of N unsigned IW-bit values (pairwise tree) into OW bits
+module ot_hdc_tsel_sum #(
+    parameter integer N  = 8,
+    parameter integer IW = 4,
+    parameter integer OW = 7
+) (
+    input  wire [N*IW-1:0] x,
+    output wire [OW-1:0]   y
+);
+    localparam integer NP = 1 << $clog2(N);
+    /* verilator lint_off UNOPTFLAT */
+    wire [2*NP*OW-1:0] t;
+    /* verilator lint_on UNOPTFLAT */
+    genvar n;
+    generate
+        for (n = 0; n < NP; n = n + 1) begin : g_leaf
+            if (n < N && OW > IW) begin : g_x
+                assign t[OW*(NP+n) +: OW] = {{(OW-IW){1'b0}}, x[IW*n +: IW]};
+            end else if (n < N) begin : g_xe
+                assign t[OW*(NP+n) +: OW] = x[IW*n +: OW];
+            end else begin : g_0
+                assign t[OW*(NP+n) +: OW] = {OW{1'b0}};
+            end
+        end
+        for (n = 1; n < NP; n = n + 1) begin : g_node
+            assign t[OW*n +: OW] = t[OW*(2*n) +: OW] + t[OW*(2*n+1) +: OW];
+        end
+    endgenerate
+    assign y = t[OW +: OW];
+    assign t[OW-1:0] = {OW{1'b0}};
+endmodule
 
 // balanced popcount of N bits (pairwise tree)
 module ot_hdc_tsel_popc #(

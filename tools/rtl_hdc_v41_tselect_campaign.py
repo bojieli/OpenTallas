@@ -58,10 +58,10 @@ VW = 16
 
 
 def lat0(w):
-    """LAT0 for W lanes: walk 1 (DRAIN 10 + 8 two-edge steps), walk 2 (10 + 16), pass-3 pipeline:
+    """LAT0 for W lanes: walk 1 (DRAIN 11 + 8 two-edge steps), walk 2 (11 + 16), pass-3 pipeline:
     read, compare, prefix, select, z, NCR compaction stages, NCR rotate stages, output."""
     ncr = (int(np.log2(w)) + 1) // 2
-    return 26 + 26 + 5 + 2 * ncr
+    return 27 + 27 + 5 + 2 * ncr
 
 
 # name, W, IW, K, AW, random segments, real sets, hierarchy trials
@@ -83,7 +83,7 @@ MUTATIONS = [
     ("pass-2 histogram ignores the boundary bucket", "k[VW-1 -: RB] == bsel);", "1'b1);"),
     ("tie remainder not carried across beats", "else if (c2_v) rem <=", "else if (1'b0) rem <="),
     ("compaction shift counts the lane itself", "sel_inc[(LW+1)*(gl-1) +: LW+1];", "sel_inc[(LW+1)*gl +: LW+1];"),
-    ("tree walk starts two edges early", "localparam integer DRAIN = 3 + RB - 1;", "localparam integer DRAIN = 3 + RB - 3;"),
+    ("tree walk starts two edges early", "localparam integer DRAIN = 4 + RB - 1;", "localparam integer DRAIN = 4 + RB - 3;"),
     ("empty lanes counted in the histogram", "e  = hs_ing ? s0_lv[gl] :", "e  = hs_ing ? 1'b1 :"),
     ("rotate ignores the running fill", "if (cp_v) frun <= cp_l ?", "if (1'b0) frun <= cp_l ?"),
 ]

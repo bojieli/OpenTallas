@@ -1640,7 +1640,7 @@ ASSUMPTIONS = [
     "sizes scale it by g_ref/g (the compute term also by users per stage).",
     "A reduction over n costs ceil(n*m/W) + red_tail 32 + 5*lg W cycles; SU classes cost 29 + the unit's depth.",
     "Top-k: the index top-512 and the layer-20 candidate blocks run on ot_hdc_tselect (64 lanes, output in "
-    "position order; latency 2 x beats + 63 after the last score, RTL-measured to 1M context in "
+    "position order; latency 2 x beats + 65 after the last score, RTL-measured to 1M context in "
     "results/rtl/hdc_v41_tselect_scale_campaign.json and hdc_v41_cand_campaign.json), local per die then one "
     "tselect over the all-gathered G x k selections; the router top-6 stays on ot_hdc_select. Sensitivity "
     "'insertion_select' keeps the earlier pricing (up to 64 ot_hdc_select units in rank order, a sorted merge "
