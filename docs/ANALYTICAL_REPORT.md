@@ -107,9 +107,18 @@ sides:
   or on the stream unit's pipelined divider, whichever is faster for the users
   in flight -- the same rule as `tools/decode_critical_path.py`. On V4.1 that
   leaves about 3.7 µs of dependent chain per layer (146 µs of chain on the ×188 array's 40 layers at batch 1 <!-- figure: 146 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.deepseek_v41_array_x188.after.by_batch.1.chain_s" scale="1e6" name="V4.1 x188 chain us b1" -->).
-- **GPU nodes** pay a published CUDA-graph launch gap (1.3 µs, band 0.5–2.1 µs)
-  per dependent kernel and published FP32 latencies for in-kernel chains, so the
-  comparison stays fair: the flat floor charged the GPU nothing for launches.
+- **GPU nodes** are priced as the best published decode execution, not the
+  shipping default: a persistent megakernel or a PDL-chained sequence of fused
+  kernels. Norms, RoPE, activations, residuals and routing scores are fused
+  into the neighbouring GEMV or attention kernel. Every remaining dependent
+  boundary pays a dependency cost measured on a Blackwell GPU
+  (`results/gpu/blackwell_gather_designs.json`,
+  `results/gpu/blackwell_dependency_latency.json`): 1.0 µs when it gathers the
+  activation vector from every SM (every GEMV input, every top-k and the
+  argmax) and 371 ns for a one-to-one handoff (the attention scan, the split-KV
+  combine). No launch cost
+  is charged. See *The GPU baseline: fused persistent-kernel decode* below.
+  In-kernel arithmetic chains pay published FP32 latencies.
 - **Every collective the weight split needs** is a graph node with its latency
   and its real payload: FP32 partial sums, the 4-copy hyper-connection residual
   at stage hops, gathered KV rows and top-k candidates. V4.1 under a tensor
@@ -139,8 +148,9 @@ ae4d7487):
 | Qwen3-8B on one HC1-class reticle | 24,222 → **9,195 <!-- figure: 9,195 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.qwen3_8b_single_reticle.after.per_user_b1" name="Qwen3-8B single reticle after" -->** | -- | -- | -- | single die, no collective |
 | Taalas HC1 gate (Llama-3.1-8B) | 24,675 → **10,723 <!-- figure: 10,723 src="results/roofline/critical_path/serial_latency_report.json#before_after.targets.hc1_llama31_8b.after.per_user_b1" name="HC1 modelled after" -->** | -- | -- | -- | published 16,960 |
 
-Every target loses per-user speed, and the GPU loses more (a launch gap per
-dependent kernel), so most per-user ratios **rise**. The ×188 V4.1 array now
+Every target loses per-user speed against the flat floor. The GPU columns
+were re-priced after this table's first publication with the measured
+dependency costs below, so they are the fused persistent-kernel GPU. The ×188 V4.1 array now
 prefers an 8-die tensor group at batch 1 and a 4-die group at batch 64;
 one-shot reduction wins inside a package and hierarchical across packages.
 
@@ -259,8 +269,8 @@ Two things still limit the ratio:
    (section 3 and the candidate table above).
 2. **Interactive multi-user MoE serving, tens to hundreds of users.** The ROM
    keeps per-user speed while the GPU's expert reads grow with the batch.
-3. **Energy per token** (section 4): the GPU now also pays its launch gaps in
-   static power.
+3. **Energy per token** (section 4): the GPU's static power is paid over its
+   measured dependency chain as well as its memory sweep.
 4. **Weak spots:**
    - dense-KV and large-KV serving at high concurrency;
    - maximum-throughput batch serving on the largest models;
