@@ -197,11 +197,33 @@ def test_sinkhorn_is_a_side_branch_joined_at_hc_post(tech):
     assert "L3.attn.hc.sinkhorn" not in sg.graph.nodes["L3.attn.hc_pre"]["deps"]
 
 
-def test_one_shot_beats_two_step_on_a_small_crossbar(tech):
+def test_package_links_reach_only_edge_neighbours(tech):
+    """Advanced-package UCIe reaches ~2 mm: a pair is one link, a 2 x 2 reaches its diagonal die through a
+    relay die (2 hops + relay) or on the standard-package diagonal link, whichever prices faster."""
+    hop = tech.link("rom_package_ucie")[0].value
+    relay = tech.graded("links", "rom_package_ucie", "relay_latency_s").value
+    d_hop = tech.link("rom_package_ucie_diagonal")[0].value
+    pair = C.Fabric(tech, inner="rom_package_ucie", outer="rom_board_serdes", domain=2, partitions=0, group=2)
+    assert pair.collective("all_reduce", 20480, 2)["latency_s"] == pytest.approx(hop)
     fab = C.Fabric(tech, inner="rom_package_ucie", outer="rom_board_serdes", domain=4, partitions=0, group=4)
     lv = fab._level("rom_package_ucie", 4)
-    assert lv.price("all_reduce", 20480, "one_shot")[0] < lv.price("all_reduce", 20480, "two_step")[0]
-    assert fab.collective("all_reduce", 20480, 4)["algo"] == "one_shot"
+    assert lv.price_mode("all_reduce", 8, "one_shot", "relay")[0] == pytest.approx(2 * hop + relay)
+    assert lv.price_mode("all_reduce", 8, "one_shot", "diagonal")[0] == pytest.approx(max(hop, d_hop))
+    # the 2 x 2 is a 2-cube: recursive doubling pairs across one edge, then the other, never the diagonal
+    assert lv.price("all_reduce", 20480, "rec_doubling")[0] == pytest.approx(2 * hop)
+    assert lv.price("all_reduce", 8, "one_shot") == min(lv.price_mode("all_reduce", 8, "one_shot", m)
+                                                        for m in ("relay", "diagonal"))
+    best = fab.collective("all_reduce", 20480, 4)
+    assert best["latency_s"] <= 2 * hop + 1e-15
+
+
+def test_package_serdes_lanes_scale_with_the_package_edge(tech):
+    """links.rom_board_serdes.bytes_s is a four-die package's; a two-die package has sqrt(1/2) of it."""
+    four = C.Fabric(tech, inner="rom_package_ucie", outer="rom_board_serdes", domain=4, partitions=0, group=4)
+    two = C.Fabric(tech, inner="rom_package_ucie", outer="rom_board_serdes", domain=2, partitions=0, group=2)
+    bw = tech.link("rom_board_serdes")[1].value
+    assert four._level("rom_board_serdes", 2).B_link == pytest.approx(bw / 4)
+    assert two._level("rom_board_serdes", 2).B_link == pytest.approx(bw / 4 * math.sqrt(0.5))
 
 
 def test_centre_mesh_is_1p1_diameter(tech):

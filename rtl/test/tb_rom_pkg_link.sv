@@ -6,8 +6,17 @@
 // 364-flit message against random receiver back-pressure.  Every flit carries
 // its message and sequence number, so loss, duplication or reordering is a
 // scoreboard error.  Prints one CASE line per message.
+//
+// CH = 204 cycles at 1 GHz stands for the channel (112G PAM4 SerDes, RS(544,514)
+// FEC, PCS alignment, board flight: 200 ns) plus 4 cycles of clock-domain
+// crossing, so the first flit arrives after the 209 ns package hop of
+// configs/hardware/technology.json links.rom_board_serdes (was CH = 60, the
+// earlier 100 ns hop without FEC or CDC).  CREDITS = 256 covers the 208-cycle
+// pipe with the immediate credit return this block models (it was 128, which
+// throttles a long message once the pipe outgrows it); a real return crosses the
+// channel too and needs ~2 x 209 = 418 flits of receive buffer for full rate.
 module tb_rom_pkg_link;
-    localparam integer FLIT_BYTES = 1800, TX = 2, CH = 60, RX = 2, CREDITS = 128;
+    localparam integer FLIT_BYTES = 1800, TX = 2, CH = 204, RX = 2, CREDITS = 256;
     localparam integer W = FLIT_BYTES * 8;
     reg clk = 0, rst_n = 0;
     reg in_valid = 0, in_last = 0, out_ready = 1;
@@ -34,7 +43,8 @@ module tb_rom_pkg_link;
     // Receiver: scoreboard each flit as it drains.
     integer expect_msg, expect_seq;
     always @(posedge clk) begin
-        if (backpressure) out_ready <= ($random(seed) & 3) != 0;
+        // ready one cycle in four on average: slow enough to exhaust 256 credits
+        if (backpressure) out_ready <= ($random(seed) & 3) == 0;
         else out_ready <= 1'b1;
     end
     always @(posedge clk) if (out_valid && out_ready) begin

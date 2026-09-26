@@ -697,6 +697,10 @@ ASSUMED_INPUTS = frozenset(
         # over the assumed global-wire delay, and its topology.
         "links.rom_wafer_express.fabric",
         "links.rom_wafer_express.router_latency_s",
+        # The reach-limited package (2026-09-26): the relay die's re-timing on a
+        # 2 x 2 package's diagonal, and the standard-package diagonal link.
+        "links.rom_package_ucie.relay_latency_s",
+        "links.rom_package_ucie_diagonal.hop_latency_s",
         "links.rom_wafer_express.wire_clock_hz",
         "links.rom_wafer_express.wire_layers",
         "links.rom_wafer_express.wire_track_pitch_um",

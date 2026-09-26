@@ -32,3 +32,14 @@ def test_committed_record_is_current():
     assert record["status"] == "pass"
     for name, digest in record["input_sha256"].items():
         assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
+
+
+def test_first_flit_lands_at_the_technology_hop():
+    """The channel stand-in is set so the first flit arrives after links.rom_board_serdes.hop_latency_s
+    (channel + clock-domain crossing + this endpoint's 5 digital cycles, at 1 GHz)."""
+    tech = json.loads((ROOT / "configs/hardware/technology.json").read_text())
+    serdes = tech["links"]["rom_board_serdes"]
+    parts = serdes["latency_components_s"]
+    assert campaign.FIRST == round(serdes["hop_latency_s"]["value"] * 1e9)
+    assert campaign.CH == round((parts["channel"] + parts["cdc"]) * 1e9)
+    assert campaign.FIRST - campaign.CH == round(parts["digital_endpoint"] * 1e9)

@@ -774,20 +774,20 @@
     "rom_package_ucie": {
       "bytes_s": {
         "grade": "derived",
-        "value": 4000000000000.0,
-        "note": "Payload per direction per die: a demonstrated UCIe advanced-package link reaches 5.27 Tb/s/mm (0.66 TB/s/mm) at 0.29 pJ/b on a CoWoS interposer; about 6 mm of each die edge given to one neighbour gives ~4 TB/s. A hardware link with no software stack.",
+        "value": 4200000000000.0,
+        "note": "Payload per direction on ONE die-to-die link (one neighbour). Advanced-package UCIe reaches ~2 mm, so only edge-adjacent dies connect: a pair shares one edge, and in a 2 x 2 layout each die borders two others. A demonstrated advanced-package link carries 5.27 Tb/s/mm (0.66 TB/s per mm of shoreline, read as one direction, as this entry always has); a quarter of the 25.6 mm short edge two ~815 mm2 (25.6 x 31.8 mm) dies share, 6.4 mm, gives 4.2 TB/s. The rest of the edge carries power, clock and test bumps and the corner keep-out; the long shared edge (31.8 mm) would give 5.2 TB/s and is not credited. The share is a judgement: 10% of the edge is 1.7 TB/s, 50% is 8.4 TB/s. Was 4 TB/s on each of three links (every die linked to every other). A hardware link with no software stack.",
         "source": "UCIe advanced-package link, 0.29 pJ/b 5.27 Tb/s/mm on 2.5-D CoWoS (reported via https://eureka.patsnap.com/report-ucie-vs-bow-reach-latency-and-energy-per-bit); UCIe overview https://semiengineering.com/what-is-ucie/"
       },
       "domain_size": {
         "grade": "assumed",
-        "value": 4.0,
-        "note": "Four reticle-class ROM dies per interposer package, ~3,260 mm2 of silicon: within the multi-reticle CoWoS-L interposer class, not a measured product.",
-        "source": "docs/ANALYTICAL_REPORT.md"
+        "value": 2.0,
+        "note": "TWO reticle-class ROM dies per interposer package (~1,630 mm2 of ROM silicon plus the HBM stacks that hold the KV cache): the class of a shipping B200-type package (two reticle dies on a ~3.3-reticle CoWoS-L interposer). Chosen 2026-09-26 over a tensor group of four spanning two such packages and over a four-die package, whose ~6.5-reticle interposer is roadmap packaging, not shipping: results/roofline/critical_path/decode_critical_path.json packaging_options. Was 4.",
+        "source": "docs/ANALYTICAL_REPORT.md; results/roofline/critical_path/decode_critical_path.json packaging_options"
       },
       "fabric": {
         "grade": "assumed",
-        "value": "switched",
-        "note": "Every die in a four-die package has a direct link to every other: one traversal between any pair.",
+        "value": "mesh",
+        "note": "Dies connect only to edge-adjacent dies (advanced-package UCIe reach ~2 mm): a two-die package is one link; a four-die package is a 2 x 2 mesh (a ring of four) whose diagonal partner is two hops through a relay die (relay_latency_s) or one hop on a standard-package diagonal link (links.rom_package_ucie_diagonal), whichever is faster per collective. Was 'switched' (every die linked to every other), which the reach does not allow.",
         "source": "docs/ANALYTICAL_REPORT.md"
       },
       "hop_latency_s": {
@@ -795,16 +795,24 @@
         "value": 1e-08,
         "range_low": 3e-09,
         "range_high": 3e-08,
-        "note": "Hardware floor, no software: UCIe PHY plus die-to-die adapter under 2 ns, on-die routing from the compute tile to the die edge ~1.5 ns (15 mm of repeated wire at ~0.1 ns/mm), and flit synchronisation and buffering of about five 1 GHz cycles. Stated 10 ns; the range spans a lean PHY-only path to a buffered one.",
+        "note": "One neighbour traversal, hardware floor, no software: UCIe PHY plus die-to-die adapter under 2 ns, on-die routing from the compute tile to the die edge ~1.5 ns (15 mm of repeated wire at ~0.1 ns/mm), and flit synchronisation into the receiver's clock and buffering of about five 1 GHz cycles. Stated 10 ns; the range spans a lean PHY-only path to a buffered one.",
         "source": "UCIe latency 'sub-nanosecond to 2 ns' (https://semiengineering.com/what-is-ucie/ ; https://awavesemi.com/the-ucie-chiplet-interconnect-standard/); decomposition in docs/ANALYTICAL_REPORT.md"
+      },
+      "relay_latency_s": {
+        "grade": "assumed",
+        "value": 4e-09,
+        "range_low": 2e-09,
+        "range_high": 1e-08,
+        "note": "Added when a flit to the diagonal die of a 2 x 2 package is relayed by a die both border: the relay die's adapter re-times the flit into its clock (CDC FIFO, 2 cycles), arbitrates it against its own traffic (1) and registers it for transmit (1), at 1 GHz, so the relayed path is 2 x hop_latency_s + this = 24 ns. Both inner edges of a 2 x 2 meet at the package centre, so the relay needs no cross-die wire. No product; a judgement.",
+        "source": "component estimate in docs/ANALYTICAL_REPORT.md (Serial latency and collectives)"
       }
     },
     "rom_board_serdes": {
       "bytes_s": {
         "grade": "derived",
-        "value": 1800000000000.0,
-        "note": "Payload per direction per package: 128 lanes of 112 Gb/s PAM4 SerDes is 14.3 Tb/s, 1.8 TB/s. Point-to-point between neighbouring packages; no switch.",
-        "source": "112G PAM4 SerDes class (https://www.cadence.com/en_US/home/tools/silicon-solutions/design-ip/scale-up-scale-out-serdes/112g-vsr-pam4-serdes-phy.html)"
+        "value": 1687000000000.0,
+        "note": "Payload per direction per FOUR-DIE-CLASS package: 128 lanes of 112 Gb/s PAM4 SerDes is 14.3 Tb/s raw (1.79 TB/s); net of RS(544,514) 'KP4' FEC (514/544) and 256b/257b transcoding it is 13.5 Tb/s, 1.69 TB/s. A package's lanes scale with its edge, sqrt(dies / 4) (serial_latency.hardware_links.rom_board_serdes reference_domain), so the two-die default package has 90 lanes, 1.19 TB/s. Point-to-point, no switch; the lanes are split evenly over the package's board neighbours, so per direction PER NEIGHBOUR on the 4-link board mesh it is 0.42 TB/s (four-die package) or 0.30 TB/s (two-die package). Was 1.8 TB/s, the raw lane rate (kept as the optimistic sensitivity in decode_critical_path.json packaging_options). Cross-check: a B200 package's NVLink 5 is published at 1.8 TB/s bidirectional, 0.9 TB/s per direction.",
+        "source": "112G PAM4 SerDes class (https://www.cadence.com/en_US/home/tools/silicon-solutions/design-ip/scale-up-scale-out-serdes/112g-vsr-pam4-serdes-phy.html); RS(544,514) FEC and 256b/257b transcoding of the IEEE 802.3 100 Gb/s-per-lane PHYs; NVIDIA B200 NVLink 1.8 TB/s"
       },
       "domain_size": {
         "grade": "derived",
@@ -820,11 +828,20 @@
       },
       "hop_latency_s": {
         "grade": "assumed",
-        "value": 1e-07,
-        "range_low": 4e-08,
-        "range_high": 2.5e-07,
-        "note": "Hardware floor, no software: SerDes transmit and receive with CDR and equalisation ~20-40 ns, a light FEC ~20-50 ns, ~0.3 m of flight at ~6.7 ns/m ~2 ns, and a router/flit stage ~10 ns. No published end-to-end figure was found, so the value is assumed and swept over its range.",
-        "source": "component decomposition in docs/ANALYTICAL_REPORT.md; OIF CEI-112G (https://www.oiforum.com/wp-content/uploads/00311c-OIF-112G-OFC-slides_ofc20_presentation.pdf)"
+        "value": 2.09e-07,
+        "range_low": 1.29e-07,
+        "range_high": 4.09e-07,
+        "note": "Hardware floor, no software, in three parts (latency_components_s). CHANNEL 200 ns nominal: 112G PAM4 transmit and DSP receive (CDR, FFE/DFE equalisation, ~40-60 ns), RS(544,514) 'KP4' FEC encode and decode including codeword accumulation (~80-100 ns), PCS lane alignment and deskew (~20-40 ns) and ~0.3 m of board flight at ~6.7 ns/m (~2 ns). CLOCK-DOMAIN CROSSING 4 cycles at 1 GHz: the recovered clock into the receiving package's clock (async FIFO) and the transmit side's crossing into the SerDes clock. DIGITAL ENDPOINT 5 cycles: rtl/rom/ot_rom_pkg_link.sv TX 2 + RX 2 + registered output 1. Total 209 ns. RANGE LOW 129 ns: a short-reach link with no FEC (120 ns channel); RANGE HIGH 409 ns: a retimer or longer reach (400 ns channel), which terminates and re-generates the FEC. No published end-to-end figure, so the value is assumed and swept over its range. Was 100 ns (40-250 ns), which left out the FEC and the clock crossings; kept as the optimistic sensitivity. results/rtl/rom_pkg_link_campaign.json runs the digital endpoint at CHANNEL_CYCLES = 204 (channel + CDC).",
+        "source": "component decomposition in docs/ANALYTICAL_REPORT.md; RS(544,514) FEC of the IEEE 802.3 100 Gb/s-per-lane PHYs; OIF CEI-112G (https://www.oiforum.com/wp-content/uploads/00311c-OIF-112G-OFC-slides_ofc20_presentation.pdf)"
+      },
+      "latency_components_s": {
+        "channel": 2e-07,
+        "channel_low": 1.2e-07,
+        "channel_high": 4e-07,
+        "cdc": 4e-09,
+        "digital_endpoint": 5e-09,
+        "clock_hz": 1000000000.0,
+        "note": "hop_latency_s = channel + cdc + digital_endpoint, at the value and at each end of the range"
       }
     },
     "rom_wafer_serdes": {
@@ -928,6 +945,22 @@
         "range_high": 1200000000.0,
         "source": "serial_latency.rom_datapath.clock_hz (the routed clock of this program's units)",
         "note": "every wire is pipelined and clocked at the fabric clock Used only for the RANGE LOW end of bytes_s; the value is the routed measurement."
+      }
+    },
+    "rom_package_ucie_diagonal": {
+      "bytes_s": {
+        "grade": "derived",
+        "value": 560000000000.0,
+        "note": "Payload per direction of a DIRECT diagonal link between opposite dies of a 2 x 2 package on standard-package UCIe (reach up to 25 mm on the package substrate, bump pitch ~100-130 um): the UCIe 1.0 shoreline figures, 224 GB/s/mm standard against 1,317 GB/s/mm advanced at 32 GT/s, scale this program's 0.66 TB/s/mm advanced-package density to 0.11 TB/s/mm; 5 mm of shoreline at each die's inner corner gives 0.56 TB/s. Only a four-die (future) package has a diagonal.",
+        "source": "UCIe 1.0 bandwidth shoreline: standard package 28-224 GB/s/mm, advanced package 165-1,317 GB/s/mm (UCIe Consortium, Universal Chiplet Interconnect Express white paper, 2022)"
+      },
+      "hop_latency_s": {
+        "grade": "assumed",
+        "value": 1.2e-08,
+        "range_low": 5e-09,
+        "range_high": 3.5e-08,
+        "note": "The neighbour hop's terms (PHY + adapter, on-die routing, synchronisation) plus ~2 ns for the standard-package PHY's wider bump field and up to ~20 mm of substrate trace; no product.",
+        "source": "links.rom_package_ucie.hop_latency_s decomposition; UCIe standard-package reach 25 mm"
       }
     }
   },
@@ -1752,20 +1785,22 @@
     "hardware_links": {
       "purpose": "Links priced as hardware traversals with no software stack, on which the collective's logical algorithm (two-step, one-shot, ring, recursive doubling, tree, centre-rooted mesh; hierarchical across link classes) is searched per collective. Every other link's hop_latency_s is half a MEASURED small-message collective (see links.nvlink3), so a collective on it is priced as its measured floor per switch tier and no algorithm is credited beyond the measured best kernel.",
       "rom_package_ucie": {
-        "value": "full",
+        "value": "ring2x2",
         "grade": "assumed",
         "source": "links.rom_package_ucie.fabric note",
-        "note": "every die in a package has a direct link to every other; bytes_s is per link",
-        "links_per_node": 3,
-        "bandwidth_scope": "per_link"
+        "note": "dies link only to edge-adjacent dies: two dies are one link; three or four sit in a 2 x 2 (a ring of four) whose diagonal partner is reached through a relay die (2 hops + links.rom_package_ucie.relay_latency_s) or on the diagonal_link, whichever prices faster per collective; bytes_s is per link. Was 'full' (every die linked to every other).",
+        "links_per_node": 2,
+        "bandwidth_scope": "per_link",
+        "diagonal_link": "rom_package_ucie_diagonal"
       },
       "rom_board_serdes": {
         "value": "mesh",
         "grade": "assumed",
         "source": "links.rom_board_serdes.fabric note",
-        "note": "packages on a 2-D board mesh; bytes_s is per package, split over its 4 neighbour links",
+        "note": "packages on a 2-D board mesh; bytes_s is per four-die-class package, scaled by sqrt(dies per package / reference_domain) for the package edge and split over its 4 neighbour links",
         "links_per_node": 4,
-        "bandwidth_scope": "per_node"
+        "bandwidth_scope": "per_node",
+        "reference_domain": 4
       },
       "on_wafer": {
         "value": "mesh",

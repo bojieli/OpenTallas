@@ -61,6 +61,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "src"))
 
 import hdc_isa as I  # noqa: E402
+from opentallas.critical_path import PackageLevel  # noqa: E402
 import hdc_timing  # noqa: E402
 
 SCHEMA = "opentallas.decode-critical-path.v1"
@@ -339,13 +340,34 @@ class Machine:
     slots: float                  # microbatches in flight
     reference: dict = field(default_factory=dict)
     capacity_note: str = ""
+    # packed placement: layer -> (group the layer starts in, groups its later operators cross into)
+    hop_plan: dict = field(default_factory=dict)
+    placement: dict = field(default_factory=dict)
 
 
 def link_consts(tech):
     L = tech["links"]
-    return {n: dict(hop=L[n]["hop_latency_s"]["value"], bw=L[n]["bytes_s"]["value"],
-                    hop_low=L[n]["hop_latency_s"].get("range_low"), hop_high=L[n]["hop_latency_s"].get("range_high"))
-            for n in ("rom_package_ucie", "rom_board_serdes", "on_wafer_n5", "rom_wafer_serdes")}
+    out = {n: dict(hop=L[n]["hop_latency_s"]["value"], bw=L[n]["bytes_s"]["value"],
+                   hop_low=L[n]["hop_latency_s"].get("range_low"), hop_high=L[n]["hop_latency_s"].get("range_high"))
+           for n in ("rom_package_ucie", "rom_package_ucie_diagonal", "rom_board_serdes", "on_wafer_n5",
+                     "rom_wafer_serdes")}
+    r = L["rom_package_ucie"]["relay_latency_s"]
+    out["rom_package_ucie"].update(relay=r["value"], relay_low=r.get("range_low"), relay_high=r.get("range_high"))
+    return out
+
+
+# The array's links BEFORE 2026-09-26, kept as the labelled optimistic sensitivity: every die of a four-die
+# package linked directly to every other at 10 ns and 4 TB/s per link (advanced-package UCIe reaches ~2 mm, so
+# a diagonal die cannot be linked that way), and a 100 ns (40-250 ns) package hop at the raw 1.8 TB/s lane rate
+# (no FEC and no clock-domain crossing in the hop, no FEC or encoding overhead on the bandwidth).
+OPTIMISTIC_LINKS = dict(
+    rom_package_ucie=dict(hop=10e-9, bw=4e12, hop_low=3e-9, hop_high=30e-9, relay=0.0, relay_low=0.0,
+                          relay_high=0.0, every_die_to_every_die=True),
+    rom_board_serdes=dict(hop=100e-9, bw=1.8e12, hop_low=40e-9, hop_high=250e-9))
+
+
+def optimistic_links(links):
+    return dict(links, **{k: dict(v) for k, v in OPTIMISTIC_LINKS.items()})
 
 
 def mesh_dims(p, shape="square"):
@@ -430,9 +452,17 @@ LANES_PER_PORT = 8                 # an x8 (800G-class) port is the smallest lin
 
 class ArrayFabric:
     """Dies on UCIe inside a package; packages on a board fabric.  Collectives spanning packages are
-    hierarchical: in-package, then across packages, then an in-package broadcast."""
+    hierarchical: in-package, then across packages, then an in-package broadcast.
 
-    def __init__(self, links, dies_per_package, board, group, algorithm="best", dies=188, switch_s=None):
+    Inside a package a die links only to the dies it shares an edge with (advanced-package UCIe reaches
+    ~2 mm): two dies are one link, four sit in a 2 x 2 (a ring of four) whose diagonal partner is two hops
+    through a relay die or one hop on a standard-package diagonal link, whichever is faster per collective
+    (opentallas.critical_path.PackageLevel), and eight are a 2 x 4 mesh.  `diagonal=False` drops the
+    diagonal link (relay only).  Links flagged every_die_to_every_die (OPTIMISTIC_LINKS) restore the earlier
+    full crossbar inside a package of up to four dies."""
+
+    def __init__(self, links, dies_per_package, board, group, algorithm="best", dies=188, switch_s=None,
+                 diagonal=True):
         self.L, self.dp, self.board, self.g, self.algorithm = links, dies_per_package, board, group, algorithm
         self.packages = math.ceil(dies / dies_per_package)
         b = links["rom_board_serdes"]
@@ -451,19 +481,32 @@ class ArrayFabric:
             self.refused = f"one switch tier of radix {SWITCH_RADIX} cannot reach {self.packages} packages"
         self.link_bw = self.pkg_bw / need if board != "switch" else self.pkg_bw
         # in-package level
-        if dies_per_package <= 4:
-            self.pkg_topo = "full"             # every die has a direct link to every other (link note)
+        u = links["rom_package_ucie"]
+        self.diagonal = bool(diagonal and dies_per_package == 4 and not u.get("every_die_to_every_die"))
+        if u.get("every_die_to_every_die") and dies_per_package <= 4:
+            self.pkg_topo = "full"             # the earlier assumption: every die linked to every other
+        elif dies_per_package <= 2:
+            self.pkg_topo = "pair"             # one shared edge, one link
+        elif dies_per_package <= 4:
+            self.pkg_topo = "ring2x2"          # 2 x 2: neighbours direct, diagonal relayed or on its own link
         else:
             self.pkg_topo = "mesh"             # 8 dies: a 2 x 4 die mesh on the interposer (assumed)
         self.alpha_board = b["hop"] if board != "switch" else 2 * b["hop"] + self.switch_s
 
     def label(self):
-        return f"array dp{self.dp} {self.board}"
+        return f"array dp{self.dp} {self.board} ({self.pkg_topo}{' + diagonal' if self.diagonal else ''})"
 
     def _in_pkg(self, p):
         u = self.L["rom_package_ucie"]
-        return direct_level(p, u["hop"], u["bw"], min(p - 1, 3) if self.pkg_topo == "full" else 3,
-                            self.pkg_topo if p > 1 else "full", "UCIe", shape="rect")
+        if self.pkg_topo == "full":
+            return direct_level(p, u["hop"], u["bw"], min(p - 1, 3), "full", "UCIe")
+        if p <= 2:
+            return direct_level(p, u["hop"], u["bw"], 1, "full", "UCIe")
+        if self.pkg_topo == "ring2x2":
+            d = self.L.get("rom_package_ucie_diagonal") if self.diagonal else None
+            return PackageLevel(p=p, alpha=u["hop"], B_link=u["bw"], relay_s=u.get("relay", 0.0),
+                                diag_alpha=d["hop"] if d else None, diag_B=d["bw"] if d else None, name="UCIe")
+        return direct_level(p, u["hop"], u["bw"], 3, "mesh", "UCIe", shape="rect")
 
     def _board(self, q):
         if self.board == "switch":
@@ -483,6 +526,21 @@ class ArrayFabric:
             {"ring": "chain", "torus": "mesh"}[self.board]
         return direct_level(q, self.alpha_board, self.link_bw, self.links_per_package, topo, self.board)
 
+    @staticmethod
+    def _best(lv, op, n, algos):
+        best = None
+        for a in algos:
+            lat, byt = lv.price(op, n, a)
+            if best is None or lat + byt < best[0] + best[1]:
+                best = (lat, byt, a)
+        return best
+
+    @staticmethod
+    def _mode(lv, op, n, a):
+        if isinstance(lv, PackageLevel) and a in ("one_shot", "two_step"):
+            return f", diagonal by {lv.best_mode(op, n, a)[2]}"
+        return ""
+
     def collective(self, op, n, span, algorithm=None):
         algo = algorithm or self.algorithm
         p = span
@@ -490,21 +548,25 @@ class ArrayFabric:
             return dict(latency_s=0.0, bytes_s=0.0, algo="none", where="")
         inside = min(p, self.dp)
         q = math.ceil(p / self.dp)
-        lv_in, lv_b = self._in_pkg(inside), self._board(q) if q > 1 else None
-        best = None
-        for a in (ALGORITHMS if algo == "best" else [algo]):
-            if q > 1:   # hierarchical: reduce in package, across packages, broadcast in package
-                l1, b1 = lv_in.price("all_reduce" if op == "all_reduce" else "all_gather", n, "one_shot")
-                l2, b2 = lv_b.price(op, n, a)
-                lat, byt = 2 * l1 if op == "all_reduce" else l1, 2 * b1 if op == "all_reduce" else b1
-                lat, byt = lat + l2, byt + b2
-                where = f"{p} dies = {inside}/package x {q} packages ({self.board}): UCIe + {a}"
+        lv_in = self._in_pkg(inside)
+        algos = ALGORITHMS if algo == "best" else [algo]
+        if q > 1:   # hierarchical: reduce in package, across packages, broadcast in package
+            lv_b = self._board(q)
+            if inside > 1:
+                l1, b1, a1 = self._best(lv_in, op, n, ALGORITHMS)
             else:
-                lat, byt = lv_in.price(op, n, a)
-                where = f"{p} dies in one package (UCIe {self.pkg_topo}): {a}"
-            if best is None or lat + byt < best[0] + best[1]:
-                best = (lat, byt, a, where)
-        lat, byt, a, where = best
+                l1, b1, a1 = 0.0, 0.0, "none"
+            best = self._best(lv_b, op, n, algos)
+            if best is None or not math.isfinite(best[0]):
+                return dict(latency_s=math.inf, bytes_s=math.inf, algo=algo, where="refused")
+            l2, b2, a = best
+            k = 2 if op == "all_reduce" else 1
+            lat, byt = k * l1 + l2, k * b1 + b2
+            where = (f"{p} dies = {inside}/package ({self.pkg_topo}: {a1}{self._mode(lv_in, op, n, a1)}) x "
+                     f"{q} packages ({self.board}): {a}")
+        else:
+            lat, byt, a = self._best(lv_in, op, n, algos)
+            where = f"{p} dies in one package (UCIe {self.pkg_topo}): {a}{self._mode(lv_in, op, n, a)}"
         return dict(latency_s=lat, bytes_s=byt, algo=a, where=where)
 
     def combine_a2a(self, v, m, kmax, span):
@@ -518,14 +580,18 @@ class ArrayFabric:
         return dict(latency_s=D * lv.alpha, bytes_s=byt, algo="expert_parallel_combine",
                     where=f"all-to-all over {p} dies (kmax {kmax:.2f})")
 
+    def _same_pkg(self, stage):
+        """Groups stage-1 and stage in one package (a package holds several groups)."""
+        g, dp = self.g, self.dp
+        return g < dp and stage is not None and (stage * g) // dp == ((stage - 1) * g) // dp
+
     def hop(self, kind, payload, stage=None):
         u = self.L["rom_package_ucie"]
         g, dp = self.g, self.dp
-        if kind in ("stage", "head"):
+        if kind in ("stage", "head") or (kind == "substage" and stage is not None):
+            # `stage` is the index of the group the hop enters (a packed placement's substage hops carry it)
             q = math.ceil(g / dp)
-            # consecutive groups: same package when a package holds several groups
-            same_pkg = g < dp and stage is not None and (stage * g) // dp == ((stage - 1) * g) // dp
-            if same_pkg:
+            if self._same_pkg(stage):
                 return dict(latency_s=u["hop"], bytes_s=payload / u["bw"], link="UCIe")
             trav = 1 if self.board in ("switch",) or self.board.startswith("fc") else \
                 (mesh_dims(q)[0] if self.board in ("mesh", "torus") else q) if q > 1 else 1
@@ -873,9 +939,13 @@ def v41_graph(ops: Ops, c, ctx):
                          desc="Engram keys + value to the layer's dies (token-addressed: prefetchable)") or kn
 
     h, pre_ready, sel, prev_stage = emb, emb, {}, 0
+    plan = m.hop_plan
     for L in range(NL):
         mode, ratio = c["modes"][L], c["compress_ratios"][L]
-        stage = int(L / m.layers_per_stage) if m.stages > 1 else 0
+        if plan:
+            stage = plan[L][0]
+        else:
+            stage = int(L / m.layers_per_stage) if m.stages > 1 else 0
         if stage != prev_stage:
             pay = RES + (1280 + 2048 if L > min(kv_src) else 0) + (CK * 2 if L > cand_src else 0)
             h = ops.hop(f"L{L}.stage_hop", [h], L, payload=pay, hop_kind="stage", stage=stage,
@@ -919,7 +989,13 @@ def v41_graph(ops: Ops, c, ctx):
             h = ops.ew(f"{P}.hc_post", [y, sk, res], HC * D, SU_BASE + 4 * FADD, L, stream=False,
                        desc="post*y + comb.res (4-term sums), BF16")
             pre_ready = mx          # attn mix feeds the FFN collapse; the FFN mix feeds the next layer
-            if sub == "attn" and m.substages_per_layer > 1:
+            if sub == "attn" and plan:
+                for i, grp in enumerate(plan[L][1]):
+                    h = ops.hop(f"L{L}.substage_hop{i}", [h], L, payload=RES, hop_kind="substage", stage=grp,
+                                desc="intra-layer hop: the layer's packed weights continue in the next group") or h
+                if plan[L][1]:
+                    prev_stage = plan[L][1][-1]
+            elif sub == "attn" and m.substages_per_layer > 1:
                 for i in range(m.substages_per_layer - 1):
                     h = ops.hop(f"L{L}.substage_hop{i}", [h], L, payload=RES, hop_kind="substage",
                                 desc="intra-layer sub-stage hop (the layer is larger than the group)") or h
@@ -1275,10 +1351,12 @@ def lanes(p, clock, compute_mm2, analytical_bf16_ops_per_die):
 
 
 def v41_machine(kind, g, batch, points, designs, p, clock, *, design=None, units=None, per_layer=None,
-                g_ref=None):
+                g_ref=None, placement=None):
     """The critical-path machine of one analytical design.  Defaults: the x188 array and the x12 wafer.
     `design`/`units`/`per_layer`/`g_ref` price any other analytical design (units = dies, or fields for a
-    wafer at 57 per wafer; per_layer = units one layer's weights occupy; g_ref = the design's tensor group)."""
+    wafer at 57 per wafer; per_layer = units one layer's weights occupy; g_ref = the design's tensor group).
+    placement="packed" (arrays): the layers' ROM bytes are packed onto the dies in order at the design's
+    per-die capacity (packed_placement), and the token pays a hop at every group boundary it crosses."""
     if kind == "array":
         dn, g0, u0, pl0 = ARRAY_DESIGN, 4, 188, 4.0
     else:
@@ -1293,11 +1371,18 @@ def v41_machine(kind, g, batch, points, designs, p, clock, *, design=None, units
     # (roofline.evaluate searches it); the group scaling below starts from that one.
     g_ref = int(q.get("tensor_group") or g_ref)
     NL = 40
-    if g >= per_layer:
+    plan, pl = {}, {}
+    if placement == "packed":
+        pl = packed_placement(units, g)
+        plan = pl.pop("hop_plan")
+        stages = pl["layer_groups"]
+        lps, sub = NL / stages, 1
+    elif g >= per_layer:
         lps, sub = g / per_layer, 1
     else:
         lps, sub = 1.0, math.ceil(per_layer / g)
-    stages = max(1, math.ceil(NL / lps))
+    if not plan:
+        stages = max(1, math.ceil(NL / lps))
     mb_ref, slots_ref = q["microbatch_per_slot"], q["token_slots"]
     if g == g_ref:
         slots, mb = slots_ref, mb_ref
@@ -1328,7 +1413,51 @@ def v41_machine(kind, g, batch, points, designs, p, clock, *, design=None, units
                    layers_per_stage=lps, weight_sweep_s=max(c_, w_) / beta,
                    sweep_basis="macs" if c_ >= w_ else "bytes", kv_bw_per_die=d["kv_read_bytes_s"] / units,
                    mac_rate_per_die=mac, su_width=su, microbatch=mb, batch=batch, context=q["context_tokens"],
-                   slots=slots, reference=ref, capacity_note=note)
+                   slots=slots, reference=ref, capacity_note=note, hop_plan=plan, placement=pl)
+
+
+def packed_placement(dies, g, dies_per_package=None):
+    """Pack the V4.1 checkpoint onto `dies` ROM dies of equal capacity (the design's ROM is sized to the
+    stored bytes, so capacity = checkpoint / dies): the 40 layers in order, each its attention/dense bytes
+    then its routed experts, then the Engram tables, embedding and lm_head.  A tensor group is g
+    consecutive dies; a layer whose bytes cross a group boundary continues in the next group (the token
+    hops there after the attention).  Returns the hop plan, the per-die contents and the feasibility."""
+    cfg = json.loads(V41_CONFIG.read_text())
+    NL = cfg["num_layers"]
+    dense, routed = cfg["layer_dense_weight_bytes"], cfg["layer_routed_weight_bytes"]
+    total = cfg["checkpoint_bytes"]
+    cap = total / dies
+    layers = [dense[L] + routed[L] for L in range(NL)]
+    experts = 384
+    x, plan, eps = 0.0, {}, 1e-9
+    for L in range(NL):
+        s_ = math.floor(x / g + eps)
+        x_end = x + layers[L] / cap
+        e_ = math.floor(x_end / g - eps)
+        plan[L] = (s_, list(range(s_ + 1, e_ + 1)))
+        x = x_end
+    layer_dies = x
+    groups = plan[NL - 1][1][-1] + 1 if plan[NL - 1][1] else plan[NL - 1][0] + 1
+    rest = total - sum(layers)
+    per_expert = routed[0] / experts
+    # experts a die holds when every expert is striped over the dies its layer's routed bytes span
+    span_dies = [routed[L] / cap for L in range(NL)]
+    out = dict(
+        dies=dies, group=g, per_die_capacity_bytes=cap, layer_bytes_mean=sum(layers) / NL,
+        dies_per_layer=layer_dies / NL, layer_dies=layer_dies, layer_groups=groups,
+        group_boundaries_crossed_in_layers=groups - 1,
+        non_layer_bytes=rest, non_layer_dies=rest / cap,
+        dense_bytes_per_layer_max=max(dense), dense_fits_one_die=max(dense) <= cap,
+        routed_bytes_per_layer=routed[0], routed_expert_bytes=per_expert,
+        routed_dies_per_layer=routed[0] / cap,
+        expert_bytes_per_die_striped=min(cap, routed[0] / max(1.0, min(span_dies))),
+        experts_per_die_equivalent=cap / per_expert,
+        fits=abs(layer_dies + rest / cap - dies) < 1e-6 and max(dense) <= cap,
+        hop_plan=plan)
+    if dies_per_package:
+        out["packages"] = math.ceil(dies / dies_per_package)
+        out["layer_packages"] = math.ceil(layer_dies / dies_per_package - eps)
+    return out
 
 
 def hc1_machine(model_path, p, clock):
@@ -1392,10 +1521,173 @@ def headline_qwen(p, clock):
     return s
 
 
+# -- packaging of the x188 array -----------------------------------------------------------------------------------
+# Advanced-package UCIe reaches ~2 mm, so only edge-adjacent dies link directly, and a shipping interposer
+# package is ~3.3 reticles (B200-class CoWoS-L: two reticle dies and eight HBM stacks).  Three packagings of the
+# same 188 dies are priced on the realistic links; the headline is the best that ships today.
+PACKAGING_OPTIONS = (
+    dict(id="a", key="a_two_die_group2", dies_per_package=2, group=2, shipping=True,
+         interposer_reticles=3.3,
+         label="2 reticle dies + HBM per package (today's B200-class CoWoS-L, ~3.3-reticle interposer); "
+               "tensor group 2 inside the package on one UCIe link; 2x the packages of a 4-die package"),
+    dict(id="b", key="b_two_die_group4_across_pair", dies_per_package=2, group=4, shipping=True,
+         interposer_reticles=3.3,
+         label="2-die packages as in (a), tensor group 4 spanning two neighbouring packages: every "
+               "all-reduce is reduced in each package over UCIe, exchanged once over the package link "
+               "(board SerDes, 209 ns) and broadcast in the package"),
+    dict(id="c", key="c_four_die_group4_future", dies_per_package=4, group=4, shipping=False,
+         interposer_reticles=6.5,
+         label="4 reticle dies + HBM per package, tensor group 4 inside it: FUTURE packaging (an interposer "
+               "beyond today's ~3.3 reticles is roadmap only); a 2 x 2 ring of four, the diagonal die two "
+               "hops through a relay die or one hop on a standard-package diagonal link"),
+)
+SHIPPING_DIES_PER_PACKAGE = 2      # a ~3.3-reticle interposer holds two reticle dies (B200-class CoWoS-L)
+HEADLINE_PACKAGING = "b"            # the best shipping option at batch 1 (packaging_options.chosen checks it)
+HEADLINE_PLACEMENT = "packed"       # layers packed onto the dies at the design's per-die ROM capacity
+PACKAGING_CONTEXTS = (8192, 200000, 1048576)
+
+
+def packaging(option_id=HEADLINE_PACKAGING):
+    return next(o for o in PACKAGING_OPTIONS if o["id"] == option_id)
+
+
 def default_fabric(kind, links, g):
     if kind == "array":
-        return ArrayFabric(links, 4, "mesh", g)
+        return ArrayFabric(links, packaging()["dies_per_package"], "mesh", g)
     return WaferFabric(links, g, "square")
+
+
+def headline_group(kind):
+    return packaging()["group"] if kind == "array" else 57
+
+
+def headline_machine(kind, g, batch, points, designs, p, clock):
+    return v41_machine(kind, g, batch, points, designs, p, clock,
+                       placement=HEADLINE_PLACEMENT if kind == "array" else None)
+
+
+def packaging_options(p, clock, links, points, designs, c):
+    """The three packagings of the x188 array at batch 1 / 64 / 4,096 on the realistic links, their capacity
+    placement, a context sweep, and the labelled sensitivities (link bands, the pair link at short reach,
+    relay-only diagonal, and the old optimistic links)."""
+    tech = json.loads(TECH.read_text())
+    design = designs[ARRAY_DESIGN]
+    stacks = design.get("hbm_stacks")
+    out = dict(
+        claim=("Advanced-package UCIe reaches ~2 mm: only edge-adjacent dies link. A shipping interposer is "
+               "~3.3 reticles (two reticle dies + 8 HBM stacks, B200-class CoWoS-L). Every option is the same "
+               "188 dies and the same analytical design; only the packaging, the tensor group and the layer "
+               "placement change. Per-user rate = 1 / max(critical path, occupancy bound)."),
+        links=dict(realistic={k: links[k] for k in ("rom_package_ucie", "rom_package_ucie_diagonal",
+                                                    "rom_board_serdes")},
+                   optimistic=OPTIMISTIC_LINKS,
+                   board_serdes_latency_components_s=tech["links"]["rom_board_serdes"].get("latency_components_s")),
+        design=ARRAY_DESIGN, dies=188, hbm_stacks_per_die=stacks, headline=HEADLINE_PACKAGING,
+        placement_rule=HEADLINE_PLACEMENT, options={})
+
+    def run(opt, bt, lk, *, ctx=None, placement=HEADLINE_PLACEMENT, diagonal=True, pp=None):
+        pp = pp or p
+        m = v41_machine("array", opt["group"], bt, points, designs, pp, clock, placement=placement)
+        b = Built(m, pp, clock, v41_graph, c, ctx or m.context)
+        fab = ArrayFabric(lk, opt["dies_per_package"], "mesh", opt["group"], diagonal=diagonal)
+        return b, b.evaluate(fab), fab
+
+    for opt in PACKAGING_OPTIONS:
+        row = dict(opt, packages=math.ceil(188 / opt["dies_per_package"]),
+                   hbm_stacks_per_package=None if stacks is None else stacks * opt["dies_per_package"])
+        pl = packed_placement(188, opt["group"], opt["dies_per_package"])
+        pl.pop("hop_plan")
+        feas = [f"per-die ROM {pl['per_die_capacity_bytes'] / 1e9:.3f} GB (the design's ROM is sized to the "
+                f"510.3 GB checkpoint, so the packing is exact)",
+                f"a layer is {pl['dies_per_layer']:.2f} dies ({pl['layer_bytes_mean'] / 1e9:.2f} GB: attention "
+                f"<= {pl['dense_bytes_per_layer_max'] / 1e9:.2f} GB fits one die, 384 routed experts "
+                f"{pl['routed_bytes_per_layer'] / 1e9:.2f} GB = {pl['routed_dies_per_layer']:.2f} dies, "
+                f"{pl['experts_per_die_equivalent']:.0f} expert-equivalents of {pl['routed_expert_bytes'] / 1e6:.1f} MB "
+                f"per die)",
+                f"40 layers on {pl['layer_dies']:.1f} dies = {pl['layer_groups']} groups of {opt['group']} "
+                f"({pl['group_boundaries_crossed_in_layers']} group boundaries on a token's path); Engram tables, "
+                f"embedding and lm_head {pl['non_layer_bytes'] / 1e9:.0f} GB on the other "
+                f"{pl['non_layer_dies']:.1f} dies"]
+        if opt["group"] * 1.0 < pl["routed_dies_per_layer"]:
+            feas.append(f"a layer's experts ({pl['routed_dies_per_layer']:.2f} dies) exceed one group of "
+                        f"{opt['group']}: the MoE of most layers is split over two groups, so the second adds the "
+                        f"first's partial sum (priced as the intra-layer hop; the matvecs split {opt['group']} ways)")
+        if stacks is not None:
+            n = stacks * opt["dies_per_package"]
+            feas.append(f"{n} HBM stacks per package ({stacks} per die, the design's KV sizing): "
+                        + ("above a B200-class package's 8 -- the package must shed stacks or the KV bandwidth "
+                           "per die drops" if opt["shipping"] and n > 8 else
+                           "a 4-die, 20-stack package is beyond any shipping interposer" if not opt["shipping"] else
+                           "within a B200-class package's 8"))
+        row["placement"] = pl
+        row["feasibility"] = feas
+        row["capacity_feasible"] = pl["fits"]
+        row["shipping_packaging"] = opt["shipping"]
+        for bt in (1, 64, 4096):
+            b, r, fab = run(opt, bt, links)
+            row[f"batch{bt}"] = dict(
+                tokens_s_per_user=1 / r["period"], aggregate_tokens_s=bt / r["period"],
+                critical_path_s=r["T"], occupancy_bound_s=r["occupancy_bound_s"],
+                binding="critical_path" if r["T"] >= r["occupancy_bound_s"] else "occupancy",
+                stages=b.mach.stages, users_per_stage=b.mach.microbatch,
+                breakdown_us={k: round(v * 1e6, 3) for k, v in r["cats"].items()},
+                collectives_on_graph=sum(1 for e in r["events"] if e["op"] != "hop"),
+                hops_on_graph=sum(1 for e in r["events"] if e["op"] == "hop"),
+                fabric=fab.label())
+            if bt == 1:
+                row["collectives_per_layer_b1"] = {k: dict(count=v["count"], latency_ns=v["latency_ns"],
+                                                           algo=v["algo"], where=v["where"])
+                                                   for k, v in collective_census(r).items()}
+        row["by_context"] = {}
+        for ctx in PACKAGING_CONTEXTS:
+            row["by_context"][str(ctx)] = {f"batch{bt}": dict(tokens_s_per_user=1 / rr["period"],
+                                                              aggregate_tokens_s=bt / rr["period"])
+                                           for bt in (1, 64, 4096)
+                                           for _, rr, _ in [run(opt, bt, links, ctx=ctx)]}
+        sens = {}
+        for band in ("hop_low", "hop_high"):
+            lk = {k: dict(v, hop=v.get(band) or v["hop"],
+                          relay=v.get("relay_" + band.split("_")[1], v.get("relay"))) if isinstance(v, dict) else v
+                  for k, v in links.items()}
+            sens[f"links_{band}_b1"] = 1 / run(opt, 1, lk)[1]["period"]
+        opt_links = optimistic_links(links)
+        for bt in (1, 64, 4096):
+            rr = run(opt, bt, opt_links)[1]
+            sens[f"optimistic_links_b{bt}"] = 1 / rr["period"]
+            sens[f"optimistic_links_aggregate_b{bt}"] = bt / rr["period"]
+        sens["legacy_placement_4_dies_per_layer_b1"] = 1 / run(opt, 1, links, placement=None)[1]["period"]
+        if opt["id"] == "b":
+            short = dict(links, rom_board_serdes=dict(links["rom_board_serdes"],
+                                                      hop=links["rom_board_serdes"]["hop_low"]))
+            sens["pair_link_short_reach_no_fec_b1"] = 1 / run(opt, 1, short)[1]["period"]
+            sens["pair_link_short_reach_no_fec_b64"] = 1 / run(opt, 64, short)[1]["period"]
+        if opt["dies_per_package"] == 4:
+            sens["relay_only_no_diagonal_link_b1"] = 1 / run(opt, 1, links, diagonal=False)[1]["period"]
+        row["sensitivity_tokens_s_per_user"] = sens
+        out["options"][opt["key"]] = row
+    shipping = [r for r in out["options"].values() if r["shipping_packaging"] and r["capacity_feasible"]]
+    best = max(shipping, key=lambda r: r["batch1"]["tokens_s_per_user"])
+    out["chosen"] = dict(id=best["id"], key=next(k for k, v in out["options"].items() if v is best),
+                         rule="the shipping, capacity-feasible option with the highest batch-1 tokens/s per user",
+                         matches_headline=best["id"] == HEADLINE_PACKAGING,
+                         best_aggregate_b4096=max(out["options"].items(),
+                                                  key=lambda kv: kv[1]["batch4096"]["aggregate_tokens_s"])[0],
+                         best_shipping_aggregate_b4096=max(
+                             ((k, v) for k, v in out["options"].items() if v["shipping_packaging"]),
+                             key=lambda kv: kv[1]["batch4096"]["aggregate_tokens_s"])[0])
+    # the old headline, step by step, on today's analytical point
+    old = dict(dies_per_package=4, group=4)
+    lad = []
+    for tag, lk, plc, opt in (
+            ("old links, 4-die full crossbar, a layer per 4 dies", optimistic_links(links), None, old),
+            ("realistic links, 4-die ring of four, a layer per 4 dies", links, None, old),
+            ("realistic links, 4-die ring of four, packed placement (option c)", links, "packed", old),
+            (f"realistic links, shipping option {HEADLINE_PACKAGING} (the headline)", links, "packed", packaging())):
+        rr = {bt: run(dict(opt, id=""), bt, lk, placement=plc)[1] for bt in (1, 64, 4096)}
+        lad.append(dict(step=tag, tokens_s_per_user_b1=1 / rr[1]["period"], tokens_s_per_user_b64=1 / rr[64]["period"],
+                        aggregate_tokens_s_b4096=4096 / rr[4096]["period"]))
+    out["headline_ladder"] = lad
+    return out
 
 
 def build(p: Params, quick=False):
@@ -1424,9 +1716,10 @@ def build(p: Params, quick=False):
     points, designs = v41_study_rows()
     c = v41_shape()
     rows = {}
-    for kind, g_ref in (("array", 4), ("wafer", 57)):
+    for kind in ("array", "wafer"):
+        g_ref = headline_group(kind)
         for bt in ((1,) if quick else (1, 64, 4096)):
-            m_ = v41_machine(kind, g_ref, bt, points, designs, p, clock)
+            m_ = headline_machine(kind, g_ref, bt, points, designs, p, clock)
             b = Built(m_, p, clock, v41_graph, c, m_.context)
             fab = default_fabric(kind, links, g_ref)
             r = b.evaluate(fab)
@@ -1434,7 +1727,7 @@ def build(p: Params, quick=False):
             s["reference_analytical"] = m_.reference
             skn = b.g.nodes["L3.attn.hc.sinkhorn"]
             pp_ = replace(p, sinkhorn_impl="pipelined")
-            mp_ = v41_machine(kind, g_ref, bt, points, designs, pp_, clock)
+            mp_ = headline_machine(kind, g_ref, bt, points, designs, pp_, clock)
             bp_ = Built(mp_, pp_, clock, v41_graph, c, mp_.context)
             s["sinkhorn"] = dict(branch_ns=skn["depth"] * 1e9, desc=skn["desc"],
                                  on_critical_path=any(n.endswith("hc.sinkhorn") for n in b.g.path(b.sink)),
@@ -1444,7 +1737,8 @@ def build(p: Params, quick=False):
                 s["collectives_per_layer"] = collective_census(r)
                 s["no_chaining_tokens_s_per_user"] = 1 / b.evaluate(fab, chaining=False)["period"]
                 for alg in ALGORITHMS:
-                    fa = ArrayFabric(links, 4, "mesh", g_ref, alg) if kind == "array" else \
+                    fa = ArrayFabric(links, packaging()["dies_per_package"], "mesh", g_ref, alg) \
+                        if kind == "array" else \
                         WaferFabric(links, g_ref, "square", alg)
                     per = b.evaluate(fa)["period"]
                     s.setdefault("algorithm_tokens_s_per_user", {})[alg] = 1 / per if math.isfinite(per) else None
@@ -1460,13 +1754,14 @@ def build(p: Params, quick=False):
                                  ("kv_rows_replicated", replace(p, kv_mode="replicated")),
                                  ("fdiv_12_cycles_hypothetical", replace(p, fdiv_cycles=12)),
                                  ("sinkhorn_pipelined_fadd_fdiv", replace(p, sinkhorn_impl="pipelined"))):
-                    mm = v41_machine(kind, g_ref, 1, points, designs, pp, clock)
+                    mm = headline_machine(kind, g_ref, 1, points, designs, pp, clock)
                     sens[name] = 1 / Built(mm, pp, clock, v41_graph, c, mm.context).evaluate(fab)["period"]
                 s["sensitivity_tokens_s_per_user"] = sens
             rows[f"{kind}_batch{bt}"] = s
     rec["deepseek_v41_flash"] = rows
     rec["index_select_by_context"] = index_select_by_context(p, clock, links, points, designs, c)
     if not quick:
+        rec["packaging_options"] = packaging_options(p, clock, links, points, designs, c)
         rec["topology_sweep"] = topology_sweep(p, clock, links, points, designs, c)
     rec["assumptions"] = ASSUMPTIONS
     return rec
@@ -1496,8 +1791,9 @@ def index_select_by_context(p, clock, links, points, designs, c):
                        ns_after_last_score=cand["cycles_after_last_beat"] / clock * 1e9,
                        cycles_from_first_score=cand["cycles_from_first_beat"],
                        ns_from_first_score=cand["cycles_from_first_beat"] / clock * 1e9))
-        for kind, g_ref in (("array", 4), ("wafer", 57)):
-            m_ = v41_machine(kind, g_ref, 1, points, designs, p, clock)
+        for kind in ("array", "wafer"):
+            g_ref = headline_group(kind)
+            m_ = headline_machine(kind, g_ref, 1, points, designs, p, clock)
             fab = default_fabric(kind, links, g_ref)
             out = {}
             for impl in ("tselect", "insertion"):
@@ -1530,7 +1826,7 @@ def topology_sweep(p, clock, links, points, designs, c):
             for g in groups:
                 built = {}
                 for bt in (1, 64, 4096):
-                    m_ = v41_machine(kind, g, bt, points, designs, pp, clock)
+                    m_ = headline_machine(kind, g, bt, points, designs, pp, clock)
                     built[bt] = Built(m_, pp, clock, v41_graph, c, m_.context)
                 if kind == "array":
                     fabrics = [(dp, board) for dp in (2, 4, 8) for board in BOARD_TOPOLOGIES]
@@ -1544,7 +1840,8 @@ def topology_sweep(p, clock, links, points, designs, c):
                             rows.append(dict(kind=kind, moe=moe, group=g, dies_per_package=dp, physical=board,
                                              logical=alg, refused=fab.refused))
                             break
-                        row = dict(kind=kind, moe=moe, group=g, dies_per_package=dp, physical=board, logical=alg)
+                        row = dict(kind=kind, moe=moe, group=g, dies_per_package=dp, physical=board, logical=alg,
+                                   shipping_packaging=kind == "wafer" or dp <= SHIPPING_DIES_PER_PACKAGE)
                         ok = True
                         for bt, b in built.items():
                             r = b.evaluate(fab)
@@ -1586,7 +1883,7 @@ def topology_sweep(p, clock, links, points, designs, c):
     out = dict(rows=len(rows), refused=[r for r in rows if "refused" in r])
     for kind in ("array", "wafer"):
         rs = [r for r in ranked if r["kind"] == kind]
-        det = [r for r in rs if r["deterministic"] and "capacity_note" not in r]
+        det = [r for r in rs if r["deterministic"] and "capacity_note" not in r and r["shipping_packaging"]]
         out[kind] = dict(ranked_top40=rs[:40], pareto_b1_vs_aggregate_b4096=pareto(rs),
                          recommended=det[0] if det else None,
                          best_per_group={str(g): max((r for r in rs if r["group"] == g),
@@ -1614,7 +1911,7 @@ def topology_sweep(p, clock, links, points, designs, c):
     if rec_a:
         sens = []
         pp = replace(p, moe=rec_a["moe"])
-        m_ = v41_machine("array", rec_a["group"], 1, points, designs, pp, clock)
+        m_ = headline_machine("array", rec_a["group"], 1, points, designs, pp, clock)
         b = Built(m_, pp, clock, v41_graph, c, m_.context)
         base = dict(links)
         for lo_hi in ("hop_low", "value", "hop_high"):
