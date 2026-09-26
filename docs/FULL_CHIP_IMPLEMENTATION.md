@@ -8,9 +8,12 @@ route, for all three architectures, on ASAP7 at a 1.0 ns clock.
 Flow: `tools/chip_assembly/` (tests: `tests/test_chip_assembly.py`).
 Records: `results/physical_abi3/asap7/chip/`.
 
-**Status (2026-09-26): the flow, RTL, floorplans and Qwen tile budget table
-are in place; block re-closure is in progress. No block, tile or die has
-closed against its budget yet.** §5 gives the per-architecture state.
+**Status (2026-09-26): halted by decision.** The decode core is being
+re-specified top-down, and the full-chip place-and-route will be redone at the
+end on the new blocks. What exists is reusable: the flow, the RTL of the tile
+and die compositions, the floorplans, and the budget method. The block records
+below are of the **pre-redesign (as-built) core** and none of them closed. No
+tile or die was assembled.
 
 ## 1. The hierarchy
 
@@ -155,38 +158,59 @@ macros' extracted models and the parent's extracted parasitics. It gives the
 worst slack per bus and the clock arrival at every macro (the inter-block
 skew). Records: `results/.../chip/tiles/`, `results/.../chip/dies/`.
 
-## 5. Status per architecture
+## 5. Status per architecture (pre-redesign core, at the halt)
 
 | Step | Qwen3-8B ROM die | HBM comparator die | DeepSeek-V4.1 universal die |
 |---|---|---|---|
-| Tile RTL | `ot_chip_hdc_tile` | the same tile; weight store is an HBM prefetch buffer | `ot_chip_v41_tile` (the same ME macro) |
+| Tile RTL | `ot_chip_hdc_tile` | the same tile; the weight store is an HBM prefetch buffer | `ot_chip_v41_tile` (the same ME macro) |
 | Die RTL | `ot_chip_die2x2` | `ot_chip_die2x2` | `ot_chip_v41_die2x2` with two collectives nodes |
 | Floorplan | tile 1.16 × 2.42 mm, die 3.60 × 6.72 mm | tile 1.16 × 0.79 mm | tile 1.65 × 1.99 mm, die 4.58 × 5.90 mm |
-| Boundary characterisation | all 5 blocks | shared with Qwen | HE, QE and SU41 done; XU and both collectives nodes queued |
-| Budget table | `tile_qwen_rom`: 1 violation (`core_token`) | queued | waits for XU and the collectives nodes |
-| Blocks re-closed | KVS routed once and missed: −244 ps setup on a through-path the budget had not paired (fixed, re-queued); ME, router, controller and SU queued | shares the Qwen blocks | not started |
-| Tile / die route | queued behind the blocks (`assemble.py`) | not started | not started |
+| Boundary characterisation | all 5 blocks | shared with Qwen | all 7 blocks; the HE, SU41 and both collectives nodes predate later RTL edits (stale) |
+| Budget table | `tile_qwen_rom`: 3 violations, all the KV streamer's HBM response ready | not derived | not derived; tile synthesis failed on the stale SU41 port list |
+| Blocks against their budgets | 4 of 5 routed, none closed (table below); the SU was cancelled | shares the Qwen blocks | not started |
+| Tile / die route | not started | not started | not started |
 
-The machine is shared. Every run goes through the machine-wide gate, and the
-flow keeps at most two runs of its own in flight. The ME route alone takes
-about six hours.
+Block routes against the Qwen tile budget at 1.0 ns, ASAP7 TT. All have zero
+DRC. Records: `results/physical_abi3/asap7/chip/blocks/`.
 
-The first ME route with budgets found a flow-level problem before any
-architectural one. The ME's clock tree inserts about 570 ps between its clock
-pin and its flops. That is more than half the cycle, and it went into the
-I/O paths, so a pin budgeted 150 ps inside failed by 539 ps. The parent's
-clock tree balances a macro's insertion delay, so the block's SDC now shifts
-its I/O by the insertion delay. The delay is measured from the block's flat
-routed record (ME 602 ps, SU 426 ps, KVS 267 ps, router 249 ps, controller
-150 ps). The budget check reads the extracted model on the same basis.
+| Block | Setup WNS | Violating endpoints | Hold WNS | Max-slew | Worst path |
+|---|---:|---:|---:|---:|---|
+| Matrix engine (ME) | −48 ps | 2,102 | −5.5 ps | 282 | wide datapath; first budgeted route |
+| KV streamer | −31 ps | 534 | +6 ps | 0 | stream-unit KV write data into the tail buffer |
+| Package controller | −14 ps | 39 | +15 ps | 0 | TX-queue read mux onto the 512-bit router port |
+| Router | −49 ps | 497 | +23 ps | 14 | `out_ready` fanning into the 512-bit output registers |
+
+What the budget and route iterations found, in order:
+
+1. **Clock insertion delay took the budgets.** The ME's clock tree inserts
+   about 540 ps, more than half the cycle, and a pin budgeted 150 ps failed by
+   539 ps. The parent balances a macro's insertion, so each block's SDC now
+   shifts its I/O by the insertion measured on its previous route.
+2. **A 150 ps floor is too small for a registered 512-bit output.** The
+   router's routed clock-to-pin was about 270 ps, so the floor became 300 ps.
+3. **Through-paths need pairing.** The KV streamer failed by 244 ps on a
+   window read that crosses it combinationally, from the ME's address through
+   to the ME's data. Each (input → output) pair now gets one through-budget,
+   and the time left outside is split by each side's need.
+4. **Three RTL changes to the tile came out of the budget:**
+   - the controller's core-start bundle is registered (it was a 920 ps
+     combinational path to the core);
+   - the controller's `core_done` is registered;
+   - the HBM response ports pass through register slices (`ot_chip_skid`,
+     tested in `tb_chip_skid`).
+5. **Repair margins.** A 40% slew margin and a 15 ps setup margin are needed
+   to cover the gap between estimated and extracted parasitics. With them the
+   controller came within 14 ps.
 
 ## 6. What remains for a tape-out
 
-- **Close the blocks against their budgets, then the tile and the reduced
-  die.** This is running.
-- **The controller's `core_token` path.** It is 923 ps deep inside the
-  controller, an argmax compare feeding a mux. It fits no budget at 1 GHz, so
-  the controller needs an output register on its core-start bundle.
+- **Rerun the flow on the re-specified blocks.** Block closure against the
+  budgets, then the tile and the reduced die. The per-pair through-budgets
+  and the insertion-shifted SDC carry over.
+- **The KV streamer's HBM response ready.** It is combinational through the
+  streamer's bank arbitration, about 500 ps, and still violates with the
+  register slices outside it. It needs a registered ready inside the
+  streamer.
 - **Real memories.** Every memory is a placeholder (§1). The memory
   compilers' SRAM and via-ROM macros, with BIST and repair, replace them. The
   vector memory has 13 ports (26 on V4.1) and needs a banked design.
