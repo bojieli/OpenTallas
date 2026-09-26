@@ -673,7 +673,6 @@ module ot_hdc_v41_stream #(
     output wire [SW*32-1:0]   red_data,
     output reg               fault
 );
-    wire gclk;                            // the unit's gated clock (u_cg, below)
     localparam [1:0] V_SCALAR = 0, V_VI = 1, V_VO = 2;
     localparam [2:0] M1_DIVB = 4, M1_DIVIMM = 5;
     localparam [1:0] RED_SEQ = 3;
@@ -712,7 +711,7 @@ module ot_hdc_v41_stream #(
 
     wire [NW-1:0] i_istep = (i_vec == V_VI) ? SW[NW-1:0] : {{(NW-1){1'b0}}, 1'b1};
     wire [NW-1:0] i_ostep = (i_vec == V_VO) ? SW[NW-1:0] : {{(NW-1){1'b0}}, 1'b1};
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             active <= 1'b0; cls <= 9'd0; inflight <= 0; gap <= 0;
         end else begin
@@ -725,7 +724,7 @@ module ot_hdc_v41_stream #(
             end
         end
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         if (accept) begin
             o <= 0; i <= 0; nout_r <= i_nout; nin_r <= i_nin; g <= 0; total <= i_nout * i_nin;
             i_last_r <= (i_nin <= i_istep); o_last_r <= (i_nout <= i_ostep);
@@ -795,7 +794,7 @@ module ot_hdc_v41_stream #(
     generate
         for (l = 0; l < SW; l = l + 1) begin : g_lane
             ot_hdc_v41_su_lane #(.AW(AW), .NW(NW), .WR(WR), .KVT_SH(KVT_SH), .LANE(l), .FULL(l == 0)) u_lane (
-                .clk(gclk), .rst_n(rst_n),
+                .clk(clk), .rst_n(rst_n),
                 .emit(emit), .vmode(vmode), .o(o), .i(i), .nout_r(nout_r), .nin_r(nin_r), .i_last_r(i_last_r),
                 .g(g), .total(total), .fin_th(fin_th), .seq(seq),
                 .arow(arow), .acol(acol), .brow(brow), .bcol(bcol), .crow(crow), .ccol(ccol), .drow(drow),
@@ -824,7 +823,7 @@ module ot_hdc_v41_stream #(
     reg  [AW-1:0]  t_base;
     reg            t_rnd, t_go;
     integer q;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin tree_busy <= 1'b0; sgot <= 0; t_go <= 1'b0; end
         else begin
             t_go <= 1'b0;
@@ -838,7 +837,7 @@ module ot_hdc_v41_stream #(
             end
         end
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         if (accept && i_redtree) begin
             t_nseg <= i_nout; t_base <= i_rbase; t_rnd <= i_redrnd;
             for (q = 0; q < 16; q = q + 1) sbuf[q] <= 32'd0;
@@ -857,33 +856,33 @@ module ot_hdc_v41_stream #(
     reg  [31:0] r2 [0:3];
     reg  [31:0] r3 [0:1];
     wire [24:0] tv;
-    ot_hdc_vline #(.D(24)) u_tv (.clk(gclk), .rst_n(rst_n), .v(t_go), .vd(tv));
+    ot_hdc_vline #(.D(24)) u_tv (.clk(clk), .rst_n(rst_n), .v(t_go), .vd(tv));
     genvar k;
     generate
         for (k = 0; k < 8; k = k + 1) begin : g_t1
-            ot_hdc_fadd u_add (gclk, rst_n, t_go, sbuf[2*k], sbuf[2*k+1], t1[k], tf[k]);
-            always @(posedge gclk) r1[k] <= t1[k];
+            ot_hdc_fadd u_add (clk, rst_n, t_go, sbuf[2*k], sbuf[2*k+1], t1[k], tf[k]);
+            always @(posedge clk) r1[k] <= t1[k];
         end
         for (k = 0; k < 4; k = k + 1) begin : g_t2
-            ot_hdc_fadd u_add (gclk, rst_n, tv[6], r1[2*k], r1[2*k+1], t2[k], tf[8+k]);
-            always @(posedge gclk) r2[k] <= t2[k];
+            ot_hdc_fadd u_add (clk, rst_n, tv[6], r1[2*k], r1[2*k+1], t2[k], tf[8+k]);
+            always @(posedge clk) r2[k] <= t2[k];
         end
         for (k = 0; k < 2; k = k + 1) begin : g_t3
-            ot_hdc_fadd u_add (gclk, rst_n, tv[12], r2[2*k], r2[2*k+1], t3[k], tf[12+k]);
-            always @(posedge gclk) r3[k] <= t3[k];
+            ot_hdc_fadd u_add (clk, rst_n, tv[12], r2[2*k], r2[2*k+1], t3[k], tf[12+k]);
+            always @(posedge clk) r3[k] <= t3[k];
         end
     endgenerate
-    ot_hdc_fadd u_t4 (gclk, rst_n, tv[18], r3[0], r3[1], t4, tf[14]);
+    ot_hdc_fadd u_t4 (clk, rst_n, tv[18], r3[0], r3[1], t4, tf[14]);
     reg        t_we;
     reg [31:0] t_data;
     function automatic [31:0] bf16(input [31:0] x);
         bf16 = (x + 32'h7FFF + {31'd0, x[16]}) & 32'hFFFF0000;
     endfunction
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) t_we <= 1'b0;
         else t_we <= tv[23];
     end
-    always @(posedge gclk) t_data <= t_rnd ? bf16(t4) : t4;
+    always @(posedge clk) t_data <= t_rnd ? bf16(t4) : t4;
 
     // lane 0's reducer port also carries the tree's result (never both: a tree op
     // holds the unit until its result is written, and its lanes write no sums)
@@ -893,26 +892,11 @@ module ot_hdc_v41_stream #(
 
     // -- status --------------------------------------------------------------------------------------------------------
     wire idle_c = !active && inflight == 0 && !(|l_busy) && !tree_busy && !t_go && !(|tv) && !t_we;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !accept;
     end
-
-    // -- clock gate ---------------------------------------------------------------
-    //: Every register above is clocked by gclk, which runs only while the
-    //: unit has work: from the go cycle until two cycles after the last
-    //: in-flight valid bit (idle_c) clears, which covers the registered idle
-    //: flag and the progress count that trail the last result by one edge.
-    //: A register only changes while an element or an op is in flight, so the
-    //: gate is cycle-transparent: every observable output is what the ungated
-    //: unit produces, on the same cycle.  cg_b* run on the free clock.
-    reg cg_b1, cg_b2;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin cg_b1 <= 1'b0; cg_b2 <= 1'b0; end
-        else begin cg_b1 <= go || !idle_c; cg_b2 <= cg_b1; end
-    end
-    ot_hdc_cg u_cg (.clk(clk), .en(!rst_n || go || cg_b1 || cg_b2), .gclk(gclk));
-    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else fault <= (|l_fault) || (|tf);
     end

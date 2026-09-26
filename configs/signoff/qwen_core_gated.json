@@ -1,6 +1,6 @@
 {
   "architecture": "qwen3-8b-rom-reticle",
-  "description": "The reduced-Qwen3 decode core with clock gating (ot_hdc_cg on the matrix engine, the stream unit and its three special-function classes; yosys-inferred gates on every enabled register bank of >= 8 flops), operand isolation of the matrix engine's unread memory port, and hold repaired at TT and FF with an OCV margin (tools/run_abi3_physical.py --clock-gating --hold-corners TC,BC --hold-margin-ns), routed through CTS like the ungated sign-off route.  Same step, bench and method as qwen_core.json; each routed ICG's enable pin carries the simulated duty of its RTL enable.",
+  "description": "NOT FINAL (2026-09-26): the power/clock-gating sign-off of the as-built blocks was halted when the core was re-specified top-down; no result has been produced from this plan and the block RTL carries no gating (rtl/hdc/ot_hdc_cg.sv is the reusable gate).  Kept as the template for re-applying gating to the final blocks; any before/after numbers must be regenerated from those.  The reduced-Qwen3 decode core with clock gating (ot_hdc_cg on the matrix engine, the stream unit and its three special-function classes; yosys-inferred gates on every enabled register bank of >= 8 flops), operand isolation of the matrix engine's unread memory port, and hold repaired at TT and FF with an OCV margin (tools/run_abi3_physical.py --clock-gating --hold-corners TC,BC --hold-margin-ns), routed through CTS like the ungated sign-off route.  Same step, bench and method as qwen_core.json; each routed ICG's enable pin carries the simulated duty of its RTL enable.",
   "output": "results/physical_abi3/asap7/signoff/qwen_core_gated_signoff.json",
   "scratch": "${OT_SIGNOFF_SCRATCH}",
   "blocks": {
@@ -74,5 +74,6 @@
         }
       ]
     }
-  }
+  },
+  "status": "not_final"
 }

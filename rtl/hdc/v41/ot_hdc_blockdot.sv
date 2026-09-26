@@ -132,7 +132,6 @@ module ot_hdc_blockdot #(
     output reg  [31:0]       acc,
     output reg               fault
 );
-    wire gclk;                            // gated clock (u_cg, at the end)
     localparam integer PW = $clog2(IL);
     localparam integer W = 42;
 
@@ -144,8 +143,6 @@ module ot_hdc_blockdot #(
 
     integer i;
 
-    //: the slot counter runs on the free clock: the QE lines its word stream
-    //: up with it, so it must count every cycle, gated or not
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) phase <= 0;
         else phase <= (phase == IL - 1) ? {PW{1'b0}} : phase + 1'b1;
@@ -155,12 +152,11 @@ module ot_hdc_blockdot #(
     reg              p0_v, p0_first, p0_last, p0_fp4;
     reg [255:0]      p0_xq, p0_wq;
     reg signed [9:0] p0_xe, p0_we;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p0_v <= 1'b0;
         else p0_v <= v;
     end
-    //: operand isolation: the 512 code bits load only with a valid block
-    always @(posedge gclk) if (v) begin
+    always @(posedge clk) begin
         p0_first <= first; p0_last <= last; p0_fp4 <= fp4;
         p0_xq <= xq; p0_wq <= wq; p0_xe <= xe; p0_we <= we;
     end
@@ -174,11 +170,11 @@ module ot_hdc_blockdot #(
     reg [3:0]         xs, ws, xf, wf;
     reg [7:0]         pm;
     reg               nan;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p1_v <= 1'b0;
         else p1_v <= p0_v;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         p1_first <= p0_first; p1_last <= p0_last;
         p1_es <= p0_xe + p0_we;
         nan = 1'b0;
@@ -208,11 +204,11 @@ module ot_hdc_blockdot #(
     reg               p2_v, p2_first, p2_last, p2_nan;
     reg signed [10:0] p2_es;
     reg [7*W-1:0]     p2_c;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p2_v <= 1'b0;
         else p2_v <= p1_v;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         p2_first <= p1_first; p2_last <= p1_last; p2_nan <= p1_nan; p2_es <= p1_es;
         p2_c <= c7;
     end
@@ -223,11 +219,11 @@ module ot_hdc_blockdot #(
     reg               p3_v, p3_first, p3_last, p3_nan;
     reg signed [10:0] p3_es;
     reg [W-1:0]       p3_a, p3_b;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p3_v <= 1'b0;
         else p3_v <= p2_v;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         p3_first <= p2_first; p3_last <= p2_last; p3_nan <= p2_nan; p3_es <= p2_es;
         p3_a <= c2[W-1:0]; p3_b <= c2[2*W-1:W];
     end
@@ -238,11 +234,11 @@ module ot_hdc_blockdot #(
     reg               p4_v, p4_first, p4_last, p4_nan, p4_s;
     reg signed [11:0] p4_eb;
     reg [W-2:0]       p4_m;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p4_v <= 1'b0;
         else p4_v <= p3_v;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         p4_first <= p3_first; p4_last <= p3_last; p4_nan <= p3_nan;
         //: biased exponent of the leading bit at position 40 is xe + we + 149
         p4_eb <= p3_es + 12'sd149;
@@ -266,11 +262,11 @@ module ot_hdc_blockdot #(
     reg signed [11:0] p5_eb;
     reg [40:0]        p5_nm;
     reg [5:0]         p5_lz;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p5_v <= 1'b0;
         else p5_v <= p4_v;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         p5_first <= p4_first; p5_last <= p4_last; p5_nan <= p4_nan; p5_s <= p4_s;
         p5_z <= (p4_m == 41'd0);
         p5_eb <= p4_eb; p5_nm <= nm; p5_lz <= lz;
@@ -283,11 +279,11 @@ module ot_hdc_blockdot #(
     reg               p6_v, p6_first, p6_last, p6_nan, p6_s, p6_z;
     reg signed [11:0] p6_b;
     reg [22:0]        p6_f;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p6_v <= 1'b0;
         else p6_v <= p5_v;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         p6_first <= p5_first; p6_last <= p5_last; p6_nan <= p5_nan; p6_s <= p5_s; p6_z <= p5_z;
         p6_b <= p5_eb - $signed({6'd0, p5_lz}) + $signed({11'd0, mr[24]});
         p6_f <= mr[24] ? 23'd0 : mr[22:0];
@@ -301,11 +297,11 @@ module ot_hdc_blockdot #(
     reg [31:0]        p7_n;                                 // normal / zero / inf result
     reg [23:0]        p7_t;
     reg               p7_g, p7_st;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p7_v <= 1'b0;
         else p7_v <= p6_v;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         p7_first <= p6_first; p7_last <= p6_last; p7_nan <= p6_nan; p7_s <= p6_s;
         p7_sub <= !p6_z && (p6_b < 12'sd1);
         p7_ovf <= !p6_z && (p6_b > 12'sd254);
@@ -321,11 +317,11 @@ module ot_hdc_blockdot #(
     wire [23:0] tr = p7_t + {23'd0, p7_g & (p7_st | p7_t[0])};
     reg         p8_v, p8_first, p8_last, p8_f;
     reg [31:0]  p8_y;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p8_v <= 1'b0;
         else p8_v <= p7_v;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         p8_first <= p7_first; p8_last <= p7_last;
         p8_f <= p7_nan | p7_ovf;
         //: a subnormal that rounds up to 2^-126 carries into the exponent field
@@ -337,50 +333,31 @@ module ot_hdc_blockdot #(
     wire        fbf, holdf, addf;
     wire [31:0] acc_in = p8_first ? 32'd0 : fb;
     wire        accf_in = p8_first ? 1'b0 : fbf;
-    ot_hdc_fadd u_add (.clk(gclk), .rst_n(rst_n), .v(p8_v), .a(acc_in), .b(p8_y), .y(sum), .fault(addf));
+    ot_hdc_fadd u_add (.clk(clk), .rst_n(rst_n), .v(p8_v), .a(acc_in), .b(p8_y), .y(sum), .fault(addf));
     reg [4:0] av;                                           // valid alongside the adder
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) av <= 5'd0;
         else av <= {av[3:0], p8_v};
     end
     wire a5_v = av[4];
     wire a5_last, a5_tf;
-    ot_hdc_delay #(.W(32 + 1), .D(5)) u_hold (.clk(gclk), .rst_n(rst_n), .d({accf_in, acc_in}), .q({holdf, hold}));
-    ot_hdc_delay #(.W(2), .D(5)) u_tag (.clk(gclk), .rst_n(rst_n), .d({p8_last, p8_f | accf_in}), .q({a5_last, a5_tf}));
+    ot_hdc_delay #(.W(32 + 1), .D(5)) u_hold (.clk(clk), .rst_n(rst_n), .d({accf_in, acc_in}), .q({holdf, hold}));
+    ot_hdc_delay #(.W(2), .D(5)) u_tag (.clk(clk), .rst_n(rst_n), .d({p8_last, p8_f | accf_in}), .q({a5_last, a5_tf}));
     wire [31:0] ring = a5_v ? sum : hold;
     wire        ringf = a5_v ? (a5_tf | addf) : holdf;
-    ot_hdc_delay #(.W(33), .D(IL - 5)) u_fb (.clk(gclk), .rst_n(rst_n), .d({ringf, ring}), .q({fbf, fb}));
+    ot_hdc_delay #(.W(33), .D(IL - 5)) u_fb (.clk(clk), .rst_n(rst_n), .d({ringf, ring}), .q({fbf, fb}));
 
     // -- output: FP32 row sum and its BF16 rounding -----------------------------------------------------
     wire [32:0] rb = {1'b0, sum} + 33'h7FFF + {32'd0, sum[16]};
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin ov <= 1'b0; fault <= 1'b0; end
         else begin
             ov <= a5_v && a5_last;
             fault <= a5_v && a5_last && (a5_tf | addf);
         end
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         acc <= sum;
         y <= rb[31:16];
     end
-
-    // -- clock gate ---------------------------------------------------------------------
-    //: Everything but `phase` is clocked by gclk, which runs while a row is
-    //: open (cg_open: rows started with `first` and not yet emitted with `ov`,
-    //: so the ring keeps circulating through any bubbles exactly as before)
-    //: and for 20 cycles after any block (LATENCY 15 plus a margin, which
-    //: clocks out and clears the last `ov`).  With no row open the ring's
-    //: contents are dead -- the next row starts from +0 on `first` -- so the
-    //: gate is cycle-transparent.
-    reg [4:0] cg_n;
-    reg [5:0] cg_open;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin cg_n <= 5'd0; cg_open <= 6'd0; end
-        else begin
-            cg_n <= v ? 5'd20 : (cg_n != 5'd0 ? cg_n - 5'd1 : 5'd0);
-            cg_open <= cg_open + {5'd0, v && first} - {5'd0, ov};
-        end
-    end
-    ot_hdc_cg u_cg (.clk(clk), .en(!rst_n || v || cg_n != 5'd0 || cg_open != 6'd0), .gclk(gclk));
 endmodule

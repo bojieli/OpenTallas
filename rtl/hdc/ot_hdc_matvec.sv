@@ -94,7 +94,6 @@ module ot_hdc_matvec #(
     output reg  [15:0]       progress,
     output reg               fault
 );
-    wire gclk;                            // the engine's gated clock (u_cg, below)
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
     localparam integer FB = IL - 5;       // circulation delay after the adder
@@ -122,7 +121,7 @@ module ot_hdc_matvec #(
 
     assign ready = !active;
 
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             active <= 1'b0;
             wrom_re <= 1'b0; kv_re <= 1'b0; x_re <= 0;
@@ -176,7 +175,7 @@ module ot_hdc_matvec #(
         end
     end
     // x address per group: chunk c = g mod S
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         for (gi = 0; gi < G; gi = gi + 1)
             x_addr[gi*AW +: AW] <= xc + (gi & ((1 << split_r) - 1)) * xcs_r;
     end
@@ -186,11 +185,11 @@ module ot_hdc_matvec #(
     reg [1:0]    e_split;
     reg [AW-1:0] e_oa, e_ots;
     reg [NW:0]   e_nb, e_lb, e_rem;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) e_v <= 1'b0;
         else e_v <= active;
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         e_first <= (k == 0); e_last <= k_last;
         e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsrc_r; e_round <= round_r; e_mmode <= mmode_r;
         e_split <= split_r; e_oa <= oa; e_ots <= ots_r; e_nb <= nb; e_lb <= lb;
@@ -210,25 +209,19 @@ module ot_hdc_matvec #(
     reg [G*W*32-1:0] mq_kv;
     reg [G*32-1:0]   mq_x;
     reg          s1_wsrc, s1_round, s2_round, s3_wsrc;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin s1_v <= 0; s1b_v <= 0; s2_v <= 0; s3_v <= 0; end
         else begin s1_v <= e_v; s1b_v <= s1_v; s2_v <= s1b_v; s3_v <= s2_v; end
     end
     reg [G*W*32-1:0] s2_w, s3_w;
     reg [G*32-1:0]   s2_x, s3_x;
     integer l;
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         s1_tag <= e_tag; s1b_tag <= s1_tag; s2_tag <= s1b_tag; s3_tag <= s2_tag;
         s1_first <= e_first; s1b_first <= s1_first; s2_first <= s1b_first; s3_first <= s2_first;
         s1_wsrc <= e_wsrc; s1_round <= e_round; s1b_wsrc <= s1_wsrc; s1b_round <= s1_round;
         s2_round <= s1b_round;
-        //: operand isolation: a memory word is captured only for a valid
-        //: element that reads it (the weight ROM or the KV SRAM, never both),
-        //: so the unread port's 1,024 or 2,048 capture flops hold -- their
-        //: enables become clock gates in synthesis
-        if (s1_v && !s1_wsrc) mq_wrom <= wrom_q;
-        if (s1_v && s1_wsrc) mq_kv <= kv_q;
-        if (s1_v) mq_x <= x_q;
+        mq_wrom <= wrom_q; mq_kv <= kv_q; mq_x <= x_q;
         s3_wsrc <= s2_tag[TW-4];
         for (l = 0; l < G * W; l = l + 1)
             s2_w[32*l +: 32] <= s1b_wsrc ? mq_kv[32*l +: 32] : {mq_wrom[16*l +: 16], 16'h0000};
@@ -239,14 +232,14 @@ module ot_hdc_matvec #(
                                          : s2_x[32*l +: 32];
     end
     wire [TW-1:0] a_tag;
-    ot_hdc_delay #(.W(TW), .D(10 + OD)) u_tag (.clk(gclk), .rst_n(rst_n), .d(s3_tag), .q(a_tag));
+    ot_hdc_delay #(.W(TW), .D(10 + OD)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag));
     wire [10+OD:0] vline;
-    ot_hdc_vline #(.D(10 + OD)) u_v (.clk(gclk), .rst_n(rst_n), .v(s3_v), .vd(vline));
+    ot_hdc_vline #(.D(10 + OD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
     wire [5:0] fl_first;
-    ot_hdc_vline #(.D(5)) u_first (.clk(gclk), .rst_n(rst_n), .v(s3_first && s3_v), .vd(fl_first));
+    ot_hdc_vline #(.D(5)) u_first (.clk(clk), .rst_n(rst_n), .v(s3_first && s3_v), .vd(fl_first));
     // split and KV flag reach the tree 10 cycles after S3
     wire [1:0] t_split;
-    ot_hdc_delay #(.W(2), .D(10)) u_ts (.clk(gclk), .rst_n(rst_n), .d(s3_tag[TW-6 -: 2]), .q(t_split));
+    ot_hdc_delay #(.W(2), .D(10)) u_ts (.clk(clk), .rst_n(rst_n), .d(s3_tag[TW-6 -: 2]), .q(t_split));
 
     // -- lanes -------------------------------------------------------------------
     wire [G*W*32-1:0] sum;
@@ -261,18 +254,18 @@ module ot_hdc_matvec #(
                 wire f0, f1;
                 //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
                 //: probabilities rounded), so every lane has the small exact multiplier
-                ot_hdc_bmul u_mul (.clk(gclk), .rst_n(rst_n), .v(s3_v),
+                ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v),
                                    .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 // add input at c+8; the circulating sum from IL cycles earlier.
                 //: The first-element select is made one cycle early into acc_q: the
                 //: flag fans out to every lane bit (G*W*32 loads), and registering the
                 //: mux gives its buffer tree a whole cycle instead of sharing one with
                 //: the adder's alignment logic (me_iter11: -98 ps on this path).
-                always @(posedge gclk) acc_q <= fl_first[4] ? 32'd0 : fb_pre;
+                always @(posedge clk) acc_q <= fl_first[4] ? 32'd0 : fb_pre;
                 assign acc_in = acc_q;
-                ot_hdc_fadd u_add (gclk, rst_n, vline[5], acc_in, prod,
+                ot_hdc_fadd u_add (clk, rst_n, vline[5], acc_in, prod,
                                    sum[32*LI +: 32], f1);
-                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(gclk), .rst_n(rst_n), .d(sum[32*LI +: 32]), .q(fb_pre));
+                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*LI +: 32]), .q(fb_pre));
                 assign lfault[LI] = f0 | f1;
             end
         end
@@ -292,24 +285,24 @@ module ot_hdc_matvec #(
     generate
         for (lv = 1; lv <= LG; lv = lv + 1) begin : g_lvl
             wire [1:0] sp_sel;                      // split when the level's sums emerge
-            ot_hdc_delay #(.W(2), .D(5)) u_sd (.clk(gclk), .rst_n(rst_n), .d(split_at[2*lv-1 -: 2]), .q(sp_sel));
+            ot_hdc_delay #(.W(2), .D(5)) u_sd (.clk(clk), .rst_n(rst_n), .d(split_at[2*lv-1 -: 2]), .q(sp_sel));
             reg  [1:0] sp_out;
-            always @(posedge gclk) sp_out <= sp_sel;
+            always @(posedge clk) sp_out <= sp_sel;
             assign split_at[2*lv+1 -: 2] = sp_out;
             wire [G*W*32-1:0] held;
-            ot_hdc_delay #(.W(G*W*32), .D(5)) u_hold (.clk(gclk), .rst_n(rst_n), .d(lvl[lv-1]), .q(held));
+            ot_hdc_delay #(.W(G*W*32), .D(5)) u_hold (.clk(clk), .rst_n(rst_n), .d(lvl[lv-1]), .q(held));
             wire [(G >> lv)*W-1:0] pf;
             reg  [G*W*32-1:0] lq;
             for (p = 0; p < (G >> lv) * W; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
-                ot_hdc_fadd u_add (gclk, rst_n, vline[10 + TL*(lv-1)] && (split_at[2*lv-1 -: 2] >= lv),
+                ot_hdc_fadd u_add (clk, rst_n, vline[10 + TL*(lv-1)] && (split_at[2*lv-1 -: 2] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
-                always @(posedge gclk) lq[32*p +: 32] <= (sp_sel >= lv) ? s_out : held[32*p +: 32];
+                always @(posedge clk) lq[32*p +: 32] <= (sp_sel >= lv) ? s_out : held[32*p +: 32];
             end
             if ((G >> lv) < G) begin : g_rest
-                always @(posedge gclk) lq[G*W*32-1 : (G >> lv)*W*32] <= held[G*W*32-1 : (G >> lv)*W*32];
+                always @(posedge clk) lq[G*W*32-1 : (G >> lv)*W*32] <= held[G*W*32-1 : (G >> lv)*W*32];
             end
             assign lvl[lv] = lq;
             assign tfault[lv] = |pf;
@@ -319,7 +312,7 @@ module ot_hdc_matvec #(
     //: A status bit: registered in two levels (see ot_hdc_stream).
     reg [G:0] fault_q;
     integer fg;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin fault_q <= 0; fault <= 1'b0; end
         else begin
             for (fg = 0; fg < G; fg = fg + 1) fault_q[fg] <= |lfault[fg*W +: W];
@@ -349,7 +342,7 @@ module ot_hdc_matvec #(
                 r_mask[q*W + ql] = (q < r_ports) &&
                     (r_mmode ? (r_lb + q * W + ql < r_nout) : (r_nb + q * (W * IL) + ql < r_nout));
     end
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             ov1 <= 1'b0; o_we1 <= 0;
         end else begin
@@ -358,7 +351,7 @@ module ot_hdc_matvec #(
                 o_we1[q] <= r_v && r_last && r_oen && (q < r_ports);
         end
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         for (q = 0; q < G; q = q + 1)
             o_addr1[q*AW +: AW] <= r_oa + q * r_ots;
         o_mask1 <= r_mask; o_data1 <= res;
@@ -366,11 +359,11 @@ module ot_hdc_matvec #(
     //: A second output register: the result bus is 2,048 bits wide and its
     //: flops sit by the lanes, so the pins get flops of their own.  ov, and the
     //: chaining progress counted from it, move with the data.
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin ov <= 1'b0; o_we <= 0; end
         else begin ov <= ov1; o_we <= o_we1; end
     end
-    always @(posedge gclk) begin
+    always @(posedge clk) begin
         o_addr <= o_addr1; o_mask <= o_mask1; o_data <= o_data1;
     end
 
@@ -387,7 +380,7 @@ module ot_hdc_matvec #(
     localparam integer CW = 1 + 32 + NW;            // {valid, key, row}
     wire [CW*NL-1:0] alv [0:LV];
     reg  [LV:0] tv;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) tv <= 0;
         else tv <= {tv[LV-1:0], r_v && r_last && r_amax};
     end
@@ -398,7 +391,7 @@ module ot_hdc_matvec #(
             reg [CW-1:0] c;
             //: sized on its own: an integer term would widen a concatenated sum
             wire [NW-1:0] row = r_nb[NW-1:0] + EQ * (W * IL) + EL;
-            always @(posedge gclk)
+            always @(posedge clk)
                 c <= {r_mask[e], okey(res[32*e +: 32]), row};
             assign alv[0][CW*e +: CW] = c;
         end
@@ -409,7 +402,7 @@ module ot_hdc_matvec #(
                 wire          x0_wins = x0[CW-1] && (!x1[CW-1] || x0[CW-2 -: 32] > x1[CW-2 -: 32] ||
                                         (x0[CW-2 -: 32] == x1[CW-2 -: 32] && x0[NW-1:0] < x1[NW-1:0]));
                 reg  [CW-1:0] c;
-                always @(posedge gclk) c <= x0_wins ? x0 : x1;
+                always @(posedge clk) c <= x0_wins ? x0 : x1;
                 assign alv[lv][CW*e +: CW] = c;
             end
             if ((NL >> lv) < NL) begin : g_pad
@@ -423,7 +416,7 @@ module ot_hdc_matvec #(
     wire [31:0]   top_val = top_key[31] ? {1'b0, top_key[30:0]} : ~top_key;   // okey inverted
     wire [NW-1:0] top_idx = top[NW-1:0];
     reg [31:0] best_key;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             am_any <= 1'b0; am_idx <= 0; am_val <= 0; best_key <= 0;
         end else begin
@@ -440,7 +433,7 @@ module ot_hdc_matvec #(
     // issued before its acceptance).
     reg [15:0] n_last_issued, n_ov, ov_mark;
     wire [15:0] ov_done = n_ov - ov_mark;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             n_last_issued <= 0; n_ov <= 0; ov_mark <= 0; progress <= 0;
         end else begin
@@ -457,24 +450,8 @@ module ot_hdc_matvec #(
     //: Registered: the OR of every valid bit is wide.  Cleared on the
     //: accepting edge so a just-issued op never reads as drained.
     wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov1 && !ov;
-    always @(posedge gclk or negedge rst_n) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(go && ready);
     end
-
-    // -- clock gate ---------------------------------------------------------------
-    //: Every register above is clocked by gclk, which runs only while the
-    //: engine has work: from the go cycle until two cycles after the last
-    //: pipeline valid bit (idle_c) clears, which covers the registered idle
-    //: flag and the progress count that trail the last result by one edge.
-    //: A register only changes while an element or an op is in flight, so the
-    //: gate is cycle-transparent: every observable output is what the ungated
-    //: engine produces, on the same cycle.  cg_b* run on the free clock.
-    reg cg_b1, cg_b2;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin cg_b1 <= 1'b0; cg_b2 <= 1'b0; end
-        else begin cg_b1 <= go || !idle_c; cg_b2 <= cg_b1; end
-    end
-    wire cg_en = !rst_n || go || cg_b1 || cg_b2;
-    ot_hdc_cg u_cg (.clk(clk), .en(cg_en), .gclk(gclk));
 endmodule

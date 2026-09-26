@@ -35,7 +35,6 @@ module ot_hdc_softplus (
     output wire        vo,
     output wire        fault
 );
-    wire gclk;                            // gated clock (u_cg, at the end)
     localparam integer T_EXP  = 92;              // ot_hdc_exp DEPTH
     localparam integer T_DEN  = T_EXP + 5;       // t + 2
     localparam integer T_U    = T_DEN + 31;      // ot_hdc_fdiv DEPTH
@@ -52,17 +51,17 @@ module ot_hdc_softplus (
     endfunction
 
     wire [DEPTH:0] vd;
-    ot_hdc_vline #(.D(DEPTH)) u_v (.clk(gclk), .rst_n(rst_n), .v(v), .vd(vd));
+    ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
     assign vo = vd[DEPTH];
 
     // t = exp(-|x|)
     wire [31:0] t, den, t_d5, u, u2, lp, l;
     wire f_exp, f_den, f_div, f_u2, f_up, f_l, f_sp, f_sq;
-    ot_hdc_exp  u_exp (.clk(gclk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(t), .vo(), .fault(f_exp));
-    ot_hdc_fadd a_den (gclk, rst_n, vd[T_EXP], t, 32'h40000000, den, f_den);
-    ot_hdc_delay #(.W(32), .D(5)) d_t (gclk, rst_n, t, t_d5);
-    ot_hdc_fdiv u_div (.clk(gclk), .rst_n(rst_n), .v(vd[T_DEN]), .a(t_d5), .b(den), .y(u), .vo(), .fault(f_div));
-    ot_hdc_fmul m_u2 (gclk, rst_n, vd[T_U], u, u, u2, f_u2);
+    ot_hdc_exp  u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(t), .vo(), .fault(f_exp));
+    ot_hdc_fadd a_den (clk, rst_n, vd[T_EXP], t, 32'h40000000, den, f_den);
+    ot_hdc_delay #(.W(32), .D(5)) d_t (clk, rst_n, t, t_d5);
+    ot_hdc_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_DEN]), .a(t_d5), .b(den), .y(u), .vo(), .fault(f_div));
+    ot_hdc_fmul m_u2 (clk, rst_n, vd[T_U], u, u, u2, f_u2);
 
     // Horner in u2; u2 travels in 10-cycle hops
     wire [31:0] u2d [0:7];
@@ -75,18 +74,18 @@ module ot_hdc_softplus (
     generate
         for (k = 1; k <= 8; k = k + 1) begin : g_h
             if (k < 8) begin : g_d
-                ot_hdc_delay #(.W(32), .D(10)) d_u2 (gclk, rst_n, u2d[k-1], u2d[k]);
+                ot_hdc_delay #(.W(32), .D(10)) d_u2 (clk, rst_n, u2d[k-1], u2d[k]);
             end
-            ot_hdc_fmul u_m (gclk, rst_n, vd[T_U2 + 10*(k-1)], pa[k-1], u2d[k-1], pm[k], hf[2*k-1]);
-            ot_hdc_fadd u_a (gclk, rst_n, vd[T_U2 + 10*(k-1) + 5], pm[k], coef(k), pa[k], hf[2*k]);
+            ot_hdc_fmul u_m (clk, rst_n, vd[T_U2 + 10*(k-1)], pa[k-1], u2d[k-1], pm[k], hf[2*k-1]);
+            ot_hdc_fadd u_a (clk, rst_n, vd[T_U2 + 10*(k-1) + 5], pm[k], coef(k), pa[k], hf[2*k]);
         end
     endgenerate
 
     // l = (u * p) * 2
     wire [31:0] u_d;
-    ot_hdc_delay #(.W(32), .D(T_P - T_U)) d_u (gclk, rst_n, u, u_d);
-    ot_hdc_fmul m_up (gclk, rst_n, vd[T_P], u_d, pa[8], lp, f_up);
-    ot_hdc_fmul m_l  (gclk, rst_n, vd[T_UP], lp, 32'h40000000, l, f_l);
+    ot_hdc_delay #(.W(32), .D(T_P - T_U)) d_u (clk, rst_n, u, u_d);
+    ot_hdc_fmul m_up (clk, rst_n, vd[T_P], u_d, pa[8], lp, f_up);
+    ot_hdc_fmul m_l  (clk, rst_n, vd[T_UP], lp, 32'h40000000, l, f_l);
 
     // sp = max(x, 0) + l
     reg  [31:0] mx;
@@ -94,33 +93,16 @@ module ot_hdc_softplus (
     //: a NaN is not below zero (numpy's maximum propagates it), so it reaches
     //: the add and is refused there; -inf gives +0, like any negative x
     wire x_nan = (x[30:23] == 8'hFF) && (x[22:0] != 23'd0);
-    //: operand isolation: x is the stream unit's result bus, which carries
-    //: every result of every SFU class; only a softplus operand is captured
-    always @(posedge gclk) if (v) mx <= (x[31] && !x_nan) ? 32'd0 : x;
-    ot_hdc_delay #(.W(32), .D(T_L - 1)) d_mx (gclk, rst_n, mx, mx_d);
-    ot_hdc_fadd a_sp (gclk, rst_n, vd[T_L], mx_d, l, spv, f_sp);
+    always @(posedge clk) mx <= (x[31] && !x_nan) ? 32'd0 : x;
+    ot_hdc_delay #(.W(32), .D(T_L - 1)) d_mx (clk, rst_n, mx, mx_d);
+    ot_hdc_fadd a_sp (clk, rst_n, vd[T_L], mx_d, l, spv, f_sp);
 
     // r = sqrt(sp); sp waits for it
-    ot_hdc_fsqrt u_sq (.clk(gclk), .rst_n(rst_n), .v(vd[T_SP]), .a(spv), .y(r), .vo(), .fault(f_sq));
-    ot_hdc_delay #(.W(32), .D(DEPTH - T_SP)) d_sp (gclk, rst_n, spv, sp);
+    ot_hdc_fsqrt u_sq (.clk(clk), .rst_n(rst_n), .v(vd[T_SP]), .a(spv), .y(r), .vo(), .fault(f_sq));
+    ot_hdc_delay #(.W(32), .D(DEPTH - T_SP)) d_sp (clk, rst_n, spv, sp);
 
     // faults: the final add's refusal travels with its result
     wire f_sp_d;
-    ot_hdc_delay #(.W(1), .D(DEPTH - T_SP), .RESET(1)) d_fsp (gclk, rst_n, f_sp, f_sp_d);
+    ot_hdc_delay #(.W(1), .D(DEPTH - T_SP), .RESET(1)) d_fsp (clk, rst_n, f_sp, f_sp_d);
     assign fault = f_sp_d | f_sq | f_exp | f_den | f_div | f_u2 | (|hf) | f_up | f_l;
-
-    // -- clock gate ---------------------------------------------------------------------
-    //: Every register is clocked by gclk, which runs while any valid bit of vd
-    //: (the input's own cycle through the final result, vd[DEPTH]) is set and
-    //: one cycle more.  Every sub-pipe (exp, the divider, the square root) is
-    //: aligned to vd, so nothing is in flight outside that window and the
-    //: outputs, sampled only with `vo`, hold.  The unit sits on the stream
-    //: unit's result bus and is busy for a few percent of a step: most of its
-    //: 35,000 flops and their clock tree now stop between router-score ops.
-    reg cg_t;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) cg_t <= 1'b0;
-        else cg_t <= |vd;
-    end
-    ot_hdc_cg u_cg (.clk(clk), .en(!rst_n || (|vd) || cg_t), .gclk(gclk));
 endmodule
