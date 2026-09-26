@@ -1,5 +1,41 @@
 {
  "blocks": {
+  "argmax_reduce": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "atpg": {
+    "capture_patterns": 2376,
+    "chains": 3,
+    "classes": {
+     "AU": 320,
+     "DS": 11352,
+     "DT": 68067,
+     "ND": 0,
+     "UT": 877
+    },
+    "fault_coverage": 0.985152,
+    "faults": 80616,
+    "gate_level": {
+     "capture_faults_confirmed": 100,
+     "capture_faults_injected": 100,
+     "chain_faults_confirmed": 30,
+     "chain_faults_injected": 30,
+     "good_machine_mismatches": 0,
+     "good_machine_patterns": 82
+    },
+    "max_chain_length": 755,
+    "scan_cells": 2264,
+    "test_coverage": 0.995987,
+    "tester_cycles": 1797767,
+    "top": "ot_rom_argmax_reduce"
+   },
+   "scan_off_equivalence": {
+    "equiv_cells": 2813,
+    "proven": true,
+    "unproven_cells": 0
+   }
+  },
   "pkg_ctrl": {
    "architectures": [
     "v41_rom_array"
