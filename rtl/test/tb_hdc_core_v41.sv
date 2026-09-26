@@ -75,7 +75,7 @@ module tb_hdc_core_v41 (input wire clk);
     wire [4:0] unit_busy; wire [2:0] issue_unit;
 
     ot_hdc_core_v41 #(.SW(SW), .HS(HS)) dut (
-        .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
+        .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry({PAW{1'b0}}), .acc_n(), .acc_tok(),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
         .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),

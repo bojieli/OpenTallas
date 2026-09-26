@@ -20,6 +20,12 @@
 //
 // `prime_*` feed the hash unit's history directly (a single-step test that
 // starts mid-sequence primes it with the preceding tokens).
+//
+// Multi-token prediction: an EHASH hashes the token presented at its accept
+// (`token`, `first`: its slot's), and snapshots the history it leaves into
+// slot i_hslot's entry; `rst_v` (idle only) restores the history from slot
+// rst_slot's entry -- the accepted slot's, after a speculative step.  A
+// SELECT's first index is held on `sel_first` (a draft token).
 // ---------------------------------------------------------------------------
 module ot_hdc_v41_xu #(
     parameter integer AW = 24,
@@ -39,6 +45,10 @@ module ot_hdc_v41_xu #(
     input  wire              i_layer,
     input  wire [NW-1:0]     token,
     input  wire              first,           // position 0: the hash history restarts
+    input  wire [2:0]        i_hslot,         // EHASH: the slot whose snapshot it writes
+    input  wire              rst_v,           // restore the history from a slot's snapshot
+    input  wire [2:0]        rst_slot,
+    output reg  [15:0]       sel_first,       // the first index the last SELECT wrote
     input  wire              prime_v,
     input  wire              prime_first,
     input  wire [11:0]       prime_cid,
@@ -76,6 +86,9 @@ module ot_hdc_v41_xu #(
     reg [NW-1:0] n, ni, nw;
     reg [4:0]    k;
     reg          layer;
+    reg [NW-1:0] tok_l;
+    reg          first_l;
+    reg [2:0]    hslot;
     reg [5:0]    cnt;
     assign ready = (st == S_IDLE) && !sel_busy;
     wire accept = go && ready;
@@ -110,8 +123,11 @@ module ot_hdc_v41_xu #(
     wire         h_ov;
     wire [ENG_ROW_W*ENG_LAYERS*ENG_COLS-1:0] h_rows;
     reg  [ENG_ROW_W*ENG_LAYERS*ENG_COLS-1:0] rows;
+    wire [ENG_ID_W*(ENG_N-1)-1:0] h_hist;
+    reg  [ENG_ID_W*(ENG_N-1)-1:0] snap [0:7];
     ot_hdc_engram_hash u_hash (.clk(clk), .rst_n(rst_n), .in_valid(h_v || (prime_v && st == S_IDLE)),
-        .in_first(h_v ? h_first : prime_first), .in_cid(h_v ? h_cid : prime_cid), .out_valid(h_ov),
+        .in_first(h_v ? h_first : prime_first), .in_cid(h_v ? h_cid : prime_cid),
+        .hist_o(h_hist), .ld_v(rst_v && st == S_IDLE && !h_v), .ld_hist(snap[rst_slot]), .out_valid(h_ov),
         .out_row(h_rows));
 
     // -- Engram gather: dequantise a row (E4M3 code * 2^scale -> binary32, exact) ------------------------
@@ -151,7 +167,7 @@ module ot_hdc_v41_xu #(
             case (st)
                 S_IDLE: if (accept) begin
                     op <= i_op; src <= i_src; dst <= i_dst; n <= i_n; k <= i_k; layer <= i_layer; ni <= 0; nw <= 0;
-                    cnt <= 0;
+                    cnt <= 0; tok_l <= token; first_l <= first; hslot <= i_hslot;
                     case (i_op)
                         OP_SEL: st <= S_SEL;
                         OP_SINK: st <= S_SK0;
@@ -173,9 +189,9 @@ module ot_hdc_v41_xu #(
                     if (sk_f) flt <= 1'b1;
                     st <= S_IDLE;
                 end
-                S_EH0: begin cr_re <= 1'b1; cr_addr <= src + token; st <= S_EH1; end
-                S_EH1: begin cnt <= cnt + 1'b1; if (cnt == 6'd1) begin h_v <= 1'b1; h_cid <= cr_q[11:0]; h_first <= first; st <= S_EHW; end end
-                S_EHW: if (h_ov) begin rows <= h_rows; st <= S_IDLE; end
+                S_EH0: begin cr_re <= 1'b1; cr_addr <= src + tok_l; st <= S_EH1; end
+                S_EH1: begin cnt <= cnt + 1'b1; if (cnt == 6'd1) begin h_v <= 1'b1; h_cid <= cr_q[11:0]; h_first <= first_l; st <= S_EHW; end end
+                S_EHW: if (h_ov) begin rows <= h_rows; snap[hslot] <= h_hist; st <= S_IDLE; end
                 S_EG: begin
                     er_re <= 1'b1; er_addr <= src + rows[ENG_ROW_W*(layer*ENG_COLS + eg_c) +: ENG_ROW_W];
                     if (eg_c + 1 == ENG_COLS) st <= S_EGW;
@@ -183,7 +199,10 @@ module ot_hdc_v41_xu #(
                 S_EGW: begin cnt <= cnt + 1'b1; if (cnt == 6'd3) st <= S_IDLE; end
                 default: st <= S_IDLE;
             endcase
-            if (so_v) begin vw_we <= 1'b1; vw_addr <= dst + nw; vw_data <= {16'd0, so_idx}; nw <= nw + 1'b1; end
+            if (so_v) begin
+                vw_we <= 1'b1; vw_addr <= dst + nw; vw_data <= {16'd0, so_idx}; nw <= nw + 1'b1;
+                if (nw == 0) sel_first <= so_idx;
+            end
             if (s_v && !sel_ready) flt <= 1'b1;                     // never: one segment per op
             // gathered rows: the ROM answers two cycles after the address
             if (eg_v1) begin

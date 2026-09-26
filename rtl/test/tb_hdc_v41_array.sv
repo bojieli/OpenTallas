@@ -183,7 +183,7 @@ module tb_hdc_v41_array #(
             wire [7:0]    cur_u = kv_base / KVW;
 
             ot_hdc_core_v41 #(.SW(SW), .HS(HS)) core (
-                .clk(clk), .rst_n(rst_n), .start(core_start), .token(core_token), .pos(core_pos),
+                .clk(clk), .rst_n(rst_n), .start(core_start), .token(core_token), .pos(core_pos), .entry(14'd0), .acc_n(), .acc_tok(),
                 .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault_w[n]),
                 .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
                 .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),

@@ -83,39 +83,68 @@ class Alloc:
 class Layout:
     """Weight ROMs, constant ROM, vector-memory and KV maps for the reduced model."""
 
-    def __init__(self, m):
+    def __init__(self, m, mtp=None):
+        """mtp: None (the one-position core), or {"slots": NS} -- the multi-token-
+        prediction configuration: NS position slots, each with its own copy of
+        every per-position vector-memory region (slot j's at + j*slot_stride),
+        the compressor slot ring of I.POS_RING entries, the DSpark stages'
+        weights, constants and window caches, RoPE tables to I.ROPE_POS."""
         self.m = m
         c = m.c
+        self.mtp = mtp
         self.L, self.dim, self.hc = m.L, m.dim, m.hc
         self.nh, self.ih = m.heads, m.ih
         assert m.hd == HD and m.ihd == HD and m.rd == 4 and m.window >= PMAX
+        self.ring = mtp.get("ring", I.POS_RING) if mtp else 2   # "ring": 2 only as a mutation check
+        self.nmtp = m.n_mtp if mtp else 0
+        self.rope_pos = I.ROPE_POS if mtp else PMAX
+        layers = range(self.L + self.nmtp)
         # -- vector memory ------------------------------------------------------
-        v = self.vm = Alloc(I.VM_ELEMS)
-        for name, n in (("H", 640), ("T", 640), ("SSX", 1), ("RF", 1), ("MIX", 32), ("PA", 4), ("POA", 4),
-                        ("CA", 16), ("PF", 4), ("POF", 4), ("CF", 16), ("CRAW", 16), ("M4", 4), ("E16", 32),
-                        ("X", 160), ("XN", 160), ("SS", 8), ("RS", 8), ("QA", 32), ("QR", 32), ("KVA", 32),
-                        ("KVN", 32), ("KVQ", 32), ("Q", 2048), ("S", self.nh * STR), ("M", 64), ("Z", 64),
-                        ("DEN", 64), ("ACC", 2048), ("ZA", 256), ("Y", 160),
-                        ("CM", 32), ("CE", 64), ("CD", 32), ("CP", 64), ("POOL", 32), ("CKA", 32), ("LAT", 32),
-                        ("IKA", 32), ("IKN", 32), ("IKQ", 32), ("IQ", 1024), ("IQQ", 1024), ("WP", 32),
-                        ("WTS", 32), ("IS", 128), ("SEL", 16),
-                        ("G12", 16), ("SC", 16), ("BI", 16), ("EID", 8), ("TOT", 1), ("DEN1", 1), ("WGT", 8),
-                        ("ER", 768), ("EKV", 800), ("ESS", 8), ("ERS", 8), ("ED", 4), ("EDOT", 4), ("EG", 4)):
+        v = self.vm = Alloc(I.VM_ELEMS_MTP if mtp else I.VM_ELEMS)
+        scratch = [("H", 640), ("T", 640), ("SSX", 1), ("RF", 1), ("MIX", 32), ("PA", 4), ("POA", 4),
+                   ("CA", 16), ("PF", 4), ("POF", 4), ("CF", 16), ("CRAW", 16), ("M4", 4), ("E16", 32),
+                   ("X", 160), ("XN", 160), ("SS", 8), ("RS", 8), ("QA", 32), ("QR", 32), ("KVA", 32),
+                   ("KVN", 32), ("KVQ", 32), ("Q", 2048), ("S", self.nh * STR), ("M", 64), ("Z", 64),
+                   ("DEN", 64), ("ACC", 2048), ("ZA", 256), ("Y", 160),
+                   ("CM", 32), ("CE", 64), ("CD", 32), ("CP", 64), ("POOL", 32), ("CKA", 32), ("LAT", 32),
+                   ("IKA", 32), ("IKN", 32), ("IKQ", 32), ("IQ", 1024), ("IQQ", 1024), ("WP", 32),
+                   ("WTS", 32), ("IS", 128), ("SEL", 16),
+                   ("G12", 16), ("SC", 16), ("BI", 16), ("EID", 8), ("TOT", 1), ("DEN1", 1), ("WGT", 8),
+                   ("ER", 768), ("EKV", 800), ("ESS", 8), ("ERS", 8), ("ED", 4), ("EDOT", 4), ("EG", 4)]
+        if mtp:
+            # per slot: the Engram rows of both Engram layers (gathered at the slot's
+            # hash), the DSpark main hidden (3 x dim) and main_x; S (scores) is shared:
+            # attention runs one slot at a time
+            scratch = [(n, k) for n, k in scratch if n not in ("S", "ER")] + \
+                      [(f"ER{L}", 768) for L in m.engram.layer_ids] + \
+                      [("MH", self.dim * len(m.dspark_targets)), ("MXA", self.dim), ("MX", self.dim)]
+        for name, n in scratch:
             v(name, n)
         for k in range(7):
             v(f"GU{k}", 128)
             v(f"ACT{k}", 64)
             v(f"E{k}", 160)
+        self.scratch_names = {n for n, _ in scratch} | {f"{x}{k}" for x in ("GU", "ACT", "E") for k in range(7)}
+        if mtp:
+            v.top = -(-v.top // 32) * 32
+            self.slot_stride = v.top
+            self.nslots = mtp["slots"]
+            assert self.nslots <= I.NSLOT and (self.nslots + 1 <= self.ring or mtp.get("mutation"))
+            v.top = self.slot_stride * self.nslots
+            # shared by the slots (used one slot at a time): scores, the draft's
+            # logits and Markov bias, the Markov embedding row, the draft tokens
+            for name, n in (("S", self.nh * STR), ("LG", 4048), ("MB", 4048), ("MBX", 32), ("DTOK", 8)):
+                v(name, n)
         # persistent: compressor slots and compressed KV rows per source layer
         self.nrows = {s: PMAX // (m.ratio[s]) for s in m.kv_src}
         for s in m.kv_src:
-            v(f"SLOT{s}", 128)
+            v(f"SLOT{s}", 64 * self.ring)
             v(f"CKV{s}", self.nrows[s] * HD)
-        self.vm_persist = [(self.vm.map[f"SLOT{s}"], 128) for s in m.kv_src] + \
+        self.vm_persist = [(self.vm.map[f"SLOT{s}"], 64 * self.ring) for s in m.kv_src] + \
                           [(self.vm.map[f"CKV{s}"], self.nrows[s] * HD) for s in m.kv_src]
         # -- KV SRAM (elements; W per word) ---------------------------------------------
         k = self.kv = Alloc(I.KV_WORDS * W, align=W)
-        for L in range(self.L):
+        for L in layers:
             k(f"KT{L}", KT_WORDS * W)
             k(f"KR{L}", KR_WORDS * W)
         for s in m.kv_src:
@@ -124,7 +153,7 @@ class Layout:
         self.crom = []
         self.cb = {}
         lw = m.lw
-        for L in range(self.L):
+        for L in layers:
             for nm in ("attn_norm", "ffn_norm"):
                 self.cb[(L, nm)] = self.put(lw(L, f"{nm}.weight"))
             for nm in ("q_norm", "kv_norm"):
@@ -143,9 +172,12 @@ class Layout:
                 self.cb[(L, "ewgt")] = self.put(G.mul(lw(L, "engram.q_weight"), lw(L, "engram.k_weight")).reshape(-1))
         self.cb["norm"] = self.put(m.w["norm.weight"])
         self.cb["pre0"] = self.put(np.array([1, 0, 0, 0], dtype=F))
+        if mtp:
+            self.cb["main_norm"] = self.put(m.w["mtp.0.main_norm.weight"])
+            self.cb["mtp_norm"] = self.put(lw(self.L + self.nmtp - 1, "norm.weight"))
         for tname, fr in (("rope_plain", m.freqs_plain), ("rope_yarn", m.freqs_yarn)):
             self.cb[tname] = len(self.crom)
-            for p in range(PMAX):
+            for p in range(self.rope_pos):
                 cs, sn = V.rope_cs(fr, p)
                 self.crom.extend((F(a), F(b)) for a, b in zip(cs, sn))
         self.cb["tmap"] = len(self.crom)
@@ -162,7 +194,16 @@ class Layout:
             wd = np.zeros(W * GR, dtype=np.uint16)
             wd[:len(flat[i:i + W * GR])] = flat[i:i + W * GR]
             self.words.append(wd)
-        for L in range(self.L):
+        if mtp:
+            # the Markov head's embedding, element-addressed like the embedding (SU gather)
+            memb = lw(self.L + self.nmtp - 1, "markov_head.embed.weight")
+            self.memb_word = len(self.words)
+            flat = (G.bits(memb.reshape(-1)) >> 16).astype(np.uint16)
+            for i in range(0, len(flat), W * GR):
+                wd = np.zeros(W * GR, dtype=np.uint16)
+                wd[:len(flat[i:i + W * GR])] = flat[i:i + W * GR]
+                self.words.append(wd)
+        for L in layers:
             for wh in ("attn", "ffn"):
                 self.mat[(L, wh, "fn")] = self.hplace(lw(L, f"hc_{wh}_fn"))
             self.mat[(L, "gate")] = self.place(lw(L, "ffn.gate.weight"))
@@ -177,24 +218,29 @@ class Layout:
             if L in m.idx_src:
                 self.mat[(L, "iwp")] = self.place(lw(L, "attn.indexer.weights_proj.weight"))
         self.mat["head"] = self.place(m.w["head.weight"])
+        if mtp:
+            self.mat["markov"] = self.place(lw(self.L + self.nmtp - 1, "markov_head.head.weight"))
         # -- QE weight ROM: per word BL lanes x (32 codes, exponent) -------------------
         self.qcodes, self.qexp = [], []
         self.qmat = {}
-        for L in range(self.L):
+        for L in layers:
             for nm in ("wq_a", "wkv", "wq_b", "wo_b"):
                 self.qmat[(L, nm)] = self.qplace(lw(L, f"attn.{nm}.weight"))
             if L in m.idx_src:
                 self.qmat[(L, "iwq_b")] = self.qplace(lw(L, "attn.indexer.wq_b.weight"))
             base = len(self.qcodes)
-            for e in range(m.n_exp):
-                self.qexpert(f"layers.{L}.ffn.experts.{e}.", (L, "exp", e))
+            n_exp = m.n_exp if L < self.L else m.dspark_n_exp
+            for e in range(n_exp):
+                self.qexpert(f"{m.P(L)}ffn.experts.{e}.", (L, "exp", e))
             self.qmat[(L, "exp_base")] = base
             self.qmat[(L, "exp_stride")] = self.qmat[(L, "exp", 1, "w13")]["base"] - self.qmat[(L, "exp", 0, "w13")]["base"]
-            for e in range(1, m.n_exp):
+            for e in range(1, n_exp):
                 assert self.qmat[(L, "exp", e, "w13")]["base"] - base == e * self.qmat[(L, "exp_stride")]
-            self.qexpert(f"layers.{L}.ffn.shared_experts.", (L, "shared"))
+            self.qexpert(f"{m.P(L)}ffn.shared_experts.", (L, "shared"))
             if L in m.engram.layer_ids:
                 self.qmat[(L, "ewkv")] = self.qplace(lw(L, "engram.wkv.weight"))
+        if mtp:
+            self.qmat["main_proj"] = self.qplace(m.w["mtp.0.main_proj.weight"])
         # -- Engram table ROM ------------------------------------------------------------------
         self.ebase = {}
         ecodes, eexp = [], []
@@ -205,6 +251,16 @@ class Layout:
             eexp.append(sc)
         self.ecodes = np.concatenate(ecodes)
         self.eexp = np.concatenate(eexp).astype(np.int64)
+
+    def slot_map(self, j):
+        """The vector-memory map slot j's instructions address."""
+        if not self.mtp:
+            return self.vm.map
+        return {n: a + (j * self.slot_stride if n in self.scratch_names else 0) for n, a in self.vm.map.items()}
+
+    def rname(self, name, j):
+        """A region's hazard name: per-slot regions are distinct per slot."""
+        return f"{name}#{j}" if self.mtp and name in self.scratch_names else name
 
     def put(self, v):
         base = len(self.crom)
@@ -301,8 +357,9 @@ class Layout:
 
     def kv_image(self, st):
         kv = np.zeros(I.KV_WORDS * W, dtype=F)
-        for L in range(self.L):
-            for t, row in enumerate(st["win"][L]):
+        wins = list(st["win"]) + (list(st["dsk"]) if self.mtp and "dsk" in st else [])
+        for L, rows in enumerate(wins):
+            for t, row in enumerate(rows):
                 for d in range(HD):
                     kv[self.kt_elem(self.kv.map[f"KT{L}"], t, d)] = row[d]
                     kv[self.kv.map[f"KR{L}"] + t * HD + d] = row[d]
@@ -314,10 +371,10 @@ class Layout:
 
     def vm_image(self, st, pos):
         """Persistent vector-memory state after positions 0 .. pos-1."""
-        vm = np.zeros(I.VM_ELEMS, dtype=F)
+        vm = np.zeros(self.vm.size, dtype=F)
         for s in self.m.kv_src:
             for i, (kv, sc) in enumerate(st["slots"][s]):
-                slot = (pos - len(st["slots"][s]) + i) & 1
+                slot = (pos - len(st["slots"][s]) + i) % self.ring
                 vm[self.vm.map[f"SLOT{s}"] + slot * 64: self.vm.map[f"SLOT{s}"] + slot * 64 + 64] = \
                     np.concatenate([kv, sc])
             for t, row in enumerate(st["ckv"][s]):
@@ -362,19 +419,44 @@ def segmented(f, segs):
 
 
 class Builder:
-    def __init__(self, lay, qchunk=None):
+    def __init__(self, lay, qchunk=None, slot=0):
         """qchunk (HBM weights): a LINQ op of more than qchunk words is issued as
         chunks of whole rounds, so its start threshold fits the QE streamer's
         window (rounds are independent output rows; each chunk re-quantises the
-        same activation, deterministically)."""
+        same activation, deterministically).
+
+        slot (MTP layouts): the position slot this builder's instructions serve:
+        its vector-memory copy, its DYN bank (dslot), its region names."""
         self.qchunk = qchunk
         self.lay, self.m = lay, lay.m
         self.prog = []
-        self.V = lay.vm.map
+        self.slot = slot
+        self.V = lay.slot_map(slot)
         self.K = lay.kv.map
+        self.serial_id = None           # MTP: the serial section an op belongs to
+        self.n_serial = 0
+        self.dslot_over = None          # MTP: an op's DYN bank, when not its own slot's
 
     def emit(self, f, reads, writes, tag):
+        f = dict(f)
+        if self.lay.mtp:
+            f.setdefault("dslot", self.slot if self.dslot_over is None else self.dslot_over)
+            f["_serial"], f["_slot"] = self.serial_id, self.slot
+            if "_redw" in f:
+                f["_redw"] = {self.lay.rname(n, self.slot) for n in f["_redw"]}
+            reads = {self.lay.rname(n, self.slot) for n in reads}
+            writes = {self.lay.rname(n, self.slot) for n in writes}
         self.prog.append((f, set(reads), set(writes), tag))
+
+    def serial(self, on):
+        """MTP: the ops emitted between serial(True) and serial(False) run for one
+        slot after another, as a block (attention over shared scores, a slot's
+        hash then its gathers, the draft's sampling chain)."""
+        if on:
+            self.serial_id = self.n_serial
+            self.n_serial += 1
+        else:
+            self.serial_id = None
 
     def me(self, mat, x, out, reads, writes, tag, **over):
         f = dict(unit=I.UNIT_ME, me_nout=mat["n"], me_tiles=mat["tiles"], me_k=mat["k"], me_wsrc=0,
@@ -531,8 +613,11 @@ class Builder:
         t = f"L{L}.engram"
         li = m.engram.layer_ids.index(L)
         h = V_["H"]
-        self.xu({"EH"}, {"ER"}, t, xu_op=I.XU_EGATHER, xu_src=lay.ebase[L], xu_dst=V_["ER"], xu_layer=li, xu_n=24)
-        self.linq(lay.qmat[(L, "ewkv")], "ER", "EKV", set(), set(), t)
+        er = f"ER{L}" if self.lay.mtp else "ER"
+        if not self.lay.mtp:
+            self.xu({"EH"}, {"ER"}, t, xu_op=I.XU_EGATHER, xu_src=lay.ebase[L], xu_dst=V_["ER"], xu_layer=li,
+                    xu_n=24)
+        self.linq(lay.qmat[(L, "ewkv")], er, "EKV", set(), set(), t)
         self.su({"H"}, {"ESS"}, t, su_nout=4, su_nin=160, a_base=h, a_so=160, a_si=1, red=I.RED_SUM, red_sq=1,
                 r_base=V_["ESS"], r_so=1)
         self.su({"EKV"}, {"ESS"}, t, su_nout=4, su_nin=160, a_base=V_["EKV"], a_so=160, a_si=1, red=I.RED_SUM,
@@ -566,13 +651,17 @@ class Builder:
         pred = I.PRED_ODD if r == 2 else 0
         slot = f"SLOT{L}"
         if r == 2:
-            self.me(mat, V_["XN"], V_[slot], {"XN"}, {slot}, t, me_d_obase=DY["SLOTW"])
+            # the ring: a position's slot entry at (pos mod ring)*64; an odd position
+            # pools its pair (pos-1, pos), at DYN SLOTP8 (ring > 2) or 0
+            ring8 = self.lay.ring > 2
+            self.me(mat, V_["XN"], V_[slot], {"XN"}, {slot}, t, me_d_obase=DY["SLOTW8" if ring8 else "SLOTW"])
+            sp = DY["SLOTP8"] if ring8 else 0
             s0, s1 = V_[slot], V_[slot] + 64
             self.su({slot}, {"CM"}, t, pred=pred, su_nout=1, su_nin=32, a_base=s0 + 32, a_si=1, b_base=s1 + 32,
-                    b_si=1, m1=I.M1_MAXB, dst=I.DST_VM, o_base=V_["CM"], o_si=1)
+                    b_si=1, m1=I.M1_MAXB, dst=I.DST_VM, o_base=V_["CM"], o_si=1, a_d=sp, b_d=sp)
             self.su({slot, "CM"}, {"CE"}, t, pred=pred, su_nout=2, su_nin=32, a_base=s0 + 32, a_so=64, a_si=1,
                     b_base=V_["CM"], b_si=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, dst=I.DST_VM, o_base=V_["CE"],
-                    o_so=32, o_si=1)
+                    o_so=32, o_si=1, a_d=sp)
             self.su({"CE"}, {"CD"}, t, pred=pred, su_nout=1, su_nin=32, a_base=V_["CE"], a_si=1,
                     c_base=V_["CE"] + 32, c_si=1, ad=I.AD_C, dst=I.DST_VM, o_base=V_["CD"], o_si=1)
             self.su({"CE", "CD"}, {"CP"}, t, pred=pred, su_nout=2, su_nin=32, a_base=V_["CE"], a_so=32, a_si=1,
@@ -580,7 +669,7 @@ class Builder:
             self.su({slot, "CP"}, {"POOL", "SS"}, t, **segmented(dict(
                 pred=pred, su_nout=1, su_nin=32, a_base=s0, a_si=1, b_base=V_["CP"], b_si=1, m1=I.M1_AB,
                 c_base=s1, c_si=1, d_base=V_["CP"] + 32, d_si=1, qm=I.QM_POS, ad=I.AD_Q, rnd=1, dst=I.DST_VM,
-                o_base=V_["POOL"], o_si=1, red=I.RED_SUM, red_sq=1, r_base=V_["SS"]), V.RMS_SPLIT))
+                o_base=V_["POOL"], o_si=1, red=I.RED_SUM, red_sq=1, r_base=V_["SS"], a_d=sp, c_d=sp), V.RMS_SPLIT))
             self.rmsnorm("POOL", 32, lay.cb[(L, "cnorm")], "LAT", t, pred, have_ss="SS")
         else:
             self.me(mat, V_["XN"], V_["CKA"], {"XN"}, {"CKA"}, t)
@@ -625,10 +714,13 @@ class Builder:
         self.xu({"IS"}, {"SEL"}, t, pred=pred, xu_op=I.XU_SEL, xu_src=V_["IS"], xu_dst=V_["SEL"], xu_d_n=nsel,
                 xu_d_k=DY["NSEL2"] if r == 2 else DY["NSEL1"])
 
-    def attention(self, L, hook=None):
+    def attention(self, L, hook=None, draft=False):
+        """draft (a DSpark stage): the block rows' KV go to the stage's window
+        cache at their positions, every row attends to the window and the whole
+        block (T = the last block row's position + 1, DYN bank draft_last)."""
         m, V_, lay, K = self.m, self.V, self.lay, self.K
         t = f"L{L}.attn"
-        r = m.ratio[L]
+        r = m.ratio_all[L]
         table = "rope_yarn" if r > 0 else "rope_plain"
         self.linq(lay.qmat[(L, "wq_a")], "XN", "QA", set(), set(), t)
         self.linq(lay.qmat[(L, "wkv")], "XN", "KVA", set(), set(), t)
@@ -637,10 +729,15 @@ class Builder:
         self.rmsnorm("KVA", 32, lay.cb[(L, "kv_norm")], "KVN", t)
         self.rope("KVN", V_["KVN"], 1, HD, table, DY["ROPE"], False, t)
         self.qdq(I.QE_QDQ8, "KVN", 1, V_["KVQ"], {"KVQ"}, t)
+        if lay.mtp and not draft:
+            self.serial(True)          # a slot's window row, its gathered rows, its scores: one slot at a time
         self.kvt_write("KVQ", f"KT{L}", K[f"KT{L}"], DY["POS"], t)
         self.su({"KVQ"}, {f"KR{L}"}, t, su_nout=1, su_nin=HD, a_base=V_["KVQ"], a_si=1, dst=I.DST_KV,
                 o_base=K[f"KR{L}"], o_d=DY["ROW"], o_si=1)
         self.rope("Q", V_["Q"], m.heads, HD, table, DY["ROPE"], False, t)
+        if draft:
+            self.serial(True)          # every block row's KV is written: now one row at a time
+            self.dslot_over = self.draft_last
         if r > 0:
             src = m.kv_of[L]
             if L == src:
@@ -692,7 +789,10 @@ class Builder:
                 e1=I.E1_ADDC, dst=I.DST_VM, o_base=V_["DEN"], o_si=1)
         self.su({"ACC", "DEN"}, {"ACC"}, tsm, su_nout=m.heads, su_nin=HD, a_base=V_["ACC"], a_so=HD, a_si=1,
                 b_base=V_["DEN"], b_so=1, m1=I.M1_DIVB, rnd=1, dst=I.DST_VM, o_base=V_["ACC"], o_so=HD, o_si=1)
+        self.dslot_over = None
         self.rope("ACC", V_["ACC"], m.heads, HD, table, DY["ROPE"], True, tsm)
+        if lay.mtp:
+            self.serial(False)
         if hook and ATTN_HOOK == "pv":
             hook()
         to = f"L{L}.out"
@@ -710,9 +810,11 @@ class Builder:
         m, V_, lay = self.m, self.V, self.lay
         t = f"L{L}.router"
         stride = lay.qmat[(L, "exp_stride")]
+        k_exp = m.k_exp if L < m.L else m.dspark_k_exp
+        n_exp = m.n_exp if L < m.L else m.dspark_n_exp
 
         def expert(k):
-            shared = k == m.k_exp
+            shared = k == k_exp
             te = f"L{L}.shared" if shared else f"L{L}.experts"
             if shared:
                 w13, w2, ind = lay.qmat[(L, "shared", "w13")], lay.qmat[(L, "shared", "w2")], {}
@@ -728,47 +830,47 @@ class Builder:
                     lambda: self.su({f"GU{k}", "WGT"}, {f"ACT{k}"}, te, **f),
                     lambda: self.linq(w2, f"ACT{k}", f"E{k}", {"EID"}, set(), te, **ind))
 
-        sh = expert(m.k_exp)
+        sh = expert(k_exp)
         sh[0]()                                        # shared w13 beside the router
         self.me(lay.mat[(L, "gate")], V_["XN"], V_["G12"], {"XN"}, {"G12"}, t)
         sh[1]()
         sh[2]()
-        self.su({"G12"}, {"SC"}, t, su_nout=1, su_nin=m.n_exp, a_base=V_["G12"], a_si=1, sfu=I.SFU_SPSQRT,
+        self.su({"G12"}, {"SC"}, t, su_nout=1, su_nin=n_exp, a_base=V_["G12"], a_si=1, sfu=I.SFU_SPSQRT,
                 dst=I.DST_VM, o_base=V_["SC"], o_si=1)
-        self.su({"SC"}, {"BI"}, t, su_nout=1, su_nin=m.n_exp, a_base=V_["SC"], a_si=1, d_src=I.SRC_CLO,
+        self.su({"SC"}, {"BI"}, t, su_nout=1, su_nin=n_exp, a_base=V_["SC"], a_si=1, d_src=I.SRC_CLO,
                 d_base=lay.cb[(L, "bias")], d_si=1, ad=I.AD_D, dst=I.DST_VM, o_base=V_["BI"], o_si=1)
-        self.xu({"BI"}, {"EID"}, t, xu_op=I.XU_SEL, xu_src=V_["BI"], xu_dst=V_["EID"], xu_n=m.n_exp,
-                xu_k=m.k_exp)
+        self.xu({"BI"}, {"EID"}, t, xu_op=I.XU_SEL, xu_src=V_["BI"], xu_dst=V_["EID"], xu_n=n_exp,
+                xu_k=k_exp)
         # wrel: this op waits for the SELECT that wrote EID, so its issue releases
         # the HBM fetch of the routed experts' weights (tools/hdc_program_v41.py
         # qe_fetch_list; rtl/hdc/hbm/ot_hdc_qstream.sv)
-        self.su({"SC", "EID"}, {"TOT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1, a_ind=I.IND_I,
+        self.su({"SC", "EID"}, {"TOT"}, t, su_nout=1, su_nin=k_exp, a_base=V_["SC"], a_si=1, a_ind=I.IND_I,
                 a_ibase=V_["EID"], red=I.RED_SEQ, r_base=V_["TOT"], wrel=1)
         self.su({"TOT"}, {"DEN1"}, t, su_nout=1, su_nin=1, a_base=V_["TOT"], ad=I.AD_IMM, imm2=f32(1e-20),
                 dst=I.DST_VM, o_base=V_["DEN1"])
-        self.su({"SC", "EID", "DEN1"}, {"WGT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1,
+        self.su({"SC", "EID", "DEN1"}, {"WGT"}, t, su_nout=1, su_nin=k_exp, a_base=V_["SC"], a_si=1,
                 a_ind=I.IND_I, a_ibase=V_["EID"], b_base=V_["DEN1"], m1=I.M1_DIVB, m2=I.M2_IMM,
                 imm1=f32(m.route_scale), dst=I.DST_VM, o_base=V_["WGT"], o_si=1)
-        ex = [expert(k) for k in range(m.k_exp)]
+        ex = [expert(k) for k in range(k_exp)]
         ex[0][0]()
-        if m.k_exp > 1:
+        if k_exp > 1:
             ex[1][0]()
-        for k in range(m.k_exp):
+        for k in range(k_exp):
             if hook and k == MOE_HOOK:
                 hook()
             if k > 0:
                 ex[k - 1][2]()                         # w2 of the previous expert (its SiLU drained)
             ex[k][1]()                                 # SiLU k (its w13 completed: a later QE op issued)
-            if k + 2 < m.k_exp:
+            if k + 2 < k_exp:
                 ex[k + 2][0]()                         # w13 two ahead
-        ex[m.k_exp - 1][2]()
-        if hook and MOE_HOOK >= m.k_exp:
+        ex[k_exp - 1][2]()
+        if hook and MOE_HOOK >= k_exp:
             hook()
         ty = f"L{L}.moe_sum"
-        for k in range(1, m.k_exp + 1):
+        for k in range(1, k_exp + 1):
             src = V_["E0"] if k == 1 else V_["Y"]
             self.su({"E0" if k == 1 else "Y", f"E{k}"}, {"Y"}, ty, su_nout=1, su_nin=160, a_base=src, a_si=1,
-                    c_base=V_[f"E{k}"], c_si=1, ad=I.AD_C, rnd=int(k == m.k_exp), dst=I.DST_VM, o_base=V_["Y"],
+                    c_base=V_[f"E{k}"], c_si=1, ad=I.AD_C, rnd=int(k == k_exp), dst=I.DST_VM, o_base=V_["Y"],
                     o_si=1)
 
     def build(self, layers=None, embed=True, head=True):
@@ -802,6 +904,224 @@ class Builder:
             self.me(lay.mat["head"], V_["XN"], 0, {"XN"}, set(), "head", me_amax=1, me_oen=0)
         self.emit(dict(unit=I.UNIT_END, wait=31), set(), set(), "end")
         return schedule(self.prog)
+
+    # -- multi-token prediction (Layout(mtp=...)) ------------------------------------------
+    def ctl(self, op, tag, slot=0, lane=0, wait=0):
+        self.emit(dict(unit=I.UNIT_CTL, ctl=op, ctl_slot=slot, ctl_lane=lane, wait=wait), set(), set(), tag)
+
+    def mh_capture(self, part):
+        """The DSpark head's main hidden part: the mean of the residual's copies at
+        this layer's input, ((h0 + h1) + h2) + h3 times 1/4, BF16 (golden
+        main_hidden_part), into MH[part]."""
+        V_ = self.V
+        h, o = V_["H"], V_["MH"] + part * self.m.dim
+        t = "mtp.main_hidden"
+        n = self.m.dim
+        self.su({"H"}, {"MH"}, t, su_nout=1, su_nin=n, a_base=h, a_si=1, c_base=h + n, c_si=1, ad=I.AD_C,
+                dst=I.DST_VM, o_base=o, o_si=1)
+        self.su({"H", "MH"}, {"MH"}, t, su_nout=1, su_nin=n, a_base=o, a_si=1, c_base=h + 2 * n, c_si=1,
+                ad=I.AD_C, dst=I.DST_VM, o_base=o, o_si=1)
+        self.su({"H", "MH"}, {"MH"}, t, su_nout=1, su_nin=n, a_base=o, a_si=1, c_base=h + 3 * n, c_si=1,
+                ad=I.AD_C, e2=I.E2_MULIMM, imm1=f32(1.0 / self.m.hc), rnd=1, dst=I.DST_VM, o_base=o, o_si=1)
+
+    def dspark_seed(self):
+        """Every DSpark stage's window row of this slot's position, from its main
+        hidden (golden dspark_seed): main_x = main_norm(main_proj(MH)), then per
+        stage kv_norm(wkv(main_x)), RoPE (plain) at the position, FP8 QDQ."""
+        m, V_, lay, K = self.m, self.V, self.lay, self.K
+        t = "mtp.seed"
+        self.linq(lay.qmat["main_proj"], "MH", "MXA", set(), set(), t)
+        self.rmsnorm("MXA", m.dim, lay.cb["main_norm"], "MX", t)
+        for st in range(m.n_mtp):
+            L = m.L + st
+            self.linq(lay.qmat[(L, "wkv")], "MX", "KVA", set(), set(), t)
+            self.rmsnorm("KVA", 32, lay.cb[(L, "kv_norm")], "KVN", t)
+            self.rope("KVN", V_["KVN"], 1, HD, "rope_plain", DY["ROPE"], False, t)
+            self.qdq(I.QE_QDQ8, "KVN", 1, V_["KVQ"], {"KVQ"}, t)
+            self.kvt_write("KVQ", f"KT{L}", K[f"KT{L}"], DY["POS"], t)
+            self.su({"KVQ"}, {f"KR{L}"}, t, su_nout=1, su_nin=HD, a_base=V_["KVQ"], a_si=1, dst=I.DST_KV,
+                    o_base=K[f"KR{L}"], o_d=DY["ROW"], o_si=1)
+
+    def position_body(self, seed=True, verify=True):
+        """One slot of a (multi-)position pass of the main model: this slot's hash
+        and Engram rows, embedding, the 40 layers (capturing the DSpark main
+        hidden at the target layers), the head (verify: its argmax latched as
+        target ttok[slot]), and (seed) the DSpark window rows of the position."""
+        m, V_, lay = self.m, self.V, self.lay
+        self.serial(True)               # the XU holds one hash: a slot's gathers follow its own hash
+        self.xu(set(), {"EH"}, "embed", xu_op=I.XU_EHASH, xu_src=lay.cb["tmap"])
+        for li, L in enumerate(m.engram.layer_ids):
+            self.xu({"EH"}, {f"ER{L}"}, f"L{L}.engram", xu_op=I.XU_EGATHER, xu_src=lay.ebase[L],
+                    xu_dst=V_[f"ER{L}"], xu_layer=li, xu_n=24)
+        self.serial(False)
+        self.su(set(), {"PF"}, "embed", su_nout=1, su_nin=4, a_src=I.SRC_CLO, a_base=lay.cb["pre0"], a_si=1,
+                dst=I.DST_VM, o_base=V_["PF"], o_si=1)
+        self.su(set(), {"H", "SSX"}, "embed", su_nout=4, su_nin=160, a_src=I.SRC_WROM,
+                a_base=lay.emb_word * W * GR, a_d=DY["EMBED"], a_si=1, dst=I.DST_VM, o_base=V_["H"], o_so=160,
+                o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1, r_base=V_["SSX"])
+        for L in range(m.L):
+            if L in m.engram.layer_ids:
+                self.engram(L)
+            if L in m.dspark_targets:
+                self.mh_capture(m.dspark_targets.index(L))
+            self.layer(L)
+        self.hc_pre("PF", "X", "head", "SS")
+        self.rmsnorm("X", 160, lay.cb["norm"], "XN", "head", have_ss="SS")
+        if verify:
+            self.serial(True)           # the argmax register holds one head's result
+            self.me(lay.mat["head"], V_["XN"], 0, {"XN"}, set(), "head", me_amax=1, me_oen=0)
+            self.ctl(I.CTL_AMAX, "head", slot=self.slot, wait=1 << (I.UNIT_ME - 1))
+            self.serial(False)
+        else:
+            self.me(lay.mat["head"], V_["XN"], 0, {"XN"}, set(), "head", me_amax=1, me_oen=0)
+        if seed:
+            self.dspark_seed()
+
+    def layer(self, L, draft=False):
+        lay = self.lay
+        self.hc_mix_issue(L, "attn")
+        self.hc_pre("PF", "X", f"L{L}.attn_norm", "SS")
+        self.rmsnorm("X", 160, lay.cb[(L, "attn_norm")], "XN", f"L{L}.attn_norm", have_ss="SS")
+        self.attention(L, hook=lambda: self.hc_mix_finish(L, "attn"), draft=draft)
+        self.hc_post("Y", "POA", "CA", f"L{L}.hc_post")
+        self.hc_mix_issue(L, "ffn")
+        self.hc_pre("PA", "X", f"L{L}.ffn_norm", "SS")
+        self.rmsnorm("X", 160, lay.cb[(L, "ffn_norm")], "XN", f"L{L}.ffn_norm", have_ss="SS")
+        self.moe(L, hook=lambda: self.hc_mix_finish(L, "ffn"))
+        self.hc_post("Y", "POF", "CF", f"L{L}.hc_post")
+
+    def draft_body(self, rows):
+        """Block row `self.slot` of the DSpark draft (golden Model.draft), at
+        position pos + row (the anchor is pos - 1): row 0 embeds the pending
+        token stok[0], the others the noise token; the three stages; the last
+        stage's hc_pre and norm, the lm_head, then -- one row after another --
+        the Markov bias of the previous row's token (row 0: stok[0]), its argmax
+        (a SELECT of 1), latched as draft token stok[row + 1]."""
+        m, V_, lay = self.m, self.V, self.lay
+        i = self.slot
+        self.draft_last = rows - 1
+        self.su(set(), {"PF"}, "draft.embed", su_nout=1, su_nin=4, a_src=I.SRC_CLO, a_base=lay.cb["pre0"],
+                a_si=1, dst=I.DST_VM, o_base=V_["PF"], o_si=1)
+        emb = dict(a_d=DY["EMBED"]) if i == 0 else dict()
+        self.su(set(), {"H", "SSX"}, "draft.embed", su_nout=4, su_nin=160, a_src=I.SRC_WROM,
+                a_base=lay.emb_word * W * GR + (0 if i == 0 else m.noise_id * m.dim), a_si=1, dst=I.DST_VM,
+                o_base=V_["H"], o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1, r_base=V_["SSX"], **emb)
+        for st in range(m.n_mtp):
+            self.layer(m.L + st, draft=True)
+        t = "draft.head"
+        self.hc_pre("PF", "X", t, "SS")
+        self.rmsnorm("X", 160, lay.cb["mtp_norm"], "XN", t, have_ss="SS")
+        self.serial(True)               # the sampling chain: row i needs row i-1's token
+        self.me(lay.mat["head"], V_["XN"], V_["LG"], {"XN"}, {"LG"}, t)
+        g = dict(a_d=DY["TOK32"]) if i == 0 else dict(a_ind=I.IND_O, a_ibase=V_["DTOK"] + i - 1, a_so=32)
+        self.su({"DTOK"}, {"MBX"}, t, su_nout=1, su_nin=32, a_src=I.SRC_WROM, a_base=lay.memb_word * W * GR,
+                a_si=1, dst=I.DST_VM, o_base=V_["MBX"], o_si=1, **g)
+        self.me(lay.mat["markov"], V_["MBX"], V_["MB"], {"MBX"}, {"MB"}, t)
+        nv = m.c["vocab_size"]
+        self.su({"LG", "MB"}, {"LG"}, t, su_nout=1, su_nin=nv, a_base=V_["LG"], a_si=1, c_base=V_["MB"], c_si=1,
+                ad=I.AD_C, dst=I.DST_VM, o_base=V_["LG"], o_si=1)
+        self.xu({"LG"}, {"DTOK"}, t, xu_op=I.XU_SEL, xu_src=V_["LG"], xu_dst=V_["DTOK"] + i, xu_n=nv, xu_k=1)
+        self.ctl(I.CTL_TOKX, t, slot=i + 1, wait=1 << (I.UNIT_XU - 1))
+        self.serial(False)
+
+
+def mx_batchable(f):
+    """A weight op one read of which may serve several slots: always issued,
+    its addresses and counts free of DYN values, not expert-indexed."""
+    if f.get("pred", 0) != I.PRED_ALWAYS:
+        return False
+    u = f["unit"]
+    if u == I.UNIT_ME:
+        return not f.get("me_wsrc", 0) and not f.get("me_amax", 0) and \
+            not any(f.get(k, 0) for k in ("me_d_wbase", "me_d_xbase", "me_d_obase", "me_d_nout", "me_d_tiles",
+                                          "me_d_k"))
+    if u == I.UNIT_QE:
+        return f.get("qe_mode", 0) == I.QE_LINQ and not f.get("qe_ind", 0) and not f.get("qe_d_obase", 0)
+    return u == I.UNIT_HE
+
+
+def mx_combine(lay, grp):
+    """One weight op for the slots of grp (consecutive): slot p's x at + p*xps,
+    its output at + p*ops."""
+    f, reads, writes, tag = grp[0]
+    if len(grp) == 1:
+        return grp[0]
+    f = dict(f)
+    ss = lay.slot_stride
+    u = f["unit"]
+    xk, ok, oscale = {I.UNIT_ME: ("me_xbase", "me_obase", W), I.UNIT_QE: ("qe_xbase", "qe_obase", 1),
+                      I.UNIT_HE: ("he_xbase", "he_obase", 1)}[u]
+    for p, (g, _, _, _) in enumerate(grp):
+        assert g[xk] == f[xk] + p * ss and g[ok] == f[ok] + p * ss // oscale, (tag, p)
+        assert {k: v for k, v in g.items() if k not in (xk, ok, "dslot", "_slot")} == \
+            {k: v for k, v in f.items() if k not in (xk, ok, "dslot", "_slot")}, tag
+    f.update(mx_m=len(grp), mx_xps=ss, mx_ops=ss // oscale)
+    return (f, set().union(*(r for _, r, _, _ in grp)), set().union(*(w for _, _, w, _ in grp)), tag)
+
+
+def merge_slots(lay, builders, m=1):
+    """Interleave the slots' (structurally identical) instruction lists: op k of
+    every slot before op k+1 of any, so a layer's weight ops for all slots sit
+    together -- and a batchable weight op is ONE instruction per m consecutive
+    slots (mx_m); a serial section runs whole for slot 0, then slot 1, ..."""
+    progs = [b.prog for b in builders]
+    n = len(progs[0])
+    assert all(len(pr) == n for pr in progs), [len(pr) for pr in progs]
+    out, k = [], 0
+    while k < n:
+        f0 = progs[0][k][0]
+        for pr in progs:
+            assert pr[k][0]["unit"] == f0["unit"] and pr[k][3] == progs[0][k][3], (k, pr[k][3])
+        sid = f0.get("_serial")
+        if sid is not None:
+            e = k
+            while e < n and progs[0][e][0].get("_serial") == sid:
+                e += 1
+            for pr in progs:
+                out.extend(pr[k:e])
+            k = e
+            continue
+        if m > 1 and mx_batchable(f0):
+            for c in range(0, len(progs), m):
+                out.append(mx_combine(lay, [pr[k] for pr in progs[c:c + m]]))
+        else:
+            out.extend(pr[k] for pr in progs)
+        k += 1
+    return out
+
+
+def build_mtp(lay, gamma, m=1, qchunk=None):
+    """The MTP configuration's two programs, one image:
+
+    STEP (entry 0): one position (prefill, or plain decode) -- the pass of one
+    slot, seeding the DSpark window rows, END with the token.
+
+    ITER (entry `iter_entry`): one speculative step from the pending token
+    stok[0] at pos (anchor pos-1): the DSpark draft over its block
+    (dspark_block_size rows, gamma of whose tokens are verified), DYN, the
+    verify pass of slots 0 .. gamma (tokens stok[0 .. gamma], positions pos ..
+    pos+gamma) with its weight ops m slots per read, ACCEPT, END with the
+    bonus token.  Returns (program, iter_entry)."""
+    mm = lay.m
+    B = mm.dspark_block
+    assert 1 <= gamma <= B and gamma + 1 <= lay.nslots and B <= lay.nslots
+    step = Builder(lay, qchunk, 0)
+    step.position_body(seed=True, verify=False)
+    prog = merge_slots(lay, [step])
+    prog.append((dict(unit=I.UNIT_END, wait=31), set(), set(), "end"))
+    step_prog = schedule(prog)
+    drafts = [Builder(lay, qchunk, i) for i in range(B)]
+    for b in drafts:
+        b.draft_body(B)
+    ver = [Builder(lay, qchunk, j) for j in range(gamma + 1)]
+    for b in ver:
+        b.position_body(seed=True, verify=True)
+    prog = merge_slots(lay, drafts, m)
+    prog.append((dict(unit=I.UNIT_CTL, ctl=I.CTL_DYN, wait=0), set(), set(), "dyn"))
+    prog += merge_slots(lay, ver, m)
+    prog.append((dict(unit=I.UNIT_CTL, ctl=I.CTL_ACCEPT, ctl_slot=gamma, wait=31), set(), set(), "accept"))
+    prog.append((dict(unit=I.UNIT_END, wait=31), set(), set(), "end"))
+    return step_prog + schedule(prog), len(step_prog)
 
 
 def su_static(f):
@@ -963,6 +1283,10 @@ class Machine:
     def __init__(self, lay, kv, vm):
         self.lay = lay
         self.m = lay.m
+        self.mtp = lay.mtp is not None
+        self.amax_lane = [0] * 8
+        self.head_log = []                             # every argmax head's logits, in execution order
+        self.sel_first = 0
         self.vm = vm.copy()
         self.kv = kv.copy()
         self.wrom = np.stack(lay.words).reshape(-1)
@@ -973,28 +1297,98 @@ class Machine:
         self.tokens = []
         self.eh = None
         self.argmax = None
+        self.slot_logits = {}
         self.logits = []
         self.trace = {}
 
     def wrom_f32(self, e):
         return G.from_bits(self.wrom[e].astype(np.uint32) << 16)
 
-    def run(self, prog, token, pos, stop=None):
-        self.dyn = I.dyn_values(token, pos)
+    def run(self, prog, token, pos, stop=None, entry=0):
+        """Run from `entry` to the next END.  MTP layouts: slot j of the step sits at
+        pos + j with token stok[j] (stok[0] = token); the Engram history
+        (self.tokens) takes a slot's token only when END (a one-position step) or
+        ACCEPT commits it.  Returns the token END reports."""
         self.token, self.pos = token, pos
-        self.tokens.append(int(token))
-        for n, f in enumerate(prog):
+        if self.mtp:
+            self.stok = [int(token)] + [0] * (I.NSLOT - 1)
+            self.ttok = [0] * I.NSLOT
+            self.banks = [I.dyn_values(self.stok[j], pos + j) for j in range(I.NSLOT)]
+            self.accepted = None
+            self.drafts = []
+        else:
+            self.dyn = I.dyn_values(token, pos)
+            self.tokens.append(int(token))
+        for n in range(entry, len(prog)):
+            f = prog[n]
             if stop is not None and n >= stop:
                 break
             f = {name: f.get(name, 0) for name, _ in I.FIELDS} | {"_tag": f.get("_tag", "")}
-            if f["pred"] == I.PRED_ODD and not (pos & 1):
+            if f["unit"] == I.UNIT_CTL:
+                if f["ctl"] == I.CTL_END:
+                    if self.mtp and self.accepted is None:
+                        self.tokens.append(self.stok[0])
+                    break
+                self.control(f)
                 continue
-            if f["pred"] == I.PRED_NZ and pos == 0:
+            p = pos
+            if self.mtp:
+                self.dyn = self.banks[f["dslot"]]
+                p = pos + f["dslot"]
+            if f["pred"] == I.PRED_ODD and not (p & 1):
+                continue
+            if f["pred"] == I.PRED_NZ and p == 0:
                 continue
             {I.UNIT_ME: self.me, I.UNIT_SU: self.su, I.UNIT_QE: self.qe, I.UNIT_XU: self.xu,
-             I.UNIT_HE: self.he}.get(
-                f["unit"], lambda f: None)(f)
+             I.UNIT_HE: self.he}[f["unit"]](f)
         return self.argmax
+
+    def poison(self, n):
+        """NaN into every position-indexed row at or past position n (window rows
+        of every layer and DSpark stage, compressed rows, index keys, slot ring
+        entries of positions >= n): a correct machine never reads them before the
+        next step rewrites them."""
+        lay, nan = self.lay, F(np.nan)
+        for L in range(lay.L + lay.nmtp):
+            for t in range(n, TMAX):
+                for d in range(HD):
+                    self.kv[lay.kt_elem(lay.kv.map[f"KT{L}"], t, d)] = nan
+                    self.kv[lay.kv.map[f"KR{L}"] + t * HD + d] = nan
+        for s in self.m.kv_src:
+            r = self.m.ratio[s]
+            for g in range(n // r, lay.nrows[s]):
+                self.vm[lay.vm.map[f"CKV{s}"] + g * HD: lay.vm.map[f"CKV{s}"] + (g + 1) * HD] = nan
+                for d in range(HD):
+                    self.kv[lay.kt_elem(lay.kv.map[f"IK{s}"], g, d)] = nan
+            if lay.ring > 2:
+                # live: only the entry of position n-1 when its group (n-1, n) is still open
+                keep = (n - 1) % lay.ring if (n - 1) % 2 == 0 else None
+                for e_i in range(lay.ring):
+                    if e_i != keep:
+                        e = lay.vm.map[f"SLOT{s}"] + e_i * 64
+                        self.vm[e:e + 64] = nan
+
+    def control(self, f):
+        op, j = f["ctl"], f["ctl_slot"]
+        if op == I.CTL_TOKX:
+            self.stok[j] = self.sel_first
+            self.drafts = self.stok[1:j + 1]
+        elif op == I.CTL_AMAX:
+            self.ttok[j] = self.amax_lane[f["ctl_lane"]]
+        elif op == I.CTL_DYN:
+            if getattr(self, "force", None) is not None:
+                self.stok[1:len(self.drafts) + 1] = [int(x) for x in self.force(list(self.drafts))]
+                self.drafts = self.stok[1:len(self.drafts) + 1]
+            self.banks = [I.dyn_values(self.stok[k], self.pos + k) for k in range(I.NSLOT)]
+        elif op == I.CTL_ACCEPT:
+            g = j                                      # drafts verified
+            a = 0
+            while a < g and self.stok[a + 1] == self.ttok[a]:
+                a += 1
+            self.accepted = a
+            self.emitted = self.ttok[:a + 1]
+            self.tokens.extend(self.stok[:a + 1])      # the hash history: committed positions only
+            self.argmax = self.ttok[a]
 
     # -- matrix engine (tools/hdc_program.py semantics, FP32 lane mode) ------------------
     def me(self, f):
@@ -1004,9 +1398,14 @@ class Machine:
         K = f["me_k"] + d[f["me_d_k"]]
         if n == 0 or tiles == 0 or K == 0:
             return
+        for lane in range(max(1, f["mx_m"])):
+            self.me_lane(f, n, tiles, K, lane)
+
+    def me_lane(self, f, n, tiles, K, lane):
+        d = self.dyn
         wb = f["me_wbase"] + d[f["me_d_wbase"]]
-        xb = f["me_xbase"] + d[f["me_d_xbase"]]
-        ob = f["me_obase"] + d[f["me_d_obase"]]
+        xb = f["me_xbase"] + d[f["me_d_xbase"]] + lane * f["mx_xps"]
+        ob = f["me_obase"] + d[f["me_d_obase"]] + lane * f["mx_ops"]
         split = 0 if f["me_wsrc"] else f["me_split"]
         hg = f["me_hg"] if f["me_wsrc"] else 0
         S = 1 << split
@@ -1042,22 +1441,28 @@ class Machine:
             order = np.argsort(nidx)
             self.logits = acc[order]
             self.argmax = int(nidx[order][np.argmax(acc[order])])
+            self.amax_lane[lane] = self.argmax
+            self.head_log.append(self.logits)
+            if self.mtp:
+                self.slot_logits[f["dslot"] + lane] = self.logits
 
     # -- hyper-connection projection engine ------------------------------------------------
     def he(self, f):
         """out[row] = sum_k w[row, k] * x[k]: chunk c (he_k terms from x[c*he_k])
         sequential from +0 in lane group c, the HC_SPLIT chunk sums a pairwise tree."""
         n, K, S, NL = f["he_nout"], f["he_k"], V.HC_SPLIT, I.HE_LANES
-        acc = np.zeros((S, NL * IL), dtype=F)
-        for k in range(K):
-            w = self.hrom[f["he_wbase"] + k * IL: f["he_wbase"] + (k + 1) * IL].reshape(IL, S, NL)
-            w = w.transpose(1, 0, 2).reshape(S, IL * NL)               # [chunk, row j*NL + l]
-            x = self.vm[f["he_xbase"] + np.arange(S) * K + k]
-            acc = G.add(acc, G.mul(w, x[:, None]))
-        parts = list(acc)
-        while len(parts) > 1:
-            parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
-        self.vm[f["he_obase"]:f["he_obase"] + n] = parts[0][:n]
+        for lane in range(max(1, f["mx_m"])):
+            xb, ob = f["he_xbase"] + lane * f["mx_xps"], f["he_obase"] + lane * f["mx_ops"]
+            acc = np.zeros((S, NL * IL), dtype=F)
+            for k in range(K):
+                w = self.hrom[f["he_wbase"] + k * IL: f["he_wbase"] + (k + 1) * IL].reshape(IL, S, NL)
+                w = w.transpose(1, 0, 2).reshape(S, IL * NL)               # [chunk, row j*NL + l]
+                x = self.vm[xb + np.arange(S) * K + k]
+                acc = G.add(acc, G.mul(w, x[:, None]))
+            parts = list(acc)
+            while len(parts) > 1:
+                parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+            self.vm[ob:ob + n] = parts[0][:n]
 
     # -- stream unit -------------------------------------------------------------------------
     def addr(self, f, s, no, ni, idx=None):
@@ -1184,25 +1589,27 @@ class Machine:
         if mode == I.QE_QDQ4E:
             self.vm[ob:ob + nb * 32] = V.qdq_fp4_e4m3(x, 16)
             return
-        xq, xe = V.quant_fp8(x)
         wb = f["qe_wbase"]
         if f["qe_ind"]:
             wb += int(to_u32(self.vm[f["qe_ibase"]])) * f["qe_istride"]
         n, rounds = f["qe_nout"], f["qe_tiles"]
         table = V.E2M1 if f["qe_fp4"] else V.E4M3
-        for rr in range(rounds):
-            for j in range(IL):
-                rows = (rr * IL + j) * BL + np.arange(BL)
-                acc = np.zeros(BL, dtype=F)
-                for kb in range(nb):
-                    word = wb + (rr * nb + kb) * IL + j
-                    codes = self.qcodes[word]
-                    wv = table[codes & (15 if f["qe_fp4"] else 255)]
-                    dsum = (wv @ xq[kb * 32:(kb + 1) * 32]).astype(F)
-                    acc = G.add(acc, np.ldexp(dsum, self.qexp[word] + xe[kb]).astype(F))
-                y = G.to_bf16(acc)
-                ok = rows < n
-                self.vm[f["qe_obase"] + rows[ok]] = y[ok]
+        for lane in range(max(1, f["mx_m"])):
+            xb = f["qe_xbase"] + lane * f["mx_xps"]
+            xq, xe = V.quant_fp8(self.vm[xb:xb + nb * 32])
+            for rr in range(rounds):
+                for j in range(IL):
+                    rows = (rr * IL + j) * BL + np.arange(BL)
+                    acc = np.zeros(BL, dtype=F)
+                    for kb in range(nb):
+                        word = wb + (rr * nb + kb) * IL + j
+                        codes = self.qcodes[word]
+                        wv = table[codes & (15 if f["qe_fp4"] else 255)]
+                        dsum = (wv @ xq[kb * 32:(kb + 1) * 32]).astype(F)
+                        acc = G.add(acc, np.ldexp(dsum, self.qexp[word] + xe[kb]).astype(F))
+                    y = G.to_bf16(acc)
+                    ok = rows < n
+                    self.vm[f["qe_obase"] + lane * f["mx_ops"] + rows[ok]] = y[ok]
 
     # -- auxiliary unit ---------------------------------------------------------------------------
     def xu(self, f):
@@ -1215,11 +1622,14 @@ class Machine:
             vals = self.vm[f["xu_src"]:f["xu_src"] + n]
             sel = sorted(int(i) for i in V.topk_lowest_index(vals, k))
             self.vm[f["xu_dst"]:f["xu_dst"] + k] = np.array(sel, dtype=np.uint32).view(F)
+            if sel:
+                self.sel_first = sel[0]
         elif op == I.XU_SINK:
             e = self.vm[f["xu_src"]:f["xu_src"] + 16].reshape(4, 4)
             self.vm[f["xu_dst"]:f["xu_dst"] + 16] = sinkhorn(e, self.m).reshape(-1)
         elif op == I.XU_EHASH:
-            self.eh = [self.m.engram.hashes(self.tokens, li) for li in range(len(self.m.engram.layer_ids))]
+            hist = self.tokens + self.stok[:f["dslot"] + 1] if self.mtp else self.tokens
+            self.eh = [self.m.engram.hashes(hist, li) for li in range(len(self.m.engram.layer_ids))]
         elif op == I.XU_EGATHER:
             li = f["xu_layer"]
             L = self.m.engram.layer_ids[li]
@@ -1393,6 +1803,44 @@ def write_images(out, lay, prog, roms_from=None):
     (out / "prog.hex").write_text(hexwords(words, I.INSTR_BITS))
     (out / "prog_tags.txt").write_text("".join(f"{n} {f['_tag']}\n" for n, f in enumerate(prog)))
     return len(words)
+
+
+def mtp_layout(model, gamma):
+    return Layout(model, mtp={"slots": max(model.dspark_block, gamma + 1)})
+
+
+def mtp_run(lay, prog, entry, prompt, n, gamma, forced=None, poison=False, record=None):
+    """The MTP configuration on the ISA model from an EMPTY state: the prompt
+    through the STEP program one position at a time, then ITER steps until n
+    tokens.  forced(q, drafts) may replace the draft tokens (the TOKX results)
+    before the verify pass -- an acceptance-coverage device; poison=True fills
+    every row past the committed positions with NaN after each step (the
+    dead-row invariant: nothing past them may be read before it is rewritten).
+    Returns (tokens, per-token logits, per-step records)."""
+    mach = Machine(lay, np.zeros(I.KV_WORDS * W, dtype=F), np.zeros(lay.vm.size, dtype=F))
+    for p, t in enumerate(prompt):
+        mach.run(prog, t, p, entry=0)
+    out, rows = [mach.argmax], [mach.logits.copy()]
+    q, y = len(prompt) - 1, mach.argmax
+    steps = []
+    max_pos = int(lay.m.c["max_seq_len"])
+    while len(out) < n:
+        assert q + 1 + gamma < max_pos, "the step would pass max_seq_len"
+        if forced is not None:
+            mach.force = lambda d, q=q: forced(q, d)
+        mach.slot_logits = {}
+        mach.run(prog, y, q + 1, entry=entry)
+        a = mach.accepted
+        steps.append({"pos": q + 1, "token": y, "drafts": list(mach.drafts), "targets": mach.ttok[:gamma + 1],
+                      "accepted": a, "emitted": list(mach.emitted)})
+        out += mach.emitted
+        rows += [mach.slot_logits[j] for j in range(a + 1)]
+        q, y = q + 1 + a, mach.argmax
+        if poison:
+            mach.poison(q + 1)
+    if record is not None:
+        record["machine"] = mach
+    return out[:n], rows[:n], steps
 
 
 def main():
