@@ -124,5 +124,97 @@ def main() -> int:
     return 0
 
 
+# --------------------------------------------------------------------------
+# Markdown tables for docs/DFT.md, every number annotated with its source
+# --------------------------------------------------------------------------
+
+SRC = "results/dft/summary.json"
+LABEL = {
+    "stream": "stream unit `ot_hdc_stream`",
+    "matvec": "matrix engine `ot_hdc_matvec`",
+    "kv_stream": "KV streamer `ot_hdc_kv_stream`",
+    "sinkhorn": "Sinkhorn unit `ot_hdc_sinkhorn`",
+    "pkg_ctrl": "package controller `ot_rom_pkg_ctrl`",
+    "fabric_router": "fabric router `ot_rom_fabric_router`",
+    "pkg_link": "package link `ot_rom_pkg_link`",
+    "argmax_reduce": "argmax collective `ot_rom_argmax_reduce`",
+    "mcast_node": "multicast node `ot_rom_mcast_node`",
+    "moe_dispatch": "MoE dispatch `ot_rom_moe_dispatch`",
+    "expert_port": "MoE expert port `ot_rom_moe_expert_port`",
+    "tap": "JTAG TAP `ot_tap`",
+}
+ARCH_SHORT = {"hbm_comparator": "HBM", "qwen3_8b_rom": "Qwen3 ROM", "v41_rom_array": "V4.1 array"}
+
+
+def _fig(value, path, name, scale=None, fmt="{:,}"):
+    shown = fmt.format(value)
+    sc = f' scale="{scale}"' if scale else ""
+    plain = shown.replace(",", "").lstrip("+")
+    return f'{shown} <!-- figure: {plain} src="{SRC}#{path}"{sc} name="{name}" -->'
+
+
+def markdown() -> str:
+    data = json.loads((ATPG / "summary.json").read_text())
+    out = ["| Block | Architectures | Scan cells | Chains (longest) | Pin faults | Fault coverage | Test coverage | Patterns | Gate-level check | Scan off equivalent |",
+           "|---|---|---|---|---|---|---|---|---|---|"]
+    for b, r in data["blocks"].items():
+        a = r.get("atpg")
+        if not a:
+            continue
+        p = f"blocks.{b}.atpg"
+        g = a.get("gate_level")
+        if g:
+            gl = (f"{g['good_machine_patterns']} patterns, {g['good_machine_mismatches']} mismatches; "
+                  f"{g['capture_faults_confirmed'] + g['chain_faults_confirmed']}/"
+                  f"{g['capture_faults_injected'] + g['chain_faults_injected']} injected faults seen")
+        else:
+            gl = "not run"
+        eq = r.get("scan_off_equivalence")
+        eqs = (f"proven ({eq['equiv_cells']:,} points)" if eq and eq["proven"] else ("not proven" if eq else "not run"))
+        out.append(
+            f"| {LABEL.get(b, b)} | {', '.join(ARCH_SHORT[x] for x in r['architectures'])} | "
+            f"{_fig(a['scan_cells'], p + '.scan_cells', b + ' scan cells')} | "
+            f"{a['chains']} ({a['max_chain_length']}) | "
+            f"{_fig(a['faults'], p + '.faults', b + ' pin faults')} | "
+            f"{_fig(round(100 * a['fault_coverage'], 2), p + '.fault_coverage', b + ' fault coverage %', 100, '{:.2f}')}% | "
+            f"{_fig(round(100 * a['test_coverage'], 2), p + '.test_coverage', b + ' test coverage %', 100, '{:.2f}')}% | "
+            f"{_fig(a['capture_patterns'], p + '.capture_patterns', b + ' patterns')} | {gl} | {eqs} |"
+        )
+    out.append("")
+    out.append("| Block | Std-cell area, no scan → scan (µm²) | Area | Routed Fmax, no scan → scan (MHz) | Fmax | Routed wirelength | Status, no scan / scan |")
+    out.append("|---|---|---|---|---|---|---|")
+    for b, r in data["blocks"].items():
+        rt = r.get("route") or {}
+        o = rt.get("overhead")
+        if not o:
+            continue
+        ns, sc = rt["noscan"], rt["scan"]
+        p = f"blocks.{b}.route"
+        out.append(
+            f"| {LABEL.get(b, b)} | {ns['standard_cell_area_um2']:,} → {sc['standard_cell_area_um2']:,} | "
+            f"{_fig(round(100 * o['standard_cell_area'], 1), p + '.overhead.standard_cell_area', b + ' scan area overhead %', 100, '{:+.1f}')}% | "
+            f"{_fig(ns['fmax_mhz'], p + '.noscan.fmax_mhz', b + ' Fmax no scan', None, '{:,.1f}')} → "
+            f"{_fig(sc['fmax_mhz'], p + '.scan.fmax_mhz', b + ' Fmax scan', None, '{:,.1f}')} | "
+            f"{_fig(round(100 * o['fmax'], 1), p + '.overhead.fmax', b + ' scan Fmax change %', 100, '{:+.1f}')}% | "
+            f"{_fig(round(100 * o['routed_wirelength'], 1), p + '.overhead.routed_wirelength', b + ' scan wirelength overhead %', 100, '{:+.1f}')}% | "
+            f"{ns['status']} / {sc['status']} |"
+        )
+    return "\n".join(out) + "\n"
+
+
 if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--markdown":
+        print(markdown())
+        raise SystemExit(0)
+    if len(sys.argv) > 1 and sys.argv[1] == "--write-doc":
+        # regenerate the tables between the markers in docs/DFT.md
+        main()
+        doc = ROOT / "docs/DFT.md"
+        text = doc.read_text()
+        begin, end = "<!-- dft-tables:begin -->", "<!-- dft-tables:end -->"
+        a, b = text.index(begin) + len(begin), text.index(end)
+        doc.write_text(text[:a] + "\n" + markdown() + text[b:])
+        raise SystemExit(0)
     raise SystemExit(main())
