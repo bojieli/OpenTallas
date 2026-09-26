@@ -463,24 +463,28 @@ def project_hbm(ghz=1.0, batch=64):
         b200_rows[f"batch{b}"] = {"per_user_tok_s": round(1 / step, 1), "aggregate_tok_s": round(b / step, 1)}
     an = json.loads((ROOT / "results/roofline/n5_vs_b200/analytical.json").read_text())
 
-    def cite(path, model, design, b):
-        d = json.loads((ROOT / path).read_text()) if path else an
-        for c in d["comparisons"]:
-            if c["rom_design"] == design and c["batch_size"] == b:
-                return {"source": f"{path or 'results/roofline/n5_vs_b200/analytical.json'}#comparisons[rom_design="
-                                  f"{design},batch_size={b}]",
-                        "rom_per_user_tokens_s": c["rom_per_user_tokens_s"],
-                        "iso_area_gpu_per_user_tokens_s": c["iso_area_gpu_per_user_tokens_s"],
-                        "iso_area_gpu_design": c["iso_area_gpu_design"]}
-        return None
+    def cite(path, model, b):
+        """The analytical study's fastest per-user ROM ARRAY design for `model`
+        at batch b (the wafer is not the deployment target), chosen by rate
+        rather than by name so the citation follows the study as it is re-run."""
+        path = path or "results/roofline/n5_vs_b200/analytical.json"
+        d = json.loads((ROOT / path).read_text())
+        cs = [c for c in d["comparisons"] if c["rom_design"].startswith(model + "/") and c["batch_size"] == b
+              and "-array-" in c["rom_design"]]
+        if not cs:
+            raise SystemExit(f"{path}: no ROM array design for {model} at batch {b}")
+        c = max(cs, key=lambda c: c["rom_per_user_tokens_s"])
+        return {"source": f"{path}#comparisons[rom_design={c['rom_design']},batch_size={b}]",
+                "rom_design": c["rom_design"], "rom_per_user_tokens_s": c["rom_per_user_tokens_s"],
+                "iso_area_gpu_per_user_tokens_s": c["iso_area_gpu_per_user_tokens_s"],
+                "iso_area_gpu_design": c["iso_area_gpu_design"],
+                "selection": "fastest per-user ROM array design at this batch"}
     qwen = {"model": "Qwen3-8B", "position": pos, "clock_ghz": ghz, "batch": batch,
             "hbm_sustained_fraction_of_peak": round(eta, 4), "rows": rows,
             "b200_roofline": dict(b200, **b200_rows, basis="step = max((weights + B x KV) / 7.2 TB/s, "
                                                              "2 x params x B / 2.25 PFLOP/s): the analytical study's "
                                                              "b200_sxm-x1 read bandwidth and BF16 rate"),
-            "analytical_rom": {f"batch{b}": cite(None, "Qwen3-8B", d, b) for b, d in
-                               ((1, "Qwen3-8B/ROM-N5-native-SRAMKV-array-hw-tensor-x6-romfill"),
-                                (batch, "Qwen3-8B/ROM-N5-native-HBMKV-array-hw-hybrid-x227-romfill"))}}
+            "analytical_rom": {f"batch{b}": cite(None, "Qwen3-8B", b) for b in (1, batch)}}
     # DeepSeek-V4.1-Flash, analytical
     vp = "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json"
     vd = json.loads((ROOT / vp).read_text())
@@ -490,8 +494,7 @@ def project_hbm(ghz=1.0, batch=64):
     k_exp, n_exp = ms["experts_per_token"], ms["num_experts"]
     dense = active - k_exp * per_exp
     kv_u = ms["kv_read_bytes_per_user_token"]
-    rom_design = "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188"
-    rom = {b: cite(vp, "DeepSeek-V4.1-Flash", rom_design, b) for b in (1, batch)}
+    rom = {b: cite(vp, "DeepSeek-V4.1-Flash", b) for b in (1, batch)}
     cap_stacks = math.ceil(ms["checkpoint_bytes"] / json.loads(
         (ROOT / "configs/hardware/technology.json").read_text())["hbm"]["hbm3e"]["stack_capacity_bytes"]["value"])
     vrows = []

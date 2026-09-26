@@ -437,7 +437,12 @@ def projections() -> dict:
     return T.project_hbm()
 
 
-def run_campaign(skip_v41=False) -> dict:
+def run_campaign(skip_v41=False, phase_dump=None) -> dict:
+    """phase_dump: a path prefix; each phase's result is also written there as
+    soon as it completes (<prefix>.qwen.json, .v41.json), so a later failure
+    does not discard hours of simulation (diagnostics only: the record is the
+    returned dict)."""
+    proj = projections()                          # cheap, and first: a failure here costs nothing
     lint = {}
     for top, srcs in (("ot_hdc_wstream", [WS_RTL]), ("ot_hdc_qstream", [QS_RTL]), ("ot_hdc_hbm_arb", [ARB])):
         r = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", top, *map(str, srcs)],
@@ -446,9 +451,13 @@ def run_campaign(skip_v41=False) -> dict:
     with tempfile.TemporaryDirectory() as scratch:
         s = Path(scratch)
         qwen = qwen_phase(s)
+        if phase_dump:
+            Path(f"{phase_dump}.qwen.json").write_text(json.dumps(qwen, indent=1, sort_keys=True))
         v41 = None
         if not skip_v41:
             v41 = v41_phase(s)
+            if phase_dump:
+                Path(f"{phase_dump}.v41.json").write_text(json.dumps(v41, indent=1, sort_keys=True))
     checks = {f"qwen_{k}": v for k, v in qwen["checks"].items()}
     if v41:
         checks.update({f"v41_{k}": v for k, v in v41["checks"].items()})
@@ -472,7 +481,7 @@ def run_campaign(skip_v41=False) -> dict:
         "checks": checks,
         "qwen3": qwen,
         "v41": v41,
-        "projections": projections(),
+        "projections": proj,
         "verilator_lint": lint,
         "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in inputs if p.exists()},
     }
@@ -483,7 +492,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=OUT)
     parser.add_argument("--skip-v41", action="store_true")
     args = parser.parse_args()
-    result = run_campaign(args.skip_v41)
+    result = run_campaign(args.skip_v41, phase_dump=args.output.with_suffix(""))
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     print(result["status"], json.dumps({k: v for k, v in result["checks"].items() if not v}))
     for row in result["qwen3"]["sweep"]:
