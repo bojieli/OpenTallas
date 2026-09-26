@@ -222,7 +222,7 @@ def budget_check(block: str, budget: dict[str, Any], lib: Path, latency_ps: floa
         within = actual is None or actual <= b["internal_budget_ps"] + 0.05
         rows[port] = {"budget_ps": b["internal_budget_ps"], "routed_ps": None if actual is None else round(actual, 1),
                       "through_ps": None if through is None else round(through, 1),
-                      "through_budget_ps": b.get("feedthrough_budget_ps"), "within_budget": within}
+                      "through_split": b.get("through_split"), "within_budget": within}
         if not within:
             over.append(port)
     return {"ports": rows, "over_budget": over,

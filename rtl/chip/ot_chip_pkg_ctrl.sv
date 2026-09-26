@@ -56,6 +56,13 @@ module ot_chip_pkg_ctrl (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) start_r <= 1'b0; else start_r <= c_start;
     always @(posedge clk) begin token_r <= c_token; pos_r <= c_pos; end
+    // core_done is also registered: inside the controller it fans into the
+    // job hand-off and the vector-memory ports (~460 ps).  The mask covers the
+    // cycle the start sits in its register and the cycle after, while the
+    // registered done still carries the previous job's.
+    reg           done_r;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) done_r <= 1'b0; else done_r <= core_done & ~start_r;
     assign core_start = start_r;
     assign core_token = token_r;
     assign core_pos   = pos_r;
@@ -66,7 +73,7 @@ module ot_chip_pkg_ctrl (
         .cfg_users(cfg_users), .cfg_prompt_len(cfg_prompt_len), .cfg_gen_len(cfg_gen_len),
         .in_valid(in_valid), .in_ready(in_ready), .in_data(in_data), .in_last(in_last),
         .out_valid(out_valid), .out_ready(out_ready), .out_data(out_data), .out_last(out_last),
-        .core_start(c_start), .core_token(c_token), .core_pos(c_pos), .core_done(core_done & ~start_r),
+        .core_start(c_start), .core_token(c_token), .core_pos(c_pos), .core_done(done_r & ~start_r),
         .core_next_token(core_next_token), .core_next_val(core_next_val), .kv_base(kv_base),
         .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .vm_re(vm_re), .vm_raddr(vm_raddr),
         .vm_rq(vm_rq), .pr_re(pr_re), .pr_user(pr_user), .pr_pos(pr_pos), .pr_q(pr_q),

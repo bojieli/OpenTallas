@@ -131,6 +131,25 @@ module ot_chip_hdc_tile #(
     wire [AW-1:0]     hq_addr_core, kv_base;
     wire              kvs_fault;
 
+    // HBM response ports through register slices: the streamer's ready is
+    // combinational from the response tag (~500 ps), which cannot also cross
+    // the PHY boundary in the same cycle.
+    wire [3:0]     hs_v, hs_rdy;
+    wire [4*14-1:0] hs_tag;
+    wire [4*4-1:0]  hs_beat;
+    wire [4*256-1:0] hs_data;
+    genvar h;
+    generate
+        for (h = 0; h < 4; h = h + 1) begin : g_hr
+            ot_chip_skid #(.W(14 + 4 + 256)) u_hr (
+                .clk(clk), .rst_n(rst_n),
+                .in_valid(hr_v[h]), .in_ready(hr_rdy[h]),
+                .in_data({hr_tag[h*14 +: 14], hr_beat[h*4 +: 4], hr_data[h*256 +: 256]}),
+                .out_valid(hs_v[h]), .out_ready(hs_rdy[h]),
+                .out_data({hs_tag[h*14 +: 14], hs_beat[h*4 +: 4], hs_data[h*256 +: 256]}));
+        end
+    endgenerate
+
     ot_hdc_kv_stream u_kvs (
         .clk(clk), .rst_n(rst_n), .tok_start(start), .tok_pos(pos), .cfg_lead(cfg_lead),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
@@ -144,7 +163,7 @@ module ot_chip_hdc_tile #(
         .tl_raddr(tl_raddr), .tl_q(tl_q),
         .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_we(hq_we), .hq_addr(hq_addr_core), .hq_len(hq_len),
         .hq_tag(hq_tag), .hq_wdata(hq_wdata),
-        .hr_v(hr_v), .hr_rdy(hr_rdy), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data),
+        .hr_v(hs_v), .hr_rdy(hs_rdy), .hr_tag(hs_tag), .hr_beat(hs_beat), .hr_data(hs_data),
         .fault(kvs_fault));
     // The KV slice of the running user (the package controller's kv_base),
     // re-registered beside the streamer: it changes only when a job starts.
