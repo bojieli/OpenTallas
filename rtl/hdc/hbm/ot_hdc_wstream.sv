@@ -369,33 +369,33 @@ module ot_hdc_wstream #(
     reg  [31:0]   d_n [0:1];
     reg  [31:0]   ann_end;             // stream words of every announced op
     reg  [31:0]   op_start;            // stream position of the newest op
-    // threshold pipeline: n = tiles * k * IL, then n * rate, then T
-    reg  [2:0]    tp;                  // stages in flight
+    // threshold pipeline, one step a stage (an op is announced at most once
+    // every few cycles, so depth is free): n = tiles * k, then * IL; n * rate
+    // (n < 2^24 words, rate <= 256); the short-fall n - n*rate/256; + lead; T
+    localparam integer TPS = 7;
+    reg  [TPS-1:0] tp;                 // stages in flight
     reg  [NW-1:0] a_tiles, a_k;
-    reg  [31:0]   a_n, a_nr, a_T;
+    reg  [31:0]   a_tk, a_n, a_nr, a_T, a_short, a_Tl;
     reg           t_rdy, uncoverable;
     wire [31:0]   a_fast = a_nr >> 8;
-    wire [31:0]   a_short = (a_fast >= a_n) ? 32'd0 : a_n - a_fast;
-    wire [31:0]   a_Tl = cfg_lead + a_short;
+    wire [8:0]    rate9 = (cfg_rate > 256) ? 9'd256 : cfg_rate[8:0];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             tp <= 0; t_rdy <= 1'b0; w_ok <= 1'b0; uncoverable <= 1'b0; ann_end <= 0; op_start <= 0;
         end else begin
             uncoverable <= 1'b0;
-            tp <= {tp[1:0], wd_v};
+            tp <= {tp[TPS-2:0], wd_v};
             if (wd_v) begin a_tiles <= wd_tiles; a_k <= wd_k; t_rdy <= 1'b0; end
-            if (tp[0]) begin
-                a_n <= a_tiles * a_k * IL;
-            end
-            if (tp[1]) begin
-                a_nr <= a_n * cfg_rate;
+            if (tp[0]) a_tk <= a_tiles * a_k;
+            if (tp[1]) a_n <= a_tk * IL;
+            if (tp[2]) begin
+                a_nr <= a_n[23:0] * rate9;
                 op_start <= ann_end; ann_end <= ann_end + a_n;
             end
-            if (tp[2]) begin
-                a_T <= (a_Tl < a_n) ? a_Tl : a_n;
-                uncoverable <= ((a_Tl < a_n) ? a_Tl : a_n) > WIN;
-                t_rdy <= 1'b1;
-            end
+            if (tp[3]) a_short <= (a_fast >= a_n) ? 32'd0 : a_n - a_fast;
+            if (tp[4]) a_Tl <= cfg_lead + a_short;
+            if (tp[5]) begin a_T <= (a_Tl < a_n) ? a_Tl : a_n; t_rdy <= 1'b1; end
+            if (tp[6]) uncoverable <= a_T > WIN;
             w_ok <= t_rdy && !wd_v && (tp == 0) && (cp - op_start >= a_T);
         end
     end
@@ -407,7 +407,7 @@ module ot_hdc_wstream #(
             dv <= 2'b00; wptr <= 1'b0; cidx <= 1'b0; c_i <= 0; overrun <= 1'b0; addr_bad <= 1'b0; underflow <= 1'b0;
         end else begin
             overrun <= 1'b0; addr_bad <= 1'b0; underflow <= 1'b0;
-            if (tp[1]) begin
+            if (tp[2]) begin
                 if (dv[wptr]) overrun <= 1'b1;
                 dv[wptr] <= 1'b1; d_n[wptr] <= a_n; wptr <= !wptr;
             end
