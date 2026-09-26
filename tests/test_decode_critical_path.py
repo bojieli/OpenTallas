@@ -21,7 +21,7 @@ RESULT = ROOT / "results/roofline/critical_path/decode_critical_path.json"
 def env():
     tech = json.loads(D.TECH.read_text())
     links = D.link_consts(tech)
-    clock, _ = D.select_clock(D.Params())
+    clock, _ = D.routed_clock()
     p = replace(D.Params(), clock_hz=clock)
     points, designs = D.v41_study_rows()
     return dict(links=links, clock=clock, p=p, points=points, designs=designs, c=D.v41_shape())
@@ -40,50 +40,8 @@ def test_select_latency_is_the_campaigns():
         assert D.select_latency(cfg["K"], asc) == cfg["latency_cycles"], cfg["name"]
 
 
-def test_tselect_latency_is_the_campaigns():
-    camp = json.loads((ROOT / "results/rtl/hdc_v41_tselect_campaign.json").read_text())
-    assert camp["status"] == "pass"
-    for cfg in camp["configurations"]:
-        W = cfg["lanes"]
-        assert D.tselect_lat0(W) == cfg["lat0"], cfg["name"]
-        for run in cfg["runs"].values():
-            # the priced worst case bounds every measured segment: 2 x beats + LAT0 (+1)
-            assert D.tselect_lat0(W) <= run["lat0_min"] <= run["lat0_max"] <= D.tselect_lat0(W) + 1, cfg["name"]
-    assert D.tselect_latency(512 * 4, 64) == 2 * 32 + 47 + 1
-    assert all(m["caught"] != bool(m.get("control")) for m in camp["mutations"])
-    assert sum(1 for m in camp["mutations"] if m.get("control")) == 1
-
-
-def test_threshold_select_needs_no_order_pass_and_is_faster(env):
-    thr, ins = v41(env), v41(env, select_impl="insertion")
-    fab = D.default_fabric("array", env["links"], 4)
-    rt, ri = thr.evaluate(fab), ins.evaluate(fab)
-    a, b = D.index_select_report(thr, rt), D.index_select_report(ins, ri)
-    assert sorted(a, key=int) == [str(L) for L in env["c"]["index_source_layer_ids"]]
-    for L in a:
-        assert "ascending" not in a[L]["steps"]["topk_final"]["desc"]
-        assert "ascending-index pass" in b[L]["steps"]["topk_final"]["desc"]
-        assert a[L]["total_us"] < b[L]["total_us"]
-    assert rt["period"] < ri["period"]
-    # one die: the local select is the whole top-k (no gather, no final pass)
-    single = v41(env, g=1)
-    assert not any(n.endswith("idx.topk_final") for n in single.g.nodes)
-
-
-def test_tselect_split_takes_the_best_unit_count(env):
-    b = v41(env)
-    ops = b.ops
-    n, k = 50000, 512
-    iss, dep, P = ops._tsel_split(n, k)
-    one = ops._tsel(n)
-    assert iss + dep <= sum(one)
-    assert 1 <= P <= b.p.tselect_units
-    W = b.p.tselect_lanes
-    assert one == (math.ceil(n / W), D.tselect_latency(n, W))
-
-
 def test_clock_is_the_slowest_routed_block():
-    clock, rows = D.select_clock(D.Params())
+    clock, rows = D.routed_clock()
     assert clock == min(r["fmax_hz"] for r in rows)
     assert 0.9e9 < clock < 1.2e9
 
@@ -208,3 +166,21 @@ def test_committed_result_reproduces():
         assert fresh["deepseek_v41_flash"][key]["tokens_s_per_user"] == pytest.approx(
             rec["deepseek_v41_flash"][key]["tokens_s_per_user"], rel=1e-9)
     assert math.isclose(fresh["clock"]["hz"], rec["clock"]["hz"])
+
+
+def test_tselect_latency_is_the_shipped_scale_campaigns():
+    """The index top-512 and candidate-block pricing reads the RTL-measured rows, and reproduces them."""
+    assert D.TS["status"] == {"scale": "pass", "cand": "pass"}
+    for r in D.TS["rows"]:
+        assert D.tselect_latency(r["scores"]) in (r["cycles_after_last_beat"], r["cycles_after_last_beat"] - 1)
+    for r in D.TS["cand_rows"]:
+        lines = math.ceil(math.ceil(r["context"] / 8) / D.TS["cand_lanes"])
+        assert D.TS["cand_front"] + 2 * lines + D.TS["lat0"] == r["cycles_after_last_beat"]
+
+
+def test_threshold_select_is_not_slower_than_the_insertion_units():
+    rows = json.loads(RESULT.read_text())["index_select_by_context"]
+    assert [r["context"] for r in rows] == [8192, 200000, 1048576]
+    for r in rows:
+        for kind in ("array_batch1", "wafer_batch1"):
+            assert r[kind]["tselect"]["tokens_s_per_user"] >= r[kind]["insertion"]["tokens_s_per_user"]

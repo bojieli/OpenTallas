@@ -1,0 +1,663 @@
+{
+  "claim_boundary": "functional simulation of the host interface RTL in front of each decode engine (Verilator, cycle-accurate; memories behavioural; host memory, DMA latency and the interrupt controller modelled by the host bridge).  Modelled seconds and tokens/s are chip cycles at the slowest routed block of each engine, not a routed chip.",
+  "input_sha256": {
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "1f943130e1fea3993df1f026872ce42a925986140c46eda6b107360fb5e62263",
+    "rtl/hdc/kv/ot_hdc_kv_stream.sv": "7fd0224313630d283525afb1df8f1b6ea5fa4534fa7669afa153698b7131c7e6",
+    "rtl/hdc/kv/ot_hdc_kv_walk.sv": "2e79a4bc0d7109302b421bc9e1f08ce7a8714028c375ba083612dc8e3df0c9b6",
+    "rtl/hdc/ot_hdc_core.sv": "97ffe38b12c945e7eba5405c11e5ee927126e1758cd5aec5fb3051c202daf8c7",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_isa.svh": "6d21fb2e220083a6e1b5e9b964dd6f9dcd41c2b1cf2c155ebad805e00e48f651",
+    "rtl/hdc/ot_hdc_matvec.sv": "48f4cbc47dab6f005f8599c30e91dc48799316fd28805c5e4c77884d0d0fdabf",
+    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+    "rtl/hdc/ot_hdc_stream.sv": "0ac8993138829ea6a87c72f0d9b5c0f6228a5e3956bb7ee9efa761cfee928c42",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1",
+    "rtl/hdc/v41/ot_hdc_core_v41.sv": "3ce4f6a06355ccec1336460b198233dc0fab3ba3799faf9c3155dcfbc2f60655",
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv": "aa1931c171c0b4c78d463debb138b583afc9a2d1715101712f101707c9ecd43a",
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_fp4qdq.sv": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+    "rtl/hdc/v41/ot_hdc_isa_v41.svh": "f91ba5a70c92fadd135a117b3603a0f4291ac9452f7829bcd4c453ab7e9bcd69",
+    "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv": "5a6cc941af82d6b74e0be17578c852ca3863fb439f1eb47da7612aebfcb8d77c",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+    "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "5835f0d0a132b2bb2bbdab6bf6108e6a2b1e932d5758b9d8af8ce164ac309530",
+    "rtl/hdc/v41/ot_hdc_v41_matvec.sv": "dbee3f31f75f847371e1f279efcb3523d05e1556f6113507705ee59121a1c9ec",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "3d58bc4fd8653c88b702ca04619547cf74ec935c9e5647f6421c4b1f2a44267b",
+    "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
+    "rtl/hdc/v41/ot_hdc_v41_xu.sv": "7b38ea9b8a41e8169d25317d56f716dbe4697b455c9f3676a5174c1e764b149a",
+    "rtl/host/ot_host_if.sv": "4c9421673fc111f7dd6a517a460fd3cacfb81957cae25f1a85884f56d19241ff",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+    "rtl/rom/ot_rom_pkg_link.sv": "0909bd7071ad7c55c75694917a682a487547dab6f633e64db0ac093ceaf7a87c",
+    "rtl/test/host_bridge_harness.cpp": "1af79ef5ec0cd21fda7cac4397f5aee5b393cc89fa65e63b1c20457fdd7a8494",
+    "rtl/test/tb_host_array.sv": "5b3e47004bd3570f861ba9ac77884e76f961e0e84927da2532bc0833769949c2",
+    "rtl/test/tb_host_conn.svh": "dc5805db60c00507c2411e557cbf6b32b04ab1ea17d41de5442e71f28bd35e7b",
+    "rtl/test/tb_host_hbm.sv": "57fb7c292d48c881d463a489d503ad6fa4f91fe45c2cabfcd3d74404d8a7cc76",
+    "rtl/test/tb_host_ports.svh": "daa348993ee404e1281526709cdb216bcb94b3813b4c7eec0b7bc697e9ca34ec",
+    "rtl/test/tb_host_qwen.sv": "0a6c4b80d5f730c70aca8fceee169c38a14f322e82e5e6abb7681329b4bc3985",
+    "rtl/test/tb_host_v41.sv": "a3132207a1c68d6cd3c6040da5040a0209efe701a9ad58d9ee36c4f3d5ad2278",
+    "runtime/hdc/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/hdc/__main__.py": "683321974cff9669f8a4ac0232ec07f316cb1d22a71b1088bca446a6b1a22e18",
+    "runtime/hdc/build.py": "11beb3f5adbc753a35a187d070e92ce60a4dffeb98f5efaf372fc993d256563b",
+    "runtime/hdc/device.py": "c47dac7c5d5a51b1496eeda7ab0121c1a0c035eaa88b0ed3c5a004bd964f4472",
+    "runtime/hdc/driver.py": "5733f3a03f801e6d4e6e1700d425f9bb3730d86dbbc49824cd8626fcb92d16ec",
+    "runtime/hdc/runtime.py": "93c576b000e771ae9746ae69f837eddee8803dba1a4cd7cf80a23c2ca7e13058",
+    "runtime/hdc/server.py": "931f4081ef50f6446b7b42d1e238efc9be28adb009933d665097007391093c6c",
+    "runtime/hdc/targets.py": "1787727e3698443ff5001e33e43992a33c8e6a18e32dd5bad6648961bb396c60",
+    "runtime/hdc/tokenizer.py": "1443922546f5db9b7157bac67b1d85a45b23433a4ff67d3988d9b86fae03cc41",
+    "tools/rtl_host_if_campaign.py": "237c21bd47724d81a4dba5d90d5477c5d740d248a9e44d7eaffee6dcf067dd60"
+  },
+  "lint": {
+    "batch": {
+      "messages": [],
+      "returncode": 0
+    },
+    "step": {
+      "messages": [],
+      "returncode": 0
+    },
+    "step_one_context": {
+      "messages": [],
+      "returncode": 0
+    }
+  },
+  "schema": "opentallas.host-if-campaign.v1",
+  "status": "pass",
+  "targets": {
+    "qwen3-array": {
+      "architecture": "ROM array (package controllers + links)",
+      "clock": {
+        "hz": 1098640000.0,
+        "limiter": "hdc/ot_hdc_matvec",
+        "source": "results/physical_abi3/asap7/hdc/ot_hdc_matvec/physical.json"
+      },
+      "counters": {
+        "clock_hz": 1098640000.0,
+        "cq_full_cycles": 0,
+        "cycles": 1930450,
+        "dma_read_beats": 40,
+        "dma_write_beats": 45,
+        "engine_busy_cycles": 1919892,
+        "modelled_seconds": 0.0017571269933736257,
+        "modelled_tokens_per_second": 8536.662436219534,
+        "msis": 15,
+        "requests": 5,
+        "status": 8,
+        "steps": 90,
+        "tokens": 15,
+        "wall_seconds_simulating": 859.411
+      },
+      "decoded_text": "ask.\n\n",
+      "engine": "host interface fronting package 0 of a 4-package layer-per-package array",
+      "model": "qwen3-reduced-v1",
+      "pass": true,
+      "prompt_text": "<|im_start|>user\nReply with OK.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "prompt_token_ids": [
+        92,
+        872,
+        198,
+        361,
+        448,
+        2210,
+        13,
+        93,
+        198,
+        92,
+        3363,
+        198,
+        115,
+        271,
+        116,
+        271
+      ],
+      "requests": [
+        {
+          "chip_cycles": 1003605,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 3292.3017603653584,
+          "modelled_seconds": 0.0009134975970290541,
+          "modelled_tokens_per_second": 3284.0808883973277,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 0,
+          "status": "eos",
+          "step_cycles": [
+            885075,
+            57948,
+            58076
+          ],
+          "target": "qwen3-array",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        },
+        {
+          "chip_cycles": 1018144,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 3245.1592194887567,
+          "modelled_seconds": 0.0009267312313405665,
+          "modelled_tokens_per_second": 3237.1845239966055,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 1,
+          "status": "eos",
+          "step_cycles": [
+            899554,
+            57980,
+            58108
+          ],
+          "target": "qwen3-array",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        },
+        {
+          "chip_cycles": 1032683,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 3199.3476899780135,
+          "modelled_seconds": 0.0009399648656520789,
+          "modelled_tokens_per_second": 3191.6086543498827,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 2,
+          "status": "eos",
+          "step_cycles": [
+            914033,
+            58012,
+            58140
+          ],
+          "target": "qwen3-array",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        },
+        {
+          "chip_cycles": 1047222,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 3154.8115873222505,
+          "modelled_seconds": 0.0009531984999635913,
+          "modelled_tokens_per_second": 3147.2982805938,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 3,
+          "status": "eos",
+          "step_cycles": [
+            928512,
+            58044,
+            58172
+          ],
+          "target": "qwen3-array",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        }
+      ],
+      "second_batch": {
+        "chip_cycles": 582149,
+        "clock_hz": 1098640000.0,
+        "expected_token_ids": [
+          1073,
+          382,
+          93
+        ],
+        "generated_tokens": 3,
+        "model": "qwen3-reduced-v1",
+        "modelled_decode_tokens_per_second": 5670.5658488076215,
+        "modelled_seconds": 0.0005298814898419865,
+        "modelled_tokens_per_second": 5661.64332499068,
+        "pass": true,
+        "prompt_tokens": 16,
+        "slot": 0,
+        "status": "eos",
+        "step_cycles": [
+          514605,
+          33250,
+          33378
+        ],
+        "target": "qwen3-array",
+        "token_ids": [
+          1073,
+          382,
+          93
+        ]
+      },
+      "target": "qwen3-array",
+      "tokenizer": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218/tokenizer.json",
+      "users": 4,
+      "wall_seconds": 1013.0
+    },
+    "qwen3-hbm": {
+      "architecture": "HBM comparator (KV in HBM)",
+      "clock": {
+        "hz": 1098640000.0,
+        "limiter": "hdc/ot_hdc_matvec",
+        "source": "results/physical_abi3/asap7/hdc/ot_hdc_matvec/physical.json"
+      },
+      "counters": {
+        "clock_hz": 1098640000.0,
+        "cq_full_cycles": 0,
+        "cycles": 1143821,
+        "dma_read_beats": 16,
+        "dma_write_beats": 18,
+        "engine_busy_cycles": 1141958,
+        "modelled_seconds": 0.0010411244811767276,
+        "modelled_tokens_per_second": 5762.9996301868905,
+        "msis": 6,
+        "requests": 2,
+        "status": 0,
+        "steps": 36,
+        "tokens": 6,
+        "wall_seconds_simulating": 59.119
+      },
+      "decoded_text": "ask.\n\n",
+      "engine": "host interface + the decode core with KV streamed from the HBM model; weights still in ROM",
+      "model": "qwen3-reduced-v1",
+      "pass": true,
+      "prompt_text": "<|im_start|>user\nReply with OK.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "prompt_token_ids": [
+        92,
+        872,
+        198,
+        361,
+        448,
+        2210,
+        13,
+        93,
+        198,
+        92,
+        3363,
+        198,
+        115,
+        271,
+        116,
+        271
+      ],
+      "requests": [
+        {
+          "chip_cycles": 571738,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 33851.1785549222,
+          "modelled_seconds": 0.0005204052282822398,
+          "modelled_tokens_per_second": 5764.738394159563,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 0,
+          "status": "eos",
+          "step_cycles": [
+            32271,
+            32374,
+            32720
+          ],
+          "target": "qwen3-hbm",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        },
+        {
+          "chip_cycles": 1142788,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 33851.1785549222,
+          "modelled_seconds": 0.0010401842277725187,
+          "modelled_tokens_per_second": 2884.1044883215436,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 1,
+          "status": "eos",
+          "step_cycles": [
+            32271,
+            32374,
+            32720
+          ],
+          "target": "qwen3-hbm",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        }
+      ],
+      "target": "qwen3-hbm",
+      "tokenizer": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218/tokenizer.json",
+      "users": 2,
+      "wall_seconds": 62.0
+    },
+    "qwen3-rom": {
+      "architecture": "Qwen3-8B ROM reticle",
+      "clock": {
+        "hz": 1098640000.0,
+        "limiter": "hdc/ot_hdc_matvec",
+        "source": "results/physical_abi3/asap7/hdc/ot_hdc_matvec/physical.json"
+      },
+      "counters": {
+        "clock_hz": 1098640000.0,
+        "cq_full_cycles": 0,
+        "cycles": 3398709,
+        "dma_read_beats": 60,
+        "dma_write_beats": 63,
+        "engine_busy_cycles": 3392928,
+        "modelled_seconds": 0.00309356021990825,
+        "modelled_tokens_per_second": 5818.53874515294,
+        "msis": 21,
+        "requests": 9,
+        "status": 0,
+        "steps": 108,
+        "tokens": 18,
+        "wall_seconds_simulating": 208.135
+      },
+      "decoded_text": "ask.\n\n",
+      "endpoint": {
+        "expected_token_ids": [
+          1073,
+          382,
+          93
+        ],
+        "finish_reason": "stop",
+        "openai_client": {
+          "finish_reason": "stop",
+          "openai_version": "2.24.0",
+          "pass": true,
+          "text": "ask.\n\n",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        },
+        "pass": true,
+        "plain_content": "ask.\n\n",
+        "plain_token_ids": [
+          1073,
+          382,
+          93
+        ],
+        "route": "/v1/chat/completions",
+        "sampling_request_http_status": 400,
+        "stream_done_marker": true,
+        "stream_events": 6,
+        "streamed_text": "ask.\n\n",
+        "streamed_token_ids": [
+          1073,
+          382,
+          93
+        ],
+        "usage": {
+          "completion_tokens": 3,
+          "prompt_tokens": 16,
+          "total_tokens": 19
+        }
+      },
+      "engine": "host interface + one decode core, 16 user contexts (KV slices)",
+      "fail_closed": {
+        "no_greedy_flag": {
+          "expected_status": "unsupported_sampling",
+          "kind": "error",
+          "pass": true,
+          "status": "unsupported_sampling"
+        },
+        "over_context": {
+          "expected_status": "bad_length",
+          "kind": "error",
+          "pass": true,
+          "status": "bad_length"
+        },
+        "pass": true,
+        "slot_out_of_range": {
+          "expected_status": "slot_unavailable",
+          "kind": "error",
+          "pass": true,
+          "status": "slot_unavailable"
+        }
+      },
+      "model": "qwen3-reduced-v1",
+      "pass": true,
+      "prompt_text": "<|im_start|>user\nReply with OK.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "prompt_token_ids": [
+        92,
+        872,
+        198,
+        361,
+        448,
+        2210,
+        13,
+        93,
+        198,
+        92,
+        3363,
+        198,
+        115,
+        271,
+        116,
+        271
+      ],
+      "requests": [
+        {
+          "chip_cycles": 1632348,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 33935.874467165006,
+          "modelled_seconds": 0.0014857897036335834,
+          "modelled_tokens_per_second": 2019.128274118019,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 0,
+          "status": "eos",
+          "step_cycles": [
+            32246,
+            32374,
+            32502
+          ],
+          "target": "qwen3-rom",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        },
+        {
+          "chip_cycles": 1664852,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 33935.874467165006,
+          "modelled_seconds": 0.0015153753731886696,
+          "modelled_tokens_per_second": 1979.7075055320233,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 1,
+          "status": "eos",
+          "step_cycles": [
+            32246,
+            32374,
+            32502
+          ],
+          "target": "qwen3-rom",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        },
+        {
+          "chip_cycles": 1697356,
+          "clock_hz": 1098640000.0,
+          "expected_token_ids": [
+            1073,
+            382,
+            93
+          ],
+          "generated_tokens": 3,
+          "model": "qwen3-reduced-v1",
+          "modelled_decode_tokens_per_second": 33935.874467165006,
+          "modelled_seconds": 0.0015449610427437559,
+          "modelled_tokens_per_second": 1941.7965353172817,
+          "pass": true,
+          "prompt_tokens": 16,
+          "slot": 2,
+          "status": "eos",
+          "step_cycles": [
+            32246,
+            32374,
+            32502
+          ],
+          "target": "qwen3-rom",
+          "token_ids": [
+            1073,
+            382,
+            93
+          ]
+        }
+      ],
+      "target": "qwen3-rom",
+      "tokenizer": "~/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218/tokenizer.json",
+      "users": 3,
+      "wall_seconds": 214.5
+    },
+    "v41-rom": {
+      "architecture": "DeepSeek-V4.1 ROM die",
+      "clock": {
+        "hz": 1033900000.0,
+        "limiter": "hdc/v41/ot_hdc_softplus",
+        "source": "results/physical_abi3/asap7/hdc/v41/ot_hdc_softplus/physical.json"
+      },
+      "counters": {
+        "clock_hz": 1033900000.0,
+        "cq_full_cycles": 0,
+        "cycles": 3363528,
+        "dma_read_beats": 6,
+        "dma_write_beats": 9,
+        "engine_busy_cycles": 3361912,
+        "modelled_seconds": 0.003253243060257278,
+        "modelled_tokens_per_second": 922.1567354278009,
+        "msis": 3,
+        "requests": 1,
+        "status": 0,
+        "steps": 10,
+        "tokens": 3,
+        "wall_seconds_simulating": 2836.451
+      },
+      "decoded_text": "\u521d cle^",
+      "engine": "host interface + the V4.1 decode core, one user's state at a time",
+      "model": "deepseek-v4.1-flash-reduced-v1",
+      "pass": true,
+      "prompt_text": "<\uff5cbegin\u2581of\u2581sentence\uff5c><\uff5cUser\uff5c>Reply with OK.<\uff5cAssistant\uff5c></think>",
+      "prompt_token_ids": [
+        0,
+        3563,
+        3745,
+        418,
+        170,
+        16,
+        3564,
+        3582
+      ],
+      "requests": [
+        {
+          "chip_cycles": 3362499,
+          "clock_hz": 1033900000.0,
+          "expected_token_ids": [
+            3118,
+            2400,
+            64
+          ],
+          "generated_tokens": 3,
+          "model": "deepseek-v4.1-flash-reduced-v1",
+          "modelled_decode_tokens_per_second": 2931.9129226493747,
+          "modelled_seconds": 0.003252247799593771,
+          "modelled_tokens_per_second": 922.4389360413193,
+          "pass": true,
+          "prompt_tokens": 8,
+          "slot": 0,
+          "status": "length",
+          "step_cycles": [
+            344106,
+            353362,
+            360442
+          ],
+          "target": "v41-rom",
+          "token_ids": [
+            3118,
+            2400,
+            64
+          ]
+        }
+      ],
+      "target": "v41-rom",
+      "tokenizer": "~/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/tokenizer.json",
+      "users": 1,
+      "wall_seconds": 2866.6
+    }
+  }
+}

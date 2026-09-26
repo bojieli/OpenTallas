@@ -47,11 +47,12 @@
 // segment of NL beats to the edge that registers its `out_last` beat:
 //   LAT = 2 NL + LAT0 (+1 when the final pass-3 beat overflows the partial
 //   output line and the remainder takes one more beat),
-//   LAT0 = 2 x (DRAIN 10 + RB 8 walk steps) + 5 + 2 ceil(log2(W) / 2)
-//        = 47 at W = 64 (read, compare, tie prefix, select, shift counts,
+//   LAT0 = 2 x (DRAIN 11 + 2 x RB 8 walk steps) + 5 + 2 ceil(log2(W) / 2)
+//        = 65 at W = 64 (a walk step is two edges: mux register, then add/compare;
+//        the histogram popcount is two registered halves) (read, compare, tie prefix, select, shift counts,
 //          3 compaction + 3 rotate register stages, output register).
 // The next segment is accepted once pass 3 has issued its last read: in_ready
-// is low for 2 NL + 36 edges after the last accept.  Area is linear in W
+// is low for 2 NL + 54 edges after the last accept.  Area is linear in W
 // (2^RB bins x W-lane popcounts, W log W compaction/rotate muxes) and
 // independent of K and of the segment length (the lines are in the memory).
 // Every segment emits at least one beat; the one with `out_last` may be empty.
@@ -98,7 +99,9 @@ module ot_hdc_tselect #(
     localparam integer EW  = 1 + VW + IW;          // stored lane {lv, value, index}
     localparam integer PW  = 1 + VW + IW;          // payload {ninf, value, index}
     localparam integer QW  = (KW > LW + 1 ? KW : LW + 1) + 1;
-    localparam integer DRAIN = 3 + RB - 1;         // histogram (3) + tree levels below level 1
+    localparam integer DRAIN = 4 + RB - 1;         // histogram (4) + tree levels below level 1
+    localparam integer PS  = (W >= 16) ? 8 : 1;    // popcount partial sums per bin
+    localparam integer PW_ = $clog2(W / PS);       // partial popcount width - 1
     localparam integer CE  = 1 + LW + PW;          // compaction lane {v, z, payload}
     localparam integer RE  = 1 + PW;               // rotate lane {v, payload}
     localparam integer KQI = K;
@@ -186,7 +189,16 @@ module ot_hdc_tselect #(
             for (gq = 0; gq < W; gq = gq + 1) begin : g_x
                 assign x[gq] = h1_hi[NH*gq + (gb >> (RB - HA))] && h1_lo[NL0*gq + (gb % NL0)];
             end
-            ot_hdc_tsel_popc #(.N(W), .OW(LW + 1)) u_pc (.x(x), .y(h2_d[(LW+1)*gb +: LW+1]));
+            // two registered halves: PS partial popcounts of W/PS lanes, then their sum (the one-edge
+            // 64-lane popcount behind the predecode AND was the routed critical path, -0.31 ns at 0.9 ns)
+            wire [PS*(PW_+1)-1:0] part_d;
+            reg  [PS*(PW_+1)-1:0] part;
+            for (gq = 0; gq < PS; gq = gq + 1) begin : g_ps
+                ot_hdc_tsel_popc #(.N(W / PS), .OW(PW_ + 1)) u_pp (.x(x[(W / PS)*gq +: W / PS]),
+                                                                   .y(part_d[(PW_+1)*gq +: PW_+1]));
+            end
+            always @(posedge clk) part <= part_d;
+            ot_hdc_tsel_sum #(.N(PS), .IW(PW_ + 1), .OW(LW + 1)) u_ps (.x(part), .y(h2_d[(LW+1)*gb +: LW+1]));
         end
     endgenerate
     always @(posedge clk) h2 <= h2_d;
@@ -207,11 +219,17 @@ module ot_hdc_tselect #(
     // -- tree walk ---------------------------------------------------------------------
     wire [RB:0]   wright = {wp, 1'b1};              // right child of the current node
     wire [CW-1:0] wc     = tv[CW*wright +: CW];
-    wire [CW:0]   wsum   = wacc + {1'b0, wc};
+    // a walk step takes two edges: the first registers the child count (a 2^RB-way mux), the second
+    // adds, compares and descends -- the one-edge step was the unit's critical path (wp -> mux -> add ->
+    // compare -> subtract -> rem, -0.72 ns at a 0.9 ns target in the routed ot_hdc_tselect_cand)
+    reg  [CW-1:0] wc_q;
+    reg           wph;
+    always @(posedge clk) wc_q <= wc;
+    wire [CW:0]   wsum   = wacc + {1'b0, wc_q};
     wire          wgo    = ({{(QW){1'b0}}, wsum} >= {{(CW + 1){1'b0}}, wkq});
     wire [RB-1:0] wp_n   = {wp[RB-2:0], wgo};
     wire [CW:0]   wacc_n = wgo ? wacc : wsum;
-    wire          wlast  = (dc == 0) && (wstep == RBM1);
+    wire          wlast  = (dc == 0) && wph && (wstep == RBM1);
     wire [QW-1:0] wrest  = wkq - wacc_n[QW-1:0];    // quota left for the boundary bucket (<= wkq)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) init <= 3'd7;
@@ -221,8 +239,9 @@ module ot_hdc_tselect #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            state <= S_ING; wptr <= 0; rptr <= 0; dc <= 0; wstep <= 0;
+            state <= S_ING; wptr <= 0; rptr <= 0; dc <= 0; wstep <= 0; wph <= 1'b0;
         end else begin
+            wph <= (state == S_W1 || state == S_W2) && dc == 0 && !wph;
             case (state)
                 S_ING: if (acc_in) begin
                     wptr <= in_last ? {AW{1'b0}} : wptr + 1'b1;
@@ -230,7 +249,7 @@ module ot_hdc_tselect #(
                 end
                 S_W1, S_W2: begin
                     if (dc != 0) dc <= dc - 1'b1;
-                    else begin
+                    else if (wph) begin
                         wstep <= wstep + 1'b1;
                         if (wlast) begin
                             state <= (state == S_W1) ? S_P2 : S_P3; rptr <= 0; wstep <= 0;
@@ -255,7 +274,7 @@ module ot_hdc_tselect #(
             wp <= {{(RB-1){1'b0}}, 1'b1}; wacc <= 0;
         end else if ((state == S_P2) && rptr == nlast) begin
             wkq <= mq; wp <= {{(RB-1){1'b0}}, 1'b1}; wacc <= 0;
-        end else if ((state == S_W1 || state == S_W2) && dc == 0) begin
+        end else if ((state == S_W1 || state == S_W2) && dc == 0 && wph) begin
             wp <= wp_n; wacc <= wacc_n;
             if (wlast && state == S_W1) begin bsel <= wp_n; mq <= wrest; end
             if (wlast && state == S_W2) begin lsel <= wp_n; end
@@ -465,16 +484,51 @@ module ot_hdc_tselect #(
         end
     end
 
+    // segments accepted and not yet closed by out_last: a second segment can be walking while the
+    // first still drains its output, so a flag cleared by the first out_last would drop busy early
+    reg  [1:0]    inflight;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) pipe_busy <= 1'b0;
-        else if (acc_in && in_last) pipe_busy <= 1'b1;
-        else if (out_valid && out_last) pipe_busy <= 1'b0;
+        if (!rst_n) inflight <= 2'd0;
+        else inflight <= inflight + {1'b0, acc_in && in_last} - {1'b0, out_valid && out_last};
     end
+    always @(*) pipe_busy = inflight != 0;
     assign busy = pipe_busy || state != S_ING;
 endmodule
 
 
 // -- structural helpers (generate-level, so synthesis does not inline loops) -------------
+
+// sum of N unsigned IW-bit values (pairwise tree) into OW bits
+module ot_hdc_tsel_sum #(
+    parameter integer N  = 8,
+    parameter integer IW = 4,
+    parameter integer OW = 7
+) (
+    input  wire [N*IW-1:0] x,
+    output wire [OW-1:0]   y
+);
+    localparam integer NP = 1 << $clog2(N);
+    /* verilator lint_off UNOPTFLAT */
+    wire [2*NP*OW-1:0] t;
+    /* verilator lint_on UNOPTFLAT */
+    genvar n;
+    generate
+        for (n = 0; n < NP; n = n + 1) begin : g_leaf
+            if (n < N && OW > IW) begin : g_x
+                assign t[OW*(NP+n) +: OW] = {{(OW-IW){1'b0}}, x[IW*n +: IW]};
+            end else if (n < N) begin : g_xe
+                assign t[OW*(NP+n) +: OW] = x[IW*n +: OW];
+            end else begin : g_0
+                assign t[OW*(NP+n) +: OW] = {OW{1'b0}};
+            end
+        end
+        for (n = 1; n < NP; n = n + 1) begin : g_node
+            assign t[OW*n +: OW] = t[OW*(2*n) +: OW] + t[OW*(2*n+1) +: OW];
+        end
+    endgenerate
+    assign y = t[OW +: OW];
+    assign t[OW-1:0] = {OW{1'b0}};
+endmodule
 
 // balanced popcount of N bits (pairwise tree)
 module ot_hdc_tsel_popc #(
