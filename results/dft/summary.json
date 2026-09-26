@@ -313,6 +313,11 @@
     "test_coverage": 0.998468,
     "tester_cycles": 23275379,
     "top": "ot_hdc_matvec"
+   },
+   "scan_off_equivalence": {
+    "equiv_cells": 98240,
+    "proven": true,
+    "unproven_cells": 0
    }
   },
   "mcast_node": {
