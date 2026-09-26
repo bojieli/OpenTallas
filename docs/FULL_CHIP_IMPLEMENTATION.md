@@ -8,7 +8,9 @@ route, for all three architectures, on ASAP7 at a 1.0 ns clock.
 Flow: `tools/chip_assembly/` (tests: `tests/test_chip_assembly.py`).
 Records: `results/physical_abi3/asap7/chip/`.
 
-<!-- RESULTS -->
+**Status (2026-09-26): the flow, RTL, floorplans and Qwen tile budget table
+are in place; block re-closure is in progress. No block, tile or die has
+closed against its budget yet.** §5 gives the per-architecture state.
 
 ## 1. The hierarchy
 
@@ -155,4 +157,43 @@ skew). Records: `results/.../chip/tiles/`, `results/.../chip/dies/`.
 
 ## 5. Status per architecture
 
+| Step | Qwen3-8B ROM die | HBM comparator die | DeepSeek-V4.1 universal die |
+|---|---|---|---|
+| Tile RTL | `ot_chip_hdc_tile` | the same tile; weight store is an HBM prefetch buffer | `ot_chip_v41_tile` (the same ME macro) |
+| Die RTL | `ot_chip_die2x2` | `ot_chip_die2x2` | `ot_chip_v41_die2x2` with two collectives nodes |
+| Floorplan | tile 1.16 × 2.42 mm, die 3.60 × 6.72 mm | tile 1.16 × 0.79 mm | tile 1.65 × 1.99 mm, die 4.58 × 5.90 mm |
+| Boundary characterisation | all 5 blocks | shared with Qwen | HE, QE and SU41 done; XU and both collectives nodes queued |
+| Budget table | `tile_qwen_rom`: 1 violation (`core_token`) | queued | waits for XU and the collectives nodes |
+| Blocks re-closed | KVS routed once and missed: −244 ps setup on a through-path the budget had not paired (fixed, re-queued); ME, router, controller and SU queued | shares the Qwen blocks | not started |
+| Tile / die route | queued behind the blocks (`assemble.py`) | not started | not started |
+
+The machine is shared. Every run goes through the machine-wide gate, and the
+flow keeps at most two runs of its own in flight. The ME route alone takes
+about six hours.
+
+The first ME route with budgets found a flow-level problem before any
+architectural one. The ME's clock tree inserts about 570 ps between its clock
+pin and its flops. That is more than half the cycle, and it went into the
+I/O paths, so a pin budgeted 150 ps inside failed by 539 ps. The parent's
+clock tree balances a macro's insertion delay, so the block's SDC now shifts
+its I/O by the insertion delay. The delay is measured from the block's flat
+routed record (ME 602 ps, SU 426 ps, KVS 267 ps, router 249 ps, controller
+150 ps). The budget check reads the extracted model on the same basis.
+
 ## 6. What remains for a tape-out
+
+- **Close the blocks against their budgets, then the tile and the reduced
+  die.** This is running.
+- **The controller's `core_token` path.** It is 923 ps deep inside the
+  controller, an argmax compare feeding a mux. It fits no budget at 1 GHz, so
+  the controller needs an output register on its core-start bundle.
+- **Real memories.** Every memory is a placeholder (§1). The memory
+  compilers' SRAM and via-ROM macros, with BIST and repair, replace them. The
+  vector memory has 13 ports (26 on V4.1) and needs a banked design.
+- **No weight streamer RTL for the HBM die.** Its prefetch buffer has no fill
+  port. The V4.1 core has no KV streaming interface either, so its HBM slices
+  are shoreline only.
+- **The collectives nodes are composition, not a verified datapath.** Each
+  engine is verified in its own bench.
+- **Scan, multi-corner sign-off, IR drop, the full-die route and the 4-die
+  package** (§6 of the plan).
