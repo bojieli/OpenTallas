@@ -228,8 +228,8 @@ and `energy_per_token.json`.
 
 | Block | Die um | Source model | VDD worst mV | VDD average mV | VSS worst mV | Max M2 mA/um | Max M5 mA/um | Max M6 mA/um | Max M7 mA/um | Max M8 mA/um |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| qwen_core | -- | pins | 3.0 | 0.22 | 3.3 | 1.98 | 1.02 | 0.00 | -- | -- |
-| qwen_core | -- | bumps 140 um | 224.0 | 101.00 | 217.0 | 6.66 | 23.17 | 17.85 | -- | -- |
+| qwen_core | 641 x 641 | pins | 3.0 | 0.22 | 3.3 | 1.98 | 1.02 | 0.00 | -- | -- |
+| qwen_core | 641 x 641 | bumps 140 um | 224.0 | 101.00 | 217.0 | 6.66 | 23.17 | 17.85 | -- | -- |
 | qwen_core_pdn_m7_m8 | 641 x 641 | bumps 140 um, grid `pdn_m7_m8_upper_grid` | 122.0 | 56.60 | 111.0 | 4.07 | 7.76 | 7.33 | 11.72 | 9.43 |
 | qwen_core_pdn_m7_m8_bump70 | 641 x 641 | bumps 70 um, grid `pdn_m7_m8_upper_grid` | 18.2 | 3.95 | 16.6 | 2.97 | 1.81 | 2.15 | 2.38 | 2.94 |
 | qwen_core_pdn_m7_m8_wide_bump70 | 641 x 641 | bumps 70 um, grid `pdn_m7_m8_wide_upper_grid` | 9.0 | 1.75 | 8.6 | 2.84 | 1.26 | 1.02 | 1.73 | 2.31 |
@@ -298,8 +298,19 @@ Fed at its own M6 pins, the route's grid drops at worst 3.0 mV on VDD and
 3.3 mV on VSS (under 0.5%). Fed from a 140 um flip-chip bump array landing
 directly on M6, it drops 224 mV (32% of the supply) and the M5 stripes carry
 23 mA/um. The ORFS block grid has no layer that can spread bump current, so
-a die built from these blocks needs an upper grid; the M7/M8 variant below
-sizes one.
+a die built from these blocks needs an upper grid. Rebuilding the grid on the
+same placement (`pdn_tcl`; the instance currents are unchanged) sizes it:
+
+| Grid over M1/M2/M5/M6 | Bump pitch | VDD worst drop | VDD average drop |
+|---|---:|---:|---:|
+| none (the route's grid) | 140 um | 224 mV (32%) | 101 mV |
+| M7/M8 straps 0.8 um on a 10.8 um pitch | 140 um | 122 mV (17%) | 57 mV |
+| M7/M8 straps 0.8 um on a 10.8 um pitch | 70 um | 18.2 mV (2.6%) | 4.0 mV |
+| M7/M8 straps 2.0 um on a 10.8 um pitch | 70 um | 9.0 mV (1.3%) | 1.8 mV |
+
+Bump density matters more than strap width: at 140 um the core gets eight
+bumps per net, 117 mA each. The wide-strap grid at a 70 um pitch meets a 2%
+static budget with room for the dynamic drop this analysis does not model.
 
 ### HBM comparator
 
@@ -398,9 +409,11 @@ the other.
    softplus unit, 4 ps on the top-16 select and the Engram hash) and under a
    5% OCV derate by about 55 ps on the core. ORFS's hold
    repair needs an FF scenario and a derated one, or a budgeted margin.
-4. **Upper power grid.** The M1/M2/M5/M6 block grid holds 3 mV fed at its
-   pins but 224 mV fed from bumps. A die needs M7/M8 straps (and a
-   redistribution layer to the bumps).
+4. **Upper power grid and bump pitch.** The M1/M2/M5/M6 block grid holds
+   3 mV fed at its pins but 224 mV fed from 140 um bumps. M7/M8 straps 2 um
+   wide on a 10.8 um pitch with a 70 um bump pitch bring it to 9 mV
+   (`configs/signoff/pdn_m7_m8_wide_upper_grid.tcl`); the full-chip
+   workstream should start from that.
 5. **Follow-pin current density.** Even fed ideally at the M6 pins, the
    18 nm M1/M2 follow-pins carry 1.2-2.4 mA/um near the densest flop
    clusters, above the assumed 1 mA/um. ASAP7 has no EM rule to check
@@ -410,6 +423,17 @@ the other.
    clock period. A full die's tree will be longer, so the full-chip
    workstream should plan a mesh or H-tree top level and carry the skew in
    the block timing budgets.
+
+## Status for each architecture
+
+| | HBM comparator | Qwen3-8B ROM reticle | V4.1 ROM array, die | V4.1 ROM array, package |
+|---|---|---|---|---|
+| Activity from the decode campaign | core and KV streamer, RTL-mapped | whole core, RTL-mapped; method checked gate-level on a collective | matrix engine and six units, RTL-mapped, sampled 10% | argmax gate-level; other fabric vectorless |
+| Power, energy per token | yes (HBM path from the analytical per-byte energy) | yes | yes, without the sequencer, V4.1 stream unit, hc projection and Sinkhorn unit | yes (UCIe bytes derived, not simulated) |
+| IR drop and EM | streamer; the core as for the reticle | core (post-CTS), with the upper-grid sizing | units | every fabric block |
+| Clock tree | yes | yes | yes | yes |
+| SS/TT/FF with OCV | yes | yes | yes | yes |
+| Open | HBM PHY and controller as blocks (the analytical energy stands in) | routed-stage parasitics for the full core (post-CTS today); gate-level activity at full length | the four unrouted units; the matrix engine as `ot_hdc_v41_matvec` (main moved to it after this branch point) | fabric activity from a multi-package campaign |
 
 ## Reproduce
 

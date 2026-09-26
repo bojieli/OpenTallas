@@ -195,7 +195,7 @@
       },
       "memory": {
         "KV and vector memory SRAM": {
-          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound) enable-high cycles {'vs_re': 2077712, 'vw_xe_we': 292, 'vx_re': 1140736, 'vw_su_we': 510581, 'ww_h_we': 640, 'ww_q_we': 14048, 'wxr_re': 80, 'vh_re': 409600, 'vw_me_we': 24576, 'vr_re': 532, 'kv_re': 125440, 'ww_x_we': 128, 'vq_re': 480, 'kv_we': 17536, 'vi_re': 15328, 'vw_rd_we': 5808}",
+          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound) enable-high cycles {'vw_me_we': 24576, 'ww_q_we': 14048, 'vs_re': 2077712, 'kv_we': 17536, 'vx_re': 1140736, 'vh_re': 409600, 'wxr_re': 80, 'vr_re': 532, 'ww_x_we': 128, 'kv_re': 125440, 'ww_h_we': 640, 'vw_rd_we': 5808, 'vq_re': 480, 'vw_xe_we': 292, 'vi_re': 15328, 'vw_su_we': 510581}",
           "bytes_per_token": 52306612.0,
           "energy_j": 0.00013599719119999998,
           "energy_j_high": 0.0006642939724,
@@ -203,7 +203,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "ROM (weights, expert weights, hc, block-quantised, Engram, constants)": {
-          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction) enable-high cycles {'erom_re': 48, 'crom_re': 67332, 'wrom_re': 159744, 'hrom_re': 409600, 'prog_re': 4416, 'xcrom_re': 1, 'ewrom_re': 640, 'qrom_re': 36800}",
+          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction) enable-high cycles {'qrom_re': 36800, 'crom_re': 67332, 'prog_re': 4416, 'hrom_re': 409600, 'xcrom_re': 1, 'ewrom_re': 640, 'erom_re': 48, 'wrom_re': 159744}",
           "bytes_per_token": 46851672.0,
           "energy_j": 3.74813376e-06,
           "energy_j_high": 2.3425836e-05,
@@ -469,6 +469,20 @@
     },
     "hbm_comparator": {
       "analytical_comparison": {
+        "clock_energy_j_per_mm2_per_cycle": {
+          "analytical": {
+            "grade": "assumed",
+            "range_high": 1.6e-10,
+            "range_low": 3e-11,
+            "source": "configs/hardware/technology.json power.clock_energy_j_per_mm2_per_cycle",
+            "value": 8.5e-11
+          },
+          "area_basis": "the routed block's die (core plus margin), TT session",
+          "area_mm2": 0.411325974409,
+          "measured_clock_network_only": 4.584143063528928e-10,
+          "measured_with_register_clock_pins": 9.308289183081814e-10,
+          "note": "sequential internal power is mostly the flops' clock-pin power; the analytical term is a whole-die clock-distribution budget"
+        },
         "mac_energy_pj": {
           "analytical_pj": 0.33,
           "analytical_range_pj": [
@@ -478,6 +492,17 @@
           "measured_matrix_engine": 3.9743577368555187,
           "measured_matrix_engine_dynamic": 3.973882016908916,
           "measured_whole_token": 262.4113816901533
+        },
+        "static_leakage_w_per_mm2_logic": {
+          "analytical": {
+            "grade": "assumed",
+            "range_high": 0.2,
+            "range_low": 0.011,
+            "source": "configs/hardware/technology.json power.static_leakage_w_per_mm2.logic",
+            "value": 0.06
+          },
+          "measured": 0.00021162358045653706,
+          "note": "ASAP7 RVT at 25 C; the analytical term is an N6/N7 foundry-class assumption including hotter operation"
         }
       },
       "clock_period_ns": 0.9,
@@ -563,7 +588,7 @@
       },
       "memory": {
         "KV from HBM": {
-          "basis": "the KV bytes the core consumes (the streamer fetches each once into its window; the tail SRAM holds the open tile) enable-high cycles {'kv_we': 256, 'kv_re': 1024}",
+          "basis": "the KV bytes the core consumes (the streamer fetches each once into its window; the tail SRAM holds the open tile) enable-high cycles {'kv_re': 1024, 'kv_we': 256}",
           "bytes_per_token": 263168.0,
           "energy_j": 2.7601059840000002e-05,
           "energy_j_high": 3.0990663679999995e-05,
@@ -571,7 +596,7 @@
           "energy_term": "hbm_j_per_byte"
         },
         "program and constant ROM/SRAM": {
-          "basis": " enable-high cycles {'crom_re': 2432, 'prog_re': 113}",
+          "basis": " enable-high cycles {'prog_re': 113, 'crom_re': 2432}",
           "bytes_per_token": 33920.0,
           "energy_j": 8.8192e-08,
           "energy_j_high": 4.30784e-07,
@@ -579,7 +604,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "vector memory SRAM": {
-          "basis": " enable-high cycles {'vx_re': 86016, 'vw_su_we': 6609, 'vw_me_we': 576, 'vb_re': 6865, 'vc_re': 5713, 'va_re': 7377, 'vw_rd_we': 113}",
+          "basis": " enable-high cycles {'va_re': 7377, 'vw_me_we': 576, 'vx_re': 86016, 'vc_re': 5713, 'vb_re': 6865, 'vw_rd_we': 113, 'vw_su_we': 6609}",
           "bytes_per_token": 487636.0,
           "energy_j": 1.2678536e-06,
           "energy_j_high": 6.1929772e-06,
@@ -632,6 +657,20 @@
     },
     "qwen3_8b_rom_reticle": {
       "analytical_comparison": {
+        "clock_energy_j_per_mm2_per_cycle": {
+          "analytical": {
+            "grade": "assumed",
+            "range_high": 1.6e-10,
+            "range_low": 3e-11,
+            "source": "configs/hardware/technology.json power.clock_energy_j_per_mm2_per_cycle",
+            "value": 8.5e-11
+          },
+          "area_basis": "the routed block's die (core plus margin), TT session",
+          "area_mm2": 0.411325974409,
+          "measured_clock_network_only": 4.584143063528928e-10,
+          "measured_with_register_clock_pins": 9.308289183081814e-10,
+          "note": "sequential internal power is mostly the flops' clock-pin power; the analytical term is a whole-die clock-distribution budget"
+        },
         "mac_energy_pj": {
           "analytical_pj": 0.33,
           "analytical_range_pj": [
@@ -641,6 +680,17 @@
           "measured_matrix_engine": 3.9743577368555187,
           "measured_matrix_engine_dynamic": 3.973882016908916,
           "measured_whole_token": 16.547206649595186
+        },
+        "static_leakage_w_per_mm2_logic": {
+          "analytical": {
+            "grade": "assumed",
+            "range_high": 0.2,
+            "range_low": 0.011,
+            "source": "configs/hardware/technology.json power.static_leakage_w_per_mm2.logic",
+            "value": 0.06
+          },
+          "measured": 0.00021162358045653706,
+          "note": "ASAP7 RVT at 25 C; the analytical term is an N6/N7 foundry-class assumption including hotter operation"
         }
       },
       "clock_period_ns": 0.9,
@@ -727,7 +777,7 @@
       },
       "memory": {
         "KV SRAM": {
-          "basis": "kv_re reads one 16-lane FP32 word per lane group (4 x 64 B); kv_we writes one FP32 element; writes charged at the read energy enable-high cycles {'kv_we': 256, 'kv_re': 1024}",
+          "basis": "kv_re reads one 16-lane FP32 word per lane group (4 x 64 B); kv_we writes one FP32 element; writes charged at the read energy enable-high cycles {'kv_re': 1024, 'kv_we': 256}",
           "bytes_per_token": 263168.0,
           "energy_j": 6.842367999999999e-07,
           "energy_j_high": 3.3422336000000003e-06,
@@ -735,7 +785,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "program and constant ROM": {
-          "basis": "1,024-bit instruction per prog_re, 64-bit constant pair per crom_re enable-high cycles {'crom_re': 2432, 'prog_re': 113}",
+          "basis": "1,024-bit instruction per prog_re, 64-bit constant pair per crom_re enable-high cycles {'prog_re': 113, 'crom_re': 2432}",
           "bytes_per_token": 33920.0,
           "energy_j": 2.7136e-09,
           "energy_j_high": 1.696e-08,
@@ -743,7 +793,7 @@
           "energy_term": "rom_read_j_per_byte"
         },
         "vector memory SRAM": {
-          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial) enable-high cycles {'vx_re': 86016, 'vw_su_we': 6609, 'vw_me_we': 576, 'vb_re': 6865, 'vc_re': 5713, 'va_re': 7377, 'vw_rd_we': 113}",
+          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial) enable-high cycles {'va_re': 7377, 'vw_me_we': 576, 'vx_re': 86016, 'vc_re': 5713, 'vb_re': 6865, 'vw_rd_we': 113, 'vw_su_we': 6609}",
           "bytes_per_token": 487636.0,
           "energy_j": 1.2678536e-06,
           "energy_j_high": 6.1929772e-06,
@@ -818,6 +868,6 @@
       "value": 2.9e-13
     }
   },
-  "generated_at": "2026-09-26T11:37:32.683459+00:00",
+  "generated_at": "2026-09-26T11:38:55.398247+00:00",
   "schema": "opentallas.signoff.v1.energy_per_token"
 }

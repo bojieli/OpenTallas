@@ -84,6 +84,8 @@
             "temperature_c": 0.0,
             "voltage_v": 0.77
           },
+          "die_area_basis": "backfilled from the TT session log line SIGNOFF ir.die_um",
+          "die_area_um2": 411325.97440899996,
           "libraries": [
             "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
             "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
@@ -186,6 +188,8 @@
             "temperature_c": 100.0,
             "voltage_v": 0.63
           },
+          "die_area_basis": "backfilled from the TT session log line SIGNOFF ir.die_um",
+          "die_area_um2": 411325.97440899996,
           "libraries": [
             "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
             "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
@@ -304,6 +308,8 @@
             "temperature_c": 25.0,
             "voltage_v": 0.7
           },
+          "die_area_basis": "backfilled from the TT session log line SIGNOFF ir.die_um",
+          "die_area_um2": 411325.97440899996,
           "em": {
             "BUMPS.VDD": {
               "assumed_dc_limit_ma_per_um": 1.0,
