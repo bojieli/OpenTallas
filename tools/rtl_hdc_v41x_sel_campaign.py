@@ -359,8 +359,11 @@ def mutate(d: Path):
         for _ in range(4):
             segs.append(segment(rng, family(rng, f, 3000, K), K, K, Q, W, "even", True))
     for _ in range(20):                                                  # signed zeros at the threshold
-        b = rng.choice(np.array([0x0000, 0x8000, 0x3F80, 0xBF80]), 200)
+        b = rng.choice(np.array([0x0000, 0x8000]), 200)
+        b[rng.choice(200, 8, replace=False)] = 0x3F80
         segs.append(segment(rng, b, K, K, Q, W, "random", False))
+    for _ in range(6):                                                   # BF16 ties at the bound, all quarters
+        segs.append(segment(rng, family(rng, "uniform", 20000, K), K, K, Q, W, "even", True))
     pfx, _ = write_vectors(segs, Q, W, d, "mut")
     res = []
 
