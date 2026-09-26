@@ -2238,5 +2238,12 @@
    ]
   }
  },
- "caveat": "RTX PRO 6000 Blackwell (GB202, sm_120), not B200 (GB100): L2 partitioning, DSMEM performance and the SM-to-L2 fabric differ; treat as a measured Blackwell-class reference for this part and derived for B200."
+ "caveat": "RTX PRO 6000 Blackwell (GB202, sm_120), not B200 (GB100): L2 partitioning, DSMEM performance and the SM-to-L2 fabric differ; treat as a measured Blackwell-class reference for this part and derived for B200.",
+ "breakdown": {
+  "file": "results/gpu/blackwell_sync_breakdown.json",
+  "tool": "tools/gpu_microbench/breakdown.cu",
+  "why_sync_is_slow": "It is latency, not serialisation. Counter barrier vs participants: N=1 473 ns, N=188 666 ns; fit over N=8..188 gives 649 ns + 0.090 ns per arrival (0.26 cycles). Same-word atomics sustain one per 0.41 ns (1.2 cycles), so even 188 simultaneous arrivals serialise for <= 77 ns. Budget of the 659 ns (1,900-cycle) barrier: arrive-side fence ~460 + atomic arrive landing ~190 + poll round trip ~383 plus half a poll period ~190 + consumer-side fence ~460 = ~1,680 cycles, plus the spread of 188 arrival times (N=1 -> N>=8 adds 176 ns). That is ~5 L2 round trips, of which two are fences.",
+  "why_megatron_pair_is_slower": "An all-reduce IS a reduce-scatter plus an all-gather: two all-SM dependencies. The explicit RS+AG measured barrier 1 = 1345 ns and barrier 2 = 796 ns plus data phases (write partial 577, read 188 slices + sum 634, all-gather read 1184), total 4612 ns. The pair therefore has the same dependency count as the two gathers it replaces, not one.",
+  "why_ll_flags_clusters_lost": "LL (flag in data): it removes the fence (one-way 967 -> ~400 cycles) but turns polling into data reads. Counted per SM per boundary: LL8 1.62 poll rounds per thread on average (max 4), 2585 16-B loads = 41.4 KB read for 16 KB useful (2.5x); 188 SMs -> 7.8 MB of L2 reads per boundary vs 3.1 MB for the counter design, all on the same 256 lines of one copy, so it queues on the hot slices. LL16 with 8 replicas spreads the lines and wins (1,151 ns in gather_designs), still reading 38.4 KB per SM (1.91 rounds)."
+ }
 }
