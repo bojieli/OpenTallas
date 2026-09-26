@@ -97,6 +97,14 @@ class Alloc(P.Alloc):
 class ShapeLayout:
     """Descriptors, vector-memory and KV maps of one die's share, from a shape dict alone."""
 
+    mtp = None                       # the MTP branch's Builder asks the layout; one position here
+
+    def slot_map(self, j):
+        return self.vm.map
+
+    def rname(self, name, j):
+        return name
+
     def __init__(self, s):
         self.s = s
         G = s["groups"]
@@ -188,6 +196,7 @@ class ShapeBuilder(P.Builder):
     def __init__(self, lay, engram_inline=True):
         self.lay, self.s = lay, lay.s
         self.prog = []
+        self.qchunk, self.slot, self.serial_id, self.n_serial, self.dslot_over = None, 0, None, 0, None
         self.V = lay.vm.map
         self.K = lay.kv
         self.engram_inline = engram_inline
