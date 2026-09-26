@@ -341,6 +341,46 @@
     "tester_cycles": 214559,
     "top": "ot_rom_moe_dispatch"
    },
+   "route": {
+    "noscan": {
+     "core_area_um2": 3866.47,
+     "drc_errors": 0,
+     "fmax_mhz": 1421.29,
+     "instance_count": 30251,
+     "routed_wirelength_um": 39280,
+     "sequential_area_um2": 637.408,
+     "setup_wns_ns": 0.196413,
+     "standard_cell_area_um2": 1510.55,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.118832,
+     "fmax": -0.051228,
+     "instances": 0.070378,
+     "routed_wirelength": 0.182968,
+     "standard_cell_area": 0.116103
+    },
+    "scan": {
+     "core_area_um2": 4325.93,
+     "drc_errors": 0,
+     "fmax_mhz": 1348.48,
+     "instance_count": 32380,
+     "routed_wirelength_um": 46467,
+     "scan": {
+      "cell_area_added_fraction": 0.120022,
+      "chain_count": 3,
+      "chain_length_max": 719,
+      "flops": 2155,
+      "lockup_latches": 0,
+      "scan_cells": 2052,
+      "scan_mux_cells": 103
+     },
+     "sequential_area_um2": 786.999,
+     "setup_wns_ns": 0.15842599999999998,
+     "standard_cell_area_um2": 1685.93,
+     "status": "pass"
+    }
+   },
    "scan_off_equivalence": {
     "equiv_cells": 2767,
     "proven": true,
