@@ -30,6 +30,46 @@
     "tester_cycles": 1797767,
     "top": "ot_rom_argmax_reduce"
    },
+   "route": {
+    "noscan": {
+     "core_area_um2": 4939.41,
+     "drc_errors": 0,
+     "fmax_mhz": 1149.46,
+     "instance_count": 37264,
+     "routed_wirelength_um": 46003,
+     "sequential_area_um2": 665.927,
+     "setup_wns_ns": 0.0300279,
+     "standard_cell_area_um2": 1848.89,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.095933,
+     "fmax": -0.011875,
+     "instances": 0.048653,
+     "routed_wirelength": 0.210204,
+     "standard_cell_area": 0.10012
+    },
+    "scan": {
+     "core_area_um2": 5413.26,
+     "drc_errors": 0,
+     "fmax_mhz": 1135.81,
+     "instance_count": 39077,
+     "routed_wirelength_um": 55673,
+     "scan": {
+      "cell_area_added_fraction": 0.09723,
+      "chain_count": 3,
+      "chain_length_max": 756,
+      "flops": 2266,
+      "lockup_latches": 0,
+      "scan_cells": 2207,
+      "scan_mux_cells": 59
+     },
+     "sequential_area_um2": 826.817,
+     "setup_wns_ns": 0.0195685,
+     "standard_cell_area_um2": 2034,
+     "status": "pass"
+    }
+   },
    "scan_off_equivalence": {
     "equiv_cells": 2813,
     "proven": true,

@@ -137,7 +137,8 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 915: docs/DFT.md's scan-cost table gains the KV streamer's routed pair (5).
     # 925: docs/DFT.md gains the multicast-node and expert-port routed pairs (10).
     # 930: docs/DFT.md gains the MoE dispatch routed pair (5).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 930
+    # 935: docs/DFT.md gains the argmax collective's routed pair (5).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 935
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
