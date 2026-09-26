@@ -1099,6 +1099,12 @@ def activity(*, work: Path, bench: Path, bench_top: str, dut_module: str, rtl: l
             sim_args += [f"+VCD_EVERY={window[2]}", f"+VCD_LEN={window[3]}"]
     t1 = time.time()
     sim = subprocess.run(sim_args, capture_output=True, text=True)
+    # a simulation that died before opening its dump leaves the readers blocked
+    # on the FIFO: open and close its write end so they see end-of-file
+    try:
+        os.close(os.open(fifo, os.O_WRONLY | os.O_NONBLOCK))
+    except OSError:
+        pass
     tee.wait()
     meta["simulation_seconds"] = time.time() - t1
     meta["simulation_stdout_tail"] = sim.stdout.strip().splitlines()[-12:]
@@ -1230,7 +1236,7 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                 "RTL simulation of the campaign bench, registers mapped by name onto the routed flops; "
                 "OpenSTA propagates through the combinational logic"))
             saifs = {s: Path(v["path"]) for s, v in act_meta["saif"].items()}
-        analyses = blk.get("analyses") or [blk]
+        analyses = blk["analyses"] if "analyses" in blk else [blk]
         for an in analyses:
             key = an.get("key", name)
             saif = saifs.get(an.get("saif")) if an.get("saif") else None
@@ -1640,7 +1646,10 @@ def summarize(cfg_path: Path) -> dict[str, Any]:
                                    item.get("instances", 1))
                 if e:
                     row[c] = e
-                    totals[c] += e["total_j"]
+                    if not item.get("subtotal_of"):
+                        totals[c] += e["total_j"]
+            if item.get("subtotal_of"):
+                row["subtotal_of"] = item["subtotal_of"]
             a["logic"][item["name"]] = row
         mem_tt = 0.0
         for item in arch.get("memory", []):
@@ -1676,7 +1685,7 @@ def summarize(cfg_path: Path) -> dict[str, Any]:
                          "token_TT": totals["TT"] + mem_tt + static_j}
         # per-MAC projection from the matrix engine
         me = arch.get("mac")
-        if me and me.get("logic") in a["logic"] and "TT" in a["logic"][me["logic"]]:
+        if me and me.get("macs_per_token") and me.get("logic") in a["logic"] and "TT" in a["logic"][me["logic"]]:
             e_me = a["logic"][me["logic"]]["TT"]
             macs = me["macs_per_token"]
             a["pj_per_mac"] = {

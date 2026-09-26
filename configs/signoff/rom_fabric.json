@@ -1,0 +1,225 @@
+{
+  "architecture": "deepseek-v41-rom-array",
+  "description": "ROM-array package fabric: the MoE and KV collectives, the package controller, the fabric router and the express link, each re-routed with its routed database retained.  Power is vectorless (OpenSTA's default input activity 0.1, propagated) except for the argmax collective, which also carries the calibration of the activity method: a random-traffic bench simulated gate-level on the routed netlist and as RTL mapped onto its flops.",
+  "output": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
+  "scratch": "${OT_SIGNOFF_SCRATCH}",
+  "blocks": {
+    "argmax_gate_level": {
+      "activity": {
+        "bench": "rtl/test/tb_signoff_argmax_random.sv",
+        "bench_top": "tb_signoff_argmax_random",
+        "dut_module": "ot_rom_argmax_reduce",
+        "include_dirs": [],
+        "liberty": [
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
+        ],
+        "window": [
+          100,
+          1900,
+          100,
+          50
+        ],
+        "half_period_ps": 450,
+        "engine": "verilator",
+        "rtl": [],
+        "netlists": {
+          "ot_rom_argmax_reduce": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_argmax_reduce"
+        },
+        "scopes": {
+          "dut": {
+            "scope": "TOP.tb_signoff_argmax_random.dut",
+            "netlist": "ot_rom_argmax_reduce",
+            "saif_top": "dut"
+          }
+        }
+      },
+      "analyses": [
+        {
+          "key": "rom_argmax_reduce_gate_level",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_argmax_reduce/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_argmax_reduce/physical.json",
+          "saif": "dut",
+          "saif_scope": "dut",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ]
+        }
+      ]
+    },
+    "argmax_rtl_mapped": {
+      "activity": {
+        "bench": "rtl/test/tb_signoff_argmax_random.sv",
+        "bench_top": "tb_signoff_argmax_random",
+        "dut_module": "ot_rom_argmax_reduce",
+        "include_dirs": [],
+        "liberty": [
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
+        ],
+        "window": [
+          100,
+          1900,
+          100,
+          50
+        ],
+        "half_period_ps": 450,
+        "engine": "verilator",
+        "rtl": [
+          "rtl/rom/collectives/ot_rom_coll_pkg.sv",
+          "rtl/rom/collectives/ot_rom_coll_skid.sv",
+          "rtl/rom/collectives/ot_rom_argmax_reduce.sv"
+        ],
+        "netlists": {},
+        "scopes": {
+          "dut": {
+            "scope": "TOP.tb_signoff_argmax_random.dut",
+            "map_netlist": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_argmax_reduce",
+            "saif_top": "dut"
+          }
+        }
+      },
+      "analyses": [
+        {
+          "key": "rom_argmax_reduce_rtl_mapped",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_argmax_reduce/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_argmax_reduce/physical.json",
+          "saif": "dut",
+          "saif_scope": "dut",
+          "corners": [
+            "TT"
+          ],
+          "derate": 0.0,
+          "ir_sources": []
+        }
+      ]
+    },
+    "rom_mcast_node": {
+      "analyses": [
+        {
+          "key": "rom_mcast_node",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_mcast_node/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_mcast_node/physical.json",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ]
+        }
+      ]
+    },
+    "rom_moe_dispatch": {
+      "analyses": [
+        {
+          "key": "rom_moe_dispatch",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_moe_dispatch/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_moe_dispatch/physical.json",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ]
+        }
+      ]
+    },
+    "rom_moe_expert_port": {
+      "analyses": [
+        {
+          "key": "rom_moe_expert_port",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_moe_expert_port/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__collectives__ot_rom_moe_expert_port/physical.json",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ]
+        }
+      ]
+    },
+    "rom_pkg_ctrl": {
+      "analyses": [
+        {
+          "key": "rom_pkg_ctrl",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/rom__ot_rom_pkg_ctrl/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__ot_rom_pkg_ctrl/physical.json",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ]
+        }
+      ]
+    },
+    "rom_fabric_router": {
+      "analyses": [
+        {
+          "key": "rom_fabric_router",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/rom__ot_rom_fabric_router/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__ot_rom_fabric_router/physical.json",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ]
+        }
+      ]
+    },
+    "rom_express_link": {
+      "analyses": [
+        {
+          "key": "rom_express_link",
+          "routed": "${OT_SIGNOFF_ROUTES}/blocks/rom__ot_rom_express_link__s1000_w64_L3000/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__ot_rom_express_link__s1000_w64_L3000/physical.json",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [
+            "PINS",
+            "BUMPS"
+          ]
+        }
+      ]
+    }
+  }
+}

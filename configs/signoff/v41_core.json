@@ -247,6 +247,48 @@
           "instances": 1
         }
       ]
+    },
+    "v41_memory_ports": {
+      "note": "the V4.1 core's own port signals over the WHOLE step (no sampling): memory-port enables give the ROM/SRAM bytes read and written per token for the energy summary; no analysis",
+      "activity": {
+        "bench": "rtl/test/tb_hdc_core_v41.sv",
+        "bench_top": "tb_hdc_core_v41",
+        "dut_module": "ot_hdc_core_v41",
+        "rtl_from": "tools/rtl_hdc_v41_decode_campaign.py:RTL",
+        "rtl": [],
+        "include_dirs": [
+          "rtl/hdc/v41",
+          "rtl/hdc"
+        ],
+        "liberty": [
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+          "${HOME}/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
+        ],
+        "prepare": [
+          [
+            "{python}",
+            "tools/hdc_program_v41.py",
+            "--out",
+            "{work}/img"
+          ]
+        ],
+        "plusargs": [
+          "+DIR={work}/img"
+        ],
+        "plusargs_file": "{work}/img/run.args",
+        "scopes": {
+          "ports": {
+            "scope": "TOP.tb_hdc_core_v41.dut!"
+          }
+        },
+        "half_period_ps": 450,
+        "netlists": {},
+        "engine": "verilator"
+      },
+      "analyses": []
     }
   }
 }
