@@ -166,6 +166,11 @@ FIELDS = [
     ("he_nout", N), ("he_k", N), ("he_wbase", A), ("he_xbase", A), ("he_obase", A),
     # SU lane axis (SCALAR, VI, VO) and the segmented-tree reduction
     ("su_vec", 2), ("red_tree", 1), ("su_chase", N),
+    # HBM weights (rtl/hdc/hbm/ot_hdc_qstream.sv): the issue of an instruction
+    # with wrel set releases the next group of expert-indexed QE fetches -- the
+    # program generator sets it on an instruction that waited for the XU op
+    # writing the expert ids, so they are in the vector memory by then
+    ("wrel", 1),
 ]
 
 
