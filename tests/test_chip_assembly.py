@@ -220,3 +220,17 @@ def test_mesh_link_delivers_in_order_at_full_rate(tmp_path, stall):
     assert line.startswith("PASS"), line
     if stall == 0:
         assert line.split()[1:] == ["2000", "2000"]
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog not available")
+@pytest.mark.parametrize("args", [[], ["+STALL=40", "+GAP=30"], ["+STALL=80"]])
+def test_skid_slice_passes_every_beat_in_order(tmp_path, args):
+    binary = tmp_path / "tb.vvp"
+    subprocess.run(["iverilog", "-g2012", "-o", str(binary), str(ROOT / "rtl/test/tb_chip_skid.sv"),
+                    str(ROOT / "rtl/chip/ot_chip_mesh_link.sv")], check=True)
+    out = subprocess.run(["vvp", "-n", str(binary), *args], capture_output=True, text=True,
+                         check=True).stdout
+    line = [l for l in out.splitlines() if l.startswith(("PASS", "FAIL"))][-1]
+    assert line.startswith("PASS"), line
+    if not args:
+        assert line.split()[1:] == ["3000", "3000"]

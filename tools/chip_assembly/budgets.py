@@ -24,12 +24,12 @@ Method (the standard budgeting step of a hierarchical flow):
    path does not fit the cycle at this floorplan and is reported as an
    architectural violation (a pipeline stage or a move), with the block
    budgeted at its pre-layout delay.  Every block keeps at least
-   ``max(1.3 x internal + 40 ps, 150 ps)`` when the outside can afford it
+   ``max(1.3 x internal + 40 ps, 300 ps)`` when the outside can afford it
    (``tight`` when it cannot): the pin-to-register wire and repair buffering
-   a pre-layout delay does not contain.  A port on a combinational path through
-   the block (``feedthrough_ps``) gets the through-budget instead: the block
-   keeps 1.5 x its through delay + 40 ps and the two outside halves share the
-   rest equally.
+   a pre-layout delay does not contain.  A block's combinational through-paths
+   (``feedthrough_ps``) share one through-budget, ``max(1.5 x through + 40 ps,
+   300 ps)``; the outside time left is split between the input and output
+   sides in addition to each side's own need (far-end delay plus wire).
 6. The block's SDC then carries ``set_input_delay = T - U - budget`` and
    ``set_output_delay = T - U - budget`` per port bus: the time the rest of
    the chip consumes, which is what re-closing the block against its budget
@@ -66,7 +66,8 @@ DIE_REGISTERED_RE = r"^(m_in_|m_out_|hq_|hr_)"
 DIE_REGISTERED_EXTERNAL_PS = 150.0
 # A block keeps at least this for a boundary path, whatever its pre-layout
 # delay: the pin-to-register wire and the repair buffering inside the block.
-MIN_BLOCK_PS = 150.0
+MIN_BLOCK_PS = 300.0           # measured: the router's registered 512-bit outputs needed ~270 ps
+                               # from clock to pin after routing (results/.../chip/blocks/ot_chip_router.json)
 GROWTH = 1.3                   # pre-layout -> routed delay growth inside a block
 GROWTH_ADD_PS = 40.0
 # Quasi-static configuration (written only while the tile is idle): false paths.
@@ -232,6 +233,8 @@ def analyse(netlist: Path, work: Path, views: dict[str, dict[str, Path]], top: s
             e = pins.get((inst, bus))
             if e is not None:
                 e["startpoint"], e["endpoint"] = sp, ep
+    if not pins:
+        raise RuntimeError(f"the tile analysis timed no macro pin; see {work / 'analyse.log'}")
     return {"pins": list(pins.values()), "log": str(work / "analyse.log")}
 
 
@@ -330,16 +333,7 @@ def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Pat
             status = "violates"
         ext_sdc = PERIOD_PS - UNCERTAINTY_PS - budget
         ft = chars[master]["ports"].get(bus, {}).get("feedthrough_ps") if master in chars else None
-        if ft:
-            # A combinational path crosses the block (e.g. the KV window read
-            # through KVS to ME).  The pre-layout stubs carry no through arcs,
-            # so the through path gets the default through-budget: the block
-            # keeps 1.5 x its pre-layout delay + 40 ps, and the two outside
-            # halves split the rest equally; the registered path of the same
-            # port must still fit.
-            ft_budget = min(1.5 * ft + 40.0, PERIOD_PS - UNCERTAINTY_PS - 100.0)
-            ext_sdc = min(ext_sdc, (PERIOD_PS - UNCERTAINTY_PS - ft_budget) / 2)
-            budget = PERIOD_PS - UNCERTAINTY_PS - ext_sdc
+        ft_budget = None   # through-paths are budgeted per pair below
         row = {
             "direction": e["direction"], "width": e["bits"],
             "internal_ps": round(internal, 1), "external_pre_ps": round(external, 1),
@@ -347,7 +341,7 @@ def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Pat
             "path_slack_ps": round(slack, 1), "internal_budget_ps": round(budget, 1),
             "external_ps": round(ext_sdc, 1),
             "far_end": far, "far_kind": far_kind, "status": status,
-            **({"feedthrough_ps": ft, "feedthrough_budget_ps": round(ft_budget, 1)} if ft else {}),
+            **({"feedthrough_ps": ft} if ft else {}),
         }
         if master in blocks:
             blocks[master]["instance"] = inst
@@ -356,6 +350,40 @@ def allocate(arch: str, analysis: dict[str, Any], views: dict[str, dict[str, Pat
             memories.setdefault(master, {"instance": inst, "ports": {}})["ports"][bus] = row
         if status == "violates":
             violations.append({"instance": inst, "bus": bus, **row})
+    # Through-paths, second pass, per (input bus -> output bus) pair of the
+    # characterisation: the pair's block budget is max(1.5 x delay + 40 ps,
+    # 300 ps); the outside time left is split between its two sides on top
+    # of each side's own need (far-end delay plus wire).  A port on several
+    # pairs takes the tightest.
+    for name in HARDENED:
+        rows = blocks[name]["ports"]
+        for key, d in chars[name].get("through", {}).items():
+            a, b = key.split("->")
+            ra, rb = rows.get(a), rows.get(b)
+            if not ra or not rb or "internal_ps" not in ra or "internal_ps" not in rb:
+                continue
+            ftb = min(max(1.5 * d + 40.0, MIN_BLOCK_PS), PERIOD_PS - UNCERTAINTY_PS - 100.0)
+            need_a = max(ra["external_pre_ps"], 0.0) + ra["wire_ps"]
+            need_b = max(rb["external_pre_ps"], 0.0) + rb["wire_ps"]
+            left = PERIOD_PS - UNCERTAINTY_PS - ftb - need_a - need_b
+            for r, need in ((ra, need_a), (rb, need_b)):
+                ext = need + left / 2
+                cur = r.get("_through_ext")
+                if cur is None or ext < cur:
+                    r["_through_ext"] = ext
+                    r["through_split"] = {"pair": key, "delay_ps": d, "block_ps": round(ftb, 1),
+                                          "need_in_ps": round(need_a, 1), "need_out_ps": round(need_b, 1)}
+                if left < 0:
+                    r["status"] = "violates"
+            if left < 0:
+                violations.append({"instance": blocks[name]["instance"], "bus": key,
+                                   "through_left_ps": round(left, 1)})
+        for r in rows.values():
+            ext = r.pop("_through_ext", None)
+            if ext is None:
+                continue
+            r["external_ps"] = round(min(r["external_ps"], ext), 1)
+            r["internal_budget_ps"] = round(PERIOD_PS - UNCERTAINTY_PS - r["external_ps"], 1)
     # Ports the parent does not time (unconnected, or reset) keep a default:
     # the conventional 20% outside the block.
     for name in HARDENED:

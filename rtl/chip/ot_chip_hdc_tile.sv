@@ -99,23 +99,12 @@ module ot_chip_hdc_tile #(
     wire [NW-1:0]     kvd_tiles, kvd_k, kvd_nout, kvd_pos;
     wire              kvd_kindk, kv_ok;
 
-    // The controller drives start / token / pos combinationally (its boundary
-    // was timed for an adjacent registered core); a tile boundary register
-    // takes them, at one cycle per token.  The core clears `done` on the edge
-    // after it samples start, so the controller must not see the previous
-    // job's `done` during the cycle the start sits in this register.
-    reg               start_q;
-    reg  [NW-1:0]     token_q, pos_q;
-    wire              core_done;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) start_q <= 1'b0; else start_q <= start;
-    always @(posedge clk) begin token_q <= token; pos_q <= pos; end
-    assign done = core_done & ~start_q;
-
+    // start / token / pos arrive registered from the controller macro, which
+    // also masks the previous job's `done` (rtl/chip/ot_chip_pkg_ctrl.sv).
     ot_hdc_core #(.INSTR_BITS(INSTR_BITS), .W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .PAW(PAW),
                   .KV_HBM(1)) u_core (
-        .clk(clk), .rst_n(rst_n), .start(start_q), .token(token_q), .pos(pos_q),
-        .done(core_done), .next_token(ntok), .next_val(nval), .cycles(cycles), .fault(core_fault),
+        .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
+        .done(done), .next_token(ntok), .next_val(nval), .cycles(cycles), .fault(core_fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
@@ -142,8 +131,27 @@ module ot_chip_hdc_tile #(
     wire [AW-1:0]     hq_addr_core, kv_base;
     wire              kvs_fault;
 
+    // HBM response ports through register slices: the streamer's ready is
+    // combinational from the response tag (~500 ps), which cannot also cross
+    // the PHY boundary in the same cycle.
+    wire [3:0]     hs_v, hs_rdy;
+    wire [4*14-1:0] hs_tag;
+    wire [4*4-1:0]  hs_beat;
+    wire [4*256-1:0] hs_data;
+    genvar h;
+    generate
+        for (h = 0; h < 4; h = h + 1) begin : g_hr
+            ot_chip_skid #(.W(14 + 4 + 256)) u_hr (
+                .clk(clk), .rst_n(rst_n),
+                .in_valid(hr_v[h]), .in_ready(hr_rdy[h]),
+                .in_data({hr_tag[h*14 +: 14], hr_beat[h*4 +: 4], hr_data[h*256 +: 256]}),
+                .out_valid(hs_v[h]), .out_ready(hs_rdy[h]),
+                .out_data({hs_tag[h*14 +: 14], hs_beat[h*4 +: 4], hs_data[h*256 +: 256]}));
+        end
+    endgenerate
+
     ot_hdc_kv_stream u_kvs (
-        .clk(clk), .rst_n(rst_n), .tok_start(start_q), .tok_pos(pos_q), .cfg_lead(cfg_lead),
+        .clk(clk), .rst_n(rst_n), .tok_start(start), .tok_pos(pos), .cfg_lead(cfg_lead),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
         .kvd_jsh(kvd_jsh), .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_nout(kvd_nout),
         .kvd_kindk(kvd_kindk), .kvd_pos(kvd_pos), .kv_ok(kv_ok),
@@ -155,7 +163,7 @@ module ot_chip_hdc_tile #(
         .tl_raddr(tl_raddr), .tl_q(tl_q),
         .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_we(hq_we), .hq_addr(hq_addr_core), .hq_len(hq_len),
         .hq_tag(hq_tag), .hq_wdata(hq_wdata),
-        .hr_v(hr_v), .hr_rdy(hr_rdy), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data),
+        .hr_v(hs_v), .hr_rdy(hs_rdy), .hr_tag(hs_tag), .hr_beat(hs_beat), .hr_data(hs_data),
         .fault(kvs_fault));
     // The KV slice of the running user (the package controller's kv_base),
     // re-registered beside the streamer: it changes only when a job starts.

@@ -139,3 +139,39 @@ module ot_chip_mesh_link_rx #(
         else ret <= {ret[RET_STAGES-2:0], drain};
     assign cr_ret = ret[RET_STAGES-1];
 endmodule
+
+// Full-throughput valid/ready register slice (a two-entry skid buffer): every
+// output is a flop, and in_ready is a flop, so no combinational path crosses it
+// in either direction.
+module ot_chip_skid #(
+    parameter integer W = 32
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         in_valid,
+    output wire         in_ready,
+    input  wire [W-1:0] in_data,
+    output reg          out_valid,
+    input  wire         out_ready,
+    output reg  [W-1:0] out_data
+);
+    reg         sk_v;
+    reg [W-1:0] sk_d;
+    assign in_ready = !sk_v;                     // a flop: the skid entry is empty
+    wire take  = in_valid && !sk_v;
+    wire drain = out_ready || !out_valid;        // the output register frees this edge
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            out_valid <= 1'b0; sk_v <= 1'b0;
+        end else if (drain) begin
+            out_valid <= sk_v || take;
+            sk_v <= 1'b0;
+        end else if (take) begin
+            sk_v <= 1'b1;                        // output stalled: park the beat
+        end
+    end
+    always @(posedge clk) begin
+        if (drain) out_data <= sk_v ? sk_d : in_data;
+        else if (take) sk_d <= in_data;
+    end
+endmodule

@@ -97,11 +97,14 @@ def characterise(netlists: list[Path], top: str, work: Path, *, clock: str = "cl
         sl = entry.pop("worst_slack_ps")
         key = "in2reg_ps" if entry["direction"] == "input" else "reg2out_ps"
         entry[key] = None if sl is None else round(period_ps - sl, 2)
+    through: dict[str, float] = {}
     for line in proc.stdout.splitlines():
         if line.startswith("OTF "):
             _, start, end, delay = line.split()
-            for name in (start, end):
-                bus = re.sub(r"\[\d+\]$", "", name)
+            sb, eb = (re.sub(r"\[\d+\]$", "", n) for n in (start, end))
+            key = f"{sb}->{eb}"
+            through[key] = round(max(through.get(key, 0.0), float(delay)), 2)
+            for bus in (sb, eb):
                 if bus in ports:
                     prev = ports[bus].get("feedthrough_ps") or 0.0
                     ports[bus]["feedthrough_ps"] = round(max(prev, float(delay)), 2)
@@ -118,6 +121,7 @@ def characterise(netlists: list[Path], top: str, work: Path, *, clock: str = "cl
                   "path, when present, is feedthrough_ps on both ends; unused_bits are ports "
                   "with no connection inside the block"),
         "ports": ports,
+        "through": through,
     }
 
 

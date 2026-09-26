@@ -326,7 +326,7 @@ def run_level(level: str, arch: str, work: Path, timeout: int) -> dict[str, Any]
         if proc.returncode != 0:
             raise orfs.FlowError(f"{level} place-and-route failed; see {work}/flow.log")
         if level == "tile":
-            proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200, peak_gb=peak)
+            proc = orfs.docker_make(work, "do-generate_abstract", "abstract.log", 7200, peak_gb=peak)
             if proc.returncode != 0:
                 raise orfs.FlowError(f"tile abstract failed; see {work}/abstract.log")
         (work / "boundary.tcl").write_text(BOUNDARY_TCL, encoding="utf-8")
@@ -341,6 +341,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--level", required=True, choices=["tile", "die"])
     ap.add_argument("--arch", required=True, choices=budgets.ARCHS)
     ap.add_argument("--work", required=True, type=Path)
+    ap.add_argument("inputs", nargs="*", type=Path,
+                    help="staged input directories (named so a remote runner copies them); unused here")
     ap.add_argument("--write-only", action="store_true", help="write the case and stop")
     ap.add_argument("--record-only", action="store_true",
                     help="re-run the boundary report and rewrite the record of a finished run")
