@@ -89,30 +89,6 @@
       },
       "analyses": [
         {
-          "key": "v41_matvec",
-          "routed": "${OT_SIGNOFF_ROUTES}/core/wd",
-          "record": "${OT_SIGNOFF_ROUTES}/core/physical.json",
-          "saif": "matvec",
-          "saif_scope": "dut",
-          "corners": [
-            "TT",
-            "SS",
-            "FF"
-          ],
-          "derate": 0.05,
-          "ir_sources": [],
-          "cycles": {
-            "token": 1088551
-          },
-          "instances": 1,
-          "groups": [
-            "u_me."
-          ],
-          "note": "the V4.1 core's matrix engine is ot_hdc_matvec with the Qwen core's parameters; its V4.1 register activity is mapped onto u_me of the routed Qwen core and only the u_me. group is read",
-          "stage": "cts",
-          "gate_min_gb": 35
-        },
-        {
           "key": "v41_actquant",
           "routed": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_actquant/wd",
           "record": "${OT_SIGNOFF_ROUTES}/blocks/hdc__v41__ot_hdc_actquant/physical.json",
@@ -247,6 +223,30 @@
             "token": 1088551
           },
           "instances": 1
+        },
+        {
+          "key": "v41_matvec",
+          "routed": "${OT_SIGNOFF_ROUTES}/core/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/core/physical.json",
+          "saif": "matvec",
+          "saif_scope": "dut",
+          "corners": [
+            "TT",
+            "SS",
+            "FF"
+          ],
+          "derate": 0.05,
+          "ir_sources": [],
+          "cycles": {
+            "token": 1088551
+          },
+          "instances": 1,
+          "groups": [
+            "u_me."
+          ],
+          "note": "the V4.1 core's matrix engine is ot_hdc_matvec with the Qwen core's parameters; its V4.1 register activity is mapped onto u_me of the routed Qwen core and only the u_me. group is read",
+          "stage": "cts",
+          "gate_min_gb": 35
         }
       ]
     },
