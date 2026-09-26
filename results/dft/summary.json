@@ -314,6 +314,29 @@
     "tester_cycles": 23275379,
     "top": "ot_hdc_matvec"
    },
+   "route": {
+    "noscan": null,
+    "scan": {
+     "core_area_um2": 287677,
+     "drc_errors": 0,
+     "fmax_mhz": 1111.53,
+     "instance_count": 1836069,
+     "routed_wirelength_um": 3846067,
+     "scan": {
+      "cell_area_added_fraction": 0.153371,
+      "chain_count": 94,
+      "chain_length_max": 1022,
+      "flops": 95995,
+      "lockup_latches": 0,
+      "scan_cells": 52007,
+      "scan_mux_cells": 43988
+     },
+     "sequential_area_um2": 35631.5,
+     "setup_wns_ns": 0.00033528700000000003,
+     "standard_cell_area_um2": 78990.1,
+     "status": "not_met"
+    }
+   },
    "scan_off_equivalence": {
     "equiv_cells": 98240,
     "proven": true,
