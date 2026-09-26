@@ -494,6 +494,20 @@ def run(quick=False, real_positions=160, workers=8) -> dict:
     }
 
 
+KEEP_SEGMENTS = ("shipped_200k", "shipped_1m", "worst_cases", "cross_die_final_q4_w16_k512")
+
+
+def compact(res):
+    """Per-segment rows only for the shipped-size configurations; the others keep their summaries
+    (tail range, overflow count) -- thousands of coverage rows would dominate the record."""
+    for c in res["configs"]:
+        for r in c["runs"]:
+            if r.get("pass"):
+                r.pop("log", None)
+            if c["name"] not in KEEP_SEGMENTS:
+                r.pop("per_segment", None)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--quick", action="store_true")
@@ -502,9 +516,7 @@ def main() -> int:
     ap.add_argument("--output", type=Path, default=OUT)
     a = ap.parse_args()
     res = run(a.quick, a.real_positions, a.workers)
-    for c in res["configs"]:
-        for r in c["runs"]:
-            r.pop("log", None) if r.get("pass") else None
+    compact(res)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(res, indent=1, default=int) + "\n")
     print(json.dumps(res["spec"], indent=1, default=int))

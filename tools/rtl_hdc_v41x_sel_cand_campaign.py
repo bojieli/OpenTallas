@@ -227,6 +227,12 @@ def main() -> int:
     a = ap.parse_args()
     res = run(a.quick, a.real_positions, a.workers)
     a.output.parent.mkdir(parents=True, exist_ok=True)
+    for c in res["configs"]:
+        for r in c["runs"]:
+            if r.get("pass"):
+                r.pop("log", None)
+            if c["name"] not in ("shipped_200k", "shipped_1m", "worst_cases"):
+                r.pop("per_segment", None)
     a.output.write_text(json.dumps(res, indent=1, default=int) + "\n")
     print(json.dumps(res["spec"], indent=1, default=int))
     print("status", res["status"])
