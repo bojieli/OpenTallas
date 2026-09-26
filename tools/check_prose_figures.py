@@ -265,7 +265,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md": 56,
     "docs/UNIFIED_EXECUTION_CHECKLIST.md": 245,
     "docs/VISION.md": 1,
-    "docs/WAFER_VS_ARRAY_ISO_AREA.md": 17,
+    "docs/WAFER_VS_ARRAY_ISO_AREA.md": 23,
 }
 
 ANNOTATION = re.compile(r"<!--\s*figure:\s*(?P<body>.*?)-->", re.S)

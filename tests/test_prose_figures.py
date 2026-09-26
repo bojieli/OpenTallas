@@ -137,7 +137,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 915: docs/DFT.md's scan-cost table gains the KV streamer's routed pair (5).
     # 945: docs/DFT.md gains the multicast-node, expert-port, MoE-dispatch,
     # argmax, package-link and fabric-router routed pairs (30).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 945
+    # 951: docs/WAFER_VS_ARRAY_ISO_AREA.md, rewritten on the realistic array
+    # links, binds 23 figures (17 -> 23).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 951
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

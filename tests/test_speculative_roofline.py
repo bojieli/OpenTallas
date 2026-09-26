@@ -67,10 +67,13 @@ def config():
 
 
 def _load_sample(tool, path):
+    from opentallas.roofline import load_study_artifact
     from opentallas.schema import ModelProfile
     from opentallas.workload import kv_traffic
 
-    body = json.loads(path.read_text())
+    # The study is sharded (analytical.json + points.json, provenance_table) to
+    # stay under the Git host's file limit; read it the way every consumer does.
+    body = load_study_artifact(path)
     technology = tool.Technology.load(TECHNOLOGY)
     models = {
         name: ModelProfile.load(ROOT / entry["path"]) for name, entry in body["inputs"]["models"].items()
