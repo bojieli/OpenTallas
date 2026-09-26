@@ -406,6 +406,14 @@ def build() -> dict:
     rec["before_after"] = before_after(tech, rec)
     rec["gpu_boundaries"] = gpu_boundary_counts(tech)
     rec["gpu_execution"] = gpu_execution_sensitivity(tech)
+    # The x188 array is not a study row: its ROM rate is the by-name re-evaluation above.
+    named = rec["before_after"]["targets"]["deepseek_v41_array_x188"]["after"]
+    for batch, entry in rec["gpu_execution"]["targets"]["deepseek_v41_array_x188"]["by_batch"].items():
+        rom = named["by_batch"][int(batch)]["per_user"]
+        entry.update(rom_design=named["design"], rom_per_user_tokens_s=rom,
+                     rom_source="before_after.targets.deepseek_v41_array_x188.after (re-evaluated by name)")
+        for g in entry["gpu"].values():
+            g["rom_over_gpu"] = rom / g["per_user_tokens_s"] if (rom and g["per_user_tokens_s"]) else None
     return rec
 
 
