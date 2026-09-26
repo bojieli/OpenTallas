@@ -81,12 +81,13 @@ module ot_hdc_v41x_vdly #(parameter integer D = 1) (
     input  wire d,
     output wire q
 );
-    reg [D-1:0] r;
+    reg [D:0] r;
+    integer i;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) r <= {D{1'b0}};
-        else r <= (D == 1) ? d : {r[D-2:0], d};
+        if (!rst_n) r[D:1] <= {D{1'b0}};
+        else for (i = 1; i <= D; i = i + 1) r[i] <= (i == 1) ? d : r[i-1];
     end
-    assign q = r[D-1];
+    assign q = r[D];
 endmodule
 
 // ---------------------------------------------------------------------------
