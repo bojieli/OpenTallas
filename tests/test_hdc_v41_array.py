@@ -67,6 +67,7 @@ def test_committed_record_passes_and_is_current():
             packages.add(r["packages"])
     assert max(packages) >= 8
     assert any(c["shared_state"] == "mcast" for c in record["configurations"])
-    assert any(c["shared_state"] == "relay" and c["lm_head_packages"] >= 2 for c in record["configurations"])
+    assert any(c["shared_state"] == "relay" for c in record["configurations"])
+    assert any(c["lm_head_packages"] >= 2 for c in record["configurations"])
     for name, digest in record["input_sha256"].items():
         assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name

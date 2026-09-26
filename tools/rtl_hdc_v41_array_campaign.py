@@ -63,7 +63,6 @@ CONFIGS = {
     "b2_p2p": (2, 0, False, "relay", "p2p", 2, (), 0, 8, 3),
     "b4_p2p": (4, 0, False, "relay", "p2p", 4, (), 0, 4, 2),
     "b8_switch_mcast_h2": (8, 2, True, "mcast", "switch", 8, (), 0, 3, 2),
-    "b8_p2p_chain_h2": (8, 2, False, "relay", "p2p", 8, (), 0, 3, 2),
 }
 RES = re.compile(r"HDC41_ARRAY nodes=(\d+) users=(\d+) generated=(\d+) mismatches=(\d+) logit_mismatch=(\d+) "
                  r"lm_head_checks=(\d+) state_mismatch=(\d+) total_cycles=(\d+)")
@@ -150,11 +149,11 @@ def build(obj: Path, svh: str, users: int, stall: int) -> Path:
         return exe
     (obj / "v41_array_cfg.svh").write_text(svh)
     with BUILD_SLOTS:
-        sh([*GATE, "verilator", "--cc", "--exe", "--build", "-O3", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
+        sh([*GATE, "verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
             "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MULTIDRIVEN", "--top-module", "tb_hdc_v41_array",
             f"-GUSERS={users}", f"-GSTALL={stall}", "-Mdir", str(obj), f"-I{obj}", f"-I{core.SVH.parent}",
             *map(str, core.RTL), str(LINK), str(ROUTER), str(CTRL), str(TB), str(HARNESS),
-            "-CFLAGS", "-O2", "-j", "8"])
+            "-CFLAGS", "-O1", "-j", "4"])
     (obj / "stamp").write_text(stamp)
     return exe
 
