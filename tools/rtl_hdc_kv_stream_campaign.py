@@ -38,6 +38,12 @@ import re
 import subprocess
 import sys
 import tempfile
+import os
+
+# The KV streamer fetches the unsplit attention ops' word order: build the
+# images, the golden and the programs with the attention products unsplit
+# (tools/hdc_golden.py attn_splits); child processes inherit it.
+os.environ["HDC_ATTN_SPLIT"] = "0"
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 

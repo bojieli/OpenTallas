@@ -8,20 +8,27 @@ each op), applied in exactly the order the hardware applies it:
 * matvec      inputs rounded to BF16; per output, products (exact) accumulated
               sequentially over K from +0.0
 * reduction   sums of P=8 interleaved partials (element i into partial i mod 8,
-              each sequential), then a pairwise tree ((p0+p1)+(p2+p3))+...
+              each sequential), then a pairwise tree ((p0+p1)+(p2+p3))+...;
+              on the SU_WIDTH-lane stream unit every lane does that over its
+              elements (i mod SU_WIDTH) and a pairwise tree adds the lane sums
+              (reduce_sum_lanes)
 * rsqrt       bit seed 0x5f3759df - (bits >> 1), three Newton-Raphson steps
 * reciprocal  bit seed 0x7ef311c7 - bits, three Newton-Raphson steps
 * exp         n = rint(x*log2e) by the 1.5*2^23 trick, two-constant Cody-Waite
               reduction, degree-6 Horner polynomial, scale by 2^n in the exponent
 * softmax     max, exp(s - max), reduction sum, reciprocal, multiply
 * attention   KV cache in BF16; q and the probabilities rounded to BF16 before
-              their products (exact BF16 x BF16 products, FP32 accumulation)
+              their products (exact BF16 x BF16 products, FP32 accumulation);
+              both products K-split INTERLEAVED over the core's lane groups
+              (attn_splits, matvec_il): scores over head_dim, the weighted sum
+              over positions, chunk sums added by a pairwise tree
 * silu        g * reciprocal(1 + exp(-g))
 
 See docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md.  `decode_token` returns the
 logits and every intermediate the RTL is checked against.
 """
 import json
+import os
 import struct
 from pathlib import Path
 
@@ -124,6 +131,44 @@ def split_for(n, k, groups, lanes=16, interleave=8):
     return best[1]
 
 
+def p2floor(n):
+    return 1 << (max(1, int(n)).bit_length() - 1)
+
+
+def attn_splits(hd, groups, lanes=16):
+    """K-splits of the two attention products on a core of `groups` lane groups
+    (tools/hdc_program.py emits them; rtl/hdc/ot_hdc_matvec.sv runs them):
+    scores split head_dim over min(hd, G) groups per position tile; the
+    weighted sum splits positions over the G / (hd / lanes) groups per head_dim
+    tile.  HDC_ATTN_SPLIT=0 in the environment keeps both unsplit (1, 1): the
+    KV-in-HBM configuration, whose streamer (rtl/hdc/kv/ot_hdc_kv_stream.sv)
+    fetches the unsplit op's word order."""
+    if os.environ.get("HDC_ATTN_SPLIT", "1") == "0":
+        return 1, 1
+    return min(hd, p2floor(groups)), p2floor(max(1, groups // max(1, hd // lanes)))
+
+
+def matvec_il(w, x, split=1):
+    """y[n] = sum_k w[n,k] * x[k] with K cut INTERLEAVED into `split` chunks:
+    chunk c holds k = c, c+S, c+2S, ... (k < K; a chunk may be short or empty),
+    each summed sequentially from +0, the chunk sums added by the pairwise tree
+    ((c0+c1)+(c2+c3)).  The attention products' order (KV-sourced ops, whose K
+    is head_dim or the context length).  split=1 is matvec_fp32.  x is used
+    as given (the caller rounds it)."""
+    w = np.asarray(w, dtype=F)
+    x = np.asarray(x, dtype=F)
+    K = w.shape[1]
+    parts = []
+    for c in range(split):
+        acc = np.zeros(w.shape[0], dtype=F)
+        for k in range(c, K, split):
+            acc = add(acc, mul(w[:, k], x[k]))
+        parts.append(acc)
+    while len(parts) > 1:
+        parts = [add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return parts[0]
+
+
 def matvec_fp32(w, x):
     acc = np.zeros(w.shape[0], dtype=F)
     for k in range(w.shape[1]):
@@ -139,6 +184,33 @@ def reduce_sum(v):
     while len(part) > 1:
         part = np.array([add(part[j], part[j + 1]) for j in range(0, len(part), 2)], dtype=F)
     return part[0]
+
+
+def reduce_sum_lanes(v, sw=1):
+    """The vector stream unit's segmented sum on `sw` lanes: lane l takes
+    elements l, l + sw, l + 2*sw, ... and sums them as reduce_sum does (its j-th
+    element into partial j mod P, each partial sequential from +0, a pairwise
+    tree over the P partials); the sw lane sums are added by a pairwise tree
+    ((l0 + l1) + (l2 + l3)) + ...  A lane with no element contributes +0.
+    sw = 1 is reduce_sum.  (rtl/hdc/ot_hdc_stream.sv: one reducer per lane and
+    the cross-lane tree.)"""
+    v = np.asarray(v, dtype=F).reshape(-1)
+    if sw == 1:
+        return reduce_sum(v)
+    lanes = [reduce_sum(v[l::sw]) if l < len(v) else F(0) for l in range(sw)]
+    while len(lanes) > 1:
+        lanes = [add(lanes[i], lanes[i + 1]) for i in range(0, len(lanes), 2)]
+    return F(lanes[0])
+
+
+# Stream-unit lanes of the Qwen3 decode core (the order of every Qwen3 sum:
+# norms and the softmax denominator).  Model(su_width=...) sets it; the
+# environment's HDC_SU_WIDTH is the default.
+SU_WIDTH = int(os.environ.get("HDC_SU_WIDTH", 1))
+
+
+def lane_sum(v):
+    return reduce_sum_lanes(v, SU_WIDTH)
 
 
 def rsqrt(v):
@@ -173,7 +245,7 @@ def exp(x):
 
 
 def rmsnorm(x, w, eps):
-    r = rsqrt(add(mul(reduce_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
+    r = rsqrt(add(mul(lane_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
     return mul(mul(x, r), w)
 
 
@@ -193,7 +265,7 @@ def rope(v, cos, sin, half):
 
 def softmax(s):
     e = exp(add(s, neg(np.max(s))))
-    return mul(e, reciprocal(reduce_sum(e)))
+    return mul(e, reciprocal(lane_sum(e)))
 
 
 def silu(g):
@@ -212,7 +284,7 @@ def fold(parts):
 
 
 class Model:
-    def __init__(self, groups=1, tp=1):
+    def __init__(self, groups=1, tp=1, su_width=None):
         """`groups`: matrix-engine lane groups of the decode core; it fixes each
         matrix's K-split (split_for) and therefore the accumulation order.
         `tp`: dies of the tensor group (1: one core holds every matrix).  With
@@ -220,6 +292,9 @@ class Model:
         every matrix, Megatron style (see decode_token_tp)."""
         self.groups = groups
         self.tp = tp
+        if su_width is not None:
+            global SU_WIDTH
+            SU_WIDTH = su_width
         self.cfg = json.loads(CONFIG.read_text())
         self.w = load_weights()
         c = self.cfg
@@ -308,6 +383,7 @@ class Model:
             cache[L].append((np.stack([kv_new[g][0] for g in range(self.kv_heads)]),
                              np.stack([kv_new[g][1] for g in range(self.kv_heads)])))
             scale = F(1.0 / np.sqrt(hd))
+            s_sc, s_pv = attn_splits(hd, self.groups)
             partial = []
             for d, q in parts:
                 s = sl[d]
@@ -316,8 +392,8 @@ class Model:
                     g = hh // group
                     keys = np.stack([kv[0][g] for kv in cache[L]])
                     vals = np.stack([kv[1][g] for kv in cache[L]])
-                    sc = mul(matvec_fp32(keys, to_bf16(q[i])), scale)
-                    attn[i] = matvec_fp32(vals.T, to_bf16(softmax(sc)))
+                    sc = mul(matvec_il(keys, to_bf16(q[i]), s_sc), scale)
+                    attn[i] = matvec_il(vals.T, to_bf16(softmax(sc)), s_pv)
                 partial.append(self.mv(attn.reshape(-1), ow[:, s["q_rows"]])[0])
             x = add(x, fold(partial))
             h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
@@ -360,12 +436,13 @@ class Model:
             cache[L].append((to_bf16(k), to_bf16(v)))
             attn = np.zeros((self.heads, self.hd), dtype=F)
             scale = F(1.0 / np.sqrt(self.hd))  # 0.25: exact
+            s_sc, s_pv = attn_splits(self.hd, self.groups)
             for hh in range(self.heads):
                 g = hh // group
                 keys = np.stack([kv[0][g] for kv in cache[L]])       # [T, hd]
                 vals = np.stack([kv[1][g] for kv in cache[L]])
-                s = mul(matvec_fp32(keys, to_bf16(q[hh])), scale)    # sequential over head dim
-                attn[hh] = matvec_fp32(vals.T, to_bf16(softmax(s)))  # sequential over positions
+                s = mul(matvec_il(keys, to_bf16(q[hh]), s_sc), scale)       # head dim, interleaved K-split
+                attn[hh] = matvec_il(vals.T, to_bf16(softmax(s)), s_pv)     # positions, interleaved K-split
             x = add(x, self.mv(attn.reshape(-1), self.lw(L, "self_attn.o_proj.weight"))[0])
             h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
             gate, up = self.mv(h, self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight"))

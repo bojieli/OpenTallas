@@ -1,311 +1,341 @@
 # Qwen3-8B decode core: architecture specification (top-down)
 
 Scope: Qwen3-8B (hidden 4,096, 36 layers, 32/8 heads of 128, FFN 12,288,
-vocabulary 151,936), batch 1, greedy, bit-exact against the golden
-(`tools/hdc_golden.py`), on two designs:
+vocabulary 151,936), greedy and bit-exact against the golden
+(`tools/hdc_golden.py`), on two designs. The design point, set by the user,
+is **8K context**; 2K is a secondary point.
 
-* **ROM** — the single-reticle Taalas-HC1-class die (N6, 815 mm²): weights in
-  ROM, KV in on-die SRAM. The reticle split comes from
+* **ROM**: the single-reticle Taalas-HC1-class die (N6, 815 mm²) with its
+  weights in ROM. By user decision, **users' KV lives in HBM stacks on the ROM
+  die**, at every context and batch. The reticle split comes from
   `opentallas.roofline.taalas_hc1_anchor`: ROM 262.0 mm², compute 146.7 mm²,
-  SRAM 259.6 mm², interconnect 65.2 mm², overhead 81.5 mm².
-* **HBM** — the iso-area comparator: one reticle of logic with **6 HBM3E
-  stacks**. 6 is the reticle's beachfront: 2 × (26 + 33) mm × 60% edge use /
-  12 mm a stack = 5.9. H200 also carries 6. At 1.0 TB/s a stack × 0.90
-  sustained that is 5.4 TB/s.
+  and 259.6 mm² of SRAM, now freed and re-budgeted (§4).
+* **HBM**: the iso-area comparator, one reticle of logic with 6 HBM3E stacks
+  carrying both weights and KV.
 
-Everything below is computed by `tools/arch_budget_qwen3.py`, which writes
+6 stacks is the reticle's beachfront. The 60% edge-use rule gives
+2 × (26 + 33) mm × 0.6 / 12 mm = 5.9, and the 814 mm² GH100 die carries 6. At
+1.0 TB/s a stack and 0.90 sustained, 6 stacks give 5.4 TB/s.
+
+Everything below is computed by `tools/arch_budget_qwen3.py`. It writes
 `results/arch/qwen3_budget.json` and is tested by
 `tests/test_arch_budget_qwen3.py`. The test includes the **performance gate**:
-the RTL-calibrated sequencer model, replaying the program the core runs at the
-shipped shapes, against a ratchet that falls as each block lands and ends at
-the budget target. The clock is the slowest routed Qwen3 token-path unit,
-1.0986 GHz (`ot_hdc_matvec`; ASAP7 TT).
+the RTL-calibrated sequencer model replays the program the core runs, at the
+shipped shapes and 8K, against a ratchet that falls as each block lands and
+ends at the budget target. The clock is 1.0986 GHz, the slowest routed Qwen3
+token-path unit (`ot_hdc_matvec`, ASAP7 TT).
 
 ## 1. Requirement and target
 
-On the ROM design the binding resource is the **weight sweep on the MAC
-lanes**. Weights cost nothing to read: a compute-in-ROM cell is read by the
-multiply that uses it. Every weight must still pass through a MAC once per
-token:
+Two resources bind on the ROM die:
 
-* 7,568,097,280 MACs per token (36 × 193.0 M, plus the lm_head's 622.3 M).
-* On 131,072 lanes that is **57,740 cycles**, a ceiling of
-  **19,027 tok/s** <!-- figure: 19,027.4 src="results/arch/qwen3_budget.json#budget.ceiling_tokens_s" name="Qwen3-8B ROM weight-sweep ceiling tok/s" -->.
+* **The weight sweep on the MAC lanes.** 7,568,097,280 MACs a token on
+  131,072 lanes take 57,740 cycles, a ceiling of 19,027 tok/s. A compute-in-ROM
+  weight costs nothing to read, but it still passes through a MAC once per
+  token.
+* **The KV stream from HBM.** At 8K the cache is 1.21 GB a token in BF16 and
+  604 MB in FP8.
 
-The budget gives the weight sweep 55% of the token:
+The target is the larger of the weight sweep over 55% of the token and the KV
+stream over 95% of it:
 
-* **Target: 104,982 cycles per token, 10,465 tok/s per user at 2k context** <!-- figure: 10,465.1 src="results/arch/qwen3_budget.json#budget.target_tokens_s" name="Qwen3-8B ROM budget target tok/s" -->.
-* The analytical headline, `decode_critical_path.py`, is 8,680 tok/s.
+| context | KV format | KV stream, cycles | target, tok/s | binding |
+|---|---|---|---|---|
+| **8K** | **FP8 (design point)** | 122,881 | **8,494** <!-- figure: 8,493.7 src="results/arch/qwen3_budget.json#budget.target_tokens_s" name="Qwen3-8B ROM 8K FP8-KV budget target tok/s" --> | KV stream |
+| 8K | BF16 | 245,762 | 4,247 | KV stream |
+| 8K | 4-bit | 61,440 | 10,465 | weights |
+| 2K | any | ≤ 61,440 | 10,465 | weights |
 
-On the HBM design the binding resource is **bytes over the stacks**. Its
-target is 95% of the byte bound:
+So the design point is **8K with FP8 KV: 129,348 cycles, 8,494 tok/s per
+user.** FP8 KV is a golden change; the KV cache is BF16 today.
 
-| format | 2k bound | 2k target | 8k bound | 8k target | MAC lanes (2× margin) |
-|---|---|---|---|---|---|
-| BF16 | 349.8 | 332.3 | 330.4 | 313.9 | 4,820 |
-| FP8 | 686.1 | 651.8 | 615.3 | 584.5 | 9,454 |
-| ROM's 3.5-bit format | 1,494.6 | 1,419.9 | 1,195.0 | 1,135.2 | 20,592 |
-
-Bounds and targets are tok/s per user. MAC lanes are sized at 2k.
+On the HBM comparator the bytes over its 6 stacks bind. With the same FP8 KV,
+the per-user bound at 8K is 343 tok/s with BF16 weights, 661 with FP8 and
+1,379 in the ROM's 3.5-bit format. The target is 95% of each.
 
 ## 2. Workload per token (from the graph)
 
-| class | 2k | 8k |
+| class | 8K | 2K |
 |---|---|---|
 | weight MACs (qkv 906 M, o 604 M, gate/up 3,624 M, down 1,812 M, lm_head 622 M) | 7.568 G | 7.568 G |
-| attention MACs (Q·K and P·V, each 36 × 32 × 128 × T) | 604 M | 2,416 M |
-| KV read, BF16, each element once (GQA-shared) | 302 MB | 1,208 MB |
-| KV capacity at 24.07 Mb/mm² | 100.4 mm² | 401.6 mm² (**exceeds the 259.6 mm² SRAM**) |
-| elementwise element-ops (reference graph: three softmax passes) | 8.75 M | 29.98 M |
-| reductions | 73 of 4,096 (sums of squares), 1,440 of 128 (q/k norms), 2 × 1,152 of T (softmax), 1 argmax of 151,936 | same |
-| dependent stages a layer | 21 (reference graph), 20 (spec, §5) | same |
+| attention MACs (Q·K and P·V, each 36 × 32 × 128 × T) | 2,416 M | 604 M |
+| KV read, each element once (GQA-shared), BF16 / FP8 | 1,208 / 604 MB | 302 / 151 MB |
+| elementwise element-ops (reference graph: three softmax passes) | 29.98 M | 8.75 M |
+| dependent stages a layer | 21 (reference graph), 20 (spec, §6) | same |
 
-At 8k, BF16 KV does not fit the reticle's SRAM. At 8k the ROM design needs
-either an FP8 KV cache (604 MB, 200.8 mm²; a golden change) or KV in HBM.
+## 3. Roofline per resource (ROM die, spec widths, FP8 KV)
 
-## 3. Roofline per resource (ROM design, spec widths)
-
-| resource | 2k cycles | 8k cycles |
+| resource | 8K cycles | 2K cycles |
 |---|---|---|
 | weights on 131,072 lanes | 57,740 | 57,740 |
-| attention on 131,072 lanes | 4,608 | 18,432 |
-| KV SRAM, one 16-lane BF16 word per group per cycle | 1,152 | 4,608 |
-| elementwise (reference graph) on 512 lanes | 34,170 | 117,114 |
+| KV from 6 HBM3E stacks | 122,881 | 30,720 |
+| attention on 131,072 lanes | 18,432 | 4,608 |
+| elementwise (reference graph) on 1,024 lanes | 29,279 | 8,543 |
 
-The elementwise row is why the spec restructures softmax (§5): three passes
-over 32 × T elements per layer is the largest non-weight load.
+## 4. Area: the freed SRAM
 
-## 4. Budget and per-block requirements (ROM, 2k)
+KV moved to HBM, so the 259.6 mm² of SRAM is re-budgeted (`area`):
 
-| share | cycles | resource |
-|---|---|---|
-| weights 55% | 57,740 | MAC lanes |
-| attention 5% | 5,249 | attention lanes and KV banks |
-| elementwise 7% | 7,349 | stream unit |
-| exposed dependency latency 30% | 31,495 | every dependent stage |
-| control 3% | 3,149 | sequencer |
+| use | mm² |
+|---|---|
+| 6 HBM3E PHYs (10 mm² each) | 60.0 |
+| KV prefetch buffer: two layers of 8K FP8 KV, 33.6 MB | 11.2 |
+| the DFlash drafter's ROM (1.05 B parameters at 3.5 bits) | 33.5 |
+| the stream unit beyond the compute share (1,024 lanes; estimated) | 12.8 |
+| **2 MAC lane copies (the lane multiplier m = 3)** | 138.4 |
+| slack | 3.7 |
+
+A lane copy costs 69.2 mm² for all 131,072 lanes. That is 528.08 µm² a lane,
+measured: `ot_hdc_lane_copy` is 16 lanes of the exact BF16 multiplier and the
+circulating FP32 adder with its interleave registers, sharing the group's
+weight word, the split tree, result port and argmax. It routed at 8,449 µm²
+and **closed at 1.2 GHz**. The whole matrix-engine lane is 1,071.8 µm². The
+route of the whole engine at m = 2 against m = 1 is in flight.
+
+Copies serve speculative slots and batched users: one weight word (or, for
+slots, one KV word) feeds m positions. They do not speed a single position.
+
+## 5. Budget and per-block requirements (8K, FP8 KV, batch 1)
+
+Budget, as shares of the 129,348-cycle target:
+
+| share | cycles |
+|---|---|
+| weights (44.6%) | 57,740 |
+| attention (15%) | 19,402 |
+| elementwise (10%) | 12,935 |
+| exposed dependency latency (30%) | 38,804 |
+| control (3%) | 3,880 |
 
 Requirements derived from the budget:
 
 | block | requirement |
 |---|---|
-| MAC array | 131,072 lanes = **8,192 groups** (a power of two, so every K-split tiles whole rounds: weight tiling 0.9999 of ideal) |
-| ROM read | 57,344 B/cycle (one 3.5-bit weight a lane a cycle) |
-| attention | ≥ 115,066 lanes busy: Q·K and P·V both K-split over every free group |
-| KV SRAM | ≥ 57,533 B/cycle (≥ 1,798 16-lane BF16 banks); 100.4 mm² at 2k |
-| stream unit | **512 elements/cycle**; a lane-partial plus 9-level cross-lane pairwise reduction tree |
-| dependency | ≤ 44 cycles exposed per dependent stage (31,495 over 36 × 20). This needs tile-granular chaining, never a full-unit drain |
-| sequencer | ≤ 3,149 exposed control cycles a token: back-to-back issue from a prefetched decode |
+| MAC array | 131,072 lanes = 8,192 groups (a power of two: every K-split tiles whole rounds, 0.9999 of ideal); lane multiplier m = 3 |
+| attention | ≥ 124,520 lanes busy: Q·K and P·V both K-split over the groups |
+| KV in HBM | 6 stacks, 604 MB/token FP8 at 5.4 TB/s (122,881 cycles). Layer l+1's KV (positions < t, data-independent of the token) streams while layer l computes, into a 33.6 MB two-layer buffer. The token's own K/V row stays on die (tail buffer) and is written back behind the stream. Efficiency ≥ 0.90 of raw peak with refresh on. The controller queue is ≥ 512 beats per pseudo-channel, and a refreshing channel must not stall the others. |
+| stream unit | **1,024 elements/cycle**, with lane partials and a 10-level cross-lane pairwise reduction tree |
+| dependency | ≤ 54 cycles exposed per dependent stage (38,804 over 36 × 20): tile-granular chaining, never a full-unit drain |
+| sequencer | ≤ 3,880 exposed control cycles a token |
+| vector buffer | ≥ 262,144 FP32 elements (the score rows 32 × 8K) |
 | argmax | a streaming compare tree on the result path (as built) |
-| vector buffer | ≥ 65,536 FP32 elements (score rows 32 × T, gate/up 2 × 12,288) |
 
-On area, the lanes are 131,072 × 1,071.8 µm² = 140.5 mm² (routed ASAP7, not
-scaled to N6), inside the 146.7 mm² compute share. The spec's 512-lane stream
-unit adds about 12.8 mm², estimated at 25,000 µm² a lane: lane 0 has every
-SFU, and lanes 1.. carry exp, three multipliers, an adder and a reducer, as in
-the V4.1 vector stream unit. That 12.8 mm² exceeds the compute share by
-6.6 mm². It is taken from SRAM, which has 125.7 mm² spare after the 2k KV and
-the DFlash drafter's ROM.
+## 6. Where the cycles go: analytical DAG, spec chain, calibrated model
 
-## 5. Reconciliation: analytical DAG vs calibrated sequencer vs as built
+All figures are cycles per token at 8K, FP8 KV:
 
-All figures are cycles per token at 2k:
-
-| model | cycles | tok/s | what differs |
-|---|---|---|---|
-| analytical DAG (`decode_critical_path.py`, SU 256, attention at the full MAC rate, no drains) | ~119,000 | 8,680 | reference |
-| dependency chain at spec widths, reference graph (SU 512, K-split attention, as-built unit latencies) | 144,576 | 7,599 | latency 68,148 and three softmax passes |
-| dependency chain, spec (one-pass softmax, prefetched issue) | 131,256 | 8,370 | latency 62,532 is now the largest term after weights |
-| calibrated model, as built (SU 1, split ≤ 8, 7,680 groups) | **14,499,553** <!-- figure: 14,499,553 src="results/arch/qwen3_budget.json#as_built_calibrated.2048.cycles" name="Qwen3-8B calibrated as-built cycles 2k" --> | 75.8 | everything below |
-| the same with the split field ignored (the figure first reported) | 13,714,305 | 80.1 | `me_split` is 2 bits: S ≤ 8 |
-
-Where the as-built 14.5 M cycles go:
-
-* Unit busy:
-  * stream unit 8,710,761 (1 element a cycle);
-  * P·V 4,718,592 (head_dim on the lanes: 8 of 7,680 groups; positions in order, T × 8 cycles an op);
-  * weights 884,736 (split ≤ 8);
-  * Q·K 147,456 (1,024 cycles an op);
-  * lm_head 8,192.
-* Sequencer:
-  * barrier drains 13.46 M;
-  * chase 269,102;
-  * issue gap 22,700 (4,540 instructions at 5 cycles).
-
-At 8k the as-built core takes 49.9 M cycles. The analytical figure hides the
-narrow units: at spec widths the gap to the DAG closes to 1.10×, and what
-remains is dependency latency, which the DAG prices only partly (its
-compute_chain of 77 µs).
-
-## 6. Gap table (requirement vs the RTL as built)
-
-| block | requirement | as built | as-built cycles, 2k |
-|---|---|---|---|
-| stream unit | 512 elements/cycle | 1 element/cycle | 8,710,761 |
-| attention P·V | K-split over positions across free groups | T × 8 cycles an op on 8 groups | 4,718,592 |
-| attention Q·K | K-split over head_dim | 1,024 cycles an op on 128 groups | 147,456 |
-| dependency | ≤ 44 exposed a stage | full-unit barrier (both units idle) | 13,463,058 |
-| sequencer | ≤ 3,149 control cycles | 4,540 × 5 | 22,700 |
-| matrix engine | 8,192 groups, split field to 2^13 | 2-bit split on 7,680 groups | 892,928 |
-| KV SRAM | ≥ 57,533 B/cycle | 7,680 × 32 B per cycle (meets) | — |
-
-## 7. Microarchitecture of each block that misses
-
-In implementation order: the largest cycles saved first, each bit-exact with
-the golden.
-
-1. **Vector stream unit (SW lanes, VI mode).** Lanes take consecutive inner
-   indices. Each lane is the scalar datapath: lane 0 is full, lanes 1.. carry
-   exp/sigmoid, the multipliers, the adder and a reducer.
-   * A segmented SUM reduces in lane-local 8-interleaved partials, then a
-     pairwise tree over each lane's partials, then a pairwise tree over the
-     lanes. That order is the golden's `reduce_sum` generalised to SW (SW = 1
-     is today's order).
-   * MAX is order-free.
-   * Memory ports are SW elements wide (word access, any alignment through
-     SW-way element banking).
-   * K writes are transposed: one lane-masked word write per KV bank per
-     cycle.
-2. **Attention K-split.**
-   * Q·K splits head_dim over the free groups (S = 2^s ≤ 128). P·V splits
-     positions into S chunks of ⌈T/S⌉. The last chunks may be short or empty,
-     and elements past T are masked to +0.
-   * The existing split tree adds the chunk sums: ((c0 + c1) + (c2 + c3)).
-   * This changes the golden's order to chunked sums plus a pairwise tree. The
-     order is fixed by the program (S) and documented.
-   * The split field widens to 4 bits (S ≤ 2^13 at shipped shapes; the reduced
-     vehicle uses S ≤ G).
-3. **Sequencer.** Prefetch and decode the next instruction while the current
-   one waits, so issue runs back to back (5 → 1 cycle a gap).
-4. **Dependency.** A per-unit barrier: an op waits for the producing unit only,
-   and chases element progress across units wherever the write/read orders
-   allow (already derived by `chase_threshold`). Full-unit drains remain only
-   where a reduction result is read.
-5. **One-pass softmax.** Latency and elementwise reductions:
-   * The row max is taken by a compare tree on the matrix engine's result path
-     as the scores emerge, next to the argmax tree.
-   * The stream unit makes one exp-and-sum pass.
-   * The 1/Z scale is applied to P·V's 32 × 128 outputs, so the reciprocal
-     runs beside P·V (normalise-after-sum: a documented golden change).
-6. **Remaining latency (target ≤ 44 a stage, spec chain 87).** The candidates,
-   each costed before it is built:
-   * the norm scalar applied after the matvec, so rsqrt overlaps the sweep;
-   * shorter special-function pipes;
-   * a registered 4:1 split tree.
-
-## 8. DFlash (the drafter the user chose for both designs)
-
-One step (block 16) needs 158.9 G MACs:
-
-* draft: 5 layers × 16 slots, plus the target's lm_head × 15;
-* verify: 36 layers × 16 slots;
-* context projection;
-* attention.
-
-**ROM:** the reticle is MAC-bound. At the spec's 131,072 lanes a step's MAC
-floor is 1,212,228 cycles. Against the spec's plain token (131,256), DFlash
-breaks even only at **τ = 9.24**. At the measured τ 5.18 it gives 4,695 tok/s
-against 8,370 plain: it loses.
-
-The lever is lane copies (the multiplier m). At 1,071.8 µm² a lane, not one
-extra copy fits in the 125.7 mm² of spare SRAM. The bare pipelined MAC is
-509 µm², but that is a lower bound for a lane copy, not a qualified figure;
-the qualified figure is `ot_hdc_matvec` routed at m = 2 against m = 1. So m is
-a first-class area trade against the KV/SRAM budget, not an add-on.
-
-The smaller-block alternatives were priced as well. Assumptions:
-
-* Tokens a step for block B are E[min(L, B)], from the 561 measured block-16
-  acceptance lengths (pooled τ 4.10). This assumes a smaller block keeps the
-  first B − 1 drafts.
-* Verify is KV-shared and slot-parallel: one plain token's dependency
-  latency, and B tokens' MACs.
-* The draft's latency is hidden under the verify ("overlapped"). Its MACs
-  cannot be hidden, because they bind.
-
-The best ROM configuration is **B = 2** (one draft): 1.70 tokens a step at
-221,929 cycles, **8,410 tok/s against 8,370 plain (1.005×)**. B = 4 gives
-7,227 and B = 16 gives 3,299. On the ROM reticle speculation is at best
-break-even at the spec's lanes. It becomes a gain only if the plain token stays
-latency-bound well above its MAC floor, or if lanes are added
-(`dflash.rom.block_size_sweep`).
-
-**HBM:** the bytes bind. With m = 16 a step reads the target's and drafter's
-weights once for 16 slots, so the speedup at τ 5.18 is **4.55×** for every
-format:
-
-| format | plain | with DFlash |
+| model | cycles | tok/s |
 |---|---|---|
-| BF16 | 349.8 | 1,591 |
-| FP8 | 686.1 | 3,122 |
-| 3.5-bit | 1,494.6 | 6,800 |
+| spec dependency chain, reference graph (SU 1,024, K-split attention, as-built unit latencies) | 165,024 | 6,658 |
+| **spec dependency chain** (one-pass softmax, prefetched issue): weights 57,744, attention 18,432, elementwise 9,792, latency 63,252 | **149,940** | 7,327 |
+| KV stream (FP8, 6 stacks) | 122,881 | 8,941 |
+| calibrated model, before this work (SU 1, split ≤ 8, 7,680 groups; KV on core) | 49,888,993 | 22 |
+| calibrated model, at HEAD (K-split attention, 4-bit split, prefetched issue) | **30,090,973** <!-- figure: 30,090,973 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | 36.5 |
 
-Rates are tok/s. The minimum is 44,431 MAC lanes at BF16.
+At HEAD, 29.94 M of the 30.09 M cycles are the 1-element stream unit's busy
+time. After the stream unit, the spec chain exceeds the design point's target
+(149,940 against 129,348) by its exposed latency. That is the next wall: 63,252
+cycles, or 88 a stage against the 54 budget.
 
-Requirements this adds to both designs:
+The analytical `decode_critical_path.py` prices 2K with KV on chip (8,680
+tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
+
+## 7. Gap table (requirement vs the RTL)
+
+| block | requirement | RTL | baseline 2K | HEAD 8K |
+|---|---|---|---|---|
+| stream unit | 1,024 elements/cycle | 1 element/cycle | 8,710,761 | 29,944,425 |
+| attention P·V | K-split over positions | **landed**: interleaved K-split | 4,718,592 | 9,216 |
+| attention Q·K | K-split over head_dim | **landed**: interleaved K-split | 147,456 | 9,216 |
+| matrix engine | 8,192 groups, split field to 2^13 | **landed**: 4-bit split | 892,928 | 57,744 |
+| sequencer | ≤ 3,880 control cycles | **landed**: prefetched issue, gap 1 | 22,700 | 4,540 |
+| dependency | ≤ 54 exposed per stage | full-unit barriers | 13.46 M | 29.13 M |
+| KV in HBM (ROM die) | 6 stacks, FP8, prefetched | `ot_hdc_kv_stream` exists for the unsplit attention order, BF16 | — | 122,881 |
+
+## 8. Microarchitecture, in implementation order
+
+1. **Attention K-split (landed).**
+   * Both attention products cut their K interleaved over the free groups
+     (`hdc_golden.attn_splits`, `matvec_il`):
+     * Q·K over head_dim, S = min(128, G);
+     * P·V over positions, S = G / (head_dim / 16).
+   * Chunk c takes k = c, c + S, …. An element past K has both operands zeroed,
+     so a ragged last chunk sums exactly. The split tree adds the chunk sums.
+   * ISA: `me_split` widened to 4 bits, and a `me_wcs` chunk stride added.
+   * RTL: the reduced token is bit-exact and on the oracle. It went from
+     32,246 to 31,478 cycles; 8 groups 22,605 → 21,709; position 59
+     37,878 → 36,438.
+   * The KV-in-HBM streamer keeps the unsplit order for now
+     (`HDC_ATTN_SPLIT=0`). Extending it is item 4.
+2. **Prefetched sequencer (landed).**
+   * A program-word FIFO feeds a decoded NEXT register. `go` is combinational,
+     so the unit latches NEXT on the issuing edge. The issue gap falls from 5
+     to 1.
+   * Reduced token: 31,374 cycles, bit-exact.
+   * The timing model was refitted (`seq_gap` 1, `start` 4, `idle_me` 3,
+     `idle_su` 0, `red_tail` 31): 31,369 against 31,374 RTL, every issue within
+     2 cycles; 8 groups 21,599 against 21,605.
+3. **Vector stream unit (next).**
+   * 1,024 lanes on the lanes of VI mode: lane l takes elements l, l + SW, ….
+   * Each lane's reducer keeps its 8 interleaved partials. A pairwise tree adds
+     the lane sums; `hdc_golden.reduce_sum_lanes` is SW = 1's order
+     generalised.
+   * Masked lanes feed +0 (SUM) or lane 0's value (MAX).
+   * Memory ports are SW wide.
+4. **KV streamer for the K-split order and FP8 KV.**
+5. **Per-unit barriers and chaining.**
+6. **One-pass softmax.** The row max goes on the matrix engine's result path;
+   1/Z is applied after P·V.
+7. **Latency.** The fast FP units (the `a516` branch: add and multiply 3
+   cycles, exp 49, recip 28, rsqrt 37) and the other candidates in §6.
+
+## 9. Speculation (DFlash, τ 4.1)
+
+τ 4.1 is the default: the pooled measured acceptance over 561 blocks. The mean
+over prompts, 5.18, is a band only. A verify's slots share the KV stream and
+the weight words. On the ROM die their MACs are real work unless lane copies
+carry them.
+
+For block B, tokens a step are E[min(L, B)] over the measured block-16
+acceptance lengths, assuming a smaller block keeps the first B − 1 drafts:
+
+| ROM die, FP8 KV | best block | tok/s | speedup |
+|---|---|---|---|
+| 8K, m = 1 | 1 (no speculation) | 7,327 | 1.0 |
+| **8K, m = 3** | **B = 3** | **13,090** | **1.79×** |
+| 2K, m = 1 | B = 2 | 8,596 | 1.01× |
+| 2K, m = 3 | B = 3 | 16,336 | 1.92× |
+
+The rates are against the spec chain's plain token.
+
+On the HBM comparator (8K, FP8 KV, m = 16) the bytes bind. The step reads the
+target's and the drafter's weights once for 16 slots: **3.6×** at τ 4.1, taking
+BF16 weights from 343 to 1,235 tok/s, FP8 from 661 to 2,380 and 3.5-bit from
+1,379 to 4,967.
+
+Requirements this adds:
 
 * the lane multiplier;
-* KV-shared verify attention (one K/V read serves 16 slots, with the causal
-  mask per slot);
-* slot-parallel non-weight work (one op over all slots on the stream unit's
-  lanes, never 16 serial ops);
-* 16 DYN banks and the CTL steps with the shared accept unit;
+* KV-shared verify attention with the causal mask per slot;
+* slot-parallel non-weight work;
+* 16 DYN banks, the CTL steps and the shared accept unit;
 * a KV ring of at least 17 entries.
 
-## 9. HBM comparator requirements
+## 10. Batch (8K, FP8 KV)
 
-The weight stream never stalls. Weights are data-independent, so the stream
-runs ahead across every dependency point:
+Users share the chain's latency and the weight words. Each user has their own
+attention and KV stream, so on the ROM die a step is
+
+`max(latency + ⌈B/m⌉ × weights + B × (attention + elementwise), B × KV / bandwidth)`.
+
+Capacity is no longer a limit: 6 × 24 GB of HBM.
+
+| batch | ROM per user | ROM total | HBM (FP8 weights) per user | HBM total |
+|---|---|---|---|---|
+| 1 | 7,327 | 7,327 | 661 | 661 |
+| 2 | 4,470 | 8,941 | 615 | 1,231 |
+| 8 | 1,118 | 8,941 | 436 | 3,484 |
+| 128 | 70 | 8,941 | 64 | 8,144 |
+
+Rates are tok/s. From batch 2 the ROM die is **KV-stream-bound at 8,941 tok/s
+total**, which is 5.4 TB/s over 604 MB a token; more users only divide it.
+Lane copies do not help, because each user's KV is its own. At 2K the stream
+leaves room: at m = 3 the total reaches 35,763 tok/s at batch ≥ 32.
+
+Energy per token at 8K is about 229 mJ, or 103 mJ at the matrix-engine
+figure: logic at the measured reduced step's 16.5 pJ/MAC (3.97 for the matrix
+engine alone), and KV at 104.9 pJ/B from HBM. It is an order-of-magnitude
+figure, not a sign-off power.
+
+## 11. Power (a first-class requirement)
+
+The reticle's cooling limit is 408 W (the iso-area study, `a57e0d89` at
+09b4b1b1). At the design point's 8,494 tok/s that is a die energy budget of
+**48.0 mJ per token**. With 75% of it for the MAC lanes, less 6 × 2.8 W of HBM
+interface idle, the matrix engine must reach:
+
+* **≤ 3.41 pJ/MAC** for autoregressive decoding at the target: 9.98 G MACs a
+  token at 84.8 TMAC/s;
+* **≤ 1.41 pJ/MAC** for the best speculative configuration uncapped
+  (m = 3, B = 3: 206 TMAC/s).
+
+As built, the ASAP7 sign-off of the reduced step's BF16 × BF16 lane is 3.97
+pJ/MAC:
+
+* Autoregressive decoding draws 449 W, capped to 7,720 tok/s. That is still
+  above the spec chain's 7,327, so it does not bind yet.
+* DFlash draws 1,088 W and is capped to 4,909 tok/s, below autoregressive
+  decoding.
+* At the GPU's 1.4 pJ/MAC (SC'25) neither is capped.
+
+The HBM DRAM energy of the KV stream, 604 MB × 104.9 pJ/B, is the stacks'
+own: 538 W at the target. It is not charged to the die.
+
+MAC requirements that follow:
+
+* **Design the lane for the ROM's weight format.** That means 4-bit weights
+  (3.5 bits a weight with group scales) × FP8/BF16 activations with FP32
+  accumulation, not a BF16 × BF16 lane. This is a golden change: the quantised
+  checkpoint.
+* **Operand isolation and clock gating** for idle lanes: groups outside an
+  op's tiles, masked elements and idle lane copies.
+* **FP32 accumulation** in the golden's order, with exact products.
+
+Energy is the ASAP7 (7 nm predictive) sign-off applied unscaled to the N6
+reticle, which is the same node class.
+
+**Reconciliation with the iso-area study's 8K headline.** Its ROM figures are
+≤ 2,570 tok/s autoregressive (BF16 KV), 4,617 with FP8 KV, and 4,767 with
+DFlash. They imply about 3.1 TB/s of KV bandwidth over 6 stacks. This budget
+uses 6 × 1.0 TB/s × 0.90 = 5.4 TB/s, which gives 4,470 (BF16 KV, KV-bound) and
+7,327 (FP8 KV, compute-bound). The stack bandwidth is the difference to
+settle.
+
+## 12. HBM comparator requirements
+
+The weight stream never stalls: weights are data-independent, so the stream
+runs ahead across every dependency point.
 
 * **Prefetch buffer.** It holds what the stacks deliver during the longest
-  weight-free interval of the chain, 1,756 cycles: **8.63 MB** at 4,915
-  B/cycle.
-* **Sustained efficiency.** At least 0.90 of **raw peak**, measured with
-  refresh on. That is how `technology.json`'s 0.90 was measured: GPU
-  STREAM-class runs, with refresh.
-  * Measured on the Qwen3 reduced vehicle, all-bank refresh (tRFC 350 ns every
-    3.9 µs) reaches 0.904 at 1 pseudo-channel and 0.910 at 2. That is its
-    ceiling of 91.0%.
-  * A refresh-aware per-bank refresh (tRFCpb 200 ns) is required so that 0.90
-    holds with margin. As currently modelled it reaches 0.914 at 1 channel and
-    0.889 at 2, with a 512-beat queue. A model diagnostic is open, so this
-    requirement is not yet met by a record.
-* **Address map.** Refresh-aware: pseudo-channels interleaved at the stream's
-  word size, refresh phases staggered.
+  weight-free interval of the 8K chain, 1,505 cycles: **7.40 MB**.
+* **Sustained efficiency.** At least 0.90 of raw peak, measured with refresh
+  on (`technology.json`'s 0.90 is a GPU STREAM-class figure, with refresh).
+  * All-bank refresh (tRFC 350 ns every 3.9 µs) meets it on the Qwen3 reduced
+    vehicle: 0.904 at 1 pseudo-channel and 0.910 at 2. Its floor is 9.0%.
+  * Per-bank refresh (200 ns) is allowed only with a record showing ≥ 0.90.
+    Refresh-aware scheduling measured 0.914 and 0.889; at a 1 ns tRFCpb it
+    reached 0.998.
+  * These are the HBM agent's scratch runs; its campaign record will follow.
 * **Controller queue.** At least 512 beats per pseudo-channel (bandwidth ×
-  tRFC ≈ 350 beats). On the V4.1 HBM vehicle, all-bank refresh with 64-beat
-  queues cost up to 15% of a token: head-of-line blocking stalled the in-order
-  stream for about tRFC.
-* **Isolation.** A refreshing channel must not stall requests to the others.
-* **Refresh policy.** Stated per design (REFab as modelled, or REFpb).
-* **MAC rate.** Above the stream rate so the buffer drains: the lane minima
-  above. DFlash raises the minimum to about 44 K lanes at BF16.
+  tRFC ≈ 350 beats). On the V4.1 vehicle a 64-beat queue cost up to 15% of a
+  token; for Qwen3 the deeper queue is neutral. A refreshing channel must not
+  stall the others.
+* **MAC rate.** Above the stream, so the buffer drains.
+* The same controller rules apply to the ROM die's KV stacks.
 
-## 10. Physical rules for every block
+## 13. Physical rules for every block
 
 These come from the full-chip effort at a 1.0 ns ASAP7 target:
 
-* Every block boundary is registered, inputs and outputs.
-  * A registered 512-bit output needs about 300 ps inside the block (router
-    clock-to-pin about 270 ps).
-  * Feed-through paths get their own budget.
-* Clock-tree insertion on the matrix engine took about 540 ps.
+* Every block boundary is registered, inputs and outputs. A registered
+  512-bit output needs about 300 ps inside the block (router clock-to-pin
+  about 270 ps), and feed-through paths get their own budget.
+* Clock insertion on the matrix engine took about 540 ps.
 * Repair needs a 40% slew margin and a 15 ps setup margin, for estimated
   against extracted wire delay.
-* Routes must carry a real hold margin: the fix at 48fc68e6. Earlier routes
-  had effectively none.
+* Routes must carry a real hold margin (the fix at 48fc68e6).
 
-## 11. Implementation and evidence
+## 14. Implementation and evidence
 
-Each block goes through the same five steps:
+Each block goes through the same steps:
 
 1. golden;
 2. ISA and program, with the ISA model bit-exact;
-3. RTL on the reduced vehicle (Verilator, `tools/rtl_hdc_decode_campaign.py`,
-   bit-exact and oracle token);
-4. a per-block performance testbench asserting the block's throughput and
-   latency spec;
-5. recalibration of `tools/hdc_timing.py` and a lower `RATCHET_2K` in
+3. RTL on the reduced vehicle (Verilator, `tools/rtl_hdc_decode_campaign.py`),
+   bit-exact and on the oracle token;
+4. a per-block performance testbench asserting the block's spec;
+5. recalibration of `tools/hdc_timing.py`, and a lower `RATCHET_8K` in
    `tests/test_arch_budget_qwen3.py`.
 
-Place and route of the whole core follows the blocks.
+Place and route of the whole core, and the integrated token simulation, follow
+the blocks.

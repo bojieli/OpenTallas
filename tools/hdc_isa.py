@@ -15,8 +15,13 @@ The core runs a static program of macro-operations.  Two units execute them:
       result  lane l of word      obase + t*ots + j*ojs   (after the last k)
   valid when (t*I + j)*W + l < nout (mmode 0, rows) or t*W + l < nout (mmode 1,
   lanes: every slot is its own vector, e.g. one attention head per slot).
-  KV-sourced ops (wsrc 1) spread over all groups (tile t = r*G + g, word
-  wbase + t*ts + ..., one KV port per group).  Every product is BF16 x BF16.
+  KV-sourced ops (wsrc 1), one KV port per group, cut K INTERLEAVED: me_k is
+  the op's whole K (a count, may add DYN_T), chunk c of S takes k' = c, c+S,
+  ..., the loop runs kc = ceil(K/S) steps and an element with k*S + c >= K
+  multiplies +0; group g = q*S + c takes tile t = r*(G/S) + q, word
+      wbase + t*ts + c*wcs + k*ks + (j >> jsh)*js,  x  xbase + c*xcs + k*xks + j*xjs,
+  and DYN_TTILES counts rounds of G/S position tiles (pos >> (log2(W*G) - s)) + 1.
+  (tools/hdc_golden.py matvec_il / attn_splits.)  Every product is BF16 x BF16.
   `chase` (either unit): instead of waiting for a barrier, start once the
   OTHER unit's latest instruction has made `chase_n` progress -- elements
   written for the stream unit, result slots (one per slot per round) for the
@@ -83,7 +88,7 @@ FIELDS = [
     ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
     ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
     ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
-    ("me_split", 2), ("me_xcs", A),
+    ("me_split", 4), ("me_xcs", A), ("me_wcs", A),
     # SU
     ("su_nout", N), ("su_nin", N), ("su_d_nin", D),
     ("a_src", 1), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D),

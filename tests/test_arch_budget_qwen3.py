@@ -20,6 +20,11 @@ def rec():
     return json.loads(REC.read_text())
 
 
+@pytest.fixture(scope="module")
+def fresh():
+    return A.evaluate()
+
+
 def test_workload_counts():
     wl = A.workload(2048)
     L, H, NH, KV, HD, FF, V = (A.Q[k] for k in ("L", "H", "NH", "KV", "HD", "FF", "V"))
@@ -28,6 +33,7 @@ def test_workload_counts():
     assert wl["attention_macs"] == 2 * L * NH * HD * 2048
     assert wl["bytes"]["kv_read"] == 2 * L * KV * HD * 2048 * 2 == 301_989_888
     assert A.workload(8192)["bytes"]["kv_read"] == 4 * wl["bytes"]["kv_read"]
+    assert A.kv_bytes(A.workload(8192), "fp8") == 603_979_776
 
 
 def test_split_rule_matches_the_engine():
@@ -40,38 +46,53 @@ def test_split_rule_matches_the_engine():
         sum(A.mv_cycles(n, k, 8192)[0] for n, k in head.values())
     ideal = A.workload(2048)["weight_macs"] / (8192 * 16)
     assert tiled <= 1.001 * ideal
-    # the ISA as built (2-bit split) is several times off
+    # the ISA as built before the spec work (2-bit split) is several times off
     assert A.mv_cycles(24576, 4096, 7680, max_split=8)[0] >= 5 * A.mv_cycles(24576, 4096, 8192)[0]
 
 
-def test_budget_shares_sum_to_one(rec):
-    assert abs(sum(rec["budget"]["shares"].values()) - 1) < 1e-9
+def test_budget_design_point(rec):
     b = rec["budget"]
-    assert b["target_cycles"] == round(b["weight_sweep_ideal_cycles"] / b["shares"]["weights"])
+    assert b["context"] == 8192 and b["kv_format"] == "fp8"
+    t = b["targets"]["8192/fp8"]
+    assert b["target_cycles"] == max(round(b["weight_sweep_ideal_cycles"] / 0.55), round(t["kv_stream_cycles"] / 0.95))
+    assert b["binding"] == "kv_stream"
+    # BF16 KV at 8k is KV-bound at half the rate
+    assert rec["budget"]["targets"]["8192/bf16"]["target_tokens_s"] < 0.55 * b["target_tokens_s"]
 
 
-def test_record_is_current(rec):
-    fresh = A.evaluate()
-    for key in ("budget", "requirements", "gap", "dflash", "hbm_requirements"):
+def test_area_ledger(rec):
+    a = rec["area"]
+    used = a["hbm_phy_mm2"] + a["kv_prefetch_buffer_mm2"] + a["drafter_rom_mm2"] + a["stream_unit_spill_mm2"] + \
+        a["lane_copies_added"] * a["lane_copy_mm2"]
+    assert used <= a["freed_sram_mm2"] + 0.1
+    assert a["lane_multiplier_m"] == 1 + a["lane_copies_added"]
+
+
+def test_record_is_current(rec, fresh):
+    for key in ("budget", "requirements", "gap", "dflash", "hbm_requirements", "batch", "area", "rom_token"):
         assert json.loads(json.dumps(fresh[key], default=float)) == rec[key], key
-    assert fresh["as_built_calibrated"]["2048"]["cycles"] == rec["as_built_calibrated"]["2048"]["cycles"]
+    assert fresh["as_built_calibrated"]["8192"]["cycles"] == rec["as_built_calibrated"]["8192"]["cycles"]
 
 
-def test_dflash_on_rom_is_mac_bound(rec):
+def test_speculation(rec):
     d = rec["dflash"]
-    assert d["rom"]["breakeven_tau"] > d["tau_central"]          # speculation loses at the spec's lanes
-    assert all(v["speedup_at_tau_central"] > 4 for v in d["hbm"].values())
+    assert d["tau_central"] == 4.1
+    m = rec["area"]["lane_multiplier_m"]
+    # with lane copies the ROM die gains; at m = 1 it does not at 8k
+    assert d["rom"][f"8192/fp8/m{m}"]["best"]["speedup"] > 1.3
+    assert d["rom"]["8192/fp8/m1"]["best"]["speedup"] <= 1.01
+    assert all(v["speedup_at_tau_central"] > 3 for v in d["hbm"].values())
 
 
 # The performance gate: the calibrated model replaying the program the core
-# runs, at shipped shapes, must not regress past the ratchet, and the gap to
-# the budget target is reported.  Lower RATCHET as blocks land; the gate is met
-# when RATCHET <= the budget target.
-RATCHET_2K = 14_499_553
+# runs, at shipped shapes and the design context, must not regress past the
+# ratchet, and the gap to the budget target is reported.  Lower RATCHET as
+# blocks land; the gate is met when RATCHET <= the budget target.
+RATCHET_8K = 30_090_973
 
 
-def test_performance_gate(rec):
-    cyc = A.as_built(2048)["cycles"]
-    assert cyc <= RATCHET_2K, f"calibrated token {cyc} cycles regressed past the ratchet {RATCHET_2K}"
+def test_performance_gate(rec, fresh):
+    cyc = fresh["as_built_calibrated"]["8192"]["cycles"]
+    assert cyc <= RATCHET_8K, f"calibrated token {cyc} cycles regressed past the ratchet {RATCHET_8K}"
     target = rec["budget"]["target_cycles"]
     print(f"calibrated {cyc} cycles vs budget target {target}: {cyc / target:.2f}x")

@@ -52,6 +52,7 @@ class Layout:
 
     def __init__(self, model, tp=1, die=0):
         self.m = model
+        self.groups = GR
         self.tp, self.die = tp, die
         c = model.cfg
         self.H, self.L = c["hidden_size"], c["num_hidden_layers"]
@@ -263,12 +264,16 @@ def build_program(lay, layers=None, embed=True, head=True):
             heads = {f"S{h}" for h in range(NH)}
             # scores[h, t] = sum_d K[g(h), t, d] q[h, d]: lanes t, slots h, k = d
             # (IL heads per op: one head per slot, a batch of whole KV groups)
+            # K-split interleaved over head_dim (hdc_golden.attn_splits): chunk c
+            # of s_sc takes d = c, c + s_sc, ...; group q*s_sc + c, position tile
+            # r*(G/s_sc) + q
+            s_sc, s_pv = G.attn_splits(HD, lay.groups)
             for hb in range(0, NH, IL):
                 nb = min(IL, NH - hb)
                 me(dict(n=0, tiles=0, k=HD, base=(lay.k_elem(L, hb // group, 0, 0)) // W), VM["QR"] + hb * HD,
-                   VM["S"] + hb * S_STRIDE, rnd=True, me_xcs=0,
-                   me_wsrc=1, me_ts=HD, me_ks=1, me_js=kjs,
-                   me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
+                   VM["S"] + hb * S_STRIDE, rnd=True, me_xcs=1, me_wcs=1, me_split=s_sc.bit_length() - 1,
+                   me_wsrc=1, me_ts=HD, me_ks=s_sc, me_js=kjs,
+                   me_jsh=jsh, me_xks=s_sc, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
                    me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES,
                    reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes={f"S{h}" for h in range(hb, hb + nb)})
             sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
@@ -281,12 +286,18 @@ def build_program(lay, layers=None, embed=True, head=True):
                d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
             su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
             # attn[h, d] = sum_t V[g(h), t, d] p[h, t]: lanes d, slots h, k = t
+            # K-split interleaved over positions: chunk c of s_pv takes t = c,
+            # c + s_pv, ... (< T; the tail multiplies +0); group q*s_pv + c,
+            # head_dim tile q
+            qt = max(1, HD // W)
             for hb in range(0, NH, IL):
                 nb = min(IL, NH - hb)
-                me(dict(n=HD, tiles=-(-HD // (W * GR)), k=0, base=lay.v_elem(L, hb // group, 0, 0) // W),
+                me(dict(n=HD, tiles=-(-qt // max(1, lay.groups // s_pv)), k=0,
+                        base=lay.v_elem(L, hb // group, 0, 0) // W),
                    VM["S"] + hb * S_STRIDE, VM["ATT"] + hb * HD,
-                   rnd=True, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
-                   me_js=vjs, me_jsh=jsh, me_xks=1,
+                   rnd=True, me_xcs=1, me_wcs=qt, me_split=s_pv.bit_length() - 1,
+                   me_wsrc=1, me_ts=1, me_ks=qt * s_pv,
+                   me_js=vjs, me_jsh=jsh, me_xks=s_pv,
                    me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
                    reads={f"S{h}" for h in range(hb, hb + nb)} | {f"V{L}"}, writes={"ATT"})
             me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
@@ -440,6 +451,7 @@ class Machine:
         return G.from_bits(self.wrom[elems].astype(np.uint32) << 16)
 
     def run(self, prog, token, pos):
+        self.pos = pos
         dyn = dyn_values(self.lay, token, pos)
         for f in prog:
             f = {name: f.get(name, 0) for name, _ in I.FIELDS}
@@ -456,9 +468,14 @@ class Machine:
         wb = f["me_wbase"] + dyn[f["me_d_wbase"]]
         xb = f["me_xbase"] + dyn[f["me_d_xbase"]]
         ob = f["me_obase"] + dyn[f["me_d_obase"]]
-        split = 0 if f["me_wsrc"] else f["me_split"]
+        split = f["me_split"]
         S = 1 << split
         per_round = GR // S
+        wsrc = f["me_wsrc"]
+        if wsrc and f["me_d_tiles"] == I.DYN_TTILES:
+            # rounds of G/S position tiles
+            tiles = f["me_tiles"] + (self.pos >> ((W * GR).bit_length() - 1 - split)) + 1
+        kc = -(-K // S) if wsrc else K          # KV ops: me_k is the whole K, cut interleaved
         r, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(per_round), np.arange(IL),
                                                          np.arange(W), indexing="ij"))
         t = r * per_round + q
@@ -469,10 +486,11 @@ class Machine:
         for c in range(S):
             g = q * S + c
             acc = np.zeros(len(t), dtype=F)
-            for k in range(K):
-                if f["me_wsrc"]:
-                    # KV ops: every group reads its own tile's word
-                    word = wb + t * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
+            for k in range(kc):
+                if wsrc:
+                    if k * S + c >= K:              # past K: the element multiplies +0
+                        continue
+                    word = wb + t * f["me_ts"] + c * f["me_wcs"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
                     w = self.kv[word * W + l]
                 else:
                     word = wb + r * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
