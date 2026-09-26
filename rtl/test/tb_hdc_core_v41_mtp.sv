@@ -19,6 +19,10 @@
 //   model's.
 // +FORCE: at each step's DYN control step the draft tokens are overwritten with
 // force.hex's (an acceptance-coverage device; the ISA model forces the same).
+// +PLAIN: the ONE-POSITION baseline -- the image's program is the non-MTP
+// decode program (tools/hdc_program_v41.py Builder.build); the prompt, then
+// greedy decode one position per start until +NGEN tokens, each token and head
+// checked the same way (HDC41_PLAIN summary).
 // +TRACE prints every issue (cycle, pc, unit).
 `ifndef HDC_SW
 `define HDC_SW 8
@@ -253,7 +257,8 @@ module tb_hdc_core_v41_mtp #(
     end
 
     integer cyc = 0, i, k, bad_vm, bad_kv;
-    reg trace = 1'b0, force_on = 1'b0;
+    reg trace = 1'b0, force_on = 1'b0, plain = 1'b0;
+    reg [63:0] plain_cycles = 0;
     reg [NW-1:0] prompt [0:255];
     reg [NW-1:0] exp_tok [0:1023];
     reg [NW-1:0] exp_acc [0:1023];
@@ -275,6 +280,7 @@ module tb_hdc_core_v41_mtp #(
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
         if ($test$plusargs("TRACE")) trace = 1'b1;
         if ($test$plusargs("FORCE")) force_on = 1'b1;
+        if ($test$plusargs("PLAIN")) plain = 1'b1;
         if (!$value$plusargs("NPROMPT=%d", n_prompt)) n_prompt = 0;
         if (!$value$plusargs("NGEN=%d", n_gen)) n_gen = 0;
         if (!$value$plusargs("GAMMA=%d", gamma)) gamma = 0;
@@ -357,10 +363,26 @@ module tb_hdc_core_v41_mtp #(
         if (cyc > 32 && done && !start) begin
             if (entry == 0) begin
                 // a prefill position: its head closed at END
-                prefill_cycles = prefill_cycles + cycles;
+                if (step < n_prompt) prefill_cycles = prefill_cycles + cycles;
                 check_head();
                 if (step + 1 < n_prompt) begin
                     step <= step + 1; token <= prompt[step + 1]; pos <= pos + 1; start <= 1'b1;
+                end else if (plain) begin
+                    // one-position greedy decode: step >= n_prompt - 1 emits token ngot
+                    if (step >= n_prompt) plain_cycles = plain_cycles + cycles;
+                    if (next_token != exp_tok[step - (n_prompt - 1)]) tok_bad = tok_bad + 1;
+                    if (fault) tok_bad = tok_bad + 1;
+                    if (step - (n_prompt - 1) + 1 >= n_gen) begin
+                        check_state();
+                        $display("HDC41_PLAIN prompt=%0d generated=%0d token_mismatches=%0d heads=%0d head_mismatches=%0d prefill_cycles=%0d decode_cycles=%0d decode_steps=%0d vm_mismatch=%0d kv_mismatch=%0d",
+                                 n_prompt, n_gen, tok_bad, nh, head_bad, prefill_cycles, plain_cycles, n_gen - 1,
+                                 bad_vm, bad_kv);
+                        qstats();
+                        if (tok_bad == 0 && head_bad == 0 && bad_vm == 0 && bad_kv == 0 && !hbm_bad) $display("PASS");
+                        else $display("FAIL");
+                        $finish;
+                    end
+                    step <= step + 1; token <= next_token; pos <= pos + 1; start <= 1'b1;
                 end else begin
                     // the pending token is the last prefill position's
                     if (next_token != exp_tok[0]) tok_bad = tok_bad + 1;

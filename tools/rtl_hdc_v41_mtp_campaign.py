@@ -84,6 +84,9 @@ SUMMARY = re.compile(r"HDC41_MTP prompt=(\d+) generated=(\d+) iters=(\d+) token_
 ITER = re.compile(r"ITER it=(\d+) pos=(\d+) in=(\d+) accepted=(\d+) emitted=(\d+) cycles=(\d+) draft_cycles=(\d+) "
                   r"fault=(\d+)")
 UTIL = re.compile(r"UTIL me_busy=(\d+) su_busy=(\d+) qe_busy=(\d+) xu_busy=(\d+) he_busy=(\d+)")
+PLAIN = re.compile(r"HDC41_PLAIN prompt=(\d+) generated=(\d+) token_mismatches=(\d+) heads=(\d+) "
+                   r"head_mismatches=(\d+) prefill_cycles=(\d+) decode_cycles=(\d+) decode_steps=(\d+) "
+                   r"vm_mismatch=(\d+) kv_mismatch=(\d+)")
 QS = re.compile(r"QSTREAM q_stall_cycles=(\d+) q_words=(\d+) q_bad=(\d+) qs_fault=(\d+) fetched=(\d+) "
                 r"consumed=(\d+) hbm_reads=(\d+)")
 F = np.float32
@@ -259,6 +262,77 @@ def golden_run(model, prompt, ngen):
     return toks, rows
 
 
+def plain_part(name, ngen, mp, hbm, prompt_names):
+    """The ONE-POSITION baseline on the same bench and core build (NSLOT = 8, MP):
+    the non-MTP decode program (Builder.build), prompt then greedy decode."""
+    model = V.Model()
+    ps = prompts()
+    lay = P.Layout(model)
+    prog = P.Builder(lay, qchunk=P.QCHUNK if hbm else None).build()
+    rec = {"part": name, "mode": "plain", "mp": mp, "target": "hbm" if hbm else "rom", "runs": [],
+           "program": {"instructions": len(prog), "weights": weight_words(prog)}}
+    with tempfile.TemporaryDirectory(dir=os.environ.get("OT_SCRATCH")) as scratch:
+        s = Path(scratch)
+        jobs = []
+        for pn in prompt_names:
+            prompt = ps[pn]
+            toks, rows = golden_run(model, prompt, ngen)
+            img = s / f"img_{pn}"
+            img.mkdir(parents=True)
+            mach = P.Machine(lay, np.zeros(I.KV_WORDS * I.W_LANES, dtype=F), np.zeros(lay.vm.size, dtype=F))
+            seq = list(prompt)
+            got = []
+            for pos in range(len(prompt) + ngen - 1):
+                a = mach.run(prog, seq[pos], pos)
+                if pos >= len(prompt) - 1:
+                    got.append(a)
+                    seq.append(a)
+            isa = {"tokens": got, "equal_golden_tokens": got == list(toks)}
+            P.write_images(img, lay, prog)
+            (img / "mtp_prompt.hex").write_text(P.hexwords(prompt, 16))
+            (img / "exp_tokens.hex").write_text(P.hexwords(toks, 16))
+            (img / "exp_accept.hex").write_text(P.hexwords([0], 16))
+            heads = np.concatenate([np.asarray(h, dtype=F) for h in mach.head_log])
+            (img / "exp_heads.hex").write_text(P.hexwords(G.bits(heads), 32))
+            vm = np.zeros(I.VM_ELEMS_MTP, dtype=F)
+            vm[:len(mach.vm)] = mach.vm
+            (img / "expect_vm.hex").write_text(P.hexwords(G.bits(vm), 32))
+            (img / "expect_kv.hex").write_text(P.hexwords(G.bits(mach.kv).reshape(-1), 32))
+            args = [f"+NPROMPT={len(prompt)}", f"+NGEN={ngen}", "+PLAIN", "+ENTRY=0"]
+            if hbm:
+                sectors, first = P.qe_hbm_image(lay)
+                (img / "hbm_q.hex").write_text(P.hexwords(sectors, P.QSEC))
+                (img / "qlist.hex").write_text(P.hexwords(P.encode_list(P.qe_fetch_list(lay, prog, first)),
+                                                          P.LIST_BITS))
+            (img / "run.args").write_text(" ".join(args) + "\n")
+            jobs.append((pn, img, isa))
+        exe = build(s, mp, hbm)
+        with ThreadPoolExecutor(max_workers=len(jobs)) as ex:
+            futs = [(pn, isa, ex.submit(subprocess.run, [str(exe), f"+DIR={img}",
+                                                         *(img / "run.args").read_text().split()],
+                                        capture_output=True, text=True)) for pn, img, isa in jobs]
+            for pn, isa, fu in futs:
+                out = fu.result().stdout
+                m = PLAIN.search(out)
+                r = {"pass": "PASS" in out and m is not None}
+                if m:
+                    r.update(dict(zip(("prompt", "generated", "token_mismatches", "heads", "head_mismatches",
+                                       "prefill_cycles", "decode_cycles", "decode_steps", "vm_mismatches",
+                                       "kv_mismatches"), map(int, m.groups()))))
+                    r["cycles_per_token"] = round(r["decode_cycles"] / r["decode_steps"], 1)
+                else:
+                    r["tail"] = out.strip().splitlines()[-10:]
+                q = QS.search(out)
+                if q:
+                    r["qstream"] = dict(zip(("q_stall_cycles", "q_words", "q_bad", "qs_fault", "fetched", "consumed",
+                                             "hbm_reads"), map(int, q.groups())))
+                rec["runs"].append({"prompt": pn, "isa": isa, "rtl": r, "pass": bool(r["pass"] and
+                                                                                  isa["equal_golden_tokens"])})
+    rec["pass"] = all(r["pass"] for r in rec["runs"])
+    rec["input_sha256"] = {str(p.relative_to(ROOT)): sha(p) for p in (SVH, *RTL, *RTL_HBM, TB, HARNESS, *TOOLS)}
+    return rec
+
+
 def part(name, gamma, ngen, mp, hbm, prompt_names, drafters, mutate=False, isa_only_checks=False):
     model = V.Model()
     ps = prompts()
@@ -318,6 +392,7 @@ def main() -> int:
     ap.add_argument("--drafters", default="dspark,forced")
     ap.add_argument("--mutate", action="store_true")
     ap.add_argument("--isa-checks", action="store_true")
+    ap.add_argument("--plain", action="store_true", help="the one-position baseline on the same bench")
     ap.add_argument("--output", type=Path)
     ap.add_argument("--merge", nargs="*", type=Path, help="merge part records into results/rtl/hdc_v41_mtp_campaign.json")
     a = ap.parse_args()
@@ -333,13 +408,18 @@ def main() -> int:
         (a.output or OUT).write_text(json.dumps(res, indent=1) + "\n")
         print(res["status"], [(p["part"], p["pass"]) for p in parts])
         return 0 if res["status"] == "pass" else 1
-    rec = part(a.part, a.gamma, a.ngen, a.mp, a.hbm, a.prompts.split(","), a.drafters.split(","), a.mutate,
-               a.isa_checks)
+    if a.plain:
+        rec = plain_part(a.part, a.ngen, a.mp, a.hbm, a.prompts.split(","))
+    else:
+        rec = part(a.part, a.gamma, a.ngen, a.mp, a.hbm, a.prompts.split(","), a.drafters.split(","), a.mutate,
+                   a.isa_checks)
     out = a.output or (ROOT / f"results/rtl/hdc_v41_mtp_parts/{a.part}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1) + "\n")
     print(a.part, "pass" if rec["pass"] else "FAIL",
-          [(r["prompt"], r["drafter"], r["pass"], r["rtl"].get("cycles_per_emitted_token")) for r in rec["runs"]])
+          [(r["prompt"], r.get("drafter"), r["pass"], r["rtl"].get("cycles_per_emitted_token",
+                                                                   r["rtl"].get("cycles_per_token")))
+           for r in rec["runs"]])
     return 0 if rec["pass"] else 1
 
 
