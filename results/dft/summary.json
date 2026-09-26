@@ -36,6 +36,31 @@
     "unproven_cells": 0
    }
   },
+  "matvec": {
+   "architectures": [
+    "hbm_comparator",
+    "qwen3_8b_rom"
+   ],
+   "atpg": {
+    "capture_patterns": 22817,
+    "chains": 94,
+    "classes": {
+     "AU": 4768,
+     "DS": 501754,
+     "DT": 2605043,
+     "ND": 0,
+     "UT": 118539
+    },
+    "fault_coverage": 0.961826,
+    "faults": 3230104,
+    "gate_level": null,
+    "max_chain_length": 1019,
+    "scan_cells": 95737,
+    "test_coverage": 0.998468,
+    "tester_cycles": 23275379,
+    "top": "ot_hdc_matvec"
+   }
+  },
   "pkg_ctrl": {
    "architectures": [
     "v41_rom_array"
