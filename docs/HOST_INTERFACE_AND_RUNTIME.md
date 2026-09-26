@@ -19,7 +19,7 @@ architectures. Only the engine behind the interface changes.
 |---|---|---|---|---|---|
 | Qwen3-8B ROM reticle | `qwen3-rom` | one `ot_hdc_core`; the KV SRAM has one slice per user | 16 contexts, steps interleaved | 1073, 382, 93 for three concurrent users; also through `/v1/chat/completions`, streamed and plain, and from the `openai` Python client | done |
 | HBM comparator | `qwen3-hbm` | `ot_hdc_core` with `KV_HBM=1`, `ot_hdc_kv_stream` and the HBM timing model | one user at a time, engine cleared between users | 1073, 382, 93 for two users in turn | done for KV in HBM; weights-in-HBM core (`rtl/hdc/hbm`) not yet on main |
-| DeepSeek-V4.1 ROM array | `v41-rom` | `ot_hdc_core_v41` (reduced V4.1 vehicle) | one user at a time, engine cleared between users | 3118, 2400, 318 | done for one package (one die) |
+| DeepSeek-V4.1 ROM array | `v41-rom` | `ot_hdc_core_v41` (reduced V4.1 vehicle) | one user at a time, engine cleared between users | 3118, 2400, 64 | done for one package (one die) |
 | ROM array (package fabric) | `qwen3-array` | package 0 (`ot_rom_pkg_ctrl`, SOURCE) of a four-package layer-per-package array over `ot_rom_pkg_link` | a batch of up to 16 users through the package controllers' user contexts | 1073, 382, 93 for four users | done for the array machinery; the only multi-package RTL array carries the reduced Qwen3 layer pipeline |
 
 Multi-package V4.1 sessions are the gap. The host interface fronts the
@@ -317,13 +317,13 @@ campaigns':
 | `qwen3-rom` | 3 at once | 1073, 382, 93 each | 1,632,348 for the first of three interleaved users <!-- figure: 1632348 src="results/rtl/host_if_campaign.json#targets.qwen3-rom.requests[0].chip_cycles" name="qwen3-rom interleaved request cycles" --> | 32,246 at the first generated position <!-- figure: 32246 src="results/rtl/host_if_campaign.json#targets.qwen3-rom.requests[0].step_cycles[0]" name="qwen3-rom decode step cycles" --> | 1,098.6 MHz |
 | `qwen3-hbm` | 2 in turn | 1073, 382, 93 each | 571,738 for the first user <!-- figure: 571738 src="results/rtl/host_if_campaign.json#targets.qwen3-hbm.requests[0].chip_cycles" name="qwen3-hbm request cycles" --> | 32,271 <!-- figure: 32271 src="results/rtl/host_if_campaign.json#targets.qwen3-hbm.requests[0].step_cycles[0]" name="qwen3-hbm decode step cycles" --> | 1,098.6 MHz |
 | `qwen3-array` | a batch of 4, then 1 more in a reused slot | 1073, 382, 93 each | 1,047,222 for the last of the four <!-- figure: 1047222 src="results/rtl/host_if_campaign.json#targets.qwen3-array.requests[3].chip_cycles" name="qwen3-array batch cycles, last user" --> | about 58,000 between one user's tokens, four users in flight <!-- figure: 58044 src="results/rtl/host_if_campaign.json#targets.qwen3-array.requests[3].step_cycles[1]" tol="1%" name="qwen3-array cycles between a user's tokens" --> | 1,098.6 MHz |
-| `v41-rom` | 1 | 3118, 2400, 318 | 10,476,045 <!-- figure: 10476045 src="results/rtl/host_if_campaign.json#targets.v41-rom.requests[0].chip_cycles" name="v41-rom request cycles" --> | 1,088,554 <!-- figure: 1088554 src="results/rtl/host_if_campaign.json#targets.v41-rom.requests[0].step_cycles[0]" name="v41-rom decode step cycles" --> | 1,033.9 MHz |
+| `v41-rom` | 1 | 3118, 2400, 64 | 3,362,499 <!-- figure: 3362499 src="results/rtl/host_if_campaign.json#targets.v41-rom.requests[0].chip_cycles" name="v41-rom request cycles" --> | 344,106 <!-- figure: 344106 src="results/rtl/host_if_campaign.json#targets.v41-rom.requests[0].step_cycles[0]" name="v41-rom decode step cycles" --> | 1,033.9 MHz |
 
 Read the rates at the modelled clocks:
 
 - A Qwen3 decode step is about 34,000 tokens/s for one user. <!-- figure: 33936 src="results/rtl/host_if_campaign.json#targets.qwen3-rom.requests[0].modelled_decode_tokens_per_second" tol="1%" name="qwen3-rom modelled decode tokens/s" -->
   A whole request, 16 prompt steps plus 3 generated, is about 0.5 ms.
-- The V4.1 core generates about 940 tokens/s. <!-- figure: 939 src="results/rtl/host_if_campaign.json#targets.v41-rom.requests[0].modelled_decode_tokens_per_second" tol="1%" name="v41-rom modelled decode tokens/s" -->
+- The V4.1 core (8 stream-unit lanes) generates about 2,932 tokens/s. <!-- figure: 2932 src="results/rtl/host_if_campaign.json#targets.v41-rom.requests[0].modelled_decode_tokens_per_second" tol="1%" name="v41-rom modelled decode tokens/s" -->
 - The four-package array retires one token step every ~14,500 cycles across
   its four users, about 2.2 times the single core. That matches the array
   campaign (`results/rtl/hdc_array_campaign.json`).
@@ -339,7 +339,7 @@ The host interface's own cost is small:
   two 64-cycle DMA writes and the MSI.
 - Descriptor and prompt fetch take a handful of 64-cycle reads, paid once per
   request.
-- Engine busy cycles are within 0.3% of chip cycles on every target.
+- Engine busy cycles are within 0.6% of chip cycles on every target.
 
 The endpoint checks on `qwen3-rom` all pass:
 

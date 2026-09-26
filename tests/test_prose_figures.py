@@ -125,7 +125,10 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 838: docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md section 7 binds the V4.1
     # core's iterations (20) to results/rtl/hdc_v41_iterations/ and the lane
     # synthesis records, 36 -> 56.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 838
+    # 853: docs/HOST_INTERFACE_AND_RUNTIME.md binds the host interface's routed
+    # record and its campaign (15) to results/physical_abi3/asap7/host/ and
+    # results/rtl/host_if_campaign.json.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 853
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
