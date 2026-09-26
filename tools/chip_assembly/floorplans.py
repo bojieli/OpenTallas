@@ -100,6 +100,7 @@ class Block:
     record: str | None = None      # the flat routed record this block came from
     notes: str = ""
     extra_sdc: list[str] = field(default_factory=list)   # block-internal constraints
+    peak_gb: float = 10.0          # expected peak memory of its route
 
     @property
     def core_area_um2(self) -> float:
@@ -121,12 +122,13 @@ BLOCKS: dict[str, Block] = {
         "ot_hdc_matvec", HDC_ME_SOURCES, 400.0, 400.0,
         [(r"^wrom_", "N"), (r"^(x_|o_|ov$)", "E")],
         record="results/physical_abi3/asap7/hdc/ot_hdc_matvec/physical.json",
-        notes="64-lane matrix-vector engine; 68.6k um2 of cells flat, so ~43% utilisation"),
+        notes="64-lane matrix-vector engine; 68.6k um2 of cells flat, so ~43% utilisation",
+        peak_gb=16.0),
     "ot_hdc_stream": Block(
         "ot_hdc_stream", HDC_SU_SOURCES, 320.0, 320.0,
         [(r"^wrom_", "N"), (r"^(va_|vb_|vc_|vm_|red_)", "W")],
         record="results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json",
-        notes="stream unit with its reducer; 42.4k um2 of cells flat"),
+        notes="stream unit with its reducer; 42.4k um2 of cells flat", peak_gb=12.0),
     "ot_hdc_kv_stream": Block(
         "ot_hdc_kv_stream", ["rtl/hdc/kv/ot_hdc_kv_walk.sv", "rtl/hdc/kv/ot_hdc_kv_stream.sv"],
         200.0, 200.0,

@@ -30,7 +30,7 @@ ORFS_IMAGE = os.environ.get("OPENTALLAS_ORFS_IMAGE", "openroad/orfs:latest")
 PLATFORM = "asap7"
 SLOT_DIR = Path(os.environ.get("OT_CHIP_SLOT_DIR", "/tmp/claude-1000/ot_chip_slots"))
 SLOTS = int(os.environ.get("OT_CHIP_SLOTS", "2"))
-MIN_MEM_GB = float(os.environ.get("OT_CHIP_MIN_MEM_GB", "60"))
+MIN_MEM_GB = float(os.environ.get("OT_CHIP_MIN_MEM_GB", "0"))   # the gate enforces memory
 # The machine-wide gate every heavy job on the shared machine goes through
 # (a flock slot plus a free-memory floor), when it exists.
 GATE = Path(os.environ.get("OT_CHIP_GATE", "/tmp/claude-1000/orfs_gate.sh"))
@@ -85,7 +85,9 @@ def slot(label: str, poll_seconds: int = 60) -> Iterator[int]:
 
 def docker_make(case: Path, goal: str, log_name: str, timeout: int,
                 extra_mounts: list[tuple[Path, str]] | None = None,
-                env: dict[str, str] | None = None) -> subprocess.CompletedProcess:
+                env: dict[str, str] | None = None, peak_gb: float = 15.0) -> subprocess.CompletedProcess:
+    """Run an ORFS make goal; ``peak_gb`` is the job's expected peak memory,
+    declared to the machine-wide gate (which admits it with 5 GB to spare)."""
     cmd = ["docker", "run", "--rm", "-v", f"{ROOT}:/src:ro", "-v", f"{case}:/work"]
     if GATE.is_file():
         cmd = [str(GATE)] + cmd
@@ -102,8 +104,9 @@ def docker_make(case: Path, goal: str, log_name: str, timeout: int,
     with (case / log_name).open("a", encoding="utf-8") as log:
         log.write(f"\n### {time.strftime('%Y-%m-%dT%H:%M:%S')} make {goal}\n")
         log.flush()
+        genv = dict(os.environ, OT_GATE_MIN_GB=str(int(peak_gb + 5)))
         proc = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, timeout=timeout,
-                              check=False, text=True)
+                              check=False, text=True, env=genv)
     return proc
 
 

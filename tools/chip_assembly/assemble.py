@@ -321,11 +321,12 @@ def run_level(level: str, arch: str, work: Path, timeout: int) -> dict[str, Any]
             if proc.returncode != 0:
                 raise orfs.FlowError(f"{level} synthesis failed; see {work}/synth.log")
         orfs.normalise_netlist(netlist)
-        proc = orfs.docker_make(work, "finish metadata-generate", "flow.log", timeout)
+        peak = 30.0 if level == "tile" else 40.0
+        proc = orfs.docker_make(work, "finish metadata-generate", "flow.log", timeout, peak_gb=peak)
         if proc.returncode != 0:
             raise orfs.FlowError(f"{level} place-and-route failed; see {work}/flow.log")
         if level == "tile":
-            proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200)
+            proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200, peak_gb=peak)
             if proc.returncode != 0:
                 raise orfs.FlowError(f"tile abstract failed; see {work}/abstract.log")
         (work / "boundary.tcl").write_text(BOUNDARY_TCL, encoding="utf-8")

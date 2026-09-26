@@ -166,10 +166,12 @@ def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int,
     t0 = time.time()
     if not record_only:
         with orfs.slot(f"pnr {block.name}"):
-            proc = orfs.docker_make(work, "finish metadata-generate", "flow.log", timeout)
+            proc = orfs.docker_make(work, "finish metadata-generate", "flow.log", timeout,
+                                    peak_gb=block.peak_gb)
             if proc.returncode != 0:
                 raise orfs.FlowError(f"place-and-route of {block.name} failed; see {work}/flow.log")
-            proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200)
+            proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200,
+                                    peak_gb=block.peak_gb)
             if proc.returncode != 0:
                 raise orfs.FlowError(f"abstract generation of {block.name} failed; see {work}/abstract.log")
     elapsed = flow_seconds(work, spec.nickname) if record_only else time.time() - t0
