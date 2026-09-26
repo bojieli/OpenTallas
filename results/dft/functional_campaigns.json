@@ -1,0 +1,50 @@
+{
+ "all_pass": true,
+ "campaigns": {
+  "rtl_hdc_decode_campaign": {
+   "architectures": [
+    "qwen3_8b_rom",
+    "hbm_comparator"
+   ],
+   "inputs_hashed": 20,
+   "seconds": 1051,
+   "status": "pass"
+  },
+  "rtl_hdc_kv_stream_campaign": {
+   "architectures": [
+    "hbm_comparator"
+   ],
+   "inputs_hashed": 27,
+   "seconds": null,
+   "status": "pass"
+  },
+  "rtl_hdc_package_tp_campaign": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "inputs_hashed": 26,
+   "seconds": 7652,
+   "status": "pass"
+  },
+  "rtl_hdc_v41_decode_campaign": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "inputs_hashed": 36,
+   "seconds": 6882,
+   "status": "pass"
+  },
+  "rtl_rom_fabric_campaign": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "inputs_hashed": 4,
+   "seconds": 26,
+   "status": "pass"
+  }
+ },
+ "git_head": "5eaca7d217bab3be839b4e7d263e2e93567eb019",
+ "note": "rtl_hdc_kv_stream_campaign first failed in its timing-model projection (ShapeLayout.tp, fixed on main in 2aebf056) and passed when re-run after merging main",
+ "purpose": "functional RTL campaigns re-run on the DFT branch with scan disabled; scan is inserted only into gate netlists, so the RTL they simulate is the functional RTL, unchanged",
+ "schema": "opentallas.dft.functional_campaigns.v1"
+}
