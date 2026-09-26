@@ -102,6 +102,32 @@ def test_campaign_git_status_is_snapshotted_across_cases(monkeypatch):
     ]
 
 
+def test_container_identity_accepts_config_or_manifest_digest_only(monkeypatch):
+    """The classic image store reports the config digest, the containerd store
+    the manifest digest; both are the locked image, and nothing else is."""
+    runner = load_runner()
+    lock = runner.strict_json(LOCK)
+    container = lock["toolchain"]["container"]
+
+    class ProbeReached(Exception):
+        pass
+
+    def fake_run_for(image_id):
+        def fake_run(command, *, cwd, log=None, timeout_seconds=None):
+            if command[:3] == ["docker", "image", "inspect"]:
+                return subprocess.CompletedProcess(command, 0, image_id + "\n", "")
+            raise ProbeReached()
+        return fake_run
+
+    for image_id in (container["image_id"], container["amd64_digest"]):
+        monkeypatch.setattr(runner, "run_command", fake_run_for(image_id))
+        with pytest.raises(ProbeReached):
+            runner.verify_toolchain(lock)
+    monkeypatch.setattr(runner, "run_command", fake_run_for("sha256:" + "0" * 64))
+    with pytest.raises(runner.CampaignError, match="container image ID"):
+        runner.verify_toolchain(lock)
+
+
 def test_asap7_lock_rejects_incomplete_or_unhashed_abc_identity():
     runner = load_runner()
     lock = runner.strict_json(LOCK)
@@ -315,3 +341,59 @@ def test_a_routed_record_with_slew_violations_is_not_closed(tmp_path):
     assert design["signal_integrity_clean"] is False
     assert design["closed"] is False
     assert "max_slew_violations 292" in design["closed_reason"]
+
+
+def test_archived_records_match_the_lock_or_are_declared_stale():
+    """A stale hash in the lock would bind routed evidence to RTL it was not
+    produced from.  The lock names the CURRENT sources; an archived record made
+    from anything else must be declared stale there, and must not be counted."""
+    runner = load_runner()
+    lock = runner.strict_json(LOCK)
+    completed = runner.load_completed(lock)
+    aggregate = runner.strict_json(ROOT / "results" / "asap7_physical" / "physical.json")
+    for case in lock["cases"]:
+        record = completed.get(case["name"])
+        if record is None:
+            continue
+        if runner.record_is_current(case, record):
+            assert "archived_evidence" not in case, case["name"]
+            assert case["name"] not in aggregate.get("stale_cases", [])
+            continue
+        archived = case.get("archived_evidence")
+        assert archived is not None, f"{case['name']}: stale record not declared"
+        assert archived["record_sources"] == runner.record_sources(record)
+        assert case["name"] in aggregate["stale_cases"]
+        assert aggregate["all_pass"] is False
+        assert aggregate["all_canonical"] is False
+    report = runner.render_report(lock, completed)
+    assert report == (ROOT / "results" / "asap7_physical" / "REPORT.md").read_text(
+        encoding="utf-8"
+    )
+
+
+def test_stale_record_is_never_reported_as_pass():
+    runner = load_runner()
+    lock = runner.strict_json(LOCK)
+    completed = runner.load_completed(lock)
+    case = runner.case_by_name(lock, "reduction_s8_g2_tc")
+    record = dict(completed["reduction_s8_g2_tc"])
+    record["source_inventory"] = [
+        {"path": path, "sha256": "0" * 64} for path in case["sources"]
+    ]
+    report = runner.render_report(lock, {**completed, case["name"]: record})
+    assert "**Overall status:** **PARTIAL**" in report
+    assert "| `reduction_s8_g2_tc` | STALE |" in report
+    with pytest.raises(runner.CampaignError, match="must be 'stale'"):
+        runner.validate_archived_evidence(
+            {**case, "archived_evidence": {**case["archived_evidence"], "status": "current"}}
+        )
+    with pytest.raises(runner.CampaignError, match="matches the lock"):
+        runner.validate_archived_evidence(
+            {
+                **case,
+                "archived_evidence": {
+                    **case["archived_evidence"],
+                    "record_sources": dict(case["sources"]),
+                },
+            }
+        )
