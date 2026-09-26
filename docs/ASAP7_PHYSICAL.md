@@ -90,14 +90,27 @@ OpenTallas.
 | `numeric_e1_l16_tc` | 4.25 ns (235.294 MHz) | PASS | +0.136856 / 0 ns | +0.805138 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 243.123 MHz |
 | `numeric_e4_l16_tc` | 2.00 ns (500 MHz) | FAIL | -7.60565 / -217.837 ns | +0.361685 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 104.105 MHz |
 | `numeric_e4_l16_tc` | 12.00 ns (83.333 MHz) | PASS | +0.0413225 / 0 ns | +2.36354 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 83.6213 MHz |
-| `reduction_s8_g2_tc` | 1.25 ns (800 MHz) | FAIL | -0.870789 / -15.3251 ns | +0.0565153 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 471.523 MHz |
-| `reduction_s8_g2_tc` | 2.25 ns (444.444 MHz) | PASS | +0.0534617 / 0 ns | +0.0557746 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 455.262 MHz |
+| `reduction_s8_g2_tc` (stale) | 1.25 ns (800 MHz) | FAIL | -0.870789 / -15.3251 ns | +0.0565153 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 471.523 MHz |
+| `reduction_s8_g2_tc` (stale) | 2.25 ns (444.444 MHz) | STALE | +0.0534617 / 0 ns | +0.0557746 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 455.262 MHz |
 
 | Passing case | Standard-cell area | Core area | Routed wire | Vias | Mapped / post-route proof |
 | --- | ---: | ---: | ---: | ---: | --- |
 | `numeric_e1_l16_tc` | 632.335 um^2 | 1,644.62 um^2 | 10,832 um | 42,366 | 38 / 38 named points equivalent |
 | `numeric_e4_l16_tc` | 2,603.30 um^2 | 6,790.42 um^2 | 80,823 um | 202,497 | 38 / 38 named points equivalent |
-| `reduction_s8_g2_tc` | 845.509 um^2 | 2,240.22 um^2 | 22,184 um | 61,473 | 687 / 687 transition points equivalent |
+| `reduction_s8_g2_tc` (stale) | 845.509 um^2 | 2,240.22 um^2 | 22,184 um | 61,473 | 687 / 687 transition points equivalent |
+
+**The two `reduction_s8_g2_tc` rows are stale.** They route the serial-chain
+reduction that commit `4690d6ce` replaced with balanced per-group add trees
+hoisted out of the clocked process, which is a synthesised-logic change.
+`70604b86` later added only a comment and a Verilator lint pragma. The lock
+names the current `rtl/ot_reduction_tree.sv`, and declares the archived record
+stale under `archived_evidence`. The runner shows that record as STALE and
+does not count it. Re-qualification was attempted on 2026-09-26 and did not
+close: the flow stopped at the mapped transition-relation proof, before place
+and route (see the lock for the measured engine results). The current tree
+has been routed only by the ungoverned `tools/run_abi3_physical.py` lane
+(`results/physical_abi3/asap7/operating_points/reduction_s8_g2_2p25.json`),
+which carries no gate-level equivalence proof.
 
 The 12-ns scaling-point target was selected from the 2-ns run's extracted
 9.629-ns worst data arrival and then reimplemented; it was not estimated from
@@ -119,9 +132,10 @@ passing constraint cannot erase a failed point.
 
 The final passing runs are marked `canonical: true`. All three were regenerated
 in one campaign from a clean detached worktree at commit `bc8089f`, after the
-periods and failed targets were committed. The aggregate record reports
-`all_pass: true`, `all_canonical: true`, and 3/3 completed required cases. This
-closes the clean-baseline gate for these exact proxy blocks and constraints; it
+periods and failed targets were committed. Since the reduction source changed,
+the aggregate record reports `all_pass: false`, `all_canonical: false`,
+`stale_cases: ["reduction_s8_g2_tc"]`, and 2/3 current passing cases. The
+clean-baseline gate holds for the two numeric proxy blocks only; it
 does not broaden the evidence boundary below.
 
 ## Claim boundary

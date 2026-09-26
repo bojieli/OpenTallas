@@ -1,6 +1,6 @@
 {
-  "all_canonical": true,
-  "all_pass": true,
+  "all_canonical": false,
+  "all_pass": false,
   "campaign_id": "opentallas-asap7-predictive-physical-v1",
   "cases": {
     "numeric_e1_l16_tc": {
@@ -5999,5 +5999,8 @@
     "numeric_e4_l16_tc",
     "reduction_s8_g2_tc"
   ],
-  "schema_version": 1
+  "schema_version": 1,
+  "stale_cases": [
+    "reduction_s8_g2_tc"
+  ]
 }

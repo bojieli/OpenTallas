@@ -206,6 +206,8 @@ def validate_lock(lock: dict[str, Any]) -> None:
                     raise CampaignError(
                         f"{name}: state aliases must map directly to canonical bits"
                     )
+        if "archived_evidence" in case:
+            validate_archived_evidence(case)
     if len(names) != len(set(names)):
         raise CampaignError("ASAP7 case names must be unique")
     acceptance = lock.get("acceptance")
@@ -244,6 +246,48 @@ def validate_lock(lock: dict[str, Any]) -> None:
             raise CampaignError(f"ASAP7 {tool} hash is invalid")
 
 
+def validate_archived_evidence(case: dict[str, Any]) -> None:
+    """A lock case may declare that its archived record predates its sources.
+
+    The lock always names the sources the campaign must route NOW.  When those
+    sources have moved past the archived record and re-qualification has not
+    closed, the case carries ``archived_evidence`` instead of a pretend-current
+    hash: the record's own source hashes, and why it has not been re-taken.
+    """
+    name = case["name"]
+    archived = case["archived_evidence"]
+    if not isinstance(archived, dict):
+        raise CampaignError(f"{name}: archived_evidence must be an object")
+    if archived.get("status") != "stale":
+        raise CampaignError(f"{name}: archived_evidence.status must be 'stale'")
+    record_sources = archived.get("record_sources")
+    if not isinstance(record_sources, dict) or set(record_sources) != set(case["sources"]):
+        raise CampaignError(
+            f"{name}: archived_evidence.record_sources must hash the case's sources"
+        )
+    for source, digest in record_sources.items():
+        if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+            raise CampaignError(f"{name}: invalid archived hash for {source}")
+    if record_sources == case["sources"]:
+        raise CampaignError(
+            f"{name}: archived_evidence declares a record stale that matches the lock"
+        )
+    for field in ("reason", "requalification"):
+        if not isinstance(archived.get(field), str) or not archived[field]:
+            raise CampaignError(f"{name}: archived_evidence.{field} is required")
+
+
+def record_sources(record: dict[str, Any]) -> dict[str, str]:
+    return {
+        item["path"]: item["sha256"] for item in record.get("source_inventory", [])
+    }
+
+
+def record_is_current(case: dict[str, Any], record: dict[str, Any]) -> bool:
+    """A record counts only if it was produced from the sources the lock names."""
+    return record_sources(record) == case["sources"]
+
+
 def case_by_name(lock: dict[str, Any], name: str) -> dict[str, Any]:
     for case in lock["cases"]:
         if case["name"] == name:
@@ -276,9 +320,20 @@ def verify_toolchain(lock: dict[str, Any]) -> dict[str, Any]:
         ["docker", "image", "inspect", reference, "--format", "{{.Id}}"],
         cwd=ROOT,
     ).stdout.strip()
-    if inspected != container["image_id"]:
+    # The classic Docker image store reports .Id as the image CONFIG digest
+    # (image_id); the containerd image store reports it as the MANIFEST digest,
+    # which for an image pulled by digest is the locked amd64_digest itself.  A
+    # manifest digest is content-addressed and names its config, so either one
+    # identifies the locked image; anything else is refused.  The executable and
+    # ASAP7 collateral hashes below are checked in both cases.
+    if inspected == container["image_id"]:
+        image_identity = "config_digest"
+    elif inspected == container["amd64_digest"]:
+        image_identity = "manifest_digest"
+    else:
         raise CampaignError(
-            f"ASAP7 container image ID {inspected}, expected {container['image_id']}"
+            f"ASAP7 container image ID {inspected}, expected {container['image_id']} "
+            f"(config digest) or {container['amd64_digest']} (manifest digest)"
         )
     asap7 = lock["toolchain"]["asap7"]
     platform_root = asap7["platform_root"]
@@ -338,6 +393,7 @@ def verify_toolchain(lock: dict[str, Any]) -> dict[str, Any]:
         "status": "pass",
         "container_reference": reference,
         "container_image_id": inspected,
+        "container_image_identity": image_identity,
         "openroad_version": lines[0],
         "yosys_version": lines[1],
         "abc_version": lines[2],
@@ -1983,7 +2039,15 @@ def load_completed(lock: dict[str, Any]) -> dict[str, dict[str, Any]]:
 
 def render_report(lock: dict[str, Any], completed: dict[str, dict[str, Any]]) -> str:
     required = lock["acceptance"]["required_cases"]
-    passed = [name for name in required if completed.get(name, {}).get("status") == "pass"]
+    cases = {case["name"]: case for case in lock["cases"]}
+    stale = [
+        name for name in required
+        if name in completed and not record_is_current(cases[name], completed[name])
+    ]
+    passed = [
+        name for name in required
+        if completed.get(name, {}).get("status") == "pass" and name not in stale
+    ]
     canonical = [name for name in passed if completed[name].get("canonical")]
     overall = "PASS" if passed == required and canonical == required else "PARTIAL"
     lines = [
@@ -1992,7 +2056,8 @@ def render_report(lock: dict[str, Any], completed: dict[str, dict[str, Any]]) ->
         f"**Campaign:** `{lock['campaign_id']}`  ",
         f"**Overall status:** **{overall}**  ",
         f"**Completed cases:** {len(passed)}/{len(required)}  ",
-        f"**Clean-baseline cases:** {len(canonical)}/{len(required)}",
+        f"**Clean-baseline cases:** {len(canonical)}/{len(required)}  ",
+        f"**Stale archived cases:** {len(stale)}/{len(required)}",
         "",
         "This is a source-hashed RTL-to-GDS experiment in the public predictive ASAP7",
         "research platform. It is not foundry signoff and contains no ROM or SRAM macro.",
@@ -2012,8 +2077,9 @@ def render_report(lock: dict[str, Any], completed: dict[str, dict[str, Any]]) ->
             )
             continue
         metrics = data["metrics"]
+        status = "STALE" if name in stale else data["status"].upper()
         lines.append(
-            f"| `{name}` | {data['status'].upper()} | {'yes' if data['canonical'] else 'no'} | "
+            f"| `{name}` | {status} | {'yes' if data['canonical'] else 'no'} | "
             f"{1e3/case['clock_period_ns']:.1f} MHz | {metrics['fmax_hz']/1e6:.1f} MHz | "
             f"{metrics['standard_cell_area_um2']:.2f} µm² | {metrics['wirelength_um']:.1f} µm | "
             f"{metrics['vias']:.0f} | {metrics['setup_wns_ns']:.4f} ns | "
@@ -2026,12 +2092,22 @@ def render_report(lock: dict[str, Any], completed: dict[str, dict[str, Any]]) ->
             "equivalence, zero reported setup/hold violations, zero detailed-route DRC",
             "errors, zero antenna violations, and zero flow errors. A dirty-worktree run",
             "is retained as useful source-hashed evidence but does not close the clean-baseline gate.",
+            "A STALE case's archived record was produced from source that no longer matches",
+            "the lock; its figures describe that older RTL and are not counted.",
             "",
             "## Evidence boundary",
             "",
         ]
     )
     lines.extend(f"- {item}" for item in lock["claim_boundary"])
+    if stale:
+        lines.extend(["", "## Stale archived evidence", ""])
+        for name in stale:
+            archived = cases[name].get("archived_evidence", {})
+            lines.append(
+                f"- `{name}`: {archived.get('reason', 'record sources do not match the lock')} "
+                f"Re-qualification: {archived.get('requalification', 'not attempted')}"
+            )
     lines.extend(
         [
             "",
@@ -2047,17 +2123,29 @@ def render_report(lock: dict[str, Any], completed: dict[str, dict[str, Any]]) ->
 def write_aggregate(lock: dict[str, Any]) -> None:
     RESULT_ROOT.mkdir(parents=True, exist_ok=True)
     completed = load_completed(lock)
+    cases = {case["name"]: case for case in lock["cases"]}
+    stale = sorted(
+        name for name, record in completed.items()
+        if not record_is_current(cases[name], record)
+    )
+    undeclared = [name for name in stale if "archived_evidence" not in cases[name]]
+    if undeclared:
+        raise CampaignError(
+            f"archived records do not match the lock sources and are not declared "
+            f"stale: {undeclared}"
+        )
     summary = {
         "schema_version": 1,
         "campaign_id": lock["campaign_id"],
         "required_cases": lock["acceptance"]["required_cases"],
         "completed_cases": sorted(completed),
+        "stale_cases": stale,
         "all_pass": all(
-            completed.get(name, {}).get("status") == "pass"
+            completed.get(name, {}).get("status") == "pass" and name not in stale
             for name in lock["acceptance"]["required_cases"]
         ),
         "all_canonical": all(
-            completed.get(name, {}).get("canonical") is True
+            completed.get(name, {}).get("canonical") is True and name not in stale
             for name in lock["acceptance"]["required_cases"]
         ),
         "cases": completed,
@@ -2077,6 +2165,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--case", action="append", dest="cases")
     parser.add_argument("--allow-dirty", action="store_true")
     parser.add_argument(
+        "--aggregate-only",
+        action="store_true",
+        help="re-render physical.json and REPORT.md from the archived case records",
+    )
+    parser.add_argument(
         "--check-only",
         action="store_true",
         help="validate source, lock, container, and ASAP7 collateral without running P&R",
@@ -2090,6 +2183,9 @@ def main(argv: list[str] | None = None) -> int:
     if not isinstance(lock, dict):
         raise CampaignError("ASAP7 lock root must be an object")
     validate_lock(lock)
+    if args.aggregate_only:
+        write_aggregate(lock)
+        return 0
     selected = args.cases or lock["acceptance"]["required_cases"]
     if len(selected) != len(set(selected)):
         raise CampaignError("duplicate --case selection")
