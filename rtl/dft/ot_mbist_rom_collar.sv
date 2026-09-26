@@ -62,18 +62,24 @@ module ot_mbist_rom_collar #(
     assign m_addr = t_en ? t_addr[AW-1:0] : f_addr;
     assign f_rd   = m_rd;
 
-    reg pend;
+    // The macro's read word is registered before the CRC fold, so the macro's
+    // clock-to-output and the fold's XOR tree are in different cycles.
+    reg pend, pend2;
+    reg [DW-1:0] rd_q;
+    always @(posedge clk) if (pend) rd_q <= m_rd;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             pend <= 1'b0;
+            pend2 <= 1'b0;
             sig <= 32'hFFFFFFFF;
         end else begin
             pend <= t_en & t_req;
+            pend2 <= pend;
             if (t_en & t_clear) sig <= 32'hFFFFFFFF;
-            else if (pend) sig <= crc_fold(sig, m_rd);
+            else if (pend2) sig <= crc_fold(sig, rd_q);
         end
     end
     assign sig_match = (sig == exp_sig);
-    assign sig_busy = pend;
+    assign sig_busy = pend | pend2;
 endmodule
 // verilator lint_on UNUSED

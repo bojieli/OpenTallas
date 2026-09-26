@@ -337,7 +337,7 @@ module ot_mbist_ctrl #(
                 end
                 S_RDRAIN: begin
                     drain <= drain + 3'd1;
-                    if (drain == 3'd2) st <= S_REVAL;
+                    if (drain == 3'd3) st <= S_REVAL;       // ROM collar: macro read + registered word + fold
                 end
                 S_REVAL: begin
                     rom_status[msel*2 +: 2] <= rom_match[msel] ? 2'b01 : 2'b11;

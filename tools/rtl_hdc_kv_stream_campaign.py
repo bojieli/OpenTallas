@@ -46,6 +46,14 @@ sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_decode_campaign as core  # noqa: E402
 
 OUT = ROOT / "results/rtl/hdc_kv_stream_campaign.json"
+OUT_MACROS = ROOT / "results/rtl/hdc_kv_stream_campaign_memory_macros.json"
+MACROS = ROOT / "physical/asap7_memory_macros"
+BUF_MACROS = ("ot_sram_1r1w_256x256_m2_r2c2", "ot_sram_1r1w_128x256_m1_r2c2")
+BUF_RTL = [ROOT / "rtl/hdc/kv/ot_hdc_kv_bufs.sv",
+           *(ROOT / f"rtl/dft/{n}.sv" for n in ("ot_mbist_ctrl", "ot_mbist_bira", "ot_mbist_sram_collar")),
+           *(MACROS / m / f"{m}.v" for m in BUF_MACROS)]
+VERILATOR5 = Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"
+GATE = Path("/tmp/claude-1000/orfs_gate.sh")
 KV_RTL = [ROOT / "rtl/hdc/kv/ot_hdc_kv_walk.sv", ROOT / "rtl/hdc/kv/ot_hdc_kv_stream.sv"]
 HBM = ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv"
 TB_CORE = ROOT / "rtl/test/tb_hdc_core_hbm.sv"
@@ -137,8 +145,9 @@ def lead_analysis(par: dict) -> dict:
                     "(fault)"}
 
 
-def verilate(top, obj: Path, sources, params=()):
-    subprocess.run(["verilator", "--cc", "--exe", "--build", *VFLAGS, "--top-module", top, *params,
+def verilate(top, obj: Path, sources, params=(), vl="verilator", gate=False):
+    pre = [str(GATE)] if gate and GATE.is_file() else []
+    subprocess.run([*pre, vl, "--cc", "--exe", "--build", *VFLAGS, "--top-module", top, *params,
                     "-Mdir", str(obj), f"-I{core.ISA_SVH.parent}", *map(str, sources), "-CFLAGS", "-O1", "-j", "8"],
                    check=True, capture_output=True)
     return str(obj / f"V{top}")
@@ -380,10 +389,110 @@ def run_campaign() -> dict:
     }
 
 
+def run_macro_campaign() -> dict:
+    """The core runs of the default record with the window and tail SRAMs as compiled macros.
+
+    Builds tb_hdc_core_hbm with +define+OT_HDC_KV_MACROS (rtl/hdc/kv/ot_hdc_kv_bufs.sv:
+    6 macros behind MBIST collars and one shared controller), reruns every core
+    job of the default record and compares each parsed run field for field with
+    results/rtl/hdc_kv_stream_campaign.json; then runs the memory self-test
+    before the token clean and with a stuck-at-1 cell in window bank 0.
+    """
+    import hdc_program as P
+    base = json.loads(OUT.read_text())
+    core_src = [*core.HDC, *KV_RTL, HBM, *core.PIPES]
+    vl = str(VERILATOR5) if VERILATOR5.is_file() else "verilator"
+    defs = ["+define+OT_HDC_KV_MACROS", "+define+OT_MEM_FAULTS"]
+    with tempfile.TemporaryDirectory() as scratch:
+        s = Path(scratch)
+        img, imgc = s / "img", s / "imgc"
+        for d, extra in ((img, []), (imgc, ["--context", "60"])):
+            subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(d), *extra], check=True,
+                           capture_output=True)
+        lay = P.Layout(P.golden_state()[0])
+        layout = {"LOG_HD": int(math.log2(lay.HD)), "LOG_TW": int(math.log2(lay.TW)),
+                  "LLG": int(math.log2(lay.L * lay.KV)), "V0_WORD": lay.kv_v0 // 16}
+        gparams = [f"-G{k}={v}" for k, v in layout.items()]
+        srcs = [*core_src, *BUF_RTL, TB_CORE, HARNESS_CORE]
+        h4 = verilate("tb_hdc_core_hbm", s / "h4", srcs, [*gparams, f"-GNPC={NPC}", *defs], vl=vl)
+        h2 = verilate("tb_hdc_core_hbm", s / "h2", srcs, [*gparams, "-GNPC=2", *defs], vl=vl)
+        a1 = (img / "run.args").read_text().split()
+        a60 = (imgc / "run.args").read_text().split()
+        jobs = {
+            "single_step": (h4, f"+DIR={img}", *a1, f"+LEAD={LEAD}"),
+            "long_context": (h4, f"+DIR={imgc}", *a60, f"+LEAD={LEAD}"),
+            "end_to_end": (h4, f"+DIR={img}", "+MULTI", "+NPROMPT=16", "+NGEN=3", f"+LEAD={LEAD}"),
+            "prompt60_from_empty": (h4, f"+DIR={imgc}", *a60, "+MULTI", "+NPROMPT=60", "+NGEN=1", "+CHECKLAST",
+                                    f"+LEAD={LEAD}"),
+            "npc2_single_step": (h2, f"+DIR={img}", *a1, f"+LEAD={LEAD}"),
+            "npc2_long_context": (h2, f"+DIR={imgc}", *a60, f"+LEAD={LEAD}"),
+            "npc2_prompt60_from_empty": (h2, f"+DIR={imgc}", *a60, "+MULTI", "+NPROMPT=60", "+NGEN=1", "+CHECKLAST",
+                                         f"+LEAD={LEAD}"),
+        }
+        for L in (0, 32, 128):
+            jobs[f"lead_{L}"] = (h4, f"+DIR={imgc}", *a60, f"+LEAD={L}")
+        bist_jobs = {
+            "bist_clean": (h4, f"+DIR={img}", *a1, f"+LEAD={LEAD}", "+BIST"),
+            "bist_win0_stuck_at_1": (h4, f"+DIR={img}", *a1, f"+LEAD={LEAD}", "+BIST",
+                                     "+FAULT_WIN_KIND=2", "+FAULT_WIN_ROW=5", "+FAULT_WIN_COL=17"),
+        }
+        allj = {**jobs, **bist_jobs}
+        with ThreadPoolExecutor(4) as pool:
+            outs = dict(zip(allj, pool.map(lambda j: run(*j), allj.values())))
+    rec = {k: parse_core(v) for k, v in outs.items()}
+    # the default record adds a derived "outcome" to the lead runs after parsing; compare parsed fields
+    same = {k: rec[k] == {f: v for f, v in base["runs"][k].items() if f != "outcome"} for k in jobs}
+    bist = {}
+    rx = re.compile(r"BIST pass=(\d+) sram_status=([01]+) bist_cycles=(\d+)")
+    for k in bist_jobs:
+        m = rx.search(outs[k])
+        bist[k] = {"bist_pass": int(m.group(1)), "sram_status": m.group(2), "bist_cycles": int(m.group(3)),
+                   "token_run_equals_default_single_step": rec[k] == base["runs"]["single_step"],
+                   "run": rec[k]}
+    checks = {
+        "every_core_run_equals_default_record": all(same.values()),
+        "bist_clean_all_pass": bist["bist_clean"]["bist_pass"] == 1
+        and set(bist["bist_clean"]["sram_status"][i:i + 2] for i in range(0, 12, 2)) == {"01"},
+        "bist_stuck_cell_repaired": bist["bist_win0_stuck_at_1"]["bist_pass"] == 1
+        and bist["bist_win0_stuck_at_1"]["sram_status"][-2:] == "10",
+        "token_unchanged_after_bist": all(b["token_run_equals_default_single_step"] for b in bist.values()),
+    }
+    return {
+        "schema": "opentallas.hdc-kv-stream-campaign-memory-macros.v1",
+        "status": "pass" if all(checks.values()) else "fail",
+        "claim_boundary": "the default KV-stream record's core runs repeated with the streamer's window and tail "
+                          "SRAMs replaced by the behavioural models of the ASAP7 compiled macros behind MBIST "
+                          "collars; same claim boundary as results/rtl/hdc_kv_stream_campaign.json otherwise",
+        "macros": {"window": f"4 x {BUF_MACROS[0]}", "tail": f"2 x {BUF_MACROS[1]}",
+                   "wrapper": "rtl/hdc/kv/ot_hdc_kv_bufs.sv (+define+OT_HDC_KV_MACROS)"},
+        "verilator": subprocess.run([vl, "--version"], capture_output=True, text=True).stdout.strip(),
+        "baseline_record": str(OUT.relative_to(ROOT)),
+        "baseline_sha256": sha(OUT),
+        "runs_equal_to_baseline": same,
+        "runs": {k: rec[k] for k in jobs},
+        "bist": bist,
+        "bist_status_encoding": "2 bits per macro, macro 0 in the LSBs: 01 pass, 10 repaired, 11 fail; macros "
+                                "0-3 window banks, 4-5 tail banks",
+        "checks": checks,
+        "input_sha256": {str(p.relative_to(ROOT)): sha(p)
+                         for p in (*KV_RTL, HBM, TB_CORE, HARNESS_CORE, *BUF_RTL, *core.HDC, *core.PIPES,
+                                   Path(__file__))},
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--output", type=Path, default=OUT)
+    parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument("--memory-macros", action="store_true",
+                        help="window and tail SRAMs as ASAP7 compiled macros with MBIST (rtl/hdc/kv/ot_hdc_kv_bufs.sv)")
     args = parser.parse_args()
+    if args.memory_macros:
+        result = run_macro_campaign()
+        out = args.output or OUT_MACROS
+        out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+        print(result["status"], json.dumps(result["checks"]))
+        return 0 if result["status"] == "pass" else 1
+    args.output = args.output or OUT
     result = run_campaign()
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     print(result["status"], json.dumps(result["checks"]))
