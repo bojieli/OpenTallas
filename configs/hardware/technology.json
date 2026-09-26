@@ -847,9 +847,9 @@
     "rom_wafer_serdes": {
       "bytes_s": {
         "grade": "derived",
-        "value": 6000000000000.0,
-        "note": "Payload per direction per wafer: a quarter of the 860 mm wafer perimeter carrying ~430 lanes of 112 Gb/s SerDes is ~48 Tb/s, 6 TB/s. Replaces the 150 GB/s Ethernet ports of a commercial wafer cluster, which a purpose-built ROM machine need not use.",
-        "source": "wafer perimeter from configs/hardware/technology_inputs.json; lane rate from the 112G PAM4 SerDes class"
+        "value": 5670000000000.0,
+        "note": "Payload per direction per wafer: a quarter of the 860 mm wafer perimeter carrying ~430 lanes of 112 Gb/s PAM4 SerDes is 48.2 Tb/s raw (6.02 TB/s); net of RS(544,514) 'KP4' FEC (514/544) and 256b/257b transcoding it is 45.3 Tb/s, 5.67 TB/s -- the same lane class and the same overheads as links.rom_board_serdes. Was 6 TB/s, the raw lane rate (kept as the optimistic sensitivity, decode_critical_path.OPTIMISTIC_LINKS). Replaces the 150 GB/s Ethernet ports of a commercial wafer cluster, which a purpose-built ROM machine need not use.",
+        "source": "wafer perimeter from configs/hardware/technology_inputs.json; lane rate from the 112G PAM4 SerDes class (https://www.cadence.com/en_US/home/tools/silicon-solutions/design-ip/scale-up-scale-out-serdes/112g-vsr-pam4-serdes-phy.html); RS(544,514) FEC and 256b/257b transcoding of the IEEE 802.3 100 Gb/s-per-lane PHYs"
       },
       "domain_size": {
         "grade": "derived",
@@ -865,11 +865,20 @@
       },
       "hop_latency_s": {
         "grade": "assumed",
-        "value": 1e-07,
-        "range_low": 4e-08,
-        "range_high": 2.5e-07,
-        "note": "Same hardware floor as rom_board_serdes: SerDes, light FEC, short flight, router; no software.",
-        "source": "component decomposition in docs/ANALYTICAL_REPORT.md"
+        "value": 2.09e-07,
+        "range_low": 1.29e-07,
+        "range_high": 4.09e-07,
+        "note": "The same link class and the same hardware floor as links.rom_board_serdes, priced the same way so the wafer and the array are symmetric (latency_components_s): CHANNEL 200 ns nominal (112G PAM4 transmit and DSP receive, RS(544,514) 'KP4' FEC encode and decode including codeword accumulation, PCS lane alignment and deskew, and short flight), CLOCK-DOMAIN CROSSING 4 cycles at 1 GHz (each wafer runs on its own clock), DIGITAL ENDPOINT 5 cycles (rtl/rom/ot_rom_pkg_link.sv). Total 209 ns. RANGE LOW 129 ns: short reach with no FEC; RANGE HIGH 409 ns: a retimer or longer reach. Neighbouring wafers sit about as far apart as neighbouring packages on a board or a cable apart; a metre of cable adds ~5 ns of flight, inside the band, so no different reach class is justified. Was 100 ns (40-250 ns), which left out the FEC and the clock crossings; kept as the optimistic sensitivity (decode_critical_path.OPTIMISTIC_LINKS, wafer_vs_array_iso_area.json sensitivity wafer_serdes_optimistic_100ns).",
+        "source": "as links.rom_board_serdes.hop_latency_s: component decomposition in docs/ANALYTICAL_REPORT.md; RS(544,514) FEC of the IEEE 802.3 100 Gb/s-per-lane PHYs; OIF CEI-112G (https://www.oiforum.com/wp-content/uploads/00311c-OIF-112G-OFC-slides_ofc20_presentation.pdf)"
+      },
+      "latency_components_s": {
+        "channel": 2e-07,
+        "channel_low": 1.2e-07,
+        "channel_high": 4e-07,
+        "cdc": 4e-09,
+        "digital_endpoint": 5e-09,
+        "clock_hz": 1000000000.0,
+        "note": "hop_latency_s = channel + cdc + digital_endpoint, at the value and at each end of the range (the same components as links.rom_board_serdes)"
       }
     },
     "rom_wafer_express": {

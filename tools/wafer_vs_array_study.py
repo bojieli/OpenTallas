@@ -386,7 +386,9 @@ def _job(job):
     p = replace(params_for(job["sinkhorn"]), clock_hz=_CTX["clock"], **job.get("extra", {}))
     fv = job["fabric"]
     links = _CTX["links"]
-    if job.get("serdes_hop_s"):
+    if job.get("serdes_optimistic"):
+        links = dict(links, rom_wafer_serdes=dict(D.OPTIMISTIC_LINKS["rom_wafer_serdes"]))
+    elif job.get("serdes_hop_s"):
         links = dict(links, rom_wafer_serdes=dict(links["rom_wafer_serdes"], hop=job["serdes_hop_s"]))
     r = best_config(ctx, ctx["kind"], p, _CTX["clock"], links, fv, layout=job.get("layout", "rom_packed"),
                     batches=job.get("batches", BATCHES), iso_hbm=job.get("iso_hbm"))
@@ -474,7 +476,9 @@ ASSUMPTIONS = [
          direction="favours neither; fewer stages for both"),
     dict(id="A6", grade="derived", statement="Wafer control fabric: links.on_wafer_n5 125 ns per 28.55 mm field "
          "crossing (75-250 ns band); per-field-edge bandwidth on_wafer_n5.bytes_s / 57 / 4; wafers joined by "
-         "rom_wafer_serdes (100 ns, 40-250).", direction="the axis under test"),
+         "rom_wafer_serdes, the same 112G PAM4 + RS(544,514) FEC link class as the array's board link (209 ns, "
+         "129-409, 5.67 TB/s net per wafer); the earlier 100 ns at the raw 6 TB/s is the "
+         "wafer_serdes_optimistic_100ns sensitivity.", direction="the axis under test"),
     dict(id="A7", grade="assumed", statement="Designed express fabric: 25/10/5 ns per field crossing are design "
          "targets with no silicon; the wire limit is 28.55 mm x 150 ps/mm (assumed, 100-250) + one router cycle "
          "(assumed). The express fabric keeps the mesh's bandwidth and is applied to every field crossing "
@@ -559,9 +563,12 @@ def build(workers=8, quick=False):
                     sens_jobs.append(dict(key=key, sinkhorn=sv, fabric=fv, extra=dict(chaining=False),
                                           tag="no_chaining"))
                     if key == wk:
-                        for sh in (40e-9, 250e-9):
+                        ws = links["rom_wafer_serdes"]
+                        for sh in (ws["hop_low"], ws["hop_high"]):
                             sens_jobs.append(dict(key=key, sinkhorn=sv, fabric=fv, serdes_hop_s=sh,
                                                   tag=f"wafer_serdes_{sh * 1e9:.0f}ns"))
+                        sens_jobs.append(dict(key=key, sinkhorn=sv, fabric=fv, serdes_optimistic=True,
+                                              tag="wafer_serdes_optimistic_100ns"))
                     if key == ak and wk in ctxs:
                         ratio = designs_out[wk]["hbm_stacks_total"] / designs_out[ak]["hbm_stacks_total"]
                         sens_jobs.append(dict(key=key, sinkhorn=sv, fabric=fv, iso_hbm=ratio,

@@ -363,7 +363,9 @@ def link_consts(tech):
 OPTIMISTIC_LINKS = dict(
     rom_package_ucie=dict(hop=10e-9, bw=4e12, hop_low=3e-9, hop_high=30e-9, relay=0.0, relay_low=0.0,
                           relay_high=0.0, every_die_to_every_die=True),
-    rom_board_serdes=dict(hop=100e-9, bw=1.8e12, hop_low=40e-9, hop_high=250e-9))
+    rom_board_serdes=dict(hop=100e-9, bw=1.8e12, hop_low=40e-9, hop_high=250e-9),
+    # the wafer-to-wafer link before 2026-09-26: the same optimistic 100 ns hop at the raw 6 TB/s lane rate
+    rom_wafer_serdes=dict(hop=100e-9, bw=6e12, hop_low=40e-9, hop_high=250e-9))
 
 
 def optimistic_links(links):

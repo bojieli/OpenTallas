@@ -152,6 +152,10 @@ def test_package_dies_link_only_to_edge_neighbours(env):
     # the package hop is the realistic one; the optimistic set is the earlier one
     assert env["links"]["rom_board_serdes"]["hop"] == pytest.approx(209e-9)
     assert D.optimistic_links(env["links"])["rom_board_serdes"]["hop"] == pytest.approx(100e-9)
+    # the wafer-to-wafer link is the same link class, priced symmetrically; its earlier 100 ns is optimistic
+    for k in ("hop", "hop_low", "hop_high"):
+        assert env["links"]["rom_wafer_serdes"][k] == pytest.approx(env["links"]["rom_board_serdes"][k])
+    assert D.optimistic_links(env["links"])["rom_wafer_serdes"]["hop"] == pytest.approx(100e-9)
 
 
 def test_packed_placement_fills_the_dies_exactly():
