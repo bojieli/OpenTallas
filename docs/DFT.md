@@ -226,8 +226,12 @@ settings: 0.9 ns target, `--false-path-io`, `--slew-margin-percent 20`,
 | Block | Architectures | Scan cells | Chains (longest) | Pin faults | Fault coverage | Test coverage | Patterns | Gate-level check | Scan off equivalent |
 |---|---|---|---|---|---|---|---|---|---|
 | argmax collective `ot_rom_argmax_reduce` | V4.1 array | 2,264 <!-- figure: 2264 src="results/dft/summary.json#blocks.argmax_reduce.atpg.scan_cells" name="argmax_reduce scan cells" --> | 3 (755) | 80,616 <!-- figure: 80616 src="results/dft/summary.json#blocks.argmax_reduce.atpg.faults" name="argmax_reduce pin faults" --> | 98.52 <!-- figure: 98.52 src="results/dft/summary.json#blocks.argmax_reduce.atpg.fault_coverage" scale="100" name="argmax_reduce fault coverage %" -->% | 99.60 <!-- figure: 99.60 src="results/dft/summary.json#blocks.argmax_reduce.atpg.test_coverage" scale="100" name="argmax_reduce test coverage %" -->% | 2,376 <!-- figure: 2376 src="results/dft/summary.json#blocks.argmax_reduce.atpg.capture_patterns" name="argmax_reduce patterns" --> | 82 patterns, 0 mismatches; 130/130 injected faults seen | proven (2,813 points) |
+| fabric router `ot_rom_fabric_router` | V4.1 array | 13,226 <!-- figure: 13226 src="results/dft/summary.json#blocks.fabric_router.atpg.scan_cells" name="fabric_router scan cells" --> | 13 (1018) | 506,234 <!-- figure: 506234 src="results/dft/summary.json#blocks.fabric_router.atpg.faults" name="fabric_router pin faults" --> | 99.87 <!-- figure: 99.87 src="results/dft/summary.json#blocks.fabric_router.atpg.fault_coverage" scale="100" name="fabric_router fault coverage %" -->% | 99.99 <!-- figure: 99.99 src="results/dft/summary.json#blocks.fabric_router.atpg.test_coverage" scale="100" name="fabric_router test coverage %" -->% | 508 <!-- figure: 508 src="results/dft/summary.json#blocks.fabric_router.atpg.capture_patterns" name="fabric_router patterns" --> | not run | proven (15,839 points) |
+| KV streamer `ot_hdc_kv_stream` | HBM | 7,187 <!-- figure: 7187 src="results/dft/summary.json#blocks.kv_stream.atpg.scan_cells" name="kv_stream scan cells" --> | 8 (899) | 294,762 <!-- figure: 294762 src="results/dft/summary.json#blocks.kv_stream.atpg.faults" name="kv_stream pin faults" --> | 98.69 <!-- figure: 98.69 src="results/dft/summary.json#blocks.kv_stream.atpg.fault_coverage" scale="100" name="kv_stream fault coverage %" -->% | 99.87 <!-- figure: 99.87 src="results/dft/summary.json#blocks.kv_stream.atpg.test_coverage" scale="100" name="kv_stream test coverage %" -->% | 4,532 <!-- figure: 4532 src="results/dft/summary.json#blocks.kv_stream.atpg.capture_patterns" name="kv_stream patterns" --> | not run | proven (11,187 points) |
 | matrix engine `ot_hdc_matvec` | HBM, Qwen3 ROM | 95,737 <!-- figure: 95737 src="results/dft/summary.json#blocks.matvec.atpg.scan_cells" name="matvec scan cells" --> | 94 (1019) | 3,230,104 <!-- figure: 3230104 src="results/dft/summary.json#blocks.matvec.atpg.faults" name="matvec pin faults" --> | 96.18 <!-- figure: 96.18 src="results/dft/summary.json#blocks.matvec.atpg.fault_coverage" scale="100" name="matvec fault coverage %" -->% | 99.85 <!-- figure: 99.85 src="results/dft/summary.json#blocks.matvec.atpg.test_coverage" scale="100" name="matvec test coverage %" -->% | 22,817 <!-- figure: 22817 src="results/dft/summary.json#blocks.matvec.atpg.capture_patterns" name="matvec patterns" --> | not run | not run |
 | package controller `ot_rom_pkg_ctrl` | V4.1 array | 4,482 <!-- figure: 4482 src="results/dft/summary.json#blocks.pkg_ctrl.atpg.scan_cells" name="pkg_ctrl scan cells" --> | 5 (897) | 189,740 <!-- figure: 189740 src="results/dft/summary.json#blocks.pkg_ctrl.atpg.faults" name="pkg_ctrl pin faults" --> | 97.74 <!-- figure: 97.74 src="results/dft/summary.json#blocks.pkg_ctrl.atpg.fault_coverage" scale="100" name="pkg_ctrl fault coverage %" -->% | 99.74 <!-- figure: 99.74 src="results/dft/summary.json#blocks.pkg_ctrl.atpg.test_coverage" scale="100" name="pkg_ctrl test coverage %" -->% | 1,223 <!-- figure: 1223 src="results/dft/summary.json#blocks.pkg_ctrl.atpg.capture_patterns" name="pkg_ctrl patterns" --> | 123 patterns, 0 mismatches; 250/250 injected faults seen | proven (5,660 points) |
+| package link `ot_rom_pkg_link` | V4.1 array | 11,856 <!-- figure: 11856 src="results/dft/summary.json#blocks.pkg_link.atpg.scan_cells" name="pkg_link scan cells" --> | 12 (988) | 362,820 <!-- figure: 362820 src="results/dft/summary.json#blocks.pkg_link.atpg.faults" name="pkg_link pin faults" --> | 94.80 <!-- figure: 94.80 src="results/dft/summary.json#blocks.pkg_link.atpg.fault_coverage" scale="100" name="pkg_link fault coverage %" -->% | 100.00 <!-- figure: 100.00 src="results/dft/summary.json#blocks.pkg_link.atpg.test_coverage" scale="100" name="pkg_link test coverage %" -->% | 336 <!-- figure: 336 src="results/dft/summary.json#blocks.pkg_link.atpg.capture_patterns" name="pkg_link patterns" --> | not run | not run |
+| stream unit `ot_hdc_stream` | HBM, Qwen3 ROM | 53,022 <!-- figure: 53022 src="results/dft/summary.json#blocks.stream.atpg.scan_cells" name="stream scan cells" --> | 52 (1020) | 2,227,034 <!-- figure: 2227034 src="results/dft/summary.json#blocks.stream.atpg.faults" name="stream pin faults" --> | 96.11 <!-- figure: 96.11 src="results/dft/summary.json#blocks.stream.atpg.fault_coverage" scale="100" name="stream fault coverage %" -->% | 99.85 <!-- figure: 99.85 src="results/dft/summary.json#blocks.stream.atpg.test_coverage" scale="100" name="stream test coverage %" -->% | 11,650 <!-- figure: 11650 src="results/dft/summary.json#blocks.stream.atpg.capture_patterns" name="stream patterns" --> | not run | not run |
 
 | Block | Std-cell area, no scan → scan (µm²) | Area | Routed Fmax, no scan → scan (MHz) | Fmax | Routed wirelength | Status, no scan / scan |
 |---|---|---|---|---|---|---|
@@ -273,9 +277,10 @@ columns.
 | | HBM comparator | Qwen3-8B ROM reticle | DeepSeek-V4.1 ROM array |
 |---|---|---|---|
 | Scan insertion in the physical flow | available for every block (`--dft scan`) | available | available |
-| Blocks with ATPG coverage | decode core: stream unit, matrix engine; KV streamer | the same decode core: stream unit, matrix engine | package controller, fabric router, package link, argmax, multicast, MoE dispatch and expert-port collectives, Sinkhorn unit |
-| Scan-off equivalence proven | stream unit, KV streamer | stream unit | package controller, fabric router, collectives |
-| Paired scan / no-scan routes | see section 4 | see section 4 | see section 4 |
+| Blocks with ATPG coverage | stream unit, matrix engine, KV streamer | stream unit, matrix engine (the same decode core) | package controller, fabric router, package link, argmax collective |
+| Gate-level confirmation of patterns and faults | pending (Verilator builds queued behind the machine's memory gate) | pending | package controller, argmax collective |
+| Scan-off equivalence proven | KV streamer (stream unit, matrix engine pending) | pending | package controller, fabric router, argmax collective |
+| Paired scan / no-scan routes | pending (queued) | pending (queued) | package controller |
 | JTAG TAP | `ot_tap`, verified | the same | the same; one TAP per die |
 | Functional RTL campaigns with scan off | HDC decode, KV stream: pass | HDC decode: pass | V4.1 decode, package TP, ROM fabric: pass |
 
@@ -293,7 +298,19 @@ All five pass. The KV-stream campaign first failed in its timing-model
 projection, on a field that was missing before main's `2aebf056`. It passed
 once main was merged.
 
-**Not yet covered:**
+**Not yet covered.** These items are still running or queued. The machine is
+shared and heavy jobs wait for a memory gate; results are appended to the
+tables by `tools/dft/summarize.py --write-doc` as they land.
+
+- Blocks: the Sinkhorn unit, and the multicast, MoE-dispatch and
+  expert-port collectives. The Sinkhorn unit's host synthesis timed out at
+  0.9 ns, so it is being re-synthesised at its 4 ns route target.
+- The remaining paired routes: stream unit, matrix engine, KV streamer,
+  fabric router, package link, collectives and Sinkhorn unit. The stream
+  unit's unscanned baseline was killed by the machine running out of memory
+  in detailed routing and has been requeued.
+
+**Out of scope for this pass:**
 
 - The whole core and whole die as one scanned netlist. Blocks are scanned
   and graded one at a time; stitching block chains into top-level chains is

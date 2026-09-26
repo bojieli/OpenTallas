@@ -36,6 +36,64 @@
     "unproven_cells": 0
    }
   },
+  "fabric_router": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "atpg": {
+    "capture_patterns": 508,
+    "chains": 13,
+    "classes": {
+     "AU": 36,
+     "DS": 66418,
+     "DT": 439144,
+     "ND": 0,
+     "UT": 636
+    },
+    "fault_coverage": 0.998673,
+    "faults": 506234,
+    "gate_level": null,
+    "max_chain_length": 1018,
+    "scan_cells": 13226,
+    "test_coverage": 0.999929,
+    "tester_cycles": 519689,
+    "top": "ot_rom_fabric_router"
+   },
+   "scan_off_equivalence": {
+    "equiv_cells": 15839,
+    "proven": true,
+    "unproven_cells": 0
+   }
+  },
+  "kv_stream": {
+   "architectures": [
+    "hbm_comparator"
+   ],
+   "atpg": {
+    "capture_patterns": 4532,
+    "chains": 8,
+    "classes": {
+     "AU": 383,
+     "DS": 36886,
+     "DT": 254011,
+     "ND": 0,
+     "UT": 3482
+    },
+    "fault_coverage": 0.986888,
+    "faults": 294762,
+    "gate_level": null,
+    "max_chain_length": 899,
+    "scan_cells": 7187,
+    "test_coverage": 0.998685,
+    "tester_cycles": 4080599,
+    "top": "ot_hdc_kv_stream"
+   },
+   "scan_off_equivalence": {
+    "equiv_cells": 11187,
+    "proven": true,
+    "unproven_cells": 0
+   }
+  },
   "matvec": {
    "architectures": [
     "hbm_comparator",
@@ -135,6 +193,55 @@
     "equiv_cells": 5660,
     "proven": true,
     "unproven_cells": 0
+   }
+  },
+  "pkg_link": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "atpg": {
+    "capture_patterns": 336,
+    "chains": 12,
+    "classes": {
+     "AU": 0,
+     "DS": 58536,
+     "DT": 285410,
+     "ND": 0,
+     "UT": 18874
+    },
+    "fault_coverage": 0.94798,
+    "faults": 362820,
+    "gate_level": null,
+    "max_chain_length": 988,
+    "scan_cells": 11856,
+    "test_coverage": 1.0,
+    "tester_cycles": 334281,
+    "top": "ot_rom_pkg_link"
+   }
+  },
+  "stream": {
+   "architectures": [
+    "hbm_comparator",
+    "qwen3_8b_rom"
+   ],
+   "atpg": {
+    "capture_patterns": 11650,
+    "chains": 52,
+    "classes": {
+     "AU": 3204,
+     "DS": 276848,
+     "DT": 1863467,
+     "ND": 0,
+     "UT": 83515
+    },
+    "fault_coverage": 0.961061,
+    "faults": 2227034,
+    "gate_level": null,
+    "max_chain_length": 1020,
+    "scan_cells": 53022,
+    "test_coverage": 0.998505,
+    "tester_cycles": 11896691,
+    "top": "ot_hdc_stream"
    }
   }
  },
