@@ -68,7 +68,8 @@
           "bump_pitch_um": 140,
           "cycles": {
             "token": 32246
-          }
+          },
+          "stage": "cts"
         }
       ]
     },
@@ -133,7 +134,8 @@
             "TT"
           ],
           "derate": 0.0,
-          "ir_sources": []
+          "ir_sources": [],
+          "stage": "cts"
         }
       ]
     }

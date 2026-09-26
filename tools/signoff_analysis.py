@@ -391,7 +391,13 @@ TCL_LOAD = r"""
 foreach lib $::so_libs { read_liberty $lib }
 read_db $::so_odb
 read_sdc $::so_sdc
-if {$::so_spef ne ""} { read_spef $::so_spef }
+if {$::so_spef ne ""} {
+    read_spef $::so_spef
+} else {
+    # pre-route stage (e.g. 4_cts.odb): placement-estimated wire parasitics
+    source $::so_platform/setRC.tcl
+    estimate_parasitics -placement
+}
 set_cmd_units -time ns -power W
 """
 
@@ -539,14 +545,29 @@ foreach net {VDD VSS} {
 # ---------------------------------------------------------------------------
 # Running a session in the ORFS image and parsing it
 # ---------------------------------------------------------------------------
-def find_results_dir(path: Path) -> Path:
-    """The ORFS results directory holding 6_final.odb under a kept workdir."""
+# ORFS stage -> the database and constraints it leaves; only "final" has a SPEF
+STAGE_FILES = {"final": ("6_final.odb", "6_final.sdc", "6_final.spef"),
+               "cts": ("4_cts.odb", "4_cts.sdc", None)}
+
+
+def stage_netlist(workdir: Path) -> Path:
+    """The netlist whose flop instance names a mapping uses: the routed one, else
+    the synthesised one (placement and CTS add buffers but keep flop names)."""
+    try:
+        return find_results_dir(workdir, "final") / "6_final.v"
+    except FileNotFoundError:
+        return find_results_dir(workdir, "cts") / "1_2_yosys.v"
+
+
+def find_results_dir(path: Path, stage: str = "final") -> Path:
+    """The ORFS results directory holding the stage's database under a kept workdir."""
+    odb = STAGE_FILES[stage][0]
     path = Path(path)
-    if (path / "6_final.odb").exists():
+    if (path / odb).exists():
         return path
-    hits = sorted(path.glob("**/results/*/*/base/6_final.odb"))
+    hits = sorted(path.glob(f"**/results/*/*/base/{odb}"))
     if not hits:
-        raise FileNotFoundError(f"no routed 6_final.odb under {path}")
+        raise FileNotFoundError(f"no {odb} under {path}")
     return hits[0].parent
 
 
@@ -557,14 +578,16 @@ def tcl_list(items: Iterable[str]) -> str:
 def session_script(results: str, out: str, corner: str, *, saif: str = "", saif_scope: str = "",
                    groups: list[str] | None = None, inst_power: str = "", derate: float = 0.0,
                    stages: tuple[str, ...] = ("power", "clock", "timing"), ir_sources: tuple[str, ...] = (),
-                   bump_pitch_um: float = 140.0, bump_size_um: float = 50.0, spef: bool = True) -> str:
+                   bump_pitch_um: float = 140.0, bump_size_um: float = 50.0, spef: bool = True,
+                   stage: str = "final") -> str:
     """The OpenROAD Tcl of one analysis session (paths as seen in the container)."""
     c = CORNERS[corner]
     head = [
         f"set ::so_libs {tcl_list(corner_libs(corner))}",
-        f"set ::so_odb {results}/6_final.odb",
-        f"set ::so_sdc {results}/6_final.sdc",
-        f"set ::so_spef {{{results + '/6_final.spef' if spef else ''}}}",
+        f"set ::so_odb {results}/{STAGE_FILES[stage][0]}",
+        f"set ::so_sdc {results}/{STAGE_FILES[stage][1]}",
+        f"set ::so_spef {{{results + '/' + STAGE_FILES[stage][2] if spef and STAGE_FILES[stage][2] else ''}}}",
+        f"set ::so_platform {PLATFORM}",
         f"set ::so_saif {{{saif}}}",
         f"set ::so_saif_scope {{{saif_scope}}}",
         f"set ::so_groups {tcl_list(groups or [])}",
@@ -753,8 +776,9 @@ def em_hotspots(csv_path: Path, top: int = 10) -> dict[str, Any]:
 def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None, saif: Path | None,
             saif_scope: str, groups: list[str], corners: list[str], derate: float, ir_sources: list[str],
             bump_pitch_um: float, cycles_per_token: dict[str, int] | None, activity_meta: dict | None,
-            keep_ir_files: bool = False) -> dict[str, Any]:
-    results_dir = find_results_dir(results_dir).resolve()
+            keep_ir_files: bool = False, stage: str = "final") -> dict[str, Any]:
+    results_dir = find_results_dir(results_dir, stage).resolve()
+    odb_name, _, spef_name = STAGE_FILES[stage]
     out_dir = Path(out_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
     mounts = {str(results_dir): "/so_res:ro", str(out_dir): "/so_out"}
@@ -768,14 +792,18 @@ def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None
         "tool": {"script": "tools/signoff_analysis.py", "sha256": sha256_file(Path(__file__)),
                  "image": IMAGE},
         "routed": {"results_dir": str(results_dir),
-                   "odb_sha256": sha256_file(results_dir / "6_final.odb"),
-                   "spef_sha256": sha256_file(results_dir / "6_final.spef"),
-                   "netlist_sha256": sha256_file(results_dir / "6_final.v")},
+                   "stage": stage,
+                   "parasitics": "routed SPEF (OpenRCX)" if spef_name else
+                                 "placement-estimated (estimate_parasitics -placement, platform setRC.tcl)",
+                   "odb_sha256": sha256_file(results_dir / odb_name),
+                   "spef_sha256": sha256_file(results_dir / spef_name) if spef_name else None,
+                   "netlist_sha256": sha256_file(results_dir / "6_final.v")
+                   if (results_dir / "6_final.v").exists() else None},
         "activity": activity_meta or {"source": "vectorless",
                                       "note": "OpenSTA default activity (0.1 at inputs, propagated)"},
         "corners": {},
     }
-    if record:
+    if record and Path(record).exists():
         rec = json.loads(Path(record).read_text())
         m = rec.get("place_and_route", {}).get("metrics", {})
         result["record"] = {"path": rel(record), "top": rec["design"]["top"],
@@ -788,6 +816,7 @@ def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None
     for corner in corners:
         stages = ("power", "clock", "timing") if corner == "TT" else ("power", "timing")
         script = session_script("/so_res", f"/so_out/{corner}", corner, saif=saif_c, saif_scope=saif_scope,
+                                stage=stage,
                                 groups=groups, derate=derate, stages=stages,
                                 ir_sources=tuple(ir_sources) if corner == "TT" else (),
                                 bump_pitch_um=bump_pitch_um)
@@ -1219,7 +1248,7 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                         if activity_only:
                             sp = {k: v for k, v in sp.items() if k != "map_netlist"}
                         else:
-                            sp = dict(sp, map_netlist=str(find_results_dir(_resolve(sp["map_netlist"])) / "6_final.v"))
+                            sp = dict(sp, map_netlist=str(stage_netlist(_resolve(sp["map_netlist"]))))
                     scopes[sname] = sp
                 a["scopes"] = scopes
                 if a.get("rtl_from"):
@@ -1251,7 +1280,8 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                         groups=an.get("groups", []), corners=an.get("corners", ["TT", "SS", "FF"]),
                         derate=an.get("derate", 0.05), ir_sources=an.get("ir_sources", []),
                         bump_pitch_um=an.get("bump_pitch_um", 140.0),
-                        cycles_per_token=an.get("cycles"), activity_meta=act_meta if saif else None)
+                        cycles_per_token=an.get("cycles"), activity_meta=act_meta if saif else None,
+                        stage=an.get("stage", "final"))
             r["plan_entry"] = {k: v for k, v in an.items() if k not in ("routed",)}
             result["blocks"][key] = r
             if out_path:
