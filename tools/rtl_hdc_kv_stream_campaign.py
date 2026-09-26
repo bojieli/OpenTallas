@@ -341,10 +341,19 @@ def run_campaign() -> dict:
         "prompt60_from_empty_total": cost(rec["prompt60_from_empty"]["total_cycles"], sram60),
     }
     decode = json.loads(core.OUT.read_text())
-    costs["end_to_end_16_plus_3_total"] = cost(e2e["total_cycles"], decode["end_to_end"]["total_cycles"])
-    checks["sram_cycles_match_decode_record"] = (rec["sram_single_step"]["cycles"] == decode["single_step"]["cycles"]
-                                                 and rec["sram_long_context"]["cycles"] ==
-                                                 decode["long_context"]["cycles"])
+    # The decode record describes the core's own configuration; this campaign
+    # builds the scalar stream unit and the unsplit attention the KV streamer
+    # serves (HDC_SU_WIDTH=1, HDC_ATTN_SPLIT=0).  Its SRAM reference equals the
+    # decode record only when that record is of the same configuration.
+    same_config = decode.get("stream_unit", {}).get("lanes", 1) == 1
+    if same_config:
+        costs["end_to_end_16_plus_3_total"] = cost(e2e["total_cycles"], decode["end_to_end"]["total_cycles"])
+        checks["sram_cycles_match_decode_record"] = (rec["sram_single_step"]["cycles"] == decode["single_step"]["cycles"]
+                                                     and rec["sram_long_context"]["cycles"] ==
+                                                     decode["long_context"]["cycles"])
+    else:
+        costs["decode_record_configuration"] = ("differs (vector stream unit, K-split attention): the SRAM "
+                                                "reference runs above are this configuration's baseline")
 
     # ---- timing model -----------------------------------------------------------------------
     probe = rec["unit_probe_npc1"]["probe"]
