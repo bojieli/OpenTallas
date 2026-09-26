@@ -333,10 +333,9 @@ def real_reduced_segments(rng, real, K, Q, W):
 
 
 MUTATIONS = [
-    ("filter keeps only strictly greater keys", "assign i1_s_d[gl]  = i0_lv[gl] && (k >= r_T);",
-     "assign i1_s_d[gl]  = i0_lv[gl] && (k > r_T);"),
-    ("coarse bound ignores the verification", "wire          use_c = (st == C_ING) && kseen && (hold_c == 0) && cres_ok;",
-     "wire          use_c = (st == C_ING) && kseen && (hold_c == 0);"),
+    ("filter drops keys equal to T + 1 as well", "assign i1_s_d[gl]  = i0_lv[gl] && (k > r_T);",
+     "assign i1_s_d[gl]  = i0_lv[gl] && (k > r_T + 16'd1);"),
+    ("coarse bound one bucket high", "wire [15:0]   tc = {cres_b, 8'h00};", "wire [15:0]   tc = {cres_b + 8'd1, 8'h00};"),
     ("fine bound used right after a bucket change", "wire          use_f = (st == C_ING) && kseen && (hold_c == 0) && (hold_f == 0) && fres_ok;",
      "wire          use_f = (st == C_ING) && kseen && (hold_c == 0) && fres_ok;"),
     ("GC keeps only strictly greater keys", "assign c1_eq_d[gl] = lv && (k == tsw);", "assign c1_eq_d[gl] = lv && (k == tsw) && (sw_k != K_GC);"),
@@ -355,7 +354,13 @@ def mutate(d: Path):
     """Return {mutation: pass?} running a small tie-heavy config on each mutated copy."""
     rng = np.random.default_rng(99)
     Q, W, IW, K, AW = 4, 4, 16, 16, 6
-    segs, _ = coverage_segments(rng, 150, K, Q, W, IW, AW, np.array([0x3F80, 0x4000, 0xBF80, 0x3F00]))
+    segs, _ = coverage_segments(rng, 150, K, Q, W, IW, AW, np.array([0x3F80, 0x4000, 0xBF80, 0x3F00, 0x0000, 0x8000]))
+    for f in ("normal", "recency", "uniform", "lognormal", "ties"):     # long streams: many bucket changes
+        for _ in range(4):
+            segs.append(segment(rng, family(rng, f, 3000, K), K, K, Q, W, "even", True))
+    for _ in range(20):                                                  # signed zeros at the threshold
+        b = rng.choice(np.array([0x0000, 0x8000, 0x3F80, 0xBF80]), 200)
+        segs.append(segment(rng, b, K, K, Q, W, "random", False))
     pfx, _ = write_vectors(segs, Q, W, d, "mut")
     res = []
 

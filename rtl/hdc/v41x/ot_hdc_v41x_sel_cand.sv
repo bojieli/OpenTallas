@@ -34,7 +34,7 @@ module ot_hdc_v41x_sel_cand #(
     parameter integer IWP = 20,       // position width
     parameter integer K   = 2048,     // largest runtime k (blocks)
     parameter integer AW  = 10,       // line-memory address width per quarter
-    parameter integer DG  = 4,
+    parameter integer DG  = 8,
     parameter integer OD  = 4,
     parameter integer KW  = $clog2(K + 1)
 ) (

@@ -24,7 +24,7 @@ module tb_hdc_v41x_sel_cand
     parameter integer IW   = 20;                   // position width
     parameter integer K    = 2048;
     parameter integer AW   = 10;
-    parameter integer DG   = 4;
+    parameter integer DG   = 8;
     parameter integer OD   = 4;
     parameter integer MAXB = 8192;                 // beats per quarter per segment
     localparam integer KW = $clog2(K + 1);

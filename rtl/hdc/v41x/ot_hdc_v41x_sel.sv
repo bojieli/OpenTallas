@@ -36,8 +36,8 @@
 // Algorithm.  Keys are the order-preserving 16-bit keys of the BF16 values (hi digit =
 // top 8 bits, lo digit = bottom 8).  T is a running LOWER BOUND on the k-th largest key:
 // at every moment, at least k elements already seen have key >= T.  An arriving element
-// with key < T has k elements strictly above it and can never be selected; it is dropped
-// (the FILTER).  Survivors (key >= T) are counted in a coarse (hi-digit) histogram and,
+// with key < T has k elements strictly above it, and one with key == T has k earlier
+// (lower-index) elements >= T; neither can be selected, so it is dropped (the FILTER).  Survivors (key >= T) are counted in a coarse (hi-digit) histogram and,
 // when their hi digit is the tracked bucket Bt, in a fine (lo-digit) histogram; T is
 // raised from these counts every cycle by two pipelined radix-16 searches (the control):
 //   coarse: the highest bucket b with count(>= b) >= k            -> T >= {b, 0}
@@ -72,7 +72,7 @@ module ot_hdc_v41x_sel #(
     parameter integer IW = 20,        // index width
     parameter integer K  = 512,       // largest runtime k
     parameter integer AW = 8,         // line-memory address width per quarter
-    parameter integer DG = 4,         // GC write-back queue per quarter
+    parameter integer DG = 8,         // GC write-back queue per quarter
     parameter integer OD = 4,         // output FIFO per quarter
     parameter integer KW = $clog2(K + 1)
 ) (

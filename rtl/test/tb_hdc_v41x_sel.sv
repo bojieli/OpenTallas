@@ -34,7 +34,7 @@ module tb_hdc_v41x_sel
     parameter integer IW   = 20;
     parameter integer K    = 512;
     parameter integer AW   = 8;
-    parameter integer DG   = 4;
+    parameter integer DG   = 8;
     parameter integer OD   = 4;
     parameter integer MAXB = 8192;                 // beats per quarter per segment
     localparam integer KW = $clog2(K + 1);

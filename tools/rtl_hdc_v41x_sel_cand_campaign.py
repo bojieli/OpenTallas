@@ -180,7 +180,7 @@ def run(quick=False, real_positions=160, workers=6):
             labs.append(f"real_L{L}_p{p}")
     jobs.append(("real_reduced_k64", 4, SL, 16, real["candidate_topk_blocks"], 6, segs, labs, ((0, 0, 1), (15, 40, 3))))
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        configs = [f.result() for f in [ex.submit(run_config, *j) for j in jobs]]
+        configs = [f.result() for f in [ex.submit(run_config, *j[:8], d, j[8]) for j in jobs]]
     rows = []
     for c in configs:
         if c["name"] in ("shipped_200k", "shipped_1m", "worst_cases"):
