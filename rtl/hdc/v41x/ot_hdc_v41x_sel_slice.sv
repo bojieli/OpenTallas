@@ -245,7 +245,7 @@ module ot_hdc_v41x_sel_slice #(
     ot_hdc_v41x_sel_hist #(.W(W), .CB(CB)) u_hc (
         .clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hi_digits(i1_k)),
         .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
-    wire f_clr = seg_clr || r_fclr || (sw_start && r_p2);
+    wire f_clr = seg_clr || r_fclr || (sw_start && p2q);
     ot_hdc_v41x_sel_hist #(.W(W), .CB(CB)) u_hf (
         .clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(p2m ? r1_v : i1_v), .i_en(p2m ? p2_en : i1_fm),
         .i_dg(p2m ? p2_dg : lo_digits(i1_k)), .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
@@ -305,10 +305,23 @@ module ot_hdc_v41x_sel_slice #(
     wire sw_fin    = (sw_st == SW_WB) && (fcnt == 0) && !f_push && !wpend;
     wire gc_go     = (ph == P_ING) && r_ing && !r_stop && !seg_clr && (sw_st == SW_IDLE) &&
                      ((head != y_st) || (r_T != t_last));
-    assign sw_start = (sw_st == SW_IDLE) && !seg_clr && (gc_go || (((ph == P_STOP) && (r_p2 || r_p3))));
+    assign sw_start = (sw_st == SW_IDLE) && !seg_clr && (gc_go || (((ph == P_STOP) && (p2q || p3q))));
+    // pass requests wait for the sweep engine (P3 may be requested while P2's write-back drains)
+    reg p2q, p3q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin p2q <= 1'b0; p3q <= 1'b0; end
+        else if (seg_clr) begin p2q <= 1'b0; p3q <= 1'b0; end
+        else begin
+            if (r_p2) p2q <= 1'b1; else if (sw_start) p2q <= 1'b0;
+            if (r_p3) p3q <= 1'b1; else if (sw_start) p3q <= 1'b0;
+        end
+    end
     // emit
     reg  [AW:0]    e_rd;
     reg  [2:0]     e_infl;
+    reg            p2h, dmode, pend_v;
+    reg  [AW:0]    dcnt;
+    reg  [W*EW-1:0] pend;
     reg            e_go, e_empty;
     reg  [OCW-1:0] ocnt;
     wire em_issue = (ph == P_EM) && e_go && (e_rd < a_end) &&
@@ -333,6 +346,7 @@ module ot_hdc_v41x_sel_slice #(
             ovf <= 1'b0; last_seen <= 1'b0; ing_fl_done <= 1'b0; t_last <= 16'h0000;
             e_rd <= 0; e_infl <= 0; e_go <= 1'b0; e_empty <= 1'b0;
             sw_T <= 16'h0000; rem <= 0; ab_seg <= 2'd0; rd_ab <= 0; rd_stop <= 0;
+            p2h <= 1'b0; dmode <= 1'b0; pend_v <= 1'b0; dcnt <= 0;
             s_last <= 1'b0; s_hfin <= 1'b0; s_stopped <= 1'b0; s_done2 <= 1'b0; s_ovf <= 1'b0; s_emitted <= 1'b0;
             s_nhead <= 0; s_n2 <= 0; s_n3 <= 0;
         end else if (seg_clr) begin
@@ -341,10 +355,11 @@ module ot_hdc_v41x_sel_slice #(
             ovf <= 1'b0; last_seen <= 1'b0; ing_fl_done <= 1'b0; t_last <= 16'h0000;
             e_rd <= 0; e_infl <= 0; e_go <= 1'b0; e_empty <= 1'b0;
             sw_T <= 16'h0000; rem <= 0; ab_seg <= 2'd0; rd_ab <= 0; rd_stop <= 0;
+            p2h <= 1'b0; dmode <= 1'b0; pend_v <= 1'b0; dcnt <= 0;
             s_last <= 1'b0; s_hfin <= 1'b0; s_stopped <= 1'b0; s_done2 <= 1'b0; s_ovf <= 1'b0; s_emitted <= 1'b0;
         end else begin
             // input bookkeeping
-            if (sw_start && (r_p2 || r_p3) && r_rep) last_seen <= 1'b0;
+            if (sw_start && (p2q || p3q) && r_rep) last_seen <= 1'b0;
             else if (acc && in_last) last_seen <= 1'b1;
             if (pi_fl) ing_fl_done <= 1'b1;
             if (pi_v) begin
@@ -361,9 +376,9 @@ module ot_hdc_v41x_sel_slice #(
                 if (gc_go) begin
                     sw_k <= K_GC; sw_rp <= 1'b0; sw_all <= 1'b1; t_last <= r_T;
                 end else begin
-                    sw_k <= r_p2 ? K_P2 : K_P3; sw_rp <= r_rep; sw_all <= r_p2; sw_T <= r_st; rem <= r_rem;
-                    ph <= r_p2 ? P_P2 : P_P3;
-                    if (r_p2) s_n2 <= 0; else s_n3 <= 0;
+                    sw_k <= p2q ? K_P2 : K_P3; sw_rp <= r_rep; sw_all <= p2q; sw_T <= r_st; rem <= r_rem;
+                    ph <= p2q ? P_P2 : P_P3;
+                    if (p2q) begin s_n2 <= 0; p2h <= 1'b0; end else begin s_n3 <= 0; dmode <= 1'b1; dcnt <= 0; pend_v <= 1'b0; end
                 end
             end
             if (c2_v && !sw_all) rem <= (rem > {{(KW-LW){1'b0}}, c2_cnt}) ? rem - {{(KW-LW){1'b0}}, c2_cnt} : {(KW+1){1'b0}};
@@ -400,17 +415,30 @@ module ot_hdc_v41x_sel_slice #(
                         end
                         K_P2: begin
                             if (!sw_rp) begin a_end <= w; b_st <= 0; b_end <= 0; y_st <= head; end
-                            ph <= P_STOP; s_done2 <= 1'b1;
+                            ph <= P_STOP;
                         end
                         default: begin
                             a_end <= w; b_st <= 0; b_end <= 0; y_st <= head;
-                            ph <= P_EM; e_rd <= 0; e_go <= 1'b1; e_empty <= (w == 0);
+                            // lines already delivered straight from pass 3 are not read again
+                            ph <= P_EM; e_rd <= dcnt; e_go <= !d_fin; e_empty <= (w == 0);
                         end
                     endcase
                 end
                 default: ;
             endcase
 
+            // pass 2 is done for the control once its last line has been histogrammed
+            if (sw_k == K_P2 && sw_st != SW_IDLE && r1_v && r1_fl) p2h <= 1'b1;
+            if (p2h && hf_cnt == 0 && !hf_busy && !s_done2) s_done2 <= 1'b1;
+            // pass 3 lines go straight to the output FIFO while it has room (one line held back so
+            // the last one can carry out_last); from the first line that finds it full, EMIT re-reads
+            if (d_push) begin dcnt <= dcnt + 1'b1; end
+            if (sw_k == K_P3 && sw_st != SW_IDLE && dmode && f_push) begin
+                if (pend_v && !d_room) dmode <= 1'b0;
+                else begin pend <= ps_line; pend_v <= 1'b1; end
+            end
+            if (d_fin_push) begin pend_v <= 1'b0; end
+            if (sw_fin && sw_k == K_P3 && dmode && pend_v && !d_room) dmode <= 1'b0;
             // emit
             e_infl <= e_infl + {2'd0, em_issue} - {2'd0, t2_v && t2_em};
             if (em_issue) e_rd <= e_rd + 1'b1;
@@ -426,6 +454,12 @@ module ot_hdc_v41x_sel_slice #(
             s_nhead   <= head;
         end
     end
+    reg [1:0] hf_cnt;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) hf_cnt <= 2'd3;
+        else if (hf_busy || (p2m && r1_v)) hf_cnt <= 2'd3;
+        else if (hf_cnt != 0) hf_cnt <= hf_cnt - 1'b1;
+    end
     // histogram settle: the group sums are final 3 edges after the last beat left the input stages
     reg [1:0] hs_cnt;
     wire      hs_quiet = (hs_cnt == 0) && !i0_v && !i1_v && !hc_busy && !hf_busy;
@@ -437,8 +471,15 @@ module ot_hdc_v41x_sel_slice #(
 
     // -- output FIFO (shift register; entry 0 drives the port) ------------------------------------
     reg  [EW*W:0]  ofq [0:OD-1];                    // {last, line}
-    wire           o_push = (t2_v && t2_em) || (ph == P_EM && e_empty && ocnt < OD);
-    wire [EW*W:0]  o_in   = (t2_v && t2_em) ? {t2_last, mem_rdata} : {1'b1, {W*EW{1'b0}}};
+    // direct delivery from pass 3
+    wire           d_room     = (ocnt < OD);
+    wire           d_mid      = (sw_k == K_P3) && (sw_st != SW_IDLE) && dmode && f_push && pend_v && d_room;
+    wire           d_fin_push = sw_fin && (sw_k == K_P3) && dmode && pend_v && d_room;
+    wire           d_fin      = sw_fin && (sw_k == K_P3) && dmode && (pend_v ? d_room : 1'b1) && (w != 0);
+    wire           d_push     = d_mid || d_fin_push;
+    wire           o_push = (t2_v && t2_em) || (ph == P_EM && e_empty && ocnt < OD) || d_push;
+    wire [EW*W:0]  o_in   = (t2_v && t2_em) ? {t2_last, mem_rdata} : d_push ? {d_fin_push, pend} :
+                            {1'b1, {W*EW{1'b0}}};
     wire           o_pop  = (ocnt != 0) && out_ready;
     integer oi;
     always @(posedge clk or negedge rst_n) begin

@@ -86,7 +86,7 @@ module ot_hdc_v41x_sel_cand #(
         for (gq = 0; gq < Q; gq = gq + 1) begin : g_q
             // front-end register (the block boundary); the max trees feed the core's input register
             wire take = in_valid[gq] && in_ready[gq];
-            assign in_ready[gq] = !f_v[gq] || c_ready[gq];
+            assign in_ready[gq] = c_ready[gq];         // no beat is taken before the core ingests
             reg [SL-1:0]    r_lv;
             reg [SL*16-1:0] r_val;
             reg [SL*IWP-1:0] r_idx;

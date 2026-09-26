@@ -201,7 +201,7 @@ module ot_hdc_v41x_sel_ctl #(
 );
     localparam integer XW   = CB + 10;              // search sums
     localparam integer QC   = KW + 1;               // coarse quota width
-    localparam integer WAIT = 13;                   // search latency after the counts settle (12) + 1
+    localparam integer WAIT = 11;                   // search latency after the counts settle
     localparam integer HOLD = 24;                   // fine results ignored after a bucket change
     localparam integer KI   = K;
     localparam [QC-1:0] KQ  = KI[QC-1:0];
@@ -310,7 +310,7 @@ module ot_hdc_v41x_sel_ctl #(
                     if (&st_emitted) begin st <= C_CLR; c_hclr <= 1'b1; wcnt <= 6'd20; end
                 end
                 default: begin                     // C_CLR: the slices clear; stale search results drain
-                    c_T <= 0; c_Bt <= 0; qf <= QINV; kseen <= 1'b0; c_rep <= 1'b0; c_stop <= 1'b0;
+                    c_T <= 0; c_Bt <= 0; qf <= QINV; kseen <= 1'b0; c_rep <= 1'b0; c_stop <= 1'b0; ovf <= 1'b0;
                     if (wcnt == 0) begin st <= C_ING; c_ing <= 1'b1; end
                 end
             endcase
