@@ -1,11 +1,72 @@
 {
   "architectures": {
     "deepseek_v41_rom_array_die": {
-      "analytical_comparison": {},
+      "analytical_comparison": {
+        "mac_energy_pj": {
+          "analytical_pj": 0.33,
+          "analytical_range_pj": [
+            0.13,
+            0.7000000000000001
+          ],
+          "measured_matrix_engine": 11.512761880960333,
+          "measured_matrix_engine_dynamic": 11.511004084058342,
+          "measured_whole_token": 66.54012140038643
+        }
+      },
       "clock_period_ns": 0.9,
       "description": "Reduced DeepSeek-V4.1-Flash on one die of the ROM array (ot_hdc_core_v41), one step at position 7.  Logic: the routed matrix engine and V4.1 units, activity from the campaign's RTL register activity mapped onto their flops; the sequencer, stream unit, hc projection and Sinkhorn unit have no retained route and are listed as missing.",
       "links": {},
       "logic": {
+        "Engram hash": {
+          "FF": {
+            "dynamic_j": 0.00010233628102352714,
+            "leakage_j": 1.2455955396353149e-08,
+            "power_w": 0.1044699028134346,
+            "total_j": 0.00010234873697892349
+          },
+          "SS": {
+            "dynamic_j": 6.13951605548719e-05,
+            "leakage_j": 2.6047512372308996e-07,
+            "power_w": 0.06293344497680664,
+            "total_j": 6.1655635678595e-05
+          },
+          "TT": {
+            "dynamic_j": 7.82508932209435e-05,
+            "leakage_j": 1.8966908067510307e-08,
+            "power_w": 0.07989199459552765,
+            "total_j": 7.826986012901102e-05
+          },
+          "activity": "RTL simulation of the campaign bench, registers mapped by name onto the routed flops; OpenSTA propagates through the combinational logic",
+          "group": null,
+          "instances": 1,
+          "note": null,
+          "source": "results/physical_abi3/asap7/signoff/v41_core_signoff.json#blocks.v41_engram_hash"
+        },
+        "FP4 quantise-dequantise": {
+          "FF": {
+            "dynamic_j": 2.399726057704557e-05,
+            "leakage_j": 3.622002802966586e-09,
+            "power_w": 0.02449829876422882,
+            "total_j": 2.4000882579848537e-05
+          },
+          "SS": {
+            "dynamic_j": 1.448177707226244e-05,
+            "leakage_j": 6.776728037103532e-08,
+            "power_w": 0.014851083047688007,
+            "total_j": 1.4549544352633476e-05
+          },
+          "TT": {
+            "dynamic_j": 1.845703168998894e-05,
+            "leakage_j": 4.922238198503465e-09,
+            "power_w": 0.018844574689865112,
+            "total_j": 1.8461953928187443e-05
+          },
+          "activity": "RTL simulation of the campaign bench, registers mapped by name onto the routed flops; OpenSTA propagates through the combinational logic",
+          "group": null,
+          "instances": 1,
+          "note": null,
+          "source": "results/physical_abi3/asap7/signoff/v41_core_signoff.json#blocks.v41_fp4qdq"
+        },
         "activation quantiser": {
           "FF": {
             "dynamic_j": 4.182784439116074e-05,
@@ -56,6 +117,56 @@
           "note": "lane 0's activity for all 16 lanes (lane 15 is analysed to bound the spread)",
           "source": "results/physical_abi3/asap7/signoff/v41_core_signoff.json#blocks.v41_blockdot_lane0"
         },
+        "matrix_engine (u_me)": {
+          "FF": {
+            "dynamic_j": 0.0001505987224278364,
+            "leakage_j": 1.2806661503463577e-08,
+            "power_w": 0.15373293796298348,
+            "total_j": 0.00015061152908933987
+          },
+          "SS": {
+            "dynamic_j": 9.294711253140583e-05,
+            "leakage_j": 2.264149270951867e-07,
+            "power_w": 0.09510453963938126,
+            "total_j": 9.317352745850101e-05
+          },
+          "TT": {
+            "dynamic_j": 0.00011815557625712726,
+            "leakage_j": 1.8043039893041395e-08,
+            "power_w": 0.12062275588849758,
+            "total_j": 0.0001181736192970203
+          },
+          "activity": "RTL simulation of the campaign bench, registers mapped by name onto the routed flops; OpenSTA propagates through the combinational logic",
+          "group": "u_me.",
+          "instances": 1,
+          "note": null,
+          "source": "results/physical_abi3/asap7/signoff/v41_core_signoff.json#blocks.v41_matvec"
+        },
+        "softplus / sqrt": {
+          "FF": {
+            "dynamic_j": 0.0002550025171781883,
+            "leakage_j": 1.722325848755609e-08,
+            "power_w": 0.2603049874305725,
+            "total_j": 0.00025501974043667583
+          },
+          "SS": {
+            "dynamic_j": 0.0001514536339255471,
+            "leakage_j": 3.249734211071162e-07,
+            "power_w": 0.154924213886261,
+            "total_j": 0.00015177860734665423
+          },
+          "TT": {
+            "dynamic_j": 0.0001932515831077796,
+            "leakage_j": 2.320192069518362e-08,
+            "power_w": 0.1972803771495819,
+            "total_j": 0.00019327478502847477
+          },
+          "activity": "RTL simulation of the campaign bench, registers mapped by name onto the routed flops; OpenSTA propagates through the combinational logic",
+          "group": null,
+          "instances": 1,
+          "note": null,
+          "source": "results/physical_abi3/asap7/signoff/v41_core_signoff.json#blocks.v41_softplus"
+        },
         "top-16 select": {
           "FF": {
             "dynamic_j": 6.5664699813650585e-06,
@@ -84,7 +195,7 @@
       },
       "memory": {
         "KV and vector memory SRAM": {
-          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound) enable-high cycles {'vi_re': 15328, 'vw_xe_we': 292, 'kv_re': 125440, 'vw_su_we': 510581, 'vw_me_we': 24576, 'vh_re': 409600, 'wxr_re': 80, 'ww_q_we': 14048, 'ww_h_we': 640, 'kv_we': 17536, 'vs_re': 2077712, 'vq_re': 480, 'vr_re': 532, 'ww_x_we': 128, 'vx_re': 1140736, 'vw_rd_we': 5808}",
+          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound) enable-high cycles {'vx_re': 1140736, 'vw_xe_we': 292, 'vi_re': 15328, 'kv_we': 17536, 'kv_re': 125440, 'vr_re': 532, 'vw_su_we': 510581, 'vw_rd_we': 5808, 'wxr_re': 80, 'ww_q_we': 14048, 'ww_h_we': 640, 'ww_x_we': 128, 'vs_re': 2077712, 'vw_me_we': 24576, 'vq_re': 480, 'vh_re': 409600}",
           "bytes_per_token": 52306612.0,
           "energy_j": 0.00013599719119999998,
           "energy_j_high": 0.0006642939724,
@@ -92,7 +203,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "ROM (weights, expert weights, hc, block-quantised, Engram, constants)": {
-          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction) enable-high cycles {'xcrom_re': 1, 'hrom_re': 409600, 'prog_re': 4416, 'crom_re': 67332, 'wrom_re': 159744, 'qrom_re': 36800, 'erom_re': 48, 'ewrom_re': 640}",
+          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction) enable-high cycles {'wrom_re': 159744, 'hrom_re': 409600, 'qrom_re': 36800, 'xcrom_re': 1, 'ewrom_re': 640, 'prog_re': 4416, 'crom_re': 67332, 'erom_re': 48}",
           "bytes_per_token": 46851672.0,
           "energy_j": 3.74813376e-06,
           "energy_j_high": 2.3425836e-05,
@@ -101,22 +212,32 @@
         }
       },
       "missing": [
-        "sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total",
-        "matrix_engine (u_me): block v41_matvec not in results/physical_abi3/asap7/signoff/v41_core_signoff.json",
-        "FP4 quantise-dequantise: block v41_fp4qdq not in results/physical_abi3/asap7/signoff/v41_core_signoff.json",
-        "Engram hash: block v41_engram_hash not in results/physical_abi3/asap7/signoff/v41_core_signoff.json",
-        "softplus / sqrt: block v41_softplus not in results/physical_abi3/asap7/signoff/v41_core_signoff.json"
+        "sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total"
       ],
+      "pj_per_mac": {
+        "analytical_mac_energy": {
+          "grade": "assumed",
+          "range_high": 7e-13,
+          "range_low": 1.3e-13,
+          "source": "configs/hardware/technology.json energy.mac_energy_j_per_op.bf16",
+          "value": 3.3e-13
+        },
+        "basis": "64 BF16 weights per matrix-engine ROM word, each one MAC (enable-high cycles of wrom_re and ewrom_re)",
+        "macs_per_token": 10264576.0,
+        "matrix_engine_dynamic_pj_per_mac": 11.511004084058342,
+        "matrix_engine_logic_pj_per_mac": 11.512761880960333,
+        "token_pj_per_mac": 66.54012140038643
+      },
       "static": {},
       "token_cycles": 1088551,
       "token_time_s": 0.0009796959000000001,
       "totals_j": {
-        "logic_FF": 0.0001755319270600814,
-        "logic_SS": 0.00010641345558818174,
-        "logic_TT": 0.00013508058982079942,
+        "logic_FF": 0.0007075128161448691,
+        "logic_SS": 0.00042757077042456545,
+        "logic_TT": 0.0005432608082034929,
         "memory_and_links": 0.00013974532495999997,
         "static": 0.0,
-        "token_TT": 0.0002748259147807994
+        "token_TT": 0.0006830061331634929
       }
     },
     "deepseek_v41_rom_array_package": {
@@ -204,17 +325,17 @@
           "FF": {
             "dynamic_j": null,
             "leakage_j": null,
-            "total_j": 0.0003152772520200814
+            "total_j": 0.0008472581411048691
           },
           "SS": {
             "dynamic_j": null,
             "leakage_j": null,
-            "total_j": 0.0002461587805481817
+            "total_j": 0.0005673160953845655
           },
           "TT": {
             "dynamic_j": null,
             "leakage_j": null,
-            "total_j": 0.0002748259147807994
+            "total_j": 0.0006830061331634929
           },
           "instances": 1,
           "note": "four dies each doing a quarter of every matrix for about a quarter of the step spend about one die-step of energy; the replicated vector work (norms, residuals, RoPE) on the other three dies is not counted, so this is a lower bound on the dies",
@@ -233,10 +354,6 @@
       },
       "missing": [
         "four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total",
-        "four-die tensor group (one die-step equivalent): matrix_engine (u_me): block v41_matvec not in results/physical_abi3/asap7/signoff/v41_core_signoff.json",
-        "four-die tensor group (one die-step equivalent): FP4 quantise-dequantise: block v41_fp4qdq not in results/physical_abi3/asap7/signoff/v41_core_signoff.json",
-        "four-die tensor group (one die-step equivalent): Engram hash: block v41_engram_hash not in results/physical_abi3/asap7/signoff/v41_core_signoff.json",
-        "four-die tensor group (one die-step equivalent): softplus / sqrt: block v41_softplus not in results/physical_abi3/asap7/signoff/v41_core_signoff.json",
         "package controller: block rom_pkg_ctrl not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
         "fabric router: block rom_fabric_router not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
         "MoE expert port: block rom_moe_expert_port not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
@@ -246,50 +363,25 @@
       "token_cycles": 1088551,
       "token_time_s": 0.0009796959000000001,
       "totals_j": {
-        "logic_FF": 0.0003716417596690611,
-        "logic_SS": 0.000280215743970988,
-        "logic_TT": 0.00031811780526681084,
+        "logic_FF": 0.0009036226487538488,
+        "logic_SS": 0.0006013730588073718,
+        "logic_TT": 0.0007262980236495043,
         "memory_and_links": 5.701632e-06,
         "static": 0.0,
-        "token_TT": 0.00032381943726681085
+        "token_TT": 0.0007319996556495043
       }
     },
     "hbm_comparator": {
       "analytical_comparison": {
-        "clock_energy_j_per_mm2_per_cycle": {
-          "analytical": {
-            "grade": "assumed",
-            "range_high": 1.6e-10,
-            "range_low": 3e-11,
-            "source": "configs/hardware/technology.json power.clock_energy_j_per_mm2_per_cycle",
-            "value": 8.5e-11
-          },
-          "area_basis": "the routed block's die (core plus margin), TT session",
-          "area_mm2": 0.039163618404,
-          "measured_clock_network_only": 2.51016047422953e-10,
-          "measured_with_register_clock_pins": 4.4791125556834067e-10,
-          "note": "sequential internal power is mostly the flops' clock-pin power; the analytical term is a whole-die clock-distribution budget"
-        },
         "mac_energy_pj": {
           "analytical_pj": 0.33,
           "analytical_range_pj": [
             0.13,
             0.7000000000000001
           ],
-          "measured_matrix_engine": 14.852440398593584,
-          "measured_matrix_engine_dynamic": 14.85046363829427,
+          "measured_matrix_engine": 3.9743577368555187,
+          "measured_matrix_engine_dynamic": 3.973882016908916,
           "measured_whole_token": 262.4113816901533
-        },
-        "static_leakage_w_per_mm2_logic": {
-          "analytical": {
-            "grade": "assumed",
-            "range_high": 0.2,
-            "range_low": 0.011,
-            "source": "configs/hardware/technology.json power.static_leakage_w_per_mm2.logic",
-            "value": 0.06
-          },
-          "measured": 0.0001735224882224577,
-          "note": "ASAP7 RVT at 25 C; the analytical term is an N6/N7 foundry-class assumption including hotter operation"
         }
       },
       "clock_period_ns": 0.9,
@@ -345,6 +437,32 @@
           "instances": 1,
           "note": null,
           "source": "results/physical_abi3/asap7/signoff/hbm_kv_stream_signoff.json#blocks.hbm_kv_stream"
+        },
+        "matrix_engine (u_me)": {
+          "FF": {
+            "dynamic_j": 6.482523590203623e-06,
+            "leakage_j": 4.0137518420801026e-10,
+            "power_w": 0.22338429456519115,
+            "total_j": 6.482924965387831e-06
+          },
+          "SS": {
+            "dynamic_j": 4.002447420911044e-06,
+            "leakage_j": 8.336263819349458e-09,
+            "power_w": 0.1382009030177489,
+            "total_j": 4.0107836847303934e-06
+          },
+          "TT": {
+            "dynamic_j": 5.078430471272783e-06,
+            "leakage_j": 6.079472572008305e-10,
+            "power_w": 0.17501011061236937,
+            "total_j": 5.079038418529984e-06
+          },
+          "activity": "RTL simulation of the campaign bench, registers mapped by name onto the routed flops; OpenSTA propagates through the combinational logic",
+          "group": "u_me.",
+          "instances": 1,
+          "note": null,
+          "source": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json#blocks.qwen_core",
+          "subtotal_of": "decode_core"
         }
       },
       "memory": {
@@ -365,7 +483,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "vector memory SRAM": {
-          "basis": " enable-high cycles {'vc_re': 5713, 'vw_su_we': 6609, 'vw_me_we': 576, 'vb_re': 6865, 'va_re': 7377, 'vx_re': 86016, 'vw_rd_we': 113}",
+          "basis": " enable-high cycles {'va_re': 7377, 'vx_re': 86016, 'vc_re': 5713, 'vb_re': 6865, 'vw_su_we': 6609, 'vw_rd_we': 113, 'vw_me_we': 576}",
           "bytes_per_token": 487636.0,
           "energy_j": 1.2678536e-06,
           "energy_j_high": 6.1929772e-06,
@@ -390,10 +508,10 @@
           "source": "configs/hardware/technology.json energy.mac_energy_j_per_op.bf16",
           "value": 3.3e-13
         },
-        "basis": "whole-core logic per weight MAC",
+        "basis": "results/rtl/hdc_decode_campaign.json weight_macs_per_token",
         "macs_per_token": 1277952,
-        "matrix_engine_dynamic_pj_per_mac": 14.85046363829427,
-        "matrix_engine_logic_pj_per_mac": 14.852440398593584,
+        "matrix_engine_dynamic_pj_per_mac": 3.973882016908916,
+        "matrix_engine_logic_pj_per_mac": 3.9743577368555187,
         "token_pj_per_mac": 262.4113816901533
       },
       "static": {
@@ -529,7 +647,7 @@
           "energy_term": "rom_read_j_per_byte"
         },
         "vector memory SRAM": {
-          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial) enable-high cycles {'vc_re': 5713, 'vw_su_we': 6609, 'vw_me_we': 576, 'vb_re': 6865, 'va_re': 7377, 'vx_re': 86016, 'vw_rd_we': 113}",
+          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial) enable-high cycles {'va_re': 7377, 'vx_re': 86016, 'vc_re': 5713, 'vb_re': 6865, 'vw_su_we': 6609, 'vw_rd_we': 113, 'vw_me_we': 576}",
           "bytes_per_token": 487636.0,
           "energy_j": 1.2678536e-06,
           "energy_j_high": 6.1929772e-06,
@@ -604,6 +722,6 @@
       "value": 2.9e-13
     }
   },
-  "generated_at": "2026-09-26T09:15:56.260547+00:00",
+  "generated_at": "2026-09-26T10:32:22.526911+00:00",
   "schema": "opentallas.signoff.v1.energy_per_token"
 }

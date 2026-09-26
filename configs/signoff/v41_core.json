@@ -246,7 +246,8 @@
           ],
           "note": "the V4.1 core's matrix engine is ot_hdc_matvec with the Qwen core's parameters; its V4.1 register activity is mapped onto u_me of the routed Qwen core and only the u_me. group is read",
           "stage": "cts",
-          "gate_min_gb": 35
+          "gate_min_gb": 35,
+          "report_group": "u_me."
         }
       ]
     },

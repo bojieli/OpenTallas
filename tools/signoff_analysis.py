@@ -1869,6 +1869,10 @@ def report_tables(signoffs: list[Path], energy: Path | None) -> str:
         d = json.loads(Path(path).read_text())
         for key, b in d.get("blocks", {}).items():
             blocks.append((d.get("architecture") or "", key, b))
+    # an analysis of one instance inside a larger route (report_group) contributes its group's power
+    # only: its timing, clock tree and grid are the host route's, reported under the host
+    groups_only = {key: (b.get("plan_entry") or {}).get("report_group") for _, key, b in blocks}
+    main_blocks = [(a, k, b) for a, k, b in blocks if not groups_only.get(k)]
     out: list[str] = []
     out.append("#### Power per block (activity-annotated, TT 0.70 V 25 C, at the routed 0.9 ns clock)\n")
     out.append("| Architecture | Block | Stage | Activity | Total mW | Internal | Switching | Leakage | "
@@ -1878,8 +1882,16 @@ def report_tables(signoffs: list[Path], energy: Path | None) -> str:
         tt = b["corners"].get("TT")
         if not tt:
             continue
-        p = tt["power_w"]["total"]
         act = (b.get("activity") or {}).get("source", "")
+        grp = groups_only.get(key)
+        if grp:
+            hp = tt["power_by_hierarchy_w"].get(grp) or {}
+            out.append(f"| {arch} | {key} (`{grp}*` of {b.get('record', {}).get('top', 'the host route')}, "
+                       f"{hp.get('instances', 0):,} instances) | {b['routed'].get('stage', 'final')} | RTL-mapped | "
+                       f"{_mw(hp.get('total'))} | {_mw(hp.get('internal'))} | {_mw(hp.get('switching'))} | "
+                       f"{_mw(hp.get('leakage'))} | | |")
+            continue
+        p = tt["power_w"]["total"]
         act = "gate-level" if act.startswith("gate-level") else "RTL-mapped" if act.startswith("RTL") else \
             "vectorless"
         share = (tt["power_w"]["clock"]["total"] or 0) / p["total"] if p["total"] else None
@@ -1895,7 +1907,7 @@ def report_tables(signoffs: list[Path], energy: Path | None) -> str:
     out.append("| Block | Register clock pins | Tree cells | Tree cell area um2 | Insertion latency ns (min-max) | "
                "Setup skew ns | Hold skew ns |")
     out.append("|---|---:|---:|---:|---|---:|---:|")
-    for arch, key, b in blocks:
+    for arch, key, b in main_blocks:
         ct = (b["corners"].get("TT") or {}).get("clock_tree")
         if not ct:
             continue
@@ -1908,7 +1920,7 @@ def report_tables(signoffs: list[Path], energy: Path | None) -> str:
     out.append("| Block | SS 0.63 V 100 C | SS + OCV | TT 0.70 V 25 C | TT + OCV | FF 0.77 V 0 C | FF + OCV | "
                "Hold WNS ns (SS / TT / FF) |")
     out.append("|---|---:|---:|---:|---:|---:|---:|---|")
-    for arch, key, b in blocks:
+    for arch, key, b in main_blocks:
         cs = b["corners"]
         if len(cs) < 3:
             continue
@@ -1926,7 +1938,7 @@ def report_tables(signoffs: list[Path], energy: Path | None) -> str:
     out.append("| Block | Die um | Source model | VDD worst mV | VDD average mV | VSS worst mV | "
                "Max M2 mA/um | Max M5 mA/um | Max M6 mA/um |")
     out.append("|---|---|---|---:|---:|---:|---:|---:|---:|")
-    for arch, key, b in blocks:
+    for arch, key, b in main_blocks:
         tt = b["corners"].get("TT") or {}
         irs = tt.get("ir") or []
         for src in ("PINS", "BUMPS"):

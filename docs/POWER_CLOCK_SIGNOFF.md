@@ -165,7 +165,11 @@ and `energy_per_token.json`.
 | deepseek-v41-rom-array | v41_actquant | final | RTL-mapped | 32.89 | 26.58 | 6.31 | 0.01 | 16.21 | 49% |
 | deepseek-v41-rom-array | v41_blockdot_lane0 | final | RTL-mapped | 6.24 | 4.80 | 1.43 | 0.00 | 3.04 | 49% |
 | deepseek-v41-rom-array | v41_blockdot_lane15 | final | RTL-mapped | 6.24 | 4.80 | 1.43 | 0.00 | 3.04 | 49% |
+| deepseek-v41-rom-array | v41_engram_hash | final | RTL-mapped | 79.89 | 67.44 | 12.43 | 0.02 | 53.16 | 67% |
+| deepseek-v41-rom-array | v41_fp4qdq | final | RTL-mapped | 18.84 | 15.17 | 3.67 | 0.01 | 9.24 | 49% |
+| deepseek-v41-rom-array | v41_matvec (`u_me.*` of ot_hdc_core, 139,983 instances) | cts | RTL-mapped | 120.62 | 112.99 | 7.61 | 0.02 | | |
 | deepseek-v41-rom-array | v41_select | final | RTL-mapped | 5.15 | 4.15 | 1.00 | 0.00 | 2.65 | 52% |
+| deepseek-v41-rom-array | v41_softplus | final | RTL-mapped | 197.28 | 135.67 | 61.59 | 0.02 | 71.23 | 36% |
 | deepseek-v41-rom-array | rom_argmax_reduce_gate_level | final | gate-level | 9.87 | 6.92 | 2.95 | 0.00 | 2.88 | 29% |
 | deepseek-v41-rom-array | rom_argmax_reduce_rtl_mapped | final | RTL-mapped | 12.83 | 8.54 | 4.29 | 0.00 | 2.88 | 22% |
 | deepseek-v41-rom-array | rom_mcast_node | final | vectorless | 23.27 | 15.49 | 7.78 | 0.00 | 5.12 | 22% |
@@ -180,7 +184,10 @@ and `energy_per_token.json`.
 | v41_actquant | 13,233 | 1,338 | 443.1 | 0.191-0.224 | 0.026 | -0.033 |
 | v41_blockdot_lane0 | 2,369 | 266 | 85.1 | 0.114-0.133 | 0.016 | -0.023 |
 | v41_blockdot_lane15 | 2,369 | 266 | 85.1 | 0.114-0.133 | 0.016 | -0.023 |
+| v41_engram_hash | 20,100 | 3,695 | 1,610.4 | 0.268-0.293 | 0.019 | -0.027 |
+| v41_fp4qdq | 7,559 | 771 | 253.0 | 0.160-0.190 | 0.026 | -0.031 |
 | v41_select | 2,006 | 228 | 71.9 | 0.112-0.134 | 0.018 | -0.023 |
+| v41_softplus | 34,779 | 6,860 | 2,402.6 | 0.306-0.353 | 0.038 | -0.045 |
 | rom_argmax_reduce_gate_level | 2,266 | 245 | 78.6 | 0.108-0.127 | 0.016 | -0.020 |
 | rom_argmax_reduce_rtl_mapped | 2,266 | 245 | 78.6 | 0.108-0.127 | 0.016 | -0.020 |
 | rom_mcast_node | 4,216 | 445 | 132.0 | 0.122-0.148 | 0.019 | -0.026 |
@@ -194,7 +201,10 @@ and `energy_per_token.json`.
 | hbm_kv_stream | 740 | 698 | 1,128 | 1,062 | 1,569 | 1,475 | +0.051 / +0.030 / +0.014 |
 | v41_actquant | 741 | 696 | 1,126 | 1,055 | 1,546 | 1,447 | +0.035 / +0.020 / +0.008 |
 | v41_blockdot_lane0 | 789 | 749 | 1,196 | 1,135 | 1,643 | 1,555 | +0.041 / +0.026 / +0.015 |
+| v41_engram_hash | 1,016 | 953 | 1,524 | 1,427 | 2,054 | 1,898 | +0.048 / +0.030 / -0.004 |
+| v41_fp4qdq | 747 | 704 | 1,121 | 1,062 | 1,506 | 1,418 | +0.040 / +0.022 / +0.009 |
 | v41_select | 1,019 | 959 | 1,526 | 1,435 | 2,104 | 1,976 | +0.033 / +0.009 / -0.004 |
+| v41_softplus | 678 | 641 | 1,034 | 976 | 1,438 | 1,354 | +0.028 / +0.011 / -0.009 |
 | rom_argmax_reduce_gate_level | 770 | 729 | 1,151 | 1,085 | 1,579 | 1,488 | +0.047 / +0.031 / +0.019 |
 | rom_mcast_node | 900 | 847 | 1,359 | 1,278 | 1,895 | 1,781 | +0.077 / +0.052 / +0.036 |
 | rom_moe_dispatch | 933 | 881 | 1,408 | 1,327 | 1,943 | 1,829 | +0.074 / +0.050 / +0.034 |
@@ -208,7 +218,10 @@ and `energy_per_token.json`.
 | hbm_kv_stream | 198 x 198 | pins | 2.1 | 0.11 | 2.2 | 1.81 | 0.37 | 0.00 |
 | v41_actquant | -- | pins | 3.0 | 0.33 | 2.5 | 1.73 | 0.75 | 0.00 |
 | v41_blockdot_lane0 | -- | pins | 1.7 | 0.18 | 1.7 | 1.19 | 0.50 | 0.00 |
+| v41_engram_hash | 207 x 207 | pins | 2.3 | 0.41 | 2.1 | 1.59 | 0.70 | 0.00 |
+| v41_fp4qdq | 124 x 124 | pins | 2.4 | 0.27 | 2.6 | 2.03 | 0.73 | 0.00 |
 | v41_select | -- | pins | 2.0 | 0.24 | 1.8 | 1.45 | 0.41 | 0.00 |
+| v41_softplus | 272 x 272 | pins | 6.5 | 0.57 | 6.3 | 3.75 | 2.73 | 0.00 |
 | rom_argmax_reduce_gate_level | 74 x 74 | pins | 2.4 | 0.45 | 2.4 | 1.47 | 1.06 | 0.00 |
 | rom_argmax_reduce_gate_level | 74 x 74 | bumps | 9.8 | 2.19 | 5.9 | 1.59 | 2.66 | 1.01 |
 | rom_mcast_node | 91 x 91 | pins | 2.8 | 0.66 | 2.6 | 1.70 | 1.30 | 0.00 |
@@ -220,9 +233,9 @@ and `energy_per_token.json`.
 
 | Architecture | Step cycles | Logic uJ | Memory and links uJ | Static uJ | Token uJ | pJ per weight MAC (matrix engine / whole step) | Not included |
 |---|---:|---:|---:|---:|---:|---|---|
-| deepseek_v41_rom_array_die | 1,088,551 | 135.08 | 139.75 | 0.00 | 274.83 | -- | sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total; matrix_engine (u_me): block v41_matvec not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; FP4 quantise-dequantise: block v41_fp4qdq not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; Engram hash: block v41_engram_hash not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; softplus / sqrt: block v41_softplus not in results/physical_abi3/asap7/signoff/v41_core_signoff.json |
-| deepseek_v41_rom_array_package | 1,088,551 | 318.12 | 5.70 | 0.00 | 323.82 | -- | four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total; four-die tensor group (one die-step equivalent): matrix_engine (u_me): block v41_matvec not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; four-die tensor group (one die-step equivalent): FP4 quantise-dequantise: block v41_fp4qdq not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; four-die tensor group (one die-step equivalent): Engram hash: block v41_engram_hash not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; four-die tensor group (one die-step equivalent): softplus / sqrt: block v41_softplus not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; package controller: block rom_pkg_ctrl not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; fabric router: block rom_fabric_router not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; MoE expert port: block rom_moe_expert_port not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; express link: block rom_express_link not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json |
-| hbm_comparator | 32,275 | 19.57 | 305.61 | 10.17 | 335.35 | 14.85 / 262.41 | -- |
+| deepseek_v41_rom_array_die | 1,088,551 | 543.26 | 139.75 | 0.00 | 683.01 | 11.51 / 66.54 | sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total |
+| deepseek_v41_rom_array_package | 1,088,551 | 726.30 | 5.70 | 0.00 | 732.00 | -- | four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total; package controller: block rom_pkg_ctrl not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; fabric router: block rom_fabric_router not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; MoE expert port: block rom_moe_expert_port not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; express link: block rom_express_link not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json |
+| hbm_comparator | 32,275 | 19.57 | 305.61 | 10.17 | 335.35 | 3.97 / 262.41 | -- |
 | qwen3_8b_rom_reticle | 32,246 | 18.98 | 2.17 | 0.00 | 21.15 | 3.97 / 16.55 | -- |
 
 <!-- signoff-tables:end -->
