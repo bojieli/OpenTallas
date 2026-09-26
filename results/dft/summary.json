@@ -36,6 +36,42 @@
     "unproven_cells": 0
    }
   },
+  "expert_port": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "atpg": {
+    "capture_patterns": 158,
+    "chains": 4,
+    "classes": {
+     "AU": 0,
+     "DS": 15902,
+     "DT": 86908,
+     "ND": 0,
+     "UT": 346
+    },
+    "fault_coverage": 0.996646,
+    "faults": 103156,
+    "gate_level": {
+     "capture_faults_confirmed": 100,
+     "capture_faults_injected": 100,
+     "chain_faults_confirmed": 30,
+     "chain_faults_injected": 30,
+     "good_machine_mismatches": 0,
+     "good_machine_patterns": 51
+    },
+    "max_chain_length": 797,
+    "scan_cells": 3185,
+    "test_coverage": 1.0,
+    "tester_cycles": 127679,
+    "top": "ot_rom_moe_expert_port"
+   },
+   "scan_off_equivalence": {
+    "equiv_cells": 4312,
+    "proven": true,
+    "unproven_cells": 0
+   }
+  },
   "fabric_router": {
    "architectures": [
     "v41_rom_array"
@@ -117,6 +153,78 @@
     "test_coverage": 0.998468,
     "tester_cycles": 23275379,
     "top": "ot_hdc_matvec"
+   }
+  },
+  "mcast_node": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "atpg": {
+    "capture_patterns": 220,
+    "chains": 5,
+    "classes": {
+     "AU": 0,
+     "DS": 21189,
+     "DT": 114967,
+     "ND": 0,
+     "UT": 234
+    },
+    "fault_coverage": 0.998284,
+    "faults": 136390,
+    "gate_level": {
+     "capture_faults_confirmed": 100,
+     "capture_faults_injected": 100,
+     "chain_faults_confirmed": 30,
+     "chain_faults_injected": 30,
+     "good_machine_mismatches": 0,
+     "good_machine_patterns": 54
+    },
+    "max_chain_length": 844,
+    "scan_cells": 4216,
+    "test_coverage": 1.0,
+    "tester_cycles": 187589,
+    "top": "ot_rom_mcast_node"
+   },
+   "scan_off_equivalence": {
+    "equiv_cells": 5342,
+    "proven": true,
+    "unproven_cells": 0
+   }
+  },
+  "moe_dispatch": {
+   "architectures": [
+    "v41_rom_array"
+   ],
+   "atpg": {
+    "capture_patterns": 296,
+    "chains": 3,
+    "classes": {
+     "AU": 13,
+     "DS": 10827,
+     "DT": 59960,
+     "ND": 0,
+     "UT": 356
+    },
+    "fault_coverage": 0.994814,
+    "faults": 71156,
+    "gate_level": {
+     "capture_faults_confirmed": 100,
+     "capture_faults_injected": 100,
+     "chain_faults_confirmed": 30,
+     "chain_faults_injected": 30,
+     "good_machine_mismatches": 0,
+     "good_machine_patterns": 51
+    },
+    "max_chain_length": 719,
+    "scan_cells": 2155,
+    "test_coverage": 0.999816,
+    "tester_cycles": 214559,
+    "top": "ot_rom_moe_dispatch"
+   },
+   "scan_off_equivalence": {
+    "equiv_cells": 2767,
+    "proven": true,
+    "unproven_cells": 0
    }
   },
   "pkg_ctrl": {
