@@ -138,6 +138,7 @@ def test_atpg_end_to_end_on_the_gates(tmp_path, cells, mixing):
         "--work", str(tmp_path / "w"), "--output", str(out), "--threads", "2",
         "--sample-patterns", "64", "--sample-faults", "40", "--sample-chain-faults", "12",
         "--simulator", "icarus" if mixing == "mix" else "verilator",   # both simulators exercised
+        *([] if mixing == "mix" else ["--lean-build"]),   # the low-memory Verilator build too
     ])
     assert rc == 0
     res = json.loads(out.read_text())

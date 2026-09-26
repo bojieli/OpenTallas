@@ -408,13 +408,15 @@ HEAVY_GATE = Path(os.environ.get("OT_HEAVY_GATE", "/tmp/claude-1000/orfs_gate.sh
 
 
 def run_bench(work: Path, timeout: int = 172800, simulator: str = "verilator",
-              heavy: bool = False, min_gb: int | None = None) -> dict[str, Any]:
+              heavy: bool = False, min_gb: int | None = None,
+              verilator_flags: list[str] | None = None) -> dict[str, Any]:
     """Compile and run the bench.  Verilator (5, --timing) is the default: it
     gives the same per-fault results as Icarus on the test netlists and is
     orders of magnitude faster on a 10^5-cell block; Icarus remains available."""
     if simulator == "verilator":
         cmd = [str(VERILATOR), "--binary", "--timing", "-Wno-fatal", "-Wno-lint", "-Wno-style",
-               "-j", "8", "--top-module", "tb", "-Mdir", "vl", "cells.v", "dut.v", "tb.v"]
+               *(verilator_flags if verilator_flags is not None else ["-j", "8"]),
+               "--top-module", "tb", "-Mdir", "vl", "cells.v", "dut.v", "tb.v"]
         if heavy and HEAVY_GATE.is_file():
             cmd = [str(HEAVY_GATE), *cmd]
         env = dict(os.environ)

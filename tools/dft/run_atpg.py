@@ -62,6 +62,8 @@ def engine(build_dir: Path) -> Path:
 
 
 REUSE = False
+LEAN_FLAGS = ["-j", "4", "-fno-inline", "--output-split", "5000", "--output-split-cfuncs", "500",
+              "-CFLAGS", "-O0"]
 
 
 def run_engine(exe: Path, model: Path, faults: Path, out: Path, threads: int, extra: list[str]) -> dict[str, Any]:
@@ -96,6 +98,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--threads", type=int, default=8)
     ap.add_argument("--backtrack-limit", type=int, default=256)
     ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--lean-build", action="store_true",
+                    help="low-memory Verilator build for large blocks: no module inlining, "
+                         "split output, -O0 C++, 4 jobs")
     ap.add_argument("--sample-patterns", type=int, default=32,
                     help="patterns simulated on the gate-level good machine")
     ap.add_argument("--sample-faults", type=int, default=48,
@@ -103,6 +108,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--sample-chain-faults", type=int, default=16,
                     help="chain-test faults injected in gate-level simulation")
     ap.add_argument("--no-gate-sim", action="store_true")
+    ap.add_argument("--gate-min-gb", type=int, default=None,
+                    help="memory floor declared to the host's heavy-job gate for the Verilator build")
     ap.add_argument("--simulator", default="verilator", choices=["verilator", "icarus"])
     ap.add_argument("--reuse", action="store_true",
                     help="reuse engine outputs already in --work (same model, same fault list)")
@@ -210,7 +217,8 @@ def main(argv: list[str] | None = None) -> int:
         srcs, obs = gate_sim.read_patterns(Path(str(work / "capture") + ".patterns"))
         dt_idx = [i for i, c in enumerate(classes) if c == "DT"]
         sample_f = rng.sample(dt_idx, min(args.sample_faults, len(dt_idx)))
-        pats = list(range(min(args.sample_patterns, len(srcs))))
+        n_pat = len(srcs) if args.sample_patterns < 0 else min(args.sample_patterns, len(srcs))
+        pats = list(range(n_pat))
         for i in sample_f:
             p = capture["statuses"][i][1]
             if p not in pats:
@@ -243,7 +251,8 @@ def main(argv: list[str] | None = None) -> int:
         t0 = time.time()
         res = gate_sim.run_bench(bench, simulator=args.simulator,
                                  heavy=model_info["instances"] > 20000,   # big builds wait for the host gate
-                                 min_gb=10 + model_info["instances"] // 5000)
+                                 min_gb=args.gate_min_gb or (10 + model_info["instances"] // 5000),
+                                 verilator_flags=LEAN_FLAGS if args.lean_build else None)
         confirmed = {"DT": [0, 0], "DS": [0, 0], "DS-clock": [0, 0]}
         misses = []
         for k, f in enumerate(faults):
@@ -263,6 +272,16 @@ def main(argv: list[str] | None = None) -> int:
             "chain_faults_injected": confirmed["DS"][1] + confirmed["DS-clock"][1],
             "chain_faults_confirmed": confirmed["DS"][0] + confirmed["DS-clock"][0],
             "unconfirmed": misses,
+            "sampling": {
+                "seed": args.seed,
+                "patterns_replayed": len(pats),
+                "patterns_total": len(srcs),
+                "capture_faults_sampled_from": len(dt_idx),
+                "chain_faults_sampled_from": len(ds_idx) + len(clock_ds),
+                "method": "patterns 0..N-1 plus each sampled fault's detecting pattern; faults drawn "
+                          "uniformly without replacement with random.Random(seed)",
+            },
+            "build": "lean (" + " ".join(LEAN_FLAGS) + ")" if args.lean_build else "default",
             "seconds": round(time.time() - t0, 1),
         }
     record["seconds"] = round(time.time() - started, 1)
