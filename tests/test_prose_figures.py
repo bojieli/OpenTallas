@@ -118,9 +118,14 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # figures (36) to the per-iteration records in results/rtl/hdc_iterations/
     # and the routed records in results/physical_abi3/asap7/hdc/.
     # 729: docs/ANALYTICAL_REPORT.md section 9 binds the decode core (two).
-    # 756: docs/WAFER_VS_ARRAY_ISO_AREA.md binds its verdict (17) to
+    # 801: docs/ANALYTICAL_REPORT.md gains the serial-latency section (the
+    # before/after per-target table and the candidate-model tables), 80 -> 142.
+    # 818: docs/WAFER_VS_ARRAY_ISO_AREA.md binds its verdict (17) to
     # results/roofline/critical_path/wafer_vs_array_iso_area.json.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 756
+    # 838: docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md section 7 binds the V4.1
+    # core's iterations (20) to results/rtl/hdc_v41_iterations/ and the lane
+    # synthesis records, 36 -> 56.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 838
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
@@ -308,13 +313,17 @@ def test_an_ambiguous_row_is_disambiguated_by_its_table(tmp_path) -> None:
     # `make roofline` reruns and this literal has to move with it -- which is
     # the same discipline the checker imposes on prose. It was 9.50 before the
     # per-model design rule, 8.98 after it, 5.76 after the scale-out link
-    # evidence was corrected, and 6.16 after the 2026-09-23 framework revision.
+    # evidence was corrected, 6.16 after the 2026-09-23 framework revision, and
+    # 6.58 once the serial path came from the per-token operator graph, and
+    # 10.42 once the ROM wafer could use the express collective network, and
+    # 12.17 with the routed Sinkhorn unit, and 9.79 with the express link at
+    # its routed (measured) field crossing.
     document = tmp_path / "ok.md"
     document.write_text(
         "# x\n\n"
-        '<!-- figure: 6.16 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
+        '<!-- figure: 9.79 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
         ' table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" -->\n'
-        "The ratio is 6.16x.\n")
+        "The ratio is 9.79x.\n")
     code, out = _run(document)
     assert code == 0, out
 

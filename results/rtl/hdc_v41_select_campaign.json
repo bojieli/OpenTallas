@@ -65,7 +65,7 @@
         }
       },
       "value_width": 32,
-      "vectors_sha256": "1484ed588df895b9184ef5ea1ee7d6dbb1bdccba9fd1d6df9427c61f16d19b2d"
+      "vectors_sha256": "a69824124d6f1e3d29f34652b79fb2015f08ba86ad58b36ffd38fce040017a50"
     },
     {
       "K": 6,
@@ -115,7 +115,7 @@
         }
       },
       "value_width": 32,
-      "vectors_sha256": "761a922af718d1f0a9dc7f98f589dfd6ae6e5c4474cc4d7d9381e8cc2e6460dc"
+      "vectors_sha256": "49fcb524d2f8f1142bbf70fe655aef5f00ac5c791b610fff54e7f4bf7f1b97d3"
     },
     {
       "K": 16,
@@ -165,7 +165,7 @@
         }
       },
       "value_width": 16,
-      "vectors_sha256": "ee86e7c6eda684ec243a91416b75f67126ad75fa49d9310206c85d7ddcd00064"
+      "vectors_sha256": "f49d055cc23189bce25dcef878165a630f21ad762be6a11b13df68e43918a4ac"
     },
     {
       "K": 64,
@@ -215,7 +215,7 @@
         }
       },
       "value_width": 16,
-      "vectors_sha256": "c943f6e1af372008acdd013da179348c90c267197921fa0e95a8f62c00cfcbac"
+      "vectors_sha256": "01b5f7cacbc4e6aadf04ac0dd5968d7483087e52bd2f8b4cbcd28a9073a82753"
     },
     {
       "K": 512,
@@ -266,7 +266,7 @@
         }
       },
       "value_width": 16,
-      "vectors_sha256": "5eba03e29d1caa3a08f988205997f545b043e8da3711eda359ebf8561b093845"
+      "vectors_sha256": "4379a9606e4eda333787da5cd2c6218bb8be8d759f8ae4a98315d785d2d117a2"
     },
     {
       "K": 512,
@@ -316,7 +316,7 @@
         }
       },
       "value_width": 16,
-      "vectors_sha256": "3c00d28c5b634d23ccb29914356321c21a9ea970e83625261429999e8a4870ce"
+      "vectors_sha256": "cb6ef4ab96e175ff9b1ebc11dc24eae40df66ddc8fadc13eb7a6d770813e6bab"
     },
     {
       "K": 1,
@@ -419,8 +419,8 @@
     "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
     "rtl/test/hdc_select_harness.cpp": "294744ae5a91a6337e797207332988829d1dd1ca053770961f1e3faeea57bc59",
     "rtl/test/tb_hdc_select.sv": "782429f81f66d1501c6f9d2db5d48ca5c876dc7bdc99d1fea4a520c796f24915",
-    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
-    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
+    "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
+    "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
     "tools/rtl_hdc_v41_select_campaign.py": "fb314c8a1ba8f3be1f204f9498f98f1c042b8c09006ca8ceb9e79226cb08cbd9"
   },
   "latency_definition": "clock edges from the edge that accepts a segment's last element to the edge that registers its first output: K + 2 (+ K for ascending-index order)",
@@ -460,31 +460,31 @@
       1289,
       2967,
       2084,
-      106,
-      1236,
-      1183,
-      267,
-      1607,
-      2176,
-      3012,
-      3341,
-      2719,
-      4014,
-      3545,
-      1685,
-      786,
-      289,
-      1889,
-      1233,
-      2413,
-      1515,
-      2588,
-      1141,
-      1386,
-      2008,
-      1635,
-      1053,
-      2476
+      3275,
+      422,
+      2318,
+      1997,
+      2659,
+      655,
+      258,
+      3471,
+      866,
+      1713,
+      1009,
+      2799,
+      477,
+      346,
+      3319,
+      3847,
+      952,
+      3768,
+      2266,
+      2686,
+      3554,
+      1480,
+      415,
+      1165,
+      2678
     ]
   },
   "schema": "opentallas.hdc-v41-select-campaign.v1",

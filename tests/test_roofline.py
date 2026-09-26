@@ -171,11 +171,18 @@ def test_gate_taalas_hc1_passes_with_one_select_cell_per_weight(
 
     check = taalas_hc1_anchor(technology, llama)
     assert check.passed
-    assert 1.0 < check.ratio < 2.0
-    assert check.detail["binding_constraint"] == "weight_read"
+    assert check.tolerance == 2.0
+    # Since the serial part of the step became the Llama decode graph priced
+    # with this repository's measured RTL depths, the gate lands BELOW the
+    # shipping part (about 0.64x) and binds on that dependent-operator chain,
+    # not on the array sweep.  It is reported there, not tuned back up.
+    assert 0.5 < check.ratio < 1.0
+    assert check.detail["binding_constraint"] == "layer_fixed_latency"
     band = check.detail["layer_fixed_latency_band"]
-    # The published rate lies inside the latency band, not at a fitted point.
-    assert band["high"]["ratio_to_published"] < 1.0 < band["low"]["ratio_to_published"]
+    # The whole serial band sits below the published rate: HC1's own hardwired
+    # datapath is serially faster than the one modelled here.
+    assert band["high"]["ratio_to_published"] < band["stated"]["ratio_to_published"]
+    assert band["stated"]["ratio_to_published"] < band["low"]["ratio_to_published"] < 1.0
 
 
 def test_gate_taalas_hc1_rom_read_density_remains_near_the_shipping_part(
@@ -244,7 +251,7 @@ def test_the_throughput_gates_report_nonthermal_outcomes(
 
     hc1 = taalas_hc1_anchor(technology, llama)
     assert hc1.modelled_value > 0.0
-    assert hc1.detail["binding_constraint"] == "weight_read"
+    assert hc1.detail["binding_constraint"] == "layer_fixed_latency"
     assert hc1.detail["step"]["thermal_scale"] == 1.0
 
     a100 = a100_weight_bound_anchor(technology, llama)
@@ -676,6 +683,25 @@ ASSUMED_INPUTS = frozenset(
         "rom.cim_cell_area_multiplier",
         "rom.cim_precompute_area_fraction",
         "sram.array_efficiency",
+        # The serial-latency graph's four judgement calls, each with a range
+        # (configs/hardware/technology.json serial_latency), and the three
+        # hardware-link topologies it prices collectives on.
+        "serial_latency.hardware_links.rom_board_serdes",
+        "serial_latency.hardware_links.rom_package_ucie",
+        "serial_latency.hardware_links.rom_wafer_serdes",
+        "serial_latency.rom_datapath.hbm_random_row_latency_s",
+        "serial_latency.rom_datapath.rom_row_access_s",
+        "serial_latency.rom_datapath.select_units_per_die",
+        "serial_latency.rom_datapath.stream_area_fraction",
+        # The wafer express network: a stated router term and wire-track budget
+        # over the assumed global-wire delay, and its topology.
+        "links.rom_wafer_express.fabric",
+        "links.rom_wafer_express.router_latency_s",
+        "links.rom_wafer_express.wire_clock_hz",
+        "links.rom_wafer_express.wire_layers",
+        "links.rom_wafer_express.wire_track_pitch_um",
+        "links.rom_wafer_express.wire_track_share",
+        "serial_latency.hardware_links.rom_wafer_express",
     }
 )
 
@@ -1683,13 +1709,14 @@ def test_pipeline_parallelism_buys_one_user_nothing(technology, llama) -> None:
     # times one stage, and it is not faster than one device either.
     assert corrected[16] <= corrected[1] * (1 + 1e-9)
     assert corrected[16] >= corrected[1] * 0.85
-    # The number the defect produced rises almost linearly with the device
-    # count, which is the whole of the error.
-    assert throughput_view[16] / throughput_view[1] > 10.0
-    for devices in (2, 4, 8, 16):
-        assert throughput_view[devices] / corrected[devices] == pytest.approx(
-            devices, rel=0.15
-        )
+    # The number the defect produced rises with the device count, which is the
+    # whole of the error.  It no longer rises linearly: the serial part of the
+    # step -- a CUDA-graph launch gap per dependent kernel, priced on the
+    # operator graph -- is the same in both views and does not divide by N.
+    assert throughput_view[16] / throughput_view[1] > 5.0
+    ratios = [throughput_view[d] / corrected[d] for d in (2, 4, 8, 16)]
+    assert ratios == sorted(ratios)
+    assert all(1.0 < r < d for r, d in zip(ratios, (2, 4, 8, 16)))
 
 
 def test_a_rom_pipeline_gives_a_user_less_despite_adding_silicon(
@@ -1749,7 +1776,9 @@ def test_a_rom_pipeline_gives_a_user_less_despite_adding_silicon(
             assert 1.0 < corrections[devices] < step.metrics["token_slots"]
     ordered = [rates[devices] for devices in sorted(rates)]
     assert ordered == sorted(ordered, reverse=True)
-    assert rates[16] < rates[1] / 10
+    # Less than ten-fold since the dependent-operator chain -- the same on one
+    # device as on sixteen -- became part of every step.
+    assert rates[16] < rates[1] / 4
     ordered_corrections = [corrections[devices] for devices in sorted(corrections)]
     assert ordered_corrections == sorted(ordered_corrections)
 
@@ -2536,10 +2565,17 @@ def test_a_single_chip_step_is_no_longer_free_of_fixed_cost(
     step = evaluate(
         budget, llama, context_tokens=2048, batch_size=1, technology=technology
     )
+    serial = step.metrics["serial_latency"]
     assert step.component_times_s["link_latency"] == 0.0
-    assert step.component_times_s["layer_fixed_latency"] == pytest.approx(total)
+    # The flat floor is kept as a diagnostic; what the step charges is the
+    # dependent-operator chain of the Llama decode graph, an order above it.
+    assert step.metrics["legacy_layer_fixed_latency_s"] == pytest.approx(total)
+    assert step.component_times_s["layer_fixed_latency"] > 5 * total
     assert step.metrics["raw_step_time_before_thermal_s"] == pytest.approx(
-        step.metrics["service_time_s"] + total
+        max(serial["critical_path_s"], step.metrics["service_time_s"])
+    )
+    assert serial["critical_path_s"] == pytest.approx(
+        step.component_times_s["layer_fixed_latency"] + serial["sweep_on_path_s"]
     )
 
 
@@ -2577,7 +2613,10 @@ def test_the_fixed_cost_falls_on_the_fast_machine_and_not_the_slow_one(
     )
     rom_share = rom.metrics["layer_fixed_latency_fraction_of_step"]
     gpu_share = gpu.metrics["layer_fixed_latency_fraction_of_step"]
-    assert rom_share > 5 * gpu_share
+    # Still larger on the fast machine, but no longer five-fold: the GPU now
+    # pays a published CUDA-graph launch gap per dependent kernel on the same
+    # operator graph, which the flat floor never charged it.
+    assert rom_share > gpu_share > 0.0
     # Compressed-sparse layers carry an extra term, so a sparse model pays more
     # per layer than a dense one.
     assert (
@@ -2614,7 +2653,9 @@ def test_the_per_layer_cost_is_a_band_and_the_gate_is_not_fitted(
     rates = [band[bound]["modelled_tokens_s"] for bound in ("high", "stated", "low")]
     assert 0.0 < rates[0] < rates[1] < rates[2]
     for bound in ("low", "stated", "high"):
-        assert band[bound]["binding_constraint"] == "weight_read"
+        # The band is now the serial-latency band (serial_latency.* ranges)
+        # and the gate binds on the dependent-operator chain at every end.
+        assert band[bound]["binding_constraint"] == "layer_fixed_latency"
     # The array sweep leaves room for a positive per-layer cost below the gap.
     assert band["per_layer_cost_that_would_close_the_gap_s"] > 0.0
     legacy = taalas_hc1_anchor(technology, llama, per_bit_cim=True)

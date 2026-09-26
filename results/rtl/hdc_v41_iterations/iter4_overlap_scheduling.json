@@ -1,0 +1,371 @@
+{
+  "iteration": {
+    "number": 4,
+    "name": "overlap scheduling",
+    "summary": "Wait masks refined, no RTL change: no drain for a same-unit write after write or write after read (units write in issue order; reducer outputs excepted); the quantised engine and the auxiliary unit are sequential, so issuing a never-skipped op there proves older ones complete; the shared expert runs beside the router and the routed experts are software-pipelined across the quantised engine and the stream unit; hooks re-swept (ATTN_HOOK scores, MOE_HOOK 1).",
+    "cycles_per_token": 470798,
+    "previous_cycles_per_token": 546393,
+    "cycles_saved": 75595
+  },
+  "schema": "opentallas.hdc-v41-decode-campaign.v1",
+  "status": "pass",
+  "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) with behavioural synchronous-read memories (many-ported vector memory: four operand reads, an element write and a reducer write per stream lane); the Sinkhorn is the routed one-normalisation-per-step unit (ot_hdc_sinkhorn) run as a 7-core-cycle multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here.",
+  "vehicle": "deepseek-v4.1-flash-reduced-v2 (dim 160, 40 layers, 64 heads of 32, hc 4, 12 experts top-6 inter 64, window 128, index top-16, Engram layers 1 and 14, vocab 4040)",
+  "parameters": {
+    "su_lanes": 8,
+    "me_lanes_per_group": 16,
+    "me_groups": 4,
+    "interleave": 8,
+    "qe_blockdot_lanes": 16,
+    "he_lanes": 3,
+    "attention_rows_per_layer": 144,
+    "program_instructions": 4416,
+    "issued_per_unit": {
+      "me": 769,
+      "su": 2649,
+      "qe": 786,
+      "xu": 131,
+      "he": 80
+    },
+    "me_rom_words": 78196,
+    "qe_rom_words": 54080,
+    "constant_rom_words": 28492,
+    "engram_rom_rows": 385590
+  },
+  "isa_model": [
+    "program: 4416 instructions (ME 769, SU 2649, QE 786, XU 131, HE 80); ME ROM 78196 words; QE ROM 54080 words; CROM 28492",
+    "ISA simulator at pos 7: token 3118 golden 3118 oracle 3118; logits bit-exact with golden: True",
+    "multi-token from empty state: ISA [3118, 2400, 64] golden [3118, 2400, 64] oracle [3118, 3583, 2357] every step's logits bit-exact: True",
+    "wrote /tmp/tmpo7eqjum_/img"
+  ],
+  "single_step": {
+    "token": 3582,
+    "position": 7,
+    "next_token": 3118,
+    "isa_next_token": 3118,
+    "cycles": 470798,
+    "fault": 0,
+    "logit_mismatches": 0,
+    "vector_memory_mismatches": 0,
+    "kv_cache_mismatches": 0,
+    "unit_busy_cycles": {
+      "me": 200259,
+      "su": 275092,
+      "qe": 71965,
+      "xu": 27261,
+      "he": 53600
+    },
+    "all_units_idle_cycles": 3332,
+    "pass": true,
+    "timing_model": {
+      "cycles": 470820,
+      "relative_error": 4.7e-05,
+      "max_abs_issue_error_cycles": 28
+    },
+    "vector_memory_banking": {
+      "bank_model": "8 banks, element address mod 8",
+      "vector_cycles": 74547,
+      "conflict_free_vector_cycles": 46495,
+      "conflict_free_share": 0.6237,
+      "colliding_strides": {
+        "so:[160]": 14240,
+        "so:[144]": 8832,
+        "so:[32]": 2688,
+        "so:[20]": 1620,
+        "so:[4]": 672
+      }
+    },
+    "golden_next_token": 3118,
+    "oracle_next_token": 3118
+  },
+  "per_operator_cycles": {
+    "scores": {
+      "cycles": 74712,
+      "issued_ops": 320,
+      "share": 0.1587
+    },
+    "out": {
+      "cycles": 47760,
+      "issued_ops": 120,
+      "share": 0.1014
+    },
+    "experts": {
+      "cycles": 43140,
+      "issued_ops": 720,
+      "share": 0.0916
+    },
+    "pv": {
+      "cycles": 42128,
+      "issued_ops": 320,
+      "share": 0.0895
+    },
+    "attn": {
+      "cycles": 29728,
+      "issued_ops": 560,
+      "share": 0.0631
+    },
+    "hc_post": {
+      "cycles": 29200,
+      "issued_ops": 320,
+      "share": 0.062
+    },
+    "hc_ffn": {
+      "cycles": 28560,
+      "issued_ops": 280,
+      "share": 0.0607
+    },
+    "router": {
+      "cycles": 26356,
+      "issued_ops": 280,
+      "share": 0.056
+    },
+    "softmax": {
+      "cycles": 26056,
+      "issued_ops": 200,
+      "share": 0.0553
+    },
+    "hc_attn": {
+      "cycles": 25280,
+      "issued_ops": 280,
+      "share": 0.0537
+    },
+    "attn_norm": {
+      "cycles": 18560,
+      "issued_ops": 200,
+      "share": 0.0394
+    },
+    "ffn_norm": {
+      "cycles": 18560,
+      "issued_ops": 200,
+      "share": 0.0394
+    },
+    "indexer": {
+      "cycles": 13553,
+      "issued_ops": 88,
+      "share": 0.0288
+    },
+    "shared": {
+      "cycles": 12524,
+      "issued_ops": 120,
+      "share": 0.0266
+    },
+    "moe_sum": {
+      "cycles": 11640,
+      "issued_ops": 240,
+      "share": 0.0247
+    },
+    "drain": {
+      "cycles": 10277,
+      "issued_ops": 0,
+      "share": 0.0218
+    },
+    "engram": {
+      "cycles": 4408,
+      "issued_ops": 18,
+      "share": 0.0094
+    },
+    "compressor": {
+      "cycles": 3347,
+      "issued_ops": 36,
+      "share": 0.0071
+    },
+    "gather": {
+      "cycles": 2516,
+      "issued_ops": 76,
+      "share": 0.0053
+    },
+    "index_key": {
+      "cycles": 1820,
+      "issued_ops": 28,
+      "share": 0.0039
+    },
+    "head": {
+      "cycles": 655,
+      "issued_ops": 6,
+      "share": 0.0014
+    },
+    "embed": {
+      "cycles": 18,
+      "issued_ops": 3,
+      "share": 0.0
+    }
+  },
+  "end_to_end": {
+    "prompt_tokens": 8,
+    "generated_tokens": [
+      3118,
+      2400,
+      64
+    ],
+    "isa_generated_tokens": [
+      3118,
+      2400,
+      64
+    ],
+    "golden_generated_tokens": [
+      3118,
+      2400,
+      64
+    ],
+    "isa_logits_bit_exact_with_golden_every_step": true,
+    "steps": 10,
+    "mismatches": 0,
+    "total_cycles": 4550300,
+    "final_vector_memory_mismatches": 0,
+    "final_kv_cache_mismatches": 0,
+    "per_step": [
+      {
+        "position": 0,
+        "input": 0,
+        "output": 2815,
+        "isa_output": 0,
+        "cycles": 424822,
+        "fault": 0
+      },
+      {
+        "position": 1,
+        "input": 3563,
+        "output": 3537,
+        "isa_output": 0,
+        "cycles": 439238,
+        "fault": 0
+      },
+      {
+        "position": 2,
+        "input": 3745,
+        "output": 2047,
+        "isa_output": 0,
+        "cycles": 440070,
+        "fault": 0
+      },
+      {
+        "position": 3,
+        "input": 418,
+        "output": 1968,
+        "isa_output": 0,
+        "cycles": 449638,
+        "fault": 0
+      },
+      {
+        "position": 4,
+        "input": 170,
+        "output": 3159,
+        "isa_output": 0,
+        "cycles": 450470,
+        "fault": 0
+      },
+      {
+        "position": 5,
+        "input": 16,
+        "output": 1719,
+        "isa_output": 0,
+        "cycles": 460078,
+        "fault": 0
+      },
+      {
+        "position": 6,
+        "input": 3564,
+        "output": 2360,
+        "isa_output": 0,
+        "cycles": 460910,
+        "fault": 0
+      },
+      {
+        "position": 7,
+        "input": 3582,
+        "output": 3118,
+        "isa_output": 3118,
+        "cycles": 470798,
+        "fault": 0
+      },
+      {
+        "position": 8,
+        "input": 3118,
+        "output": 2400,
+        "isa_output": 2400,
+        "cycles": 472110,
+        "fault": 0
+      },
+      {
+        "position": 9,
+        "input": 2400,
+        "output": 64,
+        "isa_output": 64,
+        "cycles": 482166,
+        "fault": 0
+      }
+    ],
+    "pass": true
+  },
+  "long_context": {
+    "token": 3582,
+    "position": 39,
+    "next_token": 876,
+    "isa_next_token": 876,
+    "cycles": 606966,
+    "fault": 0,
+    "logit_mismatches": 0,
+    "vector_memory_mismatches": 0,
+    "kv_cache_mismatches": 0,
+    "unit_busy_cycles": {
+      "me": 306243,
+      "su": 305428,
+      "qe": 71989,
+      "xu": 27468,
+      "he": 53600
+    },
+    "all_units_idle_cycles": 3412,
+    "pass": true
+  },
+  "verilator_lint": {
+    "returncode": 0,
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH",
+      "-Wno-BLKSEQ",
+      "-Wno-PINCONNECTEMPTY",
+      "-Wno-IMPORTSTAR"
+    ],
+    "messages": []
+  },
+  "input_sha256": {
+    "rtl/hdc/v41/ot_hdc_isa_v41.svh": "cb604fcf8a67bc626e0baf3e2dcf9d8685aba29ab93f39b89c1e743a35b12787",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
+    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_matvec.sv": "48f4cbc47dab6f005f8599c30e91dc48799316fd28805c5e4c77884d0d0fdabf",
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv": "aa1931c171c0b4c78d463debb138b583afc9a2d1715101712f101707c9ecd43a",
+    "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hdc/v41/ot_hdc_fp4qdq.sv": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+    "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv": "5a6cc941af82d6b74e0be17578c852ca3863fb439f1eb47da7612aebfcb8d77c",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+    "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282",
+    "rtl/hdc/v41/ot_hdc_v41_stream.sv": "8fc8b944e919ff6256a782a4434c1ea3cbf59dc5d95009d6fbd231e3042d3ffb",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "3d58bc4fd8653c88b702ca04619547cf74ec935c9e5647f6421c4b1f2a44267b",
+    "rtl/hdc/v41/ot_hdc_v41_xu.sv": "7b38ea9b8a41e8169d25317d56f716dbe4697b455c9f3676a5174c1e764b149a",
+    "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "5835f0d0a132b2bb2bbdab6bf6108e6a2b1e932d5758b9d8af8ce164ac309530",
+    "rtl/hdc/v41/ot_hdc_core_v41.sv": "e16838c0c50307c0760970d73e32d3e1154fb532502e1646e6b15004e6b3ec3e",
+    "rtl/test/tb_hdc_core_v41.sv": "51e25047bf2e1e5b70b41e79f4520ab8140b768edbdb74f3faf02ecc3f66fb71",
+    "rtl/test/hdc_core_v41_harness.cpp": "f5ebdcd4c0500eea8ce8c19e053fbb2f1232beabb71c757bb3f21fdddded40ce",
+    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
+    "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
+    "tools/hdc_isa_v41.py": "3a7717d67b90041048f339777158d310c187ac89c9c27f918288b1a362c29b4f",
+    "tools/hdc_program_v41.py": "58c7f681517c4e11d6e3c0f0ad50e231cbb0aa884e6f7a9be6efe0d55039eb93",
+    "tools/hdc_timing_v41.py": "7fac634afcf0162b97186144d71fe1a8c4f032d60c74dcf6b385562f2f8b27ab",
+    "tools/rtl_hdc_v41_decode_campaign.py": "0b7f1753f0f26c6e1436998b28d17f9d468d90fffc8cbfa789668f11195ef114"
+  }
+}
