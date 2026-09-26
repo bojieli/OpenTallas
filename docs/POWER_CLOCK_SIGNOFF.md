@@ -173,6 +173,7 @@ and `energy_per_token.json`.
 | deepseek-v41-rom-array | v41_softplus | final | RTL-mapped | 197.28 | 135.67 | 61.59 | 0.02 | 71.23 | 36% |
 | deepseek-v41-rom-array | rom_argmax_reduce_gate_level | final | gate-level | 9.87 | 6.92 | 2.95 | 0.00 | 2.88 | 29% |
 | deepseek-v41-rom-array | rom_argmax_reduce_rtl_mapped | final | RTL-mapped | 12.83 | 8.54 | 4.29 | 0.00 | 2.88 | 22% |
+| deepseek-v41-rom-array | rom_express_link | final | vectorless | 4.11 | 2.40 | 1.70 | 0.00 | 2.69 | 66% |
 | deepseek-v41-rom-array | rom_fabric_router | final | vectorless | 126.79 | 76.13 | 50.65 | 0.01 | 17.41 | 14% |
 | deepseek-v41-rom-array | rom_mcast_node | final | vectorless | 23.27 | 15.49 | 7.78 | 0.00 | 5.12 | 22% |
 | deepseek-v41-rom-array | rom_moe_dispatch | final | vectorless | 11.04 | 7.61 | 3.43 | 0.00 | 2.76 | 25% |
@@ -195,6 +196,7 @@ and `energy_per_token.json`.
 | v41_softplus | 34,779 | 6,860 | 2,402.6 | 0.306-0.353 | 0.038 | -0.045 |
 | rom_argmax_reduce_gate_level | 2,266 | 245 | 78.6 | 0.108-0.127 | 0.016 | -0.020 |
 | rom_argmax_reduce_rtl_mapped | 2,266 | 245 | 78.6 | 0.108-0.127 | 0.016 | -0.020 |
+| rom_express_link | 260 | 131 | 57.3 | 1.291-1.578 | 0.212 | -0.188 |
 | rom_fabric_router | 13,226 | 1,448 | 456.4 | 0.214-0.249 | 0.025 | -0.037 |
 | rom_mcast_node | 4,216 | 445 | 132.0 | 0.122-0.148 | 0.019 | -0.026 |
 | rom_moe_dispatch | 2,155 | 233 | 72.7 | 0.105-0.123 | 0.011 | -0.018 |
@@ -215,6 +217,7 @@ and `energy_per_token.json`.
 | v41_select | 1,019 | 959 | 1,526 | 1,435 | 2,104 | 1,976 | +0.033 / +0.009 / -0.004 |
 | v41_softplus | 678 | 641 | 1,034 | 976 | 1,438 | 1,354 | +0.028 / +0.011 / -0.009 |
 | rom_argmax_reduce_gate_level | 770 | 729 | 1,151 | 1,085 | 1,579 | 1,488 | +0.047 / +0.031 / +0.019 |
+| rom_express_link | 895 | 793 | 1,147 | 1,016 | 1,403 | 1,241 | +0.482 / +0.348 / +0.268 |
 | rom_fabric_router | 797 | 750 | 1,195 | 1,123 | 1,633 | 1,527 | +0.077 / +0.052 / +0.036 |
 | rom_mcast_node | 900 | 847 | 1,359 | 1,278 | 1,895 | 1,781 | +0.077 / +0.052 / +0.036 |
 | rom_moe_dispatch | 933 | 881 | 1,408 | 1,327 | 1,943 | 1,829 | +0.074 / +0.050 / +0.034 |
@@ -229,6 +232,7 @@ and `energy_per_token.json`.
 | qwen_core | -- | bumps 140 um | 224.0 | 101.00 | 217.0 | 6.66 | 23.17 | 17.85 | -- | -- |
 | qwen_core_pdn_m7_m8 | 641 x 641 | bumps 140 um, grid `pdn_m7_m8_upper_grid` | 122.0 | 56.60 | 111.0 | 4.07 | 7.76 | 7.33 | 11.72 | 9.43 |
 | qwen_core_pdn_m7_m8_bump70 | 641 x 641 | bumps 70 um, grid `pdn_m7_m8_upper_grid` | 18.2 | 3.95 | 16.6 | 2.97 | 1.81 | 2.15 | 2.38 | 2.94 |
+| qwen_core_pdn_m7_m8_wide_bump70 | 641 x 641 | bumps 70 um, grid `pdn_m7_m8_wide_upper_grid` | 9.0 | 1.75 | 8.6 | 2.84 | 1.26 | 1.02 | 1.73 | 2.31 |
 | hbm_kv_stream | 198 x 198 | pins | 2.1 | 0.11 | 2.2 | 1.81 | 0.37 | 0.00 | -- | -- |
 | v41_actquant | -- | pins | 3.0 | 0.33 | 2.5 | 1.73 | 0.75 | 0.00 | -- | -- |
 | v41_blockdot_lane0 | -- | pins | 1.7 | 0.18 | 1.7 | 1.19 | 0.50 | 0.00 | -- | -- |
@@ -238,6 +242,8 @@ and `energy_per_token.json`.
 | v41_softplus | 272 x 272 | pins | 6.5 | 0.57 | 6.3 | 3.75 | 2.73 | 0.00 | -- | -- |
 | rom_argmax_reduce_gate_level | 74 x 74 | pins | 2.4 | 0.45 | 2.4 | 1.47 | 1.06 | 0.00 | -- | -- |
 | rom_argmax_reduce_gate_level | 74 x 74 | bumps 140 um | 9.8 | 2.19 | 5.9 | 1.59 | 2.66 | 1.01 | -- | -- |
+| rom_express_link | 347 x 347 | pins | 1.5 | 0.01 | 1.3 | 1.10 | 0.26 | 0.00 | -- | -- |
+| rom_express_link | 347 x 347 | bumps 140 um | 3.9 | 0.82 | 7.6 | 1.11 | 0.24 | 0.20 | -- | -- |
 | rom_fabric_router | 167 x 167 | pins | 4.1 | 1.02 | 3.2 | 2.16 | 1.97 | 0.00 | -- | -- |
 | rom_fabric_router | 167 x 167 | bumps 140 um | 345.0 | 201.00 | 342.0 | 11.99 | 38.45 | 28.80 | -- | -- |
 | rom_mcast_node | 91 x 91 | pins | 2.8 | 0.66 | 2.6 | 1.70 | 1.30 | 0.00 | -- | -- |
@@ -254,7 +260,7 @@ and `energy_per_token.json`.
 | Architecture | Step cycles | Logic uJ | Memory and links uJ | Static uJ | Token uJ | pJ per weight MAC (matrix engine / whole step) | Not included |
 |---|---:|---:|---:|---:|---:|---|---|
 | deepseek_v41_rom_array_die | 1,088,551 | 543.26 | 139.75 | 0.00 | 683.01 | 11.51 / 66.54 | sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total |
-| deepseek_v41_rom_array_package | 1,088,551 | 896.24 | 5.70 | 0.00 | 901.94 | -- | four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total; express link: block rom_express_link not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json |
+| deepseek_v41_rom_array_package | 1,088,551 | 900.26 | 5.70 | 0.00 | 905.96 | -- | four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total |
 | hbm_comparator | 32,275 | 19.57 | 305.61 | 10.17 | 335.35 | 3.97 / 262.41 | -- |
 | qwen3_8b_rom_reticle | 32,246 | 18.98 | 2.17 | 0.00 | 21.15 | 3.97 / 16.55 | -- |
 
@@ -336,11 +342,22 @@ be up to 2x high; the register part is not).
 
 ### DeepSeek-V4.1 ROM array, per package
 
-The routed fabric blocks, vectorless, draw 10-25 mW each and close at
-1.15-1.41 GHz at TT and 0.77-0.93 GHz at SS. A package step is a four-die
-tensor group (about one die-step of energy), the fabric logic over the
-step, and 2.46 MB of UCIe all-reduce traffic at 0.29 pJ/b (5.7 uJ, derived
-under the Qwen package campaign's split rule, not simulated for V4.1).
+The seven routed fabric blocks close at 1.15-1.56 GHz at TT and
+0.77-1.04 GHz at SS; under the OCV derate they keep more than 0.75 GHz at SS.
+Only the argmax collective has decode-derived (random-traffic, gate-level)
+activity; the others are vectorless (OpenSTA's default 0.1 input activity,
+propagated), which overstates a fabric that idles between messages. On that
+basis they draw 4.1 mW (express link, 3 mm) to 29.3 mW (package controller),
+and the fabric router 126.8 mW. The express link's clock latency is 1.3-1.6 ns
+with 0.21 ns of skew, because its clock is carried along the 3 mm wire with
+the data it times.
+
+A package step is a four-die tensor group (about one die-step of energy,
+683 uJ), the fabric logic over the step (217 uJ, 124 uJ of it the router)
+and 2.46 MB of UCIe all-reduce traffic at 0.29 pJ/b (5.7 uJ, derived under
+the Qwen package campaign's split rule, not simulated for V4.1): 906 uJ per
+package step, before the sequencer, stream unit, hc projection and Sinkhorn
+unit of each die.
 
 ### Against the analytical model
 

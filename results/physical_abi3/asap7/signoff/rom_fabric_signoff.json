@@ -1308,6 +1308,1048 @@
         "sha256": "070204428ed680f04e4c85e23c78d2d570105fa7f17587c67c89eab10be43b24"
       }
     },
+    "rom_express_link": {
+      "activity": {
+        "note": "OpenSTA default activity (0.1 at inputs, propagated)",
+        "source": "vectorless"
+      },
+      "corners": {
+        "FF": {
+          "activity_annotation": {
+            "unannotated": 6083
+          },
+          "corner": {
+            "lib_tag": "FF",
+            "process": "fast",
+            "temperature_c": 0.0,
+            "voltage_v": 0.77
+          },
+          "libraries": [
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_FF_nldm_FAKE.lib",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_FF_nldm_FAKE.lib"
+          ],
+          "power_by_hierarchy_w": {
+            "__other__": {
+              "instances": 354647,
+              "internal": 0.0032037459650116062,
+              "leakage": 4.802622562484786e-07,
+              "switching": 0.0021013448787066125,
+              "total": 0.005305571103022544
+            }
+          },
+          "power_w": {
+            "clock": {
+              "internal": 0.0022861140314489603,
+              "leakage": 7.824615977369831e-08,
+              "switching": 0.0012189106782898307,
+              "total": 0.003505102824419737
+            },
+            "combinational": {
+              "internal": 0.0005029870080761611,
+              "leakage": 3.5027827038902615e-07,
+              "switching": 0.0008070501498878002,
+              "total": 0.0013103875098749995
+            },
+            "macro": {
+              "internal": 0.0,
+              "leakage": 0.0,
+              "switching": 0.0,
+              "total": 0.0
+            },
+            "sequential": {
+              "internal": 0.00041464570676907897,
+              "leakage": 5.1737877981850033e-08,
+              "switching": 7.538343197666109e-05,
+              "total": 0.0004900808562524617
+            },
+            "total": {
+              "internal": 0.0032037461642175913,
+              "leakage": 4.802617468158132e-07,
+              "switching": 0.0021013442892581224,
+              "total": 0.005305570550262928
+            }
+          },
+          "session_seconds": 5.7,
+          "timing": {
+            "hold_tns_ns": 0.0,
+            "hold_wns_ns": 0.26804614083886236,
+            "min_period": [
+              {
+                "clock": "core_clk",
+                "fmax_mhz": 1403.48,
+                "period_min_ns": 0.71
+              }
+            ],
+            "setup_tns_ns": 0.0,
+            "setup_wns_ns": 0.28748647906695624
+          },
+          "timing_ocv": {
+            "derate": 0.05,
+            "hold_wns_ns": 0.209810169238267,
+            "min_period": [
+              {
+                "clock": "core_clk",
+                "fmax_mhz": 1240.77,
+                "period_min_ns": 0.81
+              }
+            ],
+            "setup_wns_ns": 0.1940470006900341
+          }
+        },
+        "SS": {
+          "activity_annotation": {
+            "unannotated": 6083
+          },
+          "corner": {
+            "lib_tag": "SS",
+            "process": "slow",
+            "temperature_c": 100.0,
+            "voltage_v": 0.63
+          },
+          "libraries": [
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_SS_nldm_FAKE.lib",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_SS_nldm_FAKE.lib"
+          ],
+          "power_by_hierarchy_w": {
+            "__other__": {
+              "instances": 354647,
+              "internal": 0.0018917782180407627,
+              "leakage": 1.0370981623233108e-05,
+              "switching": 0.0013573304604497238,
+              "total": 0.003259479615310923
+            }
+          },
+          "power_w": {
+            "clock": {
+              "internal": 0.0013468543766066432,
+              "leakage": 1.696622575764195e-06,
+              "switching": 0.0007785192574374378,
+              "total": 0.002127070212736726
+            },
+            "combinational": {
+              "internal": 0.0002909657487180084,
+              "leakage": 7.59043814468896e-06,
+              "switching": 0.0005296609597280622,
+              "total": 0.0008282171911559999
+            },
+            "macro": {
+              "internal": 0.0,
+              "leakage": 0.0,
+              "switching": 0.0,
+              "total": 0.0
+            },
+            "sequential": {
+              "internal": 0.0002539576671551913,
+              "leakage": 1.0839135029527824e-06,
+              "switching": 4.915037061437033e-05,
+              "total": 0.0003041919553652406
+            },
+            "total": {
+              "internal": 0.0018917785491794348,
+              "leakage": 1.0370968993811402e-05,
+              "switching": 0.0013573303585872054,
+              "total": 0.0032594797667115927
+            }
+          },
+          "session_seconds": 4.5,
+          "timing": {
+            "hold_tns_ns": 0.0,
+            "hold_wns_ns": 0.4817559684511252,
+            "min_period": [
+              {
+                "clock": "core_clk",
+                "fmax_mhz": 894.81,
+                "period_min_ns": 1.12
+              }
+            ],
+            "setup_tns_ns": -2.1453681053884566,
+            "setup_wns_ns": -0.1175595176761135
+          },
+          "timing_ocv": {
+            "derate": 0.05,
+            "hold_wns_ns": 0.3875322285296079,
+            "min_period": [
+              {
+                "clock": "core_clk",
+                "fmax_mhz": 793.1,
+                "period_min_ns": 1.26
+              }
+            ],
+            "setup_wns_ns": -0.2608759874789257
+          }
+        },
+        "TT": {
+          "activity_annotation": {
+            "unannotated": 6083
+          },
+          "clock_tree": {
+            "clock_network_power_share": 0.6552963802000827,
+            "hold_skew_ns": -0.1879,
+            "latency_rise_ns": {
+              "max_ns": 1.5781,
+              "min_ns": 1.291
+            },
+            "name": "core_clk",
+            "nets": 131,
+            "note": "clock_network_power_share is OpenSTA's Clock group (tree buffers and clock nets) over total; register clock-pin internal power sits in the Sequential group",
+            "period_ns": 1.0,
+            "register_clock_pins": 260,
+            "setup_skew_ns": 0.2123,
+            "tree_cell_area_um2": 57.29939999999982,
+            "tree_cells": 131
+          },
+          "corner": {
+            "lib_tag": "TT",
+            "process": "typical",
+            "temperature_c": 25.0,
+            "voltage_v": 0.7
+          },
+          "die_area_um2": 120160.0,
+          "em": {
+            "BUMPS.VDD": {
+              "assumed_dc_limit_ma_per_um": 1.0,
+              "hotspots": [
+                {
+                  "current_a": 1.999e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.1105555555555557,
+                  "x2_um": 2448.918,
+                  "x_um": 2448.702,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.951e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.083888888888889,
+                  "x2_um": 472.518,
+                  "x_um": 472.302,
+                  "y2_um": 19.71,
+                  "y_um": 19.71
+                },
+                {
+                  "current_a": 1.914e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0633333333333335,
+                  "x2_um": 2449.134,
+                  "x_um": 2448.918,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.905e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0583333333333333,
+                  "x2_um": 2449.35,
+                  "x_um": 2449.134,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.896e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0533333333333335,
+                  "x2_um": 2449.566,
+                  "x_um": 2449.35,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.863e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0350000000000001,
+                  "x2_um": 472.734,
+                  "x_um": 472.518,
+                  "y2_um": 19.71,
+                  "y_um": 19.71
+                },
+                {
+                  "current_a": 1.848e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0266666666666668,
+                  "x2_um": 472.95,
+                  "x_um": 472.734,
+                  "y2_um": 19.71,
+                  "y_um": 19.71
+                },
+                {
+                  "current_a": 1.818e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.01,
+                  "x2_um": 380.502,
+                  "x_um": 380.286,
+                  "y2_um": 17.01,
+                  "y_um": 17.01
+                },
+                {
+                  "current_a": 1.8e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0000000000000002,
+                  "x2_um": 2449.782,
+                  "x_um": 2449.566,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.766e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9811111111111112,
+                  "x2_um": 747.918,
+                  "x_um": 747.702,
+                  "y2_um": 20.25,
+                  "y_um": 20.25
+                }
+              ],
+              "limit_basis": "assumption: ASAP7's technology LEF carries no EM rules; 1 mA/um is the order of published 7-10 nm lower-metal DC guidance",
+              "per_layer": {
+                "M1": {
+                  "max_current_a": 1.053e-05,
+                  "max_ma_per_um": 0.5850000000000001,
+                  "over_assumed_limit": false,
+                  "segments": 916772
+                },
+                "M1-M2": {
+                  "max_current_a": 2.226e-05,
+                  "segments": 1424503
+                },
+                "M2": {
+                  "max_current_a": 1.999e-05,
+                  "max_ma_per_um": 1.1105555555555557,
+                  "over_assumed_limit": true,
+                  "segments": 916608
+                },
+                "M2-M3": {
+                  "max_current_a": 2.821e-05,
+                  "segments": 36696
+                },
+                "M3-M4": {
+                  "max_current_a": 2.821e-05,
+                  "segments": 36696
+                },
+                "M4-M5": {
+                  "max_current_a": 2.821e-05,
+                  "segments": 36696
+                },
+                "M5": {
+                  "max_current_a": 2.829e-05,
+                  "max_ma_per_um": 0.23575000000000002,
+                  "over_assumed_limit": false,
+                  "segments": 36696
+                },
+                "M5-M6": {
+                  "max_current_a": 3.76e-05,
+                  "segments": 3892
+                },
+                "M6": {
+                  "max_current_a": 5.848e-05,
+                  "max_ma_per_um": 0.20305555555555557,
+                  "over_assumed_limit": false,
+                  "segments": 32802
+                }
+              },
+              "stripe_width_um": {
+                "M1": 0.018,
+                "M2": 0.018,
+                "M5": 0.12,
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
+              }
+            },
+            "BUMPS.VSS": {
+              "assumed_dc_limit_ma_per_um": 1.0,
+              "hotspots": [
+                {
+                  "current_a": 1.833e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0183333333333333,
+                  "x2_um": 380.286,
+                  "x_um": 380.07,
+                  "y2_um": 17.28,
+                  "y_um": 17.28
+                },
+                {
+                  "current_a": 1.758e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9766666666666668,
+                  "x2_um": 564.102,
+                  "x_um": 563.886,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.698e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9433333333333334,
+                  "x2_um": 2626.686,
+                  "x_um": 2626.47,
+                  "y2_um": 22.68,
+                  "y_um": 22.68
+                },
+                {
+                  "current_a": 1.687e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9372222222222223,
+                  "x2_um": 564.318,
+                  "x_um": 564.102,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.679e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9327777777777778,
+                  "x2_um": 564.534,
+                  "x_um": 564.318,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.666e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9255555555555557,
+                  "x2_um": 564.75,
+                  "x_um": 564.534,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.559e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8661111111111113,
+                  "x2_um": 2529.702,
+                  "x_um": 2529.486,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.541e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8561111111111112,
+                  "x2_um": 2626.47,
+                  "x_um": 2626.254,
+                  "y2_um": 22.68,
+                  "y_um": 22.68
+                },
+                {
+                  "current_a": 1.54e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8555555555555557,
+                  "x2_um": 704.286,
+                  "x_um": 704.07,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.521e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8450000000000001,
+                  "x2_um": 564.966,
+                  "x_um": 564.75,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                }
+              ],
+              "limit_basis": "assumption: ASAP7's technology LEF carries no EM rules; 1 mA/um is the order of published 7-10 nm lower-metal DC guidance",
+              "per_layer": {
+                "M1": {
+                  "max_current_a": 9.539e-06,
+                  "max_ma_per_um": 0.5299444444444444,
+                  "over_assumed_limit": false,
+                  "segments": 930658
+                },
+                "M1-M2": {
+                  "max_current_a": 2.038e-05,
+                  "segments": 1436382
+                },
+                "M2": {
+                  "max_current_a": 1.833e-05,
+                  "max_ma_per_um": 1.0183333333333333,
+                  "over_assumed_limit": true,
+                  "segments": 930496
+                },
+                "M2-M3": {
+                  "max_current_a": 2.802e-05,
+                  "segments": 37252
+                },
+                "M3-M4": {
+                  "max_current_a": 2.802e-05,
+                  "segments": 37252
+                },
+                "M4-M5": {
+                  "max_current_a": 2.802e-05,
+                  "segments": 37252
+                },
+                "M5": {
+                  "max_current_a": 2.616e-05,
+                  "max_ma_per_um": 0.218,
+                  "over_assumed_limit": false,
+                  "segments": 36696
+                },
+                "M5-M6": {
+                  "max_current_a": 3.203e-05,
+                  "segments": 3892
+                },
+                "M6": {
+                  "max_current_a": 4.928e-05,
+                  "max_ma_per_um": 0.17111111111111113,
+                  "over_assumed_limit": false,
+                  "segments": 32802
+                }
+              },
+              "stripe_width_um": {
+                "M1": 0.018,
+                "M2": 0.018,
+                "M5": 0.12,
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
+              }
+            },
+            "PINS.VDD": {
+              "assumed_dc_limit_ma_per_um": 1.0,
+              "hotspots": [
+                {
+                  "current_a": 1.976e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0977777777777777,
+                  "x2_um": 2448.918,
+                  "x_um": 2448.702,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.898e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0544444444444445,
+                  "x2_um": 472.518,
+                  "x_um": 472.302,
+                  "y2_um": 19.71,
+                  "y_um": 19.71
+                },
+                {
+                  "current_a": 1.889e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0494444444444446,
+                  "x2_um": 2449.134,
+                  "x_um": 2448.918,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.881e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0450000000000002,
+                  "x2_um": 2449.35,
+                  "x_um": 2449.134,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.871e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0394444444444444,
+                  "x2_um": 2449.566,
+                  "x_um": 2449.35,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.817e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0094444444444446,
+                  "x2_um": 380.502,
+                  "x_um": 380.286,
+                  "y2_um": 17.01,
+                  "y_um": 17.01
+                },
+                {
+                  "current_a": 1.807e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.003888888888889,
+                  "x2_um": 472.734,
+                  "x_um": 472.518,
+                  "y2_um": 19.71,
+                  "y_um": 19.71
+                },
+                {
+                  "current_a": 1.793e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9961111111111111,
+                  "x2_um": 472.95,
+                  "x_um": 472.734,
+                  "y2_um": 19.71,
+                  "y_um": 19.71
+                },
+                {
+                  "current_a": 1.775e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9861111111111113,
+                  "x2_um": 2449.782,
+                  "x_um": 2449.566,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                },
+                {
+                  "current_a": 1.763e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9794444444444446,
+                  "x2_um": 526.518,
+                  "x_um": 526.302,
+                  "y2_um": 21.33,
+                  "y_um": 21.33
+                }
+              ],
+              "limit_basis": "assumption: ASAP7's technology LEF carries no EM rules; 1 mA/um is the order of published 7-10 nm lower-metal DC guidance",
+              "per_layer": {
+                "M1": {
+                  "max_current_a": 1.029e-05,
+                  "max_ma_per_um": 0.5716666666666668,
+                  "over_assumed_limit": false,
+                  "segments": 916772
+                },
+                "M1-M2": {
+                  "max_current_a": 2.209e-05,
+                  "segments": 1424503
+                },
+                "M2": {
+                  "max_current_a": 1.976e-05,
+                  "max_ma_per_um": 1.0977777777777777,
+                  "over_assumed_limit": true,
+                  "segments": 916608
+                },
+                "M2-M3": {
+                  "max_current_a": 2.82e-05,
+                  "segments": 36696
+                },
+                "M3-M4": {
+                  "max_current_a": 2.82e-05,
+                  "segments": 36696
+                },
+                "M4-M5": {
+                  "max_current_a": 2.82e-05,
+                  "segments": 36696
+                },
+                "M5": {
+                  "max_current_a": 3.125e-05,
+                  "max_ma_per_um": 0.2604166666666667,
+                  "over_assumed_limit": false,
+                  "segments": 36696
+                },
+                "M5-M6": {
+                  "max_current_a": 4.066e-05,
+                  "segments": 3892
+                },
+                "M6": {
+                  "max_current_a": 3.618e-15,
+                  "max_ma_per_um": 1.2562500000000002e-11,
+                  "over_assumed_limit": false,
+                  "segments": 32802
+                }
+              },
+              "stripe_width_um": {
+                "M1": 0.018,
+                "M2": 0.018,
+                "M5": 0.12,
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
+              }
+            },
+            "PINS.VSS": {
+              "assumed_dc_limit_ma_per_um": 1.0,
+              "hotspots": [
+                {
+                  "current_a": 1.867e-05,
+                  "layer": "M2",
+                  "ma_per_um": 1.0372222222222223,
+                  "x2_um": 380.286,
+                  "x_um": 380.07,
+                  "y2_um": 17.28,
+                  "y_um": 17.28
+                },
+                {
+                  "current_a": 1.695e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9416666666666668,
+                  "x2_um": 2626.686,
+                  "x_um": 2626.47,
+                  "y2_um": 22.68,
+                  "y_um": 22.68
+                },
+                {
+                  "current_a": 1.672e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.9288888888888889,
+                  "x2_um": 564.102,
+                  "x_um": 563.886,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.604e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8911111111111111,
+                  "x2_um": 472.518,
+                  "x_um": 472.302,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.6e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.888888888888889,
+                  "x2_um": 564.318,
+                  "x_um": 564.102,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.592e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8844444444444445,
+                  "x2_um": 564.534,
+                  "x_um": 564.318,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.585e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8805555555555556,
+                  "x2_um": 472.734,
+                  "x_um": 472.518,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.579e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8772222222222222,
+                  "x2_um": 564.75,
+                  "x_um": 564.534,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.578e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8766666666666668,
+                  "x2_um": 472.95,
+                  "x_um": 472.734,
+                  "y2_um": 19.98,
+                  "y_um": 19.98
+                },
+                {
+                  "current_a": 1.537e-05,
+                  "layer": "M2",
+                  "ma_per_um": 0.8538888888888889,
+                  "x2_um": 2626.47,
+                  "x_um": 2626.254,
+                  "y2_um": 22.68,
+                  "y_um": 22.68
+                }
+              ],
+              "limit_basis": "assumption: ASAP7's technology LEF carries no EM rules; 1 mA/um is the order of published 7-10 nm lower-metal DC guidance",
+              "per_layer": {
+                "M1": {
+                  "max_current_a": 9.171e-06,
+                  "max_ma_per_um": 0.5095000000000001,
+                  "over_assumed_limit": false,
+                  "segments": 930658
+                },
+                "M1-M2": {
+                  "max_current_a": 2.011e-05,
+                  "segments": 1436382
+                },
+                "M2": {
+                  "max_current_a": 1.867e-05,
+                  "max_ma_per_um": 1.0372222222222223,
+                  "over_assumed_limit": true,
+                  "segments": 930496
+                },
+                "M2-M3": {
+                  "max_current_a": 2.865e-05,
+                  "segments": 37252
+                },
+                "M3-M4": {
+                  "max_current_a": 2.865e-05,
+                  "segments": 37252
+                },
+                "M4-M5": {
+                  "max_current_a": 2.865e-05,
+                  "segments": 37252
+                },
+                "M5": {
+                  "max_current_a": 2.855e-05,
+                  "max_ma_per_um": 0.23791666666666667,
+                  "over_assumed_limit": false,
+                  "segments": 36696
+                },
+                "M5-M6": {
+                  "max_current_a": 3.97e-05,
+                  "segments": 3892
+                },
+                "M6": {
+                  "max_current_a": 6.436e-20,
+                  "max_ma_per_um": 2.2347222222222226e-16,
+                  "over_assumed_limit": false,
+                  "segments": 32802
+                }
+              },
+              "stripe_width_um": {
+                "M1": 0.018,
+                "M2": 0.018,
+                "M5": 0.12,
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
+              }
+            }
+          },
+          "ir": [
+            {
+              "average_ir_drop_v": 7.71e-06,
+              "average_voltage_v": 0.7,
+              "em_average_current_a": 4.71e-08,
+              "em_max_current_a": 4.07e-05,
+              "net": "VDD",
+              "resistors": 3441361,
+              "source_type": "PINS",
+              "supply_v": 0.7,
+              "total_power_w": 0.00411,
+              "worst_drop_percent": 0.22,
+              "worst_ir_drop_v": 0.00153,
+              "worst_voltage_v": 0.698
+            },
+            {
+              "average_ir_drop_v": 7.81e-06,
+              "average_voltage_v": 7.81e-06,
+              "em_average_current_a": 4.74e-08,
+              "em_max_current_a": 3.97e-05,
+              "net": "VSS",
+              "resistors": 3482682,
+              "source_type": "PINS",
+              "supply_v": 0.0,
+              "total_power_w": 0.00411,
+              "worst_drop_percent": 0.19,
+              "worst_ir_drop_v": 0.00131,
+              "worst_voltage_v": 0.00131
+            },
+            {
+              "average_ir_drop_v": 0.000821,
+              "average_voltage_v": 0.699,
+              "em_average_current_a": 3.11e-07,
+              "em_max_current_a": 5.85e-05,
+              "net": "VDD",
+              "resistors": 3441361,
+              "source_type": "BUMPS",
+              "supply_v": 0.7,
+              "total_power_w": 0.00411,
+              "worst_drop_percent": 0.55,
+              "worst_ir_drop_v": 0.00388,
+              "worst_voltage_v": 0.696
+            },
+            {
+              "average_ir_drop_v": 0.00125,
+              "average_voltage_v": 0.00125,
+              "em_average_current_a": 3.72e-07,
+              "em_max_current_a": 4.93e-05,
+              "net": "VSS",
+              "resistors": 3482682,
+              "source_type": "BUMPS",
+              "supply_v": 0.0,
+              "total_power_w": 0.00411,
+              "worst_drop_percent": 1.09,
+              "worst_ir_drop_v": 0.00762,
+              "worst_voltage_v": 0.00762
+            }
+          ],
+          "ir_by_hierarchy": {
+            "BUMPS.VDD": {
+              "__other__": {
+                "average_drop_v": 0.0012105606339844748,
+                "terminals": 2713,
+                "worst_drop_v": 0.0038769999999999083
+              },
+              "__physical__": {
+                "average_drop_v": 0.000823755172844695,
+                "terminals": 351934,
+                "worst_drop_v": 0.0037769999999999193
+              }
+            },
+            "BUMPS.VSS": {
+              "__other__": {
+                "average_drop_v": 0.0023016026538886874,
+                "terminals": 2713,
+                "worst_drop_v": 0.007623
+              },
+              "__physical__": {
+                "average_drop_v": 0.0012635411469193007,
+                "terminals": 351934,
+                "worst_drop_v": 0.007584
+              }
+            },
+            "PINS.VDD": {
+              "__other__": {
+                "average_drop_v": 0.0001134511610762533,
+                "terminals": 2713,
+                "worst_drop_v": 0.0015339999999999243
+              },
+              "__physical__": {
+                "average_drop_v": 8.218526769208143e-06,
+                "terminals": 351934,
+                "worst_drop_v": 0.0014329999999999066
+              }
+            },
+            "PINS.VSS": {
+              "__other__": {
+                "average_drop_v": 0.00011464319941024653,
+                "terminals": 2713,
+                "worst_drop_v": 0.001308
+              },
+              "__physical__": {
+                "average_drop_v": 8.39376985457612e-06,
+                "terminals": 351934,
+                "worst_drop_v": 0.001179
+              }
+            }
+          },
+          "libraries": [
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+            "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib"
+          ],
+          "power_by_hierarchy_w": {
+            "__other__": {
+              "instances": 354647,
+              "internal": 0.0024049985130316642,
+              "leakage": 7.498007706072422e-07,
+              "switching": 0.001699359716239357,
+              "total": 0.0041051081189174
+            }
+          },
+          "power_w": {
+            "clock": {
+              "internal": 0.0017109181499108672,
+              "leakage": 1.227306398732253e-07,
+              "switching": 0.0009790218900889158,
+              "total": 0.002690062625333667
+            },
+            "combinational": {
+              "internal": 0.00037231712485663593,
+              "leakage": 5.47881654711091e-07,
+              "switching": 0.0006590218399651349,
+              "total": 0.0010318867862224579
+            },
+            "macro": {
+              "internal": 0.0,
+              "leakage": 0.0,
+              "switching": 0.0,
+              "total": 0.0
+            },
+            "sequential": {
+              "internal": 0.0003217633056920022,
+              "leakage": 7.918853839328222e-08,
+              "switching": 6.131621194072068e-05,
+              "total": 0.0003831587091553956
+            },
+            "total": {
+              "internal": 0.0024049992207437754,
+              "leakage": 7.498006766581966e-07,
+              "switching": 0.0016993593890219927,
+              "total": 0.0041051083244383335
+            }
+          },
+          "session_seconds": 461.6,
+          "timing": {
+            "hold_tns_ns": 0.0,
+            "hold_wns_ns": 0.34795188952330136,
+            "min_period": [
+              {
+                "clock": "core_clk",
+                "fmax_mhz": 1146.87,
+                "period_min_ns": 0.87
+              }
+            ],
+            "setup_tns_ns": 0.0,
+            "setup_wns_ns": 0.1280597849984133
+          },
+          "timing_ocv": {
+            "derate": 0.05,
+            "hold_wns_ns": 0.27613022979267043,
+            "min_period": [
+              {
+                "clock": "core_clk",
+                "fmax_mhz": 1016.31,
+                "period_min_ns": 0.98
+              }
+            ],
+            "setup_wns_ns": 0.016047163597932013
+          }
+        }
+      },
+      "generated_at": "2026-09-26T11:28:53.498047+00:00",
+      "label": "rom_express_link",
+      "pdn": {
+        "note": "the grid the route built (ORFS grid_strategy-M1-M2-M5-M6)",
+        "variant": null
+      },
+      "plan_entry": {
+        "corners": [
+          "TT",
+          "SS",
+          "FF"
+        ],
+        "derate": 0.05,
+        "ir_sources": [
+          "PINS",
+          "BUMPS"
+        ],
+        "key": "rom_express_link",
+        "record": "${OT_SIGNOFF_ROUTES}/blocks/rom__ot_rom_express_link__s1000_w64_L3000/physical.json"
+      },
+      "record": {
+        "area_um2": 781.955,
+        "cells": 11017,
+        "clock_period_ns": 1.0,
+        "closed": true,
+        "core_area_um2": 106917,
+        "fmax_hz": 1146870000.0,
+        "git_commit": "b1fafddaeaf8c36906d5d95f795de9390b7689a6",
+        "orfs_vectorless_power_w": 0.00410511,
+        "path": "/tmp/claude-1000/so/blocks/rom__ot_rom_express_link__s1000_w64_L3000/physical.json",
+        "top": "ot_rom_express_link"
+      },
+      "routed": {
+        "netlist_sha256": "11b0833a6c92a01536fc12569cef0bde57b14b190b0287f878d406f3c18ea90f",
+        "odb_sha256": "9004fb561b55154b76dcad349e8e6151a49218ac4ef4f1fb280a70fa8a7d973f",
+        "parasitics": "routed SPEF (OpenRCX)",
+        "results_dir": "/tmp/claude-1000/so/blocks/rom__ot_rom_express_link__s1000_w64_L3000/wd/orfs/results/asap7/opentallas_ot_rom_express_link_asap7_signoff/base",
+        "spef_sha256": "4594f267ef584d622f637f9ed7655251b8d5f3314f92d0596f2f69211cc45dcc",
+        "stage": "final"
+      },
+      "schema": "opentallas.signoff.v1",
+      "tool": {
+        "image": "openroad/orfs:latest",
+        "script": "tools/signoff_analysis.py",
+        "sha256": "d9bb244231857639673904f6e042515a8ae7a40ff11ba1b611d8bd9f7fc391b7"
+      }
+    },
     "rom_fabric_router": {
       "activity": {
         "note": "OpenSTA default activity (0.1 at inputs, propagated)",

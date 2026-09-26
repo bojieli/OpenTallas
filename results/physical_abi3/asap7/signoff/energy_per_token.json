@@ -195,7 +195,7 @@
       },
       "memory": {
         "KV and vector memory SRAM": {
-          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound) enable-high cycles {'vq_re': 480, 'kv_re': 125440, 'vx_re': 1140736, 'ww_x_we': 128, 'vr_re': 532, 'kv_we': 17536, 'vs_re': 2077712, 'vi_re': 15328, 'vw_rd_we': 5808, 'vw_xe_we': 292, 'ww_h_we': 640, 'vh_re': 409600, 'vw_me_we': 24576, 'vw_su_we': 510581, 'wxr_re': 80, 'ww_q_we': 14048}",
+          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound) enable-high cycles {'vs_re': 2077712, 'vw_xe_we': 292, 'vx_re': 1140736, 'vw_su_we': 510581, 'ww_h_we': 640, 'ww_q_we': 14048, 'wxr_re': 80, 'vh_re': 409600, 'vw_me_we': 24576, 'vr_re': 532, 'kv_re': 125440, 'ww_x_we': 128, 'vq_re': 480, 'kv_we': 17536, 'vi_re': 15328, 'vw_rd_we': 5808}",
           "bytes_per_token": 52306612.0,
           "energy_j": 0.00013599719119999998,
           "energy_j_high": 0.0006642939724,
@@ -203,7 +203,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "ROM (weights, expert weights, hc, block-quantised, Engram, constants)": {
-          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction) enable-high cycles {'qrom_re': 36800, 'erom_re': 48, 'hrom_re': 409600, 'ewrom_re': 640, 'crom_re': 67332, 'xcrom_re': 1, 'wrom_re': 159744, 'prog_re': 4416}",
+          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction) enable-high cycles {'erom_re': 48, 'crom_re': 67332, 'wrom_re': 159744, 'hrom_re': 409600, 'prog_re': 4416, 'xcrom_re': 1, 'ewrom_re': 640, 'qrom_re': 36800}",
           "bytes_per_token": 46851672.0,
           "energy_j": 3.74813376e-06,
           "energy_j_high": 2.3425836e-05,
@@ -346,6 +346,31 @@
           "note": null,
           "source": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json#blocks.rom_argmax_reduce_gate_level"
         },
+        "express link": {
+          "FF": {
+            "dynamic_j": 5.197375366399298e-06,
+            "leakage_j": 4.705104642822904e-10,
+            "power_w": 0.005305570550262928,
+            "total_j": 5.197845876863581e-06
+          },
+          "SS": {
+            "dynamic_j": 3.1831386755924558e-06,
+            "leakage_j": 1.0160395802264157e-08,
+            "power_w": 0.0032594797667115927,
+            "total_j": 3.19329907139472e-06
+          },
+          "TT": {
+            "dynamic_j": 4.021023302117224e-06,
+            "leakage_j": 7.34576648739261e-10,
+            "power_w": 0.0041051083244383335,
+            "total_j": 4.021757878765963e-06
+          },
+          "activity": "vectorless",
+          "group": null,
+          "instances": 1,
+          "note": null,
+          "source": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json#blocks.rom_express_link"
+        },
         "fabric router": {
           "FF": {
             "dynamic_j": 0.00016161526772243457,
@@ -428,19 +453,18 @@
         }
       },
       "missing": [
-        "four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total",
-        "express link: block rom_express_link not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json"
+        "four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total"
       ],
       "static": {},
       "token_cycles": 1088551,
       "token_time_s": 0.0009796959000000001,
       "totals_j": {
-        "logic_FF": 0.0011246381582157483,
-        "logic_SS": 0.0007352448073170596,
-        "logic_TT": 0.0008962362573613943,
+        "logic_FF": 0.0011298360040926118,
+        "logic_SS": 0.0007384381063884543,
+        "logic_TT": 0.0009002580152401602,
         "memory_and_links": 5.701632e-06,
         "static": 0.0,
-        "token_TT": 0.0009019378893613942
+        "token_TT": 0.0009059596472401601
       }
     },
     "hbm_comparator": {
@@ -555,7 +579,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "vector memory SRAM": {
-          "basis": " enable-high cycles {'va_re': 7377, 'vx_re': 86016, 'vw_rd_we': 113, 'vb_re': 6865, 'vc_re': 5713, 'vw_me_we': 576, 'vw_su_we': 6609}",
+          "basis": " enable-high cycles {'vx_re': 86016, 'vw_su_we': 6609, 'vw_me_we': 576, 'vb_re': 6865, 'vc_re': 5713, 'va_re': 7377, 'vw_rd_we': 113}",
           "bytes_per_token": 487636.0,
           "energy_j": 1.2678536e-06,
           "energy_j_high": 6.1929772e-06,
@@ -719,7 +743,7 @@
           "energy_term": "rom_read_j_per_byte"
         },
         "vector memory SRAM": {
-          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial) enable-high cycles {'va_re': 7377, 'vx_re': 86016, 'vw_rd_we': 113, 'vb_re': 6865, 'vc_re': 5713, 'vw_me_we': 576, 'vw_su_we': 6609}",
+          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial) enable-high cycles {'vx_re': 86016, 'vw_su_we': 6609, 'vw_me_we': 576, 'vb_re': 6865, 'vc_re': 5713, 'va_re': 7377, 'vw_rd_we': 113}",
           "bytes_per_token": 487636.0,
           "energy_j": 1.2678536e-06,
           "energy_j_high": 6.1929772e-06,
@@ -794,6 +818,6 @@
       "value": 2.9e-13
     }
   },
-  "generated_at": "2026-09-26T11:28:48.788814+00:00",
+  "generated_at": "2026-09-26T11:37:32.683459+00:00",
   "schema": "opentallas.signoff.v1.energy_per_token"
 }
