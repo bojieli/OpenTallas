@@ -1,0 +1,3941 @@
+{
+ "schema": "opentallas-rtl-campaign-v1",
+ "block": "sel (index top-512 streaming-filter select)",
+ "rtl": {
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38"
+ },
+ "bench": {
+  "rtl/test/tb_hdc_v41x_sel.sv": "4956bd6294cfab4c2b9e93d2f388ede28dc19016ea0de70af4c12f6527281cef",
+  "rtl/test/hdc_v41x_sel_harness.cpp": "32e0872cc0b1beee5b41dfc9b7f05e174fa0a3b02f7baf07447dafc287452f69"
+ },
+ "tools": {
+  "tools/hdc_golden_v41.py": "e6e95d8cf6ee1835bf7a1229f605d3d2b6756fd0234fdec0c4da2b3d12326a8e",
+  "tools/rtl_hdc_v41_select_campaign.py": "fb314c8a1ba8f3be1f204f9498f98f1c042b8c09006ca8ceb9e79226cb08cbd9",
+  "tools/rtl_hdc_v41x_sel_campaign.py": "be281d187bbe5ca761a40b45709f35597fb166c1a631a184a402e6852ceb81fb"
+ },
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "real_vehicle": {
+  "positions": 400,
+  "index_sets": 3197,
+  "golden_checks": 3197,
+  "tokens": [
+   0,
+   3563,
+   3745,
+   418,
+   170,
+   16,
+   3564,
+   3582,
+   3118,
+   3583,
+   2357,
+   276,
+   3270,
+   44,
+   790,
+   223,
+   2498,
+   1741,
+   858,
+   2588,
+   983,
+   1289,
+   2967,
+   2084,
+   3275,
+   422,
+   2318,
+   1997,
+   2659,
+   655,
+   258,
+   3471,
+   866,
+   1713,
+   1009,
+   2799,
+   477,
+   346,
+   3319,
+   3847,
+   952,
+   3768,
+   2266,
+   2686,
+   3554,
+   1480,
+   415,
+   1165,
+   2678,
+   1327,
+   1780,
+   917,
+   2912,
+   1877,
+   2759,
+   2208,
+   682,
+   91,
+   879,
+   49,
+   1802,
+   3931,
+   972,
+   775,
+   3320,
+   426,
+   2137,
+   3972,
+   3031,
+   2851,
+   92,
+   2124,
+   2343,
+   3680,
+   2789,
+   1646,
+   143,
+   989,
+   2357,
+   1780,
+   2100,
+   2955,
+   3901,
+   2034,
+   751,
+   1060,
+   830,
+   2430,
+   4032,
+   3472,
+   892,
+   1432,
+   3876,
+   1539,
+   3680,
+   2603,
+   604,
+   197,
+   3190,
+   1481,
+   2291,
+   3667,
+   2175,
+   2514,
+   1350,
+   583,
+   2419,
+   1603,
+   3531,
+   2543,
+   1669,
+   2804,
+   2534,
+   3704,
+   409,
+   3766,
+   1270,
+   2777,
+   2758,
+   2422,
+   775,
+   2137,
+   3572,
+   4037,
+   3774,
+   2071,
+   2437,
+   2085,
+   3802,
+   788,
+   2657,
+   3153,
+   111,
+   3168,
+   2713,
+   198,
+   2155,
+   2280,
+   948,
+   1477,
+   4020,
+   448,
+   2923,
+   3528,
+   1224,
+   1537,
+   3480,
+   936,
+   178,
+   3551,
+   1421,
+   2582,
+   2047,
+   2733,
+   2498,
+   2213,
+   2126,
+   3514,
+   1802,
+   2466,
+   259,
+   3385,
+   3245,
+   865,
+   2500,
+   2814,
+   195,
+   2100,
+   1735,
+   3438,
+   3817,
+   3691,
+   987,
+   2267,
+   3804,
+   3986,
+   1041,
+   821,
+   277,
+   1148,
+   2930,
+   521,
+   858,
+   3946,
+   48,
+   3256,
+   1109,
+   897,
+   2875,
+   2719,
+   1528,
+   100,
+   1794,
+   504,
+   2154,
+   1343,
+   831,
+   657,
+   1676,
+   2836,
+   343,
+   212,
+   3398,
+   2727,
+   3771,
+   3334,
+   1091,
+   39,
+   1181,
+   3464,
+   175,
+   108,
+   1764,
+   3551,
+   1979,
+   257,
+   2446,
+   932,
+   3119,
+   2538,
+   3311,
+   3649,
+   3851,
+   3162,
+   1772,
+   1742,
+   613,
+   90,
+   289,
+   495,
+   3029,
+   1834,
+   675,
+   3171,
+   1109,
+   3319,
+   2463,
+   3408,
+   2886,
+   75,
+   2841,
+   1468,
+   2513,
+   505,
+   3714,
+   3101,
+   322,
+   147,
+   3714,
+   1220,
+   3617,
+   448,
+   1409,
+   3216,
+   1986,
+   3352,
+   1690,
+   2074,
+   580,
+   3007,
+   3776,
+   2007,
+   338,
+   2801,
+   639,
+   2787,
+   3613,
+   285,
+   3879,
+   2818,
+   3040,
+   3545,
+   1668,
+   3685,
+   2568,
+   2580,
+   960,
+   2371,
+   1867,
+   1628,
+   2073,
+   3803,
+   588,
+   2060,
+   2797,
+   1763,
+   3050,
+   654,
+   3905,
+   1803,
+   106,
+   291,
+   1672,
+   1054,
+   658,
+   2766,
+   1639,
+   1353,
+   2517,
+   3523,
+   2101,
+   3593,
+   436,
+   532,
+   1056,
+   2374,
+   1253,
+   1946,
+   3166,
+   1464,
+   2112,
+   1772,
+   1592,
+   65,
+   1101,
+   1093,
+   2759,
+   1737,
+   1123,
+   1079,
+   284,
+   2741,
+   1415,
+   3361,
+   1046,
+   1001,
+   3253,
+   3334,
+   626,
+   2540,
+   3881,
+   1918,
+   1288,
+   613,
+   2114,
+   208,
+   51,
+   3390,
+   3104,
+   2691,
+   1955,
+   1558,
+   3161,
+   2563,
+   3354,
+   2936,
+   1715,
+   2155,
+   281,
+   2698,
+   3931,
+   3719,
+   1512,
+   1568,
+   3216,
+   2919,
+   1662,
+   1739,
+   1742,
+   2944,
+   71,
+   1433,
+   3835,
+   2755,
+   486,
+   250,
+   1662,
+   3620,
+   3162,
+   2224,
+   1243,
+   1422,
+   1718,
+   1932,
+   3460,
+   1084,
+   3693,
+   2126,
+   365,
+   2962,
+   123,
+   3931,
+   1943,
+   3564,
+   2611,
+   3700,
+   881,
+   397,
+   2624,
+   946,
+   345,
+   3969,
+   1353,
+   3110,
+   753,
+   2271,
+   1464,
+   2337,
+   3801,
+   3579,
+   259
+  ],
+  "index_topk": 16
+ },
+ "status": "pass",
+ "spec": {
+  "exact_golden_equality": {
+   "spec": "every segment bit-exact",
+   "measured": true,
+   "met": true
+  },
+  "ingest_scores_per_cycle": {
+   "spec": 64,
+   "measured_min": 63.939,
+   "stall_cycles": 0,
+   "met": true
+  },
+  "tail_1m_per_die": {
+   "spec_max_cycles": 181,
+   "measured_max": 147,
+   "met": true,
+   "families": [
+    "lognormal",
+    "normal",
+    "real_resampled",
+    "real_tiled",
+    "recency",
+    "uniform"
+   ]
+  },
+  "tail_200k_per_die": {
+   "spec_max_cycles": 155,
+   "measured_max": 149,
+   "met": true
+  },
+  "overflow_fallback": {
+   "spec": "exact, slower (full replay)",
+   "measured": [
+    {
+     "family": "ascending",
+     "n": 50000,
+     "tail": 1635,
+     "ovf": 1
+    },
+    {
+     "family": "descending",
+     "n": 50000,
+     "tail": 231,
+     "ovf": 1
+    },
+    {
+     "family": "all_equal",
+     "n": 50000,
+     "tail": 1634,
+     "ovf": 1
+    },
+    {
+     "family": "ties",
+     "n": 50000,
+     "tail": 1634,
+     "ovf": 1
+    },
+    {
+     "family": "masked",
+     "n": 50000,
+     "tail": 108,
+     "ovf": 1
+    },
+    {
+     "family": "masked_few",
+     "n": 50000,
+     "tail": 1635,
+     "ovf": 1
+    },
+    {
+     "family": "ascending",
+     "n": 262144,
+     "tail": 8263,
+     "ovf": 1
+    },
+    {
+     "family": "descending",
+     "n": 262144,
+     "tail": 251,
+     "ovf": 1
+    },
+    {
+     "family": "all_equal",
+     "n": 262144,
+     "tail": 8262,
+     "ovf": 1
+    }
+   ]
+  }
+ },
+ "shipped": {
+  "shipped_200k": [
+   {
+    "family": "normal",
+    "n": 50000,
+    "k": 512,
+    "tail": 123,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     79,
+     77,
+     78,
+     79
+    ],
+    "pass2_lines": [
+     21,
+     17,
+     18,
+     19
+    ],
+    "pass3_lines": [
+     20,
+     17,
+     16,
+     18
+    ]
+   },
+   {
+    "family": "normal",
+    "n": 50000,
+    "k": 512,
+    "tail": 119,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     78,
+     81,
+     79,
+     79
+    ],
+    "pass2_lines": [
+     17,
+     19,
+     18,
+     18
+    ],
+    "pass3_lines": [
+     17,
+     19,
+     17,
+     17
+    ]
+   },
+   {
+    "family": "normal",
+    "n": 50000,
+    "k": 512,
+    "tail": 118,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     80,
+     78,
+     79,
+     81
+    ],
+    "pass2_lines": [
+     18,
+     17,
+     19,
+     19
+    ],
+    "pass3_lines": [
+     18,
+     16,
+     17,
+     18
+    ]
+   },
+   {
+    "family": "uniform",
+    "n": 50000,
+    "k": 512,
+    "tail": 107,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     80,
+     79,
+     80,
+     77
+    ],
+    "pass2_lines": [
+     11,
+     11,
+     11,
+     13
+    ],
+    "pass3_lines": [
+     11,
+     10,
+     11,
+     12
+    ]
+   },
+   {
+    "family": "uniform",
+    "n": 50000,
+    "k": 512,
+    "tail": 105,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     81,
+     75,
+     81,
+     78
+    ],
+    "pass2_lines": [
+     12,
+     10,
+     11,
+     11
+    ],
+    "pass3_lines": [
+     12,
+     10,
+     11,
+     11
+    ]
+   },
+   {
+    "family": "uniform",
+    "n": 50000,
+    "k": 512,
+    "tail": 105,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     80,
+     79,
+     81,
+     78
+    ],
+    "pass2_lines": [
+     12,
+     11,
+     12,
+     11
+    ],
+    "pass3_lines": [
+     12,
+     11,
+     12,
+     10
+    ]
+   },
+   {
+    "family": "lognormal",
+    "n": 50000,
+    "k": 512,
+    "tail": 113,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     86,
+     84,
+     85,
+     85
+    ],
+    "pass2_lines": [
+     16,
+     15,
+     16,
+     16
+    ],
+    "pass3_lines": [
+     16,
+     15,
+     15,
+     16
+    ]
+   },
+   {
+    "family": "lognormal",
+    "n": 50000,
+    "k": 512,
+    "tail": 115,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     85,
+     83,
+     82,
+     84
+    ],
+    "pass2_lines": [
+     17,
+     14,
+     15,
+     16
+    ],
+    "pass3_lines": [
+     17,
+     14,
+     15,
+     15
+    ]
+   },
+   {
+    "family": "lognormal",
+    "n": 50000,
+    "k": 512,
+    "tail": 113,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     87,
+     87,
+     84,
+     85
+    ],
+    "pass2_lines": [
+     16,
+     16,
+     14,
+     15
+    ],
+    "pass3_lines": [
+     15,
+     16,
+     13,
+     15
+    ]
+   },
+   {
+    "family": "recency",
+    "n": 50000,
+    "k": 512,
+    "tail": 149,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     40,
+     55,
+     94,
+     179
+    ],
+    "pass2_lines": [
+     1,
+     2,
+     5,
+     34
+    ],
+    "pass3_lines": [
+     1,
+     1,
+     5,
+     34
+    ]
+   },
+   {
+    "family": "recency",
+    "n": 50000,
+    "k": 512,
+    "tail": 145,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     40,
+     56,
+     94,
+     179
+    ],
+    "pass2_lines": [
+     1,
+     2,
+     7,
+     32
+    ],
+    "pass3_lines": [
+     1,
+     2,
+     7,
+     32
+    ]
+   },
+   {
+    "family": "recency",
+    "n": 50000,
+    "k": 512,
+    "tail": 147,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     40,
+     57,
+     92,
+     182
+    ],
+    "pass2_lines": [
+     1,
+     2,
+     5,
+     34
+    ],
+    "pass3_lines": [
+     1,
+     1,
+     5,
+     34
+    ]
+   },
+   {
+    "family": "real_resampled",
+    "n": 50000,
+    "k": 512,
+    "tail": 105,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     78,
+     81,
+     83,
+     80
+    ],
+    "pass2_lines": [
+     12,
+     12,
+     12,
+     12
+    ],
+    "pass3_lines": [
+     11,
+     11,
+     11,
+     12
+    ]
+   },
+   {
+    "family": "real_resampled",
+    "n": 50000,
+    "k": 512,
+    "tail": 108,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     82,
+     81,
+     83,
+     80
+    ],
+    "pass2_lines": [
+     13,
+     11,
+     12,
+     12
+    ],
+    "pass3_lines": [
+     12,
+     10,
+     11,
+     10
+    ]
+   },
+   {
+    "family": "real_resampled",
+    "n": 50000,
+    "k": 512,
+    "tail": 105,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     82,
+     78,
+     80,
+     79
+    ],
+    "pass2_lines": [
+     12,
+     10,
+     12,
+     10
+    ],
+    "pass3_lines": [
+     11,
+     10,
+     12,
+     10
+    ]
+   },
+   {
+    "family": "real_tiled",
+    "n": 50000,
+    "k": 512,
+    "tail": 106,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     70,
+     83,
+     93,
+     85
+    ],
+    "pass2_lines": [
+     7,
+     13,
+     12,
+     12
+    ],
+    "pass3_lines": [
+     6,
+     13,
+     12,
+     11
+    ]
+   },
+   {
+    "family": "real_tiled",
+    "n": 50000,
+    "k": 512,
+    "tail": 116,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     93,
+     66,
+     90,
+     61
+    ],
+    "pass2_lines": [
+     18,
+     8,
+     16,
+     5
+    ],
+    "pass3_lines": [
+     17,
+     7,
+     15,
+     5
+    ]
+   },
+   {
+    "family": "real_tiled",
+    "n": 50000,
+    "k": 512,
+    "tail": 111,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     78,
+     92,
+     68,
+     93
+    ],
+    "pass2_lines": [
+     15,
+     14,
+     6,
+     14
+    ],
+    "pass3_lines": [
+     15,
+     13,
+     5,
+     14
+    ]
+   }
+  ],
+  "shipped_1m": [
+   {
+    "family": "normal",
+    "n": 262144,
+    "k": 512,
+    "tail": 101,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     95,
+     97,
+     97,
+     101
+    ],
+    "pass2_lines": [
+     9,
+     10,
+     10,
+     9
+    ],
+    "pass3_lines": [
+     9,
+     10,
+     10,
+     9
+    ]
+   },
+   {
+    "family": "normal",
+    "n": 262144,
+    "k": 512,
+    "tail": 103,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     101,
+     94,
+     96,
+     97
+    ],
+    "pass2_lines": [
+     10,
+     9,
+     11,
+     10
+    ],
+    "pass3_lines": [
+     10,
+     9,
+     11,
+     9
+    ]
+   },
+   {
+    "family": "normal",
+    "n": 262144,
+    "k": 512,
+    "tail": 103,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     97,
+     98,
+     98,
+     96
+    ],
+    "pass2_lines": [
+     9,
+     10,
+     11,
+     9
+    ],
+    "pass3_lines": [
+     9,
+     10,
+     11,
+     9
+    ]
+   },
+   {
+    "family": "uniform",
+    "n": 262144,
+    "k": 512,
+    "tail": 102,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     102,
+     101,
+     102,
+     100
+    ],
+    "pass2_lines": [
+     11,
+     8,
+     11,
+     9
+    ],
+    "pass3_lines": [
+     10,
+     8,
+     10,
+     8
+    ]
+   },
+   {
+    "family": "uniform",
+    "n": 262144,
+    "k": 512,
+    "tail": 100,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     100,
+     102,
+     101,
+     102
+    ],
+    "pass2_lines": [
+     8,
+     10,
+     10,
+     10
+    ],
+    "pass3_lines": [
+     8,
+     9,
+     9,
+     9
+    ]
+   },
+   {
+    "family": "uniform",
+    "n": 262144,
+    "k": 512,
+    "tail": 130,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     99,
+     102,
+     102,
+     102
+    ],
+    "pass2_lines": [
+     23,
+     24,
+     23,
+     25
+    ],
+    "pass3_lines": [
+     23,
+     24,
+     23,
+     24
+    ]
+   },
+   {
+    "family": "lognormal",
+    "n": 262144,
+    "k": 512,
+    "tail": 102,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     101,
+     102,
+     104,
+     107
+    ],
+    "pass2_lines": [
+     10,
+     9,
+     11,
+     11
+    ],
+    "pass3_lines": [
+     9,
+     9,
+     10,
+     10
+    ]
+   },
+   {
+    "family": "lognormal",
+    "n": 262144,
+    "k": 512,
+    "tail": 104,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     107,
+     104,
+     103,
+     107
+    ],
+    "pass2_lines": [
+     12,
+     10,
+     9,
+     10
+    ],
+    "pass3_lines": [
+     11,
+     9,
+     9,
+     9
+    ]
+   },
+   {
+    "family": "lognormal",
+    "n": 262144,
+    "k": 512,
+    "tail": 101,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     107,
+     106,
+     106,
+     109
+    ],
+    "pass2_lines": [
+     11,
+     10,
+     9,
+     10
+    ],
+    "pass3_lines": [
+     10,
+     9,
+     9,
+     9
+    ]
+   },
+   {
+    "family": "recency",
+    "n": 262144,
+    "k": 512,
+    "tail": 147,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     40,
+     54,
+     96,
+     241
+    ],
+    "pass2_lines": [
+     1,
+     2,
+     4,
+     33
+    ],
+    "pass3_lines": [
+     1,
+     1,
+     4,
+     32
+    ]
+   },
+   {
+    "family": "recency",
+    "n": 262144,
+    "k": 512,
+    "tail": 146,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     40,
+     54,
+     97,
+     240
+    ],
+    "pass2_lines": [
+     1,
+     1,
+     4,
+     33
+    ],
+    "pass3_lines": [
+     1,
+     1,
+     3,
+     32
+    ]
+   },
+   {
+    "family": "recency",
+    "n": 262144,
+    "k": 512,
+    "tail": 144,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     40,
+     54,
+     98,
+     239
+    ],
+    "pass2_lines": [
+     1,
+     2,
+     4,
+     32
+    ],
+    "pass3_lines": [
+     1,
+     1,
+     4,
+     31
+    ]
+   },
+   {
+    "family": "real_resampled",
+    "n": 262144,
+    "k": 512,
+    "tail": 102,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     90,
+     96,
+     95,
+     97
+    ],
+    "pass2_lines": [
+     9,
+     10,
+     9,
+     11
+    ],
+    "pass3_lines": [
+     8,
+     9,
+     9,
+     10
+    ]
+   },
+   {
+    "family": "real_resampled",
+    "n": 262144,
+    "k": 512,
+    "tail": 102,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     97,
+     96,
+     95,
+     96
+    ],
+    "pass2_lines": [
+     10,
+     8,
+     11,
+     9
+    ],
+    "pass3_lines": [
+     9,
+     8,
+     10,
+     9
+    ]
+   },
+   {
+    "family": "real_resampled",
+    "n": 262144,
+    "k": 512,
+    "tail": 100,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     97,
+     95,
+     95,
+     99
+    ],
+    "pass2_lines": [
+     10,
+     9,
+     9,
+     9
+    ],
+    "pass3_lines": [
+     9,
+     9,
+     9,
+     9
+    ]
+   },
+   {
+    "family": "real_tiled",
+    "n": 262144,
+    "k": 512,
+    "tail": 108,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     98,
+     106,
+     97,
+     92
+    ],
+    "pass2_lines": [
+     14,
+     10,
+     6,
+     9
+    ],
+    "pass3_lines": [
+     13,
+     9,
+     6,
+     9
+    ]
+   },
+   {
+    "family": "real_tiled",
+    "n": 262144,
+    "k": 512,
+    "tail": 105,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     104,
+     79,
+     91,
+     114
+    ],
+    "pass2_lines": [
+     12,
+     6,
+     7,
+     12
+    ],
+    "pass3_lines": [
+     12,
+     5,
+     7,
+     12
+    ]
+   },
+   {
+    "family": "real_tiled",
+    "n": 262144,
+    "k": 512,
+    "tail": 108,
+    "spec_tail": 181,
+    "tail_met": true,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 0,
+    "survivor_lines": [
+     69,
+     124,
+     91,
+     87
+    ],
+    "pass2_lines": [
+     8,
+     14,
+     8,
+     7
+    ],
+    "pass3_lines": [
+     8,
+     13,
+     8,
+     7
+    ]
+   }
+  ],
+  "worst_cases": [
+   {
+    "family": "ascending",
+    "n": 50000,
+    "k": 512,
+    "tail": 1635,
+    "spec_tail": 155,
+    "tail_met": false,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     32,
+     37,
+     44,
+     256
+    ],
+    "pass2_lines": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pass3_lines": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "family": "descending",
+    "n": 50000,
+    "k": 512,
+    "tail": 231,
+    "spec_tail": 155,
+    "tail_met": false,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     76,
+     53,
+     32,
+     29
+    ],
+    "pass2_lines": [
+     76,
+     0,
+     1,
+     0
+    ],
+    "pass3_lines": [
+     76,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "family": "all_equal",
+    "n": 50000,
+    "k": 512,
+    "tail": 1634,
+    "spec_tail": 155,
+    "tail_met": false,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     256,
+     256,
+     256,
+     256
+    ],
+    "pass2_lines": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pass3_lines": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "family": "ties",
+    "n": 50000,
+    "k": 512,
+    "tail": 1634,
+    "spec_tail": 155,
+    "tail_met": false,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     256,
+     256,
+     256,
+     256
+    ],
+    "pass2_lines": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pass3_lines": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "family": "masked",
+    "n": 50000,
+    "k": 512,
+    "tail": 108,
+    "spec_tail": 155,
+    "tail_met": true,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     127,
+     127,
+     128,
+     129
+    ],
+    "pass2_lines": [
+     12,
+     14,
+     13,
+     14
+    ],
+    "pass3_lines": [
+     11,
+     13,
+     12,
+     13
+    ]
+   },
+   {
+    "family": "masked_few",
+    "n": 50000,
+    "k": 512,
+    "tail": 1635,
+    "spec_tail": 155,
+    "tail_met": false,
+    "ingest_cycles": 782,
+    "scores_per_cycle": 63.939,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     256,
+     256,
+     256,
+     256
+    ],
+    "pass2_lines": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pass3_lines": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "family": "ascending",
+    "n": 262144,
+    "k": 512,
+    "tail": 8263,
+    "spec_tail": 181,
+    "tail_met": false,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     32,
+     33,
+     50,
+     256
+    ],
+    "pass2_lines": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pass3_lines": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "family": "descending",
+    "n": 262144,
+    "k": 512,
+    "tail": 251,
+    "spec_tail": 181,
+    "tail_met": false,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     106,
+     53,
+     30,
+     29
+    ],
+    "pass2_lines": [
+     86,
+     0,
+     0,
+     0
+    ],
+    "pass3_lines": [
+     86,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "family": "all_equal",
+    "n": 262144,
+    "k": 512,
+    "tail": 8262,
+    "spec_tail": 181,
+    "tail_met": false,
+    "ingest_cycles": 4096,
+    "scores_per_cycle": 64.0,
+    "stall": 0,
+    "ovf": 1,
+    "survivor_lines": [
+     256,
+     256,
+     256,
+     256
+    ],
+    "pass2_lines": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pass3_lines": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ "configs": [
+  {
+   "name": "shipped_200k",
+   "Q": 4,
+   "W": 16,
+   "IW": 20,
+   "K": 512,
+   "AW": 8,
+   "elements": 900000,
+   "expected_outputs": 9216,
+   "beats": 56304,
+   "vectors_sha256": "28a73ab0d1adc61aafee19556d35fd2f65949cc8a1ad30da7173ba1fa69a38ec",
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 18,
+     "beats": 56304,
+     "elements": 900000,
+     "outputs": 9216,
+     "out_beats": 611,
+     "errors": 0,
+     "tail_min": 105,
+     "tail_max": 149,
+     "ovf_segments": 0,
+     "stall_cycles": 0,
+     "cycles": 16662,
+     "per_segment": [
+      {
+       "seg": 0,
+       "tail": 123,
+       "first": 27,
+       "last": 808,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        79,
+        77,
+        78,
+        79
+       ],
+       "n2": [
+        21,
+        17,
+        18,
+        19
+       ],
+       "n3": [
+        20,
+        17,
+        16,
+        18
+       ],
+       "family": "normal",
+       "n": 50000
+      },
+      {
+       "seg": 1,
+       "tail": 119,
+       "first": 957,
+       "last": 1738,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        78,
+        81,
+        79,
+        79
+       ],
+       "n2": [
+        17,
+        19,
+        18,
+        18
+       ],
+       "n3": [
+        17,
+        19,
+        17,
+        17
+       ],
+       "family": "normal",
+       "n": 50000
+      },
+      {
+       "seg": 2,
+       "tail": 118,
+       "first": 1883,
+       "last": 2664,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        80,
+        78,
+        79,
+        81
+       ],
+       "n2": [
+        18,
+        17,
+        19,
+        19
+       ],
+       "n3": [
+        18,
+        16,
+        17,
+        18
+       ],
+       "family": "normal",
+       "n": 50000
+      },
+      {
+       "seg": 3,
+       "tail": 107,
+       "first": 2808,
+       "last": 3589,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        80,
+        79,
+        80,
+        77
+       ],
+       "n2": [
+        11,
+        11,
+        11,
+        13
+       ],
+       "n3": [
+        11,
+        10,
+        11,
+        12
+       ],
+       "family": "uniform",
+       "n": 50000
+      },
+      {
+       "seg": 4,
+       "tail": 105,
+       "first": 3722,
+       "last": 4503,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        81,
+        75,
+        81,
+        78
+       ],
+       "n2": [
+        12,
+        10,
+        11,
+        11
+       ],
+       "n3": [
+        12,
+        10,
+        11,
+        11
+       ],
+       "family": "uniform",
+       "n": 50000
+      },
+      {
+       "seg": 5,
+       "tail": 105,
+       "first": 4634,
+       "last": 5415,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        80,
+        79,
+        81,
+        78
+       ],
+       "n2": [
+        12,
+        11,
+        12,
+        11
+       ],
+       "n3": [
+        12,
+        11,
+        12,
+        10
+       ],
+       "family": "uniform",
+       "n": 50000
+      },
+      {
+       "seg": 6,
+       "tail": 113,
+       "first": 5546,
+       "last": 6327,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        86,
+        84,
+        85,
+        85
+       ],
+       "n2": [
+        16,
+        15,
+        16,
+        16
+       ],
+       "n3": [
+        16,
+        15,
+        15,
+        16
+       ],
+       "family": "lognormal",
+       "n": 50000
+      },
+      {
+       "seg": 7,
+       "tail": 115,
+       "first": 6466,
+       "last": 7247,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        85,
+        83,
+        82,
+        84
+       ],
+       "n2": [
+        17,
+        14,
+        15,
+        16
+       ],
+       "n3": [
+        17,
+        14,
+        15,
+        15
+       ],
+       "family": "lognormal",
+       "n": 50000
+      },
+      {
+       "seg": 8,
+       "tail": 113,
+       "first": 7388,
+       "last": 8169,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        87,
+        87,
+        84,
+        85
+       ],
+       "n2": [
+        16,
+        16,
+        14,
+        15
+       ],
+       "n3": [
+        15,
+        16,
+        13,
+        15
+       ],
+       "family": "lognormal",
+       "n": 50000
+      },
+      {
+       "seg": 9,
+       "tail": 149,
+       "first": 8308,
+       "last": 9089,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        40,
+        55,
+        94,
+        179
+       ],
+       "n2": [
+        1,
+        2,
+        5,
+        34
+       ],
+       "n3": [
+        1,
+        1,
+        5,
+        34
+       ],
+       "family": "recency",
+       "n": 50000
+      },
+      {
+       "seg": 10,
+       "tail": 145,
+       "first": 9264,
+       "last": 10045,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        40,
+        56,
+        94,
+        179
+       ],
+       "n2": [
+        1,
+        2,
+        7,
+        32
+       ],
+       "n3": [
+        1,
+        2,
+        7,
+        32
+       ],
+       "family": "recency",
+       "n": 50000
+      },
+      {
+       "seg": 11,
+       "tail": 147,
+       "first": 10216,
+       "last": 10997,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        40,
+        57,
+        92,
+        182
+       ],
+       "n2": [
+        1,
+        2,
+        5,
+        34
+       ],
+       "n3": [
+        1,
+        1,
+        5,
+        34
+       ],
+       "family": "recency",
+       "n": 50000
+      },
+      {
+       "seg": 12,
+       "tail": 105,
+       "first": 11170,
+       "last": 11951,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        78,
+        81,
+        83,
+        80
+       ],
+       "n2": [
+        12,
+        12,
+        12,
+        12
+       ],
+       "n3": [
+        11,
+        11,
+        11,
+        12
+       ],
+       "family": "real_resampled",
+       "n": 50000
+      },
+      {
+       "seg": 13,
+       "tail": 108,
+       "first": 12082,
+       "last": 12863,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        82,
+        81,
+        83,
+        80
+       ],
+       "n2": [
+        13,
+        11,
+        12,
+        12
+       ],
+       "n3": [
+        12,
+        10,
+        11,
+        10
+       ],
+       "family": "real_resampled",
+       "n": 50000
+      },
+      {
+       "seg": 14,
+       "tail": 105,
+       "first": 12997,
+       "last": 13778,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        82,
+        78,
+        80,
+        79
+       ],
+       "n2": [
+        12,
+        10,
+        12,
+        10
+       ],
+       "n3": [
+        11,
+        10,
+        12,
+        10
+       ],
+       "family": "real_resampled",
+       "n": 50000
+      },
+      {
+       "seg": 15,
+       "tail": 106,
+       "first": 13909,
+       "last": 14690,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        70,
+        83,
+        93,
+        85
+       ],
+       "n2": [
+        7,
+        13,
+        12,
+        12
+       ],
+       "n3": [
+        6,
+        13,
+        12,
+        11
+       ],
+       "family": "real_tiled",
+       "n": 50000
+      },
+      {
+       "seg": 16,
+       "tail": 116,
+       "first": 14822,
+       "last": 15603,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        93,
+        66,
+        90,
+        61
+       ],
+       "n2": [
+        18,
+        8,
+        16,
+        5
+       ],
+       "n3": [
+        17,
+        7,
+        15,
+        5
+       ],
+       "family": "real_tiled",
+       "n": 50000
+      },
+      {
+       "seg": 17,
+       "tail": 111,
+       "first": 15745,
+       "last": 16526,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        78,
+        92,
+        68,
+        93
+       ],
+       "n2": [
+        15,
+        14,
+        6,
+        14
+       ],
+       "n3": [
+        15,
+        13,
+        5,
+        14
+       ],
+       "family": "real_tiled",
+       "n": 50000
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "shipped_1m",
+   "Q": 4,
+   "W": 16,
+   "IW": 20,
+   "K": 512,
+   "AW": 8,
+   "elements": 4718592,
+   "expected_outputs": 9216,
+   "beats": 294912,
+   "vectors_sha256": "40dceba25f2db86da3131728c9b91f3169166665a90bb51e278e7785cb86896e",
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 18,
+     "beats": 294912,
+     "elements": 4718592,
+     "outputs": 9216,
+     "out_beats": 612,
+     "errors": 0,
+     "tail_min": 100,
+     "tail_max": 147,
+     "ovf_segments": 0,
+     "stall_cycles": 0,
+     "cycles": 76212,
+     "per_segment": [
+      {
+       "seg": 0,
+       "tail": 101,
+       "first": 27,
+       "last": 4122,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        95,
+        97,
+        97,
+        101
+       ],
+       "n2": [
+        9,
+        10,
+        10,
+        9
+       ],
+       "n3": [
+        9,
+        10,
+        10,
+        9
+       ],
+       "family": "normal",
+       "n": 262144
+      },
+      {
+       "seg": 1,
+       "tail": 103,
+       "first": 4249,
+       "last": 8344,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        101,
+        94,
+        96,
+        97
+       ],
+       "n2": [
+        10,
+        9,
+        11,
+        10
+       ],
+       "n3": [
+        10,
+        9,
+        11,
+        9
+       ],
+       "family": "normal",
+       "n": 262144
+      },
+      {
+       "seg": 2,
+       "tail": 103,
+       "first": 8473,
+       "last": 12568,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        97,
+        98,
+        98,
+        96
+       ],
+       "n2": [
+        9,
+        10,
+        11,
+        9
+       ],
+       "n3": [
+        9,
+        10,
+        11,
+        9
+       ],
+       "family": "normal",
+       "n": 262144
+      },
+      {
+       "seg": 3,
+       "tail": 102,
+       "first": 12697,
+       "last": 16792,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        102,
+        101,
+        102,
+        100
+       ],
+       "n2": [
+        11,
+        8,
+        11,
+        9
+       ],
+       "n3": [
+        10,
+        8,
+        10,
+        8
+       ],
+       "family": "uniform",
+       "n": 262144
+      },
+      {
+       "seg": 4,
+       "tail": 100,
+       "first": 16920,
+       "last": 21015,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        100,
+        102,
+        101,
+        102
+       ],
+       "n2": [
+        8,
+        10,
+        10,
+        10
+       ],
+       "n3": [
+        8,
+        9,
+        9,
+        9
+       ],
+       "family": "uniform",
+       "n": 262144
+      },
+      {
+       "seg": 5,
+       "tail": 130,
+       "first": 21141,
+       "last": 25236,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        99,
+        102,
+        102,
+        102
+       ],
+       "n2": [
+        23,
+        24,
+        23,
+        25
+       ],
+       "n3": [
+        23,
+        24,
+        23,
+        24
+       ],
+       "family": "uniform",
+       "n": 262144
+      },
+      {
+       "seg": 6,
+       "tail": 102,
+       "first": 25392,
+       "last": 29487,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        101,
+        102,
+        104,
+        107
+       ],
+       "n2": [
+        10,
+        9,
+        11,
+        11
+       ],
+       "n3": [
+        9,
+        9,
+        10,
+        10
+       ],
+       "family": "lognormal",
+       "n": 262144
+      },
+      {
+       "seg": 7,
+       "tail": 104,
+       "first": 29615,
+       "last": 33710,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        107,
+        104,
+        103,
+        107
+       ],
+       "n2": [
+        12,
+        10,
+        9,
+        10
+       ],
+       "n3": [
+        11,
+        9,
+        9,
+        9
+       ],
+       "family": "lognormal",
+       "n": 262144
+      },
+      {
+       "seg": 8,
+       "tail": 101,
+       "first": 33840,
+       "last": 37935,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        107,
+        106,
+        106,
+        109
+       ],
+       "n2": [
+        11,
+        10,
+        9,
+        10
+       ],
+       "n3": [
+        10,
+        9,
+        9,
+        9
+       ],
+       "family": "lognormal",
+       "n": 262144
+      },
+      {
+       "seg": 9,
+       "tail": 147,
+       "first": 38062,
+       "last": 42157,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        40,
+        54,
+        96,
+        241
+       ],
+       "n2": [
+        1,
+        2,
+        4,
+        33
+       ],
+       "n3": [
+        1,
+        1,
+        4,
+        32
+       ],
+       "family": "recency",
+       "n": 262144
+      },
+      {
+       "seg": 10,
+       "tail": 146,
+       "first": 42330,
+       "last": 46425,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        40,
+        54,
+        97,
+        240
+       ],
+       "n2": [
+        1,
+        1,
+        4,
+        33
+       ],
+       "n3": [
+        1,
+        1,
+        3,
+        32
+       ],
+       "family": "recency",
+       "n": 262144
+      },
+      {
+       "seg": 11,
+       "tail": 144,
+       "first": 46597,
+       "last": 50692,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        40,
+        54,
+        98,
+        239
+       ],
+       "n2": [
+        1,
+        2,
+        4,
+        32
+       ],
+       "n3": [
+        1,
+        1,
+        4,
+        31
+       ],
+       "family": "recency",
+       "n": 262144
+      },
+      {
+       "seg": 12,
+       "tail": 102,
+       "first": 50862,
+       "last": 54957,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        90,
+        96,
+        95,
+        97
+       ],
+       "n2": [
+        9,
+        10,
+        9,
+        11
+       ],
+       "n3": [
+        8,
+        9,
+        9,
+        10
+       ],
+       "family": "real_resampled",
+       "n": 262144
+      },
+      {
+       "seg": 13,
+       "tail": 102,
+       "first": 55085,
+       "last": 59180,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        97,
+        96,
+        95,
+        96
+       ],
+       "n2": [
+        10,
+        8,
+        11,
+        9
+       ],
+       "n3": [
+        9,
+        8,
+        10,
+        9
+       ],
+       "family": "real_resampled",
+       "n": 262144
+      },
+      {
+       "seg": 14,
+       "tail": 100,
+       "first": 59308,
+       "last": 63403,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        97,
+        95,
+        95,
+        99
+       ],
+       "n2": [
+        10,
+        9,
+        9,
+        9
+       ],
+       "n3": [
+        9,
+        9,
+        9,
+        9
+       ],
+       "family": "real_resampled",
+       "n": 262144
+      },
+      {
+       "seg": 15,
+       "tail": 108,
+       "first": 63529,
+       "last": 67624,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        98,
+        106,
+        97,
+        92
+       ],
+       "n2": [
+        14,
+        10,
+        6,
+        9
+       ],
+       "n3": [
+        13,
+        9,
+        6,
+        9
+       ],
+       "family": "real_tiled",
+       "n": 262144
+      },
+      {
+       "seg": 16,
+       "tail": 105,
+       "first": 67758,
+       "last": 71853,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        104,
+        79,
+        91,
+        114
+       ],
+       "n2": [
+        12,
+        6,
+        7,
+        12
+       ],
+       "n3": [
+        12,
+        5,
+        7,
+        12
+       ],
+       "family": "real_tiled",
+       "n": 262144
+      },
+      {
+       "seg": 17,
+       "tail": 108,
+       "first": 71984,
+       "last": 76079,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        69,
+        124,
+        91,
+        87
+       ],
+       "n2": [
+        8,
+        14,
+        8,
+        7
+       ],
+       "n3": [
+        8,
+        13,
+        8,
+        7
+       ],
+       "family": "real_tiled",
+       "n": 262144
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "worst_cases",
+   "Q": 4,
+   "W": 16,
+   "IW": 20,
+   "K": 512,
+   "AW": 8,
+   "elements": 1086432,
+   "expected_outputs": 4608,
+   "beats": 67920,
+   "vectors_sha256": "1c2e0a3a80294c7545b4e6b52283e7faf035924263562bf684f34ccb726fd9ef",
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 9,
+     "beats": 67920,
+     "elements": 1086432,
+     "outputs": 4608,
+     "out_beats": 313,
+     "errors": 0,
+     "tail_min": 108,
+     "tail_max": 8263,
+     "ovf_segments": 9,
+     "stall_cycles": 0,
+     "cycles": 40884,
+     "per_segment": [
+      {
+       "seg": 0,
+       "tail": 1635,
+       "first": 27,
+       "last": 808,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        37,
+        44,
+        256
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "ascending",
+       "n": 50000
+      },
+      {
+       "seg": 1,
+       "tail": 231,
+       "first": 2469,
+       "last": 3250,
+       "ovf": 1,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        76,
+        53,
+        32,
+        29
+       ],
+       "n2": [
+        76,
+        0,
+        1,
+        0
+       ],
+       "n3": [
+        76,
+        0,
+        0,
+        0
+       ],
+       "family": "descending",
+       "n": 50000
+      },
+      {
+       "seg": 2,
+       "tail": 1634,
+       "first": 3507,
+       "last": 4288,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        256,
+        256,
+        256,
+        256
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "all_equal",
+       "n": 50000
+      },
+      {
+       "seg": 3,
+       "tail": 1634,
+       "first": 5948,
+       "last": 6729,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        256,
+        256,
+        256,
+        256
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "ties",
+       "n": 50000
+      },
+      {
+       "seg": 4,
+       "tail": 108,
+       "first": 8389,
+       "last": 9170,
+       "ovf": 1,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        127,
+        127,
+        128,
+        129
+       ],
+       "n2": [
+        12,
+        14,
+        13,
+        14
+       ],
+       "n3": [
+        11,
+        13,
+        12,
+        13
+       ],
+       "family": "masked",
+       "n": 50000
+      },
+      {
+       "seg": 5,
+       "tail": 1635,
+       "first": 9304,
+       "last": 10085,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        256,
+        256,
+        256,
+        256
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "masked_few",
+       "n": 50000
+      },
+      {
+       "seg": 6,
+       "tail": 8263,
+       "first": 11746,
+       "last": 15841,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        33,
+        50,
+        256
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "ascending",
+       "n": 262144
+      },
+      {
+       "seg": 7,
+       "tail": 251,
+       "first": 24130,
+       "last": 28225,
+       "ovf": 1,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        106,
+        53,
+        30,
+        29
+       ],
+       "n2": [
+        86,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        86,
+        0,
+        0,
+        0
+       ],
+       "family": "descending",
+       "n": 262144
+      },
+      {
+       "seg": 8,
+       "tail": 8262,
+       "first": 28502,
+       "last": 32597,
+       "ovf": 1,
+       "replays": 2,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        256,
+        256,
+        256,
+        256
+       ],
+       "n2": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "n3": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "family": "all_equal",
+       "n": 262144
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "coverage_q4_w16_k512_aw6",
+   "Q": 4,
+   "W": 16,
+   "IW": 20,
+   "K": 512,
+   "AW": 6,
+   "elements": 1636908,
+   "expected_outputs": 158909,
+   "beats": 120756,
+   "vectors_sha256": "cb98bb80de64683ac2360c82858d6adcc32d8c64f18e1f9ad61498a38e204fd5",
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 400,
+     "beats": 120756,
+     "elements": 1636908,
+     "outputs": 158909,
+     "out_beats": 10824,
+     "errors": 0,
+     "tail_min": 83,
+     "tail_max": 1141,
+     "ovf_segments": 252,
+     "stall_cycles": 0,
+     "cycles": 177639,
+     "pass": true
+    },
+    {
+     "bubble_pct": 10,
+     "out_ready_low_pct": 30,
+     "seed": 2,
+     "segments": 400,
+     "beats": 120756,
+     "elements": 1636908,
+     "outputs": 158909,
+     "out_beats": 10824,
+     "errors": 0,
+     "tail_min": 83,
+     "tail_max": 1242,
+     "ovf_segments": 248,
+     "stall_cycles": 0,
+     "cycles": 192659,
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "reduced_real_q4_w4_k16",
+   "Q": 4,
+   "W": 4,
+   "IW": 16,
+   "K": 16,
+   "AW": 4,
+   "elements": 819794,
+   "expected_outputs": 68936,
+   "beats": 244146,
+   "vectors_sha256": "8f200c6f09ba5467970e32b219d0bd1d346175b64a7b67bb360be039220f8867",
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 4697,
+     "beats": 244146,
+     "elements": 819794,
+     "outputs": 68936,
+     "out_beats": 26612,
+     "errors": 0,
+     "tail_min": 79,
+     "tail_max": 402,
+     "ovf_segments": 2683,
+     "stall_cycles": 0,
+     "cycles": 746466,
+     "pass": true
+    },
+    {
+     "bubble_pct": 15,
+     "out_ready_low_pct": 40,
+     "seed": 5,
+     "segments": 4697,
+     "beats": 244146,
+     "elements": 819794,
+     "outputs": 68936,
+     "out_beats": 26612,
+     "errors": 0,
+     "tail_min": 78,
+     "tail_max": 459,
+     "ovf_segments": 2606,
+     "stall_cycles": 0,
+     "cycles": 796594,
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "cross_die_final_q4_w16_k512",
+   "Q": 4,
+   "W": 16,
+   "IW": 20,
+   "K": 512,
+   "AW": 6,
+   "elements": 24576,
+   "expected_outputs": 6144,
+   "beats": 1536,
+   "vectors_sha256": "3b02ac0758f38aea5abc7df504a6d3843ee0882371140d7fb1aaa6025976dc31",
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 12,
+     "beats": 1536,
+     "elements": 24576,
+     "outputs": 6144,
+     "out_beats": 412,
+     "errors": 0,
+     "tail_min": 127,
+     "tail_max": 146,
+     "ovf_segments": 0,
+     "stall_cycles": 0,
+     "cycles": 2401,
+     "per_segment": [
+      {
+       "seg": 0,
+       "tail": 127,
+       "first": 27,
+       "last": 58,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        12,
+        13,
+        12,
+        11
+       ],
+       "family": "cross_die_normal",
+       "n": 2048
+      },
+      {
+       "seg": 1,
+       "tail": 146,
+       "first": 211,
+       "last": 242,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        32,
+        30,
+        32,
+        30
+       ],
+       "family": "cross_die_real_resampled",
+       "n": 2048
+      },
+      {
+       "seg": 2,
+       "tail": 144,
+       "first": 414,
+       "last": 445,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        29,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        29,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        0,
+        32,
+        0,
+        0
+       ],
+       "family": "cross_die_ties",
+       "n": 2048
+      },
+      {
+       "seg": 3,
+       "tail": 146,
+       "first": 615,
+       "last": 646,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "family": "cross_die_recency",
+       "n": 2048
+      },
+      {
+       "seg": 4,
+       "tail": 127,
+       "first": 818,
+       "last": 849,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        11,
+        12,
+        13,
+        12
+       ],
+       "family": "cross_die_normal",
+       "n": 2048
+      },
+      {
+       "seg": 5,
+       "tail": 146,
+       "first": 1002,
+       "last": 1033,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        32,
+        31,
+        32,
+        32
+       ],
+       "family": "cross_die_real_resampled",
+       "n": 2048
+      },
+      {
+       "seg": 6,
+       "tail": 145,
+       "first": 1205,
+       "last": 1236,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        29
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        29
+       ],
+       "n3": [
+        32,
+        32,
+        32,
+        0
+       ],
+       "family": "cross_die_ties",
+       "n": 2048
+      },
+      {
+       "seg": 7,
+       "tail": 146,
+       "first": 1407,
+       "last": 1438,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "family": "cross_die_recency",
+       "n": 2048
+      },
+      {
+       "seg": 8,
+       "tail": 127,
+       "first": 1610,
+       "last": 1641,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        13,
+        12,
+        11,
+        13
+       ],
+       "family": "cross_die_normal",
+       "n": 2048
+      },
+      {
+       "seg": 9,
+       "tail": 146,
+       "first": 1794,
+       "last": 1825,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "family": "cross_die_real_resampled",
+       "n": 2048
+      },
+      {
+       "seg": 10,
+       "tail": 145,
+       "first": 1997,
+       "last": 2028,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        29,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        29,
+        32
+       ],
+       "n3": [
+        32,
+        32,
+        0,
+        32
+       ],
+       "family": "cross_die_ties",
+       "n": 2048
+      },
+      {
+       "seg": 11,
+       "tail": 146,
+       "first": 2199,
+       "last": 2230,
+       "ovf": 0,
+       "replays": 0,
+       "stall": 0,
+       "k": 512,
+       "nhead": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n2": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "n3": [
+        32,
+        32,
+        32,
+        32
+       ],
+       "family": "cross_die_recency",
+       "n": 2048
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "pass": true
+  },
+  {
+   "name": "edge_q2_w8_k7_aw3",
+   "Q": 2,
+   "W": 8,
+   "IW": 10,
+   "K": 7,
+   "AW": 3,
+   "elements": 137469,
+   "expected_outputs": 7473,
+   "beats": 21437,
+   "vectors_sha256": "04825cde552692768ca916ba382a958edc0f0c39d08bd673220b08e83bc773f2",
+   "runs": [
+    {
+     "bubble_pct": 0,
+     "out_ready_low_pct": 0,
+     "seed": 1,
+     "segments": 1500,
+     "beats": 21437,
+     "elements": 137469,
+     "outputs": 7473,
+     "out_beats": 3000,
+     "errors": 0,
+     "tail_min": 81,
+     "tail_max": 163,
+     "ovf_segments": 987,
+     "stall_cycles": 0,
+     "cycles": 194140,
+     "pass": true
+    },
+    {
+     "bubble_pct": 20,
+     "out_ready_low_pct": 50,
+     "seed": 7,
+     "segments": 1500,
+     "beats": 21437,
+     "elements": 137469,
+     "outputs": 7473,
+     "out_beats": 3000,
+     "errors": 0,
+     "tail_min": 81,
+     "tail_max": 181,
+     "ovf_segments": 987,
+     "stall_cycles": 0,
+     "cycles": 206210,
+     "pass": true
+    }
+   ],
+   "pass": true
+  }
+ ],
+ "mutations": [
+  {
+   "mutation": "control",
+   "applied": true,
+   "pass": true,
+   "errors": 0
+  },
+  {
+   "mutation": "filter keeps only strictly greater keys",
+   "applied": true,
+   "pass": false,
+   "errors": 58
+  },
+  {
+   "mutation": "coarse bound one bucket high",
+   "applied": true,
+   "pass": false,
+   "errors": 686
+  },
+  {
+   "mutation": "fine bound used right after a bucket change",
+   "applied": true,
+   "pass": false,
+   "errors": 44
+  },
+  {
+   "mutation": "GC keeps only strictly greater keys",
+   "applied": true,
+   "pass": false,
+   "errors": 313
+  },
+  {
+   "mutation": "tie to the higher index",
+   "applied": true,
+   "pass": false,
+   "errors": 4322
+  },
+  {
+   "mutation": "tie quota ignores earlier quarters",
+   "applied": true,
+   "pass": false,
+   "errors": 2429
+  },
+  {
+   "mutation": "abort loses the unread range",
+   "applied": true,
+   "pass": false,
+   "errors": 203
+  },
+  {
+   "mutation": "-0 not canonicalised",
+   "applied": true,
+   "pass": false,
+   "errors": 162
+  },
+  {
+   "mutation": "pass 2 drops the boundary bucket",
+   "applied": true,
+   "pass": false,
+   "errors": 87
+  },
+  {
+   "mutation": "search result taken early",
+   "applied": true,
+   "pass": false,
+   "errors": 74
+  }
+ ],
+ "quick": false
+}
