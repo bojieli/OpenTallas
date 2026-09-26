@@ -1872,7 +1872,11 @@ def report_tables(signoffs: list[Path], energy: Path | None) -> str:
     # an analysis of one instance inside a larger route (report_group) contributes its group's power
     # only: its timing, clock tree and grid are the host route's, reported under the host
     groups_only = {key: (b.get("plan_entry") or {}).get("report_group") for _, key, b in blocks}
-    main_blocks = [(a, k, b) for a, k, b in blocks if not groups_only.get(k)]
+    # a PDN-variant analysis repeats its host's power and timing; it only adds IR rows
+    pdn_variant = {key for _, key, b in blocks if (b.get("pdn") or {}).get("variant")}
+    ir_blocks = [(a, k, b) for a, k, b in blocks if not groups_only.get(k)]
+    main_blocks = [(a, k, b) for a, k, b in ir_blocks if k not in pdn_variant]
+    blocks = [(a, k, b) for a, k, b in blocks if k not in pdn_variant]
     out: list[str] = []
     out.append("#### Power per block (activity-annotated, TT 0.70 V 25 C, at the routed 0.9 ns clock)\n")
     out.append("| Architecture | Block | Stage | Activity | Total mW | Internal | Switching | Leakage | "
@@ -1936,9 +1940,9 @@ def report_tables(signoffs: list[Path], energy: Path | None) -> str:
                    f"{fm('FF', True)} | {holds} |")
     out.append("\n#### Static IR drop and EM (TT, activity-annotated instance power)\n")
     out.append("| Block | Die um | Source model | VDD worst mV | VDD average mV | VSS worst mV | "
-               "Max M2 mA/um | Max M5 mA/um | Max M6 mA/um |")
-    out.append("|---|---|---|---:|---:|---:|---:|---:|---:|")
-    for arch, key, b in main_blocks:
+               "Max M2 mA/um | Max M5 mA/um | Max M6 mA/um | Max M7 mA/um | Max M8 mA/um |")
+    out.append("|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|")
+    for arch, key, b in ir_blocks:
         tt = b["corners"].get("TT") or {}
         irs = tt.get("ir") or []
         for src in ("PINS", "BUMPS"):
@@ -1949,10 +1953,14 @@ def report_tables(signoffs: list[Path], energy: Path | None) -> str:
             em = ((tt.get("em") or {}).get(f"{src}.VDD") or {}).get("per_layer", {})
             die = tt.get("die_area_um2")
             side = f"{die ** 0.5:,.0f} x {die ** 0.5:,.0f}" if die else "--"
-            out.append(f"| {key} | {side} | {src.lower()} | "
+            pdn = (b.get("pdn") or {}).get("variant")
+            src_label = src.lower() + (f" {int((b.get('plan_entry') or {}).get('bump_pitch_um', 140))} um"
+                                       if src == "BUMPS" else "") + (f", grid `{Path(pdn).stem}`" if pdn else "")
+            out.append(f"| {key} | {side} | {src_label} | "
                        f"{_f(vdd['worst_ir_drop_v'] * 1e3, '{:.1f}')} | {_f(vdd['average_ir_drop_v'] * 1e3, '{:.2f}')} | "
                        f"{_f(vss and vss['worst_ir_drop_v'] * 1e3, '{:.1f}')} | "
-                       + " | ".join(_f(em.get(l, {}).get('max_ma_per_um'), '{:.2f}') for l in ("M2", "M5", "M6"))
+                       + " | ".join(_f(em.get(l, {}).get('max_ma_per_um'), '{:.2f}')
+                                    for l in ("M2", "M5", "M6", "M7", "M8"))
                        + " |")
     if energy and Path(energy).exists():
         e = json.loads(Path(energy).read_text())

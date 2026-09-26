@@ -96,6 +96,56 @@
           "stages": [
             "power"
           ]
+        },
+        {
+          "key": "qwen_core_pdn_m7_m8_bump70",
+          "routed": "${OT_SIGNOFF_ROUTES}/core/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/core/physical.json",
+          "saif": "core",
+          "saif_scope": "dut",
+          "groups": [
+            "u_me.",
+            "u_su."
+          ],
+          "corners": [
+            "TT"
+          ],
+          "derate": 0.0,
+          "ir_sources": [
+            "BUMPS"
+          ],
+          "bump_pitch_um": 70,
+          "stage": "cts",
+          "gate_min_gb": 35,
+          "pdn_tcl": "configs/signoff/pdn_m7_m8_upper_grid.tcl",
+          "stages": [
+            "power"
+          ]
+        },
+        {
+          "key": "qwen_core_pdn_m7_m8_wide_bump70",
+          "routed": "${OT_SIGNOFF_ROUTES}/core/wd",
+          "record": "${OT_SIGNOFF_ROUTES}/core/physical.json",
+          "saif": "core",
+          "saif_scope": "dut",
+          "groups": [
+            "u_me.",
+            "u_su."
+          ],
+          "corners": [
+            "TT"
+          ],
+          "derate": 0.0,
+          "ir_sources": [
+            "BUMPS"
+          ],
+          "bump_pitch_um": 70,
+          "stage": "cts",
+          "gate_min_gb": 35,
+          "pdn_tcl": "configs/signoff/pdn_m7_m8_wide_upper_grid.tcl",
+          "stages": [
+            "power"
+          ]
         }
       ]
     },

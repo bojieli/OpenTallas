@@ -211,23 +211,24 @@ and `energy_per_token.json`.
 
 #### Static IR drop and EM (TT, activity-annotated instance power)
 
-| Block | Die um | Source model | VDD worst mV | VDD average mV | VSS worst mV | Max M2 mA/um | Max M5 mA/um | Max M6 mA/um |
-|---|---|---|---:|---:|---:|---:|---:|---:|
-| qwen_core | -- | pins | 3.0 | 0.22 | 3.3 | 1.98 | 1.02 | 0.00 |
-| qwen_core | -- | bumps | 224.0 | 101.00 | 217.0 | 6.66 | 23.17 | 17.85 |
-| hbm_kv_stream | 198 x 198 | pins | 2.1 | 0.11 | 2.2 | 1.81 | 0.37 | 0.00 |
-| v41_actquant | -- | pins | 3.0 | 0.33 | 2.5 | 1.73 | 0.75 | 0.00 |
-| v41_blockdot_lane0 | -- | pins | 1.7 | 0.18 | 1.7 | 1.19 | 0.50 | 0.00 |
-| v41_engram_hash | 207 x 207 | pins | 2.3 | 0.41 | 2.1 | 1.59 | 0.70 | 0.00 |
-| v41_fp4qdq | 124 x 124 | pins | 2.4 | 0.27 | 2.6 | 2.03 | 0.73 | 0.00 |
-| v41_select | -- | pins | 2.0 | 0.24 | 1.8 | 1.45 | 0.41 | 0.00 |
-| v41_softplus | 272 x 272 | pins | 6.5 | 0.57 | 6.3 | 3.75 | 2.73 | 0.00 |
-| rom_argmax_reduce_gate_level | 74 x 74 | pins | 2.4 | 0.45 | 2.4 | 1.47 | 1.06 | 0.00 |
-| rom_argmax_reduce_gate_level | 74 x 74 | bumps | 9.8 | 2.19 | 5.9 | 1.59 | 2.66 | 1.01 |
-| rom_mcast_node | 91 x 91 | pins | 2.8 | 0.66 | 2.6 | 1.70 | 1.30 | 0.00 |
-| rom_mcast_node | 91 x 91 | bumps | 29.9 | 11.20 | 29.1 | 1.94 | 6.68 | 4.09 |
-| rom_moe_dispatch | 66 x 66 | pins | 1.9 | 0.58 | 1.9 | 1.21 | 0.64 | 0.00 |
-| rom_moe_dispatch | 66 x 66 | bumps | 3.6 | 0.93 | 4.9 | 1.19 | 1.42 | 1.01 |
+| Block | Die um | Source model | VDD worst mV | VDD average mV | VSS worst mV | Max M2 mA/um | Max M5 mA/um | Max M6 mA/um | Max M7 mA/um | Max M8 mA/um |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| qwen_core | 641 x 641 | pins | 3.0 | 0.22 | 3.3 | 1.98 | 1.02 | 0.00 | -- | -- |
+| qwen_core | 641 x 641 | bumps 140 um | 224.0 | 101.00 | 217.0 | 6.66 | 23.17 | 17.85 | -- | -- |
+| qwen_core_pdn_m7_m8 | 641 x 641 | bumps 140 um, grid `pdn_m7_m8_upper_grid` | 122.0 | 56.60 | 111.0 | 4.07 | 7.76 | 7.33 | 11.72 | 9.43 |
+| hbm_kv_stream | 198 x 198 | pins | 2.1 | 0.11 | 2.2 | 1.81 | 0.37 | 0.00 | -- | -- |
+| v41_actquant | -- | pins | 3.0 | 0.33 | 2.5 | 1.73 | 0.75 | 0.00 | -- | -- |
+| v41_blockdot_lane0 | -- | pins | 1.7 | 0.18 | 1.7 | 1.19 | 0.50 | 0.00 | -- | -- |
+| v41_engram_hash | 207 x 207 | pins | 2.3 | 0.41 | 2.1 | 1.59 | 0.70 | 0.00 | -- | -- |
+| v41_fp4qdq | 124 x 124 | pins | 2.4 | 0.27 | 2.6 | 2.03 | 0.73 | 0.00 | -- | -- |
+| v41_select | -- | pins | 2.0 | 0.24 | 1.8 | 1.45 | 0.41 | 0.00 | -- | -- |
+| v41_softplus | 272 x 272 | pins | 6.5 | 0.57 | 6.3 | 3.75 | 2.73 | 0.00 | -- | -- |
+| rom_argmax_reduce_gate_level | 74 x 74 | pins | 2.4 | 0.45 | 2.4 | 1.47 | 1.06 | 0.00 | -- | -- |
+| rom_argmax_reduce_gate_level | 74 x 74 | bumps 140 um | 9.8 | 2.19 | 5.9 | 1.59 | 2.66 | 1.01 | -- | -- |
+| rom_mcast_node | 91 x 91 | pins | 2.8 | 0.66 | 2.6 | 1.70 | 1.30 | 0.00 | -- | -- |
+| rom_mcast_node | 91 x 91 | bumps 140 um | 29.9 | 11.20 | 29.1 | 1.94 | 6.68 | 4.09 | -- | -- |
+| rom_moe_dispatch | 66 x 66 | pins | 1.9 | 0.58 | 1.9 | 1.21 | 0.64 | 0.00 | -- | -- |
+| rom_moe_dispatch | 66 x 66 | bumps 140 um | 3.6 | 0.93 | 4.9 | 1.19 | 1.42 | 1.01 | -- | -- |
 
 #### Energy per decode step of the reduced vehicles (TT)
 
@@ -327,7 +328,7 @@ under the Qwen package campaign's split rule, not simulated for V4.1).
 | Term | Analytical (`configs/hardware/technology.json`) | Measured here (ASAP7, TT) | Ratio |
 |---|---|---|---|
 | MAC energy, BF16 | 0.33 pJ (0.13-0.70) | 3.97 pJ per MAC in the matrix engine; 16.5 pJ per MAC for the whole Qwen step | 12x; 50x |
-| Clock energy | 8.5e-11 J/mm2/cycle (3e-11-1.6e-10) | `analytical_comparison` in `energy_per_token.json`, clock network alone and with the registers' clock pins | see the JSON |
+| Clock energy | 8.5e-11 J/mm2/cycle (3e-11-1.6e-10) | 4.6e-10 J/mm2/cycle for the Qwen core's clock network alone, 9.3e-10 with the registers' clock pins (0.41 mm2 die at 25% utilisation) | 5.4x; 11x, both above the range |
 | Logic leakage | 0.06 W/mm2 (0.011-0.2) | 0.2 mW/mm2 (Qwen core, RVT, 25 C) | ~300x lower |
 | ROM read | 0.08 pJ/B | not measured (no ROM macro in the routed blocks) | -- |
 
