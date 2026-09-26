@@ -1553,7 +1553,97 @@ def memory_macro_config_lines(macros: dict[str, Any] | None) -> list[str]:
     halo = macros.get("macro_place_halo") or {}
     if halo.get("emitted_in_config"):
         lines.append(f"export MACRO_PLACE_HALO = {halo['x_um']:g} {halo['y_um']:g}")
+    if macros.get("gds_allow_empty"):
+        lines.append(f"export GDS_ALLOW_EMPTY = {macros['gds_allow_empty']}")
     return lines
+
+
+def resolve_macro_views(
+    view_name: str,
+    view: dict[str, Any],
+    specs: list[str],
+    halo: list[float] | None,
+    memory_macros: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Resolve --macro-view NAME=DIR: a macro compiled by tools/mem_compiler.
+
+    DIR (relative to the source tree) holds ``NAME.lef`` and ``NAME_<corner>.lib``
+    written by ``tools/mem_compiler/{sram,rom}_gen.py``; the flow reads them from
+    the read-only ``/src`` mount, so the record's source identity covers them.
+    The views are abstracts with no GDS, so the macro names are added to
+    GDS_ALLOW_EMPTY exactly as the platform does for its own fakeram macros.
+    Merged into the --memory-macro block when both are given.
+    """
+    if not specs:
+        return memory_macros
+    pnr = view.get("pnr")
+    if not pnr:
+        raise FlowError(f"view {view_name} has no place-and-route platform")
+    corner = pnr.get("corner_env") or "TT"
+    corner_tag = {"TT": "tt", "SS": "ss", "FF": "ff"}.get(str(corner).upper(), "tt")
+    entries = []
+    for spec in specs:
+        if "=" not in spec:
+            raise FlowError(f"--macro-view expects NAME=DIR, got {spec!r}")
+        name, rel = spec.split("=", 1)
+        if not _MACRO_NAME_RE.match(name):
+            raise FlowError(f"not a macro name: {name!r}")
+        base = (ROOT / rel).resolve()
+        lef = base / f"{name}.lef"
+        lib = base / f"{name}_{corner_tag}.lib"
+        sheet_path = base / f"{name}.json"
+        for path in (lef, lib):
+            if not path.is_file():
+                raise FlowError(f"--macro-view {name}: {path} missing; run tools/mem_compiler/build_library.py")
+        try:
+            rel_lef = lef.relative_to(ROOT.resolve())
+            rel_lib = lib.relative_to(ROOT.resolve())
+        except ValueError as exc:
+            raise FlowError(f"--macro-view {name}: views must live inside the source tree") from exc
+        sheet = json.loads(sheet_path.read_text()) if sheet_path.is_file() else {}
+        area = sheet.get("area", {})
+        spec_rec = sheet.get("spec", {})
+        bits = sheet.get("capacity_bits")
+        entries.append({
+            "name": name,
+            "lef": {"path": f"/src/{rel_lef}", "sha256": sha256_file(lef)},
+            "lib": {"path": f"/src/{rel_lib}", "sha256": sha256_file(lib)},
+            "views_resolved_from": "OpenTallas memory compiler views in the source tree (tools/mem_compiler)",
+            "generator": sheet.get("generator"),
+            "capacity_bits": bits,
+            "capacity_bytes": None if bits is None else bits / 8.0,
+            "capacity_source": "compiler datasheet",
+            "words": spec_rec.get("words"),
+            "bits_per_word": spec_rec.get("bits"),
+            "banks": spec_rec.get("banks", 1),
+            "footprint": {"width_um": area.get("macro_width_um"), "height_um": area.get("macro_height_um"),
+                          "area_um2": area.get("macro_area_um2"), "source": "LEF SIZE (compiler datasheet)"},
+            "liberty": {"corner": corner_tag, "time_unit": "1ps", "time_unit_ns": 0.001,
+                        "time_unit_matches_standard_cells": view.get("time_unit_ns") == 0.001},
+        })
+    block = memory_macros
+    if block is None:
+        if halo is None:
+            raise FlowError("--macro-view needs --macro-place-halo X Y (the compiler macros declare none)")
+        block = {
+            "platform": pnr["platform"], "requested": [], "macros": [], "additional_lefs": [],
+            "additional_libs": [], "synth_blackboxes": [],
+            "macro_place_halo": {"x_um": float(halo[0]), "y_um": float(halo[1]), "source": "command line",
+                                 "emitted_in_config": True,
+                                 "used_by": "ORFS scripts/macro_place_util.tcl"},
+            "basis": "memory-compiler macros given by --macro-view",
+        }
+    block["requested"] = list(block.get("requested", [])) + list(specs)
+    block["macros"] = list(block["macros"]) + entries
+    block["additional_lefs"] = list(block["additional_lefs"]) + [e["lef"]["path"] for e in entries]
+    block["additional_libs"] = list(block["additional_libs"]) + [e["lib"]["path"] for e in entries]
+    block["synth_blackboxes"] = list(block["synth_blackboxes"]) + [e["name"] for e in entries]
+    names = "|".join(re.escape(e["name"]) for e in entries)
+    block["gds_allow_empty"] = f"(fakeram.*|{names})"
+    block["capacity_bits_total"] = sum((e["capacity_bits"] or 0) for e in block["macros"])
+    block["footprint_area_um2_total"] = round(sum((e["footprint"]["area_um2"] or 0) for e in block["macros"]), 6)
+    block["config_lines"] = memory_macro_config_lines(block)
+    return block
 
 
 # Floorplan geometry, pin edges and routing layers.
@@ -2425,6 +2515,18 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--macro-view",
+        action="append",
+        default=[],
+        metavar="NAME=DIR",
+        help=(
+            "place-and-route with a macro compiled by tools/mem_compiler: DIR (in the source "
+            "tree) holds NAME.lef and NAME_<corner>.lib; emitted as ADDITIONAL_LEFS, "
+            "ADDITIONAL_LIBS, SYNTH_BLACKBOXES and GDS_ALLOW_EMPTY.  Repeatable; needs "
+            "--macro-place-halo unless --memory-macro is also given"
+        ),
+    )
+    parser.add_argument(
         "--macro-place-halo",
         nargs=2,
         type=float,
@@ -2648,7 +2750,7 @@ def main(argv: list[str] | None = None) -> int:
         print(str(exc), file=sys.stderr)
         return 2
 
-    if args.memory_macro and stages != ["pnr"]:
+    if (args.memory_macro or args.macro_view) and stages != ["pnr"]:
         print(
             "--memory-macro is a place-and-route option: the macro views live inside "
             "the ORFS image, not on the host, so the host synth and sta stages cannot "
@@ -2672,7 +2774,11 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         memory_macros = resolve_memory_macros(
-            args.view, view, args.memory_macro, args.macro_place_halo
+            args.view, view, args.memory_macro,
+            None if args.macro_view and not args.memory_macro else args.macro_place_halo,
+        )
+        memory_macros = resolve_macro_views(
+            args.view, view, args.macro_view, args.macro_place_halo, memory_macros
         )
     except FlowError as exc:
         print(str(exc), file=sys.stderr)
