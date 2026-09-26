@@ -7,7 +7,7 @@ equal silicon, so the wafer (much harder to build) should be rejected."
 Method (every number below is computed here, from the repository's own machinery):
 
 * **Designs at equal silicon.**  For each wafer count W in (2, 3, 4, 12) the wafer design and an array of
-  the same silicon (W x 46,225 mm2 / 815 mm2 dies, rounded DOWN to whole 4-die packages so the array never
+  the same silicon (W x 46,225 mm2 / 815 mm2 dies, rounded DOWN to whole 2-die packages so the array never
   gets more silicon than the wafer; the residual is stated) are sized by the analytical model's own code:
   tools/run_roofline_studies.py `_build_rom_budget` on the n5_vs_b200 study's `array-hw-hybrid` and
   `wafer-hybrid` fabric plans -- ROM sized to the stored weights at the checkpoint's 7.40 bits/parameter,
@@ -23,8 +23,9 @@ Method (every number below is computed here, from the repository's own machinery
   and separately the best batch-4096 aggregate.
 * **Axes.**  Wafer fabric: the on-wafer mesh at 125 ns per field crossing (band 75-250; the control), and
   a designed express fabric at 25 / 10 / 5 ns and at the wire limit (28.55 mm x
-  latency.global_wire_delay_s_per_mm + one router cycle).  Array links at their technology.json points and
-  band ends.  Sinkhorn: the built divider (31 cycles), faster bit-exact dividers (12, 4), an idealised
+  latency.global_wire_delay_s_per_mm + one router cycle).  Array links (shipping two-die packages) at their
+  technology.json points and band ends, plus 4- and 8-die future packaging and the earlier optimistic links as
+  labelled variants.  Sinkhorn: the built divider (31 cycles), faster bit-exact dividers (12, 4), an idealised
   one-cycle-per-dependent-operation step, and the chain removed (hypothetical, to isolate the fabric).
 * **Crossover.**  For every pair and Sinkhorn variant, the largest wafer field-crossing latency at which
   the wafer's batch-1 rate reaches the array's (array at its control links and at its fast band end).
@@ -54,7 +55,7 @@ CONTEXT = 200_000
 BATCHES = (1, 64, 4096)
 WAFER_COUNTS = (2, 3, 4, 12)
 FIELDS_PER_WAFER = 57                  # technology.json wafer.reticle_regions (decode_critical_path's grid)
-DIES_PER_PACKAGE = 4                   # the array's package unit for the iso-area rounding
+DIES_PER_PACKAGE = 2                   # the array's package unit for the iso-area rounding (shipping, B200-class)
 NL = 40
 
 # -- the axes -----------------------------------------------------------------------------------------------
@@ -102,9 +103,18 @@ def wafer_fabric_variants(tech, clock):
 
 
 ARRAY_LINK_VARIANTS = [
-    dict(id="links_point", which="value", note="rom_package_ucie 10 ns, rom_board_serdes 100 ns"),
-    dict(id="links_low", which="hop_low", note="UCIe 3 ns, board SerDes 40 ns (band low)"),
-    dict(id="links_high", which="hop_high", note="UCIe 30 ns, board SerDes 250 ns (band high)"),
+    dict(id="links_point", which="value", dies_per_package=(2,),
+         note="shipping two-die packages; rom_package_ucie 10 ns per neighbour link, rom_board_serdes 209 ns "
+              "(112G PAM4 + RS(544,514) FEC + CDC), 1.69 TB/s per four-die-class package"),
+    dict(id="links_low", which="hop_low", dies_per_package=(2,),
+         note="UCIe 3 ns, board SerDes 129 ns (short reach, no FEC), band low"),
+    dict(id="links_high", which="hop_high", dies_per_package=(2,),
+         note="UCIe 30 ns, board SerDes 409 ns (retimer / longer reach), band high"),
+    dict(id="links_point_future_packaging", which="value", dies_per_package=(2, 4, 8),
+         note="the realistic links with 4- and 8-die packages allowed (interposers beyond ~3.3 reticles: roadmap)"),
+    dict(id="links_optimistic", which="value", dies_per_package=(2, 4, 8), optimistic=True,
+         note="the earlier links (decode_critical_path.OPTIMISTIC_LINKS): every die of a <=4-die package linked "
+              "to every other at 10 ns, board SerDes 100 ns at the raw 1.8 TB/s; 2-, 4- and 8-die packages"),
 ]
 
 
@@ -264,15 +274,19 @@ WAFER_GROUPS = (2,) + D.WAFER_GROUPS
 def _links_at(links, which):
     if which == "value":
         return links
-    return {k: dict(v, hop=v[which] or v["hop"]) for k, v in links.items()}
+    end = which.split("_")[1]
+    return {k: dict(v, hop=v[which] or v["hop"], **({"relay": v.get("relay_" + end) or v["relay"]}
+                                                    if "relay" in v else {}))
+            for k, v in links.items()}
 
 
 def fabrics_for(kind, g, links, devices, fabric_variant):
     """Every physical topology of one fabric variant at tensor group g (reduction algorithm: best per
     collective, as decode_critical_path's 'best')."""
     if kind == "array":
-        ln = _links_at(links, fabric_variant["which"])
-        for dp in (2, 4, 8):
+        ln = _links_at(D.optimistic_links(links) if fabric_variant.get("optimistic") else links,
+                       fabric_variant["which"])
+        for dp in fabric_variant.get("dies_per_package", (D.SHIPPING_DIES_PER_PACKAGE,)):
             for board in D.BOARD_TOPOLOGIES:
                 yield dict(dies_per_package=dp, physical=board), D.ArrayFabric(ln, dp, board, g, "best", dies=devices)
     else:
@@ -289,7 +303,8 @@ def _machine(ctx, kind, g, batch, p, clock, layout, iso_hbm=None):
         des = {ctx["name"]: d}
     return D.v41_machine(kind, g, batch, pts, des, p, clock, design=ctx["name"],
                          units=units_of(kind, ctx["devices"]), per_layer=per_layer_units(kind, ctx["devices"], layout),
-                         g_ref=ctx["tensor_group"])
+                         g_ref=ctx["tensor_group"],
+                         placement="packed" if kind == "array" and layout == "rom_packed" else None)
 
 
 def best_config(ctx, kind, p, clock, links, fabric_variant, layout="rom_packed", batches=BATCHES, iso_hbm=None,
@@ -444,7 +459,8 @@ ASSUMPTIONS = [
          "4,096 users at 200K, stacks capped by the die/wafer edge); nothing is re-derived here.",
          direction="neutral: the same rule on both sides"),
     dict(id="A2", grade="derived", statement="Iso-area: the array gets W x 46,225 / 815 dies rounded DOWN to whole "
-         "4-die packages (a silicon shortfall of 0.0127 of the wafer area at W = 2-4 and 0.0009 at W = 12).", direction="favours the wafer"),
+         "2-die packages, the shipping (B200-class, ~3.3-reticle interposer) package (the silicon shortfall per "
+         "pair is pairs[].array_residual_fraction, at most 2 dies).", direction="favours the wafer"),
     dict(id="A3", grade="measured", statement="Operator depths are the repository's routed/campaigned RTL "
          "(decode_critical_path RTL_SOURCES) at the slowest routed clock among the token path's units (1.0339 GHz "
          "ASAP7), applied to N5 on both sides.", direction="common-mode"),
@@ -452,8 +468,10 @@ ASSUMPTIONS = [
          "weight_read)/stage balance, scaled by g_ref/g), apportioned per matvec; lanes from routed lane areas.",
          direction="common-mode"),
     dict(id="A5", grade="derived", statement="Layout rom_packed: one layer occupies units x 0.580 (its share of "
-         "the stored bytes) / 40; Engram tables, embedding and head fill the other units. The 'uniform' layout "
-         "(units/40) is a sensitivity.", direction="favours neither; fewer stages for both"),
+         "the stored bytes) / 40; Engram tables, embedding and head fill the other units. On the array the layers' "
+         "bytes are packed onto the dies in order (decode_critical_path.packed_placement) and a token hops at every "
+         "tensor-group boundary it crosses. The 'uniform' layout (units/40) is a sensitivity.",
+         direction="favours neither; fewer stages for both"),
     dict(id="A6", grade="derived", statement="Wafer control fabric: links.on_wafer_n5 125 ns per 28.55 mm field "
          "crossing (75-250 ns band); per-field-edge bandwidth on_wafer_n5.bytes_s / 57 / 4; wafers joined by "
          "rom_wafer_serdes (100 ns, 40-250).", direction="the axis under test"),
@@ -461,8 +479,11 @@ ASSUMPTIONS = [
          "targets with no silicon; the wire limit is 28.55 mm x 150 ps/mm (assumed, 100-250) + one router cycle "
          "(assumed). The express fabric keeps the mesh's bandwidth and is applied to every field crossing "
          "(collectives and pipeline hops).", direction="favours the wafer"),
-    dict(id="A8", grade="derived", statement="Array links: rom_package_ucie 10 ns (3-30), rom_board_serdes 100 ns "
-         "(40-250), package SerDes lanes scale with the package edge; one switch tier 250 ns assumed.",
+    dict(id="A8", grade="derived/assumed", statement="Array links: two-die packages (shipping); rom_package_ucie "
+         "10 ns (3-30) per edge-adjacent link, a 2 x 2 package's diagonal relayed (+4 ns) or on a standard-package "
+         "link; rom_board_serdes 209 ns (129-409: 112G PAM4, RS(544,514) FEC, 4 CDC cycles, 5 endpoint cycles) at "
+         "1.69 TB/s net per four-die-class package, lanes scaling with the package edge; one switch tier 250 ns "
+         "assumed. 4- and 8-die packages and the earlier optimistic links are labelled array_links variants.",
          direction="the array's axis"),
     dict(id="A9", grade="measured/assumed", statement="Sinkhorn: 20 iterations x 2 normalisations per sublayer, each "
          "3 sequential fadd + eps + fdiv (31 cycles, built); fdiv 12/4 and the 5-cycle step are unbuilt what-ifs; "

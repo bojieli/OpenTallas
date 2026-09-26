@@ -1957,12 +1957,21 @@ ASSUMPTIONS = [
     "sublayer (itself waiting on the previous Sinkhorn), so it cannot start earlier; it overlaps the "
     "sublayer body and hc_post waits for it. Sensitivity 'sinkhorn_pipelined_fadd_fdiv' keeps the earlier "
     "pricing (3 fadd + eps fadd + the 31-deep fdiv per normalisation).",
-    "Array: 188 reticle dies at every dies-per-package choice; a layer per 4 dies at g=4; the remaining "
-    "silicon holds Engram tables and the lm_head (one extra hop). Package SerDes lanes scale with the "
-    "package edge (128 x sqrt(dies/4)) and are split evenly over the topology's neighbour links; a topology "
-    "needing more x8 ports than that is refused. One switch tier: 250 ns assumed (100-600 ns) plus two SerDes "
-    "hops, radix 64. Wafer: 684 fields / 40 layers = 17.1 fields per layer; a group smaller than a layer adds "
-    "intra-layer sub-stage hops; groups that do not tile 57 leave fields idle (flagged as a capacity shortfall).",
+    "Array: 188 reticle dies at every dies-per-package choice. The headline is packaging option "
+    f"{HEADLINE_PACKAGING} (packaging_options): two-die packages (a shipping ~3.3-reticle interposer), tensor group "
+    "4 across two neighbouring packages. Placement is packed: the 40 layers' ROM bytes fill the dies in order at the "
+    "design's per-die capacity (2.73 dies a layer), the Engram tables, embedding and lm_head fill the other 79 dies, "
+    "and a token hops at every tensor-group boundary it crosses (the earlier 'a layer per 4 dies' rule needed 160 "
+    "layer dies and left 76 GB of ROM for 214 GB of non-layer bytes; it is kept as a sensitivity). Inside a "
+    "package a die links only to edge-adjacent dies (UCIe reach ~2 mm): a pair is one link; a four-die 2 x 2 "
+    "reaches its diagonal through a relay die (+4 ns) or a standard-package diagonal link, whichever is faster "
+    "per collective. The package hop is 209 ns (200 ns 112G PAM4 + RS(544,514) FEC channel, 4 CDC cycles, "
+    "5 endpoint cycles); OPTIMISTIC_LINKS (the earlier 100 ns / full crossbar) is a labelled sensitivity. "
+    "Package SerDes lanes scale with the package edge (128 x sqrt(dies/4)) and are split evenly over the "
+    "topology's neighbour links; a topology needing more x8 ports than that is refused. One switch tier: 250 ns "
+    "assumed (100-600 ns) plus two SerDes hops, radix 64. Wafer: 684 fields / 40 layers = 17.1 fields per layer; "
+    "a group smaller than a layer adds intra-layer sub-stage hops; groups that do not tile 57 leave fields idle "
+    "(flagged as a capacity shortfall).",
     "HBM random-row gather latency 100 ns is assumed (technology.json has no HBM latency constant); it is "
     "charged only where the address is data-dependent (index-source layers).",
     "Per-user rate = 1 / max(critical path, occupancy bound), the occupancy bound being every issue term "
