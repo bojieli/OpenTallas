@@ -48,9 +48,9 @@
     "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
     "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.v": "f05e5b3ef11f4ace2c5d2e7f59801c851adc969f52ef238187132ab0f122d350",
     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
-    "rtl/dft/ot_mbist_bira.sv": "043622ad53a179963bbf9cbcb983e2ff474871874b9af42917d0866fbc3e2e1b",
-    "rtl/dft/ot_mbist_ctrl.sv": "6d67ba107d43f5855783bfcb791c1cfe377e22577d1cb9b8d75ac7d51ffec129",
-    "rtl/dft/ot_mbist_rom_collar.sv": "3d79dd6a8ff385aba150b3221af529b1681d60a96061a1237c410028f325e9db",
+    "rtl/dft/ot_mbist_bira.sv": "584282503a83bc47b63e0a7fcaaad29c616e4a6115952be015c89162ca80bb8f",
+    "rtl/dft/ot_mbist_ctrl.sv": "0d7d9e900a2e18f0ee42287c0e566602a2c02e0d9fe0197d0db17fa0488ef83e",
+    "rtl/dft/ot_mbist_rom_collar.sv": "43ca354517ed9a5ee7def67a19a282406a560c15f0f5613453037b5126b736f4",
     "rtl/dft/ot_mbist_sram_collar.sv": "00bc7a2106d794c6209b74f97ad701c56a204342455dd8b75936d2d6ec4e40b4",
     "rtl/dft/ot_rom_secded_dec.sv": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
     "rtl/hdc/ot_hdc_core.sv": "97ffe38b12c945e7eba5405c11e5ee927126e1758cd5aec5fb3051c202daf8c7",
@@ -88,7 +88,7 @@
   "memory_macros": {
     "bist": {
       "clean": {
-        "bist_cycles": 299219,
+        "bist_cycles": 299248,
         "bist_pass": 1,
         "cycles": 32246,
         "faults": [],
@@ -103,7 +103,7 @@
         "vector_memory_mismatches": 0
       },
       "kv_sa1_and_wrom_missing_via": {
-        "bist_cycles": 309860,
+        "bist_cycles": 309953,
         "bist_pass": 0,
         "cycles": 32246,
         "faults": [
