@@ -1055,11 +1055,11 @@ def hbm_requirements(c, hb, lat_s=HBM_LAT_S):
                 routed_fetch_us_per_layer=(lat_s + per_die / bw) * 1e6,
                 routed_note="the expert ids exist only after the router's top-6: the fetch is exposed (first-access "
                             "latency) and its bytes are on the critical path; 40 layers x this per token",
-                queue_beats_per_pseudo_channel=512,
-                queue_note="agent a8c77c67 (RTL, reduced vehicle): per-channel queue >= channel bandwidth x tRFC "
-                           "(~0.95 sectors/cycle x 366 cycles) -> 512 beats; request issue must not let a refreshing "
-                           "channel stall words that do not touch it; efficiency measured with refresh on "
-                           "(REFab cost up to 15% per token with 64-beat queues)")
+                queue_beats_per_pseudo_channel=64,
+                queue_note="agent a8c77c67 (RTL, reduced vehicle, refresh on): refresh-aware REFpb (tRFCpb 200 ns) "
+                           "reaches 0.965-0.993 of the refresh-free rate with 64-beat queues; all-bank refresh needs "
+                           ">= 256 beats (0.96-0.97) and costs up to 15% at 64; a refreshing channel must not stall "
+                           "words that do not touch it")
 
 
 # -- 5. requirements and the gap ---------------------------------------------------------------------------------------------
@@ -1290,8 +1290,9 @@ def kv_state_requirements(c, req, clock):
                 prefetch=("window rows and reuse-layer selections have static addresses: prefetched one layer "
                           "ahead; index-source selections gather after the top-512 (exposed first-row latency); "
                           "the key scan streams sequential 68-B keys in 4 KB bursts"),
-                controller=("per pseudo-channel queue >= 512 beats, no head-of-line blocking across channels, "
-                            "per-bank refresh (REFpb) with the scan's sustained efficiency >= 90% measured with "
+                controller=("refresh-aware per-bank refresh (tRFCpb 200 ns), >= 64-beat queues per pseudo-channel "
+                            "(256 under all-bank refresh), no head-of-line blocking across channels, "
+                            "with the scan's sustained efficiency >= 90% measured with "
                             "refresh on (agent a8c77c67's RTL findings on the HBM comparator)"))
 
 

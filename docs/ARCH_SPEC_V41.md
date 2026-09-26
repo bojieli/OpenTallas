@@ -368,9 +368,11 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
 11. **KV state and HBM controller on the ROM die (user decision).**
     - **Stacks:** five HBM3E stacks per die, beachfront-limited: 60% of the perimeter at 12 mm per stack.
     - **Bandwidth:** 4.5 TB/s sustained at 90%, measured with refresh on.
-    - **Controller:** a queue of ≥ 512 beats per pseudo-channel, no head-of-line blocking across channels,
-      and per-bank refresh (REFpb). This follows agent a8c77c67's RTL finding that all-bank refresh behind
-      64-beat queues costs up to 15% per token.
+    - **Controller:** refresh-aware per-bank refresh (REFpb, tRFCpb 200 ns): refresh the not-yet-refreshed
+      bank that the fewest queued bursts need, never the head burst's bank. At least 64 beats of queue per
+      pseudo-channel (256 if a design falls back to all-bank refresh), and no head-of-line blocking across
+      channels. Agent a8c77c67 measured this in RTL on the reduced vehicle: 0.965-0.993 of the refresh-free
+      rate, against 0.85-0.95 for all-bank refresh behind 64-beat queues.
     - **Prefetch:** window rows and reuse-layer selections have static addresses, so they are prefetched one
       layer ahead.
     - **Gathers:** an index-source layer's gather is exposed, and its first row is budgeted at 250 ns.
@@ -530,8 +532,9 @@ Requirements:
   28.2 MB per die of expert bytes is exposed: first access plus bytes, **7.3 µs per layer on the critical
   path**. With MTP the fetch is the union (34.6 experts at B = 6), which caps HBM's speculative gain at 1.5×
   (γ = 5, τ = 4.1).
-- **Controller.** ≥ 512-beat queues per pseudo-channel, request issue that never lets a refreshing channel
-  stall words that do not touch it, and REFpb (agent a8c77c67).
+- **Controller.** Refresh-aware REFpb with at least 64-beat queues per pseudo-channel (256 under all-bank
+  refresh), and request issue that never lets a refreshing channel stall words that do not touch it (agent
+  a8c77c67).
 - **KV and index keys.** Same format and prefetch as the ROM die. They compete with weights for the same
   stacks.
 
