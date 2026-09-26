@@ -6,27 +6,27 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.0499054,
+        "hold_wns_ns": 0.0420327,
         "max_cap_violations": 0.0,
         "max_fanout_violations": 0.0,
-        "max_slew_violations": 15.0,
-        "met": false,
-        "physically_clean": false,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 0.0207867,
-        "signal_integrity_clean": false,
+        "setup_wns_ns": 0.018999600000000002,
+        "signal_integrity_clean": true,
         "stage": "place_and_route",
         "timing_met": true
       }
     ],
     "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
     "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
-    "reason": "did not meet in: place_and_route",
-    "status": "not_met"
+    "reason": "all evaluated stages met",
+    "status": "pass"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-25T18:13:24.623380+00:00",
+  "completed_at": "2026-09-26T08:48:41.656585+00:00",
   "corner": {
     "liberty": [
       {
@@ -65,13 +65,13 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 4313.54,
+    "area_um2": 4345.19,
     "block": "ot_host_if",
-    "cells": 31780,
+    "cells": 31990,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 0.9,
     "clock_port": "clk",
-    "closed": false,
+    "closed": true,
     "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
     "core_area_um2": 11328.2,
     "description": "ad-hoc block supplied on the command line",
@@ -79,40 +79,40 @@
     "false_path_from_ports": [],
     "false_path_io": true,
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 1137380000.0,
-    "hold_wns_ns": 0.0499054,
+    "fmax_hz": 1135070000.0,
+    "hold_wns_ns": 0.0420327,
     "io_delay_fraction": 0.2,
     "parameters": {},
-    "setup_wns_ns": 0.0207867,
-    "signal_integrity_clean": false,
+    "setup_wns_ns": 0.018999600000000002,
+    "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 15
+      "max_slew_violations": 0
     },
     "sources": [
       {
         "path": "rtl/host/ot_host_if.sv",
-        "sha256": "5a957f0d583f7b3fd44e0b79ed3bb35ad333b89239c147a07bc8cb94b813e32b",
-        "size_bytes": 32992
+        "sha256": "4c9421673fc111f7dd6a517a460fd3cacfb81957cae25f1a85884f56d19241ff",
+        "size_bytes": 33107
       }
     ],
     "top": "ot_host_if",
-    "utilization_fraction": 0.380779
+    "utilization_fraction": 0.383573
   },
-  "elapsed_seconds": 8732.42,
+  "elapsed_seconds": 859.817,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-25T15:47:52.203391+00:00",
+  "generated_at": "2026-09-26T08:34:21.839525+00:00",
   "git": {
-    "commit": "a8186d183bf4daa77932f3aab4869230dcc14c3c",
+    "commit": "4710e83149d0574c1be276387f9b48c0a106c2e0",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
     "untracked_results": [],
     "worktree_dirty": false,
     "worktree_status": []
   },
   "place_and_route": {
-    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/phys_host/physical_artifacts",
+    "artifact_dir": "/tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/phys_host2/physical_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
@@ -126,38 +126,38 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "b345703b5e91d0c85dc38579871ec5027863915a23446f50651d5fa8b7ed2dd4",
-        "size_bytes": 37294090
+        "sha256": "3c49c0f8dbcf77d62cbc546456bd7c7d29fa25f5043f27d028703b30efa884a4",
+        "size_bytes": 37364233
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "1be067d7bd741cbc6c302998691a7ba3a1aad239047d413d8604b9d2dfab48ad",
-        "size_bytes": 43451358
+        "sha256": "ab3507dc0e5e194f676a26ed82a059680856bfad61510e539c3b6ef9e47dfd3e",
+        "size_bytes": 43529610
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "13d49cd86c774dbeb5d0f5d1fa6a38ac7d73135ebd7d2e003898f7533e07d1ac",
-        "size_bytes": 62059628
+        "sha256": "64dd9c0ae6908e02475ae05e745a8d5331d6fbebaa06ba5ad294dd0c3bfbd06b",
+        "size_bytes": 62288487
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "ff43c55cac8161c0f5e98bcb5e9233ce19c7865f681a3424de9ffbae3ff30551",
-        "size_bytes": 48931243
+        "sha256": "9e09da2cd7548fbba80f4a95ba3289447ec438b23de1cc45044e7ac6680a38dc",
+        "size_bytes": 48882248
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "8ea7cbd0c82e6548a003145ab54d36a022460d70aefee9f2db823b2b0baf41a6",
-        "size_bytes": 3377494
+        "sha256": "144335f898f80d502678e1802023fd20baaafd5594bd64b3067a3cac84334833",
+        "size_bytes": 3394132
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "c9a41a231538a29a0cea6f734f28cab90e6ea9f464576a0f480306caf607e55e",
-        "size_bytes": 32166
+        "sha256": "45e654851446713fcc6c911d729f359dca442631bd96fbeb3016dc56cbabecc6",
+        "size_bytes": 31775
       },
       "config.mk": {
         "retained": true,
-        "sha256": "17ed15ba1758338d32fd406f6da94a2886c710fecc1d9f22ece6eac737f771e7",
-        "size_bytes": 696
+        "sha256": "1ee2fe14bf67702131b4949a620722381c3d805eec04e2a6f313fecca1850d51",
+        "size_bytes": 720
       },
       "constraint.sdc": {
         "retained": true,
@@ -166,8 +166,8 @@
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "524aedd902247adcf68db093b0989ace4da51663a1163889642d5ed49b325546",
-        "size_bytes": 24116
+        "sha256": "c2c980b68892bbe3825744d25d2820566f27d5fcd156852e2999f05b0166c5c0",
+        "size_bytes": 23927
       }
     },
     "clock_period_ns": 0.9,
@@ -191,36 +191,36 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 1137380000.0,
+      "fmax_hz": 1135070000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.0499054,
-      "instance_count": 86289,
+      "hold_wns_ns": 0.0420327,
+      "instance_count": 86515,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 15,
+      "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "power_total_w": 0.0206499,
+      "power_total_w": 0.0206926,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 49.9054,
+        "hold_wns_ns": 42.0327,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 20.7867
+        "setup_wns_ns": 18.9996
       },
-      "routed_nets": 30392,
-      "routed_wirelength_um": 178356,
+      "routed_nets": 30607,
+      "routed_wirelength_um": 178115,
       "sequential_area_um2": 1775.06,
       "sequential_cell_count": 5085,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 0.0207867,
-      "standard_cell_area_um2": 4313.54,
-      "standard_cell_count": 31780,
-      "utilization_fraction": 0.380779,
-      "vias": 329754
+      "setup_wns_ns": 0.018999600000000002,
+      "standard_cell_area_um2": 4345.19,
+      "standard_cell_count": 31990,
+      "utilization_fraction": 0.383573,
+      "vias": 330307
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "2d7b8a9da1c053c8984b55fccf3115fc472f9c73b1c8078b332ade1738c50d57",
@@ -375,18 +375,24 @@
       "lib/NLDM/fakeregfile_64x64.lib": "e28fc92bff8066e8a3e194db7b4afc5aec7247cf8e52f4def7ed5208e39b51e5"
     },
     "sdc_clock_period_library_units": 900.0,
+    "signal_integrity_constraints": {
+      "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+      "sdc_lines": [
+        "set_max_fanout 32 [current_design]"
+      ],
+      "slew_margin_percent": 40.0
+    },
     "toolchain": {
       "binary_sha256": {
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
         "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92"
       },
-      "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
-      "image_id_matches_archived_asap7_lock": true,
+      "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+      "image_id_matches_archived_asap7_lock": false,
       "image_reference": "openroad/orfs:latest",
       "openroad_version": "26Q3-1510-g6cb3f2b704",
       "repo_digests": [
-        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
-        "openroad/orfs@sha256:d995618be9f2bcdfa5538b885123463070dfbf178bea1818716d4652fe0fa380"
+        "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
       ],
       "yosys_version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)"
     }
@@ -404,23 +410,25 @@
       "--clock-period-ns",
       "0.9",
       "--false-path-io",
+      "--slew-margin-percent",
+      "40",
       "--stages",
       "synth,pnr",
       "--output",
-      "/tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/phys_host/physical.json",
+      "/tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/phys_host2/physical.json",
       "--force"
     ],
     "driver": {
-      "commit": "a8186d183bf4daa77932f3aab4869230dcc14c3c",
+      "commit": "4710e83149d0574c1be276387f9b48c0a106c2e0",
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
       "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-a4579c065a394ea93/tools/run_abi3_physical.py",
       "same_tree_as_sources": true,
-      "sha256": "c7817bfec122284d00061c00d2af614f38dae556968419cda0a6b2fc8ee72321",
+      "sha256": "95d14fe5df7507d693224bb6e0e6ef4b9c527008b6472f73e0350211c281a871",
       "tree": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-a4579c065a394ea93"
     },
-    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
-    "python": "3.10.12",
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
     "source_root": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-a4579c065a394ea93"
   },
   "schema_version": 1,
@@ -432,7 +440,7 @@
     "synth",
     "pnr"
   ],
-  "status": "not_met",
+  "status": "pass",
   "synthesis": {
     "abc_delay_target_ps": 900.0,
     "cell_area_um2": 3445.982,
@@ -444,8 +452,8 @@
     "liberty_cell_count": 202,
     "macro_count": 0,
     "netlist_normalization": {
-      "normalized_netlist_sha256": "80726d596861a12ca7547c781a70510dffd3dc0f86694d456e38a9e1e1312371",
-      "raw_netlist_sha256": "80726d596861a12ca7547c781a70510dffd3dc0f86694d456e38a9e1e1312371",
+      "normalized_netlist_sha256": "4ab145b0927988af9c70dff0efb9bf405976c7c1cecdb52c649c4fcafab1d736",
+      "raw_netlist_sha256": "4ab145b0927988af9c70dff0efb9bf405976c7c1cecdb52c649c4fcafab1d736",
       "signed_declarations_stripped": 0
     },
     "sequential_area_um2": 1773.54,
