@@ -388,8 +388,15 @@ proc sum_list {l} { set s 0.0; foreach x $l { set s [expr {$s + $x}] }; return $
 """
 
 TCL_LOAD = r"""
-foreach lib $::so_libs { read_liberty $lib }
 read_db $::so_odb
+if {$::so_pdn_tcl ne ""} {
+    # a PDN variant: rip the route's grid up and build the variant's (before any
+    # Liberty is read: pdngen then sees only the LEF masters)
+    pdngen -ripup
+    source $::so_pdn_tcl
+    pdngen
+}
+foreach lib $::so_libs { read_liberty $lib }
 read_sdc $::so_sdc
 if {$::so_spef ne ""} {
     read_spef $::so_spef
@@ -579,7 +586,7 @@ def session_script(results: str, out: str, corner: str, *, saif: str = "", saif_
                    groups: list[str] | None = None, inst_power: str = "", derate: float = 0.0,
                    stages: tuple[str, ...] = ("power", "clock", "timing"), ir_sources: tuple[str, ...] = (),
                    bump_pitch_um: float = 140.0, bump_size_um: float = 50.0, spef: bool = True,
-                   stage: str = "final") -> str:
+                   stage: str = "final", pdn_tcl: str = "") -> str:
     """The OpenROAD Tcl of one analysis session (paths as seen in the container)."""
     c = CORNERS[corner]
     head = [
@@ -588,6 +595,7 @@ def session_script(results: str, out: str, corner: str, *, saif: str = "", saif_
         f"set ::so_sdc {results}/{STAGE_FILES[stage][1]}",
         f"set ::so_spef {{{results + '/' + STAGE_FILES[stage][2] if spef and STAGE_FILES[stage][2] else ''}}}",
         f"set ::so_platform {PLATFORM}",
+        f"set ::so_pdn_tcl {{{pdn_tcl}}}",
         f"set ::so_saif {{{saif}}}",
         f"set ::so_saif_scope {{{saif_scope}}}",
         f"set ::so_groups {tcl_list(groups or [])}",
@@ -707,7 +715,8 @@ def run_session(script: str, mounts: dict[str, str], log: Path, timeout_s: int =
 # grid_strategy-M1-M2-M5-M6.tcl): M1/M2 follow-pins 0.018 um, M5 0.12 um,
 # M6 0.288 um.  ASAP7's technology LEF carries no electromigration rules, so
 # current density is reported against a stated assumption, not a PDK limit.
-PDN_STRIPE_WIDTH_UM = {"M1": 0.018, "M2": 0.018, "M5": 0.12, "M6": 0.288}
+PDN_STRIPE_WIDTH_UM = {"M1": 0.018, "M2": 0.018, "M5": 0.12, "M6": 0.288,
+                       "M7": 0.8, "M8": 0.8}   # M7/M8: configs/signoff/pdn_m7_m8_upper_grid.tcl
 # Assumed DC EM limit for the analysis: 1 mA/um of drawn width at 105 C for
 # thin lower copper (the order of magnitude of published 7-10 nm BEOL
 # guidance; ASAP7 publishes none).  Recorded as an assumption in every result.
@@ -778,12 +787,15 @@ def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None
             saif_scope: str, groups: list[str], corners: list[str], derate: float, ir_sources: list[str],
             bump_pitch_um: float, cycles_per_token: dict[str, int] | None, activity_meta: dict | None,
             keep_ir_files: bool = False, stage: str = "final",
-            gate_min_gb: float | None = None) -> dict[str, Any]:
+            gate_min_gb: float | None = None, pdn_tcl: Path | None = None,
+            tt_stages: list[str] | None = None) -> dict[str, Any]:
     results_dir = find_results_dir(results_dir, stage).resolve()
     odb_name, _, spef_name = STAGE_FILES[stage]
     out_dir = Path(out_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
     mounts = {str(results_dir): "/so_res:ro", str(out_dir): "/so_out"}
+    if pdn_tcl:
+        mounts[str(Path(pdn_tcl).resolve())] = "/so_pdn.tcl:ro"
     if saif:
         mounts[str(Path(saif).resolve().parent)] = "/so_saif:ro"
     saif_c = f"/so_saif/{Path(saif).name}" if saif else ""
@@ -801,6 +813,8 @@ def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None
                    "spef_sha256": sha256_file(results_dir / spef_name) if spef_name else None,
                    "netlist_sha256": sha256_file(results_dir / "6_final.v")
                    if (results_dir / "6_final.v").exists() else None},
+        "pdn": {"variant": rel(pdn_tcl), "sha256": sha256_file(Path(pdn_tcl))} if pdn_tcl else
+               {"variant": None, "note": "the grid the route built (ORFS grid_strategy-M1-M2-M5-M6)"},
         "activity": activity_meta or {"source": "vectorless",
                                       "note": "OpenSTA default activity (0.1 at inputs, propagated)"},
         "corners": {},
@@ -816,9 +830,10 @@ def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None
                             "orfs_vectorless_power_w": m.get("power_total_w"),
                             "git_commit": rec.get("git", {}).get("commit")}
     for corner in corners:
-        stages = ("power", "clock", "timing") if corner == "TT" else ("power", "timing")
+        stages = tuple(tt_stages) if tt_stages else \
+            (("power", "clock", "timing") if corner == "TT" else ("power", "timing"))
         script = session_script("/so_res", f"/so_out/{corner}", corner, saif=saif_c, saif_scope=saif_scope,
-                                stage=stage,
+                                stage=stage, pdn_tcl="/so_pdn.tcl" if pdn_tcl else "",
                                 groups=groups, derate=derate, stages=stages,
                                 ir_sources=tuple(ir_sources) if corner == "TT" else (),
                                 bump_pitch_um=bump_pitch_um)
@@ -1297,7 +1312,8 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                         derate=an.get("derate", 0.05), ir_sources=an.get("ir_sources", []),
                         bump_pitch_um=an.get("bump_pitch_um", 140.0),
                         cycles_per_token=an.get("cycles"), activity_meta=act_meta if saif else None,
-                        stage=an.get("stage", "final"), gate_min_gb=an.get("gate_min_gb"))
+                        stage=an.get("stage", "final"), gate_min_gb=an.get("gate_min_gb"),
+                        pdn_tcl=_resolve(an.get("pdn_tcl")), tt_stages=an.get("stages"))
             r["plan_entry"] = {k: v for k, v in an.items() if k not in ("routed",)}
             result["blocks"][key] = r
             if out_path:
@@ -1327,6 +1343,8 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--derate", type=float, default=0.05, help="flat OCV derate (0 disables)")
     a.add_argument("--ir-source", action="append", default=[], choices=["PINS", "BUMPS"])
     a.add_argument("--bump-pitch-um", type=float, default=140.0)
+    a.add_argument("--stage", default="final", choices=sorted(STAGE_FILES))
+    a.add_argument("--pdn-tcl", help="PDN variant to rebuild the grid with before the IR analysis")
     a.add_argument("--label", required=True)
     a.add_argument("--work", required=True)
     a.add_argument("--output", required=True)
@@ -1363,7 +1381,8 @@ def main(argv: list[str] | None = None) -> int:
                     saif=Path(args.saif) if args.saif else None, saif_scope=args.saif_scope,
                     groups=args.group, corners=args.corners.split(","), derate=args.derate,
                     ir_sources=args.ir_source, bump_pitch_um=args.bump_pitch_um,
-                    cycles_per_token=None, activity_meta=None)
+                    cycles_per_token=None, activity_meta=None, stage=args.stage,
+                    pdn_tcl=Path(args.pdn_tcl) if args.pdn_tcl else None)
         Path(args.output).parent.mkdir(parents=True, exist_ok=True)
         Path(args.output).write_text(json.dumps(r, indent=2, sort_keys=True) + "\n")
     elif args.cmd == "report":
