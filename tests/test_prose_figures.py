@@ -137,7 +137,11 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 915: docs/DFT.md's scan-cost table gains the KV streamer's routed pair (5).
     # 945: docs/DFT.md gains the multicast-node, expert-port, MoE-dispatch,
     # argmax, package-link and fabric-router routed pairs (30).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 945
+    # 1165: docs/ANALYTICAL_REPORT.md gains the fused persistent-kernel GPU
+    # baseline section (84, merged from its branch) and the design-faithful
+    # speculative-decoding section (136, bound to
+    # results/roofline/speculative/hdc_design_faithful.json), 142 -> 362.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1165
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
@@ -329,13 +333,13 @@ def test_an_ambiguous_row_is_disambiguated_by_its_table(tmp_path) -> None:
     # 6.58 once the serial path came from the per-token operator graph, and
     # 10.42 once the ROM wafer could use the express collective network, and
     # 12.17 with the routed Sinkhorn unit, and 9.79 with the express link at
-    # its routed (measured) field crossing.
+    # its routed (measured) field crossing, and 8.26 on the fused persistent-kernel GPU.
     document = tmp_path / "ok.md"
     document.write_text(
         "# x\n\n"
-        '<!-- figure: 9.79 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
+        '<!-- figure: 8.26 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
         ' table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" -->\n'
-        "The ratio is 9.79x.\n")
+        "The ratio is 8.26x.\n")
     code, out = _run(document)
     assert code == 0, out
 
