@@ -393,11 +393,19 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
 11. **KV state and HBM controller on the ROM die (user decision).**
     - **Stacks:** five HBM3E stacks per die, beachfront-limited: 60% of the perimeter at 12 mm per stack.
     - **Bandwidth:** 4.5 TB/s sustained at 90%, measured with refresh on.
-    - **Controller:** refresh-aware per-bank refresh (REFpb, tRFCpb 200 ns): refresh the not-yet-refreshed
-      bank that the fewest queued bursts need, never the head burst's bank. At least 64 beats of queue per
-      pseudo-channel (256 if a design falls back to all-bank refresh), and no head-of-line blocking across
-      channels. Agent a8c77c67 measured this in RTL on the reduced vehicle: 0.965-0.993 of the refresh-free
-      rate, against 0.85-0.95 for all-bank refresh behind 64-beat queues.
+    - **Controller:** refresh-aware per-bank refresh (REFpb, tRFCpb 200 ns: refresh the not-yet-refreshed
+      bank that the fewest queued bursts need, never the head burst's bank) with at least 64 beats of queue
+      per pseudo-channel, OR all-bank refresh with at least 512 beats; no head-of-line blocking across
+      channels. The record is `results/rtl/hdc_hbm_campaign.json` `refresh_study`, commit be30614a on the HBM
+      comparator branch (RTL, reduced vehicle, every run bit-exact). It gives, at 4 / 8 / 16 / 32
+      pseudo-channels:
+      - aware REFpb: 0.965 / 0.989 / 0.993 / 0.992 of the refresh-free rate;
+      - all-bank refresh with 512-beat queues: 0.979 / 0.973 / 0.972 / 0.964;
+      - all-bank refresh with 64-beat queues: 0.933 / 0.852 / 0.949 / 0.952 (fails the 90% floor at 8).
+
+      A scratch run (not in the record) at the worst-case tRFCpb of 350 ns gives aware REFpb 0.864 at 4
+      pseudo-channels. The die therefore uses at least 8 pseudo-channels per stream, or the all-bank-512
+      option, to keep the 90% margin against tRFCpb uncertainty.
     - **Prefetch:** window rows and reuse-layer selections have static addresses, so they are prefetched one
       layer ahead.
     - **Gathers:** an index-source layer's gather is exposed, and its first row is budgeted at 250 ns.
@@ -574,9 +582,10 @@ Requirements:
   28.2 MB per die of expert bytes is exposed: first access plus bytes, **7.3 µs per layer on the critical
   path**. With MTP the fetch is the union (34.6 experts at B = 6), which caps HBM's speculative gain at 1.5×
   (γ = 5, τ = 4.1).
-- **Controller.** Refresh-aware REFpb with at least 64-beat queues per pseudo-channel (256 under all-bank
-  refresh), and request issue that never lets a refreshing channel stall words that do not touch it (agent
-  a8c77c67).
+- **Controller.** Refresh-aware REFpb with at least 64-beat queues per pseudo-channel, or all-bank refresh
+  with at least 512 beats. Request issue must never let a refreshing channel stall words that do not touch
+  it, and each stream uses at least 8 pseudo-channels (§6 item 11; `results/rtl/hdc_hbm_campaign.json`
+  `refresh_study`).
 - **KV and index keys.** Same format and prefetch as the ROM die. They compete with weights for the same
   stacks.
 

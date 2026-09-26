@@ -6088,7 +6088,7 @@
    "routed_fetch_us_per_layer": 7.2668800000000005,
    "routed_note": "the expert ids exist only after the router's top-6: the fetch is exposed (first-access latency) and its bytes are on the critical path; 40 layers x this per token",
    "queue_beats_per_pseudo_channel": 64,
-   "queue_note": "agent a8c77c67 (RTL, reduced vehicle, refresh on): refresh-aware REFpb (tRFCpb 200 ns) reaches 0.965-0.993 of the refresh-free rate with 64-beat queues; all-bank refresh needs >= 256 beats (0.96-0.97) and costs up to 15% at 64; a refreshing channel must not stall words that do not touch it"
+   "queue_note": "results/rtl/hdc_hbm_campaign.json refresh_study (commit be30614a, HBM comparator branch; RTL, reduced vehicle, refresh on): refresh-aware REFpb (tRFCpb 200 ns) reaches 0.965-0.993 of the refresh-free rate with 64-beat queues; all-bank refresh needs >= 512 beats (0.964-0.979) and falls to 0.852 at 64; >= 8 pseudo-channels per stream keep the 90% floor at the 350-ns tRFCpb band; a refreshing channel must not stall words that do not touch it"
   },
   "priced": {
    "8192": {
