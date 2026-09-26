@@ -30,6 +30,46 @@
     "tester_cycles": 1797767,
     "top": "ot_rom_argmax_reduce"
    },
+   "route": {
+    "noscan": {
+     "core_area_um2": 4939.41,
+     "drc_errors": 0,
+     "fmax_mhz": 1149.46,
+     "instance_count": 37264,
+     "routed_wirelength_um": 46003,
+     "sequential_area_um2": 665.927,
+     "setup_wns_ns": 0.0300279,
+     "standard_cell_area_um2": 1848.89,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.095933,
+     "fmax": -0.011875,
+     "instances": 0.048653,
+     "routed_wirelength": 0.210204,
+     "standard_cell_area": 0.10012
+    },
+    "scan": {
+     "core_area_um2": 5413.26,
+     "drc_errors": 0,
+     "fmax_mhz": 1135.81,
+     "instance_count": 39077,
+     "routed_wirelength_um": 55673,
+     "scan": {
+      "cell_area_added_fraction": 0.09723,
+      "chain_count": 3,
+      "chain_length_max": 756,
+      "flops": 2266,
+      "lockup_latches": 0,
+      "scan_cells": 2207,
+      "scan_mux_cells": 59
+     },
+     "sequential_area_um2": 826.817,
+     "setup_wns_ns": 0.0195685,
+     "standard_cell_area_um2": 2034,
+     "status": "pass"
+    }
+   },
    "scan_off_equivalence": {
     "equiv_cells": 2813,
     "proven": true,
@@ -65,6 +105,46 @@
     "test_coverage": 1.0,
     "tester_cycles": 127679,
     "top": "ot_rom_moe_expert_port"
+   },
+   "route": {
+    "noscan": {
+     "core_area_um2": 5489.02,
+     "drc_errors": 0,
+     "fmax_mhz": 1557.94,
+     "instance_count": 44508,
+     "routed_wirelength_um": 64681,
+     "sequential_area_um2": 938.106,
+     "setup_wns_ns": 0.258127,
+     "standard_cell_area_um2": 2178.91,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.126199,
+     "fmax": -0.113656,
+     "instances": 0.06819,
+     "routed_wirelength": 0.190056,
+     "standard_cell_area": 0.119376
+    },
+    "scan": {
+     "core_area_um2": 6181.73,
+     "drc_errors": 0,
+     "fmax_mhz": 1380.87,
+     "instance_count": 47543,
+     "routed_wirelength_um": 76974,
+     "scan": {
+      "cell_area_added_fraction": 0.123596,
+      "chain_count": 4,
+      "chain_length_max": 797,
+      "flops": 3185,
+      "lockup_latches": 0,
+      "scan_cells": 3078,
+      "scan_mux_cells": 107
+     },
+     "sequential_area_um2": 1162.49,
+     "setup_wns_ns": 0.175816,
+     "standard_cell_area_um2": 2439.02,
+     "status": "pass"
+    }
    },
    "scan_off_equivalence": {
     "equiv_cells": 4312,
@@ -123,6 +203,46 @@
     "test_coverage": 0.998685,
     "tester_cycles": 4080599,
     "top": "ot_hdc_kv_stream"
+   },
+   "route": {
+    "noscan": {
+     "core_area_um2": 37518.9,
+     "drc_errors": 0,
+     "fmax_mhz": 1106.77,
+     "instance_count": 207873,
+     "routed_wirelength_um": 442741,
+     "sequential_area_um2": 2226.31,
+     "setup_wns_ns": -0.0035261800000000003,
+     "standard_cell_area_um2": 6423.88,
+     "status": "not_met"
+    },
+    "overhead": {
+     "core_area": 0.108449,
+     "fmax": 0.013851,
+     "instances": 0.091123,
+     "routed_wirelength": 0.192731,
+     "standard_cell_area": 0.101081
+    },
+    "scan": {
+     "core_area_um2": 41587.8,
+     "drc_errors": 0,
+     "fmax_mhz": 1122.1,
+     "instance_count": 226815,
+     "routed_wirelength_um": 528071,
+     "scan": {
+      "cell_area_added_fraction": 0.1077,
+      "chain_count": 8,
+      "chain_length_max": 903,
+      "flops": 7222,
+      "lockup_latches": 0,
+      "scan_cells": 5846,
+      "scan_mux_cells": 1376
+     },
+     "sequential_area_um2": 2652.48,
+     "setup_wns_ns": 0.008813280000000001,
+     "standard_cell_area_um2": 7073.21,
+     "status": "pass"
+    }
    },
    "scan_off_equivalence": {
     "equiv_cells": 11187,
@@ -185,6 +305,46 @@
     "tester_cycles": 187589,
     "top": "ot_rom_mcast_node"
    },
+   "route": {
+    "noscan": {
+     "core_area_um2": 7572.65,
+     "drc_errors": 0,
+     "fmax_mhz": 1352.93,
+     "instance_count": 60334,
+     "routed_wirelength_um": 95881,
+     "sequential_area_um2": 1239.18,
+     "setup_wns_ns": 0.160865,
+     "standard_cell_area_um2": 2922.55,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.116779,
+     "fmax": -0.022706,
+     "instances": 0.055773,
+     "routed_wirelength": 0.147746,
+     "standard_cell_area": 0.116419
+    },
+    "scan": {
+     "core_area_um2": 8456.98,
+     "drc_errors": 0,
+     "fmax_mhz": 1322.21,
+     "instance_count": 63699,
+     "routed_wirelength_um": 110047,
+     "scan": {
+      "cell_area_added_fraction": 0.118172,
+      "chain_count": 5,
+      "chain_length_max": 844,
+      "flops": 4216,
+      "lockup_latches": 0,
+      "scan_cells": 4104,
+      "scan_mux_cells": 112
+     },
+     "sequential_area_um2": 1538.36,
+     "setup_wns_ns": 0.14369,
+     "standard_cell_area_um2": 3262.79,
+     "status": "pass"
+    }
+   },
    "scan_off_equivalence": {
     "equiv_cells": 5342,
     "proven": true,
@@ -220,6 +380,46 @@
     "test_coverage": 0.999816,
     "tester_cycles": 214559,
     "top": "ot_rom_moe_dispatch"
+   },
+   "route": {
+    "noscan": {
+     "core_area_um2": 3866.47,
+     "drc_errors": 0,
+     "fmax_mhz": 1421.29,
+     "instance_count": 30251,
+     "routed_wirelength_um": 39280,
+     "sequential_area_um2": 637.408,
+     "setup_wns_ns": 0.196413,
+     "standard_cell_area_um2": 1510.55,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.118832,
+     "fmax": -0.051228,
+     "instances": 0.070378,
+     "routed_wirelength": 0.182968,
+     "standard_cell_area": 0.116103
+    },
+    "scan": {
+     "core_area_um2": 4325.93,
+     "drc_errors": 0,
+     "fmax_mhz": 1348.48,
+     "instance_count": 32380,
+     "routed_wirelength_um": 46467,
+     "scan": {
+      "cell_area_added_fraction": 0.120022,
+      "chain_count": 3,
+      "chain_length_max": 719,
+      "flops": 2155,
+      "lockup_latches": 0,
+      "scan_cells": 2052,
+      "scan_mux_cells": 103
+     },
+     "sequential_area_um2": 786.999,
+     "setup_wns_ns": 0.15842599999999998,
+     "standard_cell_area_um2": 1685.93,
+     "status": "pass"
+    }
    },
    "scan_off_equivalence": {
     "equiv_cells": 2767,
@@ -325,6 +525,46 @@
     "test_coverage": 1.0,
     "tester_cycles": 334281,
     "top": "ot_rom_pkg_link"
+   },
+   "route": {
+    "noscan": {
+     "core_area_um2": 20369.5,
+     "drc_errors": 0,
+     "fmax_mhz": 1404.92,
+     "instance_count": 145311,
+     "routed_wirelength_um": 247963,
+     "sequential_area_um2": 3507.83,
+     "setup_wns_ns": 0.18821600000000002,
+     "standard_cell_area_um2": 7569,
+     "status": "not_met"
+    },
+    "overhead": {
+     "core_area": 0.127151,
+     "fmax": -0.107615,
+     "instances": 0.076326,
+     "routed_wirelength": 0.290378,
+     "standard_cell_area": 0.129753
+    },
+    "scan": {
+     "core_area_um2": 22959.5,
+     "drc_errors": 0,
+     "fmax_mhz": 1253.73,
+     "instance_count": 156402,
+     "routed_wirelength_um": 319966,
+     "scan": {
+      "cell_area_added_fraction": 0.12567,
+      "chain_count": 12,
+      "chain_length_max": 989,
+      "flops": 11858,
+      "lockup_latches": 0,
+      "scan_cells": 11286,
+      "scan_mux_cells": 572
+     },
+     "sequential_area_um2": 4330.58,
+     "setup_wns_ns": 0.10238,
+     "standard_cell_area_um2": 8551.1,
+     "status": "not_met"
+    }
    }
   },
   "stream": {

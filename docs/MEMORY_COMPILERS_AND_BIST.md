@@ -369,7 +369,7 @@ correct it.
   and 29 ROM collars. The ROM expected signatures are the per-instance CRCs
   that `personalise` wrote to `signatures.hex`. The campaign runs the BIST
   before the token twice (`memory_macros.bist` in the record):
-  - **clean:** all 37 macros pass, in 299,219 BIST cycles;
+  - **clean:** all 37 macros pass, in 299,248 BIST cycles;
   - **with a stuck-at-1 KV cell and a missing weight-ROM via:** the KV macro
     is reported *repaired* (status `10`) and re-verifies. The weight-ROM tile
     fails its signature (status `11`), so the die would be flagged. Its one
@@ -396,36 +396,41 @@ correct it.
 - **Flow.** It is routed through the pinned ORFS on ASAP7 with
   `--macro-view`. Both macros are placed from their LEF, and the PDN reaches
   their M4 straps.
-- **1.0 ns target.** Detailed route is clean: **0 DRC**, 0 antenna, 0
-  slew/cap/fanout violations. Hold is met. Setup is not: **455.6 MHz**,
-  WNS −1.19 ns. The limiter is the **BIRA's one-cycle online update**
-  (collar failure row → CAM match, per-column counts, must-repair popcount,
-  CAM write), about 2.3 ns of logic. The macros are not the limiter.
+- **Closed at 1.0 ns** (`pnr_1p0ns_pipelined4.json`): **1,032 MHz**, setup
+  WNS +0.031 ns, hold met, **0 DRC**, 0 antenna, 0 slew/cap/fanout
+  violations. The die is 14,362 µm2: 1,944 µm2 of macros and 2,272 µm2 of
+  standard cells. BIST therefore runs at the functional clock.
 
-- **2.4 ns test clock** (`pnr_2p4ns.json`). Setup closes with +0.146 ns of
-  slack, hold is met, and DRC is 0. The flow still refuses acceptance for
-  **8 max-slew violations**, so this is not a sign-off either.
+Getting there took four routes, each fixing the limiter the previous one
+reported:
 
-Two routes to closure. One is to rerun with `--max-transition-ns` and a slew
-margin. The other is a two-stage BIRA with an event FIFO and backpressure
-into the controller's existing `hold`, which would also let BIST run at the
-functional clock. The macros are placed and connected (PDN on their M4
-straps, pins reached on M4) in both routes.
+| Route | Fmax (MHz) | WNS (ns) | Limiter found | Fix |
+|---|---:|---:|---|---|
+| `pnr_1p0ns.json` | 455.6 | −1.195 | BIRA online update in one cycle (collar row → CAM match → per-column counts → popcount → CAM write) | event queue with stall back-pressure; four registered per-event stages |
+| `pnr_1p0ns_pipelined.json` | 800.1 | −0.250 | BIRA search popcount + compare in one cycle; ROM → SECDED → output port | search split into OR, popcount and compare cycles; decoder outputs registered |
+| `pnr_1p0ns_pipelined2.json` | 808.2 | −0.237 | ROM clock-to-output + 72-bit CRC fold | ROM collar registers the word before the fold |
+| `pnr_1p0ns_pipelined3.json` | 890.1 | −0.123 | 16-bit chunk popcount synthesised as a ripple chain | balanced adder-tree popcounts |
+| `pnr_1p0ns_pipelined4.json` | **1,032.0** | **+0.031** | — | closed |
+
+Routes 2–4 used `--max-transition-ns` with a 30% slew margin, which cleared
+the slew violations of the 2.4 ns probe (`pnr_2p4ns.json`: 8 max-slew). The
+repair allocation is unchanged by every step: the MBIST campaign stays at
+74/74 with the RTL equal to the Python reference. The BIST now takes a few
+more cycles per failing event and three cycles per search subset.
 
 ## Status per architecture
 
 | Architecture | Memory compilers | Self-test and repair |
 |---|---|---|
-| **HBM comparator** (core + KV streamer; `results/memory/memory_plan.json` `hbm_comparator`) | Program and constant ROM, KV prefetch window (4 × `ot_sram_1r1w_256x256_m2_r2c2`) and KV tail (2 × `ot_sram_1r1w_128x256_m1_r2c2`) compiled: 11 macros. The flush and write-combine FIFOs and the vector memory are register files. **Open:** there is no HBM weight streamer on main, so its prefetch buffers are not mapped. The HBM3E PHY is external IP with an *assumed* 10 mm2 per stack (`technology.json` `hbm.hbm3e.phy_area_mm2_per_stack`); it has no view here. | The collars and controller apply unchanged to the KV window and tail macros (1R1W). They are **not yet instantiated** in `ot_hdc_kv_stream`. |
-| **Qwen3-8B ROM reticle** | Reduced vehicle fully mapped and simulated: 37 macros. Full model at compiled density: 62,491 × `ot_rom_8192x266_m8` for BF16 weights (**1.12 reticles** of macro area, so BF16 Qwen3-8B does not fit one 815 mm2 reticle at ASAP7 density), or 15,623 macros (0.28 reticle) at 4 bits per weight (`full_scale_weight_rom`). | Integrated in `ot_hdc_memsys.sv`: MBIST with repair on the KV SRAM, signature BIST and SECDED on every ROM. Verified inside the decode campaign. |
-| **DeepSeek-V4.1 ROM array** | Reduced vehicle mapped: 992 macros, including the 2-read weight ROM as two copies, the quantised ROM, the HC ROM, 384 Engram-table macros (274-bit rows = 264 B + SECDED) and the 5-read constant ROM as five copies. The vector memory (12 reads, 10 writes) is a register file. Full model: about 10,355 weight macros per die (0.185 reticle). **Open:** the ROM views are content-independent by construction, and per-die via maps come from `personalise`. | ROM signature and SECDED apply unchanged. A per-die content signature is produced by `personalise` (`content_signature`, `viamap_set_sha256`). **Not yet instantiated** in `ot_hdc_core_v41`'s test bench. |
+| **HBM comparator** (core + KV streamer; `results/memory/memory_plan.json` `hbm_comparator`) | Program and constant ROM, KV prefetch window (4 × `ot_sram_1r1w_256x256_m2_r2c2`) and KV tail (2 × `ot_sram_1r1w_128x256_m1_r2c2`) compiled. The flush and write-combine FIFOs and the vector memory are register files. The HBM3E PHY has a hard-macro abstract (`ot_hbm3e_phy`, see "HBM comparator integration"). **Open:** the HBM weight streamer's prefetch buffers, whose RTL is not on main yet. | Collars and one shared controller on the KV window and tail macros (`rtl/hdc/kv/ot_hdc_kv_bufs.sv`), verified in the KV-stream campaign (see below). |
+| **Qwen3-8B ROM reticle** | Reduced vehicle fully mapped and simulated: 37 macros. Full model at compiled density: 62,491 × `ot_rom_8192x266_m8` for BF16 weights (**1.12 reticles** of macro area, so BF16 Qwen3-8B does not fit one 815 mm2 reticle at ASAP7 density), or 15,623 macros (0.28 reticle) at 4 bits per weight (`full_scale_weight_rom`). | Integrated in `ot_hdc_memsys.sv`: MBIST with repair on the KV SRAM, signature BIST and SECDED on every ROM. Verified inside the decode campaign. The BIST hard-macro route closes at 1 GHz. |
+| **DeepSeek-V4.1 ROM array** | Reduced vehicle mapped: 992 macros, including the 2-read weight ROM as two copies, the quantised ROM, the HC ROM, 384 Engram-table macros (274-bit rows = 264 B + SECDED) and the 5-read constant ROM as five copies. The vector memory (12 reads, 10 writes) is a register file. Full model: about 10,355 weight macros per die (0.185 reticle). | ROM signature, SECDED and the per-die content signature (`content_signature`, `viamap_set_sha256`). Instantiation in the V4.1 test bench: see "V4.1 ROM array integration" when present. |
 
-The workstream is complete for the Qwen3-8B ROM reticle on the reduced
-vehicle. It is not complete for the other two columns:
+**Open items.**
 
-- the HBM weight streamer's buffers are not mapped, and the collars are not
-  inserted into the KV streamer;
-- the V4.1 BIST is not instantiated.
+- **HBM comparator:** the weight streamer's buffers are not mapped, because
+  that RTL is not on main.
+- **V4.1:** the memory subsystem's campaign is in progress on this branch.
 
 ## Reproduction
 
@@ -439,3 +444,54 @@ python3 tools/rtl_hdc_decode_campaign.py             # default memories (bit-exa
 python3 tools/rtl_hdc_decode_campaign.py --memory-macros
 python3 -m pytest tests/test_mem_compiler.py tests/test_mem_compiler_mbist.py
 ```
+
+## HBM comparator integration
+
+**KV streamer buffers.** `rtl/hdc/kv/ot_hdc_kv_bufs.sv` builds the on-die
+buffers of `ot_hdc_kv_stream` from compiled macros. Each macro sits behind an
+`ot_mbist_sram_collar`, and one shared `ot_mbist_ctrl` covers all six
+(March C-, repair analysis, spare rows and columns, one repair scan chain).
+
+| Buffer | Organisation | Macros |
+|---|---|---|
+| prefetch window | 4 banks × 256 × 256 bits, shared read address, per-bank write | 4 × `ot_sram_1r1w_256x256_m2_r2c2` (172.8 × 41.0 µm, 2,632 / 2,086 MHz TT / SS) |
+| tail (open K tiles) | 2 banks × 128 × 256 bits, 16-bit lane write mask | 2 × `ot_sram_1r1w_128x256_m1_r2c2` (94.8 × 41.0 µm, 2,979 / 2,298 MHz TT / SS) |
+
+The lane mask expands to a bit mask at the collar. The macros' read-before-write
+and hold-on-idle behaviour equals the behavioural arrays they replace.
+`rtl/test/tb_hdc_core_hbm.sv` selects them with `+define+OT_HDC_KV_MACROS`.
+In that mode the core, the streamer and the HBM model stay in reset while the
+optional self-test (`+BIST`) runs and the golden tail tiles are written
+through the buffers' test port. Every cycle count is therefore measured from
+the same reset release as the default build.
+
+`python3 tools/rtl_hdc_kv_stream_campaign.py --memory-macros` builds with
+Verilator 5.050 and writes `results/rtl/hdc_kv_stream_campaign_memory_macros.json`.
+It re-runs every core run of the default record: single step, long context,
+end to end, prompt-60 from empty, the three 2-pseudo-channel runs and the
+three fetch-lead runs. Each parsed run must equal the default record's field
+for field. It then runs the self-test before the token twice: once clean, and
+once with a stuck-at-1 cell in window bank 0. The clean run passes all six
+macros in 12,850 BIST cycles. The faulty run reports bank 0 *repaired* (status `10`), and the token
+run after it equals the default single step.
+
+**HBM PHY.** `tools/mem_compiler/hbm_phy_gen.py` writes
+`physical/asap7_memory_macros/ot_hbm3e_phy/`, a placement and connection
+abstract for the licensed PHY and controller:
+
+- **Footprint.** 12.0 mm along the die edge by 0.83 mm deep, which is 10 mm².
+  Both numbers come from `configs/hardware/technology.json`:
+  `hbm.hbm3e.stack_beachfront_mm` and `phy_area_mm2_per_stack`, and both are
+  graded *assumed*.
+- **Pins.** 9,209 controller-side signal pins on M5 along the core-facing
+  edge. They are the request port and the 32 pseudo-channel response ports of
+  `rtl/hdc/kv/ot_hdc_hbm_model.sv`, which is the functional and timing model
+  of this macro.
+- **Power.** VDD and VSS as M4 straps.
+- **Liberty.** Boundary timing only, per corner, graded *assumed*.
+- **Package side.** The package side (1,024 DQ per JEDEC JESD238 HBM3, 16
+  channels × 2 pseudo-channels, plus CA, clocks and bumps) is not in the
+  abstract.
+
+The weight streamer (`rtl/hdc/hbm*`) is not on main yet, so its prefetch
+buffers are not mapped.

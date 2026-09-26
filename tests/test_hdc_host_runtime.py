@@ -71,21 +71,16 @@ def test_campaign_record_is_current():
         assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
 
 
-def test_physical_record_routes_the_campaign_circuit():
-    """The routed revision is either the campaign's source, or one whose MODE=0
-    netlist is byte-identical to it (tools/host_if_routed_revision_identity.py)."""
+def test_physical_record_routes_the_campaign_source_and_passes():
     phys = json.loads(PHYS.read_text())
     design = phys["design"]
     assert design["top"] == "ot_host_if" and "pnr" in phys["stages_completed"]
     assert design["clock_period_ns"] == 0.9 and design["drc"] == 0
+    assert phys["acceptance"]["status"] == "pass"
+    assert phys["place_and_route"]["metrics"]["fmax_hz"] >= 1.0e9
     rec = _record()
-    (src,) = design["sources"]
-    current = rec["input_sha256"][src["path"]]
-    if src["sha256"] != current:
-        ident = json.loads((PHYS.parent / "routed_revision_identity.json").read_text())
-        assert ident["identical"] and ident["parameters"] == {"MODE": 0}
-        assert ident["routed_source_sha256"] == src["sha256"]
-        assert ident["current_source_sha256"] == current
+    for src in design["sources"]:
+        assert src["sha256"] == rec["input_sha256"][src["path"]], src["path"]
     assert not list(PHYS.parent.rglob("*.v"))
 
 

@@ -207,12 +207,14 @@ several times that. Two changes fixed it:
 - the bench now drives all faults from one loop, so each task has a single
   call site;
 - `run_atpg.py --lean-build` builds without module inlining, with split
-  output, `-O1` C++ and 4 jobs.
+  output, `-O0` C++ and 4 jobs.
 
 On the argmax bench this cut the peak to 1.2 GB <!-- figure: 1.2 src="results/dft/gate_bench_build_memory.json#lean_build.peak_rss_kb" scale="1e-6" name="argmax bench lean build peak GB" --> with identical results: the
-same 82 patterns, 0 mismatches, and all 130 injected faults detected. That
-measurement was taken at `-O0`; lean builds now compile at `-O1` for speed,
-since split output already bounds each compile unit's memory.
+same 82 patterns, 0 mismatches, and all 130 injected faults detected. The
+optimisation level matters: split output does not break up the one file that
+constructs every cell instance (`Vtb__Syms__Slow.cpp`), and at `-O1` its
+compile was killed for lack of memory on the KV streamer and package link
+benches, so lean builds stay at `-O0`.
 
 **Sampling on the largest blocks.** Simulation time scales with cells ×
 patterns × chain length, so replaying every pattern of the stream unit or the
@@ -261,7 +263,13 @@ settings: 0.9 ns target, `--false-path-io`, `--slew-margin-percent 20`,
 
 | Block | Std-cell area, no scan → scan (µm²) | Area | Routed Fmax, no scan → scan (MHz) | Fmax | Routed wirelength | Status, no scan / scan |
 |---|---|---|---|---|---|---|
+| argmax collective `ot_rom_argmax_reduce` | 1,848.89 → 2,034 | +10.0 <!-- figure: 10.0 src="results/dft/summary.json#blocks.argmax_reduce.route.overhead.standard_cell_area" scale="100" name="argmax_reduce scan area overhead %" -->% | 1,149.5 <!-- figure: 1149.5 src="results/dft/summary.json#blocks.argmax_reduce.route.noscan.fmax_mhz" name="argmax_reduce Fmax no scan" --> → 1,135.8 <!-- figure: 1135.8 src="results/dft/summary.json#blocks.argmax_reduce.route.scan.fmax_mhz" name="argmax_reduce Fmax scan" --> | -1.2 <!-- figure: -1.2 src="results/dft/summary.json#blocks.argmax_reduce.route.overhead.fmax" scale="100" name="argmax_reduce scan Fmax change %" -->% | +21.0 <!-- figure: 21.0 src="results/dft/summary.json#blocks.argmax_reduce.route.overhead.routed_wirelength" scale="100" name="argmax_reduce scan wirelength overhead %" -->% | pass / pass |
+| MoE expert port `ot_rom_moe_expert_port` | 2,178.91 → 2,439.02 | +11.9 <!-- figure: 11.9 src="results/dft/summary.json#blocks.expert_port.route.overhead.standard_cell_area" scale="100" name="expert_port scan area overhead %" -->% | 1,557.9 <!-- figure: 1557.9 src="results/dft/summary.json#blocks.expert_port.route.noscan.fmax_mhz" name="expert_port Fmax no scan" --> → 1,380.9 <!-- figure: 1380.9 src="results/dft/summary.json#blocks.expert_port.route.scan.fmax_mhz" name="expert_port Fmax scan" --> | -11.4 <!-- figure: -11.4 src="results/dft/summary.json#blocks.expert_port.route.overhead.fmax" scale="100" name="expert_port scan Fmax change %" -->% | +19.0 <!-- figure: 19.0 src="results/dft/summary.json#blocks.expert_port.route.overhead.routed_wirelength" scale="100" name="expert_port scan wirelength overhead %" -->% | pass / pass |
+| KV streamer `ot_hdc_kv_stream` | 6,423.88 → 7,073.21 | +10.1 <!-- figure: 10.1 src="results/dft/summary.json#blocks.kv_stream.route.overhead.standard_cell_area" scale="100" name="kv_stream scan area overhead %" -->% | 1,106.8 <!-- figure: 1106.8 src="results/dft/summary.json#blocks.kv_stream.route.noscan.fmax_mhz" name="kv_stream Fmax no scan" --> → 1,122.1 <!-- figure: 1122.1 src="results/dft/summary.json#blocks.kv_stream.route.scan.fmax_mhz" name="kv_stream Fmax scan" --> | +1.4 <!-- figure: 1.4 src="results/dft/summary.json#blocks.kv_stream.route.overhead.fmax" scale="100" name="kv_stream scan Fmax change %" -->% | +19.3 <!-- figure: 19.3 src="results/dft/summary.json#blocks.kv_stream.route.overhead.routed_wirelength" scale="100" name="kv_stream scan wirelength overhead %" -->% | not_met / pass |
+| multicast node `ot_rom_mcast_node` | 2,922.55 → 3,262.79 | +11.6 <!-- figure: 11.6 src="results/dft/summary.json#blocks.mcast_node.route.overhead.standard_cell_area" scale="100" name="mcast_node scan area overhead %" -->% | 1,352.9 <!-- figure: 1352.9 src="results/dft/summary.json#blocks.mcast_node.route.noscan.fmax_mhz" name="mcast_node Fmax no scan" --> → 1,322.2 <!-- figure: 1322.2 src="results/dft/summary.json#blocks.mcast_node.route.scan.fmax_mhz" name="mcast_node Fmax scan" --> | -2.3 <!-- figure: -2.3 src="results/dft/summary.json#blocks.mcast_node.route.overhead.fmax" scale="100" name="mcast_node scan Fmax change %" -->% | +14.8 <!-- figure: 14.8 src="results/dft/summary.json#blocks.mcast_node.route.overhead.routed_wirelength" scale="100" name="mcast_node scan wirelength overhead %" -->% | pass / pass |
+| MoE dispatch `ot_rom_moe_dispatch` | 1,510.55 → 1,685.93 | +11.6 <!-- figure: 11.6 src="results/dft/summary.json#blocks.moe_dispatch.route.overhead.standard_cell_area" scale="100" name="moe_dispatch scan area overhead %" -->% | 1,421.3 <!-- figure: 1421.3 src="results/dft/summary.json#blocks.moe_dispatch.route.noscan.fmax_mhz" name="moe_dispatch Fmax no scan" --> → 1,348.5 <!-- figure: 1348.5 src="results/dft/summary.json#blocks.moe_dispatch.route.scan.fmax_mhz" name="moe_dispatch Fmax scan" --> | -5.1 <!-- figure: -5.1 src="results/dft/summary.json#blocks.moe_dispatch.route.overhead.fmax" scale="100" name="moe_dispatch scan Fmax change %" -->% | +18.3 <!-- figure: 18.3 src="results/dft/summary.json#blocks.moe_dispatch.route.overhead.routed_wirelength" scale="100" name="moe_dispatch scan wirelength overhead %" -->% | pass / pass |
 | package controller `ot_rom_pkg_ctrl` | 3,444.39 → 3,919.07 | +13.8 <!-- figure: 13.8 src="results/dft/summary.json#blocks.pkg_ctrl.route.overhead.standard_cell_area" scale="100" name="pkg_ctrl scan area overhead %" -->% | 1,161.8 <!-- figure: 1161.8 src="results/dft/summary.json#blocks.pkg_ctrl.route.noscan.fmax_mhz" name="pkg_ctrl Fmax no scan" --> → 1,132.6 <!-- figure: 1132.6 src="results/dft/summary.json#blocks.pkg_ctrl.route.scan.fmax_mhz" name="pkg_ctrl Fmax scan" --> | -2.5 <!-- figure: -2.5 src="results/dft/summary.json#blocks.pkg_ctrl.route.overhead.fmax" scale="100" name="pkg_ctrl scan Fmax change %" -->% | +15.0 <!-- figure: 15.0 src="results/dft/summary.json#blocks.pkg_ctrl.route.overhead.routed_wirelength" scale="100" name="pkg_ctrl scan wirelength overhead %" -->% | pass / pass |
+| package link `ot_rom_pkg_link` | 7,569 → 8,551.1 | +13.0 <!-- figure: 13.0 src="results/dft/summary.json#blocks.pkg_link.route.overhead.standard_cell_area" scale="100" name="pkg_link scan area overhead %" -->% | 1,404.9 <!-- figure: 1404.9 src="results/dft/summary.json#blocks.pkg_link.route.noscan.fmax_mhz" name="pkg_link Fmax no scan" --> → 1,253.7 <!-- figure: 1253.7 src="results/dft/summary.json#blocks.pkg_link.route.scan.fmax_mhz" name="pkg_link Fmax scan" --> | -10.8 <!-- figure: -10.8 src="results/dft/summary.json#blocks.pkg_link.route.overhead.fmax" scale="100" name="pkg_link scan Fmax change %" -->% | +29.0 <!-- figure: 29.0 src="results/dft/summary.json#blocks.pkg_link.route.overhead.routed_wirelength" scale="100" name="pkg_link scan wirelength overhead %" -->% | not_met / not_met |
 <!-- dft-tables:end -->
 
 What the numbers say:
@@ -290,10 +298,22 @@ What the numbers say:
   the cell area of these register-heavy blocks.
 - **Fmax.** The scan multiplexer sits in every D path. The functional clock
   moves only a few percent, because the critical paths of these pipelined
-  blocks are not flop-to-flop without logic.
+  blocks are not flop-to-flop without logic. A change that small is within
+  the placer's run-to-run spread, so the sign can go either way: the KV
+  streamer's scanned route came out slightly faster than its unscanned one.
+  The exception is the shallowest block, the MoE expert port. Its critical
+  path is only a few gates deep, so the scan multiplexer is a larger share of
+  it and its Fmax drops by about a ninth. Both of its routes still clear the
+  0.9 ns target with room to spare.
 - **Wirelength.** The chains are ordered by instance name, not by placement:
   OpenROAD in this image has no scan-chain reordering after placement. A
   placement-aware order would recover part of the wirelength cost.
+- **Routes marked `not_met`.** `not_met` in the status column means the route
+  failed a design-rule check, not that it missed timing. The package link's
+  two routes both meet timing and are marked `not_met` only for max-slew
+  violations at the shared slew margin (`--slew-margin-percent 20`): 12 without scan and 19 with it.
+  The KV streamer's unscanned route missed setup by 3.5 ps. Both halves of each
+  pair use the same settings, so the comparison is still like for like.
 
 ## 5. Status for each architecture
 

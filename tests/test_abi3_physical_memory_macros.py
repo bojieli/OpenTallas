@@ -179,6 +179,9 @@ def test_every_routed_record_config_mk_is_still_reproduced_byte_for_byte():
             # such record (asap7/a3_g2_cluster) would have failed instead of
             # being checked.
             pnr.get("memory_macros"),
+            # The SYNTH_MEMORY_MAX_BITS line exists only in config.mk files
+            # written since 738746b2; the G2 cluster record predates it.
+            memory_max_bits=flow.recorded_memory_max_bits(record),
         )
         text = "\n".join(lines) + "\n"
         assert hashlib.sha256(text.encode("utf-8")).hexdigest() == artifact["sha256"], path

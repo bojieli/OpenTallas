@@ -135,23 +135,18 @@ file.
 ASAP7 with `tools/run_abi3_physical.py`: 0.9 ns target, block I/O
 false-pathed, synth and place-and-route.
 
-- Routed Fmax: **1,137.4 MHz**. <!-- figure: 1137.4 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="ot_host_if routed fmax" -->
-  Setup and hold are met at 0.9 ns, with 20.8 ps of setup slack. <!-- figure: 20.8 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.setup_wns_ns" scale="1000" name="ot_host_if routed setup slack, ps" -->
-- Standard-cell area: about 4,314 µm². <!-- figure: 4314 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.standard_cell_area_um2" name="ot_host_if standard-cell area" -->
+- Routed Fmax: **1,135.1 MHz**. <!-- figure: 1135.1 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="ot_host_if routed fmax" -->
+  Setup and hold are met at 0.9 ns, with 19.0 ps of setup slack. <!-- figure: 19.0 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.setup_wns_ns" scale="1000" name="ot_host_if routed setup slack, ps" -->
+- Standard-cell area: about 4,345 µm². <!-- figure: 4345 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.standard_cell_area_um2" name="ot_host_if standard-cell area" -->
   Of that, 5,085 cells are flip-flops. <!-- figure: 5085 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.sequential_cell_count" name="ot_host_if flip-flops" -->
   Most of them hold the slot contexts and the completion-event queue.
-- DRC: zero.
-- Acceptance: `not_met`. Timing closes, but 15 max-slew violations remain. <!-- figure: 15 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.max_slew_violations" name="ot_host_if max-slew violations" -->
-  The router record cleared the same kind of violation with
-  `--slew-margin-percent 40` (docs/ROM_ARRAY_FABRIC_RTL.md). That rerun was
-  not made here; this workstream allowed one place-and-route run.
+- Max-slew violations: 0; DRC, antenna, max-cap and max-fanout violations are also zero. <!-- figure: 0 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#place_and_route.metrics.max_slew_violations" name="ot_host_if max-slew violations" -->
+- Acceptance: `pass`.
 
-The routed source is the revision at commit `a8186d18`. The later fix to the
-end of a ROM-array batch changes only `MODE=1` logic. At `MODE=0`, the
-Yosys netlists of the two revisions are byte-identical
-(`tools/host_if_routed_revision_identity.py`,
-`results/physical_abi3/asap7/host/ot_host_if/routed_revision_identity.json`),
-so the record still routes this circuit.
+The route uses `--slew-margin-percent 40`, as the fabric router's record does
+(docs/ROM_ARRAY_FABRIC_RTL.md). A first route without the margin reached the
+same clock but left 15 max-slew violations. The record routes the current
+source, including the fix to the end of a ROM-array batch.
 
 ## 2. The simulation: tops and the host bridge
 
