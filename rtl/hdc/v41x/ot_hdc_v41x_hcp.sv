@@ -64,8 +64,8 @@
 // nonfinite operand or overflow anywhere, a divide fault, or R > 2^TL.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_hcp #(
-    parameter integer W    = 256,       // lanes per group (power of two >= 2); lanes = 8W
-    parameter integer TL   = 4,         // tail levels: runs per accumulation R <= 2^TL
+    parameter integer W    = 8,         // lanes per group (power of two >= 2); lanes = 8W (spec: W = 256)
+    parameter integer TL   = 9,         // tail levels: runs per accumulation R <= 2^TL (spec: 4)
     parameter integer PMAX = 8,         // positions per command (power of two)
     parameter integer OMAX = 32,        // rows per position (power of two)
     parameter integer AW   = 16,        // bank word address width
