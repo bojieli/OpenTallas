@@ -175,6 +175,46 @@
     "tester_cycles": 519689,
     "top": "ot_rom_fabric_router"
    },
+   "route": {
+    "noscan": {
+     "core_area_um2": 26551.1,
+     "drc_errors": 0,
+     "fmax_mhz": 1204.93,
+     "instance_count": 211571,
+     "routed_wirelength_um": 477410,
+     "sequential_area_um2": 3883.03,
+     "setup_wns_ns": 0.0700757,
+     "standard_cell_area_um2": 10072.2,
+     "status": "not_met"
+    },
+    "overhead": {
+     "core_area": 0.10537,
+     "fmax": -0.040915,
+     "instances": 0.04054,
+     "routed_wirelength": 0.072692,
+     "standard_cell_area": 0.103671
+    },
+    "scan": {
+     "core_area_um2": 29348.8,
+     "drc_errors": 0,
+     "fmax_mhz": 1155.63,
+     "instance_count": 220148,
+     "routed_wirelength_um": 512114,
+     "scan": {
+      "cell_area_added_fraction": 0.105465,
+      "chain_count": 13,
+      "chain_length_max": 1018,
+      "flops": 13226,
+      "lockup_latches": 0,
+      "scan_cells": 12925,
+      "scan_mux_cells": 301
+     },
+     "sequential_area_um2": 4825.27,
+     "setup_wns_ns": 0.0346738,
+     "standard_cell_area_um2": 11116.4,
+     "status": "not_met"
+    }
+   },
    "scan_off_equivalence": {
     "equiv_cells": 15839,
     "proven": true,
