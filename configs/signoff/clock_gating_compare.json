@@ -1,0 +1,87 @@
+{
+  "description": "Clock gating, operand isolation and hold repair (docs/POWER_CLOCK_SIGNOFF.md, 'Clock gating, operand isolation and hold repair'): the same activity-annotated sign-off power and timing before and after, per block and per decode step.  Before: the committed Qwen core sign-off (ungated RTL, identical to main's, routed through CTS) and the V4.1 units on their sign-off routes with the activity of main's CURRENT V4.1 step (344,109 cycles; the committed V4.1 sign-off predates six scheduling changes and used a 1,088,551-cycle step).  After: the gated RTL on routes made with --clock-gating --hold-corners TC,BC --hold-margin-ns, activity from the same campaign steps (bit-exact and cycle-identical to before).",
+  "blocks": {
+    "qwen_core": {
+      "architecture": "qwen3-8b-rom-reticle",
+      "cycles_per_token": 32246,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json", "key": "qwen_core"},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/qwen_core_gated_signoff.json", "key": "qwen_core"}
+    },
+    "qwen_core u_me (matrix engine flops)": {
+      "architecture": "qwen3-8b-rom-reticle",
+      "cycles_per_token": 32246,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json", "key": "qwen_core", "group": "u_me."},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/qwen_core_gated_signoff.json", "key": "qwen_core", "group": "u_me."}
+    },
+    "qwen_core u_su (stream unit flops)": {
+      "architecture": "qwen3-8b-rom-reticle",
+      "cycles_per_token": 32246,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json", "key": "qwen_core", "group": "u_su."},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/qwen_core_gated_signoff.json", "key": "qwen_core", "group": "u_su."}
+    },
+    "v41_softplus": {
+      "architecture": "deepseek-v41-rom-array",
+      "cycles_per_token": 344109,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_base_signoff.json", "key": "v41_softplus"},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_gated_signoff.json", "key": "v41_softplus"}
+    },
+    "v41_engram_hash": {
+      "architecture": "deepseek-v41-rom-array",
+      "cycles_per_token": 344109,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_base_signoff.json", "key": "v41_engram_hash"},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_gated_signoff.json", "key": "v41_engram_hash"}
+    },
+    "v41_actquant": {
+      "architecture": "deepseek-v41-rom-array",
+      "cycles_per_token": 344109,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_base_signoff.json", "key": "v41_actquant"},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_gated_signoff.json", "key": "v41_actquant"}
+    },
+    "v41_fp4qdq": {
+      "architecture": "deepseek-v41-rom-array",
+      "cycles_per_token": 344109,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_base_signoff.json", "key": "v41_fp4qdq"},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_gated_signoff.json", "key": "v41_fp4qdq"}
+    },
+    "v41_blockdot_lane0": {
+      "architecture": "deepseek-v41-rom-array",
+      "cycles_per_token": 344109,
+      "instances": 8,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_base_signoff.json", "key": "v41_blockdot_lane0"},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_gated_signoff.json", "key": "v41_blockdot_lane0"}
+    },
+    "v41_blockdot_lane15": {
+      "architecture": "deepseek-v41-rom-array",
+      "cycles_per_token": 344109,
+      "instances": 8,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_base_signoff.json", "key": "v41_blockdot_lane15"},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_gated_signoff.json", "key": "v41_blockdot_lane15"}
+    },
+    "v41_select": {
+      "architecture": "deepseek-v41-rom-array",
+      "cycles_per_token": 344109,
+      "before": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_base_signoff.json", "key": "v41_select"},
+      "after": {"signoff": "results/physical_abi3/asap7/signoff/v41_units_gated_signoff.json", "key": "v41_select"}
+    }
+  },
+  "architectures": {
+    "qwen3_8b_rom_reticle": {
+      "description": "reduced Qwen3 on the ROM reticle: the decode core's logic changes; ROM and SRAM bytes do not",
+      "token_from": "results/physical_abi3/asap7/signoff/energy_per_token.json#qwen3_8b_rom_reticle",
+      "logic_blocks": ["qwen_core"],
+      "basis": "the committed token energy (energy_per_token.json token_TT) with the core's logic energy replaced"
+    },
+    "hbm_comparator": {
+      "description": "the same core with weights and KV from HBM: the KV streamer and the HBM path are unchanged",
+      "token_from": "results/physical_abi3/asap7/signoff/energy_per_token.json#hbm_comparator",
+      "logic_blocks": ["qwen_core"],
+      "basis": "the committed token energy with the core's logic energy replaced"
+    },
+    "deepseek_v41_rom_array_die (routed special units)": {
+      "description": "the six routed V4.1 special units of one die over the current step (block-dot: 16 lanes, 8 at each measured lane's activity); memory, matrix engine, stream unit, sequencer, hc projection and Sinkhorn unit are not in this total",
+      "logic_blocks": ["v41_softplus", "v41_engram_hash", "v41_actquant", "v41_fp4qdq", "v41_blockdot_lane0",
+                       "v41_blockdot_lane15", "v41_select"],
+      "basis": "units-only logic energy, before and after, both at the current 344,109-cycle step"
+    }
+  }
+}

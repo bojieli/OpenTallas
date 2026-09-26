@@ -72,9 +72,12 @@ module ot_hdc_actquant (
         if (!rst_n) s0_v <= 1'b0;
         else s0_v <= v;
     end
-    //: operand isolation: the 1,024-bit input register loads only a valid
-    //: word, not every value the shared vector-memory read bus carries
-    always @(posedge gclk) if (v) begin
+    //: No valid enable here (unlike ot_hdc_fp4qdq): the routed s0_x -> s1_m
+    //: max tree is this unit's critical path, and the register-bank ICG the
+    //: enable infers puts a second gate in the launch clock only, -14 ps of
+    //: skew at 0.9 ns (routed with --clock-gating).  The unit gate below
+    //: already stops s0_x between the QE's quantise bursts.
+    always @(posedge gclk) begin
         s0_x <= x; s0_fp4 <= fp4;
     end
 
