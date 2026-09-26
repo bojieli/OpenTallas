@@ -424,19 +424,29 @@ def capped_layout(groups, max_split):
     return lay
 
 
-def as_built(T_ctx, groups=GROUPS_ROM, su_width=1, max_split=None):
+def as_built(T_ctx, groups=GROUPS_ROM, su_width=SPEC_SU_WIDTH, max_split=None, lv=None):
     """The calibrated sequencer model replaying the decode program the core runs
-    AT THIS COMMIT (tools/hdc_program.build_program) at the shipped shapes on
-    the spec's 8,192 groups, KV on core (the KV stream is priced separately):
-    cycles and their attribution (unit busy by class, sequencer stalls).  The
-    pre-work figures (7,680 groups, split <= 8) are frozen in BASELINE."""
+    AT THIS COMMIT (tools/hdc_program.build_program) at the shipped shapes,
+    with the RTL's parameters set to the spec's (8,192 groups, a stream unit of
+    SPEC_SU_WIDTH lanes whose reducer has LV = log2(max segment vectors) time
+    levels), KV on core (the KV stream is priced separately): cycles and their
+    attribution (unit busy by class, sequencer stalls).  The pre-work figures
+    (7,680 groups, split <= 8, a 1-wide stream unit) are frozen in BASELINE."""
     import collections
     import hdc_program as P
-    lay = capped_layout(groups, max_split)
-    prog = P.build_program(lay)
+    if lv is None:
+        lv = max(1, math.ceil(math.log2(max(T_ctx, Q["H"]) / su_width))) if su_width > 1 else 0
+    sw0 = I.SU_WIDTH
+    I.SU_WIDTH = su_width            # the program's chase thresholds count vectors of this width
+    try:
+        lay = capped_layout(groups, max_split)
+        prog = P.build_program(lay)
+    finally:
+        I.SU_WIDTH = sw0
     dyn = dict(H=Q["H"], half=Q["HD"] // 2, HD=Q["HD"])
     tr = []
-    _, cyc = T.simulate(prog, T_ctx - 1, groups=groups, dyn_shape=dyn, su_width=su_width, trace=tr)
+    k = dict(T.K, red_lv=lv)
+    _, cyc = T.simulate(prog, T_ctx - 1, groups=groups, dyn_shape=dyn, su_width=su_width, trace=tr, k=k)
     d = T.dyn_values(T_ctx - 1, groups=groups, **dyn)
     busy = collections.Counter()
     stall = collections.Counter()
@@ -448,10 +458,11 @@ def as_built(T_ctx, groups=GROUPS_ROM, su_width=1, max_split=None):
             rr, kk = T.me_loop(f, d, T_ctx - 1, groups)
             busy[c] += rr * kk * IL
         elif f["unit"] == I.UNIT_SU:
-            busy["stream"] += -(-f["su_nout"] * (f["su_nin"] + d[f["su_d_nin"]]) // su_width)
+            busy["stream"] += T.su_vectors(f, d, su_width)
         stall[why] += g
     n = sum(1 for f in prog if f.get("unit") != I.UNIT_END)
-    return dict(context=T_ctx, groups=groups, su_width=su_width, max_split=max_split, instructions=n, cycles=cyc,
+    return dict(context=T_ctx, groups=groups, su_width=su_width, reducer_time_levels=lv, max_split=max_split,
+                instructions=n, cycles=cyc,
                 unit_busy=dict(busy), sequencer_stalls={k: v for k, v in stall.items() if k != "issue"},
                 seq_gap_total=n * T.K["seq_gap"])
 
@@ -556,8 +567,9 @@ def gap_table(out):
     hb = head["unit_busy"]
     return [
         dict(block="stream unit", requirement=f"{req['stream_unit_elements_per_cycle']['requirement']} elements/cycle",
-             as_built="1 element/cycle", cycles_baseline_2k=ab["unit_busy"].get("stream", 0),
-             cycles_head_8k=hb.get("stream", 0), status="MISS"),
+             as_built=f"vector stream unit, SW lanes (landed: RTL parameter; {SPEC_SU_WIDTH} at the spec), "
+                      "R-ARITH reducer", cycles_baseline_2k=ab["unit_busy"].get("stream", 0),
+             cycles_head_8k=hb.get("stream", 0), status="MEETS"),
         dict(block="attention P.V", requirement="K-split over positions across every free group",
              as_built="interleaved K-split over positions (landed)", cycles_baseline_2k=ab["unit_busy"].get("attn_pv", 0),
              cycles_head_8k=hb.get("attn_pv", 0), status="MEETS"),
@@ -567,10 +579,15 @@ def gap_table(out):
              status="MEETS"),
         dict(block="dependency handling",
              requirement=f"<= {req['exposed_latency_per_dependent_stage_max']['requirement']} cycles exposed a stage",
-             as_built="full-unit barrier drains (both units idle) on every region conflict",
+             as_built="per-unit waits (landed: wait_me / wait_su, barrier = both), element chaining across "
+                      "units; still whole-op granular within a unit",
              cycles_baseline_2k=ab["sequencer_stalls"].get("barrier_me", 0) + ab["sequencer_stalls"].get("barrier_su", 0),
-             cycles_head_8k=head["sequencer_stalls"].get("barrier_me", 0) + head["sequencer_stalls"].get("barrier_su", 0),
+             cycles_head_8k=sum(v for k2, v in head["sequencer_stalls"].items() if k2 != "unit_busy"),
              status="MISS"),
+        dict(block="softmax", requirement="one stream-unit pass over the scores, 1/Z beside P.V",
+             as_built="normalise-after-sum (landed: max pass + exp pass; the scale pass is 32 x 128); the row "
+                      "max stays a stream pass (the engine-side max is not built)",
+             cycles_baseline_2k=None, cycles_head_8k=None, status="PARTIAL"),
         dict(block="sequencer issue", requirement=req["instruction_issue"]["requirement"],
              as_built=f"prefetched issue pipeline: {head['instructions']} instructions at gap {T.K['seq_gap']} (landed)",
              cycles_baseline_2k=ab["seq_gap_total"], cycles_head_8k=head["seq_gap_total"], status="MEETS"),

@@ -56,7 +56,8 @@ VERILATOR5 = Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilato
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 ISA_SVH = ROOT / "rtl/hdc/ot_hdc_isa.svh"
 HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
-                                          "ot_hdc_reduce", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_core")]
+                                          "ot_hdc_reduce", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_vstream_lane",
+                                          "ot_hdc_vreduce", "ot_hdc_vstream", "ot_hdc_core")]
 TB_SFU = ROOT / "rtl/test/tb_hdc_sfu.sv"
 TB_MUL = ROOT / "rtl/test/tb_hdc_mul_equiv.sv"
 HARNESS_MUL = ROOT / "rtl/test/hdc_mul_equiv_harness.cpp"
@@ -64,7 +65,8 @@ MUL_VECTORS = 20_000_000
 TB_CORE = ROOT / "rtl/test/tb_hdc_core.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_harness.cpp"
 TOOLS = [ROOT / "tools/hdc_golden.py", ROOT / "tools/hdc_isa.py", ROOT / "tools/hdc_program.py", Path(__file__)]
-LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-BLKSEQ")
+LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-BLKSEQ", "-Wno-VARHIDDEN")
+SW8 = 16          # the 8-group scaling point also widens the stream unit (the reducer's tree, SW/8 = 2)
 SINGLE = re.compile(r"HDC token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) cycles=(\d+) fault=(\d+) "
                     r"logit_mismatch=(\d+) vm_mismatch=(\d+) kv_mismatch=(\d+)")
 UTIL = re.compile(r"UTIL me_issue_cycles=(\d+) su_issue_cycles=(\d+) both_idle_cycles=(\d+)")
@@ -129,6 +131,14 @@ def run(memsys: bool = False) -> dict:
     # with the data itself unchanged); 5.050 counts zero.  The default build keeps
     # the verilator on PATH so its record is unchanged.
     vl = str(VERILATOR5) if memsys and VERILATOR5.is_file() else "verilator"
+    # The stream unit: the vector unit of I.SU_WIDTH lanes (R-ARITH reducer);
+    # the memory-macro wrapper still has one stream port per operand, so it
+    # builds the scalar unit and its golden order (HDC_SU_WIDTH=1).
+    su = 1 if memsys else I.SU_WIDTH
+    su8 = 1 if memsys else SW8
+    envs = dict(os.environ, HDC_SU_WIDTH=str(su))
+    sup = [f"-GSU_VEC={int(su > 1)}", f"-GSW={su}"]
+    sup8 = [f"-GSU_VEC={int(su8 > 1)}", f"-GSW={su8}"]
     pers: dict = {}
     with tempfile.TemporaryDirectory() as scratch:
         s = Path(scratch)
@@ -155,12 +165,12 @@ def run(memsys: bool = False) -> dict:
                    "bf16_refused": int(m2.group(2)), "bf16_mismatches": int(m2.group(3)),
                    "pass": "PASS" in mul}
         # 2. lint
-        lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core",
+        lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core", *sup,
                                f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES)], capture_output=True, text=True)
         # 3. core
         img = s / "img"
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img)], check=True,
-                       capture_output=True)
+                       capture_output=True, env=envs)
 
         def rom_args(d: Path, groups: int) -> list:
             if not memsys:
@@ -173,7 +183,7 @@ def run(memsys: bool = False) -> dict:
         img_rom = rom_args(img, I.GROUPS)
         obj = s / "obj"
         subprocess.run([vl, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
-                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-Mdir", str(obj),
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", *sup, "-Mdir", str(obj),
                         f"-I{ISA_SVH.parent}", *extra_def,
                         *map(str, HDC), *map(str, PIPES), *extra_rtl, str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
                        check=True, capture_output=True)
@@ -210,18 +220,18 @@ def run(memsys: bool = False) -> dict:
         # long context: attention over every group
         imgc = s / "imgc"
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(imgc), "--context", "60"],
-                       check=True, capture_output=True)
+                       check=True, capture_output=True, env=envs)
         imgc_rom = rom_args(imgc, I.GROUPS)
         onec = subprocess.run([exe, f"+DIR={imgc}", *imgc_rom, *(imgc / "run.args").read_text().split()],
                               check=True, capture_output=True, text=True).stdout
         # scaling point: 8 lane groups
         img8, obj8 = s / "img8", s / "obj8"
-        env8 = dict(os.environ, HDC_GROUPS="8")
+        env8 = dict(os.environ, HDC_GROUPS="8", HDC_SU_WIDTH=str(su8))
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img8)], check=True,
                        capture_output=True, env=env8)
         img8_rom = rom_args(img8, 8)
         subprocess.run([vl, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
-                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-GG=8", "-Mdir", str(obj8),
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-GG=8", *sup8, "-Mdir", str(obj8),
                         f"-I{ISA_SVH.parent}", *extra_def,
                         *map(str, HDC), *map(str, PIPES), *extra_rtl, str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
                        check=True, capture_output=True)
@@ -268,6 +278,8 @@ def run(memsys: bool = False) -> dict:
         else "fail"
     record = {
         "schema": "opentallas.hdc-decode-campaign.v1",
+        "stream_unit": {"lanes": su, "lanes_8_group_point": su8,
+                        "unit": "rtl/hdc/ot_hdc_vstream.sv (R-ARITH reducer)" if su > 1 else "rtl/hdc/ot_hdc_stream.sv"},
         "status": status,
         "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core "
                           "boundary) with behavioural synchronous-read memories; clock rate is not "

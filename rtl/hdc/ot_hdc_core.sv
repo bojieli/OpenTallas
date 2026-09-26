@@ -40,7 +40,15 @@ module ot_hdc_core #(
     // sequencer reaches it and issues only once the streamer raises kv_ok
     // (its prefetch window covers the op; the engine never stalls).  With
     // KV_HBM = 0 the kvd_* outputs are unused and kv_ok is ignored.
-    parameter integer KV_HBM = 0
+    parameter integer KV_HBM = 0,
+    // The stream unit.  SU_VEC = 1: the vector stream unit (ot_hdc_vstream) of
+    // SW lanes (a multiple of 8) with the R-ARITH reducer (segments of up to
+    // 2^LV vectors); every stream port is SW elements wide.  SU_VEC = 0: the
+    // scalar stream unit (ot_hdc_stream, SW must be 1) and its P=8 reducer --
+    // the configurations not yet moved (the KV-in-HBM streamer).
+    parameter integer SU_VEC = 0,
+    parameter integer SW     = 1,
+    parameter integer LV     = 4
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -61,36 +69,36 @@ module ot_hdc_core #(
     output wire [AW-1:0]     wrom_addr,
     input  wire [G*W*16-1:0] wrom_q,
     // constant ROM
-    output wire              crom_re,
-    output wire [AW-1:0]     crom_addr,
-    input  wire [63:0]       crom_q,
+    output wire [SW-1:0]     crom_re,
+    output wire [SW*AW-1:0]  crom_addr,
+    input  wire [SW*64-1:0]  crom_q,
     // KV SRAM
     output wire              kv_re,
     output wire [G*AW-1:0]   kv_raddr,        // one read port per lane group
     input  wire [G*W*32-1:0] kv_q,
-    output wire              kv_we,
-    output wire [AW-1:0]     kv_waddr,
-    output wire [31:0]       kv_wdata,
+    output wire [SW-1:0]     kv_we,
+    output wire [SW*AW-1:0]  kv_waddr,
+    output wire [SW*32-1:0]  kv_wdata,
     // vector memory: G + 3 element read ports, G + 2 write ports
     output wire [G-1:0]      vx_re,
     output wire [G*AW-1:0]   vx_addr,
     input  wire [G*32-1:0]   vx_q,
-    output wire              va_re,
-    output wire [AW-1:0]     va_addr,
-    input  wire [31:0]       va_q,
-    output wire              vb_re,
-    output wire [AW-1:0]     vb_addr,
-    input  wire [31:0]       vb_q,
-    output wire              vc_re,
-    output wire [AW-1:0]     vc_addr,
-    input  wire [31:0]       vc_q,
+    output wire [SW-1:0]     va_re,
+    output wire [SW*AW-1:0]  va_addr,
+    input  wire [SW*32-1:0]  va_q,
+    output wire [SW-1:0]     vb_re,
+    output wire [SW*AW-1:0]  vb_addr,
+    input  wire [SW*32-1:0]  vb_q,
+    output wire [SW-1:0]     vc_re,
+    output wire [SW*AW-1:0]  vc_addr,
+    input  wire [SW*32-1:0]  vc_q,
     output wire [G-1:0]      vw_me_we,
     output wire [G*AW-1:0]   vw_me_addr,       // words
     output wire [G*W-1:0]    vw_me_mask,
     output wire [G*W*32-1:0] vw_me_data,
-    output wire              vw_su_we,
-    output wire [AW-1:0]     vw_su_addr,
-    output wire [31:0]       vw_su_data,
+    output wire [SW-1:0]     vw_su_we,
+    output wire [SW*AW-1:0]  vw_su_addr,
+    output wire [SW*32-1:0]  vw_su_data,
     output wire              vw_rd_we,
     output wire [AW-1:0]     vw_rd_addr,
     output wire [31:0]       vw_rd_data,
@@ -140,7 +148,7 @@ module ot_hdc_core #(
     reg [1:0]    d_unit;
     reg          d_barrier;
     reg [NW-1:0] me_nout, me_tiles, me_k;
-    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase;
+    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase, d_wait_me, d_wait_su;
     reg [15:0]   d_chase_n;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs;
     reg [2:0]    me_jsh;
@@ -170,7 +178,8 @@ module ot_hdc_core #(
     wire chased = ((d_unit == 2'd1) ? su_progress : me_progress) >= d_chase_n;
     //: issue NEXT this cycle; the unit latches its fields on this edge
     wire issue = (st == S_RUN) && nx_v && (d_unit != 2'd0) &&
-                 (d_barrier ? drained : (!d_chase || chased)) && unit_ready && kv_gate;
+                 (d_barrier ? drained : ((!d_chase || chased) && (!d_wait_me || me_idle) && (!d_wait_su || su_idle)))
+                 && unit_ready && kv_gate;
     assign me_go = issue && (d_unit == 2'd1);
     assign su_go = issue && (d_unit == 2'd2);
     wire fin = (st == S_RUN) && nx_v && (d_unit == 2'd0) && drained;
@@ -251,7 +260,7 @@ module ot_hdc_core #(
         me_obase <= `F(ME_OBASE) + dyn[`F(ME_D_OBASE)];
         me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
         me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE);
-        d_chase <= `F(CHASE); d_chase_n <= `F(CHASE_N);
+        d_chase <= `F(CHASE); d_chase_n <= `F(CHASE_N); d_wait_me <= `F(WAIT_ME); d_wait_su <= `F(WAIT_SU);
         me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS); me_wcs <= `F(ME_WCS);
         su_nout <= `F(SU_NOUT);
         su_nin <= `F(SU_NIN) + dyn[`F(SU_D_NIN)];
@@ -283,6 +292,30 @@ module ot_hdc_core #(
     assign me_omask = vw_me_mask;
     assign me_odata = vw_me_data;
 
+    wire       su_active;             // observation (test benches)
+    wire [7:0] su_inflight;
+    generate if (SU_VEC != 0) begin : g_vsu
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW)) u_su (
+        .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
+        .i_nout(su_nout), .i_nin(su_nin),
+        .i_asrc(a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),
+        .i_bsrc(b_src), .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si),
+        .i_csrc(c_src), .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si),
+        .i_ma(ma), .i_mb(mb), .i_ad(ad), .i_sfu(sfu), .i_mc(mc), .i_md(md),
+        .i_dst(dst), .i_dbase(d_base), .i_dso(d_so), .i_dsi(d_si),
+        .i_red(red), .i_redsq(redsq), .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2),
+        .va_re(va_re), .va_addr(va_addr), .va_q(va_q),
+        .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
+        .vc_re(vc_re), .vc_addr(vc_addr), .vc_q(vc_q),
+        .wrom_re(su_wrom_re), .wrom_addr(su_wrom_addr), .wrom_q(wrom_q),
+        .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
+        .vm_we(vw_su_we), .vm_waddr(vw_su_addr), .vm_wdata(vw_su_data),
+        .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+        .red_we(vw_rd_we), .red_addr(vw_rd_addr), .red_data(vw_rd_data),
+        .progress(su_progress), .fault(su_fault));
+    assign su_active = u_su.active;
+    assign su_inflight = u_su.inflight;
+    end else begin : g_ssu
     ot_hdc_stream #(.W(W), .WR(G * W), .AW(AW), .NW(NW)) u_su (
         .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
         .i_nout(su_nout), .i_nin(su_nin),
@@ -301,6 +334,9 @@ module ot_hdc_core #(
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
         .red_we(vw_rd_we), .red_addr(vw_rd_addr), .red_data(vw_rd_data),
         .progress(su_progress), .fault(su_fault));
+    assign su_active = u_su.active;
+    assign su_inflight = u_su.inflight;
+    end endgenerate
 
     // The embedding read is the only stream use of the weight ROM; a barrier
     // keeps it apart from matrix-vector reads.

@@ -17,7 +17,9 @@
 // the core starts later in simulation time; the core's own cycle count is what
 // is reported and compared.
 module tb_hdc_core #(
-    parameter integer G = 4                  // matrix-engine lane groups (tools/hdc_isa.py GROUPS)
+    parameter integer G = 4,                 // matrix-engine lane groups (tools/hdc_isa.py GROUPS)
+    parameter integer SU_VEC = 1,            // the vector stream unit (0: the scalar one, SW = 1)
+    parameter integer SW = 8                 // stream-unit lanes (tools/hdc_isa.py SU_WIDTH)
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
@@ -48,11 +50,12 @@ module tb_hdc_core #(
 `ifndef OT_HDC_MEMSYS
     wire prog_re; wire [PAW-1:0] prog_addr; reg [INSTR_BITS-1:0] prog_q;
     wire wrom_re; wire [AW-1:0] wrom_addr; reg [G*W*16-1:0] wrom_q;
-    wire crom_re; wire [AW-1:0] crom_addr; reg [63:0] crom_q;
-    wire kv_re, kv_we; wire [G*AW-1:0] kv_raddr; wire [AW-1:0] kv_waddr; reg [G*W*32-1:0] kv_q; wire [31:0] kv_wdata;
-    wire va_re, vb_re, vc_re; wire [AW-1:0] va_addr, vb_addr, vc_addr;
+    wire [SW-1:0] crom_re; wire [SW*AW-1:0] crom_addr; reg [SW*64-1:0] crom_q;
+    wire kv_re; wire [SW-1:0] kv_we; wire [G*AW-1:0] kv_raddr; wire [SW*AW-1:0] kv_waddr; reg [G*W*32-1:0] kv_q;
+    wire [SW*32-1:0] kv_wdata;
+    wire [SW-1:0] va_re, vb_re, vc_re; wire [SW*AW-1:0] va_addr, vb_addr, vc_addr;
     wire [G-1:0] vx_re; wire [G*AW-1:0] vx_addr; reg [G*32-1:0] vx_q;
-    reg [31:0] va_q, vb_q, vc_q;
+    reg [SW*32-1:0] va_q, vb_q, vc_q;
 `else
     wire prog_re; wire [PAW-1:0] prog_addr; wire [INSTR_BITS-1:0] prog_q;
     wire wrom_re; wire [AW-1:0] wrom_addr; wire [G*W*16-1:0] wrom_q;
@@ -80,12 +83,12 @@ module tb_hdc_core #(
         assign bist_exp_sig[32*gs +: 32] = exp_sig_mem[gs];
     end endgenerate
 `endif
-    wire vw_su_we, vw_rd_we; wire [AW-1:0] vw_su_addr, vw_rd_addr;
+    wire [SW-1:0] vw_su_we; wire vw_rd_we; wire [SW*AW-1:0] vw_su_addr; wire [AW-1:0] vw_rd_addr;
     wire [G-1:0] vw_me_we; wire [G*AW-1:0] vw_me_addr;
-    wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [31:0] vw_su_data, vw_rd_data;
+    wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [SW*32-1:0] vw_su_data; wire [31:0] vw_rd_data;
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
 
-    ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW)) dut (
+    ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(SU_VEC), .SW(SW)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
         .done(done), .next_token(next_token), .cycles(cycles), .fault(fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
@@ -131,20 +134,24 @@ module tb_hdc_core #(
     always @(posedge clk) begin
         if (prog_re) prog_q <= prog[prog_addr];
         if (wrom_re) wrom_q <= wrom[wrom_addr[16:0]];
-        if (crom_re) crom_q <= crom[crom_addr[11:0]];
+        for (q = 0; q < SW; q = q + 1)
+            if (crom_re[q]) crom_q[64*q +: 64] <= crom[crom_addr[q*AW +: 12]];
         for (q = 0; q < G; q = q + 1)
             if (kv_re) kv_q[q*W*32 +: W*32] <= kv[kv_raddr[q*AW +: 10]];
         for (q = 0; q < G; q = q + 1)
             if (vx_re[q]) vx_q[32*q +: 32] <= vm[vx_addr[q*AW +: 12]];
-        if (va_re) va_q <= vm[va_addr[11:0]];
-        if (vb_re) vb_q <= vm[vb_addr[11:0]];
-        if (vc_re) vc_q <= vm[vc_addr[11:0]];
-        if (kv_we) kv[kv_waddr[13:4]][32*kv_waddr[3:0] +: 32] <= kv_wdata;
+        for (q = 0; q < SW; q = q + 1) begin
+            if (va_re[q]) va_q[32*q +: 32] <= vm[va_addr[q*AW +: 12]];
+            if (vb_re[q]) vb_q[32*q +: 32] <= vm[vb_addr[q*AW +: 12]];
+            if (vc_re[q]) vc_q[32*q +: 32] <= vm[vc_addr[q*AW +: 12]];
+            if (kv_we[q]) kv[kv_waddr[q*AW + 4 +: 10]][32*kv_waddr[q*AW +: 4] +: 32] <= kv_wdata[32*q +: 32];
+        end
         for (q = 0; q < G; q = q + 1)
             if (vw_me_we[q])
                 for (l = 0; l < W; l = l + 1)
                     if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: 8], 4'b0} + l] <= vw_me_data[32*(q*W + l) +: 32];
-        if (vw_su_we) vm[vw_su_addr[11:0]] <= vw_su_data;
+        for (q = 0; q < SW; q = q + 1)
+            if (vw_su_we[q]) vm[vw_su_addr[q*AW +: 12]] <= vw_su_data[32*q +: 32];
         if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
 `endif
         // the result words of the one unwritten matrix-vector op are the logits
@@ -194,8 +201,8 @@ module tb_hdc_core #(
     integer me_busy = 0, su_busy = 0, both_idle = 0, lane_slots = 0;
     always @(posedge clk) if (dut.st != 0) begin
         if (dut.u_me.active) me_busy <= me_busy + 1;
-        if (dut.u_su.active) su_busy <= su_busy + 1;
-        if (!dut.u_me.active && !dut.u_su.active) both_idle <= both_idle + 1;
+        if (dut.su_active) su_busy <= su_busy + 1;
+        if (!dut.u_me.active && !dut.su_active) both_idle <= both_idle + 1;
     end
     reg [31:0] kv_e;
     initial begin
@@ -337,7 +344,7 @@ module tb_hdc_core #(
             $display("ISSUE cyc=%0d pc=%0d unit=%0d barrier=%0d", cycles, dut.pc, dut.d_unit, dut.d_barrier);
         if (cyc > 5000000) begin
             $display("TIMEOUT pc=%0d st=%0d me_idle=%0d su_idle=%0d su_ready=%0d inflight=%0d", dut.pc, dut.st,
-                     dut.me_idle, dut.su_idle, dut.su_ready, dut.u_su.inflight);
+                     dut.me_idle, dut.su_idle, dut.su_ready, dut.su_inflight);
             $finish;
         end
     end

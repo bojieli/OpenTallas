@@ -88,7 +88,7 @@ def test_speculation(rec):
 # runs, at shipped shapes and the design context, must not regress past the
 # ratchet, and the gap to the budget target is reported.  Lower RATCHET as
 # blocks land; the gate is met when RATCHET <= the budget target.
-RATCHET_8K = 30_090_973
+RATCHET_8K = 174_856
 
 
 def test_performance_gate(rec, fresh):

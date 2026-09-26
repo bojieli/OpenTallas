@@ -222,8 +222,8 @@ module tb_hdc_core_hbm #(
     wire seq_other_ok = (dut.d_barrier ? dut.drained : (!dut.d_chase || dut.chased)) && dut.unit_ready;
     always @(posedge clk) if (dut.st != 0) begin
         if (dut.u_me.active) me_busy <= me_busy + 1;
-        if (dut.u_su.active) su_busy <= su_busy + 1;
-        if (!dut.u_me.active && !dut.u_su.active) both_idle <= both_idle + 1;
+        if (dut.su_active) su_busy <= su_busy + 1;
+        if (!dut.u_me.active && !dut.su_active) both_idle <= both_idle + 1;
         //: cycles the sequencer waits only for the KV window
         if (dut.st == 6 && dut.d_unit == 1 && seq_other_ok && !dut.kv_gate) kv_stall <= kv_stall + 1;
     end

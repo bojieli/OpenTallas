@@ -1390,44 +1390,50 @@
   "8192": {
    "context": 8192,
    "groups": 8192,
-   "su_width": 1,
+   "su_width": 1024,
+   "reducer_time_levels": 3,
    "max_split": null,
    "instructions": 4540,
-   "cycles": 30090973,
+   "cycles": 174856,
    "unit_busy": {
-    "stream": 29944425,
+    "stream": 29817,
     "weights": 52992,
     "attn_scores": 9216,
     "attn_pv": 9216,
     "lm_head": 4752
    },
    "sequencer_stalls": {
-    "barrier_su": 29029677,
-    "chase": 308864,
-    "barrier_me": 95616,
-    "unit_busy": 647424
+    "wait_su": 57827,
+    "chase": 66597,
+    "unit_busy": 20052,
+    "barrier_su": 9504,
+    "wait_me": 5760,
+    "barrier_me": 5724
    },
    "seq_gap_total": 4540
   },
   "2048": {
    "context": 2048,
    "groups": 8192,
-   "su_width": 1,
+   "su_width": 1024,
+   "reducer_time_levels": 2,
    "max_split": null,
    "instructions": 4540,
-   "cycles": 8843485,
+   "cycles": 146122,
    "unit_busy": {
-    "stream": 8710761,
+    "stream": 15993,
     "weights": 52992,
     "attn_scores": 2304,
     "attn_pv": 2304,
     "lm_head": 4752
    },
    "sequencer_stalls": {
-    "barrier_su": 7796013,
-    "chase": 308864,
-    "barrier_me": 86976,
-    "unit_busy": 642240
+    "wait_su": 42917,
+    "chase": 66597,
+    "unit_busy": 9684,
+    "barrier_su": 9504,
+    "wait_me": 4032,
+    "barrier_me": 3996
    },
    "seq_gap_total": 4540
   }
@@ -1436,10 +1442,10 @@
   {
    "block": "stream unit",
    "requirement": "1024 elements/cycle",
-   "as_built": "1 element/cycle",
+   "as_built": "vector stream unit, SW lanes (landed: RTL parameter; 1024 at the spec), R-ARITH reducer",
    "cycles_baseline_2k": 8710761,
-   "cycles_head_8k": 29944425,
-   "status": "MISS"
+   "cycles_head_8k": 29817,
+   "status": "MEETS"
   },
   {
    "block": "attention P.V",
@@ -1460,10 +1466,18 @@
   {
    "block": "dependency handling",
    "requirement": "<= 54 cycles exposed a stage",
-   "as_built": "full-unit barrier drains (both units idle) on every region conflict",
+   "as_built": "per-unit waits (landed: wait_me / wait_su, barrier = both), element chaining across units; still whole-op granular within a unit",
    "cycles_baseline_2k": 13463058,
-   "cycles_head_8k": 29125293,
+   "cycles_head_8k": 145412,
    "status": "MISS"
+  },
+  {
+   "block": "softmax",
+   "requirement": "one stream-unit pass over the scores, 1/Z beside P.V",
+   "as_built": "normalise-after-sum (landed: max pass + exp pass; the scale pass is 32 x 128); the row max stays a stream pass (the engine-side max is not built)",
+   "cycles_baseline_2k": null,
+   "cycles_head_8k": null,
+   "status": "PARTIAL"
   },
   {
    "block": "sequencer issue",

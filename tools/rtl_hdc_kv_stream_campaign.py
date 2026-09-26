@@ -44,6 +44,7 @@ import os
 # images, the golden and the programs with the attention products unsplit
 # (tools/hdc_golden.py attn_splits); child processes inherit it.
 os.environ["HDC_ATTN_SPLIT"] = "0"
+os.environ["HDC_SU_WIDTH"] = "1"         # and the scalar stream unit (its P=8 reducer order)
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 

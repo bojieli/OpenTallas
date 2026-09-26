@@ -130,12 +130,22 @@ All figures are cycles per token at 8K, FP8 KV:
 | **spec dependency chain** (one-pass softmax, prefetched issue): weights 57,744, attention 18,432, elementwise 9,792, latency 63,252 | **149,940** | 7,327 |
 | KV stream (FP8, 6 stacks) | 122,881 | 8,941 |
 | calibrated model, before this work (SU 1, split ≤ 8, 7,680 groups; KV on core) | 49,888,993 | 22 |
-| calibrated model, at HEAD (K-split attention, 4-bit split, prefetched issue) | **30,090,973** <!-- figure: 30,090,973 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | 36.5 |
+| calibrated model, K-split attention + 4-bit split + prefetched issue (8fb2059d) | 30,090,973 | 36.5 |
+| calibrated model, at HEAD (+ the 1,024-lane vector stream unit, normalise-after-sum, per-unit waits) | **174,856** <!-- figure: 174,856 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | 6,283 |
 
-At HEAD, 29.94 M of the 30.09 M cycles are the 1-element stream unit's busy
-time. After the stream unit, the spec chain exceeds the design point's target
-(149,940 against 129,348) by its exposed latency. That is the next wall: 63,252
-cycles, or 88 a stage against the 54 budget.
+The HEAD figure is the RTL's parameters set to the spec's: 8,192 groups, SW =
+1,024, and LV = 3 time levels. It is not a shipped-scale simulation. What is
+left:
+
+* weights 57,744;
+* stream busy 29,817;
+* attention 18,432;
+* waits and chases, the exposed latency: 5,760 on the matrix engine, 57,827
+  on the stream unit and 66,597 in chases.
+
+The exposed latency is the wall between HEAD and the target (129,348). The
+next levers are the fast FP units, the row max on the engine, the reducer's
+time levels skipped for short segments, and waits for main writes only.
 
 The analytical `decode_critical_path.py` prices 2K with KV on chip (8,680
 tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
@@ -144,12 +154,13 @@ tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
 
 | block | requirement | RTL | baseline 2K | HEAD 8K |
 |---|---|---|---|---|
-| stream unit | 1,024 elements/cycle | 1 element/cycle | 8,710,761 | 29,944,425 |
+| stream unit | 1,024 elements/cycle | **landed**: `ot_hdc_vstream`, SW lanes (RTL parameter), R-ARITH reducer | 8,710,761 | 29,817 |
 | attention P·V | K-split over positions | **landed**: interleaved K-split | 4,718,592 | 9,216 |
 | attention Q·K | K-split over head_dim | **landed**: interleaved K-split | 147,456 | 9,216 |
 | matrix engine | 8,192 groups, split field to 2^13 | **landed**: 4-bit split | 892,928 | 57,744 |
 | sequencer | ≤ 3,880 control cycles | **landed**: prefetched issue, gap 1 | 22,700 | 4,540 |
-| dependency | ≤ 54 exposed per stage | full-unit barriers | 13.46 M | 29.13 M |
+| dependency | ≤ 54 exposed per stage | **partly landed**: per-unit waits (`wait_me` / `wait_su`); still whole-op within a unit | 13.46 M | 130,184 of waits and chases |
+| softmax | one stream pass, 1/Z beside P·V | **partly landed**: normalise-after-sum; the row max is still a stream pass | — | — |
 | KV in HBM (ROM die) | 6 stacks, FP8, prefetched | `ot_hdc_kv_stream` exists for the unsplit attention order, BF16 | — | 122,881 |
 
 ## 8. Microarchitecture, in implementation order
@@ -175,19 +186,52 @@ tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
    * The timing model was refitted (`seq_gap` 1, `start` 4, `idle_me` 3,
      `idle_su` 0, `red_tail` 31): 31,369 against 31,374 RTL, every issue within
      2 cycles; 8 groups 21,599 against 21,605.
-3. **Vector stream unit (next).**
-   * 1,024 lanes on the lanes of VI mode: lane l takes elements l, l + SW, ….
-   * Each lane's reducer keeps its 8 interleaved partials. A pairwise tree adds
-     the lane sums; `hdc_golden.reduce_sum_lanes` is SW = 1's order
-     generalised.
-   * Masked lanes feed +0 (SUM) or lane 0's value (MAX).
-   * Memory ports are SW wide.
-4. **KV streamer for the K-split order and FP8 KV.**
-5. **Per-unit barriers and chaining.**
-6. **One-pass softmax.** The row max goes on the matrix engine's result path;
-   1/Z is applied after P·V.
-7. **Latency.** The fast FP units (the `a516` branch: add and multiply 3
-   cycles, exp 49, recip 28, rsqrt 37) and the other candidates in §6.
+3. **Vector stream unit (landed).** `rtl/hdc/ot_hdc_vstream.sv`.
+   * SW lanes, a multiple of 8. Lane l of vector v takes element v·SW + l of
+     the current outer iteration (VI mode).
+   * Every lane is the scalar datapath, generated from `ot_hdc_stream.sv` by
+     `tools/gen_hdc_vstream_lane.py`.
+   * The reducer, `ot_hdc_vreduce.sv`, implements R-ARITH, the contract shared
+     with the V4.1 core:
+     * chunks of 8 contiguous elements, each summed sequentially from +0;
+     * a pairwise tree over the chunk sums, padded with +0;
+     * in hardware: SW/8 chunk chains a vector, a tree inside the vector, and
+       LV time levels pairing the segment's vectors.
+   * The order does not depend on SW (`tests/test_hdc_vstream.py` checks the
+     hardware structure against `hdc_golden.reduce_chunked` for SW 8–256).
+   * `progress` counts vectors, and the program's chase thresholds are in
+     vectors.
+   * The reduced vehicle ran bit-exact with the oracle's tokens:
+
+     | configuration | before (cycles) | after (cycles) |
+     |---|---|---|
+     | 4 groups, SW 8 | 31,374 | 27,192 |
+     | 8 groups, SW 16 | 21,605 | 16,849 |
+     | position 59 | 36,334 | 28,252 |
+     | 19-step end to end | 553,052 | 489,328 |
+
+     These figures include items 5 and 6.
+   * The timing model was refitted (`red_tail_vec` 43, `idle_su` 1) to within
+     6 cycles on all three.
+4. **KV streamer for the K-split order and FP8 KV (next).** The KV-in-HBM
+   configuration keeps the scalar stream unit and the unsplit attention
+   (`HDC_SU_WIDTH=1`, `HDC_ATTN_SPLIT=0`) until then. So do the array, package,
+   host and collectives benches (`SU_VEC=0`).
+5. **Per-unit waits (landed).**
+   * An op that cannot chase waits only for the unit whose in-flight ops it
+     conflicts with. Both units is the old barrier.
+   * The weighted-sum ops write per-head-batch regions, so they no longer
+     serialise.
+6. **Normalise-after-sum (landed, part of the one-pass softmax).**
+   * The golden's `attend`: e = exp(s − max), P·V over bf16(e), then × 1/Z.
+   * The scale pass over 32 × T is gone. The reciprocal runs beside P·V.
+   * The row max on the engine's result path is not built yet.
+7. **Latency.**
+   * The fast FP units: the `a516` branch, with add and multiply at 3 cycles,
+     exp 49, recip 28 and rsqrt 37. Waiting on its merge.
+   * Skip the reducer's time levels for short segments.
+   * Wait for a unit's main writes only (not its reducer tail).
+   * Take the row max on the engine's result path.
 
 ## 9. Speculation (DFlash, τ 4.1)
 
@@ -305,7 +349,8 @@ runs ahead across every dependency point.
   * Per-bank refresh (200 ns) is allowed only with a record showing ≥ 0.90.
     Refresh-aware scheduling measured 0.914 and 0.889; at a 1 ns tRFCpb it
     reached 0.998.
-  * These are the HBM agent's scratch runs; its campaign record will follow.
+  * Record: `results/rtl/hdc_hbm_campaign.json` `refresh_study` (be30614a on
+    the HBM comparator branch). Qwen3 keeps REFab, at 0.9037 and 0.9095.
 * **Controller queue.** At least 512 beats per pseudo-channel (bandwidth ×
   tRFC ≈ 350 beats). On the V4.1 vehicle a 64-beat queue cost up to 15% of a
   token; for Qwen3 the deeper queue is neutral. A refreshing channel must not

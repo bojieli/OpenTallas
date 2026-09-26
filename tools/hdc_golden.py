@@ -7,16 +7,18 @@ each op), applied in exactly the order the hardware applies it:
 
 * matvec      inputs rounded to BF16; per output, products (exact) accumulated
               sequentially over K from +0.0
-* reduction   sums of P=8 interleaved partials (element i into partial i mod 8,
-              each sequential), then a pairwise tree ((p0+p1)+(p2+p3))+...;
-              on the SU_WIDTH-lane stream unit every lane does that over its
-              elements (i mod SU_WIDTH) and a pairwise tree adds the lane sums
-              (reduce_sum_lanes)
+* reduction   (stream unit: norms, the softmax denominator) R-ARITH: chunks of
+              8 contiguous elements, each sequential from +0, the chunk sums a
+              pairwise tree padded with +0 (reduce_chunked); reduce_sum (P=8
+              interleaved partials + a pairwise tree) remains for the V4.1
+              golden
 * rsqrt       bit seed 0x5f3759df - (bits >> 1), three Newton-Raphson steps
 * reciprocal  bit seed 0x7ef311c7 - bits, three Newton-Raphson steps
 * exp         n = rint(x*log2e) by the 1.5*2^23 trick, two-constant Cody-Waite
               reduction, degree-6 Horner polynomial, scale by 2^n in the exponent
-* softmax     max, exp(s - max), reduction sum, reciprocal, multiply
+* softmax     max, exp(s - max), reduction sum, reciprocal, multiply (softmax());
+              attention normalises AFTER the weighted sum (attend): P.V of
+              the unnormalised exp, then x 1/Z
 * attention   KV cache in BF16; q and the probabilities rounded to BF16 before
               their products (exact BF16 x BF16 products, FP32 accumulation);
               both products K-split INTERLEAVED over the core's lane groups
@@ -186,31 +188,39 @@ def reduce_sum(v):
     return part[0]
 
 
-def reduce_sum_lanes(v, sw=1):
-    """The vector stream unit's segmented sum on `sw` lanes: lane l takes
-    elements l, l + sw, l + 2*sw, ... and sums them as reduce_sum does (its j-th
-    element into partial j mod P, each partial sequential from +0, a pairwise
-    tree over the P partials); the sw lane sums are added by a pairwise tree
-    ((l0 + l1) + (l2 + l3)) + ...  A lane with no element contributes +0.
-    sw = 1 is reduce_sum.  (rtl/hdc/ot_hdc_stream.sv: one reducer per lane and
-    the cross-lane tree.)"""
+CHUNK = 8                     # R-ARITH chunk length (shared with the DeepSeek-V4.1 core)
+
+
+def reduce_chunked(v, c=CHUNK):
+    """The arithmetic contract R-ARITH of every Qwen3 stream-unit sum (norms,
+    the softmax denominator): contiguous chunks of c elements, each summed
+    sequentially from +0, and the chunk sums added by a pairwise tree
+    ((s0 + s1) + (s2 + s3)) + ... padded with +0.  Independent of the stream
+    unit's width (rtl/hdc/ot_hdc_vreduce.sv); shared with the V4.1 core."""
     v = np.asarray(v, dtype=F).reshape(-1)
-    if sw == 1:
-        return reduce_sum(v)
-    lanes = [reduce_sum(v[l::sw]) if l < len(v) else F(0) for l in range(sw)]
-    while len(lanes) > 1:
-        lanes = [add(lanes[i], lanes[i + 1]) for i in range(0, len(lanes), 2)]
-    return F(lanes[0])
+    parts = []
+    for i in range(0, max(len(v), 1), c):
+        acc = F(0)
+        for x in v[i:i + c]:
+            acc = add(acc, x)
+        parts.append(F(acc))
+    n = 1
+    while n < len(parts):
+        n *= 2
+    parts += [F(0)] * (n - len(parts))
+    while len(parts) > 1:
+        parts = [add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return F(parts[0])
 
 
-# Stream-unit lanes of the Qwen3 decode core (the order of every Qwen3 sum:
-# norms and the softmax denominator).  Model(su_width=...) sets it; the
-# environment's HDC_SU_WIDTH is the default.
-SU_WIDTH = int(os.environ.get("HDC_SU_WIDTH", 1))
+# The stream unit the Qwen3 golden describes: HDC_SU_WIDTH >= 8 is the vector
+# unit and its R-ARITH order; 1 is the scalar unit (rtl/hdc/ot_hdc_stream.sv)
+# and its P=8 interleaved reducer -- the configurations not yet moved.
+SU_WIDTH = int(os.environ.get("HDC_SU_WIDTH", 8))
 
 
 def lane_sum(v):
-    return reduce_sum_lanes(v, SU_WIDTH)
+    return reduce_sum(v) if SU_WIDTH == 1 else reduce_chunked(v)
 
 
 def rsqrt(v):
@@ -268,6 +278,17 @@ def softmax(s):
     return mul(e, reciprocal(lane_sum(e)))
 
 
+def attend(scores, vals, s_pv):
+    """One head's attention after its scores: the row max, e = exp(s - max)
+    and its sum Z, the weighted sum of V by the UNNORMALISED e (BF16-rounded,
+    K-split over positions), then one scale by 1/Z of the head's HD outputs
+    (normalise-after-sum, as flash attention does): the stream unit makes one
+    pass over the scores instead of two, and 1/Z is formed beside the
+    weighted sum instead of before it."""
+    e = exp(add(scores, neg(np.max(scores))))
+    return mul(matvec_il(vals.T, to_bf16(e), s_pv), reciprocal(lane_sum(e)))
+
+
 def silu(g):
     return mul(g, reciprocal(add(exp(mul(g, F(-1.0))), F(1.0))))
 
@@ -284,7 +305,7 @@ def fold(parts):
 
 
 class Model:
-    def __init__(self, groups=1, tp=1, su_width=None):
+    def __init__(self, groups=1, tp=1):
         """`groups`: matrix-engine lane groups of the decode core; it fixes each
         matrix's K-split (split_for) and therefore the accumulation order.
         `tp`: dies of the tensor group (1: one core holds every matrix).  With
@@ -292,9 +313,6 @@ class Model:
         every matrix, Megatron style (see decode_token_tp)."""
         self.groups = groups
         self.tp = tp
-        if su_width is not None:
-            global SU_WIDTH
-            SU_WIDTH = su_width
         self.cfg = json.loads(CONFIG.read_text())
         self.w = load_weights()
         c = self.cfg
@@ -393,7 +411,7 @@ class Model:
                     keys = np.stack([kv[0][g] for kv in cache[L]])
                     vals = np.stack([kv[1][g] for kv in cache[L]])
                     sc = mul(matvec_il(keys, to_bf16(q[i]), s_sc), scale)
-                    attn[i] = matvec_il(vals.T, to_bf16(softmax(sc)), s_pv)
+                    attn[i] = attend(sc, vals, s_pv)
                 partial.append(self.mv(attn.reshape(-1), ow[:, s["q_rows"]])[0])
             x = add(x, fold(partial))
             h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
@@ -442,7 +460,7 @@ class Model:
                 keys = np.stack([kv[0][g] for kv in cache[L]])       # [T, hd]
                 vals = np.stack([kv[1][g] for kv in cache[L]])
                 s = mul(matvec_il(keys, to_bf16(q[hh]), s_sc), scale)       # head dim, interleaved K-split
-                attn[hh] = matvec_il(vals.T, to_bf16(softmax(s)), s_pv)     # positions, interleaved K-split
+                attn[hh] = attend(s, vals, s_pv)     # one-pass softmax, normalised after P.V
             x = add(x, self.mv(attn.reshape(-1), self.lw(L, "self_attn.o_proj.weight"))[0])
             h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
             gate, up = self.mv(h, self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight"))

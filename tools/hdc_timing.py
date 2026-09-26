@@ -42,13 +42,15 @@ IL = I.INTERLEAVE
 K = dict(seq_gap=1,        # go -> next go: NEXT is decoded on the issuing edge
          start=4,          # start -> first issue: DYN, the first fetch, decode into NEXT
          idle_me=3,        # matrix engine's last write -> a barrier releases
-         idle_su=0,        # stream unit's last write -> a barrier releases
+         idle_su=1,        # stream unit's last write -> a barrier releases
          me_start=1,       # go -> first element issued
          me_lat=16,        # element issue -> its result written (memory stage, lanes, output registers)
          me_tree=6,        # per split-tree level (5 in the adder + the level's output register)
          su_start=1,
          su_depth={I.SFU_NONE: 29, I.SFU_EXP: 121, I.SFU_RECIP: 75, I.SFU_RSQRT: 90, I.SFU_SIGM: 172},
-         red_tail=31,      # last element retired -> reducer result written
+         red_tail=31,      # last element retired -> reducer result written (scalar unit)
+         red_tail_vec=43,  # the vector reducer's fixed part, fitted (27,187 model vs 27,192 RTL at SW 8, every issue within 3)
+         red_lv=4,         # the vector reducer's time levels (ot_hdc_core LV)
          idle_reg=2)       # last write -> registered idle seen by the sequencer
 
 
@@ -75,6 +77,24 @@ def me_loop(f, dyn, pos, groups):
     return rounds, k
 
 
+def su_vectors(f, dyn, su_width=None):
+    """Cycles of a stream op's element loop: the vector unit (SW >= 8) issues
+    ceil(nin / SW) vectors per outer iteration; the scalar unit one element."""
+    sw = I.SU_WIDTH if su_width is None else su_width
+    nin = f["su_nin"] + dyn[f["su_d_nin"]]
+    return f["su_nout"] * -(-nin // sw)
+
+
+def red_tail(k, su_width=None):
+    """Last element retired -> the reducer's result written.  The vector
+    reducer (rtl/hdc/ot_hdc_vreduce.sv): squaring stage, the 8-element chain,
+    log2(SW/8) tree levels and LV time levels of 6 cycles each."""
+    sw = I.SU_WIDTH if su_width is None else su_width
+    if sw == 1:
+        return k["red_tail"]
+    return k["red_tail_vec"] + 6 * ((sw // 8).bit_length() - 1 + k["red_lv"])
+
+
 def kv_op(f, dyn, pos, groups):
     """(lines, HBM words, jsh) of a KV-sourced op under the streamer's rules."""
     W = I.W_LANES
@@ -92,7 +112,7 @@ def dyn_values(pos, token=0, H=128, half=8, HD=16, groups=I.GROUPS):
     return [0, token * H, pos * half, (pos // W) * HD * W + pos % W, pos * HD, pos + 1, pos // (W * groups) + 1]
 
 
-def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_groups=1, su_width=1, kv=None,
+def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_groups=1, su_width=None, kv=None,
              kv_stats=None):
     """attn_groups / su_width > 1 are PROJECTIONS of design options the RTL does
     not have yet: KV-sourced ops spread over that many lane groups (each taking
@@ -121,6 +141,12 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             b = max(me_idle + k.get("idle_me", k["idle_reg"]), su_idle + k.get("idle_su", k["idle_reg"]))
             if b > ready:
                 ready, why = b, "barrier_me" if me_idle >= su_idle else "barrier_su"
+
+        elif f["wait_me"] or f["wait_su"]:
+            b = max(me_idle + k.get("idle_me", k["idle_reg"]) if f["wait_me"] else 0,
+                    su_idle + k.get("idle_su", k["idle_reg"]) if f["wait_su"] else 0)
+            if b > ready:
+                ready, why = b, "wait_me" if f["wait_me"] else "wait_su"
 
         elif f["chase"]:
             n = f["chase_n"]
@@ -171,12 +197,12 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             if su_cls is not None and cls != su_cls and su_cls_idle > go:
                 go, why = su_cls_idle, "class_drain"
 
-            n_el = -(-f["su_nout"] * (f["su_nin"] + dyn[f["su_d_nin"]]) // su_width)
+            n_el = su_vectors(f, dyn, su_width)
             e0 = go + k["su_start"]
             d = k["su_depth"][cls]
             su_el_t = (e0 + d, n_el)
             last = e0 + n_el - 1 + d
-            tail = last + (k["red_tail"] if f["red"] else 0)
+            tail = last + (red_tail(k, su_width) if f["red"] else 0)
             su_free = e0 + n_el
             su_idle = max(su_idle, tail)
             su_cls, su_cls_idle = cls, last
@@ -266,7 +292,7 @@ def control_breakdown(prog, pos, groups, dyn_shape=None, su_width=1):
             rr, kk = me_loop(f, d, pos, groups)
             me += rr * kk * IL
         elif f["unit"] == I.UNIT_SU:
-            su += -(-f["su_nout"] * (f["su_nin"] + d[f["su_d_nin"]]) // su_width)
+            su += su_vectors(f, d, su_width)
     n = sum(1 for f in prog if f.get("unit") != I.UNIT_END)
     return {"cycles_per_token": total, "instructions": n,
             "issue_gap_share": round(n * K["seq_gap"] / total, 5),
