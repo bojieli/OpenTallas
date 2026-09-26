@@ -530,6 +530,22 @@ def assign_plg(cfg, ops, rng, vary):
             op.plg = int(rng.choice(legal))
 
 
+def nlev_of(nbeat):
+    return max(0, int(nbeat - 1).bit_length())
+
+
+def gaps(cfg, ops):
+    """Idle cycles the tile owes between consecutive back-to-back ops (ot_hdc_v41x_wgt_red DEPTH IS PER OP):
+    3 * max(0, plg1 - plg2, (plg1 + nlev1) - (plg2 + nlev2))."""
+    g, prev = 0, None
+    for o in ops:
+        p, n = o.plg, nlev_of(geometry(cfg, o)[1])
+        if prev is not None:
+            g += 3 * max(0, prev[0] - p, (prev[0] + prev[1]) - (p + n))
+        prev = (p, n)
+    return g
+
+
 def run_cfg(cfg: Cfg, scratch: Path, seed: int, real_calls, quick=False):
     rng = np.random.default_rng(seed)
     ops, lat = suite(cfg, rng, real_calls, quick)
@@ -546,15 +562,18 @@ def run_cfg(cfg: Cfg, scratch: Path, seed: int, real_calls, quick=False):
     useful = sum(o.nrows * o.nb for o in ops)
     macs_item = 32 if cfg.kind == 0 else 1
     issue_span = tp["last_beat"] - tp["first_beat"] + 1
+    gap = gaps(cfg, ops)
     lat_rows = []
     for i, o in enumerate(lat):
         P, nbeat, nrg = geometry(cfg, o)
-        lat_rows.append({"op": o.name, "rows": o.nrows, "K": o.nb * macs_item, "plg": o.plg, "beats": nbeat * nrg,
-                         "measured_cycles": la["latency"][i], "spec_budget_cycles": budget(cfg, o),
+        lat_rows.append({"op": o.name, "rows": o.nrows, "K": o.nb * macs_item, "plg": o.plg, "nlev": nlev_of(nbeat),
+                         "beats": nbeat * nrg, "measured_cycles": la["latency"][i], "spec_budget_cycles": budget(cfg, o),
                          "depth_measured": la["latency"][i] - nbeat * nrg,
+                         "depth_base": la["latency"][i] - nbeat * nrg - 3 * (o.plg + nlev_of(nbeat)),
                          "depth_budget": spec_depth(cfg, o), "meets": la["latency"][i] <= budget(cfg, o)})
     ok = (tp["errors"] == 0 and th["errors"] == 0 and la["errors"] == 0 and tp["events"] == sum(geometry(cfg, o)[2] for o in ops)
-          and issue_span == beats and tp["beats"] == beats and all(r["meets"] for r in lat_rows))
+          and issue_span == beats + gap and tp["beats"] == beats and all(r["meets"] for r in lat_rows)
+          and len({r["depth_base"] for r in lat_rows}) == 1)
     return {
         "config": {"kind": ["quantised FP8/FP4 block-dot", "BF16/FP32"][cfg.kind], "G": cfg.G, "lanes": cfg.L,
                    "M_POS": cfg.M, "LB": cfg.LB, "PMIN_LG": cfg.PMIN_LG, "RL": cfg.RL,
@@ -566,7 +585,10 @@ def run_cfg(cfg: Cfg, scratch: Path, seed: int, real_calls, quick=False):
                     "random_ops": [o.name for o in ops if o.source != "real"],
                     "plg_used": sorted({o.plg for o in ops})},
         "throughput": {"beats": beats, "issue_span_cycles": issue_span, "beats_per_cycle": round(beats / issue_span, 4),
-                       "no_bubble": issue_span == beats, "useful_lane_items": useful,
+                       "depth_gap_cycles_owed": gap, "no_bubble": issue_span == beats + gap,
+                       "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth "
+                                          "(ops in this run vary their geometry on purpose; equal-depth ops owe none)",
+                       "useful_lane_items": useful,
                        "lane_utilisation": round(useful / (beats * cfg.L), 4),
                        "macs_per_cycle_sustained": round(useful * macs_item * cfg.M / issue_span, 1),
                        "total_cycles_incl_fill_drain": tp["cycles"], "errors": tp["errors"]},
@@ -597,7 +619,7 @@ def die_mapping(depth_q, depth_m):
                     "o_y is the part's subtree root) and the parts' top s tree levels are added by the output "
                     "collector (3 cycles per level + COLLECT_HOP). Parts are packed into tile row groups of "
                     "G/P parts of equal length and the row groups scheduled longest-first onto the tiles. "
-                    "latency = makespan (beats) + measured tile depth + collector levels.",
+                    "latency = makespan (beats) + measured tile base depth + 3 x (the part's tree levels in the tile) + collector levels.",
            "collect_hop_cycles": 2}
     hop = 2
     for label, ops, lanes_die, G, T, depth, per, pmin in (
@@ -633,9 +655,11 @@ def die_mapping(depth_q, depth_m):
                         for gcost in groups:
                             heapq.heapreplace(heap, heap[0] + gcost)
                         mk = max(heap)
-                    lat = mk + depth + (3 * s + hop if s else 0)
+                    tree = plg + nlev_of(-(-max(lens) // P))          # the part's own tree levels in the tile
+                    lat = mk + depth + 3 * tree + (3 * s + hop if s else 0)
                     if best is None or lat < best["latency_cycles"]:
-                        best = {"k_split_parts": 1 << s, "segment_P": P, "issue_cycles": mk, "latency_cycles": lat}
+                        best = {"k_split_parts": 1 << s, "segment_P": P, "issue_cycles": mk,
+                                "tile_depth_cycles": depth + 3 * tree, "latency_cycles": lat}
             rows.append({"matrix": n, "rows_per_die": r, "terms_per_row": nb * per, **best, "budget_cycles": bud,
                          "meets": best["latency_cycles"] <= bud})
         out[label] = rows
@@ -675,9 +699,9 @@ def main() -> int:
     a = ap.parse_args()
     configs = a.configs.split(",")
     res, lint, ok = run(a.seed, configs, not a.no_real, scratch=a.scratch)
-    dq = [r["depth_measured"] for c, v in res.items() if v["config"]["G"] == 1 and "quantised" in v["config"]["kind"]
+    dq = [r["depth_base"] for c, v in res.items() if v["config"]["G"] == 1 and "quantised" in v["config"]["kind"]
           for r in v["latency"] if r["op"] == "lat_single_block_row"]
-    dm = [r["depth_measured"] for c, v in res.items() if v["config"]["G"] == 32 for r in v["latency"]
+    dm = [r["depth_base"] for c, v in res.items() if v["config"]["G"] == 32 for r in v["latency"]
           if r["op"] == "lat_single_chunk_row"]
     ckpt = V.CHECKPOINT
     rec = {
@@ -697,7 +721,7 @@ def main() -> int:
                           "checkpoint": str(ckpt.relative_to(V.BUILD)) if not a.no_real else None,
                           "checkpoint_sha256": sha(ckpt) if not a.no_real else None},
         "configs": res,
-        "die_mapping": die_mapping(dq[0] - 1 if dq else 51, dm[0] - 1 if dm else 61) if (dq or dm) else None,
+        "die_mapping": die_mapping(dq[0], dm[0]) if (dq and dm) else None,
         "verilator_lint": {"flags": list(LINT_FLAGS), "tops": lint},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (*RTL, *LIB, TB, HARNESS, *TOOLS)},
     }

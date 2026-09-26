@@ -20,6 +20,16 @@
 //   ot_hdc_v41x_wgt_comb    the temporal combiner: the padded pairwise tree
 //                           over a stream of partials, one adder per level.
 //
+// DEPTH IS PER OP.  A beat leaves the tree at its own level plg and a row leaves
+// the combiner at its own level nlev = ceil(log2(beats per row)), so the tree +
+// combiner cost 3 * (plg + nlev) = 3 * ceil(log2(chunks)) cycles -- one adder
+// latency per level of the row's own tree, as the spec's depth formula counts.
+// Two ops of different depth must not collide: the issuing sequencer leaves
+// 3 * max(0, plg1 - plg2, (plg1 + nlev1) - (plg2 + nlev2)) idle cycles between
+// an op and a SHALLOWER successor (ot_hdc_v41x_wgt_tile), so at most one level
+// hands a value to the combiner and at most one combiner level retires a row
+// in any cycle, in issue order.
+//
 // Every adder is ot_hdc_qadd (3 cycles, IEEE binary32 RNE, gradual underflow,
 // canonical +0, fail-closed fault on a nonfinite operand or overflow).
 // ---------------------------------------------------------------------------
@@ -92,11 +102,12 @@ module ot_hdc_v41x_wgt_chain #(
     assign sf = cf[7*M +: M];
 endmodule
 
-// Temporal padded-tree combiner over LB levels.  Input: one partial per cycle at most,
-// `last` on a row's final partial.  Level k pairs its inputs in arrival order; a row's odd
-// final element at a level is added to +0 (the tree's padding: exact, canonical), so every
-// element travels one adder per level and order is preserved.  A row with at most 2^LB
-// partials leaves at level LB exactly 3*LB cycles after its last partial.
+// Temporal padded-tree combiner, up to LB levels.  Input: one partial per cycle at most,
+// `last` on a row's final partial, `nlev` the row's level count (ceil(log2(partials))).
+// Level k pairs its inputs in arrival order; a row's odd final element at a level is added
+// to +0 (the tree's padding: exact, canonical), so every element travels one adder per
+// level and order is preserved.  The row leaves when it reaches level nlev: 3*nlev cycles
+// after its last partial (nlev = 0: the partial itself, the same cycle).
 module ot_hdc_v41x_wgt_comb #(
     parameter integer M = 1,
     parameter integer LB = 5,
@@ -106,22 +117,28 @@ module ot_hdc_v41x_wgt_comb #(
     input  wire            rst_n,
     input  wire            v,
     input  wire            last,
-    input  wire [M*32-1:0] d,
-    input  wire [M-1:0]    df,
+    input  wire [2:0]      nlev,
+    input  wire [M*32-1:0] din,
+    input  wire [M-1:0]    dinf,
     input  wire [TW-1:0]   t,
     output wire            ov,
     output wire [M*32-1:0] y,
     output wire [M-1:0]    yf,
     output wire [TW-1:0]   ot
 );
-    localparam integer EW = 1 + 1 + M*32 + M + TW;   // {v, last, d, f, t}
+    localparam integer EW = 1 + 1 + 3 + M*32 + M + TW;   // {v, last, nlev, d, f, t}
     wire [(LB+1)*EW-1:0] E;
-    assign E[EW-1:0] = {v, last, d, df, t};
+    wire [LB:0]          hit;
+    assign E[EW-1:0] = {v, last, nlev, din, dinf, t};
     genvar k;
     generate
+        for (k = 0; k <= LB; k = k + 1) begin : g_hit
+            assign hit[k] = E[k*EW + EW-1] && (E[k*EW + EW-3 -: 3] == k);
+        end
         for (k = 0; k < LB; k = k + 1) begin : g_lvl
-            wire            ev = E[k*EW + EW-1];
+            wire            ev = E[k*EW + EW-1] && !hit[k];
             wire            el = E[k*EW + EW-2];
+            wire [2:0]      en = E[k*EW + EW-3 -: 3];
             wire [M*32-1:0] ed = E[k*EW + M + TW +: M*32];
             wire [M-1:0]    ef = E[k*EW + TW +: M];
             wire [TW-1:0]   et = E[k*EW +: TW];
@@ -137,25 +154,39 @@ module ot_hdc_v41x_wgt_comb #(
             wire            nv;
             wire [M*32-1:0] nd;
             wire [M-1:0]    nf;
-            wire [TW:0]     nt;
-            ot_hdc_v41x_wgt_add #(.M(M), .TW(TW + 1)) u_a (
+            wire [TW+3:0]   nt;
+            ot_hdc_v41x_wgt_add #(.M(M), .TW(TW + 4)) u_a (
                 .clk(clk), .rst_n(rst_n), .v(issue),
                 .a(pv ? pd : ed), .af(pv ? pf : ef),
                 .b(pv ? ed : {(M*32){1'b0}}), .bf(pv ? ef : {M{1'b0}}),
-                .t({el, et}), .ov(nv), .y(nd), .yf(nf), .ot(nt));
-            assign E[(k+1)*EW +: EW] = {nv, nt[TW], nd, nf, nt[TW-1:0]};
+                .t({el, en, et}), .ov(nv), .y(nd), .yf(nf), .ot(nt));
+            assign E[(k+1)*EW +: EW] = {nv, nt[TW+3], nt[TW+2:TW], nd, nf, nt[TW-1:0]};
         end
     endgenerate
-    assign ov = E[LB*EW + EW-1] && E[LB*EW + EW-2];
-    assign y = E[LB*EW + M + TW +: M*32];
-    assign yf = E[LB*EW + TW +: M];
-    assign ot = E[LB*EW +: TW];
+    // the retiring level (at most one per cycle): an AND-OR select
+    reg [M*32-1:0] sy;
+    reg [M-1:0]    sf;
+    reg [TW-1:0]   st;
+    integer i;
+    always @(*) begin
+        sy = {(M*32){1'b0}}; sf = {M{1'b0}}; st = {TW{1'b0}};
+        for (i = 0; i <= LB; i = i + 1) begin
+            sy = sy | (E[i*EW + M + TW +: M*32] & {(M*32){hit[i]}});
+            sf = sf | (E[i*EW + TW +: M] & {M{hit[i]}});
+            st = st | (E[i*EW +: TW] & {TW{hit[i]}});
+        end
+    end
+    assign ov = |hit;
+    assign y = sy;
+    assign yf = sf;
+    assign ot = st;
 endmodule
 
 // Tree + combiners.  Inputs: G chunk sums of one beat (valid together) and the beat's tag
-// {plg, last, rest}.  Level l (1..LG) adds node pairs; segment s of a beat with segment size
-// 2^plg is node s of level plg, delayed through the remaining levels (so every plg leaves at
-// the same time), then combiner s.  NC = G >> PMIN_LG combiners.  LATENCY 3*LG + 3*LB.
+// {plg, nlev, last, rest}.  Level l (1..LG) adds node pairs; segment s of a beat with segment
+// size 2^plg is node s of level plg, handed to combiner s (NC = G >> PMIN_LG combiners)
+// through a register.  The combiners' output is registered.
+// LATENCY 3*plg + 1 + 3*nlev + 1.
 module ot_hdc_v41x_wgt_red #(
     parameter integer G = 8,
     parameter integer M = 1,
@@ -167,14 +198,15 @@ module ot_hdc_v41x_wgt_red #(
     input  wire              rst_n,
     input  wire              v,
     input  wire [3:0]        plg,
+    input  wire [2:0]        nlev,
     input  wire              last,
     input  wire [TW-1:0]     t,
     input  wire [G*M*32-1:0] s,
     input  wire [G*M-1:0]    sf,
-    output wire              ov,
-    output wire [TW-1:0]     ot,
-    output wire [(G>>PMIN_LG)*M*32-1:0] y,
-    output wire [(G>>PMIN_LG)*M-1:0]    yf
+    output reg               ov,
+    output reg  [TW-1:0]     ot,
+    output reg  [(G>>PMIN_LG)*M*32-1:0] y,
+    output reg  [(G>>PMIN_LG)*M-1:0]    yf
 );
     function automatic integer clog2(input integer n);
         integer r;
@@ -182,7 +214,7 @@ module ot_hdc_v41x_wgt_red #(
     endfunction
     localparam integer LG = clog2(G);
     localparam integer NC = G >> PMIN_LG;
-    localparam integer TT = 4 + 1 + TW;     // plg, last, rest
+    localparam integer TT = 4 + 3 + 1 + TW;     // plg, nlev, last, rest
     localparam integer VW = G*M*32;
     localparam integer FW = G*M;
     localparam integer DW = NC*M*32;
@@ -193,9 +225,7 @@ module ot_hdc_v41x_wgt_red #(
     wire [(LG+1)*FW-1:0]  VFA;
     wire [(LG+1)*TT-1:0]  VTA;
     wire [LG:0]           VVA;
-    wire [(LG+1)*DW-1:0]  DA;
-    wire [(LG+1)*DFW-1:0] DFA;
-    assign VA[VW-1:0] = s; assign VFA[FW-1:0] = sf; assign VTA[TT-1:0] = {plg, last, t}; assign VVA[0] = v;
+    assign VA[VW-1:0] = s; assign VFA[FW-1:0] = sf; assign VTA[TT-1:0] = {plg, nlev, last, t}; assign VVA[0] = v;
     genvar l, n;
     generate
         for (l = 1; l <= LG; l = l + 1) begin : g_lvl
@@ -224,40 +254,65 @@ module ot_hdc_v41x_wgt_red #(
                 assign VFA[l*FW +: FW] = nf;
             end
         end
-        // D[l]: plg == l takes the level's node, plg < l the previous D delayed 3 cycles
-        for (l = 0; l <= LG; l = l + 1) begin : g_eq
-            wire [3:0] pl = VTA[l*TT + TT-1 -: 4];
-            if (l < PMIN_LG) begin : g_none
-                assign DA[l*DW +: DW] = {DW{1'b0}};
-                assign DFA[l*DFW +: DFW] = {DFW{1'b0}};
-            end else if (l == PMIN_LG) begin : g_base
-                assign DA[l*DW +: DW] = VA[l*VW +: DW];
-                assign DFA[l*DFW +: DFW] = VFA[l*FW +: DFW];
-            end else begin : g_mix
-                wire [DW-1:0]  dd;
-                wire [DFW-1:0] ddf;
-                ot_hdc_delay #(.W(DW + DFW), .D(3)) u_d (.clk(clk), .rst_n(rst_n),
-                    .d({DFA[(l-1)*DFW +: DFW], DA[(l-1)*DW +: DW]}), .q({ddf, dd}));
-                for (n = 0; n < NC; n = n + 1) begin : g_s
-                    if (n < (G >> l)) begin : g_node
-                        assign DA[l*DW + n*M*32 +: M*32] = (pl == l) ? VA[l*VW + n*M*32 +: M*32] : dd[n*M*32 +: M*32];
-                        assign DFA[l*DFW + n*M +: M] = (pl == l) ? VFA[l*FW + n*M +: M] : ddf[n*M +: M];
-                    end else begin : g_dly
-                        assign DA[l*DW + n*M*32 +: M*32] = dd[n*M*32 +: M*32];
-                        assign DFA[l*DFW + n*M +: M] = ddf[n*M +: M];
-                    end
-                end
+    endgenerate
+
+    // the tap: the level whose beat has plg == level (at most one per cycle), registered
+    wire [LG:0] tap;
+    generate
+        for (l = 0; l <= LG; l = l + 1) begin : g_tap
+            if (l < PMIN_LG) begin : g_no
+                assign tap[l] = 1'b0;
+            end else begin : g_yes
+                assign tap[l] = VVA[l] && (VTA[l*TT + TT-1 -: 4] == l);
             end
         end
-        wire [NC-1:0]    cv;
-        wire [NC*TW-1:0] ct;
+    endgenerate
+    reg [DW-1:0]  cd;
+    reg [DFW-1:0] cf;
+    reg [TT-1:0]  ctg;
+    reg           cv;
+    reg [DW-1:0]  md;
+    reg [DFW-1:0] mf;
+    reg [TT-1:0]  mt;
+    integer i, j;
+    always @(*) begin
+        md = {DW{1'b0}}; mf = {DFW{1'b0}}; mt = {TT{1'b0}};
+        for (i = PMIN_LG; i <= LG; i = i + 1) begin
+            mt = mt | (VTA[i*TT +: TT] & {TT{tap[i]}});
+            for (j = 0; j < NC; j = j + 1)
+                if (j < (G >> i)) begin
+                    md[j*M*32 +: M*32] = md[j*M*32 +: M*32] | (VA[i*VW + j*M*32 +: M*32] & {(M*32){tap[i]}});
+                    mf[j*M +: M] = mf[j*M +: M] | (VFA[i*FW + j*M +: M] & {M{tap[i]}});
+                end
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) cv <= 1'b0;
+        else cv <= |tap;
+    end
+    always @(posedge clk) begin
+        cd <= md; cf <= mf; ctg <= mt;
+    end
+
+    wire [NC-1:0]      rv;
+    wire [NC*TW-1:0]   rt;
+    wire [DW-1:0]      ry;
+    wire [DFW-1:0]     rf;
+    generate
         for (n = 0; n < NC; n = n + 1) begin : g_cmb
             ot_hdc_v41x_wgt_comb #(.M(M), .LB(LB), .TW(TW)) u_c (
-                .clk(clk), .rst_n(rst_n), .v(VVA[LG]), .last(VTA[LG*TT + TW]),
-                .d(DA[LG*DW + n*M*32 +: M*32]), .df(DFA[LG*DFW + n*M +: M]), .t(VTA[LG*TT +: TW]),
-                .ov(cv[n]), .y(y[n*M*32 +: M*32]), .yf(yf[n*M +: M]), .ot(ct[n*TW +: TW]));
+                .clk(clk), .rst_n(rst_n), .v(cv), .last(ctg[TW]), .nlev(ctg[TW+3:TW+1]),
+                .din(cd[n*M*32 +: M*32]), .dinf(cf[n*M +: M]), .t(ctg[TW-1:0]),
+                .ov(rv[n]), .y(ry[n*M*32 +: M*32]), .yf(rf[n*M +: M]), .ot(rt[n*TW +: TW]));
         end
-        assign ov = cv[0];
-        assign ot = ct[TW-1:0];
     endgenerate
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ov <= 1'b0;
+        else ov <= rv[0];
+    end
+    always @(posedge clk) begin
+        ot <= rt[TW-1:0];
+        y <= ry;
+        yf <= rf;
+    end
 endmodule

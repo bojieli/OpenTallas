@@ -39,7 +39,8 @@
 // KIND 1: 16 bits BF16), also RL cycles after the request.
 //
 // PROTOCOLS.  Descriptor: valid/ready (d_v, d_rdy), registered; a queue of
-// one op behind the running one, so ops issue back to back with no bubble.
+// one op behind the running one, so ops issue back to back (see LATENCY for the
+// one gap rule).
 // Output: credit-based -- the tile starts a row group only while it holds an
 // output credit (OCRED at reset, +1 per o_cr pulse); o_v carries the row
 // group's G >> plg results (o_mask: which are real rows), in issue order.
@@ -47,10 +48,14 @@
 // value past binary32, or any adder fault (nonfinite operand, overflow).
 //
 // LATENCY (descriptor accept to a row group's result):
-//   3 (descriptor A, B, C) + 1 (beat register) + RL + CL + 3*LG + 3*LB + 1
+//   3 (descriptor A, B, C) + 1 (beat register) + RL + CL + 3*plg + 1 + 3*nlev + 1 + 1
 //   CL = 30 (KIND 0: 9 block dot + 21 chain) or 25 (KIND 1: 4 multiply + 21 chain);
-// throughput one beat (L lanes x M positions) per cycle, sustained across rows
-// and across ops.
+//   plg + nlev = ceil(log2(chunks per row)) for a well-chosen segment: one adder
+//   latency per level of the row's own padded tree (ot_hdc_v41x_wgt_red).
+// Throughput one beat (L lanes x M positions) per cycle, sustained across rows and
+// across ops of equal depth; before an op SHALLOWER than its predecessor the tile
+// idles 3 * max(0, plg1 - plg2, (plg1 + nlev1) - (plg2 + nlev2)) cycles (the only
+// bubble), so results never collide and leave in issue order.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_wgt_tile #(
     parameter integer KIND = 0,
@@ -137,12 +142,30 @@ module ot_hdc_v41x_wgt_tile #(
     reg [AW-1:0]     c_a;
     reg              c_fp4;
     reg [TGW-1:0]    c_tag;
+    reg [NBW-1:0]    c_nbm1;
+    reg [RWW-1:0]    c_nrgm1;
+    reg [2:0]        c_nlev;              // combiner levels: ceil(log2(beats per row))
+    reg              c_first;             // the op's first beat is next
+    reg [5:0]        g_r;                 // idle cycles owed before the op's first beat
+    reg [5:0]        sl;                  // idle cycles since the last issued beat (saturating)
     reg [CW-1:0]     cred;
     reg              cr_r;
 
-    wire c_lastq = (c_q == c_nbeat - 1'b1);
-    wire c_lastrg = (c_rg == c_nrg - 1'b1);
-    wire issue = c_v && ((c_q != {NBW{1'b0}}) || (cred != {CW{1'b0}}));
+    function automatic [2:0] clog2v(input [NBW-1:0] x);
+        integer i;
+        begin
+            clog2v = 3'd0;
+            for (i = 0; i < 7; i = i + 1)
+                if (({{NBW{1'b0}}, 1'b1} << i) < {1'b0, x}) clog2v = i + 1;
+        end
+    endfunction
+
+    wire c_lastq = (c_q == c_nbm1);
+    wire c_lastrg = (c_rg == c_nrgm1);
+    //: a row group starts only with an output credit; an op's first beat also waits out the
+    //: gap a shallower op owes its predecessor (ot_hdc_v41x_wgt_red: DEPTH IS PER OP)
+    wire issue = c_v && ((c_q != {NBW{1'b0}}) ||
+                         ((cred != {CW{1'b0}}) && (!c_first || (sl >= g_r))));
     wire c_done = issue && c_lastq && c_lastrg;
     wire c_free = !c_v || c_done;
     wire b_mv = b_v && c_free;
@@ -154,11 +177,26 @@ module ot_hdc_v41x_wgt_tile #(
     wire [NBW:0]   nb_up = {1'b0, a_nb} + ({{NBW{1'b0}}, 1'b1} << (3 + a_plg)) - 1'b1;
     wire [RWW:0]   nr_up = {1'b0, a_nrows} + ({{RWW{1'b0}}, 1'b1} << (LG - a_plg)) - 1'b1;
 
+    wire [2:0] b_nlev = clog2v(b_nbeat);
+    wire [4:0] dep_c = {1'b0, c_plg} + {2'b0, c_nlev};
+    wire [4:0] dep_b = {1'b0, b_plg} + {2'b0, b_nlev};
+    wire [4:0] gp = (c_plg > b_plg) ? {1'b0, c_plg - b_plg} : 5'd0;
+    wire [4:0] gd = (dep_c > dep_b) ? dep_c - dep_b : 5'd0;
+    wire [4:0] gm = (gp > gd) ? gp : gd;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             a_v <= 1'b0; b_v <= 1'b0; c_v <= 1'b0; cred <= OCRED; cr_r <= 1'b0;
+            c_plg <= 4'd0; c_nlev <= 3'd0; c_first <= 1'b0; g_r <= 6'd0; sl <= 6'd0;
         end else begin
             cr_r <= o_cr;
+            if (b_mv) begin
+                c_plg <= b_plg; c_nlev <= b_nlev; c_first <= 1'b1;
+                g_r <= {gm, 1'b0} + {1'b0, gm};          // 3 cycles per level
+            end else if (issue) begin
+                c_first <= 1'b0;
+            end
+            if (issue) sl <= 6'd0;
+            else if (sl != 6'h3F) sl <= sl + 1'b1;
             if (d_v && d_rdy) a_v <= 1'b1;
             else if (a_mv) a_v <= 1'b0;
             if (a_mv) b_v <= 1'b1;
@@ -180,7 +218,8 @@ module ot_hdc_v41x_wgt_tile #(
             b_nrg <= nr_up[RWW:0] >> (LG - a_plg);
         end
         if (b_mv) begin
-            c_plg <= b_plg; c_nb <= b_nb; c_nbeat <= b_nbeat; c_nrows <= b_nrows; c_nrg <= b_nrg;
+            c_nb <= b_nb; c_nbeat <= b_nbeat; c_nrows <= b_nrows; c_nrg <= b_nrg;
+            c_nbm1 <= b_nbeat - 1'b1; c_nrgm1 <= b_nrg - 1'b1;
             c_a <= b_wbase + b_off; c_q <= {NBW{1'b0}}; c_rg <= {RWW{1'b0}}; c_fp4 <= b_fp4; c_tag <= b_tag;
         end else if (issue) begin
             c_a <= c_a + 1'b1;
@@ -191,7 +230,7 @@ module ot_hdc_v41x_wgt_tile #(
     assign idle = !a_v && !b_v && !c_v;
 
     // -- beat record and its skewed taps ---------------------------------------------------------
-    localparam integer RW = 1 + AW + NBW + RWW + 1 + 4 + NBW + RWW + 1 + TGW;
+    localparam integer RW = 1 + AW + NBW + RWW + 1 + 4 + 3 + NBW + RWW + 1 + TGW;
     reg          r0v;
     reg [RW-2:0] r0d;
     wire [RW-1:0] r0 = {r0v, r0d};
@@ -200,7 +239,7 @@ module ot_hdc_v41x_wgt_tile #(
         else r0v <= issue;
     end
     always @(posedge clk)
-        r0d <= {c_a, c_q, c_rg, c_lastq, c_plg, c_nb, c_nrows, c_fp4, c_tag};
+        r0d <= {c_a, c_q, c_rg, c_lastq, c_plg, c_nlev, c_nb, c_nrows, c_fp4, c_tag};
     wire [19*RW-1:0] tapl;       // tapl[k] = r0 delayed k cycles
     assign tapl[RW-1:0] = r0;
     genvar k, c, u;
@@ -229,7 +268,8 @@ module ot_hdc_v41x_wgt_tile #(
             wire           t_last, t_fp4;
             wire [3:0]     t_plg;
             wire [TGW-1:0] t_tag;
-            assign {t_a, t_q, t_rg, t_last, t_plg, t_nb, t_nrows, t_fp4, t_tag} = t[RW-2:0];
+            wire [2:0]     t_nlev;
+            assign {t_a, t_q, t_rg, t_last, t_plg, t_nlev, t_nb, t_nrows, t_fp4, t_tag} = t[RW-2:0];
             assign rq_v[c] = tvv;
             assign rq_a[c*AW +: AW] = t_a;
             assign rq_q[c*NBW +: NBW] = t_q;
@@ -287,7 +327,8 @@ module ot_hdc_v41x_wgt_tile #(
     wire           r_last, r_fp4;
     wire [3:0]     r_plg;
     wire [TGW-1:0] r_tag;
-    assign {r_a, r_q, r_rg, r_last, r_plg, r_nb, r_nrows, r_fp4, r_tag} = r0[RW-2:0];
+    wire [2:0]     r_nlev;
+    assign {r_a, r_q, r_rg, r_last, r_plg, r_nlev, r_nb, r_nrows, r_fp4, r_tag} = r0[RW-2:0];
     wire [NC-1:0] r_mask;
     genvar s;
     generate
@@ -298,17 +339,19 @@ module ot_hdc_v41x_wgt_tile #(
     endgenerate
     wire          tr_v, tr_last;
     wire [3:0]    tr_plg;
+    wire [2:0]    tr_nlev;
     wire [TW-1:0] tr_t;
     ot_hdc_delay #(.W(1), .D(RL + CL), .RESET(1)) u_trv (.clk(clk), .rst_n(rst_n), .d(r0[RW-1]), .q(tr_v));
-    ot_hdc_delay #(.W(5 + TW), .D(RL + CL)) u_tr (.clk(clk), .rst_n(rst_n), .d({r_plg, r_last, r_mask, r_rg, r_tag}),
-                                                  .q({tr_plg, tr_last, tr_t}));
+    ot_hdc_delay #(.W(8 + TW), .D(RL + CL)) u_tr (.clk(clk), .rst_n(rst_n),
+                                                  .d({r_plg, r_nlev, r_last, r_mask, r_rg, r_tag}),
+                                                  .q({tr_plg, tr_nlev, tr_last, tr_t}));
 
     wire              rv;
     wire [TW-1:0]     rt;
     wire [NC*M*32-1:0] ry;
     wire [NC*M-1:0]    rf;
     ot_hdc_v41x_wgt_red #(.G(G), .M(M), .LB(LB), .PMIN_LG(PMIN_LG), .TW(TW)) u_red (
-        .clk(clk), .rst_n(rst_n), .v(tr_v), .plg(tr_plg), .last(tr_last), .t(tr_t), .s(cu_s), .sf(cu_f),
+        .clk(clk), .rst_n(rst_n), .v(tr_v), .plg(tr_plg), .nlev(tr_nlev), .last(tr_last), .t(tr_t), .s(cu_s), .sf(cu_f),
         .ov(rv), .ot(rt), .y(ry), .yf(rf));
 
     // -- registered output: FP32 and its BF16 rounding (RNE on the bits, as hdc_golden.to_bf16) ---------
