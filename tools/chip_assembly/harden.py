@@ -118,7 +118,7 @@ def spec_for(block: fp.Block, sdc: str, ports: dict[str, Any] | None) -> cs.Case
         pdn_tcl=cs.TCL_DIR / "pdn_block.tcl",
         max_layer="M6",
         place_density=block.place_density,
-        extra={"SLEW_MARGIN": 20, "HOLD_SLACK_MARGIN": 5, "SETUP_SLACK_MARGIN": 0},
+        extra={"SLEW_MARGIN": 40, "HOLD_SLACK_MARGIN": 5, "SETUP_SLACK_MARGIN": 15, **block.orfs_extra},
     )
 
 
@@ -170,7 +170,7 @@ def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int,
                                     peak_gb=block.peak_gb)
             if proc.returncode != 0:
                 raise orfs.FlowError(f"place-and-route of {block.name} failed; see {work}/flow.log")
-            proc = orfs.docker_make(work, "generate_abstract", "abstract.log", 7200,
+            proc = orfs.docker_make(work, "do-generate_abstract", "abstract.log", 7200,
                                     peak_gb=block.peak_gb)
             if proc.returncode != 0:
                 raise orfs.FlowError(f"abstract generation of {block.name} failed; see {work}/abstract.log")
@@ -186,6 +186,15 @@ def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int,
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return record
+
+
+def routed_insertion(work: Path, nickname: str) -> float | None:
+    """This route's worst clock insertion (source latency to a flop) from its skew report."""
+    rpt = orfs.reports_dir(work, nickname) / "6_finish.rpt"
+    if not rpt.is_file():
+        return None
+    m = re.search(r"^\s*([\d.]+) source latency \S+/CLK", rpt.read_text(errors="replace"), re.M)
+    return float(m.group(1)) if m else None
 
 
 def budget_check(block: str, budget: dict[str, Any], lib: Path, latency_ps: float) -> dict[str, Any]:
@@ -213,7 +222,7 @@ def budget_check(block: str, budget: dict[str, Any], lib: Path, latency_ps: floa
         within = actual is None or actual <= b["internal_budget_ps"] + 0.05
         rows[port] = {"budget_ps": b["internal_budget_ps"], "routed_ps": None if actual is None else round(actual, 1),
                       "through_ps": None if through is None else round(through, 1),
-                      "through_budget_ps": b.get("feedthrough_budget_ps"), "within_budget": within}
+                      "through_split": b.get("through_split"), "within_budget": within}
         if not within:
             over.append(port)
     return {"ports": rows, "over_budget": over,
@@ -239,7 +248,9 @@ def block_record(block, spec, budget, budget_path, m, lef, lib, work, elapsed) -
         "metrics": m,
         "closed_against_budget": closed,
         "clock_insertion_estimate": fp.clock_latency_ps(block, orfs.results_dir(work, spec.nickname) / "1_2_yosys.v"),
-        "budget_check": budget_check(block.name, budget, lib, fp.clock_latency_ps(
+        "routed_clock_insertion_ps": routed_insertion(work, spec.nickname),
+        "budget_check": budget_check(block.name, budget, lib,
+                                     routed_insertion(work, spec.nickname) or fp.clock_latency_ps(
             block, orfs.results_dir(work, spec.nickname) / "1_2_yosys.v")["latency_ps"]),
         "closed_basis": ("setup and hold met with the budgeted I/O constraints, zero DRC, zero "
                          "max-slew / max-cap / max-fanout violations"),

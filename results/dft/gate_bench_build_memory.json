@@ -13,5 +13,14 @@
  },
  "results_identical": true,
  "result": "82 patterns, 0 mismatches; capture faults 100/100, chain faults 30/30",
- "note": "lean builds now use -O1 C++; split output bounds the memory of each compile unit"
+ "note": "lean builds now use -O1 C++; split output bounds the memory of each compile unit",
+ "kv_stream_lean_build": {
+  "bench": "KV streamer ot_hdc_kv_stream gate-level scan bench (7,187 scan cells), the bench the lean run generated, rebuilt on ot-pve1",
+  "flags": "-j 4 --output-split 5000 --output-split-cfuncs 500 -CFLAGS -O0, with and without -fno-inline",
+  "no_inline": {"peak_single_process_kb": 12573080, "peak_build_tree_kb": 24929176, "elapsed_s": 1611},
+  "default_inline": {"peak_single_process_kb": 12571380, "peak_build_tree_kb": 24607112, "elapsed_s": 1077},
+  "measured_with": "a Python wrapper, since the worker image ot-host:22.04 has no /usr/bin/time: single = ru_maxrss of the largest child process, tree = summed RSS of the whole build process tree sampled each second",
+  "failure_explained": "the earlier lean run of this bench was admitted at a 16 GB floor on a 32 GB worker and cc1plus was killed for memory; the build needs about 24 GiB",
+  "sizing_rule": "with -j 4 the whole-tree peak is about twice the largest single compile unit (about 12 GiB here), and -fno-inline does not lower it; size the gate floor from the tree peak plus margin (32 GB for this bench), and measure a new bench's build before choosing its floor"
+ }
 }

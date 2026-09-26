@@ -28,7 +28,7 @@
     "program: 3992 instructions (ME 345, SU 2649, QE 786, XU 131, HE 80); ME ROM 78196 words; QE ROM 54080 words; CROM 28492",
     "ISA simulator at pos 7: token 3118 golden 3118 oracle 3118; logits bit-exact with golden: True",
     "multi-token from empty state: ISA [3118, 2400, 64] golden [3118, 2400, 64] oracle [3118, 3583, 2357] every step's logits bit-exact: True",
-    "wrote /tmp/tmp17ubgudp/img"
+    "wrote /tmp/tmpfyktlr_j/img"
   ],
   "single_step": {
     "token": 3582,
@@ -369,7 +369,7 @@
     "messages": []
   },
   "input_sha256": {
-    "rtl/hdc/v41/ot_hdc_isa_v41.svh": "f91ba5a70c92fadd135a117b3603a0f4291ac9452f7829bcd4c453ab7e9bcd69",
+    "rtl/hdc/v41/ot_hdc_isa_v41.svh": "f35cb51583200738dfc12a4b550aa4b4518eb662621d379c2934ccd8e8e7cfe7",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
@@ -396,14 +396,14 @@
     "rtl/hdc/v41/ot_hdc_v41_qe.sv": "3d58bc4fd8653c88b702ca04619547cf74ec935c9e5647f6421c4b1f2a44267b",
     "rtl/hdc/v41/ot_hdc_v41_xu.sv": "7b38ea9b8a41e8169d25317d56f716dbe4697b455c9f3676a5174c1e764b149a",
     "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "5835f0d0a132b2bb2bbdab6bf6108e6a2b1e932d5758b9d8af8ce164ac309530",
-    "rtl/hdc/v41/ot_hdc_core_v41.sv": "3ce4f6a06355ccec1336460b198233dc0fab3ba3799faf9c3155dcfbc2f60655",
+    "rtl/hdc/v41/ot_hdc_core_v41.sv": "f239a01f0bd853d92c42ac029d6f34827998f3047d6732f14062cb9d099279e2",
     "rtl/test/tb_hdc_core_v41.sv": "51e25047bf2e1e5b70b41e79f4520ab8140b768edbdb74f3faf02ecc3f66fb71",
     "rtl/test/hdc_core_v41_harness.cpp": "f5ebdcd4c0500eea8ce8c19e053fbb2f1232beabb71c757bb3f21fdddded40ce",
     "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
     "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
-    "tools/hdc_isa_v41.py": "562399618abd01ada14578f1ef1e51970238b0be6ee9357aa657416bee6964e8",
-    "tools/hdc_program_v41.py": "14b3f5b4fe0c6bc77529d548533322f70f4136ea82c5950dd0475bbbfafe39c0",
-    "tools/hdc_timing_v41.py": "2054a7727ecc56cf2cc56910631d9202e38ad0eff2cefad98fce8110058a9a5c",
+    "tools/hdc_isa_v41.py": "d3d7b6ed1f67318cdf3efdc266a8243d7285cc9ec8556b13884956d7ed1a2c90",
+    "tools/hdc_program_v41.py": "817dcefd85ba9cdee76bd7e74b1aa4802fd1a9752e9a325eafeb4abca223c1e1",
+    "tools/hdc_timing_v41.py": "d74b920107efcde5e9dab974d87dbbbd1c775db3f5a3671a9129ef0845c39a05",
     "tools/rtl_hdc_v41_decode_campaign.py": "3930ab10d325d3512ce5c3111afddf82cab08cb5947d2b785c0a1402e77bf67e"
   }
 }

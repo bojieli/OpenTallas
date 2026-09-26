@@ -1,0 +1,13 @@
+{
+  "status": "halted",
+  "date": "2026-09-26",
+  "core": "pre-redesign (as-built ot_hdc_core / ot_hdc_core_v41)",
+  "reason": "the decode core is being re-specified top-down; full-chip place-and-route is redone at the end on the new blocks",
+  "records": {
+    "blocks/": "budgeted block routes of the pre-redesign core; none closed against its budget",
+    "abstracts/": "LEF + timing-model abstracts of those routes",
+    "boundary/": "boundary characterisation of the pre-redesign blocks (V4.1 HE, SU41 and collectives nodes predate later RTL edits)",
+    "budgets/tile_qwen_rom.json": "the Qwen tile budget table at the halt (3 violations)"
+  },
+  "reusable": "tools/chip_assembly (flow), rtl/chip (tile / die / link / skid composition), docs/FULL_CHIP_IMPLEMENTATION.md (method and lessons)"
+}

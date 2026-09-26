@@ -101,6 +101,7 @@ class Block:
     notes: str = ""
     extra_sdc: list[str] = field(default_factory=list)   # block-internal constraints
     peak_gb: float = 10.0          # expected peak memory of its route
+    orfs_extra: dict[str, Any] = field(default_factory=dict)   # extra ORFS config
 
     @property
     def core_area_um2(self) -> float:
@@ -186,6 +187,7 @@ BLOCKS.update({
             "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_tselect.sv", "rtl/hdc/v41/ot_hdc_v41_xu.sv"],
         480.0, 480.0,
         [(r"^er_", "N"), (r"^(vr_|xr_|vw_|w_|cr_)", "S")],
+        orfs_extra={"SYNTH_HDL_FRONTEND": "slang"},   # package import inside the module
         notes=("V4.1 select / Sinkhorn / Engram unit; the Sinkhorn (ot_hdc_sinkhorn_mc, the "
                "configuration the decode campaign runs) is clocked by a divided clock (1/7)"),
         extra_sdc=[
@@ -240,6 +242,12 @@ def clock_latency_ps(block: Block, netlist: Path | None = None) -> dict[str, Any
     110 ps + 80 ps x log2(cells / 10,000).
     """
     import re as _re
+    routed = ROOT / "results/physical_abi3/asap7/chip/blocks" / f"{block.name}.json"
+    if routed.is_file():
+        rec = json.loads(routed.read_text(encoding="utf-8"))
+        if rec.get("routed_clock_insertion_ps"):
+            return {"latency_ps": rec["routed_clock_insertion_ps"],
+                    "basis": f"measured: this block's previous budgeted route ({routed.relative_to(ROOT)})"}
     if block.record:
         rpt = ROOT / Path(block.record).parent / "physical_artifacts" / "6_finish.rpt"
         if rpt.is_file():
