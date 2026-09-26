@@ -51,7 +51,9 @@ def test_committed_record_passes_and_is_current():
     assert record["status"] == "pass"
     packages = set()
     full = [c for c in record["configurations"] if c["prompt_tokens"] == 8 and c["generated_tokens_per_user"] == 3]
-    assert full and full[0]["golden_generated"][0] == [3118, 2400, 318]   # the single core's tokens
+    # the single core's tokens from an empty state (its own campaign record)
+    single = json.loads((ROOT / "results/rtl/hdc_v41_decode_campaign.json").read_text())["end_to_end"]
+    assert full and full[0]["golden_generated"][0] == single["golden_generated_tokens"]
     for c in record["configurations"]:
         assert c["pass"], c["name"]
         gold = c["golden_generated"]

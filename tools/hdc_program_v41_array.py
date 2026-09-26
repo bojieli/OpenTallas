@@ -287,7 +287,7 @@ class StageBuilder(P.Builder):
                     dst=I.DST_VM, o_base=V_["PF"], o_si=1)
             self.su(set(), {"H", "SSX"}, "embed", su_nout=4, su_nin=160, a_src=I.SRC_WROM,
                     a_base=lay.emb_word * W * P.GR, a_d=DY["EMBED"], a_si=1, dst=I.DST_VM, o_base=V_["H"],
-                    o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_whole=1, r_base=V_["SSX"])
+                    o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1, r_base=V_["SSX"])
         else:
             if plan.ehash(k):
                 self.xu(set(), {"EH"}, "hop.in", xu_op=I.XU_EHASH, xu_src=lay.cb["tmap"])

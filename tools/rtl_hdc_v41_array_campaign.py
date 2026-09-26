@@ -152,6 +152,7 @@ def build(obj: Path, svh: str, users: int, stall: int) -> Path:
         sh([*GATE, "verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
             "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MULTIDRIVEN", "--top-module", "tb_hdc_v41_array",
             f"-GUSERS={users}", f"-GSTALL={stall}", "-Mdir", str(obj), f"-I{obj}", f"-I{core.SVH.parent}",
+            f"+define+HDC_SW={I.SU_LANES}",
             *map(str, core.RTL), str(LINK), str(ROUTER), str(CTRL), str(TB), str(HARNESS),
             "-CFLAGS", "-O1", "-j", "4"])
     (obj / "stamp").write_text(stamp)
