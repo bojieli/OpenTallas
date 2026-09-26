@@ -166,3 +166,21 @@ def test_committed_result_reproduces():
         assert fresh["deepseek_v41_flash"][key]["tokens_s_per_user"] == pytest.approx(
             rec["deepseek_v41_flash"][key]["tokens_s_per_user"], rel=1e-9)
     assert math.isclose(fresh["clock"]["hz"], rec["clock"]["hz"])
+
+
+def test_tselect_latency_is_the_shipped_scale_campaigns():
+    """The index top-512 and candidate-block pricing reads the RTL-measured rows, and reproduces them."""
+    assert D.TS["status"] == {"scale": "pass", "cand": "pass"}
+    for r in D.TS["rows"]:
+        assert D.tselect_latency(r["scores"]) in (r["cycles_after_last_beat"], r["cycles_after_last_beat"] - 1)
+    for r in D.TS["cand_rows"]:
+        lines = math.ceil(math.ceil(r["context"] / 8) / D.TS["cand_lanes"])
+        assert D.TS["cand_front"] + 2 * lines + D.TS["lat0"] == r["cycles_after_last_beat"]
+
+
+def test_threshold_select_is_not_slower_than_the_insertion_units():
+    rows = json.loads(RESULT.read_text())["index_select_by_context"]
+    assert [r["context"] for r in rows] == [8192, 200000, 1048576]
+    for r in rows:
+        for kind in ("array_batch1", "wafer_batch1"):
+            assert r[kind]["tselect"]["tokens_s_per_user"] >= r[kind]["insertion"]["tokens_s_per_user"]
