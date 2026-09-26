@@ -245,13 +245,17 @@ def test_gpu_boundaries_are_the_measured_residual_dependency_signal(tech):
     best, median = art["best_min_ns"], art["median_of_medians_ns"]
     g = tech.raw["serial_latency"]["gpu_datapath"]
     ga, ha = g["dependent_boundary_gather_s"], g["dependent_boundary_handoff_s"]
-    assert ga["value"] == ga["range_low"] == pytest.approx(best["flag_counter_all_blocks_ns"] * 1e-9)
-    assert ga["range_high"] == pytest.approx(median["flag_counter_all_blocks_ns"] * 1e-9)
+    gd = json.loads((ROOT / "results/gpu/blackwell_gather_designs.json").read_text())["conclusions"]
+    # the gather is charged with the activation vector delivered, never the signal alone
+    assert ga["value"] == pytest.approx(gd["lowest_all_sm_gather_with_data_ns"]["bf16_8KiB"] * 1e-9, rel=0.01)
+    assert ga["range_low"] == pytest.approx(min(gd["exposed_under_weight_stream_ns"]["dynamic_rows_ll8"]) * 1e-9, rel=0.01)
+    assert ga["range_high"] == pytest.approx(gd["lowest_all_sm_gather_with_data_ns"]["fp32_16KiB"] * 1e-9, rel=0.01)
+    assert ga["range_low"] > best["flag_counter_all_blocks_ns"] * 1e-9
     assert ha["value"] == ha["range_low"] == pytest.approx(best["flag_pingpong_handoff_ns"] * 1e-9)
     assert ha["range_high"] == pytest.approx(median["flag_pingpong_handoff_ns"] * 1e-9)
     # the first-principles validation agrees to within 2%
     cost = art["validation"]["per_dependency_cost_ns"]
-    assert ga["value"] == pytest.approx(cost["all_sm_gather"] * 1e-9, rel=0.02)
+    assert ga["value"] > cost["all_sm_gather"] * 1e-9
     assert ha["value"] == pytest.approx(cost["one_to_one_or_pdl"] * 1e-9, rel=0.02)
     assert cost["intra_cluster"] < cost["one_to_one_or_pdl"] < cost["all_sm_gather"]
     prof, sg = _gpu_graph(tech, QWEN, 8192)

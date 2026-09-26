@@ -242,11 +242,10 @@ def before_after(tech: Technology, rec: dict) -> dict:
 
 
 #: The GPU's measured per-boundary costs (``technology.json``
-#: ``serial_latency.gpu_datapath``) at the two ends of their measured band: the
-#: uncontended minimum (the headline) and the median under a co-resident
-#: workload.  Only those two costs change; the GPU's memory/compute roofline,
+#: ``serial_latency.gpu_datapath``) at their stated values (the headline) and at
+#: both ends of their measured bands.  Only those two costs change; the GPU's memory/compute roofline,
 #: its links and every ROM number are the study's own.
-GPU_VARIANTS = ("headline", "measured_median")
+GPU_VARIANTS = ("headline", "band_low", "band_high")
 GPU_TARGET_BATCHES = (1, 64)
 
 
@@ -255,8 +254,8 @@ def gpu_variant_technologies(tech: Technology) -> dict[str, Technology]:
     gather, handoff = g["dependent_boundary_gather_s"], g["dependent_boundary_handoff_s"]
     return {
         "headline": tech,
-        "measured_median": C.gpu_boundary_variant(tech, gather_s=gather["range_high"],
-                                                  handoff_s=handoff["range_high"]),
+        "band_low": C.gpu_boundary_variant(tech, gather_s=gather["range_low"], handoff_s=handoff["range_low"]),
+        "band_high": C.gpu_boundary_variant(tech, gather_s=gather["range_high"], handoff_s=handoff["range_high"]),
     }
 
 
@@ -293,8 +292,9 @@ def gpu_execution_sensitivity(tech: Technology) -> dict:
     for name, t in variants.items():
         _rom, gp = C.datapaths(t)
         out["variants"][name] = dict(gather_s=gp.boundary("gather"), handoff_s=gp.boundary("handoff"),
-                                     source=g["dependent_boundary_gather_s"]["source"] if name == "headline" else
-                                     "median_of_medians_ns of the same artifact (co-resident workload)")
+                                     band={"headline": "value", "band_low": "range_low",
+                                           "band_high": "range_high"}[name],
+                                     source=g["dependent_boundary_gather_s"]["source"])
     for key, study, model_name in targets:
         if study not in cache:
             base = RESULTS / study
