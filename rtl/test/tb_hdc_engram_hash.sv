@@ -21,6 +21,7 @@ module tb_hdc_engram_hash (input wire clk);
     wire out_valid;
     wire [OW-1:0] out_row;
     ot_hdc_engram_hash dut (.clk(clk), .rst_n(rst_n), .in_valid(in_valid), .in_first(in_first),
+                            .hist_o(), .ld_v(1'b0), .ld_hist({(ENG_ID_W*(ENG_N-1)){1'b0}}),
                             .in_cid(in_cid), .out_valid(out_valid), .out_row(out_row));
 
     initial begin : load

@@ -1,7 +1,15 @@
 `timescale 1ns/1ps
-// Token-level simulation top of the V4.1 hardwired decode core: behavioural
-// synchronous-read memories loaded from tools/hdc_program_v41.py images.
-// Driven by Verilator (rtl/test/hdc_core_v41_harness.cpp).
+// Token-level simulation top of the V4.1 HBM comparator: the V4.1 hardwired
+// decode core (W_HBM = 1) with its quantised FP8/FP4 weights in HBM behind the
+// QE weight streamer (rtl/hdc/hbm/ot_hdc_qstream.sv) and the timing-faithful
+// HBM model (rtl/hdc/kv/ot_hdc_hbm_model.sv, per-channel ready).  There is no
+// quantised ROM: the words come from the HBM image and the fetch list of
+// tools/hdc_program_v41.py --hbm (hbm_q.hex, qlist.hex); the ROM image is loaded
+// only to CHECK every word the streamer delivers.  The other stores (BF16 ME
+// weights, HE weights, Engram table, constants, KV cache) are as in
+// tb_hdc_core_v41.sv.  Driven by Verilator (rtl/test/hdc_core_v41_whbm_harness.cpp).
+// +QLEAD=n, +QRATE=r: the streamer's lead (cycles) and guaranteed rate (words per
+// cycle x 256).
 //
 // Default: one decode step at +POS for +TOKEN from the golden-prefilled state
 // (KV image, persistent vector memory, Engram hash history primed with the
@@ -15,7 +23,11 @@
 `ifndef HDC_SW
 `define HDC_SW 8
 `endif
-module tb_hdc_core_v41 (input wire clk);
+module tb_hdc_core_v41_whbm #(
+    parameter integer NPC = 8,
+    parameter integer LWIN = 10,
+    parameter integer CLK_PS = 1000
+) (input wire clk);
     localparam integer INSTR_BITS = 1536;
     localparam integer W = 16, G = 4, BL = 16, QLB = 272, AW = 24, NW = 16, PAW = 14, HNL = 3;
     localparam integer SW = `HDC_SW;          // stream-unit lanes
@@ -26,7 +38,10 @@ module tb_hdc_core_v41 (input wire clk);
 
     reg [G*W*16-1:0]    wrom [0:WROM_WORDS-1];
     reg [HS*HNL*32-1:0] hrom [0:HROM_WORDS-1];
-    reg [BL*QLB-1:0]    qrom [0:QROM_WORDS-1];
+    reg [BL*QLB-1:0]    qrom [0:QROM_WORDS-1];     // CHECK ONLY: the ROM image
+    localparam integer SPW = BL * QLB / 256, HMEM = 1 << 20, LAW = 12;
+    reg [127:0]         qlist [0:(1 << LAW)-1];
+    reg [255:0]         qwin [0:SPW-1][0:(1 << LWIN)-1];
     reg [263:0]         erom [0:EROM_WORDS-1];
     reg [63:0]          crom [0:CROM_WORDS-1];
     reg [W*32-1:0]      kv   [0:KV_WORDS-1];
@@ -49,7 +64,8 @@ module tb_hdc_core_v41 (input wire clk);
     wire prog_re; wire [PAW-1:0] prog_addr; reg [INSTR_BITS-1:0] prog_q;
     wire wrom_re; wire [AW-1:0] wrom_addr; reg [G*W*16-1:0] wrom_q;
     wire [SW-1:0] ewrom_re; wire [SW*AW-1:0] ewrom_addr; reg [SW*G*W*16-1:0] ewrom_q;
-    wire qrom_re; wire [AW-1:0] qrom_addr; reg [BL*QLB-1:0] qrom_q;
+    wire qrom_re; wire [AW-1:0] qrom_addr; wire [BL*QLB-1:0] qrom_q;
+    wire qd_v, q_ok, wrel_v; wire [AW-1:0] qd_wbase; wire [7:0] qd_nb; wire [NW-1:0] qd_tiles;
     wire hrom_re; wire [AW-1:0] hrom_addr; reg [HS*HNL*32-1:0] hrom_q;
     wire [HS-1:0] vh_re; wire [HS*AW-1:0] vh_addr; reg [HS*32-1:0] vh_q;
     wire ww_h_we; wire [AW-1:0] ww_h_addr; wire [31:0] ww_h_mask; wire [1023:0] ww_h_data;
@@ -74,7 +90,7 @@ module tb_hdc_core_v41 (input wire clk);
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
     wire [4:0] unit_busy; wire [2:0] issue_unit;
 
-    ot_hdc_core_v41 #(.SW(SW), .HS(HS)) dut (
+    ot_hdc_core_v41 #(.SW(SW), .HS(HS), .W_HBM(1)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry({PAW{1'b0}}), .acc_n(), .acc_tok(),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
         .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -99,7 +115,75 @@ module tb_hdc_core_v41 (input wire clk);
         .ww_q_we(ww_q_we), .ww_q_addr(ww_q_addr), .ww_q_mask(ww_q_mask), .ww_q_data(ww_q_data),
         .ww_x_we(ww_x_we), .ww_x_addr(ww_x_addr), .ww_x_mask(ww_x_mask), .ww_x_data(ww_x_data),
         .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
-        .unit_busy(unit_busy), .issue_unit(issue_unit));
+        .unit_busy(unit_busy), .issue_unit(issue_unit),
+        .qd_v(qd_v), .qd_wbase(qd_wbase), .qd_nb(qd_nb), .qd_tiles(qd_tiles), .q_ok(q_ok), .wrel_v(wrel_v));
+
+    // ---- QE weight streamer, its window and fetch list, HBM ------------------------------------
+    reg  [15:0] qlead, qrate;
+    wire l_re; wire [LAW-1:0] l_addr; reg [127:0] l_q;
+    wire xi_re; wire [AW-1:0] xi_addr; reg [31:0] xi_q;
+    wire [SPW-1:0] qw_we; wire [SPW*LWIN-1:0] qw_waddr; wire [BL*QLB-1:0] qw_wdata;
+    wire qw_re; wire [LWIN-1:0] qw_raddr; reg [BL*QLB-1:0] qw_q;
+    wire hq_v, hq_rdy; wire [23:0] hq_addr; wire [5:0] hq_len; wire [LWIN-1:0] hq_tag;
+    wire [NPC-1:0] hr_v, hr_rdy, pc_room; wire [NPC*LWIN-1:0] hr_tag; wire [NPC*5-1:0] hr_beat;
+    wire [NPC*256-1:0] hr_data;
+    wire qs_fault; wire [3:0] qs_why; wire [31:0] qs_fetched, qs_consumed;
+    ot_hdc_qstream #(.BL(BL), .QLB(QLB), .AW(AW), .HAW(24), .NW(NW), .LWIN(LWIN), .NPC(NPC), .LENW(6),
+                     .BEATW(5), .LAW(LAW)) u_qs (
+        .clk(clk), .rst_n(rst_n), .cfg_base(24'd0), .cfg_lbase({LAW{1'b0}}), .cfg_lead(qlead), .cfg_rate(qrate),
+        .tok_start(start), .pos(pos),
+        .l_re(l_re), .l_addr(l_addr), .l_q(l_q), .vi_re(xi_re), .vi_addr(xi_addr), .vi_q(xi_q), .wrel_v(wrel_v),
+        .qd_v(qd_v), .qd_nb(qd_nb), .qd_tiles(qd_tiles), .q_ok(q_ok),
+        .qr_re(qrom_re), .qr_addr(qrom_addr), .qr_q(qrom_q),
+        .win_we(qw_we), .win_waddr(qw_waddr), .win_wdata(qw_wdata), .win_re(qw_re), .win_raddr(qw_raddr),
+        .win_q(qw_q),
+        .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag), .hq_room(pc_room),
+        .hr_v(hr_v), .hr_rdy(hr_rdy), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data),
+        .fault(qs_fault), .fault_why(qs_why), .st_fetched(qs_fetched), .st_consumed(qs_consumed));
+    ot_hdc_hbm_model #(.NPC(NPC), .AW(24), .DW(256), .MEM_WORDS(HMEM), .TAGW(LWIN), .LENW(6), .BEATW(5),
+                       .CLK_PS(CLK_PS), .PC_RDY(1), .PC_ROOM(16)) u_hbm (
+        .clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy), .pc_room(pc_room), .req_we(1'b0),
+        .req_addr(hq_addr), .req_len(hq_len), .req_tag(hq_tag), .req_wdata(256'd0),
+        .rsp_v(hr_v), .rsp_rdy(hr_rdy), .rsp_tag(hr_tag), .rsp_beat(hr_beat), .rsp_data(hr_data));
+    integer qb;
+    always @(posedge clk) begin
+        if (l_re) l_q <= qlist[l_addr];
+        if (xi_re) xi_q <= vm[xi_addr[15:0]];
+        for (qb = 0; qb < SPW; qb = qb + 1) begin
+            if (qw_re) qw_q[qb*256 +: 256] <= qwin[qb][qw_raddr];
+            if (qw_we[qb]) qwin[qb][qw_waddr[qb*LWIN +: LWIN]] <= qw_wdata[qb*256 +: 256];
+        end
+    end
+    // every delivered word against the ROM image
+    reg qchk_v; reg [AW-1:0] qchk_a;
+    integer q_bad = 0, q_words = 0, q_stall = 0, q_ops = 0;
+    always @(posedge clk) begin
+        qchk_v <= qrom_re; qchk_a <= qrom_addr;
+        if (qchk_v) begin
+            q_words <= q_words + 1;
+            if (qrom_q !== qrom[qchk_a[15:0]]) begin
+                if (q_bad < 3) $display("QBAD cyc=%0d addr=%0d", cycles, qchk_a);
+                q_bad = q_bad + 1;
+            end
+        end
+        if (qd_v) q_ops <= q_ops + 1;
+        //: cycles the sequencer waits only for the QE window
+        if (dut.st == 6 && !dut.d_skip && dut.d_unit == 3 && dut.waited && dut.unit_ready && !dut.q_gate)
+            q_stall <= q_stall + 1;
+    end
+    task qstats;
+        integer p, sum_rd, sum_act, sum_conf, sum_ref;
+        begin
+            sum_rd = 0; sum_act = 0; sum_conf = 0; sum_ref = 0;
+            for (p = 0; p < NPC; p = p + 1) begin
+                sum_rd = sum_rd + u_hbm.st_rd[p]; sum_act = sum_act + u_hbm.st_act[p];
+                sum_conf = sum_conf + u_hbm.st_conf[p]; sum_ref = sum_ref + u_hbm.st_ref[p];
+            end
+            $display("QSTREAM q_stall_cycles=%0d q_ops=%0d q_words=%0d q_bad=%0d qs_fault=%0d qs_why=%0d fetched=%0d consumed=%0d hbm_reads=%0d acts=%0d row_conflicts=%0d refreshes=%0d rd_lat_avg_ps=%0d rd_lat_max_ps=%0d",
+                     q_stall, q_ops, q_words, q_bad, qs_fault, qs_why, qs_fetched, qs_consumed, sum_rd, sum_act,
+                     sum_conf, sum_ref, (sum_rd > 0) ? u_hbm.st_rd_lat_sum / sum_rd : 0, u_hbm.st_rd_lat_max);
+        end
+    endtask
 
     // synchronous-read memories
     integer l, q;
@@ -107,7 +191,6 @@ module tb_hdc_core_v41 (input wire clk);
         if (prog_re) prog_q <= prog[prog_addr];
         if (wrom_re) wrom_q <= wrom[wrom_addr[18:0]];
         for (q = 0; q < SW; q = q + 1) if (ewrom_re[q]) ewrom_q[q*G*W*16 +: G*W*16] <= wrom[ewrom_addr[q*AW +: 19]];
-        if (qrom_re) qrom_q <= qrom[qrom_addr[15:0]];
         if (hrom_re) hrom_q <= hrom[hrom_addr[15:0]];
         for (q = 0; q < HS; q = q + 1) if (vh_re[q]) vh_q[32*q +: 32] <= vm[vh_addr[q*AW +: 16]];
         if (ww_h_we) for (q = 0; q < 32; q = q + 1) if (ww_h_mask[q]) vm[ww_h_addr[15:0] + q] <= ww_h_data[32*q +: 32];
@@ -171,6 +254,11 @@ module tb_hdc_core_v41 (input wire clk);
         if (!$value$plusargs("PFIRST=%d", pfirst)) pfirst = 0;
         $readmemh({dir, "/wrom.hex"}, wrom);
         $readmemh({dir, "/qrom.hex"}, qrom);
+        $readmemh({dir, "/qlist.hex"}, qlist);
+        for (i = 0; i < HMEM; i = i + 1) u_hbm.mem[i] = 256'd0;
+        $readmemh({dir, "/hbm_q.hex"}, u_hbm.mem);
+        if (!$value$plusargs("QLEAD=%d", qlead)) qlead = 512;
+        if (!$value$plusargs("QRATE=%d", qrate)) qrate = 0;
         $readmemh({dir, "/hrom.hex"}, hrom);
         $readmemh({dir, "/erom.hex"}, erom);
         $readmemh({dir, "/crom.hex"}, crom);
@@ -241,7 +329,9 @@ module tb_hdc_core_v41 (input wire clk);
                 check_state(0);
                 $display("HDC41_MULTI steps=%0d generated=%0d mismatches=%0d total_cycles=%0d vm_mismatch=%0d kv_mismatch=%0d",
                          step + 1, n_gen, gen_bad, total_cycles, bad_vm, bad_kv);
-                if (gen_bad == 0 && bad_vm == 0 && bad_kv == 0) $display("PASS"); else $display("FAIL");
+                qstats();
+                if (gen_bad == 0 && bad_vm == 0 && bad_kv == 0 && !qs_fault && q_bad == 0) $display("PASS");
+                else $display("FAIL");
                 $finish;
             end
             step <= step + 1;
@@ -255,7 +345,8 @@ module tb_hdc_core_v41 (input wire clk);
                      token, pos, next_token, expect_tok, cycles, fault, bad_lg, bad_vm, bad_kv);
             $display("UTIL me_busy=%0d su_busy=%0d qe_busy=%0d xu_busy=%0d he_busy=%0d all_idle=%0d", busy_me,
                      busy_su, busy_qe, busy_xu, busy_he, all_idle);
-            if (next_token == expect_tok && !fault && bad_lg == 0 && bad_vm == 0 && bad_kv == 0)
+            qstats();
+            if (next_token == expect_tok && !fault && bad_lg == 0 && bad_vm == 0 && bad_kv == 0 && !qs_fault && q_bad == 0)
                 $display("PASS");
             else
                 $display("FAIL");
@@ -270,6 +361,12 @@ module tb_hdc_core_v41 (input wire clk);
         busy_q <= unit_busy;
         if (trace && issue_unit != 0)
             $display("ISSUE cyc=%0d pc=%0d unit=%0d", cycles, dut.pc, issue_unit);
+        if (qs_fault) begin
+            $display("STREAM_FAULT cyc=%0d pc=%0d why=%0d", cycles, dut.pc, qs_why);
+            qstats();
+            $display("FAIL");
+            $finish;
+        end
         if (cyc > 50000000) begin
             $display("TIMEOUT pc=%0d st=%0d idles=%b", dut.pc, dut.st, dut.idles);
             $finish;

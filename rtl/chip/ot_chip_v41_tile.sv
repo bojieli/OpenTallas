@@ -92,7 +92,7 @@ module ot_chip_v41_tile #(
     wire [4:0]        unit_busy; wire [2:0] issue_unit;
 
     ot_hdc_core_v41 u_core (
-        .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
+        .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(14'd0), .acc_n(), .acc_tok(),
         .done(done), .next_token(ntok), .next_val(nval), .cycles(cycles), .fault(core_fault),
         .prime_v(1'b0), .prime_first(1'b0), .prime_cid(12'd0),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),

@@ -43,6 +43,11 @@ module ot_hdc_engram_hash (
     input  wire                                   in_valid,
     input  wire                                   in_first,
     input  wire [ENG_ID_W-1:0] in_cid,
+    //: the history (ids 1 .. ENG_N-1 positions back, [ENG_ID_W*(k-1) +: ENG_ID_W]):
+    //: observed, and loaded (a speculative step restores it to its accepted slot)
+    output wire [ENG_ID_W*(ENG_N-1)-1:0]          hist_o,
+    input  wire                                   ld_v,
+    input  wire [ENG_ID_W*(ENG_N-1)-1:0]          ld_hist,
     output wire                                   out_valid,
     //: column c of layer l at [ENG_ROW_W*(l*ENG_COLS + c) +: ENG_ROW_W]
     output wire [ENG_ROW_W*ENG_LAYERS*
@@ -74,8 +79,16 @@ module ot_hdc_engram_hash (
         end else if (in_valid) begin
             hist[1] <= in_cid;
             for (k = 2; k < ENG_N; k = k + 1) hist[k] <= in_first ? ENG_PAD : hist[k-1];
+        end else if (ld_v) begin
+            for (k = 1; k < ENG_N; k = k + 1) hist[k] <= ld_hist[ENG_ID_W*(k-1) +: ENG_ID_W];
         end
     end
+    genvar hk;
+    generate
+        for (hk = 1; hk < ENG_N; hk = hk + 1) begin : g_ho
+            assign hist_o[ENG_ID_W*(hk-1) +: ENG_ID_W] = hist[hk];
+        end
+    endgenerate
     always @(posedge clk) begin
         w[0] <= in_cid;
         for (k = 1; k < ENG_N; k = k + 1) w[k] <= in_first ? ENG_PAD : hist[k];

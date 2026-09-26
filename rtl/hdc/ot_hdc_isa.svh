@@ -134,3 +134,7 @@ localparam integer O_IMM1 = 763;
 localparam integer W_IMM1 = 32;
 localparam integer O_IMM2 = 795;
 localparam integer W_IMM2 = 32;
+localparam integer O_ME_ROW0 = 827;
+localparam integer W_ME_ROW0 = 16;
+localparam integer O_ME_AMC = 843;
+localparam integer W_ME_AMC = 1;

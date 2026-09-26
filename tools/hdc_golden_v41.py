@@ -158,14 +158,16 @@ class Q8:
         return (self.q * np.exp2(np.repeat(self.e, 32, axis=1)[:, :self.q.shape[1]])).astype(F)
 
 
-def load_checkpoint(path=CHECKPOINT):
+def load_checkpoint(path=CHECKPOINT, mtp=True):
+    """Every tensor of the checkpoint; mtp=False leaves out the DSpark draft
+    stages (mtp.*)."""
     raw = Path(path).read_bytes()
     n = struct.unpack("<Q", raw[:8])[0]
     header = json.loads(raw[8:8 + n])
     base = 8 + n
     t = {}
     for name, meta in header.items():
-        if name == "__metadata__" or name.startswith("mtp."):
+        if name == "__metadata__" or (name.startswith("mtp.") and not mtp):
             continue
         s, e = meta["data_offsets"]
         buf, shape, dt = raw[base + s:base + e], meta["shape"], meta["dtype"]
@@ -520,6 +522,7 @@ class Model:
         c = self.c = json.loads(Path(config).read_text())
         t = load_checkpoint(checkpoint)
         self.L = c["n_layers"]
+        self.has_mtp = any(k.startswith("mtp.") for k in t)
         self.dim, self.hc = c["dim"], c["hc_mult"]
         self.heads, self.hd, self.rd = c["n_heads"], c["head_dim"], c["rope_head_dim"]
         self.eps, self.hc_eps = F(c["norm_eps"]), F(c["hc_eps"])
@@ -537,6 +540,18 @@ class Model:
         self.index_w_scale = F(self.ihd ** -0.5 * self.ih ** -0.5)
         self.engram_scale = F(self.dim ** -0.5)
         self.sinkhorn_iters = c["hc_sinkhorn_iters"]
+        # DSpark, V4.1's multi-token-prediction head (inference/model.py DSparkBlock):
+        # n_mtp draft stages appended as layers L .. L+n_mtp-1 (checkpoint mtp.*)
+        self.n_mtp = c.get("n_mtp_layers", 0) if c.get("dspark_block_size", 0) else 0
+        self.dspark_block = c.get("dspark_block_size", 0)
+        self.dspark_targets = list(c.get("dspark_target_layer_ids", ()))
+        self.dspark_n_exp = c.get("dspark_n_routed_experts", 0) or self.n_exp
+        self.dspark_k_exp = c.get("dspark_n_activated_experts", 0) or self.k_exp
+        # The released noise id (128799) lies outside the reduced vocabulary; the
+        # reduced vehicle maps every released token id by id % vocab_size (the rule
+        # tools/build_deepseek_v41_reduced_model.py applies to prompts and EOS ids).
+        self.noise_id = int(c.get("dspark_noise_token_id", 0)) % int(c["vocab_size"])
+        self.ratio_all = list(c["compress_ratios"])
         self.freqs_plain = rope_freqs(self.rd, 0, c["rope_theta"], c["rope_factor"], c["beta_fast"], c["beta_slow"])
         self.freqs_yarn = rope_freqs(self.rd, c["original_seq_len"], c["compress_rope_theta"], c["rope_factor"],
                                      c["beta_fast"], c["beta_slow"])
@@ -550,8 +565,8 @@ class Model:
             else:
                 self.w[name] = v
         # wo_a ships FP8 with a 32x32 UE8M0 scale and the release dequantises it to BF16 (convert.py)
-        for L in range(self.L):
-            k = f"layers.{L}.attn.wo_a.weight"
+        for L in range(self.L + (self.n_mtp if self.has_mtp else 0)):
+            k = self.P(L) + "attn.wo_a.weight"
             self.w[k] = to_bf16(self.w[k].dense())
         self.emb_codes = {L: (t[f"layers.{L}.engram.embed.weight"], t[f"layers.{L}.engram.embed.scale"][:, 0])
                           for L in c["engram_layer_ids"]}
@@ -560,12 +575,44 @@ class Model:
         self.kv_of = {L: max(s for s in self.kv_src if s <= L) for L in range(self.L) if self.ratio[L]}
         self.idx_of = {L: max(s for s in self.idx_src if s <= L) for L in range(self.L) if self.ratio[L]}
 
-    def lw(self, L, name):
-        return self.w[f"layers.{L}.{name}"]
+    def P(self, L):
+        """Checkpoint prefix of layer L: the backbone, then the DSpark stages."""
+        return f"layers.{L}." if L < self.L else f"mtp.{L - self.L}."
 
-    def new_state(self):
-        return {"tokens": [], "win": [[] for _ in range(self.L)], "ckv": {s: [] for s in self.kv_src},
-                "ik": {s: [] for s in self.kv_src}, "slots": {s: [] for s in self.kv_src}}
+    def lw(self, L, name):
+        return self.w[self.P(L) + name]
+
+    def new_state(self, mtp=False):
+        """Decode state, every entry indexed by position (or by compressed group):
+        `tokens`, per-layer window KV rows `win`, compressed rows `ckv` and index
+        keys `ik` per source layer, the compressor's open group `slots` (with
+        `slotrec`, every position's slot contents, so a rollback can rebuild it).
+        mtp=True adds `dsk`: per DSpark stage its window cache (main_kv rows, one
+        per position, from the main model's hidden state at that position)."""
+        st = {"tokens": [], "win": [[] for _ in range(self.L)], "ckv": {s: [] for s in self.kv_src},
+              "ik": {s: [] for s in self.kv_src}, "slots": {s: [] for s in self.kv_src},
+              "slotrec": {s: {} for s in self.kv_src}}
+        if mtp:
+            assert self.has_mtp and self.n_mtp, "the checkpoint carries no DSpark stages"
+            st["dsk"] = [[] for _ in range(self.n_mtp)]
+        return st
+
+    def truncate(self, state, n):
+        """Roll the state back to positions 0 .. n-1: every position-indexed entry
+        past them is dropped, the compressor's open group rebuilt from the record."""
+        del state["tokens"][n:]
+        for rows in state["win"]:
+            del rows[n:]
+        for s in self.kv_src:
+            r = self.ratio[s]
+            del state["ckv"][s][n // r:]
+            del state["ik"][s][n // r:]
+            rec = state["slotrec"][s]
+            for p in [p for p in rec if p >= n]:
+                del rec[p]
+            state["slots"][s] = [rec[p] for p in range(n - n % r, n)] if r > 1 else []
+        for rows in state.get("dsk", ()):
+            del rows[n:]
 
     # -- hyper-connections ------------------------------------------------------------
     def hc_mixes(self, x, L, which):
@@ -606,9 +653,10 @@ class Model:
         return to_bf16(np.stack([add(mul(post[k], y), mix[k]) for k in range(self.hc)]))
 
     # -- Engram -------------------------------------------------------------------------
-    def engram_layer(self, h, L, state):
+    def engram_layer(self, h, L, history):
+        """history: the raw token ids of positions 0 .. this one (oldest first)."""
         li = self.engram.layer_ids.index(L)
-        ids = self.engram.hashes(state["tokens"], li)
+        ids = self.engram.hashes(history, li)
         codes, sc = self.emb_codes[L]
         rows = to_bf16((E4M3[codes[ids]] * np.exp2(sc[ids])[:, None]).astype(F)).reshape(-1)
         kv = linear_q(self.lw(L, "engram.wkv.weight"), rows)
@@ -628,7 +676,7 @@ class Model:
         return to_bf16(np.stack(out))
 
     # -- attention ------------------------------------------------------------------------
-    def indexer(self, L, x, qr, pos, state, trace):
+    def indexer(self, L, x, qr, pos, state, trace, ctx):
         """Positions of the source's compressed KV this query attends to (ascending)."""
         r, src = self.ratio[L], self.kv_of[L]
         n = (pos + 1) // r
@@ -644,9 +692,9 @@ class Model:
         s = to_bf16(reduce_rows(terms.T))
         s = s.astype(np.float64)
         if L == self.cand_src:
-            state["cand"] = self.candidate_blocks(s, n)
+            ctx["cand"] = self.candidate_blocks(s, n)
         elif 0 <= self.cand_src < L:
-            s = np.where(state["cand"][:n], s, -np.inf)
+            s = np.where(ctx["cand"][:n], s, -np.inf)
         sel = sorted(int(i) for i in topk_lowest_index(s, min(self.topk, n)))
         if trace is not None:
             trace[f"L{L}.index_select"], trace[f"L{L}.index_scores"] = sel, s
@@ -693,6 +741,7 @@ class Model:
         kv, sc = np.split(mv(wkv, x), 2)                                  # one engine op, FP32 out
         slots = state["slots"][L]
         slots.append((kv, sc))
+        state["slotrec"][L][pos] = (kv, sc)
         if (pos + 1) % r:
             return None
         state["slots"][L] = []
@@ -703,7 +752,10 @@ class Model:
         pooled = seqsum([mul(kvs[i], p[i]) for i in range(r)])
         return rmsnorm_bf16(to_bf16(pooled), self.lw(L, "attn.compressor.norm.weight"), self.eps)
 
-    def attention(self, L, x, pos, state, trace):
+    def attention(self, L, x, pos, state, trace, ctx):
+        """Main-model attention of the position at `pos`.  ctx holds the
+        position's own transients (the index selection its source layer made,
+        the candidate blocks), so positions can run layer-major."""
         yarn = self.ratio[L] > 0
         cs = rope_cs(self.freqs_yarn if yarn else self.freqs_plain, pos)
         qr = rmsnorm_bf16(linear_q(self.lw(L, "attn.wq_a.weight"), x), self.lw(L, "attn.q_norm.weight"), self.eps)
@@ -724,12 +776,20 @@ class Model:
                     state["ik"][L].append(qdq_fp4_e8m0(rope_tail(k, gcs)))
                     state["ckv"][L].append(qdq_fp4_e4m3(rope_tail(latent, gcs), 16))
             if L == self.idx_of[L]:
-                state["sel"] = self.indexer(L, x, qr, pos, state, trace)
-            rows = rows + [state["ckv"][src][i] for i in state["sel"]]
+                ctx["sel"] = self.indexer(L, x, qr, pos, state, trace, ctx)
+            rows = rows + [state["ckv"][src][i] for i in ctx["sel"]]
         kvm = np.stack(rows)                                      # [T, hd]: keys and values alike
-        sink = self.lw(L, "attn.attn_sink")
         blocks = self.vendor_blocks(pos, len(rows) - len(state["win"][L][-self.window:])) \
             if self.vendor_decode_from is not None and pos >= self.vendor_decode_from else [np.arange(len(rows))]
+        return self.attend(L, q, kvm, cs, blocks)
+
+    def attend(self, L, q, kvm, cs, blocks=None):
+        """One query's sparse attention over the rows kvm (keys and values alike),
+        the sink, the inverse RoPE, the grouped wo_a and wo_b: q [heads, hd]
+        post-RoPE, cs the query position's RoPE."""
+        sink = self.lw(L, "attn.attn_sink")
+        if blocks is None:
+            blocks = [np.arange(len(kvm))]
         # every head at once; per head the order is: scores sequential over head_dim,
         # max, exp, P (as BF16) x V sequential over positions, reduce_sum of P
         s = mul(dots(q, kvm), self.attn_scale)                    # [heads, T]
@@ -768,60 +828,97 @@ class Model:
         return linear_q(self.w[prefix + "w2.weight"], to_bf16(a))
 
     def moe(self, L, x, trace):
+        k_exp = self.k_exp if L < self.L else self.dspark_k_exp
         scores = sqrt(softplus(mv(self.lw(L, "ffn.gate.weight"), x)))
-        chosen = topk_lowest_index(add(scores, self.lw(L, "ffn.gate.bias")), self.k_exp)
+        chosen = topk_lowest_index(add(scores, self.lw(L, "ffn.gate.bias")), k_exp)
         ids = sorted(int(i) for i in chosen)                     # experts run and sum in id order
         total = seqsum([scores[i] for i in ids])
         den = add(total, F(1e-20))
         y = np.zeros(self.dim, dtype=F)
         for i in ids:
             wgt = mul(div(scores[i], den), self.route_scale)
-            y = add(y, self.expert(f"layers.{L}.ffn.experts.{i}.", x, wgt))
-        y = add(y, self.expert(f"layers.{L}.ffn.shared_experts.", x))
+            y = add(y, self.expert(f"{self.P(L)}ffn.experts.{i}.", x, wgt))
+        y = add(y, self.expert(f"{self.P(L)}ffn.shared_experts.", x))
         if trace is not None:
             trace[f"L{L}.experts"], trace[f"L{L}.router"] = ids, add(scores, self.lw(L, "ffn.gate.bias"))
         return to_bf16(y)
 
-    # -- one token --------------------------------------------------------------------------
-    def decode_token(self, token, pos, state, trace=None, force=None):
-        """One decode step at `pos`.  `force(L)`, if given, returns (h, pre_mix) to
-        replace layer L's input (teacher forcing against a reference), or None."""
-        state["tokens"].append(int(token))
-        h = np.repeat(self.w["embed.weight"][token][None, :], self.hc, axis=0).astype(F)
-        pre_mix = np.array([1, 0, 0, 0], dtype=F)[:self.hc]
-        for L in range(self.L):
-            if force is not None:
-                forced = force(L)
-                if forced is not None:
-                    h, pre_mix = forced
-            if L in self.engram.layer_ids:
-                h = self.engram_layer(h, L, state)
-                if trace is not None:
-                    trace[f"L{L}.engram"] = h
-            res = h
-            a_pre, a_post, a_comb = self.hc_mixes(h, L, "attn")
-            x = rmsnorm_bf16(self.hc_pre(h, pre_mix), self.lw(L, "attn_norm.weight"), self.eps)
-            y = self.attention(L, x, pos, state, trace)
-            h = self.hc_post(y, res, a_post, a_comb)
+    # -- positions ----------------------------------------------------------------------------
+    def layer(self, L, ctx, state, trace=None):
+        """Backbone layer L for one position (ctx: its residual `h`, the mix
+        `pre` its attention collapses with, `pos`, `hist` its token history, and
+        its per-position transients)."""
+        h, pos = ctx["h"], ctx["pos"]
+        if L in self.engram.layer_ids:
+            h = self.engram_layer(h, L, ctx["hist"])
             if trace is not None:
-                trace[f"L{L}.attn_norm"], trace[f"L{L}.attn"] = x, y
-            res = h
-            f_pre, f_post, f_comb = self.hc_mixes(h, L, "ffn")
-            x = rmsnorm_bf16(self.hc_pre(h, a_pre), self.lw(L, "ffn_norm.weight"), self.eps)
-            y = self.moe(L, x, trace)
-            h = self.hc_post(y, res, f_post, f_comb)
-            pre_mix = f_pre
-            if trace is not None:
-                trace[f"L{L}.ffn_norm"], trace[f"L{L}.ffn"], trace[f"block{L}"], trace[f"pre{L}"] = x, y, h, f_pre
-        xf = rmsnorm_bf16(self.hc_pre(h, pre_mix), self.w["norm.weight"], self.eps)
-        logits = mv(self.w["head.weight"], xf)
+                trace[f"L{L}.engram"] = h
+        if L in self.dspark_targets and "mh" in ctx:
+            ctx["mh"].append(self.main_hidden_part(h))      # the DSpark head reads the layer's INPUT
+        res = h
+        a_pre, a_post, a_comb = self.hc_mixes(h, L, "attn")
+        x = rmsnorm_bf16(self.hc_pre(h, ctx["pre"]), self.lw(L, "attn_norm.weight"), self.eps)
+        y = self.attention(L, x, pos, state, trace, ctx)
+        h = self.hc_post(y, res, a_post, a_comb)
         if trace is not None:
-            trace["final_norm"], trace["logits"] = xf, logits
-        return logits
+            trace[f"L{L}.attn_norm"], trace[f"L{L}.attn"] = x, y
+        res = h
+        f_pre, f_post, f_comb = self.hc_mixes(h, L, "ffn")
+        x = rmsnorm_bf16(self.hc_pre(h, a_pre), self.lw(L, "ffn_norm.weight"), self.eps)
+        y = self.moe(L, x, trace)
+        h = self.hc_post(y, res, f_post, f_comb)
+        ctx["h"], ctx["pre"] = h, f_pre
+        if trace is not None:
+            trace[f"L{L}.ffn_norm"], trace[f"L{L}.ffn"], trace[f"block{L}"], trace[f"pre{L}"] = x, y, h, f_pre
 
-    def generate(self, prompt, n):
+    def forward_positions(self, tokens, pos0, state, traces=None, force=None):
+        """Consecutive positions pos0 .. pos0+len(tokens)-1 in ONE pass, LAYER-MAJOR:
+        every position through layer L before any through layer L+1 -- the order
+        of the core's multi-position (verify) pass, where one weight read serves
+        every position.  A position's arithmetic is exactly a one-position step's:
+        its layer-L attention reads the window rows, compressed rows and index
+        keys its predecessors (in this pass or before) wrote at layer L, and its
+        per-position transients (index selection, candidate blocks) live in its
+        own context.  Returns the FP32 logits of every position.  With a DSpark
+        state (new_state(mtp=True)) each position also writes its DSpark window
+        rows from its main hidden state (dspark_seed).
+
+        `force(L)`, if given (one position only), returns (h, pre_mix) to replace
+        layer L's input (teacher forcing against a reference), or None."""
+        n0 = len(state["tokens"])
+        state["tokens"].extend(int(t) for t in tokens)
+        mtp = "dsk" in state
+        ctxs = [{"pos": pos0 + j, "hist": state["tokens"][:n0 + j + 1],
+                 "h": np.repeat(self.w["embed.weight"][t][None, :], self.hc, axis=0).astype(F),
+                 "pre": np.array([1, 0, 0, 0], dtype=F)[:self.hc], **({"mh": []} if mtp else {})}
+                for j, t in enumerate(tokens)]
+        traces = traces or [None] * len(ctxs)
+        assert force is None or len(ctxs) == 1
+        for L in range(self.L):
+            for ctx, trace in zip(ctxs, traces):
+                if force is not None:
+                    forced = force(L)
+                    if forced is not None:
+                        ctx["h"], ctx["pre"] = forced
+                self.layer(L, ctx, state, trace)
+        out = []
+        for ctx, trace in zip(ctxs, traces):
+            xf = rmsnorm_bf16(self.hc_pre(ctx["h"], ctx["pre"]), self.w["norm.weight"], self.eps)
+            logits = mv(self.w["head.weight"], xf)
+            if trace is not None:
+                trace["final_norm"], trace["logits"] = xf, logits
+            if mtp:
+                self.dspark_seed(np.concatenate(ctx["mh"]), ctx["pos"], state, trace)
+            out.append(logits)
+        return out
+
+    def decode_token(self, token, pos, state, trace=None, force=None):
+        """One decode step at `pos` (a one-position pass)."""
+        return self.forward_positions([token], pos, state, [trace], force)[0]
+
+    def generate(self, prompt, n, mtp_state=False):
         """Prefill one position at a time, then greedy decode.  Returns (tokens, logits)."""
-        state = self.new_state()
+        state = self.new_state(mtp=mtp_state)
         for p, t in enumerate(prompt[:-1]):
             self.decode_token(t, p, state)
         logits = self.decode_token(prompt[-1], len(prompt) - 1, state)
@@ -832,7 +929,174 @@ class Model:
             rows.append(logits)
             if i + 1 < n:
                 logits = self.decode_token(tok, len(prompt) + i, state)
+        self.last_state = state
         return out, rows
+
+    # -- DSpark: V4.1's multi-token prediction (inference/model.py DSparkBlock) -------------------
+    #
+    # Three stages (mtp.0 .. mtp.2) stacked like backbone blocks (hyper-connections, window
+    # attention, a 4-expert top-3 MoE) over a BLOCK of dspark_block_size positions: the next
+    # token y followed by noise tokens.  Their attention reads a window cache of main_kv rows, one
+    # per committed position, made from the main model's hidden state there (the mean of the four
+    # residual copies at the input of layers 37, 38, 39, projected by main_proj and normed by
+    # main_norm, then each stage's wkv / kv_norm / RoPE / FP8), plus the block's own rows (no
+    # causal mask inside the block).  The last stage's hc_pre, norm and the shared lm_head give
+    # one logit row per block position; row i adds the Markov head's bias for the token sampled
+    # at i-1 (y for i = 0) before its argmax: d_{i+1} = argmax(logits_i + markov(d_i)).
+    # The confidence head only reports; greedy drafting does not read it.
+
+    def main_hidden_part(self, h):
+        """h.mean(dim=2) of the BF16 residual copies: sequential sum, times 1/hc
+        (exact: a power of two), stored BF16."""
+        return to_bf16(mul(seqsum([h[j] for j in range(self.hc)]), F(1.0 / self.hc)))
+
+    def dspark_row(self, L, main_x, pos):
+        """DSpark stage L's window row of position pos: kv_norm(wkv(main_x)), RoPE
+        at pos (window-only stage: the plain RoPE), FP8 quantise-dequantise."""
+        kv = rmsnorm_bf16(linear_q(self.lw(L, "attn.wkv.weight"), main_x), self.lw(L, "attn.kv_norm.weight"),
+                          self.eps)
+        return qdq_fp8(rope_tail(kv, rope_cs(self.freqs_plain, pos)))
+
+    def dspark_seed(self, mh, pos, state, trace=None):
+        """Write position pos's row into every DSpark stage's window cache.  mh:
+        the concatenated main hidden parts (dim x targets, BF16)."""
+        main_x = rmsnorm_bf16(linear_q(self.w["mtp.0.main_proj.weight"], mh), self.w["mtp.0.main_norm.weight"],
+                              self.eps)
+        for st in range(self.n_mtp):
+            rows = state["dsk"][st]
+            assert len(rows) == pos, (st, len(rows), pos)
+            rows.append(self.dspark_row(self.L + st, main_x, pos))
+        if trace is not None:
+            trace["main_hidden"], trace["main_x"] = mh, main_x
+
+    def dspark_window(self, st, anchor, state):
+        """Stage st's window rows as the release's ring holds them at start_pos
+        = anchor: positions anchor-W+1 .. anchor in ring-slot (p mod W) order."""
+        W = self.window
+        ps = sorted(range(max(0, anchor + 1 - W), anchor + 1), key=lambda p: p % W)
+        return [state["dsk"][st][p] for p in ps]
+
+    def dspark_attention(self, L, xs, anchor, state):
+        """DSparkAttention.forward for the block (start_pos = anchor): block row i
+        sits at position anchor+1+i; every row attends to the window cache and to
+        all block rows."""
+        qs, kvs, css = [], [], []
+        for i, x in enumerate(xs):
+            cs = rope_cs(self.freqs_plain, anchor + 1 + i)
+            qr = rmsnorm_bf16(linear_q(self.lw(L, "attn.wq_a.weight"), x), self.lw(L, "attn.q_norm.weight"),
+                              self.eps)
+            qs.append(rope_tail(linear_q(self.lw(L, "attn.wq_b.weight"), qr).reshape(self.heads, self.hd), cs))
+            kv = rmsnorm_bf16(linear_q(self.lw(L, "attn.wkv.weight"), x), self.lw(L, "attn.kv_norm.weight"),
+                              self.eps)
+            kvs.append(qdq_fp8(rope_tail(kv, cs)))
+            css.append(cs)
+        kvm = np.stack(self.dspark_window(L - self.L, anchor, state) + kvs)
+        return [self.attend(L, q, kvm, cs) for q, cs in zip(qs, css)]
+
+    def dspark_stage(self, L, hs, pres, anchor, state):
+        """One DSpark stage (a Block over the block rows)."""
+        mixes = [self.hc_mixes(h, L, "attn") for h in hs]
+        xs = [rmsnorm_bf16(self.hc_pre(h, p), self.lw(L, "attn_norm.weight"), self.eps) for h, p in zip(hs, pres)]
+        ys = self.dspark_attention(L, xs, anchor, state)
+        hs = [self.hc_post(y, h, mx[1], mx[2]) for y, h, mx in zip(ys, hs, mixes)]
+        out_h, out_pre = [], []
+        for h, mx in zip(hs, mixes):
+            f_pre, f_post, f_comb = self.hc_mixes(h, L, "ffn")
+            x = rmsnorm_bf16(self.hc_pre(h, mx[0]), self.lw(L, "ffn_norm.weight"), self.eps)
+            out_h.append(self.hc_post(self.moe(L, x, None), h, f_post, f_comb))
+            out_pre.append(f_pre)
+        return out_h, out_pre
+
+    def draft(self, y, anchor, state, trace=None):
+        """forward_spec(y, main_hidden(anchor), start_pos=anchor): the block's
+        dspark_block_size draft tokens d_1 .. d_B (d_i proposes the token at
+        position anchor+1+i) and their logit rows.  The window caches must hold
+        positions 0 .. anchor."""
+        B = self.dspark_block
+        assert len(state["dsk"][0]) == anchor + 1, (len(state["dsk"][0]), anchor)
+        ids = [int(y)] + [self.noise_id] * (B - 1)
+        hs = [np.repeat(self.w["embed.weight"][t][None, :], self.hc, axis=0).astype(F) for t in ids]
+        pres = [np.array([1, 0, 0, 0], dtype=F)[:self.hc] for _ in ids]
+        for st in range(self.n_mtp):
+            hs, pres = self.dspark_stage(self.L + st, hs, pres, anchor, state)
+        Lf = self.L + self.n_mtp - 1
+        xh = [to_bf16(self.hc_pre(h, p)) for h, p in zip(hs, pres)]
+        logits = [mv(self.w["head.weight"], rmsnorm_bf16(x, self.lw(Lf, "norm.weight"), self.eps)) for x in xh]
+        out, membeds = [int(y)], []
+        emb, mhead = self.lw(Lf, "markov_head.embed.weight"), self.lw(Lf, "markov_head.head.weight")
+        for i in range(B):
+            e = emb[out[i]]
+            logits[i] = add(logits[i], mv(mhead, e))
+            membeds.append(e)
+            out.append(int(np.argmax(logits[i])))
+        if trace is not None:
+            proj = self.lw(Lf, "confidence_head.proj.weight")
+            trace["confidence"] = [float(mv(proj, np.concatenate([x, e]))[0]) for x, e in zip(xh, membeds)]
+            trace["draft_logits"] = logits
+        return out[1:], logits
+
+    def generate_spec(self, prompt, n, gamma=None, drafter=None):
+        """Greedy speculative decoding with the DSpark drafter.
+
+        Prefill one position at a time (each position also seeds the DSpark
+        window caches), then repeat: draft gamma tokens from the pending token y
+        at anchor q (the last committed position); run y, d_1 .. d_gamma at
+        positions q+1 .. q+1+gamma in ONE layer-major pass of the main model
+        (forward_positions); t_j = argmax of position q+1+j; accept the longest
+        prefix with d_i == t_{i-1}, a tokens, emit t_0 .. t_a (d_1 .. d_a and
+        the bonus t_a); keep the state of positions 0 .. q+1+a and drop the
+        rest (truncate: window rows, compressed rows, index keys, compressor
+        slots, token history, DSpark rows); q += a+1, y = t_a.
+
+        `drafter(y, q, state)`, if given, replaces DSpark (it returns the draft
+        tokens).  Returns (tokens, per-token logits, per-pass records): tokens and
+        logits must equal generate()'s bit for bit."""
+        gamma = self.dspark_block if gamma is None else gamma
+        assert 1 <= gamma <= self.dspark_block
+        max_pos = int(self.c["max_seq_len"])
+        state = self.new_state(mtp=True)
+        for p, t in enumerate(prompt):
+            logits = self.decode_token(t, p, state)
+        q, y = len(prompt) - 1, int(np.argmax(logits))
+        out, rows, passes = [y], [logits], []
+        while len(out) < n:
+            g = min(gamma, max_pos - 2 - q)                 # positions stay below max_seq_len
+            if g > 0:
+                drafts = [int(d) for d in (drafter(y, q, state) if drafter else self.draft(y, q, state)[0])][:g]
+            else:
+                drafts = []
+            lgs = self.forward_positions([y] + drafts, q + 1, state)
+            tg = [int(np.argmax(lg)) for lg in lgs]
+            a = 0
+            while a < len(drafts) and drafts[a] == tg[a]:
+                a += 1
+            self.truncate(state, q + 2 + a)                 # commit positions .. q+1+a
+            passes.append({"anchor": q, "drafts": drafts, "targets": tg, "accepted": a})
+            out += tg[:a + 1]
+            rows += lgs[:a + 1]
+            q, y = q + 1 + a, tg[a]
+        self.last_state = state
+        return out[:n], rows[:n], passes
+
+
+def state_digest(state):
+    """sha256 of every position-indexed entry of a decode state (for comparing a
+    speculative run's committed state with an autoregressive run's)."""
+    import hashlib
+    h = hashlib.sha256()
+    h.update(np.asarray(state["tokens"], dtype=np.int64).tobytes())
+    for key in ("win", "dsk"):
+        for rows in state.get(key, ()):
+            for r in rows:
+                h.update(bits(np.asarray(r, dtype=F)).tobytes())
+    for key in ("ckv", "ik"):
+        for s in sorted(state[key]):
+            for r in state[key][s]:
+                h.update(bits(np.asarray(r, dtype=F)).tobytes())
+    for s in sorted(state["slots"]):
+        for kv, sc in state["slots"][s]:
+            h.update(bits(kv).tobytes() + bits(sc).tobytes())
+    return h.hexdigest()
 
 
 def margin(logits):
