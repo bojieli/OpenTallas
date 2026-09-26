@@ -1,171 +1,185 @@
 {
   "schema": "opentallas.hdc-v41-decode-campaign.v1",
   "status": "pass",
-  "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) with behavioural synchronous-read memories (many-ported vector memory); the Sinkhorn is the routed one-normalisation-per-step unit (ot_hdc_sinkhorn) run as a 7-core-cycle multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here.",
+  "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) with behavioural synchronous-read memories (many-ported vector memory: four operand reads, an element write and a reducer write per stream lane); the Sinkhorn is the routed one-normalisation-per-step unit (ot_hdc_sinkhorn) run as a 7-core-cycle multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here.",
   "vehicle": "deepseek-v4.1-flash-reduced-v2 (dim 160, 40 layers, 64 heads of 32, hc 4, 12 experts top-6 inter 64, window 128, index top-16, Engram layers 1 and 14, vocab 4040)",
   "parameters": {
+    "su_lanes": 8,
     "me_lanes_per_group": 16,
     "me_groups": 4,
     "interleave": 8,
     "qe_blockdot_lanes": 16,
     "he_lanes": 3,
     "attention_rows_per_layer": 144,
-    "program_instructions": 4416,
+    "program_instructions": 3992,
     "issued_per_unit": {
-      "me": 769,
+      "me": 345,
       "su": 2649,
       "qe": 786,
       "xu": 131,
       "he": 80
     },
-    "me_rom_words": 169844,
+    "me_rom_words": 78196,
     "qe_rom_words": 54080,
     "constant_rom_words": 28492,
     "engram_rom_rows": 385590
   },
   "isa_model": [
-    "program: 4416 instructions (ME 769, SU 2649, QE 786, XU 131, HE 80); ME ROM 169844 words; QE ROM 54080 words; CROM 28492",
+    "program: 3992 instructions (ME 345, SU 2649, QE 786, XU 131, HE 80); ME ROM 78196 words; QE ROM 54080 words; CROM 28492",
     "ISA simulator at pos 7: token 3118 golden 3118 oracle 3118; logits bit-exact with golden: True",
-    "multi-token from empty state: ISA [3118, 2400, 318] golden [3118, 2400, 318] oracle [3118, 3583, 2357] every step's logits bit-exact: True",
-    "wrote /tmp/tmpvq2p_py_/img"
+    "multi-token from empty state: ISA [3118, 2400, 64] golden [3118, 2400, 64] oracle [3118, 3583, 2357] every step's logits bit-exact: True",
+    "wrote /tmp/tmp17ubgudp/img"
   ],
   "single_step": {
     "token": 3582,
     "position": 7,
     "next_token": 3118,
     "isa_next_token": 3118,
-    "cycles": 1088551,
+    "cycles": 344109,
     "fault": 0,
     "logit_mismatches": 0,
     "vector_memory_mismatches": 0,
     "kv_cache_mismatches": 0,
     "unit_busy_cycles": {
-      "me": 308259,
-      "su": 729128,
-      "qe": 73098,
-      "xu": 27223,
-      "he": 410800
+      "me": 114163,
+      "su": 232581,
+      "qe": 72555,
+      "xu": 27232,
+      "he": 53600
     },
-    "all_units_idle_cycles": 2688,
+    "all_units_idle_cycles": 2530,
     "pass": true,
     "timing_model": {
-      "cycles": 1088572,
-      "relative_error": 1.9e-05,
-      "max_abs_issue_error_cycles": 26
+      "cycles": 344131,
+      "relative_error": 6.4e-05,
+      "max_abs_issue_error_cycles": 34
+    },
+    "vector_memory_banking": {
+      "bank_model": "8 banks, element address mod 8",
+      "vector_cycles": 74547,
+      "conflict_free_vector_cycles": 46495,
+      "conflict_free_share": 0.6237,
+      "colliding_strides": {
+        "so:[160]": 14240,
+        "so:[144]": 8832,
+        "so:[32]": 2688,
+        "so:[20]": 1620,
+        "so:[4]": 672
+      }
     },
     "golden_next_token": 3118,
     "oracle_next_token": 3118
   },
   "per_operator_cycles": {
-    "hc_post": {
-      "cycles": 169200,
-      "issued_ops": 320,
-      "share": 0.1554
-    },
-    "softmax": {
-      "cycles": 141808,
-      "issued_ops": 200,
-      "share": 0.1303
-    },
     "out": {
-      "cycles": 106640,
+      "cycles": 46360,
       "issued_ops": 120,
-      "share": 0.098
+      "share": 0.1347
     },
     "experts": {
-      "cycles": 93082,
+      "cycles": 40910,
       "issued_ops": 720,
-      "share": 0.0855
-    },
-    "scores": {
-      "cycles": 90056,
-      "issued_ops": 320,
-      "share": 0.0827
-    },
-    "hc_attn": {
-      "cycles": 84688,
-      "issued_ops": 280,
-      "share": 0.0778
-    },
-    "router": {
-      "cycles": 83040,
-      "issued_ops": 280,
-      "share": 0.0763
+      "share": 0.1189
     },
     "hc_ffn": {
-      "cycles": 44560,
+      "cycles": 25960,
       "issued_ops": 280,
-      "share": 0.0409
+      "share": 0.0754
     },
     "attn": {
-      "cycles": 43451,
+      "cycles": 24642,
       "issued_ops": 560,
-      "share": 0.0399
+      "share": 0.0716
+    },
+    "softmax": {
+      "cycles": 24174,
+      "issued_ops": 200,
+      "share": 0.0703
+    },
+    "router": {
+      "cycles": 23554,
+      "issued_ops": 280,
+      "share": 0.0684
     },
     "pv": {
-      "cycles": 40112,
-      "issued_ops": 320,
-      "share": 0.0368
+      "cycles": 23344,
+      "issued_ops": 160,
+      "share": 0.0678
     },
-    "moe_sum": {
-      "cycles": 39640,
-      "issued_ops": 240,
-      "share": 0.0364
+    "hc_post": {
+      "cycles": 23320,
+      "issued_ops": 320,
+      "share": 0.0678
+    },
+    "hc_attn": {
+      "cycles": 23270,
+      "issued_ops": 280,
+      "share": 0.0676
     },
     "attn_norm": {
-      "cycles": 34360,
+      "cycles": 15520,
       "issued_ops": 200,
-      "share": 0.0316
+      "share": 0.0451
     },
     "ffn_norm": {
-      "cycles": 34360,
+      "cycles": 15520,
       "issued_ops": 200,
-      "share": 0.0316
+      "share": 0.0451
     },
-    "indexer": {
-      "cycles": 24825,
-      "issued_ops": 88,
-      "share": 0.0228
-    },
-    "gather": {
-      "cycles": 16782,
-      "issued_ops": 76,
-      "share": 0.0154
+    "scores": {
+      "cycles": 11822,
+      "issued_ops": 80,
+      "share": 0.0344
     },
     "shared": {
-      "cycles": 13000,
+      "cycles": 11126,
       "issued_ops": 120,
-      "share": 0.0119
+      "share": 0.0323
     },
     "drain": {
       "cycles": 10277,
       "issued_ops": 0,
-      "share": 0.0094
+      "share": 0.0299
     },
-    "compressor": {
-      "cycles": 7827,
-      "issued_ops": 36,
-      "share": 0.0072
+    "indexer": {
+      "cycles": 7123,
+      "issued_ops": 64,
+      "share": 0.0207
+    },
+    "moe_sum": {
+      "cycles": 4640,
+      "issued_ops": 240,
+      "share": 0.0135
     },
     "engram": {
-      "cycles": 6344,
+      "cycles": 4290,
       "issued_ops": 18,
-      "share": 0.0058
+      "share": 0.0125
+    },
+    "gather": {
+      "cycles": 3206,
+      "issued_ops": 76,
+      "share": 0.0093
+    },
+    "compressor": {
+      "cycles": 2969,
+      "issued_ops": 36,
+      "share": 0.0086
     },
     "index_key": {
-      "cycles": 2836,
+      "cycles": 1500,
       "issued_ops": 28,
-      "share": 0.0026
+      "share": 0.0044
     },
     "head": {
-      "cycles": 1645,
+      "cycles": 564,
       "issued_ops": 6,
-      "share": 0.0015
+      "share": 0.0016
     },
     "embed": {
       "cycles": 18,
       "issued_ops": 3,
-      "share": 0.0
+      "share": 0.0001
     }
   },
   "end_to_end": {
@@ -173,22 +187,22 @@
     "generated_tokens": [
       3118,
       2400,
-      318
+      64
     ],
     "isa_generated_tokens": [
       3118,
       2400,
-      318
+      64
     ],
     "golden_generated_tokens": [
       3118,
       2400,
-      318
+      64
     ],
     "isa_logits_bit_exact_with_golden_every_step": true,
     "steps": 10,
     "mismatches": 0,
-    "total_cycles": 10475405,
+    "total_cycles": 3361931,
     "final_vector_memory_mismatches": 0,
     "final_kv_cache_mismatches": 0,
     "per_step": [
@@ -197,7 +211,7 @@
         "input": 0,
         "output": 2815,
         "isa_output": 0,
-        "cycles": 974319,
+        "cycles": 316365,
         "fault": 0
       },
       {
@@ -205,7 +219,7 @@
         "input": 3563,
         "output": 3537,
         "isa_output": 0,
-        "cycles": 1000270,
+        "cycles": 325454,
         "fault": 0
       },
       {
@@ -213,7 +227,7 @@
         "input": 3745,
         "output": 2047,
         "isa_output": 0,
-        "cycles": 1007142,
+        "cycles": 324966,
         "fault": 0
       },
       {
@@ -221,7 +235,7 @@
         "input": 418,
         "output": 1968,
         "isa_output": 0,
-        "cycles": 1029502,
+        "cycles": 331478,
         "fault": 0
       },
       {
@@ -229,7 +243,7 @@
         "input": 170,
         "output": 3159,
         "isa_output": 0,
-        "cycles": 1036630,
+        "cycles": 330990,
         "fault": 0
       },
       {
@@ -237,7 +251,7 @@
         "input": 16,
         "output": 1719,
         "isa_output": 0,
-        "cycles": 1059022,
+        "cycles": 337462,
         "fault": 0
       },
       {
@@ -245,7 +259,7 @@
         "input": 3564,
         "output": 2360,
         "isa_output": 0,
-        "cycles": 1066158,
+        "cycles": 337294,
         "fault": 0
       },
       {
@@ -253,7 +267,7 @@
         "input": 3582,
         "output": 3118,
         "isa_output": 3118,
-        "cycles": 1088550,
+        "cycles": 344110,
         "fault": 0
       },
       {
@@ -261,15 +275,15 @@
         "input": 3118,
         "output": 2400,
         "isa_output": 2400,
-        "cycles": 1095710,
+        "cycles": 353366,
         "fault": 0
       },
       {
         "position": 9,
         "input": 2400,
-        "output": 318,
-        "isa_output": 318,
-        "cycles": 1118102,
+        "output": 64,
+        "isa_output": 64,
+        "cycles": 360446,
         "fault": 0
       }
     ],
@@ -280,21 +294,67 @@
     "position": 39,
     "next_token": 876,
     "isa_next_token": 876,
-    "cycles": 1435183,
+    "cycles": 489061,
     "fault": 0,
     "logit_mismatches": 0,
     "vector_memory_mismatches": 0,
     "kv_cache_mismatches": 0,
     "unit_busy_cycles": {
-      "me": 414243,
-      "su": 971816,
-      "qe": 73010,
-      "xu": 27456,
-      "he": 410800
+      "me": 230899,
+      "su": 262917,
+      "qe": 72381,
+      "xu": 27446,
+      "he": 53600
     },
-    "all_units_idle_cycles": 2936,
+    "all_units_idle_cycles": 2610,
     "pass": true
   },
+  "su_lane_sweep": [
+    {
+      "su_lanes": 4,
+      "token": 3582,
+      "position": 7,
+      "next_token": 3118,
+      "isa_next_token": 3118,
+      "cycles": 400702,
+      "fault": 0,
+      "logit_mismatches": 0,
+      "vector_memory_mismatches": 0,
+      "kv_cache_mismatches": 0,
+      "unit_busy_cycles": {
+        "me": 114163,
+        "su": 290767,
+        "qe": 72248,
+        "xu": 27227,
+        "he": 53600
+      },
+      "all_units_idle_cycles": 2730,
+      "pass": true,
+      "timing_model_cycles": 401020
+    },
+    {
+      "su_lanes": 16,
+      "token": 3582,
+      "position": 7,
+      "next_token": 3118,
+      "isa_next_token": 3118,
+      "cycles": 318906,
+      "fault": 0,
+      "logit_mismatches": 0,
+      "vector_memory_mismatches": 0,
+      "kv_cache_mismatches": 0,
+      "unit_busy_cycles": {
+        "me": 114163,
+        "su": 205988,
+        "qe": 71931,
+        "xu": 27301,
+        "he": 53600
+      },
+      "all_units_idle_cycles": 2649,
+      "pass": true,
+      "timing_model_cycles": 318928
+    }
+  ],
   "verilator_lint": {
     "returncode": 0,
     "flags": [
@@ -309,7 +369,7 @@
     "messages": []
   },
   "input_sha256": {
-    "rtl/hdc/v41/ot_hdc_isa_v41.svh": "905d0931819bf6a364d5901a15180f9d4bc8f20e21a77bcfe96cd226c1cac1c2",
+    "rtl/hdc/v41/ot_hdc_isa_v41.svh": "f91ba5a70c92fadd135a117b3603a0f4291ac9452f7829bcd4c453ab7e9bcd69",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
@@ -317,7 +377,6 @@
     "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
     "rtl/hdc/ot_hdc_sfu.sv": "dd85fcb259ffd00b1419e5395c823bc1ce19c43b0d283ad613731021006cc77d",
     "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
-    "rtl/hdc/ot_hdc_matvec.sv": "48f4cbc47dab6f005f8599c30e91dc48799316fd28805c5e4c77884d0d0fdabf",
     "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
     "rtl/hdc/v41/ot_hdc_engram_hash.sv": "aa1931c171c0b4c78d463debb138b583afc9a2d1715101712f101707c9ecd43a",
     "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
@@ -332,18 +391,19 @@
     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
     "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
     "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282",
-    "rtl/hdc/v41/ot_hdc_v41_stream.sv": "0ab121ef60c0e2979ce17423f6202fc2e88852f4851f7f1e7a51d6df89d2ede3",
+    "rtl/hdc/v41/ot_hdc_v41_matvec.sv": "dbee3f31f75f847371e1f279efcb3523d05e1556f6113507705ee59121a1c9ec",
+    "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
     "rtl/hdc/v41/ot_hdc_v41_qe.sv": "3d58bc4fd8653c88b702ca04619547cf74ec935c9e5647f6421c4b1f2a44267b",
     "rtl/hdc/v41/ot_hdc_v41_xu.sv": "7b38ea9b8a41e8169d25317d56f716dbe4697b455c9f3676a5174c1e764b149a",
-    "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "c2754fb385d3d92a8339ed69ea20654cc0437058c675faee53272c21196a6bf7",
-    "rtl/hdc/v41/ot_hdc_core_v41.sv": "72dcef09ed7a007d98c7bbf51dfa83151d324f8414cca543341a63785c07ebde",
-    "rtl/test/tb_hdc_core_v41.sv": "b00d4e2fa1c4de70f6c09fe2d544bd4a89dcf43eab51e20550d9f995abbf8ab6",
+    "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "5835f0d0a132b2bb2bbdab6bf6108e6a2b1e932d5758b9d8af8ce164ac309530",
+    "rtl/hdc/v41/ot_hdc_core_v41.sv": "3ce4f6a06355ccec1336460b198233dc0fab3ba3799faf9c3155dcfbc2f60655",
+    "rtl/test/tb_hdc_core_v41.sv": "51e25047bf2e1e5b70b41e79f4520ab8140b768edbdb74f3faf02ecc3f66fb71",
     "rtl/test/hdc_core_v41_harness.cpp": "f5ebdcd4c0500eea8ce8c19e053fbb2f1232beabb71c757bb3f21fdddded40ce",
     "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
-    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
-    "tools/hdc_isa_v41.py": "c8af579daa1e9c6b16f0f7959f894de40b4c07ed438545bb3d933c2e33f32e04",
-    "tools/hdc_program_v41.py": "c8206cac134f92eb9e16915d633aad7069f69855cd0402eee293aabe00ca80e2",
-    "tools/hdc_timing_v41.py": "08a044fa6729abf9e4f449fa4765c3caab90f82c7b709405bf4fa6e776467ebc",
-    "tools/rtl_hdc_v41_decode_campaign.py": "3868d85f6230fb4277b7a9a08845c49906b2c1cb431da1ce3c133e5c714646b4"
+    "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
+    "tools/hdc_isa_v41.py": "562399618abd01ada14578f1ef1e51970238b0be6ee9357aa657416bee6964e8",
+    "tools/hdc_program_v41.py": "14b3f5b4fe0c6bc77529d548533322f70f4136ea82c5950dd0475bbbfafe39c0",
+    "tools/hdc_timing_v41.py": "2054a7727ecc56cf2cc56910631d9202e38ad0eff2cefad98fce8110058a9a5c",
+    "tools/rtl_hdc_v41_decode_campaign.py": "3930ab10d325d3512ce5c3111afddf82cab08cb5947d2b785c0a1402e77bf67e"
   }
 }

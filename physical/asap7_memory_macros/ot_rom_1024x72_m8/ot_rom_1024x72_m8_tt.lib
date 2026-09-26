@@ -1,0 +1,275 @@
+library (ot_rom_1024x72_m8_tt) {
+  comment : "ot_rom_1024x72_m8: ASAP7 via-programmed NOR mask ROM 1024 x 72, mux 8; layout and timing content-independent; OpenTallas tools/mem_compiler/rom_gen.py v1.0";
+  technology (cmos);
+  delay_model : table_lookup;
+  revision : "1.0";
+  time_unit : "1ps";
+  voltage_unit : "1V";
+  current_unit : "1mA";
+  leakage_power_unit : "1nW";
+  pulling_resistance_unit : "1kohm";
+  capacitive_load_unit (1, ff);
+  nom_process : 1;
+  nom_voltage : 0.7;
+  nom_temperature : 25;
+  operating_conditions (PVT_tt) {
+    process : 1; voltage : 0.7; temperature : 25;
+  }
+  default_operating_conditions : PVT_tt;
+  voltage_map (VDD, 0.7);
+  voltage_map (VSS, 0);
+  default_max_transition : 320;
+  default_fanout_load : 1;
+  default_cell_leakage_power : 0;
+  default_inout_pin_cap : 0;
+  default_input_pin_cap : 0;
+  default_output_pin_cap : 0;
+  slew_lower_threshold_pct_rise : 10;
+  slew_upper_threshold_pct_rise : 90;
+  slew_lower_threshold_pct_fall : 10;
+  slew_upper_threshold_pct_fall : 90;
+  input_threshold_pct_rise : 50;
+  input_threshold_pct_fall : 50;
+  output_threshold_pct_rise : 50;
+  output_threshold_pct_fall : 50;
+  slew_derate_from_library : 1;
+  lu_table_template (mc_delay) {
+    variable_1 : input_net_transition;
+    variable_2 : total_output_net_capacitance;
+    index_1 ("5, 20, 80, 160, 320");
+    index_2 ("0.72, 2.88, 11.52, 23.04, 46.08");
+  }
+  lu_table_template (mc_constraint) {
+    variable_1 : constrained_pin_transition;
+    variable_2 : related_pin_transition;
+    index_1 ("5, 20, 80, 160, 320");
+    index_2 ("5, 20, 80, 160, 320");
+  }
+  power_lut_template (mc_energy) {
+    variable_1 : input_transition_time;
+    index_1 ("5, 20, 80, 160, 320");
+  }
+  type (ot_rom_1024x72_m8_addr_in_t) {
+    base_type : array;
+    data_type : bit;
+    bit_width : 10;
+    bit_from : 9;
+    bit_to : 0;
+    downto : true;
+  }
+  type (ot_rom_1024x72_m8_rd_out_t) {
+    base_type : array;
+    data_type : bit;
+    bit_width : 72;
+    bit_from : 71;
+    bit_to : 0;
+    downto : true;
+  }
+  cell (ot_rom_1024x72_m8) {
+    area : 762.3590;
+    dont_use : true;
+    dont_touch : true;
+    interface_timing : true;
+    cell_leakage_power : 5107.8056;
+    pg_pin (VDD) { voltage_name : VDD; pg_type : primary_power; }
+    pg_pin (VSS) { voltage_name : VSS; pg_type : primary_ground; }
+    memory () {
+      type : rom;
+      address_width : 10;
+      word_width : 72;
+    }
+    pin (clk) {
+      direction : input;
+      clock : true;
+      capacitance : 9.3458;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      min_period : 315.728;
+      min_pulse_width_high : 126.291;
+      min_pulse_width_low : 126.291;
+      internal_power () {
+        rise_power (mc_energy) {
+          index_1 ("5, 20, 80, 160, 320");
+          values ("563.3884, 563.3884, 563.3884, 563.3884, 563.3884");
+        }
+        fall_power (mc_energy) {
+          index_1 ("5, 20, 80, 160, 320");
+          values ("0.0000, 0.0000, 0.0000, 0.0000, 0.0000");
+        }
+      }
+    }
+    pin (ce_in) {
+      direction : input;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      capacitance : 0.6199;
+      timing () {
+        related_pin : "clk";
+        timing_type : setup_rising;
+        rise_constraint (mc_constraint) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("5, 20, 80, 160, 320");
+          values ( \
+            "28.2562, 26.7562, 20.7562, 12.7562, -3.2438", \
+            "32.0062, 30.5062, 24.5062, 16.5062, 0.5062", \
+            "47.0062, 45.5062, 39.5062, 31.5062, 15.5062", \
+            "67.0062, 65.5062, 59.5062, 51.5062, 35.5062", \
+            "107.0062, 105.5062, 99.5062, 91.5062, 75.5062" \
+          );
+        }
+        fall_constraint (mc_constraint) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("5, 20, 80, 160, 320");
+          values ( \
+            "28.2562, 26.7562, 20.7562, 12.7562, -3.2438", \
+            "32.0062, 30.5062, 24.5062, 16.5062, 0.5062", \
+            "47.0062, 45.5062, 39.5062, 31.5062, 15.5062", \
+            "67.0062, 65.5062, 59.5062, 51.5062, 35.5062", \
+            "107.0062, 105.5062, 99.5062, 91.5062, 75.5062" \
+          );
+        }
+      }
+      timing () {
+        related_pin : "clk";
+        timing_type : hold_rising;
+        rise_constraint (mc_constraint) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("5, 20, 80, 160, 320");
+          values ( \
+            "21.6003, 23.1003, 29.1003, 37.1003, 53.1003", \
+            "17.8503, 19.3503, 25.3503, 33.3503, 49.3503", \
+            "2.8503, 4.3503, 10.3503, 18.3503, 34.3503", \
+            "-17.1497, -15.6497, -9.6497, -1.6497, 14.3503", \
+            "-57.1497, -55.6497, -49.6497, -41.6497, -25.6497" \
+          );
+        }
+        fall_constraint (mc_constraint) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("5, 20, 80, 160, 320");
+          values ( \
+            "21.6003, 23.1003, 29.1003, 37.1003, 53.1003", \
+            "17.8503, 19.3503, 25.3503, 33.3503, 49.3503", \
+            "2.8503, 4.3503, 10.3503, 18.3503, 34.3503", \
+            "-17.1497, -15.6497, -9.6497, -1.6497, 14.3503", \
+            "-57.1497, -55.6497, -49.6497, -41.6497, -25.6497" \
+          );
+        }
+      }
+    }
+    bus (addr_in) {
+      bus_type : ot_rom_1024x72_m8_addr_in_t;
+      direction : input;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      capacitance : 0.6199;
+      timing () {
+        related_pin : "clk";
+        timing_type : setup_rising;
+        rise_constraint (mc_constraint) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("5, 20, 80, 160, 320");
+          values ( \
+            "28.2562, 26.7562, 20.7562, 12.7562, -3.2438", \
+            "32.0062, 30.5062, 24.5062, 16.5062, 0.5062", \
+            "47.0062, 45.5062, 39.5062, 31.5062, 15.5062", \
+            "67.0062, 65.5062, 59.5062, 51.5062, 35.5062", \
+            "107.0062, 105.5062, 99.5062, 91.5062, 75.5062" \
+          );
+        }
+        fall_constraint (mc_constraint) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("5, 20, 80, 160, 320");
+          values ( \
+            "28.2562, 26.7562, 20.7562, 12.7562, -3.2438", \
+            "32.0062, 30.5062, 24.5062, 16.5062, 0.5062", \
+            "47.0062, 45.5062, 39.5062, 31.5062, 15.5062", \
+            "67.0062, 65.5062, 59.5062, 51.5062, 35.5062", \
+            "107.0062, 105.5062, 99.5062, 91.5062, 75.5062" \
+          );
+        }
+      }
+      timing () {
+        related_pin : "clk";
+        timing_type : hold_rising;
+        rise_constraint (mc_constraint) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("5, 20, 80, 160, 320");
+          values ( \
+            "21.6003, 23.1003, 29.1003, 37.1003, 53.1003", \
+            "17.8503, 19.3503, 25.3503, 33.3503, 49.3503", \
+            "2.8503, 4.3503, 10.3503, 18.3503, 34.3503", \
+            "-17.1497, -15.6497, -9.6497, -1.6497, 14.3503", \
+            "-57.1497, -55.6497, -49.6497, -41.6497, -25.6497" \
+          );
+        }
+        fall_constraint (mc_constraint) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("5, 20, 80, 160, 320");
+          values ( \
+            "21.6003, 23.1003, 29.1003, 37.1003, 53.1003", \
+            "17.8503, 19.3503, 25.3503, 33.3503, 49.3503", \
+            "2.8503, 4.3503, 10.3503, 18.3503, 34.3503", \
+            "-17.1497, -15.6497, -9.6497, -1.6497, 14.3503", \
+            "-57.1497, -55.6497, -49.6497, -41.6497, -25.6497" \
+          );
+        }
+      }
+    }
+    bus (rd_out) {
+      bus_type : ot_rom_1024x72_m8_rd_out_t;
+      direction : output;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      max_capacitance : 46.08;
+      timing () {
+        related_pin : "clk";
+        timing_type : rising_edge;
+        timing_sense : non_unate;
+        cell_rise (mc_delay) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("0.72, 2.88, 11.52, 23.04, 46.08");
+          values ( \
+            "350.0767, 351.0622, 355.0043, 360.2604, 370.7726", \
+            "353.0767, 354.0622, 358.0043, 363.2604, 373.7726", \
+            "365.0767, 366.0622, 370.0043, 375.2604, 385.7726", \
+            "381.0767, 382.0622, 386.0043, 391.2604, 401.7726", \
+            "413.0767, 414.0622, 418.0043, 423.2604, 433.7726" \
+          );
+        }
+        cell_fall (mc_delay) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("0.72, 2.88, 11.52, 23.04, 46.08");
+          values ( \
+            "350.0767, 351.0622, 355.0043, 360.2604, 370.7726", \
+            "353.0767, 354.0622, 358.0043, 363.2604, 373.7726", \
+            "365.0767, 366.0622, 370.0043, 375.2604, 385.7726", \
+            "381.0767, 382.0622, 386.0043, 391.2604, 401.7726", \
+            "413.0767, 414.0622, 418.0043, 423.2604, 433.7726" \
+          );
+        }
+        rise_transition (mc_delay) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("0.72, 2.88, 11.52, 23.04, 46.08");
+          values ( \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509", \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509", \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509", \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509", \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509" \
+          );
+        }
+        fall_transition (mc_delay) {
+          index_1 ("5, 20, 80, 160, 320");
+          index_2 ("0.72, 2.88, 11.52, 23.04, 46.08");
+          values ( \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509", \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509", \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509", \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509", \
+            "28.1201, 30.2882, 38.9608, 50.5242, 73.6509" \
+          );
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "current_netlist_sha256": "5788c8d052975985bc85958bedab953116b70d69263ecb5e8e55688175ca2be3",
+  "current_source_sha256": "4c9421673fc111f7dd6a517a460fd3cacfb81957cae25f1a85884f56d19241ff",
+  "identical": true,
+  "method": "yosys synth -flatten, opt_clean -purge, write_verilog -noattr; byte comparison",
+  "parameters": {
+    "MODE": 0
+  },
+  "routed_commit": "a8186d18",
+  "routed_netlist_sha256": "5788c8d052975985bc85958bedab953116b70d69263ecb5e8e55688175ca2be3",
+  "routed_source_sha256": "5a957f0d583f7b3fd44e0b79ed3bb35ad333b89239c147a07bc8cb94b813e32b",
+  "schema": "opentallas.routed-revision-identity.v1",
+  "top": "ot_host_if",
+  "yosys": "Yosys 0.9 (git sha1 1979e0b)"
+}

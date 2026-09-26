@@ -38,13 +38,12 @@ HD = 32
 STR = TMAX                       # S-region stride per head
 # Where a sublayer's own mixes are finished (the mix passes and the Sinkhorn):
 # in attention after ATTN_HOOK ("qkv", "scores", "softmax" or "pv"), in the MoE
-# before routed expert MOE_HOOK (7: after the shared expert).  Swept with
-# tools/hdc_timing_v41.py: late enough that the HE's 5,120-cycle chain has run,
-# early enough that the Sinkhorn (the routed unit, 41 steps x 7 core cycles)
-# hides behind the rest.  (With the simple sequential Sinkhorn, ~3,700 cycles,
-# MOE_HOOK = 1 is best.)
-ATTN_HOOK = "softmax"
-MOE_HOOK = 6
+# before the SiLU of routed expert MOE_HOOK (k_exp: after the last).  Swept with
+# tools/hdc_timing_v41.py: late enough that the HE's chain (80 x 8 cycles with
+# the 8-chunk split) has run, early enough that the Sinkhorn (the routed unit,
+# 41 steps x 7 core cycles) hides behind the rest.
+ATTN_HOOK = "scores"
+MOE_HOOK = 1
 KT_WORDS = (TMAX // W) * HD      # transposed rows of one layer (words)
 KR_WORDS = TMAX * HD // W        # row-major rows of one layer (words)
 
@@ -212,48 +211,59 @@ class Layout:
         self.crom.extend((F(x), F(0)) for x in np.asarray(v, dtype=F).reshape(-1))
         return base
 
-    # ME placement: words in (round, k, slot) order; lane g*W+l holds row_of(t, j, l)
-    def place_rows(self, w, row_of, tiles_total):
+    # ME placement: words in (round, k', slot) order; lane g*W+l of group g = q*S + c
+    # holds row_of(t, j, l), column c*kc + k' of tile t = round*(GR/S) + q
+    def place_rows(self, w, row_of, tiles_total, split=1):
         n, k = w.shape
-        rounds = -(-tiles_total // GR)
+        kc = k // split
+        assert kc * split == k
+        per_round = GR // split
+        rounds = -(-tiles_total // per_round)
         base = len(self.words)
         wb = (G.bits(np.asarray(w, dtype=F)) >> 16).astype(np.uint16)
         for r in range(rounds):
-            for kk in range(k):
+            for kk in range(kc):
                 for j in range(IL):
                     word = np.zeros(W * GR, dtype=np.uint16)
                     for g in range(GR):
-                        t = r * GR + g
+                        q, c = divmod(g, split)
+                        t = r * per_round + q
                         for l in range(W):
                             row = row_of(t, j, l)
                             if 0 <= row < n:
-                                word[g * W + l] = wb[row, kk]
+                                word[g * W + l] = wb[row, c * kc + kk]
                     self.words.append(word)
-        return dict(base=base, n=n, k=k, tiles=rounds)
+        return dict(base=base, n=n, k=kc, tiles=rounds, split=split)
 
     def place(self, w):
-        n = w.shape[0]
-        return self.place_rows(w, lambda t, j, l: (t * IL + j) * W + l, -(-n // (W * IL)))
+        """A matrix with the golden's engine split (hdc_golden_v41.mv)."""
+        n, k = w.shape
+        return self.place_rows(w, lambda t, j, l: (t * IL + j) * W + l, -(-n // (W * IL)),
+                               G.split_for(n, k, GR, W, IL))
 
     def place_wo_a(self, w):
         """Grouped wo_a: slot j is group j, tile t its rows t*W .. t*W+15, so every
-        slot reads its own group's 256 attention outputs (xjs = 256)."""
+        slot reads its own group's 256 attention outputs (xjs = 256), in
+        WO_A_SPLIT chunks (xcs = the chunk length)."""
         o_rank = self.m.o_rank
         assert w.shape == (self.m.groups * o_rank, 256) and self.m.groups == IL
         return self.place_rows(w, lambda t, j, l: j * o_rank + t * W + l if t * W + l < o_rank else -1,
-                               o_rank // W)
+                               o_rank // W, V.WO_A_SPLIT)
 
     def hplace(self, w):
-        """HE placement (FP32 weights): word k*IL + j holds rows j*NL + l, lane l."""
+        """HE placement (FP32 weights), K in HC_SPLIT chunks of kc: word k'*IL + j
+        holds, in lane c*NL + l, row j*NL + l at column c*kc + k'."""
         n, k = w.shape
-        assert n <= I.HE_LANES * IL
+        S, NL = V.HC_SPLIT, I.HE_LANES
+        kc = k // S
+        assert n <= NL * IL and kc * S == k
         base = len(self.hwords)
-        wf = np.zeros((I.HE_LANES * IL, k), dtype=F)
+        wf = np.zeros((NL * IL, k), dtype=F)
         wf[:n] = w
-        for kk in range(k):
+        for kk in range(kc):
             for j in range(IL):
-                self.hwords.append(wf[j * I.HE_LANES:(j + 1) * I.HE_LANES, kk].copy())
-        return dict(base=base, n=n, k=k)
+                self.hwords.append(np.concatenate([wf[j * NL:(j + 1) * NL, c * kc + kk] for c in range(S)]))
+        return dict(base=base, n=n, k=kc)
 
     # QE placement: word (round r, block kb, slot j), lane l: row (r*IL + j)*BL + l
     def qplace(self, q8, fp4=False):
@@ -316,6 +326,41 @@ class Layout:
 
 
 # -- program -------------------------------------------------------------------------
+SCALAR_SFU = (I.SFU_RSQRT, I.SFU_SQRT, I.SFU_SPSQRT, I.SFU_EGATE)   # lane 0 only
+DYN_GUESS = 16                   # a count taken from a DYN value: assume a short context
+
+
+def su_vec_mode(f, lanes=None):
+    """The stream unit's lane axis for one op: SCALAR where only lane 0 can do the
+    op (lane-0-only SFU functions, SEQ, the whole-op P=8 reduction), VEC_O where
+    each segment must stay in one lane (a per-segment reduction or the segmented
+    tree), else whichever axis issues fewer vectors (VEC_I on a tie)."""
+    lanes = lanes or I.SU_LANES
+    if f.get("sfu", 0) in SCALAR_SFU or f.get("red", 0) == I.RED_SEQ or \
+            (f.get("red_whole", 0) and not f.get("red_tree", 0)):
+        return I.VEC_SCALAR
+    no = f.get("su_nout", 0) or DYN_GUESS
+    ni = f.get("su_nin", 0) or DYN_GUESS
+    if f.get("red", 0) or f.get("red_tree", 0):
+        return I.VEC_O if no > 1 else I.VEC_SCALAR
+    vi, vo = no * -(-ni // lanes), -(-no // lanes) * ni
+    if min(vi, vo) == no * ni:
+        return I.VEC_SCALAR
+    return I.VEC_I if vi <= vo else I.VEC_O
+
+
+def segmented(f, segs):
+    """An op over n elements whose sum (of squares) is one long sum, cut into
+    `segs` contiguous segments of n/segs (one per outer index, so every lane owns
+    one) and summed by the segment tree: the golden's split_sum."""
+    n = f["su_nin"]
+    assert f.get("su_nout", 1) == 1 and n % segs == 0 and f.get("red") == I.RED_SUM
+    f = dict(f, su_nout=segs, su_nin=n // segs, red_tree=1)
+    for x in "abcdo":
+        f[f"{x}_so"] = f.get(f"{x}_si", 0) * (n // segs)
+    return f
+
+
 class Builder:
     def __init__(self, lay):
         self.lay, self.m = lay, lay.m
@@ -329,13 +374,22 @@ class Builder:
     def me(self, mat, x, out, reads, writes, tag, **over):
         f = dict(unit=I.UNIT_ME, me_nout=mat["n"], me_tiles=mat["tiles"], me_k=mat["k"], me_wsrc=0,
                  me_wbase=mat["base"], me_ts=mat["k"] * IL, me_ks=IL, me_js=1, me_xbase=x, me_xks=1,
-                 me_round=1, me_obase=out // W, me_ots=IL, me_ojs=1, me_oen=1, me_xcs=mat["k"])
+                 me_round=1, me_obase=out // W, me_ots=IL, me_ojs=1, me_oen=1, me_xcs=mat["k"],
+                 me_split=mat.get("split", 1).bit_length() - 1)
         f.update(over)
         self.emit(f, reads, writes, tag)
 
     def su(self, reads, writes, tag, **f):
         f = dict(f, unit=I.UNIT_SU)
+        f.setdefault("su_vec", su_vec_mode(f))
+        if f.get("red"):                             # the region the reducer writes
+            f["_redw"] = {self.region_of(f.get("r_base", 0))} & set(writes)
+            assert f["_redw"], (tag, f.get("r_base"))
         self.emit(f, reads, writes, tag)
+
+    def region_of(self, addr):
+        name, base = max(((n, b) for n, b in self.V.items() if b <= addr), key=lambda nb: nb[1])
+        return name
 
     def qe(self, reads, writes, tag, **f):
         f = dict(f, unit=I.UNIT_QE)
@@ -361,8 +415,8 @@ class Builder:
         self.su({src, r}, wr, tag, **f)
 
     def sumsq(self, src, n, dst, tag, pred=0):
-        self.su({src}, {dst}, tag, pred=pred, su_nout=1, su_nin=n, a_base=self.V[src], a_si=1, red=I.RED_SUM,
-                red_sq=1, r_base=self.V[dst])
+        self.su({src}, {dst}, tag, **segmented(dict(pred=pred, su_nout=1, su_nin=n, a_base=self.V[src], a_si=1,
+                                                     red=I.RED_SUM, red_sq=1, r_base=self.V[dst]), V.RMS_SPLIT))
 
     def rmsnorm(self, src, n, w, dst, tag, pred=0, have_ss=None):
         ss = have_ss or "SS"
@@ -376,7 +430,7 @@ class Builder:
                  o_base=self.V[dst], o_si=1)
         wr = {dst}
         if sq:
-            f.update(red=I.RED_SUM, red_sq=1, r_base=self.V[sq])
+            f = segmented(dict(f, red=I.RED_SUM, red_sq=1, r_base=self.V[sq]), V.RMS_SPLIT)
             wr.add(sq)
         self.su({src}, wr, tag, **f)
 
@@ -439,9 +493,10 @@ class Builder:
                 o_si=1)
         self.su({"H", pre, "T"}, {"T"}, tag, su_nout=1, su_nin=160, a_base=h + 320, a_si=1, b_base=V_[pre] + 2,
                 m1=I.M1_AB, c_base=V_["T"], c_si=1, ad=I.AD_C, dst=I.DST_VM, o_base=V_["T"], o_si=1)
-        self.su({"H", pre, "T"}, {dst, ss}, tag, su_nout=1, su_nin=160, a_base=h + 480, a_si=1,
-                b_base=V_[pre] + 3, m1=I.M1_AB, c_base=V_["T"], c_si=1, ad=I.AD_C, rnd=1, dst=I.DST_VM,
-                o_base=V_[dst], o_si=1, red=I.RED_SUM, red_sq=1, r_base=V_[ss])
+        self.su({"H", pre, "T"}, {dst, ss}, tag, **segmented(dict(
+            su_nout=1, su_nin=160, a_base=h + 480, a_si=1, b_base=V_[pre] + 3, m1=I.M1_AB, c_base=V_["T"],
+            c_si=1, ad=I.AD_C, rnd=1, dst=I.DST_VM, o_base=V_[dst], o_si=1, red=I.RED_SUM, red_sq=1,
+            r_base=V_[ss]), V.RMS_SPLIT))
 
     def hc_post(self, y, post, comb, tag):
         V_ = self.V
@@ -455,7 +510,7 @@ class Builder:
                     dst=I.DST_VM, o_base=T, o_so=160, o_si=1)
         self.su({y, post, "T"}, {"H", "SSX"}, tag, su_nout=4, su_nin=160, a_base=V_[y], a_si=1,
                 b_base=V_[post], b_so=1, m1=I.M1_AB, c_base=T, c_so=160, c_si=1, ad=I.AD_C, rnd=1,
-                dst=I.DST_VM, o_base=h, o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_whole=1,
+                dst=I.DST_VM, o_base=h, o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1,
                 r_base=V_["SSX"])
 
     def engram(self, L):
@@ -482,7 +537,7 @@ class Builder:
                 dst=I.DST_VM, o_base=V_["EG"], o_si=1)
         self.su({"EKV", "EG", "H"}, {"H", "SSX"}, t, su_nout=4, su_nin=160, a_base=V_["EKV"] + 640, a_si=1,
                 b_base=V_["EG"], b_so=1, m1=I.M1_AB, c_base=h, c_so=160, c_si=1, ad=I.AD_C, rnd=1,
-                dst=I.DST_VM, o_base=h, o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_whole=1,
+                dst=I.DST_VM, o_base=h, o_so=160, o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1,
                 r_base=V_["SSX"])
 
     def kvt_write(self, src, region, base, rowsel, tag, pred=0, n=1, ind=False):
@@ -509,10 +564,10 @@ class Builder:
                     c_base=V_["CE"] + 32, c_si=1, ad=I.AD_C, dst=I.DST_VM, o_base=V_["CD"], o_si=1)
             self.su({"CE", "CD"}, {"CP"}, t, pred=pred, su_nout=2, su_nin=32, a_base=V_["CE"], a_so=32, a_si=1,
                     b_base=V_["CD"], b_si=1, m1=I.M1_DIVB, dst=I.DST_VM, o_base=V_["CP"], o_so=32, o_si=1)
-            self.su({slot, "CP"}, {"POOL", "SS"}, t, pred=pred, su_nout=1, su_nin=32, a_base=s0, a_si=1,
-                    b_base=V_["CP"], b_si=1, m1=I.M1_AB, c_base=s1, c_si=1, d_base=V_["CP"] + 32, d_si=1,
-                    qm=I.QM_POS, ad=I.AD_Q, rnd=1, dst=I.DST_VM, o_base=V_["POOL"], o_si=1, red=I.RED_SUM,
-                    red_sq=1, r_base=V_["SS"])
+            self.su({slot, "CP"}, {"POOL", "SS"}, t, **segmented(dict(
+                pred=pred, su_nout=1, su_nin=32, a_base=s0, a_si=1, b_base=V_["CP"], b_si=1, m1=I.M1_AB,
+                c_base=s1, c_si=1, d_base=V_["CP"] + 32, d_si=1, qm=I.QM_POS, ad=I.AD_Q, rnd=1, dst=I.DST_VM,
+                o_base=V_["POOL"], o_si=1, red=I.RED_SUM, red_sq=1, r_base=V_["SS"]), V.RMS_SPLIT))
             self.rmsnorm("POOL", 32, lay.cb[(L, "cnorm")], "LAT", t, pred, have_ss="SS")
         else:
             self.me(mat, V_["XN"], V_["CKA"], {"XN"}, {"CKA"}, t)
@@ -545,11 +600,12 @@ class Builder:
         self.me(lay.mat[(L, "iwp")], V_["XN"], V_["WP"], {"XN"}, {"WP"}, t, pred=pred)
         self.su({"WP"}, {"WTS"}, t, pred=pred, su_nout=1, su_nin=32, a_base=V_["WP"], a_si=1, a_rnd=1,
                 m1=I.M1_AIMM, imm1=f32(m.index_w_scale), rnd=1, dst=I.DST_VM, o_base=V_["WTS"], o_si=1)
-        for hb in range(0, m.ih, IL):
+        rnds16 = DY["RND16_N2"] if r == 2 else DY["RND16_POS1"]
+        for hb in range(0, m.ih, IL * GR):         # 4 head groups of 8 heads: one 16-row tile per round
             self.me(dict(n=0, tiles=0, k=HD, base=self.K[f"IK{src}"] // W), V_["IQQ"] + hb * HD,
-                    V_["S"] + hb * STR, {"IQQ", f"IK{src}"}, {"S"}, t, pred=pred, me_xcs=0, me_wsrc=1,
+                    V_["S"] + hb * STR, {"IQQ", f"IK{src}"}, {"S"}, t, pred=pred, me_xcs=IL * HD, me_wsrc=1,
                     me_ts=HD, me_ks=1, me_js=0, me_jsh=3, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=STR // W,
-                    me_mmode=1, me_d_nout=nsel, me_d_tiles=rnds)
+                    me_mmode=1, me_d_nout=nsel, me_d_tiles=rnds16, me_hg=2, me_ogs=IL * STR // W)
         self.su({"S", "WTS"}, {"IS"}, t, pred=pred, su_nout=0, su_d_nout=nsel, su_nin=m.ih, a_base=V_["S"], a_so=1,
                 a_si=STR, a_rnd=1, a_relu=1, b_base=V_["WTS"], b_si=1, m1=I.M1_AB, rnd=1, red=I.RED_SUM,
                 red_rnd=1, r_base=V_["IS"], r_so=1)
@@ -595,10 +651,12 @@ class Builder:
         if hook and ATTN_HOOK == "qkv":
             hook()
         ts = f"L{L}.scores"
-        for hb in range(0, m.heads, IL):
+        T16 = {0: DY["RND16_POS1"], 1: DY["RND16_T1"], 2: DY["RND16_T2"]}[r]
+        for hb in range(0, m.heads, IL * GR):      # 4 head groups of 8 heads: one 16-row tile per round
             self.me(dict(n=0, tiles=0, k=HD, base=K[f"KT{L}"] // W), V_["Q"] + hb * HD, V_["S"] + hb * STR,
-                    {"Q", f"KT{L}"}, {"S"}, ts, me_xcs=0, me_wsrc=1, me_ts=HD, me_ks=1, me_js=0, me_jsh=3,
-                    me_xks=1, me_xjs=HD, me_ots=1, me_ojs=STR // W, me_mmode=1, me_d_nout=T, me_d_tiles=TR)
+                    {"Q", f"KT{L}"}, {"S"}, ts, me_xcs=IL * HD, me_wsrc=1, me_ts=HD, me_ks=1, me_js=0, me_jsh=3,
+                    me_xks=1, me_xjs=HD, me_ots=1, me_ojs=STR // W, me_mmode=1, me_d_nout=T, me_d_tiles=T16,
+                    me_hg=2, me_ogs=IL * STR // W)
         if hook and ATTN_HOOK == "scores":
             hook()
         sm = dict(su_nout=m.heads, su_nin=0, su_d_nin=T, a_base=V_["S"], a_so=STR, a_si=1, dst=I.DST_VM,
@@ -611,10 +669,11 @@ class Builder:
         if hook and ATTN_HOOK == "softmax":
             hook()
         tp = f"L{L}.pv"
-        for hb in range(0, m.heads, IL):
+        for hb in range(0, m.heads, IL * 2):       # 2 head groups of 8 heads x 2 tiles of 16 dimensions
             self.me(dict(n=HD, tiles=1, k=0, base=K[f"KR{L}"] // W), V_["S"] + hb * STR, V_["ACC"] + hb * HD,
-                    {"S", f"KR{L}"}, {"ACC"}, tp, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=HD // W, me_js=0,
-                    me_jsh=3, me_xks=1, me_xjs=STR, me_ots=1, me_ojs=HD // W, me_mmode=1, me_d_k=T)
+                    {"S", f"KR{L}"}, {"ACC"}, tp, me_xcs=IL * STR, me_wsrc=1, me_ts=1, me_ks=HD // W, me_js=0,
+                    me_jsh=3, me_xks=1, me_xjs=STR, me_ots=1, me_ojs=HD // W, me_mmode=1, me_d_k=T,
+                    me_hg=1, me_ogs=IL * HD // W)
         self.su({"M", "Z"}, {"DEN"}, tsm, su_nout=1, su_nin=m.heads, a_src=I.SRC_CLO, a_base=lay.cb[(L, "sink")],
                 a_si=1, b_base=V_["M"], b_si=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, c_base=V_["Z"], c_si=1,
                 e1=I.E1_ADDC, dst=I.DST_VM, o_base=V_["DEN"], o_si=1)
@@ -630,9 +689,37 @@ class Builder:
         self.linq(lay.qmat[(L, "wo_b")], "ZA", "Y", set(), set(), to)
 
     def moe(self, L, hook=None):
+        """The router, then the experts software-pipelined across the quantised
+        engine and the stream unit: w13 of expert k+1 runs while expert k's SiLU
+        does, and w2 of expert k while expert k+1's SiLU does (the engine is
+        sequential, so issuing its next op proves the previous one complete).
+        The shared expert reads only x, so it runs beside the router."""
         m, V_, lay = self.m, self.V, self.lay
         t = f"L{L}.router"
+        stride = lay.qmat[(L, "exp_stride")]
+
+        def expert(k):
+            shared = k == m.k_exp
+            te = f"L{L}.shared" if shared else f"L{L}.experts"
+            if shared:
+                w13, w2, ind = lay.qmat[(L, "shared", "w13")], lay.qmat[(L, "shared", "w2")], {}
+            else:
+                w13, w2 = lay.qmat[(L, "exp", 0, "w13")], lay.qmat[(L, "exp", 0, "w2")]
+                ind = dict(qe_ind=1, qe_ibase=V_["EID"] + k, qe_istride=stride)
+            gu = V_[f"GU{k}"]
+            f = dict(su_nout=1, su_nin=64, a_base=gu, a_si=1, a_min=1, imm3=f32(m.limit), c_base=gu + 64, c_si=1,
+                     c_clip=1, sfu=I.SFU_SILU, e1=I.E1_MULC, rnd=1, dst=I.DST_VM, o_base=V_[f"ACT{k}"], o_si=1)
+            if not shared:
+                f.update(b_base=V_["WGT"] + k, e2=I.E2_MULB)
+            return (lambda: self.linq(w13, "XN", f"GU{k}", {"EID"}, set(), te, **ind),
+                    lambda: self.su({f"GU{k}", "WGT"}, {f"ACT{k}"}, te, **f),
+                    lambda: self.linq(w2, f"ACT{k}", f"E{k}", {"EID"}, set(), te, **ind))
+
+        sh = expert(m.k_exp)
+        sh[0]()                                        # shared w13 beside the router
         self.me(lay.mat[(L, "gate")], V_["XN"], V_["G12"], {"XN"}, {"G12"}, t)
+        sh[1]()
+        sh[2]()
         self.su({"G12"}, {"SC"}, t, su_nout=1, su_nin=m.n_exp, a_base=V_["G12"], a_si=1, sfu=I.SFU_SPSQRT,
                 dst=I.DST_VM, o_base=V_["SC"], o_si=1)
         self.su({"SC"}, {"BI"}, t, su_nout=1, su_nin=m.n_exp, a_base=V_["SC"], a_si=1, d_src=I.SRC_CLO,
@@ -646,26 +733,20 @@ class Builder:
         self.su({"SC", "EID", "DEN1"}, {"WGT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1,
                 a_ind=I.IND_I, a_ibase=V_["EID"], b_base=V_["DEN1"], m1=I.M1_DIVB, m2=I.M2_IMM,
                 imm1=f32(m.route_scale), dst=I.DST_VM, o_base=V_["WGT"], o_si=1)
-        stride = lay.qmat[(L, "exp_stride")]
-        for k in range(m.k_exp + 1):
+        ex = [expert(k) for k in range(m.k_exp)]
+        ex[0][0]()
+        if m.k_exp > 1:
+            ex[1][0]()
+        for k in range(m.k_exp):
             if hook and k == MOE_HOOK:
                 hook()
-            shared = k == m.k_exp
-            te = f"L{L}.shared" if shared else f"L{L}.experts"
-            if shared:
-                w13, w2, ind = lay.qmat[(L, "shared", "w13")], lay.qmat[(L, "shared", "w2")], {}
-            else:
-                w13, w2 = lay.qmat[(L, "exp", 0, "w13")], lay.qmat[(L, "exp", 0, "w2")]
-                ind = dict(qe_ind=1, qe_ibase=V_["EID"] + k, qe_istride=stride)
-            self.linq(w13, "XN", f"GU{k}", {"EID"}, set(), te, **ind)
-            gu = V_[f"GU{k}"]
-            f = dict(su_nout=1, su_nin=64, a_base=gu, a_si=1, a_min=1, imm3=f32(m.limit), c_base=gu + 64, c_si=1,
-                     c_clip=1, sfu=I.SFU_SILU, e1=I.E1_MULC, rnd=1, dst=I.DST_VM, o_base=V_[f"ACT{k}"], o_si=1)
-            if not shared:
-                f.update(b_base=V_["WGT"] + k, e2=I.E2_MULB)
-            self.su({f"GU{k}", "WGT"}, {f"ACT{k}"}, te, **f)
-            self.linq(w2, f"ACT{k}", f"E{k}", {"EID"}, set(), te, **ind)
-        if hook and MOE_HOOK > m.k_exp:
+            if k > 0:
+                ex[k - 1][2]()                         # w2 of the previous expert (its SiLU drained)
+            ex[k][1]()                                 # SiLU k (its w13 completed: a later QE op issued)
+            if k + 2 < m.k_exp:
+                ex[k + 2][0]()                         # w13 two ahead
+        ex[m.k_exp - 1][2]()
+        if hook and MOE_HOOK >= m.k_exp:
             hook()
         ty = f"L{L}.moe_sum"
         for k in range(1, m.k_exp + 1):
@@ -683,7 +764,7 @@ class Builder:
                     dst=I.DST_VM, o_base=V_["PF"], o_si=1)
             self.su(set(), {"H", "SSX"}, "embed", su_nout=4, su_nin=160, a_src=I.SRC_WROM,
                     a_base=lay.emb_word * W * GR, a_d=DY["EMBED"], a_si=1, dst=I.DST_VM, o_base=V_["H"], o_so=160,
-                    o_si=1, red=I.RED_SUM, red_sq=1, red_whole=1, r_base=V_["SSX"])
+                    o_si=1, red=I.RED_SUM, red_sq=1, red_tree=1, r_base=V_["SSX"])
         for L in layers:
             if L in m.engram.layer_ids:
                 self.engram(L)
@@ -707,27 +788,151 @@ class Builder:
         return schedule(self.prog)
 
 
+def su_static(f):
+    """A stream op whose vector-memory traffic is the same at every position: it
+    always issues, its counts and vector-memory bases take no DYN value, and A is
+    not gathered."""
+    if f.get("pred", 0) != I.PRED_ALWAYS or f.get("su_d_nout", 0) or f.get("su_d_nin", 0) or f.get("a_ind", 0):
+        return False
+    if f.get("red", 0) == I.RED_SEQ:
+        return False
+    return all(not f.get(f"{x}_d", 0) for x in "abcd" if f.get(f"{x}_src", 0) == I.SRC_VM) and \
+        not (f.get("dst", 0) == I.DST_VM and f.get("o_d", 0))
+
+
+def su_vectors(f, lanes=None):
+    """Per element (o, i) of a static stream op: its vector index, and its
+    vector-memory addresses read (A..D) and written (the element write)."""
+    lanes = lanes or I.SU_LANES
+    no, ni = f.get("su_nout", 0), f.get("su_nin", 0)
+    o, i = (x.reshape(-1) for x in np.meshgrid(np.arange(no), np.arange(ni), indexing="ij"))
+    vec = f.get("su_vec", 0)
+    if vec == I.VEC_I:
+        v = o * -(-ni // lanes) + i // lanes
+    elif vec == I.VEC_O:
+        v = (o // lanes) * ni + i
+    else:
+        v = o * ni + i
+
+    def at(x, half=False):
+        ii = i >> 1 if half else i
+        return f.get(f"{x}_base", 0) + o * f.get(f"{x}_so", 0) + ii * f.get(f"{x}_si", 0)
+    reads = []
+    for x in "abcd":
+        if f.get(f"{x}_src", 0) != I.SRC_VM:
+            continue
+        if x == "c" and f.get("c_pair"):
+            reads.append(at("a") ^ 1)
+        else:
+            reads.append(at(x, x in "bd" and f.get("b_half")))
+    writes = at("o") if f.get("dst", 0) == I.DST_VM else None
+    return v, reads, writes
+
+
+def chase_distance(prev, cur, lanes=None):
+    """The stream unit's chase distance D for `cur` right behind `prev` (both
+    static, same class): `cur` emits its first vector once fewer than D vectors
+    are in flight, then one per cycle, while `prev` (emitted without gaps)
+    retires one per cycle ahead of it -- so vector v goes only once `prev` has
+    retired every vector that wrote what v reads.  With n1 vectors in `prev`
+    and need[v] = 1 + the last of them that v reads (0 if none),
+    D = 1 + min_v (n1 + v - need[v])."""
+    pv, _, pw = su_vectors(prev, lanes)
+    n1 = int(pv.max()) + 1
+    writer = {}
+    if pw is not None:
+        for a, v in zip(pw.tolist(), pv.tolist()):
+            writer[a] = max(writer.get(a, -1), v)
+    cv, reads, _ = su_vectors(cur, lanes)
+    nv = int(cv.max()) + 1
+    need = np.zeros(nv, dtype=np.int64)
+    for r in reads:
+        w = np.array([writer.get(a, -1) for a in r.tolist()], dtype=np.int64) + 1
+        np.maximum.at(need, cv, w)
+    return int(1 + np.min(n1 + np.arange(nv) - need))
+
+
+def never_skipped(f):
+    """An op that issues at every position: no predicate and no count from a DYN value."""
+    if f.get("pred", 0) != I.PRED_ALWAYS:
+        return False
+    if f["unit"] == I.UNIT_XU and f.get("xu_op", 0) == I.XU_SEL:
+        return f.get("xu_d_n", 0) == 0 and f.get("xu_n", 0) > 0
+    return True
+
+
+CHASE = True                     # stream ops chase the previous stream op (su_chase) where they can
+
+
+def su_class(f):
+    """The stream unit's class: the depth an element of the op takes (ot_hdc_v41_stream)."""
+    return (f.get("m1", 0) in (I.M1_DIVB, I.M1_DIVIMM), f.get("sfu", 0)) + su_stages(f)
+
+
+def su_stages(f):
+    """Which 5-cycle stages an op uses: M1 (a multiply or divide), M2 (a multiply, or
+    Q's multiply, which spans it), AD, E1, E2."""
+    return (f.get("m1", 0) not in (I.M1_BYP, I.M1_MAXB), f.get("m2", 0) != I.M2_BYP or f.get("qm", 0) != I.QM_OFF,
+            f.get("ad", 0) != I.AD_BYP, f.get("e1", 0) != I.E1_BYP, f.get("e2", 0) != I.E2_BYP)
+
+
 def schedule(prog):
     """Wait masks: an instruction waits for every unit holding an in-flight
-    instruction it conflicts with (it reads what that unit writes, or writes what
-    it reads or writes).  A unit executes in order, so waiting for it to drain
-    covers all its older work."""
+    instruction it conflicts with.  On ANOTHER unit a conflict is any overlap (it
+    reads what that unit writes, or writes what it reads or writes).  On its OWN
+    unit only a read of what the unit writes conflicts: a unit starts an op after
+    the previous op's last element has been read, and writes in issue order --
+    the stream unit because a class change drains it and a class fixes the depth
+    (its reducer writes later, so a write over a reducer's output still waits),
+    the matrix engine when consecutive ops share the split and weight source
+    (the result latency).  A unit executes in order, so waiting for it to drain
+    covers all its older work.  The quantised engine and the auxiliary unit are
+    SEQUENTIAL (an op is accepted only once the previous one has written
+    everything), so once an op that is never skipped has issued on one of them,
+    every older op there is complete: its conflicts are forgotten."""
     out = []
     rd = {u: set() for u in I.UNITS}
     wr = {u: set() for u in I.UNITS}
+    rw = {u: set() for u in I.UNITS}              # reducer outputs (stream unit)
+    last = {}
+    last_su = None                                  # the previous stream op (chase source)
+    sequential = (I.UNIT_QE, I.UNIT_XU)
     for f, reads, writes, tag in prog:
         f = dict(f)
         wait = f.get("wait", 0)
+        own = f["unit"]
+        red = set(f.pop("_redw", ()))
+        chase = 0
         for u in I.UNITS:
-            if (reads & wr[u]) or (writes & (rd[u] | wr[u])):
+            if u == own:
+                c = reads & wr[u]
+                if u == I.UNIT_SU and c and CHASE and not (reads & rw[u]) and su_static(f) and last_su \
+                        and su_static(last_su) and su_class(f) == su_class(last_su):
+                    chase = chase_distance(last_su, f)
+                    c = set()                      # chase the previous stream op instead of draining
+                if u == I.UNIT_SU:
+                    c = c or (writes & rw[u])
+                if u == I.UNIT_ME and last.get(u) != (f.get("me_split", 0), f.get("me_wsrc", 0)):
+                    c = c or (writes & wr[u])
+            else:
+                c = (reads & wr[u]) or (writes & (rd[u] | wr[u]))
+            if c:
                 wait |= 1 << (u - 1)
         for u in I.UNITS:
             if wait >> (u - 1) & 1:
-                rd[u], wr[u] = set(), set()
+                rd[u], wr[u], rw[u] = set(), set(), set()
         f["wait"] = wait
-        if f["unit"] in rd:
-            rd[f["unit"]] |= reads
-            wr[f["unit"]] |= writes
+        if own == I.UNIT_SU:
+            f["su_chase"] = chase if not (wait >> (I.UNIT_SU - 1) & 1) else 0
+            last_su = f
+        if own in sequential and never_skipped(f):
+            rd[own], wr[own] = set(), set()
+        if own in rd:
+            rd[own] |= reads
+            wr[own] |= writes
+            rw[own] |= red
+            if own == I.UNIT_ME:
+                last[own] = (f.get("me_split", 0), f.get("me_wsrc", 0))
         f["_tag"] = tag
         out.append(f)
     return out
@@ -787,14 +992,15 @@ class Machine:
         xb = f["me_xbase"] + d[f["me_d_xbase"]]
         ob = f["me_obase"] + d[f["me_d_obase"]]
         split = 0 if f["me_wsrc"] else f["me_split"]
+        hg = f["me_hg"] if f["me_wsrc"] else 0
         S = 1 << split
-        per_round = GR // S
-        r, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(per_round), np.arange(IL),
-                                                         np.arange(W), indexing="ij"))
+        per_round = GR // S >> hg                    # tiles one round covers
+        r, h, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(1 << hg), np.arange(per_round),
+                                                            np.arange(IL), np.arange(W), indexing="ij"))
         t = r * per_round + q
         nidx = (t * IL + j) * W + l
         keep = (nidx < n) if f["me_mmode"] == 0 else (t * W + l < n)
-        r, q, t, j, l, nidx = r[keep], q[keep], t[keep], j[keep], l[keep], nidx[keep]
+        r, h, q, t, j, l, nidx = r[keep], h[keep], q[keep], t[keep], j[keep], l[keep], nidx[keep]
         parts = []
         for c in range(S):
             g = q * S + c
@@ -806,7 +1012,7 @@ class Machine:
                 else:
                     word = wb + r * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
                     w = self.wrom_f32(word * (W * GR) + g * W + l)
-                x = self.vm[xb + c * f["me_xcs"] + k * f["me_xks"] + j * f["me_xjs"]]
+                x = self.vm[xb + (c + h) * f["me_xcs"] + k * f["me_xks"] + j * f["me_xjs"]]
                 if f["me_round"]:
                     x = G.to_bf16(x)
                 acc = G.add(acc, G.mul(w, x))
@@ -815,7 +1021,7 @@ class Machine:
             parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
         acc = parts[0]
         if f["me_oen"]:
-            self.vm[(ob + t * f["me_ots"] + j * f["me_ojs"]) * W + l] = acc
+            self.vm[(ob + t * f["me_ots"] + h * f["me_ogs"] + j * f["me_ojs"]) * W + l] = acc
         if f["me_amax"]:
             order = np.argsort(nidx)
             self.logits = acc[order]
@@ -823,13 +1029,19 @@ class Machine:
 
     # -- hyper-connection projection engine ------------------------------------------------
     def he(self, f):
-        """out[row] = sum_k w[row, k] * x[k], sequential from +0 (binary32)."""
-        n, K = f["he_nout"], f["he_k"]
-        acc = np.zeros(I.HE_LANES * IL, dtype=F)
+        """out[row] = sum_k w[row, k] * x[k]: chunk c (he_k terms from x[c*he_k])
+        sequential from +0 in lane group c, the HC_SPLIT chunk sums a pairwise tree."""
+        n, K, S, NL = f["he_nout"], f["he_k"], V.HC_SPLIT, I.HE_LANES
+        acc = np.zeros((S, NL * IL), dtype=F)
         for k in range(K):
-            w = self.hrom[f["he_wbase"] + k * IL: f["he_wbase"] + (k + 1) * IL].reshape(-1)
-            acc = G.add(acc, G.mul(w, self.vm[f["he_xbase"] + k]))
-        self.vm[f["he_obase"]:f["he_obase"] + n] = acc[:n]
+            w = self.hrom[f["he_wbase"] + k * IL: f["he_wbase"] + (k + 1) * IL].reshape(IL, S, NL)
+            w = w.transpose(1, 0, 2).reshape(S, IL * NL)               # [chunk, row j*NL + l]
+            x = self.vm[f["he_xbase"] + np.arange(S) * K + k]
+            acc = G.add(acc, G.mul(w, x[:, None]))
+        parts = list(acc)
+        while len(parts) > 1:
+            parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+        self.vm[f["he_obase"]:f["he_obase"] + n] = parts[0][:n]
 
     # -- stream unit -------------------------------------------------------------------------
     def addr(self, f, s, no, ni, idx=None):
@@ -904,7 +1116,13 @@ class Machine:
         out = np.asarray(u, dtype=F).reshape(-1)
         if f["rnd"]:
             out = G.to_bf16(out)
-        if f["red"]:
+        if f["red"] and f["red_tree"]:
+            v = G.mul(out, out) if f["red_sq"] else out
+            x = V.split_sum_parts([G.reduce_sum(sg) for sg in v.reshape(no, ni)])
+            if f["red_rnd"]:
+                x = G.to_bf16(x)
+            self.vm[f["r_base"]] = x
+        elif f["red"]:
             v = G.mul(out, out) if f["red_sq"] else out
             segs = v.reshape(1, -1) if f["red_whole"] else v.reshape(no, ni)
             vals = []
@@ -1049,7 +1267,8 @@ def write_images(out, lay, prog, roms_from=None):
             (out / n).symlink_to(Path(roms_from).resolve() / n)
         return len(words)
     (out / "wrom.hex").write_text(hexwords((pack_lanes(w, 16) for w in lay.words), 16 * W * GR))
-    (out / "hrom.hex").write_text(hexwords((pack_lanes(G.bits(w), 32) for w in lay.hwords), 32 * I.HE_LANES))
+    (out / "hrom.hex").write_text(hexwords((pack_lanes(G.bits(w), 32) for w in lay.hwords),
+                                           32 * I.HE_LANES * V.HC_SPLIT))
     (out / "crom.hex").write_text(hexwords(((f32(hi) << 32) | f32(lo) for lo, hi in lay.crom), 64))
     qw = []
     for cw, ew in zip(lay.qcodes, lay.qexp):

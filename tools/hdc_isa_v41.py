@@ -2,17 +2,29 @@
 """Instruction set of the DeepSeek-V4.1 configuration of the hardwired decode core.
 
 The V4.1 core (rtl/hdc/v41/ot_hdc_core_v41.sv) is the reduced-Qwen3 core
-(tools/hdc_isa.py) with more units and a wider stream pipeline.  It shares the
-matrix-vector engine (ot_hdc_matvec, unchanged: exact BF16 lanes) and keeps its
-field semantics; the other units are:
+(tools/hdc_isa.py) with more units and a wider stream pipeline.  Its matrix-
+vector engine is the Qwen3 core's (exact BF16 lanes, ot_hdc_matvec's field
+semantics) with head groups added (ot_hdc_v41_matvec, below); the other units
+are:
 
+* The matrix engine's KV-sourced ops may take HEAD GROUPS (`me_hg`, H = 2^hg,
+  ot_hdc_v41_matvec): the G lane groups form H head groups of G/H groups; head
+  group h reads x at + h*xcs and writes at + h*ogs (words), and a round covers
+  G/H tiles of 16 rows instead of G.  With hg = 0 it is ot_hdc_matvec.
 * HE, the hyper-connection projection engine (ot_hdc_v41_hcproj): the FP32-
-  weight mixes matvec_fp32(fn, flat), NL lanes x IL interleaved outputs of the
-  qualified binary32 multiplier and adder, sequential over K per output; word
-  wbase + k*IL + j holds rows j*NL + l.  It runs beside the matrix engine.
+  weight mixes matvec(fn, flat, HC_SPLIT), HC_SPLIT x NL lanes x IL
+  interleaved outputs of the qualified binary32 multiplier and adder; K is cut
+  into HC_SPLIT chunks of he_k, each sequential in its lane, the chunk sums a
+  pairwise tree; word wbase + k*IL + j holds, in lane c*NL + l, row j*NL + l at
+  column c*he_k + k.  It runs beside the matrix engine.
 
 * SU, the V4.1 stream unit (ot_hdc_v41_stream): a 2-D element loop (outer o,
-  inner i), one element per cycle, four operand streams A, B, C, D (vector
+  inner i) over SU_LANES lanes.  `su_vec` picks what a cycle issues: SCALAR
+  (one element, lane 0), VEC_I (lanes take i .. i+SU_LANES-1 of one o) or
+  VEC_O (lanes take o .. o+SU_LANES-1 at one i: each lane owns whole
+  segments, so per-segment reductions keep the scalar order).  Lane 0 has every
+  SFU function; the other lanes lack rsqrt, sqrt, sqrt(softplus) and the Engram
+  gate (those ops are SCALAR).  Four operand streams A, B, C, D (vector
   memory, constant ROM lo/hi word, or -- A only -- the BF16 weight ROM), and a
   fixed pipeline every element passes:
 
@@ -27,9 +39,11 @@ field semantics; the other units are:
 
   sigmoid(R) = 1/(exp(-R)+1) and silu(R) = R/(exp(-R)+1) divide (IEEE), as the
   golden does.  The reducer takes out (or out*out) per outer segment, or over
-  the whole op (`red_whole`); SUM (P=8 interleaved partials, pairwise tree),
+  the whole op (`red_whole`, SCALAR only); SUM (P=8 interleaved partials, pairwise tree),
   MAX, or SEQ (one sequential partial: the unit issues one element every 8
-  cycles); `red_rnd` rounds the result to BF16.  A may be GATHERED: its i- or
+  cycles); `red_tree` sums each segment (<= 16) and adds the segment sums by a
+  pairwise tree padded with +0 (hdc_golden_v41.split_sum); `red_rnd` rounds
+  the result to BF16.  A may be GATHERED: its i- or
   o-offset is an integer index read from the vector memory (`a_ind`).
   Pair mode (`c_pair`) reads C at A's address XOR 1 and B at i >> 1
   (`b_half`): the interleaved-pair RoPE in one pass.
@@ -46,12 +60,17 @@ field semantics; the other units are:
 
 Sequencing.  An instruction names the units whose in-flight work it must see
 drained (`wait`, a mask; bit u-1 for unit u, u = ME, SU, QE, XU, HE); the program generator computes
-it from region hazards, so independent units overlap.  `pred` skips an
+it from region hazards, so independent units overlap.  A stream op that reads the
+previous stream op's element writes may instead CHASE it (`su_chase` = D > 0,
+same class): it is accepted behind that op and emits a vector only while fewer
+than D vectors are in flight, D derived from the two ops' write and read orders
+so no read overtakes its write.  `pred` skips an
 instruction by position parity (group-completing compressor steps) or at
 position 0 (an empty index set).  A count that evaluates to zero skips.
 
 `python3 tools/hdc_isa_v41.py` regenerates rtl/hdc/v41/ot_hdc_isa_v41.svh.
 """
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +81,7 @@ GROUPS = 4            # ME lane groups
 INTERLEAVE = 8        # ME / QE outputs in flight per lane
 BL = 16               # QE block-dot lanes
 HE_LANES = 3          # HE lanes (x INTERLEAVE outputs)
+SU_LANES = int(os.environ.get("HDC_SW", 8))    # SU lanes: elements per cycle (a power of two, >= 4)
 T_MAX = 144           # attention rows per layer: window 128 + 16 selected
 POS_MAX = 128         # positions provisioned (max_seq_len of the reduced model)
 VM_ELEMS = 65536
@@ -80,7 +100,7 @@ PRED_ALWAYS, PRED_ODD, PRED_NZ = range(3)
 DYN_NAMES = [
     "ZERO", "EMBED", "ROPE", "ROPE_G2", "POS", "POS1", "N2", "N2M1",
     "NSEL1", "NSEL2", "T1", "T2", "RND_POS1", "RND_N2", "RND_T1", "RND_T2",
-    "ROW", "ROW1", "SLOTW", "SLOTE", "CKV2", "ZERO21", "ZERO22", "ZERO23",
+    "ROW", "ROW1", "SLOTW", "SLOTE", "CKV2", "RND16_POS1", "RND16_N2", "RND16_T1", "RND16_T2",
 ]
 DYN = {n: i for i, n in enumerate(DYN_NAMES)}
 TOPK, RH, HDIM, DIM = 16, 2, 32, 160
@@ -90,9 +110,11 @@ def dyn_values(token, pos):
     n2 = (pos + 1) >> 1
     ns1, ns2 = min(TOPK, pos + 1), min(TOPK, n2)
     rnd = lambda x: (x - 1) // (W_LANES * GROUPS) + 1 if x > 0 else 0
+    rnd16 = lambda x: (x - 1) // W_LANES + 1 if x > 0 else 0          # 16-row tiles (head-group KV ops)
     v = [0, token * DIM, pos * RH, (pos - 1) * RH if pos else 0, pos, pos + 1, n2, n2 - 1 if n2 else 0,
          ns1, ns2, pos + 1 + ns1, pos + 1 + ns2, rnd(pos + 1), rnd(n2), rnd(pos + 1 + ns1), rnd(pos + 1 + ns2),
-         pos * HDIM, (pos + 1) * HDIM, (pos & 1) * 4, (pos & 1) * 64, (n2 - 1) * HDIM if n2 else 0, 0, 0, 0]
+         pos * HDIM, (pos + 1) * HDIM, (pos & 1) * 4, (pos & 1) * 64, (n2 - 1) * HDIM if n2 else 0,
+         rnd16(pos + 1), rnd16(n2), rnd16(pos + 1 + ns1), rnd16(pos + 1 + ns2)]
     return v + [0] * (32 - len(v))
 
 
@@ -108,6 +130,7 @@ E1_BYP, E1_MULC, E1_ADDC, E1_MULIMM, E1_ADDIMM = range(5)
 E2_BYP, E2_MULB, E2_MULIMM = range(3)
 DST_NONE, DST_VM, DST_KV, DST_KVT = range(4)
 RED_NONE, RED_SUM, RED_MAX, RED_SEQ = range(4)
+VEC_SCALAR, VEC_I, VEC_O = range(3)
 # QE / XU
 QE_LINQ, QE_QDQ8, QE_QDQ4, QE_QDQ4E = range(4)
 XU_SEL, XU_SINK, XU_EHASH, XU_EGATHER = range(4)
@@ -121,7 +144,7 @@ FIELDS = [
     ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
     ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
     ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
-    ("me_split", 2), ("me_xcs", A),
+    ("me_split", 2), ("me_xcs", A), ("me_hg", 2), ("me_ogs", A),
     # SU
     ("su_nout", N), ("su_nin", N), ("su_d_nout", D), ("su_d_nin", D),
     ("a_src", 2), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D), ("a_ind", 2), ("a_ibase", A),
@@ -141,6 +164,8 @@ FIELDS = [
     ("xu_layer", 1),
     # HE
     ("he_nout", N), ("he_k", N), ("he_wbase", A), ("he_xbase", A), ("he_obase", A),
+    # SU lane axis (SCALAR, VI, VO) and the segmented-tree reduction
+    ("su_vec", 2), ("red_tree", 1), ("su_chase", N),
 ]
 
 

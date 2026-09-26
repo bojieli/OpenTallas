@@ -190,7 +190,9 @@ class ShapeLayout:
         self.H, self.L, self.NH, self.KV = shape["H"], shape["L"], shape["NH"], shape["KV"]
         self.HD, self.FF, self.V = shape["HD"], shape["FF"], shape["V"]
         self.half, self.eps, self.emb_word = self.HD // 2, 1e-6, 0
+        self.tp, self.die, self.row0 = 1, 0, 0   # one die: build_program reads the tensor-group split
         W = I.W_LANES
+        self.GUB = min(W * IL, self.FF)          # gate/up interleave block, as Layout.GUB
         self.TW = 1 << 20
 
         def mat(n, k):

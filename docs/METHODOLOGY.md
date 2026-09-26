@@ -281,7 +281,7 @@ behavior, or overlap; those require measured traces for the exact runtime.
 
 The rebuilt power model is checked at two shipping parts: A100 lands at 461.7 W
 against 400 W (1.15×, inside the declared 2× tolerance), while HC1 lands at
-87.6 W against 200–250 W (0.44×–0.35×, outside it). A watt,
+77.6 W against 200–250 W (0.39×–0.31×, outside it). A watt,
 joule-per-token, or watts-per-mm² figure derived here may therefore appear only
 as a **model output** with the gate asymmetry and assumed terms disclosed; it is
 not a measured hardware result. Published vendor TDPs and system envelopes are
