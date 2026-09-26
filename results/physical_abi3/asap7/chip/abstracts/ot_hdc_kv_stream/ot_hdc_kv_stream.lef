@@ -142,7 +142,7 @@ MACRO ot_hdc_kv_stream
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 196.848 0.084 196.872 ;
+        RECT  0 196.8 0.084 196.824 ;
     END
   END clk
   PIN fault
