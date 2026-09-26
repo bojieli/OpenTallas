@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- OT-ARCH-001. Published copy: https://claude.ai/artifact/KYaA9ov7ZL3u2pMAi7LKMU . Figures copied from
-     results/roofline/**/analytical.json (N5 vs B200), results/rtl/ and results/physical_abi3/asap7/ as of 2026-09-24. -->
-<title>OpenTallas Architecture Atlas</title>
+<!-- OT-TR-001. Published copy: https://claude.ai/artifact/KYaA9ov7ZL3u2pMAi7LKMU . Figures from committed records on main, 2026-09-26. -->
+<title>OpenTallas Technical Report</title>
+<!-- OT-TR-001. Reorganised from docs/ARCHITECTURE_ATLAS.html (OT-ARCH-001). Figures from committed records on main, 2026-09-26. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -89,119 +89,272 @@ svg text{font-family:"IBM Plex Sans",system-ui,sans-serif}
 svg .t-mono{font-family:"IBM Plex Mono",monospace}
 footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
 .k-me{color:var(--rom)}.k-su{color:var(--hbm)}.k-sel{color:#6B7B3A}.k-sk{color:#7A2E0E}.k-col{color:#5B4B8A}
+.abstract{background:var(--panel);border:1px solid var(--rule);border-radius:5px;padding:16px 18px;display:grid;gap:10px}
+.abstract p{max-width:none}
+.tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:0 6px;border-radius:3px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+.tag.meas{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.tag.mod{background:color-mix(in srgb,var(--hbm) 16%,transparent);color:var(--hbm)}
+.tag.pend{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.tag.sup{background:var(--code);color:var(--muted)}
+.pending{border:1.5px dashed var(--warn);border-radius:5px;padding:12px 14px;background:color-mix(in srgb,var(--warn) 7%,var(--panel));display:grid;gap:4px;font-size:14px}
+.pending .ph{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--warn);font-weight:500}
+.pending p{max-width:none}
+.pending code{background:transparent;padding:0}
+.principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.principle{border:1px solid var(--rule);border-top:3px solid var(--rom);background:var(--panel);border-radius:4px;padding:12px 14px;display:grid;gap:6px;align-content:start}
+.principle .pid{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--rom);letter-spacing:.08em}
+.principle h4{font-size:15.5px}
+.principle p{font-size:13.5px;color:var(--muted)}
+.principle.hbm{border-top-color:var(--hbm)} .principle.hbm .pid{color:var(--hbm)}
+.calc{font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:var(--code);border-radius:4px;padding:12px 14px;overflow-x:auto;line-height:1.65;white-space:pre}
+.note{font-size:13px;color:var(--muted)}
+.lead{font-size:16px;color:var(--muted)}
+.sub{font-size:12.5px;color:var(--muted)}
+aside.side .l1{font-weight:500;color:var(--ink)}
+table.data tr.rej td:first-child{color:var(--bad)}
+table.data tr.sel td:first-child{color:var(--ok);font-weight:600}
+
 </style>
 </head>
 <body>
-
 <div class="layout">
 <aside class="side" aria-label="Contents">
   <div class="eyebrow" style="margin-bottom:8px">Contents</div>
-  <a href="#s1">1 Introduction</a>
-  <a href="#s2">2 Product definition</a>
-  <a href="#sM">2A Model architectures &amp; operator graphs</a>
-  <a class="l2" href="#sM-2">2A.2 Qwen3-8B graph</a>
-  <a class="l2" href="#sM-3">2A.3 DeepSeek-V4.1 graph</a>
-  <a href="#s3">3 Architecture principles</a>
-  <a href="#s4">4 Decode core</a>
-  <a class="l2" href="#s4-1">4.1 Top level &amp; interfaces</a>
-  <a class="l2" href="#s4-2">4.2 Matrix engine</a>
-  <a class="l2" href="#s4-3">4.3 Stream unit</a>
-  <a class="l2" href="#s4-4">4.4 Sequencer &amp; control</a>
-  <a class="l2" href="#s4-5">4.5 Instruction format</a>
-  <a class="l2" href="#s4-6">4.6 Memory maps</a>
-  <a class="l2" href="#s4-7">4.7 Numerics contract</a>
-  <a href="#s5">5 Core performance</a>
-  <a href="#s6">6 Multi-chip systems</a>
-  <a class="l2" href="#s6-1">6.1 Link protocol</a>
-  <a class="l2" href="#s6-2">6.2 ROM array</a>
-  <a class="l2" href="#s6-3">6.3 ROM wafer</a>
-  <a class="l2" href="#s6-4">6.4 Qwen3-8B reticle</a>
-  <a class="l2" href="#s6-5">6.5 V4.1 logical datapath</a>
-  <a class="l2" href="#s6-6">6.6 V4.1 array: physical layout</a>
-  <a class="l2" href="#s6-7">6.7 V4.1 wafer: datapath &amp; layout</a>
-  <a class="l2" href="#s6-8">6.8 Topology selection &amp; critical path</a>
-  <a class="l2" href="#s6-9">6.9 Wafer vs array at equal silicon</a>
-  <a href="#s7">7 DeepSeek-V4.1 package</a>
-  <a href="#s8">8 HBM comparator</a>
-  <a href="#s9">9 System performance</a>
-  <a href="#s10">10 Physical implementation</a>
-  <a href="#s11">11 Verification</a>
-  <a href="#s12">12 Risks &amp; open issues</a>
-  <a href="#sA">A Glossary &amp; reproduce</a>
+  <a class="l1" href="#abstract">Abstract</a>
+  <a class="l1" href="#s1">1 Introduction</a>
+  <a class="l1" href="#s2">2 Background &amp; related work</a>
+  <a class="l1" href="#s3">3 Design principles</a>
+  <a class="l2" href="#s3-2">3.2 Why ROM beats HBM</a>
+  <a class="l1" href="#s4">4 First-order analysis</a>
+  <a class="l1" href="#s5">5 Model selection &amp; graphs</a>
+  <a class="l2" href="#s5-3">5.3 Qwen3-8B graph</a>
+  <a class="l2" href="#s5-4">5.4 DeepSeek-V4.1 graph</a>
+  <a class="l1" href="#s6">6 System architecture</a>
+  <a class="l2" href="#s6-2">6.2 Qwen3-8B reticle</a>
+  <a class="l2" href="#s6-3">6.3 DeepSeek-V4.1 array</a>
+  <a class="l2" href="#s6-4">6.4 HBM comparator</a>
+  <a class="l2" href="#s6-5">6.5 Host interface &amp; runtime</a>
+  <a class="l1" href="#s7">7 Decode core (HDC)</a>
+  <a class="l2" href="#s7-1">7.1 Top level</a>
+  <a class="l2" href="#s7-2">7.2 Matrix engine</a>
+  <a class="l2" href="#s7-3">7.3 Stream unit</a>
+  <a class="l2" href="#s7-4">7.4 Sequencer &amp; control</a>
+  <a class="l2" href="#s7-5">7.5 Instruction format</a>
+  <a class="l2" href="#s7-6">7.6 Memory maps</a>
+  <a class="l2" href="#s7-7">7.7 Numerics contract</a>
+  <a class="l1" href="#s8">8 V4.1 units &amp; multi-die fabric</a>
+  <a class="l1" href="#s9">9 Memory subsystem &amp; test</a>
+  <a class="l1" href="#s10">10 Verification</a>
+  <a class="l1" href="#s11">11 Physical implementation</a>
+  <a class="l1" href="#s12">12 Performance evaluation</a>
+  <a class="l1" href="#s13">13 Alternatives rejected</a>
+  <a class="l1" href="#s14">14 Readiness, risks, future work</a>
+  <a class="l1" href="#sA">A Glossary &amp; reproduction</a>
 </aside>
 
 <main>
 <header class="doc">
-  <div class="eyebrow">OpenTallas · Architecture Specification</div>
-  <h1>Hardwired ROM inference machines and the HBM comparator</h1>
-  <p style="font-size:16.5px;color:var(--muted)">Architecture of the model-specific ROM machine — its pipelined decode core, multi-chip array and wafer systems, and the DeepSeek-V4.1 package — with the analytical comparison against a best-practice HBM/GPU machine, implementation status and open issues.</p>
+  <div class="eyebrow">OpenTallas · Technical Report</div>
+  <h1>Hardwired-ROM decode machines for Qwen3-8B and DeepSeek-V4.1-Flash, and an HBM comparator</h1>
+  <p class="lead">A model-specific inference architecture that stores the weights in mask ROM beside the multipliers and runs decode as a static, fully pipelined dataflow. This report gives its principles, first-order analysis, microarchitecture, ASAP7 implementation and measured results, and marks every figure as measured, modelled or pending.</p>
   <div class="control" role="table" aria-label="Document control">
-    <div><b>Document</b>OT-ARCH-001</div>
-    <div><b>Revision</b>0.4 (2026-09-24)</div>
-    <div><b>Status</b>Draft · exploration, pre-tape-out</div>
+    <div><b>Document</b>OT-TR-001 (supersedes OT-ARCH-001)</div>
+    <div><b>Revision</b>1.0 draft · 2026-09-26</div>
+    <div><b>Status</b>pre-tape-out research</div>
     <div><b>RTL process</b>ASAP7 (7 nm predictive PDK)</div>
-    <div><b>Analytical node</b>N5 vs B200 · N6 vs A100</div>
+    <div><b>Analytical node</b>N5/N6 ROM vs B200</div>
     <div><b>Source of truth</b>OpenTallas repository, main</div>
   </div>
 </header>
 
-<!-- 1 -->
+<section id="abstract">
+  <h2>Abstract</h2>
+  <div class="abstract">
+    <p>Batch-1 decode on an HBM accelerator is bounded by streaming every weight from memory once per token, and on a GPU additionally by the cost of each dependent operator boundary. OpenTallas removes both: weights are mask ROM next to the multiply-accumulate lanes, and a compiled static schedule replaces kernel launches and cross-core synchronisation. We define the architecture for three targets: a one-reticle Qwen3-8B chip, a multi-package DeepSeek-V4.1-Flash array, and an HBM comparator built on the same decode core. A reduced Qwen3 token decodes bit-exactly in RTL in 32,246 cycles<span class="tag meas">measured</span> and a reduced DeepSeek-V4.1 token in 344,109 cycles<span class="tag meas">measured</span>. The token-path units route at 1.03–1.62 GHz on ASAP7<span class="tag meas">measured</span>; the whole-core routes are not closed<span class="tag pend">pending</span>. The bottom-up critical-path model gives 8,680 tokens/s per user for Qwen3-8B on one reticle<span class="tag mod">modelled</span>, against a weight-streaming ceiling of 488 tokens/s per user on one B200<span class="tag mod">first-order</span>. The DeepSeek-V4.1 array's per-user rate is being re-derived with realistic links and packaging<span class="tag pend">pending</span>.</p>
+    <div class="tablebox"><table class="data">
+      <caption>Headline results and their status</caption>
+      <thead><tr><th>Result</th><th class="r">Value</th><th>Status</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Reduced Qwen3 token, bit-exact in every logit, vector memory and KV cache</td><td class="r m">32,246 cycles</td><td><span class="tag meas">measured</span></td><td class="m">results/rtl/hdc_decode_campaign.json</td></tr>
+        <tr><td>Reduced DeepSeek-V4.1 token (all 40 layers), bit-exact</td><td class="r m">344,109 cycles</td><td><span class="tag meas">measured</span></td><td class="m">results/rtl/hdc_v41_decode_campaign.json</td></tr>
+        <tr><td>Matrix engine routed clock (ASAP7, 0.9 ns target)</td><td class="r m">1,099 MHz, −10 ps</td><td><span class="tag meas">measured</span> not closed</td><td class="m">results/physical_abi3/asap7/hdc/ot_hdc_matvec</td></tr>
+        <tr><td>Qwen3-8B, one reticle, per user at batch 1</td><td class="r m">8,680 tok/s</td><td><span class="tag mod">modelled</span></td><td class="m">results/roofline/critical_path/decode_critical_path.json</td></tr>
+        <tr><td>Qwen3-8B on one B200, weight-streaming ceiling at batch 1</td><td class="r m">488 tok/s</td><td><span class="tag mod">first-order</span></td><td>§4.1</td></tr>
+        <tr><td>GPU all-SM dependent boundary (Blackwell RTX PRO 6000)</td><td class="r m">≈1.0 µs</td><td><span class="tag meas">measured</span></td><td class="m">results/gpu/blackwell_gather_designs.json</td></tr>
+        <tr><td>DeepSeek-V4.1 array, per user at batch 1</td><td class="r m">—</td><td><span class="tag pend">pending</span> (5,475 <span class="tag sup">optimistic links</span>)</td><td>§12.3</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
 <section id="s1">
   <h2><span class="num">1</span>Introduction</h2>
-  <p><b>Purpose.</b> Define the architecture of the ROM inference machine family, the design rules its blocks follow, and the evidence each claim rests on. Numbers in this document are copied from committed simulation, place-and-route and analytical records; each section names its source.</p>
-  <p><b>Scope.</b> In scope: the hardwired decode core (HDC), its instruction set and numerics, the chip-to-chip link and array/wafer systems, the DeepSeek-V4.1 package, the analytical comparison with the HBM machine. Out of scope: analog PHY design, packaging, test/DFT, power delivery.</p>
+  <p><b>The problem.</b> An interactive language-model user waits on decode: one token at a time, each depending on the last. At batch 1 an accelerator that keeps weights in HBM must read every active weight once per token, so a user's rate is capped at memory bandwidth ÷ active weight bytes, however many FLOPs the chip has. Batching amortises the reads across users but does not make any one user faster. A GPU adds a second tax: every dependent operator boundary must pass through the L2 cache, which we measure at about 1 µs per boundary that gathers from every core.</p>
+  <p><b>The thesis.</b> If the model is fixed, its weights can be hardware. Mask ROM placed beside the multipliers delivers weights at the rate the lanes consume them, with aggregate bandwidth proportional to silicon area rather than to HBM pins. With the weights and the schedule both fixed, control can be compiled away: a decode step becomes a static dataflow whose latency is the critical path of its dependent operator chain, executed by fully pipelined units at about 1 GHz. The price is flexibility, since each model needs its own mask set, and capacity, since a model must fit in the ROM of the dies it is built from.</p>
+  <p><b>Contributions.</b></p>
+  <ul>
+    <li>A hardwired decode core (HDC) whose schedule is the program: a matrix engine, a stream unit and a sequencer with progress-based chaining, with a golden → ISA → program → RTL chain that is bit-exact in every logit (§7, §10).</li>
+    <li>A DeepSeek-V4.1 extension: FP8/MXFP4 block-dot lanes, a one-normalisation-per-clock Sinkhorn unit, threshold top-k select, Engram hashing and gather, and fixed-order collectives for a four-die tensor group (§8).</li>
+    <li>A bottom-up decode critical-path model priced with the routed RTL depths, calibrated against the published Taalas HC1 (§4, §12).</li>
+    <li>A measured GPU dependent-boundary cost on Blackwell, used as the comparator's per-boundary charge instead of published launch-gap figures (§12.4).</li>
+    <li>ASAP7 place and route of the token-path units, memory compilers with self-test and repair, scan and ATPG, a hierarchical full-chip flow, and a host interface with an OpenAI-compatible endpoint (§9, §11, §14).</li>
+  </ul>
+  <p><b>Organisation.</b> §2 positions the work; §3 states the principles and why ROM beats HBM; §4 carries the back-of-envelope arithmetic; §5 fixes the models; §6–§9 describe the design; §10–§12 give verification, physical results and performance; §13 lists the alternatives rejected; §14 tracks tape-out readiness and risks.</p>
   <div class="tablebox"><table class="data">
-    <caption>Conventions</caption>
+    <caption>Table 1-1. Conventions</caption>
     <thead><tr><th>Notation</th><th>Meaning</th></tr></thead>
     <tbody>
-      <tr><td class="m">c′</td><td>the cycle an element's memory address is presented (address register valid); pipeline stages are counted from it (c′+2 = operands captured, …)</td></tr>
-      <tr><td class="m">W, G, IL</td><td>lanes per group (16), lane groups (4 default, parameter), outputs in flight per lane (8)</td></tr>
-      <tr><td class="m">binary32 / BF16</td><td>IEEE-754 single precision; bfloat16 (8-bit exponent, 7-bit fraction), rounded RNE</td></tr>
-      <tr><td class="m">Fmax</td><td>routed maximum frequency reported by OpenROAD after detailed routing (not pre-layout STA)</td></tr>
-      <tr><td class="m">× (ratio)</td><td>ROM machine ÷ HBM machine for the same model, context and metric; &gt; 1 favours ROM</td></tr>
+      <tr><td><span class="tag meas">measured</span></td><td>from an RTL simulation, an ASAP7 route or a hardware benchmark committed in the repository</td></tr>
+      <tr><td><span class="tag mod">modelled</span></td><td>from the analytical or critical-path model; first-order figures are hand arithmetic shown in §4</td></tr>
+      <tr><td><span class="tag pend">pending</span></td><td>an experiment is running or planned; the placeholder names the record that will settle it</td></tr>
+      <tr><td class="m">c′</td><td>the cycle an element's memory address is presented; pipeline stages count from it</td></tr>
+      <tr><td class="m">W, G, IL</td><td>lanes per group (16), lane groups, outputs in flight per lane (8)</td></tr>
+      <tr><td class="m">binary32 / BF16</td><td>IEEE-754 single precision; bfloat16, rounded RNE</td></tr>
+      <tr><td class="m">Fmax</td><td>routed maximum frequency after detailed routing (not pre-layout STA)</td></tr>
     </tbody>
   </table></div>
 </section>
 
-<!-- 2 -->
 <section id="s2">
-  <h2><span class="num">2</span>Product definition</h2>
-  <p>One engine design, three system products and one comparator. The ROM machine is model-specific: weights are fixed in ROM at fabrication. The HBM machine is a general accelerator and is priced at its best practice.</p>
+  <h2><span class="num">2</span>Background and related work</h2>
+  <p><b>Decode is a dependency chain.</b> Each decoder layer is a fixed sequence of matrix-vector products, normalisations, attention and activations, and each step needs the whole output of the one before. At batch 1 the work per step is small, so the time per token is set by bandwidth (reading the weights) and latency (the chain of dependent steps), not by peak arithmetic.</p>
+  <p><b>GPU serving.</b> Production stacks capture decode in CUDA graphs and fuse element-wise work into neighbouring kernels; Programmatic Dependent Launch (compute capability 9.0 and later) overlaps a kernel's prologue with its predecessor. Research megakernels run a whole forward pass as one persistent kernel whose instructions wait on counters in memory (Hazy Research's Llama-1B megakernel, 2025; Mirage Persistent Kernel, arXiv:2512.22219). Both remove launch overhead but not the cross-core dependency, which still travels through L2 (§12.4).</p>
+  <p><b>Dataflow and SRAM machines.</b> Several accelerators keep weights on chip to escape the memory wall, trading capacity for bandwidth; they need many chips or a wafer to hold a large model. <b>Hardwired model silicon</b> goes further and fixes the model in the chip: Taalas HC1 reports Llama-3.1-8B entirely on one reticle-class die at 16,960 tokens/s per user (self-reported), the closest published point to this work and our calibration anchor.</p>
   <div class="tablebox"><table class="data">
-    <caption>Targets</caption>
-    <thead><tr><th>Product</th><th>Model</th><th>Organisation</th><th>Optimised for</th><th>State</th></tr></thead>
+    <caption>Table 2-1. Positioning (qualitative; specific figures need primary citations before publication)</caption>
+    <thead><tr><th>System</th><th>Where weights live</th><th>Dependency / sync mechanism</th><th>Primary optimisation</th><th>Per-user decode focus</th></tr></thead>
     <tbody>
-      <tr><td><b>ROM reticle</b></td><td>Qwen3-8B (8.2B params)</td><td>one die; engines in an on-die layer pipeline; ROM beside each engine's lanes</td><td>per-user latency, energy</td><td><span class="status s-part">core RTL; die concept</span></td></tr>
-      <tr><td><b>ROM array</b></td><td>DeepSeek-V4.1-Flash (552B + 197B Engram)</td><td>packages in a layer pipeline over SerDes links (≈100 ns hops)</td><td>per-user speed, flexibility, yield</td><td><span class="status s-part">units built; integration</span></td></tr>
-      <tr><td><b>ROM wafer</b></td><td>DeepSeek-V4.1-Flash</td><td>the array package as reticle tiles stitched on one wafer (≈10 ns hops)</td><td>aggregate throughput, tokens/J</td><td><span class="status s-open">rejected: no gain at equal silicon (§6.9)</span></td></tr>
-      <tr><td><b>ROM array (later)</b></td><td>DeepSeek-V4-Flash (284B)</td><td>separate chip; reuses the engine library</td><td>—</td><td><span class="status s-open">analysis only</span></td></tr>
-      <tr style="background:var(--hbm-soft)"><td><b>HBM machine</b></td><td>any</td><td>general accelerator; B200/NVL72 class, NVLink, TP/PP/EP</td><td>the comparator</td><td><span class="status s-part">ABI 3.0 RTL</span></td></tr>
+      <tr><td>GPU + CUDA graph / PDL</td><td>HBM</td><td>kernel boundaries; PDL overlaps launch</td><td>throughput under batching</td><td>limited by bandwidth ÷ bytes</td></tr>
+      <tr><td>GPU megakernel (Hazy, MPK)</td><td>HBM</td><td>counters in global memory, one persistent kernel</td><td>batch-1 latency</td><td>yes; L2 round trips remain</td></tr>
+      <tr><td>Groq LPU</td><td>on-chip SRAM across many chips</td><td>compiler-scheduled, deterministic</td><td>low latency</td><td>yes [citation needed]</td></tr>
+      <tr><td>Cerebras WSE</td><td>on-wafer SRAM</td><td>dataflow over a 2-D core mesh</td><td>throughput and latency</td><td>yes [citation needed]</td></tr>
+      <tr><td>SambaNova SN40L</td><td>SRAM + HBM + DDR tiers</td><td>reconfigurable dataflow</td><td>many-model serving</td><td>partly [citation needed]</td></tr>
+      <tr><td>Tenstorrent</td><td>SRAM + DRAM</td><td>Tensix cores on a mesh NoC</td><td>programmable dataflow</td><td>partly [citation needed]</td></tr>
+      <tr><td>d-Matrix Corsair</td><td>SRAM digital in-memory compute</td><td>chiplet dataflow</td><td>inference efficiency</td><td>yes [citation needed]</td></tr>
+      <tr><td>Etched Sohu</td><td>HBM</td><td>transformer-specific datapath</td><td>throughput</td><td>limited by HBM [citation needed]</td></tr>
+      <tr><td>Taalas HC1</td><td>on-die ROM (3/6-bit, self-reported)</td><td>hardwired model</td><td>per-user speed, power</td><td>yes: 16,960 tok/s self-reported</td></tr>
+      <tr style="background:var(--rom-soft)"><td><b>OpenTallas</b></td><td>mask ROM beside the lanes</td><td>compiled static schedule; progress chaining; fixed-order collectives</td><td>per-user latency, bit-exactness</td><td>yes (§12)</td></tr>
     </tbody>
   </table></div>
+  <div class="pending"><div class="ph">Pending · literature review</div><p>Primary citations and verified figures for each system in Table 2-1 (memory capacity, bandwidth, published per-user decode rates) are to be added from vendor papers and conference talks. No figure in that table beyond the HC1 self-reported rate is used anywhere in the analysis.</p></div>
+</section>
+
+<section id="s3">
+  <h2><span class="num">3</span>Design principles</h2>
+  <h3 id="s3-1">3.1 The seven principles</h3>
+  <div class="principles">
+    <div class="principle"><span class="pid">P1</span><h4>Weights are stationary, in ROM beside the multipliers</h4><p>Weight words are laid out in the exact order the engine streams them, so address generation is a counter and every lane group reads its own macro every cycle.</p></div>
+    <div class="principle"><span class="pid">P2</span><h4>Per-user latency is the critical path of the dependent-operator chain</h4><p>A token's time is the longest chain of dependent steps plus the weight sweep on it; every design choice is judged by what it removes from that path (§4.4, §12.3).</p></div>
+    <div class="principle"><span class="pid">P3</span><h4>The schedule is the program; control is compiled away</h4><p>A static list of macro-operations; hazards are resolved at program generation into three issue conditions (none, chase, barrier). No run-time admission, dependency search or interpretation.</p></div>
+    <div class="principle"><span class="pid">P4</span><h4>Every unit is a fixed-latency pipeline at ≈1 GHz in ASAP7</h4><p>Initiation interval 1, no iterative units, no combinational IEEE operations, every port registered; nothing stalls, and memories answer at fixed latency.</p></div>
+    <div class="principle"><span class="pid">P5</span><h4>Bit-exactness is the correctness contract</h4><p>A golden model fixes every rounding in hardware order; the ISA model, the program and the RTL must match it in every logit, the vector memory and the KV cache. An order change is a specification change.</p></div>
+    <div class="principle"><span class="pid">P6</span><h4>Collectives are deterministic and fixed-order</h4><p>Every transfer has the same size, destination and order for every token; reductions sum in a fixed order, so multi-die results are bit-identical to one die's.</p></div>
+    <div class="principle"><span class="pid">P7</span><h4>Measured, not assumed</h4><p>Every figure is bound to a committed record with source hashes; a stale record fails a test. Assumptions carry a grade and a range, and headline figures are tagged.</p></div>
+  </div>
+
+  <h3 id="s3-2">3.2 Why ROM beats HBM accelerators</h3>
+  <p>The advantage follows from five physical arguments. The costs are listed with them, because they bound where the argument holds.</p>
+  <div class="principles">
+    <div class="principle"><span class="pid">R-a · bandwidth</span><h4>Weight bandwidth scales with area, not pins</h4><p>Each ROM macro delivers a word per cycle to the lanes beside it, so aggregate weight bandwidth is (macros × bits per word × clock) and grows with silicon. HBM bandwidth is fixed by stacks and pins: 8 TB/s on a B200. Batch-1 decode stops being memory-bound.</p></div>
+    <div class="principle"><span class="pid">R-b · energy</span><h4>A ROM read costs orders of magnitude less than an HBM access</h4><p>The repository's graded constants: HBM 104.9 pJ/byte end-to-end on a GPU, SRAM 2.6 pJ/byte, ROM 0.08 pJ/byte (sources in <code>configs/hardware/technology.json</code> <code>energy.*</code>). Weight movement per token falls by about 10³ (§4.3).</p></div>
+    <div class="principle"><span class="pid">R-c · density</span><h4>A via-programmed ROM bit is smaller than an SRAM bit</h4><p>ROM cell ≈ 0.33 of an SRAM cell (N5/N6 constant), 0.25 measured on ASAP7. The ASAP7 via-ROM compiler's weight macros reach 149–154 Mb/mm², against 21–34 Mb/mm² for its densest SRAM macros (§9.1). A model of a few billion parameters fits one reticle; a 552 B-parameter MoE fits tens (§4.2).</p></div>
+    <div class="principle"><span class="pid">R-d · latency and control</span><h4>A static dataflow has no kernel boundaries</h4><p>A GPU pays ≈1.0 µs per boundary that gathers from every SM, measured on Blackwell; the HDC sequencer issues a dependent macro-operation every 5 cycles (≈5 ns at 1.03 GHz) and chains consumers on measured progress.</p></div>
+    <div class="principle"><span class="pid">R-e · determinism</span><h4>Utilisation does not need batching</h4><p>Because weights are not re-read per token, a single user keeps the lanes busy; batching adds aggregate throughput (pipeline occupancy) without being the price of efficiency. Results are bit-reproducible.</p></div>
+    <div class="principle hbm"><span class="pid">Costs</span><h4>What ROM gives up</h4><p>No model updates: one mask set per model and version, with its NRE and mask cost. Capacity scales with die count. The KV cache still needs SRAM or HBM, and long-context attention cost is not helped by ROM (§5.1, §13).</p></div>
+  </div>
+  <div class="callout">Consequence for the comparison. A ROM machine's per-user rate is set by its dependency chain and ROM sweep; an HBM machine's by bytes ÷ bandwidth plus its exposed boundary costs. The comparator in this report is given the same hardwired dataflow where that is fair (§6.4), so the remaining gap is the memory technology, not the control.</div>
+</section>
+
+<section id="s4">
+  <h2><span class="num">4</span>First-order analysis</h2>
+  <p>Hand arithmetic with the models' real parameters (§5.2) and the repository's graded constants. Every line names its inputs; the results are checked against the models and measurements in §4.6.</p>
+  <h3 id="s4-1">4.1 The HBM ceiling for one user</h3>
+<div class="calc">Qwen3-8B weights (checkpoint, BF16)      16,381,470,720 B   configs/models/qwen3-8b.json
+B200 HBM bandwidth                        8.0 TB/s           technology.json reference_parts.b200_sxm
+time to stream the weights once           16.38 GB / 8.0 TB/s = 2.05 ms
+per-user ceiling at batch 1               1 / 2.05 ms        ≈ 488 tokens/s   (ignores KV and all compute)</div>
+  <p>The arithmetic intensity at batch 1 is two FLOPs per two-byte weight, about one FLOP per byte, three orders of magnitude below what the tensor cores can consume. No schedule removes this bound without reducing the bytes read per token.</p>
+
+  <h3 id="s4-2">4.2 ROM capacity and die count</h3>
+<div class="calc">DeepSeek-V4.1-Flash checkpoint           510.3 GB = 4.08 Tbit  (7.40 bits/param over 552 B params)
+ROM area in the analytical design        54,404 mm²            docs/WAFER_VS_ARRAY_ISO_AREA.md
+  implied density                        4.08 Tbit / 54,404 mm² ≈ 75 Mbit/mm²  (conservative)
+ASAP7 via-ROM weight macro               149–154 Mb/mm²          docs/MEMORY_COMPILERS_AND_BIST.md §2
+smallest array holding the weights       88 reticle dies;  modelled array: 188 dies (47 × 4)
+
+Qwen3-8B, 8.19 G params
+  BF16  (131 Gbit)  at 75 / 150 Mbit/mm²  → 1,747 / 873 mm²   (does not fit an 815 mm² reticle with compute)
+  4-bit ( 33 Gbit)  at 75 / 150 Mbit/mm²  →   437 / 218 mm²   (fits, leaving room for lanes)</div>
+  <div class="pending"><div class="ph">Pending · Qwen3-8B reticle weight format</div><p>The RTL vehicle is BF16 and bit-exact; the one-reticle chip needs roughly 4-bit weight storage (as HC1 reports 3/6-bit). The accuracy of a 4-bit Qwen3-8B and the ROM-sweep change it implies are not yet evaluated. Settled by: a quantised golden and token agreement study (<code>tools/hdc_golden.py</code> variant) and a re-run of <code>tools/decode_critical_path.py</code>.</p></div>
+
+  <h3 id="s4-3">4.3 Energy of moving weights, per token</h3>
+<div class="calc">bytes of weights per Qwen3-8B token (BF16)   16.38 GB
+HBM   104.9 pJ/B × 16.38 GB  = 1.72 J/token
+SRAM    2.6 pJ/B × 16.38 GB  = 42.6 mJ/token
+ROM    0.08 pJ/B × 16.38 GB  =  1.3 mJ/token     (≈1,300× below HBM; 4-bit storage lowers it further)</div>
+  <p class="note">First-order: weight movement only, no arithmetic, KV or leakage. The pJ/byte constants are graded and sourced in <code>configs/hardware/technology.json</code> (<code>energy.hbm_j_per_byte</code>, <code>sram_read_j_per_byte</code>, <code>rom_read_j_per_byte</code>).</p>
+  <div class="pending"><div class="ph">Pending · energy per token</div><p>Activity-based power from the decode campaigns, energy per token and IR drop for all three architectures. Settled by: the power, IR-drop and clock sign-off workstream (<code>docs/POWER_CLOCK_SIGNOFF.md</code>, not yet on main).</p></div>
+
+  <h3 id="s4-4">4.4 The dependency chain: GPU boundaries against HDC issue</h3>
+<div class="calc">GPU all-SM dependent boundary           ≈ 5 L2 round trips, 2 of them fences   ≈ 1,900 cycles at 2.88 GHz
+  measured, signal only                  659 ns        results/gpu/blackwell_gather_designs.json
+  measured, activation delivered         1,004 ns (bf16) · 1,151 ns (fp32)
+  exposed under a DRAM weight stream     0.74–1.06 µs per GEMV boundary
+Qwen3-8B dependent boundaries per token   ≈ 36 layers × 6 fused boundaries + head ≈ 220
+  GPU boundary time if exposed           220 × ≈1.0 µs ≈ 0.22 ms  (≈11% on top of the 2.05 ms stream)
+HDC dependent issue                      5 cycles ≈ 4.8 ns at 1.034 GHz, consumers chase producer progress
+  Qwen3-8B on one reticle, critical path compute chain 77.3 + ROM sweep 34.5 + control 3.4 = 115.2 µs</div>
+  <p class="note">The six-boundaries-per-layer fusion count is the GPU-baseline model's rule (pending merge); the HDC figures are from <code>decode_critical_path.json</code>.</p>
+
+  <h3 id="s4-5">4.5 Interconnect budget for one V4.1 token (realistic defaults)</h3>
+<div class="calc">pipeline hops on the path                43
+  per hop: 200 ns SerDes + FEC, 41 KB / 1.69 TB/s ≈ 24 ns, CDC ≈ 6 ns   ≈ 230 ns
+  hops                                    43 × 230 ns ≈ 9.9 µs
+collectives on the path                  210
+  per collective: 10–30 ns (ring-of-4 UCIe, diagonal relayed)
+  collectives                            ≈ 2.1–6.3 µs
+share of a ≈183 µs token                 ≈ 7–9%</div>
+  <p class="note">First-order; the defaults are those adopted for the packaging study (§12.3). The interconnect is a small term; the compute chain and the ROM sweep dominate.</p>
+
+  <h3 id="s4-6">4.6 First-order against model and measurement</h3>
   <div class="tablebox"><table class="data">
-    <caption>Decode core — key parameters (default configuration)</caption>
-    <thead><tr><th>Parameter</th><th class="r">Value</th><th>Note</th></tr></thead>
+    <caption>Table 4-1. Predictions checked</caption>
+    <thead><tr><th>Quantity</th><th class="r">First-order</th><th class="r">Model</th><th class="r">Measured</th><th>Status</th></tr></thead>
     <tbody>
-      <tr><td>Matrix lanes</td><td class="r m">64 (4 × 16)</td><td>exact BF16×BF16 multiply, FP32 accumulate; 128 lanes also verified</td></tr>
-      <tr><td>Outputs in flight per lane</td><td class="r m">8</td><td>adder latency 5 + 3 feedback</td></tr>
-      <tr><td>Stream unit width</td><td class="r m">1 element/cycle</td><td>16-wide planned for Qwen3-8B scale</td></tr>
-      <tr><td>Instruction word</td><td class="r m">1024 bits (827 used)</td><td>generated from <code>tools/hdc_isa.py</code></td></tr>
-      <tr><td>Program, reduced Qwen3 token</td><td class="r m">113 macro-ops</td><td>4,541 at Qwen3-8B shapes</td></tr>
-      <tr><td>Cycles per token (vehicle, position 15)</td><td class="r m">32,196</td><td>bit-exact in Verilator</td></tr>
-      <tr><td>Clock target / routed</td><td class="r m">0.9 ns / 1.07–1.45 GHz blocks</td><td>§10</td></tr>
-      <tr><td>KV positions provisioned</td><td class="r m">64 (vehicle)</td><td>KV streaming from HBM in design (§12)</td></tr>
+      <tr><td>Reduced Qwen3 token (cycles)</td><td class="r m">—</td><td class="r m">cycle model within 0.5% of RTL</td><td class="r m">32,246</td><td><span class="tag meas">measured</span></td></tr>
+      <tr><td>Reduced V4.1 token (cycles)</td><td class="r m">—</td><td class="r m">hdc_timing_v41</td><td class="r m">344,109</td><td><span class="tag meas">measured</span></td></tr>
+      <tr><td>HC1, Llama-3.1-8B (µs per token)</td><td class="r m">—</td><td class="r m">99.0</td><td class="r m">59.0 (self-reported)</td><td>model 0.60× of published: pessimistic</td></tr>
+      <tr><td>Qwen3-8B reticle (µs per token)</td><td class="r m">—</td><td class="r m">115.2</td><td class="r m">—</td><td><span class="tag pend">pending</span> whole-die route + simulation</td></tr>
+      <tr><td>Qwen3-8B on B200 (µs per token, batch 1)</td><td class="r m">≥2,048</td><td class="r m">—</td><td class="r m">—</td><td><span class="tag pend">pending</span> GPU baseline regeneration</td></tr>
+      <tr><td>GPU all-SM boundary (ns)</td><td class="r m">≈660 (5 L2 trips)</td><td class="r m">—</td><td class="r m">659 signal · 1,004 with data</td><td><span class="tag meas">measured</span></td></tr>
+      <tr><td>V4.1 array interconnect share</td><td class="r m">7–9%</td><td class="r m">7% (optimistic links)</td><td class="r m">—</td><td><span class="tag pend">pending</span> §12.3</td></tr>
     </tbody>
   </table></div>
 </section>
 
-<!-- M -->
-<section id="sM">
-  <h2><span class="num">2A</span>Model architectures and operator graphs</h2>
-  <p>This section fixes <em>what</em> the hardware computes. Both models are specified bit-exactly by a golden model, <code>tools/hdc_golden.py</code> for Qwen3-8B and <code>tools/hdc_golden_v41.py</code> for DeepSeek-V4.1-Flash, and the RTL is checked against it in every logit. The graphs below give one decode step of one layer. Each node shows the operation, its shape (<i>in → out</i>, or heads × width × rows), its number format, and the unit that executes it: <span class="k-me">■ matrix engine</span>, <span class="k-su">■ stream unit / SFU</span>, <span class="k-sel">■ SELECT</span>, <span class="k-sk">■ Sinkhorn unit</span>, <span class="k-col">■ collective</span> (4-die one-shot, array only). Parallel nodes in a column are independent and run concurrently. An arrow between columns is a data dependency, and those dependencies make up the critical path of §6.8.</p>
-
-  <h3 id="sM-1">2A.1 Model parameters</h3>
+<section id="s5">
+  <h2><span class="num">5</span>Model selection and operator graphs</h2>
+  <h3 id="s5-1">5.1 Why Qwen3-8B and DeepSeek-V4.1-Flash</h3>
+  <p><b>Qwen3-8B</b> is the dense baseline: a widely used GQA model whose weights fit one reticle at HC1-class density (§4.2), so the whole product is one die with no inter-chip network. A reduced configuration of the same architecture is the bit-exact RTL vehicle, and its golden reproduces the reference tokens 1073, 382, 93.</p>
+  <p><b>DeepSeek-V4.1-Flash</b> is the flagship-class sparse target. Its 552 B parameters use the ROM array's aggregate capacity, while only 16 B are active per token, so per-token work stays small. It also exercises every hard part of the design: hyper-connections with a Sinkhorn normalisation, a sparse-attention indexer with top-512 selection, cross-layer KV sharing, Engram hashed lookup tables and a 1 M-token context. Its Engram tables and cross-layer KV are the most ROM-favourable features in the candidate set.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 2A-1. Architecture parameters (from the released configurations)</caption>
+    <caption>Table 5-1. Candidate models (parameters from <code>configs/models/**.json</code>; die count of the analytical model's recommended design, <code>serial_latency_report.json</code>)</caption>
+    <thead><tr><th>Model</th><th class="r">Params total / active</th><th class="r">Layers</th><th>Attention</th><th class="r">ROM dies</th><th>Decision and reason</th></tr></thead>
+    <tbody>
+      <tr class="sel"><td>Qwen3-8B</td><td class="r m">8.19 B / 7.57 B</td><td class="r m">36</td><td>GQA, dense KV</td><td class="r m">1 (reticle)</td><td><b>selected</b>: one-die product, dense baseline, bit-exact vehicle</td></tr>
+      <tr class="sel"><td>DeepSeek-V4.1-Flash</td><td class="r m">552 B / 16 B</td><td class="r m">40</td><td>window + compressed sparse (indexer), mHC, Engram</td><td class="r m">≥88; 188 modelled</td><td><b>selected</b>: sparse MoE fits the array; ROM-favourable Engram and shared KV</td></tr>
+      <tr><td>DeepSeek-V4-Flash-0731</td><td class="r m">284 B / 13 B</td><td class="r m">43</td><td>window + compressed sparse + compressed dense</td><td class="r m">35</td><td>deferred: architecturally different (hash-routed layers; no Engram or cross-layer KV); a later separate chip reusing the engine library</td></tr>
+      <tr class="rej"><td>DeepSeek-V4-Pro-0813</td><td class="r m">1.6 T / 49 B</td><td class="r m">61</td><td>compressed sparse + compressed dense</td><td class="r m">166</td><td>analysis only: about twice V4.1's ROM silicon for a model outside the product scope</td></tr>
+      <tr class="rej"><td>Kimi K3</td><td class="r m">2.8 T / 104 B</td><td class="r m">93</td><td>recurrent (KDA) + dense MLA</td><td class="r m">297</td><td>rejected: 449 MB recurrent state per user and ≈899 MB state traffic per token, which ROM does not help</td></tr>
+      <tr class="rej"><td>MiMo-V2.6-Pro</td><td class="r m">1.02 T / 42 B</td><td class="r m">70</td><td>window + dense KV</td><td class="r m">107</td><td>analysis only: full KV caches grow per-user traffic; falls toward parity beyond 8 K context</td></tr>
+      <tr class="rej"><td>MiMo-V2.6-Flash</td><td class="r m">309 B / 15 B</td><td class="r m">48</td><td>window + dense KV</td><td class="r m">36</td><td>analysis only: candidate for a short-context product</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Candidates are profiled from safetensors headers without downloading the checkpoints; their roofline studies are under <code>results/roofline/candidates/</code>. The Kimi K3 state figures are from the candidate analysis recorded with the target decision.</p>
+
+  <h3 id="s5-2">5.2 Model parameters</h3>
+  <div class="tablebox"><table class="data">
+    <caption>Table 5-2. Architecture parameters (from the released configurations)</caption>
     <thead><tr><th>Parameter</th><th class="r">Qwen3-8B</th><th class="r">DeepSeek-V4.1-Flash</th></tr></thead>
     <tbody>
       <tr><td>Parameters, total / active per token</td><td class="r m">8.19 B / 7.57 B (dense)</td><td class="r m">552 B / 16 B (MoE)</td></tr>
@@ -224,13 +377,13 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     </tbody>
   </table></div>
 
-  <h3 id="sM-2">2A.2 Qwen3-8B: one decode layer</h3>
+  <h3 id="s5-3">5.3 Qwen3-8B: one decode layer</h3>
   <figure class="fig">
     <div class="svgbox"><svg id="gQwen" viewBox="0 0 1000 470" role="img" aria-label="Qwen3-8B operator graph"></svg></div>
-    <figcaption><b>Figure 2A-1.</b> Qwen3-8B decode, one layer, plus the output head. The attention half has one parallel fan-out (Q, K and V) and a strictly serial softmax. The MLP half is two matrix passes around SiLU. Every matrix pass is BF16 × BF16 with FP32 accumulation, in the fixed summation order of the golden. L is the number of past positions.</figcaption>
+    <figcaption><b>Figure 5-1.</b> Qwen3-8B decode, one layer, plus the output head. The attention half has one parallel fan-out (Q, K and V) and a strictly serial softmax. The MLP half is two matrix passes around SiLU. Every matrix pass is BF16 × BF16 with FP32 accumulation, in the fixed summation order of the golden. L is the number of past positions.</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
-    <caption>Table 2A-2. Qwen3-8B multiply-accumulates per decode token</caption>
+    <caption>Table 5-3. Qwen3-8B multiply-accumulates per decode token</caption>
     <thead><tr><th>Operator</th><th class="r">Shape</th><th class="r">MACs per layer</th><th class="r">× 36 layers</th></tr></thead>
     <tbody>
       <tr><td>Q, O projections</td><td class="r m">2 × [4096, 4096]</td><td class="r m">33.6 M</td><td class="r m">1.21 G</td></tr>
@@ -242,13 +395,13 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
     </tbody>
   </table></div>
 
-  <h3 id="sM-3">2A.3 DeepSeek-V4.1-Flash: one decode layer</h3>
+  <h3 id="s5-4">5.4 DeepSeek-V4.1-Flash: one decode layer</h3>
   <figure class="fig">
     <div class="svgbox"><svg id="gV41" viewBox="0 0 1000 560" role="img" aria-label="DeepSeek-V4.1 operator graph"></svg></div>
-    <figcaption><b>Figure 2A-2.</b> DeepSeek-V4.1-Flash decode, one layer. Each half (attention, MoE) is wrapped in a hyper-connection mix. The mix's Sinkhorn runs <i>alongside</i> the sublayer, and <code>hc_post</code> waits for both. Nodes marked † exist only on the index-source layers (2, 8, 14, 20, 24, 28, 32, 36), and ‡ only on the KV-source layers (2, 8, 14, 20). Engram (layers 1 and 14) adds a hash, a table-row gather and a gated add before attention. Rows continue from one to the next: the queries after RoPE feed the attention scores in the second row. In the array each matrix pass is split over the package's 4 dies, and the <span class="k-col">■</span> collectives join the partial results (Table 6-3).</figcaption>
+    <figcaption><b>Figure 5-2.</b> DeepSeek-V4.1-Flash decode, one layer. Each half (attention, MoE) is wrapped in a hyper-connection mix. The mix's Sinkhorn runs <i>alongside</i> the sublayer, and <code>hc_post</code> waits for both. Nodes marked † exist only on the index-source layers (2, 8, 14, 20, 24, 28, 32, 36), and ‡ only on the KV-source layers (2, 8, 14, 20). Engram (layers 1 and 14) adds a hash, a table-row gather and a gated add before attention. Rows continue from one to the next: the queries after RoPE feed the attention scores in the second row. In the array each matrix pass is split over the package's 4 dies, and the <span class="k-col">■</span> collectives join the partial results (Table 6-2).</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
-    <caption>Table 2A-3. DeepSeek-V4.1-Flash multiply-accumulates per decode token (shipped shapes)</caption>
+    <caption>Table 5-4. DeepSeek-V4.1-Flash multiply-accumulates per decode token (shipped shapes)</caption>
     <thead><tr><th>Operator</th><th class="r">Shape</th><th class="r">Format</th><th class="r">MACs per layer</th><th class="r">× 40 layers</th></tr></thead>
     <tbody>
       <tr><td>q low rank: wq_a, wq_b</td><td class="r m">[1280, 5120], [32768, 1280]</td><td class="r m">FP8</td><td class="r m">48.5 M</td><td class="r m">1.94 G</td></tr>
@@ -267,33 +420,111 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
   <p><b>What the graphs imply for hardware.</b></p>
   <ul>
     <li><b>Qwen3-8B</b> is shallow and wide: about 12 dependent steps per layer, dominated by the matrix passes. A fast matrix engine and short softmax/SiLU pipelines set its token time.</li>
-    <li><b>V4.1</b> fixes its attention work per token at 640 rows, whatever the context, and moves the context-dependent cost into the indexer on 8 layers. Its MoE touches only 6 of 384 experts, but a ROM machine sweeps all of them (§3).</li>
+    <li><b>V4.1</b> fixes its attention work per token at 640 rows, whatever the context, and moves the context-dependent cost into the indexer on 8 layers. Its MoE touches only 6 of 384 experts, but a ROM machine sweeps all of them (§4).</li>
     <li><b>V4.1 needs five unit types beyond the matrix engine and stream unit:</b> FP8/MXFP4 block-dot lanes, SELECT (top-k, router top-6, candidate blocks), a Sinkhorn unit, the Engram hash-and-gather unit, and the IEEE divide/sqrt/softplus functions. Its dependency chain per layer is about twice Qwen's.</li>
-  </ul>
-</section>
+  </ul></section>
 
-<!-- 3 -->
-<section id="s3">
-  <h2><span class="num">3</span>Architecture principles</h2>
+<section id="s6">
+  <h2><span class="num">6</span>System architecture</h2>
+  <h3 id="s6-1">6.1 Three targets on one engine library</h3>
   <div class="tablebox"><table class="data">
-    <thead><tr><th>ID</th><th>Principle</th><th>Consequence in the design</th></tr></thead>
+    <caption>Table 6-1. Targets</caption>
+    <thead><tr><th>Product</th><th>Model</th><th>Organisation</th><th>Optimised for</th><th>State</th></tr></thead>
     <tbody>
-      <tr><td class="req">P1</td><td>Weights are hardware.</td><td>Weight ROM words are laid out in the exact order the engine streams them; address generation is a counter.</td></tr>
-      <tr><td class="req">P2</td><td>Every datapath unit is a fixed-latency pipeline with II = 1.</td><td>No divider, no iterative unit, no combinational IEEE op; special functions are unrolled Horner/Newton chains.</td></tr>
-      <tr><td class="req">P3</td><td>Nothing stalls.</td><td>Memories answer at fixed latency; units never back-pressure; a program is scheduled so no read can overtake its write.</td></tr>
-      <tr><td class="req">P4</td><td>The schedule is the program.</td><td>A static list of macro-operations; the sequencer does no admission, dependency search or interpretation at run time.</td></tr>
-      <tr><td class="req">P5</td><td>The arithmetic order is specified.</td><td>A golden model defines every rounding in hardware order; RTL is bit-exact with it; order changes (K-split, BF16 KV) are spec changes, re-validated against the model's reference tokens.</td></tr>
-      <tr><td class="req">P6</td><td>Overlap by measured progress, not by barriers.</td><td>Units report elements/slots produced; a consumer starts at a threshold derived from producer write order and consumer read order.</td></tr>
-      <tr><td class="req">P7</td><td>Fail closed.</td><td>Nonfinite operands, overflow and inexact BF16 products raise a sticky fault instead of producing a value.</td></tr>
-      <tr><td class="req">P8</td><td>Register every boundary.</td><td>Unit, memory and link ports are registered on the block side; wide buses get an extra register at the pins.</td></tr>
+      <tr><td><b>ROM reticle</b></td><td>Qwen3-8B</td><td>one die; engines in an on-die layer pipeline; ROM beside each engine's lanes</td><td>per-user latency, energy</td><td><span class="status s-part">core RTL bit-exact; die in hierarchical flow</span></td></tr>
+      <tr><td><b>ROM array</b></td><td>DeepSeek-V4.1-Flash</td><td>reticle dies in tensor-group packages; packages in a board ring pipeline</td><td>per-user speed at flagship scale</td><td><span class="status s-part">units and 2/4-package RTL; packaging under study</span></td></tr>
+      <tr style="background:var(--hbm-soft)"><td><b>HBM comparator</b></td><td>Qwen3-8B, V4.1</td><td>the same decode core with weights and KV streamed from HBM by prefetching streamers</td><td>fair comparison of the memory technology</td><td><span class="status s-part">KV streaming on main; weight streaming pending</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="s6-2">6.2 Qwen3-8B single reticle</h3>
+  <figure class="fig">
+    <div class="svgbox"><svg id="reticle" viewBox="0 0 1000 240" role="img" aria-label="Reticle concept"></svg></div>
+    <figcaption><b>Figure 6-1.</b> Concept: the array pattern on one die — engines each owning a band of layers with their ROM, handing the 4,096-float hidden state on-die, users in flight. Engine width and count are sized from the cycle model (§12.1) and the ROM read bandwidth of the HC1-class envelope.</figcaption>
+  </figure>  <div class="pending"><div class="ph">Pending · whole-die implementation</div><p>Engine count and width per band, ROM banking and the on-die hand-off are sized in the model, not yet implemented as a die. Settled by: the hierarchical flow's Qwen tile and 2×2 reduced die (<code>tools/chip_assembly/</code>, §11.4) and a whole-die token simulation.</p></div>
+
+  <h3 id="s6-3">6.3 DeepSeek-V4.1 ROM array</h3>
+  <p>Forty layers, each an attention half and a MoE half joined by hyper-connections (a four-copy residual stream). Layers share state in groups: 2–7 read layer 2's compressed KV and index selection, 8–13 read 8's, 14–19 read 14's, and 20–39 read layer 20's compressed KV and candidate-block mask. Layers 1 and 14 add Engram lookups. A package boundary never separates a KV source from a consumer it cannot reach cheaply.</p>
+  <figure class="fig">
+    <div class="svgbox"><svg id="v41logical" viewBox="0 0 1000 560" role="img" aria-label="DeepSeek-V4.1 logical datapath"></svg></div>
+    <figcaption><b>Figure 6-2.</b> Top: the token's path through the layer groups, with the state each KV-source layer shares with the layers that read it (dashed). Bottom: one layer as it executes inside a package — attention half, hyper-connection mix, MoE half — with the hardware unit that runs each step.</figcaption>
+  </figure>  <p><b>Physical organisation (modelled, under review).</b> The configuration carried so far is 188 reticle dies of 815 mm² in 47 packages of four, each package one tensor group: its four dies split every weight matrix, including a quarter of every expert, and combine partial results with fixed-order collectives over UCIe. Packages form a board ring whose closing link returns the token to stage 0; each die streams its KV cache from HBM3E stacks. Three of its assumptions were optimistic: all-to-all UCIe links inside a 2×2 die package (advanced UCIe reaches about 2 mm, so diagonal dies do not touch), 100 ns package hops (112G PAM4 with KP4 FEC is closer to 200 ns), and a four-reticle interposer (beyond today's largest). They are being replaced (§12.3).</p>
+  <figure class="fig">
+    <div class="svgbox"><svg id="v41array" viewBox="0 0 1000 720" role="img" aria-label="DeepSeek-V4.1 ROM array physical layout"></svg></div>
+    <figcaption><b>Figure 6-3.</b> The DeepSeek-V4.1 ROM array as currently modelled: packaging option (c), four reticle dies per package (§12.3). <b>A</b>: 47 packages in a board ring; the lettered dots show that with 47 or more users every package works on a different user's token. <b>B</b>: one MoE layer inside a package; the router's choice changes only which ROM rows each die reads, so every transfer has a fixed size, destination and order. <b>C</b>: die floorplan and one token's critical path at batch 1 under the <i>superseded optimistic links</i> (all-to-all UCIe at 10 ns, 100 ns package hops). The realistic-link figure is pending (§12.3).</figcaption>
+  </figure>  <div class="tablebox"><table class="data">
+    <caption>Table 6-2. Communication per V4.1 layer, packaging option (c), batch 1. Latencies are the superseded optimistic link values; realistic values (ring-of-4 UCIe with diagonal relay, 200 ns package hop) are pending (§12.3).</caption>
+    <thead><tr><th>Event</th><th>Path</th><th class="r">Payload</th><th class="r">Latency</th><th>Unit / RTL</th></tr></thead>
+    <tbody>
+      <tr><td>q_a | kv | index-weight rows, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">3.6 KB</td><td class="r m">10 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
+      <tr><td>Shared compressed-KV rows, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">67.6 KB</td><td class="r m">10 ns + 4 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
+      <tr><td>Attention output, all-reduce (FP32 partials)</td><td>4 dies, UCIe, one-shot</td><td class="r m">20 KB</td><td class="r m">20 ns + 5 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
+      <tr><td>Router scores, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">1.5 KB</td><td class="r m">10 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
+      <tr><td>MoE combine (routed + shared), all-reduce</td><td>4 dies, UCIe, one-shot</td><td class="r m">20 KB</td><td class="r m">20 ns + 5 ns</td><td>MoE combine <span class="status s-part">in design</span></td></tr>
+      <tr><td>Index top-k merge (8 index-source layers)</td><td>4 dies, UCIe, one-shot</td><td class="r m">16 KB</td><td class="r m">10 ns</td><td>select + merge <span class="status s-part">in design</span></td></tr>
+      <tr><td>Stage hop: 4-copy residual + pre mix + forwarded rows</td><td>package → next, board SerDes</td><td class="r m">41 KB</td><td class="r m">110 ns + 101 ns</td><td>link + package controller <span class="status s-part">in design</span></td></tr>
+      <tr><td>Engram keys + values (layers 1, 14)</td><td>board, prefetched from token ids</td><td class="r m">51 KB</td><td class="r m">off the critical path</td><td>Engram hash <span class="status s-done">RTL</span></td></tr>
+      <tr><td>KV cache</td><td>die ↔ its HBM3E stacks</td><td class="r m">grows with context</td><td class="r m">—</td><td>KV streaming engine <span class="status s-part">in design</span></td></tr>
+    </tbody>
+  </table></div>  <div class="pending"><div class="ph">Pending · packaging options and realistic links</div><p>Three packaging options are being evaluated with realistic links: (a) two reticle dies + HBM per package, tensor group 2 on UCIe; (b) two-die packages with a tensor group of 4 spanning a package pair; (c) the four-die package above, labelled future packaging. Links: ring-of-4 UCIe with diagonal relay, 200 ns package hop (120–400 ns), 1.69 TB/s net per direction, clock-domain crossings. The best option using shipping packaging becomes the headline. Settled by: <code>tools/decode_critical_path.py</code> and <code>results/roofline/critical_path/decode_critical_path.json</code> after the interconnect update.</p></div>
+
+  <h3 id="s6-4">6.4 HBM comparator</h3>
+  <div class="two">
+    <figure class="fig narrow">
+      <div class="svgbox"><svg viewBox="0 0 440 260" role="img" aria-label="HBM accelerator node">
+        <g font-size="12" text-anchor="middle">
+          <rect x="120" y="70" width="200" height="120" rx="5" fill="var(--hbm-soft)" stroke="var(--hbm)" stroke-width="1.5"/>
+          <text x="220" y="98" fill="var(--ink)" font-weight="600">Compute die</text><text x="220" y="118" fill="var(--muted)">tensor engines</text><text x="220" y="136" fill="var(--muted)">descriptor front end</text><text x="220" y="154" fill="var(--muted)">microsequencer · admission</text>
+          <g fill="var(--panel)" stroke="var(--hbm)"><rect x="20" y="70" width="80" height="54" rx="3"/><rect x="20" y="136" width="80" height="54" rx="3"/><rect x="340" y="70" width="80" height="54" rx="3"/><rect x="340" y="136" width="80" height="54" rx="3"/></g>
+          <g fill="var(--ink)"><text x="60" y="102">HBM</text><text x="60" y="168">HBM</text><text x="380" y="102">HBM</text><text x="380" y="168">HBM</text></g>
+          <text x="220" y="40" fill="var(--muted)">weights and KV stream from HBM every token</text>
+          <rect x="120" y="210" width="200" height="34" rx="4" fill="var(--panel)" stroke="var(--hbm)"/><text x="220" y="232" fill="var(--ink)">NVLink / NVL72 domain</text>
+          <path d="M220,190 L220,208" stroke="var(--hbm)" stroke-width="2"/>
+        </g>
+      </svg></div>
+      <figcaption><b>Figure 6-4.</b> The analytical comparator: a B200-class GPU node priced at its best per metric (tensor/pipeline/expert parallelism, native FP4/FP8), with dependent boundaries charged at the measured Blackwell costs (§12.4).</figcaption>
+    </figure>    <div class="fig">
+      <h4>The comparator core</h4>
+      <ul>
+        <li>The analytical comparator is a B200-class GPU executing decode as a fused megakernel/PDL sequence, with each remaining dependent boundary charged at the measured Blackwell cost (§12.4).</li>
+        <li>The RTL comparator is the HDC itself with weights and KV in HBM: <code>ot_hdc_kv_stream</code> prefetches KV so the engine never stalls, and the reduced Qwen3 token stays bit-exact (<code>results/rtl/hdc_kv_stream_campaign.json</code>).</li>
+        <li>A weight streamer (<code>rtl/hdc/hbm/</code>) that prefetches weights per pseudo-channel is built and bit-exact on its branch; its campaign record and routed clock are not yet on main.</li>
+      </ul>
+      <div class="callout hbm">The comparator gets the same hardwired dataflow, so the measured difference is the memory technology, not the control path.</div>
+    </div>
+  </div>
+  <div class="pending"><div class="ph">Pending · HBM comparator record</div><p>Cycles per token against HBM pseudo-channel count for Qwen3-8B and V4.1 with weights streamed, and the weight streamer's routed Fmax. Settled by: <code>results/rtl/hdc_hbm_campaign.json</code> (<code>tools/rtl_hdc_hbm_campaign.py</code>).</p></div>
+
+  <h3 id="s6-5">6.5 Host interface and runtime</h3>
+  <p>An AXI4-Lite register block and a 64-bit AXI4 DMA master present the chip like a PCIe endpoint. Requests arrive on a submission ring of 32-byte descriptors (user slot, prompt, max new tokens, EOS ids; greedy only); each generated token returns as a 16-byte completion entry, so the completion ring is the token stream. Sixteen user slots match the package controller. A runtime drives the Verilated chip through shared host memory and serves <code>/v1/models</code>, <code>/v1/completions</code> and <code>/v1/chat/completions</code> with streaming. The endpoint returns 1073, 382, 93 bit-exactly from the RTL<span class="tag meas">measured</span>; the interface routes at 1,135 MHz and passes sign-off<span class="tag meas">measured</span> (<code>docs/HOST_INTERFACE_AND_RUNTIME.md</code>).</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 6-3. Host targets (results/rtl/host_if_campaign.json)</caption>
+    <thead><tr><th>Target</th><th>Engine behind the interface</th><th>Tokens through the endpoint path</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="m">qwen3-rom</td><td><code>ot_hdc_core</code>, 16 KV slices</td><td>1073, 382, 93 for three concurrent users</td><td><span class="status s-done">done</span></td></tr>
+      <tr><td class="m">qwen3-hbm</td><td>core with KV in HBM</td><td>1073, 382, 93 for two users in turn</td><td><span class="status s-part">KV only</span></td></tr>
+      <tr><td class="m">v41-rom</td><td><code>ot_hdc_core_v41</code>, one die</td><td>3118, 2400, 64</td><td><span class="status s-part">one die</span></td></tr>
+      <tr><td class="m">qwen3-array</td><td>four packages over <code>ot_rom_pkg_link</code></td><td>1073, 382, 93 for four users</td><td><span class="status s-done">done</span></td></tr>
     </tbody>
   </table></div>
 </section>
 
-<!-- 4 -->
-<section id="s4">
-  <h2><span class="num">4</span>Hardwired decode core (HDC)</h2>
-  <h3 id="s4-1">4.1 Top level and interfaces</h3>
+<section id="s7">
+  <h2><span class="num">7</span>Hardwired decode core (HDC)</h2>
+  <p>One engine design serves all three targets. The reduced-Qwen3 configuration below is the bit-exact vehicle; the V4.1 configuration (§8) shares the matrix engine and adds units.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Key parameters (default configuration)</caption>
+    <thead><tr><th>Parameter</th><th class="r">Value</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>Matrix lanes</td><td class="r m">64 (4 × 16)</td><td>exact BF16 × BF16 multiply, FP32 accumulate; 128 lanes also verified</td></tr>
+      <tr><td>Outputs in flight per lane</td><td class="r m">8</td><td>adder latency 5 + 3 feedback</td></tr>
+      <tr><td>Instruction word</td><td class="r m">1024 bits (827 used)</td><td>generated from <code>tools/hdc_isa.py</code></td></tr>
+      <tr><td>Program, reduced Qwen3 token</td><td class="r m">113 macro-ops</td><td>4,541 at Qwen3-8B shapes</td></tr>
+      <tr><td>Cycles per reduced token</td><td class="r m">32,246</td><td>bit-exact in Verilator <span class="tag meas">measured</span></td></tr>
+      <tr><td>Clock</td><td class="r m">0.9 ns target</td><td>units 1.03–1.62 GHz routed; whole core <span class="tag pend">pending</span> (§11)</td></tr>
+    </tbody>
+  </table></div>
+  <h3 id="s7-1">7.1 Top level and interfaces</h3>
   <figure class="fig">
     <div class="svgbox"><svg viewBox="0 0 1000 500" role="img" aria-label="Decode core block diagram">
       <defs>
@@ -337,22 +568,22 @@ footer{margin-top:36px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
       </g>
       <g stroke="var(--rom)" stroke-width="1.3" fill="none" marker-end="url(#arR)"><path d="M456,430 L456,248"/><path d="M842,430 L842,418"/></g>
     </svg></div>
-    <figcaption><b>Figure 4-1.</b> Decode core. Copper: datapath that carries weights or special functions. All unit ports are registered; memories are outside the core behind synchronous-read ports (read data usable at c′+2, plus one registered stage on the matrix engine's wide buses).</figcaption>
+    <figcaption><b>Figure 7-1.</b> Decode core. Copper: datapath that carries weights or special functions. All unit ports are registered; memories are outside the core behind synchronous-read ports (read data usable at c′+2, plus one registered stage on the matrix engine's wide buses).</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-1. Core interfaces (ot_hdc_core)</caption>
+    <caption>Table 7-1. Core interfaces (ot_hdc_core)</caption>
     <thead><tr><th>Port group</th><th>Direction / width</th><th>Protocol</th></tr></thead>
     <tbody>
       <tr><td>start, token, pos → done, next_token, next_val, cycles, fault</td><td class="m">16-bit token/position; 32-bit logit</td><td>level start in IDLE; done held until next start; fault sticky</td></tr>
       <tr><td>prog_re / prog_addr / prog_q</td><td class="m">12-bit addr, 1024-bit data</td><td>synchronous read, 1-cycle latency</td></tr>
       <tr><td>wrom_re / wrom_addr / wrom_q</td><td class="m">24-bit addr, G×16×16 bits</td><td>sync read; shared by engine (weights) and stream unit (embedding)</td></tr>
       <tr><td>kv_re / kv_raddr[G] / kv_q[G]; kv_we / kv_waddr / kv_wdata</td><td class="m">G×24-bit addr, G×16×32 bits; element write</td><td>one read port per lane group; write of one BF16-rounded element</td></tr>
-      <tr><td>vx[G], va, vb, vc (read); vw_me[G], vw_su, vw_rd (write)</td><td class="m">element reads; word writes with lane mask</td><td>behavioural in simulation; banked register file in silicon (open issue I-3)</td></tr>
+      <tr><td>vx[G], va, vb, vc (read); vw_me[G], vw_su, vw_rd (write)</td><td class="m">element reads; word writes with lane mask</td><td>behavioural in simulation; banked register file in silicon (§14, R6)</td></tr>
       <tr><td>crom_re / crom_addr / crom_q</td><td class="m">64-bit pairs</td><td>sync read</td></tr>
     </tbody>
   </table></div>
 
-  <h3 id="s4-2">4.2 Matrix engine</h3>
+  <h3 id="s7-2">7.2 Matrix engine</h3>
   <p>Output <i>n</i> of tile <i>t</i> sits in lane <i>l</i> of slot <i>j</i> of group <i>g</i>. Each lane multiplies then adds into a sum that re-enters the adder exactly <b>IL = 8</b> cycles later, so every output accumulates its products strictly in order at one multiply-accumulate per lane per cycle, with no accumulator file.</p>
   <pre>weight  = lane g·W+l of word   wbase + r·ts + k·ks + (j ≫ jsh)·js        (KV ops: wbase + t·ts + …, own port per group)
 x       = element              xbase + c·xcs + k·xks + j·xjs              (BF16-rounded when round=1)
@@ -361,10 +592,10 @@ valid   = (t·IL + j)·W + l &lt; nout   (rows)      or      t·W + l &lt; nout 
 split S = 2^split: group g = q·S + c takes K-chunk c of tile t = r·(G/S) + q; tree ((c0+c1)+(c2+c3))</pre>
   <figure class="fig">
     <div class="svgbox"><svg id="mepipe" viewBox="0 0 1000 250" role="img" aria-label="Matrix engine pipeline timing"></svg></div>
-    <figcaption><b>Figure 4-2.</b> Matrix-engine pipeline from the address cycle c′. The adder's output for (k, j) re-enters at c′+8+IL for (k+1, j); the last k's sums reach the K-split tree and are written after two output registers.</figcaption>
+    <figcaption><b>Figure 7-2.</b> Matrix-engine pipeline from the address cycle c′. The adder's output for (k, j) re-enters at c′+8+IL for (k+1, j); the last k's sums reach the K-split tree and are written after two output registers.</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-2. K-split per matrix (4 groups; chosen for fewest engine cycles, smaller split on ties)</caption>
+    <caption>Table 7-2. K-split per matrix (4 groups; chosen for fewest engine cycles, smaller split on ties)</caption>
     <thead><tr><th>Matrix (reduced Qwen3)</th><th class="r">N × K</th><th class="r">Split S</th><th class="r">Rounds</th><th class="r">Cycles</th></tr></thead>
     <tbody>
       <tr><td>QKV (fused)</td><td class="r m">192 × 128</td><td class="r m">2</td><td class="r m">1</td><td class="r m">512</td></tr>
@@ -375,10 +606,10 @@ split S = 2^split: group g = q·S + c takes K-chunk c of tile t = r·(G/S) + q; 
     </tbody>
   </table></div>
 
-  <h3 id="s4-3">4.3 Stream unit and special functions</h3>
+  <h3 id="s7-3">7.3 Stream unit and special functions</h3>
   <p>A 2-D element loop issues one element per cycle through a fixed operator chain. The instruction's SFU class sets the pipeline depth; a new instruction of another class waits for the unit to drain, so writes stay in order without reorder logic.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-3. Special-function pipelines (ot_hdc_sfu.sv), all II = 1</caption>
+    <caption>Table 7-3. Special-function pipelines (ot_hdc_sfu.sv), all II = 1</caption>
     <thead><tr><th>Function</th><th>Algorithm (golden order)</th><th class="r">Depth</th><th class="r">Max rel. error</th><th class="r">Routed</th></tr></thead>
     <tbody>
       <tr><td>exp(x)</td><td>clamp [−87, 88]; n = rint(x·log₂e) via 1.5·2²³; r = (x − n·ln2_hi) − n·ln2_lo; degree-6 Horner; add n to the exponent field</td><td class="r m">92</td><td class="r m">&lt;3.6e−7</td><td class="r m">1,196 MHz</td></tr>
@@ -388,7 +619,7 @@ split S = 2^split: group g = q·S + c takes K-chunk c of tile t = r·(G/S) + q; 
     </tbody>
   </table></div>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-4. Stream-unit operator chain per element</caption>
+    <caption>Table 7-4. Stream-unit operator chain per element</caption>
     <thead><tr><th>Stage</th><th>Operation</th><th>Selects</th></tr></thead>
     <tbody>
       <tr><td class="m">c′+2 / c′+3</td><td>capture A (VM or weight ROM BF16), B (VM or constant pair), C; select operands</td><td class="m">ma: A | A·B | A·A | A·imm1 · mb: C·(±B.hi)</td></tr>
@@ -400,15 +631,15 @@ split S = 2^split: group g = q·S + c takes K-chunk c of tile t = r·(G/S) + q; 
     </tbody>
   </table></div>
 
-  <h3 id="s4-4">4.4 Sequencer and control path</h3>
+  <h3 id="s7-4">7.4 Sequencer and control path</h3>
   <p>The control path is deliberately thin: one in-order issue slot, no dependency search, no admission. Hazards are resolved at program-generation time into one of three issue conditions.</p>
   <figure class="fig">
     <div class="svgbox"><svg id="chase" viewBox="0 0 1000 240" role="img" aria-label="Barrier versus chase timing"></svg></div>
-    <figcaption><b>Figure 4-3.</b> Issue conditions. A barrier waits for both units to drain; a chase starts a consumer once the producer's reported progress reaches the threshold the generator derived from write and read order, so the consumer overlaps the producer.</figcaption>
+    <figcaption><b>Figure 7-3.</b> Issue conditions. A barrier waits for both units to drain; a chase starts a consumer once the producer's reported progress reaches the threshold the generator derived from write and read order, so the consumer overlaps the producer.</figcaption>
   </figure>
   <div class="two">
     <div class="tablebox"><table class="data">
-      <caption>Table 4-5. Issue conditions</caption>
+      <caption>Table 7-5. Issue conditions</caption>
       <thead><tr><th>Mode</th><th>Waits for</th><th>Used when</th></tr></thead>
       <tbody>
         <tr><td class="m">none</td><td>unit ready</td><td>no hazard with in-flight writes</td></tr>
@@ -417,7 +648,7 @@ split S = 2^split: group g = q·S + c takes K-chunk c of tile t = r·(G/S) + q; 
       </tbody>
     </table></div>
     <div class="tablebox"><table class="data">
-      <caption>Table 4-6. Per-token DYN offsets (added at decode)</caption>
+      <caption>Table 7-6. Per-token DYN offsets (added at decode)</caption>
       <thead><tr><th>DYN</th><th>Value</th><th>Used by</th></tr></thead>
       <tbody>
         <tr><td class="m">1</td><td class="m">token · hidden</td><td>embedding row</td></tr>
@@ -431,18 +662,18 @@ split S = 2^split: group g = q·S + c takes K-chunk c of tile t = r·(G/S) + q; 
   </div>
   <div class="callout"><b>Control-path budget (measured with the RTL-calibrated cycle model).</b> Sequencer issue cost is 1.7% of the vehicle token and 0.15–0.7% at Qwen3-8B shapes; the rest is unit busy time and pipeline latency exposed between dependent operations. Macro-operations are large (113 per vehicle token), so issue rate never limits.</div>
 
-  <h3 id="s4-5">4.5 Instruction format</h3>
+  <h3 id="s7-5">7.5 Instruction format</h3>
   <p>One 1024-bit word per macro-operation; 827 bits are defined. Fields are generated from <code>tools/hdc_isa.py</code> into <code>rtl/hdc/ot_hdc_isa.svh</code>, so the assembler and the RTL cannot drift. Unit 0 = END, 1 = matrix engine, 2 = stream unit.</p>
   <figure class="fig">
     <div class="svgbox"><svg id="isamap" viewBox="0 0 1000 150" role="img" aria-label="Instruction bit map"></svg></div>
-    <figcaption><b>Figure 4-4.</b> Bit map of the instruction word, grouped by owner.</figcaption>
+    <figcaption><b>Figure 7-4.</b> Bit map of the instruction word, grouped by owner.</figcaption>
   </figure>
-  <div class="tablebox"><table class="data" id="isatable"><caption>Table 4-7. Instruction fields (bit offset, width)</caption></table></div>
+  <div class="tablebox"><table class="data" id="isatable"><caption>Table 7-7. Instruction fields (bit offset, width)</caption></table></div>
 
-  <h3 id="s4-6">4.6 Memory maps and layouts</h3>
+  <h3 id="s7-6">7.6 Memory maps and layouts</h3>
   <div class="two">
     <div class="tablebox"><table class="data">
-      <caption>Table 4-8. Vector-memory map (elements, reduced Qwen3)</caption>
+      <caption>Table 7-8. Vector-memory map (elements, reduced Qwen3)</caption>
       <thead><tr><th>Region</th><th class="r">Base</th><th class="r">Size</th><th>Contents</th></tr></thead>
       <tbody>
         <tr><td class="m">X</td><td class="r m">0</td><td class="r m">128</td><td>residual stream (received over the link in arrays)</td></tr>
@@ -467,7 +698,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
     </div>
   </div>
 
-  <h3 id="s4-7">4.7 Numerics contract</h3>
+  <h3 id="s7-7">7.7 Numerics contract</h3>
   <div class="tablebox"><table class="data">
     <thead><tr><th>Item</th><th>Specification</th></tr></thead>
     <tbody>
@@ -476,216 +707,16 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tr><td>KV cache</td><td>BF16 (RNE) on write</td></tr>
       <tr><td>Reductions</td><td>element i → partial i mod 8, each sequential from +0; tree ((p0+p1)+(p2+p3))+((p4+p5)+(p6+p7)); max by total-order key</td></tr>
       <tr><td>Argmax</td><td>lowest index on ties, across lanes and cycles</td></tr>
-      <tr><td>Validation</td><td>golden reproduces the torch oracle's tokens (1073, 382, 93); RTL bit-exact with golden in every logit, vector memory and KV cache</td></tr>
+      <tr><td>Validation</td><td>golden reproduces the torch oracle's tokens (1073, 382, 93); RTL bit-exact with the golden in every logit, the vector memory and the KV cache (results/rtl/hdc_decode_campaign.json)</td></tr>
     </tbody>
-  </table></div>
-</section>
+  </table></div></section>
 
-<!-- 5 -->
-<section id="s5">
-  <h2><span class="num">5</span>Decode-core performance</h2>
-  <div class="two">
-    <figure class="fig">
-      <div class="svgbox"><svg id="iterbars" viewBox="0 0 480 250" role="img" aria-label="Cycles per token by iteration"></svg></div>
-      <figcaption><b>Figure 5-1.</b> Cycles per token of the reduced Qwen3 vehicle through six measured iterations (Verilator, bit-exact). A prefetching sequencer was built and reverted: it saved no cycles.</figcaption>
-    </figure>
-    <figure class="fig">
-      <div class="svgbox"><svg id="qwenbars" viewBox="0 0 480 200" role="img" aria-label="Qwen3-8B projection"></svg></div>
-      <figcaption><b>Figure 5-2.</b> Qwen3-8B shapes, 16,384 lanes, position 1,024 (cycle model within 0.5% of RTL). * projection; the wide stream unit is not yet in RTL.</figcaption>
-    </figure>
-  </div>
+<section id="s8">
+  <h2><span class="num">8</span>DeepSeek-V4.1 units and the multi-die fabric</h2>
+  <h3 id="s8-1">8.1 The V4.1 decode core</h3>
+  <p>The V4.1 configuration (<code>rtl/hdc/v41/ot_hdc_core_v41.sv</code>) shares the matrix engine and adds a vector stream unit, an FP8/FP4 quantised engine, an auxiliary unit (select, Sinkhorn, Engram hash and gather) and a hyper-connection projection engine. It runs all 40 layers of the reduced model and decodes token 3118 in 344,109 cycles, bit-exact in every logit, the vector memory and the KV cache<span class="tag meas">measured</span> (<code>results/rtl/hdc_v41_decode_campaign.json</code>). From an empty state it consumes the prompt and generates 3118, 2400, 64, identical to the golden. Each unit below is specified by the V4.1 golden, in which every operation is one binary32 operation in hardware order.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 5-1. Where the cycles go (cycle model)</caption>
-    <thead><tr><th>Case</th><th class="r">Cycles/token</th><th class="r">Engine busy</th><th class="r">Stream busy</th><th class="r">Issue cost</th></tr></thead>
-    <tbody>
-      <tr><td>Vehicle, 4 groups, position 15</td><td class="r m">32,191</td><td class="r m">66.8%</td><td class="r m">23.3%</td><td class="r m">1.7%</td></tr>
-      <tr><td>Qwen3-8B, 64 groups</td><td class="r m">15.1 M</td><td class="r m">66.6%</td><td class="r m">34.3%</td><td class="r m">0.15%</td></tr>
-      <tr><td>Qwen3-8B, 1,024 groups</td><td class="r m">8.2 M</td><td class="r m">36.3%</td><td class="r m">63.2%</td><td class="r m">0.28%</td></tr>
-      <tr><td>Qwen3-8B, 1,024 groups, 16-wide stream*</td><td class="r m">3.36 M</td><td class="r m">88.4%</td><td class="r m">9.6%</td><td class="r m">0.68%</td></tr>
-    </tbody>
-  </table></div>
-</section>
-
-<!-- 6 -->
-<section id="s6">
-  <h2><span class="num">6</span>Multi-chip systems</h2>
-  <h3 id="s6-1">6.1 Link protocol (ot_rom_pkg_link)</h3>
-  <p>A cut-through, credit-flow-controlled pipe that forwards each flit as it arrives. The analog PHY (SerDes, FEC, deskew) is represented by a fixed delay line; framing, credits and cut-through are real logic.</p>
-  <figure class="fig">
-    <div class="svgbox"><svg id="flits" viewBox="0 0 1000 220" role="img" aria-label="Flit formats"></svg></div>
-    <figcaption><b>Figure 6-1.</b> Message = header flit + payload flits (512-bit flits: one vector-memory word of 16 FP32). Hidden-state message: header + 8 flits. Token feedback: header only. In a split lm_head the header also carries the running best logit.</figcaption>
-  </figure>
-  <div class="tablebox"><table class="data">
-    <thead><tr><th>Property</th><th>Value</th></tr></thead>
-    <tbody>
-      <tr><td>Latency law</td><td class="m">first flit = TX + CHANNEL + RX + 1 (registered output); last = first + flits − 1</td></tr>
-      <tr><td>Flow control</td><td>credits = receiver buffer entries (32 in the array); a credit returns on each drain</td></tr>
-      <tr><td>Ordering</td><td>in order per link; one message at a time per sender</td></tr>
-      <tr><td>Routed</td><td>1,339 MHz (64-byte flits, 16 credits); worst path: receive-buffer read → output register</td></tr>
-      <tr><td>Not modelled</td><td>SerDes/PHY, FEC, retry, lane deskew, link training (open issue I-5)</td></tr>
-    </tbody>
-  </table></div>
-
-  <h3 id="s6-2">6.2 ROM array: layer-per-package pipeline</h3>
-  <figure class="fig">
-    <div class="svgbox"><svg id="arraydiag" viewBox="0 0 1000 250" role="img" aria-label="ROM array pipeline"></svg></div>
-    <figcaption><b>Figure 6-2.</b> The 12-package configuration: half-layer packages (attention, MLP), a vocabulary-split lm_head over four packages carrying the running argmax, and token feedback to package 0. Each package is a decode core with a KV slice per user.</figcaption>
-  </figure>
-  <div class="two">
-    <div class="tablebox"><table class="data">
-      <caption>Table 6-1. Array configurations (RTL, every user token-exact from an empty KV cache)</caption>
-      <thead><tr><th>Packages / users</th><th class="r">Cycles / token-step</th><th class="r">vs one core</th><th>Limiter</th></tr></thead>
-      <tbody>
-        <tr><td>4 / 4</td><td class="r m">14,499</td><td class="r m">2.22×</td><td>layer 3 + lm_head package</td></tr>
-        <tr><td>5 / 5 (lm_head alone)</td><td class="r m">8,810</td><td class="r m">3.66×</td><td>lm_head package</td></tr>
-        <tr><td>6 / 6 (lm_head ÷ 2)</td><td class="r m">6,167</td><td class="r m">5.22×</td><td>layer packages</td></tr>
-        <tr><td>10 / 10 (half layers)</td><td class="r m">4,624</td><td class="r m">6.96×</td><td>lm_head halves</td></tr>
-        <tr><td>12 / 12 (lm_head ÷ 4)</td><td class="r m">3,312</td><td class="r m">9.72×</td><td>MLP half-layer (balanced)</td></tr>
-      </tbody>
-    </table></div>
-    <figure class="fig narrow">
-      <div class="svgbox"><svg id="arraybars" viewBox="0 0 460 230" role="img" aria-label="Array speed-up"></svg></div>
-      <figcaption><b>Figure 6-3.</b> Aggregate throughput over one core. Per-user latency stays ≈ one core's.</figcaption>
-    </figure>
-  </div>
-
-  <h3 id="s6-3">6.3 ROM wafer</h3>
-  <p class="note"><b>Status: rejected as an implementation target</b> (§6.9). At equal silicon the wafer is no faster than the array. It is kept here as an analysed comparison only.</p>
-  <div class="two">
-    <figure class="fig narrow">
-      <div class="svgbox"><svg id="wafer" viewBox="0 0 360 360" role="img" aria-label="Wafer tiles"></svg></div>
-      <figcaption><b>Figure 6-4.</b> Reticle tiles in a 2-D mesh. Dark copper: V4.1 KV-source layers (2, 8, 14, 20) multicasting compressed KV rows; blue: Engram table tiles.</figcaption>
-    </figure>
-    <div class="fig">
-      <h4>Wafer versus array</h4>
-      <ul>
-        <li>Same package logic; die hops ≈10 ns (UCIe-class) instead of ≈100 ns package hops.</li>
-        <li>Holds the whole V4.1 model; wins aggregate throughput and tokens/J (3.18× / 3.97× best-vs-best at 200K).</li>
-        <li>Needs the fabric router with multicast and deadlock-free mesh routing (in design), and yield/redundancy handling (not started).</li>
-        <li>Partitioning rule: a package boundary never separates a KV-source layer from the layers reading its compressed KV; Engram tables get their own tiles.</li>
-      </ul>
-    </div>
-  </div>
-
-  <h3 id="s6-4">6.4 Qwen3-8B single reticle</h3>
-  <figure class="fig">
-    <div class="svgbox"><svg id="reticle" viewBox="0 0 1000 240" role="img" aria-label="Reticle concept"></svg></div>
-    <figcaption><b>Figure 6-5.</b> Concept: the array pattern on one die — engines each owning a band of layers with their ROM, handing the 4,096-float hidden state on-die, users in flight. Engine width and count are sized from the cycle model (§5) and the ROM read bandwidth of the HC1-class envelope.</figcaption>
-  </figure>
-
-  <h3 id="s6-5">6.5 DeepSeek-V4.1: logical datapath of one token</h3>
-  <p>Forty layers, each an attention half and a MoE half joined by hyper-connections (a four-copy residual stream). Layers share state in groups: layers 2–7 read layer 2's compressed KV and index selection, 8–13 read layer 8's, 14–19 read 14's, and 20–39 read layer 20's compressed KV and candidate-block mask. Layers 1 and 14 add Engram n-gram lookups from their own read-only tables. The partitioning follows from this: a package boundary never separates a KV source from a consumer it cannot reach cheaply.</p>
-  <figure class="fig">
-    <div class="svgbox"><svg id="v41logical" viewBox="0 0 1000 560" role="img" aria-label="DeepSeek-V4.1 logical datapath"></svg></div>
-    <figcaption><b>Figure 6-6.</b> Top: the token's path through the layer groups, with the state each KV-source layer shares with the layers that read it (dashed). Bottom: one layer as it executes inside a package — attention half, hyper-connection mix, MoE half — with the hardware unit that runs each step.</figcaption>
-  </figure>
-
-  <h3 id="s6-6">6.6 DeepSeek-V4.1 ROM array: physical layout and network</h3>
-  <p><b>Selected configuration</b> (the study is in §6.8): 188 reticle-sized dies of 815 mm² in 47 packages of four. <b>Each package is one tensor group</b>: its four dies split every weight matrix they hold, including a quarter of every expert, and combine their partial results with <b>one-shot collectives over UCIe</b>. In a one-shot collective every die sends its partial to the other three and sums locally in a fixed order, so each die holds the identical, bit-exact result after a single ≈10 ns link crossing. The packages are joined by board SerDes in a <b>ring</b>: a 40-stage layer pipeline, one layer per package, whose closing link returns the token to stage 0. Each die streams its KV cache from five HBM3E stacks. The Engram tables, embedding and lm_head take the remaining ROM capacity; their exact placement is not yet fixed.</p>
-  <div class="tablebox"><table class="data">
-    <caption>Table 6-2. V4.1 ROM array, selected configuration (N5, 200K context)</caption>
-    <thead><tr><th>Item</th><th class="r">Value</th><th>Note</th></tr></thead>
-    <tbody>
-      <tr><td>Dies × area</td><td class="r m">188 × 815 mm²</td><td>153,220 mm² in total</td></tr>
-      <tr><td>Package / tensor group</td><td class="r m">4 dies on UCIe</td><td>one-shot all-reduce and all-gather, fixed summation order</td></tr>
-      <tr><td>Board fabric / pipeline</td><td class="r m">ring · 40 stages</td><td>one layer per package; the 4-copy residual is 41 KB per hop</td></tr>
-      <tr><td>Die area split</td><td class="r m">ROM 289 · compute 329 · HBM PHY 50 · links 65 · overhead 82 mm²</td><td>weights at 7.4 bits per parameter, FP8 execution</td></tr>
-      <tr><td>KV store</td><td class="r m">5 × HBM3E per die</td><td>ROM holds no per-user state</td></tr>
-      <tr><td>Per-user rate, batch 1 / 64 (critical path)</td><td class="r m">5,005 / 4,436 tok/s</td><td>bottom-up, measured RTL depths, with the routed Sinkhorn unit (§6.8); the analytical model's 15,556 / 12,208 omitted most serial latency</td></tr>
-      <tr><td>Aggregate at 4,096 users</td><td class="r m">≈504 K tok/s</td><td>bound by stage occupancy; 3.6 MB per hop at this load</td></tr>
-    </tbody>
-  </table></div>
-  <figure class="fig">
-    <div class="svgbox"><svg id="v41array" viewBox="0 0 1000 720" role="img" aria-label="DeepSeek-V4.1 ROM array physical layout"></svg></div>
-    <figcaption><b>Figure 6-7.</b> <b>A</b>: the 47-package ring. Each package holds 1/47 of the weights, and a token crosses 39 package boundaries, one per layer boundary. The lettered dots show that with 47 or more users every package works on a different user's token at once. <b>B</b>: one MoE layer inside a package. The token's vector goes to all four dies. Each die reads its quarter of the six routed experts and the shared expert; the router's choice changes only which ROM rows are read. A fixed-order one-shot reduction over UCIe then combines the partial sums, so every transfer has the same size, destination and order for every token. <b>C</b>: the die floorplan and one token's critical path at batch 1 with the Sinkhorn unit: the compute chain and the ROM sweep, not the network.</figcaption>
-  </figure>
-  <div class="tablebox"><table class="data">
-    <caption>Table 6-3. Communication per V4.1 layer in the selected array (batch 1)</caption>
-    <thead><tr><th>Event</th><th>Path</th><th class="r">Payload</th><th class="r">Latency</th><th>Unit / RTL</th></tr></thead>
-    <tbody>
-      <tr><td>q_a | kv | index-weight rows, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">3.6 KB</td><td class="r m">10 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
-      <tr><td>Shared compressed-KV rows, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">67.6 KB</td><td class="r m">10 ns + 4 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
-      <tr><td>Attention output, all-reduce (FP32 partials)</td><td>4 dies, UCIe, one-shot</td><td class="r m">20 KB</td><td class="r m">20 ns + 5 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
-      <tr><td>Router scores, all-gather</td><td>4 dies, UCIe, one-shot</td><td class="r m">1.5 KB</td><td class="r m">10 ns</td><td>collectives <span class="status s-part">in design</span></td></tr>
-      <tr><td>MoE combine (routed + shared), all-reduce</td><td>4 dies, UCIe, one-shot</td><td class="r m">20 KB</td><td class="r m">20 ns + 5 ns</td><td>MoE combine <span class="status s-part">in design</span></td></tr>
-      <tr><td>Index top-k merge (8 index-source layers)</td><td>4 dies, UCIe, one-shot</td><td class="r m">16 KB</td><td class="r m">10 ns</td><td>select + merge <span class="status s-part">in design</span></td></tr>
-      <tr><td>Stage hop: 4-copy residual + pre mix + forwarded rows</td><td>package → next, board SerDes</td><td class="r m">41 KB</td><td class="r m">110 ns + 101 ns</td><td>link + package controller <span class="status s-part">in design</span></td></tr>
-      <tr><td>Engram keys + values (layers 1, 14)</td><td>board, prefetched from token ids</td><td class="r m">51 KB</td><td class="r m">off the critical path</td><td>Engram hash <span class="status s-done">RTL</span></td></tr>
-      <tr><td>KV cache</td><td>die ↔ its HBM3E stacks</td><td class="r m">grows with context</td><td class="r m">—</td><td>KV streaming engine <span class="status s-part">in design</span></td></tr>
-    </tbody>
-  </table></div>
-
-  <h3 id="s6-7">6.7 DeepSeek-V4.1 ROM wafer: datapath and layout</h3>
-  <p><b>Selected configuration</b>: twelve wafers of 46,225 mm², each holding 57 reticle fields. The earlier analytical design made the whole wafer one tensor group, and at 125 ns per field crossing its six collectives per layer then cost ≈336 µs per token, two-thirds of the token time. The selected design splits each wafer into <b>three square groups of 19 fields</b>. Each group is a tensor group that reduces with one-shot collectives over its own compact region, and the 36 groups form an on-wafer and wafer-to-wafer pipeline. Each wafer has 43 HBM3E stacks at its edge for KV. The wafer's strength remains aggregate throughput, ≈1.0 M tok/s at 4,096 users. Per user it is still behind the array, because a field crossing costs 125 ns against 10 ns for UCIe.</p>
-  <figure class="fig">
-    <div class="svgbox"><svg id="v41wafer" viewBox="0 0 1000 640" role="img" aria-label="DeepSeek-V4.1 wafer datapath"></svg></div>
-    <figcaption><b>Figure 6-8.</b> <b>A</b>: the twelve-wafer pipeline. <b>B</b>: one wafer as three 19-field tensor groups. Every field in a group holds 1/19 of every weight of that group's layer, including a slice of every expert, and reductions stay inside the group. The token passes group to group across the wafer, then to the next wafer; HBM3E stacks surround the edge. <b>C</b>: one token's critical path at batch 1 for the whole-wafer group and the 19-field group, set against the array.</figcaption>
-  </figure>
-
-  <h3 id="s6-8">6.8 Communication topology selection and the decode critical path</h3>
-  <p>The analytical model prices a layer's serial work as four dependent passes (≈250 ns) plus two all-reduces. The bottom-up model <code>tools/decode_critical_path.py</code> replaces that with each layer's operator dependency graph. Every node is priced with our routed ASAP7 unit depths at 1.034 GHz, from the matrix engine, the stream-unit functions, the V4.1 select, the softplus/sqrt and the divider. Every collective the weight split needs is priced for latency, algorithm and payload bytes, and the control path is priced per instruction. Against the published Taalas HC1 (Llama-3.1-8B) it lands <b>1.67× slower</b> (98 µs against 59 µs per token), so its absolute numbers are pessimistic. The analytical model is 1.45× optimistic on the same anchor, so the truth lies between the two.</p>
-  <div class="tablebox"><table class="data">
-    <caption>Table 6-4. Per-user decode rate, analytical model against the critical path (tok/s, batch 1)</caption>
-    <thead><tr><th>Target</th><th class="r">Analytical</th><th class="r">Critical path</th><th>What binds on the critical path</th></tr></thead>
-    <tbody>
-      <tr><td>Taalas HC1, Llama-3.1-8B (published 16,960)</td><td class="r m">24,675</td><td class="r m">10,103</td><td>compute chain 61 µs + sweep 34 µs</td></tr>
-      <tr><td>Qwen3-8B, one reticle</td><td class="r m">24,222</td><td class="r m">8,680</td><td>compute chain</td></tr>
-      <tr><td>V4.1 array: 4-die group, ring (selected), pipelined Sinkhorn</td><td class="r m">15,556</td><td class="r m">4,136</td><td>Sinkhorn chain, 224 µs of a 242 µs token</td></tr>
-      <tr><td>V4.1 array: as above with the routed Sinkhorn unit</td><td class="r m">—</td><td class="r m">5,005</td><td>compute chain 138 µs + ROM sweep 43 µs of a 200 µs token</td></tr>
-      <tr><td>V4.1 wafer, 57-field group</td><td class="r m">5,653</td><td class="r m">1,992</td><td>collective latency, 336 µs</td></tr>
-      <tr><td>V4.1 wafer: 19-field groups (selected)</td><td class="r m">—</td><td class="r m">2,768</td><td>collectives 169 µs + chain 131 µs</td></tr>
-    </tbody>
-  </table></div>
-  <p><b>The analytical model now uses this graph.</b> Every point of every roofline study is priced on the same per-token operator graph (<code>src/opentallas/critical_path.py</code>, reported by <code>tools/serial_latency_report.py</code>), on both the ROM and the GPU side, with the routed Sinkhorn unit, and with the tensor group, the reduction algorithm and, on a wafer, the collective network searched per point. There the ×188 array gives 5,227 / 4,552 tok/s per user at batch 1 / 64 (8- and 4-die groups), and the ×12 wafer 4,641 / 4,385 on the measured express link (<code>links.rom_wafer_express</code>, 30 ns per field crossing, 16-field groups) against 3,221 at batch 1 on the 125 ns Cerebras-style core mesh. The HC1 gate lands at 0.63×. See the analytical report, <i>Serial latency and collectives</i>.</p>
-  <p><b>The sweep.</b> 2,038 configurations at fixed silicon. The array was swept over 2, 4 or 8 dies per package; board fabrics chain, ring, mesh, torus, fully connected groups of 2, 4 or 8 packages, or one switch; tensor groups of 1–32 dies; and six reduction algorithms. The wafer was swept over groups of 4–57 fields in square and rectangular shapes. Both were run with experts either striped across the group or placed one per device. The results:</p>
-  <ul>
-    <li><b>The array is insensitive to its network.</b> The best configuration (8-die packages, 8-die group, ring) reaches 4,262 tok/s per user, only 3% above the selected 4-die ring. That group gives up a quarter of the aggregate at 4,096 users (379 K against 504 K tok/s) and needs a 6,520 mm² interposer. A single switch tier costs 3–6%.</li>
-    <li><b>The wafer is sensitive to its group size.</b> The per-user rate goes from 1,992 tok/s with one 57-field group to 2,768 with three 19-field groups. Groups of 8–12 fields reach about 2,950 but leave 2–16% of the fields holding no weights.</li>
-    <li><b>One-shot wins</b> almost everywhere at decode payloads (1.5–68 KB). Every static algorithm keeps a fixed summation order, so results stay reproducible.</li>
-    <li><b>Placing each expert on its own device is 11% slower</b> than striping at batch 64. It also needs arrivals buffered and summed in expert-id order to stay bit-exact.</li>
-  </ul>
-  <div class="tablebox"><table class="data">
-    <caption>Table 6-5. Selected topologies and sensitivities</caption>
-    <thead><tr><th>Target</th><th>Physical</th><th>Logical</th><th class="r">Batch 1 / 64 per user</th><th class="r">Aggregate, 4,096 users</th></tr></thead>
-    <tbody>
-      <tr><td>V4.1 array (selected)</td><td>4-die package, board ring, 40 stages</td><td>one-shot inside the package; experts striped</td><td class="r m">5,005 / 4,436</td><td class="r m">504 K</td></tr>
-      <tr><td>V4.1 array, per-user optimum</td><td>8-die package, 8-die group, ring</td><td>one-shot</td><td class="r m">5,603 / 4,095</td><td class="r m">379 K</td></tr>
-      <tr><td>V4.1 wafer (selected)</td><td>3 × 19-field square groups per wafer, 37 stages</td><td>one-shot inside the group</td><td class="r m">2,768 / 2,422</td><td class="r m">1.00 M</td></tr>
-      <tr><td>Wafer + dedicated reduction network (sensitivity)</td><td>express tree, 10 ns per level</td><td>tree</td><td class="r m">3,929 at batch 1</td><td class="r m">—</td></tr>
-      <tr><td>V4.1 array before the Sinkhorn unit (pipelined adders + 31-cycle divider)</td><td>as selected</td><td>as selected</td><td class="r m">4,136 / 4,024</td><td class="r m">504 K</td></tr>
-    </tbody>
-  </table></div>
-  <p><b>What this changed in the design.</b> Before the Sinkhorn unit, V4.1's per-user rate was bound by the hyper-connection Sinkhorn. Its 39 dependent 4×4 normalisations per sublayer took ≈2.0 µs, 80 times per token, on pipelined adders and a 31-cycle divider. The <b>Sinkhorn unit</b> (<code>rtl/hdc/v41/ot_hdc_sinkhorn.sv</code>) now does one whole normalisation per clock: positive-only chained adders, and a table-seeded reciprocal with an exact remainder correction that is bit-identical to IEEE division. That brings a step to 6.6 ns and a Sinkhorn to 270 ns, verified bit-exact on 3,840 real and 1,000,000 random Sinkhorns. The Sinkhorn is now off the critical path. The selected array rises to <b>5,005 / 4,436 tok/s per user at batch 1 / 64</b>, where the token is set by the compute chain (norms, softmax, SiLU and the matrix passes, 138 µs) and the ROM sweep (43 µs). The next RTL priorities are the stream-unit function depths (sigmoid, exp, rsqrt) and the index top-k merge. The per-user optimum at batch 1 is now an 8-die group, 12% faster, but it loses 8% at batch 64 and 25% of the aggregate, so the 4-die package stays selected.</p>
-  <h3 id="s6-9">6.9 Wafer vs array at equal silicon: the wafer is rejected</h3>
-  <p>The ×12 wafer design of §6.7 uses 3.6× the array's silicon, so comparing it with the array directly flatters the wafer. <code>tools/wafer_vs_array_study.py</code> (report: <code>docs/WAFER_VS_ARRAY_ISO_AREA.md</code>) sizes wafers of 2, 3, 4 and 12 against arrays of the same area, rounded down to whole 4-die packages. Both are sized with the analytical model's own rules, and both are priced on the bottom-up critical path. Every size holds the weights; a single wafer does not.</p>
-  <div class="tablebox"><table class="data">
-    <caption>Table 6-6. Wafer ÷ array at equal silicon (divider as built, Cerebras-style mesh at 125 ns per field)</caption>
-    <thead><tr><th>Wafers</th><th class="r">Silicon</th><th class="r">Wafer / array per user, batch 1 (tok/s)</th><th class="r">Ratio, batch 1</th><th class="r">Ratio, batch 64</th><th class="r">Aggregate ratio, 4,096 users</th></tr></thead>
-    <tbody>
-      <tr><td>2</td><td class="r m">92,450 mm²</td><td class="r m">3,487 / 4,196</td><td class="r m">0.83</td><td class="r m">1.05</td><td class="r m">1.20</td></tr>
-      <tr><td>3</td><td class="r m">138,675 mm²</td><td class="r m">3,814 / 4,279</td><td class="r m">0.89</td><td class="r m">0.56</td><td class="r m">0.92</td></tr>
-      <tr><td>4</td><td class="r m">184,900 mm²</td><td class="r m">3,705 / 4,254</td><td class="r m">0.87</td><td class="r m">0.56</td><td class="r m">0.90</td></tr>
-      <tr><td>12</td><td class="r m">554,700 mm²</td><td class="r m">3,083 / 4,216</td><td class="r m">0.73</td><td class="r m">0.61</td><td class="r m">1.03</td></tr>
-    </tbody>
-  </table></div>
-  <ul>
-    <li><b>Wafer fabric is the only lever for batch 1.</b> The wafer only matches the array when a field crossing costs about 13–18 ns or less, which needs a designed long-wire network that has not been built, instead of Cerebras' fine-grained mesh. Even at the wire limit (≈5 ns) the wafer's lead is 2–3%.</li>
-    <li><b>Measured: a designed fabric is not fast enough.</b> A pipelined long-wire link routed on ASAP7 (<code>rtl/rom/ot_rom_express_link.sv</code>, <code>results/architecture/wafer_express_link_measurement.json</code>) runs at 605 ps/mm with a register every 1.0 mm at 1 GHz. That makes a 28.55 mm field crossing ≈30 ns with a forwarding boundary, or ≈35 ns with an FP32 reduction boundary. It is 4× better than Cerebras' mesh but still above the 13–18 ns the wafer needs to match the array, and above the 22.5 ns beyond which, in this model, the wafer never reaches the array at batch 1. ASAP7's thin routing metal makes this an upper-side figure for N5, but even a 2× better N5 wire would leave the wafer at parity, not ahead.</li>
-    <li><b>Up to 16%, and only with two unbuilt parts.</b> The lead reaches 6–16% only when the Sinkhorn chain is also cut in half, from ≈168 µs to ≈84 µs per token with a 4-cycle bit-exact divider. Even then the wafer is slower at batch 64 at three of the four sizes.</li>
-    <li><b>Aggregate throughput is a wash.</b> At 4,096 users it is set by pipeline occupancy, not the fabric: 0.90–1.20.</li>
-    <li><b>HBM is the wafer's hard limit.</b> A wafer edge carries 43 HBM3E stacks against 5 per die, so the array has 6.5× the stacks at every size.</li>
-    <li><b>Manufacturing:</b> everything is harder on the wafer. It needs in-place defect tolerance instead of discarding bad dies, stitching across fields, HBM limited to the wafer edge, and whole-wafer test.</li>
-  </ul>
-  <p><b>Decision.</b> The wafer's advantage is at most a few percent at batch 1, only there, and it depends on two parts that have not been built. That does not justify its manufacturing risk. DeepSeek-V4.1 is implemented on the <b>ROM array</b> with the topology of §6.6: 4-die tensor-group packages, one-shot fixed-order collectives on UCIe, and a board ring. The wafer stays in the analytical model as a comparison, with Cerebras' mesh as the conservative control, but it is no longer a simulation target.</p>
-</section>
-
-<!-- 7 -->
-<section id="s7">
-  <h2><span class="num">7</span>DeepSeek-V4.1 package</h2>
-  <p class="note"><b>Status: one V4.1 decode token runs bit-exact in RTL.</b> The V4.1 configuration of the decode core (<code>rtl/hdc/v41/ot_hdc_core_v41.sv</code>) shares the matrix engine and adds a four-operand stream unit, an FP8/FP4 quantised engine, an auxiliary unit (top-k select, Sinkhorn, Engram hash and gather) and a hyper-connection projection engine. It runs a 4,416-instruction program over all 40 layers of the reduced model. It decodes token 3118 (the golden's and the oracle's) in 1,088,551 cycles, bit-exact in every logit, the vector memory and the KV cache. From an empty state it consumes the prompt and generates three tokens identical to the golden. The timing model agrees to 0.002%. The token is bound by the one-element-per-cycle stream unit (729 K busy cycles) and by the golden's sequential 640-term hyper-connection sums, which are the current optimisation targets. The core has not been routed yet.</p>
-  <p>A V4.1 package is the decode core plus the units below, each specified by a V4.1 golden written in the same style (every operation one binary32 op in hardware order). The golden reproduces the reduced model's first oracle token and is bit-exact layer by layer at every prompt position.</p>
-  <div class="tablebox"><table class="data">
-    <caption>Table 7-1. V4.1 units (all II = 1, bit-exact vs the golden, routed at a 0.9 ns target unless noted)</caption>
+    <caption>Table 8-1. V4.1 units (all II = 1, bit-exact vs the golden; routed on ASAP7 at a 0.9 ns target unless noted)</caption>
     <thead><tr><th>Unit</th><th>Function</th><th class="r">Latency</th><th class="r">Cell area µm²</th><th class="r">Routed</th></tr></thead>
     <tbody>
       <tr><td class="m">ot_hdc_blockdot</td><td>FP8/FP4 block-linear lane: E4M3/E2M1 decode, exact 32-term dot, 2^(ew+ex) scale, 8-slot FP32 ring, BF16 out</td><td class="r m">15</td><td class="r m">2,470</td><td class="r m">1,196 MHz</td></tr>
@@ -695,98 +726,175 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tr><td class="m">ot_hdc_select (K=512)</td><td>index top-k of the sparse attention, emitted in position order</td><td class="r m">2K+2</td><td class="r m">32,305</td><td class="r m">1,115 MHz</td></tr>
       <tr><td class="m">ot_hdc_engram_hash</td><td>n-gram hash: constant multiply, XOR, exact modulo by primes (no divider), 48 row addresses/token</td><td class="r m">12</td><td class="r m">12,206</td><td class="r m">1,524 MHz</td></tr>
       <tr><td class="m">ot_hdc_softplus</td><td>softplus and √softplus router scores (exp, CR divide, odd series, CR sqrt)</td><td class="r m">259</td><td class="r m">23,078</td><td class="r m">1,034 MHz (1.0 ns)</td></tr>
+      <tr><td class="m">ot_hdc_sinkhorn</td><td>4×4 Sinkhorn, one whole normalisation per step: positive-only chained adders and a table-seeded reciprocal with exact remainder correction, bit-identical to IEEE division</td><td class="r m">7 core cycles / step</td><td class="r m">30,143</td><td class="r m">multicycle unit; 146.8 MHz at 7 ns, 17 slew</td></tr>
+      <tr><td class="m">ot_hdc_tselect (W=16)</td><td>threshold top-512: 256-bin high-byte histogram, low-byte refinement, position-order output</td><td class="r m">2·beats + 65</td><td class="r m">18,079</td><td class="r m">1,087 MHz, −20 ps, 74 slew</td></tr>
+      <tr><td class="m">ot_hdc_tselect (W=64)</td><td>as above, 64 lanes (the configuration the model prices)</td><td class="r m">2·beats + 65</td><td class="r m">—</td><td class="r m"><span class="status s-open">global route congested</span></td></tr>
+      <tr><td class="m">ot_hdc_tselect_cand</td><td>layer-20 candidate blocks: block max, newest-block pin, K=2048</td><td class="r m">2·beats + 69</td><td class="r m">—</td><td class="r m"><span class="status s-part">route pending</span></td></tr>
     </tbody>
-  </table></div>
+  </table></div>  <div class="pending"><div class="ph">Pending · V4.1 unit and core routes on the current RTL</div><p>The divider, square root and hyper-connection projection were routed on a branch before the 8-lane vector stream unit merged; they, the Sinkhorn wrapper, the stream unit, QE, XU and the whole V4.1 core are being re-routed from current main. The 64-lane threshold select is being rebuilt as four 16-lane quarters so it routes. Settled by: <code>results/physical_abi3/asap7/hdc/v41/</code> records and <code>summary.json</code>.</p></div>
+
+  <h3 id="s8-2">8.2 Collectives and the tensor group</h3>
+  <p>A package's dies split every matrix and combine partial results with fixed-order collectives: each die sends its partial to the others and sums in a fixed order, so every die holds a bit-identical result. The four-die tensor group runs a reduced Qwen3 token bit-exactly in RTL (<code>results/rtl/hdc_package_tp_campaign.json</code>): 32,291 → 16,534 cycles per token step (1.95×) for one user and 14,510 → 5,883 (2.47×) under load<span class="tag meas">measured</span>, with the link latency set to the model's value, not measured.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 7-2. Remaining V4.1 work</caption>
-    <thead><tr><th>Item</th><th>State</th></tr></thead>
+    <caption>Table 8-2. Collective and fabric blocks (ASAP7, routed)</caption>
+    <thead><tr><th>Block</th><th>Function</th><th class="r">Area µm²</th><th class="r">Routed</th></tr></thead>
     <tbody>
-      <tr><td>MoE dispatch/combine (expert-parallel all-to-all) with deterministic combine order</td><td><span class="status s-part">in design</span></td></tr>
-      <tr><td>KV-source multicast; package controller; fabric router</td><td><span class="status s-part">in design</span></td></tr>
-      <tr><td>Hyper-connection (Sinkhorn) unit; indexer integration; V4.1 ISA and program</td><td><span class="status s-open">not started</span></td></tr>
-      <tr><td>Compiler/runtime lane: state-read binding fixed (HBM cell emits the oracle's first token at 12 and 16 prompt tokens); ROM KV-join order, ROM decode trap, Engram decode history</td><td><span class="status s-part">fixing</span></td></tr>
+      <tr><td class="m">ot_rom_pkg_ctrl</td><td>package controller: stage sequencing, user contexts, token forwarding</td><td class="r m">3,443</td><td class="r m">1,162 MHz</td></tr>
+      <tr><td class="m">ot_rom_fabric_router</td><td>package fabric router with multicast</td><td class="r m">10,103</td><td class="r m">1,195 MHz</td></tr>
+      <tr><td class="m">ot_rom_moe_dispatch</td><td>MoE dispatch (multicast); unicast variant 1,285 MHz</td><td class="r m">1,511</td><td class="r m">1,408 MHz</td></tr>
+      <tr><td class="m">ot_rom_moe_expert_port</td><td>expert port</td><td class="r m">2,179</td><td class="r m">1,558 MHz</td></tr>
+      <tr><td class="m">ot_rom_moe_combine</td><td>deterministic MoE combine</td><td class="r m">46,746</td><td class="r m">1,000 MHz (1.0 ns)</td></tr>
+      <tr><td class="m">ot_rom_mcast_node</td><td>KV-source multicast node</td><td class="r m">2,915</td><td class="r m">1,359 MHz</td></tr>
+      <tr><td class="m">ot_rom_argmax_reduce</td><td>vocabulary-split argmax</td><td class="r m">1,849</td><td class="r m">1,151 MHz</td></tr>
+      <tr><td class="m">ot_rom_oneshot_die</td><td>one-shot all-reduce engine per die</td><td class="r m">65,857</td><td class="r m">1,006 MHz, −94 ps, 7,104 slew <span class="status s-part">re-route pending</span></td></tr>
     </tbody>
   </table></div>
-</section>
 
-<!-- 8 -->
-<section id="s8">
-  <h2><span class="num">8</span>HBM comparator</h2>
-  <div class="two">
-    <figure class="fig narrow">
-      <div class="svgbox"><svg viewBox="0 0 440 260" role="img" aria-label="HBM accelerator node">
-        <g font-size="12" text-anchor="middle">
-          <rect x="120" y="70" width="200" height="120" rx="5" fill="var(--hbm-soft)" stroke="var(--hbm)" stroke-width="1.5"/>
-          <text x="220" y="98" fill="var(--ink)" font-weight="600">Compute die</text><text x="220" y="118" fill="var(--muted)">tensor engines</text><text x="220" y="136" fill="var(--muted)">descriptor front end</text><text x="220" y="154" fill="var(--muted)">microsequencer · admission</text>
-          <g fill="var(--panel)" stroke="var(--hbm)"><rect x="20" y="70" width="80" height="54" rx="3"/><rect x="20" y="136" width="80" height="54" rx="3"/><rect x="340" y="70" width="80" height="54" rx="3"/><rect x="340" y="136" width="80" height="54" rx="3"/></g>
-          <g fill="var(--ink)"><text x="60" y="102">HBM</text><text x="60" y="168">HBM</text><text x="380" y="102">HBM</text><text x="380" y="168">HBM</text></g>
-          <text x="220" y="40" fill="var(--muted)">weights and KV stream from HBM every token</text>
-          <rect x="120" y="210" width="200" height="34" rx="4" fill="var(--panel)" stroke="var(--hbm)"/><text x="220" y="232" fill="var(--ink)">NVLink / NVL72 domain</text>
-          <path d="M220,190 L220,208" stroke="var(--hbm)" stroke-width="2"/>
-        </g>
-      </svg></div>
-      <figcaption><b>Figure 8-1.</b> The comparator is priced at its best per metric: B200 or NVL72, tensor/pipeline/expert parallelism, native FP4/FP8.</figcaption>
-    </figure>
-    <div class="fig">
-      <h4>ABI 3.0 RTL (the general machine)</h4>
-      <ul>
-        <li>Descriptor control plane, microsequencer, admission bridge and IEEE engines; the reduced Qwen3 token runs end to end (7.9 M cycles, one MAC per cycle).</li>
-        <li>Its control path has repeatedly been the limiter: clock (58–75 MHz slowest blocks), issue latency, and issue rate on many small operations. A control-path optimisation pass is in progress (§12, I-6).</li>
-        <li>Shipped-model RTL stops at PC 32 <code>DMA.SCATTER</code>.</li>
-      </ul>
-      <div class="callout hbm">Specialisation is a property of the ROM machine. The HBM machine keeps GPU-class NVLink numbers in every comparison.</div>
-    </div>
-  </div>
-</section>
-
-<!-- 9 -->
-<section id="s9">
-  <h2><span class="num">9</span>System performance (analytical)</h2>
-  <p>ROM at N5 against B200, best feasible design on each side. Qwen3-8B at 200K and 1M is hypothetical (released context 40,960). “none”: no feasible ROM design at that point.</p>
-  <div class="fig">
-    <div class="controls" role="group" aria-label="Metric">
-      <span class="eyebrow">Metric</span>
-      <div class="seg" id="metricSeg">
-        <button type="button" id="m-b1" aria-pressed="true" data-m="b1">Per user · batch 1</button>
-        <button type="button" id="m-b64" aria-pressed="false" data-m="b64">Per user · batch 64</button>
-        <button type="button" id="m-agg" aria-pressed="false" data-m="agg">Best throughput</button>
-        <button type="button" id="m-tpj" aria-pressed="false" data-m="tpj">Best tokens/J</button>
-      </div>
-    </div>
-    <div class="svgbox"><svg id="perfchart" viewBox="0 0 1000 560" role="img" aria-label="ROM over B200 ratio by model and context"></svg></div>
-    <div class="legend-row" id="ctxLegend"></div>
-  </div>
-  <div class="tablebox"><table class="data" id="heat"><caption>Table 9-1. All ratios (copper: ROM leads; blue: HBM leads; darker = further from parity)</caption></table></div>
-  <div class="callout"><b>Reading.</b> ROM wins where per-token cost is weight reads. V4.1-Flash keeps 7.9–8.2× at batch 64 even at 1M context because compressed sparse attention keeps per-user state small; Kimi K3 (fixed recurrent state) and MiMo (full GQA caches) fall toward parity beyond 8K because per-user state traffic is not helped by ROM.</div>
-</section>
-
-<!-- 10 -->
-<section id="s10">
-  <h2><span class="num">10</span>Physical implementation (ASAP7)</h2>
-  <p>OpenROAD-flow-scripts, TT corner, detailed-routed Fmax. Blocks registered at every port are characterised with I/O false-pathed (their neighbours are registered blocks or memory macros); the value is recorded in each record.</p>
+  <h3 id="s8-3">8.3 Link protocol</h3>
+  <p>A cut-through, credit-flow-controlled pipe that forwards each flit as it arrives. The analog PHY (SerDes, FEC, deskew) is represented by a fixed delay line; framing, credits and cut-through are real logic.</p>
   <figure class="fig">
-    <div class="svgbox"><svg id="fmax" viewBox="0 0 520 440" role="img" aria-label="Routed Fmax"></svg></div>
-    <figcaption><b>Figure 10-1.</b> Routed clock of each block; dashed line 1 GHz.</figcaption>
+    <div class="svgbox"><svg id="flits" viewBox="0 0 1000 220" role="img" aria-label="Flit formats"></svg></div>
+    <figcaption><b>Figure 8-3.</b> Message = header flit + payload flits (512-bit flits: one vector-memory word of 16 FP32). Hidden-state message: header + 8 flits. Token feedback: header only. In a split lm_head the header also carries the running best logit.</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
-    <caption>Table 10-1. Block records</caption>
-    <thead><tr><th>Block</th><th class="r">Cells</th><th class="r">Area µm²</th><th class="r">Seq. µm²</th><th class="r">Target ns</th><th class="r">Routed</th><th class="r">Slew viol.</th><th>Worst reg→reg path</th></tr></thead>
+    <thead><tr><th>Property</th><th>Value</th></tr></thead>
     <tbody>
-      <tr><td class="m">ot_hdc_matvec</td><td class="r m">373,000</td><td class="r m">56,838</td><td class="r m">31,700</td><td class="r m">0.9</td><td class="r m">1,099 MHz</td><td class="r m">37</td><td class="m">first-select register fan-out (−10 ps); first-select retimed and split-tree levels registered (1,009 → 1,099 MHz)</td></tr>
-      <tr><td class="m">ot_hdc_stream</td><td class="r m">242,220</td><td class="r m">35,300</td><td class="r m">17,090</td><td class="r m">0.85</td><td class="r m">1,111 MHz</td><td class="r m">0</td><td class="m">rsqrt multiplier stage 3</td></tr>
-      <tr><td class="m">ot_hdc_fp32_mul_pipe</td><td class="r m">4,632</td><td class="r m">615</td><td class="r m">136</td><td class="r m">0.7</td><td class="r m">1,275 MHz</td><td class="r m">0</td><td class="m">s1_b → s2 partial product</td></tr>
-      <tr><td class="m">ot_fp32_mul_rne_pipe (qualified)</td><td class="r m">4,646</td><td class="r m">588</td><td class="r m">105</td><td class="r m">0.7</td><td class="r m">1,052 MHz</td><td class="r m">0</td><td class="m">s1_a → s2 24×24 product</td></tr>
-      <tr><td class="m">ot_fp32_add_rne_pipe</td><td class="r m">1,901</td><td class="r m">288</td><td class="r m">143</td><td class="r m">0.7</td><td class="r m">1,447 MHz</td><td class="r m">0</td><td class="m">s3 value → s4 exponent</td></tr>
-      <tr><td class="m">ot_hdc_exp</td><td class="r m">57,009</td><td class="r m">8,296</td><td class="r m">3,488</td><td class="r m">0.8</td><td class="r m">1,196 MHz</td><td class="r m">0</td><td class="m">multiplier stage 2</td></tr>
-      <tr><td class="m">ot_hdc_recip</td><td class="r m">35,812</td><td class="r m">4,970</td><td class="r m">1,675</td><td class="r m">0.8</td><td class="r m">1,223 MHz</td><td class="r m">0</td><td class="m">multiplier stage 2</td></tr>
-      <tr><td class="m">ot_hdc_rsqrt</td><td class="r m">50,104</td><td class="r m">6,949</td><td class="r m">2,342</td><td class="r m">0.8</td><td class="r m">1,210 MHz</td><td class="r m">0</td><td class="m">multiplier stage 2</td></tr>
-      <tr><td class="m">ot_rom_pkg_link</td><td class="r m">41,601</td><td class="r m">6,521</td><td class="r m">3,506</td><td class="r m">1.0</td><td class="r m">1,339 MHz</td><td class="r m">58</td><td class="m">receive buffer read → output register</td></tr>
-      <tr><td class="m">V4.1 units</td><td colspan="7">see Table 7-1 (all closed)</td></tr>
-      <tr><td class="m">ot_hdc_core (full)</td><td colspan="7"><span class="status s-part">route in progress</span></td></tr>
+      <tr><td>Latency law</td><td class="m">first flit = TX + CHANNEL + RX + 1 (registered output); last = first + flits − 1</td></tr>
+      <tr><td>Flow control</td><td>credits = receiver buffer entries (32 in the array); a credit returns on each drain</td></tr>
+      <tr><td>Ordering</td><td>in order per link; one message at a time per sender</td></tr>
+      <tr><td>Routed</td><td>1,339 MHz (64-byte flits, 16 credits); worst path: receive-buffer read → output register</td></tr>
+      <tr><td>Not modelled</td><td>SerDes/PHY, FEC, retry, lane deskew, link training (§14, R3)</td></tr>
+    </tbody>
+  </table></div>  <p class="note">The link's analog channel is a delay parameter (<code>CHANNEL_CYCLES</code>); it is being moved from the optimistic 60 ns to the realistic package-hop latency (§12.3).</p>
+  <h3 id="s8-4">8.4 Qwen array in RTL</h3>
+  <figure class="fig">
+    <div class="svgbox"><svg id="arraydiag" viewBox="0 0 1000 250" role="img" aria-label="ROM array pipeline"></svg></div>
+    <figcaption><b>Figure 8-4.</b> The 12-package configuration: half-layer packages (attention, MLP), a vocabulary-split lm_head over four packages carrying the running argmax, and token feedback to package 0. Each package is a decode core with a KV slice per user.</figcaption>
+  </figure>
+  <div class="two">
+    <div class="tablebox"><table class="data">
+      <caption>Table 8-4. Qwen array configurations (results/rtl/hdc_array_campaign.json; every user token-exact from an empty KV cache; single core 32,246 cycles)</caption>
+      <thead><tr><th>Packages / users</th><th class="r">Cycles / token-step</th><th class="r">vs one core</th><th>Limiter</th></tr></thead>
+      <tbody>
+        <tr><td>4 / 4</td><td class="r m">14,510</td><td class="r m">2.22×</td><td>layer 3 + lm_head package</td></tr>
+        <tr><td>5 / 5 (lm_head alone)</td><td class="r m">8,809</td><td class="r m">3.66×</td><td>lm_head package</td></tr>
+        <tr><td>6 / 6 (lm_head ÷ 2)</td><td class="r m">6,174</td><td class="r m">5.22×</td><td>layer packages</td></tr>
+        <tr><td>10 / 10 (half layers)</td><td class="r m">4,616</td><td class="r m">6.99×</td><td>lm_head halves</td></tr>
+        <tr><td>12 / 12 (lm_head ÷ 4)</td><td class="r m">3,306</td><td class="r m">9.75×</td><td>MLP half-layer (balanced)</td></tr>
+      </tbody>
+    </table></div>
+    <figure class="fig narrow">
+      <div class="svgbox"><svg id="arraybars" viewBox="0 0 460 230" role="img" aria-label="Array speed-up"></svg></div>
+      <figcaption><b>Figure 8-5.</b> Aggregate throughput over one core. Per-user latency stays ≈ one core's.</figcaption>
+    </figure>
+  </div>  <div class="pending"><div class="ph">Pending · V4.1 across packages in RTL</div><p>A multi-package V4.1 decode runs bit-exactly at 2 and 4 packages on a branch (only per-step deltas of compressed KV, index keys and selections cross a boundary); its record is being regenerated against current main before merge, and the 8-package switched/multicast configuration is compiling. Settled by: <code>results/rtl/hdc_v41_array_campaign.json</code>.</p></div>
+</section>
+
+<section id="s9">
+  <h2><span class="num">9</span>Memory subsystem and test</h2>
+  <h3 id="s9-1">9.1 SRAM and ROM compilers</h3>
+  <p>An SRAM compiler (1RW, 1R1W, 2RW; column mux, banks, spare rows and IO columns) and a via-programmed NOR mask-ROM compiler with per-instance personalisation generate LEF, Liberty and Verilog views from an analytical model calibrated to one published 7 nm SRAM macro. ROM layout and timing are independent of content; content is a per-die via map with a hash. ASAP7 is predictive, so these are model-grade views, not silicon macros.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 9-1. Representative macros (docs/MEMORY_COMPILERS_AND_BIST.md; "r2c2" = 2 spare rows + 2 spare IO columns)</caption>
+    <thead><tr><th>Macro</th><th class="r">Size µm</th><th class="r">Density Mb/mm²</th><th class="r">fmax TT / SS / FF MHz</th></tr></thead>
+    <tbody>
+      <tr><td class="m">ot_sram_1rw_2048x128_m4_r2c2</td><td class="r m">122.9 × 66.2</td><td class="r m">32.2</td><td class="r m">1967 / 1532 / 2400</td></tr>
+      <tr><td class="m">ot_sram_1r1w_1024x256_m2_r2c2 (KV)</td><td class="r m">174.7 × 70.5</td><td class="r m">21.3</td><td class="r m">1897 / 1489 / 2297</td></tr>
+      <tr><td class="m">ot_sram_1r1w_64x512_m1_r2c2 (pin-limited)</td><td class="r m">171.3 × 77.8</td><td class="r m">2.5</td><td class="r m">2871 / 2282 / 3430</td></tr>
+      <tr><td class="m">ot_rom_8192x266_m8 (weights, SECDED 256+10)</td><td class="r m">122.3 × 119.3</td><td class="r m">149.4</td><td class="r m">1298 / 1018 / 1576</td></tr>
+      <tr><td class="m">ot_rom_16384x266_m16</td><td class="r m">237.2 × 119.6</td><td class="r m">153.6</td><td class="r m">976 / 799 / 1137</td></tr>
+    </tbody>
+  </table></div>
+  <h3 id="s9-2">9.2 Memory self-test and repair</h3>
+  <p>One shared March controller (reset default March C−) drives SRAM and ROM collars; a built-in redundancy analyser (BIRA) allocates spare rows and columns, and ROM words carry SECDED with a CRC-32 content signature. The hard-macro test top, with an SRAM, a ROM, their collars, SECDED and the controller placed as macros, closes on ASAP7 at 1.0 ns: <b>1,032 MHz</b>, DRC 0, no slew, capacitance or fanout violations, hold met<span class="tag meas">measured</span> (<code>results/physical_abi3/asap7/mbist_macro_testtop/pnr_1p0ns_pipelined4.json</code>). It took four routes, each fixing the limiter the previous one found: 800 → 808 → 890 → 1,032 MHz. With the macros in the decode core, the reduced Qwen3 token still decodes 1073 in 32,246 cycles, and BIST finds and repairs a stuck KV cell (<code>results/rtl/mbist_campaign.json</code>).</p>
+  <h3 id="s9-3">9.3 Scan, ATPG and the test access port</h3>
+  <p>The ASAP7 Liberty has no scan-cell descriptions, so a netlist-level inserter replaces flops with ASAP7 scan flops between synthesis and floorplan (<code>--dft scan</code>); Yosys proves the scanned netlist equals the unscanned one with scan off. A JTAG TAP (IEEE 1149.1 subset) carries IDCODE, BYPASS, scan access and BIST control; it stays off internal scan because it captures on both TCK edges. Stuck-at ATPG is our own engine, confirmed at gate level by replaying patterns and injected faults.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 9-2. ATPG coverage (results/dft/summary.json)</caption>
+    <thead><tr><th>Block</th><th>Architectures</th><th class="r">Scan cells</th><th class="r">Fault coverage</th><th class="r">Test coverage</th><th class="r">Patterns</th></tr></thead>
+    <tbody>
+      <tr><td class="m">matrix engine</td><td>HBM, Qwen ROM</td><td class="r m">95,737</td><td class="r m">96.18%</td><td class="r m">99.85%</td><td class="r m">22,817</td></tr>
+      <tr><td class="m">stream unit</td><td>HBM, Qwen ROM</td><td class="r m">53,022</td><td class="r m">96.11%</td><td class="r m">99.85%</td><td class="r m">11,650</td></tr>
+      <tr><td class="m">KV streamer</td><td>HBM</td><td class="r m">7,187</td><td class="r m">98.69%</td><td class="r m">99.87%</td><td class="r m">4,532</td></tr>
+      <tr><td class="m">package controller</td><td>V4.1 array</td><td class="r m">4,482</td><td class="r m">97.74%</td><td class="r m">99.74%</td><td class="r m">1,223</td></tr>
+      <tr><td class="m">fabric router</td><td>V4.1 array</td><td class="r m">13,226</td><td class="r m">99.87%</td><td class="r m">99.99%</td><td class="r m">508</td></tr>
+      <tr><td class="m">package link</td><td>V4.1 array</td><td class="r m">11,856</td><td class="r m">94.80%</td><td class="r m">100.00%</td><td class="r m">336</td></tr>
+      <tr><td class="m">argmax collective</td><td>V4.1 array</td><td class="r m">2,264</td><td class="r m">98.52%</td><td class="r m">99.60%</td><td class="r m">2,376</td></tr>
+      <tr><td class="m">multicast node</td><td>V4.1 array</td><td class="r m">4,216</td><td class="r m">99.83%</td><td class="r m">100.00%</td><td class="r m">220</td></tr>
+      <tr><td class="m">MoE dispatch</td><td>V4.1 array</td><td class="r m">2,155</td><td class="r m">99.48%</td><td class="r m">99.98%</td><td class="r m">296</td></tr>
+      <tr><td class="m">MoE expert port</td><td>V4.1 array</td><td class="r m">3,185</td><td class="r m">99.66%</td><td class="r m">100.00%</td><td class="r m">158</td></tr>
     </tbody>
   </table></div>
   <div class="tablebox"><table class="data">
-    <caption>Table 10-2. Timing lessons carried into the design</caption>
+    <caption>Table 9-3. Cost of scan, same settings with and without (results/dft/summary.json)</caption>
+    <thead><tr><th>Block</th><th class="r">Std-cell area</th><th class="r">Routed wirelength</th><th class="r">Fmax</th></tr></thead>
+    <tbody>
+      <tr><td class="m">package controller</td><td class="r m">+13.8%</td><td class="r m">+15.0%</td><td class="r m">−2.5%</td></tr>
+      <tr><td class="m">package link</td><td class="r m">+13.0%</td><td class="r m">+29.0%</td><td class="r m">−10.8%</td></tr>
+      <tr><td class="m">MoE expert port</td><td class="r m">+11.9%</td><td class="r m">+19.0%</td><td class="r m">−11.4%</td></tr>
+      <tr><td class="m">multicast node</td><td class="r m">+11.6%</td><td class="r m">+14.8%</td><td class="r m">−2.3%</td></tr>
+      <tr><td class="m">MoE dispatch</td><td class="r m">+11.6%</td><td class="r m">+18.3%</td><td class="r m">−5.1%</td></tr>
+      <tr><td class="m">KV streamer</td><td class="r m">+10.1%</td><td class="r m">+19.3%</td><td class="r m">+1.4% (noise)</td></tr>
+      <tr><td class="m">argmax collective</td><td class="r m">+10.0%</td><td class="r m">+21.0%</td><td class="r m">−1.2%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="pending"><div class="ph">Pending · large-block DFT</div><p>Scan-cost route pairs for the matrix engine, stream unit, Sinkhorn and fabric router; gate-level confirmation for the matrix engine, stream unit and KV streamer (sampled on the two largest); scan-off equivalence proofs for the stream unit and matrix engine. Settled by: <code>results/dft/</code> and <code>docs/DFT.md</code> (<code>tools/dft/summarize.py --write-doc</code>).</p></div>
+</section>
+
+<section id="s10">
+  <h2><span class="num">10</span>Verification methodology</h2>
+  <p>Correctness is defined by the golden model, not by the RTL. Each stage is checked against the one before it before the next is written, and every campaign writes a record with the SHA-256 of its inputs; a test fails when a record goes stale against its sources.</p>
+  <figure class="fig">
+    <div class="svgbox"><svg id="vchain" viewBox="0 0 1000 150" role="img" aria-label="Verification chain"></svg></div>
+    <figcaption><b>Figure 10-1.</b> Every stage is checked against the one before it before the next is written.</figcaption>
+  </figure>  <div class="tablebox"><table class="data">
+    <caption>Table 10-1. Campaigns on main (all status pass)</caption>
+    <thead><tr><th>Campaign</th><th>Checks</th></tr></thead>
+    <tbody>
+      <tr><td class="m">rtl_hdc_decode_campaign</td><td>special functions and multipliers against references; single step bit-exact in logits, vector memory and KV; end to end from an empty KV cache; tokens 1073, 382, 93</td></tr>
+      <tr><td class="m">rtl_hdc_kv_stream_campaign</td><td>KV streamed from an HBM timing model; every core run equals the ROM-KV record</td></tr>
+      <tr><td class="m">rtl_hdc_array_campaign</td><td>4/5/6/10/12-package Qwen arrays; every user token-exact; link stalls</td></tr>
+      <tr><td class="m">rtl_hdc_package_tp_campaign</td><td>four-die tensor group with one-shot collectives; bit-exact per step</td></tr>
+      <tr><td class="m">rtl_hdc_v41_decode_campaign</td><td>reduced V4.1 token at positions 7 and 39; prompt + 3 generated from empty state; ISA model against golden</td></tr>
+      <tr><td class="m">rtl_hdc_v41_*_campaign</td><td>Sinkhorn (3,840 real + 1,000,000 random), block-dot, select, threshold select at 64/32/16/8/4 lanes, candidate select, Engram hash and gather; mutation checks catch every injected fault</td></tr>
+      <tr><td class="m">mbist_campaign</td><td>March C− with BIRA repair on SRAM and ROM collars; stuck cell repaired</td></tr>
+      <tr><td class="m">host_if_campaign</td><td>submission/completion rings and DMA for four targets; tokens through the endpoint path</td></tr>
+      <tr><td class="m">tools/dft</td><td>scan-off equivalence proofs; ATPG with gate-level replay and fault injection</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s11">
+  <h2><span class="num">11</span>Physical implementation (ASAP7)</h2>
+  <h3 id="s11-1">11.1 Flow</h3>
+  <p>OpenROAD-flow-scripts at the typical corner, one pinned container image; Fmax is the routed maximum after detailed routing. A block is <i>accepted</i> only if setup and hold are met with zero violating paths and the routed netlist has no max-slew, max-capacitance or max-fanout violations. Blocks registered at every port are characterised with I/O false-pathed (<code>--false-path-io</code>); each record carries its settings, source hashes and the image digest. Routes run on a shared pool of remote workers with an identical toolchain; a benchmark route reproduced a local record bit for bit.</p>
+  <h3 id="s11-2">11.2 Block results</h3>
+  <figure class="fig">
+    <div class="svgbox"><svg id="fmax" viewBox="0 0 560 640" role="img" aria-label="Routed Fmax per block"></svg></div>
+    <figcaption><b>Figure 11-1.</b> Routed clock per block; dashed line 1 GHz. Amber: not accepted (small negative slack or slew violations); blue: collectives and fabric.</figcaption>
+  </figure>
+  <div class="tablebox"><table class="data">
+    <caption>Table 11-1. Decode-core, host and memory-test blocks (results/physical_abi3/asap7/**)</caption>
+    <thead><tr><th>Block</th><th class="r">Target ns</th><th class="r">Routed</th><th class="r">Setup WNS</th><th class="r">Area µm²</th><th class="r">Slew viol.</th><th>Accepted</th></tr></thead>
+    <tbody>
+      <tr><td class="m">ot_hdc_matvec</td><td class="r m">0.9</td><td class="r m">1,099 MHz</td><td class="r m">−10 ps</td><td class="r m">68,596</td><td class="r m">37</td><td><span class="status s-part">no</span></td></tr>
+      <tr><td class="m">ot_hdc_stream</td><td class="r m">0.85</td><td class="r m">1,111 MHz</td><td class="r m">−50 ps</td><td class="r m">42,443</td><td class="r m">0</td><td><span class="status s-part">no</span></td></tr>
+      <tr><td class="m">ot_hdc_kv_stream</td><td class="r m">0.9</td><td class="r m">1,128 MHz</td><td class="r m">+13 ps</td><td class="r m">6,481</td><td class="r m">0</td><td><span class="status s-part">no</span></td></tr>
+      <tr><td class="m">ot_hdc_exp</td><td class="r m">0.8</td><td class="r m">1,196 MHz</td><td class="r m">−36 ps</td><td class="r m">10,110</td><td class="r m">0</td><td><span class="status s-part">no</span></td></tr>
+      <tr><td class="m">ot_hdc_recip</td><td class="r m">0.8</td><td class="r m">1,223 MHz</td><td class="r m">−17 ps</td><td class="r m">5,846</td><td class="r m">0</td><td><span class="status s-part">no</span></td></tr>
+      <tr><td class="m">ot_hdc_rsqrt</td><td class="r m">0.8</td><td class="r m">1,210 MHz</td><td class="r m">−26 ps</td><td class="r m">8,212</td><td class="r m">0</td><td><span class="status s-part">no</span></td></tr>
+      <tr><td class="m">ot_hdc_fp32_mul_pipe</td><td class="r m">0.7</td><td class="r m">1,275 MHz</td><td class="r m">−85 ps</td><td class="r m">783</td><td class="r m">0</td><td><span class="status s-part">no</span></td></tr>
+      <tr><td class="m">ot_fp32_add_rne_pipe</td><td class="r m">0.7</td><td class="r m">1,447 MHz</td><td class="r m">+9 ps</td><td class="r m">386</td><td class="r m">0</td><td><span class="status s-done">yes</span></td></tr>
+      <tr><td class="m">ot_host_if</td><td class="r m">0.9</td><td class="r m">1,135 MHz</td><td class="r m">+19 ps</td><td class="r m">4,345</td><td class="r m">0</td><td><span class="status s-done">yes</span></td></tr>
+      <tr><td class="m">ot_mbist_macro_testtop</td><td class="r m">1.0</td><td class="r m">1,032 MHz</td><td class="r m">+31 ps</td><td class="r m">2,272 + 1,944 macros</td><td class="r m">0</td><td><span class="status s-done">yes</span></td></tr>
+      <tr><td class="m">ot_rom_pkg_link</td><td class="r m">1.0</td><td class="r m">1,339 MHz</td><td class="r m">+253 ps</td><td class="r m">7,641</td><td class="r m">58</td><td><span class="status s-part">no</span></td></tr>
+      <tr><td class="m">V4.1 units, collectives</td><td colspan="6">Tables 8-1 and 8-2</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Several near-misses (−10 to −50 ps) are at a probe target tighter than the 1.034 GHz clock the model uses; the routed Fmax of every token-path unit exceeds that clock.</p>
+  <h3 id="s11-3">11.3 Timing lessons</h3>
+  <div class="tablebox"><table class="data">
+    <caption>Table 11-2. Timing lessons carried into the design</caption>
     <thead><tr><th>Finding</th><th>Fix</th></tr></thead>
     <tbody>
       <tr><td>The qualified multiplier's single-stage 24×24 product limits every unit at ≈0.95–1.05 GHz</td><td>stage-rebalanced copy: three 24×8 partial products + both exponent decisions in stage 2; cycle-equivalent on 20 M vectors; +21%</td></tr>
@@ -794,53 +902,168 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tr><td>2,048-bit memory buses from pins to lanes</td><td>one register on arrival and a second output register at the pins</td></tr>
       <tr><td>Block I/O budgets (20% of the clock) and hold buffering at zero delay</td><td><code>--false-path-io</code> for blocks registered at every port</td></tr>
       <tr><td>Engine: one first-k flag fans out to 64 adders</td><td>open: replicate per group</td></tr>
-      <tr><td>Synthesis merges a reset-constant multiplier flop across all instances (one flop drives the die)</td><td>fanout limit; open: make the bit non-constant</td></tr>
+      <tr><td>Synthesis merges a reset-constant multiplier flop across all instances (one flop drives the die)</td><td>data registers without reset, decision select one stage later (V4.1 core-route branch; pending merge)</td></tr>
     </tbody>
-  </table></div>
-</section>
-
-<!-- 11 -->
-<section id="s11">
-  <h2><span class="num">11</span>Verification</h2>
-  <figure class="fig">
-    <div class="svgbox"><svg id="vchain" viewBox="0 0 1000 150" role="img" aria-label="Verification chain"></svg></div>
-    <figcaption><b>Figure 11-1.</b> Every stage is checked against the one before it before the next is written.</figcaption>
-  </figure>
+  </table></div>  <h3 id="s11-4">11.4 Full-chip hierarchical implementation</h3>
+  <p>A hierarchical flow characterises each block's ports, derives timing budgets from the tile's paths, the floorplan distances and a wire model fitted to routed links (0.60 ps/µm + 190 ps), hardens blocks against their budgets with LEF/Liberty abstracts, and assembles tiles and reduced 2×2 dies with post-route timing at every block pin. Mesh ports use a pipelined credit link so every tile pin is a register.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 11-1. Campaigns (each writes a record with source SHA-256s; a test fails if the record is stale)</caption>
-    <thead><tr><th>Campaign</th><th>Checks</th><th>Result</th></tr></thead>
+    <caption>Table 11-3. Full-chip status (docs/FULL_CHIP_IMPLEMENTATION.md)</caption>
+    <thead><tr><th>Step</th><th>Qwen3-8B ROM die</th><th>HBM comparator die</th><th>DeepSeek-V4.1 universal die</th></tr></thead>
     <tbody>
-      <tr><td class="m">rtl_hdc_decode_campaign</td><td>SFU 18,010 vectors; multipliers 20 M vectors; single step (logits, VM, KV bit-exact); end to end from empty KV; position 59; 8-group scaling</td><td><span class="status s-done">pass</span></td></tr>
-      <tr><td class="m">rtl_hdc_array_campaign</td><td>4/5/6/10/12-package arrays, every user token-exact, link stalls</td><td><span class="status s-done">pass</span></td></tr>
-      <tr><td class="m">rtl_hdc_v41_decode_campaign</td><td>one reduced V4.1 token at positions 7 and 39 (top-k live), 8-token prompt + 3 generated from empty state; every logit, vector memory and KV cache vs the ISA model; ISA model vs golden</td><td><span class="status s-done">pass</span></td></tr>
-      <tr><td class="m">rtl_hdc_v41_sinkhorn_campaign</td><td>3,840 real + 1,000,000 random 4×4 Sinkhorns (≈645 M quotients), fail-closed classes, 14/14 mutations caught</td><td><span class="status s-done">pass</span></td></tr>
-      <tr><td class="m">rtl_hdc_v41_blockdot_campaign</td><td>36,573 quantiser blocks, 100,592 dot rows, ties, subnormals, mutation check</td><td><span class="status s-done">pass</span></td></tr>
-      <tr><td class="m">rtl_hdc_v41_select_campaign</td><td>8 configurations, tie-heavy random + 2,349 real reduced-V4.1 selections</td><td><span class="status s-done">pass</span></td></tr>
-      <tr><td class="m">rtl_hdc_v41_engram_campaign</td><td>divider/sqrt 20 M each; hash 18,861 positions; softplus 53,552 arguments</td><td><span class="status s-done">pass</span></td></tr>
-      <tr><td class="m">hdc_timing (test)</td><td>cycle model within 0.5% of RTL</td><td><span class="status s-done">pass</span></td></tr>
+      <tr><td>Floorplan</td><td>tile 1.16 × 2.42 mm; die 3.60 × 6.72 mm</td><td>tile 1.16 × 0.79 mm</td><td>tile 1.65 × 1.99 mm; die 4.58 × 5.90 mm</td></tr>
+      <tr><td>Budget table</td><td>1 violation (controller <code>core_token</code> output)</td><td>queued</td><td>waits for XU and the collectives nodes</td></tr>
+      <tr><td>Blocks re-closed to budget</td><td>KV streamer missed −244 ps on an unpaired through-path (fixed, re-queued); others queued</td><td>shares Qwen blocks</td><td>not started</td></tr>
+      <tr><td>Tile / die route</td><td>queued</td><td>not started</td><td>not started</td></tr>
     </tbody>
   </table></div>
+  <div class="pending"><div class="ph">Pending · whole-core routes</div><p>The whole Qwen HDC core (running, 24 h flow limit) and the whole V4.1 core (queued at 50 GB) set the achieved clock; the V4.1 token time is 344,109 cycles × that period. Settled by: <code>results/physical_abi3/asap7/hdc/</code> core records.</p></div>
+  <div class="pending"><div class="ph">Pending · power, IR drop, clock and multi-corner timing</div><p>Activity-based power from the decode campaigns, energy per token, power-grid IR drop, clock skew and latency, and SS/FF corners for every block and die. Settled by: the sign-off workstream (<code>docs/POWER_CLOCK_SIGNOFF.md</code>).</p></div>
 </section>
 
-<!-- 12 -->
 <section id="s12">
-  <h2><span class="num">12</span>Risks and open issues</h2>
+  <h2><span class="num">12</span>Performance evaluation</h2>
+  <h3 id="s12-1">12.1 Decode core, cycles per token</h3>
+  <div class="two">
+    <figure class="fig">
+      <div class="svgbox"><svg id="iterbars" viewBox="0 0 480 280" role="img" aria-label="Cycles per token by iteration"></svg></div>
+      <figcaption><b>Figure 12-1.</b> Reduced Qwen3 vehicle, cycles per token through the measured iterations (Verilator, bit-exact); green: the committed record.</figcaption>
+    </figure>
+    <div class="tablebox"><table class="data">
+      <caption>Table 12-1. Measured tokens (RTL)</caption>
+      <thead><tr><th>Vehicle</th><th class="r">Cycles</th><th>Tokens</th></tr></thead>
+      <tbody>
+        <tr><td>Reduced Qwen3, one step</td><td class="r m">32,246</td><td>1073 (then 382, 93)</td></tr>
+        <tr><td>Reduced V4.1, one step, 40 layers</td><td class="r m">344,109</td><td>3118 (then 2400, 64)</td></tr>
+        <tr><td>Qwen array, 12 packages, per token step</td><td class="r m">3,306</td><td>9.75× one core, every user exact</td></tr>
+        <tr><td>Four-die tensor group, per step under load</td><td class="r m">5,883</td><td>2.47× one core per package</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <h3 id="s12-2">12.2 Qwen3-8B on one reticle</h3>
   <div class="tablebox"><table class="data">
-    <thead><tr><th>ID</th><th>Issue</th><th>Impact</th><th>Plan</th><th>State</th></tr></thead>
+    <caption>Table 12-2. Per-user decode at batch 1 (results/roofline/critical_path/*.json)</caption>
+    <thead><tr><th>Target</th><th class="r">Critical path</th><th class="r">Analytical (graph-priced)</th><th class="r">Published</th><th>Binding</th></tr></thead>
     <tbody>
-      <tr><td class="req">I-1</td><td>Matrix engine: 61 slew violations; full-core route not yet closed</td><td>core clock unproven as a whole</td><td>slew margin + fanout limit re-route; replicate first-k flag</td><td><span class="status s-part">running</span></td></tr>
-      <tr><td class="req">I-2</td><td>KV cache lives in HBM at 200K–1M; no streaming engine</td><td>attention time at long context</td><td>HBM timing model + prefetch engine that keeps the engine stall-free</td><td><span class="status s-part">in design</span></td></tr>
-      <tr><td class="req">I-3</td><td>Vector memory assumed with G+3 read / G+2 write ports</td><td>area/realism</td><td>banked register file; single x port with per-chunk hold</td><td><span class="status s-open">open</span></td></tr>
-      <tr><td class="req">I-4</td><td>Stream unit is one element per cycle</td><td>63% of the Qwen3-8B token at 1,024 groups</td><td>16-wide stream unit; reductions become 8·width partials (spec change)</td><td><span class="status s-open">next</span></td></tr>
-      <tr><td class="req">I-5</td><td>Link PHY is a delay stand-in; no FEC/retry; package controller in testbench</td><td>system realism</td><td>synthesizable package controller, router with multicast</td><td><span class="status s-part">in design</span></td></tr>
-      <tr><td class="req">I-6</td><td>HBM machine control path limits clock, latency, issue rate</td><td>comparator RTL quality</td><td>measure and pipeline control blocks</td><td><span class="status s-part">in progress</span></td></tr>
-      <tr><td class="req">I-7</td><td>MoE all-to-all and V4.1 integration</td><td>V4.1 array in RTL</td><td>dispatch/combine engines, V4.1 ISA and program</td><td><span class="status s-part">in design</span></td></tr>
-      <tr><td class="req">I-8</td><td>V4.1 oracle is self-consistent only at positions 0–7</td><td>grading beyond 8 tokens</td><td>grade on tokens; document near-misses</td><td><span class="status s-open">external</span></td></tr>
+      <tr><td>Qwen3-8B, HC1-class reticle</td><td class="r m">8,680 tok/s (115.2 µs)</td><td class="r m">9,195</td><td class="r m">—</td><td>compute chain 77.3 µs + ROM sweep 34.5 µs + control 3.4 µs</td></tr>
+      <tr><td>Calibration: HC1, Llama-3.1-8B</td><td class="r m">10,103 tok/s (99.0 µs)</td><td class="r m">10,723</td><td class="r m">16,960 (59 µs, self-reported)</td><td>model is 0.60–0.63× of published: pessimistic</td></tr>
+    </tbody>
+  </table></div>
+  <h3 id="s12-3">12.3 DeepSeek-V4.1 ROM array</h3>
+  <div class="pending"><div class="ph">Pending · headline per-user and aggregate rates</div><p>Re-derivation with realistic links (ring-of-4 UCIe with diagonal relay, 200 ns package hop, 1.69 TB/s net, CDC) across packaging options (a) 2 dies + HBM per package, tensor group 2; (b) 2-die packages, tensor group 4 across a package pair; (c) 4-die package (future packaging). Reported per option: tok/s per user at batch 1 and 64, aggregate at 4,096 users, package count, ROM-placement feasibility and the critical-path breakdown. Settled by: <code>results/roofline/critical_path/decode_critical_path.json</code> (<code>tools/decode_critical_path.py</code>).</p></div>
+  <div class="tablebox"><table class="data">
+    <caption>Table 12-3. Superseded: option (c) with optimistic links (all-to-all UCIe at 10 ns, 100 ns package hop)</caption>
+    <thead><tr><th>Batch</th><th class="r">Per user</th><th class="r">Aggregate</th><th>Critical-path breakdown (batch 1)</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="r m">5,475 tok/s <span class="tag sup">optimistic</span></td><td class="r m">5,475</td><td rowspan="3">compute chain 117.0 · weight sweep 43.7 · pipeline hops 9.4 · control 7.3 · collectives 3.1 · KV 2.1 µs = 182.6 µs</td></tr>
+      <tr><td>64</td><td class="r m">4,824 tok/s</td><td class="r m">309 K</td></tr>
+      <tr><td>4,096</td><td class="r m">125 tok/s</td><td class="r m">510 K (occupancy-bound)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Two further caveats carry into the pending figure: the model's 1.034 GHz clock is the slowest routed unit, not a closed whole core, and the threshold select is priced at 64 lanes, which does not yet route (at the 16 lanes that do, the batch-1 figure would be lower).</p>
+  <h3 id="s12-4">12.4 GPU baseline and the comparison</h3>
+  <p>The GPU comparator executes decode the way state-of-the-art stacks do — fused kernels chained by PDL or a persistent megakernel — and pays, at each remaining dependent boundary, its measured cost on a Blackwell GPU (RTX PRO 6000, GB202, 188 SMs; measured, not a B200).</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 12-4. Measured dependent-boundary costs (results/gpu/*.json)</caption>
+    <thead><tr><th>Dependency</th><th class="r">Cost</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>inside one SM (<code>__syncthreads</code>)</td><td class="r m">7 ns</td><td>fused work is free</td></tr>
+      <tr><td>inside an 8-block cluster</td><td class="r m">131 ns</td><td>cluster shared memory is slow for data on this part</td></tr>
+      <tr><td>one-to-one handoff / PDL boundary</td><td class="r m">366–371 ns</td><td>≈1.5 L2 round trips; fence waits for the L2 acknowledgement</td></tr>
+      <tr><td>CUDA-graph gap, empty kernels</td><td class="r m">428 ns</td><td>real kernels add tail and prologue</td></tr>
+      <tr><td>all-SM gather, signal only</td><td class="r m">659 ns</td><td>≈5 L2 round trips, 2 of them fences</td></tr>
+      <tr><td>all-SM gather, activation delivered</td><td class="r m">1,004 ns (bf16) · 1,151 ns (fp32)</td><td>best of 12 designs; flag-in-data, per-producer flags, clusters and a Megatron pair all lose</td></tr>
+      <tr><td>exposed per GEMV boundary under a DRAM weight stream</td><td class="r m">0.74–1.06 µs</td><td>dynamic row claiming; 1.2–2.3 µs with fixed tiles (stragglers)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Full analysis: <a href="https://claude.ai/code/artifact/70f35b8f-623d-44a2-a466-c42b68e84bf2">GPU dependent-boundary cost: first-principles analysis and Blackwell measurement</a>.</p>
+  <div class="pending"><div class="ph">Pending · ROM : GPU ratios</div><p>Per-user and aggregate ratios for Qwen3-8B and DeepSeek-V4.1 with the GPU charged only measured boundary costs (≈1.0 µs all-SM gather, 371 ns handoff; no published launch-gap figures), and the realistic ROM-array links. Settled by: the GPU-baseline regeneration of <code>results/roofline/</code> and <code>results/roofline/critical_path/serial_latency_report.json</code>.</p></div>
+</section>
+
+<section id="s13">
+  <h2><span class="num">13</span>Design alternatives considered and rejected</h2>
+  <p>Each alternative below was built, measured or modelled before it was dropped; the evidence is named so the decision can be reopened if an input changes.</p>
+
+  <h3 id="s13-1">13.1 Wafer-scale integration</h3>
+  <p><b>What it was.</b> The V4.1 package logic laid out as reticle fields stitched on one wafer, so a die-to-die hop becomes an on-wafer crossing, with KV in HBM stacks around the wafer edge.</p>
+  <p><b>First principles.</b> The per-user rate is bound by the serial dependency chain and the ROM sweep, not by link bandwidth (§4.5: interconnect is under a tenth of the token). A wafer's advantage is shorter wires, but a wafer-sized tensor group spans many more fields, so every collective crosses more of them; a 125 ns field crossing on a published mesh makes collectives two-thirds of the token. The wafer only matches the array when a crossing costs about 13–18 ns, which needs a designed long-wire fabric; our routed express link (605 ps/mm with a register per mm) makes a 28.55 mm crossing ≈30–35 ns.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 13-1. Wafer ÷ array at equal silicon (docs/WAFER_VS_ARRAY_ISO_AREA.md; Cerebras-style mesh as the conservative control)</caption>
+    <thead><tr><th>Wafers</th><th class="r">Silicon mm²</th><th class="r">Ratio, batch 1</th><th class="r">Ratio, batch 64</th><th class="r">Aggregate ratio, 4,096 users</th></tr></thead>
+    <tbody>
+      <tr><td>2</td><td class="r m">92,450</td><td class="r m">0.83</td><td class="r m">1.05</td><td class="r m">1.20</td></tr>
+      <tr><td>3</td><td class="r m">138,675</td><td class="r m">0.89</td><td class="r m">0.56</td><td class="r m">0.92</td></tr>
+      <tr><td>4</td><td class="r m">184,900</td><td class="r m">0.87</td><td class="r m">0.56</td><td class="r m">0.90</td></tr>
+      <tr><td>12</td><td class="r m">554,700</td><td class="r m">0.73</td><td class="r m">0.61</td><td class="r m">1.03</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Why rejected.</b> At most +3% at batch 1 on an unbuilt wire-limited fabric (+16% only if the Sinkhorn chain also halves), slower at batch 64 at three of four sizes, aggregate a wash. Against that: in-place defect tolerance instead of discarding bad dies, field stitching, HBM limited to the wafer edge (43 stacks per wafer against 5 per die, 6.5× fewer at every size), and whole-wafer test. The wafer stays in the analytical model as a comparison only.</p>
+
+  <h3 id="s13-2">13.2 Other alternatives</h3>
+  <div class="tablebox"><table class="data">
+    <caption>Table 13-2. Alternatives, evidence and decision (per-user tok/s at batch 1 on the V4.1 array unless noted; decode_critical_path.json, optimistic links)</caption>
+    <thead><tr><th>Alternative</th><th>Evidence</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr class="rej"><td>GPU-style HBM accelerator</td><td>Qwen3-8B weight-streaming ceiling 488 tok/s per user on a B200 (§4.1) against 8,680 modelled for the ROM reticle; ≈1.0 µs per exposed all-SM boundary (§12.4)</td><td>kept only as the comparator (§6.4)</td></tr>
+      <tr class="rej"><td>SRAM-only weights (Groq/Cerebras style)</td><td>densest SRAM macros 21–34 Mb/mm² against 149–154 for ROM (§9.1); V4.1's 4.08 Tbit would need ≈140,000 mm² of SRAM bit cells alone, Qwen3-8B at 4 bits ≈1,100 mm²</td><td>rejected on capacity</td></tr>
+      <tr class="rej"><td>Generic compiler ROM at BF16</td><td>generic compiler ROM reported at 2.7–4.3 MB/mm² at N7 [citation needed], no denser than SRAM; the design instead follows the HC1-class envelope (3/6-bit, self-reported) and a via-programmed NOR ROM</td><td>rejected; HC1-class ROM adopted</td></tr>
+      <tr class="rej"><td>ABI 3.0 programmable engine (predecessor)</td><td>descriptor control plane, microsequencer and admission bridge; reduced Qwen3 token in 7.9 M cycles at one MAC per cycle, slowest control blocks 58–75 MHz (previous revision of this document)</td><td>replaced by the HDC: 32,246 cycles, bit-exact, units ≥1 GHz</td></tr>
+      <tr class="rej"><td>Two-step all-reduce</td><td>5,363 against one-shot 5,475</td><td>one-shot adopted</td></tr>
+      <tr class="rej"><td>Ring all-reduce</td><td>5,290</td><td>rejected</td></tr>
+      <tr class="rej"><td>Recursive doubling</td><td>5,403</td><td>rejected</td></tr>
+      <tr class="rej"><td>Tree all-reduce</td><td>5,261</td><td>rejected</td></tr>
+      <tr class="rej"><td>Expert-parallel placement (each expert on one device)</td><td>4,829 against 5,475 striped; needs arrivals buffered and summed in expert-id order to stay bit-exact</td><td>striped experts adopted</td></tr>
+      <tr class="rej"><td>Insertion-sort top-k + merge + position-order pass</td><td>4,922 against 5,475 with the threshold select</td><td>threshold select adopted (64-lane route pending, §8)</td></tr>
+      <tr class="rej"><td>Sinkhorn on pipelined adders and a 31-cycle divider</td><td>4,469 against 5,475 with the Sinkhorn unit (one normalisation per step, 270 ns per Sinkhorn)</td><td>Sinkhorn unit adopted</td></tr>
+      <tr class="rej"><td>Combinational FP32 add</td><td>≈6.4 ns on ASAP7 caps a block near 155 MHz (repository timing note); the pipelined adder routes at 1,447 MHz</td><td>every IEEE operation pipelined</td></tr>
+      <tr class="rej"><td>Fused, non-bit-exact arithmetic</td><td>6,323 against 5,475</td><td>rejected: breaks the golden contract (P5)</td></tr>
+      <tr><td>Stream-unit width 64 / 512 / 4,096 lanes</td><td>4,377 / 5,475 / 5,564</td><td>512 adopted: 4,096 buys 1.6%</td></tr>
+      <tr><td>Four-die package against two-die packages</td><td>four reticles exceed today's largest interposers</td><td><span class="tag pend">pending</span> §12.3</td></tr>
+      <tr><td>Batch against latency</td><td>per user 5,475 / 4,824 / 125 at batch 1 / 64 / 4,096; aggregate 5.5 K / 309 K / 510 K</td><td>product point is low batch; aggregate is occupancy-bound</td></tr>
     </tbody>
   </table></div>
 </section>
 
-<!-- A -->
+<section id="s14">
+  <h2><span class="num">14</span>Tape-out readiness, risks and future work</h2>
+  <h3 id="s14-1">14.1 Readiness matrix</h3>
+  <p>A chip needs five workstreams beyond the core; each must cover all three architectures (docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md §6).</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 14-1. Workstream status</caption>
+    <thead><tr><th>Workstream</th><th>HBM comparator</th><th>Qwen3-8B ROM reticle</th><th>DeepSeek-V4.1 ROM array</th></tr></thead>
+    <tbody>
+      <tr><td>Memory compilers</td><td><span class="status s-part">SRAM macros; HBM PHY placeholder</span></td><td><span class="status s-done">SRAM + ROM macros; campaigns pass</span></td><td><span class="status s-part">integration in progress</span></td></tr>
+      <tr><td>Memory self-test and repair</td><td><span class="status s-part">KV-stream record with BIST</span></td><td><span class="status s-done">BIST top closed at 1,032 MHz</span></td><td><span class="status s-part">content signature in progress</span></td></tr>
+      <tr><td>Scan and test</td><td><span class="status s-part">coverage done; KV-streamer scan cost; gate checks pending</span></td><td><span class="status s-part">coverage done; gate checks pending</span></td><td><span class="status s-part">6 blocks with scan cost; gate checks done on 5</span></td></tr>
+      <tr><td>Power, IR and clock sign-off</td><td><span class="status s-open">pending</span></td><td><span class="status s-open">pending</span></td><td><span class="status s-open">pending</span></td></tr>
+      <tr><td>Full-chip hierarchical</td><td><span class="status s-part">floorplan</span></td><td><span class="status s-part">floorplan, budgets; blocks re-closing</span></td><td><span class="status s-part">floorplan</span></td></tr>
+      <tr><td>Host interface and runtime</td><td><span class="status s-part">KV in HBM only</span></td><td><span class="status s-done">done; endpoint bit-exact</span></td><td><span class="status s-part">one die; multi-package open</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3 id="s14-2">14.2 Risks and limitations</h3>
+  <div class="tablebox"><table class="data">
+    <thead><tr><th>ID</th><th>Risk</th><th>Impact</th><th>Plan</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td class="req">R1</td><td>Whole Qwen and V4.1 core routes not closed</td><td>the clock the model assumes is unproven</td><td>routes running on the pool; fanout and slew fixes carried in</td><td><span class="status s-part">running</span></td></tr>
+      <tr><td class="req">R2</td><td>64-lane threshold select does not route</td><td>V4.1 per-user gain partly unearned</td><td>four 16-lane quarters; price only what routes</td><td><span class="status s-part">in progress</span></td></tr>
+      <tr><td class="req">R3</td><td>Array interconnect and packaging were optimistic</td><td>V4.1 headline moves</td><td>realistic links and three packaging options (§12.3)</td><td><span class="status s-part">in progress</span></td></tr>
+      <tr><td class="req">R4</td><td>Qwen3-8B BF16 does not fit one reticle</td><td>reticle product needs ≈4-bit storage</td><td>quantised golden and accuracy study (§4.2)</td><td><span class="status s-open">open</span></td></tr>
+      <tr><td class="req">R5</td><td>HBM comparator weight streaming not on main</td><td>comparison incomplete</td><td>campaign record and streamer route</td><td><span class="status s-part">running</span></td></tr>
+      <tr><td class="req">R6</td><td>Vector memory assumed with many ports</td><td>area and realism</td><td>banked vector memory</td><td><span class="status s-part">in progress</span></td></tr>
+      <tr><td class="req">R7</td><td>Full-scale V4.1 drifts from its oracle (third generated token differs; reduced model bit-exact)</td><td>full-model fidelity</td><td>attribute the drift layer by layer</td><td><span class="status s-open">open</span></td></tr>
+      <tr><td class="req">R8</td><td>No power, IR or multi-corner sign-off</td><td>energy claims are first-order</td><td>sign-off workstream</td><td><span class="status s-open">pending</span></td></tr>
+      <tr><td class="req">R9</td><td>ASAP7 is a predictive PDK; memory macros are model-grade views</td><td>absolute figures carry model error</td><td>state evidence class on every figure</td><td><span class="status s-open">inherent</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3 id="s14-3">14.3 Future work</h3>
+  <ul>
+    <li>Close the whole-core routes and compute token time from the achieved clock.</li>
+    <li>Settle the V4.1 packaging option and re-derive the headline with realistic links.</li>
+    <li>Complete the HBM comparator record and regenerate the ROM : GPU ratios with measured boundaries.</li>
+    <li>Power, IR and clock sign-off; re-close blocks against budgets and assemble tiles and dies.</li>
+    <li>A quantised Qwen3-8B reticle; DeepSeek-V4 as a later separate chip on the same engine library.</li>
+  </ul>
+</section>
+
 <section id="sA" style="border-bottom:0">
   <h2><span class="num">A</span>Glossary and reproduction</h2>
   <div class="two">
@@ -848,25 +1071,26 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tbody>
         <tr><td class="m">HDC</td><td>hardwired decode core (rtl/hdc)</td></tr>
         <tr><td class="m">ME / SU</td><td>matrix engine / stream unit</td></tr>
-        <tr><td class="m">Chase</td><td>start an op on the other unit's measured progress</td></tr>
+        <tr><td class="m">Chase</td><td>start an operation on the other unit's measured progress</td></tr>
         <tr><td class="m">K-split</td><td>cut an output's sum into contiguous chunks added by a tree</td></tr>
         <tr><td class="m">Golden</td><td>numpy model defining every rounding (tools/hdc_golden*.py)</td></tr>
-        <tr><td class="m">Engram</td><td>V4.1's n-gram hashed lookup tables (197B read-only params)</td></tr>
+        <tr><td class="m">mHC</td><td>V4.1 hyper-connections: a 4-copy residual mixed by a Sinkhorn-normalised 4×4 matrix</td></tr>
+        <tr><td class="m">Engram</td><td>V4.1's hashed n-gram lookup tables</td></tr>
+        <tr><td class="m">One-shot</td><td>collective in which every die sends its partial to every other and sums in a fixed order</td></tr>
         <tr><td class="m">UE8M0 / E4M3 / E2M1</td><td>power-of-two scale; FP8; FP4 formats</td></tr>
-        <tr><td class="m">ABI 3.0</td><td>the general HBM accelerator's descriptor ABI</td></tr>
       </tbody>
     </table></div>
-    <pre>python3 tools/hdc_program.py --out DIR       # images; ISA model vs golden
-python3 tools/rtl_hdc_decode_campaign.py      # core, ~3 min
-python3 tools/rtl_hdc_array_campaign.py       # arrays, ~15 min
-python3 tools/hdc_timing.py --model qwen3-8b --groups 1024
-python3 tools/run_roofline_studies.py --candidates …
+<pre>python3 tools/rtl_hdc_decode_campaign.py      # Qwen core
+python3 tools/rtl_hdc_v41_decode_campaign.py  # V4.1 core
+python3 tools/rtl_hdc_array_campaign.py       # Qwen arrays
+python3 tools/decode_critical_path.py         # critical path
 python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_matvec \
-    --source … --clock-period-ns 0.9 --false-path-io --stages synth,pnr</pre>
+    --source … --clock-period-ns 0.9 --false-path-io --stages synth,pnr
+nvcc -O3 -arch=sm_120 -rdc=true tools/gpu_microbench/gather_designs.cu</pre>
   </div>
   <footer>
-    <div>Sources: docs/ANALYTICAL_REPORT.md · docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md · docs/HDC_DEEPSEEK_V41_OPERATOR_INVENTORY.md · results/roofline/**/analytical.json · results/rtl/*.json · results/physical_abi3/asap7/**/physical.json.</div>
-    <div>Analytical figures are model outputs, not silicon measurements; RTL figures are Verilator simulations and OpenROAD/ASAP7 routes on a predictive PDK.</div>
+    <div>Sources: results/rtl/*.json · results/physical_abi3/asap7/** · results/roofline/critical_path/*.json · results/gpu/*.json · results/dft/summary.json · docs/*.md in the OpenTallas repository (main, 2026-09-26).</div>
+    <div>Analytical figures are model outputs, not silicon measurements; RTL figures are Verilator simulations; routes are OpenROAD on the ASAP7 predictive PDK; GPU figures are from an RTX PRO 6000 Blackwell, not a B200.</div>
   </footer>
 </section>
 </main>
@@ -878,18 +1102,6 @@ const NS="http://www.w3.org/2000/svg";
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e;}
 
-const MODELS=[
- {name:"Qwen3-8B",note:"200K/1M hypothetical",d:{"8K":[18.99,3.27,5.16,13.41],"200K":[17.21,0.50,10.23,34.30],"1M":[11.78,null,9.08,35.07]}},
- {name:"DeepSeek-V4-Flash",d:{"8K":[5.85,9.50,4.20,6.34],"200K":[5.08,7.21,2.75,3.15],"1M":[3.85,3.74,1.93,5.73]}},
- {name:"DeepSeek-V4.1-Flash",d:{"8K":[4.07,8.79,4.05,8.19],"200K":[3.87,8.52,3.18,3.97],"1M":[3.26,7.92,3.38,3.09]}},
- {name:"V4.1-Flash · Engram in KV HBM",d:{"8K":[4.59,10.22,6.10,10.52],"200K":[4.40,9.55,3.35,5.10],"1M":[3.80,8.17,3.34,3.12]}},
- {name:"Kimi K3",d:{"8K":[2.38,4.86,4.17,4.15],"200K":[2.26,1.77,2.60,3.58],"1M":[1.87,1.24,0.54,4.32]}},
- {name:"MiMo-V2.6-Pro",d:{"8K":[3.99,10.07,4.50,3.46],"200K":[3.05,0.94,0.50,4.50],"1M":[3.00,0.60,1.44,11.06]}},
- {name:"MiMo-V2.6-Flash",d:{"8K":[6.35,11.43,3.28,6.24],"200K":[4.82,2.37,1.64,12.08],"1M":[4.08,0.54,3.48,20.10]}},
-];
-const METRICS={b1:[0,"Per-user, batch 1"],b64:[1,"Per-user, batch 64"],agg:[2,"Best throughput"],tpj:[3,"Best tokens/J"]};
-const CTX=["8K","200K","1M"];
-const CTXCOL=()=>[css("--rom"),css("--hbm"),css("--muted")];
 const FIELDS=[["unit",2],["barrier",1],["chase",1],["chase_n",16],["me_nout",16],["me_tiles",16],["me_k",16],["me_wsrc",1],["me_wbase",24],["me_ts",24],["me_ks",24],["me_js",24],["me_xbase",24],["me_round",1],["me_obase",24],["me_oen",1],["me_amax",1],["me_d_wbase",3],["me_d_xbase",3],["me_d_obase",3],["me_d_nout",3],["me_d_tiles",3],["me_d_k",3],["me_xks",24],["me_xjs",24],["me_jsh",3],["me_ots",24],["me_ojs",24],["me_mmode",1],["me_split",2],["me_xcs",24],["su_nout",16],["su_nin",16],["su_d_nin",3],["a_src",1],["a_base",24],["a_so",24],["a_si",24],["a_d",3],["b_src",1],["b_base",24],["b_so",24],["b_si",24],["b_d",3],["c_src",1],["c_base",24],["c_so",24],["c_si",24],["c_d",3],["ma",2],["mb",2],["ad",3],["sfu",3],["mc",1],["md",1],["dst",2],["d_base",24],["d_so",24],["d_si",24],["d_d",3],["red",2],["r_base",24],["r_so",24],["red_sq",1],["imm1",32],["imm2",32]];
 const DESC={unit:"0 END · 1 matrix engine · 2 stream unit",barrier:"wait for both units idle",chase:"start on the other unit's progress",chase_n:"progress threshold",me_nout:"valid outputs",me_tiles:"rounds",me_k:"k per chunk",me_wsrc:"0 weight ROM · 1 KV",me_wbase:"weight word base",me_ts:"stride per round/tile",me_ks:"stride per k",me_js:"stride per slot group",me_xbase:"x element base",me_round:"BF16-round x",me_obase:"result word base",me_oen:"write results",me_amax:"track argmax",me_xks:"x stride per k",me_xjs:"x stride per slot",me_jsh:"slots per weight word (log2)",me_ots:"result stride per tile",me_ojs:"result stride per slot",me_mmode:"0 rows · 1 lanes (vector per slot)",me_split:"K-split log2",me_xcs:"x stride per chunk",su_nout:"outer count",su_nin:"inner count",a_src:"0 VM · 1 weight ROM (BF16)",b_src:"0 VM · 1 constant pair",c_src:"0 VM · 1 constant",ma:"A | A·B | A·A | A·imm1",mb:"off | C·B.hi | C·(−B.hi)",ad:"P | +Q | +C | −B | +imm2",sfu:"none · exp · recip · rsqrt · sigmoid",mc:"× C",md:"× B",dst:"none · VM · KV",red:"none · sum · max",red_sq:"reduce out²",imm1:"FP32 immediate",imm2:"FP32 immediate"};
 
@@ -909,41 +1121,6 @@ function drawISA(){
   const body=document.createElement("tbody"); off=0;
   FIELDS.forEach(([n,w])=>{const d=DESC[n]||(n.endsWith("_d")||n.includes("_d_")?"DYN select (0 = none)":n.endsWith("_base")?"base address":n.endsWith("_so")?"stride per outer":n.endsWith("_si")?"stride per inner":"");const tr=document.createElement("tr");tr.innerHTML=`<td class="m">${n}</td><td>${{common:"common",me:"engine",su:"stream"}[owner(n)]}</td><td class="r m">${off}</td><td class="r m">${w}</td><td>${d}</td>`;body.appendChild(tr);off+=w;});
   tb.appendChild(body);
-}
-
-function drawPerf(mk){
-  const svg=document.getElementById("perfchart"); svg.innerHTML="";
-  const W=1000,L=250,R=40,T=30,rowH=72,barH=17;
-  const H=T+MODELS.length*rowH+40; svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
-  const lo=Math.log10(0.4),hi=Math.log10(40); const x=v=>L+(Math.log10(v)-lo)/(hi-lo)*(W-L-R);
-  [0.5,1,2,5,10,20,40].forEach(t=>{el("line",{x1:x(t),x2:x(t),y1:T-8,y2:H-30,stroke:t===1?css("--ink"):css("--grid"),"stroke-width":t===1?1.4:1,"stroke-dasharray":t===1?"4 3":"none"},svg);el("text",{x:x(t),y:H-12,"text-anchor":"middle","font-size":12,fill:css("--muted"),class:"t-mono"},svg,t+"×");});
-  el("text",{x:x(1)+6,y:T-12,"font-size":11.5,fill:css("--muted")},svg,"parity");
-  const idx=METRICS[mk][0], cols=CTXCOL();
-  MODELS.forEach((m,i)=>{const y0=T+i*rowH;
-    el("text",{x:L-12,y:y0+22,"text-anchor":"end","font-size":13.5,fill:css("--ink"),"font-weight":600},svg,m.name);
-    if(m.note) el("text",{x:L-12,y:y0+40,"text-anchor":"end","font-size":11,fill:css("--muted")},svg,m.note);
-    CTX.forEach((c,j)=>{const v=m.d[c][idx], y=y0+4+j*(barH+3);
-      if(v==null){el("text",{x:x(0.4)+6,y:y+13,"font-size":11.5,fill:css("--muted"),class:"t-mono"},svg,c+" · none");return;}
-      el("rect",{x:x(0.4),y:y,width:Math.max(1,x(v)-x(0.4)),height:barH,rx:2,fill:cols[j],opacity:v<1?0.55:0.92},svg);
-      el("text",{x:x(v)+6,y:y+13,"font-size":11.5,fill:css("--ink"),class:"t-mono"},svg,v.toFixed(2)+"×");});});
-  const lg=document.getElementById("ctxLegend"); lg.innerHTML="";
-  CTX.forEach((c,j)=>{const s=document.createElement("span");s.className="chip";s.innerHTML=`<span class="sw" style="background:${cols[j]}"></span>${c} context`;lg.appendChild(s);});
-}
-document.querySelectorAll("#metricSeg button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("#metricSeg button").forEach(o=>o.setAttribute("aria-pressed",o===b?"true":"false"));drawPerf(b.dataset.m);try{localStorage.setItem("atlas-metric",b.dataset.m)}catch(e){}}));
-
-function drawHeat(){
-  const t=document.getElementById("heat"); const cap=t.querySelector("caption"); t.innerHTML=""; t.appendChild(cap);
-  const th=document.createElement("thead"); let r=document.createElement("tr");
-  r.innerHTML="<th>Model</th>"+Object.values(METRICS).map(m=>`<th colspan="3" style="text-align:center">${m[1]}</th>`).join(""); th.appendChild(r);
-  r=document.createElement("tr"); r.innerHTML="<th></th>"+Object.keys(METRICS).map(()=>CTX.map(c=>`<th class="r">${c}</th>`).join("")).join(""); th.appendChild(r); t.appendChild(th);
-  const tb=document.createElement("tbody");
-  MODELS.forEach(m=>{const tr=document.createElement("tr"); let h=`<td>${m.name}</td>`;
-    Object.values(METRICS).forEach(([i])=>CTX.forEach(c=>{const v=m.d[c][i];
-      if(v==null){h+=`<td class="r" style="color:var(--muted)">none</td>`;return;}
-      const s=Math.min(1,Math.abs(Math.log10(v))/1.3), base=v>=1?"--rom":"--hbm";
-      h+=`<td class="r m" style="background:color-mix(in srgb, var(${base}) ${Math.round(8+s*52)}%, transparent)">${v.toFixed(2)}×</td>`;}));
-    tr.innerHTML=h; tb.appendChild(tr);});
-  t.appendChild(tb);
 }
 
 function hbars(id,rows,opt){
@@ -1014,16 +1191,6 @@ function drawArray(){
   el("text",{x:500,y:40,"text-anchor":"middle","font-size":12,fill:css("--ink")},svg,"each arrow: ot_rom_pkg_link, header + 8 flits, cut-through, credit flow");
 }
 
-function drawWafer(){
-  const wf=document.getElementById("wafer"); wf.innerHTML="";
-  el("circle",{cx:180,cy:180,r:168,fill:css("--grid"),stroke:css("--rule")},wf);
-  const src=new Set(["3,2","5,3","2,5","4,5"]),eng=new Set(["1,3","6,4"]);
-  for(let r=0;r<8;r++)for(let c=0;c<8;c++){const x0=40+c*35,y0=40+r*35;if(Math.hypot(x0+15-180,y0+15-180)>150)continue;const k=c+","+r;
-    el("rect",{x:x0,y:y0,width:30,height:30,rx:3,fill:eng.has(k)?css("--hbm"):src.has(k)?css("--rom"):css("--rom-soft"),stroke:css("--rom"),"stroke-width":0.8},wf);}
-  for(let r=0;r<8;r++) el("line",{x1:40,x2:320,y1:55+r*35,y2:55+r*35,stroke:css("--rom"),"stroke-width":0.6,opacity:0.45},wf);
-  for(let c=0;c<8;c++) el("line",{y1:40,y2:320,x1:55+c*35,x2:55+c*35,stroke:css("--rom"),"stroke-width":0.6,opacity:0.45},wf);
-}
-
 function drawReticle(){
   const svg=document.getElementById("reticle"); svg.innerHTML="";
   el("rect",{x:10,y:10,width:980,height:210,rx:6,fill:css("--rom-soft"),stroke:css("--rom"),"stroke-width":1.5},svg);
@@ -1075,7 +1242,7 @@ function drawV41Logical(){
   el("path",{d:`M${10+6*(gw+gg)+gw/2},134 C 980,215 30,215 ${10+gw/2},136`,fill:"none",stroke:M,"stroke-width":1.3,"stroke-dasharray":"5 4","marker-end":"url(#ar)"},svg);
   el("text",{x:500,y:212,"text-anchor":"middle","font-size":10.5,fill:M},svg,"next token fed back to the embedding stage");
   // one layer
-  el("text",{x:10,y:252,"font-size":12.5,"font-weight":600,fill:css("--ink")},svg,"Inside one layer (in one package / on one wafer band)");
+  el("text",{x:10,y:252,"font-size":12.5,"font-weight":600,fill:css("--ink")},svg,"Inside one layer (in one package)");
   const att=[["HC pre-mix","Sinkhorn 4×4","SU"],["RMSNorm","","SU"],["q / kv low-rank","FP8 block linear","block-dot lanes"],["indexer","idx keys · ReLU · Σ heads","ME + SU"],["top-512 select","position order","SELECT"],["sparse attention","window + top-512 · sink","ME + SU (exp)"],["o low-rank + HC post","FP8 · 4-copy residual","block-dot + SU"]];
   const moe=[["HC pre-mix","","SU"],["RMSNorm","","SU"],["router gate","FP32 · √softplus + bias","ME + softplus"],["top-6 select","ties → lower id","SELECT"],["broadcast x","to every die of the group","UCIe one-shot"],["experts","¼ of the 6 routed + shared","block-dot lanes"],["combine + HC post","fixed-order reduction","collectives + SU"]];
   function row(items,y,label,fill){
@@ -1086,7 +1253,7 @@ function drawV41Logical(){
       if(i<items.length-1) arrow(svg,x+w,y+35,x+w+g-2,y+35,R);});}
   row(att,286,"attention half",P); row(moe,420,"MoE half",Rs);
   arrow(svg,990-66,356,990-66,418,R);
-  el("text",{x:10,y:520,"font-size":10.5,fill:M},svg,"third line of each box: the decode-core unit that executes the step (§4, §7). All steps are fixed-latency pipelines; the golden specifies every rounding.");
+  el("text",{x:10,y:520,"font-size":10.5,fill:M},svg,"third line of each box: the decode-core unit that executes the step (§7, §8). All steps are fixed-latency pipelines; the golden specifies every rounding.");
   el("text",{x:10,y:538,"font-size":10.5,fill:M},svg,"Engram layers (1, 14) add a hash → table-row gather → gated add into the stream before attention.");
 }
 
@@ -1142,57 +1309,10 @@ function drawV41Array(){
   const parts=[["ROM",289.4,Rs,R],["compute",328.9,P,R],["PHY",50,Bs,B],["links",65.2,G,M],["overhead",81.5,G,M]];
   let xx=10; const fw=440/815; parts.forEach(([n,a,f,st])=>{const w=a*fw; el("rect",{x:xx,y:cy0+26,width:w,height:22,fill:f,stroke:st},svg);
     txt(svg,xx+w/2,cy0+62,n,{anchor:"middle",fs:9.5,fill:I}); txt(svg,xx+w/2,cy0+74,a.toFixed(0)+" mm²",{anchor:"middle",fs:9.5,cls:"t-mono"}); xx+=w;});
-  const sc=460/199.8;
-  budgetBar(svg,520,cy0+26,460,sc,"",[[137.5,Rs,R,"compute chain 137.5 µs"],[42.8+2.1,P,M,"ROM sweep + KV"],[7.0,R,R,""],[7.3,G,M,""],[3.0,B,B,""]]);
-  txt(svg,520,cy0+62,"199.8 µs per token → 5,005 tokens/s per user (critical path, Sinkhorn unit)",{fs:10,fill:I});
-  txt(svg,520,cy0+76,"sweep + KV 44.9 · stage hops 7.0 · control 7.3 · collectives 3.0 µs",{fs:10,fill:R});
-}
-
-function drawV41Wafer(){
-  const svg=document.getElementById("v41wafer"); svg.innerHTML="";
-  const R=css("--rom"),Rs=css("--rom-soft"),B=css("--hbm"),Bs=css("--hbm-soft"),P=css("--panel"),M=css("--muted"),I=css("--ink"),G=css("--grid");
-  head(svg,10,18,"A · 12 wafers in a pipeline");
-  const wp=i=>{const r=Math.floor(i/3),c=r%2===0?i%3:2-i%3;return [50+c*88,62+r*98];};
-  for(let i=0;i<12;i++){const [cx,cy]=wp(i); el("circle",{cx:cx,cy:cy,r:34,fill:i===4?Rs:G,stroke:R,"stroke-width":i===4?2.2:1},svg);
-    txt(svg,cx,cy-2,"wafer "+i,{anchor:"middle",fs:10.5,fw:600,fill:I}); txt(svg,cx,cy+12,"≈3.3 layers",{anchor:"middle",fs:9});
-    if(i<11){const [x2,y2]=wp(i+1); if(y2===cy) arrow(svg,x2>cx?cx+34:cx-34,cy,x2>cx?x2-35:x2+35,cy,R); else arrow(svg,cx,cy+34,cx,y2-35,R);}}
-  txt(svg,10,452,"11 wafer-to-wafer hops: 1.12 µs per token",{fs:10.5,fill:I});
-  txt(svg,10,467,"highlighted: the wafer drawn on the right",{fs:10});
-  // B: one wafer
-  head(svg,320,18,"B · One wafer: three 19-field tensor groups (G0–G2) in a pipeline");
-  const cx=640,cy=250,rad=205;
-  el("circle",{cx:cx,cy:cy,r:rad,fill:G,stroke:css("--rule")},svg);
-  for(let k=0;k<43;k++){const a=k/43*2*Math.PI; el("rect",{x:cx+(rad+11)*Math.cos(a)-7,y:cy+(rad+11)*Math.sin(a)-5,width:14,height:10,rx:1.5,fill:Bs,stroke:B},svg);}
-  const rows=[5,7,8,8,8,8,7,6],fw=40,fh=36,g=6,fields=[];
-  rows.forEach((n,r)=>{const y=cy-(rows.length*(fh+g))/2+r*(fh+g); const x0=cx-(n*(fw+g)-g)/2;
-    for(let c=0;c<n;c++){fields.push([x0+c*(fw+g),y]);}});
-  const ang=f=>Math.atan2(f[1]+fh/2-cy,f[0]+fw/2-cx);
-  const order=fields.map((f,i)=>i).sort((i,j)=>ang(fields[i])-ang(fields[j]));
-  const grp=new Array(fields.length); order.forEach((fi,k)=>grp[fi]=Math.floor(k/19));
-  const gfill=[Rs,Bs,css("--panel")], gstroke=[R,B,I];
-  const hubs=[0,1,2].map(q=>{const mem=fields.map((f,i)=>i).filter(i=>grp[i]===q);
-    const mx=mem.reduce((a,i)=>a+fields[i][0],0)/mem.length, my=mem.reduce((a,i)=>a+fields[i][1],0)/mem.length;
-    return mem.reduce((best,i)=>Math.hypot(fields[i][0]-mx,fields[i][1]-my)<Math.hypot(fields[best][0]-mx,fields[best][1]-my)?i:best,mem[0]);});
-  fields.forEach(([x,y],i)=>{const h=fields[hubs[grp[i]]]; el("line",{x1:x+fw/2,y1:y+fh/2,x2:h[0]+fw/2,y2:h[1]+fh/2,stroke:gstroke[grp[i]],"stroke-width":0.9,opacity:0.5},svg);});
-  fields.forEach(([x,y],i)=>{el("rect",{x:x,y:y,width:fw,height:fh,rx:3,fill:gfill[grp[i]],stroke:gstroke[grp[i]],"stroke-width":0.9},svg);
-    for(let e=0;e<12;e++) el("rect",{x:x+5+(e%6)*5,y:y+6+Math.floor(e/6)*5,width:4,height:4,fill:(e===2||e===9)?R:G},svg);
-    txt(svg,x+fw/2,y+fh-6,"G"+grp[i],{anchor:"middle",fs:8,cls:"t-mono"});});
-  hubs.forEach(hi=>el("rect",{x:fields[hi][0]-2,y:fields[hi][1]-2,width:fw+4,height:fh+4,rx:4,fill:"none",stroke:I,"stroke-width":1.6},svg));
-  const gc=q=>fields[hubs[q]];
-  arrow(svg,cx-rad-45,cy-120,gc(0)[0]-2,gc(0)[1]+fh/2,R); txt(svg,cx-rad-45,cy-128,"from wafer k−1",{fs:10.5,fill:I});
-  [[0,1],[1,2]].forEach(([u,v])=>{const a=gc(u),b=gc(v); el("path",{d:`M${a[0]+fw/2},${a[1]+fh/2} Q ${cx},${cy} ${b[0]+fw/2},${b[1]+fh/2}`,fill:"none",stroke:I,"stroke-width":2,"stroke-dasharray":"6 3","marker-end":"url(#ar)"},svg);});
-  const last=gc(2); arrow(svg,last[0]+fw+2,last[1]+fh/2,cx+rad+45,cy+120,R); txt(svg,cx+rad-20,cy+140,"to wafer k+1",{fs:10.5,fill:I});
-  const nx=872; el("rect",{x:nx,y:40,width:122,height:250,rx:4,fill:P,stroke:css("--rule")},svg);
-  [["Each group (G0–G2) is",I],["one tensor group: every",I],["field holds 1/19 of",I],["every weight of its",I],["layer, incl. a slice of",I],["every expert.",I],["",M],["Reductions stay inside",M],["the group (thin lines to",M],["the outlined field);",M],["dashed: group-to-group",M],["pipeline hop.",M],["",M],["",M],["",M],["HBM3E ×43 at the edge",B],["holds the KV cache.",B]].forEach(([t,c],i)=>txt(svg,nx+8,58+i*13.5,t,{fs:10,fill:c}));
-  // C: time budget comparison
-  const y=490; head(svg,10,y,"C · One token's critical path at batch 1 (200K context), same scale");
-  const sc=(1000-20-170)/500.8;
-  const rowsC=[["array, 4-die groups",[[137.5,Rs,R,"chain 137.5"],[44.9,P,M,""],[7.0,R,R,""],[10.3,G,M,""]],"199.8 µs · 5,005 tok/s"],
-    ["wafer, 57-field group",[[140.2,Rs,R,"chain 140.2"],[4.1,P,M,""],[336.2,B,B,"collectives 336.2"],[12.8,R,R,""],[7.4,G,M,""]],"502.0 µs · 1,992 tok/s"],
-    ["wafer, 3 × 19 fields",[[130.5,Rs,R,"chain 130.5"],[32.8,P,M,"sweep"],[169.0,B,B,"collectives 169.0"],[20.2,R,R,""],[7.4,G,M,""]],"361.3 µs · 2,768 tok/s"]];
-  rowsC.forEach(([lab,segs,tot],i)=>{const yy=y+24+i*36; txt(svg,10,yy+15,lab,{fs:10.5,fw:600,fill:I});
-    const end=budgetBar(svg,170,yy,0,sc,"",segs); txt(svg,990,yy-3,tot,{fs:10,fill:R,anchor:"end"});});
-  txt(svg,10,y+140,"copper: compute chain · grey: weight/KV sweep on the path · blue: collectives · dark copper: pipeline hops · pale: control",{fs:9.5});
+  const sc=460/182.6;
+  budgetBar(svg,520,cy0+26,460,sc,"",[[117.0,Rs,R,"compute chain 117.0 µs"],[45.8,P,M,"ROM sweep + KV"],[9.4,R,R,""],[7.3,G,M,""],[3.1,B,B,""]]);
+  txt(svg,520,cy0+62,"182.6 µs per token → 5,475 tok/s per user (optimistic links — superseded)",{fs:10,fill:I});
+  txt(svg,520,cy0+76,"sweep + KV 45.8 · stage hops 9.4 · control 7.3 · collectives 3.1 µs",{fs:10,fill:R});
 }
 
 function drawOpGraph(id, rows, opts){
@@ -1287,9 +1407,7 @@ function drawModelGraphs(){
 }
 
 function drawAll(){
-  let m="b1"; try{m=localStorage.getItem("atlas-metric")||"b1"}catch(e){}
-  document.querySelectorAll("#metricSeg button").forEach(o=>o.setAttribute("aria-pressed",o.dataset.m===m?"true":"false"));
-  drawPerf(m); drawHeat(); drawISA(); drawModelGraphs(); drawV41Logical(); drawV41Array(); drawV41Wafer(); drawMEPipe(); drawChase(); drawFlits(); drawArray(); drawWafer(); drawReticle(); drawChain();
+  drawISA(); drawModelGraphs(); drawV41Logical(); drawV41Array(); drawMEPipe(); drawChase(); drawFlits(); drawArray(); drawReticle(); drawChain();
   const grp=document.getElementById("grp"); grp.innerHTML="";
   for(let g=0;g<4;g++){const x0=250+g*103;
     el("rect",{x:x0,y:50,width:95,height:138,rx:3,fill:css("--panel"),stroke:css("--rom")},grp);
@@ -1299,14 +1417,17 @@ function drawAll(){
     el("text",{x:x0+47,y:150,fill:css("--muted")},grp,"BF16 mul (exact)");
     el("text",{x:x0+47,y:166,fill:css("--muted")},grp,"FP32 add, 8 in flight");
     el("text",{x:x0+47,y:182,fill:css("--muted")},grp,"own KV + x port");}
-  hbars("iterbars",[["1 · baseline 16 lanes",107228,"--faint"],["2 · batched heads, chaining",95590,"--faint"],["3 · 64 lanes, K-split",36950],["4 · fused SiLU, progress chase",32212],["5–6 · BF16 KV, all-group attn",32196]],
-    {max:115000,ticks:[0,25000,50000,75000,100000],fmt:v=>v.toLocaleString(),L:200,tfmt:t=>(t/1000)+"K"});
-  hbars("qwenbars",[["as built (iteration 5)",24.7,"--faint"],["+ attention on all groups",8.2],["+ 16-wide stream unit*",3.36]],
-    {max:26,ticks:[0,5,10,15,20,25],fmt:v=>v+" M",L:190});
-  hbars("arraybars",[["1 core",1,"--faint"],["4 packages",2.22],["5 packages",3.66],["6 packages",5.22],["10 packages",6.96],["12 packages",9.72]],
+  hbars("iterbars",[["1 · baseline 16 lanes",107228,"--faint"],["2 · batched heads, chaining",95590,"--faint"],["3 · 64 lanes, K-split",36950],["4 · fused SiLU, progress chase",32212],["5–6 · BF16 KV, all-group attn",32196],["committed record (final tb)",32246,"--ok"]],
+    {max:115000,ticks:[0,25000,50000,75000,100000],fmt:v=>v.toLocaleString(),L:210,tfmt:t=>(t/1000)+"K"});
+  hbars("arraybars",[["1 core",1,"--faint"],["4 packages",2.22],["5 packages",3.66],["6 packages",5.22],["10 packages",6.99],["12 packages",9.75]],
     {max:11,ticks:[0,2,4,6,8,10],fmt:v=>v.toFixed(2)+"×",L:110,tfmt:t=>t+"×"});
-  hbars("fmax",[["FP32 adder",1447],["rebalanced FP32 mul",1275],["qualified FP32 mul",1052,"--faint"],["reciprocal",1223],["rsqrt",1210],["exp",1196],["stream unit",1111],["matrix engine (−10 ps open)",1099,"--warn"],["package link",1339,"--hbm"],["V4.1 block dot",1196],["V4.1 act. quantiser",1126],["V4.1 SELECT K=6",1618],["V4.1 SELECT K=512",1115],["V4.1 Engram hash",1524],["V4.1 softplus",1034]],
-    {W:520,max:1700,ticks:[0,500,1000,1500],fmt:v=>v+" MHz",L:170,bh:16,gap:7,ref:1000});
+  hbars("fmax",[
+    ["FP32 adder",1447],["FP32 mul (rebalanced)",1275,"--warn"],["exp",1196,"--warn"],["reciprocal",1223,"--warn"],["rsqrt",1210,"--warn"],
+    ["stream unit (Qwen)",1111,"--warn"],["matrix engine",1099,"--warn"],["KV streamer",1128,"--warn"],
+    ["V4.1 block dot",1196],["V4.1 act. quantiser",1126],["V4.1 FP4 QDQ",1122],["V4.1 select K=6",1618],["V4.1 select K=512",1115],["V4.1 tselect W=16",1087,"--warn"],["V4.1 Engram hash",1524],["V4.1 softplus",1034],
+    ["package controller",1162,"--hbm"],["fabric router",1195,"--hbm"],["MoE dispatch",1408,"--hbm"],["MoE expert port",1558,"--hbm"],["multicast node",1359,"--hbm"],["argmax collective",1151,"--hbm"],["MoE combine",1000,"--hbm"],["one-shot die engine",1006,"--warn"],
+    ["host interface",1135],["BIST test top (macros)",1032]],
+    {W:560,max:1700,ticks:[0,500,1000,1500],fmt:v=>v+" MHz",L:190,bh:14,gap:6,ref:1000});
 }
 drawAll();
 const mq=window.matchMedia("(prefers-color-scheme: dark)"); if(mq.addEventListener) mq.addEventListener("change",drawAll);
