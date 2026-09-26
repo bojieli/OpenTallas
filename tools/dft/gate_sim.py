@@ -376,26 +376,39 @@ def build_bench(
         "    end",
         '    $display("GOOD patterns %0d mismatches %0d", P, total_mism);',
     ]
-    for k, (target, value, pat) in enumerate(inject):
-        if pat is None:
-            # chain-test fault: a flush of alternating values
-            lines += [
-                f"    force {target} = 1'b{value};",
-                "    mism = 0;",
-                "    flush;",
-                f"    release {target};",
-                f'    $display("FAULT {k} chain mismatches %0d", mism);',
-            ]
-        else:
-            lines += [
-                f"    force {target} = 1'b{value};",
-                "    mism = 0;",
-                f"    shift_phase({pat}, -1);",
-                f"    capture({pat});",
-                f"    shift_phase(-1, {pat});",
-                f"    release {target};",
-                f'    $display("FAULT {k} capture mismatches %0d", mism);',
-            ]
+    # Faults are driven from one loop, so the shift and capture tasks have a
+    # single call site each (Verilator inlines tasks per call site; one call
+    # per fault made the bench's C++ grow with the fault count).
+    n_inj = len(inject)
+    if n_inj:
+        pats_l = ", ".join(str(-1 if pat is None else pat) for _t, _v, pat in inject)
+        lines.insert(lines.index("  initial begin"),
+                     f"  integer fpat [0:{n_inj - 1}];\n  initial begin : fault_table\n"
+                     + "".join(f"    fpat[{k}] = {(-1 if pat is None else pat)};\n"
+                               for k, (_t, _v, pat) in enumerate(inject))
+                     + "  end")
+        del pats_l
+        lines.insert(lines.index("  initial begin"), "  task apply_fault(input integer k, input integer on); begin")
+        body = ["    case (k)"]
+        for k, (target, value, _pat) in enumerate(inject):
+            body.append(f"      {k}: if (on) force {target} = 1'b{value}; else release {target};")
+        body += ["    endcase", "  end endtask"]
+        at = lines.index("  initial begin")
+        lines[at:at] = body
+        lines += [
+            f"    for (f = 0; f < {n_inj}; f = f + 1) begin",
+            "      apply_fault(f, 1);",
+            "      mism = 0;",
+            "      if (fpat[f] < 0) flush;",
+            "      else begin",
+            "        shift_phase(fpat[f], -1);",
+            "        capture(fpat[f]);",
+            "        shift_phase(-1, fpat[f]);",
+            "      end",
+            "      apply_fault(f, 0);",
+            '      $display("FAULT %0d %s mismatches %0d", f, (fpat[f] < 0) ? "chain" : "capture", mism);',
+            "    end",
+        ]
     lines += ["    $finish;", "  end", "endmodule"]
     (work / "tb.v").write_text("\n".join(lines) + "\n")
     return work / "tb.v"
@@ -438,7 +451,7 @@ def run_bench(work: Path, timeout: int = 172800, simulator: str = "verilator",
     (work / "sim.log").write_text(sim.stdout + sim.stderr)
     good = re.search(r"GOOD patterns (\d+) mismatches (\d+)", sim.stdout)
     faults = {int(m.group(1)): (m.group(2), int(m.group(3)))
-              for m in re.finditer(r"FAULT (\d+) (\w+) mismatches (\d+)", sim.stdout)}
+              for m in re.finditer(r"FAULT (\d+) +(\w+) mismatches (\d+)", sim.stdout)}
     return {
         "good_patterns": int(good.group(1)) if good else None,
         "good_mismatches": int(good.group(2)) if good else None,
