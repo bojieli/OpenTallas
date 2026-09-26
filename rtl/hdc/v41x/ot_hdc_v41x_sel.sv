@@ -297,7 +297,7 @@ module ot_hdc_v41x_sel_ctl #(
                     end
                 end
                 C_P2: begin
-                    if (&st_done2) begin st <= C_W2; wcnt <= WAIT; end
+                    if (&st_done2) begin st <= C_W2; wcnt <= WAIT + 1; end   // + res_eq's edge
                 end
                 C_W2: begin
                     if (wcnt == 0) begin

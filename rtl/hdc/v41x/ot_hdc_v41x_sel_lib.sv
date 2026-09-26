@@ -407,7 +407,8 @@ endmodule
 // Latency: a result is registered 14 edges after the gs it was computed from.  Counts sampled
 // at different edges are consistent as long as they only grow (then ok still implies
 // count_now(>= b) >= q); with static counts the result is exact.
-// eq: per-slice bin b count taken from the current bs (exact once the counts are static).
+// eq: per-slice bin b count taken from the current bs one edge after res_b (exact once the
+// counts are static).
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_sel_su #(
     parameter integer Q  = 4,
@@ -531,7 +532,7 @@ module ot_hdc_v41x_sel_su #(
     end
     always @(posedge clk) begin
         res_b <= {g_b4, bb}; res_ok <= okb; res_above <= aboveb;
-        for (s = 0; s < Q; s = s + 1)
-            res_eq[CB*s +: CB] <= bs_r[CB*(16*s + bb) +: CB];
+        for (s = 0; s < Q; s = s + 1)                // one edge after res_b (static counts only)
+            res_eq[CB*s +: CB] <= bs_r[CB*(16*s + res_b[3:0]) +: CB];
     end
 endmodule
