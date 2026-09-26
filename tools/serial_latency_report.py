@@ -241,6 +241,115 @@ def before_after(tech: Technology, rec: dict) -> dict:
     return out
 
 
+#: The GPU's measured per-boundary costs (``technology.json``
+#: ``serial_latency.gpu_datapath``) at the two ends of their measured band: the
+#: uncontended minimum (the headline) and the median under a co-resident
+#: workload.  Only those two costs change; the GPU's memory/compute roofline,
+#: its links and every ROM number are the study's own.
+GPU_VARIANTS = ("headline", "measured_median")
+GPU_TARGET_BATCHES = (1, 64)
+
+
+def gpu_variant_technologies(tech: Technology) -> dict[str, Technology]:
+    g = tech.raw["serial_latency"]["gpu_datapath"]
+    gather, handoff = g["dependent_boundary_gather_s"], g["dependent_boundary_handoff_s"]
+    return {
+        "headline": tech,
+        "measured_median": C.gpu_boundary_variant(tech, gather_s=gather["range_high"],
+                                                  handoff_s=handoff["range_high"]),
+    }
+
+
+def gpu_boundary_counts(tech: Technology) -> dict:
+    """Dependent GPU boundaries per layer under the fused execution, and what they cost one token on one GPU."""
+    out = {}
+    for key, path, ctx in (("qwen3_8b", QWEN, 8192), ("deepseek_v41_flash", V41, 200_000)):
+        model = ModelProfile.load(path)
+        m = C.MachineSpec(family="gpu", group=1, microbatch=1.0, clock_hz=1.965e9)
+        sg = C.serial_graph(tech, model, context_tokens=ctx, machine=m, fabric_links=None)
+        det = sg.detail(0.0, 0.0, layers=set())
+        out[key] = dict(model=model.name, context_tokens=ctx, **C.gpu_boundary_census(sg.graph, model.num_layers),
+                        single_gpu_dependency_path_s=det["breakdown_s"]["gpu_dependency"])
+    return out
+
+
+def gpu_execution_sensitivity(tech: Technology) -> dict:
+    """Per target, ROM against the fastest GPU at both ends of the measured boundary band, batch 1 and 64.
+
+    The GPU side re-evaluates every GPU design the study priced for that model
+    (same budgets, same node/model technology) and keeps the fastest feasible
+    one per band end, so each may choose its own layout.  The headline
+    variant must reproduce the study's own fastest GPU; whether it does is
+    recorded, not assumed."""
+    import run_roofline_studies as S
+    from opentallas.roofline import evaluate as _evaluate
+
+    variants = gpu_variant_technologies(tech)
+    targets = [(key, study, model) for key, study, model in decode_targets.TARGETS]
+    targets.insert(1, ("deepseek_v41_array_x188", "candidates/deepseek-v41-flash/n5_vs_b200", "DeepSeek-V4.1-Flash"))
+    cache: dict[str, tuple[list, list]] = {}
+    out: dict = {"variants": {}, "targets": {}}
+    g = tech.raw["serial_latency"]["gpu_datapath"]
+    for name, t in variants.items():
+        _rom, gp = C.datapaths(t)
+        out["variants"][name] = dict(gather_s=gp.boundary("gather"), handoff_s=gp.boundary("handoff"),
+                                     source=g["dependent_boundary_gather_s"]["source"] if name == "headline" else
+                                     "median_of_medians_ns of the same artifact (co-resident workload)")
+    for key, study, model_name in targets:
+        if study not in cache:
+            base = RESULTS / study
+            ana = json.loads((base / "analytical.json").read_text())
+            cache[study] = ([d for d in ana["designs"] if d["family"] == "gpu"],
+                            json.loads((base / "points.json").read_text()))
+        designs, points = cache[study]
+        rows = [q for q in points if q["model"] == model_name]
+        if study.startswith("candidates/"):
+            slug = study.split("/")[1]
+            path = next(c[2] for c in S.CANDIDATE_MODELS if c[0] == slug)
+        else:
+            path = next(p for n, p, _c in S.STUDY_MODELS if n == model_name)
+        profile = ModelProfile.load(path)
+        if profile.name != model_name:
+            raise ValueError(f"{key}: {path} is {profile.name}, not {model_name}")
+        node = S.STUDIES["n5_vs_b200"]["rom_node"]
+        by_batch: dict = {}
+        for batch in GPU_TARGET_BATCHES:
+            here = [q for q in rows if int(q["batch_size"]) == batch and q["feasible"]]
+            if key == "deepseek_v41_array_x188":
+                rom = next((q for q in here if q["design"] == ARRAY_DESIGN), None)
+            else:
+                roms = [q for q in here if q["family"] == "rom"]
+                rom = max(roms, key=lambda q: q["per_user_tokens_s"]) if roms else None
+            gpus = [q for q in here if q["family"] == "gpu"]
+            study_gpu = max(gpus, key=lambda q: q["per_user_tokens_s"]) if gpus else None
+            ctx = int(here[0]["context_tokens"]) if here else None
+            entry: dict = {"rom_design": rom["design"] if rom else None,
+                           "rom_per_user_tokens_s": rom["per_user_tokens_s"] if rom else None,
+                           "study_fastest_gpu_design": study_gpu["design"] if study_gpu else None,
+                           "study_fastest_gpu_per_user_tokens_s": study_gpu["per_user_tokens_s"] if study_gpu else None,
+                           "gpu": {}}
+            for name, t in variants.items():
+                vt = S._model_technology(S._node_technology(t, node), model_name)
+                best = None
+                for d in designs:
+                    if d["model"] != model_name:
+                        continue
+                    step = _evaluate(budget_from(d), profile, context_tokens=ctx, batch_size=batch, technology=vt)
+                    if step.feasible and (best is None or step.per_user_tokens_s > best[1]):
+                        best = (d["design"], step.per_user_tokens_s)
+                entry["gpu"][name] = {
+                    "design": best[0] if best else None,
+                    "per_user_tokens_s": best[1] if best else None,
+                    "rom_over_gpu": (rom["per_user_tokens_s"] / best[1]) if (rom and best) else None,
+                }
+            head = entry["gpu"]["headline"]["per_user_tokens_s"]
+            entry["headline_matches_study"] = bool(
+                study_gpu and head and math.isclose(head, study_gpu["per_user_tokens_s"], rel_tol=1e-6))
+            by_batch[str(batch)] = entry
+        out["targets"][key] = {"study": study, "model": model_name, "by_batch": by_batch}
+    return out
+
+
 def build() -> dict:
     tech = Technology.load(TECH)
     rec: dict = dict(schema=SCHEMA, tool="tools/serial_latency_report.py",
@@ -295,6 +404,8 @@ def build() -> dict:
             rows[f"{kind}_batch{bt}"] = s
     rec["deepseek_v41_flash"] = rows
     rec["before_after"] = before_after(tech, rec)
+    rec["gpu_boundaries"] = gpu_boundary_counts(tech)
+    rec["gpu_execution"] = gpu_execution_sensitivity(tech)
     return rec
 
 

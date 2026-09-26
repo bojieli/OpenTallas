@@ -93,17 +93,13 @@ def test_serial_inputs_follow_the_grading_convention(tech):
             if node["grade"] == "assumed":
                 assert "range_low" in node and "range_high" in node, name
     gpu = block["gpu_datapath"]
-    gap = gpu["kernel_launch_gap_s"]
-    assert gap["grade"] == "published" and gap["range_low"] < gap["value"] < gap["range_high"]
-    # The baseline is the state-of-the-art execution; CUDA graphs are a labelled legacy sensitivity.
+    # The baseline is the fused persistent-kernel execution; no launch gap and no unmeasured boundary exists.
     assert gpu["execution_model"]["value"] == "megakernel_pdl"
-    assert "LEGACY" in gap["note"]
+    assert "kernel_launch_gap_s" not in gpu and "hypothetical_boundary_s" not in gpu
     for key in ("dependent_boundary_gather_s", "dependent_boundary_handoff_s"):
         node = gpu[key]
         assert node["grade"] == "derived" and "blackwell_dependency_latency.json" in node["source"], key
         assert node["range_low"] <= node["value"] <= node["range_high"], key
-    assert gpu["hypothetical_boundary_s"]["grade"] == "assumed"
-    assert "HYPOTHETICAL" in gpu["hypothetical_boundary_s"]["note"]
 
 
 # -- the graph and its solve -----------------------------------------------------------------------------
@@ -244,61 +240,63 @@ def _gpu_graph(tech, path, ctx, group=1):
 
 
 def test_gpu_boundaries_are_the_measured_residual_dependency_signal(tech):
-    """The baseline GPU pays no launch: every boundary costs its measured gather or handoff."""
-    measured = json.loads((ROOT / "results/gpu/blackwell_dependency_latency.json").read_text())["best_min_ns"]
+    """The GPU pays no launch: every boundary costs its measured all-SM gather or one-to-one handoff."""
+    art = json.loads((ROOT / "results/gpu/blackwell_dependency_latency.json").read_text())
+    best, median = art["best_min_ns"], art["median_of_medians_ns"]
     g = tech.raw["serial_latency"]["gpu_datapath"]
-    assert g["dependent_boundary_gather_s"]["value"] == pytest.approx(measured["flag_counter_all_blocks_ns"] * 1e-9)
-    assert g["dependent_boundary_handoff_s"]["value"] == pytest.approx(measured["flag_pingpong_handoff_ns"] * 1e-9)
-    assert g["dependent_boundary_handoff_s"]["range_low"] == pytest.approx(measured["pdl_boundary_ns"] * 1e-9)
-    assert g["dependent_boundary_gather_s"]["range_low"] == pytest.approx(measured["persistent_grid_sync_ns"] * 1e-9)
+    ga, ha = g["dependent_boundary_gather_s"], g["dependent_boundary_handoff_s"]
+    assert ga["value"] == ga["range_low"] == pytest.approx(best["flag_counter_all_blocks_ns"] * 1e-9)
+    assert ga["range_high"] == pytest.approx(median["flag_counter_all_blocks_ns"] * 1e-9)
+    assert ha["value"] == ha["range_low"] == pytest.approx(best["flag_pingpong_handoff_ns"] * 1e-9)
+    assert ha["range_high"] == pytest.approx(median["flag_pingpong_handoff_ns"] * 1e-9)
+    # the first-principles validation agrees to within 2%
+    cost = art["validation"]["per_dependency_cost_ns"]
+    assert ga["value"] == pytest.approx(cost["all_sm_gather"] * 1e-9, rel=0.02)
+    assert ha["value"] == pytest.approx(cost["one_to_one_or_pdl"] * 1e-9, rel=0.02)
+    assert cost["intra_cluster"] < cost["one_to_one_or_pdl"] < cost["all_sm_gather"]
     prof, sg = _gpu_graph(tech, QWEN, 8192)
     census = C.gpu_boundary_census(sg.graph, prof.num_layers)
     # Qwen3-8B fused: QKV, attention, attention combine, o-proj, gate|up, down (Hazy's instruction set)
     assert census["per_layer_total_min"] == census["per_layer_total_max"] == 6
     assert census["per_layer_mean"] == {"gather": 4.0, "handoff": 2.0}
     det = sg.detail(0.0, 0.0)
-    gather, handoff = g["dependent_boundary_gather_s"]["value"], g["dependent_boundary_handoff_s"]["value"]
     # a single GPU at zero sweep: the path is exactly its boundaries
-    expect = census["per_token"]["gather"] * gather + census["per_token"]["handoff"] * handoff
-    assert det["breakdown_s"]["kernel_launch"] == pytest.approx(expect)
+    expect = census["per_token"]["gather"] * ga["value"] + census["per_token"]["handoff"] * ha["value"]
+    assert det["breakdown_s"]["gpu_dependency"] == pytest.approx(expect)
     assert det["critical_path_s"] == pytest.approx(expect)
+    assert "kernel_launch" not in det["breakdown_s"]
 
 
-def test_legacy_cuda_graph_mode_is_the_unfused_launch_count(tech):
-    legacy = C.gpu_execution_variant(tech, "cuda_graph")
-    prof, sg = _gpu_graph(legacy, QWEN, 8192)
-    census = C.gpu_boundary_census(sg.graph, prof.num_layers)
-    assert census["per_layer_total_min"] == census["per_layer_total_max"] == 12
-    gap = tech.raw["serial_latency"]["gpu_datapath"]["kernel_launch_gap_s"]["value"]
-    det = sg.detail(0.0, 0.0)
-    assert det["breakdown_s"]["kernel_launch"] == pytest.approx(census["per_token_total"] * gap)
-    _, fused = _gpu_graph(tech, QWEN, 8192)
-    assert fused.detail(0.0, 0.0)["critical_path_s"] < det["critical_path_s"] / 4
-
-
-def test_gpu_variants_touch_only_the_gpu_serial_path(tech):
-    hyp = tech.raw["serial_latency"]["gpu_datapath"]["hypothetical_boundary_s"]["value"]
-    var = C.gpu_execution_variant(tech, gather_s=hyp, handoff_s=hyp)
+def test_gpu_boundary_variant_touches_only_the_gpu_boundaries(tech):
+    g = tech.raw["serial_latency"]["gpu_datapath"]
+    hi = (g["dependent_boundary_gather_s"]["range_high"], g["dependent_boundary_handoff_s"]["range_high"])
+    var = C.gpu_boundary_variant(tech, gather_s=hi[0], handoff_s=hi[1])
     assert {k: v for k, v in var.raw.items() if k != "serial_latency"} == \
         {k: v for k, v in tech.raw.items() if k != "serial_latency"}
     assert var.raw["serial_latency"]["rom_datapath"] == tech.raw["serial_latency"]["rom_datapath"]
     rom_a, gpu_a = C.datapaths(tech)
     rom_b, gpu_b = C.datapaths(var)
     assert rom_a == rom_b
-    assert gpu_b.boundary("gather") == gpu_b.boundary("handoff") == pytest.approx(hyp)
-    with pytest.raises(Exception):
-        C.gpu_execution_variant(tech, "eager")
+    assert (gpu_b.boundary("gather"), gpu_b.boundary("handoff")) == pytest.approx(hi)
     with pytest.raises(Exception):
         gpu_a.boundary("barrier")
+    bad = C.gpu_boundary_variant(tech)
+    bad.raw["serial_latency"]["gpu_datapath"]["execution_model"]["value"] = "cuda_graph"
+    with pytest.raises(Exception):
+        C.GpuDatapath.from_technology(bad)
+    # a slower boundary can only lengthen the GPU's path
+    prof, fast = _gpu_graph(tech, QWEN, 8192)
+    _, slow = _gpu_graph(var, QWEN, 8192)
+    assert slow.detail(0.0, 0.0)["critical_path_s"] > fast.detail(0.0, 0.0)["critical_path_s"]
 
 
-def test_deepseek_fused_boundaries_exceed_qwen_and_stay_below_legacy(tech):
+def test_deepseek_fused_boundaries_exceed_qwen(tech):
     prof, sg = _gpu_graph(tech, V41, 200_000)
     fused = C.gpu_boundary_census(sg.graph, prof.num_layers)
-    _, sgl = _gpu_graph(C.gpu_execution_variant(tech, "cuda_graph"), V41, 200_000)
-    legacy = C.gpu_boundary_census(sgl.graph, prof.num_layers)
-    assert 6 < fused["per_layer_total_mean"] < legacy["per_layer_total_mean"]
-    assert fused["per_token"]["handoff"] == legacy["per_token"]["handoff"]
+    # every GEMV, attention scan, index top-k and merge stays a boundary; the hyper-connection mixes,
+    # Sinkhorn and pooling are fused
+    assert 6 < fused["per_layer_total_mean"] < 20
+    assert fused["per_token"]["handoff"] >= 2 * prof.num_layers
 
 
 # -- the roofline integration ------------------------------------------------------------------------
