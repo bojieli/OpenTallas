@@ -138,7 +138,8 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 925: docs/DFT.md gains the multicast-node and expert-port routed pairs (10).
     # 930: docs/DFT.md gains the MoE dispatch routed pair (5).
     # 935: docs/DFT.md gains the argmax collective's routed pair (5).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 935
+    # 940: docs/DFT.md gains the package link's routed pair (5).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 940
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

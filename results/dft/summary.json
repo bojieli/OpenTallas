@@ -525,6 +525,46 @@
     "test_coverage": 1.0,
     "tester_cycles": 334281,
     "top": "ot_rom_pkg_link"
+   },
+   "route": {
+    "noscan": {
+     "core_area_um2": 20369.5,
+     "drc_errors": 0,
+     "fmax_mhz": 1404.92,
+     "instance_count": 145311,
+     "routed_wirelength_um": 247963,
+     "sequential_area_um2": 3507.83,
+     "setup_wns_ns": 0.18821600000000002,
+     "standard_cell_area_um2": 7569,
+     "status": "not_met"
+    },
+    "overhead": {
+     "core_area": 0.127151,
+     "fmax": -0.107615,
+     "instances": 0.076326,
+     "routed_wirelength": 0.290378,
+     "standard_cell_area": 0.129753
+    },
+    "scan": {
+     "core_area_um2": 22959.5,
+     "drc_errors": 0,
+     "fmax_mhz": 1253.73,
+     "instance_count": 156402,
+     "routed_wirelength_um": 319966,
+     "scan": {
+      "cell_area_added_fraction": 0.12567,
+      "chain_count": 12,
+      "chain_length_max": 989,
+      "flops": 11858,
+      "lockup_latches": 0,
+      "scan_cells": 11286,
+      "scan_mux_cells": 572
+     },
+     "sequential_area_um2": 4330.58,
+     "setup_wns_ns": 0.10238,
+     "standard_cell_area_um2": 8551.1,
+     "status": "not_met"
+    }
    }
   },
   "stream": {
