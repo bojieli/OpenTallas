@@ -1215,7 +1215,7 @@ def campaign_sources(spec: str) -> list[Path]:
 
 
 def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dry_run: bool = False,
-             activity_only: bool = False) -> dict:
+             activity_only: bool = False, analyses_only: list[str] | None = None) -> dict:
     """Execute a sign-off plan (configs/signoff/*.json): per block, an optional
     gate-level activity capture and the analysis sessions."""
     plan = json.loads(Path(plan_path).read_text())
@@ -1283,6 +1283,8 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
         analyses = blk["analyses"] if "analyses" in blk else [blk]
         for an in analyses:
             key = an.get("key", name)
+            if analyses_only and key not in analyses_only:
+                continue
             try:
                 find_results_dir(_resolve(an["routed"]), an.get("stage", "final"))
             except FileNotFoundError as exc:
@@ -1344,6 +1346,7 @@ def main(argv: list[str] | None = None) -> int:
     sm = sub.add_parser("summary", help="energy per token per architecture from the sign-off results")
     sm.add_argument("config", nargs="?", default="configs/signoff/energy_per_token.json")
     sm.add_argument("--output", default="results/physical_abi3/asap7/signoff/energy_per_token.json")
+    p.add_argument("--analysis", action="append", help="run only these analysis keys")
     p.add_argument("--activity-only", action="store_true",
                    help="run the simulations only (the routes may not exist yet); a later run reuses them")
     args = ap.parse_args(argv)
@@ -1371,7 +1374,7 @@ def main(argv: list[str] | None = None) -> int:
         Path(args.output).write_text(json.dumps(r, indent=2, sort_keys=True) + "\n")
     elif args.cmd == "plan":
         run_plan(Path(args.plan), only=args.only, output=Path(args.output) if args.output else None,
-                 dry_run=args.dry_run, activity_only=args.activity_only)
+                 dry_run=args.dry_run, activity_only=args.activity_only, analyses_only=args.analysis)
     return 0
 
 
