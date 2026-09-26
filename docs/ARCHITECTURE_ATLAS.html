@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- OT-TR-001. Published copy: https://claude.ai/artifact/KYaA9ov7ZL3u2pMAi7LKMU . Figures from committed records on main, 2026-09-26. -->
 <title>OpenTallas Technical Report</title>
-<!-- OT-TR-001 rev 1.5. Reorganised from docs/ARCHITECTURE_ATLAS.html (OT-ARCH-001). Figures from committed records on main, 2026-09-26. -->
+<!-- OT-TR-001 rev 1.6. Reorganised from docs/ARCHITECTURE_ATLAS.html (OT-ARCH-001). Figures from committed records on main, 2026-09-26. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -154,6 +154,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   <a class="l2" href="#s8-5">8.5 Design-space exploration</a>
   <a class="l2" href="#s8-6">8.6 Sensitivity</a>
   <a class="l2" href="#s8-7">8.7 What the measurements reveal</a>
+  <a class="l2" href="#s8-8">8.8 Speculative decoding: ROM vs HBM</a>
   <a class="l1" href="#s9">9 Related work</a>
   <a class="l1" href="#s10">10 Discussion</a>
   <a class="l2" href="#s10-1">10.1 Economics</a>
@@ -174,7 +175,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   <p class="lead">Mask-ROM weights beside the multipliers and a compiled, fully pipelined decode dataflow give one user roughly 7–11× the tokens per second of the best GPU design at equal silicon in our models, for a small interactive model (Qwen3-8B) and a large sparse long-context model (DeepSeek-V4.1-Flash). Reduced versions of both decode bit-exactly in RTL today; the full chips are in implementation.</p>
   <div class="control" role="table" aria-label="Document control">
     <div><b>Document</b>OT-TR-001 (supersedes OT-ARCH-001)</div>
-    <div><b>Revision</b>1.5 draft · 2026-09-26</div>
+    <div><b>Revision</b>1.6 draft · 2026-09-26</div>
     <div><b>Status</b>pre-tape-out research</div>
     <div><b>RTL process</b>ASAP7 (7 nm predictive PDK)</div>
     <div><b>Evidence</b>tagged measured / modelled / pending</div>
@@ -1197,14 +1198,76 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tr><td>Megatron-style operator pairing loses on one chip</td><td>one all-reduce 3.6 µs against 2 × 1.15 µs for the gathers it replaces</td><td>pairing helps across slow links, not across SMs</td><td class="m">gpu/blackwell_gather_designs.json</td></tr>
       <tr><td>Bit-exactness costs about 13% of per-user rate</td><td>5,475 exact against 6,323 relaxed (V4.1 array, modelled)</td><td>a price we pay for verifiability (P5)</td><td class="m">critical_path/decode_critical_path.json</td></tr>
       <tr><td>Scan costs about a tenth of logic area</td><td>+10.0–13.8% cell area on seven blocks; Fmax −1% to −11%</td><td>budget DFT area and a timing margin up front</td><td class="m">dft/summary.json</td></tr>
+      <tr><td>Speculative decoding cures the memory wall, not the lane wall</td><td>DFlash on the ROM reticle: best 1.005× (B = 2), 0.39× at B = 16; HBM comparator 4.55×; measured B200 5.1×</td><td>ROM speculation needs cheap lane copies sharing a weight read, or it should not speculate</td><td class="m">arch/qwen3_budget.json</td></tr>
       <tr><td>High fan-out, not logic depth, limits routed clocks</td><td>matrix engine −10 ps on one flag's fan-out; reset-constant flops merged into one die-wide net</td><td>replicate control flags; avoid reset on data registers</td><td class="m">physical_abi3/asap7/hdc/</td></tr>
     </tbody>
   </table></div>
+
+  <h3 id="s8-8">8.8 Speculative decoding: a gift for HBM, a wash for ROM</h3>
+  <p class="finding">Speculative decoding speeds up a weight-streaming machine by roughly the acceptance length, but it barely helps a hardwired one: on the Qwen3-8B reticle the best draft block gains 0.5%, while the HBM comparator on the same core gains 4.55× and a measured B200 5.1× (Figure 8-9, Table 8-16).</p>
+  <p><b>How speculation works.</b> A small drafter proposes a block of B−1 tokens; the target model then scores all B positions in one pass and keeps the longest prefix that matches its own greedy choice, plus one token of its own. Under greedy decoding the output is identical to plain decoding, token for token; our golden, ISA and RTL keep it bit-exact because every verify position uses the same fixed-order arithmetic as a one-position step (§6.2.7). The speed-up is the accepted length per pass, τ = E[min(L, B)], divided by the cost of a pass relative to a plain step. For Qwen3-8B we use DFlash [<a href="#r-dflash">DFlash</a>], a 1.05 B-parameter block-diffusion drafter that fills a whole block in one parallel pass; on the real Qwen3-8B we measured τ = 5.18 (FP32, six benchmark prompts of 512 tokens, speculative output equal to greedy on all six) and pooled 4.10 over 561 blocks. DeepSeek-V4.1-Flash ships its own multi-token-prediction drafter, DSpark (three stages over a block of five) [<a href="#r-dsv4">DeepSeek-V4</a>].</p>
+  <p><b>Why the two machines respond so differently.</b> Speculation trades arithmetic for memory traffic: a verify pass does B positions of multiply-accumulates for one read of each weight. A GPU or HBM machine decoding one user is bandwidth-bound, so its multipliers idle while weights stream; the extra B−1 positions ride on the same weight read and the pass costs about as much as a plain step, giving a speed-up close to τ. A hardwired ROM machine has already removed that bottleneck. Its weights sit beside the multipliers, each lane consumes one weight per cycle, and the token time is set by the multiply-accumulate lanes themselves (the weight sweep, §8.2). A B-position verify pass therefore costs about B times the lane time, and the speed-up collapses to about τ / B ≤ 1. Only the fixed per-pass costs, such as dependency latency and control, are shared across positions, which is why a block of two breaks even rather than loses. The general lesson: <b>speculation is a remedy for the memory wall; a design that has removed the memory wall has little left for it to cure.</b></p>
+  <figure class="fig">
+    <div class="svgbox"><svg viewBox="0 0 1000 340" role="img" aria-label="Speedup from speculative decoding on the ROM reticle against the HBM comparator and a measured B200">
+<line x1="80" x2="960" y1="280.0" y2="280.0" style="stroke:var(--rule);stroke-width:1"/>
+<text x="70" y="284.0" text-anchor="end" font-size="12" style="fill:var(--muted)" class="t-mono">0×</text>
+<line x1="80" x2="960" y1="238.3" y2="238.3" style="stroke:var(--rule);stroke-width:1"/>
+<text x="70" y="242.3" text-anchor="end" font-size="12" style="fill:var(--muted)" class="t-mono">1×</text>
+<line x1="80" x2="960" y1="196.7" y2="196.7" style="stroke:var(--rule);stroke-width:1"/>
+<text x="70" y="200.7" text-anchor="end" font-size="12" style="fill:var(--muted)" class="t-mono">2×</text>
+<line x1="80" x2="960" y1="155.0" y2="155.0" style="stroke:var(--rule);stroke-width:1"/>
+<text x="70" y="159.0" text-anchor="end" font-size="12" style="fill:var(--muted)" class="t-mono">3×</text>
+<line x1="80" x2="960" y1="113.3" y2="113.3" style="stroke:var(--rule);stroke-width:1"/>
+<text x="70" y="117.3" text-anchor="end" font-size="12" style="fill:var(--muted)" class="t-mono">4×</text>
+<line x1="80" x2="960" y1="71.7" y2="71.7" style="stroke:var(--rule);stroke-width:1"/>
+<text x="70" y="75.7" text-anchor="end" font-size="12" style="fill:var(--muted)" class="t-mono">5×</text>
+<line x1="80" x2="960" y1="30.0" y2="30.0" style="stroke:var(--rule);stroke-width:1"/>
+<text x="70" y="34.0" text-anchor="end" font-size="12" style="fill:var(--muted)" class="t-mono">6×</text>
+<rect x="133.0" y="238.1" width="70" height="41.9" style="fill:var(--rom)"/>
+<text x="168.0" y="231.1" text-anchor="middle" font-size="12" style="fill:var(--ink)" class="t-mono">1.00×</text>
+<text x="168.0" y="300" text-anchor="middle" font-size="12" style="fill:var(--muted)" class="t-mono">B = 2</text>
+<rect x="309.0" y="240.6" width="70" height="39.4" style="fill:var(--rom)"/>
+<text x="344.0" y="233.6" text-anchor="middle" font-size="12" style="fill:var(--ink)" class="t-mono">0.95×</text>
+<text x="344.0" y="300" text-anchor="middle" font-size="12" style="fill:var(--muted)" class="t-mono">B = 3</text>
+<rect x="485.0" y="244.0" width="70" height="36.0" style="fill:var(--rom)"/>
+<text x="520.0" y="237.0" text-anchor="middle" font-size="12" style="fill:var(--ink)" class="t-mono">0.86×</text>
+<text x="520.0" y="300" text-anchor="middle" font-size="12" style="fill:var(--muted)" class="t-mono">B = 4</text>
+<rect x="661.0" y="254.4" width="70" height="25.6" style="fill:var(--rom)"/>
+<text x="696.0" y="247.4" text-anchor="middle" font-size="12" style="fill:var(--ink)" class="t-mono">0.62×</text>
+<text x="696.0" y="300" text-anchor="middle" font-size="12" style="fill:var(--muted)" class="t-mono">B = 8</text>
+<rect x="837.0" y="263.6" width="70" height="16.4" style="fill:var(--rom)"/>
+<text x="872.0" y="256.6" text-anchor="middle" font-size="12" style="fill:var(--ink)" class="t-mono">0.39×</text>
+<text x="872.0" y="300" text-anchor="middle" font-size="12" style="fill:var(--muted)" class="t-mono">B = 16</text>
+<line x1="80" x2="960" y1="90.4" y2="90.4" style="stroke:var(--hbm);stroke-width:2;stroke-dasharray:6 4"/>
+<text x="960" y="84.4" text-anchor="end" font-size="12" style="fill:var(--hbm)">HBM comparator, same core, DFlash B = 16, m = 16 (modelled): 4.55×</text>
+<line x1="80" x2="960" y1="67.5" y2="67.5" style="stroke:var(--hbm);stroke-width:2;stroke-dasharray:2 3"/>
+<text x="960" y="61.5" text-anchor="end" font-size="12" style="fill:var(--hbm)">one B200, SGLang, DFlash B = 16, MATH-500 (measured [DFlash]): 5.1×</text>
+<line x1="80" x2="960" y1="238.3" y2="238.3" style="stroke:var(--ink);stroke-width:1.5"/>
+<text x="86" y="232.3" font-size="12" style="fill:var(--ink)">no speculation</text>
+<text x="520.0" y="324" text-anchor="middle" font-size="12" style="fill:var(--muted)">ROM reticle: draft block size B (bars, speed-up over plain decoding)</text>
+</svg>
+</div>
+    <figcaption><b>Figure 8-9.</b> <b>Speed-up from speculative decoding, Qwen3-8B, one user, 2 K context.</b> Bars: the ROM reticle at spec widths with a DFlash block of B, KV-shared slot-parallel verify and the drafter overlapped under the verify, against 8,370 tok/s plain (RTL-calibrated sequencer model; acceptance from the 561 measured DFlash block lengths). Dashed: the HBM comparator on the same core with 16 multiply-accumulate copies per weight read (modelled), and one B200 running SGLang (measured [<a href="#r-dflash">DFlash</a>]). results/arch/qwen3_budget.json.</figcaption>
+  </figure>
+  <div class="tablebox"><table class="data">
+    <caption>Table 8-16. Speculative decoding on the two storage choices, Qwen3-8B, one user, 2 K context</caption>
+    <thead><tr><th>Machine</th><th>Binding resource</th><th class="r">Plain tok/s</th><th class="r">With DFlash</th><th class="r">Speed-up</th><th>Evidence</th></tr></thead>
+    <tbody>
+      <tr><td>ROM reticle, B = 2 (best)</td><td>multiply-accumulate lanes</td><td class="r m">8,370</td><td class="r m">8,410</td><td class="r m">1.005×</td><td>calibrated model at spec widths</td></tr>
+      <tr><td>ROM reticle, B = 4</td><td>multiply-accumulate lanes</td><td class="r m">8,370</td><td class="r m">7,227</td><td class="r m">0.86×</td><td>calibrated model at spec widths</td></tr>
+      <tr><td>ROM reticle, B = 16</td><td>multiply-accumulate lanes</td><td class="r m">8,370</td><td class="r m">3,299</td><td class="r m">0.39×</td><td>calibrated model at spec widths</td></tr>
+      <tr><td>HBM comparator, 6 HBM3E stacks, BF16, m = 16</td><td>HBM bandwidth</td><td class="r m">332</td><td class="r m">≈1,510</td><td class="r m">4.55×</td><td>budget model (target at 95% of byte bound)</td></tr>
+      <tr><td>One B200, SGLang, MATH-500</td><td>HBM bandwidth</td><td class="r m">230</td><td class="r m">1,175</td><td class="r m">5.1×</td><td>measured [<a href="#r-dflash">DFlash</a>, Table 3]</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Consequences for the design.</b> Speculation narrows the ROM machine's lead over HBM (from 25× to about 5.5× at BF16 on this table) but does not close it, and the ROM reticle still gives one user about 7× the speculating B200's measured rate (8,410 against 1,175 tok/s). The only way to make speculation pay on ROM is to buy lanes: m copies of each multiply-accumulate lane sharing one weight read, so a verify pass costs ⌈B/m⌉ sweeps. On the reticle those lanes compete with the KV SRAM for area, and the cost of a qualified lane copy is being measured by routing the matrix engine at m = 2 against m = 1. For DeepSeek-V4.1 the same analysis on the array is pending its top-down specification; the pre-specification model found DSpark at m = 1 within a few percent of plain decoding at τ = 5 and a loss below τ ≈ 4.8. Energy moves the other way: every rejected draft position still burns multiply-accumulates, so speculation raises the ROM machine's energy per token while it lowers the GPU's.</p>
+  <div class="pending"><div class="ph">Pending · lane-copy area and the best speculative ROM design at iso-area</div><p>Routed ot_hdc_matvec at m = 2 against m = 1, a bare shared-operand MAC copy against a whole lane, and the speculative sweep re-run at the measured area; DeepSeek-V4.1 DSpark on the array under its specification. Settled by: results/arch/qwen3_budget.json and the V4.1 architecture specification.</p></div>
 </section>
 
 <section id="s9">
   <h2><span class="num">9</span>Related work</h2>
   <p><b>GPU decode.</b> Serving stacks capture decode in CUDA graphs and fuse element-wise work into neighbouring kernels; Programmatic Dependent Launch overlaps a kernel's prologue with its predecessor. Megakernels run a forward pass as one persistent kernel whose instructions wait on counters in memory: Hazy Research's Llama-1B megakernel [<a href="#r-hazy">Hazy</a>] and the Mirage Persistent Kernel [<a href="#r-mpk">MPK</a>]. They remove launch overhead but keep the weight stream (C1) and the L2 round trips of cross-SM dependencies (C2), which we measure directly.</p>
+  <p><b>Speculative decoding.</b> Draft-and-verify decoding is lossless under greedy and rejection sampling [<a href="#r-leviathan">Leviathan</a>]. Drafters range from feature-level heads (EAGLE-3 [<a href="#r-eagle3">EAGLE-3</a>]) and built-in multi-token prediction (DeepSeek-V3, V4's DSpark [<a href="#r-dsv3">DeepSeek-V3</a>, <a href="#r-dsv4">DeepSeek-V4</a>]) to block-diffusion drafters that fill a block in one pass (DFlash [<a href="#r-dflash">DFlash</a>]). All of them were designed for bandwidth-bound GPUs; we show that their benefit depends on the machine's binding resource and largely vanishes when weights no longer move (§8.8).</p>
   <p><b>On-chip-SRAM dataflow machines.</b> Groq's tensor streaming processor makes execution deterministic by removing reactive hardware (arbiters, caches) and scheduling everything in the compiler [<a href="#r-groq">TSP</a>], a principle we share (P2, P5). Cerebras keeps weights in on-wafer SRAM (vendor-reported 44 GB on 46,225 mm² for WSE-3 [<a href="#r-cerebras">WSE-3</a>]). Both trade capacity for bandwidth with SRAM; ROM's density advantage (I-c) is what lets a large MoE fit tens of dies rather than many wafers. SambaNova (tiered SRAM/HBM/DDR reconfigurable dataflow), Tenstorrent (mesh of programmable cores) and d-Matrix (SRAM digital in-memory compute) occupy other points of the same trade-off [citation needed].</p>
   <p><b>Model-specific silicon.</b> Etched builds a transformer-specific datapath that keeps weights in HBM [citation needed]. Taalas HC1 hardwires Llama-3.1-8B on one 815 mm² TSMC 6 nm die and reports about 17,000 tokens/s per user [<a href="#r-hc1">HC1</a>], the closest prior work and our calibration anchor. We differ in targeting a large sparse System-2 model across dies, in publishing a bit-exact verification chain and implementation evidence, and in pricing the comparator with measured GPU boundary costs.</p>
   <div class="tablebox"><table class="data">
@@ -1397,6 +1460,10 @@ ROM    0.08 pJ/B × 16.38 GB  =  1.3 mJ/token     (≈1,300× below HBM; 4-bit s
     <li id="r-groq">D. Abts et al., Think Fast: A Tensor Streaming Processor (TSP) for Accelerating Deep Learning Workloads, ISCA 2020, <a href="https://dl.acm.org/doi/10.1109/ISCA45697.2020.00023">doi:10.1109/ISCA45697.2020.00023</a>.</li>
     <li id="r-cerebras">Cerebras, <a href="https://hc2024.hotchips.org/assets/program/conference/day2/72_HC2024.Cerebras.Sean.v03.final.pdf">Wafer-Scale AI</a>, Hot Chips 2024 (vendor-reported).</li>
     <li id="r-cowos">TSMC CoWoS roadmap: <a href="https://www.trendforce.com/news/2025/05/02/news-wafer-level-packaging-showdown-tsmc-scales-up-cowos-reticle-size-as-intel-readies-foveros-s/">TrendForce, 2 May 2025</a>; <a href="https://www.tomshardware.com/tech-industry/tsmc-super-carrier-cowos-interposer-gets-bigger-enabling-massive-ai-chips-to-reach-9-reticle-sizes-with-12-hbm4-stacks">Tom's Hardware</a>; <a href="https://3dfabric.tsmc.com/english/dedicatedFoundry/technology/cowos.htm">TSMC CoWoS</a>.</li>
+    <li id="r-leviathan">Y. Leviathan, M. Kalman, Y. Matias, Fast Inference from Transformers via Speculative Decoding, ICML 2023, <a href="https://arxiv.org/abs/2211.17192">arXiv:2211.17192</a>.</li>
+    <li id="r-eagle3">Y. Li et al., EAGLE-3: Scaling up Inference Acceleration of Large Language Models via Training-Time Test, <a href="https://arxiv.org/abs/2503.01840">arXiv:2503.01840</a>.</li>
+    <li id="r-dsv3">DeepSeek-AI, DeepSeek-V3 Technical Report (multi-token prediction), <a href="https://arxiv.org/abs/2412.19437">arXiv:2412.19437</a>.</li>
+    <li id="r-dflash">DFlash: Block Diffusion for Flash Speculative Decoding, <a href="https://arxiv.org/abs/2602.06036">arXiv:2602.06036</a>; drafter <a href="https://huggingface.co/z-lab/Qwen3-8B-DFlash-b16">z-lab/Qwen3-8B-DFlash-b16</a>.</li>
     <li>GPU dependent-boundary report: <a href="https://claude.ai/code/artifact/70f35b8f-623d-44a2-a466-c42b68e84bf2">first-principles analysis and Blackwell measurement</a> (this project).</li>
   </ol>
   <footer>
