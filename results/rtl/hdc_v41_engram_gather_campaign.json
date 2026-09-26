@@ -13,7 +13,7 @@
     "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
     "rtl/test/tb_hdc_engram_gather.sv": "ae0899500999ee12e04a64d9021e2c9e3939fbbd806cefb66631c9da3f89d172",
     "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
-    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
+    "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
     "tools/hdc_v41_engram_shipped.py": "28713b421c5a350166598b35ea111df98a0c86ce61094f96d4ee979b2fe2c5b5",
     "tools/rtl_hdc_v41_engram_campaign.py": "6d8e8f6967f3a91d1b8515e7a7667552253bf0a782200a34a2f97efb3d88410a",
     "tools/rtl_hdc_v41_engram_gather_campaign.py": "a3978bd09c2b12323c489daa8fe5eca4cbd477ee42c800dde7c401c7d73020f6"
@@ -277,32 +277,32 @@
         "board_hop_pair_209_cycles": {
           "rows_ready_us_layer_1": 0.4043,
           "rows_ready_us_layer_14": 0.4043,
-          "slack_us_layer_1": 3.5687,
-          "slack_us_layer_14": 66.5882
+          "slack_us_layer_1": 3.5903,
+          "slack_us_layer_14": 66.8961
         },
-        "layer_14_start_us": 66.9925,
-        "layer_1_start_us": 3.973,
+        "layer_14_start_us": 67.3004,
+        "layer_1_start_us": 3.9946,
         "ucie_hop_pair_23_cycles": {
           "rows_ready_us_layer_1": 0.2244,
           "rows_ready_us_layer_14": 0.2244,
-          "slack_us_layer_1": 3.7486,
-          "slack_us_layer_14": 66.7681
+          "slack_us_layer_1": 3.7702,
+          "slack_us_layer_14": 67.076
         }
       },
       "wafer_batch1": {
         "board_hop_pair_209_cycles": {
           "rows_ready_us_layer_1": 0.4043,
           "rows_ready_us_layer_14": 0.4043,
-          "slack_us_layer_1": 11.6408,
-          "slack_us_layer_14": 169.7353
+          "slack_us_layer_1": 11.6412,
+          "slack_us_layer_14": 169.7409
         },
-        "layer_14_start_us": 170.1396,
-        "layer_1_start_us": 12.0451,
+        "layer_14_start_us": 170.1452,
+        "layer_1_start_us": 12.0455,
         "ucie_hop_pair_23_cycles": {
           "rows_ready_us_layer_1": 0.2244,
           "rows_ready_us_layer_14": 0.2244,
-          "slack_us_layer_1": 11.8207,
-          "slack_us_layer_14": 169.9152
+          "slack_us_layer_1": 11.8211,
+          "slack_us_layer_14": 169.9208
         }
       }
     },

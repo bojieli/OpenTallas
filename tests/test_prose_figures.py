@@ -122,7 +122,10 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # before/after per-target table and the candidate-model tables), 80 -> 142.
     # 818: docs/WAFER_VS_ARRAY_ISO_AREA.md binds its verdict (17) to
     # results/roofline/critical_path/wafer_vs_array_iso_area.json.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 818
+    # 838: docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md section 7 binds the V4.1
+    # core's iterations (20) to results/rtl/hdc_v41_iterations/ and the lane
+    # synthesis records, 36 -> 56.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 838
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

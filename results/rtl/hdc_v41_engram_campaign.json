@@ -69,7 +69,7 @@
     "rtl/test/tb_hdc_fsqrt_equiv.sv": "f64665b50e43ab250079455b3aab2eb1495f408f284a0e8bb46239eb5a295d4c",
     "rtl/test/tb_hdc_softplus.sv": "f771bd697aa1e2c97d6bb157de999ad53534a424e2617d7aea2295d81bae510a",
     "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
-    "tools/hdc_golden_v41.py": "e484e9ea35887d5b7d4e38d8fcaed028e6a1d58c507807157db106672d41a449",
+    "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
     "tools/rtl_hdc_v41_engram_campaign.py": "6d8e8f6967f3a91d1b8515e7a7667552253bf0a782200a34a2f97efb3d88410a"
   },
   "pipelines": {
@@ -105,9 +105,9 @@
     "reference": "tools/hdc_golden_v41.softplus and .sqrt; a nonfinite golden result must be a fault with +0 outputs",
     "router_argument_range": [
       -1.1550854444503784,
-      0.9365441799163818
+      0.9365441203117371
     ],
-    "router_argument_sha256": "9137fc7dde6ea84c4fcf902cf0700aed3a077a0b59f31c3d809667f57f27b77b",
+    "router_argument_sha256": "8e3c9fdcee1470e8254427c4b1cb29a66bbfdff8fdd6c598556ffae2c34aabe3",
     "router_arguments": 11520,
     "verilator": {
       "checked": 53552,

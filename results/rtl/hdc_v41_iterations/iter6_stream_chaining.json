@@ -1,4 +1,12 @@
 {
+  "iteration": {
+    "number": 6,
+    "name": "stream-unit chaining",
+    "summary": "su_chase = D: a same-class stream op that reads the previous stream op's element writes is accepted behind it and emits its first vector once fewer than D vectors are in flight, then one per cycle; D from both ops' vector write and read maps (hdc_program_v41.chase_distance). Arithmetic unchanged.",
+    "cycles_per_token": 370399,
+    "previous_cycles_per_token": 384830,
+    "cycles_saved": 14431
+  },
   "schema": "opentallas.hdc-v41-decode-campaign.v1",
   "status": "pass",
   "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) with behavioural synchronous-read memories (many-ported vector memory: four operand reads, an element write and a reducer write per stream lane); the Sinkhorn is the routed one-normalisation-per-step unit (ot_hdc_sinkhorn) run as a 7-core-cycle multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here.",
@@ -28,31 +36,31 @@
     "program: 3992 instructions (ME 345, SU 2649, QE 786, XU 131, HE 80); ME ROM 78196 words; QE ROM 54080 words; CROM 28492",
     "ISA simulator at pos 7: token 3118 golden 3118 oracle 3118; logits bit-exact with golden: True",
     "multi-token from empty state: ISA [3118, 2400, 64] golden [3118, 2400, 64] oracle [3118, 3583, 2357] every step's logits bit-exact: True",
-    "wrote /tmp/tmp17ubgudp/img"
+    "wrote /tmp/tmpp7argd8c/img"
   ],
   "single_step": {
     "token": 3582,
     "position": 7,
     "next_token": 3118,
     "isa_next_token": 3118,
-    "cycles": 344109,
+    "cycles": 370399,
     "fault": 0,
     "logit_mismatches": 0,
     "vector_memory_mismatches": 0,
     "kv_cache_mismatches": 0,
     "unit_busy_cycles": {
       "me": 114163,
-      "su": 232581,
-      "qe": 72555,
-      "xu": 27232,
+      "su": 261825,
+      "qe": 72169,
+      "xu": 27230,
       "he": 53600
     },
-    "all_units_idle_cycles": 2530,
+    "all_units_idle_cycles": 2524,
     "pass": true,
     "timing_model": {
-      "cycles": 344131,
-      "relative_error": 6.4e-05,
-      "max_abs_issue_error_cycles": 34
+      "cycles": 370422,
+      "relative_error": 6.2e-05,
+      "max_abs_issue_error_cycles": 28
     },
     "vector_memory_banking": {
       "bank_model": "8 banks, element address mod 8",
@@ -72,114 +80,114 @@
   },
   "per_operator_cycles": {
     "out": {
-      "cycles": 46360,
+      "cycles": 47760,
       "issued_ops": 120,
-      "share": 0.1347
+      "share": 0.1289
     },
     "experts": {
-      "cycles": 40910,
+      "cycles": 43220,
       "issued_ops": 720,
-      "share": 0.1189
-    },
-    "hc_ffn": {
-      "cycles": 25960,
-      "issued_ops": 280,
-      "share": 0.0754
+      "share": 0.1167
     },
     "attn": {
-      "cycles": 24642,
+      "cycles": 29752,
       "issued_ops": 560,
-      "share": 0.0716
+      "share": 0.0803
+    },
+    "hc_ffn": {
+      "cycles": 29040,
+      "issued_ops": 280,
+      "share": 0.0784
+    },
+    "router": {
+      "cycles": 26444,
+      "issued_ops": 280,
+      "share": 0.0714
     },
     "softmax": {
-      "cycles": 24174,
+      "cycles": 26056,
       "issued_ops": 200,
       "share": 0.0703
     },
-    "router": {
-      "cycles": 23554,
+    "hc_attn": {
+      "cycles": 25724,
       "issued_ops": 280,
-      "share": 0.0684
+      "share": 0.0694
     },
     "pv": {
-      "cycles": 23344,
+      "cycles": 24144,
       "issued_ops": 160,
-      "share": 0.0678
+      "share": 0.0652
     },
     "hc_post": {
-      "cycles": 23320,
+      "cycles": 21280,
       "issued_ops": 320,
-      "share": 0.0678
-    },
-    "hc_attn": {
-      "cycles": 23270,
-      "issued_ops": 280,
-      "share": 0.0676
+      "share": 0.0575
     },
     "attn_norm": {
-      "cycles": 15520,
+      "cycles": 17400,
       "issued_ops": 200,
-      "share": 0.0451
+      "share": 0.047
     },
     "ffn_norm": {
-      "cycles": 15520,
+      "cycles": 17400,
       "issued_ops": 200,
-      "share": 0.0451
+      "share": 0.047
     },
     "scores": {
-      "cycles": 11822,
+      "cycles": 12792,
       "issued_ops": 80,
-      "share": 0.0344
+      "share": 0.0345
     },
     "shared": {
-      "cycles": 11126,
+      "cycles": 12436,
       "issued_ops": 120,
-      "share": 0.0323
+      "share": 0.0336
     },
     "drain": {
       "cycles": 10277,
       "issued_ops": 0,
-      "share": 0.0299
+      "share": 0.0277
     },
     "indexer": {
-      "cycles": 7123,
+      "cycles": 7365,
       "issued_ops": 64,
-      "share": 0.0207
+      "share": 0.0199
     },
     "moe_sum": {
-      "cycles": 4640,
+      "cycles": 6560,
       "issued_ops": 240,
-      "share": 0.0135
+      "share": 0.0177
     },
     "engram": {
-      "cycles": 4290,
+      "cycles": 4416,
       "issued_ops": 18,
-      "share": 0.0125
-    },
-    "gather": {
-      "cycles": 3206,
-      "issued_ops": 76,
-      "share": 0.0093
+      "share": 0.0119
     },
     "compressor": {
-      "cycles": 2969,
+      "cycles": 3347,
       "issued_ops": 36,
-      "share": 0.0086
+      "share": 0.009
+    },
+    "gather": {
+      "cycles": 2516,
+      "issued_ops": 76,
+      "share": 0.0068
     },
     "index_key": {
-      "cycles": 1500,
+      "cycles": 1816,
       "issued_ops": 28,
-      "share": 0.0044
+      "share": 0.0049
     },
     "head": {
-      "cycles": 564,
+      "cycles": 636,
       "issued_ops": 6,
-      "share": 0.0016
+      "share": 0.0017
     },
     "embed": {
       "cycles": 18,
       "issued_ops": 3,
-      "share": 0.0001
+      "share": 0.0
     }
   },
   "end_to_end": {
@@ -202,7 +210,7 @@
     "isa_logits_bit_exact_with_golden_every_step": true,
     "steps": 10,
     "mismatches": 0,
-    "total_cycles": 3361931,
+    "total_cycles": 3621621,
     "final_vector_memory_mismatches": 0,
     "final_kv_cache_mismatches": 0,
     "per_step": [
@@ -211,7 +219,7 @@
         "input": 0,
         "output": 2815,
         "isa_output": 0,
-        "cycles": 316365,
+        "cycles": 342335,
         "fault": 0
       },
       {
@@ -219,7 +227,7 @@
         "input": 3563,
         "output": 3537,
         "isa_output": 0,
-        "cycles": 325454,
+        "cycles": 352062,
         "fault": 0
       },
       {
@@ -227,7 +235,7 @@
         "input": 3745,
         "output": 2047,
         "isa_output": 0,
-        "cycles": 324966,
+        "cycles": 350998,
         "fault": 0
       },
       {
@@ -235,7 +243,7 @@
         "input": 418,
         "output": 1968,
         "isa_output": 0,
-        "cycles": 331478,
+        "cycles": 358070,
         "fault": 0
       },
       {
@@ -243,7 +251,7 @@
         "input": 170,
         "output": 3159,
         "isa_output": 0,
-        "cycles": 330990,
+        "cycles": 356982,
         "fault": 0
       },
       {
@@ -251,7 +259,7 @@
         "input": 16,
         "output": 1719,
         "isa_output": 0,
-        "cycles": 337462,
+        "cycles": 364054,
         "fault": 0
       },
       {
@@ -259,7 +267,7 @@
         "input": 3564,
         "output": 2360,
         "isa_output": 0,
-        "cycles": 337294,
+        "cycles": 362966,
         "fault": 0
       },
       {
@@ -267,7 +275,7 @@
         "input": 3582,
         "output": 3118,
         "isa_output": 3118,
-        "cycles": 344110,
+        "cycles": 370398,
         "fault": 0
       },
       {
@@ -275,7 +283,7 @@
         "input": 3118,
         "output": 2400,
         "isa_output": 2400,
-        "cycles": 353366,
+        "cycles": 378110,
         "fault": 0
       },
       {
@@ -283,7 +291,7 @@
         "input": 2400,
         "output": 64,
         "isa_output": 64,
-        "cycles": 360446,
+        "cycles": 385646,
         "fault": 0
       }
     ],
@@ -294,67 +302,21 @@
     "position": 39,
     "next_token": 876,
     "isa_next_token": 876,
-    "cycles": 489061,
+    "cycles": 513471,
     "fault": 0,
     "logit_mismatches": 0,
     "vector_memory_mismatches": 0,
     "kv_cache_mismatches": 0,
     "unit_busy_cycles": {
       "me": 230899,
-      "su": 262917,
-      "qe": 72381,
-      "xu": 27446,
+      "su": 292161,
+      "qe": 72089,
+      "xu": 27363,
       "he": 53600
     },
-    "all_units_idle_cycles": 2610,
+    "all_units_idle_cycles": 2604,
     "pass": true
   },
-  "su_lane_sweep": [
-    {
-      "su_lanes": 4,
-      "token": 3582,
-      "position": 7,
-      "next_token": 3118,
-      "isa_next_token": 3118,
-      "cycles": 400702,
-      "fault": 0,
-      "logit_mismatches": 0,
-      "vector_memory_mismatches": 0,
-      "kv_cache_mismatches": 0,
-      "unit_busy_cycles": {
-        "me": 114163,
-        "su": 290767,
-        "qe": 72248,
-        "xu": 27227,
-        "he": 53600
-      },
-      "all_units_idle_cycles": 2730,
-      "pass": true,
-      "timing_model_cycles": 401020
-    },
-    {
-      "su_lanes": 16,
-      "token": 3582,
-      "position": 7,
-      "next_token": 3118,
-      "isa_next_token": 3118,
-      "cycles": 318906,
-      "fault": 0,
-      "logit_mismatches": 0,
-      "vector_memory_mismatches": 0,
-      "kv_cache_mismatches": 0,
-      "unit_busy_cycles": {
-        "me": 114163,
-        "su": 205988,
-        "qe": 71931,
-        "xu": 27301,
-        "he": 53600
-      },
-      "all_units_idle_cycles": 2649,
-      "pass": true,
-      "timing_model_cycles": 318928
-    }
-  ],
   "verilator_lint": {
     "returncode": 0,
     "flags": [
@@ -392,18 +354,18 @@
     "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
     "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282",
     "rtl/hdc/v41/ot_hdc_v41_matvec.sv": "dbee3f31f75f847371e1f279efcb3523d05e1556f6113507705ee59121a1c9ec",
-    "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
+    "rtl/hdc/v41/ot_hdc_v41_stream.sv": "1bccd9477a2e7402d57b87a2d8de7980d178a2dd02ed068f87748d25fcff40ed",
     "rtl/hdc/v41/ot_hdc_v41_qe.sv": "3d58bc4fd8653c88b702ca04619547cf74ec935c9e5647f6421c4b1f2a44267b",
     "rtl/hdc/v41/ot_hdc_v41_xu.sv": "7b38ea9b8a41e8169d25317d56f716dbe4697b455c9f3676a5174c1e764b149a",
     "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "5835f0d0a132b2bb2bbdab6bf6108e6a2b1e932d5758b9d8af8ce164ac309530",
     "rtl/hdc/v41/ot_hdc_core_v41.sv": "3ce4f6a06355ccec1336460b198233dc0fab3ba3799faf9c3155dcfbc2f60655",
     "rtl/test/tb_hdc_core_v41.sv": "51e25047bf2e1e5b70b41e79f4520ab8140b768edbdb74f3faf02ecc3f66fb71",
     "rtl/test/hdc_core_v41_harness.cpp": "f5ebdcd4c0500eea8ce8c19e053fbb2f1232beabb71c757bb3f21fdddded40ce",
-    "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
+    "tools/hdc_golden.py": "deff434284067959ce5e1c63790a1e0559eff7952c292e491a45867104c79233",
     "tools/hdc_golden_v41.py": "e00d1a43f3c062ff7135a2f637d80ad2a6577ab60e71c32811859624be7494db",
     "tools/hdc_isa_v41.py": "562399618abd01ada14578f1ef1e51970238b0be6ee9357aa657416bee6964e8",
-    "tools/hdc_program_v41.py": "14b3f5b4fe0c6bc77529d548533322f70f4136ea82c5950dd0475bbbfafe39c0",
-    "tools/hdc_timing_v41.py": "2054a7727ecc56cf2cc56910631d9202e38ad0eff2cefad98fce8110058a9a5c",
+    "tools/hdc_program_v41.py": "92d7f0395c69d70e2bf997b57aa99c21f417653ea8e2b6890d8ecca684166a73",
+    "tools/hdc_timing_v41.py": "da11d775f5c80873547dab1e0b5ef0fa84f3c83f1fa71922865a0cb395036655",
     "tools/rtl_hdc_v41_decode_campaign.py": "3930ab10d325d3512ce5c3111afddf82cab08cb5947d2b785c0a1402e77bf67e"
   }
 }
