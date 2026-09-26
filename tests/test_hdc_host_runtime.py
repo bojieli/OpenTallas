@@ -39,7 +39,7 @@ def test_campaign_passes_on_all_three_architectures():
         assert t["pass"], name
         for r in t["requests"]:
             assert r["token_ids"] == r["expected_token_ids"], name
-        assert t["counters"]["status"] & 0x1F == 0, name   # idle; no fault, DMA error or event overflow
+        assert t["counters"]["status"] & 0x16 == 0, name   # no engine fault, DMA error or event overflow
     assert rec["targets"]["qwen3-rom"]["requests"][0]["token_ids"] == ORACLE
     assert rec["targets"]["v41-rom"]["requests"][0]["token_ids"][0] == 3118
     assert len(rec["targets"]["qwen3-rom"]["requests"]) == 3

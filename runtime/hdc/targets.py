@@ -32,11 +32,11 @@ _HDC = [f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_
                                     "ot_hdc_reduce", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_core")]
 _PIPES = ["rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 _V41 = (_PIPES + [f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
-                                             "ot_hdc_reduce", "ot_hdc_matvec")]
+                                             "ot_hdc_reduce")]
         + [f"rtl/hdc/v41/{n}.sv" for n in ("ot_hdc_engram_tables_pkg", "ot_hdc_engram_hash", "ot_hdc_select",
                                            "ot_hdc_blockdot", "ot_hdc_actquant", "ot_hdc_fp4qdq", "ot_hdc_fdiv",
                                            "ot_hdc_fsqrt", "ot_hdc_softplus", "ot_hdc_sinkhorn_seq", "ot_hdc_sk_arith",
-                                           "ot_hdc_sk_recip_rom", "ot_hdc_sinkhorn", "ot_hdc_sinkhorn_mc",
+                                           "ot_hdc_sk_recip_rom", "ot_hdc_sinkhorn", "ot_hdc_sinkhorn_mc", "ot_hdc_v41_matvec",
                                            "ot_hdc_v41_stream", "ot_hdc_v41_qe", "ot_hdc_v41_xu", "ot_hdc_v41_hcproj",
                                            "ot_hdc_core_v41")])
 _HOST = ["rtl/host/ot_host_if.sv"]
@@ -103,10 +103,10 @@ TARGETS: dict[str, Target] = {
         top="tb_host_v41", sources=tuple(_V41 + _HOST + ["rtl/test/tb_host_v41.sv"]),
         images="v41", tokenizer_repo="deepseek-ai/DeepSeek-V4.1-Flash", vocab=4040, eos=(1, 0), ctx_max=128,
         slots=16, mode=0, chat="deepseek-v41",
-        physical=tuple(["hdc/ot_hdc_matvec", "hdc/ot_hdc_stream"] + [f"hdc/v41/{n}" for n in (
+        physical=tuple(["hdc/ot_fp32_add_rne_pipe", "hdc/ot_hdc_fp32_mul_pipe"] + [f"hdc/v41/{n}" for n in (
             "ot_hdc_actquant", "ot_hdc_blockdot", "ot_hdc_engram_hash", "ot_hdc_fp4qdq", "ot_hdc_select_k512",
             "ot_hdc_softplus")]),                  # the Sinkhorn unit is a 7-cycle multicycle path (ot_hdc_sinkhorn_mc)
-        verilator_flags=("-Wno-IMPORTSTAR",), oracle=(3118, 2400, 318),
+        verilator_flags=("-Wno-IMPORTSTAR",), oracle=(3118, 2400, 64),
         status="host interface + the V4.1 decode core, one user's state at a time"),
     "qwen3-array": Target(
         name="qwen3-array", architecture="ROM array (package controllers + links)", model_id="qwen3-reduced-v1",

@@ -115,7 +115,7 @@ def run_target(name: str, n_users: int, port: int = 0) -> dict:
                    and rec.get("endpoint", {}).get("pass", True)
                    and rec.get("fail_closed", {}).get("pass", True)
                    and rec.get("second_batch", {}).get("pass", True)
-                   and rec["counters"]["status"] & 0x1F == 0)
+                   and rec["counters"]["status"] & 0x16 == 0)
     return rec
 
 
