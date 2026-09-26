@@ -125,6 +125,53 @@ HC_SS_SPLIT = 4          # hyper-connection norm: one segment per copy
 RMS_SPLIT = 8            # RMSNorm sums of squares
 WO_A_SPLIT = 2           # grouped wo_a: 256 terms per group in 2 chunks
 ME_GROUPS, ME_LANES, ME_IL = 4, 16, 8
+# R-ARITH (docs/ARCH_SPEC_V41.md 4): the arithmetic contract at shipped shapes.  "legacy" keeps the orders above
+# (the as-built reduced core implements them); "chunk8" cuts EVERY accumulation into contiguous chunks of at
+# most CHUNK terms, each summed sequentially from +0, the chunk sums added by a pairwise tree padded with +0
+# (csum) -- independent of the engine's geometry, so any engine that sums power-of-two-aligned runs of chunks
+# and combines them by the same padded tree reproduces it bit for bit.
+ARITH = os.environ.get("HDC_V41_ARITH", "legacy")
+CHUNK = 8
+assert ARITH in ("legacy", "chunk8"), ARITH
+
+
+def set_arith(mode):
+    """Switch the accumulation contract at run time (tests; the RTL campaigns set HDC_V41_ARITH)."""
+    global ARITH
+    assert mode in ("legacy", "chunk8"), mode
+    ARITH = mode
+
+
+def csum(t, axis=-1, c=CHUNK):
+    """R-ARITH sum along `axis`: chunks of <= c contiguous terms, each sequential from +0, then a pairwise tree
+    over the chunk sums padded with +0 to a power of two.  n <= c is a plain sequential sum from +0."""
+    t = np.moveaxis(np.asarray(t, dtype=F), axis, -1)
+    n = t.shape[-1]
+    nc = max(1, -(-n // c))
+    pad = nc * c - n
+    if pad:
+        t = np.concatenate([t, np.zeros(t.shape[:-1] + (pad,), dtype=F)], axis=-1)
+    t = t.reshape(t.shape[:-1] + (nc, c))
+    acc = np.zeros(t.shape[:-1], dtype=F)
+    for i in range(c):
+        acc = add(acc, t[..., i])
+    while acc.shape[-1] & (acc.shape[-1] - 1):
+        acc = np.concatenate([acc, np.zeros(acc.shape[:-1] + (1,), dtype=F)], axis=-1)
+    while acc.shape[-1] > 1:
+        acc = add(acc[..., 0::2], acc[..., 1::2])
+    return acc[..., 0]
+
+
+def matvec_c(w, x, split):
+    """hdc_golden.matvec (legacy, K in `split` chunks) or the R-ARITH csum over all K (chunk8)."""
+    if ARITH == "legacy":
+        return matvec(w, x, split)
+    xb = to_bf16(x)
+    return csum(mul(np.asarray(w, dtype=F), xb[None, :]))
+
+
+def reduce_sum_c(v):
+    return reduce_sum(v) if ARITH == "legacy" else F(csum(v))
 
 
 # -- storage formats -------------------------------------------------------------
@@ -275,10 +322,13 @@ def linear_q(w: Q8, x):
     blocks accumulated sequentially from +0."""
     xq, xe = quant_fp8(x)
     n, k = w.q.shape
+    blocks = [np.ldexp((w.q[:, b * 32:(b + 1) * 32] @ xq[b * 32:(b + 1) * 32]).astype(F),   # exact, rounded once
+                       w.e[:, b] + xe[b]).astype(F) for b in range(k // 32)]
+    if ARITH == "chunk8":
+        return to_bf16(csum(np.stack(blocks, axis=-1)))
     acc = np.zeros(n, dtype=F)
-    for b in range(k // 32):
-        d = (w.q[:, b * 32:(b + 1) * 32] @ xq[b * 32:(b + 1) * 32]).astype(F)   # exact, rounded once
-        acc = add(acc, np.ldexp(d, w.e[:, b] + xe[b]).astype(F))
+    for d in blocks:
+        acc = add(acc, d)
     return to_bf16(acc)
 
 
@@ -286,7 +336,7 @@ def mv(w, x):
     """A matrix-engine matvec: the engine's K-split (hdc_golden.split_for), each
     chunk sequential from +0, the chunks a pairwise tree; x BF16-rounded."""
     n, k = w.shape
-    return matvec(w, x, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL))
+    return matvec_c(w, x, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL))
 
 
 def linear_bf16(w, x):
@@ -297,16 +347,37 @@ def linear_bf16(w, x):
 def dots(a, b):
     """out[i, j] = sum_k a[i, k] * b[j, k], each sum sequential over k from +0: one
     matvec_fp32 per row of `a`, evaluated for all rows at once."""
+    if ARITH == "chunk8":
+        return csum(mul(np.asarray(a, dtype=F)[:, None, :], np.asarray(b, dtype=F)[None, :, :]))
     acc = np.zeros((a.shape[0], b.shape[0]), dtype=F)
     for k in range(a.shape[1]):
         acc = add(acc, mul(a[:, k][:, None], b[:, k][None, :]))
     return acc
 
 
+def dots_q4(a, b, block=32):
+    """Index scores under R-ARITH: a, b are FP4 (E2M1 x UE8M0 per 32) quantise-dequantised rows, so inside one
+    32-element block every product shares the two blocks' scales and the block dot is an exact small integer
+    times a power of two.  Each block dot is formed exactly and rounded once to FP32 (the block-dot lane,
+    exactly as linear_q's blocks), canonical +0; the blocks combine by csum.  legacy: dots()."""
+    if ARITH == "legacy":
+        return dots(a, b)
+    a64, b64 = np.asarray(a, dtype=np.float64), np.asarray(b, dtype=np.float64)
+    k = a64.shape[1]
+    nb = k // block
+    assert nb * block == k
+    blk = np.stack([a64[:, i * block:(i + 1) * block] @ b64[:, i * block:(i + 1) * block].T for i in range(nb)],
+                   axis=-1)
+    blk = (blk.astype(F) + F(0)).astype(F)          # round once (RNE); -0 -> +0
+    return csum(blk)
+
+
 def reduce_rows(v):
     """hdc_golden.reduce_sum of every row of a 2-D array at once (P=8 interleaved
     partials, then the pairwise tree)."""
     v = np.asarray(v, dtype=F)
+    if ARITH == "chunk8":
+        return csum(v)
     part = np.zeros((v.shape[0], 8), dtype=F)
     for i in range(v.shape[1]):
         part[:, i % 8] = add(part[:, i % 8], v[:, i])
@@ -329,6 +400,8 @@ def split_sum_parts(parts):
 def split_sum(v, s):
     """A long sum cut into s contiguous segments: each segment is reduce_sum (P=8
     interleaved partials, pairwise tree), the segment sums a pairwise tree."""
+    if ARITH == "chunk8":
+        return F(csum(v))
     v = np.asarray(v, dtype=F).reshape(s, -1)
     return split_sum_parts([reduce_sum(seg) for seg in v])
 
@@ -621,7 +694,7 @@ class Model:
         flat = x.reshape(-1)
         assert np.array_equal(to_bf16(flat), flat)          # the residual is BF16: x rounding is exact
         r = rsqrt(add(div(split_sum(mul(flat, flat), HC_SS_SPLIT), F(flat.size)), self.eps))
-        mixes = mul(matvec(fn, flat, HC_SPLIT), r)
+        mixes = mul(matvec_c(fn, flat, HC_SPLIT), r)
         h = self.hc
         pre = add(sigmoid(add(mul(mixes[:h], scale[0]), base[:h])), self.hc_eps)
         post = mul(sigmoid(add(mul(mixes[h:2 * h], scale[1]), base[h:2 * h])), F(2.0))
@@ -667,9 +740,9 @@ class Model:
         for j in range(self.hc):
             hj, kj = h[j], key[j]
             n = F(self.dim)
-            rstd = mul(rsqrt(add(div(reduce_sum(mul(hj, hj)), n), self.eps)),
-                       rsqrt(add(div(reduce_sum(mul(kj, kj)), n), self.eps)))
-            dot = mul(mul(reduce_sum(mul(mul(hj, wgt[j]), kj)), rstd), self.engram_scale)
+            rstd = mul(rsqrt(add(div(reduce_sum_c(mul(hj, hj)), n), self.eps)),
+                       rsqrt(add(div(reduce_sum_c(mul(kj, kj)), n), self.eps)))
+            dot = mul(mul(reduce_sum_c(mul(mul(hj, wgt[j]), kj)), rstd), self.engram_scale)
             mag = sqrt(np.maximum(np.abs(dot), F(1e-6)).astype(F))
             gate = sigmoid(np.where(dot < 0, neg(mag), mag).astype(F))
             out.append(add(hj, mul(gate, value)))
@@ -687,7 +760,7 @@ class Model:
         q = np.stack([qdq_fp4_e8m0(q[h]) for h in range(self.ih)])
         wts = to_bf16(mul(linear_bf16(self.lw(L, "attn.indexer.weights_proj.weight"), x), self.index_w_scale))
         keys = np.stack(state["ik"][src][:n])                                     # [n, ihd]
-        score = to_bf16(dots(q, keys))                                           # [ih, n] BF16 einsum
+        score = to_bf16(dots_q4(q, keys))                                        # [ih, n] BF16 einsum
         terms = to_bf16(mul(np.maximum(score, F(0)), wts[:, None]))
         s = to_bf16(reduce_rows(terms.T))
         s = s.astype(np.float64)
@@ -812,7 +885,7 @@ class Model:
         og = o.reshape(self.groups, -1)
         wa = self.lw(L, "attn.wo_a.weight").reshape(self.groups, self.o_rank, -1)
         # grouped wo_a: each group's K in WO_A_SPLIT chunks (o is BF16: x rounding is exact)
-        z = np.stack([matvec(wa[g], og[g], WO_A_SPLIT) for g in range(self.groups)])
+        z = np.stack([matvec_c(wa[g], og[g], WO_A_SPLIT) for g in range(self.groups)])
         z = to_bf16(z.reshape(-1))
         return linear_q(self.lw(L, "attn.wo_b.weight"), z)
 
