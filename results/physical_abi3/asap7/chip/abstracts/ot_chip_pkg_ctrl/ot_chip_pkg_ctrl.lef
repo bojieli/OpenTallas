@@ -334,7 +334,7 @@ MACRO ot_chip_pkg_ctrl
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 136.848 0.084 136.872 ;
+        RECT  0 137.184 0.084 137.208 ;
     END
   END clk
   PIN core_busy
