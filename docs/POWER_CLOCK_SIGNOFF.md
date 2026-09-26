@@ -174,6 +174,8 @@ and `energy_per_token.json`.
 | deepseek-v41-rom-array | rom_argmax_reduce_rtl_mapped | final | RTL-mapped | 12.83 | 8.54 | 4.29 | 0.00 | 2.88 | 22% |
 | deepseek-v41-rom-array | rom_mcast_node | final | vectorless | 23.27 | 15.49 | 7.78 | 0.00 | 5.12 | 22% |
 | deepseek-v41-rom-array | rom_moe_dispatch | final | vectorless | 11.04 | 7.61 | 3.43 | 0.00 | 2.76 | 25% |
+| deepseek-v41-rom-array | rom_moe_expert_port | final | vectorless | 17.34 | 11.85 | 5.49 | 0.00 | 3.95 | 23% |
+| deepseek-v41-rom-array | rom_pkg_ctrl | final | vectorless | 29.34 | 18.27 | 11.06 | 0.00 | 5.94 | 20% |
 
 #### Clock tree (TT)
 
@@ -192,6 +194,8 @@ and `energy_per_token.json`.
 | rom_argmax_reduce_rtl_mapped | 2,266 | 245 | 78.6 | 0.108-0.127 | 0.016 | -0.020 |
 | rom_mcast_node | 4,216 | 445 | 132.0 | 0.122-0.148 | 0.019 | -0.026 |
 | rom_moe_dispatch | 2,155 | 233 | 72.7 | 0.105-0.123 | 0.011 | -0.018 |
+| rom_moe_expert_port | 3,185 | 344 | 103.3 | 0.114-0.141 | 0.023 | -0.029 |
+| rom_pkg_ctrl | 4,482 | 500 | 159.9 | 0.126-0.153 | 0.021 | -0.028 |
 
 #### Fmax per corner (reg-to-reg `report_clock_min_period`; OCV = flat 5% early/late derate)
 
@@ -208,6 +212,8 @@ and `energy_per_token.json`.
 | rom_argmax_reduce_gate_level | 770 | 729 | 1,151 | 1,085 | 1,579 | 1,488 | +0.047 / +0.031 / +0.019 |
 | rom_mcast_node | 900 | 847 | 1,359 | 1,278 | 1,895 | 1,781 | +0.077 / +0.052 / +0.036 |
 | rom_moe_dispatch | 933 | 881 | 1,408 | 1,327 | 1,943 | 1,829 | +0.074 / +0.050 / +0.034 |
+| rom_moe_expert_port | 1,037 | 980 | 1,558 | 1,470 | 2,111 | 1,984 | +0.077 / +0.052 / +0.031 |
+| rom_pkg_ctrl | 761 | 719 | 1,162 | 1,100 | 1,592 | 1,507 | +0.069 / +0.048 / +0.033 |
 
 #### Static IR drop and EM (TT, activity-annotated instance power)
 
@@ -229,13 +235,17 @@ and `energy_per_token.json`.
 | rom_mcast_node | 91 x 91 | bumps 140 um | 29.9 | 11.20 | 29.1 | 1.94 | 6.68 | 4.09 | -- | -- |
 | rom_moe_dispatch | 66 x 66 | pins | 1.9 | 0.58 | 1.9 | 1.21 | 0.64 | 0.00 | -- | -- |
 | rom_moe_dispatch | 66 x 66 | bumps 140 um | 3.6 | 0.93 | 4.9 | 1.19 | 1.42 | 1.01 | -- | -- |
+| rom_moe_expert_port | 78 x 78 | pins | 2.4 | 0.65 | 2.2 | 1.33 | 0.94 | 0.00 | -- | -- |
+| rom_moe_expert_port | 78 x 78 | bumps 140 um | 16.9 | 4.70 | 16.3 | 1.32 | 4.47 | 3.34 | -- | -- |
+| rom_pkg_ctrl | 99 x 99 | pins | 4.3 | 0.67 | 4.5 | 3.01 | 0.98 | 0.00 | -- | -- |
+| rom_pkg_ctrl | 99 x 99 | bumps 140 um | 40.7 | 12.50 | 51.9 | 3.07 | 8.68 | 4.88 | -- | -- |
 
 #### Energy per decode step of the reduced vehicles (TT)
 
 | Architecture | Step cycles | Logic uJ | Memory and links uJ | Static uJ | Token uJ | pJ per weight MAC (matrix engine / whole step) | Not included |
 |---|---:|---:|---:|---:|---:|---|---|
 | deepseek_v41_rom_array_die | 1,088,551 | 543.26 | 139.75 | 0.00 | 683.01 | 11.51 / 66.54 | sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total |
-| deepseek_v41_rom_array_package | 1,088,551 | 726.30 | 5.70 | 0.00 | 732.00 | -- | four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total; package controller: block rom_pkg_ctrl not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; fabric router: block rom_fabric_router not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; MoE expert port: block rom_moe_expert_port not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; express link: block rom_express_link not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json |
+| deepseek_v41_rom_array_package | 1,088,551 | 772.02 | 5.70 | 0.00 | 777.73 | -- | four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total; fabric router: block rom_fabric_router not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; express link: block rom_express_link not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json |
 | hbm_comparator | 32,275 | 19.57 | 305.61 | 10.17 | 335.35 | 3.97 / 262.41 | -- |
 | qwen3_8b_rom_reticle | 32,246 | 18.98 | 2.17 | 0.00 | 21.15 | 3.97 / 16.55 | -- |
 

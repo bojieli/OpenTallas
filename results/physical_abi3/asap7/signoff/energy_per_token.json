@@ -195,7 +195,7 @@
       },
       "memory": {
         "KV and vector memory SRAM": {
-          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound) enable-high cycles {'kv_we': 17536, 'wxr_re': 80, 'vi_re': 15328, 'vw_rd_we': 5808, 'kv_re': 125440, 'vw_me_we': 24576, 'vs_re': 2077712, 'ww_q_we': 14048, 'vh_re': 409600, 'ww_x_we': 128, 'vr_re': 532, 'vx_re': 1140736, 'vw_xe_we': 292, 'vq_re': 480, 'vw_su_we': 510581, 'ww_h_we': 640}",
+          "basis": "one FP32 element per element-port enable bit, 32 elements (128 B) per wide-port enable, one 16-element line per matrix-engine group write (masks ignored: an upper bound) enable-high cycles {'vh_re': 409600, 'vw_su_we': 510581, 'vi_re': 15328, 'kv_re': 125440, 'ww_h_we': 640, 'vw_me_we': 24576, 'ww_q_we': 14048, 'kv_we': 17536, 'vr_re': 532, 'vw_rd_we': 5808, 'vs_re': 2077712, 'vx_re': 1140736, 'wxr_re': 80, 'vw_xe_we': 292, 'ww_x_we': 128, 'vq_re': 480}",
           "bytes_per_token": 52306612.0,
           "energy_j": 0.00013599719119999998,
           "energy_j_high": 0.0006642939724,
@@ -203,7 +203,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "ROM (weights, expert weights, hc, block-quantised, Engram, constants)": {
-          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction) enable-high cycles {'ewrom_re': 640, 'wrom_re': 159744, 'xcrom_re': 1, 'hrom_re': 409600, 'prog_re': 4416, 'qrom_re': 36800, 'erom_re': 48, 'crom_re': 67332}",
+          "basis": "port widths of ot_hdc_core_v41 (HNL=3 hc lanes x 32 bit, BL=16 x QLB=272 bit, 264-bit Engram row, 1,536-bit instruction) enable-high cycles {'qrom_re': 36800, 'wrom_re': 159744, 'crom_re': 67332, 'xcrom_re': 1, 'ewrom_re': 640, 'erom_re': 48, 'prog_re': 4416, 'hrom_re': 409600}",
           "bytes_per_token": 46851672.0,
           "energy_j": 3.74813376e-06,
           "energy_j_high": 2.3425836e-05,
@@ -296,6 +296,31 @@
           "note": null,
           "source": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json#blocks.rom_moe_dispatch"
         },
+        "MoE expert port": {
+          "FF": {
+            "dynamic_j": 2.20136115025125e-05,
+            "leakage_j": 1.2514264283750437e-09,
+            "power_w": 0.022471118718385696,
+            "total_j": 2.2014862928940875e-05
+          },
+          "SS": {
+            "dynamic_j": 1.3355380527102343e-05,
+            "leakage_j": 2.3380739368685866e-08,
+            "power_w": 0.013656034134328365,
+            "total_j": 1.3378761266471029e-05
+          },
+          "TT": {
+            "dynamic_j": 1.698195449913503e-05,
+            "leakage_j": 1.727807209396258e-09,
+            "power_w": 0.017335668206214905,
+            "total_j": 1.6983682306344426e-05
+          },
+          "activity": "vectorless",
+          "group": null,
+          "instances": 1,
+          "note": null,
+          "source": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json#blocks.rom_moe_expert_port"
+        },
         "argmax collective": {
           "FF": {
             "dynamic_j": 1.265112253464691e-05,
@@ -340,6 +365,31 @@
           "instances": 1,
           "note": "four dies each doing a quarter of every matrix for about a quarter of the step spend about one die-step of energy; the replicated vector work (norms, residuals, RoPE) on the other three dies is not counted, so this is a lower bound on the dies",
           "source": "architectures.deepseek_v41_rom_array_die"
+        },
+        "package controller": {
+          "FF": {
+            "dynamic_j": 3.737721648961651e-05,
+            "leakage_j": 2.0235199878230337e-09,
+            "power_w": 0.03815392032265663,
+            "total_j": 3.737924000960433e-05
+          },
+          "SS": {
+            "dynamic_j": 2.2587372779327635e-05,
+            "leakage_j": 3.989695091691247e-08,
+            "power_w": 0.023096216842532158,
+            "total_j": 2.2627269730244547e-05
+          },
+          "TT": {
+            "dynamic_j": 2.873889618868316e-05,
+            "leakage_j": 2.8799270935724968e-09,
+            "power_w": 0.02933744713664055,
+            "total_j": 2.8741776115776733e-05
+          },
+          "activity": "vectorless",
+          "group": null,
+          "instances": 1,
+          "note": null,
+          "source": "results/physical_abi3/asap7/signoff/rom_fabric_signoff.json#blocks.rom_pkg_ctrl"
         }
       },
       "memory": {
@@ -354,21 +404,19 @@
       },
       "missing": [
         "four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total",
-        "package controller: block rom_pkg_ctrl not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
         "fabric router: block rom_fabric_router not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
-        "MoE expert port: block rom_moe_expert_port not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json",
         "express link: block rom_express_link not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json"
       ],
       "static": {},
       "token_cycles": 1088551,
       "token_time_s": 0.0009796959000000001,
       "totals_j": {
-        "logic_FF": 0.0009036226487538488,
-        "logic_SS": 0.0006013730588073718,
-        "logic_TT": 0.0007262980236495043,
+        "logic_FF": 0.000963016751692394,
+        "logic_SS": 0.0006373790898040874,
+        "logic_TT": 0.0007720234820716255,
         "memory_and_links": 5.701632e-06,
         "static": 0.0,
-        "token_TT": 0.0007319996556495043
+        "token_TT": 0.0007777251140716255
       }
     },
     "hbm_comparator": {
@@ -492,7 +540,7 @@
       },
       "memory": {
         "KV from HBM": {
-          "basis": "the KV bytes the core consumes (the streamer fetches each once into its window; the tail SRAM holds the open tile) enable-high cycles {'kv_re': 1024, 'kv_we': 256}",
+          "basis": "the KV bytes the core consumes (the streamer fetches each once into its window; the tail SRAM holds the open tile) enable-high cycles {'kv_we': 256, 'kv_re': 1024}",
           "bytes_per_token": 263168.0,
           "energy_j": 2.7601059840000002e-05,
           "energy_j_high": 3.0990663679999995e-05,
@@ -508,7 +556,7 @@
           "energy_term": "sram_read_j_per_byte"
         },
         "vector memory SRAM": {
-          "basis": " enable-high cycles {'vw_rd_we': 113, 'va_re': 7377, 'vw_me_we': 576, 'vb_re': 6865, 'vc_re': 5713, 'vx_re': 86016, 'vw_su_we': 6609}",
+          "basis": " enable-high cycles {'va_re': 7377, 'vw_su_we': 6609, 'vw_me_we': 576, 'vb_re': 6865, 'vw_rd_we': 113, 'vx_re': 86016, 'vc_re': 5713}",
           "bytes_per_token": 487636.0,
           "energy_j": 1.2678536e-06,
           "energy_j_high": 6.1929772e-06,
@@ -681,7 +729,7 @@
       },
       "memory": {
         "KV SRAM": {
-          "basis": "kv_re reads one 16-lane FP32 word per lane group (4 x 64 B); kv_we writes one FP32 element; writes charged at the read energy enable-high cycles {'kv_re': 1024, 'kv_we': 256}",
+          "basis": "kv_re reads one 16-lane FP32 word per lane group (4 x 64 B); kv_we writes one FP32 element; writes charged at the read energy enable-high cycles {'kv_we': 256, 'kv_re': 1024}",
           "bytes_per_token": 263168.0,
           "energy_j": 6.842367999999999e-07,
           "energy_j_high": 3.3422336000000003e-06,
@@ -697,7 +745,7 @@
           "energy_term": "rom_read_j_per_byte"
         },
         "vector memory SRAM": {
-          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial) enable-high cycles {'vw_rd_we': 113, 'va_re': 7377, 'vw_me_we': 576, 'vb_re': 6865, 'vc_re': 5713, 'vx_re': 86016, 'vw_su_we': 6609}",
+          "basis": "one FP32 element per read-port enable bit; a matrix-engine write is one 16-element line per group (upper bound: the mask can be partial) enable-high cycles {'va_re': 7377, 'vw_su_we': 6609, 'vw_me_we': 576, 'vb_re': 6865, 'vw_rd_we': 113, 'vx_re': 86016, 'vc_re': 5713}",
           "bytes_per_token": 487636.0,
           "energy_j": 1.2678536e-06,
           "energy_j_high": 6.1929772e-06,
@@ -772,6 +820,6 @@
       "value": 2.9e-13
     }
   },
-  "generated_at": "2026-09-26T10:37:58.132326+00:00",
+  "generated_at": "2026-09-26T10:48:21.875368+00:00",
   "schema": "opentallas.signoff.v1.energy_per_token"
 }
