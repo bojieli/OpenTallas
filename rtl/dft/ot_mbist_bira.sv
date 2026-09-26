@@ -37,8 +37,8 @@
 //   P3  popcount of those columns; clear them from every entry
 //   P4  free-slot search; commit or mark unrepairable
 // `analyze` is latched and served once the queue is empty and P1..P4 idle.
-// The exhaustive search takes two cycles per subset (uncovered-column OR in
-// one, popcount and compare in the next).  The allocation is identical to the
+// The exhaustive search takes three cycles per subset (uncovered-column OR,
+// popcount, compare).  The allocation is identical to the
 // single-cycle version (tools/rtl_mbist_campaign.py cross-checks it).
 // ---------------------------------------------------------------------------
 // The per-stage temporaries (tmn, tvn, cnt, cmc, spop, slot) are blocking
@@ -82,7 +82,7 @@ module ot_mbist_bira #(
     localparam [15:0] R16 = R[15:0], C16 = C[15:0], E16 = E[15:0], D16 = DMAX[15:0];
     localparam integer DI = (DMAX <= 2) ? 1 : $clog2(DMAX);
     localparam [2:0] S_IDLE = 3'd0, S_SRCH = 3'd1, S_ROWS = 3'd2, S_COLS = 3'd3, S_DONE = 3'd4,
-                     S_WAIT = 3'd5, S_SRCH2 = 3'd6;
+                     S_SRCH3 = 3'd5, S_SRCH2 = 3'd6;
 
     reg [E-1:0]      valid;
     reg [RMAX-1:0]   row  [0:E-1];
@@ -131,6 +131,11 @@ module ot_mbist_bira #(
     reg [DMAX-1:0] cm_r;                      // uncovered columns of subset s (registered)
     reg            s_ok_r;                    // subset uses only valid entries and <= R rows
     reg [15:0]     s_pop_r;
+    reg [15:0]     cm_pop_r;                  // popcount of cm_r (registered)
+    // chunked popcount: 16-bit chunks counted in one stage, summed in the next
+    localparam integer NCH = (DMAX + 15) / 16;
+    reg [4:0]      p_part [0:NCH-1];
+    reg            p_sum;                     // P3b pending
 
     assign busy = (st != S_IDLE && st != S_DONE) || ana_pend || (q_n + QSLACK[QW:0] > QD[QW:0]);
 
@@ -149,15 +154,15 @@ module ot_mbist_bira #(
             colset <= {DMAX{1'b0}}; k <= 16'd0; sl <= 0; done <= 1'b0; repairable <= 1'b0;
             rr_en <= {R1{1'b0}}; rr_addr <= {(R1*RMAX){1'b0}}; cr_en <= {C1{1'b0}}; cr_sel <= {(C1*CMAX){1'b0}};
             n_must_cols <= 8'd0; n_events <= 8'd0; ana_pend <= 1'b0;
-            q_wp <= {QW{1'b0}}; q_rp <= {QW{1'b0}}; q_n <= {(QW+1){1'b0}}; ph <= 4'd0;
-            cm_r <= {DMAX{1'b0}}; s_ok_r <= 1'b0; s_pop_r <= 16'd0;
+            q_wp <= {QW{1'b0}}; q_rp <= {QW{1'b0}}; q_n <= {(QW+1){1'b0}}; ph <= 4'd0; p_sum <= 1'b0;
+            cm_r <= {DMAX{1'b0}}; s_ok_r <= 1'b0; s_pop_r <= 16'd0; cm_pop_r <= 16'd0;
             for (j = 0; j < E; j = j + 1) begin row[j] <= {RMAX{1'b0}}; mask[j] <= {DMAX{1'b0}}; end
         end else if (clear) begin
             valid <= {E{1'b0}}; mustcol <= {DMAX{1'b0}}; ncols <= 8'd0; unrep <= 1'b0;
             st <= S_IDLE; done <= 1'b0; repairable <= 1'b0; found <= 1'b0; ana_pend <= 1'b0;
             rr_en <= {R1{1'b0}}; rr_addr <= {(R1*RMAX){1'b0}}; cr_en <= {C1{1'b0}}; cr_sel <= {(C1*CMAX){1'b0}};
             n_must_cols <= 8'd0; n_events <= 8'd0;
-            q_wp <= {QW{1'b0}}; q_rp <= {QW{1'b0}}; q_n <= {(QW+1){1'b0}}; ph <= 4'd0;
+            q_wp <= {QW{1'b0}}; q_rp <= {QW{1'b0}}; q_n <= {(QW+1){1'b0}}; ph <= 4'd0; p_sum <= 1'b0;
         end else begin
             // ---- queue ----
             if (q_push && !q_full) begin
@@ -169,6 +174,7 @@ module ot_mbist_bira #(
             q_n <= q_n + {{QW{1'b0}}, q_push && !q_full} - {{QW{1'b0}}, q_pop};
             if (unrep) begin
                 ph <= 4'd0;
+                p_sum <= 1'b0;
             end else begin
                 // ---- P1: mask, CAM match ----
                 if (q_pop) begin
@@ -200,9 +206,21 @@ module ot_mbist_bira #(
                     end
                 end
                 // ---- P3: popcount, clear the must-repair columns ----
-                if (ph[1]) begin
-                    p_npop <= pop(p_new);
+                if (ph[1] && !p_sum) begin                 // P3a: chunk counts, clear columns
+                    for (c = 0; c < NCH; c = c + 1) begin
+                        cnt = 8'd0;
+                        for (i = 0; i < 16; i = i + 1)
+                            if (c * 16 + i < DMAX) cnt = cnt + {7'd0, p_new[c * 16 + i]};
+                        p_part[c] <= cnt[4:0];
+                    end
                     for (i = 0; i <= E; i = i + 1) p_tm[i] <= p_tm[i] & ~p_new;
+                    p_sum <= 1'b1;
+                end
+                if (ph[1] && p_sum) begin                  // P3b: sum the chunks
+                    spop = 16'd0;
+                    for (c = 0; c < NCH; c = c + 1) spop = spop + {11'd0, p_part[c]};
+                    p_npop <= spop;
+                    p_sum <= 1'b0;
                     ph <= 4'b0100;
                 end
                 // ---- P4: slot, commit ----
@@ -250,10 +268,16 @@ module ot_mbist_bira #(
                     s_pop_r <= spop;
                     st <= S_SRCH2;
                 end
-                S_SRCH2: begin                                 // popcount, feasibility, best
-                    if (s_ok_r && s_pop_r <= R16 && (pop(cm_r) + {8'd0, ncols} <= C16)
-                        && (!found || s_pop_r + pop(cm_r) < best_cost)) begin
-                        found <= 1'b1; best <= s[E-1:0]; best_cost <= s_pop_r + pop(cm_r);
+                S_SRCH2: begin                                 // popcount of the uncovered columns
+                    spop = 16'd0;
+                    for (c = 0; c < DMAX; c = c + 1) spop = spop + {15'd0, cm_r[c]};
+                    cm_pop_r <= spop;
+                    st <= S_SRCH3;
+                end
+                S_SRCH3: begin                                 // feasibility, best
+                    if (s_ok_r && s_pop_r <= R16 && (cm_pop_r + {8'd0, ncols} <= C16)
+                        && (!found || s_pop_r + cm_pop_r < best_cost)) begin
+                        found <= 1'b1; best <= s[E-1:0]; best_cost <= s_pop_r + cm_pop_r;
                     end
                     if (s[E-1:0] == {E{1'b1}}) begin
                         st <= S_ROWS; k <= 16'd0; s <= {SW{1'b0}}; sl <= 0;
