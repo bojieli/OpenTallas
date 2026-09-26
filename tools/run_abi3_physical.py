@@ -41,6 +41,17 @@ platform's ``MACRO_PLACE_HALO``; without it the platform default stands.  What
 was used is recorded under ``place_and_route.memory_macros`` and nothing is
 emitted or recorded when the option is absent.
 
+Design for test.  ``--dft scan`` inserts muxed-D full scan into the netlist
+ORFS synthesised, between synthesis and floorplan, with ``tools/dft``: every
+flop becomes a scan cell, stitched into ``--scan-chains`` balanced chains (or
+as many as ``--scan-max-length`` needs), with ``scan_en``, ``scan_in[N-1:0]``
+and ``scan_out[N-1:0]`` ports and lock-up latches where a chain crosses clock
+domains (``--scan-clock-mixing mix``).  The scan description is retained as
+``scan_chains.json`` beside the other artifacts and summarised under
+``place_and_route.dft``; the route gets its own DESIGN_NICKNAME so it cannot
+collide with an unscanned route of the same top.  Without ``--dft`` nothing is
+emitted or recorded and the config.mk is byte-for-byte unchanged.
+
 Pinned sources.  ``--source-root DIR`` reads the RTL from another checkout
 (a worktree pinned at the commit being characterised); the record's ``git``
 block then describes that tree and ``runner.driver`` names the commit this
@@ -1850,6 +1861,60 @@ def orfs_config_lines(
     return config
 
 
+DFT_SUPPORTED_VIEWS = {"asap7"}
+
+
+def resolve_dft(mode: str | None, chains: int | None, max_length: int | None,
+                clock_mixing: str | None) -> dict[str, Any] | None:
+    """The scan configuration, or None when no DFT was asked for."""
+    if mode in (None, "none"):
+        if chains is not None or max_length is not None or clock_mixing is not None:
+            raise ValueError("--scan-chains/--scan-max-length/--scan-clock-mixing need --dft scan")
+        return None
+    if mode != "scan":
+        raise ValueError(f"--dft: unknown mode {mode!r}")
+    if chains is not None and chains < 1:
+        raise ValueError("--scan-chains must be positive")
+    if max_length is not None and max_length < 1:
+        raise ValueError("--scan-max-length must be positive")
+    return {
+        "mode": "scan",
+        "chains": chains if chains is not None else (None if max_length else 1),
+        "max_length": max_length,
+        "clock_mixing": clock_mixing or "no_mix",
+    }
+
+
+def apply_scan_insertion(mapped: Path, case: Path, block: dict[str, Any], view_name: str,
+                         corner: dict[str, Any] | None, dft: dict[str, Any]) -> dict[str, Any]:
+    """Insert scan into the ORFS-synthesised netlist in place; return the record."""
+    sys.path.insert(0, str(DRIVER_ROOT / "tools"))
+    from dft import liberty as dft_liberty  # noqa: PLC0415
+    from dft import netlist as dft_netlist  # noqa: PLC0415
+    from dft import scan_insert  # noqa: PLC0415
+
+    if view_name not in DFT_SUPPORTED_VIEWS or corner is None:
+        raise FlowError(f"--dft scan supports views {sorted(DFT_SUPPORTED_VIEWS)}")
+    cells = dft_liberty.load_cells([Path(p) for p in corner["liberty"]], case / "dft_cache")
+    pre = case / "1_2_yosys.prescan.v"
+    shutil.copy2(mapped, pre)
+    module = dft_netlist.read_module(mapped, block["top"])
+    text, report = scan_insert.insert_scan(
+        module, cells, chains=dft["chains"], max_length=dft["max_length"],
+        clock_mixing=dft["clock_mixing"], tech=view_name,
+    )
+    mapped.write_text(text, encoding="utf-8")
+    shutil.copy2(mapped, case / "1_2_yosys.scan.v")
+    report["prescan_netlist_sha256"] = sha256_file(pre)
+    report["scan_netlist_sha256"] = sha256_file(mapped)
+    (case / "scan_chains.json").write_text(json.dumps(report, indent=1, sort_keys=True) + "\n")
+    summary = {k: v for k, v in report.items() if k not in ("chains", "clock_roots")}
+    summary["chain_lengths"] = [c["length"] for c in report["chains"]]
+    summary["requested"] = dft
+    summary["inserted_by"] = "tools/dft/scan_insert.py (host, between ORFS synthesis and floorplan)"
+    return summary
+
+
 def run_pnr(
     view_name: str,
     view: dict[str, Any],
@@ -1864,6 +1929,8 @@ def run_pnr(
     constraints: dict[str, Any] | None = None,
     memory_macros: dict[str, Any] | None = None,
     floorplan: dict[str, Any] | None = None,
+    dft: dict[str, Any] | None = None,
+    corner: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     pnr = view["pnr"]
     platform_name = pnr["platform"]
@@ -1877,7 +1944,7 @@ def run_pnr(
         sdc_text(view, block, clock_period_ns, constraints), encoding="utf-8"
     )
 
-    nickname = f"opentallas_{block_name}_{view_name}"
+    nickname = f"opentallas_{block_name}_{view_name}" + ("_scan" if dft else "")
     config = orfs_config_lines(
         nickname, block, platform_name, pnr, core_utilization, place_density,
         constraints, memory_macros, floorplan,
@@ -1937,6 +2004,9 @@ def run_pnr(
     raw_mapped = case / "1_2_yosys.raw.v"
     shutil.copy2(mapped, raw_mapped)
     signed_stripped = normalise_netlist(mapped, mapped)
+    dft_record = None
+    if dft:
+        dft_record = apply_scan_insertion(mapped, case, block, view_name, corner, dft)
 
     # Phase 2: floorplan through routing and metadata.
     #
@@ -2002,6 +2072,15 @@ def run_pnr(
                     "retained": True,
                 }
                 break
+    if dft_record:
+        for name in ("scan_chains.json", "1_2_yosys.scan.v"):
+            candidate = case / name
+            shutil.copy2(candidate, out_dir / name)
+            artifacts[name] = {
+                "sha256": sha256_file(candidate),
+                "size_bytes": candidate.stat().st_size,
+                "retained": True,
+            }
     # Record identity of heavy artifacts even when they are not retained.
     if not keep_heavy:
         for name in PNR_ARTIFACTS_HEAVY:
@@ -2032,6 +2111,7 @@ def run_pnr(
         **({"signal_integrity_constraints": constraints} if constraints else {}),
         **({"memory_macros": memory_macros} if memory_macros else {}),
         **({"floorplan": floorplan} if floorplan else {}),
+        **({"dft": dft_record} if dft_record else {}),
         "metrics": metrics,
         "artifacts": artifacts,
         "artifact_dir": str(out_dir.relative_to(ROOT)) if out_dir.is_relative_to(ROOT) else str(out_dir),
@@ -2590,6 +2670,19 @@ def build_parser() -> argparse.ArgumentParser:
         help="source FILE at ORFS step hook HOOK (e.g. POST_PDN), repeatable; "
              "its sha256 is recorded under place_and_route.floorplan.step_tcl",
     )
+    parser.add_argument(
+        "--dft", default=None, choices=["none", "scan"],
+        help="scan: insert muxed-D full scan between ORFS synthesis and floorplan "
+             "(tools/dft/scan_insert.py) and route the scanned netlist; recorded "
+             "under place_and_route.dft.  Absent or none: no DFT, as every earlier record",
+    )
+    parser.add_argument("--scan-chains", type=int, default=None, metavar="N",
+                        help="number of balanced scan chains (default 1)")
+    parser.add_argument("--scan-max-length", type=int, default=None, metavar="L",
+                        help="longest allowed chain; raises the chain count to fit")
+    parser.add_argument("--scan-clock-mixing", default=None, choices=["no_mix", "mix"],
+                        help="no_mix (default): one clock domain per chain; mix: chains "
+                             "cross domains through lock-up latches")
     parser.add_argument("--output", required=True)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--keep-workdir", default=None, help="directory to retain intermediate files in")
@@ -2784,6 +2877,18 @@ def main(argv: list[str] | None = None) -> int:
         print(str(exc), file=sys.stderr)
         return 2
 
+    try:
+        dft = resolve_dft(args.dft, args.scan_chains, args.scan_max_length, args.scan_clock_mixing)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    if dft and "pnr" not in stages:
+        print("--dft scan is applied to the ORFS netlist; it requires stage pnr", file=sys.stderr)
+        return 2
+    if dft and args.view not in DFT_SUPPORTED_VIEWS:
+        print(f"--dft scan supports views {sorted(DFT_SUPPORTED_VIEWS)}", file=sys.stderr)
+        return 2
+
     workdir_ctx = None
     if args.keep_workdir:
         work = Path(args.keep_workdir)
@@ -2912,6 +3017,8 @@ def main(argv: list[str] | None = None) -> int:
                 constraints,
                 memory_macros,
                 floorplan,
+                dft,
+                corner,
             )
             if args.cts_cluster_size is not None:
                 record["place_and_route"]["clock_tree_config"] = {
@@ -3012,6 +3119,13 @@ def main(argv: list[str] | None = None) -> int:
                 if constraints.get("slew_margin_percent") is not None
                 else ""
             )
+        )
+    if pnr and pnr.get("dft"):
+        d = pnr["dft"]
+        print(
+            f"  dft:   {d['flops']} flops -> {d['chain_count']} chains (max {d['chain_length_max']}), "
+            f"{d['scan_cells']} scan cells + {d['scan_mux_cells']} muxed, "
+            f"{d['lockup_latches']} lock-up latches, pre-layout +{d['cell_area_added_um2']:.2f} um2"
         )
     if memory_macros:
         halo = memory_macros["macro_place_halo"]

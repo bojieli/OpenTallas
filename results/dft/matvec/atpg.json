@@ -1,0 +1,143 @@
+{
+ "aborted_by_pin": {
+  "A": 817,
+  "A1": 545,
+  "A2": 527,
+  "B": 912,
+  "B1": 230,
+  "B2": 247,
+  "C": 664,
+  "C1": 43,
+  "C2": 35,
+  "D": 396,
+  "E": 13,
+  "Y": 339
+ },
+ "block": "ot_hdc_matvec",
+ "classes": {
+  "AU": 4768,
+  "DS": 501754,
+  "DT": 2605043,
+  "ND": 0,
+  "UT": 118539
+ },
+ "engine": {
+  "binary_source_sha256": "3b639ac42a3eb520dab25b0f73eda39624d3d878399fe3eab4deba9461dd220d",
+  "capture": {
+   "abort_retry_backtrack_limit": 4096,
+   "aborted": 4768,
+   "aborted_retried": 6413,
+   "backtrack_limit": 256,
+   "detected": 2605043,
+   "detected_after_random": 2335947,
+   "faults_targeted": 3038630,
+   "log": [
+    "otatpg: PODEM 465201 calls, 428819 untestable, 4773 aborted, 24152 deterministic patterns, 0 unconfirmed (326.297 s)",
+    "otatpg: compaction 27174 -> 22817 patterns (534.854 s)",
+    "otatpg: 2605043 detected, 428819 untestable, 4768 aborted, 0 other; 22817 patterns (859.536 s)"
+   ],
+   "max_level": 125,
+   "nodes": 3201159,
+   "observed": 98334,
+   "patterns": 22817,
+   "patterns_before_compaction": 27174,
+   "podem_backtracks": 31137063,
+   "podem_calls": 465201,
+   "podem_unconfirmed": 0,
+   "primary_inputs": 3620,
+   "random_blocks": 51,
+   "random_patterns_kept": 3022,
+   "seconds": 859.536,
+   "seed": 1,
+   "sources": 99357,
+   "threads": 8,
+   "undetected_other": 0,
+   "untestable": 428819,
+   "untestable_but_detected": 0,
+   "wall_seconds": 861.0
+  },
+  "shift": {
+   "cycles": 2040,
+   "detected": 501754,
+   "faults_simulated": 625061,
+   "first_divergence_faults": 610263,
+   "full_simulation_faults": 14610,
+   "log": [
+    "otatpg: flush 2040 cycles, 501754/625061 faults detected (1294.21 s)"
+   ],
+   "longest_chain": 1019,
+   "mode": "flush",
+   "scan_out_faults": 188,
+   "seconds": 1294.21,
+   "wall_seconds": 1298.8
+  }
+ },
+ "fault_coverage": 0.961826,
+ "fault_model": "single stuck-at, every pin of every cell (uncollapsed), clock pins included",
+ "faults_total": 3230104,
+ "model": {
+  "clock_pin_faults": 191474,
+  "clock_ports": [
+   "clk"
+  ],
+  "instances": 417017,
+  "lockup_latches": 0,
+  "node_types": {
+   "AND": 498163,
+   "BUF": 1615052,
+   "CONST0": 1,
+   "CONST1": 1,
+   "INPUT": 99357,
+   "NOT": 696952,
+   "OR": 291633
+  },
+  "nodes": 3201159,
+  "pin_faults_modelled": 3038630,
+  "primary_inputs": 3620,
+  "primary_outputs": 2597,
+  "scan_cells": 95737,
+  "top": "ot_hdc_matvec",
+  "undriven_net_count": 0,
+  "undriven_nets": []
+ },
+ "netlist": {
+  "origin": "host Yosys 0.68 synthesis (run_abi3_physical --stages synth), scan inserted by tools/dft/scan_insert.py --max-length 1024",
+  "path": "scan.v",
+  "sha256": "16192790b374caf4c28a99c58f85f42fd6271615e453888ac41ebfb21fa53066"
+ },
+ "patterns": {
+  "before_compaction": 27174,
+  "capture": 22817,
+  "chain_test": 1,
+  "note": "tester cycles = one load/unload of the longest chain per pattern, overlapped, plus the capture cycle",
+  "random_kept": 3022,
+  "tester_cycles": 23275379
+ },
+ "scan": {
+  "capture_constraints": {
+   "rst_n": 1,
+   "scan_en": 0
+  },
+  "chains": 94,
+  "max_chain_length": 1019,
+  "scan_cells": 95737
+ },
+ "schema": "opentallas.dft.atpg.v1",
+ "seconds": 2482.3,
+ "test_coverage": 0.998468,
+ "top": "ot_hdc_matvec",
+ "untestable_by_pin": {
+  "A": 1900,
+  "A1": 1595,
+  "A2": 17592,
+  "B": 1933,
+  "B1": 194,
+  "C": 812,
+  "C1": 166,
+  "D": 165,
+  "RESETN": 43922,
+  "SE": 5131,
+  "SETN": 43922,
+  "Y": 963
+ }
+}
