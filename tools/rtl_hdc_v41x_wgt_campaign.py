@@ -620,7 +620,8 @@ def die_mapping(depth_q, depth_m):
                     "collector (3 cycles per level + COLLECT_HOP). Parts are packed into tile row groups of "
                     "G/P parts of equal length and the row groups scheduled longest-first onto the tiles. "
                     "latency = makespan (beats) + measured tile base depth + 3 x (the part's tree levels in the tile) + collector levels.",
-           "collect_hop_cycles": 2}
+           "collect_hop_cycles": 2,
+           "choice": "per matrix, the fewest K-split parts that meet the budget (the cross-tile collector is modelled, not built)"}
     hop = 2
     for label, ops, lanes_die, G, T, depth, per, pmin in (
             ("quantised: 906 tiles x 8 block-dot lanes (G=1)", qops, 7248, 1, 906, depth_q, 8, 0),
@@ -657,9 +658,11 @@ def die_mapping(depth_q, depth_m):
                         mk = max(heap)
                     tree = plg + nlev_of(-(-max(lens) // P))          # the part's own tree levels in the tile
                     lat = mk + depth + 3 * tree + (3 * s + hop if s else 0)
-                    if best is None or lat < best["latency_cycles"]:
+                    key = (lat > bud, (1 << s) if lat <= bud else 0, lat)   # meet first, then fewest parts, then fastest
+                    if best is None or key < best["_key"]:
                         best = {"k_split_parts": 1 << s, "segment_P": P, "issue_cycles": mk,
-                                "tile_depth_cycles": depth + 3 * tree, "latency_cycles": lat}
+                                "tile_depth_cycles": depth + 3 * tree, "latency_cycles": lat, "_key": key}
+            best.pop("_key")
             rows.append({"matrix": n, "rows_per_die": r, "terms_per_row": nb * per, **best, "budget_cycles": bud,
                          "meets": best["latency_cycles"] <= bud})
         out[label] = rows
@@ -722,6 +725,20 @@ def main() -> int:
                           "checkpoint_sha256": sha(ckpt) if not a.no_real else None},
         "configs": res,
         "die_mapping": die_mapping(dq[0], dm[0]) if (dq and dm) else None,
+        "per_die": {
+            "quantised": {"tiles": 906, "tile": "ot_hdc_v41x_wgt_qtile (G=1: 8 block-dot lanes)", "block_dot_lanes": 7248,
+                          "macs_per_cycle_m1": 906 * 8 * 32, "macs_per_cycle_m2": 906 * 8 * 32 * 2,
+                          "spec_macs_per_cycle": SPEC["weight_macs_per_cycle"]},
+            "bf16_fp32": {"tiles": 123, "tile": "G=32 (256 MAC lanes) = 4 x ot_hdc_v41x_wgt_mtile slices (G=8, routed)",
+                          "mac_lanes": 123 * 256, "macs_per_cycle_m1": 123 * 256, "macs_per_cycle_m2": 123 * 256 * 2,
+                          "spec_macs_per_cycle": SPEC["bf16_macs_per_cycle"]},
+            "rom_read_port_bytes_per_cycle": {
+                "quantised_fp8_33B_per_lane": 7248 * 33, "quantised_fp4_17B_per_lane": 7248 * 17,
+                "bf16_2B_per_lane": 123 * 256 * 2, "fp32_4B_per_lane": 123 * 256 * 4,
+                "peak_both_engines_fp8_plus_fp32": 7248 * 33 + 123 * 256 * 4,
+                "spec_bytes_per_cycle": SPEC["rom_bytes_per_cycle"],
+                "basis": "one ROM word per lane per cycle at full issue (the bench's read port); the lane multiplier "
+                         "m does not change the read"}},
         "verilator_lint": {"flags": list(LINT_FLAGS), "tops": lint},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (*RTL, *LIB, TB, HARNESS, *TOOLS)},
     }
