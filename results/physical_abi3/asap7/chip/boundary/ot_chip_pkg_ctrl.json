@@ -1,5 +1,6 @@
 {
   "basis": "OpenSTA, ideal clock, zero wire load, ASAP7 RVT TT liberty; inputs arrive at 0 and outputs are required at the period, so a port's worst slack gives in2reg = period - slack (setup included) for an input and reg2out = period - slack (clock-to-q included) for an output; a combinational input-to-output path, when present, is feedthrough_ps on both ends; unused_bits are ports with no connection inside the block",
+  "netlist_signed_stripped": 0,
   "netlists": [
     "<work>/results/asap7/chip_ot_chip_pkg_ctrl/base/1_2_yosys.v"
   ],
@@ -7,44 +8,43 @@
   "ports": {
     "cfg_gen_len": {
       "direction": "input",
-      "in2reg_ps": 915.78,
+      "in2reg_ps": 865.37,
       "unused_bits": 0,
       "width": 16
     },
     "cfg_prompt_len": {
       "direction": "input",
-      "in2reg_ps": 921.64,
+      "in2reg_ps": 871.23,
       "unused_bits": 0,
       "width": 16
     },
     "cfg_users": {
       "direction": "input",
-      "in2reg_ps": 315.32,
+      "in2reg_ps": 307.7,
       "unused_bits": 0,
       "width": 8
     },
     "core_busy": {
       "direction": "output",
-      "reg2out_ps": 76.22,
+      "reg2out_ps": 80.75,
       "unused_bits": 0,
       "width": 1
     },
     "core_done": {
       "direction": "input",
-      "feedthrough_ps": 461.32,
-      "in2reg_ps": 605.26,
+      "in2reg_ps": 34.26,
       "unused_bits": 0,
       "width": 1
     },
     "core_next_token": {
       "direction": "input",
-      "in2reg_ps": 422.74,
+      "in2reg_ps": 464.38,
       "unused_bits": 0,
       "width": 16
     },
     "core_next_val": {
       "direction": "input",
-      "in2reg_ps": 516.56,
+      "in2reg_ps": 598.0,
       "unused_bits": 0,
       "width": 32
     },
@@ -56,7 +56,7 @@
     },
     "core_start": {
       "direction": "output",
-      "reg2out_ps": 60.41,
+      "reg2out_ps": 64.99,
       "unused_bits": 0,
       "width": 1
     },
@@ -68,28 +68,28 @@
     },
     "in_data": {
       "direction": "input",
-      "feedthrough_ps": 91.74,
-      "in2reg_ps": 423.0,
+      "feedthrough_ps": 94.14,
+      "in2reg_ps": 422.7,
       "unused_bits": 0,
       "width": 512
     },
     "in_last": {
       "direction": "input",
-      "in2reg_ps": 142.65,
+      "in2reg_ps": 153.7,
       "unused_bits": 0,
       "width": 1
     },
     "in_ready": {
       "direction": "output",
-      "feedthrough_ps": 440.73,
-      "reg2out_ps": 537.9,
+      "feedthrough_ps": 94.14,
+      "reg2out_ps": 519.6,
       "unused_bits": 0,
       "width": 1
     },
     "in_valid": {
       "direction": "input",
-      "feedthrough_ps": 70.18,
-      "in2reg_ps": 247.01,
+      "feedthrough_ps": 93.35,
+      "in2reg_ps": 232.54,
       "unused_bits": 0,
       "width": 1
     },
@@ -107,7 +107,7 @@
     },
     "out_last": {
       "direction": "output",
-      "reg2out_ps": 243.15,
+      "reg2out_ps": 241.38,
       "unused_bits": 0,
       "width": 1
     },
@@ -143,19 +143,19 @@
     },
     "pr_user": {
       "direction": "output",
-      "reg2out_ps": 62.85,
+      "reg2out_ps": 66.72,
       "unused_bits": 0,
       "width": 8
     },
     "proto_fault": {
       "direction": "output",
-      "reg2out_ps": 60.81,
+      "reg2out_ps": 60.65,
       "unused_bits": 0,
       "width": 1
     },
     "rst_n": {
       "direction": "input",
-      "in2reg_ps": 218.72,
+      "in2reg_ps": 227.62,
       "unused_bits": 0,
       "width": 1
     },
@@ -191,21 +191,19 @@
     },
     "vm_raddr": {
       "direction": "output",
-      "feedthrough_ps": 254.71,
-      "reg2out_ps": 351.88,
+      "reg2out_ps": 336.25,
       "unused_bits": 0,
       "width": 8
     },
     "vm_re": {
       "direction": "output",
-      "feedthrough_ps": 246.22,
-      "reg2out_ps": 343.38,
+      "reg2out_ps": 327.63,
       "unused_bits": 0,
       "width": 1
     },
     "vm_rq": {
       "direction": "input",
-      "in2reg_ps": 119.12,
+      "in2reg_ps": 118.22,
       "unused_bits": 0,
       "width": 512
     },
@@ -224,8 +222,8 @@
     },
     "vm_we": {
       "direction": "output",
-      "feedthrough_ps": 461.32,
-      "reg2out_ps": 558.49,
+      "feedthrough_ps": 93.35,
+      "reg2out_ps": 566.22,
       "unused_bits": 0,
       "width": 1
     }
@@ -237,17 +235,13 @@
     },
     {
       "path": "rtl/chip/ot_chip_pkg_ctrl.sv",
-      "sha256": "508ac329901698aed0ae4a2a9411448751ec496c8bc90c685617aa6d2035d89e"
+      "sha256": "f7617ddb68967e6385f3a99b3151c77f6f9146ba80180e9e6dd8157043dc64f8"
     }
   ],
   "through": {
-    "core_done->in_ready": 440.73,
-    "core_done->vm_raddr": 254.71,
-    "core_done->vm_re": 246.22,
-    "core_done->vm_we": 461.32,
-    "in_data->in_ready": 91.74,
+    "in_data->in_ready": 94.14,
     "in_data->vm_wdata": 13.76,
-    "in_valid->vm_we": 70.18
+    "in_valid->vm_we": 93.35
   },
   "top": "ot_chip_pkg_ctrl"
 }
