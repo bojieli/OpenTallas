@@ -21,7 +21,7 @@
 // concatenation over q is the kept list.  -inf blocks (selected only when fewer than k
 // blocks are finite) leave with out_lv = 0.
 //
-// Datapath: a two-register front end per quarter (ot_hdc_v41x_sel_cfront) computes the SL/8 block maxima of a beat
+// Datapath: a three-register front end per quarter (ot_hdc_v41x_sel_cfront) computes the SL/8 block maxima of a beat
 // (an 8-way key-max tree), pins the newest block, and feeds ot_hdc_v41x_sel (Q quarters x
 // SL/8 lanes, K, block-index width IWP-3): the streaming filter + GC + threshold select.
 // Latency budget: the mask is consumed >= 4 layers later (~20 us); at 1M per die (262,144
@@ -99,10 +99,11 @@ module ot_hdc_v41x_sel_cand #(
 endmodule
 
 // ---------------------------------------------------------------------------
-// One quarter's candidate front end: input register, then the SL/8 block maxima (8-way
-// key-max trees, invalid lanes = -inf) and the +inf pin of the newest block (PIN: this is
-// quarter Q-1; the pinned block is the last valid block of the in_last beat), registered.
-// Both stages advance together when `en` (the core's in_ready) is high.
+// One quarter's candidate front end, three registers: the input beat; the keys and the
+// first max level (4 pairs per block); the block maxima (two more levels) with the +inf
+// pin of the newest block (PIN: this is quarter Q-1; the pinned block is the last valid
+// block of the in_last beat).  Invalid lanes count as -inf.  All stages advance together
+// when `en` (the core's in_ready) is high.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_sel_cfront #(
     parameter integer SL  = 16,
@@ -131,15 +132,16 @@ module ot_hdc_v41x_sel_cfront #(
     function automatic [31:0] kmax(input [31:0] a, input [31:0] b);
         kmax = (b[31:16] > a[31:16]) ? b : a;
     endfunction
-    reg              r_v, r_last;
+    reg              r_v, r_last, m_v, m_last;
     reg [SL-1:0]     r_lv;
     reg [SL*16-1:0]  r_val;
     reg [SL*IWP-1:0] r_idx;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin r_v <= 1'b0; r_last <= 1'b0; o_v <= 1'b0; o_last <= 1'b0; end
+        if (!rst_n) begin r_v <= 1'b0; r_last <= 1'b0; m_v <= 1'b0; m_last <= 1'b0; o_v <= 1'b0; o_last <= 1'b0; end
         else if (en) begin
             r_v <= in_valid; r_last <= in_valid && in_last;
-            o_v <= r_v; o_last <= r_last;
+            m_v <= r_v; m_last <= r_last;
+            o_v <= m_v; o_last <= m_last;
         end
     end
     always @(posedge clk) if (en) begin r_lv <= in_lv; r_val <= in_val; r_idx <= in_idx; end
@@ -151,20 +153,27 @@ module ot_hdc_v41x_sel_cfront #(
                 wire [15:0] v = r_val[16*(8*gb + gl) +: 16];
                 assign kv[32*gl +: 32] = r_lv[8*gb + gl] ? {fkey(v), v} : {16'h007F, 16'hFF80};
             end
-            wire [31:0] m01 = kmax(kv[31:0], kv[63:32]), m23 = kmax(kv[95:64], kv[127:96]);
-            wire [31:0] m45 = kmax(kv[159:128], kv[191:160]), m67 = kmax(kv[223:192], kv[255:224]);
-            wire [31:0] mx  = kmax(kmax(m01, m23), kmax(m45, m67));
+            reg [4*32-1:0] m1;
+            reg            m_lv, m_pl;
+            reg [BW-1:0]   m_idx;
             wire pin_last;
             if (gb + 1 < BL) begin : g_nx
                 assign pin_last = !r_lv[8*(gb + 1)];
             end else begin : g_ln
                 assign pin_last = 1'b1;
             end
-            wire pin = (PIN != 0) && r_last && r_lv[8*gb] && pin_last;
             always @(posedge clk) if (en) begin
-                o_lv[gb] <= r_lv[8*gb];
-                o_val[16*gb +: 16] <= pin ? 16'h7F80 : mx[15:0];
-                o_idx[BW*gb +: BW] <= r_idx[IWP*(8*gb) + 3 +: BW];
+                m1 <= {kmax(kv[223:192], kv[255:224]), kmax(kv[159:128], kv[191:160]),
+                       kmax(kv[95:64], kv[127:96]), kmax(kv[31:0], kv[63:32])};
+                m_lv  <= r_lv[8*gb];
+                m_pl  <= (PIN != 0) && r_lv[8*gb] && pin_last;
+                m_idx <= r_idx[IWP*(8*gb) + 3 +: BW];
+            end
+            wire [31:0] mx = kmax(kmax(m1[31:0], m1[63:32]), kmax(m1[95:64], m1[127:96]));
+            always @(posedge clk) if (en) begin
+                o_lv[gb] <= m_lv;
+                o_val[16*gb +: 16] <= (m_last && m_pl) ? 16'h7F80 : mx[15:0];
+                o_idx[BW*gb +: BW] <= m_idx;
             end
         end
     endgenerate
