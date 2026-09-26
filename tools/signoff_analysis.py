@@ -1604,7 +1604,25 @@ def map_rtl_saif_to_netlist(rtl_saif: Path, netlist: Path, out: Path, top: str =
         if not m:
             continue
         inst = _netkey(m.group(2))
-        if not _FLOP_SUFFIX.search(inst) or not inst.startswith(netlist_prefix):
+        if not inst.startswith(netlist_prefix):
+            continue
+        if m.group(1).startswith("ICG"):
+            # An integrated clock gate.  One the RTL instantiates (ot_hdc_cg, cell
+            # u_icg) gets its enable pin from the RTL `en`, so OpenSTA's gated
+            # clock (density ~ 2 f x duty(ENA)) is the simulated duty, not a
+            # probabilistic OR of the enable's inputs.  One yosys inferred from a
+            # register enable keeps OpenSTA's propagation from the annotated flops.
+            stats["icg"] = stats.get("icg", 0) + 1
+            if inst.endswith(".u_icg"):
+                r = rtl.get(inst[len(netlist_prefix):-len(".u_icg")] + ".en")
+                if r is not None:
+                    stats["icg_enable_matched"] = stats.get("icg_enable_matched", 0) + 1
+                    inst_lines.append(f"  (INSTANCE {_saif_instance(inst)}\n    (NET\n"
+                                      f"      (ENA (T0 {r[0]}) (T1 {r[1]}) (TX {r[2]}) (TC {r[3]}))\n    )\n  )\n")
+                elif len(stats["unmatched_examples"]) < 12:
+                    stats["unmatched_examples"].append(inst)
+            continue
+        if not _FLOP_SUFFIX.search(inst):
             continue
         pins = dict(_CONN.findall(stmt))
         out_pin = next((p for p in flop_output_pins if p in pins), None)

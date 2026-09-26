@@ -863,6 +863,7 @@ def resolve_signal_integrity_constraints(
         out["slew_margin_percent"] = margin
     if hold_margin_ns is not None:
         out["hold_margin_ns"] = float(hold_margin_ns)
+        out["hold_margin_library_units"] = float(f"{float(hold_margin_ns) / time_unit_ns:.6g}")
         out["hold_margin_basis"] = (
             "ORFS HOLD_SLACK_MARGIN: repair_timing targets this much POSITIVE hold "
             "slack under global-route-estimated parasitics so the RCX-extracted "
@@ -1922,8 +1923,16 @@ def orfs_config_lines(
         # to hold.  The later line wins in an ORFS config, so this overrides the
         # HOLD_SLACK_MARGIN = 0 above only when a margin was asked for, and every
         # record without one keeps a byte-identical config.mk.
+        #
+        # UNITS: repair_timing -hold_margin is in the user time unit, which is
+        # the liberty's -- PICOSECONDS on asap7.  Until 2026-09-26 the ns value
+        # was written as is, so every asap7 record with --hold-margin-ns 0.02
+        # (the G2 cluster's "20 ps", hold_margin_locus.json) asked for 0.02 ps:
+        # that is why its margin "did not move" the violation.  The library-unit
+        # value is now recorded and written (identical on sky130, whose unit is ns).
+        lib_units = constraints.get("hold_margin_library_units", constraints["hold_margin_ns"])
         config.append(
-            f"export HOLD_SLACK_MARGIN = {constraints['hold_margin_ns']:g}"
+            f"export HOLD_SLACK_MARGIN = {lib_units:g}"
         )
     if constraints and constraints.get("clock_gating"):
         config.append("export INFER_CLKGATES = 1")
