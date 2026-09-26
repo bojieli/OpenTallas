@@ -442,6 +442,10 @@ class Builder:
         if self.lay.mtp:
             f.setdefault("dslot", self.slot if self.dslot_over is None else self.dslot_over)
             f["_serial"], f["_slot"] = self.serial_id, self.slot
+            if f.get("wrel"):
+                # the slots' SELECTs interleave, so a later one no longer proves this
+                # slot's ids written: a release waits for the XU itself (HBM fetch list)
+                f["wait"] = f.get("wait", 0) | 1 << (I.UNIT_XU - 1)
             if "_redw" in f:
                 f["_redw"] = {self.lay.rname(n, self.slot) for n in f["_redw"]}
             reads = {self.lay.rname(n, self.slot) for n in reads}
