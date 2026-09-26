@@ -1,0 +1,46 @@
+`timescale 1ps/1ps
+// Icarus driver for sign-off activity capture (tools/signoff_analysis.py), the
+// event-driven twin of activity_harness.cpp: a flat routed netlist verilates
+// to ~1 GB of C++ whose compile does not finish on a loaded machine, while
+// Icarus elaborates it in minutes.
+//
+// Drives @BENCH@.clk with a @HALF_PS@ ps half period and dumps @SCOPES@ to
+// +VCD (usually a FIFO) for cycles [+VCD_BEGIN, +VCD_END), optionally only
+// +VCD_LEN of every +VCD_EVERY cycles; +VCD_STOP ends the run at +VCD_END
+// (a calibration window need not finish the decode step).  Unlike the Verilator harness the dump
+// is in simulated time; tools/signoff/vcd2saif is told the window.
+module so_icarus_top;
+    reg clk = 1'b0;
+    always #(@HALF_PS@) clk = ~clk;
+    @BENCH@ bench (.clk(clk));
+    reg [8*1024-1:0] vcd;
+    reg [63:0] cyc = 0, vb = 0, ve = 64'hFFFF_FFFF_FFFF_FFFF, every = 0, len = 0;
+    reg dumping = 1'b0, opened = 1'b0;
+    initial begin
+        if ($value$plusargs("VCD=%s", vcd)) begin
+            if (!$value$plusargs("VCD_BEGIN=%d", vb)) vb = 0;
+            if (!$value$plusargs("VCD_END=%d", ve)) ve = 64'hFFFF_FFFF_FFFF_FFFF;
+            if (!$value$plusargs("VCD_EVERY=%d", every)) every = 0;
+            if (!$value$plusargs("VCD_LEN=%d", len)) len = 0;
+            $dumpfile(vcd);
+            $dumpvars(1, @SCOPES@);
+            $dumpoff;
+            opened = 1'b1;
+        end
+    end
+    // decide at the falling edge, so a window opens before its rising edge
+    always @(negedge clk) begin
+        cyc <= cyc + 1;
+        if (opened) begin
+            if (!dumping && cyc >= vb && cyc < ve && (every == 0 || (cyc - vb) % every < len)) begin
+                $dumpon; dumping = 1'b1;
+            end else if (dumping && (cyc >= ve || (every != 0 && (cyc - vb) % every >= len))) begin
+                $dumpoff; dumping = 1'b0;
+            end
+            if (cyc >= ve && $test$plusargs("VCD_STOP")) begin
+                $display("ACTIVITY window done at cycle %0d, stopping (+VCD_STOP)", cyc);
+                $finish;
+            end
+        end
+    end
+endmodule
