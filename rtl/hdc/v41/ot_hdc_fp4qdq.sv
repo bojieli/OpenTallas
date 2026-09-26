@@ -37,6 +37,7 @@ module ot_hdc_fp4qdq (
     output reg  [511:0]  y,
     output reg           fault
 );
+    wire gclk;                            // gated clock (u_cg, at the end)
     localparam [30:0] FLOOR = 31'h3c400000;   // float32(6 * 2^-9)
     localparam [30:0] SUBN  = 31'h3dc00000;   // float32(6 * 2^-6): below it s is subnormal E4M3
 
@@ -69,11 +70,12 @@ module ot_hdc_fp4qdq (
     // -- S0 ------------------------------------------------------------------------
     reg          s0_v;
     reg [1023:0] s0_x;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) s0_v <= 1'b0;
         else s0_v <= v;
     end
-    always @(posedge clk) s0_x <= x;
+    //: operand isolation: the input register loads only a valid word
+    always @(posedge gclk) if (v) s0_x <= x;
 
     // -- S1: 16 -> 4 per block (two 31-bit compare-and-select levels per stage; one is
     //    ~350 ps routed on ASAP7) -----------------------------------------------------------
@@ -86,11 +88,11 @@ module ot_hdc_fp4qdq (
         for (i = 0; i < 32; i = i + 1) nf0 = nf0 | (s0_x[32*i + 23 +: 8] == 8'hFF);
         for (i = 0; i < 16; i = i + 1) t8[i] = mx(s0_x[64*i +: 31], s0_x[64*i + 32 +: 31]);
     end
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= s0_v;
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         s1_nf <= nf0;
         for (i = 0; i < 8; i = i + 1) s1_m[i] <= mx(t8[2*i], t8[2*i+1]);
     end
@@ -98,11 +100,11 @@ module ot_hdc_fp4qdq (
     // -- S2: 4 -> 1 per block --------------------------------------------------------------
     reg        s2a_v, s2a_nf;
     reg [30:0] s2a_m [0:1];
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) s2a_v <= 1'b0;
         else s2a_v <= s1_v;
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         s2a_nf <= s1_nf;
         for (b = 0; b < 2; b = b + 1)
             s2a_m[b] <= mx(mx(s1_m[4*b], s1_m[4*b+1]), mx(s1_m[4*b+2], s1_m[4*b+3]));
@@ -111,11 +113,11 @@ module ot_hdc_fp4qdq (
     // -- S2b: the floor --------------------------------------------------------------------
     reg        s2_v, s2_nf;
     reg [30:0] s2_amax [0:1];
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= s2a_v;
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         s2_nf <= s2a_nf;
         for (b = 0; b < 2; b = b + 1) s2_amax[b] <= mx(s2a_m[b], FLOOR);
     end
@@ -127,11 +129,11 @@ module ot_hdc_fp4qdq (
     reg [23:0]       ma;
     reg [4:0]        cnt;
     reg signed [9:0] ea;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) s3_v <= 1'b0;
         else s3_v <= s2_v;
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         s3_nf <= s2_nf;
         for (b = 0; b < 2; b = b + 1) begin
             ma = {1'b1, s2_amax[b][22:0]};
@@ -175,11 +177,11 @@ module ot_hdc_fp4qdq (
     reg [3:0]        pp;
     reg signed [10:0] bt;
     reg [22:0]       mt;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) s4_v <= 1'b0;
         else s4_v <= s3_v;
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         s4_nf <= s3_nf;
         for (b = 0; b < 2; b = b + 1) begin
             s4_n[b] <= s3_n[b]; s4_qs[b] <= s3_qs[b];
@@ -195,7 +197,7 @@ module ot_hdc_fp4qdq (
         end
     end
     wire [1023:0] x4;
-    ot_hdc_delay #(.W(1024), .D(5)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x4));
+    ot_hdc_delay #(.W(1024), .D(5)) u_x (.clk(gclk), .rst_n(rst_n), .d(s0_x), .q(x4));
 
     // -- S5: E2M1 codes ------------------------------------------------------------------------
     reg              s5_v, s5_nf;
@@ -205,11 +207,11 @@ module ot_hdc_fp4qdq (
     reg signed [9:0] s5_qs [0:1];
     reg [30:0]       xm;
     reg [2:0]        cc;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) s5_v <= 1'b0;
         else s5_v <= s4_v;
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         s5_nf <= s4_nf;
         for (b = 0; b < 2; b = b + 1) begin s5_n[b] <= s4_n[b]; s5_qs[b] <= s4_qs[b]; end
         for (i = 0; i < 32; i = i + 1) begin
@@ -231,11 +233,11 @@ module ot_hdc_fp4qdq (
     reg [2:0]         pr;
     reg signed [10:0] be;
     reg [7:0]         rn;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; end
         else begin vo <= s5_v; fault <= s5_v && s5_nf; end
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         for (i = 0; i < 32; i = i + 1) begin
             b = i / 16;
             r = twov(s5_c[i]) * s5_n[b];               // <= 12 * 16
@@ -248,4 +250,17 @@ module ot_hdc_fp4qdq (
             else                     y[16*i +: 16] <= {s5_sgn[i], be[7:0], rn[6:0]};
         end
     end
+
+    // -- clock gate ---------------------------------------------------------------------
+    //: A fixed-latency pipeline with no state across inputs: every register is
+    //: clocked by gclk, which runs on each cycle with an input and for 12 more
+    //: (LATENCY 8 plus a margin), so the last result and its valid bit are
+    //: clocked out and cleared exactly as without the gate.  Between inputs
+    //: nothing is in flight and the outputs, sampled only with `vo`, hold.
+    reg [4:0] cg_n;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) cg_n <= 5'd0;
+        else cg_n <= v ? 5'd12 : (cg_n != 5'd0 ? cg_n - 5'd1 : 5'd0);
+    end
+    ot_hdc_cg u_cg (.clk(clk), .en(!rst_n || v || cg_n != 5'd0), .gclk(gclk));
 endmodule

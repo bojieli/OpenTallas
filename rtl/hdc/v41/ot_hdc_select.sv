@@ -75,6 +75,7 @@ module ot_hdc_select #(
     output reg           out_ninf,
     output wire          busy
 );
+    wire gclk;                            // gated clock (u_cg, at the end)
     localparam integer RW = 1 + VW + IW;           // {valid, key, ~index}
     localparam integer PW = RW + 1;                // + ninf
 
@@ -87,11 +88,12 @@ module ot_hdc_select #(
     reg [VW-1:0] r0_val;
     reg [IW-1:0] r0_idx;
     reg [KW-1:0] r0_k;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin r0_v <= 1'b0; r0_last <= 1'b0; end
         else begin r0_v <= acc; r0_last <= acc && in_last; end
     end
-    always @(posedge clk) begin r0_val <= in_val; r0_idx <= in_idx; r0_k <= in_k; end
+    //: operand isolation: the input register loads only an accepted element
+    always @(posedge gclk) if (acc) begin r0_val <= in_val; r0_idx <= in_idx; r0_k <= in_k; end
 
     // -- stage 1: key ---------------------------------------------------------------
     wire          zero = (r0_val[VW-2:0] == 0);
@@ -107,16 +109,16 @@ module ot_hdc_select #(
     reg  [K-1:0]    thr;                           // cell j < this segment's k
     reg             x0_v;
     reg  [PW-2:0]   x0_d;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin x0_v <= 1'b0; xw[0] <= 1'b0; end
         else begin x0_v <= r0_v; xw[0] <= r0_last; end
     end
-    always @(posedge clk) x0_d <= {key, ~r0_idx, ninf};
+    always @(posedge gclk) x0_d <= {key, ~r0_idx, ninf};
     assign xv[PW-1:0] = {x0_v, x0_d};
     genvar j;
     generate
         for (j = 0; j < K; j = j + 1) begin : g_thr
-            always @(posedge clk) if (r0_last) thr[j] <= (r0_k > j);
+            always @(posedge gclk) if (r0_last) thr[j] <= (r0_k > j);
         end
     endgenerate
 
@@ -132,20 +134,20 @@ module ot_hdc_select #(
             assign lv[PW*j +: PW] = gt ? sj : xj;
             reg           s_v;
             reg [PW-2:0]  s_d;
-            always @(posedge clk or negedge rst_n) begin
+            always @(posedge gclk or negedge rst_n) begin
                 if (!rst_n) s_v <= 1'b0;
                 else s_v <= mv[PW*j + PW - 1] && !xw[j];         // restart empty behind the wave
             end
-            always @(posedge clk) s_d <= mv[PW*j +: PW-1];
+            always @(posedge gclk) s_d <= mv[PW*j +: PW-1];
             assign sv[PW*j +: PW] = {s_v, s_d};
             if (j + 1 < K) begin : g_pass
                 reg          x_v;
                 reg [PW-2:0] x_d;
-                always @(posedge clk or negedge rst_n) begin
+                always @(posedge gclk or negedge rst_n) begin
                     if (!rst_n) begin x_v <= 1'b0; xw[j+1] <= 1'b0; end
                     else begin x_v <= lv[PW*j + PW - 1]; xw[j+1] <= xw[j]; end
                 end
-                always @(posedge clk) x_d <= lv[PW*j +: PW-1];
+                always @(posedge gclk) x_d <= lv[PW*j +: PW-1];
                 assign xv[PW*(j+1) +: PW] = {x_v, x_d};
             end
         end
@@ -180,7 +182,7 @@ module ot_hdc_select #(
             end
             wire from_left  = (j > 0) && swap[JL];
             wire from_right = (j + 1 < K) && (swap[j] || emitting);
-            always @(posedge clk) begin
+            always @(posedge gclk) begin
                 if (xw[j]) begin
                     bv[j] <= mv[PW*j + PW - 1] && thr[j];
                     bi[IW*j +: IW] <= ~mv[PW*j + 1 +: IW];
@@ -196,7 +198,7 @@ module ot_hdc_select #(
         end
     endgenerate
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin
             bsy <= 1'b0; sorting <= 1'b0; emitting <= 1'b0; pc <= 0; par <= 1'b0;
             sort_ev <= 1'b0; sort_od <= 1'b0;
@@ -220,5 +222,26 @@ module ot_hdc_select #(
             end
         end
     end
-    always @(posedge clk) begin out_idx <= bi[IW-1:0]; out_ninf <= bn[0]; end
+    always @(posedge gclk) begin out_idx <= bi[IW-1:0]; out_ninf <= bn[0]; end
+
+    // -- clock gate ---------------------------------------------------------------------
+    //: gclk runs on an accepted element's cycle and for K + 4 cycles after it
+    //: (the insertion array passes an element one cell per cycle), while the
+    //: bank is busy (bsy: the wave, the sort and the emission) and one cycle
+    //: after, which clears out_valid.  Between segments the cells hold their
+    //: entries unchanged anyway (no element arrives), so the gate is
+    //: cycle-transparent.
+    localparam integer CGW = K + 4;
+    localparam integer CGB = $clog2(CGW + 1);
+    localparam [CGB-1:0] CGN = CGW[CGB-1:0];
+    reg [CGB-1:0] cg_n;
+    reg           cg_b;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin cg_n <= {CGB{1'b0}}; cg_b <= 1'b0; end
+        else begin
+            cg_n <= acc ? CGN : (cg_n != {CGB{1'b0}} ? cg_n - 1'b1 : {CGB{1'b0}});
+            cg_b <= bsy;
+        end
+    end
+    ot_hdc_cg u_cg (.clk(clk), .en(!rst_n || acc || bsy || cg_b || cg_n != {CGB{1'b0}}), .gclk(gclk));
 endmodule

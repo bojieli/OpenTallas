@@ -81,6 +81,7 @@ module ot_hdc_stream #(
     output reg  [15:0]       progress,
     output reg               fault
 );
+    wire gclk;                            // the unit's gated clock (u_cg, below)
     localparam integer LW = $clog2(WR);   // weight-ROM element -> word, lane
     localparam [1:0] MA_BYP = 0, MA_AB = 1, MA_AA = 2, MA_AIMM = 3;
     localparam [1:0] MB_OFF = 0, MB_POS = 1, MB_NEG = 2;
@@ -111,7 +112,7 @@ module ot_hdc_stream #(
     wire   emit = active;
     wire   retire;
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin
             active <= 1'b0; cls <= SFU_NONE; inflight <= 0;
         end else begin
@@ -123,7 +124,7 @@ module ot_hdc_stream #(
             end
         end
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         if (accept) begin
             o <= 0; i <= 0; nout_r <= i_nout; nin_r <= i_nin;
             i_last_r <= (i_nin == 1); o_last_r <= (i_nout == 1);
@@ -160,7 +161,7 @@ module ot_hdc_stream #(
     reg          e_ifirst, e_first8, e_final, e_last;
     reg [2:0]    e_p;
     reg [AW-1:0] e_daddr, e_raddr;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin
             e_v <= 1'b0; va_re <= 1'b0; vb_re <= 1'b0; vc_re <= 1'b0; wrom_re <= 1'b0; crom_re <= 1'b0;
         end else begin
@@ -170,7 +171,7 @@ module ot_hdc_stream #(
             crom_re <= emit && (bsrc || csrc);
         end
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         va_addr <= cura; wrom_addr <= cura >> LW; e_lane <= cura[LW-1:0];
         vb_addr <= curb; vc_addr <= curc; crom_addr <= bsrc ? curb : curc;
         e_asrc <= asrc; e_bsrc <= bsrc; e_csrc <= csrc; e_mc <= mc; e_md <= md; e_redsq <= redsq;
@@ -187,7 +188,7 @@ module ot_hdc_stream #(
                            e_lane, e_ifirst, e_first8, e_final, e_last, e_p, e_daddr, e_raddr};
     reg [FT-1:0] s1_tag;
     reg          s1_v, s2_v, s3_v;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin s1_v <= 0; s2_v <= 0; s3_v <= 0; end
         else begin s1_v <= e_v; s2_v <= s1_v; s3_v <= s2_v; end
     end
@@ -199,7 +200,7 @@ module ot_hdc_stream #(
     wire          t_ifirst, t_first8, t_final, t_last;
     wire [2:0]    t_p;
     wire [AW-1:0] t_daddr, t_raddr;
-    always @(posedge clk) s1_tag <= e_tag;
+    always @(posedge gclk) s1_tag <= e_tag;
     assign {t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq, t_ma, t_mb, t_dst, t_red, t_ad, t_imm1, t_imm2,
             t_lane, t_ifirst, t_first8, t_final, t_last, t_p, t_daddr, t_raddr} = s1_tag;
     reg [31:0] s2_a, s2_blo, s2_bhi, s2_c, s2_imm1, s2_imm2;
@@ -208,7 +209,7 @@ module ot_hdc_stream #(
     // tail tag: travels S2 -> write
     localparam integer TT = 1 + 1 + 2 + AW + 2 + 1 + AW + 1+1+1+1 + 3;
     reg [TT-1:0] s2_tail;
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         s2_a <= t_asrc ? {wrom_q[16*t_lane +: 16], 16'h0000} : va_q;
         s2_blo <= t_bsrc ? crom_q[31:0] : vb_q;
         s2_bhi <= t_bsrc ? crom_q[63:32] : 32'd0;
@@ -221,7 +222,7 @@ module ot_hdc_stream #(
     reg [1:0]  s3_ma, s3_mb;
     reg [2:0]  s3_ad;
     reg [TT-1:0] s3_tail;
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         ma_x <= s2_a;
         ma_y <= (s2_ma == MA_AB) ? s2_blo : (s2_ma == MA_AA) ? s2_a : s2_imm1;
         mb_x <= s2_c;
@@ -233,20 +234,20 @@ module ot_hdc_stream #(
     // -- S3 -> S8: the two multipliers ------------------------------------------
     wire [31:0] p_mul, q_mul;
     wire fa, fb_;
-    ot_hdc_fmul u_ma (clk, rst_n, s3_v && s3_ma != MA_BYP, ma_x, ma_y, p_mul, fa);
-    ot_hdc_fmul u_mb (clk, rst_n, s3_v && s3_mb != MB_OFF, mb_x, mb_y, q_mul, fb_);
+    ot_hdc_fmul u_ma (gclk, rst_n, s3_v && s3_ma != MA_BYP, ma_x, ma_y, p_mul, fa);
+    ot_hdc_fmul u_mb (gclk, rst_n, s3_v && s3_mb != MB_OFF, mb_x, mb_y, q_mul, fb_);
     wire [31:0] a8, blo8, c8, imm2_8;
     wire [1:0]  ma8;
     wire [2:0]  ad8;
-    ot_hdc_delay #(.W(32*4 + 2 + 3), .D(5)) u_d38 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(32*4 + 2 + 3), .D(5)) u_d38 (.clk(gclk), .rst_n(rst_n),
         .d({s3_a, s3_blo, s3_c, s3_imm2, s3_ma, s3_ad}), .q({a8, blo8, c8, imm2_8, ma8, ad8}));
     wire [8:0] v3;
-    ot_hdc_vline #(.D(8)) u_v3 (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(v3));   // v3[k] = S3+k
+    ot_hdc_vline #(.D(8)) u_v3 (.clk(gclk), .rst_n(rst_n), .v(s3_v), .vd(v3));   // v3[k] = S3+k
 
     // -- S8 -> S9 operand select -> S14 adder ----------------------------------
     reg [31:0] ad_x, ad_y;
     reg [2:0]  ad9;
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         ad_x <= (ma8 == MA_BYP) ? a8 : p_mul;
         case (ad8)
             AD_Q:    ad_y <= q_mul;
@@ -258,36 +259,45 @@ module ot_hdc_stream #(
     end
     wire [31:0] r_add, px14;
     wire fad;
-    ot_hdc_fadd u_ad (clk, rst_n, v3[6] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
+    ot_hdc_fadd u_ad (gclk, rst_n, v3[6] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
     wire [2:0] ad14;
-    ot_hdc_delay #(.W(35), .D(5)) u_d914 (.clk(clk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
+    ot_hdc_delay #(.W(35), .D(5)) u_d914 (.clk(gclk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
     wire [5:0] v9;
-    ot_hdc_vline #(.D(5)) u_v9 (.clk(clk), .rst_n(rst_n), .v(v3[6]), .vd(v9));    // v9[5] = S14
+    ot_hdc_vline #(.D(5)) u_v9 (.clk(gclk), .rst_n(rst_n), .v(v3[6]), .vd(v9));    // v9[5] = S14
     wire [31:0] r14 = (ad14 == AD_BYP) ? px14 : r_add;
     wire        v14 = v9[5];
 
     // -- S14: special functions ----------------------------------------------------
+    //: Each special-function pipeline runs only while an instruction of a class
+    //: that uses it holds the unit (clock gates below the unit's own gate).  The
+    //: class changes only when nothing is in flight (`ready`), so a pipeline
+    //: whose class is not current is empty, and its first element reaches it
+    //: at S14, long after the accepting edge set `cls`.
+    wire gclk_exp, gclk_rcp, gclk_rsq;
+    ot_hdc_cg u_cg_exp (.clk(gclk), .en(!rst_n || cls == SFU_EXP || cls == SFU_SIGM), .gclk(gclk_exp));
+    ot_hdc_cg u_cg_rcp (.clk(gclk), .en(!rst_n || cls == SFU_RECIP || cls == SFU_SIGM), .gclk(gclk_rcp));
+    ot_hdc_cg u_cg_rsq (.clk(gclk), .en(!rst_n || cls == SFU_RSQRT), .gclk(gclk_rsq));
     wire [31:0] y_exp, y_rcp, y_rsq;
     wire vo_exp, vo_rcp, vo_rsq, f_exp, f_rcp, f_rsq;
-    ot_hdc_exp   u_exp (.clk(clk), .rst_n(rst_n), .v(v14 && (cls == SFU_EXP || cls == SFU_SIGM)), .x(r14),
+    ot_hdc_exp   u_exp (.clk(gclk_exp), .rst_n(rst_n), .v(v14 && (cls == SFU_EXP || cls == SFU_SIGM)), .x(r14),
                         .y(y_exp), .vo(vo_exp), .fault(f_exp));
     // sigmoid denominator: exp(R) + 1, then the reciprocal
     wire [31:0] e1;
     wire f_e1;
     wire [5:0] ve1;
-    ot_hdc_fadd u_e1 (clk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);
-    ot_hdc_vline #(.D(5)) u_ve1 (.clk(clk), .rst_n(rst_n), .v(vo_exp && cls == SFU_SIGM), .vd(ve1));
+    ot_hdc_fadd u_e1 (gclk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);
+    ot_hdc_vline #(.D(5)) u_ve1 (.clk(gclk), .rst_n(rst_n), .v(vo_exp && cls == SFU_SIGM), .vd(ve1));
     wire        rcp_v = (cls == SFU_SIGM) ? ve1[5] : (v14 && cls == SFU_RECIP);
     wire [31:0] rcp_x = (cls == SFU_SIGM) ? e1 : r14;
-    ot_hdc_recip u_rcp (.clk(clk), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));
-    ot_hdc_rsqrt u_rsq (.clk(clk), .rst_n(rst_n), .v(v14 && cls == SFU_RSQRT), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));
+    ot_hdc_recip u_rcp (.clk(gclk_rcp), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));
+    ot_hdc_rsqrt u_rsq (.clk(gclk_rsq), .rst_n(rst_n), .v(v14 && cls == SFU_RSQRT), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));
 
     // B, C and the tail tag ride a tapped line from S3; the tap is the class depth.
     localparam integer LT = 32 + 32 + TT;
     reg [LT*TAPMAX-1:0] tl;              // tap n (1-based) = tl[LT*n-1 -: LT]
     reg [TAPMAX:1] tlv;
-    always @(posedge clk) tl <= {tl[LT*(TAPMAX-1)-1:0], s3_blo, s3_c, s3_tail};
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk) tl <= {tl[LT*(TAPMAX-1)-1:0], s3_blo, s3_c, s3_tail};
+    always @(posedge gclk or negedge rst_n) begin
         //: A class switch happens only with nothing in flight, but the line
         //: still holds the valid bits of retired elements beyond the old tap;
         //: they would retire a second time at the new, deeper tap.
@@ -312,38 +322,38 @@ module ot_hdc_stream #(
     reg [31:0] mc_x, mc_y, mc_b;
     reg        mc_v;
     reg [TT-1:0] mc_tail;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) mc_v <= 1'b0;
         else mc_v <= tapv;
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         mc_x <= s_val; mc_b <= tap[LT-1 -: 32]; mc_y <= tap[LT-33 -: 32]; mc_tail <= tap[TT-1:0];
     end
     wire [31:0] mc_out, byp5, b5;
     wire fmc;
-    ot_hdc_fmul u_mc (clk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);
+    ot_hdc_fmul u_mc (gclk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);
     wire [TT-1:0] c_tail;
     wire [5:0] vmc;
-    ot_hdc_vline #(.D(5)) u_vmc (.clk(clk), .rst_n(rst_n), .v(mc_v), .vd(vmc));
-    ot_hdc_delay #(.W(64 + TT), .D(5)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_x, mc_b, mc_tail}),
+    ot_hdc_vline #(.D(5)) u_vmc (.clk(gclk), .rst_n(rst_n), .v(mc_v), .vd(vmc));
+    ot_hdc_delay #(.W(64 + TT), .D(5)) u_dmc (.clk(gclk), .rst_n(rst_n), .d({mc_x, mc_b, mc_tail}),
                                              .q({byp5, b5, c_tail}));
     reg [31:0] md_x, md_y;
     reg        md_v;
     reg [TT-1:0] md_tail;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) md_v <= 1'b0;
         else md_v <= vmc[5];
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         md_x <= c_tail[TT-1] ? mc_out : byp5; md_y <= b5; md_tail <= c_tail;
     end
     wire [31:0] md_out, dbyp5;
     wire fmd;
-    ot_hdc_fmul u_md (clk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);
+    ot_hdc_fmul u_md (gclk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);
     wire [TT-1:0] o_tail;
     wire [5:0] vmd;
-    ot_hdc_vline #(.D(5)) u_vmd (.clk(clk), .rst_n(rst_n), .v(md_v), .vd(vmd));
-    ot_hdc_delay #(.W(32 + TT), .D(5)) u_dmd (.clk(clk), .rst_n(rst_n), .d({md_x, md_tail}), .q({dbyp5, o_tail}));
+    ot_hdc_vline #(.D(5)) u_vmd (.clk(gclk), .rst_n(rst_n), .v(md_v), .vd(vmd));
+    ot_hdc_delay #(.W(32 + TT), .D(5)) u_dmd (.clk(gclk), .rst_n(rst_n), .d({md_x, md_tail}), .q({dbyp5, o_tail}));
     wire          o_mc, o_md;
     wire [1:0]    o_dst, o_red;
     wire          o_redsq;
@@ -355,14 +365,14 @@ module ot_hdc_stream #(
     wire        ov = vmd[5];
     assign retire = ov;
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin vm_we <= 1'b0; kv_we <= 1'b0; end
         else begin
             vm_we <= ov && o_dst == 2'd1;
             kv_we <= ov && o_dst == 2'd2;
         end
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         vm_waddr <= o_daddr; vm_wdata <= out;
         //: the KV cache holds BF16 (RNE), so attention products are exact BF16 x BF16
         kv_waddr <= o_daddr; kv_wdata <= (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
@@ -375,16 +385,16 @@ module ot_hdc_stream #(
     reg          rd_ifirst, rd_first8, rd_final, rd_last;
     reg [2:0]    rd_p;
     reg [AW-1:0] rd_addr;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) rd_v <= 1'b0;
         else rd_v <= ov && o_red != 2'd0;
     end
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         rd_mode <= o_red; rd_sq <= o_redsq; rd_x <= out; rd_ifirst <= o_ifirst; rd_first8 <= o_first8;
         rd_final <= o_final; rd_last <= o_last; rd_p <= o_p; rd_addr <= o_raddr;
     end
     wire f_red;
-    ot_hdc_reduce #(.AW(AW)) u_red (.clk(clk), .rst_n(rst_n), .v_in(rd_v), .mode_in(rd_mode),
+    ot_hdc_reduce #(.AW(AW)) u_red (.clk(gclk), .rst_n(rst_n), .v_in(rd_v), .mode_in(rd_mode),
         .sq(rd_sq), .x_in(rd_x), .ifirst_in(rd_ifirst), .first8_in(rd_first8), .final_in(rd_final),
         .last_in(rd_last), .p_in(rd_p), .raddr_in(rd_addr), .o_we(red_we), .o_addr(red_addr), .o_data(red_data), .busy(reducer_busy),
         .fault(f_red));
@@ -395,7 +405,7 @@ module ot_hdc_stream #(
     // register by nothing.
     reg [15:0] n_emit, n_retire, first_mark;
     wire [15:0] done_n = n_retire - first_mark;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin
             n_emit <= 0; n_retire <= 0; first_mark <= 0; progress <= 0;
         end else begin
@@ -412,14 +422,27 @@ module ot_hdc_stream #(
     //: Registered: the OR of every valid bit is wide.  Cleared on the
     //: accepting edge so a just-issued op never reads as drained.
     wire idle_c = !active && inflight == 0 && !vm_we && !kv_we && !rd_v && !reducer_busy;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(accept);
     end
+
+    // -- clock gate ---------------------------------------------------------------
+    //: The unit's registers are clocked by gclk, which runs from the go cycle
+    //: until two cycles after the last element retires and the reducer drains
+    //: (idle_c), covering the registered idle flag and progress count that
+    //: trail the last write by one edge.  Nothing changes outside that window,
+    //: so the gate is cycle-transparent.  cg_b* run on the free clock.
+    reg cg_b1, cg_b2;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin cg_b1 <= 1'b0; cg_b2 <= 1'b0; end
+        else begin cg_b1 <= go || !idle_c; cg_b2 <= cg_b1; end
+    end
+    ot_hdc_cg u_cg (.clk(clk), .en(!rst_n || go || cg_b1 || cg_b2), .gclk(gclk));
     //: A status bit: registered in two levels so the wide OR never meets a port
     //: or a consumer in the same cycle it forms.
     reg [2:0] fault_q;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin fault_q <= 0; fault <= 1'b0; end
         else begin
             fault_q <= {fa | fb_ | fad, f_exp | f_e1 | f_rcp | f_rsq, fmc | fmd | f_red};

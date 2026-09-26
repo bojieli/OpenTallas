@@ -48,6 +48,7 @@ module ot_hdc_engram_hash (
     output wire [ENG_ROW_W*ENG_LAYERS*
                  ENG_COLS-1:0] out_row
 );
+    wire gclk;                            // gated clock (u_cg, at the end)
     localparam integer LATENCY = 12;
     localparam integer NP = ENG_LAYERS * ENG_N;          // products
     localparam integer NC = ENG_LAYERS * ENG_COLS;       // columns
@@ -58,7 +59,7 @@ module ot_hdc_engram_hash (
     localparam [$bits(ENG_RES)-1:0] RES = ENG_RES;
 
     reg [LATENCY:1] vl;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) vl <= {LATENCY{1'b0}};
         else vl <= {vl[LATENCY-1:1], in_valid};
     end
@@ -68,7 +69,7 @@ module ot_hdc_engram_hash (
     reg [ENG_ID_W-1:0] hist [1:ENG_N-1];   // hist[k]: the id k positions back
     reg [ENG_ID_W-1:0] w    [0:ENG_N-1];
     integer k;
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin
             for (k = 1; k < ENG_N; k = k + 1) hist[k] <= ENG_PAD;
         end else if (in_valid) begin
@@ -76,7 +77,8 @@ module ot_hdc_engram_hash (
             for (k = 2; k < ENG_N; k = k + 1) hist[k] <= in_first ? ENG_PAD : hist[k-1];
         end
     end
-    always @(posedge clk) begin
+    //: operand isolation: the window loads only with a valid id
+    always @(posedge gclk) if (in_valid) begin
         w[0] <= in_cid;
         for (k = 1; k < ENG_N; k = k + 1) w[k] <= in_first ? ENG_PAD : hist[k];
     end
@@ -89,7 +91,7 @@ module ot_hdc_engram_hash (
             wire [ENG_ID_W-1:0] t = w[p % ENG_N];
             localparam [64*16-1:0] TP = NIB[64*16*p +: 64*16];   // this product's 16 entries
             reg [63:0] pp0, pp1, pp2, pa, pb, prod;
-            always @(posedge clk) begin
+            always @(posedge gclk) begin
                 pp0  <= TP[64*t[3:0]  +: 64];
                 pp1  <= TP[64*t[7:4]  +: 64] << 4;
                 pp2  <= TP[64*t[11:8] +: 64] << 8;
@@ -106,7 +108,7 @@ module ot_hdc_engram_hash (
     reg [64*NP-1:0] roll_all;
     integer l, s;
     reg [63:0] acc;
-    always @(posedge clk) begin
+    always @(posedge gclk) begin
         for (l = 0; l < ENG_LAYERS; l = l + 1) begin
             acc = prod_all[64*(l*ENG_N) +: 64];
             roll_all[64*(l*ENG_N) +: 64] <= 64'd0;
@@ -148,7 +150,7 @@ module ot_hdc_engram_hash (
             reg [RW+3:0] t8, t2;
             reg [ENG_ROW_W-1:0] row_q;
             assign out_row[ENG_ROW_W*c +: ENG_ROW_W] = row_q;
-            always @(posedge clk) begin
+            always @(posedge gclk) begin
                 for (i = 0; i < 8; i = i + 1) s1[i] <= r[2*i] + r[2*i+1];
                 for (i = 0; i < 4; i = i + 1) s2[i] <= s1[2*i] + s1[2*i+1];
                 for (i = 0; i < 2; i = i + 1) s3[i] <= s2[2*i] + s2[2*i+1];
@@ -161,4 +163,17 @@ module ot_hdc_engram_hash (
             end
         end
     endgenerate
+
+    // -- clock gate ---------------------------------------------------------------------
+    //: gclk runs on the cycle of an input and while its valid bit is in vl
+    //: (through out_valid, whose clearing edge is clocked), and one cycle more.
+    //: The history changes only with in_valid, and out_row is sampled only
+    //: with out_valid, so the gate is cycle-transparent.  The unit hashes one
+    //: id per token; its 20,000 flops idled clocked for the rest of the step.
+    reg cg_t;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) cg_t <= 1'b0;
+        else cg_t <= in_valid || (|vl);
+    end
+    ot_hdc_cg u_cg (.clk(clk), .en(!rst_n || in_valid || (|vl) || cg_t), .gclk(gclk));
 endmodule
