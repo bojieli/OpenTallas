@@ -130,16 +130,32 @@ ME_GROUPS, ME_LANES, ME_IL = 4, 16, 8
 # most CHUNK terms, each summed sequentially from +0, the chunk sums added by a pairwise tree padded with +0
 # (csum) -- independent of the engine's geometry, so any engine that sums power-of-two-aligned runs of chunks
 # and combines them by the same padded tree reproduces it bit for bit.
+# For unit-by-unit bring-up of the re-specified core, ARITH may also be a comma list of the operator classes
+# that follow chunk8 while the rest stay legacy: me (BF16/FP32 weight matvecs: mv, wo_a), qe (linear_q),
+# he (hyper-connection mixes), att (q.k, p.v), idx (index dots and the index head sum), su (stream-unit sums:
+# norms, softmax denominators, Engram dots).
+ARITH_CLASSES = ("me", "qe", "he", "att", "idx", "su")
 ARITH = os.environ.get("HDC_V41_ARITH", "legacy")
 CHUNK = 8
-assert ARITH in ("legacy", "chunk8"), ARITH
+
+
+def _check(mode):
+    assert mode in ("legacy", "chunk8") or set(mode.split(",")) <= set(ARITH_CLASSES), mode
+
+
+_check(ARITH)
 
 
 def set_arith(mode):
     """Switch the accumulation contract at run time (tests; the RTL campaigns set HDC_V41_ARITH)."""
     global ARITH
-    assert mode in ("legacy", "chunk8"), mode
+    _check(mode)
     ARITH = mode
+
+
+def chunked(cls):
+    """Does operator class `cls` follow R-ARITH under the current mode?"""
+    return ARITH == "chunk8" or (ARITH != "legacy" and cls in ARITH.split(","))
 
 
 def csum(t, axis=-1, c=CHUNK):
@@ -162,16 +178,16 @@ def csum(t, axis=-1, c=CHUNK):
     return acc[..., 0]
 
 
-def matvec_c(w, x, split):
+def matvec_c(w, x, split, cls="me"):
     """hdc_golden.matvec (legacy, K in `split` chunks) or the R-ARITH csum over all K (chunk8)."""
-    if ARITH == "legacy":
+    if not chunked(cls):
         return matvec(w, x, split)
     xb = to_bf16(x)
     return csum(mul(np.asarray(w, dtype=F), xb[None, :]))
 
 
-def reduce_sum_c(v):
-    return reduce_sum(v) if ARITH == "legacy" else F(csum(v))
+def reduce_sum_c(v, cls="su"):
+    return F(csum(v)) if chunked(cls) else reduce_sum(v)
 
 
 # -- storage formats -------------------------------------------------------------
@@ -324,7 +340,7 @@ def linear_q(w: Q8, x):
     n, k = w.q.shape
     blocks = [np.ldexp((w.q[:, b * 32:(b + 1) * 32] @ xq[b * 32:(b + 1) * 32]).astype(F),   # exact, rounded once
                        w.e[:, b] + xe[b]).astype(F) for b in range(k // 32)]
-    if ARITH == "chunk8":
+    if chunked("qe"):
         return to_bf16(csum(np.stack(blocks, axis=-1)))
     acc = np.zeros(n, dtype=F)
     for d in blocks:
@@ -344,10 +360,10 @@ def linear_bf16(w, x):
     return to_bf16(mv(w, to_bf16(x)))
 
 
-def dots(a, b):
+def dots(a, b, cls="att"):
     """out[i, j] = sum_k a[i, k] * b[j, k], each sum sequential over k from +0: one
     matvec_fp32 per row of `a`, evaluated for all rows at once."""
-    if ARITH == "chunk8":
+    if chunked(cls):
         return csum(mul(np.asarray(a, dtype=F)[:, None, :], np.asarray(b, dtype=F)[None, :, :]))
     acc = np.zeros((a.shape[0], b.shape[0]), dtype=F)
     for k in range(a.shape[1]):
@@ -360,8 +376,8 @@ def dots_q4(a, b, block=32):
     32-element block every product shares the two blocks' scales and the block dot is an exact small integer
     times a power of two.  Each block dot is formed exactly and rounded once to FP32 (the block-dot lane,
     exactly as linear_q's blocks), canonical +0; the blocks combine by csum.  legacy: dots()."""
-    if ARITH == "legacy":
-        return dots(a, b)
+    if not chunked("idx"):
+        return dots(a, b, cls="idx")
     a64, b64 = np.asarray(a, dtype=np.float64), np.asarray(b, dtype=np.float64)
     k = a64.shape[1]
     nb = k // block
@@ -372,11 +388,11 @@ def dots_q4(a, b, block=32):
     return csum(blk)
 
 
-def reduce_rows(v):
+def reduce_rows(v, cls="su"):
     """hdc_golden.reduce_sum of every row of a 2-D array at once (P=8 interleaved
     partials, then the pairwise tree)."""
     v = np.asarray(v, dtype=F)
-    if ARITH == "chunk8":
+    if chunked(cls):
         return csum(v)
     part = np.zeros((v.shape[0], 8), dtype=F)
     for i in range(v.shape[1]):
@@ -400,7 +416,7 @@ def split_sum_parts(parts):
 def split_sum(v, s):
     """A long sum cut into s contiguous segments: each segment is reduce_sum (P=8
     interleaved partials, pairwise tree), the segment sums a pairwise tree."""
-    if ARITH == "chunk8":
+    if chunked("su"):
         return F(csum(v))
     v = np.asarray(v, dtype=F).reshape(s, -1)
     return split_sum_parts([reduce_sum(seg) for seg in v])
@@ -694,7 +710,7 @@ class Model:
         flat = x.reshape(-1)
         assert np.array_equal(to_bf16(flat), flat)          # the residual is BF16: x rounding is exact
         r = rsqrt(add(div(split_sum(mul(flat, flat), HC_SS_SPLIT), F(flat.size)), self.eps))
-        mixes = mul(matvec_c(fn, flat, HC_SPLIT), r)
+        mixes = mul(matvec_c(fn, flat, HC_SPLIT, cls="he"), r)
         h = self.hc
         pre = add(sigmoid(add(mul(mixes[:h], scale[0]), base[:h])), self.hc_eps)
         post = mul(sigmoid(add(mul(mixes[h:2 * h], scale[1]), base[h:2 * h])), F(2.0))
@@ -762,7 +778,7 @@ class Model:
         keys = np.stack(state["ik"][src][:n])                                     # [n, ihd]
         score = to_bf16(dots_q4(q, keys))                                        # [ih, n] BF16 einsum
         terms = to_bf16(mul(np.maximum(score, F(0)), wts[:, None]))
-        s = to_bf16(reduce_rows(terms.T))
+        s = to_bf16(reduce_rows(terms.T, cls="idx"))
         s = s.astype(np.float64)
         if L == self.cand_src:
             ctx["cand"] = self.candidate_blocks(s, n)

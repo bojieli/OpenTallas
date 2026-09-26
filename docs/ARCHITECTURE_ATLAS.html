@@ -675,6 +675,7 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
       <tr><td>KV cache</td><td>BF16 (RNE) on write</td></tr>
       <tr><td>Reductions</td><td>element i → partial i mod 8, each sequential from +0; tree ((p0+p1)+(p2+p3))+((p4+p5)+(p6+p7)); max by total-order key</td></tr>
       <tr><td>Argmax</td><td>lowest index on ties, across lanes and cycles</td></tr>
+      <tr><td>DeepSeek-V4.1 at shipped shapes (R-ARITH)</td><td>every FP32 accumulation in contiguous chunks of at most 8 terms, each sequential from +0, the chunk sums by a pairwise tree padded with +0; FP8/FP4 × FP8/FP4 dots take the 32-element quantisation block as the chunk (exact, rounded once); a tree level across dies is the one-shot collective's rank order. The earlier geometry-bound orders (2,560-term hyper-connection chains, 640-term p·v) capped the array near 1,170 tokens/s per user at any width. Golden and ISA carry it as a mode, bit-exact with each other; on the reduced vehicle the two orders differ by at most 2.4 × 10<sup>-7</sup> in any logit until a near-tied expert selection flips (docs/ARCH_SPEC_V41.md §4, results/arch/v41_arith_contract.json)</td></tr>
       <tr><td>Validation</td><td>golden reproduces the torch oracle's tokens (1073, 382, 93); RTL bit-exact with the golden in every logit, the vector memory and the KV cache (results/rtl/hdc_decode_campaign.json)</td></tr>
     </tbody>
   </table></div>

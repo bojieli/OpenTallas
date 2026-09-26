@@ -70,3 +70,13 @@ def test_dots_q4_block_exact():
 
 def test_legacy_is_the_default():
     assert V.ARITH == "legacy"
+
+
+def test_class_list_mode():
+    V.set_arith("att,su")
+    try:
+        assert V.chunked("att") and V.chunked("su") and not V.chunked("qe")
+    finally:
+        V.set_arith("legacy")
+    with pytest.raises(AssertionError):
+        V.set_arith("nope")

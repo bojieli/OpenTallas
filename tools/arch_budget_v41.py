@@ -1321,6 +1321,52 @@ def choose_target_context(rec):
                 rule="max ROM:HBM per-user rate with MTP (tau 4.1), then without; energy and throughput reported")
 
 
+def power_requirements(rec, req, areas):
+    """Per-die power at the target against the die's cooling limit (technology.json thermal: 0.5 W/mm2 x 815 mm2).
+
+    Batch 1, stage clock gating: a die is active only while its layer group holds the token (about T/28 of
+    the token time); its dynamic power then is its share of the token's non-clock energy over that window
+    plus the clock of its block area.  Saturated batch: every die is busy all the time, so the array power is
+    the aggregate rate x energy per token.  Static: the analytical design's leakage estimate (N5, per die) and
+    the ASAP7 sign-off leakage density, both reported; the HBM stacks' interface power from the analytical
+    design."""
+    E = _env()
+    c, clock = E["c"], E["clock"]
+    d = E["designs"][D.ARRAY_DESIGN]
+    die_mm2 = d["area_split_per_device"]["total_mm2"]
+    cool = E["tech"]["thermal"]["cooling_limit_w_per_mm2"]["value"] * die_mm2
+    stat = d["static_power"]["detail"]
+    et = energy_terms(E["tech"])
+    rows = {}
+    b = rec["batch"]["200000"]["rows"]["rom"]
+    b1 = b[0]
+    sat = max(b, key=lambda r: r["ar_aggregate_tokens_s"])
+    T = 1.0 / b1["ar_tokens_s_per_user"]
+    nonclock = sum(v for k, v in b1["ar_energy_parts_j"].items() if k != "clock")
+    layer_dies = 112.0                                          # 28 groups x 4 dies hold the 40 layers
+    stages = 28
+    for m in (1, 2):
+        blk = spec_area_mm2(req, areas)["total"] * m
+        clk_w = et["clock"] * blk * clock
+        active = nonclock / layer_dies / (T / stages) + clk_w
+        sat_w = sat["ar_aggregate_tokens_s"] * sat["ar_energy_j_per_token"] / 188 + (clk_w if m > 1 else 0.0)
+        rows[f"m{m}"] = dict(block_mm2=blk, clock_w_active=clk_w, active_die_dynamic_w_b1=active,
+                             saturated_die_dynamic_w=sat_w)
+    leak_n5 = stat["leakage_w_per_device"]
+    leak_asap7 = E["tech"].get("power", {}).get("leak_w_per_mm2")
+    hbm_if = stat["memory_interface_w_per_device"]
+    worst = max(r["saturated_die_dynamic_w"] for r in rows.values()) + leak_n5 + hbm_if
+    return dict(cooling_limit_w_per_die=cool, cooling_basis="technology.json thermal.cooling_limit_w_per_mm2 x die",
+                static_leakage_w_per_die_n5_analytical=leak_n5, hbm_interface_w_per_die=hbm_if,
+                token_time_us_b1=T * 1e6, nonclock_energy_per_token_j_b1=nonclock, by_lane_mult=rows,
+                worst_case_die_w=worst, margin=cool / worst,
+                requirement=("per-die power <= the cooling limit at every batch with stage clock gating: an idle "
+                             "stage's clock tree gated (ICG at the block boundaries), its ROM macros and engines "
+                             "quiescent; the worst case is the saturated array (every die busy)"),
+                note="ASAP7 unit areas; the analytical design's 48 W/die clock term charges all 525 mm2 of logic "
+                     "at 1 GHz ungated and is the upper bound if nothing gates")
+
+
 def build(quick=False):
     E = _env()
     c, clock = E["c"], E["clock"]
@@ -1456,6 +1502,8 @@ def build(quick=False):
     rec["kv_state"] = kv_state_requirements(c, req, clock)
     if not quick:
         rec["target_context"] = choose_target_context(rec)
+    if not quick:
+        rec["power"] = power_requirements(rec, req, areas)
     rec["replay"] = replay_summary()
     return rec
 

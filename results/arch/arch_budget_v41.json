@@ -8152,6 +8152,32 @@
   },
   "rule": "max ROM:HBM per-user rate with MTP (tau 4.1), then without; energy and throughput reported"
  },
+ "power": {
+  "cooling_limit_w_per_die": 407.5,
+  "cooling_basis": "technology.json thermal.cooling_limit_w_per_mm2 x die",
+  "static_leakage_w_per_die_n5_analytical": 33.47579066861809,
+  "hbm_interface_w_per_die": 14.0,
+  "token_time_us_b1": 204.42097369161627,
+  "nonclock_energy_per_token_j_b1": 0.012869598105856,
+  "by_lane_mult": {
+   "m1": {
+    "block_mm2": 85.006494704,
+    "clock_w_active": 7.470498264329577,
+    "active_die_dynamic_w_b1": 23.209585444873383,
+    "saturated_die_dynamic_w": 27.350070718147236
+   },
+   "m2": {
+    "block_mm2": 170.012989408,
+    "clock_w_active": 14.940996528659154,
+    "active_die_dynamic_w_b1": 30.68008370920296,
+    "saturated_die_dynamic_w": 42.29106724680639
+   }
+  },
+  "worst_case_die_w": 89.76685791542448,
+  "margin": 4.539537302106906,
+  "requirement": "per-die power <= the cooling limit at every batch with stage clock gating: an idle stage's clock tree gated (ICG at the block boundaries), its ROM macros and engines quiescent; the worst case is the saturated array (every die busy)",
+  "note": "ASAP7 unit areas; the analytical design's 48 W/die clock term charges all 525 mm2 of logic at 1 GHz ungated and is the upper bound if nothing gates"
+ },
  "replay": {
   "validation": [
    {

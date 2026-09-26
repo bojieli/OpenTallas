@@ -1556,6 +1556,9 @@ class Machine:
         keep = (nidx < n) if f["me_mmode"] == 0 else (t * W + l < n)
         r, h, q, t, j, l, nidx = r[keep], h[keep], q[keep], t[keep], j[keep], l[keep], nidx[keep]
         parts = []
+        prods = []                                   # R-ARITH: every product in K order, csum'd
+        cls = ("idx" if "indexer" in f.get("_tag", "") else "att") if f["me_wsrc"] else "me"
+        c8 = V.chunked(cls)
         for c in range(S):
             g = q * S + c
             acc = np.zeros(len(t), dtype=F)
@@ -1569,11 +1572,17 @@ class Machine:
                 x = self.vm[xb + (c + h) * f["me_xcs"] + k * f["me_xks"] + j * f["me_xjs"]]
                 if f["me_round"]:
                     x = G.to_bf16(x)
-                acc = G.add(acc, G.mul(w, x))
+                if c8:
+                    prods.append(G.mul(w, x))
+                else:
+                    acc = G.add(acc, G.mul(w, x))
             parts.append(acc)
-        while len(parts) > 1:
-            parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
-        acc = parts[0]
+        if c8:
+            acc = V.csum(np.stack(prods, axis=-1))
+        else:
+            while len(parts) > 1:
+                parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+            acc = parts[0]
         if f["me_oen"]:
             self.vm[(ob + t * f["me_ots"] + h * f["me_ogs"] + j * f["me_ojs"]) * W + l] = acc
         if f["me_amax"]:
@@ -1593,11 +1602,16 @@ class Machine:
         for lane in range(max(1, f["mx_m"])):
             xb, ob = f["he_xbase"] + lane * f["mx_xps"], f["he_obase"] + lane * f["mx_ops"]
             acc = np.zeros((S, NL * IL), dtype=F)
+            prods = np.zeros((S, K, NL * IL), dtype=F)
             for k in range(K):
                 w = self.hrom[f["he_wbase"] + k * IL: f["he_wbase"] + (k + 1) * IL].reshape(IL, S, NL)
                 w = w.transpose(1, 0, 2).reshape(S, IL * NL)               # [chunk, row j*NL + l]
                 x = self.vm[xb + np.arange(S) * K + k]
-                acc = G.add(acc, G.mul(w, x[:, None]))
+                prods[:, k] = G.mul(w, x[:, None])
+                acc = G.add(acc, prods[:, k])
+            if V.chunked("he"):                          # R-ARITH: csum over the S*K terms in K order
+                self.vm[ob:ob + n] = V.csum(prods.reshape(S * K, -1).T)[:n]
+                continue
             parts = list(acc)
             while len(parts) > 1:
                 parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
@@ -1685,7 +1699,8 @@ class Machine:
             out = G.to_bf16(out)
         if f["red"] and f["red_tree"]:
             v = G.mul(out, out) if f["red_sq"] else out
-            x = V.split_sum_parts([G.reduce_sum(sg) for sg in v.reshape(no, ni)])
+            x = V.csum(v) if V.chunked("su") else \
+                V.split_sum_parts([G.reduce_sum(sg) for sg in v.reshape(no, ni)])
             if f["red_rnd"]:
                 x = G.to_bf16(x)
             self.vm[f["r_base"]] = x
@@ -1695,7 +1710,8 @@ class Machine:
             vals = []
             for sg in segs:
                 if f["red"] == I.RED_SUM:
-                    vals.append(G.reduce_sum(sg))
+                    vals.append(V.csum(sg) if V.chunked("idx" if "indexer" in f.get("_tag", "") else "su")
+                                else G.reduce_sum(sg))
                 elif f["red"] == I.RED_MAX:
                     vals.append(np.max(sg))
                 else:
@@ -1747,12 +1763,16 @@ class Machine:
                 for j in range(IL):
                     rows = (rr * IL + j) * BL + np.arange(BL)
                     acc = np.zeros(BL, dtype=F)
+                    blocks = []
                     for kb in range(nb):
                         word = wb + (rr * nb + kb) * IL + j
                         codes = self.qcodes[word]
                         wv = table[codes & (15 if f["qe_fp4"] else 255)]
                         dsum = (wv @ xq[kb * 32:(kb + 1) * 32]).astype(F)
-                        acc = G.add(acc, np.ldexp(dsum, self.qexp[word] + xe[kb]).astype(F))
+                        blocks.append(np.ldexp(dsum, self.qexp[word] + xe[kb]).astype(F))
+                        acc = G.add(acc, blocks[-1])
+                    if V.chunked("qe"):
+                        acc = V.csum(np.stack(blocks, axis=-1))
                     y = G.to_bf16(acc)
                     ok = rows < n
                     self.vm[f["qe_obase"] + lane * f["mx_ops"] + rows[ok]] = y[ok]
