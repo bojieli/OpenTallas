@@ -10,12 +10,12 @@ bandwidth and compute roof are derived from it.
 ## What the model says
 
 1. **The ROM path has a hard per-token ceiling that is a technology constant, not a design choice.** The full-array sweep time is the ROM capacity density divided by its read-bandwidth density, so it does not depend on model size, batch, or expert coverage: 34.5 us, or 29,015 tok/s per user. Under this derivation both densities scale with the same published bitcell-area ratio, so that ceiling is the same at every node: process scaling buys a ROM design capacity, not per-token speed.
-2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 91x (ROM-N5-native-HBMKV-wafer-pipeline-x16-perstream, 908 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 3 devices. On the GPU side the correction reaches 10x (b200_sxm-x462-pipeline, 462 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 58 devices. Both validation gates are single-slot machines and are unchanged to the digit.
-3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. Kimi-K3 takes 6 x 46,225 mm2 (277,350 mm2, wafer, KV in SRAM) at 1,682 tok/s per user and 6 tok/s per 1,000 mm2, holding 1 session, against 173 copies of one unified HBM die at the same silicon: 5.9x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
-4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Kimi-K3 on 369,800 mm2 of ROM silicon at 1,777 tok/s per user against 369,600 mm2 of b200_sxm-x231-nvl72-hybrid at 284 tok/s: **6.3x**, ROM binding on `layer_fixed_latency` and the GPU on `layer_fixed_latency`. It holds 1 resident session against the GPU cluster's 11,157. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
+2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 91x (ROM-N5-native-HBMKV-wafer-pipeline-x16-perstream, 908 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 3 devices. On the GPU side the correction reaches 22x (b200_sxm-x462-pipeline, 462 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 58 devices. Both validation gates are single-slot machines and are unchanged to the digit.
+3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. Kimi-K3 takes 6 x 46,225 mm2 (277,350 mm2, wafer, KV in SRAM) at 1,682 tok/s per user and 6 tok/s per 1,000 mm2, holding 1 session, against 173 copies of one unified HBM die at the same silicon: 3.5x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
+4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Kimi-K3 on 369,800 mm2 of ROM silicon at 1,777 tok/s per user against 369,600 mm2 of b200_sxm-x231-nvl72-hybrid at 474 tok/s: **3.7x**, ROM binding on `layer_fixed_latency` and the GPU on `link_latency`. It holds 1 resident session against the GPU cluster's 11,157. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
 5. **The layer cap on serial stage boundaries is still applied and is no longer visible in the headline, because no comparator it binds on wins any more.** A token cannot cross more stage boundaries than the model has layers, and this study charges at most that many. With per-user latency separated from aggregate throughput, both families now pick a topology with a tensor group at batch 1, and a tensor group has one stage and no boundary for the cap to remove. The `Ratio without the layer cap` column in the iso-area table therefore equals the stated ratio wherever the winner is tensor-parallel; it still differs wherever a pipeline wins.
-6. **Letting the GPU choose its own parallelism is worth up to 6.76x to it.** At 223,310 mm2 on Kimi-K3 the pipeline-only GPU delivers 42.86 tok/s and the same silicon running hybrid delivers 290 tok/s.
-7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 4096 the aggregate ratio at equal area spans 0.02x (Kimi-K3, ROM binding on `link_latency`) to 1.01x (Kimi-K3, ROM binding on `kv_read`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
+6. **Letting the GPU choose its own parallelism is worth up to 11.47x to it.** At 223,310 mm2 on Kimi-K3 the pipeline-only GPU delivers 42.86 tok/s and the same silicon running hybrid delivers 491 tok/s.
+7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 4096 the aggregate ratio at equal area spans 0.02x (Kimi-K3, ROM binding on `link_latency`) to 0.95x (Kimi-K3, ROM binding on `kv_read`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
 8. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** Kimi-K3 engages 100.0% of its ROM array at batch 1 and 100.0% at batch 4096, while the weight-read time is identical at both. What the machine delivers rises from 73 to 23,845 tok/s, and its rate with every slot occupied from 23,717 to 23,845. The second rises far less than the first because the batch-1 figure is already a full-machine number -- this design has 327 slots -- so most of what batching adds there is coverage rather than occupancy. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
 9. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 1,367 us over NVLink, capping per-user decode at 732 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 482.1 us and cap it at 2,074 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least nanx cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
 10. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 10 of 10 operating points and an array 0; on tokens per second per square millimetre the same points go 6 to the array and 4 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
@@ -23,7 +23,7 @@ bandwidth and compute roof are derived from it.
 12. **The largest open question is not in this model's inputs but in the architecture, and a batch-1 anchor cannot settle its scaling law.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 4096 that costs up to 5.8x of aggregate throughput (Kimi-K3). Their sweep counts coincide at batch 1, but their cell and pre-compute costs make their floorplans different; the current compute-in-ROM anchor reconstruction fails capacity. A batch-1 validation therefore cannot establish either high-batch law.
 13. **A third machine sits between them, and for a sparse model it recovers part of what compute-in-ROM gives up -- less than the mean-region arithmetic used to say.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise, and the sweep waits for the BUSIEST region rather than the average engaged one. The largest gain over a global broadcast is 5.78x, on Kimi-K3 at batch 4096, where the busiest region carries 3.43x the load of the mean engaged one. It is not free ground: per-region still loses to the amortising ROM-plus-MAC machine at 10 of 20 operating points. A dense model has one region, so it gains nothing -- the disjointness is what sparsity buys.
 14. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N5.
-15. **The cooling limit binds, and not where a uniform correction said it would.** 279 of 3,331 feasible points (8.4%) are power-limited now that leakage, clock distribution and a measured clocked-idle floor are charged per mm2 per second rather than per byte moved. The worst is `Kimi-K3/b200_sxm-x91-pipeline` at batch 4096 on 145,600 mm2, throttled 1.20x from 6 to 5 tok/s per user. **No wafer is throttled anywhere in this study**: a ROM sweep is a fixed cost spread over far more silicon, so wafer-scale is power-sparse. And HBM KV is what melts the arrays -- the worst point's dynamic energy is 74% weight read against 73.7% weight read. The ROM sweep is not what melts it.
+15. **The cooling limit binds, and not where a uniform correction said it would.** 289 of 3,331 feasible points (8.7%) are power-limited now that leakage, clock distribution and a measured clocked-idle floor are charged per mm2 per second rather than per byte moved. The worst is `Kimi-K3/b200_sxm-x116-nvl72-hybrid` at batch 4096 on 185,600 mm2, throttled 1.21x from 21 to 17 tok/s per user. **No wafer is throttled anywhere in this study**: a ROM sweep is a fixed cost spread over far more silicon, so wafer-scale is power-sparse. And HBM KV is what melts the arrays -- the worst point's dynamic energy is 36% kv read against 29.6% weight read. The ROM sweep is not what melts it.
 
 
 ## The recommended design per model, and the rule that picks it
@@ -60,25 +60,25 @@ The GPU comparator at each ROM area is N copies of one unified HBM die, N chosen
 | | ROM | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: |
 | silicon mm2 | 277,350 | 276,800 | 1.0020 |
-| user tok/s | 1,681.7 | 284.2 | 5.92x |
-| aggregate tok/s | 1,682 | 853 | 0.23x |
+| user tok/s | 1,681.7 | 475.2 | 3.54x |
+| aggregate tok/s | 1,682 | 1,425 | 0.23x |
 | resident sessions | 1 | 8,233 | -- |
-| J/token | 11.5283 | 228.4939 | 19.8x |
+| J/token | 11.5283 | 142.7462 | 12.4x |
 
 The areas match to within 2%, so no granularity correction is needed on this row.
 
 **Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 8,233 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
 
-The GPU's own best machine at **any** area is `b200_sxm-x72-nvl72-tensor` at 115,200 mm2 and 291.3 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
+The GPU's own best machine at **any** area is `b200_sxm-x72-nvl72-tensor` at 115,200 mm2 and 495.3 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
 
 **Headline before and after.**
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 1,779.5 | 5.5 | 1 | 6.17x |
-| rank on per-user rate alone | `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 1,779.5 | 5.5 | 1 | 6.17x |
-| smallest feasible machine | `ROM-N5-native-SRAMKV-array-hw-hybrid-x274` | 223,310 | 890.9 | 4.0 | 1 | 3.07x |
-| **after -- this report's rule** | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | 277,350 | 1,681.7 | 6.1 | 1 | 5.92x |
+| before -- smallest within 5% of peak rate | `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 1,779.5 | 5.5 | 1 | 3.65x |
+| rank on per-user rate alone | `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 1,779.5 | 5.5 | 1 | 3.65x |
+| smallest feasible machine | `ROM-N5-native-SRAMKV-array-hw-hybrid-x274` | 223,310 | 890.9 | 4.0 | 1 | 1.81x |
+| **after -- this report's rule** | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | 277,350 | 1,681.7 | 6.1 | 1 | 3.54x |
 
 **The walk, rung by rung.** The number in the `marginal` column is what the next slab of silicon returns; the number in `incumbent average` is what the silicon already bought returns. The walk stops the first time the former is not larger.
 
@@ -91,8 +91,8 @@ The GPU's own best machine at **any** area is `b200_sxm-x72-nvl72-tensor` at 115
 
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
-| `ROM-N5-native-SRAMKV-wafer-hybrid-x6` **<-- recommended** | 277,350 | 6 | 1,681.7 | 1,682 | 6.1 | 1 | `layer_fixed_latency` | 19,387 | 11,528.3 | `b200_sxm-x173-nvl72-hybrid` | 5.92x |
-| `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 7 | 1,779.5 | 1,779 | 5.5 | 1 | `layer_fixed_latency` | 26,099 | 14,666.8 | `b200_sxm-x202-nvl72-hybrid` | 6.17x |
+| `ROM-N5-native-SRAMKV-wafer-hybrid-x6` **<-- recommended** | 277,350 | 6 | 1,681.7 | 1,682 | 6.1 | 1 | `layer_fixed_latency` | 19,387 | 11,528.3 | `b200_sxm-x173-nvl72-hybrid` | 3.54x |
+| `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 7 | 1,779.5 | 1,779 | 5.5 | 1 | `layer_fixed_latency` | 26,099 | 14,666.8 | `b200_sxm-x202-nvl72-hybrid` | 3.65x |
 
 **Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
 
@@ -109,28 +109,28 @@ The GPU's own best machine at **any** area is `b200_sxm-x72-nvl72-tensor` at 115
 
 | batch | class | design | mm2 | user tok/s | aggregate tok/s | resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | J/token ratio |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 | array | `ROM-N5-native-SRAMKV-array-hw-hybrid-x395` | 321,925 | 1,428.2 | 1,428 | 1 | 25,825 | 18,082.1 | `layer_fixed_latency` | `b200_sxm-x201-nvl72-hybrid` | 288.3 | 9,645 | 259,473.6 | 1.001 | 4.95x | 14.3x |
-| 1 | wafer | `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 1,779.5 | 1,779 | 1 | 26,099 | 14,666.8 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 288.4 | 9,695 | 260,580.0 | 1.001 | 6.17x | 17.8x |
-| 1 | array @ wafer area | `ROM-N5-native-SRAMKV-array-hw-hybrid-x395` | 321,925 | 1,428.2 | 1,428 | 1 | 25,825 | 18,082.1 | `layer_fixed_latency` | `b200_sxm-x201-nvl72-hybrid` | 288.3 | 9,645 | 259,473.6 | 1.001 | 4.95x | 14.3x |
+| 1 | array | `ROM-N5-native-SRAMKV-array-hw-hybrid-x395` | 321,925 | 1,428.2 | 1,428 | 1 | 25,825 | 18,082.1 | `layer_fixed_latency` | `b200_sxm-x201-nvl72-hybrid` | 486.8 | 9,645 | 159,847.6 | 1.001 | 2.93x | 8.8x |
+| 1 | wafer | `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 1,779.5 | 1,779 | 1 | 26,099 | 14,666.8 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 487.2 | 9,695 | 160,458.3 | 1.001 | 3.65x | 10.9x |
+| 1 | array @ wafer area | `ROM-N5-native-SRAMKV-array-hw-hybrid-x395` | 321,925 | 1,428.2 | 1,428 | 1 | 25,825 | 18,082.1 | `layer_fixed_latency` | `b200_sxm-x201-nvl72-hybrid` | 486.8 | 9,645 | 159,847.6 | 1.001 | 2.93x | 8.8x |
 | 1 | wafer reference | `ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 323,575 | 1,779.5 | -- | 1 | -- | 14,666.8 | -- | -- | -- | -- | -- | 0.995 | 1.25x wafer/array | -- |
-| 2 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,322.3 | 9,256 | 12,474 | 35,850 | 12,367.5 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 288.4 | 9,695 | 137,868.0 | 0.999 | 4.58x | 11.1x |
-| 2 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,760.7 | 28,171 | 4,334 | 101,674 | 25,544.2 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 286.0 | 22,800 | 298,185.2 | 1.001 | 6.16x | 11.7x |
-| 4 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,322.3 | 9,256 | 12,474 | 35,850 | 6,421.6 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 286.0 | 9,695 | 74,098.6 | 0.999 | 4.62x | 11.5x |
-| 4 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,760.7 | 28,171 | 4,334 | 101,674 | 13,009.9 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 286.0 | 22,800 | 156,670.6 | 1.001 | 6.16x | 12.0x |
-| 8 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,301.1 | 16,914 | 12,474 | 39,493 | 3,496.9 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 276.9 | 9,695 | 39,770.8 | 0.999 | 4.70x | 11.4x |
-| 8 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,760.7 | 28,171 | 4,334 | 101,674 | 6,742.8 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 284.8 | 22,800 | 84,749.2 | 1.001 | 6.18x | 12.6x |
-| 16 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,154.8 | 18,476 | 12,474 | 40,116 | 2,171.2 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 260.6 | 9,695 | 22,537.1 | 0.999 | 4.43x | 10.4x |
-| 16 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,760.7 | 28,171 | 4,334 | 101,674 | 3,609.2 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 275.6 | 22,800 | 45,273.4 | 1.001 | 6.39x | 12.5x |
-| 32 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 911.1 | 29,155 | 12,474 | 45,094 | 1,546.7 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 234.2 | 9,695 | 13,788.4 | 0.999 | 3.89x | 8.9x |
-| 32 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,537.9 | 49,211 | 4,334 | 111,521 | 2,266.2 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 259.0 | 22,800 | 25,475.2 | 1.001 | 5.94x | 11.2x |
-| 64 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 580.6 | 37,157 | 12,474 | 48,840 | 1,314.4 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 197.6 | 9,695 | 9,177.8 | 0.999 | 2.94x | 7.0x |
-| 64 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,264.7 | 80,944 | 4,334 | 126,467 | 1,562.4 | `kv_read` | `b200_sxm-x462-nvl72-hybrid` | 232.1 | 22,800 | 15,461.2 | 1.001 | 5.45x | 9.9x |
-| 256 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 176.3 | 45,126 | 12,474 | 52,557 | 1,164.7 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 117.0 | 9,695 | 4,655.8 | 0.999 | 1.51x | 4.0x |
-| 256 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 509.1 | 130,342 | 4,334 | 149,757 | 1,149.0 | `kv_read` | `b200_sxm-x462-nvl72-hybrid` | 152.2 | 22,800 | 7,956.2 | 1.001 | 3.35x | 6.9x |
-| 1024 | array | `ROM-N5-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 45.9 | 46,989 | 12,474 | 52,798 | 1,123.6 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 58.0 | 9,695 | 2,426.5 | 0.999 | 0.79x | 2.2x |
-| 1024 | wafer | `ROM-N5-native-HBMKV-wafer-pipeline-x16` | 739,600 | 144.4 | 147,836 | 4,334 | 158,010 | 1,068.8 | `kv_read` | `b200_sxm-x462-nvl72-hybrid` | 78.2 | 22,800 | 4,525.0 | 1.001 | 1.85x | 4.2x |
+| 2 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,322.3 | 9,256 | 12,474 | 35,850 | 12,367.5 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 487.2 | 9,695 | 87,807.2 | 0.999 | 2.71x | 7.1x |
+| 2 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,760.7 | 28,171 | 4,334 | 101,674 | 25,544.2 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 480.3 | 22,800 | 183,689.7 | 1.001 | 3.67x | 7.2x |
+| 4 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,322.3 | 9,256 | 12,474 | 35,850 | 6,421.6 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 480.4 | 9,695 | 49,068.2 | 0.999 | 2.75x | 7.6x |
+| 4 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,760.7 | 28,171 | 4,334 | 101,674 | 13,009.9 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 480.3 | 22,800 | 99,422.8 | 1.001 | 3.67x | 7.6x |
+| 8 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,301.1 | 16,914 | 12,474 | 39,493 | 3,496.9 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 455.1 | 9,695 | 27,255.6 | 0.999 | 2.86x | 7.8x |
+| 8 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,760.7 | 28,171 | 4,334 | 101,674 | 6,742.8 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 476.9 | 22,800 | 56,125.4 | 1.001 | 3.69x | 8.3x |
+| 16 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,154.8 | 18,476 | 12,474 | 40,116 | 2,171.2 | `layer_fixed_latency` | `b200_sxm-x202-nvl72-hybrid` | 412.7 | 9,695 | 16,279.5 | 0.999 | 2.80x | 7.5x |
+| 16 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,760.7 | 28,171 | 4,334 | 101,674 | 3,609.2 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 451.6 | 22,800 | 30,961.4 | 1.001 | 3.90x | 8.6x |
+| 32 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 911.1 | 29,155 | 12,474 | 45,094 | 1,546.7 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 350.3 | 9,695 | 10,659.6 | 0.999 | 2.60x | 6.9x |
+| 32 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,537.9 | 49,211 | 4,334 | 111,521 | 2,266.2 | `layer_fixed_latency` | `b200_sxm-x462-nvl72-hybrid` | 408.8 | 22,800 | 18,319.2 | 1.001 | 3.76x | 8.1x |
+| 64 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 580.6 | 37,157 | 12,474 | 48,840 | 1,314.4 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 274.2 | 9,695 | 7,613.4 | 0.999 | 2.12x | 5.8x |
+| 64 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 1,264.7 | 80,944 | 4,334 | 126,467 | 1,562.4 | `kv_read` | `b200_sxm-x462-nvl72-hybrid` | 345.5 | 22,800 | 11,883.2 | 1.001 | 3.66x | 7.6x |
+| 256 | array | `ROM-N5-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 176.3 | 45,126 | 12,474 | 52,557 | 1,164.7 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 140.2 | 9,695 | 4,264.7 | 0.999 | 1.26x | 3.7x |
+| 256 | wafer | `ROM-N5-native-HBMKV-wafer-hybrid-x16` | 739,600 | 509.1 | 130,342 | 4,334 | 149,757 | 1,149.0 | `kv_read` | `b200_sxm-x462-nvl72-hybrid` | 193.9 | 22,800 | 7,061.7 | 1.001 | 2.63x | 6.1x |
+| 1024 | array | `ROM-N5-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 45.9 | 46,989 | 12,474 | 52,798 | 1,123.6 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 63.2 | 9,695 | 2,328.7 | 0.999 | 0.73x | 2.1x |
+| 1024 | wafer | `ROM-N5-native-HBMKV-wafer-pipeline-x16` | 739,600 | 144.4 | 147,836 | 4,334 | 158,010 | 1,068.8 | `kv_read` | `b200_sxm-x462-nvl72-hybrid` | 88.0 | 22,800 | 4,301.3 | 1.001 | 1.64x | 4.0x |
 | 4096 | array | `ROM-N5-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 11.5 | 47,169 | 12,474 | 52,384 | 1,110.6 | `compute` | `b200_sxm-x202-nvl72-hybrid` | 25.1 | 9,695 | 1,962.7 | 0.999 | 0.46x | 1.8x |
-| 4096 | wafer | `ROM-N5-native-HBMKV-wafer-pipeline-x16` | 739,600 | 36.9 | 151,188 | 4,334 | 156,090 | 1,032.4 | `kv_read` | `b200_sxm-x462-nvl72-hybrid` | 36.7 | 22,800 | 2,430.1 | 1.001 | 1.01x | 2.4x |
+| 4096 | wafer | `ROM-N5-native-HBMKV-wafer-pipeline-x16` | 739,600 | 36.9 | 151,188 | 4,334 | 156,090 | 1,032.4 | `kv_read` | `b200_sxm-x462-nvl72-hybrid` | 38.7 | 22,800 | 2,374.2 | 1.001 | 0.95x | 2.3x |
 
 **The best design differs by batch, and here is where it changes.**
 
@@ -161,8 +161,10 @@ A wafer chosen over the array class is now compared against an array sampled at 
 
 The serial part of every step is the longest path of one token's operator
 dependency graph (`src/opentallas/critical_path.py`): the dependent-operator
-chain priced with measured RTL depths (ROM) or a published CUDA-graph launch gap
-per dependent kernel (GPU), every collective the weight split needs with its
+chain priced with measured RTL depths (ROM) or, on the GPU, a megakernel/PDL
+execution in which every remaining dependent boundary pays only its measured
+residual dependency signal (all-SM gather or one-to-one handoff, no launch;
+`serial_latency.gpu_datapath`), every collective the weight split needs with its
 latency and real payload, and every pipeline hop. A hybrid layout's tensor
 group and every collective's reduction algorithm are searched per point.
 `legacy` is the flat per-layer floor plus two all-reduces per layer this
@@ -171,8 +173,8 @@ replaced.
 | Model | Design | Batch | Group | Coll./layer | Algorithms | Chain (us) | Comm. (us) | Sweep (us) | Legacy serial (us) | tok/s/user |
 |---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|
 | Kimi-K3 | `ROM-N5-native-SRAMKV-wafer-hybrid-x6` | 1 | 57 on `rom_wafer_express` | 5.24 | one_shot, rec_doubling | 301.06 | 178.38 | 130.49 | 114.81 | 1,681.7 |
-| Kimi-K3 | `b200_sxm-x173-nvl72-hybrid` | 1 | 64 | 5.24 | measured_floor | 2,180.10 | 976.93 | 376.40 | 487.52 | 284.2 |
-| Kimi-K3 | `b200_sxm-x173-nvl72-hybrid` | 64 | 64 | 5.24 | measured_floor | 2,180.10 | 1,441.30 | 1,741.96 | 677.09 | 188.6 |
+| Kimi-K3 | `b200_sxm-x173-nvl72-hybrid` | 1 | 64 | 5.24 | measured_floor | 765.73 | 976.93 | 376.40 | 487.52 | 475.2 |
+| Kimi-K3 | `b200_sxm-x173-nvl72-hybrid` | 64 | 64 | 5.24 | measured_floor | 765.73 | 1,441.30 | 1,741.96 | 677.09 | 257.2 |
 
 ## The overlap and serialisation rule
 
@@ -364,9 +366,9 @@ fails.**
 | Part | Energy | W | tok/s |
 |---|---:|---:|---:|
 | Taalas HC1 (modelled reconstruction) | 0.007235 J/token | 77.6 | 10,723.2 |
-| A100 80GB, weight-bound gate, same model and batch | 1.537721 J/token | 336.2 | 218.6 |
+| A100 80GB, weight-bound gate, same model and batch | 1.487141 J/token | 352.1 | 236.7 |
 
-That is a factor of 213 in tokens per joule, and **it is a ceiling on the ROM advantage, not a measurement of it**, for three reasons that all point the same way. The GPU is at batch 1, which is a GPU's worst operating point -- it re-reads the whole checkpoint from DRAM for one token, and the batched rows in the table below are the fair comparison. The ROM side's read energy is `assumed` over a 17x bracket. And the HC1 power gate says this model's ROM total is 2.6-3.2x below the shipping part's published card power, so the ROM joules here are a lower bound by roughly that factor.
+That is a factor of 206 in tokens per joule, and **it is a ceiling on the ROM advantage, not a measurement of it**, for three reasons that all point the same way. The GPU is at batch 1, which is a GPU's worst operating point -- it re-reads the whole checkpoint from DRAM for one token, and the batched rows in the table below are the fair comparison. The ROM side's read energy is `assumed` over a 17x bracket. And the HC1 power gate says this model's ROM total is 2.6-3.2x below the shipping part's published card power, so the ROM joules here are a lower bound by roughly that factor.
 
 **Where the remaining HC1 shortfall could live, none of it fitted.**
 The ROM array is charged its stated leakage density: 1.7 W at the point
@@ -394,28 +396,28 @@ always reduced modelled power, so every design was coolable at some speed
 and `thermal_scale` was exactly 1.0 at all 11,747 feasible points across
 both studies.
 
-- **279 of 3,331 feasible points (8.4%) are power-limited.**
+- **289 of 3,331 feasible points (8.7%) are power-limited.**
 - 0 points are uncoolable at any speed (static power alone at or above the cooling budget).
-- By family: gpu 279.
-- By area class: wafer (>=40,000 mm2) 279.
-- By KV store: hbm 279.
-- By batch: B=1 26, B=2 26, B=4 26, B=8 26, B=16 26, B=32 26, B=64 26, B=256 27, B=1024 31, B=4096 39.
+- By family: gpu 289.
+- By area class: wafer (>=40,000 mm2) 289.
+- By KV store: hbm 289.
+- By batch: B=1 26, B=2 26, B=4 26, B=8 26, B=16 26, B=32 26, B=64 27, B=256 32, B=1024 34, B=4096 40.
 
 The cooling limit binds, and it binds where a uniform multiplier on the old traffic-proportional model said it would NOT. It is not the wafers: wafer-scale ROM silicon is power-sparse, because a ROM sweep is a fixed cost spread over far more silicon, and the busiest one here reaches 43% of its budget. It is the SMALL, DENSE ARRAYS, and specifically the ones that put KV in HBM: the worst point's dynamic energy is dominated by KV traffic and not by the ROM sweep at all. The batch dependence the earlier uniform-multiplier analysis predicted does NOT survive -- static power does not scale with traffic, so batch 1 throttles too, and the worst point here is at batch 4096.
 
 | Family | Area class | Points | Throttled | Median power / budget | Worst power / budget | Peak W/mm2 | Median static share |
 |---|---|---:|---:|---:|---:|---:|---:|
-| gpu | wafer (>=40,000 mm2) | 1,735 | 279 | 41.6% | 100.0% | 0.625 | 84% |
+| gpu | wafer (>=40,000 mm2) | 1,735 | 289 | 42.9% | 100.0% | 0.625 | 82% |
 | rom | wafer (>=40,000 mm2) | 1,596 | 0 | 22.6% | 44.2% | 0.221 | 78% |
 
 ### The points that cannot be cooled at full speed
 
 | Design | Model | B | mm2 | KV | Throttle | Power / budget | Static share | tok/s | tok/s unthrottled |
 |---|---|---:|---:|---|---:|---|---:|---:|---:|
+| `Kimi-K3/b200_sxm-x116-nvl72-hybrid` | Kimi-K3 | 4096 | 185,600 | hbm | 1.214x | 116,000.0 / 116,000.0 W | 35% | 17.1 | 20.7 |
 | `Kimi-K3/b200_sxm-x91-pipeline` | Kimi-K3 | 4096 | 145,600 | hbm | 1.203x | 91,000.0 / 91,000.0 W | 35% | 5.0 | 6.0 |
 | `Kimi-K3/b200_sxm-x116-pipeline` | Kimi-K3 | 4096 | 185,600 | hbm | 1.191x | 116,000.0 / 116,000.0 W | 35% | 5.9 | 7.0 |
 | `Kimi-K3/b200_sxm-x140-pipeline` | Kimi-K3 | 4096 | 224,000 | hbm | 1.182x | 140,000.0 / 140,000.0 W | 35% | 6.8 | 8.0 |
-| `Kimi-K3/b200_sxm-x116-nvl72-hybrid` | Kimi-K3 | 4096 | 185,600 | hbm | 1.179x | 116,000.0 / 116,000.0 W | 35% | 17.1 | 20.1 |
 | `Kimi-K3/b200_sxm-x152-pipeline` | Kimi-K3 | 4096 | 243,200 | hbm | 1.179x | 152,000.0 / 152,000.0 W | 35% | 7.2 | 8.5 |
 | `Kimi-K3/b200_sxm-x159-pipeline` | Kimi-K3 | 4096 | 254,400 | hbm | 1.177x | 159,000.0 / 159,000.0 W | 35% | 7.4 | 8.7 |
 | `Kimi-K3/b200_sxm-x160-pipeline` | Kimi-K3 | 4096 | 256,000 | hbm | 1.177x | 160,000.0 / 160,000.0 W | 35% | 7.4 | 8.8 |
@@ -425,7 +427,7 @@ The cooling limit binds, and it binds where a uniform multiplier on the old traf
 | `Kimi-K3/b200_sxm-x172-pipeline` | Kimi-K3 | 4096 | 275,200 | hbm | 1.174x | 172,000.0 / 172,000.0 W | 35% | 7.8 | 9.2 |
 | `Kimi-K3/b200_sxm-x173-pipeline` | Kimi-K3 | 4096 | 276,800 | hbm | 1.174x | 173,000.0 / 173,000.0 W | 35% | 7.9 | 9.3 |
 
-The worst point's dynamic energy is weight read 73.7%, kv read 13.3%, arithmetic 12.9%, operand delivery 0.2%. **The ROM sweep is not what melts it.** A mask-ROM array
+The worst point's dynamic energy is kv read 35.7%, arithmetic 34.5%, weight read 29.6%, operand delivery 0.1%. **The ROM sweep is not what melts it.** A mask-ROM array
 reads its weights for almost nothing; what it still pays for, at
 the same rate a GPU does, is KV traffic to DRAM. That is an
 argument for keeping KV on die, and it is visible here only
@@ -444,16 +446,16 @@ One row per (model, batch). The ROM design is the smallest silicon within 5% of 
 
 | Model | B | mm2 | ROM design | ROM J/token | ROM W | ROM binds | iso-area GPU | GPU J/token | GPU W | GPU binds | ROM tokens/joule |
 |---|---:|---:|---|---:|---:|---|---|---:|---:|---|---:|
-| Kimi-K3 | 1 | 323,575 | `Kimi-K3/ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 14.666849 | 26,099.2 | layer_fixed_latency | `Kimi-K3/b200_sxm-x202-nvl72-hybrid` | 260.579961 | 83,903.4 | layer_fixed_latency | 17.77x |
-| Kimi-K3 | 2 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 25.544216 | 101,673.8 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 298.185223 | 192,247.5 | layer_fixed_latency | 11.67x |
-| Kimi-K3 | 4 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 13.009914 | 101,673.8 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 156.670602 | 192,247.5 | layer_fixed_latency | 12.04x |
-| Kimi-K3 | 8 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 6.742762 | 101,673.8 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 84.749248 | 193,100.3 | layer_fixed_latency | 12.57x |
-| Kimi-K3 | 16 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 3.609187 | 101,673.8 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 45.273358 | 199,611.8 | layer_fixed_latency | 12.54x |
-| Kimi-K3 | 32 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 2.266179 | 111,521.5 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 25.475157 | 211,159.9 | layer_fixed_latency | 11.24x |
-| Kimi-K3 | 64 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1.562410 | 126,467.4 | kv_read | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 15.461171 | 229,640.7 | layer_fixed_latency | 9.90x |
-| Kimi-K3 | 256 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1.148960 | 149,757.4 | kv_read | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 7.956176 | 309,921.3 | weight_read | 6.92x |
-| Kimi-K3 | 1024 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-pipeline-x16` | 1.068814 | 158,009.6 | kv_read | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 4.524954 | 362,551.7 | weight_read | 4.23x |
-| Kimi-K3 | 4096 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-pipeline-x16` | 1.032420 | 156,089.9 | kv_read | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 2.430105 | 365,084.4 | link_latency | 2.35x |
+| Kimi-K3 | 1 | 323,575 | `Kimi-K3/ROM-N5-native-SRAMKV-wafer-hybrid-x7` | 14.666849 | 26,099.2 | layer_fixed_latency | `Kimi-K3/b200_sxm-x202-nvl72-hybrid` | 160.458350 | 92,940.1 | link_latency | 10.94x |
+| Kimi-K3 | 2 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 25.544216 | 101,673.8 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 183.689717 | 212,862.3 | link_latency | 7.19x |
+| Kimi-K3 | 4 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 13.009914 | 101,673.8 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 99.422849 | 212,862.3 | link_latency | 7.64x |
+| Kimi-K3 | 8 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 6.742762 | 101,673.8 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 56.125371 | 214,144.6 | link_latency | 8.32x |
+| Kimi-K3 | 16 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 3.609187 | 101,673.8 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 30.961420 | 223,695.2 | link_latency | 8.58x |
+| Kimi-K3 | 32 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 2.266179 | 111,521.5 | layer_fixed_latency | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 18.319188 | 239,639.3 | link_latency | 8.08x |
+| Kimi-K3 | 64 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1.562410 | 126,467.4 | kv_read | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 11.883186 | 262,738.8 | link_latency | 7.61x |
+| Kimi-K3 | 256 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16` | 1.148960 | 149,757.4 | kv_read | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 7.061679 | 350,512.6 | weight_read | 6.15x |
+| Kimi-K3 | 1024 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-pipeline-x16` | 1.068814 | 158,009.6 | kv_read | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 4.301330 | 387,520.1 | weight_read | 4.02x |
+| Kimi-K3 | 4096 | 739,600 | `Kimi-K3/ROM-N5-native-HBMKV-wafer-pipeline-x16` | 1.032420 | 156,089.9 | kv_read | `Kimi-K3/b200_sxm-x462-nvl72-hybrid` | 2.374199 | 376,201.4 | link_latency | 2.30x |
 
 **Read this with the power gates beside it.** The ROM side's energy
 rests on `energy.rom_read_j_per_byte`, which is `assumed` over a
@@ -522,11 +524,11 @@ rungs of silicon.
 
 | Model | Wafer-eq | mm2 | ROM before | topo | ROM after | topo | ROM /x | GPU before | topo | GPU after | topo | GPU /x | Ratio before | Ratio after | Ratio change |
 |---|---:|---:|---:|---|---:|---|---:|---:|---|---:|---|---:|---:|---:|---:|
-| Kimi-K3 | 6 | 277,350 | 2,733.9 | wafer-pipeline | 1,681.7 | wafer-hybrid | 1.63x | 401.4 | pipeline | 284.2 | hybrid | 1.41x | 6.81x | 5.92x | 0.87x |
-| Kimi-K3 | 8 | 369,800 | 2,971.1 | wafer-pipeline | 1,777.2 | wafer-hybrid | 1.67x | 406.4 | pipeline | 283.8 | hybrid | 1.43x | 7.31x | 6.26x | 0.86x |
-| Kimi-K3 | 12 | 554,700 | 2,971.1 | wafer-pipeline | 1,652.8 | wafer-hybrid | 1.80x | 411.4 | pipeline | 288.2 | hybrid | 1.43x | 7.22x | 5.73x | 0.79x |
+| Kimi-K3 | 6 | 277,350 | 2,733.9 | wafer-pipeline | 1,681.7 | wafer-hybrid | 1.63x | 877.3 | pipeline | 475.2 | hybrid | 1.85x | 3.12x | 3.54x | 1.14x |
+| Kimi-K3 | 8 | 369,800 | 2,971.1 | wafer-pipeline | 1,777.2 | wafer-hybrid | 1.67x | 902.9 | pipeline | 474.0 | hybrid | 1.90x | 3.29x | 3.75x | 1.14x |
+| Kimi-K3 | 12 | 554,700 | 2,971.1 | wafer-pipeline | 1,652.8 | wafer-hybrid | 1.80x | 930.1 | pipeline | 486.6 | hybrid | 1.91x | 3.19x | 3.40x | 1.06x |
 
-**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 0.79x to 0.87x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
+**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 1.06x to 1.14x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
 
 
 ## Iso-area comparison
@@ -559,25 +561,25 @@ is the error this study made.
 
 | Model | B | Pick | ROM design | ROM mm2 | ROM user tok/s | ROM aggregate tok/s | ROM binds on | GPU | GPU mm2 | Area ratio | GPU parallelism | GPU link us | GPU user tok/s | GPU aggregate tok/s | GPU binds on | Per-user ratio | Aggregate ratio | PP-only ratio | Ratio without the layer cap |
 |---|---:|---|---|---:|---:|---:|---|---|---:|---:|---|---:|---:|---:|---|---:|---:|---:|---:|
-| Kimi-K3 | 1 | fastest | Kimi-K3/ROM-N5-native-SRAMKV-wafer-hybrid-x7 | 323,575 | 1,779.5 | 1,779.5 | layer_fixed_latency | Kimi-K3/b200_sxm-x202-nvl72-hybrid | 323,200 | 1.00x | hybrid | 976.96 | 288.4 | 865.3 | layer_fixed_latency | 6.17x | 0.21x | 41.52x | 6.17x |
-| Kimi-K3 | 1 | smallest silicon | Kimi-K3/ROM-N5-native-SRAMKV-array-hw-hybrid-x274 | 223,310 | 890.9 | 890.9 | layer_fixed_latency | Kimi-K3/b200_sxm-x140-nvl72-hybrid | 224,000 | 1.00x | hybrid | 971.20 | 289.9 | 579.8 | layer_fixed_latency | 3.07x | 0.15x | 20.79x | 3.07x |
-| Kimi-K3 | 2 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,760.7 | 28,170.8 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 999.98 | 286.0 | 2,002.1 | layer_fixed_latency | 6.16x | 1.42x | 41.08x | 6.16x |
-| Kimi-K3 | 2 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 1,176.0 | 7,056.2 | layer_fixed_latency | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 976.93 | 283.1 | 849.4 | layer_fixed_latency | 4.15x | 0.99x | 27.44x | 4.15x |
-| Kimi-K3 | 4 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,760.7 | 28,170.8 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 999.98 | 286.0 | 2,002.1 | layer_fixed_latency | 6.16x | 1.42x | 41.08x | 6.16x |
-| Kimi-K3 | 4 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 1,176.0 | 7,056.2 | layer_fixed_latency | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 984.54 | 280.5 | 1,121.8 | layer_fixed_latency | 4.19x | 0.99x | 27.44x | 4.19x |
-| Kimi-K3 | 8 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,760.7 | 28,170.8 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,005.38 | 284.8 | 2,278.5 | layer_fixed_latency | 6.18x | 1.42x | 41.08x | 6.18x |
-| Kimi-K3 | 8 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 1,057.2 | 11,628.8 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 1,014.99 | 270.4 | 2,162.9 | layer_fixed_latency | 3.91x | 1.62x | 24.67x | 3.91x |
-| Kimi-K3 | 16 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,760.7 | 28,170.8 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,048.55 | 275.6 | 4,409.0 | layer_fixed_latency | 6.39x | 1.42x | 41.08x | 6.39x |
-| Kimi-K3 | 16 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 838.1 | 13,410.4 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 1,075.89 | 252.6 | 4,041.4 | layer_fixed_latency | 3.32x | 1.87x | 19.56x | 3.32x |
-| Kimi-K3 | 32 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,537.9 | 49,211.2 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,134.89 | 259.0 | 8,288.9 | layer_fixed_latency | 5.94x | 2.49x | 35.88x | 5.94x |
-| Kimi-K3 | 32 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 568.3 | 18,184.7 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 1,197.70 | 224.4 | 7,182.2 | layer_fixed_latency | 2.53x | 2.53x | 13.26x | 2.53x |
-| Kimi-K3 | 64 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,264.7 | 80,943.8 | kv_read | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,307.58 | 232.1 | 14,852.7 | layer_fixed_latency | 5.45x | 4.09x | 29.51x | 5.45x |
-| Kimi-K3 | 64 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 327.8 | 20,981.1 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 1,441.30 | 186.5 | 11,933.5 | layer_fixed_latency | 1.76x | 1.76x | 7.65x | 1.76x |
-| Kimi-K3 | 256 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 509.1 | 130,341.7 | kv_read | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,701.05 | 152.2 | 38,953.6 | weight_read | 3.35x | 3.35x | 11.88x | 3.35x |
-| Kimi-K3 | 256 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 91.4 | 23,390.9 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 2,902.94 | 107.9 | 27,618.5 | weight_read | 0.85x | 0.85x | 2.39x | 0.85x |
-| Kimi-K3 | 1024 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-pipeline-x16 | 739,600 | 144.4 | 147,836.4 | kv_read | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 3,886.28 | 78.2 | 80,122.7 | weight_read | 1.85x | 1.85x | 4.29x | 1.85x |
-| Kimi-K3 | 1024 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-pipeline-x327 | 266,505 | 23.3 | 23,847.4 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 4,919.74 | 54.0 | 55,336.6 | weight_read | 0.43x | 0.43x | 1.16x | 0.43x |
-| Kimi-K3 | 4096 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-pipeline-x16 | 739,600 | 36.9 | 151,188.3 | kv_read | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 12,627.19 | 36.7 | 150,234.0 | link_latency | 1.01x | 1.01x | 2.32x | 1.01x |
+| Kimi-K3 | 1 | fastest | Kimi-K3/ROM-N5-native-SRAMKV-wafer-hybrid-x7 | 323,575 | 1,779.5 | 1,779.5 | layer_fixed_latency | Kimi-K3/b200_sxm-x202-nvl72-hybrid | 323,200 | 1.00x | hybrid | 976.96 | 487.2 | 1,461.5 | link_latency | 3.65x | 0.21x | 41.52x | 3.65x |
+| Kimi-K3 | 1 | smallest silicon | Kimi-K3/ROM-N5-native-SRAMKV-array-hw-hybrid-x274 | 223,310 | 890.9 | 890.9 | layer_fixed_latency | Kimi-K3/b200_sxm-x140-nvl72-hybrid | 224,000 | 1.00x | hybrid | 971.20 | 491.4 | 982.8 | link_latency | 1.81x | 0.15x | 20.79x | 1.81x |
+| Kimi-K3 | 2 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,760.7 | 28,170.8 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 999.98 | 480.3 | 3,362.3 | link_latency | 3.67x | 1.42x | 41.08x | 3.67x |
+| Kimi-K3 | 2 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 1,176.0 | 7,056.2 | layer_fixed_latency | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 976.93 | 472.2 | 1,416.7 | link_latency | 2.49x | 0.99x | 27.44x | 2.49x |
+| Kimi-K3 | 4 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,760.7 | 28,170.8 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 999.98 | 480.3 | 3,362.3 | link_latency | 3.67x | 1.42x | 41.08x | 3.67x |
+| Kimi-K3 | 4 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 1,176.0 | 7,056.2 | layer_fixed_latency | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 984.54 | 464.9 | 1,859.4 | link_latency | 2.53x | 0.99x | 27.44x | 2.53x |
+| Kimi-K3 | 8 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,760.7 | 28,170.8 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,005.38 | 476.9 | 3,815.5 | link_latency | 3.69x | 1.42x | 41.08x | 3.69x |
+| Kimi-K3 | 8 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 1,057.2 | 11,628.8 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 1,014.99 | 437.7 | 3,502.0 | link_latency | 2.42x | 1.62x | 24.67x | 2.42x |
+| Kimi-K3 | 16 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,760.7 | 28,170.8 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,048.55 | 451.6 | 7,225.0 | link_latency | 3.90x | 1.42x | 41.08x | 3.90x |
+| Kimi-K3 | 16 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 838.1 | 13,410.4 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 1,075.89 | 393.0 | 6,287.8 | link_latency | 2.13x | 1.87x | 19.56x | 2.13x |
+| Kimi-K3 | 32 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,537.9 | 49,211.2 | layer_fixed_latency | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,134.89 | 408.8 | 13,081.3 | link_latency | 3.76x | 2.49x | 35.88x | 3.76x |
+| Kimi-K3 | 32 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 568.3 | 18,184.7 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 1,197.70 | 328.8 | 10,522.5 | link_latency | 1.73x | 1.73x | 13.26x | 1.73x |
+| Kimi-K3 | 64 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 1,264.7 | 80,943.8 | kv_read | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,307.58 | 345.5 | 22,110.1 | link_latency | 3.66x | 3.66x | 29.51x | 3.66x |
+| Kimi-K3 | 64 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 327.8 | 20,981.1 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 1,441.30 | 253.2 | 16,207.9 | link_latency | 1.29x | 1.29x | 7.65x | 1.29x |
+| Kimi-K3 | 256 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16 | 739,600 | 509.1 | 130,341.7 | kv_read | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 1,701.05 | 193.9 | 49,635.9 | weight_read | 2.63x | 2.63x | 11.88x | 2.63x |
+| Kimi-K3 | 256 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-hybrid-x327 | 266,505 | 91.4 | 23,390.9 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 2,902.94 | 127.3 | 32,591.6 | weight_read | 0.72x | 0.72x | 2.39x | 0.72x |
+| Kimi-K3 | 1024 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-pipeline-x16 | 739,600 | 144.4 | 147,836.4 | kv_read | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 3,886.28 | 88.0 | 90,093.1 | weight_read | 1.64x | 1.64x | 4.29x | 1.64x |
+| Kimi-K3 | 1024 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-pipeline-x327 | 266,505 | 23.3 | 23,847.4 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 4,919.74 | 58.5 | 59,916.1 | weight_read | 0.40x | 0.40x | 1.16x | 0.40x |
+| Kimi-K3 | 4096 | fastest | Kimi-K3/ROM-N5-native-HBMKV-wafer-pipeline-x16 | 739,600 | 36.9 | 151,188.3 | kv_read | Kimi-K3/b200_sxm-x462-nvl72-hybrid | 739,200 | 1.00x | hybrid | 12,627.19 | 38.7 | 158,454.0 | link_latency | 0.95x | 0.95x | 2.32x | 0.95x |
 | Kimi-K3 | 4096 | smallest silicon | Kimi-K3/ROM-N5-native-HBMKV-array-hw-pipeline-x327 | 266,505 | 5.8 | 23,845.4 | compute | Kimi-K3/b200_sxm-x167-nvl72-hybrid | 267,200 | 1.00x | hybrid | 9,811.85 | 22.1 | 90,690.9 | thermal | 0.26x | 0.26x | 0.76x | 0.26x |
 
 ## The NVLink domain is a published number, and there are two of them
@@ -590,32 +592,32 @@ best topology at each cluster size.
 
 | Model | GPUs | mm2 | Link us at domain 72 | Link us at domain 72 | tok/s at 72 | tok/s at 72 |
 |---|---:|---:|---:|---:|---:|---:|
-| Kimi-K3 | 29 | 46,400 | 963.09 | 454.98 | 258.9 | 298.1 |
-| Kimi-K3 | 58 | 92,800 | 963.36 | 455.14 | 285.4 | 333.9 |
-| Kimi-K3 | 66 | 105,600 | 963.39 | 455.15 | 289.0 | 338.8 |
-| Kimi-K3 | 72 | 115,200 | 963.41 | 455.16 | 291.3 | 341.9 |
-| Kimi-K3 | 73 | 116,800 | 971.17 | 457.48 | 268.6 | 311.6 |
-| Kimi-K3 | 87 | 139,200 | 971.17 | 457.48 | 275.4 | 320.8 |
-| Kimi-K3 | 91 | 145,600 | 971.17 | 457.48 | 277.0 | 323.0 |
-| Kimi-K3 | 116 | 185,600 | 971.17 | 457.48 | 284.8 | 333.6 |
-| Kimi-K3 | 140 | 224,000 | 971.20 | 457.48 | 289.9 | 340.6 |
-| Kimi-K3 | 152 | 243,200 | 976.93 | 459.80 | 280.2 | 327.7 |
-| Kimi-K3 | 159 | 254,400 | 976.93 | 459.80 | 281.6 | 329.6 |
-| Kimi-K3 | 160 | 256,000 | 976.93 | 459.80 | 281.8 | 329.9 |
-| Kimi-K3 | 161 | 257,600 | 976.93 | 459.80 | 282.0 | 330.2 |
-| Kimi-K3 | 162 | 259,200 | 976.93 | 459.80 | 282.2 | 330.4 |
-| Kimi-K3 | 167 | 267,200 | 976.93 | 459.80 | 283.1 | 331.7 |
-| Kimi-K3 | 172 | 275,200 | 976.93 | 459.80 | 284.0 | 332.9 |
-| Kimi-K3 | 173 | 276,800 | 976.93 | 459.80 | 284.2 | 333.1 |
-| Kimi-K3 | 187 | 299,200 | 976.93 | 459.80 | 286.4 | 336.2 |
-| Kimi-K3 | 192 | 307,200 | 976.93 | 459.80 | 287.1 | 337.2 |
-| Kimi-K3 | 195 | 312,000 | 976.96 | 459.80 | 287.5 | 337.7 |
-| Kimi-K3 | 198 | 316,800 | 976.96 | 459.80 | 287.9 | 338.3 |
-| Kimi-K3 | 201 | 321,600 | 976.96 | 459.80 | 288.3 | 338.8 |
-| Kimi-K3 | 202 | 323,200 | 976.96 | 459.80 | 288.4 | 339.0 |
-| Kimi-K3 | 231 | 369,600 | 982.69 | 462.12 | 283.8 | 332.9 |
-| Kimi-K3 | 347 | 555,200 | 988.47 | 464.43 | 288.2 | 339.5 |
-| Kimi-K3 | 462 | 739,200 | 999.98 | 469.07 | 286.0 | 337.2 |
+| Kimi-K3 | 29 | 46,400 | 963.09 | 454.98 | 408.4 | 515.4 |
+| Kimi-K3 | 58 | 92,800 | 963.36 | 455.14 | 478.7 | 632.6 |
+| Kimi-K3 | 66 | 105,600 | 963.39 | 455.15 | 488.9 | 650.6 |
+| Kimi-K3 | 72 | 115,200 | 963.41 | 455.16 | 495.3 | 661.9 |
+| Kimi-K3 | 73 | 116,800 | 971.17 | 457.48 | 433.2 | 557.1 |
+| Kimi-K3 | 87 | 139,200 | 971.17 | 457.48 | 451.1 | 587.2 |
+| Kimi-K3 | 91 | 145,600 | 971.17 | 457.48 | 455.5 | 594.6 |
+| Kimi-K3 | 116 | 185,600 | 971.17 | 457.48 | 476.9 | 631.7 |
+| Kimi-K3 | 140 | 224,000 | 971.20 | 457.48 | 491.4 | 657.3 |
+| Kimi-K3 | 152 | 243,200 | 976.93 | 459.80 | 464.1 | 610.7 |
+| Kimi-K3 | 159 | 254,400 | 976.93 | 459.80 | 468.1 | 617.6 |
+| Kimi-K3 | 160 | 256,000 | 976.93 | 459.80 | 468.6 | 618.5 |
+| Kimi-K3 | 161 | 257,600 | 976.93 | 459.80 | 469.1 | 619.4 |
+| Kimi-K3 | 162 | 259,200 | 976.93 | 459.80 | 469.7 | 620.4 |
+| Kimi-K3 | 167 | 267,200 | 976.93 | 459.80 | 472.2 | 624.8 |
+| Kimi-K3 | 172 | 275,200 | 976.93 | 459.80 | 474.7 | 629.1 |
+| Kimi-K3 | 173 | 276,800 | 976.93 | 459.80 | 475.2 | 630.0 |
+| Kimi-K3 | 187 | 299,200 | 976.93 | 459.80 | 481.4 | 640.9 |
+| Kimi-K3 | 192 | 307,200 | 976.93 | 459.80 | 483.4 | 644.5 |
+| Kimi-K3 | 195 | 312,000 | 976.96 | 459.80 | 484.6 | 646.6 |
+| Kimi-K3 | 198 | 316,800 | 976.96 | 459.80 | 485.7 | 648.6 |
+| Kimi-K3 | 201 | 321,600 | 976.96 | 459.80 | 486.8 | 650.6 |
+| Kimi-K3 | 202 | 323,200 | 976.96 | 459.80 | 487.2 | 651.3 |
+| Kimi-K3 | 231 | 369,600 | 982.69 | 462.12 | 474.0 | 629.2 |
+| Kimi-K3 | 347 | 555,200 | 988.47 | 464.43 | 486.6 | 653.2 |
+| Kimi-K3 | 462 | 739,200 | 999.98 | 469.07 | 480.3 | 644.8 |
 
 ## The GPU's own topology choice, at batch 1
 
@@ -635,32 +637,32 @@ second while the same silicon tensor-parallel reads in the hundreds.
 
 | Model | GPUs | mm2 | Pipeline tok/s | Tensor tok/s | Hybrid tok/s | Best | Best link us | Link share | Binds on |
 |---|---:|---:|---:|---:|---:|---|---:|---:|---|
-| Kimi-K3 | 29 | 46,400 | 42.9 | 258.9 | 165.6 | tensor | 963.09 | 24.9% | layer_fixed_latency |
-| Kimi-K3 | 58 | 92,800 | 42.9 | 285.4 | 164.9 | tensor | 963.36 | 27.5% | layer_fixed_latency |
-| Kimi-K3 | 66 | 105,600 | 42.9 | 289.0 | 165.7 | tensor | 963.39 | 27.8% | layer_fixed_latency |
-| Kimi-K3 | 72 | 115,200 | 42.9 | 291.3 | 172.5 | tensor | 963.41 | 28.1% | layer_fixed_latency |
-| Kimi-K3 | 73 | 116,800 | 42.9 | 170.8 | 268.6 | hybrid | 971.17 | 26.1% | layer_fixed_latency |
-| Kimi-K3 | 87 | 139,200 | 42.9 | 172.1 | 275.4 | hybrid | 971.17 | 26.7% | layer_fixed_latency |
-| Kimi-K3 | 91 | 145,600 | 42.9 | 172.4 | 277.0 | hybrid | 971.17 | 26.9% | layer_fixed_latency |
-| Kimi-K3 | 116 | 185,600 | 42.9 | 173.9 | 284.8 | hybrid | 971.17 | 27.7% | layer_fixed_latency |
-| Kimi-K3 | 140 | 224,000 | 42.9 | 174.9 | 289.9 | hybrid | 971.20 | 28.2% | layer_fixed_latency |
-| Kimi-K3 | 152 | 243,200 | 42.9 | 173.8 | 280.2 | hybrid | 976.93 | 27.4% | layer_fixed_latency |
-| Kimi-K3 | 159 | 254,400 | 42.9 | 174.0 | 281.6 | hybrid | 976.93 | 27.5% | layer_fixed_latency |
-| Kimi-K3 | 160 | 256,000 | 42.9 | 174.0 | 281.8 | hybrid | 976.93 | 27.5% | layer_fixed_latency |
-| Kimi-K3 | 161 | 257,600 | 42.9 | 174.0 | 282.0 | hybrid | 976.93 | 27.6% | layer_fixed_latency |
-| Kimi-K3 | 162 | 259,200 | 42.9 | 174.1 | 282.2 | hybrid | 976.93 | 27.6% | layer_fixed_latency |
-| Kimi-K3 | 167 | 267,200 | 42.9 | 174.2 | 283.1 | hybrid | 976.93 | 27.7% | layer_fixed_latency |
-| Kimi-K3 | 172 | 275,200 | 42.9 | 174.3 | 284.0 | hybrid | 976.93 | 27.7% | layer_fixed_latency |
-| Kimi-K3 | 173 | 276,800 | 42.9 | 174.3 | 284.2 | hybrid | 976.93 | 27.8% | layer_fixed_latency |
-| Kimi-K3 | 187 | 299,200 | 42.9 | 174.6 | 286.4 | hybrid | 976.93 | 28.0% | layer_fixed_latency |
-| Kimi-K3 | 192 | 307,200 | 42.9 | 174.7 | 287.1 | hybrid | 976.93 | 28.0% | layer_fixed_latency |
-| Kimi-K3 | 195 | 312,000 | 42.9 | 174.7 | 287.5 | hybrid | 976.96 | 28.1% | layer_fixed_latency |
-| Kimi-K3 | 198 | 316,800 | 42.9 | 174.8 | 287.9 | hybrid | 976.96 | 28.1% | layer_fixed_latency |
-| Kimi-K3 | 201 | 321,600 | 42.9 | 174.8 | 288.3 | hybrid | 976.96 | 28.2% | layer_fixed_latency |
-| Kimi-K3 | 202 | 323,200 | 42.9 | 174.8 | 288.4 | hybrid | 976.96 | 28.2% | layer_fixed_latency |
-| Kimi-K3 | 231 | 369,600 | 42.9 | 174.5 | 283.8 | hybrid | 982.69 | 27.9% | layer_fixed_latency |
-| Kimi-K3 | 347 | 555,200 | 42.9 | 175.0 | 288.2 | hybrid | 988.47 | 28.5% | layer_fixed_latency |
-| Kimi-K3 | 462 | 739,200 | 42.9 | 175.0 | 286.0 | hybrid | 999.98 | 28.6% | layer_fixed_latency |
+| Kimi-K3 | 29 | 46,400 | 42.9 | 408.4 | 216.2 | tensor | 963.09 | 39.3% | link_latency |
+| Kimi-K3 | 58 | 92,800 | 42.9 | 478.7 | 215.1 | tensor | 963.36 | 46.1% | link_latency |
+| Kimi-K3 | 66 | 105,600 | 42.9 | 488.9 | 216.4 | tensor | 963.39 | 47.1% | link_latency |
+| Kimi-K3 | 72 | 115,200 | 42.9 | 495.3 | 228.1 | tensor | 963.41 | 47.7% | link_latency |
+| Kimi-K3 | 73 | 116,800 | 42.9 | 225.2 | 433.2 | hybrid | 971.17 | 42.1% | link_latency |
+| Kimi-K3 | 87 | 139,200 | 42.9 | 227.5 | 451.1 | hybrid | 971.17 | 43.8% | link_latency |
+| Kimi-K3 | 91 | 145,600 | 42.9 | 228.1 | 455.5 | hybrid | 971.17 | 44.2% | link_latency |
+| Kimi-K3 | 116 | 185,600 | 42.9 | 230.7 | 476.9 | hybrid | 971.17 | 46.3% | link_latency |
+| Kimi-K3 | 140 | 224,000 | 42.9 | 232.3 | 491.4 | hybrid | 971.20 | 47.7% | link_latency |
+| Kimi-K3 | 152 | 243,200 | 42.9 | 230.4 | 464.1 | hybrid | 976.93 | 45.3% | link_latency |
+| Kimi-K3 | 159 | 254,400 | 42.9 | 230.8 | 468.1 | hybrid | 976.93 | 45.7% | link_latency |
+| Kimi-K3 | 160 | 256,000 | 42.9 | 230.8 | 468.6 | hybrid | 976.93 | 45.8% | link_latency |
+| Kimi-K3 | 161 | 257,600 | 42.9 | 230.9 | 469.1 | hybrid | 976.93 | 45.8% | link_latency |
+| Kimi-K3 | 162 | 259,200 | 42.9 | 230.9 | 469.7 | hybrid | 976.93 | 45.9% | link_latency |
+| Kimi-K3 | 167 | 267,200 | 42.9 | 231.1 | 472.2 | hybrid | 976.93 | 46.1% | link_latency |
+| Kimi-K3 | 172 | 275,200 | 42.9 | 231.3 | 474.7 | hybrid | 976.93 | 46.4% | link_latency |
+| Kimi-K3 | 173 | 276,800 | 42.9 | 231.3 | 475.2 | hybrid | 976.93 | 46.4% | link_latency |
+| Kimi-K3 | 187 | 299,200 | 42.9 | 231.8 | 481.4 | hybrid | 976.93 | 47.0% | link_latency |
+| Kimi-K3 | 192 | 307,200 | 42.9 | 232.0 | 483.4 | hybrid | 976.93 | 47.2% | link_latency |
+| Kimi-K3 | 195 | 312,000 | 42.9 | 232.1 | 484.6 | hybrid | 976.96 | 47.3% | link_latency |
+| Kimi-K3 | 198 | 316,800 | 42.9 | 232.2 | 485.7 | hybrid | 976.96 | 47.5% | link_latency |
+| Kimi-K3 | 201 | 321,600 | 42.9 | 232.2 | 486.8 | hybrid | 976.96 | 47.6% | link_latency |
+| Kimi-K3 | 202 | 323,200 | 42.9 | 232.3 | 487.2 | hybrid | 976.96 | 47.6% | link_latency |
+| Kimi-K3 | 231 | 369,600 | 42.9 | 231.7 | 474.0 | hybrid | 982.69 | 46.6% | link_latency |
+| Kimi-K3 | 347 | 555,200 | 42.9 | 232.6 | 486.6 | hybrid | 988.47 | 48.1% | link_latency |
+| Kimi-K3 | 462 | 739,200 | 42.9 | 232.5 | 480.3 | hybrid | 999.98 | 48.0% | link_latency |
 
 ## Array or wafer: the crossover, reported rather than assumed
 
@@ -1388,7 +1390,7 @@ large fraction of one and a rounding error on the other.
 
 | Family | Model | B | Fixed latency (us) | Share of the fastest step |
 |---|---|---:|---:|---:|
-| gpu | Kimi-K3 | 1 | 2,180.10 | 63.5% |
+| gpu | Kimi-K3 | 1 | 765.73 | 37.9% |
 | rom | Kimi-K3 | 1 | 283.91 | 52.9% |
 
 ### 4. KV access granularity, which is a layout choice
@@ -1449,12 +1451,11 @@ reduces the bytes fetched.
 
 | Family | Binding constraint | Points |
 |---|---|---:|
-| gpu | compute | 8 |
+| gpu | compute | 5 |
 | gpu | infeasible | 45 |
-| gpu | layer_fixed_latency | 192 |
-| gpu | link_latency | 869 |
-| gpu | thermal | 279 |
-| gpu | weight_read | 387 |
+| gpu | link_latency | 1038 |
+| gpu | thermal | 289 |
+| gpu | weight_read | 403 |
 | rom | compute | 456 |
 | rom | infeasible | 1704 |
 | rom | kv_read | 61 |
@@ -1471,7 +1472,7 @@ Why the infeasible points are infeasible:
 
 ## Mechanical consistency audit
 
-**FAIL** over 102,456 checks.
+**FAIL** over 102,466 checks.
 
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N5-native-SRAMKV-array-hw-pipeline-x274', 'Kimi-K3', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('Kimi-K3/ROM-N5-native-SRAMKV-array-hw-pipeline-x299', 'Kimi-K3', 1)
@@ -1534,7 +1535,7 @@ Why the infeasible points are infeasible:
 |---|---:|
 | measured | 4 |
 | published | 75 |
-| derived | 49 |
+| derived | 51 |
 | assumed | 84 |
 
 Every `assumed` input, in full, because an ungraded assumption is the

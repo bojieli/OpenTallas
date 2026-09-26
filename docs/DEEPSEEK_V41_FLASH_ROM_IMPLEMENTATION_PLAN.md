@@ -68,8 +68,8 @@ priced, and this plan has to deliver or refute:
    tables live decides whether the primary target is two wafers or three, and
    whether an array is 51 reticles or 84. Section 3 decides it.
 3. **The packaged array is now the winning class for this model.** At N5 the
-   best array is 7.49× <!-- figure: 7.49 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].per_user_speed_ratio" name="V4.1 N5 array ratio B1" -->
-   B200 on NVL72 per user at batch 1 and 7.22× <!-- figure: 7.22 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].per_user_speed_ratio" name="V4.1 N5 array ratio B64" -->
+   best array is 4.94× <!-- figure: 4.94 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].per_user_speed_ratio" name="V4.1 N5 array ratio B1" -->
+   B200 on NVL72 per user at batch 1 and 5.56× <!-- figure: 5.56 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].per_user_speed_ratio" name="V4.1 N5 array ratio B64" -->
    at batch 64 ([analytical report](ANALYTICAL_REPORT.md)). With GPU-class
    NVLink and InfiniBand it would only tie: both would pay hundreds of µs of
    collectives per token. The array target exists
