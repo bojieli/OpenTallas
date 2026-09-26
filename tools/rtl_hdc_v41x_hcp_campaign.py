@@ -60,7 +60,13 @@ SPEC = {"lanes": 2048, "latency_one_position_cycles": 1000, "mtp_positions": 6,
         "mtp_lane_work_cycles": 24 * SHIPPED_K * 6 // 2048}
 # (W, TL, FP units): the spec engine (host-float stand-ins for the FP units: see DPI_SV), the routed tile
 # with the real units, and the tile again with the stand-ins (must match the real units result for result)
-CONFIGS = {"spec_w256": (256, 4, "dpi"), "tile_w8": (8, 9, "rtl"), "tile_w8_dpi": (8, 9, "dpi")}
+CONFIGS = {"spec_w256": (256, 4, "dpi"), "mtp_m2_w512": (512, 3, "dpi"), "tile_w8": (8, 9, "rtl"),
+           "tile_w8_dpi": (8, 9, "dpi")}
+# The sublayer body the projection must fit (tools/arch_budget_v41.py, results/arch/arch_budget_v41.json
+# mtp.speculation.200000): per hc op, rom_m1 verify busy 1,440 cycles of which 720 are ON the critical path
+# (verify_path_us / 80 ops), so the body the side branch overlaps is 1,440 - 720 = 720 cycles; at m = 6 the
+# path share is 0.  The budget's MTP design point is m = 2 (docs/ARCH_SPEC_V41.md section 7): 2 x 2,048 lanes.
+HC_OPS_PER_TOKEN = 80
 MUTATIONS = [
     ("tail passes a stored sibling through instead of adding it", "a(bitl ? slot : 32'd0)", "a(32'd0)"),
     ("last run stored instead of moved up", "wire go    = ev_v[gv] && (bitl || lastr);",
@@ -415,14 +421,29 @@ def run(quick=False, configs=None, scratch=None) -> dict:
     }
 
 
+def body_cycles():
+    """The sublayer body an hc op overlaps under a 6-position verify pass, from the committed budget."""
+    bud = json.loads(BUDGET.read_text())
+    clock = bud["clock_hz"]
+    m1 = bud["mtp"]["speculation"]["200000"]["rom_m1"]["classes"]["hc_projection"]
+    busy = m1["verify_busy_us"] / HC_OPS_PER_TOKEN * 1e-6 * clock
+    path = m1["verify_path_us"] / HC_OPS_PER_TOKEN * 1e-6 * clock
+    return {"verify_busy_cycles_m1": round(busy, 1), "verify_on_path_cycles_m1": round(path, 1),
+            "body_cycles": round(busy - path, 1), "clock_hz": clock,
+            "source": "results/arch/arch_budget_v41.json mtp.speculation.200000.rom_m1.classes.hc_projection "
+                      "(per op: / 80 hc ops per token)"}
+
+
 def spec_check(benches):
     b = benches.get("spec_w256")
     if not b or not b["run"].get("cases"):
         return None
+    body = body_cycles()
     cs = {c["name"]: c for c in b["run"]["cases"] if "name" in c}
     one = cs.get("shipped typical x1")
     six = cs.get("shipped typical x6 (MTP verify)")
-    out = {"lanes": {"spec": SPEC["lanes"], "measured": b["lanes"], "met": b["lanes"] >= SPEC["lanes"]}}
+    out = {"lanes": {"spec": SPEC["lanes"], "measured": b["lanes"], "met": b["lanes"] >= SPEC["lanes"]},
+           "sublayer_body": body}
     if one:
         out["one_position_latency_cycles"] = {
             "spec": SPEC["latency_one_position_cycles"], "measured": one["last_result_cycles"],
@@ -430,16 +451,24 @@ def spec_check(benches):
             "issue_bound": one["issue_bound_cycles"], "depth": one["depth_cycles"]}
     if six:
         lane_cycles = 24 * SHIPPED_K * 6 // (8 * b["W"])
-        out["six_positions_cycles"] = {
+        out["six_positions_2048_lanes"] = {
             "spec_lane_work": SPEC["mtp_lane_work_cycles"], "measured": six["last_result_cycles"],
-            "position_last_cycles": six["position_last_cycles"],
-            "fn_lane_cycles": lane_cycles,
-            "sum_of_squares_task_cycles": six["issue_bound_cycles"] - lane_cycles,
-            "depth": six["depth_cycles"],
+            "position_last_cycles": six["position_last_cycles"], "fn_lane_cycles": lane_cycles,
+            "sum_of_squares_task_cycles": six["issue_bound_cycles"] - lane_cycles, "depth": six["depth_cycles"],
             "lane_utilisation_during_issue": 1.0,
-            "met": six["last_result_cycles"] <= SPEC["mtp_lane_work_cycles"],
-            "note": "the spec's 1,440 is pure lane work for the 24 rows; the engine also runs the norm's sum of "
-                    "squares (one more row per position, taken from the stream unit) and adds its pipeline depth"}
+            "fits_body": six["last_result_cycles"] <= body["body_cycles"],
+            "note": "2,048 lanes do 1,440 cycles of lane work for 6 positions: twice the body, which is why the "
+                    "budget itself puts hc_projection on the critical path at m = 1 (rom_m1 verify_path_us > 0)"}
+    b2 = benches.get("mtp_m2_w512")
+    if b2 and b2["run"].get("cases"):
+        c2 = {c["name"]: c for c in b2["run"]["cases"] if "name" in c}.get("shipped typical x6 (MTP verify)")
+        if c2:
+            out["six_positions_m2_4096_lanes"] = {
+                "lanes": b2["lanes"], "measured": c2["last_result_cycles"], "issue_bound": c2["issue_bound_cycles"],
+                "depth": c2["depth_cycles"], "position_last_cycles": c2["position_last_cycles"],
+                "body_cycles": body["body_cycles"], "fits_body": c2["last_result_cycles"] <= body["body_cycles"],
+                "note": "the MTP design point m = 2 as 8 x 512 lanes (weights read at twice the rate; an m-way "
+                        "multiplier sharing one weight read has the same lane count and cycle count)"}
     return out
 
 

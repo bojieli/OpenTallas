@@ -107,6 +107,7 @@ def test_committed_record_passes_and_is_current():
         assert b["run"]["pass"] and b["run"]["mismatches"] == 0 and b["run"]["faults"] == 0, name
     spec = rec["spec_check"]
     assert spec["lanes"]["met"] and spec["one_position_latency_cycles"]["met"]
+    assert spec["six_positions_m2_4096_lanes"]["issue_bound"] == 750
     assert rec["fp_stand_in"]["identical_results_and_cycles"]
     assert all(m["caught"] != m["control"] for m in rec["mutations"])
     for p, digest in rec["input_sha256"].items():
