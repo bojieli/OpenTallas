@@ -69,7 +69,8 @@
           "cycles": {
             "token": 32246
           },
-          "stage": "cts"
+          "stage": "cts",
+          "gate_min_gb": 35
         }
       ]
     },
@@ -135,7 +136,8 @@
           ],
           "derate": 0.0,
           "ir_sources": [],
-          "stage": "cts"
+          "stage": "cts",
+          "gate_min_gb": 35
         }
       ]
     }

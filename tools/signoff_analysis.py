@@ -673,7 +673,8 @@ def parse_session(text: str) -> dict[str, Any]:
     return out
 
 
-def run_session(script: str, mounts: dict[str, str], log: Path, timeout_s: int = 86400) -> str:
+def run_session(script: str, mounts: dict[str, str], log: Path, timeout_s: int = 86400,
+                gate_min_gb: float | None = None) -> str:
     """Run one OpenROAD session in the ORFS image; returns its stdout+stderr."""
     log.parent.mkdir(parents=True, exist_ok=True)
     tcl = log.with_suffix(".tcl")
@@ -686,10 +687,10 @@ def run_session(script: str, mounts: dict[str, str], log: Path, timeout_s: int =
              f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /so_session/{tcl.name}"]
     gate = os.environ.get("OT_SIGNOFF_GATE")
     env = None
-    if gate:
+    if gate and gate_min_gb:
         # a shared machine's admission gate (slot + memory floor) in front of heavy sessions
         args = [gate, *args]
-        env = dict(os.environ, OT_GATE_MIN_GB=os.environ.get("OT_SIGNOFF_GATE_MIN_GB", "20"))
+        env = dict(os.environ, OT_GATE_MIN_GB=str(int(gate_min_gb)))
     t0 = time.time()
     proc = subprocess.run(args, capture_output=True, text=True, timeout=timeout_s, env=env)
     text = proc.stdout + proc.stderr
@@ -776,7 +777,8 @@ def em_hotspots(csv_path: Path, top: int = 10) -> dict[str, Any]:
 def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None, saif: Path | None,
             saif_scope: str, groups: list[str], corners: list[str], derate: float, ir_sources: list[str],
             bump_pitch_um: float, cycles_per_token: dict[str, int] | None, activity_meta: dict | None,
-            keep_ir_files: bool = False, stage: str = "final") -> dict[str, Any]:
+            keep_ir_files: bool = False, stage: str = "final",
+            gate_min_gb: float | None = None) -> dict[str, Any]:
     results_dir = find_results_dir(results_dir, stage).resolve()
     odb_name, _, spef_name = STAGE_FILES[stage]
     out_dir = Path(out_dir).resolve()
@@ -820,7 +822,7 @@ def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None
                                 groups=groups, derate=derate, stages=stages,
                                 ir_sources=tuple(ir_sources) if corner == "TT" else (),
                                 bump_pitch_um=bump_pitch_um)
-        text = run_session(script, mounts, out_dir / f"session_{corner}.log")
+        text = run_session(script, mounts, out_dir / f"session_{corner}.log", gate_min_gb=gate_min_gb)
         parsed = parse_session(text)
         c = {"corner": CORNERS[corner], "libraries": corner_libs(corner)}
         c["power_w"] = {g: {p: parsed.get(f"power.{g}.{p}_w") for p in ("internal", "switching", "leakage", "total")}
@@ -1248,7 +1250,11 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                         if activity_only:
                             sp = {k: v for k, v in sp.items() if k != "map_netlist"}
                         else:
-                            sp = dict(sp, map_netlist=str(stage_netlist(_resolve(sp["map_netlist"]))))
+                            try:
+                                sp = dict(sp, map_netlist=str(stage_netlist(_resolve(sp["map_netlist"]))))
+                            except FileNotFoundError as exc:   # not routed yet: its analysis is skipped
+                                print(f"[signoff] scope {sname}: no netlist yet ({exc})", flush=True)
+                                sp = {k: v for k, v in sp.items() if k != "map_netlist"}
                     scopes[sname] = sp
                 a["scopes"] = scopes
                 if a.get("rtl_from"):
@@ -1274,6 +1280,11 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
         analyses = blk["analyses"] if "analyses" in blk else [blk]
         for an in analyses:
             key = an.get("key", name)
+            try:
+                find_results_dir(_resolve(an["routed"]), an.get("stage", "final"))
+            except FileNotFoundError as exc:
+                print(f"[signoff] {key}: skipped, {exc}", flush=True)
+                continue
             saif = saifs.get(an.get("saif")) if an.get("saif") else None
             r = analyze(_resolve(an["routed"]), work / f"analysis_{key}", label=key,
                         record=_resolve(an.get("record")), saif=saif, saif_scope=an.get("saif_scope", ""),
@@ -1281,7 +1292,7 @@ def run_plan(plan_path: Path, *, only: list[str] | None, output: Path | None, dr
                         derate=an.get("derate", 0.05), ir_sources=an.get("ir_sources", []),
                         bump_pitch_um=an.get("bump_pitch_um", 140.0),
                         cycles_per_token=an.get("cycles"), activity_meta=act_meta if saif else None,
-                        stage=an.get("stage", "final"))
+                        stage=an.get("stage", "final"), gate_min_gb=an.get("gate_min_gb"))
             r["plan_entry"] = {k: v for k, v in an.items() if k not in ("routed",)}
             result["blocks"][key] = r
             if out_path:
