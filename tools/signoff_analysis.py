@@ -661,8 +661,14 @@ def run_session(script: str, mounts: dict[str, str], log: Path, timeout_s: int =
     args += [IMAGE, "bash", "-c",
              "trap 'chmod -R a+rwX /so_out >/dev/null 2>&1 || true' EXIT; "
              f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /so_session/{tcl.name}"]
+    gate = os.environ.get("OT_SIGNOFF_GATE")
+    env = None
+    if gate:
+        # a shared machine's admission gate (slot + memory floor) in front of heavy sessions
+        args = [gate, *args]
+        env = dict(os.environ, OT_GATE_MIN_GB=os.environ.get("OT_SIGNOFF_GATE_MIN_GB", "20"))
     t0 = time.time()
-    proc = subprocess.run(args, capture_output=True, text=True, timeout=timeout_s)
+    proc = subprocess.run(args, capture_output=True, text=True, timeout=timeout_s, env=env)
     text = proc.stdout + proc.stderr
     log.write_text(text, encoding="utf-8")
     if proc.returncode != 0 or re.search(r"^Error: ", text, re.M):
