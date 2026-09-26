@@ -22,9 +22,25 @@ the supply cannot be covered by a bounded window: the model then starts it
 late enough for its last word to arrive in time and reports the window that
 would take (`kv_supply_limited_ops`, `kv_window_lines_required`).  The
 constants are fitted to the RTL (tools/rtl_hdc_kv_stream_campaign.py).
+
+Weights in HBM (`--w-hbm`, `simulate(w=WStream(...))`) adds the weight streaming
+engine (rtl/hdc/hbm/ot_hdc_wstream.sv): the token's weight words are one stream
+in consumption order, fetched from the first token start on at the sustained
+rate s = min(npc * bw_per_pc, 1 word a cycle) whenever the window has room
+(word k is requested no earlier than word k - win is consumed), and arrive
+`lat` cycles after their request.  A weight op of n words issues only once the
+first T = min(n, lead + n - floor(n * rate / 256)) of its words have arrived
+(its start threshold: the engine cannot stall), and consumes one word a cycle
+from its first element.  The stream runs on across tokens (WStream carries
+it), and the stream unit's embedding read waits `emb` cycles from the token
+start for the token's row.  Weight ops larger than the window are issued in
+round chunks by the program (tools/hdc_program.py --wchunk).  The constants are
+fitted to the RTL (tools/rtl_hdc_hbm_campaign.py); the per-channel rate is the
+streamer's probe on the HBM model.
 """
 import argparse
 import json
+import math
 import re
 from pathlib import Path
 
@@ -55,6 +71,94 @@ K = dict(seq_gap=5,        # go -> next go, sequencer fetch/decode (S_GO..S_ISSU
 KV = dict(npc=4, bw_per_pc=0.70, c0=12, lat=108, lead=512, win=256)
 
 
+# Weights in HBM (W_HBM configuration).  bw_per_pc: sustained 128-byte words
+# per cycle per pseudo-channel of the streamer's per-channel sub-streams on the
+# model's HBM3E timing (tb_hdc_wstream probe, 1 GHz core); lat (request to the
+# completion pointer), c_ann (announce to issue) and emb (token start to the
+# embedding row) are fitted to the reduced vehicle's Verilator runs.
+WH = dict(npc=4, bw_per_pc=0.219, rmax=1.0, lat=80, c_ann=6, emb=65, emb_busy=138, kv_q=0, lead=512, win=2048,
+          margin=0.9, word_bytes=128)
+
+
+def w_rate(w):
+    """The streamer's guaranteed rate (words per cycle x 256) for a provisioning:
+    the probed sustained supply less a margin, capped at the engine's demand."""
+    return min(256, int(256 * w["margin"] * w["npc"] * w["bw_per_pc"] * 128 / w["word_bytes"]))
+
+
+class WStream:
+    """Fluid model of the weight streamer across tokens.  Word k of the stream is
+    requested at r_k = max(r_{k-1} + 1/s, c_{k-win}) (rate, and a free window
+    slot: word k - win consumed at c_{k-win}), which is k/s + a running maximum;
+    it has arrived at r_k + lat.  The KV streamer shares the HBM: its traffic
+    (steal) delays the weight stream's rate-limited requests by its bytes at
+    the stream's rate."""
+
+    def __init__(self, w, rate=None):
+        import numpy as np
+        self.np = np
+        self.w = w
+        # supply in the core's weight words (word_bytes each; bw_per_pc is in 128-byte words)
+        self.s = min(w["npc"] * w["bw_per_pc"] * 128 / w["word_bytes"], w["rmax"])
+        self.rate = w_rate(w) if rate is None else rate
+        self.r = np.zeros(0)
+        self.c = np.zeros(0)
+        self.t0 = None                 # stream start (absolute)
+        self.base = 0.0                # absolute time of the current token's cycle 0
+        self.nxt = 0                   # first word of the next op
+        self.pending = 0.0             # KV traffic not yet charged to the stream (cycles)
+        self.stats = dict(ops=0, words=0, wait_cycles=0, kv_bytes=0)
+
+    def token(self, t_abs):
+        """A token starts at absolute time t_abs (its cycle 0).  After the first
+        token the stream is running when a token starts (the next token's
+        weights are prefetched), so the embedding row waits behind the
+        pseudo-channel queues (emb_busy)."""
+        self.base = t_abs
+        self.emb = self.w["emb"] if self.t0 is None else self.w["emb_busy"]
+        if self.t0 is None:
+            self.t0 = t_abs
+
+    def _req(self, k):
+        np = self.np
+        k0 = len(self.r)
+        if k < k0:
+            return
+        win, s = self.w["win"], self.s
+        ks = np.arange(k0, k + 1)
+        b = np.full(len(ks), -np.inf)
+        m = ks >= win
+        b[m] = self.c[ks[m] - win] - ks[m] / s
+        carry = ((self.r[-1] - (k0 - 1) / s) if k0 else self.t0) + self.pending
+        self.pending = 0.0
+        b[0] = max(b[0], carry)
+        self.r = np.concatenate([self.r, ks / s + np.maximum.accumulate(b)])
+
+    def gate(self, n, t_ann):
+        """Earliest issue (token-relative) of the next weight op of n words,
+        announced at token-relative t_ann."""
+        w = self.w
+        T = min(n, w["lead"] + n - (n * self.rate) // 256)
+        self._req(self.nxt + T - 1)
+        ok = self.r[self.nxt + T - 1] + w["lat"] - self.base
+        return max(t_ann + w["c_ann"], ok)
+
+    def steal(self, t_rel, nbytes):
+        """KV traffic of nbytes issued at token-relative t_rel."""
+        self.stats["kv_bytes"] += nbytes
+        last = self.r[-1] if len(self.r) else self.t0
+        if self.base + t_rel >= last:
+            self.pending += nbytes / self.w["word_bytes"] / self.s
+
+    def consume(self, n, e0):
+        """The op's words are read one a cycle from token-relative e0."""
+        np = self.np
+        self.c = np.concatenate([self.c, self.base + e0 + np.arange(n)])
+        self.nxt += n
+        self.stats["ops"] += 1
+        self.stats["words"] += n
+
+
 def kv_op(f, dyn, pos, groups):
     """(lines, HBM words, jsh) of a KV-sourced op under the streamer's rules."""
     W = I.W_LANES
@@ -74,12 +178,13 @@ def dyn_values(pos, token=0, H=128, half=8, HD=16, groups=I.GROUPS):
 
 
 def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_groups=1, su_width=1, kv=None,
-             kv_stats=None):
+             kv_stats=None, w=None):
     """attn_groups / su_width > 1 are PROJECTIONS of design options the RTL does
     not have yet: KV-sourced ops spread over that many lane groups (each taking
     its own heads), and a stream unit retiring su_width elements per cycle.
     kv: KV streaming constants (see KV) when the cache is in HBM; kv_stats, a
-    dict, receives the streaming totals."""
+    dict, receives the streaming totals.  w: a WStream (weights in HBM), whose
+    token() the caller has set to this token's start."""
     dyn = dyn_values(pos, groups=groups, **(dyn_shape or {}))
     t = 0                              # sequencer time: earliest next issue
     me_free = su_free = 0              # unit accepts a new op from here
@@ -117,6 +222,13 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             go = max(ready, me_free)
             if go > ready:
                 why = "unit_busy"
+            if w is not None and not f["me_wsrc"]:
+                n_w = (f["me_tiles"] + dyn[f["me_d_tiles"]]) * (f["me_k"] + dyn[f["me_d_k"]]) * IL
+                g = w.gate(n_w, t)
+                g = int(-(-g // 1))
+                if g > go:
+                    w.stats["wait_cycles"] += g - go
+                    go, why = g, "w_window"
             if kv and f["me_wsrc"]:
                 lines, words, jsh = kv_op(f, dyn, pos, groups)
                 bw = kv["npc"] * kv["bw_per_pc"]
@@ -137,6 +249,8 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
                 kv_free = max(f0 + words / bw, go + ((lines - kv["win"]) << jsh))
                 ks["ops"] += 1
                 ks["hbm_words"] += words
+                if w is not None:
+                    w.steal(go, words * 32)
             split = 0 if f["me_wsrc"] else f["me_split"]
             rounds = f["me_tiles"] + dyn[f["me_d_tiles"]]
             # (attention now spreads over every group in the RTL itself; the
@@ -148,11 +262,15 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             me_slot_t = [e0 + r * kc * IL + (kc - 1) * IL + j + lat for r in range(rounds) for j in range(IL)]
             me_free = e0 + n_el
             me_idle = max(me_idle, me_slot_t[-1])
+            if w is not None and not f["me_wsrc"]:
+                w.consume(n_el, e0)
         else:
             cls = f["sfu"]
             go = max(ready, su_free)
             if go > ready:
                 why = "unit_busy"
+            if w is not None and f["a_src"] and w.emb > go:
+                go, why = w.emb, "embedding_row"
             if su_cls is not None and cls != su_cls and su_cls_idle > go:
                 go, why = su_cls_idle, "class_drain"
 
@@ -235,6 +353,173 @@ def price(model, groups, pos, ghz, attn_groups=1, su_width=1, kv=None):
                              kv_bytes_per_token=stats["hbm_words"] * 32,
                              kv_supply_words_per_cycle=kv["npc"] * kv["bw_per_pc"])
     return out
+
+
+# ---- HBM comparator projections (tools/rtl_hdc_hbm_campaign.py) ------------------------------------
+PC_PER_STACK = 32
+
+
+def weight_ops_words(prog):
+    """Weight-sourced ops' word counts, in program order."""
+    return [f["me_tiles"] * f["me_k"] * IL for f in prog if f.get("unit") == I.UNIT_ME and not f.get("me_wsrc")]
+
+
+def price_hbm(model, groups, pos, stacks, kv_hbm=True, w_hbm=True, su_width=1):
+    """Cycles per token of `model` on a core of `groups` groups with the weights
+    (and the KV cache) streamed from `stacks` HBM3E stacks: the weight stream
+    and the KV streamer share the stacks' pseudo-channels.  The window is not
+    bounded here: its required size (the largest start threshold) is reported."""
+    import hdc_program as P
+    shape = SHAPES[model]
+    lay = ShapeLayout(shape, groups)
+    prog = P.build_program(lay)
+    dyn_k = dict(H=shape["H"], half=shape["HD"] // 2, HD=shape["HD"])
+    npc = stacks * PC_PER_STACK
+    wb = groups * I.W_LANES * 2
+    ops = weight_ops_words(prog)
+    ws = None
+    if w_hbm:
+        ws = WStream(dict(WH, npc=npc, word_bytes=wb, win=sum(ops)))
+        ws.token(0)
+    kst = {}
+    cycles = simulate(prog, pos, groups=groups, dyn_shape=dyn_k, kv=dict(KV, npc=npc) if kv_hbm else None,
+                      kv_stats=kst, w=ws, su_width=su_width)[1]
+    out = {"cycles_per_token": cycles, "weight_bytes_per_token": sum(ops) * wb,
+           "kv_bytes_per_token": kst.get("hbm_words", 0) * 32}
+    if ws is not None:
+        rate = ws.rate
+        thr = [min(n, WH["lead"] + n - (n * rate) // 256) for n in ops]
+        out.update(weight_supply_bytes_per_cycle=round(ws.s * wb, 1), weight_demand_bytes_per_cycle=wb,
+                   guaranteed_rate_x256=rate, weight_wait_cycles=ws.stats["wait_cycles"],
+                   window_bytes_required=max(thr) * wb)
+    return out
+
+
+def project_hbm(ghz=1.0, batch=64):
+    """Shipped-scale projections of the HBM comparator beside the ROM machine.
+
+    Qwen3-8B at an 8K context: this timing model's schedule of the full shapes
+    on the same core with its weights in ROM (and KV in on-core SRAM or HBM) and
+    with its weights and KV streamed from HBM3E stacks (one stack; a B200-class
+    8 stacks = 8 TB/s; enough stacks for the stream to keep up), at the
+    RTL-calibrated per-channel rate.  Batch B (PROJECTION): a batched core that
+    reads each weight once per step for B users (B x the element work per
+    weight word) -- step = max(B x the ROM core's token, the weight bytes plus
+    B x the KV bytes at the stacks' sustained rate); the ROM core time-shares
+    (step = B x its token).  Beside them, the B200 roofline (published
+    bandwidth and BF16 rate as the analytical study grades them) and the
+    analytical study's ROM designs.
+
+    DeepSeek-V4.1-Flash at 200K: ANALYTICAL (no shipped-scale V4.1 schedule
+    exists in this model): an HBM array whose token takes max(the ROM array's
+    token -- same cores, links and clock -- , the active bytes over the stacks'
+    sustained rate); at batch B the step reads the dense bytes once, each
+    distinct routed expert once (the expected union of B users' top-6 of 384)
+    and B users' KV."""
+    shape = SHAPES["qwen3-8b"]
+    H, L, NH, KVH, HD, FF, V = (shape[k] for k in ("H", "L", "NH", "KV", "HD", "FF", "V"))
+    pos = 8191
+    params = L * ((NH + 2 * KVH) * HD * H + NH * HD * H + 3 * FF * H) + V * H
+    w_bytes = 2 * params
+    kv_bytes = 2 * L * KVH * HD * 2 * (pos + 1)
+    stack_bw = 1.0e12
+    eta = WH["bw_per_pc"] * 128 * PC_PER_STACK * ghz * 1e9 / stack_bw       # sustained fraction of the peak
+    rows = []
+    for groups, sw in ((256, 1), (1024, 1), (256, 16), (1024, 16)):
+        demand = groups * I.W_LANES * 2 * ghz * 1e9
+        matched = math.ceil(demand / (stack_bw * eta))
+        rom_sram = price_hbm("qwen3-8b", groups, pos, 8, kv_hbm=False, w_hbm=False, su_width=sw)["cycles_per_token"]
+        for stacks, label in ((1, "one HBM3E stack (1 TB/s)"), (8, "B200-class: 8 HBM3E stacks (8 TB/s)"),
+                              (matched, f"{matched} stacks (the stream keeps up with the engine)")):
+            rom_kv = price_hbm("qwen3-8b", groups, pos, stacks, kv_hbm=True, w_hbm=False, su_width=sw)
+            hbm = price_hbm("qwen3-8b", groups, pos, stacks, su_width=sw)
+            bw = stacks * stack_bw * eta
+            b1 = {"rom_weights_kv_sram_tok_s": ghz * 1e9 / rom_sram,
+                  "rom_weights_kv_hbm_tok_s": ghz * 1e9 / rom_kv["cycles_per_token"],
+                  "hbm_weights_kv_hbm_tok_s": ghz * 1e9 / hbm["cycles_per_token"]}
+            step_rom = batch * rom_kv["cycles_per_token"] / (ghz * 1e9)
+            step_hbm = max(batch * rom_kv["cycles_per_token"] / (ghz * 1e9), (w_bytes + batch * kv_bytes) / bw)
+            rows.append({"groups": groups, "lanes": groups * I.W_LANES, "stacks": stacks, "configuration": label,
+                         "stream_unit_width": sw, "stream_unit_width_basis": "as built" if sw == 1 else
+                         "PROJECTION: a stream unit retiring 16 elements a cycle (hdc_timing su_width)",
+                         "matrix_engine_weight_cycles": sum(weight_ops_words(
+                             __import__("hdc_program").build_program(ShapeLayout(shape, groups)))),
+                         "hbm_bytes_s_sustained": bw, "weight_bytes_per_token": w_bytes,
+                         "kv_bytes_per_token": kv_bytes, "cycles_rom_kv_sram": rom_sram,
+                         "cycles_rom_kv_hbm": rom_kv["cycles_per_token"], "cycles_hbm": hbm["cycles_per_token"],
+                         "hbm_over_rom": round(hbm["cycles_per_token"] / rom_kv["cycles_per_token"], 3),
+                         "weight_demand_bytes_per_cycle": hbm["weight_demand_bytes_per_cycle"],
+                         "weight_supply_bytes_per_cycle": hbm["weight_supply_bytes_per_cycle"],
+                         "window_bytes_required": hbm["window_bytes_required"],
+                         "batch1": {k: round(v, 1) for k, v in b1.items()},
+                         f"batch{batch}": {"rom_per_user_tok_s": round(1 / step_rom, 1),
+                                           "rom_aggregate_tok_s": round(batch / step_rom, 1),
+                                           "hbm_batched_per_user_tok_s": round(1 / step_hbm, 1),
+                                           "hbm_batched_aggregate_tok_s": round(batch / step_hbm, 1)}})
+    b200 = {"bytes_s": 7.2e12, "bf16_flops": 2.25e15}
+    b200_rows = {}
+    for b in (1, batch):
+        step = max((w_bytes + b * kv_bytes) / b200["bytes_s"], 2 * params * b / b200["bf16_flops"])
+        b200_rows[f"batch{b}"] = {"per_user_tok_s": round(1 / step, 1), "aggregate_tok_s": round(b / step, 1)}
+    an = json.loads((ROOT / "results/roofline/n5_vs_b200/analytical.json").read_text())
+
+    def cite(path, model, b):
+        """The analytical study's fastest per-user ROM ARRAY design for `model`
+        at batch b (the wafer is not the deployment target), chosen by rate
+        rather than by name so the citation follows the study as it is re-run."""
+        path = path or "results/roofline/n5_vs_b200/analytical.json"
+        d = json.loads((ROOT / path).read_text())
+        cs = [c for c in d["comparisons"] if c["rom_design"].startswith(model + "/") and c["batch_size"] == b
+              and "-array-" in c["rom_design"]]
+        if not cs:
+            raise SystemExit(f"{path}: no ROM array design for {model} at batch {b}")
+        c = max(cs, key=lambda c: c["rom_per_user_tokens_s"])
+        return {"source": f"{path}#comparisons[rom_design={c['rom_design']},batch_size={b}]",
+                "rom_design": c["rom_design"], "rom_per_user_tokens_s": c["rom_per_user_tokens_s"],
+                "iso_area_gpu_per_user_tokens_s": c["iso_area_gpu_per_user_tokens_s"],
+                "iso_area_gpu_design": c["iso_area_gpu_design"],
+                "selection": "fastest per-user ROM array design at this batch"}
+    qwen = {"model": "Qwen3-8B", "position": pos, "clock_ghz": ghz, "batch": batch,
+            "hbm_sustained_fraction_of_peak": round(eta, 4), "rows": rows,
+            "b200_roofline": dict(b200, **b200_rows, basis="step = max((weights + B x KV) / 7.2 TB/s, "
+                                                             "2 x params x B / 2.25 PFLOP/s): the analytical study's "
+                                                             "b200_sxm-x1 read bandwidth and BF16 rate"),
+            "analytical_rom": {f"batch{b}": cite(None, "Qwen3-8B", b) for b in (1, batch)}}
+    # DeepSeek-V4.1-Flash, analytical
+    vp = "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json"
+    vd = json.loads((ROOT / vp).read_text())
+    ms = vd["model_summaries"][0]
+    active = ms["active_parameters"] * ms["native_bits_per_parameter"] / 8
+    per_exp = ms["per_region_sizing"]["routed_bytes_per_expert"]
+    k_exp, n_exp = ms["experts_per_token"], ms["num_experts"]
+    dense = active - k_exp * per_exp
+    kv_u = ms["kv_read_bytes_per_user_token"]
+    rom = {b: cite(vp, "DeepSeek-V4.1-Flash", b) for b in (1, batch)}
+    cap_stacks = math.ceil(ms["checkpoint_bytes"] / json.loads(
+        (ROOT / "configs/hardware/technology.json").read_text())["hbm"]["hbm3e"]["stack_capacity_bytes"]["value"])
+    vrows = []
+    for stacks, label in ((cap_stacks, "capacity minimum (the checkpoint fits)"), (96, "96 stacks"),
+                          (768, "768 stacks (the B200 x96 NVL72 layout's)")):
+        bw = stacks * stack_bw * eta
+        out = {"stacks": stacks, "configuration": label, "hbm_bytes_s_sustained": bw}
+        for b in (1, batch):
+            distinct = n_exp * (1 - (1 - k_exp / n_exp) ** b)
+            step_bytes = dense + distinct * per_exp + b * kv_u
+            t_rom = b / (rom[b]["rom_per_user_tokens_s"] * b)          # the ROM array's step (per-user rate)
+            step = max(t_rom, step_bytes / bw)
+            out[f"batch{b}"] = {"step_bytes": round(step_bytes), "distinct_experts": round(distinct, 1),
+                                "hbm_per_user_tok_s": round(1 / step, 1),
+                                "rom_per_user_tok_s": round(rom[b]["rom_per_user_tokens_s"], 1),
+                                "hbm_over_rom_time": round(step / t_rom, 3),
+                                "bound": "hbm_bandwidth" if step_bytes / bw > t_rom else "rom_array_path"}
+        vrows.append(out)
+    v41 = {"model": "DeepSeek-V4.1-Flash", "context": ms["context_tokens"], "batch": batch,
+           "active_weight_bytes_per_token": active, "dense_active_bytes": dense,
+           "routed_bytes_per_expert": per_exp, "kv_read_bytes_per_user_token": kv_u,
+           "checkpoint_bytes": ms["checkpoint_bytes"], "rows": vrows, "rom_array": rom, "source": vp,
+           "grade": "analytical: the ROM array's per-token path from the analytical study, the HBM streaming "
+                    "efficiency from the RTL-calibrated weight-stream probe; no shipped-scale V4.1 schedule"}
+    return {"qwen3_8b": qwen, "deepseek_v41_flash": v41}
 
 
 def control_breakdown(prog, pos, groups, dyn_shape=None, su_width=1):
