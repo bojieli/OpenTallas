@@ -876,6 +876,9 @@ def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None
                             if p.exists():
                                 p.unlink()
         c["session_seconds"] = parsed.get("session.seconds")
+        if isinstance(parsed.get("ir.die_um"), str) and "x" in parsed["ir.die_um"]:
+            w, h = (float(v) for v in parsed["ir.die_um"].split("x"))
+            c["die_area_um2"] = w * h
         result["corners"][corner] = c
     if cycles_per_token:
         result["energy_per_token"] = energy_per_token(result, cycles_per_token)
@@ -1651,6 +1654,45 @@ def _corner_energy(block: dict[str, Any], corner: str, cycles: int, period_ns: f
     return {"dynamic_j": dyn, "leakage_j": leak, "total_j": dyn + leak, "power_w": p["total"] * instances}
 
 
+def analytical_comparison(arch: dict, a: dict, load) -> dict[str, Any]:
+    """Measured (ASAP7, activity-annotated) against the analytical model's power terms."""
+    out: dict[str, Any] = {}
+    ref = arch.get("compare")
+    if not ref:
+        return out
+    blk = load(ref["signoff"])["blocks"].get(ref["key"]) if (ROOT / ref["signoff"]).exists() else None
+    if not blk or "TT" not in blk["corners"]:
+        return out
+    tt = blk["corners"]["TT"]
+    area_mm2 = (tt.get("die_area_um2") or 0) / 1e6
+    f_hz = 1e9 / arch["clock_period_ns"]
+    clk_w = tt["power_w"]["clock"]["total"] or 0.0
+    seq_int = tt["power_w"]["sequential"]["internal"] or 0.0
+    leak = tt["power_w"]["total"]["leakage"] or 0.0
+    if area_mm2:
+        ce = tech_value("power", "clock_energy_j_per_mm2_per_cycle")
+        out["clock_energy_j_per_mm2_per_cycle"] = {
+            "measured_clock_network_only": clk_w / area_mm2 / f_hz,
+            "measured_with_register_clock_pins": (clk_w + seq_int) / area_mm2 / f_hz,
+            "analytical": ce,
+            "area_mm2": area_mm2, "area_basis": "the routed block's die (core plus margin), TT session",
+            "note": "sequential internal power is mostly the flops' clock-pin power; the analytical term is "
+                    "a whole-die clock-distribution budget"}
+        lk = tech_value("power", "static_leakage_w_per_mm2", "logic")
+        out["static_leakage_w_per_mm2_logic"] = {"measured": leak / area_mm2, "analytical": lk,
+                                                  "note": "ASAP7 RVT at 25 C; the analytical term is an N6/N7 "
+                                                          "foundry-class assumption including hotter operation"}
+    pm = a.get("pj_per_mac")
+    if pm:
+        out["mac_energy_pj"] = {"measured_matrix_engine": pm["matrix_engine_logic_pj_per_mac"],
+                                "measured_matrix_engine_dynamic": pm["matrix_engine_dynamic_pj_per_mac"],
+                                "measured_whole_token": pm["token_pj_per_mac"],
+                                "analytical_pj": pm["analytical_mac_energy"]["value"] * 1e12,
+                                "analytical_range_pj": [pm["analytical_mac_energy"]["range_low"] * 1e12,
+                                                        pm["analytical_mac_energy"]["range_high"] * 1e12]}
+    return out
+
+
 def summarize(cfg_path: Path) -> dict[str, Any]:
     """Energy per token of each architecture's reduced vehicle, composed from
     the sign-off results (logic, activity-annotated) and the analytical
@@ -1733,7 +1775,13 @@ def summarize(cfg_path: Path) -> dict[str, Any]:
                          "memory_and_links": mem_tt, "static": static_j,
                          "token_TT": totals["TT"] + mem_tt + static_j}
         # per-MAC projection from the matrix engine
-        me = arch.get("mac")
+        me = dict(arch.get("mac") or {})
+        if me.get("macs_per_token_from_saif"):
+            ms = me["macs_per_token_from_saif"]
+            saif = _resolve(ms["saif"])
+            if saif and saif.exists():
+                cyc = saif_port_cycles(saif, ms["ports"].keys(), ms["half_period_ps"])
+                me["macs_per_token"] = sum(cyc[p] * n for p, n in ms["ports"].items())
         if me and me.get("macs_per_token") and me.get("logic") in a["logic"] and "TT" in a["logic"][me["logic"]]:
             e_me = a["logic"][me["logic"]]["TT"]
             macs = me["macs_per_token"]
@@ -1744,6 +1792,7 @@ def summarize(cfg_path: Path) -> dict[str, Any]:
                 "macs_per_token": macs, "basis": me.get("basis"),
                 "analytical_mac_energy": tech_value("energy", "mac_energy_j_per_op", me.get("format", "bf16")),
             }
+        a["analytical_comparison"] = analytical_comparison(arch, a, load)
         out["architectures"][name] = a
     return out
 
