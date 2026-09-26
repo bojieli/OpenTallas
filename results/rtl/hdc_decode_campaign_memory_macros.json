@@ -48,7 +48,7 @@
     "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
     "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.v": "f05e5b3ef11f4ace2c5d2e7f59801c851adc969f52ef238187132ab0f122d350",
     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
-    "rtl/dft/ot_mbist_bira.sv": "a6092e34420d9c1d485414d50ee3f8af662e417294578a29148687c18c9aaa13",
+    "rtl/dft/ot_mbist_bira.sv": "043622ad53a179963bbf9cbcb983e2ff474871874b9af42917d0866fbc3e2e1b",
     "rtl/dft/ot_mbist_ctrl.sv": "6d67ba107d43f5855783bfcb791c1cfe377e22577d1cb9b8d75ac7d51ffec129",
     "rtl/dft/ot_mbist_rom_collar.sv": "3d79dd6a8ff385aba150b3221af529b1681d60a96061a1237c410028f325e9db",
     "rtl/dft/ot_mbist_sram_collar.sv": "00bc7a2106d794c6209b74f97ad701c56a204342455dd8b75936d2d6ec4e40b4",
@@ -103,7 +103,7 @@
         "vector_memory_mismatches": 0
       },
       "kv_sa1_and_wrom_missing_via": {
-        "bist_cycles": 309796,
+        "bist_cycles": 309860,
         "bist_pass": 0,
         "cycles": 32246,
         "faults": [
