@@ -126,7 +126,7 @@
               "total": 0.012914568185806274
             }
           },
-          "session_seconds": 6.9,
+          "session_seconds": 7.6,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.01900177931668523,
@@ -214,7 +214,7 @@
               "total": 0.007752337958663702
             }
           },
-          "session_seconds": 6.7,
+          "session_seconds": 7.2,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.046552206534045126,
@@ -268,6 +268,7 @@
             "temperature_c": 25.0,
             "voltage_v": 0.7
           },
+          "die_area_um2": 5543.100304,
           "em": {
             "BUMPS.VDD": {
               "assumed_dc_limit_ma_per_um": 1.0,
@@ -414,7 +415,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "BUMPS.VSS": {
@@ -562,7 +565,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "PINS.VDD": {
@@ -710,7 +715,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "PINS.VSS": {
@@ -858,7 +865,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             }
           },
@@ -1020,7 +1029,7 @@
               "total": 0.009872609749436378
             }
           },
-          "session_seconds": 37.2,
+          "session_seconds": 40.7,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.03050416863548122,
@@ -1048,8 +1057,12 @@
           }
         }
       },
-      "generated_at": "2026-09-25T22:21:50.714603+00:00",
+      "generated_at": "2026-09-26T09:12:06.942308+00:00",
       "label": "rom_argmax_reduce_gate_level",
+      "pdn": {
+        "note": "the grid the route built (ORFS grid_strategy-M1-M2-M5-M6)",
+        "variant": null
+      },
       "plan_entry": {
         "corners": [
           "TT",
@@ -1081,14 +1094,16 @@
       "routed": {
         "netlist_sha256": "84b0e56bcb021ba799ff76c9f0627e6fd34ae19f41edf78cf839cff3595890ee",
         "odb_sha256": "e8b9ec2eb2e80a95d8b6b54e0d554efab7758598e1cca8022a38afde50c00895",
+        "parasitics": "routed SPEF (OpenRCX)",
         "results_dir": "/tmp/claude-1000/so/blocks/rom__collectives__ot_rom_argmax_reduce/wd/orfs/results/asap7/opentallas_ot_rom_argmax_reduce_asap7_signoff/base",
-        "spef_sha256": "f7024c1dd825db792d0ea9e4c802b6edf62bafa7c940594c8fd3f2f93ab22e78"
+        "spef_sha256": "f7024c1dd825db792d0ea9e4c802b6edf62bafa7c940594c8fd3f2f93ab22e78",
+        "stage": "final"
       },
       "schema": "opentallas.signoff.v1",
       "tool": {
         "image": "openroad/orfs:latest",
         "script": "tools/signoff_analysis.py",
-        "sha256": "13030e9f8c420a60aab8d9f2406a8e38ddcf3dda1f178a61472a0bd2e9fb9562"
+        "sha256": "070204428ed680f04e4c85e23c78d2d570105fa7f17587c67c89eab10be43b24"
       }
     },
     "rom_argmax_reduce_rtl_mapped": {
@@ -1233,7 +1248,7 @@
               "total": 0.01283428817987442
             }
           },
-          "session_seconds": 9.9,
+          "session_seconds": 9.2,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.03050416863548122,
@@ -1249,8 +1264,12 @@
           }
         }
       },
-      "generated_at": "2026-09-26T01:08:42.517327+00:00",
+      "generated_at": "2026-09-26T09:13:04.743312+00:00",
       "label": "rom_argmax_reduce_rtl_mapped",
+      "pdn": {
+        "note": "the grid the route built (ORFS grid_strategy-M1-M2-M5-M6)",
+        "variant": null
+      },
       "plan_entry": {
         "corners": [
           "TT"
@@ -1277,14 +1296,16 @@
       "routed": {
         "netlist_sha256": "84b0e56bcb021ba799ff76c9f0627e6fd34ae19f41edf78cf839cff3595890ee",
         "odb_sha256": "e8b9ec2eb2e80a95d8b6b54e0d554efab7758598e1cca8022a38afde50c00895",
+        "parasitics": "routed SPEF (OpenRCX)",
         "results_dir": "/tmp/claude-1000/so/blocks/rom__collectives__ot_rom_argmax_reduce/wd/orfs/results/asap7/opentallas_ot_rom_argmax_reduce_asap7_signoff/base",
-        "spef_sha256": "f7024c1dd825db792d0ea9e4c802b6edf62bafa7c940594c8fd3f2f93ab22e78"
+        "spef_sha256": "f7024c1dd825db792d0ea9e4c802b6edf62bafa7c940594c8fd3f2f93ab22e78",
+        "stage": "final"
       },
       "schema": "opentallas.signoff.v1",
       "tool": {
         "image": "openroad/orfs:latest",
         "script": "tools/signoff_analysis.py",
-        "sha256": "0dfac7a9b7a5418ddbc713894790b0e01d9d523ce26d9121ba65ffdc2790054d"
+        "sha256": "070204428ed680f04e4c85e23c78d2d570105fa7f17587c67c89eab10be43b24"
       }
     },
     "rom_mcast_node": {
@@ -1353,7 +1374,7 @@
               "total": 0.030257990583777428
             }
           },
-          "session_seconds": 13.2,
+          "session_seconds": 8.2,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.03592430519727685,
@@ -1440,7 +1461,7 @@
               "total": 0.018322113901376724
             }
           },
-          "session_seconds": 12.8,
+          "session_seconds": 12.2,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.07702762039318856,
@@ -1493,6 +1514,7 @@
             "temperature_c": 25.0,
             "voltage_v": 0.7
           },
+          "die_area_um2": 8312.333584,
           "em": {
             "BUMPS.VDD": {
               "assumed_dc_limit_ma_per_um": 1.0,
@@ -1639,7 +1661,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "BUMPS.VSS": {
@@ -1787,7 +1811,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "PINS.VDD": {
@@ -1935,7 +1961,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "PINS.VSS": {
@@ -2083,7 +2111,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             }
           },
@@ -2245,7 +2275,7 @@
               "total": 0.023271555081009865
             }
           },
-          "session_seconds": 72.0,
+          "session_seconds": 64.7,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.052256060589783715,
@@ -2273,8 +2303,12 @@
           }
         }
       },
-      "generated_at": "2026-09-26T01:08:52.501300+00:00",
+      "generated_at": "2026-09-26T09:13:13.958106+00:00",
       "label": "rom_mcast_node",
+      "pdn": {
+        "note": "the grid the route built (ORFS grid_strategy-M1-M2-M5-M6)",
+        "variant": null
+      },
       "plan_entry": {
         "corners": [
           "TT",
@@ -2304,14 +2338,16 @@
       "routed": {
         "netlist_sha256": "a39fcad6088a311205fd9b190a0b58d933f549324a8aea1c4de10244b32a60b0",
         "odb_sha256": "7ccc62ecca042e253e319f47ee8839ff322b56f0bd4fefefa1f0e04f446508c9",
+        "parasitics": "routed SPEF (OpenRCX)",
         "results_dir": "/tmp/claude-1000/so/blocks/rom__collectives__ot_rom_mcast_node/wd/orfs/results/asap7/opentallas_ot_rom_mcast_node_asap7_signoff/base",
-        "spef_sha256": "30d6855f43b176809ec4149ada0a3f61fb956c9364097f93b9cd229091a1c7ae"
+        "spef_sha256": "30d6855f43b176809ec4149ada0a3f61fb956c9364097f93b9cd229091a1c7ae",
+        "stage": "final"
       },
       "schema": "opentallas.signoff.v1",
       "tool": {
         "image": "openroad/orfs:latest",
         "script": "tools/signoff_analysis.py",
-        "sha256": "0dfac7a9b7a5418ddbc713894790b0e01d9d523ce26d9121ba65ffdc2790054d"
+        "sha256": "070204428ed680f04e4c85e23c78d2d570105fa7f17587c67c89eab10be43b24"
       }
     },
     "rom_moe_dispatch": {
@@ -2380,7 +2416,7 @@
               "total": 0.014360097236931324
             }
           },
-          "session_seconds": 8.4,
+          "session_seconds": 4.6,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.03402420706288822,
@@ -2467,7 +2503,7 @@
               "total": 0.008688339032232761
             }
           },
-          "session_seconds": 8.5,
+          "session_seconds": 4.4,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.0740217886985306,
@@ -2520,6 +2556,7 @@
             "temperature_c": 25.0,
             "voltage_v": 0.7
           },
+          "die_area_um2": 4404.180496000001,
           "em": {
             "BUMPS.VDD": {
               "assumed_dc_limit_ma_per_um": 1.0,
@@ -2666,7 +2703,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "BUMPS.VSS": {
@@ -2814,7 +2853,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "PINS.VDD": {
@@ -2962,7 +3003,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "PINS.VSS": {
@@ -3110,7 +3153,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             }
           },
@@ -3272,7 +3317,7 @@
               "total": 0.011044944636523724
             }
           },
-          "session_seconds": 36.2,
+          "session_seconds": 22.0,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.049984863470520224,
@@ -3300,8 +3345,12 @@
           }
         }
       },
-      "generated_at": "2026-09-26T01:10:35.377637+00:00",
+      "generated_at": "2026-09-26T09:14:40.753788+00:00",
       "label": "rom_moe_dispatch",
+      "pdn": {
+        "note": "the grid the route built (ORFS grid_strategy-M1-M2-M5-M6)",
+        "variant": null
+      },
       "plan_entry": {
         "corners": [
           "TT",
@@ -3331,14 +3380,16 @@
       "routed": {
         "netlist_sha256": "2e497bae9877bff7d02d400886d2e3542d148ec47b73b5bf7782c669e554e0c4",
         "odb_sha256": "d247087b2d315326fe8ef53ab872165af930154cc342a8412544f2448bc86a99",
+        "parasitics": "routed SPEF (OpenRCX)",
         "results_dir": "/tmp/claude-1000/so/blocks/rom__collectives__ot_rom_moe_dispatch/wd/orfs/results/asap7/opentallas_ot_rom_moe_dispatch_asap7_signoff/base",
-        "spef_sha256": "72372bb6160d3f712cfdd5ededebcafe9415847a3ee5121f5ff2fc60ef852904"
+        "spef_sha256": "72372bb6160d3f712cfdd5ededebcafe9415847a3ee5121f5ff2fc60ef852904",
+        "stage": "final"
       },
       "schema": "opentallas.signoff.v1",
       "tool": {
         "image": "openroad/orfs:latest",
         "script": "tools/signoff_analysis.py",
-        "sha256": "43aa986caf44b36bfd1c5d59a4fdb3e55f27a21cfc5af085d98ae418896efbcf"
+        "sha256": "070204428ed680f04e4c85e23c78d2d570105fa7f17587c67c89eab10be43b24"
       }
     }
   },

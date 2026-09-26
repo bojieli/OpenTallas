@@ -108,6 +108,14 @@
           "cycles": 32246
         },
         {
+          "name": "matrix_engine (u_me)",
+          "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+          "key": "qwen_core",
+          "group": "u_me.",
+          "subtotal_of": "decode_core",
+          "cycles": 32246
+        },
+        {
           "name": "kv_streamer",
           "signoff": "results/physical_abi3/asap7/signoff/hbm_kv_stream_signoff.json",
           "key": "hbm_kv_stream"
@@ -181,14 +189,14 @@
         }
       ],
       "mac": {
-        "logic": "decode_core",
+        "logic": "matrix_engine (u_me)",
         "macs_per_token": 1277952,
         "format": "bf16",
-        "basis": "whole-core logic per weight MAC"
+        "basis": "results/rtl/hdc_decode_campaign.json weight_macs_per_token"
       },
       "compare": {
-        "signoff": "results/physical_abi3/asap7/signoff/hbm_kv_stream_signoff.json",
-        "key": "hbm_kv_stream"
+        "signoff": "results/physical_abi3/asap7/signoff/qwen_core_signoff.json",
+        "key": "qwen_core"
       }
     },
     "deepseek_v41_rom_array_die": {

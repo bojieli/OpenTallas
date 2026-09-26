@@ -155,7 +155,7 @@
               "total": 0.0263421181589365
             }
           },
-          "session_seconds": 28.6,
+          "session_seconds": 31.3,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.014474130227704052,
@@ -257,7 +257,7 @@
               "total": 0.016021128743886948
             }
           },
-          "session_seconds": 28.5,
+          "session_seconds": 27.2,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.05064748620497994,
@@ -311,6 +311,7 @@
             "temperature_c": 25.0,
             "voltage_v": 0.7
           },
+          "die_area_um2": 39163.618404,
           "em": {
             "PINS.VDD": {
               "assumed_dc_limit_ma_per_um": 1.0,
@@ -457,7 +458,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             },
             "PINS.VSS": {
@@ -605,7 +608,9 @@
                 "M1": 0.018,
                 "M2": 0.018,
                 "M5": 0.12,
-                "M6": 0.288
+                "M6": 0.288,
+                "M7": 0.8,
+                "M8": 0.8
               }
             }
           },
@@ -739,7 +744,7 @@
               "total": 0.02030235156416893
             }
           },
-          "session_seconds": 166.7,
+          "session_seconds": 187.4,
           "timing": {
             "hold_tns_ns": 0.0,
             "hold_wns_ns": 0.029569902082471344,
@@ -808,8 +813,12 @@
           }
         }
       },
-      "generated_at": "2026-09-26T03:07:26.736633+00:00",
+      "generated_at": "2026-09-26T09:07:45.841277+00:00",
       "label": "hbm_kv_stream",
+      "pdn": {
+        "note": "the grid the route built (ORFS grid_strategy-M1-M2-M5-M6)",
+        "variant": null
+      },
       "plan_entry": {
         "corners": [
           "TT",
@@ -847,14 +856,16 @@
       "routed": {
         "netlist_sha256": "65d8b3371cefb811e3c2c2c2f89d3955a4053fc420844034577f4731fae7e38c",
         "odb_sha256": "0652dab3a509286e887d61745bd1f9ff54fae5c8854a7def6eda26b8fe8e63af",
+        "parasitics": "routed SPEF (OpenRCX)",
         "results_dir": "/tmp/claude-1000/so/blocks/hdc__kv__ot_hdc_kv_stream/wd/orfs/results/asap7/opentallas_ot_hdc_kv_stream_asap7_signoff/base",
-        "spef_sha256": "ea43857ef33eea71ac05a173a66de34afc007cad71ea27ae187fbe4b8e7cf920"
+        "spef_sha256": "ea43857ef33eea71ac05a173a66de34afc007cad71ea27ae187fbe4b8e7cf920",
+        "stage": "final"
       },
       "schema": "opentallas.signoff.v1",
       "tool": {
         "image": "openroad/orfs:latest",
         "script": "tools/signoff_analysis.py",
-        "sha256": "113729ad03079647bdd1b4b9e2818fc280deb3c3bd520c5eff1103d9f49cf9c1"
+        "sha256": "070204428ed680f04e4c85e23c78d2d570105fa7f17587c67c89eab10be43b24"
       }
     }
   },
