@@ -21,7 +21,7 @@
 // concatenation over q is the kept list.  -inf blocks (selected only when fewer than k
 // blocks are finite) leave with out_lv = 0.
 //
-// Datapath: a registered front end per quarter computes the SL/8 block maxima of a beat
+// Datapath: a two-register front end per quarter (ot_hdc_v41x_sel_cfront) computes the SL/8 block maxima of a beat
 // (an 8-way key-max tree), pins the newest block, and feeds ot_hdc_v41x_sel (Q quarters x
 // SL/8 lanes, K, block-index width IWP-3): the streaming filter + GC + threshold select.
 // Latency budget: the mask is consumed >= 4 layers later (~20 us); at 1M per die (262,144
@@ -66,14 +66,6 @@ module ot_hdc_v41x_sel_cand #(
     localparam integer BL = SL / 8;                 // block lanes per quarter
     localparam integer BW = IWP - 3;                // block-index width
 
-    function automatic [15:0] fkey(input [15:0] v);
-        fkey = (v[14:0] == 0) ? 16'h8000 : v[15] ? ~v : {1'b1, v[14:0]};
-    endfunction
-    // the max of two (key, value) pairs; invalid = -inf
-    function automatic [31:0] kmax(input [31:0] a, input [31:0] b);
-        kmax = (b[31:16] > a[31:16]) ? b : a;
-    endfunction
-
     wire [Q-1:0]         c_ready;
     wire [Q*BL-1:0]      c_lv;
     wire [Q*BL*16-1:0]   c_val;
@@ -81,49 +73,15 @@ module ot_hdc_v41x_sel_cand #(
     wire [Q-1:0]         f_v, f_last;
     reg  [KW-1:0]        k_r;
 
-    genvar gq, gb, gl;
+    genvar gq;
     generate
         for (gq = 0; gq < Q; gq = gq + 1) begin : g_q
-            // front-end register (the block boundary); the max trees feed the core's input register
-            wire take = in_valid[gq] && in_ready[gq];
-            assign in_ready[gq] = c_ready[gq];         // no beat is taken before the core ingests
-            reg [SL-1:0]    r_lv;
-            reg [SL*16-1:0] r_val;
-            reg [SL*IWP-1:0] r_idx;
-            reg fv, fl;
-            assign f_v[gq] = fv;
-            assign f_last[gq] = fl;
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) begin fv <= 1'b0; fl <= 1'b0; end
-                else if (in_ready[gq]) begin fv <= in_valid[gq]; fl <= in_valid[gq] && in_last[gq]; end
-            end
-            always @(posedge clk) if (take) begin
-                r_lv <= in_lv[SL*gq +: SL]; r_val <= in_val[SL*16*gq +: SL*16]; r_idx <= in_idx[SL*IWP*gq +: SL*IWP];
-            end
-            // block maxima
-            wire [BL-1:0] blk_v;
-            for (gb = 0; gb < BL; gb = gb + 1) begin : g_b
-                wire [8*32-1:0] kv;
-                for (gl = 0; gl < 8; gl = gl + 1) begin : g_l
-                    wire [15:0] v = r_val[16*(8*gb + gl) +: 16];
-                    assign kv[32*gl +: 32] = r_lv[8*gb + gl] ? {fkey(v), v} : {16'h007F, 16'hFF80};
-                end
-                wire [31:0] m01 = kmax(kv[31:0], kv[63:32]), m23 = kmax(kv[95:64], kv[127:96]);
-                wire [31:0] m45 = kmax(kv[159:128], kv[191:160]), m67 = kmax(kv[223:192], kv[255:224]);
-                wire [31:0] mx  = kmax(kmax(m01, m23), kmax(m45, m67));
-                assign blk_v[gb] = r_lv[8*gb];
-                // pinned: the last valid block of quarter Q-1's last beat
-                wire pin_last;
-                if (gb + 1 < BL) begin : g_nx
-                    assign pin_last = !r_lv[8*(gb + 1)];
-                end else begin : g_ln
-                    assign pin_last = 1'b1;
-                end
-                wire pin = (gq == Q - 1) && f_last[gq] && r_lv[8*gb] && pin_last;
-                assign c_val[(BL*gq + gb)*16 +: 16] = pin ? 16'h7F80 : mx[15:0];
-                assign c_idx[(BL*gq + gb)*BW +: BW] = r_idx[IWP*(8*gb) + 3 +: BW];
-                assign c_lv[BL*gq + gb] = blk_v[gb];
-            end
+            assign in_ready[gq] = c_ready[gq];      // the front end advances only with the core
+            ot_hdc_v41x_sel_cfront #(.SL(SL), .IWP(IWP), .PIN(gq == Q - 1)) u_f (
+                .clk(clk), .rst_n(rst_n), .en(c_ready[gq]), .in_valid(in_valid[gq]), .in_last(in_last[gq]),
+                .in_lv(in_lv[SL*gq +: SL]), .in_val(in_val[SL*16*gq +: SL*16]), .in_idx(in_idx[SL*IWP*gq +: SL*IWP]),
+                .o_v(f_v[gq]), .o_last(f_last[gq]), .o_lv(c_lv[BL*gq +: BL]), .o_val(c_val[BL*16*gq +: BL*16]),
+                .o_idx(c_idx[BL*BW*gq +: BL*BW]));
         end
     endgenerate
     always @(posedge clk) if (|(in_valid & in_ready)) k_r <= in_k;
@@ -138,4 +96,76 @@ module ot_hdc_v41x_sel_cand #(
         .mem_we(mem_we), .mem_waddr(mem_waddr), .mem_wdata(mem_wdata), .mem_re(mem_re), .mem_raddr(mem_raddr),
         .mem_rdata(mem_rdata), .rep_req(rep_req), .ovf(ovf), .busy(busy), .stats(stats));
     assign out_lv = o_lv & ~o_ninf;
+endmodule
+
+// ---------------------------------------------------------------------------
+// One quarter's candidate front end: input register, then the SL/8 block maxima (8-way
+// key-max trees, invalid lanes = -inf) and the +inf pin of the newest block (PIN: this is
+// quarter Q-1; the pinned block is the last valid block of the in_last beat), registered.
+// Both stages advance together when `en` (the core's in_ready) is high.
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_sel_cfront #(
+    parameter integer SL  = 16,
+    parameter integer IWP = 20,
+    parameter integer PIN = 1
+) (
+    input  wire                        clk,
+    input  wire                        rst_n,
+    input  wire                        en,
+    input  wire                        in_valid,
+    input  wire                        in_last,
+    input  wire [SL-1:0]               in_lv,
+    input  wire [SL*16-1:0]            in_val,
+    input  wire [SL*IWP-1:0]           in_idx,
+    output reg                         o_v,
+    output reg                         o_last,
+    output reg  [SL/8-1:0]             o_lv,
+    output reg  [(SL/8)*16-1:0]        o_val,
+    output reg  [(SL/8)*(IWP-3)-1:0]   o_idx
+);
+    localparam integer BL = SL / 8;
+    localparam integer BW = IWP - 3;
+    function automatic [15:0] fkey(input [15:0] v);
+        fkey = (v[14:0] == 0) ? 16'h8000 : v[15] ? ~v : {1'b1, v[14:0]};
+    endfunction
+    function automatic [31:0] kmax(input [31:0] a, input [31:0] b);
+        kmax = (b[31:16] > a[31:16]) ? b : a;
+    endfunction
+    reg              r_v, r_last;
+    reg [SL-1:0]     r_lv;
+    reg [SL*16-1:0]  r_val;
+    reg [SL*IWP-1:0] r_idx;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin r_v <= 1'b0; r_last <= 1'b0; o_v <= 1'b0; o_last <= 1'b0; end
+        else if (en) begin
+            r_v <= in_valid; r_last <= in_valid && in_last;
+            o_v <= r_v; o_last <= r_last;
+        end
+    end
+    always @(posedge clk) if (en) begin r_lv <= in_lv; r_val <= in_val; r_idx <= in_idx; end
+    genvar gb, gl;
+    generate
+        for (gb = 0; gb < BL; gb = gb + 1) begin : g_b
+            wire [8*32-1:0] kv;
+            for (gl = 0; gl < 8; gl = gl + 1) begin : g_l
+                wire [15:0] v = r_val[16*(8*gb + gl) +: 16];
+                assign kv[32*gl +: 32] = r_lv[8*gb + gl] ? {fkey(v), v} : {16'h007F, 16'hFF80};
+            end
+            wire [31:0] m01 = kmax(kv[31:0], kv[63:32]), m23 = kmax(kv[95:64], kv[127:96]);
+            wire [31:0] m45 = kmax(kv[159:128], kv[191:160]), m67 = kmax(kv[223:192], kv[255:224]);
+            wire [31:0] mx  = kmax(kmax(m01, m23), kmax(m45, m67));
+            wire pin_last;
+            if (gb + 1 < BL) begin : g_nx
+                assign pin_last = !r_lv[8*(gb + 1)];
+            end else begin : g_ln
+                assign pin_last = 1'b1;
+            end
+            wire pin = (PIN != 0) && r_last && r_lv[8*gb] && pin_last;
+            always @(posedge clk) if (en) begin
+                o_lv[gb] <= r_lv[8*gb];
+                o_val[16*gb +: 16] <= pin ? 16'h7F80 : mx[15:0];
+                o_idx[BW*gb +: BW] <= r_idx[IWP*(8*gb) + 3 +: BW];
+            end
+        end
+    endgenerate
 endmodule
