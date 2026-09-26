@@ -205,28 +205,141 @@ and `energy_per_token.json`.
 |---|---|---|---:|---:|---:|---:|---:|---:|
 | qwen_core | -- | pins | 3.0 | 0.22 | 3.3 | 1.98 | 1.02 | 0.00 |
 | qwen_core | -- | bumps | 224.0 | 101.00 | 217.0 | 6.66 | 23.17 | 17.85 |
-| hbm_kv_stream | -- | pins | 2.1 | 0.11 | 2.2 | 1.81 | 0.37 | 0.00 |
+| hbm_kv_stream | 198 x 198 | pins | 2.1 | 0.11 | 2.2 | 1.81 | 0.37 | 0.00 |
 | v41_actquant | -- | pins | 3.0 | 0.33 | 2.5 | 1.73 | 0.75 | 0.00 |
 | v41_blockdot_lane0 | -- | pins | 1.7 | 0.18 | 1.7 | 1.19 | 0.50 | 0.00 |
 | v41_select | -- | pins | 2.0 | 0.24 | 1.8 | 1.45 | 0.41 | 0.00 |
-| rom_argmax_reduce_gate_level | -- | pins | 2.4 | 0.45 | 2.4 | 1.47 | 1.06 | 0.00 |
-| rom_argmax_reduce_gate_level | -- | bumps | 9.8 | 2.19 | 5.9 | 1.59 | 2.66 | 1.01 |
-| rom_mcast_node | -- | pins | 2.8 | 0.66 | 2.6 | 1.70 | 1.30 | 0.00 |
-| rom_mcast_node | -- | bumps | 29.9 | 11.20 | 29.1 | 1.94 | 6.68 | 4.09 |
-| rom_moe_dispatch | -- | pins | 1.9 | 0.58 | 1.9 | 1.21 | 0.64 | 0.00 |
-| rom_moe_dispatch | -- | bumps | 3.6 | 0.93 | 4.9 | 1.19 | 1.42 | 1.01 |
+| rom_argmax_reduce_gate_level | 74 x 74 | pins | 2.4 | 0.45 | 2.4 | 1.47 | 1.06 | 0.00 |
+| rom_argmax_reduce_gate_level | 74 x 74 | bumps | 9.8 | 2.19 | 5.9 | 1.59 | 2.66 | 1.01 |
+| rom_mcast_node | 91 x 91 | pins | 2.8 | 0.66 | 2.6 | 1.70 | 1.30 | 0.00 |
+| rom_mcast_node | 91 x 91 | bumps | 29.9 | 11.20 | 29.1 | 1.94 | 6.68 | 4.09 |
+| rom_moe_dispatch | 66 x 66 | pins | 1.9 | 0.58 | 1.9 | 1.21 | 0.64 | 0.00 |
+| rom_moe_dispatch | 66 x 66 | bumps | 3.6 | 0.93 | 4.9 | 1.19 | 1.42 | 1.01 |
 
 #### Energy per decode step of the reduced vehicles (TT)
 
 | Architecture | Step cycles | Logic uJ | Memory and links uJ | Static uJ | Token uJ | pJ per weight MAC (matrix engine / whole step) | Not included |
 |---|---:|---:|---:|---:|---:|---|---|
 | deepseek_v41_rom_array_die | 1,088,551 | 135.08 | 139.75 | 0.00 | 274.83 | -- | sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total; matrix_engine (u_me): block v41_matvec not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; FP4 quantise-dequantise: block v41_fp4qdq not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; Engram hash: block v41_engram_hash not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; softplus / sqrt: block v41_softplus not in results/physical_abi3/asap7/signoff/v41_core_signoff.json |
+| deepseek_v41_rom_array_package | 1,088,551 | 318.12 | 5.70 | 0.00 | 323.82 | -- | four-die tensor group (one die-step equivalent): sequencer, V4.1 stream unit (ot_hdc_v41_stream), hc projection (ot_hdc_v41_hcproj) and Sinkhorn unit: no retained route (being routed by the full-chip workstream); their energy is not in the logic total; four-die tensor group (one die-step equivalent): matrix_engine (u_me): block v41_matvec not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; four-die tensor group (one die-step equivalent): FP4 quantise-dequantise: block v41_fp4qdq not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; four-die tensor group (one die-step equivalent): Engram hash: block v41_engram_hash not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; four-die tensor group (one die-step equivalent): softplus / sqrt: block v41_softplus not in results/physical_abi3/asap7/signoff/v41_core_signoff.json; package controller: block rom_pkg_ctrl not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; fabric router: block rom_fabric_router not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; MoE expert port: block rom_moe_expert_port not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json; express link: block rom_express_link not in results/physical_abi3/asap7/signoff/rom_fabric_signoff.json |
 | hbm_comparator | 32,275 | 19.57 | 305.61 | 10.17 | 335.35 | 14.85 / 262.41 | -- |
 | qwen3_8b_rom_reticle | 32,246 | 18.98 | 2.17 | 0.00 | 21.15 | 3.97 / 16.55 | -- |
 
 <!-- signoff-tables:end -->
 
-@@FINDINGS@@
+## What the results say
+
+### Qwen3-8B ROM reticle: the reduced decode core
+
+The core (0.85 M cells at the post-CTS stage, 0.9 ns clock) draws 654 mW at
+TT over a decode step. The matrix engine (`u_me`) is 175 mW and the stream
+unit (`u_su`) 65 mW; the remaining 414 mW is the sequencer, the core-level
+operand and result registers and, above all, the clock tree. By OpenSTA's
+grouping the clock network is 210 mW (32%), the registers 240 mW and the
+combinational logic 204 mW. Leakage is 0.09 mW: ASAP7's RVT library at
+25 C leaks almost nothing, so every number here is dynamic.
+
+One step is 32,246 cycles, 29.0 us at the routed clock. It costs 19.0 uJ of
+core logic plus 2.2 uJ of memory reads (2.64 MB of weight ROM at the
+analytical model's 0.08 pJ/B; 0.26 MB of KV and 0.49 MB of vector memory
+SRAM traffic at 2.6 pJ/B): 21.2 uJ per token. The matrix engine spends
+3.97 pJ per weight MAC (1,277,952 BF16 MACs per step); the whole step is
+16.5 pJ per MAC.
+
+Timing gives 688 MHz at SS (640 MHz under the 5% OCV derate), 1,051 MHz at
+TT (954) and 1,374 MHz at FF (1,243). Hold closes at SS and TT but fails at
+FF by 12 ps, and under the OCV derate by 52-56 ps at every corner: ORFS
+repairs hold at the one corner it routes at, with no derate.
+
+The clock tree drives 150,844 register clock pins through 17,607 buffers
+and inverters (5,654 um2). Insertion latency is 0.80-0.90 ns, about one
+clock period, with 71 ps of setup skew and 101 ps of hold skew.
+
+Fed at its own M6 pins, the route's grid drops at worst 3.0 mV on VDD and
+3.3 mV on VSS (under 0.5%). Fed from a 140 um flip-chip bump array landing
+directly on M6, it drops 224 mV (32% of the supply) and the M5 stripes carry
+23 mA/um. The ORFS block grid has no layer that can spread bump current, so
+a die built from these blocks needs an upper grid; the M7/M8 variant below
+sizes one.
+
+### HBM comparator
+
+The KV streamer (`ot_hdc_kv_stream`, 55,125 cells, 1,128 MHz at TT) draws
+20.3 mW, 54% of it in the clock network: it idles through most of the step
+and is never clock-gated. Its logic is 0.6 uJ per step and the core is the
+Qwen core above (19.0 uJ). The HBM path dominates. The 2.64 MB of weights
+per step cost 277 uJ at the measured 104.9 pJ/B, the KV bytes 27.6 uJ, and
+the stack's idle interface power (1/8 of 2.8 W for 4 of 32 pseudo-channels)
+10.2 uJ. A step is 335 uJ, 15.9 times the ROM reticle's 21.2 uJ; 88% of the
+difference is moving the weights.
+
+### DeepSeek-V4.1 ROM array, per die
+
+The V4.1 step is 1,088,551 cycles (0.98 ms). With their register activity
+mapped from the campaign, the routed V4.1 units draw 32.9 mW (activation
+quantiser), 6.2 mW per block-dot lane (16 lanes) and 5.2 mW (top-16
+select), about half of each in the clock network. These units are busy for
+a few percent of the step (the QE, which holds the quantiser and the
+block-dot lanes, is busy 73,098 of 1,088,551 cycles), so their energy is
+almost all idle clocking: the 16 block-dot lanes alone spend 98 uJ per
+step. The memories move 46.9 MB of ROM (3.8 uJ) and 52.3 MB of SRAM traffic
+(136 uJ, of which 32 MB is KV reads) per step.
+
+### DeepSeek-V4.1 ROM array, per package
+
+The routed fabric blocks, vectorless, draw 10-25 mW each and close at
+1.15-1.41 GHz at TT and 0.77-0.93 GHz at SS. A package step is a four-die
+tensor group (about one die-step of energy), the fabric logic over the
+step, and 2.46 MB of UCIe all-reduce traffic at 0.29 pJ/b (5.7 uJ, derived
+under the Qwen package campaign's split rule, not simulated for V4.1).
+
+### Against the analytical model
+
+| Term | Analytical (`configs/hardware/technology.json`) | Measured here (ASAP7, TT) | Ratio |
+|---|---|---|---|
+| MAC energy, BF16 | 0.33 pJ (0.13-0.70) | 3.97 pJ per MAC in the matrix engine; 16.5 pJ per MAC for the whole Qwen step | 12x; 50x |
+| Clock energy | 8.5e-11 J/mm2/cycle (3e-11-1.6e-10) | `analytical_comparison` in `energy_per_token.json`, clock network alone and with the registers' clock pins | see the JSON |
+| Logic leakage | 0.06 W/mm2 (0.011-0.2) | 0.2 mW/mm2 (Qwen core, RVT, 25 C) | ~300x lower |
+| ROM read | 0.08 pJ/B | not measured (no ROM macro in the routed blocks) | -- |
+
+The MAC disagreement is the one that matters. The analytical 0.33 pJ is a
+datapath-only figure. The matrix engine pays a pipelined BF16 multiplier, an
+FP32 adder and about 1,500 flip-flops per lane (95,995 in 64 lanes), all
+clocked every cycle whether or not a lane has work, plus the reduction tree
+behind them. Over the whole step, the core's clock tree and sequencer, which
+the analytical term never sees, bring it to 16.5 pJ. ASAP7 is a predictive
+library, so the ratio rather than the absolute pJ is the finding: for this
+microarchitecture the analytical model's logic energy per token is
+optimistic by about an order of magnitude, and its clock term (a whole-die
+budget taken from GPU TDPs) does not stand in for the clock tree a core with
+150,000 always-clocked flops actually builds. Leakage runs the other way:
+the analytical term is a foundry-class assumption at operating temperature,
+ASAP7 RVT at 25 C is not a foundry library, and neither number should move
+the other.
+
+### Recommendations
+
+1. **Clock gating.** No block has an integrated clock gate. The clock
+   network is 22-54% of every block's power, and the registers' own clock
+   pins are most of the rest of the sequential power. The V4.1 units are
+   idle for over 90% of a step; gating the QE, XU and HE by their busy
+   signals, and the matrix-engine lanes by lane validity, would remove most
+   of the V4.1 die's logic energy and a large part of the Qwen core's.
+2. **Hold at every corner.** Hold fails at FF (12 ps on the core, 4 ps on the
+   top-16 select) and under a 5% OCV derate by about 55 ps. ORFS's hold
+   repair needs an FF scenario and a derated one, or a budgeted margin.
+3. **Upper power grid.** The M1/M2/M5/M6 block grid holds 3 mV fed at its
+   pins but 224 mV fed from bumps. A die needs M7/M8 straps (and a
+   redistribution layer to the bumps).
+4. **Follow-pin current density.** Even fed ideally at the M6 pins, the
+   18 nm M1/M2 follow-pins carry 1.2-2.4 mA/um near the densest flop
+   clusters, above the assumed 1 mA/um. ASAP7 has no EM rule to check
+   against; a foundry flow would need wider rails or M3 straps over the
+   matrix engine's register columns.
+5. **Clock latency.** A 0.8-0.9 ns insertion delay on a 0.64 mm core is one
+   clock period. A full die's tree will be longer, so the full-chip
+   workstream should plan a mesh or H-tree top level and carry the skew in
+   the block timing budgets.
 
 ## Reproduce
 
