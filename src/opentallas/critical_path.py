@@ -46,10 +46,20 @@ Two machines, one graph
 * **ROM** (the hardwired datapath): every node priced from
   ``technology.serial_latency.rom_datapath`` -- measured RTL depths at the
   slowest routed clock.  Streamable consumers chase their producer.
-* **GPU**: the same graph; every dependent kernel boundary pays a published
-  CUDA-graph launch gap, vector work fused into a kernel is free, a dependent
-  arithmetic chain inside one kernel (the Sinkhorn) pays published instruction
-  latencies at the part's clock.
+* **GPU**: the same graph, executed as state-of-the-art decode is: a persistent
+  megakernel or a PDL-chained sequence of fused kernels
+  (``serial_latency.gpu_datapath.execution_model`` = ``megakernel_pdl``).
+  Elementwise, norm and reduction work is fused into a neighbouring GEMM or
+  attention kernel; every remaining dependent boundary (a GEMM/GEMV, an
+  attention or state scan, a top-k select, the flash-decode combine, the
+  argmax) pays only its residual dependency signal, never a launch: a
+  measured all-SM gather (``dependent_boundary_gather_s``: every GEMV input,
+  every top-k or argmax over a whole vector) or a measured one-to-one handoff
+  (``dependent_boundary_handoff_s``: the attention scan, the flash-decode
+  combine, the token-id handoff).  A dependent arithmetic chain inside one kernel (the
+  Sinkhorn) pays published instruction latencies at the part's clock.  The
+  unfused CUDA-graph stack (``cuda_graph``: ``kernel_launch_gap_s`` per
+  kernel) survives only as a labelled legacy sensitivity.
 
 Collectives
 -----------
@@ -164,18 +174,81 @@ class RomDatapath:
         return max(16, 2 ** int(math.log2(max(1.0, lanes))))
 
 
+#: How a GPU decode step crosses a dependent-operator boundary.
+#: ``megakernel_pdl`` (the baseline): one persistent kernel, or a PDL-chained
+#: sequence of fused kernels, in which a consumer waits only for its producer's
+#: dependency signal (``dependent_boundary_s``), and elementwise, norm and
+#: reduction work is fused into the prologue or epilogue of a neighbouring
+#: GEMM/attention kernel.  ``cuda_graph`` (a labelled legacy sensitivity only):
+#: every kernel of today's CUDA-graph stacks is a separate launch paying
+#: ``kernel_launch_gap_s``, with the unfused kernel boundaries of those stacks.
+GPU_EXECUTION_MODELS = ("megakernel_pdl", "cuda_graph")
+
+
+#: The two kinds of dependent boundary a fused GPU decode step still has.
+#: ``gather``: the consumer needs a whole vector that every SM produced a slice
+#: of (every GEMV input -- a GEMV's K dimension is the full vector --, a top-k
+#: over every expert score, the vocabulary argmax), so every SM arrives on a
+#: counter and waits for all.  ``handoff``: the consumer needs a slice from a
+#: bounded set of producers (one attention head's q/k/v rows; the split-KV
+#: partials of one head), a producer-to-consumer flag through L2.
+BOUNDARY_KINDS = ("gather", "handoff")
+
+
 @dataclass(frozen=True)
 class GpuDatapath:
-    kernel_gap_s: float
     fp32_dep_cycles: float
     fp32_div_cycles: float
+    execution_model: str = "megakernel_pdl"
+    gather_s: float = 0.0
+    handoff_s: float = 0.0
+    launch_gap_s: float = 0.0
+
+    @property
+    def fused(self) -> bool:
+        """Elementwise/norm/reduction kernels fused into a neighbouring GEMM or attention kernel."""
+        return self.execution_model == "megakernel_pdl"
+
+    def boundary(self, kind: str) -> float:
+        """Seconds one dependent boundary of this kind costs on the serial path."""
+        if kind not in BOUNDARY_KINDS:
+            raise ValidationError(f"unknown GPU boundary kind {kind!r}")
+        if not self.fused:
+            return self.launch_gap_s
+        return self.gather_s if kind == "gather" else self.handoff_s
 
     @classmethod
     def from_technology(cls, technology: Any) -> "GpuDatapath":
         g = technology.raw["serial_latency"]["gpu_datapath"]
-        return cls(kernel_gap_s=_val(g["kernel_launch_gap_s"]),
-                   fp32_dep_cycles=_val(g["fp32_dependent_cycles"]),
-                   fp32_div_cycles=_val(g["fp32_divide_cycles"]))
+        mode = str(g["execution_model"]["value"])
+        if mode not in GPU_EXECUTION_MODELS:
+            raise ValidationError(f"unknown GPU execution model {mode!r}; one of {GPU_EXECUTION_MODELS}")
+        return cls(fp32_dep_cycles=_val(g["fp32_dependent_cycles"]),
+                   fp32_div_cycles=_val(g["fp32_divide_cycles"]),
+                   execution_model=mode,
+                   gather_s=_val(g["dependent_boundary_gather_s"]),
+                   handoff_s=_val(g["dependent_boundary_handoff_s"]),
+                   launch_gap_s=_val(g["kernel_launch_gap_s"]))
+
+
+def gpu_execution_variant(technology: Any, execution_model: str = "megakernel_pdl", *,
+                          gather_s: float | None = None, handoff_s: float | None = None,
+                          launch_gap_s: float | None = None) -> Any:
+    """A copy of ``technology`` with the GPU's serial execution model and/or its
+    per-boundary costs replaced.  The ROM datapath, every link and the GPU's
+    memory and compute roofline are untouched."""
+
+    if execution_model not in GPU_EXECUTION_MODELS:
+        raise ValidationError(f"unknown GPU execution model {execution_model!r}")
+    raw = json.loads(json.dumps(technology.raw))
+    g = raw["serial_latency"]["gpu_datapath"]
+    g["execution_model"]["value"] = execution_model
+    for key, value in (("dependent_boundary_gather_s", gather_s), ("dependent_boundary_handoff_s", handoff_s),
+                       ("kernel_launch_gap_s", launch_gap_s)):
+        if value is not None:
+            g[key]["value"] = float(value)
+    from dataclasses import replace as _replace
+    return _replace(technology, raw=raw)
 
 
 _DATAPATHS: dict[int, tuple[Any, "RomDatapath", "GpuDatapath"]] = {}
@@ -1125,9 +1198,9 @@ class Ops:
     def cyc(self, c: float) -> float:
         return c / self.m.clock_hz
 
-    @property
-    def gap(self) -> float:
-        return self.gp.kernel_gap_s
+    def gap(self, kind: str = "gather") -> float:
+        """One dependent GPU boundary of ``kind`` (see ``BOUNDARY_KINDS``)."""
+        return self.gp.boundary(kind)
 
     @property
     def ctrl(self) -> float:
@@ -1145,19 +1218,27 @@ class Ops:
         return self.g.add(name, deps, layer=layer, kind="join")
 
     def ew(self, name: str, deps: list, n: float, depth_cycles: float, layer: int, stream: bool = True,
-           kernel: bool = False, gpu_extra: float = 0.0, desc: str = "") -> str:
+           kernel: bool = False, gpu_extra: float = 0.0, desc: str = "", combine: str = "") -> str:
+        """A vector operator.  On a GPU, ``kernel`` marks a node today's unfused
+        stacks run as its own kernel; under ``megakernel_pdl`` it is fused into
+        a neighbour's prologue/epilogue (an intra-CTA dependency, ~7 ns, not
+        charged) unless ``combine`` names the boundary it still needs (the
+        split-KV flash-decode reduction: ``handoff``; the vocabulary argmax:
+        ``gather``)."""
         if self.rom:
             return self._add(name, deps, layer, ("vec", n, depth_cycles),
                              ctrl=self.ctrl if stream else self.bctrl, stream=stream, kind="vector", desc=desc)
-        return self.g.add(name, deps, layer=layer, depth=(self.gap if kernel else 0.0) + gpu_extra,
+        kernel = kernel and (bool(combine) or not self.gp.fused)
+        return self.g.add(name, deps, layer=layer, depth=(self.gap(combine or "gather") if kernel else 0.0) + gpu_extra,
+                          boundary=(combine or "gather") if kernel else None,
                           depth_cat="kernel_launch" if kernel else "compute_chain", kind="vector", desc=desc)
 
     def reduce(self, name: str, deps: list, n: float, layer: int, segments: int = 1, stream: bool = True,
-               kernel: bool = False, desc: str = "") -> str:
+               kernel: bool = False, desc: str = "", combine: str = "") -> str:
         if self.rom:
             return self._add(name, deps, layer, ("red", n, segments),
                              ctrl=self.ctrl if stream else self.bctrl, stream=stream, kind="reduce", desc=desc)
-        return self.ew(name, deps, n, 0, layer, kernel=kernel, desc=desc)
+        return self.ew(name, deps, n, 0, layer, kernel=kernel, desc=desc, combine=combine)
 
     def rmsnorm(self, pre: str, deps: list, n: float, layer: int, segments: int = 1, kernel: bool = True) -> str:
         r = self.r
@@ -1180,7 +1261,7 @@ class Ops:
             return self._add(name, deps, layer, ("mv", r.interleave * min(r.interleave, blocks), depth),
                              w=bytes_, ctrl=self.bctrl, kind="matvec",
                              desc=desc or f"[{n_out:.0f}, {k:.0f}] {fmt}")
-        return self.g.add(name, deps, layer=layer, w=bytes_, depth=self.gap, depth_cat="kernel_launch",
+        return self.g.add(name, deps, layer=layer, w=bytes_, depth=self.gap("gather"), depth_cat="kernel_launch", boundary="gather",
                           kind="matvec", desc=desc or f"[{n_out:.0f}, {k:.0f}] {fmt} GEMV kernel")
 
     def kvscan(self, name: str, deps: list, layer: int, *, kv_bytes: float, depth_cycles: float,
@@ -1188,12 +1269,13 @@ class Ops:
         if self.rom:
             return self.g.add(name, deps, layer=layer, k=kv_bytes, depth=self.cyc(depth_cycles), ctrl=self.bctrl,
                               kind="kvscan", desc=desc)
-        return self.g.add(name, deps, layer=layer, k=kv_bytes, depth=self.gap if kernel else 0.0,
+        return self.g.add(name, deps, layer=layer, k=kv_bytes, depth=self.gap("handoff") if kernel else 0.0,
+                          boundary="handoff" if kernel else None,
                           depth_cat="kernel_launch" if kernel else "compute_chain", kind="kvscan", desc=desc)
 
     def select_local(self, name: str, deps: list, layer: int, *, n: int, k: int, desc: str = "") -> str:
         if not self.rom:
-            return self.g.add(name, deps, layer=layer, depth=self.gap, depth_cat="kernel_launch", kind="select",
+            return self.g.add(name, deps, layer=layer, depth=self.gap("gather"), depth_cat="kernel_launch", kind="select", boundary="gather",
                               desc=desc or f"top-{k} of {n} kernel")
         units = self.pricer.price(("sel", n, k))[3]["units"]
         return self._add(name, deps, layer, ("sel", n, k), ctrl=self.bctrl, kind="select",
@@ -1202,7 +1284,7 @@ class Ops:
     def select_final(self, name: str, deps: list, layer: int, *, k: int, ways: int, ascending: bool,
                      desc: str = "") -> str:
         if not self.rom:
-            return self.g.add(name, deps, layer=layer, depth=self.gap if ways > 1 else 0.0,
+            return self.g.add(name, deps, layer=layer, depth=self.gap("gather") if ways > 1 else 0.0, boundary="gather" if ways > 1 else None,
                               depth_cat="kernel_launch", kind="select", desc=desc or f"{ways}-way merge")
         merge = (k + math.ceil(math.log2(ways))) if ways > 1 else 0
         order = (2 * k + self.r.select_extra + k - 1) if ascending else 0
@@ -1272,13 +1354,15 @@ def build_graph(shape: DecodeShape, ctx: int, ops: Ops) -> str:
     ops.sel = {}
 
     tok = ops.join("token", [], -1)
-    emb = g.add("embed", [tok], layer=-1, depth=ops.cyc(r.su_none) + r.rom_row_s if ops.rom else ops.gap,
+    emb = g.add("embed", [tok], layer=-1, depth=ops.cyc(r.su_none) + r.rom_row_s if ops.rom else ops.gap("handoff"),
+                boundary=None if ops.rom else "handoff",
                 depth_cat="compute_chain" if ops.rom else "kernel_launch",
                 ctrl=ops.bctrl, desc="embedding row read" + (" + 4-copy expand" if HC > 1 else ""))
     eng: dict[int, str] = {}
     for L in shape.engram.get("layers", ()):
         hd, cols = shape.engram["head_dim"], shape.engram["columns"]
-        h = g.add(f"E{L}.hash", [tok], layer=L, depth=ops.cyc(r.engram_hash) if ops.rom else ops.gap,
+        h = g.add(f"E{L}.hash", [tok], layer=L, depth=ops.cyc(r.engram_hash) if ops.rom else ops.gap("handoff"),
+                  boundary=None if ops.rom else "handoff",
                   ctrl=ops.bctrl, desc="Engram hash columns")
         rr = g.add(f"E{L}.gather", [h], layer=L, depth=(r.rom_row_s + ops.cyc(r.su_none)) if ops.rom else 0.0,
                    ctrl=ops.ctrl, desc="Engram table rows (token-addressed)")
@@ -1352,7 +1436,8 @@ def build_graph(shape: DecodeShape, ctx: int, ops: Ops) -> str:
     V = shape.vocab
     lg = ops.matvec("head.lm_head", [x], NL, n_out=V, k=D, bytes_=V * D * shape.dense_bpp,
                     desc=f"lm_head [{V}, {D}], vocabulary split {G} ways")
-    am = ops.reduce("head.argmax", [lg], math.ceil(V / max(1, G)), NL, kernel=True, desc="local argmax")
+    am = ops.reduce("head.argmax", [lg], math.ceil(V / max(1, G)), NL, kernel=True, combine="gather",
+                    desc="local argmax (needs every logit block: a boundary even when fused)")
     am = ops.collective("head.argmax_merge", [am], NL, op="all_gather", payload=8,
                         desc="best {logit, id} per partition") or am
     return am
@@ -1383,7 +1468,7 @@ def _softmax_pv(ops: Ops, P: str, L: int, sco: str, heads: int, rows: int, hd: i
                     depth_cycles=r.me_lat + r.me_tree * math.ceil(math.log2(max(1, rows / 16 / r.interleave))),
                     desc="P x V")
     return ops.ew(f"{P}.normalize", [pv, den] + (extra_dep or []), heads * vhd, r.su_none + r.fdiv + r.fadd, L,
-                  stream=False, kernel=True, desc="acc / den (flash-decode combine on a GPU)")
+                  stream=False, kernel=True, combine="handoff", desc="acc / den (flash-decode combine on a GPU)")
 
 
 def _gqa(ops: Ops, shape: DecodeShape, spec: LayerSpec, xq: str) -> str:
@@ -1769,6 +1854,30 @@ class SerialGraph:
                 for L, ss in sorted(by_layer.items()) if layers is None or L in layers},
             "collectives": collective_census(self.census, len(self.shape.layers)),
         }
+
+
+def gpu_boundary_census(graph: "Graph", num_layers: int) -> dict[str, Any]:
+    """Dependent GPU boundaries of one token's graph by kind: the whole token,
+    and per decoder layer (the mean over layers, and the min/max layer)."""
+    per: dict[int, dict[str, int]] = {}
+    total = {k: 0 for k in BOUNDARY_KINDS}
+    for node in graph.nodes.values():
+        kind = node.get("boundary")
+        if not kind:
+            continue
+        total[kind] += 1
+        if 0 <= node["layer"] < num_layers:
+            per.setdefault(node["layer"], {k: 0 for k in BOUNDARY_KINDS})[kind] += 1
+    layer_totals = [sum(per.get(L, {}).values()) for L in range(num_layers)]
+    return {
+        "per_token": total,
+        "per_token_total": sum(total.values()),
+        "per_layer_mean": {k: sum(per.get(L, {}).get(k, 0) for L in range(num_layers)) / max(1, num_layers)
+                           for k in BOUNDARY_KINDS},
+        "per_layer_total_mean": sum(layer_totals) / max(1, num_layers),
+        "per_layer_total_min": min(layer_totals) if layer_totals else 0,
+        "per_layer_total_max": max(layer_totals) if layer_totals else 0,
+    }
 
 
 def collective_census(events: list, num_layers: int) -> dict[str, Any]:
