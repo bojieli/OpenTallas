@@ -1,12 +1,12 @@
 `timescale 1ns/1ps
 // Equivalence of the V4.1 vector unit's special-function pipes (rtl/hdc/v41x/ot_hdc_v41x_sfu.sv)
 // against the repository's qualified five-stage pipes, one operand per cycle:
-//   ot_hdc_v41x_fdiv (18)     vs ot_hdc_fdiv (31)       code and fault
+//   ot_hdc_v41x_fdiv (19)     vs ot_hdc_fdiv (31)       code and fault
 //   ot_hdc_v41x_exp (49)      vs ot_hdc_exp (92)        code and fault
 //   ot_hdc_v41x_rsqrt (37)    vs ot_hdc_rsqrt (61)      code where neither faults (both
 //                             report a unit's refusal at that unit's own cycle, not
 //                             aligned with vo, so fault timing is counted, not graded)
-//   ot_hdc_v41x_softplus (161) vs ot_hdc_softplus (259) both results and fault
+//   ot_hdc_v41x_softplus (162) vs ot_hdc_softplus (259) both results and fault
 // Operands: random words with the exponent field biased toward the edges
 // (subnormal, near-overflow, near 1).  +N=<count> sets the number of operands.
 // Prints: V41XSFU n=<n> div_err=<e> exp_err=<e> rsq_err=<e> sp_err=<e>
@@ -46,7 +46,7 @@ module tb_hdc_v41x_vec_sfu (input wire clk);
     wire dvq, dvr, dfq, dfr, dfq_d, dvq_d;
     ot_hdc_v41x_fdiv u_nd (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(dq), .vo(dvq), .fault(dfq));
     ot_hdc_fdiv      u_rd (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(dr), .vo(dvr), .fault(dfr));
-    ot_hdc_delay #(.W(34), .D(31 - 18), .RESET(1)) d_d (clk, rst_n, {dvq, dfq, dq}, {dvq_d, dfq_d, dq_d});
+    ot_hdc_delay #(.W(34), .D(31 - 19), .RESET(1)) d_d (clk, rst_n, {dvq, dfq, dq}, {dvq_d, dfq_d, dq_d});
     // exp
     wire [31:0] eq, er, eq_d;
     wire evq, evr, efq, efr, evq_d, efq_d;
@@ -64,7 +64,7 @@ module tb_hdc_v41x_vec_sfu (input wire clk);
     wire svq, svr, sfq, sfr, svq_d, sfq_d;
     ot_hdc_v41x_softplus u_ns (.clk(clk), .rst_n(rst_n), .v(v), .x(a), .sp(sq), .r(tq), .vo(svq), .fault(sfq));
     ot_hdc_softplus      u_rs (.clk(clk), .rst_n(rst_n), .v(v), .x(a), .sp(sr), .r(tr), .vo(svr), .fault(sfr));
-    ot_hdc_delay #(.W(66), .D(259 - 161), .RESET(1)) d_s (clk, rst_n, {svq, sfq, sq, tq}, {svq_d, sfq_d, sq_d, tq_d});
+    ot_hdc_delay #(.W(66), .D(259 - 162), .RESET(1)) d_s (clk, rst_n, {svq, sfq, sq, tq}, {svq_d, sfq_d, sq_d, tq_d});
 
     integer rsq_fm = 0;
     integer de = 0, ee = 0, re = 0, se = 0, dn = 0, en = 0, rn = 0, sn = 0;

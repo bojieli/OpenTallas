@@ -7,9 +7,9 @@
 //
 //   rsqrt            ot_hdc_v41x_rsqrt                              37
 //   sqrt             ot_hdc_fsqrt                                   31
-//   sqrt(softplus)   ot_hdc_v41x_softplus                          161
+//   sqrt(softplus)   ot_hdc_v41x_softplus                          162
 //   Engram gate      m = max(|R|, 1e-6); sqrt; sign of R restored;
-//                    sigmoid (exp, +1, divide)              1+31+1+70 = 103
+//                    sigmoid (exp, +1, divide)              1+31+1+71 = 104
 //
 // This is tools/hdc_program_v41.Machine.su's egate, bit for bit: sigmoid(x < 0 ?
 // -sqrt(max(|x|, 1e-6)) : +sqrt(...)).  Each function has its own units.  The

@@ -12,9 +12,9 @@
 //                                                algorithms are tools/hdc_golden.py
 //                                                exp and rsqrt, checked there on all
 //                                                2^32 inputs.
-//   ot_hdc_v41x_fdiv      IEEE binary32 division, DEPTH 18 (rtl/hdc/v41/ot_hdc_fdiv's
-//                         digit recurrence, two quotient bits per stage)
-//   ot_hdc_v41x_softplus  softplus and sqrt(softplus), DEPTH 161
+//   ot_hdc_v41x_fdiv      IEEE binary32 division, DEPTH 19 (rtl/hdc/v41/ot_hdc_fdiv's
+//                         digit recurrence, two quotient bits per stage, radix-4 select)
+//   ot_hdc_v41x_softplus  softplus and sqrt(softplus), DEPTH 162
 //   ot_hdc_v41x_ins       an insertion delay line: variable depth, in order
 //
 // They are built from the fast binary32 add and multiply (rtl/hdc/ot_hdc_fastfp.sv:
@@ -428,7 +428,7 @@ module ot_hdc_v41x_rsqrt (
 endmodule
 
 // ---------------------------------------------------------------------------
-// Correctly rounded binary32 DIVISION: II 1, fixed DEPTH 18.
+// Correctly rounded binary32 DIVISION: II 1, fixed DEPTH 19.
 //
 // The function, the operand decode, the finish and the fault convention are
 // those of rtl/hdc/v41/ot_hdc_fdiv.sv, transcribed unchanged:
@@ -436,11 +436,15 @@ endmodule
 //   operand, a zero divisor or an overflowing quotient fails closed
 //   (fault, y = +0).
 // What changes is the recurrence.  It forms the same 27 quotient bits and the
-// same final remainder, but TWO bits per register stage instead of one: two
-// compare-and-subtract steps in series.  So it has 14 stages instead of 27, and
-// the last stage forms one bit.  A correctly rounded quotient is unique, so the
-// result is the same bit for bit.
-// Stages: 1 decode, 14 recurrence, 3 finish.
+// same final remainder, but TWO bits per register stage.  A stage takes x = 4R
+// (2 ma in the first stage), with R < mb the running remainder, so x < 4 mb.
+// It forms x - mb, x - 2 mb and x - 3 mb in parallel, and the digit
+// q = floor(x / mb) in [0, 3] is the largest with a non-negative difference.
+// That is one subtract and a select, not two subtracts in series: the routed
+// SFU lane measured two serial restoring steps at 907 MHz.  3 mb is formed
+// once, in a stage after the decode.  The last stage forms one bit.  A
+// correctly rounded quotient is unique, so the result is the same bit for bit.
+// Stages: 1 decode, 1 (3 mb), 14 recurrence, 3 finish.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_fdiv (
     input  wire        clk,
@@ -454,7 +458,7 @@ module ot_hdc_v41x_fdiv (
 );
     localparam integer QB = 27;
     localparam integer NS = (QB + 1) / 2;      // 14
-    localparam integer DEPTH = 1 + NS + 3;     // 18
+    localparam integer DEPTH = 2 + NS + 3;     // 19
 
     wire [DEPTH:0] vd;
     ot_hdc_vline #(.D(DEPTH)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
@@ -489,21 +493,20 @@ module ot_hdc_v41x_fdiv (
         d_e    <= $signed({na[9], na[9:0]}) - $signed({nb[9], nb[9:0]});
     end
 
-    // one recurrence step: {remainder, quotient} -> the next bit
-    function automatic [24+QB:0] step;          // {rem[24:0], q[QB-1:0]}
-        input [24:0]   rem;                     // already shifted
-        input [23:0]   mb;
-        input [QB-1:0] q;
-        reg   [25:0]   diff;
-        begin
-            diff = {1'b0, rem} - {2'b0, mb};
-            step = diff[25] ? {rem, q[QB-2:0], 1'b0} : {diff[24:0], q[QB-2:0], 1'b1};
-        end
-    endfunction
+    // 3 mb, once
+    reg        e_sign, e_zero, e_bad;
+    reg [23:0] e_ma, e_mb;
+    reg [25:0] e_mb3;
+    reg signed [10:0] e_e;
+    always @(posedge clk) begin
+        e_sign <= d_sign; e_zero <= d_zero; e_bad <= d_bad; e_e <= d_e;
+        e_ma <= d_ma; e_mb <= d_mb; e_mb3 <= {2'b0, d_mb} + {1'b0, d_mb, 1'b0};
+    end
 
     reg [24:0]        r_rem  [0:NS-1];
     reg [QB-1:0]      r_q    [0:NS-1];
     reg [23:0]        r_mb   [0:NS-1];
+    reg [25:0]        r_mb3  [0:NS-1];
     reg               r_sign [0:NS-1];
     reg               r_zero [0:NS-1];
     reg               r_bad  [0:NS-1];
@@ -512,21 +515,27 @@ module ot_hdc_v41x_fdiv (
     genvar j;
     generate
         for (j = 0; j < NS; j = j + 1) begin : g_rec
-            // bits 2j and 2j+1 of the recurrence (bit 2^-k is step k); stage NS-1 forms one bit
-            wire [24:0]   src_rem = (j == 0) ? {1'b0, d_ma} : {r_rem[j-1][23:0], 1'b0};
-            wire [23:0]   src_mb  = (j == 0) ? d_mb : r_mb[j-1];
-            wire [QB-1:0] src_q   = (j == 0) ? {QB{1'b0}} : r_q[j-1];
-            wire [24+QB:0] s1 = step(src_rem, src_mb, src_q);
-            wire [24+QB:0] s2 = step({s1[23+QB:QB], 1'b0}, src_mb, s1[QB-1:0]);
-            wire           two = (2 * j + 1 < QB);
+            // quotient bits 2j and 2j+1 (bit 2^-k is restoring step k); stage NS-1 forms one bit
+            localparam integer TWO = (2 * j + 1 < QB);
+            wire [23:0]   mb  = (j == 0) ? e_mb : r_mb[j-1];
+            wire [25:0]   mb3 = (j == 0) ? e_mb3 : r_mb3[j-1];
+            wire [QB-1:0] qin = (j == 0) ? {QB{1'b0}} : r_q[j-1];
+            wire [26:0]   x   = (j == 0) ? {2'b0, e_ma, 1'b0} :
+                                TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
+            wire [27:0]   d1 = {1'b0, x} - {4'b0, mb};
+            wire [27:0]   d2 = {1'b0, x} - {3'b0, mb, 1'b0};
+            wire [27:0]   d3 = {1'b0, x} - {2'b0, mb3};
+            wire [1:0]    q  = !d3[27] ? 2'd3 : !d2[27] ? 2'd2 : !d1[27] ? 2'd1 : 2'd0;
+            wire [26:0]   r  = !d3[27] ? d3[26:0] : !d2[27] ? d2[26:0] : !d1[27] ? d1[26:0] : x;
             always @(posedge clk) begin
-                r_rem[j]  <= two ? s2[24+QB:QB] : s1[24+QB:QB];
-                r_q[j]    <= two ? s2[QB-1:0] : s1[QB-1:0];
-                r_mb[j]   <= src_mb;
-                r_sign[j] <= (j == 0) ? d_sign : r_sign[j-1];
-                r_zero[j] <= (j == 0) ? d_zero : r_zero[j-1];
-                r_bad[j]  <= (j == 0) ? d_bad  : r_bad[j-1];
-                r_e[j]    <= (j == 0) ? d_e    : r_e[j-1];
+                r_rem[j]  <= r[24:0];
+                r_q[j]    <= TWO ? {qin[QB-3:0], q} : {qin[QB-2:0], q[0]};
+                r_mb[j]   <= mb;
+                r_mb3[j]  <= mb3;
+                r_sign[j] <= (j == 0) ? e_sign : r_sign[j-1];
+                r_zero[j] <= (j == 0) ? e_zero : r_zero[j-1];
+                r_bad[j]  <= (j == 0) ? e_bad  : r_bad[j-1];
+                r_e[j]    <= (j == 0) ? e_e    : r_e[j-1];
             end
         end
     endgenerate
@@ -586,11 +595,11 @@ module ot_hdc_v41x_fdiv (
 endmodule
 
 // ---------------------------------------------------------------------------
-// softplus(x) and sqrt(softplus(x)): II 1, fixed DEPTH 161.  The operation order
+// softplus(x) and sqrt(softplus(x)): II 1, fixed DEPTH 162.  The operation order
 // of rtl/hdc/v41/ot_hdc_softplus.sv (tools/hdc_golden_v41.softplus, .sqrt), on
 // the fast units:
 //     t = exp(-|x|)            49     ot_hdc_v41x_exp
-//     u = t / (t + 2)          3 + 18 ot_hdc_qadd, ot_hdc_v41x_fdiv
+//     u = t / (t + 2)          3 + 19 ot_hdc_qadd, ot_hdc_v41x_fdiv
 //     u2 = u * u               3
 //     p = 1/17; p = p*u2 + 1/(2i+1), i = 7 .. 0      8 x (3 + 3)
 //     l = (u * p) * 2          3 + 3
@@ -610,13 +619,13 @@ module ot_hdc_v41x_softplus (
 );
     localparam integer T_EXP  = 49;
     localparam integer T_DEN  = T_EXP + 3;
-    localparam integer T_U    = T_DEN + 18;
+    localparam integer T_U    = T_DEN + 19;
     localparam integer T_U2   = T_U + 3;
     localparam integer T_P    = T_U2 + 8 * 6;
     localparam integer T_UP   = T_P + 3;
     localparam integer T_L    = T_UP + 3;
     localparam integer T_SP   = T_L + 3;
-    localparam integer DEPTH  = T_SP + 31;       // 161
+    localparam integer DEPTH  = T_SP + 31;       // 162
     localparam [32*9-1:0] C = {32'h3D70F0F1, 32'h3D888889, 32'h3D9D89D9, 32'h3DBA2E8C, 32'h3DE38E39,
                                32'h3E124925, 32'h3E4CCCCD, 32'h3EAAAAAB, 32'h3F800000};  // 1/17 .. 1/1
     function automatic [31:0] coef(input integer i);

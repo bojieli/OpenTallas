@@ -6,26 +6,27 @@
 //
 //   KIND 0  LIGHT  mul / add / max / BF16 rounding.  Every stage is fixed:
 //                  M1 3, M2 3, AD 3, no SFU stage, E1 3, E2 3.
-//   KIND 1  SFU    LIGHT plus an IEEE divider at M1 (A'/B, A'/imm1: 18) and the
-//                  SFU stage: exp (49), sigmoid / SiLU (exp, +1, divide: 70).
+//   KIND 1  SFU    LIGHT plus an IEEE divider at M1 (A'/B, A'/imm1: 19) and the
+//                  SFU stage: exp (49), sigmoid / SiLU (exp, +1, divide: 71).
 //   KIND 2  FULL   (lane 0) SFU plus the scalar side pipe's results: rsqrt (37),
-//                  sqrt (31), sqrt(softplus) (161), Engram gate (103).
+//                  sqrt (31), sqrt(softplus) (162), Engram gate (104).
 //
-// Timing, from the controller's emit cycle E (every boundary registered):
+// Timing, from the cycle E the lane sees the vector (the controller's broadcast
+// register, one cycle after its emit decision; every boundary registered):
 //   E+1   F0  lane position (o, i), liveness, the four operand addresses, the
 //             output address (linear or transposed-KV), the gather-index read
 //   E+3   G2  (gather ops only) A's address with the gathered index; B, C, D
 //             wait with it
 //   E+dF  X   operands captured (dF = 3, or 5 with a gather)
 //   +1    PRE A' = min(relu(rnd?(A)), imm3), C' = clip(C, +-imm3)
-//   +m1   M1  P = A' | A'*B | A'*A' | A'*imm1 | max(A', B) (3) | A'/B | A'/imm1 (18)
+//   +m1   M1  P = A' | A'*B | A'*A' | A'*imm1 | max(A', B) (3) | A'/B | A'/imm1 (19)
 //   +3    M2  P2 = P | P*C' | P*imm1;  Q = C' * (+-D)  (a second multiplier)
 //   +3    AD  R = P2 | P2+Q | P2+C' | P2-B | P2+imm2 | P2+D
 //   +s    S   S = R | exp | sigmoid | silu | rsqrt | sqrt | sqrt(softplus) | gate
 //   +3    E1  T = S | S*C' | S+C' | S*imm2 | S+imm2
 //   +3    E2  U = T | T*B | T*imm1
 //   +1    OUT out = rnd?(U) -> vector memory / KV SRAM, and to the reducer
-// A linear op therefore writes 20 cycles after its emit (22 with a gather).
+// A linear op therefore writes 20 cycles after E, 21 after the emit decision (23 with a gather).
 //
 // Stages whose depth depends on the op (the fetch, M1, S) are INSERTION lines
 // (ot_hdc_v41x_ins): an element enters at the stage that leaves at its own
@@ -42,12 +43,12 @@ module ot_hdc_v41x_vec_lane #(
     parameter integer AW = 24,
     parameter integer CW = 24,          // internal count width
     parameter integer LN = 3,           // log2 lanes (offset terms)
-    parameter integer LANE = 0,
     parameter integer KIND = 0,         // 0 light, 1 SFU, 2 full (lane 0)
     parameter integer KVT_SH = 9
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input  wire [10:0]       lane_id,   // this lane's index in the unit (a constant at every instance)
     // ---- offsets of an op being set up: lane l's offset is the sum of c[k] over the set bits k of l
     input  wire              ld,
     input  wire              ld_bank,
@@ -111,6 +112,7 @@ module ot_hdc_v41x_vec_lane #(
     output wire              fault,
     output wire              coll
 );
+    /* verilator no_inline_module */
     localparam [1:0] SRC_VM = 0, SRC_CLO = 1, SRC_CHI = 2, SRC_WROM = 3;
     localparam [1:0] IND_NONE = 0, IND_I = 1, IND_O = 2;
     localparam [1:0] DST_NONE = 0, DST_VM = 1, DST_KV = 2, DST_KVT = 3;
@@ -122,8 +124,8 @@ module ot_hdc_v41x_vec_lane #(
                      SFU_SPSQRT = 6, SFU_EGATE = 7;
     localparam [2:0] E1_BYP = 0, E1_MULC = 1, E1_ADDC = 2, E1_MULIMM = 3, E1_ADDIMM = 4;
     localparam [1:0] E2_BYP = 0, E2_MULB = 1, E2_MULIMM = 2;
-    localparam integer D_DIV = 18, D_EXP = 49, D_SIG = D_EXP + 3 + D_DIV;          // 70
-    localparam integer D_RSQ = 37, D_SQRT = 31, D_SP = 161, D_EG = 1 + 31 + 1 + D_SIG;   // 103
+    localparam integer D_DIV = 19, D_EXP = 49, D_SIG = D_EXP + 3 + D_DIV;          // 71
+    localparam integer D_RSQ = 37, D_SQRT = 31, D_SP = 162, D_EG = 1 + 31 + 1 + D_SIG;   // 104
     localparam integer HAS_SFU = (KIND != 0);
     localparam integer FULL = (KIND == 2);
 
@@ -150,7 +152,7 @@ module ot_hdc_v41x_vec_lane #(
             for (s = 0; s < 5; s = s + 1) begin
                 acc = {AW{1'b0}};
                 for (k = 0; k < LN; k = k + 1)
-                    if ((LANE >> k) & 1) acc = acc + ld_c[(s*LN + k)*AW +: AW];
+                    if (lane_id[k]) acc = acc + ld_c[(s*LN + k)*AW +: AW];
                 if (ld_bank) off1[s] <= acc; else off0[s] <= acc;
             end
         end
@@ -158,10 +160,11 @@ module ot_hdc_v41x_vec_lane #(
 
     // ---- F0: position, liveness, addresses ------------------------------------------------------
     //: slot (outer) and in-slot (inner) offsets of this lane for a slot size 2^ls
-    wire [CW-1:0] d_o = LANE >> ls;
-    wire [CW-1:0] d_i = LANE & ((1 << ls) - 1);
+    wire [CW-1:0] lid = {{(CW-11){1'b0}}, lane_id};
+    wire [CW-1:0] d_o = lid >> ls;
+    wire [CW-1:0] d_i = lid & ((1 << ls) - 1);
     wire [CW-1:0] ol = o_v + d_o, il = i_v + d_i;
-    wire lane_in = (LANE < (1 << lvw));
+    wire lane_in = (lid < (1 << lvw));
     wire live0 = emit && lane_in && (ol < no) && (il < ni);
     wire [AW-1:0] a_off = bank ? off1[0] : off0[0];
     wire [AW-1:0] b_off = bank ? off1[1] : off0[1];
@@ -266,7 +269,7 @@ module ot_hdc_v41x_vec_lane #(
         if (HAS_SFU != 0) begin : g_m1s
             ot_hdc_v41x_fdiv u_d1 (.clk(clk), .rst_n(rst_n), .v(p_v && p_div), .a(p_a),
                                    .b((cp_m1 == M1_DIVB) ? p_b : cp_imm1), .y(div1_y), .vo(), .fault(f_d1));
-            ot_hdc_v41x_ins #(.W(T1W), .K(2), .DEPTHS({16'd18, 16'd3}), .DMAX(18)) u_l1 (
+            ot_hdc_v41x_ins #(.W(T1W), .K(2), .DEPTHS({16'd19, 16'd3}), .DMAX(19)) u_l1 (
                 .clk(clk), .rst_n(rst_n), .v(p_v), .sel({p_div, !p_div}), .d({p_b, p_c, p_d, p_o, p_par}),
                 .vo(v1), .q(t1), .coll(c1), .busy());
         end else begin : g_m1l
@@ -351,10 +354,10 @@ module ot_hdc_v41x_vec_lane #(
                           is_sig, is_exp, ci_sfu == SFU_NONE};
             if (FULL != 0) begin : g_full
                 ot_hdc_v41x_ins #(.W(T4W), .K(7),
-                    .DEPTHS({16'd103, 16'd161, 16'd31, 16'd37, 16'd70, 16'd49, 16'd0}), .DMAX(161)) u_l4 (
+                    .DEPTHS({16'd104, 16'd162, 16'd31, 16'd37, 16'd71, 16'd49, 16'd0}), .DMAX(162)) u_l4 (
                     .clk(clk), .rst_n(rst_n), .v(v3), .sel(sel), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4), .coll(c4), .busy());
             end else begin : g_vec
-                ot_hdc_v41x_ins #(.W(T4W), .K(3), .DEPTHS({16'd70, 16'd49, 16'd0}), .DMAX(70)) u_l4 (
+                ot_hdc_v41x_ins #(.W(T4W), .K(3), .DEPTHS({16'd71, 16'd49, 16'd0}), .DMAX(71)) u_l4 (
                     .clk(clk), .rst_n(rst_n), .v(v3), .sel(sel[2:0]), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),
                     .coll(c4), .busy());
             end

@@ -49,6 +49,7 @@ module ot_hdc_v41x_vred_op (
     output wire [31:0] y,
     output wire        fault
 );
+    /* verilator no_inline_module */
     function automatic [31:0] okey(input [31:0] x);
         okey = x[31] ? ~x : {1'b1, x[30:0]};
     endfunction
@@ -58,6 +59,19 @@ module ot_hdc_v41x_vred_op (
     ot_hdc_delay #(.W(33), .D(3)) u_m (.clk(clk), .rst_n(rst_n), .d({mx, (okey(a) >= okey(b)) ? a : b}),
                                       .q({mxd, ym}));
     assign y = mxd ? ym : ys;
+endmodule
+
+// x * x (a lane of the reducer's square stage; its own module so a simulator shares its code)
+module ot_hdc_v41x_vsq (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] x,
+    output wire [31:0] y,
+    output wire        fault
+);
+    /* verilator no_inline_module */
+    ot_hdc_qmul u (clk, rst_n, v, x, x, y, fault);
 endmodule
 
 module ot_hdc_v41x_vec_red #(
@@ -115,8 +129,8 @@ module ot_hdc_v41x_vec_red #(
     wire [N-1:0]    fsq;
     genvar l;
     generate for (l = 0; l < N; l = l + 1) begin : g_sq
-        ot_hdc_qmul u_sq (clk, rst_n, i_v && i_sq && i_live[l], i_x[32*l +: 32], i_x[32*l +: 32], xsq[32*l +: 32],
-                          fsq[l]);
+        ot_hdc_v41x_vsq u_sq (.clk(clk), .rst_n(rst_n), .v(i_v && i_sq && i_live[l]), .x(i_x[32*l +: 32]),
+                              .y(xsq[32*l +: 32]), .fault(fsq[l]));
     end endgenerate
     wire [N-1:0]   q_live;
     wire [TAG-1:0] q_t;

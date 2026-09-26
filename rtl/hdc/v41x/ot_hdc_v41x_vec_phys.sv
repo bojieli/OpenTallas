@@ -150,8 +150,8 @@ module ot_hdc_v41x_vec_lane64 #(
     output wire              fault,
     output wire              coll
 );
-    ot_hdc_v41x_vec_lane #(.AW(AW), .LN(LN), .LANE(LANE), .KIND(KIND)) u (
-        .clk(clk), .rst_n(rst_n), .ld(ld), .ld_bank(ld_bank), .ld_c(ld_c), .emit(emit), .bank(bank),
+    ot_hdc_v41x_vec_lane #(.AW(AW), .LN(LN), .KIND(KIND)) u (
+        .clk(clk), .rst_n(rst_n), .lane_id(LANE[10:0]), .ld(ld), .ld_bank(ld_bank), .ld_c(ld_c), .emit(emit), .bank(bank),
         .o_v(o_v), .i_v(i_v), .no(no), .ni(ni), .ls(ls), .lvw(lvw), .vb(vb), .krow(krow), .obase(obase),
         .aibase(aibase), .aind(aind), .gsh(gsh), .cpair(cpair), .dst(dst), .srcs(srcs),
         .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re), .rd_src(rd_src),

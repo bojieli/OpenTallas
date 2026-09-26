@@ -73,9 +73,9 @@ _PINNED = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/ope
 VERILATOR = str(_PINNED) if _PINNED.exists() else "verilator"
 
 # depths the RTL implements (ot_hdc_v41x_vec_lane / _red): emit -> write, per stage
-D_FETCH, D_FETCH_G, D_PRE, D_M1, D_DIV, D_STAGE, D_OUT = 3, 5, 1, 3, 18, 3, 1
-SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: 49, I.SFU_SIGM: 70, I.SFU_SILU: 70, I.SFU_RSQRT: 37, I.SFU_SQRT: 31,
-             I.SFU_SPSQRT: 161, I.SFU_EGATE: 103}
+D_FETCH, D_FETCH_G, D_PRE, D_M1, D_DIV, D_STAGE, D_OUT = 4, 6, 1, 3, 19, 3, 1   # fetch includes the broadcast reg
+SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: 49, I.SFU_SIGM: 71, I.SFU_SILU: 71, I.SFU_RSQRT: 37, I.SFU_SQRT: 31,
+             I.SFU_SPSQRT: 162, I.SFU_EGATE: 104}
 SCALAR_SFU = (I.SFU_RSQRT, I.SFU_SQRT, I.SFU_SPSQRT, I.SFU_EGATE)
 VEC_SFU = (I.SFU_EXP, I.SFU_SIGM, I.SFU_SILU)
 CH_NONE, CH_SELF, CH_RES, CH_EXT = range(4)
@@ -357,6 +357,68 @@ def check_ref_vs_isa(f, m):
     return bool(np.array_equal(fbits(mach.vm), mine.vm) and np.array_equal(fbits(mach.kv), mine.kv))
 
 
+# ---- the reducer's order, modelled: the claim that lanes reproduce csum -------------------------------------
+def unit_sum(x, S, width):
+    """The reducer's order on one segment x laid out in slots of S lanes (S >= 8, a power of two) of a
+    `width`-lane vector (ot_hdc_v41x_vec_red): per vector, 7-add chains over 8 adjacent lanes from the
+    lane's first element, a pairwise tree over the vector's width/8 chunk sums (lanes past the segment +0),
+    tapped at the slot's level; across vectors (a spanning segment, S = width) a streaming binary counter:
+    level t holds a left operand until its right sibling arrives, the LAST item combines with what is
+    held or passes.  Returns the result bit pattern."""
+    x = np.asarray(x, dtype=F)
+    n = len(x)
+    nv = max(1, -(-n // S))
+    vsum = []
+    for v in range(nv):
+        lanes = np.zeros(width, dtype=F)
+        seg = x[v * S:(v + 1) * S]
+        lanes[:len(seg)] = seg
+        ch = []
+        for c in range(width // 8):
+            acc = lanes[8 * c]
+            for j in range(1, 8):
+                acc = G.add(acc, lanes[8 * c + j])
+            ch.append(F(acc))
+        lvl, size = ch, 8
+        while size < S:                                # tree level log2(size / 8): nodes of `size` lanes
+            lvl = [F(G.add(lvl[2 * i], lvl[2 * i + 1])) for i in range(len(lvl) // 2)]
+            size *= 2
+        vsum.append(lvl[0])
+    if nv == 1:
+        return fbits(vsum[0])
+    L = clog2(nv)
+    held = [None] * (L + 1)
+    out = None
+    for v, item in enumerate(vsum):
+        last = v == nv - 1
+        for t in range(1, L + 1):
+            if held[t] is not None:
+                item, held[t] = F(G.add(held[t], item)), None
+            elif last:
+                pass
+            else:
+                held[t] = item
+                item = None
+                break
+        if last:
+            out = item
+    return fbits(out)
+
+
+def check_reducer_claim(rng, trials=3000):
+    """unit_sum == hdc_golden_v41.csum on random segments, slot sizes and widths (bit for bit)."""
+    bad, cases = 0, 0
+    for _ in range(trials):
+        width = int(rng.choice([8, 16, 64, 256, 1024]))
+        n = int(rng.integers(1, 40 * width if rng.random() < 0.3 else 2 * width))
+        S = min(width, 1 << clog2(max(n, 8)))
+        x = rand_vals(rng, n, "any")
+        cases += 1
+        if unit_sum(x, S, width) != fbits(V.csum(x)):
+            bad += 1
+    return dict(segments=cases, mismatches=bad)
+
+
 # ---- the unit's layout (mirrors ot_hdc_v41x_vec's set-up) -------------------------------------------------
 def layout(f, N, M):
     no, ni = f["nout"], f["nin"]
@@ -554,7 +616,7 @@ def random_program(rng, N, M, nops, alloc):
     for k in range(nops):
         f = op_defaults()
         cls = str(rng.choice(["lin", "lin", "lin", "div", "exp", "sig", "silu", "scalar", "gather", "pair", "red",
-                              "red", "tree", "kvt"]))
+                              "red", "tree", "kvt", "hcp"]))
         big = rng.random() < 0.3
         no = int(rng.integers(1, 6 if big else 12))
         ni = int(rng.integers(1, (6 * N if big else 3 * N // 2) + 1))
@@ -562,19 +624,24 @@ def random_program(rng, N, M, nops, alloc):
             no, ni = int(rng.integers(1, 4)), int(rng.integers(1, 20))
         if cls == "kvt":
             ni = min(ni, 32)
+        if cls == "hcp":                      # hc_post's shape: a broadcast row, a per-row scalar, rows of whole chunks
+            no, ni = int(rng.integers(2, 6)), 8 * int(rng.integers(1, 3 * N // 8 + 2))
         if cls == "pair" and ni % 2:
             ni += 1
         red = 0
         if cls in ("red", "tree") or (cls not in ("scalar", "kvt") and rng.random() < 0.15):
             red = int(rng.choice([I.RED_SUM, I.RED_SUM, I.RED_MAX, I.RED_SEQ])) if cls != "tree" else I.RED_SUM
+        if cls == "hcp":
+            red = I.RED_SUM
         if red == I.RED_SEQ:
             ni = min(ni, 8)
         vsfu = cls in ("exp", "sig", "silu", "div")
         vw = M if vsfu else N
         if red:
-            tot = no * ni if cls == "tree" else ni
+            whole = cls in ("tree", "hcp")
+            tot = no * ni if whole else ni
             if tot > 64 * vw:
-                ni = max(1, (64 * vw) // (no if cls == "tree" else 1))
+                ni = max(8, (64 * vw) // (no if whole else 1)) // 8 * 8
         while no * ni > 3000:
             ni = max(1, ni // 2)
             if cls == "pair" and ni % 2:
@@ -665,10 +732,18 @@ def random_program(rng, N, M, nops, alloc):
             f["dsrc"], f["dbase"], f["dso"], f["dsi"] = I.SRC_VM, fresh(no * ni // 2 + 1, "small"), ni // 2, 1
             f["m1"], f["m2"], f["ad"] = I.M1_BYP, I.M2_C, I.AD_Q
             f["csrc"] = I.SRC_VM
+        if cls == "hcp":
+            f["asrc"], f["abase"], f["aso"], f["asi"] = I.SRC_VM, fresh(ni, "small"), 0, 1
+            f["bsrc"], f["bbase"], f["bso"], f["bsi"] = I.SRC_VM, fresh(no, "small"), 1, 0
+            f["csrc"], f["cbase"], f["cso"], f["csi"] = I.SRC_VM, fresh(no * ni, "small"), ni, 1
+            f["m1"], f["m2"], f["qm"], f["ad"], f["e1"], f["e2"] = I.M1_AB, I.M2_BYP, I.QM_OFF, I.AD_C, 0, 0
+            f["arnd"] = f["arelu"] = f["amin"] = f["cclip"] = 0
         if red:
             f["red"] = red
             f["redsq"] = int(red == I.RED_SUM and rng.random() < 0.4)
             f["redrnd"] = int(rng.random() < 0.3)
+            if cls == "hcp":
+                f["redtree"] = 1
             if cls == "tree":
                 f["redtree" if rng.random() < 0.5 else "redwhole"] = 1
             nres = 1 if (f["redwhole"] or f["redtree"]) else no
@@ -733,7 +808,7 @@ def build(N, M, obj: Path, pmax=4096):
     obj.mkdir(parents=True, exist_ok=True)
     cmd = [VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-UNOPTFLAT", "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb", "-Mdir", str(obj),
-           f"-GN={N}", f"-GM={M}", f"-GPMAX={pmax}", f"-I{ROOT / 'rtl/test'}",
+           f"-GN={N}", f"-GM={M}", f"-GPMAX={pmax}", f"-GVMA={VMA}", f"-GKVA={KVA}", f"-GCRA={CRA}", f"-GWRA={WRA}", f"-GXBA={XBA}", f"-I{ROOT / 'rtl/test'}",
            *map(str, LIB), *map(str, RTL), str(TB), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"]
     t0 = time.time()
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -831,13 +906,17 @@ def random_campaign(exe, N, M, seeds, nops, scratch: Path, chain=True):
             key = ("sfu%d" % f["sfu"]) if f["sfu"] else ("div" if f["m1"] in (4, 5) else "lin")
             classes[key] = classes.get(key, 0) + 1
         chained = sum(1 for f in sops if f["ch_src"] == CH_SELF and f.get("ch_mul", 0) > 0)
-        return dict(seed=seed, ops=len(sops), vectors=sum(l["nv"] for l in lays),
+        r = dict(seed=seed, ops=len(sops), vectors=sum(l["nv"] for l in lays),
                     elements=int(sum(f["nout"] * f["nin"] for f in sops)),
                     reductions=sum(1 for f in sops if f["red"]), gathers=sum(1 for f in sops if f["aind"]),
                     pair_ops=sum(1 for f in sops if f["cpair"]), kvt_ops=sum(1 for f in sops if f["dst"] == 3),
                     flattened=sum(1 for l in lays if l["flat"]), spanning=sum(1 for l in lays if l["span"]),
                     packed_multi=sum(1 for l in lays if l["packed"] and l["nsh"] > 0),
                     chained_by_credit=chained, classes=classes, **c)
+        print(f"  random N={N} seed={seed} ops={len(sops)} pass={c['pass_']} vm_bad={c['vm_mismatch_words']} "
+              f"kv_bad={c['kv_mismatch_words']} faults={c['faults']} order={c['order_faults']} cycles={c['cycles']}",
+              flush=True)
+        return r
     with ThreadPoolExecutor(max_workers=min(8, len(seeds))) as ex:
         res = list(ex.map(one, seeds))
     return res
@@ -1161,6 +1240,57 @@ def sfu_equivalence(scratch, n=200000):
                 pass_=v[2] == 0 and v[4] == 0 and v[6] == 0 and v[9] == 0)
 
 
+def spec_rows(rec):
+    """docs/ARCH_SPEC_V41.md section 6 item 2, graded on the N = 1,024 / M = 256 bench."""
+    P = rec.get("perf_N1024_M256")
+    if not P:
+        return None
+    d = P["depths"]["classes"]
+    copy = d["linear (copy)"]["emit_to_write"]
+    sdepth = lambda k: d[k]["emit_to_write"] - copy
+    hp = P["hc_post"]
+    ex = [o for o in P["mixed_classes"]["ops"] if o["cls"] == "sfu1"][0]
+    exp_rate = 4 * 1024 / (ex["last_emit"] - ex["first_emit"] + 1)
+    span = d["reduce: one spanning row of 20480 (20 vectors)"]
+    rows = [
+        dict(item="light lanes: elements/cycle, a 20,480-element hc_post op", required=1024,
+             measured=min(o["elements_per_cycle"] for o in hp["ops"]), meets=None),
+        dict(item="light lanes: sustained over 4 back-to-back chained hc_post ops (81,920 elements)",
+             required=1024, measured=hp["sequence"]["elements_per_cycle"], meets=None,
+             note="the first op's vector 0 of each consumer waits for the producer's vector 0 to be written"),
+        dict(item="SFU lanes: elements/cycle of an exp op", required=256, measured=exp_rate, meets=None),
+        dict(item="linear op depth (emit -> write, every stage used)", required=21,
+             measured=d["linear (M1, M2, Q, AD, E1, E2 all used)"]["emit_to_write"], meets=None, le=True),
+        dict(item="exp (S stage)", required=49, measured=sdepth("exp"), meets=None, le=True),
+        dict(item="sigmoid (S stage: exp, +1, IEEE divide)", required=80, measured=sdepth("sigmoid"), meets=None,
+             le=True),
+        dict(item="rsqrt (S stage, side pipe)", required=37, measured=sdepth("rsqrt (side pipe)"), meets=None,
+             le=True),
+        dict(item="reducer: csum-exact, lane-parallel", required="bit-exact on every program",
+             measured="see random / vehicle / perf checks", meets=None),
+        dict(item="reducer: result after the last element is written, 20 vectors x 1,024", required=25,
+             measured=span["result_after_last_write"], meets=None, le=True,
+             note="the R-ARITH order itself sets a floor of 3 cycles x (7 chain adds + log2(1024/8) tree levels + "
+                  "ceil(log2 20) vector levels) = 57 at a 3-cycle add, plus the input, square and result registers; "
+                  "~25 is not reachable under chunk8 with the 3-cycle adder"),
+        dict(item="vector chaining: producer write -> consumer emit of the vector that reads it", required=2,
+             measured=P["chain_ext"]["max_write_to_emit"], meets=None, le=True),
+    ]
+    for r in rows:
+        m = r["measured"]
+        if isinstance(m, (int, float)) and isinstance(r["required"], (int, float)):
+            r["meets"] = bool(m <= r["required"]) if r.get("le") else bool(m >= r["required"] * 0.999)
+            r["graded"] = True
+    exact = all(x["pass_"] for runs in rec.get("random", {}).values() for x in runs) and \
+        all(b["pass_"] for b in rec.get("vehicle", {}).get("batches", [])) and \
+        all(P[k]["check"]["pass_"] for k in ("hc_post", "depths", "chain_ext", "mixed_classes"))
+    rows[7]["meets"] = bool(exact)
+    rows[7]["graded"] = True
+    for r in rows:
+        r["expected_meets"] = r is not rows[8]
+    return dict(clock_ghz=CLOCK_GHZ, rows=rows)
+
+
 def sha(p: Path):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
@@ -1214,6 +1344,7 @@ def main():
                                       chain_ext=perf_chain_ext(e, N, M, scratch, rng),
                                       mixed_classes=perf_mix(e, N, M, scratch, rng))
         print(key, json.dumps(rec[f"perf_N{N}_M{M}"]["hc_post"].get("sequence")), flush=True)
+    rec["spec"] = spec_rows(rec)
     rec["input_sha256"] = {str(p.relative_to(ROOT)): sha(p) for p in RTL + [TB, TB_SFU, FIELDS_SVH] + TOOLS}
     out = Path(args.out) if args.out else OUT
     out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")
