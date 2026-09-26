@@ -1715,7 +1715,7 @@ def test_pipeline_parallelism_buys_one_user_nothing(technology, llama) -> None:
     assert corrected[16] >= corrected[1] * 0.85
     # The number the defect produced rises with the device count, which is the
     # whole of the error.  It no longer rises linearly: the serial part of the
-    # step -- a CUDA-graph launch gap per dependent kernel, priced on the
+    # step -- a measured dependency cost per fused-kernel boundary, priced on the
     # operator graph -- is the same in both views and does not divide by N.
     assert throughput_view[16] / throughput_view[1] > 5.0
     ratios = [throughput_view[d] / corrected[d] for d in (2, 4, 8, 16)]
@@ -2618,7 +2618,7 @@ def test_the_fixed_cost_falls_on_the_fast_machine_and_not_the_slow_one(
     rom_share = rom.metrics["layer_fixed_latency_fraction_of_step"]
     gpu_share = gpu.metrics["layer_fixed_latency_fraction_of_step"]
     # Still larger on the fast machine, but no longer five-fold: the GPU now
-    # pays a published CUDA-graph launch gap per dependent kernel on the same
+    # pays a measured dependency cost per fused-kernel boundary on the same
     # operator graph, which the flat floor never charged it.
     assert rom_share > gpu_share > 0.0
     # Compressed-sparse layers carry an extra term, so a sparse model pays more
