@@ -599,15 +599,34 @@ Each block ships with a performance testbench that asserts its spec row (through
 Each is re-checked with the bit-exact V4.1 token campaign (`tools/rtl_hdc_v41_decode_campaign.py`) and routed
 on ASAP7 at 0.97 ns with registered boundaries.
 
-**Status at this commit.** The spec, the budget model and the replay are committed. No RTL block of this spec
-has been implemented yet.
+**Status.** The spec, the budget model, the replay and R-ARITH in the golden and the ISA simulator are
+committed. The six block implementations are in progress; no RTL block of this spec has landed yet.
+
+**The spec replayed on the program (`tools/hdc_timing_v41x.py`, `results/arch/v41x_replay.json`).** The
+shipped-shape instruction stream of one die (about 3,840 instructions per token) runs on an event model of
+the re-specified core. Every op runs on its new unit at the spec widths, with region dependences and vector
+chaining, and the DAG's 55.6 µs of communication is added. At the reduced shape, with the as-built widths
+and drains, its engine reproduces `hdc_timing_v41.simulate` exactly (344,131 cycles).
+
+| context | replayed spec | budget | target |
+|---|---|---|---|
+| 8K | 5,272 | 4,980 | 4,522 |
+| 200K | 5,134 | 4,892 | 4,450 |
+| 1M | 4,645 | 4,510 | 4,249 |
+
+- The spec therefore meets the target on the program itself, not only on the DAG.
+- With chaining, dependent-stage depth dominates the 139 µs of compute at 200K: stream-unit depth 27 µs,
+  the scalar side pipe (rsqrt 58 cycles per norm, softplus 280 per router) 21 µs, the BF16 weight engine 16 µs,
+  transcendental depth 15 µs.
+- Chaining off (drains): 4,290 at 200K, still above the target but not at 1M (3,943).
+- Stream-unit width saturates near 1,024 lanes. Softplus depth is the next latency lever.
 
 ## 11. Assumptions and limits
 
 - **One dependency structure.** The budget re-prices the report's DAG. The replay (§3) shows that the as-built
   sequencer adds drains and ordered reductions that this DAG does not have; the spec requires them removed.
-  The spec is verified on the DAG, not on a replay of a respecified ISA. Doing that is the first
-  implementation milestone.
+  The spec is also verified on the program by the replay above (§10), which keeps the as-built instruction
+  stream and changes only the units and the sequencing.
 - **Areas.** Unit areas are ASAP7, compared against the analytical design's N5 compute envelope, which is
   conservative. The light stream lane's area is an estimate; no routed block exists.
 - **Routing.** Uniform routing: the router trace is synthetic. Correlated routing is a sensitivity (§7), not
