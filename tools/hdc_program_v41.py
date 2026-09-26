@@ -990,15 +990,19 @@ class Builder:
         self.moe(L, hook=lambda: self.hc_mix_finish(L, "ffn"))
         self.hc_post("Y", "POF", "CF", f"L{L}.hc_post")
 
-    def draft_body(self, rows):
+    def draft_body(self, rows, sample=None):
         """Block row `self.slot` of the DSpark draft (golden Model.draft), at
         position pos + row (the anchor is pos - 1): row 0 embeds the pending
         token stok[0], the others the noise token; the three stages; the last
         stage's hc_pre and norm, the lm_head, then -- one row after another --
         the Markov bias of the previous row's token (row 0: stok[0]), its argmax
-        (a SELECT of 1), latched as draft token stok[row + 1]."""
+        (a SELECT of 1), latched as draft token stok[row + 1].  Only the first
+        `sample` rows are sampled (the verify pass checks gamma drafts): the
+        other rows' chains are emitted with zero counts, so the slots' programs
+        stay aligned and those instructions skip."""
         m, V_, lay = self.m, self.V, self.lay
         i = self.slot
+        off = sample is not None and i >= sample
         self.draft_last = rows - 1
         self.su(set(), {"PF"}, "draft.embed", su_nout=1, su_nin=4, a_src=I.SRC_CLO, a_base=lay.cb["pre0"],
                 a_si=1, dst=I.DST_VM, o_base=V_["PF"], o_si=1)
@@ -1012,25 +1016,58 @@ class Builder:
         self.hc_pre("PF", "X", t, "SS")
         self.rmsnorm("X", 160, lay.cb["mtp_norm"], "XN", t, have_ss="SS")
         self.serial(True)               # the sampling chain: row i needs row i-1's token
-        self.me(lay.mat["head"], V_["XN"], V_["LG"], {"XN"}, {"LG"}, t)
+        z = dict(me_nout=0) if off else {}
+        self.me(lay.mat["head"], V_["XN"], V_["LG"], {"XN"}, {"LG"}, t, **z)
         g = dict(a_d=DY["TOK32"]) if i == 0 else dict(a_ind=I.IND_O, a_ibase=V_["DTOK"] + i - 1, a_so=32)
-        self.su({"DTOK"}, {"MBX"}, t, su_nout=1, su_nin=32, a_src=I.SRC_WROM, a_base=lay.memb_word * W * GR,
-                a_si=1, dst=I.DST_VM, o_base=V_["MBX"], o_si=1, **g)
-        self.me(lay.mat["markov"], V_["MBX"], V_["MB"], {"MBX"}, {"MB"}, t)
+        self.su({"DTOK"}, {"MBX"}, t, su_nout=0 if off else 1, su_nin=32, a_src=I.SRC_WROM,
+                a_base=lay.memb_word * W * GR, a_si=1, dst=I.DST_VM, o_base=V_["MBX"], o_si=1, **g)
+        self.me(lay.mat["markov"], V_["MBX"], V_["MB"], {"MBX"}, {"MB"}, t, **z)
         nv = m.c["vocab_size"]
-        self.su({"LG", "MB"}, {"LG"}, t, su_nout=1, su_nin=nv, a_base=V_["LG"], a_si=1, c_base=V_["MB"], c_si=1,
-                ad=I.AD_C, dst=I.DST_VM, o_base=V_["LG"], o_si=1)
-        self.xu({"LG"}, {"DTOK"}, t, xu_op=I.XU_SEL, xu_src=V_["LG"], xu_dst=V_["DTOK"] + i, xu_n=nv, xu_k=1)
+        self.su({"LG", "MB"}, {"LG"}, t, su_nout=0 if off else 1, su_nin=nv, a_base=V_["LG"], a_si=1,
+                c_base=V_["MB"], c_si=1, ad=I.AD_C, dst=I.DST_VM, o_base=V_["LG"], o_si=1)
+        self.xu({"LG"}, {"DTOK"}, t, xu_op=I.XU_SEL, xu_src=V_["LG"], xu_dst=V_["DTOK"] + i, xu_n=0 if off else nv,
+                xu_k=1)
         self.ctl(I.CTL_TOKX, t, slot=i + 1, wait=1 << (I.UNIT_XU - 1))
         self.serial(False)
 
 
+SU_BATCH = True                  # the stream unit's lane multiplier (its copies) serves batched slots
+
+
+def su_shift(f, p):
+    """Stream-unit copy p of a batched op: every vector-memory stream (A..D
+    reads, the element write, the reducer write) moves by p slot strides."""
+    if p == 0:
+        return f
+    g = dict(f)
+    for x in "abcd":
+        if g.get(f"{x}_src", 0) == I.SRC_VM:
+            g[f"{x}_base"] = g.get(f"{x}_base", 0) + p * g["mx_xps"]
+    if g.get("dst", 0) == I.DST_VM:
+        g["o_base"] = g.get("o_base", 0) + p * g["mx_ops"]
+    if g.get("red", 0):
+        g["r_base"] = g.get("r_base", 0) + p * g["mx_ops"]
+    return g
+
+
+def su_sig(f):
+    """Which stream-unit copies an op occupies: a one-slot op runs on copy 0,
+    a batched op on copies 0 .. m-1 for its slot group."""
+    m = max(1, f.get("mx_m", 0))
+    return (1, None) if m == 1 else (m, f.get("_slot"))
+
+
 def mx_batchable(f):
-    """A weight op one read of which may serve several slots: always issued,
-    its addresses and counts free of DYN values, not expert-indexed."""
+    """An op one issue of which may serve several slots: always issued, its
+    addresses and counts free of DYN values, not expert-indexed.  Weight ops
+    (ME from the weight ROM, QE LINQ, HE: one weight read for the slots) and,
+    with SU_BATCH, static stream ops writing the vector memory (the stream
+    unit's copies)."""
     if f.get("pred", 0) != I.PRED_ALWAYS:
         return False
     u = f["unit"]
+    if u == I.UNIT_SU:
+        return SU_BATCH and su_static(f) and f.get("dst", 0) in (I.DST_NONE, I.DST_VM)
     if u == I.UNIT_ME:
         return not f.get("me_wsrc", 0) and not f.get("me_amax", 0) and \
             not any(f.get(k, 0) for k in ("me_d_wbase", "me_d_xbase", "me_d_obase", "me_d_nout", "me_d_tiles",
@@ -1049,6 +1086,16 @@ def mx_combine(lay, grp):
     f = dict(f)
     ss = lay.slot_stride
     u = f["unit"]
+    if u == I.UNIT_SU:
+        f.update(mx_m=len(grp), mx_xps=ss, mx_ops=ss)
+        for p, (g, _, _, _) in enumerate(grp):
+            want = su_shift(f, p)
+            skip = ("dslot", "_slot", "_redw", "mx_m", "mx_xps", "mx_ops")
+            if {k: v for k, v in g.items() if k not in skip} != \
+                    {k: v for k, v in want.items() if k not in skip}:
+                return None                    # the slots' copies differ (e.g. the draft's row 0): one by one
+        f["_redw"] = set().union(*(g.get("_redw", set()) for g, _, _, _ in grp))
+        return (f, set().union(*(r for _, r, _, _ in grp)), set().union(*(w for _, _, w, _ in grp)), tag)
     xk, ok, oscale = {I.UNIT_ME: ("me_xbase", "me_obase", W), I.UNIT_QE: ("qe_xbase", "qe_obase", 1),
                       I.UNIT_HE: ("he_xbase", "he_obase", 1)}[u]
     for p, (g, _, _, _) in enumerate(grp):
@@ -1083,14 +1130,16 @@ def merge_slots(lay, builders, m=1):
             continue
         if m > 1 and mx_batchable(f0):
             for c in range(0, len(progs), m):
-                out.append(mx_combine(lay, [pr[k] for pr in progs[c:c + m]]))
+                grp = [pr[k] for pr in progs[c:c + m]]
+                one = mx_combine(lay, grp)
+                out.extend(grp if one is None else [one])
         else:
             out.extend(pr[k] for pr in progs)
         k += 1
     return out
 
 
-def build_mtp(lay, gamma, m=1, qchunk=None):
+def build_mtp(lay, gamma, m=1, qchunk=None, chain=None):
     """The MTP configuration's two programs, one image:
 
     STEP (entry 0): one position (prefill, or plain decode) -- the pass of one
@@ -1103,16 +1152,17 @@ def build_mtp(lay, gamma, m=1, qchunk=None):
     pos+gamma) with its weight ops m slots per read, ACCEPT, END with the
     bonus token.  Returns (program, iter_entry)."""
     mm = lay.m
+    chain = CHAIN_MTP if chain is None else chain
     B = mm.dspark_block
     assert 1 <= gamma <= B and gamma + 1 <= lay.nslots and B <= lay.nslots
     step = Builder(lay, qchunk, 0)
     step.position_body(seed=True, verify=False)
     prog = merge_slots(lay, [step])
     prog.append((dict(unit=I.UNIT_END, wait=31), set(), set(), "end"))
-    step_prog = schedule(prog)
+    step_prog = schedule(prog, chain=chain)
     drafts = [Builder(lay, qchunk, i) for i in range(B)]
     for b in drafts:
-        b.draft_body(B)
+        b.draft_body(B, sample=gamma)
     ver = [Builder(lay, qchunk, j) for j in range(gamma + 1)]
     for b in ver:
         b.position_body(seed=True, verify=True)
@@ -1121,7 +1171,7 @@ def build_mtp(lay, gamma, m=1, qchunk=None):
     prog += merge_slots(lay, ver, m)
     prog.append((dict(unit=I.UNIT_CTL, ctl=I.CTL_ACCEPT, ctl_slot=gamma, wait=31), set(), set(), "accept"))
     prog.append((dict(unit=I.UNIT_END, wait=31), set(), set(), "end"))
-    return step_prog + schedule(prog), len(step_prog)
+    return step_prog + schedule(prog, chain=chain), len(step_prog)
 
 
 def su_static(f):
@@ -1138,7 +1188,15 @@ def su_static(f):
 
 def su_vectors(f, lanes=None):
     """Per element (o, i) of a static stream op: its vector index, and its
-    vector-memory addresses read (A..D) and written (the element write)."""
+    vector-memory addresses read (A..D) and written (the element write).  A
+    batched op's copies run in lockstep: copy p's element has copy 0's vector
+    index."""
+    if max(1, f.get("mx_m", 0)) > 1:
+        parts = [su_vectors(dict(su_shift(f, p), mx_m=1), lanes) for p in range(f["mx_m"])]
+        v = np.concatenate([x[0] for x in parts])
+        reads = [np.concatenate([x[1][k] for x in parts]) for k in range(len(parts[0][1]))]
+        w = None if parts[0][2] is None else np.concatenate([x[2] for x in parts])
+        return v, reads, w
     lanes = lanes or I.SU_LANES
     no, ni = f.get("su_nout", 0), f.get("su_nin", 0)
     o, i = (x.reshape(-1) for x in np.meshgrid(np.arange(no), np.arange(ni), indexing="ij"))
@@ -1198,6 +1256,7 @@ def never_skipped(f):
 
 
 CHASE = True                     # stream ops chase the previous stream op (su_chase) where they can
+CHAIN_MTP = False                # chase whole same-class runs in the MTP programs (schedule chain=True): measured no gain
 
 
 def su_class(f):
@@ -1212,7 +1271,45 @@ def su_stages(f):
             f.get("ad", 0) != I.AD_BYP, f.get("e1", 0) != I.E1_BYP, f.get("e2", 0) != I.E2_BYP)
 
 
-def schedule(prog):
+def su_nvec(f):
+    """Vectors a stream op emits: exact for a static op, else a lower bound (0)."""
+    if not su_static(f):
+        return 0
+    v, _, _ = su_vectors(f)
+    return int(v.max()) + 1 if len(v) else 0
+
+
+def chain_distance(chain, cur):
+    """The chase distance D of `cur` behind a CHAIN of same-class stream ops
+    (oldest first, [(op, vectors)]): the unit retires vectors in emission order,
+    so once fewer than D are in flight every vector emitted at least D-1
+    vectors before cur's first has retired; D = 1 + the fewest vectors emitted
+    after any vector cur reads.  Every chain op writing an address cur reads
+    must be static; the others count as their lower bound.  None: not
+    computable (drain instead); 0: no dependency on the chain."""
+    after = 0                                  # vectors emitted after the op being looked at
+    best = None
+    _, reads, _ = su_vectors(cur)
+    need = set()
+    for r in reads:
+        need.update(r.tolist())
+    for g, n in reversed(chain):
+        if not need:
+            break
+        if su_static(g):
+            v, _, w = su_vectors(g)
+            if w is not None:
+                hit = [(a, vv) for a, vv in zip(w.tolist(), v.tolist()) if a in need]
+                if hit:
+                    last = max(vv for _, vv in hit)
+                    a_after = after + (n - 1 - last)
+                    best = a_after if best is None else min(best, a_after)
+                    need -= {a for a, _ in hit}
+        after += n
+    return 0 if best is None else best + 1
+
+
+def schedule(prog, chain=False):
     """Wait masks: an instruction waits for every unit holding an in-flight
     instruction it conflicts with.  On ANOTHER unit a conflict is any overlap (it
     reads what that unit writes, or writes what it reads or writes).  On its OWN
@@ -1225,8 +1322,18 @@ def schedule(prog):
     covers all its older work.  The quantised engine and the auxiliary unit are
     SEQUENTIAL (an op is accepted only once the previous one has written
     everything), so once an op that is never skipped has issued on one of them,
-    every older op there is complete: its conflicts are forgotten."""
+    every older op there is complete: its conflicts are forgotten.
+
+    chain=True (the MTP programs): a stream op of another CLASS than the
+    previous one is accepted only once the unit has drained (ot_hdc_v41_stream
+    `ready`), so element writes before a class change are never waited on;
+    within a same-class run a read of an earlier op's writes CHASES the whole
+    run (chain_distance) when every writer involved is static -- the multi-slot
+    programs place the slots' copies of an op side by side, so a slot's
+    producer sits several ops back."""
     out = []
+    su_chain, su_chain_w = [], []                   # same-class stream ops since the last drain / class change
+    su_sig_w = {}                                   # stream-unit copy signature -> regions written since a drain
     rd = {u: set() for u in I.UNITS}
     wr = {u: set() for u in I.UNITS}
     rw = {u: set() for u in I.UNITS}              # reducer outputs (stream unit)
@@ -1239,11 +1346,29 @@ def schedule(prog):
         own = f["unit"]
         red = set(f.pop("_redw", ()))
         chase = 0
+        cls_change = own == I.UNIT_SU and last_su is not None and su_class(f) != su_class(last_su)
+        if chain and cls_change:
+            su_chain, su_chain_w = [], []
         for u in I.UNITS:
             if u == own:
                 c = reads & wr[u]
-                if u == I.UNIT_SU and c and CHASE and not (reads & rw[u]) and su_static(f) and last_su \
-                        and su_static(last_su) and su_class(f) == su_class(last_su):
+                if u == I.UNIT_SU and c and CHASE and chain:
+                    if cls_change:
+                        c = reads & rw[u]          # the element pipeline drains; a reducer may still write
+                    elif not (reads & rw[u]):
+                        live = reads & set().union(set(), *su_chain_w)
+                        if not live:
+                            c = set()              # its writers precede a drain or a class change
+                        elif su_static(f):
+                            relevant = [g for g, w in zip(su_chain, su_chain_w) if w & reads]
+                            if all(su_static(g) for g, _ in relevant):
+                                chase = chain_distance(su_chain, f)
+                                c = set()
+                elif u == I.UNIT_SU and c and CHASE and not (reads & rw[u]) and su_static(f) and last_su \
+                        and su_static(last_su) and su_class(f) == su_class(last_su) and \
+                        su_sig(f) == su_sig(last_su) and \
+                        not (reads & set().union(set(), *(w for s, w in su_sig_w.items() if s != su_sig(f)))):
+                    # a copy's chase counts only its own vectors: never across copies
                     chase = chase_distance(last_su, f)
                     c = set()                      # chase the previous stream op instead of draining
                 if u == I.UNIT_SU:
@@ -1258,9 +1383,19 @@ def schedule(prog):
             if wait >> (u - 1) & 1:
                 rd[u], wr[u], rw[u] = set(), set(), set()
         f["wait"] = wait
+        if wait >> (I.UNIT_SU - 1) & 1:
+            su_sig_w = {}
         if own == I.UNIT_SU:
             f["su_chase"] = chase if not (wait >> (I.UNIT_SU - 1) & 1) else 0
             last_su = f
+            su_sig_w.setdefault(su_sig(f), set()).update(writes)
+            if chain:
+                if wait >> (I.UNIT_SU - 1) & 1:
+                    su_chain, su_chain_w = [], []
+                su_chain.append((f, su_nvec(f)))
+                su_chain_w.append(set(writes))
+        elif chain and wait >> (I.UNIT_SU - 1) & 1:
+            su_chain, su_chain_w = [], []
         if own in sequential and never_skipped(f):
             rd[own], wr[own] = set(), set()
         if own in rd:
@@ -1487,6 +1622,13 @@ class Machine:
         return self.wrom_f32(e)
 
     def su(self, f):
+        if max(1, f["mx_m"]) > 1:
+            for p in range(f["mx_m"]):
+                self.su1(dict(su_shift(f, p), mx_m=1))
+            return
+        self.su1(f)
+
+    def su1(self, f):
         d = self.dyn
         no = f["su_nout"] + d[f["su_d_nout"]]
         ni = f["su_nin"] + d[f["su_d_nin"]]

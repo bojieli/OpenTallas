@@ -44,7 +44,9 @@
 // takes the longest matching prefix a and restores the Engram hash history to
 // slot a's snapshot; END reports n_emit = a + 1 tokens ttok[0 .. a] (acc_tok)
 // and next_token = ttok[a].  MP > 1: the ME, QE and HE serve up to MP slots per
-// weight read (mx_m); their vector-memory ports widen by MP.
+// weight read (mx_m), and the stream unit is MP copies, copy p running slot p of
+// a batched static stream op (every vector-memory stream moved by p slot
+// strides); their vector-memory ports widen by MP.
 // ---------------------------------------------------------------------------
 module ot_hdc_core_v41 #(
     parameter integer INSTR_BITS = 1536,
@@ -90,9 +92,9 @@ module ot_hdc_core_v41 #(
     output wire              wrom_re,
     output wire [AW-1:0]     wrom_addr,
     input  wire [G*W*16-1:0] wrom_q,
-    output wire [SW-1:0]     ewrom_re,
-    output wire [SW*AW-1:0]  ewrom_addr,
-    input  wire [SW*G*W*16-1:0] ewrom_q,
+    output wire [MP*SW-1:0]  ewrom_re,
+    output wire [MP*SW*AW-1:0] ewrom_addr,
+    input  wire [MP*SW*G*W*16-1:0] ewrom_q,
     // HE weight ROM (HS x HNL binary32 lanes per word)
     output wire              hrom_re,
     output wire [AW-1:0]     hrom_addr,
@@ -105,9 +107,9 @@ module ot_hdc_core_v41 #(
     output wire [AW-1:0]     erom_addr,
     input  wire [263:0]      erom_q,
     // constant ROM: four stream ports per stream lane and one auxiliary port
-    output wire [4*SW-1:0]   crom_re,
-    output wire [4*SW*AW-1:0] crom_addr,
-    input  wire [4*SW*64-1:0] crom_q,
+    output wire [MP*4*SW-1:0] crom_re,
+    output wire [MP*4*SW*AW-1:0] crom_addr,
+    input  wire [MP*4*SW*64-1:0] crom_q,
     output wire              xcrom_re,
     output wire [AW-1:0]     xcrom_addr,
     input  wire [63:0]       xcrom_q,
@@ -115,19 +117,19 @@ module ot_hdc_core_v41 #(
     output wire              kv_re,
     output wire [G*AW-1:0]   kv_raddr,
     input  wire [G*W*32-1:0] kv_q,
-    output wire [SW-1:0]     kv_we,
-    output wire [SW*AW-1:0]  kv_waddr,
-    output wire [SW*32-1:0]  kv_wdata,
+    output wire [MP*SW-1:0]  kv_we,
+    output wire [MP*SW*AW-1:0] kv_waddr,
+    output wire [MP*SW*32-1:0] kv_wdata,
     // vector memory
     output wire [MP*G-1:0]   vx_re,           // matrix-engine x reads
     output wire [MP*G*AW-1:0] vx_addr,
     input  wire [MP*G*32-1:0] vx_q,
-    output wire [4*SW-1:0]   vs_re,           // stream operand reads A..D, per lane
-    output wire [4*SW*AW-1:0] vs_addr,
-    input  wire [4*SW*32-1:0] vs_q,
-    output wire [SW-1:0]     vi_re,           // stream gather index, per lane
-    output wire [SW*AW-1:0]  vi_addr,
-    input  wire [SW*32-1:0]  vi_q,
+    output wire [MP*4*SW-1:0] vs_re,          // stream operand reads A..D, per lane (and copy)
+    output wire [MP*4*SW*AW-1:0] vs_addr,
+    input  wire [MP*4*SW*32-1:0] vs_q,
+    output wire [MP*SW-1:0]  vi_re,           // stream gather index, per lane
+    output wire [MP*SW*AW-1:0] vi_addr,
+    input  wire [MP*SW*32-1:0] vi_q,
     output wire              vq_re,           // QE expert index
     output wire [AW-1:0]     vq_addr,
     input  wire [31:0]       vq_q,
@@ -147,12 +149,12 @@ module ot_hdc_core_v41 #(
     output wire [MP*G*AW-1:0] vw_me_addr,
     output wire [MP*G*W-1:0] vw_me_mask,
     output wire [MP*G*W*32-1:0] vw_me_data,
-    output wire [SW-1:0]     vw_su_we,        // stream element writes, per lane
-    output wire [SW*AW-1:0]  vw_su_addr,
-    output wire [SW*32-1:0]  vw_su_data,
-    output wire [SW-1:0]     vw_rd_we,        // stream reducer writes, per lane
-    output wire [SW*AW-1:0]  vw_rd_addr,
-    output wire [SW*32-1:0]  vw_rd_data,
+    output wire [MP*SW-1:0]  vw_su_we,        // stream element writes, per lane
+    output wire [MP*SW*AW-1:0] vw_su_addr,
+    output wire [MP*SW*32-1:0] vw_su_data,
+    output wire [MP*SW-1:0]  vw_rd_we,        // stream reducer writes, per lane
+    output wire [MP*SW*AW-1:0] vw_rd_addr,
+    output wire [MP*SW*32-1:0] vw_rd_data,
     output wire              vw_xe_we,        // XU element write
     output wire [AW-1:0]     vw_xe_addr,
     output wire [31:0]       vw_xe_data,
@@ -484,25 +486,49 @@ module ot_hdc_core_v41 #(
     assign me_omask = vw_me_mask;
     assign me_odata = vw_me_data;
 
-    ot_hdc_v41_stream #(.AW(AW), .NW(NW), .WR(G * W), .SW(SW)) u_su (
-        .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
-        .i_nout(su_nout), .i_nin(su_nin), .i_vec(su_vec), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src), .i_csrc(c_src), .i_dsrc(d_src),
-        .i_abase(a_base), .i_aso(a_so), .i_asi(a_si), .i_aibase(a_ibase), .i_aind(a_ind),
-        .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si), .i_bhalf(b_half),
-        .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si), .i_cpair(c_pair),
-        .i_dbase(d_base), .i_dso(d_so), .i_dsi(d_si),
-        .i_arnd(a_rnd), .i_arelu(a_relu), .i_amin(a_min), .i_cclip(c_clip),
-        .i_m1(m1), .i_m2(m2), .i_qm(qm), .i_ad(ad), .i_sfu(sfu), .i_e1(e1), .i_e2(e2), .i_rnd(rnd),
-        .i_dst(dst), .i_obase(o_base), .i_oso(o_so), .i_osi(o_si), .i_orow(o_row),
-        .i_red(red), .i_redsq(red_sq), .i_redwhole(red_whole), .i_redtree(red_tree), .i_redrnd(red_rnd), .i_rbase(r_base), .i_rso(r_so),
-        .i_imm1(imm1), .i_imm2(imm2), .i_imm3(imm3),
-        .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q),
-        .vm_re(vs_re), .vm_addr(vs_addr), .vm_q(vs_q),
-        .cr_re(crom_re), .cr_addr(crom_addr), .cr_q(crom_q),
-        .wrom_re(ewrom_re), .wrom_addr(ewrom_addr), .wrom_q(ewrom_q),
-        .vm_we(vw_su_we), .vm_waddr(vw_su_addr), .vm_wdata(vw_su_data),
-        .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
-        .red_we(vw_rd_we), .red_addr(vw_rd_addr), .red_data(vw_rd_data), .fault(su_fault));
+    // the stream unit: MP copies; copy p runs slot p of a batched op (mx_m), its
+    // vector-memory streams moved by p slot strides (mx_xps reads, mx_ops writes)
+    wire [MP-1:0] su_ready_v, su_idle_v, su_fault_v;
+    wire [2:0]    su_m = (mx_m == 3'd0) ? 3'd1 : mx_m;
+    assign su_ready = &su_ready_v;
+    assign su_idle = &su_idle_v;
+    assign su_fault = |su_fault_v;
+    genvar sp;
+    generate
+        for (sp = 0; sp < MP; sp = sp + 1) begin : g_su
+            wire [AW-1:0] xo = sp * mx_xps;
+            wire [AW-1:0] oo = sp * mx_ops;
+            ot_hdc_v41_stream #(.AW(AW), .NW(NW), .WR(G * W), .SW(SW)) u_su (
+                .clk(clk), .rst_n(rst_n), .go(su_go && (sp < su_m)), .ready(su_ready_v[sp]), .idle(su_idle_v[sp]),
+                .i_nout(su_nout), .i_nin(su_nin), .i_vec(su_vec), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src),
+                .i_csrc(c_src), .i_dsrc(d_src),
+                .i_abase(a_base + ((a_src == 2'd0) ? xo : {AW{1'b0}})), .i_aso(a_so), .i_asi(a_si),
+                .i_aibase(a_ibase), .i_aind(a_ind),
+                .i_bbase(b_base + ((b_src == 2'd0) ? xo : {AW{1'b0}})), .i_bso(b_so), .i_bsi(b_si), .i_bhalf(b_half),
+                .i_cbase(c_base + ((c_src == 2'd0) ? xo : {AW{1'b0}})), .i_cso(c_so), .i_csi(c_si), .i_cpair(c_pair),
+                .i_dbase(d_base + ((d_src == 2'd0) ? xo : {AW{1'b0}})), .i_dso(d_so), .i_dsi(d_si),
+                .i_arnd(a_rnd), .i_arelu(a_relu), .i_amin(a_min), .i_cclip(c_clip),
+                .i_m1(m1), .i_m2(m2), .i_qm(qm), .i_ad(ad), .i_sfu(sfu), .i_e1(e1), .i_e2(e2), .i_rnd(rnd),
+                .i_dst(dst), .i_obase(o_base + ((dst == 2'd1) ? oo : {AW{1'b0}})), .i_oso(o_so), .i_osi(o_si),
+                .i_orow(o_row),
+                .i_red(red), .i_redsq(red_sq), .i_redwhole(red_whole), .i_redtree(red_tree), .i_redrnd(red_rnd),
+                .i_rbase(r_base + ((red != 2'd0) ? oo : {AW{1'b0}})), .i_rso(r_so),
+                .i_imm1(imm1), .i_imm2(imm2), .i_imm3(imm3),
+                .vi_re(vi_re[sp*SW +: SW]), .vi_addr(vi_addr[sp*SW*AW +: SW*AW]), .vi_q(vi_q[sp*SW*32 +: SW*32]),
+                .vm_re(vs_re[sp*4*SW +: 4*SW]), .vm_addr(vs_addr[sp*4*SW*AW +: 4*SW*AW]),
+                .vm_q(vs_q[sp*4*SW*32 +: 4*SW*32]),
+                .cr_re(crom_re[sp*4*SW +: 4*SW]), .cr_addr(crom_addr[sp*4*SW*AW +: 4*SW*AW]),
+                .cr_q(crom_q[sp*4*SW*64 +: 4*SW*64]),
+                .wrom_re(ewrom_re[sp*SW +: SW]), .wrom_addr(ewrom_addr[sp*SW*AW +: SW*AW]),
+                .wrom_q(ewrom_q[sp*SW*G*W*16 +: SW*G*W*16]),
+                .vm_we(vw_su_we[sp*SW +: SW]), .vm_waddr(vw_su_addr[sp*SW*AW +: SW*AW]),
+                .vm_wdata(vw_su_data[sp*SW*32 +: SW*32]),
+                .kv_we(kv_we[sp*SW +: SW]), .kv_waddr(kv_waddr[sp*SW*AW +: SW*AW]),
+                .kv_wdata(kv_wdata[sp*SW*32 +: SW*32]),
+                .red_we(vw_rd_we[sp*SW +: SW]), .red_addr(vw_rd_addr[sp*SW*AW +: SW*AW]),
+                .red_data(vw_rd_data[sp*SW*32 +: SW*32]), .fault(su_fault_v[sp]));
+        end
+    endgenerate
 
     ot_hdc_v41_qe #(.AW(AW), .NW(NW), .BL(BL), .IL(IL), .QLB(QLB), .MP(MP)) u_qe (
         .clk(clk), .rst_n(rst_n), .go(qe_go), .ready(qe_ready), .idle(qe_idle),

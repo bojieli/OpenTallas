@@ -67,7 +67,7 @@ module tb_hdc_core_v41_mtp #(
 
     wire prog_re; wire [PAW-1:0] prog_addr; reg [INSTR_BITS-1:0] prog_q;
     wire wrom_re; wire [AW-1:0] wrom_addr; reg [G*W*16-1:0] wrom_q;
-    wire [SW-1:0] ewrom_re; wire [SW*AW-1:0] ewrom_addr; reg [SW*G*W*16-1:0] ewrom_q;
+    wire [MP*SW-1:0] ewrom_re; wire [MP*SW*AW-1:0] ewrom_addr; reg [MP*SW*G*W*16-1:0] ewrom_q;
     wire qrom_re; wire [AW-1:0] qrom_addr;
 `ifdef HDC_WHBM
     wire [BL*QLB-1:0] qrom_q;
@@ -79,20 +79,21 @@ module tb_hdc_core_v41_mtp #(
     wire [MP*HS-1:0] vh_re; wire [MP*HS*AW-1:0] vh_addr; reg [MP*HS*32-1:0] vh_q;
     wire [MP-1:0] ww_h_we; wire [MP*AW-1:0] ww_h_addr; wire [MP*32-1:0] ww_h_mask; wire [MP*1024-1:0] ww_h_data;
     wire erom_re; wire [AW-1:0] erom_addr; reg [263:0] erom_q;
-    wire [4*SW-1:0] crom_re; wire [4*SW*AW-1:0] crom_addr; reg [4*SW*64-1:0] crom_q;
+    wire [MP*4*SW-1:0] crom_re; wire [MP*4*SW*AW-1:0] crom_addr; reg [MP*4*SW*64-1:0] crom_q;
     wire xcrom_re; wire [AW-1:0] xcrom_addr; reg [63:0] xcrom_q;
     wire kv_re; wire [G*AW-1:0] kv_raddr; reg [G*W*32-1:0] kv_q;
-    wire [SW-1:0] kv_we; wire [SW*AW-1:0] kv_waddr; wire [SW*32-1:0] kv_wdata;
+    wire [MP*SW-1:0] kv_we; wire [MP*SW*AW-1:0] kv_waddr; wire [MP*SW*32-1:0] kv_wdata;
     wire [MP*G-1:0] vx_re; wire [MP*G*AW-1:0] vx_addr; reg [MP*G*32-1:0] vx_q;
-    wire [4*SW-1:0] vs_re; wire [4*SW*AW-1:0] vs_addr; reg [4*SW*32-1:0] vs_q;
-    wire [SW-1:0] vi_re; wire [SW*AW-1:0] vi_addr; reg [SW*32-1:0] vi_q;
+    wire [MP*4*SW-1:0] vs_re; wire [MP*4*SW*AW-1:0] vs_addr; reg [MP*4*SW*32-1:0] vs_q;
+    wire [MP*SW-1:0] vi_re; wire [MP*SW*AW-1:0] vi_addr; reg [MP*SW*32-1:0] vi_q;
     wire vq_re, vr_re, wqr_re, wxr_re;
     wire [AW-1:0] vq_addr, vr_addr, wqr_addr, wxr_addr;
     reg [31:0] vq_q, vr_q;
     reg [1023:0] wqr_q, wxr_q;
     wire [MP*G-1:0] vw_me_we; wire [MP*G*AW-1:0] vw_me_addr; wire [MP*G*W-1:0] vw_me_mask;
     wire [MP*G*W*32-1:0] vw_me_data;
-    wire [SW-1:0] vw_su_we, vw_rd_we; wire [SW*AW-1:0] vw_su_addr, vw_rd_addr; wire [SW*32-1:0] vw_su_data, vw_rd_data;
+    wire [MP*SW-1:0] vw_su_we, vw_rd_we; wire [MP*SW*AW-1:0] vw_su_addr, vw_rd_addr;
+    wire [MP*SW*32-1:0] vw_su_data, vw_rd_data;
     wire vw_xe_we, ww_x_we;
     wire [MP-1:0] ww_q_we; wire [MP*AW-1:0] ww_q_addr; wire [MP*32-1:0] ww_q_mask; wire [MP*1024-1:0] ww_q_data;
     wire [AW-1:0] vw_xe_addr, ww_x_addr;
@@ -210,7 +211,7 @@ module tb_hdc_core_v41_mtp #(
     always @(posedge clk) begin
         if (prog_re) prog_q <= prog[prog_addr];
         if (wrom_re) wrom_q <= wrom[wrom_addr[18:0]];
-        for (q = 0; q < SW; q = q + 1) if (ewrom_re[q]) ewrom_q[q*G*W*16 +: G*W*16] <= wrom[ewrom_addr[q*AW +: 19]];
+        for (q = 0; q < MP*SW; q = q + 1) if (ewrom_re[q]) ewrom_q[q*G*W*16 +: G*W*16] <= wrom[ewrom_addr[q*AW +: 19]];
 `ifndef HDC_WHBM
         if (qrom_re) qrom_q <= qrom[qrom_addr[15:0]];
 `endif
@@ -220,24 +221,24 @@ module tb_hdc_core_v41_mtp #(
             if (ww_h_we[q]) for (l = 0; l < 32; l = l + 1)
                 if (ww_h_mask[q*32 + l]) vm[ww_h_addr[q*AW +: VA] + l] <= ww_h_data[q*1024 + 32*l +: 32];
         if (erom_re) erom_q <= erom[erom_addr[18:0]];
-        for (q = 0; q < 4*SW; q = q + 1) if (crom_re[q]) crom_q[64*q +: 64] <= crom[crom_addr[q*AW +: 15]];
+        for (q = 0; q < MP*4*SW; q = q + 1) if (crom_re[q]) crom_q[64*q +: 64] <= crom[crom_addr[q*AW +: 15]];
         if (xcrom_re) xcrom_q <= crom[xcrom_addr[14:0]];
         for (q = 0; q < G; q = q + 1) if (kv_re) kv_q[q*W*32 +: W*32] <= kv[kv_raddr[q*AW +: 15]];
         for (q = 0; q < MP*G; q = q + 1) if (vx_re[q]) vx_q[32*q +: 32] <= vm[vx_addr[q*AW +: VA]];
-        for (q = 0; q < 4*SW; q = q + 1) if (vs_re[q]) vs_q[32*q +: 32] <= vm[vs_addr[q*AW +: VA]];
-        for (q = 0; q < SW; q = q + 1) if (vi_re[q]) vi_q[32*q +: 32] <= vm[vi_addr[q*AW +: VA]];
+        for (q = 0; q < MP*4*SW; q = q + 1) if (vs_re[q]) vs_q[32*q +: 32] <= vm[vs_addr[q*AW +: VA]];
+        for (q = 0; q < MP*SW; q = q + 1) if (vi_re[q]) vi_q[32*q +: 32] <= vm[vi_addr[q*AW +: VA]];
         if (vq_re) vq_q <= vm[vq_addr[VA-1:0]];
         if (vr_re) vr_q <= vm[vr_addr[VA-1:0]];
         if (wqr_re) for (q = 0; q < 32; q = q + 1) wqr_q[32*q +: 32] <= vm[wqr_addr[VA-1:0] + q];
         if (wxr_re) for (q = 0; q < 32; q = q + 1) wxr_q[32*q +: 32] <= vm[wxr_addr[VA-1:0] + q];
-        for (q = 0; q < SW; q = q + 1)
+        for (q = 0; q < MP*SW; q = q + 1)
             if (kv_we[q]) kv[kv_waddr[q*AW+4 +: 15]][32*kv_waddr[q*AW +: 4] +: 32] <= kv_wdata[32*q +: 32];
         for (q = 0; q < MP*G; q = q + 1)
             if (vw_me_we[q])
                 for (l = 0; l < W; l = l + 1)
                     if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: VA-4], 4'b0} + l] <= vw_me_data[32*(q*W + l) +: 32];
-        for (q = 0; q < SW; q = q + 1) if (vw_su_we[q]) vm[vw_su_addr[q*AW +: VA]] <= vw_su_data[32*q +: 32];
-        for (q = 0; q < SW; q = q + 1) if (vw_rd_we[q]) vm[vw_rd_addr[q*AW +: VA]] <= vw_rd_data[32*q +: 32];
+        for (q = 0; q < MP*SW; q = q + 1) if (vw_su_we[q]) vm[vw_su_addr[q*AW +: VA]] <= vw_su_data[32*q +: 32];
+        for (q = 0; q < MP*SW; q = q + 1) if (vw_rd_we[q]) vm[vw_rd_addr[q*AW +: VA]] <= vw_rd_data[32*q +: 32];
         if (vw_xe_we) vm[vw_xe_addr[VA-1:0]] <= vw_xe_data;
         for (q = 0; q < MP; q = q + 1)
             if (ww_q_we[q]) for (l = 0; l < 32; l = l + 1)

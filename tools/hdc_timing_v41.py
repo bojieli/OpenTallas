@@ -177,20 +177,40 @@ class QStream:
         self.stats["words"] += n
 
 
-def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30, q=None):
-    dyn = I.dyn_values(0, pos)
-    t = 0                                     # sequencer: earliest next issue cycle
+def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30, q=None, entry=0, nslot=1):
+    """Cycles of one run of `prog` from `entry` to its END at position pos.
+    Multi-token prediction (nslot > 1, tools/hdc_program_v41.py build_mtp): an
+    instruction's DYN values and predicate take its slot's position pos +
+    dslot; the DYN banks cost one cycle a slot at the start and at a DYN
+    control step; a control step issues once its wait mask has drained; a QE
+    LINQ op serving mx_m slots loads mx_m activations before its word stream
+    (one weight stream for all of them); ME and HE ops with mx_m slots take
+    their one-position time."""
+    banks = [I.dyn_values(0, pos + j) for j in range(max(1, nslot))]
+    dyn = banks[0]
+    t = nslot - 1                             # sequencer: earliest next issue cycle (the DYN banks)
     free = {u: 0 for u in (1, 2, 3, 4, 5)}    # unit accepts a new op from here
     idle = {u: 0 for u in (1, 2, 3, 4, 5)}    # unit drained (as the sequencer sees it) at
     su_cls, su_last_retire, su_last_emit = None, 0, 0
     issues = []
-    for n, f0 in enumerate(prog):
+    for n in range(entry, len(prog)):
+        f0 = prog[n]
         f = {name: f0.get(name, 0) for name, _ in I.FIELDS}
         u = f["unit"]
-        if u == I.UNIT_END:
+        if u == I.UNIT_END and f["ctl"] == I.CTL_END:
             t = max([t] + list(idle.values())) + 1
             break
-        skip = (f["pred"] == I.PRED_ODD and not pos & 1) or (f["pred"] == I.PRED_NZ and pos == 0)
+        if u == I.UNIT_CTL:                    # a control step: its wait mask, then the sequencer's own cycles
+            ready = t
+            for b in range(5):
+                if f["wait"] >> b & 1:
+                    ready = max(ready, idle[b + 1])
+            issues.append((ready, n, u))
+            t = ready + k["gap"] + {I.CTL_DYN: nslot, I.CTL_ACCEPT: 2}.get(f["ctl"], 0)
+            continue
+        dyn = banks[f["dslot"]] if nslot > 1 else banks[0]
+        p = pos + (f["dslot"] if nslot > 1 else 0)
+        skip = (f["pred"] == I.PRED_ODD and not p & 1) or (f["pred"] == I.PRED_NZ and p == 0)
         if u == I.UNIT_ME:
             cnt = [f["me_nout"] + dyn[f["me_d_nout"]], f["me_tiles"] + dyn[f["me_d_tiles"]],
                    f["me_k"] + dyn[f["me_d_k"]]]
@@ -253,7 +273,7 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30, q=None):
                 idle[unit] += k["su_tree"]
                 free[unit] = idle[unit] + k["su_tree_free"]
         elif unit == I.UNIT_QE:
-            c = s + k["qe_start"] + (k["qe_idx"] if f["qe_ind"] else 0) + f["qe_nb"]
+            c = s + k["qe_start"] + (k["qe_idx"] if f["qe_ind"] else 0) + f["qe_nb"] * max(1, f["mx_m"])
             if f["qe_mode"] == I.QE_LINQ:
                 c += k["qe_load"]
                 c += (4 - (c + t0 + k["qe_phase0"])) % IL          # wait for slot phase IL-4
