@@ -66,6 +66,46 @@
     "tester_cycles": 127679,
     "top": "ot_rom_moe_expert_port"
    },
+   "route": {
+    "noscan": {
+     "core_area_um2": 5489.02,
+     "drc_errors": 0,
+     "fmax_mhz": 1557.94,
+     "instance_count": 44508,
+     "routed_wirelength_um": 64681,
+     "sequential_area_um2": 938.106,
+     "setup_wns_ns": 0.258127,
+     "standard_cell_area_um2": 2178.91,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.126199,
+     "fmax": -0.113656,
+     "instances": 0.06819,
+     "routed_wirelength": 0.190056,
+     "standard_cell_area": 0.119376
+    },
+    "scan": {
+     "core_area_um2": 6181.73,
+     "drc_errors": 0,
+     "fmax_mhz": 1380.87,
+     "instance_count": 47543,
+     "routed_wirelength_um": 76974,
+     "scan": {
+      "cell_area_added_fraction": 0.123596,
+      "chain_count": 4,
+      "chain_length_max": 797,
+      "flops": 3185,
+      "lockup_latches": 0,
+      "scan_cells": 3078,
+      "scan_mux_cells": 107
+     },
+     "sequential_area_um2": 1162.49,
+     "setup_wns_ns": 0.175816,
+     "standard_cell_area_um2": 2439.02,
+     "status": "pass"
+    }
+   },
    "scan_off_equivalence": {
     "equiv_cells": 4312,
     "proven": true,
@@ -224,6 +264,46 @@
     "test_coverage": 1.0,
     "tester_cycles": 187589,
     "top": "ot_rom_mcast_node"
+   },
+   "route": {
+    "noscan": {
+     "core_area_um2": 7572.65,
+     "drc_errors": 0,
+     "fmax_mhz": 1352.93,
+     "instance_count": 60334,
+     "routed_wirelength_um": 95881,
+     "sequential_area_um2": 1239.18,
+     "setup_wns_ns": 0.160865,
+     "standard_cell_area_um2": 2922.55,
+     "status": "pass"
+    },
+    "overhead": {
+     "core_area": 0.116779,
+     "fmax": -0.022706,
+     "instances": 0.055773,
+     "routed_wirelength": 0.147746,
+     "standard_cell_area": 0.116419
+    },
+    "scan": {
+     "core_area_um2": 8456.98,
+     "drc_errors": 0,
+     "fmax_mhz": 1322.21,
+     "instance_count": 63699,
+     "routed_wirelength_um": 110047,
+     "scan": {
+      "cell_area_added_fraction": 0.118172,
+      "chain_count": 5,
+      "chain_length_max": 844,
+      "flops": 4216,
+      "lockup_latches": 0,
+      "scan_cells": 4104,
+      "scan_mux_cells": 112
+     },
+     "sequential_area_um2": 1538.36,
+     "setup_wns_ns": 0.14369,
+     "standard_cell_area_um2": 3262.79,
+     "status": "pass"
+    }
    },
    "scan_off_equivalence": {
     "equiv_cells": 5342,

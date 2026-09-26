@@ -250,7 +250,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/ANALYTICAL_REPORT.md": 142,
     "docs/CHIP_ARCHITECTURE_DESIGN.md": 19,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
-    "docs/DFT.md": 62,
+    "docs/DFT.md": 72,
     "docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md": 14,
     "docs/DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md": 9,
     "docs/EVIDENCE_LEDGER.md": 44,
