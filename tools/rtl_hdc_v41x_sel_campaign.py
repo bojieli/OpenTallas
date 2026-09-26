@@ -347,7 +347,7 @@ MUTATIONS = [
      "else if (ab_seg == 2'd0) begin b_st <= 0; b_end <= 0; end"),
     ("-0 not canonicalised", "fkey = (v[14:0] == 0) ? 16'h8000", "fkey = (v[15:0] == 0) ? 16'h8000"),
     ("pass 2 drops the boundary bucket", "c_st <= {bs, 8'h00}; c_p2 <= 1'b1;", "c_st <= {bs, 8'h01}; c_p2 <= 1'b1;"),
-    ("search result taken early", "localparam integer WAIT = 11;", "localparam integer WAIT = 7;"),
+    ("search result taken early", "localparam integer WAIT = 13;", "localparam integer WAIT = 9;"),
 ]
 
 

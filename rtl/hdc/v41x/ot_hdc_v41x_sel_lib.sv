@@ -404,7 +404,7 @@ endmodule
 // (so "b = 0 and quota m = q - above" is ot_hdc_tselect's walk result in both cases).
 // Step A reads the slices' registered group sums (gs); its group G leaves on g_out (a register)
 // and the slices return the registered hbin of G (bs) three edges later; step B searches them.
-// Latency: a result is registered 12 edges after the gs it was computed from.  Counts sampled
+// Latency: a result is registered 14 edges after the gs it was computed from.  Counts sampled
 // at different edges are consistent as long as they only grow (then ok still implies
 // count_now(>= b) >= q); with static counts the result is exact.
 // eq: per-slice bin b count taken from the current bs (exact once the counts are static).
@@ -458,17 +458,25 @@ module ot_hdc_v41x_sel_su #(
         s2_r <= s2_d; q2 <= q1;
         s3_r <= s3_d; q3 <= q2;
     end
+    // compares registered, then the priority encode and the suffix mux
+    reg [15:0]      gea;
+    reg [16*XW-1:0] s4_r;
+    reg [QW-1:0]    q4;
+    always @(posedge clk) begin
+        for (i = 0; i < 16; i = i + 1) gea[i] <= (s3_r[XW*i +: XW] >= {{(XW-QW){1'b0}}, q3});
+        s4_r <= s3_r; q4 <= q3;
+    end
     reg [3:0]    ga;
     reg [XW-1:0] acca;
     always @(*) begin
         ga = 4'd0;
         for (i = 0; i < 16; i = i + 1)
-            if (s3_r[XW*i +: XW] >= {{(XW-QW){1'b0}}, q3}) ga = i[3:0];
-        acca = (ga == 4'd15) ? {XW{1'b0}} : s3_r[XW*(ga + 4'd1) +: XW];
+            if (gea[i]) ga = i[3:0];
+        acca = (ga == 4'd15) ? {XW{1'b0}} : s4_r[XW*(ga + 4'd1) +: XW];
     end
     reg [XW-1:0] acc_a;
     reg [QW-1:0] qa;
-    always @(posedge clk) begin g_out <= ga; acc_a <= acca; qa <= q3; end
+    always @(posedge clk) begin g_out <= ga; acc_a <= acca; qa <= q4; end
 
     // -- 3-edge round trip through the slices, then step B over the hbin of G ----------------
     reg [XW-1:0] acc_d1, acc_d2, acc_d3, acc_b1, acc_b2, acc_b3;
@@ -504,17 +512,25 @@ module ot_hdc_v41x_sel_su #(
         u2_r   <= u2_d;   acc_b2 <= acc_b1; q_b2 <= q_b1; g_b2 <= g_b1;
         u3_r   <= u3_d;   acc_b3 <= acc_b2; q_b3 <= q_b2; g_b3 <= g_b2;
     end
+    reg [15:0]      geb;
+    reg [16*XW-1:0] u4_r;
+    reg [XW-1:0]    acc_b4;
+    reg [3:0]       g_b4;
+    always @(posedge clk) begin
+        for (i = 0; i < 16; i = i + 1) geb[i] <= (u3_r[XW*i +: XW] >= {{(XW-QW){1'b0}}, q_b3});
+        u4_r <= u3_r; acc_b4 <= acc_b3; g_b4 <= g_b3;
+    end
     reg [3:0]    bb;
     reg          okb;
     reg [XW-1:0] aboveb;
     always @(*) begin
         bb = 4'd0; okb = 1'b0;
         for (i = 0; i < 16; i = i + 1)
-            if (u3_r[XW*i +: XW] >= {{(XW-QW){1'b0}}, q_b3}) begin bb = i[3:0]; okb = 1'b1; end
-        aboveb = (bb == 4'd15) ? acc_b3 : u3_r[XW*(bb + 4'd1) +: XW];
+            if (geb[i]) begin bb = i[3:0]; okb = 1'b1; end
+        aboveb = (bb == 4'd15) ? acc_b4 : u4_r[XW*(bb + 4'd1) +: XW];
     end
     always @(posedge clk) begin
-        res_b <= {g_b3, bb}; res_ok <= okb; res_above <= aboveb;
+        res_b <= {g_b4, bb}; res_ok <= okb; res_above <= aboveb;
         for (s = 0; s < Q; s = s + 1)
             res_eq[CB*s +: CB] <= bs_r[CB*(16*s + bb) +: CB];
     end

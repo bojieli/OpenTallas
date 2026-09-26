@@ -201,8 +201,8 @@ module ot_hdc_v41x_sel_ctl #(
 );
     localparam integer XW   = CB + 10;              // search sums
     localparam integer QC   = KW + 1;               // coarse quota width
-    localparam integer WAIT = 11;                   // search latency after the counts settle
-    localparam integer HOLD = 24;                   // fine results ignored after a bucket change
+    localparam integer WAIT = 13;                   // search latency after the counts settle
+    localparam integer HOLD = 26;                   // fine results ignored after a bucket change
     localparam integer KI   = K;
     localparam [QC-1:0] KQ  = KI[QC-1:0];
     localparam [XW-1:0] QINV = {XW{1'b1}};          // a quota no count reaches
@@ -271,7 +271,7 @@ module ot_hdc_v41x_sel_ctl #(
             case (st)
                 C_ING: begin
                     if (k_ld && !kseen) begin
-                        kseen <= 1'b1; kq <= kin_c; hold_c <= 6'd16; hold_f <= 6'd32;
+                        kseen <= 1'b1; kq <= kin_c; hold_c <= 6'd20; hold_f <= 6'd36;
                     end
                     // the running bound
                     if (use_c) begin
