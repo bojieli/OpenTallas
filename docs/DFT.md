@@ -207,12 +207,14 @@ several times that. Two changes fixed it:
 - the bench now drives all faults from one loop, so each task has a single
   call site;
 - `run_atpg.py --lean-build` builds without module inlining, with split
-  output, `-O1` C++ and 4 jobs.
+  output, `-O0` C++ and 4 jobs.
 
 On the argmax bench this cut the peak to 1.2 GB <!-- figure: 1.2 src="results/dft/gate_bench_build_memory.json#lean_build.peak_rss_kb" scale="1e-6" name="argmax bench lean build peak GB" --> with identical results: the
-same 82 patterns, 0 mismatches, and all 130 injected faults detected. That
-measurement was taken at `-O0`; lean builds now compile at `-O1` for speed,
-since split output already bounds each compile unit's memory.
+same 82 patterns, 0 mismatches, and all 130 injected faults detected. The
+optimisation level matters: split output does not break up the one file that
+constructs every cell instance (`Vtb__Syms__Slow.cpp`), and at `-O1` its
+compile was killed for lack of memory on the KV streamer and package link
+benches, so lean builds stay at `-O0`.
 
 **Sampling on the largest blocks.** Simulation time scales with cells ×
 patterns × chain length, so replaying every pattern of the stream unit or the

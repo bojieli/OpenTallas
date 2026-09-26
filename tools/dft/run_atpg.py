@@ -63,7 +63,7 @@ def engine(build_dir: Path) -> Path:
 
 REUSE = False
 LEAN_FLAGS = ["-j", "4", "-fno-inline", "--output-split", "5000", "--output-split-cfuncs", "500",
-              "-CFLAGS", "-O1"]
+              "-CFLAGS", "-O0"]
 
 
 def run_engine(exe: Path, model: Path, faults: Path, out: Path, threads: int, extra: list[str]) -> dict[str, Any]:
@@ -100,7 +100,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--lean-build", action="store_true",
                     help="low-memory Verilator build for large blocks: no module inlining, "
-                         "split output, -O1 C++, 4 jobs (argmax bench: 8.3 GB -> 1.2 GB peak)")
+                         "split output, -O0 C++, 4 jobs (argmax bench: 8.3 GB -> 1.2 GB peak)")
     ap.add_argument("--sample-patterns", type=int, default=32,
                     help="patterns simulated on the gate-level good machine")
     ap.add_argument("--sample-faults", type=int, default=48,
