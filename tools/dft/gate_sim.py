@@ -408,7 +408,7 @@ HEAVY_GATE = Path(os.environ.get("OT_HEAVY_GATE", "/tmp/claude-1000/orfs_gate.sh
 
 
 def run_bench(work: Path, timeout: int = 172800, simulator: str = "verilator",
-              heavy: bool = False) -> dict[str, Any]:
+              heavy: bool = False, min_gb: int | None = None) -> dict[str, Any]:
     """Compile and run the bench.  Verilator (5, --timing) is the default: it
     gives the same per-fault results as Icarus on the test netlists and is
     orders of magnitude faster on a 10^5-cell block; Icarus remains available."""
@@ -417,7 +417,10 @@ def run_bench(work: Path, timeout: int = 172800, simulator: str = "verilator",
                "-j", "8", "--top-module", "tb", "-Mdir", "vl", "cells.v", "dut.v", "tb.v"]
         if heavy and HEAVY_GATE.is_file():
             cmd = [str(HEAVY_GATE), *cmd]
-        comp = subprocess.run(cmd, cwd=work, capture_output=True, text=True, timeout=timeout)
+        env = dict(os.environ)
+        if min_gb:
+            env["OT_GATE_MIN_GB"] = str(min_gb)   # the gate's per-job memory floor
+        comp = subprocess.run(cmd, cwd=work, capture_output=True, text=True, timeout=timeout, env=env)
         if comp.returncode != 0:
             raise RuntimeError("verilator failed:\n" + comp.stderr[-4000:])
         run_cmd = ["./vl/Vtb"]
