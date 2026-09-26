@@ -197,6 +197,11 @@ class HdcRuntime:
         # ROM array: one batch at a time, equal lengths, slots 0..n-1
         if self._active or not self._waiting:
             return
+        # a batch whose users stopped at EOS still runs them to its generation length:
+        # the chip refuses new descriptors until the array is idle again
+        while (self.dev.read32(0x050) >> 8) & 3:
+            self.dev.wait_irq(self.chunk)
+            self.drv.poll()
         key = (len(self._waiting[0].prompt), self._waiting[0].max_new)
         batch = [r for r in self._waiting if (len(r.prompt), r.max_new) == key][:self.drv.slots]
         for s, r in enumerate(batch):
@@ -209,6 +214,10 @@ class HdcRuntime:
         # before the batch starts, or BATCH_GO is refused
         while any(self.dev.read32(0x100 + 8 * s) & 3 != 1 for s in range(len(batch))):
             self.dev.wait_irq(256)
+            for c in self.drv.poll():
+                self._complete(c)
+                if c.kind == "error":
+                    raise RuntimeError(f"descriptor for slot {c.slot} refused: {c.status}")
         self.drv.batch_go(len(batch))
         if (self.dev.read32(0x050) >> 10) & 3:
             raise RuntimeError("BATCH_GO refused by the host interface")
