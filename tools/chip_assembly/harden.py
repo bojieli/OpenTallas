@@ -118,7 +118,7 @@ def spec_for(block: fp.Block, sdc: str, ports: dict[str, Any] | None) -> cs.Case
         pdn_tcl=cs.TCL_DIR / "pdn_block.tcl",
         max_layer="M6",
         place_density=block.place_density,
-        extra={"SLEW_MARGIN": 20, "HOLD_SLACK_MARGIN": 5, "SETUP_SLACK_MARGIN": 0},
+        extra={"SLEW_MARGIN": 40, "HOLD_SLACK_MARGIN": 5, "SETUP_SLACK_MARGIN": 0},
     )
 
 
