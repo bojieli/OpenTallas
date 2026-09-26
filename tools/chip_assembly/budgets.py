@@ -233,6 +233,8 @@ def analyse(netlist: Path, work: Path, views: dict[str, dict[str, Path]], top: s
             e = pins.get((inst, bus))
             if e is not None:
                 e["startpoint"], e["endpoint"] = sp, ep
+    if not pins:
+        raise RuntimeError(f"the tile analysis timed no macro pin; see {work / 'analyse.log'}")
     return {"pins": list(pins.values()), "log": str(work / "analyse.log")}
 
 
