@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- OT-TR-001. Published copy: https://claude.ai/artifact/KYaA9ov7ZL3u2pMAi7LKMU . Figures from committed records on main, 2026-09-26. -->
 <title>OpenTallas Technical Report</title>
-<!-- OT-TR-001 rev 1.2. Reorganised from docs/ARCHITECTURE_ATLAS.html (OT-ARCH-001). Figures from committed records on main, 2026-09-26. -->
+<!-- OT-TR-001 rev 1.3. Reorganised from docs/ARCHITECTURE_ATLAS.html (OT-ARCH-001). Figures from committed records on main, 2026-09-26. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -132,7 +132,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   <a class="l2" href="#s3-1">3.1 Anatomy of a decode token</a>
   <a class="l2" href="#s3-2">3.2 Representative workloads</a>
   <a class="l2" href="#s3-3">3.3 Operator graphs</a>
-  <a class="l1" href="#s4">4 Motivation: four challenges</a>
+  <a class="l1" href="#s4">4 Motivation</a>
   <a class="l1" href="#s5">5 Insights &amp; principles</a>
   <a class="l2" href="#s5-1">5.1 Why ROM beats HBM</a>
   <a class="l2" href="#s5-2">5.2 Principles</a>
@@ -153,7 +153,10 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   <a class="l2" href="#s8-5">8.5 Design-space exploration</a>
   <a class="l2" href="#s8-6">8.6 Sensitivity</a>
   <a class="l1" href="#s9">9 Related work</a>
-  <a class="l1" href="#s10">10 Discussion &amp; limitations</a>
+  <a class="l1" href="#s10">10 Discussion</a>
+  <a class="l2" href="#s10-1">10.1 Economics</a>
+  <a class="l2" href="#s10-2">10.2 Why one model?</a>
+  <a class="l2" href="#s10-3">10.3 Limitations</a>
   <a class="l1" href="#s11">11 Conclusion</a>
   <a class="l1" href="#sA">A Tape-out readiness</a>
   <a class="l1" href="#sB">B Reproduction</a>
@@ -165,11 +168,11 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
 <main>
 <header class="doc">
   <div class="eyebrow">OpenTallas · Technical Report</div>
-  <h1>Hardwired-ROM decode machines for fast per-user inference</h1>
-  <p class="lead">Mask-ROM weights beside the multipliers and a compiled, fully pipelined decode dataflow, built for a small interactive model (Qwen3-8B) and a large sparse long-context model (DeepSeek-V4.1-Flash), with an HBM comparator on the same core.</p>
+  <h1>OpenTallas: Hardwiring Language Models for Order-of-Magnitude Faster Tokens</h1>
+  <p class="lead">Mask-ROM weights beside the multipliers and a compiled, fully pipelined decode dataflow give one user roughly 7–11× the tokens per second of the best GPU design at equal silicon in our models, for a small interactive model (Qwen3-8B) and a large sparse long-context model (DeepSeek-V4.1-Flash). Reduced versions of both decode bit-exactly in RTL today; the full chips are in implementation.</p>
   <div class="control" role="table" aria-label="Document control">
     <div><b>Document</b>OT-TR-001 (supersedes OT-ARCH-001)</div>
-    <div><b>Revision</b>1.1 draft · 2026-09-26</div>
+    <div><b>Revision</b>1.3 draft · 2026-09-26</div>
     <div><b>Status</b>pre-tape-out research</div>
     <div><b>RTL process</b>ASAP7 (7 nm predictive PDK)</div>
     <div><b>Evidence</b>tagged measured / modelled / pending</div>
@@ -180,14 +183,21 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
 <section id="s1">
   <h2><span class="num">1</span>Abstract</h2>
   <div class="abstract">
-    <p>Interactive and agentic use of language models is gated by per-user decode speed, which batching does not improve. We find that on HBM accelerators this speed is bounded twice: by streaming every active weight across the memory interface once per token, and on GPUs by the microsecond cost of each dependent operator boundary. We present OpenTallas, a model-specific architecture that stores weights in mask ROM beside the multiply-accumulate lanes and executes decode as a compiled dataflow of fixed-latency pipelined units. We build it for two representative workload classes, a small interactive model (Qwen3-8B) and a large sparse model with compressed KV for long context (DeepSeek-V4.1-Flash), and add the pipelined units their irregular operators require. Reduced configurations of both decode bit-exactly in RTL, and the token-path units route at about 1 GHz on ASAP7. A bottom-up critical-path model places the single-reticle Qwen3-8B design more than an order of magnitude above the weight-streaming ceiling of a current GPU for one user; the multi-die System-2 design is being re-evaluated under realistic packaging.</p>
+    <p>Interactive and agentic use of language models is gated by per-user decode speed, which batching does not improve. We find that on HBM accelerators this speed is bounded twice: by streaming every active weight across the memory interface once per token, and on GPUs by the microsecond cost of each dependent operator boundary. We present OpenTallas, a model-specific architecture that stores weights in mask ROM beside the multiply-accumulate lanes and executes decode as a compiled dataflow of fixed-latency pipelined units. We build it for two representative workload classes, a small interactive model (Qwen3-8B) and a large sparse model with compressed KV for long context (DeepSeek-V4.1-Flash), and add the pipelined units their irregular operators require. Reduced configurations of both decode bit-exactly in RTL, and the token-path units route at about 1 GHz on ASAP7. At equal silicon our models give one user about 11× (Qwen3-8B) and 7.5× (DeepSeek-V4.1) the decode rate of the best B200 design, and energy per token improves by about an order of magnitude; the GPU side is being re-priced with measured boundary costs and the multi-die design with realistic packaging.</p>
   </div>
 </section>
 
 <section id="s2">
   <h2><span class="num">2</span>Introduction</h2>
-  <p>An interactive user, and increasingly an agent calling a model in a loop, waits on decode: tokens are produced one at a time, each depending on the last. What matters is therefore the rate for one user. Serving systems have largely optimised aggregate throughput through batching, which amortises weight reads across users but does not make any single stream faster.</p>
-  <p>Current hardware falls short of what one user could get, for two reasons that we quantify in §4. First, an HBM accelerator must read every active weight once per token, which caps a single user at a few hundred tokens per second for an 8B model even on the fastest current part. Second, a decode token is a chain of several hundred dependent steps, and on a GPU each step that gathers from the whole chip costs about a microsecond of synchronisation through the L2 cache, which we measure directly. Hardwired silicon has been reported to exceed these limits by more than an order of magnitude for an 8B model [<a href="#r-hc1">HC1</a>], which suggests the gap is architectural rather than physical.</p>
+  <p>A growing class of language-model workloads is limited by how fast one user's tokens arrive, not by how many tokens a data centre can produce. <b>Interactive System-1 models</b> sit in a conversation or a control loop. Human turn-taking leaves gaps of about 200 ms across languages [<a href="#r-stivers">Stivers</a>], and full-duplex speech models are built to answer within that budget (Moshi reports 200 ms in practice [<a href="#r-moshi">Moshi</a>]); voice agents such as GPT-Live [<a href="#r-gptlive">GPT-Live</a>] and Thinking Machines Lab's interaction models [<a href="#r-tml">TML</a>] hold the conversation on a fast model for exactly this reason. In-car and home assistants inherit the same conversational budget [citation needed], and in robotics and driving the budget is set by physics: fast-slow systems run a large reasoning model at about 5 Hz beside a 20 Hz control loop because the large model cannot keep up with the vehicle [<a href="#r-fastslow">Fast-slow VLA</a>].</p>
+  <p><b>Background System-2 models</b> reason before they act, so their wall-clock time is the length of the reasoning trace times the time per output token. Computer-use agents today take tens of minutes on OSWorld tasks that take a person a few minutes, and most of that time is large-model calls [<a href="#r-osworldh">OSWorld-Human</a>]. Background speed also becomes foreground latency: generative user interfaces are designed and coded per request, and Google reports its implementation "can sometimes take a minute or more" [<a href="#r-genui">Generative UI</a>]; self-improving software agents iterate write–test–evaluate loops whose duration is the sum of their generated tokens [<a href="#r-alphaevolve">AlphaEvolve</a>].</p>
+  <p>Serving systems and hardware roadmaps, however, optimise cost per token. Continuous batching and paged KV caches [<a href="#r-vllm">vLLM</a>] maximise tokens per second per accelerator, and batching amortises weight reads across users without making any one stream faster. Public trackers such as Artificial Analysis report per-user output speed by model and over time [<a href="#r-aa">Artificial Analysis</a>]; whether the output speed of frontier models is improving or declining is not something we could verify from that source [citation needed]. What is clear from first principles (§4) is that an HBM accelerator caps one user of an 8B model at a few hundred tokens per second, and that a GPU adds about a microsecond of synchronisation to each of the several hundred dependent steps in a token.</p>
+  <p><b>The payoff.</b> Figure 2-1 previews the result. When weights live in mask ROM beside the multipliers and the schedule is compiled, our models give one user roughly an order of magnitude more tokens per second than the best B200 design at equal silicon, for both workload classes. These are model outputs, calibrated conservatively against the one published hardwired chip [<a href="#r-hc1">HC1</a>], and the RTL behind them decodes bit-exactly today.</p>
+  <figure class="fig">
+    <div class="svgbox"><svg id="teaser" viewBox="0 0 1000 330" role="img" aria-label="Per-user decode rate, GPU against OpenTallas"></svg></div>
+    <figcaption><b>Figure 2-1.</b> <b>Per-user decode rate at batch 1: OpenTallas against the best B200 design at equal silicon.</b> Log scale. Qwen3-8B at 8 K context, DeepSeek-V4.1-Flash at 200 K (docs/ANALYTICAL_REPORT.md, N5 vs B200; the single-reticle point is the critical-path model; the single-B200 point is the first-order weight-streaming ceiling). All values are modelled. The GPU side is pending re-pricing with measured boundary costs, and the V4.1 ROM array with realistic packaging (§6.5).</figcaption>
+  </figure>
+  <p>Two objections follow immediately, and we address them early rather than late. <i>Is it more expensive?</i> Per token served it is not: energy per token falls by about an order of magnitude and aggregate throughput at equal silicon is on par or better, while the mask-set cost is amortised over the model's deployment (§10.1). <i>Why build silicon for one model?</i> Because the interactive layer of a paired system changes slowly, frontier architectures are converging, and everything except the ROM contents is reused across models (§10.2).</p>
   <p>Our thesis is that when a model is fixed, both its weights and its schedule can be hardware. Mask ROM beside the lanes makes weight bandwidth a function of silicon area, and a schedule compiled before fabrication replaces run-time synchronisation with sequencing measured in cycles. Per-user latency then becomes the critical path of the decode dependency chain, and the design problem becomes shortening that path while keeping every operator exact. The approach has real costs, a mask set per model and capacity that scales with die count, which we treat as first-class constraints (§5, §10).</p>
   <p>This report makes the following contributions:</p>
   <ul>
@@ -208,6 +218,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
       <tr><td>Qwen3-8B, one reticle, per user, batch 1</td><td class="r m">8,680 tok/s</td><td><span class="tag mod">modelled</span></td><td>§8.4</td></tr>
       <tr><td>Qwen3-8B on one B200, weight-streaming ceiling</td><td class="r m">≈488 tok/s</td><td><span class="tag mod">first-order</span></td><td>§4</td></tr>
       <tr><td>GPU all-SM boundary, vector delivered</td><td class="r m">1,004–1,151 ns</td><td><span class="tag meas">measured</span></td><td>§4, §8.4</td></tr>
+      <tr><td>Per user at batch 1, ROM ÷ best B200 design at equal silicon (Qwen3-8B / V4.1)</td><td class="r m">11.3× / 7.5×</td><td><span class="tag mod">modelled</span>; GPU re-pricing <span class="tag pend">pending</span></td><td>§2, §10.1</td></tr>
       <tr><td>DeepSeek-V4.1 array, per user, batch 1</td><td class="r m">—</td><td><span class="tag pend">pending</span>; 5,475 <span class="tag sup">optimistic links</span></td><td>§8.4</td></tr>
     </tbody>
   </table></div>
@@ -320,20 +331,35 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   </ul></section>
 
 <section id="s4">
-  <h2><span class="num">4</span>Motivation: four challenges</h2>
-  <p>We identify four challenges that together bound per-user decode speed. The first two apply to any single device; the third appears once a model spans many dies; the fourth comes from the structure of modern models themselves. Each ends with an implication that a design principle in §5 answers. First-order derivations are collected in Appendix D.</p>
+  <h2><span class="num">4</span>Motivation</h2>
+  <h3 id="s4-1">4.1 Why speed, not cost</h3>
+  <p>The workloads of §2 each carry a latency budget set by a person or by physics, and in every case the budget is spent mostly on decode. Table 4-1 collects them. The common thread is that a faster token cannot be bought with more accelerators: batching and data parallelism raise aggregate throughput, while one stream's rate is bounded by the per-token critical path. Cost per token is therefore the wrong objective for these workloads; time per output token for one user is the right one, subject to a cost per token that is not worse (§10.1).</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 4-1. Workloads whose value is set by per-user speed</caption>
+    <thead><tr><th>Workload</th><th>Class</th><th>Budget or observation</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>Spoken conversation, full-duplex voice agents</td><td>System-1</td><td>human turn gaps ≈200 ms; Moshi 200 ms in practice</td><td>[<a href="#r-stivers">Stivers</a>, <a href="#r-moshi">Moshi</a>]</td></tr>
+      <tr><td>Voice agent delegating to a background model</td><td>System-1 + 2</td><td>fast model holds the conversation; frontier model reasons behind it</td><td>[<a href="#r-gptlive">GPT-Live</a>, <a href="#r-tml">TML</a>]</td></tr>
+      <tr><td>Driving and robot control with a reasoning model</td><td>System-1 + 2</td><td>reasoning at 5 Hz beside a 20 Hz control loop</td><td>[<a href="#r-fastslow">Fast-slow VLA</a>]</td></tr>
+      <tr><td>In-car and smart-home assistants</td><td>System-1</td><td>conversational budget</td><td>[citation needed]</td></tr>
+      <tr><td>Computer-use agents</td><td>System-2</td><td>tens of minutes for tasks people finish in a few; mostly large-model calls</td><td>[<a href="#r-osworldh">OSWorld-Human</a>]</td></tr>
+      <tr><td>Generative user interfaces</td><td>System-2, user-visible</td><td>"a minute or more" per generated interface</td><td>[<a href="#r-genui">Generative UI</a>]</td></tr>
+      <tr><td>Self-improving software loops</td><td>System-2</td><td>wall-clock = tokens generated × time per token, per iteration</td><td>[<a href="#r-alphaevolve">AlphaEvolve</a>]</td></tr>
+    </tbody>
+  </table></div>
+  <p>Against that objective we identify four challenges that together bound per-user decode speed. The first two apply to any single device; the third appears once a model spans many dies; the fourth comes from the structure of modern models themselves. They are presented in §4.2–§4.5; each ends with an implication that a design principle in §5 answers. First-order derivations are collected in Appendix D.</p>
 
-  <h3 id="s4-1">4.1 Challenge 1 — The memory wall sets the per-user ceiling</h3>
+  <h3 id="s4-c1">4.2 Challenge 1 — The memory wall sets the per-user ceiling</h3>
   <p><b><i>Every token touches every active weight, so where the weights live — their bandwidth and their capacity together — bounds single-user speed.</i></b></p>
   <p>At batch 1 each weight is used for exactly one multiply-accumulate per token, so decode performs about one floating-point operation per byte of weight read. An accelerator that keeps the weights in HBM therefore runs at the speed of its memory interface, not its arithmetic: the per-user rate cannot exceed memory bandwidth divided by the bytes a token must read. Batching raises aggregate throughput by reusing each read across users, but it leaves the rate of any one user where it was.</p>
   <p>The ceiling is low for both workload classes. For the System-1 model it lies in the hundreds of tokens per second even on the fastest current HBM part, and a sparse System-2 model does not escape it: its active weights per token are comparable to a dense 8B model's (Figure 4-1). Moving the weights next to the arithmetic changes the picture qualitatively, because on-die memory bandwidth grows with the number of memory macros rather than with the number of package pins.</p>
-  <p>The difficulty is capacity. On-die storage must hold the whole model, and the densities differ by an order of magnitude between memory technologies (Table 4-1). We find that even the System-1 model does not fit one reticle at BF16; a one-die product needs about 4-bit weights, as the only published hardwired product also uses [<a href="#r-hc1">HC1</a>]. SRAM-only storage would need about a dozen wafers for the System-2 model.</p>
+  <p>The difficulty is capacity. On-die storage must hold the whole model, and the densities differ by an order of magnitude between memory technologies (Table 4-2). We find that even the System-1 model does not fit one reticle at BF16; a one-die product needs about 4-bit weights, as the only published hardwired product also uses [<a href="#r-hc1">HC1</a>]. SRAM-only storage would need about a dozen wafers for the System-2 model.</p>
   <figure class="fig">
     <div class="svgbox"><svg id="ceiling" viewBox="0 0 1000 440" role="img" aria-label="Per-user decode ceiling against weight bytes per token"></svg></div>
     <figcaption><b>Figure 4-1.</b> <b>Weight streaming caps an HBM machine at a few hundred tokens/s per user for both workload classes.</b> Blue lines: bandwidth ÷ bytes ceilings of two HBM parts; dashed verticals: bytes each model must read per token; copper squares: ROM-at-MAC designs from the critical-path model, which are bound by their dependency chain rather than by bandwidth. Derivations in Appendix D.</figcaption>
   </figure>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-1. Capacity decides how many dies a model needs</caption>
+    <caption>Table 4-2. Capacity decides how many dies a model needs</caption>
     <thead><tr><th>Storage</th><th class="r">Density</th><th>Qwen3-8B (System-1)</th><th>DeepSeek-V4.1-Flash (System-2)</th><th>Status</th></tr></thead>
     <tbody>
       <tr><td>Via-programmed ROM macro (ASAP7)</td><td class="r m">149–154 Mb/mm²</td><td>BF16: 873 mm², over one reticle with compute · 4-bit: 218 mm², fits</td><td>≥88 reticle dies (188 modelled)</td><td><span class="tag meas">macro</span> <span class="tag mod">dies</span></td></tr>
@@ -345,7 +371,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   <div class="pending"><div class="ph">Pending · Qwen3-8B reticle weight format</div><p>Token agreement and accuracy of a 4-bit Qwen3-8B, and the ROM-sweep change it implies. Settled by: a quantised golden (<code>tools/hdc_golden.py</code> variant) and a re-run of <code>tools/decode_critical_path.py</code>.</p></div>
   <p class="implication"><b>Implication.</b> Weights must live beside the arithmetic in the densest storage available, and the machine must be sized so the whole model fits.</p>
 
-  <h3 id="s4-2">4.2 Challenge 2 — Per-user latency is a serial dependency problem</h3>
+  <h3 id="s4-c2">4.3 Challenge 2 — Per-user latency is a serial dependency problem</h3>
   <p><b><i>Once bandwidth is solved, a token's time is the critical path of its dependent operators, and on a GPU each dependent boundary costs on the order of a microsecond.</i></b></p>
   <p>A decode layer is a chain: each matrix-vector product needs the whole output of the previous step, softmax needs every score, and the next token needs every logit. The System-1 model has about a dozen dependent steps per layer and the System-2 model about twice that, so a token is several hundred dependent boundaries long. When weights no longer bound the rate, the cost of crossing each boundary does.</p>
   <p>We measured that cost on a Blackwell GPU (Figure 4-2). The key finding is that the expensive part is not kernel launch, which programmatic dependent launch and persistent megakernels already remove, but the physics of the dependency itself: a result produced by every streaming multiprocessor must pass through the L2 cache, and a memory fence must wait for L2's acknowledgement. The cheapest all-SM boundary that actually delivers the activation vector costs about a microsecond, and none of the alternative designs we tried — data-carried flags, per-producer flags, cluster hierarchies, or Megatron-style operator pairing — was faster. Only dependencies that stay inside one SM or one cluster are cheap, and a matrix-vector product spread over the whole chip cannot stay there.</p>
@@ -356,12 +382,12 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   </figure>
   <p class="implication"><b>Implication.</b> The schedule must be resolved at build time so that dependent operations are sequenced in cycles, not synchronised in microseconds.</p>
 
-  <h3 id="s4-3">4.3 Challenge 3 — Scaling past one die must not add latency</h3>
+  <h3 id="s4-c3">4.4 Challenge 3 — Scaling past one die must not add latency</h3>
   <p><b><i>Frontier models span many dies, so communication, collectives and packaging enter the critical path of every token.</i></b></p>
-  <p>A System-2 model needs tens of reticle dies (Table 4-1). Splitting it adds two kinds of serial cost: pipeline hops, where a token's activations move from the dies holding one group of layers to the next, and collectives, where the dies of a tensor group combine partial results inside a layer. Both are latency-bound, because decode activations are kilobytes, not megabytes. We find that if every die keeps its own weights and only activations move, communication is under a tenth of a token under realistic link assumptions (Table 4-2); the design must keep it that way by making collectives small, fixed and few.</p>
+  <p>A System-2 model needs tens of reticle dies (Table 4-2). Splitting it adds two kinds of serial cost: pipeline hops, where a token's activations move from the dies holding one group of layers to the next, and collectives, where the dies of a tensor group combine partial results inside a layer. Both are latency-bound, because decode activations are kilobytes, not megabytes. We find that if every die keeps its own weights and only activations move, communication is under a tenth of a token under realistic link assumptions (Table 4-3); the design must keep it that way by making collectives small, fixed and few.</p>
   <p>Packaging is a hard constraint rather than a parameter. High-density die-to-die links reach only adjacent dies, board links pay forward-error-correction latency, and interposers are limited in size: four reticle-sized dies with their HBM exceed the largest interposer in volume production and need the class announced for 2025–26 [<a href="#r-cowos">CoWoS</a>]. The packaging choice is therefore evaluated, not assumed (§6.5).</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-2. Communication stays a minority of the token if only activations move (V4.1 array, one token, realistic defaults; first-order)</caption>
+    <caption>Table 4-3. Communication stays a minority of the token if only activations move (V4.1 array, one token, realistic defaults; first-order)</caption>
     <thead><tr><th>Mechanism</th><th class="r">Latency</th><th class="r">Bandwidth</th><th class="r">On the path</th><th class="r">Per token</th></tr></thead>
     <tbody>
       <tr><td>Board hop, 112G PAM4 + KP4 FEC</td><td class="r m">200 ns (120–400)</td><td class="r m">1.69 TB/s per direction</td><td class="r m">43 hops</td><td class="r m">≈9.9 µs</td></tr>
@@ -372,12 +398,12 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
   </table></div>
   <p class="implication"><b>Implication.</b> Multi-die communication must be deterministic, fixed-size and local, and the packaging must be one that can be built today.</p>
 
-  <h3 id="s4-4">4.4 Challenge 4 — Modern models are irregular, and hardwiring must stay exact and fast</h3>
+  <h3 id="s4-c4">4.5 Challenge 4 — Modern models are irregular, and hardwiring must stay exact and fast</h3>
   <p><b><i>MoE routing, top-k indexers, Sinkhorn-normalised hyper-connections, Engram lookups and sparse attention must become fixed-latency pipelines at about 1 GHz while matching the reference bit for bit.</i></b></p>
-  <p>The System-2 line of models adds operators that are neither matrix products nor element-wise functions, and each sits on the critical path (Table 4-3). They are data-dependent selections, iterative normalisations and hashed lookups — exactly the operations a conventional datapath implements with loops, sorts and iterative dividers. Built that way they cost the design 10–20% of its per-user rate; each needs its own pipeline.</p>
+  <p>The System-2 line of models adds operators that are neither matrix products nor element-wise functions, and each sits on the critical path (Table 4-4). They are data-dependent selections, iterative normalisations and hashed lookups — exactly the operations a conventional datapath implements with loops, sorts and iterative dividers. Built that way they cost the design 10–20% of its per-user rate; each needs its own pipeline.</p>
   <p>The same operators make exactness hard. Floating-point addition is not associative, so a different reduction order is a different model, and faults in selection or indexing produce fluent but wrong tokens. The full-scale compiler lane found three such faults only by comparing against the reference token by token (<code>results/abi3/deepseek_v41_pool_and_decode_path.json</code>). Exactness also has a price: relaxing the golden order would buy about 15% (§8.5), which we decline. Finally, every one of these units must close timing near 1 GHz on a 7 nm-class process, where a single combinational binary32 addition already takes several nanoseconds.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-3. Irregular operators and why they are hard to hardwire (per-user tok/s, V4.1 array, batch 1, optimistic links; decode_critical_path.json)</caption>
+    <caption>Table 4-4. Irregular operators and why they are hard to hardwire (per-user tok/s, V4.1 array, batch 1, optimistic links; decode_critical_path.json)</caption>
     <thead><tr><th>Operator</th><th>Hardware difficulty</th><th class="r">Conventional</th><th class="r">Pipelined</th></tr></thead>
     <tbody>
       <tr><td>Indexer top-512; candidate blocks</td><td>data-dependent selection over up to 1 M positions, output in position order</td><td class="r m">4,922</td><td class="r m">5,475</td></tr>
@@ -395,7 +421,7 @@ p.implication{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink)}
 <section id="s5">
   <h2><span class="num">5</span>Key insights and design principles</h2>
   <h3 id="s5-1">5.1 Central insight: when the model is fixed, weights and schedule can be hardware</h3>
-  <p>The key insight is that the two limits of §4.1 and §4.2 share a cause: a general-purpose accelerator must treat both the weights and the schedule as data, fetched and synchronised at run time. For a model that will be served unchanged for months, both can be fixed at fabrication. Weights then become mask ROM placed beside the multipliers, and the schedule becomes a compiled program whose dependencies are resolved before the chip is built.</p>
+  <p>The key insight is that the two limits of §4.2 and §4.3 share a cause: a general-purpose accelerator must treat both the weights and the schedule as data, fetched and synchronised at run time. For a model that will be served unchanged for months, both can be fixed at fabrication. Weights then become mask ROM placed beside the multipliers, and the schedule becomes a compiled program whose dependencies are resolved before the chip is built.</p>
   <p>This removes the memory wall rather than moving it. Each ROM macro delivers a word per cycle to the lanes next to it, so aggregate weight bandwidth grows with silicon area, not with package pins. A ROM bit is also denser than an SRAM bit and far cheaper to read than an HBM access (Table 5-1), which is what lets a System-1 model fit one reticle and a System-2 model fit tens of dies rather than many wafers. With the weights no longer re-read per user, a single user keeps the lanes busy: batching becomes a way to add aggregate throughput, not the price of efficiency.</p>
   <p>The insight has costs that bound where it applies. Each model and version needs its own mask set; capacity scales with die count; the KV cache is per-user state and still lives in SRAM or HBM; and long-context attention traffic is untouched by ROM, which is why the workload's state per token matters (§3.2).</p>
   <div class="tablebox"><table class="data">
@@ -1116,10 +1142,31 @@ Constant ROM per layer: in_ln[H], qk_norm[heads·hd], post_ln[H];
 </section>
 
 <section id="s10">
-  <h2><span class="num">10</span>Discussion and limitations</h2>
-  <p><b>When ROM is the wrong answer.</b> The architecture assumes a model is worth a mask set. Models that change weekly, or whose per-user state traffic dominates (recurrent state or full KV at long context, Table 3-1), gain little: ROM removes weight traffic, not state traffic. The System-1/System-2 split helps here: the interaction model changes slowly and is latency-critical, while the background model can be swapped behind it [<a href="#r-gptlive">GPT-Live</a>].</p>
-  <p><b>What is modelled rather than built.</b> The per-user rates are model outputs calibrated only against one self-reported product; the clock is the slowest routed unit, not a closed core; memory macros are model-grade views on a predictive PDK. The GPU boundary costs are measured on a workstation Blackwell (GB202), not a B200.</p>
-  
+  <h2><span class="num">10</span>Discussion</h2>
+  <h3 id="s10-1">10.1 Economics: is it more expensive?</h3>
+  <p>We find that per token served, a hardwired machine is not more expensive to run, and that its fixed cost is a question of deployment volume. Removing weight movement removes most of decode's energy: the analytical model gives about an order of magnitude more tokens per joule than the best B200 design for both workloads, and aggregate throughput at equal silicon is on par or better (Table 10-1). The fixed cost is the mask set and design. Leading-edge mask sets are estimated in the tens of millions of dollars and complete designs at 7 nm at $50–75 M [<a href="#r-semi">SemiAnalysis</a>]. Because the ROM is via-programmed, a new model or version changes the via layers and the ROM contents, not the logic (docs/MEMORY_COMPILERS_AND_BIST.md), so the per-model cost is a partial mask set [citation needed for its price] on a design that is otherwise reused.</p>
+  <p>The fixed cost is amortised over tokens served in the model's deployment life. A System-1 model that serves an interactive product for a year, or a System-2 model deployed at data-centre scale, serves many trillions of tokens [citation needed]; at that volume the mask cost per token is small next to the energy and silicon cost of streaming weights. Latency also has value of its own for the workloads of Table 4-1, which a cost-per-token metric does not capture.</p>
+  <div class="tablebox"><table class="data">
+    <caption>Table 10-1. Energy and throughput per unit silicon favour ROM; the fixed cost is the mask set (analytical model N5 vs B200, docs/ANALYTICAL_REPORT.md; external estimates cited)</caption>
+    <thead><tr><th>Measure</th><th class="r">Qwen3-8B, 8 K</th><th class="r">DeepSeek-V4.1-Flash, 200 K</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Best tokens per joule, ROM ÷ B200</td><td class="r m">9.04×</td><td class="r m">12.33×*</td><td><span class="tag mod">modelled</span></td></tr>
+      <tr><td>Best aggregate throughput at equal silicon, ROM ÷ B200</td><td class="r m">1.21×</td><td class="r m">4.30×*</td><td><span class="tag mod">modelled</span></td></tr>
+      <tr><td>Per-user rate at batch 1, ROM ÷ B200</td><td class="r m">11.33×</td><td class="r m">7.49×</td><td><span class="tag mod">modelled</span></td></tr>
+      <tr><td>Leading-edge mask set (3 nm class)</td><td colspan="2" class="r m">≈$40 M range (2022 estimate)</td><td>[<a href="#r-semi">SemiAnalysis</a>]</td></tr>
+      <tr><td>Complete leading-edge design, 7 nm</td><td colspan="2" class="r m">$50–75 M</td><td>[<a href="#r-semi">SemiAnalysis</a>]</td></tr>
+      <tr><td>Per-model re-spin (via layers + ROM contents)</td><td colspan="2" class="r m">—</td><td>[citation needed]</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">* The V4.1 best-throughput and best-tokens-per-joule designs in the analytical report are wafer configurations, which we reject (§8.5); the corresponding array figures are pending with the packaging study. The GPU side of every ratio is pending re-pricing with measured boundary costs.</p>
+  <div class="pending"><div class="ph">Pending · cost per token</div><p>Dollars per million tokens for each design, combining die cost, yield, packaging, energy and amortised NRE over a stated deployment volume. Settled by: an economics study added to the analytical model (not yet in the repository).</p></div>
+
+  <h3 id="s10-2">10.2 Why build silicon for one model?</h3>
+  <p>Three observations make a model-specific chip reasonable. First, the paired System-1/System-2 structure separates a slowly changing interaction layer from a replaceable background model; OpenAI describes the background model of GPT-Live as swappable without replacing the real-time layer [<a href="#r-gptlive">GPT-Live</a>], so the model that most needs speed is also the one that changes least. Second, frontier open architectures are converging: latent or compressed KV, learned sparse attention and mixtures of experts recur across successive generations [<a href="#r-dsv2">DS-V2</a>, <a href="#r-dsv32">DS-V3.2</a>, <a href="#r-dsv4">DS-V4</a>], so the units a model like V4.1 needs are likely to be needed again. Third, only the ROM contents are model-specific: the matrix engine is shared between the Qwen3 and V4.1 cores, and the unit library, compiler, verification chain and physical flow carry over.</p>
+  <p>The costs are real. A model cannot be updated in the field; a new version needs new via masks and a new die run; capacity is fixed at fabrication; and a model whose value lies in frequent retraining is a poor fit. Deployment lifetimes of production models are not well documented publicly [citation needed], and the economics of §10.1 depend on them.</p>
+
+  <h3 id="s10-3">10.3 Limitations</h3>
+  <p>The per-user rates are model outputs calibrated only against one self-reported product; the clock is the slowest routed unit rather than a closed core; memory macros are model-grade views on a predictive PDK; and the GPU boundary costs are measured on a workstation Blackwell (GB202), not a B200. ROM removes weight traffic, not per-user state traffic, so models whose state grows with context (Table 3-1) gain less.</p>
   <div class="tablebox"><table class="data">
     <thead><tr><th>ID</th><th>Risk</th><th>Impact</th><th>Plan</th><th>State</th></tr></thead>
     <tbody>
@@ -1240,6 +1287,15 @@ ROM    0.08 pJ/B × 16.38 GB  =  1.3 mJ/token     (≈1,300× below HBM; 4-bit s
 <section id="sR" style="border-bottom:0">
   <h2>References</h2>
   <ol class="refs">
+    <li id="r-stivers">T. Stivers et al., Universals and cultural variation in turn-taking in conversation, PNAS 106(26), 2009, <a href="https://www.pnas.org/doi/10.1073/pnas.0903616106">doi:10.1073/pnas.0903616106</a>.</li>
+    <li id="r-moshi">Kyutai, Moshi: a speech-text foundation model for real-time dialogue, <a href="https://arxiv.org/abs/2410.00037">arXiv:2410.00037</a>.</li>
+    <li id="r-fastslow">Think at 5 Hz, Act at 20 Hz: Asynchronous Fast-Slow Vision-Language-Action Inference for Closed-Loop Driving, <a href="https://arxiv.org/abs/2607.15621">arXiv:2607.15621</a>.</li>
+    <li id="r-osworldh">OSWorld-Human: Benchmarking the Efficiency of Computer-Use Agents, <a href="https://arxiv.org/abs/2506.16042">arXiv:2506.16042</a> (MLSys 2026).</li>
+    <li id="r-genui">Google Research, <a href="https://research.google/blog/generative-ui-a-rich-custom-visual-interactive-user-experience-for-any-prompt/">Generative UI: a rich, custom, visual interactive user experience for any prompt</a>, 18 Nov 2025.</li>
+    <li id="r-alphaevolve">A. Novikov et al., AlphaEvolve: A coding agent for scientific and algorithmic discovery, <a href="https://arxiv.org/abs/2506.13131">arXiv:2506.13131</a>.</li>
+    <li id="r-vllm">W. Kwon et al., Efficient Memory Management for Large Language Model Serving with PagedAttention, SOSP 2023, <a href="https://arxiv.org/abs/2309.06180">arXiv:2309.06180</a>.</li>
+    <li id="r-aa">Artificial Analysis, <a href="https://artificialanalysis.ai/trends">output speed by intelligence band over time</a> and <a href="https://artificialanalysis.ai/methodology/performance-benchmarking">performance methodology</a>.</li>
+    <li id="r-semi">SemiAnalysis, <a href="https://newsletter.semianalysis.com/p/the-dark-side-of-the-semiconductor">The Dark Side Of The Semiconductor Design Renaissance</a>, 24 Jul 2022.</li>
     <li id="r-gptlive">OpenAI, <a href="https://openai.com/index/introducing-gpt-live/">Introducing GPT-Live</a>, July 2026; report: <a href="https://www.marktechpost.com/2026/07/08/openai-releases-gpt-live-and-gpt-live-1-mini-full-duplex-voice-models-that-delegate-deeper-reasoning-to-gpt-5-5/">MarkTechPost, 8 July 2026</a>.</li>
     <li id="r-tml">Thinking Machines Lab, <a href="https://thinkingmachines.ai/blog/interaction-models/">Interaction Models: A Scalable Approach to Human-AI Collaboration</a>, 11 May 2026.</li>
     <li id="r-qwen3">Qwen Team, Qwen3 Technical Report, <a href="https://arxiv.org/abs/2505.09388">arXiv:2505.09388</a>.</li>
@@ -1589,8 +1645,8 @@ function drawCeiling(){
     el("text",{x:X(b)+6,y:Y(bw/b)+4,"font-size":12,fill:c},svg,n+" ceiling");});
   const models=[["Qwen3-8B, BF16",16.38e9],["Qwen3-8B, 4-bit",4.10e9],["V4.1-Flash, active",13.0e9]];
   models.forEach(([n,b],i)=>{el("line",{x1:X(b),x2:X(b),y1:T,y2:H-B,stroke:css("--muted"),"stroke-dasharray":"3 3"},svg);
-    const left=i===2; el("text",{x:left?X(b)-4:X(b)+4,y:T+12+(i===0?0:i===1?0:14),"text-anchor":left?"end":"start","font-size":11,fill:css("--muted")},svg,n);});
-  [[16.38e9,488,css("--hbm"),"488 on B200",1],[13.0e9,615,css("--hbm"),"615 on B200",0]].forEach(([b,v,c,t,r])=>{el("circle",{cx:X(b),cy:Y(v),r:4.5,fill:c},svg);el("text",{x:r?X(b)+8:X(b)-8,y:Y(v)+(r?16:-8),"text-anchor":r?"start":"end","font-size":11,fill:c,class:"t-mono"},svg,t);});
+    el("text",{x:X(b)+4,y:T+12+i*15,"font-size":11,fill:css("--muted")},svg,n);});
+  [[16.38e9,488,css("--hbm"),"488 on B200"],[13.0e9,615,css("--hbm"),"615 on B200"]].forEach(([b,v,c,t])=>{el("circle",{cx:X(b),cy:Y(v),r:4.5,fill:c},svg);el("text",{x:X(b)+8,y:Y(v)+16,"font-size":11,fill:c,class:"t-mono"},svg,t);});
   [[16.38e9,8680,"Qwen3-8B reticle: 8,680 (modelled)"],[13.0e9,5475,"V4.1 array: 5,475 (optimistic links)"]].forEach(([b,v,t],i)=>{
     el("rect",{x:X(b)-5,y:Y(v)-5,width:10,height:10,fill:css("--rom")},svg);
     el("text",{x:W-R+8,y:Y(v)+4,"font-size":11.5,fill:css("--rom")},svg,t);
@@ -1608,8 +1664,25 @@ function drawLadder(){
     el("rect",{x:X(1),y:y,width:Math.max(2,X(v)-X(1)),height:bh,rx:2,fill:css(c),opacity:i===0?1:0.85},svg);
     el("text",{x:X(v)+6,y:y+bh*0.68,"font-size":12,fill:css("--ink"),class:"t-mono"},svg,v>=1000?(v/1000).toFixed(2)+" µs":v+" ns");});
 }
+
+function drawTeaser(){
+  const svg=document.getElementById("teaser"); if(!svg) return; svg.innerHTML="";
+  const groups=[["Qwen3-8B · System-1",[["1 B200, weight-streaming ceiling (first-order)",488,"--hbm"],["best B200 design, equal silicon (8 GPUs)",944,"--hbm"],["OpenTallas, one reticle (critical path)",8680,"--rom"],["OpenTallas, equal silicon (16 dies)",10692,"--rom"]]],
+                ["DeepSeek-V4.1-Flash · System-2",[["best B200 design, equal silicon (93 GPUs)",698,"--hbm"],["OpenTallas array, equal silicon (183 dies)",5228,"--rom"]]]];
+  const W=1000,L=360,R=150,T=10,bh=22,gap=7;
+  let y=T; const lo=Math.log10(100),hi=Math.log10(20000),X=v=>L+(Math.log10(v)-lo)/(hi-lo)*(W-L-R);
+  const H=T+groups.reduce((a,g)=>a+22+g[1].length*(bh+gap)+8,0)+30; svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  [100,300,1000,3000,10000].forEach(t=>{el("line",{x1:X(t),x2:X(t),y1:T,y2:H-26,stroke:css("--grid")},svg);el("text",{x:X(t),y:H-8,"text-anchor":"middle","font-size":12,fill:css("--muted"),class:"t-mono"},svg,t.toLocaleString()+" tok/s");});
+  groups.forEach(([g,rows])=>{el("text",{x:10,y:y+15,"font-size":13,"font-weight":600,fill:css("--ink")},svg,g); y+=22;
+    rows.forEach(([n,v,c])=>{el("text",{x:L-10,y:y+bh*0.7,"text-anchor":"end","font-size":12,fill:css("--ink")},svg,n);
+      el("rect",{x:X(100),y:y,width:Math.max(2,X(v)-X(100)),height:bh,rx:2,fill:css(c)},svg);
+      el("text",{x:X(v)+6,y:y+bh*0.7,"font-size":12,fill:css("--ink"),class:"t-mono"},svg,v.toLocaleString());y+=bh+gap;});
+    const r=rows.filter(r=>r[2]==="--rom").pop()[1], g0=rows.filter(r=>r[2]==="--hbm").pop()[1];
+    el("text",{x:W-R+60,y:y-(bh+gap)*rows.length/2,"font-size":17,"font-weight":700,fill:css("--rom"),"text-anchor":"middle"},svg,(r/g0).toFixed(1)+"×");
+    y+=8;});
+}
 function drawAll(){
-  drawCeiling(); drawLadder();
+  drawTeaser(); drawCeiling(); drawLadder();
   drawISA(); drawModelGraphs(); drawV41Logical(); drawV41Array(); drawMEPipe(); drawChase(); drawFlits(); drawArray(); drawReticle(); drawChain();
   const grp=document.getElementById("grp"); grp.innerHTML="";
   for(let g=0;g<4;g++){const x0=250+g*103;
