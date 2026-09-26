@@ -7,7 +7,7 @@
     },
     "liberty": {
       "path": "results/physical_abi3/asap7/chip/abstracts/ot_chip_router/ot_chip_router_typ.lib",
-      "sha256": "80dedf8f525d83e79764dc87d988b3aaffdf5a49bbb44c87626192ca316ca848"
+      "sha256": "03d2fe775cdfe5339e89ab5a9e863b7f5aa00fd692f6c97d2b7c6e91ffcc8a12"
     }
   },
   "block": "ot_chip_router",
@@ -18,7 +18,6 @@
   "budget_check": {
     "basis": "routed delay from the block's write_timing_model liberty: an input's worst setup constraint (pin to register, setup included), an output's worst clock-to-output",
     "over_budget": [
-      "in_last",
       "in_ready",
       "out_data",
       "out_last",
@@ -27,64 +26,64 @@
     ],
     "ports": {
       "in_data": {
-        "budget_ps": 540.5,
-        "routed_ps": 525.3,
+        "budget_ps": 541.6,
+        "routed_ps": 511.3,
         "through_budget_ps": null,
         "through_ps": null,
         "within_budget": true
       },
       "in_last": {
-        "budget_ps": 159.9,
-        "routed_ps": 193.5,
+        "budget_ps": 300.0,
+        "routed_ps": 218.5,
         "through_budget_ps": null,
         "through_ps": null,
-        "within_budget": false
+        "within_budget": true
       },
       "in_ready": {
-        "budget_ps": 293.5,
-        "routed_ps": 511.6,
+        "budget_ps": 300.0,
+        "routed_ps": 462.5,
         "through_budget_ps": null,
         "through_ps": null,
         "within_budget": false
       },
       "in_valid": {
-        "budget_ps": 606.6,
-        "routed_ps": 486.8,
+        "budget_ps": 610.7,
+        "routed_ps": 525.5,
         "through_budget_ps": null,
         "through_ps": null,
         "within_budget": true
       },
       "out_data": {
-        "budget_ps": 150.0,
-        "routed_ps": 394.6,
+        "budget_ps": 300.0,
+        "routed_ps": 495.8,
         "through_budget_ps": null,
         "through_ps": null,
         "within_budget": false
       },
       "out_last": {
-        "budget_ps": 313.5,
-        "routed_ps": 357.5,
+        "budget_ps": 300.0,
+        "routed_ps": 365.9,
         "through_budget_ps": null,
         "through_ps": null,
         "within_budget": false
       },
       "out_ready": {
-        "budget_ps": 404.3,
-        "routed_ps": 494.2,
+        "budget_ps": 420.1,
+        "routed_ps": 467.4,
         "through_budget_ps": null,
         "through_ps": null,
         "within_budget": false
       },
       "out_valid": {
-        "budget_ps": 200.8,
-        "routed_ps": 371.1,
+        "budget_ps": 300.0,
+        "routed_ps": 377.0,
         "through_budget_ps": null,
         "through_ps": null,
         "within_budget": false
       },
       "overflow": {
         "budget_ps": 429.7,
-        "routed_ps": 316.3,
+        "routed_ps": 321.7,
         "through_budget_ps": null,
         "through_ps": null,
         "within_budget": true
@@ -92,8 +91,8 @@
     }
   },
   "clock_insertion_estimate": {
-    "basis": "measured: results/physical_abi3/asap7/rom/ot_rom_fabric_router/physical_artifacts/6_finish.rpt",
-    "latency_ps": 249.05
+    "basis": "measured: this block's previous budgeted route (results/physical_abi3/asap7/chip/blocks/ot_chip_router.json)",
+    "latency_ps": 296.47
   },
   "clock_period_ns": 1.0,
   "closed_against_budget": false,
@@ -103,41 +102,41 @@
     200.0,
     200.0
   ],
-  "elapsed_seconds": 2762.0,
+  "elapsed_seconds": 3356.0,
   "flat_record": "results/physical_abi3/asap7/rom/ot_rom_fabric_router/physical.json",
   "git": {
-    "commit": "0a6cd5a6882489f44887ba6c9f573a4489808739",
+    "commit": "c785019273513540daa6eb9b8b180c9118f60794",
     "worktree_dirty": false,
     "worktree_status": []
   },
   "metrics": {
     "antenna_violating_nets": 0,
-    "clock_skew_ps": 67.5231,
+    "clock_skew_ps": 63.5019,
     "core_area_um2": 38349.8,
     "die_area_um2": 40000,
     "drc_errors": 0,
     "flow_errors": {},
-    "fmax_hz": 894383000.0,
+    "fmax_hz": 947600000.0,
     "hold_tns_ps": 0,
     "hold_violations": 0,
-    "hold_wns_ps": 23.2802,
+    "hold_wns_ps": 22.8667,
     "macro_area_um2": 0,
     "macro_count": 0,
     "max_cap_violations": 0,
     "max_fanout_violations": 0,
-    "max_slew_violations": 108,
-    "power_total_w": 0.148435,
-    "setup_tns_ps": -149091,
-    "setup_violations": 2884,
-    "setup_wns_ps": -118.089,
-    "stdcell_area_um2": 10572.4,
-    "stdcell_count": 83087,
-    "utilization": 0.275684,
-    "vias": 903608,
-    "wirelength_um": 932151
+    "max_slew_violations": 76,
+    "power_total_w": 0.145475,
+    "setup_tns_ps": -13284.8,
+    "setup_violations": 654,
+    "setup_wns_ps": -55.2972,
+    "stdcell_area_um2": 10312.6,
+    "stdcell_count": 82211,
+    "utilization": 0.268909,
+    "vias": 926629,
+    "wirelength_um": 936112
   },
   "notes": "5-port 512-bit mesh router; 10.1k um2 of cells, ~5,200 pins",
-  "routed_clock_insertion_ps": 296.47,
+  "routed_clock_insertion_ps": 288.49,
   "schema": "opentallas-chip-block-v1",
   "sources": [
     {
@@ -151,7 +150,7 @@
   ],
   "toolchain": {
     "image": "openroad/orfs:latest",
-    "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
+    "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
   },
-  "work_dir": "/tmp/claude-1000/otchip/r/ot_chip_router/w"
+  "work_dir": "/tmp/claude-1000/otchip/r/ot_chip_router_094653/w"
 }
