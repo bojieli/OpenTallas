@@ -23,9 +23,9 @@ module ot_mbist_macro_testtop (
     // ROM functional port, SECDED-corrected
     input  wire         r_ce,
     input  wire [9:0]   r_addr,
-    output wire [63:0]  r_data,
-    output wire         r_corrected,
-    output wire         r_uncorrectable,
+    output reg  [63:0]  r_data,              // SECDED-corrected, registered
+    output reg          r_corrected,
+    output reg          r_uncorrectable,
     // BIST
     input  wire         bist_start,
     output wire         bist_busy,
@@ -102,6 +102,14 @@ module ot_mbist_macro_testtop (
         .t_en(rom_sel), .t_clear(rom_clear), .t_req(rom_req), .t_addr(rom_addr),
         .exp_sig(rom_exp_sig), .sig(), .sig_match(rom_match), .sig_busy());
     ot_rom_1024x72_m8 u_rom (.clk(clk), .ce_in(rm_ce), .addr_in(rm_addr), .rd_out(rm_rd));
-    ot_rom_secded_dec #(.K(64)) u_dec (.cw(r_cw), .data(r_data), .corrected(r_corrected),
-                                       .uncorrectable(r_uncorrectable));
+    // The decoder sits between the macro's output latch and a register: macro
+    // clock-to-output plus the SECDED tree is one cycle, the consumer sees it next.
+    wire [63:0] d_data;
+    wire        d_cor, d_unc;
+    ot_rom_secded_dec #(.K(64)) u_dec (.cw(r_cw), .data(d_data), .corrected(d_cor), .uncorrectable(d_unc));
+    always @(posedge clk) begin
+        r_data <= d_data;
+        r_corrected <= d_cor;
+        r_uncorrectable <= d_unc;
+    end
 endmodule

@@ -1777,6 +1777,22 @@ def resolve_floorplan(
     return floorplan or None
 
 
+# 738746b2 (2026-09-19T10:07:51Z) began emitting SYNTH_MEMORY_MAX_BITS in every
+# config.mk; records written before it have no such line.
+SYNTH_MEMORY_MAX_BITS_SINCE = "2026-09-19T10:07:51+00:00"
+
+
+def recorded_memory_max_bits(record: dict[str, Any]) -> int | None:
+    """The SYNTH_MEMORY_MAX_BITS a routed record's config.mk carried (None: no line)."""
+    pnr = record.get("place_and_route", {})
+    if "synth_memory_max_bits" in pnr:
+        return pnr["synth_memory_max_bits"]
+    generated = datetime.fromisoformat(record["generated_at"])
+    if generated < datetime.fromisoformat(SYNTH_MEMORY_MAX_BITS_SINCE):
+        return None
+    return 65536   # the only value any record between 738746b2 and this field used
+
+
 def orfs_config_lines(
     nickname: str,
     block: dict[str, Any],
@@ -1787,8 +1803,16 @@ def orfs_config_lines(
     constraints: dict[str, Any] | None = None,
     memory_macros: dict[str, Any] | None = None,
     floorplan: dict[str, Any] | None = None,
+    memory_max_bits: int | None | str = "current",
 ) -> list[str]:
     """The ORFS config.mk for one route.
+
+    ``memory_max_bits`` is the SYNTH_MEMORY_MAX_BITS line: "current" (the
+    default) emits ``synth_memory_max_bits()``, an integer emits that value,
+    and None omits the line, as every config.mk before 738746b2 did.  Records
+    carry the value used under ``place_and_route.synth_memory_max_bits`` so a
+    config.mk can be rebuilt byte for byte; ``recorded_memory_max_bits``
+    recovers it for the records written before that field existed.
 
     SLEW_MARGIN appears only when a margin was given, and the macro lines only
     when a memory macro was named; without either the file is byte-for-byte
@@ -1818,7 +1842,9 @@ def orfs_config_lines(
         # every routed record here is standard cells plus the platform's fakeram
         # where one is asked for -- so the right answer is to let yosys map the
         # array to flops, which is what the routed area then honestly reports.
-        f"export SYNTH_MEMORY_MAX_BITS = {synth_memory_max_bits()}",
+        *([] if memory_max_bits is None else [
+            "export SYNTH_MEMORY_MAX_BITS = "
+            + str(synth_memory_max_bits() if memory_max_bits == "current" else memory_max_bits)]),
         "export LEC_CHECK = 0",
         "export TNS_END_PERCENT = 100",
         # ORFS repairs hold under GLOBAL-ROUTE-ESTIMATED parasitics and the finish
@@ -2105,6 +2131,7 @@ def run_pnr(
             ),
         },
         "core_utilization_percent": core_utilization,
+        "synth_memory_max_bits": synth_memory_max_bits(),
         "place_density": place_density,
         "clock_period_ns": clock_period_ns,
         "sdc_clock_period_library_units": period_lib,

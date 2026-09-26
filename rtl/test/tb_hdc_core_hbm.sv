@@ -13,6 +13,15 @@
 // final step like the default mode (a long prompt from an empty cache: the
 // core writes, flushes and re-reads every K and V row through HBM).
 // +LEAD=n: the streamer's fetch lead (cycles).
+//
+// +define+OT_HDC_KV_MACROS: the window and tail SRAMs are the ASAP7 compiled
+// macros behind rtl/hdc/kv/ot_hdc_kv_bufs.sv (MBIST collars, one shared
+// controller, spare-row/column repair).  The core, the streamer and the HBM
+// model are held in reset while the optional memory self-test (+BIST) runs and
+// the golden tail tiles are written through the buffers' test port, so every
+// cycle count is measured from the same reset release as without macros.  The
+// tail array below is then a write-side shadow used only by the checks; every
+// word the core reads comes out of the macros.
 module tb_hdc_core_hbm #(
     parameter integer G = 4,
     parameter integer LOG_HD = 4,
@@ -88,9 +97,35 @@ module tb_hdc_core_hbm #(
 
     // KV streaming engine, window and tail SRAMs, HBM
     wire [G-1:0] win_we; wire [G*LWIN-1:0] win_waddr; wire [G*W*16-1:0] win_wdata;
+`ifndef OT_HDC_KV_MACROS
     wire win_re; wire [LWIN-1:0] win_raddr; reg [G*W*16-1:0] win_q;
     wire [1:0] tl_we, tl_re; wire [2*TAW-1:0] tl_waddr, tl_raddr; wire [2*W-1:0] tl_wmask;
     wire [2*W*16-1:0] tl_wdata; reg [2*W*16-1:0] tl_q;
+`else
+    wire win_re; wire [LWIN-1:0] win_raddr; wire [G*W*16-1:0] win_q;
+    wire [1:0] tl_we, tl_re; wire [2*TAW-1:0] tl_waddr, tl_raddr; wire [2*W-1:0] tl_wmask;
+    wire [2*W*16-1:0] tl_wdata; wire [2*W*16-1:0] tl_q;
+    localparam integer N_M = G + 2;
+    reg bist_rst_n = 1'b0, bist_en = 1'b0, bist_start = 1'b0, bist_started = 1'b0;
+    wire bist_busy, bist_done, bist_pass, rep_scan_out;
+    wire [2*N_M-1:0] bist_sram_status;
+    reg tst_tl_en = 1'b0;
+    reg [1:0] tst_tl_we = 2'b00;
+    reg [TAW-1:0] tst_tl_addr = 0;
+    reg [2*W*16-1:0] tst_tl_wdata = 0;
+    integer pre_i = 0;
+    reg pre_busy = 1'b0;
+    ot_hdc_kv_bufs #(.G(G), .W(W), .LWIN(LWIN), .TAW(TAW)) u_bufs (
+        .clk(clk), .rst_n(bist_rst_n),
+        .win_we(win_we), .win_waddr(win_waddr), .win_wdata(win_wdata), .win_re(win_re),
+        .win_raddr(win_raddr), .win_q(win_q),
+        .tl_we(tl_we), .tl_waddr(tl_waddr), .tl_wmask(tl_wmask), .tl_wdata(tl_wdata), .tl_re(tl_re),
+        .tl_raddr(tl_raddr), .tl_q(tl_q),
+        .tst_tl_en(tst_tl_en), .tst_tl_we(tst_tl_we), .tst_tl_addr(tst_tl_addr), .tst_tl_wdata(tst_tl_wdata),
+        .bist_start(bist_start), .bist_busy(bist_busy), .bist_done(bist_done), .bist_pass(bist_pass),
+        .bist_sram_status(bist_sram_status), .rep_scan_en(1'b0), .rep_scan_in(1'b0),
+        .rep_scan_out(rep_scan_out));
+`endif
     wire hq_v, hq_rdy, hq_we; wire [AW-1:0] hq_addr; wire [LBK:0] hq_len; wire [TAGW-1:0] hq_tag;
     wire [W*16-1:0] hq_wdata;
     wire [NPC-1:0] hr_v, hr_rdy; wire [NPC*TAGW-1:0] hr_tag; wire [NPC*LBK-1:0] hr_beat;
@@ -124,12 +159,16 @@ module tb_hdc_core_hbm #(
         if (prog_re) prog_q <= prog[prog_addr];
         if (wrom_re) wrom_q <= wrom[wrom_addr[16:0]];
         if (crom_re) crom_q <= crom[crom_addr[11:0]];
+`ifndef OT_HDC_KV_MACROS
         for (q = 0; q < G; q = q + 1) begin
             if (win_re) win_q[q*W*16 +: W*16] <= win[q][win_raddr];
             if (win_we[q]) win[q][win_waddr[q*LWIN +: LWIN]] <= win_wdata[q*W*16 +: W*16];
         end
+`endif
         for (b = 0; b < 2; b = b + 1) begin
+`ifndef OT_HDC_KV_MACROS
             if (tl_re[b]) tl_q[b*W*16 +: W*16] <= tl[b][tl_raddr[b*TAW +: TAW]];
+`endif
             if (tl_we[b])
                 for (l = 0; l < W; l = l + 1)
                     if (tl_wmask[b*W + l]) tl[b][tl_waddr[b*TAW +: TAW]][l*16 +: 16] <= tl_wdata[(b*W + l)*16 +: 16];
@@ -169,7 +208,8 @@ module tb_hdc_core_hbm #(
     endfunction
 
     reg [8*512-1:0] dir;
-    integer cyc = 0, i, bad_lg, bad_vm, bad_kv, lgi, T;
+    integer cyc = 0, lc = 0, i, bad_lg, bad_vm, bad_kv, lgi, T;
+    reg go = 1'b1;
     reg trace = 1'b0, multi = 1'b0, checklast = 1'b0;
     reg [NW-1:0] prompt [0:255];
     reg [NW-1:0] gold_gen [0:255];
@@ -206,6 +246,22 @@ module tb_hdc_core_hbm #(
                      cycles - kvd_cyc, dut.me_tiles, dut.me_k, dut.me_jsh);
     end
 
+`ifdef OT_HDC_KV_MACROS
+`ifdef OT_MEM_FAULTS
+    // +FAULT_WIN_KIND/ROW/COL: one fault in window bank 0's macro (physical cell
+    // coordinates, kinds as in tools/mem_compiler/behav.py), applied on the first clock
+    integer fk_k, fk_r, fk_c;
+    reg fk = 1'b0;
+    initial fk = $value$plusargs("FAULT_WIN_KIND=%d", fk_k) && $value$plusargs("FAULT_WIN_ROW=%d", fk_r)
+                 && $value$plusargs("FAULT_WIN_COL=%d", fk_c);
+    always @(posedge clk) if (cyc == 1 && fk) begin
+        u_bufs.g_win[0].u_sram.f_kind[0] = fk_k[3:0];
+        u_bufs.g_win[0].u_sram.f_r[0] = fk_r;
+        u_bufs.g_win[0].u_sram.f_c[0] = fk_c;
+        $display("FAULT win0 kind=%0d row=%0d col=%0d", fk_k, fk_r, fk_c);
+    end
+`endif
+`endif
     reg [W*32-1:0] kvw;
     integer to0;
     initial begin
@@ -215,6 +271,10 @@ module tb_hdc_core_hbm #(
         if (!$value$plusargs("POS=%d", pos)) pos = 0;
         if (!$value$plusargs("EXPECT=%d", expect_tok)) expect_tok = 0;
         if (!$value$plusargs("LEAD=%d", lead)) lead = 512;
+`ifdef OT_HDC_KV_MACROS
+        go = 1'b0;
+        if ($test$plusargs("BIST")) bist_en = 1'b1;
+`endif
         $readmemh({dir, "/wrom.hex"}, wrom);
         $readmemh({dir, "/crom.hex"}, crom);
         if ($test$plusargs("MULTI")) multi = 1'b1;
@@ -288,10 +348,11 @@ module tb_hdc_core_hbm #(
 
     always @(posedge clk) begin
         cyc <= cyc + 1;
-        if (cyc == 5) rst_n <= 1'b1;
-        start <= (cyc == 10);
-        if (cyc == 9 && multi) begin token <= prompt[0]; pos <= 0; step <= 0; end
-        if (multi && cyc > 12 && done && !start) begin
+        if (lc < 5 || go) lc <= lc + 1;
+        if (lc == 5 && go) rst_n <= 1'b1;
+        start <= (lc == 10);
+        if (lc == 9 && multi) begin token <= prompt[0]; pos <= 0; step <= 0; end
+        if (multi && lc > 12 && done && !start) begin
             total_cycles = total_cycles + cycles;
             if (step >= n_prompt - 1 && !checklast) begin
                 $display("STEP pos=%0d in=%0d out=%0d gold=%0d cycles=%0d fault=%0d", pos, token, next_token,
@@ -314,7 +375,28 @@ module tb_hdc_core_hbm #(
             pos <= pos + 1;
             start <= 1'b1;
         end
-        if (!multi && cyc > 12 && done) check_and_finish(expect_tok);
+        if (!multi && lc > 12 && done) check_and_finish(expect_tok);
+`ifdef OT_HDC_KV_MACROS
+        // buffers out of reset, optional self-test, then the tail preload, then the core
+        if (cyc == 2) bist_rst_n <= 1'b1;
+        bist_start <= bist_en && cyc == 4 && !bist_started;
+        if (bist_start) bist_started <= 1'b1;
+        tst_tl_we <= 2'b00;
+        if (!go && !pre_busy && cyc >= 4 && (!bist_en || (bist_started && bist_done))) begin
+            if (bist_en)
+                $display("BIST pass=%0d sram_status=%b bist_cycles=%0d", bist_pass, bist_sram_status, cyc - 5);
+            pre_busy <= 1'b1; pre_i <= 0; tst_tl_en <= 1'b1;
+        end
+        if (pre_busy) begin
+            if (pre_i < TDEPTH) begin
+                tst_tl_we <= 2'b11; tst_tl_addr <= pre_i;
+                tst_tl_wdata <= {tl[1][pre_i], tl[0][pre_i]};
+                pre_i <= pre_i + 1;
+            end else begin
+                pre_busy <= 1'b0; tst_tl_en <= 1'b0; go <= 1'b1;
+            end
+        end
+`endif
         //: an underflow (or any streamer fault) ends the run: its state no longer follows the engine
         if (kvs_fault) begin
             $display("STREAM_FAULT cyc=%0d pc=%0d", cycles, dut.pc);
