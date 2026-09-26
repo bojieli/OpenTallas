@@ -171,3 +171,23 @@ def test_scan_off_is_formally_equivalent(tmp_path, cells, mixing):
     (tmp_path / "bad.v").write_text(text.replace("NAND2xp5_ASAP7_75t_R g0", "NOR2xp33_ASAP7_75t_R g0"))
     res = eq.check(tmp_path / "pre.v", tmp_path / "bad.v", rep, tmp_path / "bad", cells, YOSYS)
     assert not res["proven"]
+
+
+def test_mixed_edge_capture_is_refused(tmp_path, cells):
+    """A falling-edge cell fed by a rising-edge cell of the same clock sees the new
+    value within one capture pulse; the single-frame model must refuse it."""
+    from dft import atpg_model
+
+    toy = """
+module mixed(clk, a, y);
+  input clk; input a; output y;
+  wire q0n, q1n;
+  DFFHQNx1_ASAP7_75t_R p0 (.CLK(clk), .D(a), .QN(q0n));
+  DFFLQNx1_ASAP7_75t_R n0 (.CLK(clk), .D(q0n), .QN(q1n));
+  INVx1_ASAP7_75t_R g (.A(q1n), .Y(y));
+endmodule
+"""
+    text, rep = scan_insert.insert_scan(nl.parse_netlist(toy)[0], cells, chains=1)
+    (tmp_path / "scan.v").write_text(text)
+    with pytest.raises(scan_insert.DftError, match="falling-edge"):
+        atpg_model.build_models(tmp_path / "scan.v", rep, cells, tmp_path / "m")

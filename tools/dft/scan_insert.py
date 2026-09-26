@@ -640,6 +640,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--chains", type=int)
     ap.add_argument("--max-length", type=int)
     ap.add_argument("--clock-mixing", default="no_mix", choices=["no_mix", "mix"])
+    ap.add_argument("--port-prefix", default="",
+                    help="prefix for the added ports (a block that already has scan_en, such as the TAP)")
     ap.add_argument("--liberty", action="append", default=None)
     ap.add_argument("--cache-dir", default=None)
     args = ap.parse_args(argv)
@@ -648,6 +650,8 @@ def main(argv: list[str] | None = None) -> int:
     report = insert_scan_file(
         Path(args.netlist), Path(args.output), cells, top=args.top, chains=args.chains,
         max_length=args.max_length, clock_mixing=args.clock_mixing,
+        scan_enable=args.port_prefix + "scan_en", scan_in=args.port_prefix + "scan_in",
+        scan_out=args.port_prefix + "scan_out", test_mode=args.port_prefix + "test_mode",
     )
     Path(args.report).write_text(json.dumps(report, indent=1, sort_keys=True) + "\n")
     print(

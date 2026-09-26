@@ -113,6 +113,7 @@ def build_models(
     out_dir: Path,
     top: str | None = None,
     clock_ports: list[str] | None = None,
+    allow_mixed_edge: bool = False,
 ) -> dict[str, Any]:
     """Write capture.model, shift.model, faults and a names map into out_dir."""
     mod = nl.read_module(netlist, top or scan.get("top"))
@@ -323,6 +324,35 @@ def build_models(
                     for k, cellrec in enumerate(chain["cells"]):
                         fh.write(f"SCANPOS {ppo_of[cellrec['instance']]} {k} {n}\n")
         return {"path": str(path), "constrained_inputs": constrained, "observed": len(obs)}
+
+    # Design-rule check: one capture pulse is a rising edge then a falling
+    # edge.  A cell that captures on the falling edge of a clock while its data
+    # cone reads a cell that captured on the rising edge of the same clock sees
+    # the NEW value, half a cycle later; this single-frame model would give it
+    # the old one.  Refuse rather than grade such a design wrongly.
+    domain = {c["instance"]: (c["clock"], c["edge"]) for ch in scan["chains"] for c in ch["cells"]}
+    ppi_dom = {node: domain.get(name) for name, node in ppi_nodes}
+    fanins = m.fanins
+    violations = []
+    for name, ppo in ppo_nodes:
+        dom = domain.get(name)
+        if not dom or dom[1] != "neg":
+            continue
+        seen, stack = {ppo}, [ppo]
+        while stack:
+            v = stack.pop()
+            d = ppi_dom.get(v)
+            if d and d[0] == dom[0] and d[1] == "pos":
+                violations.append(name)
+                break
+            for f in fanins[v]:
+                if f not in seen:
+                    seen.add(f)
+                    stack.append(f)
+    if violations and not allow_mixed_edge:
+        raise DftError(
+            f"{len(violations)} falling-edge scan cells capture from rising-edge cells of the same clock "
+            f"(e.g. {violations[0]}); a single-frame capture model cannot grade this design")
 
     capture = write("capture", scan["capture_constraints"], observe_po=True)
     shift = write("shift", scan["shift_constraints"], observe_po=False)
