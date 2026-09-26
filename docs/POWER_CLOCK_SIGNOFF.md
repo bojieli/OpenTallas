@@ -288,15 +288,31 @@ difference is moving the weights.
 
 ### DeepSeek-V4.1 ROM array, per die
 
-The V4.1 step is 1,088,551 cycles (0.98 ms). With their register activity
-mapped from the campaign, the routed V4.1 units draw 32.9 mW (activation
-quantiser), 6.2 mW per block-dot lane (16 lanes) and 5.2 mW (top-16
-select), about half of each in the clock network. These units are busy for
-a few percent of the step (the QE, which holds the quantiser and the
-block-dot lanes, is busy 73,098 of 1,088,551 cycles), so their energy is
-almost all idle clocking: the 16 block-dot lanes alone spend 98 uJ per
-step. The memories move 46.9 MB of ROM (3.8 uJ) and 52.3 MB of SRAM traffic
-(136 uJ, of which 32 MB is KV reads) per step.
+The V4.1 activity is that of the V4.1 core at this branch's base
+(`1dab4867`), whose matrix engine is the Qwen core's `ot_hdc_matvec` with the
+same parameters; its register activity is mapped onto `u_me` of the routed
+Qwen core. (Main has since given the V4.1 core its own `ot_hdc_v41_matvec`.)
+
+The step is 1,088,551 cycles (0.98 ms). With their register activity mapped
+from the campaign, the matrix engine draws 120.6 mW and the routed V4.1
+units 197.3 mW (softplus/sqrt), 79.9 mW (Engram hash), 32.9 mW (activation
+quantiser), 18.8 mW (FP4 quantise-dequantise), 6.2 mW per block-dot lane
+(16 lanes) and 5.2 mW (top-16 select). The logic listed comes to 543 uJ per
+step; the memories move 46.9 MB of ROM (3.8 uJ) and 52.3 MB of SRAM traffic
+(136 uJ, of which 32 MB is KV reads); 683 uJ in all, without the sequencer,
+the V4.1 stream unit, the hc projection and the Sinkhorn unit, which have
+no retained route. The matrix engine spends 11.5 pJ per weight MAC here
+(10.3 M MACs per step), three times the Qwen figure, because V4.1's
+operators keep it idle-but-clocked for more of the step.
+
+These units are busy for a few percent of the step (the QE, which holds the
+quantiser and the block-dot lanes, is busy 73,098 of 1,088,551 cycles), so
+their energy is idle cost. Half of the block-dot, quantiser and select power
+and two thirds of the Engram hash's is clock network. The softplus/sqrt
+unit is worse: 62 mW of it is switching, because its deep arithmetic
+pipeline takes the stream unit's result bus unconditionally and toggles on
+every value that passes, used or not (the RTL-mapped combinational part may
+be up to 2x high; the register part is not).
 
 ### DeepSeek-V4.1 ROM array, per package
 
@@ -338,18 +354,22 @@ the other.
    idle for over 90% of a step; gating the QE, XU and HE by their busy
    signals, and the matrix-engine lanes by lane validity, would remove most
    of the V4.1 die's logic energy and a large part of the Qwen core's.
-2. **Hold at every corner.** Hold fails at FF (12 ps on the core, 4 ps on the
-   top-16 select) and under a 5% OCV derate by about 55 ps. ORFS's hold
+2. **Operand isolation.** Units that sit on a shared bus (the softplus/sqrt
+   unit on the stream unit's result, the Engram hash) should hold their
+   inputs when not selected; the softplus unit's switching alone is 62 mW.
+3. **Hold at every corner.** Hold fails at FF (12 ps on the core, 9 ps on the
+   softplus unit, 4 ps on the top-16 select and the Engram hash) and under a
+   5% OCV derate by about 55 ps on the core. ORFS's hold
    repair needs an FF scenario and a derated one, or a budgeted margin.
-3. **Upper power grid.** The M1/M2/M5/M6 block grid holds 3 mV fed at its
+4. **Upper power grid.** The M1/M2/M5/M6 block grid holds 3 mV fed at its
    pins but 224 mV fed from bumps. A die needs M7/M8 straps (and a
    redistribution layer to the bumps).
-4. **Follow-pin current density.** Even fed ideally at the M6 pins, the
+5. **Follow-pin current density.** Even fed ideally at the M6 pins, the
    18 nm M1/M2 follow-pins carry 1.2-2.4 mA/um near the densest flop
    clusters, above the assumed 1 mA/um. ASAP7 has no EM rule to check
    against; a foundry flow would need wider rails or M3 straps over the
    matrix engine's register columns.
-5. **Clock latency.** A 0.8-0.9 ns insertion delay on a 0.64 mm core is one
+6. **Clock latency.** A 0.8-0.9 ns insertion delay on a 0.64 mm core is one
    clock period. A full die's tree will be longer, so the full-chip
    workstream should plan a mesh or H-tree top level and carry the skew in
    the block timing budgets.
