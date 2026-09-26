@@ -1,0 +1,201 @@
+{
+ "schema": "opentallas.gpu-dependency-latency.v1",
+ "tool": "tools/gpu_microbench/dep_latency.cu (nvcc 12.8, -O3 -arch=sm_120 -rdc=true)",
+ "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+ "sm": "12.0",
+ "sms": 188,
+ "nvidia_smi": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 595.91.07, 3090 MHz",
+ "conditions": "shared GPU: another workload was resident (~52 GB used, ~30% utilisation), so medians carry contention; minima are the uncontended estimate",
+ "runs": [
+  {
+   "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+   "sm": "12.0",
+   "sms": 188,
+   "blocks": 188,
+   "boundaries_per_trial": 2000,
+   "trials": 15,
+   "graph_launch_gap_ns": {
+    "min": 428.1,
+    "median": 429.4,
+    "max": 442.4
+   },
+   "pdl_boundary_ns": {
+    "min": 365.6,
+    "median": 370.9,
+    "max": 430.1
+   },
+   "persistent_grid_sync_ns": {
+    "min": 621.5,
+    "median": 622.8,
+    "max": 637.0
+   },
+   "flag_pingpong_handoff_ns": {
+    "min": 370.6,
+    "median": 371.3,
+    "max": 377.3
+   },
+   "flag_counter_all_blocks_ns": {
+    "min": 663.3,
+    "median": 663.6,
+    "max": 665.5
+   }
+  },
+  {
+   "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+   "sm": "12.0",
+   "sms": 188,
+   "blocks": 188,
+   "boundaries_per_trial": 20000,
+   "trials": 15,
+   "graph_launch_gap_ns": {
+    "min": 453.8,
+    "median": 552.6,
+    "max": 1091.3
+   },
+   "pdl_boundary_ns": {
+    "min": 373.8,
+    "median": 451.0,
+    "max": 876.4
+   },
+   "persistent_grid_sync_ns": {
+    "min": 723.5,
+    "median": 869.1,
+    "max": 1571.9
+   },
+   "flag_pingpong_handoff_ns": {
+    "min": 392.7,
+    "median": 676.4,
+    "max": 770.7
+   },
+   "flag_counter_all_blocks_ns": {
+    "min": 688.2,
+    "median": 808.0,
+    "max": 1350.6
+   },
+   "block_syncthreads_ns": {
+    "min": 7.3,
+    "median": 7.4,
+    "max": 133.3
+   },
+   "cluster8_sync_ns": {
+    "min": 131.3,
+    "median": 143.2,
+    "max": 332.0
+   }
+  },
+  {
+   "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+   "sm": "12.0",
+   "sms": 188,
+   "blocks": 188,
+   "boundaries_per_trial": 20000,
+   "trials": 15,
+   "graph_launch_gap_ns": {
+    "min": 450.8,
+    "median": 589.9,
+    "max": 1180.6
+   },
+   "pdl_boundary_ns": {
+    "min": 388.3,
+    "median": 495.1,
+    "max": 878.9
+   },
+   "persistent_grid_sync_ns": {
+    "min": 769.1,
+    "median": 872.1,
+    "max": 1572.2
+   },
+   "flag_pingpong_handoff_ns": {
+    "min": 384.6,
+    "median": 469.2,
+    "max": 767.5
+   },
+   "flag_counter_all_blocks_ns": {
+    "min": 680.0,
+    "median": 752.7,
+    "max": 1346.0
+   },
+   "block_syncthreads_ns": {
+    "min": 7.2,
+    "median": 8.3,
+    "max": 15.5
+   },
+   "cluster8_sync_ns": {
+    "min": 131.0,
+    "median": 141.2,
+    "max": 245.7
+   }
+  },
+  {
+   "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+   "sm": "12.0",
+   "sms": 188,
+   "blocks": 188,
+   "boundaries_per_trial": 20000,
+   "trials": 15,
+   "graph_launch_gap_ns": {
+    "min": 473.6,
+    "median": 785.1,
+    "max": 1090.9
+   },
+   "pdl_boundary_ns": {
+    "min": 389.6,
+    "median": 577.5,
+    "max": 888.2
+   },
+   "persistent_grid_sync_ns": {
+    "min": 738.2,
+    "median": 922.2,
+    "max": 1573.2
+   },
+   "flag_pingpong_handoff_ns": {
+    "min": 380.4,
+    "median": 440.7,
+    "max": 768.8
+   },
+   "flag_counter_all_blocks_ns": {
+    "min": 678.8,
+    "median": 761.4,
+    "max": 1345.3
+   },
+   "block_syncthreads_ns": {
+    "min": 7.3,
+    "median": 7.3,
+    "max": 8.7
+   },
+   "cluster8_sync_ns": {
+    "min": 131.0,
+    "median": 146.1,
+    "max": 245.7
+   }
+  }
+ ],
+ "best_min_ns": {
+  "graph_launch_gap_ns": 428.1,
+  "pdl_boundary_ns": 365.6,
+  "persistent_grid_sync_ns": 621.5,
+  "flag_pingpong_handoff_ns": 370.6,
+  "flag_counter_all_blocks_ns": 663.3,
+  "block_syncthreads_ns": 7.2,
+  "cluster8_sync_ns": 131.0
+ },
+ "median_of_medians_ns": {
+  "graph_launch_gap_ns": 589.9,
+  "pdl_boundary_ns": 495.1,
+  "persistent_grid_sync_ns": 872.1,
+  "flag_pingpong_handoff_ns": 469.2,
+  "flag_counter_all_blocks_ns": 761.4,
+  "block_syncthreads_ns": 7.4,
+  "cluster8_sync_ns": 143.2
+ },
+ "interpretation": {
+  "graph_launch_gap": "CUDA graph of empty kernels, one block per SM: launch gap only (real kernels add tail + prologue)",
+  "pdl_boundary": "Programmatic Dependent Launch chain: residual cost of a dependent kernel boundary",
+  "flag_pingpong_handoff": "persistent kernel, one-to-one producer->consumer flag through L2 with __threadfence: the cross-SM megakernel dependency floor",
+  "flag_counter_all_blocks": "persistent kernel, every SM arrives on a counter and waits for all: a dependency that gathers from every SM (e.g. a reduction feeding the next op)",
+  "persistent_grid_sync": "cooperative grid.sync()",
+  "cluster8_sync": "8-block thread-block cluster barrier (distributed shared memory domain)",
+  "block_syncthreads": "intra-SM barrier"
+ },
+ "caveat": "RTX PRO 6000 Blackwell (GB202, sm_120), not B200 (GB100): L2 size/latency and the SM-to-L2 fabric differ; treat as a measured Blackwell-class reference, graded measured for this part and derived for B200."
+}
