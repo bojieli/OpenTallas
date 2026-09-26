@@ -234,6 +234,102 @@ module ot_hdc_v41x_attn_deq (
 endmodule
 
 // ---------------------------------------------------------------------------
+// One chunk: 8 products (position i issued 3*(i-1) cycles after position 0)
+// summed sequentially: acc = p0; acc = add(acc, p_i), i = 1..7.  LATENCY 21
+// from the products of positions 0/1.
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_attn_chunk (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire [8*32-1:0] p,
+    input  wire [7:0]    pf,
+    output wire [31:0]   y,
+    output wire          f
+);
+    wire [8*32-1:0] acc;
+    wire [7:0]      af;
+    assign acc[31:0] = p[31:0];
+    assign af[0] = pf[0];
+    genvar gi;
+    generate
+        for (gi = 1; gi < 8; gi = gi + 1) begin : g_a
+            wire [31:0] s;
+            wire sf;
+            ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc[(gi-1)*32 +: 32]), .b(p[gi*32 +: 32]),
+                             .y(s), .fault(sf));
+            reg [2:0] fd;
+            always @(posedge clk) fd <= {fd[1:0], af[gi-1] | pf[gi]};
+            assign acc[gi*32 +: 32] = s;
+            assign af[gi] = fd[2] | sf;
+        end
+    endgenerate
+    assign y = acc[7*32 +: 32];
+    assign f = af[7];
+endmodule
+
+// ---------------------------------------------------------------------------
+// One head of a tile: TD stationary operands (NBANK banks), TD multipliers,
+// TD/8 chunk chains, the pairwise tree.  LATENCY 3 + 21 + 3*log2(TD/8) from
+// the skewed operands to y (y is the last adder's register).
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_attn_hdp #(
+    parameter integer TD = 64,
+    parameter integer NBANK = 3,
+    parameter integer BW = 2
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [TD-1:0]     we,
+    input  wire [BW-1:0]     wbank,
+    input  wire [TD*16-1:0]  wd,
+    input  wire [8*BW-1:0]   sk_bank,
+    input  wire [TD*18-1:0]  sk_b,
+    output wire [31:0]       y,
+    output wire              f
+);
+    localparam integer NC = TD / 8;
+    wire [TD*32-1:0] p;
+    wire [TD-1:0]    pf;
+    genvar gk, gn;
+    generate
+        for (gk = 0; gk < TD; gk = gk + 1) begin : g_m
+            reg [NBANK*16-1:0] ab;
+            integer bb;
+            always @(posedge clk)
+                for (bb = 0; bb < NBANK; bb = bb + 1)
+                    if (we[gk] && (wbank == bb)) ab[bb*16 +: 16] <= wd[gk*16 +: 16];
+            wire [BW-1:0] bk = sk_bank[(gk % 8)*BW +: BW];
+            wire [15:0] av = ab[bk*16 +: 16];
+            wire [17:0] be = sk_b[gk*18 +: 18];
+            wire mf;
+            ot_hdc_v41x_attn_bmul u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]), .y(p[gk*32 +: 32]), .flt(mf));
+            // dequant fault rides with the product
+            reg [2:0] df;
+            always @(posedge clk) df <= {df[1:0], be[16] & ~be[17]};
+            assign pf[gk] = mf | df[2];
+        end
+        wire [(2*NC-1)*32-1:0] tn;      // heap order: leaves (chunk sums) at NC-1 .. 2NC-2
+        wire [2*NC-2:0]        tf;
+        for (gn = 0; gn < NC; gn = gn + 1) begin : g_c
+            ot_hdc_v41x_attn_chunk u_c (.clk(clk), .rst_n(rst_n), .p(p[gn*256 +: 256]), .pf(pf[gn*8 +: 8]),
+                                        .y(tn[(NC-1+gn)*32 +: 32]), .f(tf[NC-1+gn]));
+        end
+        for (gn = 0; gn < NC - 1; gn = gn + 1) begin : g_node
+            wire [31:0] s;
+            wire sf;
+            ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
+                             .b(tn[(2*gn+2)*32 +: 32]), .y(s), .fault(sf));
+            reg [2:0] fd;
+            always @(posedge clk) fd <= {fd[1:0], tf[2*gn+1] | tf[2*gn+2]};
+            assign tn[gn*32 +: 32] = s;
+            assign tf[gn] = fd[2] | sf;
+        end
+    endgenerate
+    assign y = tn[31:0];
+    assign f = tf[0];
+endmodule
+
+// ---------------------------------------------------------------------------
 module ot_hdc_v41x_attn_tile #(
     parameter integer H = 16,          // heads
     parameter integer TD = 64,         // products per head per beat (multiple of 8, TD/8 a power of two)
@@ -312,74 +408,23 @@ module ot_hdc_v41x_attn_tile #(
         end
     endgenerate
 
-    // -- per head: multiply, chunk chains, tree
+    // -- per head: multiply, chunk chains, tree (one datapath module per head)
     generate
         for (gh = 0; gh < H; gh = gh + 1) begin : g_h
-            wire [TD*32-1:0] p;
-            wire [TD-1:0]    pf;
-            for (gk = 0; gk < TD; gk = gk + 1) begin : g_m
-                // stationary operand, NBANK banks
-                reg [NBANK*16-1:0] ab;
-                wire [15:0] wd = r_ld_mode ? r_ld_w[((gk % R) * H + gh) * 16 +: 16] : r_ld_w[gk * 16 +: 16];
-                wire wsel = r_ld_v && (r_ld_mode ? (r_ld_grp == (gk / R)) : (r_ld_grp == gh));
-                integer bb;
-                always @(posedge clk)
-                    for (bb = 0; bb < NBANK; bb = bb + 1)
-                        if (wsel && (r_ld_bank == bb)) ab[bb*16 +: 16] <= wd;
-                wire [BW-1:0] bk = sk_bank[(gk % 8)*BW +: BW];
-                wire [15:0] av = ab[bk*16 +: 16];
-                wire [17:0] be = sk_b[gk*18 +: 18];
-                wire mf;
-                ot_hdc_v41x_attn_bmul u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]),
-                                           .y(p[gk*32 +: 32]), .flt(mf));
-                // dequant fault rides with the product
-                reg [2:0] df;
-                always @(posedge clk) df <= {df[1:0], be[16] & ~be[17]};
-                assign pf[gk] = mf | df[2];
+            wire [TD-1:0]    we;
+            wire [TD*16-1:0] wd;
+            for (gk = 0; gk < TD; gk = gk + 1) begin : g_w
+                assign wd[gk*16 +: 16] = r_ld_mode ? r_ld_w[((gk % R) * H + gh) * 16 +: 16] : r_ld_w[gk * 16 +: 16];
+                assign we[gk] = r_ld_v && (r_ld_mode ? (r_ld_grp == (gk / R)) : (r_ld_grp == gh));
             end
-            // chunk chains
-            wire [NC*32-1:0] cs;
-            wire [NC-1:0]    cf;
-            for (gk = 0; gk < NC; gk = gk + 1) begin : g_c
-                wire [8*32-1:0] acc;
-                wire [7:0]      af;
-                assign acc[31:0] = p[(gk*8)*32 +: 32];
-                assign af[0] = pf[gk*8];
-                genvar gi;
-                for (gi = 1; gi < 8; gi = gi + 1) begin : g_a
-                    wire [31:0] y;
-                    wire f;
-                    ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc[(gi-1)*32 +: 32]),
-                                     .b(p[(gk*8+gi)*32 +: 32]), .y(y), .fault(f));
-                    reg [2:0] fd;
-                    always @(posedge clk) fd <= {fd[1:0], af[gi-1] | pf[gk*8+gi]};
-                    assign acc[gi*32 +: 32] = y;
-                    assign af[gi] = fd[2] | f;
-                end
-                assign cs[gk*32 +: 32] = acc[7*32 +: 32];
-                assign cf[gk] = af[7];
-            end
-            // pairwise tree over the chunk sums
-            wire [(2*NC-1)*32-1:0] tn;      // heap order: leaves at NC-1 .. 2NC-2
-            wire [2*NC-2:0]        tf;
-            genvar gn;
-            for (gn = 0; gn < NC; gn = gn + 1) begin : g_leaf
-                assign tn[(NC-1+gn)*32 +: 32] = cs[gn*32 +: 32];
-                assign tf[NC-1+gn] = cf[gn];
-            end
-            for (gn = 0; gn < NC - 1; gn = gn + 1) begin : g_node
-                wire [31:0] y;
-                wire f;
-                ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
-                                 .b(tn[(2*gn+2)*32 +: 32]), .y(y), .fault(f));
-                reg [2:0] fd;
-                always @(posedge clk) fd <= {fd[1:0], tf[2*gn+1] | tf[2*gn+2]};
-                assign tn[gn*32 +: 32] = y;
-                assign tf[gn] = fd[2] | f;
-            end
+            wire [31:0] y;
+            wire f;
+            ot_hdc_v41x_attn_hdp #(.TD(TD), .NBANK(NBANK), .BW(BW)) u_hdp (
+                .clk(clk), .rst_n(rst_n), .we(we), .wbank(r_ld_bank), .wd(wd), .sk_bank(sk_bank), .sk_b(sk_b),
+                .y(y), .f(f));
             always @(posedge clk) begin
-                oy[gh*32 +: 32] <= tn[31:0];
-                oflt[gh] <= tf[0];
+                oy[gh*32 +: 32] <= y;
+                oflt[gh] <= f;
             end
         end
     endgenerate

@@ -314,7 +314,7 @@ def write_hex(path: Path, words, width_bits):
     path.write_text("".join(f"{w:0{nd}x}\n" for w in words))
 
 
-VL_EXTRA = os.environ.get("OT_ATTN_VL_EXTRA", "--output-split 20000 --output-split-cfuncs 2000").split()
+VL_EXTRA = os.environ.get("OT_ATTN_VL_EXTRA", "--output-split 20000 --output-split-cfuncs 2000 -fno-inline").split()
 VL_CFLAGS = os.environ.get("OT_ATTN_VL_CFLAGS", "-O1")
 
 
@@ -634,16 +634,116 @@ def capture_vehicle(n_positions, keep, log=print):
                   "tokens": toks[:n_positions]}
 
 
+SHIPPED = dict(H=16, D=512, TD=64, NL=4, TROWS=640)      # one die: 16 heads, 4 row lanes x 8 slices = 32 tiles
+REDUCED = dict(H=16, D=32, TD=32, NL=4, TROWS=160)       # the vehicle's head_dim, T <= 144
+PHYS = ROOT / "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_attn_tile/physical.json"
+
+
+def reduced_jobs(rng, vehicle_jobs):
+    rj = [random_job(rng, 16, 32, T, min(T, 128), "wide" if i % 2 == 0 else "coarse")
+          for i, T in enumerate((144, 1, 7, 8, 9, 31, 32, 33, 64, 65, 127, 128, 129, 143, 144, 100))]
+    return rj + list(vehicle_jobs)
+
+
+def shipped_jobs(rng):
+    return [random_job(rng, 16, 512, 640, 128, "wide"), random_job(rng, 16, 512, 640, 128, "coarse"),
+            random_job(rng, 16, 512, 300, 128, "wide")]
+
+
+def perf_summary(rec, cfg):
+    H, D, TD, NL = cfg["H"], cfg["D"], cfg["TD"], cfg["NL"]
+    full = [j for j in rec["per_job"] if j["T"] == cfg["TROWS"]]
+    out = {"tiles": NL * (D // TD), "tile_macs": H * TD, "issue_macs_per_cycle": NL * (D // TD) * H * TD,
+           "full_jobs": len(full)}
+    if full:
+        macs = sum(H * j["T"] * D for j in full)
+        out.update({"qk_macs_per_cycle_sustained": macs / sum(j["qk_cycles"] for j in full),
+                    "pv_macs_per_cycle_sustained": macs / sum(j["pv_cycles"] for j in full),
+                    "qk_bubbles": sum(j["qk_beat_bubbles"] for j in full),
+                    "pv_bubbles": sum(j["pv_beat_bubbles"] for j in full),
+                    "rows_per_cycle": NL, "kv_read_bytes_per_cycle": NL * D * 528 / 512,
+                    "layer_cycles_engine_busy": [j["qk_cycles"] + j["pv_cycles"] for j in full]})
+    return out
+
+
+def physical_summary():
+    if not PHYS.is_file():
+        return None
+    d = json.loads(PHYS.read_text())
+    des = d.get("design", {})
+    argv = d.get("runner", {}).get("argv", [])
+    prm = [argv[i + 1] for i, a in enumerate(argv) if a == "--param"]
+    return {"record": str(PHYS.relative_to(ROOT)), "params": prm, "fmax_hz": des.get("fmax_hz"),
+            "closed": des.get("closed"), "area_um2": des.get("area_um2"), "setup_wns_ns": des.get("setup_wns_ns"),
+            "target_clock_period_ns": d.get("target_clock_period_ns")}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--only", choices=["tile", "engine", "all"], default="all")
-    ap.add_argument("--scratch", type=Path, default=None)
+    ap.add_argument("--scratch", type=Path, required=True, help="build/vector directory (outside the worktree)")
+    ap.add_argument("--vehicle-positions", type=int, default=131)
+    ap.add_argument("--vehicle-cache", type=Path, default=None, help="pickle of capture_vehicle's result")
+    ap.add_argument("--skip-shipped", action="store_true")
     ap.add_argument("--output", type=Path, default=OUT)
     args = ap.parse_args()
-    with tempfile.TemporaryDirectory() as td:
-        s = args.scratch or Path(td)
-        if args.only in ("tile", "all"):
-            print(json.dumps(run_tile(s, 16, 64, 120, 1), indent=1))
+    s = args.scratch
+    s.mkdir(parents=True, exist_ok=True)
+    t0 = time.time()
+    rec = {"schema": "hdc_v41x_attn_campaign/1", "tool": "tools/rtl_hdc_v41x_attn_campaign.py",
+           "arith": V.ARITH, "spec": SPEC, "verilator": VERILATOR,
+           "sources": {str(p.relative_to(ROOT)): sha(p) for p in (RTL_TILE, RTL_ENG, *LIB, TB_TILE, TB_ENG,
+                                                                  ROOT / "tools/hdc_golden_v41.py",
+                                                                  ROOT / "tools/hdc_golden.py",
+                                                                  Path(__file__).resolve())}}
+    rec["order_model"] = check_order_model(np.random.default_rng(1), 40)
+    rec["tile"] = [run_tile(s, 4, 16, 200, 1), run_tile(s, 16, 64, 80, 2)]
+    if args.vehicle_cache and args.vehicle_cache.is_file():
+        import pickle
+        vj, info = pickle.loads(args.vehicle_cache.read_bytes())
+    else:
+        vj, info = capture_vehicle(args.vehicle_positions, {0, 7, 31, 63, 64, 100, 127, 128, 129, 130})
+    red = run_engine(s, "reduced", REDUCED, reduced_jobs(np.random.default_rng(21), vj), extra={"MAXCYC": 4000000})
+    red["vehicle"] = {k: v for k, v in info.items() if k != "tokens"}
+    red["n_vehicle_jobs"] = len(vj)
+    red["per_job"] = red["per_job"][:20]
+    rec["reduced"] = red
+    rec["reduced_bubbles"] = run_engine(s, "reduced_bub", REDUCED, reduced_jobs(np.random.default_rng(5), [])[:8],
+                                        extra={"MAXCYC": 400000, "BUB": 30})
+    if not args.skip_shipped:
+        sh = run_engine(s, "shipped", SHIPPED, shipped_jobs(np.random.default_rng(33)), extra={"MAXCYC": 100000})
+        sh["performance"] = perf_summary(sh, SHIPPED)
+        rec["shipped"] = sh
+    rec["physical"] = physical_summary()
+    fails = []
+    if rec["order_model"]["mismatching_trials"]:
+        fails.append(f"order model: {rec['order_model']['mismatching_trials']} trials")
+    fails += [f"tile H={t['H']}" for t in rec["tile"] if t["status"] != "pass"]
+    for k in ("reduced", "reduced_bubbles", "shipped"):
+        if k in rec and not rec[k]["bit_exact"]:
+            fails.append(f"{k}: not bit exact")
+    if "shipped" in rec:
+        pf, lat = rec["shipped"]["performance"], rec["shipped"]["latency"]
+        if pf.get("qk_bubbles") or pf.get("pv_bubbles"):
+            fails.append("shipped: issue bubbles on full-window layers")
+        if lat["first_score_after_row_entry_max"] > SPEC["first_score_latency_cycles"]:
+            fails.append("shipped: first-score latency over budget")
+        if lat["last_pv_after_last_probability_max"] > SPEC["last_pv_latency_cycles"]:
+            fails.append("shipped: last-pv latency over budget")
+        rec["spec_check"] = {
+            "macs_per_cycle": {"spec": SPEC["macs_per_cycle"], "measured": pf.get("qk_macs_per_cycle_sustained"),
+                               "met": (pf.get("qk_macs_per_cycle_sustained") or 0) >= SPEC["macs_per_cycle"]},
+            "kv_read_bytes_per_cycle": {"spec": SPEC["kv_read_bytes_per_cycle"],
+                                        "measured": pf.get("kv_read_bytes_per_cycle")},
+            "first_score_latency": {"spec": SPEC["first_score_latency_cycles"],
+                                    "measured": lat["first_score_after_row_entry_max"]},
+            "last_pv_latency": {"spec": SPEC["last_pv_latency_cycles"],
+                                "measured": lat["last_pv_after_last_probability_max"]}}
+    rec["failures"] = fails
+    rec["status"] = "pass" if not fails else "fail"
+    rec["elapsed_s"] = round(time.time() - t0)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(rec, indent=1, default=str) + "\n")
+    print(json.dumps({"status": rec["status"], "failures": fails}, indent=1))
 
 
 if __name__ == "__main__":

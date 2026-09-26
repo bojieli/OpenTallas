@@ -49,12 +49,12 @@ def test_tile_rtl_bit_exact(tmp_path):
 
 @pytest.mark.skipif(not HAVE_VERILATOR, reason="verilator not installed")
 def test_small_engine_rtl_bit_exact_and_back_to_back(tmp_path):
-    cfg = dict(H=4, D=32, TD=16, NL=2, TROWS=72)
+    cfg = dict(H=4, D=64, TD=16, NL=1, TROWS=72)       # DPT = 16: the p.v stream at one beat per cycle
     rng = np.random.default_rng(9)
-    jobs = [C.random_job(rng, 4, 32, T, min(T, 40)) for T in (72, 1, 33)]
+    jobs = [C.random_job(rng, 4, 64, T, min(T, 40)) for T in (72, 1, 33)]
     r = C.run_engine(tmp_path, "small", cfg, jobs)
     assert r["bit_exact"], r
-    big = r["per_job"][0]                       # T = 72: 36 q.k beats, 5 blocks x DPT p.v beats
+    big = r["per_job"][0]                       # T = 72: 72 q.k beats, 5 blocks x 16 p.v beats
     assert big["qk_beat_bubbles"] == 0 and big["pv_beat_bubbles"] == 0, big
 
 
