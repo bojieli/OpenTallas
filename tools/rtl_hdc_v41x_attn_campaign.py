@@ -309,6 +309,15 @@ def tile_vectors(rng, H, TD, nbeats, nbank=3):
     return stim, exp
 
 
+def src_digest(paths, extra=None):
+    h = hashlib.sha1()
+    for p in paths:
+        h.update(Path(p).read_bytes())
+    h.update(repr(sorted((extra or {}).items())).encode())
+    h.update(" ".join(VL_EXTRA + [VL_CFLAGS]).encode())
+    return h.hexdigest()[:12]
+
+
 def write_hex(path: Path, words, width_bits):
     nd = -(-width_bits // 4)
     path.write_text("".join(f"{w:0{nd}x}\n" for w in words))
@@ -342,8 +351,11 @@ def run_tile(scratch: Path, H=16, TD=64, nbeats=200, seed=1):
     d.mkdir(parents=True, exist_ok=True)
     write_hex(d / "in.hex", stim, win)
     write_hex(d / "exp.hex", exp, 33 * H)
-    exe = verilator_build(TB_TILE, "tb_hdc_v41x_attn_tile", [RTL_TILE, *LIB], d / "obj",
-                          {"H": H, "TD": TD, "NCYC": len(stim), "NOUT": len(exp)})
+    prm = {"H": H, "TD": TD, "NCYC": len(stim), "NOUT": len(exp)}
+    obj = d / ("obj_" + src_digest([RTL_TILE, *LIB, TB_TILE], prm))
+    exe = obj / "Vtb"
+    if not exe.is_file():
+        verilator_build(TB_TILE, "tb_hdc_v41x_attn_tile", [RTL_TILE, *LIB], obj, prm)
     out = subprocess.run([str(exe), f"+in={d / 'in.hex'}", f"+exp={d / 'exp.hex'}"], capture_output=True,
                          text=True, check=True).stdout
     m = TILE_RE.search(out)
@@ -473,7 +485,7 @@ def build_engine(scratch: Path, cfg: dict, counts: dict, extra: dict):
     cap = {("NJOBMAX" if k == "NJOB" else k): 1 << max(4, int(v - 1).bit_length()) for k, v in counts.items()}
     params = {"H": cfg["H"], "D": cfg["D"], "TD": cfg["TD"], "NL": cfg["NL"], "TROWS": cfg["TROWS"], **cap,
               **extra}
-    tag = "_".join(f"{k}{v}" for k, v in sorted(params.items()))
+    tag = "_".join(f"{k}{v}" for k, v in sorted(params.items())) + src_digest([RTL_TILE, RTL_ENG, *LIB, TB_ENG])
     obj = scratch / ("obj_" + hashlib.sha1(tag.encode()).hexdigest()[:12])
     exe = obj / "Vtb"
     if not exe.is_file():
@@ -684,6 +696,8 @@ def main():
     ap.add_argument("--vehicle-positions", type=int, default=131)
     ap.add_argument("--vehicle-cache", type=Path, default=None, help="pickle of capture_vehicle's result")
     ap.add_argument("--skip-shipped", action="store_true")
+    ap.add_argument("--shipped-json", type=Path, default=None,
+                    help="take the shipped-shape run from this file (run_engine record, e.g. run on a pool worker)")
     ap.add_argument("--output", type=Path, default=OUT)
     args = ap.parse_args()
     s = args.scratch
@@ -709,7 +723,10 @@ def main():
     rec["reduced"] = red
     rec["reduced_bubbles"] = run_engine(s, "reduced_bub", REDUCED, reduced_jobs(np.random.default_rng(5), [])[:8],
                                         extra={"MAXCYC": 400000, "BUB": 30})
-    if not args.skip_shipped:
+    if args.shipped_json:
+        rec["shipped"] = json.loads(args.shipped_json.read_text())
+        rec["shipped"]["ran_on"] = "pool worker (tools/rtl_hdc_v41x_attn_campaign.run_engine, same sources)"
+    elif not args.skip_shipped:
         sh = run_engine(s, "shipped", SHIPPED, shipped_jobs(np.random.default_rng(33)), extra={"MAXCYC": 100000})
         sh["performance"] = perf_summary(sh, SHIPPED)
         rec["shipped"] = sh
