@@ -49,6 +49,32 @@ def _max_values(body: str, names: tuple[str, ...]) -> float | None:
     return best
 
 
+def read_pin_timing(pbody: str, scale: float) -> dict[str, Any]:
+    entry: dict[str, Any] = {}
+    for tk, _, t0, t1 in _groups(pbody):
+        if tk != "timing":
+            continue
+        tb = pbody[t0:t1]
+        ttype = re.search(r"timing_type\s*:\s*\"?(\w+)", tb)
+        ttype = ttype.group(1) if ttype else "combinational"
+        rel = re.search(r'related_pin\s*:\s*"?([\w\[\]]+)', tb)
+        if ttype == "setup_rising":
+            v = _max_values(tb, ("rise_constraint", "fall_constraint"))
+            if v is not None:
+                entry["setup_ps"] = max(entry.get("setup_ps", -1e9), v * scale)
+        elif ttype == "rising_edge":
+            v = _max_values(tb, ("cell_rise", "cell_fall"))
+            if v is not None:
+                entry["clk_to_out_ps"] = max(entry.get("clk_to_out_ps", -1e9), v * scale)
+        elif ttype.startswith("combinational"):
+            v = _max_values(tb, ("cell_rise", "cell_fall"))
+            if v is not None:
+                src = rel.group(1) if rel else "?"
+                entry.setdefault("through", {})
+                entry["through"][src] = max(entry["through"].get(src, -1e9), v * scale)
+    return entry
+
+
 def read(path: Path) -> dict[str, Any]:
     text = path.read_text(encoding="utf-8", errors="replace")
     unit = re.search(r'time_unit\s*:\s*"1(\w+)"', text)
@@ -86,6 +112,16 @@ def read(path: Path) -> dict[str, Any]:
                         entry.setdefault("through", {})
                         src = rel.group(1) if rel else "?"
                         entry["through"][src] = max(entry["through"].get(src, -1e9), v * scale)
+            # a bus carries its arcs on its member pin groups
+            for bk, bname, q0, q1 in (_groups(pbody) if pk == "bus" else []):
+                if bk != "pin":
+                    continue
+                sub = read_pin_timing(pbody[q0:q1], scale)
+                for k, v in sub.items():
+                    if k == "through":
+                        entry.setdefault("through", {}).update(v)
+                    else:
+                        entry[k] = max(entry.get(k, -1e9), v)
             if entry:
                 base = re.sub(r"\[\d+\]$", "", pname)
                 prev = out.setdefault(base, {})

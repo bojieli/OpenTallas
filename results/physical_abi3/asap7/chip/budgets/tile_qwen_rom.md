@@ -112,14 +112,14 @@ Period 1000 ps, uncertainty 30 ps, wire 0.5997 ps/um.
 | ot_hdc_kv_stream | hq_v | ou | 1 | 66.7 | 150.0 | 175.0 | 104.9 | 648.4 | 201.2 | 768.8 | hq_v | fits |
 | ot_hdc_kv_stream | hq_wdata | ou | 256 | 59.4 | 150.0 | 175.0 | 104.9 | 655.7 | 183.2 | 786.8 | hq_wdata[0] | fits |
 | ot_hdc_kv_stream | hq_we | ou | 1 | 53.2 | 150.0 | 175.0 | 104.9 | 661.9 | 167.4 | 802.6 | hq_we | fits |
-| ot_hdc_kv_stream | hr_beat | in | 16 | 593.3 | 150.0 | 175.0 | 104.9 | 121.8 | 715.1 | 254.9 | hr_beat[0] | tight |
+| ot_hdc_kv_stream | hr_beat | in | 16 | 593.3 | 150.0 | 175.0 | 104.9 | 121.8 | 853.0 | 117.0 | hr_beat[0] | tight |
 | ot_hdc_kv_stream | hr_data | in | 1024 | 106.7 | 150.0 | 175.0 | 104.9 | 608.4 | 286.1 | 683.9 | hr_data[0] | fits |
 | ot_hdc_kv_stream | hr_rdy | ou | 4 | 609.9 | 150.0 | 175.0 | 104.9 | 105.2 | 876.1 | 93.9 | hr_rdy[0] | tight |
 | ot_hdc_kv_stream | hr_tag | in | 56 | 624.1 | 150.0 | 175.0 | 104.9 | 91.0 | 876.1 | 93.9 | hr_tag[0] | tight |
-| ot_hdc_kv_stream | hr_v | in | 4 | 526.2 | 150.0 | 175.0 | 104.9 | 188.9 | 715.0 | 255.0 | hr_v[0] | tight |
+| ot_hdc_kv_stream | hr_v | in | 4 | 526.2 | 150.0 | 175.0 | 104.9 | 188.9 | 799.1 | 170.9 | hr_v[0] | tight |
 | ot_hdc_kv_stream | kv_ok | ou | 1 | 60.6 | 183.1 | 50.0 | 30.0 | 696.2 | 214.9 | 755.1 | u_core.st[3]$_DFF_PN0_/D | fits |
 | ot_hdc_kv_stream | kv_q | ou | 2048 | 205.6 | 3.4 | 340.0 | 203.9 | 557.1 | 548.3 | 421.7 | u_core.u_me/kv_q[0] | fits |
-| ot_hdc_kv_stream | kv_raddr | in | 96 | 108.7 | 76.7 | 340.0 | 203.9 | 580.7 | 270.8 | 699.2 | u_core.u_me/kv_addr[0] | fits |
+| ot_hdc_kv_stream | kv_raddr | in | 96 | 108.7 | 76.7 | 340.0 | 203.9 | 580.7 | 586.5 | 383.5 | u_core.u_me/kv_addr[0] | fits |
 | ot_hdc_kv_stream | kv_re | in | 1 | 600.9 | 57.8 | 340.0 | 203.9 | 107.4 | 708.3 | 261.7 | u_core.u_me/kv_re | tight |
 | ot_hdc_kv_stream | kv_waddr | in | 24 | 384.4 | 53.1 | 340.0 | 203.9 | 328.6 | 581.3 | 388.7 | u_core.u_su/kv_waddr[0] | fits |
 | ot_hdc_kv_stream | kv_wdata | in | 32 | 102.3 | 50.8 | 340.0 | 203.9 | 613.0 | 277.9 | 692.1 | u_core.u_su/kv_wdata[0] | fits |
@@ -151,7 +151,7 @@ Period 1000 ps, uncertainty 30 ps, wire 0.5997 ps/um.
 | ot_hdc_kv_stream | win_wdata | ou | 1024 | 50.8 | 50.0 | 21.9 | 13.1 | 856.1 | 432.8 | 537.2 | u_kvwin/wdata[0] | fits |
 | ot_hdc_kv_stream | win_we | ou | 4 | 97.8 | 50.0 | 21.9 | 13.1 | 809.1 | 589.3 | 380.7 | u_kvwin/we[0] | fits |
 | ot_chip_pkg_ctrl | core_busy | ou | 1 | 77.2 | 300.0 | 595.0 | 356.8 | 236.0 | 150.0 | 820.0 | core_busy | fits |
-| ot_chip_pkg_ctrl | core_done | in | 1 | 634.4 | 110.4 | 200.0 | 119.9 | 105.3 | 852.7 | 117.3 | start_q$_DFF_PN0_/QN | tight |
+| ot_chip_pkg_ctrl | core_done | in | 1 | 634.4 | 110.4 | 200.0 | 119.9 | 105.3 | 920.0 | 50.0 | start_q$_DFF_PN0_/QN | tight |
 | ot_chip_pkg_ctrl | core_next_token | in | 16 | 399.6 | 77.9 | 200.0 | 119.9 | 372.6 | 648.8 | 321.2 | u_core.next_token[0]$_DFFE_PN0P_/QN | fits |
 | ot_chip_pkg_ctrl | core_next_val | in | 32 | 530.5 | 69.4 | 200.0 | 119.9 | 250.2 | 729.6 | 240.4 | u_core.next_val[0]$_DFFE_PP_/QN | fits |
 | ot_chip_pkg_ctrl | core_pos | ou | 16 | 792.3 | 19.4 | 50.0 | 30.0 | 128.3 | 920.7 | 49.3 | pos_q[0]$_DFF_P_/D | tight |

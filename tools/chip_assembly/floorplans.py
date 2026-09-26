@@ -123,7 +123,7 @@ BLOCKS: dict[str, Block] = {
         [(r"^wrom_", "N"), (r"^(x_|o_|ov$)", "E")],
         record="results/physical_abi3/asap7/hdc/ot_hdc_matvec/physical.json",
         notes="64-lane matrix-vector engine; 68.6k um2 of cells flat, so ~43% utilisation",
-        peak_gb=16.0),
+        peak_gb=20.0),
     "ot_hdc_stream": Block(
         "ot_hdc_stream", HDC_SU_SOURCES, 320.0, 320.0,
         [(r"^wrom_", "N"), (r"^(va_|vb_|vc_|vm_|red_)", "W")],
@@ -152,7 +152,7 @@ BLOCKS: dict[str, Block] = {
          (r"^(in_data|out_data)$", "W", 2048, 2559), (r"^cfg_", "W")],
         default_edge="E",
         record="results/physical_abi3/asap7/rom/ot_rom_fabric_router/physical.json",
-        notes="5-port 512-bit mesh router; 10.1k um2 of cells, ~5,200 pins"),
+        notes="5-port 512-bit mesh router; 10.1k um2 of cells, ~5,200 pins", peak_gb=20.0),
 }
 
 

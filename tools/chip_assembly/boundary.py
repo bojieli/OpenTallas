@@ -44,9 +44,15 @@ foreach p [get_ports *] {
   if {[llength $net] > 0} { set used [llength [get_pins -quiet -of_objects $net]] }
   puts "OTP [get_property $p direction] $n $used [get_property $p slack_max]"
 }
-set ft [find_timing_paths -from $ins -to [all_outputs] -path_delay max -group_path_count 100000 -endpoint_path_count 1]
-foreach e $ft {
-  puts "OTF [get_full_name [get_property $e startpoint]] [get_full_name [get_property $e endpoint]] [expr %(period_ps)s - [get_property $e slack]]"
+# every input bus separately, so a through-path is found from each start bus,
+# not only from the worst one per output
+set fbuses [dict create]
+foreach p $ins { regsub {\[[0-9]+\]$} [get_name $p] "" b; dict lappend fbuses $b $p }
+foreach b [dict keys $fbuses] {
+  set ft [find_timing_paths -from [dict get $fbuses $b] -to [all_outputs] -path_delay max -group_path_count 100000 -endpoint_path_count 1]
+  foreach e $ft {
+    puts "OTF [get_full_name [get_property $e startpoint]] [get_full_name [get_property $e endpoint]] [expr %(period_ps)s - [get_property $e slack]]"
+  }
 }
 exit
 """

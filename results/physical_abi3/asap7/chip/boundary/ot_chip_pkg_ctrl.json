@@ -1,6 +1,5 @@
 {
   "basis": "OpenSTA, ideal clock, zero wire load, ASAP7 RVT TT liberty; inputs arrive at 0 and outputs are required at the period, so a port's worst slack gives in2reg = period - slack (setup included) for an input and reg2out = period - slack (clock-to-q included) for an output; a combinational input-to-output path, when present, is feedthrough_ps on both ends; unused_bits are ports with no connection inside the block",
-  "netlist_signed_stripped": 0,
   "netlists": [
     "<work>/results/asap7/chip_ot_chip_pkg_ctrl/base/1_2_yosys.v"
   ],
@@ -8,6 +7,7 @@
   "ports": {
     "cfg_gen_len": {
       "direction": "input",
+      "feedthrough_ps": 794.37,
       "in2reg_ps": 990.9,
       "unused_bits": 0,
       "width": 16
@@ -33,7 +33,7 @@
     },
     "core_done": {
       "direction": "input",
-      "feedthrough_ps": 463.66,
+      "feedthrough_ps": 573.73,
       "in2reg_ps": 634.37,
       "unused_bits": 0,
       "width": 1
@@ -73,7 +73,7 @@
     },
     "in_data": {
       "direction": "input",
-      "feedthrough_ps": 13.76,
+      "feedthrough_ps": 91.74,
       "in2reg_ps": 426.02,
       "unused_bits": 0,
       "width": 512
@@ -93,6 +93,7 @@
     },
     "in_valid": {
       "direction": "input",
+      "feedthrough_ps": 181.96,
       "in2reg_ps": 257.78,
       "unused_bits": 0,
       "width": 1

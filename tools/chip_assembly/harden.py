@@ -188,20 +188,32 @@ def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int,
     return record
 
 
-def budget_check(block: str, budget: dict[str, Any], lib: Path) -> dict[str, Any]:
+def budget_check(block: str, budget: dict[str, Any], lib: Path, latency_ps: float) -> dict[str, Any]:
     """Each budgeted port's routed internal delay (the extracted timing model)
-    against its budget."""
+    against its budget.
+
+    The model's arcs are referred to the block's clock pin, so they carry its
+    clock insertion delay L_int: an input's setup is (data - L_int + setup),
+    an output's clock-to-out (L_int + data).  The parent balances insertion,
+    so with the budget's L the comparable internal delays are setup + L and
+    clock-to-out - L.
+    """
     model = etm.read(lib)
+    L = latency_ps
     rows, over = {}, []
     for port, b in sorted(budget["blocks"][block]["ports"].items()):
         if b["status"] in ("static", "untimed") or port == "rst_n":
             continue
         m = model.get(port, {})
-        actual = m.get("setup_ps") if b["direction"] == "input" else m.get("clk_to_out_ps")
+        if b["direction"] == "input":
+            actual = None if m.get("setup_ps") is None else m["setup_ps"] + L
+        else:
+            actual = None if m.get("clk_to_out_ps") is None else m["clk_to_out_ps"] - L
         through = max(m.get("through", {}).values(), default=None) if b["direction"] == "output" else None
         within = actual is None or actual <= b["internal_budget_ps"] + 0.05
         rows[port] = {"budget_ps": b["internal_budget_ps"], "routed_ps": None if actual is None else round(actual, 1),
-                      "through_ps": None if through is None else round(through, 1), "within_budget": within}
+                      "through_ps": None if through is None else round(through, 1),
+                      "through_budget_ps": b.get("feedthrough_budget_ps"), "within_budget": within}
         if not within:
             over.append(port)
     return {"ports": rows, "over_budget": over,
@@ -227,7 +239,8 @@ def block_record(block, spec, budget, budget_path, m, lef, lib, work, elapsed) -
         "metrics": m,
         "closed_against_budget": closed,
         "clock_insertion_estimate": fp.clock_latency_ps(block, orfs.results_dir(work, spec.nickname) / "1_2_yosys.v"),
-        "budget_check": budget_check(block.name, budget, lib),
+        "budget_check": budget_check(block.name, budget, lib, fp.clock_latency_ps(
+            block, orfs.results_dir(work, spec.nickname) / "1_2_yosys.v")["latency_ps"]),
         "closed_basis": ("setup and hold met with the budgeted I/O constraints, zero DRC, zero "
                          "max-slew / max-cap / max-fanout violations"),
         "abstract": {
