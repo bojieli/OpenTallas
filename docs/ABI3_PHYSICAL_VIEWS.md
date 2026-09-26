@@ -391,6 +391,13 @@ The final routed netlist is **byte-identical**. The archived ASAP7 campaign is
 therefore not merely reproducible in principle; its routed result was
 regenerated exactly on this machine.
 
+Both columns route the serial-chain reduction that existed before commit
+`4690d6ce`. That commit replaced it with balanced add trees, so the archived
+`reduction_s8_g2_tc` record is now declared stale in
+`configs/pdk/asap7_physical_lock.json`, and the "This flow" column's record is
+kept as `pnr_serial_chain.json`. The reproduction result above still holds
+for that older RTL.
+
 Two qualifications, stated precisely:
 
 1. **The recorded amd64 manifest digest was not re-verified.** The lock records

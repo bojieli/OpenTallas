@@ -108,7 +108,7 @@
       "description": "Eight-source, two-group tagged deterministic reduction endpoint used as a local NoC/reduction representative.",
       "top": "ot_reduction_endpoint",
       "sources": {
-        "rtl/ot_reduction_tree.sv": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5"
+        "rtl/ot_reduction_tree.sv": "1a398c65ef7550e3fe5fdc9d193e88f6d180e7e8d0489eaa52940d26ecf4bf78"
       },
       "parameters": {
         "DATA_W": 32,
@@ -126,6 +126,21 @@
       "core_utilization_percent": 35,
       "place_density": 0.6,
       "equivalence_method": "state_relation_transition_cec",
+      "archived_evidence": {
+        "status": "stale",
+        "record": "results/asap7_physical/reduction_s8_g2_tc/physical.json",
+        "record_sources": {
+          "rtl/ot_reduction_tree.sv": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5"
+        },
+        "record_commit": "bc8089f1678f5795d37fdb24af015aa05bb00fca",
+        "reason": "The archived 455.262 MHz / 845.509 um^2 record routes the serial-chain reduction that 4690d6ce replaced with balanced per-group add trees hoisted out of the clocked process (a synthesised-logic change: eight chained 35-bit carry-propagate adds become three levels). 70604b86 then added only a comment and a Verilator lint_off/lint_on UNOPTFLAT pragma pair, which cannot change synthesis. The record therefore describes RTL that no longer exists.",
+        "requalification": "Attempted 2026-09-26 with tools/run_asap7_physical.py --case reduction_s8_g2_tc at this lock (clean tree, remote worker, identical container). ORFS synthesis completed, but the governed mapped transition-relation proof did not close: ABC 'cec' of the 687-output transition relation (677 inputs) was killed by the runner's 1,800 s budget, so place and route was never reached. The same AIG pair was also UNDECIDED under dcec (313 s), &cec (553 s) and the arithmetic checker &acec (545 s, arithmetic boxes not matched), and cec -C 10000000, cec -p and cec -p -s -C 1000000 were still undecided after 86 minutes; cec -p stalls on a single-output cone of 600 inputs and 9,618 AND nodes. The cause is structural: ORFS merges each group's pairwise add tree into one multi-operand carry-save tree (366 FA and 69 HA cells after extract_fa), which shares no internal equivalence points with the RTL's pairwise adders. Re-lowering the gold with ORFS's own synth word-level script did not make the proof tractable either. Closing this needs a proof method for multi-operand arithmetic, not a longer budget.",
+        "current_source_physical_evidence": [
+          "results/physical_abi3/asap7/operating_points/reduction_s8_g2_2p25.json",
+          "results/physical_abi3/asap7/reduction_s8_g2/pnr.json"
+        ],
+        "current_source_physical_evidence_note": "Routed by tools/run_abi3_physical.py from the post-4690d6ce, pre-70604b86 source (sha256 ceaf333a..., logic-identical to the locked source). That lane performs no gate-level equivalence proof, so it is not governed ASAP7 campaign evidence."
+      },
       "state_aliases": {
         "expected[0][1]": "expected[0][0]",
         "expected[0][2]": "expected[0][0]",
