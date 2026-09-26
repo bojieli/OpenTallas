@@ -208,9 +208,27 @@ breaks even only at **τ = 9.24**. At the measured τ 5.18 it gives 4,695 tok/s
 against 8,370 plain: it loses.
 
 The lever is lane copies (the multiplier m). At 1,071.8 µm² a lane, not one
-extra copy fits in the 125.7 mm² of spare SRAM. The DFlash agent's closed
-pipelined MAC at about 509 µm² a lane fits one copy. So m is a first-class
-area trade against the KV/SRAM budget, not an add-on.
+extra copy fits in the 125.7 mm² of spare SRAM. The bare pipelined MAC is
+509 µm², but that is a lower bound for a lane copy, not a qualified figure;
+the qualified figure is `ot_hdc_matvec` routed at m = 2 against m = 1. So m is
+a first-class area trade against the KV/SRAM budget, not an add-on.
+
+The smaller-block alternatives were priced as well. Assumptions:
+
+* Tokens a step for block B are E[min(L, B)], from the 561 measured block-16
+  acceptance lengths (pooled τ 4.10). This assumes a smaller block keeps the
+  first B − 1 drafts.
+* Verify is KV-shared and slot-parallel: one plain token's dependency
+  latency, and B tokens' MACs.
+* The draft's latency is hidden under the verify ("overlapped"). Its MACs
+  cannot be hidden, because they bind.
+
+The best ROM configuration is **B = 2** (one draft): 1.70 tokens a step at
+221,929 cycles, **8,410 tok/s against 8,370 plain (1.005×)**. B = 4 gives
+7,227 and B = 16 gives 3,299. On the ROM reticle speculation is at best
+break-even at the spec's lanes. It becomes a gain only if the plain token stays
+latency-bound well above its MAC floor, or if lanes are added
+(`dflash.rom.block_size_sweep`).
 
 **HBM:** the bytes bind. With m = 16 a step reads the target's and drafter's
 weights once for 16 slots, so the speedup at τ 5.18 is **4.55×** for every
@@ -242,7 +260,16 @@ runs ahead across every dependency point:
 * **Prefetch buffer.** It holds what the stacks deliver during the longest
   weight-free interval of the chain, 1,756 cycles: **8.63 MB** at 4,915
   B/cycle.
-* **Sustained efficiency.** At least 0.90, **measured with refresh on**.
+* **Sustained efficiency.** At least 0.90 of **raw peak**, measured with
+  refresh on. That is how `technology.json`'s 0.90 was measured: GPU
+  STREAM-class runs, with refresh.
+  * Measured on the Qwen3 reduced vehicle, all-bank refresh (tRFC 350 ns every
+    3.9 µs) reaches 0.904 at 1 pseudo-channel and 0.910 at 2. That is its
+    ceiling of 91.0%.
+  * A refresh-aware per-bank refresh (tRFCpb 200 ns) is required so that 0.90
+    holds with margin. As currently modelled it reaches 0.914 at 1 channel and
+    0.889 at 2, with a 512-beat queue. A model diagnostic is open, so this
+    requirement is not yet met by a record.
 * **Address map.** Refresh-aware: pseudo-channels interleaved at the stream's
   word size, refresh phases staggered.
 * **Controller queue.** At least 512 beats per pseudo-channel (bandwidth ×
@@ -254,7 +281,21 @@ runs ahead across every dependency point:
 * **MAC rate.** Above the stream rate so the buffer drains: the lane minima
   above. DFlash raises the minimum to about 44 K lanes at BF16.
 
-## 10. Implementation and evidence
+## 10. Physical rules for every block
+
+These come from the full-chip effort at a 1.0 ns ASAP7 target:
+
+* Every block boundary is registered, inputs and outputs.
+  * A registered 512-bit output needs about 300 ps inside the block (router
+    clock-to-pin about 270 ps).
+  * Feed-through paths get their own budget.
+* Clock-tree insertion on the matrix engine took about 540 ps.
+* Repair needs a 40% slew margin and a 15 ps setup margin, for estimated
+  against extracted wire delay.
+* Routes must carry a real hold margin: the fix at 48fc68e6. Earlier routes
+  had effectively none.
+
+## 11. Implementation and evidence
 
 Each block goes through the same five steps:
 

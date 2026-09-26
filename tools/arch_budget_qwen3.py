@@ -460,8 +460,11 @@ def hbm_requirements(out, clock):
                 controller_queue_basis="bandwidth x tRFC (350 ns) = ~350 beats; a refreshing channel's full queue "
                                        "stalled the in-order stream for ~tRFC (V4.1 HBM vehicle: up to 15% of a "
                                        "token with the 64-beat queue; 256 beats removes most of it)",
-                refresh_policy="stated per design: REFab (as modelled, JESD238 tRFC 350 ns) or REFpb; a refreshing "
-                               "channel must not stall requests to other channels (no head-of-line blocking)",
+                refresh_policy="0.90 is of RAW peak with refresh on, so REFab (JESD238 tRFC 350 ns / tREFI 3.9 us: a "
+                               "91.0% ceiling, measured 0.904 / 0.910 at 1 / 2 pseudo-channels on the Qwen3 reduced "
+                               "vehicle) is not enough: refresh-aware REFpb (tRFCpb 200 ns) is required, and a "
+                               "refreshing channel must not stall requests to other channels (no head-of-line "
+                               "blocking); REFpb as modelled reaches 0.914 / 0.889 with a 512-beat queue -- open",
                 longest_weight_free_interval_cycles=gap,
                 prefetch_buffer_bytes_min=math.ceil(bw * gap / clock),
                 hbm_bytes_per_cycle=round(bw / clock), per_context=res,
@@ -505,6 +508,47 @@ DRAFTER_PARAMS = 1_048_626_432     # z-lab/Qwen3-8B-DFlash-b16 safetensors heade
 DRAFTER_LAYERS = 5
 DFLASH_FC = (4096, 5 * 4096)
 TAU_CENTRAL = 5.18                 # measured: fp32 torch reference, 6 prompts (DFlash agent, reference_fp32.json)
+
+
+# Pooled acceptance lengths (tokens a step, accepted drafts + 1) of DFlash-b16
+# on Qwen3-8B, fp32 torch reference, 6 prompts x 512 tokens, 561 blocks:
+# results/speculative/dflash_validation_parts/reference_fp32.json at
+# worktree-agent-a5d8c1340cfb92fbc 0b576189 (pooled tau 4.10; mean of prompts 5.18).
+ACCEPT_HIST = {1: 169, 2: 118, 3: 79, 4: 51, 5: 29, 6: 13, 7: 12, 8: 9, 9: 14, 10: 9, 11: 5, 12: 3, 13: 3,
+               14: 9, 15: 4, 16: 34}
+
+
+def rom_block_sweep(out, clock):
+    """ROM speculative configurations at the spec's lanes: block B = 2..16 (B-1
+    drafts, B verified slots), tokens a step E[min(L, B)] from the measured
+    block-16 acceptance lengths (a smaller block keeps the first B-1 drafts --
+    an approximation: DFlash drafts the block jointly), KV-shared slot-parallel
+    verify (the step's dependency latency is one plain token's, its MACs B
+    tokens'), the drafter's 5 layers over B slots and the target lm_head over
+    B-1, the context projection of B slots.  'overlapped' hides the drafter's
+    dependency latency under the verify (the MACs cannot overlap: they bind)."""
+    ch = out["dependency_chain"]["2048/spec"]
+    comp = ch["components"]
+    lat = comp["latency"] + comp["control"]
+    per_layer, _ = matrices()
+    layer_macs = sum(a * b for a, b in per_layer.values())
+    head_macs = Q["V"] * Q["H"]
+    wl = out["workload"]["2048"]
+    n_blocks = sum(ACCEPT_HIST.values())
+    rows = []
+    for B in (2, 3, 4, 5, 6, 8, 12, 16):
+        tok = sum(min(k, B) * v for k, v in ACCEPT_HIST.items()) / n_blocks
+        verify = B * (comp["weights"] + comp["attention"] + comp["elementwise"])
+        draft_macs = B * DRAFTER_LAYERS * layer_macs + (B - 1) * head_macs + \
+            B * (DFLASH_FC[0] * DFLASH_FC[1] + DRAFTER_LAYERS * 2 * Q["KV"] * Q["HD"] * Q["H"]) + \
+            B * DRAFTER_LAYERS * 2 * Q["NH"] * Q["HD"] * (wl["context"] + B)
+        draft_lat = lat * DRAFTER_LAYERS / Q["L"]
+        serial = lat + verify + draft_macs / LANES_ROM + draft_lat
+        overl = lat + verify + draft_macs / LANES_ROM
+        rows.append(dict(block=B, tokens_per_step=round(tok, 3), step_cycles=round(serial),
+                         step_cycles_overlapped=round(overl), tokens_s=round(tok * clock / serial, 1),
+                         tokens_s_overlapped=round(tok * clock / overl, 1)))
+    return rows
 
 
 def dflash_budget(out, clock):
@@ -558,6 +602,10 @@ def dflash_budget(out, clock):
                         tokens_s_at_tau_central=round(TAU_CENTRAL / step_s, 1),
                         speedup_at_tau_central=round(TAU_CENTRAL * plain_s / step_s, 2),
                         mac_lanes_min=lanes)
+    rom["block_size_sweep"] = rom_block_sweep(out, clock)
+    best = max(rom["block_size_sweep"], key=lambda r: r["tokens_s_overlapped"])
+    rom["best_configuration"] = dict(best, plain_tokens_s_spec=rom["plain_tokens_s_spec"],
+                                     speedup=round(best["tokens_s_overlapped"] / rom["plain_tokens_s_spec"], 3))
     return dict(slots=n, tau_central=TAU_CENTRAL, drafter_parameters=DRAFTER_PARAMS,
                 macs=dict(draft=draft, verify=verify, context=context, attention_verify=attn_verify,
                           attention_draft=attn_draft, step=step_macs),

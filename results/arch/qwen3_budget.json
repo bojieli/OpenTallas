@@ -1313,7 +1313,7 @@
   "efficiency_measured_with_refresh": true,
   "controller_queue_beats_per_pseudo_channel_min": 512,
   "controller_queue_basis": "bandwidth x tRFC (350 ns) = ~350 beats; a refreshing channel's full queue stalled the in-order stream for ~tRFC (V4.1 HBM vehicle: up to 15% of a token with the 64-beat queue; 256 beats removes most of it)",
-  "refresh_policy": "stated per design: REFab (as modelled, JESD238 tRFC 350 ns) or REFpb; a refreshing channel must not stall requests to other channels (no head-of-line blocking)",
+  "refresh_policy": "0.90 is of RAW peak with refresh on, so REFab (JESD238 tRFC 350 ns / tREFI 3.9 us: a 91.0% ceiling, measured 0.904 / 0.910 at 1 / 2 pseudo-channels on the Qwen3 reduced vehicle) is not enough: refresh-aware REFpb (tRFCpb 200 ns) is required, and a refreshing channel must not stall requests to other channels (no head-of-line blocking); REFpb as modelled reaches 0.914 / 0.889 with a 512-beat queue -- open",
   "longest_weight_free_interval_cycles": 1756,
   "prefetch_buffer_bytes_min": 8631035,
   "hbm_bytes_per_cycle": 4915,
@@ -1377,7 +1377,83 @@
    "spare_sram_mm2_after_kv_2k_and_drafter": 125.7,
    "added_lane_copies_that_fit": 0,
    "tokens_s_at_tau_central_with_added_copies": null,
-   "verdict": "the ROM reticle is MAC-bound: a 16-slot step needs 16x a plain token's MACs, so at the spec's lanes speculation pays only while the plain token stays above breakeven_tau x its MAC floor; lane copies (m) taken from spare SRAM are the lever, a first-class area trade against the KV/SRAM budget"
+   "verdict": "the ROM reticle is MAC-bound: a 16-slot step needs 16x a plain token's MACs, so at the spec's lanes speculation pays only while the plain token stays above breakeven_tau x its MAC floor; lane copies (m) taken from spare SRAM are the lever, a first-class area trade against the KV/SRAM budget",
+   "block_size_sweep": [
+    {
+     "block": 2,
+     "tokens_per_step": 1.699,
+     "step_cycles": 230714,
+     "step_cycles_overlapped": 221929,
+     "tokens_s": 8089.3,
+     "tokens_s_overlapped": 8409.5
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.187,
+     "step_cycles": 312428,
+     "step_cycles_overlapped": 303643,
+     "tokens_s": 7691.1,
+     "tokens_s_overlapped": 7913.6
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.535,
+     "step_cycles": 394142,
+     "step_cycles_overlapped": 385357,
+     "tokens_s": 7065.4,
+     "tokens_s_overlapped": 7226.5
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.791,
+     "step_cycles": 475857,
+     "step_cycles_overlapped": 467072,
+     "tokens_s": 6444.8,
+     "tokens_s_overlapped": 6566.0
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 2.996,
+     "step_cycles": 557572,
+     "step_cycles_overlapped": 548787,
+     "tokens_s": 5904.2,
+     "tokens_s_overlapped": 5998.7
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.339,
+     "step_cycles": 721005,
+     "step_cycles_overlapped": 712220,
+     "tokens_s": 5087.4,
+     "tokens_s_overlapped": 5150.1
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.8,
+     "step_cycles": 1047878,
+     "step_cycles_overlapped": 1039093,
+     "tokens_s": 3984.5,
+     "tokens_s_overlapped": 4018.1
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 4.102,
+     "step_cycles": 1374761,
+     "step_cycles_overlapped": 1365976,
+     "tokens_s": 3277.8,
+     "tokens_s_overlapped": 3298.9
+    }
+   ],
+   "best_configuration": {
+    "block": 2,
+    "tokens_per_step": 1.699,
+    "step_cycles": 230714,
+    "step_cycles_overlapped": 221929,
+    "tokens_s": 8089.3,
+    "tokens_s_overlapped": 8409.5,
+    "plain_tokens_s_spec": 8370.2,
+    "speedup": 1.005
+   }
   },
   "hbm": {
    "bf16": {
