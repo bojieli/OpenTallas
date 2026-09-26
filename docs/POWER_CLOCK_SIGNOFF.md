@@ -343,7 +343,7 @@ be up to 2x high; the register part is not).
 ### DeepSeek-V4.1 ROM array, per package
 
 The seven routed fabric blocks close at 1.15-1.56 GHz at TT and
-0.77-1.04 GHz at SS; under the OCV derate they keep more than 0.75 GHz at SS.
+0.76-1.04 GHz at SS; under the OCV derate they keep at least 0.72 GHz at SS.
 Only the argmax collective has decode-derived (random-traffic, gate-level)
 activity; the others are vectorless (OpenSTA's default 0.1 input activity,
 propagated), which overstates a fabric that idles between messages. On that
