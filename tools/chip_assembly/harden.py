@@ -188,6 +188,15 @@ def phase_pnr(block: fp.Block, work: Path, budget_path: Path, timeout: int,
     return record
 
 
+def routed_insertion(work: Path, nickname: str) -> float | None:
+    """This route's worst clock insertion (source latency to a flop) from its skew report."""
+    rpt = orfs.reports_dir(work, nickname) / "6_finish.rpt"
+    if not rpt.is_file():
+        return None
+    m = re.search(r"^\s*([\d.]+) source latency \S+/CLK", rpt.read_text(errors="replace"), re.M)
+    return float(m.group(1)) if m else None
+
+
 def budget_check(block: str, budget: dict[str, Any], lib: Path, latency_ps: float) -> dict[str, Any]:
     """Each budgeted port's routed internal delay (the extracted timing model)
     against its budget.
@@ -239,7 +248,9 @@ def block_record(block, spec, budget, budget_path, m, lef, lib, work, elapsed) -
         "metrics": m,
         "closed_against_budget": closed,
         "clock_insertion_estimate": fp.clock_latency_ps(block, orfs.results_dir(work, spec.nickname) / "1_2_yosys.v"),
-        "budget_check": budget_check(block.name, budget, lib, fp.clock_latency_ps(
+        "routed_clock_insertion_ps": routed_insertion(work, spec.nickname),
+        "budget_check": budget_check(block.name, budget, lib,
+                                     routed_insertion(work, spec.nickname) or fp.clock_latency_ps(
             block, orfs.results_dir(work, spec.nickname) / "1_2_yosys.v")["latency_ps"]),
         "closed_basis": ("setup and hold met with the budgeted I/O constraints, zero DRC, zero "
                          "max-slew / max-cap / max-fanout violations"),

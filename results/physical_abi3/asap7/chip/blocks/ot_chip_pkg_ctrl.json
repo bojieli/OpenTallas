@@ -1,0 +1,331 @@
+{
+  "abstract": {
+    "basis": "ORFS generate_abstract: write_abstract_lef -bloat_occupied_layers and write_timing_model on 6_final.odb with its extracted SPEF",
+    "lef": {
+      "path": "results/physical_abi3/asap7/chip/abstracts/ot_chip_pkg_ctrl/ot_chip_pkg_ctrl.lef",
+      "sha256": "f294ab1d3fb6feb01ad07a019e1d6105cb9d260b212988daf4618790b2114a4b"
+    },
+    "liberty": {
+      "path": "results/physical_abi3/asap7/chip/abstracts/ot_chip_pkg_ctrl/ot_chip_pkg_ctrl_typ.lib",
+      "sha256": "15881fe7af873c9a84061640b1a2b3fcbec1599cde14fc009e072d9a1cd223b5"
+    }
+  },
+  "block": "ot_chip_pkg_ctrl",
+  "budget": {
+    "name": "tile_qwen_rom",
+    "table": "results/physical_abi3/asap7/chip/budgets/tile_qwen_rom.json"
+  },
+  "budget_check": {
+    "basis": "routed delay from the block's write_timing_model liberty: an input's worst setup constraint (pin to register, setup included), an output's worst clock-to-output",
+    "over_budget": [
+      "core_busy",
+      "core_pos",
+      "core_start",
+      "core_token",
+      "in_ready",
+      "out_data",
+      "out_valid",
+      "pr_pos",
+      "pr_re",
+      "pr_user",
+      "tok_id",
+      "tok_pos",
+      "tok_user",
+      "tok_valid",
+      "users_done",
+      "vm_rq",
+      "vm_waddr"
+    ],
+    "ports": {
+      "core_busy": {
+        "budget_ps": 150.0,
+        "routed_ps": 239.7,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "core_done": {
+        "budget_ps": 920.0,
+        "routed_ps": 768.0,
+        "through_budget_ps": 870.0,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "core_next_token": {
+        "budget_ps": 648.8,
+        "routed_ps": 530.7,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "core_next_val": {
+        "budget_ps": 729.6,
+        "routed_ps": 634.2,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "core_pos": {
+        "budget_ps": 920.7,
+        "routed_ps": 1031.7,
+        "through_budget_ps": 870.0,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "core_start": {
+        "budget_ps": 920.0,
+        "routed_ps": 962.3,
+        "through_budget_ps": 870.0,
+        "through_ps": 830.6,
+        "within_budget": false
+      },
+      "core_token": {
+        "budget_ps": 923.2,
+        "routed_ps": 1109.1,
+        "through_budget_ps": 870.0,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "in_data": {
+        "budget_ps": 830.6,
+        "routed_ps": 657.7,
+        "through_budget_ps": 177.6,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "in_last": {
+        "budget_ps": 592.8,
+        "routed_ps": 203.8,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "in_ready": {
+        "budget_ps": 835.0,
+        "routed_ps": 856.7,
+        "through_budget_ps": 700.0,
+        "through_ps": 809.2,
+        "within_budget": false
+      },
+      "in_valid": {
+        "budget_ps": 735.0,
+        "routed_ps": 475.8,
+        "through_budget_ps": 312.9,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "kv_base": {
+        "budget_ps": 582.2,
+        "routed_ps": 415.2,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "out_data": {
+        "budget_ps": 411.7,
+        "routed_ps": 607.7,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "out_last": {
+        "budget_ps": 772.0,
+        "routed_ps": 568.6,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "out_ready": {
+        "budget_ps": 515.8,
+        "routed_ps": 328.9,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "out_valid": {
+        "budget_ps": 331.3,
+        "routed_ps": 440.8,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "pr_pos": {
+        "budget_ps": 150.0,
+        "routed_ps": 296.7,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "pr_q": {
+        "budget_ps": 150.0,
+        "routed_ps": 147.5,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "pr_re": {
+        "budget_ps": 150.0,
+        "routed_ps": 270.2,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "pr_user": {
+        "budget_ps": 150.0,
+        "routed_ps": 290.1,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "proto_fault": {
+        "budget_ps": 404.0,
+        "routed_ps": 265.4,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": true
+      },
+      "tok_id": {
+        "budget_ps": 150.0,
+        "routed_ps": 294.6,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "tok_pos": {
+        "budget_ps": 150.0,
+        "routed_ps": 283.1,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "tok_user": {
+        "budget_ps": 150.0,
+        "routed_ps": 275.5,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "tok_valid": {
+        "budget_ps": 150.0,
+        "routed_ps": 266.8,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "users_done": {
+        "budget_ps": 150.5,
+        "routed_ps": 298.5,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "vm_raddr": {
+        "budget_ps": 680.0,
+        "routed_ps": 539.9,
+        "through_budget_ps": 390.1,
+        "through_ps": 427.6,
+        "within_budget": true
+      },
+      "vm_re": {
+        "budget_ps": 672.9,
+        "routed_ps": 623.6,
+        "through_budget_ps": 375.8,
+        "through_ps": 576.1,
+        "within_budget": true
+      },
+      "vm_rq": {
+        "budget_ps": 193.8,
+        "routed_ps": 228.8,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "vm_waddr": {
+        "budget_ps": 206.1,
+        "routed_ps": 329.0,
+        "through_budget_ps": null,
+        "through_ps": null,
+        "within_budget": false
+      },
+      "vm_wdata": {
+        "budget_ps": 515.3,
+        "routed_ps": null,
+        "through_budget_ps": 60.6,
+        "through_ps": 399.5,
+        "within_budget": true
+      },
+      "vm_we": {
+        "budget_ps": 852.7,
+        "routed_ps": 812.4,
+        "through_budget_ps": 735.5,
+        "through_ps": 765.0,
+        "within_budget": true
+      }
+    }
+  },
+  "clock_insertion_estimate": {
+    "basis": "measured: results/physical_abi3/asap7/rom/ot_rom_pkg_ctrl/physical_artifacts/6_finish.rpt",
+    "latency_ps": 150.42
+  },
+  "clock_period_ns": 1.0,
+  "closed_against_budget": false,
+  "closed_basis": "setup and hold met with the budgeted I/O constraints, zero DRC, zero max-slew / max-cap / max-fanout violations",
+  "constraints": "budgeted per-port set_input_delay / set_output_delay (no I/O false paths), clock uncertainty from the budget, max transition 320 ps",
+  "die_um": [
+    140.0,
+    140.0
+  ],
+  "elapsed_seconds": 1137.3,
+  "flat_record": "results/physical_abi3/asap7/rom/ot_rom_pkg_ctrl/physical.json",
+  "git": {
+    "commit": "aa94e2784c6092036ec5c94db6a54bbe99f4c0ab",
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M tools/chip_assembly/harden.py"
+    ]
+  },
+  "metrics": {
+    "antenna_violating_nets": 0,
+    "clock_skew_ps": 53.5512,
+    "core_area_um2": 18459,
+    "die_area_um2": 19600,
+    "drc_errors": 0,
+    "flow_errors": {},
+    "fmax_hz": 917366000.0,
+    "hold_tns_ps": 0,
+    "hold_violations": 0,
+    "hold_wns_ps": 16.5175,
+    "macro_area_um2": 0,
+    "macro_count": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 2,
+    "power_total_w": 0.0355756,
+    "setup_tns_ps": -21599.9,
+    "setup_violations": 683,
+    "setup_wns_ps": -90.0775,
+    "stdcell_area_um2": 3898.21,
+    "stdcell_count": 28601,
+    "utilization": 0.211182,
+    "vias": 299486,
+    "wirelength_um": 309270
+  },
+  "notes": "package controller, superset role; 3.4k um2 of cells, ~2,200 pins",
+  "routed_clock_insertion_ps": 195.39,
+  "schema": "opentallas-chip-block-v1",
+  "sources": [
+    {
+      "path": "rtl/rom/ot_rom_pkg_ctrl.sv",
+      "sha256": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46"
+    },
+    {
+      "path": "rtl/chip/ot_chip_pkg_ctrl.sv",
+      "sha256": "6aef3a65c6da71d1cdf7ee97dedc8252f9a6cde3b24357158221134e6abe6c49"
+    }
+  ],
+  "toolchain": {
+    "image": "openroad/orfs:latest",
+    "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
+  },
+  "work_dir": "/tmp/claude-1000/otchip/r/ot_chip_pkg_ctrl/w"
+}
