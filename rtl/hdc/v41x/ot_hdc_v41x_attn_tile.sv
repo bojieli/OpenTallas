@@ -1,0 +1,392 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------
+// Attention-engine TILE of the re-specified DeepSeek-V4.1-Flash decode die
+// (docs/ARCH_SPEC_V41.md section 6 item 4): H heads x TD products per cycle,
+// every product BF16 x (dequantised FP8/FP4 KV element) -> binary32, summed
+// by the R-ARITH contract of tools/hdc_golden_v41.py (chunk8):
+//
+//   out[h] = csum_k( mul(A[h][k], B[k]) ),  k = 0 .. TD-1
+//
+// csum = TD/8 contiguous chunks of 8, each summed sequentially from +0, the
+// chunk sums added by a pairwise tree.  TD/8 is a power of two, so the tile's
+// output is one aligned node of the golden's padded tree and tiles combine by
+// the same tree (q.k: the slices of a row) or by the binary-counter merge
+// (p.v: the row blocks) -- see ot_hdc_v41x_attn.sv.
+//
+// ONE datapath serves both products of attention:
+//   q.k  A = q[h][64 dims of a slice] (stationary for the layer),
+//        B = one KV row's 64 elements            -> a partial score s[h, row]
+//   p.v  A = to_bf16(p)[h][64 rows of a block] (stationary for DPT beats),
+//        B = one dim of the block's 64 KV rows    -> a partial pv[h, dim]
+//
+// STATIONARY OPERAND A: NBANK banks of H x TD BF16.  Load port: one word of TD
+// BF16 per cycle into bank ld_bank, group ld_grp (0 .. H-1):
+//   ld_mode 0 (q)  A[ld_grp][k]        = ld_w[k]                (one head)
+//   ld_mode 1 (p)  A[h][R*ld_grp + j]   = ld_w[j*H + h], R = TD/H (R rows x H heads)
+// The bank a beat reads travels with the beat (per chunk position, skewed as
+// its operands are), so a bank may be reloaded while late positions of an
+// earlier beat still read another bank; the engine's controller keeps the
+// write-after-read distance (ot_hdc_v41x_attn.sv).
+//
+// ISSUE PORT: iv, ibank, ib[TD x 18]: per element {pad, fmt, code[7:0],
+// scale[7:0]} in the KV row's STORED format, dequantised exactly here:
+//   fmt 0  E4M3 code x 2^(scale - 127)   (window rows, UE8M0 per 32)
+//   fmt 1  E2M1 code (low nibble) x E4M3 scale   (compressed rows, per 16)
+// -- the golden's qdq_fp8 / qdq_fp4_e4m3 values, every one exact in BF16.
+// `pad` marks an element past the row count: its product is +0, never a
+// fault, whatever the stale A holds.
+//
+// CHUNK CHAIN: the 8 products of a chunk enter one sequential chain of 7
+// binary32 adders (ot_hdc_qadd, 3 cycles each); product i of the chunk is
+// issued 3*(i-1) cycles after product 0, by skewing the B element (shared by
+// all H heads) and the bank select, not the per-head product.  The chunk's
+// first term needs no adder: add(+0, p) = p for every canonical p.
+//
+// Timing, a beat sampled at edge 0: R0 input register (1), dequant (2),
+// multiply (3 -> 5), chain (21 -> 26), tree 3*log2(TD/8) (-> 35 at TD=64),
+// output register: ov at LAT = 4 + 3 + 21 + 3*log2(TD/8) + 1 = 36 (TD=64).
+// Fully pipelined, II = 1, no stall: flow control is by issue credit in the
+// engine.
+//
+// Faults fail closed: a nonfinite A, an out-of-domain KV element (a NaN
+// code, a dequantised value outside the binary32 normal range), a product or
+// sum overflow raises oflt[h] with its output, exactly where the golden's
+// value would not be finite.
+// ---------------------------------------------------------------------------
+
+module ot_hdc_v41x_dly #(parameter integer W = 1, parameter integer D = 0) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    generate
+        if (D == 0) begin : g_wire
+            assign q = d;
+        end else begin : g_reg
+            reg [W-1:0] r [0:D-1];
+            integer i;
+            always @(posedge clk) begin
+                r[0] <= d;
+                for (i = 1; i < D; i = i + 1) r[i] <= r[i-1];
+            end
+            assign q = r[D-1];
+        end
+    endgenerate
+endmodule
+
+// Valid delay line with reset.
+module ot_hdc_v41x_vdly #(parameter integer D = 1) (
+    input  wire clk,
+    input  wire rst_n,
+    input  wire d,
+    output wire q
+);
+    reg [D-1:0] r;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) r <= {D{1'b0}};
+        else r <= (D == 1) ? d : {r[D-2:0], d};
+    end
+    assign q = r[D-1];
+endmodule
+
+// ---------------------------------------------------------------------------
+// BF16 x BF16 -> binary32, IEEE RNE with gradual underflow, canonical +0,
+// LATENCY 3 -- hdc_golden.mul on BF16 operands.  The 8 x 8 significand
+// product is exact in binary32 whenever the result is normal; only a
+// subnormal result rounds.  A nonfinite operand or an overflowing result
+// raises flt with y = 0 (as ot_hdc_qmul).  `pad` forces y = +0, no fault.
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_attn_bmul (
+    input  wire        clk,
+    input  wire [15:0] a,
+    input  wire [15:0] b,
+    input  wire        pad,
+    output reg  [31:0] y,
+    output reg         flt
+);
+    // -- stage 1: decode, 8x8 product, exponent sum
+    wire [7:0] ea = a[14:7];
+    wire [7:0] eb = b[14:7];
+    wire [7:0] ma = {(ea != 8'd0), a[6:0]};
+    wire [7:0] mb = {(eb != 8'd0), b[6:0]};
+    wire [8:0] esum_c = {1'b0, (ea == 8'd0) ? 8'd1 : ea} + {1'b0, (eb == 8'd0) ? 8'd1 : eb};
+    wire nonfin_c = !pad && ((ea == 8'hff) || (eb == 8'hff));
+    wire zero_c = pad || (ma == 8'd0) || (mb == 8'd0);
+    reg [15:0] s1_p;
+    reg [8:0]  s1_esum;
+    reg        s1_sign, s1_zero, s1_nonfin;
+    always @(posedge clk) begin
+        s1_p <= ma * mb;
+        s1_esum <= esum_c;
+        s1_sign <= a[15] ^ b[15];
+        s1_zero <= zero_c;
+        s1_nonfin <= nonfin_c;
+    end
+
+    // -- stage 2: normalise; normal encoding; subnormal shift amounts
+    //: value = P * 2^(esum - 268); msb at 15 - lz; biased exponent
+    //: esum - 126 - lz; a subnormal result is P * 2^(esum - 119) in units of
+    //: 2^-149, i.e. P << (esum - 119) or P >> (119 - esum) rounded.
+    reg [3:0] lz;
+    integer i;
+    always @* begin
+        lz = 4'd15;
+        for (i = 0; i < 16; i = i + 1)
+            if (s1_p[i]) lz = 4'd15 - i[3:0];
+    end
+    wire [15:0] pn = s1_p << lz;
+    wire signed [10:0] biased = $signed({2'b00, s1_esum}) - 11'sd126 - $signed({7'd0, lz});
+    wire normal_c = biased >= 11'sd1;
+    wire over_c = biased >= 11'sd255;
+    wire signed [10:0] lsh = $signed({2'b00, s1_esum}) - 11'sd119;   // left shift if >= 0
+    reg [31:0] s2_code_n;
+    reg [15:0] s2_p;
+    reg [4:0]  s2_lsh;            // 0 .. 22 when used
+    reg [4:0]  s2_rsh;            // 1 .. 17 (clamped) when used
+    reg        s2_left, s2_normal, s2_over, s2_sign, s2_zero, s2_nonfin;
+    always @(posedge clk) begin
+        s2_code_n <= {s1_sign, biased[7:0], pn[14:0], 8'd0};
+        s2_p <= s1_p;
+        s2_left <= !lsh[10];
+        s2_lsh <= (lsh > 11'sd22) ? 5'd22 : lsh[4:0];
+        s2_rsh <= (lsh < -11'sd17) ? 5'd17 : (-lsh[4:0]);
+        s2_normal <= normal_c;
+        s2_over <= over_c;
+        s2_sign <= s1_sign;
+        s2_zero <= s1_zero;
+        s2_nonfin <= s1_nonfin;
+    end
+
+    // -- stage 3: subnormal alignment and rounding, select, encode
+    wire [22:0] lft = {7'd0, s2_p} << s2_lsh;
+    wire [15:0] rgt = s2_p >> s2_rsh;
+    wire [31:0] below = {s2_p, 16'd0} >> s2_rsh;       // bits shifted out, MSB first at [15]
+    wire rb = below[15];
+    wire st = |below[14:0];
+    wire [23:0] sub_f = s2_left ? {1'b0, lft} : ({8'd0, rgt} + {23'd0, rb && (st || rgt[0])});
+    wire [31:0] code_s = {s2_sign, 7'd0, sub_f};
+    always @(posedge clk) begin
+        if (s2_nonfin) begin
+            y <= 32'd0; flt <= 1'b1;
+        end else if (s2_zero) begin
+            y <= 32'd0; flt <= 1'b0;
+        end else if (s2_normal) begin
+            y <= s2_over ? 32'd0 : s2_code_n; flt <= s2_over;
+        end else begin
+            y <= (sub_f == 24'd0) ? 32'd0 : code_s; flt <= 1'b0;
+        end
+    end
+endmodule
+
+// ---------------------------------------------------------------------------
+// KV element dequantiser (combinational): stored code + scale -> BF16, exact.
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_attn_deq (
+    input  wire [17:0] e,          // {pad, fmt, code[7:0], scale[7:0]}
+    output reg  [15:0] y,
+    output reg         flt
+);
+    wire pad = e[17];
+    wire fmt = e[16];
+    wire [7:0] c = e[15:8];
+    wire [7:0] s = e[7:0];
+    reg signed [10:0] bx;
+    reg [6:0] man;
+    reg [5:0] prod;
+    reg [2:0] msb;
+    reg sgn, nan, zero;
+    integer i;
+    always @* begin
+        bx = 11'sd0; man = 7'd0; prod = 6'd0; msb = 3'd0; sgn = 1'b0; nan = 1'b0; zero = 1'b0;
+        if (!fmt) begin
+            // E4M3 code x 2^(s - 127): value = sig * 2^(max(e4,1) - 10 + s - 127)
+            sgn = c[7];
+            nan = ((c[6:3] == 4'hf) && (c[2:0] == 3'd7)) || (s == 8'hff);
+            prod = {2'b00, (c[6:3] != 4'd0), c[2:0]};
+            bx = $signed({7'd0, (c[6:3] == 4'd0) ? 4'd1 : c[6:3]}) + $signed({3'd0, s}) - 11'sd137;
+        end else begin
+            // E2M1 code x E4M3 scale: sigA (2b) * sigS (4b) * 2^(expA + expS)
+            sgn = c[3] ^ s[7];
+            nan = (s[6:3] == 4'hf) && (s[2:0] == 3'd7);
+            prod = {(c[2:1] != 2'd0), c[0]} * {(s[6:3] != 4'd0), s[2:0]};
+            bx = $signed({9'd0, (c[2:1] == 2'd0) ? 2'd1 : c[2:1]}) - 11'sd2
+               + $signed({7'd0, (s[6:3] == 4'd0) ? 4'd1 : s[6:3]}) - 11'sd10;
+        end
+        zero = (prod == 6'd0);
+        for (i = 0; i < 6; i = i + 1)
+            if (prod[i]) msb = i[2:0];
+        // value = 1.f * 2^(msb + bx): biased = msb + bx + 127
+        bx = bx + $signed({8'd0, msb}) + 11'sd127;
+        man = ({1'b0, prod} << (3'd6 - msb));          // leading one lands at bit 6
+        if (pad) begin
+            y = 16'd0; flt = 1'b0;
+        end else if (nan) begin
+            y = 16'd0; flt = 1'b1;
+        end else if (zero) begin
+            y = {sgn, 15'd0}; flt = 1'b0;
+        end else if ((bx < 11'sd1) || (bx > 11'sd254)) begin
+            y = 16'd0; flt = 1'b1;                       // outside the quantiser's domain / overflow
+        end else begin
+            y = {sgn, bx[7:0], man[5:0], 1'b0}; flt = 1'b0;
+        end
+    end
+endmodule
+
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_attn_tile #(
+    parameter integer H = 16,          // heads
+    parameter integer TD = 64,         // products per head per beat (multiple of 8, TD/8 a power of two)
+    parameter integer NBANK = 3,       // stationary-operand banks
+    parameter integer BW = 2           // bank index width
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    // stationary operand load
+    input  wire              ld_v,
+    input  wire              ld_mode,
+    input  wire [BW-1:0]     ld_bank,
+    input  wire [7:0]        ld_grp,
+    input  wire [TD*16-1:0]  ld_w,
+    // issue
+    input  wire              iv,
+    input  wire [BW-1:0]     ibank,
+    input  wire [TD*18-1:0]  ib,
+    // result
+    output reg               ov,
+    output reg  [H*32-1:0]   oy,
+    output reg  [H-1:0]      oflt
+);
+    localparam integer NC = TD / 8;          // chunks
+    localparam integer LV = $clog2(NC);      // tree levels
+    localparam integer R = TD / H;           // rows per p-load word
+    localparam integer LAT_CORE = 3 + 21 + 3 * LV;   // multiply .. tree, from the dequant register
+
+    // -- R0: boundary registers
+    reg              r_ld_v, r_ld_mode;
+    reg [BW-1:0]     r_ld_bank;
+    reg [7:0]        r_ld_grp;
+    reg [TD*16-1:0]  r_ld_w;
+    reg              r_iv;
+    reg [BW-1:0]     r_ibank;
+    reg [TD*18-1:0]  r_ib;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin r_ld_v <= 1'b0; r_iv <= 1'b0; end
+        else begin r_ld_v <= ld_v; r_iv <= iv; end
+    end
+    always @(posedge clk) begin
+        r_ld_mode <= ld_mode; r_ld_bank <= ld_bank; r_ld_grp <= ld_grp; r_ld_w <= ld_w;
+        r_ibank <= ibank; r_ib <= ib;
+    end
+
+    genvar gh, gk;
+    // -- D1: dequantise (shared by all heads)
+    reg [TD*18-1:0] d1_b;              // {pad, flt, bf16} per element
+    reg [BW-1:0]    d1_bank;
+    reg             d1_v;
+    generate
+        for (gk = 0; gk < TD; gk = gk + 1) begin : g_dq
+            wire [15:0] y;
+            wire f;
+            ot_hdc_v41x_attn_deq u_dq (.e(r_ib[gk*18 +: 18]), .y(y), .flt(f));
+            always @(posedge clk) d1_b[gk*18 +: 18] <= {r_ib[gk*18 + 17], f, y};
+        end
+    endgenerate
+    always @(posedge clk) d1_bank <= r_ibank;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) d1_v <= 1'b0;
+        else d1_v <= r_iv;
+    end
+
+    // -- skew: chunk position i issues 3*(i-1) cycles after position 0 (0 for i = 0, 1)
+    wire [TD*18-1:0] sk_b;
+    wire [8*BW-1:0]  sk_bank;
+    generate
+        for (gk = 0; gk < 8; gk = gk + 1) begin : g_skb
+            localparam integer DS = (gk == 0) ? 0 : 3 * (gk - 1);
+            ot_hdc_v41x_dly #(.W(BW), .D(DS)) u_d (.clk(clk), .d(d1_bank), .q(sk_bank[gk*BW +: BW]));
+        end
+        for (gk = 0; gk < TD; gk = gk + 1) begin : g_ske
+            localparam integer DS = ((gk % 8) == 0) ? 0 : 3 * ((gk % 8) - 1);
+            ot_hdc_v41x_dly #(.W(18), .D(DS)) u_d (.clk(clk), .d(d1_b[gk*18 +: 18]), .q(sk_b[gk*18 +: 18]));
+        end
+    endgenerate
+
+    // -- per head: multiply, chunk chains, tree
+    generate
+        for (gh = 0; gh < H; gh = gh + 1) begin : g_h
+            wire [TD*32-1:0] p;
+            wire [TD-1:0]    pf;
+            for (gk = 0; gk < TD; gk = gk + 1) begin : g_m
+                // stationary operand, NBANK banks
+                reg [NBANK*16-1:0] ab;
+                wire [15:0] wd = r_ld_mode ? r_ld_w[((gk % R) * H + gh) * 16 +: 16] : r_ld_w[gk * 16 +: 16];
+                wire wsel = r_ld_v && (r_ld_mode ? (r_ld_grp == (gk / R)) : (r_ld_grp == gh));
+                integer bb;
+                always @(posedge clk)
+                    for (bb = 0; bb < NBANK; bb = bb + 1)
+                        if (wsel && (r_ld_bank == bb)) ab[bb*16 +: 16] <= wd;
+                wire [BW-1:0] bk = sk_bank[(gk % 8)*BW +: BW];
+                wire [15:0] av = ab[bk*16 +: 16];
+                wire [17:0] be = sk_b[gk*18 +: 18];
+                wire mf;
+                ot_hdc_v41x_attn_bmul u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]),
+                                           .y(p[gk*32 +: 32]), .flt(mf));
+                // dequant fault rides with the product
+                reg [2:0] df;
+                always @(posedge clk) df <= {df[1:0], be[16] & ~be[17]};
+                assign pf[gk] = mf | df[2];
+            end
+            // chunk chains
+            wire [NC*32-1:0] cs;
+            wire [NC-1:0]    cf;
+            for (gk = 0; gk < NC; gk = gk + 1) begin : g_c
+                wire [8*32-1:0] acc;
+                wire [7:0]      af;
+                assign acc[31:0] = p[(gk*8)*32 +: 32];
+                assign af[0] = pf[gk*8];
+                genvar gi;
+                for (gi = 1; gi < 8; gi = gi + 1) begin : g_a
+                    wire [31:0] y;
+                    wire f;
+                    ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc[(gi-1)*32 +: 32]),
+                                     .b(p[(gk*8+gi)*32 +: 32]), .y(y), .fault(f));
+                    reg [2:0] fd;
+                    always @(posedge clk) fd <= {fd[1:0], af[gi-1] | pf[gk*8+gi]};
+                    assign acc[gi*32 +: 32] = y;
+                    assign af[gi] = fd[2] | f;
+                end
+                assign cs[gk*32 +: 32] = acc[7*32 +: 32];
+                assign cf[gk] = af[7];
+            end
+            // pairwise tree over the chunk sums
+            wire [(2*NC-1)*32-1:0] tn;      // heap order: leaves at NC-1 .. 2NC-2
+            wire [2*NC-2:0]        tf;
+            genvar gn;
+            for (gn = 0; gn < NC; gn = gn + 1) begin : g_leaf
+                assign tn[(NC-1+gn)*32 +: 32] = cs[gn*32 +: 32];
+                assign tf[NC-1+gn] = cf[gn];
+            end
+            for (gn = 0; gn < NC - 1; gn = gn + 1) begin : g_node
+                wire [31:0] y;
+                wire f;
+                ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
+                                 .b(tn[(2*gn+2)*32 +: 32]), .y(y), .fault(f));
+                reg [2:0] fd;
+                always @(posedge clk) fd <= {fd[1:0], tf[2*gn+1] | tf[2*gn+2]};
+                assign tn[gn*32 +: 32] = y;
+                assign tf[gn] = fd[2] | f;
+            end
+            always @(posedge clk) begin
+                oy[gh*32 +: 32] <= tn[31:0];
+                oflt[gh] <= tf[0];
+            end
+        end
+    endgenerate
+
+    wire v_core;
+    ot_hdc_v41x_vdly #(.D(LAT_CORE)) u_v (.clk(clk), .rst_n(rst_n), .d(d1_v), .q(v_core));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ov <= 1'b0;
+        else ov <= v_core;
+    end
+endmodule
