@@ -130,7 +130,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 893: docs/HOST_INTERFACE_AND_RUNTIME.md binds the host interface's routed
     # record and its campaign (15) to results/physical_abi3/asap7/host/ and
     # results/rtl/host_if_campaign.json.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 893
+    # 895: docs/DFT.md binds the gate-bench build memory (2) to
+    # results/dft/gate_bench_build_memory.json.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 895
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

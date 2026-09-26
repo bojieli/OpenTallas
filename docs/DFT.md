@@ -198,6 +198,29 @@ a sample of chain-test faults is injected during a flush. Every injected
 fault must produce a mismatch. On the toy netlist Verilator and Icarus give
 identical per-fault results.
 
+**Building the bench for big blocks.** The first benches called the shift and
+capture tasks once per injected fault. Verilator inlines each call and
+compiles large translation units, so the argmax collective's bench (about
+10,000 cells) peaked at 8.3 GB <!-- figure: 8.3 src="results/dft/gate_bench_build_memory.json#default_build.peak_rss_kb" scale="1e-6" name="argmax bench default build peak GB" -->, and the stream unit's would have needed
+several times that. Two changes fixed it:
+
+- the bench now drives all faults from one loop, so each task has a single
+  call site;
+- `run_atpg.py --lean-build` builds without module inlining, with split
+  output, `-O1` C++ and 4 jobs.
+
+On the argmax bench this cut the peak to 1.2 GB <!-- figure: 1.2 src="results/dft/gate_bench_build_memory.json#lean_build.peak_rss_kb" scale="1e-6" name="argmax bench lean build peak GB" --> with identical results: the
+same 82 patterns, 0 mismatches, and all 130 injected faults detected. That
+measurement was taken at `-O0`; lean builds now compile at `-O1` for speed,
+since split output already bounds each compile unit's memory.
+
+**Sampling on the largest blocks.** Simulation time scales with cells ×
+patterns × chain length, so replaying every pattern of the stream unit or the
+matrix engine would take weeks. On those two blocks the check replays a
+sample of patterns plus each sampled fault's detecting pattern, and injects a
+random sample of faults. Each record's `gate_level.sampling` states the
+sample sizes, the population they were drawn from and the seed.
+
 ## 4. Results: coverage, patterns and the cost of scan
 
 The records are in `results/dft/<block>/` (`atpg.json`, `equivalence.json`,

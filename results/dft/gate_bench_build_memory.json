@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.dft.gate_bench_build_memory.v1",
+ "bench": "argmax collective ot_rom_argmax_reduce gate-level scan bench (10,142 cells), same seed and samples",
+ "default_build": {
+  "flags": "-j 8, one task call site per injected fault, default inlining",
+  "peak_rss_kb": 8293092,
+  "measured_with": "/usr/bin/time -v on the verilator --binary build"
+ },
+ "lean_build": {
+  "flags": "--lean-build: -j 4 -fno-inline --output-split 5000 --output-split-cfuncs 500 -CFLAGS -O0, single-call-site bench",
+  "peak_rss_kb": 1241204,
+  "measured_with": "/usr/bin/time -v on run_atpg.py (build and simulation)"
+ },
+ "results_identical": true,
+ "result": "82 patterns, 0 mismatches; capture faults 100/100, chain faults 30/30",
+ "note": "lean builds now use -O1 C++; split output bounds the memory of each compile unit"
+}
