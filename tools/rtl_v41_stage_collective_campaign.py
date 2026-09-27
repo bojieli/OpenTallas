@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures as cf
+import hashlib
 import json
 import math
 import re
@@ -328,6 +329,16 @@ def summarise(rec, lp):
                 patterns=pats)
 
 
+PINNED = (ADDER, ENGINE, TB, Path(__file__).resolve(), ROOT / "tools/hdc_golden.py")
+
+
+def source_sha256():
+    """SHA-256 of every source this campaign's result depends on: the RTL under test, the bench, this driver
+    (patterns, schedules, link parameters) and the golden it imports (tools/audit_source_currency_drift.py
+    re-hashes these to decide whether the record still binds the tree)."""
+    return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in PINNED}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--scratch", type=Path, required=True)
@@ -354,6 +365,7 @@ def main():
                link_parameters=lp, patterns={k: {kk: vv for kk, vv in v.items()} for k, v in PATTERNS.items()},
                schedules={k: schedule(v) for k, v in PATTERNS.items()},
                sources=[str(p.relative_to(ROOT)) for p in (ADDER, ENGINE, TB)],
+               source_sha256=source_sha256(),
                claim_boundary=("RTL of the one-shot engine (ot_rom_oneshot_die, unchanged) with behavioural links "
                                "(flight ring + token-bucket rate + credit lane) and cycle-faithful producer / consumer "
                                "stubs driven from the design point's producer timing and the weight array's row "
