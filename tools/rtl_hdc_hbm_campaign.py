@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """HBM comparator of the hardwired decode core: RTL campaign.
 
-The same hardwired decode core as the ROM machine (rtl/hdc/ot_hdc_core.sv,
-rtl/hdc/v41/ot_hdc_core_v41.sv: same matrix engine, stream unit, sequencer and
-clock), with its weights streamed from HBM instead of read from ROM, so the
-ROM-against-HBM comparison differs in the weight store only.  Runs, from the
-repository root:
+Historical HBM comparator sweep. The Qwen weight-HBM top now selects the
+scalar controller ``ot_hdc_core_whbm`` while the adopted ROM top selects the
+vector/FIFO controller ``ot_hdc_core``. Consequently its Qwen ROM/HBM cycle
+ratios are cross-controller diagnostics, not a same-core comparison; the
+source-pinned current gates are ``rtl_hdc_qwen_whbm_split_single.py`` and
+``rtl_hdc_qwen_vector_system_two_token.py``. Runs, from the repository root:
 
 1. Verilator lints of the weight streamers (rtl/hdc/hbm/ot_hdc_wstream.sv,
    ot_hdc_qstream.sv), the shared-port arbiter and the cores with W_HBM = 1;
@@ -15,7 +16,7 @@ repository root:
    deliberately unprovisioned start (claimed rate above the supply) that the
    underflow detector must catch, and a gated stream that must be exact;
 3. the reduced Qwen3 vehicle with its WEIGHTS AND KV CACHE in HBM
-   (rtl/test/tb_hdc_core_whbm.sv: ot_hdc_core KV_HBM = W_HBM = 1, the weight
+   (rtl/test/tb_hdc_core_whbm.sv: ot_hdc_core_whbm KV_HBM = W_HBM = 1, the weight
    and KV streamers sharing one HBM model, no weight ROM): one decode step at
    position 15 bit-exact in every logit, the vector memory and the KV cache
    against the ISA-level model, and the 16-token prompt from an empty cache
@@ -23,9 +24,9 @@ repository root:
    pseudo-channel count of the sweep, with every delivered weight word checked
    against the ROM image; plus fail-closed runs (an overstated rate, no lead)
    that must end in a detected underflow, never a wrong answer;
-4. the ROM configuration on the same vehicle (tb_hdc_core), with the ROM
-   program and with the HBM program (its weight ops chunked for the window), so
-   the cost of streaming is separated from the cost of chunking;
+4. the current ROM-controller configuration on the same vehicle (tb_hdc_core),
+   with the ROM program and with the HBM program (its weight ops chunked for
+   the window); controller differences remain in the observed cycle ratios;
 5. the reduced DeepSeek-V4.1 vehicle with its FP8/FP4 weights in HBM
    (rtl/test/tb_hdc_core_v41_whbm.sv: ot_hdc_core_v41 W_HBM = 1 and the QE
    weight streamer): token 3118 bit-exact, and the pseudo-channel sweep;
@@ -468,13 +469,14 @@ def run_campaign(skip_v41=False, phase_dump=None) -> dict:
     return {
         "schema": "opentallas.hdc-hbm-campaign.v1",
         "status": status,
-        "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of the hardwired decode cores with "
+        "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of hardwired decode cores with "
                           "their weights (Qwen3: and KV cache) behind synthesizable streaming engines and a "
                           "behavioural, timing-faithful HBM model (simulation only; not a JEDEC-certified "
                           "controller): HBM3E bandwidth from the repository's technology table, DRAM timings from "
                           "a public simulator's HBM3 preset, controller latency and queue depth assumed. The core "
-                          "clock of the HBM time base is 1 GHz. Shipped-scale figures are timing-model "
-                          "projections, not RTL runs.",
+                          "clock of the HBM time base is 1 GHz. The Qwen ROM and HBM tops use different "
+                          "controllers, so their cycle ratio is not a controlled same-core memory comparison. "
+                          "Shipped-scale figures are timing-model projections, not RTL runs.",
         "vehicles": {"qwen3": "qwen3-reduced-v1 (hidden 128, 4 layers, 8/2 heads, head_dim 16, ffn 384, vocab 4096)",
                      "v41": "deepseek-v4.1-flash-reduced-v2 (tools/hdc_program_v41.py)"},
         "hbm_model": kvc.hbm_parameters(),
