@@ -13,6 +13,7 @@ import json
 import math
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -35,7 +36,14 @@ def sha(path: Path) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/hdc_qwen_ingest_to_token.json")
+    ap.add_argument("--weights", type=Path, help="checkpoint directory, also synced by remote_gate")
     args = ap.parse_args()
+    checkpoint = ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"
+    if args.weights is not None and not checkpoint.exists():
+        checkpoint.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(args.weights / checkpoint.name, checkpoint)
+    if not checkpoint.exists():
+        raise FileNotFoundError(f"missing reduced Qwen3 checkpoint: {checkpoint}")
     cap = IC.qwen_capture()
     case = IC.case_qwen_reduced(R.FMT_FP32, cap)
     assert case["meta"]["image_equals_golden_cache"]
@@ -77,6 +85,7 @@ def main() -> None:
                "decoded_image_equals_golden_kv_hex": image_equal, "token": token,
                "packed_image_sha256": hashlib.sha256(packed.tobytes()).hexdigest(),
                "descriptor_count": nd, "payload_beats": npay,
+               "checkpoint_sha256": sha(checkpoint),
                "scope": "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write. Tail SRAM remains seeded by testbench.",
                "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in
                                 [*IC.RTL, IC.TB, IC.HARNESS, *sources[:-1], sources[-1],
