@@ -78,6 +78,9 @@ def test_committed_record():
 def test_pool_batch_gate_record():
     rec = json.loads((ROOT / "results/rtl/hdc_v41x_idx_pool_batch_campaign.json").read_text())
     assert rec["status"] == "pass"
-    assert {r["name"] for r in rec["rows"]} == {"typical", "wide", "masked", "fault", "vehicle"}
+    expected = {"typical", "wide", "masked", "fault", "vehicle.L2", "vehicle.L20"}
+    assert {(r["mp"], r["name"]) for r in rec["rows"]} == {
+        (mp, name) for mp in (1, 2) for name in expected
+    }
     assert all(r["keys"] == r["checked"] and r["errors"] == 0 and r["protocol_fault"] == 0
                for r in rec["rows"])
