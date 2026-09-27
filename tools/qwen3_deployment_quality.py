@@ -172,7 +172,7 @@ def _tree_last(v):
     return v[..., 0]
 
 
-def chunk_tree_dot_t(xT, wT, S, scaleT=None, group=128, budget=1 << 27, BT=32, BN=64):
+def chunk_tree_dot_t(xT, wT, S, scaleT=None, group=128, budget=1 << 26, BT=32, BN=64):
     """y[b, t, n] = sum_k xT[b, k, t] wT[b, k, n] in the golden matvec order: K cut
     into S contiguous chunks of K/S, each sequential from +0, chunk sums a pairwise
     tree.  K-major operands: xT [B, K, T] FP32 (values the golden has already
@@ -499,7 +499,7 @@ class Qwen3:
         self.eps, self.theta = c["rms_norm_eps"], c["rope_theta"]
         self.arith, self.wfmt, self.kvfmt = arith, weights, kv
         self.groups = groups
-        self.prefill_chunk = 1024
+        self.prefill_chunk = 512
         self.device = torch.device(device)
         self.bits = {}
         self.wfile = None
@@ -508,7 +508,7 @@ class Qwen3:
             assert self.wfile["fold"] == (arith == "contract"), "GPTQ file was built for the other norm placement"
             self.wfmt = self.wfile["fmt"]
         sd = load_state(path, self.device)
-        self.embed = sd.pop("model.embed_tokens.weight")
+        self.embed = sd.pop("model.embed_tokens.weight").cpu()      # gathered on the host: 1.2 GB less GPU
         self.norm = sd.pop("model.norm.weight")
         lm = sd.pop("lm_head.weight")
         self.layers = []
@@ -644,7 +644,7 @@ class Qwen3:
 
     def _forward_gpu(self, tokens, cache):
         B, T = tokens.shape
-        x = self.embed[tokens]                                              # [B, T, H]
+        x = self.embed[tokens.cpu()].to(self.device)                        # [B, T, H]
         qpos = self._qpos(cache, T)
         fr = qpos.to(F32)[..., None] * self.inv_freq
         emb = torch.cat([fr, fr], -1)[:, None]                              # [B, 1, T, HD]
@@ -680,7 +680,7 @@ class Qwen3:
     def _forward_contract(self, tokens, cache):
         B, T = tokens.shape
         dev = self.device
-        x = self.embed[tokens].to(F32).reshape(B * T, self.H)
+        x = self.embed[tokens.cpu()].to(self.device).to(F32).reshape(B * T, self.H)
         qpos = self._qpos(cache, T)
         cos, sin = rope_tables_g(qpos.cpu().numpy().reshape(-1), self.HD, self.theta, dev)
         cos, sin = cos.view(B, 1, T, -1), sin.view(B, 1, T, -1)
@@ -709,7 +709,7 @@ class Qwen3:
         cache["lens"] = [l + T for l in cache["lens"]]
         return rmsnorm_g(x, self.norm.to(F32), self.eps).view(B, T, self.H)
 
-    def _attend(self, q, K, V, P, T, qpos, s_sc, s_pv, scale, budget=1 << 26):
+    def _attend(self, q, K, V, P, T, qpos, s_sc, s_pv, scale, budget=1 << 25):
         """q [Bt, grp, T, HD] (BF16-rounded) query heads by (sequence, KV head); K, V
         [Bt, P, HD] (zero past each sequence's end); qpos [Bt, T] the query positions.
         Scores: head_dim interleaved s_sc ways; P.V: positions interleaved s_pv ways
