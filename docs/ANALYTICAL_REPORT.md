@@ -382,10 +382,151 @@ Two things still limit the ratio:
 - The ROM power model reads HC1 low.
 - Hot-expert skew is uniform-random plus a derate for ROM; the GPU is assumed to
   replicate hot experts.
-- Speculative decoding is a separate study (`results/roofline/speculative/`).
+- Speculative decoding is a separate study (`results/roofline/speculative/`); its
+  acceptance lengths are measured and cited in the subsection below.
 - Mask cost and model churn are outside the model.
 - Before any claim: test ROM bank striping, link latency and power in RTL and
   physical design (the next phase).
+
+### Speculative acceptance per workload, measured and cited
+
+Unlike the rest of this report, these acceptance lengths are measured or cited,
+not projected. tau is the number of tokens one verification pass commits,
+including the target's bonus token. The producer is
+`tools/measure_speculative_acceptance.py` and the record is
+`results/speculative/acceptance_tau.json`. The measured and cited points are
+added to `configs/studies/speculative_profiles.json` beside the published ones,
+with grades.
+
+**Qwen3-8B with DFlash, measured.**
+
+- **Setup:** drafter `z-lab/Qwen3-8B-DFlash-b16` on BF16 `Qwen/Qwen3-8B`,
+  greedy decoding, batch 1, 24 samples per workload. It ran on one NVIDIA RTX
+  PRO 6000 Blackwell shared with other tenants.
+- **Two implementations:** vLLM 0.23.0 with 15 draft tokens per pass, and
+  DFlash's own Transformers reference (`dflash_generate`).
+- **Block length:** a block of 16 is the anchor token plus 15 drafted positions,
+  so tau runs from 1 to 16.
+
+The table columns are:
+
+- tau from vLLM, with a prompt-bootstrap 95% interval;
+- tau from the reference implementation;
+- survival of draft positions 1 and 4;
+- tau truncated to 5 drafts (derived: 1 plus the first five survival terms);
+- decode rate at concurrency 1, autoregressive (AR) → DFlash.
+
+| Class | Workload | n | Generated tokens | tau (vLLM, 95% CI) | tau (reference) | s1 / s4 | tau at 5 drafts | AR → DFlash tok/s |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| Reasoning | MATH-500, thinking on | 24 | 48,176 | **3.87** (3.63–4.13) | 3.85 | 0.75 / 0.28 | 3.13 | 94 → 270 | <!-- figure: 3.87 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.reasoning_math500.tau_mean" name="DFlash tau reasoning_math500" --> <!-- figure: 270 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.reasoning_math500.decode_tokens_per_s" name="DFlash tok/s reasoning_math500" -->
+| Reasoning | AIME 2025, thinking on | 24 | 49,152 | **3.77** (3.54–4.04) | 3.74 | 0.76 / 0.27 | 3.12 | 94 → 286 | <!-- figure: 3.77 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.reasoning_aime25.tau_mean" name="DFlash tau reasoning_aime25" --> <!-- figure: 286 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.reasoning_aime25.decode_tokens_per_s" name="DFlash tok/s reasoning_aime25" -->
+| Reasoning | HumanEval, thinking on | 24 | 46,429 | **3.40** (3.21–3.59) | 3.33 | 0.74 / 0.22 | 2.92 | 94 → 253 | <!-- figure: 3.40 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.reasoning_humaneval.tau_mean" name="DFlash tau reasoning_humaneval" --> <!-- figure: 253 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.reasoning_humaneval.decode_tokens_per_s" name="DFlash tok/s reasoning_humaneval" -->
+| Agentic | BFCL v3 function calls | 24 | 1,175 | **5.90** (5.40–6.36) | 5.92 | 0.83 / 0.53 | 4.05 | 90 → 514 | <!-- figure: 5.90 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_bfcl.tau_mean" name="DFlash tau agentic_bfcl" --> <!-- figure: 514 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_bfcl.decode_tokens_per_s" name="DFlash tok/s agentic_bfcl" -->
+| Agentic | tau-bench next agent turn | 24 | 1,672 | **4.27** (3.22–5.38) | 4.11 | 0.72 / 0.35 | 3.32 | 89 → 284 | <!-- figure: 4.27 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_tau_bench.tau_mean" name="DFlash tau agentic_tau_bench" --> <!-- figure: 284 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_tau_bench.decode_tokens_per_s" name="DFlash tok/s agentic_tau_bench" -->
+| Agentic | SWE-agent next action | 24 | 2,741 | **3.85** (3.32–4.41) | 3.80 | 0.76 / 0.27 | 3.20 | 91 → 249 | <!-- figure: 3.85 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_swe_agent.tau_mean" name="DFlash tau agentic_swe_agent" --> <!-- figure: 249 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_swe_agent.decode_tokens_per_s" name="DFlash tok/s agentic_swe_agent" -->
+| Agentic | Mind2Web next web action | 24 | 1,310 | **2.62** (2.49–2.75) | 2.65 | 0.67 / 0.13 | 2.54 | 92 → 176 | <!-- figure: 2.62 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_mind2web.tau_mean" name="DFlash tau agentic_mind2web" --> <!-- figure: 176 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_mind2web.decode_tokens_per_s" name="DFlash tok/s agentic_mind2web" -->
+| Agentic | JSON-schema output | 24 | 2,204 | **11.31** (10.31–12.16) | 11.12 | 0.98 / 0.85 | 5.48 | 94 → 878 | <!-- figure: 11.31 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.agentic_json_mode.tau_mean" name="DFlash tau agentic_json_mode" --> <!-- figure: 878 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.agentic_json_mode.decode_tokens_per_s" name="DFlash tok/s agentic_json_mode" -->
+| Chat | MT-Bench, two turns | 24 | 11,504 | **3.49** (2.97–4.31) | 3.44 | 0.73 / 0.22 | 2.91 | 94 → 240 | <!-- figure: 3.49 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.chat_mt_bench.tau_mean" name="DFlash tau chat_mt_bench" --> <!-- figure: 240 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.chat_mt_bench.decode_tokens_per_s" name="DFlash tok/s chat_mt_bench" -->
+| Paper setting | MATH-500, thinking off | 24 | 23,583 | **8.22** (7.52–8.91) | 8.36 | 0.92 / 0.64 | 4.65 | 94 → 576 | <!-- figure: 8.22 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.xcheck_math500_nothink.tau_mean" name="DFlash tau xcheck_math500_nothink" --> <!-- figure: 576 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.xcheck_math500_nothink.decode_tokens_per_s" name="DFlash tok/s xcheck_math500_nothink" -->
+| Paper setting | HumanEval, thinking off | 24 | 11,911 | **6.45** (6.06–6.87) | 6.34 | 0.87 / 0.50 | 4.14 | 94 → 508 | <!-- figure: 6.45 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.xcheck_humaneval_nothink.tau_mean" name="DFlash tau xcheck_humaneval_nothink" --> <!-- figure: 508 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16.workloads.xcheck_humaneval_nothink.decode_tokens_per_s" name="DFlash tok/s xcheck_humaneval_nothink" -->
+
+The workloads:
+
+- **Reasoning:** thinking on, up to 2,048 tokens. Most samples reach the cap, so
+  this is mostly thinking text.
+- **Agentic:** thinking off, up to 1,024 tokens. The sources are:
+  - [BFCL v3](https://huggingface.co/datasets/gorilla-llm/Berkeley-Function-Calling-Leaderboard):
+    the simple, multiple, parallel and live-multiple subsets, with Qwen3's own
+    tool template;
+  - [tau-bench](https://github.com/sierra-research/tau-bench): its published
+    gpt-4o trajectories, cut before an agent turn;
+  - [SWE-agent trajectories](https://huggingface.co/datasets/nebius/SWE-agent-trajectories):
+    cut before an agent action;
+  - [Mind2Web](https://huggingface.co/datasets/osunlp/Mind2Web): the next-action
+    prompt over cleaned HTML;
+  - [json-mode-eval](https://huggingface.co/datasets/NousResearch/json-mode-eval).
+- **Chat:** both turns of [MT-Bench](https://huggingface.co/datasets/HuggingFaceH4/mt_bench_prompts).
+
+Seeds, dataset revisions and prompt ids are in the record.
+
+1. **The paper's setting reproduces, and thinking mode explains the gap.**
+   - With thinking off, MATH-500 gives tau **8.22** <!-- figure: 8.22 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.xcheck_math500_nothink.tau_mean" name="tau MATH-500 thinking off" -->, against the paper's
+     7.87 (arXiv:2602.06036, Table 1). Per-prompt MT-Bench gives
+     **4.44** <!-- figure: 4.44 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.chat_mt_bench.tau_macro_mean_of_prompt_means" name="tau MT-Bench per-prompt mean" -->, against the paper's 4.24.
+   - With thinking on, the same MATH-500 prompts fall to **3.87** <!-- figure: 3.87 src="results/speculative/acceptance_tau.json#qwen3_8b.dflash_b16_vllm.workloads.reasoning_math500.tau_mean" name="tau MATH-500 thinking on" -->. Every
+     reasoning workload lands between 3.4 and 3.9.
+   - The released b16 drafter targets non-thinking Qwen3. The paper's
+     thinking-mode results (tau 5.82 on MATH-500) used drafters trained on
+     reasoning traces, which are not the released checkpoint.
+   - The two implementations agree to within a few hundredths of a token. So
+     the prompt template, bf16 precision and the verifier are not the cause.
+   - The design default of tau = 4.1 sits inside the measured reasoning and
+     agentic range.
+2. **Agentic acceptance depends on the output format.**
+   - Schema-bound output is the easiest: JSON reaches tau about 11, and BFCL
+     tool calls about 6.
+   - Free-form agent turns reach 3.8–4.3.
+   - Mind2Web's HTML-grounded action choice is the lowest at 2.6.
+   - Agent turns are short, 39–162 tokens. So prefill, not the per-token rate,
+     dominates the latency of an agent step.
+3. **Losslessness holds up to bf16 rounding.**
+   - Every emitted reference token was checked against the target in one
+     teacher-forced forward. 579 of 198,460 tokens are not the target's
+     full-sequence argmax, and all but 4 of those lie within
+     0.5 logits of it.
+   - Compared with plain greedy in the same engine, every first divergence falls
+     at a top-1/top-2 gap of at most 0.5 logits, except one. That one vLLM case
+     reproduces deterministically and disappears with batch-invariant kernels.
+   - With batch-invariant kernels (`VLLM_BATCH_INVARIANT=1`), speculative and
+     plain outputs are token-identical on all 36 control samples.
+4. **EAGLE-3, for comparison.** `RedHatAI/Qwen3-8B-speculator.eagle3` with
+   chain drafting at 7 tokens gets tau 2.2–3.5 on the same workloads, 5.1 on
+   JSON. That matches its model card: 2.81 on math at k = 7.
+5. **Absolute rate and energy on this GPU at concurrency 1 (vLLM).**
+   - Decode rates:
+     - AR: **94** <!-- figure: 94 src="results/speculative/acceptance_tau.json#throughput_c1.runs.ar_bf16.workloads.reasoning_math500.decode_tokens_per_s" name="AR BF16 tok/s" --> tok/s in BF16 and **151** <!-- figure: 151 src="results/speculative/acceptance_tau.json#throughput_c1.runs.ar_fp8.workloads.reasoning_math500.decode_tokens_per_s" name="AR FP8 tok/s" --> in FP8;
+     - DFlash: 250–580 tok/s in BF16 outside the JSON outlier.
+   - Board energy on MATH-500 with thinking on (100 ms power log, other
+     tenants' idle draw included):
+     - AR: **5.15** <!-- figure: 5.15 src="results/speculative/acceptance_tau.json#throughput_c1.runs.ar_bf16_energy.workloads.reasoning_math500.energy.j_per_token_gross" name="AR J/token" --> J/token;
+     - DFlash: **1.85** <!-- figure: 1.85 src="results/speculative/acceptance_tau.json#throughput_c1.runs.dflash_b16_bf16_energy.workloads.reasoning_math500.energy.j_per_token_gross" name="DFlash J/token" --> J/token.
+   - A concurrency sweep up to 16 is in the record.
+
+**DeepSeek-V4 family, cited.** No published source measures DeepSeek-V4.1-Flash,
+and none measures an agentic workload.
+
+- **DeepSeek-V3** accepts the second token 85–90% of the time
+  (arXiv:2412.19437, section 5.4.3). So tau = 1 + s1 = **1.85–1.90** at
+  gamma = 1.
+- **DeepSeek-V4-Pro-0813 with DSpark.**
+  - [vLLM](https://vllm.ai/blog/2026-08-14-dspark-adaptive-verification)
+    reports that the first drafted position survives more than 70% of the time
+    and the seventh less than 10%, at temperature 1.0.
+  - Those two survivals alone bound tau at gamma = 7 to (1.70, 7.10).
+  - Assuming a constant conditional rate r = (0.10/0.70)^(1/6) = 0.723 between
+    them gives tau = 1 + 0.70·(1 − r^7)/(1 − r) = **3.27**. That is an
+    illustration, not a measurement.
+- **DeepSeek-V4-Pro-DSpark.**
+  [LMSYS](https://www.lmsys.org/blog/2026-07-06-dspark-sglang/) publishes
+  "accept length ~5" at batch 1, without stating the workload.
+
+**DeepSeek-V4.1-Flash, teacher-forced.**
+
+- **Method:** the checkpoint is streamed one layer at a time through a 12 GB GPU
+  slice (`tools/v41_dspark_teacher_forced/`). Its shipped DSpark drafter
+  (5 draft positions) then scores 16 public agent traces from tau-bench and
+  SWE-agent against V4.1's own greedy argmax, in about 14 minutes.
+- **Result:**
+  - tau at gamma = 5 is **3.48** <!-- figure: 3.48 src="results/speculative/v41_flash_dspark_feasibility.json#public_traces.overall.tau_proxy_assistant_spans" name="V4.1 tau all tokens" --> over all assistant tokens;
+  - it is **4.33** <!-- figure: 4.33 src="results/speculative/v41_flash_dspark_feasibility.json#public_traces.overall.tau_on_greedy_matching_rows" name="V4.1 tau matching tokens" --> on the tokens where the trace already equals V4.1's
+    greedy choice.
+- **Why this is a bracket, not a value:** the traces were written by other
+  models, so the first figure understates and the second overstates on-policy
+  acceptance.
+- **What a true on-policy measurement needs:** V4.1's own greedy continuations,
+  which need a KV-cached streamed decode that is not built yet (0.5–2.8 h per
+  run here). It would be routine on one 8×H200/B200 node.
+- **Record:** `results/speculative/v41_flash_dspark_feasibility.json`.
 
 ## 9. Implementation status: the three mechanisms in RTL
 

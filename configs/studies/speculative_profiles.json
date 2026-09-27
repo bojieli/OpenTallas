@@ -93,6 +93,55 @@
         "range_high": 5.0,
         "note": "WHOSE NUMBER THIS IS: the SGLang integration's own measurement, published by LMSYS Org, not a statement by DeepSeek. DeepSeek's own pages carry no accepted-length figure -- the vLLM integration blog (https://vllm.ai/blog/2026-08-14-dspark-adaptive-verification) and the DeepSeek-V4-Pro-DSpark model card were both checked and state the serving flag, the hardware and the per-position survival rates but no average accepted length. The source writes 'accept length ~5'; it is approximate and it is used here as an exact point, which is a property of the source and not a claim of precision. It is one figure and not a range; that too is a property of the source, not a claim that acceptance is workload-independent. At the paper's configured block of 5 the cap is gamma+1 = 6 and at the served block of 7 the cap is 8, so 5.00 is inside the interval at both and is never clamped."
       },
+      "cited_and_derived_acceptance": {
+        "grade": "derived",
+        "source": "arXiv:2412.19437 (2024) section 5.4.3; https://vllm.ai/blog/2026-08-14-dspark-adaptive-verification (2026); https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ (2026); arXiv:2607.05147 (2026) Table 1",
+        "artifact": "results/speculative/acceptance_tau.json",
+        "formula": "tau(gamma) = 1 + sum_{k=1..gamma} s_k, s_k = P(first k drafts all accepted)",
+        "points": [
+          {
+            "model": "DeepSeek-V3 (MTP-1)",
+            "gamma": 1,
+            "value_low": 1.85,
+            "value_high": 1.9,
+            "grade": "derived",
+            "source": "arXiv:2412.19437 (2024): second-token acceptance 85%-90%",
+            "arithmetic": "1 + 0.85 = 1.85; 1 + 0.90 = 1.90"
+          },
+          {
+            "model": "DeepSeek-V4-Pro-0813 + DSpark",
+            "gamma": 7,
+            "value_low": 1.7,
+            "value_high": 7.1,
+            "illustrative_value": 3.27,
+            "grade": "derived",
+            "source": "https://vllm.ai/blog/2026-08-14-dspark-adaptive-verification (2026): position 1 survives >70%, position 7 <10%, T=1.0, SPEED-Bench qualitative",
+            "arithmetic": "bounds from the two quoted survivals alone; 3.27 assumes a constant conditional rate r=(0.10/0.70)^(1/6)=0.723 between them, and is an interpolation, not a measurement"
+          },
+          {
+            "model": "DeepSeek-V4-Pro-DSpark",
+            "gamma": null,
+            "value": 5.0,
+            "grade": "published",
+            "source": "https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ (2026) accept length ~5, batch 1, B300 TP=8, workload not stated"
+          }
+        ],
+        "executed_v41_flash_teacher_forced": {
+          "grade": "executed",
+          "artifact": "results/speculative/v41_flash_dspark_feasibility.json",
+          "source": "tools/v41_dspark_teacher_forced/ (2026): DeepSeek-V4.1-Flash checkpoint dba1be0a streamed layer by layer, shipped DSpark drafter (3 stages, 5 draft positions) teacher-forced over 16 public agent traces (tau-bench gpt-4o, SWE-agent llama), greedy targets = V4.1 argmax",
+          "gamma": 5,
+          "tau_all_assistant_tokens": 3.4805,
+          "tau_greedy_matching_tokens": 4.3319,
+          "greedy_match_rate": 0.7852,
+          "note": "A BRACKET, not an on-policy measurement: the assistant turns were written by other models, so the all-token figure understates V4.1 acceptance on its own continuations and the matching-token figure (outcome-selected) overstates it."
+        },
+        "gaps": [
+          "No published source measures DeepSeek-V4.1-Flash (the executed bracket above is ours).",
+          "No published DeepSeek source measures an agentic or tool-use workload.",
+          "No DeepSeek source publishes a per-position acceptance table; only two vLLM endpoint bounds."
+        ]
+      },
       "external_draft_traffic_decomposition": {
         "grade": "published",
         "constant_bytes": 3770773788,
@@ -184,6 +233,151 @@
         "range_low": 4.24,
         "range_high": 7.87,
         "note": "ACCEPTANCE IS TASK-DEPENDENT AND THE SPREAD IS LARGER THAN MOST OF THE EFFECTS THIS STUDY MEASURES: 4.24 on MT-Bench against 7.87 on MATH-500, a 1.86x range on the same model and the same drafter. Every speculative rate in the report is therefore published across the range, never at the mean alone."
+      },
+      "executed_acceptance_by_workload": {
+        "grade": "executed",
+        "artifact": "results/speculative/acceptance_tau.json",
+        "run_id": "dflash_b16_vllm",
+        "source": "tools/measure_speculative_acceptance.py run-vllm --method dflash, z-lab/Qwen3-8B-DFlash-b16 on Qwen/Qwen3-8B BF16, vLLM 0.23.0, NVIDIA RTX PRO 6000 Blackwell (shared), greedy, batch 1, 2026",
+        "includes_bonus_token": true,
+        "draft_tokens_per_cycle": 15,
+        "max_committed_per_cycle": 16,
+        "gamma_note": "MEASURED CONVENTION, stated beside -- not replacing -- the convention block above: in the released reference implementation (github.com/z-lab/dflash dflash.model.dflash_generate) a block of 16 is the anchor token plus 15 drafted positions, and vLLM serves the same drafter with num_speculative_tokens = 15, so the committed length per cycle runs 1..16, not 1..17. Every point here is on that 15-draft cycle.",
+        "points": [
+          {
+            "workload": "reasoning_math500",
+            "class": "reasoning",
+            "value": 3.865,
+            "ci95_prompt_bootstrap": [
+              3.6305,
+              4.129
+            ],
+            "samples": 24,
+            "cycles": 12474,
+            "thinking": true
+          },
+          {
+            "workload": "reasoning_aime25",
+            "class": "reasoning",
+            "value": 3.769,
+            "ci95_prompt_bootstrap": [
+              3.5425,
+              4.0356
+            ],
+            "samples": 24,
+            "cycles": 13059,
+            "thinking": true
+          },
+          {
+            "workload": "reasoning_humaneval",
+            "class": "reasoning",
+            "value": 3.3954,
+            "ci95_prompt_bootstrap": [
+              3.2117,
+              3.5901
+            ],
+            "samples": 24,
+            "cycles": 13683,
+            "thinking": true
+          },
+          {
+            "workload": "agentic_bfcl",
+            "class": "agentic",
+            "value": 5.904,
+            "ci95_prompt_bootstrap": [
+              5.4031,
+              6.3618
+            ],
+            "samples": 24,
+            "cycles": 198,
+            "thinking": false
+          },
+          {
+            "workload": "agentic_tau_bench",
+            "class": "agentic",
+            "value": 4.2653,
+            "ci95_prompt_bootstrap": [
+              3.2204,
+              5.3777
+            ],
+            "samples": 24,
+            "cycles": 392,
+            "thinking": false
+          },
+          {
+            "workload": "agentic_swe_agent",
+            "class": "agentic",
+            "value": 3.8478,
+            "ci95_prompt_bootstrap": [
+              3.316,
+              4.4052
+            ],
+            "samples": 24,
+            "cycles": 716,
+            "thinking": false
+          },
+          {
+            "workload": "agentic_mind2web",
+            "class": "agentic",
+            "value": 2.6182,
+            "ci95_prompt_bootstrap": [
+              2.4891,
+              2.7468
+            ],
+            "samples": 24,
+            "cycles": 495,
+            "thinking": false
+          },
+          {
+            "workload": "agentic_json_mode",
+            "class": "agentic",
+            "value": 11.3061,
+            "ci95_prompt_bootstrap": [
+              10.3141,
+              12.165
+            ],
+            "samples": 24,
+            "cycles": 196,
+            "thinking": false
+          },
+          {
+            "workload": "chat_mt_bench",
+            "class": "chat",
+            "value": 3.4927,
+            "ci95_prompt_bootstrap": [
+              2.966,
+              4.3144
+            ],
+            "samples": 24,
+            "cycles": 3300,
+            "thinking": false
+          },
+          {
+            "workload": "xcheck_math500_nothink",
+            "class": "xcheck",
+            "value": 8.2194,
+            "ci95_prompt_bootstrap": [
+              7.5218,
+              8.9065
+            ],
+            "samples": 24,
+            "cycles": 2876,
+            "thinking": false
+          },
+          {
+            "workload": "xcheck_humaneval_nothink",
+            "class": "xcheck",
+            "value": 6.4468,
+            "ci95_prompt_bootstrap": [
+              6.062,
+              6.8654
+            ],
+            "samples": 24,
+            "cycles": 1851,
+            "thinking": false
+          }
+        ],
+        "note": "Replaces no published point. The paper points above are thinking-OFF on H200; the reasoning rows here are thinking-ON with a drafter whose model card says it was trained for the non-thinking mode, and the agentic rows are workloads the paper does not measure. The xcheck_* rows repeat the paper setting (thinking off) for the cross-check."
       },
       "external_acceptance_cross_check": {
         "grade": "published",

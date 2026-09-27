@@ -248,7 +248,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/ABI3_ENGINE_DATAPATH_RTL.md": 67,
     "docs/ABI3_PROGRAM_REPORT.md": 17,
     "docs/ARCH_SPEC_QWEN3.md": 3,
-    "docs/ANALYTICAL_REPORT.md": 142,
+    "docs/ANALYTICAL_REPORT.md": 257,
     "docs/CHIP_ARCHITECTURE_DESIGN.md": 19,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,
     "docs/DFT.md": 92,

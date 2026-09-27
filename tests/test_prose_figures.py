@@ -141,7 +141,13 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # links, binds 23 figures (17 -> 23).
     # 954: docs/ARCH_SPEC_QWEN3.md binds its budget headline (3) to
     # results/arch/qwen3_budget.json.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 954
+    # 976: docs/ANALYTICAL_REPORT.md gains the measured/cited speculative
+    # acceptance subsection (31), bound to results/speculative/acceptance_tau.json
+    # and results/speculative/v41_flash_dspark_feasibility.json, 142 -> 173 (954 + 31 = 985).
+    # 1069: docs/ANALYTICAL_REPORT.md carries 257 after the realistic-link and
+    # fused-GPU regeneration rebound its section 2-5 tables and the acceptance
+    # subsection landed (173 -> 257).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1069
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
@@ -333,13 +339,13 @@ def test_an_ambiguous_row_is_disambiguated_by_its_table(tmp_path) -> None:
     # 6.58 once the serial path came from the per-token operator graph, and
     # 10.42 once the ROM wafer could use the express collective network, and
     # 12.17 with the routed Sinkhorn unit, and 9.79 with the express link at
-    # its routed (measured) field crossing.
+    # its routed (measured) field crossing, and 8.20 on the realistic ROM-array links and the fused persistent-kernel GPU.
     document = tmp_path / "ok.md"
     document.write_text(
         "# x\n\n"
-        '<!-- figure: 9.79 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
+        '<!-- figure: 8.20 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
         ' table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" -->\n'
-        "The ratio is 9.79x.\n")
+        "The ratio is 8.20x.\n")
     code, out = _run(document)
     assert code == 0, out
 
