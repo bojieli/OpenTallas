@@ -41,10 +41,14 @@ def main():
     ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/hdc_qwen_whbm_split_single.json")
     ap.add_argument("--executable", type=Path, help="reuse a Verilator binary built from these exact sources")
     args = ap.parse_args()
-    env = dict(os.environ, HDC_GROUPS="4", HDC_SU_WIDTH="1", HDC_RMAX="0", HDC_KV_FMT="bf16")
+    # The imported KV campaign sets HDC_ATTN_SPLIT=0 in this process.
+    # Force the adopted interleaved K-split for the generated program.
+    env = dict(os.environ, HDC_GROUPS="4", HDC_SU_WIDTH="1", HDC_RMAX="0",
+               HDC_KV_FMT="bf16", HDC_ATTN_SPLIT="1")
     record = {
         "schema": "opentallas.hdc-qwen-whbm-split-single.v1",
-        "configuration": {"groups": 4, "su_width": 1, "kv_format": "bf16", "position": 15,
+        "configuration": {"groups": 4, "su_width": 1, "kv_format": "bf16", "attention_split": 1,
+                          "position": 15,
                           "hbm_pseudo_channels": 4, "weight_chunk_words": 1536,
                           "weight_guaranteed_rate_x256": T.w_rate(dict(T.WH, npc=4))},
         "claim_boundary": "Reduced Qwen single-token functional and cycle-accurate RTL with weights and KV in "
