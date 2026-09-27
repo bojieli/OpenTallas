@@ -5,9 +5,14 @@ The per-token operator graph (src/opentallas/critical_path.py) prices every ROM
 operator with ``technology.json`` ``serial_latency.rom_datapath``.  Those values
 are copies of this repository's RTL timing model and routed results:
 
-* ``tools/hdc_timing.py`` ``K`` (sequencer gap, matrix-engine latency and tree,
-  stream-unit depths, reducer tail, barrier idle) and ``tools/hdc_isa.py``
-  ``INTERLEAVE``;
+* ``tools/decode_critical_path.py`` ``K`` (sequencer gap, matrix-engine latency
+  and tree, stream-unit depths, reducer tail, barrier idle) and
+  ``tools/hdc_isa.py`` ``INTERLEAVE``.  That is the PINNED pre-pipeline set, not
+  ``tools/hdc_timing.py`` ``K`` live: hdc_timing.K is the Qwen core's model,
+  refitted for its prefetched sequencer and 3-cycle ot_hdc_fastfp adders, while
+  this table's clock, stream lane area and fp_add_cycles 5 (ot_hdc_fpu) are the
+  pre-pipeline routed blocks'.  Moving the depths alone would mix the two RTL
+  generations; they move together with the routes (see decode_critical_path.K);
 * the slowest routed fmax among the token path's units, and the routed stream
   lane area (results/physical_abi3/asap7/hdc/), and the routed Sinkhorn unit;
 * the wafer express network's field crossing and bandwidth
@@ -35,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 import hdc_isa as I  # noqa: E402
-import hdc_timing  # noqa: E402
+import decode_critical_path  # noqa: E402  (its pinned K; see the module docstring)
 
 TECH = ROOT / "configs" / "hardware" / "technology.json"
 PHYS = ROOT / "results" / "physical_abi3" / "asap7" / "hdc"
@@ -49,7 +54,7 @@ def _design(block: str) -> dict:
 
 
 def expected() -> dict[str, float]:
-    K = hdc_timing.K
+    K = decode_critical_path.K   # pinned pre-pipeline constants, not hdc_timing.K (module docstring)
     su = K["su_depth"]
     clocks = {b: _design(b)["fmax_hz"] for b in CLOCK_BLOCKS}
     slowest = min(clocks, key=clocks.get)

@@ -38,7 +38,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 import decode_targets  # noqa: E402
 import hdc_isa as I  # noqa: E402
-import hdc_timing  # noqa: E402
+import decode_critical_path  # noqa: E402  (its pinned K: rtl_constant_check)
 
 from opentallas import critical_path as C  # noqa: E402
 from opentallas.roofline import (  # noqa: E402
@@ -84,9 +84,12 @@ def routed_clock() -> tuple[float, list[dict]]:
 
 
 def rtl_constant_check(tech: Technology) -> dict[str, list]:
-    """The technology table's datapath depths against the RTL timing model they were copied from."""
+    """The technology table's datapath depths against the RTL timing model they were copied from: the pinned
+    pre-pipeline constants of tools/decode_critical_path.py K, which match this table's routed clock, stream lane
+    area and fp_add_cycles (ot_hdc_fpu).  Not tools/hdc_timing.py K live: that is the Qwen core's refit (prefetched
+    sequencer, 3-cycle ot_hdc_fastfp adders) and would mix two RTL generations into one priced datapath."""
     rom = C.RomDatapath.from_technology(tech)
-    K = hdc_timing.K
+    K = decode_critical_path.K
     su = {name: K["su_depth"][getattr(I, "SFU_" + name)] for name in ("NONE", "EXP", "RECIP", "RSQRT", "SIGM")}
     pairs = {
         "seq_gap": (rom.seq_gap, K["seq_gap"]), "idle_reg": (rom.idle_reg, K["idle_reg"]),
