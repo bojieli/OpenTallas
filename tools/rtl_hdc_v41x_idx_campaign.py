@@ -476,13 +476,13 @@ def die_summary(rec):
                       "128 x 4 KB = 512 KB SRAM) + ot_hdc_v41x_idx_kmerge -> 64 keys/cycle",
         "latency_shipped_cycles": {
             "input register": 1, "block dots (exact, rounded once)": 3, "3 sequential block adds": 9,
-            "to_bf16 + ReLU": 1, "x head weight, to_bf16": 2, "7 sequential head adds (chunk of 8)": 21,
+            "to_bf16 + ReLU": 1, "x head weight, to_bf16": 3, "7 sequential head adds (chunk of 8)": 21,
             "chunk output register": 1, "tail input register": 1, "2 tree levels": 6,
             "to_bf16 + mask + output register": 1, "engine output register": 1},
         "latency_note": "R-ARITH fixes the dependent adds: 3 block adds + 7 head adds + 2 tree levels = 12 x 3 "
-                        "cycles = 36 of the 47.  The per-head score (the dot product the spec's ~30-cycle budget "
+                        "cycles = 36 of the 48.  The per-head score (the dot product the spec's ~30-cycle budget "
                         "covers) is ready 13 cycles after the key arrives; the fused ReLU-weight head sum, which "
-                        "spec section 6 item 5 places on the stream unit, adds the other 34.",
+                        "spec section 6 item 5 places on the stream unit, adds the other 35.",
         "routed": {"chunk": chunk, "tail": tail, "kctl": kctl},
     }
     if chunk and tail:
