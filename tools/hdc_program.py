@@ -362,11 +362,19 @@ def build_program(lay, layers=None, embed=True, head=True):
             else:
                 rmsnorm("X", H, lay.cb[(L, "post")], "H")
                 me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(FF // tb)})
-            for r in range(FF // tb):                           # one fused SiLU*up op per tile pair
-                g0 = VM["GU"] + 2 * tb * r
-                su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,
-                   c_base=g0, c_si=1, mc=I.MC_C, b_base=g0 + tb, b_si=1, md=I.MD_B, dst=I.DST_VM,
-                   d_base=VM["ACT"] + tb * r, d_si=1, reads={f"GU{r}"}, writes={f"ACT{r}"})
+            if G.NORM_FOLD and lay.tp == 1:
+                # one fused SiLU*up op over every tile pair (a row per tile): the
+                # scaled gate/up are all written before it starts
+                su(su_nout=FF // tb, su_nin=tb, a_base=VM["GU"], a_so=2 * tb, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0),
+                   sfu=I.SFU_SIGM, c_base=VM["GU"], c_so=2 * tb, c_si=1, mc=I.MC_C, b_base=VM["GU"] + tb,
+                   b_so=2 * tb, b_si=1, md=I.MD_B, dst=I.DST_VM, d_base=VM["ACT"], d_so=tb, d_si=1,
+                   reads={f"GU{r}" for r in range(FF // tb)}, writes={f"ACT{r}" for r in range(FF // tb)})
+            else:
+                for r in range(FF // tb):                       # one fused SiLU*up op per tile pair
+                    g0 = VM["GU"] + 2 * tb * r
+                    su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,
+                       c_base=g0, c_si=1, mc=I.MC_C, b_base=g0 + tb, b_si=1, md=I.MD_B, dst=I.DST_VM,
+                       d_base=VM["ACT"] + tb * r, d_si=1, reads={f"GU{r}"}, writes={f"ACT{r}"})
             me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={f"ACT{r}" for r in range(lay.FF // lay.GUB)},
                writes={"T1"})
             coll(COLL_ALLREDUCE, "T1")

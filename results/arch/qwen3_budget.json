@@ -1393,8 +1393,8 @@
    "su_width": 1024,
    "reducer_time_levels": 3,
    "max_split": null,
-   "instructions": 4468,
-   "cycles": 126721,
+   "instructions": 1048,
+   "cycles": 123301,
    "unit_busy": {
     "stream": 21177,
     "weights": 52992,
@@ -1403,13 +1403,13 @@
     "lm_head": 4752
    },
    "sequencer_stalls": {
-    "chase": 35557,
+    "chase": 38977,
     "wait_su": 18618,
     "barrier_me": 37512,
-    "unit_busy": 20124,
+    "unit_busy": 16704,
     "wait_me": 5616
    },
-   "seq_gap_total": 4468
+   "seq_gap_total": 1048
   },
   "2048": {
    "context": 2048,
@@ -1417,8 +1417,8 @@
    "su_width": 1024,
    "reducer_time_levels": 2,
    "max_split": null,
-   "instructions": 4468,
-   "cycles": 111813,
+   "instructions": 1048,
+   "cycles": 108393,
    "unit_busy": {
     "stream": 14265,
     "weights": 52992,
@@ -1427,14 +1427,14 @@
     "lm_head": 4752
    },
    "sequencer_stalls": {
-    "chase": 33829,
+    "chase": 37249,
     "wait_su": 18038,
     "barrier_me": 35208,
-    "unit_busy": 9756,
+    "unit_busy": 6336,
     "wait_me": 3888,
     "barrier_su": 1800
    },
-   "seq_gap_total": 4468
+   "seq_gap_total": 1048
   }
  },
  "gap": [
@@ -1467,7 +1467,7 @@
    "requirement": "<= 54 cycles exposed a stage",
    "as_built": "per-unit waits (landed: wait_me / wait_su, barrier = both), element chaining across units; still whole-op granular within a unit",
    "cycles_baseline_2k": 13463058,
-   "cycles_head_8k": 97303,
+   "cycles_head_8k": 100723,
    "status": "MISS"
   },
   {
@@ -1481,9 +1481,9 @@
   {
    "block": "sequencer issue",
    "requirement": "<= 3880 control cycles a token exposed",
-   "as_built": "prefetched issue pipeline: 4468 instructions at gap 1 (landed)",
+   "as_built": "prefetched issue pipeline: 1048 instructions at gap 1 (landed)",
    "cycles_baseline_2k": 22700,
-   "cycles_head_8k": 4468,
+   "cycles_head_8k": 1048,
    "status": "MEETS"
   },
   {
