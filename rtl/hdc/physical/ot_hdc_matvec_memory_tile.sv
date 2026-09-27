@@ -46,6 +46,7 @@ module ot_hdc_matvec_memory_tile (
     wire [127:0] wrom_q;
     wire [255:0] kv_q;
     wire [63:0] x_q;
+    wire [255:0] o_data_raw;
 
     ot_hdc_matvec #(.W(4), .G(2), .IL(8), .AW(16), .NW(8)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
@@ -59,7 +60,7 @@ module ot_hdc_matvec_memory_tile (
         .wrom_q(wrom_q), .kv_re(kv_re), .kv_addr(kv_addr), .kv_q(kv_q),
         .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
         .ov(ov), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask),
-        .o_data(o_data), .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
+        .o_data(o_data_raw), .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask),
         .mx_data(mx_data), .progress(progress), .fault(fault)
     );
@@ -78,17 +79,45 @@ module ot_hdc_matvec_memory_tile (
         .corrected(rom_corrected), .uncorrectable(rom_uncorrectable));
     assign wrom_q = rom_valid ? rom_data[127:0] : 128'd0;
 
-    genvar g;
+    // Characterization-only ASAP7 buffers on the four pins that failed the
+    // previous extracted-slew check. They are combinational identity cells;
+    // no state or matvec protocol is changed by this reduced physical proxy.
+    genvar ob;
+    generate for (ob = 0; ob < 256; ob = ob + 1) begin : g_out
+        if (ob == 179) begin : g_iso
+            BUFx24_ASAP7_75t_R u_buf (.A(o_data_raw[ob]), .Y(o_data[ob]));
+        end else begin : g_wire
+            assign o_data[ob] = o_data_raw[ob];
+        end
+    end endgenerate
+
+    genvar g, b, a;
     generate for (g = 0; g < 2; g = g + 1) begin : g_bank
         wire [255:0] kv_word, x_word;
+        wire [255:0] kv_wd;
+        wire [9:0] x_waddr;
+        for (b = 0; b < 256; b = b + 1) begin : g_kv_wd
+            if (g == 0 && (b == 220 || b == 251)) begin : g_iso
+                BUFx24_ASAP7_75t_R u_buf (.A(kv_load_data[b]), .Y(kv_wd[b]));
+            end else begin : g_wire
+                assign kv_wd[b] = kv_load_data[b];
+            end
+        end
+        for (a = 0; a < 10; a = a + 1) begin : g_x_waddr
+            if (g == 1 && a == 7) begin : g_iso
+                BUFx24_ASAP7_75t_R u_buf (.A(x_load_addr[a]), .Y(x_waddr[a]));
+            end else begin : g_wire
+                assign x_waddr[a] = x_load_addr[a];
+            end
+        end
         ot_sram_1r1w_1024x256_m2_r2c2 u_kv (
             .clk(clk), .r_ce_in(kv_re), .r_addr_in(kv_addr[g*16 +: 10]),
             .rd_out(kv_word), .w_ce_in(kv_load), .w_addr_in(kv_load_addr),
-            .wd_in(kv_load_data), .w_mask_in({256{1'b1}}),
+            .wd_in(kv_wd), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
         ot_sram_1r1w_1024x256_m2_r2c2 u_x (
             .clk(clk), .r_ce_in(x_re[g]), .r_addr_in(x_addr[g*16 +: 10]),
-            .rd_out(x_word), .w_ce_in(x_load), .w_addr_in(x_load_addr),
+            .rd_out(x_word), .w_ce_in(x_load), .w_addr_in(x_waddr),
             .wd_in(x_load_data), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
         assign kv_q[g*128 +: 128] = kv_word[127:0];
