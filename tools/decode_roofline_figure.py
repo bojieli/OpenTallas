@@ -224,7 +224,7 @@ def build_qwen(src: dict) -> dict:
     def g(fmt, n, t="best_kernel"):
         return rate(gpu_step_s(W[fmt], n, b200, n_dep, t_dep, n_coll, tc[t]))
 
-    pp = qb["power_production"]
+    pp = qb["power_production"]["scenarios"]["B_proposed_production"]   # the production lane (scenario B)
     rom_ar = pp["rom"]["ar_batch1"]["tokens_s"]
     rom_df = pp["rom"]["dflash_tau4.1_block3"]["tokens_s"]
     hdc_bf16 = qb["hbm_comparator"]["8192"]["bf16"]["tokens_s"]
@@ -322,11 +322,11 @@ def build_qwen(src: dict) -> dict:
         dict(key="S1f", label="idealised, 3.5-bit", value=m_draw / s1f * 1e3, unit="mJ/token", evidence="modelled",
              basis="draw held at 689 W", matching="same GPU"),
         dict(key="S2", label="HDC-HBM, 3.5-bit (iso-area, 6 stacks)", value=pp["hbm_comparator"]["rom35_batch1"]["energy_per_token_mj"],
-             unit="mJ/token", evidence="modelled (production power inputs)",
-             basis="package energy; HBM priced at the conservative 13.1 pJ/bit system figure, so S1f->S2 mixes a measured GPU draw with a conservative model",
+             unit="mJ/token", evidence="modelled (power scenario B)",
+             basis="package energy, scenario B (derived production lane); HBM path 13.64 pJ/bit (10.19 on the die, 3.45 in the stacks), so S1f->S2 mixes a measured GPU draw with a conservative model",
              matching="one reticle, 6 stacks"),
         dict(key="S3", label="ROM reticle", value=pp["rom"]["ar_batch1"]["energy_per_token_mj"], unit="mJ/token",
-             evidence="modelled (production power inputs)", basis="same power model as S2: the matched-format ratio",
+             evidence="modelled (power scenario B)", basis="same power model as S2: the matched-format ratio",
              matching="one reticle, 6 stacks"),
     ])
     kv_bound_b200 = b200 / kv

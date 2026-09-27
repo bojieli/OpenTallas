@@ -339,111 +339,140 @@ total**, which is 5.4 TB/s over 604 MB a token; more users only divide it.
 Lane copies do not help, because each user's KV is its own. At 2K the stream
 leaves room: at m = 3 the total reaches 35,763 tok/s at batch ≥ 32.
 
-Energy per token at 8K is about 229 mJ, or 103 mJ at the matrix-engine
-figure: logic at the measured reduced step's 16.5 pJ/MAC (3.97 for the matrix
-engine alone), and KV at 104.9 pJ/B from HBM. It is an order-of-magnitude
-figure, not a sign-off power.
+A first-order energy per token at 8K ranks these batch rows: about 232 mJ,
+or 106 mJ at the matrix-engine figure, from logic at the measured reduced
+step's 16.55 pJ/MAC (3.97 for the matrix engine alone; power scenario A) and KV
+at the whole 13.64 pJ/bit HBM path (109.1 pJ/B), without clock or stream-unit
+energy. It is not the power figure: section 11 prices die, stacks, package and
+wall.
 
 ## 11. Power (a first-class requirement)
 
-### 11.1 Production basis (the figures to use)
+### 11.1 Inputs: the two power scenarios
 
-By user directive, power is priced on the conservative production value
-wherever sources disagree. `power_production()` reads its inputs from
-`configs/hardware/technology.json`, where each entry quotes its normative or
-production source (checked on worktree-agent-adae6788cbf2f3f86, 16272bbf):
+Every energy, leakage, clock, HBM, MAC-lane and cooling figure is read from
+`configs/hardware/power_scenarios.json` through `tools/power_scenarios.py`,
+where each input carries its evidence class, boundary and source;
+`tools/arch_budget_qwen3.py` restates none of them. Two separate scenarios
+price the multiply-accumulates, and every other input is shared:
 
-* MAC: W4A8 0.09 pJ, FP8 0.13, BF16 0.41, FP32 1.18 (Jouppi ISCA 2021 Table 2
-  at 7 nm, × 0.7 to N5);
-* leakage: logic 0.10 W/mm², applied to logic area only; the ROM and SRAM
-  arrays keep their own densities (0.0067 and 0.005 W/mm²);
-* clock 8.5e-11 J/mm²/cycle, the ROM and SRAM arrays at 0.15 of it;
-* operand delivery 0.23 pJ/B, SRAM 2.6 pJ/B, ROM read 0.08 pJ/B;
-* HBM 13.1 pJ/bit at system level. The 0.8 pJ/bit active interface is
-  **inside** that figure: it is charged to the die, and the other 12.3 pJ/bit
-  to the stacks, never added on top. Each stack also idles at 2.8 W;
-* PSU 0.96, VR 0.87, CDU 0.6%, fans 3%.
+* **Scenario A (measured implementation):** every MAC, whatever its format,
+  at the energy our routed ASAP7 matrix engine reports on the reduced Qwen3
+  step, 3.97 pJ/MAC (a BF16 × BF16 lane);
+* **Scenario B (proposed production):** a floating-point lane derived from
+  published per-operation energies at 7 nm, one multiplier plus one FP32 add
+  per product (the golden's accumulation): 0.45 pJ per W4A8 MAC, 0.59 pJ per
+  FP8 or BF16 MAC;
+* the HBM path is 13.64 pJ/bit (the least favourable measured path without a
+  last-level cache, SC'25 MI250X). 3.45 pJ/bit of it is inside the DRAM stack
+  (O'Connor); the other 10.19 pJ/bit (controller, PHY, both ends' I/O and
+  control plane) is charged to the logic die. Each stack idles at 2.8 W,
+  charged to the die;
+* leakage 0.10 W/mm² on logic (0.0067 and 0.005 W/mm² on the ROM and SRAM
+  arrays); clock 8.5e-11 J/mm²/cycle, the arrays at 0.15 of it; operand
+  delivery 0.23 pJ/B, SRAM 2.6 pJ/B, ROM read 0.08 pJ/B, a stream-unit FP32
+  operation 1.69 pJ;
+* **cooling limit 549.5 W a die**: a shipping single-reticle package's rating
+  (H200 SXM, 700 W) less its own six stacks at peak bandwidth. No
+  single-reticle liquid rating exists, so liquid equals air; the package
+  (die + our stacks) is checked against the 700 W rating too;
+* die to wall (from `configs/hardware/technology.json`, which the scenarios
+  do not model): VR 0.87, PSU 0.96, CDU 0.6%, fans 3%.
 
-The record is `results/arch/qwen3_budget.json` `power_production`. Weights are
-priced at W4A8 (the lane designed for the weight format) and attention at
-BF16, and idle lane copies are clock-gated. All figures are at 8K with FP8 KV:
+The record is `results/arch/qwen3_budget.json` `power_production` (energy and
+power per scenario) and `power` (the requirement). Weights are priced at the
+W4A8 lane, attention at BF16, idle lane copies clock-gated, and the users' KV
+is read from HBM on the ROM die and on the comparator alike. The ROM rows at
+batch 1 and with DFlash are the design points `power_scenarios.json` pins; a
+test holds the two records equal.
 
-| design, scenario | tok/s | mJ/token | die W | stacks W | package W | wall W |
-|---|---|---|---|---|---|---|
-| ROM, batch 1 | 8,910 | **82.4** <!-- figure: 82.38 src="results/arch/qwen3_budget.json#power_production.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM production-basis mJ/token 8K batch 1" --> | 187.2 | 546.8 | 734.0 | 910.5 |
-| ROM, DFlash τ 4.1 (block 3, m = 3) | 13,612 | 47.9 | 213.5 | 438.4 | 652.0 | 808.7 |
-| ROM, batch 2 (KV-bound) | 8,941 | 82.5 | 189.5 | 548.6 | 738.0 | 915.5 |
-| ROM, batch 128 | 8,941 | 83.1 | 194.4 | 548.6 | 743.0 | 921.6 |
-| HBM comparator, batch 1 | 661 | 1,126 | 195.4 | 548.6 | 743.9 | 922.8 |
-| HBM comparator, batch 16 | 5,014 | 150.9 | 208.2 | 548.6 | 756.8 | 938.7 |
-| HBM comparator, batch 128 | 8,144 | 94.1 | 217.4 | 548.6 | 766.0 | 950.1 |
-| HBM comparator, ROM's 3.5-bit weights, batch 1 | 1,379 | **540.6** <!-- figure: 540.597 src="results/arch/qwen3_budget.json#power_production.hbm_comparator.rom35_batch1.energy_per_token_mj" name="Qwen3-8B HBM comparator 3.5-bit weights production-basis mJ/token 8K batch 1" --> | 197.1 | 548.6 | 745.6 | 924.9 |
-| HBM comparator, 3.5-bit weights, batch 16 | 6,659 | 114.1 | 211.0 | 548.6 | 759.6 | 942.2 |
-| HBM comparator, 3.5-bit weights, batch 128 | 8,574 | 89.2 | 216.1 | 548.6 | 764.7 | 948.5 |
-| B200, batch 1 (measured 689 W decode draw, roofline rate) | 881 | 782 | | | | |
+### 11.2 Energy per token and power at 8K, FP8 KV
 
-* **The KV stream is the energy.** At batch 1 on the ROM die, 61.4 mJ of the
-  82.4 mJ is in the stacks: 59.5 mJ of DRAM energy for the 604 MB of FP8 KV
-  and 1.9 mJ of idle floor. The die's 21.0 mJ splits into:
+Scenario B / scenario A; cooling-capped rates are the same in air and liquid:
+
+| design | tok/s | mJ/token, B / A | die W, B / A | stacks W | package W, B / A | wall W, B / A | capped tok/s, B / A |
+|---|---|---|---|---|---|---|---|
+| ROM, batch 1 | 8,910 | **88.1** <!-- figure: 88.116 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM scenario-B mJ/token 8K batch 1" --> / **123.0** <!-- figure: 122.965 src="results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM scenario-A mJ/token 8K batch 1" --> | 636.6 / 947.1 | 148.5 | 785.1 / 1,095.6 | 973.9 / 1,359.1 | 7,442 / 4,689 |
+| ROM, DFlash τ 4.1 (block 3, m = 3) | 13,612 | 54.3 / 109.2 | 621.1 / 1,368.1 | 118.2 | 739.2 / 1,486.3 | 917.0 / 1,843.6 | 11,665 / 4,680 |
+| ROM, batch 2 (KV-bound) | 8,941 | 88.3 / 123.1 | 640.3 / 951.9 | 149.0 | 789.3 / 1,100.9 | 979.1 / 1,365.6 | 7,398 / 4,646 |
+| ROM, batch 128 | 8,941 | 88.8 / 123.7 | 645.2 / 956.8 | 149.0 | 794.3 / 1,105.9 | 985.2 / 1,371.7 | 7,309 / 4,585 |
+| HBM comparator, FP8 weights, batch 1 | 661 | 1,164 / 1,198 | 620.4 / 642.7 | 149.0 | 769.4 / 791.8 | 954.4 / 982.1 | 556 / 529 |
+| HBM comparator, FP8 weights, batch 16 | 5,014 | 159.4 / 193.2 | 650.3 / 819.8 | 149.0 | 799.4 / 968.8 | 991.6 / 1,201.7 | 3,951 / 2,914 |
+| HBM comparator, FP8 weights, batch 128 | 8,144 | 100.8 / 134.6 | 671.9 / 947.0 | 149.0 | 820.9 / 1,096.1 | 1,018.3 / 1,359.6 | 6,140 / 3,953 |
+| HBM comparator, ROM's 3.5-bit weights, batch 1 | 1,379 | **560.4** <!-- figure: 560.372 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch1.energy_per_token_mj" name="Qwen3-8B HBM comparator 3.5-bit weights scenario-B mJ/token 8K batch 1" --> / 595.2 | 623.9 / 671.9 | 149.0 | 772.9 / 821.0 | 958.7 / 1,018.4 | 1,151 / 1,040 |
+| HBM comparator, 3.5-bit weights, batch 16 | 6,659 | 120.7 / 155.5 | 654.6 / 886.7 | 149.0 | 803.6 / 1,035.7 | 996.8 / 1,284.7 | 5,201 / 3,507 |
+| HBM comparator, 3.5-bit weights, batch 128 | 8,574 | 95.0 / 129.9 | 665.7 / 964.5 | 149.0 | 814.8 / 1,113.5 | 1,010.7 / 1,381.3 | 6,545 / 4,070 |
+| B200, batch 1 (measured 689 W decode draw, roofline rate) | 881 | 782 | | | | | |
+
+* **Power caps the reticle in both scenarios.** At 8,910 tok/s the die draws
+  636.6 W on the production lane and 947.1 W on the measured lane against
+  549.5 W. The die check binds (not the package), capping autoregressive
+  decoding at 7,442 (B) and 4,689 (A) tok/s, and DFlash at 11,665 and 4,680.
+  On the measured lane speculation runs no faster than plain decoding.
+* **The HBM path is the die's energy.** At batch 1 on the ROM die (scenario
+  B), 16.7 mJ of the 88.1 mJ is in the stacks and 71.4 mJ on the die:
+  * the die's share of the HBM path 49.2 (604 MB of FP8 KV at 10.19 pJ/bit);
   * leakage 5.9;
   * clock 4.3;
-  * the HBM interface 3.9 (its share of the 13.1 pJ/bit);
+  * MACs 4.8 (3.4 weights, 1.4 attention; 39.7 in scenario A);
   * the KV ring's SRAM write, read and delivery 3.3;
-  * MACs 1.7 (0.7 weights, 1.0 attention);
+  * stack idle 1.9;
   * the weights' ROM read and delivery 1.0;
   * the stream unit 1.0.
 
-  Halving the KV bytes (4-bit KV, a sensitivity) is the largest energy lever
-  as well as the largest speed lever.
-* **Ratios per token at batch 1** (the HBM comparator is the same core on 6
-  stacks, weights and KV streamed):
-  * **6.6×** against the comparator in the ROM's own 3.5-bit weight format.
+  The KV stream costs 65.9 mJ of the 88.1 in all, so halving the KV bytes
+  (4-bit KV, a sensitivity) is the largest energy lever as well as the
+  largest speed lever.
+* **Ratios per token at batch 1**, the HBM comparator being the same core on
+  6 stacks with weights and KV streamed, scenario B / A:
+  * **6.36× / 4.84×** <!-- figure: 6.36 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.ratios_batch1.hbm_rom_format_over_rom" name="Qwen3-8B HBM 3.5-bit over ROM energy ratio scenario B" --> against the comparator in the ROM's own 3.5-bit weight format.
     It runs at 1,379 tok/s, the machine of the iso-area rate comparison
-    (`results/roofline/iso_area/qwen3_8b.json`), so this is the matched-format
-    ratio;
-  * 13.7× against the comparator with FP8 weights (661 tok/s);
-  * 9.5× against a B200 at its measured decode draw.
+    (`results/roofline/iso_area/qwen3_8b.json`), so this is the
+    matched-format ratio;
+  * 13.21× / 9.74× against the comparator with FP8 weights (661 tok/s);
+  * a B200 at its measured decode draw is 782 mJ, 8.87× / 6.36× the ROM die;
+    an illustration only, since its workload and context are not matched.
 
-  All rest on the 13.1 pJ/bit stack figure, which carries most of the ROM's
-  energy. The comparator's own die is dominated by clock and leakage over its
-  token: 238 of 295 mJ at FP8 weights over 1.5 ms, and 114 of 143 mJ at 3.5-bit
-  weights over 0.73 ms.
+  The comparator's die at 3.5-bit weights spends 452.3 mJ of its 560.4 (B):
+  319.2 on its share of the HBM path (weights and KV), and 126.4 of leakage,
+  clock and stack idle over a 0.73 ms token. Its die also exceeds 549.5 W at
+  batch 1 (624 W), capping it at 1,151 tok/s.
 * **Worst case.** The hardwired schedule bounds the power. The saturated worst
-  case has every lane copy MAC every cycle at BF16, the stream unit and the ROM
-  read path busy every cycle, and the 6 stacks at full raw bandwidth. That is a
-  die of 407.9 W, stacks of 607.7 W and a package of 1,015.6 W (1,259.7 W at
-  the wall). **Provisioned: 1.2 × 1,015.6 / (0.87 × 0.96) = 1,459.1 W.** The
-  worst-case die sits at the reticle's cooling limit (0.5 W/mm² × 815 mm²);
-  every scheduled scenario draws at most 214 W on the die.
+  case has every lane copy MAC every cycle at the BF16 lane energy, the stream
+  unit and the ROM read path busy every cycle, and the 6 stacks at full raw
+  bandwidth. Scenario B: die 953.7 W, stacks 165.6 W, package 1,119.3 W
+  (1,388.4 W at the wall); **provisioned 1.2 × 1,119.3 / (0.87 × 0.96) =
+  1,608.2 W**. Scenario A: die 2,415.8 W, package 2,581.4 W, provisioned
+  3,708.9 W. Both worst-case dies are above the 549.5 W cooling limit, so the
+  die must be power-capped (clock throttling) to its cooling class.
 * **GPU reference powers:**
   * B200 TDP: 1,000 W (HGX), 1,200 W (NVL72);
   * MLPerf v5.1 measured 1.30 kW a GPU at the wall, saturated: 1,476 mJ/token
     at the roofline rate;
   * measured decode draw: 689 W (arXiv:2609.11133).
 
-### 11.2 ASAP7-measured basis (the sign-off cross-check)
+### 11.3 The requirement: MAC energy that fits
 
-The reticle's cooling limit is 408 W (the iso-area study, `a57e0d89` at
-09b4b1b1). At the design point's 8,494 tok/s that is a die energy budget of
-**48.0 mJ per token**. With 75% of it for the MAC lanes, less 6 × 2.8 W of HBM
-interface idle, the matrix engine must reach:
+The die's power other than its MACs does not depend on the lane: static
+107.7 W (leakage 52.5, clock 38.4, stack idle 16.8) plus 54.5 mJ a token of
+non-MAC dynamic energy for autoregressive decoding (120.6 W and 29.2 mJ with
+DFlash). At the design rate that is:
 
-* **≤ 3.41 pJ/MAC** for autoregressive decoding at the target: 9.98 G MACs a
-  token at 84.8 TMAC/s;
-* **≤ 1.41 pJ/MAC** for the best speculative configuration uncapped
-  (m = 3, B = 3: 206 TMAC/s).
+* **autoregressive, 8,910 tok/s: 593.6 W before any MAC**, above the 549.5 W
+  limit, so no MAC energy fits (−0.50 pJ/MAC; −0.25 at the 8,494 tok/s
+  target). With free MACs the die would still cap at 8,102 tok/s: the die's
+  share of the HBM path binds, not the lane;
+* **DFlash, 13,612 tok/s: 518.6 W before any MAC**, leaving **≤ 0.145
+  pJ/MAC** at 214 TMAC/s.
 
-As built, the ASAP7 sign-off of the reduced step's BF16 × BF16 lane is 3.97
-pJ/MAC:
+Die energy per token that fits 549.5 W: 61.7 mJ at 8,910 tok/s and 64.7 mJ at
+the 8,494 tok/s target. Capped rates by lane (air = liquid):
 
-* Autoregressive decoding draws 449 W, capped to 7,720 tok/s. That is still
-  above the spec chain's 7,327, so it does not bind yet.
-* DFlash draws 1,088 W and is capped to 4,909 tok/s, below autoregressive
-  decoding.
-* At the GPU's 1.4 pJ/MAC (SC'25) neither is capped.
-
-The HBM DRAM energy of the KV stream, 604 MB × 104.9 pJ/B, is the stacks'
-own: 538 W at the target. It is not charged to the die.
+| lane | pJ/MAC (W4A8 / BF16) | autoregressive | DFlash |
+|---|---|---|---|
+| scenario A, routed ASAP7 matrix engine | 3.97 / 3.97 | 4,689 | 4,680 |
+| scenario B, derived production lane | 0.45 / 0.59 | 7,442 | 11,665 |
+| a lane no better than an A100 tensor core (sensitivity) | 1.40 / 1.40 | 6,449 | 8,373 |
 
 MAC requirements that follow:
 
@@ -454,16 +483,35 @@ MAC requirements that follow:
 * **Operand isolation and clock gating** for idle lanes: groups outside an
   op's tiles, masked elements and idle lane copies.
 * **FP32 accumulation** in the golden's order, with exact products.
+* **Reduce the die's HBM-path energy.** Even with free MACs the
+  autoregressive die is over its limit, so the rate uncapped needs less
+  controller, PHY and I/O energy per bit than the measured 10.19 pJ/bit (the
+  GH200 path, 8.23 pJ/bit on the die, is the power-scenario sensitivity), or
+  fewer KV bytes.
 
-Energy is the ASAP7 (7 nm predictive) sign-off applied unscaled to the N6
+Scenario A is the ASAP7 (7 nm predictive) sign-off applied unscaled to the N6
 reticle, which is the same node class.
 
-**Reconciliation with the iso-area study's 8K headline.** Its ROM figures are
-≤ 2,570 tok/s autoregressive (BF16 KV), 4,617 with FP8 KV, and 4,767 with
-DFlash. They imply about 3.1 TB/s of KV bandwidth over 6 stacks. This budget
-uses 6 × 1.0 TB/s × 0.90 = 5.4 TB/s, which gives 4,470 (BF16 KV, KV-bound) and
-7,327 (FP8 KV, compute-bound). The stack bandwidth is the difference to
-settle.
+### 11.4 Reconciliation with the earlier power basis
+
+An earlier version of this section priced the reticle on inputs that are now
+withdrawn; its figures are superseded by 11.1-11.3 and appear nowhere else:
+
+| quantity | earlier basis | now |
+|---|---|---|
+| cooling limit | 408 W (0.5 W/mm² × 815 mm², from an A100 module rating, stacks not deducted) | 549.5 W (H200 SXM 700 W less its stacks; air = liquid) |
+| HBM path | 13.1 pJ/bit (A100), 0.8 pJ/bit of it on the die, 12.3 in the stacks | 13.64 pJ/bit (MI250X), 10.19 on the die, 3.45 in the stacks |
+| W4A8 MAC | 0.09 pJ, a per-operation entry charged once a MAC (2× under-charge) | 0.45 pJ/MAC incl. FP32 accumulate (B); 3.97 routed (A) |
+| ROM, batch 1: mJ/token; die / package / wall W | 82.4; 187.2 / 734.0 / 910.5 | 88.1 / 123.0; 636.6 / 785.1 / 973.9 (B), 947.1 / 1,095.6 / 1,359.1 (A) |
+| ROM, DFlash: mJ/token | 47.9 | 54.3 (B) / 109.2 (A) |
+| HBM comparator 3.5-bit / FP8, batch 1: mJ/token; ratio to ROM | 540.6 / 1,126; 6.6× / 13.7× | 560.4 / 1,164 (B), 595.2 / 1,198 (A); 6.36× / 13.21× (B), 4.84× / 9.74× (A) |
+| worst case die / package / wall; provisioned | 407.9 / 1,015.6 / 1,259.7 W; 1,459.1 W | 953.7 / 1,119.3 / 1,388.4 W; 1,608.2 W (B); 2,415.8 / 2,581.4 / 3,202.0 W; 3,708.9 W (A) |
+| MAC energy that fits, autoregressive / DFlash | ≤ 3.41 / ≤ 1.35 pJ (75% of 408 W to the lanes) | none (−0.50) / ≤ 0.145 pJ (549.5 W less the whole non-MAC die) |
+| 3.97 pJ/MAC lane capped, autoregressive / DFlash | 7,720 / 4,909 tok/s (MAC power only) | 4,689 / 4,680 tok/s (whole die) |
+
+The stacks' power fell (546.8 → 148.5 W at batch 1) and the die's rose
+because the controller, PHY and I/O energy of the HBM path now sits on the
+die; the earlier 75% MAC share left the rest of the die unpriced.
 
 ## 12. HBM comparator requirements
 
@@ -564,10 +612,11 @@ The verdicts:
   (5.4 TB/s × 350 ns). That is 18.7 MB, and 5.0 mm² go to slack (section 4).
 * **Lane copies.** They are idle in autoregressive decode and in every
   KV-bound batch, since each user's KV is its own and from batch 2 the step is
-  the KV stream. They carry the DFlash verify, 1.77× single-user tokens/s. That
-  gain holds under the cooling limit only at ≤ 1.35 pJ/MAC. At the measured
-  3.97 pJ/MAC the capped DFlash rate falls below autoregressive, and the copies
-  would not pay (section 11). They stay on that condition.
+  the KV stream. They carry the DFlash verify, 1.77× single-user tokens/s. Under the
+  549.5 W die limit the gain survives on the production lane (scenario B:
+  DFlash capped at 11,665 against 7,442 tok/s autoregressive), but not on the
+  measured 3.97 pJ/MAC lane (scenario A: 4,680 against 4,689), where the
+  copies would not pay (section 11). They stay on that condition.
 * **Batch.** From batch 2 the base lanes are 69–79% idle and nothing on the die can
   use it: the KV stream is the whole step. Only KV bytes move it. The stacks
   are fixed by the beachfront, so 4-bit KV (a sensitivity, pending the
@@ -579,7 +628,7 @@ section 10:
 | component | share |
 |---|---|
 | matrix engine (3.97 pJ/MAC) | 17% |
-| the rest of the logic (upper bound) | 55% |
+| the rest of the logic (upper bound) | 54% |
 | KV reads in the stacks | 28% |
 | ROM read and leakage | 0.2% |
 

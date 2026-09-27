@@ -109,16 +109,72 @@ def test_layer_chain_is_under_the_kv_floor(rec, fresh):
 
 
 def test_production_power_basis(rec):
-    """Production-basis power: per-token energy is the sum of its components, the provisioned power is
-    1.2 x worst / (0.87 x 0.96), and the ROM die beats the HBM comparator and the B200 per token."""
+    """Power in the two sourced scenarios: per-token energy is the sum of its components, the provisioned power is
+    1.2 x worst / (VR x PSU), every point sits under the saturated worst case, and the ROM die beats the HBM
+    comparator per token with KV read from HBM on both."""
     pp = rec["power_production"]
-    w = pp["worst_case"]
-    assert abs(pp["provisioned_w"] - 1.2 * w["package_w"] / (0.87 * 0.96)) < 1.0
-    for sc in pp["rom"].values():
-        assert sc["die_w"] <= w["die_w"] and sc["package_w"] <= w["package_w"]
-    ar = pp["rom"]["ar_batch1"]
-    assert abs(sum(ar["die_components_mj_per_token"].values()) - ar["die_energy_per_token_mj"]) < 0.01
-    assert pp["ratios_batch1"]["hbm_over_rom"] > 1 and pp["ratios_batch1"]["b200_measured_over_rom"] > 1
+    P = pp["inputs"]
+    assert set(pp["scenarios"]) == set(A.SCENARIOS)
+    for s, body in pp["scenarios"].items():
+        w = body["worst_case"]
+        assert abs(w["provisioned_w"] - 1.2 * w["package_w"] / (P["vr"] * P["psu"])) < 1.0
+        for sc in body["rom"].values():
+            assert sc["die_w"] <= w["die_w"] and sc["package_w"] <= w["package_w"]
+            assert abs(sum(sc["die_components_mj_per_token"].values()) - sc["die_energy_per_token_mj"]) < 0.01
+            assert abs(sc["die_energy_per_token_mj"] + sc["stack_energy_per_token_mj"] - sc["energy_per_token_mj"]) < 0.01
+        for sc in body["hbm_comparator"].values():
+            assert abs(sum(sc["die_components_mj_per_token"].values()) - sc["die_energy_per_token_mj"]) < 0.01
+            assert sc["die_components_mj_per_token"]["hbm_controller_phy_io"] > 0     # the die's HBM share
+        assert body["ratios_batch1"]["hbm_over_rom"] > body["ratios_batch1"]["hbm_rom_format_over_rom"] > 1
+        assert body["rom"]["ar_batch1"]["die_components_mj_per_token"]["hbm_controller_phy_io"] > 0
+
+
+def test_power_reads_the_sourced_scenarios_and_matches_their_record(rec):
+    """Single source of truth: every power input is tools/power_scenarios' (no 408 W cooling, no 0.8-inside-13.1
+    HBM split, W4A8 priced per MAC not per operation), and the ROM points this tool prices are the ones
+    configs/hardware/power_scenarios.json pins -- so the two records agree to rounding."""
+    import power_scenarios as PS
+    cfg = PS.load_cfg()
+    P = rec["power_production"]["inputs"]
+    assert P["hbm_pj_per_bit"] == PS.hbm_split(cfg)
+    assert P["hbm_pj_per_bit"]["die"] == pytest.approx(10.19) and P["hbm_pj_per_bit"]["stack"] == pytest.approx(3.45)
+    assert P["mac_pj"]["B_proposed_production"]["w4a8"] == 0.45 >= 2 * 0.09   # >= two operations a MAC
+    assert P["cooling"]["air"]["die_limit_w"] == pytest.approx(PS.cooling_w(cfg, "air", 1))
+    assert rec["power"]["cooling"]["air"]["die_limit_w"] == pytest.approx(549.47, abs=0.01)
+    for name in ("COOLING_W", "MAC_POWER_SHARE", "HBM_IDLE_W_PER_STACK", "GPU_PJ_PER_MAC", "E_SRAM_PER_BYTE"):
+        assert not hasattr(A, name), name
+    pinned = cfg["design_points"]["qwen3"]
+    dp = rec["power_production"]["design_point"]
+    for k in ("ar_batch1", "dflash"):
+        assert {f: dp[k][f] for f in pinned[k]} == pinned[k], k
+    assert {f: dp["area_mm2"][f] for f in pinned["area_mm2"]} == pinned["area_mm2"]
+    assert dp["clock_hz"] == pinned["clock_hz"]
+    ps = json.loads(PS.OUT.read_text())
+    for s in A.SCENARIOS:
+        mine = rec["power_production"]["scenarios"][s]["rom"]
+        theirs = ps["scenarios"][s]["qwen3_8b_rom_8k"]
+        for k, t in (("ar_batch1", "ar_batch1"), (f"dflash_tau{A.TAU_CENTRAL}_block3", "dflash")):
+            assert mine[k]["energy_per_token_mj"] == pytest.approx(theirs[t]["energy_per_token_mj"], rel=1e-4)
+            assert mine[k]["die_w"] == pytest.approx(theirs[t]["die_w_at_design_rate"], abs=0.1)
+            assert mine[k]["cooling"]["air"]["capped_tokens_s"] == pytest.approx(theirs[t]["capped_rate"], abs=0.1)
+
+
+def test_power_budget_is_the_die_limit_less_the_non_mac_power(rec):
+    """The MAC energy that fits is (die limit - static - non-MAC dynamic x rate) / MAC rate; scenario A's lane is
+    hotter than B's and caps lower; with free MACs the autoregressive die is still over the limit."""
+    pw = rec["power"]
+    lim = pw["cooling"]["air"]["die_limit_w"]
+    for key, pt in pw["points"].items():
+        d = pt["at"]["design"]
+        assert d["die_w_without_macs"] == pytest.approx(pt["die_static_w"] + pt["die_non_mac_dynamic_mj_per_token"]
+                                                        / 1e3 * d["tokens_s"], abs=0.2)
+        assert d["pj_per_mac_that_fits"]["air"] == pytest.approx((lim - d["die_w_without_macs"]) / d["mac_rate_per_s"]
+                                                                 * 1e12, abs=2e-3)
+        la = pt["lanes"]
+        assert la["A_measured_implementation"]["cooling"]["air"]["capped_tokens_s"] <= \
+            la["B_proposed_production"]["cooling"]["air"]["capped_tokens_s"] <= d["tokens_s"]
+    assert pw["points"]["ar_batch1"]["at"]["design"]["pj_per_mac_that_fits"]["air"] < 0
+    assert pw["points"]["ar_batch1"]["rate_cap_with_free_macs"]["air"] < pw["points"]["ar_batch1"]["at"]["design"]["tokens_s"]
 
 
 UTIL = ROOT / "results/arch/qwen3_utilization.json"

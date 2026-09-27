@@ -14,18 +14,18 @@
    "slots": 1,
    "tokens_s_total": 8910.2,
    "energy_per_step_mj": {
-    "matrix_engine": 39.637,
-    "other_logic_upper": 125.1,
+    "matrix_engine": 39.68,
+    "other_logic_upper": 125.528,
     "rom_read": 0.265,
     "rom_leakage": 0.197,
-    "kv_hbm_stacks": 63.345
+    "kv_hbm_stacks": 65.906
    },
    "energy_share": {
-    "matrix_engine": 0.1734,
-    "other_logic_upper": 0.5474,
-    "rom_read": 0.0012,
+    "matrix_engine": 0.1713,
+    "other_logic_upper": 0.5421,
+    "rom_read": 0.0011,
     "rom_leakage": 0.0009,
-    "kv_hbm_stacks": 0.2772
+    "kv_hbm_stacks": 0.2846
    },
    "blocks": [
     {
@@ -171,18 +171,18 @@
    "slots": 3,
    "tokens_s_total": 13612.1,
    "energy_per_step_mj": {
-    "matrix_engine": 136.339,
-    "other_logic_upper": 430.311,
+    "matrix_engine": 136.489,
+    "other_logic_upper": 431.782,
     "rom_read": 0.302,
     "rom_leakage": 0.282,
-    "kv_hbm_stacks": 72.143
+    "kv_hbm_stacks": 75.06
    },
    "energy_share": {
-    "matrix_engine": 0.2132,
-    "other_logic_upper": 0.673,
+    "matrix_engine": 0.212,
+    "other_logic_upper": 0.6706,
     "rom_read": 0.0005,
     "rom_leakage": 0.0004,
-    "kv_hbm_stacks": 0.1128
+    "kv_hbm_stacks": 0.1166
    },
    "blocks": [
     {
@@ -328,18 +328,18 @@
    "slots": 1,
    "tokens_s_total": 8940.7,
    "energy_per_step_mj": {
-    "matrix_engine": 79.273,
-    "other_logic_upper": 250.199,
+    "matrix_engine": 79.36,
+    "other_logic_upper": 251.055,
     "rom_read": 0.265,
     "rom_leakage": 0.393,
-    "kv_hbm_stacks": 126.691
+    "kv_hbm_stacks": 131.813
    },
    "energy_share": {
-    "matrix_engine": 0.1735,
-    "other_logic_upper": 0.5477,
+    "matrix_engine": 0.1714,
+    "other_logic_upper": 0.5424,
     "rom_read": 0.0006,
-    "rom_leakage": 0.0009,
-    "kv_hbm_stacks": 0.2773
+    "rom_leakage": 0.0008,
+    "kv_hbm_stacks": 0.2848
    },
    "blocks": [
     {
@@ -485,18 +485,18 @@
    "slots": 1,
    "tokens_s_total": 8940.7,
    "energy_per_step_mj": {
-    "matrix_engine": 5073.478,
-    "other_logic_upper": 16012.765,
+    "matrix_engine": 5079.047,
+    "other_logic_upper": 16067.524,
     "rom_read": 11.39,
     "rom_leakage": 25.129,
-    "kv_hbm_stacks": 8108.211
+    "kv_hbm_stacks": 8436.003
    },
    "energy_share": {
-    "matrix_engine": 0.1736,
-    "other_logic_upper": 0.5478,
+    "matrix_engine": 0.1715,
+    "other_logic_upper": 0.5425,
     "rom_read": 0.0004,
-    "rom_leakage": 0.0009,
-    "kv_hbm_stacks": 0.2774
+    "rom_leakage": 0.0008,
+    "kv_hbm_stacks": 0.2848
    },
    "blocks": [
     {
@@ -1099,7 +1099,7 @@
   {
    "block": "ROM: 2 lane copies",
    "verdict": "JUSTIFIED (DFlash only), conditional on power",
-   "why": "idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry the DFlash block-3 verify (1.77x single-user tokens/s). Under the cooling limit that gain needs <= 1.35 pJ/MAC; at the measured 3.97 the capped DFlash rate is below autoregressive and the copies would not pay"
+   "why": "idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry the DFlash block-3 verify (1.77x single-user tokens/s). Under the 549.5 W die limit the capped DFlash / autoregressive rates are 11,665 / 7,442 tokens/s on the production lane (scenario B: the copies pay) and 4,680 / 4,689 on the routed 3.97 pJ/MAC lane (scenario A: they do not)"
   },
   {
    "block": "ROM: weight ROM read path",
@@ -1147,7 +1147,7 @@
    "why": "bytes bind every 8k row and the 2k rows below 32 users"
   }
  ],
- "energy_basis": "logic at the measured reduced step on the routed ASAP7 core: 16.5 pJ/MAC whole step (upper), 3.97 pJ/MAC the matrix engine alone (lower); ROM 0.08 pJ/B, HBM 104.9 pJ/B, ROM leakage 0.0067 W/mm2. Predictive PDK, upper-bound activity: an order-of-magnitude figure, not a sign-off power",
+ "energy_basis": "scenario A of configs/hardware/power_scenarios.json: logic at the measured reduced step on the routed ASAP7 core, 16.55 pJ/MAC whole step (upper), 3.97 pJ/MAC the matrix engine alone (lower); ROM 0.08 pJ/B, the whole HBM path 109.12 pJ/B, ROM leakage; no clock or stream-unit energy. A ranking of batch sizes, not the power figure: power_production prices die, package and wall",
  "notes": [
   "busy fractions of the autoregressive row are the calibrated model's; the other rows scale the per-position busy by positions over copies in use",
   "SFU and reducer demand counts operations whose peak is the stream unit's lanes; their busy time is inside the stream unit's",

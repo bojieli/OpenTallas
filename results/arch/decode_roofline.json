@@ -4,7 +4,7 @@
  "inputs": {
   "qwen3_budget": {
    "from": "worktree:results/arch/qwen3_budget.json",
-   "sha256": "9e245b2dc2c63e6c66575cac4949f162cbbe80c51b1f4af16acf8ac4f0dc8fd8"
+   "sha256": "e6c973267351f578ad4f51349a4ff8b167759be3644663da113d1326281272bc"
   },
   "iso_qwen": {
    "from": "b42f8606:results/roofline/iso_area/qwen3_8b.json",
@@ -565,22 +565,22 @@
      {
       "step": "S2",
       "label": "HDC-HBM, 3.5-bit (iso-area, 6 stacks)",
-      "value": 540.597,
+      "value": 560.372,
       "unit": "mJ/token",
-      "evidence": "modelled (production power inputs)",
-      "basis": "package energy; HBM priced at the conservative 13.1 pJ/bit system figure, so S1f->S2 mixes a measured GPU draw with a conservative model",
+      "evidence": "modelled (power scenario B)",
+      "basis": "package energy, scenario B (derived production lane); HBM path 13.64 pJ/bit (10.19 on the die, 3.45 in the stacks), so S1f->S2 mixes a measured GPU draw with a conservative model",
       "matching": "one reticle, 6 stacks",
-      "multiplier": 0.693023
+      "multiplier": 0.668566
      },
      {
       "step": "S3",
       "label": "ROM reticle",
-      "value": 82.38,
+      "value": 88.116,
       "unit": "mJ/token",
-      "evidence": "modelled (production power inputs)",
+      "evidence": "modelled (power scenario B)",
       "basis": "same power model as S2: the matched-format ratio",
       "matching": "one reticle, 6 stacks",
-      "multiplier": 6.56224
+      "multiplier": 6.35948
      }
     ],
     "aggregate": [

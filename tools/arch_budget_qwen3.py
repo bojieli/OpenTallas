@@ -574,37 +574,52 @@ def evaluate():
     return out
 
 
-# Production power inputs (user directive: the conservative PRODUCTION value wherever sources disagree), read
-# from configs/hardware/technology.json, where each entry quotes its normative or production source (checked
-# on worktree-agent-adae6788cbf2f3f86, 16272bbf; record results/arch/power_assumptions.json there).  They
-# supersede the ASAP7-measured basis above for every energy, die-, package- and rack-power figure; the
-# measured basis stays as the sign-off cross-check.  Rulings: logic leakage applies to logic area only (the
-# ROM and SRAM arrays keep their own densities); the 0.8 pJ/bit HBM interface is INSIDE the 13.1 pJ/bit
-# system figure -- it is charged to the die and the rest to the stacks, never added on top.
+# Power and energy inputs: ONE source.  Every energy, leakage, clock, HBM-path, MAC-lane and cooling figure is read
+# from the sourced power-scenario model (configs/hardware/power_scenarios.json through tools/power_scenarios.py,
+# where each input carries its evidence class, boundary and source); nothing is restated here.  Two SEPARATE
+# scenarios price the multiply-accumulates:
+#   A_measured_implementation -- every MAC, whatever its format, at our routed ASAP7 matrix engine's reported
+#     energy (3.97 pJ/MAC on the reduced Qwen3 step);
+#   B_proposed_production -- a floating-point lane derived from published per-OPERATION energies: multiplier +
+#     one FP32 add per product (0.45 pJ a W4A8 MAC, 0.59 BF16/FP8).  The per-op technology.json w4a8 entry an
+#     earlier model charged once per MAC (9e-14) is not used: that under-charged its own input 2x.
+# The HBM path (13.64 pJ/bit, SC'25 MI250X) is split, every joule counted once: 3.45 pJ/bit inside the DRAM stack
+# (O'Connor), the other 10.19 pJ/bit (controller, PHY, both ends' I/O, control plane) charged to the logic die;
+# stack idle power is charged to the die.  Cooling is the per-class die limit of a shipping single-reticle package
+# (H200 SXM 700 W less its six stacks at peak: 549.5 W; no single-reticle liquid rating exists, so liquid = air),
+# checked with the package rating.  Only the die-to-wall conversion and the B200 reference rows, which the power
+# scenarios do not model, are read from configs/hardware/technology.json.
+import copy  # noqa: E402
+
+import power_scenarios as PS  # noqa: E402
+
 TECH = ROOT / "configs/hardware/technology.json"
+PS_CFG = PS.load_cfg()
+SCENARIOS = PS.SCENARIOS
+GPU_TENSOR = "B_gpu_tensor_sensitivity"        # the lane no better than a shipping tensor core (A100, 1.40 pJ/MAC)
 
 
 def _prod_inputs():
+    cfg, v = PS_CFG, PS.val
+    d, mem = cfg["die"], cfg["memory"]
     t = json.loads(TECH.read_text())
-    v = lambda d: d["value"]                                   # noqa: E731
-    e, pw, b = t["energy"], t["power"], t["reference_parts"]["b200_sxm"]
-    mac = {k: v(e["mac_energy_j_per_op"][k]) for k in ("w4a8", "fp8", "bf16", "fp32", "fp4")}
-    leak, cm = pw["static_leakage_w_per_mm2"], pw["clock_region_multiplier"]
+    pw, b = t["power"], t["reference_parts"]["b200_sxm"]
     ro, gp = pw["rack_overheads"], pw["gpu_reference_power"]
-    hbm_sys = v(e["hbm_j_per_byte"])
-    hbm_if = v(pw["memory_interface_active_j_per_bit"]) * 8
+    lim = PS.cooling_limits(cfg)
     return dict(
-        mac_j=mac,
-        leak_w_mm2=dict(logic=v(leak["logic"]), rom=v(leak["rom_array"]), sram=v(leak["sram_array"])),
-        clock_j_mm2_cycle=v(pw["clock_energy_j_per_mm2_per_cycle"]),
-        clock_mult=dict(logic=v(cm["logic"]), rom=v(cm["rom_array"]), sram=v(cm["sram_array"])),
-        rom_read_j_b=v(e["rom_read_j_per_byte"]), delivery_j_b=v(e["operand_delivery_j_per_byte"]),
-        sram_j_b=v(e["sram_read_j_per_byte"]),
-        hbm_system_j_b=hbm_sys, hbm_if_j_b=hbm_if, hbm_core_j_b=hbm_sys - hbm_if,
-        hbm_idle_w_stack=v(pw["memory_interface_idle_w_per_stack"]),
+        source="configs/hardware/power_scenarios.json via tools/power_scenarios.py (die, memory, MAC lane, "
+               "cooling); configs/hardware/technology.json (die-to-wall conversion, B200 reference only)",
+        mac_pj={s: {f: PS.mac_pj(cfg, s, "qwen3", f) for f in ("w4a8", "fp8", "bf16")}
+                for s in SCENARIOS + (GPU_TENSOR,)},
+        hbm_pj_per_bit=PS.hbm_split(cfg), hbm_idle_w_stack=v(mem["idle_w_per_stack"]),
+        leak_w_mm2={k: v(d["leakage_w_per_mm2"][k]) for k in ("logic", "rom_array", "sram_array")},
+        clock_j_mm2_cycle=v(d["clock_j_per_mm2_per_cycle"]), clock_mult=dict(d["clock_region_multiplier"]),
+        rom_read_j_b=v(d["rom_read_j_per_byte"]), delivery_j_b=v(d["operand_delivery_j_per_byte"]),
+        sram_j_b=v(d["sram_j_per_byte"]), stream_fp32_op_j=v(d["stream_fp32_op_j"]),
+        cooling={cls: dict(reference=lim[cls]["1"]["reference"], die_limit_w=lim[cls]["1"]["die_w"],
+                           package_limit_w=lim[cls]["1"]["package_w"]) for cls in PS.COOLING_CLASSES},
         psu=v(ro["psu_efficiency"]), vr=v(ro["vr_efficiency_48v_to_core"]), cdu=v(ro["cdu_fraction_of_it"]),
         fans=v(ro["fan_fraction_of_it"]), margin=1.2,
-        link_j_bit={k: v(x) for k, x in e["link_j_per_bit"].items() if isinstance(x, dict) and "value" in x},
         b200=dict(tdp_hgx_w=v(b["power_w"]), tdp_nvl72_w=v(gp["b200_tdp_nvl72_w"]),
                   wall_saturated_w=v(gp["b200_measured_wall_w_per_gpu_saturated"]),
                   decode_measured_w=v(gp["b200_measured_decode_w"]),
@@ -614,56 +629,6 @@ def _prod_inputs():
 
 PROD = _prod_inputs()
 
-def _rom_areas(out, copies_on):
-    """Logic / ROM / SRAM mm2 of the ROM reticle (area ledger); idle lane copies clock-gated."""
-    a = out["area"]
-    m = a["lane_multiplier_m"]
-    copies = a["lane_copy_mm2"] * (m - 1)
-    logic = (RETICLE["compute_mm2"] + RETICLE["interconnect_mm2"] + RETICLE["overhead_mm2"] + a["hbm_phy_mm2"]
-             + a["stream_unit_spill_mm2"] + copies)
-    rom = RETICLE["rom_mm2"] + a["drafter_rom_mm2"]
-    sram = a["kv_prefetch_buffer_mm2"]
-    clocked_logic = logic - copies * (1 - copies_on / max(1, m - 1))
-    return dict(logic=logic, rom=rom, sram=sram, clocked_logic=clocked_logic)
-
-
-def _die_static_w(ar, clock):
-    P = PROD
-    leak = ar["logic"] * P["leak_w_mm2"]["logic"] + ar["rom"] * P["leak_w_mm2"]["rom"] + ar["sram"] * P["leak_w_mm2"]["sram"]
-    clk = P["clock_j_mm2_cycle"] * clock * (ar["clocked_logic"] * P["clock_mult"]["logic"]
-                                            + ar["rom"] * P["clock_mult"]["rom"] + ar["sram"] * P["clock_mult"]["sram"])
-    return leak, clk
-
-
-def _rom_step(out, clock, step_cycles, users, slots, drafter, copies_on):
-    """Energy of one ROM-die step (J, by component) on the production basis."""
-    P = PROD
-    wl = out["workload"][str(CTX_HEAD)]
-    per_layer, _ = matrices()
-    layer_macs = sum(a * b for a, b in per_layer.values())
-    n = users * slots
-    m = out["area"]["lane_multiplier_m"]
-    sweeps = 1 if drafter else math.ceil(n / m)
-    draft_macs = (slots * DRAFTER_LAYERS * layer_macs + (slots - 1) * Q["V"] * Q["H"]
-                  + slots * DFLASH_FC[0] * DFLASH_FC[1]) if drafter else 0
-    kvb = users * kv_bytes(wl, KV_FMT_SPEC) * ((1 + DRAFTER_LAYERS / Q["L"]) if drafter else 1)
-    wbytes = sweeps * wl["bytes"]["weights_rom_format"] + (DRAFTER_PARAMS * RETICLE["weight_bits"] / 8 if drafter else 0)
-    t = step_cycles / clock
-    ar = _rom_areas(out, copies_on)
-    leak, clk = _die_static_w(ar, clock)
-    e = dict(
-        mac_weights=(n * wl["weight_macs"] + draft_macs) * P["mac_j"]["w4a8"],     # the lane for the weight format
-        mac_attention=n * wl["attention_macs"] * P["mac_j"]["bf16"],               # BF16 q x FP8 K/V, taken at BF16
-        weight_read_and_delivery=wbytes * (P["rom_read_j_b"] + P["delivery_j_b"]),
-        kv_ring_sram_and_delivery=kvb * (2 * P["sram_j_b"] + P["delivery_j_b"]),  # written once, read once
-        stream_unit=n * wl["elementwise_total"] * (P["mac_j"]["fp32"] + 12 * P["sram_j_b"]),  # 3 FP32 operands
-        clock=clk * t, leakage=leak * t,
-        hbm_interface=kvb * P["hbm_if_j_b"],
-    )
-    die = sum(e.values())
-    stacks = kvb * P["hbm_core_j_b"] + ROM_KV_HBM["stacks"] * P["hbm_idle_w_stack"] * t
-    return e, die, stacks, t
-
 
 def _package(die_w, stacks_w):
     P = PROD
@@ -672,96 +637,165 @@ def _package(die_w, stacks_w):
     return dict(die_w=round(die_w, 1), stacks_w=round(stacks_w, 1), package_w=round(it, 1), wall_w=round(wall, 1))
 
 
-def power_production(out, clock):
-    """Energy per token and die / package / wall power on the production basis (PROD), for the ROM reticle,
-    the HBM comparator and a B200, at the design point (8K, FP8 KV); the hardwired schedule's saturated
-    worst case and the provisioned power with margin: 1.2 x worst / (VR 0.87 x PSU 0.96)."""
-    P = PROD
+def _classes(c):
+    return {cls: dict(reference=x["reference"], die_limit_w=round(x["die_limit_w"], 1),
+                      package_limit_w=x["package_limit_w"], capped_tokens_s=round(x["capped_rate"], 1),
+                      binds=x["binds"], bound_by=x["bound_by"], die_w_at_cap=round(x["die_w_at_cap"], 1))
+            for cls, x in c.items()}
+
+
+def qwen_design_point(out, clock):
+    """This tool's ROM-reticle step points in the power-scenario schema: the steps, rates and areas the power
+    model prices.  Its ar_batch1 and dflash rows are the ones configs/hardware/power_scenarios.json pins
+    (tests/test_arch_budget_qwen3.py holds them equal)."""
+    a = out["area"]
+    m = a["lane_multiplier_m"]
     wl = out["workload"][str(CTX_HEAD)]
-    m = out["area"]["lane_multiplier_m"]
-    ar_cal = out["as_built_calibrated"][str(CTX_HEAD)]
     kv_cyc = kv_bytes(wl, KV_FMT_SPEC) / rom_kv_bw() * clock
     batch = {r["batch"]: r for r in out["batch"]["per_context"][str(CTX_HEAD)]["rom"] if r["lane_multiplier"] == m}
     b_kv = min(b for b, r in batch.items() if r["binding"] == "kv_stream")
     best = out["dflash"]["rom"][f"{CTX_HEAD}/{KV_FMT_SPEC}/m{m}"]["best"]
-    rom = {}
-    for label, step, users, slots, drafter, copies, toks in (
-            ("ar_batch1", max(ar_cal["cycles"], kv_cyc), 1, 1, False, 0, 1),
-            (f"dflash_tau{TAU_CENTRAL}_block{best['block']}", best["step_cycles"], 1, best["block"], True,
-             min(m, best["block"]) - 1, best["tokens_per_step"]),
-            (f"kv_bound_batch{b_kv}", batch[b_kv]["step_cycles"], b_kv, 1, False, min(m, b_kv) - 1, b_kv),
-            ("batch128", batch[128]["step_cycles"], 128, 1, False, m - 1, 128)):
-        e, die, stacks, t = _rom_step(out, clock, step, users, slots, drafter, copies)
-        rom[label] = dict(step_cycles=round(step), tokens_per_step=toks, tokens_s=round(toks / t, 1),
-                          energy_per_token_mj=round((die + stacks) / toks * 1e3, 3),
-                          die_energy_per_token_mj=round(die / toks * 1e3, 3),
-                          die_components_mj_per_token={k: round(v / toks * 1e3, 4) for k, v in e.items()},
-                          **_package(die / t, stacks / t))
-    # the saturated worst case: every lane copy MACs every cycle (BF16, the costlier product), the stream unit
-    # retires 1,024 FP32 ops a cycle, the ROM streams one weight a lane a cycle, the stacks run at full raw
-    # bandwidth; clock on every mm2, leakage.  The hardwired schedule cannot exceed it.
-    arw = _rom_areas(out, m - 1)
-    leak, clk = _die_static_w(arw, clock)
-    raw_b_s = ROM_KV_HBM["stacks"] * HBM["stack_bytes_s"]
-    worst_die = (LANES_ROM * m * clock * P["mac_j"]["bf16"]
-                 + SPEC_SU_WIDTH * clock * (P["mac_j"]["fp32"] + 12 * P["sram_j_b"])
-                 + LANES_ROM * RETICLE["weight_bits"] / 8 * clock * (P["rom_read_j_b"] + P["delivery_j_b"])
-                 + raw_b_s * (P["hbm_if_j_b"] + 2 * P["sram_j_b"] + P["delivery_j_b"]) + clk + leak)
-    worst_stacks = raw_b_s * P["hbm_core_j_b"] + ROM_KV_HBM["stacks"] * P["hbm_idle_w_stack"]
-    worst = _package(worst_die, worst_stacks)
-    provisioned_w = P["margin"] * (worst_die + worst_stacks) / (P["vr"] * P["psu"])
-    # ---- the HBM comparator: one reticle of logic (815 mm2), FP8 weights and KV over the same 6 stacks ----
+    one = dict(users=1, slots=1, drafter=False)
+    dp = dict(context=CTX_HEAD, kv_format_bytes_per_elem=KV_FORMATS[KV_FMT_SPEC], clock_hz=clock,
+              hbm_stacks=ROM_KV_HBM["stacks"], dies_per_package=1,
+              ar_batch1=dict(step_cycles=round(max(out["as_built_calibrated"][str(CTX_HEAD)]["cycles"], kv_cyc)),
+                             tokens_per_step=1, lane_copies_on=0, **one),
+              dflash=dict(tau=TAU_CENTRAL, block=best["block"], step_cycles=best["step_cycles"],
+                          tokens_per_step=best["tokens_per_step"], users=1, slots=best["block"], drafter=True,
+                          lane_copies_on=min(m, best["block"]) - 1),
+              area_mm2=dict(compute=RETICLE["compute_mm2"], interconnect=RETICLE["interconnect_mm2"],
+                            overhead=RETICLE["overhead_mm2"], hbm_phy=a["hbm_phy_mm2"],
+                            stream_unit_spill=a["stream_unit_spill_mm2"], lane_copy=a["lane_copy_mm2"],
+                            lane_multiplier_m=m, rom=RETICLE["rom_mm2"], drafter_rom=a["drafter_rom_mm2"],
+                            sram=a["kv_prefetch_buffer_mm2"]))
+    dp[f"kv_bound_batch{b_kv}"] = dict(step_cycles=batch[b_kv]["step_cycles"], tokens_per_step=b_kv, users=b_kv,
+                                       slots=1, drafter=False, lane_copies_on=min(m, b_kv) - 1)
+    dp["batch128"] = dict(step_cycles=batch[128]["step_cycles"], tokens_per_step=128, users=128, slots=1,
+                          drafter=False, lane_copies_on=m - 1)
+    return dp
+
+
+def _ps_cfg(dp):
+    cfg = copy.deepcopy(PS_CFG)
+    cfg["design_points"]["qwen3"] = dict(cfg["design_points"]["qwen3"], **dp)
+    return cfg
+
+
+def _rom_points(dp, scenario):
+    """Every ROM point priced by tools/power_scenarios.qwen_point on this tool's design point."""
+    cfg = _ps_cfg(dp)
+    res = {}
+    for key in (k for k, v in dp.items() if isinstance(v, dict) and "step_cycles" in v):
+        r = PS.qwen_point(cfg, scenario, key)
+        label = f"dflash_tau{TAU_CENTRAL}_block{dp['dflash']['block']}" if key == "dflash" else key
+        res[label] = dict(step_cycles=r["step_cycles"], tokens_per_step=r["tokens_per_step"],
+                          tokens_s=round(r["design_rate_tokens_s"], 1),
+                          energy_per_token_mj=round(r["energy_per_token_mj"], 3),
+                          die_energy_per_token_mj=round(r["die_energy_per_token_mj"], 3),
+                          stack_energy_per_token_mj=round(r["stack_energy_per_token_mj"], 3),
+                          die_components_mj_per_token={k: round(v, 4) for k, v in r["die_components_mj_per_token"].items()},
+                          die_static_w={k: round(v, 2) for k, v in r["die_static_w"].items()},
+                          cooling=_classes(r["cooling_classes"]),
+                          **_package(r["die_w_at_design_rate"], r["stacks_w_at_design_rate"]))
+    return res
+
+
+def _hbm_comparator(out, clock, scenario):
+    """The iso-area HBM comparator (one 815 mm2 reticle of logic, 6 stacks), weights AND the users' KV read from
+    HBM, priced on the same inputs as the ROM die: die = leakage + clock over the whole reticle + stack idle +
+    MACs + operand delivery + stream unit + the die's share of every HBM bit; stacks = their in-DRAM share."""
+    P = PROD
+    hb = P["hbm_pj_per_bit"]
+    wl = out["workload"][str(CTX_HEAD)]
     bw = HBM["stacks"] * HBM["stack_bytes_s"] * HBM["efficiency"]
     comp = out["dependency_chain"][f"{CTX_HEAD}/spec"]["components"]
     lat = (comp["latency"] + comp["control"]) / clock
-    hbm = {}
-    # weight formats: FP8 (the FP8 MAC), and the ROM's own 3.5-bit format (the W4A8 MAC) -- the latter is
-    # the machine the paper's iso-area rate comparison uses (results/roofline/iso_area/qwen3_8b.json)
+    mm2 = RETICLE["die_mm2"]
+    static = dict(leakage_w=mm2 * P["leak_w_mm2"]["logic"], clock_w=P["clock_j_mm2_cycle"] * clock * mm2,
+                  hbm_idle_w=HBM["stacks"] * P["hbm_idle_w_stack"])
+    static_w = sum(static.values())
+    res = {}
+    # weight formats: FP8 (the FP8 MAC), and the ROM's own 3.5-bit format (the W4A8 MAC) -- the latter is the
+    # matched-format comparator (the same weight bits as the ROM die)
     for fmt, bpp, mac in (("fp8", 1.0, "fp8"), ("rom_format_3.5b", RETICLE["weight_bits"] / 8, "w4a8")):
-      for B in (1, 16, 128):
-        byt = wl["weight_macs"] * bpp + B * kv_bytes(wl, KV_FMT_SPEC)
-        macs_w, macs_a = B * wl["weight_macs"], B * wl["attention_macs"]
-        t = max(byt / bw, (macs_w + macs_a) / (LANES_HBM * clock), lat)
-        leak = RETICLE["die_mm2"] * P["leak_w_mm2"]["logic"]
-        clk = P["clock_j_mm2_cycle"] * clock * RETICLE["die_mm2"]
-        e = dict(mac_weights=macs_w * P["mac_j"][mac], mac_attention=macs_a * P["mac_j"]["bf16"],
-                 operand_delivery=byt * P["delivery_j_b"], stream_unit=B * wl["elementwise_total"]
-                 * (P["mac_j"]["fp32"] + 12 * P["sram_j_b"]), clock=clk * t, leakage=leak * t,
-                 hbm_interface=byt * P["hbm_if_j_b"])
-        die = sum(e.values())
-        stacks = byt * P["hbm_core_j_b"] + HBM["stacks"] * P["hbm_idle_w_stack"] * t
-        key = f"batch{B}" if fmt == "fp8" else f"rom35_batch{B}"   # (no "." in a key: figure paths split on it)
-        hbm[key] = dict(weight_format=fmt, tokens_s=round(B / t, 1),
-                        energy_per_token_mj=round((die + stacks) / B * 1e3, 3),
-                                die_components_mj_per_token={k: round(v / B * 1e3, 4) for k, v in e.items()},
-                                **_package(die / t, stacks / t))
-    # ---- a B200 at the same design point: its measured decode draw at its HBM-roofline rate (FP8 weights) ----
+        for B in (1, 16, 128):
+            byt = wl["weight_macs"] * bpp + B * kv_bytes(wl, KV_FMT_SPEC)
+            macs_w, macs_a = B * wl["weight_macs"], B * wl["attention_macs"]
+            t = max(byt / bw, (macs_w + macs_a) / (LANES_HBM * clock), lat)
+            dyn = dict(mac_weights=macs_w * P["mac_pj"][scenario][mac] * 1e-12,
+                       mac_attention=macs_a * P["mac_pj"][scenario]["bf16"] * 1e-12,
+                       operand_delivery=byt * P["delivery_j_b"],
+                       stream_unit=B * wl["elementwise_total"] * (P["stream_fp32_op_j"] + 12 * P["sram_j_b"]),
+                       hbm_controller_phy_io=byt * 8 * hb["die"] * 1e-12)
+            rate = B / t
+            dyn_tok = sum(dyn.values()) / B
+            stack_tok = byt * 8 * hb["stack"] * 1e-12 / B
+            classes = PS._class_caps(PS_CFG, 1, static_w, dyn_tok, byt * 8 * hb["stack_high"] * 1e-12 / B, rate, mm2)
+            comps = {k: round(v / B * 1e3, 4) for k, v in dyn.items()}
+            comps.update({k.replace("_w", ""): round(v / rate * 1e3, 4) for k, v in static.items()})
+            key = f"batch{B}" if fmt == "fp8" else f"rom35_batch{B}"   # (no "." in a key: figure paths split on it)
+            res[key] = dict(weight_format=fmt, tokens_s=round(rate, 1),
+                            energy_per_token_mj=round((dyn_tok + static_w / rate + stack_tok) * 1e3, 3),
+                            die_energy_per_token_mj=round((dyn_tok + static_w / rate) * 1e3, 3),
+                            stack_energy_per_token_mj=round(stack_tok * 1e3, 3),
+                            die_components_mj_per_token=comps, cooling=_classes(classes),
+                            **_package(static_w + dyn_tok * rate, stack_tok * rate))
+    return res
+
+
+def _worst_case(out, clock, scenario, dp):
+    """The saturated hardwired schedule, which the ROM die cannot exceed: every lane copy MACs every cycle (at the
+    lane's BF16 energy, the costlier product), the 1,024-lane stream unit and the ROM read path run every cycle,
+    the 6 stacks stream at full raw bandwidth; clock on every mm2, leakage, stack idle."""
+    P = PROD
+    hb = P["hbm_pj_per_bit"]
+    m = out["area"]["lane_multiplier_m"]
+    st = PS._die_static(PS_CFG, PS._qwen_areas(dp, m - 1), clock, ROM_KV_HBM["stacks"])
+    raw_b_s = ROM_KV_HBM["stacks"] * HBM["stack_bytes_s"]
+    die = (LANES_ROM * m * clock * P["mac_pj"][scenario]["bf16"] * 1e-12
+           + SPEC_SU_WIDTH * clock * (P["stream_fp32_op_j"] + 12 * P["sram_j_b"])
+           + LANES_ROM * RETICLE["weight_bits"] / 8 * clock * (P["rom_read_j_b"] + P["delivery_j_b"])
+           + raw_b_s * (8 * hb["die"] * 1e-12 + 2 * P["sram_j_b"] + P["delivery_j_b"]) + sum(st.values()))
+    stacks = raw_b_s * 8 * hb["stack"] * 1e-12
+    return dict(_package(die, stacks), provisioned_w=round(P["margin"] * (die + stacks) / (P["vr"] * P["psu"]), 1),
+                basis="saturated hardwired schedule: every lane copy MACs every cycle (BF16 lane energy), the "
+                      "1,024-lane stream unit and the ROM read path run every cycle, the 6 stacks at full raw "
+                      "bandwidth (the die's share of the HBM path on the die), clock on every mm2, leakage, stack "
+                      "idle; provisioned = 1.2 x (die + stacks) / (VR x PSU)")
+
+
+def power_production(out, clock):
+    """Energy per token and die / package / wall power for the ROM reticle, the HBM comparator and a B200 at the
+    design point (8K, FP8 KV), in the two power scenarios, every input read from the sourced power-scenario model
+    (PROD); per point the rate each cooling class allows; the saturated worst case and the provisioned power."""
+    P = PROD
+    wl = out["workload"][str(CTX_HEAD)]
+    dp = qwen_design_point(out, clock)
     g = P["b200"]
     gbyt = wl["weight_macs"] + kv_bytes(wl, KV_FMT_SPEC)
     g_tok_s = g["hbm_bytes_s"] * g["efficiency"] / gbyt
     gpu = dict(tokens_s_batch1_fp8=round(g_tok_s, 1),
                energy_per_token_mj_at_measured_decode_draw=round(g["decode_measured_w"] / g_tok_s * 1e3, 1),
                energy_per_token_mj_at_saturated_wall=round(g["wall_saturated_w"] / g_tok_s * 1e3, 1),
-               basis="the measured B200 decode draw (689 W, arXiv:2609.11133) over the HBM-roofline batch-1 rate "
-                     "(8 TB/s x 0.90 over FP8 weights + FP8 KV at 8K); the saturated wall figure (1.30 kW a GPU, "
-                     "MLPerf v5.1) is the upper bound", **{k: v for k, v in g.items()})
-    r1 = rom["ar_batch1"]["energy_per_token_mj"]
-    h1 = hbm["batch1"]["energy_per_token_mj"]
-    h35 = hbm["rom35_batch1"]["energy_per_token_mj"]
-    return dict(basis="production (conservative) inputs read from configs/hardware/technology.json (each entry "
-                      "quotes its source); supersedes the ASAP7-measured basis of `power` and `batch` for energy "
-                      "and power; the 0.8 pJ/bit HBM interface is inside the 13.1 pJ/bit system figure (die "
-                      "share), not added to it",
-                inputs=PROD, rom=rom, hbm_comparator=hbm, b200=gpu,
-                worst_case=dict(worst, basis="saturated hardwired schedule: every lane copy MACs every cycle (BF16), "
-                                             "the 1,024-lane stream unit and the ROM read path run every cycle, "
-                                             "the 6 stacks at full raw bandwidth, clock on every mm2, leakage"),
-                provisioned_w=round(provisioned_w, 1),
-                provisioned_basis="1.2 x worst case (die + stacks) / (VR 0.87 x PSU 0.96)",
-                ratios_batch1=dict(hbm_over_rom=round(h1 / r1, 2),
-                                   hbm_rom_format_over_rom=round(h35 / r1, 2),
-                                   b200_measured_over_rom=round(gpu["energy_per_token_mj_at_measured_decode_draw"] / r1, 2),
-                                   b200_measured_over_hbm=round(gpu["energy_per_token_mj_at_measured_decode_draw"] / h1, 2)))
+               basis="illustration, not a matched ratio: the measured B200 decode draw (689 W, arXiv:2609.11133) "
+                     "over the HBM-roofline batch-1 rate (8 TB/s x 0.90 over FP8 weights + FP8 KV at 8K); the "
+                     "saturated wall figure (1.30 kW a GPU, MLPerf v5.1) is the upper bound", **g)
+    scen = {}
+    for s in SCENARIOS:
+        rom, hbm = _rom_points(dp, s), _hbm_comparator(out, clock, s)
+        r1 = rom["ar_batch1"]["energy_per_token_mj"]
+        h1, h35 = hbm["batch1"]["energy_per_token_mj"], hbm["rom35_batch1"]["energy_per_token_mj"]
+        scen[s] = dict(mac_pj=P["mac_pj"][s], rom=rom, hbm_comparator=hbm, worst_case=_worst_case(out, clock, s, dp),
+                       ratios_batch1=dict(hbm_over_rom=round(h1 / r1, 2), hbm_rom_format_over_rom=round(h35 / r1, 2),
+                                          b200_measured_over_rom=round(gpu["energy_per_token_mj_at_measured_decode_draw"] / r1, 2)))
+    return dict(basis="two power scenarios on the sourced inputs of configs/hardware/power_scenarios.json (read "
+                      "through tools/power_scenarios.py): A = every MAC at the routed ASAP7 matrix engine's "
+                      "3.97 pJ/MAC, B = the derived floating-point production lane (0.45 pJ W4A8, 0.59 BF16/FP8, "
+                      "FP32 accumulate included); HBM path 13.64 pJ/bit = 10.19 on the die + 3.45 in the stacks; "
+                      "KV read from HBM on the ROM die and the comparator alike; cooling per shipping package class "
+                      "(one reticle: H200 SXM 700 W less its stacks = 549.5 W, air = liquid); wall = package "
+                      "through VR 0.87 and PSU 0.96 with CDU and fans",
+                inputs=PROD, design_point=dp, scenarios=scen, b200=gpu)
 
 
 UTIL_OUT = ROOT / "results/arch/qwen3_utilization.json"
@@ -928,15 +962,23 @@ def utilization(out, clock):
     su_sweep = {sw: as_built(CTX_HEAD, su_width=sw)["cycles"] for sw in (512, 1024, 2048)}
     g_half = as_built(CTX_HEAD, groups=GROUPS_ROM // 2)["cycles"]
     ar_step = max(ar["cycles"], kv_cyc)
+    pw_cool = PROD["cooling"]["air"]["die_limit_w"]
+
+    def pw_cap(point, scenario):
+        return out["power"]["points"][point]["lanes"][scenario]["cooling"]["air"]["capped_tokens_s"]
+
     verdicts = [
         dict(block="ROM: matrix engine base lanes (131,072)", verdict="RIGHT-SIZED",
              why=f"compute sits at the KV floor ({ar['cycles']:,} vs {round(kv_cyc):,} cycles); half the groups "
                  f"is {g_half:,} cycles (+{g_half / ar_step - 1:.0%} a token) in the calibrated model"),
         dict(block=f"ROM: {m - 1} lane copies", verdict="JUSTIFIED (DFlash only), conditional on power",
              why=f"idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry "
-                 f"the DFlash block-{Bd} verify ({best['speedup']}x single-user tokens/s). Under the cooling limit "
-                 f"that gain needs <= {out['power']['pj_per_mac_required_dflash']} pJ/MAC; at the measured 3.97 "
-                 f"the capped DFlash rate is below autoregressive and the copies would not pay"),
+                 f"the DFlash block-{Bd} verify ({best['speedup']}x single-user tokens/s). Under the "
+                 f"{pw_cool:.1f} W die limit the capped DFlash / autoregressive rates are "
+                 f"{pw_cap('dflash', 'B_proposed_production'):,.0f} / {pw_cap('ar_batch1', 'B_proposed_production'):,.0f} "
+                 f"tokens/s on the production lane (scenario B: the copies pay) and "
+                 f"{pw_cap('dflash', 'A_measured_implementation'):,.0f} / {pw_cap('ar_batch1', 'A_measured_implementation'):,.0f} "
+                 f"on the routed 3.97 pJ/MAC lane (scenario A: they do not)"),
         dict(block="ROM: weight ROM read path", verdict="RIGHT-SIZED",
              why="one weight a lane a cycle; the sweep is on the single user's chain (57,740 cycles)"),
         dict(block="ROM: vector stream unit (1,024 lanes; SFUs and reducers on its lanes)", verdict="RIGHT-SIZED",
@@ -1153,14 +1195,14 @@ def dflash_budget(out, clock):
 
 
 BATCHES = (1, 2, 4, 8, 16, 32, 64, 128)
-# Energy basis: the measured reduced Qwen3 step on the routed ASAP7 core
-# (docs/ARCHITECTURE_ATLAS.html 8.7, signoff/energy_per_token.json).
-E_LOGIC_PER_MAC = 16.5e-12       # whole step (upper: a tiny vehicle's clock and registers)
-E_ME_PER_MAC = 3.97e-12           # the matrix engine alone (lower)
-E_SRAM_PER_BYTE = 2.6e-12
-E_HBM_PER_BYTE = 1.0488e-10
-E_ROM_PER_BYTE = 8e-14
-LEAK_W_ROM = RETICLE["rom_mm2"] * 0.0067
+# Energy basis of the batch rows and the utilisation gate's energy shares: scenario A of the power-scenario model
+# (the measured reduced Qwen3 step on the routed ASAP7 core), every figure read from PROD / PS_CFG.
+_LANE_A = PS_CFG["mac_lane"]["scenario_A"]["qwen3"]
+E_LOGIC_PER_MAC = _LANE_A["whole_step_pj_per_mac"] * 1e-12       # whole step (upper: a tiny vehicle's clock, registers)
+E_ME_PER_MAC = PS.val(_LANE_A) * 1e-12                           # the matrix engine alone (lower)
+E_HBM_PER_BYTE = PROD["hbm_pj_per_bit"]["total"] * 8 * 1e-12    # the whole HBM path, die and stack shares
+E_ROM_PER_BYTE = PROD["rom_read_j_b"]
+LEAK_W_ROM = RETICLE["rom_mm2"] * PROD["leak_w_mm2"]["rom_array"]
 
 
 def batch_model(out, clock):
@@ -1210,68 +1252,82 @@ def batch_model(out, clock):
     return dict(per_context=res,
                 note=f"HBM comparator rows at {LANES_HBM:,} lanes and the same KV format as the ROM die",
                 lane_copies_serve_batch="yes: one weight word feeding m users' MACs is the DFlash lane multiplier",
-                energy_basis="logic at the measured reduced step on the routed ASAP7 core: 16.5 pJ/MAC whole step "
-                             "(upper), 3.97 pJ/MAC the matrix engine alone (lower); ROM 0.08 pJ/B, HBM 104.9 pJ/B, "
-                             "ROM leakage 0.0067 W/mm2. Predictive PDK, upper-bound activity: an order-of-magnitude "
-                             "figure, not a sign-off power")
-
-
-COOLING_W = 408.0          # the reticle's cooling limit (iso-area study, worktree-agent-a57e0d89de203ba19 09b4b1b1)
-HBM_IDLE_W_PER_STACK = 2.8  # idle interface power a stack (same study)
-MAC_POWER_SHARE = 0.75     # of the die's cooling budget, to the MAC lanes (the rest: stream unit, control,
-                           # clock, memories, PHY)
-GPU_PJ_PER_MAC = 1.4       # SC'25 measured 0.70 pJ/FLOP (same study)
+                energy_basis=f"scenario A of configs/hardware/power_scenarios.json: logic at the measured reduced "
+                             f"step on the routed ASAP7 core, {E_LOGIC_PER_MAC * 1e12:.2f} pJ/MAC whole step (upper), "
+                             f"{E_ME_PER_MAC * 1e12:.2f} pJ/MAC the matrix engine alone (lower); ROM "
+                             f"{E_ROM_PER_BYTE * 1e12:.2f} pJ/B, the whole HBM path {E_HBM_PER_BYTE * 1e12:.2f} pJ/B, ROM "
+                             "leakage; no clock or stream-unit energy. A ranking of batch sizes, not the power figure: "
+                             "power_production prices die, package and wall")
 
 
 def power_budget(out, clock):
-    """Power as a first-class requirement.  Die power = MAC rate x pJ/MAC +
-    the rest of the logic; HBM DRAM energy is the stacks' own (reported, not
-    charged to the die).  From the cooling limit and the design point's rate
-    (and the best speculative configuration's MAC rate) follow the per-token
-    energy budget and the pJ/MAC the matrix engine must reach.  Energy basis:
-    ASAP7 sign-off of the reduced step (3.97 pJ/MAC the matrix engine, a
-    BF16 x BF16 lane) used AS IS for the N6 reticle -- no node scaling."""
+    """Power as a first-class requirement, on the sourced power-scenario inputs (PROD).  The die limit is the
+    per-class single-reticle limit (a shipping package's rating less its own stacks: H200 SXM, 549.5 W; no
+    single-reticle liquid rating exists, so liquid = air).  At each step point's design rate (autoregressive
+    batch 1; the best DFlash configuration) the die's power other than its MACs -- static (leakage, clock, stack
+    idle) and dynamic (ROM and KV reads, stream unit, the die's share of the HBM path) -- is the same in every
+    scenario; what the limit leaves, over the MAC rate, is the MAC energy that fits.  Each lane -- scenario A
+    (routed ASAP7 matrix engine), scenario B (derived production lane), and a lane no better than an A100 tensor
+    core -- then gives the die power and the rate each cooling class allows (tools/power_scenarios: die and
+    package checks)."""
+    P = PROD
+    dp = qwen_design_point(out, clock)
+    cfg = _ps_cfg(dp)
     wl = out["workload"][str(CTX_HEAD)]
     macs_tok = wl["weight_macs"] + wl["attention_macs"]
     target = out["budget"]["target_tokens_s"]
-    m = out["area"]["lane_multiplier_m"]
-    best = out["dflash"]["rom"][f"{CTX_HEAD}/{KV_FMT_SPEC}/m{m}"]["best"]
-    B = best["block"]
     per_layer, _ = matrices()
     layer_macs = sum(a * b for a, b in per_layer.values())
-    step_macs = B * macs_tok + B * DRAFTER_LAYERS * layer_macs + (B - 1) * Q["V"] * Q["H"] + \
-        B * (DFLASH_FC[0] * DFLASH_FC[1])
-    spec_mac_rate = step_macs * best["tokens_s"] / best["tokens_per_step"]
-    ar_mac_rate = macs_tok * target
-    mac_w = COOLING_W * MAC_POWER_SHARE - ROM_KV_HBM["stacks"] * HBM_IDLE_W_PER_STACK
-    e_tok_budget = COOLING_W / target
-    need_ar = mac_w / ar_mac_rate * 1e12
-    need_spec = mac_w / spec_mac_rate * 1e12
-    capped = {}
-    for pj in (E_ME_PER_MAC * 1e12, GPU_PJ_PER_MAC):
-        p_ar = ar_mac_rate * pj * 1e-12 / MAC_POWER_SHARE
-        p_sp = spec_mac_rate * pj * 1e-12 / MAC_POWER_SHARE
-        capped[f"{pj:.2f}_pj"] = dict(ar_die_w=round(p_ar, 1), ar_tokens_s_capped=round(min(target, target * COOLING_W / p_ar), 1),
-                                     dflash_die_w=round(p_sp, 1),
-                                     dflash_tokens_s_capped=round(min(best["tokens_s"], best["tokens_s"] * COOLING_W / p_sp), 1))
+    lim = P["cooling"]
+    points = {}
+    for key in ("ar_batch1", "dflash"):
+        pt = dp[key]
+        n = pt["users"] * pt["slots"]
+        step_macs = n * macs_tok + ((pt["slots"] * DRAFTER_LAYERS * layer_macs + (pt["slots"] - 1) * Q["V"] * Q["H"]
+                                     + pt["slots"] * DFLASH_FC[0] * DFLASH_FC[1]) if pt["drafter"] else 0)
+        lanes = {s: PS.qwen_point(cfg, s, key) for s in SCENARIOS + (GPU_TENSOR,)}
+        r = lanes["B_proposed_production"]
+        c = r["die_components_mj_per_token"]
+        nonmac_dyn_j = (r["die_dynamic_mj_per_token"] - c["mac_weights"] - c["mac_attention"]) * 1e-3
+        static_w = sum(r["die_static_w"].values())
+        rates = dict(design=r["design_rate_tokens_s"])
+        if key == "ar_batch1":
+            rates["target"] = target
+        fits = {}
+        for which, rate in rates.items():
+            mac_rate = step_macs / pt["tokens_per_step"] * rate
+            nonmac_w = static_w + nonmac_dyn_j * rate
+            fits[which] = dict(tokens_s=round(rate, 1), mac_rate_per_s=mac_rate, die_w_without_macs=round(nonmac_w, 1),
+                               die_energy_budget_mj_per_token={cls: round(x["die_limit_w"] / rate * 1e3, 2)
+                                                               for cls, x in lim.items()},
+                               pj_per_mac_that_fits={cls: round((x["die_limit_w"] - nonmac_w) / mac_rate * 1e12, 3)
+                                                     for cls, x in lim.items()})
+        points[key] = dict(
+            macs_per_step=step_macs, tokens_per_step=pt["tokens_per_step"], die_static_w=round(static_w, 1),
+            die_non_mac_dynamic_mj_per_token=round(nonmac_dyn_j * 1e3, 3), at=fits,
+            rate_cap_with_free_macs={cls: round((x["die_limit_w"] - static_w) / nonmac_dyn_j, 1) for cls, x in lim.items()},
+            lanes={s: dict(pj_per_mac_w4a8=P["mac_pj"][s]["w4a8"], pj_per_mac_bf16=P["mac_pj"][s]["bf16"],
+                           energy_per_token_mj=round(x["energy_per_token_mj"], 3),
+                           die_w_at_design_rate=round(x["die_w_at_design_rate"], 1),
+                           cooling=_classes(x["cooling_classes"])) for s, x in lanes.items()})
     kvb = kv_bytes(wl, KV_FMT_SPEC)
-    return dict(cooling_limit_w=COOLING_W, mac_power_share=MAC_POWER_SHARE,
-                energy_per_token_budget_mj=round(e_tok_budget * 1e3, 2),
-                macs_per_token=macs_tok, ar_mac_rate_per_s=ar_mac_rate, dflash_best=dict(best, lane_multiplier=m),
-                dflash_mac_rate_per_s=spec_mac_rate,
-                pj_per_mac_required_ar=round(need_ar, 2), pj_per_mac_required_dflash=round(need_spec, 2),
-                pj_per_mac_as_built_asap7=E_ME_PER_MAC * 1e12, pj_per_mac_gpu=GPU_PJ_PER_MAC,
-                at=capped, hbm_dram_w_at_target=round(kvb * target * E_HBM_PER_BYTE, 1),
-                node="energy is the ASAP7 (7 nm predictive) sign-off of the reduced step, applied unscaled to the N6 "
-                     "reticle; N6 is the same node class, and no scaling factor is applied",
+    ar, df = points["ar_batch1"], points["dflash"]
+    fit_ar = ar["at"]["design"]["pj_per_mac_that_fits"]["air"]
+    fit_df = df["at"]["design"]["pj_per_mac_that_fits"]["air"]
+    return dict(cooling=lim, basis="per-class die limit of a shipping single-reticle package (configs/hardware/"
+                                   "power_scenarios.json cooling); every energy from the same file",
+                target_tokens_s=target, macs_per_token=macs_tok, points=points,
+                stack_w_at_target=round(kvb * target * 8 * P["hbm_pj_per_bit"]["stack"] * 1e-12, 1),
                 mac_requirements=["the lane is designed for the ROM's weight format: 4-bit weights (3.5 bits a "
                                   "weight with group scales) x FP8/BF16 activations, FP32 accumulation -- not a "
                                   "BF16 x BF16 lane (a golden change: the quantised checkpoint)",
                                   "operand isolation and clock gating of idle lanes: groups outside an op's tiles, "
                                   "masked elements, idle lane copies",
                                   "accumulation width FP32 (the golden's order), products exact",
-                                  f"<= {need_spec:.2f} pJ/MAC for the best speculative configuration uncapped; "
-                                  f"<= {need_ar:.2f} for autoregressive decoding at the target"])
+                                  f"at the design rate the die's non-MAC power leaves {fit_ar:.3f} pJ/MAC for "
+                                  f"autoregressive decoding and {fit_df:.3f} pJ/MAC for the best DFlash "
+                                  f"configuration under the {lim['air']['die_limit_w']:.1f} W die limit (negative: "
+                                  "the die is over the limit with free MACs; the die's share of the HBM path binds)"])
 
 
 def main():
