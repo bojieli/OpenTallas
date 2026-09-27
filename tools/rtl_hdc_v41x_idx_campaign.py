@@ -383,6 +383,86 @@ def hsum_bench(work: Path, name, toks, ih):
     return res
 
 
+POOL_RTL = [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_wgt_bdot", "ot_hdc_v41x_wgt_red", "ot_hdc_v41x_wgt_mac",
+                                                       "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_idx_pcol",
+                                                       "ot_hdc_v41x_idx_hsum", "ot_hdc_v41x_idx_arith")] + \
+    [ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROOT / "rtl/hdc/ot_hdc_delay.sv"]
+POOL_TB = ROOT / "rtl/test/tb_hdc_v41x_idx_pool.sv"
+E2M1_E4M3 = [0x00, 0x30, 0x38, 0x3C, 0x40, 0x44, 0x48, 0x4C]
+PRE = re.compile(r"V41XPOOL keys=(\d+) checked=(\d+) errors=(\d+) faults_expected_and_raised=(\d+) "
+                 r"lat_first=(-?\d+) lat_last=(-?\d+) cycles=(\d+)")
+PCRE = re.compile(r"V41XPOOLCNT stream_beats=(\d+) split_beats=(\d+) rom_beats=(\d+) expected_beats=(\d+) "
+                  r"refused=(\d+)")
+
+
+def pool_bench(work: Path, name, toks, ih=32, GT=1, M=1):
+    """R-U2 pooled path end to end: the wgt pooled tile (POOL=1, split, keys on rd_k) -> ot_hdc_v41x_idx_pcol ->
+    ot_hdc_v41x_idx_hsum, every key's BF16 score against the golden (shipped shape, 4 blocks per head)."""
+    d = work / f"{name}_pool_g{GT}m{M}"
+    d.mkdir(parents=True, exist_ok=True)
+    L, hg = 8 * GT, ih // M
+    tl, wl, kl, xl, ml, el = [], [], {}, [], [], []
+    wbase = xbase = 0
+    for t in toks:
+        n = len(t["keep"])
+        rows = n * hg
+        assert rows % (2 * GT) == 0 and t["kc"].shape[1] == 128
+        tl += [f"{xbase:08x}", f"{wbase:08x}", f"{n:08x}"]
+        for rg in range(rows // (2 * GT)):
+            for j in range(L):
+                r = rg * 2 * GT + 2 * (j // 8) + (1 if j % 8 >= 4 else 0)
+                key, b = r // hg, j % 4
+                kl[(wbase + rg) * L + j] = hexline([(c, 4) for c in t["kc"][key][32 * b:32 * b + 32]] + [(0, 128)] +
+                                                   [(int(t["ku"][key][b]), 8)])
+        for g in range(hg):
+            for b in range(4):
+                for p in range(M):
+                    h = g * M + p
+                    cod = [E2M1_E4M3[c & 7] | (0x80 if c & 8 else 0) for c in t["qc"][h][32 * b:32 * b + 32]]
+                    xl.append(hexline([(c, 8) for c in cod] + [(int(t["qu"][h][b]), 8)]))
+        wl += [hexline([(int(G.bits(t['w'][h])) >> 16, 16)] + [(int(u), 8) for u in t["qu"][h]]) for h in range(ih)]
+        kref = np.asarray(t["ku"] >= 253).any(1)
+        ml += [f"{(int(kref[j]) << 1) | int(t['keep'][j]):x}" for j in range(n)]
+        el += [hexline([(t["exp"][j], 16), (int(t["fault"][j]), 1)]) for j in range(n)]
+        wbase += rows // (2 * GT)
+        xbase += hg * 4 * M
+    kmax = max(kl) + 1
+    (d / "pk.mem").write_text("\n".join(kl.get(i, "0") for i in range(kmax)) + "\n")
+    for nm_, lines in (("pt.mem", tl), ("pw.mem", wl), ("px.mem", xl), ("pm.mem", ml), ("pe.mem", el)):
+        (d / nm_).write_text("\n".join(lines) + "\n")
+    obj = work / f"obj_pool_g{GT}m{M}"
+    exe = obj / "Vtb_hdc_v41x_idx_pool"
+    stamp = hashlib.sha256(b"".join(p.read_bytes() for p in POOL_RTL + [POOL_TB, HARNESS])).hexdigest()
+    if not (exe.exists() and (obj / "stamp").exists() and (obj / "stamp").read_text() == stamp):
+        subprocess.run(["verilator", "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
+                        "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-DECLFILENAME", "-Wno-UNOPTFLAT",
+                        "--top-module", "tb_hdc_v41x_idx_pool", f"-GG={GT}", f"-GM={M}", f"-GKD={1 << max(10, kmax.bit_length())}",
+                        "-CFLAGS", "-DVTOP=Vtb_hdc_v41x_idx_pool -O1", "-j", "16", "--Mdir", str(obj), str(POOL_TB)]
+                       + [str(p) for p in POOL_RTL] + [str(HARNESS)], check=True, capture_output=True, text=True)
+        (obj / "stamp").write_text(stamp)
+    nkey = sum(len(t["keep"]) for t in toks)
+    r = subprocess.run([str(exe), f"+NTOK={len(toks)}", f"+NKEY={nkey}"], cwd=d, capture_output=True, text=True,
+                       timeout=36000)
+    m, mc = PRE.search(r.stdout), PCRE.search(r.stdout)
+    if not m or not mc:
+        raise RuntimeError(r.stdout[-3000:] + r.stderr[-2000:])
+    res = dict(zip(("keys", "checked", "errors", "faults_expected_and_raised", "latency_first_cycles",
+                    "latency_last_key_cycles", "cycles"), map(int, m.groups())))
+    res["counters"] = dict(zip(("stream_beats", "split_beats", "rom_beats", "expected_beats", "refused"),
+                               map(int, mc.groups())))
+    res["mismatch_lines"] = [ln for ln in r.stdout.splitlines() if ln.startswith("MISMATCH")][:10]
+    res["expected_faults"] = int(sum(int(t["fault"].sum()) for t in toks))
+    res["expected_refused"] = int(sum(int((np.asarray(t["ku"] >= 253).any(1) |
+                                           np.asarray(t["qu"] >= 253).any()).sum()) for t in toks))
+    cn = res["counters"]
+    res["split_mode_used"] = cn["split_beats"] == cn["expected_beats"] == cn["stream_beats"] > 0 and cn["rom_beats"] == 0
+    res["bit_exact"] = res["errors"] == 0 and res["checked"] == res["keys"] and \
+        res["faults_expected_and_raised"] == res["expected_faults"] and cn["refused"] == res["expected_refused"]
+    res["tile"] = {"G": GT, "M": M, "rd_k": "behavioural read network (tb_hdc_v41x_wgt model): key words from the "
+                                            "image, RL = 2 after each chain position's request"}
+    return res
+
+
 def shape_bench(work, name, ih, nb, nk, fd, toks, long_n, rng):
     """Correctness under bubbles/back-pressure on `toks`, then one long back-to-back scan for throughput and
     latency."""
@@ -580,7 +660,7 @@ def main():
     rng = np.random.default_rng(20260926)
     rec = {"schema": "opentallas-hdc-v41x-idx-campaign-v1", "block": "idx",
            "tool": "tools/rtl_hdc_v41x_idx_campaign.py", "arith": G.ARITH, "spec": SPEC,
-           "sources": {str(p.relative_to(ROOT)): sha(p) for p in RTL + HS_RTL[:1] + [VLT, TB, HS_TB, HARNESS, ROOT / "tools/hdc_golden_v41.py",
+           "sources": {str(p.relative_to(ROOT)): sha(p) for p in RTL + HS_RTL[:1] + POOL_RTL[:5] + [VLT, TB, HS_TB, POOL_TB, HARNESS, ROOT / "tools/hdc_golden_v41.py",
                                                                         Path(__file__).resolve()]}}
     per_class = 2 if a.quick else 12
     nkeys = (lambda: int(rng.integers(1, 40))) if a.quick else (lambda: int(rng.integers(1, 400)))
@@ -617,6 +697,8 @@ def main():
         print(f"{name}: {len(toks)} tokens, {sum(len(t['keep']) for t in toks)} keys", flush=True)
         rec[name] = shape_bench(work, name, ih, nb, a.nk, 64, toks, long_n, rng)
         rec[name]["hsum"] = hsum_bench(work, name, toks, ih)
+        if name == "shipped":
+            rec[name]["pooled"] = pool_bench(work, name, toks, ih, GT=1, M=2)
         if name == "reduced":
             rec[name]["vehicle"] = {"tokens": len(veh), "keys": int(sum(len(t["keep"]) for t in veh)),
                                     "layers": sorted({t["cls"] for t in veh})}
@@ -638,6 +720,8 @@ def main():
                         "latency_note": ("48 against 47: deviation accepted by spec owner (1 cycle on 8 index layers, "
                                          "~8 ns per token)") if name == "shipped" else "reduced shape"}
         ok &= exact and thr and r.get("hsum", {"bit_exact": True})["bit_exact"]
+        if "pooled" in r:
+            ok &= r["pooled"]["bit_exact"] and r["pooled"]["split_mode_used"]
     if "hbm_scan" in rec:
         ok &= rec["hbm_scan"]["verdict"]["bit_exact"] and rec["hbm_scan"]["verdict"]["meets_90pct_of_peak_with_refresh"]
     rec["die"] = die_summary(rec)
