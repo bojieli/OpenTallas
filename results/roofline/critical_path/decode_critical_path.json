@@ -159,6 +159,12 @@
    "bw": 5670000000000.0,
    "hop_low": 1.29e-07,
    "hop_high": 4.09e-07
+  },
+  "rom_rack_cable_serdes": {
+   "hop": 2.09e-07,
+   "bw": 1687000000000.0,
+   "hop_low": 1.6e-07,
+   "hop_high": 3e-07
   }
  },
  "switch_latency": {
@@ -11902,6 +11908,12 @@
      "hop_low": 4e-08,
      "hop_high": 2.5e-07
     },
+    "rom_rack_cable_serdes": {
+     "hop": 1e-07,
+     "bw": 1800000000000.0,
+     "hop_low": 4e-08,
+     "hop_high": 2.5e-07
+    },
     "rom_wafer_serdes": {
      "hop": 1e-07,
      "bw": 6000000000000.0,
@@ -12154,8 +12166,8 @@
      }
     },
     "sensitivity_tokens_s_per_user": {
-     "links_hop_low_b1": 4248.139835447085,
-     "links_hop_high_b1": 3860.6195929594,
+     "links_hop_low_b1": 4213.184655593808,
+     "links_hop_high_b1": 3965.7552332159344,
      "optimistic_links_b1": 4264.393147822876,
      "optimistic_links_aggregate_b1": 4264.393147822876,
      "optimistic_links_b64": 4264.393147822876,
@@ -12387,8 +12399,8 @@
      }
     },
     "sensitivity_tokens_s_per_user": {
-     "links_hop_low_b1": 4862.2596455562,
-     "links_hop_high_b1": 3662.954465113485,
+     "links_hop_low_b1": 4836.018049004381,
+     "links_hop_high_b1": 3716.3714828182315,
      "optimistic_links_b1": 4971.061926036423,
      "optimistic_links_aggregate_b1": 4971.061926036423,
      "optimistic_links_b64": 4971.061926036423,
@@ -12396,8 +12408,8 @@
      "optimistic_links_b4096": 87.16872765567103,
      "optimistic_links_aggregate_b4096": 357043.10847762856,
      "legacy_placement_4_dies_per_layer_b1": 4349.954329145501,
-     "pair_link_short_reach_no_fec_b1": 4815.547830005454,
-     "pair_link_short_reach_no_fec_b64": 4815.547830005454
+     "pair_link_short_reach_no_fec_b1": 4749.675634247508,
+     "pair_link_short_reach_no_fec_b64": 4749.675634247508
     }
    },
    "c_four_die_group4_future": {
@@ -12622,8 +12634,8 @@
      }
     },
     "sensitivity_tokens_s_per_user": {
-     "links_hop_low_b1": 5574.398124189191,
-     "links_hop_high_b1": 5079.815359739447,
+     "links_hop_low_b1": 5542.789759861717,
+     "links_hop_high_b1": 5174.361794404116,
      "optimistic_links_b1": 5597.991491898153,
      "optimistic_links_aggregate_b1": 5597.991491898153,
      "optimistic_links_b64": 5295.382785929225,
@@ -15199,7 +15211,7 @@
    "sensitivity_link_latency": [
     {
      "link_hops": "hop_low",
-     "tok_s_user_b1": 5392.247261179909
+     "tok_s_user_b1": 5375.175522915238
     },
     {
      "link_hops": "value",
@@ -15207,7 +15219,7 @@
     },
     {
      "link_hops": "hop_high",
-     "tok_s_user_b1": 4020.268662063887
+     "tok_s_user_b1": 4054.022356525885
     }
    ]
   },
