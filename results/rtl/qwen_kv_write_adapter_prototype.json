@@ -2,6 +2,7 @@
   "checks": [
     "K bank dispatch and new-tile zero mask",
     "two-parity one-cycle banked tail read",
+    "streamer compact tail row to vector bank and FP8-to-BF16 read port",
     "V full 32-byte sector",
     "partial-sector explicit read/modify/write",
     "ready/retire"
@@ -21,6 +22,10 @@
         "status": "pass",
         "stdout": "PASS READ SW=16"
       },
+      "streamer_tail_port": {
+        "status": "pass",
+        "stdout": "PASS TAIL_BANK_PORT SW=16"
+      },
       "write": {
         "status": "pass",
         "stdout": "PASS SW=16"
@@ -30,6 +35,10 @@
       "read": {
         "status": "pass",
         "stdout": "PASS READ SW=8"
+      },
+      "streamer_tail_port": {
+        "status": "pass",
+        "stdout": "PASS TAIL_BANK_PORT SW=8"
       },
       "write": {
         "status": "pass",
@@ -41,17 +50,19 @@
   "scope": "reduced functional adapter bench, not integrated Qwen token or physical closure",
   "source_sha256": {
     "rtl/hdc/kv/ot_hdc_kv_stream.sv": "b7d320289ffbb51384b7ea18cdd6b7b1503fe71dd00b369dc4f9ffdafcae3a7d",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_bank_port.sv": "24d973adf95ee82ee83dca2a511589b0f199959f51919b06df536b6d0f2d4bd5",
     "rtl/hdc/kv/ot_hdc_qwen_kv_tail_read_mux.sv": "c424d6a9299b12f93f2b569be7681839e48b5c24a5ee2c577312b9df91a7a892",
     "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
-    "rtl/hdc/ot_hdc_core.sv": "d39aeeb3993ad9418d4bb3045644700d15fdebed8d8faac297e2521de3a8c877",
+    "rtl/hdc/ot_hdc_core.sv": "3960b47cf854c920af1e6e488d24d63653dffd54c992119d60e0753f18d614e5",
     "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+    "rtl/test/tb_hdc_qwen_kv_tail_bank_port.sv": "16ca4a40a9fd596bdeb80fbb673fc5f78f38ae666841f790d76d51b3133f8079",
     "rtl/test/tb_hdc_qwen_kv_tail_read_mux.sv": "0b04f6d2184deb3d2137c4bcc4c0513eee1b09806324244808a65e94e4ee3e2b",
     "rtl/test/tb_hdc_qwen_kv_write_adapter.sv": "cdf5eceb9eb4035024128aa725b2faa4c89035e000782ae5648ba9d13ff7b876",
     "tests/test_qwen_kv_bank_prototype.py": "c811d723b7115f8bd89d93ff6cb1533f9b885a6b23e3d151ba11ea2c3d63b693",
-    "tests/test_qwen_kv_write_adapter_record.py": "b89675bd1e6e0c9d899503ec45c02e53d131dc2f2fb44ad7f46ccbcdde74846b",
+    "tests/test_qwen_kv_write_adapter_record.py": "271b27ba3d8721aa65ac3093662f736cc736e2d056756ea800503b691d9b7d74",
     "tools/hdc_program.py": "4d3f4e37437997ab7af3612d96d25d88a6a17f473013586dd43f0afaa83a3712",
     "tools/qwen_kv_bank_prototype.py": "1d327fdf38c7ddb3907f53cb69c67d0e8a64fe639d8630b6ae6c612038e79a9a",
-    "tools/run_qwen_kv_write_adapter_campaign.py": "3c2aabb883d7f6b823d652e69f43737062cc9473669adb9dc12ac67db8b708ba"
+    "tools/run_qwen_kv_write_adapter_campaign.py": "d79c6377c166ff43ec66e8ff03ec32713604fc9ed8a670201601e159c27de5c0"
   },
   "status": "pass"
 }

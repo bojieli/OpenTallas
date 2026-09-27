@@ -12,6 +12,8 @@ SOURCES = (
     "rtl/test/tb_hdc_qwen_kv_write_adapter.sv",
     "rtl/hdc/kv/ot_hdc_qwen_kv_tail_read_mux.sv",
     "rtl/test/tb_hdc_qwen_kv_tail_read_mux.sv",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_bank_port.sv",
+    "rtl/test/tb_hdc_qwen_kv_tail_bank_port.sv",
     "rtl/hdc/ot_hdc_core.sv",
     "rtl/hdc/ot_hdc_vstream.sv",
     "rtl/hdc/kv/ot_hdc_kv_stream.sv",
@@ -32,6 +34,8 @@ def main() -> None:
             for kind, top, source_pair, expected in (
                 ("write", "tb_hdc_qwen_kv_write_adapter", SOURCES[:2], f"PASS SW={sw}"),
                 ("read", "tb_hdc_qwen_kv_tail_read_mux", SOURCES[2:4], f"PASS READ SW={sw}"),
+                ("streamer_tail_port", "tb_hdc_qwen_kv_tail_bank_port", SOURCES[2:3] + SOURCES[4:6],
+                 f"PASS TAIL_BANK_PORT SW={sw}"),
             ):
                 exe = Path(td) / f"kv_{kind}{sw}.vvp"
                 subprocess.run([
@@ -49,6 +53,7 @@ def main() -> None:
         "scope": "reduced functional adapter bench, not integrated Qwen token or physical closure",
         "source_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in SOURCES},
         "checks": ["K bank dispatch and new-tile zero mask", "two-parity one-cycle banked tail read",
+                   "streamer compact tail row to vector bank and FP8-to-BF16 read port",
                    "V full 32-byte sector",
                    "partial-sector explicit read/modify/write", "ready/retire"],
         "runs": runs,

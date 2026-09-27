@@ -11,7 +11,7 @@ def test_qwen_kv_write_adapter_record_is_current_and_passes():
     rec = json.loads((ROOT / "results/rtl/qwen_kv_write_adapter_prototype.json").read_text())
     assert rec["status"] == "pass"
     assert set(rec["runs"]) == {"8", "16"}
-    assert all(set(run) == {"write", "read"} and
+    assert all(set(run) == {"write", "read", "streamer_tail_port"} and
                all(part["status"] == "pass" for part in run.values())
                for run in rec["runs"].values())
     for name, digest in rec["source_sha256"].items():
