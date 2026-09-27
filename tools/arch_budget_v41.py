@@ -123,6 +123,24 @@ HBM_LAT_S = 1.0e-6        # ASSUMED first-access latency of a data-dependent HBM
 
 
 # -- 1. the requirement -------------------------------------------------------------------------------------------------
+# User decision 2026-09-27: the V4.1 baseline is the best SHIPPABLE option -- packaging option (b) plus a
+# light-FEC package link (130 ns hop, band 100-170, the same bandwidth; the packaging agent's lever 1) plus
+# overlapped reductions (a collective's bytes stream behind its producer; lever 4).  Plain (b) stays a
+# secondary row.
+BASELINE = dict(name="b_lightfec_overlap", board_hop_s=130e-9, overlap_collectives=True,
+                label="option (b) + light-FEC package link (130 ns) + overlapped reductions")
+PLAIN_B = dict(name="b_plain", board_hop_s=None, overlap_collectives=False, label="option (b) as published")
+
+
+def links_for(base):
+    E = _env()
+    if not base or base["board_hop_s"] is None:
+        return E["links"]
+    lk = dict(E["links"])
+    lk["rom_board_serdes"] = dict(lk["rom_board_serdes"], hop=base["board_hop_s"])
+    return lk
+
+
 def headline():
     rec = json.loads((ROOT / "results/roofline/critical_path/decode_critical_path.json").read_text())
     o = rec["packaging_options"]["options"][HEADLINE_KEY]
@@ -483,7 +501,7 @@ def fill_machine(batch):
 
 
 def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, expert_overlap=0.0, hbm=None,
-          fill=False):
+          fill=False, base=None):
     """Re-price the report's DAG node by node from `spec`; returns T (critical path), the occupancy bound,
     tokens/s per user and the per-category / per-resource critical-path breakdown.
 
@@ -504,8 +522,13 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
     if positions > 1:
         m = replace(m, microbatch=users * positions)
     b = D.Built(m, E["p"], clock, D.v41_graph, E["c"], ctx)
-    fab = D.ArrayFabric(links or E["links"], 2, "mesh", 4)
+    base = BASELINE if base is None else base
+    fab = D.ArrayFabric(links or links_for(base), 2, "mesh", 4)
     D.price_communication(b.g, fab, m.microbatch, clock)
+    if base.get("overlap_collectives"):
+        for nd in b.g.nodes.values():            # a collective's bytes stream behind its producer
+            if nd["kind"] == "collective":
+                nd["stream"] = True
     c, G, mb = E["c"], 4, m.microbatch
     NE, KE, FF, D_ = c["num_routed_experts"], c["experts_per_token"], c["moe_intermediate_size"], c["hidden_size"]
     lm = max(1, spec.lane_mult)
@@ -1375,6 +1398,13 @@ def build(quick=False):
     areas, area_src = unit_areas()
     hl = headline()
     dag = dag_spec(dag_machine(1), clock)
+    hl = dict(hl, baseline=BASELINE, plain_b=PLAIN_B,
+              tokens_s_per_user_plain_b=dict(hl["tokens_s_per_user"]),
+              tokens_s_per_user={ctx: price(dag, ctx)["tokens_s_per_user"] for ctx in CONTEXTS},
+              tokens_s_per_user_b64={ctx: price(dag_spec(dag_machine(64), clock), ctx, batch=64)["tokens_s_per_user"]
+                                     for ctx in CONTEXTS},
+              source="decode_critical_path's option-(b) DAG re-priced at the baseline (light-FEC 130 ns package "
+                     "link, overlapped reductions); plain (b) from " + hl["source"])
     built = as_built_spec()
     rec = dict(schema=SCHEMA, tool="tools/arch_budget_v41.py", clock_hz=clock,
                clock_basis="the report's clock: slowest routed token-path unit (decode_critical_path routed_clock)",
@@ -1504,6 +1534,14 @@ def build(quick=False):
     rec["kv_state"] = kv_state_requirements(c, req, clock)
     if not quick:
         rec["target_context"] = choose_target_context(rec)
+    # the secondary row: plain option (b) -- the published links, no overlapped reductions
+    rec["plain_b"] = dict(
+        label=PLAIN_B["label"],
+        dag_tokens_s_per_user={str(k): v for k, v in hl["tokens_s_per_user_plain_b"].items()},
+        required_ar={str(ctx): price(req, ctx, base=PLAIN_B)["tokens_s_per_user"] for ctx in CONTEXTS},
+        required_mtp_m2_tau41={str(ctx): 4.1 / (price(replace(req, lane_mult=2), ctx, positions=6, base=PLAIN_B)[
+            "period_s"] + draft_cost_s(replace(req, lane_mult=2), ctx, 5, c)["total_s"]) for ctx in CONTEXTS},
+        hbm_ar={str(ctx): price(req, ctx, hbm=hbm_kw, base=PLAIN_B)["tokens_s_per_user"] for ctx in CONTEXTS})
     if not quick:
         rec["power"] = power_requirements(rec, req, areas)
     rec["replay"] = replay_summary()

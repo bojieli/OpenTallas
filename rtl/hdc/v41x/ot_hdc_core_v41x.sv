@@ -75,6 +75,11 @@ module ot_hdc_core_v41x #(
     parameter integer X_EG  = 0,           // XU EGATHER -> the per-bank Engram gather
     parameter integer XSQ   = 4,           // select: quarters
     parameter integer XSW   = 16,          // select: lanes per quarter
+    parameter integer X_SU  = 0,           // SU -> the vector unit ot_hdc_v41x_vec
+    // SU: ot_hdc_v41x_vec geometry
+    parameter integer SUN   = 16,          // light lanes (elements a cycle)
+    parameter integer SUM   = 8,           // SFU lanes
+    parameter integer SULV  = 8,           // reducer time levels
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
     parameter integer HTL   = 9,           // HCP tail levels
@@ -123,6 +128,25 @@ module ot_hdc_core_v41x #(
     output wire [7:0]        mb_re,
     output wire [8*MBAW-1:0] mb_addr,
     input  wire [8*MG*32-1:0] mb_q,
+    // vector-unit ports (X_SU): per lane a gather-index read, four operand reads (the source selected by
+    // xs_rd_src: 0 vector memory, 1 / 2 constant ROM lo / hi word, 3 the BF16 weight ROM element in
+    // bits 31:16), an element write to the vector memory and to the KV SRAM; SUN/8 reducer result writes
+    output wire [SUN-1:0]    xs_vi_re,
+    output wire [SUN*AW-1:0] xs_vi_addr,
+    input  wire [SUN*32-1:0] xs_vi_q,
+    output wire [4*SUN-1:0]  xs_rd_re,
+    output wire [4*SUN*AW-1:0] xs_rd_addr,
+    output wire [8*SUN-1:0]  xs_rd_src,
+    input  wire [4*SUN*32-1:0] xs_rd_q,
+    output wire [SUN-1:0]    xs_vm_we,
+    output wire [SUN*AW-1:0] xs_vm_waddr,
+    output wire [SUN*32-1:0] xs_vm_wdata,
+    output wire [SUN-1:0]    xs_kv_we,
+    output wire [SUN*AW-1:0] xs_kv_waddr,
+    output wire [SUN*32-1:0] xs_kv_wdata,
+    output wire [SUN/8-1:0]  xs_res_we,
+    output wire [SUN/8*AW-1:0] xs_res_addr,
+    output wire [SUN/8*32-1:0] xs_res_data,
     // HCP weight banks (X_HE): 8 banks of HHW binary32 lanes, bank k addressed by hb_addr[k]
     output wire [7:0]        hb_re,
     output wire [8*HBAW-1:0] hb_addr,
@@ -620,15 +644,41 @@ module ot_hdc_core_v41x #(
         assign e_am_val[3*MP*32 +: MP*32] = 0; assign e_am_any[3*MP +: MP] = 0;
     end endgenerate
 
-    // the stream unit: MP copies; copy p runs slot p of a batched op (mx_m), its
-    // vector-memory streams moved by p slot strides (mx_xps reads, mx_ops writes)
+    // the stream unit.  X_SU: the vector unit behind its adapter (a batched op's m copies back to back);
+    // else the as-built MP copies of ot_hdc_v41_stream
+    genvar sp;
+    generate if (X_SU != 0) begin : g_su_x
+        ot_hdc_v41x_su_adapt #(.N(SUN), .M(SUM), .LV(SULV), .AW(AW), .NW(NW), .CLS_DRAIN((NSLOT > 1) ? 1 : 0))
+            u_su (
+            .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
+            .i_nout(su_nout), .i_nin(su_nin), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src),
+            .i_csrc(c_src), .i_dsrc(d_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si), .i_aibase(a_ibase),
+            .i_aind(a_ind), .i_bbase(b_base), .i_bso(b_so), .i_bsi(b_si), .i_bhalf(b_half),
+            .i_cbase(c_base), .i_cso(c_so), .i_csi(c_si), .i_cpair(c_pair),
+            .i_dbase(d_base), .i_dso(d_so), .i_dsi(d_si),
+            .i_arnd(a_rnd), .i_arelu(a_relu), .i_amin(a_min), .i_cclip(c_clip),
+            .i_m1(m1), .i_m2(m2), .i_qm(qm), .i_ad(ad), .i_sfu(sfu), .i_e1(e1), .i_e2(e2), .i_rnd(rnd),
+            .i_dst(dst), .i_obase(o_base), .i_oso(o_so), .i_osi(o_si), .i_orow(o_row),
+            .i_red(red), .i_redsq(red_sq), .i_redwhole(red_whole), .i_redtree(red_tree), .i_redrnd(red_rnd),
+            .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2), .i_imm3(imm3),
+            .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
+            .vi_re(xs_vi_re), .vi_addr(xs_vi_addr), .vi_q(xs_vi_q),
+            .rd_addr(xs_rd_addr), .rd_re(xs_rd_re), .rd_src(xs_rd_src), .rd_q(xs_rd_q),
+            .vm_we(xs_vm_we), .vm_waddr(xs_vm_waddr), .vm_wdata(xs_vm_wdata),
+            .kv_we(xs_kv_we), .kv_waddr(xs_kv_waddr), .kv_wdata(xs_kv_wdata),
+            .res_we(xs_res_we), .res_addr(xs_res_addr), .res_data(xs_res_data), .fault(su_fault));
+        assign vi_re = 0; assign vi_addr = 0; assign vs_re = 0; assign vs_addr = 0; assign crom_re = 0;
+        assign crom_addr = 0; assign ewrom_re = 0; assign ewrom_addr = 0; assign vw_su_we = 0; assign vw_su_addr = 0;
+        assign vw_su_data = 0; assign kv_we = 0; assign kv_waddr = 0; assign kv_wdata = 0; assign vw_rd_we = 0;
+        assign vw_rd_addr = 0; assign vw_rd_data = 0;
+    end else begin : g_su_a
+    // MP copies; copy p runs slot p of a batched op (mx_m), its vector-memory streams moved by p slot
+    // strides (mx_xps reads, mx_ops writes)
     wire [MP-1:0] su_ready_v, su_idle_v, su_fault_v;
     wire [2:0]    su_m = (mx_m == 3'd0) ? 3'd1 : mx_m;
     assign su_ready = &su_ready_v;
     assign su_idle = &su_idle_v;
     assign su_fault = |su_fault_v;
-    genvar sp;
-    generate
         for (sp = 0; sp < MP; sp = sp + 1) begin : g_su
             wire [AW-1:0] xo = sp * mx_xps;
             wire [AW-1:0] oo = sp * mx_ops;
@@ -662,7 +712,12 @@ module ot_hdc_core_v41x #(
                 .red_we(vw_rd_we[sp*SW +: SW]), .red_addr(vw_rd_addr[sp*SW*AW +: SW*AW]),
                 .red_data(vw_rd_data[sp*SW*32 +: SW*32]), .fault(su_fault_v[sp]));
         end
-    endgenerate
+
+        assign xs_vi_re = 0; assign xs_vi_addr = 0; assign xs_rd_re = 0; assign xs_rd_addr = 0; assign xs_rd_src = 0;
+        assign xs_vm_we = 0; assign xs_vm_waddr = 0; assign xs_vm_wdata = 0; assign xs_kv_we = 0;
+        assign xs_kv_waddr = 0; assign xs_kv_wdata = 0; assign xs_res_we = 0; assign xs_res_addr = 0;
+        assign xs_res_data = 0;
+    end endgenerate
 
     ot_hdc_v41_qe #(.AW(AW), .NW(NW), .BL(BL), .IL(IL), .QLB(QLB), .MP(MP)) u_qe (
         .clk(clk), .rst_n(rst_n), .go(qe_go), .ready(qe_ready), .idle(qe_idle),
