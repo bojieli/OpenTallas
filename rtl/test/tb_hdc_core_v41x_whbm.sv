@@ -133,9 +133,9 @@ module tb_hdc_core_v41x_whbm #(
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
     wire [4:0] unit_busy; wire [2:0] issue_unit;
 
-    // index-key HBM (X_IDX): one HBM3E stack model (32 pseudo-channels, refresh-aware REFpb with the MRU
-    // tie-break, 64-beat queues) holding the 68-B key image; the core's key writer's records are applied
-    // through its backdoor (the model is read-only)
+    // Index-key HBM: X_IDX=1 retains the legacy backdoor. X_IDX=2 sends each
+    // replicated key through bounded request arbitration and the timed WR
+    // queues of four HBM3E stack models.
     localparam integer IKH_WORDS = 1 << 18;          // 32-B sectors (8 MB)
     wire [31:0] ikh_req_v, ikh_req_rdy, ikh_rsp_v, ikh_rsp_rdy;
     wire [32*28-1:0] ikh_req_addr; wire [32*4-1:0] ikh_req_len, ikh_rsp_beat;
@@ -146,10 +146,14 @@ module tb_hdc_core_v41x_whbm #(
     wire [128*4-1:0] pikh_req_len,pikh_rsp_beat;
     wire [128*16-1:0] pikh_req_tag,pikh_rsp_tag;
     wire [128*256-1:0] pikh_rsp_data;
-    wire pikw_v; wire [3:0] pikw_stack_mask;
+    wire pikw_v,pikw_rdy; wire [3:0] pikw_stack_mask;
     wire [27:0] pikw_csec,pikw_ssec; wire [511:0] pikw_codes;
     wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
+    wire [31:0] idxwr_records,idxwr_writes,idxwr_highwater,idxwr_read_stalls,idxwr_writer_stalls;
+    wire [63:0] idxwr_refreshes;
     generate if (`HDC_X_IDX == 1) begin : g_ikh
+        assign idxwr_records=0;assign idxwr_writes=0;assign idxwr_highwater=0;
+        assign idxwr_read_stalls=0;assign idxwr_writer_stalls=0;assign idxwr_refreshes=0;
         ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(28), .DW(256), .MEM_WORDS(IKH_WORDS), .TAGW(16), .LENW(4), .BEATW(4),
                               .QD(64), .REFPB(3), .MEM_MODE(0)) u_ikh (
             .clk(clk), .rst_n(rst_n), .req_v(ikh_req_v), .req_rdy(ikh_req_rdy), .req_addr(ikh_req_addr),
@@ -190,29 +194,58 @@ module tb_hdc_core_v41x_whbm #(
             for (integer i=0; i<IKH_WORDS; i=i+1) ikimg[i] = 256'd0;
             if (!ik_multi) $readmemh({ikdir, "/ikhbm.hex"}, ikimg);
         end
+        wire [127:0] h_v,h_rdy,h_we,h_wr_done;
+        wire [128*28-1:0] h_addr;
+        wire [128*4-1:0] h_len;
+        wire [128*16-1:0] h_tag;
+        wire [128*256-1:0] h_wdata;
+        wire [128*32-1:0] h_wstrb;
+        wire bridge_busy;
+        wire [31:0] bridge_records,bridge_writes,bridge_highwater,bridge_read_stalls,bridge_writer_stalls;
+        wire [4*64-1:0] stack_refs;
+        assign idxwr_records=bridge_records;assign idxwr_writes=bridge_writes;
+        assign idxwr_highwater=bridge_highwater;assign idxwr_read_stalls=bridge_read_stalls;
+        assign idxwr_writer_stalls=bridge_writer_stalls;
+        assign idxwr_refreshes=stack_refs[0 +: 64]+stack_refs[64 +: 64]+
+                               stack_refs[128 +: 64]+stack_refs[192 +: 64];
+        ot_hdc_v41x_idx_pool_hbm_bridge u_bridge (
+            .clk(clk),.rst_n(rst_n),.w_v(pikw_v),.w_rdy(pikw_rdy),.w_stack_mask(pikw_stack_mask),
+            .w_csec(pikw_csec),.w_codes(pikw_codes),.w_ssec(pikw_ssec),.w_sslot(pikw_sslot),
+            .w_scales(pikw_scales),.r_v(pikh_req_v),.r_rdy(pikh_req_rdy),.r_addr(pikh_req_addr),
+            .r_len(pikh_req_len),.r_tag(pikh_req_tag),.h_v(h_v),.h_rdy(h_rdy),.h_addr(h_addr),
+            .h_len(h_len),.h_tag(h_tag),.h_we(h_we),.h_wdata(h_wdata),.h_wstrb(h_wstrb),
+            .h_wr_done(h_wr_done),.busy(bridge_busy),.dbg_records(bridge_records),
+            .dbg_writes(bridge_writes),.dbg_fifo_highwater(bridge_highwater),
+            .dbg_read_stalls(bridge_read_stalls),.dbg_writer_stalls(bridge_writer_stalls));
         for (genvar s=0; s<4; s=s+1) begin : g_stack
             ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(28), .DW(256), .MEM_WORDS(IKH_WORDS),
                 .TAGW(16), .LENW(4), .BEATW(4), .QD(64), .REFPB(3), .MEM_MODE(0)) hm (
-                .clk(clk), .rst_n(rst_n), .req_v(pikh_req_v[s*32 +: 32]),
-                .req_rdy(pikh_req_rdy[s*32 +: 32]), .req_addr(pikh_req_addr[s*32*28 +: 32*28]),
-                .req_len(pikh_req_len[s*32*4 +: 32*4]), .req_tag(pikh_req_tag[s*32*16 +: 32*16]),
+                .clk(clk), .rst_n(rst_n), .req_v(h_v[s*32 +: 32]),
+                .req_rdy(h_rdy[s*32 +: 32]), .req_addr(h_addr[s*32*28 +: 32*28]),
+                .req_len(h_len[s*32*4 +: 32*4]), .req_tag(h_tag[s*32*16 +: 32*16]),
+                .req_we(h_we[s*32 +: 32]),.req_wdata(h_wdata[s*32*256 +: 32*256]),
+                .req_wstrb(h_wstrb[s*32*32 +: 32*32]),.wr_done(h_wr_done[s*32 +: 32]),
                 .rsp_v(pikh_rsp_v[s*32 +: 32]), .rsp_rdy(pikh_rsp_rdy[s*32 +: 32]),
                 .rsp_tag(pikh_rsp_tag[s*32*16 +: 32*16]), .rsp_beat(pikh_rsp_beat[s*32*4 +: 32*4]),
                 .rsp_data(pikh_rsp_data[s*32*256 +: 32*256]));
             reg loaded=0;
+            reg [63:0] refresh_count;
+            integer pp;
+            always @* begin
+                refresh_count=0;
+                for(pp=0;pp<32;pp=pp+1) refresh_count=refresh_count+hm.st_ref[pp];
+            end
+            assign stack_refs[s*64 +: 64]=refresh_count;
             always @(posedge clk) begin
                 if (!loaded) begin
                     for (integer i=0; i<IKH_WORDS; i=i+1) hm.mem[i]=ikimg[i];
                     loaded<=1;
                 end
-                if (pikw_v && pikw_stack_mask[s]) begin
-                    hm.mem[pikw_csec]=pikw_codes[255:0];
-                    hm.mem[pikw_csec+1]=pikw_codes[511:256];
-                    hm.mem[pikw_ssec][32*pikw_sslot +: 32]=pikw_scales;
-                end
             end
         end
     end else begin : g_ikh_n
+        assign idxwr_records=0;assign idxwr_writes=0;assign idxwr_highwater=0;
+        assign idxwr_read_stalls=0;assign idxwr_writer_stalls=0;assign idxwr_refreshes=0;
         assign ikh_req_rdy = 0; assign ikh_rsp_v = 0; assign ikh_rsp_tag = 0; assign ikh_rsp_beat = 0;
         assign ikh_rsp_data = 0;
         assign pikh_req_rdy = 0; assign pikh_rsp_v = 0; assign pikh_rsp_tag = 0;
@@ -231,7 +264,8 @@ module tb_hdc_core_v41x_whbm #(
         .pikh_req_v(pikh_req_v), .pikh_req_rdy(pikh_req_rdy), .pikh_req_addr(pikh_req_addr),
         .pikh_req_len(pikh_req_len), .pikh_req_tag(pikh_req_tag), .pikh_rsp_v(pikh_rsp_v),
         .pikh_rsp_rdy(pikh_rsp_rdy), .pikh_rsp_tag(pikh_rsp_tag), .pikh_rsp_beat(pikh_rsp_beat),
-        .pikh_rsp_data(pikh_rsp_data), .pikw_v(pikw_v), .pikw_stack_mask(pikw_stack_mask),
+        .pikh_rsp_data(pikh_rsp_data), .pikw_v(pikw_v), .pikw_rdy(pikw_rdy),
+        .pikw_stack_mask(pikw_stack_mask),
         .pikw_csec(pikw_csec), .pikw_codes(pikw_codes), .pikw_ssec(pikw_ssec),
         .pikw_sslot(pikw_sslot), .pikw_scales(pikw_scales),
         .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
@@ -401,7 +435,14 @@ module tb_hdc_core_v41x_whbm #(
     wire [47:0] x_idx_ks, x_idx_hb, x_idx_sc, x_idx_hs;
     wire [31:0] x_idx_kw;
     generate
-        if (`HDC_X_IDX == 1) begin : g_cnt_idx
+        if (`HDC_X_IDX == 2) begin : g_cnt_idx_pool
+            assign x_cnt_idx = {dut.g_idx_x.g_pool.u_idx.dbg_ops, dut.g_idx_x.g_pool.u_idx.dbg_elems};
+            assign x_idx_ks = dut.g_idx_x.g_pool.u_idx.dbg_keys_streamed;
+            assign x_idx_hb = dut.g_idx_x.g_pool.u_idx.dbg_hbm_beats;
+            assign x_idx_sc = dut.g_idx_x.g_pool.u_idx.dbg_keys_scored;
+            assign x_idx_hs = dut.g_idx_x.g_pool.u_idx.dbg_headsums_fused;
+            assign x_idx_kw = dut.g_idx_x.g_pool.u_kwr.dbg_keys;
+        end else if (`HDC_X_IDX == 1) begin : g_cnt_idx
             assign x_cnt_idx = {dut.g_idx_x.g_legacy.u_idx.dbg_ops, dut.g_idx_x.g_legacy.u_idx.dbg_elems};
             assign x_idx_ks = dut.g_idx_x.g_legacy.u_idx.dbg_keys_streamed;
             assign x_idx_hb = dut.g_idx_x.g_legacy.u_idx.dbg_hbm_beats;
@@ -526,6 +567,10 @@ module tb_hdc_core_v41x_whbm #(
                 $display("XCNT unit=idx_fused ops=%0d elems=%0d", x_idx_sc, x_idx_hs);
                 $display("XCNT unit=idx_kwr ops=%0d elems=%0d", x_idx_kw, x_idx_kw);
             end
+            if (`HDC_X_IDX == 2)
+                $display("IDXHBMWR records=%0d writes=%0d highwater=%0d read_stalls=%0d writer_stalls=%0d refreshes=%0d refpb=3",
+                    idxwr_records,idxwr_writes,idxwr_highwater,idxwr_read_stalls,
+                    idxwr_writer_stalls,idxwr_refreshes);
         end
     endtask
 
