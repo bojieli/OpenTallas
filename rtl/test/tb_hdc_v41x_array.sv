@@ -455,8 +455,9 @@ module tb_hdc_v41x_array #(
                                 if (pikh_req_addr[pc*28 +: 28] + pikh_req_len[pc*4 +: 4] > IKH_WORDS)
                                     $fatal(1, "IDXHBM read outside user slice pkg=%0d user=%0d pc=%0d addr=%0d len=%0d",
                                            n, cur_u, pc, pikh_req_addr[pc*28 +: 28], pikh_req_len[pc*4 +: 4]);
-                                user_reads[cur_u] <= user_reads[cur_u] + 1;
                             end
+                        if (|(pikh_req_v & pikh_req_rdy))
+                            user_reads[cur_u] <= user_reads[cur_u] + 1;
                     end
                 end
                 assign idxwr_refreshes = stack_refs[0 +: 64] + stack_refs[64 +: 64]
