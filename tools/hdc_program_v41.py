@@ -22,6 +22,7 @@ against the same images and results.
 import argparse
 import copy
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -419,7 +420,7 @@ def segmented(f, segs):
 
 
 class Builder:
-    def __init__(self, lay, qchunk=None, slot=0):
+    def __init__(self, lay, qchunk=None, slot=0, idx_fused=None):
         """qchunk (HBM weights): a LINQ op of more than qchunk words is issued as
         chunks of whole rounds, so its start threshold fits the QE streamer's
         window (rounds are independent output rows; each chunk re-quantises the
@@ -428,6 +429,9 @@ class Builder:
         slot (MTP layouts): the position slot this builder's instructions serve:
         its vector-memory copy, its DYN bank (dslot), its region names."""
         self.qchunk = qchunk
+        # idx_fused (the re-specified core's indexer engine, HDC_V41_IDX_FUSED=1): one fused ME op per indexer
+        # writes the index scores IS (me_fuse, me_wts) in place of the per-head score op and the SU head sum
+        self.idx_fused = (os.environ.get("HDC_V41_IDX_FUSED", "0") == "1") if idx_fused is None else idx_fused
         self.lay, self.m = lay, lay.m
         self.prog = []
         self.slot = slot
@@ -707,6 +711,17 @@ class Builder:
         self.su({"WP"}, {"WTS"}, t, pred=pred, su_nout=1, su_nin=32, a_base=V_["WP"], a_si=1, a_rnd=1,
                 m1=I.M1_AIMM, imm1=f32(m.index_w_scale), rnd=1, dst=I.DST_VM, o_base=V_["WTS"], o_si=1)
         rnds16 = DY["RND16_N2"] if r == 2 else DY["RND16_POS1"]
+        if self.idx_fused:
+            # the indexer engine: dots, ReLU x weight and the head sum in one op, straight to IS
+            assert m.ih == IL * GR
+            self.me(dict(n=0, tiles=0, k=HD, base=self.K[f"IK{src}"] // W), V_["IQQ"], V_["IS"],
+                    {"IQQ", "WTS", f"IK{src}"}, {"IS"}, t, pred=pred, me_xcs=IL * HD, me_wsrc=1,
+                    me_ts=HD, me_ks=1, me_js=0, me_jsh=3, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=0,
+                    me_mmode=1, me_d_nout=nsel, me_d_tiles=rnds16, me_hg=2, me_ogs=0,
+                    me_fuse=1, me_wts=V_["WTS"])
+            self.xu({"IS"}, {"SEL"}, t, pred=pred, xu_op=I.XU_SEL, xu_src=V_["IS"], xu_dst=V_["SEL"], xu_d_n=nsel,
+                    xu_d_k=DY["NSEL2"] if r == 2 else DY["NSEL1"])
+            return
         for hb in range(0, m.ih, IL * GR):         # 4 head groups of 8 heads: one 16-row tile per round
             self.me(dict(n=0, tiles=0, k=HD, base=self.K[f"IK{src}"] // W), V_["IQQ"] + hb * HD,
                     V_["S"] + hb * STR, {"IQQ", f"IK{src}"}, {"S"}, t, pred=pred, me_xcs=IL * HD, me_wsrc=1,
@@ -1537,10 +1552,29 @@ class Machine:
         K = f["me_k"] + d[f["me_d_k"]]
         if n == 0 or tiles == 0 or K == 0:
             return
+        if f["me_fuse"]:
+            self.me_fused(f, n, tiles, K)
+            return
         for lane in range(max(1, f["mx_m"])):
             self.me_lane(f, n, tiles, K, lane)
 
-    def me_lane(self, f, n, tiles, K, lane):
+    def me_fused(self, f, n, tiles, K):
+        """The fused indexer op (me_fuse): the per-head scores S[hh, r] as the KV-sourced op computes them (not
+        written), then exactly the stream unit's op it replaces -- a = to_bf16(S), relu, * wts (BF16), to_bf16,
+        the head sum (class "idx": csum; legacy: the P = 8 interleaved sum), to_bf16 -- into element
+        me_obase*W + r."""
+        assert max(1, f["mx_m"]) == 1
+        S = self.me_lane(dict(f, me_oen=0, me_amax=0), n, tiles, K, 0, ret=True)     # [heads, n]
+        a = np.maximum(G.to_bf16(S), F(0)).astype(F)
+        wts = self.vm[f["me_wts"] + np.arange(S.shape[0])]
+        terms = G.to_bf16(G.mul(a, wts[:, None]))
+        cls = "idx" if "indexer" in f.get("_tag", "") else "su"
+        s = np.array([V.csum(terms[:, r]) if V.chunked(cls) else G.reduce_sum(terms[:, r]) for r in range(n)],
+                     dtype=F)
+        ob = (f["me_obase"] + self.dyn[f["me_d_obase"]]) * W
+        self.vm[ob:ob + n] = G.to_bf16(s)
+
+    def me_lane(self, f, n, tiles, K, lane, ret=False):
         d = self.dyn
         wb = f["me_wbase"] + d[f["me_d_wbase"]]
         xb = f["me_xbase"] + d[f["me_d_xbase"]] + lane * f["mx_xps"]
@@ -1583,6 +1617,10 @@ class Machine:
             while len(parts) > 1:
                 parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
             acc = parts[0]
+        if ret:                                      # (the fused indexer) S[head h*IL + j, row t*W + l]
+            S = np.zeros(((1 << hg) * IL, n), dtype=F)
+            S[h * IL + j, t * W + l] = acc
+            return S
         if f["me_oen"]:
             self.vm[(ob + t * f["me_ots"] + h * f["me_ogs"] + j * f["me_ojs"]) * W + l] = acc
         if f["me_amax"]:

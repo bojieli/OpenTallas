@@ -203,6 +203,13 @@ FIELDS = [
     # of a weight op (ME, QE LINQ, HE), and the control step
     ("dslot", 3), ("mx_m", 3), ("mx_xps", A), ("mx_ops", A),
     ("ctl", 3), ("ctl_slot", 3), ("ctl_lane", 3),
+    # FUSED INDEXER (re-specified core, tools/hdc_program_v41.py Builder(idx_fused=True)): a KV-sourced ME
+    # op on the index keys with me_fuse set computes, per key row r < n, the index score
+    #   IS[r] = to_bf16(sum over heads hh of to_bf16(relu(to_bf16(dot(q[hh], key[r]))) * wts[hh]))
+    # (the head sum under the "idx" class: csum, or the legacy P = 8 interleaved sum), with wts[hh] the
+    # vector-memory element me_wts + hh, and writes it as element me_obase*16 + r -- the per-head scores
+    # and the stream unit's ReLU / weight / head-sum op are gone
+    ("me_fuse", 1), ("me_wts", A),
 ]
 
 

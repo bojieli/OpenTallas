@@ -246,3 +246,7 @@ localparam integer O_CTL_SLOT = 1458;
 localparam integer W_CTL_SLOT = 3;
 localparam integer O_CTL_LANE = 1461;
 localparam integer W_CTL_LANE = 3;
+localparam integer O_ME_FUSE = 1464;
+localparam integer W_ME_FUSE = 1;
+localparam integer O_ME_WTS = 1465;
+localparam integer W_ME_WTS = 24;

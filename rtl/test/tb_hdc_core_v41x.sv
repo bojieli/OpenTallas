@@ -101,10 +101,53 @@ module tb_hdc_core_v41x (input wire clk);
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
     wire [4:0] unit_busy; wire [2:0] issue_unit;
 
+    // index-key HBM (X_IDX): one HBM3E stack model (32 pseudo-channels, refresh-aware REFpb with the MRU
+    // tie-break, 64-beat queues) holding the 68-B key image; the core's key writer's records are applied
+    // through its backdoor (the model is read-only)
+    localparam integer IKH_WORDS = 1 << 18;          // 32-B sectors (8 MB)
+    wire [31:0] ikh_req_v, ikh_req_rdy, ikh_rsp_v, ikh_rsp_rdy;
+    wire [32*28-1:0] ikh_req_addr; wire [32*4-1:0] ikh_req_len, ikh_rsp_beat;
+    wire [32*16-1:0] ikh_req_tag, ikh_rsp_tag; wire [32*256-1:0] ikh_rsp_data;
+    wire ikw_v; wire [27:0] ikw_csec, ikw_ssec; wire [127:0] ikw_codes; wire [2:0] ikw_sslot; wire [7:0] ikw_scale;
+    generate if (`HDC_X_IDX) begin : g_ikh
+        ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(28), .DW(256), .MEM_WORDS(IKH_WORDS), .TAGW(16), .LENW(4), .BEATW(4),
+                              .QD(64), .REFPB(3), .MEM_MODE(0)) u_ikh (
+            .clk(clk), .rst_n(rst_n), .req_v(ikh_req_v), .req_rdy(ikh_req_rdy), .req_addr(ikh_req_addr),
+            .req_len(ikh_req_len), .req_tag(ikh_req_tag), .rsp_v(ikh_rsp_v), .rsp_rdy(ikh_rsp_rdy),
+            .rsp_tag(ikh_rsp_tag), .rsp_beat(ikh_rsp_beat), .rsp_data(ikh_rsp_data));
+        reg [255:0] ikimg [0:IKH_WORDS-1];
+        integer ii;
+        reg ik_multi;
+        reg [8*512-1:0] ikdir;
+        initial begin
+            ik_multi = $test$plusargs("MULTI");
+            if (!$value$plusargs("DIR=%s", ikdir)) ikdir = ".";
+            for (ii = 0; ii < IKH_WORDS; ii = ii + 1) ikimg[ii] = 256'd0;
+            if (!ik_multi) $readmemh({ikdir, "/ikhbm.hex"}, ikimg);
+        end
+        reg ik_loaded = 1'b0;
+        always @(posedge clk) begin
+            if (!ik_loaded) begin
+                for (ii = 0; ii < IKH_WORDS; ii = ii + 1) u_ikh.mem[ii] = ikimg[ii];
+                ik_loaded = 1'b1;
+            end
+            if (ikw_v) begin
+                u_ikh.mem[ikw_csec] = {128'd0, ikw_codes};
+                u_ikh.mem[ikw_ssec][32*ikw_sslot +: 32] = {24'd0, ikw_scale};
+            end
+        end
+    end else begin : g_ikh_n
+        assign ikh_req_rdy = 0; assign ikh_rsp_v = 0; assign ikh_rsp_tag = 0; assign ikh_rsp_beat = 0;
+        assign ikh_rsp_data = 0;
+    end endgenerate
     reg [AW-1:0] cfg [0:15];                   // tools/hdc_images_v41x.py cfg.hex: [0] the index keys' KV word base
     ot_hdc_core_v41x #(.SW(SW), .HS(HS), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) dut (
         .cfg_ik_base(cfg[0]), .cfg_me_xs(cfg[1][3:0]),
+        .ikh_req_v(ikh_req_v), .ikh_req_rdy(ikh_req_rdy), .ikh_req_addr(ikh_req_addr), .ikh_req_len(ikh_req_len),
+        .ikh_req_tag(ikh_req_tag), .ikh_rsp_v(ikh_rsp_v), .ikh_rsp_rdy(ikh_rsp_rdy), .ikh_rsp_tag(ikh_rsp_tag),
+        .ikh_rsp_beat(ikh_rsp_beat), .ikh_rsp_data(ikh_rsp_data), .ikw_v(ikw_v), .ikw_csec(ikw_csec),
+        .ikw_codes(ikw_codes), .ikw_ssec(ikw_ssec), .ikw_sslot(ikw_sslot), .ikw_scale(ikw_scale),
         .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry({PAW{1'b0}}), .acc_n(), .acc_tok(),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
@@ -178,8 +221,21 @@ module tb_hdc_core_v41x (input wire clk);
                         lg[{me_oaddr[q*AW +: 12], 4'b0} + l] <= me_odata[32*(q*W + l) +: 32];
     end
 
-    wire [63:0] x_cnt_he, x_cnt_me;
+    wire [63:0] x_cnt_he, x_cnt_me, x_cnt_idx;
+    wire [47:0] x_idx_ks, x_idx_hb, x_idx_sc, x_idx_hs;
+    wire [31:0] x_idx_kw;
     generate
+        if (`HDC_X_IDX) begin : g_cnt_idx
+            assign x_cnt_idx = {dut.g_idx_x.u_idx.dbg_ops, dut.g_idx_x.u_idx.dbg_elems};
+            assign x_idx_ks = dut.g_idx_x.u_idx.dbg_keys_streamed;
+            assign x_idx_hb = dut.g_idx_x.u_idx.dbg_hbm_beats;
+            assign x_idx_sc = dut.g_idx_x.u_idx.dbg_keys_scored;
+            assign x_idx_hs = dut.g_idx_x.u_idx.dbg_headsums_fused;
+            assign x_idx_kw = dut.g_idx_x.u_kwr.dbg_keys;
+        end else begin : g_cnt_idx_n
+            assign x_cnt_idx = 64'd0; assign x_idx_ks = 0; assign x_idx_hb = 0; assign x_idx_sc = 0;
+            assign x_idx_hs = 0; assign x_idx_kw = 0;
+        end
         if (`HDC_X_HE) begin : g_cnt_he
             assign x_cnt_he = {dut.g_he_x.u_he.dbg_ops, dut.g_he_x.u_he.dbg_elems};
         end else begin : g_cnt_he_n
@@ -255,6 +311,14 @@ module tb_hdc_core_v41x (input wire clk);
         begin
             if (`HDC_X_HE) $display("XCNT unit=he ops=%0d elems=%0d", x_cnt_he[63:32], x_cnt_he[31:0]);
             if (`HDC_X_ME) $display("XCNT unit=me ops=%0d elems=%0d", x_cnt_me[63:32], x_cnt_me[31:0]);
+            if (`HDC_X_IDX) begin
+                $display("XCNT unit=idx ops=%0d elems=%0d", x_cnt_idx[63:32], x_cnt_idx[31:0]);
+                // ops = keys the HBM key stream delivered, elems = HBM beats; keys scored / head terms fused
+                // inside the engine; index keys written to the HBM image
+                $display("XCNT unit=idx_hbm ops=%0d elems=%0d", x_idx_ks, x_idx_hb);
+                $display("XCNT unit=idx_fused ops=%0d elems=%0d", x_idx_sc, x_idx_hs);
+                $display("XCNT unit=idx_kwr ops=%0d elems=%0d", x_idx_kw, x_idx_kw);
+            end
         end
     endtask
 
