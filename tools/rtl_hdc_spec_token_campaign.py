@@ -23,6 +23,10 @@ The model is what prices the shipped token, so its error at the spec's
 ratios is the evidence behind the spec's HEAD figure.
 
     python3 tools/rtl_hdc_spec_token_campaign.py [--output PATH] [--points 64:8 256:32]
+    python3 tools/rtl_hdc_spec_token_campaign.py --merge A.json B.json [--output PATH]
+
+Verilating the core is memory-bound: 37.5 GB peak at 64 groups, so each point is
+best run as its own job (--points one, --output a part) and the parts merged.
 """
 import argparse
 import hashlib
@@ -72,7 +76,8 @@ def point(s: Path, groups: int, sw: int) -> dict:
                          cwd=ROOT).stdout
     isa_exact = "bit-exact with golden: True" in gen
     subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
-                    "-Wno-BLKSEQ", "-Wno-VARHIDDEN", "--top-module", "tb_hdc_core", f"-GG={groups}", "-GSU_VEC=1",
+                    "-Wno-BLKSEQ", "-Wno-VARHIDDEN", "--unroll-count", "65536",   # the testbench's per-group loops
+                    "--top-module", "tb_hdc_core", f"-GG={groups}", "-GSU_VEC=1",
                     f"-GSW={sw}", "-Mdir", str(obj), f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES),
                     str(TB), str(HARNESS), "-CFLAGS", "-O1"], check=True, capture_output=True,
                    env=dict(os.environ, MAKEFLAGS="-j8"))
@@ -96,13 +101,19 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--output", type=Path, default=OUT)
     ap.add_argument("--points", nargs="+", default=["64:8", "256:32"], help="groups:su_width")
+    ap.add_argument("--merge", nargs="+", type=Path, help="combine the points of part records (same inputs)")
     a = ap.parse_args()
     pts = []
-    with tempfile.TemporaryDirectory() as scratch:
-        for p in a.points:
-            g, sw = map(int, p.split(":"))
-            pts.append(point(Path(scratch), g, sw))
-            print(json.dumps(pts[-1]), flush=True)
+    if a.merge:
+        parts = [json.loads(p.read_text()) for p in a.merge]
+        assert all(p["input_sha256"] == parts[0]["input_sha256"] for p in parts), "parts from different sources"
+        pts = sorted((pt for p in parts for pt in p["points"]), key=lambda pt: pt["groups"])
+    else:
+        with tempfile.TemporaryDirectory() as scratch:
+            for p in a.points:
+                g, sw = map(int, p.split(":"))
+                pts.append(point(Path(scratch), g, sw))
+                print(json.dumps(pts[-1]), flush=True)
     spec_ratio = dict(lanes_per_hidden=SPEC["lanes"] // SPEC["hidden"], lanes_per_su_lane=SPEC["lanes"] // SPEC["su_width"])
     rec = {
         "schema": "opentallas.hdc-spec-token-campaign.v1",
