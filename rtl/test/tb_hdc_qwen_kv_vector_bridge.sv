@@ -19,7 +19,7 @@ module tb_hdc_qwen_kv_vector_bridge;
     wire [2*SW*128-1:0] tl_data;
     integer writes=0, tail=0, i, beat;
     ot_hdc_qwen_kv_vector_bridge #(.SW(SW), .AW(AW), .LOG_HD(7), .LOG_TW(2),
-                                    .V0_ELEMENT(V0), .FIFO_BEATS(16)) dut (
+                                    .V0_ELEMENT(V0), .FIFO_BEATS(128)) dut (
         .clk(clk), .rst_n(rst_n), .core_we(core_we), .core_addr(core_addr), .core_data(core_data),
         .drained(drained), .tl_we(tl_we), .tl_row(tl_row), .tl_mask(tl_mask), .tl_data(tl_data),
         .fl_v(fl_v), .fl_ready(fl_ready), .fl_word_addr(fl_word_addr), .fl_word_data(fl_word_data),
@@ -46,9 +46,9 @@ module tb_hdc_qwen_kv_vector_bridge;
     end
     initial begin
         repeat(3) @(negedge clk); rst_n=1;
-        // Two full V sectors arrive back-to-back while HBM refuses writes.
-        // The second sector must remain in the FIFO until the first retires.
-        for (beat=0;beat<(64/SW);beat=beat+1) begin
+        // A full shipped-shape 1,024-element V instruction arrives while HBM
+        // refuses writes. The FIFO must hold the entire stream without loss.
+        for (beat=0;beat<(1024/SW);beat=beat+1) begin
             core_we={SW{1'b1}};
             for (integer j=0;j<SW;j=j+1) begin
                 core_addr[j*AW +: AW]=V0+beat*SW+j;
@@ -60,7 +60,7 @@ module tb_hdc_qwen_kv_vector_bridge;
         repeat(5) @(negedge clk);
         if (drained || writes != 0) $fatal(1,"backpressure missing");
         mem_w_ready=1;
-        wait(writes==2);
+        wait(writes==32);
         @(negedge clk); mem_w_ready=0;
         // Each K dimension uses a distinct tail-word bank in one vector beat.
         core_we={SW{1'b1}};

@@ -11,7 +11,8 @@ module ot_hdc_qwen_kv_vector_bridge #(
     parameter integer LOG_HD = 7,
     parameter integer LOG_TW = 2,
     parameter integer V0_ELEMENT = 1048576,
-    parameter integer FIFO_BEATS = 128
+    parameter integer FIFO_BEATS = 128,
+    parameter integer MAX_KV_OP_ELEMS = 1024 // shipped Qwen: 8 KV heads x 128 dimensions
 ) (
     input  wire clk, rst_n,
     input  wire [SW-1:0] core_we,
@@ -53,6 +54,8 @@ module ot_hdc_qwen_kv_vector_bridge #(
     wire adapter_ready, adapter_idle, adapter_fault;
     wire push = |core_we;
     wire pop = used != 0 && adapter_ready;
+    initial if (FIFO_BEATS*SW < MAX_KV_OP_ELEMS)
+        $error("KV bridge FIFO cannot hold one complete vector KV instruction");
     genvar lane;
     generate for (lane=0; lane<SW; lane=lane+1) begin : g_fp8
         ot_hdc_ingest_fp8q u_q (.f(head_data[32*lane +: 32]), .q(head_fp8[8*lane +: 8]));
