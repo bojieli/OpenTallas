@@ -51,12 +51,12 @@ module tb_hdc_qwen_kv_write_adapter;
         if (!idle) $fatal(1,"write did not retire");
 
         // One byte of a pre-existing sector must read-modify-write its other 31 bytes.
-        in_v=1; in_we=1; in_addr[0 +: AW]=V0+64+3; in_data[0 +: 8]=8'haa;
+        in_v=1; in_we=2; in_addr[AW +: AW]=V0+64+3; in_data[8 +: 8]=8'haa;
         #1; if (!in_ready) $fatal(1,"partial V beat not accepted");
         @(negedge clk);
         // A different sector is backpressured while the first partial one
         // drains through an explicit read/modify/write.
-        in_addr[0 +: AW]=V0+96;
+        in_addr[AW +: AW]=V0+96;
         #1; if (in_ready) $fatal(1,"sector switch was not backpressured");
         @(negedge clk); in_v=0; in_we=0;
         if (!mem_r_v || mem_r_sector !== (V0+64)/32) $fatal(1,"RMW read absent");

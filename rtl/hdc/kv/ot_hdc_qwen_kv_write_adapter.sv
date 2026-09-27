@@ -51,10 +51,9 @@ module ot_hdc_qwen_kv_write_adapter #(
     reg [AW-1:0] sector;
     reg [255:0] data_buf, merged;
     reg [31:0] byte_mask;
-    wire [AW-1:0] first_addr = in_addr[0 +: AW];
-    wire [AW-1:0] first_sector = first_addr >> 5;
+    reg [AW-1:0] first_sector;
     wire [AW-1:0] fl_sector = fl_word_addr >> 1;
-    reg all_k, all_v, one_sector, bank_unique;
+    reg all_k, all_v, one_sector, bank_unique, have_first;
     reg [2*SW-1:0] occupied;
     reg [AW-1:0] addr_i, word_i;
     integer i, j, bank_i, lane_i, off_i;
@@ -64,11 +63,15 @@ module ot_hdc_qwen_kv_write_adapter #(
     always @(*) begin
         all_k = 1'b1; all_v = 1'b1; one_sector = 1'b1;
         bank_unique = 1'b1; occupied = 0;
+        have_first = 1'b0; first_sector = 0;
         for (i=0; i<SW; i=i+1) if (in_we[i]) begin
             addr_i = in_addr[i*AW +: AW];
+            if (!have_first) begin
+                first_sector = addr_i >> 5;
+                have_first = 1'b1;
+            end else if ((addr_i >> 5) != first_sector) one_sector = 1'b0;
             if (addr_i >= V0_ELEMENT) all_k = 1'b0;
             else all_v = 1'b0;
-            if ((addr_i >> 5) != first_sector) one_sector = 1'b0;
             word_i = addr_i >> 4;
             bank_i = ((word_i >> LOG_HD) & 1) * SW + (word_i & (SW-1));
             if (addr_i < V0_ELEMENT) begin
@@ -112,7 +115,6 @@ module ot_hdc_qwen_kv_write_adapter #(
     assign mem_w_data = merged;
 
     integer k;
-    reg [AW-1:0] input_sector;
     reg [31:0] next_mask;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
