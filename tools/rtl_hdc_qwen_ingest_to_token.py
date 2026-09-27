@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Source-pinned Qwen reduced-vehicle FP32 prefill ingest -> KV image -> HBM token gate.
 
-The RTL ingest engine produces packed E4M3 bytes.  The legacy HBM token bench
-loads BF16 words, so this gate decodes the *actual* final.mem bytes into its
-kv.hex input.  The hardware packed read/expand path is gated separately.
+The RTL ingest engine produces packed E4M3 bytes.  Its actual final.mem bytes
+populate the packed HBM bench and boot the active K tail through the streamer.
+The diagnostic legacy-width mode decodes the same bytes to BF16 words.
 """
 from __future__ import annotations
 
@@ -42,6 +42,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/hdc_qwen_ingest_to_token.json")
     ap.add_argument("--weights", type=Path, help="checkpoint directory, also synced by remote_gate")
+    ap.add_argument("--legacy-width", action="store_true", help="diagnostic: BF16-width HBM with FP8 core writes")
     args = ap.parse_args()
     checkpoint = ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"
     if args.weights is not None and not checkpoint.exists():
@@ -76,7 +77,8 @@ def main() -> None:
         lay = P.Layout(P.golden_state(64)[0])
         layout = {"LOG_HD": int(math.log2(lay.HD)), "LOG_TW": int(math.log2(lay.TW)),
                   "LLG": int(math.log2(lay.L * lay.KV)), "V0_WORD": lay.kv_v0 // 16}
-        params = [*(f"-G{k}={v}" for k, v in layout.items()), f"-GNPC={KC.NPC}", "-GPACKED_HBM=1"]
+        params = [*(f"-G{k}={v}" for k, v in layout.items()), f"-GNPC={KC.NPC}",
+                  "-GPACKED_HBM=0" if args.legacy_width else "-GPACKED_HBM=1", "-GCORE_FP8=1"]
         sources = [*KC.core.HDC, *KC.KV_RTL, KC.HBM, *KC.core.PIPES, KC.TB_CORE, KC.HARNESS_CORE]
         try:
             exe = KC.verilate("tb_hdc_core_hbm", work / "core_obj", sources, params)
@@ -95,7 +97,8 @@ def main() -> None:
                "packed_image_sha256": hashlib.sha256(packed.tobytes()).hexdigest(),
                "descriptor_count": nd, "payload_beats": npay,
                "checkpoint_sha256": sha(checkpoint),
-               "scope": "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write. Tail SRAM remains seeded by testbench.",
+               "scope": "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write; hardware tail boot transfers active K words. Legacy-width diagnostic uses BF16 HBM words and direct tail preload.",
+               "legacy_width": args.legacy_width,
                "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in
                                 [*IC.RTL, IC.TB, IC.HARNESS, *sources[:-1], sources[-1],
                                  ROOT / "tools/hdc_program.py", ROOT / "tools/kv_ingest_ref.py",

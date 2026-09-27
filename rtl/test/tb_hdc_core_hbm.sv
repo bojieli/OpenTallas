@@ -32,7 +32,8 @@ module tb_hdc_core_hbm #(
     parameter integer NPC = 4,
     parameter integer BK = 16,
     parameter integer CLK_PS = 1000,
-    parameter integer PACKED_HBM = 0
+    parameter integer PACKED_HBM = 0,
+    parameter integer CORE_FP8 = PACKED_HBM
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12, IL = 8;
@@ -83,7 +84,7 @@ module tb_hdc_core_hbm #(
     wire [NW-1:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos;
 
     ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .KV_HBM(1),
-                  .KV_FP8(PACKED_HBM)) dut (
+                  .KV_FP8(CORE_FP8)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
         .done(done), .next_token(next_token), .cycles(cycles), .fault(fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
