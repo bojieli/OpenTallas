@@ -68,19 +68,26 @@ def sha(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
-def point(s: Path, groups: int, sw: int) -> dict:
+def point(s: Path, groups: int, sw: int, build_log: Path) -> dict:
     env = dict(os.environ, HDC_GROUPS=str(groups), HDC_SU_WIDTH=str(sw))
     img, obj = s / f"img{groups}", s / f"obj{groups}"
     gen = subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img),
                           "--context", str(CONTEXT)], check=True, capture_output=True, text=True, env=env,
                          cwd=ROOT).stdout
     isa_exact = "bit-exact with golden: True" in gen
-    subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
-                    "-Wno-BLKSEQ", "-Wno-VARHIDDEN", "--unroll-count", "65536",   # the testbench's per-group loops
-                    "--top-module", "tb_hdc_core", f"-GG={groups}", "-GSU_VEC=1",
-                    f"-GSW={sw}", "-Mdir", str(obj), f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES),
-                    str(TB), str(HARNESS), "-CFLAGS", "-O1"], check=True, capture_output=True,
-                   env=dict(os.environ, MAKEFLAGS="-j8"))
+    cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
+           "-Wno-BLKSEQ", "-Wno-VARHIDDEN", "--unroll-count", "65536",   # the testbench's per-group loops
+           "--top-module", "tb_hdc_core", f"-GG={groups}", "-GSU_VEC=1",
+           f"-GSW={sw}", "-Mdir", str(obj), f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES),
+           str(TB), str(HARNESS), "-CFLAGS", "-O1"]
+    build = subprocess.run(cmd, capture_output=True, text=True, env=dict(os.environ, MAKEFLAGS="-j8"))
+    if build.returncode:
+        build_log.parent.mkdir(parents=True, exist_ok=True)
+        build_log.write_text(f"source_sha256={sha(Path(__file__))}\n"
+                             f"input_sha256={json.dumps({str(p.relative_to(ROOT)): sha(p) for p in HDC + PIPES + [TB, HARNESS, ISA_SVH]})}\n"
+                             f"returncode={build.returncode}\ncommand={' '.join(cmd)}\n"
+                             f"stdout:\n{build.stdout}\nstderr:\n{build.stderr}\n")
+        raise RuntimeError(f"Verilator build failed for {groups}:{sw}; full output: {build_log}")
     out = subprocess.run([str(obj / "Vtb_hdc_core"), f"+DIR={img}", *(img / "run.args").read_text().split()],
                          check=True, capture_output=True, text=True).stdout
     m = SINGLE.search(out)
@@ -112,7 +119,8 @@ def main() -> int:
         with tempfile.TemporaryDirectory() as scratch:
             for p in a.points:
                 g, sw = map(int, p.split(":"))
-                pts.append(point(Path(scratch), g, sw))
+                pts.append(point(Path(scratch), g, sw,
+                                 a.output.with_name(f"{a.output.stem}.g{g}.build_error.log")))
                 print(json.dumps(pts[-1]), flush=True)
     spec_ratio = dict(lanes_per_hidden=SPEC["lanes"] // SPEC["hidden"], lanes_per_su_lane=SPEC["lanes"] // SPEC["su_width"])
     rec = {
