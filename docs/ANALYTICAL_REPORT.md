@@ -578,6 +578,17 @@ implements that specialisation on the reduced Qwen3 vehicle.
   read back exactly. The behavioral HBM model has one-cycle reads and no
   calibrated bandwidth or refresh timing; these cycles establish functional
   scheduling only.
+- Starting from an empty KV cache, the same vector core processes a
+  16-token prompt <!-- figure: 16 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#configuration.prompt_tokens" name="Qwen physical-KV vector prompt tokens" -->
+  and produces 3 <!-- figure: 3 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.generated" name="Qwen physical-KV vector generated tokens" -->
+  oracle tokens (1073, 382, 93) in 18 <!-- figure: 18 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.steps" name="Qwen physical-KV vector decode steps" -->
+  decode steps and 439,897 <!-- figure: 439897 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.total_cycles" name="Qwen physical-KV vector multi-step cycles" -->
+  simulated cycles. Every step's token, logits, vector memory, and KV state
+  match the ISA model. The physical HBM image has zero byte mismatches after
+  144 <!-- figure: 144 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#physical_hbm.v_reads_after_write" name="Qwen vector V HBM reads after writes" -->
+  V reads from previously written sectors and 128 <!-- figure: 128 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#physical_hbm.k_flush_writes" name="Qwen vector K-tail physical HBM flush writes" -->
+  K-tail flush writes. The one-cycle behavioral HBM model makes this a
+  functional sequence result, not a calibrated token-rate measurement.
 - The scalar weight-HBM configuration also passes a complete split-aware
   position-15 token with weights and KV in the behavioral HBM model at
   30,539 cycles. <!-- figure: 30539 src="results/rtl/hdc_qwen_whbm_split_single.json#cycles" name="Qwen split-aware scalar weight-HBM single-token cycles" -->
