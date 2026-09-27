@@ -77,7 +77,8 @@ module ot_hdc_kv_stream #(
     parameter integer LOG_HD = 4,        // KV layout (tools/hdc_program.py k_elem): head_dim
     parameter integer LOG_TW = 2,        //   position tiles per KV head
     parameter integer LLG    = 3,        //   layers x KV heads
-    parameter integer V0_WORD = 512      //   first V word (K words below)
+    parameter integer V0_WORD = 512,     //   first V word (K words below)
+    parameter integer HBM_FP8 = 0        // packed E4M3 HBM words; SRAM remains BF16
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -123,13 +124,13 @@ module ot_hdc_kv_stream #(
     output reg  [AW-1:0]     hq_addr,
     output reg  [$clog2(BK):0] hq_len,
     output reg  [1+LWIN+$clog2(G)+3-1:0] hq_tag,
-    output reg  [W*16-1:0]   hq_wdata,
+    output reg  [W*(HBM_FP8 ? 8 : 16)-1:0] hq_wdata,
     // HBM read responses, one port per pseudo-channel (valid/ready)
     input  wire [NPC-1:0]    hr_v,
     output reg  [NPC-1:0]    hr_rdy,
     input  wire [NPC*(1+LWIN+$clog2(G)+3)-1:0] hr_tag,
     input  wire [NPC*$clog2(BK)-1:0] hr_beat,
-    input  wire [NPC*W*16-1:0] hr_data,
+    input  wire [NPC*W*(HBM_FP8 ? 8 : 16)-1:0] hr_data,
     output reg               fault
 );
     localparam integer LW   = $clog2(W);
@@ -138,6 +139,50 @@ module ot_hdc_kv_stream #(
     localparam integer LBK  = $clog2(BK);
     localparam integer WIN  = 1 << LWIN;
     localparam integer TAW  = LLG + LOG_HD;
+    localparam integer HB = HBM_FP8 ? 8 : 16;
+
+    function automatic [15:0] fp8_to_bf16(input [7:0] c);
+        reg [3:0] e;
+        reg [2:0] m;
+        begin
+            e = c[6:3]; m = c[2:0];
+            if (e != 0) fp8_to_bf16 = {c[7], (8'(e) + 8'd120), m, 4'b0};
+            else if (m == 0) fp8_to_bf16 = {c[7], 15'b0};
+            else if (m == 1) fp8_to_bf16 = {c[7], 8'd118, 7'b0};
+            else if (m < 4) fp8_to_bf16 = {c[7], 8'd119, m[0], 6'b0};
+            else fp8_to_bf16 = {c[7], 8'd120, m[1:0], 5'b0};
+        end
+    endfunction
+
+    function automatic [7:0] bf16_to_fp8(input [15:0] b);
+        reg [7:0] e;
+        begin
+            e = b[14:7];
+            if (e == 0) bf16_to_fp8 = {b[15], 7'b0};
+            else if (e == 118) bf16_to_fp8 = {b[15], 7'd1};
+            else if (e == 119) bf16_to_fp8 = {b[15], 5'b0, 1'b1, b[6]};
+            else if (e == 120) bf16_to_fp8 = {b[15], 4'b0, 1'b1, b[6:5]};
+            else bf16_to_fp8 = {b[15], (e[3:0] - 4'd8), b[6:4]};
+        end
+    endfunction
+
+    function automatic [W*16-1:0] expand_word(input [W*HB-1:0] p);
+        integer x;
+        begin
+            for (x = 0; x < W; x = x + 1)
+                if (HBM_FP8) expand_word[x*16 +: 16] = fp8_to_bf16(p[x*HB +: 8]);
+                else expand_word[x*16 +: 16] = p[x*HB +: 16];
+        end
+    endfunction
+
+    function automatic [W*HB-1:0] pack_word(input [W*16-1:0] p);
+        integer x;
+        begin
+            for (x = 0; x < W; x = x + 1)
+                if (HBM_FP8) pack_word[x*HB +: 8] = bf16_to_fp8(p[x*16 +: 16]);
+                else pack_word[x*HB +: 16] = p[x*16 +: 16];
+        end
+    endfunction
     localparam integer TAGW = 1 + LWIN + LG + 3;
     localparam [1:0] SRC_WIN = 2'd0, SRC_ZERO = 2'd1, SRC_T0 = 2'd2, SRC_T1 = 2'd3;
 
@@ -480,7 +525,7 @@ module ot_hdc_kv_stream #(
         for (pi = 0; pi < NPC; pi = pi + 1)
             if (hr_v[pi] && hr_rdy[pi]) begin
                 st_slot[rsp_grp[pi*LG +: LG]*LWIN +: LWIN] <= rsp_line[pi*LWIN +: LWIN];
-                st_data[rsp_grp[pi*LG +: LG]*W*16 +: W*16] <= hr_data[pi*W*16 +: W*16];
+                st_data[rsp_grp[pi*LG +: LG]*W*16 +: W*16] <= expand_word(hr_data[pi*W*HB +: W*HB]);
             end
     end
     always @(posedge clk) begin
@@ -609,11 +654,11 @@ module ot_hdc_kv_stream #(
     end
     always @(posedge clk) if (hq_free) begin
         if (!vf_empty) begin
-            hq_we <= 1'b1; hq_addr <= vf_addr[vf_rp]; hq_len <= 1; hq_wdata <= vf_data[vf_rp]; hq_tag <= 0;
+            hq_we <= 1'b1; hq_addr <= vf_addr[vf_rp]; hq_len <= 1; hq_wdata <= pack_word(vf_data[vf_rp]); hq_tag <= 0;
         end else if (f_req_v) begin
             hq_we <= 1'b0; hq_addr <= f_req_addr; hq_len <= f_req_len; hq_tag <= f_req_tag;
         end else if (ff_n != 0) begin
-            hq_we <= 1'b1; hq_addr <= ff_addr[ff_rp]; hq_len <= 1; hq_wdata <= ff_data[ff_rp]; hq_tag <= 0;
+            hq_we <= 1'b1; hq_addr <= ff_addr[ff_rp]; hq_len <= 1; hq_wdata <= pack_word(ff_data[ff_rp]); hq_tag <= 0;
         end
     end
     // ---- status ----------------------------------------------------------------------------------

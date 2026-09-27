@@ -57,10 +57,13 @@ def main() -> None:
         image_equal = decoded_hex == original_hex
         # The token test's KV initialization must depend on the RTL's final.mem.
         (img / "kv.hex").write_text(decoded_hex)
+        packed_words = packed.reshape(-1, 16)
+        (img / "kv_fp8.hex").write_text(P.hexwords((int.from_bytes(w.tobytes(), "little")
+                                                   for w in packed_words), 128))
         lay = P.Layout(P.golden_state(64)[0])
         layout = {"LOG_HD": int(math.log2(lay.HD)), "LOG_TW": int(math.log2(lay.TW)),
                   "LLG": int(math.log2(lay.L * lay.KV)), "V0_WORD": lay.kv_v0 // 16}
-        params = [*(f"-G{k}={v}" for k, v in layout.items()), f"-GNPC={KC.NPC}"]
+        params = [*(f"-G{k}={v}" for k, v in layout.items()), f"-GNPC={KC.NPC}", "-GPACKED_HBM=1"]
         sources = [*KC.core.HDC, *KC.KV_RTL, KC.HBM, *KC.core.PIPES, KC.TB_CORE, KC.HARNESS_CORE]
         exe = KC.verilate("tb_hdc_core_hbm", work / "core_obj", sources, params)
         raw = KC.run(exe, f"+DIR={img}", *(img / "run.args").read_text().split(), f"+LEAD={KC.LEAD}")
@@ -74,7 +77,7 @@ def main() -> None:
                "decoded_image_equals_golden_kv_hex": image_equal, "token": token,
                "packed_image_sha256": hashlib.sha256(packed.tobytes()).hexdigest(),
                "descriptor_count": nd, "payload_beats": npay,
-               "scope": "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output feeds HBM bench through explicit FP8-to-BF16 image conversion; tail SRAM seeded by testbench.",
+               "scope": "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write. Tail SRAM remains seeded by testbench.",
                "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in
                                 [*IC.RTL, IC.TB, IC.HARNESS, *sources[:-1], sources[-1],
                                  ROOT / "tools/hdc_program.py", ROOT / "tools/kv_ingest_ref.py",

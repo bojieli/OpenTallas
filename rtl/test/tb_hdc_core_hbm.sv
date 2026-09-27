@@ -31,7 +31,8 @@ module tb_hdc_core_hbm #(
     parameter integer LWIN = 8,
     parameter integer NPC = 4,
     parameter integer BK = 16,
-    parameter integer CLK_PS = 1000
+    parameter integer CLK_PS = 1000,
+    parameter integer PACKED_HBM = 0
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12, IL = 8;
@@ -39,10 +40,12 @@ module tb_hdc_core_hbm #(
     localparam integer VM_ELEMS = 4096, VOCAB = 4096, PROG_WORDS = 4096;
     localparam integer WIN = 1 << LWIN, TAW = LLG + LOG_HD, TDEPTH = 1 << TAW;
     localparam integer LG = $clog2(G), TAGW = 1 + LWIN + LG + 3, LBK = $clog2(BK);
+    localparam integer HB = PACKED_HBM ? 8 : 16;
 
     reg [G*W*16-1:0] wrom [0:WROM_WORDS-1];
     reg [63:0]      crom [0:CROM_WORDS-1];
     reg [W*32-1:0]  kv   [0:KV_WORDS-1];          // image only (loaded into HBM / tail)
+    reg [W*8-1:0]   kv_fp8 [0:KV_WORDS-1];       // packed ingest RTL image
     reg [INSTR_BITS-1:0] prog [0:PROG_WORDS-1];
     reg [31:0]      vm   [0:VM_ELEMS-1];
     reg [31:0]      e_vm [0:VM_ELEMS-1];
@@ -127,12 +130,12 @@ module tb_hdc_core_hbm #(
         .rep_scan_out(rep_scan_out));
 `endif
     wire hq_v, hq_rdy, hq_we; wire [AW-1:0] hq_addr; wire [LBK:0] hq_len; wire [TAGW-1:0] hq_tag;
-    wire [W*16-1:0] hq_wdata;
+    wire [W*HB-1:0] hq_wdata;
     wire [NPC-1:0] hr_v, hr_rdy; wire [NPC*TAGW-1:0] hr_tag; wire [NPC*LBK-1:0] hr_beat;
-    wire [NPC*W*16-1:0] hr_data;
+    wire [NPC*W*HB-1:0] hr_data;
     wire kvs_fault;
     ot_hdc_kv_stream #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .LWIN(LWIN), .NPC(NPC), .BK(BK),
-                       .LOG_HD(LOG_HD), .LOG_TW(LOG_TW), .LLG(LLG), .V0_WORD(V0_WORD)) u_kvs (
+                       .LOG_HD(LOG_HD), .LOG_TW(LOG_TW), .LLG(LLG), .V0_WORD(V0_WORD), .HBM_FP8(PACKED_HBM)) u_kvs (
         .clk(clk), .rst_n(rst_n), .tok_start(start), .tok_pos(pos), .cfg_lead(lead),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
         .kvd_jsh(kvd_jsh), .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_nout(kvd_nout),
@@ -147,7 +150,7 @@ module tb_hdc_core_hbm #(
         .hq_wdata(hq_wdata),
         .hr_v(hr_v), .hr_rdy(hr_rdy), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data),
         .fault(kvs_fault));
-    ot_hdc_hbm_model #(.NPC(NPC), .AW(AW), .DW(W*16), .MEM_WORDS(KV_WORDS), .TAGW(TAGW), .LENW(LBK+1),
+    ot_hdc_hbm_model #(.NPC(NPC), .AW(AW), .DW(W*HB), .MEM_WORDS(KV_WORDS), .TAGW(TAGW), .LENW(LBK+1),
                        .BEATW(LBK), .CLK_PS(CLK_PS)) u_hbm (
         .clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy), .req_we(hq_we), .req_addr(hq_addr),
         .req_len(hq_len), .req_tag(hq_tag), .req_wdata(hq_wdata),
@@ -196,6 +199,22 @@ module tb_hdc_core_hbm #(
         integer i;
         for (i = 0; i < W; i = i + 1) pack16[i*16 +: 16] = w32[i*32 + 16 +: 16];
     endfunction
+    function automatic [15:0] fp8_to_bf16(input [7:0] c);
+        reg [3:0] e;
+        reg [2:0] m;
+        begin
+            e = c[6:3]; m = c[2:0];
+            if (e != 0) fp8_to_bf16 = {c[7], (8'(e) + 8'd120), m, 4'b0};
+            else if (m == 0) fp8_to_bf16 = {c[7], 15'b0};
+            else if (m == 1) fp8_to_bf16 = {c[7], 8'd118, 7'b0};
+            else if (m < 4) fp8_to_bf16 = {c[7], 8'd119, m[0], 6'b0};
+            else fp8_to_bf16 = {c[7], 8'd120, m[1:0], 5'b0};
+        end
+    endfunction
+    function automatic [W*16-1:0] expand_fp8(input [W*8-1:0] p);
+        integer x;
+        for (x = 0; x < W; x = x + 1) expand_fp8[x*16 +: 16] = fp8_to_bf16(p[x*8 +: 8]);
+    endfunction
     function automatic [W*16-1:0] logical_kv(input integer a, input integer to);
         integer T;
         begin
@@ -203,7 +222,7 @@ module tb_hdc_core_hbm #(
             if (a < V0_WORD && (T == to || T + 1 == to))
                 logical_kv = tl[T & 1][((a >> (LOG_HD + LOG_TW)) << LOG_HD) | (a & ((1 << LOG_HD) - 1))];
             else
-                logical_kv = u_hbm.mem[a];
+                logical_kv = PACKED_HBM ? expand_fp8(u_hbm.mem[a]) : u_hbm.mem[a];
         end
     endfunction
 
@@ -288,7 +307,9 @@ module tb_hdc_core_hbm #(
         end else
             $readmemh({dir, "/kv.hex"}, kv);
         // HBM holds the whole image; the tail the open tile and the one before it
-        for (i = 0; i < KV_WORDS; i = i + 1) u_hbm.mem[i] = pack16(kv[i]);
+        if (PACKED_HBM) $readmemh({dir, "/kv_fp8.hex"}, kv_fp8);
+        for (i = 0; i < KV_WORDS; i = i + 1)
+            u_hbm.mem[i] = PACKED_HBM ? kv_fp8[i] : pack16(kv[i]);
         for (b = 0; b < 2; b = b + 1)
             for (i = 0; i < TDEPTH; i = i + 1) tl[b][i] = 0;
         to0 = multi ? 0 : (pos >> 4);
