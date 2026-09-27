@@ -44,6 +44,7 @@ def main() -> None:
     ap.add_argument("--weights", type=Path, help="checkpoint directory, also synced by remote_gate")
     ap.add_argument("--legacy-width", action="store_true", help="diagnostic: BF16-width HBM with FP8 core writes")
     ap.add_argument("--bisect", action="store_true", help="find first ISA instruction whose state differs")
+    ap.add_argument("--probe-stop", type=int, help="run one cut point and retain first VM/KV mismatch lines")
     args = ap.parse_args()
     checkpoint = ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"
     if args.weights is not None and not checkpoint.exists():
@@ -89,7 +90,7 @@ def main() -> None:
         raw = KC.run(exe, f"+DIR={img}", *(img / "run.args").read_text().split(), f"+LEAD={KC.LEAD}")
         token = KC.parse_core(raw)
         bisection = None
-        if args.bisect:
+        if args.bisect or args.probe_stop is not None:
             def probe(stop: int) -> dict:
                 cut = work / f"stop_{stop}"
                 gen = subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(cut),
@@ -108,6 +109,8 @@ def main() -> None:
                 output = KC.run(exe, f"+DIR={cut}", *run_args,
                                 f"+LEAD={KC.LEAD}")
                 rec = KC.parse_core(output)
+                rec["first_state_mismatch_lines"] = [line for line in output.splitlines()
+                                                      if line.startswith(("vm ", "kv "))][:12]
                 # The bench initializes unwritten logits to all-ones, while
                 # Machine starts at zero; a cut before the final projection
                 # therefore cannot compare logits.  VM/KV are initialized
@@ -116,18 +119,22 @@ def main() -> None:
                                           and all(rec.get(k) == 0 for k in
                                                   ("vector_memory_mismatches", "kv_cache_mismatches")))
                 return rec
-            lo, hi = 0, len(P.build_program(lay))
-            probes = {}
-            while lo < hi:
-                mid = (lo + hi) // 2
-                probes[mid] = probe(mid)
-                if probes[mid]["exact_state"]:
-                    lo = mid + 1
-                else:
-                    hi = mid
-            probes[lo] = probe(lo) if lo not in probes else probes[lo]
-            bisection = {"first_failing_stop": lo, "program_length": len(P.build_program(lay)),
-                         "probes": {str(k): v for k, v in sorted(probes.items())}}
+            if args.probe_stop is not None:
+                bisection = {"probe_stop": args.probe_stop,
+                             "probe": probe(args.probe_stop)}
+            else:
+                lo, hi = 0, len(P.build_program(lay))
+                probes = {}
+                while lo < hi:
+                    mid = (lo + hi) // 2
+                    probes[mid] = probe(mid)
+                    if probes[mid]["exact_state"]:
+                        lo = mid + 1
+                    else:
+                        hi = mid
+                probes[lo] = probe(lo) if lo not in probes else probes[lo]
+                bisection = {"first_failing_stop": lo, "program_length": len(P.build_program(lay)),
+                             "probes": {str(k): v for k, v in sorted(probes.items())}}
         token_exact = (token.get("pass") and token.get("fault") == 0 and token.get("stream_fault") == 0
                        and token.get("next_token") == token.get("isa_next_token")
                        and all(token.get(k) == 0 for k in ("logit_mismatches", "vector_memory_mismatches",
