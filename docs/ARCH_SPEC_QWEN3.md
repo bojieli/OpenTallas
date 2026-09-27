@@ -377,6 +377,9 @@ BF16, and idle lane copies are clock-gated. All figures are at 8K with FP8 KV:
 | HBM comparator, batch 1 | 661 | 1,126 | 195.4 | 548.6 | 743.9 | 922.8 |
 | HBM comparator, batch 16 | 5,014 | 150.9 | 208.2 | 548.6 | 756.8 | 938.7 |
 | HBM comparator, batch 128 | 8,144 | 94.1 | 217.4 | 548.6 | 766.0 | 950.1 |
+| HBM comparator, ROM's 3.5-bit weights, batch 1 | 1,379 | **540.6** <!-- figure: 540.597 src="results/arch/qwen3_budget.json#power_production.hbm_comparator.rom_format_3.5b/batch1.energy_per_token_mj" name="Qwen3-8B HBM comparator 3.5-bit weights production-basis mJ/token 8K batch 1" --> | 197.1 | 548.6 | 745.6 | 924.9 |
+| HBM comparator, 3.5-bit weights, batch 16 | 6,659 | 114.1 | 211.0 | 548.6 | 759.6 | 942.2 |
+| HBM comparator, 3.5-bit weights, batch 128 | 8,574 | 89.2 | 216.1 | 548.6 | 764.7 | 948.5 |
 | B200, batch 1 (measured 689 W decode draw, roofline rate) | 881 | 782 | | | | |
 
 * **The KV stream is the energy.** At batch 1 on the ROM die, 61.4 mJ of the
@@ -392,11 +395,19 @@ BF16, and idle lane copies are clock-gated. All figures are at 8K with FP8 KV:
 
   Halving the KV bytes (4-bit KV, a sensitivity) is the largest energy lever
   as well as the largest speed lever.
-* **Ratios per token at batch 1:** the HBM comparator spends **13.7×** the ROM
-  die's energy and a B200 **9.5×** (at its measured decode draw). Both rest on
-  the 13.1 pJ/bit stack figure, which carries most of the ROM's energy. The
-  comparator's own die is dominated by clock and leakage (238 of 295 mJ) over
-  its 1.5 ms token.
+* **Ratios per token at batch 1** (the HBM comparator is the same core on 6
+  stacks, weights and KV streamed):
+  * **6.6×** against the comparator in the ROM's own 3.5-bit weight format.
+    It runs at 1,379 tok/s, the machine of the iso-area rate comparison
+    (`results/roofline/iso_area/qwen3_8b.json`), so this is the matched-format
+    ratio;
+  * 13.7× against the comparator with FP8 weights (661 tok/s);
+  * 9.5× against a B200 at its measured decode draw.
+
+  All rest on the 13.1 pJ/bit stack figure, which carries most of the ROM's
+  energy. The comparator's own die is dominated by clock and leakage over its
+  token: 238 of 295 mJ at FP8 weights over 1.5 ms, and 114 of 143 mJ at 3.5-bit
+  weights over 0.73 ms.
 * **Worst case.** The hardwired schedule bounds the power. The saturated worst
   case has every lane copy MAC every cycle at BF16, the stream unit and the ROM
   read path busy every cycle, and the 6 stacks at full raw bandwidth. That is a

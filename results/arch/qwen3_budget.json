@@ -2936,6 +2936,7 @@
   },
   "hbm_comparator": {
    "batch1": {
+    "weight_format": "fp8",
     "tokens_s": 660.8,
     "energy_per_token_mj": 1125.853,
     "die_components_mj_per_token": {
@@ -2953,6 +2954,7 @@
     "wall_w": 922.8
    },
    "batch16": {
+    "weight_format": "fp8",
     "tokens_s": 5014.0,
     "energy_per_token_mj": 150.931,
     "die_components_mj_per_token": {
@@ -2970,6 +2972,7 @@
     "wall_w": 938.7
    },
    "batch128": {
+    "weight_format": "fp8",
     "tokens_s": 8143.5,
     "energy_per_token_mj": 94.061,
     "die_components_mj_per_token": {
@@ -2985,6 +2988,60 @@
     "stacks_w": 548.6,
     "package_w": 766.0,
     "wall_w": 950.1
+   },
+   "rom_format_3.5b/batch1": {
+    "weight_format": "rom_format_3.5b",
+    "tokens_s": 1379.3,
+    "energy_per_token_mj": 540.597,
+    "die_components_mj_per_token": {
+     "mac_weights": 0.6811,
+     "mac_attention": 0.9905,
+     "operand_delivery": 0.9005,
+     "stream_unit": 0.9708,
+     "clock": 55.1788,
+     "leakage": 59.0878,
+     "hbm_interface": 25.0561
+    },
+    "die_w": 197.1,
+    "stacks_w": 548.6,
+    "package_w": 745.6,
+    "wall_w": 924.9
+   },
+   "rom_format_3.5b/batch16": {
+    "weight_format": "rom_format_3.5b",
+    "tokens_s": 6659.1,
+    "energy_per_token_mj": 114.069,
+    "die_components_mj_per_token": {
+     "mac_weights": 0.6811,
+     "mac_attention": 0.9905,
+     "operand_delivery": 0.1865,
+     "stream_unit": 0.9708,
+     "clock": 11.4292,
+     "leakage": 12.2389,
+     "hbm_interface": 5.1899
+    },
+    "die_w": 211.0,
+    "stacks_w": 548.6,
+    "package_w": 759.6,
+    "wall_w": 942.2
+   },
+   "rom_format_3.5b/batch128": {
+    "weight_format": "rom_format_3.5b",
+    "tokens_s": 8573.5,
+    "energy_per_token_mj": 89.188,
+    "die_components_mj_per_token": {
+     "mac_weights": 0.6811,
+     "mac_attention": 0.9905,
+     "operand_delivery": 0.1449,
+     "stream_unit": 0.9708,
+     "clock": 8.8771,
+     "leakage": 9.506,
+     "hbm_interface": 4.031
+    },
+    "die_w": 216.1,
+    "stacks_w": 548.6,
+    "package_w": 764.7,
+    "wall_w": 948.5
    }
   },
   "b200": {
@@ -3010,6 +3067,7 @@
   "provisioned_basis": "1.2 x worst case (die + stacks) / (VR 0.87 x PSU 0.96)",
   "ratios_batch1": {
    "hbm_over_rom": 13.67,
+   "hbm_rom_format_over_rom": 6.56,
    "b200_measured_over_rom": 9.49,
    "b200_measured_over_hbm": 0.69
   }

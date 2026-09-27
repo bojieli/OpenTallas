@@ -715,19 +715,24 @@ def power_production(out, clock):
     comp = out["dependency_chain"][f"{CTX_HEAD}/spec"]["components"]
     lat = (comp["latency"] + comp["control"]) / clock
     hbm = {}
-    for B in (1, 16, 128):
-        byt = wl["weight_macs"] + B * kv_bytes(wl, KV_FMT_SPEC)
+    # weight formats: FP8 (the FP8 MAC), and the ROM's own 3.5-bit format (the W4A8 MAC) -- the latter is
+    # the machine the paper's iso-area rate comparison uses (results/roofline/iso_area/qwen3_8b.json)
+    for fmt, bpp, mac in (("fp8", 1.0, "fp8"), ("rom_format_3.5b", RETICLE["weight_bits"] / 8, "w4a8")):
+      for B in (1, 16, 128):
+        byt = wl["weight_macs"] * bpp + B * kv_bytes(wl, KV_FMT_SPEC)
         macs_w, macs_a = B * wl["weight_macs"], B * wl["attention_macs"]
         t = max(byt / bw, (macs_w + macs_a) / (LANES_HBM * clock), lat)
         leak = RETICLE["die_mm2"] * P["leak_w_mm2"]["logic"]
         clk = P["clock_j_mm2_cycle"] * clock * RETICLE["die_mm2"]
-        e = dict(mac_weights=macs_w * P["mac_j"]["fp8"], mac_attention=macs_a * P["mac_j"]["bf16"],
+        e = dict(mac_weights=macs_w * P["mac_j"][mac], mac_attention=macs_a * P["mac_j"]["bf16"],
                  operand_delivery=byt * P["delivery_j_b"], stream_unit=B * wl["elementwise_total"]
                  * (P["mac_j"]["fp32"] + 12 * P["sram_j_b"]), clock=clk * t, leakage=leak * t,
                  hbm_interface=byt * P["hbm_if_j_b"])
         die = sum(e.values())
         stacks = byt * P["hbm_core_j_b"] + HBM["stacks"] * P["hbm_idle_w_stack"] * t
-        hbm[f"batch{B}"] = dict(tokens_s=round(B / t, 1), energy_per_token_mj=round((die + stacks) / B * 1e3, 3),
+        key = f"batch{B}" if fmt == "fp8" else f"{fmt}/batch{B}"
+        hbm[key] = dict(weight_format=fmt, tokens_s=round(B / t, 1),
+                        energy_per_token_mj=round((die + stacks) / B * 1e3, 3),
                                 die_components_mj_per_token={k: round(v / B * 1e3, 4) for k, v in e.items()},
                                 **_package(die / t, stacks / t))
     # ---- a B200 at the same design point: its measured decode draw at its HBM-roofline rate (FP8 weights) ----
@@ -742,6 +747,7 @@ def power_production(out, clock):
                      "MLPerf v5.1) is the upper bound", **{k: v for k, v in g.items()})
     r1 = rom["ar_batch1"]["energy_per_token_mj"]
     h1 = hbm["batch1"]["energy_per_token_mj"]
+    h35 = hbm["rom_format_3.5b/batch1"]["energy_per_token_mj"]
     return dict(basis="production (conservative) inputs read from configs/hardware/technology.json (each entry "
                       "quotes its source); supersedes the ASAP7-measured basis of `power` and `batch` for energy "
                       "and power; the 0.8 pJ/bit HBM interface is inside the 13.1 pJ/bit system figure (die "
@@ -753,6 +759,7 @@ def power_production(out, clock):
                 provisioned_w=round(provisioned_w, 1),
                 provisioned_basis="1.2 x worst case (die + stacks) / (VR 0.87 x PSU 0.96)",
                 ratios_batch1=dict(hbm_over_rom=round(h1 / r1, 2),
+                                   hbm_rom_format_over_rom=round(h35 / r1, 2),
                                    b200_measured_over_rom=round(gpu["energy_per_token_mj_at_measured_decode_draw"] / r1, 2),
                                    b200_measured_over_hbm=round(gpu["energy_per_token_mj_at_measured_decode_draw"] / h1, 2)))
 
