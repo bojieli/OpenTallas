@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Equivalence of the decode core's shortened special-function pipelines.
 
-The stream unit's exp / reciprocal / rsqrt (rtl/hdc/ot_hdc_sfu.sv) now run on
+The Qwen3 stream unit's exp / reciprocal / rsqrt (rtl/hdc/ot_hdc_sfu_q.sv:
+ot_hdc_exp_q, ot_hdc_recip_q, ot_hdc_rsqrt_q; ot_hdc_sfu.sv keeps the
+five-stage modules the V4.1 blocks use) run on
 the low-latency binary32 units (3 stages instead of 5) and form exp's n and
 n*ln2 with an integer step and a table instead of two adds and two multiplies.
 The numerics must not move by a bit.  This campaign checks that three ways:

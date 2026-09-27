@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Exhaustive check of the exp range reduction in rtl/hdc/ot_hdc_sfu.sv.
+"""Exhaustive check of the exp range reduction in rtl/hdc/ot_hdc_sfu_q.sv.
 
 The golden (tools/hdc_golden.exp) forms n with two binary32 adds (the 1.5*2^23
 trick) and the products n*LN2_HI, n*LN2_LO with two multiplies.  The RTL forms
 n = rint-to-even(t) with one integer step on t's encoding and reads both
 products from a 254-entry table.  This script replays, for EVERY one of the
 2^32 input words, the golden's clamp / t / u / n / products and the RTL's
-integer step (bit for bit as written in ot_hdc_exp) and table, and requires
+integer step (bit for bit as written in ot_hdc_exp_q) and table, and requires
 n, n*LN2_HI and RN(n*LN2_LO) to agree.  Everything after that point is the
 same operation sequence on the same operands in both designs.
 
-Also checks that the table in ot_hdc_sfu.sv is the golden's products.
+Also checks that the table in ot_hdc_sfu_q.sv is the golden's products.
 """
 import re
 import sys
@@ -26,7 +26,7 @@ U32 = np.uint32
 
 
 def rtl_table():
-    txt = (ROOT / "rtl/hdc/ot_hdc_sfu.sv").read_text()
+    txt = (ROOT / "rtl/hdc/ot_hdc_sfu_q.sv").read_text()
     tab = {}
     for idx, hi, lo in re.findall(r"8'd(\d+)\s*: ln2_nk = \{32'h([0-9A-F]{8}), 32'h([0-9A-F]{8})\}", txt):
         tab[int(idx)] = (int(hi, 16), int(lo, 16))
@@ -34,7 +34,7 @@ def rtl_table():
 
 
 def rtl_rint(t):
-    """ot_hdc_exp's integer step: n = rint-to-even(t) from t's encoding."""
+    """ot_hdc_exp_q.s integer step: n = rint-to-even(t) from t's encoding."""
     b = G.bits(t).astype(np.int64)
     te = (b >> 23) & 0xFF
     tm = (b & 0x7FFFFF) | 0x800000
