@@ -106,3 +106,28 @@ def test_layer_chain_is_under_the_kv_floor(rec, fresh):
     kv = rec["rom_token"]["8192/fp8"]["kv_stream_cycles"]
     assert lc["cycles"] < kv / rec["shape"]["L"]
     assert fresh["as_built_calibrated"]["8192"]["cycles"] <= rec["budget"]["target_cycles"]
+
+
+UTIL = ROOT / "results/arch/qwen3_utilization.json"
+
+
+def test_utilization_gate_covers_every_block_and_is_current(fresh):
+    """The utilisation gate (user, before the core P&R): every block of both
+    designs has a peak, a demand and a verdict in four scenarios; nothing is
+    left OVER-PROVISIONED without its right-sizing applied; right-sizing the
+    HBM comparator's lanes slows no scenario; the record is current."""
+    u = json.loads(UTIL.read_text())
+    assert u == json.loads(json.dumps(A.utilization(fresh, fresh["clock_hz"]), default=float))
+    assert len(u["rom"]) == 4 and all(len(sc["blocks"]) >= 12 for sc in u["rom"].values())
+    for v in u["verdicts"]:
+        assert v["verdict"].startswith(("RIGHT-SIZED", "JUSTIFIED")) or "(applied)" in v["verdict"]
+    # the comparator's lanes never bind at 8k; the rejected smaller array slows the 2k batch rows
+    spec = u["hbm"][f"{A.LANES_HBM}_lanes"]["scenarios"]
+    assert all(sc["slowed_by_lanes"] == 0 for k, sc in spec.items() if not k.startswith("ctx2048"))
+    cand = u["hbm"][f"{A.GROUPS_HBM_CANDIDATE * A.W}_lanes"]["scenarios"]
+    assert all(cand[k]["slowed_by_lanes"] == 0 for k in cand if not k.startswith("ctx2048"))
+    k2 = next(k for k in cand if k.startswith("ctx2048"))
+    assert cand[k2]["step_cycles"] > spec[k2]["step_cycles"] * 1.2
+    # the stream unit is the smallest width that keeps the single user at the KV floor
+    ar = u["rom"]["ar_batch1"]["step_cycles"]
+    assert u["su_width_sweep_cycles"]["512"] > ar >= u["su_width_sweep_cycles"]["1024"]

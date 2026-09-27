@@ -163,14 +163,14 @@
  "area": {
   "freed_sram_mm2": 259.62,
   "hbm_phy_mm2": 60.0,
-  "kv_prefetch_buffer_mm2": 11.2,
-  "kv_prefetch_buffer_bytes": 33554432.0,
+  "kv_prefetch_buffer_mm2": 6.2,
+  "kv_prefetch_buffer_bytes": 18667216.0,
   "drafter_rom_mm2": 33.5,
   "stream_unit_spill_mm2": 12.8,
   "lane_copy_mm2": 69.2,
   "lane_copies_added": 2,
   "lane_multiplier_m": 3,
-  "slack_mm2": 3.7,
+  "slack_mm2": 8.6,
   "beachfront_mm": 70.8,
   "stacks_max_by_beachfront": 6,
   "stacks_note": "5.9 by the 60%-edge rule; 6 as on the 814 mm2 GH100 die (H100/H200)",
@@ -1244,7 +1244,7 @@
    "efficiency_min": "0.90 of raw peak with refresh on (REFab measured 0.904 / 0.910)",
    "controller_queue_beats_per_pseudo_channel_min": 512,
    "prefetch": "layer l+1's KV (positions < t) streams while layer l computes; the token's own K/V row is kept on die (tail buffer) and written back behind the stream",
-   "prefetch_buffer_bytes": 33554432.0,
+   "prefetch_buffer_bytes": 18667216.0,
    "streamer": "rtl/hdc/kv/ot_hdc_kv_stream.sv extended to the K-split attention word order"
   },
   "stream_unit_elements_per_cycle": {

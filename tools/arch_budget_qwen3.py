@@ -67,6 +67,15 @@ SRAM_BITS_PER_MM2 = 24.07e6       # usable SRAM bits/mm2 (configs/hardware/techn
 GROUPS_BUDGET = 7680              # floor(146.7 mm2 x 0.9 / MAC_UM2 / 16): the reticle's lane budget
 GROUPS_ROM = 8192                 # the spec: a power of two, so every split tiles whole rounds (see split_rounds)
 LANES_ROM = GROUPS_ROM * W
+# The HBM comparator's MAC array: the ROM die's lanes.  The utilisation gate
+# tried the smallest array that still covers the DFlash tau-4.1 step at 8k
+# (GROUPS_HBM_CANDIDATE: 6,656 groups, tiling 0.947, 100,897 effective lanes
+# against a 97,471-lane need) -- it slows no 8k row, but at 2k the batch rows
+# from 32 users are MAC-bound and lose 23% of their throughput, so the
+# comparator keeps 131,072 lanes (qwen3_utilization.json).
+GROUPS_HBM = GROUPS_ROM
+LANES_HBM = GROUPS_HBM * W
+GROUPS_HBM_CANDIDATE = 6656
 ISA_MAX_SPLIT_AS_BUILT = 1 << ((1 << 2) - 1)    # me_split is 2 bits: S <= 8
 HBM = dict(stacks=6, stack_bytes_s=1.0e12, efficiency=0.90, phy_mm2_per_stack=10.0,
            basis="HBM3E 1.0 TB/s a stack (B200: 8 TB/s over 8 stacks), 0.90 sustained "
@@ -186,6 +195,13 @@ def mv_cycles(n, k, groups, max_split=None):
     """Engine cycles of an n x k matrix (and its split)."""
     s, rounds, kc = split_rounds(n, k, groups, max_split)
     return rounds * kc * IL, s
+
+
+def tiling_eff(groups):
+    """The token's weight sweep: ideal cycles over tiled cycles at this many groups."""
+    per_layer, head = matrices()
+    mats = [*per_layer.values()] * Q["L"] + [*head.values()]
+    return sum(n * k for n, k in mats) / (W * groups) / sum(mv_cycles(n, k, groups)[0] for n, k in mats)
 
 
 def attn_cycles(T_ctx, groups, s=Q, mapping="as_built"):
@@ -312,10 +328,17 @@ def area_ledger():
                                 "(results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json)")
 
 
+T_RFC_S = 350e-9                  # HBM3E all-bank refresh (the controller rules, section 12)
+
+
 def kv_prefetch_buffer_bytes(ctx=CTX_HEAD, fmt=KV_FMT_SPEC):
-    """Two layers of KV at the head context: layer l's KV is consumed while
-    layer l+1's streams in (positions < t are data-independent of the token)."""
-    return 2 * kv_bytes(workload(ctx), fmt) / Q["L"]
+    """A RING of one layer of KV at the head context plus the stream's
+    refresh cover (bandwidth x tRFC).  The stream runs continuously (it binds
+    the token) and the engine drains a layer's KV in its attention burst, so
+    the peak occupancy is the layer being consumed plus what lands while a
+    channel refreshes.  (Two layers, double-buffered, was the first sizing:
+    the utilisation gate found it half used -- qwen3_utilization.json.)"""
+    return kv_bytes(workload(ctx), fmt) / Q["L"] + rom_kv_bw() * T_RFC_S
 
 
 def rom_token(out, ctx, fmt, slots=1, users=1, m=1, drafter=False):
@@ -550,6 +573,221 @@ def evaluate():
     return out
 
 
+UTIL_OUT = ROOT / "results/arch/qwen3_utilization.json"
+SRAM_READ_B_PER_CYCLE = GROUPS_ROM * W   # the engine's KV port: one FP8 word of W elements a group a cycle
+
+
+def _blk(name, peak, unit, demand, step, *, busy=None, area_mm2=None, kind="compute", **kw):
+    u = demand / (peak * step) if peak else 0.0
+    r = dict(block=name, kind=kind, peak_per_cycle=peak, unit=unit, demand_per_step=demand,
+             utilization=round(u, 4))
+    if busy is not None:
+        r["busy_cycles"] = round(busy)
+        r["busy_fraction"] = round(busy / step, 4)
+    if area_mm2 is not None:
+        r["area_mm2"] = area_mm2
+    r.update(kw)
+    return r
+
+
+def utilization(out, clock):
+    """The utilisation gate (user, binding before the core P&R): for every block
+    of the ROM reticle and of the HBM comparator, its peak, its demand at batch
+    1 (autoregressive and DFlash tau 4.1), at the KV-bound batch and at the
+    largest batch; utilisation (MFU for compute, MBU for memory and bandwidth)
+    and busy fraction over the step; area and energy share; and a verdict:
+    RIGHT-SIZED (binding, or smaller would slow the single user -- measured by
+    the calibrated model where it can be), JUSTIFIED (idle capacity that buys
+    batch-1 latency), or OVER-PROVISIONED with the right-sizing applied."""
+    wl = out["workload"][str(CTX_HEAD)]
+    m = out["area"]["lane_multiplier_m"]
+    ar = out["as_built_calibrated"][str(CTX_HEAD)]
+    kvb1 = kv_bytes(wl, KV_FMT_SPEC)
+    kv_cyc = kvb1 / rom_kv_bw() * clock
+    macs_tok = wl["weight_macs"] + wl["attention_macs"]
+    per_layer, _ = matrices()
+    layer_macs = sum(a * b for a, b in per_layer.values())
+    wbytes = wl["bytes"]["weights_rom_format"]
+    drafter_bytes = DRAFTER_PARAMS * RETICLE["weight_bits"] / 8
+    rom_peak_b = LANES_ROM * RETICLE["weight_bits"] / 8
+    raw_hbm_b = ROM_KV_HBM["stacks"] * HBM["stack_bytes_s"] / clock
+    trans = Q["NH"] * CTX_HEAD * Q["L"] + Q["FF"] * Q["L"] + wl["elementwise"]["rsqrt_recip"]
+    red = sum(n * k for n, k in wl["reductions"].values())
+    layer_kv = kvb1 / Q["L"]
+    ring_need = layer_kv + rom_kv_bw() * T_RFC_S
+    buf = out["area"]["kv_prefetch_buffer_bytes"]
+    buf_first = 2 * layer_kv
+    batch = {r["batch"]: r for r in out["batch"]["per_context"][str(CTX_HEAD)]["rom"] if r["lane_multiplier"] == m}
+    b_kv = min(b for b, r in batch.items() if r["binding"] == "kv_stream")
+    b_max = max(batch)
+    best = out["dflash"]["rom"][f"{CTX_HEAD}/{KV_FMT_SPEC}/m{m}"]["best"]
+    Bd = best["block"]
+    draft_macs = Bd * DRAFTER_LAYERS * layer_macs + (Bd - 1) * Q["V"] * Q["H"] + Bd * DFLASH_FC[0] * DFLASH_FC[1]
+    area = out["area"]
+    ub = ar["unit_busy"]
+    attn_busy = ub["attn_scores"] + ub["attn_pv"]
+    # scenarios: (label, step cycles, positions sharing a weight word, users, slots, drafter, basis)
+    scen = [("ar_batch1", max(ar["cycles"], kv_cyc), 1, 1, 1, False,
+             "calibrated sequencer model at HEAD (unit busy measured on the replayed program)"),
+            (f"dflash_tau{TAU_CENTRAL}_block{Bd}", best["step_cycles"], min(m, Bd), 1, Bd, True,
+             f"budget model, best ROM block at m = {m} ({best['tokens_per_step']} tokens a step)"),
+            (f"kv_bound_batch{b_kv}", batch[b_kv]["step_cycles"], min(m, b_kv), b_kv, 1, False,
+             "budget model, smallest KV-bound batch"),
+            (f"max_batch{b_max}", batch[b_max]["step_cycles"], m, b_max, 1, False, "budget model")]
+    rom = {}
+    for label, step, share, users, slots, drafter, basis in scen:
+        n = users * slots
+        macs = n * macs_tok + (draft_macs if drafter else 0)
+        k = max(1, min(m, share))
+        sweeps = 1 if drafter else math.ceil(n / m)
+        rbytes = sweeps * wbytes + (drafter_bytes if drafter else 0)
+        kvb = users * kvb1 * ((1 + DRAFTER_LAYERS / Q["L"]) if drafter else 1)
+        su_el = n * wl["elementwise_total"]
+        su_busy = ub["stream"] * n
+        a_busy = attn_busy * users * math.ceil(slots / k)
+        me_busy = (ub["weights"] + ub["lm_head"]) * math.ceil(n / k) + a_busy
+        if drafter:
+            me_busy += draft_macs / (LANES_ROM * k)
+        instr = ar["instructions"] * users * (1 + (DRAFTER_LAYERS / Q["L"] if drafter else 0))
+        t = step / clock
+        e = dict(matrix_engine=macs * E_ME_PER_MAC, other_logic_upper=macs * (E_LOGIC_PER_MAC - E_ME_PER_MAC),
+                 rom_read=rbytes * E_ROM_PER_BYTE, rom_leakage=LEAK_W_ROM * t,
+                 kv_hbm_stacks=kvb * E_HBM_PER_BYTE)
+        et = sum(e.values())
+        blocks = [
+            _blk("matrix engine, base lanes", LANES_ROM, "MAC", macs / k, step, busy=min(me_busy, step),
+                 area_mm2=RETICLE["compute_mm2"], kind="compute (MFU)"),
+            _blk(f"matrix engine, {m - 1} lane copies", LANES_ROM * (m - 1), "MAC", macs * (k - 1) / k, step,
+                 busy=min(me_busy, step) if k > 1 else 0, area_mm2=round(area["lane_copy_mm2"] * (m - 1), 1),
+                 kind="compute (MFU)", copies_in_use=k - 1),
+            _blk("weight ROM macros and read path", rom_peak_b, "byte", rbytes, step,
+                 busy=rbytes / rom_peak_b, area_mm2=RETICLE["rom_mm2"], kind="memory (MBU)", weight_sweeps=sweeps),
+            _blk("drafter ROM", rom_peak_b, "byte", drafter_bytes if drafter else 0, step,
+                 area_mm2=area["drafter_rom_mm2"], kind="memory (MBU)"),
+            _blk("attention path (engine share: scores, P.V)", LANES_ROM * k, "MAC",
+                 n * wl["attention_macs"], step, busy=a_busy, kind="compute (MFU)"),
+            _blk(f"vector stream unit ({SPEC_SU_WIDTH} lanes)", SPEC_SU_WIDTH, "element", su_el, step,
+                 busy=min(su_busy, step), area_mm2=SU_SPILL_MM2, kind="compute (MFU)"),
+            _blk("SFUs (exp, SiLU, rsqrt/recip: one a stream lane)", SPEC_SU_WIDTH, "transcendental", n * trans,
+                 step, kind="compute (MFU)"),
+            _blk("reducers (R-ARITH segments, split tree)", SPEC_SU_WIDTH, "element", n * red, step,
+                 kind="compute (MFU)"),
+            _blk("KV streamer, HBM controllers and PHYs (6 stacks, raw peak)", raw_hbm_b, "byte", kvb, step,
+                 busy=min(kvb / (raw_hbm_b * HBM["efficiency"]), step), area_mm2=area["hbm_phy_mm2"],
+                 kind="bandwidth (MBU)",
+                 mbu_of_sustained=round(kvb / (raw_hbm_b * HBM["efficiency"] * step), 4)),
+            _blk("KV ring buffer (SRAM): capacity", buf, "byte", ring_need, 1,
+                 area_mm2=area["kv_prefetch_buffer_mm2"], kind="capacity",
+                 first_sizing_bytes=buf_first, first_sizing_utilization=round(ring_need / buf_first, 4)),
+            _blk("KV ring buffer (SRAM): engine read port", SRAM_READ_B_PER_CYCLE, "byte", kvb, step,
+                 busy=kvb / SRAM_READ_B_PER_CYCLE, kind="bandwidth (MBU)"),
+            _blk("sequencer / issue", 1, "instruction", instr, step, busy=instr, kind="control"),
+            _blk("argmax (streaming compare tree on the LM head's results)", LANES_ROM, "compare",
+                 Q["V"] * (n + (Bd - 1 if drafter else 0)), step,
+                 busy=ub["lm_head"] * math.ceil(n / k), kind="compute"),
+        ]
+        rom[label] = dict(step_cycles=round(step), basis=basis, users=users, slots=slots,
+                          tokens_s_total=round(users * (best["tokens_per_step"] if drafter else 1) * clock / step, 1),
+                          energy_per_step_mj={k2: round(v * 1e3, 3) for k2, v in e.items()},
+                          energy_share={k2: round(v / et, 4) for k2, v in e.items()}, blocks=blocks)
+    # ---- the HBM comparator (FP8 weights and KV, the same 6 stacks) -------------------------------
+    bw = HBM["stacks"] * HBM["stack_bytes_s"] * HBM["efficiency"]
+    raw = HBM["stacks"] * HBM["stack_bytes_s"] / clock
+    comp = out["dependency_chain"][f"{CTX_HEAD}/spec"]["components"]
+    lat = (comp["latency"] + comp["control"]) / clock
+    dh = out["dflash"]["hbm"]["fp8"]
+    n16 = DFLASH_SLOTS
+    step_macs16 = n16 * DRAFTER_LAYERS * layer_macs + (n16 - 1) * Q["V"] * Q["H"] + \
+        n16 * (Q["L"] * layer_macs + Q["V"] * Q["H"]) + n16 * wl["attention_macs"]
+    hbatch = [r["batch"] for r in out["batch"]["per_context"][str(CTX_HEAD)]["hbm"]["fp8"]]
+    hb_kv = min(b for b in hbatch if b * kvb1 >= wl["weight_macs"])
+    wl2 = out["workload"]["2048"]
+    kvb2 = kv_bytes(wl2, KV_FMT_SPEC)
+    hscen = [("ar_batch1", 1, None, wl, kvb1), (f"dflash_tau{TAU_CENTRAL}_block{n16}", None, dh["step_s"], wl, kvb1),
+             (f"kv_bound_batch{hb_kv}", hb_kv, None, wl, kvb1), (f"max_batch{b_max}", b_max, None, wl, kvb1),
+             (f"ctx2048_max_batch{b_max}", b_max, None, wl2, kvb2)]
+    hbm = {}
+    for lanes, groups, role in ((LANES_HBM, GROUPS_HBM, "the comparator as specified"),
+                                (GROUPS_HBM_CANDIDATE * W, GROUPS_HBM_CANDIDATE, "right-sizing candidate, rejected")):
+        eff = tiling_eff(groups)
+        rows = {}
+        for label, B, fixed, w_, kvb_ in hscen:
+            if fixed:
+                macs = step_macs16
+                byt = (w_["weight_macs"] + DRAFTER_PARAMS) + kvb_ * (1 + DRAFTER_LAYERS / Q["L"])
+                bound_t = fixed
+                t = max(fixed, macs / (lanes * eff * clock))
+            else:
+                byt = w_["weight_macs"] + B * kvb_
+                macs = B * (w_["weight_macs"] + w_["attention_macs"])
+                bound_t = max(byt / bw, lat)
+                t = max(bound_t, macs / (lanes * eff * clock))
+            step = t * clock
+            rows[label] = dict(step_cycles=round(step), slowed_by_lanes=round(t / bound_t - 1, 4), blocks=[
+                _blk("matrix engine", lanes, "MAC", macs, step, busy=macs / (lanes * eff), kind="compute (MFU)"),
+                _blk("HBM (6 stacks, raw peak): weights + KV", raw, "byte", byt, step,
+                     busy=min(byt / (raw * HBM["efficiency"]), step), kind="bandwidth (MBU)",
+                     mbu_of_sustained=round(byt / (bw / clock * step), 4)),
+                _blk(f"vector stream unit ({SPEC_SU_WIDTH} lanes)", SPEC_SU_WIDTH, "element",
+                     (B or n16) * w_["elementwise_total"], step, kind="compute (MFU)"),
+                _blk("sequencer / issue", 1, "instruction", ar["instructions"] * (B or 1), step, kind="control"),
+            ])
+        hbm[f"{lanes}_lanes"] = dict(role=role, groups=groups, lanes=lanes, tiling_efficiency=round(eff, 4),
+                                     scenarios=rows)
+    su_sweep = {sw: as_built(CTX_HEAD, su_width=sw)["cycles"] for sw in (512, 1024, 2048)}
+    g_half = as_built(CTX_HEAD, groups=GROUPS_ROM // 2)["cycles"]
+    ar_step = max(ar["cycles"], kv_cyc)
+    verdicts = [
+        dict(block="ROM: matrix engine base lanes (131,072)", verdict="RIGHT-SIZED",
+             why=f"compute sits at the KV floor ({ar['cycles']:,} vs {round(kv_cyc):,} cycles); half the groups "
+                 f"is {g_half:,} cycles (+{g_half / ar_step - 1:.0%} a token) in the calibrated model"),
+        dict(block=f"ROM: {m - 1} lane copies", verdict="JUSTIFIED (DFlash only), conditional on power",
+             why=f"idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry "
+                 f"the DFlash block-{Bd} verify ({best['speedup']}x single-user tokens/s). Under the cooling limit "
+                 f"that gain needs <= {out['power']['pj_per_mac_required_dflash']} pJ/MAC; at the measured 3.97 "
+                 f"the capped DFlash rate is below autoregressive and the copies would not pay"),
+        dict(block="ROM: weight ROM read path", verdict="RIGHT-SIZED",
+             why="one weight a lane a cycle; the sweep is on the single user's chain (57,740 cycles)"),
+        dict(block="ROM: vector stream unit (1,024 lanes; SFUs and reducers on its lanes)", verdict="RIGHT-SIZED",
+             why=f"calibrated: 512 lanes is {su_sweep[512]:,} cycles, above the KV floor "
+                 f"(+{su_sweep[512] / ar_step - 1:.1%} a token); 2,048 is {su_sweep[2048]:,}, under the floor, "
+                 f"so it buys nothing"),
+        dict(block="ROM: KV streamer, controllers, 6 PHYs", verdict="RIGHT-SIZED (binding)",
+             why="the KV stream binds the token from batch 1 (0.3% below compute) and at every batch"),
+        dict(block="ROM: KV ring buffer", verdict="OVER-PROVISIONED -> RIGHT-SIZED (applied)",
+             why=f"two layers ({buf_first / 1e6:.1f} MB) were {ring_need / buf_first:.0%} used: the stream is "
+                 f"continuous and the engine drains a layer in its attention burst, so the peak is one layer plus "
+                 f"the refresh cover ({buf / 1e6:.1f} MB); area_ledger now sizes the ring"),
+        dict(block="ROM: KV ring buffer's engine read port", verdict="JUSTIFIED (latency)",
+             why="one FP8 word a group a cycle is the engine's attention operand rate: the scores and P.V passes "
+                 f"read a layer's KV in {attn_busy // Q['L']} cycles on the chain; a narrower port lengthens "
+                 "every layer's attention stage"),
+        dict(block="ROM: drafter ROM", verdict="JUSTIFIED (DFlash only)", why="read once a DFlash step; idle otherwise"),
+        dict(block="ROM: sequencer, argmax", verdict="JUSTIFIED (latency)",
+             why="small; both sit on the token's chain (the issue gap, the LM head's tail)"),
+        dict(block="HBM: matrix engine", verdict="JUSTIFIED (batch throughput), right-sizing rejected",
+             why=f"{LANES_HBM:,} lanes are 4.6% used at batch 1 and bytes bind every 8k row, but at 2k the rows "
+                 f"from 32 users are MAC-bound (utilisation ~1). The smallest array that keeps the DFlash step "
+                 f"({GROUPS_HBM_CANDIDATE * W:,} lanes, tiling {tiling_eff(GROUPS_HBM_CANDIDATE):.3f}, against a "
+                 f"{dh['mac_lanes_min']:,}-lane need) slows no single user and no 8k row, but costs the 2k batch "
+                 f"rows 23% of their throughput; the comparator keeps its lanes rather than be handicapped"),
+        dict(block="HBM: stacks and controllers", verdict="RIGHT-SIZED (binding)",
+             why="bytes bind every 8k row and the 2k rows below 32 users"),
+    ]
+    return dict(schema="opentallas.arch-utilization-qwen3.v1", tool="tools/arch_budget_qwen3.py",
+                context=CTX_HEAD, kv_format=KV_FMT_SPEC, clock_hz=clock, lane_multiplier=m,
+                rule="improve utilisation without slowing the single user",
+                rom=rom, hbm=hbm, su_width_sweep_cycles=su_sweep, half_groups_cycles=g_half,
+                verdicts=verdicts, energy_basis=out["batch"]["energy_basis"],
+                notes=["busy fractions of the autoregressive row are the calibrated model's; the other rows "
+                       "scale the per-position busy by positions over copies in use",
+                       "SFU and reducer demand counts operations whose peak is the stream unit's lanes; their "
+                       "busy time is inside the stream unit's",
+                       "the other rows' steps are the budget model's (analytical chain, conservative against the "
+                       "calibrated 123,301); KV-bound rows are exact either way"])
+
+
+
 def hbm_requirements(out, clock):
     """The iso-area HBM comparator: the weight stream binds, so the design goal
     is a stream that never stalls.  Weights are data-independent, so the
@@ -769,7 +1007,7 @@ def batch_model(out, clock):
             rows = []
             for B in BATCHES:
                 byt = wl["weight_macs"] * bpp + B * kv_bytes(wl, KV_FMT_SPEC)
-                t = max(byt / bw, B * macs / (LANES_ROM * clock), lat / clock)
+                t = max(byt / bw, B * macs / (LANES_HBM * clock), lat / clock)
                 e_hi = B * macs * E_LOGIC_PER_MAC + byt * E_HBM_PER_BYTE
                 e_lo = B * macs * E_ME_PER_MAC + byt * E_HBM_PER_BYTE
                 rows.append(dict(batch=B, step_cycles=round(t * clock), per_user_tokens_s=round(1 / t, 1),
@@ -779,7 +1017,7 @@ def batch_model(out, clock):
             hbm[fmt] = rows
         res[str(ctx)] = dict(rom=rom, hbm=hbm, kv_format=KV_FMT_SPEC)
     return dict(per_context=res,
-                note="HBM comparator rows at 131,072 lanes and the same KV format as the ROM die",
+                note=f"HBM comparator rows at {LANES_HBM:,} lanes and the same KV format as the ROM die",
                 lane_copies_serve_batch="yes: one weight word feeding m users' MACs is the DFlash lane multiplier",
                 energy_basis="logic at the measured reduced step on the routed ASAP7 core: 16.5 pJ/MAC whole step "
                              "(upper), 3.97 pJ/MAC the matrix engine alone (lower); ROM 0.08 pJ/B, HBM 104.9 pJ/B, "
@@ -852,6 +1090,7 @@ def main():
     out = evaluate()
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(out, indent=1, default=float) + "\n")
+    UTIL_OUT.write_text(json.dumps(utilization(out, out["clock_hz"]), indent=1, default=float) + "\n")
     b = out["budget"]
     print(f"clock {out['clock_hz']/1e9:.4f} GHz; design point {CTX_HEAD} {KV_FMT_SPEC}: target {b['target_cycles']} "
           f"cycles = {b['target_tokens_s']} tok/s ({b['binding']}); weight ceiling {b['ceiling_tokens_s']}")

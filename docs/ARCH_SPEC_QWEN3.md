@@ -47,7 +47,7 @@ stream over 95% of it:
 | 2K | any | ≤ 61,440 | 10,465 | weights |
 
 So the design point is **8K with FP8 KV: 129,348 cycles, 8,494 tok/s per
-user.** FP8 KV is a golden change; the KV cache is BF16 today.
+user.** FP8 KV (E4M3, round to nearest even, saturating) is in the golden, the ISA model and the RTL (8a91421a); the scalar core keeps BF16.
 
 On the HBM comparator the bytes over its 6 stacks bind. With the same FP8 KV,
 the per-user bound at 8K is 343 tok/s with BF16 weights, 661 with FP8 and
@@ -79,11 +79,11 @@ KV moved to HBM, so the 259.6 mm² of SRAM is re-budgeted (`area`):
 | use | mm² |
 |---|---|
 | 6 HBM3E PHYs (10 mm² each) | 60.0 |
-| KV prefetch buffer: two layers of 8K FP8 KV, 33.6 MB | 11.2 |
+| KV ring buffer: one layer of 8K FP8 KV plus the refresh cover, 18.7 MB (section 15) | 6.2 |
 | the DFlash drafter's ROM (1.05 B parameters at 3.5 bits) | 33.5 |
 | the stream unit beyond the compute share (1,024 lanes; estimated) | 12.8 |
 | **2 MAC lane copies (the lane multiplier m = 3)** | 138.4 |
-| slack | 3.7 |
+| slack | 8.6 |
 
 A lane copy costs 69.2 mm² for all 131,072 lanes. That is 528.08 µm² a lane,
 measured: `ot_hdc_lane_copy` is 16 lanes of the exact BF16 multiplier and the
@@ -113,7 +113,7 @@ Requirements derived from the budget:
 |---|---|
 | MAC array | 131,072 lanes = 8,192 groups (a power of two: every K-split tiles whole rounds, 0.9999 of ideal); lane multiplier m = 3 |
 | attention | ≥ 124,520 lanes busy: Q·K and P·V both K-split over the groups |
-| KV in HBM | 6 stacks, 604 MB/token FP8 at 5.4 TB/s (122,881 cycles). Layer l+1's KV (positions < t, data-independent of the token) streams while layer l computes, into a 33.6 MB two-layer buffer. The token's own K/V row stays on die (tail buffer) and is written back behind the stream. Efficiency ≥ 0.90 of raw peak with refresh on. The controller queue is ≥ 512 beats per pseudo-channel, and a refreshing channel must not stall the others. |
+| KV in HBM | 6 stacks, 604 MB/token FP8 at 5.4 TB/s (122,881 cycles). Layer l+1's KV (positions < t, data-independent of the token) streams while layer l computes, into an 18.7 MB ring (one layer plus the refresh cover, §15). The token's own K/V row stays on die (tail buffer) and is written back behind the stream. Efficiency ≥ 0.90 of raw peak with refresh on. The controller queue is ≥ 512 beats per pseudo-channel, and a refreshing channel must not stall the others. |
 | stream unit | **1,024 elements/cycle**, with lane partials and a 10-level cross-lane pairwise reduction tree |
 | dependency | ≤ 54 cycles exposed per dependent stage (38,804 over 36 × 20): tile-granular chaining, never a full-unit drain |
 | sequencer | ≤ 3,880 exposed control cycles a token |
@@ -437,3 +437,91 @@ Each block goes through the same steps:
 
 Place and route of the whole core, and the integrated token simulation, follow
 the blocks.
+
+## 15. Utilisation of every block (the gate before place and route)
+
+The rule is to improve utilisation without slowing the single user. Every block
+of both designs is priced in four scenarios at 8K with FP8 KV:
+
+* batch 1, autoregressive;
+* batch 1 with DFlash at τ 4.1 (ROM: block 3 at m = 3; HBM: block 16);
+* the smallest KV-bound batch (ROM 2, HBM 16);
+* batch 128.
+
+The record is `results/arch/qwen3_utilization.json`, written by
+`tools/arch_budget_qwen3.py utilization()`; a test keeps it current.
+Utilisation is demand over peak × step: MFU for compute, MBU for memory and
+bandwidth (MBU against raw peak, so 0.90 is the sustained ceiling). The
+batch-1 autoregressive row uses the calibrated model's measured unit busy. The
+other rows use the budget model's steps, which are conservative; the
+KV-bound rows are exact.
+
+**ROM reticle** (utilisation per scenario: AR 1 / DFlash / batch 2 / batch 128):
+
+| block | AR 1 | DFlash | batch 2 | batch 128 | area mm² | verdict |
+|---|---|---|---|---|---|---|
+| matrix engine, base lanes | 0.62 | 0.49 | 0.31 | 0.21 | 146.7 | right-sized |
+| 2 lane copies | 0 | 0.49 | 0.15 | 0.21 | 138.4 | justified by DFlash, conditional on power |
+| weight ROM read path | 0.47 | 0.37 | 0.23 | 0.16 | 262.0 | right-sized |
+| attention (engine share) | 0.15 | 0.10 | 0.08 | 0.05 | (engine) | right-sized with the engine |
+| vector stream unit, 1,024 lanes | 0.24 | 0.50 | 0.24 | 0.24 | 12.8 | right-sized |
+| SFUs / reducers (on the stream lanes) | 0.08 / 0.15 | 0.16 / 0.32 | 0.08 / 0.16 | 0.08 / 0.16 | (stream) | with the stream unit |
+| KV streamer, controllers, 6 PHYs | 0.90 | 0.71 | 0.90 | 0.90 | 60.0 | binding |
+| KV ring buffer, capacity | 1.00 | 1.00 | 1.00 | 1.00 | 6.2 | **right-sized (was 0.56)** |
+| KV ring buffer, engine read port | 0.04 | 0.03 | 0.04 | 0.04 | (ring) | justified (latency) |
+| drafter ROM | 0 | 0.05 | 0 | 0 | 33.5 | justified by DFlash |
+| sequencer / argmax (busy) | 0.01 / 0.04 | 0.01 / 0.03 | 0.01 / 0.02 | 0.01 / 0.01 | small | justified (latency) |
+
+The verdicts:
+
+* **Base lanes.** Compute sits at the KV floor (123,301 against 122,881
+  cycles). Half the groups is 198,565 cycles in the calibrated model, 61%
+  slower a token.
+* **Stream unit.** It is the smallest width that holds the floor. 512 lanes is
+  133,569 cycles (+8.3% a token); 2,048 lanes is 121,569, under the floor, so
+  it buys nothing.
+* **KV ring buffer: over-provisioned, right-sized (applied).** Two layers
+  (33.6 MB) were 56% used. The stream runs continuously, because it binds the
+  token, and the engine drains a layer in its attention burst. So the peak
+  occupancy is one layer (16.8 MB) plus what lands during a refresh
+  (5.4 TB/s × 350 ns). That is 18.7 MB, and 5.0 mm² go to slack (section 4).
+* **Lane copies.** They are idle in autoregressive decode and in every
+  KV-bound batch, since each user's KV is its own and from batch 2 the step is
+  the KV stream. They carry the DFlash verify, 1.77× single-user tokens/s. That
+  gain holds under the cooling limit only at ≤ 1.35 pJ/MAC. At the measured
+  3.97 pJ/MAC the capped DFlash rate falls below autoregressive, and the copies
+  would not pay (section 11). They stay on that condition.
+* **Batch.** From batch 2 the base lanes are 69–79% idle and nothing on the die can
+  use it: the KV stream is the whole step. Only KV bytes move it. The stacks
+  are fixed by the beachfront, so 4-bit KV (a sensitivity, pending the
+  accuracy study) is the lever.
+
+Energy per step at batch 1 autoregressive, by the order-of-magnitude basis of
+section 10:
+
+| component | share |
+|---|---|
+| matrix engine (3.97 pJ/MAC) | 17% |
+| the rest of the logic (upper bound) | 55% |
+| KV reads in the stacks | 28% |
+| ROM read and leakage | 0.2% |
+
+Clock gating and operand isolation of the idle lane copies, and of lanes
+outside an op's tiles, are therefore requirements, not options.
+
+**HBM comparator** (131,072 lanes, FP8 weights and KV):
+
+| scenario | MFU | MBU (raw) | binding |
+|---|---|---|---|
+| batch 1 | 0.05 | 0.90 | bytes |
+| DFlash τ 4.1, block 16 | 0.74 | 0.90 | bytes |
+| batch 16 | 0.35 | 0.90 | bytes |
+| batch 128 | 0.56 | 0.90 | bytes |
+| 2K, batch 128 | 1.00 | 0.62 | MACs |
+
+The comparator's lanes are 5% used at batch 1, and a smaller array was tried.
+6,656 groups (106,496 lanes, tiling 0.947) still cover the DFlash step's
+97,471-lane need and slow no 8K row. At 2K, however, the batches from 32 users
+are MAC-bound, and it would cost them 23% of their throughput (13,564 against
+17,621 tok/s). **The comparator keeps its 131,072 lanes rather than be
+handicapped.** Its stacks and controllers bind every 8K row.
