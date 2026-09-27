@@ -1,25 +1,31 @@
 {
   "schema": "opentallas.hdc-v41x-decode-campaign.v1",
   "respecified_units": [
-    "he",
-    "me"
+    "sel",
+    "eg"
   ],
   "as_built_units": [
+    "he",
+    "me",
     "att",
     "idx"
   ],
-  "hdc_v41_arith": "he,me",
+  "hdc_v41_arith": "legacy",
   "engine_parameters": {
     "hhw": 8,
     "mg": 8
   },
   "not_exercised": {
-    "he": [
-      "MTP lane multiplier (mx_m > 1): the MTP program is not run on this core"
+    "sel": [
+      "static-count SELECTs (router top-6 over FP32 biased scores, a draft's top-1 over FP32 logits) stay on the as-built FP32 select: the re-specified select takes BF16 keys only",
+      "the overflow fallback (rep_req re-stream): the reduced vehicle's <= 128 scores never overflow the line memories (reps counted, expected 0)",
+      "k > 16 and the candidate top-2,048 (ot_hdc_v41x_sel_cand): the reduced vehicle's index top-k is 16",
+      "the MTP program (sel_first of a draft top-1 is FP32, as-built path)"
     ],
-    "me": [
-      "wo_a in the checkpoint's FP8 image format (the image feeds it as expanded BF16)",
-      "MTP lane multiplier (mx_m > 1) and the MTP layout's images"
+    "eg": [
+      "BEATS > 1 (the shipped 256-code rows): the reduced vehicle's rows are 32 codes, one beat",
+      "24 separate column-bank ROMs and the links between them: the core's single Engram ROM port stands in, one slice read a cycle",
+      "more than one token slot in flight (the core runs one EGATHER at a time)"
     ]
   },
   "status": "pass",
@@ -50,46 +56,58 @@
     "program: 3992 instructions (ME 345, SU 2649, QE 786, XU 131, HE 80); ME ROM 78196 words; QE ROM 54080 words; CROM 28492",
     "ISA simulator at pos 7: token 3118 golden 3118 oracle 3118; logits bit-exact with golden: True",
     "multi-token from empty state: ISA [3118, 2400, 64] golden [3118, 2400, 64] oracle [3118, 3583, 2357] every step's logits bit-exact: True",
-    "wrote /var/tmp/tmpbh6gesbb/img"
+    "wrote /tmp/tmp9obzwcjz/img"
   ],
   "single_step": {
     "token": 3582,
     "position": 7,
     "next_token": 3118,
     "isa_next_token": 3118,
-    "cycles": 376321,
+    "cycles": 344589,
     "fault": 0,
     "logit_mismatches": 0,
     "vector_memory_mismatches": 0,
     "kv_cache_mismatches": 0,
     "unit_busy_cycles": {
-      "me": 142227,
+      "me": 114163,
       "su": 232581,
-      "qe": 72233,
-      "xu": 27234,
-      "he": 32160
+      "qe": 72595,
+      "xu": 27714,
+      "he": 53600
     },
-    "all_units_idle_cycles": 2730,
+    "all_units_idle_cycles": 2530,
     "pass": true,
     "activation": {
       "counters": {
-        "he": {
-          "ops": 80,
-          "elements": 1228800
+        "sel": {
+          "ops": 8,
+          "elements": 52
         },
-        "me": {
-          "ops": 97,
-          "elements": 3585536
+        "eg": {
+          "ops": 2,
+          "elements": 48
         }
       },
       "zero_counter_units": [],
       "units_without_counters": [],
-      "pass": true
+      "pass": true,
+      "sel_replays": 0,
+      "expected_from_program": {
+        "sel": {
+          "ops": 8,
+          "elements": 52
+        },
+        "eg": {
+          "ops": 2,
+          "elements": 48
+        }
+      },
+      "count_mismatches": {}
     },
     "timing_model": {
       "cycles": 344131,
-      "relative_error": -0.085539,
-      "max_abs_issue_error_cycles": 30361
+      "relative_error": -0.001329,
+      "max_abs_issue_error_cycles": 454
     },
     "vector_memory_banking": {
       "bank_model": "8 banks, element address mod 8",
@@ -109,114 +127,114 @@
   },
   "per_operator_cycles": {
     "out": {
-      "cycles": 82960,
+      "cycles": 46360,
       "issued_ops": 120,
-      "share": 0.2205
+      "share": 0.1345
     },
     "experts": {
-      "cycles": 40800,
+      "cycles": 40906,
       "issued_ops": 720,
-      "share": 0.1084
+      "share": 0.1187
     },
     "hc_ffn": {
       "cycles": 25960,
       "issued_ops": 280,
-      "share": 0.069
+      "share": 0.0753
     },
     "attn": {
       "cycles": 24642,
       "issued_ops": 560,
-      "share": 0.0655
+      "share": 0.0715
     },
     "softmax": {
       "cycles": 24174,
       "issued_ops": 200,
-      "share": 0.0642
+      "share": 0.0702
+    },
+    "router": {
+      "cycles": 23534,
+      "issued_ops": 280,
+      "share": 0.0683
     },
     "pv": {
       "cycles": 23344,
       "issued_ops": 160,
-      "share": 0.062
+      "share": 0.0677
     },
     "hc_post": {
       "cycles": 23320,
       "issued_ops": 320,
-      "share": 0.062
+      "share": 0.0677
     },
     "hc_attn": {
       "cycles": 23270,
       "issued_ops": 280,
-      "share": 0.0618
-    },
-    "router": {
-      "cycles": 19160,
-      "issued_ops": 280,
-      "share": 0.0509
+      "share": 0.0675
     },
     "attn_norm": {
       "cycles": 15520,
       "issued_ops": 200,
-      "share": 0.0412
+      "share": 0.045
     },
     "ffn_norm": {
       "cycles": 15520,
       "issued_ops": 200,
-      "share": 0.0412
-    },
-    "drain": {
-      "cycles": 12217,
-      "issued_ops": 0,
-      "share": 0.0325
+      "share": 0.045
     },
     "scores": {
       "cycles": 11822,
       "issued_ops": 80,
-      "share": 0.0314
+      "share": 0.0343
     },
     "shared": {
-      "cycles": 11022,
+      "cycles": 11146,
       "issued_ops": 120,
-      "share": 0.0293
+      "share": 0.0323
+    },
+    "drain": {
+      "cycles": 10277,
+      "issued_ops": 0,
+      "share": 0.0298
     },
     "indexer": {
-      "cycles": 5847,
+      "cycles": 7123,
       "issued_ops": 64,
-      "share": 0.0155
+      "share": 0.0207
     },
     "moe_sum": {
       "cycles": 4640,
       "issued_ops": 240,
-      "share": 0.0123
+      "share": 0.0135
     },
     "engram": {
-      "cycles": 4290,
+      "cycles": 4322,
       "issued_ops": 18,
-      "share": 0.0114
+      "share": 0.0125
     },
     "gather": {
-      "cycles": 3206,
+      "cycles": 3658,
       "issued_ops": 76,
-      "share": 0.0085
+      "share": 0.0106
     },
     "compressor": {
-      "cycles": 2621,
+      "cycles": 2969,
       "issued_ops": 36,
-      "share": 0.007
+      "share": 0.0086
     },
     "index_key": {
-      "cycles": 1404,
+      "cycles": 1500,
       "issued_ops": 28,
-      "share": 0.0037
+      "share": 0.0044
     },
     "head": {
       "cycles": 564,
       "issued_ops": 6,
-      "share": 0.0015
+      "share": 0.0016
     },
     "embed": {
       "cycles": 18,
       "issued_ops": 3,
-      "share": 0.0
+      "share": 0.0001
     }
   },
   "end_to_end": {
@@ -239,7 +257,7 @@
     "isa_logits_bit_exact_with_golden_every_step": true,
     "steps": 10,
     "mismatches": 0,
-    "total_cycles": 3685463,
+    "total_cycles": 3366827,
     "final_vector_memory_mismatches": 0,
     "final_kv_cache_mismatches": 0,
     "per_step": [
@@ -248,7 +266,7 @@
         "input": 0,
         "output": 2815,
         "isa_output": 0,
-        "cycles": 349225,
+        "cycles": 316717,
         "fault": 0
       },
       {
@@ -256,7 +274,7 @@
         "input": 3563,
         "output": 3537,
         "isa_output": 0,
-        "cycles": 357702,
+        "cycles": 325998,
         "fault": 0
       },
       {
@@ -264,7 +282,7 @@
         "input": 3745,
         "output": 2047,
         "isa_output": 0,
-        "cycles": 357382,
+        "cycles": 325510,
         "fault": 0
       },
       {
@@ -272,7 +290,7 @@
         "input": 418,
         "output": 1968,
         "isa_output": 0,
-        "cycles": 363710,
+        "cycles": 331982,
         "fault": 0
       },
       {
@@ -280,7 +298,7 @@
         "input": 170,
         "output": 3159,
         "isa_output": 0,
-        "cycles": 363366,
+        "cycles": 331494,
         "fault": 0
       },
       {
@@ -288,7 +306,7 @@
         "input": 16,
         "output": 1719,
         "isa_output": 0,
-        "cycles": 369694,
+        "cycles": 337966,
         "fault": 0
       },
       {
@@ -296,7 +314,7 @@
         "input": 3564,
         "output": 2360,
         "isa_output": 0,
-        "cycles": 369670,
+        "cycles": 337798,
         "fault": 0
       },
       {
@@ -304,7 +322,7 @@
         "input": 3582,
         "output": 3118,
         "isa_output": 3118,
-        "cycles": 376318,
+        "cycles": 344590,
         "fault": 0
       },
       {
@@ -312,7 +330,7 @@
         "input": 3118,
         "output": 2400,
         "isa_output": 2400,
-        "cycles": 385742,
+        "cycles": 353846,
         "fault": 0
       },
       {
@@ -320,19 +338,19 @@
         "input": 2400,
         "output": 64,
         "isa_output": 64,
-        "cycles": 392654,
+        "cycles": 360926,
         "fault": 0
       }
     ],
     "activation": {
       "counters": {
-        "he": {
-          "ops": 800,
-          "elements": 12288000
+        "sel": {
+          "ops": 77,
+          "elements": 350
         },
-        "me": {
-          "ops": 952,
-          "elements": 35821568
+        "eg": {
+          "ops": 20,
+          "elements": 480
         }
       },
       "zero_counter_units": [],
@@ -341,7 +359,53 @@
     },
     "pass": true
   },
-  "long_context": null,
+  "long_context": {
+    "token": 3582,
+    "position": 39,
+    "next_token": 876,
+    "isa_next_token": 876,
+    "cycles": 489357,
+    "fault": 0,
+    "logit_mismatches": 0,
+    "vector_memory_mismatches": 0,
+    "kv_cache_mismatches": 0,
+    "unit_busy_cycles": {
+      "me": 230899,
+      "su": 262917,
+      "qe": 72341,
+      "xu": 27723,
+      "he": 53600
+    },
+    "all_units_idle_cycles": 2610,
+    "pass": true,
+    "activation": {
+      "counters": {
+        "sel": {
+          "ops": 8,
+          "elements": 260
+        },
+        "eg": {
+          "ops": 2,
+          "elements": 48
+        }
+      },
+      "zero_counter_units": [],
+      "units_without_counters": [],
+      "pass": true,
+      "sel_replays": 0,
+      "expected_from_program": {
+        "sel": {
+          "ops": 8,
+          "elements": 260
+        },
+        "eg": {
+          "ops": 2,
+          "elements": 48
+        }
+      },
+      "count_mismatches": {}
+    }
+  },
   "verilator_lint": {
     "returncode": 0,
     "flags": [
@@ -392,8 +456,13 @@
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "4019a66fa9e49dc263745ad2c09a6f667d1fbf7ff2a8621937ab3c36d8be024e",
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "a8f85464b0a3f9fd9c1576eb14105a90b6bd85d1f1672258e1f749e2b0dd23b3",
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "d6abc86f0b1ca437c8262e0ce46a93bd9e2263b4097ea0543d1ccb8f959ec718",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "57acecac43f431cfcfd1ac1c7c5f990d3b48d2411e3ae25c78240e64c10ccc97",
-    "rtl/test/tb_hdc_core_v41x.sv": "bcb2e028c63a0898e5e3d4f273336831d5b344febf730107c4011c1cbfb522ad",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+    "rtl/hdc/v41x/ot_hdc_v41x_egather.sv": "d1ac9dc69dadfe10e7093ea99aa027f3420885d6a8bd7d35132cf3d22ed2db21",
+    "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": "5358f668fa3115cabd4f50a82bbc6fc603ccec661b11a3bf68623085341f536e",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "1e6d65164538ddff8ce462bd1368d4fe3e7e7cc20a430c9e841bb46800a36d72",
+    "rtl/test/tb_hdc_core_v41x.sv": "764b2fc596abb5b2d9f05e9512b7b13facb5929a7845de38fc6a9ac3ad5be566",
     "rtl/test/hdc_core_v41x_harness.cpp": "26f6a740676595fec4589ff02f72bcd2b6fef7dfd380e01ce87c4607b16e8026",
     "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
     "tools/hdc_golden_v41.py": "6a991a1eb346220fdcff3b32dbfde286c0e526bfdd7f4c24a52ea553034ae734",
@@ -402,6 +471,6 @@
     "tools/hdc_timing_v41.py": "8298c22e3e1265bdd60e82f2e97dea4145d8c93f2627a74c80705588e892a127",
     "tools/hdc_timing_v41x.py": "48020ef5117d8f958141de2481b98a9e9b7cdb61a2ce1ef44c61a58c76a6cdf6",
     "tools/hdc_images_v41x.py": "fa592820beb94889ea3f2deaf27f461c291989dfd2398d5ebd3a3ef5886a576f",
-    "tools/rtl_hdc_v41x_decode_campaign.py": "6b0e9f7fd95212a66ee4bdccb7c7402ce5220b8375cc4f26192c3ea32896d475"
+    "tools/rtl_hdc_v41x_decode_campaign.py": "daef95b31c365aa6de1796bfb41c6ec2577227819df9cc99eb6d36fd51004363"
   }
 }
