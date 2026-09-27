@@ -1,0 +1,1796 @@
+{
+ "schema": "opentallas.dflash-step-timing.v1",
+ "tool": "tools/dflash_step_timing.py",
+ "drafter": "z-lab/Qwen3-8B-DFlash-b16",
+ "basis": {
+  "path": "results/speculative/dflash_timing_basis.json",
+  "source": "74359092:results/arch/qwen3_budget.json",
+  "source_sha256": "7539545928682b9731e6413bf78fe7592ca1f2a8b56890f64ffcceb4529dcd06"
+ },
+ "acceptance": {
+  "path": "results/speculative/dflash_block_acceptance.json",
+  "central": "primary workloads, cycle-weighted (the convention of the atlas's pooled 4.1)",
+  "band": "mean of the primary workloads' tau (each workload weighted equally)",
+  "per_block": {
+   "1": {
+    "direct": 1.0,
+    "truncated": 1.0,
+    "direct_mean_of_workloads": 1.0,
+    "truncated_mean_of_workloads": 1.0,
+    "direct_range": [
+     1.0,
+     1.0
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "2": {
+    "direct": 1.7361,
+    "truncated": 1.74,
+    "direct_mean_of_workloads": 1.7517,
+    "truncated_mean_of_workloads": 1.7545,
+    "direct_range": [
+     1.6302,
+     1.9552
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "3": {
+    "direct": 2.2654,
+    "truncated": 2.2451,
+    "direct_mean_of_workloads": 2.3207,
+    "truncated_mean_of_workloads": 2.3173,
+    "direct_range": [
+     1.9704,
+     2.8836
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "4": {
+    "direct": 2.6256,
+    "truncated": 2.5938,
+    "direct_mean_of_workloads": 2.7447,
+    "truncated_mean_of_workloads": 2.7424,
+    "direct_range": [
+     2.1635,
+     3.7913
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "5": {
+    "direct": 2.8591,
+    "truncated": 2.8463,
+    "direct_mean_of_workloads": 3.0823,
+    "truncated_mean_of_workloads": 3.0838,
+    "direct_range": [
+     2.3309,
+     4.6285
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "6": {
+    "direct": 3.0335,
+    "truncated": 3.0347,
+    "direct_mean_of_workloads": 3.3344,
+    "truncated_mean_of_workloads": 3.3601,
+    "direct_range": [
+     2.4057,
+     5.4229
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "8": {
+    "direct": 3.2956,
+    "truncated": 3.2911,
+    "direct_mean_of_workloads": 3.7478,
+    "truncated_mean_of_workloads": 3.7936,
+    "direct_range": [
+     2.4902,
+     6.8339
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "12": {
+    "direct": 3.4927,
+    "truncated": 3.5481,
+    "direct_mean_of_workloads": 4.2393,
+    "truncated_mean_of_workloads": 4.3485,
+    "direct_range": [
+     2.5148,
+     9.1983
+    ],
+    "measured": true,
+    "complete": true
+   },
+   "16": {
+    "direct": 3.6559,
+    "truncated": 3.6559,
+    "direct_mean_of_workloads": 4.6623,
+    "truncated_mean_of_workloads": 4.6623,
+    "direct_range": [
+     2.6485,
+     11.1224
+    ],
+    "measured": true,
+    "complete": true
+   }
+  }
+ },
+ "clock_hz": 1098640000.0,
+ "rom": {
+  "8192/fp8/m1": {
+   "context": 8192,
+   "kv_format": "fp8",
+   "lane_multiplier": 1,
+   "plain_cycles": 142884,
+   "plain_tokens_s": 7689.0,
+   "sweep": [
+    {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_truncated": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 142884,
+     "draft_cycles": 0,
+     "verify_cycles": 142884,
+     "commit_cycles": 0,
+     "tokens_s": 7689.0,
+     "tokens_s_band": 7689.0,
+     "speedup": 1.0,
+     "legacy_step_cycles": 142884,
+     "tokens_s_legacy_timing_measured_tau": 7689.0,
+     "tokens_s_serial_timing_truncated_tau": 7689.0
+    },
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_truncated": 1.74,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 266581,
+     "draft_cycles": 37723,
+     "verify_cycles": 228852,
+     "commit_cycles": 6,
+     "tokens_s": 7154.9,
+     "tokens_s_band": 7219.1,
+     "speedup": 0.931,
+     "legacy_step_cycles": 255361,
+     "tokens_s_legacy_timing_measured_tau": 7469.2,
+     "tokens_s_serial_timing_truncated_tau": 7170.9,
+     "draft_detail": {
+      "fc": 1556,
+      "layers": 31105,
+      "final_norm": 208,
+      "lm_head": 4854,
+      "chain_latency_only": 8475,
+      "compute": 37723,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 228852,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_truncated": 2.2451,
+     "tokens_per_step_band": 2.3207,
+     "step_cycles": 369551,
+     "draft_cycles": 54723,
+     "verify_cycles": 314820,
+     "commit_cycles": 8,
+     "tokens_s": 6734.8,
+     "tokens_s_band": 6899.2,
+     "speedup": 0.876,
+     "legacy_step_cycles": 356959,
+     "tokens_s_legacy_timing_measured_tau": 6972.4,
+     "tokens_s_serial_timing_truncated_tau": 6674.5,
+     "draft_detail": {
+      "fc": 2200,
+      "layers": 42705,
+      "final_norm": 212,
+      "lm_head": 9606,
+      "chain_latency_only": 8475,
+      "compute": 54723,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 314820,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_truncated": 2.5938,
+     "tokens_per_step_band": 2.7447,
+     "step_cycles": 472519,
+     "draft_cycles": 71723,
+     "verify_cycles": 400788,
+     "commit_cycles": 8,
+     "tokens_s": 6104.7,
+     "tokens_s_band": 6381.6,
+     "speedup": 0.794,
+     "legacy_step_cycles": 458557,
+     "tokens_s_legacy_timing_measured_tau": 6290.6,
+     "tokens_s_serial_timing_truncated_tau": 6030.8,
+     "draft_detail": {
+      "fc": 2844,
+      "layers": 54305,
+      "final_norm": 216,
+      "lm_head": 14358,
+      "chain_latency_only": 8475,
+      "compute": 71723,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 400788,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_truncated": 2.8463,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 575489,
+     "draft_cycles": 88723,
+     "verify_cycles": 486756,
+     "commit_cycles": 10,
+     "tokens_s": 5458.2,
+     "tokens_s_band": 5884.3,
+     "speedup": 0.71,
+     "legacy_step_cycles": 560156,
+     "tokens_s_legacy_timing_measured_tau": 5607.6,
+     "tokens_s_serial_timing_truncated_tau": 5433.7,
+     "draft_detail": {
+      "fc": 3488,
+      "layers": 65905,
+      "final_norm": 220,
+      "lm_head": 19110,
+      "chain_latency_only": 8475,
+      "compute": 88723,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 486756,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_truncated": 3.0347,
+     "tokens_per_step_band": 3.3344,
+     "step_cycles": 678457,
+     "draft_cycles": 105723,
+     "verify_cycles": 572724,
+     "commit_cycles": 10,
+     "tokens_s": 4912.2,
+     "tokens_s_band": 5399.5,
+     "speedup": 0.639,
+     "legacy_step_cycles": 661755,
+     "tokens_s_legacy_timing_measured_tau": 5036.2,
+     "tokens_s_serial_timing_truncated_tau": 4914.2,
+     "draft_detail": {
+      "fc": 4132,
+      "layers": 77505,
+      "final_norm": 224,
+      "lm_head": 23862,
+      "chain_latency_only": 8475,
+      "compute": 105723,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 572724,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_truncated": 3.2911,
+     "tokens_per_step_band": 3.7478,
+     "step_cycles": 884393,
+     "draft_cycles": 139723,
+     "verify_cycles": 744660,
+     "commit_cycles": 10,
+     "tokens_s": 4094.0,
+     "tokens_s_band": 4655.7,
+     "speedup": 0.532,
+     "legacy_step_cycles": 864956,
+     "tokens_s_legacy_timing_measured_tau": 4186.0,
+     "tokens_s_serial_timing_truncated_tau": 4088.4,
+     "draft_detail": {
+      "fc": 5420,
+      "layers": 100705,
+      "final_norm": 232,
+      "lm_head": 33366,
+      "chain_latency_only": 8475,
+      "compute": 139723,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 744660,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_truncated": 3.5481,
+     "tokens_per_step_band": 4.2393,
+     "step_cycles": 1296267,
+     "draft_cycles": 207723,
+     "verify_cycles": 1088532,
+     "commit_cycles": 12,
+     "tokens_s": 2960.2,
+     "tokens_s_band": 3593.0,
+     "speedup": 0.385,
+     "legacy_step_cycles": 1271365,
+     "tokens_s_legacy_timing_measured_tau": 3018.2,
+     "tokens_s_serial_timing_truncated_tau": 3007.2,
+     "draft_detail": {
+      "fc": 7996,
+      "layers": 147105,
+      "final_norm": 248,
+      "lm_head": 52374,
+      "chain_latency_only": 8475,
+      "compute": 207723,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 1088532,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_truncated": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_cycles": 1708139,
+     "draft_cycles": 275723,
+     "verify_cycles": 1432404,
+     "commit_cycles": 12,
+     "tokens_s": 2351.4,
+     "tokens_s_band": 2998.7,
+     "speedup": 0.306,
+     "legacy_step_cycles": 1677784,
+     "tokens_s_legacy_timing_measured_tau": 2393.9,
+     "tokens_s_serial_timing_truncated_tau": 2351.4,
+     "draft_detail": {
+      "fc": 10572,
+      "layers": 193505,
+      "final_norm": 264,
+      "lm_head": 71382,
+      "chain_latency_only": 8475,
+      "compute": 275723,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 1432404,
+      "kv_stream": 122881
+     }
+    }
+   ],
+   "best": {
+    "block": 1,
+    "tokens_per_step": 1.0,
+    "tokens_per_step_truncated": 1.0,
+    "tokens_per_step_band": 1.0,
+    "step_cycles": 142884,
+    "draft_cycles": 0,
+    "verify_cycles": 142884,
+    "commit_cycles": 0,
+    "tokens_s": 7689.0,
+    "tokens_s_band": 7689.0,
+    "speedup": 1.0,
+    "legacy_step_cycles": 142884,
+    "tokens_s_legacy_timing_measured_tau": 7689.0,
+    "tokens_s_serial_timing_truncated_tau": 7689.0
+   }
+  },
+  "8192/fp8/m3": {
+   "context": 8192,
+   "kv_format": "fp8",
+   "lane_multiplier": 3,
+   "plain_cycles": 142884,
+   "plain_tokens_s": 7689.0,
+   "sweep": [
+    {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_truncated": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 142884,
+     "draft_cycles": 0,
+     "verify_cycles": 142884,
+     "commit_cycles": 0,
+     "tokens_s": 7689.0,
+     "tokens_s_band": 7689.0,
+     "speedup": 1.0,
+     "legacy_step_cycles": 142884,
+     "tokens_s_legacy_timing_measured_tau": 7689.0,
+     "tokens_s_serial_timing_truncated_tau": 7689.0
+    },
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_truncated": 1.74,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 179525,
+     "draft_cycles": 26843,
+     "verify_cycles": 152676,
+     "commit_cycles": 6,
+     "tokens_s": 10624.4,
+     "tokens_s_band": 10719.9,
+     "speedup": 1.382,
+     "legacy_step_cycles": 165931,
+     "tokens_s_legacy_timing_measured_tau": 11494.9,
+     "tokens_s_serial_timing_truncated_tau": 10648.3,
+     "draft_detail": {
+      "fc": 916,
+      "layers": 20865,
+      "final_norm": 208,
+      "lm_head": 4854,
+      "chain_latency_only": 8475,
+      "compute": 26843,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 152676,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_truncated": 2.2451,
+     "tokens_per_step_band": 2.3207,
+     "step_cycles": 190687,
+     "draft_cycles": 28211,
+     "verify_cycles": 162468,
+     "commit_cycles": 8,
+     "tokens_s": 13052.1,
+     "tokens_s_band": 13370.7,
+     "speedup": 1.697,
+     "legacy_step_cycles": 176514,
+     "tokens_s_legacy_timing_measured_tau": 14100.0,
+     "tokens_s_serial_timing_truncated_tau": 12935.1,
+     "draft_detail": {
+      "fc": 920,
+      "layers": 22225,
+      "final_norm": 212,
+      "lm_head": 4854,
+      "chain_latency_only": 8475,
+      "compute": 28211,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 162468,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_truncated": 2.5938,
+     "tokens_per_step_band": 2.7447,
+     "step_cycles": 288903,
+     "draft_cycles": 40459,
+     "verify_cycles": 248436,
+     "commit_cycles": 8,
+     "tokens_s": 9984.6,
+     "tokens_s_band": 10437.5,
+     "speedup": 1.299,
+     "legacy_step_cycles": 267692,
+     "tokens_s_legacy_timing_measured_tau": 10775.8,
+     "tokens_s_serial_timing_truncated_tau": 9863.7,
+     "draft_detail": {
+      "fc": 1564,
+      "layers": 33825,
+      "final_norm": 216,
+      "lm_head": 4854,
+      "chain_latency_only": 8475,
+      "compute": 40459,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 248436,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_truncated": 2.8463,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 304817,
+     "draft_cycles": 46579,
+     "verify_cycles": 258228,
+     "commit_cycles": 10,
+     "tokens_s": 10304.9,
+     "tokens_s_band": 11109.4,
+     "speedup": 1.34,
+     "legacy_step_cycles": 282695,
+     "tokens_s_legacy_timing_measured_tau": 11111.4,
+     "tokens_s_serial_timing_truncated_tau": 10258.8,
+     "draft_detail": {
+      "fc": 1568,
+      "layers": 35185,
+      "final_norm": 220,
+      "lm_head": 9606,
+      "chain_latency_only": 8475,
+      "compute": 46579,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 258228,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_truncated": 3.0347,
+     "tokens_per_step_band": 3.3344,
+     "step_cycles": 315977,
+     "draft_cycles": 47947,
+     "verify_cycles": 268020,
+     "commit_cycles": 10,
+     "tokens_s": 10547.4,
+     "tokens_s_band": 11593.6,
+     "speedup": 1.372,
+     "legacy_step_cycles": 297697,
+     "tokens_s_legacy_timing_measured_tau": 11195.0,
+     "tokens_s_serial_timing_truncated_tau": 10551.5,
+     "draft_detail": {
+      "fc": 1572,
+      "layers": 36545,
+      "final_norm": 224,
+      "lm_head": 9606,
+      "chain_latency_only": 8475,
+      "compute": 47947,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 268020,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_truncated": 3.2911,
+     "tokens_per_step_band": 3.7478,
+     "step_cycles": 430105,
+     "draft_cycles": 66315,
+     "verify_cycles": 363780,
+     "commit_cycles": 10,
+     "tokens_s": 8418.1,
+     "tokens_s_band": 9573.2,
+     "speedup": 1.095,
+     "legacy_step_cycles": 403879,
+     "tokens_s_legacy_timing_measured_tau": 8964.8,
+     "tokens_s_serial_timing_truncated_tau": 8406.6,
+     "draft_detail": {
+      "fc": 2220,
+      "layers": 49505,
+      "final_norm": 232,
+      "lm_head": 14358,
+      "chain_latency_only": 8475,
+      "compute": 66315,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 363780,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_truncated": 3.5481,
+     "tokens_per_step_band": 4.2393,
+     "step_cycles": 566555,
+     "draft_cycles": 87419,
+     "verify_cycles": 479124,
+     "commit_cycles": 12,
+     "tokens_s": 6772.9,
+     "tokens_s_band": 8220.7,
+     "speedup": 0.881,
+     "legacy_step_cycles": 540068,
+     "tokens_s_legacy_timing_measured_tau": 7105.1,
+     "tokens_s_serial_timing_truncated_tau": 6880.3,
+     "draft_detail": {
+      "fc": 2876,
+      "layers": 65185,
+      "final_norm": 248,
+      "lm_head": 19110,
+      "chain_latency_only": 8475,
+      "compute": 87419,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 479124,
+      "kv_stream": 122881
+     }
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_truncated": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_cycles": 790059,
+     "draft_cycles": 119403,
+     "verify_cycles": 670644,
+     "commit_cycles": 12,
+     "tokens_s": 5083.8,
+     "tokens_s_band": 6483.3,
+     "speedup": 0.661,
+     "legacy_step_cycles": 752437,
+     "tokens_s_legacy_timing_measured_tau": 5338.0,
+     "tokens_s_serial_timing_truncated_tau": 5083.8,
+     "draft_detail": {
+      "fc": 4172,
+      "layers": 91105,
+      "final_norm": 264,
+      "lm_head": 23862,
+      "chain_latency_only": 8475,
+      "compute": 119403,
+      "kv_stream": 17067
+     },
+     "verify_detail": {
+      "compute": 670644,
+      "kv_stream": 122881
+     }
+    }
+   ],
+   "best": {
+    "block": 3,
+    "tokens_per_step": 2.2654,
+    "tokens_per_step_truncated": 2.2451,
+    "tokens_per_step_band": 2.3207,
+    "step_cycles": 190687,
+    "draft_cycles": 28211,
+    "verify_cycles": 162468,
+    "commit_cycles": 8,
+    "tokens_s": 13052.1,
+    "tokens_s_band": 13370.7,
+    "speedup": 1.697,
+    "legacy_step_cycles": 176514,
+    "tokens_s_legacy_timing_measured_tau": 14100.0,
+    "tokens_s_serial_timing_truncated_tau": 12935.1,
+    "draft_detail": {
+     "fc": 920,
+     "layers": 22225,
+     "final_norm": 212,
+     "lm_head": 4854,
+     "chain_latency_only": 8475,
+     "compute": 28211,
+     "kv_stream": 17067
+    },
+    "verify_detail": {
+     "compute": 162468,
+     "kv_stream": 122881
+    }
+   }
+  },
+  "2048/fp8/m1": {
+   "context": 2048,
+   "kv_format": "fp8",
+   "lane_multiplier": 1,
+   "plain_cycles": 122148,
+   "plain_tokens_s": 8994.3,
+   "sweep": [
+    {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_truncated": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 122148,
+     "draft_cycles": 0,
+     "verify_cycles": 122148,
+     "commit_cycles": 0,
+     "tokens_s": 8994.3,
+     "tokens_s_band": 8994.3,
+     "speedup": 1.0,
+     "legacy_step_cycles": 122148,
+     "tokens_s_legacy_timing_measured_tau": 8994.3,
+     "tokens_s_serial_timing_truncated_tau": 8994.3
+    },
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_truncated": 1.74,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 219349,
+     "draft_cycles": 31963,
+     "verify_cycles": 187380,
+     "commit_cycles": 6,
+     "tokens_s": 8695.5,
+     "tokens_s_band": 8773.6,
+     "speedup": 0.967,
+     "legacy_step_cycles": 210049,
+     "tokens_s_legacy_timing_measured_tau": 9080.5,
+     "tokens_s_serial_timing_truncated_tau": 8715.0,
+     "draft_detail": {
+      "fc": 1556,
+      "layers": 25345,
+      "final_norm": 208,
+      "lm_head": 4854,
+      "chain_latency_only": 8475,
+      "compute": 31963,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 187380,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_truncated": 2.2451,
+     "tokens_per_step_band": 2.3207,
+     "step_cycles": 298703,
+     "draft_cycles": 46083,
+     "verify_cycles": 252612,
+     "commit_cycles": 8,
+     "tokens_s": 8332.2,
+     "tokens_s_band": 8535.6,
+     "speedup": 0.926,
+     "legacy_step_cycles": 288991,
+     "tokens_s_legacy_timing_measured_tau": 8612.2,
+     "tokens_s_serial_timing_truncated_tau": 8257.6,
+     "draft_detail": {
+      "fc": 2200,
+      "layers": 34065,
+      "final_norm": 212,
+      "lm_head": 9606,
+      "chain_latency_only": 8475,
+      "compute": 46083,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 252612,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_truncated": 2.5938,
+     "tokens_per_step_band": 2.7447,
+     "step_cycles": 378055,
+     "draft_cycles": 60203,
+     "verify_cycles": 317844,
+     "commit_cycles": 8,
+     "tokens_s": 7630.1,
+     "tokens_s_band": 7976.2,
+     "speedup": 0.848,
+     "legacy_step_cycles": 367933,
+     "tokens_s_legacy_timing_measured_tau": 7840.0,
+     "tokens_s_serial_timing_truncated_tau": 7537.7,
+     "draft_detail": {
+      "fc": 2844,
+      "layers": 42785,
+      "final_norm": 216,
+      "lm_head": 14358,
+      "chain_latency_only": 8475,
+      "compute": 60203,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 317844,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_truncated": 2.8463,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 457409,
+     "draft_cycles": 74323,
+     "verify_cycles": 383076,
+     "commit_cycles": 10,
+     "tokens_s": 6867.2,
+     "tokens_s_band": 7403.3,
+     "speedup": 0.764,
+     "legacy_step_cycles": 446876,
+     "tokens_s_legacy_timing_measured_tau": 7029.1,
+     "tokens_s_serial_timing_truncated_tau": 6836.5,
+     "draft_detail": {
+      "fc": 3488,
+      "layers": 51505,
+      "final_norm": 220,
+      "lm_head": 19110,
+      "chain_latency_only": 8475,
+      "compute": 74323,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 383076,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_truncated": 3.0347,
+     "tokens_per_step_band": 3.3344,
+     "step_cycles": 536761,
+     "draft_cycles": 88443,
+     "verify_cycles": 448308,
+     "commit_cycles": 10,
+     "tokens_s": 6209.0,
+     "tokens_s_band": 6824.8,
+     "speedup": 0.69,
+     "legacy_step_cycles": 525819,
+     "tokens_s_legacy_timing_measured_tau": 6338.2,
+     "tokens_s_serial_timing_truncated_tau": 6211.4,
+     "draft_detail": {
+      "fc": 4132,
+      "layers": 60225,
+      "final_norm": 224,
+      "lm_head": 23862,
+      "chain_latency_only": 8475,
+      "compute": 88443,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 448308,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_truncated": 3.2911,
+     "tokens_per_step_band": 3.7478,
+     "step_cycles": 695465,
+     "draft_cycles": 116683,
+     "verify_cycles": 578772,
+     "commit_cycles": 10,
+     "tokens_s": 5206.1,
+     "tokens_s_band": 5920.5,
+     "speedup": 0.579,
+     "legacy_step_cycles": 683708,
+     "tokens_s_legacy_timing_measured_tau": 5295.6,
+     "tokens_s_serial_timing_truncated_tau": 5199.0,
+     "draft_detail": {
+      "fc": 5420,
+      "layers": 77665,
+      "final_norm": 232,
+      "lm_head": 33366,
+      "chain_latency_only": 8475,
+      "compute": 116683,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 578772,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_truncated": 3.5481,
+     "tokens_per_step_band": 4.2393,
+     "step_cycles": 1012875,
+     "draft_cycles": 173163,
+     "verify_cycles": 839700,
+     "commit_cycles": 12,
+     "tokens_s": 3788.4,
+     "tokens_s_band": 4598.3,
+     "speedup": 0.421,
+     "legacy_step_cycles": 999493,
+     "tokens_s_legacy_timing_measured_tau": 3839.2,
+     "tokens_s_serial_timing_truncated_tau": 3848.5,
+     "draft_detail": {
+      "fc": 7996,
+      "layers": 112545,
+      "final_norm": 248,
+      "lm_head": 52374,
+      "chain_latency_only": 8475,
+      "compute": 173163,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 839700,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_truncated": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_cycles": 1330283,
+     "draft_cycles": 229643,
+     "verify_cycles": 1100628,
+     "commit_cycles": 12,
+     "tokens_s": 3019.3,
+     "tokens_s_band": 3850.5,
+     "speedup": 0.336,
+     "legacy_step_cycles": 1315288,
+     "tokens_s_legacy_timing_measured_tau": 3053.7,
+     "tokens_s_serial_timing_truncated_tau": 3019.3,
+     "draft_detail": {
+      "fc": 10572,
+      "layers": 147425,
+      "final_norm": 264,
+      "lm_head": 71382,
+      "chain_latency_only": 8475,
+      "compute": 229643,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 1100628,
+      "kv_stream": 30720
+     }
+    }
+   ],
+   "best": {
+    "block": 1,
+    "tokens_per_step": 1.0,
+    "tokens_per_step_truncated": 1.0,
+    "tokens_per_step_band": 1.0,
+    "step_cycles": 122148,
+    "draft_cycles": 0,
+    "verify_cycles": 122148,
+    "commit_cycles": 0,
+    "tokens_s": 8994.3,
+    "tokens_s_band": 8994.3,
+    "speedup": 1.0,
+    "legacy_step_cycles": 122148,
+    "tokens_s_legacy_timing_measured_tau": 8994.3,
+    "tokens_s_serial_timing_truncated_tau": 8994.3
+   }
+  },
+  "2048/fp8/m3": {
+   "context": 2048,
+   "kv_format": "fp8",
+   "lane_multiplier": 3,
+   "plain_cycles": 122148,
+   "plain_tokens_s": 8994.3,
+   "sweep": [
+    {
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "tokens_per_step_truncated": 1.0,
+     "tokens_per_step_band": 1.0,
+     "step_cycles": 122148,
+     "draft_cycles": 0,
+     "verify_cycles": 122148,
+     "commit_cycles": 0,
+     "tokens_s": 8994.3,
+     "tokens_s_band": 8994.3,
+     "speedup": 1.0,
+     "legacy_step_cycles": 122148,
+     "tokens_s_legacy_timing_measured_tau": 8994.3,
+     "tokens_s_serial_timing_truncated_tau": 8994.3
+    },
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_truncated": 1.74,
+     "tokens_per_step_band": 1.7517,
+     "step_cycles": 148037,
+     "draft_cycles": 23003,
+     "verify_cycles": 125028,
+     "commit_cycles": 6,
+     "tokens_s": 12884.3,
+     "tokens_s_band": 13000.0,
+     "speedup": 1.432,
+     "legacy_step_cycles": 136363,
+     "tokens_s_legacy_timing_measured_tau": 13987.3,
+     "tokens_s_serial_timing_truncated_tau": 12913.2,
+     "draft_detail": {
+      "fc": 916,
+      "layers": 17025,
+      "final_norm": 208,
+      "lm_head": 4854,
+      "chain_latency_only": 8475,
+      "compute": 23003,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 125028,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_truncated": 2.2451,
+     "tokens_per_step_band": 2.3207,
+     "step_cycles": 151327,
+     "draft_cycles": 23411,
+     "verify_cycles": 127908,
+     "commit_cycles": 8,
+     "tokens_s": 16446.9,
+     "tokens_s_band": 16848.4,
+     "speedup": 1.829,
+     "legacy_step_cycles": 140034,
+     "tokens_s_legacy_timing_measured_tau": 17773.2,
+     "tokens_s_serial_timing_truncated_tau": 16299.5,
+     "draft_detail": {
+      "fc": 920,
+      "layers": 17425,
+      "final_norm": 212,
+      "lm_head": 4854,
+      "chain_latency_only": 8475,
+      "compute": 23411,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 127908,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_truncated": 2.5938,
+     "tokens_per_step_band": 2.7447,
+     "step_cycles": 225927,
+     "draft_cycles": 32779,
+     "verify_cycles": 193140,
+     "commit_cycles": 8,
+     "tokens_s": 12767.8,
+     "tokens_s_band": 13347.0,
+     "speedup": 1.42,
+     "legacy_step_cycles": 209836,
+     "tokens_s_legacy_timing_measured_tau": 13746.9,
+     "tokens_s_serial_timing_truncated_tau": 12613.2,
+     "draft_detail": {
+      "fc": 1564,
+      "layers": 26145,
+      "final_norm": 216,
+      "lm_head": 4854,
+      "chain_latency_only": 8475,
+      "compute": 32779,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 193140,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_truncated": 2.8463,
+     "tokens_per_step_band": 3.0823,
+     "step_cycles": 233969,
+     "draft_cycles": 37939,
+     "verify_cycles": 196020,
+     "commit_cycles": 10,
+     "tokens_s": 13425.4,
+     "tokens_s_band": 14473.4,
+     "speedup": 1.493,
+     "legacy_step_cycles": 217287,
+     "tokens_s_legacy_timing_measured_tau": 14456.1,
+     "tokens_s_serial_timing_truncated_tau": 13365.3,
+     "draft_detail": {
+      "fc": 1568,
+      "layers": 26545,
+      "final_norm": 220,
+      "lm_head": 9606,
+      "chain_latency_only": 8475,
+      "compute": 37939,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 196020,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_truncated": 3.0347,
+     "tokens_per_step_band": 3.3344,
+     "step_cycles": 237257,
+     "draft_cycles": 38347,
+     "verify_cycles": 198900,
+     "commit_cycles": 10,
+     "tokens_s": 14046.9,
+     "tokens_s_band": 15440.2,
+     "speedup": 1.562,
+     "legacy_step_cycles": 224737,
+     "tokens_s_legacy_timing_measured_tau": 14829.4,
+     "tokens_s_serial_timing_truncated_tau": 14052.5,
+     "draft_detail": {
+      "fc": 1572,
+      "layers": 26945,
+      "final_norm": 224,
+      "lm_head": 9606,
+      "chain_latency_only": 8475,
+      "compute": 38347,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 198900,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_truncated": 3.2911,
+     "tokens_per_step_band": 3.7478,
+     "step_cycles": 319897,
+     "draft_cycles": 52875,
+     "verify_cycles": 267012,
+     "commit_cycles": 10,
+     "tokens_s": 11318.3,
+     "tokens_s_band": 12871.3,
+     "speedup": 1.258,
+     "legacy_step_cycles": 301991,
+     "tokens_s_legacy_timing_measured_tau": 11989.4,
+     "tokens_s_serial_timing_truncated_tau": 11302.8,
+     "draft_detail": {
+      "fc": 2220,
+      "layers": 36065,
+      "final_norm": 232,
+      "lm_head": 14358,
+      "chain_latency_only": 8475,
+      "compute": 52875,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 267012,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_truncated": 3.5481,
+     "tokens_per_step_band": 4.2393,
+     "step_cycles": 409115,
+     "draft_cycles": 68219,
+     "verify_cycles": 340884,
+     "commit_cycles": 12,
+     "tokens_s": 9379.3,
+     "tokens_s_band": 11384.2,
+     "speedup": 1.043,
+     "legacy_step_cycles": 394148,
+     "tokens_s_legacy_timing_measured_tau": 9735.5,
+     "tokens_s_serial_timing_truncated_tau": 9528.1,
+     "draft_detail": {
+      "fc": 2876,
+      "layers": 45985,
+      "final_norm": 248,
+      "lm_head": 19110,
+      "chain_latency_only": 8475,
+      "compute": 68219,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 340884,
+      "kv_stream": 30720
+     }
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_truncated": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_cycles": 569643,
+     "draft_cycles": 92523,
+     "verify_cycles": 477108,
+     "commit_cycles": 12,
+     "tokens_s": 7050.9,
+     "tokens_s_band": 8991.9,
+     "speedup": 0.784,
+     "legacy_step_cycles": 548661,
+     "tokens_s_legacy_timing_measured_tau": 7320.6,
+     "tokens_s_serial_timing_truncated_tau": 7050.9,
+     "draft_detail": {
+      "fc": 4172,
+      "layers": 64225,
+      "final_norm": 264,
+      "lm_head": 23862,
+      "chain_latency_only": 8475,
+      "compute": 92523,
+      "kv_stream": 4267
+     },
+     "verify_detail": {
+      "compute": 477108,
+      "kv_stream": 30720
+     }
+    }
+   ],
+   "best": {
+    "block": 3,
+    "tokens_per_step": 2.2654,
+    "tokens_per_step_truncated": 2.2451,
+    "tokens_per_step_band": 2.3207,
+    "step_cycles": 151327,
+    "draft_cycles": 23411,
+    "verify_cycles": 127908,
+    "commit_cycles": 8,
+    "tokens_s": 16446.9,
+    "tokens_s_band": 16848.4,
+    "speedup": 1.829,
+    "legacy_step_cycles": 140034,
+    "tokens_s_legacy_timing_measured_tau": 17773.2,
+    "tokens_s_serial_timing_truncated_tau": 16299.5,
+    "draft_detail": {
+     "fc": 920,
+     "layers": 17425,
+     "final_norm": 212,
+     "lm_head": 4854,
+     "chain_latency_only": 8475,
+     "compute": 23411,
+     "kv_stream": 4267
+    },
+    "verify_detail": {
+     "compute": 127908,
+     "kv_stream": 30720
+    }
+   }
+  }
+ },
+ "hbm": {
+  "bf16": {
+   "context": 8192,
+   "plain_tokens_s": 343.1,
+   "sweep": [
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_band": 1.7517,
+     "step_us": 3549.26,
+     "draft_us": 634.41,
+     "verify_us": 2914.85,
+     "commit_us": 0.0055,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 489.1,
+     "tokens_s_band": 493.5,
+     "speedup": 1.426,
+     "tokens_s_legacy_pricing_measured_tau": 523.1
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_band": 2.3207,
+     "step_us": 3549.26,
+     "draft_us": 634.41,
+     "verify_us": 2914.85,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 638.3,
+     "tokens_s_band": 653.9,
+     "speedup": 1.86,
+     "tokens_s_legacy_pricing_measured_tau": 682.6
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_band": 2.7447,
+     "step_us": 3549.26,
+     "draft_us": 634.41,
+     "verify_us": 2914.85,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 739.8,
+     "tokens_s_band": 773.3,
+     "speedup": 2.156,
+     "tokens_s_legacy_pricing_measured_tau": 791.1
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_band": 3.0823,
+     "step_us": 3549.26,
+     "draft_us": 634.41,
+     "verify_us": 2914.85,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 805.5,
+     "tokens_s_band": 868.4,
+     "speedup": 2.348,
+     "tokens_s_legacy_pricing_measured_tau": 861.5
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_band": 3.3344,
+     "step_us": 3549.26,
+     "draft_us": 634.41,
+     "verify_us": 2914.85,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 854.7,
+     "tokens_s_band": 939.5,
+     "speedup": 2.491,
+     "tokens_s_legacy_pricing_measured_tau": 914.0
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_band": 3.7478,
+     "step_us": 3549.26,
+     "draft_us": 634.41,
+     "verify_us": 2914.85,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 928.5,
+     "tokens_s_band": 1055.9,
+     "speedup": 2.707,
+     "tokens_s_legacy_pricing_measured_tau": 993.0
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_band": 4.2393,
+     "step_us": 3549.27,
+     "draft_us": 634.41,
+     "verify_us": 2914.85,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 984.1,
+     "tokens_s_band": 1194.4,
+     "speedup": 2.868,
+     "tokens_s_legacy_pricing_measured_tau": 1052.4
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_us": 3549.27,
+     "draft_us": 634.41,
+     "verify_us": 2914.85,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1030.0,
+     "tokens_s_band": 1313.6,
+     "speedup": 3.002,
+     "tokens_s_legacy_pricing_measured_tau": 1101.6
+    }
+   ],
+   "best": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 3549.27,
+    "draft_us": 634.41,
+    "verify_us": 2914.85,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 1030.0,
+    "tokens_s_band": 1313.6,
+    "speedup": 3.002,
+    "tokens_s_legacy_pricing_measured_tau": 1101.6
+   },
+   "block16": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 3549.27,
+    "draft_us": 634.41,
+    "verify_us": 2914.85,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 1030.0,
+    "tokens_s_band": 1313.6,
+    "speedup": 3.002,
+    "tokens_s_legacy_pricing_measured_tau": 1101.6
+   },
+   "legacy_block16_tokens_s_at_tau_4_1": 1235.4
+  },
+  "fp8": {
+   "context": 8192,
+   "plain_tokens_s": 660.8,
+   "sweep": [
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_band": 1.7517,
+     "step_us": 1838.32,
+     "draft_us": 324.97,
+     "verify_us": 1513.35,
+     "commit_us": 0.0055,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 944.4,
+     "tokens_s_band": 952.9,
+     "speedup": 1.429,
+     "tokens_s_legacy_pricing_measured_tau": 1007.6
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_band": 2.3207,
+     "step_us": 1838.33,
+     "draft_us": 324.97,
+     "verify_us": 1513.35,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1232.3,
+     "tokens_s_band": 1262.4,
+     "speedup": 1.865,
+     "tokens_s_legacy_pricing_measured_tau": 1314.7
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_band": 2.7447,
+     "step_us": 1838.33,
+     "draft_us": 324.97,
+     "verify_us": 1513.35,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1428.3,
+     "tokens_s_band": 1493.0,
+     "speedup": 2.161,
+     "tokens_s_legacy_pricing_measured_tau": 1523.8
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_band": 3.0823,
+     "step_us": 1838.33,
+     "draft_us": 324.97,
+     "verify_us": 1513.35,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1555.3,
+     "tokens_s_band": 1676.7,
+     "speedup": 2.354,
+     "tokens_s_legacy_pricing_measured_tau": 1659.3
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_band": 3.3344,
+     "step_us": 1838.33,
+     "draft_us": 324.97,
+     "verify_us": 1513.35,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1650.1,
+     "tokens_s_band": 1813.8,
+     "speedup": 2.497,
+     "tokens_s_legacy_pricing_measured_tau": 1760.5
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_band": 3.7478,
+     "step_us": 1838.33,
+     "draft_us": 324.97,
+     "verify_us": 1513.35,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1792.7,
+     "tokens_s_band": 2038.7,
+     "speedup": 2.713,
+     "tokens_s_legacy_pricing_measured_tau": 1912.6
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_band": 4.2393,
+     "step_us": 1838.33,
+     "draft_us": 324.97,
+     "verify_us": 1513.35,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1899.9,
+     "tokens_s_band": 2306.1,
+     "speedup": 2.875,
+     "tokens_s_legacy_pricing_measured_tau": 2027.0
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_us": 1838.33,
+     "draft_us": 324.97,
+     "verify_us": 1513.35,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1988.7,
+     "tokens_s_band": 2536.2,
+     "speedup": 3.01,
+     "tokens_s_legacy_pricing_measured_tau": 2121.7
+    }
+   ],
+   "best": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 1838.33,
+    "draft_us": 324.97,
+    "verify_us": 1513.35,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 1988.7,
+    "tokens_s_band": 2536.2,
+    "speedup": 3.01,
+    "tokens_s_legacy_pricing_measured_tau": 2121.7
+   },
+   "block16": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 1838.33,
+    "draft_us": 324.97,
+    "verify_us": 1513.35,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 1988.7,
+    "tokens_s_band": 2536.2,
+    "speedup": 3.01,
+    "tokens_s_legacy_pricing_measured_tau": 2121.7
+   },
+   "legacy_block16_tokens_s_at_tau_4_1": 2379.5
+  },
+  "rom_format_3.5b": {
+   "context": 8192,
+   "plain_tokens_s": 1379.3,
+   "sweep": [
+    {
+     "block": 2,
+     "tokens_per_step": 1.7361,
+     "tokens_per_step_band": 1.7517,
+     "step_us": 875.92,
+     "draft_us": 150.91,
+     "verify_us": 725.0,
+     "commit_us": 0.0055,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 1982.0,
+     "tokens_s_band": 1999.8,
+     "speedup": 1.437,
+     "tokens_s_legacy_pricing_measured_tau": 2103.1
+    },
+    {
+     "block": 3,
+     "tokens_per_step": 2.2654,
+     "tokens_per_step_band": 2.3207,
+     "step_us": 875.92,
+     "draft_us": 150.91,
+     "verify_us": 725.0,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2586.3,
+     "tokens_s_band": 2649.4,
+     "speedup": 1.875,
+     "tokens_s_legacy_pricing_measured_tau": 2744.3
+    },
+    {
+     "block": 4,
+     "tokens_per_step": 2.6256,
+     "tokens_per_step_band": 2.7447,
+     "step_us": 875.92,
+     "draft_us": 150.91,
+     "verify_us": 725.0,
+     "commit_us": 0.0073,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 2997.5,
+     "tokens_s_band": 3133.5,
+     "speedup": 2.173,
+     "tokens_s_legacy_pricing_measured_tau": 3180.6
+    },
+    {
+     "block": 5,
+     "tokens_per_step": 2.8591,
+     "tokens_per_step_band": 3.0823,
+     "step_us": 875.93,
+     "draft_us": 150.91,
+     "verify_us": 725.0,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 3264.1,
+     "tokens_s_band": 3518.9,
+     "speedup": 2.366,
+     "tokens_s_legacy_pricing_measured_tau": 3463.5
+    },
+    {
+     "block": 6,
+     "tokens_per_step": 3.0335,
+     "tokens_per_step_band": 3.3344,
+     "step_us": 875.93,
+     "draft_us": 150.91,
+     "verify_us": 725.0,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 3463.2,
+     "tokens_s_band": 3806.7,
+     "speedup": 2.511,
+     "tokens_s_legacy_pricing_measured_tau": 3674.8
+    },
+    {
+     "block": 8,
+     "tokens_per_step": 3.2956,
+     "tokens_per_step_band": 3.7478,
+     "step_us": 875.93,
+     "draft_us": 150.91,
+     "verify_us": 725.0,
+     "commit_us": 0.0091,
+     "binding": {
+      "draft": "bytes",
+      "verify": "bytes"
+     },
+     "tokens_s": 3762.4,
+     "tokens_s_band": 4278.7,
+     "speedup": 2.728,
+     "tokens_s_legacy_pricing_measured_tau": 3992.3
+    },
+    {
+     "block": 12,
+     "tokens_per_step": 3.4927,
+     "tokens_per_step_band": 4.2393,
+     "step_us": 998.42,
+     "draft_us": 166.42,
+     "verify_us": 832.0,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "macs",
+      "verify": "macs"
+     },
+     "tokens_s": 3498.2,
+     "tokens_s_band": 4246.0,
+     "speedup": 2.536,
+     "tokens_s_legacy_pricing_measured_tau": 4231.0
+    },
+    {
+     "block": 16,
+     "tokens_per_step": 3.6559,
+     "tokens_per_step_band": 4.6623,
+     "step_us": 1332.69,
+     "draft_us": 223.35,
+     "verify_us": 1109.33,
+     "commit_us": 0.0109,
+     "binding": {
+      "draft": "macs",
+      "verify": "macs"
+     },
+     "tokens_s": 2743.3,
+     "tokens_s_band": 3498.4,
+     "speedup": 1.989,
+     "tokens_s_legacy_pricing_measured_tau": 4428.7
+    }
+   ],
+   "best": {
+    "block": 8,
+    "tokens_per_step": 3.2956,
+    "tokens_per_step_band": 3.7478,
+    "step_us": 875.93,
+    "draft_us": 150.91,
+    "verify_us": 725.0,
+    "commit_us": 0.0091,
+    "binding": {
+     "draft": "bytes",
+     "verify": "bytes"
+    },
+    "tokens_s": 3762.4,
+    "tokens_s_band": 4278.7,
+    "speedup": 2.728,
+    "tokens_s_legacy_pricing_measured_tau": 3992.3
+   },
+   "block16": {
+    "block": 16,
+    "tokens_per_step": 3.6559,
+    "tokens_per_step_band": 4.6623,
+    "step_us": 1332.69,
+    "draft_us": 223.35,
+    "verify_us": 1109.33,
+    "commit_us": 0.0109,
+    "binding": {
+     "draft": "macs",
+     "verify": "macs"
+    },
+    "tokens_s": 2743.3,
+    "tokens_s_band": 3498.4,
+    "speedup": 1.989,
+    "tokens_s_legacy_pricing_measured_tau": 4428.7
+   },
+   "legacy_block16_tokens_s_at_tau_4_1": 4966.7
+  }
+ },
+ "checks": {
+  "legacy_rom_sweep_reproduced/8192/fp8/m1": true,
+  "legacy_rom_sweep_reproduced/8192/fp8/m3": true,
+  "legacy_hbm_block16_reproduced/bf16": true,
+  "legacy_hbm_block16_reproduced/fp8": true,
+  "legacy_hbm_block16_reproduced/rom_format_3.5b": true,
+  "legacy_rom_sweep_reproduced/2048/fp8/m1": true,
+  "legacy_rom_sweep_reproduced/2048/fp8/m3": true,
+  "all": true
+ },
+ "notes": [
+  "Tokens per step are measured at BF16 on a GPU (results/speculative/dflash_block_acceptance.json), not in the deployment arithmetic (3.5-bit ROM weights, FP8 KV).",
+  "Blocks below 16 run the block-16 drafter out of its training distribution; the direct runs measure that.",
+  "The draft phase projects B new context positions (an upper bound: the last step committed tau of them).",
+  "DRAFT and VERIFY are serial; each overlaps its own KV stream with its compute, as the atlas's rom_token does. Only one KV layer is buffered (the ring of the atlas's area ledger), so neither phase's stream runs ahead into the other.",
+  "The HBM comparator's draft re-reads the shared lm_head (151,936 x 4096) at the weight format, and each phase is capped by the 131,072 MAC lanes."
+ ]
+}
