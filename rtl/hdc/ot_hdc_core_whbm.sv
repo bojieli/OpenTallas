@@ -104,6 +104,8 @@ module ot_hdc_core_whbm #(
     // KV-streaming handshake (KV_HBM = 1 only)
     output reg               kvd_v,           // descriptor of the KV op now waiting to issue
     output wire [AW-1:0]     kvd_wbase, kvd_ts, kvd_ks, kvd_js,
+    output wire [AW-1:0]     kvd_wcs,
+    output wire [3:0]        kvd_split,
     output wire [2:0]        kvd_jsh,
     output wire [NW-1:0]     kvd_tiles, kvd_k, kvd_nout,
     output wire              kvd_kindk,       // positions tile the lanes (scores); else positions are k (weighted sum)
@@ -143,13 +145,13 @@ module ot_hdc_core_whbm #(
     reg [1:0]    d_unit;
     reg          d_barrier;
     reg [NW-1:0] me_nout, me_tiles, me_k;
-    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase, me_amc;
+    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase, d_wait_me, d_wait_su, me_amc;
     reg [NW-1:0] me_row0;
     reg [15:0]   d_chase_n;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs;
     reg [2:0]    me_jsh;
-    reg [1:0]    me_split;
-    reg [AW-1:0] me_xcs;
+    reg [3:0]    me_split;
+    reg [AW-1:0] me_xcs, me_wcs;
     reg [NW-1:0] su_nout, su_nin;
     reg          a_src, b_src, c_src, mc;
     reg [AW-1:0] a_base, a_so, a_si, b_base, b_so, b_si, c_base, c_so, c_si;
@@ -176,6 +178,7 @@ module ot_hdc_core_whbm #(
     //: chase_n progress; a go on that cycle would make the count stale.
     wire chased = !me_go && !su_go &&
                   (((d_unit == 2'd1) ? su_progress : me_progress) >= d_chase_n);
+    wire waited = (!d_wait_me || (me_idle && !me_go)) && (!d_wait_su || (su_idle && !su_go));
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -199,7 +202,7 @@ module ot_hdc_core_whbm #(
                         if (drained) begin
                             done <= 1'b1; next_token <= fin_idx; next_val <= fin_val; st <= S_IDLE;
                         end
-                    end else if ((d_drain ? drained : (!d_chase || chased)) && unit_ready && kv_gate && w_gate) begin
+                    end else if ((d_drain ? drained : (!d_chase || chased)) && waited && unit_ready && kv_gate && w_gate) begin
                         me_go <= (d_unit == 2'd1); su_go <= (d_unit == 2'd2);
                         st <= S_GO;
                     end
@@ -241,6 +244,7 @@ module ot_hdc_core_whbm #(
         end
     end
     assign kvd_wbase = me_wbase; assign kvd_ts = me_ts; assign kvd_ks = me_ks; assign kvd_js = me_js;
+    assign kvd_wcs = me_wcs; assign kvd_split = me_split;
     assign kvd_jsh = me_jsh; assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
     assign kvd_kindk = me_kindk; assign kvd_pos = pos_r;
 
@@ -260,7 +264,8 @@ module ot_hdc_core_whbm #(
     always @(posedge clk) if (st == S_DEC) begin
         d_unit <= `F(UNIT); d_barrier <= `F(BARRIER);
         me_nout <= `F(ME_NOUT) + dyn[`F(ME_D_NOUT)];
-        me_tiles <= `F(ME_TILES) + dyn[`F(ME_D_TILES)];
+        me_tiles <= `F(ME_TILES) + ((`F(ME_D_TILES) == 3'd6) ? ((pos_r >> (LT0 - `F(ME_SPLIT))) + 1'b1)
+                                                               : dyn[`F(ME_D_TILES)]);
         me_k <= `F(ME_K) + dyn[`F(ME_D_K)];
         me_kindk <= (`F(ME_D_TILES) == 3'd6);        // DYN_TTILES: rounds of position tiles
         me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
@@ -272,7 +277,8 @@ module ot_hdc_core_whbm #(
         me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
         me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE);
         d_chase <= `F(CHASE); d_chase_n <= `F(CHASE_N);
-        me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS);
+        d_wait_me <= `F(WAIT_ME); d_wait_su <= `F(WAIT_SU);
+        me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS); me_wcs <= `F(ME_WCS);
         su_nout <= `F(SU_NOUT);
         su_nin <= `F(SU_NIN) + dyn[`F(SU_D_NIN)];
         a_src <= `F(A_SRC); a_base <= `F(A_BASE) + dyn[`F(A_D)]; a_so <= `F(A_SO); a_si <= `F(A_SI);
@@ -292,7 +298,8 @@ module ot_hdc_core_whbm #(
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
-        .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
+        .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_wcs(me_wcs), .i_rmax(1'b0), .i_mbase('0),
+        .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
         .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax),
         .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(wrom_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),

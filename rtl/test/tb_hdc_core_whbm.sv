@@ -77,7 +77,8 @@ module tb_hdc_core_whbm #(
     wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [31:0] vw_su_data, vw_rd_data;
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
     wire kvd_v, kvd_kindk, kv_ok;
-    wire [AW-1:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js;
+    wire [AW-1:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js, kvd_wcs;
+    wire [3:0] kvd_split;
     wire [2:0] kvd_jsh;
     wire [NW-1:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos;
     wire wd_v, w_ok, emb_ok;
@@ -101,6 +102,7 @@ module tb_hdc_core_whbm #(
         .vw_rd_we(vw_rd_we), .vw_rd_addr(vw_rd_addr), .vw_rd_data(vw_rd_data),
         .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
+        .kvd_wcs(kvd_wcs), .kvd_split(kvd_split),
         .kvd_jsh(kvd_jsh), .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_nout(kvd_nout),
         .kvd_kindk(kvd_kindk), .kvd_pos(kvd_pos), .kv_ok(kv_ok),
         .wrom_su(wrom_su), .wd_v(wd_v), .wd_wbase(wd_wbase), .wd_tiles(wd_tiles), .wd_k(wd_k),
@@ -111,6 +113,8 @@ module tb_hdc_core_whbm #(
     wire win_re; wire [LWIN-1:0] win_raddr; reg [G*W*16-1:0] win_q;
     wire [1:0] tl_we, tl_re; wire [2*TAW-1:0] tl_waddr, tl_raddr; wire [2*W-1:0] tl_wmask;
     wire [2*W*16-1:0] tl_wdata; reg [2*W*16-1:0] tl_q;
+    wire [G-1:0] tl_group_re; wire [G*AW-1:0] tl_group_raddr;
+    reg [G*W*16-1:0] tl_group_q;
     wire kq_v, kq_rdy, kq_we; wire [AW-1:0] kq_addr; wire [LBK:0] kq_len; wire [TAGK-1:0] kq_tag;
     wire [W*16-1:0] kq_wdata;
     wire [NPC-1:0] kr_v, kr_rdy; wire [NPC*TAGK-1:0] kr_tag;
@@ -122,9 +126,10 @@ module tb_hdc_core_whbm #(
     wire [NPC*256-1:0] hr_data;
     wire [NPC-1:0] pc_room;
     ot_hdc_kv_stream #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .LWIN(LWIN), .NPC(NPC), .BK(BK),
-                       .LOG_HD(LOG_HD), .LOG_TW(LOG_TW), .LLG(LLG), .V0_WORD(V0_WORD)) u_kvs (
+                       .LOG_HD(LOG_HD), .LOG_TW(LOG_TW), .LLG(LLG), .V0_WORD(V0_WORD), .SPLIT_AWARE(1)) u_kvs (
         .clk(clk), .rst_n(rst_n), .tok_start(start), .tok_pos(pos), .cfg_lead(lead),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
+        .kvd_wcs(kvd_wcs), .kvd_split(kvd_split),
         .kvd_jsh(kvd_jsh), .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_nout(kvd_nout),
         .kvd_kindk(kvd_kindk), .kvd_pos(kvd_pos), .kv_ok(kv_ok),
         .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q),
@@ -133,6 +138,7 @@ module tb_hdc_core_whbm #(
         .win_q(win_q),
         .tl_we(tl_we), .tl_waddr(tl_waddr), .tl_wmask(tl_wmask), .tl_wdata(tl_wdata), .tl_re(tl_re),
         .tl_raddr(tl_raddr), .tl_q(tl_q),
+        .tl_group_re(tl_group_re), .tl_group_raddr(tl_group_raddr), .tl_group_q(tl_group_q),
         .hq_v(kq_v), .hq_rdy(kq_rdy), .hq_we(kq_we), .hq_addr(kq_addr), .hq_len(kq_len), .hq_tag(kq_tag),
         .hq_wdata(kq_wdata),
         .hr_v(kr_v), .hr_rdy(kr_rdy), .hr_tag(kr_tag), .hr_beat(hr_beat), .hr_data(hr_data),
@@ -193,6 +199,12 @@ module tb_hdc_core_whbm #(
                 for (l = 0; l < W; l = l + 1)
                     if (tl_wmask[b*W + l]) tl[b][tl_waddr[b*TAW +: TAW]][l*16 +: 16] <= tl_wdata[(b*W + l)*16 +: 16];
         end
+        for (q = 0; q < G; q = q + 1)
+            if (tl_group_re[q])
+                tl_group_q[q*W*16 +: W*16] <=
+                    tl[tl_group_raddr[q*AW + LOG_HD]][
+                        ((tl_group_raddr[q*AW +: AW] >> (LOG_HD + LOG_TW)) << LOG_HD) |
+                        (tl_group_raddr[q*AW +: AW] & ((1 << LOG_HD) - 1))];
         for (q = 0; q < G; q = q + 1)
             if (vx_re[q]) vx_q[32*q +: 32] <= vm[vx_addr[q*AW +: 12]];
         if (va_re) va_q <= vm[va_addr[11:0]];
@@ -273,6 +285,10 @@ module tb_hdc_core_whbm #(
         if (trace && dut.me_go && !dut.me_wsrc)
             $display("WGO cyc=%0d pc=%0d tiles=%0d k=%0d words=%0d cp=%0d cons=%0d fp=%0d", cycles, dut.pc,
                      dut.me_tiles, dut.me_k, dut.me_tiles * dut.me_k * IL, u_ws.cp, u_ws.cons, u_ws.fp);
+        if (trace && dut.me_go && dut.me_amax)
+            $display("ARGMAX_CHUNK cyc=%0d pc=%0d row0=%0d continuation=%0d prior_idx=%0d prior_val=%h prior_any=%0d run_idx=%0d run_val=%h run_any=%0d", cycles, dut.pc,
+                     dut.me_row0, dut.me_amc, dut.am_idx, dut.am_val, dut.am_any,
+                     dut.run_idx, dut.run_val, dut.run_any);
     end
 
     initial begin
