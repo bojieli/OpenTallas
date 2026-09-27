@@ -568,8 +568,8 @@ implements that specialisation on the reduced Qwen3 vehicle.
 - A static program drives a 64-lane matrix engine and a 16-element vector
   stream unit with exp, reciprocal, rsqrt and sigmoid pipelines.
 - In the source-pinned joined Verilator gate, the core decodes positions 15
-  and 16 in 24,408 <!-- figure: 24408 src="results/rtl/hdc_qwen_vector_system_two_token_split_flush_firstwrite_g4sw16.json#first_step.cycles" name="Qwen joined physical-KV-HBM first-step cycles" -->
-  and 24,685 <!-- figure: 24685 src="results/rtl/hdc_qwen_vector_system_two_token_split_flush_firstwrite_g4sw16.json#cycles" name="Qwen joined physical-KV-HBM second-step cycles" -->
+  and 16 in 24,408 <!-- figure: 24408 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_g4sw16.json#first_step.cycles" name="Qwen joined physical-KV-HBM first-step cycles" -->
+  and 24,685 <!-- figure: 24685 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_g4sw16.json#cycles" name="Qwen joined physical-KV-HBM second-step cycles" -->
   cycles. Both tokens, all logits, vector memory, and KV entries match the ISA
   oracle. Its KV cache uses a serialized 32-byte HBM interface; the testbench
   initializes the resident K tail before the first token.
