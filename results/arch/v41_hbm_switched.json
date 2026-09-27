@@ -1,0 +1,1637 @@
+{
+ "schema": "opentallas.v41-hbm-switched.v1",
+ "tool": "tools/arch_hbm_switched_v41.py",
+ "basis": "spec agent's request, 2026-09-27; closes the asymmetry that the comparator's collectives were on the board\nmesh with overlapped bytes while the ROM array's are on its real 112G lanes):\n\n* every comparator die is an endpoint of one switch tier; a traversal is SerDes -> switch -> SerDes:\n  alpha = 2 x 209 ns (technology.json links.rom_rack_cable_serdes: full KP4 over rack cable, validated 2026-09-27;\n  the same hop the ROM array's stage links use) + 250 ns (one cut-through tier) = 668 ns;\n* each die's link to the switch carries 1.8 TB/s per direction (the spec agent's figure, \"B200 NVLink\"; note B200's\n  published 1.8 TB/s is the bidirectional total, 0.9 TB/s per direction -- priced as a sensitivity);\n* a collective's bytes cross the die's ONE switch link: one-shot all-reduce (p - 1) n, two-step (reduce-scatter +\n  all-gather, fixed order) 2 (p - 1) / p n at two traversals, all-gather (p - 1) / p n; the faster per collective;\n  in-switch reduction (NVLS/SHARP: one traversal, n bytes) is a sensitivity, not the baseline;\n* stage hops and the token return are one traversal plus the payload on the die link;\n* bytes overlap their producer only where the DAG allows (the same rule as the ROM side);\n* static power on the validated inputs (U.static_terms): logic leakage 0.10 W/mm2 x 628 mm2, 4 stacks x 2.8 W,\n  UCIe idle, and the SerDes lanes that carry the package's link (0.9 TB/s per direction = 68 lanes x 0.728 W, 6.5\n  pJ/b), shared by its 2 dies;\n* switches on BOTH machines (spec ruling): NVL72's NVSwitch trays at 1.5 kW each (ASSUMED) scaled to the\n  comparator's 50 packages by port capacity, and the ROM rack's one off-path switch on the same W per Tb/s; then\n  both machines' chip + switch power through the same wall chain (technology.json power.rack_overheads).",
+ "alpha_s": 6.68e-07,
+ "dies": 99,
+ "configs": {
+  "nvl_0p9_nvls": {
+   "1048576": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1054.3635090574533,
+      "breakdown_us": {
+       "compute_chain": 115.19,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.35,
+       "control": 1.69
+      },
+      "mtp_m2": 1618.7768431299426,
+      "mtp_m6": 1629.4348006476562
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1618.211544917683,
+      "breakdown_us": {
+       "compute_chain": 116.99,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.62,
+       "control": 1.98
+      },
+      "mtp_m2": 2929.6445378791277,
+      "mtp_m6": 2948.453828497466
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2415.9117741231044,
+      "breakdown_us": {
+       "compute_chain": 114.4,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.1,
+       "pipeline_hops": 2.91,
+       "control": 1.98
+      },
+      "mtp_m2": 5132.518251360473,
+      "mtp_m6": 5165.600815315752
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2680.4083700212755,
+      "breakdown_us": {
+       "compute_chain": 113.54,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.18,
+       "pipeline_hops": 2.24,
+       "control": 1.98
+      },
+      "mtp_m2": 6585.519528113432,
+      "mtp_m6": 6618.62090347417
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2938.024234882893,
+      "breakdown_us": {
+       "compute_chain": 112.58,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.22,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 7815.941431138607,
+      "mtp_m6": 7841.701675858729
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3236.6924964183845,
+      "breakdown_us": {
+       "compute_chain": 112.16,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.26,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 9537.867960262014,
+      "mtp_m6": 9566.292550205802
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3417.3759335525424,
+      "breakdown_us": {
+       "compute_chain": 111.89,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.61,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 10698.12417336098,
+      "mtp_m6": 10734.298922266746
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3580.375802755708,
+      "breakdown_us": {
+       "compute_chain": 111.73,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 1.48,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 11932.86832121333,
+      "mtp_m6": 11977.864259442315
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3580.375802755708
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 11977.864259442315
+    }
+   },
+   "200000": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1063.0133824160337,
+      "breakdown_us": {
+       "compute_chain": 107.47,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.35,
+       "control": 1.69
+      },
+      "mtp_m2": 1630.9007375265467,
+      "mtp_m6": 1633.5432531621132
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1628.5028861478152,
+      "breakdown_us": {
+       "compute_chain": 113.08,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.62,
+       "control": 1.98
+      },
+      "mtp_m2": 2949.5613530269156,
+      "mtp_m6": 2955.259454715854
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2427.4465431310946,
+      "breakdown_us": {
+       "compute_chain": 112.44,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.1,
+       "pipeline_hops": 2.91,
+       "control": 1.98
+      },
+      "mtp_m2": 5161.79969133055,
+      "mtp_m6": 5170.951465044183
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2689.4143069710567,
+      "breakdown_us": {
+       "compute_chain": 112.29,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.18,
+       "pipeline_hops": 2.24,
+       "control": 1.98
+      },
+      "mtp_m2": 6605.355271247036,
+      "mtp_m6": 6618.849302194411
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2945.5398186908837,
+      "breakdown_us": {
+       "compute_chain": 111.71,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.22,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 7822.567280582631,
+      "mtp_m6": 7841.701675858729
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3239.289097153167,
+      "breakdown_us": {
+       "compute_chain": 111.68,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.49,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 9537.867960262014,
+      "mtp_m6": 9566.292550205802
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3417.55253830787,
+      "breakdown_us": {
+       "compute_chain": 111.6,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.88,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 10698.12417336098,
+      "mtp_m6": 10734.298922266746
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3580.375802755708,
+      "breakdown_us": {
+       "compute_chain": 111.58,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 1.63,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 11932.86832121333,
+      "mtp_m6": 11977.864259442315
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3580.375802755708
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 11977.864259442315
+    }
+   }
+  },
+  "nvl_0p9": {
+   "1048576": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1054.3635090574533,
+      "breakdown_us": {
+       "compute_chain": 115.19,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.35,
+       "control": 1.69
+      },
+      "mtp_m2": 1618.7768431299426,
+      "mtp_m6": 1629.4348006476562
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1618.211544917683,
+      "breakdown_us": {
+       "compute_chain": 116.99,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.62,
+       "control": 1.98
+      },
+      "mtp_m2": 2929.6445378791277,
+      "mtp_m6": 2948.453828497466
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2415.9117741231044,
+      "breakdown_us": {
+       "compute_chain": 114.4,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.1,
+       "pipeline_hops": 2.91,
+       "control": 1.98
+      },
+      "mtp_m2": 4864.933087749056,
+      "mtp_m6": 4894.646051954188
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2680.4083700212755,
+      "breakdown_us": {
+       "compute_chain": 113.54,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.18,
+       "pipeline_hops": 2.24,
+       "control": 1.98
+      },
+      "mtp_m2": 6122.277492440016,
+      "mtp_m6": 6150.875676017574
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2938.024234882893,
+      "breakdown_us": {
+       "compute_chain": 112.58,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.22,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 7171.890985222794,
+      "mtp_m6": 7193.574856406628
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3161.945781457449,
+      "breakdown_us": {
+       "compute_chain": 112.16,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 7.56,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 8595.877640028368,
+      "mtp_m6": 8618.958088217783
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3225.1175926641654,
+      "breakdown_us": {
+       "compute_chain": 111.89,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 18.06,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 9527.082213158472,
+      "mtp_m6": 9555.760246378075
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3005.3469028822797,
+      "breakdown_us": {
+       "compute_chain": 111.73,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 179.31,
+       "collective_bytes": 1.48,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 10490.656763828669,
+      "mtp_m6": 10525.417670290224
+     }
+    ],
+    "best_ar": {
+     "G": 64,
+     "rate": 3225.1175926641654
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 10525.417670290224
+    }
+   },
+   "200000": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1063.0133824160337,
+      "breakdown_us": {
+       "compute_chain": 107.47,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.35,
+       "control": 1.69
+      },
+      "mtp_m2": 1630.9007375265467,
+      "mtp_m6": 1633.5432531621132
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1628.5028861478152,
+      "breakdown_us": {
+       "compute_chain": 113.08,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.62,
+       "control": 1.98
+      },
+      "mtp_m2": 2949.5613530269156,
+      "mtp_m6": 2955.259454715854
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2427.4465431310946,
+      "breakdown_us": {
+       "compute_chain": 112.44,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.1,
+       "pipeline_hops": 2.91,
+       "control": 1.98
+      },
+      "mtp_m2": 4891.233103736338,
+      "mtp_m6": 4899.449839876025
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2689.4143069710567,
+      "breakdown_us": {
+       "compute_chain": 112.29,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.18,
+       "pipeline_hops": 2.24,
+       "control": 1.98
+      },
+      "mtp_m2": 6139.417160485578,
+      "mtp_m6": 6151.072932594231
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2945.5398186908837,
+      "breakdown_us": {
+       "compute_chain": 111.71,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.22,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 7177.469466671123,
+      "mtp_m6": 7193.574856406628
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3164.4237916318352,
+      "breakdown_us": {
+       "compute_chain": 111.68,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 7.79,
+       "pipeline_hops": 1.56,
+       "control": 1.97
+      },
+      "mtp_m2": 8595.877640028368,
+      "mtp_m6": 8618.958088217783
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3225.274884697273,
+      "breakdown_us": {
+       "compute_chain": 111.6,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 18.33,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 9527.082213158472,
+      "mtp_m6": 9555.760246378075
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3005.3469028822797,
+      "breakdown_us": {
+       "compute_chain": 111.58,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 179.31,
+       "collective_bytes": 1.63,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 10490.656763828669,
+      "mtp_m6": 10525.417670290224
+     }
+    ],
+    "best_ar": {
+     "G": 64,
+     "rate": 3225.274884697273
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 10525.417670290224
+    }
+   }
+  },
+  "nvl_1p8_nvls": {
+   "1048576": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1054.4937653721527,
+      "breakdown_us": {
+       "compute_chain": 115.19,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.23,
+       "control": 1.69
+      },
+      "mtp_m2": 1621.3573653426722,
+      "mtp_m6": 1632.049442260205
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1618.37518045849,
+      "breakdown_us": {
+       "compute_chain": 116.99,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.55,
+       "control": 1.98
+      },
+      "mtp_m2": 2938.932162044761,
+      "mtp_m6": 2957.8612862449277
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2416.659644763124,
+      "breakdown_us": {
+       "compute_chain": 114.4,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.88,
+       "control": 1.98
+      },
+      "mtp_m2": 5162.000561054395,
+      "mtp_m6": 5195.46552265271
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2681.84554344703,
+      "breakdown_us": {
+       "compute_chain": 113.54,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.21,
+       "control": 1.98
+      },
+      "mtp_m2": 6635.182904988745,
+      "mtp_m6": 6676.7168449281335
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2940.0277048484404,
+      "breakdown_us": {
+       "compute_chain": 112.58,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 7897.300094383553,
+      "mtp_m6": 7937.459901604003
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3239.542034567446,
+      "breakdown_us": {
+       "compute_chain": 112.16,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 9705.343582772059,
+      "mtp_m6": 9737.89881074123
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3424.6244860657084,
+      "breakdown_us": {
+       "compute_chain": 111.89,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 10951.387704051815,
+      "mtp_m6": 10989.29853745008
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3595.2999913454996,
+      "breakdown_us": {
+       "compute_chain": 111.73,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 0.33,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 12437.83339090417,
+      "mtp_m6": 12486.72590732894
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3595.2999913454996
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 12486.72590732894
+    }
+   },
+   "200000": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1063.1457848464113,
+      "breakdown_us": {
+       "compute_chain": 107.47,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.23,
+       "control": 1.69
+      },
+      "mtp_m2": 1633.5200896122622,
+      "mtp_m6": 1636.1711071297964
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1628.6686097597226,
+      "breakdown_us": {
+       "compute_chain": 113.08,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.55,
+       "control": 1.98
+      },
+      "mtp_m2": 2958.975890811438,
+      "mtp_m6": 2964.7104608080463
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2428.201573351041,
+      "breakdown_us": {
+       "compute_chain": 112.44,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.88,
+       "control": 1.98
+      },
+      "mtp_m2": 5193.143053130295,
+      "mtp_m6": 5204.930816226145
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2690.8611567808202,
+      "breakdown_us": {
+       "compute_chain": 112.29,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.21,
+       "control": 1.98
+      },
+      "mtp_m2": 6665.66252369953,
+      "mtp_m6": 6679.723197904102
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2947.5535551919697,
+      "breakdown_us": {
+       "compute_chain": 111.71,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 7917.973910701722,
+      "mtp_m6": 7937.578475975991
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3244.5799430958737,
+      "breakdown_us": {
+       "compute_chain": 111.68,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 9708.44684688256,
+      "mtp_m6": 9737.89881074123
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3427.4880419562837,
+      "breakdown_us": {
+       "compute_chain": 111.6,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.04,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 10951.387704051815,
+      "mtp_m6": 10989.29853745008
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3595.2999913454996,
+      "breakdown_us": {
+       "compute_chain": 111.58,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 0.48,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 12437.83339090417,
+      "mtp_m6": 12486.72590732894
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3595.2999913454996
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 12486.72590732894
+    }
+   }
+  },
+  "nvl_1p8": {
+   "1048576": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1054.4937653721527,
+      "breakdown_us": {
+       "compute_chain": 115.19,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.23,
+       "control": 1.69
+      },
+      "mtp_m2": 1621.3573653426722,
+      "mtp_m6": 1632.049442260205
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1618.37518045849,
+      "breakdown_us": {
+       "compute_chain": 116.99,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.55,
+       "control": 1.98
+      },
+      "mtp_m2": 2938.932162044761,
+      "mtp_m6": 2957.8612862449277
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2416.659644763124,
+      "breakdown_us": {
+       "compute_chain": 114.4,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.88,
+       "control": 1.98
+      },
+      "mtp_m2": 5162.000561054395,
+      "mtp_m6": 5195.46552265271
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2681.84554344703,
+      "breakdown_us": {
+       "compute_chain": 113.54,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.21,
+       "control": 1.98
+      },
+      "mtp_m2": 6635.182904988745,
+      "mtp_m6": 6676.7168449281335
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2940.0277048484404,
+      "breakdown_us": {
+       "compute_chain": 112.58,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 7240.335116250436,
+      "mtp_m6": 7274.076896239789
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3239.542034567446,
+      "breakdown_us": {
+       "compute_chain": 112.16,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 8731.670502715086,
+      "mtp_m6": 8758.012425035133
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3385.9463621489217,
+      "breakdown_us": {
+       "compute_chain": 111.89,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 3.34,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 9727.415561980037,
+      "mtp_m6": 9757.314238690751
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3429.156081616017,
+      "breakdown_us": {
+       "compute_chain": 111.73,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 13.8,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 10882.641550109882,
+      "mtp_m6": 10920.05331185638
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3429.156081616017
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 10920.05331185638
+    }
+   },
+   "200000": {
+    "grid": [
+     {
+      "G": 4,
+      "stages": 15,
+      "ar": 1063.1457848464113,
+      "breakdown_us": {
+       "compute_chain": 107.47,
+       "weight_sweep": 809.55,
+       "kv_sweep": 0.0,
+       "collective_latency": 11.66,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 10.23,
+       "control": 1.69
+      },
+      "mtp_m2": 1633.5200896122622,
+      "mtp_m6": 1636.1711071297964
+     },
+     {
+      "G": 8,
+      "stages": 8,
+      "ar": 1628.6686097597226,
+      "breakdown_us": {
+       "compute_chain": 113.08,
+       "weight_sweep": 398.59,
+       "kv_sweep": 0.0,
+       "collective_latency": 94.79,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 5.55,
+       "control": 1.98
+      },
+      "mtp_m2": 2958.975890811438,
+      "mtp_m6": 2964.7104608080463
+     },
+     {
+      "G": 16,
+      "stages": 4,
+      "ar": 2428.201573351041,
+      "breakdown_us": {
+       "compute_chain": 112.44,
+       "weight_sweep": 198.38,
+       "kv_sweep": 0.0,
+       "collective_latency": 96.14,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.88,
+       "control": 1.98
+      },
+      "mtp_m2": 5193.143053130295,
+      "mtp_m6": 5204.930816226145
+     },
+     {
+      "G": 24,
+      "stages": 3,
+      "ar": 2690.8611567808202,
+      "breakdown_us": {
+       "compute_chain": 112.29,
+       "weight_sweep": 131.73,
+       "kv_sweep": 0.0,
+       "collective_latency": 123.41,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 2.21,
+       "control": 1.98
+      },
+      "mtp_m2": 6665.66252369953,
+      "mtp_m6": 6679.723197904102
+     },
+     {
+      "G": 32,
+      "stages": 2,
+      "ar": 2947.5535551919697,
+      "breakdown_us": {
+       "compute_chain": 111.71,
+       "weight_sweep": 99.27,
+       "kv_sweep": 0.0,
+       "collective_latency": 124.77,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 7257.708569047779,
+      "mtp_m6": 7274.176478728981
+     },
+     {
+      "G": 48,
+      "stages": 2,
+      "ar": 3244.5799430958737,
+      "breakdown_us": {
+       "compute_chain": 111.68,
+       "weight_sweep": 67.69,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 0.0,
+       "pipeline_hops": 1.54,
+       "control": 1.97
+      },
+      "mtp_m2": 8734.182259916524,
+      "mtp_m6": 8758.012425035133
+     },
+     {
+      "G": 64,
+      "stages": 1,
+      "ar": 3388.745574177065,
+      "breakdown_us": {
+       "compute_chain": 111.6,
+       "weight_sweep": 51.95,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.32,
+       "collective_bytes": 3.38,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 9727.415561980037,
+      "mtp_m6": 9757.314238690751
+     },
+     {
+      "G": 96,
+      "stages": 1,
+      "ar": 3429.156081616017,
+      "breakdown_us": {
+       "compute_chain": 111.58,
+       "weight_sweep": 37.37,
+       "kv_sweep": 0.0,
+       "collective_latency": 125.87,
+       "collective_bytes": 13.96,
+       "pipeline_hops": 0.88,
+       "control": 1.97
+      },
+      "mtp_m2": 10882.641550109882,
+      "mtp_m6": 10920.05331185638
+     }
+    ],
+    "best_ar": {
+     "G": 96,
+     "rate": 3429.156081616017
+    },
+    "best_mtp": {
+     "G": 96,
+     "m": 6,
+     "rate": 10920.05331185638
+    }
+   }
+  }
+ },
+ "headline_config": "nvl_0p9_nvls",
+ "board_mesh_was": {
+  "1048576": {
+   "ar": 2932.5746896637033,
+   "ar_G": 32,
+   "mtp": 8631.933457027371,
+   "mtp_G": 48,
+   "mtp_m": 6
+  },
+  "200000": {
+   "ar": 2940.062383490817,
+   "ar_G": 32,
+   "mtp": 8631.933457027371,
+   "mtp_G": 48,
+   "mtp_m": 6
+  }
+ },
+ "hbm_static_w_per_die": {
+  "total": 101.4125,
+  "serdes": 24.8625,
+  "leakage_hbm_ucie": 76.55,
+  "serdes_at_1p8": 49.725
+ },
+ "switches_and_wall": {
+  "hbm_switch_w": 9375.0,
+  "rom_switch_w": 1096.6666666666667,
+  "wall_factor": 1.2404214559386975,
+  "hbm_chip_static_w": 10039.8375,
+  "rom_chip_static_w": 14875.923795328998,
+  "basis": "13.0 W per Tb/s of port capacity (NVL72: 9 x 1.5 kW trays, ASSUMED, over 72 GPUs x 14.4 Tb/s); the ROM rack's off-path switch carries 4 lanes x 112G both ways per package; NVL72 trays scaled to the comparator's 50 packages (ASSUMED 1.5 kW a tray); both machines' chip and switch power go through the same wall chain (1/(VR x PSU) x (1 + CDU + fans))"
+ },
+ "domain": {
+  "packages": 50,
+  "nvl72_packages": 72,
+  "fits_one_tier": true,
+  "note": "99 dies are 50 two-die packages (GPUs), inside one NVL72 domain of 72; G = 96 dies is 48 packages: no second switch tier is needed"
+ },
+ "energy": {
+  "1048576": {
+   "b1": {
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 3580.375802755708,
+     "aggregate_tokens_s": 3580.375802755708,
+     "switch_j": 2.618440218701161,
+     "wall_j": 8.831684753696305,
+     "dynamic_j": 1.6973367292984143,
+     "static_j": 2.8041295252505725,
+     "total_j": 4.501466254548987,
+     "nonclock_j": 1.3948335309655038,
+     "clock_j": 0.3025031983329105
+    },
+    "rom": {
+     "tokens_s_per_user": 8622.047603391655,
+     "aggregate_tokens_s": 8622.047603391655,
+     "total_j": 1.7623007684823913,
+     "dynamic_j": 0.036965386492937236,
+     "static_j": 1.7253353819894541,
+     "switch_j": 0.12719329759154555,
+     "wall_j": 2.343768980426962
+    },
+    "ratio_rate_per_user": 2.4081403959761776,
+    "ratio_aggregate": 2.4081403959761776,
+    "ratio_energy_with_static": 3.768154979202534,
+    "ratio_energy_chip_only": 2.554312144132714
+   },
+   "b1_mtp": {
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 11977.864259442315,
+     "aggregate_tokens_s": 11977.864259442315,
+     "switch_j": 0.7826937922267369,
+     "wall_j": 3.668094749800898,
+     "dynamic_j": 1.3362427472041079,
+     "static_j": 0.838199305196288,
+     "total_j": 2.174442052400396,
+     "nonclock_j": 0.793967030245713,
+     "clock_j": 0.5422757169583947
+    },
+    "rom": {
+     "tokens_s_per_user": 23577.550266865917,
+     "aggregate_tokens_s": 23577.550266865917,
+     "total_j": 0.6516440232241282,
+     "dynamic_j": 0.02070808514092195,
+     "static_j": 0.6309359380832062,
+     "switch_j": 0.04651317266865668,
+     "wall_j": 0.8660091654034066
+    },
+    "ratio_rate_per_user": 1.9684269045109115,
+    "ratio_aggregate": 1.9684269045109115,
+    "ratio_energy_with_static": 4.235630402470645,
+    "ratio_energy_chip_only": 3.3368556679794983
+   },
+   "fill28": {
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 1213.7503956626733,
+     "aggregate_tokens_s": 33985.01107855485,
+     "switch_j": 0.27585690580856664,
+     "wall_j": 1.3007276102771068,
+     "dynamic_j": 0.47734099119286266,
+     "static_j": 0.29541957414088693,
+     "total_j": 0.7727605653337496,
+     "nonclock_j": 0.44547179070727555,
+     "clock_j": 0.031869200485587106
+    },
+    "rom": {
+     "tokens_s_per_user": 8622.047603391655,
+     "aggregate_tokens_s": 241417.33289496633,
+     "total_j": 0.0985845072782749,
+     "dynamic_j": 0.036965386492937256,
+     "static_j": 0.06161912078533765,
+     "switch_j": 0.004542617771126627,
+     "wall_j": 0.12792109860055076
+    },
+    "ratio_rate_per_user": 7.103641435835958,
+    "ratio_aggregate": 7.103641435835958,
+    "ratio_energy_with_static": 10.168202309915955,
+    "ratio_energy_chip_only": 7.838559898184357
+   },
+   "fill28_mtp": {
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 2027.4909995067735,
+     "aggregate_tokens_s": 56769.74798618966,
+     "switch_j": 0.16514077184701703,
+     "wall_j": 0.8608822042179644,
+     "dynamic_j": 0.35203128792700245,
+     "static_j": 0.17685189482332006,
+     "total_j": 0.5288831827503225,
+     "nonclock_j": 0.2376163898636973,
+     "clock_j": 0.11441489806330515
+    },
+    "rom": {
+     "tokens_s_per_user": 23577.550266865917,
+     "aggregate_tokens_s": 660171.4074722456,
+     "total_j": 0.04324151150103647,
+     "dynamic_j": 0.02070808514092196,
+     "static_j": 0.02253342636011451,
+     "switch_j": 0.00166118473816631,
+     "wall_j": 0.055698267844604986
+    },
+    "ratio_rate_per_user": 11.628929683338479,
+    "ratio_aggregate": 11.628929683338477,
+    "ratio_energy_with_static": 15.456175524520384,
+    "ratio_energy_chip_only": 12.230913406846232
+   },
+   "sat1024": {
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 62.56722080757301,
+     "aggregate_tokens_s": 64068.83410695476,
+     "switch_j": 0.14632699549908512,
+     "wall_j": 0.46917109362912646,
+     "dynamic_j": 0.07520431293867536,
+     "static_j": 0.15670392071189823,
+     "total_j": 0.2319082336505736,
+     "nonclock_j": 0.05829944574912563,
+     "clock_j": 0.01690486718954972
+    },
+    "rom": {
+     "tokens_s_per_user": 672.9518655501923,
+     "aggregate_tokens_s": 689102.710323397,
+     "total_j": 0.05236818218926456,
+     "dynamic_j": 0.030780799680860692,
+     "static_j": 0.02158738250840387,
+     "switch_j": 0.0015914415227767707,
+     "wall_j": 0.06693267500679458
+    },
+    "ratio_rate_per_user": 10.755661780469232,
+    "ratio_aggregate": 10.755661780469232,
+    "ratio_energy_with_static": 7.009597234556952,
+    "ratio_energy_chip_only": 4.428418630465936
+   },
+   "sat1024_mtp": {
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 82.65004218611831,
+     "aggregate_tokens_s": 84633.64319858515,
+     "switch_j": 0.11077155189931284,
+     "wall_j": 0.40609564932545755,
+     "dynamic_j": 0.09798663927922062,
+     "static_j": 0.1186270272738045,
+     "total_j": 0.2166136665530251,
+     "nonclock_j": 0.021240505195416967,
+     "clock_j": 0.07674613408380365
+    },
+    "rom": {
+     "tokens_s_per_user": 1260.3885493592798,
+     "aggregate_tokens_s": 1290637.8745439025,
+     "total_j": 0.028643072278366835,
+     "dynamic_j": 0.01711704775302429,
+     "static_j": 0.011526024525342547,
+     "switch_j": 0.0008497090379082645,
+     "wall_j": 0.03658347874001557
+    },
+    "ratio_rate_per_user": 15.249702432347595,
+    "ratio_aggregate": 15.249702432347595,
+    "ratio_energy_with_static": 11.100520325347405,
+    "ratio_energy_chip_only": 7.562515097817431
+   }
+  },
+  "200000": {
+   "b1": {
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 3580.375802755708,
+     "aggregate_tokens_s": 3580.375802755708,
+     "switch_j": 2.618440218701161,
+     "wall_j": 8.811498399293681,
+     "dynamic_j": 1.6810629424286543,
+     "static_j": 2.8041295252505725,
+     "total_j": 4.4851924676792265,
+     "nonclock_j": 1.3785597440957438,
+     "clock_j": 0.3025031983329105
+    },
+    "rom": {
+     "tokens_s_per_user": 9041.220574931696,
+     "aggregate_tokens_s": 9041.220574931696,
+     "total_j": 1.6658009284339073,
+     "dynamic_j": 0.02045629028018313,
+     "static_j": 1.6453446381537242,
+     "switch_j": 0.1212963070171476,
+     "wall_j": 2.2167537547022187
+    },
+    "ratio_rate_per_user": 2.525215528485289,
+    "ratio_aggregate": 2.525215528485289,
+    "ratio_energy_with_static": 3.9749558924181674,
+    "ratio_energy_chip_only": 2.692514088040492
+   },
+   "b1_mtp": {
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 11977.864259442315,
+     "aggregate_tokens_s": 11977.864259442315,
+     "switch_j": 0.7826937922267369,
+     "wall_j": 3.662229191668998,
+     "dynamic_j": 1.3315140655904376,
+     "static_j": 0.838199305196288,
+     "total_j": 2.1697133707867255,
+     "nonclock_j": 0.7892383486320429,
+     "clock_j": 0.5422757169583947
+    },
+    "rom": {
+     "tokens_s_per_user": 24602.01201946047,
+     "aggregate_tokens_s": 24602.01201946047,
+     "total_j": 0.6204877676065071,
+     "dynamic_j": 0.01582487322364235,
+     "static_j": 0.6046628943828648,
+     "switch_j": 0.04457629993023298,
+     "wall_j": 0.8249597389464354
+    },
+    "ratio_rate_per_user": 2.0539564889513895,
+    "ratio_aggregate": 2.0539564889513895,
+    "ratio_energy_with_static": 4.43928232951837,
+    "ratio_energy_chip_only": 3.496786695983161
+   },
+   "fill28": {
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 1213.7503956626733,
+     "aggregate_tokens_s": 33985.01107855485,
+     "switch_j": 0.27585690580856664,
+     "wall_j": 1.2805412558744835,
+     "dynamic_j": 0.4610672043231027,
+     "static_j": 0.29541957414088693,
+     "total_j": 0.7564867784639897,
+     "nonclock_j": 0.4291980038375156,
+     "clock_j": 0.031869200485587106
+    },
+    "rom": {
+     "tokens_s_per_user": 9041.220574931696,
+     "aggregate_tokens_s": 253154.1760980875,
+     "total_j": 0.07921859878567329,
+     "dynamic_j": 0.02045629028018315,
+     "static_j": 0.05876230850549014,
+     "switch_j": 0.004332010964898128,
+     "wall_j": 0.10363796899136973
+    },
+    "ratio_rate_per_user": 7.448994955833111,
+    "ratio_aggregate": 7.448994955833111,
+    "ratio_energy_with_static": 12.35590844105714,
+    "ratio_energy_chip_only": 9.549358232284217
+   },
+   "fill28_mtp": {
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 2027.4909995067735,
+     "aggregate_tokens_s": 56769.74798618966,
+     "switch_j": 0.16514077184701703,
+     "wall_j": 0.8550166460860649,
+     "dynamic_j": 0.3473026063133321,
+     "static_j": 0.17685189482332006,
+     "total_j": 0.5241545011366522,
+     "nonclock_j": 0.23288770825002694,
+     "clock_j": 0.11441489806330515
+    },
+    "rom": {
+     "tokens_s_per_user": 24602.01201946047,
+     "aggregate_tokens_s": 688856.3365448932,
+     "total_j": 0.03741997659445896,
+     "dynamic_j": 0.015824873223642358,
+     "static_j": 0.0215951033708166,
+     "switch_j": 0.001592010711794035,
+     "wall_j": 0.04839130609348433
+    },
+    "ratio_rate_per_user": 12.134215158264766,
+    "ratio_aggregate": 12.134215158264766,
+    "ratio_energy_with_static": 17.66880696367873,
+    "ratio_energy_chip_only": 14.007344441104419
+   },
+   "sat1024": {
+    "hbm": {
+     "G": 96,
+     "m": null,
+     "tokens_s_per_user": 65.72743531537212,
+     "aggregate_tokens_s": 67304.89376294105,
+     "switch_j": 0.13929150580075644,
+     "wall_j": 0.4299037027168895,
+     "dynamic_j": 0.05811772991631181,
+     "static_j": 0.14916950222612288,
+     "total_j": 0.2072872321424347,
+     "nonclock_j": 0.04202565887936563,
+     "clock_j": 0.016092071036946185
+    },
+    "rom": {
+     "tokens_s_per_user": 869.9395509245768,
+     "aggregate_tokens_s": 890818.1001467666,
+     "total_j": 0.03080355259584637,
+     "dynamic_j": 0.014104381583404981,
+     "static_j": 0.01669917101244139,
+     "switch_j": 0.0012310781140234864,
+     "wall_j": 0.03973644326559528
+    },
+    "ratio_rate_per_user": 13.235562086827967,
+    "ratio_aggregate": 13.235562086827967,
+    "ratio_energy_with_static": 10.818877266982522,
+    "ratio_energy_chip_only": 6.7293287518526625
+   },
+   "sat1024_mtp": {
+    "hbm": {
+     "G": 96,
+     "m": 6,
+     "tokens_s_per_user": 82.65004218611831,
+     "aggregate_tokens_s": 84633.64319858515,
+     "switch_j": 0.11077155189931284,
+     "wall_j": 0.400230091193558,
+     "dynamic_j": 0.09325795766555021,
+     "static_j": 0.1186270272738045,
+     "total_j": 0.2118849849393547,
+     "nonclock_j": 0.016511823581746563,
+     "clock_j": 0.07674613408380365
+    },
+    "rom": {
+     "tokens_s_per_user": 1500.840900383201,
+     "aggregate_tokens_s": 1536861.0819923978,
+     "total_j": 0.02176367291656129,
+     "dynamic_j": 0.012084252980932665,
+     "static_j": 0.009679419935628627,
+     "switch_j": 0.0007135756637450537,
+     "wall_j": 0.027881261409479614
+    },
+    "ratio_rate_per_user": 18.158985291301864,
+    "ratio_aggregate": 18.158985291301864,
+    "ratio_energy_with_static": 14.354805735492297,
+    "ratio_energy_chip_only": 9.735718127711737
+   }
+  }
+ },
+ "gpu_crosscheck": {
+  "modelled_1M": {
+   "b1": {
+    "chip_w_per_package": 322.3388170941712,
+    "wall_w_per_package": 632.4150077940151
+   },
+   "b1_mtp": {
+    "chip_w_per_package": 520.9034348735019,
+    "wall_w_per_package": 878.7188200777633
+   },
+   "fill28": {
+    "chip_w_per_package": 525.2455274787558,
+    "wall_w_per_package": 884.1048449089933
+   },
+   "fill28_mtp": {
+    "chip_w_per_package": 600.491299977394,
+    "wall_w_per_package": 977.4413155849859
+   },
+   "sat1024": {
+    "chip_w_per_package": 297.16180299591,
+    "wall_w_per_package": 601.1848993100608
+   },
+   "sat1024_mtp": {
+    "chip_w_per_package": 366.6560753397205,
+    "wall_w_per_package": 687.3870857901705
+   }
+  },
+  "reference": {
+   "b200_tdp_nvl72_w": 1200.0,
+   "nvl72_rack_w": 132000.0,
+   "b200_measured_wall_w_per_gpu_saturated": 1300.0,
+   "b200_measured_decode_w": 689.0
+  },
+  "note": "a check only: the comparator stays modelled (its engines, HBM and SerDes), not scaled to a GPU's measured draw"
+ },
+ "rom_worst_die_w": {
+  "static_w": 98.7963990503202,
+  "dynamic_w": 197.24919759312277,
+  "worst_point": "1048576/sat1024_mtp",
+  "dynamic_w_by_point": {
+   "1048576/sat1024": 189.38511148216656,
+   "1048576/sat1024_mtp": 197.24919759312277,
+   "200000/sat1024": 112.18248576673099,
+   "200000/sat1024_mtp": 165.81980456558958
+  },
+  "total_w": 296.045596643443,
+  "cooling_limit_w": 407.5,
+  "provisioned_wall_w": 440.6655720152399,
+  "basis": "max over saturation without and with MTP at the design point (R-L8 pools doubled, m = 2): the array's dynamic energy per token x its rate over the 112 layer dies, plus the static die. No separate HBM-interface active term: the dynamic energy charges every HBM byte at the system-level 13 pJ/b, which contains the I/O (adae6788's ruling); the interface idle is in the static 98.8 W"
+ },
+ "rom_design_point": {
+  "1048576": {
+   "ar": 8622.047603391655,
+   "mtp": 23577.550266865917
+  },
+  "200000": {
+   "ar": 9041.220574931696,
+   "mtp": 24602.01201946047
+  }
+ },
+ "ratios_batch1": {
+  "1048576": {
+   "ar": {
+    "rom": 8622.047603391655,
+    "hbm": 3580.375802755708,
+    "ratio": 2.4081403959761776
+   },
+   "mtp": {
+    "rom": 23577.550266865917,
+    "hbm": 11977.864259442315,
+    "ratio": 1.9684269045109115
+   }
+  },
+  "200000": {
+   "ar": {
+    "rom": 9041.220574931696,
+    "hbm": 3580.375802755708,
+    "ratio": 2.525215528485289
+   },
+   "mtp": {
+    "rom": 24602.01201946047,
+    "hbm": 11977.864259442315,
+    "ratio": 2.0539564889513895
+   }
+  }
+ },
+ "kv_replicate_on_write": {
+  "by_source": {
+   "L2": {
+    "reader_groups": 3,
+    "bytes_per_token": 1068
+   },
+   "L8": {
+    "reader_groups": 3,
+    "bytes_per_token": 1068
+   },
+   "L14": {
+    "reader_groups": 3,
+    "bytes_per_token": 1068
+   },
+   "L20": {
+    "reader_groups": 13,
+    "bytes_per_token": 4628
+   }
+  },
+  "bytes_per_token_upper": 7832.0,
+  "residual_hop_bytes_per_token": 41000,
+  "stage_link_Bps_per_group": 368941176470.58826,
+  "worst_aggregate_tokens_s": 1290637.8745439025,
+  "link_load_fraction": 0.1708251415378465,
+  "batch1_write_time_s": 2.122831632653061e-08,
+  "note": "upper bound: every source layer's new compressed row + index key (288 + 68 B) written to each distinct reader group, all on one stage link (store-and-forward along the ring); off the critical path (the readers need it from the next token on)"
+ }
+}

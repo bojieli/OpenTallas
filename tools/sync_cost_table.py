@@ -10,10 +10,11 @@ Inputs (read, never re-derived here):
   results/rtl/hdc_package_tp_campaign.json   (RTL one-shot all-reduce, 331 cycles per token step per die)
   configs/hardware/technology.json           (link tiers, corrected power inputs)
   tools/decode_critical_path.ArrayFabric     (the cross-package collective as the model prices it)
-The per-token OpenTallas totals are the adopted V4.1 design's latency ladder (results/arch/v41_latency_ladder.json
-@ b07a5745, 1M context, batch 1, on the 209 ns rack-cable tier), PINNED here because that artifact is not on this
-branch; this branch's specification-width budget (results/arch/arch_budget_v41.json, whose stage hops ride the same
-cable tier via decode_critical_path.ArrayFabric.alpha_stage) is reported beside it.  The power table reads the
+The per-token OpenTallas totals are the adopted V4.1 DESIGN POINT's headline token (results/arch/v41_lanes.json
+design_point, 1M context, batch 1, on the 209 ns rack-cable tier, with the RTL stage bench's MEASURED collective
+exposure -- rack gate C7): collective latency + exposed collective bytes + pipeline hops; the specification-width
+budget (results/arch/arch_budget_v41.json, whose stage hops ride the same cable tier via
+decode_critical_path.ArrayFabric.alpha_stage) is reported beside it.  The power table reads the
 tagged power scenarios (configs/hardware/power_scenarios.json, results/arch/power_scenarios.json).
 
 Outputs: results/arch/sync_cost_table.json, results/arch/power_assumptions.json,
@@ -36,6 +37,7 @@ GPU_DEP = ROOT / "results/gpu/blackwell_dependency_latency.json"
 GPU_GATHER = ROOT / "results/gpu/blackwell_gather_designs.json"
 RTL_TP = ROOT / "results/rtl/hdc_package_tp_campaign.json"
 V41_BUDGET = ROOT / "results/arch/arch_budget_v41.json"
+V41_LANES = ROOT / "results/arch/v41_lanes.json"
 PSCEN_CFG = ROOT / "configs/hardware/power_scenarios.json"
 PSCEN = ROOT / "results/arch/power_scenarios.json"
 OUT = ROOT / "results/arch/sync_cost_table.json"
@@ -48,20 +50,29 @@ LIGHT_FEC_HOP_S = 130e-9        # tools/arch_budget_v41.BASELINE["board_hop_s"] 
 STAGE_HOPS, V41_COLLECTIVES = 27, 209
 # tools/arch_budget_v41.py re-run with and without links.rom_rack_cable_serdes (2026-09-27, this branch): the
 # pipeline hops go 9.10 -> 11.95 us per token (36 board traversals x 79 ns)
-CABLE_EFFECT = ("+79 ns per stage hop; adopted design 8,819 -> 8,622 tok/s/user at 1M (b07a5745); specification budget "
+CABLE_EFFECT = ("+79 ns per stage hop; adopted design (overlap assumed) 8,819 -> 8,622 tok/s/user at 1M (b07a5745); specification budget "
                 "at batch 1: 4,978 -> 4,909 at 1M (-1.4%), 5,448 -> 5,365 at 200K (-1.5%), with MTP 10,383 -> 10,309 at 1M; "
                 "pipeline hops 9.10 -> 11.95 us per token")
 
 
-# The ADOPTED V4.1 design's latency ladder, final attribution at 1M, batch 1: results/arch/v41_latency_ladder.json
-# final_attribution_1M at commit b07a5745 (V4.1 spec agent), re-derived there on the 209 ns rack-cable tier.  That
-# artifact and its tool are not on this branch, so the four numbers are PINNED here, not recomputed; the atlas's
-# section 8.9 quotes them.  This branch's own specification-width budget (results/arch/arch_budget_v41.json) is
-# reported beside them (v41_spec_budget) so the two are never confused.
-LADDER = dict(T_us=119.925, collective_latency_us=15.301, pipeline_hops_us=9.373, stage_hops=STAGE_HOPS,
-              collectives=V41_COLLECTIVES,
-              source="results/arch/v41_latency_ladder.json final_attribution_1M @ b07a5745 (adopted V4.1 design, 209 ns "
-                     "rack-cable tier); pinned, the artifact is not on this branch")
+# The ADOPTED V4.1 design point's headline token at 1M, batch 1 (results/arch/v41_lanes.json design_point: the
+# design-point model with the RTL stage bench's measured collective exposure, rack gate C7 measured NOT MET).  The
+# synchronisation cost is its collective latency + the collective bytes the bench measured as exposed + the stage
+# hops; the specification-width budget (results/arch/arch_budget_v41.json) is reported beside it (v41_spec_budget)
+# so the two are never confused.
+def v41_design_point():
+    ln = json.loads(V41_LANES.read_text())
+    d = ln["design_point"]["1048576"]
+    b = d["breakdown_us"]
+    c = ln["design_point_overlap_assumed"]["1048576"]
+    return dict(T_us=round(d["T_us"], 3), tokens_s_per_user=d["ar"], collective_latency_us=round(b["collective_latency"], 3),
+                collective_exposed_bytes_us=round(b["collective_bytes"], 3), pipeline_hops_us=round(b["pipeline_hops"], 3),
+                stage_hops=STAGE_HOPS, collectives=V41_COLLECTIVES, overlap_assumed_tokens_s_per_user=c["ar"],
+                source="results/arch/v41_lanes.json design_point['1048576'] (design-point model, collective exposure "
+                       "measured in the RTL stage bench, 209 ns rack-cable tier)")
+
+
+LADDER = v41_design_point()
 
 
 def v41_spec_budget():
@@ -258,7 +269,7 @@ def build():
     # ---- GPU cross-package points (arXiv:2607.16100, NCCL)
     sol_us, best_us, nccl_ring_us, nccl227_us, remote_store_us = 1.404, 2.37, 11.0, 5.0, 0.792
     # ---- per token, V4.1 at 1M, batch 1
-    rom_tok_us = LADDER["collective_latency_us"] + LADDER["pipeline_hops_us"]
+    rom_tok_us = LADDER["collective_latency_us"] + LADDER["collective_exposed_bytes_us"] + LADDER["pipeline_hops_us"]
     gpu_tok = {k: LADDER["collectives"] * v + LADDER["stage_hops"] * remote_store_us
                for k, v in (("best_kernel", best_us), ("nccl_2_27", nccl227_us), ("nccl_ring", nccl_ring_us), ("sol", sol_us))}
 
@@ -303,7 +314,8 @@ def build():
           gpu=cell(round(gpu_tok["best_kernel"]), "us", "model on measured primitives", ["r-sol", "r-nccl227"],
                    f"same graph priced at 2.37 us per collective + 0.79 us per stage handoff; NCCL 2.27: {gpu_tok['nccl_2_27']:.0f} us; NCCL ring: {gpu_tok['nccl_ring']:.0f} us; SoL floor: {gpu_tok['sol']:.0f} us"),
           ot=cell(round(rom_tok_us, 1), "us", "model, normative basis", ["r-rtl-tp", "r-sue", "r-ualink"],
-                  f"adopted-design ladder: collectives {LADDER['collective_latency_us']} us + hops {LADDER['pipeline_hops_us']} us "
+                  f"adopted design point, collective exposure measured in the RTL stage bench: collectives {LADDER['collective_latency_us']:.1f} us "
+                  f"+ exposed collective bytes {LADDER['collective_exposed_bytes_us']:.1f} us + hops {LADDER['pipeline_hops_us']:.1f} us "
                   f"(27 stage hops on the {cable['value']*1e9:.0f} ns cable tier); {rom_tok_us/LADDER['T_us']:.0%} of the {LADDER['T_us']:.1f} us token. "
                   f"Specification widths (this branch's budget): {spec['collective_latency_us'] + spec['pipeline_hops_us']:.1f} us of "
                   f"{spec['T_us']:.1f} us"),
@@ -379,13 +391,13 @@ def build():
     )
 
     rec = dict(schema="opentallas.sync-cost-table.v1", tool="tools/sync_cost_table.py",
-               inputs={str(p.relative_to(ROOT)): sha_file(p) for p in (TECH, GPU_DEP, GPU_GATHER, RTL_TP, V41_BUDGET)},
+               inputs={str(p.relative_to(ROOT)): sha_file(p) for p in (TECH, GPU_DEP, GPU_GATHER, RTL_TP, V41_BUDGET, V41_LANES)},
                ladder=LADDER, v41_spec_budget=spec, rows=rows, hpc_precedents=hpc, hop_decomposition=hop_decomp, values_checked=values_checked,
                narrowed_claim=claim, references={k: v for k, v in REFS.items()},
                caveats=["GPU on-chip primitives are measured on an RTX PRO 6000 Blackwell (GB202), not a B200.",
                         "The GPU per-token rows price the SAME collective graph as the ROM array; a GPU deployment would choose its own parallelism.",
                         "No production measurement of a 112G PAM4 port's end-to-end latency was found; the 130/209 ns points are component sums cross-checked against Broadcom's budget.",
-                        "The V4.1 ROM per-token figure is the adopted design's latency ladder (b07a5745, 209 ns cable tier), pinned; the specification-width budget on this branch is reported beside it."])
+                        "The V4.1 ROM per-token figure is the adopted design point with the measured collective exposure (results/arch/v41_lanes.json design_point, 209 ns cable tier); the specification-width budget is reported beside it."])
     return rec, tech
 
 
