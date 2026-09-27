@@ -13,7 +13,7 @@ Arithmetic modes (``--mode``; see MODES):
                 BF16 GEMMs with FP32 accumulation and BF16 outputs, FP32
                 RMSNorm, BF16 residual stream, SDPA attention in BF16).
 * ``contract``  the decode core's golden arithmetic, emulated exactly on the
-                GPU (tools/hdc_golden.py at 8a91421a, the vector-core
+                GPU (tools/hdc_golden.py at 27d30c15, the vector-core
                 configuration HDC_SU_WIDTH>1 at the spec's 8,192 lane groups):
                 FP32 residual stream and FP32 matrix outputs; every matrix
                 input rounded to BF16; every weight dot product cut into the
@@ -292,27 +292,28 @@ def rsqrt_g(v):
     return y
 
 
-# The golden's reciprocal seed 0x7EF311C7 - bits(d) wraps negative for d above
-# 0x7EF311C7 (1.6158e38), and the Newton steps then return NaN.  silu(g) reaches it
-# for g <= -87.98 (exp(-g) clamps at exp(88) = 1.65e38): the golden, and the RTL
-# that is bit-exact with it (rtl/hdc/ot_hdc_sfu.sv:122), turn such a gate into NaN.
-# Full Qwen3-8B produces such gates (layer 2 on WikiText-2), so the as-specified
-# contract cannot run it.  RECIP_SAT (default on) returns +0 there instead -- the
-# true 1/d is below 6.2e-39 -- which leaves every finite golden result unchanged;
-# RECIP_SAT_HITS counts the elements it rescued.
+# RECIP_SAT, the implemented contract's reciprocal saturation (tools/hdc_golden.py
+# @ 27d30c15 reciprocal(); rtl/hdc/ot_hdc_sfu.sv, ot_hdc_sfu_q.sv): for finite
+# positive d with bits(d) > 0x7EF311C7 (d > 1.6158e38) the bit seed would wrap, so
+# the seed is +0 and the Newton steps return +0 (the true 1/d is below 2^-127).
+# silu(g) reaches it for every gate g <= -87.98 (exp(-g) clamps at exp(88)); full
+# Qwen3-8B produces such gates on ordinary text.  Before 27d30c15 the golden and
+# RTL returned NaN there.  RECIP_SAT_HITS counts the saturated elements.
 RECIP_SAT = True
 RECIP_SAT_HITS = [0]
 
 
 def reciprocal_g(d):
-    over = _bits(d) > 0x7EF311C7
+    db = _bits(d)
+    over = (db > 0x7EF311C7) & (db < 0x7F800000)          # finite positive, above the seed's range
     if RECIP_SAT:
         RECIP_SAT_HITS[0] = RECIP_SAT_HITS[0] + over.sum()
-    y = _from_bits(0x7EF311C7 - _bits(d))
+        seed = torch.where(over, torch.zeros_like(db), 0x7EF311C7 - db)
+    else:
+        seed = 0x7EF311C7 - db
+    y = _from_bits(seed)
     for _ in range(3):
         y = mul(y, add(2.0, -mul(d, y)))
-    if RECIP_SAT:
-        y = torch.where(over, torch.zeros_like(y), y)
     return y
 
 
@@ -677,7 +678,7 @@ class Qwen3:
         cache["lens"] = [l + T for l in cache["lens"]]
         return self._rms_hf(x, self.norm)
 
-    # Contract arithmetic (tools/hdc_golden.py @ 8a91421a, Model.decode_token, NORM_FOLD)
+    # Contract arithmetic (tools/hdc_golden.py @ 27d30c15, Model.decode_token, NORM_FOLD)
     def _forward_contract(self, tokens, cache):
         B, T = tokens.shape
         dev = self.device

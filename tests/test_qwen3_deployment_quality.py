@@ -3,7 +3,7 @@ of the Qwen3-8B deployment arithmetic.
 
 The load-bearing check is the last one: the GPU contract forward (Triton
 chunk + pairwise-tree kernel, eager FP32 golden primitives, batched prefill)
-reproduces the numpy golden (tools/hdc_golden.py at 8a91421a, sequential
+reproduces the numpy golden (tools/hdc_golden.py at 27d30c15, sequential
 decode steps) bit-exactly in every logit of the reduced Qwen3 vehicle.
 """
 import importlib.util
@@ -20,7 +20,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 torch = pytest.importorskip("torch")
 Q = pytest.importorskip("qwen3_deployment_quality")
 
-GOLDEN_COMMIT = "8a91421a"          # hdc: FP8 E4M3 KV cache on the vector core -- golden kv_round
+GOLDEN_COMMIT = "27d30c15"          # vector-core golden (FP8 KV, norm fold) + reciprocal saturation
+GOLDEN_BLOB = "9c1640f9ffa5c20ac745a504ad04a111324b4f53"   # blob hash of that tools/hdc_golden.py
 REDUCED = Path("/home/ubuntu/OpenTallas/build/models/qwen3-reduced-v1")
 CUDA = torch.cuda.is_available()
 
@@ -31,6 +32,9 @@ def golden_module(tmp_path):
                              capture_output=True, check=True, text=True).stdout
     except Exception:
         pytest.skip(f"golden {GOLDEN_COMMIT} not in this clone")
+    import hashlib
+    blob = src.encode()
+    assert hashlib.sha1(b"blob %d\0" % len(blob) + blob).hexdigest() == GOLDEN_BLOB
     p = tmp_path / "hdc_golden_fp8kv.py"
     p.write_text(src)
     spec = importlib.util.spec_from_file_location("hdc_golden_fp8kv", p)
@@ -146,3 +150,15 @@ def test_gptq_beats_rtn_on_correlated_inputs():
         c2, s2, _ = Q.quantize(w, fmt)
         e_rtn = (x @ (Q.dequant(c2, s2) - w.float()).t()).pow(2).mean()
         assert e_gptq < 0.8 * e_rtn
+
+
+def test_reciprocal_saturation_matches_golden(tmp_path):
+    """RECIP_SAT equals the golden's saturated reciprocal and SiLU at the extremes."""
+    g = golden_module(tmp_path)
+    d = np.float32([1.0, 3.0, 1.6e38, 1.6158e38, 1.6159e38, 1.7e38, 3.4e38, 2.0 ** -120])
+    got = Q.reciprocal_g(torch.from_numpy(d)).numpy()
+    assert np.array_equal(g.reciprocal(d).view(np.uint32), got.view(np.uint32))
+    x = np.float32([-200.0, -90.0, -88.0, -87.98, -87.9, -10.0, 0.0, 3.0, 90.0])
+    got = Q.silu_g(torch.from_numpy(x)).numpy()
+    ref = g.silu(x)
+    assert np.isfinite(got).all() and np.array_equal(ref.view(np.uint32), got.view(np.uint32))
