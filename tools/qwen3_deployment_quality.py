@@ -465,6 +465,7 @@ MODES = {
     "c_kvfp8": ("gpu", "bf16", "fp8"),
     "d_contract": ("contract", "bf16", "bf16"),
     "e_full": ("contract", "q35", "fp8"),
+    "f_contract_kvfp8": ("contract", "bf16", "fp8"),      # everything but the weight format
     "e_full_w4": ("contract", "w4", "fp8"),
 }
 
