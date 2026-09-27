@@ -22,7 +22,12 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-os.environ.setdefault("HDC_KV_FMT", "fp8")
+# These must precede *all* imports of hdc_golden/hdc_program.  The HBM core
+# campaign uses the scalar, unsplit stream program; an import with the vector
+# defaults generates a different prefill despite identical FP8 quantization.
+os.environ["HDC_KV_FMT"] = "fp8"
+os.environ["HDC_ATTN_SPLIT"] = "0"
+os.environ["HDC_SU_WIDTH"] = "1"
 import hdc_program as P  # noqa: E402
 import kv_ingest_ref as R  # noqa: E402
 import rtl_hdc_kv_ingest_campaign as IC  # noqa: E402

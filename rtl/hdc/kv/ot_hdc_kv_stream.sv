@@ -117,6 +117,12 @@ module ot_hdc_kv_stream #(
     output reg  [1:0]        tl_re,
     output reg  [2*(LLG+LOG_HD)-1:0] tl_raddr,
     input  wire [2*W*16-1:0] tl_q,
+    // Pre-token tail boot: one packed K word per cycle from ingested HBM.
+    // The controller holds tok_start and kv_we low until all resident tiles
+    // have been transferred.  Address uses the streamer's logical word ABI.
+    input  wire              boot_v,
+    input  wire [AW-1:0]     boot_addr,
+    input  wire [W*(HBM_FP8 ? 8 : 16)-1:0] boot_data,
     // HBM request (valid/ready): reads of hq_len words, or one-word writes
     output reg               hq_v,
     input  wire              hq_rdy,
@@ -558,16 +564,19 @@ module ot_hdc_kv_stream #(
         if (!rst_n) tl_we <= 2'b00;
         else begin
             tl_we <= 2'b00;
-            if (kv_we && w_isk) tl_we[w_bank] <= 1'b1;
+            if (boot_v) tl_we[boot_addr[LOG_HD]] <= 1'b1;
+            else if (kv_we && w_isk) tl_we[w_bank] <= 1'b1;
         end
     end
     integer tb;
     always @(posedge clk) begin
         for (tb = 0; tb < 2; tb = tb + 1) begin
-            tl_waddr[tb*TAW +: TAW] <= tail_idx(w_word);
+            tl_waddr[tb*TAW +: TAW] <= boot_v ? tail_idx(boot_addr) : tail_idx(w_word);
             //: lane 0 opens a new tile: the other lanes (later positions) read zero
-            tl_wmask[tb*W +: W] <= (w_lane == 0) ? {W{1'b1}} : ({{(W-1){1'b0}}, 1'b1} << w_lane);
-            tl_wdata[tb*W*16 +: W*16] <= {{(W-1)*16{1'b0}}, kv_wdata[31:16]} << (16 * w_lane);
+            tl_wmask[tb*W +: W] <= boot_v ? {W{1'b1}} :
+                                   ((w_lane == 0) ? {W{1'b1}} : ({{(W-1){1'b0}}, 1'b1} << w_lane));
+            tl_wdata[tb*W*16 +: W*16] <= boot_v ? expand_word(boot_data) :
+                                              ({{(W-1)*16{1'b0}}, kv_wdata[31:16]} << (16 * w_lane));
         end
     end
     // Reads: the engine's (same cycle as its kv_re, like the window) or, on a

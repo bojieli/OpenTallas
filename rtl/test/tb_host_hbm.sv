@@ -119,6 +119,7 @@ module tb_host_hbm #(
         .win_q(win_q),
         .tl_we(tl_we), .tl_waddr(tl_waddr), .tl_wmask(tl_wmask), .tl_wdata(tl_wdata), .tl_re(tl_re),
         .tl_raddr(tl_raddr), .tl_q(tl_q),
+        .boot_v(1'b0), .boot_addr({AW{1'b0}}), .boot_data({(W*16){1'b0}}),
         .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_we(hq_we), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag),
         .hq_wdata(hq_wdata),
         .hr_v(hr_v), .hr_rdy(hr_rdy), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data),
