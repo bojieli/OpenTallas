@@ -40,7 +40,6 @@
   "schema_version": 1,
   "scope": "reduced functional adapter bench, not integrated Qwen token or physical closure",
   "source_sha256": {
-    "docs/QWEN_VECTOR_KV_WRITE_ADAPTER_PROTOTYPE.md": "68c52767b2781c1a3359faa244f6eb4f65859f4c8be49d7d809ad2572de8a87a",
     "rtl/hdc/kv/ot_hdc_kv_stream.sv": "b7d320289ffbb51384b7ea18cdd6b7b1503fe71dd00b369dc4f9ffdafcae3a7d",
     "rtl/hdc/kv/ot_hdc_qwen_kv_tail_read_mux.sv": "c424d6a9299b12f93f2b569be7681839e48b5c24a5ee2c577312b9df91a7a892",
     "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
@@ -52,7 +51,7 @@
     "tests/test_qwen_kv_write_adapter_record.py": "b89675bd1e6e0c9d899503ec45c02e53d131dc2f2fb44ad7f46ccbcdde74846b",
     "tools/hdc_program.py": "4d3f4e37437997ab7af3612d96d25d88a6a17f473013586dd43f0afaa83a3712",
     "tools/qwen_kv_bank_prototype.py": "1d327fdf38c7ddb3907f53cb69c67d0e8a64fe639d8630b6ae6c612038e79a9a",
-    "tools/run_qwen_kv_write_adapter_campaign.py": "fc36241b53d79f66770f0773c9a9f377d0fe85fea52a607b419ce047b047d4df"
+    "tools/run_qwen_kv_write_adapter_campaign.py": "3c2aabb883d7f6b823d652e69f43737062cc9473669adb9dc12ac67db8b708ba"
   },
   "status": "pass"
 }
