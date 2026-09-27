@@ -24,6 +24,7 @@ module ot_hdc_matvec_memory_tile (
     input wire kv_load, x_load,
     input wire [9:0] kv_load_addr, x_load_addr,
     input wire [255:0] kv_load_data, x_load_data,
+    output reg kv_load_commit, x_load_commit,
     output wire ov,
     output wire [1:0] o_we,
     output wire [31:0] o_addr,
@@ -46,6 +47,32 @@ module ot_hdc_matvec_memory_tile (
     wire [127:0] wrom_q;
     wire [255:0] kv_q;
     wire [63:0] x_q;
+
+    // The ingress stage accepts one whole-word load per bank each cycle.
+    // SRAM writes occur at the following rising edge. A producer must wait
+    // for the corresponding commit pulse before reading the loaded address.
+    reg kv_load_q, x_load_q;
+    reg [9:0] kv_load_addr_q, x_load_addr_q;
+    reg [255:0] kv_load_data_q, x_load_data_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            kv_load_q <= 1'b0;
+            x_load_q <= 1'b0;
+            kv_load_commit <= 1'b0;
+            x_load_commit <= 1'b0;
+        end else begin
+            kv_load_q <= kv_load;
+            x_load_q <= x_load;
+            kv_load_commit <= kv_load_q;
+            x_load_commit <= x_load_q;
+        end
+    end
+    always @(posedge clk) begin
+        kv_load_addr_q <= kv_load_addr;
+        x_load_addr_q <= x_load_addr;
+        kv_load_data_q <= kv_load_data;
+        x_load_data_q <= x_load_data;
+    end
 
     ot_hdc_matvec #(.W(4), .G(2), .IL(8), .AW(16), .NW(8)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
@@ -83,13 +110,13 @@ module ot_hdc_matvec_memory_tile (
         wire [255:0] kv_word, x_word;
         ot_sram_1r1w_1024x256_m2_r2c2 u_kv (
             .clk(clk), .r_ce_in(kv_re), .r_addr_in(kv_addr[g*16 +: 10]),
-            .rd_out(kv_word), .w_ce_in(kv_load), .w_addr_in(kv_load_addr),
-            .wd_in(kv_load_data), .w_mask_in({256{1'b1}}),
+            .rd_out(kv_word), .w_ce_in(kv_load_q), .w_addr_in(kv_load_addr_q),
+            .wd_in(kv_load_data_q), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
         ot_sram_1r1w_1024x256_m2_r2c2 u_x (
             .clk(clk), .r_ce_in(x_re[g]), .r_addr_in(x_addr[g*16 +: 10]),
-            .rd_out(x_word), .w_ce_in(x_load), .w_addr_in(x_load_addr),
-            .wd_in(x_load_data), .w_mask_in({256{1'b1}}),
+            .rd_out(x_word), .w_ce_in(x_load_q), .w_addr_in(x_load_addr_q),
+            .wd_in(x_load_data_q), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
         assign kv_q[g*128 +: 128] = kv_word[127:0];
         assign x_q[g*32 +: 32] = x_word[31:0];
