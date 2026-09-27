@@ -18,6 +18,10 @@ Steps:
     python3 tools/v41_collective_exposure.py [--out results/arch/v41_collective_exposure.json]
     python3 tools/v41_collective_exposure.py --levers [results/rtl/v41_collective_levers_campaign.json]
             (every lever alone and the recommended set: results/arch/v41_collective_levers.json)
+
+The --levers rates are a CONDITIONED DESIGN-POINT MODEL RESULT: the analytical decode DAG with each streaming
+collective / stage hop re-priced from a bench-measured tail (RTL of the collective engine and behavioural links).
+They are not measured chip throughput.  The conditions are recorded in the output (lever_conditions()).
 """
 from __future__ import annotations
 
@@ -198,6 +202,52 @@ def lever_scenarios(lev):
     ], dict(best_hop_split=best_split, gather_levers=gath)
 
 
+def lever_conditions(dp, lev):
+    """The conditions the --levers rates hold under (read from the model, not restated)."""
+    import arch_budget_v41 as A
+    import arch_latency_ladder_v41 as LX
+    import arch_utilization_v41 as U
+    links = A.links_for(A.BASELINE)
+    aa = lev.get("area_assumptions", {})
+    return dict(
+        result_kind=("conditioned design-point model result using bench-measured collective tails; NOT measured "
+                     "chip throughput"),
+        contexts=list(CONTEXTS), batch=1, clock_hz=dp["hz"][0], lane_split=dp["split"],
+        mtp=dict(tau=LX.TAU, gamma=U.GAMMA, lane_multiplier=U.MTP_M, tau_sensitivity_band=list(U.TAU_BAND),
+                 tau_source=("tools/arch_utilization_v41.py TAU: LMSYS/SGLang accept length ~5 on "
+                             "DeepSeek-V4-Pro-DSpark at batch 1 (https://www.lmsys.org/blog/2026-07-06-dspark-sglang/),"
+                             " third-party, V4-Pro not V4.1-Flash")),
+        hbm_stacks_per_rom_die=A.ROM_DIE_HBM_STACKS,
+        links_s=dict(ucie_hop=links["rom_package_ucie"]["hop"], t1_board_hop=links["rom_board_serdes"]["hop"],
+                     t2_rack_cable_stage_hop=links["rom_rack_cable_serdes"]["hop"]),
+        bench=dict(campaign=str(LEVERS_CAMPAIGN.relative_to(ROOT)), baseline=str(CAMPAIGN.relative_to(ROOT)),
+                   word_bytes=512, simulator="Verilator", links="behavioural (flight ring + token-bucket rate + "
+                   "credit lane), single clock, no PHY / FEC / retries"),
+        queue_area=dict(kind="ANALYTICAL estimate (bitcell area x overhead), not a compiled SRAM macro",
+                        bitcell_um2=aa.get("bitcell_um2"), bitcell_source="configs/hardware/technology.json "
+                        "nodes.N5.sram_hd_bitcell_um2", two_port_overhead=aa.get("rf_overhead"),
+                        two_port_overhead_status="ASSUMPTION (1R1W register-file periphery and 8T cell)",
+                        flop_um2=aa.get("flop_um2"), flop_status="ASSUMPTION", die_mm2=aa.get("die_mm2")))
+
+
+DERIVATION = [
+    "The design-point DAG (tools/arch_lanes_v41.design_point: the adopted latency-ladder rungs, the TP 52 / stage 14 "
+    "lane split with two-step all-reduces) prices a collective as STREAMING from its producer's start.",
+    "tools/collective_exposure.expose_collectives re-prices every streaming collective and stage hop from its "
+    "producer's LAST output: issue = max(0, bytes x bytes_scale - window) + residual, depth unchanged (hop + fold), "
+    "where residual = bench-measured tail - that formula at the bench's design-point node.",
+    "Measured tails replace the nodes by class: allreduce_wo_b / allreduce_down -> every L*.attn.out_allreduce, "
+    "L*.ffn.combine_allreduce (and the other all-reduce-class collectives: wo_a group reduce, combine a2a); "
+    "gather_router -> L*.ffn.router_allgather and the other small all-gathers; gather_topk -> L*.attn.idx.topk_merge "
+    "and cand.merge; gather_rows -> L*.attn.rows_allgather; stage_hop -> L*.substage_hop*, stage hops and head.hop.",
+    "bytes_scale = 0.5 on a class whose lever is the receive-side relay (each T1 link carries half the words).",
+    "Consumer early start (lever 4) marks hc_post after an all-reduce as streaming (issue overlaps the arrivals, "
+    "depth after the last word).",
+    "tok/s/user = 1 / period of the re-solved DAG at batch 1 (arch_latency_ladder_v41.evaluate); with MTP, "
+    "tau / (verify period at gamma + 1 positions on the m = 2 core + draft cost).",
+]
+
+
 def lever_rates(camp, lev, lev_path, out):
     import copy
     import arch_lanes_v41 as AL
@@ -222,8 +272,11 @@ def lever_rates(camp, lev, lev_path, out):
         r["gain_vs_measured"] = {ctx: dict(ar=r["rates"][ctx]["ar"] / base[ctx]["ar"] - 1,
                                            mtp=r["rates"][ctx]["mtp"] / base[ctx]["mtp"] - 1) for ctx in base}
     rel = (lambda q: str(q.relative_to(ROOT)) if q.resolve().is_relative_to(ROOT) else str(q))
-    rec = dict(schema="v41_collective_levers/2", tool="tools/v41_collective_exposure.py --levers",
-               gate="C7 / O2 levers", campaign=rel(lev_path), baseline_campaign=str(CAMPAIGN.relative_to(ROOT)),
+    rec = dict(schema="v41_collective_levers/3", tool="tools/v41_collective_exposure.py --levers",
+               gate="C7 / O2 levers", result_kind=("conditioned design-point model result using bench-measured "
+                                                   "collective tails; NOT measured chip throughput"),
+               conditions=lever_conditions(dp, lev), derivation=DERIVATION,
+               campaign=rel(lev_path), baseline_campaign=str(CAMPAIGN.relative_to(ROOT)),
                design_point_model=dict(tools=["tools/arch_budget_v41.py", "tools/arch_utilization_v41.py",
                                               "tools/arch_latency_ladder_v41.py", "tools/arch_lanes_v41.py"],
                                        split=dp["split"]),

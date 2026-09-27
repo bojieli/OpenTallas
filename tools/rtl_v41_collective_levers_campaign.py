@@ -290,7 +290,8 @@ def queue_cost(depth, qtx, add_lat, gw, relay, lanes=LANES):
     sram_bits = rx_bits + tx_bits
     flop_bits = heads + delay + gout
     mm2 = sram_bits * BITCELL_UM2 * RF_OVERHEAD * 1e-6 + flop_bits * FLOP_UM2 * 1e-6
-    return dict(rx_fifo_bits=rx_bits, tx_queue_bits=tx_bits, sram_KiB=sram_bits / 8 / 1024,
+    return dict(estimate="analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 "
+                         "(assumed); not a compiled macro", rx_fifo_bits=rx_bits, tx_queue_bits=tx_bits, sram_KiB=sram_bits / 8 / 1024,
                 head_flops=heads, delay_line_flops=delay, gather_out_flops=gout, flop_bits=flop_bits,
                 area_mm2=round(mm2, 4), die_fraction=mm2 / DIE_MM2)
 
@@ -387,6 +388,9 @@ def main():
                sources=[str(p.relative_to(ROOT)) for p in sources()], source_sha256=source_sha256(),
                area_assumptions=dict(bitcell_um2=BITCELL_UM2, rf_overhead=RF_OVERHEAD, flop_um2=FLOP_UM2,
                                      die_mm2=DIE_MM2,
+                                     kind="ANALYTICAL (bitcell area x overhead), not a compiled SRAM macro",
+                                     bitcell_source="configs/hardware/technology.json nodes.N5.sram_hd_bitcell_um2",
+                                     rf_overhead_status="ASSUMPTION", flop_um2_status="ASSUMPTION",
                                      note="receive FIFOs and producer queues as 1R1W register-file macros; head, "
                                           "delay-line and gather-output registers as flops"),
                claim_boundary=("RTL of the lever engine (ot_rom_oneshot_die_px) with the O2 bench's behavioural links "
