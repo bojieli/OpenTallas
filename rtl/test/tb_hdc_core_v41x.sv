@@ -178,6 +178,19 @@ module tb_hdc_core_v41x (input wire clk);
                         lg[{me_oaddr[q*AW +: 12], 4'b0} + l] <= me_odata[32*(q*W + l) +: 32];
     end
 
+    wire [63:0] x_cnt_he, x_cnt_me;
+    generate
+        if (`HDC_X_HE) begin : g_cnt_he
+            assign x_cnt_he = {dut.g_he_x.u_he.dbg_ops, dut.g_he_x.u_he.dbg_elems};
+        end else begin : g_cnt_he_n
+            assign x_cnt_he = 64'd0;
+        end
+        if (`HDC_X_ME) begin : g_cnt_me
+            assign x_cnt_me = {dut.g_me_x.u_mw.dbg_ops, dut.g_me_x.u_mw.dbg_elems};
+        end else begin : g_cnt_me_n
+            assign x_cnt_me = 64'd0;
+        end
+    endgenerate
     reg [8*512-1:0] dir;
     integer cyc = 0, i, bad_lg, bad_vm, bad_kv, n_prime = 0, pfirst = 0, prime_i = 0;
     reg trace = 1'b0, multi = 1'b0, running = 1'b0, dbg = 1'b0;
@@ -237,8 +250,17 @@ module tb_hdc_core_v41x (input wire clk);
         for (i = 0; i < VOCAB; i = i + 1) lg[i] = 32'hFFFFFFFF;
     end
 
+    // activation counters of the re-specified units: "XCNT unit=<u> ops=<n> elems=<n>" (the campaign asserts them)
+    task print_counters;
+        begin
+            if (`HDC_X_HE) $display("XCNT unit=he ops=%0d elems=%0d", x_cnt_he[63:32], x_cnt_he[31:0]);
+            if (`HDC_X_ME) $display("XCNT unit=me ops=%0d elems=%0d", x_cnt_me[63:32], x_cnt_me[31:0]);
+        end
+    endtask
+
     task check_state(input integer check_logits);
         begin
+            print_counters();
             bad_lg = 0; bad_vm = 0; bad_kv = 0;
             if ($test$plusargs("DUMP")) $writememh({dir, "/rtl_vm.hex"}, vm);
             if (check_logits)

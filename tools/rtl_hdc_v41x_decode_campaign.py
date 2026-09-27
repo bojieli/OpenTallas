@@ -80,6 +80,31 @@ SINGLE = re.compile(r"HDC41 token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) 
 UTIL = re.compile(r"UTIL me_busy=(\d+) su_busy=(\d+) qe_busy=(\d+) xu_busy=(\d+) he_busy=(\d+) all_idle=(\d+)")
 ISSUE = re.compile(r"ISSUE cyc=(\d+) pc=(\d+) unit=(\d+)")
 STEP = re.compile(r"STEP pos=(\d+) in=(\d+) out=(\d+) gold=(\d+) cycles=(\d+) fault=(\d+)")
+XCNT = re.compile(r"XCNT unit=(\w+) ops=(\d+) elems=(\d+)")
+# classes whose counters the bench prints (a re-specified unit not listed here has no activation proof yet)
+COUNTED = ("he", "me")
+# coverage the runs do NOT prove, per unit (recorded, never counted as proven)
+NOT_EXERCISED = {
+    "he": ["MTP lane multiplier (mx_m > 1): the MTP program is not run on this core"],
+    "me": ["wo_a in the checkpoint's FP8 image format (the image feeds it as expanded BF16)",
+           "MTP lane multiplier (mx_m > 1) and the MTP layout's images"],
+}
+
+
+def counters(run):
+    """{unit: {ops, elements}} from a bench log; the proof that each re-specified unit fired."""
+    return {m.group(1): {"ops": int(m.group(2)), "elements": int(m.group(3))} for m in XCNT.finditer(run)}
+
+
+def activation(cnt):
+    """Every selected unit must have run ops and processed elements; one that stayed at 0 FAILS the run."""
+    missing = [u for u in UNITS if u in COUNTED and (cnt.get(u, {}).get("ops", 0) == 0 or
+                                                     cnt.get(u, {}).get("elements", 0) == 0)]
+    uncounted = [u for u in UNITS if u not in COUNTED]
+    return {"counters": cnt, "zero_counter_units": missing, "units_without_counters": uncounted,
+            "pass": not missing and not uncounted}
+
+
 MULTI = re.compile(r"HDC41_MULTI steps=(\d+) generated=(\d+) mismatches=(\d+) total_cycles=(\d+) "
                    r"vm_mismatch=(\d+) kv_mismatch=(\d+)")
 
@@ -160,6 +185,8 @@ def single(exe, img, trace=True):
            "kv_cache_mismatches": bad_kv,
            "unit_busy_cycles": dict(zip(("me", "su", "qe", "xu", "he"), u[:5])), "all_units_idle_cycles": u[5],
            "pass": "PASS" in run and nxt == exp_tok and fault == 0 and bad_lg + bad_vm + bad_kv == 0}
+    rec["activation"] = activation(counters(run))
+    rec["pass"] = rec["pass"] and rec["activation"]["pass"]
     return rec, run
 
 
@@ -252,7 +279,9 @@ def run(ngen: int, context: int, sweep=()) -> dict:
                      "steps": mm[0], "mismatches": mm[2], "total_cycles": mm[3],
                      "final_vector_memory_mismatches": mm[4], "final_kv_cache_mismatches": mm[5],
                      "per_step": steps,
+                     "activation": activation(counters(multi)),
                      "pass": "PASS" in multi and mm[2] + mm[4] + mm[5] == 0 and gen == expect["multi"]["golden"]}
+        multi_rec["pass"] = multi_rec["pass"] and multi_rec["activation"]["pass"]
         longc = None
         if context:
             imgc = s / "imgc"
@@ -269,6 +298,7 @@ def run(ngen: int, context: int, sweep=()) -> dict:
         "as_built_units": [u for u in X_UNITS if u not in UNITS],
         "hdc_v41_arith": arith(),
         "engine_parameters": dict(PARAMS),
+        "not_exercised": {u: NOT_EXERCISED.get(u, []) for u in UNITS},
         "status": status,
         "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) "
                           "with behavioural synchronous-read memories (many-ported vector memory: four operand reads, "

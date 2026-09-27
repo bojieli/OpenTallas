@@ -285,4 +285,14 @@ module ot_hdc_v41x_me_adapt #(
         if (!rst_n) idle <= 1'b1;
         else idle <= (st == A_IDLE) && !go && t_idle && !t_ov && !ov && !(|o_we);
     end
+    // ---- activation counters (bench only, read hierarchically by rtl/test/tb_hdc_core_v41x.sv): ops this
+    // engine ran and the elements it processed -- the campaign fails a selected unit whose counters stay 0
+    reg [31:0] dbg_ops, dbg_elems;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin dbg_ops <= 0; dbg_elems <= 0; end
+        else begin
+            if (st == A_IDLE && go) dbg_ops <= dbg_ops + 1;
+            dbg_elems <= dbg_elems + (rq_v[0] ? L * MP : 0);        // MACs issued (a beat of L lanes)
+        end
+    end
 endmodule
