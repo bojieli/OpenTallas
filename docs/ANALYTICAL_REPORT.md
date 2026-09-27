@@ -595,6 +595,24 @@ implements that specialisation on the reduced Qwen3 vehicle.
 The same vehicle takes 7.9 M cycles on the general ABI 3.0 token path, whose
 slowest blocks route at 58–75 MHz.
 
+### V4.1 reduced-core and package-array gates
+
+The combined reduced V4.1 core has now run ten dependent steps from empty
+state with QE weights streamed from HBM and pooled index keys written to and
+read from timed four-stack HBM. It generates 3 <!-- figure: 3 src="results/rtl/hdc_v41x_whbm_pooled_multi.json#configuration.generated_tokens" name="V4.1 combined HBM generated tokens" -->
+oracle tokens in 4,326,779 <!-- figure: 4326779 src="results/rtl/hdc_v41x_whbm_pooled_multi.json#summary.total_cycles" name="V4.1 combined HBM ten-step RTL cycles" -->
+RTL cycles, with 0 <!-- figure: 0 src="results/rtl/hdc_v41x_whbm_pooled_multi.json#summary.token_mismatches" name="V4.1 combined HBM generated-token mismatches" -->
+generated-token, final vector-memory and KV mismatches, faults, or queue errors.
+The result uses DPI arithmetic stand-ins and does not establish production
+throughput or energy.
+
+A separate two-package point-to-point array run completed its prompt and
+generated-token gate in 967,618 <!-- figure: 967618 src="results/rtl/hdc_v41x_array_b2_campaign.json#configurations[0].runs[0].total_cycles" name="V4.1 two-package array RTL cycles" -->
+RTL cycles with exact token, logit and package state checks. It is pinned to
+the tested source snapshot; the current-source rerun and switched five-package
+gate remain open. These gates exercise different configurations and do not yet
+prove a combined full-size system rate.
+
 ## 10. Reproduce
 
 ```
