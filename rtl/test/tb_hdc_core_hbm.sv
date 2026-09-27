@@ -315,13 +315,13 @@ module tb_hdc_core_hbm #(
         if ($test$plusargs("CHECKLAST")) checklast = 1'b1;
         if (!$value$plusargs("NPROMPT=%d", n_prompt)) n_prompt = 0;
         if (!$value$plusargs("NGEN=%d", n_gen)) n_gen = 0;
+        $readmemh({dir, "/kv.hex"}, kv);
         if (multi) begin
             $readmemh({dir, "/prompt.hex"}, prompt);
             $readmemh({dir, "/generated.hex"}, gold_gen);
             if (!prefill_multi)
                 for (i = 0; i < KV_WORDS; i = i + 1) kv[i] = {(W*32){1'b0}};
-        end else
-            $readmemh({dir, "/kv.hex"}, kv);
+        end
         // HBM holds the whole image; the tail the open tile and the one before it
         if (PACKED_HBM) $readmemh({dir, "/kv_fp8.hex"}, kv_fp8);
         for (i = 0; i < KV_WORDS; i = i + 1)
@@ -375,7 +375,8 @@ module tb_hdc_core_hbm #(
                      kv_stall, kv_ops, kvs_fault, kvq_bad, kvq_zero, sum_rd, sum_wr, sum_act, sum_hit, sum_conf, sum_ref,
                      (sum_rd > 0) ? u_hbm.st_rd_lat_sum / sum_rd : 0, u_hbm.st_rd_lat_max, u_hbm.st_bp_cycles,
                      multi ? total_cycles : cycles);
-            if (next_token == exp_tok && !fault && !kvs_fault && kvq_bad == 0 && bad_lg == 0 && bad_vm == 0 && bad_kv == 0)
+            if (next_token == exp_tok && (!prefill_multi || gen_bad == 0) && !fault && !kvs_fault &&
+                kvq_bad == 0 && bad_lg == 0 && bad_vm == 0 && bad_kv == 0)
                 $display("PASS");
             else
                 $display("FAIL");
