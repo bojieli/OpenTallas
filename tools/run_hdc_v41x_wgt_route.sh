@@ -11,7 +11,10 @@ set -euo pipefail
 top=$1; stages=$2; out=$3; period=${4:-0.9}; shift 4 || shift $#
 cd "$(dirname "$0")/.."
 fp=()
-for p in rst_n d_v d_plg d_nb d_nrows d_wbase d_ind d_eid d_estride d_fp4 d_tag rd_w rd_x o_cr; do
+ports="rst_n d_v d_plg d_nb d_nrows d_wbase d_ind d_eid d_estride d_fp4 d_tag rd_w rd_x o_cr"
+case "$top" in *_pool) ports="$ports d_src d_split rd_k";; esac
+case "$top" in *mtile*) ports=${ports/ d_fp4/}; ports=${ports/ d_split/};; esac
+for p in $ports; do
   fp+=(--false-path-from "$p")
 done
 exec python3 tools/run_abi3_physical.py --view asap7 --top "$top" \
