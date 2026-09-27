@@ -68,6 +68,26 @@ so no read overtakes its write.  `pred` skips an
 instruction by position parity (group-completing compressor steps) or at
 position 0 (an empty index set).  A count that evaluates to zero skips.
 
+MULTI-TOKEN PREDICTION (DSpark drafting, one multi-position verify pass;
+tools/hdc_program_v41.py `--mtp`).  The sequencer holds NSLOT position SLOTS:
+slot j sits at position pos + j and has its own token register stok[j] and its
+own DYN bank (dyn_values(stok[j], pos + j)); an instruction's `dslot` picks the
+bank its DYN selects, its predicate position and (EHASH) its token.  A weight
+op (ME from the weight ROM, QE LINQ, HE) may serve `mx_m` consecutive slots
+with ONE weight read: slot p (0 <= p < mx_m) reads its x at + p*mx_xps
+(elements) and writes at + p*mx_ops (ME: words; QE, HE: elements) -- the
+lane multiplier; mx_m = 0 or 1 is the one-position op.  Unit 0 is CONTROL:
+`ctl` END (the token is the ME argmax), TOKX (stok[ctl_slot] <= the first index
+the last XU SELECT wrote: a draft token), AMAX (ttok[ctl_slot] <= the ME argmax
+of lane ctl_lane: a verify target), DYN (recompute every slot's DYN bank from
+stok), ACCEPT (a = the longest prefix with stok[i+1] == ttok[i], i < nslot-1;
+emit ttok[0 .. a]; restore the Engram hash history to its state after slot
+a's EHASH) -- the one data-dependent step of the static program: nothing else
+is predicated on a, because every position-indexed write of a rejected slot
+lands in a row no later read reaches before the next pass rewrites it (window
+KV rows, compressed rows, index keys, compressor slot ring of POS_RING
+entries >= nslot + 1, DSpark window rows).
+
 `python3 tools/hdc_isa_v41.py` regenerates rtl/hdc/v41/ot_hdc_isa_v41.svh.
 """
 import os
@@ -85,6 +105,10 @@ SU_LANES = int(os.environ.get("HDC_SW", 8))    # SU lanes: elements per cycle (a
 T_MAX = 144           # attention rows per layer: window 128 + 16 selected
 POS_MAX = 128         # positions provisioned (max_seq_len of the reduced model)
 VM_ELEMS = 65536
+VM_ELEMS_MTP = 131072  # vector memory of the MTP configuration (NSLOT position slots)
+NSLOT = 8             # position slots (verify pass gamma + 1 <= NSLOT)
+POS_RING = 8          # compressor slot ring (MTP): positions p and p+8 never share an entry
+ROPE_POS = POS_MAX + 16   # RoPE table rows (MTP: DSpark block rows reach anchor + 5)
 KV_WORDS = 32768
 INSTR_BITS = 1536
 
@@ -93,6 +117,8 @@ N = 16   # count width
 D = 5    # DYN select width
 
 UNIT_END, UNIT_ME, UNIT_SU, UNIT_QE, UNIT_XU, UNIT_HE = range(6)
+UNIT_CTL = UNIT_END
+CTL_END, CTL_TOKX, CTL_AMAX, CTL_DYN, CTL_ACCEPT = range(5)
 UNITS = (UNIT_ME, UNIT_SU, UNIT_QE, UNIT_XU, UNIT_HE)
 PRED_ALWAYS, PRED_ODD, PRED_NZ = range(3)
 
@@ -101,6 +127,7 @@ DYN_NAMES = [
     "ZERO", "EMBED", "ROPE", "ROPE_G2", "POS", "POS1", "N2", "N2M1",
     "NSEL1", "NSEL2", "T1", "T2", "RND_POS1", "RND_N2", "RND_T1", "RND_T2",
     "ROW", "ROW1", "SLOTW", "SLOTE", "CKV2", "RND16_POS1", "RND16_N2", "RND16_T1", "RND16_T2",
+    "SLOTW8", "SLOTP8", "TOK32",
 ]
 DYN = {n: i for i, n in enumerate(DYN_NAMES)}
 TOPK, RH, HDIM, DIM = 16, 2, 32, 160
@@ -114,7 +141,8 @@ def dyn_values(token, pos):
     v = [0, token * DIM, pos * RH, (pos - 1) * RH if pos else 0, pos, pos + 1, n2, n2 - 1 if n2 else 0,
          ns1, ns2, pos + 1 + ns1, pos + 1 + ns2, rnd(pos + 1), rnd(n2), rnd(pos + 1 + ns1), rnd(pos + 1 + ns2),
          pos * HDIM, (pos + 1) * HDIM, (pos & 1) * 4, (pos & 1) * 64, (n2 - 1) * HDIM if n2 else 0,
-         rnd16(pos + 1), rnd16(n2), rnd16(pos + 1 + ns1), rnd16(pos + 1 + ns2)]
+         rnd16(pos + 1), rnd16(n2), rnd16(pos + 1 + ns1), rnd16(pos + 1 + ns2),
+         (pos % POS_RING) * 64 // W_LANES, ((pos >> 1) % (POS_RING // 2)) * 128, token * 32]
     return v + [0] * (32 - len(v))
 
 
@@ -171,6 +199,17 @@ FIELDS = [
     # program generator sets it on an instruction that waited for the XU op
     # writing the expert ids, so they are in the vector memory by then
     ("wrel", 1),
+    # multi-token prediction: the DYN bank / position slot, the lane multiplier
+    # of a weight op (ME, QE LINQ, HE), and the control step
+    ("dslot", 3), ("mx_m", 3), ("mx_xps", A), ("mx_ops", A),
+    ("ctl", 3), ("ctl_slot", 3), ("ctl_lane", 3),
+    # FUSED INDEXER (re-specified core, tools/hdc_program_v41.py Builder(idx_fused=True)): a KV-sourced ME
+    # op on the index keys with me_fuse set computes, per key row r < n, the index score
+    #   IS[r] = to_bf16(sum over heads hh of to_bf16(relu(to_bf16(dot(q[hh], key[r]))) * wts[hh]))
+    # (the head sum under the "idx" class: csum, or the legacy P = 8 interleaved sum), with wts[hh] the
+    # vector-memory element me_wts + hh, and writes it as element me_obase*16 + r -- the per-head scores
+    # and the stream unit's ReLU / weight / head-sum op are gone
+    ("me_fuse", 1), ("me_wts", A),
 ]
 
 

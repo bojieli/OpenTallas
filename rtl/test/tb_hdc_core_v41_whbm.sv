@@ -91,7 +91,7 @@ module tb_hdc_core_v41_whbm #(
     wire [4:0] unit_busy; wire [2:0] issue_unit;
 
     ot_hdc_core_v41 #(.SW(SW), .HS(HS), .W_HBM(1)) dut (
-        .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
+        .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry({PAW{1'b0}}), .acc_n(), .acc_tok(),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
         .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
@@ -130,7 +130,7 @@ module tb_hdc_core_v41_whbm #(
     wire qs_fault; wire [3:0] qs_why; wire [31:0] qs_fetched, qs_consumed;
     ot_hdc_qstream #(.BL(BL), .QLB(QLB), .AW(AW), .HAW(24), .NW(NW), .LWIN(LWIN), .NPC(NPC), .LENW(6),
                      .BEATW(5), .LAW(LAW)) u_qs (
-        .clk(clk), .rst_n(rst_n), .cfg_base(24'd0), .cfg_lead(qlead), .cfg_rate(qrate),
+        .clk(clk), .rst_n(rst_n), .cfg_base(24'd0), .cfg_lbase({LAW{1'b0}}), .cfg_lead(qlead), .cfg_rate(qrate),
         .tok_start(start), .pos(pos),
         .l_re(l_re), .l_addr(l_addr), .l_q(l_q), .vi_re(xi_re), .vi_addr(xi_addr), .vi_q(xi_q), .wrel_v(wrel_v),
         .qd_v(qd_v), .qd_nb(qd_nb), .qd_tiles(qd_tiles), .q_ok(q_ok),

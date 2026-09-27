@@ -60,6 +60,7 @@ module ot_hdc_qstream #(
     input  wire              clk,
     input  wire              rst_n,
     input  wire [HAW-1:0]    cfg_base,       // HBM sector of the quantised region
+    input  wire [LAW-1:0]    cfg_lbase,      // first fetch-list entry of the program the token runs
     input  wire [NW-1:0]     cfg_lead,
     input  wire [15:0]       cfg_rate,       // words per cycle x 256
     input  wire              tok_start,
@@ -188,7 +189,7 @@ module ot_hdc_qstream #(
             else if (wrel_v) rel_cnt <= rel_cnt + 1'b1;
             if (hq_free) hq_v <= 1'b0;
             case (w_st)
-                W_IDLE: if (tok_start) begin l_idx <= 0; w_st <= W_LOAD; end
+                W_IDLE: if (tok_start) begin l_idx <= cfg_lbase; w_st <= W_LOAD; end
                 W_LOAD: begin l_re <= 1'b1; l_addr <= l_idx; w_st <= W_LWAIT; end
                 W_LWAIT: w_st <= W_DEC;
                 W_DEC: begin

@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas-hdc-v41x-idx-pool-kwr-v1",
+ "status": "pass",
+ "kdim": [
+  32,
+  128
+ ],
+ "checked": 2,
+ "errors": 0,
+ "stack_replication": 4,
+ "encoded_bytes_per_key": 68,
+ "logical_storage_bytes_per_key": 272,
+ "sources": {
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "76a7658ee2e9a7ab063ec799412b94b200b60a7a4c8803c70fafd9875be9f21a",
+  "rtl/test/tb_hdc_v41x_idx_pool_kwr.sv": "b7cec52addd8758539338ee4ec79fc2ca07f7555e81dc80a8ef8f270ec1098a3",
+  "tools/rtl_hdc_v41x_idx_pool_kwr_campaign.py": "e7ca49e1bf82da592ded2fdff0eb30dcf1a5d7e32d73b6aef4c8bee875bfd56f"
+ }
+}
