@@ -123,7 +123,7 @@ module ot_hdc_v41x_su_adapt #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             pend <= 1'b0; cp <= 3'd0; seq <= 8'd0; any_op <= 1'b0; cls_last <= 9'd0;
-            dbg_ops <= 0; dbg_elems <= 0;
+            dbg_ops <= 0;
         end else begin
             if (go && !pend) begin
                 pend <= 1'b1; cp <= 3'd0; m_r <= (i_m == 3'd0) ? 3'd1 : i_m;
@@ -132,7 +132,6 @@ module ot_hdc_v41x_su_adapt #(
                 wait_prev <= any_op && ((i_chase != 0) || (CLS_DRAIN != 0 && cls_in != cls_last));
             end else if (v_acc) begin
                 dbg_ops <= dbg_ops + 1'b1;
-                dbg_elems <= dbg_elems + nout;
                 seq <= seq + 8'd1;
                 cp <= cp + 3'd1;
                 if (cp + 3'd1 == m_r) pend <= 1'b0;
@@ -192,5 +191,17 @@ module ot_hdc_v41x_su_adapt #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else fault <= v_fault || v_ofault;
+    end
+    // Count output elements actually written by the vector unit, including reducer results.
+    integer ci;
+    reg [31:0] written;
+    always @(*) begin
+        written = 0;
+        for (ci = 0; ci < N; ci = ci + 1) written = written + vm_we[ci] + kv_we[ci];
+        for (ci = 0; ci < N / 8; ci = ci + 1) written = written + res_we[ci];
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) dbg_elems <= 0;
+        else dbg_elems <= dbg_elems + written;
     end
 endmodule
