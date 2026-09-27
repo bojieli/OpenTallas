@@ -1258,8 +1258,8 @@ def block_sweep(args) -> None:
         "out_of_distribution": (f"The drafter was trained at block {ref_block}. A shorter block is a supported "
                                 "argument of the reference (dflash_generate(block_size=...)) but out of its training "
                                 "distribution: the drafter sees fewer mask slots in its bidirectional block. These "
-                                "rows measure that drafter at that block; a drafter trained at the short block would "
-                                "do at least as well (not measured)."),
+                                "rows measure that drafter at that block. A drafter trained at the short block is "
+                                "not measured; no inference about retraining is made."),
         "convention": {
             "tau_direct": "committed tokens / verification cycles of the run at block B (bonus token included)",
             "tau_truncated_from_block16": "sum_c min(L_c, B) / cycles over the block-16 run's cycles c",
