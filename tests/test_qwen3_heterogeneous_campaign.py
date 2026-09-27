@@ -346,7 +346,29 @@ def test_missing_oracle_blocks_reference_set_and_runnable_inputs(
 ) -> None:
     root, codec = frozen_campaign
     accepted = _validate(root, codec)
-    with pytest.raises(campaign.QwenHeterogeneousCampaignError, match="oracle is missing"):
+    # The committed campaign retains a lane-0 oracle (a22c4dc0) that was not a
+    # production launch: no checkpoint-lock identity, no preflight. It sits at
+    # the production path but must never be admitted into a reference set.
+    retained = root / accepted.manifest["lanes"][0]["oracle_binding"]["expected_path"]
+    assert retained.is_file()
+    with pytest.raises(
+        campaign.QwenHeterogeneousCampaignError,
+        match="lane 0 oracle checkpoint-lock binding differs",
+    ):
+        campaign.build_reference_set(accepted, codec=codec)
+
+    retained.unlink()
+    with pytest.raises(
+        campaign.QwenHeterogeneousCampaignError,
+        match="lane 0 production oracle is missing",
+    ):
+        campaign.build_reference_set(accepted, codec=codec)
+
+    _oracle(root, accepted, codec, 0)
+    with pytest.raises(
+        campaign.QwenHeterogeneousCampaignError,
+        match="lane 1 production oracle is missing",
+    ):
         campaign.build_reference_set(accepted, codec=codec)
 
 
