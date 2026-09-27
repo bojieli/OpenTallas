@@ -60,6 +60,7 @@ X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "se
 # which the as-built engine still matches: FP4 x FP4 products of one 32-block share its scales, so every
 # partial sum is exact and the order cannot change the result
 UNITS = X_UNITS           # set by main(): the units built re-specified
+IDX_POOL = False          # X_IDX=2: replicated four-stack pooled correctness path
 PARAMS = {"hhw": 8, "mg": 8, "sun": 16, "sum": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
        [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
@@ -177,9 +178,12 @@ def indexer_record(prog, tags, issues):
         "su_indexer_other_ops_in_program": len(su_idx) - len(su_hs),
         "dropped": "the per-head index-score ME op (S region) and the stream unit's ReLU x weight head-sum op "
                    "(S, WTS -> IS): the fused ME op (me_fuse, me_wts) writes IS on the indexer engine",
-        "key_source": "HBM: ot_hdc_v41x_idx_kstream (one stack, 32 pseudo-channels, 68-B FP4 keys) from the "
-                      "bench's ot_hdc_v41x_idx_hbm (REFPB = 3 refresh-aware per-bank refresh, MRU tie-break, "
-                      "64-beat queues); runtime keys written by ot_hdc_v41x_idx_kwr through the model's backdoor",
+        "key_source": ("HBM: four replicated 68-B FP4 key images, dynamic quarter/group selector, kmerge and one "
+                       "pooled tile; full K32/K128 writer records broadcast to all four model backdoors"
+                       if IDX_POOL else
+                       "HBM: ot_hdc_v41x_idx_kstream (one stack, 32 pseudo-channels, 68-B FP4 keys) from the "
+                       "bench's ot_hdc_v41x_idx_hbm (REFPB = 3 refresh-aware per-bank refresh, MRU tie-break, "
+                       "64-beat queues); runtime keys written by ot_hdc_v41x_idx_kwr through the model's backdoor"),
     }
 
 
@@ -234,7 +238,7 @@ def defines(lanes=None):
     return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}",
             f"+define+HDC_MG={PARAMS['mg']}",
             f"+define+HDC_SUN={PARAMS['sun']}", f"+define+HDC_SUM={PARAMS['sum']}"] + \
-        [f"+define+HDC_X_{u.upper()}={int(u in UNITS)}" for u in X_UNITS]
+        [f"+define+HDC_X_{u.upper()}={2 if u == 'idx' and IDX_POOL else int(u in UNITS)}" for u in X_UNITS]
 
 
 def arith():
@@ -460,6 +464,7 @@ def main() -> int:
                                                           "e.g. 4,16")
     parser.add_argument("--units", default="he",
                         help="the re-specified units to build (the rest as built), e.g. he,qe; '' for none")
+    parser.add_argument("--idx-pool", action="store_true", help="use X_IDX=2, four replicated HBM stacks and pooled tile")
     parser.add_argument("--hhw", type=int, default=8, help="HCP lanes per group")
     parser.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
     parser.add_argument("--sun", type=int, default=16, help="vector-unit light lanes")
@@ -468,9 +473,22 @@ def main() -> int:
     parser.add_argument("--single-output", type=Path, help="incremental single-step JSON path; defaults to "
                         "<output stem>.single.json")
     args = parser.parse_args()
-    global UNITS
+    global UNITS, IDX_POOL
     UNITS = tuple(u for u in args.units.split(",") if u)
     assert set(UNITS) <= set(X_UNITS), UNITS
+    IDX_POOL = args.idx_pool
+    assert not IDX_POOL or "idx" in UNITS
+    if IDX_POOL:
+        RTL.extend(ROOT / f"rtl/hdc/v41x/{n}.sv" for n in (
+            "ot_hdc_v41x_idx_pcol", "ot_hdc_v41x_idx_hsum", "ot_hdc_v41x_idx_pool_finish",
+            "ot_hdc_v41x_idx_pool_batch", "ot_hdc_v41x_idx_pool_replica",
+            "ot_hdc_v41x_idx_pool_adapt", "ot_hdc_v41x_idx_pool_kwr"))
+        NOT_EXERCISED["idx"] = [
+            "HBM writes use model backdoors; write timing is not modelled",
+            "the shipped K128 program (the decode vehicle uses K32)",
+            "the candidate mask (k_keep): every block is kept in the reduced vehicle",
+            "the full-rate replicated tile layout; the functional selector rereads super-block prefixes",
+            "MTP lane multiplier"]
     PARAMS["hhw"] = args.hhw
     PARAMS["mg"] = args.mg
     PARAMS["sun"], PARAMS["sum"] = args.sun, args.sum

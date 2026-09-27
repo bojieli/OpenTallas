@@ -29,7 +29,7 @@
 // (copied from rtl/hdc/v41/ot_hdc_blockdot.sv ot_hdc_v41_csa, renamed so this file stands alone)
 // Carry-save reduction of N W-bit operands (mod 2^W) to at most M, by levels of
 // 3:2 compressors; operands that do not fill a triple pass to the next level.
-module ot_hdc_v41x_csa #(
+module ot_hdc_v41x_wgt_csa #(
     parameter integer N = 32,
     parameter integer M = 2,
     parameter integer W = 42
@@ -210,7 +210,7 @@ module ot_hdc_v41x_wgt_bdot #(
                     terms[W*k +: W] = {{(W-9){p1_p[k][8]}}, p1_p[k]} << p1_sh[k];
             end
             wire [7*W-1:0] c7;
-            ot_hdc_v41x_csa #(.N(32), .M(7), .W(W)) u_csa1 (.d(terms), .q(c7));
+            ot_hdc_v41x_wgt_csa #(.N(32), .M(7), .W(W)) u_csa1 (.d(terms), .q(c7));
             reg               p2_nan, p2_z;
             reg signed [10:0] p2_es;
             reg [7*W-1:0]     p2_c;
@@ -221,7 +221,7 @@ module ot_hdc_v41x_wgt_bdot #(
 
             // -- P3: CSA 7 -> 2 ---------------------------------------------------------------
             wire [2*W-1:0] c2;
-            ot_hdc_v41x_csa #(.N(7), .M(2), .W(W)) u_csa2 (.d(p2_c), .q(c2));
+            ot_hdc_v41x_wgt_csa #(.N(7), .M(2), .W(W)) u_csa2 (.d(p2_c), .q(c2));
             reg               p3_nan, p3_z;
             reg signed [10:0] p3_es;
             reg [W-1:0]       p3_a, p3_b;
