@@ -1203,7 +1203,7 @@
         "range_low": 0.91,
         "range_high": 0.975,
         "note": "80 PLUS Titanium (230 V internal redundant) 10/20/50/100% load: 'N.D. | 90% | 94% | 96% | 91%'. WAS 0.975 (a vendor peak, not reached in a primary source).",
-        "source": "https://en.wikipedia.org/wiki/80_Plus (retrieved 2026) ; 80 PLUS Titanium table (https://en.wikipedia.org/wiki/80_Plus, citing CLEAResult) ; NVIDIA DGX GB200 user guide s1.4 (8 x 33 kW shelves, N+N)"
+        "source": "https://en.wikipedia.org/wiki/80_Plus -- 80 PLUS Titanium table (https://en.wikipedia.org/wiki/80_Plus, citing CLEAResult) ; NVIDIA DGX GB200 user guide s1.4 (8 x 33 kW shelves, N+N)"
       },
       "vr_efficiency_48v_to_core": {
         "grade": "published",
@@ -1211,7 +1211,7 @@
         "range_low": 0.6,
         "range_high": 0.9,
         "note": "48 V -> 12 V bus converter 'Efficiency ... 95.6 %' at full load (Vicor NBM2317, '97.9% peak'), times ~0.91 for the 12 V -> core multiphase stage = 0.87. The 0.90 used before is the edge: 'The reference architecture (A0) is modeled with a 90% efficient 48V-to-1V converter' and 'over 30% power loss has recently been reported in state-of-the-art AI accelerators' (arXiv:2309.10141).",
-        "source": "https://arxiv.org/abs/2309.10141 (2023) ; Vicor NBM2317S60D1580T0R datasheet ; arXiv:2309.10141 s2-3"
+        "source": "https://arxiv.org/abs/2309.10141 (2023) -- Vicor NBM2317S60D1580T0R datasheet ; arXiv:2309.10141 s2-3"
       },
       "cdu_fraction_of_it": {
         "grade": "published",
@@ -1254,7 +1254,7 @@
         "grade": "measured",
         "value": 1300.0,
         "note": "MLPerf Inference v5.1, 8 x B200 (Lenovo SR680a V3, ID 5.1-0061), Llama-2-70B Offline: 'Power_Result: 10400.9988793425' W at the wall = 1.30 kW per GPU all-in.",
-        "source": "https://github.com/mlcommons/inference_results_v5.1 (MLPerf Inference v5.1, 2025) ; mlcommons/inference_results_v5.1 summary_results.json"
+        "source": "https://github.com/mlcommons/inference_results_v5.1 (MLPerf Inference v5.1, 2025) -- mlcommons/inference_results_v5.1 summary_results.json"
       },
       "b200_measured_decode_w": {
         "grade": "measured",
@@ -1262,7 +1262,7 @@
         "range_low": 567.0,
         "range_high": 994.0,
         "note": "'Decode natural draw held at 688-689 W' (disaggregated decode lane, not batch 1).",
-        "source": "https://arxiv.org/abs/2609.11133 (2026) ; arXiv:2609.11133"
+        "source": "https://arxiv.org/abs/2609.11133 (2026) -- arXiv:2609.11133"
       }
     },
     "memory_interface_active_j_per_bit": {
