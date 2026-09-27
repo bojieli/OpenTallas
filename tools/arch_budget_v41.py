@@ -112,9 +112,10 @@ def unit_areas():
 ADD_LAT = dict(as_built=5, fastfp=3)          # rtl/hdc/ot_fp32_add_rne_pipe (5); rtl/hdc/ot_hdc_fastfp.sv (3)
 SFU_DEPTH = dict(as_built=dict(exp=92, rsqrt=61, sigmoid=128, recip=46, softplus=259, div=31),
                  fastfp=dict(exp=49, rsqrt=37, sigmoid=80, recip=28, softplus=259, div=31))
-# KV state on the ROM die lives in HBM (user decision 2026-09-26): the analytical design's 5 HBM3E stacks per die
-# (beachfront-limited: 60% of the perimeter at 12 mm per stack, technology.json hbm3e), 1.0 TB/s each, 90% sustained
-ROM_DIE_HBM_STACKS = 5
+# KV state on the ROM die lives in HBM (user decision 2026-09-26) on 4 HBM3E stacks per ROM layer die (standing
+# user decision: what today's interposers carry beside a reticle die; the analytical design's beachfront rule
+# would allow 5, which no shipping package offers), 1.0 TB/s each, 90% sustained = 3.6 TB/s per die
+ROM_DIE_HBM_STACKS = 4
 ROM_DIE_HBM_BPS = ROM_DIE_HBM_STACKS * 1.0e12 * 0.90
 KV_GATHER_S_REQUIRED = 250e-9   # budgeted first-row latency of a data-dependent row gather (device ~100 ns +
                                 # controller + PHY + NoC; the report's 100 ns is optimistic)
@@ -1089,7 +1090,9 @@ def hbm_comparator(c, tech=None):
     d = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]
     die_mm2 = d["total_mm2"]
     edge = math.sqrt(die_mm2)
-    stacks = int(4 * edge * util // beach)
+    # the beachfront rule allows int(4 x edge x util / beach) = 5; the package limit is the same one the ROM die
+    # has (ROM_DIE_HBM_STACKS: what today's interposers carry beside a reticle die), so the comparator gets 4
+    stacks = min(int(4 * edge * util // beach), ROM_DIE_HBM_STACKS)
     logic_per_die = die_mm2 - d["interconnect_mm2"] - d["overhead_mm2"] - stacks * phy
     rom_logic_total = 188 * d["compute_mm2"]
     dies = math.ceil(rom_logic_total / logic_per_die)
@@ -1321,12 +1324,12 @@ def capacity_limit(c, hb, ctx):
     r20 = 1
     rows = ctx // r20
     per_user_die = (rows * CKV_ROW_B + rows * IDX_KEY_B) / 4 + c["window_tokens"] * WIN_ROW_B * 2
-    rom_cap = 5 * hb["stack_capacity_B"]
+    rom_cap = ROM_DIE_HBM_STACKS * hb["stack_capacity_B"]
     hbm_cap = hb["hbm_stacks_per_die"] * hb["stack_capacity_B"] - hb["weights_B"] / hb["dies"]
     return dict(per_user_bytes_busiest_die=per_user_die, rom_users=int(rom_cap // per_user_die),
                 hbm_users=int(hbm_cap // per_user_die),
                 note="layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the "
-                     "group's 4 dies, plus 2 window rings; ROM die: 5 HBM3E stacks for KV; HBM die: its stacks less "
+                     f"group's 4 dies, plus 2 window rings; ROM die: {ROM_DIE_HBM_STACKS} HBM3E stacks for KV; HBM die: its stacks less "
                      "its weight share")
 
 
@@ -1422,7 +1425,8 @@ def power_requirements(rec, req, areas):
                              saturated_die_dynamic_w=sat_w)
     leak_n5 = stat["leakage_w_per_device"]
     leak_asap7 = E["tech"].get("power", {}).get("leak_w_per_mm2")
-    hbm_if = stat["memory_interface_w_per_device"]
+    # the ROM die's HBM interface idle power on ITS stacks (the analytical design's 14 W assumes 5)
+    hbm_if = ROM_DIE_HBM_STACKS * E["tech"]["power"]["memory_interface_idle_w_per_stack"]["value"]
     worst = max(r["saturated_die_dynamic_w"] for r in rows.values()) + leak_n5 + hbm_if
     return dict(cooling_limit_w_per_die=cool, cooling_basis="technology.json thermal.cooling_limit_w_per_mm2 x die",
                 static_leakage_w_per_die_n5_analytical=leak_n5, hbm_interface_w_per_die=hbm_if,

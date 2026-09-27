@@ -118,3 +118,9 @@ def test_old_allocation_understates_die_power(rec):
     old = rec["sensitivities"]["B_old_hbm_allocation_die_0p8"]["qwen3_8b_rom_8k"]["ar_batch1"]
     assert old["energy_per_token_mj"] == pytest.approx(new["energy_per_token_mj"], rel=1e-6)   # same joules
     assert old["die_w_at_design_rate"] < new["die_w_at_design_rate"]                          # moved to the stacks
+
+
+def test_v41_stack_count_matches_the_budget(cfg):
+    import arch_budget_v41 as V
+    assert cfg["design_points"]["v41"]["hbm_stacks_per_die"] == V.ROM_DIE_HBM_STACKS == 4
+    assert V.ROM_DIE_HBM_BPS == pytest.approx(3.6e12)

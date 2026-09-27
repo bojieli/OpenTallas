@@ -6,7 +6,7 @@
   "results/gpu/blackwell_dependency_latency.json": "78fccad39c375636028c3389b5d78e022814432b5216ddbd8f07eb3881d35d26",
   "results/gpu/blackwell_gather_designs.json": "717e6cfc4ca04056844cf57385212853eace6d63abc3222e630ed05ff367078e",
   "results/rtl/hdc_package_tp_campaign.json": "15814bf8112c36d6dbab63fce050146f41506299927057c10c316983493879c6",
-  "results/arch/arch_budget_v41.json": "f50fd6b1bcaa532af7bd1e17b8f1562e88b76aa007d8a8d14448f3b8e0735551"
+  "results/arch/arch_budget_v41.json": "0d1836615435e0f3a19ce0a27dc0574f65305fce99e5e3f3e86a3c2df0d20755"
  },
  "ladder": {
   "T_us": 119.925,
@@ -17,8 +17,8 @@
   "source": "results/arch/v41_latency_ladder.json final_attribution_1M @ b07a5745 (adopted V4.1 design, 209 ns rack-cable tier); pinned, the artifact is not on this branch"
  },
  "v41_spec_budget": {
-  "T_us": 203.72206877784615,
-  "tokens_s_per_user": 4908.648365879669,
+  "T_us": 203.5584959233407,
+  "tokens_s_per_user": 4912.5927928677365,
   "collective_latency_us": 26.353769223329085,
   "pipeline_hops_us": 11.946211283672527,
   "source": "results/arch/arch_budget_v41.json required_priced['1048576'] (tools/arch_budget_v41.py)"
@@ -189,7 +189,7 @@
      "r-sue",
      "r-ualink"
     ],
-    "note": "adopted-design ladder: collectives 15.301 us + hops 9.373 us (27 stage hops on the 209 ns cable tier); 21% of the 119.9 us token. Specification widths (this branch's budget): 38.3 us of 203.7 us"
+    "note": "adopted-design ladder: collectives 15.301 us + hops 9.373 us (27 stage hops on the 209 ns cable tier); 21% of the 119.9 us token. Specification widths (this branch's budget): 38.3 us of 203.6 us"
    },
    "ratio": 21,
    "ratio_vs": {

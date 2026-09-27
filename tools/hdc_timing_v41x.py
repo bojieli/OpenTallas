@@ -11,7 +11,7 @@ token in packaging option (b) (tensor group 4), with every op mapped to its re-s
 * ME weight op     -> BF16/FP32 weight engine (31,360 MACs/cycle), depth 60 + 3 ceil(log2(K / 8));
 * ME KV-sourced op -> attention engine (34,176 MACs/cycle, row staging 2.2 KB/cycle; score depth 50, p.v 70) or,
                       for indexer-tagged ops, the indexer engine (228,864 FP4 MACs/cycle ~ 56 keys/cycle, keys
-                      from the die's HBM at 4.5 TB/s, depth 30); the index head sum (the SU op of the indexer) is
+                      from the die's HBM at 3.6 TB/s, depth 30); the index head sum (the SU op of the indexer) is
                       fused into the indexer;
 * SU               -> vector unit: 1,024 light lanes, 256 SFU lanes (exp / sigmoid / silu / divide), a scalar
                       side pipe (rsqrt / sqrt / softplus / Engram gate); total depths 21 / 70 (exp) / 101
@@ -69,7 +69,8 @@ class Spec:
     att_macs: float = 34176.0          # attention engine
     att_kv_bytes: float = 2202.75      # row staging read bytes/cycle
     idx_macs: float = 228864.0         # indexer engine (FP4 x FP4)
-    hbm_Bps: float = 4.5e12            # the die's HBM sustained bandwidth (keys, gathered rows)
+    hbm_Bps: float = 3.6e12            # the die's HBM sustained bandwidth (keys, gathered rows): 4 stacks x 0.9 TB/s
+                                       # (arch_budget_v41.ROM_DIE_HBM_BPS)
     su_lanes: int = 1024
     sfu_lanes: int = 256
     side_lanes: int = 1                # scalar side pipe (rsqrt / sqrt / softplus / gate)
