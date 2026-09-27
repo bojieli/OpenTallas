@@ -490,7 +490,7 @@ def load_state(path, device):
 
 
 class Qwen3:
-    def __init__(self, path, arith, weights, kv, groups=SPEC_GROUPS, device="cuda"):
+    def __init__(self, path, arith, weights, kv, groups=SPEC_GROUPS, device="cuda", wfile=None):
         self.cfg = json.loads((Path(path) / "config.json").read_text())
         c = self.cfg
         self.L, self.H = c["num_hidden_layers"], c["hidden_size"]
@@ -502,6 +502,11 @@ class Qwen3:
         self.prefill_chunk = 1024
         self.device = torch.device(device)
         self.bits = {}
+        self.wfile = None
+        if wfile is not None:
+            self.wfile = torch.load(wfile, map_location="cpu")
+            assert self.wfile["fold"] == (arith == "contract"), "GPTQ file was built for the other norm placement"
+            self.wfmt = self.wfile["fmt"]
         sd = load_state(path, self.device)
         self.embed = sd.pop("model.embed_tokens.weight")
         self.norm = sd.pop("model.norm.weight")
@@ -525,22 +530,27 @@ class Qwen3:
                 qkv = torch.cat([qw, kw, vw], 0)
                 gu = torch.cat([gw, uw], 0)
             del qw, kw, vw, gw, uw
-            lay["qkv"] = self._w(qkv, "qkv")
-            lay["o"] = self._w(ow, "o")
-            lay["gu"] = self._w(gu, "gate_up")
-            lay["down"] = self._w(dw, "down")
+            lay["qkv"] = self._w(qkv, "qkv", f"{i}.qkv")
+            lay["o"] = self._w(ow, "o", f"{i}.o")
+            lay["gu"] = self._w(gu, "gate_up", f"{i}.gu")
+            lay["down"] = self._w(dw, "down", f"{i}.down")
             self.layers.append(lay)
-        self.lm = self._w(lm, "lm_head")
+        self.lm = self._w(lm, "lm_head", "lm_head")
+        self.wfile = None
         del sd
         torch.cuda.empty_cache()
         inv = 1.0 / (self.theta ** (torch.arange(0, self.HD, 2, dtype=torch.int64).to(F32) / self.HD))
         self.inv_freq = inv.to(self.device)
 
-    def _w(self, m, name):
+    def _w(self, m, name, key):
         """Weights as the mode consumes them: row-major [N, K] for the GPU linear;
         K-major [K, N] (codes and [K/g, N] scales) for the contract kernel."""
         N = m.shape[0]
-        if self.wfmt == "bf16":
+        if self.wfile is not None:
+            codes, scales, bits = self.wfile["w"][key]
+            self.bits.setdefault(name, []).append(bits)
+            W = {"q": codes.to(self.device), "s": scales.to(self.device), "N": N}
+        elif self.wfmt == "bf16":
             W = {"w": m.contiguous(), "N": N}
         else:
             codes, scales, bits = quantize(m, self.wfmt)
@@ -860,6 +870,178 @@ def run_mmlu(model, tok, items):
     return res
 
 
+# -- GPTQ (calibrated) variant of the weight formats ---------------------------------
+def _gptq_matrix(W, H, fmt, blocksize=128, percdamp=0.01, row_chunk=16384):
+    """GPTQ (Frantar et al. 2022) of W [N, K] with input Hessian H [K, K], groups of
+    128 along K (the block), per-group symmetric INT scale chosen by MSE search on
+    the error-updated weights at the group's start, and the same INT_lo/INT_hi
+    group allocation as quantize() (chosen on the unupdated W)."""
+    lo, hi, frac, g = QFORMATS[fmt]
+    assert g == blocksize
+    W = W.to(F32).clone() if W.shape[0] <= row_chunk else W.clone()
+    N, K = W.shape
+    H = H.clone()
+    dead = torch.diag(H) == 0
+    H[dead, dead] = 1
+    W[:, dead] = 0
+    use_hi = torch.zeros((N, K // g), dtype=torch.bool, device=W.device)
+    if frac > 0:
+        rows = max(1, (1 << 24) // K)
+        gains = []
+        for r0 in range(0, N, rows):
+            wg = W[r0:r0 + rows].to(F32).reshape(-1, K // g, g)
+            gains.append(_rtn_mse(wg, lo)[2] - _rtn_mse(wg, hi)[2])
+        gain = torch.cat(gains)
+        nhi = int(round(frac * gain.numel()))
+        thr = torch.topk(gain.reshape(-1), nhi).values[-1]
+        use_hi = gain >= thr
+    H += percdamp * torch.mean(torch.diag(H)) * torch.eye(K, device=W.device)
+    Hinv = torch.linalg.cholesky(torch.cholesky_inverse(torch.linalg.cholesky(H)), upper=True)
+    codes = torch.empty((N, K), dtype=torch.int8)
+    scales = torch.empty((N, K // g), dtype=BF16)
+    for r0 in range(0, N, row_chunk):                       # rows are independent given H
+        Wr = W[r0:r0 + row_chunk].to(F32)
+        ur = use_hi[r0:r0 + row_chunk]
+        cr = torch.empty(Wr.shape, dtype=torch.int8, device=W.device)
+        sr = torch.empty((Wr.shape[0], K // g), dtype=BF16, device=W.device)
+        for i1 in range(0, K, blocksize):
+            i2 = i1 + blocksize
+            gi = i1 // g
+            W1 = Wr[:, i1:i2].clone()
+            Err1 = torch.zeros_like(W1)
+            Hinv1 = Hinv[i1:i2, i1:i2]
+            _, s_lo, _ = _rtn_mse(W1[:, None, :], lo)
+            _, s_hi, _ = _rtn_mse(W1[:, None, :], hi)
+            u = ur[:, gi]
+            sc = torch.where(u, s_hi[:, 0, 0], s_lo[:, 0, 0])
+            qmax = torch.where(u, 2 ** (hi - 1) - 1, 2 ** (lo - 1) - 1).to(F32)
+            qmin = -qmax - 1
+            sr[:, gi] = sc.to(BF16)
+            for i in range(blocksize):
+                w = W1[:, i]
+                d = Hinv1[i, i]
+                q = torch.minimum(torch.maximum(torch.round(w / sc), qmin), qmax)
+                cr[:, i1 + i] = q.to(torch.int8)
+                err = (w - q * sc) / d
+                W1[:, i:] -= err[:, None] * Hinv1[i, i:][None, :]
+                Err1[:, i] = err
+            Wr[:, i2:] -= Err1 @ Hinv[i1:i2, i2:]
+        codes[r0:r0 + row_chunk] = cr.cpu()
+        scales[r0:r0 + row_chunk] = sr.cpu()
+    bits = lo + (hi - lo) * use_hi.float().mean().item() + 16.0 / g
+    return codes, scales, bits
+
+
+def c4_calibration(tok, nseq, seqlen, seed=0):
+    from datasets import load_dataset
+    d = load_dataset("allenai/c4", data_files={"train": "en/c4-train.00000-of-01024.json.gz"}, split="train")
+    rng = np.random.default_rng(seed)
+    out = []
+    while len(out) < nseq:
+        t = d[int(rng.integers(len(d)))]["text"]
+        ids = tok(t, return_tensors="pt").input_ids[0]
+        if ids.numel() <= seqlen:
+            continue
+        s0 = int(rng.integers(ids.numel() - seqlen))
+        out.append(ids[s0:s0 + seqlen])
+    return torch.stack(out)
+
+
+@torch.no_grad()
+def gptq_build(snap, fmt, fold, out_path, nseq=128, seqlen=2048, chunk=8):
+    """Sequential layer-by-layer GPTQ of every linear layer (fused qkv, o, fused
+    gate/up, down, lm_head) on C4 calibration text, in the vendor BF16 forward.
+    fold=True quantises the norm-folded W' = bf16(W diag(w)) of q,k,v and gate,up
+    against the inputs they see in the contract (x / rms, i.e. normalised without
+    the weight), as the decode core consumes them."""
+    from transformers import AutoTokenizer
+    dev = torch.device("cuda")
+    tok = AutoTokenizer.from_pretrained(str(snap))
+    cfg = json.loads((Path(snap) / "config.json").read_text())
+    L, Hd, NH, KV, HD, FF = (cfg[k] for k in ("num_hidden_layers", "hidden_size", "num_attention_heads",
+                                               "num_key_value_heads", "head_dim", "intermediate_size"))
+    eps, theta = cfg["rms_norm_eps"], cfg["rope_theta"]
+    sd = load_state(snap, "cpu")
+    calib = c4_calibration(tok, nseq, seqlen)
+    xs = sd["model.embed_tokens.weight"][calib]                     # [nseq, T, H] bf16 on CPU
+    inv = 1.0 / (theta ** (torch.arange(0, HD, 2, dtype=torch.int64).to(F32) / HD))
+    fr = torch.arange(seqlen, dtype=F32)[:, None] * inv[None, :]
+    emb = torch.cat([fr, fr], -1).to(dev)
+    cos, sin = emb.cos().to(BF16), emb.sin().to(BF16)
+    rot = lambda t: torch.cat([-t[..., HD // 2:], t[..., :HD // 2]], -1)
+
+    def rms(x, w=None):
+        xf = x.to(F32)
+        xf = xf * torch.rsqrt(xf.pow(2).mean(-1, keepdim=True) + eps)
+        return xf.to(BF16) if w is None else w * xf.to(BF16)
+
+    def hess(fn, K):
+        Hm = torch.zeros((K, K), device=dev, dtype=F32)
+        for c0 in range(0, nseq, chunk):
+            a = fn(c0).reshape(-1, K).to(F32)
+            Hm += a.t() @ a
+        return Hm * (2.0 / (nseq * seqlen))
+
+    def deq(codes, scales):
+        return dequant(codes.to(dev), scales.to(dev)).to(BF16)
+
+    res = {"fmt": fmt, "fold": fold, "calib": f"C4 en train shard 00000, {nseq} x {seqlen} tokens, seed 0", "w": {}}
+    for i in range(L):
+        t0 = time.time()
+        p = f"model.layers.{i}."
+        g = lambda n: sd[p + n].to(dev)
+        ln1, ln2 = g("input_layernorm.weight"), g("post_attention_layernorm.weight")
+        qn, kn = g("self_attn.q_norm.weight"), g("self_attn.k_norm.weight")
+        qkv = torch.cat([g("self_attn.q_proj.weight"), g("self_attn.k_proj.weight"), g("self_attn.v_proj.weight")])
+        gu = torch.cat([g("mlp.gate_proj.weight"), g("mlp.up_proj.weight")])
+        ow, dw = g("self_attn.o_proj.weight"), g("mlp.down_proj.weight")
+        if fold:
+            qkv = (qkv.to(F32) * ln1.to(F32)[None]).to(BF16)
+            gu = (gu.to(F32) * ln2.to(F32)[None]).to(BF16)
+        in1 = (lambda x: rms(x)) if fold else (lambda x: rms(x, ln1))
+        in2 = (lambda x: rms(x)) if fold else (lambda x: rms(x, ln2))
+        X = lambda c0: xs[c0:c0 + chunk].to(dev)
+        c, s_, b = _gptq_matrix(qkv, hess(lambda c0: in1(X(c0)), Hd), fmt)
+        res["w"][f"{i}.qkv"] = (c, s_, b)
+        qkv_q = deq(c, s_)
+
+        def attn_in(c0):
+            x = X(c0)
+            B = x.shape[0]
+            q, k, v = Fn.linear(in1(x), qkv_q).split([NH * HD, KV * HD, KV * HD], -1)
+            q = rms(q.view(B, seqlen, NH, HD), qn).transpose(1, 2)
+            k = rms(k.view(B, seqlen, KV, HD), kn).transpose(1, 2)
+            v = v.view(B, seqlen, KV, HD).transpose(1, 2)
+            q, k = q * cos + rot(q) * sin, k * cos + rot(k) * sin
+            a = Fn.scaled_dot_product_attention(q, k, v, is_causal=True, enable_gqa=True)
+            return a.transpose(1, 2).reshape(B, seqlen, NH * HD)
+        c, s_, b = _gptq_matrix(ow, hess(attn_in, NH * HD), fmt)
+        res["w"][f"{i}.o"] = (c, s_, b)
+        o_q = deq(c, s_)
+        for c0 in range(0, nseq, chunk):                       # residual after attention
+            xs[c0:c0 + chunk] = (X(c0) + Fn.linear(attn_in(c0), o_q)).cpu()
+        c, s_, b = _gptq_matrix(gu, hess(lambda c0: in2(X(c0)), Hd), fmt)
+        res["w"][f"{i}.gu"] = (c, s_, b)
+        gu_q = deq(c, s_)
+
+        def down_in(c0):
+            gt, up = Fn.linear(in2(X(c0)), gu_q).split([FF, FF], -1)
+            return Fn.silu(gt) * up
+        c, s_, b = _gptq_matrix(dw, hess(down_in, FF), fmt)
+        res["w"][f"{i}.down"] = (c, s_, b)
+        d_q = deq(c, s_)
+        for c0 in range(0, nseq, chunk):
+            xs[c0:c0 + chunk] = (X(c0) + Fn.linear(down_in(c0), d_q)).cpu()
+        del qkv_q, o_q, gu_q, d_q
+        torch.cuda.empty_cache()
+        print(f"  gptq layer {i} ({time.time() - t0:.0f}s)", flush=True)
+    nw = sd["model.norm.weight"].to(dev)
+    c, s_, b = _gptq_matrix(sd["lm_head.weight"].to(dev), hess(lambda c0: rms(xs[c0:c0 + chunk].to(dev), nw), Hd), fmt)
+    res["w"]["lm_head"] = (c, s_, b)
+    torch.save(res, out_path)
+    return res
+
+
 # -- summary -----------------------------------------------------------------------
 THRESHOLD = {
     "rule": "acceptable iff, against a_bf16, WikiText-2 perplexity rises by at most 2.0% (relative) at "
@@ -902,6 +1084,13 @@ def summarize(raw_dir, out_path, meta):
                  "rel_delta_ppl_ci95": _boot(lambda i: ppl(s_m, i) / ppl(s_r, i) - 1, n),
                  "top1_agree_vs_ref": float(ag_n.sum() / ag_c.sum()),
                  "top1_agree_ci95": _boot(lambda i: ag_n[i].sum() / ag_c[i].sum(), n)}
+            ref_margin = np.concatenate([np.array(w["margin"]) for w in ref[key][:n]])
+            dis = ~np.concatenate(agree)
+            if dis.any():
+                d["ref_margin_at_disagreements"] = {
+                    "median_logits": float(np.median(ref_margin[dis])),
+                    "fraction_below_0.5": float(np.mean(ref_margin[dis] < 0.5)),
+                    "fraction_below_1.0": float(np.mean(ref_margin[dis] < 1.0))}
             if ctx == 8192:
                 buckets = {}
                 for lo in range(0, ctx, 2048):
@@ -980,8 +1169,15 @@ def main():
     ap.add_argument("--greedy-ref", default=None, help="a_bf16 raw JSON whose greedy tokens are teacher-forced")
     ap.add_argument("--mmlu", type=int, default=1000)
     ap.add_argument("--groups", type=int, default=SPEC_GROUPS)
+    ap.add_argument("--wfile", default=None, help="pre-quantised (GPTQ) weights from --build-gptq")
+    ap.add_argument("--build-gptq", default=None, metavar="FMT", help="build GPTQ weights of FMT into --out")
+    ap.add_argument("--fold", action="store_true", help="--build-gptq for the contract's norm-folded matrices")
+    ap.add_argument("--gptq-nseq", type=int, default=128)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
+    if args.build_gptq:
+        gptq_build(find_snapshot(), args.build_gptq, args.fold, args.out, nseq=args.gptq_nseq)
+        return
     if args.summarize:
         meta = json.loads(Path(args.meta).read_text()) if args.meta else {}
         summarize(args.summarize, args.out, meta)
@@ -991,8 +1187,10 @@ def main():
     tok = AutoTokenizer.from_pretrained(str(snap))
     arith, wf, kv = MODES[args.mode]
     t0 = time.time()
-    model = Qwen3(snap, arith, wf, kv, groups=args.groups)
-    out = {"mode": args.mode, "arith": arith, "weights": wf, "kv": kv, "groups": args.groups,
+    model = Qwen3(snap, arith, wf, kv, groups=args.groups, wfile=args.wfile)
+    if args.wfile:
+        wf = model.wfmt + "_gptq"
+    out = {"mode": args.mode, "arith": arith, "weights": wf, "kv": kv, "groups": args.groups, "wfile": args.wfile,
            "snapshot": str(snap), "load_s": time.time() - t0,
            "weight_bits": {k: float(np.mean(v)) for k, v in model.bits.items()}}
     print(f"[{args.mode}] loaded in {out['load_s']:.0f}s bits={out['weight_bits']} "

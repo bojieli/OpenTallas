@@ -127,3 +127,22 @@ def test_batched_decode_equals_single_sequence(tmp_path):
     for a, b in zip(both, alone):
         assert a["tokens"] == b["tokens"]
         assert a["margins"] == b["margins"]
+
+
+def test_gptq_beats_rtn_on_correlated_inputs():
+    """GPTQ codes keep the format (ranges, bits) and cut the output error below RTN's."""
+    torch.manual_seed(1)
+    N, K, T = 64, 256, 2048
+    w = (torch.randn(N, K) * 0.02).to(torch.bfloat16)
+    mix = torch.randn(K, K) / K ** 0.5 + torch.eye(K)
+    x = torch.randn(T, K) @ mix
+    H = 2 * x.t() @ x / T
+    for fmt in ("q35", "w3"):
+        codes, scales, bits = Q._gptq_matrix(w, H, fmt)
+        lo, hi, _, _ = Q.QFORMATS[fmt]
+        assert abs(bits - Q.quantize(w, fmt)[2]) < 1e-3
+        assert int(codes.min()) >= -(2 ** (hi - 1)) and int(codes.max()) <= 2 ** (hi - 1) - 1
+        e_gptq = (x @ (Q.dequant(codes, scales) - w.float()).t()).pow(2).mean()
+        c2, s2, _ = Q.quantize(w, fmt)
+        e_rtn = (x @ (Q.dequant(c2, s2) - w.float()).t()).pow(2).mean()
+        assert e_gptq < 0.8 * e_rtn
