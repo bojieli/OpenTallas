@@ -58,6 +58,15 @@ HARNESS = ROOT / "rtl/test/hdc_v41x_array_harness.cpp"
 LINK = ROOT / "rtl/rom/ot_rom_pkg_link.sv"
 ROUTER = ROOT / "rtl/rom/ot_rom_fabric_router.sv"
 CTRL = ROOT / "rtl/rom/ot_rom_pkg_ctrl_x.sv"
+# Verilator 4 resolves hierarchical testbench memory references even inside
+# inactive generate branches. Include these definitions in either build mode;
+# the unused instances are removed during elaboration.
+BENCH_AUX_RTL = sorted((ROOT / "rtl/hdc/v41x").glob("ot_hdc_v41x_idx_pool_*.sv")) + [
+    ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+    ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+    ROOT / "rtl/hdc/hbm/ot_hdc_qstream.sv",
+    ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv",
+]
 MG_SIDE, MG_HEAD, DESTS = 32, 48, 64
 
 # name: (body packages, lm_head parts, lm_head multicast, shared state, fabric,
@@ -164,12 +173,7 @@ def build(obj: Path, svh: str, users: int, stall: int) -> Path:
                ("HE", "ME", "ATT", "IDX", "SEL", "EG", "SU")] + ["+define+HDC_W_HBM=1"]
               if ALL_UNIT else []),
             *map(str, core.rtl_sources(True) if ALL_UNIT else core.RTL),
-            *([str(p) for p in (ROOT / "rtl/hdc/v41x").glob("ot_hdc_v41x_idx_pool_*.sv")]
-              + [str(ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv"),
-                 str(ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv"),
-                 str(ROOT / "rtl/hdc/hbm/ot_hdc_qstream.sv"),
-                 str(ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv")]
-              if ALL_UNIT else []),
+            *map(str, BENCH_AUX_RTL),
             str(LINK), str(ROUTER), str(CTRL), str(TB), str(HARNESS),
             "-CFLAGS", "-O1", "-MAKEFLAGS", "OPT_FAST=-O0 OPT_GLOBAL=-O0", "-j", "16"])
     (obj / "stamp").write_text(stamp)
@@ -290,13 +294,9 @@ def run_config(name, spec, ctx, scratch: Path, log) -> dict:
 
 
 def rtl_sources():
-    pool = list((ROOT / "rtl/hdc/v41x").glob("ot_hdc_v41x_idx_pool_*.sv")) + [
-        ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
-        ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
-        ROOT / "rtl/hdc/hbm/ot_hdc_qstream.sv",
-        ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv", core.VLT]
+    pool = [*BENCH_AUX_RTL, *([core.VLT] if ALL_UNIT else [])]
     return [TB, HARNESS, LINK, ROUTER, CTRL, core.SVH,
-            *(core.rtl_sources(True) if ALL_UNIT else core.RTL), *(pool if ALL_UNIT else [])]
+            *(core.rtl_sources(True) if ALL_UNIT else core.RTL), *pool]
 
 
 def sources():
