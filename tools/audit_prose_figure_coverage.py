@@ -16,6 +16,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
@@ -82,7 +83,28 @@ def _sha256(payload: bytes) -> str:
 
 
 def corpus_documents(repo: Path = REPO) -> list[Path]:
-    """The complete release-prose corpus, in stable repository-path order."""
+    """Tracked release prose, in stable repository-path order.
+
+    Local review drafts are not part of the checked-in release snapshot until
+    they are staged.  A plain directory still works for fixture tests.
+    """
+
+    tracked = subprocess.run(
+        ["git", "-C", str(repo), "ls-files", "-z", "--", "README.md", "docs"],
+        capture_output=True,
+        check=False,
+    )
+    if tracked.returncode == 0:
+        paths = [
+            repo / name.decode("utf-8", "surrogateescape")
+            for name in tracked.stdout.split(b"\0")
+            if name and (name == b"README.md" or name.startswith(b"docs/"))
+            and name.endswith(b".md")
+        ]
+        return sorted(
+            (path for path in paths if path.is_file()),
+            key=lambda path: path.relative_to(repo).as_posix(),
+        )
 
     paths = [repo / "README.md", *(repo / "docs").rglob("*.md")]
     return sorted(paths, key=lambda path: path.relative_to(repo).as_posix())

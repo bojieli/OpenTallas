@@ -39,13 +39,13 @@ def _run(*args: str) -> tuple[int, str]:
 def test_report_covers_and_classifies_the_whole_markdown_corpus() -> None:
     report = AUDIT.build_report(ROOT)
     expected_paths = sorted(
-        [
-            "README.md",
-            *(
-                path.relative_to(ROOT).as_posix()
-                for path in (ROOT / "docs").rglob("*.md")
-            ),
-        ]
+        path
+        for path in subprocess.check_output(
+            ["git", "ls-files", "--", "README.md", "docs"],
+            cwd=ROOT,
+            text=True,
+        ).splitlines()
+        if path.endswith(".md")
     )
 
     assert report["schema"] == "opentallas.prose_figure_coverage.v2"
@@ -90,6 +90,21 @@ def test_report_covers_and_classifies_the_whole_markdown_corpus() -> None:
         report["corpus_digest"]
         == hashlib.sha256(AUDIT.canonical_json(report["documents"])).hexdigest()
     )
+
+
+def test_untracked_review_draft_does_not_change_release_census(tmp_path: Path) -> None:
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "README.md").write_text("# Release\n")
+    (tmp_path / "docs" / "release.md").write_text("# Tracked\n")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(
+        ["git", "add", "README.md", "docs/release.md"], cwd=tmp_path, check=True
+    )
+    (tmp_path / "docs" / "review.md").write_text("Untracked 42 W\n")
+    assert [
+        path.relative_to(tmp_path).as_posix()
+        for path in AUDIT.corpus_documents(tmp_path)
+    ] == ["README.md", "docs/release.md"]
 
 
 def test_structural_classification_keeps_exclusions_and_unbound_claims_explicit(
