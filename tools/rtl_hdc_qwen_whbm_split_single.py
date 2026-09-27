@@ -36,6 +36,8 @@ INPUTS = [*SOURCES, C.ISA_SVH, ROOT / "tools/hdc_program.py", ROOT / "tools/hdc_
 SINGLE = re.compile(r"HDC token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) cycles=(\d+) fault=(\d+) "
                     r"logit_mismatch=(\d+) vm_mismatch=(\d+) kv_mismatch=(\d+)")
 STREAM = re.compile(r"WSTREAM ([^\n]+)")
+MULTI = re.compile(r"HDC_MULTI steps=(\d+) generated=(\d+) mismatches=(\d+) total_cycles=(\d+)")
+STEP = re.compile(r"STEP pos=(\d+) in=(\d+) out=(\d+) gold=(\d+) cycles=(\d+) fault=(\d+)")
 
 
 def sha(path):
@@ -44,20 +46,24 @@ def sha(path):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/hdc_qwen_whbm_split_single.json")
+    ap.add_argument("--mode", choices=("single", "multi"), default="single")
+    ap.add_argument("--output", type=Path)
     ap.add_argument("--executable", type=Path, help="reuse a Verilator binary built from these exact sources")
     args = ap.parse_args()
+    if args.output is None:
+        args.output = ROOT / f"results/rtl/hdc_qwen_whbm_split_{'e2e' if args.mode == 'multi' else 'single'}.json"
     env = dict(os.environ, HDC_GROUPS="4", HDC_SU_WIDTH="1", HDC_RMAX="0",
                HDC_KV_FMT="bf16", HDC_ATTN_SPLIT="1")
     record = {
-        "schema": "opentallas.hdc-qwen-whbm-split-single.v1",
+        "schema": f"opentallas.hdc-qwen-whbm-split-{args.mode}.v1",
         "configuration": {"groups": 4, "su_width": 1, "kv_format": "bf16", "attention_split": 1,
                           "position": 15,
                           "hbm_pseudo_channels": 4, "weight_chunk_words": 1536,
                           "weight_guaranteed_rate_x256": T.w_rate(dict(T.WH, npc=4))},
-        "claim_boundary": "Reduced Qwen single-token functional and cycle-accurate RTL with weights and KV in "
-                          "the timing-faithful behavioral HBM model; scalar stream and split-aware KV tail. "
-                          "No vector KV bridge, consecutive-token HBM ordering, or shipped-scale throughput claim.",
+        "claim_boundary": "Reduced Qwen functional and cycle-accurate RTL with weights and KV in the "
+                          "timing-faithful behavioral HBM model; scalar stream and split-aware KV tail. "
+                          "The multi mode covers empty-cache prompt and three generated tokens. No vector KV "
+                          "bridge, physical K-flush ordering, or shipped-scale throughput claim.",
         "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in INPUTS},
         "model_sha256": sha(ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"),
     }
@@ -86,23 +92,34 @@ def main():
                     exe = obj / "Vtb_hdc_core_whbm"
             if exe is not None and "status" not in record:
                 record["binary_sha256"] = sha(exe)
-                run = subprocess.run([str(exe), f"+DIR={img}", *(img / "run.args").read_text().split(),
+                run_args = (["+MULTI", "+NPROMPT=16", "+NGEN=3"] if args.mode == "multi"
+                            else (img / "run.args").read_text().split())
+                run = subprocess.run([str(exe), f"+DIR={img}", *run_args,
                                       *(img / "hbm.args").read_text().split(),
                                       f"+WRATE={record['configuration']['weight_guaranteed_rate_x256']}"],
                                      cwd=ROOT, capture_output=True, text=True, timeout=1800)
-                m = SINGLE.search(run.stdout)
+                m = (MULTI if args.mode == "multi" else SINGLE).search(run.stdout)
                 s = STREAM.search(run.stdout)
                 if m:
-                    names = ("token", "position", "next_token", "expected_token", "cycles", "core_fault",
-                             "logit_mismatches", "vm_mismatches", "kv_mismatches")
+                    names = (("steps", "generated", "mismatches", "total_cycles") if args.mode == "multi" else
+                             ("token", "position", "next_token", "expected_token", "cycles", "core_fault",
+                              "logit_mismatches", "vm_mismatches", "kv_mismatches"))
                     record.update(zip(names, map(int, m.groups())))
+                if args.mode == "multi":
+                    record["generation_steps"] = [dict(zip(("position", "input_token", "output_token", "gold_token",
+                                                               "cycles", "fault"), map(int, mm.groups())))
+                                                  for mm in STEP.finditer(run.stdout)]
                 if s:
                     record["stream"] = H.kv_pairs(s.group(1))
                 st = record.get("stream", {})
-                record.update(status="pass" if run.returncode == 0 and "PASS" in run.stdout and m and s and
-                              record["next_token"] == record["expected_token"] and
-                              all(record[k] == 0 for k in ("core_fault", "logit_mismatches", "vm_mismatches",
-                                                               "kv_mismatches")) and
+                exact = (record.get("steps") == 18 and record.get("generated") == 3 and
+                         record.get("mismatches") == 0 and len(record["generation_steps"]) == 3 and
+                         all(step["output_token"] == step["gold_token"] and step["fault"] == 0
+                             for step in record["generation_steps"])) if args.mode == "multi" else (
+                         m and record["next_token"] == record["expected_token"] and
+                         all(record[k] == 0 for k in ("core_fault", "logit_mismatches", "vm_mismatches",
+                                                      "kv_mismatches")))
+                record.update(status="pass" if run.returncode == 0 and "PASS" in run.stdout and m and s and exact and
                               all(st.get(k) == 0 for k in ("wq_bad", "ws_fault", "kvs_fault", "kvq_bad"))
                               else "fail", phase="simulation", returncode=run.returncode,
                               stdout=run.stdout[-5000:], stderr=run.stderr[-2000:])

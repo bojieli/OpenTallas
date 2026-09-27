@@ -576,6 +576,9 @@ implements that specialisation on the reduced Qwen3 vehicle.
 - The scalar weight-HBM configuration also passes a complete split-aware
   position-15 token with weights and KV in the behavioral HBM model at
   30,539 cycles. <!-- figure: 30539 src="results/rtl/hdc_qwen_whbm_split_single.json#cycles" name="Qwen split-aware scalar weight-HBM single-token cycles" -->
+  From an empty KV cache, the same configuration consumes the prompt and
+  generates 3 <!-- figure: 3 src="results/rtl/hdc_qwen_whbm_split_e2e.json#generated" name="Qwen scalar weight-HBM generated tokens" -->
+  oracle tokens with 0 mismatches. <!-- figure: 0 src="results/rtl/hdc_qwen_whbm_split_e2e.json#mismatches" name="Qwen scalar weight-HBM generated-token mismatches" -->
 - On ASAP7 the stream unit routes at 1,111 MHz. <!-- figure: 1111 src="results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC stream unit routed fmax MHz" -->
 
 The same vehicle takes 7.9 M cycles on the general ABI 3.0 token path, whose
