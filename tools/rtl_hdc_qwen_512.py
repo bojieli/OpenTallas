@@ -85,6 +85,7 @@ def main():
     rec = {"schema": "opentallas.qwen-vector-context-512.v1",
            "configuration": {"context_positions": 512, "position": 511, "groups": 4, "su_width": 16,
                              "reducer_levels": 5, "reducer_max_elements": 512, "kv_format": "fp8-e4m3",
+                             "kv_window_lines": 1024, "kv_cfg_lead_cycles": 2048,
                              "physical_hbm_sector_bytes": 32, "pseudo_channels": 4,
                              "hbm_queue_depth": args.qd, "hbm_pc_room": args.pc_room,
                              "hbm_pc_ready": 1, "clock_ps": 1000,

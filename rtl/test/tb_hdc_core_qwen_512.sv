@@ -136,7 +136,7 @@ module tb_hdc_core #(
         .vw_mx_we(vw_mx_we), .vw_mx_addr(vw_mx_addr), .vw_mx_mask(vw_mx_mask), .vw_mx_data(vw_mx_data));
 
 `ifndef OT_HDC_MEMSYS
-    localparam integer SYS_LWIN=8,SYS_NPC=4,SYS_BK=16;
+    localparam integer SYS_LWIN=10,SYS_NPC=4,SYS_BK=16;
     localparam integer SYS_TAGW=1+SYS_LWIN+$clog2(G)+3,SYS_LBK=$clog2(SYS_BK);
     reg [127:0] kv_fp8 [0:KV_WORDS-1];
     reg [127:0] expected_flushed_word;
@@ -189,7 +189,7 @@ module tb_hdc_core #(
     ot_hdc_qwen_kv_system #(.W(W),.G(G),.SW(SW),.AW(AW),.NW(NW),
                              .LWIN(SYS_LWIN),.NPC(SYS_NPC),.BK(SYS_BK),
                              .LOG_HD(4),.LOG_TW(5),.LLG(3),.V0_WORD(KV_WORDS/2)) u_system (
-        .clk(clk),.rst_n(rst_n),.tok_start(start),.tok_pos(pos),.cfg_lead(16'd512),
+        .clk(clk),.rst_n(rst_n),.tok_start(start),.tok_pos(pos),.cfg_lead(16'd2048),
         .kvd_v(kvd_v),.kvd_wbase(kvd_wbase),.kvd_ts(kvd_ts),.kvd_ks(kvd_ks),.kvd_js(kvd_js),
         .kvd_wcs(kvd_wcs),.kvd_split(kvd_split),
         .kvd_jsh(kvd_jsh),.kvd_tiles(kvd_tiles),.kvd_k(kvd_k),.kvd_nout(kvd_nout),
@@ -454,6 +454,16 @@ module tb_hdc_core #(
         if (dut.u_me.active) me_busy <= me_busy + 1;
         if (dut.su_active) su_busy <= su_busy + 1;
         if (!dut.u_me.active && !dut.su_active) both_idle <= both_idle + 1;
+    end
+    // A no-stall KV consumer may never overtake lines allocated by the
+    // physical-HBM fetcher. Catch the first violation before occ wraps.
+    always @(posedge clk) if (rst_n && cyc > 2 &&
+                              u_system.u_stream.cons_line > u_system.u_stream.fetch_line) begin
+        $display("KV_WINDOW_UNDERFLOW cyc=%0d pc=%0d fetch=%0d complete=%0d consume=%0d occ=%0d",
+                 cyc, dut.pc, u_system.u_stream.fetch_line,
+                 u_system.u_stream.cp_line, u_system.u_stream.cons_line,
+                 u_system.u_stream.occ);
+        $fatal(1, "KV consumer overtook allocated fetch lines");
     end
     reg [31:0] kv_e;
     initial begin
