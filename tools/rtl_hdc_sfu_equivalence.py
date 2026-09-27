@@ -36,7 +36,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results/rtl/hdc_sfu_equivalence.json"
 FP = [ROOT / "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", ROOT / "rtl/hdc/ot_hdc_fpu.sv", ROOT / "rtl/hdc/ot_hdc_fastfp.sv",
       ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv"]
-SRC = [ROOT / "rtl/hdc/ot_hdc_delay.sv", *FP, ROOT / "rtl/hdc/ot_hdc_sfu.sv"]
+SRC = [ROOT / "rtl/hdc/ot_hdc_delay.sv", *FP, ROOT / "rtl/hdc/ot_hdc_sfu.sv", ROOT / "rtl/hdc/ot_hdc_sfu_q.sv"]
 REF = ROOT / "rtl/test/ot_hdc_sfu_ref.sv"
 TB = ROOT / "rtl/test/tb_hdc_sfu_equiv.sv"
 HARNESS = ROOT / "rtl/test/hdc_sfu_equiv_harness.cpp"

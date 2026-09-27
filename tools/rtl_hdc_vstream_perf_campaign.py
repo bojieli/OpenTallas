@@ -31,7 +31,7 @@ import hdc_golden as G  # noqa: E402
 import hdc_timing as T  # noqa: E402
 
 OUT = ROOT / "results/rtl/hdc_vstream_perf.json"
-RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_fastfp", "ot_hdc_sfu",
+RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_fastfp", "ot_hdc_sfu", "ot_hdc_sfu_q",
                                           "ot_hdc_vstream_lane", "ot_hdc_vreduce", "ot_hdc_vstream")]
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 TB = ROOT / "rtl/test/tb_hdc_vstream_perf.sv"

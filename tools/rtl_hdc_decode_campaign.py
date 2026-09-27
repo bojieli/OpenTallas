@@ -55,7 +55,7 @@ WROM_ROWS = 6
 VERILATOR5 = Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 ISA_SVH = ROOT / "rtl/hdc/ot_hdc_isa.svh"
-HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_fastfp", "ot_hdc_sfu",
+HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_fastfp", "ot_hdc_sfu", "ot_hdc_sfu_q",
                                           "ot_hdc_reduce", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_vstream_lane",
                                           "ot_hdc_vreduce", "ot_hdc_vstream", "ot_hdc_core")]
 TB_SFU = ROOT / "rtl/test/tb_hdc_sfu.sv"

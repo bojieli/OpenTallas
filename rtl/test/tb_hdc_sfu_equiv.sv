@@ -34,12 +34,12 @@ module tb_hdc_sfu_equiv (input wire clk);
     wire [31:0] ne_y, nr_y, ns_y, ne1;
     wire ne_vo, nr_vo, ns_vo, ne_f, nr_f, ns_f, ne1_f;
     wire [3:0] nve1;
-    ot_hdc_exp   n_exp (.clk(clk), .rst_n(rst_n), .v(v && (func == 0 || func == 3)), .x(x), .y(ne_y), .vo(ne_vo), .fault(ne_f));
+    ot_hdc_exp_q n_exp (.clk(clk), .rst_n(rst_n), .v(v && (func == 0 || func == 3)), .x(x), .y(ne_y), .vo(ne_vo), .fault(ne_f));
     ot_hdc_qadd  n_e1  (clk, rst_n, ne_vo && func == 3, ne_y, 32'h3F800000, ne1, ne1_f);
     ot_hdc_vline #(.D(3)) n_ve1 (.clk(clk), .rst_n(rst_n), .v(ne_vo && func == 3), .vd(nve1));
-    ot_hdc_recip n_rcp (.clk(clk), .rst_n(rst_n), .v(func == 3 ? nve1[3] : (v && func == 1)), .x(func == 3 ? ne1 : x),
+    ot_hdc_recip_q n_rcp (.clk(clk), .rst_n(rst_n), .v(func == 3 ? nve1[3] : (v && func == 1)), .x(func == 3 ? ne1 : x),
                         .y(nr_y), .vo(nr_vo), .fault(nr_f));
-    ot_hdc_rsqrt n_rsq (.clk(clk), .rst_n(rst_n), .v(v && func == 2), .x(x), .y(ns_y), .vo(ns_vo), .fault(ns_f));
+    ot_hdc_rsqrt_q n_rsq (.clk(clk), .rst_n(rst_n), .v(v && func == 2), .x(x), .y(ns_y), .vo(ns_vo), .fault(ns_f));
 
     wire        r_vo = func == 0 ? re_vo : func == 2 ? rs_vo : rr_vo;
     wire [31:0] r_y  = func == 0 ? re_y  : func == 2 ? rs_y  : rr_y;
