@@ -13,7 +13,7 @@ Arithmetic modes (``--mode``; see MODES):
                 BF16 GEMMs with FP32 accumulation and BF16 outputs, FP32
                 RMSNorm, BF16 residual stream, SDPA attention in BF16).
 * ``contract``  the decode core's golden arithmetic, emulated exactly on the
-                GPU (tools/hdc_golden.py at 27d30c15, the vector-core
+                GPU (tools/hdc_golden.py at 45762e32, the vector-core
                 configuration HDC_SU_WIDTH>1 at the spec's 8,192 lane groups):
                 FP32 residual stream and FP32 matrix outputs; every matrix
                 input rounded to BF16; every weight dot product cut into the
@@ -293,11 +293,12 @@ def rsqrt_g(v):
 
 
 # RECIP_SAT, the implemented contract's reciprocal saturation (tools/hdc_golden.py
-# @ 27d30c15 reciprocal(); rtl/hdc/ot_hdc_sfu.sv, ot_hdc_sfu_q.sv): for finite
+# @ 45762e32 reciprocal(); rtl/hdc/ot_hdc_sfu.sv, ot_hdc_sfu_q.sv): for finite
 # positive d with bits(d) > 0x7EF311C7 (d > 1.6158e38) the bit seed would wrap, so
-# the seed is +0 and the Newton steps return +0 (the true 1/d is below 2^-127).
+# the seed is +0 and the Newton steps return +0.  This is an explicit saturation
+# contract (+0), not IEEE rounding; the true reciprocal is subnormal.
 # silu(g) reaches it for every gate g <= -87.98 (exp(-g) clamps at exp(88)); full
-# Qwen3-8B produces such gates on ordinary text.  Before 27d30c15 the golden and
+# Qwen3-8B produces such gates on ordinary text.  Before 45762e32 the golden and
 # RTL returned NaN there.  RECIP_SAT_HITS counts the saturated elements.
 RECIP_SAT = True
 RECIP_SAT_HITS = [0]
@@ -678,7 +679,7 @@ class Qwen3:
         cache["lens"] = [l + T for l in cache["lens"]]
         return self._rms_hf(x, self.norm)
 
-    # Contract arithmetic (tools/hdc_golden.py @ 27d30c15, Model.decode_token, NORM_FOLD)
+    # Contract arithmetic (tools/hdc_golden.py @ 45762e32, Model.decode_token, NORM_FOLD)
     def _forward_contract(self, tokens, cache):
         B, T = tokens.shape
         dev = self.device

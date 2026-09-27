@@ -3,7 +3,7 @@ of the Qwen3-8B deployment arithmetic.
 
 The load-bearing check is the last one: the GPU contract forward (Triton
 chunk + pairwise-tree kernel, eager FP32 golden primitives, batched prefill)
-reproduces the numpy golden (tools/hdc_golden.py at 27d30c15, sequential
+reproduces the numpy golden (tools/hdc_golden.py at 45762e32, sequential
 decode steps) bit-exactly in every logit of the reduced Qwen3 vehicle.
 """
 import importlib.util
@@ -20,8 +20,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 torch = pytest.importorskip("torch")
 Q = pytest.importorskip("qwen3_deployment_quality")
 
-GOLDEN_COMMIT = "27d30c15"          # vector-core golden (FP8 KV, norm fold) + reciprocal saturation
-GOLDEN_BLOB = "9c1640f9ffa5c20ac745a504ad04a111324b4f53"   # blob hash of that tools/hdc_golden.py
+GOLDEN_COMMIT = "45762e32"          # vector-core golden (FP8 KV, norm fold) + reciprocal saturation
+GOLDEN_BLOB = "657d916762bc39c68124388f1dd74d302c8bf059"   # blob hash of that tools/hdc_golden.py
 REDUCED = Path("/home/ubuntu/OpenTallas/build/models/qwen3-reduced-v1")
 CUDA = torch.cuda.is_available()
 
