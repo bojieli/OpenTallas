@@ -43,6 +43,7 @@ def main() -> None:
     ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/hdc_qwen_ingest_to_token.json")
     ap.add_argument("--weights", type=Path, help="checkpoint directory, also synced by remote_gate")
     ap.add_argument("--legacy-width", action="store_true", help="diagnostic: BF16-width HBM with FP8 core writes")
+    ap.add_argument("--bisect", action="store_true", help="find first ISA instruction whose state differs")
     args = ap.parse_args()
     checkpoint = ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"
     if args.weights is not None and not checkpoint.exists():
@@ -87,6 +88,35 @@ def main() -> None:
             raise
         raw = KC.run(exe, f"+DIR={img}", *(img / "run.args").read_text().split(), f"+LEAD={KC.LEAD}")
         token = KC.parse_core(raw)
+        bisection = None
+        if args.bisect:
+            def probe(stop: int) -> dict:
+                cut = work / f"stop_{stop}"
+                subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(cut),
+                                "--context", "64", "--stop", str(stop)], check=True,
+                               capture_output=True, text=True)
+                (cut / "kv.hex").write_text(decoded_hex)
+                (cut / "kv_fp8.hex").write_text((img / "kv_fp8.hex").read_text())
+                output = KC.run(exe, f"+DIR={cut}", *(cut / "run.args").read_text().split(),
+                                f"+LEAD={KC.LEAD}")
+                rec = KC.parse_core(output)
+                rec["exact_state"] = bool(rec.get("fault") == 0 and rec.get("stream_fault") == 0
+                                          and all(rec.get(k) == 0 for k in
+                                                  ("logit_mismatches", "vector_memory_mismatches",
+                                                   "kv_cache_mismatches")))
+                return rec
+            lo, hi = 0, len(P.build_program(lay))
+            probes = {}
+            while lo < hi:
+                mid = (lo + hi) // 2
+                probes[mid] = probe(mid)
+                if probes[mid]["exact_state"]:
+                    lo = mid + 1
+                else:
+                    hi = mid
+            probes[lo] = probe(lo) if lo not in probes else probes[lo]
+            bisection = {"first_failing_stop": lo, "program_length": len(P.build_program(lay)),
+                         "probes": {str(k): v for k, v in sorted(probes.items())}}
         token_exact = (token.get("pass") and token.get("fault") == 0 and token.get("stream_fault") == 0
                        and token.get("next_token") == token.get("isa_next_token")
                        and all(token.get(k) == 0 for k in ("logit_mismatches", "vector_memory_mismatches",
@@ -99,6 +129,7 @@ def main() -> None:
                "checkpoint_sha256": sha(checkpoint),
                "scope": "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write; hardware tail boot transfers active K words. Legacy-width diagnostic uses BF16 HBM words and direct tail preload.",
                "legacy_width": args.legacy_width,
+               "instruction_bisection": bisection,
                "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in
                                 [*IC.RTL, IC.TB, IC.HARNESS, *sources[:-1], sources[-1],
                                  ROOT / "tools/hdc_program.py", ROOT / "tools/kv_ingest_ref.py",
