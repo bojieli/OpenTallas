@@ -334,6 +334,7 @@ def main():
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--jobs", type=int, default=6)
     ap.add_argument("--only", default="")
+    ap.add_argument("--clean", action="store_true", help="delete the Verilator build directories at the end")
     a = ap.parse_args()
     a.scratch = a.scratch.resolve()
     a.scratch.mkdir(parents=True, exist_ok=True)
@@ -363,6 +364,10 @@ def main():
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(rec["summary"], indent=1))
+    if a.clean:
+        import shutil
+        for d in a.scratch.glob("obj_*"):
+            shutil.rmtree(d, ignore_errors=True)
 
 
 if __name__ == "__main__":
