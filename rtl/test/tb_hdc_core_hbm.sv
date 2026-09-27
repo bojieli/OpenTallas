@@ -415,7 +415,10 @@ module tb_hdc_core_hbm #(
                     end
             end
             $display("BOOT packed_hbm_bad=%0d tail_bad=%0d words=%0d", hbm_bad, boot_bad, boot_i);
-            if (hbm_bad != 0 || boot_bad != 0) $fatal(1, "packed KV image or tail boot mismatch");
+            if (hbm_bad != 0 || boot_bad != 0) begin
+                $display("FAIL packed KV image or tail boot mismatch");
+                $finish;
+            end
         end
         start <= (lc == 10);
         if (lc == 9 && multi) begin token <= prompt[0]; pos <= 0; step <= 0; end
