@@ -570,7 +570,169 @@ def evaluate():
     out["dflash"] = dflash_budget(out, clock)
     out["batch"] = batch_model(out, clock)
     out["power"] = power_budget(out, clock)
+    out["power_production"] = power_production(out, clock)
     return out
+
+
+# Production power inputs (user directive: the conservative PRODUCTION value wherever sources disagree), checked
+# against normative and production sources by worktree-agent-adae6788cbf2f3f86 and recorded, each with its
+# quoted source, in configs/hardware/technology.json there (power.*, energy.*; record
+# results/arch/power_assumptions.json).  They supersede the ASAP7-measured basis above for every energy,
+# die-, package- and rack-power figure; the measured basis stays as the sign-off cross-check.
+PROD = dict(
+    mac_j=dict(w4a8=0.09e-12, fp8=0.13e-12, bf16=0.41e-12, fp32=1.18e-12, fp4=0.052e-12),  # Jouppi ISCA'21 T2 x0.7
+    leak_w_mm2=dict(logic=0.10, rom=0.0067, sram=0.005),           # H100 idle 71.8 W / 814 mm2; TPUv4i
+    clock_j_mm2_cycle=8.5e-11, clock_mult=dict(logic=1.0, rom=0.15, sram=0.15),
+    rom_read_j_b=0.08e-12, delivery_j_b=0.23e-12, sram_j_b=2.6e-12,
+    hbm_core_j_b=1.0488e-10,                                        # 13.1 pJ/bit, system-level
+    hbm_if_j_b=0.8e-12 * 8,                                         # O'Connor MICRO'17 T3: 0.8 pJ/bit active I/O
+    hbm_idle_w_stack=2.8,
+    psu=0.96, vr=0.87, cdu=0.006, fans=0.03, margin=1.2,
+    b200=dict(tdp_hgx_w=1000.0, tdp_nvl72_w=1200.0, wall_saturated_w=1300.0, decode_measured_w=689.0,
+              hbm_bytes_s=8.0e12, efficiency=0.90),
+)
+
+
+def _rom_areas(out, copies_on):
+    """Logic / ROM / SRAM mm2 of the ROM reticle (area ledger); idle lane copies clock-gated."""
+    a = out["area"]
+    m = a["lane_multiplier_m"]
+    copies = a["lane_copy_mm2"] * (m - 1)
+    logic = (RETICLE["compute_mm2"] + RETICLE["interconnect_mm2"] + RETICLE["overhead_mm2"] + a["hbm_phy_mm2"]
+             + a["stream_unit_spill_mm2"] + copies)
+    rom = RETICLE["rom_mm2"] + a["drafter_rom_mm2"]
+    sram = a["kv_prefetch_buffer_mm2"]
+    clocked_logic = logic - copies * (1 - copies_on / max(1, m - 1))
+    return dict(logic=logic, rom=rom, sram=sram, clocked_logic=clocked_logic)
+
+
+def _die_static_w(ar, clock):
+    P = PROD
+    leak = ar["logic"] * P["leak_w_mm2"]["logic"] + ar["rom"] * P["leak_w_mm2"]["rom"] + ar["sram"] * P["leak_w_mm2"]["sram"]
+    clk = P["clock_j_mm2_cycle"] * clock * (ar["clocked_logic"] * P["clock_mult"]["logic"]
+                                            + ar["rom"] * P["clock_mult"]["rom"] + ar["sram"] * P["clock_mult"]["sram"])
+    return leak, clk
+
+
+def _rom_step(out, clock, step_cycles, users, slots, drafter, copies_on):
+    """Energy of one ROM-die step (J, by component) on the production basis."""
+    P = PROD
+    wl = out["workload"][str(CTX_HEAD)]
+    per_layer, _ = matrices()
+    layer_macs = sum(a * b for a, b in per_layer.values())
+    n = users * slots
+    m = out["area"]["lane_multiplier_m"]
+    sweeps = 1 if drafter else math.ceil(n / m)
+    draft_macs = (slots * DRAFTER_LAYERS * layer_macs + (slots - 1) * Q["V"] * Q["H"]
+                  + slots * DFLASH_FC[0] * DFLASH_FC[1]) if drafter else 0
+    kvb = users * kv_bytes(wl, KV_FMT_SPEC) * ((1 + DRAFTER_LAYERS / Q["L"]) if drafter else 1)
+    wbytes = sweeps * wl["bytes"]["weights_rom_format"] + (DRAFTER_PARAMS * RETICLE["weight_bits"] / 8 if drafter else 0)
+    t = step_cycles / clock
+    ar = _rom_areas(out, copies_on)
+    leak, clk = _die_static_w(ar, clock)
+    e = dict(
+        mac_weights=(n * wl["weight_macs"] + draft_macs) * P["mac_j"]["w4a8"],     # the lane for the weight format
+        mac_attention=n * wl["attention_macs"] * P["mac_j"]["bf16"],               # BF16 q x FP8 K/V, taken at BF16
+        weight_read_and_delivery=wbytes * (P["rom_read_j_b"] + P["delivery_j_b"]),
+        kv_ring_sram_and_delivery=kvb * (2 * P["sram_j_b"] + P["delivery_j_b"]),  # written once, read once
+        stream_unit=n * wl["elementwise_total"] * (P["mac_j"]["fp32"] + 12 * P["sram_j_b"]),  # 3 FP32 operands
+        clock=clk * t, leakage=leak * t,
+        hbm_interface=kvb * P["hbm_if_j_b"],
+    )
+    die = sum(e.values())
+    stacks = kvb * P["hbm_core_j_b"] + ROM_KV_HBM["stacks"] * P["hbm_idle_w_stack"] * t
+    return e, die, stacks, t
+
+
+def _package(die_w, stacks_w):
+    P = PROD
+    it = die_w + stacks_w
+    wall = it / (P["psu"] * P["vr"]) * (1 + P["cdu"] + P["fans"])
+    return dict(die_w=round(die_w, 1), stacks_w=round(stacks_w, 1), package_w=round(it, 1), wall_w=round(wall, 1))
+
+
+def power_production(out, clock):
+    """Energy per token and die / package / wall power on the production basis (PROD), for the ROM reticle,
+    the HBM comparator and a B200, at the design point (8K, FP8 KV); the hardwired schedule's saturated
+    worst case and the provisioned power with margin: 1.2 x worst / (VR 0.87 x PSU 0.96)."""
+    P = PROD
+    wl = out["workload"][str(CTX_HEAD)]
+    m = out["area"]["lane_multiplier_m"]
+    ar_cal = out["as_built_calibrated"][str(CTX_HEAD)]
+    kv_cyc = kv_bytes(wl, KV_FMT_SPEC) / rom_kv_bw() * clock
+    batch = {r["batch"]: r for r in out["batch"]["per_context"][str(CTX_HEAD)]["rom"] if r["lane_multiplier"] == m}
+    b_kv = min(b for b, r in batch.items() if r["binding"] == "kv_stream")
+    best = out["dflash"]["rom"][f"{CTX_HEAD}/{KV_FMT_SPEC}/m{m}"]["best"]
+    rom = {}
+    for label, step, users, slots, drafter, copies, toks in (
+            ("ar_batch1", max(ar_cal["cycles"], kv_cyc), 1, 1, False, 0, 1),
+            (f"dflash_tau{TAU_CENTRAL}_block{best['block']}", best["step_cycles"], 1, best["block"], True,
+             min(m, best["block"]) - 1, best["tokens_per_step"]),
+            (f"kv_bound_batch{b_kv}", batch[b_kv]["step_cycles"], b_kv, 1, False, min(m, b_kv) - 1, b_kv),
+            ("batch128", batch[128]["step_cycles"], 128, 1, False, m - 1, 128)):
+        e, die, stacks, t = _rom_step(out, clock, step, users, slots, drafter, copies)
+        rom[label] = dict(step_cycles=round(step), tokens_per_step=toks, tokens_s=round(toks / t, 1),
+                          energy_per_token_mj=round((die + stacks) / toks * 1e3, 3),
+                          die_energy_per_token_mj=round(die / toks * 1e3, 3),
+                          die_components_mj_per_token={k: round(v / toks * 1e3, 4) for k, v in e.items()},
+                          **_package(die / t, stacks / t))
+    # the saturated worst case: every lane copy MACs every cycle (BF16, the costlier product), the stream unit
+    # retires 1,024 FP32 ops a cycle, the ROM streams one weight a lane a cycle, the stacks run at full raw
+    # bandwidth; clock on every mm2, leakage.  The hardwired schedule cannot exceed it.
+    arw = _rom_areas(out, m - 1)
+    leak, clk = _die_static_w(arw, clock)
+    raw_b_s = ROM_KV_HBM["stacks"] * HBM["stack_bytes_s"]
+    worst_die = (LANES_ROM * m * clock * P["mac_j"]["bf16"]
+                 + SPEC_SU_WIDTH * clock * (P["mac_j"]["fp32"] + 12 * P["sram_j_b"])
+                 + LANES_ROM * RETICLE["weight_bits"] / 8 * clock * (P["rom_read_j_b"] + P["delivery_j_b"])
+                 + raw_b_s * (P["hbm_if_j_b"] + 2 * P["sram_j_b"] + P["delivery_j_b"]) + clk + leak)
+    worst_stacks = raw_b_s * P["hbm_core_j_b"] + ROM_KV_HBM["stacks"] * P["hbm_idle_w_stack"]
+    worst = _package(worst_die, worst_stacks)
+    provisioned_w = P["margin"] * (worst_die + worst_stacks) / (P["vr"] * P["psu"])
+    # ---- the HBM comparator: one reticle of logic (815 mm2), FP8 weights and KV over the same 6 stacks ----
+    bw = HBM["stacks"] * HBM["stack_bytes_s"] * HBM["efficiency"]
+    comp = out["dependency_chain"][f"{CTX_HEAD}/spec"]["components"]
+    lat = (comp["latency"] + comp["control"]) / clock
+    hbm = {}
+    for B in (1, 16, 128):
+        byt = wl["weight_macs"] + B * kv_bytes(wl, KV_FMT_SPEC)
+        macs_w, macs_a = B * wl["weight_macs"], B * wl["attention_macs"]
+        t = max(byt / bw, (macs_w + macs_a) / (LANES_HBM * clock), lat)
+        leak = RETICLE["die_mm2"] * P["leak_w_mm2"]["logic"]
+        clk = P["clock_j_mm2_cycle"] * clock * RETICLE["die_mm2"]
+        e = dict(mac_weights=macs_w * P["mac_j"]["fp8"], mac_attention=macs_a * P["mac_j"]["bf16"],
+                 operand_delivery=byt * P["delivery_j_b"], stream_unit=B * wl["elementwise_total"]
+                 * (P["mac_j"]["fp32"] + 12 * P["sram_j_b"]), clock=clk * t, leakage=leak * t,
+                 hbm_interface=byt * P["hbm_if_j_b"])
+        die = sum(e.values())
+        stacks = byt * P["hbm_core_j_b"] + HBM["stacks"] * P["hbm_idle_w_stack"] * t
+        hbm[f"batch{B}"] = dict(tokens_s=round(B / t, 1), energy_per_token_mj=round((die + stacks) / B * 1e3, 3),
+                                die_components_mj_per_token={k: round(v / B * 1e3, 4) for k, v in e.items()},
+                                **_package(die / t, stacks / t))
+    # ---- a B200 at the same design point: its measured decode draw at its HBM-roofline rate (FP8 weights) ----
+    g = P["b200"]
+    gbyt = wl["weight_macs"] + kv_bytes(wl, KV_FMT_SPEC)
+    g_tok_s = g["hbm_bytes_s"] * g["efficiency"] / gbyt
+    gpu = dict(tokens_s_batch1_fp8=round(g_tok_s, 1),
+               energy_per_token_mj_at_measured_decode_draw=round(g["decode_measured_w"] / g_tok_s * 1e3, 1),
+               energy_per_token_mj_at_saturated_wall=round(g["wall_saturated_w"] / g_tok_s * 1e3, 1),
+               basis="the measured B200 decode draw (689 W, arXiv:2609.11133) over the HBM-roofline batch-1 rate "
+                     "(8 TB/s x 0.90 over FP8 weights + FP8 KV at 8K); the saturated wall figure (1.30 kW a GPU, "
+                     "MLPerf v5.1) is the upper bound", **{k: v for k, v in g.items()})
+    r1 = rom["ar_batch1"]["energy_per_token_mj"]
+    h1 = hbm["batch1"]["energy_per_token_mj"]
+    return dict(basis="production (conservative) inputs: configs/hardware/technology.json on "
+                      "worktree-agent-adae6788cbf2f3f86 (each entry quotes its source); supersedes the "
+                      "ASAP7-measured basis of `power` and `batch` for energy and power",
+                inputs=PROD, rom=rom, hbm_comparator=hbm, b200=gpu,
+                worst_case=dict(worst, basis="saturated hardwired schedule: every lane copy MACs every cycle (BF16), "
+                                             "the 1,024-lane stream unit and the ROM read path run every cycle, "
+                                             "the 6 stacks at full raw bandwidth, clock on every mm2, leakage"),
+                provisioned_w=round(provisioned_w, 1),
+                provisioned_basis="1.2 x worst case (die + stacks) / (VR 0.87 x PSU 0.96)",
+                ratios_batch1=dict(hbm_over_rom=round(h1 / r1, 2),
+                                   b200_measured_over_rom=round(gpu["energy_per_token_mj_at_measured_decode_draw"] / r1, 2),
+                                   b200_measured_over_hbm=round(gpu["energy_per_token_mj_at_measured_decode_draw"] / h1, 2)))
 
 
 UTIL_OUT = ROOT / "results/arch/qwen3_utilization.json"

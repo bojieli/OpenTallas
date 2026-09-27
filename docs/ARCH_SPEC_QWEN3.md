@@ -346,6 +346,62 @@ figure, not a sign-off power.
 
 ## 11. Power (a first-class requirement)
 
+### 11.1 Production basis (the figures to use)
+
+By user directive, power is priced on the conservative production value
+wherever sources disagree. The inputs are in `configs/hardware/technology.json`
+(checked against normative and production sources on
+worktree-agent-adae6788cbf2f3f86, each entry quoting its source):
+
+* MAC: W4A8 0.09 pJ, FP8 0.13, BF16 0.41, FP32 1.18 (Jouppi ISCA 2021 Table 2
+  at 7 nm, × 0.7 to N5);
+* logic leakage 0.10 W/mm²; clock 8.5e-11 J/mm²/cycle (ROM and SRAM arrays at
+  0.15 of that);
+* operand delivery 0.23 pJ/B, SRAM 2.6 pJ/B, ROM read 0.08 pJ/B;
+* HBM 13.1 pJ/bit in the stacks (system level), plus 0.8 pJ/bit of active
+  interface on the die and 2.8 W a stack idle;
+* PSU 0.96, VR 0.87, CDU 0.6%, fans 3%.
+
+Computed by `power_production()` (`results/arch/qwen3_budget.json`
+`power_production`). The weights are priced at W4A8 (the lane designed for the
+weight format), attention at BF16, and idle lane copies are clock-gated. All
+figures are at 8K with FP8 KV:
+
+| design, scenario | tok/s | mJ/token | die W | stacks W | package W | wall W |
+|---|---|---|---|---|---|---|
+| ROM, batch 1 | 8,910 | **86.2** <!-- figure: 86.246 src="results/arch/qwen3_budget.json#power_production.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM production-basis mJ/token 8K batch 1" --> | 187.2 | 581.2 | 768.5 | 953.2 |
+| ROM, DFlash τ 4.1 (block 3, m = 3) | 13,612 | 49.9 | 213.5 | 465.8 | 679.4 | 842.7 |
+| ROM, batch 2 (KV-bound) | 8,941 | 86.4 | 189.5 | 583.2 | 772.6 | 958.4 |
+| ROM, batch 128 | 8,941 | 87.0 | 194.4 | 583.2 | 777.6 | 964.5 |
+| HBM comparator, batch 1 | 661 | 1,178 | 195.4 | 583.2 | 778.5 | 965.7 |
+| HBM comparator, batch 16 | 5,014 | 157.8 | 208.2 | 583.2 | 791.3 | 981.6 |
+| HBM comparator, batch 128 | 8,144 | 98.3 | 217.4 | 583.2 | 800.5 | 993.0 |
+| B200, batch 1 (measured 689 W decode draw, roofline rate) | 881 | 782 | | | | |
+
+* **The KV stream is the energy.** At batch 1 on the ROM die, 65.2 mJ of the
+  86.2 mJ is in the stacks: 63.4 mJ of DRAM energy for the 604 MB of FP8 KV
+  and 1.9 mJ of idle floor. The die's 21.0 mJ splits into leakage 5.9, clock 4.3, the HBM interface 3.9, the KV ring's
+  SRAM write, read and delivery 3.3, the weights' ROM read and delivery 1.0,
+  MACs 1.7 (0.7 weights, 1.0 attention), and the stream unit 1.0. Halving
+  the KV bytes (4-bit KV, a sensitivity) is the largest energy lever as well
+  as the largest speed lever.
+* **Ratios per token at batch 1:** the HBM comparator spends **13.7×** the
+  ROM die's energy, and a B200 **9.1×** (at its measured decode draw). The
+  comparator's own die is dominated by clock and leakage (238 of 295 mJ) over
+  its 1.5 ms token.
+* **Worst case.** The hardwired schedule bounds the power. The saturated worst
+  case has every lane copy MAC every cycle at BF16, the stream unit and the
+  ROM read path busy every cycle, and the 6 stacks at full raw bandwidth. That
+  is a die of 407.9 W, stacks of 646.1 W and a package of 1,054.0 W (1,307.4 W
+  at the wall). **Provisioned: 1.2 × 1,054.0 / (0.87 × 0.96) = 1,514.3 W.**
+  The worst-case die sits at the reticle's cooling limit (0.5 W/mm² × 815
+  mm²); every scheduled scenario draws at most 214 W on the die.
+* The GPU reference powers: B200 TDP 1,000 W (HGX) and 1,200 W (NVL72);
+  MLPerf v5.1 measured 1.30 kW a GPU at the wall, saturated (1,476 mJ/token
+  at the roofline rate); measured decode draw 689 W (arXiv:2609.11133).
+
+### 11.2 ASAP7-measured basis (the sign-off cross-check)
+
 The reticle's cooling limit is 408 W (the iso-area study, `a57e0d89` at
 09b4b1b1). At the design point's 8,494 tok/s that is a die energy budget of
 **48.0 mJ per token**. With 75% of it for the MAC lanes, less 6 × 2.8 W of HBM

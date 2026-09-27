@@ -108,6 +108,19 @@ def test_layer_chain_is_under_the_kv_floor(rec, fresh):
     assert fresh["as_built_calibrated"]["8192"]["cycles"] <= rec["budget"]["target_cycles"]
 
 
+def test_production_power_basis(rec):
+    """Production-basis power: per-token energy is the sum of its components, the provisioned power is
+    1.2 x worst / (0.87 x 0.96), and the ROM die beats the HBM comparator and the B200 per token."""
+    pp = rec["power_production"]
+    w = pp["worst_case"]
+    assert abs(pp["provisioned_w"] - 1.2 * w["package_w"] / (0.87 * 0.96)) < 1.0
+    for sc in pp["rom"].values():
+        assert sc["die_w"] <= w["die_w"] and sc["package_w"] <= w["package_w"]
+    ar = pp["rom"]["ar_batch1"]
+    assert abs(sum(ar["die_components_mj_per_token"].values()) - ar["die_energy_per_token_mj"]) < 0.01
+    assert pp["ratios_batch1"]["hbm_over_rom"] > 1 and pp["ratios_batch1"]["b200_measured_over_rom"] > 1
+
+
 UTIL = ROOT / "results/arch/qwen3_utilization.json"
 
 
