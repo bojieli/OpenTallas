@@ -209,10 +209,10 @@ def finish(tok):
 
 
 # -- real vehicle ---------------------------------------------------------------------------------------------
-def vehicle_tokens(positions, seed=7):
+def vehicle_tokens(positions, seed=7, checkpoint=None):
     """Every indexer call of the golden over the oracle prompt followed by pseudo-random continuation tokens
     (real weights, real activations), captured at Model.indexer.  Returns token dicts."""
-    model = G.Model()
+    model = G.Model(checkpoint=checkpoint) if checkpoint else G.Model()
     prompt, _ = G.prompt_and_expected()
     rng = np.random.default_rng(seed)
     toks = list(prompt) + [int(t) for t in rng.integers(0, model.c["vocab_size"], max(0, positions - len(prompt)))]
@@ -649,6 +649,7 @@ def main():
     ap.add_argument("--quick", action="store_true", help="small vector counts (pytest)")
     ap.add_argument("--nk", type=int, default=8)
     ap.add_argument("--positions", type=int, default=40, help="vehicle positions decoded")
+    ap.add_argument("--checkpoint", default=None, help="reduced-vehicle safetensors (default: the golden's)")
     ap.add_argument("--output", default=str(OUT))
     ap.add_argument("--only", choices=("shipped", "reduced", "hbm"), default=None)
     ap.add_argument("--reuse-engine", default=None,
@@ -691,7 +692,7 @@ def main():
         toks = [finish(rand_token(rng, ih, nb, nkeys(), c)) for c in CLASSES for _ in range(per_class)]
         if name == "reduced":
             t0 = time.time()
-            veh = vehicle_tokens(8 if a.quick else a.positions)
+            veh = vehicle_tokens(8 if a.quick else a.positions, checkpoint=a.checkpoint)
             rec["vehicle_capture_s"] = round(time.time() - t0, 1)
             toks += veh
         print(f"{name}: {len(toks)} tokens, {sum(len(t['keep']) for t in toks)} keys", flush=True)
