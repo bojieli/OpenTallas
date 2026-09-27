@@ -174,7 +174,9 @@ def main() -> None:
                "packed_image_sha256": hashlib.sha256(packed.tobytes()).hexdigest(),
                "descriptor_count": nd, "payload_beats": npay,
                "checkpoint_sha256": sha(checkpoint),
-               "scope": "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write; hardware tail boot transfers active K words. Legacy-width diagnostic uses BF16 HBM words and direct tail preload.",
+               "scope": ("Reduced Qwen3 vehicle, FP32 prefill through position 14 followed by two packed-FP8 tokens at positions 15 and 16 across the K tail tile boundary. Ingest RTL populates HBM, streamer boots the active tail, then writes and flushes KV. Full terminal logits, VM, KV and both token IDs are checked."
+                         if args.two_token else
+                         "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write; hardware tail boot transfers active K words. Legacy-width diagnostic uses BF16 HBM words and direct tail preload."),
                "legacy_width": args.legacy_width,
                "two_token": args.two_token,
                "first_token": first_token if args.two_token else None,
