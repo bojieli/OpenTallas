@@ -16,6 +16,7 @@ module ot_hdc_v41x_idx_pool_kwr #(
     input wire [NL*AW-1:0] kv_waddr,
     input wire [NL*32-1:0] kv_wdata,
     output reg w_v,
+    input wire w_rdy,
     output wire [3:0] w_stack_mask,
     output reg [HAW-1:0] w_csec,
     output reg [511:0] w_codes,
@@ -49,12 +50,15 @@ module ot_hdc_v41x_idx_pool_kwr #(
         if(!rst_n) begin
             busy<=0;w_v<=0;fault<=0;got<=0;need<=0;wbad<=0;dbg_keys<=0;
         end else begin
-            w_v<=0;fault<=0;
+            if(w_v && w_rdy) w_v<=0;
+            fault<=0;
             if(hit) begin
-                if(busy || i_nout!=1 || (i_kdim!=32 && i_kdim!=128)) fault<=1;
-                busy<=1;rbase<=i_obase;row<=i_orow;kdim<=i_kdim;
-                got<=0;need<=i_kdim==32 ? {{96{1'b0}},{32{1'b1}}} : {128{1'b1}};
-                wbad<=0;
+                if(busy || w_v || i_nout!=1 || (i_kdim!=32 && i_kdim!=128)) fault<=1;
+                else begin
+                    busy<=1;rbase<=i_obase;row<=i_orow;kdim<=i_kdim;
+                    got<=0;need<=i_kdim==32 ? {{96{1'b0}},{32{1'b1}}} : {128{1'b1}};
+                    wbad<=0;
+                end
             end else if(busy) begin
                 for(integer q=0;q<NL;q=q+1) if(kv_we[q]) begin
                     off=kv_waddr[q*AW +: AW]-rb_e;

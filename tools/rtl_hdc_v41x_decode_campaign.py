@@ -114,6 +114,8 @@ LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-B
 SINGLE = re.compile(r"HDC41 token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) cycles=(\d+) fault=(\d+) "
                     r"logit_mismatch=(\d+) vm_mismatch=(\d+) kv_mismatch=(\d+)")
 UTIL = re.compile(r"UTIL me_busy=(\d+) su_busy=(\d+) qe_busy=(\d+) xu_busy=(\d+) he_busy=(\d+) all_idle=(\d+)")
+IDXHBMWR = re.compile(r"IDXHBMWR records=(\d+) writes=(\d+) highwater=(\d+) read_stalls=(\d+) "
+                      r"writer_stalls=(\d+) refreshes=(\d+) refpb=(\d+)")
 ISSUE = re.compile(r"ISSUE cyc=(\d+) pc=(\d+) unit=(\d+)")
 STEP = re.compile(r"STEP pos=(\d+) in=(\d+) out=(\d+) gold=(\d+) cycles=(\d+) fault=(\d+)")
 XCNT = re.compile(r"XCNT unit=(\w+) ops=(\d+) elems=(\d+)")
@@ -192,7 +194,7 @@ def indexer_record(prog, tags, issues):
         "dropped": "the per-head index-score ME op (S region) and the stream unit's ReLU x weight head-sum op "
                    "(S, WTS -> IS): the fused ME op (me_fuse, me_wts) writes IS on the indexer engine",
         "key_source": ("HBM: four replicated 68-B FP4 key images, dynamic quarter/group selector, kmerge and one "
-                       "pooled tile; full K32/K128 writer records broadcast to all four model backdoors"
+                       "pooled tile; full K32/K128 writer records traverse three timed sector writes per stack"
                        if IDX_POOL else
                        "HBM: ot_hdc_v41x_idx_kstream (one stack, 32 pseudo-channels, 68-B FP4 keys) from the "
                        "bench's ot_hdc_v41x_idx_hbm (REFPB = 3 refresh-aware per-bank refresh, MRU tie-break, "
@@ -305,6 +307,17 @@ def single(exe, img, trace=True):
     m = re.search(r"XCNT unit=sel .* reps=(\d+)", run)
     if m:
         rec["activation"]["sel_replays"] = int(m.group(1))
+    if IDX_POOL:
+        wm = IDXHBMWR.search(run)
+        if wm is None:
+            raise RuntimeError("pooled token did not report timed HBM writes:\n" + run[-4000:])
+        vals = list(map(int, wm.groups()))
+        wr = dict(zip(("records", "sector_writes", "fifo_highwater", "read_stall_cycles",
+                       "writer_stall_cycles", "refresh_events", "refpb_mode"), vals))
+        rec["index_key_hbm_writer"] = wr
+        rec["pass"] = rec["pass"] and wr["records"] == rec["activation"]["counters"]["idx_kwr"]["ops"] and \
+                      wr["sector_writes"] == 12 * wr["records"] and wr["fifo_highwater"] <= 4 and \
+                      wr["refpb_mode"] == 3 and wr["refresh_events"] > 0
     return xu_check(rec, img), run
 
 
@@ -398,7 +411,7 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
             "claim_boundary": (
                 "Single-token functional Verilator gate with DPI bit-equivalent FP simulation stand-ins; "
                 "physical FP RTL is not elaborated. Four replicated HBM key images use 272 encoded bytes/key "
-                "and four runtime writes/key; the selector rereads super-block prefixes and one pooled "
+                "and twelve timed sector writes/key; the selector rereads super-block prefixes and one pooled "
                 "tile back-pressures kmerge, so full-rate bandwidth is not claimed."
                 if IDX_POOL and PARAMS.get("fp") == "dpi" else
                 "Single-token functional Verilator gate; physical timing is not established."),
@@ -462,7 +475,7 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
                           + ("FP arithmetic uses bit-equivalent DPI simulation stand-ins; physical FP RTL is not "
                              "elaborated in this full-core gate. " if PARAMS.get("fp") == "dpi" else "")
                           + ("X_IDX=2 uses four replicated HBM images (272 encoded bytes per logical key), "
-                             "four runtime writes per key, and a prefix-rereading correctness-rate selector; "
+                             "twelve timed sector writes per key, and a prefix-rereading correctness-rate selector; "
                              "full-rate read bandwidth and tile replication are not claimed."
                              if IDX_POOL else ""),
         "fp_simulation": PARAMS.get("fp", "rtl"),
@@ -517,9 +530,10 @@ def main() -> int:
         RTL.extend(ROOT / f"rtl/hdc/v41x/{n}.sv" for n in (
             "ot_hdc_v41x_idx_pcol", "ot_hdc_v41x_idx_hsum", "ot_hdc_v41x_idx_pool_finish",
             "ot_hdc_v41x_idx_pool_batch", "ot_hdc_v41x_idx_pool_replica",
-            "ot_hdc_v41x_idx_pool_adapt", "ot_hdc_v41x_idx_pool_kwr"))
+            "ot_hdc_v41x_idx_pool_adapt", "ot_hdc_v41x_idx_pool_kwr",
+            "ot_hdc_v41x_idx_pool_hbm_bridge"))
         NOT_EXERCISED["idx"] = [
-            "HBM writes use model backdoors; write timing is not modelled",
+            "the index-key HBM controllers are timing models, not physical HBM RTL",
             "the shipped K128 program (the decode vehicle uses K32)",
             "the candidate mask (k_keep): every block is kept in the reduced vehicle",
             "the full-rate replicated tile layout; the functional selector rereads super-block prefixes",
