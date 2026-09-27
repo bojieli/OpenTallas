@@ -101,6 +101,11 @@ SKY130_HD = PDK_FULL_ROOT / "sky130A/libs.ref/sky130_fd_sc_hd"
 ASAP7_NLDM = PDK_ASAP7_ROOT / "lib/NLDM"
 
 ORFS_IMAGE = os.environ.get("OPENTALLAS_ORFS_IMAGE", "openroad/orfs:latest")
+# Clock gating (--clock-gating) and multi-corner hold repair (--hold-corners).
+CLOCK_GATE_CELL = "ICGx1_ASAP7_75t_R"
+CLOCK_GATE_MIN_FLOPS = 8
+# ORFS asap7 corner names -> the liberty file list variable the platform defines
+ORFS_LIB_CORNERS = {"TC": "TC_NLDM_LIB_FILES", "BC": "BC_NLDM_LIB_FILES", "WC": "WC_NLDM_LIB_FILES"}
 ORFS_EXPECTED_IMAGE_ID = (
     "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
 )
@@ -620,9 +625,16 @@ def run_synthesis(
     raw_netlist = work / "mapped.raw.v"
     stat_path = work / "stat.txt"
     script = work / "synth.ys"
+    # An integrated clock gate the RTL instantiates (ot_hdc_cg) is a liberty
+    # cell: read the sequential library as black boxes so hierarchy -check
+    # accepts it.  Only when a source names one, so every other synth.ys is
+    # byte-identical to before.
+    icg_lib = [f"read_liberty -lib {dff_lib}"] if any(
+        "ICGx" in path.read_text(encoding="utf-8", errors="replace") for path in sources) else []
     script.write_text(
         "\n".join(
             [
+                *icg_lib,
                 *(f"read_verilog -sv {path}" for path in sources),
                 f"hierarchy -check -top {block['top']}{chparam}",
                 f"synth -top {block['top']} -flatten",
@@ -780,6 +792,8 @@ def resolve_signal_integrity_constraints(
     max_fanout: int | str | None,
     slew_margin_percent: float | None,
     hold_margin_ns: float | None = None,
+    clock_gating: bool = False,
+    hold_corners: list[str] | None = None,
 ) -> dict[str, Any] | None:
     """Turn the command-line options into the recorded constraint block.
 
@@ -791,6 +805,8 @@ def resolve_signal_integrity_constraints(
         and max_fanout is None
         and slew_margin_percent is None
         and hold_margin_ns is None
+        and not clock_gating
+        and not hold_corners
     ):
         return None
     time_unit_ns = view["time_unit_ns"]
@@ -847,12 +863,40 @@ def resolve_signal_integrity_constraints(
         out["slew_margin_percent"] = margin
     if hold_margin_ns is not None:
         out["hold_margin_ns"] = float(hold_margin_ns)
+        out["hold_margin_library_units"] = float(f"{float(hold_margin_ns) / time_unit_ns:.6g}")
         out["hold_margin_basis"] = (
             "ORFS HOLD_SLACK_MARGIN: repair_timing targets this much POSITIVE hold "
             "slack under global-route-estimated parasitics so the RCX-extracted "
             "finish check still lands non-negative.  Absent: ORFS default 0, which "
             "leaves the estimate-versus-extraction gap standing as a violation"
         )
+    if clock_gating:
+        out["clock_gating"] = {
+            "infer": True,
+            "cell": CLOCK_GATE_CELL,
+            "min_flops_per_gate": CLOCK_GATE_MIN_FLOPS,
+            "basis": (
+                "ORFS INFER_CLKGATES: yosys `clockgate` turns every set of at least "
+                f"{CLOCK_GATE_MIN_FLOPS} flip-flops sharing a clock and an enable into "
+                f"one {CLOCK_GATE_CELL} integrated clock gate and enable-less flops "
+                "(register-bank gating); ICG cells instantiated in the RTL (ot_hdc_cg, "
+                "unit gating) are kept either way.  The platform lists ICG* as "
+                "dont_use, which only stops the resizer from choosing one"
+            ),
+        }
+    if hold_corners:
+        bad = [c for c in hold_corners if c not in ORFS_LIB_CORNERS]
+        if bad:
+            raise FlowError(f"--hold-corners: unknown ORFS corner(s) {bad}; known {sorted(ORFS_LIB_CORNERS)}")
+        out["hold_corners"] = list(hold_corners)
+        out["hold_corners_basis"] = (
+            "ORFS CORNERS: every listed corner's liberty is read as its own "
+            "scene, so repair_timing fixes setup AND hold at each of them (ASAP7: "
+            "TC = TT 0.70 V 25 C, BC = FF 0.77 V 0 C, WC = SS 0.63 V 100 C); the "
+            "platform's multi-bit flop views stay the primary corner's"
+        )
+    if hold_margin_ns is not None:
+        # (the slew-margin wording rides with the hold margin, as it always has)
         out["slew_margin_basis"] = (
             "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and "
             "after global routing: the repair targets (100 - margin)% of each pin's "
@@ -1879,9 +1923,29 @@ def orfs_config_lines(
         # to hold.  The later line wins in an ORFS config, so this overrides the
         # HOLD_SLACK_MARGIN = 0 above only when a margin was asked for, and every
         # record without one keeps a byte-identical config.mk.
+        #
+        # UNITS: repair_timing -hold_margin is in the user time unit, which is
+        # the liberty's -- PICOSECONDS on asap7.  Until 2026-09-26 the ns value
+        # was written as is, so every asap7 record with --hold-margin-ns 0.02
+        # (the G2 cluster's "20 ps", hold_margin_locus.json) asked for 0.02 ps:
+        # that is why its margin "did not move" the violation.  The library-unit
+        # value is now recorded and written (identical on sky130, whose unit is ns).
+        lib_units = constraints.get("hold_margin_library_units", constraints["hold_margin_ns"])
         config.append(
-            f"export HOLD_SLACK_MARGIN = {constraints['hold_margin_ns']:g}"
+            f"export HOLD_SLACK_MARGIN = {lib_units:g}"
         )
+    if constraints and constraints.get("clock_gating"):
+        config.append("export INFER_CLKGATES = 1")
+        config.append(
+            f"export POS_CLKGATE_AND_PORTS = {constraints['clock_gating']['cell']} ENA:CLK:GCLK "
+            f"-tie_lo SE -min_net_size {constraints['clock_gating']['min_flops_per_gate']}"
+        )
+    if constraints and constraints.get("hold_corners"):
+        # the first corner is the primary one the rest of the flow (CORNER) names
+        corners = constraints["hold_corners"]
+        config.append("export CORNERS = " + " ".join(corners))
+        for c in corners:
+            config.append(f"export {c}_LIB_FILES = $({ORFS_LIB_CORNERS[c]})")
     config.extend(memory_macro_config_lines(memory_macros))
     config.extend(floorplan_extra_lines(floorplan))
     return config
@@ -1968,6 +2032,7 @@ def run_pnr(
     dft: dict[str, Any] | None = None,
     corner: dict[str, Any] | None = None,
     nickname_tag: str | None = None,
+    stop_after: str = "finish",
 ) -> dict[str, Any]:
     pnr = view["pnr"]
     platform_name = pnr["platform"]
@@ -2054,10 +2119,55 @@ def run_pnr(
     # transcendental -- was killed at exactly 21,600 s while in GLOBAL ROUTE, stage
     # five of six, and reported as an error.  Worse, the container outlives the
     # wrapper, so the killed run kept burning cores on a result nobody would read.
-    proc = orfs_make("finish metadata-generate", "orfs_flow.log", flow_timeout_seconds())
-    require_success(proc, "ORFS place-and-route")
     reports_dir = case / "reports" / platform_name / nickname / "base"
     logs_dir = case / "logs" / platform_name / nickname / "base"
+    if stop_after == "cts":
+        # through clock-tree synthesis and its setup/hold repair only; the
+        # record carries that stage's own metrics (ORFS 4_1_cts.json)
+        proc = orfs_make("cts", "orfs_flow.log", flow_timeout_seconds())
+        require_success(proc, "ORFS place-and-route through CTS")
+        cts_json = logs_dir / "4_1_cts.json"
+        if not cts_json.is_file():
+            raise FlowError(f"ORFS produced no CTS metrics at {cts_json}")
+        cts = json.loads(cts_json.read_text(encoding="utf-8"))
+        errors = {k: v for k, v in cts.items() if k.endswith("__flow__errors__count")}
+        if any(int(v) != 0 for v in errors.values()):
+            raise FlowError(f"ORFS reported flow errors: {errors}")
+        fmax = cts.get("cts__timing__fmax")
+        return {
+            "platform": platform_name,
+            "design_nickname": nickname,
+            "stopped_after": "cts",
+            "core_utilization_percent": core_utilization,
+            "synth_memory_max_bits": synth_memory_max_bits(),
+            "place_density": place_density,
+            "clock_period_ns": clock_period_ns,
+            "sdc_clock_period_library_units": period_lib,
+            **({"signal_integrity_constraints": constraints} if constraints else {}),
+            "metrics": {
+                "stage": "cts (placement-estimated parasitics)",
+                "setup_wns_ns": float(cts["cts__timing__setup__ws"]) * time_unit_ns,
+                "hold_wns_ns": float(cts["cts__timing__hold__ws"]) * time_unit_ns,
+                "setup_tns_ns": float(cts["cts__timing__setup__tns"]) * time_unit_ns,
+                "hold_tns_ns": float(cts["cts__timing__hold__tns"]) * time_unit_ns,
+                "setup_violations": cts.get("cts__timing__drv__setup_violation_count"),
+                "hold_violations": cts.get("cts__timing__drv__hold_violation_count"),
+                "fmax_mhz": float(fmax) / 1e6 if fmax is not None else None,
+                "fmax_hz": float(fmax) if fmax is not None else None,
+                "hold_buffers": cts.get("cts__design__instance__count__hold_buffer"),
+                "setup_buffers": cts.get("cts__design__instance__count__setup_buffer"),
+                "instance_count": cts.get("cts__design__instance__count"),
+                "instance_area_um2": cts.get("cts__design__instance__area"),
+                "clock_skew_setup_ps": cts.get("cts__clock__skew__setup"),
+                "clock_skew_hold_ps": cts.get("cts__clock__skew__hold"),
+                "vectorless_power_total_w": cts.get("cts__power__total"),
+                "orfs_cts_metrics": cts,
+            },
+            "toolchain": orfs_identity(),
+            "platform_file_sha256": platform_file_hashes(platform_name),
+        }
+    proc = orfs_make("finish metadata-generate", "orfs_flow.log", flow_timeout_seconds())
+    require_success(proc, "ORFS place-and-route")
     metadata_path = reports_dir / "metadata.json"
     if not metadata_path.is_file():
         raise FlowError(f"ORFS produced no metadata.json at {metadata_path}")
@@ -2229,6 +2339,17 @@ def evaluate_verdict(record: dict[str, Any]) -> dict[str, Any]:
         )}
         signal_ok = all(value == 0 for value in signal_checks.values())
         clean_ok = drc == 0 and ant_nets == 0 and ant_pins == 0 and signal_ok
+        if pnr.get("stopped_after") == "cts":
+            # a route stopped after CTS has no routed checks to be clean in
+            checks.append({
+                "stage": "place_and_route",
+                "scope": "post-CTS, placement-estimated parasitics (stopped after cts)",
+                "met": bool(timing_ok), "timing_met": bool(timing_ok),
+                "setup_wns_ns": setup_wns, "setup_violations": setup_viol,
+                "hold_wns_ns": hold_wns, "hold_violations": hold_viol,
+            })
+            pnr = None
+    if pnr:
         checks.append(
             {
                 "stage": "place_and_route",
@@ -2619,6 +2740,37 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--clock-gating",
+        action="store_true",
+        help=(
+            "ORFS INFER_CLKGATES: yosys turns every group of >= 8 flops sharing an "
+            "enable into an integrated clock gate (ASAP7 ICGx1) plus plain flops; "
+            "recorded under signal_integrity_constraints.clock_gating.  ICGs the RTL "
+            "instantiates (ot_hdc_cg) are kept with or without it"
+        ),
+    )
+    parser.add_argument(
+        "--hold-corners",
+        default=None,
+        metavar="C1,C2",
+        help=(
+            "ORFS CORNERS: repair setup and hold at each listed ORFS corner (asap7: "
+            "TC, BC, WC), e.g. TC,BC to fix hold at the fast corner too; the first "
+            "is the primary.  Combine with --hold-margin-ns for an on-chip-variation "
+            "budget.  Recorded under signal_integrity_constraints.hold_corners"
+        ),
+    )
+    parser.add_argument(
+        "--pnr-stop-after",
+        default="finish",
+        choices=["finish", "cts"],
+        help=(
+            "cts: run ORFS through clock-tree synthesis (with its setup/hold repair) "
+            "and record the CTS-stage metrics, for a block whose global route does "
+            "not finish in the flow limit; recorded as place_and_route.stopped_after"
+        ),
+    )
+    parser.add_argument(
         "--memory-macro",
         action="append",
         default=[],
@@ -2884,7 +3036,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         constraints = resolve_signal_integrity_constraints(
             view, corner, args.max_transition_ns, args.max_fanout,
-            args.slew_margin_percent, args.hold_margin_ns
+            args.slew_margin_percent, args.hold_margin_ns,
+            clock_gating=args.clock_gating,
+            hold_corners=[c.strip() for c in args.hold_corners.split(",")] if args.hold_corners else None,
         )
     except FlowError as exc:
         print(str(exc), file=sys.stderr)
@@ -3067,6 +3221,7 @@ def main(argv: list[str] | None = None) -> int:
                 dft,
                 corner,
                 nickname_tag=args.nickname_tag,
+                stop_after=args.pnr_stop_after,
             )
             if args.cts_cluster_size is not None:
                 record["place_and_route"]["clock_tree_config"] = {

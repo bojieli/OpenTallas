@@ -1,0 +1,1416 @@
+{
+ "schema": "opentallas.arch-budget-qwen3.v1",
+ "tool": "tools/arch_budget_qwen3.py",
+ "model": "Qwen3-8B",
+ "shape": {
+  "H": 4096,
+  "L": 36,
+  "NH": 32,
+  "KV": 8,
+  "HD": 128,
+  "FF": 12288,
+  "V": 151936
+ },
+ "clock_hz": 1098640000.0,
+ "clock_basis": "slowest routed Qwen3 token-path unit (ot_hdc_matvec, ot_hdc_stream; ASAP7 TT)",
+ "reticle": {
+  "die_mm2": 815.0,
+  "node": "N6",
+  "rom_mm2": 261.98,
+  "compute_mm2": 146.7,
+  "sram_mm2": 259.62,
+  "interconnect_mm2": 65.2,
+  "overhead_mm2": 81.5,
+  "weight_bits": 3.5,
+  "source": "opentallas.roofline.taalas_hc1_anchor on configs/models/qwen3-8b.json (tools/decode_critical_path.py qwen3_8b_single_reticle)"
+ },
+ "rom_design": {
+  "groups": 8192,
+  "lanes": 131072,
+  "mac_um2_asap7": 1071.8171875
+ },
+ "hbm_design": {
+  "stacks": 6,
+  "stack_bytes_s": 1000000000000.0,
+  "efficiency": 0.9,
+  "phy_mm2_per_stack": 10.0,
+  "basis": "HBM3E 1.0 TB/s a stack (B200: 8 TB/s over 8 stacks), 0.90 sustained (configs/hardware/technology.json efficiencies.hbm_bandwidth); 6 stacks = the beachfront of one reticle at 60% edge use and 12 mm a stack (H200 also carries 6)"
+ },
+ "workload": {
+  "2048": {
+   "context": 2048,
+   "macs": {
+    "qkv": 905969664,
+    "o": 603979776,
+    "gate_up": 3623878656,
+    "down": 1811939328,
+    "lm_head": 622329856,
+    "attn_scores": 301989888,
+    "attn_pv": 301989888
+   },
+   "weight_macs": 7568097280,
+   "attention_macs": 603979776,
+   "bytes": {
+    "weights_rom_format": 3311042560.0,
+    "weights_bf16": 15136194560,
+    "weights_fp8": 7568097280,
+    "kv_read": 301989888,
+    "kv_write": 147456,
+    "kv_capacity": 301989888
+   },
+   "elementwise": {
+    "embedding_copy": 4096,
+    "norm_scale": 299008,
+    "qk_norm": 368640,
+    "rope": 184320,
+    "kv_write": 73728,
+    "softmax": 7077888,
+    "silu_mul": 442368,
+    "residual": 294912,
+    "rsqrt_recip": 2665
+   },
+   "elementwise_total": 8747625,
+   "reductions": {
+    "sum_of_squares_H": [
+     73,
+     4096
+    ],
+    "qk_norm_HD": [
+     1440,
+     128
+    ],
+    "softmax_max_T": [
+     1152,
+     2048
+    ],
+    "softmax_sum_T": [
+     1152,
+     2048
+    ],
+    "argmax_V": [
+     1,
+     151936
+    ]
+   }
+  },
+  "8192": {
+   "context": 8192,
+   "macs": {
+    "qkv": 905969664,
+    "o": 603979776,
+    "gate_up": 3623878656,
+    "down": 1811939328,
+    "lm_head": 622329856,
+    "attn_scores": 1207959552,
+    "attn_pv": 1207959552
+   },
+   "weight_macs": 7568097280,
+   "attention_macs": 2415919104,
+   "bytes": {
+    "weights_rom_format": 3311042560.0,
+    "weights_bf16": 15136194560,
+    "weights_fp8": 7568097280,
+    "kv_read": 1207959552,
+    "kv_write": 147456,
+    "kv_capacity": 1207959552
+   },
+   "elementwise": {
+    "embedding_copy": 4096,
+    "norm_scale": 299008,
+    "qk_norm": 368640,
+    "rope": 184320,
+    "kv_write": 73728,
+    "softmax": 28311552,
+    "silu_mul": 442368,
+    "residual": 294912,
+    "rsqrt_recip": 2665
+   },
+   "elementwise_total": 29981289,
+   "reductions": {
+    "sum_of_squares_H": [
+     73,
+     4096
+    ],
+    "qk_norm_HD": [
+     1440,
+     128
+    ],
+    "softmax_max_T": [
+     1152,
+     8192
+    ],
+    "softmax_sum_T": [
+     1152,
+     8192
+    ],
+    "argmax_V": [
+     1,
+     151936
+    ]
+   }
+  }
+ },
+ "roofline_rom": {
+  "2048": {
+   "weights_mac": {
+    "cycles": 57740,
+    "us": 52.556
+   },
+   "attention_mac": {
+    "cycles": 4608,
+    "us": 4.194
+   },
+   "kv_sram_read": {
+    "cycles": 1152,
+    "us": 1.049
+   },
+   "elementwise": {
+    "cycles": 17085,
+    "us": 15.551
+   }
+  },
+  "8192": {
+   "weights_mac": {
+    "cycles": 57740,
+    "us": 52.556
+   },
+   "attention_mac": {
+    "cycles": 18432,
+    "us": 16.777
+   },
+   "kv_sram_read": {
+    "cycles": 4608,
+    "us": 4.194
+   },
+   "elementwise": {
+    "cycles": 58557,
+    "us": 53.3
+   }
+  }
+ },
+ "hbm_comparator": {
+  "2048": {
+   "bf16": {
+    "weight_format": "bf16",
+    "bytes_per_token": 15438184448,
+    "sustained_bytes_s": 5400000000000.0,
+    "token_s": 0.002858923045925926,
+    "tokens_s": 349.8,
+    "mac_rate_needed": 2647184677035.93,
+    "lanes_needed_at_clock": 2410,
+    "hbm_bytes_per_cycle": 4915
+   },
+   "fp8": {
+    "weight_format": "fp8",
+    "bytes_per_token": 7870087168,
+    "sustained_bytes_s": 5400000000000.0,
+    "token_s": 0.0014574235496296296,
+    "tokens_s": 686.1,
+    "mac_rate_needed": 5192791952568.117,
+    "lanes_needed_at_clock": 4727,
+    "hbm_bytes_per_cycle": 4915
+   },
+   "rom_format_3.5b": {
+    "weight_format": "rom_format_3.5b",
+    "bytes_per_token": 3613032448.0,
+    "sustained_bytes_s": 5400000000000.0,
+    "token_s": 0.000669080082962963,
+    "tokens_s": 1494.6,
+    "mac_rate_needed": 11311197975712.174,
+    "lanes_needed_at_clock": 10296,
+    "hbm_bytes_per_cycle": 4915
+   }
+  },
+  "8192": {
+   "bf16": {
+    "weight_format": "bf16",
+    "bytes_per_token": 16344154112,
+    "sustained_bytes_s": 5400000000000.0,
+    "token_s": 0.003026695205925926,
+    "tokens_s": 330.4,
+    "mac_rate_needed": 2500449092192.2114,
+    "lanes_needed_at_clock": 2276,
+    "hbm_bytes_per_cycle": 4915
+   },
+   "fp8": {
+    "weight_format": "fp8",
+    "bytes_per_token": 8776056832,
+    "sustained_bytes_s": 5400000000000.0,
+    "token_s": 0.0016251957096296296,
+    "tokens_s": 615.3,
+    "mac_rate_needed": 4656729792699.684,
+    "lanes_needed_at_clock": 4239,
+    "hbm_bytes_per_cycle": 4915
+   },
+   "rom_format_3.5b": {
+    "weight_format": "rom_format_3.5b",
+    "bytes_per_token": 4519002112.0,
+    "sustained_bytes_s": 5400000000000.0,
+    "token_s": 0.0008368522429629629,
+    "tokens_s": 1195.0,
+    "mac_rate_needed": 9043528703710.418,
+    "lanes_needed_at_clock": 8232,
+    "hbm_bytes_per_cycle": 4915
+   }
+  }
+ },
+ "budget": {
+  "weight_sweep_ideal_cycles": 57740,
+  "weight_sweep_tiled_cycles": 57744,
+  "weight_tiling_efficiency": 0.9999,
+  "target_cycles": 104982,
+  "target_tokens_s": 10465.1,
+  "ceiling_tokens_s": 19027.4,
+  "shares": {
+   "weights": 0.55,
+   "attention": 0.05,
+   "elementwise": 0.07,
+   "latency": 0.3,
+   "control": 0.03
+  },
+  "cycles": {
+   "weights": 57740,
+   "attention": 5249,
+   "elementwise": 7349,
+   "latency": 31495,
+   "control": 3149
+  }
+ },
+ "requirements": {
+  "mac_lanes": {
+   "requirement": 131072,
+   "basis": "the reticle's compute share (weights bind)"
+  },
+  "weight_tiling_efficiency": {
+   "requirement": ">= 0.90 of the ideal sweep (split/tile quantisation)"
+  },
+  "rom_read_bytes_per_cycle": {
+   "requirement": 57344,
+   "basis": "one weight per lane per cycle at the ROM format"
+  },
+  "attention_lanes_min": {
+   "requirement": 115066,
+   "basis": "6.040e+08 MACs in 5249 cycles"
+  },
+  "kv_read_bytes_per_cycle_min": {
+   "requirement": 57533,
+   "basis": "each K/V element once per token (GQA-shared) within the attention share; the RTL's per-group KV port gives groups x 32 B"
+  },
+  "kv_sram_banks_min": {
+   "requirement": 1798,
+   "basis": "16-lane BF16 words per bank per cycle"
+  },
+  "kv_capacity_bytes": {
+   "requirement": 301989888,
+   "sram_mm2": 100.4,
+   "reticle_sram_mm2": 259.62
+  },
+  "stream_unit_elements_per_cycle": {
+   "requirement": 512,
+   "all_elements_unchained": 568.3,
+   "reference_graph_elements_per_cycle": 1190.3,
+   "basis": "the spec chain's exposed (unchained) elementwise cycles within 7349 at 2k (scaled with the context at 8k); all 4.176e+06 element-ops of the one-pass softmax graph unchained would need 568/cycle, and the reference graph's three softmax passes (8.748e+06) 1190/cycle"
+  },
+  "reduction_tree": {
+   "requirement": "lane partials + a 9-level cross-lane pairwise tree",
+   "basis": "a reduction of n elements on W lanes: n/W cycles + the tree"
+  },
+  "exposed_latency_per_dependent_stage_max": {
+   "requirement": 44,
+   "stages_per_layer": 20,
+   "basis": "31495 cycles over 36 layers x 20 dependent stages: tile-granular chaining, never a full-unit drain"
+  },
+  "instruction_issue": {
+   "requirement": "<= 3149 control cycles a token exposed: issue back-to-back (prefetched decode), the next op queued while the unit runs",
+   "per_instruction_max": 0.69
+  },
+  "argmax": {
+   "requirement": "streaming compare tree over each result word, no pass over the logits",
+   "basis": "151,936 logits emerge 128 a slot from the lm_head sweep"
+  },
+  "vector_buffer": {
+   "requirement_elements": 65536,
+   "basis": "gate/up outputs (2 x FF) and the score/probability rows (NH x T)"
+  }
+ },
+ "dependency_chain": {
+  "2048/as_built_units": {
+   "context": 2048,
+   "su_width": 1,
+   "attention_mapping": "as_built",
+   "chained_elementwise": false,
+   "layer_cycles": 313546,
+   "token_cycles": 11292408,
+   "components": {
+    "weights": 57744,
+    "attention": 2506752,
+    "elementwise": 8665704,
+    "latency": 58428,
+    "control": 3780
+   },
+   "tokens_s": 97.3,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 4096,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 192,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 5120,
+     "exposed_latency": 61
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 40,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 5120,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 5120,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 4096,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "softmax.max",
+     "kind": "red",
+     "throughput": 65536,
+     "exposed_latency": 61
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 65536,
+     "exposed_latency": 153
+    },
+    {
+     "stage": "softmax.recip",
+     "kind": "sfu",
+     "throughput": 32,
+     "exposed_latency": 75
+    },
+    {
+     "stage": "softmax.scale",
+     "kind": "ew",
+     "throughput": 65536,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 65536,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4096,
+     "exposed_latency": 61
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 4096,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 768,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 12288,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 384,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4096,
+     "exposed_latency": 61
+    }
+   ]
+  },
+  "2048/spec_widths_reference_graph": {
+   "context": 2048,
+   "su_width": 512,
+   "attention_mapping": "ksplit",
+   "chained_elementwise": true,
+   "layer_cycles": 3884,
+   "token_cycles": 144576,
+   "components": {
+    "weights": 57744,
+    "attention": 4608,
+    "elementwise": 10296,
+    "latency": 68148,
+    "control": 3780
+   },
+   "tokens_s": 7599.0,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 192,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 10,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 64,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "softmax.max",
+     "kind": "red",
+     "throughput": 128,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 128,
+     "exposed_latency": 207
+    },
+    {
+     "stage": "softmax.recip",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 75
+    },
+    {
+     "stage": "softmax.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 64,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 8,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 768,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 384,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 8,
+     "exposed_latency": 115
+    }
+   ]
+  },
+  "2048/spec": {
+   "context": 2048,
+   "su_width": 512,
+   "attention_mapping": "ksplit",
+   "chained_elementwise": true,
+   "layer_cycles": 3514,
+   "token_cycles": 131256,
+   "components": {
+    "weights": 57744,
+    "attention": 4608,
+    "elementwise": 5652,
+    "latency": 62532,
+    "control": 720
+   },
+   "tokens_s": 8370.2,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 192,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 10,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 64,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "scores.max",
+     "kind": "mvred",
+     "throughput": 0,
+     "exposed_latency": 34
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 128,
+     "exposed_latency": 207
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 64,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "pv.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 8,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 768,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 384,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 8,
+     "exposed_latency": 115
+    }
+   ]
+  },
+  "8192/as_built_units": {
+   "context": 8192,
+   "su_width": 1,
+   "attention_mapping": "as_built",
+   "chained_elementwise": false,
+   "layer_cycles": 1099978,
+   "token_cycles": 39603960,
+   "components": {
+    "weights": 57744,
+    "attention": 9584640,
+    "elementwise": 29899368,
+    "latency": 58428,
+    "control": 3780
+   },
+   "tokens_s": 27.7,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 4096,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 192,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 5120,
+     "exposed_latency": 61
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 40,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 5120,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 5120,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 4096,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "softmax.max",
+     "kind": "red",
+     "throughput": 262144,
+     "exposed_latency": 61
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 262144,
+     "exposed_latency": 153
+    },
+    {
+     "stage": "softmax.recip",
+     "kind": "sfu",
+     "throughput": 32,
+     "exposed_latency": 75
+    },
+    {
+     "stage": "softmax.scale",
+     "kind": "ew",
+     "throughput": 262144,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 262144,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4096,
+     "exposed_latency": 61
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 4096,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 768,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 12288,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 384,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 4096,
+     "exposed_latency": 61
+    }
+   ]
+  },
+  "8192/spec_widths_reference_graph": {
+   "context": 8192,
+   "su_width": 512,
+   "attention_mapping": "ksplit",
+   "chained_elementwise": true,
+   "layer_cycles": 5036,
+   "token_cycles": 186048,
+   "components": {
+    "weights": 57744,
+    "attention": 18432,
+    "elementwise": 37944,
+    "latency": 68148,
+    "control": 3780
+   },
+   "tokens_s": 5905.1,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 192,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 10,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 256,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "softmax.max",
+     "kind": "red",
+     "throughput": 512,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 512,
+     "exposed_latency": 207
+    },
+    {
+     "stage": "softmax.recip",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 75
+    },
+    {
+     "stage": "softmax.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 256,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 8,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 768,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 384,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 8,
+     "exposed_latency": 115
+    }
+   ]
+  },
+  "8192/spec": {
+   "context": 8192,
+   "su_width": 512,
+   "attention_mapping": "ksplit",
+   "chained_elementwise": true,
+   "layer_cycles": 4282,
+   "token_cycles": 158904,
+   "components": {
+    "weights": 57744,
+    "attention": 18432,
+    "elementwise": 19476,
+    "latency": 62532,
+    "control": 720
+   },
+   "tokens_s": 6913.9,
+   "stages": [
+    {
+     "stage": "attn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "attn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "qkv",
+     "kind": "mv",
+     "throughput": 192,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "qk_norm.sumsq",
+     "kind": "red",
+     "throughput": 10,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "qk_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "qk_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "rope",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "scores",
+     "kind": "attn",
+     "throughput": 256,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "scores.max",
+     "kind": "mvred",
+     "throughput": 0,
+     "exposed_latency": 34
+    },
+    {
+     "stage": "softmax.exp_sum",
+     "kind": "red",
+     "throughput": 512,
+     "exposed_latency": 207
+    },
+    {
+     "stage": "pv",
+     "kind": "attn",
+     "throughput": 256,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "pv.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "o",
+     "kind": "mv",
+     "throughput": 128,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 8,
+     "exposed_latency": 115
+    },
+    {
+     "stage": "ffn_norm.rsqrt",
+     "kind": "sfu",
+     "throughput": 1,
+     "exposed_latency": 90
+    },
+    {
+     "stage": "ffn_norm.scale",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 29
+    },
+    {
+     "stage": "gate_up",
+     "kind": "mv",
+     "throughput": 768,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "silu_mul",
+     "kind": "ew",
+     "throughput": 0,
+     "exposed_latency": 172
+    },
+    {
+     "stage": "down",
+     "kind": "mv",
+     "throughput": 384,
+     "exposed_latency": 94
+    },
+    {
+     "stage": "residual+sumsq",
+     "kind": "red",
+     "throughput": 8,
+     "exposed_latency": 115
+    }
+   ]
+  }
+ },
+ "as_built_calibrated": {
+  "2048": {
+   "context": 2048,
+   "groups": 7680,
+   "su_width": 1,
+   "max_split": 8,
+   "instructions": 4540,
+   "cycles": 14499553,
+   "unit_busy": {
+    "stream": 8710761,
+    "weights": 884736,
+    "attn_scores": 147456,
+    "attn_pv": 4718592,
+    "lm_head": 8192
+   },
+   "sequencer_stalls": {
+    "barrier_su": 7795326,
+    "chase": 269102,
+    "barrier_me": 5667732,
+    "unit_busy": 736416
+   },
+   "seq_gap_total": 22700
+  },
+  "8192": {
+   "context": 8192,
+   "groups": 7680,
+   "su_width": 1,
+   "max_split": 8,
+   "instructions": 4540,
+   "cycles": 49888993,
+   "unit_busy": {
+    "stream": 29944425,
+    "weights": 884736,
+    "attn_scores": 147456,
+    "attn_pv": 18874368,
+    "lm_head": 8192
+   },
+   "sequencer_stalls": {
+    "barrier_su": 29028990,
+    "chase": 269102,
+    "barrier_me": 19823508,
+    "unit_busy": 736416
+   },
+   "seq_gap_total": 22700
+  }
+ },
+ "as_built_split_uncapped": {
+  "context": 2048,
+  "groups": 7680,
+  "su_width": 1,
+  "max_split": null,
+  "instructions": 4540,
+  "cycles": 13714305,
+  "unit_busy": {
+   "stream": 8710761,
+   "weights": 61056,
+   "attn_scores": 147456,
+   "attn_pv": 4718592,
+   "lm_head": 5120
+  },
+  "sequencer_stalls": {
+   "barrier_su": 7795326,
+   "chase": 310606,
+   "barrier_me": 4844052,
+   "unit_busy": 736416
+  },
+  "seq_gap_total": 22700
+ },
+ "gap": [
+  {
+   "block": "stream unit",
+   "requirement": "512 elements/cycle",
+   "as_built": "1 element/cycle",
+   "cycles_as_built_2k": 8710761,
+   "status": "MISS"
+  },
+  {
+   "block": "attention P.V",
+   "requirement": "K-split over positions across every free group",
+   "as_built": "head_dim on lanes (8 of 7,680 groups), positions in order: T x 8 cycles an op",
+   "cycles_as_built_2k": 4718592,
+   "status": "MISS"
+  },
+  {
+   "block": "attention Q.K",
+   "requirement": "K-split over head_dim across free groups",
+   "as_built": "positions on lanes (128 groups at 2k), head_dim in order: 1,024 cycles an op",
+   "cycles_as_built_2k": 147456,
+   "status": "MISS"
+  },
+  {
+   "block": "dependency handling",
+   "requirement": "<= 44 cycles exposed a stage",
+   "as_built": "full-unit barrier drains (both units idle) on every region conflict",
+   "cycles_as_built_2k": 13463058,
+   "status": "MISS"
+  },
+  {
+   "block": "sequencer issue",
+   "requirement": "<= 3149 control cycles a token exposed: issue back-to-back (prefetched decode), the next op queued while the unit runs",
+   "as_built": "4540 instructions at seq_gap 5",
+   "cycles_as_built_2k": 22700,
+   "status": "MISS"
+  },
+  {
+   "block": "matrix engine (weights)",
+   "requirement": ">= 0.90 of the ideal sweep (split/tile quantisation); spec: 8192 groups (a power of two) and a K-split field up to 2^13",
+   "as_built": "2-bit me_split (S <= 8) on 7,680 groups: 0.07 of ideal",
+   "cycles_as_built_2k": 892928,
+   "status": "MISS"
+  },
+  {
+   "block": "KV SRAM",
+   "requirement": ">= 57533 B/cycle, 100.4 mm2 at 2k",
+   "as_built": "one 16-lane word per group per cycle (up to 7,680 x 32 B)",
+   "cycles_as_built_2k": null,
+   "status": "MEETS (ports) / capacity fits at 2k only"
+  }
+ ],
+ "hbm_requirements": {
+  "stacks": 6,
+  "sustained_efficiency_min": 0.9,
+  "address_map": "refresh-aware: pseudo-channels interleaved at the stream's word size and refresh phases staggered, so no weight op meets the same refresh on every channel (the npc=8 refresh alignment outlier of tools/rtl_hdc_hbm_campaign.py)",
+  "efficiency_measured_with_refresh": true,
+  "controller_queue_beats_per_pseudo_channel_min": 512,
+  "controller_queue_basis": "bandwidth x tRFC (350 ns) = ~350 beats; a refreshing channel's full queue stalled the in-order stream for ~tRFC (V4.1 HBM vehicle: up to 15% of a token with the 64-beat queue; 256 beats removes most of it)",
+  "refresh_policy": "stated per design: REFab (as modelled, JESD238 tRFC 350 ns) or REFpb; a refreshing channel must not stall requests to other channels (no head-of-line blocking)",
+  "longest_weight_free_interval_cycles": 1756,
+  "prefetch_buffer_bytes_min": 8631035,
+  "hbm_bytes_per_cycle": 4915,
+  "per_context": {
+   "2048": {
+    "bf16": {
+     "tokens_s_target": 332.3,
+     "tokens_s_bound": 349.8,
+     "mac_lanes_min": 4820
+    },
+    "fp8": {
+     "tokens_s_target": 651.8,
+     "tokens_s_bound": 686.1,
+     "mac_lanes_min": 9454
+    },
+    "rom_format_3.5b": {
+     "tokens_s_target": 1419.9,
+     "tokens_s_bound": 1494.6,
+     "mac_lanes_min": 20592
+    }
+   },
+   "8192": {
+    "bf16": {
+     "tokens_s_target": 313.9,
+     "tokens_s_bound": 330.4,
+     "mac_lanes_min": 4552
+    },
+    "fp8": {
+     "tokens_s_target": 584.5,
+     "tokens_s_bound": 615.3,
+     "mac_lanes_min": 8478
+    },
+    "rom_format_3.5b": {
+     "tokens_s_target": 1135.2,
+     "tokens_s_bound": 1195.0,
+     "mac_lanes_min": 16464
+    }
+   }
+  },
+  "note": "95% of the byte bound: the stream stalls only at the token start (the first weights' latency)"
+ },
+ "dflash": {
+  "slots": 16,
+  "tau_central": 5.18,
+  "drafter_parameters": 1048626432,
+  "macs": {
+   "draft": 24769986560,
+   "verify": 121089556480,
+   "context": 2013265920,
+   "attention_verify": 9663676416,
+   "attention_draft": 1352663040,
+   "step": 158889148416
+  },
+  "rom": {
+   "step_mac_floor_cycles": 1212228,
+   "plain_token_cycles_spec": 131256,
+   "breakeven_tau": 9.24,
+   "tokens_s_at_tau_central": 4694.6,
+   "plain_tokens_s_spec": 8370.2,
+   "drafter_rom_mm2_3p5b": 33.5,
+   "spare_sram_mm2_after_kv_2k_and_drafter": 125.7,
+   "added_lane_copies_that_fit": 0,
+   "tokens_s_at_tau_central_with_added_copies": null,
+   "verdict": "the ROM reticle is MAC-bound: a 16-slot step needs 16x a plain token's MACs, so at the spec's lanes speculation pays only while the plain token stays above breakeven_tau x its MAC floor; lane copies (m) taken from spare SRAM are the lever, a first-class area trade against the KV/SRAM budget"
+  },
+  "hbm": {
+   "bf16": {
+    "step_s": 0.0032550704355555557,
+    "plain_token_s": 0.002858923045925926,
+    "tokens_s_plain": 349.8,
+    "tokens_s_at_tau_central": 1591.4,
+    "speedup_at_tau_central": 4.55,
+    "mac_lanes_min": 44431
+   },
+   "fp8": {
+    "step_s": 0.0016593808592592592,
+    "plain_token_s": 0.0014574235496296296,
+    "tokens_s_plain": 686.1,
+    "tokens_s_at_tau_central": 3121.6,
+    "speedup_at_tau_central": 4.55,
+    "mac_lanes_min": 87156
+   },
+   "rom_format_3.5b": {
+    "step_s": 0.0007618054725925926,
+    "plain_token_s": 0.000669080082962963,
+    "tokens_s_plain": 1494.6,
+    "tokens_s_at_tau_central": 6799.6,
+    "speedup_at_tau_central": 4.55,
+    "mac_lanes_min": 189844
+   }
+  },
+  "requirements": [
+   "lane multiplier m (one weight word feeds m slots); HBM m = 16",
+   "KV-shared verify attention: one K/V read serves 16 slots, the causal mask per slot",
+   "slot-parallel non-weight work: one op over all 16 slots (the stream unit's lanes take slots), never 16 serial ops",
+   "16 DYN banks (token, pos + j); CTL TOKX/AMAX/DYN/ACCEPT/END; the shared accept unit",
+   "KV ring >= 17 entries; rollback is a commit pointer"
+  ]
+ }
+}

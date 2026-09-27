@@ -10,16 +10,16 @@ bandwidth and compute roof are derived from it.
 ## What the model says
 
 1. **The ROM path has a hard per-token ceiling that is a technology constant, not a design choice.** The full-array sweep time is the ROM capacity density divided by its read-bandwidth density, so it does not depend on model size, batch, or expert coverage: 34.5 us, or 29,015 tok/s per user. Under this derivation both densities scale with the same published bitcell-area ratio, so that ceiling is the same at every node: process scaling buys a ROM design capacity, not per-token speed.
-2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 14x (ROM-N6-native-SRAMKV-array-hw-pipeline-x187, 187 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 5 devices. On the GPU side the correction reaches 16x (a100_sxm_80gb-x672-pipeline, 672 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 56 devices. Both validation gates are single-slot machines and are unchanged to the digit.
-3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. DeepSeek-V4-Pro-0813 takes 4 x 46,225 mm2 (184,900 mm2, wafer, KV in HBM) at 2,051 tok/s per user and 11 tok/s per 1,000 mm2, holding 27,932 sessions, against 224 copies of one unified HBM die at the same silicon: 12.1x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
-4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is DeepSeek-V4-Pro-0813 on 554,700 mm2 of ROM silicon at 2,258 tok/s per user against 555,072 mm2 of a100_sxm_80gb-x672-hybrid at 166 tok/s: **13.6x**, ROM binding on `layer_fixed_latency` and the GPU on `weight_read`. It holds 83,798 resident sessions against the GPU cluster's 535,594. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
-5. **A token cannot cross more stage boundaries than the model has layers, and charging it as though it could was most of the reported advantage at scale.** At 554,700 mm2 on DeepSeek-V4-Pro-0813 at batch 1, the iso-area GPU cluster is 672 devices. Cut as one serial pipeline that is 84 stages and 1,962 us of link latency per token; but the model has 61 layers, so at most 61 of those boundaries can exist and the rest of the silicon is replication, which adds bandwidth and no serial event: 1,902 us. The iso-area per-user ratio at that point falls from 13.7x to 13.6x. The same cap is applied to the ROM side, where it is worth more still because a twelve-wafer machine spans 681 reticle fields.
-6. **Letting the GPU choose its own parallelism is worth up to 4.21x to it.** At 178,485 mm2 on DeepSeek-V4-Pro-0813 the pipeline-only GPU delivers 40.42 tok/s and the same silicon running hybrid delivers 170 tok/s.
-7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 4096 the aggregate ratio at equal area spans 0.00x (DeepSeek-V4-Pro-0813, ROM binding on `link_latency`) to 18.21x (DeepSeek-V4-Pro-0813, ROM binding on `compute`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
-8. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** DeepSeek-V4-Pro-0813 engages 100.0% of its ROM array at batch 1 and 100.0% at batch 4096, while the weight-read time is identical at both. What the machine delivers rises from 63 to 12,961 tok/s, and its rate with every slot occupied from 12,785 to 12,961. The second rises far less than the first because the batch-1 figure is already a full-machine number -- this design has 202 slots -- so most of what batching adds there is coverage rather than occupancy. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
-9. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 1,823 us over NVLink, capping per-user decode at 548 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 262.3 us and cap it at 3,812 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least nanx cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
+2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 14x (ROM-N6-native-SRAMKV-array-hw-pipeline-x187, 187 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 5 devices. On the GPU side the correction reaches 31x (a100_sxm_80gb-x672-pipeline, 672 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 56 devices. Both validation gates are single-slot machines and are unchanged to the digit.
+3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. DeepSeek-V4-Pro-0813 takes 4 x 46,225 mm2 (184,900 mm2, wafer, KV in HBM) at 2,048 tok/s per user and 11 tok/s per 1,000 mm2, holding 27,932 sessions, against 224 copies of one unified HBM die at the same silicon: 10.5x per user. Every model lands in the same class under this rule, which is a result rather than an assumption. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
+4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is DeepSeek-V4-Pro-0813 on 369,800 mm2 of ROM silicon at 2,260 tok/s per user against 370,048 mm2 of a100_sxm_80gb-x448-hybrid at 190 tok/s: **11.9x**, ROM binding on `layer_fixed_latency` and the GPU on `weight_read`. It holds 55,865 resident sessions against the GPU cluster's 353,706. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
+5. **A token cannot cross more stage boundaries than the model has layers, and charging it as though it could was most of the reported advantage at scale.** At 554,700 mm2 on DeepSeek-V4-Pro-0813 at batch 1, the iso-area GPU cluster is 672 devices. Cut as one serial pipeline that is 84 stages and 1,962 us of link latency per token; but the model has 61 layers, so at most 61 of those boundaries can exist and the rest of the silicon is replication, which adds bandwidth and no serial event: 1,902 us. The iso-area per-user ratio at that point falls from 12.0x to 11.9x. The same cap is applied to the ROM side, where it is worth more still because a twelve-wafer machine spans 681 reticle fields.
+6. **Letting the GPU choose its own parallelism is worth up to 4.69x to it.** At 178,485 mm2 on DeepSeek-V4-Pro-0813 the pipeline-only GPU delivers 41.49 tok/s and the same silicon running hybrid delivers 195 tok/s.
+7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 4096 the aggregate ratio at equal area spans 0.00x (DeepSeek-V4-Pro-0813, ROM binding on `link_latency`) to 17.96x (DeepSeek-V4-Pro-0813, ROM binding on `compute`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
+8. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** DeepSeek-V4-Pro-0813 engages 100.0% of its ROM array at batch 1 and 100.0% at batch 4096, while the weight-read time is identical at both. What the machine delivers rises from 63 to 12,957 tok/s, and its rate with every slot occupied from 12,778 to 12,957. The second rises far less than the first because the batch-1 figure is already a full-machine number -- this design has 202 slots -- so most of what batching adds there is coverage rather than occupancy. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
+9. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 1,823 us over NVLink, capping per-user decode at 548 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 291.6 us and cap it at 3,429 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least nanx cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
 10. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 10 of 10 operating points and an array 0; on tokens per second per square millimetre the same points go 0 to the array and 10 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
-11. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 29 of 3614 feasible points.
+11. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 29 of 3494 feasible points.
 12. **The largest open question is not in this model's inputs but in the architecture, and a batch-1 anchor cannot settle its scaling law.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 4096 that costs up to 57.3x of aggregate throughput (DeepSeek-V4-Pro-0813). Their sweep counts coincide at batch 1, but their cell and pre-compute costs make their floorplans different; the current compute-in-ROM anchor reconstruction fails capacity. A batch-1 validation therefore cannot establish either high-batch law.
 13. **A third machine sits between them, and for a sparse model it recovers part of what compute-in-ROM gives up -- less than the mean-region arithmetic used to say.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise, and the sweep waits for the BUSIEST region rather than the average engaged one. The largest gain over a global broadcast is 16.31x, on DeepSeek-V4-Pro-0813 at batch 4096, where the busiest region carries 3.18x the load of the mean engaged one. It is not free ground: per-region still loses to the amortising ROM-plus-MAC machine at 20 of 20 operating points. A dense model has one region, so it gains nothing -- the disjointness is what sparsity buys.
 14. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N6.
@@ -50,97 +50,97 @@ The GPU comparator at each ROM area is N copies of one unified HBM die, N chosen
 
 **Recommended: `ROM-N6-native-HBMKV-wafer-hybrid-x4`** -- 4 x 46,225 mm2 wafers, 184,900 mm2 total, `hybrid`-parallel, KV in HBM, spare silicon to `sram`.
 
-- **2,050.6 tok/s per user** (0.49 ms/token), binding on `layer_fixed_latency`
+- **2,048.3 tok/s per user** (0.49 ms/token), binding on `layer_fixed_latency`
 - **11.1 tok/s per 1,000 mm2** -- the quantity the rule maximises
-- 30,759 tok/s aggregate with every slot full, over 27,932 resident sessions (fill limited by `pipeline_slots`)
-- 12,628 W at 0.068 W/mm2, 5,839.8 mJ/token, thermal scale 1.000
+- 30,724 tok/s aggregate with every slot full, over 27,932 resident sessions (fill limited by `pipeline_slots`)
+- 12,627 W at 0.068 W/mm2, 5,846.4 mJ/token, thermal scale 1.000
 
 **Iso-area, at the area the rule chose.** The comparator is 224 copies of one unified HBM die -- `a100_sxm_80gb-x224-hybrid`, 185,024 mm2, area ratio 0.9993 -- running the `hybrid` topology it chose for itself.
 
 | | ROM | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: |
 | silicon mm2 | 184,900 | 185,024 | 0.9993 |
-| user tok/s | 2,050.6 | 170.1 | 12.05x |
-| aggregate tok/s | 30,759 | 4,763 | 3.40x |
+| user tok/s | 2,048.3 | 194.6 | 10.52x |
+| aggregate tok/s | 30,724 | 5,449 | 3.31x |
 | resident sessions | 27,932 | 171,819 | -- |
-| J/token | 5.8398 | 194.3112 | 33.3x |
+| J/token | 5.8464 | 170.3619 | 29.1x |
 
 The areas match to within 2%, so no granularity correction is needed on this row.
 
 **Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 27,932 sessions against one that holds 171,819 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
 
-The GPU's own best machine at **any** area is `a100_sxm_80gb-x56-hybrid` at 46,256 mm2 and 172.8 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
+The GPU's own best machine at **any** area is `a100_sxm_80gb-x56-hybrid` at 46,256 mm2 and 198.1 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
 
 **Headline before and after.**
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 231,125 | 2,230.8 | 9.7 | 34,915 | 13.18x |
-| rank on per-user rate alone | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | 8.2 | 41,899 | 13.46x |
-| smallest feasible machine | `ROM-N6-native-SRAMKV-array-hw-hybrid-x187` | 152,405 | 1,063.3 | 7.0 | 1 | 6.34x |
-| **after -- this report's rule** | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 184,900 | 2,050.6 | 11.1 | 27,932 | 12.05x |
+| before -- smallest within 5% of peak rate | `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 231,125 | 2,227.5 | 9.6 | 34,915 | 11.51x |
+| rank on per-user rate alone | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | 8.2 | 41,899 | 11.76x |
+| smallest feasible machine | `ROM-N6-native-SRAMKV-array-hw-hybrid-x187` | 152,405 | 714.1 | 4.7 | 1 | 3.73x |
+| **after -- this report's rule** | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 184,900 | 2,048.3 | 11.1 | 27,932 | 10.52x |
 
 **The walk, rung by rung.** The number in the `marginal` column is what the next slab of silicon returns; the number in `incumbent average` is what the silicon already bought returns. The walk stops the first time the former is not larger.
 
 | design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | incumbent average | verdict |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 184,900 | 2,050.6 | 11.1 | -- | 11.1 | ACCEPT |
-| `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 231,125 | 2,230.8 | 9.7 | 3.9 | 11.1 | stop |
-| `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | 8.2 | 2.3 | 11.1 | stop |
+| `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 184,900 | 2,048.3 | 11.1 | -- | 11.1 | ACCEPT |
+| `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 231,125 | 2,227.5 | 9.6 | 3.9 | 11.1 | stop |
+| `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | 8.2 | 2.3 | 11.1 | stop |
 
 **The frontier at batch 1, published in full.** Every design here is one that nothing else beats on both axes at once, so a reader with a latency target this report does not know about can read their own point off it. An honest curve beats a false single answer, and the rows above and below the recommendation are the ones that show what the rule is doing.
 
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
-| `ROM-N6-native-HBMKV-wafer-hybrid-x4` **<-- recommended** | 184,900 | 4 | 2,050.6 | 30,759 | 11.1 | 27,932 | `layer_fixed_latency` | 12,628 | 5,839.8 | `a100_sxm_80gb-x224-hybrid` | 12.05x |
-| `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 231,125 | 5 | 2,230.8 | 40,155 | 9.7 | 34,915 | `layer_fixed_latency` | 19,665 | 8,428.2 | `a100_sxm_80gb-x280-hybrid` | 13.18x |
-| `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 6 | 2,266.7 | 49,868 | 8.2 | 41,899 | `layer_fixed_latency` | 26,709 | 11,305.2 | `a100_sxm_80gb-x336-hybrid` | 13.46x |
+| `ROM-N6-native-HBMKV-wafer-hybrid-x4` **<-- recommended** | 184,900 | 4 | 2,048.3 | 30,724 | 11.1 | 27,932 | `layer_fixed_latency` | 12,627 | 5,846.4 | `a100_sxm_80gb-x224-hybrid` | 10.52x |
+| `ROM-N6-native-HBMKV-wafer-hybrid-x5` | 231,125 | 5 | 2,227.5 | 40,096 | 9.6 | 34,915 | `layer_fixed_latency` | 19,664 | 8,440.7 | `a100_sxm_80gb-x280-hybrid` | 11.51x |
+| `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 6 | 2,262.2 | 49,768 | 8.2 | 41,899 | `layer_fixed_latency` | 26,707 | 11,327.9 | `a100_sxm_80gb-x336-hybrid` | 11.76x |
 
 **Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
 
 | class | designs | pick | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions |
 | --- | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| array | 252 | densest | `ROM-N6-native-SRAMKV-array-hw-hybrid-x220` | 179,300 | 1,801.8 | 10.0 | 1 |
-| array | 252 | fastest | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 298,290 | 2,073.7 | 7.0 | 297,191 |
-| array | 252 | smallest | `ROM-N6-native-SRAMKV-array-hw-hybrid-x187` | 152,405 | 1,063.3 | 7.0 | 1 |
-| wafer | 54 | densest | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 184,900 | 2,050.6 | 11.1 | 27,932 |
-| wafer | 54 | fastest | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | 8.2 | 41,899 |
-| wafer | 54 | smallest | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 184,900 | 2,050.6 | 11.1 | 27,932 |
+| array | 252 | densest | `ROM-N6-native-SRAMKV-array-hw-hybrid-x224` | 182,560 | 1,360.4 | 7.5 | 1 |
+| array | 252 | fastest | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 322,740 | 1,630.8 | 5.1 | 321,551 |
+| array | 252 | smallest | `ROM-N6-native-SRAMKV-array-hw-hybrid-x187` | 152,405 | 714.1 | 4.7 | 1 |
+| wafer | 54 | densest | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 184,900 | 2,048.3 | 11.1 | 27,932 |
+| wafer | 54 | fastest | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | 8.2 | 41,899 |
+| wafer | 54 | smallest | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 184,900 | 2,048.3 | 11.1 | 27,932 |
 
 **Three classes at iso-area, batch by batch.** Each ROM class enters at its fastest feasible design for that batch and is read against the GPU comparator at *its own* silicon area (the area ratio is stated). The `array @ wafer area` row is the fastest reticle array within 5% of the wafer's silicon, which is the wafer-versus-array comparison at iso-area. Read resident sessions before the ratio.
 
 | batch | class | design | mm2 | user tok/s | aggregate tok/s | resident sessions | W | mJ/token | binds on | iso-area GPU | GPU user tok/s | GPU sessions | GPU mJ/token | area ratio | speed ratio | J/token ratio |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 298,290 | 2,073.7 | 95,391 | 297,191 | 35,183 | 15,942.1 | `layer_fixed_latency` | `a100_sxm_80gb-x361-hybrid` | 166.4 | 283,063 | 317,457.5 | 1.000 | 12.46x | 19.9x |
-| 1 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | 49,868 | 41,899 | 26,709 | 11,305.2 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 168.4 | 262,763 | 292,312.8 | 0.999 | 13.46x | 25.9x |
-| 1 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 277,100 | 2,050.5 | 88,172 | 276,079 | 31,582 | 14,446.3 | `layer_fixed_latency` | `a100_sxm_80gb-x335-hybrid` | 168.1 | 261,951 | 291,855.9 | 1.001 | 12.20x | 20.2x |
-| 1 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | -- | 41,899 | -- | 11,305.2 | -- | -- | -- | -- | -- | 0.999 | 1.11x wafer/array | -- |
-| 2 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 298,290 | 2,073.7 | 95,391 | 297,191 | 35,183 | 7,982.4 | `layer_fixed_latency` | `a100_sxm_80gb-x361-hybrid` | 166.4 | 283,063 | 160,819.8 | 1.000 | 12.46x | 20.1x |
-| 2 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | 49,868 | 41,899 | 26,709 | 5,664.0 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 168.4 | 262,763 | 148,247.4 | 0.999 | 13.46x | 26.2x |
-| 2 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 277,100 | 2,050.5 | 88,172 | 276,079 | 31,582 | 7,234.5 | `layer_fixed_latency` | `a100_sxm_80gb-x335-hybrid` | 168.1 | 261,951 | 148,019.0 | 1.001 | 12.20x | 20.5x |
-| 2 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | -- | 41,899 | -- | 5,664.0 | -- | -- | -- | -- | -- | 0.999 | 1.11x wafer/array | -- |
-| 4 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 298,290 | 2,073.7 | 95,391 | 297,191 | 35,183 | 4,002.6 | `layer_fixed_latency` | `a100_sxm_80gb-x361-hybrid` | 166.4 | 283,063 | 82,500.9 | 1.000 | 12.46x | 20.6x |
-| 4 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | 49,868 | 41,899 | 26,709 | 2,843.4 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 168.4 | 262,763 | 76,214.8 | 0.999 | 13.46x | 26.8x |
-| 4 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 277,100 | 2,050.5 | 88,172 | 276,079 | 31,582 | 3,628.6 | `layer_fixed_latency` | `a100_sxm_80gb-x335-hybrid` | 168.1 | 261,951 | 76,100.6 | 1.001 | 12.20x | 21.0x |
-| 4 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | -- | 41,899 | -- | 2,843.4 | -- | -- | -- | -- | -- | 0.999 | 1.11x wafer/array | -- |
-| 8 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 298,290 | 2,073.7 | 95,391 | 297,191 | 35,183 | 2,012.7 | `layer_fixed_latency` | `a100_sxm_80gb-x361-hybrid` | 166.4 | 283,063 | 43,341.5 | 1.000 | 12.46x | 21.5x |
-| 8 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | 49,868 | 41,899 | 26,709 | 1,433.1 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 168.4 | 262,763 | 40,198.4 | 0.999 | 13.46x | 28.1x |
-| 8 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 277,100 | 2,050.5 | 88,172 | 276,079 | 31,582 | 1,825.7 | `layer_fixed_latency` | `a100_sxm_80gb-x335-hybrid` | 168.1 | 261,951 | 40,141.3 | 1.001 | 12.20x | 22.0x |
-| 8 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | -- | 41,899 | -- | 1,433.1 | -- | -- | -- | -- | -- | 0.999 | 1.11x wafer/array | -- |
-| 16 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 298,290 | 2,073.7 | 95,391 | 297,191 | 35,183 | 1,017.7 | `layer_fixed_latency` | `a100_sxm_80gb-x361-hybrid` | 166.4 | 283,063 | 23,761.8 | 1.000 | 12.46x | 23.3x |
-| 16 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | 49,868 | 41,899 | 26,709 | 727.9 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 168.4 | 262,763 | 22,190.3 | 0.999 | 13.46x | 30.5x |
-| 16 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x340` | 277,100 | 2,050.5 | 88,172 | 276,079 | 31,582 | 924.2 | `layer_fixed_latency` | `a100_sxm_80gb-x335-hybrid` | 168.1 | 261,951 | 22,161.7 | 1.001 | 12.20x | 24.0x |
-| 16 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,266.7 | -- | 41,899 | -- | 727.9 | -- | -- | -- | -- | -- | 0.999 | 1.11x wafer/array | -- |
-| 32 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x366` | 298,290 | 2,073.7 | 95,391 | 297,191 | 35,183 | 520.2 | `layer_fixed_latency` | `a100_sxm_80gb-x361-hybrid` | 166.4 | 283,063 | 13,972.0 | 1.000 | 12.46x | 26.9x |
-| 32 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 2,257.9 | 97,088 | 83,798 | 53,788 | 736.6 | `layer_fixed_latency` | `a100_sxm_80gb-x672-hybrid` | 166.1 | 535,594 | 22,439.4 | 0.999 | 13.60x | 30.5x |
-| 64 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,948.6 | 124,708 | 321,551 | 39,588 | 317.4 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 158.1 | 307,423 | 9,096.6 | 0.999 | 12.32x | 28.7x |
-| 64 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 2,220.5 | 190,966 | 83,798 | 55,924 | 385.7 | `layer_fixed_latency` | `a100_sxm_80gb-x672-hybrid` | 166.1 | 535,594 | 13,310.8 | 0.999 | 13.37x | 34.5x |
-| 256 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,330.3 | 340,554 | 321,551 | 44,083 | 129.4 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 93.8 | 307,423 | 4,209.3 | 0.999 | 14.18x | 32.5x |
-| 256 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 1,714.1 | 438,812 | 83,798 | 60,346 | 137.5 | `layer_fixed_latency` | `a100_sxm_80gb-x672-hybrid` | 119.4 | 535,594 | 5,439.9 | 0.999 | 14.35x | 39.6x |
-| 1024 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 525.1 | 537,707 | 321,551 | 46,446 | 86.4 | `compute` | `a100_sxm_80gb-x391-hybrid` | 37.5 | 307,423 | 2,775.6 | 0.999 | 13.99x | 32.1x |
-| 1024 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 554,700 | 950.4 | 973,176 | 83,798 | 80,934 | 83.2 | `weight_read` | `a100_sxm_80gb-x672-hybrid` | 54.3 | 535,594 | 3,226.6 | 0.999 | 17.50x | 38.8x |
-| 4096 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 148.5 | 608,246 | 321,551 | 46,082 | 75.8 | `compute` | `a100_sxm_80gb-x391-hybrid` | 14.4 | 307,423 | 1,759.5 | 0.999 | 10.30x | 23.2x |
-| 4096 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 554,700 | 365.5 | 1,497,047 | 83,798 | 87,699 | 58.6 | `compute` | `a100_sxm_80gb-x672-hybrid` | 20.1 | 535,594 | 2,438.4 | 0.999 | 18.21x | 41.6x |
+| 1 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 322,740 | 1,630.8 | 161,452 | 321,551 | 39,519 | 22,002.2 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 191.0 | 307,423 | 299,782.4 | 0.999 | 8.54x | 13.6x |
+| 1 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | 49,768 | 41,899 | 26,707 | 11,327.9 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 192.4 | 262,763 | 256,388.9 | 0.999 | 11.76x | 22.6x |
+| 1 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x351` | 286,065 | 1,607.3 | 141,441 | 285,011 | 34,249 | 19,328.3 | `layer_fixed_latency` | `a100_sxm_80gb-x346-hybrid` | 190.3 | 270,883 | 266,731.3 | 1.001 | 8.45x | 13.8x |
+| 1 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | -- | 41,899 | -- | 11,327.9 | -- | -- | -- | -- | -- | 1.031 | 1.41x wafer/array | -- |
+| 2 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 322,740 | 1,630.8 | 161,452 | 321,551 | 39,519 | 11,012.5 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 191.0 | 307,423 | 151,982.2 | 0.999 | 8.54x | 13.8x |
+| 2 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | 49,768 | 41,899 | 26,707 | 5,675.3 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 192.4 | 262,763 | 130,285.5 | 0.999 | 11.76x | 23.0x |
+| 2 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x351` | 286,065 | 1,607.3 | 141,441 | 285,011 | 34,249 | 9,675.5 | `layer_fixed_latency` | `a100_sxm_80gb-x346-hybrid` | 190.3 | 270,883 | 135,456.7 | 1.001 | 8.45x | 14.0x |
+| 2 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | -- | 41,899 | -- | 5,675.3 | -- | -- | -- | -- | -- | 1.031 | 1.41x wafer/array | -- |
+| 4 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 322,740 | 1,630.8 | 161,452 | 321,551 | 39,519 | 5,517.6 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 191.0 | 307,423 | 78,082.2 | 0.999 | 8.54x | 14.2x |
+| 4 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | 49,768 | 41,899 | 26,707 | 2,849.0 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 192.4 | 262,763 | 67,233.8 | 0.999 | 11.76x | 23.6x |
+| 4 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x351` | 286,065 | 1,607.3 | 141,441 | 285,011 | 34,249 | 4,849.2 | `layer_fixed_latency` | `a100_sxm_80gb-x346-hybrid` | 190.3 | 270,883 | 69,819.4 | 1.001 | 8.45x | 14.4x |
+| 4 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | -- | 41,899 | -- | 2,849.0 | -- | -- | -- | -- | -- | 1.031 | 1.41x wafer/array | -- |
+| 8 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 322,740 | 1,630.8 | 161,452 | 321,551 | 39,519 | 2,770.2 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 191.0 | 307,423 | 41,132.1 | 0.999 | 8.54x | 14.8x |
+| 8 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | 49,768 | 41,899 | 26,707 | 1,435.9 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 192.4 | 262,763 | 35,708.0 | 0.999 | 11.76x | 24.9x |
+| 8 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x351` | 286,065 | 1,607.3 | 141,441 | 285,011 | 34,249 | 2,436.0 | `layer_fixed_latency` | `a100_sxm_80gb-x346-hybrid` | 190.3 | 270,883 | 37,000.8 | 1.001 | 8.45x | 15.2x |
+| 8 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | -- | 41,899 | -- | 1,435.9 | -- | -- | -- | -- | -- | 1.031 | 1.41x wafer/array | -- |
+| 16 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 322,740 | 1,630.8 | 161,452 | 321,551 | 39,519 | 1,396.5 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 191.0 | 307,423 | 22,657.1 | 0.999 | 8.54x | 16.2x |
+| 16 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | 49,768 | 41,899 | 26,707 | 729.3 | `layer_fixed_latency` | `a100_sxm_80gb-x336-hybrid` | 192.4 | 262,763 | 19,945.0 | 0.999 | 11.76x | 27.3x |
+| 16 | array @ wafer area | `ROM-N6-native-HBMKV-array-hw-hybrid-x351` | 286,065 | 1,607.3 | 141,441 | 285,011 | 34,249 | 1,229.4 | `layer_fixed_latency` | `a100_sxm_80gb-x346-hybrid` | 190.3 | 270,883 | 20,591.4 | 1.001 | 8.45x | 16.7x |
+| 16 | wafer reference | `ROM-N6-native-HBMKV-wafer-hybrid-x6` | 277,350 | 2,262.2 | -- | 41,899 | -- | 729.3 | -- | -- | -- | -- | -- | 1.031 | 1.41x wafer/array | -- |
+| 32 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 322,740 | 1,630.8 | 161,452 | 321,551 | 39,519 | 709.6 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 191.0 | 307,423 | 13,419.6 | 0.999 | 8.54x | 18.9x |
+| 32 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 2,249.4 | 96,724 | 83,798 | 53,779 | 739.3 | `layer_fixed_latency` | `a100_sxm_80gb-x672-hybrid` | 189.4 | 535,594 | 20,194.2 | 0.999 | 11.88x | 27.3x |
+| 64 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396-romfill` | 322,740 | 1,630.8 | 161,452 | 321,551 | 39,519 | 366.2 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 179.1 | 307,423 | 8,443.4 | 0.999 | 9.11x | 23.1x |
+| 64 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 2,215.6 | 190,543 | 83,798 | 55,914 | 386.5 | `layer_fixed_latency` | `a100_sxm_80gb-x672-hybrid` | 189.4 | 535,594 | 12,188.1 | 0.999 | 11.70x | 31.5x |
+| 256 | array | `ROM-N6-native-HBMKV-array-hw-hybrid-x396` | 322,740 | 1,298.4 | 332,402 | 321,551 | 43,913 | 132.1 | `layer_fixed_latency` | `a100_sxm_80gb-x391-hybrid` | 100.8 | 307,423 | 4,046.4 | 0.999 | 12.88x | 30.6x |
+| 256 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 554,700 | 1,712.5 | 438,392 | 83,798 | 60,338 | 137.6 | `layer_fixed_latency` | `a100_sxm_80gb-x672-hybrid` | 131.0 | 535,594 | 5,159.3 | 0.999 | 13.07x | 37.5x |
+| 1024 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 521.2 | 533,756 | 321,551 | 46,377 | 86.9 | `compute` | `a100_sxm_80gb-x391-hybrid` | 38.5 | 307,423 | 2,739.9 | 0.999 | 13.55x | 31.5x |
+| 1024 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 554,700 | 949.3 | 972,074 | 83,798 | 80,918 | 83.2 | `weight_read` | `a100_sxm_80gb-x672-hybrid` | 56.3 | 535,594 | 3,165.2 | 0.999 | 16.86x | 38.0x |
+| 4096 | array | `ROM-N6-native-HBMKV-array-hw-pipeline-x396` | 322,740 | 147.6 | 604,458 | 321,551 | 46,026 | 76.1 | `compute` | `a100_sxm_80gb-x391-hybrid` | 14.5 | 307,423 | 1,750.5 | 0.999 | 10.14x | 23.0x |
+| 4096 | wafer | `ROM-N6-native-HBMKV-wafer-hybrid-x12` | 554,700 | 365.4 | 1,496,632 | 83,798 | 87,693 | 58.6 | `compute` | `a100_sxm_80gb-x672-hybrid` | 20.3 | 535,594 | 2,423.0 | 0.999 | 17.96x | 41.4x |
 
 **The best design differs by batch, and here is where it changes.**
 
@@ -158,10 +158,10 @@ Per-user rate falls as the batch rises on a fixed machine, so `tok/s per 1,000 m
 
 | model | KV store | spare silicon | reticle counts emitted |
 | --- | --- | --- | --- |
-| DeepSeek-V4-Pro-0813 | HBM | rom | 202, 217, 227, 244, 248, 297, 326, 340, 359, 360, 396 |
-| DeepSeek-V4-Pro-0813 | HBM | sram | 202, 217, 227, 244, 248, 297, 328, 340, 365, 366, 396 |
-| DeepSeek-V4-Pro-0813 | SRAM | rom | 187, 200, 219, 220, 224, 227, 230, 276, 340, 368 |
-| DeepSeek-V4-Pro-0813 | SRAM | sram | 187, 200, 219, 220, 224, 227, 230, 276, 340, 368 |
+| DeepSeek-V4-Pro-0813 | HBM | rom | 202, 208, 227, 244, 248, 297, 340, 342, 359, 360, 396 |
+| DeepSeek-V4-Pro-0813 | HBM | sram | 202, 208, 227, 244, 248, 297, 340, 351, 365, 366, 396 |
+| DeepSeek-V4-Pro-0813 | SRAM | rom | 187, 191, 219, 221, 224, 227, 230, 276, 340, 368 |
+| DeepSeek-V4-Pro-0813 | SRAM | sram | 187, 191, 219, 221, 224, 227, 230, 276, 340, 368 |
 
 A wafer chosen over the array class is now compared against an array sampled at the wafer's own area and at four rungs above the array's floor; the `array @ wafer area` rows in the iso-area table above are that comparison. The curve BETWEEN rungs is still not evidence and must not be read as any.
 
@@ -169,8 +169,10 @@ A wafer chosen over the array class is now compared against an array sampled at 
 
 The serial part of every step is the longest path of one token's operator
 dependency graph (`src/opentallas/critical_path.py`): the dependent-operator
-chain priced with measured RTL depths (ROM) or a published CUDA-graph launch gap
-per dependent kernel (GPU), every collective the weight split needs with its
+chain priced with measured RTL depths (ROM) or, on the GPU, a megakernel/PDL
+execution in which every remaining dependent boundary pays only its measured
+residual dependency signal (all-SM gather or one-to-one handoff, no launch;
+`serial_latency.gpu_datapath`), every collective the weight split needs with its
 latency and real payload, and every pipeline hop. A hybrid layout's tensor
 group and every collective's reduction algorithm are searched per point.
 `legacy` is the flat per-layer floor plus two all-reduces per layer this
@@ -178,10 +180,10 @@ replaced.
 
 | Model | Design | Batch | Group | Coll./layer | Algorithms | Chain (us) | Comm. (us) | Sweep (us) | Legacy serial (us) | tok/s/user |
 |---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 1 | 16 on `rom_wafer_express` | 5.51 | one_shot | 333.62 | 66.64 | 101.97 | 42.88 | 2,050.6 |
-| DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 64 | 4 on `rom_wafer_express` | 5.51 | one_shot | 341.28 | 24.21 | 435.06 | 28.05 | 1,289.2 |
-| DeepSeek-V4-Pro-0813 | `a100_sxm_80gb-x224-hybrid` | 1 | 8 | 5.51 | measured_floor | 1,344.20 | 1,759.34 | 3,006.49 | 713.20 | 170.1 |
-| DeepSeek-V4-Pro-0813 | `a100_sxm_80gb-x224-hybrid` | 64 | 8 | 5.51 | measured_floor | 1,344.20 | 2,006.84 | 4,239.67 | 752.79 | 137.7 |
+| DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 1 | 16 on `rom_wafer_express` | 5.51 | one_shot | 333.62 | 67.19 | 101.97 | 43.31 | 2,048.3 |
+| DeepSeek-V4-Pro-0813 | `ROM-N6-native-HBMKV-wafer-hybrid-x4` | 64 | 4 on `rom_wafer_express` | 5.51 | one_shot | 341.28 | 24.77 | 435.06 | 28.49 | 1,288.3 |
+| DeepSeek-V4-Pro-0813 | `a100_sxm_80gb-x224-hybrid` | 1 | 8 | 5.51 | measured_floor | 603.70 | 1,759.34 | 3,006.49 | 713.20 | 194.6 |
+| DeepSeek-V4-Pro-0813 | `a100_sxm_80gb-x224-hybrid` | 64 | 8 | 5.51 | measured_floor | 603.70 | 2,006.84 | 4,239.67 | 752.79 | 153.3 |
 
 ## The overlap and serialisation rule
 
@@ -373,9 +375,9 @@ fails.**
 | Part | Energy | W | tok/s |
 |---|---:|---:|---:|
 | Taalas HC1 (modelled reconstruction) | 0.007235 J/token | 77.6 | 10,723.2 |
-| A100 80GB, weight-bound gate, same model and batch | 1.537721 J/token | 336.2 | 218.6 |
+| A100 80GB, weight-bound gate, same model and batch | 1.487141 J/token | 352.1 | 236.7 |
 
-That is a factor of 213 in tokens per joule, and **it is a ceiling on the ROM advantage, not a measurement of it**, for three reasons that all point the same way. The GPU is at batch 1, which is a GPU's worst operating point -- it re-reads the whole checkpoint from DRAM for one token, and the batched rows in the table below are the fair comparison. The ROM side's read energy is `assumed` over a 17x bracket. And the HC1 power gate says this model's ROM total is 2.6-3.2x below the shipping part's published card power, so the ROM joules here are a lower bound by roughly that factor.
+That is a factor of 206 in tokens per joule, and **it is a ceiling on the ROM advantage, not a measurement of it**, for three reasons that all point the same way. The GPU is at batch 1, which is a GPU's worst operating point -- it re-reads the whole checkpoint from DRAM for one token, and the batched rows in the table below are the fair comparison. The ROM side's read energy is `assumed` over a 17x bracket. And the HC1 power gate says this model's ROM total is 2.6-3.2x below the shipping part's published card power, so the ROM joules here are a lower bound by roughly that factor.
 
 **Where the remaining HC1 shortfall could live, none of it fitted.**
 The ROM array is charged its stated leakage density: 1.7 W at the point
@@ -404,16 +406,16 @@ always reduced modelled power, so every design was coolable at some speed
 and `thermal_scale` was exactly 1.0 at all 11,747 feasible points across
 both studies.
 
-- **0 of 3,614 feasible points (0.0%) are power-limited.**
+- **0 of 3,494 feasible points (0.0%) are power-limited.**
 - 0 points are uncoolable at any speed (static power alone at or above the cooling budget).
 
 Nothing in this study is power-limited. That is a statement about these designs and not an artifact of the energy model: static power is charged per mm2 per second, so a design cannot escape it by moving fewer bytes. The busiest point reaches 80% of its cooling budget, and the busiest wafer-scale ROM design 32%. The companion study at the other node, whose HBM generation delivers more than twice the bandwidth per stack, does have power-limited points.
 
 | Family | Area class | Points | Throttled | Median power / budget | Worst power / budget | Peak W/mm2 | Median static share |
 |---|---|---:|---:|---:|---:|---:|---:|
-| gpu | large array (5,000-40,000 mm2) | 40 | 0 | 62.1% | 80.2% | 0.389 | 73% |
-| gpu | wafer (>=40,000 mm2) | 1,240 | 0 | 55.3% | 79.8% | 0.387 | 85% |
-| rom | wafer (>=40,000 mm2) | 2,334 | 0 | 18.8% | 31.6% | 0.158 | 97% |
+| gpu | large array (5,000-40,000 mm2) | 40 | 0 | 63.1% | 80.2% | 0.389 | 72% |
+| gpu | wafer (>=40,000 mm2) | 1,240 | 0 | 55.4% | 79.8% | 0.387 | 84% |
+| rom | wafer (>=40,000 mm2) | 2,214 | 0 | 18.9% | 31.6% | 0.158 | 97% |
 
 ### Energy per token, both sides, at equal area
 
@@ -428,16 +430,16 @@ One row per (model, batch). The ROM design is the smallest silicon within 5% of 
 
 | Model | B | mm2 | ROM design | ROM J/token | ROM W | ROM binds | iso-area GPU | GPU J/token | GPU W | GPU binds | ROM tokens/joule |
 |---|---:|---:|---|---:|---:|---|---|---:|---:|---|---:|
-| DeepSeek-V4-Pro-0813 | 1 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 8.428201 | 19,665.1 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 243.067208 | 65,199.0 | weight_read | 28.84x |
-| DeepSeek-V4-Pro-0813 | 2 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 4.225480 | 19,665.1 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 123.624657 | 65,199.0 | weight_read | 29.26x |
-| DeepSeek-V4-Pro-0813 | 4 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 2.124119 | 19,665.1 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 63.903382 | 65,199.0 | weight_read | 30.08x |
-| DeepSeek-V4-Pro-0813 | 8 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 1.073439 | 19,665.1 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 34.042744 | 65,199.0 | weight_read | 31.71x |
-| DeepSeek-V4-Pro-0813 | 16 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 0.548098 | 19,665.1 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 19.112426 | 65,199.0 | weight_read | 34.87x |
-| DeepSeek-V4-Pro-0813 | 32 | 277,350 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6` | 0.382355 | 27,749.2 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x336-hybrid` | 13.186190 | 78,087.3 | weight_read | 34.49x |
-| DeepSeek-V4-Pro-0813 | 64 | 369,800 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 0.272819 | 37,378.3 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x448-hybrid` | 10.058176 | 104,431.0 | weight_read | 36.87x |
-| DeepSeek-V4-Pro-0813 | 256 | 554,700 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 0.137522 | 60,346.4 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x672-hybrid` | 5.439936 | 166,319.8 | weight_read | 39.56x |
-| DeepSeek-V4-Pro-0813 | 1024 | 554,700 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12` | 0.083165 | 80,934.3 | weight_read | `DSV4-Pro/a100_sxm_80gb-x672-hybrid` | 3.226612 | 179,460.1 | weight_read | 38.80x |
-| DeepSeek-V4-Pro-0813 | 4096 | 554,700 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12` | 0.058581 | 87,698.5 | compute | `DSV4-Pro/a100_sxm_80gb-x672-hybrid` | 2.438352 | 200,495.7 | weight_read | 41.62x |
+| DeepSeek-V4-Pro-0813 | 1 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 8.440673 | 19,663.8 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 213.130681 | 68,748.1 | weight_read | 25.25x |
+| DeepSeek-V4-Pro-0813 | 2 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 4.231716 | 19,663.8 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 108.656394 | 68,748.1 | weight_read | 25.68x |
+| DeepSeek-V4-Pro-0813 | 4 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 2.127237 | 19,663.8 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 56.419250 | 68,748.1 | weight_read | 26.52x |
+| DeepSeek-V4-Pro-0813 | 8 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 1.074998 | 19,663.8 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 30.300679 | 68,748.1 | weight_read | 28.19x |
+| DeepSeek-V4-Pro-0813 | 16 | 231,125 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5` | 0.548878 | 19,663.8 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x280-hybrid` | 17.241393 | 68,748.1 | weight_read | 31.41x |
+| DeepSeek-V4-Pro-0813 | 32 | 277,350 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6` | 0.382976 | 27,745.5 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x336-hybrid` | 12.063570 | 82,299.8 | weight_read | 31.50x |
+| DeepSeek-V4-Pro-0813 | 64 | 369,800 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill` | 0.273357 | 37,371.9 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x448-hybrid` | 9.309763 | 109,857.7 | weight_read | 34.06x |
+| DeepSeek-V4-Pro-0813 | 256 | 554,700 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill` | 0.137635 | 60,338.0 | layer_fixed_latency | `DSV4-Pro/a100_sxm_80gb-x672-hybrid` | 5.159281 | 173,042.5 | weight_read | 37.49x |
+| DeepSeek-V4-Pro-0813 | 1024 | 554,700 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12` | 0.083243 | 80,918.0 | weight_read | `DSV4-Pro/a100_sxm_80gb-x672-hybrid` | 3.165241 | 182,465.8 | weight_read | 38.02x |
+| DeepSeek-V4-Pro-0813 | 4096 | 554,700 | `DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12` | 0.058593 | 87,692.6 | compute | `DSV4-Pro/a100_sxm_80gb-x672-hybrid` | 2.423010 | 201,858.8 | weight_read | 41.35x |
 
 **Read this with the power gates beside it.** The ROM side's energy
 rests on `energy.rom_read_j_per_byte`, which is `assumed` over a
@@ -506,12 +508,12 @@ rungs of silicon.
 
 | Model | Wafer-eq | mm2 | ROM before | topo | ROM after | topo | ROM /x | GPU before | topo | GPU after | topo | GPU /x | Ratio before | Ratio after | Ratio change |
 |---|---:|---:|---:|---|---:|---|---:|---:|---|---:|---|---:|---:|---:|---:|
-| DeepSeek-V4-Pro-0813 | 4 | 184,900 | 2,783.8 | wafer-pipeline | 2,050.6 | wafer-hybrid | 1.36x | 633.2 | pipeline | 170.1 | hybrid | 3.72x | 4.40x | 12.05x | 2.74x |
-| DeepSeek-V4-Pro-0813 | 6 | 277,350 | 2,791.3 | wafer-pipeline | 2,266.7 | wafer-hybrid | 1.23x | 646.7 | pipeline | 168.4 | hybrid | 3.84x | 4.32x | 13.46x | 3.12x |
-| DeepSeek-V4-Pro-0813 | 8 | 369,800 | 2,792.1 | wafer-pipeline | 2,265.7 | wafer-hybrid | 1.23x | 653.7 | pipeline | 166.7 | hybrid | 3.92x | 4.27x | 13.59x | 3.18x |
-| DeepSeek-V4-Pro-0813 | 12 | 554,700 | 2,792.8 | wafer-pipeline | 2,257.9 | wafer-hybrid | 1.24x | 660.9 | pipeline | 166.1 | hybrid | 3.98x | 4.23x | 13.60x | 3.22x |
+| DeepSeek-V4-Pro-0813 | 4 | 184,900 | 2,782.1 | wafer-pipeline | 2,048.3 | wafer-hybrid | 1.36x | 1,179.6 | pipeline | 194.6 | hybrid | 6.06x | 2.36x | 10.52x | 4.46x |
+| DeepSeek-V4-Pro-0813 | 6 | 277,350 | 2,789.6 | wafer-pipeline | 2,262.2 | wafer-hybrid | 1.23x | 1,227.4 | pipeline | 192.4 | hybrid | 6.38x | 2.27x | 11.76x | 5.17x |
+| DeepSeek-V4-Pro-0813 | 8 | 369,800 | 2,790.4 | wafer-pipeline | 2,260.0 | wafer-hybrid | 1.23x | 1,252.8 | pipeline | 190.1 | hybrid | 6.59x | 2.23x | 11.89x | 5.34x |
+| DeepSeek-V4-Pro-0813 | 12 | 554,700 | 2,791.1 | wafer-pipeline | 2,249.4 | wafer-hybrid | 1.24x | 1,279.3 | pipeline | 189.4 | hybrid | 6.76x | 2.18x | 11.88x | 5.44x |
 
-**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 2.74x to 3.22x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
+**Did the error cancel in the ratio?** If it had, `Ratio change` would be 1.00x on every row. It runs from 4.46x to 5.44x across this ladder. It does not cancel, for the reason the two families reach equal area at very different device counts and therefore at very different slot counts, and because the correction changes which topology each side picks -- a change that lands on whichever side was relying on depth.
 
 
 ## Iso-area comparison
@@ -544,26 +546,26 @@ is the error this study made.
 
 | Model | B | Pick | ROM design | ROM mm2 | ROM user tok/s | ROM aggregate tok/s | ROM binds on | GPU | GPU mm2 | Area ratio | GPU parallelism | GPU link us | GPU user tok/s | GPU aggregate tok/s | GPU binds on | Per-user ratio | Aggregate ratio | PP-only ratio | Ratio without the layer cap |
 |---|---:|---|---|---:|---:|---:|---|---|---:|---:|---|---:|---:|---:|---|---:|---:|---:|---:|
-| DeepSeek-V4-Pro-0813 | 1 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,266.7 | 49,868.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 168.4 | 7,071.6 | weight_read | 13.46x | 3.67x | 56.08x | 13.46x |
-| DeepSeek-V4-Pro-0813 | 1 | smallest silicon | DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x187 | 152,405 | 1,063.3 | 1,063.3 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x185-hybrid | 152,810 | 1.00x | hybrid | 1,742.04 | 167.6 | 4,022.5 | weight_read | 6.34x | 0.14x | 26.31x | 6.34x |
-| DeepSeek-V4-Pro-0813 | 2 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,266.7 | 49,868.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 168.4 | 7,071.6 | weight_read | 13.46x | 3.67x | 56.08x | 13.46x |
-| DeepSeek-V4-Pro-0813 | 2 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 894.1 | 3,576.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,746.37 | 170.1 | 4,251.9 | weight_read | 5.26x | 0.44x | 22.12x | 5.26x |
-| DeepSeek-V4-Pro-0813 | 4 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,266.7 | 49,868.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 168.4 | 7,071.6 | weight_read | 13.46x | 3.67x | 56.08x | 13.46x |
-| DeepSeek-V4-Pro-0813 | 4 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 894.1 | 3,576.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,746.37 | 170.1 | 4,251.9 | weight_read | 5.26x | 0.44x | 22.12x | 5.26x |
-| DeepSeek-V4-Pro-0813 | 8 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,266.7 | 49,868.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 168.4 | 7,071.6 | weight_read | 13.46x | 3.67x | 56.08x | 13.46x |
-| DeepSeek-V4-Pro-0813 | 8 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 727.9 | 5,822.9 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,746.37 | 170.1 | 4,251.9 | weight_read | 4.28x | 0.72x | 18.01x | 4.28x |
-| DeepSeek-V4-Pro-0813 | 16 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,266.7 | 49,868.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 168.4 | 7,071.6 | weight_read | 13.46x | 3.67x | 56.08x | 13.46x |
-| DeepSeek-V4-Pro-0813 | 16 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 519.7 | 8,315.5 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,746.37 | 170.1 | 4,251.9 | weight_read | 3.06x | 1.03x | 12.86x | 3.06x |
-| DeepSeek-V4-Pro-0813 | 32 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 2,257.9 | 97,088.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 1,902.05 | 166.1 | 13,950.2 | weight_read | 13.60x | 3.57x | 55.86x | 13.73x |
-| DeepSeek-V4-Pro-0813 | 32 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 322.6 | 10,322.4 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,798.34 | 161.7 | 5,175.6 | weight_read | 1.99x | 1.28x | 7.98x | 1.99x |
-| DeepSeek-V4-Pro-0813 | 64 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 2,220.5 | 190,965.8 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 1,902.05 | 166.1 | 13,950.2 | weight_read | 13.37x | 7.03x | 54.94x | 13.50x |
-| DeepSeek-V4-Pro-0813 | 64 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 181.8 | 11,636.9 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 2,035.93 | 132.4 | 8,471.6 | weight_read | 1.37x | 1.37x | 4.50x | 1.37x |
-| DeepSeek-V4-Pro-0813 | 256 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 1,714.1 | 438,811.8 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 2,451.25 | 119.4 | 30,573.9 | weight_read | 14.35x | 14.35x | 42.41x | 14.50x |
-| DeepSeek-V4-Pro-0813 | 256 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-pipeline-x202 | 164,630 | 50.1 | 12,829.7 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 3,168.82 | 64.7 | 16,561.6 | weight_read | 0.77x | 0.77x | 1.35x | 0.77x |
-| DeepSeek-V4-Pro-0813 | 1024 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 950.4 | 973,175.8 | weight_read | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 4,610.35 | 54.3 | 55,618.7 | weight_read | 17.50x | 17.50x | 27.27x | 17.69x |
-| DeepSeek-V4-Pro-0813 | 1024 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-pipeline-x202 | 164,630 | 12.6 | 12,944.8 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 8,863.02 | 24.3 | 24,882.3 | weight_read | 0.52x | 0.52x | 0.70x | 0.52x |
-| DeepSeek-V4-Pro-0813 | 4096 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 365.5 | 1,497,046.5 | compute | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 5,838.90 | 20.1 | 82,225.9 | weight_read | 18.21x | 18.21x | 22.66x | 18.59x |
-| DeepSeek-V4-Pro-0813 | 4096 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-pipeline-x202 | 164,630 | 3.2 | 12,960.6 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 31,639.83 | 10.9 | 44,625.1 | weight_read | 0.29x | 0.29x | 0.49x | 0.29x |
+| DeepSeek-V4-Pro-0813 | 1 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,262.2 | 49,768.1 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 192.4 | 8,078.9 | weight_read | 11.76x | 3.57x | 54.53x | 11.76x |
+| DeepSeek-V4-Pro-0813 | 1 | smallest silicon | DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x187 | 152,405 | 714.1 | 714.1 | link_latency | DSV4-Pro/a100_sxm_80gb-x185-hybrid | 152,810 | 1.00x | hybrid | 1,742.04 | 191.4 | 4,592.5 | weight_read | 3.73x | 0.09x | 17.21x | 3.73x |
+| DeepSeek-V4-Pro-0813 | 2 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,262.2 | 49,768.1 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 192.4 | 8,078.9 | weight_read | 11.76x | 3.57x | 54.53x | 11.76x |
+| DeepSeek-V4-Pro-0813 | 2 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 638.7 | 4,471.0 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,746.37 | 194.6 | 4,864.6 | weight_read | 3.28x | 0.54x | 15.40x | 3.28x |
+| DeepSeek-V4-Pro-0813 | 4 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,262.2 | 49,768.1 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 192.4 | 8,078.9 | weight_read | 11.76x | 3.57x | 54.53x | 11.76x |
+| DeepSeek-V4-Pro-0813 | 4 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 638.7 | 4,471.0 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,746.37 | 194.6 | 4,864.6 | weight_read | 3.28x | 0.54x | 15.40x | 3.28x |
+| DeepSeek-V4-Pro-0813 | 8 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,262.2 | 49,768.1 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 192.4 | 8,078.9 | weight_read | 11.76x | 3.57x | 54.53x | 11.76x |
+| DeepSeek-V4-Pro-0813 | 8 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 594.4 | 4,755.0 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,746.37 | 194.6 | 4,864.6 | weight_read | 3.05x | 0.58x | 14.33x | 3.05x |
+| DeepSeek-V4-Pro-0813 | 16 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,262.2 | 49,768.1 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x336-hybrid | 277,536 | 1.00x | hybrid | 1,819.88 | 192.4 | 8,078.9 | weight_read | 11.76x | 3.57x | 54.53x | 11.76x |
+| DeepSeek-V4-Pro-0813 | 16 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 469.0 | 7,504.8 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,746.37 | 194.6 | 4,864.6 | weight_read | 2.41x | 0.91x | 11.31x | 2.41x |
+| DeepSeek-V4-Pro-0813 | 32 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 2,249.4 | 96,724.3 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 1,902.05 | 189.4 | 15,906.4 | weight_read | 11.88x | 3.47x | 54.22x | 12.01x |
+| DeepSeek-V4-Pro-0813 | 32 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 311.6 | 9,971.2 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 1,798.34 | 183.7 | 5,879.8 | weight_read | 1.70x | 1.21x | 7.51x | 1.70x |
+| DeepSeek-V4-Pro-0813 | 64 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 2,215.6 | 190,543.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 1,902.05 | 189.4 | 15,906.4 | weight_read | 11.70x | 6.83x | 53.40x | 11.83x |
+| DeepSeek-V4-Pro-0813 | 64 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x202 | 164,630 | 179.2 | 11,466.7 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 2,035.93 | 146.8 | 9,392.2 | weight_read | 1.22x | 1.22x | 4.32x | 1.22x |
+| DeepSeek-V4-Pro-0813 | 256 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 1,712.5 | 438,392.2 | layer_fixed_latency | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 2,451.25 | 131.0 | 33,540.0 | weight_read | 13.07x | 13.07x | 41.28x | 13.22x |
+| DeepSeek-V4-Pro-0813 | 256 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-pipeline-x202 | 164,630 | 50.1 | 12,823.7 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 3,168.82 | 67.5 | 17,285.9 | weight_read | 0.74x | 0.74x | 1.32x | 0.74x |
+| DeepSeek-V4-Pro-0813 | 1024 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 949.3 | 972,073.7 | weight_read | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 4,610.35 | 56.3 | 57,646.7 | weight_read | 16.86x | 16.86x | 26.67x | 17.06x |
+| DeepSeek-V4-Pro-0813 | 1024 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-pipeline-x202 | 164,630 | 12.6 | 12,941.0 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 8,863.02 | 24.7 | 25,280.2 | weight_read | 0.51x | 0.51x | 0.70x | 0.51x |
+| DeepSeek-V4-Pro-0813 | 4096 | fastest | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 365.4 | 1,496,631.7 | compute | DSV4-Pro/a100_sxm_80gb-x672-hybrid | 555,072 | 1.00x | hybrid | 5,838.90 | 20.3 | 83,309.1 | weight_read | 17.96x | 17.96x | 22.66x | 18.35x |
+| DeepSeek-V4-Pro-0813 | 4096 | smallest silicon | DSV4-Pro/ROM-N6-native-HBMKV-array-hw-pipeline-x202 | 164,630 | 3.2 | 12,957.4 | compute | DSV4-Pro/a100_sxm_80gb-x199-hybrid | 164,374 | 1.00x | hybrid | 31,639.83 | 11.0 | 44,942.3 | weight_read | 0.29x | 0.29x | 0.49x | 0.29x |
 
 ## The GPU's own topology choice, at batch 1
 
@@ -583,38 +585,38 @@ second while the same silicon tensor-parallel reads in the hundreds.
 
 | Model | GPUs | mm2 | Pipeline tok/s | Tensor tok/s | Hybrid tok/s | Best | Best link us | Link share | Binds on |
 |---|---:|---:|---:|---:|---:|---|---:|---:|---|
-| DeepSeek-V4-Pro-0813 | 18 | 14,868 | 40.6 | 126.2 | 149.4 | hybrid | 1,651.23 | 24.7% | weight_read |
-| DeepSeek-V4-Pro-0813 | 56 | 46,256 | 40.4 | 126.2 | 172.8 | hybrid | 1,668.53 | 28.8% | weight_read |
-| DeepSeek-V4-Pro-0813 | 93 | 76,818 | 40.4 | 120.6 | 169.5 | hybrid | 1,690.15 | 28.7% | weight_read |
-| DeepSeek-V4-Pro-0813 | 103 | 85,078 | 40.4 | 119.2 | 171.2 | hybrid | 1,694.48 | 29.0% | weight_read |
-| DeepSeek-V4-Pro-0813 | 112 | 92,512 | 40.4 | 117.9 | 171.9 | hybrid | 1,698.80 | 29.2% | weight_read |
-| DeepSeek-V4-Pro-0813 | 168 | 138,768 | 40.4 | 103.9 | 171.0 | hybrid | 1,729.07 | 29.6% | weight_read |
-| DeepSeek-V4-Pro-0813 | 185 | 152,810 | 40.4 | 102.0 | 167.6 | hybrid | 1,742.04 | 29.2% | weight_read |
-| DeepSeek-V4-Pro-0813 | 197 | 162,722 | 40.4 | 100.7 | 169.3 | hybrid | 1,746.37 | 29.6% | weight_read |
-| DeepSeek-V4-Pro-0813 | 199 | 164,374 | 40.4 | 100.5 | 170.1 | hybrid | 1,746.37 | 29.7% | weight_read |
-| DeepSeek-V4-Pro-0813 | 214 | 176,764 | 40.4 | 99.0 | 169.5 | hybrid | 1,755.02 | 29.7% | weight_read |
-| DeepSeek-V4-Pro-0813 | 216 | 178,416 | 40.4 | 98.8 | 170.2 | hybrid | 1,755.02 | 29.9% | weight_read |
-| DeepSeek-V4-Pro-0813 | 217 | 179,242 | 40.4 | 98.6 | 167.6 | hybrid | 1,759.34 | 29.5% | weight_read |
-| DeepSeek-V4-Pro-0813 | 221 | 182,546 | 40.4 | 98.3 | 169.0 | hybrid | 1,759.34 | 29.7% | weight_read |
-| DeepSeek-V4-Pro-0813 | 224 | 185,024 | 40.4 | 98.0 | 170.1 | hybrid | 1,759.34 | 29.9% | weight_read |
-| DeepSeek-V4-Pro-0813 | 227 | 187,502 | 40.4 | 97.6 | 168.2 | hybrid | 1,763.67 | 29.7% | weight_read |
-| DeepSeek-V4-Pro-0813 | 241 | 199,066 | 40.4 | 96.3 | 167.4 | hybrid | 1,772.31 | 29.7% | weight_read |
-| DeepSeek-V4-Pro-0813 | 245 | 202,370 | 40.4 | 95.9 | 168.8 | hybrid | 1,772.31 | 29.9% | weight_read |
-| DeepSeek-V4-Pro-0813 | 272 | 224,672 | 40.4 | 93.4 | 169.4 | hybrid | 1,785.29 | 30.2% | weight_read |
-| DeepSeek-V4-Pro-0813 | 280 | 231,280 | 40.4 | 92.6 | 169.2 | hybrid | 1,789.61 | 30.3% | weight_read |
-| DeepSeek-V4-Pro-0813 | 293 | 242,018 | 40.4 | 91.5 | 168.2 | hybrid | 1,798.26 | 30.2% | weight_read |
-| DeepSeek-V4-Pro-0813 | 322 | 265,972 | 40.4 | 79.3 | 167.0 | hybrid | 1,815.56 | 30.3% | weight_read |
-| DeepSeek-V4-Pro-0813 | 324 | 267,624 | 40.4 | 79.2 | 167.5 | hybrid | 1,815.56 | 30.4% | weight_read |
-| DeepSeek-V4-Pro-0813 | 335 | 276,710 | 40.4 | 78.5 | 168.1 | hybrid | 1,819.88 | 30.6% | weight_read |
-| DeepSeek-V4-Pro-0813 | 336 | 277,536 | 40.4 | 78.4 | 168.4 | hybrid | 1,819.88 | 30.6% | weight_read |
-| DeepSeek-V4-Pro-0813 | 354 | 292,404 | 40.4 | 77.3 | 166.7 | hybrid | 1,832.86 | 30.6% | weight_read |
-| DeepSeek-V4-Pro-0813 | 355 | 293,230 | 40.4 | 77.2 | 166.9 | hybrid | 1,832.86 | 30.6% | weight_read |
-| DeepSeek-V4-Pro-0813 | 360 | 297,360 | 40.4 | 76.9 | 168.0 | hybrid | 1,832.86 | 30.8% | weight_read |
-| DeepSeek-V4-Pro-0813 | 361 | 298,186 | 40.4 | 76.8 | 166.4 | hybrid | 1,837.18 | 30.6% | weight_read |
-| DeepSeek-V4-Pro-0813 | 363 | 299,838 | 40.4 | 76.7 | 166.8 | hybrid | 1,837.18 | 30.6% | weight_read |
-| DeepSeek-V4-Pro-0813 | 391 | 322,966 | 40.4 | 75.0 | 167.3 | hybrid | 1,850.15 | 31.0% | weight_read |
-| DeepSeek-V4-Pro-0813 | 448 | 370,048 | 40.4 | 71.8 | 166.7 | hybrid | 1,880.42 | 31.3% | weight_read |
-| DeepSeek-V4-Pro-0813 | 672 | 555,072 | 40.4 | 61.4 | 166.1 | hybrid | 1,902.05 | 31.6% | weight_read |
+| DeepSeek-V4-Pro-0813 | 18 | 14,868 | 41.6 | 138.3 | 167.9 | hybrid | 1,651.23 | 27.7% | weight_read |
+| DeepSeek-V4-Pro-0813 | 56 | 46,256 | 41.5 | 138.2 | 198.1 | hybrid | 1,668.53 | 33.1% | weight_read |
+| DeepSeek-V4-Pro-0813 | 93 | 76,818 | 41.5 | 131.5 | 193.9 | hybrid | 1,690.15 | 32.8% | weight_read |
+| DeepSeek-V4-Pro-0813 | 103 | 85,078 | 41.5 | 129.9 | 196.1 | hybrid | 1,694.48 | 33.2% | weight_read |
+| DeepSeek-V4-Pro-0813 | 112 | 92,512 | 41.5 | 128.4 | 196.9 | hybrid | 1,698.80 | 33.5% | weight_read |
+| DeepSeek-V4-Pro-0813 | 168 | 138,768 | 41.5 | 112.0 | 195.8 | hybrid | 1,729.07 | 33.9% | weight_read |
+| DeepSeek-V4-Pro-0813 | 185 | 152,810 | 41.5 | 109.7 | 191.4 | hybrid | 1,742.04 | 33.3% | weight_read |
+| DeepSeek-V4-Pro-0813 | 188 | 155,288 | 41.5 | 109.4 | 193.1 | hybrid | 1,742.04 | 33.6% | weight_read |
+| DeepSeek-V4-Pro-0813 | 199 | 164,374 | 41.5 | 108.0 | 194.6 | hybrid | 1,746.37 | 34.0% | weight_read |
+| DeepSeek-V4-Pro-0813 | 205 | 169,330 | 41.5 | 107.3 | 193.4 | hybrid | 1,750.69 | 33.9% | weight_read |
+| DeepSeek-V4-Pro-0813 | 216 | 178,416 | 41.5 | 106.0 | 194.8 | hybrid | 1,755.02 | 34.2% | weight_read |
+| DeepSeek-V4-Pro-0813 | 218 | 180,068 | 41.5 | 105.7 | 191.8 | hybrid | 1,759.34 | 33.7% | weight_read |
+| DeepSeek-V4-Pro-0813 | 221 | 182,546 | 41.5 | 105.4 | 193.2 | hybrid | 1,759.34 | 34.0% | weight_read |
+| DeepSeek-V4-Pro-0813 | 224 | 185,024 | 41.5 | 105.1 | 194.6 | hybrid | 1,759.34 | 34.2% | weight_read |
+| DeepSeek-V4-Pro-0813 | 227 | 187,502 | 41.5 | 104.7 | 192.2 | hybrid | 1,763.67 | 33.9% | weight_read |
+| DeepSeek-V4-Pro-0813 | 241 | 199,066 | 41.5 | 103.1 | 191.1 | hybrid | 1,772.31 | 33.9% | weight_read |
+| DeepSeek-V4-Pro-0813 | 245 | 202,370 | 41.5 | 102.7 | 192.9 | hybrid | 1,772.31 | 34.2% | weight_read |
+| DeepSeek-V4-Pro-0813 | 272 | 224,672 | 41.5 | 99.8 | 193.6 | hybrid | 1,785.29 | 34.6% | weight_read |
+| DeepSeek-V4-Pro-0813 | 280 | 231,280 | 41.5 | 98.9 | 193.5 | hybrid | 1,789.61 | 34.6% | weight_read |
+| DeepSeek-V4-Pro-0813 | 293 | 242,018 | 41.5 | 97.6 | 192.1 | hybrid | 1,798.26 | 34.5% | weight_read |
+| DeepSeek-V4-Pro-0813 | 335 | 276,710 | 41.5 | 83.0 | 192.0 | hybrid | 1,819.88 | 35.0% | weight_read |
+| DeepSeek-V4-Pro-0813 | 336 | 277,536 | 41.5 | 82.9 | 192.4 | hybrid | 1,819.88 | 35.0% | weight_read |
+| DeepSeek-V4-Pro-0813 | 337 | 278,362 | 41.5 | 82.8 | 190.1 | hybrid | 1,824.21 | 34.7% | weight_read |
+| DeepSeek-V4-Pro-0813 | 346 | 285,796 | 41.5 | 82.2 | 190.3 | hybrid | 1,828.53 | 34.8% | weight_read |
+| DeepSeek-V4-Pro-0813 | 354 | 292,404 | 41.5 | 81.6 | 190.2 | hybrid | 1,832.86 | 34.9% | weight_read |
+| DeepSeek-V4-Pro-0813 | 355 | 293,230 | 41.5 | 81.6 | 190.4 | hybrid | 1,832.86 | 34.9% | weight_read |
+| DeepSeek-V4-Pro-0813 | 360 | 297,360 | 41.5 | 81.2 | 191.9 | hybrid | 1,832.86 | 35.2% | weight_read |
+| DeepSeek-V4-Pro-0813 | 361 | 298,186 | 41.5 | 81.1 | 189.8 | hybrid | 1,837.18 | 34.9% | weight_read |
+| DeepSeek-V4-Pro-0813 | 363 | 299,838 | 41.5 | 81.0 | 190.3 | hybrid | 1,837.18 | 35.0% | weight_read |
+| DeepSeek-V4-Pro-0813 | 391 | 322,966 | 41.5 | 79.1 | 191.0 | hybrid | 1,850.15 | 35.3% | weight_read |
+| DeepSeek-V4-Pro-0813 | 448 | 370,048 | 41.5 | 75.5 | 190.1 | hybrid | 1,880.42 | 35.8% | weight_read |
+| DeepSeek-V4-Pro-0813 | 672 | 555,072 | 41.5 | 64.1 | 189.4 | hybrid | 1,902.05 | 36.0% | weight_read |
 
 ## Array or wafer: the crossover, reported rather than assumed
 
@@ -632,24 +634,24 @@ fabric (Rocki et al., SC20). `Events` spells the breakdown out.
 
 | Design | Model | Devices | Parallelism | Intra link | Inter link | Hops/token | Link latency/token | Viable to (10% budget) | Hard ceiling | Events |
 |---|---|---:|---|---|---|---:|---:|---:|---:|---|
-| DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x224 | DeepSeek-V4-Pro-0813 | 224 | pipeline | rom_package_ucie | rom_board_serdes | 60 | 2.23 us | 44,828.0 tok/s | 448,280.4 tok/s | 45 x point_to_point span 2 on rom_package_ucie (traversals 1.0) = 0.61 us; 15 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 1.62 us |
-| DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x200 | DeepSeek-V4-Pro-0813 | 200 | tensor | rom_package_ucie | rom_board_serdes | 244 | 194.16 us | 515.0 tok/s | 5,150.4 tok/s | 122 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 3.42 us; 122 x all_reduce span 50 on rom_board_serdes (traversals 15.4) = 190.74 us |
-| DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x220 | DeepSeek-V4-Pro-0813 | 220 | hybrid | rom_package_ucie | rom_board_serdes | 176 | 9.25 us | 10,806.3 tok/s | 108,062.7 tok/s | 122 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 3.42 us; 54 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 5.83 us |
+| DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x224 | DeepSeek-V4-Pro-0813 | 224 | pipeline | rom_package_ucie | rom_board_serdes | 60 | 6.93 us | 14,435.6 tok/s | 144,355.6 tok/s | 30 x point_to_point span 2 on rom_package_ucie (traversals 1.0) = 0.40 us; 30 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 6.52 us |
+| DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x191 | DeepSeek-V4-Pro-0813 | 191 | tensor | rom_package_ucie | rom_board_serdes | 244 | 511.25 us | 195.6 tok/s | 1,956.0 tok/s | 122 x all_reduce span 2 on rom_package_ucie (traversals 2.2) = 3.31 us; 122 x all_reduce span 96 on rom_board_serdes (traversals 19.8) = 507.94 us |
+| DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x221 | DeepSeek-V4-Pro-0813 | 221 | hybrid | rom_package_ucie | rom_board_serdes | 182 | 16.36 us | 6,113.0 tok/s | 61,130.2 tok/s | 122 x all_reduce span 2 on rom_package_ucie (traversals 2.2) = 3.31 us; 60 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 13.05 us |
 | DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x224 | DeepSeek-V4-Pro-0813 | 224 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
-| DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x4 | DeepSeek-V4-Pro-0813 | 4 | pipeline | on_wafer | rom_wafer_serdes | 60 | 7.48 us | 13,373.6 tok/s | 133,736.0 tok/s | 59 x point_to_point span 2 on on_wafer (traversals 1.0) = 7.38 us; 1 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.10 us |
+| DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x4 | DeepSeek-V4-Pro-0813 | 4 | pipeline | on_wafer | rom_wafer_serdes | 60 | 7.59 us | 13,181.2 tok/s | 131,812.0 tok/s | 59 x point_to_point span 2 on on_wafer (traversals 1.0) = 7.38 us; 1 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.21 us |
 | DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x187 | DeepSeek-V4-Pro-0813 | 187 | tensor | nvlink3 | infiniband_hdr | 244 | 1,321.76 us | 75.7 tok/s | 756.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 24 on infiniband_hdr (traversals 2.0) = 696.45 us |
-| DSV4-Pro/ROM-N6-native-SRAMKV-wafer-tensor-x4 | DeepSeek-V4-Pro-0813 | 4 | tensor | on_wafer | rom_wafer_serdes | 244 | 262.35 us | 381.2 tok/s | 3,811.8 tok/s | 122 x all_reduce span 57 on on_wafer (traversals 15.4) = 234.85 us; 122 x all_reduce span 4 on rom_wafer_serdes (traversals 2.2) = 27.50 us |
+| DSV4-Pro/ROM-N6-native-SRAMKV-wafer-tensor-x4 | DeepSeek-V4-Pro-0813 | 4 | tensor | on_wafer | rom_wafer_serdes | 244 | 291.64 us | 342.9 tok/s | 3,428.9 tok/s | 122 x all_reduce span 57 on on_wafer (traversals 15.4) = 234.85 us; 122 x all_reduce span 4 on rom_wafer_serdes (traversals 2.2) = 56.79 us |
 | DSV4-Pro/ROM-N6-native-SRAMKV-array-hybrid-x219 | DeepSeek-V4-Pro-0813 | 219 | hybrid | nvlink3 | infiniband_hdr | 149 | 695.60 us | 143.8 tok/s | 1,437.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 27 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 70.29 us |
-| DSV4-Pro/ROM-N6-native-SRAMKV-wafer-hybrid-x4 | DeepSeek-V4-Pro-0813 | 4 | hybrid | on_wafer | rom_wafer_serdes | 125 | 235.16 us | 425.2 tok/s | 4,252.5 tok/s | 122 x all_reduce span 57 on on_wafer (traversals 15.4) = 234.85 us; 3 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.31 us |
-| DSV4-Pro/ROM-N6-native-HBMKV-array-hw-pipeline-x366 | DeepSeek-V4-Pro-0813 | 366 | pipeline | rom_package_ucie | rom_board_serdes | 60 | 2.23 us | 44,828.0 tok/s | 448,280.4 tok/s | 45 x point_to_point span 2 on rom_package_ucie (traversals 1.0) = 0.61 us; 15 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 1.62 us |
-| DSV4-Pro/ROM-N6-native-HBMKV-array-hw-tensor-x217 | DeepSeek-V4-Pro-0813 | 217 | tensor | rom_package_ucie | rom_board_serdes | 244 | 194.17 us | 515.0 tok/s | 5,150.2 tok/s | 122 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 3.42 us; 122 x all_reduce span 55 on rom_board_serdes (traversals 15.4) = 190.74 us |
-| DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x328 | DeepSeek-V4-Pro-0813 | 328 | hybrid | rom_package_ucie | rom_board_serdes | 182 | 9.90 us | 10,099.3 tok/s | 100,993.0 tok/s | 122 x all_reduce span 4 on rom_package_ucie (traversals 2.0) = 3.42 us; 60 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 6.48 us |
+| DSV4-Pro/ROM-N6-native-SRAMKV-wafer-hybrid-x4 | DeepSeek-V4-Pro-0813 | 4 | hybrid | on_wafer | rom_wafer_serdes | 125 | 235.48 us | 424.7 tok/s | 4,246.6 tok/s | 122 x all_reduce span 57 on on_wafer (traversals 15.4) = 234.85 us; 3 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.63 us |
+| DSV4-Pro/ROM-N6-native-HBMKV-array-hw-pipeline-x366 | DeepSeek-V4-Pro-0813 | 366 | pipeline | rom_package_ucie | rom_board_serdes | 60 | 6.93 us | 14,435.6 tok/s | 144,355.6 tok/s | 30 x point_to_point span 2 on rom_package_ucie (traversals 1.0) = 0.40 us; 30 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 6.52 us |
+| DSV4-Pro/ROM-N6-native-HBMKV-array-hw-tensor-x208 | DeepSeek-V4-Pro-0813 | 208 | tensor | rom_package_ucie | rom_board_serdes | 244 | 567.34 us | 176.3 tok/s | 1,762.6 tok/s | 122 x all_reduce span 2 on rom_package_ucie (traversals 2.2) = 3.31 us; 122 x all_reduce span 104 on rom_board_serdes (traversals 22.0) = 564.04 us |
+| DSV4-Pro/ROM-N6-native-HBMKV-array-hw-hybrid-x351 | DeepSeek-V4-Pro-0813 | 351 | hybrid | rom_package_ucie | rom_board_serdes | 182 | 16.36 us | 6,113.0 tok/s | 61,130.2 tok/s | 122 x all_reduce span 2 on rom_package_ucie (traversals 2.2) = 3.31 us; 60 x point_to_point span 2 on rom_board_serdes (traversals 1.0) = 13.05 us |
 | DSV4-Pro/ROM-N6-native-HBMKV-array-pipeline-x365 | DeepSeek-V4-Pro-0813 | 365 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
-| DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x6 | DeepSeek-V4-Pro-0813 | 6 | pipeline | on_wafer | rom_wafer_serdes | 60 | 7.48 us | 13,373.6 tok/s | 133,736.0 tok/s | 59 x point_to_point span 2 on on_wafer (traversals 1.0) = 7.38 us; 1 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.10 us |
+| DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x6 | DeepSeek-V4-Pro-0813 | 6 | pipeline | on_wafer | rom_wafer_serdes | 60 | 7.59 us | 13,181.2 tok/s | 131,812.0 tok/s | 59 x point_to_point span 2 on on_wafer (traversals 1.0) = 7.38 us; 1 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.21 us |
 | DSV4-Pro/ROM-N6-native-HBMKV-array-tensor-x202 | DeepSeek-V4-Pro-0813 | 202 | tensor | nvlink3 | infiniband_hdr | 244 | 1,322.43 us | 75.6 tok/s | 756.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 26 on infiniband_hdr (traversals 2.0) = 697.13 us |
-| DSV4-Pro/ROM-N6-native-HBMKV-wafer-tensor-x4 | DeepSeek-V4-Pro-0813 | 4 | tensor | on_wafer | rom_wafer_serdes | 244 | 262.35 us | 381.2 tok/s | 3,811.8 tok/s | 122 x all_reduce span 57 on on_wafer (traversals 15.4) = 234.85 us; 122 x all_reduce span 4 on rom_wafer_serdes (traversals 2.2) = 27.50 us |
+| DSV4-Pro/ROM-N6-native-HBMKV-wafer-tensor-x4 | DeepSeek-V4-Pro-0813 | 4 | tensor | on_wafer | rom_wafer_serdes | 244 | 291.64 us | 342.9 tok/s | 3,428.9 tok/s | 122 x all_reduce span 57 on on_wafer (traversals 15.4) = 234.85 us; 122 x all_reduce span 4 on rom_wafer_serdes (traversals 2.2) = 56.79 us |
 | DSV4-Pro/ROM-N6-native-HBMKV-array-hybrid-x244 | DeepSeek-V4-Pro-0813 | 244 | hybrid | nvlink3 | infiniband_hdr | 152 | 703.41 us | 142.2 tok/s | 1,421.7 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 30 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 78.10 us |
-| DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | DeepSeek-V4-Pro-0813 | 5 | hybrid | on_wafer | rom_wafer_serdes | 126 | 235.26 us | 425.1 tok/s | 4,250.6 tok/s | 122 x all_reduce span 57 on on_wafer (traversals 15.4) = 234.85 us; 4 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.41 us |
+| DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | DeepSeek-V4-Pro-0813 | 5 | hybrid | on_wafer | rom_wafer_serdes | 126 | 235.70 us | 424.3 tok/s | 4,242.7 tok/s | 122 x all_reduce span 57 on on_wafer (traversals 15.4) = 234.85 us; 4 x point_to_point span 2 on rom_wafer_serdes (traversals 1.0) = 0.85 us |
 | DSV4-Pro/a100_sxm_80gb-x18-pipeline | DeepSeek-V4-Pro-0813 | 18 | pipeline | nvlink3 | infiniband_hdr | 17 | 43.42 us | 2,302.9 tok/s | 23,028.9 tok/s | 15 x point_to_point span 2 on nvlink3 (traversals 1.0) = 38.22 us; 2 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 5.21 us |
 | DSV4-Pro/a100_sxm_80gb-x18-tensor | DeepSeek-V4-Pro-0813 | 18 | tensor | nvlink3 | infiniband_hdr | 244 | 1,260.54 us | 79.3 tok/s | 793.3 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 3 on infiniband_hdr (traversals 2.0) = 635.24 us |
 | DSV4-Pro/a100_sxm_80gb-x18-hybrid | DeepSeek-V4-Pro-0813 | 18 | hybrid | nvlink3 | infiniband_hdr | 124 | 630.51 us | 158.6 tok/s | 1,586.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 2 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 5.21 us |
@@ -678,26 +680,26 @@ fabric (Rocki et al., SC20). `Events` spells the breakdown out.
 | DSV4-Pro/a100_sxm_80gb-x185-tensor | DeepSeek-V4-Pro-0813 | 185 | tensor | nvlink3 | infiniband_hdr | 244 | 1,321.76 us | 75.7 tok/s | 756.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 24 on infiniband_hdr (traversals 2.0) = 696.45 us |
 | DSV4-Pro/a100_sxm_80gb-x185-hybrid | DeepSeek-V4-Pro-0813 | 185 | hybrid | nvlink3 | infiniband_hdr | 145 | 685.18 us | 145.9 tok/s | 1,459.5 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 23 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 59.88 us |
 | DSV4-Pro/a100_sxm_80gb-x185-expert | DeepSeek-V4-Pro-0813 | 185 | expert | nvlink3 | infiniband_hdr | 244 | 860.59 us | 116.2 tok/s | 1,162.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.67 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.93 us |
-| DSV4-Pro/a100_sxm_80gb-x197-pipeline | DeepSeek-V4-Pro-0813 | 197 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
-| DSV4-Pro/a100_sxm_80gb-x197-tensor | DeepSeek-V4-Pro-0813 | 197 | tensor | nvlink3 | infiniband_hdr | 244 | 1,322.11 us | 75.6 tok/s | 756.4 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 25 on infiniband_hdr (traversals 2.0) = 696.80 us |
-| DSV4-Pro/a100_sxm_80gb-x197-hybrid | DeepSeek-V4-Pro-0813 | 197 | hybrid | nvlink3 | infiniband_hdr | 146 | 687.79 us | 145.4 tok/s | 1,453.9 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 24 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 62.48 us |
-| DSV4-Pro/a100_sxm_80gb-x197-expert | DeepSeek-V4-Pro-0813 | 197 | expert | nvlink3 | infiniband_hdr | 244 | 860.43 us | 116.2 tok/s | 1,162.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.64 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.79 us |
+| DSV4-Pro/a100_sxm_80gb-x188-pipeline | DeepSeek-V4-Pro-0813 | 188 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
+| DSV4-Pro/a100_sxm_80gb-x188-tensor | DeepSeek-V4-Pro-0813 | 188 | tensor | nvlink3 | infiniband_hdr | 244 | 1,321.76 us | 75.7 tok/s | 756.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 24 on infiniband_hdr (traversals 2.0) = 696.45 us |
+| DSV4-Pro/a100_sxm_80gb-x188-hybrid | DeepSeek-V4-Pro-0813 | 188 | hybrid | nvlink3 | infiniband_hdr | 145 | 685.18 us | 145.9 tok/s | 1,459.5 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 23 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 59.88 us |
+| DSV4-Pro/a100_sxm_80gb-x188-expert | DeepSeek-V4-Pro-0813 | 188 | expert | nvlink3 | infiniband_hdr | 244 | 860.56 us | 116.2 tok/s | 1,162.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.67 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.89 us |
 | DSV4-Pro/a100_sxm_80gb-x199-pipeline | DeepSeek-V4-Pro-0813 | 199 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
 | DSV4-Pro/a100_sxm_80gb-x199-tensor | DeepSeek-V4-Pro-0813 | 199 | tensor | nvlink3 | infiniband_hdr | 244 | 1,322.11 us | 75.6 tok/s | 756.4 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 25 on infiniband_hdr (traversals 2.0) = 696.80 us |
 | DSV4-Pro/a100_sxm_80gb-x199-hybrid | DeepSeek-V4-Pro-0813 | 199 | hybrid | nvlink3 | infiniband_hdr | 146 | 687.79 us | 145.4 tok/s | 1,453.9 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 24 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 62.48 us |
 | DSV4-Pro/a100_sxm_80gb-x199-expert | DeepSeek-V4-Pro-0813 | 199 | expert | nvlink3 | infiniband_hdr | 244 | 860.41 us | 116.2 tok/s | 1,162.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.64 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.77 us |
-| DSV4-Pro/a100_sxm_80gb-x214-pipeline | DeepSeek-V4-Pro-0813 | 214 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
-| DSV4-Pro/a100_sxm_80gb-x214-tensor | DeepSeek-V4-Pro-0813 | 214 | tensor | nvlink3 | infiniband_hdr | 244 | 1,322.73 us | 75.6 tok/s | 756.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 27 on infiniband_hdr (traversals 2.0) = 697.43 us |
-| DSV4-Pro/a100_sxm_80gb-x214-hybrid | DeepSeek-V4-Pro-0813 | 214 | hybrid | nvlink3 | infiniband_hdr | 148 | 692.99 us | 144.3 tok/s | 1,443.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 26 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 67.69 us |
-| DSV4-Pro/a100_sxm_80gb-x214-expert | DeepSeek-V4-Pro-0813 | 214 | expert | nvlink3 | infiniband_hdr | 244 | 860.21 us | 116.3 tok/s | 1,162.5 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.59 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.62 us |
+| DSV4-Pro/a100_sxm_80gb-x205-pipeline | DeepSeek-V4-Pro-0813 | 205 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
+| DSV4-Pro/a100_sxm_80gb-x205-tensor | DeepSeek-V4-Pro-0813 | 205 | tensor | nvlink3 | infiniband_hdr | 244 | 1,322.43 us | 75.6 tok/s | 756.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 26 on infiniband_hdr (traversals 2.0) = 697.13 us |
+| DSV4-Pro/a100_sxm_80gb-x205-hybrid | DeepSeek-V4-Pro-0813 | 205 | hybrid | nvlink3 | infiniband_hdr | 147 | 690.39 us | 144.8 tok/s | 1,448.5 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 25 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 65.09 us |
+| DSV4-Pro/a100_sxm_80gb-x205-expert | DeepSeek-V4-Pro-0813 | 205 | expert | nvlink3 | infiniband_hdr | 244 | 860.32 us | 116.2 tok/s | 1,162.4 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.61 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.71 us |
 | DSV4-Pro/a100_sxm_80gb-x216-pipeline | DeepSeek-V4-Pro-0813 | 216 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
 | DSV4-Pro/a100_sxm_80gb-x216-tensor | DeepSeek-V4-Pro-0813 | 216 | tensor | nvlink3 | infiniband_hdr | 244 | 1,322.73 us | 75.6 tok/s | 756.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 27 on infiniband_hdr (traversals 2.0) = 697.43 us |
 | DSV4-Pro/a100_sxm_80gb-x216-hybrid | DeepSeek-V4-Pro-0813 | 216 | hybrid | nvlink3 | infiniband_hdr | 148 | 692.99 us | 144.3 tok/s | 1,443.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 26 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 67.69 us |
 | DSV4-Pro/a100_sxm_80gb-x216-expert | DeepSeek-V4-Pro-0813 | 216 | expert | nvlink3 | infiniband_hdr | 244 | 860.17 us | 116.3 tok/s | 1,162.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.57 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.60 us |
-| DSV4-Pro/a100_sxm_80gb-x217-pipeline | DeepSeek-V4-Pro-0813 | 217 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
-| DSV4-Pro/a100_sxm_80gb-x217-tensor | DeepSeek-V4-Pro-0813 | 217 | tensor | nvlink3 | infiniband_hdr | 244 | 1,323.01 us | 75.6 tok/s | 755.9 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 28 on infiniband_hdr (traversals 2.0) = 697.70 us |
-| DSV4-Pro/a100_sxm_80gb-x217-hybrid | DeepSeek-V4-Pro-0813 | 217 | hybrid | nvlink3 | infiniband_hdr | 149 | 695.60 us | 143.8 tok/s | 1,437.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 27 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 70.29 us |
-| DSV4-Pro/a100_sxm_80gb-x217-expert | DeepSeek-V4-Pro-0813 | 217 | expert | nvlink3 | infiniband_hdr | 244 | 860.16 us | 116.3 tok/s | 1,162.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.57 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.59 us |
+| DSV4-Pro/a100_sxm_80gb-x218-pipeline | DeepSeek-V4-Pro-0813 | 218 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
+| DSV4-Pro/a100_sxm_80gb-x218-tensor | DeepSeek-V4-Pro-0813 | 218 | tensor | nvlink3 | infiniband_hdr | 244 | 1,323.01 us | 75.6 tok/s | 755.9 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 28 on infiniband_hdr (traversals 2.0) = 697.70 us |
+| DSV4-Pro/a100_sxm_80gb-x218-hybrid | DeepSeek-V4-Pro-0813 | 218 | hybrid | nvlink3 | infiniband_hdr | 149 | 695.60 us | 143.8 tok/s | 1,437.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 27 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 70.29 us |
+| DSV4-Pro/a100_sxm_80gb-x218-expert | DeepSeek-V4-Pro-0813 | 218 | expert | nvlink3 | infiniband_hdr | 244 | 860.15 us | 116.3 tok/s | 1,162.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.57 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.59 us |
 | DSV4-Pro/a100_sxm_80gb-x221-pipeline | DeepSeek-V4-Pro-0813 | 221 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
 | DSV4-Pro/a100_sxm_80gb-x221-tensor | DeepSeek-V4-Pro-0813 | 221 | tensor | nvlink3 | infiniband_hdr | 244 | 1,323.01 us | 75.6 tok/s | 755.9 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 28 on infiniband_hdr (traversals 2.0) = 697.70 us |
 | DSV4-Pro/a100_sxm_80gb-x221-hybrid | DeepSeek-V4-Pro-0813 | 221 | hybrid | nvlink3 | infiniband_hdr | 149 | 695.60 us | 143.8 tok/s | 1,437.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 27 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 70.29 us |
@@ -730,14 +732,6 @@ fabric (Rocki et al., SC20). `Events` spells the breakdown out.
 | DSV4-Pro/a100_sxm_80gb-x293-tensor | DeepSeek-V4-Pro-0813 | 293 | tensor | nvlink3 | infiniband_hdr | 244 | 1,324.83 us | 75.5 tok/s | 754.8 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 37 on infiniband_hdr (traversals 2.0) = 699.53 us |
 | DSV4-Pro/a100_sxm_80gb-x293-hybrid | DeepSeek-V4-Pro-0813 | 293 | hybrid | nvlink3 | infiniband_hdr | 158 | 719.03 us | 139.1 tok/s | 1,390.8 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 36 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 93.72 us |
 | DSV4-Pro/a100_sxm_80gb-x293-expert | DeepSeek-V4-Pro-0813 | 293 | expert | nvlink3 | infiniband_hdr | 244 | 859.52 us | 116.3 tok/s | 1,163.4 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.43 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 249.09 us |
-| DSV4-Pro/a100_sxm_80gb-x322-pipeline | DeepSeek-V4-Pro-0813 | 322 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
-| DSV4-Pro/a100_sxm_80gb-x322-tensor | DeepSeek-V4-Pro-0813 | 322 | tensor | nvlink3 | infiniband_hdr | 244 | 1,820.70 us | 54.9 tok/s | 549.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 41 on infiniband_hdr (traversals 4.0) = 1,195.40 us |
-| DSV4-Pro/a100_sxm_80gb-x322-hybrid | DeepSeek-V4-Pro-0813 | 322 | hybrid | nvlink3 | infiniband_hdr | 162 | 729.44 us | 137.1 tok/s | 1,370.9 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 40 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 104.14 us |
-| DSV4-Pro/a100_sxm_80gb-x322-expert | DeepSeek-V4-Pro-0813 | 322 | expert | nvlink3 | infiniband_hdr | 244 | 859.35 us | 116.4 tok/s | 1,163.7 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.38 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 248.96 us |
-| DSV4-Pro/a100_sxm_80gb-x324-pipeline | DeepSeek-V4-Pro-0813 | 324 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
-| DSV4-Pro/a100_sxm_80gb-x324-tensor | DeepSeek-V4-Pro-0813 | 324 | tensor | nvlink3 | infiniband_hdr | 244 | 1,820.70 us | 54.9 tok/s | 549.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 41 on infiniband_hdr (traversals 4.0) = 1,195.40 us |
-| DSV4-Pro/a100_sxm_80gb-x324-hybrid | DeepSeek-V4-Pro-0813 | 324 | hybrid | nvlink3 | infiniband_hdr | 162 | 729.44 us | 137.1 tok/s | 1,370.9 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 40 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 104.14 us |
-| DSV4-Pro/a100_sxm_80gb-x324-expert | DeepSeek-V4-Pro-0813 | 324 | expert | nvlink3 | infiniband_hdr | 244 | 859.34 us | 116.4 tok/s | 1,163.7 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.38 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 248.96 us |
 | DSV4-Pro/a100_sxm_80gb-x335-pipeline | DeepSeek-V4-Pro-0813 | 335 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
 | DSV4-Pro/a100_sxm_80gb-x335-tensor | DeepSeek-V4-Pro-0813 | 335 | tensor | nvlink3 | infiniband_hdr | 244 | 1,820.83 us | 54.9 tok/s | 549.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 42 on infiniband_hdr (traversals 4.0) = 1,195.52 us |
 | DSV4-Pro/a100_sxm_80gb-x335-hybrid | DeepSeek-V4-Pro-0813 | 335 | hybrid | nvlink3 | infiniband_hdr | 163 | 732.04 us | 136.6 tok/s | 1,366.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 41 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 106.74 us |
@@ -746,6 +740,14 @@ fabric (Rocki et al., SC20). `Events` spells the breakdown out.
 | DSV4-Pro/a100_sxm_80gb-x336-tensor | DeepSeek-V4-Pro-0813 | 336 | tensor | nvlink3 | infiniband_hdr | 244 | 1,820.83 us | 54.9 tok/s | 549.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 42 on infiniband_hdr (traversals 4.0) = 1,195.52 us |
 | DSV4-Pro/a100_sxm_80gb-x336-hybrid | DeepSeek-V4-Pro-0813 | 336 | hybrid | nvlink3 | infiniband_hdr | 163 | 732.04 us | 136.6 tok/s | 1,366.0 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 41 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 106.74 us |
 | DSV4-Pro/a100_sxm_80gb-x336-expert | DeepSeek-V4-Pro-0813 | 336 | expert | nvlink3 | infiniband_hdr | 244 | 859.27 us | 116.4 tok/s | 1,163.8 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.36 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 248.91 us |
+| DSV4-Pro/a100_sxm_80gb-x337-pipeline | DeepSeek-V4-Pro-0813 | 337 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
+| DSV4-Pro/a100_sxm_80gb-x337-tensor | DeepSeek-V4-Pro-0813 | 337 | tensor | nvlink3 | infiniband_hdr | 244 | 1,820.94 us | 54.9 tok/s | 549.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 43 on infiniband_hdr (traversals 4.0) = 1,195.64 us |
+| DSV4-Pro/a100_sxm_80gb-x337-hybrid | DeepSeek-V4-Pro-0813 | 337 | hybrid | nvlink3 | infiniband_hdr | 164 | 734.65 us | 136.1 tok/s | 1,361.2 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 42 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 109.34 us |
+| DSV4-Pro/a100_sxm_80gb-x337-expert | DeepSeek-V4-Pro-0813 | 337 | expert | nvlink3 | infiniband_hdr | 244 | 859.27 us | 116.4 tok/s | 1,163.8 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.36 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 248.91 us |
+| DSV4-Pro/a100_sxm_80gb-x346-pipeline | DeepSeek-V4-Pro-0813 | 346 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
+| DSV4-Pro/a100_sxm_80gb-x346-tensor | DeepSeek-V4-Pro-0813 | 346 | tensor | nvlink3 | infiniband_hdr | 244 | 1,821.05 us | 54.9 tok/s | 549.1 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 44 on infiniband_hdr (traversals 4.0) = 1,195.75 us |
+| DSV4-Pro/a100_sxm_80gb-x346-hybrid | DeepSeek-V4-Pro-0813 | 346 | hybrid | nvlink3 | infiniband_hdr | 165 | 737.25 us | 135.6 tok/s | 1,356.4 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 43 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 111.95 us |
+| DSV4-Pro/a100_sxm_80gb-x346-expert | DeepSeek-V4-Pro-0813 | 346 | expert | nvlink3 | infiniband_hdr | 244 | 859.23 us | 116.4 tok/s | 1,163.8 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 610.36 us; 122 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 248.87 us |
 | DSV4-Pro/a100_sxm_80gb-x354-pipeline | DeepSeek-V4-Pro-0813 | 354 | pipeline | nvlink3 | infiniband_hdr | 60 | 153.26 us | 652.5 tok/s | 6,525.0 tok/s | 53 x point_to_point span 2 on nvlink3 (traversals 1.0) = 135.03 us; 7 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 18.22 us |
 | DSV4-Pro/a100_sxm_80gb-x354-tensor | DeepSeek-V4-Pro-0813 | 354 | tensor | nvlink3 | infiniband_hdr | 244 | 1,821.16 us | 54.9 tok/s | 549.1 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 122 x all_reduce span 45 on infiniband_hdr (traversals 4.0) = 1,195.86 us |
 | DSV4-Pro/a100_sxm_80gb-x354-hybrid | DeepSeek-V4-Pro-0813 | 354 | hybrid | nvlink3 | infiniband_hdr | 166 | 739.86 us | 135.2 tok/s | 1,351.6 tok/s | 122 x all_reduce span 8 on nvlink3 (traversals 2.0) = 625.30 us; 44 x point_to_point span 2 on infiniband_hdr (traversals 1.0) = 114.55 us |
@@ -787,16 +789,16 @@ given more silicon.
 
 | Model | B | Winner on rate | Winner per mm2 | Best design | Best mm2 | Best user tok/s | tok/s per mm2 | Best array tok/s (mm2) | Best wafer tok/s (mm2) | Wafer/array | Binds on |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
-| DeepSeek-V4-Pro-0813 | 1 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,230.8 | 0.010 | 1,970.7 (242,055) | 2,230.8 (231,125) | 1.13x | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 2 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,230.8 | 0.010 | 1,970.7 (242,055) | 2,230.8 (231,125) | 1.13x | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 4 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,230.8 | 0.010 | 1,970.7 (242,055) | 2,230.8 (231,125) | 1.13x | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 8 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,230.8 | 0.010 | 1,970.7 (242,055) | 2,230.8 (231,125) | 1.13x | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 16 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,230.8 | 0.010 | 1,970.7 (242,055) | 2,230.8 (231,125) | 1.13x | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 32 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,222.5 | 0.008 | 2,037.0 (265,690) | 2,222.5 (277,350) | 1.09x | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 64 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill | 369,800 | 2,140.7 | 0.006 | 1,878.1 (277,100) | 2,140.7 (369,800) | 1.14x | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 256 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 1,714.1 | 0.003 | 1,330.3 (322,740) | 1,714.1 (554,700) | 1.29x | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 1024 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 950.4 | 0.002 | 525.1 (322,740) | 950.4 (554,700) | 1.81x | weight_read |
-| DeepSeek-V4-Pro-0813 | 4096 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 365.5 | 0.001 | 148.5 (322,740) | 365.5 (554,700) | 2.46x | compute |
+| DeepSeek-V4-Pro-0813 | 1 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,227.5 | 0.010 | 1,597.2 (277,100) | 2,227.5 (231,125) | 1.39x | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 2 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,227.5 | 0.010 | 1,597.2 (277,100) | 2,227.5 (231,125) | 1.39x | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 4 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,227.5 | 0.010 | 1,597.2 (277,100) | 2,227.5 (231,125) | 1.39x | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 8 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,227.5 | 0.010 | 1,597.2 (277,100) | 2,227.5 (231,125) | 1.39x | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 16 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x5 | 231,125 | 2,227.5 | 0.010 | 1,597.2 (277,100) | 2,227.5 (231,125) | 1.39x | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 32 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x6 | 277,350 | 2,218.7 | 0.008 | 1,597.2 (277,100) | 2,218.7 (277,350) | 1.39x | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 64 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x8-romfill | 369,800 | 2,136.2 | 0.006 | 1,591.0 (277,100) | 2,136.2 (369,800) | 1.34x | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 256 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 1,712.5 | 0.003 | 1,298.4 (322,740) | 1,712.5 (554,700) | 1.32x | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 1024 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 949.3 | 0.002 | 521.2 (322,740) | 949.3 (554,700) | 1.82x | weight_read |
+| DeepSeek-V4-Pro-0813 | 4096 | wafer | wafer | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 365.4 | 0.001 | 147.6 (322,740) | 365.4 (554,700) | 2.48x | compute |
 
 ## The two ROM floorplans on one die
 
@@ -869,26 +871,26 @@ distribution rather than from the mean engaged region.
 
 | Model | B | Spare silicon | Batched aggregate | Per-stream aggregate | Per-region aggregate | Per-stream penalty | Per-region over broadcast | Batched binds on | Per-stream binds on | Per-region binds on |
 |---|---:|---|---:|---:|---:|---:|---:|---|---|---|
-| DeepSeek-V4-Pro-0813 | 1 | sram | 474,556.7 | 25,060.6 | 25,060.6 | 18.94x | 1.00x | weight_read | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 2 | sram | 474,556.7 | 25,060.6 | 25,060.6 | 18.94x | 1.00x | weight_read | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 4 | sram | 474,556.7 | 25,060.6 | 25,060.6 | 18.94x | 1.00x | weight_read | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 8 | sram | 474,556.7 | 25,060.6 | 25,060.6 | 18.94x | 1.00x | weight_read | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 16 | sram | 474,556.7 | 25,060.6 | 25,060.6 | 18.94x | 1.00x | weight_read | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 32 | sram | 474,556.7 | 25,060.6 | 42,177.1 | 18.94x | 1.68x | weight_read | weight_read | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 64 | sram | 474,556.7 | 25,060.6 | 68,407.0 | 18.94x | 2.73x | weight_read | weight_read | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 256 | sram | 474,556.7 | 26,003.9 | 158,113.9 | 18.25x | 6.08x | weight_read | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 1024 | sram | 973,175.8 | 26,113.2 | 269,116.6 | 37.27x | 10.31x | weight_read | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 4096 | sram | 1,497,046.5 | 26,113.2 | 425,950.2 | 57.33x | 16.31x | compute | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 1 | rom | 755,121.7 | 29,415.3 | 29,415.3 | 25.67x | 1.00x | compute | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 2 | rom | 755,121.7 | 29,415.3 | 29,415.3 | 25.67x | 1.00x | compute | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 4 | rom | 755,121.7 | 29,415.3 | 29,415.3 | 25.67x | 1.00x | compute | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 8 | rom | 755,121.7 | 29,415.3 | 29,415.3 | 25.67x | 1.00x | compute | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 16 | rom | 755,121.7 | 29,415.3 | 29,415.3 | 25.67x | 1.00x | compute | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 32 | rom | 755,121.7 | 29,415.3 | 43,582.3 | 25.67x | 1.48x | compute | weight_read | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 64 | rom | 755,121.7 | 29,415.3 | 69,888.2 | 25.67x | 2.38x | compute | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 256 | rom | 755,121.7 | 30,736.9 | 155,795.9 | 24.57x | 5.07x | compute | weight_read | layer_fixed_latency |
-| DeepSeek-V4-Pro-0813 | 1024 | rom | 848,915.9 | 31,106.0 | 290,556.7 | 27.29x | 9.34x | compute | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 4096 | rom | 1,040,199.8 | 31,106.0 | 430,083.4 | 33.44x | 13.83x | compute | weight_read | kv_read |
+| DeepSeek-V4-Pro-0813 | 1 | sram | 474,483.9 | 25,059.4 | 25,059.4 | 18.93x | 1.00x | weight_read | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 2 | sram | 474,483.9 | 25,059.4 | 25,059.4 | 18.93x | 1.00x | weight_read | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 4 | sram | 474,483.9 | 25,059.4 | 25,059.4 | 18.93x | 1.00x | weight_read | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 8 | sram | 474,483.9 | 25,059.4 | 25,059.4 | 18.93x | 1.00x | weight_read | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 16 | sram | 474,483.9 | 25,059.4 | 25,059.4 | 18.93x | 1.00x | weight_read | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 32 | sram | 474,483.9 | 25,059.4 | 42,149.9 | 18.93x | 1.68x | weight_read | weight_read | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 64 | sram | 474,483.9 | 25,059.4 | 68,367.4 | 18.93x | 2.73x | weight_read | weight_read | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 256 | sram | 474,483.9 | 26,003.3 | 158,068.1 | 18.25x | 6.08x | weight_read | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 1024 | sram | 972,073.7 | 26,113.2 | 269,072.0 | 37.23x | 10.30x | weight_read | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 4096 | sram | 1,496,631.7 | 26,113.2 | 425,907.8 | 57.31x | 16.31x | compute | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 1 | rom | 754,937.3 | 29,413.6 | 29,413.6 | 25.67x | 1.00x | compute | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 2 | rom | 754,937.3 | 29,413.6 | 29,413.6 | 25.67x | 1.00x | compute | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 4 | rom | 754,937.3 | 29,413.6 | 29,413.6 | 25.67x | 1.00x | compute | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 8 | rom | 754,937.3 | 29,413.6 | 29,413.6 | 25.67x | 1.00x | compute | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 16 | rom | 754,937.3 | 29,413.6 | 29,413.6 | 25.67x | 1.00x | compute | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 32 | rom | 754,937.3 | 29,413.6 | 43,553.3 | 25.67x | 1.48x | compute | weight_read | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 64 | rom | 754,937.3 | 29,413.6 | 69,860.5 | 25.67x | 2.38x | compute | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 256 | rom | 754,937.3 | 30,736.1 | 155,751.4 | 24.56x | 5.07x | compute | weight_read | layer_fixed_latency |
+| DeepSeek-V4-Pro-0813 | 1024 | rom | 848,760.2 | 31,106.0 | 290,504.7 | 27.29x | 9.34x | compute | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 4096 | rom | 1,040,138.7 | 31,106.0 | 430,040.2 | 33.44x | 13.82x | compute | weight_read | kv_read |
 
 ## The floorplan sweep: where the recovered silicon goes
 
@@ -917,66 +919,66 @@ where that is controlled for.
 
 | Model | B | Amortisation | Spare | Design | mm2 | R | Sweeps | Aggregate | tok/s/mm2 | Binds on | vs ROM+MAC/sram |
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---|---:|
-| DeepSeek-V4-Pro-0813 | 1 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,556.7 | 0.856 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 1 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 755,121.7 | 1.361 | compute | 1.59x |
-| DeepSeek-V4-Pro-0813 | 1 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 1 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 1 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 1 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 2 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,556.7 | 0.856 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 2 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 755,121.7 | 1.361 | compute | 1.59x |
-| DeepSeek-V4-Pro-0813 | 2 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 2 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 2 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 2 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 4 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,556.7 | 0.856 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 4 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 755,121.7 | 1.361 | compute | 1.59x |
-| DeepSeek-V4-Pro-0813 | 4 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 4 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 4 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 4 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 8 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,556.7 | 0.856 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 8 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 755,121.7 | 1.361 | compute | 1.59x |
-| DeepSeek-V4-Pro-0813 | 8 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 8 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 8 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 8 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 16 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,556.7 | 0.856 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 16 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 755,121.7 | 1.361 | compute | 1.59x |
-| DeepSeek-V4-Pro-0813 | 16 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 16 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 16 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 16 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 32 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,556.7 | 0.856 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 32 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 755,121.7 | 1.361 | compute | 1.59x |
-| DeepSeek-V4-Pro-0813 | 32 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 32 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 32 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 1.99 | 42,177.1 | 0.456 | layer_fixed_latency | 0.09x |
-| DeepSeek-V4-Pro-0813 | 32 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 1.99 | 43,582.3 | 0.471 | layer_fixed_latency | 0.09x |
-| DeepSeek-V4-Pro-0813 | 64 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,556.7 | 0.856 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 64 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 755,121.7 | 1.361 | compute | 1.59x |
-| DeepSeek-V4-Pro-0813 | 64 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,060.6 | 0.271 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 64 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,415.3 | 0.318 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 64 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 2.54 | 68,407.0 | 0.740 | layer_fixed_latency | 0.14x |
-| DeepSeek-V4-Pro-0813 | 64 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 1.99 | 69,888.2 | 0.756 | weight_read | 0.15x |
-| DeepSeek-V4-Pro-0813 | 256 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,556.7 | 0.856 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 256 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 755,121.7 | 1.361 | compute | 1.59x |
-| DeepSeek-V4-Pro-0813 | 256 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 2.25 | 26,003.9 | 0.281 | weight_read | 0.05x |
-| DeepSeek-V4-Pro-0813 | 256 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 2.25 | 30,736.9 | 0.332 | weight_read | 0.06x |
-| DeepSeek-V4-Pro-0813 | 256 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 3.49 | 158,113.9 | 1.710 | weight_read | 0.33x |
-| DeepSeek-V4-Pro-0813 | 256 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 3.49 | 155,795.9 | 1.685 | layer_fixed_latency | 0.33x |
-| DeepSeek-V4-Pro-0813 | 1024 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 1.00 | 1.00 | 973,175.8 | 1.754 | weight_read | 1.00x |
-| DeepSeek-V4-Pro-0813 | 1024 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 848,915.9 | 1.530 | compute | 0.87x |
+| DeepSeek-V4-Pro-0813 | 1 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,483.9 | 0.855 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 1 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 754,937.3 | 1.361 | compute | 1.59x |
+| DeepSeek-V4-Pro-0813 | 1 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 1 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 1 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 1 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 2 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,483.9 | 0.855 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 2 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 754,937.3 | 1.361 | compute | 1.59x |
+| DeepSeek-V4-Pro-0813 | 2 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 2 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 2 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 2 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 4 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,483.9 | 0.855 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 4 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 754,937.3 | 1.361 | compute | 1.59x |
+| DeepSeek-V4-Pro-0813 | 4 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 4 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 4 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 4 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 8 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,483.9 | 0.855 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 8 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 754,937.3 | 1.361 | compute | 1.59x |
+| DeepSeek-V4-Pro-0813 | 8 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 8 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 8 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 8 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 16 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,483.9 | 0.855 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 16 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 754,937.3 | 1.361 | compute | 1.59x |
+| DeepSeek-V4-Pro-0813 | 16 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 16 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 16 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perregion | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 16 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perregion-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 32 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,483.9 | 0.855 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 32 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 754,937.3 | 1.361 | compute | 1.59x |
+| DeepSeek-V4-Pro-0813 | 32 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 32 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 32 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 1.99 | 42,149.9 | 0.456 | layer_fixed_latency | 0.09x |
+| DeepSeek-V4-Pro-0813 | 32 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 1.99 | 43,553.3 | 0.471 | layer_fixed_latency | 0.09x |
+| DeepSeek-V4-Pro-0813 | 64 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,483.9 | 0.855 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 64 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 754,937.3 | 1.361 | compute | 1.59x |
+| DeepSeek-V4-Pro-0813 | 64 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 1.00 | 25,059.4 | 0.271 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 64 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 1.00 | 29,413.6 | 0.318 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 64 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 2.54 | 68,367.4 | 0.740 | layer_fixed_latency | 0.14x |
+| DeepSeek-V4-Pro-0813 | 64 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 1.99 | 69,860.5 | 0.756 | weight_read | 0.15x |
+| DeepSeek-V4-Pro-0813 | 256 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12 | 554,700 | 1.00 | 1.00 | 474,483.9 | 0.855 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 256 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 754,937.3 | 1.361 | compute | 1.59x |
+| DeepSeek-V4-Pro-0813 | 256 | per_stream | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 2.25 | 26,003.3 | 0.281 | weight_read | 0.05x |
+| DeepSeek-V4-Pro-0813 | 256 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 2.25 | 30,736.1 | 0.332 | weight_read | 0.06x |
+| DeepSeek-V4-Pro-0813 | 256 | per_region | sram | DSV4-Pro/ROM-N6-native-SRAMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 3.49 | 158,068.1 | 1.710 | weight_read | 0.33x |
+| DeepSeek-V4-Pro-0813 | 256 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 3.49 | 155,751.4 | 1.685 | layer_fixed_latency | 0.33x |
+| DeepSeek-V4-Pro-0813 | 1024 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 1.00 | 1.00 | 972,073.7 | 1.752 | weight_read | 1.00x |
+| DeepSeek-V4-Pro-0813 | 1024 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 848,760.2 | 1.530 | compute | 0.87x |
 | DeepSeek-V4-Pro-0813 | 1024 | per_stream | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 8.98 | 26,113.2 | 0.282 | weight_read | 0.03x |
 | DeepSeek-V4-Pro-0813 | 1024 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 8.98 | 31,106.0 | 0.336 | weight_read | 0.03x |
-| DeepSeek-V4-Pro-0813 | 1024 | per_region | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 5.09 | 269,116.6 | 2.911 | weight_read | 0.28x |
-| DeepSeek-V4-Pro-0813 | 1024 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 5.09 | 290,556.7 | 3.143 | weight_read | 0.30x |
-| DeepSeek-V4-Pro-0813 | 4096 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 1.00 | 1.00 | 1,497,046.5 | 2.699 | compute | 1.00x |
-| DeepSeek-V4-Pro-0813 | 4096 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 1,040,199.8 | 1.875 | compute | 0.69x |
+| DeepSeek-V4-Pro-0813 | 1024 | per_region | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 5.09 | 269,072.0 | 2.910 | weight_read | 0.28x |
+| DeepSeek-V4-Pro-0813 | 1024 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 5.09 | 290,504.7 | 3.142 | weight_read | 0.30x |
+| DeepSeek-V4-Pro-0813 | 4096 | batched | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x12 | 554,700 | 1.00 | 1.00 | 1,496,631.7 | 2.698 | compute | 1.00x |
+| DeepSeek-V4-Pro-0813 | 4096 | batched | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x12-romfill | 554,700 | 1.97 | 1.00 | 1,040,138.7 | 1.875 | compute | 0.69x |
 | DeepSeek-V4-Pro-0813 | 4096 | per_stream | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream | 92,450 | 1.00 | 35.93 | 26,113.2 | 0.282 | weight_read | 0.02x |
 | DeepSeek-V4-Pro-0813 | 4096 | per_stream | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-pipeline-x2-perstream-romfill | 92,450 | 1.19 | 35.93 | 31,106.0 | 0.336 | weight_read | 0.02x |
-| DeepSeek-V4-Pro-0813 | 4096 | per_region | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 7.62 | 425,950.2 | 4.607 | weight_read | 0.28x |
-| DeepSeek-V4-Pro-0813 | 4096 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 7.62 | 430,083.4 | 4.652 | kv_read | 0.29x |
+| DeepSeek-V4-Pro-0813 | 4096 | per_region | sram | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion | 92,450 | 1.00 | 7.62 | 425,907.8 | 4.607 | weight_read | 0.28x |
+| DeepSeek-V4-Pro-0813 | 4096 | per_region | rom | DSV4-Pro/ROM-N6-native-HBMKV-wafer-hybrid-x2-perregion-romfill | 92,450 | 1.19 | 7.62 | 430,040.2 | 4.652 | kv_read | 0.29x |
 
 ## What the completeness corrections cost
 
@@ -1097,16 +1099,16 @@ correcting only the ROM side would be its own bias.
 | DeepSeek-V4-Pro-0813 | 256 | 185 | 161.05 | 55.36 | 2.91x |
 | DeepSeek-V4-Pro-0813 | 1024 | 185 | 161.92 | 55.76 | 2.90x |
 | DeepSeek-V4-Pro-0813 | 4096 | 185 | 161.92 | 55.76 | 2.90x |
-| DeepSeek-V4-Pro-0813 | 1 | 197 | 5.92 | 5.61 | 1.06x |
-| DeepSeek-V4-Pro-0813 | 2 | 197 | 11.58 | 9.31 | 1.24x |
-| DeepSeek-V4-Pro-0813 | 4 | 197 | 22.16 | 13.34 | 1.66x |
-| DeepSeek-V4-Pro-0813 | 8 | 197 | 40.68 | 19.93 | 2.04x |
-| DeepSeek-V4-Pro-0813 | 16 | 197 | 69.52 | 28.08 | 2.48x |
-| DeepSeek-V4-Pro-0813 | 32 | 197 | 106.11 | 37.80 | 2.81x |
-| DeepSeek-V4-Pro-0813 | 64 | 197 | 140.05 | 47.23 | 2.97x |
-| DeepSeek-V4-Pro-0813 | 256 | 197 | 168.10 | 57.05 | 2.95x |
-| DeepSeek-V4-Pro-0813 | 1024 | 197 | 169.09 | 57.47 | 2.94x |
-| DeepSeek-V4-Pro-0813 | 4096 | 197 | 169.09 | 57.47 | 2.94x |
+| DeepSeek-V4-Pro-0813 | 1 | 188 | 5.92 | 5.59 | 1.06x |
+| DeepSeek-V4-Pro-0813 | 2 | 188 | 11.57 | 9.23 | 1.25x |
+| DeepSeek-V4-Pro-0813 | 4 | 188 | 22.10 | 13.19 | 1.67x |
+| DeepSeek-V4-Pro-0813 | 8 | 188 | 40.47 | 19.71 | 2.05x |
+| DeepSeek-V4-Pro-0813 | 16 | 188 | 68.86 | 27.66 | 2.49x |
+| DeepSeek-V4-Pro-0813 | 32 | 188 | 104.43 | 37.13 | 2.81x |
+| DeepSeek-V4-Pro-0813 | 64 | 188 | 136.79 | 46.29 | 2.96x |
+| DeepSeek-V4-Pro-0813 | 256 | 188 | 162.85 | 55.79 | 2.92x |
+| DeepSeek-V4-Pro-0813 | 1024 | 188 | 163.75 | 56.20 | 2.91x |
+| DeepSeek-V4-Pro-0813 | 4096 | 188 | 163.75 | 56.20 | 2.91x |
 | DeepSeek-V4-Pro-0813 | 1 | 199 | 5.93 | 5.61 | 1.06x |
 | DeepSeek-V4-Pro-0813 | 2 | 199 | 11.59 | 9.33 | 1.24x |
 | DeepSeek-V4-Pro-0813 | 4 | 199 | 22.17 | 13.37 | 1.66x |
@@ -1117,16 +1119,16 @@ correcting only the ROM side would be its own bias.
 | DeepSeek-V4-Pro-0813 | 256 | 199 | 169.24 | 57.32 | 2.95x |
 | DeepSeek-V4-Pro-0813 | 1024 | 199 | 170.25 | 57.75 | 2.95x |
 | DeepSeek-V4-Pro-0813 | 4096 | 199 | 170.25 | 57.75 | 2.95x |
-| DeepSeek-V4-Pro-0813 | 1 | 214 | 5.93 | 5.63 | 1.05x |
-| DeepSeek-V4-Pro-0813 | 2 | 214 | 11.61 | 9.45 | 1.23x |
-| DeepSeek-V4-Pro-0813 | 4 | 214 | 22.25 | 13.61 | 1.64x |
-| DeepSeek-V4-Pro-0813 | 8 | 214 | 41.04 | 20.30 | 2.02x |
-| DeepSeek-V4-Pro-0813 | 16 | 214 | 70.64 | 28.83 | 2.45x |
-| DeepSeek-V4-Pro-0813 | 32 | 214 | 109.00 | 39.02 | 2.79x |
-| DeepSeek-V4-Pro-0813 | 64 | 214 | 145.70 | 48.93 | 2.98x |
-| DeepSeek-V4-Pro-0813 | 256 | 214 | 177.43 | 59.32 | 2.99x |
-| DeepSeek-V4-Pro-0813 | 1024 | 214 | 178.58 | 59.77 | 2.99x |
-| DeepSeek-V4-Pro-0813 | 4096 | 214 | 178.58 | 59.77 | 2.99x |
+| DeepSeek-V4-Pro-0813 | 1 | 205 | 5.93 | 5.62 | 1.05x |
+| DeepSeek-V4-Pro-0813 | 2 | 205 | 11.59 | 9.38 | 1.24x |
+| DeepSeek-V4-Pro-0813 | 4 | 205 | 22.20 | 13.47 | 1.65x |
+| DeepSeek-V4-Pro-0813 | 8 | 205 | 40.86 | 20.11 | 2.03x |
+| DeepSeek-V4-Pro-0813 | 16 | 205 | 70.07 | 28.44 | 2.46x |
+| DeepSeek-V4-Pro-0813 | 32 | 205 | 107.52 | 38.39 | 2.80x |
+| DeepSeek-V4-Pro-0813 | 64 | 205 | 142.78 | 48.05 | 2.97x |
+| DeepSeek-V4-Pro-0813 | 256 | 205 | 172.59 | 58.13 | 2.97x |
+| DeepSeek-V4-Pro-0813 | 1024 | 205 | 173.65 | 58.57 | 2.96x |
+| DeepSeek-V4-Pro-0813 | 4096 | 205 | 173.65 | 58.57 | 2.96x |
 | DeepSeek-V4-Pro-0813 | 1 | 216 | 5.93 | 5.64 | 1.05x |
 | DeepSeek-V4-Pro-0813 | 2 | 216 | 11.61 | 9.47 | 1.23x |
 | DeepSeek-V4-Pro-0813 | 4 | 216 | 22.26 | 13.64 | 1.63x |
@@ -1137,16 +1139,16 @@ correcting only the ROM side would be its own bias.
 | DeepSeek-V4-Pro-0813 | 256 | 216 | 178.48 | 59.58 | 3.00x |
 | DeepSeek-V4-Pro-0813 | 1024 | 216 | 179.64 | 60.03 | 2.99x |
 | DeepSeek-V4-Pro-0813 | 4096 | 216 | 179.64 | 60.03 | 2.99x |
-| DeepSeek-V4-Pro-0813 | 1 | 217 | 5.93 | 5.64 | 1.05x |
-| DeepSeek-V4-Pro-0813 | 2 | 217 | 11.61 | 9.48 | 1.23x |
-| DeepSeek-V4-Pro-0813 | 4 | 217 | 22.27 | 13.65 | 1.63x |
-| DeepSeek-V4-Pro-0813 | 8 | 217 | 41.10 | 20.36 | 2.02x |
-| DeepSeek-V4-Pro-0813 | 16 | 217 | 70.82 | 28.96 | 2.45x |
-| DeepSeek-V4-Pro-0813 | 32 | 217 | 109.47 | 39.23 | 2.79x |
-| DeepSeek-V4-Pro-0813 | 64 | 217 | 146.64 | 49.22 | 2.98x |
-| DeepSeek-V4-Pro-0813 | 256 | 217 | 179.00 | 59.70 | 3.00x |
-| DeepSeek-V4-Pro-0813 | 1024 | 217 | 180.17 | 60.16 | 3.00x |
-| DeepSeek-V4-Pro-0813 | 4096 | 217 | 180.17 | 60.16 | 3.00x |
+| DeepSeek-V4-Pro-0813 | 1 | 218 | 5.93 | 5.64 | 1.05x |
+| DeepSeek-V4-Pro-0813 | 2 | 218 | 11.61 | 9.48 | 1.22x |
+| DeepSeek-V4-Pro-0813 | 4 | 218 | 22.28 | 13.67 | 1.63x |
+| DeepSeek-V4-Pro-0813 | 8 | 218 | 41.11 | 20.38 | 2.02x |
+| DeepSeek-V4-Pro-0813 | 16 | 218 | 70.88 | 29.00 | 2.44x |
+| DeepSeek-V4-Pro-0813 | 32 | 218 | 109.62 | 39.29 | 2.79x |
+| DeepSeek-V4-Pro-0813 | 64 | 218 | 146.95 | 49.31 | 2.98x |
+| DeepSeek-V4-Pro-0813 | 256 | 218 | 179.51 | 59.83 | 3.00x |
+| DeepSeek-V4-Pro-0813 | 1024 | 218 | 180.70 | 60.29 | 3.00x |
+| DeepSeek-V4-Pro-0813 | 4096 | 218 | 180.70 | 60.29 | 3.00x |
 | DeepSeek-V4-Pro-0813 | 1 | 221 | 5.93 | 5.65 | 1.05x |
 | DeepSeek-V4-Pro-0813 | 2 | 221 | 11.62 | 9.51 | 1.22x |
 | DeepSeek-V4-Pro-0813 | 4 | 221 | 22.29 | 13.72 | 1.63x |
@@ -1227,26 +1229,6 @@ correcting only the ROM side would be its own bias.
 | DeepSeek-V4-Pro-0813 | 256 | 293 | 212.31 | 68.26 | 3.11x |
 | DeepSeek-V4-Pro-0813 | 1024 | 293 | 214.17 | 68.82 | 3.11x |
 | DeepSeek-V4-Pro-0813 | 4096 | 293 | 214.17 | 68.82 | 3.11x |
-| DeepSeek-V4-Pro-0813 | 1 | 322 | 5.95 | 5.75 | 1.03x |
-| DeepSeek-V4-Pro-0813 | 2 | 322 | 11.71 | 10.08 | 1.16x |
-| DeepSeek-V4-Pro-0813 | 4 | 322 | 22.64 | 15.03 | 1.51x |
-| DeepSeek-V4-Pro-0813 | 8 | 322 | 42.45 | 21.98 | 1.93x |
-| DeepSeek-V4-Pro-0813 | 16 | 322 | 75.22 | 32.84 | 2.29x |
-| DeepSeek-V4-Pro-0813 | 32 | 322 | 121.31 | 44.94 | 2.70x |
-| DeepSeek-V4-Pro-0813 | 64 | 322 | 171.18 | 57.39 | 2.98x |
-| DeepSeek-V4-Pro-0813 | 256 | 322 | 222.38 | 71.03 | 3.13x |
-| DeepSeek-V4-Pro-0813 | 1024 | 322 | 224.47 | 71.63 | 3.13x |
-| DeepSeek-V4-Pro-0813 | 4096 | 322 | 224.47 | 71.63 | 3.13x |
-| DeepSeek-V4-Pro-0813 | 1 | 324 | 5.95 | 5.75 | 1.03x |
-| DeepSeek-V4-Pro-0813 | 2 | 324 | 11.71 | 10.09 | 1.16x |
-| DeepSeek-V4-Pro-0813 | 4 | 324 | 22.65 | 15.05 | 1.50x |
-| DeepSeek-V4-Pro-0813 | 8 | 324 | 42.47 | 22.00 | 1.93x |
-| DeepSeek-V4-Pro-0813 | 16 | 324 | 75.27 | 32.91 | 2.29x |
-| DeepSeek-V4-Pro-0813 | 32 | 324 | 121.48 | 45.03 | 2.70x |
-| DeepSeek-V4-Pro-0813 | 64 | 324 | 171.53 | 57.52 | 2.98x |
-| DeepSeek-V4-Pro-0813 | 256 | 324 | 223.03 | 71.21 | 3.13x |
-| DeepSeek-V4-Pro-0813 | 1024 | 324 | 225.14 | 71.81 | 3.14x |
-| DeepSeek-V4-Pro-0813 | 4096 | 324 | 225.14 | 71.81 | 3.14x |
 | DeepSeek-V4-Pro-0813 | 1 | 335 | 5.96 | 5.76 | 1.03x |
 | DeepSeek-V4-Pro-0813 | 2 | 335 | 11.71 | 10.13 | 1.16x |
 | DeepSeek-V4-Pro-0813 | 4 | 335 | 22.67 | 15.17 | 1.49x |
@@ -1267,6 +1249,26 @@ correcting only the ROM side would be its own bias.
 | DeepSeek-V4-Pro-0813 | 256 | 336 | 226.83 | 72.31 | 3.14x |
 | DeepSeek-V4-Pro-0813 | 1024 | 336 | 229.03 | 72.91 | 3.14x |
 | DeepSeek-V4-Pro-0813 | 4096 | 336 | 229.03 | 72.91 | 3.14x |
+| DeepSeek-V4-Pro-0813 | 1 | 337 | 5.96 | 5.76 | 1.03x |
+| DeepSeek-V4-Pro-0813 | 2 | 337 | 11.72 | 10.14 | 1.16x |
+| DeepSeek-V4-Pro-0813 | 4 | 337 | 22.68 | 15.19 | 1.49x |
+| DeepSeek-V4-Pro-0813 | 8 | 337 | 42.58 | 22.16 | 1.92x |
+| DeepSeek-V4-Pro-0813 | 16 | 337 | 75.64 | 33.30 | 2.27x |
+| DeepSeek-V4-Pro-0813 | 32 | 337 | 122.49 | 45.56 | 2.69x |
+| DeepSeek-V4-Pro-0813 | 64 | 337 | 173.73 | 58.36 | 2.98x |
+| DeepSeek-V4-Pro-0813 | 256 | 337 | 227.14 | 72.40 | 3.14x |
+| DeepSeek-V4-Pro-0813 | 1024 | 337 | 229.35 | 73.00 | 3.14x |
+| DeepSeek-V4-Pro-0813 | 4096 | 337 | 229.35 | 73.00 | 3.14x |
+| DeepSeek-V4-Pro-0813 | 1 | 346 | 5.96 | 5.77 | 1.03x |
+| DeepSeek-V4-Pro-0813 | 2 | 346 | 11.72 | 10.18 | 1.15x |
+| DeepSeek-V4-Pro-0813 | 4 | 346 | 22.70 | 15.29 | 1.48x |
+| DeepSeek-V4-Pro-0813 | 8 | 346 | 42.65 | 22.27 | 1.92x |
+| DeepSeek-V4-Pro-0813 | 16 | 346 | 75.88 | 33.57 | 2.26x |
+| DeepSeek-V4-Pro-0813 | 32 | 346 | 123.16 | 45.92 | 2.68x |
+| DeepSeek-V4-Pro-0813 | 64 | 346 | 175.17 | 58.93 | 2.97x |
+| DeepSeek-V4-Pro-0813 | 256 | 346 | 229.87 | 73.20 | 3.14x |
+| DeepSeek-V4-Pro-0813 | 1024 | 346 | 232.14 | 73.81 | 3.14x |
+| DeepSeek-V4-Pro-0813 | 4096 | 346 | 232.14 | 73.81 | 3.14x |
 | DeepSeek-V4-Pro-0813 | 1 | 354 | 5.96 | 5.78 | 1.03x |
 | DeepSeek-V4-Pro-0813 | 2 | 354 | 11.72 | 10.21 | 1.15x |
 | DeepSeek-V4-Pro-0813 | 4 | 354 | 22.71 | 15.37 | 1.48x |
@@ -1360,8 +1362,8 @@ large fraction of one and a rounding error on the other.
 
 | Family | Model | B | Fixed latency (us) | Share of the fastest step |
 |---|---|---:|---:|---:|
-| gpu | DeepSeek-V4-Pro-0813 | 1 | 1,344.20 | 23.2% |
-| rom | DeepSeek-V4-Pro-0813 | 1 | 348.79 | 79.1% |
+| gpu | DeepSeek-V4-Pro-0813 | 1 | 603.70 | 12.0% |
+| rom | DeepSeek-V4-Pro-0813 | 1 | 348.79 | 78.9% |
 
 ### 4. KV access granularity, which is a layout choice
 
@@ -1409,30 +1411,30 @@ reduces the bytes fetched.
 
 | Model | B | Expert coverage | Engaged weight bytes | Engaged fraction | Effective ROM read | Peak ROM read | Per-user tok/s | Aggregate tok/s |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Pro-0813 | 1 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,784.7 |
-| DeepSeek-V4-Pro-0813 | 2 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,784.7 |
-| DeepSeek-V4-Pro-0813 | 4 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,784.7 |
-| DeepSeek-V4-Pro-0813 | 8 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,784.7 |
-| DeepSeek-V4-Pro-0813 | 16 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,784.7 |
-| DeepSeek-V4-Pro-0813 | 32 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,784.7 |
-| DeepSeek-V4-Pro-0813 | 64 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,784.7 |
-| DeepSeek-V4-Pro-0813 | 256 | 1.98% | 43.1 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 50.1 | 12,829.7 |
-| DeepSeek-V4-Pro-0813 | 1024 | 7.67% | 89.9 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 12.6 | 12,944.8 |
-| DeepSeek-V4-Pro-0813 | 4096 | 27.34% | 251.5 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 3.2 | 12,960.6 |
+| DeepSeek-V4-Pro-0813 | 1 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,777.9 |
+| DeepSeek-V4-Pro-0813 | 2 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,777.9 |
+| DeepSeek-V4-Pro-0813 | 4 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,777.9 |
+| DeepSeek-V4-Pro-0813 | 8 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,777.9 |
+| DeepSeek-V4-Pro-0813 | 16 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,777.9 |
+| DeepSeek-V4-Pro-0813 | 32 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,777.9 |
+| DeepSeek-V4-Pro-0813 | 64 | 1.56% | 39.7 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 63.3 | 12,777.9 |
+| DeepSeek-V4-Pro-0813 | 256 | 1.98% | 43.1 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 50.1 | 12,823.7 |
+| DeepSeek-V4-Pro-0813 | 1024 | 7.67% | 89.9 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 12.6 | 12,941.0 |
+| DeepSeek-V4-Pro-0813 | 4096 | 27.34% | 251.5 GB | 100.00% | 25,902.15 TB/s | 25,902.15 TB/s | 3.2 | 12,957.4 |
 
 ## Binding constraint census
 
 | Family | Binding constraint | Points |
 |---|---|---:|
 | gpu | compute | 1 |
-| gpu | link_latency | 482 |
-| gpu | weight_read | 797 |
-| rom | compute | 675 |
+| gpu | link_latency | 483 |
+| gpu | weight_read | 796 |
+| rom | compute | 677 |
 | rom | infeasible | 1566 |
 | rom | kv_read | 29 |
-| rom | layer_fixed_latency | 445 |
-| rom | link_latency | 872 |
-| rom | weight_read | 313 |
+| rom | layer_fixed_latency | 359 |
+| rom | link_latency | 890 |
+| rom | weight_read | 259 |
 
 Why the infeasible points are infeasible:
 
@@ -1442,12 +1444,12 @@ Why the infeasible points are infeasible:
 
 ## Mechanical consistency audit
 
-**FAIL** over 112,715 checks.
+**FAIL** over 109,115 checks.
 
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x187', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x200', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x191', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x219', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x220', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x221', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x224', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x227', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x230', 'DeepSeek-V4-Pro-0813', 1)
@@ -1455,9 +1457,9 @@ Why the infeasible points are infeasible:
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x340', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-pipeline-x368', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x187', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x200', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x191', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x219', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x220', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x221', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x224', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x227', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x230', 'DeepSeek-V4-Pro-0813', 1)
@@ -1465,9 +1467,9 @@ Why the infeasible points are infeasible:
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x340', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-tensor-x368', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x187', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x200', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x191', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x219', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x220', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x221', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x224', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x227', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x230', 'DeepSeek-V4-Pro-0813', 1)
@@ -1475,9 +1477,9 @@ Why the infeasible points are infeasible:
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x340', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-hw-hybrid-x368', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x187', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x200', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x191', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x219', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x220', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x221', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x224', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x227', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-pipeline-x230', 'DeepSeek-V4-Pro-0813', 1)
@@ -1489,9 +1491,9 @@ Why the infeasible points are infeasible:
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x8', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-wafer-pipeline-x12', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x187', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x200', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x191', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x219', 'DeepSeek-V4-Pro-0813', 1)
-- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x220', 'DeepSeek-V4-Pro-0813', 1)
+- ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x221', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x224', 'DeepSeek-V4-Pro-0813', 1)
 - ERROR: ROM weight time below the serial full-array sweep floor ('DSV4-Pro/ROM-N6-native-SRAMKV-array-tensor-x227', 'DeepSeek-V4-Pro-0813', 1)
 
@@ -1505,8 +1507,8 @@ Why the infeasible points are infeasible:
 |---|---:|
 | measured | 4 |
 | published | 75 |
-| derived | 49 |
-| assumed | 84 |
+| derived | 52 |
+| assumed | 86 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -1563,6 +1565,8 @@ failure mode this program exists to prevent:
 - `links.rom_board_serdes.hop_latency_s`
 - `links.rom_package_ucie.domain_size`
 - `links.rom_package_ucie.fabric`
+- `links.rom_package_ucie.relay_latency_s`
+- `links.rom_package_ucie_diagonal.hop_latency_s`
 - `links.rom_wafer_express.fabric`
 - `links.rom_wafer_express.router_latency_s`
 - `links.rom_wafer_express.wire_clock_hz`

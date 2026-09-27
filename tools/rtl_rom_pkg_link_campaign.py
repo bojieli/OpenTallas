@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Simulate the ROM package-to-package link and check its latency law.
 
-docs/ANALYTICAL_REPORT.md prices a hop between ROM packages at ~100 ns plus
-serialisation at 1.8 TB/s (links.rom_board_serdes).  This campaign runs
+docs/ANALYTICAL_REPORT.md prices a hop between ROM packages at 209 ns plus
+serialisation (links.rom_board_serdes: a 200 ns channel of 112G PAM4 SerDes with
+RS(544,514) FEC, 4 cycles of clock-domain crossing and this endpoint's 5
+cycles).  This campaign runs
 rtl/rom/ot_rom_pkg_link.sv under Icarus, lints it under Verilator, and checks
 that a message of F flits arrives with
 
@@ -11,7 +13,10 @@ that a message of F flits arrives with
 
 with a free-running receiver, and without loss or reordering under random
 back-pressure.  CHANNEL_CYCLES stands in for the analog PHY, FEC and flight
-time; only the digital framing, credit flow and cut-through are logic.
+time plus the clock-domain crossing (200 + 4 cycles at 1 GHz, so the first flit
+lands at the technology's 209 ns hop); only the digital framing, credit flow and
+cut-through are logic.  The flit stays 1,800 bytes (the package's raw lane rate
+at 1 GHz); the net rate after FEC and transcoding is 1.69 TB/s.
 """
 import argparse
 import hashlib
@@ -26,7 +31,7 @@ RTL = ROOT / "rtl/rom/ot_rom_pkg_link.sv"
 TB = ROOT / "rtl/test/tb_rom_pkg_link.sv"
 OUT = ROOT / "results/rtl/rom_pkg_link_campaign.json"
 # Must match the testbench parameters.
-FLIT_BYTES, TX, CH, RX, CREDITS = 1800, 2, 60, 2, 128
+FLIT_BYTES, TX, CH, RX, CREDITS = 1800, 2, 204, 2, 256
 OUT_STAGE = 1   # registered output, added after ASAP7 routing found the read mux critical
 FIRST = TX + CH + RX + OUT_STAGE
 LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH")
@@ -65,7 +70,11 @@ def run() -> dict:
         "schema": "opentallas.rom-pkg-link-campaign.v1",
         "status": status,
         "claim_boundary": "functional RTL of the digital link endpoint: framing, credits, cut-through. "
-                          "CHANNEL_CYCLES is a delay-line stand-in for SerDes, FEC and flight; no PHY.",
+                          "CHANNEL_CYCLES is a delay-line stand-in for SerDes, FEC, flight and the clock-domain "
+                          "crossing (200 + 4 cycles); no PHY. Credits return immediately here; a real return "
+                          "crosses the channel, so full rate needs ~418 flits of receive buffer, not 256.",
+        "technology_hop_s": json.loads((ROOT / "configs/hardware/technology.json").read_text())[
+            "links"]["rom_board_serdes"]["hop_latency_s"]["value"],
         "parameters": {"flit_bytes": FLIT_BYTES, "tx_stages": TX, "channel_cycles": CH, "rx_stages": RX,
                        "credits": CREDITS, "clock_hz": 1e9},
         "digital_endpoint_cycles": TX + RX + OUT_STAGE,

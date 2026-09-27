@@ -92,8 +92,14 @@ def test_serial_inputs_follow_the_grading_convention(tech):
             assert node.get("source"), name
             if node["grade"] == "assumed":
                 assert "range_low" in node and "range_high" in node, name
-    gap = block["gpu_datapath"]["kernel_launch_gap_s"]
-    assert gap["grade"] == "published" and gap["range_low"] < gap["value"] < gap["range_high"]
+    gpu = block["gpu_datapath"]
+    # The baseline is the fused persistent-kernel execution; no launch gap and no unmeasured boundary exists.
+    assert gpu["execution_model"]["value"] == "megakernel_pdl"
+    assert "kernel_launch_gap_s" not in gpu and "hypothetical_boundary_s" not in gpu
+    for key in ("dependent_boundary_gather_s", "dependent_boundary_handoff_s"):
+        node = gpu[key]
+        assert node["grade"] == "derived" and "blackwell_dependency_latency.json" in node["source"], key
+        assert node["range_low"] <= node["value"] <= node["range_high"], key
 
 
 # -- the graph and its solve -----------------------------------------------------------------------------
@@ -197,11 +203,33 @@ def test_sinkhorn_is_a_side_branch_joined_at_hc_post(tech):
     assert "L3.attn.hc.sinkhorn" not in sg.graph.nodes["L3.attn.hc_pre"]["deps"]
 
 
-def test_one_shot_beats_two_step_on_a_small_crossbar(tech):
+def test_package_links_reach_only_edge_neighbours(tech):
+    """Advanced-package UCIe reaches ~2 mm: a pair is one link, a 2 x 2 reaches its diagonal die through a
+    relay die (2 hops + relay) or on the standard-package diagonal link, whichever prices faster."""
+    hop = tech.link("rom_package_ucie")[0].value
+    relay = tech.graded("links", "rom_package_ucie", "relay_latency_s").value
+    d_hop = tech.link("rom_package_ucie_diagonal")[0].value
+    pair = C.Fabric(tech, inner="rom_package_ucie", outer="rom_board_serdes", domain=2, partitions=0, group=2)
+    assert pair.collective("all_reduce", 20480, 2)["latency_s"] == pytest.approx(hop)
     fab = C.Fabric(tech, inner="rom_package_ucie", outer="rom_board_serdes", domain=4, partitions=0, group=4)
     lv = fab._level("rom_package_ucie", 4)
-    assert lv.price("all_reduce", 20480, "one_shot")[0] < lv.price("all_reduce", 20480, "two_step")[0]
-    assert fab.collective("all_reduce", 20480, 4)["algo"] == "one_shot"
+    assert lv.price_mode("all_reduce", 8, "one_shot", "relay")[0] == pytest.approx(2 * hop + relay)
+    assert lv.price_mode("all_reduce", 8, "one_shot", "diagonal")[0] == pytest.approx(max(hop, d_hop))
+    # the 2 x 2 is a 2-cube: recursive doubling pairs across one edge, then the other, never the diagonal
+    assert lv.price("all_reduce", 20480, "rec_doubling")[0] == pytest.approx(2 * hop)
+    assert lv.price("all_reduce", 8, "one_shot") == min(lv.price_mode("all_reduce", 8, "one_shot", m)
+                                                        for m in ("relay", "diagonal"))
+    best = fab.collective("all_reduce", 20480, 4)
+    assert best["latency_s"] <= 2 * hop + 1e-15
+
+
+def test_package_serdes_lanes_scale_with_the_package_edge(tech):
+    """links.rom_board_serdes.bytes_s is a four-die package's; a two-die package has sqrt(1/2) of it."""
+    four = C.Fabric(tech, inner="rom_package_ucie", outer="rom_board_serdes", domain=4, partitions=0, group=4)
+    two = C.Fabric(tech, inner="rom_package_ucie", outer="rom_board_serdes", domain=2, partitions=0, group=2)
+    bw = tech.link("rom_board_serdes")[1].value
+    assert four._level("rom_board_serdes", 2).B_link == pytest.approx(bw / 4)
+    assert two._level("rom_board_serdes", 2).B_link == pytest.approx(bw / 4 * math.sqrt(0.5))
 
 
 def test_centre_mesh_is_1p1_diameter(tech):
@@ -227,15 +255,74 @@ def test_a_measured_link_is_charged_its_measured_floor(tech):
 
 
 # -- the GPU side -------------------------------------------------------------------------------------------
-def test_gpu_pays_a_published_launch_gap_per_dependent_kernel(tech):
-    prof = ModelProfile.load(QWEN)
-    m = C.MachineSpec(family="gpu", group=1, microbatch=1.0, clock_hz=1.965e9)
-    sg = C.serial_graph(tech, prof, context_tokens=8192, machine=m, fabric_links=None)
+def _gpu_graph(tech, path, ctx, group=1):
+    prof = ModelProfile.load(path)
+    m = C.MachineSpec(family="gpu", group=group, microbatch=1.0, clock_hz=1.965e9)
+    return prof, C.serial_graph(tech, prof, context_tokens=ctx, machine=m, fabric_links=None)
+
+
+def test_gpu_boundaries_are_the_measured_residual_dependency_signal(tech):
+    """The GPU pays no launch: every boundary costs its measured all-SM gather or one-to-one handoff."""
+    art = json.loads((ROOT / "results/gpu/blackwell_dependency_latency.json").read_text())
+    best, median = art["best_min_ns"], art["median_of_medians_ns"]
+    g = tech.raw["serial_latency"]["gpu_datapath"]
+    ga, ha = g["dependent_boundary_gather_s"], g["dependent_boundary_handoff_s"]
+    gd = json.loads((ROOT / "results/gpu/blackwell_gather_designs.json").read_text())["conclusions"]
+    # the gather is charged with the activation vector delivered, never the signal alone
+    assert ga["value"] == pytest.approx(gd["lowest_all_sm_gather_with_data_ns"]["bf16_8KiB"] * 1e-9, rel=0.01)
+    assert ga["range_low"] == pytest.approx(min(gd["exposed_under_weight_stream_ns"]["dynamic_rows_ll8"]) * 1e-9, rel=0.01)
+    assert ga["range_high"] == pytest.approx(gd["lowest_all_sm_gather_with_data_ns"]["fp32_16KiB"] * 1e-9, rel=0.01)
+    assert ga["range_low"] > best["flag_counter_all_blocks_ns"] * 1e-9
+    assert ha["value"] == ha["range_low"] == pytest.approx(best["flag_pingpong_handoff_ns"] * 1e-9)
+    assert ha["range_high"] == pytest.approx(median["flag_pingpong_handoff_ns"] * 1e-9)
+    # the first-principles validation agrees to within 2%
+    cost = art["validation"]["per_dependency_cost_ns"]
+    assert ga["value"] > cost["all_sm_gather"] * 1e-9
+    assert ha["value"] == pytest.approx(cost["one_to_one_or_pdl"] * 1e-9, rel=0.02)
+    assert cost["intra_cluster"] < cost["one_to_one_or_pdl"] < cost["all_sm_gather"]
+    prof, sg = _gpu_graph(tech, QWEN, 8192)
+    census = C.gpu_boundary_census(sg.graph, prof.num_layers)
+    # Qwen3-8B fused: QKV, attention, attention combine, o-proj, gate|up, down (Hazy's instruction set)
+    assert census["per_layer_total_min"] == census["per_layer_total_max"] == 6
+    assert census["per_layer_mean"] == {"gather": 4.0, "handoff": 2.0}
     det = sg.detail(0.0, 0.0)
-    gap = tech.raw["serial_latency"]["gpu_datapath"]["kernel_launch_gap_s"]["value"]
-    kernels = det["breakdown_s"]["kernel_launch"] / gap
-    assert kernels == pytest.approx(round(kernels))
-    assert 6 * 36 <= kernels <= 14 * 36 + 10       # 6-14 dependent kernels per dense layer
+    # a single GPU at zero sweep: the path is exactly its boundaries
+    expect = census["per_token"]["gather"] * ga["value"] + census["per_token"]["handoff"] * ha["value"]
+    assert det["breakdown_s"]["gpu_dependency"] == pytest.approx(expect)
+    assert det["critical_path_s"] == pytest.approx(expect)
+    assert "kernel_launch" not in det["breakdown_s"]
+
+
+def test_gpu_boundary_variant_touches_only_the_gpu_boundaries(tech):
+    g = tech.raw["serial_latency"]["gpu_datapath"]
+    hi = (g["dependent_boundary_gather_s"]["range_high"], g["dependent_boundary_handoff_s"]["range_high"])
+    var = C.gpu_boundary_variant(tech, gather_s=hi[0], handoff_s=hi[1])
+    assert {k: v for k, v in var.raw.items() if k != "serial_latency"} == \
+        {k: v for k, v in tech.raw.items() if k != "serial_latency"}
+    assert var.raw["serial_latency"]["rom_datapath"] == tech.raw["serial_latency"]["rom_datapath"]
+    rom_a, gpu_a = C.datapaths(tech)
+    rom_b, gpu_b = C.datapaths(var)
+    assert rom_a == rom_b
+    assert (gpu_b.boundary("gather"), gpu_b.boundary("handoff")) == pytest.approx(hi)
+    with pytest.raises(Exception):
+        gpu_a.boundary("barrier")
+    bad = C.gpu_boundary_variant(tech)
+    bad.raw["serial_latency"]["gpu_datapath"]["execution_model"]["value"] = "cuda_graph"
+    with pytest.raises(Exception):
+        C.GpuDatapath.from_technology(bad)
+    # a slower boundary can only lengthen the GPU's path
+    prof, fast = _gpu_graph(tech, QWEN, 8192)
+    _, slow = _gpu_graph(var, QWEN, 8192)
+    assert slow.detail(0.0, 0.0)["critical_path_s"] > fast.detail(0.0, 0.0)["critical_path_s"]
+
+
+def test_deepseek_fused_boundaries_exceed_qwen(tech):
+    prof, sg = _gpu_graph(tech, V41, 200_000)
+    fused = C.gpu_boundary_census(sg.graph, prof.num_layers)
+    # every GEMV, attention scan, index top-k and merge stays a boundary; the hyper-connection mixes,
+    # Sinkhorn and pooling are fused
+    assert 6 < fused["per_layer_total_mean"] < 20
+    assert fused["per_token"]["handoff"] >= 2 * prof.num_layers
 
 
 # -- the roofline integration ------------------------------------------------------------------------

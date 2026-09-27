@@ -25,6 +25,17 @@ model needs only the program's shapes and the position, so it prices what the
 RTL simulator reaches only slowly (long contexts), and design options:
 `--sinkhorn-seq` (the simple sequential Sinkhorn instead of the routed
 one-normalisation-per-step unit, ot_hdc_sinkhorn_mc).
+
+Quantised weights in HBM (`simulate(q=QStream(...))`, `--q-hbm NPC`) adds the QE
+weight streamer (rtl/hdc/hbm/ot_hdc_qstream.sv): the token's LINQ ops (those
+whose predicate holds) are one stream of FP8 (17-sector) and packed FP4
+(9-sector) words; word k is requested one a cycle when the window has room
+(word k - win consumed) and, for a routed expert, not before its release
+instruction has issued (plus the id read); the HBM serves sectors at the
+calibrated rate and a word arrives `lat` cycles after its request at the
+earliest.  A LINQ op issues once the first T = min(n, lead + n - floor(n *
+rate / 256)) of its words have arrived, and its row phase consumes a word a
+cycle.  Constants fitted to the RTL (tools/rtl_hdc_hbm_campaign.py).
 """
 import argparse
 import json
@@ -86,7 +97,87 @@ def sink_cycles(iters=20):
     return total + 2               # P_DONE, out_valid
 
 
-def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
+# QE weights in HBM: sec_per_pc, the probed sectors (32 B) per cycle of one
+# pseudo-channel; sec_cap, the most the QE stream takes in (its 17-sector words
+# span up to 5 channels and go one request a cycle through an 8-word look-
+# ahead) -- fitted with lat (request to arrival) and rel (a release
+# instruction's issue to the routed expert's first word being fetchable: the
+# walker reaching the entry, the id read) to the reduced vehicle's Verilator
+# runs at 4, 16 and 32 pseudo-channels; c_ann, announce to issue.
+# rate_sec_per_pc: the conservative per-channel rate behind the guaranteed
+# rate (q_rate) the streamer is configured with.
+QH = dict(npc=8, sec_per_pc=0.877, sec_cap=2.8, lat=80, c_ann=6, rel=120, lead=512, win=1024, margin=0.9,
+          rate_sec_per_pc=0.30)
+SPW8, SPW4 = 17, 9
+
+
+def q_rate(q):
+    """The QE streamer's guaranteed rate (FP8 words per cycle x 256)."""
+    return min(256, int(256 * q["margin"] * q["npc"] * q["rate_sec_per_pc"] / SPW8))
+
+
+class QStream:
+    """Fluid model of the QE weight streamer over one token."""
+
+    def __init__(self, q, prog, pos, rate=None):
+        self.q = q
+        self.s = min(q["npc"] * q["sec_per_pc"], q.get("sec_cap", 1e9))
+        self.rate = q_rate(q) if rate is None else rate
+        self.words = []                 # (spw, entry) per stream word
+        self.ent = []                   # (first word, n, release group)
+        grp = 0
+        for f0 in prog:
+            f = {name: f0.get(name, 0) for name, _ in I.FIELDS}
+            if f["wrel"]:
+                grp += 1
+            if f["unit"] != I.UNIT_QE or f["qe_mode"] != I.QE_LINQ:
+                continue
+            if (f["pred"] == I.PRED_ODD and not pos & 1) or (f["pred"] == I.PRED_NZ and pos == 0):
+                continue
+            n = f["qe_tiles"] * f["qe_nb"] * IL
+            self.ent.append((len(self.words), n, grp if f["qe_ind"] else 0))
+            self.words.extend([SPW4 if f["qe_fp4"] else SPW8] * n)
+        self.first_of = {e[0]: e for e in self.ent}
+        self.r, self.a, self.c = [], [], []
+        self.release_t = {}
+        self.n_rel = 0
+        self.nxt = 0
+        self.stats = dict(ops=0, words=0, sectors=sum(self.words), wait_cycles=0)
+
+    def release(self, t):
+        self.n_rel += 1
+        self.release_t[self.n_rel] = t
+
+    def _req(self, k):
+        q = self.q
+        while len(self.r) <= k:
+            j = len(self.r)
+            t = self.r[-1] + 1 if j else 0.0
+            if j >= q["win"]:
+                t = max(t, self.c[j - q["win"]])
+            e = self.first_of.get(j)
+            if e and e[2]:
+                t = max(t, self.release_t[e[2]] + q["rel"])
+            a = t + q["lat"]
+            if j:
+                a = max(a, self.a[-1] + self.words[j] / self.s)
+            self.r.append(t)
+            self.a.append(a)
+
+    def gate(self, t_ann):
+        first, n, _ = self.ent[self.stats["ops"]]
+        q = self.q
+        T = min(n, q["lead"] + n - (n * self.rate) // 256)
+        self._req(first + T - 1)
+        return max(t_ann + q["c_ann"], self.a[first + T - 1]), n
+
+    def consume(self, n, c0):
+        self.c.extend(c0 + j for j in range(n))
+        self.stats["ops"] += 1
+        self.stats["words"] += n
+
+
+def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30, q=None):
     dyn = I.dyn_values(0, pos)
     t = 0                                     # sequencer: earliest next issue cycle
     free = {u: 0 for u in (1, 2, 3, 4, 5)}    # unit accepts a new op from here
@@ -118,12 +209,20 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
             if f["wait"] >> b & 1:
                 ready = max(ready, idle[b + 1])
         go = max(ready, free[unit])
+        if q is not None and unit == I.UNIT_QE and f["qe_mode"] == I.QE_LINQ:
+            g, _ = q.gate(t)
+            g = int(-(-g // 1))
+            if g > go:
+                q.stats["wait_cycles"] += g - go
+                go = g
         if unit == I.UNIT_SU:
             stages = (f["m1"] not in (I.M1_BYP, I.M1_MAXB), f["m2"] != I.M2_BYP or f["qm"] != I.QM_OFF,
                       f["ad"] != I.AD_BYP, f["e1"] != I.E1_BYP, f["e2"] != I.E2_BYP)
             cls = (f["m1"] in (I.M1_DIVB, I.M1_DIVIMM), f["sfu"]) + stages
             if su_cls is not None and cls != su_cls:
                 go = max(go, su_last_retire + k["su_cls"])
+        if q is not None and f["wrel"]:
+            q.release(go)
         issues.append((go, n, u))
         s = go + 1                                  # the unit accepts at the next edge
         if unit == I.UNIT_HE:
@@ -158,6 +257,8 @@ def simulate(prog, pos, k=K, trace=False, sinkhorn_seq=False, t0=30):
             if f["qe_mode"] == I.QE_LINQ:
                 c += k["qe_load"]
                 c += (4 - (c + t0 + k["qe_phase0"])) % IL          # wait for slot phase IL-4
+                if q is not None:
+                    q.consume(f["qe_tiles"] * f["qe_nb"] * IL, c)
                 c += f["qe_tiles"] * f["qe_nb"] * IL
                 done = c + k["qe_rows_lat"]
             else:

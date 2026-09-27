@@ -230,3 +230,5 @@ localparam integer O_RED_TREE = 1383;
 localparam integer W_RED_TREE = 1;
 localparam integer O_SU_CHASE = 1384;
 localparam integer W_SU_CHASE = 16;
+localparam integer O_WREL = 1400;
+localparam integer W_WREL = 1;

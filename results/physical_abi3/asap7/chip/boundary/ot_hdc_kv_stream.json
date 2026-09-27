@@ -316,5 +316,16 @@
       "sha256": "7fd0224313630d283525afb1df8f1b6ea5fa4534fa7669afa153698b7131c7e6"
     }
   ],
+  "through": {
+    "hr_beat->hr_rdy": 464.03,
+    "hr_tag->hr_rdy": 494.79,
+    "hr_v->hr_rdy": 392.07,
+    "kv_raddr->tl_raddr": 108.7,
+    "kv_re->tl_raddr": 265.8,
+    "kv_re->tl_re": 232.13,
+    "kv_re->win_re": 13.76,
+    "tl_q->kv_q": 57.75,
+    "win_q->kv_q": 57.75
+  },
   "top": "ot_hdc_kv_stream"
 }

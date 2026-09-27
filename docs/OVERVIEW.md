@@ -228,19 +228,19 @@ The [analytical report](ANALYTICAL_REPORT.md) compares a redesigned
 model-specific ROM machine with a general-purpose HBM machine, B200 or A100 on
 NVLink, at equal silicon. Three results matter:
 
-- **One user, large MoE model.** The ROM array is 2.3–5× faster per user at N5
+- **One user, large MoE model.** The ROM array is 2.3–4.1× faster per user at N5
   against B200. Most of that comes from specialisation: chip links built without
   a software stack, experts striped across ROM banks, and one layer per package.
   With the GPU's own NVLink, a ROM array roughly ties.
 - **Many users, large MoE model.** With tens to about a thousand concurrent
-  users, the gap widens to 2.8–8.5×. Every extra GPU user adds expert-weight
+  users, the gap widens to 3.7–6.7×. Every extra GPU user adds expert-weight
   reads; a ROM weight never moves.
-- **Each side at its best.** Throughput differs by about 3×, and energy per
-  token by 3–5× (13× on Qwen3-8B). At thousands of users both machines run out
+- **Each side at its best.** Throughput differs by 1.1–4.0×, and energy per
+  token by 8–12× (9× on Qwen3-8B). At thousands of users both machines run out
   of arithmetic, and dense-KV models narrow the gap.
 
 A small dense model such as Qwen3-8B is the extreme case. It fits on a few ROM
-dies, so a single user runs about 19× faster than on B200, in line with the
+dies, so a single user runs about 4.6× faster than on B200, in line with the
 Taalas HC1 part the model is checked against.
 
 ## What has actually been simulated or implemented

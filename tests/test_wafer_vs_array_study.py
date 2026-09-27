@@ -41,7 +41,7 @@ def test_iso_area_pairs_never_give_the_array_more_silicon(env):
         assert pr["array_dies"] % S.DIES_PER_PACKAGE == 0
         assert pr["array_silicon_mm2"] <= pr["wafer_silicon_mm2"]
         assert 0 <= pr["array_residual_mm2"] < S.DIES_PER_PACKAGE * 815
-    assert [p["array_dies"] for p in S.iso_area_pairs(env["renv"])] == [112, 168, 224, 680]
+    assert [p["array_dies"] for p in S.iso_area_pairs(env["renv"])] == [112, 170, 226, 680]
 
 
 def test_designs_are_the_analytical_models_own(env):

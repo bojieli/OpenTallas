@@ -33,9 +33,9 @@ remain separate from a correctness-qualified chip throughput result.
 | Signal | Result | Evidence class |
 |---|---:|---|
 | Public model-specific silicon reference | **16,960 tokens/s per user** on Taalas HC1 | Fabricated product; first-party Taalas run, publicly documented, not an independent benchmark | <!-- figure: 16,960 src="configs/hardware/technology.json#reference_parts.taalas_hc1.published_tokens_s_per_user.value" name="Taalas HC1 public reference rate, README" -->
-| OpenTallas redesigned ROM array, DeepSeek-V4.1-Flash, 200K context | **5,218 tokens/s per user** at batch 1; **3,402** with 64 concurrent users | Deterministic analytical result on the [analytical report](docs/ANALYTICAL_REPORT.md) framework, with the serial path priced from the per-token operator graph; not measured silicon | <!-- figure: 5,218 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].rom_per_user_tokens_s" name="README V4.1 ROM batch-1 rate" --> <!-- figure: 3,402 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].rom_per_user_tokens_s" name="README V4.1 ROM batch-64 rate" -->
-| Same ROM array versus B200 on NVLink/NVL72 at the same silicon | **7.49×** per user at batch 1, **7.22×** at 64 users | Modeled; the GPU picks its own best layout, including NVL72 and expert parallelism, and pays a published launch gap per dependent kernel | <!-- figure: 7.49 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].per_user_speed_ratio" name="README V4.1 batch-1 ratio" --> <!-- figure: 7.22 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].per_user_speed_ratio" name="README V4.1 batch-64 ratio" -->
-| Each side at its best | **4.30×** throughput, **12.33×** tokens per joule | Best design and batch on each side at the same silicon | <!-- figure: 4.30 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4.1-Flash,silicon_area_mm2=554700.0].aggregate_ratio" name="README V4.1 best throughput ratio" --> <!-- figure: 12.33 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4.1-Flash,silicon_area_mm2=554700.0].tokens_per_joule_ratio" name="README V4.1 best energy ratio" -->
+| OpenTallas redesigned ROM array, DeepSeek-V4.1-Flash, 200K context | **4,084 tokens/s per user** at batch 1; **3,290** with 64 concurrent users | Deterministic analytical result on the [analytical report](docs/ANALYTICAL_REPORT.md) framework, with the serial path priced from the per-token operator graph; not measured silicon | <!-- figure: 4,084 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].rom_per_user_tokens_s" name="README V4.1 ROM batch-1 rate" --> <!-- figure: 3,290 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].rom_per_user_tokens_s" name="README V4.1 ROM batch-64 rate" -->
+| Same ROM array versus B200 on NVLink/NVL72 at the same silicon | **3.87×** per user at batch 1, **5.37×** at 64 users | Modeled; the GPU picks its own best layout, including NVL72 and expert parallelism, and runs decode as a fused persistent kernel whose dependent boundaries pay only their measured Blackwell dependency cost (no launch) | <!-- figure: 3.87 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x176,batch_size=1].per_user_speed_ratio" name="README V4.1 batch-1 ratio" --> <!-- figure: 5.37 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#comparisons[rom_design=DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x132,batch_size=64].per_user_speed_ratio" name="README V4.1 batch-64 ratio" -->
+| Each side at its best | **3.97×** throughput, **11.84×** tokens per joule | Best design and batch on each side at the same silicon | <!-- figure: 3.97 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4.1-Flash,silicon_area_mm2=554700.0].aggregate_ratio" name="README V4.1 best throughput ratio" --> <!-- figure: 11.84 src="results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#capacity_comparison[model=DeepSeek-V4.1-Flash,silicon_area_mm2=554700.0].tokens_per_joule_ratio" name="README V4.1 best energy ratio" -->
 
 The Taalas and OpenTallas rates are **not** an apples-to-apples benchmark. They
 use different models, contexts, systems, and evidence classes. The Taalas number
@@ -117,7 +117,7 @@ economic lever.
 
 The [analytical report](docs/ANALYTICAL_REPORT.md) prices energy per delivered
 token rather than cost: at each side's best, the redesigned ROM machine uses
-3–5× less energy per token than B200 on DeepSeek models and 13× less on
+8–12× less energy per token than B200 on DeepSeek models and 9× less on
 Qwen3-8B. The earlier partial-TCO scenarios came from the retired iso-node
 analytical model and are no longer published. A cost model would add mask and
 NRE amortisation, which falls on the ROM side, and model-refresh risk.
@@ -164,11 +164,11 @@ and may use tensor, pipeline, hybrid or expert parallelism.
 
 Summary at N5 against B200, per user:
 
-- **DeepSeek MoE models:** 2.3–5× at batch 1 and 2.8–8.5× from tens to about a
+- **DeepSeek MoE models:** 2.3–4.1× at batch 1 and 3.7–6.7× from tens to about a
   thousand concurrent users.
-- **Qwen3-8B:** about 19× for a single user.
-- **At each side's best:** throughput is about 3×, and tokens per joule 3–5× on
-  DeepSeek (13× on Qwen).
+- **Qwen3-8B:** about 4.6× for a single user.
+- **At each side's best:** throughput is 1.1–4.0×, and tokens per joule 8–12× on
+  DeepSeek (9× on Qwen).
 
 Specialisation, not weights-in-ROM alone, produces most of the large-model
 single-user gain. With the GPU's own links, a ROM array only ties B200 on NVL72

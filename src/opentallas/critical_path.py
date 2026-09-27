@@ -46,10 +46,20 @@ Two machines, one graph
 * **ROM** (the hardwired datapath): every node priced from
   ``technology.serial_latency.rom_datapath`` -- measured RTL depths at the
   slowest routed clock.  Streamable consumers chase their producer.
-* **GPU**: the same graph; every dependent kernel boundary pays a published
-  CUDA-graph launch gap, vector work fused into a kernel is free, a dependent
-  arithmetic chain inside one kernel (the Sinkhorn) pays published instruction
-  latencies at the part's clock.
+* **GPU**: the same graph, executed as state-of-the-art decode is: a persistent
+  megakernel or a PDL-chained sequence of fused kernels
+  (``serial_latency.gpu_datapath.execution_model`` = ``megakernel_pdl``).
+  Elementwise, norm and reduction work is fused into a neighbouring GEMM or
+  attention kernel; every remaining dependent boundary (a GEMM/GEMV, an
+  attention or state scan, a top-k select, the flash-decode combine, the
+  argmax) pays only its residual dependency signal, never a launch: a
+  measured all-SM gather (``dependent_boundary_gather_s``: every GEMV input,
+  every top-k or argmax over a whole vector) or a measured one-to-one handoff
+  (``dependent_boundary_handoff_s``: the attention scan, the flash-decode
+  combine, the token-id handoff), both measured on a Blackwell part
+  (``results/gpu/blackwell_dependency_latency.json``).  A dependent arithmetic
+  chain inside one kernel (the Sinkhorn) pays published instruction latencies
+  at the part's clock.
 
 Collectives
 -----------
@@ -77,7 +87,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SHAPES_PATH = ROOT / "configs" / "models" / "decode_graph_shapes.json"
 
 CATS = ("compute_chain", "weight_sweep", "kv_sweep", "collective_latency",
-        "collective_bytes", "pipeline_hops", "control", "kernel_launch")
+        "collective_bytes", "pipeline_hops", "control", "gpu_dependency")
 COMM_CATS = ("collective_latency", "collective_bytes", "pipeline_hops")
 ALGORITHMS = ("two_step", "one_shot", "ring", "rec_doubling", "tree", "centre_mesh")
 DETERMINISM = {
@@ -164,18 +174,61 @@ class RomDatapath:
         return max(16, 2 ** int(math.log2(max(1.0, lanes))))
 
 
+#: The one GPU execution this model prices: a persistent megakernel, or a
+#: PDL-chained sequence of fused kernels, in which a consumer waits only for its
+#: producer's dependency signal and elementwise, norm and reduction work is fused
+#: into the prologue or epilogue of a neighbouring GEMV/attention kernel.
+GPU_EXECUTION_MODEL = "megakernel_pdl"
+
+#: The two kinds of dependent boundary a fused GPU decode step still has, each
+#: charged its measured cost (``serial_latency.gpu_datapath``).
+#: ``gather``: the consumer needs a whole vector that every SM produced a slice
+#: of (every GEMV input -- a GEMV's K dimension is the full vector --, a top-k
+#: over every expert score, the vocabulary argmax), so every SM arrives on a
+#: counter and waits for all.  ``handoff``: the consumer needs a slice from a
+#: bounded set of producers (one attention head's q/k/v rows; the split-KV
+#: partials of one head), a producer-to-consumer flag through L2.
+BOUNDARY_KINDS = ("gather", "handoff")
+
+
 @dataclass(frozen=True)
 class GpuDatapath:
-    kernel_gap_s: float
     fp32_dep_cycles: float
     fp32_div_cycles: float
+    gather_s: float
+    handoff_s: float
+
+    def boundary(self, kind: str) -> float:
+        """Seconds one dependent boundary of this kind costs on the serial path."""
+        if kind not in BOUNDARY_KINDS:
+            raise ValidationError(f"unknown GPU boundary kind {kind!r}")
+        return self.gather_s if kind == "gather" else self.handoff_s
 
     @classmethod
     def from_technology(cls, technology: Any) -> "GpuDatapath":
         g = technology.raw["serial_latency"]["gpu_datapath"]
-        return cls(kernel_gap_s=_val(g["kernel_launch_gap_s"]),
-                   fp32_dep_cycles=_val(g["fp32_dependent_cycles"]),
-                   fp32_div_cycles=_val(g["fp32_divide_cycles"]))
+        mode = str(g["execution_model"]["value"])
+        if mode != GPU_EXECUTION_MODEL:
+            raise ValidationError(f"unknown GPU execution model {mode!r}; only {GPU_EXECUTION_MODEL!r} is priced")
+        return cls(fp32_dep_cycles=_val(g["fp32_dependent_cycles"]),
+                   fp32_div_cycles=_val(g["fp32_divide_cycles"]),
+                   gather_s=_val(g["dependent_boundary_gather_s"]),
+                   handoff_s=_val(g["dependent_boundary_handoff_s"]))
+
+
+def gpu_boundary_variant(technology: Any, *, gather_s: float | None = None,
+                         handoff_s: float | None = None) -> Any:
+    """A copy of ``technology`` with the GPU's per-boundary costs replaced (for
+    their measured band).  The ROM datapath, every link and the GPU's memory
+    and compute roofline are untouched."""
+
+    raw = json.loads(json.dumps(technology.raw))
+    g = raw["serial_latency"]["gpu_datapath"]
+    for key, value in (("dependent_boundary_gather_s", gather_s), ("dependent_boundary_handoff_s", handoff_s)):
+        if value is not None:
+            g[key]["value"] = float(value)
+    from dataclasses import replace as _replace
+    return _replace(technology, raw=raw)
 
 
 _DATAPATHS: dict[int, tuple[Any, "RomDatapath", "GpuDatapath"]] = {}
@@ -872,6 +925,86 @@ class Level:
         return lat, byt
 
 
+@dataclass(frozen=True)
+class PackageLevel:
+    """Three or four dies of a 2 x 2 package on reach-limited links (a ring of four).
+
+    Advanced-package UCIe reaches ~2 mm, so a die links only to the two dies it
+    shares an edge with.  Its diagonal partner is reached either through a relay
+    die (two hops plus the relay's re-timing, over the neighbour links) or on a
+    direct standard-package diagonal link (longer reach, far less bandwidth per
+    mm), and each collective is priced on whichever is faster.  The 2 x 2 is a
+    2-cube, so recursive doubling (pair across one edge, then across the other)
+    never needs the diagonal.  Three dies are priced as the full 2 x 2."""
+    p: int
+    alpha: float                 # one neighbour traversal
+    B_link: float                # one neighbour link, per direction
+    relay_s: float               # added by the relay die on a diagonal
+    diag_alpha: float | None     # the direct diagonal link, if the package has one
+    diag_B: float | None
+    name: str
+    mesh_like: bool = True
+
+    @property
+    def relay_alpha(self) -> float:
+        return 2 * self.alpha + self.relay_s
+
+    @property
+    def D(self) -> float:
+        """Diameter in neighbour traversals, the diagonal at its faster path."""
+        return min(self.relay_alpha, self.diag_alpha or math.inf) / self.alpha
+
+    @property
+    def Dsum(self) -> float:
+        return 2.0
+
+    @property
+    def B_node(self) -> float:
+        return 2 * self.B_link + (self.diag_B or 0.0)
+
+    def modes(self) -> tuple[str, ...]:
+        return ("relay", "diagonal") if self.diag_alpha else ("relay",)
+
+    def price_mode(self, op: str, n: float, algo: str, mode: str) -> tuple[float, float]:
+        a, B = self.alpha, self.B_link
+        if mode == "diagonal":
+            ad, Bd = float(self.diag_alpha), float(self.diag_B)
+            lat_d = max(a, ad)
+
+            def spread(x: float) -> float:          # x on every neighbour link and on the diagonal at once
+                return max(x / B, x / Bd)
+        else:
+            lat_d = self.relay_alpha
+
+            def spread(x: float) -> float:          # the diagonal's x rides a neighbour link: 2x per link
+                return 2 * x / B
+        if algo == "centre_mesh":
+            return math.inf, math.inf
+        if op == "all_reduce":
+            lat = {"one_shot": lat_d, "two_step": 2 * lat_d, "ring": 6 * a, "rec_doubling": 2 * a,
+                   "tree": 4 * a}[algo]
+            byt = {"one_shot": spread(n), "two_step": 2 * spread(n / 4), "ring": 1.5 * n / B,
+                   "rec_doubling": 2 * n / B, "tree": 4 * n / B}[algo]
+        else:
+            lat = {"one_shot": lat_d, "two_step": lat_d, "ring": 3 * a, "rec_doubling": 2 * a,
+                   "tree": 4 * a}[algo]
+            byt = {"one_shot": spread(n / 4), "two_step": spread(n / 4), "ring": 0.75 * n / B,
+                   "rec_doubling": 0.75 * n / B, "tree": 2 * n / B}[algo]
+        return lat, byt
+
+    def best_mode(self, op: str, n: float, algo: str) -> tuple[float, float, str]:
+        best = None
+        for mode in self.modes():
+            lat, byt = self.price_mode(op, n, algo, mode)
+            if best is None or lat + byt < best[0] + best[1]:
+                best = (lat, byt, mode)
+        return best
+
+    def price(self, op: str, n: float, algo: str) -> tuple[float, float]:
+        lat, byt, _ = self.best_mode(op, n, algo)
+        return lat, byt
+
+
 def direct_level(p: int, alpha: float, B_link: float, links_per_node: float, topo: str, name: str) -> Level:
     """A direct network embedding of p consecutive nodes: chain, ring, mesh, torus or full crossbar."""
     if topo in ("chain", "ring"):
@@ -914,14 +1047,14 @@ class Fabric:
         node = self.hw.get(link)
         return node if isinstance(node, Mapping) and "value" in node else None
 
-    def _level(self, link: str, p: int) -> Level:
+    def _level(self, link: str, p: int) -> "Level | PackageLevel":
         key = ("level", link, p)
         hit = self._memo.get(key)
         if hit is None:
             hit = self._memo[key] = self._level_uncached(link, p)
         return hit
 
-    def _level_uncached(self, link: str, p: int) -> Level:
+    def _level_uncached(self, link: str, p: int) -> "Level | PackageLevel":
         hop, bw = self.t.link(link)
         spec = self._hw(link)
         assert spec is not None
@@ -934,6 +1067,20 @@ class Fabric:
             b_link = bw.value / lpn
         else:
             b_link = bw.value
+        if spec.get("reference_domain") and link == self.outer:
+            # a package's SerDes lanes scale with its edge: sqrt(dies per package / the reference package)
+            b_link *= math.sqrt(self.domain / float(spec["reference_domain"]))
+        if topo == "ring2x2":
+            if p <= 2:      # one edge-adjacent pair: a single link
+                return direct_level(p, hop.value, b_link, 1, "full", link)
+            if p > 4:
+                raise ValidationError(f"{link}: a 2 x 2 package holds at most 4 dies, not {p}")
+            relay = self.t.graded("links", link, "relay_latency_s").value
+            diag = spec.get("diagonal_link")
+            d_hop, d_bw = self.t.link(str(diag)) if diag else (None, None)
+            return PackageLevel(p=p, alpha=hop.value, B_link=b_link, relay_s=relay,
+                                diag_alpha=d_hop.value if d_hop else None, diag_B=d_bw.value if d_bw else None,
+                                name=link)
         return direct_level(p, hop.value, b_link, min(lpn, max(1, p - 1)) if topo == "full" else lpn,
                             topo if p > 1 else "full", link)
 
@@ -960,6 +1107,13 @@ class Fabric:
                 best = (lat, byt, a)
         return best
 
+    def _mode(self, link: str, op: str, n: float, p: int, algo: str) -> str:
+        """How a 2 x 2 package reaches the diagonal die for this collective ('' elsewhere)."""
+        if p <= 2 or self._hw(link) is None or algo not in ("one_shot", "two_step"):
+            return ""
+        lv = self._level(link, p)
+        return f", diagonal by {lv.best_mode(op, n, algo)[2]}" if isinstance(lv, PackageLevel) else ""
+
     # -- collectives ---------------------------------------------------------
     def collective(self, op: str, n: float, span: int) -> dict[str, Any]:
         """One all_reduce / all_gather over ``span`` partitions of the group."""
@@ -976,7 +1130,8 @@ class Fabric:
         across = math.ceil(span / self.domain)
         if across <= 1:
             lat, byt, a = self._one_level(self.inner, op, n, inside, self.algorithm)
-            return dict(latency_s=lat, bytes_s=byt, algo=a, where=f"{span} x {self.inner}: {a}")
+            return dict(latency_s=lat, bytes_s=byt, algo=a,
+                        where=f"{span} x {self.inner}: {a}{self._mode(self.inner, op, n, inside, a)}")
         # hierarchical: reduce (or gather) in the domain, across domains, broadcast in the domain
         l1, b1, a1 = self._one_level(self.inner, op, n, inside, self.algorithm)
         l2, b2, a2 = self._one_level(self.outer, op, n, across, self.algorithm)
@@ -985,7 +1140,8 @@ class Fabric:
         else:
             lat, byt = l1 + l2, b1 + b2
         return dict(latency_s=lat, bytes_s=byt, algo="hierarchical",
-                    where=f"{inside} x {self.inner} ({a1}) then {across} x {self.outer} ({a2})")
+                    where=f"{inside} x {self.inner} ({a1}{self._mode(self.inner, op, n, inside, a1)}) "
+                          f"then {across} x {self.outer} ({a2})")
 
     def all_to_all(self, n_per_node: float, span: int) -> dict[str, Any]:
         """Expert dispatch or combine: every node sends its tokens' copies to their experts."""
@@ -1125,9 +1281,9 @@ class Ops:
     def cyc(self, c: float) -> float:
         return c / self.m.clock_hz
 
-    @property
-    def gap(self) -> float:
-        return self.gp.kernel_gap_s
+    def gap(self, kind: str = "gather") -> float:
+        """One dependent GPU boundary of ``kind`` (see ``BOUNDARY_KINDS``)."""
+        return self.gp.boundary(kind)
 
     @property
     def ctrl(self) -> float:
@@ -1145,19 +1301,27 @@ class Ops:
         return self.g.add(name, deps, layer=layer, kind="join")
 
     def ew(self, name: str, deps: list, n: float, depth_cycles: float, layer: int, stream: bool = True,
-           kernel: bool = False, gpu_extra: float = 0.0, desc: str = "") -> str:
+           kernel: bool = False, gpu_extra: float = 0.0, desc: str = "", combine: str = "") -> str:
+        """A vector operator.  On a GPU, ``kernel`` marks a node an unfused stack
+        would run as its own kernel; the fused execution folds it into a
+        neighbour's prologue/epilogue (an intra-CTA dependency, ~7 ns measured,
+        not charged) unless ``combine`` names the boundary it still needs (the
+        split-KV flash-decode reduction: ``handoff``; the vocabulary argmax:
+        ``gather``)."""
         if self.rom:
             return self._add(name, deps, layer, ("vec", n, depth_cycles),
                              ctrl=self.ctrl if stream else self.bctrl, stream=stream, kind="vector", desc=desc)
-        return self.g.add(name, deps, layer=layer, depth=(self.gap if kernel else 0.0) + gpu_extra,
-                          depth_cat="kernel_launch" if kernel else "compute_chain", kind="vector", desc=desc)
+        kernel = kernel and bool(combine)
+        return self.g.add(name, deps, layer=layer, depth=(self.gap(combine or "gather") if kernel else 0.0) + gpu_extra,
+                          boundary=(combine or "gather") if kernel else None,
+                          depth_cat="gpu_dependency" if kernel else "compute_chain", kind="vector", desc=desc)
 
     def reduce(self, name: str, deps: list, n: float, layer: int, segments: int = 1, stream: bool = True,
-               kernel: bool = False, desc: str = "") -> str:
+               kernel: bool = False, desc: str = "", combine: str = "") -> str:
         if self.rom:
             return self._add(name, deps, layer, ("red", n, segments),
                              ctrl=self.ctrl if stream else self.bctrl, stream=stream, kind="reduce", desc=desc)
-        return self.ew(name, deps, n, 0, layer, kernel=kernel, desc=desc)
+        return self.ew(name, deps, n, 0, layer, kernel=kernel, desc=desc, combine=combine)
 
     def rmsnorm(self, pre: str, deps: list, n: float, layer: int, segments: int = 1, kernel: bool = True) -> str:
         r = self.r
@@ -1180,7 +1344,7 @@ class Ops:
             return self._add(name, deps, layer, ("mv", r.interleave * min(r.interleave, blocks), depth),
                              w=bytes_, ctrl=self.bctrl, kind="matvec",
                              desc=desc or f"[{n_out:.0f}, {k:.0f}] {fmt}")
-        return self.g.add(name, deps, layer=layer, w=bytes_, depth=self.gap, depth_cat="kernel_launch",
+        return self.g.add(name, deps, layer=layer, w=bytes_, depth=self.gap("gather"), depth_cat="gpu_dependency", boundary="gather",
                           kind="matvec", desc=desc or f"[{n_out:.0f}, {k:.0f}] {fmt} GEMV kernel")
 
     def kvscan(self, name: str, deps: list, layer: int, *, kv_bytes: float, depth_cycles: float,
@@ -1188,12 +1352,13 @@ class Ops:
         if self.rom:
             return self.g.add(name, deps, layer=layer, k=kv_bytes, depth=self.cyc(depth_cycles), ctrl=self.bctrl,
                               kind="kvscan", desc=desc)
-        return self.g.add(name, deps, layer=layer, k=kv_bytes, depth=self.gap if kernel else 0.0,
-                          depth_cat="kernel_launch" if kernel else "compute_chain", kind="kvscan", desc=desc)
+        return self.g.add(name, deps, layer=layer, k=kv_bytes, depth=self.gap("handoff") if kernel else 0.0,
+                          boundary="handoff" if kernel else None,
+                          depth_cat="gpu_dependency" if kernel else "compute_chain", kind="kvscan", desc=desc)
 
     def select_local(self, name: str, deps: list, layer: int, *, n: int, k: int, desc: str = "") -> str:
         if not self.rom:
-            return self.g.add(name, deps, layer=layer, depth=self.gap, depth_cat="kernel_launch", kind="select",
+            return self.g.add(name, deps, layer=layer, depth=self.gap("gather"), depth_cat="gpu_dependency", kind="select", boundary="gather",
                               desc=desc or f"top-{k} of {n} kernel")
         units = self.pricer.price(("sel", n, k))[3]["units"]
         return self._add(name, deps, layer, ("sel", n, k), ctrl=self.bctrl, kind="select",
@@ -1202,8 +1367,8 @@ class Ops:
     def select_final(self, name: str, deps: list, layer: int, *, k: int, ways: int, ascending: bool,
                      desc: str = "") -> str:
         if not self.rom:
-            return self.g.add(name, deps, layer=layer, depth=self.gap if ways > 1 else 0.0,
-                              depth_cat="kernel_launch", kind="select", desc=desc or f"{ways}-way merge")
+            return self.g.add(name, deps, layer=layer, depth=self.gap("gather") if ways > 1 else 0.0, boundary="gather" if ways > 1 else None,
+                              depth_cat="gpu_dependency", kind="select", desc=desc or f"{ways}-way merge")
         merge = (k + math.ceil(math.log2(ways))) if ways > 1 else 0
         order = (2 * k + self.r.select_extra + k - 1) if ascending else 0
         return self.g.add(name, deps, layer=layer, depth=self.cyc(merge + order), ctrl=self.bctrl, kind="select",
@@ -1272,13 +1437,15 @@ def build_graph(shape: DecodeShape, ctx: int, ops: Ops) -> str:
     ops.sel = {}
 
     tok = ops.join("token", [], -1)
-    emb = g.add("embed", [tok], layer=-1, depth=ops.cyc(r.su_none) + r.rom_row_s if ops.rom else ops.gap,
-                depth_cat="compute_chain" if ops.rom else "kernel_launch",
+    emb = g.add("embed", [tok], layer=-1, depth=ops.cyc(r.su_none) + r.rom_row_s if ops.rom else ops.gap("handoff"),
+                boundary=None if ops.rom else "handoff",
+                depth_cat="compute_chain" if ops.rom else "gpu_dependency",
                 ctrl=ops.bctrl, desc="embedding row read" + (" + 4-copy expand" if HC > 1 else ""))
     eng: dict[int, str] = {}
     for L in shape.engram.get("layers", ()):
         hd, cols = shape.engram["head_dim"], shape.engram["columns"]
-        h = g.add(f"E{L}.hash", [tok], layer=L, depth=ops.cyc(r.engram_hash) if ops.rom else ops.gap,
+        h = g.add(f"E{L}.hash", [tok], layer=L, depth=ops.cyc(r.engram_hash) if ops.rom else ops.gap("handoff"),
+                  boundary=None if ops.rom else "handoff",
                   ctrl=ops.bctrl, desc="Engram hash columns")
         rr = g.add(f"E{L}.gather", [h], layer=L, depth=(r.rom_row_s + ops.cyc(r.su_none)) if ops.rom else 0.0,
                    ctrl=ops.ctrl, desc="Engram table rows (token-addressed)")
@@ -1352,7 +1519,8 @@ def build_graph(shape: DecodeShape, ctx: int, ops: Ops) -> str:
     V = shape.vocab
     lg = ops.matvec("head.lm_head", [x], NL, n_out=V, k=D, bytes_=V * D * shape.dense_bpp,
                     desc=f"lm_head [{V}, {D}], vocabulary split {G} ways")
-    am = ops.reduce("head.argmax", [lg], math.ceil(V / max(1, G)), NL, kernel=True, desc="local argmax")
+    am = ops.reduce("head.argmax", [lg], math.ceil(V / max(1, G)), NL, kernel=True, combine="gather",
+                    desc="local argmax (needs every logit block: a boundary even when fused)")
     am = ops.collective("head.argmax_merge", [am], NL, op="all_gather", payload=8,
                         desc="best {logit, id} per partition") or am
     return am
@@ -1383,7 +1551,7 @@ def _softmax_pv(ops: Ops, P: str, L: int, sco: str, heads: int, rows: int, hd: i
                     depth_cycles=r.me_lat + r.me_tree * math.ceil(math.log2(max(1, rows / 16 / r.interleave))),
                     desc="P x V")
     return ops.ew(f"{P}.normalize", [pv, den] + (extra_dep or []), heads * vhd, r.su_none + r.fdiv + r.fadd, L,
-                  stream=False, kernel=True, desc="acc / den (flash-decode combine on a GPU)")
+                  stream=False, kernel=True, combine="handoff", desc="acc / den (flash-decode combine on a GPU)")
 
 
 def _gqa(ops: Ops, shape: DecodeShape, spec: LayerSpec, xq: str) -> str:
@@ -1769,6 +1937,30 @@ class SerialGraph:
                 for L, ss in sorted(by_layer.items()) if layers is None or L in layers},
             "collectives": collective_census(self.census, len(self.shape.layers)),
         }
+
+
+def gpu_boundary_census(graph: "Graph", num_layers: int) -> dict[str, Any]:
+    """Dependent GPU boundaries of one token's graph by kind: the whole token,
+    and per decoder layer (the mean over layers, and the min/max layer)."""
+    per: dict[int, dict[str, int]] = {}
+    total = {k: 0 for k in BOUNDARY_KINDS}
+    for node in graph.nodes.values():
+        kind = node.get("boundary")
+        if not kind:
+            continue
+        total[kind] += 1
+        if 0 <= node["layer"] < num_layers:
+            per.setdefault(node["layer"], {k: 0 for k in BOUNDARY_KINDS})[kind] += 1
+    layer_totals = [sum(per.get(L, {}).values()) for L in range(num_layers)]
+    return {
+        "per_token": total,
+        "per_token_total": sum(total.values()),
+        "per_layer_mean": {k: sum(per.get(L, {}).get(k, 0) for L in range(num_layers)) / max(1, num_layers)
+                           for k in BOUNDARY_KINDS},
+        "per_layer_total_mean": sum(layer_totals) / max(1, num_layers),
+        "per_layer_total_min": min(layer_totals) if layer_totals else 0,
+        "per_layer_total_max": max(layer_totals) if layer_totals else 0,
+    }
 
 
 def collective_census(events: list, num_layers: int) -> dict[str, Any]:
