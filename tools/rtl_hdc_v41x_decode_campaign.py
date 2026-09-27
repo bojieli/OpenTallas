@@ -91,7 +91,8 @@ NOT_EXERCISED = {
     "me": ["wo_a in the checkpoint's FP8 image format (the image feeds it as expanded BF16)",
            "MTP lane multiplier (mx_m > 1) and the MTP layout's images"],
     "sel": ["static-count SELECTs (router top-6 over FP32 biased scores, a draft's top-1 over FP32 logits) stay "
-            "on the as-built FP32 select: the re-specified select takes BF16 keys only",
+            "on the as-built FP32 select: the re-specified select takes BF16 keys only -- not exercised on the new "
+            "unit (SPEC GAP, owner a2e48e15: an FP32-key mode of the streaming select)",
             "the overflow fallback (rep_req re-stream): the reduced vehicle's <= 128 scores never overflow the "
             "line memories (reps counted, expected 0)",
             "k > 16 and the candidate top-2,048 (ot_hdc_v41x_sel_cand): the reduced vehicle's index top-k is 16",
