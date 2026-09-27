@@ -90,9 +90,12 @@ SOURCES = {
     "v41_lanes": (None, "results/arch/v41_lanes.json"),
     "v41_hbm_best": (None, "results/arch/v41_hbm_best.json"),
     "v41_ladder": (None, "results/arch/v41_latency_ladder.json"),
-    "v41_budget": (None, "results/arch/arch_budget_v41_dp.json"),   # checkpoint weight precision (design-point base)
-    # Validated rack links and switched HBM comparator, including wall energy.
+    "v41_budget": (None, "results/arch/arch_budget_v41.json"),   # checkpoint weight precision (design-point base)
+    # Validated rack links and switched HBM comparator (rates, tensor group, aggregates).
     "v41_switched": (None, "results/arch/v41_hbm_switched.json"),
+    # One power model for both V4.1 machines: energy per token of the design point and of the best switched HBM
+    # comparator, logic dies + their HBM stacks (tools/power_scenarios.py, scenario B, production lane).
+    "power": (None, "results/arch/power_scenarios.json"),
     # clocked-idle floor
     "idle_floor": (None, "results/roofline/gpu_clocked_idle_floor.json"),
 }
@@ -363,6 +366,7 @@ def build_v41(src: dict) -> dict:
     ln, hb, ld, bu, sy, idle, switched = (
         src["v41_lanes"], src["v41_hbm_best"], src["v41_ladder"], src["v41_budget"],
         src["sync"], src["idle_floor"], src["v41_switched"])
+    ps = src["power"]["scenarios"]["B_proposed_production"]
     eff = CITED["hbm_efficiency"]["value"]
     b200 = CITED["b200_hbm_Bps"]["value"] * eff
     out = {}
@@ -481,10 +485,17 @@ def build_v41(src: dict) -> dict:
                    f"({idle_w:.0f} W) {n_iso * idle_w / s0:.1f} J", matching=""),
         dict(key="S1", label="best measured all-reduce", value=n_iso * draw / s1, unit="J/token", evidence="modelled",
              basis=f"at the clocked-idle floor {n_iso * idle_w / s1:.2f} J", matching="same GPUs"),
-        dict(key="S2", label="HBM comparator", value=en["b1"]["hbm"]["wall_j"], unit="J/token", evidence="modelled",
-             basis="dynamic + static + switches + wall overhead (v41_hbm_switched energy b1)", matching=""),
-        dict(key="S3", label="ROM array", value=en["b1"]["rom"]["wall_j"], unit="J/token", evidence="modelled, C7 measured",
-             basis="same wall energy model", matching=""),
+        dict(key="S2", label="HBM comparator",
+             value=ps["deepseek_v41_hbm_comparator"]["per_context"][ctx]["ar_batch1"]["energy_per_token_j"],
+             unit="J/token", evidence="modelled",
+             basis="power scenario B (production lane): logic dies + their HBM stacks, dynamic + static, weights and "
+                   "KV from HBM (power_scenarios deepseek_v41_hbm_comparator); switches and wall chain excluded, like "
+                   "the GPUs' device draw", matching=""),
+        dict(key="S3", label="ROM array",
+             value=ps["deepseek_v41_design_point"]["per_context"][ctx]["ar_batch1"]["energy_per_token_j"],
+             unit="J/token", evidence="modelled, C7 measured",
+             basis="the same power model and boundary (power_scenarios deepseek_v41_design_point); KV from HBM",
+             matching=""),
     ])
     aggregate = ladder([
         dict(key="S0", label="B200 set, real software", value=None, unit="tok/s", evidence="not available",

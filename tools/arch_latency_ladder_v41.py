@@ -2,7 +2,7 @@
 """Push the DeepSeek-V4.1-Flash per-user rate further: attribute the remaining critical path of the recommended
 design (docs/ARCH_SPEC_V41.md 13) at 1M (primary, user decision 2026-09-27) and 200K, and price every REALISTIC
 microarchitecture / implementation lever as a cumulative ladder, with and without MTP (DSpark, tau 5.0), next to
-the BEST HBM comparator at iso total logic area.  Model work only: the budget model (tools/arch_budget_v41_dp.py) and
+the BEST HBM comparator at iso total logic area.  Model work only: the budget model (tools/arch_budget_v41.py) and
 the utilisation study (tools/arch_utilization_v41.py) are imported, never edited.
 
     python3 tools/arch_latency_ladder_v41.py [--out results/arch/v41_latency_ladder.json]

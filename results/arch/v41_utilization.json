@@ -2,7 +2,7 @@
  "schema": "opentallas.v41-utilization.v1",
  "tool": "tools/arch_utilization_v41.py",
  "clock_hz": 1033900000.0,
- "budget_model": "tools/arch_budget_v41_dp.py (imported, not edited); results/arch/arch_budget_v41_dp.json",
+ "budget_model": "tools/arch_budget_v41.py (imported, not edited); results/arch/arch_budget_v41.json",
  "precision_dependency": "weights at the spec's current checkpoint dtypes (docs/ARCH_SPEC_V41.md 2.1); a separate agent is auditing them -- every figure re-derives from the budget model",
  "mtp": {
   "tau": 5.0,
@@ -3755,7 +3755,7 @@
      }
     }
    },
-   "stage_count_vs_width_note": "report DAG (plain option-(b) links), results/roofline/critical_path/decode_critical_path.json packaging_options: group 2 inside a 2-die package removes the board from every collective (2.2 us) but doubles each die's weight sweep (86 us) and the stage count (hops 22 us) -- a net loss; group 4 in one 4-die package is the real fix (future packaging); att_local (attention on one package) is priced in arch_budget_v41_dp chain_ladder 4a/4b and was not adopted"
+   "stage_count_vs_width_note": "report DAG (plain option-(b) links), results/roofline/critical_path/decode_critical_path.json packaging_options: group 2 inside a 2-die package removes the board from every collective (2.2 us) but doubles each die's weight sweep (86 us) and the stage count (hops 22 us) -- a net loss; group 4 in one 4-die package is the real fix (future packaging); att_local (attention on one package) is priced in arch_budget_v41 chain_ladder 4a/4b and was not adopted"
   },
   "on_l3": {
    "base_levers": [
@@ -4083,7 +4083,7 @@
      }
     }
    },
-   "stage_count_vs_width_note": "report DAG (plain option-(b) links), results/roofline/critical_path/decode_critical_path.json packaging_options: group 2 inside a 2-die package removes the board from every collective (2.2 us) but doubles each die's weight sweep (86 us) and the stage count (hops 22 us) -- a net loss; group 4 in one 4-die package is the real fix (future packaging); att_local (attention on one package) is priced in arch_budget_v41_dp chain_ladder 4a/4b and was not adopted"
+   "stage_count_vs_width_note": "report DAG (plain option-(b) links), results/roofline/critical_path/decode_critical_path.json packaging_options: group 2 inside a 2-die package removes the board from every collective (2.2 us) but doubles each die's weight sweep (86 us) and the stage count (hops 22 us) -- a net loss; group 4 in one 4-die package is the real fix (future packaging); att_local (attention on one package) is priced in arch_budget_v41 chain_ladder 4a/4b and was not adopted"
   }
  },
  "leave_one_out_l3": {
@@ -4340,7 +4340,7 @@
   "hbm_stacks_removed": 288,
   "hbm_stacks_spec": 752,
   "head_dies_keep_stacks": "4 per head die for the drafter's per-user state at saturation (rack C10)",
-  "static_w_saved": 3400.86193567872,
+  "static_w_saved": 3697.7992261312,
   "batch1_effect": "none: the non-layer dies' engines never run layer work; KV lives only on layer dies",
   "basis": "busy fraction of a non-layer die's weight/attention/indexer/HC engines is 0 at every batch (they run no layer); the 4 lm_head dies need the BF16 engine, the vector unit and the one-shot engine; the Engram dies need only their per-bank gather slices and the assembler; the HBM stacks hold KV and index keys, which live on the layer dies (kv-lives-in-hbm), except the head dies' 4 stacks for the drafter (rack C10). Static saving on the table dies: HBM idle + logic leakage (0.10 W/mm2 of logic) x the removed ASAP7 engine area (ASSUMED scaling) + the SerDes they do not need (84 -> 2 lanes a package)"
  },
@@ -4356,9 +4356,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.0009352273852159863,
     "mfu_layer_dies": 0.0015180385787035193,
-    "energy_j_per_token": 2.7183986776327322,
+    "energy_j_per_token": 3.4479770521297013,
     "energy_dynamic_j_per_token": 0.01962704833043514,
-    "energy_static_j_per_token": 2.698771629302297,
+    "energy_static_j_per_token": 3.4283500037992662,
     "concurrent_aggregate_tokens_s": 5417.685767461598,
     "concurrent_tokens_s_per_user": 5417.685767461598,
     "frontier": false
@@ -4372,9 +4372,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.007481819081727891,
     "mfu_layer_dies": 0.012144308629628155,
-    "energy_j_per_token": 0.3569735019932223,
+    "energy_j_per_token": 0.4481707988053434,
     "energy_dynamic_j_per_token": 0.019627048330435132,
-    "energy_static_j_per_token": 0.33734645366278715,
+    "energy_static_j_per_token": 0.4285437504749083,
     "concurrent_aggregate_tokens_s": 43341.48613969278,
     "concurrent_tokens_s_per_user": 5417.685767461598,
     "frontier": false
@@ -4388,9 +4388,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.02618636678604762,
     "mfu_layer_dies": 0.042505080203698545,
-    "energy_j_per_token": 0.11601174937694574,
+    "energy_j_per_token": 0.14206811989469462,
     "energy_dynamic_j_per_token": 0.01962704833043513,
-    "energy_static_j_per_token": 0.0963847010465106,
+    "energy_static_j_per_token": 0.1224410715642595,
     "concurrent_aggregate_tokens_s": 151695.20148892474,
     "concurrent_tokens_s_per_user": 5417.685767461598,
     "frontier": false
@@ -4404,9 +4404,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.04306707222267551,
     "mfu_layer_dies": 0.06990543491274427,
-    "energy_j_per_token": 0.07403069061759156,
+    "energy_j_per_token": 0.08987392398072871,
     "energy_dynamic_j_per_token": 0.01542524093395678,
-    "energy_static_j_per_token": 0.05860544968363478,
+    "energy_static_j_per_token": 0.07444868304677194,
     "concurrent_aggregate_tokens_s": 249483.5672216172,
     "concurrent_tokens_s_per_user": 3898.180737837769,
     "frontier": false
@@ -4420,9 +4420,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.06015265999854058,
     "mfu_layer_dies": 0.09763834970287148,
-    "energy_j_per_token": 0.055959777324530224,
+    "energy_j_per_token": 0.06730294445142843,
     "energy_dynamic_j_per_token": 0.014000450268524537,
-    "energy_static_j_per_token": 0.041959327056005684,
+    "energy_static_j_per_token": 0.053302494182903885,
     "concurrent_aggregate_tokens_s": 348458.7974012197,
     "concurrent_tokens_s_per_user": 2722.334354697029,
     "frontier": false
@@ -4436,9 +4436,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.07411589785462301,
     "mfu_layer_dies": 0.12030314126503397,
-    "energy_j_per_token": 0.0470472165029738,
+    "energy_j_per_token": 0.05625336113916631,
     "energy_dynamic_j_per_token": 0.01299291496677456,
-    "energy_static_j_per_token": 0.03405430153619924,
+    "energy_static_j_per_token": 0.043260446172391755,
     "concurrent_aggregate_tokens_s": 429346.5432012512,
     "concurrent_tokens_s_per_user": 1677.1349343798875,
     "frontier": false
@@ -4452,9 +4452,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.08165472704147077,
     "mfu_layer_dies": 0.1325399873249341,
-    "energy_j_per_token": 0.04326281465858633,
+    "energy_j_per_token": 0.0516189956197252,
     "energy_dynamic_j_per_token": 0.012352600080493322,
-    "energy_static_j_per_token": 0.030910214578093006,
+    "energy_static_j_per_token": 0.039266395539231884,
     "concurrent_aggregate_tokens_s": 524625.8035425333,
     "concurrent_tokens_s_per_user": 512.3298862720052,
     "frontier": false
@@ -4468,9 +4468,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.0012892329346239964,
     "mfu_layer_dies": 0.0020926518648108176,
-    "energy_j_per_token": 0.9926575727109254,
+    "energy_j_per_token": 1.257280689746765,
     "energy_dynamic_j_per_token": 0.013794457139189356,
-    "energy_static_j_per_token": 0.978863115571736,
+    "energy_static_j_per_token": 1.2434862326075757,
     "concurrent_aggregate_tokens_s": 14936.814364652291,
     "concurrent_tokens_s_per_user": 14936.814364652291,
     "frontier": false
@@ -4484,9 +4484,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.010313863476991971,
     "mfu_layer_dies": 0.01674121491848654,
-    "energy_j_per_token": 0.13615234658565636,
+    "energy_j_per_token": 0.16923023621513633,
     "energy_dynamic_j_per_token": 0.01379445713918936,
-    "energy_static_j_per_token": 0.122357889446467,
+    "energy_static_j_per_token": 0.15543577907594697,
     "concurrent_aggregate_tokens_s": 119494.51491721833,
     "concurrent_tokens_s_per_user": 14936.814364652291,
     "frontier": false
@@ -4500,9 +4500,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.036098522169471896,
     "mfu_layer_dies": 0.058594252214702894,
-    "energy_j_per_token": 0.048753854123894214,
+    "energy_j_per_token": 0.05820467973231706,
     "energy_dynamic_j_per_token": 0.013794457139189361,
-    "energy_static_j_per_token": 0.034959396984704856,
+    "energy_static_j_per_token": 0.044410222593127706,
     "concurrent_aggregate_tokens_s": 418230.80221026414,
     "concurrent_tokens_s_per_user": 14936.814364652291,
     "frontier": false
@@ -4516,9 +4516,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.04845754555717891,
     "mfu_layer_dies": 0.07865512146876717,
-    "energy_j_per_token": 0.0382543200239439,
+    "energy_j_per_token": 0.045294726916672336,
     "energy_dynamic_j_per_token": 0.012211264137123881,
-    "energy_static_j_per_token": 0.026043055886820012,
+    "energy_static_j_per_token": 0.033083462779548455,
     "concurrent_aggregate_tokens_s": 561420.1616446906,
     "concurrent_tokens_s_per_user": 8772.19002569829,
     "frontier": false
@@ -4532,9 +4532,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.057071262594999776,
     "mfu_layer_dies": 0.0926366996134534,
-    "energy_j_per_token": 0.03346502338809973,
+    "energy_j_per_token": 0.039442827667049665,
     "energy_dynamic_j_per_token": 0.011352623737170962,
-    "energy_static_j_per_token": 0.02211239965092877,
+    "energy_static_j_per_token": 0.028090203929878703,
     "concurrent_aggregate_tokens_s": 661217.0943231882,
     "concurrent_tokens_s_per_user": 5165.758549399908,
     "frontier": false
@@ -4548,9 +4548,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.06371891508456645,
     "mfu_layer_dies": 0.10342700911090906,
-    "energy_j_per_token": 0.03054842137819852,
+    "energy_j_per_token": 0.03590257465109533,
     "energy_dynamic_j_per_token": 0.010742959131880303,
-    "energy_static_j_per_token": 0.01980546224631822,
+    "energy_static_j_per_token": 0.025159615519215025,
     "concurrent_aggregate_tokens_s": 738235.566726963,
     "concurrent_tokens_s_per_user": 2883.7326825271994,
     "frontier": false
@@ -4564,9 +4564,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.06838322325650739,
     "mfu_layer_dies": 0.11099800185545239,
-    "energy_j_per_token": 0.028259723654648915,
+    "energy_j_per_token": 0.03324867886177276,
     "energy_dynamic_j_per_token": 0.00980515969895462,
-    "energy_static_j_per_token": 0.018454563955694295,
+    "energy_static_j_per_token": 0.02344351916281814,
     "concurrent_aggregate_tokens_s": 825671.5355588301,
     "concurrent_tokens_s_per_user": 806.31985894417,
     "frontier": false
@@ -4580,9 +4580,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.001207013372699384,
     "mfu_layer_dies": 0.001959195051100385,
-    "energy_j_per_token": 2.1092557961184633,
+    "energy_j_per_token": 2.674553323821056,
     "energy_dynamic_j_per_token": 0.018172804616191137,
-    "energy_static_j_per_token": 2.091082991502272,
+    "energy_static_j_per_token": 2.656380519204865,
     "concurrent_aggregate_tokens_s": 6992.116862466631,
     "concurrent_tokens_s_per_user": 6992.116862466631,
     "frontier": false
@@ -4596,9 +4596,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.009656106981595072,
     "mfu_layer_dies": 0.01567356040880308,
-    "energy_j_per_token": 0.27955817855397513,
+    "energy_j_per_token": 0.35022036951679925,
     "energy_dynamic_j_per_token": 0.018172804616191127,
-    "energy_static_j_per_token": 0.261385373937784,
+    "energy_static_j_per_token": 0.3320475649006081,
     "concurrent_aggregate_tokens_s": 55936.934899733045,
     "concurrent_tokens_s_per_user": 6992.116862466631,
     "frontier": false
@@ -4612,9 +4612,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.033796374435582754,
     "mfu_layer_dies": 0.054857461430810786,
-    "energy_j_per_token": 0.09285434002698656,
+    "energy_j_per_token": 0.1130435374449363,
     "energy_dynamic_j_per_token": 0.01817280461619113,
-    "energy_static_j_per_token": 0.07468153541079543,
+    "energy_static_j_per_token": 0.09487073282874517,
     "concurrent_aggregate_tokens_s": 195779.27214906565,
     "concurrent_tokens_s_per_user": 6992.116862466631,
     "frontier": false
@@ -4628,9 +4628,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.05709968219384284,
     "mfu_layer_dies": 0.09268282962217324,
-    "energy_j_per_token": 0.05866296302008009,
+    "energy_j_per_token": 0.07061262104399998,
     "energy_dynamic_j_per_token": 0.014460175242749201,
-    "energy_static_j_per_token": 0.04420278777733089,
+    "energy_static_j_per_token": 0.05615244580125078,
     "concurrent_aggregate_tokens_s": 330773.1792698952,
     "concurrent_tokens_s_per_user": 5168.330926092112,
     "frontier": false
@@ -4644,9 +4644,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.07779745730529641,
     "mfu_layer_dies": 0.12627895994213786,
-    "energy_j_per_token": 0.045805554882509,
+    "energy_j_per_token": 0.054576043008018445,
     "energy_dynamic_j_per_token": 0.013362783337125287,
-    "energy_static_j_per_token": 0.03244277154538371,
+    "energy_static_j_per_token": 0.041213259670893156,
     "concurrent_aggregate_tokens_s": 472773.15363232704,
     "concurrent_tokens_s_per_user": 3693.540262752555,
     "frontier": true
@@ -4660,9 +4660,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.07953783120954291,
     "mfu_layer_dies": 0.12910389296888505,
-    "energy_j_per_token": 0.04457025478061542,
+    "energy_j_per_token": 0.05314883512552512,
     "energy_dynamic_j_per_token": 0.012837366219471829,
-    "energy_static_j_per_token": 0.0317328885611436,
+    "energy_static_j_per_token": 0.0403114689060533,
     "concurrent_aggregate_tokens_s": 595812.8532487695,
     "concurrent_tokens_s_per_user": 2327.393958003006,
     "frontier": true
@@ -4676,9 +4676,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.08165472704147077,
     "mfu_layer_dies": 0.1325399873249341,
-    "energy_j_per_token": 0.04326281465858633,
+    "energy_j_per_token": 0.0516189956197252,
     "energy_dynamic_j_per_token": 0.012352600080493322,
-    "energy_static_j_per_token": 0.030910214578093006,
+    "energy_static_j_per_token": 0.039266395539231884,
     "concurrent_aggregate_tokens_s": 744829.8473504698,
     "concurrent_tokens_s_per_user": 727.3728978031932,
     "frontier": false
@@ -4692,9 +4692,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.0016165472714165176,
     "mfu_layer_dies": 0.0026239406171168172,
-    "energy_j_per_token": 0.7935116261061442,
+    "energy_j_per_token": 1.004554534518293,
     "energy_dynamic_j_per_token": 0.012846198377630633,
-    "energy_static_j_per_token": 0.7806654277285136,
+    "energy_static_j_per_token": 0.9917083361406622,
     "concurrent_aggregate_tokens_s": 18729.01774098401,
     "concurrent_tokens_s_per_user": 18729.01774098401,
     "frontier": false
@@ -4708,9 +4708,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.01293237817133214,
     "mfu_layer_dies": 0.020991524936934538,
-    "energy_j_per_token": 0.11042937684369483,
+    "energy_j_per_token": 0.1368097403952134,
     "energy_dynamic_j_per_token": 0.012846198377630636,
-    "energy_static_j_per_token": 0.0975831784660642,
+    "energy_static_j_per_token": 0.12396354201758278,
     "concurrent_aggregate_tokens_s": 149832.1419278721,
     "concurrent_tokens_s_per_user": 18729.01774098401,
     "frontier": false
@@ -4724,9 +4724,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.04526332359966249,
     "mfu_layer_dies": 0.07347033727927088,
-    "energy_j_per_token": 0.04072710651079184,
+    "energy_j_per_token": 0.04826435323979715,
     "energy_dynamic_j_per_token": 0.012846198377630638,
-    "energy_static_j_per_token": 0.027880908133161197,
+    "energy_static_j_per_token": 0.03541815486216651,
     "concurrent_aggregate_tokens_s": 524412.4967475523,
     "concurrent_tokens_s_per_user": 18729.01774098401,
     "frontier": false
@@ -4740,9 +4740,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.0587397641380246,
     "mfu_layer_dies": 0.09534497115359128,
-    "energy_j_per_token": 0.033084854638276824,
+    "energy_j_per_token": 0.0388928595349907,
     "energy_dynamic_j_per_token": 0.011600557150830746,
-    "energy_static_j_per_token": 0.02148429748744608,
+    "energy_static_j_per_token": 0.027292302384159955,
     "concurrent_aggregate_tokens_s": 729078.8596215815,
     "concurrent_tokens_s_per_user": 11391.857181587211,
     "frontier": false
@@ -4756,9 +4756,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.061763134320944116,
     "mfu_layer_dies": 0.10025243285533966,
-    "energy_j_per_token": 0.03156021307778835,
+    "energy_j_per_token": 0.03708391004518426,
     "energy_dynamic_j_per_token": 0.011127594478382293,
-    "energy_static_j_per_token": 0.02043261859940606,
+    "energy_static_j_per_token": 0.025956315566801964,
     "concurrent_aggregate_tokens_s": 876677.4401897027,
     "concurrent_tokens_s_per_user": 6849.042501482052,
     "frontier": false
@@ -4772,9 +4772,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.06452475391781935,
     "mfu_layer_dies": 0.10473502730673301,
-    "energy_j_per_token": 0.0302679388112442,
+    "energy_j_per_token": 0.035555224961610274,
     "energy_dynamic_j_per_token": 0.010709823662273067,
-    "energy_static_j_per_token": 0.019558115148971135,
+    "energy_static_j_per_token": 0.024845401299337204,
     "concurrent_aggregate_tokens_s": 997021.9782811713,
     "concurrent_tokens_s_per_user": 3894.6171026608254,
     "frontier": false
@@ -4788,9 +4788,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.06838322325650739,
     "mfu_layer_dies": 0.11099800185545239,
-    "energy_j_per_token": 0.028259723654648915,
+    "energy_j_per_token": 0.03324867886177276,
     "energy_dynamic_j_per_token": 0.00980515969895462,
-    "energy_static_j_per_token": 0.018454563955694295,
+    "energy_static_j_per_token": 0.02344351916281814,
     "concurrent_aggregate_tokens_s": 1149569.4559133237,
     "concurrent_tokens_s_per_user": 1122.6264217903552,
     "frontier": false
@@ -4804,9 +4804,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.0012995864130807147,
     "mfu_layer_dies": 0.0021094573818107765,
-    "energy_j_per_token": 1.5082072234587154,
+    "energy_j_per_token": 1.993794717585873,
     "energy_dynamic_j_per_token": 0.01781634797222238,
-    "energy_static_j_per_token": 1.490390875486493,
+    "energy_static_j_per_token": 1.9759783696136506,
     "concurrent_aggregate_tokens_s": 7528.383925699341,
     "concurrent_tokens_s_per_user": 7528.383925699341,
     "frontier": false
@@ -4820,9 +4820,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.010396691304645718,
     "mfu_layer_dies": 0.016875659054486212,
-    "energy_j_per_token": 0.204115207408034,
+    "energy_j_per_token": 0.2648136441739287,
     "energy_dynamic_j_per_token": 0.017816347972222372,
-    "energy_static_j_per_token": 0.18629885943581162,
+    "energy_static_j_per_token": 0.24699729620170632,
     "concurrent_aggregate_tokens_s": 60227.071405594725,
     "concurrent_tokens_s_per_user": 7528.383925699341,
     "frontier": false
@@ -4836,9 +4836,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.03638841956626001,
     "mfu_layer_dies": 0.059064806690701736,
-    "energy_j_per_token": 0.07104459352531141,
+    "energy_j_per_token": 0.08838700402985275,
     "energy_dynamic_j_per_token": 0.017816347972222372,
-    "energy_static_j_per_token": 0.05322824555308903,
+    "energy_static_j_per_token": 0.07057065605763038,
     "concurrent_aggregate_tokens_s": 210794.74991958155,
     "concurrent_tokens_s_per_user": 7528.383925699341,
     "frontier": false
@@ -4852,9 +4852,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.06057715478568393,
     "mfu_layer_dies": 0.0983273794228399,
-    "energy_j_per_token": 0.04626411139219949,
+    "energy_j_per_token": 0.056681617991216966,
     "energy_dynamic_j_per_token": 0.014290147959709938,
-    "energy_static_j_per_token": 0.03197396343248955,
+    "energy_static_j_per_token": 0.04239147003150703,
     "concurrent_aggregate_tokens_s": 350917.8564525509,
     "concurrent_tokens_s_per_user": 5483.091507071108,
     "frontier": false
@@ -4868,9 +4868,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.07633908607297496,
     "mfu_layer_dies": 0.12391176686403518,
-    "energy_j_per_token": 0.03877652785787919,
+    "energy_j_per_token": 0.04704310455132182,
     "energy_dynamic_j_per_token": 0.013404312501381717,
-    "energy_static_j_per_token": 0.025372215356497474,
+    "energy_static_j_per_token": 0.0336387920499401,
     "concurrent_aggregate_tokens_s": 494006.13198695687,
     "concurrent_tokens_s_per_user": 3859.4229061481005,
     "frontier": false
@@ -4884,9 +4884,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.07801411991112346,
     "mfu_layer_dies": 0.12663064146837114,
-    "energy_j_per_token": 0.037706346288363154,
+    "energy_j_per_token": 0.0457954320903756,
     "energy_dynamic_j_per_token": 0.012878895383728259,
-    "energy_static_j_per_token": 0.024827450904634896,
+    "energy_static_j_per_token": 0.03291653670664734,
     "concurrent_aggregate_tokens_s": 606915.6415605675,
     "concurrent_tokens_s_per_user": 2370.764224845967,
     "frontier": false
@@ -4900,9 +4900,9 @@
     "layer_die_block_mm2": 99.53563112,
     "mfu_array": 0.0801678366400138,
     "mfu_layer_dies": 0.13012650261800976,
-    "energy_j_per_token": 0.036551473578660565,
+    "energy_j_per_token": 0.04442324530381381,
     "energy_dynamic_j_per_token": 0.01239101455743052,
-    "energy_static_j_per_token": 0.02416045902123004,
+    "energy_static_j_per_token": 0.03203223074638329,
     "concurrent_aggregate_tokens_s": 741177.0180585823,
     "concurrent_tokens_s_per_user": 723.8056816978343,
     "frontier": false
@@ -4916,9 +4916,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.0016578260124264534,
     "mfu_layer_dies": 0.0026909432758541064,
-    "energy_j_per_token": 0.5969193651000492,
+    "energy_j_per_token": 0.7872478148285943,
     "energy_dynamic_j_per_token": 0.01275319885477061,
-    "energy_static_j_per_token": 0.5841661662452785,
+    "energy_static_j_per_token": 0.7744946159738236,
     "concurrent_aggregate_tokens_s": 19207.265600709838,
     "concurrent_tokens_s_per_user": 19207.265600709838,
     "frontier": false
@@ -4932,9 +4932,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.013262608099411627,
     "mfu_layer_dies": 0.02152754620683285,
-    "energy_j_per_token": 0.08577396963543044,
+    "energy_j_per_token": 0.10956502585149858,
     "energy_dynamic_j_per_token": 0.012753198854770621,
-    "energy_static_j_per_token": 0.07302077078065981,
+    "energy_static_j_per_token": 0.09681182699672795,
     "concurrent_aggregate_tokens_s": 153658.1248056787,
     "concurrent_tokens_s_per_user": 19207.265600709838,
     "frontier": false
@@ -4948,9 +4948,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.0464191283479407,
     "mfu_layer_dies": 0.07534641172391499,
-    "energy_j_per_token": 0.03361627622067342,
+    "energy_j_per_token": 0.04041372085383574,
     "energy_dynamic_j_per_token": 0.012753198854770616,
-    "energy_static_j_per_token": 0.020863077365902802,
+    "energy_static_j_per_token": 0.027660521999065126,
     "concurrent_aggregate_tokens_s": 537803.4368198755,
     "concurrent_tokens_s_per_user": 19207.265600709838,
     "frontier": true
@@ -4964,9 +4964,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.057805911808217265,
     "mfu_layer_dies": 0.09382916453172647,
-    "energy_j_per_token": 0.028400458161481797,
+    "energy_j_per_token": 0.03385892157801992,
     "energy_dynamic_j_per_token": 0.011647052918193313,
-    "energy_static_j_per_token": 0.016753405243288486,
+    "energy_static_j_per_token": 0.022211868659826602,
     "concurrent_aggregate_tokens_s": 746813.5879214877,
     "concurrent_tokens_s_per_user": 11668.962311273246,
     "frontier": false
@@ -4980,9 +4980,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.06073152030836788,
     "mfu_layer_dies": 0.098577941823343,
-    "energy_j_per_token": 0.027120436740341366,
+    "energy_j_per_token": 0.032315950589865514,
     "energy_dynamic_j_per_token": 0.011174090245744856,
-    "energy_static_j_per_token": 0.01594634649459651,
+    "energy_static_j_per_token": 0.02114186034412066,
     "concurrent_aggregate_tokens_s": 883970.876795476,
     "concurrent_tokens_s_per_user": 6906.022474964656,
     "frontier": false
@@ -4996,9 +4996,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.06339966442613615,
     "mfu_layer_dies": 0.10290880912721018,
-    "energy_j_per_token": 0.02603157166869358,
+    "energy_j_per_token": 0.031008434838567182,
     "energy_dynamic_j_per_token": 0.010756319429635631,
-    "energy_static_j_per_token": 0.015275252239057948,
+    "energy_static_j_per_token": 0.020252115408931553,
     "concurrent_aggregate_tokens_s": 996203.9630513244,
     "concurrent_tokens_s_per_user": 3891.421730669236,
     "frontier": false
@@ -5012,9 +5012,9 @@
     "layer_die_block_mm2": 198.99894584,
     "mfu_array": 0.06714300321519316,
     "mfu_layer_dies": 0.10898490653921389,
-    "energy_j_per_token": 0.02427445563925129,
+    "energy_j_per_token": 0.028973850062427524,
     "energy_dynamic_j_per_token": 0.009850825184757139,
-    "energy_static_j_per_token": 0.01442363045449415,
+    "energy_static_j_per_token": 0.019123024877670383,
     "concurrent_aggregate_tokens_s": 1139056.3628819473,
     "concurrent_tokens_s_per_user": 1112.3597293769017,
     "frontier": false
@@ -5028,9 +5028,9 @@
     "layer_die_block_mm2": 65.2720394048,
     "mfu_array": 0.0012594841472116382,
     "mfu_layer_dies": 0.0020443643492017876,
-    "energy_j_per_token": 1.5028030669776036,
+    "energy_j_per_token": 1.9871536124099107,
     "energy_dynamic_j_per_token": 0.016208699989674145,
-    "energy_static_j_per_token": 1.4865943669879293,
+    "energy_static_j_per_token": 1.9709449124202365,
     "concurrent_aggregate_tokens_s": 7547.610134400964,
     "concurrent_tokens_s_per_user": 7547.610134400964,
     "frontier": false
@@ -5044,9 +5044,9 @@
     "layer_die_block_mm2": 65.2720394048,
     "mfu_array": 0.010075873177693106,
     "mfu_layer_dies": 0.0163549147936143,
-    "energy_j_per_token": 0.2020329958631653,
+    "energy_j_per_token": 0.2625768140422037,
     "energy_dynamic_j_per_token": 0.016208699989674138,
-    "energy_static_j_per_token": 0.18582429587349117,
+    "energy_static_j_per_token": 0.24636811405252956,
     "concurrent_aggregate_tokens_s": 60380.88107520771,
     "concurrent_tokens_s_per_user": 7547.610134400964,
     "frontier": false
@@ -5060,9 +5060,9 @@
     "layer_die_block_mm2": 65.2720394048,
     "mfu_array": 0.03526555612192587,
     "mfu_layer_dies": 0.05724220177765005,
-    "energy_j_per_token": 0.06930135595352876,
+    "energy_j_per_token": 0.0865995897189683,
     "energy_dynamic_j_per_token": 0.016208699989674134,
-    "energy_static_j_per_token": 0.053092655963854624,
+    "energy_static_j_per_token": 0.07039088972929416,
     "concurrent_aggregate_tokens_s": 211333.08376322698,
     "concurrent_tokens_s_per_user": 7547.610134400964,
     "frontier": true
@@ -5076,9 +5076,9 @@
     "layer_die_block_mm2": 65.2720394048,
     "mfu_array": 0.05885002865913879,
     "mfu_layer_dies": 0.09552394986995441,
-    "energy_j_per_token": 0.04513551255082997,
+    "energy_j_per_token": 0.055501384030666026,
     "energy_dynamic_j_per_token": 0.013320030363045809,
-    "energy_static_j_per_token": 0.031815482187784155,
+    "energy_static_j_per_token": 0.042181353667620214,
     "concurrent_aggregate_tokens_s": 352665.8701507781,
     "concurrent_tokens_s_per_user": 5510.404221105908,
     "frontier": true
@@ -5092,9 +5092,9 @@
     "layer_die_block_mm2": 65.2720394048,
     "mfu_array": 0.07512424078596545,
     "mfu_layer_dies": 0.121939859238158,
-    "energy_j_per_token": 0.037539266691218945,
+    "energy_j_per_token": 0.04565957283052925,
     "energy_dynamic_j_per_token": 0.01261599267251892,
-    "energy_static_j_per_token": 0.024923274018700023,
+    "energy_static_j_per_token": 0.03304358015801033,
     "concurrent_aggregate_tokens_s": 497555.9029161166,
     "concurrent_tokens_s_per_user": 3887.155491532161,
     "frontier": true
@@ -5108,9 +5108,9 @@
     "layer_die_block_mm2": 65.2720394048,
     "mfu_array": 0.07680297408757095,
     "mfu_layer_dies": 0.12466473872252312,
-    "energy_j_per_token": 0.03648545913688023,
+    "energy_j_per_token": 0.04442827438476035,
     "energy_dynamic_j_per_token": 0.012106949570042772,
-    "energy_static_j_per_token": 0.02437850956683745,
+    "energy_static_j_per_token": 0.032321324814717584,
     "concurrent_aggregate_tokens_s": 613234.3066798015,
     "concurrent_tokens_s_per_user": 2395.446510467975,
     "frontier": true
@@ -5124,9 +5124,9 @@
     "layer_die_block_mm2": 65.2720394048,
     "mfu_array": 0.07896339928774937,
     "mfu_layer_dies": 0.12817148890126892,
-    "energy_j_per_token": 0.03535063423900652,
+    "energy_j_per_token": 0.04307613541002745,
     "energy_dynamic_j_per_token": 0.011639116555573934,
-    "energy_static_j_per_token": 0.023711517683432586,
+    "energy_static_j_per_token": 0.03143701885445352,
     "concurrent_aggregate_tokens_s": 752183.4577304599,
     "concurrent_tokens_s_per_user": 734.5541579399022,
     "frontier": true
@@ -5140,9 +5140,9 @@
     "layer_die_block_mm2": 130.4717624096,
     "mfu_array": 0.0016022119123363866,
     "mfu_layer_dies": 0.0026006718073415553,
-    "energy_j_per_token": 0.5957987025305445,
+    "energy_j_per_token": 0.7861704720100688,
     "energy_dynamic_j_per_token": 0.011499577009401588,
-    "energy_static_j_per_token": 0.5842991255211428,
+    "energy_static_j_per_token": 0.7746708950006672,
     "concurrent_aggregate_tokens_s": 19202.894921353905,
     "concurrent_tokens_s_per_user": 19202.894921353905,
     "frontier": false
@@ -5156,9 +5156,9 @@
     "layer_die_block_mm2": 130.4717624096,
     "mfu_array": 0.012817695298691093,
     "mfu_layer_dies": 0.020805374458732442,
-    "energy_j_per_token": 0.08453696769954444,
+    "energy_j_per_token": 0.10833343888448499,
     "energy_dynamic_j_per_token": 0.011499577009401591,
-    "energy_static_j_per_token": 0.07303739069014285,
+    "energy_static_j_per_token": 0.0968338618750834,
     "concurrent_aggregate_tokens_s": 153623.15937083124,
     "concurrent_tokens_s_per_user": 19202.894921353905,
     "frontier": false
@@ -5172,9 +5172,9 @@
     "layer_die_block_mm2": 130.4717624096,
     "mfu_array": 0.04486193354541883,
     "mfu_layer_dies": 0.07281881060556356,
-    "energy_j_per_token": 0.03236740292087098,
+    "energy_j_per_token": 0.039166394687996854,
     "energy_dynamic_j_per_token": 0.011499577009401593,
-    "energy_static_j_per_token": 0.020867825911469386,
+    "energy_static_j_per_token": 0.02766681767859526,
     "concurrent_aggregate_tokens_s": 537681.0577979094,
     "concurrent_tokens_s_per_user": 19202.894921353905,
     "frontier": true
@@ -5188,9 +5188,9 @@
     "layer_die_block_mm2": 130.4717624096,
     "mfu_array": 0.05691384513552895,
     "mfu_layer_dies": 0.09238118338262463,
-    "energy_j_per_token": 0.027054002172264786,
+    "energy_j_per_token": 0.03241325906496491,
     "energy_dynamic_j_per_token": 0.010605086850370711,
-    "energy_static_j_per_token": 0.016448915321894075,
+    "energy_static_j_per_token": 0.021808172214594194,
     "concurrent_aggregate_tokens_s": 752003.7874455836,
     "concurrent_tokens_s_per_user": 11750.059178837244,
     "frontier": true
@@ -5204,9 +5204,9 @@
     "layer_die_block_mm2": 130.4717624096,
     "mfu_array": 0.059848901928234964,
     "mfu_layer_dies": 0.09714529691527593,
-    "energy_j_per_token": 0.02582292613137418,
+    "energy_j_per_token": 0.030919359098488537,
     "energy_dynamic_j_per_token": 0.010180683932841038,
-    "energy_static_j_per_token": 0.015642242198533142,
+    "energy_static_j_per_token": 0.020738675165647497,
     "concurrent_aggregate_tokens_s": 891409.9290102755,
     "concurrent_tokens_s_per_user": 6964.1400703927775,
     "frontier": true
@@ -5220,9 +5220,9 @@
     "layer_die_block_mm2": 130.4717624096,
     "mfu_array": 0.06253087379123186,
     "mfu_layer_dies": 0.10149860908233396,
-    "energy_j_per_token": 0.02477461817463559,
+    "energy_j_per_token": 0.0296524632828135,
     "energy_dynamic_j_per_token": 0.009803277418975472,
-    "energy_static_j_per_token": 0.014971340755660117,
+    "energy_static_j_per_token": 0.019849185863838027,
     "concurrent_aggregate_tokens_s": 1005941.2460095222,
     "concurrent_tokens_s_per_user": 3929.457992224696,
     "frontier": true
@@ -5236,15 +5236,15 @@
     "layer_die_block_mm2": 130.4717624096,
     "mfu_array": 0.06630170425755823,
     "mfu_layer_dies": 0.10761933032309622,
-    "energy_j_per_token": 0.023068857791697005,
+    "energy_j_per_token": 0.027669281268713125,
     "energy_dynamic_j_per_token": 0.008948994211101529,
-    "energy_static_j_per_token": 0.014119863580595478,
+    "energy_static_j_per_token": 0.018720287057611598,
     "concurrent_aggregate_tokens_s": 1151855.8920826952,
     "concurrent_tokens_s_per_user": 1124.859269612007,
     "frontier": true
    }
   ],
-  "energy_basis": "dynamic = the budget model's per-format MAC, ROM/HBM byte and link energies at the point's microbatch; clock gated per stage; static = the budget's per-die static 77.8 W (leakage, HBM idle, SerDes, UCIe idle), less the right-sizing saving on the 76 non-layer dies from 'L3+comm levers' on (ASSUMED scaling)"
+  "energy_basis": "dynamic = the budget model's per-format MAC, ROM/HBM byte and link energies at the point's microbatch; clock gated per stage; static = the budget's per-die static 98.8 W (leakage, HBM idle, SerDes, UCIe idle), less the right-sizing saving on the 76 non-layer dies from 'L3+comm levers' on (ASSUMED scaling)"
  },
  "design_point": {
   "label": "spec + chain ladder L1-3 + the adopted communication levers (replicate_a_proj, direct_to_next_stage, cut_through_hops, ring_placement_return, flat_one_shot, oneshot_128_lanes) + pooled engines + per-unit concurrency across microbatches; non-layer dies right-sized; MTP m = 2 at tau 5.0; operate at the 28-user pipeline fill",
@@ -5685,70 +5685,70 @@
    6.4
   ],
   "idle_floor_w_per_device": 50.0,
-  "rom_die_static_w": 77.7717906686181,
-  "hbm_die_static_w": 81.994,
-  "hbm_die_logic_leak_w": 37.69799999999999,
-  "logic_leak_w_per_mm2": 0.06,
+  "rom_die_static_w": 98.7963990503202,
+  "hbm_die_static_w": 107.126,
+  "hbm_die_logic_leak_w": 62.83,
+  "logic_leak_w_per_mm2": 0.1,
   "rom_dies": 188,
   "hbm_dies": 99,
-  "rom_design_nonlayer_die_static_w": 33.02360730442441,
+  "rom_design_nonlayer_die_static_w": 50.14114607490968,
   "rows": {
    "200000/b1": {
     "rom_spec": {
      "tokens_s_per_user": 5417.685767461598,
      "aggregate_tokens_s": 5417.685767461598,
      "dynamic_j": 0.01962704833043514,
-     "static_j": 2.698771629302297,
-     "total_j": 2.7183986776327322,
-     "static_array_w": 14621.096645700201,
+     "static_j": 3.4283500037992662,
+     "total_j": 3.4479770521297013,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      2.49631123077002,
-      3.2180954330738345
+      3.225889605266989,
+      3.947673807570803
      ],
-     "total_j_with_idle_floor": 2.7183986776327322
+     "total_j_with_idle_floor": 3.4479770521297013
     },
     "rom_design": {
      "tokens_s_per_user": 7547.610134400964,
      "aggregate_tokens_s": 7547.610134400964,
      "dynamic_j": 0.016208699989674145,
-     "static_j": 1.4865943669879293,
-     "total_j": 1.5028030669776036,
-     "static_array_w": 11220.234710021481,
+     "static_j": 1.9709449124202365,
+     "total_j": 1.9871536124099107,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      1.4078326078208798,
-      1.7164866000802317
+      1.8921831532531872,
+      2.2008371455125384
      ],
-     "total_j_with_idle_floor": 1.5028030669776036
+     "total_j_with_idle_floor": 1.9871536124099107
     },
     "hbm": {
      "tokens_s_per_user": 941.7970760113858,
      "aggregate_tokens_s": 941.7970760113858,
      "dynamic_j": 1.4089517136986582,
-     "static_j": 8.619060524564492,
-     "total_j": 10.02801223826315,
-     "static_array_w": 8117.406,
+     "static_j": 11.260890769501376,
+     "total_j": 12.669842483200034,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      9.35525584929307,
-      11.541714113445831
+      11.997086094229953,
+      14.183544358382715
      ],
-     "total_j_with_idle_floor": 10.02801223826315
+     "total_j_with_idle_floor": 12.669842483200034
     },
     "hbm_over_rom_spec": {
-     "with_static": 3.688940963948622,
+     "with_static": 3.674572739796598,
      "dynamic_only": 71.78622531406491,
-     "with_idle_floor": 3.688940963948622,
+     "with_idle_floor": 3.674572739796598,
      "stack_band": [
-      3.747631999559333,
-      3.5865046122704665
+      3.719000822173833,
+      3.5928866086102853
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 6.6728718210771385,
+     "with_static": 6.37587472054299,
      "dynamic_only": 86.9256457702493,
-     "with_idle_floor": 6.6728718210771385,
+     "with_idle_floor": 6.37587472054299,
      "stack_band": [
-      6.6451478658202445,
-      6.724033914920367
+      6.3403408246203,
+      6.4446133087596555
      ]
     }
    },
@@ -5757,57 +5757,57 @@
      "tokens_s_per_user": 14936.814364652291,
      "aggregate_tokens_s": 14936.814364652291,
      "dynamic_j": 0.013794457139189356,
-     "static_j": 0.978863115571736,
-     "total_j": 0.9926575727109254,
-     "static_array_w": 14621.096645700201,
+     "static_j": 1.2434862326075757,
+     "total_j": 1.257280689746765,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.9121049213472348,
-      1.1739010382792288
+      1.1767280383830745,
+      1.4385241553150685
      ],
-     "total_j_with_idle_floor": 0.9926575727109254
+     "total_j_with_idle_floor": 1.257280689746765
     },
     "rom_design": {
      "tokens_s_per_user": 19202.894921353905,
      "aggregate_tokens_s": 19202.894921353905,
      "dynamic_j": 0.011499577009401588,
-     "static_j": 0.5842991255211428,
-     "total_j": 0.5957987025305445,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.7746708950006672,
+     "total_j": 0.7861704720100688,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.5584709973623561,
-      0.6797860391589682
+      0.7488427668418806,
+      0.8701578086384926
      ],
-     "total_j_with_idle_floor": 0.5957987025305445
+     "total_j_with_idle_floor": 0.7861704720100688
     },
     "hbm": {
      "tokens_s_per_user": 1660.0496942742377,
      "aggregate_tokens_s": 1660.0496942742377,
      "dynamic_j": 0.8233292162663851,
-     "static_j": 4.889857230177,
-     "total_j": 5.713186446443386,
-     "static_array_w": 8117.406,
+     "static_j": 6.388648506475368,
+     "total_j": 7.211977722741754,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      5.33151112540608,
-      6.571955918777323
+      6.830302401704448,
+      8.07074719507569
      ],
-     "total_j_with_idle_floor": 5.713186446443386
+     "total_j_with_idle_floor": 7.211977722741754
     },
     "hbm_over_rom_spec": {
-     "with_static": 5.755445385704158,
+     "with_static": 5.736171549882273,
      "dynamic_only": 59.68551048865478,
-     "with_idle_floor": 5.755445385704158,
+     "with_idle_floor": 5.736171549882273,
      "stack_band": [
-      5.8452827088479165,
-      5.598390072480787
+      5.804486830355356,
+      5.610435643541917
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 9.58912200073227,
+     "with_static": 9.173554565465016,
      "dynamic_only": 71.59647833944366,
-     "with_idle_floor": 9.58912200073227,
+     "with_idle_floor": 9.173554565465016,
      "stack_band": [
-      9.546621311736272,
-      9.667682976996927
+      9.12114358867364,
+      9.27503852169496
      ]
     }
    },
@@ -5816,57 +5816,57 @@
      "tokens_s_per_user": 5417.685767461598,
      "aggregate_tokens_s": 151695.20148892474,
      "dynamic_j": 0.01962704833043513,
-     "static_j": 0.0963847010465106,
-     "total_j": 0.11601174937694574,
-     "static_array_w": 14621.096645700201,
+     "static_j": 0.1224410715642595,
+     "total_j": 0.14206811989469462,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.10808005484613459,
-      0.13385806207127082
+      0.13413642536388348,
+      0.15991443258901972
      ],
-     "total_j_with_idle_floor": 0.11601174937694574
+     "total_j_with_idle_floor": 0.14206811989469462
     },
     "rom_design": {
      "tokens_s_per_user": 7547.610134400964,
      "aggregate_tokens_s": 211333.08376322698,
      "dynamic_j": 0.016208699989674134,
-     "static_j": 0.053092655963854624,
-     "total_j": 0.06930135595352876,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.07039088972929416,
+     "total_j": 0.0865995897189683,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.06590955384078862,
-      0.07693291070719405
+      0.08320778760622818,
+      0.09423114447263359
      ],
-     "total_j_with_idle_floor": 0.06930135595352876
+     "total_j_with_idle_floor": 0.0865995897189683
     },
     "hbm": {
      "tokens_s_per_user": 941.7970760113858,
      "aggregate_tokens_s": 26370.318128318802,
      "dynamic_j": 1.4089517136986582,
-     "static_j": 0.3078235901630176,
-     "total_j": 1.7167753038616758,
-     "static_array_w": 8117.406,
+     "static_j": 0.40217467033933485,
+     "total_j": 1.8111263840379932,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      1.6927482899698871,
-      1.7708360851182001
+      1.7870993701462046,
+      1.8651871652945173
      ],
-     "total_j_with_idle_floor": 1.7167753038616758
+     "total_j_with_idle_floor": 1.8111263840379932
     },
     "hbm_over_rom_spec": {
-     "with_static": 14.798288217200518,
+     "with_static": 12.748295573844839,
      "dynamic_only": 71.78622531406494,
-     "with_idle_floor": 14.798288217200518,
+     "with_idle_floor": 12.748295573844839,
      "stack_band": [
-      15.661985852798882,
-      13.229207548032061
+      13.322998322776126,
+      11.663657464164292
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 24.772607696347087,
+     "with_static": 20.913798667123405,
      "dynamic_only": 86.92564577024936,
-     "with_idle_floor": 24.772607696347087,
+     "with_idle_floor": 20.913798667123405,
      "stack_band": [
-      25.682897111682728,
-      23.01792651337457
+      21.477549416449556,
+      19.793744156807957
      ]
     }
    },
@@ -5875,57 +5875,57 @@
      "tokens_s_per_user": 14936.814364652291,
      "aggregate_tokens_s": 418230.80221026414,
      "dynamic_j": 0.013794457139189361,
-     "static_j": 0.034959396984704856,
-     "total_j": 0.048753854123894214,
-     "static_array_w": 14621.096645700201,
+     "static_j": 0.044410222593127706,
+     "total_j": 0.05820467973231706,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.04587697371804812,
-      0.05522683503704791
+      0.055327799326470986,
+      0.06467766064547076
      ],
-     "total_j_with_idle_floor": 0.048753854123894214
+     "total_j_with_idle_floor": 0.05820467973231706
     },
     "rom_design": {
      "tokens_s_per_user": 19202.894921353905,
      "aggregate_tokens_s": 537681.0577979094,
      "dynamic_j": 0.011499577009401593,
-     "static_j": 0.020867825911469386,
-     "total_j": 0.03236740292087098,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.02766681767859526,
+     "total_j": 0.039166394687996854,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.03103427059343568,
-      0.0353669506576004
+      0.03783326236056155,
+      0.042165942424726266
      ],
-     "total_j_with_idle_floor": 0.03236740292087098
+     "total_j_with_idle_floor": 0.039166394687996854
     },
     "hbm": {
      "tokens_s_per_user": 1660.0496942742377,
      "aggregate_tokens_s": 46481.39143967866,
      "dynamic_j": 0.8233292162663851,
-     "static_j": 0.17463775822060715,
-     "total_j": 0.9979669744869922,
-     "static_array_w": 8117.406,
+     "static_j": 0.228166018088406,
+     "total_j": 1.0514952343547912,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      0.9843357130213742,
-      1.0286373127846329
+      1.037863972889173,
+      1.0821655726524317
      ],
-     "total_j_with_idle_floor": 0.9979669744869922
+     "total_j_with_idle_floor": 1.0514952343547912
     },
     "hbm_over_rom_spec": {
-     "with_static": 20.469499128231785,
+     "with_static": 18.065475820683332,
      "dynamic_only": 59.68551048865476,
-     "with_idle_floor": 20.469499128231785,
+     "with_idle_floor": 18.065475820683332,
      "stack_band": [
-      21.455986157041,
-      18.62567920277507
+      18.75845389701987,
+      16.73167461303679
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 30.83246984401978,
+     "with_static": 26.846873262936253,
      "dynamic_only": 71.59647833944364,
-     "with_idle_floor": 30.83246984401978,
+     "with_idle_floor": 26.846873262936253,
      "stack_band": [
-      31.717700922204997,
-      29.08470460863941
+      27.43257937943706,
+      25.664446480338736
      ]
     }
    },
@@ -5934,57 +5934,57 @@
      "tokens_s_per_user": 461.9319175864325,
      "aggregate_tokens_s": 473018.2836085069,
      "dynamic_j": 0.012352600080493322,
-     "static_j": 0.030910214578093006,
-     "total_j": 0.04326281465858633,
-     "static_array_w": 14621.096645700201,
+     "static_j": 0.039266395539231884,
+     "total_j": 0.0516189956197252,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.0407191497693115,
-      0.04898606065945468
+      0.04907533073045038,
+      0.05734224162059355
      ],
-     "total_j_with_idle_floor": 0.04326281465858633
+     "total_j_with_idle_floor": 0.0516189956197252
     },
     "rom_design": {
      "tokens_s_per_user": 462.1070909628561,
      "aggregate_tokens_s": 473197.66114596464,
      "dynamic_j": 0.011639116555573934,
-     "static_j": 0.023711517683432586,
-     "total_j": 0.03535063423900652,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.03143701885445352,
+     "total_j": 0.04307613541002745,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.033835833852495535,
-      0.03875893510865623
+      0.04156133502351647,
+      0.046484436279677153
      ],
-     "total_j_with_idle_floor": 0.03535063423900652
+     "total_j_with_idle_floor": 0.04307613541002745
     },
     "hbm": {
      "tokens_s_per_user": 91.47626704615881,
      "aggregate_tokens_s": 93671.69745526662,
      "dynamic_j": 0.4085317231119251,
-     "static_j": 0.08665804314986933,
-     "total_j": 0.49518976626179445,
-     "static_array_w": 8117.406,
+     "static_j": 0.11321962009992075,
+     "total_j": 0.5217513432118458,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      0.488425716744035,
-      0.510408877676753
+      0.5149872936940865,
+      0.5369704546268045
      ],
-     "total_j_with_idle_floor": 0.49518976626179445
+     "total_j_with_idle_floor": 0.5217513432118458
     },
     "hbm_over_rom_spec": {
-     "with_static": 11.446082973788082,
+     "with_static": 10.107739155863555,
      "dynamic_only": 33.07252889673489,
-     "with_idle_floor": 11.446082973788082,
+     "with_idle_floor": 10.107739155863555,
      "stack_band": [
-      11.994988095555552,
-      10.419471800867095
+      10.493811983105921,
+      9.364308744322965
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 14.00794573907229,
+     "with_static": 12.112306228157836,
      "dynamic_only": 35.099891057992764,
-     "with_idle_floor": 14.00794573907229,
+     "with_idle_floor": 12.112306228157836,
      "stack_band": [
-      14.435161222072603,
-      13.168805495968355
+      12.391019042162467,
+      11.55161808128813
      ]
     }
    },
@@ -5993,57 +5993,57 @@
      "tokens_s_per_user": 773.7064244566391,
      "aggregate_tokens_s": 792275.3786435984,
      "dynamic_j": 0.00980515969895462,
-     "static_j": 0.018454563955694295,
-     "total_j": 0.028259723654648915,
-     "static_array_w": 14621.096645700201,
+     "static_j": 0.02344351916281814,
+     "total_j": 0.03324867886177276,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.026741059775354927,
-      0.03167671738306038
+      0.03173001498247877,
+      0.03666567259018423
      ],
-     "total_j_with_idle_floor": 0.028259723654648915
+     "total_j_with_idle_floor": 0.03324867886177276
     },
     "rom_design": {
      "tokens_s_per_user": 776.017444960559,
      "aggregate_tokens_s": 794641.8636396124,
      "dynamic_j": 0.008948994211101529,
-     "static_j": 0.014119863580595478,
-     "total_j": 0.023068857791697005,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.018720287057611598,
+     "total_j": 0.027669281268713125,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.02216681621448017,
-      0.025098451340434882
+      0.026767239691496296,
+      0.029698874817451003
      ],
-     "total_j_with_idle_floor": 0.023068857791697005
+     "total_j_with_idle_floor": 0.027669281268713125
     },
     "hbm": {
      "tokens_s_per_user": 196.98759168099926,
      "aggregate_tokens_s": 201715.29388134324,
      "dynamic_j": 0.19304102213743843,
-     "static_j": 0.04024189660489984,
-     "total_j": 0.23328291874233825,
-     "static_array_w": 8117.406,
+     "static_j": 0.05257644968773935,
+     "total_j": 0.2456174718251778,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      0.23014185795409328,
-      0.24035030551588948
+      0.2424764110369328,
+      0.25268485859872897
      ],
-     "total_j_with_idle_floor": 0.23328291874233825
+     "total_j_with_idle_floor": 0.2456174718251778
     },
     "hbm_over_rom_spec": {
-     "with_static": 8.254961074396835,
+     "with_static": 7.38728515639078,
      "dynamic_only": 19.687697912561234,
-     "with_idle_floor": 8.254961074396835,
+     "with_idle_floor": 7.38728515639078,
      "stack_band": [
-      8.606310291643581,
-      7.587601411136766
+      7.641862481654282,
+      6.891592073681889
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 10.11246074031034,
+     "with_static": 8.87690104559775,
      "dynamic_only": 21.571253437393505,
-     "with_idle_floor": 10.11246074031034,
+     "with_idle_floor": 8.87690104559775,
      "stack_band": [
-      10.38226941240918,
-      9.576300236846603
+      9.058700629260823,
+      8.508230030662704
      ]
     }
    },
@@ -6052,57 +6052,57 @@
      "tokens_s_per_user": 4933.094756135517,
      "aggregate_tokens_s": 4933.094756135517,
      "dynamic_j": 0.03601294152089957,
-     "static_j": 2.9638791404757168,
-     "total_j": 2.999892081996616,
-     "static_array_w": 14621.096645700201,
+     "static_j": 3.765125938105933,
+     "total_j": 3.8011388796268326,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      2.7559883948631945,
-      3.5486753780468145
+      3.557235192493411,
+      4.349922175677031
      ],
-     "total_j_with_idle_floor": 2.999892081996616
+     "total_j_with_idle_floor": 3.8011388796268326
     },
     "rom_design": {
      "tokens_s_per_user": 7037.978976508167,
      "aggregate_tokens_s": 7037.978976508167,
      "dynamic_j": 0.03218030336155979,
-     "static_j": 1.5942410097377564,
-     "total_j": 1.6264213130993161,
-     "static_array_w": 11220.234710021481,
+     "static_j": 2.1136641420758493,
+     "total_j": 2.145844445437409,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      1.5245738932089494,
-      1.855578007852641
+      2.0439970255470423,
+      2.3750011401907334
      ],
-     "total_j_with_idle_floor": 1.6264213130993161
+     "total_j_with_idle_floor": 2.145844445437409
     },
     "hbm": {
      "tokens_s_per_user": 925.9844816192578,
      "aggregate_tokens_s": 925.9844816192578,
      "dynamic_j": 1.4252639686421322,
-     "static_j": 8.766244101418623,
-     "total_j": 10.191508070060756,
-     "static_array_w": 8117.406,
+     "static_j": 11.453187618710777,
+     "total_j": 12.87845158735291,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      9.507263341799185,
-      11.73105870864929
+      12.194206859091338,
+      14.418002225941443
      ],
-     "total_j_with_idle_floor": 10.191508070060756
+     "total_j_with_idle_floor": 12.87845158735291
     },
     "hbm_over_rom_spec": {
-     "with_static": 3.397291566327836,
+     "with_static": 3.3880507908769752,
      "dynamic_only": 39.576438592637636,
-     "with_idle_floor": 3.397291566327836,
+     "with_idle_floor": 3.3880507908769752,
      "stack_band": [
-      3.449674664639188,
-      3.3057570667695297
+      3.4280012985433,
+      3.3145425696489372
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 6.266216501208884,
+     "with_static": 6.001577427821319,
      "dynamic_only": 44.28994819062667,
-     "with_idle_floor": 6.266216501208884,
+     "with_idle_floor": 6.001577427821319,
      "stack_band": [
-      6.236013475075408,
-      6.322050950703497
+      5.9658633093302855,
+      6.070734864903497
      ]
     }
    },
@@ -6111,57 +6111,57 @@
      "tokens_s_per_user": 13013.51669247227,
      "aggregate_tokens_s": 13013.51669247227,
      "dynamic_j": 0.018541504713013517,
-     "static_j": 1.1235315550144753,
-     "total_j": 1.1420730597274888,
-     "static_array_w": 14621.096645700201,
+     "static_j": 1.4272639333689299,
+     "total_j": 1.4458054380819434,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      1.0496153460722708,
-      1.350102915451729
+      1.3533477244267254,
+      1.6538352938061835
      ],
-     "total_j_with_idle_floor": 1.1420730597274888
+     "total_j_with_idle_floor": 1.4458054380819434
     },
     "rom_design": {
      "tokens_s_per_user": 17573.578095281435,
      "aggregate_tokens_s": 17573.578095281435,
      "dynamic_j": 0.01577590986951391,
-     "static_j": 0.6384718381872473,
-     "total_j": 0.6542477480567612,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.8464937370564981,
+     "total_j": 0.862269646926012,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.6134592418052959,
-      0.746021887122558
+      0.8214811406745468,
+      0.9540437859918087
      ],
-     "total_j_with_idle_floor": 0.6542477480567612
+     "total_j_with_idle_floor": 0.862269646926012
     },
     "hbm": {
      "tokens_s_per_user": 1633.2234092842689,
      "aggregate_tokens_s": 1633.2234092842689,
      "dynamic_j": 0.8279959246579862,
-     "static_j": 4.970174903112189,
-     "total_j": 5.798170827770175,
-     "static_array_w": 8117.406,
+     "static_j": 6.493584368012249,
+     "total_j": 7.321580292670236,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      5.410226351589991,
-      6.67104589917559
+      6.933635816490051,
+      8.194455364075651
      ],
-     "total_j_with_idle_floor": 5.798170827770175
+     "total_j_with_idle_floor": 7.321580292670236
     },
     "hbm_over_rom_spec": {
-     "with_static": 5.0768825850367945,
+     "with_static": 5.064014908107763,
      "dynamic_only": 44.656350035973624,
-     "with_idle_floor": 5.0768825850367945,
+     "with_idle_floor": 5.064014908107763,
      "stack_band": [
-      5.154484804205094,
-      4.941138799736266
+      5.123321738636774,
+      4.954819500324424
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 8.862347398201724,
+     "with_static": 8.491056502767599,
      "dynamic_only": 52.48482854596193,
-     "with_idle_floor": 8.862347398201724,
+     "with_idle_floor": 8.491056502767599,
      "stack_band": [
-      8.819210768866578,
-      8.94215841964923
+      8.440407786838053,
+      8.589181633374222
      ]
     }
    },
@@ -6170,57 +6170,57 @@
      "tokens_s_per_user": 4933.094756135517,
      "aggregate_tokens_s": 138126.6531717945,
      "dynamic_j": 0.036012941520899594,
-     "static_j": 0.10585282644556131,
-     "total_j": 0.1418657679664609,
-     "static_array_w": 14621.096645700201,
+     "static_j": 0.13446878350378333,
+     "total_j": 0.17048172502468292,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.13315492199741014,
-      0.16146517139682512
+      0.16177087905563214,
+      0.19008112845504713
      ],
-     "total_j_with_idle_floor": 0.1418657679664609
+     "total_j_with_idle_floor": 0.17048172502468292
     },
     "rom_design": {
      "tokens_s_per_user": 7037.978976508167,
      "aggregate_tokens_s": 197063.41134222868,
      "dynamic_j": 0.03218030336155979,
-     "static_j": 0.056937178919205585,
-     "total_j": 0.08911748228076538,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.07548800507413747,
+     "total_j": 0.10766830843569726,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.085480074427538,
-      0.09730164995052697
+      0.10403090058246989,
+      0.11585247610545885
      ],
-     "total_j_with_idle_floor": 0.08911748228076538
+     "total_j_with_idle_floor": 0.10766830843569726
     },
     "hbm": {
      "tokens_s_per_user": 925.9844816192578,
      "aggregate_tokens_s": 25927.56548533922,
      "dynamic_j": 1.425263968642132,
-     "static_j": 0.31308014647923654,
-     "total_j": 1.7383441151213685,
-     "static_array_w": 8117.406,
+     "static_j": 0.4090424149539563,
+     "total_j": 1.8343063835960884,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      1.713906803397741,
-      1.7933280664995306
+      1.8098690718724608,
+      1.8892903349742503
      ],
-     "total_j_with_idle_floor": 1.7383441151213685
+     "total_j_with_idle_floor": 1.8343063835960884
     },
     "hbm_over_rom_spec": {
-     "with_static": 12.253443096521623,
+     "with_static": 10.75954846967035,
      "dynamic_only": 39.57643859263761,
-     "with_idle_floor": 12.253443096521623,
+     "with_idle_floor": 10.75954846967035,
      "stack_band": [
-      12.871524219217946,
-      11.106593768709137
+      11.187854590627875,
+      9.939389303557583
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 19.50620765569544,
+     "with_static": 17.03664161020595,
      "dynamic_only": 44.28994819062666,
-     "with_idle_floor": 19.50620765569544,
+     "with_idle_floor": 17.03664161020595,
      "stack_band": [
-      20.050366297360103,
-      18.43060284600876
+      17.39741809153808,
+      16.307725121511055
      ]
     }
    },
@@ -6229,57 +6229,57 @@
      "tokens_s_per_user": 13013.51669247227,
      "aggregate_tokens_s": 364378.4673892236,
      "dynamic_j": 0.018541504713013527,
-     "static_j": 0.04012612696480269,
-     "total_j": 0.05866763167781622,
-     "static_array_w": 14621.096645700201,
+     "static_j": 0.050973711906033205,
+     "total_j": 0.06951521661904674,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.055365570475844145,
-      0.06609726938225337
+      0.06621315541707466,
+      0.07694485432348389
      ],
-     "total_j_with_idle_floor": 0.05866763167781622
+     "total_j_with_idle_floor": 0.06951521661904674
     },
     "rom_design": {
      "tokens_s_per_user": 17573.578095281435,
      "aggregate_tokens_s": 492060.18666788016,
      "dynamic_j": 0.01577590986951392,
-     "static_j": 0.022802565649544547,
-     "total_j": 0.038578475519058464,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.03023191918058922,
+     "total_j": 0.046007829050103144,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.037121743152934705,
-      0.04185612334283692
+      0.044551096683979385,
+      0.04928547687388159
      ],
-     "total_j_with_idle_floor": 0.038578475519058464
+     "total_j_with_idle_floor": 0.046007829050103144
     },
     "hbm": {
      "tokens_s_per_user": 1633.2234092842689,
      "aggregate_tokens_s": 45730.25545995953,
      "dynamic_j": 0.8279959246579862,
-     "static_j": 0.17750624653972102,
-     "total_j": 1.0055021711977072,
-     "static_array_w": 8117.406,
+     "static_j": 0.2319137274290089,
+     "total_j": 1.059909652086995,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      0.9916470113341292,
-      1.0366762808907577
+      1.0460544922234172,
+      1.0910837617800455
      ],
-     "total_j_with_idle_floor": 1.0055021711977072
+     "total_j_with_idle_floor": 1.059909652086995
     },
     "hbm_over_rom_spec": {
-     "with_static": 17.138959634839225,
+     "with_static": 15.247160314488417,
      "dynamic_only": 44.656350035973595,
-     "with_idle_floor": 17.138959634839225,
+     "with_idle_floor": 15.247160314488417,
      "stack_band": [
-      17.910896660349273,
-      15.684101485274029
+      15.798287902673595,
+      14.180074436076257
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 26.063812985584953,
+     "with_static": 23.037593252503594,
      "dynamic_only": 52.484828545961896,
-     "with_idle_floor": 26.063812985584953,
+     "with_idle_floor": 23.037593252503594,
      "stack_band": [
-      26.71337407967959,
-      24.767613388356715
+      23.47988198009005,
+      22.138038038508984
      ]
     }
    },
@@ -6288,57 +6288,57 @@
      "tokens_s_per_user": 352.24982965582785,
      "aggregate_tokens_s": 360703.8255675677,
      "dynamic_j": 0.02874898432647784,
-     "static_j": 0.04053490872378161,
-     "total_j": 0.06928389305025945,
-     "static_array_w": 14621.096645700201,
+     "static_j": 0.05149300258247728,
+     "total_j": 0.08024198690895512,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.06594819235979196,
-      0.0767892196038113
+      0.07690628621848764,
+      0.08774731346250696
      ],
-     "total_j_with_idle_floor": 0.06928389305025945
+     "total_j_with_idle_floor": 0.08024198690895512
     },
     "rom_design": {
      "tokens_s_per_user": 352.35168284660557,
      "aggregate_tokens_s": 360808.1232349241,
      "dynamic_j": 0.027813499582319226,
-     "static_j": 0.031097511357070878,
-     "total_j": 0.05891101093939011,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.0412294591982986,
+     "total_j": 0.06904295878061784,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.056924359437274974,
-      0.06338097681914913
+      0.0670563072785027,
+      0.07351292466037684
      ],
-     "total_j_with_idle_floor": 0.05891101093939011
+     "total_j_with_idle_floor": 0.06904295878061784
     },
     "hbm": {
      "tokens_s_per_user": 86.16329329989925,
      "aggregate_tokens_s": 88231.21233909683,
      "dynamic_j": 0.4248532513991179,
-     "static_j": 0.09200152400493575,
-     "total_j": 0.5168547754040537,
-     "static_array_w": 8117.406,
+     "static_j": 0.12020093251399794,
+     "total_j": 0.5450541839131158,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      0.5096736432037513,
-      0.5330123228547339
+      0.5378730517128135,
+      0.5612117313637961
      ],
-     "total_j_with_idle_floor": 0.5168547754040537
+     "total_j_with_idle_floor": 0.5450541839131158
     },
     "hbm_over_rom_spec": {
-     "with_static": 7.459955736452633,
+     "with_static": 6.792630702571586,
      "dynamic_only": 14.778026471280507,
-     "with_idle_floor": 7.459955736452633,
+     "with_idle_floor": 6.792630702571586,
      "stack_band": [
-      7.728394440641179,
-      6.941238960426663
+      6.993876289705864,
+      6.39577109792191
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 8.773483380480663,
+     "with_static": 7.894421003088975,
      "dynamic_only": 15.275073535485372,
-     "with_idle_floor": 8.773483380480663,
+     "with_idle_floor": 7.894421003088975,
      "stack_band": [
-      8.953524435621649,
-      8.409657749132327
+      8.021214909417596,
+      7.634191320186814
      ]
     }
    },
@@ -6347,57 +6347,57 @@
      "tokens_s_per_user": 601.54477982152,
      "aggregate_tokens_s": 615981.8545372365,
      "dynamic_j": 0.014567606607203628,
-     "static_j": 0.023736245699452412,
-     "total_j": 0.03830385230665604,
-     "static_array_w": 14621.096645700201,
+     "static_j": 0.030153035977681392,
+     "total_j": 0.04472064258488502,
+     "static_array_w": 18573.7230214602,
      "total_j_stack_band": [
-      0.03635054801508089,
-      0.04269878696270012
+      0.04276733829330988,
+      0.04911557724092909
      ],
-     "total_j_with_idle_floor": 0.03830385230665604
+     "total_j_with_idle_floor": 0.04472064258488502
     },
     "rom_design": {
      "tokens_s_per_user": 607.0689399493681,
      "aggregate_tokens_s": 621638.5945081529,
      "dynamic_j": 0.01345364477417983,
-     "static_j": 0.018049449968432302,
-     "total_j": 0.031503094742612134,
-     "static_array_w": 11220.234710021481,
+     "static_j": 0.023930180536970984,
+     "total_j": 0.037383825311150816,
+     "static_array_w": 14875.923795328998,
      "total_j_stack_band": [
-      0.0303500131831135,
-      0.03409752825148406
+      0.03623074375165218,
+      0.03997825882002273
      ],
-     "total_j_with_idle_floor": 0.031503094742612134
+     "total_j_with_idle_floor": 0.037383825311150816
     },
     "hbm": {
      "tokens_s_per_user": 183.6085786513518,
      "aggregate_tokens_s": 188015.18453898423,
      "dynamic_j": 0.19772134244071884,
-     "static_j": 0.04317420435963185,
-     "total_j": 0.2408955468003507,
-     "static_array_w": 8117.406,
+     "static_j": 0.0564075397740069,
+     "total_j": 0.25412888221472574,
+     "static_array_w": 10605.474,
      "total_j_stack_band": [
-      0.23752560622053212,
-      0.2484779131049425
+      0.2507589416349072,
+      0.26171124851931754
      ],
-     "total_j_with_idle_floor": 0.2408955468003507
+     "total_j_with_idle_floor": 0.25412888221472574
     },
     "hbm_over_rom_spec": {
-     "with_static": 6.289068391131259,
+     "with_static": 5.68258565901327,
      "dynamic_only": 13.572671734761588,
-     "with_idle_floor": 6.289068391131259,
+     "with_idle_floor": 5.68258565901327,
      "stack_band": [
-      6.534306061135281,
-      5.819320191039677
+      5.863328222933471,
+      5.3284775059352825
      ]
     },
     "hbm_over_rom_design": {
-     "with_static": 7.646726417468674,
+     "with_static": 6.7978298127485735,
      "dynamic_only": 14.696489000526064,
-     "with_idle_floor": 7.646726417468674,
+     "with_idle_floor": 6.7978298127485735,
      "stack_band": [
-      7.826210973532277,
-      7.287270539738544
+      6.9211646151611825,
+      6.546339341528349
      ]
     }
    }

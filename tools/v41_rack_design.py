@@ -27,7 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-BUDGET = ROOT / "results/arch/arch_budget_v41_dp.json"
+BUDGET = ROOT / "results/arch/arch_budget_v41.json"
 UTIL = ROOT / "results/arch/v41_utilization.json"
 HBM_BEST = ROOT / "results/arch/v41_hbm_best.json"
 LADDER = ROOT / "results/arch/v41_latency_ladder.json"
@@ -536,7 +536,7 @@ def mac_energy_delta_j():
 
 
 def power(el, pl):
-    """Rack power on the spec's per-die terms (arch_budget_v41_dp.json power, re-derived on the validated values):
+    """Rack power on the spec's per-die terms (arch_budget_v41.json power, re-derived on the validated values):
     layer and head dies carry the spec's static (leakage + HBM idle + always-on SerDes + UCIe idle) and, at
     provisioning, its worst-case die (saturated dynamic at m = 2 + HBM interface at full bandwidth); table dies
     carry leakage of their right-sized logic and ROM array, UCIe idle and their two switch lanes.  Wall =
@@ -557,7 +557,7 @@ def power(el, pl):
     active_lanes = sum(LANES.values()) - LANES["spare"]
     # table dies: the layer die's logic less its engines (right-sized, R-U1) + ROM array, UCIe idle, 2 lanes/package
     import decode_critical_path as D
-    import arch_budget_v41_dp as AB
+    import arch_budget_v41 as AB
     detail = AB._env()["designs"][D.ARRAY_DESIGN]["static_power"]["detail"]
     engines = U["nonlayer_right_size"]["engine_area_per_die_spec_mm2"]
     table_leak = (detail["logic_mm2_per_device"] - engines) * lk["logic"] + detail["rom_array_mm2_per_device"] * lk["rom_array"]
@@ -597,7 +597,7 @@ def power(el, pl):
         static = dict(layer_and_head_dies=n_ld * die_static, table_dies=72 * table_static)
         worst_chips = n_ld * die_worst + 72 * table_static
         switch_w = _v("switch_tray_w")
-        basis = "spec widths: arch_budget_v41_dp.json power and batch rows"
+        basis = "spec widths: arch_budget_v41.json power and batch rows"
     static_total = sum(static.values())
     serdes_total = n_ld * st["serdes_always_on"] + 36 * 2 * serdes_lane_w
     infra = dict(switch=switch_w, host=900.0, mgmt=100.0)
@@ -636,8 +636,8 @@ def power(el, pl):
                      hbm_interface_worst_w=pw["hbm_interface_worst_w_per_die"], table_static_w=table_static,
                      table_leakage_w=table_leak, cooling_limit_w=_cooling_2die(),
                      cooling_basis="configs/hardware/power_scenarios.json cooling classes, 2-die packages (B200 HGX "
-                                   "air / GB200 liquid, less the stacks); the budget's 0.5 W/mm2 x 815 mm2 rule "
-                                   "(%.1f W) is withdrawn" % pw["cooling_limit_w_per_die"],
+                                   "air / GB200 liquid, less the stacks), as the budget's power check "
+                                   "(arch_budget_v41.json power.cooling_limit_w_per_die_by_class)",
                      spec_provisioned_wall_w=pw["provisioned_wall_w_per_die"]),
         serdes=dict(lane_w=serdes_lane_w, active_lanes_per_layer_pkg=active_lanes,
                     per_layer_pkg_w=2 * st["serdes_always_on"], per_table_pkg_w=2 * serdes_lane_w,
@@ -757,7 +757,7 @@ def conflicts(pl, links, tr, pwr, el, draft_sram):
     c.append(dict(
         id="C5", severity="resolved-in-budget",
         item="HBM interface power scaled to four stacks",
-        finding=("arch_budget_v41_dp.json kv_state.stacks_per_die = %d and capacity %d users at 1M; HBM interface "
+        finding=("arch_budget_v41.json kv_state.stacks_per_die = %d and capacity %d users at 1M; HBM interface "
                  "%.1f W idle per die (4 x 2.8 W) and %.1f W at full bandwidth (idle + 0.8 pJ/b active I/O), the "
                  "latter in the spec's worst-case die. The worst case adds full-bandwidth I/O on top of dynamic energy "
                  "that already charges the actual HBM bytes at 13.1 pJ/b (which includes the I/O): conservative, "

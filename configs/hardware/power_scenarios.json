@@ -377,7 +377,7 @@
     "unit": "W/mm2",
     "evidence_class": "assumed",
     "boundary": "standard-cell region at operating temperature, N5-N7",
-    "source": "conservative production value (validation record 2026-09-27, whole-chip idle anchor: H100 bare idle 71.8 W over 814 mm2); configs/hardware/technology.json power.static_leakage_w_per_mm2.logic still carries 0.06 for the roofline study",
+    "source": "conservative production value (validation record 2026-09-27, whole-chip idle anchor: H100 bare idle 71.8 W over 814 mm2); configs/hardware/technology.json power.static_leakage_w_per_mm2.logic carries the same 0.10 since 2026-09-27 (one value for every model)",
     "was": 0.06
    },
    "rom_array": {
@@ -477,7 +477,7 @@
    "dies_per_package": 1
   },
   "v41": {
-   "source": "main tools/arch_budget_v41.py (token_workload, distinct_experts, fill_machine) and results/arch/arch_budget_v41.json batch rows (rates)",
+   "source": "tools/arch_budget_v41.py, the one V4.1 budget model (token_workload, distinct_experts, fill_machine) and results/arch/arch_budget_v41.json batch rows (rates)",
    "contexts": [
     1048576,
     200000
@@ -488,7 +488,8 @@
    "hbm_stacks_per_die": 4,
    "mtp": {
     "gamma": 5,
-    "tau": 4.1,
+    "tau": 5.0,
+    "tau_source": "user decision 2026-09-27: the LMSYS/SGLang DSpark measurement (accept length ~5, tools/arch_budget_v41.TAU_HEADLINE); 3.27-3.80 and 4.1 are sensitivities",
     "draft_overhead": 0.075
    },
    "links_formula": "collective bytes x 8 x (board + UCIe) x 4, as tools/arch_budget_v41.energy_per_token",

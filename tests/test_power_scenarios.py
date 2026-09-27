@@ -181,3 +181,54 @@ def test_design_point_rows_price_the_measured_headline(rec):
             assert p["mtp_batch1"]["design_rate_tokens_s"] == pytest.approx(ln["design_point"][c]["mtp"], rel=1e-5)
             assert p["ar_batch1"]["die_components_j_per_token"]["hbm_controller_phy_io"] > 0
             assert p["ar_batch1"]["stack_j_per_token"] > 0
+
+
+def test_hbm_comparator_is_the_best_switched_machine_on_the_same_power_model(rec):
+    """The best switched HBM comparator (results/arch/v41_hbm_switched.json: 99 dies, 4 stacks each, the tensor group
+    each operating point picks there) is priced by the same function and inputs as the design point: its rates
+    are the switched record's, its weights are charged to HBM (die share + stack share), and static power covers
+    all 99 dies with 4 stacks' idle each."""
+    sw = json.loads((ROOT / "results/arch/v41_hbm_switched.json").read_text())
+    for s in P.SCENARIOS:
+        hb = rec["scenarios"][s]["deepseek_v41_hbm_comparator"]
+        assert hb["dies"] == sw["dies"] == 99 and hb["stacks_per_die"] == 4 and hb["packages"] == 50
+        assert hb["die_static_w"]["hbm_idle_w"] == pytest.approx(4 * 2.8)
+        for c in ("1048576", "200000"):
+            for key, sk in P.HBM_POINTS:
+                p, h = hb["per_context"][c][key], sw["energy"][c][sk]["hbm"]
+                assert p["design_rate_tokens_s"] == pytest.approx(h["aggregate_tokens_s"], rel=1e-5)
+                assert p["tensor_group"] == h["G"]
+                assert p["die_components_j_per_token"]["weight_hbm_controller_phy_io"] > 0
+                assert p["stack_j_per_token"] > 0
+                assert p["energy_per_token_j"] == pytest.approx(
+                    p["array_dynamic_j_per_token"] + p["stack_j_per_token"] + p["array_static_j_per_token"], rel=1e-5)
+
+
+def test_rom_weights_never_touch_hbm_in_the_rom_blocks(rec):
+    for s in P.SCENARIOS:
+        for blk in ("deepseek_v41_rom_array", "deepseek_v41_design_point"):
+            for pts in rec["scenarios"][s][blk]["per_context"].values():
+                for p in pts.values():
+                    assert "weight_hbm_controller_phy_io" not in p["die_components_j_per_token"]
+
+
+def test_rom_over_hbm_ratios_come_from_the_two_blocks(rec):
+    """Every ROM / HBM energy ratio is the quotient of the two blocks' energies (one power model), and the ROM
+    wins on energy at every operating point."""
+    for s in P.SCENARIOS:
+        body = rec["scenarios"][s]
+        for c, pts in rec["rom_over_hbm"][s].items():
+            assert set(pts) == {k for k, _ in P.HBM_POINTS}
+            for k, r in pts.items():
+                rom = body["deepseek_v41_design_point"]["per_context"][c][k]["energy_per_token_j"]
+                hbm = body["deepseek_v41_hbm_comparator"]["per_context"][c][k]["energy_per_token_j"]
+                assert r["energy_hbm_over_rom"] == pytest.approx(hbm / rom, rel=1e-4)
+                assert r["energy_hbm_over_rom"] > 1
+    b = rec["rom_over_hbm"]["B_proposed_production"]["1048576"]
+    assert 3.0 < b["ar_batch1"]["energy_hbm_over_rom"] < 4.0
+    assert b["fill28"]["energy_hbm_over_rom"] > b["ar_batch1"]["energy_hbm_over_rom"]
+
+
+def test_leakage_is_one_value_across_the_models(cfg):
+    tech = json.loads((ROOT / "configs/hardware/technology.json").read_text())
+    assert tech["power"]["static_leakage_w_per_mm2"]["logic"]["value"] == P.val(cfg["die"]["leakage_w_per_mm2"]["logic"]) == 0.1

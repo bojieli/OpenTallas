@@ -4,7 +4,7 @@
 Inputs: results/rtl/v41_stage_collective_campaign.json (tools/rtl_v41_stage_collective_campaign.py) and the V4.1
 DESIGN-POINT MODEL on this tree (tools/arch_lanes_v41.py design_point(): the adopted ladder rungs of
 results/arch/v41_latency_ladder.json, the lane split of results/arch/v41_lanes.json, on the design-point base
-tools/arch_budget_v41_dp.py).  The design point itself now prices the measured exposure (arch_lanes_v41.build ->
+tools/arch_budget_v41.py).  The design point itself now prices the measured exposure (arch_lanes_v41.build ->
 v41_lanes.json design_point is the exposure-corrected headline; design_point_overlap_assumed is the conditional
 point); this tool writes the standalone C7 record with the derivation and the specification model's rows.
 
@@ -152,7 +152,7 @@ def main():
                gate="C7 / O2", campaign=str(a.campaign.relative_to(ROOT)) if a.campaign.is_relative_to(ROOT)
                else str(a.campaign),
                campaign_binding=bind,
-               design_point_model=dict(tools=["tools/arch_budget_v41_dp.py", "tools/arch_utilization_v41.py",
+               design_point_model=dict(tools=["tools/arch_budget_v41.py", "tools/arch_utilization_v41.py",
                                               "tools/arch_latency_ladder_v41.py", "tools/arch_lanes_v41.py"],
                                        split=dp["split"]),
                terms=terms, per_pattern=rows, design_point_on_path=dump["on_path"],

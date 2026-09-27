@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SNAP = Path("/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/"
             "dba1be0a40aa45a94ad051997016db3960a90277")
 CFG = ROOT / "configs/models/candidates/deepseek-v4.1-flash.json"
-BUDGET = ROOT / "results/arch/arch_budget_v41_dp.json"
+BUDGET = ROOT / "results/arch/arch_budget_v41.json"
 OUT = ROOT / "results/arch/v41_die_placement.json"
 SIZE = {"BF16": 2, "F16": 2, "F32": 4, "F8_E4M3": 1, "F8_E8M0": 1, "I8": 1}
 DIES, STAGES, GROUP, HEAD_DIES = 188, 28, 4, 4

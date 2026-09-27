@@ -110,7 +110,7 @@ def test_mtp_design_point_fits_and_pays(rec):
     assert d["design_m"] >= 2
     rows = {r["m"]: r for r in d["rows"]}
     ar = rec["required_priced"]["200000"]["tokens_s_per_user"]
-    assert rows[2]["tokens_s_per_user"]["default 4.1 (user decision)"] > 2 * ar
+    assert rows[2]["tokens_s_per_user"][A.TAU_HEADLINE_LABEL] > 2 * ar
 
 
 def test_rom_beats_hbm_at_every_batch(rec):
@@ -142,3 +142,34 @@ def test_rom_and_comparator_dies_carry_four_stacks(rec):
     hb = rec["hbm_comparator"]
     ctx = "200000"
     assert rec["capacity"][ctx]["rom_users"] == int(4 * hb["stack_capacity_B"] // rec["capacity"][ctx]["per_user_bytes_busiest_die"])
+
+
+def test_one_budget_model_carries_the_user_decisions(rec):
+    """The unified budget (arch_budget_v41_dp retired): checkpoint precision, online softmax with norm folding
+    rejected, tau 5.0 with 3.27-3.80 and 4.1 as sensitivities, 1M primary, the measured collective exposure rows
+    and the per-class cooling limits."""
+    assert not (ROOT / "tools/arch_budget_v41_dp.py").exists()
+    assert rec["tool"] == "tools/arch_budget_v41.py"
+    assert A.TAU_HEADLINE == 5.0 and A.TAU_DEFAULT == 5.0
+    taus = {p["label"]: p["tau"] for p in A.tau_points()}
+    assert taus[A.TAU_HEADLINE_LABEL] == 5.0 and 4.1 in taus.values()
+    assert rec["target_context"]["chosen"] == 1048576
+    steps = [s["step"] for s in rec["chain_ladder"]]
+    assert any("online softmax" in s for s in steps) and any("REJECTED" in s for s in steps)
+    assert "osm" in A.CHAIN_LEVERS
+    ce = rec["collective_exposure"]
+    assert ce["tau"] == 5.0
+    for ctx in ("200000", "1048576"):
+        assert ce["spec"][ctx]["measured_exposure"] < ce["spec"][ctx]["overlap_assumed"]
+    p = rec["power"]
+    assert set(p["cooling_limit_w_per_die_by_class"]) == {"air", "liquid"}
+    assert p["cooling_limit_w_per_die"] == p["cooling_limit_w_per_die_by_class"]["air"]
+    assert p["cooling_limit_w_per_die"] < 407.5          # the withdrawn 0.5 W/mm2 x 815 mm2 rule
+    assert p["worst_case_die_w"] < p["cooling_limit_w_per_die"]
+
+
+def test_checkpoint_precision_prices_router_and_wo_a_as_released(rec):
+    assert A.FP8 == pytest.approx(1 + 1 / 1024)          # one UE8M0 scale per 32 x 32 block
+    ops = {o["name"]: o for o in rec["layer20_ops_200k"]}
+    assert ops["ffn.router"]["fmt"] == "bf16"
+    assert ops["attn.wo_a"]["fmt"] == "bf16xfp8w"

@@ -25,7 +25,15 @@ design point the record gives energy per token by component, die power against e
 class allows:
 
 * Qwen3-8B ROM reticle, 8K context, FP8 KV: autoregressive batch 1 and DFlash (tau 4.1, block 3);
-* DeepSeek-V4.1 ROM array at 1M and 200K: batch 1 without and with MTP (gamma 5, tau 4.1) and the saturated batch.
+* DeepSeek-V4.1 ROM array at 1M and 200K: batch 1 without and with MTP (gamma 5, tau 5.0) and the saturated batch,
+  on the specification widths (deepseek_v41_rom_array) and on the adopted design point (deepseek_v41_design_point,
+  which adds the 28-user fill and the saturated batch with MTP);
+* the best switched HBM comparator of results/arch/v41_hbm_switched.json (99 dies in 50 two-die packages, 4 HBM3E
+  stacks per die, the tensor group and lane multiplier each operating point picked there) priced on the SAME inputs
+  and component list as the ROM design point, weights read from HBM instead of ROM (deepseek_v41_hbm_comparator), and
+  the ROM / HBM ratios of rate and energy per token taken from these two blocks (rom_over_hbm).  Both machines are
+  priced at the same boundary: the logic dies plus their stacks; switches and the wall chain are outside it (they are
+  in v41_hbm_switched.json energy.*.wall_j).
 
 The die's power is static (leakage + clock + HBM idle) plus dynamic energy per token x rate, so the cooling-capped
 rate is (cooling - static) / dynamic energy per token -- per die for the V4.1 array (see v41_points).  The top-level
@@ -47,6 +55,7 @@ CFG = ROOT / "configs/hardware/power_scenarios.json"
 V41_REC = ROOT / "results/arch/arch_budget_v41.json"
 V41_LANES = ROOT / "results/arch/v41_lanes.json"          # the adopted design point (design-point model)
 V41_LADDER = ROOT / "results/arch/v41_latency_ladder.json"
+V41_SWITCHED = ROOT / "results/arch/v41_hbm_switched.json"   # the best switched HBM comparator (design-point model)
 OUT = ROOT / "results/arch/power_scenarios.json"
 SCHEMA = "opentallas.power-scenarios-result.v1"
 SCENARIOS = ("A_measured_implementation", "B_proposed_production")
@@ -227,10 +236,12 @@ def qwen_point(cfg, scenario, key, hbm_die_pj=None):
 FMT = {"fp8": "fp8", "fp4": "fp4", "bf16": "bf16", "fp32": "fp32", "bf16xfp8": "bf16"}
 
 
-def _v41_energy(cfg, scenario, V, E, ctx, users, positions, hbm_die_pj=None):
+def _v41_energy(cfg, scenario, V, E, ctx, users, positions, hbm_die_pj=None, weights="rom"):
     """Joules per emitted POSITION of the whole array, die-side dynamic by component and the stacks' share.
     Same quantities as tools/arch_budget_v41.energy_per_token (weights read once per microbatch pass, routed
-    experts as their union, KV and index keys per user), priced on the scenario's inputs."""
+    experts as their union, KV and index keys per user), priced on the scenario's inputs.  weights="hbm" (the HBM
+    comparator): the same weight bytes come from the die's stacks -- the die pays the HBM path's die share
+    (controller, PHY, I/O) and operand delivery, the stacks their in-DRAM share -- instead of the ROM read."""
     c = E["c"]
     tot, _ = V.token_workload(c, ctx)
     tokens = max(1.0, users * positions)
@@ -243,16 +254,21 @@ def _v41_energy(cfg, scenario, V, E, ctx, users, positions, hbm_die_pj=None):
     die_pj = hb["die"] if hbm_die_pj is None else hbm_die_pj
     hbm_bits = (tot["bytes"]["kv_hbm"] + tot["bytes"]["idx"]) / positions * 8
     lj = d["link_j_per_bit"]
+    w_rd = val(d["rom_read_j_per_byte"]) if weights == "rom" else 0.0
+    w_bits = w_bytes * 8 if weights == "hbm" else 0.0
     dyn = dict(
         mac=sum(v * mac_pj(cfg, scenario, "v41", FMT.get(k.split(":")[1], "bf16")) * 1e-12
                 for k, v in tot["macs"].items()),
-        weight_read_and_delivery=w_bytes * (val(d["rom_read_j_per_byte"]) + val(d["operand_delivery_j_per_byte"])),
+        weight_read_and_delivery=w_bytes * (w_rd + val(d["operand_delivery_j_per_byte"])),
         kv_sram=tot["bytes"]["kv_sram"] * val(d["sram_j_per_byte"]),
         stream=sum(tot["elems"].values()) * 3 * val(d["stream_fp32_op_j"]),
         links=tot["collective_bytes"] * 8 * (val(lj["board"]) + val(lj["ucie"])) * 4,
         hbm_controller_phy_io=hbm_bits * die_pj * 1e-12,
     )
-    return dyn, hbm_bits * (hb["total"] - die_pj) * 1e-12, hbm_bits * hb["stack_high"] * 1e-12
+    if weights == "hbm":
+        dyn["weight_hbm_controller_phy_io"] = w_bits * die_pj * 1e-12
+    bits = hbm_bits + w_bits
+    return dyn, bits * (hb["total"] - die_pj) * 1e-12, bits * hb["stack_high"] * 1e-12
 
 
 def _v41_static(cfg, E, V, D):
@@ -277,14 +293,18 @@ def _dp_rates(ctx):
     measured in the RTL stage bench) and its saturated aggregate at 1,024 users (energy rows, same exposure)."""
     ln = json.loads(V41_LANES.read_text())
     d = ln["design_point"][str(ctx)]
-    sat = ln["energy"][str(ctx)]["sat1024"]["rom"]
-    return dict(ar=d["ar"], mtp=d["mtp"], sat_rate=sat["aggregate_tokens_s"], sat_batch=1024)
+    en = ln["energy"][str(ctx)]
+    sat = en["sat1024"]["rom"]
+    return dict(ar=d["ar"], mtp=d["mtp"], sat_rate=sat["aggregate_tokens_s"], sat_batch=1024,
+                extra={"fill28": (28, False, en["fill28"]["rom"]["aggregate_tokens_s"]),
+                       "fill28_mtp": (28, True, en["fill28_mtp"]["rom"]["aggregate_tokens_s"]),
+                       "saturated_batch1024_mtp": (1024, True, en["sat1024_mtp"]["rom"]["aggregate_tokens_s"])})
 
 
 def v41_design_points(cfg, scenario, hbm_die_pj=None):
-    """The same pricing on the DESIGN-POINT model (tools/arch_budget_v41_dp.py workload; rates of
+    """The same pricing on the DESIGN-POINT model (tools/arch_budget_v41.py workload; rates of
     results/arch/v41_lanes.json design_point; MTP at the design point's tau 5.0, gamma 5)."""
-    import arch_budget_v41_dp as V
+    import arch_budget_v41 as V
     lad = json.loads(V41_LADDER.read_text())
     return v41_points(cfg, scenario, hbm_die_pj, V=V, rates=_dp_rates, tau=lad["tau"], gamma=lad["gamma"])
 
@@ -324,6 +344,15 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
         ds, ss, ss_hi = _v41_energy(cfg, scenario, V, E, ctx, m.microbatch, 1, hbm_die_pj)
         pts[f"saturated_batch{rt['sat_batch']}"] = dict(rate=rt["sat_rate"], per_die=1 / ld, dyn=ds, stk=ss,
                                                      stk_hi=ss_hi, basis="aggregate tokens/s of the array")
+        # the design point's further operating points: every layer die holds a user (fill) or a microbatch (sat)
+        for k, (bt, mtp, rate) in rt.get("extra", {}).items():
+            mm = V.fill_machine(bt)
+            pos = g + 1 if mtp else 1
+            de, se, se_hi = _v41_energy(cfg, scenario, V, E, ctx, mm.microbatch, pos, hbm_die_pj)
+            ff = (g + 1) / tau * (1 + ovh) if mtp else 1.0
+            pts[k] = dict(rate=rate, per_die=1 / ld, dyn={kk: vv * ff for kk, vv in de.items()}, stk=se * ff,
+                          stk_hi=se_hi * ff, basis=f"aggregate tokens/s of the array, batch {bt}"
+                                                   + (f", gamma {g}, tau {tau}" if mtp else ""))
         res = {}
         for k, p in pts.items():
             e_dyn = sum(p["dyn"].values())
@@ -333,7 +362,7 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
             cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
             # whole-array energy per token: dynamic + stacks + the static of every die over the time a token
             # holds the array (idle dies' clock gated: leakage + HBM idle only; active dies clock too)
-            active = min(dies, ld) if k.startswith("sat") else ld / stages
+            active = min(dies, ld) if (k.startswith("sat") or k.startswith("fill")) else ld / stages
             idle_static = st["leakage_w"] + st["hbm_idle_w"]
             arr_static = (dies * idle_static + active * st["clock_w"]) / p["rate"]
             res[k] = dict(design_rate_tokens_s=p["rate"], basis=p["basis"],
@@ -352,6 +381,96 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
                           "hbm_controller_phy_io + the stacks' share), as the HBM comparator does")
 
 
+HBM_POINTS = (("ar_batch1", "b1"), ("mtp_batch1", "b1_mtp"), ("fill28", "fill28"), ("fill28_mtp", "fill28_mtp"),
+              ("saturated_batch1024", "sat1024"), ("saturated_batch1024_mtp", "sat1024_mtp"))
+
+
+def v41_hbm_comparator(cfg, scenario, hbm_die_pj=None):
+    """The best switched HBM comparator (results/arch/v41_hbm_switched.json: 99 dies in 50 two-die packages, 4 HBM3E
+    stacks per die, the headline NVL72-class fabric; each operating point at the tensor group G and lane multiplier
+    that record picks for it) priced on the SAME power model as the ROM design point: the same workload and
+    component list (tools/arch_budget_v41 token_workload), the same MAC, SRAM, stream and link energies and the same
+    HBM path split for KV and index keys; the weights are read from the die's stacks instead of ROM.  The die is the
+    ROM die with its ROM array re-spent on logic (iso total logic area): leakage and ungated clock over the whole
+    non-SRAM area, 4 stacks idle.  Links are priced on the same collective bytes as the ROM array (tensor group 4),
+    which favours the comparator (its G-way all-reduces cross the switch); switches and the wall chain are outside
+    the boundary on both machines."""
+    import arch_budget_v41 as V
+    import decode_critical_path as D
+    E = V._env()
+    sw = json.loads(V41_SWITCHED.read_text())
+    lad = json.loads(V41_LADDER.read_text())
+    tau, g = lad["tau"], lad["gamma"]
+    ovh = cfg["design_points"]["v41"]["mtp"]["draft_overhead"]
+    dies = sw["dies"]
+    stacks = cfg["design_points"]["v41"]["hbm_stacks_per_die"]
+    n_pkg = 2
+    ad = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]
+    logic = ad["total_mm2"] - ad["sram_mm2"]
+    ar = dict(logic=logic, clocked_logic=logic, rom=0.0, sram=ad["sram_mm2"])
+    st = _die_static(cfg, ar, E["clock"], stacks)
+    static_w = sum(st.values())
+    cool = cooling_w(cfg, "air", n_pkg)
+    grid = {str(ctx): {r["G"]: r for r in cf["grid"]} for ctx, cf in sw["configs"][sw["headline_config"]].items()}
+    out = {}
+    for ctx, rows in sw["energy"].items():
+        res = {}
+        for key, sk in HBM_POINTS:
+            h = rows[sk]["hbm"]
+            G, mtp = h["G"], sk.endswith("_mtp")
+            stages = grid[ctx][G]["stages"]
+            bt = int(round(h["aggregate_tokens_s"] / h["tokens_s_per_user"]))
+            users = max(1.0, bt / stages)                  # users sharing one weight pass (a stage's microbatch)
+            pos = g + 1 if mtp else 1
+            de, se, se_hi = _v41_energy(cfg, scenario, V, E, int(ctx), users, pos, hbm_die_pj, weights="hbm")
+            ff = (g + 1) / tau * (1 + ovh) if mtp else 1.0
+            dyn = {k: v * ff for k, v in de.items()}
+            stk, stk_hi = se * ff, se_hi * ff
+            rate = h["aggregate_tokens_s"]
+            used = min(dies, G * stages)
+            # batch 1: the token's stage holds it for T / stages on its G dies; filled: every used die is busy
+            per_die = 1 / G if bt < stages else 1 / used
+            active = G if bt < stages else used
+            e_dyn = sum(dyn.values())
+            die_w = static_w + e_dyn * per_die * rate
+            classes = _class_caps(cfg, n_pkg, static_w, e_dyn * per_die, stk_hi * per_die, rate, logic)
+            cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
+            arr_static = (dies * (st["leakage_w"] + st["hbm_idle_w"]) + active * st["clock_w"]) / rate
+            res[key] = dict(design_rate_tokens_s=rate, tokens_s_per_user=h["tokens_s_per_user"], batch=bt,
+                            tensor_group=G, stages=stages, lane_mult=h.get("m"),
+                            basis=("per user" if bt == 1 else "aggregate tokens/s of the machine")
+                                  + (f", gamma {g}, tau {tau}" if mtp else ""),
+                            array_dynamic_j_per_token=e_dyn, stack_j_per_token=stk, array_static_j_per_token=arr_static,
+                            energy_per_token_j=e_dyn + stk + arr_static, die_components_j_per_token=dyn,
+                            hottest_die_w=die_w, die_over_cooling=die_w / cool,
+                            hottest_die_stacks_w=stk * per_die * rate, hottest_die_stacks_w_high=stk_hi * per_die * rate,
+                            cooling_classes=classes, **cap)
+        out[ctx] = res
+    return dict(per_context=out, die_static_w=st, die_area_mm2=ar, cooling_limit_w=cool, dies_per_package=n_pkg,
+                dies=dies, packages=math.ceil(dies / n_pkg), stacks_per_die=stacks, mtp_tau=tau, mtp_gamma=g,
+                source=f"{V41_SWITCHED.relative_to(ROOT)} (headline fabric {sw['headline_config']}: rates, tensor "
+                       "group, lane multiplier per point)")
+
+
+def rom_over_hbm(rom, hbm):
+    """Per context and operating point: ROM / HBM per-user and aggregate rate, and HBM / ROM energy per token, both
+    machines from this record (ROM: the adopted design point; HBM: the best switched comparator)."""
+    out = {}
+    for ctx, pts in hbm["per_context"].items():
+        out[ctx] = {}
+        for k, h in pts.items():
+            r = rom["per_context"].get(ctx, {}).get(k)
+            if r is None:
+                continue
+            r_user = r["design_rate_tokens_s"] / (h["batch"] if h["batch"] > 1 else 1)
+            out[ctx][k] = dict(rom_energy_j=r["energy_per_token_j"], hbm_energy_j=h["energy_per_token_j"],
+                               energy_hbm_over_rom=h["energy_per_token_j"] / r["energy_per_token_j"],
+                               rate_rom_over_hbm=r["design_rate_tokens_s"] / h["design_rate_tokens_s"],
+                               rom_tokens_s_per_user=r_user, hbm_tokens_s_per_user=h["tokens_s_per_user"],
+                               batch=h["batch"])
+    return out
+
+
 def _sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -361,6 +480,7 @@ def build(cfg_path=CFG):
     hb = hbm_split(cfg)
     rec = dict(schema=SCHEMA, tool="tools/power_scenarios.py",
                inputs={str(p.relative_to(ROOT)): _sha(p) for p in (Path(cfg_path), V41_REC, V41_LANES, V41_LADDER,
+                                                                    V41_SWITCHED,
                                                                     ROOT / "configs/hardware/technology.json")},
                hbm_split_pj_per_bit=hb,
                mac_pj={s: dict(qwen3_w4a8=mac_pj(cfg, s, "qwen3", "w4a8"), qwen3_bf16=mac_pj(cfg, s, "qwen3", "bf16"),
@@ -371,7 +491,10 @@ def build(cfg_path=CFG):
     for s in SCENARIOS:
         rec["scenarios"][s] = dict(qwen3_8b_rom_8k={k: qwen_point(cfg, s, k) for k in ("ar_batch1", "dflash")},
                                    deepseek_v41_rom_array=v41_points(cfg, s),
-                                   deepseek_v41_design_point=v41_design_points(cfg, s))
+                                   deepseek_v41_design_point=v41_design_points(cfg, s),
+                                   deepseek_v41_hbm_comparator=v41_hbm_comparator(cfg, s))
+    rec["rom_over_hbm"] = {s: rom_over_hbm(rec["scenarios"][s]["deepseek_v41_design_point"],
+                                           rec["scenarios"][s]["deepseek_v41_hbm_comparator"]) for s in SCENARIOS}
     # the lane no better than a shipping tensor core (A100 measured, control plane included)
     rec["sensitivities"]["B_lane_at_gpu_tensor_1p40pj"] = dict(
         qwen3_8b_rom_8k={k: qwen_point(cfg, "B_gpu_tensor_sensitivity", k) for k in ("ar_batch1", "dflash")},
@@ -420,6 +543,9 @@ def summary(rec):
         for ctx, pts in body.get("deepseek_v41_design_point", {}).get("per_context", {}).items():
             for k, r in pts.items():
                 row(s, f"V4.1 design point {int(ctx):,}", k, r["energy_per_token_j"] * 1e3, r["hottest_die_w"], r)
+        for ctx, pts in body.get("deepseek_v41_hbm_comparator", {}).get("per_context", {}).items():
+            for k, r in pts.items():
+                row(s, f"V4.1 HBM comparator {int(ctx):,}", k, r["energy_per_token_j"] * 1e3, r["hottest_die_w"], r)
     return rows
 
 

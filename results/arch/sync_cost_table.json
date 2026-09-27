@@ -2,12 +2,12 @@
  "schema": "opentallas.sync-cost-table.v1",
  "tool": "tools/sync_cost_table.py",
  "inputs": {
-  "configs/hardware/technology.json": "359545b4a283beb76601edb40c3b8c7539ff60d4353fda982c1f48176f87a61d",
+  "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
   "results/gpu/blackwell_dependency_latency.json": "78fccad39c375636028c3389b5d78e022814432b5216ddbd8f07eb3881d35d26",
   "results/gpu/blackwell_gather_designs.json": "717e6cfc4ca04056844cf57385212853eace6d63abc3222e630ed05ff367078e",
   "results/rtl/hdc_package_tp_campaign.json": "15814bf8112c36d6dbab63fce050146f41506299927057c10c316983493879c6",
-  "results/arch/arch_budget_v41.json": "7a9536c63f780a00b92bc1c73f349e68204f4f3ec04c08efe19c5eb0798bd989",
-  "results/arch/v41_lanes.json": "a3152977fcbe8be5fcff152d313a7690f01911b5e31f23f3d7e09a13fb57d52d"
+  "results/arch/arch_budget_v41.json": "d6acea1edc84ebc3a1db188c44872346f8f2152cea04fee2346e6066000212e2",
+  "results/arch/v41_lanes.json": "642b47edc17e66bd7f48961a00b5e184065c0ab1881b8a0d84324a83ab695726"
  },
  "ladder": {
   "T_us": 131.944,
@@ -21,8 +21,8 @@
   "source": "results/arch/v41_lanes.json design_point['1048576'] (design-point model, collective exposure measured in the RTL stage bench, 209 ns rack-cable tier)"
  },
  "v41_spec_budget": {
-  "T_us": 203.5584959233407,
-  "tokens_s_per_user": 4912.5927928677365,
+  "T_us": 202.71250592870817,
+  "tokens_s_per_user": 4933.094756135517,
   "collective_latency_us": 26.353769223329085,
   "pipeline_hops_us": 11.946211283672527,
   "source": "results/arch/arch_budget_v41.json required_priced['1048576'] (tools/arch_budget_v41.py)"
@@ -193,7 +193,7 @@
      "r-sue",
      "r-ualink"
     ],
-    "note": "adopted design point, collective exposure measured in the RTL stage bench: collectives 15.6 us + exposed collective bytes 12.5 us + hops 12.4 us (27 stage hops on the 209 ns cable tier); 31% of the 131.9 us token. Specification widths (this branch's budget): 38.3 us of 203.6 us"
+    "note": "adopted design point, collective exposure measured in the RTL stage bench: collectives 15.6 us + exposed collective bytes 12.5 us + hops 12.4 us (27 stage hops on the 209 ns cable tier); 31% of the 131.9 us token. Specification widths (this branch's budget): 38.3 us of 202.7 us"
    },
    "ratio": 13,
    "ratio_vs": {

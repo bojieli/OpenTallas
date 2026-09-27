@@ -12,27 +12,31 @@
   },
   "sync": {
    "from": "worktree:results/arch/sync_cost_table.json",
-   "sha256": "2cd876a95fc9d012c5925b7fcbc5e9a6e056bea1d67098dd4c802e53c610de25"
+   "sha256": "1b3972f9fb88b990d67fa28ba662f91b22c5cadf1a2c1a0c7ea0969c2e789400"
   },
   "v41_lanes": {
    "from": "worktree:results/arch/v41_lanes.json",
-   "sha256": "a3152977fcbe8be5fcff152d313a7690f01911b5e31f23f3d7e09a13fb57d52d"
+   "sha256": "642b47edc17e66bd7f48961a00b5e184065c0ab1881b8a0d84324a83ab695726"
   },
   "v41_hbm_best": {
    "from": "worktree:results/arch/v41_hbm_best.json",
-   "sha256": "c30708ee19309960a5388397e476a42d7d9cb22ef4b74704e80accbb65aa82cb"
+   "sha256": "3e28dea3d2112929133f4ddc284c5761186bc466e44c62b63b26bfef234f3ee6"
   },
   "v41_ladder": {
    "from": "worktree:results/arch/v41_latency_ladder.json",
-   "sha256": "c9f73cbb5a908914b813f70da9793973c12062997a8c6b3174fa1b841acd5990"
+   "sha256": "db61454979559fdb4f1e0ebd436f05d40482ce523890036550b4b6261545420a"
   },
   "v41_budget": {
-   "from": "worktree:results/arch/arch_budget_v41_dp.json",
-   "sha256": "80869e5dbb42ed052af378112215e39a486207f8233bb0e1e86a2cec303715ba"
+   "from": "worktree:results/arch/arch_budget_v41.json",
+   "sha256": "d6acea1edc84ebc3a1db188c44872346f8f2152cea04fee2346e6066000212e2"
   },
   "v41_switched": {
    "from": "worktree:results/arch/v41_hbm_switched.json",
-   "sha256": "ddc955df43d64b546b737b71484efe4ceb51227b29d4f4b00d6eddafeed53890"
+   "sha256": "7abcdf94f90b8df90166188d893bd7ffac265641cce411bf9d4d5b52b8000214"
+  },
+  "power": {
+   "from": "worktree:results/arch/power_scenarios.json",
+   "sha256": "85ca58922432a05be844a947d1918cc83af8c8248c8ba5f48f669d12bbf3f0b1"
   },
   "idle_floor": {
    "from": "worktree:results/roofline/gpu_clocked_idle_floor.json",
@@ -1097,22 +1101,22 @@
      {
       "step": "S2",
       "label": "HBM comparator",
-      "value": 7.96601,
+      "value": 5.94474,
       "unit": "J/token",
       "evidence": "modelled",
-      "basis": "dynamic + static + switches + wall overhead (v41_hbm_switched energy b1)",
+      "basis": "power scenario B (production lane): logic dies + their HBM stacks, dynamic + static, weights and KV from HBM (power_scenarios deepseek_v41_hbm_comparator); switches and wall chain excluded, like the GPUs' device draw",
       "matching": "",
-      "multiplier": 2.30105
+      "multiplier": 3.08343
      },
      {
       "step": "S3",
       "label": "ROM array",
-      "value": 2.05889,
+      "value": 1.69601,
       "unit": "J/token",
       "evidence": "modelled, C7 measured",
-      "basis": "same wall energy model",
+      "basis": "the same power model and boundary (power_scenarios deepseek_v41_design_point); KV from HBM",
       "matching": "",
-      "multiplier": 3.86907
+      "multiplier": 3.50513
      }
     ],
     "aggregate": [

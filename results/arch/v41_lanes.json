@@ -1037,15 +1037,15 @@
   "note": "design_point is the headline (measured exposure); design_point_overlap_assumed is the conditional point that holds only if C7 is recovered (tools/collective_exposure.py, results/rtl/v41_stage_collective_campaign.json)"
  },
  "static_w": {
-  "rom_total": 11220.234710021483,
-  "layer_die": 77.7717906686181,
-  "head_die": 73.8846867969381,
-  "table_die": 30.75354733261809,
+  "rom_total": 14875.923795328998,
+  "layer_die": 98.7963990503202,
+  "head_die": 92.3178925975202,
+  "table_die": 47.797993490320195,
   "rom_serdes": 3599.2320000000004,
   "rom_switch_w": 1096.6666666666667,
   "wall_factor": 1.2404214559386975,
   "switch_basis": "13.0 W per Tb/s of port capacity (NVL72: 9 x 1.5 kW trays, ASSUMED, over 72 GPUs x 14.4 Tb/s); the ROM rack's off-path switch carries 4 lanes x 112G both ways per package",
-  "source": "results/arch/arch_budget_v41_dp.json power.static_w_per_die (validated inputs, cce817f3)"
+  "source": "results/arch/arch_budget_v41.json power.static_w_per_die (validated inputs, cce817f3)"
  },
  "energy": {
   "1048576": {
@@ -1054,8 +1054,8 @@
      "tokens_s_per_user": 7578.981495298372,
      "aggregate_tokens_s": 7578.981495298372,
      "dynamic_j": 0.034694103772699575,
-     "static_j": 1.4804409691436726,
-     "total_j": 1.5151350729163722,
+     "static_j": 1.9627866626349848,
+     "total_j": 1.9974807664076843,
      "nonclock_j": 0.028920160215295976,
      "clock_j": 0.005773943557403599
     },
@@ -1065,11 +1065,11 @@
      "tokens_s_per_user": 2932.5746896637033,
      "aggregate_tokens_s": 2932.5746896637033,
      "dynamic_j": 1.576526574437157,
-     "static_j": 2.7680133872160213,
-     "total_j": 4.344539961653179
+     "static_j": 3.6164378139730164,
+     "total_j": 5.192964388410173
     },
     "ratio_rate_per_user": 2.584412094263659,
-    "ratio_energy_with_static": 2.867427491656366,
+    "ratio_energy_with_static": 2.5997568916517384,
     "ratio_energy_dynamic": 45.440763789889544
    },
    "b1_mtp": {
@@ -1077,8 +1077,8 @@
      "tokens_s_per_user": 21005.94986438209,
      "aggregate_tokens_s": 21005.94986438209,
      "dynamic_j": 0.017331357063798,
-     "static_j": 0.5341455531628508,
-     "total_j": 0.5514769102266488,
+     "static_j": 0.7081766781017015,
+     "total_j": 0.7255080351654994,
      "nonclock_j": 0.013166070455814104,
      "clock_j": 0.004165286607983895
     },
@@ -1088,11 +1088,11 @@
      "tokens_s_per_user": 8631.933457027371,
      "aggregate_tokens_s": 8631.933457027371,
      "dynamic_j": 1.1663729620330245,
-     "static_j": 0.9403925598373922,
-     "total_j": 2.106765521870417
+     "static_j": 1.2286325019530755,
+     "total_j": 2.3950054639861
     },
     "ratio_rate_per_user": 2.4335161952946787,
-    "ratio_energy_with_static": 3.8202243517404337,
+    "ratio_energy_with_static": 3.3011425758224204,
     "ratio_energy_dynamic": 67.29842087607565
    },
    "fill28": {
@@ -1100,8 +1100,8 @@
      "tokens_s_per_user": 7578.981495298372,
      "aggregate_tokens_s": 212211.4818683544,
      "dynamic_j": 0.0346941037726996,
-     "static_j": 0.05287289175513117,
-     "total_j": 0.08756699552783077,
+     "static_j": 0.07009952366553518,
+     "total_j": 0.10479362743823478,
      "nonclock_j": 0.028920160215296004,
      "clock_j": 0.005773943557403599
     },
@@ -1111,11 +1111,11 @@
      "tokens_s_per_user": 1076.0237978266969,
      "aggregate_tokens_s": 30128.666339147516,
      "dynamic_j": 0.552717822818034,
-     "static_j": 0.26942467046583785,
-     "total_j": 0.8221424932838719
+     "static_j": 0.35200608883971196,
+     "total_j": 0.904723911657746
     },
     "ratio_rate_per_user": 7.043507318895779,
-    "ratio_energy_with_static": 9.388725607498733,
+    "ratio_energy_with_static": 8.633386721830858,
     "ratio_energy_dynamic": 15.931174543063467
    },
    "fill28_mtp": {
@@ -1123,8 +1123,8 @@
      "tokens_s_per_user": 21005.94986438209,
      "aggregate_tokens_s": 588166.5962026985,
      "dynamic_j": 0.017331357063798007,
-     "static_j": 0.019076626898673243,
-     "total_j": 0.036407983962471246,
+     "static_j": 0.025292024217917913,
+     "total_j": 0.042623381281715916,
      "nonclock_j": 0.01316607045581411,
      "clock_j": 0.004165286607983895
     },
@@ -1134,11 +1134,11 @@
      "tokens_s_per_user": 1987.710227441109,
      "aggregate_tokens_s": 55655.88636835106,
      "dynamic_j": 0.48251953273896897,
-     "static_j": 0.14584990968028128,
-     "total_j": 0.6283694424192503
+     "static_j": 0.19055439940007576,
+     "total_j": 0.6730739321390448
     },
     "ratio_rate_per_user": 10.567913559223484,
-    "ratio_energy_with_static": 17.259111162731866,
+    "ratio_energy_with_static": 15.79119046634088,
     "ratio_energy_dynamic": 27.840839638972234
    },
    "sat1024": {
@@ -1146,8 +1146,8 @@
      "tokens_s_per_user": 672.9518655501923,
      "aggregate_tokens_s": 689102.710323397,
      "dynamic_j": 0.02781100483081269,
-     "static_j": 0.016282383659114923,
-     "total_j": 0.04409338848992761,
+     "static_j": 0.02158738250840387,
+     "total_j": 0.04939838733921656,
      "nonclock_j": 0.02603289962213368,
      "clock_j": 0.001778105208679011
     },
@@ -1157,11 +1157,11 @@
      "tokens_s_per_user": 86.52050785588904,
      "aggregate_tokens_s": 88597.00004443037,
      "dynamic_j": 0.09798573151888755,
-     "static_j": 0.09162168014638435,
-     "total_j": 0.1896074116652719
+     "static_j": 0.11970466262606497,
+     "total_j": 0.2176903941449525
     },
     "ratio_rate_per_user": 7.777946318473762,
-    "ratio_energy_with_static": 4.300132472435964,
+    "ratio_energy_with_static": 4.406832001419036,
     "ratio_energy_dynamic": 3.5232718887713856
    },
    "sat1024_mtp": {
@@ -1169,8 +1169,8 @@
      "tokens_s_per_user": 1202.0926965497094,
      "aggregate_tokens_s": 1230942.9212669025,
      "dynamic_j": 0.013378065946519715,
-     "static_j": 0.00911515433914147,
-     "total_j": 0.022493220285661183,
+     "static_j": 0.012084982608306894,
+     "total_j": 0.02546304855482661,
      "nonclock_j": 0.01138781732970723,
      "clock_j": 0.001990248616812485
     },
@@ -1180,11 +1180,11 @@
      "tokens_s_per_user": 100.76431720488415,
      "aggregate_tokens_s": 103182.66081780137,
      "dynamic_j": 0.08690579091262948,
-     "static_j": 0.07867025269229694,
-     "total_j": 0.16557604360492642
+     "static_j": 0.10278349013238776,
+     "total_j": 0.18968928104501726
     },
     "ratio_rate_per_user": 11.929745865349274,
-    "ratio_energy_with_static": 7.361153338745215,
+    "ratio_energy_with_static": 7.449590359794565,
     "ratio_energy_dynamic": 6.496140119210423
    }
   },
@@ -1194,8 +1194,8 @@
      "tokens_s_per_user": 7905.41350038117,
      "aggregate_tokens_s": 7905.41350038117,
      "dynamic_j": 0.018704213504752702,
-     "static_j": 1.4193102877516128,
-     "total_j": 1.4380145012563654,
+     "static_j": 1.8817388609225483,
+     "total_j": 1.9004430744273009,
      "nonclock_j": 0.013168688845056009,
      "clock_j": 0.005535524659696695
     },
@@ -1205,11 +1205,11 @@
      "tokens_s_per_user": 2940.062383490817,
      "aggregate_tokens_s": 2940.062383490817,
      "dynamic_j": 1.5603048073336148,
-     "static_j": 2.7609638644340535,
-     "total_j": 4.321268671767668
+     "static_j": 3.6072275403244434,
+     "total_j": 5.167532347658058
     },
     "ratio_rate_per_user": 2.6888591020285952,
-    "ratio_energy_with_static": 3.0050244055204307,
+    "ratio_energy_with_static": 2.7191197764317647,
     "ratio_energy_dynamic": 83.41996347171425
    },
    "b1_mtp": {
@@ -1217,8 +1217,8 @@
      "tokens_s_per_user": 21815.28744657373,
      "aggregate_tokens_s": 21815.28744657373,
      "dynamic_j": 0.013121932140899241,
-     "static_j": 0.5143289877568729,
-     "total_j": 0.5274509198977722,
+     "static_j": 0.6819036344013603,
+     "total_j": 0.6950255665422596,
      "nonclock_j": 0.009111175836524541,
      "clock_j": 0.0040107563043747
     },
@@ -1228,11 +1228,11 @@
      "tokens_s_per_user": 8631.933457027371,
      "aggregate_tokens_s": 8631.933457027371,
      "dynamic_j": 1.162318067413735,
-     "static_j": 0.9403925598373922,
-     "total_j": 2.102710627251127
+     "static_j": 1.2286325019530755,
+     "total_j": 2.3909505693668107
     },
     "ratio_rate_per_user": 2.527277064307489,
-    "ratio_energy_with_static": 3.9865522040584627,
+    "ratio_energy_with_static": 3.440090098068981,
     "ratio_energy_dynamic": 88.57827147199998
    },
    "fill28": {
@@ -1240,8 +1240,8 @@
      "tokens_s_per_user": 7905.41350038117,
      "aggregate_tokens_s": 221351.57801067276,
      "dynamic_j": 0.018704213504752695,
-     "static_j": 0.05068965313398617,
-     "total_j": 0.06939386663873887,
+     "static_j": 0.06720495931866244,
+     "total_j": 0.08590917282341513,
      "nonclock_j": 0.013168688845056,
      "clock_j": 0.005535524659696695
     },
@@ -1251,11 +1251,11 @@
      "tokens_s_per_user": 1088.4366001478431,
      "aggregate_tokens_s": 30476.224804139612,
      "dynamic_j": 0.5365563877720749,
-     "static_j": 0.26635208435978613,
-     "total_j": 0.8029084721318611
+     "static_j": 0.34799172365205316,
+     "total_j": 0.884548111424128
     },
     "ratio_rate_per_user": 7.263090472433003,
-    "ratio_energy_with_static": 11.570308890723211,
+    "ratio_energy_with_static": 10.296317405386988,
     "ratio_energy_dynamic": 28.68639131154792
    },
    "fill28_mtp": {
@@ -1263,8 +1263,8 @@
      "tokens_s_per_user": 21815.28744657373,
      "aggregate_tokens_s": 610828.0485040644,
      "dynamic_j": 0.01312193214089921,
-     "static_j": 0.018368892419888316,
-     "total_j": 0.03149082456078753,
+     "static_j": 0.02435370122862001,
+     "total_j": 0.03747563336951922,
      "nonclock_j": 0.00911117583652451,
      "clock_j": 0.0040107563043747
     },
@@ -1274,11 +1274,11 @@
      "tokens_s_per_user": 1987.710227441109,
      "aggregate_tokens_s": 55655.88636835106,
      "dynamic_j": 0.4784646381196793,
-     "static_j": 0.14584990968028128,
-     "total_j": 0.6243145477999605
+     "static_j": 0.19055439940007576,
+     "total_j": 0.6690190375197551
     },
     "ratio_rate_per_user": 10.975084368639473,
-    "ratio_energy_with_static": 19.825284237789027,
+    "ratio_energy_with_static": 17.852107552741224,
     "ratio_energy_dynamic": 36.46297153361833
    },
    "sat1024": {
@@ -1286,8 +1286,8 @@
      "tokens_s_per_user": 869.9395509245768,
      "aggregate_tokens_s": 890818.1001467666,
      "dynamic_j": 0.011656902232876984,
-     "static_j": 0.012595427403386723,
-     "total_j": 0.024252329636263704,
+     "static_j": 0.01669917101244139,
+     "total_j": 0.028356073245318372,
      "nonclock_j": 0.01028142825189368,
      "clock_j": 0.001375473980983303
     },
@@ -1297,11 +1297,11 @@
      "tokens_s_per_user": 90.84368475131835,
      "aggregate_tokens_s": 93023.93318534999,
      "dynamic_j": 0.0816524948237528,
-     "static_j": 0.08726147908437806,
-     "total_j": 0.16891397390813084
+     "static_j": 0.11400801532298807,
+     "total_j": 0.19566051014674085
     },
     "ratio_rate_per_user": 9.57622484497418,
-    "ratio_energy_with_static": 6.964855601152616,
+    "ratio_energy_with_static": 6.900127124585019,
     "ratio_energy_dynamic": 7.004647820881701
    },
    "sat1024_mtp": {
@@ -1309,8 +1309,8 @@
      "tokens_s_per_user": 1336.4688878140405,
      "aggregate_tokens_s": 1368544.1411215775,
      "dynamic_j": 0.009123060399669505,
-     "static_j": 0.008198664824085284,
-     "total_j": 0.01732172522375479,
+     "static_j": 0.010869889650134029,
+     "total_j": 0.019992950049803532,
      "nonclock_j": 0.007332922710417631,
      "clock_j": 0.0017901376892518741
     },
@@ -1320,11 +1320,11 @@
      "tokens_s_per_user": 100.76431720488415,
      "aggregate_tokens_s": 103182.66081780137,
      "dynamic_j": 0.08285089629333989,
-     "static_j": 0.07867025269229694,
-     "total_j": 0.16152114898563683
+     "static_j": 0.10278349013238776,
+     "total_j": 0.18563438642572766
     },
     "ratio_rate_per_user": 13.263315079053207,
-    "ratio_energy_with_static": 9.324772613534408,
+    "ratio_energy_with_static": 9.284992257936036,
     "ratio_energy_dynamic": 9.081480628621211
    }
   }

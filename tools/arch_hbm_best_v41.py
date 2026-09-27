@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """The BEST HBM comparator for DeepSeek-V4.1-Flash, fully derived at its own tensor group, and the ROM:HBM rate and
-energy ratios against it.  Model work only; the budget model (tools/arch_budget_v41_dp.py) is imported, not edited.
+energy ratios against it.  Model work only; the budget model (tools/arch_budget_v41.py) is imported, not edited.
 
     python3 tools/arch_hbm_best_v41.py [--out results/arch/v41_hbm_best.json]
 

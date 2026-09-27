@@ -17,17 +17,17 @@ def test_graph_basis_is_pinned():
     assert D.SU_BASE == 29 and D.SU["EXP"] == 121 and D.SU["RSQRT"] == 90
 
 
-def test_spec_budget_reproduces_its_record():
+def test_budget_reproduces_its_record():
+    """One budget model (tools/arch_budget_v41.py; the design-point base arch_budget_v41_dp.py is retired): its
+    required spec re-prices to the record at the primary (1M) and the secondary (200K) context."""
     import arch_budget_v41 as A
     rec = json.loads((ROOT / "results/arch/arch_budget_v41.json").read_text())
     sp = A.Spec(**rec["required_spec"])
-    r = A.price(sp, 200000)
-    assert abs(r["tokens_s_per_user"] - rec["required_priced"]["200000"]["tokens_s_per_user"]) < 1e-6
+    for ctx in (200000, 1048576):
+        r = A.price(sp, ctx)
+        assert abs(r["tokens_s_per_user"] - rec["required_priced"][str(ctx)]["tokens_s_per_user"]) < 1e-6
 
 
-def test_design_point_base_reproduces_its_record():
-    import arch_budget_v41_dp as B
-    rec = json.loads((ROOT / "results/arch/arch_budget_v41_dp.json").read_text())
-    sp = B.Spec(**rec["required_spec"])
-    r = B.price(sp, 1048576)
-    assert abs(r["tokens_s_per_user"] - rec["required_priced"]["1048576"]["tokens_s_per_user"]) < 1e-6
+def test_design_point_base_is_retired():
+    assert not (ROOT / "tools/arch_budget_v41_dp.py").exists()
+    assert not (ROOT / "results/arch/arch_budget_v41_dp.json").exists()

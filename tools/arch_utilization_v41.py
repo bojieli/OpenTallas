@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Utilisation of the DeepSeek-V4.1-Flash ROM array (and its HBM comparator), the bottleneck link, and a priced
-optimisation plan.  Model work only: every figure is the budget model's (tools/arch_budget_v41_dp.py), not silicon.
+optimisation plan.  Model work only: every figure is the budget model's (tools/arch_budget_v41.py), not silicon.
 
     python3 tools/arch_utilization_v41.py [--out results/arch/v41_utilization.json]
 
@@ -40,7 +40,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-import arch_budget_v41_dp as A  # noqa: E402
+import arch_budget_v41 as A  # noqa: E402
 import decode_critical_path as D  # noqa: E402
 
 # USER DECISION 2026-09-27: 4 HBM3E stacks per die (8 per 2-die package, today's interposers), not the budget
@@ -52,7 +52,7 @@ A.ROM_DIE_HBM_BPS = STACKS_PER_DIE * 1.0e12 * 0.90
 
 SCHEMA = "opentallas.v41-utilization.v1"
 OUT = ROOT / "results/arch/v41_utilization.json"
-BUDGET = ROOT / "results/arch/arch_budget_v41_dp.json"
+BUDGET = ROOT / "results/arch/arch_budget_v41.json"
 CONTEXTS = (200000, 1048576)
 PRIMARY = 200000
 FILL = 28                     # layer-group stages: b <= 28 users ride one per stage at the batch-1 rate
@@ -117,7 +117,7 @@ def params(**kw):
         E["p"] = old
 
 
-# spec input (agent ad495baa, 2026-09-27; its branch's results/arch/arch_budget_v41_dp.json hc_mtp_sizing): the
+# spec input (agent ad495baa, 2026-09-27; its branch's results/arch/arch_budget_v41.json hc_mtp_sizing): the
 # hyper-connection projection is 5,120 FP32 MAC lanes per weight lane (10,240 in the m = 2 MTP core) -- with its
 # measured 126-cycle depth, 8,192 lanes left the HC op on the chain-attacked MTP verify path
 HC_LANES_SPEC = 5120
@@ -165,7 +165,7 @@ def static_terms(hb=None):
                ucie_idle=sw["ucie_idle"], layer_die=sw["total"], lane_w=lane_w, stack_w=stack,
                table_serdes=lane_w, wall=pw["wall_factor"],
                switch_w_per_tbps=NVSWITCH_TRAY_W * NVL72_TRAYS / (NVL72_GPUS * NVL72_GPU_TBPS),
-               source="results/arch/arch_budget_v41_dp.json power.static_w_per_die (validated inputs, cce817f3)")
+               source="results/arch/arch_budget_v41.json power.static_w_per_die (validated inputs, cce817f3)")
     if hb:
         out["hbm_die_no_serdes"] = (sl["logic"]["value"] * hb["logic_mm2_per_die"] + hb["hbm_stacks_per_die"] * stack
                                     + sw["ucie_idle"])
@@ -515,7 +515,7 @@ def price_levers(spec, base_levers):
         "packaging_options: group 2 inside a 2-die package removes the board from every collective (2.2 us) but "
         "doubles each die's weight sweep (86 us) and the stage count (hops 22 us) -- a net loss; group 4 in one "
         "4-die package is the real fix (future packaging); att_local (attention on one package) is priced in "
-        "arch_budget_v41_dp chain_ladder 4a/4b and was not adopted")
+        "arch_budget_v41 chain_ladder 4a/4b and was not adopted")
     return out
 
 
@@ -727,7 +727,7 @@ def build():
     rom_leak = ST["rom_array_leak"]
     logic_leak_per_mm2 = ST["logic_density"]
     rec = dict(schema=SCHEMA, tool="tools/arch_utilization_v41.py", clock_hz=clock,
-               budget_model="tools/arch_budget_v41_dp.py (imported, not edited); results/arch/arch_budget_v41_dp.json",
+               budget_model="tools/arch_budget_v41.py (imported, not edited); results/arch/arch_budget_v41.json",
                precision_dependency=("weights at the spec's current checkpoint dtypes (docs/ARCH_SPEC_V41.md 2.1); a "
                                      "separate agent is auditing them -- every figure re-derives from the budget model"),
                mtp=dict(tau=TAU, tau_band=TAU_BAND, gamma=GAMMA, positions=GAMMA + 1, lane_mult=MTP_M,

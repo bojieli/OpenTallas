@@ -3,6 +3,18 @@
 
     python3 tools/arch_budget_v41.py [--out results/arch/arch_budget_v41.json] [--quick]
 
+ONE BUDGET MODEL (unified 2026-09-27).  The specification document (docs/ARCH_SPEC_V41.md), the atlas's budget
+sections and the adopted design point (tools/arch_utilization_v41.py -> arch_latency_ladder_v41.py ->
+arch_hbm_best_v41.py -> arch_lanes_v41.py -> arch_hbm_switched_v41.py -> v41_rack_design.py) all read this module
+and its record results/arch/arch_budget_v41.json.  It carries the 2026-09-27 user decisions: the official
+checkpoint weight precision everywhere (FP8 per 32x32 block, FP4 routed experts, BF16 lm_head / router / compressor,
+_precision_fix), online softmax adopted and norm folding rejected (lever "osm"), the measured hyper-connection depth
+(126 cycles, 5,120 HC lanes per weight lane), MTP at tau 5.0 (LMSYS/SGLang; 3.27-3.80 and 4.1 as sensitivities),
+1M as the primary context and the validated static power terms.  Links: 4 HBM3E stacks per die, 130 ns light-FEC
+board hop, 209 ns rack-cable stage hop.  Timing: decode_critical_path's pinned pre-pipeline RTL constants (K, FADD 5;
+e6ba1efc).  Energy/power inputs: configs/hardware/technology.json.  The former split (a specification model here and
+a design-point base in tools/arch_budget_v41_dp.py, ported from v41-rack-gates@0facdc17) is retired.
+
 A vendor-style budget, in the order a product team writes one:
 
 1. REQUIREMENT.  Tokens/s per user at batch 1 at 8K / 200K / 1M context, without and with MTP (DSpark),
@@ -50,9 +62,13 @@ sys.path.insert(0, str(ROOT / "src"))
 
 import decode_critical_path as D  # noqa: E402
 
-SCHEMA = "opentallas.arch-budget-v41.v1"
+SCHEMA = "opentallas.arch-budget-v41.v2"
 OUT = ROOT / "results/arch/arch_budget_v41.json"
 CONTEXTS = (8192, 200000, 1048576)
+# User decision 2026-09-27: V4.1's primary context is 1M ("1M is the default for most agent APIs"); 200K is
+# secondary, 8K tertiary.  The headline, the power check and the batch model's MTP design are taken at TARGET_CTX.
+TARGET_CTX = 1048576
+MTP_M_DESIGN = 2          # the lane multiplier; the knee rule picks m = 3 at 1M -- held at 2 pending the 1M push-the-rate study
 BATCHES = (1, 2, 4, 8, 16, 32, 64)
 HEADLINE_KEY = "b_two_die_group4_across_pair"
 SPEC_PROFILES = ROOT / "configs/studies/speculative_profiles.json"
@@ -112,11 +128,18 @@ def unit_areas():
 ADD_LAT = dict(as_built=5, fastfp=3)          # rtl/hdc/ot_fp32_add_rne_pipe (5); rtl/hdc/ot_hdc_fastfp.sv (3)
 SFU_DEPTH = dict(as_built=dict(exp=92, rsqrt=61, sigmoid=128, recip=46, softplus=259, div=31),
                  fastfp=dict(exp=49, rsqrt=37, sigmoid=80, recip=28, softplus=259, div=31))
-# KV state on the ROM die lives in HBM (user decision 2026-09-26) on 4 HBM3E stacks per ROM layer die (standing
-# user decision: what today's interposers carry beside a reticle die; the analytical design's beachfront rule
-# would allow 5, which no shipping package offers), 1.0 TB/s each, 90% sustained = 3.6 TB/s per die
-ROM_DIE_HBM_STACKS = 4
+# KV state on the ROM die lives in HBM (user decision 2026-09-26).  STACKS PER DIE (user decision 2026-09-27, "no
+# unrealistic assumptions"): 4 HBM3E stacks per die = 8 per two-die package, what a shipping B200/B300-class
+# CoWoS-L interposer carries -- not the 5 per die the beachfront rule allows (10 per package has no shipping
+# interposer).  The same cap applies to the HBM comparator's dies.  1.0 TB/s per stack (B200: 8 TB/s / 8), 22.5 GB
+# per stack (B200: 180 GB / 8), 90% sustained with refresh on.  Non-layer dies carry no stacks (R-U1).
+HBM_STACKS_PER_DIE_MAX = 4
+ROM_DIE_HBM_STACKS = HBM_STACKS_PER_DIE_MAX
 ROM_DIE_HBM_BPS = ROM_DIE_HBM_STACKS * 1.0e12 * 0.90
+SERDES_LANES_PER_PACKAGE_2DIE = 84   # always-on 112G lanes per two-die package (rack study: 90 lanes, 6 spare)
+PROVISION_FACTOR = 1.2             # provision at 1.2 x the worst case (research agent adae6788, 2026-09-27)
+HC_DEPTH_CYC = 126         # hyper-connection projection depth, measured (results/rtl/hdc_v41x_hcp_campaign.json, 4,096 lanes)
+HC_MTP_LANES = 5120.0     # HC FP32 lanes per weight lane: keeps the 6-position MTP verify's HC projection off the chain-attacked path
 KV_GATHER_S_REQUIRED = 250e-9   # budgeted first-row latency of a data-dependent row gather (device ~100 ns +
                                 # controller + PHY + NoC; the report's 100 ns is optimistic)
 HBM_LAT_S = 1.0e-6        # ASSUMED first-access latency of a data-dependent HBM gather incl. controller queue
@@ -158,7 +181,13 @@ def headline():
 
 # -- 2. workload characterisation -----------------------------------------------------------------------------------------
 FP4 = 0.53125        # E2M1 + UE8M0 per 32
-FP8 = 1 + 1 / 32     # E4M3 + UE8M0 per 32 (block scales)
+FP8 = 1 + 1 / 1024   # E4M3 + one UE8M0 scale per 32x32 weight block (the checkpoint's own layout)
+# OFFICIAL PRECISION (user decision 2026-09-27): every weight at its dtype in the pinned release snapshot
+# (dba1be0a..., safetensors headers; tools/audit_v41_weight_precision.py): FP8 E4M3 with a UE8M0 scale per
+# 32x32 block (attention projections incl. wo_a, the indexer's wq_b, shared experts, Engram wkv, DSpark),
+# FP4 E2M1 packed two per byte with a UE8M0 scale per row x 32 (routed experts), BF16 (embedding, lm_head,
+# router gate, compressor wkv/wgate, indexer weights_proj/wk, norms, DSpark gate / Markov head), FP32
+# (hyper-connection fn/base/scale, attention sink, router bias).
 WIN_ROW_B = 528      # window KV row: 512 FP8 + scales (decode_critical_path v41_attention)
 CKV_ROW_B = 288      # compressed row: 512 FP4 (E4M3 scale per 16) (ibid.)
 IDX_KEY_B = 68       # index key: 128 FP4 + UE8M0 per 32 (ibid.)
@@ -268,12 +297,12 @@ def ops_of_layer(c, L, ctx, pos=None):
     op("attn.softmax_exp", "attn", "sfu", elems=H * T, fn="exp", chain=T // 8)
     op("attn.pv", "attn", "attention", macs=H * T * HD, fmt="bf16", chain=T)
     op("attn.normalize", "attn", "sfu", elems=H * HD + H * RD, fn="div")
-    op("attn.wo_a", "attn", "weight", macs=OG * OR * (H // OG) * HD, fmt="bf16", rom=OG * OR * (H // OG) * HD * 2,
+    op("attn.wo_a", "attn", "weight", macs=OG * OR * (H // OG) * HD, fmt="bf16xfp8w", rom=OG * OR * (H // OG) * HD * FP8,
        chain=(H // OG) * HD // 2)
     op("attn.z_quant", "attn", "su", elems=OG * OR)
     op("attn.wo_b", "attn", "weight", macs=D_ * OG * OR, fmt="fp8", rom=D_ * OG * OR * FP8, chain=OG * OR // 32)
     # MoE
-    op("ffn.router", "ffn", "weight", macs=NE * D_, fmt="fp32", rom=NE * D_ * 4, chain=D_ // 4)
+    op("ffn.router", "ffn", "weight", macs=NE * D_, fmt="bf16", rom=NE * D_ * 2, chain=D_ // 4)
     op("ffn.softplus_sqrt", "ffn", "sfu", elems=NE, fn="softplus")
     op("ffn.top6", "ffn", "select", elems=NE, topk=(NE, KE), share="rep")
     op("ffn.route_weights", "ffn", "sfu", elems=2 * KE, fn="div", share="rep")
@@ -291,8 +320,8 @@ def head_ops(c):
     D_, HC, V = c["hidden_size"], c["hc_mult"], c["vocab_size"]
     return [dict(name="head.pre_norm", sub="head", cls="su", macs=0, fmt="", bytes=dict(rom=0, kv_sram=0, kv_hbm=0, idx=0, engram=0),
                  elems=HC * D_ + 2 * D_, fn="none", chain=D_ // 64, share="rep", topk=None),
-            dict(name="head.lm_head", sub="head", cls="weight", macs=V * D_, fmt="fp8",
-                 bytes=dict(rom=V * D_ * FP8, kv_sram=0, kv_hbm=0, idx=0, engram=0), elems=0, fn="none",
+            dict(name="head.lm_head", sub="head", cls="weight", macs=V * D_, fmt="bf16",
+                 bytes=dict(rom=V * D_ * 2, kv_sram=0, kv_hbm=0, idx=0, engram=0), elems=0, fn="none",
                  chain=D_ // 32, share="tp", topk=None),
             dict(name="head.argmax", sub="head", cls="select", macs=0, fmt="", bytes=dict(rom=0, kv_sram=0, kv_hbm=0, idx=0, engram=0),
                  elems=V, fn="max", chain=0, share="tp", topk=(V, 1))]
@@ -487,6 +516,28 @@ def die_fraction(name, c, G):
     return 1.0 / G
 
 
+def _precision_fix(name, c, nd):
+    """The report DAG's weight bytes against the checkpoint's own dtypes: lm_head is BF16 (the DAG prices
+    FP8), the router gate is BF16 (DAG: FP32), the ratio-2 compressor's wkv|wgate is BF16 (DAG: FP32).
+    wo_a is FP8 in the checkpoint as the DAG has it (the release dequantises it to BF16 for its einsum, which
+    is exact: this engine takes the FP8 codes and scales and multiplies exactly).
+    Self-detecting: the factor is checkpoint bytes / the DAG's bytes, so it is 1 once decode_critical_path
+    carries the checkpoint dtypes itself (fixed at source on the packaging branch, dee2f0a1)."""
+    D_, HD = c["hidden_size"], c["head_dim"]
+    full = nd["sweep"]["bytes"]
+    if name.endswith("head.lm_head"):
+        return c["vocab_size"] * D_ * 2 / full
+    if name.endswith("ffn.router"):
+        return c["num_routed_experts"] * D_ * 2 / full
+    if name.endswith("attn.a_proj"):
+        L = nd["layer"]
+        if L in c["kv_source_layer_ids"] and c["compress_ratios"][L] == 2:
+            fp32 = (c["q_lora_rank"] + HD) * D_ + c["index_heads"] * D_ * 2 + 2 * HD * D_ * 4
+            if abs(full - fp32) < 0.5:                  # the DAG still prices the compressor at FP32
+                return (full - 2 * HD * D_ * 2) / full
+    return 1.0
+
+
 def distinct_experts(tokens, E, k):
     """Expected distinct experts over `tokens` independent top-k draws of E (uniform routing: the router trace
     is synthetic, configs/models/candidates/deepseek-v4.1-flash.json router_trace_status)."""
@@ -501,7 +552,7 @@ def fill_machine(batch):
     return replace(m1, batch=batch, microbatch=max(1.0, batch / S), slots=float(min(batch, S)))
 
 
-CHAIN_LEVERS = ("fuse", "chain_all", "short_stages", "att_local")
+CHAIN_LEVERS = ("osm", "fuse", "chain_all", "short_stages", "att_local")
 ATT_NODES = ("attn.a_proj", "attn.wq_b", "attn.wo_a", "attn.wo_b", "attn.cmp.wk", "attn.scores", "attn.pv",
              "attn.idx.score", "attn.idx.topk_local", "attn.cand.topk_local")
 ATT_COLL = ("attn.a_allgather", "attn.rows_allgather", "attn.out_allreduce", "attn.idx.topk_merge",
@@ -577,10 +628,12 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
             if "att_local" in levers and name.split(".", 1)[-1] in ATT_NODES:
                 f *= 2
             hc = name.endswith("hc.fn")
-            wide = name.endswith(("wo_a", "cmp.wk", "router"))
+            if hc:          # measured: the hcp block's depth (a6236a4f campaign, 4,096 lanes as 8 x 512: 126 cycles)
+                nd["depth"] = max(nd["depth"], HC_DEPTH_CYC * cyc)
+            wide = name.endswith(("wo_a", "cmp.wk", "router", "lm_head"))
             lanes = spec.hc_macs if hc else (spec.bf16_macs if wide else spec.weight_macs)
             macs = sw["macs"] * f                                   # the DAG's sweep MACs already carry mb
-            full_b = sw["bytes"] * f
+            full_b = sw["bytes"] * f * _precision_fix(name, c, nd)
             routed_b = 0.0
             if name.endswith("ffn.experts_gu"):
                 routed_b = full_b
@@ -671,6 +724,13 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
         for nd in b.g.nodes.values():
             if nd["ctrl"] > 0:
                 nd["ctrl"] += (spec.seq_gap - 5) * cyc
+    if "osm" in levers and "fuse" not in levers:
+        # online softmax only: exp streams behind the scores (running-max rescale), the norms keep their order
+        for name, nd in b.g.nodes.items():
+            if name.endswith("attn.exp"):
+                pre = name[:-len("exp")]
+                nd["deps"] = [pre + "scores"]
+                nd["stream"] = True
     if "chain_all" in levers:
         for name, nd in b.g.nodes.items():
             if nd["kind"] in ("matvec", "kvscan") or (nd["kind"] == "select" and name.endswith("topk_local")):
@@ -937,15 +997,27 @@ def spec_area_mm2(spec, areas):
 
 
 # -- 6. MTP ------------------------------------------------------------------------------------------------------------------
+# User decision 2026-09-27: MTP headlines at tau = 5.0, the best third-party measurement of DeepSeek's DSpark --
+# LMSYS/SGLang accept length ~5 at batch 1 on DeepSeek-V4-PRO-DSpark (B300, TP8), NOT V4.1-Flash, workload not
+# stated.  The vLLM-derived 3.27 / 3.80 and the earlier 4.1 default are sensitivities.
+TAU_HEADLINE = 5.0
+TAU_HEADLINE_LABEL = "LMSYS SGLang ~5"
+TAU_HEADLINE_SOURCE = ("LMSYS Org, https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ (2026-07-06): 'accept length "
+                       "~5 at batch size 1 on DeepSeek-V4-Pro, TP=8, B300' -- V4-Pro, not V4.1-Flash; workload not stated")
 def tau_points():
     """tau (accepted tokens per verify cycle incl. the bonus token) as the design-faithful remodel carries them:
     LMSYS/SGLang ~5 (published, V4-Pro, gamma 7) and the vLLM survival-derived 3.27 / 3.8."""
     fa = json.loads(SPEC_FAITHFUL.read_text()) if SPEC_FAITHFUL.exists() else None
-    out = [dict(tau=4.1, gamma=7, label="default 4.1 (user decision)", grade="decision",
-                source="user decision 2026-09-26: speculation headlines at tau = 4.1, the band 3.27-3.80 / ~5")]
+    out = []
     if fa:
         for t in fa["tau"]["v41"]:
-            out.append(dict(tau=t["tau"], gamma=t["gamma"], label=t["label"], grade=t["grade"], source=t["source"]))
+            out.append(dict(tau=t["tau"], gamma=t["gamma"], label=t["label"], grade=t["grade"], source=t["source"],
+                            model=t.get("model"), workload=t.get("workload")))
+    if not any(p["label"] == TAU_HEADLINE_LABEL for p in out):
+        out.insert(0, dict(tau=TAU_DEFAULT, gamma=7, label=TAU_HEADLINE_LABEL, grade="published",
+                           model="DeepSeek-V4-Pro", workload="not stated by the source", source=TAU_HEADLINE_SOURCE))
+    out.append(dict(tau=4.1, gamma=7, label="4.1 (previous default, sensitivity)", grade="decision",
+                    source="user decision 2026-09-26, superseded 2026-09-27 by the LMSYS ~5 headline"))
     return out
 
 
@@ -1065,7 +1137,7 @@ def mtp_design(req, ctx, B, areas, cap_mm2, c, rom_read_cap):
                          rom_read_bytes_per_cycle=req.rom_bytes, rom_read_ok=req.rom_bytes <= rom_read_cap,
                          tokens_s_per_user={p["label"]: min(p["tau"], B) / (v + d) for p in tau_points()}))
     fit = [r for r in rows if r["fits"]]
-    key = "default 4.1 (user decision)"
+    key = TAU_HEADLINE_LABEL
     design = rows[0]["m"]
     for a, b in zip(rows, rows[1:]):                    # the knee: stop when the next m buys < 15%
         if b["fits"] and b["tokens_s_per_user"][key] >= 1.15 * a["tokens_s_per_user"][key]:
@@ -1073,7 +1145,7 @@ def mtp_design(req, ctx, B, areas, cap_mm2, c, rom_read_cap):
         else:
             break
     return dict(B=B, rows=rows, largest_fitting_m=max(r["m"] for r in fit) if fit else None, design_m=design,
-                design_rule="the knee: the largest m whose step from m-1 still buys >= 15% at tau 4.1, within the "
+                design_rule="the knee: the largest m whose step from m-1 still buys >= 15% at the headline tau, within the "
                             "area cap", cap_mm2=cap_mm2, rom_read_cap_bytes_per_cycle=rom_read_cap)
 
 
@@ -1095,9 +1167,7 @@ def hbm_comparator(c, tech=None):
     d = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]
     die_mm2 = d["total_mm2"]
     edge = math.sqrt(die_mm2)
-    # the beachfront rule allows int(4 x edge x util / beach) = 5; the package limit is the same one the ROM die
-    # has (ROM_DIE_HBM_STACKS: what today's interposers carry beside a reticle die), so the comparator gets 4
-    stacks = min(int(4 * edge * util // beach), ROM_DIE_HBM_STACKS)
+    stacks = min(int(4 * edge * util // beach), HBM_STACKS_PER_DIE_MAX)   # beachfront allows 5; shipping packages 4
     logic_per_die = die_mm2 - d["interconnect_mm2"] - d["overhead_mm2"] - stacks * phy
     rom_logic_total = 188 * d["compute_mm2"]
     dies = math.ceil(rom_logic_total / logic_per_die)
@@ -1238,8 +1308,12 @@ def replay_summary():
 
 
 # -- 8. batch and energy: one model with the speculation analysis --------------------------------------------------------
-TAU_DEFAULT = 4.1          # user decision 2026-09-26: speculation headlines at tau = 4.1; 3.27 / 3.80 / ~5 as the band
+TAU_DEFAULT = TAU_HEADLINE
 BATCH_SWEEP = (1, 2, 4, 8, 16, 28, 32, 64, 128, 256, 512, 1024)
+
+
+def _v(x):
+    return x["value"] if isinstance(x, dict) else x
 
 
 def energy_terms(tech):
@@ -1248,9 +1322,10 @@ def energy_terms(tech):
     return dict(mac_op=op, rom=e["rom_read_j_per_byte"]["value"], deliver=e["operand_delivery_j_per_byte"]["value"],
                 sram=e["sram_read_j_per_byte"]["value"], hbm=e["hbm_j_per_byte"]["value"],
                 clock=tech["power"]["clock_energy_j_per_mm2_per_cycle"]["value"],
-                link_pj_per_bit=dict(ucie=0.5, board=5.0),
-                source="configs/hardware/technology.json energy.* and power.clock_energy_j_per_mm2_per_cycle; link "
-                       "energy ASSUMED (UCIe ~0.5 pJ/bit, 112G PAM4 board SerDes ~5 pJ/bit)")
+                link_pj_per_bit=dict(ucie=_v(e["link_j_per_bit"]["ucie_advanced"]) * 1e12,
+                                     board=_v(e["link_j_per_bit"]["board_serdes_112g"]) * 1e12),
+                source="configs/hardware/technology.json energy.* (MAC energies and link_j_per_bit validated "
+                       "2026-09-27, results/arch/power_assumptions.json) and power.clock_energy_j_per_mm2_per_cycle")
 
 
 def energy_per_token(spec, ctx, users, positions=1, hbm=None, gated=False, rate_tokens_s=None, areas=None):
@@ -1270,8 +1345,11 @@ def energy_per_token(spec, ctx, users, positions=1, hbm=None, gated=False, rate_
     routed_b = c["num_layers"] * KE * 3 * FF * D_ * FP4
     dense_b = tot["bytes"]["rom"] - routed_b
     w_bytes = dense_b / tokens + routed_b * (U / KE) / tokens
-    fmt_op = {"fp8": "fp8", "fp4": "fp4", "bf16": "bf16", "fp32": "fp32", "bf16xfp8": "bf16"}
-    mac_j = sum(v * 2 * et["mac_op"][fmt_op.get(k.split(":")[1], "bf16")] for k, v in tot["macs"].items())
+    # routed experts are FP4 weights x FP8 activations: the W4A8 op (technology.json mac_energy_j_per_op.w4a8);
+    # the indexer is FP4 x FP4 (fp4); wo_a's FP8 weights meet BF16 activations on the BF16 engine (bf16)
+    fmt_op = {"fp8": "fp8", "fp4": "fp4", "bf16": "bf16", "fp32": "fp32", "bf16xfp8": "bf16", "bf16xfp8w": "bf16"}
+    fmt_of = lambda k: "w4a8" if k == "weight:fp4" else fmt_op.get(k.split(":")[1], "bf16")
+    mac_j = sum(v * 2 * et["mac_op"][fmt_of(k)] for k, v in tot["macs"].items())
     w_j = w_bytes * (et["hbm"] if hbm else (et["rom"] + et["deliver"]))
     kv_j = (tot["bytes"]["kv_hbm"] + tot["bytes"]["idx"]) / positions * et["hbm"] + tot["bytes"]["kv_sram"] * et["sram"]
     el = sum(tot["elems"].values())
@@ -1334,7 +1412,7 @@ def capacity_limit(c, hb, ctx):
     return dict(per_user_bytes_busiest_die=per_user_die, rom_users=int(rom_cap // per_user_die),
                 hbm_users=int(hbm_cap // per_user_die),
                 note="layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the "
-                     f"group's 4 dies, plus 2 window rings; ROM die: {ROM_DIE_HBM_STACKS} HBM3E stacks for KV; HBM die: its stacks less "
+                     "group's 4 dies, plus 2 window rings; ROM layer die: 4 HBM3E stacks for KV; HBM die: its stacks less "
                      "its weight share")
 
 
@@ -1374,7 +1452,7 @@ def kv_state_requirements(c, req, clock):
 
 def choose_target_context(rec):
     """User decision 2026-09-26: the design target context is 200K or 1M, whichever maximises the ROM:HBM
-    advantage -- per-user rate first (with MTP at tau 4.1, then without), energy and throughput reported."""
+    advantage -- per-user rate first (with MTP at the headline tau, then without), energy and throughput reported."""
     rows = {}
     for ctx in ("200000", "1048576"):
         b = rec["batch"][ctx]["rows"]
@@ -1392,13 +1470,16 @@ def choose_target_context(rec):
             ratio_aggregate_b64=r64["ar_aggregate_tokens_s"] / h64["ar_aggregate_tokens_s"],
             ratio_aggregate_saturated=rs["ar_aggregate_tokens_s"] / hs["ar_aggregate_tokens_s"])
     pick = max(rows, key=lambda k: (round(rows[k]["ratio_user_mtp"], 3), rows[k]["ratio_user_ar"]))
-    other = [k for k in rows if k != pick][0]
-    return dict(chosen=int(pick), secondary=int(other), rows=rows,
-                rule="max ROM:HBM per-user rate with MTP (tau 4.1), then without; energy and throughput reported")
+    return dict(chosen=TARGET_CTX, secondary=200000, tertiary=8192, rows=rows, ratio_rule_pick=int(pick),
+                rule="user decision 2026-09-27: 1M is the primary context (the default of most agent APIs); the "
+                     "earlier rule (max ROM:HBM per-user rate with MTP, then without) is kept as ratio_rule_pick")
 
 
 def power_requirements(rec, req, areas):
-    """Per-die power at the target against the die's cooling limit (technology.json thermal: 0.5 W/mm2 x 815 mm2).
+    """Per-die power at the target against the die's cooling limit: the per-class limits of a two-die package
+    (configs/hardware/power_scenarios.json cooling classes via tools/power_scenarios.cooling_limits: a shipping
+    package's rating less its own stacks, per die; the air class binds the margin, liquid is reported beside it).
+    The former 0.5 W/mm2 x 815 mm2 rule (technology.json thermal, an A100 module rating over its die) is withdrawn.
 
     Batch 1, stage clock gating: a die is active only while its layer group holds the token (about T/28 of
     the token time); its dynamic power then is its share of the token's non-clock energy over that window
@@ -1410,11 +1491,14 @@ def power_requirements(rec, req, areas):
     c, clock = E["c"], E["clock"]
     d = E["designs"][D.ARRAY_DESIGN]
     die_mm2 = d["area_split_per_device"]["total_mm2"]
-    cool = E["tech"]["thermal"]["cooling_limit_w_per_mm2"]["value"] * die_mm2
+    import power_scenarios as PS
+    lims = PS.cooling_limits(PS.load_cfg())
+    cool_cls = {cls: v["2"]["die_w"] for cls, v in lims.items()}
+    cool = cool_cls["air"]
     stat = d["static_power"]["detail"]
     et = energy_terms(E["tech"])
     rows = {}
-    b = rec["batch"]["200000"]["rows"]["rom"]
+    b = rec["batch"][str(TARGET_CTX)]["rows"]["rom"]
     b1 = b[0]
     sat = max(b, key=lambda r: r["ar_aggregate_tokens_s"])
     T = 1.0 / b1["ar_tokens_s_per_user"]
@@ -1428,15 +1512,44 @@ def power_requirements(rec, req, areas):
         sat_w = sat["ar_aggregate_tokens_s"] * sat["ar_energy_j_per_token"] / 188 + (clk_w if m > 1 else 0.0)
         rows[f"m{m}"] = dict(block_mm2=blk, clock_w_active=clk_w, active_die_dynamic_w_b1=active,
                              saturated_die_dynamic_w=sat_w)
-    leak_n5 = stat["leakage_w_per_device"]
-    leak_asap7 = E["tech"].get("power", {}).get("leak_w_per_mm2")
-    # the ROM die's HBM interface idle power on ITS stacks (the analytical design's 14 W assumes 5)
-    hbm_if = ROM_DIE_HBM_STACKS * E["tech"]["power"]["memory_interface_idle_w_per_stack"]["value"]
-    worst = max(r["saturated_die_dynamic_w"] for r in rows.values()) + leak_n5 + hbm_if
-    return dict(cooling_limit_w_per_die=cool, cooling_basis="technology.json thermal.cooling_limit_w_per_mm2 x die",
-                static_leakage_w_per_die_n5_analytical=leak_n5, hbm_interface_w_per_die=hbm_if,
+    # STATIC, from the validated technology values (research agent adae6788, 2026-09-27, results/arch/
+    # power_assumptions.json): leakage per mm2 of logic / ROM array; HBM interface = idle per stack + active I/O
+    # energy x the die's HBM traffic (worst case: the die's sustained 3.6 TB/s); always-on package SerDes lanes
+    # (84 per two-die package at the board-SerDes energy x 112 Gb/s); UCIe idle at 15% of its peak.
+    P = E["tech"]["power"]
+    lk = P["static_leakage_w_per_mm2"]
+    lk = {k: (v["value"] if isinstance(v, dict) else v) for k, v in (lk.items() if isinstance(lk, dict) else [])}
+    logic_mm2, rom_mm2 = stat["logic_mm2_per_device"], stat["rom_array_mm2_per_device"]
+    leak = logic_mm2 * lk["logic"] + rom_mm2 * lk["rom_array"]
+    idle_stack = P["memory_interface_idle_w_per_stack"]["value"]
+    act_jb = P["memory_interface_active_j_per_bit"]["value"] if isinstance(P["memory_interface_active_j_per_bit"], dict) \
+        else P["memory_interface_active_j_per_bit"]
+    hbm_idle = ROM_DIE_HBM_STACKS * idle_stack
+    hbm_worst = hbm_idle + act_jb * 8 * ROM_DIE_HBM_BPS
+    serdes_j_bit = et["link_pj_per_bit"]["board"] * 1e-12
+    serdes_w = SERDES_LANES_PER_PACKAGE_2DIE * 112e9 * serdes_j_bit / 2        # per die, always on
+    ucie_idle = 0.15 * E["links"]["rom_package_ucie"]["bw"] * 8 * et["link_pj_per_bit"]["ucie"] * 1e-12
+    static = leak + hbm_idle + serdes_w + ucie_idle
+    dyn_worst = max(r["saturated_die_dynamic_w"] for r in rows.values())
+    worst = dyn_worst + leak + hbm_worst + serdes_w + ucie_idle
+    ro = P["rack_overheads"]
+    ro = {k: (v["value"] if isinstance(v, dict) else v) for k, v in ro.items() if k != "purpose"}
+    wall = 1.0 / (ro["vr_efficiency_48v_to_core"] * ro["psu_efficiency"]) * (1 + ro["cdu_fraction_of_it"] + ro["fan_fraction_of_it"])
+    provisioned = PROVISION_FACTOR * worst * wall
+    return dict(cooling_limit_w_per_die=cool, cooling_limit_w_per_die_by_class=cool_cls,
+                cooling_basis="configs/hardware/power_scenarios.json cooling classes, 2-die package, AIR class "
+                              "(tools/power_scenarios.cooling_limits); liquid in cooling_limit_w_per_die_by_class",
+                die_mm2=die_mm2,
+                static_w_per_die=dict(leakage=leak, hbm_interface_idle=hbm_idle, serdes_always_on=serdes_w,
+                                      ucie_idle=ucie_idle, total=static),
+                hbm_interface_worst_w_per_die=hbm_worst,
+                static_leakage_w_per_die_n5_analytical=leak, hbm_interface_w_per_die=hbm_worst,
                 token_time_us_b1=T * 1e6, nonclock_energy_per_token_j_b1=nonclock, by_lane_mult=rows,
                 worst_case_die_w=worst, margin=cool / worst,
+                margin_by_class={k: v / worst for k, v in cool_cls.items()},
+                wall_factor=wall, provisioned_wall_w_per_die=provisioned,
+                provisioning_rule=f"{PROVISION_FACTOR} x worst case / (VR x PSU) x (1 + CDU + fans): "
+                                  "technology.json power.rack_overheads",
                 requirement=("per-die power <= the cooling limit at every batch with stage clock gating: an idle "
                              "stage's clock tree gated (ICG at the block boundaries), its ROM macros and engines "
                              "quiescent; the worst case is the saturated array (every die busy)"),
@@ -1448,11 +1561,13 @@ def chain_ladder(req, c, areas=None):
     """The dependency-chain attack in the user-approved order: each step adds one lever to the previous; us per
     token and tokens/s per user at batch 1.  Step 4 (attention on one package) is priced at the spec's widths
     and with its attention, indexer and weight engines doubled (it doubles their per-die work); MTP (m = 2,
-    tau 4.1) goes on top of the best step that keeps the spec's area."""
+    headline tau) goes on top of the best step that keeps the spec's area."""
     areas = areas or unit_areas()[0]
-    L3 = ("fuse", "chain_all", "short_stages")
-    steps = [("0 spec (baseline links)", (), req), ("1 reductions off the path", ("fuse",), req),
-             ("2 chaining for every unit", ("fuse", "chain_all"), req),
+    L3 = ("osm", "chain_all", "short_stages")
+    steps = [("0 spec (baseline links)", (), req),
+             ("1 reductions off the path: online softmax (norm folding rejected)", ("osm",), req),
+             ("1x norm folding as well (REJECTED: changes the FP8 quantisation point)", ("fuse",), req),
+             ("2 chaining for every unit", ("osm", "chain_all"), req),
              ("3 shorter stages", L3, req),
              ("4a attention on one package, spec widths", L3 + ("att_local",), req),
              ("4b attention on one package, attention/indexer/weight engines x2", L3 + ("att_local",),
@@ -1469,14 +1584,14 @@ def chain_ladder(req, c, areas=None):
             row[str(ctx)] = dict(us=r["T_s"] * 1e6, tokens_s_per_user=r["tokens_s_per_user"],
                                  breakdown_us={k: round(v, 2) for k, v in r["breakdown_us"].items()})
         out.append(row)
-    mt = dict(step="5 MTP m = 2, tau 4.1, on step 3", levers=list(L3) + ["mtp_m2"],
+    mt = dict(step=f"5 MTP m = 2, tau {TAU_HEADLINE:g}, on step 3", levers=list(L3) + ["mtp_m2"],
               area_mm2=2 * spec_area_mm2(req, areas)["total"])
     for ctx in CONTEXTS:
         sp = replace(req, lane_mult=2)
         v = price(sp, ctx, positions=6, levers=L3)
         d = draft_cost_s(sp, ctx, 5, c)["total_s"]
         mt[str(ctx)] = dict(verify_us=v["period_s"] * 1e6, draft_us=d * 1e6,
-                            tokens_s_per_user=4.1 / (v["period_s"] + d))
+                            tokens_s_per_user=TAU_HEADLINE / (v["period_s"] + d))
     out.append(mt)
     return out
 
@@ -1489,7 +1604,7 @@ def collective_exposure_rows(req, c):
     if not D.COLLECTIVE_EXPOSURE_REC.exists():
         return None
     terms = D.load_exposure_terms()
-    L3 = ("fuse", "chain_all", "short_stages")
+    L3 = ("osm", "chain_all", "short_stages")
     out = dict(source=str(D.COLLECTIVE_EXPOSURE_REC.relative_to(ROOT)),
                terms_residual_cycles={k: v["residual_cycles"] for k, v in terms.items()})
     for tag, lv in (("spec", ()), ("ladder_step3", L3)):
@@ -1506,9 +1621,36 @@ def collective_exposure_rows(req, c):
         d = draft_cost_s(sp, ctx, 5, c)["total_s"]
         v0 = price(sp, ctx, positions=6, levers=L3)["period_s"]
         v1 = price(sp, ctx, positions=6, levers=L3, exposure=terms)["period_s"]
-        mt[str(ctx)] = dict(overlap_assumed=4.1 / (v0 + d), measured_exposure=4.1 / (v1 + d))
-    out["ladder_mtp_m2_tau41"] = mt
+        mt[str(ctx)] = dict(overlap_assumed=TAU_HEADLINE / (v0 + d), measured_exposure=TAU_HEADLINE / (v1 + d))
+    out["ladder_mtp_m2_headline_tau"] = mt
+    out["tau"] = TAU_HEADLINE
     return out
+
+
+def hc_mtp_sizing(req, c, areas):
+    """The hyper-connection projection under the MTP verify (6 positions, m = 2) at 200K, with the measured depth:
+    HC lanes per weight lane against the step-5 (chain-attacked) and the spec-only MTP rate, HC nodes on the
+    critical path, and the area of the m = 2 core's HC lanes.  6 positions x 24 x 20,480 FP32 MACs per HC op."""
+    L3 = ("osm", "chain_all", "short_stages")
+    rows = []
+    for hc in (2048.0, 4096.0, 5120.0, 6144.0, 8192.0):
+        sp = replace(req, lane_mult=2, hc_macs=hc)
+        out = {}
+        for tag, lv in (("step5", L3), ("spec", ())):
+            v = price(sp, 200000, positions=6, levers=lv, keep=True)
+            b = v["_built"]
+            path = set(b.g.path(b.sink))
+            hcn = [n for n in b.g.nodes if n.endswith("hc.fn")]
+            d = draft_cost_s(sp, 200000, 5, c)["total_s"]
+            out[tag] = dict(tokens_s_per_user=TAU_HEADLINE / (v["period_s"] + d), verify_us=v["period_s"] * 1e6,
+                            hc_on_path=sum(1 for n in hcn if n in path), hc_ops=len(hcn))
+        work = 6 * 24 * c["hidden_size"] * c["hc_mult"]
+        rows.append(dict(hc_per_weight_lane=hc, lanes_m2=2 * hc, hc_area_m2_mm2=2 * hc * areas[AREA_KEY["hc"]] / 1e6,
+                         six_position_cycles=work / (2 * hc) + HC_DEPTH_CYC, **out))
+    return dict(rows=rows, depth_cycles=HC_DEPTH_CYC, chosen=HC_MTP_LANES,
+                rule="the smallest HC width per weight lane that keeps the step-5 MTP rate within 0.2% of unlimited "
+                     "HC lanes; the unified MAC fabric may supply these lanes if it gives the HC op this issue rate "
+                     "during the verify's side-branch window")
 
 
 def build(quick=False):
@@ -1565,17 +1707,22 @@ def build(quick=False):
             derived[ctx] = sp
         budgets[str(ctx)] = entry
     # batch 64: the report's per-user rate at 64 users (the occupancy bound joins the critical path)
-    t64 = 1.0 / hl["tokens_s_per_user_b64"][200000]
-    sp64, info64 = derive(t64, 200000, derived[200000], areas, batch=64)
-    budgets["200000_b64"] = dict(target_us=t64 * 1e6, target_tokens_s=1 / t64, feasible=info64["feasible"],
-                                 history=info64["history"], spec=asdict(sp64) if sp64 else None,
-                                 area_mm2=spec_area_mm2(sp64, areas) if sp64 else None)
-    if sp64:
-        derived["b64"] = sp64
+    for c64 in (200000, TARGET_CTX):
+        t64 = 1.0 / hl["tokens_s_per_user_b64"][c64]
+        sp64, info64 = derive(t64, c64, derived[c64], areas, batch=64)
+        budgets[f"{c64}_b64"] = dict(target_us=t64 * 1e6, target_tokens_s=1 / t64, feasible=info64["feasible"],
+                                     history=info64["history"], spec=asdict(sp64) if sp64 else None,
+                                     area_mm2=spec_area_mm2(sp64, areas) if sp64 else None)
+        if sp64:
+            derived[f"b64_{c64}"] = sp64
     rec["budget"] = budgets
     req = derived[200000]
     for sp in derived.values():
         req = _with_widths(req, {k: max(getattr(req, WIDTH_FIELD[k]), getattr(sp, WIDTH_FIELD[k])) for k in RESOURCES})
+    # the MTP verify (6 positions, m = 2) on the chain-attacked core (ladder step 5): with the measured 126-cycle
+    # depth, 2 x 4,096 HC lanes put 45 of 80 HC projections on the path (-0.7%); 2 x 5,120 take them off
+    # (hc_mtp_sizing below).  The batch-1 MTP rate is the requirement, so the HC floor is 5,120 per weight lane.
+    req = _with_widths(req, {"hc": max(req.hc_macs, HC_MTP_LANES)})
     rec["required_spec"] = asdict(req)
     rec["required_area_mm2"] = spec_area_mm2(req, areas)
     rec["compute_envelope_mm2"] = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]["compute_mm2"]
@@ -1641,12 +1788,15 @@ def build(quick=False):
                                       critical_issue_us_by_resource=hr["critical_issue_us_by_resource"],
                                       rom_over_hbm=price(req, ctx)["tokens_s_per_user"] / hr["tokens_s_per_user"])
     hb["batch_curve"] = {str(bt): price(req, 200000, batch=bt, hbm=hbm_kw)["tokens_s_per_user"] for bt in BATCHES}
+    hb["efficiency_sensitivity_1m"] = {
+        str(e): price(req, TARGET_CTX, hbm=dict(hbm_kw, bw_Bps=hb["bw_Bps"] / 0.9 * e))["tokens_s_per_user"]
+        for e in (0.75, 0.85, 0.9, 0.95)}
     hb["efficiency_sensitivity_200k"] = {
         str(e): price(req, 200000, hbm=dict(hbm_kw, bw_Bps=hb["bw_Bps"] / 0.9 * e))["tokens_s_per_user"]
         for e in (0.75, 0.85, 0.9, 0.95)}
     rec["hbm_comparator"] = hb
     # 8. batch x MTP x energy, one model (m = 2 is the MTP design point: the knee of the m sweep)
-    m_design = rec["mtp"]["design"]["200000"]["design_m"]
+    m_design = MTP_M_DESIGN
     rec["batch"] = {str(ctx): batch_model(req, hb, ctx, m_design, areas=areas)
                     for ctx in (CONTEXTS if not quick else (200000,))}
     rec["capacity"] = {str(ctx): capacity_limit(c, hb, ctx) for ctx in CONTEXTS}
@@ -1658,13 +1808,14 @@ def build(quick=False):
         label=PLAIN_B["label"],
         dag_tokens_s_per_user={str(k): v for k, v in hl["tokens_s_per_user_plain_b"].items()},
         required_ar={str(ctx): price(req, ctx, base=PLAIN_B)["tokens_s_per_user"] for ctx in CONTEXTS},
-        required_mtp_m2_tau41={str(ctx): 4.1 / (price(replace(req, lane_mult=2), ctx, positions=6, base=PLAIN_B)[
+        required_mtp_m2_headline_tau={str(ctx): TAU_HEADLINE / (price(replace(req, lane_mult=2), ctx, positions=6, base=PLAIN_B)[
             "period_s"] + draft_cost_s(replace(req, lane_mult=2), ctx, 5, c)["total_s"]) for ctx in CONTEXTS},
         hbm_ar={str(ctx): price(req, ctx, hbm=hbm_kw, base=PLAIN_B)["tokens_s_per_user"] for ctx in CONTEXTS})
     if not quick:
         rec["power"] = power_requirements(rec, req, areas)
     rec["chain_ladder"] = chain_ladder(req, c, areas)
     rec["collective_exposure"] = collective_exposure_rows(req, c)
+    rec["hc_mtp_sizing"] = hc_mtp_sizing(req, c, areas)
     rec["replay"] = replay_summary()
     return rec
 
