@@ -185,7 +185,7 @@ def qwen_phase(s: Path) -> dict:
     layout = {"LOG_HD": int(math.log2(lay.HD)), "LOG_TW": int(math.log2(lay.TW)),
               "LLG": int(math.log2(lay.L * lay.KV)), "V0_WORD": lay.kv_v0 // 16}
     gparams = [f"-G{k}={v}" for k, v in layout.items()]
-    src = [*core.HDC, *KV_RTL, HBM, WS_RTL, ARB, *core.PIPES]
+    src = [*core.HDC, ROOT / "rtl/hdc/ot_hdc_core_whbm.sv", *KV_RTL, HBM, WS_RTL, ARB, *core.PIPES]
     h_core = HARNESS_CORE
     h_unit = harness(kvc.HARNESS_CORE, "tb_hdc_wstream", s / "h_unit.cpp")
     with ThreadPoolExecutor(3) as pool:
@@ -464,7 +464,7 @@ def run_campaign(skip_v41=False, phase_dump=None) -> dict:
     checks.update({f"lint_{k}": v["returncode"] == 0 for k, v in lint.items()})
     status = "pass" if all(checks.values()) else "fail"
     inputs = [*KV_RTL, HBM, WS_RTL, QS_RTL, ARB, TB_CORE, HARNESS_CORE, TB_UNIT, TB_V41, HARNESS_V41,
-              core.ISA_SVH, *core.HDC, *core.PIPES, core.TB_CORE, core.HARNESS, *core.TOOLS, *TOOLS, kvc.TECH]
+              core.ISA_SVH, *core.HDC, ROOT / "rtl/hdc/ot_hdc_core_whbm.sv", *core.PIPES, core.TB_CORE, core.HARNESS, *core.TOOLS, *TOOLS, kvc.TECH]
     return {
         "schema": "opentallas.hdc-hbm-campaign.v1",
         "status": status,

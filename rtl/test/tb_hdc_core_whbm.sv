@@ -84,7 +84,7 @@ module tb_hdc_core_whbm #(
     wire [AW-1:0] wd_wbase;
     wire [NW-1:0] wd_tiles, wd_k;
 
-    ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .KV_HBM(1), .W_HBM(1)) dut (
+    ot_hdc_core_whbm #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .KV_HBM(1), .W_HBM(1)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
         .done(done), .next_token(next_token), .cycles(cycles), .fault(fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),

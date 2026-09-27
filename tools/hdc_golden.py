@@ -7,21 +7,30 @@ each op), applied in exactly the order the hardware applies it:
 
 * matvec      inputs rounded to BF16; per output, products (exact) accumulated
               sequentially over K from +0.0
-* reduction   sums of P=8 interleaved partials (element i into partial i mod 8,
-              each sequential), then a pairwise tree ((p0+p1)+(p2+p3))+...
+* reduction   (stream unit: norms, the softmax denominator) R-ARITH: chunks of
+              8 contiguous elements, each sequential from +0, the chunk sums a
+              pairwise tree padded with +0 (reduce_chunked); reduce_sum (P=8
+              interleaved partials + a pairwise tree) remains for the V4.1
+              golden
 * rsqrt       bit seed 0x5f3759df - (bits >> 1), three Newton-Raphson steps
 * reciprocal  bit seed 0x7ef311c7 - bits, three Newton-Raphson steps
 * exp         n = rint(x*log2e) by the 1.5*2^23 trick, two-constant Cody-Waite
               reduction, degree-6 Horner polynomial, scale by 2^n in the exponent
-* softmax     max, exp(s - max), reduction sum, reciprocal, multiply
+* softmax     max, exp(s - max), reduction sum, reciprocal, multiply (softmax());
+              attention normalises AFTER the weighted sum (attend): P.V of
+              the unnormalised exp, then x 1/Z
 * attention   KV cache in BF16; q and the probabilities rounded to BF16 before
-              their products (exact BF16 x BF16 products, FP32 accumulation)
+              their products (exact BF16 x BF16 products, FP32 accumulation);
+              both products K-split INTERLEAVED over the core's lane groups
+              (attn_splits, matvec_il): scores over head_dim, the weighted sum
+              over positions, chunk sums added by a pairwise tree
 * silu        g * reciprocal(1 + exp(-g))
 
 See docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md.  `decode_token` returns the
 logits and every intermediate the RTL is checked against.
 """
 import json
+import os
 import struct
 from pathlib import Path
 
@@ -124,6 +133,44 @@ def split_for(n, k, groups, lanes=16, interleave=8):
     return best[1]
 
 
+def p2floor(n):
+    return 1 << (max(1, int(n)).bit_length() - 1)
+
+
+def attn_splits(hd, groups, lanes=16):
+    """K-splits of the two attention products on a core of `groups` lane groups
+    (tools/hdc_program.py emits them; rtl/hdc/ot_hdc_matvec.sv runs them):
+    scores split head_dim over min(hd, G) groups per position tile; the
+    weighted sum splits positions over the G / (hd / lanes) groups per head_dim
+    tile.  HDC_ATTN_SPLIT=0 in the environment keeps both unsplit (1, 1): the
+    KV-in-HBM configuration, whose streamer (rtl/hdc/kv/ot_hdc_kv_stream.sv)
+    fetches the unsplit op's word order."""
+    if os.environ.get("HDC_ATTN_SPLIT", "1") == "0":
+        return 1, 1
+    return min(hd, p2floor(groups)), p2floor(max(1, groups // max(1, hd // lanes)))
+
+
+def matvec_il(w, x, split=1):
+    """y[n] = sum_k w[n,k] * x[k] with K cut INTERLEAVED into `split` chunks:
+    chunk c holds k = c, c+S, c+2S, ... (k < K; a chunk may be short or empty),
+    each summed sequentially from +0, the chunk sums added by the pairwise tree
+    ((c0+c1)+(c2+c3)).  The attention products' order (KV-sourced ops, whose K
+    is head_dim or the context length).  split=1 is matvec_fp32.  x is used
+    as given (the caller rounds it)."""
+    w = np.asarray(w, dtype=F)
+    x = np.asarray(x, dtype=F)
+    K = w.shape[1]
+    parts = []
+    for c in range(split):
+        acc = np.zeros(w.shape[0], dtype=F)
+        for k in range(c, K, split):
+            acc = add(acc, mul(w[:, k], x[k]))
+        parts.append(acc)
+    while len(parts) > 1:
+        parts = [add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return parts[0]
+
+
 def matvec_fp32(w, x):
     acc = np.zeros(w.shape[0], dtype=F)
     for k in range(w.shape[1]):
@@ -139,6 +186,41 @@ def reduce_sum(v):
     while len(part) > 1:
         part = np.array([add(part[j], part[j + 1]) for j in range(0, len(part), 2)], dtype=F)
     return part[0]
+
+
+CHUNK = 8                     # R-ARITH chunk length (shared with the DeepSeek-V4.1 core)
+
+
+def reduce_chunked(v, c=CHUNK):
+    """The arithmetic contract R-ARITH of every Qwen3 stream-unit sum (norms,
+    the softmax denominator): contiguous chunks of c elements, each summed
+    sequentially from +0, and the chunk sums added by a pairwise tree
+    ((s0 + s1) + (s2 + s3)) + ... padded with +0.  Independent of the stream
+    unit's width (rtl/hdc/ot_hdc_vreduce.sv); shared with the V4.1 core."""
+    v = np.asarray(v, dtype=F).reshape(-1)
+    parts = []
+    for i in range(0, max(len(v), 1), c):
+        acc = F(0)
+        for x in v[i:i + c]:
+            acc = add(acc, x)
+        parts.append(F(acc))
+    n = 1
+    while n < len(parts):
+        n *= 2
+    parts += [F(0)] * (n - len(parts))
+    while len(parts) > 1:
+        parts = [add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return F(parts[0])
+
+
+# The stream unit the Qwen3 golden describes: HDC_SU_WIDTH >= 8 is the vector
+# unit and its R-ARITH order; 1 is the scalar unit (rtl/hdc/ot_hdc_stream.sv)
+# and its P=8 interleaved reducer -- the configurations not yet moved.
+SU_WIDTH = int(os.environ.get("HDC_SU_WIDTH", 8))
+
+
+def lane_sum(v):
+    return reduce_sum(v) if SU_WIDTH == 1 else reduce_chunked(v)
 
 
 def rsqrt(v):
@@ -172,8 +254,50 @@ def exp(x):
     return from_bits(e.astype(np.uint32))
 
 
+def to_fp8(x):
+    """FP32 -> FP8 E4M3 (bias 7, max 448, subnormal quantum 2^-9), round to
+    nearest even, saturating; returned as FP32.  Every E4M3 value is a BF16
+    value, so an FP8 KV cache still gives exact BF16 x BF16 products."""
+    x = np.asarray(x, dtype=F)
+    a = np.abs(x).astype(np.float64)
+    _, ex = np.frexp(a)
+    e = np.maximum(ex - 1, -6)                       # the binade (subnormals share 2^-6's quantum)
+    q = np.ldexp(1.0, e - 3)
+    r = np.minimum(np.round(a / q) * q, 448.0)       # np.round: half to even
+    return z(np.where(x < 0, -r, r).astype(F))
+
+
+# The KV cache's format: FP8 E4M3 on the vector core (the spec's design point:
+# half the KV bytes of BF16), BF16 on the scalar core.  HDC_KV_FMT overrides.
+KV_FMT = os.environ.get("HDC_KV_FMT", "fp8" if SU_WIDTH > 1 else "bf16")
+
+
+def kv_round(x):
+    return to_fp8(x) if KV_FMT == "fp8" else to_bf16(x)
+
+
+def rstd(x, eps):
+    return rsqrt(add(mul(lane_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
+
+
+# NORM FOLD (the vector core; SU_WIDTH > 1, one die).  The two per-layer
+# RMSNorms fold their weight into the following projections' columns, stored
+# in BF16 (W' = bf16(W x diag(w))), and apply 1/rms AFTER them:
+#   attention: q, k, v = (W'_qkv bf16(x)) x r        r = rstd(x)
+#   MLP:       g, u    = (W'_gu  bf16(x)) x r
+# so the sum of squares and the rsqrt run beside the projection instead of in
+# front of it.  Mathematically RMSNorm; the rounding (and the BF16 of W x w)
+# differ from the unfolded order, which the scalar core and the tensor-group
+# path keep.
+NORM_FOLD = SU_WIDTH > 1
+
+
+def fold_cols(wmat, w):
+    return to_bf16(mul(np.asarray(wmat, dtype=F), np.asarray(w, dtype=F)[None, :]))
+
+
 def rmsnorm(x, w, eps):
-    r = rsqrt(add(mul(reduce_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
+    r = rsqrt(add(mul(lane_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
     return mul(mul(x, r), w)
 
 
@@ -193,7 +317,18 @@ def rope(v, cos, sin, half):
 
 def softmax(s):
     e = exp(add(s, neg(np.max(s))))
-    return mul(e, reciprocal(reduce_sum(e)))
+    return mul(e, reciprocal(lane_sum(e)))
+
+
+def attend(scores, vals, s_pv):
+    """One head's attention after its scores: the row max, e = exp(s - max)
+    and its sum Z, the weighted sum of V by the UNNORMALISED e (BF16-rounded,
+    K-split over positions), then one scale by 1/Z of the head's HD outputs
+    (normalise-after-sum, as flash attention does): the stream unit makes one
+    pass over the scores instead of two, and 1/Z is formed beside the
+    weighted sum instead of before it."""
+    e = exp(add(scores, neg(np.max(scores))))
+    return mul(matvec_il(vals.T, to_bf16(e), s_pv), reciprocal(lane_sum(e)))
 
 
 def silu(g):
@@ -229,6 +364,20 @@ class Model:
 
     def lw(self, layer, name):
         return self.w[f"model.layers.{layer}.{name}"]
+
+    def folded(self, layer, part):
+        """The projections of `part` ('attn': q, k, v; 'mlp': gate, up) with the
+        preceding RMSNorm weight folded into their columns (NORM_FOLD)."""
+        cache = self.__dict__.setdefault("_folded", {})
+        if (layer, part) not in cache:
+            if part == "attn":
+                w = self.lw(layer, "input_layernorm.weight")
+                names = ("self_attn.q_proj.weight", "self_attn.k_proj.weight", "self_attn.v_proj.weight")
+            else:
+                w = self.lw(layer, "post_attention_layernorm.weight")
+                names = ("mlp.gate_proj.weight", "mlp.up_proj.weight")
+            cache[(layer, part)] = [fold_cols(self.lw(layer, n), w) for n in names]
+        return cache[(layer, part)]
 
     def split(self, *mats):
         """K-split of the fused matrix formed by stacking `mats` row-wise."""
@@ -308,6 +457,7 @@ class Model:
             cache[L].append((np.stack([kv_new[g][0] for g in range(self.kv_heads)]),
                              np.stack([kv_new[g][1] for g in range(self.kv_heads)])))
             scale = F(1.0 / np.sqrt(hd))
+            s_sc, s_pv = attn_splits(hd, self.groups)
             partial = []
             for d, q in parts:
                 s = sl[d]
@@ -316,8 +466,8 @@ class Model:
                     g = hh // group
                     keys = np.stack([kv[0][g] for kv in cache[L]])
                     vals = np.stack([kv[1][g] for kv in cache[L]])
-                    sc = mul(matvec_fp32(keys, to_bf16(q[i])), scale)
-                    attn[i] = matvec_fp32(vals.T, to_bf16(softmax(sc)))
+                    sc = mul(matvec_il(keys, to_bf16(q[i]), s_sc), scale)
+                    attn[i] = attend(sc, vals, s_pv)
                 partial.append(self.mv(attn.reshape(-1), ow[:, s["q_rows"]])[0])
             x = add(x, fold(partial))
             h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
@@ -347,9 +497,13 @@ class Model:
         cos, sin, half = rope_tables(position, self.hd, self.theta)
         group = self.heads // self.kv_heads
         for L in range(self.layers):
-            h = rmsnorm(x, self.lw(L, "input_layernorm.weight"), self.eps)
-            q, k, v = self.mv(h, self.lw(L, "self_attn.q_proj.weight"), self.lw(L, "self_attn.k_proj.weight"),
-                              self.lw(L, "self_attn.v_proj.weight"))
+            if NORM_FOLD:
+                r = rstd(x, self.eps)
+                q, k, v = (mul(t, r) for t in self.mv(x, *self.folded(L, "attn")))
+            else:
+                h = rmsnorm(x, self.lw(L, "input_layernorm.weight"), self.eps)
+                q, k, v = self.mv(h, self.lw(L, "self_attn.q_proj.weight"), self.lw(L, "self_attn.k_proj.weight"),
+                                  self.lw(L, "self_attn.v_proj.weight"))
             q, k, v = q.reshape(self.heads, self.hd), k.reshape(self.kv_heads, self.hd), v.reshape(self.kv_heads, self.hd)
             qn, kn = self.lw(L, "self_attn.q_norm.weight"), self.lw(L, "self_attn.k_norm.weight")
             q = np.stack([rope(rmsnorm(q[i], qn, self.eps), cos, sin, half) for i in range(self.heads)])
@@ -357,18 +511,23 @@ class Model:
             # KV cache in BF16; q and the probabilities are BF16-rounded before
             # their products, so every attention product is an exact BF16 x BF16
             # product any lane can form
-            cache[L].append((to_bf16(k), to_bf16(v)))
+            cache[L].append((kv_round(k), kv_round(v)))
             attn = np.zeros((self.heads, self.hd), dtype=F)
             scale = F(1.0 / np.sqrt(self.hd))  # 0.25: exact
+            s_sc, s_pv = attn_splits(self.hd, self.groups)
             for hh in range(self.heads):
                 g = hh // group
                 keys = np.stack([kv[0][g] for kv in cache[L]])       # [T, hd]
                 vals = np.stack([kv[1][g] for kv in cache[L]])
-                s = mul(matvec_fp32(keys, to_bf16(q[hh])), scale)    # sequential over head dim
-                attn[hh] = matvec_fp32(vals.T, to_bf16(softmax(s)))  # sequential over positions
+                s = mul(matvec_il(keys, to_bf16(q[hh]), s_sc), scale)       # head dim, interleaved K-split
+                attn[hh] = attend(s, vals, s_pv)     # one-pass softmax, normalised after P.V
             x = add(x, self.mv(attn.reshape(-1), self.lw(L, "self_attn.o_proj.weight"))[0])
-            h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
-            gate, up = self.mv(h, self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight"))
+            if NORM_FOLD:
+                r = rstd(x, self.eps)
+                gate, up = (mul(t, r) for t in self.mv(x, *self.folded(L, "mlp")))
+            else:
+                h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
+                gate, up = self.mv(h, self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight"))
             a = mul(silu(gate), up)
             x = add(x, self.mv(a, self.lw(L, "mlp.down_proj.weight"))[0])
             if trace is not None:

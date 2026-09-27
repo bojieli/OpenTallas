@@ -46,6 +46,12 @@ import re
 import subprocess
 import sys
 import tempfile
+
+# This campaign's benches build the core with the scalar stream unit (SU_VEC 0):
+# its images, golden and programs take that unit's reduction order and
+# element-granular chaining (tools/hdc_golden.py SU_WIDTH); child processes
+# inherit it.
+os.environ.setdefault("HDC_SU_WIDTH", "1")
 from pathlib import Path
 
 import numpy as np

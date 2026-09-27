@@ -37,3 +37,13 @@ def test_golden_reproduces_the_torch_oracle_tokens():
         tok = int(np.argmax(model.decode_token(tok, len(prompt) - 1 + i, cache)))
         out.append(tok)
     assert out == expected
+
+
+def test_fp8_kv_rounding_is_e4m3_nearest_even_saturating():
+    f = lambda v: float(G.to_fp8(np.float32(v)))                               # noqa: E731
+    assert f(1.0 + 2 ** -4) == 1.0 and f(1.0 + 3 * 2 ** -4) == 1.0 + 2 ** -2     # tie -> even
+    assert f(448.0) == 448.0 and f(1e9) == 448.0 and f(-500.0) == -448.0         # saturating
+    assert f(2 ** -9) == 2 ** -9 and f(2 ** -10) == 0.0 and f(1.5 * 2 ** -9) == 2 ** -8  # subnormals
+    assert np.signbit(G.to_fp8(np.float32(-2 ** -12))) == False                  # noqa: E712  canonical +0
+    x = np.random.default_rng(0).standard_normal(4096).astype(np.float32)
+    assert np.array_equal(G.to_bf16(G.to_fp8(x)), G.to_fp8(x))                  # every E4M3 value is a BF16 value

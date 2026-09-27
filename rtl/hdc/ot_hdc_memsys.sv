@@ -15,7 +15,8 @@
 //                                G replicas x 2 x ot_sram_1r1w_1024x256_m2_r2c2
 //                                (one replica per read port; every write goes to all
 //                                replicas; read-before-write; spare rows/columns)
-//   vector memory 4,096 x 32, G+3 read and G+2 write ports per cycle
+//   vector memory 4,096 x 32, G+3 read and G+3 write ports per cycle (the last:
+//                                the engine's attention row maxima, me_rmax)
 //                                a standard-cell register file (below):
 //                                measured on the campaign it has up to 7 reads and
 //                                4 writes in one cycle and 128 same-bank write pairs
@@ -108,6 +109,11 @@ module ot_hdc_memsys #(
     input  wire              vw_rd_we,
     input  wire [AW-1:0]     vw_rd_addr,
     input  wire [31:0]       vw_rd_data,
+    // the engine's attention row maxima (me_rmax): one W-element word, lane-masked
+    input  wire              vw_mx_we,
+    input  wire [AW-1:0]     vw_mx_addr,
+    input  wire [W-1:0]      vw_mx_mask,
+    input  wire [W*32-1:0]   vw_mx_data,
     // test / debug access
     input  wire              tst_kv_en,
     input  wire              tst_kv_we,
@@ -291,6 +297,9 @@ module ot_hdc_memsys #(
                     if (vw_me_mask[g*W + l]) vm[{vw_me_addr[g*AW +: 8], 4'b0} + l] <= vw_me_data[32*(g*W + l) +: 32];
         if (vw_su_we) vm[vw_su_addr[11:0]] <= vw_su_data;
         if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
+        if (vw_mx_we)
+            for (l = 0; l < W; l = l + 1)
+                if (vw_mx_mask[l]) vm[{vw_mx_addr[7:0], 4'b0} + l] <= vw_mx_data[32*l +: 32];
     end
     assign tst_vm_q = vm[tst_vm_addr];
 

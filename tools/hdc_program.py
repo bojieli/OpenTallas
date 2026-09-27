@@ -30,7 +30,7 @@ W, IL, TMAX, GR = I.W_LANES, I.INTERLEAVE, I.T_MAX, I.GROUPS
 
 # -- vector memory map (FP32 elements) ------------------------------------------
 VM = dict(X=0, H=128, QKV=256, QN=448, QR=608, SS=736, RS=752, SSX=768, RX=769,
-          M=784, Z=800, RZ=816, S=1024, ATT=1536, T1=1664, GU=1792, E1=2560,
+          M=784, Z=800, RZ=816, S=1024, ATT=1536, T1=1664, GU=1792, ATTN=2560,
           U=2944, ACT=3328)
 S_STRIDE = TMAX        # elements per head in S
 
@@ -52,6 +52,7 @@ class Layout:
 
     def __init__(self, model, tp=1, die=0):
         self.m = model
+        self.groups = GR
         self.tp, self.die = tp, die
         c = model.cfg
         self.H, self.L = c["hidden_size"], c["num_hidden_layers"]
@@ -78,6 +79,9 @@ class Layout:
             qw, kw, vw = lw("self_attn.q_proj.weight"), lw("self_attn.k_proj.weight"), lw("self_attn.v_proj.weight")
             ow, dw = lw("self_attn.o_proj.weight"), lw("mlp.down_proj.weight")
             gate, up = lw("mlp.gate_proj.weight"), lw("mlp.up_proj.weight")
+            if G.NORM_FOLD and tp == 1:
+                qw, kw, vw = model.folded(L, "attn")
+                gate, up = model.folded(L, "mlp")
             if tp > 1:
                 # column split: the die's heads / FFN rows; row split: its input columns
                 qw, kw, vw = qw[sl["q_rows"]], kw[sl["kv_rows"]], vw[sl["kv_rows"]]
@@ -113,6 +117,9 @@ class Layout:
             self.cb[(L, "qk")] = self.put_const(qk)
             self.cb[(L, "post")] = self.put_const(model.lw(L, "post_attention_layernorm.weight"))
         self.cb["final"] = self.put_const(model.w["model.norm.weight"])
+        # (0, 1/sqrt(head_dim)): the exp pass subtracts M x scale through Q = C x (-B.hi)
+        self.cb["qscale"] = len(self.crom)
+        self.crom.append((F(0), F(1.0 / np.sqrt(self.HD))))
         self.cb["rope"] = len(self.crom)
         for pos in range(TMAX):
             cos, sin, _ = G.rope_tables(pos, self.HD, model.theta)
@@ -235,6 +242,11 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
     # The sum of squares of x is reduced by the op that produced x (red_sq).
     sq = dict(red=I.RED_SUM, red_sq=1, r_base=VM["SSX"])
 
+    def rsqrt_rx(n):
+        su(su_nout=1, su_nin=1, a_base=VM["SSX"], ma=I.MA_AIMM, imm1=f32(1.0 / n), ad=I.AD_IMM,
+           imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RX"],
+           reads={"SSX"}, writes={"RX"})
+
     def rmsnorm(src, n, wbase, dst):
         su(su_nout=1, su_nin=1, a_base=VM["SSX"], ma=I.MA_AIMM, imm1=f32(1.0 / n), ad=I.AD_IMM,
            imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RX"],
@@ -245,6 +257,10 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
 
     H, HD, NH, KV, half = lay.H, lay.HD, lay.NH, lay.KV, lay.half
     group = NH // KV
+    # the vector stream unit reads an embedding vector from ONE weight-ROM
+    # word: rows start on a vector boundary and a vector fits a word
+    assert I.SU_WIDTH == 1 or (H % I.SU_WIDTH == 0 and (W * lay.groups) % I.SU_WIDTH == 0), \
+        "embedding vectors must not straddle a weight-ROM word"
     if isinstance(head, tuple) and head[0] > 0:
         pass
     elif not embed:
@@ -257,22 +273,35 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
         # an item is a layer, or (layer, "attn" | "mlp") for half a layer per package
         L, part = item if isinstance(item, tuple) else (item, "both")
         if part in ("both", "attn"):
-            rmsnorm("X", H, lay.cb[(L, "in")], "H")
-            me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
+            nh = NH + KV
+            fold = G.NORM_FOLD and lay.tp == 1
+            if fold:
+                # the norm weight is in the projection; 1/rms (RX) is formed beside it
+                me(lay.mat[(L, "qkv")], VM["X"], VM["QKV"], reads={"X"}, writes={"QKVqk", "QKVv"})
+                rsqrt_rx(H)
+            else:
+                rmsnorm("X", H, lay.cb[(L, "in")], "H")
+                me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKVqk", "QKVv"})
+            rx = dict(ma=I.MA_AB, b_base=VM["RX"]) if fold else {}
             # V row straight to the cache: independent of the head norms
             su(su_nout=KV, su_nin=HD, a_base=VM["QKV"] + (NH + KV) * HD, a_so=HD, a_si=1,
                dst=I.DST_KV, d_base=lay.v_elem(L, 0, 0, 0), d_d=I.DYN_VWRITE,
                d_so=lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0), d_si=1,
-               reads={"QKV"}, writes={f"V{L}"})
-            nh = NH + KV
-            su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
-               r_base=VM["SS"], r_so=1, reads={"QKV"}, red_writes={"SS"})
+               reads={"QKVv"} | ({"RX"} if fold else set()), writes={f"V{L}"}, **rx)
+            if fold:
+                # q, k x r in place, their sums of squares on the way (red_sq)
+                su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RX"],
+                   dst=I.DST_VM, d_base=VM["QKV"], d_so=HD, d_si=1, red=I.RED_SUM, red_sq=1,
+                   r_base=VM["SS"], r_so=1, reads={"QKVqk", "RX"}, writes={"QKVqk"}, red_writes={"SS"})
+            else:
+                su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
+                   r_base=VM["SS"], r_so=1, reads={"QKVqk"}, red_writes={"SS"})
             su(su_nout=1, su_nin=nh, a_base=VM["SS"], a_si=1, ma=I.MA_AIMM, imm1=f32(1.0 / HD),
                ad=I.AD_IMM, imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RS"], d_si=1,
                reads={"SS"}, writes={"RS"})
             su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RS"],
                b_so=1, c_src=I.SRC_ALT, c_base=lay.cb[(L, "qk")], c_so=HD, c_si=1, mc=I.MC_C,
-               dst=I.DST_VM, d_base=VM["QN"], d_so=HD, d_si=1, reads={"QKV", "RS"}, writes={"QN"})
+               dst=I.DST_VM, d_base=VM["QN"], d_so=HD, d_si=1, reads={"QKVqk", "RS"}, writes={"QN"})
             rope = dict(b_src=I.SRC_ALT, b_base=lay.cb["rope"], b_d=I.DYN_ROPE, b_si=1, ma=I.MA_AB,
                         ad=I.AD_Q, a_so=HD, a_si=1, c_so=HD, c_si=1, su_nin=half)
             for lo in (True, False):
@@ -295,46 +324,89 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
             heads = {f"S{h}" for h in range(NH)}
             # scores[h, t] = sum_d K[g(h), t, d] q[h, d]: lanes t, slots h, k = d
             # (IL heads per op: one head per slot, a batch of whole KV groups)
+            # K-split interleaved over head_dim (hdc_golden.attn_splits): chunk c
+            # of s_sc takes d = c, c + s_sc, ...; group q*s_sc + c, position tile
+            # r*(G/s_sc) + q
+            s_sc, s_pv = G.attn_splits(HD, lay.groups)
             for hb in range(0, NH, IL):
                 nb = min(IL, NH - hb)
                 me(dict(n=0, tiles=0, k=HD, base=(lay.k_elem(L, hb // group, 0, 0)) // W), VM["QR"] + hb * HD,
-                   VM["S"] + hb * S_STRIDE, rnd=True, me_xcs=0,
-                   me_wsrc=1, me_ts=HD, me_ks=1, me_js=kjs,
-                   me_jsh=jsh, me_xks=1, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
+                   VM["S"] + hb * S_STRIDE, rnd=True, me_xcs=1, me_wcs=1, me_split=s_sc.bit_length() - 1,
+                   me_wsrc=1, me_ts=HD, me_ks=s_sc, me_js=kjs,
+                   me_jsh=jsh, me_xks=s_sc, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
                    me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES,
-                   reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes={f"S{h}" for h in range(hb, hb + nb)})
+                   **(dict(me_rmax=1, me_mbase=VM["M"] + hb) if I.RMAX else {}),
+                   reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"},
+                   writes={f"S{h}" for h in range(hb, hb + nb)} | ({f"M{hb}"} if I.RMAX else set()))
             sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
                       d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)
-            su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
-               reads=heads, writes=heads, red_writes={"M"}, **sm)
-            su(b_base=VM["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"],
-               r_so=1, reads=heads | {"M"}, writes=heads, red_writes={"Z"}, **sm)
-            su(su_nout=1, su_nin=NH, a_base=VM["Z"], a_si=1, sfu=I.SFU_RECIP, dst=I.DST_VM,
-               d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
-            su(ma=I.MA_AB, b_base=VM["RZ"], b_so=1, reads=heads | {"RZ"}, writes=heads, **sm)
-            # attn[h, d] = sum_t V[g(h), t, d] p[h, t]: lanes d, slots h, k = t
+            if I.RMAX:
+                # the row max came with the scores (me_rmax, unscaled): e = exp(s*scale - M*scale),
+                # scale > 0 so max(s)*scale is the max of the scaled scores exactly
+                su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), mb=I.MB_NEG, b_src=I.SRC_ALT, b_base=lay.cb["qscale"],
+                   c_base=VM["M"], c_so=1, ad=I.AD_Q, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"], r_so=1,
+                   reads=heads | {f"M{hb}" for hb in range(0, NH, IL)}, writes=heads, red_writes={"Z"}, **sm)
+            else:
+                su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
+                   reads=heads, writes=heads, red_writes={"M"}, **sm)
+                su(b_base=VM["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"],
+                   r_so=1, reads=heads | {"M"}, writes=heads, red_writes={"Z"}, **sm)
+            # (normalise-after-sum: the weighted sum takes the unnormalised
+            # exp; hdc_golden.attend)
+            # attn[h, d] = sum_t V[g(h), t, d] e[h, t]: lanes d, slots h, k = t
+            # K-split interleaved over positions: chunk c of s_pv takes t = c,
+            # c + s_pv, ... (< T; the tail multiplies +0); group q*s_pv + c,
+            # head_dim tile q
+            qt = max(1, HD // W)
             for hb in range(0, NH, IL):
                 nb = min(IL, NH - hb)
-                me(dict(n=HD, tiles=-(-HD // (W * GR)), k=0, base=lay.v_elem(L, hb // group, 0, 0) // W),
+                me(dict(n=HD, tiles=-(-qt // max(1, lay.groups // s_pv)), k=0,
+                        base=lay.v_elem(L, hb // group, 0, 0) // W),
                    VM["S"] + hb * S_STRIDE, VM["ATT"] + hb * HD,
-                   rnd=True, me_xcs=0, me_wsrc=1, me_ts=1, me_ks=max(1, HD // W),
-                   me_js=vjs, me_jsh=jsh, me_xks=1,
+                   rnd=True, me_xcs=1, me_wcs=qt, me_split=s_pv.bit_length() - 1,
+                   me_wsrc=1, me_ts=1, me_ks=qt * s_pv,
+                   me_js=vjs, me_jsh=jsh, me_xks=s_pv,
                    me_xjs=S_STRIDE, me_ots=1, me_ojs=max(1, HD // W), me_mmode=1, me_d_k=I.DYN_T,
-                   reads={f"S{h}" for h in range(hb, hb + nb)} | {f"V{L}"}, writes={"ATT"})
-            me(lay.mat[(L, "o")], VM["ATT"], VM["T1"], reads={"ATT"}, writes={"T1"})
+                   reads={f"S{h}" for h in range(hb, hb + nb)} | {f"V{L}"}, writes={f"ATT{hb}"})
+            # each head batch writes its own slice of ATT: no false dependency
+            # between the weighted-sum ops; the o projection reads them all
+            # 1/Z on the stream unit while the engine runs the weighted sums
+            su(su_nout=1, su_nin=NH, a_base=VM["Z"], a_si=1, sfu=I.SFU_RECIP, dst=I.DST_VM,
+               d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
+            # attn[h, :] x 1/Z[h] -> ATTN, the o projection's input
+            su(su_nout=NH, su_nin=HD, a_base=VM["ATT"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RZ"], b_so=1,
+               dst=I.DST_VM, d_base=VM["ATTN"], d_so=HD, d_si=1,
+               reads={f"ATT{hb}" for hb in range(0, NH, IL)} | {"RZ"}, writes={"ATTN"})
+            me(lay.mat[(L, "o")], VM["ATTN"], VM["T1"], reads={"ATTN"}, writes={"T1"})
             coll(COLL_ALLREDUCE, "T1")
             su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
                dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
         if part in ("both", "mlp"):
-            rmsnorm("X", H, lay.cb[(L, "post")], "H")
-            me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(lay.FF // lay.GUB)})
             FF = lay.FF
             tb = lay.GUB
-            for r in range(FF // tb):                           # one fused SiLU*up op per tile pair
-                g0 = VM["GU"] + 2 * tb * r
-                su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,
-                   c_base=g0, c_si=1, mc=I.MC_C, b_base=g0 + tb, b_si=1, md=I.MD_B, dst=I.DST_VM,
-                   d_base=VM["ACT"] + tb * r, d_si=1, reads={f"GU{r}"}, writes={f"ACT{r}"})
+            if G.NORM_FOLD and lay.tp == 1:
+                me(lay.mat[(L, "gu")], VM["X"], VM["GU"], reads={"X"}, writes={"GUall"})
+                rsqrt_rx(H)
+                # gate/up x r in place (one pass, chasing the projection), then SiLU per tile
+                su(su_nout=1, su_nin=2 * FF, a_base=VM["GU"], a_si=1, ma=I.MA_AB, b_base=VM["RX"],
+                   dst=I.DST_VM, d_base=VM["GU"], d_si=1, reads={"GUall", "RX"},
+                   writes={f"GU{r}" for r in range(FF // tb)})
+            else:
+                rmsnorm("X", H, lay.cb[(L, "post")], "H")
+                me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(FF // tb)})
+            if G.NORM_FOLD and lay.tp == 1:
+                # one fused SiLU*up op over every tile pair (a row per tile): the
+                # scaled gate/up are all written before it starts
+                su(su_nout=FF // tb, su_nin=tb, a_base=VM["GU"], a_so=2 * tb, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0),
+                   sfu=I.SFU_SIGM, c_base=VM["GU"], c_so=2 * tb, c_si=1, mc=I.MC_C, b_base=VM["GU"] + tb,
+                   b_so=2 * tb, b_si=1, md=I.MD_B, dst=I.DST_VM, d_base=VM["ACT"], d_so=tb, d_si=1,
+                   reads={f"GU{r}" for r in range(FF // tb)}, writes={f"ACT{r}" for r in range(FF // tb)})
+            else:
+                for r in range(FF // tb):                       # one fused SiLU*up op per tile pair
+                    g0 = VM["GU"] + 2 * tb * r
+                    su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,
+                       c_base=g0, c_si=1, mc=I.MC_C, b_base=g0 + tb, b_si=1, md=I.MD_B, dst=I.DST_VM,
+                       d_base=VM["ACT"] + tb * r, d_si=1, reads={f"GU{r}"}, writes={f"ACT{r}"})
             me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={f"ACT{r}" for r in range(lay.FF // lay.GUB)},
                writes={"T1"})
             coll(COLL_ALLREDUCE, "T1")
@@ -358,35 +430,51 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
     # emission order; matrix engine: result slots, in round/slot order).
     # chase_n is derived from the producer's write order and the consumer's
     # read order so that no read can overtake its write:
-    #   * engine reading stream output: x element at producer position p is
-    #     read no sooner than 8*k' cycles after start, the stream writes one
-    #     element per cycle, so chase_n >= p - 8*k' + 1 for every read;
+    #   * engine reading stream output: x element written by the producer's
+    #     vector p (su_write_order) is read no sooner than 8*k' cycles after
+    #     start, the stream writes one vector per cycle, so
+    #     chase_n >= p - 8*k' + 1 for every read (progress counts vectors);
     #   * stream reading engine output: chase_n = the last result slot any of
     #     its reads needs.
     # Each unit retires in order, so once the latest op has written anything,
     # every older op of that unit has written all its main output: reads of
     # those need only chase_n >= 1.  Reads of reducer outputs or of the same
     # unit's in-flight writes are never chased.
-    out, rd, wr = [], set(), set()
+    # PER-UNIT WAITS.  In-flight reads and writes are tracked per unit; an op
+    # that cannot chase waits only for the unit(s) whose in-flight ops it
+    # conflicts with (wait_me / wait_su), both being the old barrier.
+    U = (I.UNIT_ME, I.UNIT_SU)
+    out = []
+    rdu = {u: set() for u in U}
+    wru = {u: set() for u in U}
     last = {I.UNIT_ME: None, I.UNIT_SU: None}
     main = {I.UNIT_ME: set(), I.UNIT_SU: set()}      # in-flight main writes per unit
     for f, reads, writes in prog:
         assert all(isinstance(r, str) for r in reads | writes), (reads, writes)
+        rd = rdu[I.UNIT_ME] | rdu[I.UNIT_SU]
+        wr = wru[I.UNIT_ME] | wru[I.UNIT_SU]
         conflict = (reads & wr) | (writes & (rd | wr))
         other = I.UNIT_SU if f["unit"] == I.UNIT_ME else I.UNIT_ME
         prod = last.get(other)
         chase_n = None
         if (conflict and prod is not None and f["unit"] != I.UNIT_END and not (writes & (rd | wr))
                 and conflict <= main[other]):
-            chase_n = chase_threshold(f, prod[0])
+            chase_n = chase_threshold(f, prod[0], lay.groups)
         if chase_n is not None:
             f["chase"], f["chase_n"] = 1, chase_n
         elif conflict or f.get("barrier"):
-            f["barrier"] = 1
-            rd, wr = set(), set()
-            main = {I.UNIT_ME: set(), I.UNIT_SU: set()}
-        rd |= reads
-        wr |= writes
+            waits = set(U) if (f.get("barrier") or f["unit"] == I.UNIT_END) else \
+                {u for u in U if (reads & wru[u]) or (writes & (rdu[u] | wru[u]))}
+            if waits == set(U):
+                f["barrier"] = 1
+            else:
+                f["wait_me"] = int(I.UNIT_ME in waits)
+                f["wait_su"] = int(I.UNIT_SU in waits)
+            for u in waits:
+                rdu[u], wru[u], main[u] = set(), set(), set()
+        if f["unit"] in last:
+            rdu[f["unit"]] |= reads
+            wru[f["unit"]] |= writes
         out.append(f)
         if f["unit"] in last:
             red = set(f.get("_red_regions", ()))
@@ -401,18 +489,23 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
 
 
 def su_write_order(f):
-    """Destination element addresses of a stream op, in emission order."""
+    """Destination element address -> the VECTOR (0-based, in emission order)
+    that writes it: the stream unit emits SU_WIDTH elements of one outer
+    iteration a cycle, element (o, i) in vector o * ceil(nin / SW) + i // SW."""
     if f.get("dst", 0) != I.DST_VM:
         return {}
+    sw = I.SU_WIDTH
+    nvec = -(-f["su_nin"] // sw)
     o, i = np.meshgrid(np.arange(f["su_nout"]), np.arange(f["su_nin"]), indexing="ij")
     addr = (f["d_base"] + o * f.get("d_so", 0) + i * f.get("d_si", 0)).reshape(-1)
-    return {int(a): n for n, a in enumerate(addr)}
+    vec = (o * nvec + i // sw).reshape(-1)
+    return {int(a): int(n) for a, n in zip(addr, vec)}
 
 
-def me_write_slots(f):
+def me_write_slots(f, groups=GR):
     """Vector-memory element -> result slot (1-based) of a ROM matrix-vector op."""
     split = f.get("me_split", 0)
-    per_round = GR >> split
+    per_round = groups >> split
     slots = {}
     for r in range(f["me_tiles"]):
         for j in range(IL):
@@ -425,8 +518,18 @@ def me_write_slots(f):
     return slots
 
 
-def chase_threshold(f, prod):
+def chase_threshold(f, prod, groups=GR):
     """chase_n for consumer `f` of producer `prod` (other unit), or None."""
+    if (f["unit"] == I.UNIT_ME and prod["unit"] == I.UNIT_SU and f.get("me_wsrc") and I.SU_WIDTH > 1
+            and prod.get("dst", 0) == I.DST_VM and prod.get("d_so", 0) > 0 and prod.get("d_si", 0) == 1):
+        # a KV op reading rows of a stream op's output (P.V of the exp pass): the
+        # rows its slots read must be complete -- slot j reads from x base + j*xjs
+        # on, within one producer row (xjs = the row stride)
+        rows = [(f["me_xbase"] + j * f.get("me_xjs", 0) - prod["d_base"]) // prod["d_so"] for j in range(IL)]
+        if min(rows) < 0 or max(rows) >= prod["su_nout"] or f.get("me_xjs", 0) != prod["d_so"]:
+            return None
+        f["chase_rows"] = 1
+        return max(rows) + 1
     if f["unit"] == I.UNIT_ME and prod["unit"] == I.UNIT_SU:
         if f.get("me_wsrc") or f.get("me_xjs") or f.get("me_d_k") or f.get("me_xks", 1) != 1:
             return None
@@ -441,9 +544,8 @@ def chase_threshold(f, prod):
     if f["unit"] == I.UNIT_SU and prod["unit"] == I.UNIT_ME:
         if prod.get("me_wsrc") or f.get("su_d_nin"):
             return None
-        slots = me_write_slots(prod)
-        # elements an earlier chunk of the same op wrote are complete once the
-        # latest chunk has written anything
+        slots = me_write_slots(prod, groups)
+        # A previous chunk of this op has already completed its written slots.
         slots.update({a: 1 for a in prod.get("_prev_slots", ()) if a not in slots})
         need = 0
         for s_ in "abc":
@@ -476,6 +578,7 @@ class Machine:
         return G.from_bits(self.wrom[elems].astype(np.uint32) << 16)
 
     def run(self, prog, token, pos):
+        self.pos = pos
         dyn = dyn_values(self.lay, token, pos)
         for f in prog:
             f = {name: f.get(name, 0) for name, _ in I.FIELDS}
@@ -492,9 +595,14 @@ class Machine:
         wb = f["me_wbase"] + dyn[f["me_d_wbase"]]
         xb = f["me_xbase"] + dyn[f["me_d_xbase"]]
         ob = f["me_obase"] + dyn[f["me_d_obase"]]
-        split = 0 if f["me_wsrc"] else f["me_split"]
+        split = f["me_split"]
         S = 1 << split
         per_round = GR // S
+        wsrc = f["me_wsrc"]
+        if wsrc and f["me_d_tiles"] == I.DYN_TTILES:
+            # rounds of G/S position tiles
+            tiles = f["me_tiles"] + (self.pos >> ((W * GR).bit_length() - 1 - split)) + 1
+        kc = -(-K // S) if wsrc else K          # KV ops: me_k is the whole K, cut interleaved
         r, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(per_round), np.arange(IL),
                                                          np.arange(W), indexing="ij"))
         t = r * per_round + q
@@ -505,10 +613,11 @@ class Machine:
         for c in range(S):
             g = q * S + c
             acc = np.zeros(len(t), dtype=F)
-            for k in range(K):
-                if f["me_wsrc"]:
-                    # KV ops: every group reads its own tile's word
-                    word = wb + t * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
+            for k in range(kc):
+                if wsrc:
+                    if k * S + c >= K:              # past K: the element multiplies +0
+                        continue
+                    word = wb + t * f["me_ts"] + c * f["me_wcs"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
                     w = self.kv[word * W + l]
                 else:
                     word = wb + r * f["me_ts"] + k * f["me_ks"] + (j >> f["me_jsh"]) * f["me_js"]
@@ -523,6 +632,11 @@ class Machine:
         acc = parts[0]
         if f["me_oen"]:
             self.vm[(ob + t * f["me_ots"] + j * f["me_ojs"]) * W + l] = acc
+        if f["me_rmax"]:
+            for jj in range(IL):
+                sel = acc[j == jj]
+                if len(sel):
+                    self.vm[f["me_mbase"] + jj] = F(np.max(sel))
         if f["me_amax"]:
             order = np.argsort(nidx)
             # a continuation chunk (me_amc) extends the previous chunks' rows;
@@ -564,7 +678,7 @@ class Machine:
         out = np.asarray(out, dtype=F).reshape(-1)
         if f["red"]:
             seg = (G.mul(out, out) if f["red_sq"] else out).reshape(n_out, n_in)
-            vals = [G.reduce_sum(v) if f["red"] == I.RED_SUM else np.max(v) for v in seg]
+            vals = [G.lane_sum(v) if f["red"] == I.RED_SUM else np.max(v) for v in seg]
             for o, v in enumerate(vals):
                 self.vm[f["r_base"] + o * f["r_so"]] = v
         if f["dst"]:
@@ -572,7 +686,7 @@ class Machine:
             if f["dst"] == I.DST_VM:
                 self.vm[ed] = out
             else:
-                self.kv[ed] = G.to_bf16(out)          # the KV cache holds BF16
+                self.kv[ed] = G.kv_round(out)         # the KV cache holds BF16 or FP8 E4M3 (G.KV_FMT)
 
 
 # -- HBM weight image (rtl/hdc/hbm/ot_hdc_wstream.sv) ------------------------------------

@@ -17,7 +17,10 @@
 // the core starts later in simulation time; the core's own cycle count is what
 // is reported and compared.
 module tb_hdc_core #(
-    parameter integer G = 4                  // matrix-engine lane groups (tools/hdc_isa.py GROUPS)
+    parameter integer G = 4,                 // matrix-engine lane groups (tools/hdc_isa.py GROUPS)
+    parameter integer SU_VEC = 1,            // the vector stream unit (0: the scalar one, SW = 1)
+    parameter integer SW = 8,                // stream-unit lanes (tools/hdc_isa.py SU_WIDTH)
+    parameter integer KV_BRIDGE = 0          // mirror vector writes through packed sector/tail bridge
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
@@ -48,11 +51,13 @@ module tb_hdc_core #(
 `ifndef OT_HDC_MEMSYS
     wire prog_re; wire [PAW-1:0] prog_addr; reg [INSTR_BITS-1:0] prog_q;
     wire wrom_re; wire [AW-1:0] wrom_addr; reg [G*W*16-1:0] wrom_q;
-    wire crom_re; wire [AW-1:0] crom_addr; reg [63:0] crom_q;
-    wire kv_re, kv_we; wire [G*AW-1:0] kv_raddr; wire [AW-1:0] kv_waddr; reg [G*W*32-1:0] kv_q; wire [31:0] kv_wdata;
-    wire va_re, vb_re, vc_re; wire [AW-1:0] va_addr, vb_addr, vc_addr;
+    wire [SW-1:0] crom_re; wire [SW*AW-1:0] crom_addr; reg [SW*64-1:0] crom_q;
+    wire kv_re; wire [SW-1:0] kv_we; wire [G*AW-1:0] kv_raddr; wire [SW*AW-1:0] kv_waddr; reg [G*W*32-1:0] kv_q;
+    wire [SW*32-1:0] kv_wdata;
+    wire kv_write_flush;
+    wire [SW-1:0] va_re, vb_re, vc_re; wire [SW*AW-1:0] va_addr, vb_addr, vc_addr;
     wire [G-1:0] vx_re; wire [G*AW-1:0] vx_addr; reg [G*32-1:0] vx_q;
-    reg [31:0] va_q, vb_q, vc_q;
+    reg [SW*32-1:0] va_q, vb_q, vc_q;
 `else
     wire prog_re; wire [PAW-1:0] prog_addr; wire [INSTR_BITS-1:0] prog_q;
     wire wrom_re; wire [AW-1:0] wrom_addr; wire [G*W*16-1:0] wrom_q;
@@ -80,12 +85,15 @@ module tb_hdc_core #(
         assign bist_exp_sig[32*gs +: 32] = exp_sig_mem[gs];
     end endgenerate
 `endif
-    wire vw_su_we, vw_rd_we; wire [AW-1:0] vw_su_addr, vw_rd_addr;
+    wire [SW-1:0] vw_su_we; wire vw_rd_we; wire [SW*AW-1:0] vw_su_addr; wire [AW-1:0] vw_rd_addr;
     wire [G-1:0] vw_me_we; wire [G*AW-1:0] vw_me_addr;
-    wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [31:0] vw_su_data, vw_rd_data;
+    wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [SW*32-1:0] vw_su_data; wire [31:0] vw_rd_data;
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
+    wire vw_mx_we; wire [AW-1:0] vw_mx_addr; wire [W-1:0] vw_mx_mask; wire [W*32-1:0] vw_mx_data;
+    wire bridge_drained, bridge_fault;
 
-    ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW)) dut (
+    ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(SU_VEC), .SW(SW),
+                  .KV_VEC_WRITE_BRIDGE(KV_BRIDGE)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
         .done(done), .next_token(next_token), .cycles(cycles), .fault(fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
@@ -93,6 +101,8 @@ module tb_hdc_core #(
         .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
         .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q),
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+        .kv_write_drained(bridge_drained),
+        .kv_write_flush(kv_write_flush),
         .vx_re(vx_re), .vx_addr(vx_addr), .vx_q(vx_q),
         .va_re(va_re), .va_addr(va_addr), .va_q(va_q),
         .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
@@ -100,7 +110,91 @@ module tb_hdc_core #(
         .vw_me_we(vw_me_we), .vw_me_addr(vw_me_addr), .vw_me_mask(vw_me_mask), .vw_me_data(vw_me_data),
         .vw_su_we(vw_su_we), .vw_su_addr(vw_su_addr), .vw_su_data(vw_su_data),
         .vw_rd_we(vw_rd_we), .vw_rd_addr(vw_rd_addr), .vw_rd_data(vw_rd_data),
-        .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata));
+        .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
+        .vw_mx_we(vw_mx_we), .vw_mx_addr(vw_mx_addr), .vw_mx_mask(vw_mx_mask), .vw_mx_data(vw_mx_data));
+
+`ifndef OT_HDC_MEMSYS
+    // Functional physical-write mirror for the vector token gate. The core's
+    // normal KV array supplies reads; the bridge independently captures every
+    // emitted write through FIFO, E4M3 encoding, tail banks and 32-byte RMW.
+    // The terminal check verifies that no core byte was lost under sector stalls.
+    localparam integer BV0 = KV_WORDS*W/2;
+    localparam integer BLOG_HD = 4, BLOG_TW = 2, BLG_SW = $clog2(SW);
+    reg [255:0] bridge_sector [0:KV_WORDS/2-1];
+    reg [127:0] bridge_bank [0:2*SW-1][0:255];
+    reg [7:0] bridge_expect [0:KV_WORDS*W-1];
+    reg bridge_written [0:KV_WORDS*W-1];
+    wire [SW*8-1:0] bridge_q;
+    wire [2*SW-1:0] bridge_tl_we;
+    wire [2*SW*AW-1:0] bridge_tl_row;
+    wire [2*SW*16-1:0] bridge_tl_mask;
+    wire [2*SW*128-1:0] bridge_tl_data;
+    wire bridge_mem_r_v, bridge_mem_w_v;
+    wire [AW-1:0] bridge_mem_r_sector, bridge_mem_w_sector;
+    wire [255:0] bridge_mem_w_data;
+    reg bridge_mem_r_resp_v;
+    reg [255:0] bridge_mem_r_resp_data;
+    integer bridge_i, bridge_j, bridge_b, bridge_r, bridge_a, bridge_bad;
+    initial begin
+        for (bridge_i=0;bridge_i<KV_WORDS/2;bridge_i=bridge_i+1) bridge_sector[bridge_i]=0;
+        for (bridge_i=0;bridge_i<2*SW;bridge_i=bridge_i+1)
+            for (bridge_j=0;bridge_j<256;bridge_j=bridge_j+1) bridge_bank[bridge_i][bridge_j]=0;
+        for (bridge_i=0;bridge_i<KV_WORDS*W;bridge_i=bridge_i+1) begin
+            bridge_written[bridge_i]=0; bridge_expect[bridge_i]=0;
+        end
+    end
+    generate if (KV_BRIDGE) begin : g_bridge
+        for (genvar v=0;v<SW;v=v+1) begin : g_q
+            ot_hdc_ingest_fp8q u_q (.f(kv_wdata[v*32 +: 32]), .q(bridge_q[v*8 +: 8]));
+        end
+        ot_hdc_qwen_kv_vector_bridge #(.SW(SW), .AW(AW), .LOG_HD(BLOG_HD),
+                                        .LOG_TW(BLOG_TW), .V0_ELEMENT(BV0),
+                                        .FIFO_BEATS(128)) u_bridge (
+            .clk(clk), .rst_n(rst_n), .core_we(kv_we), .core_addr(kv_waddr), .core_data(kv_wdata),
+            .drained(bridge_drained), .tl_we(bridge_tl_we), .tl_row(bridge_tl_row),
+            .tl_mask(bridge_tl_mask), .tl_data(bridge_tl_data),
+            .fl_v(1'b0), .fl_ready(), .fl_word_addr('0), .fl_word_data('0),
+            .flush(kv_write_flush),
+            .mem_r_v(bridge_mem_r_v), .mem_r_ready(1'b1),
+            .mem_r_sector(bridge_mem_r_sector), .mem_r_resp_v(bridge_mem_r_resp_v),
+            .mem_r_resp_data(bridge_mem_r_resp_data),
+            .mem_w_v(bridge_mem_w_v), .mem_w_ready(1'b1),
+            .mem_w_sector(bridge_mem_w_sector), .mem_w_data(bridge_mem_w_data),
+            .fault(bridge_fault));
+        always @(posedge clk) begin
+            bridge_mem_r_resp_v <= rst_n && bridge_mem_r_v;
+            if (bridge_mem_r_v) bridge_mem_r_resp_data <= bridge_sector[bridge_mem_r_sector];
+            if (bridge_mem_w_v) bridge_sector[bridge_mem_w_sector] <= bridge_mem_w_data;
+            // Shadow banks are write-only until the terminal check. Apply
+            // masked bytes in bank/byte order; no same-cycle read observes them.
+            for (integer z=0;z<2*SW;z=z+1) if (bridge_tl_we[z])
+                for (integer k=0;k<16;k=k+1) if (bridge_tl_mask[z*16+k])
+                    bridge_bank[z][bridge_tl_row[z*AW +: AW]][k*8 +: 8] =
+                        bridge_tl_data[z*128+k*8 +: 8];
+            for (integer z=0;z<SW;z=z+1) if (kv_we[z]) begin
+                bridge_a = kv_waddr[z*AW +: AW];
+                bridge_written[bridge_a] = 1'b1;
+                bridge_expect[bridge_a] = bridge_q[z*8 +: 8];
+            end
+        end
+    end else begin : g_no_bridge
+        assign bridge_drained=1'b1;
+        assign bridge_fault=1'b0;
+        assign bridge_q='0;
+        assign bridge_tl_we='0;
+        assign bridge_tl_row='0;
+        assign bridge_tl_mask='0;
+        assign bridge_tl_data='0;
+        assign bridge_mem_r_v=1'b0;
+        assign bridge_mem_w_v=1'b0;
+        assign bridge_mem_r_sector='0;
+        assign bridge_mem_w_sector='0;
+        assign bridge_mem_w_data='0;
+    end endgenerate
+`else
+    assign bridge_drained=1'b1;
+    assign bridge_fault=1'b0;
+`endif
 
     integer l, q;
 `ifdef OT_HDC_MEMSYS
@@ -118,6 +212,7 @@ module tb_hdc_core #(
         .vw_me_we(vw_me_we), .vw_me_addr(vw_me_addr), .vw_me_mask(vw_me_mask), .vw_me_data(vw_me_data),
         .vw_su_we(vw_su_we), .vw_su_addr(vw_su_addr), .vw_su_data(vw_su_data),
         .vw_rd_we(vw_rd_we), .vw_rd_addr(vw_rd_addr), .vw_rd_data(vw_rd_data),
+        .vw_mx_we(vw_mx_we), .vw_mx_addr(vw_mx_addr), .vw_mx_mask(vw_mx_mask), .vw_mx_data(vw_mx_data),
         .tst_kv_en(tst_kv_en), .tst_kv_we(tst_kv_we), .tst_kv_waddr(tst_kv_waddr), .tst_kv_wdata(tst_kv_wdata),
         .tst_kv_re(tst_kv_re), .tst_kv_raddr(tst_kv_raddr), .tst_kv_q(tst_kv_q),
         .tst_vm_addr(tst_vm_addr), .tst_vm_q(tst_vm_q),
@@ -131,27 +226,38 @@ module tb_hdc_core #(
     always @(posedge clk) begin
         if (prog_re) prog_q <= prog[prog_addr];
         if (wrom_re) wrom_q <= wrom[wrom_addr[16:0]];
-        if (crom_re) crom_q <= crom[crom_addr[11:0]];
+        for (q = 0; q < SW; q = q + 1)
+            if (crom_re[q]) crom_q[64*q +: 64] <= crom[crom_addr[q*AW +: 12]];
         for (q = 0; q < G; q = q + 1)
             if (kv_re) kv_q[q*W*32 +: W*32] <= kv[kv_raddr[q*AW +: 10]];
         for (q = 0; q < G; q = q + 1)
             if (vx_re[q]) vx_q[32*q +: 32] <= vm[vx_addr[q*AW +: 12]];
-        if (va_re) va_q <= vm[va_addr[11:0]];
-        if (vb_re) vb_q <= vm[vb_addr[11:0]];
-        if (vc_re) vc_q <= vm[vc_addr[11:0]];
-        if (kv_we) kv[kv_waddr[13:4]][32*kv_waddr[3:0] +: 32] <= kv_wdata;
+        for (q = 0; q < SW; q = q + 1) begin
+            if (va_re[q]) va_q[32*q +: 32] <= vm[va_addr[q*AW +: 12]];
+            if (vb_re[q]) vb_q[32*q +: 32] <= vm[vb_addr[q*AW +: 12]];
+            if (vc_re[q]) vc_q[32*q +: 32] <= vm[vc_addr[q*AW +: 12]];
+            if (kv_we[q]) kv[kv_waddr[q*AW + 4 +: 10]][32*kv_waddr[q*AW +: 4] +: 32] <= kv_wdata[32*q +: 32];
+        end
+        // All synchronous VM reads above sample the old array. Apply ME
+        // writes here in port order; the later SU/reducer/max writes retain
+        // their priority on collisions. Blocking stores also avoid Verilator's
+        // delayed-array-write elaboration limit at large G.
         for (q = 0; q < G; q = q + 1)
             if (vw_me_we[q])
                 for (l = 0; l < W; l = l + 1)
-                    if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: 8], 4'b0} + l] <= vw_me_data[32*(q*W + l) +: 32];
-        if (vw_su_we) vm[vw_su_addr[11:0]] <= vw_su_data;
+                    if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: 8], 4'b0} + l] = vw_me_data[32*(q*W + l) +: 32];
+        for (q = 0; q < SW; q = q + 1)
+            if (vw_su_we[q]) vm[vw_su_addr[q*AW +: 12]] <= vw_su_data[32*q +: 32];
         if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
+        if (vw_mx_we)
+            for (l = 0; l < W; l = l + 1)
+                if (vw_mx_mask[l]) vm[{vw_mx_addr[7:0], 4'b0} + l] <= vw_mx_data[32*l +: 32];
 `endif
         // the result words of the one unwritten matrix-vector op are the logits
         if (me_ov && vw_me_we == 0)
             for (q = 0; q < G; q = q + 1)
                 for (l = 0; l < W; l = l + 1)
-                    if (me_omask[q*W + l]) lg[{me_oaddr[q*AW +: 8], 4'b0} + l] <= me_odata[32*(q*W + l) +: 32];
+                    if (me_omask[q*W + l]) lg[{me_oaddr[q*AW +: 8], 4'b0} + l] = me_odata[32*(q*W + l) +: 32];
     end
 
     reg finishing = 1'b0;
@@ -194,8 +300,8 @@ module tb_hdc_core #(
     integer me_busy = 0, su_busy = 0, both_idle = 0, lane_slots = 0;
     always @(posedge clk) if (dut.st != 0) begin
         if (dut.u_me.active) me_busy <= me_busy + 1;
-        if (dut.u_su.active) su_busy <= su_busy + 1;
-        if (!dut.u_me.active && !dut.u_su.active) both_idle <= both_idle + 1;
+        if (dut.su_active) su_busy <= su_busy + 1;
+        if (!dut.u_me.active && !dut.su_active) both_idle <= both_idle + 1;
     end
     reg [31:0] kv_e;
     initial begin
@@ -327,7 +433,25 @@ module tb_hdc_core #(
 `ifdef OT_HDC_MEMSYS
             $display("ROM_ECC corrected=%0d uncorrectable=%0d", ecc_corrected, ecc_uncorrectable);
 `endif
-            if (next_token == expect_tok && !fault && bad_lg == 0 && bad_vm == 0 && bad_kv == 0)
+`ifndef OT_HDC_MEMSYS
+            bridge_bad=0;
+            if (KV_BRIDGE) begin
+                for (i=0;i<KV_WORDS*W;i=i+1) if (bridge_written[i]) begin
+                    if (i < BV0) begin
+                        bridge_b = (((i >> 4) >> BLOG_HD) & 1)*SW + ((i >> 4) & (SW-1));
+                        bridge_r = (((i >> 4) >> (BLOG_HD+BLOG_TW)) << (BLOG_HD-BLG_SW)) |
+                                   (((i >> 4) & ((1 << BLOG_HD)-1)) >> BLG_SW);
+                        if (bridge_bank[bridge_b][bridge_r][(i & 15)*8 +: 8] !== bridge_expect[i])
+                            bridge_bad=bridge_bad+1;
+                    end else if (bridge_sector[i >> 5][(i & 31)*8 +: 8] !== bridge_expect[i])
+                        bridge_bad=bridge_bad+1;
+                end
+                $display("KV_BRIDGE written_byte_mismatches=%0d fault=%0d drained=%0d",
+                         bridge_bad, bridge_fault, bridge_drained);
+            end
+`endif
+            if (next_token == expect_tok && !fault && bad_lg == 0 && bad_vm == 0 && bad_kv == 0 &&
+                (!KV_BRIDGE || (!bridge_fault && bridge_drained && bridge_bad == 0)))
                 $display("PASS");
             else
                 $display("FAIL");
@@ -337,7 +461,7 @@ module tb_hdc_core #(
             $display("ISSUE cyc=%0d pc=%0d unit=%0d barrier=%0d", cycles, dut.pc, dut.d_unit, dut.d_barrier);
         if (cyc > 5000000) begin
             $display("TIMEOUT pc=%0d st=%0d me_idle=%0d su_idle=%0d su_ready=%0d inflight=%0d", dut.pc, dut.st,
-                     dut.me_idle, dut.su_idle, dut.su_ready, dut.u_su.inflight);
+                     dut.me_idle, dut.su_idle, dut.su_ready, dut.su_inflight);
             $finish;
         end
     end

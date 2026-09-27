@@ -1,0 +1,1156 @@
+{
+ "schema": "opentallas.arch-utilization-qwen3.v1",
+ "tool": "tools/arch_budget_qwen3.py",
+ "context": 8192,
+ "kv_format": "fp8",
+ "clock_hz": 1098640000.0,
+ "lane_multiplier": 3,
+ "rule": "improve utilisation without slowing the single user",
+ "rom": {
+  "ar_batch1": {
+   "step_cycles": 123301,
+   "basis": "calibrated sequencer model at HEAD (unit busy measured on the replayed program)",
+   "users": 1,
+   "slots": 1,
+   "tokens_s_total": 8910.2,
+   "energy_per_step_mj": {
+    "matrix_engine": 39.637,
+    "other_logic_upper": 125.1,
+    "rom_read": 0.265,
+    "rom_leakage": 0.197,
+    "kv_hbm_stacks": 63.345
+   },
+   "energy_share": {
+    "matrix_engine": 0.1734,
+    "other_logic_upper": 0.5474,
+    "rom_read": 0.0012,
+    "rom_leakage": 0.0009,
+    "kv_hbm_stacks": 0.2772
+   },
+   "blocks": [
+    {
+     "block": "matrix engine, base lanes",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 131072,
+     "unit": "MAC",
+     "demand_per_step": 9984016384.0,
+     "utilization": 0.6178,
+     "busy_cycles": 76176,
+     "busy_fraction": 0.6178,
+     "area_mm2": 146.7
+    },
+    {
+     "block": "matrix engine, 2 lane copies",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 262144,
+     "unit": "MAC",
+     "demand_per_step": 0.0,
+     "utilization": 0.0,
+     "busy_cycles": 0,
+     "busy_fraction": 0.0,
+     "area_mm2": 138.4,
+     "copies_in_use": 0
+    },
+    {
+     "block": "weight ROM macros and read path",
+     "kind": "memory (MBU)",
+     "peak_per_cycle": 57344.0,
+     "unit": "byte",
+     "demand_per_step": 3311042560.0,
+     "utilization": 0.4683,
+     "busy_cycles": 57740,
+     "busy_fraction": 0.4683,
+     "area_mm2": 261.98,
+     "weight_sweeps": 1
+    },
+    {
+     "block": "drafter ROM",
+     "kind": "memory (MBU)",
+     "peak_per_cycle": 57344.0,
+     "unit": "byte",
+     "demand_per_step": 0,
+     "utilization": 0.0,
+     "area_mm2": 33.5
+    },
+    {
+     "block": "attention path (engine share: scores, P.V)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 131072,
+     "unit": "MAC",
+     "demand_per_step": 2415919104,
+     "utilization": 0.1495,
+     "busy_cycles": 18432,
+     "busy_fraction": 0.1495
+    },
+    {
+     "block": "vector stream unit (1024 lanes)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "element",
+     "demand_per_step": 29981289,
+     "utilization": 0.2375,
+     "busy_cycles": 21177,
+     "busy_fraction": 0.1718,
+     "area_mm2": 12.8
+    },
+    {
+     "block": "SFUs (exp, SiLU, rsqrt/recip: one a stream lane)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "transcendental",
+     "demand_per_step": 9882217,
+     "utilization": 0.0783
+    },
+    {
+     "block": "reducers (R-ARITH segments, split tree)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "element",
+     "demand_per_step": 19509632,
+     "utilization": 0.1545
+    },
+    {
+     "block": "KV streamer, HBM controllers and PHYs (6 stacks, raw peak)",
+     "kind": "bandwidth (MBU)",
+     "peak_per_cycle": 5461.297604310785,
+     "unit": "byte",
+     "demand_per_step": 603979776.0,
+     "utilization": 0.8969,
+     "busy_cycles": 122881,
+     "busy_fraction": 0.9966,
+     "area_mm2": 60.0,
+     "mbu_of_sustained": 0.9966
+    },
+    {
+     "block": "KV ring buffer (SRAM): capacity",
+     "kind": "capacity",
+     "peak_per_cycle": 18667216.0,
+     "unit": "byte",
+     "demand_per_step": 18667216.0,
+     "utilization": 1.0,
+     "area_mm2": 6.2,
+     "first_sizing_bytes": 33554432.0,
+     "first_sizing_utilization": 0.5563
+    },
+    {
+     "block": "KV ring buffer (SRAM): engine read port",
+     "kind": "bandwidth (MBU)",
+     "peak_per_cycle": 131072,
+     "unit": "byte",
+     "demand_per_step": 603979776.0,
+     "utilization": 0.0374,
+     "busy_cycles": 4608,
+     "busy_fraction": 0.0374
+    },
+    {
+     "block": "sequencer / issue",
+     "kind": "control",
+     "peak_per_cycle": 1,
+     "unit": "instruction",
+     "demand_per_step": 1048,
+     "utilization": 0.0085,
+     "busy_cycles": 1048,
+     "busy_fraction": 0.0085
+    },
+    {
+     "block": "argmax (streaming compare tree on the LM head's results)",
+     "kind": "compute",
+     "peak_per_cycle": 131072,
+     "unit": "compare",
+     "demand_per_step": 151936,
+     "utilization": 0.0,
+     "busy_cycles": 4752,
+     "busy_fraction": 0.0385
+    }
+   ]
+  },
+  "dflash_tau4.1_block3": {
+   "step_cycles": 176514,
+   "basis": "budget model, best ROM block at m = 3 (2.187 tokens a step)",
+   "users": 1,
+   "slots": 3,
+   "tokens_s_total": 13612.1,
+   "energy_per_step_mj": {
+    "matrix_engine": 136.339,
+    "other_logic_upper": 430.311,
+    "rom_read": 0.302,
+    "rom_leakage": 0.282,
+    "kv_hbm_stacks": 72.143
+   },
+   "energy_share": {
+    "matrix_engine": 0.2132,
+    "other_logic_upper": 0.673,
+    "rom_read": 0.0005,
+    "rom_leakage": 0.0004,
+    "kv_hbm_stacks": 0.1128
+   },
+   "blocks": [
+    {
+     "block": "matrix engine, base lanes",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 131072,
+     "unit": "MAC",
+     "demand_per_step": 11447478954.666666,
+     "utilization": 0.4948,
+     "busy_cycles": 87341,
+     "busy_fraction": 0.4948,
+     "area_mm2": 146.7
+    },
+    {
+     "block": "matrix engine, 2 lane copies",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 262144,
+     "unit": "MAC",
+     "demand_per_step": 22894957909.333332,
+     "utilization": 0.4948,
+     "busy_cycles": 87341,
+     "busy_fraction": 0.4948,
+     "area_mm2": 138.4,
+     "copies_in_use": 2
+    },
+    {
+     "block": "weight ROM macros and read path",
+     "kind": "memory (MBU)",
+     "peak_per_cycle": 57344.0,
+     "unit": "byte",
+     "demand_per_step": 3769816624.0,
+     "utilization": 0.3724,
+     "busy_cycles": 65740,
+     "busy_fraction": 0.3724,
+     "area_mm2": 261.98,
+     "weight_sweeps": 1
+    },
+    {
+     "block": "drafter ROM",
+     "kind": "memory (MBU)",
+     "peak_per_cycle": 57344.0,
+     "unit": "byte",
+     "demand_per_step": 458774064.0,
+     "utilization": 0.0453,
+     "area_mm2": 33.5
+    },
+    {
+     "block": "attention path (engine share: scores, P.V)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 393216,
+     "unit": "MAC",
+     "demand_per_step": 7247757312,
+     "utilization": 0.1044,
+     "busy_cycles": 18432,
+     "busy_fraction": 0.1044
+    },
+    {
+     "block": "vector stream unit (1024 lanes)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "element",
+     "demand_per_step": 89943867,
+     "utilization": 0.4976,
+     "busy_cycles": 63531,
+     "busy_fraction": 0.3599,
+     "area_mm2": 12.8
+    },
+    {
+     "block": "SFUs (exp, SiLU, rsqrt/recip: one a stream lane)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "transcendental",
+     "demand_per_step": 29646651,
+     "utilization": 0.164
+    },
+    {
+     "block": "reducers (R-ARITH segments, split tree)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "element",
+     "demand_per_step": 58528896,
+     "utilization": 0.3238
+    },
+    {
+     "block": "KV streamer, HBM controllers and PHYs (6 stacks, raw peak)",
+     "kind": "bandwidth (MBU)",
+     "peak_per_cycle": 5461.297604310785,
+     "unit": "byte",
+     "demand_per_step": 687865856.0,
+     "utilization": 0.7136,
+     "busy_cycles": 139948,
+     "busy_fraction": 0.7928,
+     "area_mm2": 60.0,
+     "mbu_of_sustained": 0.7928
+    },
+    {
+     "block": "KV ring buffer (SRAM): capacity",
+     "kind": "capacity",
+     "peak_per_cycle": 18667216.0,
+     "unit": "byte",
+     "demand_per_step": 18667216.0,
+     "utilization": 1.0,
+     "area_mm2": 6.2,
+     "first_sizing_bytes": 33554432.0,
+     "first_sizing_utilization": 0.5563
+    },
+    {
+     "block": "KV ring buffer (SRAM): engine read port",
+     "kind": "bandwidth (MBU)",
+     "peak_per_cycle": 131072,
+     "unit": "byte",
+     "demand_per_step": 687865856.0,
+     "utilization": 0.0297,
+     "busy_cycles": 5248,
+     "busy_fraction": 0.0297
+    },
+    {
+     "block": "sequencer / issue",
+     "kind": "control",
+     "peak_per_cycle": 1,
+     "unit": "instruction",
+     "demand_per_step": 1193.5555555555554,
+     "utilization": 0.0068,
+     "busy_cycles": 1194,
+     "busy_fraction": 0.0068
+    },
+    {
+     "block": "argmax (streaming compare tree on the LM head's results)",
+     "kind": "compute",
+     "peak_per_cycle": 131072,
+     "unit": "compare",
+     "demand_per_step": 759680,
+     "utilization": 0.0,
+     "busy_cycles": 4752,
+     "busy_fraction": 0.0269
+    }
+   ]
+  },
+  "kv_bound_batch2": {
+   "step_cycles": 245762,
+   "basis": "budget model, smallest KV-bound batch",
+   "users": 2,
+   "slots": 1,
+   "tokens_s_total": 8940.7,
+   "energy_per_step_mj": {
+    "matrix_engine": 79.273,
+    "other_logic_upper": 250.199,
+    "rom_read": 0.265,
+    "rom_leakage": 0.393,
+    "kv_hbm_stacks": 126.691
+   },
+   "energy_share": {
+    "matrix_engine": 0.1735,
+    "other_logic_upper": 0.5477,
+    "rom_read": 0.0006,
+    "rom_leakage": 0.0009,
+    "kv_hbm_stacks": 0.2773
+   },
+   "blocks": [
+    {
+     "block": "matrix engine, base lanes",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 131072,
+     "unit": "MAC",
+     "demand_per_step": 9984016384.0,
+     "utilization": 0.3099,
+     "busy_cycles": 94608,
+     "busy_fraction": 0.385,
+     "area_mm2": 146.7
+    },
+    {
+     "block": "matrix engine, 2 lane copies",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 262144,
+     "unit": "MAC",
+     "demand_per_step": 9984016384.0,
+     "utilization": 0.155,
+     "busy_cycles": 94608,
+     "busy_fraction": 0.385,
+     "area_mm2": 138.4,
+     "copies_in_use": 1
+    },
+    {
+     "block": "weight ROM macros and read path",
+     "kind": "memory (MBU)",
+     "peak_per_cycle": 57344.0,
+     "unit": "byte",
+     "demand_per_step": 3311042560.0,
+     "utilization": 0.2349,
+     "busy_cycles": 57740,
+     "busy_fraction": 0.2349,
+     "area_mm2": 261.98,
+     "weight_sweeps": 1
+    },
+    {
+     "block": "drafter ROM",
+     "kind": "memory (MBU)",
+     "peak_per_cycle": 57344.0,
+     "unit": "byte",
+     "demand_per_step": 0,
+     "utilization": 0.0,
+     "area_mm2": 33.5
+    },
+    {
+     "block": "attention path (engine share: scores, P.V)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 262144,
+     "unit": "MAC",
+     "demand_per_step": 4831838208,
+     "utilization": 0.075,
+     "busy_cycles": 36864,
+     "busy_fraction": 0.15
+    },
+    {
+     "block": "vector stream unit (1024 lanes)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "element",
+     "demand_per_step": 59962578,
+     "utilization": 0.2383,
+     "busy_cycles": 42354,
+     "busy_fraction": 0.1723,
+     "area_mm2": 12.8
+    },
+    {
+     "block": "SFUs (exp, SiLU, rsqrt/recip: one a stream lane)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "transcendental",
+     "demand_per_step": 19764434,
+     "utilization": 0.0785
+    },
+    {
+     "block": "reducers (R-ARITH segments, split tree)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "element",
+     "demand_per_step": 39019264,
+     "utilization": 0.155
+    },
+    {
+     "block": "KV streamer, HBM controllers and PHYs (6 stacks, raw peak)",
+     "kind": "bandwidth (MBU)",
+     "peak_per_cycle": 5461.297604310785,
+     "unit": "byte",
+     "demand_per_step": 1207959552.0,
+     "utilization": 0.9,
+     "busy_cycles": 245762,
+     "busy_fraction": 1.0,
+     "area_mm2": 60.0,
+     "mbu_of_sustained": 1.0
+    },
+    {
+     "block": "KV ring buffer (SRAM): capacity",
+     "kind": "capacity",
+     "peak_per_cycle": 18667216.0,
+     "unit": "byte",
+     "demand_per_step": 18667216.0,
+     "utilization": 1.0,
+     "area_mm2": 6.2,
+     "first_sizing_bytes": 33554432.0,
+     "first_sizing_utilization": 0.5563
+    },
+    {
+     "block": "KV ring buffer (SRAM): engine read port",
+     "kind": "bandwidth (MBU)",
+     "peak_per_cycle": 131072,
+     "unit": "byte",
+     "demand_per_step": 1207959552.0,
+     "utilization": 0.0375,
+     "busy_cycles": 9216,
+     "busy_fraction": 0.0375
+    },
+    {
+     "block": "sequencer / issue",
+     "kind": "control",
+     "peak_per_cycle": 1,
+     "unit": "instruction",
+     "demand_per_step": 2096,
+     "utilization": 0.0085,
+     "busy_cycles": 2096,
+     "busy_fraction": 0.0085
+    },
+    {
+     "block": "argmax (streaming compare tree on the LM head's results)",
+     "kind": "compute",
+     "peak_per_cycle": 131072,
+     "unit": "compare",
+     "demand_per_step": 303872,
+     "utilization": 0.0,
+     "busy_cycles": 4752,
+     "busy_fraction": 0.0193
+    }
+   ]
+  },
+  "max_batch128": {
+   "step_cycles": 15728743,
+   "basis": "budget model",
+   "users": 128,
+   "slots": 1,
+   "tokens_s_total": 8940.7,
+   "energy_per_step_mj": {
+    "matrix_engine": 5073.478,
+    "other_logic_upper": 16012.765,
+    "rom_read": 11.39,
+    "rom_leakage": 25.129,
+    "kv_hbm_stacks": 8108.211
+   },
+   "energy_share": {
+    "matrix_engine": 0.1736,
+    "other_logic_upper": 0.5478,
+    "rom_read": 0.0004,
+    "rom_leakage": 0.0009,
+    "kv_hbm_stacks": 0.2774
+   },
+   "blocks": [
+    {
+     "block": "matrix engine, base lanes",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 131072,
+     "unit": "MAC",
+     "demand_per_step": 425984699050.6667,
+     "utilization": 0.2066,
+     "busy_cycles": 4842288,
+     "busy_fraction": 0.3079,
+     "area_mm2": 146.7
+    },
+    {
+     "block": "matrix engine, 2 lane copies",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 262144,
+     "unit": "MAC",
+     "demand_per_step": 851969398101.3334,
+     "utilization": 0.2066,
+     "busy_cycles": 4842288,
+     "busy_fraction": 0.3079,
+     "area_mm2": 138.4,
+     "copies_in_use": 2
+    },
+    {
+     "block": "weight ROM macros and read path",
+     "kind": "memory (MBU)",
+     "peak_per_cycle": 57344.0,
+     "unit": "byte",
+     "demand_per_step": 142374830080.0,
+     "utilization": 0.1579,
+     "busy_cycles": 2482820,
+     "busy_fraction": 0.1579,
+     "area_mm2": 261.98,
+     "weight_sweeps": 43
+    },
+    {
+     "block": "drafter ROM",
+     "kind": "memory (MBU)",
+     "peak_per_cycle": 57344.0,
+     "unit": "byte",
+     "demand_per_step": 0,
+     "utilization": 0.0,
+     "area_mm2": 33.5
+    },
+    {
+     "block": "attention path (engine share: scores, P.V)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 393216,
+     "unit": "MAC",
+     "demand_per_step": 309237645312,
+     "utilization": 0.05,
+     "busy_cycles": 2359296,
+     "busy_fraction": 0.15
+    },
+    {
+     "block": "vector stream unit (1024 lanes)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "element",
+     "demand_per_step": 3837604992,
+     "utilization": 0.2383,
+     "busy_cycles": 2710656,
+     "busy_fraction": 0.1723,
+     "area_mm2": 12.8
+    },
+    {
+     "block": "SFUs (exp, SiLU, rsqrt/recip: one a stream lane)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "transcendental",
+     "demand_per_step": 1264923776,
+     "utilization": 0.0785
+    },
+    {
+     "block": "reducers (R-ARITH segments, split tree)",
+     "kind": "compute (MFU)",
+     "peak_per_cycle": 1024,
+     "unit": "element",
+     "demand_per_step": 2497232896,
+     "utilization": 0.155
+    },
+    {
+     "block": "KV streamer, HBM controllers and PHYs (6 stacks, raw peak)",
+     "kind": "bandwidth (MBU)",
+     "peak_per_cycle": 5461.297604310785,
+     "unit": "byte",
+     "demand_per_step": 77309411328.0,
+     "utilization": 0.9,
+     "busy_cycles": 15728743,
+     "busy_fraction": 1.0,
+     "area_mm2": 60.0,
+     "mbu_of_sustained": 1.0
+    },
+    {
+     "block": "KV ring buffer (SRAM): capacity",
+     "kind": "capacity",
+     "peak_per_cycle": 18667216.0,
+     "unit": "byte",
+     "demand_per_step": 18667216.0,
+     "utilization": 1.0,
+     "area_mm2": 6.2,
+     "first_sizing_bytes": 33554432.0,
+     "first_sizing_utilization": 0.5563
+    },
+    {
+     "block": "KV ring buffer (SRAM): engine read port",
+     "kind": "bandwidth (MBU)",
+     "peak_per_cycle": 131072,
+     "unit": "byte",
+     "demand_per_step": 77309411328.0,
+     "utilization": 0.0375,
+     "busy_cycles": 589824,
+     "busy_fraction": 0.0375
+    },
+    {
+     "block": "sequencer / issue",
+     "kind": "control",
+     "peak_per_cycle": 1,
+     "unit": "instruction",
+     "demand_per_step": 134144,
+     "utilization": 0.0085,
+     "busy_cycles": 134144,
+     "busy_fraction": 0.0085
+    },
+    {
+     "block": "argmax (streaming compare tree on the LM head's results)",
+     "kind": "compute",
+     "peak_per_cycle": 131072,
+     "unit": "compare",
+     "demand_per_step": 19447808,
+     "utilization": 0.0,
+     "busy_cycles": 204336,
+     "busy_fraction": 0.013
+    }
+   ]
+  }
+ },
+ "hbm": {
+  "131072_lanes": {
+   "role": "the comparator as specified",
+   "groups": 8192,
+   "lanes": 131072,
+   "tiling_efficiency": 0.9999,
+   "scenarios": {
+    "ar_batch1": {
+     "step_cycles": 1662624,
+     "slowed_by_lanes": 0.0,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 131072,
+       "unit": "MAC",
+       "demand_per_step": 9984016384,
+       "utilization": 0.0458,
+       "busy_cycles": 76177,
+       "busy_fraction": 0.0458
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 8172077056.0,
+       "utilization": 0.9,
+       "busy_cycles": 1662624,
+       "busy_fraction": 1.0,
+       "mbu_of_sustained": 1.0
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 29981289,
+       "utilization": 0.0176
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 1048,
+       "utilization": 0.0006
+      }
+     ]
+    },
+    "dflash_tau4.1_block16": {
+     "step_cycles": 1893036,
+     "slowed_by_lanes": 0.0,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 131072,
+       "unit": "MAC",
+       "demand_per_step": 184514248704,
+       "utilization": 0.7436,
+       "busy_cycles": 1407830,
+       "busy_fraction": 0.7437
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 9304589568.0,
+       "utilization": 0.9,
+       "busy_cycles": 1893036,
+       "busy_fraction": 1.0,
+       "mbu_of_sustained": 1.0
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 479700624,
+       "utilization": 0.2475
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 1048,
+       "utilization": 0.0006
+      }
+     ]
+    },
+    "kv_bound_batch16": {
+     "step_cycles": 3505836,
+     "slowed_by_lanes": 0.0,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 131072,
+       "unit": "MAC",
+       "demand_per_step": 159744262144,
+       "utilization": 0.3476,
+       "busy_cycles": 1218836,
+       "busy_fraction": 0.3477
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 17231773696.0,
+       "utilization": 0.9,
+       "busy_cycles": 3505836,
+       "busy_fraction": 1.0,
+       "mbu_of_sustained": 1.0
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 479700624,
+       "utilization": 0.1336
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 16768,
+       "utilization": 0.0048
+      }
+     ]
+    },
+    "max_batch128": {
+     "step_cycles": 17268486,
+     "slowed_by_lanes": 0.0,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 131072,
+       "unit": "MAC",
+       "demand_per_step": 1277954097152,
+       "utilization": 0.5646,
+       "busy_cycles": 9750691,
+       "busy_fraction": 0.5647
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 84877508608.0,
+       "utilization": 0.9,
+       "busy_cycles": 17268486,
+       "busy_fraction": 1.0,
+       "mbu_of_sustained": 1.0
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 3837604992,
+       "utilization": 0.217
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 134144,
+       "utilization": 0.0078
+      }
+     ]
+    },
+    "ctx2048_max_batch128": {
+     "step_cycles": 7981097,
+     "slowed_by_lanes": 0.4586,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 131072,
+       "unit": "MAC",
+       "demand_per_step": 1046025863168,
+       "utilization": 0.9999,
+       "busy_cycles": 7981097,
+       "busy_fraction": 1.0
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 26895450112.0,
+       "utilization": 0.6171,
+       "busy_cycles": 5471929,
+       "busy_fraction": 0.6856,
+       "mbu_of_sustained": 0.6856
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 1119696000,
+       "utilization": 0.137
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 134144,
+       "utilization": 0.0168
+      }
+     ]
+    }
+   }
+  },
+  "106496_lanes": {
+   "role": "right-sizing candidate, rejected",
+   "groups": 6656,
+   "lanes": 106496,
+   "tiling_efficiency": 0.9474,
+   "scenarios": {
+    "ar_batch1": {
+     "step_cycles": 1662624,
+     "slowed_by_lanes": 0.0,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 106496,
+       "unit": "MAC",
+       "demand_per_step": 9984016384,
+       "utilization": 0.0564,
+       "busy_cycles": 98952,
+       "busy_fraction": 0.0595
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 8172077056.0,
+       "utilization": 0.9,
+       "busy_cycles": 1662624,
+       "busy_fraction": 1.0,
+       "mbu_of_sustained": 1.0
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 29981289,
+       "utilization": 0.0176
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 1048,
+       "utilization": 0.0006
+      }
+     ]
+    },
+    "dflash_tau4.1_block16": {
+     "step_cycles": 1893036,
+     "slowed_by_lanes": 0.0,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 106496,
+       "unit": "MAC",
+       "demand_per_step": 184514248704,
+       "utilization": 0.9152,
+       "busy_cycles": 1828735,
+       "busy_fraction": 0.966
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 9304589568.0,
+       "utilization": 0.9,
+       "busy_cycles": 1893036,
+       "busy_fraction": 1.0,
+       "mbu_of_sustained": 1.0
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 479700624,
+       "utilization": 0.2475
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 1048,
+       "utilization": 0.0006
+      }
+     ]
+    },
+    "kv_bound_batch16": {
+     "step_cycles": 3505836,
+     "slowed_by_lanes": 0.0,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 106496,
+       "unit": "MAC",
+       "demand_per_step": 159744262144,
+       "utilization": 0.4279,
+       "busy_cycles": 1583238,
+       "busy_fraction": 0.4516
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 17231773696.0,
+       "utilization": 0.9,
+       "busy_cycles": 3505836,
+       "busy_fraction": 1.0,
+       "mbu_of_sustained": 1.0
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 479700624,
+       "utilization": 0.1336
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 16768,
+       "utilization": 0.0048
+      }
+     ]
+    },
+    "max_batch128": {
+     "step_cycles": 17268486,
+     "slowed_by_lanes": 0.0,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 106496,
+       "unit": "MAC",
+       "demand_per_step": 1277954097152,
+       "utilization": 0.6949,
+       "busy_cycles": 12665902,
+       "busy_fraction": 0.7335
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 84877508608.0,
+       "utilization": 0.9,
+       "busy_cycles": 17268486,
+       "busy_fraction": 1.0,
+       "mbu_of_sustained": 1.0
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 3837604992,
+       "utilization": 0.217
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 134144,
+       "utilization": 0.0078
+      }
+     ]
+    },
+    "ctx2048_max_batch128": {
+     "step_cycles": 10367244,
+     "slowed_by_lanes": 0.8946,
+     "blocks": [
+      {
+       "block": "matrix engine",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 106496,
+       "unit": "MAC",
+       "demand_per_step": 1046025863168,
+       "utilization": 0.9474,
+       "busy_cycles": 10367244,
+       "busy_fraction": 1.0
+      },
+      {
+       "block": "HBM (6 stacks, raw peak): weights + KV",
+       "kind": "bandwidth (MBU)",
+       "peak_per_cycle": 5461.297604310785,
+       "unit": "byte",
+       "demand_per_step": 26895450112.0,
+       "utilization": 0.475,
+       "busy_cycles": 5471929,
+       "busy_fraction": 0.5278,
+       "mbu_of_sustained": 0.5278
+      },
+      {
+       "block": "vector stream unit (1024 lanes)",
+       "kind": "compute (MFU)",
+       "peak_per_cycle": 1024,
+       "unit": "element",
+       "demand_per_step": 1119696000,
+       "utilization": 0.1055
+      },
+      {
+       "block": "sequencer / issue",
+       "kind": "control",
+       "peak_per_cycle": 1,
+       "unit": "instruction",
+       "demand_per_step": 134144,
+       "utilization": 0.0129
+      }
+     ]
+    }
+   }
+  }
+ },
+ "su_width_sweep_cycles": {
+  "512": 133569,
+  "1024": 123301,
+  "2048": 121569
+ },
+ "half_groups_cycles": 198565,
+ "verdicts": [
+  {
+   "block": "ROM: matrix engine base lanes (131,072)",
+   "verdict": "RIGHT-SIZED",
+   "why": "compute sits at the KV floor (123,301 vs 122,881 cycles); half the groups is 198,565 cycles (+61% a token) in the calibrated model"
+  },
+  {
+   "block": "ROM: 2 lane copies",
+   "verdict": "JUSTIFIED (DFlash only), conditional on power",
+   "why": "idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry the DFlash block-3 verify (1.77x single-user tokens/s). Under the cooling limit that gain needs <= 1.35 pJ/MAC; at the measured 3.97 the capped DFlash rate is below autoregressive and the copies would not pay"
+  },
+  {
+   "block": "ROM: weight ROM read path",
+   "verdict": "RIGHT-SIZED",
+   "why": "one weight a lane a cycle; the sweep is on the single user's chain (57,740 cycles)"
+  },
+  {
+   "block": "ROM: vector stream unit (1,024 lanes; SFUs and reducers on its lanes)",
+   "verdict": "RIGHT-SIZED",
+   "why": "calibrated: 512 lanes is 133,569 cycles, above the KV floor (+8.3% a token); 2,048 is 121,569, under the floor, so it buys nothing"
+  },
+  {
+   "block": "ROM: KV streamer, controllers, 6 PHYs",
+   "verdict": "RIGHT-SIZED (binding)",
+   "why": "the KV stream binds the token from batch 1 (0.3% below compute) and at every batch"
+  },
+  {
+   "block": "ROM: KV ring buffer",
+   "verdict": "OVER-PROVISIONED -> RIGHT-SIZED (applied)",
+   "why": "two layers (33.6 MB) were 56% used: the stream is continuous and the engine drains a layer in its attention burst, so the peak is one layer plus the refresh cover (18.7 MB); area_ledger now sizes the ring"
+  },
+  {
+   "block": "ROM: KV ring buffer's engine read port",
+   "verdict": "JUSTIFIED (latency)",
+   "why": "one FP8 word a group a cycle is the engine's attention operand rate: the scores and P.V passes read a layer's KV in 512 cycles on the chain; a narrower port lengthens every layer's attention stage"
+  },
+  {
+   "block": "ROM: drafter ROM",
+   "verdict": "JUSTIFIED (DFlash only)",
+   "why": "read once a DFlash step; idle otherwise"
+  },
+  {
+   "block": "ROM: sequencer, argmax",
+   "verdict": "JUSTIFIED (latency)",
+   "why": "small; both sit on the token's chain (the issue gap, the LM head's tail)"
+  },
+  {
+   "block": "HBM: matrix engine",
+   "verdict": "JUSTIFIED (batch throughput), right-sizing rejected",
+   "why": "131,072 lanes are 4.6% used at batch 1 and bytes bind every 8k row, but at 2k the rows from 32 users are MAC-bound (utilisation ~1). The smallest array that keeps the DFlash step (106,496 lanes, tiling 0.947, against a 97,471-lane need) slows no single user and no 8k row, but costs the 2k batch rows 23% of their throughput; the comparator keeps its lanes rather than be handicapped"
+  },
+  {
+   "block": "HBM: stacks and controllers",
+   "verdict": "RIGHT-SIZED (binding)",
+   "why": "bytes bind every 8k row and the 2k rows below 32 users"
+  }
+ ],
+ "energy_basis": "logic at the measured reduced step on the routed ASAP7 core: 16.5 pJ/MAC whole step (upper), 3.97 pJ/MAC the matrix engine alone (lower); ROM 0.08 pJ/B, HBM 104.9 pJ/B, ROM leakage 0.0067 W/mm2. Predictive PDK, upper-bound activity: an order-of-magnitude figure, not a sign-off power",
+ "notes": [
+  "busy fractions of the autoregressive row are the calibrated model's; the other rows scale the per-position busy by positions over copies in use",
+  "SFU and reducer demand counts operations whose peak is the stream unit's lanes; their busy time is inside the stream unit's",
+  "the other rows' steps are the budget model's (analytical chain, conservative against the calibrated 123,301); KV-bound rows are exact either way"
+ ]
+}

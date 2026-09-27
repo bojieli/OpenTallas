@@ -77,7 +77,9 @@ module ot_hdc_kv_stream #(
     parameter integer LOG_HD = 4,        // KV layout (tools/hdc_program.py k_elem): head_dim
     parameter integer LOG_TW = 2,        //   position tiles per KV head
     parameter integer LLG    = 3,        //   layers x KV heads
-    parameter integer V0_WORD = 512      //   first V word (K words below)
+    parameter integer V0_WORD = 512,     //   first V word (K words below)
+    parameter integer HBM_FP8 = 0,       // packed E4M3 HBM words; SRAM remains BF16
+    parameter integer SPLIT_AWARE = 0    // consume adopted vector matvec split/wcs descriptor
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -88,6 +90,8 @@ module ot_hdc_kv_stream #(
     // descriptor of the KV op the sequencer waits on, and its issue permission
     input  wire              kvd_v,
     input  wire [AW-1:0]     kvd_wbase, kvd_ts, kvd_ks, kvd_js,
+    input  wire [AW-1:0]     kvd_wcs,
+    input  wire [3:0]        kvd_split,
     input  wire [2:0]        kvd_jsh,
     input  wire [NW-1:0]     kvd_tiles, kvd_k, kvd_nout,
     input  wire              kvd_kindk,
@@ -116,6 +120,17 @@ module ot_hdc_kv_stream #(
     output reg  [1:0]        tl_re,
     output reg  [2*(LLG+LOG_HD)-1:0] tl_raddr,
     input  wire [2*W*16-1:0] tl_q,
+    // Split KV matvecs can read several chunks of the same tail tile at once.
+    // One read per matrix group is required; each maps to a distinct SW bank.
+    output reg  [G-1:0]      tl_group_re,
+    output wire [G*AW-1:0]   tl_group_raddr,
+    input  wire [G*W*16-1:0] tl_group_q,
+    // Pre-token tail boot: one packed K word per cycle from ingested HBM.
+    // The controller holds tok_start and kv_we low until all resident tiles
+    // have been transferred.  Address uses the streamer's logical word ABI.
+    input  wire              boot_v,
+    input  wire [AW-1:0]     boot_addr,
+    input  wire [W*(HBM_FP8 ? 8 : 16)-1:0] boot_data,
     // HBM request (valid/ready): reads of hq_len words, or one-word writes
     output reg               hq_v,
     input  wire              hq_rdy,
@@ -123,13 +138,13 @@ module ot_hdc_kv_stream #(
     output reg  [AW-1:0]     hq_addr,
     output reg  [$clog2(BK):0] hq_len,
     output reg  [1+LWIN+$clog2(G)+3-1:0] hq_tag,
-    output reg  [W*16-1:0]   hq_wdata,
+    output reg  [W*(HBM_FP8 ? 8 : 16)-1:0] hq_wdata,
     // HBM read responses, one port per pseudo-channel (valid/ready)
     input  wire [NPC-1:0]    hr_v,
     output reg  [NPC-1:0]    hr_rdy,
     input  wire [NPC*(1+LWIN+$clog2(G)+3)-1:0] hr_tag,
     input  wire [NPC*$clog2(BK)-1:0] hr_beat,
-    input  wire [NPC*W*16-1:0] hr_data,
+    input  wire [NPC*W*(HBM_FP8 ? 8 : 16)-1:0] hr_data,
     output reg               fault
 );
     localparam integer LW   = $clog2(W);
@@ -138,13 +153,58 @@ module ot_hdc_kv_stream #(
     localparam integer LBK  = $clog2(BK);
     localparam integer WIN  = 1 << LWIN;
     localparam integer TAW  = LLG + LOG_HD;
+    localparam integer HB = HBM_FP8 ? 8 : 16;
+
+    function automatic [15:0] fp8_to_bf16(input [7:0] c);
+        reg [3:0] e;
+        reg [2:0] m;
+        begin
+            e = c[6:3]; m = c[2:0];
+            if (e != 0) fp8_to_bf16 = {c[7], (8'(e) + 8'd120), m, 4'b0};
+            else if (m == 0) fp8_to_bf16 = {c[7], 15'b0};
+            else if (m == 1) fp8_to_bf16 = {c[7], 8'd118, 7'b0};
+            else if (m < 4) fp8_to_bf16 = {c[7], 8'd119, m[0], 6'b0};
+            else fp8_to_bf16 = {c[7], 8'd120, m[1:0], 5'b0};
+        end
+    endfunction
+
+    function automatic [7:0] bf16_to_fp8(input [15:0] b);
+        reg [7:0] e;
+        begin
+            e = b[14:7];
+            if (e == 0) bf16_to_fp8 = {b[15], 7'b0};
+            else if (e == 118) bf16_to_fp8 = {b[15], 7'd1};
+            else if (e == 119) bf16_to_fp8 = {b[15], 5'b0, 1'b1, b[6]};
+            else if (e == 120) bf16_to_fp8 = {b[15], 4'b0, 1'b1, b[6:5]};
+            else bf16_to_fp8 = {b[15], (e[3:0] - 4'd8), b[6:4]};
+        end
+    endfunction
+
+    function automatic [W*16-1:0] expand_word(input [W*HB-1:0] p);
+        integer x;
+        begin
+            for (x = 0; x < W; x = x + 1)
+                if (HBM_FP8) expand_word[x*16 +: 16] = fp8_to_bf16(p[x*HB +: 8]);
+                else expand_word[x*16 +: 16] = p[x*HB +: 16];
+        end
+    endfunction
+
+    function automatic [W*HB-1:0] pack_word(input [W*16-1:0] p);
+        integer x;
+        begin
+            for (x = 0; x < W; x = x + 1)
+                if (HBM_FP8) pack_word[x*HB +: 8] = bf16_to_fp8(p[x*16 +: 16]);
+                else pack_word[x*HB +: 16] = p[x*16 +: 16];
+        end
+    endfunction
     localparam integer TAGW = 1 + LWIN + LG + 3;
     localparam [1:0] SRC_WIN = 2'd0, SRC_ZERO = 2'd1, SRC_T0 = 2'd2, SRC_T1 = 2'd3;
 
     // ---- descriptors: 2 slots (the op being consumed, the op being announced) ----
     reg [1:0]    dv, fdone, cpdone;
     reg          wptr;
-    reg [AW-1:0] d_wbase [0:1], d_ts [0:1], d_ks [0:1], d_js [0:1];
+    reg [AW-1:0] d_wbase [0:1], d_ts [0:1], d_ks [0:1], d_js [0:1], d_wcs [0:1];
+    reg [3:0] d_split [0:1];
     reg [2:0]    d_jsh [0:1];
     reg [NW-1:0] d_tiles [0:1], d_k [0:1], d_ntile [0:1], d_to [0:1], d_T [0:1];
     reg          d_kindk [0:1], d_kmode [0:1], d_gmode [0:1], d_capped [0:1];
@@ -153,11 +213,12 @@ module ot_hdc_kv_stream #(
     wire [NW-1:0] t_cap = WIN - (BK << (LIL - kvd_jsh));
 
     // Source of group g's word in round r of slot s.
-    function automatic [1:0] src_of(input [NW-1:0] r, input integer g, input [NW-1:0] ntile,
+    function automatic [1:0] src_of(input [NW-1:0] r, input integer g, input [3:0] split,
+                                    input [NW-1:0] ntile,
                                     input kindk, input [NW-1:0] to);
         reg [NW-1:0] t;
         begin
-            t = (r << LG) + g;
+            t = r * (G >> split) + (g >> split);
             if (t >= ntile) src_of = SRC_ZERO;
             else if (kindk && (t == to || (to != 0 && t + 1'b1 == to))) src_of = t[0] ? SRC_T1 : SRC_T0;
             else src_of = SRC_WIN;
@@ -175,14 +236,15 @@ module ot_hdc_kv_stream #(
     localparam [1:0] F_IDLE = 2'd0, F_PREP = 2'd1, F_ALLOC = 2'd2, F_ISSUE = 2'd3;
     reg [1:0]    f_st;
     reg          f_idx;
-    reg [AW-1:0] f_ts, f_ks, f_js;
+    reg [AW-1:0] f_ts, f_ks, f_js, f_wcs;
+    reg [3:0] f_split;
     reg [2:0]    f_jsh;
     reg          f_km, f_kindk;
     reg [NW-1:0] f_tiles, f_k, f_ntile, f_to;
     reg [NW-1:0] f_r, f_k0, blen, f_kk;
     reg [LG-1:0] f_g;
     reg [LIL-1:0] f_jh, f_jh_end;
-    reg [AW-1:0] f_rb, a_blk, a_nblk, a_outer, f_addr;
+    reg [AW-1:0] f_rb, a_blk, a_nblk, a_outer, a_k, f_addr;
     reg [LWIN-1:0] t_lb, t_outer, f_tline;
     reg [G-1:0]  f_mask;                 // groups of round f_r read from HBM (K-mode)
     reg [LBK:0]  f_nval;                 // HBM groups of round f_r (G-mode: a prefix)
@@ -191,17 +253,22 @@ module ot_hdc_kv_stream #(
     reg          f_unsup;
     wire         vf_empty;
     wire [NW-1:0] f_krem = f_k - f_k0;
-    wire [NW-1:0] f_rt = f_r << LG;
+    wire [NW-1:0] f_rt = f_r * (G >> f_split);
+    wire [AW-1:0] f_next_group_addr = a_blk +
+        (((f_g + 1'b1) >> f_split) * f_ts) +
+        (((f_g + 1'b1) & ((1 << f_split) - 1)) * f_wcs);
     wire         f_emit = f_km ? f_mask[f_g] : (f_nval != 0);
+    wire         f_stride = f_km && f_ks != 1;
     wire         f_req_v = (f_st == F_ISSUE) && f_emit && vf_empty;
     wire [AW-1:0] f_req_addr = f_addr;
-    wire [LBK:0] f_req_len = f_km ? blen[LBK:0] : f_nval;
+    wire [LBK:0] f_req_len = f_km ? (f_stride ? 1 : blen[LBK:0]) : f_nval;
     wire [TAGW-1:0] f_req_tag = {!f_km, f_tline, f_km ? f_g : {LG{1'b0}}, f_jsh};
     wire         hq_free = !hq_v || hq_rdy;
     wire         f_take = hq_free && f_req_v;
     wire         f_adv = (f_st == F_ISSUE) && (!f_emit || f_take);
     wire         f_kk_last = (f_kk + 1'b1 == blen);
-    wire         f_blk_last_it = (f_jh == f_jh_end) && (f_km ? (f_g == G - 1) : f_kk_last);
+    wire         f_blk_last_it = (f_jh == f_jh_end) &&
+                                  (f_km ? ((f_g == G - 1) && (!f_stride || f_kk_last)) : f_kk_last);
     wire         f_alloc = (f_st == F_ALLOC) && (occ + blines <= WIN);
     wire         c_step;
     integer gf;
@@ -216,6 +283,7 @@ module ot_hdc_kv_stream #(
             case (f_st)
                 F_IDLE: if (dv[f_idx] && !fdone[f_idx] && !(kvd_v && wptr == f_idx)) begin
                     f_ts <= d_ts[f_idx]; f_ks <= d_ks[f_idx]; f_js <= d_js[f_idx]; f_jsh <= d_jsh[f_idx];
+                    f_wcs <= d_wcs[f_idx]; f_split <= d_split[f_idx];
                     f_km <= d_kmode[f_idx]; f_kindk <= d_kindk[f_idx]; f_tiles <= d_tiles[f_idx];
                     f_k <= d_k[f_idx]; f_ntile <= d_ntile[f_idx]; f_to <= d_to[f_idx];
                     f_jh_end <= (1 << (LIL - d_jsh[f_idx])) - 1;
@@ -229,15 +297,16 @@ module ot_hdc_kv_stream #(
                     f_last_k <= (f_krem <= BK);
                     f_last_r <= (f_r + 1'b1 == f_tiles);
                     for (gf = 0; gf < G; gf = gf + 1)
-                        f_mask[gf] <= (src_of(f_r, gf, f_ntile, f_kindk, f_to) == SRC_WIN);
-                    f_nval <= (f_ntile <= f_rt) ? 0 : ((f_ntile - f_rt > G) ? G : (f_ntile - f_rt));
+                        f_mask[gf] <= (src_of(f_r, gf, f_split, f_ntile, f_kindk, f_to) == SRC_WIN);
+                    f_nval <= (f_ntile <= f_rt) ? 0 :
+                        ((((f_ntile - f_rt) << f_split) > G) ? G : ((f_ntile - f_rt) << f_split));
                     f_st <= F_ALLOC;
                 end
                 F_ALLOC: if (f_alloc) begin
                     fetch_line <= fetch_line + blines;
                     t_lb <= fetch_line[LWIN-1:0]; t_outer <= fetch_line[LWIN-1:0]; f_tline <= fetch_line[LWIN-1:0];
-                    f_addr <= a_blk; a_outer <= a_blk;
-                    if (f_km) a_nblk <= a_blk + blen;              // K-mode: ks = 1
+                    f_addr <= a_blk; a_outer <= a_blk; a_k <= a_blk;
+                    if (f_km) a_nblk <= a_blk + f_ks * blen;
                     f_g <= 0; f_jh <= 0; f_kk <= 0;
                     f_st <= F_ISSUE;
                 end
@@ -254,17 +323,25 @@ module ot_hdc_kv_stream #(
                                 a_outer <= a_outer + f_js; f_addr <= a_outer + f_js;
                                 t_outer <= t_outer + 1'b1; f_tline <= t_outer + 1'b1;
                             end
-                        end else if (f_jh != f_jh_end) begin      // K-mode: jh inner, g outer
+                        end else if (f_jh != f_jh_end) begin      // K-mode: jh inner
                             f_jh <= f_jh + 1'b1; f_addr <= f_addr + f_js; f_tline <= f_tline + 1'b1;
+                        end else if (f_stride && !f_kk_last) begin
+                            // K-split layout: stride between k words, one tagged
+                            // HBM word per k step instead of a contiguous burst.
+                            f_kk <= f_kk + 1'b1; f_jh <= 0;
+                            a_k <= a_k + f_ks; f_addr <= a_k + f_ks;
+                            f_tline <= t_lb + ((f_kk + 1'b1) << (LIL - f_jsh));
                         end else begin
-                            f_jh <= 0; f_g <= f_g + 1'b1;
-                            a_outer <= a_outer + f_ts; f_addr <= a_outer + f_ts; f_tline <= t_lb;
+                            f_jh <= 0; f_kk <= 0; f_g <= f_g + 1'b1;
+                            a_outer <= f_next_group_addr; a_k <= f_next_group_addr;
+                            f_addr <= f_next_group_addr; f_tline <= t_lb;
                         end
                     end else if (!f_last_k) begin
                         f_k0 <= f_k0 + blen; a_blk <= a_nblk; f_st <= F_PREP;
                     end else if (!f_last_r) begin
                         f_k0 <= 0; f_r <= f_r + 1'b1;
-                        f_rb <= f_rb + (f_ts << LG); a_blk <= f_rb + (f_ts << LG); f_st <= F_PREP;
+                        f_rb <= f_rb + f_ts * (G >> f_split);
+                        a_blk <= f_rb + f_ts * (G >> f_split); f_st <= F_PREP;
                     end else begin
                         fdone[f_idx] <= 1'b1; f_idx <= !f_idx; f_st <= F_IDLE;
                     end
@@ -287,8 +364,8 @@ module ot_hdc_kv_stream #(
     integer gg;
     always @(*) begin
         for (gg = 0; gg < G; gg = gg + 1) begin
-            p_need0[gg] = (src_of({NW{1'b0}}, gg, d_ntile[p_idx], d_kindk[p_idx], d_to[p_idx]) == SRC_WIN);
-            p_need_nx[gg] = (src_of(p_r + 1'b1, gg, d_ntile[p_idx], d_kindk[p_idx], d_to[p_idx]) == SRC_WIN);
+            p_need0[gg] = (src_of({NW{1'b0}}, gg, d_split[p_idx], d_ntile[p_idx], d_kindk[p_idx], d_to[p_idx]) == SRC_WIN);
+            p_need_nx[gg] = (src_of(p_r + 1'b1, gg, d_split[p_idx], d_ntile[p_idx], d_kindk[p_idx], d_to[p_idx]) == SRC_WIN);
         end
     end
     wire [G-1:0] p_have = vbits[cp_line[LWIN-1:0]*G +: G];
@@ -351,8 +428,8 @@ module ot_hdc_kv_stream #(
     reg  [2*G-1:0] c_src, c_src0, c_src_nx;           // sources of the round, registered as p_need
     always @(*) begin
         for (gg = 0; gg < G; gg = gg + 1) begin
-            c_src0[2*gg +: 2] = src_of({NW{1'b0}}, gg, d_ntile[c_idx], d_kindk[c_idx], d_to[c_idx]);
-            c_src_nx[2*gg +: 2] = src_of(c_r + 1'b1, gg, d_ntile[c_idx], d_kindk[c_idx], d_to[c_idx]);
+            c_src0[2*gg +: 2] = src_of({NW{1'b0}}, gg, d_split[c_idx], d_ntile[c_idx], d_kindk[c_idx], d_to[c_idx]);
+            c_src_nx[2*gg +: 2] = src_of(c_r + 1'b1, gg, d_split[c_idx], d_ntile[c_idx], d_kindk[c_idx], d_to[c_idx]);
         end
     end
     always @(posedge clk) begin
@@ -367,6 +444,15 @@ module ot_hdc_kv_stream #(
     endfunction
     reg [1:0]    c_tl_use;
     reg [2*TAW-1:0] c_tl_addr;
+    assign tl_group_raddr = kv_raddr;
+    integer tg;
+    always @(*) begin
+        tl_group_re = 0;
+        if (SPLIT_AWARE)
+            for (tg=0; tg<G; tg=tg+1)
+                tl_group_re[tg] = kv_re && (c_src[2*tg +: 2] == SRC_T0 ||
+                                             c_src[2*tg +: 2] == SRC_T1);
+    end
     always @(*) begin
         c_tl_use = 2'b00; c_tl_addr = 0;
         for (gg = 0; gg < G; gg = gg + 1) begin
@@ -406,8 +492,10 @@ module ot_hdc_kv_stream #(
             for (lq = 0; lq < W; lq = lq + 1)
                 case (sel_r[2*gg +: 2])
                     SRC_WIN:  kv_q[(gg*W + lq)*32 +: 32] = {win_q[(gg*W + lq)*16 +: 16], 16'h0000};
-                    SRC_T0:   kv_q[(gg*W + lq)*32 +: 32] = {tl_q[lq*16 +: 16], 16'h0000};
-                    SRC_T1:   kv_q[(gg*W + lq)*32 +: 32] = {tl_q[(W + lq)*16 +: 16], 16'h0000};
+                    SRC_T0:   kv_q[(gg*W + lq)*32 +: 32] =
+                        {SPLIT_AWARE ? tl_group_q[(gg*W+lq)*16 +: 16] : tl_q[lq*16 +: 16], 16'h0000};
+                    SRC_T1:   kv_q[(gg*W + lq)*32 +: 32] =
+                        {SPLIT_AWARE ? tl_group_q[(gg*W+lq)*16 +: 16] : tl_q[(W+lq)*16 +: 16], 16'h0000};
                     default:  kv_q[(gg*W + lq)*32 +: 32] = 32'd0;
                 endcase
     end
@@ -430,11 +518,16 @@ module ot_hdc_kv_stream #(
     always @(posedge clk) begin
         if (kvd_v) begin
             d_wbase[wptr] <= kvd_wbase; d_ts[wptr] <= kvd_ts; d_ks[wptr] <= kvd_ks; d_js[wptr] <= kvd_js;
-            d_jsh[wptr] <= kvd_jsh; d_tiles[wptr] <= kvd_tiles; d_k[wptr] <= kvd_k;
+            d_wcs[wptr] <= SPLIT_AWARE ? kvd_wcs : AW'(0);
+            d_split[wptr] <= SPLIT_AWARE ? kvd_split : 4'd0;
+            d_jsh[wptr] <= kvd_jsh; d_tiles[wptr] <= kvd_tiles;
+            d_k[wptr] <= SPLIT_AWARE ? ((kvd_k + ((NW'(1) << kvd_split) - 1)) >> kvd_split) : kvd_k;
             d_ntile[wptr] <= (kvd_nout + W - 1) >> LW; d_to[wptr] <= kvd_pos >> LW;
             d_T[wptr] <= (t_lead > t_cap) ? t_cap : t_lead;
             d_capped[wptr] <= (t_lead > t_cap);
-            d_kindk[wptr] <= kvd_kindk; d_kmode[wptr] <= (kvd_ks == 1); d_gmode[wptr] <= (kvd_ts == 1);
+            d_kindk[wptr] <= kvd_kindk;
+            d_kmode[wptr] <= (kvd_ts != 1); // dense and strided K score walks
+            d_gmode[wptr] <= (kvd_ts == 1);
         end
     end
 
@@ -480,7 +573,7 @@ module ot_hdc_kv_stream #(
         for (pi = 0; pi < NPC; pi = pi + 1)
             if (hr_v[pi] && hr_rdy[pi]) begin
                 st_slot[rsp_grp[pi*LG +: LG]*LWIN +: LWIN] <= rsp_line[pi*LWIN +: LWIN];
-                st_data[rsp_grp[pi*LG +: LG]*W*16 +: W*16] <= hr_data[pi*W*16 +: W*16];
+                st_data[rsp_grp[pi*LG +: LG]*W*16 +: W*16] <= expand_word(hr_data[pi*W*HB +: W*HB]);
             end
     end
     always @(posedge clk) begin
@@ -513,22 +606,27 @@ module ot_hdc_kv_stream #(
         if (!rst_n) tl_we <= 2'b00;
         else begin
             tl_we <= 2'b00;
-            if (kv_we && w_isk) tl_we[w_bank] <= 1'b1;
+            if (boot_v) tl_we[boot_addr[LOG_HD]] <= 1'b1;
+            else if (kv_we && w_isk) tl_we[w_bank] <= 1'b1;
         end
     end
     integer tb;
     always @(posedge clk) begin
         for (tb = 0; tb < 2; tb = tb + 1) begin
-            tl_waddr[tb*TAW +: TAW] <= tail_idx(w_word);
+            tl_waddr[tb*TAW +: TAW] <= boot_v ? tail_idx(boot_addr) : tail_idx(w_word);
             //: lane 0 opens a new tile: the other lanes (later positions) read zero
-            tl_wmask[tb*W +: W] <= (w_lane == 0) ? {W{1'b1}} : ({{(W-1){1'b0}}, 1'b1} << w_lane);
-            tl_wdata[tb*W*16 +: W*16] <= {{(W-1)*16{1'b0}}, kv_wdata[31:16]} << (16 * w_lane);
+            tl_wmask[tb*W +: W] <= boot_v ? {W{1'b1}} :
+                                   ((w_lane == 0) ? {W{1'b1}} : ({{(W-1){1'b0}}, 1'b1} << w_lane));
+            tl_wdata[tb*W*16 +: W*16] <= boot_v ? expand_word(boot_data) :
+                                              ({{(W-1)*16{1'b0}}, kv_wdata[31:16]} << (16 * w_lane));
         end
     end
     // Reads: the engine's (same cycle as its kv_re, like the window) or, on a
     // cycle the engine leaves that bank idle, the flush.
     always @(*) begin
-        tl_re = c_tl_use; tl_raddr = c_tl_addr;
+        // The split-aware physical system reads the core through the G-port
+        // bank mux. Keep this two-parity port for closed-tile flush only.
+        tl_re = SPLIT_AWARE ? 2'b00 : c_tl_use; tl_raddr = c_tl_addr;
         if (fl_go) begin
             tl_re[fl_bank] = 1'b1; tl_raddr[fl_bank*TAW +: TAW] = fl_idx;
         end
@@ -609,11 +707,11 @@ module ot_hdc_kv_stream #(
     end
     always @(posedge clk) if (hq_free) begin
         if (!vf_empty) begin
-            hq_we <= 1'b1; hq_addr <= vf_addr[vf_rp]; hq_len <= 1; hq_wdata <= vf_data[vf_rp]; hq_tag <= 0;
+            hq_we <= 1'b1; hq_addr <= vf_addr[vf_rp]; hq_len <= 1; hq_wdata <= pack_word(vf_data[vf_rp]); hq_tag <= 0;
         end else if (f_req_v) begin
             hq_we <= 1'b0; hq_addr <= f_req_addr; hq_len <= f_req_len; hq_tag <= f_req_tag;
         end else if (ff_n != 0) begin
-            hq_we <= 1'b1; hq_addr <= ff_addr[ff_rp]; hq_len <= 1; hq_wdata <= ff_data[ff_rp]; hq_tag <= 0;
+            hq_we <= 1'b1; hq_addr <= ff_addr[ff_rp]; hq_len <= 1; hq_wdata <= pack_word(ff_data[ff_rp]); hq_tag <= 0;
         end
     end
     // ---- status ----------------------------------------------------------------------------------

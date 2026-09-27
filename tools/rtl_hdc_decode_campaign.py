@@ -55,16 +55,21 @@ WROM_ROWS = 6
 VERILATOR5 = Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 ISA_SVH = ROOT / "rtl/hdc/ot_hdc_isa.svh"
-HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
-                                          "ot_hdc_reduce", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_core")]
+HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_fastfp", "ot_hdc_sfu", "ot_hdc_sfu_q",
+                                          "ot_hdc_reduce", "ot_hdc_reduce_q", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_vstream_lane",
+                                          "ot_hdc_vreduce", "ot_hdc_vstream", "ot_hdc_core")]
 TB_SFU = ROOT / "rtl/test/tb_hdc_sfu.sv"
 TB_MUL = ROOT / "rtl/test/tb_hdc_mul_equiv.sv"
 HARNESS_MUL = ROOT / "rtl/test/hdc_mul_equiv_harness.cpp"
 MUL_VECTORS = 20_000_000
+TB_FAST = ROOT / "rtl/test/tb_hdc_fastfp_equiv.sv"
+HARNESS_FAST = ROOT / "rtl/test/hdc_fastfp_equiv_harness.cpp"
+FAST_VECTORS = 20_000_000
 TB_CORE = ROOT / "rtl/test/tb_hdc_core.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_harness.cpp"
 TOOLS = [ROOT / "tools/hdc_golden.py", ROOT / "tools/hdc_isa.py", ROOT / "tools/hdc_program.py", Path(__file__)]
-LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-BLKSEQ")
+LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-BLKSEQ", "-Wno-VARHIDDEN")
+SW8 = 16          # the 8-group scaling point also widens the stream unit (the reducer's tree, SW/8 = 2)
 SINGLE = re.compile(r"HDC token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) cycles=(\d+) fault=(\d+) "
                     r"logit_mismatch=(\d+) vm_mismatch=(\d+) kv_mismatch=(\d+)")
 UTIL = re.compile(r"UTIL me_issue_cycles=(\d+) su_issue_cycles=(\d+) both_idle_cycles=(\d+)")
@@ -129,13 +134,21 @@ def run(memsys: bool = False) -> dict:
     # with the data itself unchanged); 5.050 counts zero.  The default build keeps
     # the verilator on PATH so its record is unchanged.
     vl = str(VERILATOR5) if memsys and VERILATOR5.is_file() else "verilator"
+    # The stream unit: the vector unit of I.SU_WIDTH lanes (R-ARITH reducer);
+    # the memory-macro wrapper still has one stream port per operand, so it
+    # builds the scalar unit and its golden order (HDC_SU_WIDTH=1).
+    su = 1 if memsys else I.SU_WIDTH
+    su8 = 1 if memsys else SW8
+    envs = dict(os.environ, HDC_SU_WIDTH=str(su))
+    sup = [f"-GSU_VEC={int(su > 1)}", f"-GSW={su}"]
+    sup8 = [f"-GSU_VEC={int(su8 > 1)}", f"-GSW={su8}"]
     pers: dict = {}
     with tempfile.TemporaryDirectory() as scratch:
         s = Path(scratch)
         # 1. special functions
         n_vec = sfu_vectors(s / "sfu.txt")
         subprocess.run(["iverilog", "-g2012", "-o", str(s / "sfu.vvp"), str(TB_SFU),
-                        *map(str, HDC[0:4]), *map(str, PIPES)], check=True)
+                        *map(str, HDC[0:5]), *map(str, PIPES)], check=True)
         sfu = subprocess.run(["vvp", "-n", str(s / "sfu.vvp"), f"+VEC={s / 'sfu.txt'}"],
                              check=True, capture_output=True, text=True).stdout
         m = re.search(r"SFU vectors=(\d+) checked=(\d+) errors=(\d+)", sfu)
@@ -154,13 +167,24 @@ def run(memsys: bool = False) -> dict:
                    "fp32_rebalanced_mismatches": int(m1.group(2)), "bf16_exact_checked": int(m2.group(1)),
                    "bf16_refused": int(m2.group(2)), "bf16_mismatches": int(m2.group(3)),
                    "pass": "PASS" in mul}
+        # 1c. low-latency adder and multiplier (worktree-agent-a516a664)
+        subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_fastfp_equiv", "-Mdir", str(s / "objq"),
+                        str(HDC[1]), str(HDC[2]), str(HDC[3]), *map(str, PIPES), str(TB_FAST), str(HARNESS_FAST),
+                        "-CFLAGS", "-O1"], check=True, capture_output=True)
+        fast = subprocess.run([str(s / "objq" / "Vtb_hdc_fastfp_equiv"), f"+N={FAST_VECTORS}"], check=True,
+                              capture_output=True, text=True).stdout
+        mf = re.search(r"FASTFP checked=(\d+) add_mismatches=(\d+) mul_mismatches=(\d+)", fast)
+        fast_rec = {"vectors": FAST_VECTORS, "checked": int(mf.group(1)), "add_mismatches": int(mf.group(2)),
+                    "mul_mismatches": int(mf.group(3)), "latency_cycles": 3, "reference_latency_cycles": 5,
+                    "pass": "PASS" in fast}
         # 2. lint
-        lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core",
+        lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core", *sup,
                                f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES)], capture_output=True, text=True)
         # 3. core
         img = s / "img"
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img)], check=True,
-                       capture_output=True)
+                       capture_output=True, env=envs)
 
         def rom_args(d: Path, groups: int) -> list:
             if not memsys:
@@ -173,7 +197,7 @@ def run(memsys: bool = False) -> dict:
         img_rom = rom_args(img, I.GROUPS)
         obj = s / "obj"
         subprocess.run([vl, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
-                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-Mdir", str(obj),
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", *sup, "-Mdir", str(obj),
                         f"-I{ISA_SVH.parent}", *extra_def,
                         *map(str, HDC), *map(str, PIPES), *extra_rtl, str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
                        check=True, capture_output=True)
@@ -210,18 +234,18 @@ def run(memsys: bool = False) -> dict:
         # long context: attention over every group
         imgc = s / "imgc"
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(imgc), "--context", "60"],
-                       check=True, capture_output=True)
+                       check=True, capture_output=True, env=envs)
         imgc_rom = rom_args(imgc, I.GROUPS)
         onec = subprocess.run([exe, f"+DIR={imgc}", *imgc_rom, *(imgc / "run.args").read_text().split()],
                               check=True, capture_output=True, text=True).stdout
         # scaling point: 8 lane groups
         img8, obj8 = s / "img8", s / "obj8"
-        env8 = dict(os.environ, HDC_GROUPS="8")
+        env8 = dict(os.environ, HDC_GROUPS="8", HDC_SU_WIDTH=str(su8))
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img8)], check=True,
                        capture_output=True, env=env8)
         img8_rom = rom_args(img8, 8)
         subprocess.run([vl, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
-                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-GG=8", "-Mdir", str(obj8),
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-GG=8", *sup8, "-Mdir", str(obj8),
                         f"-I{ISA_SVH.parent}", *extra_def,
                         *map(str, HDC), *map(str, PIPES), *extra_rtl, str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
                        check=True, capture_output=True)
@@ -264,10 +288,12 @@ def run(memsys: bool = False) -> dict:
         bist_ok = (c["bist_pass"] == 1 and c["token_pass"] and f["token_pass"] and f["bist_pass"] == 0
                    and f["sram_status"][-2:] == "10" and f["rom_ecc_corrected"] > 0
                    and f["rom_status"][-2 * 6:-2 * 5] == "11" and f["cycles"] == c["cycles"])
-    status = "pass" if bist_ok and sfu_rec["pass"] and mul_rec["pass"] and single["pass"] and scale8["pass"] and longc["pass"] and multi_rec["pass"] and lint.returncode == 0 \
+    status = "pass" if bist_ok and sfu_rec["pass"] and mul_rec["pass"] and fast_rec["pass"] and single["pass"] and scale8["pass"] and longc["pass"] and multi_rec["pass"] and lint.returncode == 0 \
         else "fail"
     record = {
         "schema": "opentallas.hdc-decode-campaign.v1",
+        "stream_unit": {"lanes": su, "lanes_8_group_point": su8,
+                        "unit": "rtl/hdc/ot_hdc_vstream.sv (R-ARITH reducer)" if su > 1 else "rtl/hdc/ot_hdc_stream.sv"},
         "status": status,
         "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core "
                           "boundary) with behavioural synchronous-read memories; clock rate is not "
@@ -279,6 +305,7 @@ def run(memsys: bool = False) -> dict:
         "weight_macs_per_token": macs,
         "sfu": sfu_rec,
         "multipliers": mul_rec,
+        "low_latency_fp_units": fast_rec,
         "single_step": single,
         "end_to_end": multi_rec,
         "scaling_8_groups": scale8,
@@ -286,7 +313,8 @@ def run(memsys: bool = False) -> dict:
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                            "messages": lint.stderr.strip().splitlines()[:20]},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p)
-                         for p in (ISA_SVH, *HDC, *PIPES, TB_SFU, TB_MUL, HARNESS_MUL, TB_CORE, HARNESS, *TOOLS,
+                         for p in (ISA_SVH, *HDC, *PIPES, TB_SFU, TB_MUL, HARNESS_MUL, TB_FAST, HARNESS_FAST, TB_CORE,
+                                   HARNESS, *TOOLS,
                                    *(MEMSYS_RTL if memsys else []))},
     }
     if memsys:

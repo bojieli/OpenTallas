@@ -50,15 +50,27 @@ ROOT = Path(__file__).resolve().parents[1]
 IL = I.INTERLEAVE
 
 # RTL constants (cycles); fitted by `calibrate` and fixed here.
-# Fitted to the reduced vehicle's Verilator issue trace at 4 groups: 32,191
-# model cycles against 32,196 RTL cycles, every issue within 7 cycles.
-K = dict(seq_gap=5,        # go -> next go, sequencer fetch/decode (S_GO..S_ISSUE)
+# Fitted to the reduced vehicle's Verilator issue trace (4 groups, SW 8): the
+# prefetched sequencer, the vector stream unit, the 3-cycle adders
+# (ot_hdc_fastfp) in the stream unit, reducers and split tree, the engine's
+# row max: 24,986 model cycles against 24,992 RTL cycles, every issue within 3
+# cycles (the pre-pipeline fit was 32,191 vs 32,196 at seq_gap 5).
+K = dict(seq_gap=1,        # go -> next go: NEXT is decoded on the issuing edge
+         start=3,          # start -> first issue: DYN, the first fetch, decode into NEXT
+         idle_me=4,        # matrix engine's last write -> a barrier releases
+         idle_su=1,        # stream unit's last write -> a barrier releases
          me_start=1,       # go -> first element issued
          me_lat=16,        # element issue -> its result written (memory stage, lanes, output registers)
-         me_tree=6,        # per split-tree level (5 in the adder + the level's output register)
+         me_tree=4,        # per split-tree level (the 3-cycle ot_hdc_qadd + the level's output register)
          su_start=1,
-         su_depth={I.SFU_NONE: 29, I.SFU_EXP: 121, I.SFU_RECIP: 75, I.SFU_RSQRT: 90, I.SFU_SIGM: 172},
-         red_tail=32,      # last element retired -> reducer result written
+         # the low-latency (3-stage) adder and multiplier and the table-driven
+         # exp range reduction (rtl/hdc/ot_hdc_fastfp.sv, ot_hdc_sfu.sv; the
+         # worktree-agent-a516a664 branch at acc46e61): 29/121/75/90/172 -> 21/70/49/58/101
+         su_depth={I.SFU_NONE: 21, I.SFU_EXP: 70, I.SFU_RECIP: 49, I.SFU_RSQRT: 58, I.SFU_SIGM: 101},
+         red_tail=21,      # last element retired -> reducer result written (scalar unit; a516: 22 at seq_gap 5)
+         red_tail_vec=26,  # the vector reducer's fixed part: read 1 + square 3+1 + the 3-cycle-adder chain 21
+         red_lv=4,         # the vector reducer's time levels (ot_hdc_core LV)
+         rmax_tail=4,      # last result -> the maxima word written, beyond the compare tree's levels
          idle_reg=2)       # last write -> registered idle seen by the sequencer
 
 
@@ -68,7 +80,41 @@ K = dict(seq_gap=5,        # go -> next go, sequencer fetch/decode (S_GO..S_ISSU
 # Qwen3-like two-KV-head stream) at a 1 GHz core; c0 (announce to first fetch,
 # issue iterations, completion walk, kv_ok registers) and lat (fetch to data)
 # are fitted to the reduced vehicle's Verilator runs.
-KV = dict(npc=4, bw_per_pc=0.70, c0=12, lat=108, lead=512, win=256)
+# lat was 108 with the 5-stage stream unit; a516 refitted it to 140 when the
+# shorter stream unit reached each KV op sooner (+0.30% / -0.31% at positions 15 / 59).
+KV = dict(npc=4, bw_per_pc=0.70, c0=12, lat=140, lead=512, win=256)
+
+
+def me_loop(f, dyn, pos, groups):
+    """(rounds, k steps) of a matrix-engine op.  KV-sourced ops cut their whole
+    K interleaved over S = 2^split groups (kc = ceil(K/S)) and count rounds of
+    G/S position tiles (tools/hdc_isa.py)."""
+    rounds = f["me_tiles"] + dyn[f["me_d_tiles"]]
+    k = f["me_k"] + dyn[f["me_d_k"]]
+    if f["me_wsrc"]:
+        s = f["me_split"]
+        if f["me_d_tiles"] == I.DYN_TTILES:
+            rounds = f["me_tiles"] + (pos >> ((I.W_LANES * groups).bit_length() - 1 - s)) + 1
+        k = -(-k // (1 << s))
+    return rounds, k
+
+
+def su_vectors(f, dyn, su_width=None):
+    """Cycles of a stream op's element loop: the vector unit (SW >= 8) issues
+    ceil(nin / SW) vectors per outer iteration; the scalar unit one element."""
+    sw = I.SU_WIDTH if su_width is None else su_width
+    nin = f["su_nin"] + dyn[f["su_d_nin"]]
+    return f["su_nout"] * -(-nin // sw)
+
+
+def red_tail(k, su_width=None):
+    """Last element retired -> the reducer's result written.  The vector
+    reducer (rtl/hdc/ot_hdc_vreduce.sv): squaring stage, the 8-element chain,
+    log2(SW/8) tree levels and LV time levels of LA + 1 = 4 cycles each."""
+    sw = I.SU_WIDTH if su_width is None else su_width
+    if sw == 1:
+        return k["red_tail"]
+    return k["red_tail_vec"] + 4 * ((sw // 8).bit_length() - 1 + k["red_lv"])
 
 
 # Weights in HBM (W_HBM configuration).  bw_per_pc: sustained 128-byte words
@@ -162,8 +208,7 @@ class WStream:
 def kv_op(f, dyn, pos, groups):
     """(lines, HBM words, jsh) of a KV-sourced op under the streamer's rules."""
     W = I.W_LANES
-    rounds = f["me_tiles"] + dyn[f["me_d_tiles"]]
-    k = f["me_k"] + dyn[f["me_d_k"]]
+    rounds, k = me_loop(f, dyn, pos, groups)
     jsh = f["me_jsh"]
     njh = IL >> jsh
     lines = rounds * k * njh
@@ -177,7 +222,7 @@ def dyn_values(pos, token=0, H=128, half=8, HD=16, groups=I.GROUPS):
     return [0, token * H, pos * half, (pos // W) * HD * W + pos % W, pos * HD, pos + 1, pos // (W * groups) + 1]
 
 
-def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_groups=1, su_width=1, kv=None,
+def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_groups=1, su_width=None, kv=None,
              kv_stats=None, w=None):
     """attn_groups / su_width > 1 are PROJECTIONS of design options the RTL does
     not have yet: KV-sourced ops spread over that many lane groups (each taking
@@ -186,7 +231,7 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
     dict, receives the streaming totals.  w: a WStream (weights in HBM), whose
     token() the caller has set to this token's start."""
     dyn = dyn_values(pos, groups=groups, **(dyn_shape or {}))
-    t = 0                              # sequencer time: earliest next issue
+    t = k.get("start", 0)              # sequencer time: earliest next issue
     me_free = su_free = 0              # unit accepts a new op from here
     me_idle = su_idle = 0              # unit fully drained at
     su_cls, su_cls_idle = None, 0
@@ -199,22 +244,31 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
         f = {name: f.get(name, 0) for name, _ in I.FIELDS}
         u = f["unit"]
         if u == I.UNIT_END:
-            t = max(t, me_idle, su_idle) + k["idle_reg"]
+            t = max(t, me_idle + k.get("idle_me", k["idle_reg"]), su_idle + k.get("idle_su", k["idle_reg"]))
             break
         ready = t
         why = "issue"
         if f["barrier"]:
-            b = max(me_idle + k["idle_reg"], su_idle + k["idle_reg"])
+            b = max(me_idle + k.get("idle_me", k["idle_reg"]), su_idle + k.get("idle_su", k["idle_reg"]))
             if b > ready:
                 ready, why = b, "barrier_me" if me_idle >= su_idle else "barrier_su"
 
+        elif f["wait_me"] or f["wait_su"]:
+            b = max(me_idle + k.get("idle_me", k["idle_reg"]) if f["wait_me"] else 0,
+                    su_idle + k.get("idle_su", k["idle_reg"]) if f["wait_su"] else 0)
+            if b > ready:
+                ready, why = b, "wait_me" if f["wait_me"] else "wait_su"
+
         elif f["chase"]:
             n = f["chase_n"]
-            if u == I.UNIT_ME:
-                first, cnt = su_el_t
-                c = first + min(n, cnt) - 1 + 1
+            if u == I.UNIT_ME and f["chase_rows"]:
+                first, cnt, per_row = su_el_t
+                c = first + min(n * per_row, cnt) - 1 + 1 + k.get("chase_me", 0)
+            elif u == I.UNIT_ME:
+                first, cnt, _ = su_el_t
+                c = first + min(n, cnt) - 1 + 1 + k.get("chase_me", 0)
             else:
-                c = me_slot_t[min(n, len(me_slot_t)) - 1] + 1
+                c = me_slot_t[min(n, len(me_slot_t)) - 1] + 1 + k.get("chase_su", 0)
             if c > ready:
                 ready, why = c, "chase"
 
@@ -251,17 +305,14 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
                 ks["hbm_words"] += words
                 if w is not None:
                     w.steal(go, words * 32)
-            split = 0 if f["me_wsrc"] else f["me_split"]
-            rounds = f["me_tiles"] + dyn[f["me_d_tiles"]]
-            # (attention now spreads over every group in the RTL itself; the
-            # attn_groups projection is retired and kept only as 1)
-            kc = f["me_k"] + dyn[f["me_d_k"]]
+            rounds, kc = me_loop(f, dyn, pos, groups)
             n_el = rounds * kc * IL
             e0 = go + k["me_start"]
             lat = k["me_lat"] + k["me_tree"] * (groups.bit_length() - 1)
             me_slot_t = [e0 + r * kc * IL + (kc - 1) * IL + j + lat for r in range(rounds) for j in range(IL)]
             me_free = e0 + n_el
-            me_idle = max(me_idle, me_slot_t[-1])
+            me_idle = max(me_idle, me_slot_t[-1] + (k.get("rmax_tail", 0) + (groups * I.W_LANES - 1).bit_length()
+                                                    if f["me_rmax"] else 0))
             if w is not None and not f["me_wsrc"]:
                 w.consume(n_el, e0)
         else:
@@ -274,12 +325,12 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             if su_cls is not None and cls != su_cls and su_cls_idle > go:
                 go, why = su_cls_idle, "class_drain"
 
-            n_el = -(-f["su_nout"] * (f["su_nin"] + dyn[f["su_d_nin"]]) // su_width)
+            n_el = su_vectors(f, dyn, su_width)
             e0 = go + k["su_start"]
             d = k["su_depth"][cls]
-            su_el_t = (e0 + d, n_el)
+            su_el_t = (e0 + d, n_el, n_el // max(1, f["su_nout"]))
             last = e0 + n_el - 1 + d
-            tail = last + (k["red_tail"] if f["red"] else 0)
+            tail = last + (red_tail(k, su_width) if f["red"] else 0)
             su_free = e0 + n_el
             su_idle = max(su_idle, tail)
             su_cls, su_cls_idle = cls, last
@@ -309,6 +360,7 @@ class ShapeLayout:
         self.HD, self.FF, self.V = shape["HD"], shape["FF"], shape["V"]
         self.half, self.eps, self.emb_word = self.HD // 2, 1e-6, 0
         self.tp, self.die, self.row0 = 1, 0, 0   # one die: build_program reads the tensor-group split
+        self.groups = groups
         W = I.W_LANES
         self.GUB = min(W * IL, self.FF)          # gate/up interleave block, as Layout.GUB
         self.TW = 1 << 20
@@ -324,7 +376,7 @@ class ShapeLayout:
             self.mat[(L, "gu")] = mat(2 * self.FF, self.H)
             self.mat[(L, "down")] = mat(self.H, self.FF)
         self.mat["lm_head"] = mat(self.V, self.H)
-        self.cb = {k: 0 for k in [(L, n) for L in range(self.L) for n in ("in", "qk", "post")] + ["final", "rope"]}
+        self.cb = {k: 0 for k in [(L, n) for L in range(self.L) for n in ("in", "qk", "post")] + ["final", "rope", "qscale"]}
 
     def k_elem(self, L, g, t, d):
         return ((L * self.KV + g) * self.TW + t) * self.HD + d
@@ -532,9 +584,10 @@ def control_breakdown(prog, pos, groups, dyn_shape=None, su_width=1):
     for f in prog:
         f = {n: f.get(n, 0) for n, _ in I.FIELDS}
         if f["unit"] == I.UNIT_ME:
-            me += (f["me_tiles"] + d[f["me_d_tiles"]]) * (f["me_k"] + d[f["me_d_k"]]) * IL
+            rr, kk = me_loop(f, d, pos, groups)
+            me += rr * kk * IL
         elif f["unit"] == I.UNIT_SU:
-            su += -(-f["su_nout"] * (f["su_nin"] + d[f["su_d_nin"]]) // su_width)
+            su += su_vectors(f, d, su_width)
     n = sum(1 for f in prog if f.get("unit") != I.UNIT_END)
     return {"cycles_per_token": total, "instructions": n,
             "issue_gap_share": round(n * K["seq_gap"] / total, 5),

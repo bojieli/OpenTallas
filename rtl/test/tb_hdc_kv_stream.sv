@@ -63,6 +63,7 @@ module tb_hdc_kv_stream #(
         .win_q(win_q),
         .tl_we(tl_we), .tl_waddr(tl_waddr), .tl_wmask(tl_wmask), .tl_wdata(tl_wdata), .tl_re(tl_re),
         .tl_raddr(tl_raddr), .tl_q({(2*W*16){1'b0}}),
+        .boot_v(1'b0), .boot_addr({AW{1'b0}}), .boot_data({(W*16){1'b0}}),
         .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_we(hq_we), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag),
         .hq_wdata(hq_wdata),
         .hr_v(hr_v), .hr_rdy(hr_rdy), .hr_tag(hr_tag), .hr_beat(hr_beat), .hr_data(hr_data), .fault(fault));
@@ -110,6 +111,17 @@ module tb_hdc_kv_stream #(
             add_op(24'd40000, 24'd1, 24'd1, 24'd3000, 3'd2, 16'd1, 16'd3000, 16'd16);
             // and a long G-mode op: 2,000 positions of head_dim 64
             add_op(24'd8000, 24'd1, 24'd4, 24'd9000, 3'd2, 16'd1, 16'd2000, 16'd64);
+        end else if (set == 3) begin
+            // Vector Qwen K-split score walk: ks=4, ts=16, one live tile.
+            // The fetcher must issue separately tagged words for each k step.
+            add_op(24'd1000,24'd16,24'd4,24'd512,3'd3,16'd1,16'd4,16'd16);
+        end else if (set == 4) begin
+            // Actual vector K-split count and GQA share: 16 k steps x 2
+            // head-share lines, inside a 256-line window with BK=16.
+            add_op(24'd1000,24'd16,24'd4,24'd512,3'd2,16'd1,16'd16,16'd16);
+        end else if (set == 5) begin
+            // Two adjacent live position tiles exercise the group stride.
+            add_op(24'd1000,24'd16,24'd4,24'd512,3'd2,16'd1,16'd16,16'd32);
         end else begin
             // set 1: jsh 0, 8 KV heads per op, 4 words per cycle; set 2: jsh 2 (GQA 4:1 as Qwen3),
             // 1 word per cycle, run on one pseudo-channel to measure its sustained rate

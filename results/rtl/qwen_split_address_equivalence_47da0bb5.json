@@ -1,0 +1,252 @@
+{
+  "schema": "opentallas.qwen-split-address-equivalence.v1",
+  "status": "pass",
+  "qwen_rtl_commit": "47da0bb568f1c9f57df2a06c8701744050e2a2e4",
+  "reference_commit": "98e3de0e",
+  "reference_script_sha256": "d362022d36997b2e7351047ec37ab14a9601d2457c0dd94cdb95a02adceb0487",
+  "inputs_sha256": {
+    "rtl/hdc/ot_hdc_core.sv": "4c7251434c8f1de9e46d8bfb823e492c370cda70ebd234bb6b0c60bfe54207b0",
+    "rtl/hdc/ot_hdc_matvec.sv": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
+    "rtl/hdc/kv/ot_hdc_kv_stream.sv": "79cf8383f3c9960963c467da950e5f156d292833b3ad5bbe8dd147b6b4972635",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_group_port.sv": "18576d35141c7e559ffb1e790c0fc5eabf978b870ac791953aaf7b2e898b366c",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "9b6ca112dafb4cf551871e1a0894e1d06c664b98cce544212b595d2668d9c2d1",
+    "results/rtl/qwen_kv_system_split_boundaries.json": "e6b2a66d3d4702d703dfe2181c920af279b953d7e92f734fd4b75142bef91fba"
+  },
+  "boundary": "Independent matvec address-equivalence model for all non-tail PC11 K-score and PC13 V-weighted-sum words across nine token positions; actual RTL read/sector and tail ports are checked by the separately pinned SW8/SW16 boundary campaign, not this mathematical gate.",
+  "cases": [
+    {
+      "position": 0,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 0,
+        "fetched_logical_words": 0,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 0
+    },
+    {
+      "position": 0,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 8,
+        "fetched_logical_words": 8,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 6
+    },
+    {
+      "position": 15,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 0,
+        "fetched_logical_words": 0,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 0
+    },
+    {
+      "position": 15,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 32,
+        "fetched_logical_words": 32,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 24
+    },
+    {
+      "position": 16,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 0,
+        "fetched_logical_words": 0,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 0
+    },
+    {
+      "position": 16,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 40,
+        "fetched_logical_words": 40,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 30
+    },
+    {
+      "position": 31,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 0,
+        "fetched_logical_words": 0,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 0
+    },
+    {
+      "position": 31,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 64,
+        "fetched_logical_words": 64,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 48
+    },
+    {
+      "position": 32,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 32,
+        "fetched_logical_words": 32,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 24
+    },
+    {
+      "position": 32,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 72,
+        "fetched_logical_words": 72,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 54
+    },
+    {
+      "position": 47,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 32,
+        "fetched_logical_words": 32,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 24
+    },
+    {
+      "position": 47,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 96,
+        "fetched_logical_words": 96,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 72
+    },
+    {
+      "position": 48,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 64,
+        "fetched_logical_words": 64,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 56
+    },
+    {
+      "position": 48,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 104,
+        "fetched_logical_words": 104,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 78
+    },
+    {
+      "position": 62,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 64,
+        "fetched_logical_words": 64,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 56
+    },
+    {
+      "position": 62,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 128,
+        "fetched_logical_words": 128,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 96
+    },
+    {
+      "position": 63,
+      "pc": 11,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 64,
+        "fetched_logical_words": 64,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 56
+    },
+    {
+      "position": 63,
+      "pc": 13,
+      "split": 2,
+      "word_chunk_stride": 1,
+      "exact": {
+        "needed_hbm_words": 128,
+        "fetched_logical_words": 128,
+        "mismatched_words": 0,
+        "examples": []
+      },
+      "pre_split_mismatches": 96
+    }
+  ]
+}

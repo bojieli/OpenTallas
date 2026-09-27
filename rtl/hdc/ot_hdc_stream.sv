@@ -13,10 +13,12 @@
 //     out = (S | S*C) (| *B)
 //
 // then is written (vector memory or KV SRAM) and/or reduced per segment.
-// Every operator is a qualified pipelined binary32 unit; the SFU class sets the
-// pipeline depth, so a new instruction of another class waits for the unit to
-// drain (in-order writes, no reorder logic).  Depth from the address cycle to
-// the write: 27 (no SFU), 73 (reciprocal), 88 (rsqrt), 119 (exp), 170 (sigmoid).
+// Every operator is a pipelined binary32 unit (the low-latency adder and
+// multiplier of rtl/hdc/ot_hdc_fastfp.sv, LATENCY 3, bit-identical to the
+// qualified pipes); the SFU class sets the pipeline depth, so a new instruction
+// of another class waits for the unit to drain (in-order writes, no reorder
+// logic).  Depth from the address cycle to the write: 19 (no SFU), 47
+// (reciprocal), 56 (rsqrt), 68 (exp), 99 (sigmoid).
 // `progress` counts the elements the latest instruction has written, for
 // element chaining by the sequencer.
 // ---------------------------------------------------------------------------
@@ -24,7 +26,8 @@ module ot_hdc_stream #(
     parameter integer W  = 16,
     parameter integer WR = 64,        // bf16 lanes per weight-ROM word
     parameter integer AW = 24,
-    parameter integer NW = 16
+    parameter integer NW = 16,
+    parameter integer KV_FP8 = 0      // KV cache in FP8 E4M3 (else BF16)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -86,10 +89,45 @@ module ot_hdc_stream #(
     localparam [1:0] MB_OFF = 0, MB_POS = 1, MB_NEG = 2;
     localparam [2:0] AD_BYP = 0, AD_Q = 1, AD_C = 2, AD_NEGB = 3, AD_IMM = 4;
     localparam [2:0] SFU_NONE = 0, SFU_EXP = 1, SFU_RECIP = 2, SFU_RSQRT = 3, SFU_SIGM = 4;
-    localparam integer D_EXP = 92, D_RECIP = 46, D_RSQRT = 61;
-    localparam integer D_SIGM = D_EXP + 5 + D_RECIP;   // exp, +1, reciprocal
-    localparam integer TAP0 = 11;                 // S3 -> S14
+    localparam integer LA = 3, LM = 3;            // ot_hdc_qadd / ot_hdc_qmul latency
+    localparam integer D_EXP = 49, D_RECIP = 28, D_RSQRT = 37;   // ot_hdc_sfu.sv DEPTHs
+    localparam integer D_SIGM = D_EXP + LA + D_RECIP;   // exp, +1, reciprocal
+    localparam integer TAP0 = LM + 1 + LA;        // S3 -> R (7)
     localparam integer TAPMAX = TAP0 + D_SIGM;
+
+    //: The KV cache's format: BF16, or FP8 E4M3 (KV_FP8; bias 7, max 448,
+    //: subnormal quantum 2^-9, RNE, saturating) -- tools/hdc_golden.py kv_round.
+    //: The value is kept as its binary32 bits; every E4M3 value is a BF16 value.
+    function automatic [31:0] fp8r(input [31:0] v);
+        reg [7:0] ex; reg [22:0] mt; reg [24:0] sig; reg [4:0] sh; reg [24:0] n, rem, half;
+        reg [3:0] m4; reg up; integer e; reg [31:0] y;
+        begin
+            ex = v[30:23]; mt = v[22:0]; e = ex - 127;
+            if (ex == 0) y = 32'd0;                                   // zero (and FP32 subnormals: below 2^-9)
+            else if (e >= -6) begin
+                up = v[19] && ((|v[18:0]) || v[20]);
+                m4 = {1'b1, v[22:20]} + up;                          // 8..16
+                if (m4 == 0) begin e = e + 1; m4 = 4'd8; end          // 16 wraps: the next binade
+                if (e > 8 || (e == 8 && m4 > 4'd14)) y = {v[31], 8'd135, 3'b110, 20'd0};   // saturate at 448
+                else y = {v[31], e[7:0] + 8'd127, m4[2:0], 20'd0};
+            end else begin
+                // subnormal: n = round(|v| / 2^-9), |v| = sig * 2^(e-23), sh = 14 - e
+                sig = {2'b01, mt};
+                if (14 - e >= 26) y = 32'd0;
+                else begin
+                    sh = 14 - e;
+                    n = sig >> sh; rem = sig & ((25'd1 << sh) - 1); half = 25'd1 << (sh - 1);
+                    if (rem > half || (rem == half && n[0])) n = n + 1;
+                    if (n == 0) y = 32'd0;
+                    else if (n[3]) y = {v[31], 8'd121, 23'd0};          // 8 x 2^-9 = 2^-6
+                    else if (n[2]) y = {v[31], 8'd120, n[1:0], 21'd0};
+                    else if (n[1]) y = {v[31], 8'd119, n[0], 22'd0};
+                    else y = {v[31], 8'd118, 23'd0};
+                end
+            end
+            fp8r = y;
+        end
+    endfunction
 
     // -- issue loop -----------------------------------------------------------
     reg              active;
@@ -230,20 +268,20 @@ module ot_hdc_stream #(
         s3_ma <= s2_ma; s3_mb <= s2_mb; s3_ad <= s2_ad; s3_tail <= s2_tail;
     end
 
-    // -- S3 -> S8: the two multipliers ------------------------------------------
+    // -- S3 -> S3+LM: the two multipliers ----------------------------------------
     wire [31:0] p_mul, q_mul;
     wire fa, fb_;
-    ot_hdc_fmul u_ma (clk, rst_n, s3_v && s3_ma != MA_BYP, ma_x, ma_y, p_mul, fa);
-    ot_hdc_fmul u_mb (clk, rst_n, s3_v && s3_mb != MB_OFF, mb_x, mb_y, q_mul, fb_);
+    ot_hdc_qmul u_ma (clk, rst_n, s3_v && s3_ma != MA_BYP, ma_x, ma_y, p_mul, fa);
+    ot_hdc_qmul u_mb (clk, rst_n, s3_v && s3_mb != MB_OFF, mb_x, mb_y, q_mul, fb_);
     wire [31:0] a8, blo8, c8, imm2_8;
     wire [1:0]  ma8;
     wire [2:0]  ad8;
-    ot_hdc_delay #(.W(32*4 + 2 + 3), .D(5)) u_d38 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(32*4 + 2 + 3), .D(LM)) u_d38 (.clk(clk), .rst_n(rst_n),
         .d({s3_a, s3_blo, s3_c, s3_imm2, s3_ma, s3_ad}), .q({a8, blo8, c8, imm2_8, ma8, ad8}));
-    wire [8:0] v3;
-    ot_hdc_vline #(.D(8)) u_v3 (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(v3));   // v3[k] = S3+k
+    wire [LM+1:0] v3;
+    ot_hdc_vline #(.D(LM+1)) u_v3 (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(v3));   // v3[k] = S3+k
 
-    // -- S8 -> S9 operand select -> S14 adder ----------------------------------
+    // -- S3+LM -> operand select -> adder (LA) -> R ------------------------------
     reg [31:0] ad_x, ad_y;
     reg [2:0]  ad9;
     always @(posedge clk) begin
@@ -258,29 +296,29 @@ module ot_hdc_stream #(
     end
     wire [31:0] r_add, px14;
     wire fad;
-    ot_hdc_fadd u_ad (clk, rst_n, v3[6] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
+    ot_hdc_qadd u_ad (clk, rst_n, v3[LM+1] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
     wire [2:0] ad14;
-    ot_hdc_delay #(.W(35), .D(5)) u_d914 (.clk(clk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
-    wire [5:0] v9;
-    ot_hdc_vline #(.D(5)) u_v9 (.clk(clk), .rst_n(rst_n), .v(v3[6]), .vd(v9));    // v9[5] = S14
+    ot_hdc_delay #(.W(35), .D(LA)) u_d914 (.clk(clk), .rst_n(rst_n), .d({ad_x, ad9}), .q({px14, ad14}));
+    wire [LA:0] v9;
+    ot_hdc_vline #(.D(LA)) u_v9 (.clk(clk), .rst_n(rst_n), .v(v3[LM+1]), .vd(v9));    // v9[LA] = R
     wire [31:0] r14 = (ad14 == AD_BYP) ? px14 : r_add;
-    wire        v14 = v9[5];
+    wire        v14 = v9[LA];
 
-    // -- S14: special functions ----------------------------------------------------
+    // -- R: special functions -------------------------------------------------------
     wire [31:0] y_exp, y_rcp, y_rsq;
     wire vo_exp, vo_rcp, vo_rsq, f_exp, f_rcp, f_rsq;
-    ot_hdc_exp   u_exp (.clk(clk), .rst_n(rst_n), .v(v14 && (cls == SFU_EXP || cls == SFU_SIGM)), .x(r14),
+    ot_hdc_exp_q u_exp (.clk(clk), .rst_n(rst_n), .v(v14 && (cls == SFU_EXP || cls == SFU_SIGM)), .x(r14),
                         .y(y_exp), .vo(vo_exp), .fault(f_exp));
     // sigmoid denominator: exp(R) + 1, then the reciprocal
     wire [31:0] e1;
     wire f_e1;
-    wire [5:0] ve1;
-    ot_hdc_fadd u_e1 (clk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);
-    ot_hdc_vline #(.D(5)) u_ve1 (.clk(clk), .rst_n(rst_n), .v(vo_exp && cls == SFU_SIGM), .vd(ve1));
-    wire        rcp_v = (cls == SFU_SIGM) ? ve1[5] : (v14 && cls == SFU_RECIP);
+    wire [LA:0] ve1;
+    ot_hdc_qadd u_e1 (clk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);
+    ot_hdc_vline #(.D(LA)) u_ve1 (.clk(clk), .rst_n(rst_n), .v(vo_exp && cls == SFU_SIGM), .vd(ve1));
+    wire        rcp_v = (cls == SFU_SIGM) ? ve1[LA] : (v14 && cls == SFU_RECIP);
     wire [31:0] rcp_x = (cls == SFU_SIGM) ? e1 : r14;
-    ot_hdc_recip u_rcp (.clk(clk), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));
-    ot_hdc_rsqrt u_rsq (.clk(clk), .rst_n(rst_n), .v(v14 && cls == SFU_RSQRT), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));
+    ot_hdc_recip_q u_rcp (.clk(clk), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));
+    ot_hdc_rsqrt_q u_rsq (.clk(clk), .rst_n(rst_n), .v(v14 && cls == SFU_RSQRT), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));
 
     // B, C and the tail tag ride a tapped line from S3; the tap is the class depth.
     localparam integer LT = 32 + 32 + TT;
@@ -308,7 +346,7 @@ module ot_hdc_stream #(
         endcase
     end
 
-    // -- MC select (+1) -> multiplier (+5) -> MD select (+1) -> multiplier (+5) -> write
+    // -- MC select (+1) -> multiplier (+LM) -> MD select (+1) -> multiplier (+LM) -> write
     reg [31:0] mc_x, mc_y, mc_b;
     reg        mc_v;
     reg [TT-1:0] mc_tail;
@@ -321,29 +359,29 @@ module ot_hdc_stream #(
     end
     wire [31:0] mc_out, byp5, b5;
     wire fmc;
-    ot_hdc_fmul u_mc (clk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);
+    ot_hdc_qmul u_mc (clk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);
     wire [TT-1:0] c_tail;
-    wire [5:0] vmc;
-    ot_hdc_vline #(.D(5)) u_vmc (.clk(clk), .rst_n(rst_n), .v(mc_v), .vd(vmc));
-    ot_hdc_delay #(.W(64 + TT), .D(5)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_x, mc_b, mc_tail}),
+    wire [LM:0] vmc;
+    ot_hdc_vline #(.D(LM)) u_vmc (.clk(clk), .rst_n(rst_n), .v(mc_v), .vd(vmc));
+    ot_hdc_delay #(.W(64 + TT), .D(LM)) u_dmc (.clk(clk), .rst_n(rst_n), .d({mc_x, mc_b, mc_tail}),
                                              .q({byp5, b5, c_tail}));
     reg [31:0] md_x, md_y;
     reg        md_v;
     reg [TT-1:0] md_tail;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) md_v <= 1'b0;
-        else md_v <= vmc[5];
+        else md_v <= vmc[LM];
     end
     always @(posedge clk) begin
         md_x <= c_tail[TT-1] ? mc_out : byp5; md_y <= b5; md_tail <= c_tail;
     end
     wire [31:0] md_out, dbyp5;
     wire fmd;
-    ot_hdc_fmul u_md (clk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);
+    ot_hdc_qmul u_md (clk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);
     wire [TT-1:0] o_tail;
-    wire [5:0] vmd;
-    ot_hdc_vline #(.D(5)) u_vmd (.clk(clk), .rst_n(rst_n), .v(md_v), .vd(vmd));
-    ot_hdc_delay #(.W(32 + TT), .D(5)) u_dmd (.clk(clk), .rst_n(rst_n), .d({md_x, md_tail}), .q({dbyp5, o_tail}));
+    wire [LM:0] vmd;
+    ot_hdc_vline #(.D(LM)) u_vmd (.clk(clk), .rst_n(rst_n), .v(md_v), .vd(vmd));
+    ot_hdc_delay #(.W(32 + TT), .D(LM)) u_dmd (.clk(clk), .rst_n(rst_n), .d({md_x, md_tail}), .q({dbyp5, o_tail}));
     wire          o_mc, o_md;
     wire [1:0]    o_dst, o_red;
     wire          o_redsq;
@@ -352,7 +390,7 @@ module ot_hdc_stream #(
     wire [2:0]    o_p;
     assign {o_mc, o_md, o_dst, o_daddr, o_red, o_redsq, o_raddr, o_ifirst, o_first8, o_final, o_last, o_p} = o_tail;
     wire [31:0] out = o_md ? md_out : dbyp5;
-    wire        ov = vmd[5];
+    wire        ov = vmd[LM];
     assign retire = ov;
 
     always @(posedge clk or negedge rst_n) begin
@@ -365,7 +403,8 @@ module ot_hdc_stream #(
     always @(posedge clk) begin
         vm_waddr <= o_daddr; vm_wdata <= out;
         //: the KV cache holds BF16 (RNE), so attention products are exact BF16 x BF16
-        kv_waddr <= o_daddr; kv_wdata <= (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
+        kv_waddr <= o_daddr;
+        kv_wdata <= KV_FP8 ? fp8r(out) : (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
     end
 
     // -- reducer ------------------------------------------------------------------
@@ -384,7 +423,7 @@ module ot_hdc_stream #(
         rd_final <= o_final; rd_last <= o_last; rd_p <= o_p; rd_addr <= o_raddr;
     end
     wire f_red;
-    ot_hdc_reduce #(.AW(AW)) u_red (.clk(clk), .rst_n(rst_n), .v_in(rd_v), .mode_in(rd_mode),
+    ot_hdc_reduce_q #(.AW(AW)) u_red (.clk(clk), .rst_n(rst_n), .v_in(rd_v), .mode_in(rd_mode),
         .sq(rd_sq), .x_in(rd_x), .ifirst_in(rd_ifirst), .first8_in(rd_first8), .final_in(rd_final),
         .last_in(rd_last), .p_in(rd_p), .raddr_in(rd_addr), .o_we(red_we), .o_addr(red_addr), .o_data(red_data), .busy(reducer_busy),
         .fault(f_red));
