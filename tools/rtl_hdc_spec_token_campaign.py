@@ -90,14 +90,14 @@ def point(s: Path, groups: int, sw: int, build_log: Path, kv_bridge: bool = Fals
            "-Wno-BLKSEQ", "-Wno-VARHIDDEN", "--unroll-count", "65536",   # the testbench's per-group loops
            "--top-module", "tb_hdc_core", f"-GG={groups}", "-GSU_VEC=1",
            f"-GSW={sw}", "-Mdir", str(obj), f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES),
-           *(map(str, BRIDGE_RTL) if kv_bridge else ()), str(TB), str(HARNESS), "-CFLAGS", "-O1"]
+           *map(str, BRIDGE_RTL), str(TB), str(HARNESS), "-CFLAGS", "-O1"]
     if kv_bridge:
         cmd.insert(cmd.index("-Mdir"), "-GKV_BRIDGE=1")
     build = subprocess.run(cmd, capture_output=True, text=True, env=dict(os.environ, MAKEFLAGS="-j8"))
     if build.returncode:
         build_log.parent.mkdir(parents=True, exist_ok=True)
         build_log.write_text(f"source_sha256={sha(Path(__file__))}\n"
-                             f"input_sha256={json.dumps({str(p.relative_to(ROOT)): sha(p) for p in HDC + PIPES + [TB, HARNESS, ISA_SVH]})}\n"
+                             f"input_sha256={json.dumps({str(p.relative_to(ROOT)): sha(p) for p in HDC + PIPES + BRIDGE_RTL + [TB, HARNESS, ISA_SVH]})}\n"
                              f"returncode={build.returncode}\ncommand={' '.join(cmd)}\n"
                              f"stdout:\n{build.stdout}\nstderr:\n{build.stderr}\n")
         raise RuntimeError(f"Verilator build failed for {groups}:{sw}; full output: {build_log}")
@@ -156,7 +156,7 @@ def main() -> int:
         "kv_format": "fp8_e4m3", "context": CONTEXT, "spec": SPEC, "spec_ratios": spec_ratio,
         "points": pts, "kv_bridge": a.kv_bridge,
         "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in
-                         (ISA_SVH, *HDC, *PIPES, *(BRIDGE_RTL if a.kv_bridge else ()), TB, HARNESS, *TOOLS)},
+                         (ISA_SVH, *HDC, *PIPES, *BRIDGE_RTL, TB, HARNESS, *TOOLS)},
     }
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
