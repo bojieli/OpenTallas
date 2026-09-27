@@ -283,6 +283,7 @@ def run(names, scratch: Path) -> dict:
     return {
         "schema": "opentallas.hdc-v41x-array-hcp-gate.v1",
         "status": "pass" if all(c["pass"] for c in results) else "fail",
+        "simulation_build_note": os.environ.get("OT_ARRAY_BUILD_NOTE", "Verilator --build as invoked by this campaign"),
         "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of "
                           "V4.1x cores with X_HE=1 and other X units=0; package control is ot_rom_pkg_ctrl_x; "
                           "the selected fabric is RTL point-to-point links or ot_rom_fabric_router; memories "
