@@ -123,6 +123,24 @@ HBM_LAT_S = 1.0e-6        # ASSUMED first-access latency of a data-dependent HBM
 
 
 # -- 1. the requirement -------------------------------------------------------------------------------------------------
+# User decision 2026-09-27: the V4.1 baseline is the best SHIPPABLE option -- packaging option (b) plus a
+# light-FEC package link (130 ns hop, band 100-170, the same bandwidth; the packaging agent's lever 1) plus
+# overlapped reductions (a collective's bytes stream behind its producer; lever 4).  Plain (b) stays a
+# secondary row.
+BASELINE = dict(name="b_lightfec_overlap", board_hop_s=130e-9, overlap_collectives=True,
+                label="option (b) + light-FEC package link (130 ns) + overlapped reductions")
+PLAIN_B = dict(name="b_plain", board_hop_s=None, overlap_collectives=False, label="option (b) as published")
+
+
+def links_for(base):
+    E = _env()
+    if not base or base["board_hop_s"] is None:
+        return E["links"]
+    lk = dict(E["links"])
+    lk["rom_board_serdes"] = dict(lk["rom_board_serdes"], hop=base["board_hop_s"])
+    return lk
+
+
 def headline():
     rec = json.loads((ROOT / "results/roofline/critical_path/decode_critical_path.json").read_text())
     o = rec["packaging_options"]["options"][HEADLINE_KEY]
@@ -483,7 +501,7 @@ def fill_machine(batch):
 
 
 def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, expert_overlap=0.0, hbm=None,
-          fill=False):
+          fill=False, base=None):
     """Re-price the report's DAG node by node from `spec`; returns T (critical path), the occupancy bound,
     tokens/s per user and the per-category / per-resource critical-path breakdown.
 
@@ -504,8 +522,13 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
     if positions > 1:
         m = replace(m, microbatch=users * positions)
     b = D.Built(m, E["p"], clock, D.v41_graph, E["c"], ctx)
-    fab = D.ArrayFabric(links or E["links"], 2, "mesh", 4)
+    base = BASELINE if base is None else base
+    fab = D.ArrayFabric(links or links_for(base), 2, "mesh", 4)
     D.price_communication(b.g, fab, m.microbatch, clock)
+    if base.get("overlap_collectives"):
+        for nd in b.g.nodes.values():            # a collective's bytes stream behind its producer
+            if nd["kind"] == "collective":
+                nd["stream"] = True
     c, G, mb = E["c"], 4, m.microbatch
     NE, KE, FF, D_ = c["num_routed_experts"], c["experts_per_token"], c["moe_intermediate_size"], c["hidden_size"]
     lm = max(1, spec.lane_mult)
@@ -1056,10 +1079,12 @@ def hbm_requirements(c, hb, lat_s=HBM_LAT_S):
                 routed_note="the expert ids exist only after the router's top-6: the fetch is exposed (first-access "
                             "latency) and its bytes are on the critical path; 40 layers x this per token",
                 queue_beats_per_pseudo_channel=64,
-                queue_note="agent a8c77c67 (RTL, reduced vehicle, refresh on): refresh-aware REFpb (tRFCpb 200 ns) "
-                           "reaches 0.965-0.993 of the refresh-free rate with 64-beat queues; all-bank refresh needs "
-                           ">= 256 beats (0.96-0.97) and costs up to 15% at 64; a refreshing channel must not stall "
-                           "words that do not touch it")
+                queue_note="results/rtl/hdc_hbm_campaign.json refresh_study (commit be30614a, HBM comparator "
+                           "branch; RTL, reduced vehicle, refresh on): refresh-aware REFpb (tRFCpb 200 ns) reaches "
+                           "0.965-0.993 of the refresh-free rate with 64-beat queues; all-bank refresh needs >= 512 "
+                           "beats (0.964-0.979) and falls to 0.852 at 64; >= 8 pseudo-channels per stream keep the "
+                           "90% floor at the 350-ns tRFCpb band; a refreshing channel must not stall words that do "
+                           "not touch it")
 
 
 # -- 5. requirements and the gap ---------------------------------------------------------------------------------------------
@@ -1321,12 +1346,65 @@ def choose_target_context(rec):
                 rule="max ROM:HBM per-user rate with MTP (tau 4.1), then without; energy and throughput reported")
 
 
+def power_requirements(rec, req, areas):
+    """Per-die power at the target against the die's cooling limit (technology.json thermal: 0.5 W/mm2 x 815 mm2).
+
+    Batch 1, stage clock gating: a die is active only while its layer group holds the token (about T/28 of
+    the token time); its dynamic power then is its share of the token's non-clock energy over that window
+    plus the clock of its block area.  Saturated batch: every die is busy all the time, so the array power is
+    the aggregate rate x energy per token.  Static: the analytical design's leakage estimate (N5, per die) and
+    the ASAP7 sign-off leakage density, both reported; the HBM stacks' interface power from the analytical
+    design."""
+    E = _env()
+    c, clock = E["c"], E["clock"]
+    d = E["designs"][D.ARRAY_DESIGN]
+    die_mm2 = d["area_split_per_device"]["total_mm2"]
+    cool = E["tech"]["thermal"]["cooling_limit_w_per_mm2"]["value"] * die_mm2
+    stat = d["static_power"]["detail"]
+    et = energy_terms(E["tech"])
+    rows = {}
+    b = rec["batch"]["200000"]["rows"]["rom"]
+    b1 = b[0]
+    sat = max(b, key=lambda r: r["ar_aggregate_tokens_s"])
+    T = 1.0 / b1["ar_tokens_s_per_user"]
+    nonclock = sum(v for k, v in b1["ar_energy_parts_j"].items() if k != "clock")
+    layer_dies = 112.0                                          # 28 groups x 4 dies hold the 40 layers
+    stages = 28
+    for m in (1, 2):
+        blk = spec_area_mm2(req, areas)["total"] * m
+        clk_w = et["clock"] * blk * clock
+        active = nonclock / layer_dies / (T / stages) + clk_w
+        sat_w = sat["ar_aggregate_tokens_s"] * sat["ar_energy_j_per_token"] / 188 + (clk_w if m > 1 else 0.0)
+        rows[f"m{m}"] = dict(block_mm2=blk, clock_w_active=clk_w, active_die_dynamic_w_b1=active,
+                             saturated_die_dynamic_w=sat_w)
+    leak_n5 = stat["leakage_w_per_device"]
+    leak_asap7 = E["tech"].get("power", {}).get("leak_w_per_mm2")
+    hbm_if = stat["memory_interface_w_per_device"]
+    worst = max(r["saturated_die_dynamic_w"] for r in rows.values()) + leak_n5 + hbm_if
+    return dict(cooling_limit_w_per_die=cool, cooling_basis="technology.json thermal.cooling_limit_w_per_mm2 x die",
+                static_leakage_w_per_die_n5_analytical=leak_n5, hbm_interface_w_per_die=hbm_if,
+                token_time_us_b1=T * 1e6, nonclock_energy_per_token_j_b1=nonclock, by_lane_mult=rows,
+                worst_case_die_w=worst, margin=cool / worst,
+                requirement=("per-die power <= the cooling limit at every batch with stage clock gating: an idle "
+                             "stage's clock tree gated (ICG at the block boundaries), its ROM macros and engines "
+                             "quiescent; the worst case is the saturated array (every die busy)"),
+                note="ASAP7 unit areas; the analytical design's 48 W/die clock term charges all 525 mm2 of logic "
+                     "at 1 GHz ungated and is the upper bound if nothing gates")
+
+
 def build(quick=False):
     E = _env()
     c, clock = E["c"], E["clock"]
     areas, area_src = unit_areas()
     hl = headline()
     dag = dag_spec(dag_machine(1), clock)
+    hl = dict(hl, baseline=BASELINE, plain_b=PLAIN_B,
+              tokens_s_per_user_plain_b=dict(hl["tokens_s_per_user"]),
+              tokens_s_per_user={ctx: price(dag, ctx)["tokens_s_per_user"] for ctx in CONTEXTS},
+              tokens_s_per_user_b64={ctx: price(dag_spec(dag_machine(64), clock), ctx, batch=64)["tokens_s_per_user"]
+                                     for ctx in CONTEXTS},
+              source="decode_critical_path's option-(b) DAG re-priced at the baseline (light-FEC 130 ns package "
+                     "link, overlapped reductions); plain (b) from " + hl["source"])
     built = as_built_spec()
     rec = dict(schema=SCHEMA, tool="tools/arch_budget_v41.py", clock_hz=clock,
                clock_basis="the report's clock: slowest routed token-path unit (decode_critical_path routed_clock)",
@@ -1456,6 +1534,16 @@ def build(quick=False):
     rec["kv_state"] = kv_state_requirements(c, req, clock)
     if not quick:
         rec["target_context"] = choose_target_context(rec)
+    # the secondary row: plain option (b) -- the published links, no overlapped reductions
+    rec["plain_b"] = dict(
+        label=PLAIN_B["label"],
+        dag_tokens_s_per_user={str(k): v for k, v in hl["tokens_s_per_user_plain_b"].items()},
+        required_ar={str(ctx): price(req, ctx, base=PLAIN_B)["tokens_s_per_user"] for ctx in CONTEXTS},
+        required_mtp_m2_tau41={str(ctx): 4.1 / (price(replace(req, lane_mult=2), ctx, positions=6, base=PLAIN_B)[
+            "period_s"] + draft_cost_s(replace(req, lane_mult=2), ctx, 5, c)["total_s"]) for ctx in CONTEXTS},
+        hbm_ar={str(ctx): price(req, ctx, hbm=hbm_kw, base=PLAIN_B)["tokens_s_per_user"] for ctx in CONTEXTS})
+    if not quick:
+        rec["power"] = power_requirements(rec, req, areas)
     rec["replay"] = replay_summary()
     return rec
 
