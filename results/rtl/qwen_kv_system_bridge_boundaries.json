@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.qwen-kv-system-bridge-boundaries.v1",
   "status": "pass",
-  "scope": "A full 1,024-element vector V instruction buffers under held-off HBM writes; SW8/SW16 banked K output and logical 16-byte to physical 32-byte HBM read/partial-write RMW are verified. These focused gates do not claim full vector KV reads.",
+  "scope": "A full 1,024-element vector V instruction buffers under held-off HBM writes; SW8/SW16 banked K output and logical 16-byte to physical 32-byte HBM read/partial-write RMW and shared-port response routing are verified. These focused gates do not claim full vector KV reads.",
   "runs": {
     "vector_sw8": {
       "status": "pass",
@@ -23,6 +23,13 @@
       "returncode": 0,
       "stdout": "PASS HBM_SECTOR_BRIDGE reads=4 writes=1 beats=5",
       "stderr": ""
+    },
+    "physical_arbiter": {
+      "status": "pass",
+      "phase": "simulation",
+      "returncode": 0,
+      "stdout": "PASS QWEN_KV_PHYS_ARBITER",
+      "stderr": ""
     }
   },
   "input_sha256": {
@@ -32,6 +39,8 @@
     "rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv": "2cb3c6d81e343bce86474b64eea27c6b48dbc897f1d988e9212cd1d7d1d1b764",
     "rtl/test/tb_hdc_qwen_kv_vector_bridge.sv": "f3ab32e12a3995c2b62d5295248f75a5423142da1da7a4509fa5b9ef343eb172",
     "rtl/test/tb_hdc_qwen_hbm_sector_bridge.sv": "f34ab2186d7e3182de0dddbe7d06fafd850e3910cda340681deb5b7266f8e839",
-    "tools/run_qwen_kv_system_bridge_campaign.py": "f4933b79e6d87a7764232cc75ad96322507f76a7805c70ea35121dfd4c312845"
+    "rtl/hdc/kv/ot_hdc_qwen_kv_phys_arbiter.sv": "02c0698d1cb76cf7e10984461a9e844bacc7f3e5111f2a7581c11be96334b053",
+    "rtl/test/tb_hdc_qwen_kv_phys_arbiter.sv": "6ba6c5a65997c1c0b67cac6ac41ede5bdf97561bc80455c2159a2e39c2b105af",
+    "tools/run_qwen_kv_system_bridge_campaign.py": "1de4e4d1129ad3660f7468c998f1ef577534c7280cf6777fca240e64fd0aa1a6"
   }
 }
