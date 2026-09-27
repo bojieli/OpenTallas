@@ -325,7 +325,13 @@ module ot_hdc_v41x_idx_engine #(
     input  wire                 o_ready,
     output reg  [NK-1:0]        o_kv,
     output reg  [NK*16-1:0]     o_score,
-    output reg  [NK-1:0]        o_fault
+    output reg  [NK-1:0]        o_fault,
+    // activation counters (since reset; for the benches): keys scored (score
+    // slots delivered), head terms fused (ReLU x weight terms summed inside the
+    // engine: IH per scored key), keys whose score faulted
+    output reg  [47:0]          cnt_keys_scored,
+    output reg  [47:0]          cnt_headsums_fused,
+    output reg  [47:0]          cnt_faults
 );
     localparam integer NCH = IH / 8;
     localparam integer LVT = (NCH <= 1) ? 0 : $clog2(NCH);
@@ -378,6 +384,23 @@ module ot_hdc_v41x_idx_engine #(
     reg [CW-1:0] fcnt, infl;
     reg [PW-1:0] wp, rp;
     wire deq = o_valid && o_ready;
+    integer ck;
+    reg [$clog2(NK+1)-1:0] nk_out, nf_out;
+    always @* begin
+        nk_out = 0; nf_out = 0;
+        for (ck = 0; ck < NK; ck = ck + 1) begin
+            nk_out = nk_out + o_kv[ck];
+            nf_out = nf_out + (o_kv[ck] & o_fault[ck]);
+        end
+    end
+    always @(posedge clk)
+        if (!rst_n) begin
+            cnt_keys_scored <= 0; cnt_headsums_fused <= 0; cnt_faults <= 0;
+        end else if (deq) begin
+            cnt_keys_scored <= cnt_keys_scored + nk_out;
+            cnt_headsums_fused <= cnt_headsums_fused + nk_out * IH;
+            cnt_faults <= cnt_faults + nf_out;
+        end
     wire out_free = !o_valid || o_ready;
     wire from_fifo = (fcnt != 0) && out_free;
     wire bypass = tv && (fcnt == 0) && out_free;

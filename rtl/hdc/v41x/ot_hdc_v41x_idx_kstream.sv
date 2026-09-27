@@ -391,7 +391,10 @@ module ot_hdc_v41x_idx_kstream #(
     output wire                 o_valid,
     input  wire                 o_ready,
     output wire [15:0]          o_kv,
-    output wire [16*544-1:0]    o_key
+    output wire [16*544-1:0]    o_key,
+    // activation counters (since reset): keys delivered, HBM beats taken
+    output reg  [47:0]          cnt_keys_streamed,
+    output reg  [47:0]          cnt_hbm_beats
 );
     wire dr_scale, dr_quarter, dr_ready;
     wire [$clog2(WB)-1:0] dr_slot;
@@ -400,6 +403,21 @@ module ot_hdc_v41x_idx_kstream #(
     wire [5:0] dr_sidx;
     wire       kbusy;
     assign busy = kbusy || o_valid;
+    integer ck;
+    reg [4:0] nko;
+    reg [5:0] nbt;
+    always @* begin
+        nko = 0; nbt = 0;
+        for (ck = 0; ck < 16; ck = ck + 1) nko = nko + o_kv[ck];
+        for (ck = 0; ck < NPC; ck = ck + 1) nbt = nbt + (rsp_v[ck] & rsp_rdy[ck]);
+    end
+    always @(posedge clk)
+        if (!rst_n) begin
+            cnt_keys_streamed <= 0; cnt_hbm_beats <= 0;
+        end else begin
+            if (o_valid && o_ready) cnt_keys_streamed <= cnt_keys_streamed + nko;
+            cnt_hbm_beats <= cnt_hbm_beats + nbt;
+        end
     ot_hdc_v41x_idx_kctl #(.NPC(NPC), .WB(WB), .GA(GA), .AW(AW), .HW(HW), .TAGW(TAGW), .LENW(LENW), .BEATW(BEATW)) u_c (
         .clk(clk), .rst_n(rst_n), .cmd_v(cmd_v), .cmd_base(cmd_base), .cmd_nkeys(cmd_nkeys), .busy(kbusy),
         .req_v(req_v), .req_rdy(req_rdy), .req_addr(req_addr), .req_len(req_len), .req_tag(req_tag),

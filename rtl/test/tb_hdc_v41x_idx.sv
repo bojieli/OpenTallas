@@ -63,7 +63,9 @@ module tb_hdc_v41x_idx #(
     ot_hdc_v41x_idx_engine #(.NK(NK), .IH(IH), .NB(NB), .FD(FD)) dut (
         .clk(clk), .rst_n(rst_n), .ql_v(ql_v), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc),
         .ql_w(ql_w), .k_valid(k_valid), .k_ready(k_ready), .k_kv(k_kv), .k_keep(k_keep), .k_key(k_key),
-        .o_valid(o_valid), .o_ready(o_ready), .o_kv(o_kv), .o_score(o_score), .o_fault(o_fault));
+        .o_valid(o_valid), .o_ready(o_ready), .o_kv(o_kv), .o_score(o_score), .o_fault(o_fault),
+        .cnt_keys_scored(cnt_ks), .cnt_headsums_fused(cnt_hs), .cnt_faults(cnt_f));
+    wire [47:0] cnt_ks, cnt_hs, cnt_f;
 
     // beat accept times (a ring, indexed by beat number)
     localparam integer RB = 1024;
@@ -156,6 +158,7 @@ module tb_hdc_v41x_idx #(
                     end
                 end
                 default: begin
+                    $display("V41XIDXCNT keys_scored=%0d headsums_fused=%0d faults=%0d", cnt_ks, cnt_hs, cnt_f);
                     $display("V41XIDX keys=%0d checked=%0d errors=%0d faults_expected_and_raised=%0d beats=%0d span=%0d stall=%0d lat_min=%0d lat_max=%0d cycles=%0d",
                              nkey, checked, errors, faults_ok, beats_in, span, stall, lat_min, lat_max, cyc);
                     $finish;

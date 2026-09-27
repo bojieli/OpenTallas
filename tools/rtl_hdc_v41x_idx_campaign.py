@@ -314,6 +314,9 @@ def run(exe: Path, d: Path, ntok, nkey, seed=1, bubble=0, ordy=0):
     k = ("keys", "checked", "errors", "faults_expected_and_raised", "beats", "span", "stall", "lat_min", "lat_max",
          "cycles")
     res = dict(zip(k, map(int, m.groups())))
+    c = re.search(r"V41XIDXCNT keys_scored=(\d+) headsums_fused=(\d+) faults=(\d+)", r.stdout)
+    if c:
+        res["counters"] = dict(zip(("keys_scored", "headsums_fused", "faults"), map(int, c.groups())))
     res["mismatch_lines"] = [ln for ln in r.stdout.splitlines() if ln.startswith(("MISMATCH", "MISS-FAULT"))][:10]
     return res
 
@@ -556,6 +559,9 @@ def main():
             continue
         r = rec[name]
         m, b = r["mixed"], r["back_to_back"]
+        for x in (m, b):
+            cn = x.get("counters")
+            assert cn is None or (cn["keys_scored"] == x["keys"] and cn["headsums_fused"] == x["keys"] * 32), cn
         exact = m["errors"] == 0 and m["checked"] == m["keys"] and b["errors"] == 0 and b["checked"] == b["keys"] \
             and m["faults_expected_and_raised"] == m["expected_faults"]
         thr = b["keys_per_cycle"] >= 0.99 * a.nk * (1 - 1.0 / max(1, b["beats"]))
