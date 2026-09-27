@@ -584,7 +584,7 @@ implements that specialisation on the reduced Qwen3 vehicle.
   oracle tokens (1073, 382, 93) in 18 <!-- figure: 18 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.steps" name="Qwen physical-KV vector decode steps" -->
   decode steps and 439,897 <!-- figure: 439897 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.total_cycles" name="Qwen physical-KV vector multi-step cycles" -->
   simulated cycles. Every step's token, logits, vector memory, and KV state
-  match the ISA model. The physical HBM image has zero byte mismatches after
+  match the ISA model. Every physically written HBM sector has zero byte mismatches after
   144 <!-- figure: 144 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#physical_hbm.v_reads_after_write" name="Qwen vector V HBM reads after writes" -->
   V reads from previously written sectors and 128 <!-- figure: 128 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#physical_hbm.k_flush_writes" name="Qwen vector K-tail physical HBM flush writes" -->
   K-tail flush writes. The one-cycle behavioral HBM model makes this a
