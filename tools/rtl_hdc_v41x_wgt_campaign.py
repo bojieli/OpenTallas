@@ -69,7 +69,7 @@ SPEC = {"weight_macs_per_cycle": 252160, "bf16_macs_per_cycle": 36928, "rom_byte
         "latency_formula": "ceil(rows*K/lanes) + depth", "source": "docs/ARCH_SPEC_V41.md 5-6; results/arch/arch_budget_v41.json"}
 
 SUM = re.compile(r"V41XWGT ops=(\d+) events=(\d+) checked=(\d+) errors=(\d+) faults=(\d+) cycles=(\d+) beats=(\d+) "
-                 r"first_beat=(-?\d+) last_beat=(-?\d+) last_out=(-?\d+) start=(\d+)")
+                 r"first_beat=(-?\d+) last_beat=(-?\d+) last_out=(-?\d+) start=(\d+) cnt=(\d+),(\d+),(\d+)")
 LAT = re.compile(r"V41XWGT_LAT op=(\d+) cycles=(\d+)")
 
 
@@ -119,6 +119,9 @@ class Op:
     experts: list = field(default_factory=list)   # indirect: other experts' (wcode, wexp) sharing the table
     eid: int = 0
     source: str = "random"
+    src: int = 0                 # POOL: 0 = ROM, 1 = stream (HBM keys / KV rows)
+    split: bool = False          # POOL, KIND 0: two 4-block rows per chunk unit
+    xr: int = 1                  # distinct activation rows (row % xr selects; index mode: head groups)
 
 
 def qe_expect(wq, we, x):
@@ -192,7 +195,8 @@ def make_me_fp8(name, wq, we, xs, source="random"):
     op.yf = (op.yf.astype(bool) | rowbad[None, :]).astype(np.int64)
     op.y32 = np.where(op.yf, 0, op.y32)
     op.ybf = np.where(op.yf, 0, op.ybf)
-    op.wcode, op.wexp, op.fp4 = codes, (we + 127).astype(np.int64), True
+    sc = np.repeat((we + 127).astype(np.int64), 32, axis=1)[:, :k]
+    op.wcode = codes | (sc << 8) | (1 << 32)                 # {fmt 1, UE8M0, E4M3}
     return op
 
 
@@ -347,6 +351,7 @@ class Cfg:
     LB: int
     PMIN_LG: int = 0
     RL: int = 2
+    POOL: int = 0
 
     @property
     def L(self):
@@ -361,7 +366,7 @@ class Cfg:
         return int(math.log2(self.G))
 
     def key(self):
-        return f"k{self.kind}_g{self.G}_m{self.M}_lb{self.LB}_p{self.PMIN_LG}_rl{self.RL}"
+        return f"k{self.kind}_g{self.G}_m{self.M}_lb{self.LB}_p{self.PMIN_LG}_rl{self.RL}_pool{self.POOL}"
 
 
 def pick_plg(cfg: Cfg, op: Op, mode="best"):
@@ -383,6 +388,8 @@ def pick_plg(cfg: Cfg, op: Op, mode="best"):
 
 
 def geometry(cfg, op):
+    if op.split:
+        return 1, 1, -(-op.nrows // (2 * cfg.G))
     P = 1 << op.plg
     nbeat = -(-op.nb // (8 * P))
     nrg = -(-op.nrows // (cfg.G >> op.plg))
@@ -406,11 +413,19 @@ def word_q(codes_row, e, fp4, lo, hi):
     return acc | (int(e) << 256)
 
 
+def lane_row_term(cfg, op, rg, q, j):
+    """The (row, term) lane j carries in beat q of row group rg (the tile's own mapping)."""
+    if op.split:
+        return rg * 2 * cfg.G + 2 * (j >> 3) + ((j & 7) >= 4), j & 3
+    P = 1 << op.plg
+    return rg * (cfg.G >> op.plg) + (j >> (3 + op.plg)), q * 8 * P + (j % (8 * P))
+
+
 def write_run(cfg: Cfg, ops, d: Path):
-    """ROM image, activation memory, op list and expected result events for one bench run."""
+    """ROM image, stream image, activation memory, op list and expected result events for one bench run."""
     d.mkdir(parents=True, exist_ok=True)
-    L, M, WW, XW = cfg.L, cfg.M, (264 if cfg.kind == 0 else 32), (264 if cfg.kind == 0 else 16)
-    rom_words = {}
+    L, M, WW, XW = cfg.L, cfg.M, (264 if cfg.kind == 0 else 34), (264 if cfg.kind == 0 else 16)
+    mem = {0: {}, 1: {}}                               # 0: ROM (rd_w), 1: stream (rd_k)
     xmem = []
     opw = []
     exp = []
@@ -423,6 +438,7 @@ def write_run(cfg: Cfg, ops, d: Path):
         order = list(range(1, len(mats)))
         order.insert(op.eid, 0)
         wbase = a_next
+        rom = mem[op.src]
         for slot, mi in enumerate(order):
             wc, wx = mats[mi]
             base = wbase + slot * per
@@ -430,55 +446,59 @@ def write_run(cfg: Cfg, ops, d: Path):
                 for q in range(nbeat):
                     a = base + rg * nbeat + q
                     for j in range(L):
-                        row = rg * (cfg.G >> op.plg) + (j >> (3 + op.plg))
-                        t = q * 8 * P + (j % (8 * P))
+                        row, t = lane_row_term(cfg, op, rg, q, j)
                         if row >= op.nrows or t >= op.nb:
                             continue
                         if cfg.kind == 0:
-                            rom_words[a * L + j] = word_q(wc[row], wx[row, t], op.fp4, 32 * t, 32 * t + 32)
+                            rom[a * L + j] = word_q(wc[row], wx[row, t], op.fp4, 32 * t, 32 * t + 32)
                         else:
-                            if op.fp4:          # FP8 E4M3 + its block's UE8M0 (broadcast by the read network)
-                                rom_words[a * L + j] = int(wc[row, t]) | (int(wx[row, t // 32]) << 8)
-                            else:
-                                rom_words[a * L + j] = int(wc[row, t]) & 0xFFFFFFFF
+                            rom[a * L + j] = int(wc[row, t])          # 34-bit {fmt, data}
         a_next = wbase + len(mats) * per
         xbase = len(xmem)
-        for t in range(op.nb):
-            for p in range(M):
-                if cfg.kind == 0:
-                    codes, ex = op.xw[p]
-                    acc = 0
-                    for k, cde in enumerate(codes[32 * t:32 * t + 32]):
-                        acc |= int(cde) << (8 * k)
-                    xmem.append(acc | (int(ex[t]) << 256))
-                else:
-                    xmem.append(int(op.xw[p][t]))
+        for xr in range(op.xr):
+            for t in range(op.nb):
+                for p in range(M):
+                    if cfg.kind == 0:
+                        codes, ex = op.xw[p] if op.xr == 1 else op.xw[xr * M + p]
+                        acc = 0
+                        for k, cde in enumerate(codes[32 * t:32 * t + 32]):
+                            acc |= int(cde) << (8 * k)
+                        xmem.append(acc | (int(ex[t]) << 256))
+                    else:
+                        xmem.append(int((op.xw[p] if op.xr == 1 else op.xw[xr * M + p])[t]))
         ind = 1 if op.experts else 0
-        opw += [op.plg, op.nb, op.nrows, wbase, ind, op.eid if ind else 0, per if ind else 0, int(op.fp4), xbase, nrg]
+        opw += [op.plg, op.nb, op.nrows, wbase, ind, op.eid if ind else 0, per if ind else 0, int(op.fp4), xbase,
+                nrg, op.src, int(op.split), op.xr, 0, 0, 0]
         for rg in range(nrg):
             nseg = cfg.G >> op.plg
-            mask = 0
-            vals = []
+            mask = smask = 0
+            vals, svals = [], []
             for s in range(cfg.NC):
-                row = rg * nseg + s
-                real = s < nseg and row < op.nrows
+                row = (rg * 2 * cfg.G + 2 * s + 1) if op.split else (rg * nseg + s)
+                real = (s < cfg.G if op.split else s < nseg) and row < op.nrows
                 mask |= int(real) << s
                 for p in range(M):
-                    if real:
-                        vals += [int(op.y32[p, row]), int(op.ybf[p, row]), int(op.yf[p, row])]
-                    else:
-                        vals += [0, 0, 0]
-            exp += [rg, i % 16, mask] + vals
-    romd = max(rom_words) + 1 if rom_words else 1
-    with open(d / "rom.hex", "w") as f:
-        f.write("\n".join(hexline(rom_words.get(a, 0), WW) for a in range(romd)) + "\n")
+                    vals += [int(op.y32[p, row]), int(op.ybf[p, row]), int(op.yf[p, row])] if real else [0, 0, 0]
+            for s in range(cfg.G):
+                row = rg * 2 * cfg.G + 2 * s
+                real = bool(op.split) and row < op.nrows
+                smask |= int(real) << s
+                for p in range(M):
+                    svals += [int(op.y32[p, row]), int(op.ybf[p, row]), int(op.yf[p, row])] if real else [0, 0, 0]
+            exp += [rg, i % 16, mask, smask] + vals + svals
+    depth = {}
+    for k, m in mem.items():
+        n = max(m) + 1 if m else 1
+        depth[k] = n
+        with open(d / ("rom.hex" if k == 0 else "kmem.hex"), "w") as f:
+            f.write("\n".join(hexline(m.get(a, 0), WW) for a in range(n)) + "\n")
     with open(d / "xmem.hex", "w") as f:
         f.write("\n".join(hexline(v, XW) for v in xmem) + "\n")
     with open(d / "ops.hex", "w") as f:
         f.write("\n".join(hexline(v, 32) for v in opw) + "\n")
     with open(d / "exp.hex", "w") as f:
         f.write("\n".join(hexline(v, 32) for v in exp) + "\n")
-    return {"rom_depth": romd, "xmem": len(xmem), "exp": len(exp), "ops": len(ops)}
+    return {"rom_depth": max(depth.values()), "xmem": len(xmem), "exp": len(exp), "ops": len(ops)}
 
 
 def pow2(n):
@@ -488,7 +508,7 @@ def pow2(n):
 def build(cfg: Cfg, sizes, obj: Path):
     obj.mkdir(parents=True, exist_ok=True)
     params = [f"-GKIND={cfg.kind}", f"-GG={cfg.G}", f"-GM={cfg.M}", f"-GLB={cfg.LB}", f"-GPMIN_LG={cfg.PMIN_LG}",
-              f"-GRL={cfg.RL}", f"-GNBW={10 if cfg.kind == 0 else 14}", f"-GMAXOPS={max(16, sizes['ops'])}", f"-GROMD={pow2(sizes['rom_depth'])}",
+              f"-GRL={cfg.RL}", f"-GPOOL={cfg.POOL}", f"-GNBW={10 if cfg.kind == 0 else 14}", f"-GMAXOPS={max(16, sizes['ops'])}", f"-GROMD={pow2(sizes['rom_depth'])}",
               f"-GXMD={pow2(sizes['xmem'])}", f"-GEXPD={pow2(sizes['exp'])}"]
     stamp = obj / "params.txt"
     if (obj / "Vtb").exists() and stamp.exists() and stamp.read_text() == " ".join(params):
@@ -503,7 +523,7 @@ def build(cfg: Cfg, sizes, obj: Path):
 
 def run_bench(exe: Path, d: Path, nops: int, gap: int, throttle: int):
     r = subprocess.run([str(exe), f"+ops={d / 'ops.hex'}", f"+rom={d / 'rom.hex'}", f"+xmem={d / 'xmem.hex'}",
-                        f"+exp={d / 'exp.hex'}", f"+nops={nops}", f"+gap={gap}", f"+throttle={throttle}"],
+                        f"+exp={d / 'exp.hex'}", f"+kmem={d / 'kmem.hex'}", f"+nops={nops}", f"+gap={gap}", f"+throttle={throttle}"],
                        capture_output=True, text=True, check=True)
     m = SUM.search(r.stdout)
     if not m:
@@ -513,7 +533,7 @@ def run_bench(exe: Path, d: Path, nops: int, gap: int, throttle: int):
     errs = [ln for ln in r.stdout.splitlines() if ln.startswith("V41XWGT_ERR")][:8]
     return {"ops": g[0], "events": g[1], "checked": g[2], "errors": g[3], "faults_expected_and_raised": g[4],
             "cycles": g[5], "beats": g[6], "first_beat": g[7], "last_beat": g[8], "last_out": g[9], "start": g[10],
-            "latency": lat, "error_lines": errs}
+            "latency": lat, "error_lines": errs, "counters": {"rom": g[11], "stream": g[12], "split": g[13]}}
 
 
 def spec_depth(cfg, op):
@@ -538,6 +558,137 @@ def make_m_shipped(name, rng, rows, k, fmt, xs):
         wq, we = rand_fp8_blocks(rng, rows, k)
         return make_me_fp8(name, wq, we, xs)
     return make_me(name, rand_mw(rng, rows, k, fmt == "fp32"), xs)
+
+
+# -- R-U2 pooled modes ---------------------------------------------------------------------------------------
+E2M1_E4M3 = {0.0: 0x00, 0.5: 0x30, 1.0: 0x38, 1.5: 0x3C, 2.0: 0x40, 3.0: 0x44, 4.0: 0x48, 6.0: 0x4C}
+
+
+def make_idx(name, rng, nkeys, M, heads=32, k=128, erange=(-12, 4)):
+    """Lightning-indexer scores on the block-dot pool (split chains, keys on the stream port):
+    hdc_golden_v41.dots_q4(q, keys) -- FP4 E2M1 x UE8M0 per 32 on both sides, every block dot exact and rounded
+    once, the 4 blocks by csum.  Row r = key r // (heads/M), head group r % (heads/M); position p = head hg*M + p."""
+    nb = k // 32
+    kc = rng.integers(0, 16, (nkeys, k))
+    ke = rng.integers(*erange, (nkeys, nb))
+    qc = rng.integers(0, 16, (heads, k))
+    qe = rng.integers(*erange, (heads, nb))
+    kdeq = V.E2M1[kc] * np.exp2(np.repeat(ke, 32, axis=1))
+    qdeq = V.E2M1[qc] * np.exp2(np.repeat(qe, 32, axis=1))
+    with np.errstate(over="ignore", invalid="ignore"):
+        sc = V.dots_q4(qdeq, kdeq)                                  # [heads, keys]
+    hg = heads // M
+    rows = nkeys * hg
+    r = np.arange(rows)
+    key, grp = r // hg, r % hg
+    wcode = kc[key]
+    wexp = (ke[key] + 127).astype(np.int64)
+    xw = []
+    for g in range(hg):
+        for p in range(M):
+            h = g * M + p
+            codes = np.array([E2M1_E4M3[abs(float(v))] | (0x80 if v < 0 else 0) for v in V.E2M1[qc[h]]])
+            xw.append((codes, (qe[h] + 127).astype(np.int64)))
+    y32 = np.zeros((M, rows), np.int64)
+    ybf = np.zeros((M, rows), np.int64)
+    yf = np.zeros((M, rows), np.int64)
+    for p in range(M):
+        v = sc[grp * M + p, key]
+        fin = np.isfinite(v)
+        y32[p] = np.where(fin, u32(v), 0)
+        ybf[p] = np.where(fin, u32(V.to_bf16(v)) >> 16, 0)
+        yf[p] = (~fin).astype(np.int64)
+    return Op(0, name, rows, nb, wcode, wexp, True, xw, y32, ybf, yf, src=1, split=True, xr=hg)
+
+
+def fp8_row(x):
+    """A window KV row: qdq_fp8 (E4M3, UE8M0 per 32) -> (34-bit fmt-1 words, the golden's BF16 row)."""
+    q, e = V.quant_fp8(x)
+    codes = e4m3_codes(q)
+    words = codes | (np.repeat(e + 127, 32)[:len(x)] << 8) | (1 << 32)
+    row = V.qdq_fp8(x)
+    assert np.array_equal(V.bits(V.to_bf16((q * np.exp2(np.repeat(e, 32))).astype(F))), V.bits(row))
+    return words.astype(np.int64), row
+
+
+def fp4e4_row(x, block=16):
+    """A compressed KV row: qdq_fp4_e4m3 (E2M1, E4M3 scale per 16) -> (34-bit fmt-2 words, the golden's row).
+    The codes are the golden's own procedure (its comparisons against the code midpoints)."""
+    xb = np.asarray(x, dtype=F).reshape(-1, block)
+    amax = np.maximum(np.max(np.abs(xb), axis=1), V.FP4_AMAX_FLOOR_E4M3).astype(F)
+    s = V._e4m3_round(amax.astype(np.float64) / V.FP4_MAX)
+    a = np.abs(xb.astype(np.float64))
+    code = np.zeros(a.shape, dtype=np.int64)
+    for i, m in enumerate(V.E2M1_MIDPOINTS):
+        t = m * s[:, None]
+        code = np.where((a > t) | ((a == t) & ((i + 1) % 2 == 0)), i + 1, code)
+    sign = (xb < 0) & (code > 0)
+    q4 = code + 8 * sign
+    sc = e4m3_codes(s)
+    words = (q4 | (np.repeat(sc[:, None], block, axis=1) << 8) | (2 << 32)).reshape(-1)
+    row = V.qdq_fp4_e4m3(x, block)
+    mine = V.to_bf16((np.where(sign, -1.0, 1.0) * V.E2M1_VALUES[code] * s[:, None]).astype(F).reshape(-1))
+    assert np.array_equal(V.bits(V.to_bf16(np.where(mine == 0, F(0), mine))), V.bits(V.to_bf16(np.where(row == 0, F(0), row))))
+    return words.astype(np.int64), row
+
+
+def kv_rows(rng, nwin, ncmp, hd=512):
+    words, rows = [], []
+    for i in range(nwin + ncmp):
+        x = (rng.standard_normal(hd) * np.exp2(rng.integers(-6, 6))).astype(F)
+        w, r = fp8_row(x) if i < nwin else fp4e4_row(x)
+        words.append(w)
+        rows.append(r)
+    return np.stack(words), np.stack(rows).astype(F)
+
+
+def make_att_qk(name, rng, M, nwin, ncmp, hd=512):
+    """Attention scores on the BF16 pool: dots(q, kvm) (cls att) -- rows = KV rows (window FP8 and compressed
+    FP4 per-word formats in one op, from the KV-row stream port), terms = head_dim, positions = heads."""
+    words, kvm = kv_rows(rng, nwin, ncmp, hd)
+    q = V.to_bf16((rng.standard_normal((M, hd)) * 0.3).astype(F))
+    with np.errstate(over="ignore", invalid="ignore"):
+        s = V.dots(q, kvm, cls="att")                              # [M, T]
+    fin = np.isfinite(s)
+    y32 = np.where(fin, u32(s), 0)
+    ybf = np.where(fin, u32(V.to_bf16(s)) >> 16, 0)
+    xw = [u32(q[p]) >> 16 for p in range(M)]
+    return Op(1, name, kvm.shape[0], hd, words, None, False, xw, y32, ybf, (~fin).astype(np.int64), src=1)
+
+
+def make_att_pv(name, rng, M, nwin, ncmp, nd=64, hd=512):
+    """p.v on the BF16 pool: dots(to_bf16(p), kvm.T) -- rows = head_dim columns d (the first nd), terms = the KV
+    rows (the stream port delivers, per lane, element d of KV row n with that row's own format and scale),
+    positions = heads with their BF16 probabilities."""
+    words, kvm = kv_rows(rng, nwin, ncmp, hd)
+    T = kvm.shape[0]
+    p = V.to_bf16(np.exp(-np.abs(rng.standard_normal((M, T)) * 3)).astype(F))
+    with np.errstate(over="ignore", invalid="ignore"):
+        o = V.dots(p, kvm.T[:nd], cls="att")                      # [M, nd]
+    fin = np.isfinite(o)
+    xw = [u32(p[h]) >> 16 for h in range(M)]
+    return Op(1, name, nd, T, words.T[:nd].copy(), None, False, xw, np.where(fin, u32(o), 0),
+              np.where(fin, u32(V.to_bf16(o)) >> 16, 0), (~fin).astype(np.int64), src=1)
+
+
+def pool_suite(cfg, rng, quick=False):
+    """The pooled modes of a tile, interleaved with its weight ops by the caller (the operand mux switches
+    between ROM and stream back to back)."""
+    M = cfg.M
+    ops, lat = [], []
+    if cfg.kind == 0:
+        for i, n in enumerate((64, 17, 40) if not quick else (16,)):
+            ops.append(make_idx(f"idx_scores_keys{n}", rng, n, M))
+        if not quick:
+            ops.append(make_idx("idx_scores_range", rng, 8, M, erange=(-70, 70)))
+        lat.append(make_idx("lat_idx_keys64", rng, 64, M))
+    else:
+        for nwin, ncmp in (((16, 8), (5, 30)) if not quick else ((6, 4),)):
+            ops.append(make_att_qk(f"att_qk_win{nwin}_cmp{ncmp}", rng, M, nwin, ncmp))
+            ops.append(make_att_pv(f"att_pv_win{nwin}_cmp{ncmp}", rng, M, nwin, ncmp, nd=16 if quick else 64))
+        lat.append(make_att_qk("lat_att_qk_T160", rng, M, 128, 32))
+        lat.append(make_att_pv("lat_att_pv_T160", rng, M, 128, 32, nd=64))
+    return ops, lat
 
 
 def suite(cfg: Cfg, rng, real_calls, quick=False):
@@ -596,12 +747,19 @@ def suite(cfg: Cfg, rng, real_calls, quick=False):
             lat.append(make_m_shipped(f"lat_{name}_K{k}", rng, 4 * cfg.G, k, fmt, [rand_x(rng, k) for _ in range(M)]))
         w = rand_mw(rng, 1, 8, True)
         lat.append(make_me("lat_single_chunk_row", w, [rand_x(rng, 8) for _ in range(M)]))
+    if cfg.POOL:
+        pops, plat = pool_suite(cfg, rng, quick)
+        ops = [o for pair in zip(ops, pops) for o in pair] + ops[len(pops):] + pops[len(ops):]
+        lat += plat
     return ops, lat
 
 
 def assign_plg(cfg, ops, rng, vary):
     """Best segment size per op; with `vary`, every other op takes a random legal size (exercises every tap)."""
     for i, op in enumerate(ops):
+        if op.split:
+            op.plg = 0
+            continue
         op.plg = pick_plg(cfg, op)
         if vary and i % 2 == 1:
             legal = [p for p in range(cfg.PMIN_LG, cfg.LG + 1) if -(-op.nb // (8 << p)) <= (1 << cfg.LB)]
@@ -681,6 +839,8 @@ CONFIGS = {
     "q_g1_m1": Cfg(0, 1, 1, 5), "q_g1_m2": Cfg(0, 1, 2, 5), "q_g8_m1": Cfg(0, 8, 1, 5), "q_g8_m2": Cfg(0, 8, 2, 5),
     # BF16/FP32 engine: the routed tile (64 MAC lanes), m = 2, and the spec tile (256 lanes)
     "m_g8_m1": Cfg(1, 8, 1, 7, PMIN_LG=1), "m_g8_m2": Cfg(1, 8, 2, 7, PMIN_LG=1), "m_g32_m1": Cfg(1, 32, 1, 5, PMIN_LG=2),
+    # R-U2 pooled tiles: + the stream operand port, index split chains (block-dot pool), attention modes (BF16 pool)
+    "qp_g1_m2": Cfg(0, 1, 2, 5, POOL=1), "qp_g8_m2": Cfg(0, 8, 2, 5, POOL=1), "mp_g8_m2": Cfg(1, 8, 2, 7, PMIN_LG=1, POOL=1),
 }
 
 

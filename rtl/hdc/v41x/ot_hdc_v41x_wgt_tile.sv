@@ -73,7 +73,8 @@ module ot_hdc_v41x_wgt_tile #(
     parameter integer EIW = 9,            // expert id
     parameter integer TGW = 4,            // op tag
     parameter integer RL = 2,             // ROM / activation read latency
-    parameter integer OCRED = 128         // output credits at reset
+    parameter integer OCRED = 128,        // output credits at reset
+    parameter integer POOL = 0            // R-U2 pooled engine: stream operand port, split chains, fmt 2
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -87,16 +88,22 @@ module ot_hdc_v41x_wgt_tile #(
     input  wire                  d_ind,
     input  wire [EIW-1:0]        d_eid,
     input  wire [AW-1:0]         d_estride,
-    input  wire                  d_fp4,          // KIND 0: FP4 E2M1 weights; KIND 1: FP8 E4M3 + 32x32 scale
+    input  wire                  d_fp4,          // KIND 0: FP4 E2M1 weights (KIND 1: format is per word)
     input  wire [TGW-1:0]        d_tag,
+    input  wire                  d_src,          // POOL: 0 = ROM (rd_w), 1 = stream (rd_k: HBM keys / KV rows)
+    input  wire                  d_split,        // POOL, KIND 0: two 4-block rows per chunk unit
     // read requests, one bus per chain position
     output wire [7:0]            rq_v,
     output wire [8*AW-1:0]       rq_a,
     output wire [8*NBW-1:0]      rq_q,
     output wire [8*4-1:0]        rq_plg,
     output wire [8*TGW-1:0]      rq_tag,
+    output wire [7:0]            rq_src,
+    output wire [7:0]            rq_split,
+    output wire [8*RWW-1:0]      rq_rg,
     // read data, RL cycles after the lane's request
-    input  wire [8*G*(KIND ? 32 : 264)-1:0]       rd_w,
+    input  wire [8*G*(KIND ? 34 : 264)-1:0]       rd_w,
+    input  wire [8*G*(KIND ? 34 : 264)-1:0]       rd_k,
     input  wire [8*G*M*(KIND ? 16 : 264)-1:0]     rd_x,
     // results
     input  wire                  o_cr,
@@ -107,6 +114,15 @@ module ot_hdc_v41x_wgt_tile #(
     output reg  [(G>>PMIN_LG)*M*32-1:0]   o_y,
     output reg  [(G>>PMIN_LG)*M*16-1:0]   o_bf,
     output reg  [(G>>PMIN_LG)*M-1:0]      o_f,
+    // split mode: the first 4-block row of each chunk unit (row 2s; o_y segment s is row 2s+1)
+    output reg  [G-1:0]          o_smask,
+    output reg  [G*M*32-1:0]     o_ys,
+    output reg  [G*M*16-1:0]     o_bfs,
+    output reg  [G*M-1:0]        o_fs,
+    // activation counters (beats issued) per mode
+    output reg  [31:0]           o_cnt_rom,
+    output reg  [31:0]           o_cnt_stream,
+    output reg  [31:0]           o_cnt_split,
     output wire                  idle
 );
     function automatic integer clog2(input integer n);
@@ -116,7 +132,7 @@ module ot_hdc_v41x_wgt_tile #(
     localparam integer LG = clog2(G);
     localparam integer L = 8 * G;
     localparam integer NC = G >> PMIN_LG;
-    localparam integer WW = KIND ? 32 : 264;
+    localparam integer WW = KIND ? 34 : 264;
     localparam integer XW = KIND ? 16 : 264;
     localparam integer CL = KIND ? 26 : 30;
     localparam integer CW = 8;
@@ -127,7 +143,7 @@ module ot_hdc_v41x_wgt_tile #(
     reg [NBW-1:0]    a_nb;
     reg [RWW-1:0]    a_nrows;
     reg [AW-1:0]     a_wbase, a_estride;
-    reg              a_ind, a_fp4;
+    reg              a_ind, a_fp4, a_src, a_split;
     reg [EIW-1:0]    a_eid;
     reg [TGW-1:0]    a_tag;
     // stage B: expert offset, beats per row, row groups
@@ -136,7 +152,7 @@ module ot_hdc_v41x_wgt_tile #(
     reg [NBW-1:0]    b_nb, b_nbeat;
     reg [RWW-1:0]    b_nrows, b_nrg;
     reg [AW-1:0]     b_wbase, b_off;
-    reg              b_fp4;
+    reg              b_fp4, b_src, b_split;
     reg [TGW-1:0]    b_tag;
     // stage C: the running op
     reg              c_v;
@@ -144,7 +160,7 @@ module ot_hdc_v41x_wgt_tile #(
     reg [NBW-1:0]    c_nb, c_nbeat, c_q;
     reg [RWW-1:0]    c_nrows, c_nrg, c_rg;
     reg [AW-1:0]     c_a;
-    reg              c_fp4;
+    reg              c_fp4, c_src, c_split;
     reg [TGW-1:0]    c_tag;
     reg [NBW-1:0]    c_nbm1;
     reg [RWW-1:0]    c_nrgm1;
@@ -180,6 +196,9 @@ module ot_hdc_v41x_wgt_tile #(
     // (nb + 8P - 1) >> (3 + plg), (nrows + G/P - 1) >> (LG - plg)
     wire [NBW:0]   nb_up = {1'b0, a_nb} + ({{NBW{1'b0}}, 1'b1} << (3 + a_plg)) - 1'b1;
     wire [RWW:0]   nr_up = {1'b0, a_nrows} + ({{RWW{1'b0}}, 1'b1} << (LG - a_plg)) - 1'b1;
+    //: split (plg = 0, one beat per row): 2G rows per row group
+    wire [RWW:0]   nr_sp = {1'b0, a_nrows} + ({{RWW{1'b0}}, 1'b1} << (LG + 1)) - 1'b1;
+    wire           a_sp = (POOL != 0) && (KIND == 0) && a_split;
 
     wire [2:0] b_nlev = clog2v(b_nbeat);
     wire [4:0] dep_c = {1'b0, c_plg} + {2'b0, c_nlev};
@@ -191,8 +210,12 @@ module ot_hdc_v41x_wgt_tile #(
         if (!rst_n) begin
             a_v <= 1'b0; b_v <= 1'b0; c_v <= 1'b0; cred <= OCRED; cr_r <= 1'b0;
             c_plg <= 4'd0; c_nlev <= 3'd0; c_first <= 1'b0; g_r <= 6'd0; sl <= 6'd0;
+            o_cnt_rom <= 32'd0; o_cnt_stream <= 32'd0; o_cnt_split <= 32'd0;
         end else begin
             cr_r <= o_cr;
+            if (issue && !c_src) o_cnt_rom <= o_cnt_rom + 1'b1;
+            if (issue && c_src) o_cnt_stream <= o_cnt_stream + 1'b1;
+            if (issue && c_split) o_cnt_split <= o_cnt_split + 1'b1;
             if (b_mv) begin
                 c_plg <= b_plg; c_nlev <= b_nlev; c_first <= 1'b1;
                 g_r <= {gm, 1'b0} + {1'b0, gm};          // 3 cycles per level
@@ -214,17 +237,20 @@ module ot_hdc_v41x_wgt_tile #(
         if (d_v && d_rdy) begin
             a_plg <= d_plg; a_nb <= d_nb; a_nrows <= d_nrows; a_wbase <= d_wbase; a_estride <= d_estride;
             a_ind <= d_ind; a_fp4 <= d_fp4; a_eid <= d_eid; a_tag <= d_tag;
+            a_src <= (POOL != 0) && d_src; a_split <= d_split;
         end
         if (a_mv) begin
             b_plg <= a_plg; b_nb <= a_nb; b_nrows <= a_nrows; b_wbase <= a_wbase; b_fp4 <= a_fp4; b_tag <= a_tag;
+            b_src <= a_src; b_split <= a_sp;
             b_off <= a_ind ? a_eid * a_estride : {AW{1'b0}};
             b_nbeat <= nb_up[NBW:0] >> (3 + a_plg);
-            b_nrg <= nr_up[RWW:0] >> (LG - a_plg);
+            b_nrg <= a_sp ? (nr_sp[RWW:0] >> (LG + 1)) : (nr_up[RWW:0] >> (LG - a_plg));
         end
         if (b_mv) begin
             c_nb <= b_nb; c_nbeat <= b_nbeat; c_nrows <= b_nrows; c_nrg <= b_nrg;
             c_nbm1 <= b_nbeat - 1'b1; c_nrgm1 <= b_nrg - 1'b1;
             c_a <= b_wbase + b_off; c_q <= {NBW{1'b0}}; c_rg <= {RWW{1'b0}}; c_fp4 <= b_fp4; c_tag <= b_tag;
+            c_src <= b_src; c_split <= b_split;
         end else if (issue) begin
             c_a <= c_a + 1'b1;
             if (c_lastq) begin c_q <= {NBW{1'b0}}; c_rg <= c_rg + 1'b1; end
@@ -234,7 +260,7 @@ module ot_hdc_v41x_wgt_tile #(
     assign idle = !a_v && !b_v && !c_v;
 
     // -- beat record and its skewed taps ---------------------------------------------------------
-    localparam integer RW = 1 + AW + NBW + RWW + 1 + 4 + 3 + NBW + RWW + 1 + TGW;
+    localparam integer RW = 1 + AW + NBW + RWW + 1 + 4 + 3 + NBW + RWW + 1 + TGW + 2;
     reg          r0v;
     reg [RW-2:0] r0d;
     wire [RW-1:0] r0 = {r0v, r0d};
@@ -243,7 +269,7 @@ module ot_hdc_v41x_wgt_tile #(
         else r0v <= issue;
     end
     always @(posedge clk)
-        r0d <= {c_a, c_q, c_rg, c_lastq, c_plg, c_nlev, c_nb, c_nrows, c_fp4, c_tag};
+        r0d <= {c_a, c_q, c_rg, c_lastq, c_plg, c_nlev, c_nb, c_nrows, c_fp4, c_tag, c_src, c_split};
     wire [19*RW-1:0] tapl;       // tapl[k] = r0 delayed k cycles
     assign tapl[RW-1:0] = r0;
     genvar k, c, u;
@@ -259,7 +285,7 @@ module ot_hdc_v41x_wgt_tile #(
         else tv <= {tv[17:1], r0[RW-1]};
     end
 
-    wire [7:0]   lvall, lfall;
+    wire [7:0]   lvall, lfall, lsrc, lspl;
     wire [8*G-1:0] lzall;
     generate
         for (c = 0; c < 8; c = c + 1) begin : g_pos
@@ -269,31 +295,56 @@ module ot_hdc_v41x_wgt_tile #(
             wire [AW-1:0]  t_a;
             wire [NBW-1:0] t_q, t_nb;
             wire [RWW-1:0] t_rg, t_nrows;
-            wire           t_last, t_fp4;
+            wire           t_last, t_fp4, t_src, t_split;
             wire [3:0]     t_plg;
             wire [TGW-1:0] t_tag;
             wire [2:0]     t_nlev;
-            assign {t_a, t_q, t_rg, t_last, t_plg, t_nlev, t_nb, t_nrows, t_fp4, t_tag} = t[RW-2:0];
+            assign {t_a, t_q, t_rg, t_last, t_plg, t_nlev, t_nb, t_nrows, t_fp4, t_tag, t_src, t_split} = t[RW-2:0];
             assign rq_v[c] = tvv;
             assign rq_a[c*AW +: AW] = t_a;
             assign rq_q[c*NBW +: NBW] = t_q;
             assign rq_plg[c*4 +: 4] = t_plg;
             assign rq_tag[c*TGW +: TGW] = t_tag;
+            assign rq_src[c] = t_src;
+            assign rq_split[c] = t_split;
+            assign rq_rg[c*RWW +: RWW] = t_rg;
             // lane controls, delayed RL cycles to meet the read data
             wire [G-1:0] zc;
             for (u = 0; u < G; u = u + 1) begin : g_u
                 localparam integer J = 8 * u + c;
                 wire [NBW+8:0]  blk = ({9'd0, t_q} << (3 + t_plg)) + (J & ((8 << t_plg) - 1));
                 wire [RWW+8:0]  row = ({9'd0, t_rg} << (LG - t_plg)) + (J >> (3 + t_plg));
-                assign zc[u] = (blk >= {9'd0, t_nb}) || (row >= {9'd0, t_nrows});
+                //: split: lane 8u + c is term c mod 4 of row 2G*rg + 2u + (c >= 4)
+                wire [RWW+8:0]  srow = ({9'd0, t_rg} << (LG + 1)) + (2 * u + (c >= 4 ? 1 : 0));
+                wire            zn = (blk >= {9'd0, t_nb}) || (row >= {9'd0, t_nrows});
+                wire            zs = ((c % 4) >= t_nb) || (srow >= {9'd0, t_nrows});
+                assign zc[u] = t_split ? zs : zn;
             end
-            wire          lv, lfp4;
+            wire          lv, lfp4, ls, lp;
             wire [G-1:0]  lz;
             ot_hdc_delay #(.W(1), .D(RL), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(tvv), .q(lv));
-            ot_hdc_delay #(.W(G + 1), .D(RL)) u_z (.clk(clk), .rst_n(rst_n), .d({t_fp4, zc}), .q({lfp4, lz}));
+            ot_hdc_delay #(.W(G + 3), .D(RL)) u_z (.clk(clk), .rst_n(rst_n), .d({t_split, t_src, t_fp4, zc}),
+                                                   .q({lp, ls, lfp4, lz}));
             assign lvall[c] = lv;
             assign lfall[c] = lfp4;
             assign lzall[c*G +: G] = lz;
+            assign lsrc[c] = ls;
+            assign lspl[c] = lp;
+        end
+    endgenerate
+
+    // -- the operand mux (POOL): ROM read network or the stream (HBM index keys / KV row staging) ---------
+    wire [8*G*WW-1:0] rd_op;
+    generate
+        if (POOL != 0) begin : g_mux
+            for (u = 0; u < G; u = u + 1) begin : g_mu
+                for (c = 0; c < 8; c = c + 1) begin : g_mc
+                    localparam integer J = 8 * u + c;
+                    assign rd_op[J*WW +: WW] = lsrc[c] ? rd_k[J*WW +: WW] : rd_w[J*WW +: WW];
+                end
+            end
+        end else begin : g_nomux
+            assign rd_op = rd_w;
         end
     endgenerate
 
@@ -301,6 +352,8 @@ module ot_hdc_v41x_wgt_tile #(
     wire [G-1:0]      cu_v;
     wire [G*M*32-1:0] cu_s;
     wire [G*M-1:0]    cu_f;
+    wire [G*M*32-1:0] cu_s1;
+    wire [G*M-1:0]    cu_f1;
     generate
         for (u = 0; u < G; u = u + 1) begin : g_cu
             wire [7:0] lv8, lz8, lf8;
@@ -310,35 +363,45 @@ module ot_hdc_v41x_wgt_tile #(
                 assign lf8[c] = lfall[c];
             end
             if (KIND == 0) begin : g_q
-                ot_hdc_v41x_wgt_qchunk #(.M(M)) u_ch (
-                    .clk(clk), .rst_n(rst_n), .v(lv8), .z(lz8), .fp4(lf8),
-                    .w(rd_w[u*8*WW +: 8*WW]), .x(rd_x[u*8*M*XW +: 8*M*XW]),
-                    .ov(cu_v[u]), .s(cu_s[u*M*32 +: M*32]), .sf(cu_f[u*M +: M]));
+                ot_hdc_v41x_wgt_qchunk #(.M(M), .POOL(POOL)) u_ch (
+                    .clk(clk), .rst_n(rst_n), .v(lv8), .z(lz8), .fp4(lf8), .split4(lspl[4]),
+                    .w(rd_op[u*8*WW +: 8*WW]), .x(rd_x[u*8*M*XW +: 8*M*XW]),
+                    .ov(cu_v[u]), .s(cu_s[u*M*32 +: M*32]), .sf(cu_f[u*M +: M]),
+                    .s1st(cu_s1[u*M*32 +: M*32]), .s1stf(cu_f1[u*M +: M]));
             end else begin : g_m
-                ot_hdc_v41x_wgt_mchunk #(.M(M)) u_ch (
-                    .clk(clk), .rst_n(rst_n), .v(lv8), .z(lz8), .f8(lf8),
-                    .w(rd_w[u*8*WW +: 8*WW]), .x(rd_x[u*8*M*XW +: 8*M*XW]),
+                ot_hdc_v41x_wgt_mchunk #(.M(M), .POOL(POOL)) u_ch (
+                    .clk(clk), .rst_n(rst_n), .v(lv8), .z(lz8),
+                    .w(rd_op[u*8*WW +: 8*WW]), .x(rd_x[u*8*M*XW +: 8*M*XW]),
                     .ov(cu_v[u]), .s(cu_s[u*M*32 +: M*32]), .sf(cu_f[u*M +: M]));
+                assign cu_s1[u*M*32 +: M*32] = {(M*32){1'b0}};
+                assign cu_f1[u*M +: M] = {M{1'b0}};
             end
         end
     endgenerate
 
     // -- beat tag to the tree: {mask, rg, tag}, delayed RL + CL from the beat record ---------------------
-    localparam integer TW = NC + RWW + TGW;
+    localparam integer TW = G + NC + RWW + TGW;
     wire [AW-1:0]  r_a;
     wire [NBW-1:0] r_q, r_nb;
     wire [RWW-1:0] r_rg, r_nrows;
-    wire           r_last, r_fp4;
+    wire           r_last, r_fp4, r_src, r_split;
     wire [3:0]     r_plg;
     wire [TGW-1:0] r_tag;
     wire [2:0]     r_nlev;
-    assign {r_a, r_q, r_rg, r_last, r_plg, r_nlev, r_nb, r_nrows, r_fp4, r_tag} = r0[RW-2:0];
+    assign {r_a, r_q, r_rg, r_last, r_plg, r_nlev, r_nb, r_nrows, r_fp4, r_tag, r_src, r_split} = r0[RW-2:0];
     wire [NC-1:0] r_mask;
+    wire [G-1:0]  r_smask;
     genvar s;
     generate
         for (s = 0; s < NC; s = s + 1) begin : g_mask
             wire [RWW+8:0] row = ({9'd0, r_rg} << (LG - r_plg)) + s;
-            assign r_mask[s] = ((s >> (LG - r_plg)) == 0) && (row < {9'd0, r_nrows});
+            wire [RWW+8:0] srow = ({9'd0, r_rg} << (LG + 1)) + 2 * s + 1;
+            assign r_mask[s] = r_split ? ((s < G) && (srow < {9'd0, r_nrows}))
+                                       : (((s >> (LG - r_plg)) == 0) && (row < {9'd0, r_nrows}));
+        end
+        for (s = 0; s < G; s = s + 1) begin : g_smask
+            wire [RWW+8:0] srow = ({9'd0, r_rg} << (LG + 1)) + 2 * s;
+            assign r_smask[s] = r_split && (srow < {9'd0, r_nrows});
         end
     endgenerate
     wire          tr_v, tr_last;
@@ -347,7 +410,7 @@ module ot_hdc_v41x_wgt_tile #(
     wire [TW-1:0] tr_t;
     ot_hdc_delay #(.W(1), .D(RL + CL), .RESET(1)) u_trv (.clk(clk), .rst_n(rst_n), .d(r0[RW-1]), .q(tr_v));
     ot_hdc_delay #(.W(8 + TW), .D(RL + CL)) u_tr (.clk(clk), .rst_n(rst_n),
-                                                  .d({r_plg, r_nlev, r_last, r_mask, r_rg, r_tag}),
+                                                  .d({r_plg, r_nlev, r_last, r_smask, r_mask, r_rg, r_tag}),
                                                   .q({tr_plg, tr_nlev, tr_last, tr_t}));
 
     wire              rv;
@@ -365,13 +428,31 @@ module ot_hdc_v41x_wgt_tile #(
         if (!rst_n) o_v <= 1'b0;
         else o_v <= rv;
     end
+    //: the split first rows bypass the tree: a split beat is plg 0, nlev 0, so the tree's latency is 2
+    wire [G*M*32-1:0] ys1;
+    wire [G*M-1:0]    yf1;
+    generate
+        if (POOL != 0 && KIND == 0) begin : g_s1
+            ot_hdc_delay #(.W(G*M*33), .D(2)) u_s1 (.clk(clk), .rst_n(rst_n), .d({cu_f1, cu_s1}), .q({yf1, ys1}));
+        end else begin : g_nos1
+            assign ys1 = {(G*M*32){1'b0}};
+            assign yf1 = {(G*M){1'b0}};
+        end
+    endgenerate
+    reg [32:0] rb1;
     always @(posedge clk) begin
-        {o_mask, o_rg, o_tag} <= rt;
+        {o_smask, o_mask, o_rg, o_tag} <= rt;
         o_y <= ry;
         o_f <= rf;
         for (i = 0; i < NC * M; i = i + 1) begin
             rb = {1'b0, ry[32*i +: 32]} + 33'h7FFF + {32'd0, ry[32*i + 16]};
             o_bf[16*i +: 16] <= rb[31:16];
+        end
+        o_ys <= ys1;
+        o_fs <= yf1;
+        for (i = 0; i < G * M; i = i + 1) begin
+            rb1 = {1'b0, ys1[32*i +: 32]} + 33'h7FFF + {32'd0, ys1[32*i + 16]};
+            o_bfs[16*i +: 16] <= rb1[31:16];
         end
     end
 endmodule
