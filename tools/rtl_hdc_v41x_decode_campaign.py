@@ -75,6 +75,7 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
        [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt",
                                                  "ot_hdc_v41x_wgt_bdot", "ot_hdc_v41x_wgt_red", "ot_hdc_v41x_wgt_mac",
                                                  "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_me_adapt",
+                                                 "ot_hdc_v41x_attn_tile", "ot_hdc_v41x_attn", "ot_hdc_v41x_att_adapt",
                                                  "ot_hdc_v41x_sel_lib", "ot_hdc_v41x_sel_slice", "ot_hdc_v41x_sel",
                                                  "ot_hdc_v41x_egather", "ot_hdc_v41x_xu_adapt",
                                                  "ot_hdc_v41x_idx_arith", "ot_hdc_v41x_idx", "ot_hdc_v41x_idx_kstream",
@@ -103,7 +104,7 @@ ISSUE = re.compile(r"ISSUE cyc=(\d+) pc=(\d+) unit=(\d+)")
 STEP = re.compile(r"STEP pos=(\d+) in=(\d+) out=(\d+) gold=(\d+) cycles=(\d+) fault=(\d+)")
 XCNT = re.compile(r"XCNT unit=(\w+) ops=(\d+) elems=(\d+)")
 # classes whose counters the bench prints (a re-specified unit not listed here has no activation proof yet)
-COUNTED = ("he", "me", "idx", "sel", "eg", "su")
+COUNTED = ("he", "me", "att", "idx", "sel", "eg", "su")
 # the indexer's extra counters (bench XCNT lines): keys the HBM key stream delivered (elems: HBM beats), keys
 # the engine scored (elems: head terms fused), index keys written to the HBM image (the key writer)
 IDX_COUNTERS = ("idx_hbm", "idx_fused", "idx_kwr")

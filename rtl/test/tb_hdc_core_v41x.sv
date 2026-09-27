@@ -269,7 +269,7 @@ module tb_hdc_core_v41x (input wire clk);
                         lg[{me_oaddr[q*AW +: 12], 4'b0} + l] <= me_odata[32*(q*W + l) +: 32];
     end
 
-    wire [63:0] x_cnt_he, x_cnt_me, x_cnt_idx, x_cnt_su;
+    wire [63:0] x_cnt_he, x_cnt_me, x_cnt_att, x_cnt_idx, x_cnt_su;
     wire [47:0] x_idx_ks, x_idx_hb, x_idx_sc, x_idx_hs;
     wire [31:0] x_idx_kw;
     generate
@@ -293,6 +293,11 @@ module tb_hdc_core_v41x (input wire clk);
             assign x_cnt_me = {dut.g_me_x.u_mw.dbg_ops, dut.g_me_x.u_mw.dbg_elems};
         end else begin : g_cnt_me_n
             assign x_cnt_me = 64'd0;
+        end
+        if (`HDC_X_ATT) begin : g_cnt_att
+            assign x_cnt_att = {dut.g_att_x.u_att.dbg_ops, dut.g_att_x.u_att.dbg_elems};
+        end else begin : g_cnt_att_n
+            assign x_cnt_att = 64'd0;
         end
         if (`HDC_X_SU) begin : g_cnt_su
             assign x_cnt_su = {dut.g_su_x.u_su.dbg_ops, dut.g_su_x.u_su.dbg_elems};
@@ -375,6 +380,7 @@ module tb_hdc_core_v41x (input wire clk);
         begin
             if (`HDC_X_HE) $display("XCNT unit=he ops=%0d elems=%0d", x_cnt_he[63:32], x_cnt_he[31:0]);
             if (`HDC_X_ME) $display("XCNT unit=me ops=%0d elems=%0d", x_cnt_me[63:32], x_cnt_me[31:0]);
+            if (`HDC_X_ATT) $display("XCNT unit=att ops=%0d elems=%0d", x_cnt_att[63:32], x_cnt_att[31:0]);
             if (`HDC_X_SU) $display("XCNT unit=su ops=%0d elems=%0d", x_cnt_su[63:32], x_cnt_su[31:0]);
             if (`HDC_X_SEL) $display("XCNT unit=sel ops=%0d elems=%0d reps=%0d", x_cnt_sel[63:32], x_cnt_sel[31:0],
                                      x_sel_reps);

@@ -646,7 +646,20 @@ module ot_hdc_core_v41x #(
 
     // engine 2: the attention engine (X_ATT)
     generate if (X_ATT != 0) begin : g_att_x
-        // (attention adapter: ot_hdc_v41x_att_adapt)
+        // The reduced vehicle uses 16 heads per job, head dimension 32 and at most 144 rows.
+        ot_hdc_v41x_att_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .H(16), .D(32), .TD(32),
+                                .NL(4), .TROWS(160), .NHMAX(32)) u_att (
+            .clk(clk), .rst_n(rst_n), .go(e_go[2]), .ready(e_ready[2]), .idle(e_idle[2]),
+            .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_ts(me_ts), .i_ks(me_ks),
+            .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs), .i_xcs(me_xcs), .i_hg(me_hg),
+            .i_ogs(me_ogs), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
+            .i_mmode(me_mmode), .i_oen(me_oen), .i_m(mx_m),
+            .kv_re(e_kv_re[2]), .kv_addr(e_kv_raddr[2*G*AW +: G*AW]), .kv_q(kv_q),
+            .x_re(e_vx_re[2*MP*G +: MP*G]), .x_addr(e_vx_addr[2*MP*G*AW +: MP*G*AW]), .x_q(vx_q),
+            .o_we(e_we[2*MP*G +: MP*G]), .o_addr(e_addr[2*MP*G*AW +: MP*G*AW]), .o_mask(e_mask[2*MP*G*W +: MP*G*W]),
+            .o_data(e_data[2*MP*G*W*32 +: MP*G*W*32]), .fault(e_fault[2]));
+        assign e_ov[2] = 1'b0;
+        assign e_am_idx[2*MP*NW +: MP*NW] = 0; assign e_am_val[2*MP*32 +: MP*32] = 0; assign e_am_any[2*MP +: MP] = 0;
     end else begin : g_att_n
         assign e_ready[2] = 1'b1; assign e_idle[2] = 1'b1; assign e_fault[2] = 1'b0; assign e_kv_re[2] = 1'b0;
         assign e_kv_raddr[2*G*AW +: G*AW] = 0; assign e_vx_re[2*MP*G +: MP*G] = 0;
