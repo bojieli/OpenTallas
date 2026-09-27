@@ -1,0 +1,317 @@
+{
+  "claim_boundary": "cycle-level Verilator simulation of 48 column-bank slices and the consumer-side assembler with behavioural ROMs, a behavioural one-beat-per-cycle merge network and a behavioural vector memory; the shipped table CONTENT is synthetic (not in this repository), the reduced vehicle's is real; link latencies are parameters.  Clock, area and pins: results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_{slice,asm}.",
+  "input_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_egather.sv": "d1ac9dc69dadfe10e7093ea99aa027f3420885d6a8bd7d35132cf3d22ed2db21",
+    "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+    "rtl/test/tb_hdc_v41x_egather.sv": "ada984ac51c758036735bff472051b0bed0d598d6dc4e8b0f36471742e419f63",
+    "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
+    "tools/hdc_golden_v41.py": "e6e95d8cf6ee1835bf7a1229f605d3d2b6756fd0234fdec0c4da2b3d12326a8e",
+    "tools/hdc_v41_engram_shipped.py": "28713b421c5a350166598b35ea111df98a0c86ce61094f96d4ee979b2fe2c5b5",
+    "tools/rtl_hdc_v41_engram_gather_campaign.py": "a3978bd09c2b12323c489daa8fe5eca4cbd477ee42c800dde7c401c7d73020f6",
+    "tools/rtl_hdc_v41x_egather_campaign.py": "08eae21198d11255dfebbb19cb788dea1d00c448068354b07a9d6bdd002faadc"
+  },
+  "io_pins": {
+    "as_built_flat_port_io_pins": 16559,
+    "asm": {
+      "beats": 276,
+      "clk_rst": 2,
+      "completion": 5,
+      "slots": 3,
+      "total": 810,
+      "write_port": 524
+    },
+    "slice": {
+      "beats": 276,
+      "clk_rst": 2,
+      "request": 35,
+      "rom": 293,
+      "straps": 38,
+      "total": 644
+    }
+  },
+  "mutations": [
+    {
+      "caught": true,
+      "faults": 0,
+      "mutation": "slice: scale not latched for beats 1..",
+      "word_mismatches": 13405
+    },
+    {
+      "caught": true,
+      "faults": 0,
+      "mutation": "slice: column base not subtracted",
+      "word_mismatches": 14720
+    },
+    {
+      "caught": true,
+      "faults": 0,
+      "mutation": "slice: beat index off by one",
+      "word_mismatches": 15360
+    },
+    {
+      "caught": true,
+      "faults": 0,
+      "mutation": "asm: layer and column order swapped",
+      "word_mismatches": 14720
+    },
+    {
+      "caught": true,
+      "faults": 0,
+      "mutation": "asm: slot ignored in the address",
+      "word_mismatches": 11714
+    },
+    {
+      "caught": true,
+      "faults": 10157,
+      "mutation": "asm: token ready one word early",
+      "word_mismatches": 37
+    },
+    {
+      "caught": true,
+      "faults": 0,
+      "mutation": "decode: subnormal tie rounds away from even",
+      "word_mismatches": 34
+    },
+    {
+      "caught": true,
+      "faults": 0,
+      "mutation": "decode: NaN sign dropped",
+      "word_mismatches": 1851
+    }
+  ],
+  "runs": {
+    "reduced": {
+      "back_to_back_random_order_stressed": {
+        "beats_moved": 20928,
+        "cycles": 42608,
+        "faults": 0,
+        "first_mismatches": [],
+        "latency_cycles": {
+          "max": 143,
+          "mean": 133.6,
+          "min": 122
+        },
+        "pass": true,
+        "plusargs": {
+          "ARB": 1,
+          "CDEL": 60,
+          "JIT": 40,
+          "LAT": 4,
+          "NETLAT": 6,
+          "NSTALL": 10,
+          "TABLE": 1,
+          "WSTALL": 10
+        },
+        "rom_queue_overflows": 0,
+        "token_interval_cycles": {
+          "max": 204,
+          "mean": 97.9,
+          "min": 1
+        },
+        "tokens": 436,
+        "word_mismatches": 0,
+        "words_compared": 20928
+      },
+      "back_to_back_rr_4": {
+        "beats_moved": 20928,
+        "cycles": 20950,
+        "faults": 0,
+        "first_mismatches": [],
+        "latency_cycles": {
+          "max": 116,
+          "mean": 94.0,
+          "min": 70
+        },
+        "pass": true,
+        "plusargs": {
+          "LAT": 4,
+          "NETLAT": 2,
+          "TABLE": 1
+        },
+        "rom_queue_overflows": 0,
+        "token_interval_cycles": {
+          "max": 48,
+          "mean": 48.2,
+          "min": 48
+        },
+        "tokens": 436,
+        "word_mismatches": 0,
+        "words_compared": 20928
+      }
+    },
+    "shipped": {
+      "back_to_back_random_order_stressed": {
+        "beats_moved": 230400,
+        "cycles": 266006,
+        "faults": 0,
+        "first_mismatches": [],
+        "latency_cycles": {
+          "max": 1253,
+          "mean": 824.6,
+          "min": 475
+        },
+        "pass": true,
+        "plusargs": {
+          "ARB": 1,
+          "CDEL": 60,
+          "JIT": 40,
+          "LAT": 4,
+          "NETLAT": 6,
+          "NSTALL": 10,
+          "WSTALL": 10
+        },
+        "rom_queue_overflows": 0,
+        "token_interval_cycles": {
+          "max": 898,
+          "mean": 444.1,
+          "min": 23
+        },
+        "tokens": 600,
+        "word_mismatches": 0,
+        "words_compared": 230400
+      },
+      "back_to_back_rr_4": {
+        "beats_moved": 230400,
+        "cycles": 230422,
+        "faults": 0,
+        "first_mismatches": [],
+        "latency_cycles": {
+          "max": 788,
+          "mean": 765.4,
+          "min": 406
+        },
+        "pass": true,
+        "plusargs": {
+          "LAT": 4,
+          "NETLAT": 2
+        },
+        "rom_queue_overflows": 0,
+        "token_interval_cycles": {
+          "max": 384,
+          "mean": 384.7,
+          "min": 384
+        },
+        "tokens": 600,
+        "word_mismatches": 0,
+        "words_compared": 230400
+      },
+      "isolated_board_hop_pair_209": {
+        "beats_moved": 230400,
+        "cycles": 368998,
+        "faults": 0,
+        "first_mismatches": [],
+        "latency_cycles": {
+          "max": 613,
+          "mean": 613.0,
+          "min": 613
+        },
+        "pass": true,
+        "plusargs": {
+          "LAT": 4,
+          "NETLAT": 209,
+          "SPACED": 1
+        },
+        "rom_queue_overflows": 0,
+        "token_interval_cycles": {
+          "max": 615,
+          "mean": 616.0,
+          "min": 615
+        },
+        "tokens": 600,
+        "word_mismatches": 0,
+        "words_compared": 230400
+      },
+      "isolated_ucie_hop_pair_23": {
+        "beats_moved": 230400,
+        "cycles": 257398,
+        "faults": 0,
+        "first_mismatches": [],
+        "latency_cycles": {
+          "max": 427,
+          "mean": 427.0,
+          "min": 427
+        },
+        "pass": true,
+        "plusargs": {
+          "LAT": 4,
+          "NETLAT": 23,
+          "SPACED": 1
+        },
+        "rom_queue_overflows": 0,
+        "token_interval_cycles": {
+          "max": 429,
+          "mean": 429.7,
+          "min": 429
+        },
+        "tokens": 600,
+        "word_mismatches": 0,
+        "words_compared": 230400
+      }
+    }
+  },
+  "schema": "opentallas.hdc-v41x-egather-campaign.v1",
+  "spec": {
+    "bandwidth_met": true,
+    "bytes_per_token": 12672,
+    "isolated_token_latency_cycles": {
+      "max": 427,
+      "mean": 427.0,
+      "min": 427
+    },
+    "measured_bytes_per_cycle": 32.94,
+    "measured_token_interval_cycles": 384.7,
+    "note": "a token is 384 beats of 256-bit codes + tag (the UE8M0 scale rides in every beat's tag, so the row's 7 pad bytes are never sent); one beat per cycle is 32 B/cycle of codes, 2.4x the requirement",
+    "required_bytes_per_cycle": 13.732778148497042,
+    "spec_port_cycles": 396
+  },
+  "status": "pass",
+  "vectors": {
+    "reduced": {
+      "beats": 1,
+      "golden_rows_recorded_and_equal": 576,
+      "ntok": 436,
+      "streams": {
+        "random": 424,
+        "reduced_workload_prompt_and_gold": 12
+      }
+    },
+    "shipped": {
+      "beats": 8,
+      "ntok": 600,
+      "released_layout": {
+        "primes_offsets_multipliers_equal": true,
+        "reference": "tools/build_a3_v41_ngram_hash_vectors.released_layout + PINNED_MULTIPLIERS",
+        "released_rows": [
+          384006168,
+          384016682
+        ]
+      },
+      "streams": {
+        "extremes": 9,
+        "pad_ids": 5,
+        "random": 1609,
+        "reduced_tokenised_text": 166,
+        "reduced_workload_prompt_and_gold": 24,
+        "single_position": 1
+      }
+    }
+  },
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH",
+      "-Wno-BLKSEQ",
+      "-Wno-PINCONNECTEMPTY"
+    ],
+    "ot_hdc_v41x_egather_asm": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_hdc_v41x_egather_slice": {
+      "messages": [],
+      "returncode": 0
+    }
+  }
+}
