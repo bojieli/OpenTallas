@@ -36,6 +36,9 @@
 `ifndef HDC_X_EG
 `define HDC_X_EG 0
 `endif
+`ifndef HDC_MG
+`define HDC_MG 8
+`endif
 `ifndef HDC_HHW
 `define HDC_HHW 8
 `endif
@@ -48,12 +51,14 @@ module tb_hdc_core_v41x (input wire clk);
     localparam integer WROM_WORDS = 1 << 19, QROM_WORDS = 1 << 16, EROM_WORDS = 1 << 19, CROM_WORDS = 1 << 15;
     localparam integer HHW = `HDC_HHW, HBAW = 16;
     localparam integer XSQ = 4, XSW = 16;       // X_SEL: select quarters x lanes
+    localparam integer MG = `HDC_MG, MBAW = 17, ML = 2;   // ME weight tile: read latency ML (RL)
     localparam integer KV_WORDS = 32768, VM_ELEMS = 65536, VOCAB = 4040, PROG_WORDS = 1 << PAW;
 
     reg [G*W*16-1:0]    wrom [0:WROM_WORDS-1];
     reg [HS*HNL*32-1:0] hrom [0:HROM_WORDS-1];
     reg [BL*QLB-1:0]    qrom [0:QROM_WORDS-1];
     reg [HHW*32-1:0]    hbank [0:8*(1<<HBAW)-1];     // HCP weight banks: line a*8 + k
+    reg [31:0]          mbank [0:8*MG*(1<<MBAW)-1];  // ME weight-tile banks: line a*8*MG + b
     reg [263:0]         erom [0:EROM_WORDS-1];
     reg [63:0]          crom [0:CROM_WORDS-1];
     reg [W*32-1:0]      kv   [0:KV_WORDS-1];
@@ -79,6 +84,7 @@ module tb_hdc_core_v41x (input wire clk);
     wire qrom_re; wire [AW-1:0] qrom_addr; reg [BL*QLB-1:0] qrom_q;
     wire hrom_re; wire [AW-1:0] hrom_addr; reg [HS*HNL*32-1:0] hrom_q;
     wire [XSQ-1:0] vsl_re; wire [XSQ*AW-1:0] vsl_addr; reg [XSQ*XSW*32-1:0] vsl_q;
+    wire [7:0] mb_re; wire [8*MBAW-1:0] mb_addr; reg [8*MG*32-1:0] mb_p [0:ML-1];
     wire [7:0] hb_re; wire [8*HBAW-1:0] hb_addr; reg [8*HHW*32-1:0] hb_q;
     wire [HS-1:0] vh_re; wire [HS*AW-1:0] vh_addr; reg [HS*32-1:0] vh_q;
     wire ww_h_we; wire [AW-1:0] ww_h_addr; wire [31:0] ww_h_mask; wire [1023:0] ww_h_data;
@@ -106,8 +112,9 @@ module tb_hdc_core_v41x (input wire clk);
     reg [AW-1:0] cfg [0:15];                   // tools/hdc_images_v41x.py cfg.hex: [0] the index keys' KV word base
     ot_hdc_core_v41x #(.SW(SW), .HS(HS), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
                        .X_SEL(`HDC_X_SEL), .X_EG(`HDC_X_EG), .XSQ(XSQ), .XSW(XSW),
-                       .HHW(HHW), .HBAW(HBAW)) dut (
-        .cfg_ik_base(cfg[0]),
+                       .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) dut (
+        .cfg_ik_base(cfg[0]), .cfg_me_xs(cfg[1][3:0]),
+        .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry({PAW{1'b0}}), .acc_n(), .acc_tok(),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
         .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -144,6 +151,10 @@ module tb_hdc_core_v41x (input wire clk);
         for (q = 0; q < SW; q = q + 1) if (ewrom_re[q]) ewrom_q[q*G*W*16 +: G*W*16] <= wrom[ewrom_addr[q*AW +: 19]];
         if (qrom_re) qrom_q <= qrom[qrom_addr[15:0]];
         if (hrom_re) hrom_q <= hrom[hrom_addr[15:0]];
+        // ME weight-tile banks: bank b = 8u + c answers chain position c's address ML cycles later
+        for (q = 0; q < 8 * MG; q = q + 1)
+            mb_p[0][32*q +: 32] <= mbank[32'(mb_addr[(q % 8)*MBAW +: MBAW]) * (8 * MG) + q];
+        for (l = 1; l < ML; l = l + 1) mb_p[l] <= mb_p[l-1];
         for (q = 0; q < 8; q = q + 1) if (hb_re[q]) hb_q[q*HHW*32 +: HHW*32] <= hbank[{hb_addr[q*HBAW +: HBAW], 3'(q)}];
         for (q = 0; q < HS; q = q + 1) if (vh_re[q]) vh_q[32*q +: 32] <= vm[vh_addr[q*AW +: 16]];
         if (ww_h_we) for (q = 0; q < 32; q = q + 1) if (ww_h_mask[q]) vm[ww_h_addr[15:0] + q] <= ww_h_data[32*q +: 32];
@@ -179,6 +190,30 @@ module tb_hdc_core_v41x (input wire clk);
                         lg[{me_oaddr[q*AW +: 12], 4'b0} + l] <= me_odata[32*(q*W + l) +: 32];
     end
 
+    wire [63:0] x_cnt_he, x_cnt_me;
+    generate
+        if (`HDC_X_HE) begin : g_cnt_he
+            assign x_cnt_he = {dut.g_he_x.u_he.dbg_ops, dut.g_he_x.u_he.dbg_elems};
+        end else begin : g_cnt_he_n
+            assign x_cnt_he = 64'd0;
+        end
+        if (`HDC_X_ME) begin : g_cnt_me
+            assign x_cnt_me = {dut.g_me_x.u_mw.dbg_ops, dut.g_me_x.u_mw.dbg_elems};
+        end else begin : g_cnt_me_n
+            assign x_cnt_me = 64'd0;
+        end
+    endgenerate
+    wire [63:0] x_cnt_sel, x_cnt_eg;
+    wire [31:0] x_sel_reps;
+    generate
+        if (`HDC_X_SEL || `HDC_X_EG) begin : g_cnt_xu
+            assign x_cnt_sel = {dut.g_xu_x.u_xu.dbg_sel_ops, dut.g_xu_x.u_xu.dbg_sel_elems};
+            assign x_sel_reps = dut.g_xu_x.u_xu.dbg_sel_reps;
+            assign x_cnt_eg = {dut.g_xu_x.u_xu.dbg_eg_ops, dut.g_xu_x.u_xu.dbg_eg_elems};
+        end else begin : g_cnt_xu_n
+            assign x_cnt_sel = 64'd0; assign x_sel_reps = 32'd0; assign x_cnt_eg = 64'd0;
+        end
+    endgenerate
     reg [8*512-1:0] dir;
     integer cyc = 0, i, bad_lg, bad_vm, bad_kv, n_prime = 0, pfirst = 0, prime_i = 0;
     reg trace = 1'b0, multi = 1'b0, running = 1'b0, dbg = 1'b0;
@@ -212,6 +247,7 @@ module tb_hdc_core_v41x (input wire clk);
         $readmemh({dir, "/hrom.hex"}, hrom);
         if (`HDC_X_HE) $readmemh({dir, "/hbank.hex"}, hbank);
         $readmemh({dir, "/cfg.hex"}, cfg);
+        if (`HDC_X_ME) $readmemh({dir, "/mbank.hex"}, mbank);
         $readmemh({dir, "/erom.hex"}, erom);
         $readmemh({dir, "/crom.hex"}, crom);
         $readmemh({dir, "/prog.hex"}, prog);
@@ -237,8 +273,20 @@ module tb_hdc_core_v41x (input wire clk);
         for (i = 0; i < VOCAB; i = i + 1) lg[i] = 32'hFFFFFFFF;
     end
 
+    // activation counters of the re-specified units: "XCNT unit=<u> ops=<n> elems=<n>" (the campaign asserts them)
+    task print_counters;
+        begin
+            if (`HDC_X_HE) $display("XCNT unit=he ops=%0d elems=%0d", x_cnt_he[63:32], x_cnt_he[31:0]);
+            if (`HDC_X_ME) $display("XCNT unit=me ops=%0d elems=%0d", x_cnt_me[63:32], x_cnt_me[31:0]);
+            if (`HDC_X_SEL) $display("XCNT unit=sel ops=%0d elems=%0d reps=%0d", x_cnt_sel[63:32], x_cnt_sel[31:0],
+                                     x_sel_reps);
+            if (`HDC_X_EG) $display("XCNT unit=eg ops=%0d elems=%0d", x_cnt_eg[63:32], x_cnt_eg[31:0]);
+        end
+    endtask
+
     task check_state(input integer check_logits);
         begin
+            print_counters();
             bad_lg = 0; bad_vm = 0; bad_kv = 0;
             if ($test$plusargs("DUMP")) $writememh({dir, "/rtl_vm.hex"}, vm);
             if (check_logits)

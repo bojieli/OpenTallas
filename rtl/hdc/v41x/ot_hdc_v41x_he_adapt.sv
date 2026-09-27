@@ -182,4 +182,14 @@ module ot_hdc_v41x_he_adapt #(
             fault <= (e_fault && st == A_RUN) || xlow;
         end
     end
+    // ---- activation counters (bench only, read hierarchically by rtl/test/tb_hdc_core_v41x.sv): ops this
+    // engine ran and the elements it processed -- the campaign fails a selected unit whose counters stay 0
+    reg [31:0] dbg_ops, dbg_elems;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin dbg_ops <= 0; dbg_elems <= 0; end
+        else begin
+            if (st == A_IDLE && go) dbg_ops <= dbg_ops + 1;
+            dbg_elems <= dbg_elems + (u_hcp.iss ? 8 * HW : 0);        // MACs issued (one task of 8 x HW terms)
+        end
+    end
 endmodule

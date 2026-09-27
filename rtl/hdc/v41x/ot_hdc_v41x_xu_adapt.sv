@@ -466,6 +466,33 @@ module ot_hdc_v41x_xu_adapt #(
             if (ea_fault) flt <= 1'b1;
         end
     end
+    // -- activation counters (bench only: the proof the re-specified paths ran) -------------------
+    //   sel: ops run on ot_hdc_v41x_sel, scores it ingested on the FIRST pass (valid lanes accepted),
+    //        and whole-segment replays (the overflow fallback)
+    //   eg:  ops run on the per-bank gather, rows the assembler wrote (one word per row: BEATS = 1)
+    reg [31:0] dbg_sel_ops, dbg_sel_elems, dbg_sel_reps, dbg_eg_ops, dbg_eg_elems;
+    reg        xs_first;
+    integer    cq, cl;
+    reg [31:0] xs_acc;
+    always @(*) begin
+        xs_acc = 0;
+        for (cq = 0; cq < SQ; cq = cq + 1)
+            if (xs_v[cq] && xs_in_ready[cq])
+                for (cl = 0; cl < SW; cl = cl + 1) xs_acc = xs_acc + xs_lv[SW*cq + cl];
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            dbg_sel_ops <= 0; dbg_sel_elems <= 0; dbg_sel_reps <= 0; dbg_eg_ops <= 0; dbg_eg_elems <= 0;
+            xs_first <= 1'b0;
+        end else begin
+            if (st == S_XS0) begin dbg_sel_ops <= dbg_sel_ops + 1; xs_first <= 1'b1; end
+            if (st == S_XSW && xs_rep) begin dbg_sel_reps <= dbg_sel_reps + 1; xs_first <= 1'b0; end
+            if (xs_first) dbg_sel_elems <= dbg_sel_elems + xs_acc;
+            if (st == S_IDLE && accept && i_op == OP_EGATHER && X_EG != 0) dbg_eg_ops <= dbg_eg_ops + 1;
+            if (ea_wv) dbg_eg_elems <= dbg_eg_elems + 1;
+        end
+    end
+
     //: the slice data: the ROM word of the read answered, its side byte (a signed exponent) as UE8M0
     always @(*) begin
         erd = {er_q[263:256] + 8'd127, er_q[255:0]};

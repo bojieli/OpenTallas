@@ -51,7 +51,7 @@ OUT = ROOT / "results/rtl/hdc_v41x_decode_campaign.json"
 X_UNITS = ("he", "me", "att", "idx", "sel", "eg")
 X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "sel": (), "eg": ()}
 UNITS = X_UNITS           # set by main(): the units built re-specified
-PARAMS = {"hhw": 8}      # engine geometry of the build
+PARAMS = {"hhw": 8, "mg": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
        [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
                                            "ot_hdc_reduce", "ot_hdc_accept")] +
@@ -64,9 +64,11 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                "ot_hdc_v41_hcproj")] +
        [ROOT / "rtl/hdc/ot_hdc_fastfp.sv"] +
        [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt",
-                                                "ot_hdc_v41x_sel_lib", "ot_hdc_v41x_sel_slice", "ot_hdc_v41x_sel",
-                                                "ot_hdc_v41x_egather", "ot_hdc_v41x_xu_adapt",
-                                                "ot_hdc_core_v41x")])
+                                                 "ot_hdc_v41x_wgt_bdot", "ot_hdc_v41x_wgt_red", "ot_hdc_v41x_wgt_mac",
+                                                 "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_me_adapt",
+                                                 "ot_hdc_v41x_sel_lib", "ot_hdc_v41x_sel_slice", "ot_hdc_v41x_sel",
+                                                 "ot_hdc_v41x_egather", "ot_hdc_v41x_xu_adapt",
+                                                 "ot_hdc_core_v41x")])
 SVH = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
 TB = ROOT / "rtl/test/tb_hdc_core_v41x.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_v41x_harness.cpp"
@@ -80,6 +82,76 @@ SINGLE = re.compile(r"HDC41 token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) 
 UTIL = re.compile(r"UTIL me_busy=(\d+) su_busy=(\d+) qe_busy=(\d+) xu_busy=(\d+) he_busy=(\d+) all_idle=(\d+)")
 ISSUE = re.compile(r"ISSUE cyc=(\d+) pc=(\d+) unit=(\d+)")
 STEP = re.compile(r"STEP pos=(\d+) in=(\d+) out=(\d+) gold=(\d+) cycles=(\d+) fault=(\d+)")
+XCNT = re.compile(r"XCNT unit=(\w+) ops=(\d+) elems=(\d+)")
+# classes whose counters the bench prints (a re-specified unit not listed here has no activation proof yet)
+COUNTED = ("he", "me", "sel", "eg")
+# coverage the runs do NOT prove, per unit (recorded, never counted as proven)
+NOT_EXERCISED = {
+    "he": ["MTP lane multiplier (mx_m > 1): the MTP program is not run on this core"],
+    "me": ["wo_a in the checkpoint's FP8 image format (the image feeds it as expanded BF16)",
+           "MTP lane multiplier (mx_m > 1) and the MTP layout's images"],
+    "sel": ["static-count SELECTs (router top-6 over FP32 biased scores, a draft's top-1 over FP32 logits) stay "
+            "on the as-built FP32 select: the re-specified select takes BF16 keys only",
+            "the overflow fallback (rep_req re-stream): the reduced vehicle's <= 128 scores never overflow the "
+            "line memories (reps counted, expected 0)",
+            "k > 16 and the candidate top-2,048 (ot_hdc_v41x_sel_cand): the reduced vehicle's index top-k is 16",
+            "the MTP program (sel_first of a draft top-1 is FP32, as-built path)"],
+    "eg": ["BEATS > 1 (the shipped 256-code rows): the reduced vehicle's rows are 32 codes, one beat",
+           "24 separate column-bank ROMs and the links between them: the core's single Engram ROM port stands "
+           "in, one slice read a cycle",
+           "more than one token slot in flight (the core runs one EGATHER at a time)"],
+}
+
+
+def expected_xu(prog, pos):
+    """What the re-specified XU paths must have processed in ONE step at `pos`: the index-score SELECTs'
+    scores (sum of n = xu_n + DYN over the dynamic-count SELECTs the step runs: X_SEL's ops) and the
+    EGATHER ops' rows (24 each)."""
+    dyn = I.dyn_values(0, pos)
+    sel_ops = sel_n = eg_ops = 0
+    for f in prog:
+        if f["unit"] != I.UNIT_XU:
+            continue
+        if (f["pred"] == I.PRED_ODD and not pos & 1) or (f["pred"] == I.PRED_NZ and pos == 0):
+            continue
+        if f["xu_op"] == I.XU_SEL and f["xu_d_n"] != 0:
+            n = f["xu_n"] + dyn[f["xu_d_n"]]
+            if n:
+                sel_ops += 1
+                sel_n += n
+        elif f["xu_op"] == I.XU_EGATHER:
+            eg_ops += 1
+    return {"sel": {"ops": sel_ops, "elements": sel_n}, "eg": {"ops": eg_ops, "elements": 24 * eg_ops}}
+
+
+def xu_check(rec, img):
+    """A single step's sel / eg counters must equal what its program asks of them."""
+    import hdc_timing_v41 as T
+    exp = expected_xu(T.load_prog(img), rec["position"])
+    cnt = rec["activation"]["counters"]
+    bad = {u: {"counted": cnt.get(u), "expected": exp[u]} for u in ("sel", "eg")
+           if u in UNITS and cnt.get(u) != exp[u]}
+    rec["activation"]["expected_from_program"] = {u: exp[u] for u in ("sel", "eg") if u in UNITS}
+    rec["activation"]["count_mismatches"] = bad
+    rec["activation"]["pass"] = rec["activation"]["pass"] and not bad
+    rec["pass"] = rec["pass"] and not bad
+    return rec
+
+
+def counters(run):
+    """{unit: {ops, elements}} from a bench log; the proof that each re-specified unit fired."""
+    return {m.group(1): {"ops": int(m.group(2)), "elements": int(m.group(3))} for m in XCNT.finditer(run)}
+
+
+def activation(cnt):
+    """Every selected unit must have run ops and processed elements; one that stayed at 0 FAILS the run."""
+    missing = [u for u in UNITS if u in COUNTED and (cnt.get(u, {}).get("ops", 0) == 0 or
+                                                     cnt.get(u, {}).get("elements", 0) == 0)]
+    uncounted = [u for u in UNITS if u not in COUNTED]
+    return {"counters": cnt, "zero_counter_units": missing, "units_without_counters": uncounted,
+            "pass": not missing and not uncounted}
+
+
 MULTI = re.compile(r"HDC41_MULTI steps=(\d+) generated=(\d+) mismatches=(\d+) total_cycles=(\d+) "
                    r"vm_mismatch=(\d+) kv_mismatch=(\d+)")
 
@@ -112,7 +184,8 @@ def breakdown(trace, tags, cycles):
 
 
 def defines(lanes=None):
-    return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}"] + \
+    return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}",
+            f"+define+HDC_MG={PARAMS['mg']}"] + \
         [f"+define+HDC_X_{u.upper()}={int(u in UNITS)}" for u in X_UNITS]
 
 
@@ -141,7 +214,7 @@ def images(out: Path, *extra, lanes=None):
     if r.returncode:
         raise SystemExit(f"hdc_program_v41 failed:\n{r.stdout}\n{r.stderr}")
     r2 = subprocess.run([sys.executable, str(ROOT / "tools/hdc_images_v41x.py"), "--out", str(out),
-                         "--hhw", str(PARAMS["hhw"])], capture_output=True, text=True, env=env)
+                         "--hhw", str(PARAMS["hhw"]), "--mg", str(PARAMS["mg"])], capture_output=True, text=True, env=env)
     if r2.returncode:
         raise SystemExit(f"hdc_images_v41x failed:\n{r2.stdout}\n{r2.stderr}")
     return r.stdout
@@ -159,7 +232,12 @@ def single(exe, img, trace=True):
            "kv_cache_mismatches": bad_kv,
            "unit_busy_cycles": dict(zip(("me", "su", "qe", "xu", "he"), u[:5])), "all_units_idle_cycles": u[5],
            "pass": "PASS" in run and nxt == exp_tok and fault == 0 and bad_lg + bad_vm + bad_kv == 0}
-    return rec, run
+    rec["activation"] = activation(counters(run))
+    rec["pass"] = rec["pass"] and rec["activation"]["pass"]
+    m = re.search(r"XCNT unit=sel .* reps=(\d+)", run)
+    if m:
+        rec["activation"]["sel_replays"] = int(m.group(1))
+    return xu_check(rec, img), run
 
 
 def banking(prog, pos, lanes):
@@ -217,7 +295,7 @@ def run(ngen: int, context: int, sweep=()) -> dict:
     with tempfile.TemporaryDirectory() as scratch:
         s = Path(scratch)
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core_v41x",
-                               f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}",
+                               f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}", f"-GMG={PARAMS['mg']}",
                                *[f"-GX_{u.upper()}={int(u in UNITS)}" for u in X_UNITS],
                                f"-I{SVH.parent}", *map(str, RTL)], capture_output=True, text=True)
         img = s / "img"
@@ -251,7 +329,9 @@ def run(ngen: int, context: int, sweep=()) -> dict:
                      "steps": mm[0], "mismatches": mm[2], "total_cycles": mm[3],
                      "final_vector_memory_mismatches": mm[4], "final_kv_cache_mismatches": mm[5],
                      "per_step": steps,
+                     "activation": activation(counters(multi)),
                      "pass": "PASS" in multi and mm[2] + mm[4] + mm[5] == 0 and gen == expect["multi"]["golden"]}
+        multi_rec["pass"] = multi_rec["pass"] and multi_rec["activation"]["pass"]
         longc = None
         if context:
             imgc = s / "imgc"
@@ -268,6 +348,7 @@ def run(ngen: int, context: int, sweep=()) -> dict:
         "as_built_units": [u for u in X_UNITS if u not in UNITS],
         "hdc_v41_arith": arith(),
         "engine_parameters": dict(PARAMS),
+        "not_exercised": {u: NOT_EXERCISED.get(u, []) for u in UNITS},
         "status": status,
         "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) "
                           "with behavioural synchronous-read memories (many-ported vector memory: four operand reads, "
@@ -306,11 +387,13 @@ def main() -> int:
     parser.add_argument("--units", default="he",
                         help="the re-specified units to build (the rest as built), e.g. he,qe; '' for none")
     parser.add_argument("--hhw", type=int, default=8, help="HCP lanes per group")
+    parser.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
     args = parser.parse_args()
     global UNITS
     UNITS = tuple(u for u in args.units.split(",") if u)
     assert set(UNITS) <= set(X_UNITS), UNITS
     PARAMS["hhw"] = args.hhw
+    PARAMS["mg"] = args.mg
     result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x])
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     s = result["single_step"]

@@ -78,7 +78,10 @@ module ot_hdc_core_v41x #(
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
     parameter integer HTL   = 9,           // HCP tail levels
-    parameter integer HBAW  = 16           // HCP weight-bank word address
+    parameter integer HBAW  = 16,          // HCP weight-bank word address
+    // ME weight ops: ot_hdc_v41x_wgt_tile KIND 1 geometry
+    parameter integer MG    = 8,           // chunk units (8 x MG BF16/FP32 MAC lanes)
+    parameter integer MBAW  = 17           // weight-bank word address
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -114,6 +117,12 @@ module ot_hdc_core_v41x #(
     input  wire [HS*HNL*32-1:0] hrom_q,
     // the KV word address where the index keys start (the ME slot's class of a KV-sourced op)
     input  wire [AW-1:0]     cfg_ik_base,
+    // the ME weight-tile base shift (tools/hdc_images_v41x.py me_xs)
+    input  wire [3:0]        cfg_me_xs,
+    // BF16/FP32 weight-tile banks (X_ME): 8 request buses, bank b = 8u + c of chain position c
+    output wire [7:0]        mb_re,
+    output wire [8*MBAW-1:0] mb_addr,
+    input  wire [8*MG*32-1:0] mb_q,
     // HCP weight banks (X_HE): 8 banks of HHW binary32 lanes, bank k addressed by hb_addr[k]
     output wire [7:0]        hb_re,
     output wire [8*HBAW-1:0] hb_addr,
@@ -564,8 +573,21 @@ module ot_hdc_core_v41x #(
 
     // engine 1: the BF16/FP32 weight engine (X_ME)
     generate if (X_ME != 0) begin : g_me_x
-        // (weight-engine adapter: ot_hdc_v41x_me_adapt)
+        ot_hdc_v41x_me_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .MG(MG), .BAW(MBAW)) u_mw (
+            .clk(clk), .rst_n(rst_n), .go(e_go[1]), .ready(e_ready[1]), .idle(e_idle[1]),
+            .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase),
+            .i_xjs(me_xjs), .i_split(me_split), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots),
+            .i_ojs(me_ojs), .i_oen(me_oen), .i_amax(me_amax), .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
+            .cfg_xs(cfg_me_xs), .wb_re(mb_re), .wb_addr(mb_addr), .wb_q(mb_q),
+            .x_re(e_vx_re[1*MP*G +: MP*G]), .x_addr(e_vx_addr[1*MP*G*AW +: MP*G*AW]), .x_q(vx_q),
+            .ov(e_ov[1]), .o_we(e_we[1*MP*G +: MP*G]), .o_addr(e_addr[1*MP*G*AW +: MP*G*AW]),
+            .o_mask(e_mask[1*MP*G*W +: MP*G*W]), .o_data(e_data[1*MP*G*W*32 +: MP*G*W*32]),
+            .am_idx(e_am_idx[1*MP*NW +: MP*NW]), .am_val(e_am_val[1*MP*32 +: MP*32]),
+            .am_any(e_am_any[1*MP +: MP]), .fault(e_fault[1]));
+        assign e_kv_re[1] = 1'b0;
+        assign e_kv_raddr[1*G*AW +: G*AW] = 0;
     end else begin : g_me_n
+        assign mb_re = 8'd0; assign mb_addr = 0;
         assign e_ready[1] = 1'b1; assign e_idle[1] = 1'b1; assign e_fault[1] = 1'b0; assign e_kv_re[1] = 1'b0;
         assign e_kv_raddr[1*G*AW +: G*AW] = 0; assign e_vx_re[1*MP*G +: MP*G] = 0;
         assign e_vx_addr[1*MP*G*AW +: MP*G*AW] = 0; assign e_ov[1] = 1'b0; assign e_we[1*MP*G +: MP*G] = 0;
