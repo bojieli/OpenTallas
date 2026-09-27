@@ -73,3 +73,11 @@ def test_committed_record():
     h = r.get("hbm_scan")
     if h:
         assert h["verdict"]["bit_exact"]
+
+
+def test_pool_batch_gate_record():
+    rec = json.loads((ROOT / "results/rtl/hdc_v41x_idx_pool_batch_campaign.json").read_text())
+    assert rec["status"] == "pass"
+    assert {r["name"] for r in rec["rows"]} == {"typical", "wide", "masked", "fault", "vehicle"}
+    assert all(r["keys"] == r["checked"] and r["errors"] == 0 and r["protocol_fault"] == 0
+               for r in rec["rows"])
