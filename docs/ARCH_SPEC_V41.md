@@ -187,9 +187,34 @@ sequential FP32 chain costs 12,800 cycles at a 5-cycle add. Under the current or
   chunk sums added by a pairwise tree padded with +0. This is the golden's own `split_sum`, applied with the
   chunk length fixed instead of the chunk count.
 - A tree level that crosses dies is the one-shot collective's fixed rank order.
+- Where both operands are FP8/FP4 with 32-element block scales (the linear_q weights and the index dots), the
+  chunk is the quantisation block: its dot is formed exactly and rounded once, as linear_q already does, and
+  the block values combine by the same chunked tree. This is what makes a block-dot lane cost ~78 µm² per
+  MAC instead of a full FP32 adder.
+- A tree level that crosses dies is the one-shot collective's fixed rank order.
 - The golden, the ISA and the RTL change together.
 - Bit-exactness stays defined against the golden. The golden stays token-equal to the oracle, which must be
   re-checked on the reduced vehicle (§10).
+
+**Status of R-ARITH.**
+
+- **Golden:** `tools/hdc_golden_v41.py` carries it as a mode, `HDC_V41_ARITH=chunk8` (`csum`, `dots_q4`).
+  `legacy` stays the default so the as-built core's records hold. The mode can also be a list of operator
+  classes (`me, qe, he, att, idx, su`), so the re-specified units can be brought up one at a time against a
+  golden that switches only their classes.
+- **ISA:** the ISA-level simulator of the V4.1 program implements the same classes. Under `chunk8` it is bit-exact
+  with the golden in every logit at position 7 and over the prompt plus 4 generated tokens from an empty
+  state.
+- **Numerics** (`tools/check_v41_arith_contract.py`, `results/arch/v41_arith_contract.json`; teacher-forced
+  over the oracle's 24-token sequence):
+  - Up to position 7 the two orders differ by at most **2.4 × 10⁻⁷** in any logit.
+  - At position 8 a routed-expert selection flips at a near-tie of the reduced vehicle's 12-expert router,
+    and every later difference (up to 0.34) follows such flips.
+  - Against the oracle (the vendor model in BF16 on a GPU), neither order is closer: legacy matches 3 of 16
+    teacher-forced steps, chunk8 matches 2, with mean oracle-token gaps of 0.345 and 0.341.
+  - This is the reduced fixture's conditioning, not a precision loss: its top-1 margins are 0.001-0.25 while
+    either golden sits ~0.34 from the oracle per step. Both orders reproduce the oracle's token 3118 at step
+    0 with the same margin.
 
 The other depth requirements:
 
@@ -368,17 +393,55 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
 11. **KV state and HBM controller on the ROM die (user decision).**
     - **Stacks:** five HBM3E stacks per die, beachfront-limited: 60% of the perimeter at 12 mm per stack.
     - **Bandwidth:** 4.5 TB/s sustained at 90%, measured with refresh on.
-    - **Controller:** refresh-aware per-bank refresh (REFpb, tRFCpb 200 ns): refresh the not-yet-refreshed
-      bank that the fewest queued bursts need, never the head burst's bank. At least 64 beats of queue per
-      pseudo-channel (256 if a design falls back to all-bank refresh), and no head-of-line blocking across
-      channels. Agent a8c77c67 measured this in RTL on the reduced vehicle: 0.965-0.993 of the refresh-free
-      rate, against 0.85-0.95 for all-bank refresh behind 64-beat queues.
+    - **Controller:** refresh-aware per-bank refresh (REFpb, tRFCpb 200 ns: refresh the not-yet-refreshed
+      bank that the fewest queued bursts need, never the head burst's bank) with at least 64 beats of queue
+      per pseudo-channel, OR all-bank refresh with at least 512 beats; no head-of-line blocking across
+      channels. The record is `results/rtl/hdc_hbm_campaign.json` `refresh_study`, commit be30614a on the HBM
+      comparator branch (RTL, reduced vehicle, every run bit-exact). It gives, at 4 / 8 / 16 / 32
+      pseudo-channels:
+      - aware REFpb: 0.965 / 0.989 / 0.993 / 0.992 of the refresh-free rate;
+      - all-bank refresh with 512-beat queues: 0.979 / 0.973 / 0.972 / 0.964;
+      - all-bank refresh with 64-beat queues: 0.933 / 0.852 / 0.949 / 0.952 (fails the 90% floor at 8).
+
+      A scratch run (not in the record) at the worst-case tRFCpb of 350 ns gives aware REFpb 0.864 at 4
+      pseudo-channels. The die therefore uses at least 8 pseudo-channels per stream, or the all-bank-512
+      option, to keep the 90% margin against tRFCpb uncertainty.
+
+      The tie-break among equally eligible banks depends on the workload. The index-key scan is one long
+      sequential stream, so it breaks ties toward the MOST RECENTLY ACTIVATED bank, the set the stream has
+      just left. The record's closed-bank-first tie-break was measured on the QE weight streams; on a
+      sequential scan it refreshes the next bank set just before the stream needs it. The indexer agent
+      (ac9ca93f; its campaign record will carry these) measured, per stack, 64-beat queues, 1M keys:
+      - MRU tie-break: 0.956 of peak;
+      - closed-first tie-break: 0.851;
+      - all-bank refresh with 512-beat queues: 0.901, the fallback;
+      - refresh-free: 0.998.
+
+      On five stacks, layer 20's 1M scan (262,144 keys) takes 4.08 µs with MRU, 0.989 of refresh-free,
+      against 5.09 µs with closed-first.
     - **Prefetch:** window rows and reuse-layer selections have static addresses, so they are prefetched one
       layer ahead.
     - **Gathers:** an index-source layer's gather is exposed, and its first row is budgeted at 250 ns.
     - **Capacity:** per-user state at 1M is 93.5 MB on the busiest die, so the stacks hold **1,203 users at
       1M and 6,272 at 200K**. Batch is not capacity-limited below that, and the old 8,192-context admission
       limit from on-die KV does not apply.
+
+12. **Power (requirement).** Per-die power must stay at or below the die's cooling limit, 0.5 W/mm² × 815 mm²
+    = **407.5 W** (`technology.json` thermal), at every batch, with stage clock gating: an idle stage's clock
+    tree gated at its block boundaries, and its ROM macros and engines quiescent. From
+    `results/arch/arch_budget_v41.json` `power`, at 200K:
+
+    | per die | m = 1 | m = 2 (MTP) |
+    |---|---|---|
+    | block area (ASAP7) | 85 mm² | 170 mm² |
+    | active clock of the blocks | 7.5 W | 14.9 W |
+    | dynamic while its stage holds the token, batch 1 | 23.2 W | 30.7 W |
+    | dynamic at the saturated batch (every die busy) | 27.4 W | 42.3 W |
+
+    With static leakage (33.5 W, the analytical N5 estimate) and the HBM interfaces (14 W), the worst case is
+    **~90 W per die, 4.5× under the limit**. Without gating, the analytical design charges a 48 W/die clock
+    term on all 525 mm² of logic, which is the upper bound if nothing gates. Stage gating is also what keeps
+    batch-1 energy at 19 mJ per token instead of 300 mJ (§8).
 
 ## 7. MTP (DSpark): per-operator speculation analysis
 
@@ -532,9 +595,10 @@ Requirements:
   28.2 MB per die of expert bytes is exposed: first access plus bytes, **7.3 µs per layer on the critical
   path**. With MTP the fetch is the union (34.6 experts at B = 6), which caps HBM's speculative gain at 1.5×
   (γ = 5, τ = 4.1).
-- **Controller.** Refresh-aware REFpb with at least 64-beat queues per pseudo-channel (256 under all-bank
-  refresh), and request issue that never lets a refreshing channel stall words that do not touch it (agent
-  a8c77c67).
+- **Controller.** Refresh-aware REFpb with at least 64-beat queues per pseudo-channel, or all-bank refresh
+  with at least 512 beats. Request issue must never let a refreshing channel stall words that do not touch
+  it, and each stream uses at least 8 pseudo-channels (§6 item 11; `results/rtl/hdc_hbm_campaign.json`
+  `refresh_study`).
 - **KV and index keys.** Same format and prefetch as the ROM die. They compete with weights for the same
   stacks.
 
@@ -557,15 +621,34 @@ Each block ships with a performance testbench that asserts its spec row (through
 Each is re-checked with the bit-exact V4.1 token campaign (`tools/rtl_hdc_v41_decode_campaign.py`) and routed
 on ASAP7 at 0.97 ns with registered boundaries.
 
-**Status at this commit.** The spec, the budget model and the replay are committed. No RTL block of this spec
-has been implemented yet.
+**Status.** The spec, the budget model, the replay and R-ARITH in the golden and the ISA simulator are
+committed. The six block implementations are in progress; no RTL block of this spec has landed yet.
+
+**The spec replayed on the program (`tools/hdc_timing_v41x.py`, `results/arch/v41x_replay.json`).** The
+shipped-shape instruction stream of one die (about 3,840 instructions per token) runs on an event model of
+the re-specified core. Every op runs on its new unit at the spec widths, with region dependences and vector
+chaining, and the DAG's 55.6 µs of communication is added. At the reduced shape, with the as-built widths
+and drains, its engine reproduces `hdc_timing_v41.simulate` exactly (344,131 cycles).
+
+| context | replayed spec | budget | target |
+|---|---|---|---|
+| 8K | 5,272 | 4,980 | 4,522 |
+| 200K | 5,134 | 4,892 | 4,450 |
+| 1M | 4,645 | 4,510 | 4,249 |
+
+- The spec therefore meets the target on the program itself, not only on the DAG.
+- With chaining, dependent-stage depth dominates the 139 µs of compute at 200K: stream-unit depth 27 µs,
+  the scalar side pipe (rsqrt 58 cycles per norm, softplus 280 per router) 21 µs, the BF16 weight engine 16 µs,
+  transcendental depth 15 µs.
+- Chaining off (drains): 4,290 at 200K, still above the target but not at 1M (3,943).
+- Stream-unit width saturates near 1,024 lanes. Softplus depth is the next latency lever.
 
 ## 11. Assumptions and limits
 
 - **One dependency structure.** The budget re-prices the report's DAG. The replay (§3) shows that the as-built
   sequencer adds drains and ordered reductions that this DAG does not have; the spec requires them removed.
-  The spec is verified on the DAG, not on a replay of a respecified ISA. Doing that is the first
-  implementation milestone.
+  The spec is also verified on the program by the replay above (§10), which keeps the as-built instruction
+  stream and changes only the units and the sequencing.
 - **Areas.** Unit areas are ASAP7, compared against the analytical design's N5 compute envelope, which is
   conservative. The light stream lane's area is an estimate; no routed block exists.
 - **Routing.** Uniform routing: the router trace is synthetic. Correlated routing is a sensitivity (§7), not

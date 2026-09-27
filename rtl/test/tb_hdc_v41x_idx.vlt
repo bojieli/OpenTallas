@@ -1,0 +1,9 @@
+`verilator_config
+// Keep the indexer's replicated arithmetic units as C++ classes (one per
+// module, not one flattened copy per instance): the flattened model of the
+// engine is gigabytes of C++.
+no_inline -module "ot_hdc_v41x_q4dot"
+no_inline -module "ot_hdc_v41x_bmul"
+no_inline -module "ot_hdc_fp32_add_fast"
+no_inline -module "ot_hdc_v41x_idx_chunk"
+no_inline -module "ot_hdc_v41x_idx_tail"
