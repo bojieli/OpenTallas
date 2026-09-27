@@ -234,10 +234,14 @@ module tb_hdc_core #(
             if (vc_re[q]) vc_q[32*q +: 32] <= vm[vc_addr[q*AW +: 12]];
             if (kv_we[q]) kv[kv_waddr[q*AW + 4 +: 10]][32*kv_waddr[q*AW +: 4] +: 32] <= kv_wdata[32*q +: 32];
         end
+        // All synchronous VM reads above sample the old array. Apply ME
+        // writes here in port order; the later SU/reducer/max writes retain
+        // their priority on collisions. Blocking stores also avoid Verilator's
+        // delayed-array-write elaboration limit at large G.
         for (q = 0; q < G; q = q + 1)
             if (vw_me_we[q])
                 for (l = 0; l < W; l = l + 1)
-                    if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: 8], 4'b0} + l] <= vw_me_data[32*(q*W + l) +: 32];
+                    if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: 8], 4'b0} + l] = vw_me_data[32*(q*W + l) +: 32];
         for (q = 0; q < SW; q = q + 1)
             if (vw_su_we[q]) vm[vw_su_addr[q*AW +: 12]] <= vw_su_data[32*q +: 32];
         if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
@@ -249,7 +253,7 @@ module tb_hdc_core #(
         if (me_ov && vw_me_we == 0)
             for (q = 0; q < G; q = q + 1)
                 for (l = 0; l < W; l = l + 1)
-                    if (me_omask[q*W + l]) lg[{me_oaddr[q*AW +: 8], 4'b0} + l] <= me_odata[32*(q*W + l) +: 32];
+                    if (me_omask[q*W + l]) lg[{me_oaddr[q*AW +: 8], 4'b0} + l] = me_odata[32*(q*W + l) +: 32];
     end
 
     reg finishing = 1'b0;
