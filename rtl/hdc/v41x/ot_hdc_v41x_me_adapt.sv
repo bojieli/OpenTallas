@@ -196,6 +196,14 @@ module ot_hdc_v41x_me_adapt #(
     wire [NC*MP*32-1:0] t_y;
     wire [NC*MP*16-1:0] t_bf;
     wire [NC*MP-1:0]  t_f;
+    // The KIND 1 tile carries a two-bit format with each weight word. The
+    // core's existing ROM contains FP32 words, so tag each lane separately;
+    // widening the packed bus as a whole would shift all but lane zero.
+    wire [8*MG*34-1:0] wb_fmt;
+    genvar wi;
+    generate for (wi = 0; wi < 8*MG; wi = wi + 1) begin : g_wfmt
+        assign wb_fmt[34*wi +: 34] = {2'b00, wb_q[32*wi +: 32]};
+    end endgenerate
     // activation broadcast: lane b = 8u + c takes term q*8P + (b mod 8P) of each position, RL cycles later
     reg  [8*MG*MP*16-1:0] xr [0:RL-1];
     integer u, cc, pp, rr;
@@ -219,7 +227,7 @@ module ot_hdc_v41x_me_adapt #(
         .d_fp4(1'b0), .d_tag(4'd0), .d_src(1'b0), .d_split(1'b0),
         .rq_v(rq_v), .rq_a(rq_a), .rq_q(rq_q), .rq_plg(rq_plg), .rq_tag(),
         .rq_src(), .rq_split(), .rq_rg(),
-        .rd_w(wb_q), .rd_k('0), .rd_x(xr[RL-1]),
+        .rd_w(wb_fmt), .rd_k('0), .rd_x(xr[RL-1]),
         .o_cr(t_ov), .o_v(t_ov), .o_rg(t_rg), .o_tag(), .o_mask(t_mask), .o_y(t_y), .o_bf(t_bf), .o_f(t_f),
         .o_smask(), .o_ys(), .o_bfs(), .o_fs(),
         .o_cnt_rom(), .o_cnt_stream(), .o_cnt_split(),
