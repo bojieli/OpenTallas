@@ -32,7 +32,11 @@
 // (beat index, for the activation broadcast), rq_plg[c], rq_tag[c].
 // Every bank of chain position c answers exactly RL cycles after its request
 // on rd_w[j] (KIND 0: 264 bits {we, codes}, see ot_hdc_v41x_wgt_bdot;
-// KIND 1: 32 bits).  The ACTIVATION is quantised once per op (by
+// KIND 1: 32 bits, see ot_hdc_v41x_wgt_mlane).  SCALES: the checkpoint's FP8
+// weights carry ONE UE8M0 scale per 32 x 32 block (routed-expert FP4: one per
+// row x 32); the ROM stores each scale once and the read network broadcasts
+// it into the word of every row of its block -- the lane word is the same for
+// both.  The ACTIVATION is quantised once per op (by
 // ot_hdc_actquant, outside) and BROADCAST from a die-level activation buffer
 // on the same request buses: rd_x[j] carries term q*8P + (j mod 8P) of op
 // rq_tag for each of M positions (KIND 0: 264 bits {xe, E4M3 codes};
@@ -49,7 +53,7 @@
 //
 // LATENCY (descriptor accept to a row group's result):
 //   3 (descriptor A, B, C) + 1 (beat register) + RL + CL + 3*plg + 1 + 3*nlev + 1 + 1
-//   CL = 30 (KIND 0: 9 block dot + 21 chain) or 25 (KIND 1: 4 multiply + 21 chain);
+//   CL = 30 (KIND 0: 9 block dot + 21 chain) or 26 (KIND 1: 5 decode + multiply + 21 chain);
 //   plg + nlev = ceil(log2(chunks per row)) for a well-chosen segment: one adder
 //   latency per level of the row's own padded tree (ot_hdc_v41x_wgt_red).
 // Throughput one beat (L lanes x M positions) per cycle, sustained across rows and
@@ -83,7 +87,7 @@ module ot_hdc_v41x_wgt_tile #(
     input  wire                  d_ind,
     input  wire [EIW-1:0]        d_eid,
     input  wire [AW-1:0]         d_estride,
-    input  wire                  d_fp4,
+    input  wire                  d_fp4,          // KIND 0: FP4 E2M1 weights; KIND 1: FP8 E4M3 + 32x32 scale
     input  wire [TGW-1:0]        d_tag,
     // read requests, one bus per chain position
     output wire [7:0]            rq_v,
@@ -114,7 +118,7 @@ module ot_hdc_v41x_wgt_tile #(
     localparam integer NC = G >> PMIN_LG;
     localparam integer WW = KIND ? 32 : 264;
     localparam integer XW = KIND ? 16 : 264;
-    localparam integer CL = KIND ? 25 : 30;
+    localparam integer CL = KIND ? 26 : 30;
     localparam integer CW = 8;
 
     // -- descriptor stage A (registered boundary) ---------------------------------------------------
@@ -312,7 +316,7 @@ module ot_hdc_v41x_wgt_tile #(
                     .ov(cu_v[u]), .s(cu_s[u*M*32 +: M*32]), .sf(cu_f[u*M +: M]));
             end else begin : g_m
                 ot_hdc_v41x_wgt_mchunk #(.M(M)) u_ch (
-                    .clk(clk), .rst_n(rst_n), .v(lv8), .z(lz8),
+                    .clk(clk), .rst_n(rst_n), .v(lv8), .z(lz8), .f8(lf8),
                     .w(rd_w[u*8*WW +: 8*WW]), .x(rd_x[u*8*M*XW +: 8*M*XW]),
                     .ov(cu_v[u]), .s(cu_s[u*M*32 +: M*32]), .sf(cu_f[u*M +: M]));
             end

@@ -60,7 +60,10 @@ LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-B
 _V5 = Path(os.environ.get("OPENTALLAS_TOOL_ROOT", Path.home() / ".local/opentallas-tools")) / "verilator-5.050/bin/verilator"
 VERILATOR = str(_V5) if _V5.exists() else "verilator"
 CLOCK_HZ = 1.0339e9
-SPEC = {"weight_macs_per_cycle": 231936, "bf16_macs_per_cycle": 31360, "rom_bytes_per_cycle": 301904,
+SPEC = {"weight_macs_per_cycle": 252160, "bf16_macs_per_cycle": 36928, "rom_bytes_per_cycle": 326000,
+        "spec_basis": "re-derived at checkpoint precision (results/arch/v41_weight_precision.json, parent ad495bae): "
+                      "FP8 one UE8M0 per 32x32, lm_head + router gate + compressor BF16, wo_a FP8 on the BF16 engine; "
+                      "was 231,936 / 31,360 / 301,904",
         "lane_mult_design_point": 2, "depth_formula_q": "60 + 3*ceil(log2(K/32/8))",
         "depth_formula_m": "60 + 3*ceil(log2(K/8))",
         "latency_formula": "ceil(rows*K/lanes) + depth", "source": "docs/ARCH_SPEC_V41.md 5-6; results/arch/arch_budget_v41.json"}
@@ -170,6 +173,42 @@ def make_me(name, w, xs, source="random"):
     return Op(1, name, rows, k, u32(w), None, False, xw, np.array(y32), np.array(ybf), np.array(yf), source=source)
 
 
+def make_me_fp8(name, wq, we, xs, source="random"):
+    """An FP8 weight on the BF16 engine (wo_a at checkpoint precision): wq E4M3 values [rows, K], we the unbiased
+    UE8M0 exponent per row x 32 columns (the checkpoint's 32x32 block scale, repeated over its rows).  The golden's
+    weight is to_bf16(Q8.dense()) (exact); the lane faults where e4m3 x 2^e leaves the binary32 normal range."""
+    wq = np.asarray(wq, dtype=np.float64)
+    we = np.asarray(we, dtype=np.int64)
+    rows, k = wq.shape
+    dense = V.to_bf16(V.Q8(wq, we).dense())
+    op = make_me(name, dense, xs, source=source)
+    nanm = ~np.isfinite(wq)
+    codes = np.zeros(wq.shape, np.int64)
+    codes[~nanm] = e4m3_codes(wq[~nanm])
+    codes[nanm] = 0x7F
+    scaled = np.abs(wq) * np.exp2(np.repeat(we, 32, axis=1)[:, :k].astype(np.float64))
+    bad = nanm | ((wq != 0) & ((scaled < 2.0 ** -126) | (scaled >= 2.0 ** 128)))
+    rowbad = np.any(bad, axis=1)
+    op.yf = (op.yf.astype(bool) | rowbad[None, :]).astype(np.int64)
+    op.y32 = np.where(op.yf, 0, op.y32)
+    op.ybf = np.where(op.yf, 0, op.ybf)
+    op.wcode, op.wexp, op.fp4 = codes, (we + 127).astype(np.int64), True
+    return op
+
+
+def rand_fp8_blocks(rng, rows, k, style="normal"):
+    """E4M3 values and a 32x32-block UE8M0 exponent (repeated over the block's rows), as the checkpoint stores wo_a."""
+    codes = rng.integers(0, 256, (rows, k))
+    codes[(codes & 0x7F) == 0x7F] ^= 1
+    wq = V.E4M3[codes].astype(np.float64)
+    lo, hi = {"normal": (-14, -4), "range": (-127, -120)}[style]
+    eb = rng.integers(lo, hi, (-(-rows // 32), -(-k // 32)))
+    if style == "range":
+        eb[0, 0] = 125                                   # overflow in one block
+    we = np.repeat(eb, 32, axis=0)[:rows]
+    return wq, we
+
+
 # -- random operands -------------------------------------------------------------------------------------
 def rand_x(rng, k, style="normal"):
     x = rng.standard_normal(k).astype(np.float64)
@@ -248,6 +287,25 @@ def capture_real(positions=2):
             m.decode_token(prompt[p], p, st)
     finally:
         V.linear_q, V.matvec_c = lq, mc
+    # wo_a is FP8 E4M3 with a 32x32 UE8M0 scale in the checkpoint; the golden applies it dequantised to BF16 (exact).
+    # The BF16 engine stores it at checkpoint precision, so attach each wo_a call's FP8 rows (codes + scales).
+    ck = None
+    for key, c in calls.items():
+        if key[0] != "m":
+            continue
+        w = c["w"]
+        for k, dense in m.w.items():
+            if k.endswith("attn.wo_a.weight") and np.shares_memory(w, dense):
+                if ck is None:
+                    ck = V.load_checkpoint(mtp=True)
+                q8 = V._blocked(ck[k], ck[k[:-len(".weight")] + ".scale"], k)
+                row0 = (w.__array_interface__["data"][0] - dense.__array_interface__["data"][0]) // (4 * dense.shape[1])
+                n, kk = w.shape
+                if kk == dense.shape[1]:                     # a group of whole rows (the grouped wo_a)
+                    q, e = q8.q[row0:row0 + n], q8.e[row0:row0 + n]
+                    assert np.array_equal(V.bits(V.to_bf16(V.Q8(q, e).dense())), V.bits(np.asarray(w, F)))
+                    c["fp8"] = (q, e)
+                break
     return calls
 
 
@@ -261,7 +319,7 @@ def real_ops(calls, kind, M, max_rows, per_shape, rng):
             continue
         w = c["w"]
         shp = w.q.shape if kind == 0 else w.shape
-        fp4 = kind == 0 and bool(np.all(np.isin(np.abs(w.q), V.E2M1_VALUES)))
+        fp4 = kind == 0 and bool(np.all(np.isin(np.abs(w.q), V.E2M1_VALUES))) or (kind == 1 and "fp8" in c)
         sk = (shp, fp4)
         if seen.get(sk, 0) >= per_shape:
             continue
@@ -269,9 +327,12 @@ def real_ops(calls, kind, M, max_rows, per_shape, rng):
         rows = shp[0]
         sel = np.sort(rng.choice(rows, size=min(rows, max_rows), replace=False))
         xs = [c["xs"][min(p, len(c["xs"]) - 1)] for p in range(M)]
-        nm = f"real_{'fp4' if fp4 else ('fp8' if kind == 0 else 'mv')}_{shp[0]}x{shp[1]}"
+        nm = f"real_{('fp4' if kind == 0 else 'fp8') if fp4 else ('fp8' if kind == 0 else 'bf16')}_{shp[0]}x{shp[1]}"
         if kind == 0:
             ops.append(make_qe(nm, w.q[sel], w.e[sel], xs, source="real"))
+        elif fp4:
+            q, e = c["fp8"]
+            ops.append(make_me_fp8(nm + "_wo_a", q[sel], e[sel], xs, source="real"))
         else:
             ops.append(make_me(nm, np.asarray(w, F)[sel], xs, source="real"))
     return ops
@@ -376,7 +437,10 @@ def write_run(cfg: Cfg, ops, d: Path):
                         if cfg.kind == 0:
                             rom_words[a * L + j] = word_q(wc[row], wx[row, t], op.fp4, 32 * t, 32 * t + 32)
                         else:
-                            rom_words[a * L + j] = int(wc[row, t]) & 0xFFFFFFFF
+                            if op.fp4:          # FP8 E4M3 + its block's UE8M0 (broadcast by the read network)
+                                rom_words[a * L + j] = int(wc[row, t]) | (int(wx[row, t // 32]) << 8)
+                            else:
+                                rom_words[a * L + j] = int(wc[row, t]) & 0xFFFFFFFF
         a_next = wbase + len(mats) * per
         xbase = len(xmem)
         for t in range(op.nb):
@@ -463,7 +527,17 @@ def budget(cfg, op):
 
 # -- suites ----------------------------------------------------------------------------------------------
 SHIPPED_Q = [("wq_a", 5120), ("wq_b", 1280), ("wo_b", 8192), ("experts_w2", 2304)]
-SHIPPED_M = [("router_gate_fp32", 5120, True), ("wo_a_group", 4096, False), ("cmp_wk", 512, False)]
+# the BF16/FP32 engine's shipped matrices at checkpoint precision (results/arch/v41_weight_precision.json): the
+# router gate, lm_head and the compressor are BF16; wo_a is FP8 E4M3 with a 32x32 scale ("fp8")
+SHIPPED_M = [("router_gate_bf16", 5120, "bf16"), ("wo_a_group_fp8", 4096, "fp8"), ("lm_head_bf16", 5120, "bf16"),
+             ("cmp_wk_bf16", 512, "bf16")]
+
+
+def make_m_shipped(name, rng, rows, k, fmt, xs):
+    if fmt == "fp8":
+        wq, we = rand_fp8_blocks(rng, rows, k)
+        return make_me_fp8(name, wq, we, xs)
+    return make_me(name, rand_mw(rng, rows, k, fmt == "fp32"), xs)
 
 
 def suite(cfg: Cfg, rng, real_calls, quick=False):
@@ -504,20 +578,22 @@ def suite(cfg: Cfg, rng, real_calls, quick=False):
         wq, we = rand_qw(rng, 1, 32, False)
         lat.append(make_qe("lat_single_block_row", wq, we, [rand_x(rng, 32) for _ in range(M)]))
     else:
-        for name, k, fp32 in (SHIPPED_M if not quick else SHIPPED_M[2:]):
-            w = rand_mw(rng, 2 * cfg.G if not quick else cfg.G, k, fp32)
-            ops.append(make_me(f"shipped_{name}_K{k}", w, [rand_x(rng, k) for _ in range(M)]))
+        for name, k, fmt in (SHIPPED_M if not quick else SHIPPED_M[1:2] + SHIPPED_M[3:]):
+            ops.append(make_m_shipped(f"shipped_{name}_K{k}", rng, 2 * cfg.G if not quick else cfg.G, k, fmt,
+                                      [rand_x(rng, k) for _ in range(M)]))
         for st in (("wide", "ovf", "sub") if not quick else ("wide",)):
             for fp32 in (False, True):
                 k = int(rng.integers(1, 300))
                 w = rand_mw(rng, int(rng.integers(1, 3 * cfg.G + 2)), k, fp32, st)
                 ops.append(make_me(f"edge_{st}_{'fp32' if fp32 else 'bf16'}_K{k}", w,
                                    [rand_x(rng, k, "wide") for _ in range(M)]))
+        k = 32 * int(rng.integers(1, 10))
+        wq, we = rand_fp8_blocks(rng, int(rng.integers(33, 70)), k, "range")
+        ops.append(make_me_fp8(f"edge_fp8_scale_range_K{k}", wq, we, [rand_x(rng, k) for _ in range(M)]))
         if real_calls is not None:
             ops += real_ops(real_calls, 1, M, 64 if not quick else 16, 1 if quick else 2, rng)
-        for name, k, fp32 in (SHIPPED_M if not quick else SHIPPED_M[2:]):
-            w = rand_mw(rng, 4 * cfg.G, k, fp32)
-            lat.append(make_me(f"lat_{name}_K{k}", w, [rand_x(rng, k) for _ in range(M)]))
+        for name, k, fmt in (SHIPPED_M if not quick else SHIPPED_M[3:]):
+            lat.append(make_m_shipped(f"lat_{name}_K{k}", rng, 4 * cfg.G, k, fmt, [rand_x(rng, k) for _ in range(M)]))
         w = rand_mw(rng, 1, 8, True)
         lat.append(make_me("lat_single_chunk_row", w, [rand_x(rng, 8) for _ in range(M)]))
     return ops, lat
@@ -613,7 +689,7 @@ def die_mapping(depth_q, depth_m):
     (the spec's own shapes, results/arch/arch_budget_v41.json layer 20 op inventory)."""
     qops = {"wq_a": (1280, 160), "wkv": (512, 160), "wq_b": (32768, 40), "idx.wq_b": (4096, 40), "wo_b": (5120, 256),
             "shared_w13": (4608, 160), "shared_w2": (5120, 72), "experts_w13": (27648, 160), "experts_w2": (30720, 72)}
-    mops = {"wo_a": (2048, 4096), "router_gate": (96, 5120), "idx.weights_proj": (32, 5120), "cmp.wkv": (512, 5120),
+    mops = {"wo_a": (2048, 4096), "lm_head": (32320, 5120), "router_gate": (96, 5120), "idx.weights_proj": (32, 5120), "cmp.wkv": (512, 5120),
             "cmp.wk": (128, 512)}
     import heapq
     out = {"model": "each matrix alone on the die's tiles. A row's padded chunk tree (NP = pow2(chunks)) may be "
@@ -626,8 +702,8 @@ def die_mapping(depth_q, depth_m):
            "choice": "per matrix, the fewest K-split parts that meet the budget (the cross-tile collector is modelled, not built)"}
     hop = 2
     for label, ops, lanes_die, G, T, depth, per, pmin in (
-            ("quantised: 906 tiles x 8 block-dot lanes (G=1)", qops, 7248, 1, 906, depth_q, 8, 0),
-            ("bf16: 123 tiles x 256 MAC lanes (G=32)", mops, 31360, 32, 123, depth_m, 1, 2)):
+            ("quantised: 985 tiles x 8 block-dot lanes (G=1)", qops, 7880, 1, 985, depth_q, 8, 0),
+            ("bf16: 145 tiles x 256 MAC lanes (G=32)", mops, 36928, 32, 145, depth_m, 1, 2)):
         rows = []
         for n, (r, nb) in ops.items():
             nc = -(-nb // 8)
@@ -728,19 +804,22 @@ def main() -> int:
         "configs": res,
         "die_mapping": die_mapping(dq[0], dm[0]) if (dq and dm) else None,
         "per_die": {
-            "quantised": {"tiles": 906, "tile": "ot_hdc_v41x_wgt_qtile (G=1: 8 block-dot lanes)", "block_dot_lanes": 7248,
-                          "macs_per_cycle_m1": 906 * 8 * 32, "macs_per_cycle_m2": 906 * 8 * 32 * 2,
+            "quantised": {"tiles": 985, "tile": "ot_hdc_v41x_wgt_qtile (G=1: 8 block-dot lanes)", "block_dot_lanes": 7880,
+                          "macs_per_cycle_m1": 985 * 8 * 32, "macs_per_cycle_m2": 985 * 8 * 32 * 2,
                           "spec_macs_per_cycle": SPEC["weight_macs_per_cycle"]},
-            "bf16_fp32": {"tiles": 123, "tile": "G=32 (256 MAC lanes) = 4 x ot_hdc_v41x_wgt_mtile slices (G=8, routed)",
-                          "mac_lanes": 123 * 256, "macs_per_cycle_m1": 123 * 256, "macs_per_cycle_m2": 123 * 256 * 2,
+            "bf16_fp32": {"tiles": 145, "tile": "G=32 (256 MAC lanes) = 4 x ot_hdc_v41x_wgt_mtile slices (G=8, routed)",
+                          "mac_lanes": 145 * 256, "macs_per_cycle_m1": 145 * 256, "macs_per_cycle_m2": 145 * 256 * 2,
                           "spec_macs_per_cycle": SPEC["bf16_macs_per_cycle"]},
             "rom_read_port_bytes_per_cycle": {
-                "quantised_fp8_33B_per_lane": 7248 * 33, "quantised_fp4_17B_per_lane": 7248 * 17,
-                "bf16_2B_per_lane": 123 * 256 * 2, "fp32_4B_per_lane": 123 * 256 * 4,
-                "peak_both_engines_fp8_plus_fp32": 7248 * 33 + 123 * 256 * 4,
+                "quantised_fp8_per_lane_B": 32 + 1 / 32, "quantised_fp4_per_lane_B": 17,
+                "quantised_fp8_all_lanes": round(7880 * (32 + 1 / 32)), "quantised_fp4_all_lanes": 7880 * 17,
+                "bf16_engine_bf16_2B_per_lane": 145 * 256 * 2,
+                "bf16_engine_fp8_wo_a_per_lane_1B": round(145 * 256 * (1 + 1 / 1024)),
+                "peak_fp8_plus_bf16": round(7880 * (32 + 1 / 32)) + 145 * 256 * 2,
                 "spec_bytes_per_cycle": SPEC["rom_bytes_per_cycle"],
-                "basis": "one ROM word per lane per cycle at full issue (the bench's read port); the lane multiplier "
-                         "m does not change the read"}},
+                "basis": "one ROM word per lane per cycle at full issue; an FP8 scale is one byte per 32x32 block, "
+                         "stored once and broadcast by the read network into the lane word; routed FP4 carries one "
+                         "per row x 32; the lane multiplier m does not change the read"}},
         "verilator_lint": {"flags": list(LINT_FLAGS), "tops": lint},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (*RTL, *LIB, TB, HARNESS, *TOOLS)},
     }
