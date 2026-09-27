@@ -92,12 +92,20 @@ def main() -> None:
         if args.bisect:
             def probe(stop: int) -> dict:
                 cut = work / f"stop_{stop}"
-                subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(cut),
-                                "--context", "64", "--stop", str(stop)], check=True,
-                               capture_output=True, text=True)
+                gen = subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(cut),
+                                      "--context", "64", "--stop", str(stop)],
+                                     capture_output=True, text=True)
+                if not (cut / "expect_kv.hex").exists():
+                    raise RuntimeError(f"stop {stop} image generation failed (rc={gen.returncode}): "
+                                       f"{gen.stdout[-500:]} {gen.stderr[-1000:]}")
                 (cut / "kv.hex").write_text(decoded_hex)
                 (cut / "kv_fp8.hex").write_text((img / "kv_fp8.hex").read_text())
-                output = KC.run(exe, f"+DIR={cut}", *(cut / "run.args").read_text().split(),
+                # Partial programs can end before the argmax exists.  hdc_program
+                # then returns 1 and writes EXPECT=None, while VM/KV snapshots
+                # remain valid and are exactly what this cut-point checks.
+                run_args = [a if a != "+EXPECT=None" else "+EXPECT=0"
+                            for a in (cut / "run.args").read_text().split()]
+                output = KC.run(exe, f"+DIR={cut}", *run_args,
                                 f"+LEAD={KC.LEAD}")
                 rec = KC.parse_core(output)
                 rec["exact_state"] = bool(rec.get("fault") == 0 and rec.get("stream_fault") == 0
