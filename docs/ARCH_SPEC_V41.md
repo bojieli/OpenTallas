@@ -13,10 +13,10 @@ covers the ROM array (packaging option (b)) and the HBM comparator.
 packaging option (b), plus a light-FEC package link (130 ns hop instead of 209 ns, the same bandwidth), plus
 overlapped reductions (a collective's bytes stream behind its producer). Plain option (b) stays as a secondary
 row. The target context is **200K**; 1M is the secondary point, because 200K gives the larger ROM:HBM
-advantage on every metric (§8.3). At batch 1 the ROM array must reach at least **4,904 tokens/s per user
-without MTP**, which is the report's DAG re-priced at the baseline. The budgeted design delivers **5,448 without
-MTP and 11,950 with DSpark MTP** at the default τ = 4.1. The HBM comparator at equal total logic area delivers
-1,167 without MTP and 1,709 with it. Every figure below comes from the budget model at its current spec, not
+advantage on every metric (§8.3). At batch 1 the ROM array must reach at least **4,837 tokens/s per user
+without MTP**, which is the report's DAG re-priced at the baseline. The budgeted design delivers **5,393 without
+MTP and 12,002 with DSpark MTP** at the default τ = 4.1. The HBM comparator at equal total logic area delivers
+972 without MTP and 1,391 with it. Every figure below comes from the budget model at its current spec, not
 from silicon.
 
 ## 1. Requirement
@@ -24,14 +24,14 @@ from silicon.
 The requirement is the report's own dependency DAG (`tools/decode_critical_path.py`, `packaging_options`,
 option (b)): 188 reticle dies in 94 two-die packages, tensor group 4 spanning a package pair, and 28 layer
 groups. It uses the realistic links: UCIe inside a package, and a board SerDes between packages. The
-baseline re-prices that DAG with the light-FEC package link (130 ns, band 100-170) and with collectives
+baseline re-prices that DAG with the light-FEC package link (130 ns, band 100-170) for collectives, stage hops on the rack-cable tier (209 ns, full RS(544,514); `technology.json` links.rom_rack_cable_serdes), 4 HBM3E stacks per die and with collectives
 chasing their producers. The silicon must deliver what that DAG gives, or the report must change.
 
 | context | baseline, batch 1, tokens/s/user (µs/token) | plain (b), batch 1 (µs/token) |
 |---|---|---|
-| 8,192 | 4,992 (200.3) | 4,522 (221.1) |
-| 200,000 (headline) | **4,904** (203.9) | 4,450 (224.7) |
-| 1,048,576 | 4,660 (214.6) | 4,249 (235.4) |
+| 8,192 | 4,922 (203.2) | 4,522 (221.1) |
+| 200,000 (headline) | **4,837** (206.7) | 4,450 (224.7) |
+| 1,048,576 | 4,599 (217.4) | 4,249 (235.4) |
 
 The model re-prices that DAG node by node from a block spec. At plain (b) and the DAG's own assumptions it
 reproduces the published figures exactly (`test_dag_spec_reproduces_the_headline_exactly`). So the budget and
@@ -108,7 +108,7 @@ exactly the same at 4, 8, 16 and 64 stream lanes; at 8 lanes that is 344,131 cyc
 replay then prices every layer kind with the RTL-calibrated sequencer and unit model.
 
 This reconciliation is on plain (b), the report as published, so layers B and C include that DAG's
-communication, 55.6 µs per token; the baseline's links take 20 µs off every column.
+communication, 55.6 µs per token; the baseline's links take 17 µs off every column.
 
 | context | A: report DAG | B: calibrated at the DAG's widths | B with lane-parallel reductions | C: as built |
 |---|---|---|---|---|
@@ -164,30 +164,30 @@ the **issue budget** that the block widths must fit into.
 |---|---|---|---|---|
 | compute-chain depths | 101.6 | 99.0 | 216.3 | 481.0 |
 | sequential-chain floors (on the weight path) | 0 | 10.9 | 587.9 | 979.8 |
-| KV gather and scan latency | 2.1 | 2.2 | 5.2 | 8.2 |
+| KV gather and scan latency | 2.7 | 2.8 | 5.4 | 8.4 |
 | collective latency + bytes | 26.6 | 26.4 | 14.4 | 16.6 |
-| pipeline hops | 9.1 | 9.1 | 9.1 | 9.1 |
+| pipeline hops | 11.9 | 11.9 | 11.9 | 11.9 |
 | control | 6.4 | 6.4 | 5.1 | 8.2 |
-| **fixed part** | **145.7** | **154.0** | **837.9** | **1,502.9** |
-| target | 203.9 | 203.9 | 203.9 | 203.9 |
-| **issue budget** | 58.2 | **49.9** | **< 0: infeasible** | < 0 |
+| **fixed part** | **149.1** | **157.4** | **840.9** | **1,505.9** |
+| target | 206.7 | 206.7 | 206.7 | 206.7 |
+| **issue budget** | 57.7 | **49.4** | **< 0: infeasible** | < 0 |
 
-At 8K the issue budget is 47.3 µs; at 1M it is 52.6 µs. Plain (b)'s fixed part was 175.0 µs against a
-224.7 µs target (issue budget 49.7 µs): the baseline removes 21 µs of link latency from both, so the widths
+At 8K the issue budget is 47.3 µs; at 1M it is 50.0 µs. Plain (b)'s fixed part was 175.0 µs against a
+224.7 µs target (issue budget 49.7 µs): the baseline removes 18 µs of link latency from both, so the widths
 get the same budget against a faster target.
 
-**Finding 1: the latency floor is the requirement.** Of the 203.9 µs target:
+**Finding 1: the latency floor is the requirement.** Of the 206.7 µs target:
 
-- 154 µs is fixed.
+- 157 µs is fixed.
 - 26 µs of that is collectives: about 5 per layer, each ~135 ns across the package pair with the light-FEC
   link, their bytes hidden behind the producers.
 - About 99 µs is unit depth.
 
-The widths therefore have only 50 µs, **24% of the token**, to spend.
+The widths therefore have only 49 µs, **24% of the token**, to spend.
 
 **Finding 2: the golden's summation orders make the target unreachable at any width.** A 2,560-term
 sequential FP32 chain costs 12,800 cycles at a 5-cycle add. Under the current orders the fixed part alone is
-838 µs, which caps the design near 1,180 tokens/s per user (`ablations: golden_orders`).
+841 µs, which caps the design near 1,180 tokens/s per user (`ablations: golden_orders`).
 
 **Requirement R-ARITH (the arithmetic contract at shipped shapes):**
 
@@ -245,13 +245,13 @@ four cases.
 
 | block | unit | required | as built | factor | as-built basis |
 |---|---|---|---|---|---|
-| weight engine (FP8/FP4 block-dot) | MACs/cycle | 231,168 | 512 | 452× | QE: 16 block-dot lanes × 32 |
-| BF16/FP32 weight engine | MACs/cycle | 31,296 | 64 | 489× | ME: 4 groups × 16 lanes |
-| weight ROM read | bytes/cycle | 300,984 | 528 | 570× | QE word 16 × 33 B |
-| attention engine (q·k, p·v) | MACs/cycle | 34,112 | 64 | 533× | ME head groups |
-| KV row staging buffer | bytes/cycle | 2,199 | 128 | 17× | KV SRAM |
-| indexer engine (FP4 × FP4) | MACs/cycle | 228,096 | 64 | 3,564× | ME head groups |
-| index-key stream (from HBM) | bytes/cycle | 3,787 | 128 | 30× | KV SRAM |
+| weight engine (FP8/FP4 block-dot) | MACs/cycle | 233,472 | 512 | 456× | QE: 16 block-dot lanes × 32 |
+| BF16/FP32 weight engine | MACs/cycle | 32,896 | 64 | 514× | ME: 4 groups × 16 lanes |
+| weight ROM read | bytes/cycle | 306,560 | 528 | 581× | QE word 16 × 33 B |
+| attention engine (q·k, p·v) | MACs/cycle | 35,840 | 64 | 560× | ME head groups |
+| KV row staging buffer | bytes/cycle | 2,310 | 128 | 18× | KV SRAM |
+| indexer engine (FP4 × FP4) | MACs/cycle | 239,616 | 64 | 3,744× | ME head groups |
+| index-key stream (from HBM) | bytes/cycle | 3,482 | 128 | 27× | KV SRAM |
 | stream unit, linear lanes | elements/cycle | 1,024 | 8 | 128× | 8 lanes |
 | stream unit, SFU lanes (exp/sigmoid/silu/divide) | elements/cycle | 256 | 8 | 32× | rsqrt, sqrt, softplus and gate on lane 0 only |
 | index top-512 select | scores/cycle | 64 (streaming filter) | 1 (insertion) | 64× | XU `ot_hdc_select` |
@@ -267,19 +267,19 @@ latency cut, its side branch surfaced on the batch-64 critical path. The quantis
 counts FP8 at 33 B per 32-weight block. The weight-engine agent measured a 365 KB/cycle peak when the router's
 FP32 weights (4 B each) stream concurrently; that is still 44% of the ROM macros' sweep rate.
 
-**Weight ROM read.** At 300,984 B/cycle the required read is 36% of the ROM macro array's sweep rate:
+**Weight ROM read.** At 306,560 B/cycle the required read is 37% of the ROM macro array's sweep rate:
 2.96 TB/s/mm² over 289 mm² of ROM is 828 KB/cycle (`docs/MEMORY_COMPILERS_AND_BIST.md`). ROM bandwidth is
 not the constraint. MAC lanes and latency are.
 
-**Area.** At ASAP7 unit areas the required blocks total **87 mm² per die**, against the analytical design's
+**Area.** At ASAP7 unit areas the required blocks total **90 mm² per die**, against the analytical design's
 329 mm² N5 compute envelope. The breakdown:
 
 | block | mm² |
 |---|---|
-| weight engine | 18.1 |
-| BF16 engine | 15.9 |
-| attention | 17.4 |
-| indexer | 17.9 |
+| weight engine | 18.3 |
+| BF16 engine | 16.8 |
+| attention | 18.3 |
+| indexer | 18.8 |
 | light stream lanes | 4.2 |
 | SFU lanes | 8.8 |
 | hyper-connection projection | 4.8 |
@@ -299,18 +299,18 @@ What each requirement is worth, with that one requirement undone, at 200K and ba
 
 | undone | tokens/s/user |
 |---|---|
-| none (the spec) | 5,448 |
-| golden summation orders | 1,183 |
+| none (the spec) | 5,393 |
+| golden summation orders | 1,179 |
 | stream unit as built (8 lanes) | 1,482 |
 | weight engines as built | 81 |
 | attention on 64 lanes | 160 |
 | indexer on 64 lanes | 112 (24 at 1M) |
-| no chaining (drain barriers) | 5,038 |
-| 5-cycle FP32 add | 5,350 |
-| as-built SFU depths | 5,317 |
-| two-pass select instead of the streaming filter | 5,333 (4,530 at 1M) |
+| no chaining (drain barriers) | 4,984 |
+| 5-cycle FP32 add | 5,296 |
+| as-built SFU depths | 5,257 |
+| two-pass select instead of the streaming filter | 5,280 (4,476 at 1M) |
 
-On plain (b) the same spec gives 4,978 / 4,890 / 4,508 tokens/s per user at 8K / 200K / 1M, all above plain
+On plain (b) the same spec gives 5,007 / 4,913 / 4,511 tokens/s per user at 8K / 200K / 1M, all above plain
 (b)'s own target.
 
 ## 6. Microarchitecture that meets the spec
@@ -365,11 +365,11 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
 5. **Indexer engine and key stream (KV in HBM, user decision).** Index keys stay in their model precision:
    FP4 E2M1 codes plus one UE8M0 scale per 32, **68 B per key**. The golden quantises every key to FP4 before
    use, so this is lossless and 3.8× smaller than BF16.
-   - **Spec:** 228,864 FP4 × FP4 MACs/cycle, which is about 56 keys/cycle, streaming keys from the die's HBM
-     at up to 3.8 KB/cycle.
+   - **Spec:** 239,616 FP4 × FP4 MACs/cycle, which is about 58 keys/cycle, streaming keys from the die's HBM
+     at up to 3.5 KB/cycle.
    - The fused ReLU·weight head-sum runs on the stream unit's light lanes, at 32 heads per key.
-   - At 1M, layer 20's scan is 17.8 MB per die, about 4.4 µs at the 4.5 TB/s the die's five HBM3E stacks
-     sustain. That scan is the HBM term that grows with context (§9).
+   - At 1M, layer 20's scan is 17.8 MB per die, about 5.0 µs at the 3.6 TB/s the die's four HBM3E stacks
+     sustain. That scan is the HBM term that grows with context (§9); at the spec's indexer width it wants 4.6 stacks' bandwidth, so on four the 1M scan is bandwidth-bound.
 
 6. **Select.** A **streaming exact filter** plus a threshold select over the survivors.
    - While scores arrive, keep a running lower bound on the k-th largest score and discard every score below
@@ -411,8 +411,8 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
     wait-mask drains. The replay counts ~3,840 instructions per token per die, so issue is 1.9% of the token.
 
 11. **KV state and HBM controller on the ROM die (user decision).**
-    - **Stacks:** five HBM3E stacks per die, beachfront-limited: 60% of the perimeter at 12 mm per stack.
-    - **Bandwidth:** 4.5 TB/s sustained at 90%, measured with refresh on.
+    - **Stacks:** four HBM3E stacks per die (standing user decision: what today's interposers carry; the beachfront rule, 60% of the perimeter at 12 mm per stack, would allow five).
+    - **Bandwidth:** 3.6 TB/s sustained at 90%, measured with refresh on.
     - **Controller:** refresh-aware per-bank refresh (REFpb, tRFCpb 200 ns: refresh the not-yet-refreshed
       bank that the fewest queued bursts need, never the head burst's bank) with at least 64 beats of queue
       per pseudo-channel, OR all-bank refresh with at least 512 beats; no head-of-line blocking across
@@ -437,13 +437,13 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
       - all-bank refresh with 512-beat queues: 0.901, the fallback;
       - refresh-free: 0.998.
 
-      On five stacks, layer 20's 1M scan (262,144 keys) takes 4.08 µs with MRU, 0.989 of refresh-free,
+      Measured on five stacks (the campaign predates the four-stack decision; re-run on four pending), layer 20's 1M scan (262,144 keys) takes 4.08 µs with MRU, 0.989 of refresh-free,
       against 5.09 µs with closed-first.
     - **Prefetch:** window rows and reuse-layer selections have static addresses, so they are prefetched one
       layer ahead.
     - **Gathers:** an index-source layer's gather is exposed, and its first row is budgeted at 250 ns.
-    - **Capacity:** per-user state at 1M is 93.5 MB on the busiest die, so the stacks hold **1,203 users at
-      1M and 6,272 at 200K**. Batch is not capacity-limited below that, and the old 8,192-context admission
+    - **Capacity:** per-user state at 1M is 93.5 MB on the busiest die, so the stacks hold **962 users at
+      1M and 5,018 at 200K**. Batch is not capacity-limited below that, and the old 8,192-context admission
       limit from on-die KV does not apply.
 
 12. **Power (requirement).** Per-die power must stay at or below the die's cooling limit, 0.5 W/mm² × 815 mm²
@@ -453,15 +453,15 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
 
     | per die | m = 1 | m = 2 (MTP) |
     |---|---|---|
-    | block area (ASAP7) | 87 mm² | 174 mm² |
-    | active clock of the blocks | 7.7 W | 15.3 W |
-    | dynamic while its stage holds the token, batch 1 | 25.2 W | 32.9 W |
-    | dynamic at the saturated batch (every die busy) | 30.4 W | 45.8 W |
+    | block area (ASAP7) | 90 mm² | 180 mm² |
+    | active clock of the blocks | 7.9 W | 15.8 W |
+    | dynamic while its stage holds the token, batch 1 | 25.3 W | 33.2 W |
+    | dynamic at the saturated batch (every die busy) | 31.0 W | 46.9 W |
 
-    With static leakage (33.5 W, the analytical N5 estimate) and the HBM interfaces (14 W), the worst case is
-    **~93 W per die, 4.4× under the limit**. Without gating, the analytical design charges a 48 W/die clock
+    With static leakage (33.5 W, the analytical N5 estimate) and the HBM interfaces (11.2 W), the worst case is
+    **~92 W per die, 4.5× under the limit**. Without gating, the analytical design charges a 48 W/die clock
     term on all 525 mm² of logic, which is the upper bound if nothing gates. Stage gating is also what keeps
-    batch-1 energy at 18.5 mJ per token instead of 277 mJ (§8).
+    batch-1 energy at 18.7 mJ per token instead of 289 mJ (§8).
 
 ## 7. MTP (DSpark): per-operator speculation analysis
 
@@ -474,14 +474,14 @@ one die; "path" is its share of the critical path.
 
 | operator class | ROM, AR-sized lanes (m = 1) | ROM, m = 6 core | HBM, m = 1 | HBM, m = 6 | binding resource |
 |---|---|---|---|---|---|
-| dense GEMVs (projections, shared expert, head) | 5.2× (MAC-bound) | **1.0×** (weight read shared) | **1.0×** (bytes shared) | 1.0× | ROM: MAC lanes; HBM: bytes |
+| dense GEMVs (projections, shared expert, head) | 5.1× (MAC-bound) | **1.0×** (weight read shared) | **1.0×** (bytes shared) | 1.0× | ROM: MAC lanes; HBM: bytes |
 | routed experts | 6.0× | **5.35×** | **5.3×** | 5.3× | ROM: weight lanes (the union); HBM: bytes (the union) |
-| hyper-connection projection | 6.0× | 2.4× | 1.6× | 1.0× | FP32 lanes |
-| attention (q·k, p·v, softmax) | 5.6× | 2.2× | 5.6× | 2.2× | MAC lanes; KV rows shared |
-| indexer (scan + select) | 6.0× | 1.7× | 6.0× | 1.7× | MAC lanes; keys read once per pass |
+| hyper-connection projection | 6.0× | 2.4× | 1.3× | 1.0× | FP32 lanes |
+| attention (q·k, p·v, softmax) | 5.6× | 2.1× | 5.6× | 2.1× | MAC lanes; KV rows shared |
+| indexer (scan + select) | 5.6× | 1.6× | 5.6× | 1.6× | MAC lanes; keys read once per pass |
 | stream unit | 3.2× | 1.5× | 3.2× | 1.5× | lanes |
-| fixed (depths, control, collectives, hops) | 1.18× | 1.16× | 1.15× | 1.12× | latency, once per pass |
-| **whole verify pass** | **2.38×** (436.9 µs) | **1.44×** (252.4 µs) | **2.55×** (2,182 µs) | **2.45×** (2,077 µs) | |
+| fixed (depths, control, collectives, hops) | 1.17× | 1.16× | 1.15× | 1.12× | latency, once per pass |
+| **whole verify pass** | **2.33×** (431.7 µs) | **1.43×** (253.9 µs) | **2.57×** (2,649 µs) | **2.50×** (2,548 µs) | |
 
 **Does "speculation trades MACs for bandwidth" hold for sparse V4.1?** Only for the dense part.
 
@@ -496,8 +496,8 @@ one die; "path" is its share of the critical path.
   there. What the ROM die does have idle is macro read bandwidth: 828 KB/cycle available against 301 KB/cycle
   used, so 2.7× headroom. Harvesting it takes more weight lanes (area), not more positions.
 - **Correlated routing.** If adjacent tokens share experts, the union shrinks. At an overlap of 25% (50%) of
-  the union's excess, the ROM m = 6 verify drops 252 → 242 (232) µs and the HBM verify 2,077 → 1,778
-  (1,479) µs. No measurement of adjacent-token routing on real prompts with the shipped router exists here;
+  the union's excess, the ROM m = 6 verify drops 254 → 244 (234) µs and the HBM verify 2,548 → 2,175
+  (1,801) µs. No measurement of adjacent-token routing on real prompts with the shipped router exists here;
   the reduced vehicle has 12 experts, which is not representative. Independent draws are the conservative
   case.
 - **Sparse attention.** The KV rows of adjacent positions overlap: the window fully, the selected rows mostly.
@@ -517,24 +517,24 @@ width does not change.
 
 | m | block area, mm² | verify, µs | draft, µs | tok/s at τ = 4.1 (band 3.27 – 3.8 – 5.0) |
 |---|---|---|---|---|
-| 1 | 87 | 436.9 | 25.8 | 8,862 |
-| **2 (design)** | **174** | **322.8** | **20.3** | **11,950** (9,519 – 11,075 – 14,573) |
-| 3 | 261 | 287.1 | 18.3 | 13,429 |
-| 4 | 349 (exceeds 329) | 276.7 | 17.8 | 13,924 |
-| 6 | 523 | 252.4 | 16.4 | 15,255 |
+| 1 | 90 | 431.7 | 25.4 | 8,969 |
+| **2 (design)** | **180** | **321.5** | **20.2** | **12,002** (9,561 – 11,124 – 14,637) |
+| 3 | 270 | 287.0 | 18.1 | 13,437 |
+| 4 | 360 (exceeds 329) | 277.0 | 17.7 | 13,917 |
+| 6 | 540 | 253.9 | 16.3 | 15,175 |
 
 m = 2 is the knee: m = 3 buys 12% for 50% more area. The draft chain is 3 DSpark stages over a 5-row block
 plus 5 dependent argmax steps over the 129,280-row vocabulary (lm_head row, rank-256 Markov bias, argmax, one
-group collective). At m = 2 it is **20.3 µs, 6% of the cycle**.
+group collective). At m = 2 it is **20.2 µs, 6% of the cycle**.
 
 With and without MTP, both machines, at τ = 4.1 (baseline; plain (b) in the last row):
 
 | | 200K, no MTP | 200K, with MTP | 1M, no MTP | 1M, with MTP |
 |---|---|---|---|---|
-| ROM array (baseline; m = 2) | 5,448 | **11,950** | 4,978 | 10,383 |
-| HBM comparator (iso logic area; m = 6) | 1,167 | 1,709 | 1,144 | 1,697 |
-| ROM : HBM | 4.67× | **7.0×** | 4.35× | 6.1× |
-| ROM array, plain (b) (m = 2) | 4,890 | 10,879 | 4,508 | 9,565 |
+| ROM array (baseline; m = 2) | 5,393 | **12,002** | 4,913 | 10,458 |
+| HBM comparator (iso logic area; m = 6) | 972 | 1,391 | 955 | 1,382 |
+| ROM : HBM | 5.55× | **8.6×** | 5.15× | 7.6× |
+| ROM array, plain (b) (m = 2) | 4,913 | 11,006 | 4,511 | 9,693 |
 
 ## 8. Batch: rate per user, throughput and energy (one model with §7)
 
@@ -551,13 +551,13 @@ their union across users and positions, and KV and index keys are per user.
 
 | batch | ROM tok/s/user | ROM array tok/s | ROM mJ/token (gated) | ROM + MTP tok/s/user | HBM tok/s/user | HBM array tok/s | HBM mJ/token (gated) | HBM + MTP tok/s/user |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 5,448 | 5,448 | 18.5 | 11,950 | 1,167 | 1,167 | 1,509 | 1,679 |
-| 8 | 5,448 | 43,584 | 13.6 | 11,950 | 1,167 | 9,334 | 1,486 | 1,679 |
-| 28 | 5,448 | 152,545 | 13.1 | 11,950 | 1,167 | 32,667 | 1,484 | 1,679 |
-| 64 | 3,878 | 248,179 | 11.1 | 6,946 | 880 | 56,326 | 858 | 956 |
-| 128 | 2,671 | 341,852 | 10.7 | 4,073 | 523 | 66,913 | 730 | 590 |
-| 256 | 1,633 | 418,055 | 10.2 | 2,219 | 338 | 86,569 | 556 | 363 |
-| 1,024 | 432 | 442,378 | 9.7 | 589 | 109 | 111,615 | 402 | 188 |
+| 1 | 5,393 | 5,393 | 18.7 | 12,002 | 972 | 972 | 1,515 | 1,372 |
+| 8 | 5,393 | 43,144 | 13.6 | 12,002 | 972 | 7,772 | 1,487 | 1,372 |
+| 28 | 5,393 | 151,003 | 13.1 | 12,002 | 972 | 27,202 | 1,484 | 1,372 |
+| 64 | 3,874 | 247,962 | 11.1 | 7,029 | 730 | 46,725 | 858 | 779 |
+| 128 | 2,685 | 343,734 | 10.7 | 4,141 | 430 | 55,054 | 730 | 483 |
+| 256 | 1,652 | 422,815 | 10.2 | 2,266 | 280 | 71,634 | 556 | 298 |
+| 1,024 | 439 | 449,707 | 9.7 | 602 | 91 | 93,067 | 402 | 160 |
 
 The HBM MTP column uses m = 2 here, the batch model's single design point; §7 gives HBM at m = 6.
 
@@ -565,27 +565,27 @@ The HBM MTP column uses m = 2 here, the batch model's single design point; §7 g
 
 | batch | ROM tok/s/user | ROM array tok/s | ROM mJ/token (gated) | HBM tok/s/user | HBM array tok/s | HBM mJ/token (gated) |
 |---|---|---|---|---|---|---|
-| 1 | 4,978 | 4,978 | 34.8 | 1,144 | 1,144 | 1,525 |
-| 64 | 3,363 | 215,234 | 26.9 | 851 | 54,435 | 874 |
-| 1,024 | 338 | 346,022 | 25.5 | 102 | 104,288 | 418 |
+| 1 | 4,913 | 4,913 | 35.1 | 955 | 955 | 1,532 |
+| 64 | 3,340 | 213,748 | 26.9 | 709 | 45,357 | 874 |
+| 1,024 | 339 | 346,988 | 25.5 | 86 | 87,694 | 418 |
 
-Batch-1 energy per token without gating: ROM 277 mJ (clock 265 mJ), HBM 2,146 mJ (weights 1,474 mJ). Every
+Batch-1 energy per token without gating: ROM 289 mJ (clock 276 mJ), HBM 2,289 mJ (weights 1,474 mJ). Every
 die clocks every cycle while only one layer group works, so **idle-stage clock gating is a requirement**.
-Gated, the ROM token at batch 1 is 18.5 mJ, **81.6× below HBM**.
+Gated, the ROM token at batch 1 is 18.7 mJ, **80.9× below HBM**.
 
-The pipeline keeps the batch-1 per-user rate up to 28 users. The array then saturates at 442K tokens/s at
-200K; the HBM comparator reaches 112K at 1,024 users. Per-user MTP gains shrink with batch, because the
+The pipeline keeps the batch-1 per-user rate up to 28 users. The array then saturates at 450K tokens/s at
+200K; the HBM comparator reaches 93K at 1,024 users. Per-user MTP gains shrink with batch, because the
 verify pass's extra positions compete for the lanes that other users' tokens use.
 
 ### 8.3 Target context: 200K
 
 | ROM : HBM | 200K | 1M |
 |---|---|---|
-| per-user rate, with MTP (τ = 4.1) | **7.12×** | 6.31× |
-| per-user rate, without MTP | **4.67×** | 4.35× |
-| energy per token, batch 1, gated | **81.6×** | 43.9× |
-| array throughput, batch 64 | **4.41×** | 3.95× |
-| array throughput, saturated | **3.96×** | 3.32× |
+| per-user rate, with MTP (τ = 4.1) | **8.75×** | 7.75× |
+| per-user rate, without MTP | **5.55×** | 5.15× |
+| energy per token, batch 1, gated | **80.9×** | 43.7× |
+| array throughput, batch 64 | **5.31×** | 4.71× |
+| array throughput, saturated | **4.83×** | 3.96× |
 
 200K wins on every metric, on the baseline as on plain (b). The reason is that the context-dependent cost is
 the indexer's key scan plus its KV. Both machines hold it in HBM, stream it at the same per-die bandwidth,
@@ -596,26 +596,26 @@ longer context dilutes it. 200K is the headline and 1M is the secondary point.
 
 **Configuration.** The ROM array spends 188 dies × 328.9 mm² = 61,836 mm² on compute. The comparator spends
 the same on logic-only dies: the same 815 mm² die with the ROM area freed, keeping interconnect and overhead,
-with 5 HBM3E stacks per die (beachfront-limited) and 618.3 mm² of logic.
+with 4 HBM3E stacks per die (the ROM die's package limit; the beachfront allows five) and 628.3 mm² of logic.
 
-- **101 dies** in about 25 tensor groups of 4.
-- 11.4 TB of HBM, against 510 GB of weights.
-- **4.5 TB/s sustained per die**: a 90% efficiency requirement, measured with refresh on.
+- **99 dies** in about 24 tensor groups of 4.
+- 8.9 TB of HBM, against 510 GB of weights.
+- **3.6 TB/s sustained per die**: a 90% efficiency requirement, measured with refresh on.
 
-At 200K the comparator gives 1,167 tokens/s per user on the baseline links (1,143 on plain (b)). Its weight
-sweep is 679 µs of the 857 µs token.
+At 200K the comparator gives 972 tokens/s per user on the baseline links (1,143 on plain (b)). Its weight
+sweep is 848 µs of the 1029 µs token.
 
 | sustained efficiency | 75% | 85% | 90% | 95% |
 |---|---|---|---|---|
-| tokens/s/user | 1,007 | 1,115 | 1,167 | 1,217 |
+| tokens/s/user | 834 | 926 | 972 | 1,016 |
 
 Requirements:
 
-- **Prefetch window.** 4.5 MB per die, which is latency × bandwidth at 1 µs first access. Every static-address
+- **Prefetch window.** 3.6 MB per die, which is latency × bandwidth at 1 µs first access. Every static-address
   stream (dense weights, window rows) is issued that far ahead across every dependency point.
 - **Routed-expert fetch.** The hard part. The expert ids exist only after the router's top-6, so a layer's
   28.2 MB per die of expert bytes is exposed: first access plus bytes, **7.3 µs per layer on the critical
-  path**. With MTP the fetch is the union (34.6 experts at B = 6), which caps HBM's speculative gain at 1.5×
+  path**. With MTP the fetch is the union (34.6 experts at B = 6), which caps HBM's speculative gain at 1.4×
   (γ = 5, τ = 4.1).
 - **Controller.** Refresh-aware REFpb with at least 64-beat queues per pseudo-channel, or all-bank refresh
   with at least 512 beats. Request issue must never let a refreshing channel stall words that do not touch
@@ -658,20 +658,20 @@ with each unit behind an adapter), brought up one arithmetic class at a time. Co
 shipped-shape instruction stream of one die (about 3,840 instructions per token) runs on an event model of
 the re-specified core. Every op runs on its new unit at the spec widths, with region dependences and vector
 chaining, and the DAG's communication is added. At the reduced shape, with the as-built widths and drains,
-its engine reproduces `hdc_timing_v41.simulate` exactly (344,131 cycles). Compute per token is 134.1 / 139.2
-/ 159.7 µs at 8K / 200K / 1M.
+its engine reproduces `hdc_timing_v41.simulate` exactly (344,131 cycles). Compute per token is 134.2 / 139.5
+/ 160.8 µs at 8K / 200K / 1M.
 
-| context | replayed spec, baseline links (35.7 µs comm) | budget, baseline | target, baseline | replayed, plain (b) (55.6 µs) | target, plain (b) |
+| context | replayed spec, baseline links (38.5 µs comm) | budget, baseline | target, baseline | replayed, plain (b) (55.6 µs) | target, plain (b) |
 |---|---|---|---|---|---|
-| 8K | 5,889 | 5,558 | 4,992 | 5,272 | 4,522 |
-| 200K | 5,718 | 5,448 | 4,904 | 5,134 | 4,450 |
-| 1M | 5,118 | 4,978 | 4,660 | 4,645 | 4,249 |
+| 8K | 5,789 | 5,507 | 4,922 | 5,270 | 4,522 |
+| 200K | 5,616 | 5,393 | 4,837 | 5,126 | 4,450 |
+| 1M | 5,015 | 4,913 | 4,599 | 4,621 | 4,249 |
 
 - The spec therefore meets the target on the program itself, not only on the DAG.
-- With chaining, dependent-stage depth dominates the 139 µs of compute at 200K: stream-unit depth 27 µs,
+- With chaining, dependent-stage depth dominates the 140 µs of compute at 200K: stream-unit depth 27 µs,
   the scalar side pipe (rsqrt 58 cycles per norm, softplus 280 per router) 21 µs, the BF16 weight engine 16 µs,
   transcendental depth 15 µs.
-- Chaining off (drains), plain (b): 4,290 at 200K, still above that target but not at 1M (3,943).
+- Chaining off (drains), plain (b): 4,274 at 200K, still above that target but not at 1M (3,917).
 - Stream-unit width saturates near 1,024 lanes. Softplus depth is the next latency lever.
 
 ## 11. Assumptions and limits
@@ -701,14 +701,14 @@ section prices the further levers, each added to the previous, on the spec's wid
 
 | step | levers | µs/token at 200K | tok/s/user 8K / 200K / 1M | block area |
 |---|---|---|---|---|
-| 0 | the spec on the baseline links | 183.6 | 5,558 / 5,448 / 4,978 | 87 mm² |
-| 1 | reductions off the critical path | 160.9 | 6,329 / 6,214 / 5,610 | 87 mm² |
-| 2 | + tile/row chaining for every unit | 144.9 | 6,994 / 6,903 / 6,521 | 87 mm² |
-| 3 | + shorter stages | **131.5** | **7,715 / 7,602 / 7,138** | 87 mm² |
-| 4a | + attention on one package, spec widths | 136.9 | 7,527 / 7,304 / 6,451 | 87 mm² |
-| 4b | + attention on one package, attention/indexer/weight engines ×2 | 116.7 | 8,869 / 8,571 / 7,530 | 157 mm² |
-| 4c | the same engines ×2, attention kept on the four-die group | 119.4 | 8,512 / 8,377 / 7,844 | 157 mm² |
-| 5 | MTP m = 2, τ = 4.1, on step 3 | 238.9 per cycle | **16,204 / 15,818 / 14,311** | 174 mm² |
+| 0 | the spec on the baseline links | 185.4 | 5,507 / 5,393 / 4,913 | 90 mm² |
+| 1 | reductions off the critical path | 162.8 | 6,262 / 6,142 / 5,526 | 90 mm² |
+| 2 | + tile/row chaining for every unit | 146.8 | 6,900 / 6,810 / 6,407 | 90 mm² |
+| 3 | + shorter stages | **133.5** | **7,600 / 7,488 / 6,991** | 90 mm² |
+| 4a | + attention on one package, spec widths | 138.2 | 7,464 / 7,235 / 6,323 | 90 mm² |
+| 4b | + attention on one package, attention/indexer/weight engines ×2 | 119.1 | 8,702 / 8,395 / 7,196 | 162 mm² |
+| 4c | the same engines ×2, attention kept on the four-die group | 121.9 | 8,336 / 8,202 / 7,609 | 162 mm² |
+| 5 | MTP m = 2, τ = 4.1, on step 3 | 240.1 per cycle | **16,129 / 15,756 / 14,335** | 180 mm² |
 
 1. **Reductions off the critical path (−23 µs).** An RMSNorm's rstd scales the next matvec's outputs instead
    of its input, so the sum of squares and the rsqrt run beside the weight sweep. The attention softmax
@@ -728,7 +728,7 @@ section prices the further levers, each added to the previous, on the spec's wid
 4. **Collectives and hops: fewer tensor-parallel boundaries (not adopted).** Keeping attention and its
    projections on the two dies of one package halves the attention collectives' latency on the path (26 →
    13 µs). But it doubles each die's attention, indexer and projection work.
-   - At the spec's widths this is a net loss: 7,304 against 7,602 tok/s at 200K, and 6,451 against 7,138
+   - At the spec's widths this is a net loss: 7,235 against 7,488 tok/s at 200K, and 6,323 against 6,991
      at 1M.
    - With those engines doubled it gains only 2-3% at 8K and 200K over spending the same area without the
      move (step 4c), and loses 4% at 1M, where the doubled index scan dominates.
@@ -737,14 +737,14 @@ section prices the further levers, each added to the previous, on the spec's wid
      reduction is already the one-shot engine's first level. The next lever is in-network reduction, which
      removes the package-pair round trip, or a shorter pair link. The substrate module is +12.5% but not
      shippable (the packaging agent's study).
-5. **MTP on top (×2.1).** On step 3 the m = 2 core verifies 6 positions in 238.9 µs per cycle with its draft.
-   At τ = 4.1 that is **15,818 tok/s per user at 200K**, against 11,950 with MTP on the spec alone.
+5. **MTP on top (×2.1).** On step 3 the m = 2 core verifies 6 positions in 240.1 µs per cycle with its draft.
+   At τ = 4.1 that is **15,756 tok/s per user at 200K**, against 12,002 with MTP on the spec alone.
 
 Levers 1-3 are the integration requirements for `ot_hdc_core_v41x`:
 - lever 1 is a golden/ISA/RTL contract change;
 - lever 2 is the chaining protocol on every unit boundary;
 - lever 3 is the vector unit's measured depths.
 
-Doubling the engines (step 4c, +8% at 200K for +70 mm²) stays inside the 329 mm² envelope. It is the next
+Doubling the engines (step 4c, +8% at 200K for +72 mm²) stays inside the 329 mm² envelope. It is the next
 width lever if the silicon falls short. Every number in this section is the model's, on the report's DAG,
 not silicon.
