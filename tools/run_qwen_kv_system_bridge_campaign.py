@@ -29,7 +29,8 @@ INPUTS = [ROOT / p for p in (
 
 
 def run(sources: list[Path], top: str, out: Path, sw: int | None = None,
-        v_mode: bool = False, split_mode: bool = False, hbm_split_mode: bool = False) -> dict:
+        v_mode: bool = False, split_mode: bool = False, hbm_split_mode: bool = False,
+        flush_mode: bool = False) -> dict:
     cmd = ["iverilog", "-g2012", "-s", top]
     if sw is not None:
         cmd += [f"-P{top}.SW={sw}"]
@@ -39,6 +40,8 @@ def run(sources: list[Path], top: str, out: Path, sw: int | None = None,
         cmd += [f"-P{top}.SPLIT_MODE=1"]
     if hbm_split_mode:
         cmd += [f"-P{top}.HBM_SPLIT_MODE=1"]
+    if flush_mode:
+        cmd += [f"-P{top}.FLUSH_MODE=1"]
     cmd += ["-o", str(out), *(str(p) for p in sources)]
     build = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if build.returncode:
@@ -79,6 +82,10 @@ def main() -> int:
                 [walk, stream, mux, tail, group, q, w, v, s, arb, system, b_system],
                 "tb_hdc_qwen_kv_system_tail", td / f"system_split_v{sw}", sw,
                 v_mode=True, split_mode=True)
+            runs[f"system_split_flush_sw{sw}"] = run(
+                [walk, stream, mux, tail, group, q, w, v, s, arb, system, b_system],
+                "tb_hdc_qwen_kv_system_tail", td / f"system_split_flush{sw}", sw,
+                split_mode=True, flush_mode=True)
     rec = {"schema": "opentallas.qwen-kv-system-bridge-boundaries.v1",
            "status": "pass" if all(x["status"] == "pass" for x in runs.values()) else "fail",
            "scope": "A full 1,024-element vector V instruction buffers under held-off HBM writes; "

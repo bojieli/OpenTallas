@@ -6,8 +6,10 @@ module tb_hdc_qwen_kv_system_tail;
     parameter integer V_MODE=0;
     parameter integer SPLIT_MODE=0;
     parameter integer HBM_SPLIT_MODE=0;
+    parameter integer FLUSH_MODE=0;
     localparam AW=24,G=4,W=16,LWIN=4,NPC=2,BK=4,TAGW=1+LWIN+$clog2(G)+3,LBK=$clog2(BK);
-    reg clk=0,rst_n=0,boot_v=0,kvd_v=0,kv_re=0;
+    reg clk=0,rst_n=0,boot_v=0,kvd_v=0,kv_re=0,tok_start=0;
+    reg [15:0] tok_pos=0;
     always #5 clk=~clk;
     reg [AW-1:0] boot_word=0;
     reg [127:0] boot_data=0;
@@ -44,7 +46,7 @@ module tb_hdc_qwen_kv_system_tail;
     integer b,r;
     ot_hdc_qwen_kv_system #(.W(W),.G(G),.SW(SW),.AW(AW),.LWIN(LWIN),
                              .NPC(NPC),.BK(BK),.LOG_HD(4),.LOG_TW(2),.LLG(3),.V0_WORD(512)) dut (
-        .clk(clk),.rst_n(rst_n),.tok_start(1'b0),.tok_pos(16'd0),.cfg_lead(16'd0),
+        .clk(clk),.rst_n(rst_n),.tok_start(tok_start),.tok_pos(tok_pos),.cfg_lead(16'd0),
         .kvd_v(kvd_v),.kvd_wbase(V_MODE ? 24'd512 : 24'd0),
         .kvd_ts(V_MODE ? 24'd1 : 24'd16),.kvd_ks(SPLIT_MODE ? 24'd4 : 24'd1),.kvd_js(24'd16),
         .kvd_wcs(SPLIT_MODE ? 24'd1 : 24'd0),.kvd_split(SPLIT_MODE ? 4'd2 : 4'd0),
@@ -106,8 +108,8 @@ module tb_hdc_qwen_kv_system_tail;
         for (b=0;b<G;b=b+1)
             for (r=0;r<(1<<LWIN);r=r+1) win_mem[b][r]=0;
         repeat(2) @(negedge clk); rst_n=1; boot_v=1;
-        if (SPLIT_MODE) begin
-            for (integer s=0;s<4;s=s+1) begin
+        if (SPLIT_MODE || FLUSH_MODE) begin
+            for (integer s=0;s<(FLUSH_MODE ? 128 : 4);s=s+1) begin
                 boot_word=s; boot_data={16{8'(8'h38+s*8)}};
                 @(negedge clk);
             end
@@ -132,6 +134,15 @@ module tb_hdc_qwen_kv_system_tail;
         if (V_MODE && (h_mem[256][7:0] !== 8'h38 || h_reads<2 || h_writes!=1))
             $fatal(1,"V sector did not pass RMW+fetch: byte=%h reads=%0d writes=%0d",
                    h_mem[256][7:0],h_reads,h_writes);
+        if (FLUSH_MODE) begin
+            @(negedge clk); kv_re=0; tok_pos=16; tok_start=1;
+            @(negedge clk); tok_start=0;
+            for (integer n=0;n<5000 && h_writes<128;n=n+1) @(negedge clk);
+            if (h_writes != 128 || h_mem[0][7:0] !== 8'h38 ||
+                h_mem[0][128 +: 8] !== 8'h40 || fault)
+                $fatal(1,"K tile flush lost physical data: writes=%0d sector0=%h fault=%b",
+                       h_writes,h_mem[0],fault);
+        end
         $display("PASS QWEN_KV_SYSTEM_%s SW=%0d",V_MODE ? "V_SECTOR" : "TAIL",SW); $finish;
     end
 endmodule

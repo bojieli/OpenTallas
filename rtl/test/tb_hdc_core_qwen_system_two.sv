@@ -132,6 +132,7 @@ module tb_hdc_core #(
     localparam integer SYS_TAGW=1+SYS_LWIN+$clog2(G)+3,SYS_LBK=$clog2(SYS_BK);
     reg [127:0] kv_fp8 [0:KV_WORDS-1];
     reg [255:0] system_hbm [0:KV_WORDS/2-1];
+    reg system_hbm_written [0:KV_WORDS/2-1];
     reg [W*16-1:0] system_win [0:G-1][0:(1<<SYS_LWIN)-1];
     reg [127:0] system_bank [0:2*SW-1][0:15];
     reg [G*W*16-1:0] system_win_q=0;
@@ -156,6 +157,7 @@ module tb_hdc_core #(
     reg [SYS_NPC*SYS_LBK-1:0] system_hr_beat=0;
     reg [SYS_NPC*256-1:0] system_hr_data=0;
     integer system_hbm_reads=0,system_hbm_writes=0,system_wait_cycles=0;
+    integer system_hbm_v_reads_after_write=0;
     reg system_waiting=0;
     wire system_boot_v=(lc>=6 && lc<262 && rst_n);
     wire [7:0] system_boot_idx=lc-6;
@@ -203,10 +205,13 @@ module tb_hdc_core #(
         if (system_hq_v) begin
             if (system_hq_we) begin
                 system_hbm[system_hq_sector] <= system_hq_data;
+                system_hbm_written[system_hq_sector] <= 1;
                 system_hbm_writes<=system_hbm_writes+1;
             end
             else begin
                 system_hbm_reads<=system_hbm_reads+1;
+                if (two_step && system_hq_sector >= 256 && system_hbm_written[system_hq_sector])
+                    system_hbm_v_reads_after_write<=system_hbm_v_reads_after_write+1;
                 system_hr_v[0]<=1;
                 system_hr_tag[0 +: SYS_TAGW]<=system_hq_tag;
                 system_hr_beat[0 +: SYS_LBK]<=0;
@@ -460,6 +465,7 @@ module tb_hdc_core #(
             for (integer e=0;e<W;e=e+1)
                 kv_fp8[i][e*8 +: 8]=packed_fp8(kv[i][e*32+16 +: 16]);
             system_hbm[i/2][(i%2)*128 +: 128]=kv_fp8[i];
+            if ((i%2)==0) system_hbm_written[i/2]=0;
         end
         for (i=0;i<2*SW;i=i+1)
             for (integer br=0;br<16;br=br+1) system_bank[i][br]=0;
@@ -567,6 +573,7 @@ module tb_hdc_core #(
             $display("UTIL me_issue_cycles=%0d su_issue_cycles=%0d both_idle_cycles=%0d", me_busy, su_busy, both_idle);
             $display("KV_SYSTEM fault=%0d drained=%0d hbm_reads=%0d hbm_writes=%0d wait_cycles=%0d",
                      system_fault,system_drained,system_hbm_reads,system_hbm_writes,system_wait_cycles);
+            $display("KV_SYSTEM_ORDER v_reads_after_write=%0d",system_hbm_v_reads_after_write);
 `ifdef OT_HDC_MEMSYS
             $display("ROM_ECC corrected=%0d uncorrectable=%0d", ecc_corrected, ecc_uncorrectable);
 `endif
@@ -588,6 +595,7 @@ module tb_hdc_core #(
             end
 `endif
             if (next_token == expect_tok && !first_bad && !fault && !system_fault && system_drained &&
+                (!two_token || system_hbm_v_reads_after_write > 0) &&
                 bad_lg == 0 && bad_vm == 0 && bad_kv == 0 &&
                 (!KV_BRIDGE || (!bridge_fault && bridge_drained && bridge_bad == 0)))
                 $display("PASS");

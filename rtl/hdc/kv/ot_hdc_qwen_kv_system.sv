@@ -79,12 +79,13 @@ module ot_hdc_qwen_kv_system #(
     wire [2*TAW-1:0] tl_raddr,ignored_tl_waddr;
     wire [2*W-1:0] ignored_tl_wmask;
     wire [2*W*16-1:0] tl_q,ignored_tl_wdata;
-    assign tl_q='0;
     wire [G-1:0] tl_group_re;
     wire [G*AW-1:0] tl_group_raddr;
     wire [G*W*16-1:0] tl_group_q;
-    wire [2*SW-1:0] vec_tl_we,tail_bank_re;
-    wire [2*SW*AW-1:0] vec_tl_row,tail_bank_row;
+    wire [2*SW-1:0] vec_tl_we,group_bank_re,flush_bank_re;
+    wire [2*SW*AW-1:0] vec_tl_row,group_bank_row,flush_bank_row;
+    wire group_fault,flush_fault;
+    wire tail_collision=|(group_bank_re & flush_bank_re);
     wire [2*SW*16-1:0] vec_tl_mask;
     wire [2*SW*128-1:0] vec_tl_data;
     wire lq_v,lq_ready,lq_we;
@@ -118,6 +119,7 @@ module ot_hdc_qwen_kv_system #(
     end
     assign kv_ok=kvs_ok && kv_write_drained && !boot_v && !desc_pending && !kvd_v;
     assign fault=kvs_fault || tail_fault || sector_fault || arb_fault || write_fault || desc_overrun;
+    assign tail_fault=group_fault || flush_fault || tail_collision;
     ot_hdc_kv_stream #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.LWIN(LWIN),.NPC(NPC),.BK(BK),.SPLIT_AWARE(1),
                        .LOG_HD(LOG_HD),.LOG_TW(LOG_TW),.LLG(LLG),.V0_WORD(V0_WORD),.HBM_FP8(1)) u_stream (
         .clk(clk),.rst_n(rst_n),.tok_start(tok_start),.tok_pos(tok_pos),.cfg_lead(cfg_lead),
@@ -140,9 +142,16 @@ module ot_hdc_qwen_kv_system #(
         .fault(kvs_fault));
     ot_hdc_qwen_kv_tail_group_port #(.G(G),.SW(SW),.AW(AW),.LOG_HD(LOG_HD),.LOG_TW(LOG_TW),.W(W)) u_tail (
         .clk(clk),.rst_n(rst_n),.rd_v(tl_group_re),.rd_word(tl_group_raddr),.rd_data(tl_group_q),
-        .bank_re(tail_bank_re),.bank_row(tail_bank_row),.bank_q(bank_q),.addr_error(tail_fault));
-    assign bank_re=tail_bank_re;
-    assign bank_rrow=tail_bank_row;
+        .bank_re(group_bank_re),.bank_row(group_bank_row),.bank_q(bank_q),.addr_error(group_fault));
+    ot_hdc_qwen_kv_tail_bank_port #(.SW(SW),.AW(AW),.LOG_HD(LOG_HD),.LOG_TW(LOG_TW),.LLG(LLG),.W(W)) u_flush_tail (
+        .clk(clk),.rst_n(rst_n),.tl_re(tl_re),.tl_raddr(tl_raddr),.tl_q(tl_q),
+        .bank_re(flush_bank_re),.bank_row(flush_bank_row),.bank_q(bank_q),.addr_error(flush_fault));
+    assign bank_re=group_bank_re | flush_bank_re;
+    genvar rb;
+    generate for (rb=0;rb<2*SW;rb=rb+1) begin : g_read_bank
+        assign bank_rrow[rb*AW +: AW]=group_bank_re[rb] ?
+            group_bank_row[rb*AW +: AW] : flush_bank_row[rb*AW +: AW];
+    end endgenerate
     genvar b;
     generate for (b=0;b<2*SW;b=b+1) begin : g_bank
         assign bank_we[b]=boot_v ? (boot_bank==b) : vec_tl_we[b];

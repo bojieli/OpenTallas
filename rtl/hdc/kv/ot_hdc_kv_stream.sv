@@ -624,7 +624,9 @@ module ot_hdc_kv_stream #(
     // Reads: the engine's (same cycle as its kv_re, like the window) or, on a
     // cycle the engine leaves that bank idle, the flush.
     always @(*) begin
-        tl_re = c_tl_use; tl_raddr = c_tl_addr;
+        // The split-aware physical system reads the core through the G-port
+        // bank mux. Keep this two-parity port for closed-tile flush only.
+        tl_re = SPLIT_AWARE ? 2'b00 : c_tl_use; tl_raddr = c_tl_addr;
         if (fl_go) begin
             tl_re[fl_bank] = 1'b1; tl_raddr[fl_bank*TAW +: TAW] = fl_idx;
         end
