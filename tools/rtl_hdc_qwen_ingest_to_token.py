@@ -101,6 +101,14 @@ def main() -> None:
                                        f"{gen.stdout[-500:]} {gen.stderr[-1000:]}")
                 (cut / "kv.hex").write_text(decoded_hex)
                 (cut / "kv_fp8.hex").write_text((img / "kv_fp8.hex").read_text())
+                # A plain END directly after a matrix op can observe me_idle
+                # before the registered go clears it.  A harmless stream op
+                # with barrier=1 provides a real drain point for cut programs.
+                program = P.build_program(lay)[:stop]
+                program += [dict(unit=P.I.UNIT_SU, su_nout=1, su_nin=1, barrier=1),
+                            dict(unit=P.I.UNIT_END, barrier=1)]
+                (cut / "prog.hex").write_text(P.hexwords((P.I.encode(**f) for f in program),
+                                                        P.I.INSTR_BITS))
                 # Partial programs can end before the argmax exists.  hdc_program
                 # then returns 1 and writes EXPECT=None, while VM/KV snapshots
                 # remain valid and are exactly what this cut-point checks.
