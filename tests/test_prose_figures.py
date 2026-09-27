@@ -147,7 +147,12 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 1069: docs/ANALYTICAL_REPORT.md carries 257 after the realistic-link and
     # fused-GPU regeneration rebound its section 2-5 tables and the acceptance
     # subsection landed (173 -> 257).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1069
+    # 1096: docs/ARCH_SPEC_QWEN3.md binds its production power/energy rows to
+    # results/arch/qwen3_budget.json (3 -> 7, from f58591db), and
+    # docs/ANALYTICAL_REPORT.md binds the joined/split-aware Qwen token gates,
+    # V4.1 multi-step/package gates and Qwen vector timing sensitivity to their
+    # tracked records (257 -> 280, from 36c664e2); the floors had not been raised.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1096
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
