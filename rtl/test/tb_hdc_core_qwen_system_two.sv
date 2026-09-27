@@ -134,6 +134,7 @@ module tb_hdc_core #(
     reg [255:0] system_hbm [0:KV_WORDS/2-1];
     reg [127:0] expected_flushed_word;
     reg system_hbm_written [0:KV_WORDS/2-1];
+    reg system_hbm_written_before_second [0:KV_WORDS/2-1];
     reg [W*16-1:0] system_win [0:G-1][0:(1<<SYS_LWIN)-1];
     reg [127:0] system_bank [0:2*SW-1][0:15];
     reg [G*W*16-1:0] system_win_q=0;
@@ -213,7 +214,8 @@ module tb_hdc_core #(
             end
             else begin
                 system_hbm_reads<=system_hbm_reads+1;
-                if (two_step && system_hq_sector >= 256 && system_hbm_written[system_hq_sector])
+                if (two_step && system_hq_sector >= 256 &&
+                    system_hbm_written_before_second[system_hq_sector])
                     system_hbm_v_reads_after_write<=system_hbm_v_reads_after_write+1;
                 system_hr_v[0]<=1;
                 system_hr_tag[0 +: SYS_TAGW]<=system_hq_tag;
@@ -468,7 +470,10 @@ module tb_hdc_core #(
             for (integer e=0;e<W;e=e+1)
                 kv_fp8[i][e*8 +: 8]=packed_fp8(kv[i][e*32+16 +: 16]);
             system_hbm[i/2][(i%2)*128 +: 128]=kv_fp8[i];
-            if ((i%2)==0) system_hbm_written[i/2]=0;
+            if ((i%2)==0) begin
+                system_hbm_written[i/2]=0;
+                system_hbm_written_before_second[i/2]=0;
+            end
         end
         for (i=0;i<2*SW;i=i+1)
             for (integer br=0;br<16;br=br+1) system_bank[i][br]=0;
@@ -519,6 +524,8 @@ module tb_hdc_core #(
             end
         end
         if (!multi && two_token && !two_step && lc > START + 2 && done) begin
+            for (integer sector=0;sector<KV_WORDS/2;sector=sector+1)
+                system_hbm_written_before_second[sector]=system_hbm_written[sector];
             first_bad <= (next_token != gold_gen[0]) || fault || system_fault;
             $display("KV_SYSTEM_FIRST pos=%0d next_token=%0d expect=%0d cycles=%0d fault=%0d",
                      pos,next_token,gold_gen[0],cycles,fault || system_fault);
