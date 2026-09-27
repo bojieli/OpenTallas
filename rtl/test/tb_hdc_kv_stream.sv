@@ -119,6 +119,9 @@ module tb_hdc_kv_stream #(
             // Actual vector K-split count and GQA share: 16 k steps x 2
             // head-share lines, inside a 256-line window with BK=16.
             add_op(24'd1000,24'd16,24'd4,24'd512,3'd2,16'd1,16'd16,16'd16);
+        end else if (set == 5) begin
+            // Two adjacent live position tiles exercise the group stride.
+            add_op(24'd1000,24'd16,24'd4,24'd512,3'd2,16'd1,16'd16,16'd32);
         end else begin
             // set 1: jsh 0, 8 KV heads per op, 4 words per cycle; set 2: jsh 2 (GQA 4:1 as Qwen3),
             // 1 word per cycle, run on one pseudo-channel to measure its sustained rate
