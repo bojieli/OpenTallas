@@ -14,6 +14,7 @@ module ot_hdc_qwen_kv_write_adapter #(
     parameter integer SW = 8,
     parameter integer AW = 24,
     parameter integer LOG_HD = 7,
+    parameter integer LOG_TW = 2,
     parameter integer V0_ELEMENT = 1048576
 ) (
     input  wire clk, rst_n,
@@ -92,7 +93,10 @@ module ot_hdc_qwen_kv_write_adapter #(
                 lane_i = in_addr[j*AW +: AW] & 15;
                 bank_i = ((word_i >> LOG_HD) & 1) * SW + (word_i & (SW-1));
                 tl_we[bank_i] = 1'b1;
-                tl_row[bank_i*AW +: AW] = word_i >> LG_SW;
+                // Drop tile bits: tiles 0 and 2 reuse one parity's SRAM.
+                tl_row[bank_i*AW +: AW] =
+                    ((word_i >> (LOG_HD + LOG_TW)) << (LOG_HD - LG_SW)) |
+                    ((word_i & ((1 << LOG_HD) - 1)) >> LG_SW);
                 tl_mask[bank_i*16 +: 16] = lane_i == 0 ? 16'hffff : (16'h1 << lane_i);
                 tl_data[bank_i*128 + lane_i*8 +: 8] = in_data[j*8 +: 8];
             end

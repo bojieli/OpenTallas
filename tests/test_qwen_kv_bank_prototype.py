@@ -64,3 +64,14 @@ def test_bank_collision_is_explicit_instead_of_silent_drop():
     tail = BankedTail(8)
     with pytest.raises(ValueError, match="one tail write port"):
         tail.write_vector([(0, 1), (8 * 16, 2)], v0_element=8192)
+
+
+def test_reused_tile_parity_has_fixed_tail_capacity():
+    tail = BankedTail(8, position_tiles=4)
+    tail.write_vector([(k_element(0, 0, 0, 0, kv_heads=8, position_tiles=4), 7)],
+                      v0_element=8192)
+    assert tail.read_word(0)[0] == 7
+    tail.write_vector([(k_element(0, 0, 32, 0, kv_heads=8, position_tiles=4), 9)],
+                      v0_element=8192)
+    assert tail.read_word(0)[0] == 9  # tile 2 reuses parity 0's physical row
+    assert len(tail.words) == 1

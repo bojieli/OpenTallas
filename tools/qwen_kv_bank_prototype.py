@@ -51,6 +51,7 @@ class BankedTail:
     sw: int
     width: int = 16
     head_dim: int = 128
+    position_tiles: int = 512
     words: dict[tuple[int, int, int], bytearray] = field(default_factory=dict)
 
     def write_vector(self, writes: list[tuple[int, int]], *, v0_element: int) -> None:
@@ -67,7 +68,8 @@ class BankedTail:
             if key in occupied:
                 raise ValueError(f"two K words target one tail write port: {key}")
             occupied.add(key)
-            row = word // self.sw
+            row = ((word // (self.head_dim * self.position_tiles))
+                   * (self.head_dim // self.sw) + (word % self.head_dim) // self.sw)
             dest = self.words.setdefault((tile_parity, bank, row), bytearray(self.width))
             if lane == 0:
                 dest[:] = bytes(self.width)  # a new position tile opens
@@ -75,7 +77,9 @@ class BankedTail:
 
     def read_word(self, word: int) -> bytes:
         parity = (word // self.head_dim) & 1
-        return bytes(self.words.get((parity, word % self.sw, word // self.sw),
+        row = ((word // (self.head_dim * self.position_tiles))
+               * (self.head_dim // self.sw) + (word % self.head_dim) // self.sw)
+        return bytes(self.words.get((parity, word % self.sw, row),
                                     bytearray(self.width)))
 
     def flush_k_tile(self, first_word: int, sectors: SectorAssembly) -> None:

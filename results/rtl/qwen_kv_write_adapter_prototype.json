@@ -28,14 +28,14 @@
   "scope": "reduced functional adapter bench, not integrated Qwen token or physical closure",
   "source_sha256": {
     "rtl/hdc/kv/ot_hdc_kv_stream.sv": "b7d320289ffbb51384b7ea18cdd6b7b1503fe71dd00b369dc4f9ffdafcae3a7d",
-    "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "ff2b0c7823dc27df3c040718b1dfc6fa490f314d86a89baae7021eb74f9ba151",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "41895dca8b4eec178f3a67c0c3dd0893df049183bc9a52bdf4dcd6901aaa1ecc",
     "rtl/hdc/ot_hdc_core.sv": "d39aeeb3993ad9418d4bb3045644700d15fdebed8d8faac297e2521de3a8c877",
     "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
     "rtl/test/tb_hdc_qwen_kv_write_adapter.sv": "c71142682a2ca5648f9e249d9624d5b37ee2aec45ebd2830f06f768260c78f6e",
-    "tests/test_qwen_kv_bank_prototype.py": "f063a3439adfaddd5a2ed28fac9c5726f6af9c477398af4ee887d433dd4b1ea2",
+    "tests/test_qwen_kv_bank_prototype.py": "c811d723b7115f8bd89d93ff6cb1533f9b885a6b23e3d151ba11ea2c3d63b693",
     "tests/test_qwen_kv_write_adapter_record.py": "8b3dff6a55a5fddbe022bcf176087054b0c6bfac9fadfa7f0bd53270b3a8fdf1",
     "tools/hdc_program.py": "4d3f4e37437997ab7af3612d96d25d88a6a17f473013586dd43f0afaa83a3712",
-    "tools/qwen_kv_bank_prototype.py": "7a2a56453d319fc781924c1e7917df491602258ea932ca72566cd2b86054dabf",
+    "tools/qwen_kv_bank_prototype.py": "1d327fdf38c7ddb3907f53cb69c67d0e8a64fe639d8630b6ae6c612038e79a9a",
     "tools/run_qwen_kv_write_adapter_campaign.py": "1e674ec1e0688b8a7ebd1a6dfc6c3bdd5314c3549ad85dcb0b427c623b720ad2"
   },
   "status": "pass"
