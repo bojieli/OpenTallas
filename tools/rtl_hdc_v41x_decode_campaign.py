@@ -51,7 +51,7 @@ OUT = ROOT / "results/rtl/hdc_v41x_decode_campaign.json"
 X_UNITS = ("he", "me", "att", "idx")
 X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",)}
 UNITS = X_UNITS           # set by main(): the units built re-specified
-PARAMS = {"hhw": 8}      # engine geometry of the build
+PARAMS = {"hhw": 8, "mg": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
        [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
                                            "ot_hdc_reduce", "ot_hdc_accept")] +
@@ -63,7 +63,10 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                "ot_hdc_v41_stream", "ot_hdc_v41_qe", "ot_hdc_v41_xu",
                                                "ot_hdc_v41_hcproj")] +
        [ROOT / "rtl/hdc/ot_hdc_fastfp.sv"] +
-       [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt", "ot_hdc_core_v41x")])
+       [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt",
+                                                 "ot_hdc_v41x_wgt_bdot", "ot_hdc_v41x_wgt_red", "ot_hdc_v41x_wgt_mac",
+                                                 "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_me_adapt",
+                                                 "ot_hdc_core_v41x")])
 SVH = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
 TB = ROOT / "rtl/test/tb_hdc_core_v41x.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_v41x_harness.cpp"
@@ -109,7 +112,8 @@ def breakdown(trace, tags, cycles):
 
 
 def defines(lanes=None):
-    return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}"] + \
+    return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}",
+            f"+define+HDC_MG={PARAMS['mg']}"] + \
         [f"+define+HDC_X_{u.upper()}={int(u in UNITS)}" for u in X_UNITS]
 
 
@@ -138,7 +142,7 @@ def images(out: Path, *extra, lanes=None):
     if r.returncode:
         raise SystemExit(f"hdc_program_v41 failed:\n{r.stdout}\n{r.stderr}")
     r2 = subprocess.run([sys.executable, str(ROOT / "tools/hdc_images_v41x.py"), "--out", str(out),
-                         "--hhw", str(PARAMS["hhw"])], capture_output=True, text=True, env=env)
+                         "--hhw", str(PARAMS["hhw"]), "--mg", str(PARAMS["mg"])], capture_output=True, text=True, env=env)
     if r2.returncode:
         raise SystemExit(f"hdc_images_v41x failed:\n{r2.stdout}\n{r2.stderr}")
     return r.stdout
@@ -214,7 +218,7 @@ def run(ngen: int, context: int, sweep=()) -> dict:
     with tempfile.TemporaryDirectory() as scratch:
         s = Path(scratch)
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core_v41x",
-                               f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}",
+                               f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}", f"-GMG={PARAMS['mg']}",
                                *[f"-GX_{u.upper()}={int(u in UNITS)}" for u in X_UNITS],
                                f"-I{SVH.parent}", *map(str, RTL)], capture_output=True, text=True)
         img = s / "img"
@@ -303,11 +307,13 @@ def main() -> int:
     parser.add_argument("--units", default="he",
                         help="the re-specified units to build (the rest as built), e.g. he,qe; '' for none")
     parser.add_argument("--hhw", type=int, default=8, help="HCP lanes per group")
+    parser.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
     args = parser.parse_args()
     global UNITS
     UNITS = tuple(u for u in args.units.split(",") if u)
     assert set(UNITS) <= set(X_UNITS), UNITS
     PARAMS["hhw"] = args.hhw
+    PARAMS["mg"] = args.mg
     result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x])
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     s = result["single_step"]
