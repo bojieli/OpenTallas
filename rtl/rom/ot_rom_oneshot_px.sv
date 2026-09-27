@@ -120,35 +120,41 @@ module ot_rom_oneshot_die_px #(
     assign tx_rec = {in_tag, in_mode, in_last, lpar, in_data};
 
     // -- receive: every (source, parity) FIFO has one writer ------------------------------
-    reg [PW-1:0] mem [0:2*N*PD-1];
-    reg [DB-1:0] wp [0:2*N-1];
-    reg [DB-1:0] rp [0:2*N-1];
-    reg [2*N-1:0] push;
-    reg [PW-1:0]  push_rec [0:2*N-1];
-    reg           relay_clash;
-    always @(*) begin
-        relay_clash = 1'b0;
-        for (r = 0; r < 2 * N; r = r + 1) begin push[r] = 1'b0; push_rec[r] = {PW{1'b0}}; end
-        for (r = 0; r < N; r = r + 1) begin
-            if (r == RANK) begin
-                push[2*r + lpar] = fire;
-                push_rec[2*r + lpar] = tx_rec;
-            end else begin
-                if (rx_valid[r]) begin
-                    push[2*r + rx_rec[r*PW + PAR_B]] = 1'b1;
-                    push_rec[2*r + rx_rec[r*PW + PAR_B]] = rx_rec[r*PW +: PW];
-                end
-                if (RELAY != 0 && !same_pkg(r) && rl_rx_valid[r]) begin
-                    if (rx_valid[r] && rx_rec[r*PW + PAR_B] == rl_rx_rec[r*PW + PAR_B]) relay_clash = 1'b1;
-                    push[2*r + rl_rx_rec[r*PW + PAR_B]] = 1'b1;
-                    push_rec[2*r + rl_rx_rec[r*PW + PAR_B]] = rl_rx_rec[r*PW +: PW];
-                end
-            end
-        end
-    end
-    // a record landing from a partner-package source is relayed to the package peer the cycle it lands
+    // (one generate block per FIFO with static selects: a combinational loop writing arrays at a dynamic index
+    // elaborates to tens of GB in Verilator at 128 lanes)
+    reg           ppar;                                 // index parity of the next pop
+    wire [2*N-1:0] push;
+    wire [2*N-1:0] clash;
+    wire [N-1:0]  nonempty;
+    wire [PW-1:0] head [0:N-1];
+    wire [PW-1:0] hd [0:2*N-1];
+    wire          pop;
     generate
-        for (g = 0; g < N; g = g + 1) begin : g_rl
+        for (g = 0; g < N; g = g + 1) begin : g_src
+            wire dpar = rx_rec[g*PW + PAR_B];
+            wire rpar = rl_rx_rec[g*PW + PAR_B];
+            wire rl_on = (RELAY != 0) && (g != RANK) && ((g / PKG_DIES) != MYPKG);
+            for (q = 0; q < 2; q = q + 1) begin : g_par
+                localparam integer F = 2 * g + q;
+                wire          pd_ = (g == RANK) ? (fire && lpar == q) : (rx_valid[g] && dpar == q);
+                wire          pr_ = rl_on && rl_rx_valid[g] && rpar == q;
+                wire [PW-1:0] rec = (g == RANK) ? tx_rec : (pd_ ? rx_rec[g*PW +: PW] : rl_rx_rec[g*PW +: PW]);
+                assign push[F] = pd_ || pr_;
+                assign clash[F] = pd_ && pr_;
+                reg [PW-1:0] m [0:PD-1];
+                reg [DB-1:0] wp, rp;
+                always @(posedge clk) if (push[F]) m[wp] <= rec;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) begin wp <= 0; rp <= 0; end
+                    else begin
+                        if (push[F]) wp <= wp + 1'b1;
+                        if (pop && ppar == q) rp <= rp + 1'b1;
+                    end
+                assign hd[F] = m[rp];
+            end
+            assign nonempty[g] = ppar ? (cnt[2*g + 1] != 0) : (cnt[2*g] != 0);
+            assign head[g] = ppar ? hd[2*g + 1] : hd[2*g];
+            // a record landing from a partner-package source is relayed to the package peer the cycle it lands
             if (RELAY != 0 && g != RANK && (g / PKG_DIES) != MYPKG) begin : g_on
                 assign rl_tx_valid[g] = rx_valid[g];
                 assign rl_tx_rec[g*PW +: PW] = rx_rec[g*PW +: PW];
@@ -158,17 +164,7 @@ module ot_rom_oneshot_die_px #(
             end
         end
     endgenerate
-
-    // -- heads of the pop parity --------------------------------------------------------
-    reg           ppar;                                 // index parity of the next pop
-    reg  [N-1:0]  nonempty;
-    reg  [PW-1:0] head [0:N-1];
-    always @(*) begin
-        for (r = 0; r < N; r = r + 1) begin
-            nonempty[r] = cnt[2*r + ppar] != 0;
-            head[r] = mem[(2*r + ppar)*PD + rp[2*r + ppar]];
-        end
-    end
+    wire relay_clash = |clash;
     wire head_mode = head[0][MODE_B];
     wire head_last = head[0][LAST_B];
 
@@ -185,7 +181,7 @@ module ot_rom_oneshot_die_px #(
     wire g_free = g_idle || (g_busy && g_cnt == E - 1) || (g_first && E == 1);
     wire pop_red = all_ne && g_idle && !head_mode;
     wire pop_gat = all_ne && head_mode && inflight == 0 && g_free && !(s0_v && !s0_mode);
-    wire pop = pop_red || pop_gat;
+    assign pop = pop_red || pop_gat;
     generate
         for (g = 0; g < N; g = g + 1) begin : g_cr
             for (q = 0; q < 2; q = q + 1) begin : g_p
@@ -202,7 +198,7 @@ module ot_rom_oneshot_die_px #(
         if (!rst_n) begin
             lpar <= 1'b0; ppar <= 1'b0;
             for (r = 0; r < 2 * N; r = r + 1) begin
-                cr[r] <= PD; cnt[r] <= 0; wp[r] <= 0; rp[r] <= 0;
+                cr[r] <= PD; cnt[r] <= 0;
             end
         end else begin
             if (fire) lpar <= in_last ? 1'b0 : ~lpar;
@@ -210,11 +206,6 @@ module ot_rom_oneshot_die_px #(
             for (r = 0; r < 2 * N; r = r + 1) begin
                 if ((r / 2) != RANK)
                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
-                if (push[r]) begin
-                    mem[r*PD + wp[r]] <= push_rec[r];
-                    wp[r] <= wp[r] + 1'b1;
-                end
-                if (pop && (r % 2) == ppar) rp[r] <= rp[r] + 1'b1;
                 cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
             end
         end

@@ -84,8 +84,20 @@ def build(scratch: Path, top: str, params: dict) -> Path:
 # -- cases -------------------------------------------------------------------------------------------------------------
 LEVERS = {   # name: (RELAY, ADD_LAT, GW)
     "base_nobubble": (0, 5, 1), "add3": (0, 3, 1), "relay": (1, 5, 1), "relay_add3": (1, 3, 1),
-    "gw2": (0, 3, 2), "gw4": (0, 3, 4), "relay_gw1": (1, 3, 1), "relay_gw2": (1, 3, 2), "relay_gw4": (1, 3, 4),
+    "gw2": (0, 5, 2), "gw4": (0, 5, 4), "relay_gw1": (1, 5, 1), "relay_gw2": (1, 5, 2), "relay_gw4": (1, 5, 4),
 }
+# ot_hdc_fp32_add_fast elaborates to ~100 MB per instance in Verilator 4.038 (its Kogge-Stone loops), 40+ GB for the
+# 1,536 adders of 4 dies x 3 stages x 128 lanes.  The engine moves one word per cycle whatever its width, so the
+# ADD_LAT = 3 cases carry ADD3_LANES data lanes per word while every link still charges the full 512-B word
+# (FLIT_OVH pads the record's link cost): the same cycle schedule, bit-exact on the lanes carried.  The
+# relay_l8_control case runs the 128-lane relay case at 8 lanes to show the tails agree.
+ADD3_LANES = 8
+
+
+def data_lanes(case):
+    if case["pattern"] == "stage_hop":
+        return LANES
+    return case.get("lanes", ADD3_LANES if LEVERS[case["lever"]][1] == 3 else LANES)
 
 
 def cases():
@@ -98,6 +110,8 @@ def cases():
                             qtx=64))
         for q in (8, 16, 32):
             out.append(dict(name=f"{pat}_relay_add3_d64_q{q}", pattern=pat, lever="relay_add3", depth=64, qtx=q))
+    out.append(dict(name="allreduce_wo_b_relay_l8_control_d64_q64", pattern="allreduce_wo_b", lever="relay",
+                    depth=64, qtx=64, lanes=ADD3_LANES))
     for order in ("blocked", "uniform"):
         out.append(dict(name=f"allreduce_wo_b_relay_add3_{order}_d64_q64", pattern="allreduce_wo_b",
                         lever="relay_add3", depth=64, qtx=64, order=order))
@@ -147,9 +161,9 @@ def top_params(case, lp):
             BPC_C_DEN=100, LAT_X=lp["LAT_X"], BPC_X=lp["BPC_X"], BPC_X_DEN=100, LAT_U=lp["LAT_U"], BPC_U=lp["BPC_U"])
     relay, add, gw = LEVERS[case["lever"]]
     return "tb_v41_stage_collective_px", dict(
-        LANES=LANES, DEPTH=case["depth"], QTX=case["qtx"], PKG_DIES=2, RELAY=relay, ADD_LAT=add, GW=gw,
+        LANES=data_lanes(case), DEPTH=case["depth"], QTX=case["qtx"], PKG_DIES=2, RELAY=relay, ADD_LAT=add, GW=gw,
         LAT_U=lp["LAT_U"], BPC_U=lp["BPC_U"], LAT_X=lp["LAT_X"], BPC_X=lp["BPC_X"], BPC_X_DEN=100,
-        FLIT_OVH=case.get("ovh", 0))
+        FLIT_OVH=WORD_B - 4 * data_lanes(case) + case.get("ovh", 0))
 
 
 def hop_vectors(path: Path, sched, lists, uniq, seed):
@@ -166,6 +180,27 @@ def hop_vectors(path: Path, sched, lists, uniq, seed):
     (path / "uniq.hex").write_text("\n".join(str(x) for x in uniq) + "\n")
 
 
+def coll_vectors(path: Path, words, sched, mode, seed, lanes):
+    """B.vectors at `lanes` data lanes per word (every die on the same producer schedule)."""
+    rng = np.random.default_rng(seed)
+    part = B.rand_f32(rng, N * words * lanes).reshape(N, words, lanes)
+    path.mkdir(parents=True, exist_ok=True)
+    pl, rl = [], []
+    for d in range(N):
+        pl.append(f"@{d * MAXW:x}")
+        rl.append(f"@{d * MAXW:x}")
+        pl += [B.hexw(part[d, k]) for k in range(words)]
+        rl += [f"{sched[k]:08x}" for k in range(words)]
+    if mode == 0:
+        sums = G.bits(G.fold([G.from_bits(part[d]) for d in range(N)]))
+        el = [B.hexw(sums[k]) for k in range(words)]
+    else:
+        el = ["0" * (lanes * 8)]
+    (path / "part.hex").write_text("\n".join(pl) + "\n")
+    (path / "ready.hex").write_text("\n".join(rl) + "\n")
+    (path / "exp.hex").write_text("\n".join(el) + "\n")
+
+
 def run_case(scratch: Path, case: dict, lp: dict) -> dict:
     p = B.PATTERNS[case["pattern"]]
     hop = case["pattern"] == "stage_hop"
@@ -180,7 +215,7 @@ def run_case(scratch: Path, case: dict, lp: dict) -> dict:
         hop_vectors(vec, sch, lists, uniq, 101 + len(case["name"]))
         args += [f"+LN{d}={len(lst)}" for d, lst in enumerate(lists)]
     else:
-        B.vectors(vec, words, [sch] * N, p["mode"], 11 + len(case["name"]))
+        coll_vectors(vec, words, sch, p["mode"], 11 + len(case["name"]), data_lanes(case))
         args += [f"+MODE={p['mode']}", f"+SKEW={case.get('skew', 0)}"]
     txt = B.sh(args, timeout=3600)
     shutil.rmtree(vec, ignore_errors=True)
@@ -212,7 +247,8 @@ def run_case(scratch: Path, case: dict, lp: dict) -> dict:
                    receive_buffer_max=max(sbs[d]["qmax"] for d in range(4)))
     else:
         relay, add, gw = LEVERS[case["lever"]]
-        rec.update(relay=relay, add_lat=add, gather_words_per_cycle=gw, rx_depth_words=case["depth"],
+        rec.update(relay=relay, add_lat=add, gather_words_per_cycle=gw, data_lanes=data_lanes(case),
+                   link_bytes_per_word=WORD_B + case.get("ovh", 0), rx_depth_words=case["depth"],
                    tx_queue_words=case["qtx"])
     rec.update(producer_first_word_cycle=start + min(sch), producer_ref_last_cycle=ref,
                producer_actual_last_cycle=pushed, producer_stall_cycles=max(x["stall"] for x in prod),
@@ -255,7 +291,7 @@ def summarise(rec, base):
     by = {c["case"]: c for c in rec["cases"]}
     bp = base["summary"]["patterns"]
     out = {}
-    std = [c for c in rec["cases"] if c.get("order") == B.PATTERNS[c["pattern"]]["order"] and not c["skew_cycles"]
+    std = [c for c in rec["cases"] if "control" not in c["case"] and c.get("order") == B.PATTERNS[c["pattern"]]["order"] and not c["skew_cycles"]
            and not c["flit_overhead_bytes"]]
     for pat in ("allreduce_wo_b", "allreduce_down", "gather_router", "gather_topk", "gather_rows", "stage_hop"):
         rows = [c for c in std if c["pattern"] == pat]
@@ -319,7 +355,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--scratch", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=OUT)
-    ap.add_argument("--jobs", type=int, default=6)
+    ap.add_argument("--jobs", type=int, default=1, help="parallel Verilator builds (a 128-lane build is ~3 GB)")
     ap.add_argument("--only", default="")
     ap.add_argument("--clean", action="store_true")
     a = ap.parse_args()
@@ -333,7 +369,7 @@ def main():
         tops[(t, tuple(sorted(prm.items())))] = (t, prm)
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         list(ex.map(lambda tp: build(a.scratch, *tp), tops.values()))
-    with cf.ThreadPoolExecutor(2 * a.jobs) as ex:
+    with cf.ThreadPoolExecutor(4) as ex:
         res = list(ex.map(lambda c: run_case(a.scratch, c, lp), cs))
     base = json.loads(BASE_REC.read_text())
     rec = dict(schema="v41_collective_levers_campaign/1", tool="tools/rtl_v41_collective_levers_campaign.py",
