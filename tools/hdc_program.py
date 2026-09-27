@@ -649,7 +649,7 @@ class Machine:
             if f["dst"] == I.DST_VM:
                 self.vm[ed] = out
             else:
-                self.kv[ed] = G.to_bf16(out)          # the KV cache holds BF16
+                self.kv[ed] = G.kv_round(out)         # the KV cache holds BF16 or FP8 E4M3 (G.KV_FMT)
 
 
 # -- images ----------------------------------------------------------------------------

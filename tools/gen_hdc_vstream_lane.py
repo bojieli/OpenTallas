@@ -31,7 +31,8 @@ module ot_hdc_vstream_lane #(
     parameter integer WR   = 64,
     parameter integer AW   = 24,
     parameter integer NW   = 16,
-    parameter integer LANE = 0
+    parameter integer LANE = 0,
+    parameter integer KV_FP8 = 1      // the vector core's KV cache is FP8 E4M3 (hdc_golden.KV_FMT)
 ) (
     input  wire              clk,
     input  wire              rst_n,

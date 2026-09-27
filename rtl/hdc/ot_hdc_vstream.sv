@@ -26,7 +26,8 @@ module ot_hdc_vstream #(
     parameter integer LV = 4,         // the reducer's time levels: segments of up to 2^LV vectors
     parameter integer WR = 64,
     parameter integer AW = 24,
-    parameter integer NW = 16
+    parameter integer NW = 16,
+    parameter integer KV_FP8 = 1      // KV cache in FP8 E4M3 (else BF16): hdc_golden.KV_FMT
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -156,7 +157,7 @@ module ot_hdc_vstream #(
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_lane
         wire live = ({1'b0, v} << LS) + l < {1'b0, nin_r};
-        ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(l)) u_lane (
+        ot_hdc_vstream_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(l), .KV_FP8(KV_FP8)) u_lane (
             .clk(clk), .rst_n(rst_n), .emit0(emit), .live(live), .i(v), .fin_th(fin_th), .i_last_r(v_last_r),
             .cura0(cura), .curb0(curb), .curc0(curc), .curd0(curd), .rrow(rrow),
             .asi(asi), .bsi(bsi), .csi(csi), .dsi(dsi),

@@ -26,7 +26,8 @@ module ot_hdc_stream #(
     parameter integer W  = 16,
     parameter integer WR = 64,        // bf16 lanes per weight-ROM word
     parameter integer AW = 24,
-    parameter integer NW = 16
+    parameter integer NW = 16,
+    parameter integer KV_FP8 = 0      // KV cache in FP8 E4M3 (else BF16)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -93,6 +94,40 @@ module ot_hdc_stream #(
     localparam integer D_SIGM = D_EXP + LA + D_RECIP;   // exp, +1, reciprocal
     localparam integer TAP0 = LM + 1 + LA;        // S3 -> R (7)
     localparam integer TAPMAX = TAP0 + D_SIGM;
+
+    //: The KV cache's format: BF16, or FP8 E4M3 (KV_FP8; bias 7, max 448,
+    //: subnormal quantum 2^-9, RNE, saturating) -- tools/hdc_golden.py kv_round.
+    //: The value is kept as its binary32 bits; every E4M3 value is a BF16 value.
+    function automatic [31:0] fp8r(input [31:0] v);
+        reg [7:0] ex; reg [22:0] mt; reg [24:0] sig; reg [4:0] sh; reg [24:0] n, rem, half;
+        reg [3:0] m4; reg up; integer e; reg [31:0] y;
+        begin
+            ex = v[30:23]; mt = v[22:0]; e = ex - 127;
+            if (ex == 0) y = 32'd0;                                   // zero (and FP32 subnormals: below 2^-9)
+            else if (e >= -6) begin
+                up = v[19] && ((|v[18:0]) || v[20]);
+                m4 = {1'b1, v[22:20]} + up;                          // 8..16
+                if (m4 == 0) begin e = e + 1; m4 = 4'd8; end          // 16 wraps: the next binade
+                if (e > 8 || (e == 8 && m4 > 4'd14)) y = {v[31], 8'd135, 3'b110, 20'd0};   // saturate at 448
+                else y = {v[31], e[7:0] + 8'd127, m4[2:0], 20'd0};
+            end else begin
+                // subnormal: n = round(|v| / 2^-9), |v| = sig * 2^(e-23), sh = 14 - e
+                sig = {2'b01, mt};
+                if (14 - e >= 26) y = 32'd0;
+                else begin
+                    sh = 14 - e;
+                    n = sig >> sh; rem = sig & ((25'd1 << sh) - 1); half = 25'd1 << (sh - 1);
+                    if (rem > half || (rem == half && n[0])) n = n + 1;
+                    if (n == 0) y = 32'd0;
+                    else if (n[3]) y = {v[31], 8'd121, 23'd0};          // 8 x 2^-9 = 2^-6
+                    else if (n[2]) y = {v[31], 8'd120, n[1:0], 21'd0};
+                    else if (n[1]) y = {v[31], 8'd119, n[0], 22'd0};
+                    else y = {v[31], 8'd118, 23'd0};
+                end
+            end
+            fp8r = y;
+        end
+    endfunction
 
     // -- issue loop -----------------------------------------------------------
     reg              active;
@@ -368,7 +403,8 @@ module ot_hdc_stream #(
     always @(posedge clk) begin
         vm_waddr <= o_daddr; vm_wdata <= out;
         //: the KV cache holds BF16 (RNE), so attention products are exact BF16 x BF16
-        kv_waddr <= o_daddr; kv_wdata <= (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
+        kv_waddr <= o_daddr;
+        kv_wdata <= KV_FP8 ? fp8r(out) : (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
     end
 
     // -- reducer ------------------------------------------------------------------

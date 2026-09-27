@@ -254,6 +254,28 @@ def exp(x):
     return from_bits(e.astype(np.uint32))
 
 
+def to_fp8(x):
+    """FP32 -> FP8 E4M3 (bias 7, max 448, subnormal quantum 2^-9), round to
+    nearest even, saturating; returned as FP32.  Every E4M3 value is a BF16
+    value, so an FP8 KV cache still gives exact BF16 x BF16 products."""
+    x = np.asarray(x, dtype=F)
+    a = np.abs(x).astype(np.float64)
+    _, ex = np.frexp(a)
+    e = np.maximum(ex - 1, -6)                       # the binade (subnormals share 2^-6's quantum)
+    q = np.ldexp(1.0, e - 3)
+    r = np.minimum(np.round(a / q) * q, 448.0)       # np.round: half to even
+    return z(np.where(x < 0, -r, r).astype(F))
+
+
+# The KV cache's format: FP8 E4M3 on the vector core (the spec's design point:
+# half the KV bytes of BF16), BF16 on the scalar core.  HDC_KV_FMT overrides.
+KV_FMT = os.environ.get("HDC_KV_FMT", "fp8" if SU_WIDTH > 1 else "bf16")
+
+
+def kv_round(x):
+    return to_fp8(x) if KV_FMT == "fp8" else to_bf16(x)
+
+
 def rstd(x, eps):
     return rsqrt(add(mul(lane_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
 
@@ -489,7 +511,7 @@ class Model:
             # KV cache in BF16; q and the probabilities are BF16-rounded before
             # their products, so every attention product is an exact BF16 x BF16
             # product any lane can form
-            cache[L].append((to_bf16(k), to_bf16(v)))
+            cache[L].append((kv_round(k), kv_round(v)))
             attn = np.zeros((self.heads, self.hd), dtype=F)
             scale = F(1.0 / np.sqrt(self.hd))  # 0.25: exact
             s_sc, s_pv = attn_splits(self.hd, self.groups)
