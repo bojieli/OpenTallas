@@ -38,6 +38,7 @@ module tb_hdc_qwen_kv_system_tail;
     reg [NPC*LBK-1:0] h_rsp_beat=0;
     reg [NPC*256-1:0] h_rsp_data=0;
     reg [255:0] h_mem [0:511];
+    integer h_reads=0,h_writes=0;
     integer b,r;
     ot_hdc_qwen_kv_system #(.W(W),.G(G),.SW(SW),.AW(AW),.LWIN(LWIN),
                              .NPC(NPC),.BK(BK),.LOG_HD(4),.LOG_TW(2),.LLG(3),.V0_WORD(512)) dut (
@@ -62,8 +63,9 @@ module tb_hdc_qwen_kv_system_tail;
     always @(posedge clk) begin
         h_rsp_v <= 0;
         if (h_req_v) begin
-            if (h_req_we) h_mem[h_req_sector] <= h_req_data;
+            if (h_req_we) begin h_mem[h_req_sector] <= h_req_data; h_writes=h_writes+1; end
             else begin
+                h_reads=h_reads+1;
                 h_rsp_v[0] <= 1;
                 h_rsp_tag[0 +: TAGW] <= h_req_tag;
                 h_rsp_beat[0 +: LBK] <= 0;
@@ -100,6 +102,9 @@ module tb_hdc_qwen_kv_system_tail;
         @(posedge clk); #1;
         if (kv_q[31:0] !== 32'h3f800000 || fault || (!V_MODE && h_req_v))
             $fatal(1,"KV physical read mismatch SW=%0d V=%0d got=%h fault=%b hq=%b",SW,V_MODE,kv_q[31:0],fault,h_req_v);
+        if (V_MODE && (h_mem[256][7:0] !== 8'h38 || h_reads<2 || h_writes!=1))
+            $fatal(1,"V sector did not pass RMW+fetch: byte=%h reads=%0d writes=%0d",
+                   h_mem[256][7:0],h_reads,h_writes);
         $display("PASS QWEN_KV_SYSTEM_%s SW=%0d",V_MODE ? "V_SECTOR" : "TAIL",SW); $finish;
     end
 endmodule
