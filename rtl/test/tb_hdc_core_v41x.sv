@@ -30,6 +30,12 @@
 `ifndef HDC_X_IDX
 `define HDC_X_IDX 0
 `endif
+`ifndef HDC_X_SEL
+`define HDC_X_SEL 0
+`endif
+`ifndef HDC_X_EG
+`define HDC_X_EG 0
+`endif
 `ifndef HDC_MG
 `define HDC_MG 8
 `endif
@@ -44,6 +50,7 @@ module tb_hdc_core_v41x (input wire clk);
     localparam integer HROM_WORDS = 1 << 16;
     localparam integer WROM_WORDS = 1 << 19, QROM_WORDS = 1 << 16, EROM_WORDS = 1 << 19, CROM_WORDS = 1 << 15;
     localparam integer HHW = `HDC_HHW, HBAW = 16;
+    localparam integer XSQ = 4, XSW = 16;       // X_SEL: select quarters x lanes
     localparam integer MG = `HDC_MG, MBAW = 17, ML = 2;   // ME weight tile: read latency ML (RL)
     localparam integer KV_WORDS = 32768, VM_ELEMS = 65536, VOCAB = 4040, PROG_WORDS = 1 << PAW;
 
@@ -76,6 +83,7 @@ module tb_hdc_core_v41x (input wire clk);
     wire [SW-1:0] ewrom_re; wire [SW*AW-1:0] ewrom_addr; reg [SW*G*W*16-1:0] ewrom_q;
     wire qrom_re; wire [AW-1:0] qrom_addr; reg [BL*QLB-1:0] qrom_q;
     wire hrom_re; wire [AW-1:0] hrom_addr; reg [HS*HNL*32-1:0] hrom_q;
+    wire [XSQ-1:0] vsl_re; wire [XSQ*AW-1:0] vsl_addr; reg [XSQ*XSW*32-1:0] vsl_q;
     wire [7:0] mb_re; wire [8*MBAW-1:0] mb_addr; reg [8*MG*32-1:0] mb_p [0:ML-1];
     wire [7:0] hb_re; wire [8*HBAW-1:0] hb_addr; reg [8*HHW*32-1:0] hb_q;
     wire [HS-1:0] vh_re; wire [HS*AW-1:0] vh_addr; reg [HS*32-1:0] vh_q;
@@ -103,6 +111,7 @@ module tb_hdc_core_v41x (input wire clk);
 
     reg [AW-1:0] cfg [0:15];                   // tools/hdc_images_v41x.py cfg.hex: [0] the index keys' KV word base
     ot_hdc_core_v41x #(.SW(SW), .HS(HS), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
+                       .X_SEL(`HDC_X_SEL), .X_EG(`HDC_X_EG), .XSQ(XSQ), .XSW(XSW),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) dut (
         .cfg_ik_base(cfg[0]), .cfg_me_xs(cfg[1][3:0]),
         .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
@@ -124,6 +133,7 @@ module tb_hdc_core_v41x (input wire clk);
         .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .vq_re(vq_re), .vq_addr(vq_addr), .vq_q(vq_q),
         .vr_re(vr_re), .vr_addr(vr_addr), .vr_q(vr_q), .wqr_re(wqr_re), .wqr_addr(wqr_addr), .wqr_q(wqr_q),
         .wxr_re(wxr_re), .wxr_addr(wxr_addr), .wxr_q(wxr_q),
+        .vsl_re(vsl_re), .vsl_addr(vsl_addr), .vsl_q(vsl_q),
         .vw_me_we(vw_me_we), .vw_me_addr(vw_me_addr), .vw_me_mask(vw_me_mask), .vw_me_data(vw_me_data),
         .vw_su_we(vw_su_we), .vw_su_addr(vw_su_addr), .vw_su_data(vw_su_data),
         .vw_rd_we(vw_rd_we), .vw_rd_addr(vw_rd_addr), .vw_rd_data(vw_rd_data),
@@ -159,6 +169,8 @@ module tb_hdc_core_v41x (input wire clk);
         if (vr_re) vr_q <= vm[vr_addr[15:0]];
         if (wqr_re) for (q = 0; q < 32; q = q + 1) wqr_q[32*q +: 32] <= vm[wqr_addr[15:0] + q];
         if (wxr_re) for (q = 0; q < 32; q = q + 1) wxr_q[32*q +: 32] <= vm[wxr_addr[15:0] + q];
+        for (q = 0; q < XSQ; q = q + 1)
+            if (vsl_re[q]) for (l = 0; l < XSW; l = l + 1) vsl_q[32*(q*XSW + l) +: 32] <= vm[vsl_addr[q*AW +: 16] + l];
         for (q = 0; q < SW; q = q + 1)
             if (kv_we[q]) kv[kv_waddr[q*AW+4 +: 15]][32*kv_waddr[q*AW +: 4] +: 32] <= kv_wdata[32*q +: 32];
         for (q = 0; q < G; q = q + 1)
@@ -189,6 +201,17 @@ module tb_hdc_core_v41x (input wire clk);
             assign x_cnt_me = {dut.g_me_x.u_mw.dbg_ops, dut.g_me_x.u_mw.dbg_elems};
         end else begin : g_cnt_me_n
             assign x_cnt_me = 64'd0;
+        end
+    endgenerate
+    wire [63:0] x_cnt_sel, x_cnt_eg;
+    wire [31:0] x_sel_reps;
+    generate
+        if (`HDC_X_SEL || `HDC_X_EG) begin : g_cnt_xu
+            assign x_cnt_sel = {dut.g_xu_x.u_xu.dbg_sel_ops, dut.g_xu_x.u_xu.dbg_sel_elems};
+            assign x_sel_reps = dut.g_xu_x.u_xu.dbg_sel_reps;
+            assign x_cnt_eg = {dut.g_xu_x.u_xu.dbg_eg_ops, dut.g_xu_x.u_xu.dbg_eg_elems};
+        end else begin : g_cnt_xu_n
+            assign x_cnt_sel = 64'd0; assign x_sel_reps = 32'd0; assign x_cnt_eg = 64'd0;
         end
     endgenerate
     reg [8*512-1:0] dir;
@@ -255,6 +278,9 @@ module tb_hdc_core_v41x (input wire clk);
         begin
             if (`HDC_X_HE) $display("XCNT unit=he ops=%0d elems=%0d", x_cnt_he[63:32], x_cnt_he[31:0]);
             if (`HDC_X_ME) $display("XCNT unit=me ops=%0d elems=%0d", x_cnt_me[63:32], x_cnt_me[31:0]);
+            if (`HDC_X_SEL) $display("XCNT unit=sel ops=%0d elems=%0d reps=%0d", x_cnt_sel[63:32], x_cnt_sel[31:0],
+                                     x_sel_reps);
+            if (`HDC_X_EG) $display("XCNT unit=eg ops=%0d elems=%0d", x_cnt_eg[63:32], x_cnt_eg[31:0]);
         end
     endtask
 

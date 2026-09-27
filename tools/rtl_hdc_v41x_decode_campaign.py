@@ -48,8 +48,8 @@ import hdc_isa_v41 as I  # noqa: E402
 
 OUT = ROOT / "results/rtl/hdc_v41x_decode_campaign.json"
 # the re-specified units (bring-up switches of ot_hdc_core_v41x) and the R-ARITH classes each one brings
-X_UNITS = ("he", "me", "att", "idx")
-X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",)}
+X_UNITS = ("he", "me", "att", "idx", "sel", "eg")
+X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "sel": (), "eg": ()}
 UNITS = X_UNITS           # set by main(): the units built re-specified
 PARAMS = {"hhw": 8, "mg": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
@@ -66,6 +66,8 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
        [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt",
                                                  "ot_hdc_v41x_wgt_bdot", "ot_hdc_v41x_wgt_red", "ot_hdc_v41x_wgt_mac",
                                                  "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_me_adapt",
+                                                 "ot_hdc_v41x_sel_lib", "ot_hdc_v41x_sel_slice", "ot_hdc_v41x_sel",
+                                                 "ot_hdc_v41x_egather", "ot_hdc_v41x_xu_adapt",
                                                  "ot_hdc_core_v41x")])
 SVH = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
 TB = ROOT / "rtl/test/tb_hdc_core_v41x.sv"
@@ -82,13 +84,58 @@ ISSUE = re.compile(r"ISSUE cyc=(\d+) pc=(\d+) unit=(\d+)")
 STEP = re.compile(r"STEP pos=(\d+) in=(\d+) out=(\d+) gold=(\d+) cycles=(\d+) fault=(\d+)")
 XCNT = re.compile(r"XCNT unit=(\w+) ops=(\d+) elems=(\d+)")
 # classes whose counters the bench prints (a re-specified unit not listed here has no activation proof yet)
-COUNTED = ("he", "me")
+COUNTED = ("he", "me", "sel", "eg")
 # coverage the runs do NOT prove, per unit (recorded, never counted as proven)
 NOT_EXERCISED = {
     "he": ["MTP lane multiplier (mx_m > 1): the MTP program is not run on this core"],
     "me": ["wo_a in the checkpoint's FP8 image format (the image feeds it as expanded BF16)",
            "MTP lane multiplier (mx_m > 1) and the MTP layout's images"],
+    "sel": ["static-count SELECTs (router top-6 over FP32 biased scores, a draft's top-1 over FP32 logits) stay "
+            "on the as-built FP32 select: the re-specified select takes BF16 keys only",
+            "the overflow fallback (rep_req re-stream): the reduced vehicle's <= 128 scores never overflow the "
+            "line memories (reps counted, expected 0)",
+            "k > 16 and the candidate top-2,048 (ot_hdc_v41x_sel_cand): the reduced vehicle's index top-k is 16",
+            "the MTP program (sel_first of a draft top-1 is FP32, as-built path)"],
+    "eg": ["BEATS > 1 (the shipped 256-code rows): the reduced vehicle's rows are 32 codes, one beat",
+           "24 separate column-bank ROMs and the links between them: the core's single Engram ROM port stands "
+           "in, one slice read a cycle",
+           "more than one token slot in flight (the core runs one EGATHER at a time)"],
 }
+
+
+def expected_xu(prog, pos):
+    """What the re-specified XU paths must have processed in ONE step at `pos`: the index-score SELECTs'
+    scores (sum of n = xu_n + DYN over the dynamic-count SELECTs the step runs: X_SEL's ops) and the
+    EGATHER ops' rows (24 each)."""
+    dyn = I.dyn_values(0, pos)
+    sel_ops = sel_n = eg_ops = 0
+    for f in prog:
+        if f["unit"] != I.UNIT_XU:
+            continue
+        if (f["pred"] == I.PRED_ODD and not pos & 1) or (f["pred"] == I.PRED_NZ and pos == 0):
+            continue
+        if f["xu_op"] == I.XU_SEL and f["xu_d_n"] != 0:
+            n = f["xu_n"] + dyn[f["xu_d_n"]]
+            if n:
+                sel_ops += 1
+                sel_n += n
+        elif f["xu_op"] == I.XU_EGATHER:
+            eg_ops += 1
+    return {"sel": {"ops": sel_ops, "elements": sel_n}, "eg": {"ops": eg_ops, "elements": 24 * eg_ops}}
+
+
+def xu_check(rec, img):
+    """A single step's sel / eg counters must equal what its program asks of them."""
+    import hdc_timing_v41 as T
+    exp = expected_xu(T.load_prog(img), rec["position"])
+    cnt = rec["activation"]["counters"]
+    bad = {u: {"counted": cnt.get(u), "expected": exp[u]} for u in ("sel", "eg")
+           if u in UNITS and cnt.get(u) != exp[u]}
+    rec["activation"]["expected_from_program"] = {u: exp[u] for u in ("sel", "eg") if u in UNITS}
+    rec["activation"]["count_mismatches"] = bad
+    rec["activation"]["pass"] = rec["activation"]["pass"] and not bad
+    rec["pass"] = rec["pass"] and not bad
+    return rec
 
 
 def counters(run):
@@ -187,7 +234,10 @@ def single(exe, img, trace=True):
            "pass": "PASS" in run and nxt == exp_tok and fault == 0 and bad_lg + bad_vm + bad_kv == 0}
     rec["activation"] = activation(counters(run))
     rec["pass"] = rec["pass"] and rec["activation"]["pass"]
-    return rec, run
+    m = re.search(r"XCNT unit=sel .* reps=(\d+)", run)
+    if m:
+        rec["activation"]["sel_replays"] = int(m.group(1))
+    return xu_check(rec, img), run
 
 
 def banking(prog, pos, lanes):
