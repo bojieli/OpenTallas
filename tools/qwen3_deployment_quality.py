@@ -504,7 +504,7 @@ class Qwen3:
         self.bits = {}
         self.wfile = None
         if wfile is not None:
-            self.wfile = torch.load(wfile, map_location="cpu")
+            self.wfile = wfile if isinstance(wfile, dict) else torch.load(wfile, map_location="cpu")
             assert self.wfile["fold"] == (arith == "contract"), "GPTQ file was built for the other norm placement"
             self.wfmt = self.wfile["fmt"]
         sd = load_state(path, self.device)
@@ -1038,7 +1038,8 @@ def gptq_build(snap, fmt, fold, out_path, nseq=128, seqlen=2048, chunk=8):
     nw = sd["model.norm.weight"].to(dev)
     c, s_, b = _gptq_matrix(sd["lm_head.weight"].to(dev), hess(lambda c0: rms(xs[c0:c0 + chunk].to(dev), nw), Hd), fmt)
     res["w"]["lm_head"] = (c, s_, b)
-    torch.save(res, out_path)
+    if out_path:
+        torch.save(res, out_path)
     return res
 
 
@@ -1173,6 +1174,8 @@ def main():
     ap.add_argument("--build-gptq", default=None, metavar="FMT", help="build GPTQ weights of FMT into --out")
     ap.add_argument("--fold", action="store_true", help="--build-gptq for the contract's norm-folded matrices")
     ap.add_argument("--gptq-nseq", type=int, default=128)
+    ap.add_argument("--gptq-inline", default=None, metavar="FMT",
+                    help="GPTQ-quantise FMT in this process (no dump on disk) and evaluate with it")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     if args.build_gptq:
@@ -1187,10 +1190,18 @@ def main():
     tok = AutoTokenizer.from_pretrained(str(snap))
     arith, wf, kv = MODES[args.mode]
     t0 = time.time()
-    model = Qwen3(snap, arith, wf, kv, groups=args.groups, wfile=args.wfile)
-    if args.wfile:
+    wsrc = args.wfile
+    if args.gptq_inline:
+        tg = time.time()
+        wsrc = gptq_build(snap, args.gptq_inline, arith == "contract", None, nseq=args.gptq_nseq)
+        wsrc["build_s"] = time.time() - tg
+        torch.cuda.empty_cache()
+    gptq_meta = {k: v for k, v in wsrc.items() if k != "w"} if isinstance(wsrc, dict) else None
+    model = Qwen3(snap, arith, wf, kv, groups=args.groups, wfile=wsrc)
+    del wsrc
+    if args.wfile or args.gptq_inline:
         wf = model.wfmt + "_gptq"
-    out = {"mode": args.mode, "arith": arith, "weights": wf, "kv": kv, "groups": args.groups, "wfile": args.wfile,
+    out = {"mode": args.mode, "arith": arith, "weights": wf, "kv": kv, "groups": args.groups, "wfile": args.wfile, "gptq": gptq_meta,
            "snapshot": str(snap), "load_s": time.time() - t0,
            "weight_bits": {k: float(np.mean(v)) for k, v in model.bits.items()}}
     print(f"[{args.mode}] loaded in {out['load_s']:.0f}s bits={out['weight_bits']} "
