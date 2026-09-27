@@ -112,27 +112,26 @@ module tb_hdc_v41x_idx_pool #(
         rd_x = px[RL-1];
     end
 
-    // collector and head-sum stage
-    wire             k_v;
-    wire [IH*32-1:0] k_score;
-    wire [IH-1:0]    k_fault;
-    ot_hdc_v41x_idx_pcol #(.G(G), .M(M), .IH(IH)) col (.clk(clk), .rst_n(rst_n), .i_v(o_v), .i_smask(o_smask),
-        .i_ys(o_ys), .i_fs(o_fs), .i_mask(o_mask), .i_y(o_y), .i_f(o_f), .k_v(k_v), .k_score(k_score),
-        .k_fault(k_fault));
+    // Reusable output bridge: the metadata stream advances on ready/valid,
+    // while the pool's dot results arrive after their independent pipeline.
     reg        w_v = 1'b0;
     reg [7:0]  w_head = 0;
     reg [15:0] w_w = 0;
     reg [31:0] w_qsc = 0;
-    integer kin = 0;
-    wire [1:0] meta = mm[kin];
+    integer mfeed = 0;
+    wire m_ready;
+    wire [1:0] meta = mm[mfeed];
     wire        h_v;
-    wire [0:0]  h_kv, h_fault;
+    wire        h_fault, protocol_fault;
     wire [15:0] h_score;
     wire [47:0] cnt_ref;
-    ot_hdc_v41x_idx_hsum #(.IH(IH), .NKT(1), .NBQ(4)) hs (.clk(clk), .rst_n(rst_n), .w_v(w_v), .w_head(w_head),
-        .w_w(w_w), .w_qsc(w_qsc), .i_v(k_v), .i_kv(1'b1), .i_ref(meta[1]), .i_keep(meta[0]), .i_score(k_score),
-        .i_fault(k_fault), .o_v(h_v), .o_kv(h_kv), .o_score(h_score), .o_fault(h_fault), .cnt_refused(cnt_ref));
-    always @(posedge clk) if (k_v) kin <= kin + 1;
+    ot_hdc_v41x_idx_pool_finish #(.G(G), .M(M), .IH(IH), .MD(128)) finish (
+        .clk(clk), .rst_n(rst_n), .m_v(mfeed < nkey), .m_ready(m_ready), .m_keep(meta[0]), .m_ref(meta[1]),
+        .w_v(w_v), .w_head(w_head), .w_w(w_w), .w_qsc(w_qsc),
+        .p_v(o_v), .p_smask(o_smask), .p_ys(o_ys), .p_fs(o_fs), .p_mask(o_mask), .p_y(o_y), .p_f(o_f),
+        .o_v(h_v), .o_score(h_score), .o_fault(h_fault), .cnt_refused(cnt_ref),
+        .protocol_fault(protocol_fault));
+    always @(posedge clk) if (rst_n && mfeed < nkey && m_ready) mfeed <= mfeed + 1;
 
     integer stt = 0, tok = 0, h = 0, kend = 0, kout = 0, errors = 0, faults = 0, wait_c = 0;
     integer lat_last = -1, beats_exp = 0, first_out = -1, t_desc = -1, lat_first = -1;
@@ -142,9 +141,9 @@ module tb_hdc_v41x_idx_pool #(
         if (cyc == 4) rst_n <= 1'b1;
         if (h_v) begin
             e = em[kout];
-            if (e[16] ? !h_fault[0] : (h_fault[0] || h_score != e[15:0])) begin
+            if (e[16] ? !h_fault : (h_fault || h_score != e[15:0])) begin
                 errors = errors + 1;
-                if (errors <= 10) $display("MISMATCH key %0d got %h f%0d exp %h", kout, h_score, h_fault[0], e);
+                if (errors <= 10) $display("MISMATCH key %0d got %h f%0d exp %h", kout, h_score, h_fault, e);
             end else if (e[16]) faults = faults + 1;
             if (lat_first < 0) lat_first = cyc - t_desc;
             kout = kout + 1;
@@ -175,6 +174,7 @@ module tb_hdc_v41x_idx_pool #(
                end
             2: if (!d_v && kout >= kend) begin tok = tok + 1; stt = 0; end
             default: begin
+                if (protocol_fault || mfeed != nkey) errors = errors + 1;
                 $display("V41XPOOLCNT stream_beats=%0d split_beats=%0d rom_beats=%0d expected_beats=%0d refused=%0d",
                          cnt_stream, cnt_split, cnt_rom, beats_exp, cnt_ref);
                 $display("V41XPOOL keys=%0d checked=%0d errors=%0d faults_expected_and_raised=%0d lat_first=%0d lat_last=%0d cycles=%0d",

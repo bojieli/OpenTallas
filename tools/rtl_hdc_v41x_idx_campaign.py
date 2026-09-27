@@ -385,7 +385,8 @@ def hsum_bench(work: Path, name, toks, ih):
 
 POOL_RTL = [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_wgt_bdot", "ot_hdc_v41x_wgt_red", "ot_hdc_v41x_wgt_mac",
                                                        "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_idx_pcol",
-                                                       "ot_hdc_v41x_idx_hsum", "ot_hdc_v41x_idx_arith")] + \
+                                                       "ot_hdc_v41x_idx_hsum", "ot_hdc_v41x_idx_arith",
+                                                       "ot_hdc_v41x_idx_pool_finish")] + \
     [ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROOT / "rtl/hdc/ot_hdc_delay.sv"]
 POOL_TB = ROOT / "rtl/test/tb_hdc_v41x_idx_pool.sv"
 E2M1_E4M3 = [0x00, 0x30, 0x38, 0x3C, 0x40, 0x44, 0x48, 0x4C]
@@ -666,7 +667,7 @@ def main():
     rng = np.random.default_rng(20260926)
     rec = {"schema": "opentallas-hdc-v41x-idx-campaign-v1", "block": "idx",
            "tool": "tools/rtl_hdc_v41x_idx_campaign.py", "arith": G.ARITH, "spec": SPEC,
-           "sources": {str(p.relative_to(ROOT)): sha(p) for p in RTL + HS_RTL[:1] + POOL_RTL[:5] + [VLT, TB, HS_TB, POOL_TB, HARNESS, ROOT / "tools/hdc_golden_v41.py",
+           "sources": {str(p.relative_to(ROOT)): sha(p) for p in RTL + HS_RTL[:1] + POOL_RTL + [VLT, TB, HS_TB, POOL_TB, HARNESS, ROOT / "tools/hdc_golden_v41.py",
                                                                         Path(__file__).resolve()]}}
     per_class = 2 if a.quick else 12
     nkeys = (lambda: int(rng.integers(1, 40))) if a.quick else (lambda: int(rng.integers(1, 400)))
@@ -698,6 +699,7 @@ def main():
         # only them, so the dedicated engine and HBM scans are not recompiled.
         toks = [finish(rand_token(rng, 32, 4, nkeys(), c)) for c in CLASSES for _ in range(per_class)]
         assert sum(len(t["keep"]) for t in toks) == rec["shipped"]["mixed"]["keys"]
+        rec["shipped"]["pooled"] = pool_bench(work, "shipped", toks, 32, GT=1, M=2)
         rec["shipped"]["pooled_core_geometry"] = pool_bench(work, "shipped_core", toks, 32, GT=4, M=2)
     for name, (ih, nb) in shapes.items():
         if reused is not None or (a.only and a.only != name):
