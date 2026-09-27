@@ -9,11 +9,11 @@
 // copies every flit of the packet to every port of the set).  Ids at or above
 // DESTS, and ids whose set is empty, are dropped and counted.
 //
-// Inputs.  Each input port has a BUF-flit buffer.  The upstream sender either
-// holds credits (initialised to BUF, one returned per `in_credit` pulse, one
-// spent per flit sent) or, when it sits next to the router, watches
-// `in_ready`, which is a function of registers only.  A flit sent without a
-// credit is lost and latches `overflow`.
+// Inputs. Each input port has a BUF-flit buffer. In the default credit-pulse
+// mode, the sender spends one of BUF initial credits per flit and receives one
+// `in_credit` pulse per flit leaving the buffer. Sending without a credit
+// latches `overflow`. In ready/valid mode, a sender holds valid and data until
+// `in_ready`; valid while full is ordinary backpressure and no flit is lost.
 //
 // Switching.  Wormhole: an output port, once granted to an input's packet,
 // stays with it until the last flit.  A multicast packet is granted ALL of its
@@ -42,6 +42,7 @@ module ot_rom_fabric_router #(
     parameter integer BUF      = 4,        // input buffer depth, in flits (= credits)
     parameter integer DESTS    = 32,       // routing-table entries
     parameter integer DEST_LSB = 0,        // header bit of the 8-bit destination id
+    parameter integer INPUT_READY_VALID = 0, // 0: credit-pulse sender; 1: held ready/valid sender
     parameter [DESTS*NP-1:0] ROUTE_INIT = {DESTS*NP{1'b0}}   // entry d at [d*NP +: NP]
 ) (
     input  wire               clk,
@@ -215,7 +216,7 @@ module ot_rom_fabric_router #(
             busy <= (busy & ~release_out) | gmask;
             // the pointer waits on a blocked candidate (its set stays reserved)
             if (!cand[ptr] || grant[ptr]) ptr <= (ptr == NP - 1) ? {PW{1'b0}} : ptr + 1'b1;
-            if ((in_valid & ~in_ready) != 0) overflow <= 1'b1;
+            if (!INPUT_READY_VALID && (in_valid & ~in_ready) != 0) overflow <= 1'b1;
         end
     end
 

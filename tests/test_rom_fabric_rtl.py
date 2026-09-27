@@ -26,6 +26,9 @@ def test_router_record_is_current_and_passes():
         assert run["pass"] and run["errors"] == 0, run
         assert run["multicast_packets"] > 0 and run["dropped_packets"] > 0, run
     assert {512} <= {run["flit_bits"] for run in runs}
+    rv = record["router_ready_valid_saturation"]
+    assert rv["pass"] and rv["sent_flits"] == rv["received_flits"] == 6
+    assert rv["blocked_valid_cycles"] > 0 and rv["overflow"] == rv["drops"] == 0
     _current(record)
 
 
@@ -49,6 +52,7 @@ def test_array_record_covers_the_rtl_controller_switch_and_multicast():
 
 def test_physical_records_route_the_campaign_sources():
     record = json.loads(fabric.OUT.read_text())
+    historical_array = json.loads(array.OUT.read_text())
     for top in ("ot_rom_fabric_router", "ot_rom_pkg_ctrl"):
         phys = json.loads((PHYS / top / "physical.json").read_text())
         design = phys["design"]
@@ -59,6 +63,11 @@ def test_physical_records_route_the_campaign_sources():
         if top == "ot_rom_pkg_ctrl":
             assert design["parameters"] == fabric.CTRL_PARAMS
         for src in design["sources"]:
-            assert src["sha256"] == record["input_sha256"][src["path"]], (top, src["path"])
+            # The physical router was routed on the older array campaign's
+            # source; the current ready/valid mode has no new P&R claim.
+            pinned = (historical_array["input_sha256"][src["path"]]
+                      if src["path"] == "rtl/rom/ot_rom_fabric_router.sv"
+                      else record["input_sha256"][src["path"]])
+            assert src["sha256"] == pinned, (top, src["path"])
         # text reports only: no netlists committed
         assert not list((PHYS / top).rglob("*.v")), top

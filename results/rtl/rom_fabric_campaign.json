@@ -1,10 +1,11 @@
 {
-  "claim_boundary": "functional RTL simulation (Icarus) of the packet router under random traffic and a Verilator lint of the router and the package controller; token-level results are results/rtl/hdc_array_campaign.json, clock rate the ASAP7 physical records.",
+  "claim_boundary": "Functional RTL simulation (Icarus) of credit-pulse router input under random traffic and a saturated ready/valid input with ordered flit conservation; Verilator lint of router and package controller. Historical array and ASAP7 physical records remain pinned to their own source hashes and do not establish current-source timing.",
   "input_sha256": {
-    "rtl/rom/ot_rom_fabric_router.sv": "f4c2f0737c03cec072c8cabc23a873090a441d0ffdef26d3dc1a93e9f8e60277",
+    "rtl/rom/ot_rom_fabric_router.sv": "327b720da88dbdd08289d5e7f599a1c779b91459189a25c0629e7ca2e2a45c1c",
     "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
     "rtl/test/tb_rom_fabric_router.sv": "6037982c3f2585d350a45ae37d63115707868643500e95dd4b7c7c45c518b8f0",
-    "tools/rtl_rom_fabric_campaign.py": "455515d9d45c60e3ad9a35c8394b8245b957561a6a57a6d5c3b40c3dd94d9a3b"
+    "rtl/test/tb_rom_fabric_router_ready_valid.sv": "d7277a44f10d6735ac9cdb82ce8cbb8eb63bfdf0a28c4027393a747c9dbd8526",
+    "tools/rtl_rom_fabric_campaign.py": "74f269d84fca155334f027e682d28ae8c5566b38963d9ec34764de1f94465f07"
   },
   "router_random_traffic": [
     {
@@ -128,7 +129,15 @@
       "sent_flits": 3773
     }
   ],
-  "schema": "opentallas.rom-fabric-campaign.v1",
+  "router_ready_valid_saturation": {
+    "blocked_valid_cycles": 10,
+    "drops": 0,
+    "overflow": 0,
+    "pass": true,
+    "received_flits": 6,
+    "sent_flits": 6
+  },
+  "schema": "opentallas.rom-fabric-campaign.v2",
   "status": "pass",
   "verilator_lint": {
     "flags": [

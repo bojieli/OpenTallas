@@ -137,7 +137,8 @@ module tb_hdc_v41x_array #(
         end else begin : g_star
             wire [NODES-1:0] ri_v, ri_r, ri_l, ro_v, ro_r, ro_l, ri_c;
             wire [NODES*FLIT-1:0] ri_d, ro_d;
-            ot_rom_fabric_router #(.NP(NODES), .FW(FLIT), .BUF(4), .DESTS(DESTS), .ROUTE_INIT(ROUTE)) u_router (
+            ot_rom_fabric_router #(.NP(NODES), .FW(FLIT), .BUF(4), .DESTS(DESTS),
+                                   .INPUT_READY_VALID(1), .ROUTE_INIT(ROUTE)) u_router (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(ri_v), .in_ready(ri_r), .in_credit(ri_c), .in_data(ri_d), .in_last(ri_l),
                 .out_valid(ro_v), .out_ready(ro_r), .out_data(ro_d), .out_last(ro_l),

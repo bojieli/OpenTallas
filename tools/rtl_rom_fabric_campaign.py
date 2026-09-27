@@ -12,6 +12,8 @@ Runs, from the repository root:
    levels and seeds, including the routed width (512-bit flits, 5 ports).
    Each run checks credits, payload integrity, wormhole contiguity, per-input
    ordering on every output, exact multicast delivery sets and drops.
+3. a saturated ready/valid input test that holds the blocked flit and checks
+   every accepted flit arrives once, in order, with no overflow alarm.
 
 Token-level verification of the controller and of the router inside an array
 of decode cores is tools/rtl_hdc_array_campaign.py.  Writes
@@ -31,6 +33,7 @@ OUT = ROOT / "results/rtl/rom_fabric_campaign.json"
 ROUTER = ROOT / "rtl/rom/ot_rom_fabric_router.sv"
 CTRL = ROOT / "rtl/rom/ot_rom_pkg_ctrl.sv"
 TB = ROOT / "rtl/test/tb_rom_fabric_router.sv"
+TB_RV = ROOT / "rtl/test/tb_rom_fabric_router_ready_valid.sv"
 LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH")
 CTRL_PARAMS = {"SOURCE": 1, "RESULT_PARTS": 4, "SEND_HIDDEN": 1, "SEND_RESULT": 1, "COMBINE_IN": 1,
                "ROW0": 1024, "TXB": 8}
@@ -39,6 +42,7 @@ RUNS = [(5, 64, 4, 400, 70, 1), (5, 64, 4, 400, 70, 2), (5, 64, 4, 400, 30, 3), 
         (3, 64, 2, 400, 60, 5), (8, 64, 4, 300, 70, 6), (8, 64, 1, 300, 80, 7), (5, 512, 4, 150, 70, 8)]
 RES = re.compile(r"ROUTER_TB ports=(\d+) buf=(\d+) packets=(\d+) multicast_packets=(\d+) dropped=(\d+) "
                  r"sent_flits=(\d+) received_flits=(\d+) cycles=(\d+) errors=(\d+)")
+RV_RES = re.compile(r"ROUTER_READY_VALID sent=(\d+) received=(\d+) stalled=(\d+) overflow=(\d+) drops=(\d+)")
 
 
 def sha(path: Path) -> str:
@@ -59,6 +63,20 @@ def router_run(scratch: Path, np_, fw, buf, npkt, ready, seed) -> dict:
             "delivered_flits": recv, "cycles": cyc, "errors": err, "pass": "PASS" in out and err == 0}
 
 
+def ready_valid_run(scratch: Path) -> dict:
+    vvp = scratch / "router_ready_valid.vvp"
+    subprocess.run(["iverilog", "-g2012", "-s", "tb_rom_fabric_router_ready_valid",
+                    "-o", str(vvp), str(TB_RV), str(ROUTER)], check=True)
+    out = subprocess.run(["vvp", "-n", str(vvp)], check=True, capture_output=True, text=True).stdout
+    m = RV_RES.search(out)
+    if not m:
+        raise RuntimeError(f"ready/valid result missing: {out}")
+    sent, received, stalled, overflow, drops = map(int, m.groups())
+    return {"sent_flits": sent, "received_flits": received, "blocked_valid_cycles": stalled,
+            "overflow": overflow, "drops": drops,
+            "pass": "PASS" in out and sent == received == 6 and stalled > 0 and overflow == drops == 0}
+
+
 def run() -> dict:
     lint = {}
     for name, src, params in (("ot_rom_fabric_router", ROUTER, {}), ("ot_rom_pkg_ctrl", CTRL, CTRL_PARAMS)):
@@ -68,16 +86,19 @@ def run() -> dict:
                       "messages": r.stderr.strip().splitlines()[:20]}
     with tempfile.TemporaryDirectory() as tmp, ThreadPoolExecutor(len(RUNS)) as pool:
         runs = list(pool.map(lambda c: router_run(Path(tmp), *c), RUNS))
-    ok = all(r["pass"] for r in runs) and all(v["returncode"] == 0 for v in lint.values())
+        rv = ready_valid_run(Path(tmp))
+    ok = all(r["pass"] for r in runs) and rv["pass"] and all(v["returncode"] == 0 for v in lint.values())
     return {
-        "schema": "opentallas.rom-fabric-campaign.v1",
+        "schema": "opentallas.rom-fabric-campaign.v2",
         "status": "pass" if ok else "fail",
-        "claim_boundary": "functional RTL simulation (Icarus) of the packet router under random traffic and "
-                          "a Verilator lint of the router and the package controller; token-level results "
-                          "are results/rtl/hdc_array_campaign.json, clock rate the ASAP7 physical records.",
+        "claim_boundary": "Functional RTL simulation (Icarus) of credit-pulse router input under random "
+                          "traffic and a saturated ready/valid input with ordered flit conservation; Verilator "
+                          "lint of router and package controller. Historical array and ASAP7 physical records "
+                          "remain pinned to their own source hashes and do not establish current-source timing.",
         "verilator_lint": {"flags": list(LINT_FLAGS), **lint},
         "router_random_traffic": runs,
-        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (ROUTER, CTRL, TB, Path(__file__))},
+        "router_ready_valid_saturation": rv,
+        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (ROUTER, CTRL, TB, TB_RV, Path(__file__))},
     }
 
 
@@ -91,6 +112,7 @@ def main() -> int:
         print("pass" if r["pass"] else "FAIL", {k: r[k] for k in ("ports", "flit_bits", "buffer_flits",
                                                                   "ready_percent", "packets", "multicast_packets",
                                                                   "dropped_packets", "cycles", "errors")})
+    print("ready-valid", result["router_ready_valid_saturation"])
     print(result["status"], "lint", {k: v["returncode"] for k, v in result["verilator_lint"].items() if k != "flags"})
     return 0 if result["status"] == "pass" else 1
 
