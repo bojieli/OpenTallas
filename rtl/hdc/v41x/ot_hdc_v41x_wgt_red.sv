@@ -69,17 +69,24 @@ endmodule
 // The chunk chain: term j (j = 0..7) presented at cycle t + SK(j), SK = 0,0,3,6,..,18;
 // the chunk sum leaves at t + 21.  v[j] is term j's valid (the lanes of a beat are valid
 // together, skewed); adder j runs on v[j].
+// SPLIT (sp4, aligned with term 4): the chunk carries two rows of 4 terms -- adder 4 takes
+// +0 instead of s3, so lanes 4..7 restart (add(+0, t4) is canonical t4, exactly the +0 start of
+// a sequential sum), and s3, the first row's sum, is delayed 12 cycles to leave with s7 on s1st.
 module ot_hdc_v41x_wgt_chain #(
-    parameter integer M = 1
+    parameter integer M = 1,
+    parameter integer SPLIT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire [7:0]        v,
+    input  wire              sp4,
     input  wire [8*M*32-1:0] t,
     input  wire [8*M-1:0]    tf,
     output wire              ov,
     output wire [M*32-1:0]   s,
-    output wire [M-1:0]      sf
+    output wire [M-1:0]      sf,
+    output wire [M*32-1:0]   s1st,
+    output wire [M-1:0]      s1stf
 );
     wire [8*M*32-1:0] c;
     wire [8*M-1:0]    cf;
@@ -91,16 +98,26 @@ module ot_hdc_v41x_wgt_chain #(
     generate
         for (j = 1; j < 8; j = j + 1) begin : g_add
             wire unused_t;
+            wire rs = (SPLIT != 0) && (j == 4) && sp4;
             ot_hdc_v41x_wgt_add #(.M(M), .TW(1)) u_a (
                 .clk(clk), .rst_n(rst_n), .v(v[j]),
-                .a(c[(j-1)*M*32 +: M*32]), .af(cf[(j-1)*M +: M]), .b(t[j*M*32 +: M*32]), .bf(tf[j*M +: M]),
+                .a(rs ? {(M*32){1'b0}} : c[(j-1)*M*32 +: M*32]), .af(rs ? {M{1'b0}} : cf[(j-1)*M +: M]),
+                .b(t[j*M*32 +: M*32]), .bf(tf[j*M +: M]),
                 .t(1'b0), .ov(cv[j]), .y(c[j*M*32 +: M*32]), .yf(cf[j*M +: M]), .ot(unused_t));
+        end
+        if (SPLIT != 0) begin : g_tap
+            ot_hdc_delay #(.W(M*33), .D(12)) u_d (.clk(clk), .rst_n(rst_n), .d({cf[3*M +: M], c[3*M*32 +: M*32]}),
+                                                  .q({s1stf, s1st}));
+        end else begin : g_notap
+            assign s1st = {(M*32){1'b0}};
+            assign s1stf = {M{1'b0}};
         end
     endgenerate
     assign ov = cv[7];
     assign s = c[7*M*32 +: M*32];
     assign sf = cf[7*M +: M];
 endmodule
+
 
 // Temporal padded-tree combiner, up to LB levels.  Input: one partial per cycle at most,
 // `last` on a row's final partial, `nlev` the row's level count (ceil(log2(partials))).

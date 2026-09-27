@@ -131,7 +131,15 @@ module tb_hdc_core_v41x (input wire clk);
     wire [32*28-1:0] ikh_req_addr; wire [32*4-1:0] ikh_req_len, ikh_rsp_beat;
     wire [32*16-1:0] ikh_req_tag, ikh_rsp_tag; wire [32*256-1:0] ikh_rsp_data;
     wire ikw_v; wire [27:0] ikw_csec, ikw_ssec; wire [127:0] ikw_codes; wire [2:0] ikw_sslot; wire [7:0] ikw_scale;
-    generate if (`HDC_X_IDX) begin : g_ikh
+    wire [127:0] pikh_req_v,pikh_req_rdy,pikh_rsp_v,pikh_rsp_rdy;
+    wire [128*28-1:0] pikh_req_addr;
+    wire [128*4-1:0] pikh_req_len,pikh_rsp_beat;
+    wire [128*16-1:0] pikh_req_tag,pikh_rsp_tag;
+    wire [128*256-1:0] pikh_rsp_data;
+    wire pikw_v; wire [3:0] pikw_stack_mask;
+    wire [27:0] pikw_csec,pikw_ssec; wire [511:0] pikw_codes;
+    wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
+    generate if (`HDC_X_IDX == 1) begin : g_ikh
         ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(28), .DW(256), .MEM_WORDS(IKH_WORDS), .TAGW(16), .LENW(4), .BEATW(4),
                               .QD(64), .REFPB(3), .MEM_MODE(0)) u_ikh (
             .clk(clk), .rst_n(rst_n), .req_v(ikh_req_v), .req_rdy(ikh_req_rdy), .req_addr(ikh_req_addr),
@@ -158,9 +166,47 @@ module tb_hdc_core_v41x (input wire clk);
                 u_ikh.mem[ikw_ssec][32*ikw_sslot +: 32] = {24'd0, ikw_scale};
             end
         end
+        assign pikh_req_rdy = 0; assign pikh_rsp_v = 0; assign pikh_rsp_tag = 0;
+        assign pikh_rsp_beat = 0; assign pikh_rsp_data = 0;
+    end else if (`HDC_X_IDX == 2) begin : g_pikh
+        assign ikh_req_rdy = 0; assign ikh_rsp_v = 0; assign ikh_rsp_tag = 0;
+        assign ikh_rsp_beat = 0; assign ikh_rsp_data = 0;
+        reg [255:0] ikimg [0:IKH_WORDS-1];
+        reg ik_multi;
+        reg [8*512-1:0] ikdir;
+        initial begin
+            ik_multi = $test$plusargs("MULTI");
+            if (!$value$plusargs("DIR=%s", ikdir)) ikdir = ".";
+            for (integer i=0; i<IKH_WORDS; i=i+1) ikimg[i] = 256'd0;
+            if (!ik_multi) $readmemh({ikdir, "/ikhbm.hex"}, ikimg);
+        end
+        for (genvar s=0; s<4; s=s+1) begin : g_stack
+            ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(28), .DW(256), .MEM_WORDS(IKH_WORDS),
+                .TAGW(16), .LENW(4), .BEATW(4), .QD(64), .REFPB(3), .MEM_MODE(0)) hm (
+                .clk(clk), .rst_n(rst_n), .req_v(pikh_req_v[s*32 +: 32]),
+                .req_rdy(pikh_req_rdy[s*32 +: 32]), .req_addr(pikh_req_addr[s*32*28 +: 32*28]),
+                .req_len(pikh_req_len[s*32*4 +: 32*4]), .req_tag(pikh_req_tag[s*32*16 +: 32*16]),
+                .rsp_v(pikh_rsp_v[s*32 +: 32]), .rsp_rdy(pikh_rsp_rdy[s*32 +: 32]),
+                .rsp_tag(pikh_rsp_tag[s*32*16 +: 32*16]), .rsp_beat(pikh_rsp_beat[s*32*4 +: 32*4]),
+                .rsp_data(pikh_rsp_data[s*32*256 +: 32*256]));
+            reg loaded=0;
+            always @(posedge clk) begin
+                if (!loaded) begin
+                    for (integer i=0; i<IKH_WORDS; i=i+1) hm.mem[i]=ikimg[i];
+                    loaded<=1;
+                end
+                if (pikw_v && pikw_stack_mask[s]) begin
+                    hm.mem[pikw_csec]=pikw_codes[255:0];
+                    hm.mem[pikw_csec+1]=pikw_codes[511:256];
+                    hm.mem[pikw_ssec][32*pikw_sslot +: 32]=pikw_scales;
+                end
+            end
+        end
     end else begin : g_ikh_n
         assign ikh_req_rdy = 0; assign ikh_rsp_v = 0; assign ikh_rsp_tag = 0; assign ikh_rsp_beat = 0;
         assign ikh_rsp_data = 0;
+        assign pikh_req_rdy = 0; assign pikh_rsp_v = 0; assign pikh_rsp_tag = 0;
+        assign pikh_rsp_beat = 0; assign pikh_rsp_data = 0;
     end endgenerate
     reg [AW-1:0] cfg [0:15];                   // tools/hdc_images_v41x.py cfg.hex: [0] the index keys' KV word base
     ot_hdc_core_v41x #(.SW(SW), .HS(HS), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
@@ -172,6 +218,12 @@ module tb_hdc_core_v41x (input wire clk);
         .ikh_req_tag(ikh_req_tag), .ikh_rsp_v(ikh_rsp_v), .ikh_rsp_rdy(ikh_rsp_rdy), .ikh_rsp_tag(ikh_rsp_tag),
         .ikh_rsp_beat(ikh_rsp_beat), .ikh_rsp_data(ikh_rsp_data), .ikw_v(ikw_v), .ikw_csec(ikw_csec),
         .ikw_codes(ikw_codes), .ikw_ssec(ikw_ssec), .ikw_sslot(ikw_sslot), .ikw_scale(ikw_scale),
+        .pikh_req_v(pikh_req_v), .pikh_req_rdy(pikh_req_rdy), .pikh_req_addr(pikh_req_addr),
+        .pikh_req_len(pikh_req_len), .pikh_req_tag(pikh_req_tag), .pikh_rsp_v(pikh_rsp_v),
+        .pikh_rsp_rdy(pikh_rsp_rdy), .pikh_rsp_tag(pikh_rsp_tag), .pikh_rsp_beat(pikh_rsp_beat),
+        .pikh_rsp_data(pikh_rsp_data), .pikw_v(pikw_v), .pikw_stack_mask(pikw_stack_mask),
+        .pikw_csec(pikw_csec), .pikw_codes(pikw_codes), .pikw_ssec(pikw_ssec),
+        .pikw_sslot(pikw_sslot), .pikw_scales(pikw_scales),
         .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
         .xs_vi_re(xs_vi_re), .xs_vi_addr(xs_vi_addr), .xs_vi_q(xs_vi_q), .xs_rd_re(xs_rd_re),
         .xs_rd_addr(xs_rd_addr), .xs_rd_src(xs_rd_src), .xs_rd_q(xs_rd_q), .xs_vm_we(xs_vm_we),
@@ -273,13 +325,20 @@ module tb_hdc_core_v41x (input wire clk);
     wire [47:0] x_idx_ks, x_idx_hb, x_idx_sc, x_idx_hs;
     wire [31:0] x_idx_kw;
     generate
-        if (`HDC_X_IDX) begin : g_cnt_idx
-            assign x_cnt_idx = {dut.g_idx_x.u_idx.dbg_ops, dut.g_idx_x.u_idx.dbg_elems};
-            assign x_idx_ks = dut.g_idx_x.u_idx.dbg_keys_streamed;
-            assign x_idx_hb = dut.g_idx_x.u_idx.dbg_hbm_beats;
-            assign x_idx_sc = dut.g_idx_x.u_idx.dbg_keys_scored;
-            assign x_idx_hs = dut.g_idx_x.u_idx.dbg_headsums_fused;
-            assign x_idx_kw = dut.g_idx_x.u_kwr.dbg_keys;
+        if (`HDC_X_IDX == 2) begin : g_cnt_idx_pool
+            assign x_cnt_idx = {dut.g_idx_x.g_pool.u_idx.dbg_ops, dut.g_idx_x.g_pool.u_idx.dbg_elems};
+            assign x_idx_ks = dut.g_idx_x.g_pool.u_idx.dbg_keys_streamed;
+            assign x_idx_hb = dut.g_idx_x.g_pool.u_idx.dbg_hbm_beats;
+            assign x_idx_sc = dut.g_idx_x.g_pool.u_idx.dbg_keys_scored;
+            assign x_idx_hs = dut.g_idx_x.g_pool.u_idx.dbg_headsums_fused;
+            assign x_idx_kw = dut.g_idx_x.g_pool.u_kwr.dbg_keys;
+        end else if (`HDC_X_IDX == 1) begin : g_cnt_idx
+            assign x_cnt_idx = {dut.g_idx_x.g_legacy.u_idx.dbg_ops, dut.g_idx_x.g_legacy.u_idx.dbg_elems};
+            assign x_idx_ks = dut.g_idx_x.g_legacy.u_idx.dbg_keys_streamed;
+            assign x_idx_hb = dut.g_idx_x.g_legacy.u_idx.dbg_hbm_beats;
+            assign x_idx_sc = dut.g_idx_x.g_legacy.u_idx.dbg_keys_scored;
+            assign x_idx_hs = dut.g_idx_x.g_legacy.u_idx.dbg_headsums_fused;
+            assign x_idx_kw = dut.g_idx_x.g_legacy.u_kwr.dbg_keys;
         end else begin : g_cnt_idx_n
             assign x_cnt_idx = 64'd0; assign x_idx_ks = 0; assign x_idx_hb = 0; assign x_idx_sc = 0;
             assign x_idx_hs = 0; assign x_idx_kw = 0;
@@ -316,6 +375,83 @@ module tb_hdc_core_v41x (input wire clk);
             assign x_cnt_sel = 64'd0; assign x_sel_reps = 32'd0; assign x_cnt_eg = 64'd0;
         end
     endgenerate
+    // Optional first pooled instruction trace. Keep the default token log small;
+    // this shows the VM input, replicated HBM image, HBM request/response and
+    // score/write timing at the first fused indexer dispatch.
+    generate if (`HDC_X_IDX == 2) begin : g_idx_trace
+        integer ops=0, qreads=0, reqs=0, rsps=0, scores=0, writes=0, qewrites=0, linwrites=0;
+        reg active=0;
+        integer sector;
+        always @(posedge clk) if ($test$plusargs("IDXTRACE")) begin
+            if (dut.qe_go && (dut.pc==238 || dut.pc==240)) begin
+                $display("IDXTRACE qe_go cyc=%0d pc=%0d mode=%0d xbase=%0d obase=%0d nb=%0d vm_input=%h vm_output_before=%h",cycles,
+                    dut.pc,dut.qe_mode,dut.qe_xbase,dut.qe_obase,dut.qe_nb,
+                    vm[dut.qe_xbase],vm[dut.qe_obase]);
+                if ($test$plusargs("IDXSNAP")) begin
+                    if (dut.pc==238) $writememh({dir,"/rtl_vm_pc238.hex"},vm);
+                    else $writememh({dir,"/rtl_vm_pc240.hex"},vm);
+                end
+            end
+            if (ww_q_we && linwrites<8 && ww_q_addr<=16512 && ww_q_addr+32>16512) begin
+                $display("IDXTRACE lin_write cyc=%0d addr=%0d mask=%h data0=%h vm_before=%h",cycles,
+                    ww_q_addr,ww_q_mask,ww_q_data[0 +: 32],vm[16512]);
+                linwrites=linwrites+1;
+            end
+            if (ww_q_we && qewrites<8 && ww_q_addr<=17536 && ww_q_addr+32>17536) begin
+                $display("IDXTRACE qe_write cyc=%0d addr=%0d mask=%h data0=%h vm_before=%h",cycles,
+                    ww_q_addr,ww_q_mask,ww_q_data[0 +: 32],vm[17536]);
+                qewrites=qewrites+1;
+            end
+            if (dut.e_go[3] && ops==0) begin
+                ops=1;active=1;
+                if ($test$plusargs("IDXSNAP")) $writememh({dir,"/rtl_vm_pc243.hex"},vm);
+                sector=(((dut.me_wbase-dut.cfg_ik_base)>>7)*17)*128;
+                $display("IDXTRACE go cyc=%0d pc=%0d n=%0d k=%0d hg=%0d round=%0d mmode=%0d fuse=%0d wbase=%0d ikbase=%0d xbase=%0d xks=%0d xjs=%0d xcs=%0d wts=%0d obase=%0d sector=%0d vm0=%h vm1=%h scale0=%h",
+                    cycles,dut.pc,dut.me_nout,dut.me_k,dut.me_hg,dut.me_round,dut.me_mmode,dut.me_fuse,
+                    dut.me_wbase,dut.cfg_ik_base,dut.me_xbase,dut.me_xks,dut.me_xjs,dut.me_xcs,
+                    dut.me_wts,dut.me_obase,sector,vm[dut.me_xbase],vm[dut.me_xbase+1],vm[dut.me_wts]);
+                $display("IDXTRACE image stack0 scale=%h code=%h",g_pikh.g_stack[0].hm.mem[sector],g_pikh.g_stack[0].hm.mem[sector+128]);
+                $display("IDXTRACE image stack1 scale=%h code=%h",g_pikh.g_stack[1].hm.mem[sector],g_pikh.g_stack[1].hm.mem[sector+128]);
+                $display("IDXTRACE image stack2 scale=%h code=%h",g_pikh.g_stack[2].hm.mem[sector],g_pikh.g_stack[2].hm.mem[sector+128]);
+                $display("IDXTRACE image stack3 scale=%h code=%h",g_pikh.g_stack[3].hm.mem[sector],g_pikh.g_stack[3].hm.mem[sector+128]);
+            end
+            if(active) begin
+                if (|dut.e_vx_re[3*G +: G] && qreads<8) begin
+                    $display("IDXTRACE qread cyc=%0d addr0=%0d data0=%h addr1=%0d data1=%h",cycles,
+                        dut.e_vx_addr[3*G*AW +: AW],vm[dut.e_vx_addr[3*G*AW +: AW]],
+                        dut.e_vx_addr[3*G*AW+AW +: AW],vm[dut.e_vx_addr[3*G*AW+AW +: AW]]);
+                    qreads=qreads+1;
+                end
+                if (|pikh_req_v && reqs<8) begin
+                    $display("IDXTRACE req cyc=%0d stack3=%h addr3pc0=%0d stack0=%h",cycles,
+                        pikh_req_v[96 +: 32],pikh_req_addr[96*28 +: 28],pikh_req_v[0 +: 32]);
+                    reqs=reqs+1;
+                end
+                if (|pikh_rsp_v && rsps<8) begin
+                    $display("IDXTRACE rsp cyc=%0d stack3=%h data3pc0=%h stack0=%h",cycles,
+                        pikh_rsp_v[96 +: 32],pikh_rsp_data[96*256 +: 256],pikh_rsp_v[0 +: 32]);
+                    rsps=rsps+1;
+                end
+                if (dut.g_idx_x.g_pool.u_idx.b_valid && dut.g_idx_x.g_pool.u_idx.b_write && scores<8) begin
+                    $display("IDXTRACE score cyc=%0d index=%0d write=%0d score=%h fault=%0d",cycles,
+                        dut.g_idx_x.g_pool.u_idx.b_index,dut.g_idx_x.g_pool.u_idx.b_write,
+                        dut.g_idx_x.g_pool.u_idx.b_score,dut.g_idx_x.g_pool.u_idx.b_fault);
+                    scores=scores+1;
+                end
+                if (dut.e_ov[3] && writes<8) begin
+                    $display("IDXTRACE write cyc=%0d addr=%0d mask=%h score=%h fault=%0d",cycles,
+                        dut.e_addr[3*G*AW +: AW],dut.e_mask[3*G*W +: W],
+                        dut.g_idx_x.g_pool.u_idx.b_score,dut.e_fault[3]);
+                    writes=writes+1;
+                end
+                if (dut.e_idle[3] && scores>0) begin
+                    $display("IDXTRACE done cyc=%0d qreads=%0d reqs=%0d rsps=%0d scores=%0d writes=%0d",cycles,qreads,reqs,rsps,scores,writes);
+                    active=0;
+                    if ($test$plusargs("IDXSTOP")) $finish;
+                end
+            end
+        end
+    end endgenerate
     reg [8*512-1:0] dir;
     integer cyc = 0, i, bad_lg, bad_vm, bad_kv, n_prime = 0, pfirst = 0, prime_i = 0;
     reg trace = 1'b0, multi = 1'b0, running = 1'b0, dbg = 1'b0;

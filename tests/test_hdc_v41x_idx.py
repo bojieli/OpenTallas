@@ -59,11 +59,25 @@ def test_rtl_reduced_quick(tmp_path):
 
 def test_committed_record():
     r = json.loads(REC.read_text())
+    assert "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv" in r["sources"]
     for shape in ("shipped", "reduced"):
         v = r[shape]["verdict"]
         assert v["bit_exact"] and v["throughput_ok"], shape
         assert r[shape]["mixed"]["errors"] == 0
+    p = r["shipped"]["pooled_core_geometry"]
+    assert p["tile"]["G"] == 4 and p["tile"]["M"] == 2
+    assert p["bit_exact"] and p["split_mode_used"]
+    assert r["shipped"]["pooled"]["bit_exact"]
+    assert p["counters"]["refused"] == p["expected_refused"]
     assert r["reduced"]["vehicle"]["keys"] > 0
     h = r.get("hbm_scan")
     if h:
         assert h["verdict"]["bit_exact"]
+
+
+def test_pool_batch_gate_record():
+    rec = json.loads((ROOT / "results/rtl/hdc_v41x_idx_pool_batch_campaign.json").read_text())
+    assert rec["status"] == "pass"
+    assert {r["name"] for r in rec["rows"]} == {"typical", "wide", "masked", "fault", "vehicle"}
+    assert all(r["keys"] == r["checked"] and r["errors"] == 0 and r["protocol_fault"] == 0
+               for r in rec["rows"])
