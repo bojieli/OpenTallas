@@ -105,7 +105,8 @@
       "range_high": 1.1776e-10,
       "range_low": 9.344e-11,
       "source": "https://escholarship.org/content/qt6189368s/qt6189368s.pdf -- Measuring the Energy of Data Movement on Modern GPU Systems, SC 2025, doi:10.1145/3712285.3759815, Table 3",
-      "value": 1.0488e-10
+      "value": 1.0488e-10,
+      "boundary": "A100 HBM2e path beyond L2, regressed from board power (nvidia-smi at 1 s): DRAM device + TSV + interposer + processor-side PHY + memory controller + on-chip L2-to-controller movement + control plane (SC'25 Fig. 1 caption: 'memory controller energy is tabulated with HBM energy'; Table 3 A100 HBM control 8.47 / datapath 4.64 / total 13.11 pJ/bit). It is NOT stack power: O'Connor MICRO 2017 puts the HBM2 device at ~3.9 pJ/bit. The die/stack split is in configs/hardware/power_scenarios.json memory.hbm_path."
     },
     "mac_energy_j_per_op": {
       "bf16": {
@@ -130,7 +131,9 @@
         "range_high": 2.9e-14,
         "range_low": 1.5e-14,
         "source": "Keller et al., 2022 Symposium on VLSI Technology and Circuits, Digest pp. 16-17, Table 2 (fabricated TSMC 5nm: INT4 91.1 and INT8 39.1 TOPS/W at 0.46 V), https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
-        "value": 2.3e-14
+        "value": 2.3e-14,
+        "boundary": "NOT a floating-point measurement. Keller et al. VLSI 2022 Table 2 formats are 'INT4 / INT4 VSQ / INT8'; '24b partial sums are temporally accumulated in a 16-entry latch array' (p.16); TOPS/W are whole-accelerator (lanes, 132 KB SRAM, PPU; leakage ESTIMATED) at 0.46 V with '50% non-zero input densities'. INT4 VSQ 95.6 TOPS/W = 0.021 pJ per MAC; INT4 91.1 = 0.022; INT8 39.1 = 0.051 (2 ops per MAC). An FP4/FP8 x FP8 product into the FP32 accumulator OpenTallas's golden fixes is not this datapath: the Keller figures are an integer LOWER BOUND only. The FP-format MAC energies the power model uses are derived in configs/hardware/power_scenarios.json mac_lane.",
+        "evidence_class": "published-measured (integer INT4-VSQ silicon), applied here as a lower bound for a floating-point rung"
       },
       "fp8": {
         "grade": "assumed",
@@ -138,7 +141,8 @@
         "range_high": 6.8e-14,
         "range_low": 3e-14,
         "source": "Antepara, Williams et al., SC'25, doi:10.1145/3712285.3759815, Table 3 ; Keller et al., A 95.6-TOPS/W Deep Learning Inference Accelerator with Per-Vector Scaled 4-bit Quantization in 5nm, 2022 Symposium on VLSI Technology and Circuits, Digest pp. 16-17, Table 2, https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
-        "value": 5.4e-14
+        "value": 5.4e-14,
+        "boundary": "Keller's INT8 39.1 TOPS/W cross-check is INTEGER 8-bit with 24-bit partial sums at 0.46 V and 50% input density -- a lower bound for an FP8 MAC with FP32 accumulation, not a measurement of one."
       },
       "w4a8": {
         "grade": "assumed",
@@ -172,6 +176,35 @@
       "range_low": 1.44e-12,
       "source": "Antepara, Williams et al., Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 3 (A100 L1: control 1.26 / datapath 0.33 / total 1.59 pJ/bit; MI250X L1 datapath 0.18 pJ/bit)",
       "value": 2.6e-12
+    },
+    "link_j_per_bit": {
+      "purpose": "Energy per bit moved on each link class (NEW 2026-09-27, normative/peer-reviewed check). Record: results/arch/power_assumptions.json.",
+      "board_serdes_112g": {
+        "grade": "published",
+        "value": 6.5e-12,
+        "range_low": 5.6e-12,
+        "range_high": 7.5e-12,
+        "note": "112G PAM4 with DSP. The only primary LR-class figure including DSP: 'a total power efficiency of 5.6pJ/b per lane including analog and DSP at 112Gb/s' (5 nm, VLSI 2022); at 7 nm the analog alone is '602 mW per channel, excluding DSP' (JSSC 2021) = 5.4 pJ/b, so LR with DSP at 7 nm is ~6-7 pJ/b. WAS 5 pJ/b (3.5-7) in the V4.1 budget/rack: optimistic for LR; MR measured 2.29 pJ/b (ISSCC 2022, excl. FEC/DSP) and OIF VSR '< 3 pJ/bit likely'. RS FEC adds ~0.9 pJ/b at 40 nm (RS(528,514) '90 mW', IEEE P802.3bj gustlin_01_0312 slide 6), less at N5. Always-on (ungated) lane power at 112 Gb/s = 0.73 W.",
+        "source": "VLSI 2022 doi:10.1109/VLSITechnologyandCir46769.2022.9830304 ; JSSC Jan 2021 doi:10.1109/JSSC.2020.3024261 ; ISSCC 2022 doi:10.1109/ISSCC42614.2022.9731591"
+      },
+      "ucie_advanced": {
+        "grade": "published",
+        "value": 5e-13,
+        "range_low": 2.9e-13,
+        "range_high": 6e-13,
+        "idle_fraction_of_peak": 0.15,
+        "note": "UCIe Hot Chips 2023 electrical summary: 'Power Efficiency Target (pJ/b) ... 0.3-0.6 [Adv 16] 0.3-0.6 [Adv 24/32]'; 'Idle Power (% of peak) 15%'. Measured best case: 'exhibit 0.29 pJ/bit power efficiency with 5.27Tb/s/mm ... and 3.5 ns measured FDI-to-FDI latency' (3 nm CoWoS, 16 Gb/s/pin, JSSC 2026). WAS 0.29 pJ/b from a secondary summary: the best case, optimistic for an N5/N6 die; 0.5 pJ/b is the conservative spec-range value.",
+        "source": "UCIe Consortium, Hot Chips 2023 tutorial, Electrical Summary ; JSSC 2026 doi:10.1109/JSSC.2026.3651425"
+      },
+      "ucie_standard": {
+        "grade": "published",
+        "value": 1e-12,
+        "range_low": 5.2e-13,
+        "range_high": 1.25e-12,
+        "idle_fraction_of_peak": 0.15,
+        "note": "Spec target 0.5-1 (16G), 0.75-1.25 (24/32G) pJ/b; measured 0.52 (3 nm, 16G, 25 mm, JSSC 2026), 0.58 (22 nm, 32G, CICC 2026), 1.2 (48G, 30 mm, ISSCC 2026).",
+        "source": "UCIe Hot Chips 2023 tutorial ; JSSC 2026 doi:10.1109/JSSC.2026.3651425 ; CICC 2026 doi:10.1109/CICC65509.2026.11509556 ; ISSCC 2026 doi:10.1109/ISSCC49663.2026.11409120"
+      }
     }
   },
   "floorplan": {
@@ -971,6 +1004,40 @@
         "note": "The neighbour hop's terms (PHY + adapter, on-die routing, synchronisation) plus ~2 ns for the standard-package PHY's wider bump field and up to ~20 mm of substrate trace; no product.",
         "source": "links.rom_package_ucie.hop_latency_s decomposition; UCIe standard-package reach 25 mm"
       }
+    },
+    "rom_rack_cable_serdes": {
+      "bytes_s": {
+        "grade": "derived",
+        "value": 1687000000000.0,
+        "note": "Same lanes and net rate as rom_board_serdes (full RS(544,514) overhead already charged there). Payload per direction per FOUR-DIE-CLASS package: 128 lanes of 112 Gb/s PAM4 SerDes is 14.3 Tb/s raw (1.79 TB/s); net of RS(544,514) 'KP4' FEC (514/544) and 256b/257b transcoding it is 13.5 Tb/s, 1.69 TB/s. A package's lanes scale with its edge, sqrt(dies / 4) (serial_latency.hardware_links.rom_board_serdes reference_domain), so the two-die default package has 90 lanes, 1.19 TB/s. Point-to-point, no switch; the lanes are split evenly over the package's board neighbours, so per direction PER NEIGHBOUR on the 4-link board mesh it is 0.42 TB/s (four-die package) or 0.30 TB/s (two-die package). Was 1.8 TB/s, the raw lane rate (kept as the optimistic sensitivity in decode_critical_path.json packaging_options). Cross-check: a B200 package's NVLink 5 is published at 1.8 TB/s bidirectional, 0.9 TB/s per direction.",
+        "source": "112G PAM4 SerDes class (https://www.cadence.com/en_US/home/tools/silicon-solutions/design-ip/scale-up-scale-out-serdes/112g-vsr-pam4-serdes-phy.html); RS(544,514) FEC and 256b/257b transcoding of the IEEE 802.3 100 Gb/s-per-lane PHYs; NVIDIA B200 NVLink 1.8 TB/s"
+      },
+      "domain_size": {
+        "grade": "derived",
+        "value": 1.0,
+        "note": "A package-to-package link carries no intra-domain traffic.",
+        "source": "docs/ANALYTICAL_REPORT.md"
+      },
+      "fabric": {
+        "grade": "assumed",
+        "value": "mesh",
+        "note": "Packages form a 2-D board mesh of direct neighbour links. A pipeline boundary is one traversal; a collective across packages pays the mesh diameter.",
+        "source": "docs/ANALYTICAL_REPORT.md"
+      },
+      "hop_latency_s": {
+        "grade": "derived",
+        "value": 2.09e-07,
+        "range_low": 1.6e-07,
+        "range_high": 3e-07,
+        "note": "NEW 2026-09-27 (normative-source check). The rack-cable tier: stage hops, the token return and Engram requests between modules over <= 0.8 m of passive twinax (rack model results/arch/v41_rack.json T2). Priced with the FULL-STRENGTH RS(544,514) code, un-interleaved -- UALink 1.0's in-rack mode ('reduced interleave, to achieve better FEC latency at the cost of decreased burst error correction'; '640-byte Flits ... fit exactly into one RS (544, 514) codeword'; 'cable length < 4 meters') -- because the light RS(272) code is not qualified at CR-class pre-FEC BER: IEEE 802.3ck requires RS(544,514) for 100GBASE-CR1, and the LL-FEC spec's own Table 1 needs raw BER <= 8.9e-9 under DFE bursts without precoding. Value = the technology.json full_kp4_fec_s hop (200 ns channel + 4 CDC + 5 endpoint cycles); typical 139-199 ns un-interleaved (IEEE contributions quoted under rom_board_serdes.hop_latency_s.full_kp4_fec_s), 190-300 ns with 802.3ck Clause 161 2-way interleave. Flight at 0.8 m is 3.7 ns (Broadcom SUE: twinax 4.6 ns/m; Belden 9207/9182: velocity 66-78%, 4.3-5.1 ns/m); 0.3 m is inside the 200 ns channel, so the extra ~2.4 ns sits inside the band. WAS: the stage hops rode the package link, which tools/arch_budget_v41.py BASELINE sets to the 130 ns light-FEC hop, which assumed the on-module code on a cable channel -- too optimistic by 79 ns per stage hop. Record: results/arch/sync_cost_table.json.",
+        "source": "UALink 200G 1.0 white paper (Apr 2025) https://ualinkconsortium.org/wp-content/uploads/2025/04/UALink-1.0-White_Paper_FINAL.pdf ; Ethernet Technology Consortium LL-FEC Specification 1.0 (2018-11-09) Annex A Table 1 https://ethernettechnologyconsortium.org/wp-content/uploads/2020/03/LL-FEC-Specification-1.0-25G-Consortium.pdf ; Gustlin et al., IEEE P802.3ck 2018-11 https://www.ieee802.org/3/ck/public/18_11/gustlin_3ck_01_1118.pdf p.8 ; Nicholl & Jones, IEEE P802.3ck 2020-01 https://www.ieee802.org/3/ck/public/20_01/nicholl_3ck_01a_0120.pdf ; Broadcom Scale-Up Ethernet Framework Spec RM104 (2025-09-26) Appendix A https://docs.broadcom.com/doc/scale-up-ethernet-framework",
+        "full_kp4_fec_s": {
+          "value": 2.09e-07,
+          "range_low": 1.29e-07,
+          "range_high": 4.09e-07,
+          "note": "identical: this tier already runs full-strength KP4"
+        }
+      }
     }
   },
   "nodes": {
@@ -1127,6 +1194,84 @@
         "source": "TSMC N7 0.027 um2 6T HD bitcell (this file, nodes.N7) at sram.array_efficiency, times a per-cell off current of 0.05-1.0 nA at 0.8 V; no vendor SRAM macro leakage published for the target arrays",
         "value": 0.005
       }
+    },
+    "rack_overheads": {
+      "purpose": "Conversion and facility overheads between die power and wall power (NEW 2026-09-27; conservative production values). Record: results/arch/power_assumptions.json.",
+      "psu_efficiency": {
+        "grade": "published",
+        "value": 0.96,
+        "range_low": 0.91,
+        "range_high": 0.975,
+        "note": "80 PLUS Titanium (230 V internal redundant) 10/20/50/100% load: 'N.D. | 90% | 94% | 96% | 91%'. WAS 0.975 (a vendor peak, not reached in a primary source).",
+        "source": "https://en.wikipedia.org/wiki/80_Plus (retrieved 2026) ; 80 PLUS Titanium table (https://en.wikipedia.org/wiki/80_Plus, citing CLEAResult) ; NVIDIA DGX GB200 user guide s1.4 (8 x 33 kW shelves, N+N)"
+      },
+      "vr_efficiency_48v_to_core": {
+        "grade": "published",
+        "value": 0.87,
+        "range_low": 0.6,
+        "range_high": 0.9,
+        "note": "48 V -> 12 V bus converter 'Efficiency ... 95.6 %' at full load (Vicor NBM2317, '97.9% peak'), times ~0.91 for the 12 V -> core multiphase stage = 0.87. The 0.90 used before is the edge: 'The reference architecture (A0) is modeled with a 90% efficient 48V-to-1V converter' and 'over 30% power loss has recently been reported in state-of-the-art AI accelerators' (arXiv:2309.10141).",
+        "source": "https://arxiv.org/abs/2309.10141 (2023) ; Vicor NBM2317S60D1580T0R datasheet ; arXiv:2309.10141 s2-3"
+      },
+      "cdu_fraction_of_it": {
+        "grade": "published",
+        "value": 0.006,
+        "note": "CoolIT CHx2000 row CDU: 'Cooling Capacity: 2000 kW', 'Power Consumption: 12.24 kW' (rated). In-rack CDU power not published.",
+        "source": "https://www.coolitsystems.com/chx2000/"
+      },
+      "fan_fraction_of_it": {
+        "grade": "assumed",
+        "value": 0.03,
+        "range_low": 0.01,
+        "range_high": 0.06,
+        "note": "'fans contribute only a few percent' (H100 air nodes, arXiv:2512.03024); liquid-cooled trays and air-cooled PSUs keep fans. No primary number for a cold-plate tray.",
+        "source": "arXiv:2512.03024"
+      },
+      "switch_tray_w": {
+        "grade": "assumed",
+        "value": 1500.0,
+        "note": "UNVERIFIED: no primary power figure for a 51.2 Tb/s switch tray (NVIDIA gives none for the NVLink switch tray either).",
+        "source": "none found"
+      }
+    },
+    "gpu_reference_power": {
+      "purpose": "Measured or vendor-stated GPU power for the comparator rows (NEW 2026-09-27). Record: results/arch/power_assumptions.json.",
+      "b200_tdp_nvl72_w": {
+        "grade": "published",
+        "value": 1200.0,
+        "note": "'Max Thermal Design Power (TDP) Configurable up to 1,200 W' (GB200 NVL72); 1,000 W HGX B200.",
+        "source": "NVIDIA Blackwell datasheet (2025-10-28)"
+      },
+      "nvl72_rack_w": {
+        "grade": "published",
+        "value": 132000.0,
+        "range_low": 120000.0,
+        "range_high": 135000.0,
+        "note": "NVIDIA: 'The rack power consumption is approximately 120kW'; Supermicro: 'total power 132kW', 'Operating Power 125kW to 135kW'.",
+        "source": "NVIDIA DGX GB200 user guide s1.4 ; Supermicro SuperCluster GB200 NVL72 datasheet (2025-09-12)"
+      },
+      "b200_measured_wall_w_per_gpu_saturated": {
+        "grade": "measured",
+        "value": 1300.0,
+        "note": "MLPerf Inference v5.1, 8 x B200 (Lenovo SR680a V3, ID 5.1-0061), Llama-2-70B Offline: 'Power_Result: 10400.9988793425' W at the wall = 1.30 kW per GPU all-in.",
+        "source": "https://github.com/mlcommons/inference_results_v5.1 (MLPerf Inference v5.1, 2025) ; mlcommons/inference_results_v5.1 summary_results.json"
+      },
+      "b200_measured_decode_w": {
+        "grade": "measured",
+        "value": 689.0,
+        "range_low": 567.0,
+        "range_high": 994.0,
+        "note": "'Decode natural draw held at 688-689 W' (disaggregated decode lane, not batch 1).",
+        "source": "https://arxiv.org/abs/2609.11133 (2026) ; arXiv:2609.11133"
+      }
+    },
+    "memory_interface_active_j_per_bit": {
+      "grade": "published",
+      "value": 8e-13,
+      "range_low": 7.7e-13,
+      "range_high": 1e-12,
+      "note": "HBM I/O (interposer channel) energy per bit moved, both ends, at 50% toggle: O'Connor et al. MICRO 2017 Table 3 'I/O (pJ/b)* 0.80' (HBM2, *at 50% activity) and 0.77 (QB-HBM); the same paper's Fig. 2 prose gives 0.3 pJ/bit over the interposer at application toggle rates. BOUNDARY: the I/O wires only -- O'Connor's model runs 'from a DRAM cell to the GPU's pins' and contains NO memory controller, PHY digital or on-die control plane. It is therefore NOT the die-side share of energy.hbm_j_per_byte (SC'25, 13.11 pJ/bit, whose HBM category 'memory controller energy is tabulated with'): subtracting 0.8 pJ/bit from 13.11 and charging the remaining 12.3 to the stacks (the 2026-09-27 Qwen production model) puts controller and control-plane energy in the DRAM stacks, which do not dissipate it. The die/stack allocation now lives in configs/hardware/power_scenarios.json memory.hbm_path (stack = O'Connor's in-DRAM 3.45 pJ/bit; die = the rest, 9.66 pJ/bit, conservative for die cooling). No vendor publishes HBM3E pJ/bit or a controller/PHY pJ/bit (Micron, SK hynix, Rambus and Synopsys pages checked 2026-09-27 give only relative claims).",
+      "source": "O'Connor et al., Fine-Grained DRAM: Energy-Efficient DRAM for Extreme Bandwidth Systems, MICRO 2017, s1-2 and Table 3 ('The energy to access a bit in HBM2 is approximately 3.97 pJ/bit'), https://d1qx31qr3h6wln.cloudfront.net/publications/MICRO_2017_Fine_Grained_DRAM.pdf"
     }
   },
   "purpose": "Graded technology primitives for the area-constrained roofline model. Every entry is a primitive input; capacities, bandwidths and compute roofs are derived from these by src/opentallas/roofline.py and are never stated here.",

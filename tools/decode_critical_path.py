@@ -351,6 +351,14 @@ def link_consts(tech):
                    hop_low=L[n]["hop_latency_s"].get("range_low"), hop_high=L[n]["hop_latency_s"].get("range_high"))
            for n in ("rom_package_ucie", "rom_package_ucie_diagonal", "rom_board_serdes", "on_wafer_n5",
                      "rom_wafer_serdes")}
+    # The rack-cable tier (stage hops between package pairs over <= 0.8 m of twinax) runs the full-strength
+    # RS(544,514) code, un-interleaved (UALink 1.0's in-rack mode), not the light code of the on-module link:
+    # technology.json links.rom_rack_cable_serdes.  Absent that entry every hop is the package link's.
+    if "rom_rack_cable_serdes" in L:
+        c = L["rom_rack_cable_serdes"]
+        out["rom_rack_cable_serdes"] = dict(hop=c["hop_latency_s"]["value"], bw=c["bytes_s"]["value"],
+                                            hop_low=c["hop_latency_s"].get("range_low"),
+                                            hop_high=c["hop_latency_s"].get("range_high"))
     r = L["rom_package_ucie"]["relay_latency_s"]
     out["rom_package_ucie"].update(relay=r["value"], relay_low=r.get("range_low"), relay_high=r.get("range_high"))
     return out
@@ -364,6 +372,8 @@ OPTIMISTIC_LINKS = dict(
     rom_package_ucie=dict(hop=10e-9, bw=4e12, hop_low=3e-9, hop_high=30e-9, relay=0.0, relay_low=0.0,
                           relay_high=0.0, every_die_to_every_die=True),
     rom_board_serdes=dict(hop=100e-9, bw=1.8e12, hop_low=40e-9, hop_high=250e-9),
+    # before 2026-09-27 the stage hops rode the package link: the same optimistic 100 ns
+    rom_rack_cable_serdes=dict(hop=100e-9, bw=1.8e12, hop_low=40e-9, hop_high=250e-9),
     # the wafer-to-wafer link before 2026-09-26: the same optimistic 100 ns hop at the raw 6 TB/s lane rate
     rom_wafer_serdes=dict(hop=100e-9, bw=6e12, hop_low=40e-9, hop_high=250e-9))
 
@@ -493,7 +503,12 @@ class ArrayFabric:
             self.pkg_topo = "ring2x2"          # 2 x 2: neighbours direct, diagonal relayed or on its own link
         else:
             self.pkg_topo = "mesh"             # 8 dies: a 2 x 4 die mesh on the interposer (assumed)
-        self.alpha_board = b["hop"] if board != "switch" else 2 * b["hop"] + self.switch_s
+        # stage hops, the token return and Engram requests leave the package pair over the rack-cable tier; a
+        # switched fabric's ports are cable ports too (a switch port runs the standard RS(544,514) FEC), so a
+        # switched traversal is 2 x the cable hop + the switch for collectives and hops alike
+        c = links.get("rom_rack_cable_serdes", b)
+        self.alpha_board = b["hop"] if board != "switch" else 2 * c["hop"] + self.switch_s
+        self.alpha_stage = c["hop"] if board != "switch" else 2 * c["hop"] + self.switch_s
 
     def label(self):
         return f"array dp{self.dp} {self.board} ({self.pkg_topo}{' + diagonal' if self.diagonal else ''})"
@@ -598,20 +613,20 @@ class ArrayFabric:
             trav = 1 if self.board in ("switch",) or self.board.startswith("fc") else \
                 (mesh_dims(q)[0] if self.board in ("mesh", "torus") else q) if q > 1 else 1
             fan = u["hop"] * (1 if dp > 1 else 0)
-            return dict(latency_s=trav * self.alpha_board + fan, bytes_s=payload / self.link_bw + payload / u["bw"],
+            return dict(latency_s=trav * self.alpha_stage + fan, bytes_s=payload / self.link_bw + payload / u["bw"],
                         link=f"board {self.board} x{trav} + UCIe fan-out")
         if kind == "substage":
             same_pkg = g < dp
             if same_pkg:
                 return dict(latency_s=u["hop"], bytes_s=payload / u["bw"], link="UCIe")
-            return dict(latency_s=self.alpha_board, bytes_s=payload / self.link_bw, link="board")
+            return dict(latency_s=self.alpha_stage, bytes_s=payload / self.link_bw, link="board")
         if kind == "engram":
-            return dict(latency_s=2 * self.alpha_board, bytes_s=payload / self.link_bw, link="board x2")
+            return dict(latency_s=2 * self.alpha_stage, bytes_s=payload / self.link_bw, link="board x2")
         if kind == "return":
             n = self.packages
             trav = {"chain": n - 1, "ring": 1, "mesh": mesh_dims(n)[0] - 1 or 1, "torus": 1, "switch": 1}.get(
                 self.board, math.ceil(n / int(self.board[2:] or 1)) if self.board.startswith("fc") else 1)
-            return dict(latency_s=max(1, trav) * self.alpha_board, bytes_s=payload / self.link_bw,
+            return dict(latency_s=max(1, trav) * self.alpha_stage, bytes_s=payload / self.link_bw,
                         link=f"board x{trav} (token id back to the first stage)")
         raise ValueError(kind)
 
