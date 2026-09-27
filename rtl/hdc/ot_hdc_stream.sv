@@ -423,7 +423,7 @@ module ot_hdc_stream #(
         rd_final <= o_final; rd_last <= o_last; rd_p <= o_p; rd_addr <= o_raddr;
     end
     wire f_red;
-    ot_hdc_reduce #(.AW(AW)) u_red (.clk(clk), .rst_n(rst_n), .v_in(rd_v), .mode_in(rd_mode),
+    ot_hdc_reduce_q #(.AW(AW)) u_red (.clk(clk), .rst_n(rst_n), .v_in(rd_v), .mode_in(rd_mode),
         .sq(rd_sq), .x_in(rd_x), .ifirst_in(rd_ifirst), .first8_in(rd_first8), .final_in(rd_final),
         .last_in(rd_last), .p_in(rd_p), .raddr_in(rd_addr), .o_we(red_we), .o_addr(red_addr), .o_data(red_data), .busy(reducer_busy),
         .fault(f_red));

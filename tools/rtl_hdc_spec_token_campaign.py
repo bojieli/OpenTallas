@@ -41,7 +41,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results/rtl/hdc_spec_token_campaign.json"
 HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in (
-    "ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_fastfp", "ot_hdc_sfu", "ot_hdc_sfu_q", "ot_hdc_reduce",
+    "ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_fastfp", "ot_hdc_sfu", "ot_hdc_sfu_q", "ot_hdc_reduce", "ot_hdc_reduce_q",
     "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_vstream_lane", "ot_hdc_vreduce", "ot_hdc_vstream", "ot_hdc_core")]
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 ISA_SVH = ROOT / "rtl/hdc/ot_hdc_isa.svh"
