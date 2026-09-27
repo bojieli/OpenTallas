@@ -130,16 +130,60 @@ ME_GROUPS, ME_LANES, ME_IL = 4, 16, 8
 # most CHUNK terms, each summed sequentially from +0, the chunk sums added by a pairwise tree padded with +0
 # (csum) -- independent of the engine's geometry, so any engine that sums power-of-two-aligned runs of chunks
 # and combines them by the same padded tree reproduces it bit for bit.
+# For unit-by-unit bring-up of the re-specified core, ARITH may also be a comma list of the operator classes
+# that follow chunk8 while the rest stay legacy: me (BF16/FP32 weight matvecs: mv, wo_a), qe (linear_q),
+# he (hyper-connection mixes), att (q.k, p.v), idx (index dots and the index head sum), su (stream-unit sums:
+# norms, softmax denominators, Engram dots).
+ARITH_CLASSES = ("me", "qe", "he", "att", "idx", "su")
 ARITH = os.environ.get("HDC_V41_ARITH", "legacy")
 CHUNK = 8
-assert ARITH in ("legacy", "chunk8"), ARITH
+
+
+def _check(mode):
+    assert mode in ("legacy", "chunk8") or set(mode.split(",")) <= set(ARITH_CLASSES), mode
+
+
+_check(ARITH)
 
 
 def set_arith(mode):
     """Switch the accumulation contract at run time (tests; the RTL campaigns set HDC_V41_ARITH)."""
     global ARITH
-    assert mode in ("legacy", "chunk8"), mode
+    _check(mode)
     ARITH = mode
+
+
+# R-ARITH v2 (docs/ARCH_SPEC_V41.md 12, lever 1: reductions off the critical path), a comma list:
+#   nfold  an RMSNorm feeding matrix products (the sublayer norms, q_norm, the final norm) returns the gained
+#          input x*w (BF16) and its rstd; every consumer matvec multiplies its FP32 accumulator by rstd before
+#          its own output rounding, so the sum of squares and the rsqrt run beside the weight sweep;
+#   osm    attention is always the online softmax in the release kernel's 64-entry blocks (vendor_blocks:
+#          window ring oldest slot first, then the compressed selections; running max, exp(m_old - m_new)
+#          rescale of the partial sums).
+FUSE = set(filter(None, os.environ.get("HDC_V41_FUSE", "").split(",")))
+assert FUSE <= {"nfold", "osm"}, FUSE
+
+
+def set_fuse(names):
+    global FUSE
+    FUSE = set(filter(None, names.split(","))) if isinstance(names, str) else set(names)
+    assert FUSE <= {"nfold", "osm"}, FUSE
+
+
+class Folded:
+    """A normed activation under nfold: xw = bf16(x * gain), r = rstd; consumers scale their outputs by r."""
+    __slots__ = ("xw", "r")
+
+    def __init__(self, xw, r):
+        self.xw, self.r = xw, r
+
+    def __len__(self):
+        return len(self.xw)
+
+
+def chunked(cls):
+    """Does operator class `cls` follow R-ARITH under the current mode?"""
+    return ARITH == "chunk8" or (ARITH != "legacy" and cls in ARITH.split(","))
 
 
 def csum(t, axis=-1, c=CHUNK):
@@ -162,16 +206,16 @@ def csum(t, axis=-1, c=CHUNK):
     return acc[..., 0]
 
 
-def matvec_c(w, x, split):
+def matvec_c(w, x, split, cls="me"):
     """hdc_golden.matvec (legacy, K in `split` chunks) or the R-ARITH csum over all K (chunk8)."""
-    if ARITH == "legacy":
+    if not chunked(cls):
         return matvec(w, x, split)
     xb = to_bf16(x)
     return csum(mul(np.asarray(w, dtype=F), xb[None, :]))
 
 
-def reduce_sum_c(v):
-    return reduce_sum(v) if ARITH == "legacy" else F(csum(v))
+def reduce_sum_c(v, cls="su"):
+    return F(csum(v)) if chunked(cls) else reduce_sum(v)
 
 
 # -- storage formats -------------------------------------------------------------
@@ -320,15 +364,21 @@ def linear_q(w: Q8, x):
     """FP8 activation x FP8/FP4 weight, output BF16.  Per 32-wide K block: exact dot
     product of the quantised operands, rounded once to FP32, scaled by 2^(e_w+e_x);
     blocks accumulated sequentially from +0."""
+    scale = None
+    if isinstance(x, Folded):
+        x, scale = x.xw, x.r
     xq, xe = quant_fp8(x)
     n, k = w.q.shape
     blocks = [np.ldexp((w.q[:, b * 32:(b + 1) * 32] @ xq[b * 32:(b + 1) * 32]).astype(F),   # exact, rounded once
                        w.e[:, b] + xe[b]).astype(F) for b in range(k // 32)]
-    if ARITH == "chunk8":
-        return to_bf16(csum(np.stack(blocks, axis=-1)))
-    acc = np.zeros(n, dtype=F)
-    for d in blocks:
-        acc = add(acc, d)
+    if chunked("qe"):
+        acc = csum(np.stack(blocks, axis=-1))
+    else:
+        acc = np.zeros(n, dtype=F)
+        for d in blocks:
+            acc = add(acc, d)
+    if scale is not None:
+        acc = mul(acc, scale)
     return to_bf16(acc)
 
 
@@ -336,18 +386,22 @@ def mv(w, x):
     """A matrix-engine matvec: the engine's K-split (hdc_golden.split_for), each
     chunk sequential from +0, the chunks a pairwise tree; x BF16-rounded."""
     n, k = w.shape
+    if isinstance(x, Folded):
+        return mul(matvec_c(w, x.xw, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL)), x.r)
     return matvec_c(w, x, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL))
 
 
 def linear_bf16(w, x):
     """BF16 weight, BF16 activation: exact products, split FP32 sum (mv), BF16 out."""
+    if isinstance(x, Folded):
+        return to_bf16(mv(w, x))
     return to_bf16(mv(w, to_bf16(x)))
 
 
-def dots(a, b):
+def dots(a, b, cls="att"):
     """out[i, j] = sum_k a[i, k] * b[j, k], each sum sequential over k from +0: one
     matvec_fp32 per row of `a`, evaluated for all rows at once."""
-    if ARITH == "chunk8":
+    if chunked(cls):
         return csum(mul(np.asarray(a, dtype=F)[:, None, :], np.asarray(b, dtype=F)[None, :, :]))
     acc = np.zeros((a.shape[0], b.shape[0]), dtype=F)
     for k in range(a.shape[1]):
@@ -360,8 +414,8 @@ def dots_q4(a, b, block=32):
     32-element block every product shares the two blocks' scales and the block dot is an exact small integer
     times a power of two.  Each block dot is formed exactly and rounded once to FP32 (the block-dot lane,
     exactly as linear_q's blocks), canonical +0; the blocks combine by csum.  legacy: dots()."""
-    if ARITH == "legacy":
-        return dots(a, b)
+    if not chunked("idx"):
+        return dots(a, b, cls="idx")
     a64, b64 = np.asarray(a, dtype=np.float64), np.asarray(b, dtype=np.float64)
     k = a64.shape[1]
     nb = k // block
@@ -372,11 +426,11 @@ def dots_q4(a, b, block=32):
     return csum(blk)
 
 
-def reduce_rows(v):
+def reduce_rows(v, cls="su"):
     """hdc_golden.reduce_sum of every row of a 2-D array at once (P=8 interleaved
     partials, then the pairwise tree)."""
     v = np.asarray(v, dtype=F)
-    if ARITH == "chunk8":
+    if chunked(cls):
         return csum(v)
     part = np.zeros((v.shape[0], 8), dtype=F)
     for i in range(v.shape[1]):
@@ -400,7 +454,7 @@ def split_sum_parts(parts):
 def split_sum(v, s):
     """A long sum cut into s contiguous segments: each segment is reduce_sum (P=8
     interleaved partials, pairwise tree), the segment sums a pairwise tree."""
-    if ARITH == "chunk8":
+    if chunked("su"):
         return F(csum(v))
     v = np.asarray(v, dtype=F).reshape(s, -1)
     return split_sum_parts([reduce_sum(seg) for seg in v])
@@ -456,6 +510,14 @@ def rmsnorm_bf16(x, w, eps):
     """The release's RMSNorm: x * rsqrt(mean(x^2) + eps), times the gain, stored BF16."""
     r = rsqrt(add(div(split_sum(mul(x, x), RMS_SPLIT), F(len(x))), F(eps)))
     return to_bf16(mul(w, mul(x, r)))
+
+
+def rmsnorm_fold(x, w, eps):
+    """rmsnorm_bf16, or under nfold the Folded (bf16(x * gain), rstd) its consumer matvecs scale by."""
+    if "nfold" not in FUSE:
+        return rmsnorm_bf16(x, w, eps)
+    r = rsqrt(add(div(split_sum(mul(x, x), RMS_SPLIT), F(len(x))), F(eps)))
+    return Folded(to_bf16(mul(w, x)), r)
 
 
 def topk_lowest_index(v, k):
@@ -694,7 +756,7 @@ class Model:
         flat = x.reshape(-1)
         assert np.array_equal(to_bf16(flat), flat)          # the residual is BF16: x rounding is exact
         r = rsqrt(add(div(split_sum(mul(flat, flat), HC_SS_SPLIT), F(flat.size)), self.eps))
-        mixes = mul(matvec_c(fn, flat, HC_SPLIT), r)
+        mixes = mul(matvec_c(fn, flat, HC_SPLIT, cls="he"), r)
         h = self.hc
         pre = add(sigmoid(add(mul(mixes[:h], scale[0]), base[:h])), self.hc_eps)
         post = mul(sigmoid(add(mul(mixes[h:2 * h], scale[1]), base[h:2 * h])), F(2.0))
@@ -762,7 +824,7 @@ class Model:
         keys = np.stack(state["ik"][src][:n])                                     # [n, ihd]
         score = to_bf16(dots_q4(q, keys))                                        # [ih, n] BF16 einsum
         terms = to_bf16(mul(np.maximum(score, F(0)), wts[:, None]))
-        s = to_bf16(reduce_rows(terms.T))
+        s = to_bf16(reduce_rows(terms.T, cls="idx"))
         s = s.astype(np.float64)
         if L == self.cand_src:
             ctx["cand"] = self.candidate_blocks(s, n)
@@ -831,7 +893,7 @@ class Model:
         the candidate blocks), so positions can run layer-major."""
         yarn = self.ratio[L] > 0
         cs = rope_cs(self.freqs_yarn if yarn else self.freqs_plain, pos)
-        qr = rmsnorm_bf16(linear_q(self.lw(L, "attn.wq_a.weight"), x), self.lw(L, "attn.q_norm.weight"), self.eps)
+        qr = rmsnorm_fold(linear_q(self.lw(L, "attn.wq_a.weight"), x), self.lw(L, "attn.q_norm.weight"), self.eps)
         q = rope_tail(linear_q(self.lw(L, "attn.wq_b.weight"), qr).reshape(self.heads, self.hd), cs)
         kv = rmsnorm_bf16(linear_q(self.lw(L, "attn.wkv.weight"), x), self.lw(L, "attn.kv_norm.weight"), self.eps)
         kv = qdq_fp8(rope_tail(kv, cs))
@@ -853,7 +915,8 @@ class Model:
             rows = rows + [state["ckv"][src][i] for i in ctx["sel"]]
         kvm = np.stack(rows)                                      # [T, hd]: keys and values alike
         blocks = self.vendor_blocks(pos, len(rows) - len(state["win"][L][-self.window:])) \
-            if self.vendor_decode_from is not None and pos >= self.vendor_decode_from else [np.arange(len(rows))]
+            if ("osm" in FUSE or (self.vendor_decode_from is not None and pos >= self.vendor_decode_from)) \
+            else [np.arange(len(rows))]
         return self.attend(L, q, kvm, cs, blocks)
 
     def attend(self, L, q, kvm, cs, blocks=None):
@@ -930,14 +993,14 @@ class Model:
             ctx["mh"].append(self.main_hidden_part(h))      # the DSpark head reads the layer's INPUT
         res = h
         a_pre, a_post, a_comb = self.hc_mixes(h, L, "attn")
-        x = rmsnorm_bf16(self.hc_pre(h, ctx["pre"]), self.lw(L, "attn_norm.weight"), self.eps)
+        x = rmsnorm_fold(self.hc_pre(h, ctx["pre"]), self.lw(L, "attn_norm.weight"), self.eps)
         y = self.attention(L, x, pos, state, trace, ctx)
         h = self.hc_post(y, res, a_post, a_comb)
         if trace is not None:
             trace[f"L{L}.attn_norm"], trace[f"L{L}.attn"] = x, y
         res = h
         f_pre, f_post, f_comb = self.hc_mixes(h, L, "ffn")
-        x = rmsnorm_bf16(self.hc_pre(h, a_pre), self.lw(L, "ffn_norm.weight"), self.eps)
+        x = rmsnorm_fold(self.hc_pre(h, a_pre), self.lw(L, "ffn_norm.weight"), self.eps)
         y = self.moe(L, x, trace)
         h = self.hc_post(y, res, f_post, f_comb)
         ctx["h"], ctx["pre"] = h, f_pre
@@ -976,7 +1039,7 @@ class Model:
                 self.layer(L, ctx, state, trace)
         out = []
         for ctx, trace in zip(ctxs, traces):
-            xf = rmsnorm_bf16(self.hc_pre(ctx["h"], ctx["pre"]), self.w["norm.weight"], self.eps)
+            xf = rmsnorm_fold(self.hc_pre(ctx["h"], ctx["pre"]), self.w["norm.weight"], self.eps)
             logits = mv(self.w["head.weight"], xf)
             if trace is not None:
                 trace["final_norm"], trace["logits"] = xf, logits
