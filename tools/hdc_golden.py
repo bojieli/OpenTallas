@@ -254,6 +254,26 @@ def exp(x):
     return from_bits(e.astype(np.uint32))
 
 
+def rstd(x, eps):
+    return rsqrt(add(mul(lane_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
+
+
+# NORM FOLD (the vector core; SU_WIDTH > 1, one die).  The two per-layer
+# RMSNorms fold their weight into the following projections' columns, stored
+# in BF16 (W' = bf16(W x diag(w))), and apply 1/rms AFTER them:
+#   attention: q, k, v = (W'_qkv bf16(x)) x r        r = rstd(x)
+#   MLP:       g, u    = (W'_gu  bf16(x)) x r
+# so the sum of squares and the rsqrt run beside the projection instead of in
+# front of it.  Mathematically RMSNorm; the rounding (and the BF16 of W x w)
+# differ from the unfolded order, which the scalar core and the tensor-group
+# path keep.
+NORM_FOLD = SU_WIDTH > 1
+
+
+def fold_cols(wmat, w):
+    return to_bf16(mul(np.asarray(wmat, dtype=F), np.asarray(w, dtype=F)[None, :]))
+
+
 def rmsnorm(x, w, eps):
     r = rsqrt(add(mul(lane_sum(mul(x, x)), F(1.0 / len(x))), F(eps)))
     return mul(mul(x, r), w)
@@ -322,6 +342,20 @@ class Model:
 
     def lw(self, layer, name):
         return self.w[f"model.layers.{layer}.{name}"]
+
+    def folded(self, layer, part):
+        """The projections of `part` ('attn': q, k, v; 'mlp': gate, up) with the
+        preceding RMSNorm weight folded into their columns (NORM_FOLD)."""
+        cache = self.__dict__.setdefault("_folded", {})
+        if (layer, part) not in cache:
+            if part == "attn":
+                w = self.lw(layer, "input_layernorm.weight")
+                names = ("self_attn.q_proj.weight", "self_attn.k_proj.weight", "self_attn.v_proj.weight")
+            else:
+                w = self.lw(layer, "post_attention_layernorm.weight")
+                names = ("mlp.gate_proj.weight", "mlp.up_proj.weight")
+            cache[(layer, part)] = [fold_cols(self.lw(layer, n), w) for n in names]
+        return cache[(layer, part)]
 
     def split(self, *mats):
         """K-split of the fused matrix formed by stacking `mats` row-wise."""
@@ -441,9 +475,13 @@ class Model:
         cos, sin, half = rope_tables(position, self.hd, self.theta)
         group = self.heads // self.kv_heads
         for L in range(self.layers):
-            h = rmsnorm(x, self.lw(L, "input_layernorm.weight"), self.eps)
-            q, k, v = self.mv(h, self.lw(L, "self_attn.q_proj.weight"), self.lw(L, "self_attn.k_proj.weight"),
-                              self.lw(L, "self_attn.v_proj.weight"))
+            if NORM_FOLD:
+                r = rstd(x, self.eps)
+                q, k, v = (mul(t, r) for t in self.mv(x, *self.folded(L, "attn")))
+            else:
+                h = rmsnorm(x, self.lw(L, "input_layernorm.weight"), self.eps)
+                q, k, v = self.mv(h, self.lw(L, "self_attn.q_proj.weight"), self.lw(L, "self_attn.k_proj.weight"),
+                                  self.lw(L, "self_attn.v_proj.weight"))
             q, k, v = q.reshape(self.heads, self.hd), k.reshape(self.kv_heads, self.hd), v.reshape(self.kv_heads, self.hd)
             qn, kn = self.lw(L, "self_attn.q_norm.weight"), self.lw(L, "self_attn.k_norm.weight")
             q = np.stack([rope(rmsnorm(q[i], qn, self.eps), cos, sin, half) for i in range(self.heads)])
@@ -462,8 +500,12 @@ class Model:
                 s = mul(matvec_il(keys, to_bf16(q[hh]), s_sc), scale)       # head dim, interleaved K-split
                 attn[hh] = attend(s, vals, s_pv)     # one-pass softmax, normalised after P.V
             x = add(x, self.mv(attn.reshape(-1), self.lw(L, "self_attn.o_proj.weight"))[0])
-            h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
-            gate, up = self.mv(h, self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight"))
+            if NORM_FOLD:
+                r = rstd(x, self.eps)
+                gate, up = (mul(t, r) for t in self.mv(x, *self.folded(L, "mlp")))
+            else:
+                h = rmsnorm(x, self.lw(L, "post_attention_layernorm.weight"), self.eps)
+                gate, up = self.mv(h, self.lw(L, "mlp.gate_proj.weight"), self.lw(L, "mlp.up_proj.weight"))
             a = mul(silu(gate), up)
             x = add(x, self.mv(a, self.lw(L, "mlp.down_proj.weight"))[0])
             if trace is not None:

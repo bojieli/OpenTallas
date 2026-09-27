@@ -79,6 +79,9 @@ class Layout:
             qw, kw, vw = lw("self_attn.q_proj.weight"), lw("self_attn.k_proj.weight"), lw("self_attn.v_proj.weight")
             ow, dw = lw("self_attn.o_proj.weight"), lw("mlp.down_proj.weight")
             gate, up = lw("mlp.gate_proj.weight"), lw("mlp.up_proj.weight")
+            if G.NORM_FOLD and tp == 1:
+                qw, kw, vw = model.folded(L, "attn")
+                gate, up = model.folded(L, "mlp")
             if tp > 1:
                 # column split: the die's heads / FFN rows; row split: its input columns
                 qw, kw, vw = qw[sl["q_rows"]], kw[sl["kv_rows"]], vw[sl["kv_rows"]]
@@ -207,6 +210,11 @@ def build_program(lay, layers=None, embed=True, head=True):
     # The sum of squares of x is reduced by the op that produced x (red_sq).
     sq = dict(red=I.RED_SUM, red_sq=1, r_base=VM["SSX"])
 
+    def rsqrt_rx(n):
+        su(su_nout=1, su_nin=1, a_base=VM["SSX"], ma=I.MA_AIMM, imm1=f32(1.0 / n), ad=I.AD_IMM,
+           imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RX"],
+           reads={"SSX"}, writes={"RX"})
+
     def rmsnorm(src, n, wbase, dst):
         su(su_nout=1, su_nin=1, a_base=VM["SSX"], ma=I.MA_AIMM, imm1=f32(1.0 / n), ad=I.AD_IMM,
            imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RX"],
@@ -233,22 +241,35 @@ def build_program(lay, layers=None, embed=True, head=True):
         # an item is a layer, or (layer, "attn" | "mlp") for half a layer per package
         L, part = item if isinstance(item, tuple) else (item, "both")
         if part in ("both", "attn"):
-            rmsnorm("X", H, lay.cb[(L, "in")], "H")
-            me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKV"})
+            nh = NH + KV
+            fold = G.NORM_FOLD and lay.tp == 1
+            if fold:
+                # the norm weight is in the projection; 1/rms (RX) is formed beside it
+                me(lay.mat[(L, "qkv")], VM["X"], VM["QKV"], reads={"X"}, writes={"QKVqk", "QKVv"})
+                rsqrt_rx(H)
+            else:
+                rmsnorm("X", H, lay.cb[(L, "in")], "H")
+                me(lay.mat[(L, "qkv")], VM["H"], VM["QKV"], reads={"H"}, writes={"QKVqk", "QKVv"})
+            rx = dict(ma=I.MA_AB, b_base=VM["RX"]) if fold else {}
             # V row straight to the cache: independent of the head norms
             su(su_nout=KV, su_nin=HD, a_base=VM["QKV"] + (NH + KV) * HD, a_so=HD, a_si=1,
                dst=I.DST_KV, d_base=lay.v_elem(L, 0, 0, 0), d_d=I.DYN_VWRITE,
                d_so=lay.v_elem(L, 1, 0, 0) - lay.v_elem(L, 0, 0, 0), d_si=1,
-               reads={"QKV"}, writes={f"V{L}"})
-            nh = NH + KV
-            su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
-               r_base=VM["SS"], r_so=1, reads={"QKV"}, red_writes={"SS"})
+               reads={"QKVv"} | ({"RX"} if fold else set()), writes={f"V{L}"}, **rx)
+            if fold:
+                # q, k x r in place, their sums of squares on the way (red_sq)
+                su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RX"],
+                   dst=I.DST_VM, d_base=VM["QKV"], d_so=HD, d_si=1, red=I.RED_SUM, red_sq=1,
+                   r_base=VM["SS"], r_so=1, reads={"QKVqk", "RX"}, writes={"QKVqk"}, red_writes={"SS"})
+            else:
+                su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AA, red=I.RED_SUM,
+                   r_base=VM["SS"], r_so=1, reads={"QKVqk"}, red_writes={"SS"})
             su(su_nout=1, su_nin=nh, a_base=VM["SS"], a_si=1, ma=I.MA_AIMM, imm1=f32(1.0 / HD),
                ad=I.AD_IMM, imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RS"], d_si=1,
                reads={"SS"}, writes={"RS"})
             su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RS"],
                b_so=1, c_src=I.SRC_ALT, c_base=lay.cb[(L, "qk")], c_so=HD, c_si=1, mc=I.MC_C,
-               dst=I.DST_VM, d_base=VM["QN"], d_so=HD, d_si=1, reads={"QKV", "RS"}, writes={"QN"})
+               dst=I.DST_VM, d_base=VM["QN"], d_so=HD, d_si=1, reads={"QKVqk", "RS"}, writes={"QN"})
             rope = dict(b_src=I.SRC_ALT, b_base=lay.cb["rope"], b_d=I.DYN_ROPE, b_si=1, ma=I.MA_AB,
                         ad=I.AD_Q, a_so=HD, a_si=1, c_so=HD, c_si=1, su_nin=half)
             for lo in (True, False):
@@ -329,10 +350,18 @@ def build_program(lay, layers=None, embed=True, head=True):
             su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
                dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
         if part in ("both", "mlp"):
-            rmsnorm("X", H, lay.cb[(L, "post")], "H")
-            me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(lay.FF // lay.GUB)})
             FF = lay.FF
             tb = lay.GUB
+            if G.NORM_FOLD and lay.tp == 1:
+                me(lay.mat[(L, "gu")], VM["X"], VM["GU"], reads={"X"}, writes={"GUall"})
+                rsqrt_rx(H)
+                # gate/up x r in place (one pass, chasing the projection), then SiLU per tile
+                su(su_nout=1, su_nin=2 * FF, a_base=VM["GU"], a_si=1, ma=I.MA_AB, b_base=VM["RX"],
+                   dst=I.DST_VM, d_base=VM["GU"], d_si=1, reads={"GUall", "RX"},
+                   writes={f"GU{r}" for r in range(FF // tb)})
+            else:
+                rmsnorm("X", H, lay.cb[(L, "post")], "H")
+                me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(FF // tb)})
             for r in range(FF // tb):                           # one fused SiLU*up op per tile pair
                 g0 = VM["GU"] + 2 * tb * r
                 su(su_nout=1, su_nin=tb, a_base=g0, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0), sfu=I.SFU_SIGM,

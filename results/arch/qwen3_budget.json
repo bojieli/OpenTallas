@@ -1393,24 +1393,23 @@
    "su_width": 1024,
    "reducer_time_levels": 3,
    "max_split": null,
-   "instructions": 4504,
-   "cycles": 131185,
+   "instructions": 4468,
+   "cycles": 126721,
    "unit_busy": {
-    "stream": 20601,
+    "stream": 21177,
     "weights": 52992,
     "attn_scores": 9216,
     "attn_pv": 9216,
     "lm_head": 4752
    },
    "sequencer_stalls": {
-    "wait_su": 20994,
-    "chase": 66805,
-    "unit_busy": 20052,
-    "barrier_su": 5796,
-    "wait_me": 5616,
-    "barrier_me": 2592
+    "chase": 35557,
+    "wait_su": 18618,
+    "barrier_me": 37512,
+    "unit_busy": 20124,
+    "wait_me": 5616
    },
-   "seq_gap_total": 4504
+   "seq_gap_total": 4468
   },
   "2048": {
    "context": 2048,
@@ -1418,23 +1417,24 @@
    "su_width": 1024,
    "reducer_time_levels": 2,
    "max_split": null,
-   "instructions": 4504,
-   "cycles": 115989,
+   "instructions": 4468,
+   "cycles": 111813,
    "unit_busy": {
-    "stream": 13689,
+    "stream": 14265,
     "weights": 52992,
     "attn_scores": 2304,
     "attn_pv": 2304,
     "lm_head": 4752
    },
    "sequencer_stalls": {
-    "wait_su": 20414,
-    "chase": 65077,
-    "unit_busy": 9684,
-    "barrier_su": 7596,
-    "wait_me": 3888
+    "chase": 33829,
+    "wait_su": 18038,
+    "barrier_me": 35208,
+    "unit_busy": 9756,
+    "wait_me": 3888,
+    "barrier_su": 1800
    },
-   "seq_gap_total": 4504
+   "seq_gap_total": 4468
   }
  },
  "gap": [
@@ -1443,7 +1443,7 @@
    "requirement": "1024 elements/cycle",
    "as_built": "vector stream unit, SW lanes (landed: RTL parameter; 1024 at the spec), R-ARITH reducer",
    "cycles_baseline_2k": 8710761,
-   "cycles_head_8k": 20601,
+   "cycles_head_8k": 21177,
    "status": "MEETS"
   },
   {
@@ -1467,7 +1467,7 @@
    "requirement": "<= 54 cycles exposed a stage",
    "as_built": "per-unit waits (landed: wait_me / wait_su, barrier = both), element chaining across units; still whole-op granular within a unit",
    "cycles_baseline_2k": 13463058,
-   "cycles_head_8k": 101803,
+   "cycles_head_8k": 97303,
    "status": "MISS"
   },
   {
@@ -1481,9 +1481,9 @@
   {
    "block": "sequencer issue",
    "requirement": "<= 3880 control cycles a token exposed",
-   "as_built": "prefetched issue pipeline: 4504 instructions at gap 1 (landed)",
+   "as_built": "prefetched issue pipeline: 4468 instructions at gap 1 (landed)",
    "cycles_baseline_2k": 22700,
-   "cycles_head_8k": 4504,
+   "cycles_head_8k": 4468,
    "status": "MEETS"
   },
   {
