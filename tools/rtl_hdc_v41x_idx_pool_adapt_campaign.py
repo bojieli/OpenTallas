@@ -42,7 +42,7 @@ def main() -> None:
                            stderr=subprocess.STDOUT)
             (obj / 'stamp').write_text(stamp)
         for k in (32, 128):
-            for nout in (6, 32):
+            for nout in (4, 6, 32):
                 for nonzero in (0, 1):
                     args = [str(exe), f'+KDIM={k}', f'+NOUT={nout}'] + (['+NONZERO'] if nonzero else [])
                     run = subprocess.run(args, cwd=WORK, capture_output=True,
@@ -56,7 +56,7 @@ def main() -> None:
                     assert kd == k and mpr == mp and nr == nout and nz == nonzero and checked == nout and errors == 0 and keys >= nout, row
                     rows.append(row)
     rec = dict(schema='opentallas-hdc-v41x-idx-pool-adapt-v1', status='pass', rows=rows,
-               limitation='Four-stack constant zero/one tokens prove loader/replicated-image group selection/merge/pooled score/VM write coupling at MP1 and MP2, K32 and K128, for 6-key tail and 32-key scan. The selector rereads each key-group prefix; HBM bandwidth and tile replication remain unmeasured.',
+               limitation='Four-stack constant zero/one tokens prove loader/replicated-image group selection/merge/pooled score/VM write coupling at MP1 and MP2, K32 and K128, for 4/6-key tails and 32-key scan. The selector rereads each key-group prefix; HBM bandwidth and tile replication remain unmeasured.',
                sources={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                         for p in SOURCES + [Path(__file__).resolve()]})
     OUT.write_text(json.dumps(rec, indent=1) + '\n')

@@ -379,10 +379,18 @@ module tb_hdc_core_v41x (input wire clk);
     // this shows the VM input, replicated HBM image, HBM request/response and
     // score/write timing at the first fused indexer dispatch.
     generate if (`HDC_X_IDX == 2) begin : g_idx_trace
-        integer ops=0, qreads=0, reqs=0, rsps=0, scores=0, writes=0;
+        integer ops=0, qreads=0, reqs=0, rsps=0, scores=0, writes=0, qewrites=0;
         reg active=0;
         integer sector;
         always @(posedge clk) if ($test$plusargs("IDXTRACE")) begin
+            if (dut.qe_go && dut.pc==240)
+                $display("IDXTRACE qe_go cyc=%0d pc=%0d mode=%0d obase=%0d nb=%0d vm_before=%h",cycles,
+                    dut.pc,dut.qe_mode,dut.qe_obase,dut.qe_nb,vm[17536]);
+            if (ww_q_we && qewrites<8 && ww_q_addr<=17536 && ww_q_addr+32>17536) begin
+                $display("IDXTRACE qe_write cyc=%0d addr=%0d mask=%h data0=%h vm_before=%h",cycles,
+                    ww_q_addr,ww_q_mask,ww_q_data[0 +: 32],vm[17536]);
+                qewrites=qewrites+1;
+            end
             if (dut.e_go[3] && ops==0) begin
                 ops=1;active=1;
                 sector=(((dut.me_wbase-dut.cfg_ik_base)>>7)*17)*128;
@@ -412,21 +420,22 @@ module tb_hdc_core_v41x (input wire clk);
                         pikh_rsp_v[96 +: 32],pikh_rsp_data[96*256 +: 256],pikh_rsp_v[0 +: 32]);
                     rsps=rsps+1;
                 end
-                if (dut.g_idx_x.g_pool.u_idx.b_valid && scores<8) begin
+                if (dut.g_idx_x.g_pool.u_idx.b_valid && dut.g_idx_x.g_pool.u_idx.b_write && scores<8) begin
                     $display("IDXTRACE score cyc=%0d index=%0d write=%0d score=%h fault=%0d",cycles,
                         dut.g_idx_x.g_pool.u_idx.b_index,dut.g_idx_x.g_pool.u_idx.b_write,
                         dut.g_idx_x.g_pool.u_idx.b_score,dut.g_idx_x.g_pool.u_idx.b_fault);
                     scores=scores+1;
                 end
                 if (dut.e_ov[3] && writes<8) begin
-                    $display("IDXTRACE write cyc=%0d addr=%0d mask=%h data=%h fault=%0d",cycles,
+                    $display("IDXTRACE write cyc=%0d addr=%0d mask=%h score=%h fault=%0d",cycles,
                         dut.e_addr[3*G*AW +: AW],dut.e_mask[3*G*W +: W],
-                        dut.e_data[3*G*W*32 +: 32],dut.e_fault[3]);
+                        dut.g_idx_x.g_pool.u_idx.b_score,dut.e_fault[3]);
                     writes=writes+1;
                 end
                 if (dut.e_idle[3] && scores>0) begin
                     $display("IDXTRACE done cyc=%0d qreads=%0d reqs=%0d rsps=%0d scores=%0d writes=%0d",cycles,qreads,reqs,rsps,scores,writes);
                     active=0;
+                    if ($test$plusargs("IDXSTOP")) $finish;
                 end
             end
         end

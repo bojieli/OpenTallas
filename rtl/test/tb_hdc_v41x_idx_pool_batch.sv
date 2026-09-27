@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // One kmerge-format four-quarter beat through the pooled indexer batch bridge.
-module tb_hdc_v41x_idx_pool_batch (input wire clk);
-    localparam integer G=4, M=2, IH=32, AW=20, L=8*G, XW=264;
+module tb_hdc_v41x_idx_pool_batch #(parameter integer M=2) (input wire clk);
+    localparam integer G=4, IH=32, AW=20, L=8*G, XW=264;
     reg [543:0] km [0:63];
     reg [XW-1:0] xm [0:(IH/M)*4*M-1];
     reg [47:0] wm [0:IH-1];
@@ -33,7 +33,7 @@ module tb_hdc_v41x_idx_pool_batch (input wire clk);
     wire [8*4-1:0] rq_plg,rq_tag;
     wire [8*16-1:0] rq_rg;
     wire [L*M*XW-1:0] rd_x;
-    ot_hdc_v41x_idx_pool_batch dut (
+    ot_hdc_v41x_idx_pool_batch #(.M(M)) dut (
         .clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_nkeys(cmd_nkeys),
         .b_valid(b_valid),.b_ready(b_ready),.b_kv(b_kv),.b_ref(b_ref),.b_keep(b_keep),.b_key(b_key),
         .w_v(w_v),.w_head(w_head),.w_w(w_w),.w_qsc(w_qsc),

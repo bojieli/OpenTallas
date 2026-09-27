@@ -28,9 +28,9 @@ def _line(items):
     return C.hexline(items)
 
 
-def vectors(tok, work: Path):
+def vectors(tok, work: Path, m: int):
     assert len(tok['keep']) <= 16 or len(tok['keep']) == 32
-    ih, m, n = 32, 2, len(tok['keep'])
+    ih, n = 32, len(tok['keep'])
     qc = np.pad(tok['qc'], ((0, 0), (0, 128-tok['qc'].shape[1])))
     qu = np.pad(tok['qu'], ((0, 0), (0, 4-tok['qu'].shape[1])))
     kc = np.pad(tok['kc'], ((0, 0), (0, 128-tok['kc'].shape[1])))
@@ -62,37 +62,39 @@ def vectors(tok, work: Path):
 
 def main():
     work=Path('/tmp/claude-1000/idx_pool_batch_gate');work.mkdir(parents=True,exist_ok=True)
-    obj=work/'obj';exe=obj/'Vtb_hdc_v41x_idx_pool_batch'
     stamp=hashlib.sha256(b''.join(p.read_bytes() for p in RTL+[TB,HARNESS])).hexdigest()
-    if not exe.exists() or not (obj/'stamp').exists() or (obj/'stamp').read_text()!=stamp:
-        subprocess.run(['verilator','--cc','--exe','--build','-O3','--x-assign','fast','--x-initial','fast',
-            '-Wno-fatal','-Wno-WIDTH','-Wno-UNUSED','-Wno-BLKSEQ','-Wno-DECLFILENAME','-Wno-WIDTHCONCAT',
-            '--top-module','tb_hdc_v41x_idx_pool_batch','-CFLAGS','-DVTOP=Vtb_hdc_v41x_idx_pool_batch -O1',
-            '-j','8','--Mdir',str(obj),str(TB)]+[str(p) for p in RTL]+[str(HARNESS)],
-            check=True,capture_output=True,text=True)
-        (obj/'stamp').write_text(stamp)
     rng=np.random.default_rng(20260927)
     toks=[C.finish(C.rand_token(rng,32,4,n,cls)) for cls,n in (
         ('typical',32),('wide',15),('masked',16),('fault',13))]
     # A real reduced-vehicle token is padded from one 32-dim block to four;
     # zero extra blocks preserve the golden's exact FP32 accumulation.
     vehicle=C.vehicle_tokens(8)
-    tok=next(t for t in vehicle if 0 < len(t['keep']) <= 16 or len(t['keep']) == 32)
-    toks.append(tok)
+    toks.extend((next(t for t in vehicle if t['cls']==layer and len(t['keep'])==n)
+                 for layer,n in (('vehicle.L2',1),('vehicle.L20',6))))
     rows=[]
-    for i,t in enumerate(toks):
-        d=work/f'case{i}';d.mkdir(exist_ok=True)
-        vectors(t,d)
-        r=subprocess.run([str(exe),f'+NKEY={len(t["keep"])}'],cwd=d,capture_output=True,text=True,timeout=600)
-        m=P.search(r.stdout)
-        if not m: raise RuntimeError(r.stdout[-2000:]+r.stderr[-2000:])
-        v=list(map(int,m.groups()))
-        row=dict(name='vehicle' if i==len(toks)-1 else t['cls'],keys=v[0],checked=v[1],errors=v[2],
-                 faults=v[3],cycles=v[4],protocol_fault=v[5])
-        assert row['keys']==row['checked'] and row['errors']==0 and row['protocol_fault']==0,row
-        rows.append(row)
+    for mp in (1,2):
+        obj=work/f'obj_m{mp}';exe=obj/'Vtb_hdc_v41x_idx_pool_batch'
+        if not exe.exists() or not (obj/'stamp').exists() or (obj/'stamp').read_text()!=stamp:
+            subprocess.run(['verilator','--cc','--exe','--build','-O3','--x-assign','fast','--x-initial','fast',
+                '-Wno-fatal','-Wno-WIDTH','-Wno-UNUSED','-Wno-BLKSEQ','-Wno-DECLFILENAME','-Wno-WIDTHCONCAT',
+                '--top-module','tb_hdc_v41x_idx_pool_batch',f'-GM={mp}',
+                '-CFLAGS','-DVTOP=Vtb_hdc_v41x_idx_pool_batch -O1',
+                '-j','8','--Mdir',str(obj),str(TB)]+[str(p) for p in RTL]+[str(HARNESS)],
+                check=True,capture_output=True,text=True,timeout=1800)
+            (obj/'stamp').write_text(stamp)
+        for i,t in enumerate(toks):
+            d=work/f'm{mp}_case{i}';d.mkdir(exist_ok=True)
+            vectors(t,d,mp)
+            r=subprocess.run([str(exe),f'+NKEY={len(t["keep"])}'],cwd=d,capture_output=True,text=True,timeout=600)
+            m=P.search(r.stdout)
+            if not m: raise RuntimeError(r.stdout[-2000:]+r.stderr[-2000:])
+            v=list(map(int,m.groups()))
+            row=dict(name=t['cls'],mp=mp,keys=v[0],checked=v[1],errors=v[2],
+                     faults=v[3],cycles=v[4],protocol_fault=v[5])
+            assert row['keys']==row['checked'] and row['errors']==0 and row['protocol_fault']==0,row
+            rows.append(row)
     rec=dict(schema='opentallas-hdc-v41x-idx-pool-batch-v1',status='pass',rows=rows,
-        limitation='One G4/M2 tile back-pressures 64-key kmerge beats; query FP8 read words and head weights are supplied by a testbench memory. Core X_IDX adapter and full-rate replication remain.',
+        limitation='One G4/MP1 or MP2 tile back-pressures 64-key kmerge beats; query FP8 read words and head weights are supplied by a testbench memory. Core X_IDX adapter and full-rate replication remain.',
         sources={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in RTL+[TB,HARNESS,Path(__file__).resolve()]})
     OUT.write_text(json.dumps(rec,indent=1)+'\n')
     print(json.dumps(rows,indent=1))
