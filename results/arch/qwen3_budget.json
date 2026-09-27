@@ -1395,6 +1395,42 @@
    "max_split": null,
    "instructions": 1048,
    "cycles": 123301,
+   "layer_chain": {
+    "layer": 18,
+    "cycles": 3286,
+    "stages": [
+     {
+      "stage": "QKV projection, then q/k norm, RoPE",
+      "cycles": 628,
+      "engine_busy": 192,
+      "exposed": 436
+     },
+     {
+      "stage": "attention: scores, softmax, P\u00b7V, 1/Z",
+      "cycles": 872,
+      "engine_busy": 512,
+      "exposed": 360
+     },
+     {
+      "stage": "O projection, residual, FFN norm",
+      "cycles": 223,
+      "engine_busy": 128,
+      "exposed": 95
+     },
+     {
+      "stage": "gate/up projection, fused SiLU\u00b7up",
+      "cycles": 1084,
+      "engine_busy": 768,
+      "exposed": 316
+     },
+     {
+      "stage": "down projection, residual, next norm",
+      "cycles": 479,
+      "engine_busy": 384,
+      "exposed": 95
+     }
+    ]
+   },
    "unit_busy": {
     "stream": 21177,
     "weights": 52992,
@@ -1419,6 +1455,42 @@
    "max_split": null,
    "instructions": 1048,
    "cycles": 108393,
+   "layer_chain": {
+    "layer": 18,
+    "cycles": 2872,
+    "stages": [
+     {
+      "stage": "QKV projection, then q/k norm, RoPE",
+      "cycles": 624,
+      "engine_busy": 192,
+      "exposed": 432
+     },
+     {
+      "stage": "attention: scores, softmax, P\u00b7V, 1/Z",
+      "cycles": 462,
+      "engine_busy": 128,
+      "exposed": 334
+     },
+     {
+      "stage": "O projection, residual, FFN norm",
+      "cycles": 223,
+      "engine_busy": 128,
+      "exposed": 95
+     },
+     {
+      "stage": "gate/up projection, fused SiLU\u00b7up",
+      "cycles": 1084,
+      "engine_busy": 768,
+      "exposed": 316
+     },
+     {
+      "stage": "down projection, residual, next norm",
+      "cycles": 479,
+      "engine_busy": 384,
+      "exposed": 95
+     }
+    ]
+   },
    "unit_busy": {
     "stream": 14265,
     "weights": 52992,

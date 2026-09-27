@@ -424,6 +424,38 @@ def capped_layout(groups, max_split):
     return lay
 
 
+def layer_chain(prog, iss, d, T_ctx, groups, layer=None):
+    """One decoder layer of the replayed program (the middle one), cut at the
+    matrix engine's weight-op issues: each stage's span in cycles, the engine's
+    busy cycles in it (the weight sweep, or the attention passes), and the rest,
+    the exposed chain (stream-unit work and latency not hidden under the engine)."""
+    me = [i for i, f in enumerate(prog) if f.get("unit") == I.UNIT_ME]
+    wt = [i for i in me if not prog[i].get("me_wsrc") and not prog[i].get("me_amax")]
+    layer = Q["L"] // 2 if layer is None else layer
+    q0, o, gu, dn, q1 = (wt[4 * layer + j] for j in range(5))
+
+    def busy(lo, hi):
+        tot = 0
+        for i in me:
+            if lo <= i < hi:
+                f = {n: prog[i].get(n, 0) for n, _ in I.FIELDS}
+                rr, kk = T.me_loop(f, d, T_ctx - 1, groups)
+                tot += rr * kk * IL
+        return tot
+    att0 = next(i for i in me if q0 < i and prog[i].get("me_wsrc"))
+    cuts = (("QKV projection, then q/k norm, RoPE", q0, att0),
+            ("attention: scores, softmax, P·V, 1/Z", att0, o),
+            ("O projection, residual, FFN norm", o, gu),
+            ("gate/up projection, fused SiLU·up", gu, dn),
+            ("down projection, residual, next norm", dn, q1))
+    rows = []
+    for name, lo, hi in cuts:
+        span = iss[hi] - iss[lo]
+        b = busy(lo, hi)
+        rows.append(dict(stage=name, cycles=span, engine_busy=b, exposed=span - b))
+    return dict(layer=layer, cycles=iss[q1] - iss[q0], stages=rows)
+
+
 def as_built(T_ctx, groups=GROUPS_ROM, su_width=SPEC_SU_WIDTH, max_split=None, lv=None):
     """The calibrated sequencer model replaying the decode program the core runs
     AT THIS COMMIT (tools/hdc_program.build_program) at the shipped shapes,
@@ -446,7 +478,7 @@ def as_built(T_ctx, groups=GROUPS_ROM, su_width=SPEC_SU_WIDTH, max_split=None, l
     dyn = dict(H=Q["H"], half=Q["HD"] // 2, HD=Q["HD"])
     tr = []
     k = dict(T.K, red_lv=lv)
-    _, cyc = T.simulate(prog, T_ctx - 1, groups=groups, dyn_shape=dyn, su_width=su_width, trace=tr, k=k)
+    iss, cyc = T.simulate(prog, T_ctx - 1, groups=groups, dyn_shape=dyn, su_width=su_width, trace=tr, k=k)
     d = T.dyn_values(T_ctx - 1, groups=groups, **dyn)
     busy = collections.Counter()
     stall = collections.Counter()
@@ -462,7 +494,7 @@ def as_built(T_ctx, groups=GROUPS_ROM, su_width=SPEC_SU_WIDTH, max_split=None, l
         stall[why] += g
     n = sum(1 for f in prog if f.get("unit") != I.UNIT_END)
     return dict(context=T_ctx, groups=groups, su_width=su_width, reducer_time_levels=lv, max_split=max_split,
-                instructions=n, cycles=cyc,
+                instructions=n, cycles=cyc, layer_chain=layer_chain(prog, iss, d, T_ctx, groups),
                 unit_busy=dict(busy), sequencer_stalls={k: v for k, v in stall.items() if k != "issue"},
                 seq_gap_total=n * T.K["seq_gap"])
 

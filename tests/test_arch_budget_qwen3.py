@@ -88,7 +88,7 @@ def test_speculation(rec):
 # runs, at shipped shapes and the design context, must not regress past the
 # ratchet, and the gap to the budget target is reported.  Lower RATCHET as
 # blocks land; the gate is met when RATCHET <= the budget target.
-RATCHET_8K = 131_185
+RATCHET_8K = 123_301
 
 
 def test_performance_gate(rec, fresh):
@@ -96,3 +96,13 @@ def test_performance_gate(rec, fresh):
     assert cyc <= RATCHET_8K, f"calibrated token {cyc} cycles regressed past the ratchet {RATCHET_8K}"
     target = rec["budget"]["target_cycles"]
     print(f"calibrated {cyc} cycles vs budget target {target}: {cyc / target:.2f}x")
+
+
+def test_layer_chain_is_under_the_kv_floor(rec, fresh):
+    """The per-layer compute chain at the spec configuration fits under the
+    per-layer share of the FP8 KV stream: the ROM token is KV-bound at 8k."""
+    lc = fresh["as_built_calibrated"]["8192"]["layer_chain"]
+    assert lc["cycles"] == sum(s["cycles"] for s in lc["stages"])
+    kv = rec["rom_token"]["8192/fp8"]["kv_stream_cycles"]
+    assert lc["cycles"] < kv / rec["shape"]["L"]
+    assert fresh["as_built_calibrated"]["8192"]["cycles"] <= rec["budget"]["target_cycles"]

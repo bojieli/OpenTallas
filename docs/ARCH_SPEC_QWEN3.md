@@ -132,30 +132,59 @@ All figures are cycles per token at 8K, FP8 KV:
 | calibrated model, before this work (SU 1, split ≤ 8, 7,680 groups; KV on core) | 49,888,993 | 22 |
 | calibrated model, K-split attention + 4-bit split + prefetched issue (8fb2059d) | 30,090,973 | 36.5 |
 | calibrated model, + the 1,024-lane vector stream unit, normalise-after-sum, per-unit waits (0a23b3fe) | 174,856 | 6,283 |
-| calibrated model, at HEAD (+ 3-cycle FP units, the row max on the engine, P·V chasing the exp pass by rows) | **131,185** <!-- figure: 131,185 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | 8,375 |
+| calibrated model, + 3-cycle FP units, the row max on the engine, P·V chasing the exp pass by rows | 131,185 | 8,375 |
+| calibrated model, at HEAD (+ RMSNorm weights folded into the projections with 1/rms after them, one fused SiLU·up op; FP8 KV) | **123,301** <!-- figure: 123,301 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | 8,910 |
 
 The HEAD figure is the RTL's parameters set to the spec's: 8,192 groups, SW =
 1,024, and LV = 3 time levels. It is not a shipped-scale simulation.
 
-HEAD is **1.4% above the design point's target** of 129,348. The KV stream
-(122,881) sits under both. What is left:
+HEAD is **4.7% under the design point's target** of 129,348 and 0.3% above
+the KV stream (122,881): **compute has reached the KV floor**, and the ROM
+token at 8K is bound by the KV stream, not by the chain. One decoder layer
+(the middle one, of 36) at HEAD:
 
-* weights 57,744;
-* stream busy 20,601;
-* attention 18,432;
-* waits and chases, the exposed latency: about 101,000, of which 66,805 are
-  chases on the matrix-vector results.
+| stage (cut at the matrix engine's weight-op issues) | cycles | engine busy | exposed |
+|---|---|---|---|
+| QKV projection, then q/k norm, RoPE | 628 | 192 | 436 |
+| attention: scores, softmax, P·V, 1/Z | 872 | 512 | 360 |
+| O projection, residual, FFN norm | 223 | 128 | 95 |
+| gate/up projection, fused SiLU·up | 1,084 | 768 | 316 |
+| down projection, residual, next norm | 479 | 384 | 95 |
+| **layer** | **3,286** <!-- figure: 3,286 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.layer_chain.cycles" name="Qwen3-8B calibrated layer chain 8K" --> | 1,984 | 1,302 |
 
-The chases are each projection's latency: its loop plus a 68-cycle result
-path (16 through the lanes, 13 split-tree levels of 4). That makes them the
-remaining lever. Tile-granular chaining would help: a consumer starting on a
-round's first slots rather than on the op's.
+The per-layer share of the KV stream is 3,413 cycles, so a layer's chain
+(3,286) now fits under it with 127 cycles to spare. The token adds the LM
+head and the first layer's norm to the 36 layers. The exposed 1,302 cycles
+per layer are the stream-unit passes and result paths between projections;
+they matter again only if the KV stream gets faster (4-bit KV, a sensitivity:
+61,440 cycles), where the chain would bind.
+
+The analytical spec chain that `rom_token` prices (142,884 at 8K) is now
+pessimistic against the calibrated replay; the speculation, batch and power
+sections still use it, so their compute-bound figures are conservative.
+
+The chain levers, in the order the user approved, and the token after each
+(8K, calibrated):
+
+1. reductions off the critical path -- normalise after P·V, the row max on
+   the engine, the RMSNorm fold with 1/rms after the projection, SiLU fused:
+   174,856 → 123,301 (with 3);
+2. row-granular chaining (P·V chasing the exp pass by rows): included above.
+   Tile-granular chaining of the projections gives nothing here: at 8,192
+   groups every weight op is a single round, so there is no earlier tile to
+   start on;
+3. shallower stages (3-cycle FP units; 4-cycle split-tree and reducer
+   levels): included above;
+4. overlapping the KV prefetch: the KV stream runs beside the chain (the
+   streamer's lead covers the fetch), so the token is max(chain, KV stream).
 
 **One lever was tried and rejected: the attention norm applied after the
 projection.** The idea is h = x·w, then qkv = W·h·r, so the rsqrt runs beside
 the projection. It was bit-exact and on the oracle token, but it saves
 nothing. The stream unit drains between SFU classes, so the rsqrt and the
-x·w pass still serialise. It was reverted.
+x·w pass still serialise. It was reverted. Folding the norm weight into
+the projection's weights (W' = bf16(W·diag(w))) removes the x·w pass instead,
+and that is what landed.
 
 The analytical `decode_critical_path.py` prices 2K with KV on chip (8,680
 tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
