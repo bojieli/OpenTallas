@@ -110,7 +110,8 @@ module tb_hdc_qwen_kv_system_tail;
         repeat(2) @(negedge clk); rst_n=1; boot_v=1;
         if (SPLIT_MODE || FLUSH_MODE) begin
             for (integer s=0;s<(FLUSH_MODE ? 128 : 4);s=s+1) begin
-                boot_word=s; boot_data={16{8'(8'h38+s*8)}};
+                boot_word=FLUSH_MODE ? ((s/16)*64+(s%16)) : s;
+                boot_data={16{8'(s<4 ? (8'h38+s*8) : 8'h38)}};
                 @(negedge clk);
             end
         end
@@ -138,10 +139,17 @@ module tb_hdc_qwen_kv_system_tail;
             @(negedge clk); kv_re=0; tok_pos=16; tok_start=1;
             @(negedge clk); tok_start=0;
             for (integer n=0;n<5000 && h_writes<128;n=n+1) @(negedge clk);
-            if (h_writes != 128 || h_mem[0][7:0] !== 8'h38 ||
-                h_mem[0][128 +: 8] !== 8'h40 || fault)
-                $fatal(1,"K tile flush lost physical data: writes=%0d sector0=%h fault=%b",
-                       h_writes,h_mem[0],fault);
+            if (h_writes != 128 || fault)
+                $fatal(1,"K tile flush incomplete: writes=%0d fault=%b",h_writes,fault);
+            for (integer s=0;s<128;s=s+1) begin
+                integer word_addr;
+                reg [127:0] want;
+                word_addr=(s/16)*64+(s%16);
+                want=(s==0) ? 128'h38 : {16{8'(s<4 ? (8'h38+s*8) : 8'h38)}};
+                if (h_mem[word_addr/2][(word_addr%2)*128 +: 128] !== want)
+                    $fatal(1,"K tile flush word %0d address %0d mismatch: got=%h expect=%h",
+                           s,word_addr,h_mem[word_addr/2][(word_addr%2)*128 +: 128],want);
+            end
         end
         $display("PASS QWEN_KV_SYSTEM_%s SW=%0d",V_MODE ? "V_SECTOR" : "TAIL",SW); $finish;
     end
