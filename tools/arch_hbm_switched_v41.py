@@ -124,6 +124,13 @@ def run(cfg, sp, muts, hz, hb, hbm, static_die_w):
     return out
 
 
+def _cooling_2die():
+    """Per-die cooling limit of a two-die package by class (air / liquid), from the sourced power scenarios."""
+    import power_scenarios as PS
+    lim = PS.cooling_limits(PS.load_cfg())
+    return {cls: v["2"]["die_w"] for cls, v in lim.items()}
+
+
 def build():
     E = A._env()
     c = E["c"]
@@ -217,7 +224,10 @@ def build():
     dyn_die = dyns[worst_key]
     worst = lanes["static_w"]["layer_die"] + dyn_die
     rec["rom_worst_die_w"] = dict(static_w=lanes["static_w"]["layer_die"], dynamic_w=dyn_die, worst_point=worst_key,
-                                  dynamic_w_by_point=dyns, total_w=worst, cooling_limit_w=407.5,
+                                  dynamic_w_by_point=dyns, total_w=worst,
+                                  cooling_limit_w=_cooling_2die(),
+                                  cooling_basis="configs/hardware/power_scenarios.json cooling classes, 2-die packages "
+                                                "(tools/power_scenarios.cooling_limits: per-die W, air / liquid)",
                                   provisioned_wall_w=1.2 * worst * wall,
                                   basis="max over saturation without and with MTP at the design point (R-L8 pools "
                                         "doubled, m = 2): the array's dynamic energy per token x its rate over the "

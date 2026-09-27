@@ -634,7 +634,10 @@ def power(el, pl):
         mac_energy_delta_j_per_token=dmac,
         per_die=dict(static_w=st, layer_static_w=die_static, worst_case_w=die_worst,
                      hbm_interface_worst_w=pw["hbm_interface_worst_w_per_die"], table_static_w=table_static,
-                     table_leakage_w=table_leak, cooling_limit_w=pw["cooling_limit_w_per_die"],
+                     table_leakage_w=table_leak, cooling_limit_w=_cooling_2die(),
+                     cooling_basis="configs/hardware/power_scenarios.json cooling classes, 2-die packages (B200 HGX "
+                                   "air / GB200 liquid, less the stacks); the budget's 0.5 W/mm2 x 815 mm2 rule "
+                                   "(%.1f W) is withdrawn" % pw["cooling_limit_w_per_die"],
                      spec_provisioned_wall_w=pw["provisioned_wall_w_per_die"]),
         serdes=dict(lane_w=serdes_lane_w, active_lanes_per_layer_pkg=active_lanes,
                     per_layer_pkg_w=2 * st["serdes_always_on"], per_table_pkg_w=2 * serdes_lane_w,
@@ -831,13 +834,21 @@ def conflicts(pl, links, tr, pwr, el, draft_sram):
         item="collective overlap and whole-system clock must be demonstrated",
         status=_c7_status(),
         finding=("the overlap-assumed lane-priced rate assumes collective bytes chase their producers (%.2f us of "
-                 "exposed bytes per token) and a %.3f GHz clock on every die. %s With no overlap at all the stress "
-                 "bound is %.0f tok/s/user. The demonstration plan (record key demonstration_plan) states the benches, "
+                 "exposed bytes per token) and a %.3f GHz clock on every die. %s Serialising only the collective bytes "
+                 "from the conditional point gives %.0f tok/s/user -- not a bound, since the bench's fold, hop and "
+                 "row-gather tails add more. The demonstration plan (record key demonstration_plan) states the benches, "
                  "parameters and acceptance for both."
                  % (LANES_R_L9[str(CTX)]["collective_bytes_us"] if LANES_R_L9 else float("nan"),
                     json.loads(LADDER.read_text())["ladder"][-1]["clock_hz"] / 1e9, _c7_measured_text(),
                     reprice_sensitivity(pl, links, tr, pwr)["no_collective_overlap_stress"]["rate_tokens_s"]))))
     return c
+
+
+def _cooling_2die():
+    """Per-die cooling limit of a two-die package by class (air / liquid), from the sourced power scenarios."""
+    import power_scenarios as PS
+    lim = PS.cooling_limits(PS.load_cfg())
+    return {cls: v["2"]["die_w"] for cls, v in lim.items()}
 
 
 def _c7_lanes():
@@ -1174,17 +1185,23 @@ def reprice_sensitivity(pl, links, tr, pwr):
     """Bind the adopted 1M rate to this rack's geometry and expose the two missing physical costs.
 
     The adopted ladder already credits a one-hop ring return, so relocating the embedding is a
-    physical validation of that lever, not a second speed credit.  The no-overlap case is a stress
-    bound: every on-path collective's payload serialises on one eight-lane peer link after its
-    producer.  It is not a prediction of the final pipelined implementation.
+    physical validation of that lever, not a second speed credit.  The baseline is the HEADLINE: the design
+    point with the RTL stage bench's measured collective exposure (gate C7, results/arch/v41_lanes.json
+    design_point); the overlap-assumed (conditional) point is kept beside it.  The bytes-only serialisation row
+    serialises every on-path collective's payload on one peer link after its producer, from the conditional
+    point; it charges bytes only, not the measured fold / hop / row-gather tails, so it is NOT a lower bound (the
+    measured headline sits below it).
     """
     best = json.loads(HBM_BEST.read_text())["rungs"]["top"]["energy"][str(CTX)]["b1"]["rom"]
     top_rung = json.loads(LADDER.read_text())["ladder"][-1]
     overlap_assumed_rate = best["tokens_s_per_user"]
     # baseline: the design point priced on this rack's lanes (R-L9) when available -- its collective bytes already
     # sit on their peer links and its hops on the stage lanes; else the overlap-assumed ladder top
-    baseline_rate = LANES_R_L9[str(CTX)]["ar"] if LANES_R_L9 else overlap_assumed_rate
+    conditional_rate = LANES_R_L9[str(CTX)]["ar"] if LANES_R_L9 else overlap_assumed_rate
+    ln = _c7_lanes()
+    baseline_rate = ln["design_point"][str(CTX)]["ar"] if ln else conditional_rate
     baseline_t = 1 / baseline_rate
+    conditional_t = 1 / conditional_rate
     hops = len(links["stage_links"])
     base_hop = _v("cable_hop_s") if LANES_R_L9 and LANES_R_L9[str(CTX)].get("hops_us", 0) > 8.0 else _v("hop_s")
     extra_hop = max(0.0, max(x["latency_s"] for x in links["stage_links"]) - base_hop) * hops
@@ -1195,7 +1212,7 @@ def reprice_sensitivity(pl, links, tr, pwr):
     charged = (LANES_R_L9[str(CTX)]["collective_bytes_us"] * 1e-6) if LANES_R_L9 else 0.0
     no_overlap = max(0.0, peer_bytes / lb["tp_per_die_pair_Bps"] - charged)
     geom_rate = 1 / (baseline_t + extra_hop)
-    stress_rate = 1 / (baseline_t + extra_hop + no_overlap)
+    stress_rate = 1 / (conditional_t + extra_hop + no_overlap)
     serdes_w = pwr["serdes"]["total_w"]
     baseline_static_w = pwr["static_total_w"] - serdes_w          # validated leakage + HBM idle (no SerDes)
     dyn_j = best["dynamic_j"] + pwr["mac_energy_delta_j_per_token"]
@@ -1203,16 +1220,21 @@ def reprice_sensitivity(pl, links, tr, pwr):
         evidence_class="analytical sensitivity; not a routed whole-system result",
         baseline=dict(rate_tokens_s=baseline_rate, period_s=baseline_t, clock_hz=top_rung["clock_hz"],
                       dynamic_j_per_token=dyn_j, static_w=baseline_static_w,
-                      basis=("design point priced on the R-L9 lanes (results/arch/v41_lanes.json best_split)"
+                      basis=("design point priced on the R-L9 lanes with the measured C7 collective exposure "
+                             "(results/arch/v41_lanes.json design_point)" if ln else
+                             "design point priced on the R-L9 lanes (results/arch/v41_lanes.json best_split)"
                              if LANES_R_L9 else "adopted ladder top, collective overlap assumed"),
+                      conditional_rate_tokens_s=conditional_rate,
                       overlap_assumed_rate_tokens_s=overlap_assumed_rate),
         geometry=dict(extra_s_per_token=extra_hop, rate_tokens_s=geom_rate,
                       note="29 ring cables at the worst layout-estimated length; adopted ladder already has a one-hop return"),
         no_collective_overlap_stress=dict(extra_s_per_token=no_overlap, rate_tokens_s=stress_rate,
-                                          note="all 209 token-collective peer payloads serialised after their producers "
-                                               "on one %d-lane peer link (two-step all-reduce: n/2 per peer), minus the "
-                                               "bytes the lane-priced baseline already exposes; a pessimistic bound "
-                                               "pending the streamed RTL demonstration" % lb["tp_lanes_per_die_pair"]),
+                                          note="from the CONDITIONAL (overlap-assumed) point: all 209 token-collective "
+                                               "peer payloads serialised after their producers on one %d-lane peer link "
+                                               "(two-step all-reduce: n/2 per peer), minus the bytes it already exposes. "
+                                               "Bytes only: the RTL stage bench also measures fold, hop and row-gather "
+                                               "tails, so the measured headline (baseline) is BELOW this row -- it is not "
+                                               "a lower bound" % lb["tp_lanes_per_die_pair"]),
         serdes_static=dict(additional_w=serdes_w,
                            geometry_j_per_token=dyn_j + (baseline_static_w + serdes_w) / geom_rate,
                            no_overlap_j_per_token=dyn_j + (baseline_static_w + serdes_w) / stress_rate,

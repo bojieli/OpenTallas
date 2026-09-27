@@ -166,3 +166,18 @@ def test_every_point_is_capped_per_class_and_liquid_never_caps_lower(rec):
                 assert c["package_w_at_cap"] <= c["package_limit_w"] * (1 + 1e-6)
     classes = {r["cooling"] for r in rec["summary"]}
     assert classes == set(P.COOLING_CLASSES)
+
+
+def test_design_point_rows_price_the_measured_headline(rec):
+    """The adopted V4.1 design point (results/arch/v41_lanes.json design_point, collective exposure measured) is
+    priced in both scenarios beside the specification model, KV in HBM charged on every point."""
+    ln = json.loads((ROOT / "results/arch/v41_lanes.json").read_text())
+    for s in P.SCENARIOS:
+        dp = rec["scenarios"][s]["deepseek_v41_design_point"]
+        assert dp["mtp_tau"] == 5.0
+        for c in ("1048576", "200000"):
+            p = dp["per_context"][c]
+            assert p["ar_batch1"]["design_rate_tokens_s"] == pytest.approx(ln["design_point"][c]["ar"], rel=1e-5)
+            assert p["mtp_batch1"]["design_rate_tokens_s"] == pytest.approx(ln["design_point"][c]["mtp"], rel=1e-5)
+            assert p["ar_batch1"]["die_components_j_per_token"]["hbm_controller_phy_io"] > 0
+            assert p["ar_batch1"]["stack_j_per_token"] > 0

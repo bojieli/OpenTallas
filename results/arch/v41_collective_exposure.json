@@ -1,11 +1,32 @@
 {
- "schema": "v41_collective_exposure/1",
+ "schema": "v41_collective_exposure/2",
  "tool": "tools/v41_collective_exposure.py",
  "gate": "C7 / O2",
  "campaign": "results/rtl/v41_stage_collective_campaign.json",
- "design_point_tree": {
-  "branch": "v41-rack-gates",
-  "commit": "0facdc17fafb12fadcffb0680e1d3fe057c052be"
+ "campaign_binding": {
+  "pinned": true,
+  "current": true,
+  "stale": [],
+  "source_sha256": {
+   "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "rtl/rom/ot_rom_oneshot_allreduce.sv": "9086fb04462ca058b3c759eb72ead4a5f720fb2a3e594eacfff35326efa88da2",
+   "rtl/test/tb_v41_stage_collective.sv": "9ecce59a8d5898b8c1da81106a2f134c35e08e106e692f7a0cf6ad4e6a83daf9",
+   "tools/rtl_v41_stage_collective_campaign.py": "b1d8a57b03d2e54f2764418382921019b1ae8be16124c985e24935dd394739e6",
+   "tools/hdc_golden.py": "930415fe9e9e6d24d308b0fc72be89b3b3665539063e71abf74106a1a160e788"
+  }
+ },
+ "design_point_model": {
+  "tools": [
+   "tools/arch_budget_v41_dp.py",
+   "tools/arch_utilization_v41.py",
+   "tools/arch_latency_ladder_v41.py",
+   "tools/arch_lanes_v41.py"
+  ],
+  "split": {
+   "tp": 52,
+   "stage": 14,
+   "two_step": true
+  }
  },
  "terms": {
   "all_reduce": {
@@ -444,22 +465,5 @@
    }
   }
  },
- "spec_model_rates_this_line": {
-  "200000": {
-   "overlap_assumed": 5392.968133722219,
-   "measured_exposure": 5291.904810212757,
-   "T_us": [
-    185.42664729409432,
-    188.96787373614828
-   ]
-  },
-  "1048576": {
-   "overlap_assumed": 4912.5927928677365,
-   "measured_exposure": 4828.5916976540375,
-   "T_us": [
-    203.5584959233407,
-    207.0997223653945
-   ]
-  }
- }
+ "spec_model_rates": "results/arch/arch_budget_v41.json collective_exposure (tools/arch_budget_v41.py prices the specification model with these terms, exposure=True)"
 }

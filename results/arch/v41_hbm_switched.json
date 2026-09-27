@@ -1160,17 +1160,17 @@
   }
  },
  "hbm_static_w_per_die": {
-  "total": 101.4125,
+  "total": 76.2805,
   "serdes": 24.8625,
-  "leakage_hbm_ucie": 76.55,
+  "leakage_hbm_ucie": 51.418,
   "serdes_at_1p8": 49.725
  },
  "switches_and_wall": {
   "hbm_switch_w": 9375.0,
   "rom_switch_w": 1096.6666666666667,
   "wall_factor": 1.2404214559386975,
-  "hbm_chip_static_w": 10039.8375,
-  "rom_chip_static_w": 14875.923795328998,
+  "hbm_chip_static_w": 7551.7695,
+  "rom_chip_static_w": 11220.234710021483,
   "basis": "13.0 W per Tb/s of port capacity (NVL72: 9 x 1.5 kW trays, ASSUMED, over 72 GPUs x 14.4 Tb/s); the ROM rack's off-path switch carries 4 lanes x 112G both ways per package; NVL72 trays scaled to the comparator's 50 packages (ASSUMED 1.5 kW a tray); both machines' chip and switch power go through the same wall chain (1/(VR x PSU) x (1 + CDU + fans))"
  },
  "domain": {
@@ -1188,26 +1188,26 @@
      "tokens_s_per_user": 3580.375802755708,
      "aggregate_tokens_s": 3580.375802755708,
      "switch_j": 2.618440218701161,
-     "wall_j": 8.831684753696305,
-     "dynamic_j": 1.6973367292984143,
-     "static_j": 2.8041295252505725,
-     "total_j": 4.501466254548987,
-     "nonclock_j": 1.3948335309655038,
+     "wall_j": 7.966009617809366,
+     "dynamic_j": 1.6943669344483663,
+     "static_j": 2.1092114113238143,
+     "total_j": 3.8035783457721806,
+     "nonclock_j": 1.3918637361154558,
      "clock_j": 0.3025031983329105
     },
     "rom": {
-     "tokens_s_per_user": 8622.047603391655,
-     "aggregate_tokens_s": 8622.047603391655,
-     "total_j": 1.7623007684823913,
-     "dynamic_j": 0.036965386492937236,
-     "static_j": 1.7253353819894541,
-     "switch_j": 0.12719329759154555,
-     "wall_j": 2.343768980426962
+     "tokens_s_per_user": 7578.981495298372,
+     "aggregate_tokens_s": 7578.981495298372,
+     "total_j": 1.5151350729163722,
+     "dynamic_j": 0.034694103772699575,
+     "static_j": 1.4804409691436726,
+     "switch_j": 0.1446984225185119,
+     "wall_j": 2.0588930810231565
     },
-    "ratio_rate_per_user": 2.4081403959761776,
-    "ratio_aggregate": 2.4081403959761776,
-    "ratio_energy_with_static": 3.768154979202534,
-    "ratio_energy_chip_only": 2.554312144132714
+    "ratio_rate_per_user": 2.116811729501986,
+    "ratio_aggregate": 2.116811729501986,
+    "ratio_energy_with_static": 3.8690739656333673,
+    "ratio_energy_chip_only": 2.510388950637221
    },
    "b1_mtp": {
     "hbm": {
@@ -1216,26 +1216,26 @@
      "tokens_s_per_user": 11977.864259442315,
      "aggregate_tokens_s": 11977.864259442315,
      "switch_j": 0.7826937922267369,
-     "wall_j": 3.668094749800898,
-     "dynamic_j": 1.3362427472041079,
-     "static_j": 0.838199305196288,
-     "total_j": 2.174442052400396,
-     "nonclock_j": 0.793967030245713,
+     "wall_j": 3.405679610240851,
+     "dynamic_j": 1.332411711847546,
+     "static_j": 0.6304771315175689,
+     "total_j": 1.962888843365115,
+     "nonclock_j": 0.7901359948891513,
      "clock_j": 0.5422757169583947
     },
     "rom": {
-     "tokens_s_per_user": 23577.550266865917,
-     "aggregate_tokens_s": 23577.550266865917,
-     "total_j": 0.6516440232241282,
-     "dynamic_j": 0.02070808514092195,
-     "static_j": 0.6309359380832062,
-     "switch_j": 0.04651317266865668,
-     "wall_j": 0.8660091654034066
+     "tokens_s_per_user": 21005.94986438209,
+     "aggregate_tokens_s": 21005.94986438209,
+     "total_j": 0.5514769102266488,
+     "dynamic_j": 0.017331357063798,
+     "static_j": 0.5341455531628508,
+     "switch_j": 0.052207430454082264,
+     "wall_j": 0.7488230087945851
     },
-    "ratio_rate_per_user": 1.9684269045109115,
-    "ratio_aggregate": 1.9684269045109115,
-    "ratio_energy_with_static": 4.235630402470645,
-    "ratio_energy_chip_only": 3.3368556679794983
+    "ratio_rate_per_user": 1.7537308329256456,
+    "ratio_aggregate": 1.7537308329256456,
+    "ratio_energy_with_static": 4.548043489907088,
+    "ratio_energy_chip_only": 3.559330965567347
    },
    "fill28": {
     "hbm": {
@@ -1244,26 +1244,26 @@
      "tokens_s_per_user": 1213.7503956626733,
      "aggregate_tokens_s": 33985.01107855485,
      "switch_j": 0.27585690580856664,
-     "wall_j": 1.3007276102771068,
-     "dynamic_j": 0.47734099119286266,
-     "static_j": 0.29541957414088693,
-     "total_j": 0.7727605653337496,
-     "nonclock_j": 0.44547179070727555,
+     "wall_j": 1.2062316333882737,
+     "dynamic_j": 0.4743711963428147,
+     "static_j": 0.2222088285492807,
+     "total_j": 0.6965800248920955,
+     "nonclock_j": 0.4425019958572276,
      "clock_j": 0.031869200485587106
     },
     "rom": {
-     "tokens_s_per_user": 8622.047603391655,
-     "aggregate_tokens_s": 241417.33289496633,
-     "total_j": 0.0985845072782749,
-     "dynamic_j": 0.036965386492937256,
-     "static_j": 0.06161912078533765,
-     "switch_j": 0.004542617771126627,
-     "wall_j": 0.12792109860055076
+     "tokens_s_per_user": 7578.981495298372,
+     "aggregate_tokens_s": 212211.4818683544,
+     "total_j": 0.08756699552783077,
+     "dynamic_j": 0.0346941037726996,
+     "static_j": 0.05287289175513117,
+     "switch_j": 0.005167800804232567,
+     "wall_j": 0.1150302310823966
     },
-    "ratio_rate_per_user": 7.103641435835958,
-    "ratio_aggregate": 7.103641435835958,
-    "ratio_energy_with_static": 10.168202309915955,
-    "ratio_energy_chip_only": 7.838559898184357
+    "ratio_rate_per_user": 6.244266961627199,
+    "ratio_aggregate": 6.244266961627199,
+    "ratio_energy_with_static": 10.486214119871196,
+    "ratio_energy_chip_only": 7.95482385450471
    },
    "fill28_mtp": {
     "hbm": {
@@ -1272,26 +1272,26 @@
      "tokens_s_per_user": 2027.4909995067735,
      "aggregate_tokens_s": 56769.74798618966,
      "switch_j": 0.16514077184701703,
-     "wall_j": 0.8608822042179644,
-     "dynamic_j": 0.35203128792700245,
-     "static_j": 0.17685189482332006,
-     "total_j": 0.5288831827503225,
-     "nonclock_j": 0.2376163898636973,
+     "wall_j": 0.8017657120409688,
+     "dynamic_j": 0.3482002525704405,
+     "static_j": 0.1330245380310146,
+     "total_j": 0.4812247906014551,
+     "nonclock_j": 0.23378535450713533,
      "clock_j": 0.11441489806330515
     },
     "rom": {
-     "tokens_s_per_user": 23577.550266865917,
-     "aggregate_tokens_s": 660171.4074722456,
-     "total_j": 0.04324151150103647,
-     "dynamic_j": 0.02070808514092196,
-     "static_j": 0.02253342636011451,
-     "switch_j": 0.00166118473816631,
-     "wall_j": 0.055698267844604986
+     "tokens_s_per_user": 21005.94986438209,
+     "aggregate_tokens_s": 588166.5962026985,
+     "total_j": 0.036407983962471246,
+     "dynamic_j": 0.017331357063798007,
+     "static_j": 0.019076626898673243,
+     "switch_j": 0.001864551087645795,
+     "wall_j": 0.047474073649331004
     },
-    "ratio_rate_per_user": 11.628929683338479,
-    "ratio_aggregate": 11.628929683338477,
-    "ratio_energy_with_static": 15.456175524520384,
-    "ratio_energy_chip_only": 12.230913406846232
+    "ratio_rate_per_user": 10.360563804964952,
+    "ratio_aggregate": 10.360563804964952,
+    "ratio_energy_with_static": 16.888496191905517,
+    "ratio_energy_chip_only": 13.21756214509141
    },
    "sat1024": {
     "hbm": {
@@ -1300,26 +1300,26 @@
      "tokens_s_per_user": 62.56722080757301,
      "aggregate_tokens_s": 64068.83410695476,
      "switch_j": 0.14632699549908512,
-     "wall_j": 0.46917109362912646,
-     "dynamic_j": 0.07520431293867536,
-     "static_j": 0.15670392071189823,
-     "total_j": 0.2319082336505736,
-     "nonclock_j": 0.05829944574912563,
+     "wall_j": 0.41731640371088186,
+     "dynamic_j": 0.07223451808862735,
+     "static_j": 0.11786962577457369,
+     "total_j": 0.19010414386320104,
+     "nonclock_j": 0.055329650899077626,
      "clock_j": 0.01690486718954972
     },
     "rom": {
      "tokens_s_per_user": 672.9518655501923,
      "aggregate_tokens_s": 689102.710323397,
-     "total_j": 0.05236818218926456,
-     "dynamic_j": 0.030780799680860692,
-     "static_j": 0.02158738250840387,
+     "total_j": 0.04409338848992761,
+     "dynamic_j": 0.02781100483081269,
+     "static_j": 0.016282383659114923,
      "switch_j": 0.0015914415227767707,
-     "wall_j": 0.06693267500679458
+     "wall_j": 0.05666844335867067
     },
     "ratio_rate_per_user": 10.755661780469232,
     "ratio_aggregate": 10.755661780469232,
-    "ratio_energy_with_static": 7.009597234556952,
-    "ratio_energy_chip_only": 4.428418630465936
+    "ratio_energy_with_static": 7.364176232432711,
+    "ratio_energy_chip_only": 4.311397930023616
    },
    "sat1024_mtp": {
     "hbm": {
@@ -1328,26 +1328,26 @@
      "tokens_s_per_user": 82.65004218611831,
      "aggregate_tokens_s": 84633.64319858515,
      "switch_j": 0.11077155189931284,
-     "wall_j": 0.40609564932545755,
-     "dynamic_j": 0.09798663927922062,
-     "static_j": 0.1186270272738045,
-     "total_j": 0.2166136665530251,
-     "nonclock_j": 0.021240505195416967,
+     "wall_j": 0.3648775213534392,
+     "dynamic_j": 0.0941556039226587,
+     "static_j": 0.08922893089076243,
+     "total_j": 0.18338453481342115,
+     "nonclock_j": 0.017409469838855045,
      "clock_j": 0.07674613408380365
     },
     "rom": {
-     "tokens_s_per_user": 1260.3885493592798,
-     "aggregate_tokens_s": 1290637.8745439025,
-     "total_j": 0.028643072278366835,
-     "dynamic_j": 0.01711704775302429,
-     "static_j": 0.011526024525342547,
-     "switch_j": 0.0008497090379082645,
-     "wall_j": 0.03658347874001557
+     "tokens_s_per_user": 1202.0926965497094,
+     "aggregate_tokens_s": 1230942.9212669025,
+     "total_j": 0.022493220285661183,
+     "dynamic_j": 0.013378065946519715,
+     "static_j": 0.00911515433914147,
+     "switch_j": 0.0008909159374652101,
+     "wall_j": 0.029006184299759274
     },
-    "ratio_rate_per_user": 15.249702432347595,
-    "ratio_aggregate": 15.249702432347595,
-    "ratio_energy_with_static": 11.100520325347405,
-    "ratio_energy_chip_only": 7.562515097817431
+    "ratio_rate_per_user": 14.544368820075567,
+    "ratio_aggregate": 14.544368820075567,
+    "ratio_energy_with_static": 12.57930093743724,
+    "ratio_energy_chip_only": 8.152880400603367
    }
   },
   "200000": {
@@ -1358,26 +1358,26 @@
      "tokens_s_per_user": 3580.375802755708,
      "aggregate_tokens_s": 3580.375802755708,
      "switch_j": 2.618440218701161,
-     "wall_j": 8.811498399293681,
-     "dynamic_j": 1.6810629424286543,
-     "static_j": 2.8041295252505725,
-     "total_j": 4.4851924676792265,
-     "nonclock_j": 1.3785597440957438,
+     "wall_j": 7.9464711547591165,
+     "dynamic_j": 1.6786154630781265,
+     "static_j": 2.1092114113238143,
+     "total_j": 3.787826874401941,
+     "nonclock_j": 1.376112264745216,
      "clock_j": 0.3025031983329105
     },
     "rom": {
-     "tokens_s_per_user": 9041.220574931696,
-     "aggregate_tokens_s": 9041.220574931696,
-     "total_j": 1.6658009284339073,
-     "dynamic_j": 0.02045629028018313,
-     "static_j": 1.6453446381537242,
-     "switch_j": 0.1212963070171476,
-     "wall_j": 2.2167537547022187
+     "tokens_s_per_user": 7905.41350038117,
+     "aggregate_tokens_s": 7905.41350038117,
+     "total_j": 1.4380145012563654,
+     "dynamic_j": 0.018704213504752702,
+     "static_j": 1.4193102877516128,
+     "switch_j": 0.13872350467357458,
+     "wall_j": 1.955819652949495
     },
-    "ratio_rate_per_user": 2.525215528485289,
-    "ratio_aggregate": 2.525215528485289,
-    "ratio_energy_with_static": 3.9749558924181674,
-    "ratio_energy_chip_only": 2.692514088040492
+    "ratio_rate_per_user": 2.2079842831851924,
+    "ratio_aggregate": 2.2079842831851924,
+    "ratio_energy_with_static": 4.062987680267634,
+    "ratio_energy_chip_only": 2.634067230262692
    },
    "b1_mtp": {
     "hbm": {
@@ -1386,26 +1386,26 @@
      "tokens_s_per_user": 11977.864259442315,
      "aggregate_tokens_s": 11977.864259442315,
      "switch_j": 0.7826937922267369,
-     "wall_j": 3.662229191668998,
-     "dynamic_j": 1.3315140655904376,
-     "static_j": 0.838199305196288,
-     "total_j": 2.1697133707867255,
-     "nonclock_j": 0.7892383486320429,
+     "wall_j": 3.4006498319535137,
+     "dynamic_j": 1.3283568172282565,
+     "static_j": 0.6304771315175689,
+     "total_j": 1.9588339487458253,
+     "nonclock_j": 0.7860811002698618,
      "clock_j": 0.5422757169583947
     },
     "rom": {
-     "tokens_s_per_user": 24602.01201946047,
-     "aggregate_tokens_s": 24602.01201946047,
-     "total_j": 0.6204877676065071,
-     "dynamic_j": 0.01582487322364235,
-     "static_j": 0.6046628943828648,
-     "switch_j": 0.04457629993023298,
-     "wall_j": 0.8249597389464354
+     "tokens_s_per_user": 21815.28744657373,
+     "aggregate_tokens_s": 21815.28744657373,
+     "total_j": 0.5274509198977722,
+     "dynamic_j": 0.013121932140899241,
+     "static_j": 0.5143289877568729,
+     "switch_j": 0.05027055771565858,
+     "wall_j": 0.7166181163883074
     },
-    "ratio_rate_per_user": 2.0539564889513895,
-    "ratio_aggregate": 2.0539564889513895,
-    "ratio_energy_with_static": 4.43928232951837,
-    "ratio_energy_chip_only": 3.496786695983161
+    "ratio_rate_per_user": 1.8213002730746795,
+    "ratio_aggregate": 1.8213002730746795,
+    "ratio_energy_with_static": 4.745414264842328,
+    "ratio_energy_chip_only": 3.713774826908021
    },
    "fill28": {
     "hbm": {
@@ -1414,26 +1414,26 @@
      "tokens_s_per_user": 1213.7503956626733,
      "aggregate_tokens_s": 33985.01107855485,
      "switch_j": 0.27585690580856664,
-     "wall_j": 1.2805412558744835,
-     "dynamic_j": 0.4610672043231027,
-     "static_j": 0.29541957414088693,
-     "total_j": 0.7564867784639897,
-     "nonclock_j": 0.4291980038375156,
+     "wall_j": 1.1866931703380237,
+     "dynamic_j": 0.4586197249725747,
+     "static_j": 0.2222088285492807,
+     "total_j": 0.6808285535218555,
+     "nonclock_j": 0.4267505244869876,
      "clock_j": 0.031869200485587106
     },
     "rom": {
-     "tokens_s_per_user": 9041.220574931696,
-     "aggregate_tokens_s": 253154.1760980875,
-     "total_j": 0.07921859878567329,
-     "dynamic_j": 0.02045629028018315,
-     "static_j": 0.05876230850549014,
-     "switch_j": 0.004332010964898128,
-     "wall_j": 0.10363796899136973
+     "tokens_s_per_user": 7905.41350038117,
+     "aggregate_tokens_s": 221351.57801067276,
+     "total_j": 0.06939386663873887,
+     "dynamic_j": 0.018704213504752695,
+     "static_j": 0.05068965313398617,
+     "switch_j": 0.004954410881199091,
+     "wall_j": 0.09222319864781578
     },
-    "ratio_rate_per_user": 7.448994955833111,
-    "ratio_aggregate": 7.448994955833111,
-    "ratio_energy_with_static": 12.35590844105714,
-    "ratio_energy_chip_only": 9.549358232284217
+    "ratio_rate_per_user": 6.513211883292559,
+    "ratio_aggregate": 6.51321188329256,
+    "ratio_energy_with_static": 12.867621029604457,
+    "ratio_energy_chip_only": 9.81107677809937
    },
    "fill28_mtp": {
     "hbm": {
@@ -1442,26 +1442,26 @@
      "tokens_s_per_user": 2027.4909995067735,
      "aggregate_tokens_s": 56769.74798618966,
      "switch_j": 0.16514077184701703,
-     "wall_j": 0.8550166460860649,
-     "dynamic_j": 0.3473026063133321,
-     "static_j": 0.17685189482332006,
-     "total_j": 0.5241545011366522,
-     "nonclock_j": 0.23288770825002694,
+     "wall_j": 0.7967359337536317,
+     "dynamic_j": 0.344145357951151,
+     "static_j": 0.1330245380310146,
+     "total_j": 0.4771698959821656,
+     "nonclock_j": 0.2297304598878458,
      "clock_j": 0.11441489806330515
     },
     "rom": {
-     "tokens_s_per_user": 24602.01201946047,
-     "aggregate_tokens_s": 688856.3365448932,
-     "total_j": 0.03741997659445896,
-     "dynamic_j": 0.015824873223642358,
-     "static_j": 0.0215951033708166,
-     "switch_j": 0.001592010711794035,
-     "wall_j": 0.04839130609348433
+     "tokens_s_per_user": 21815.28744657373,
+     "aggregate_tokens_s": 610828.0485040644,
+     "total_j": 0.03149082456078753,
+     "dynamic_j": 0.01312193214089921,
+     "static_j": 0.018368892419888316,
+     "switch_j": 0.0017953770612735207,
+     "wall_j": 0.041288918678706
     },
-    "ratio_rate_per_user": 12.134215158264766,
-    "ratio_aggregate": 12.134215158264766,
-    "ratio_energy_with_static": 17.66880696367873,
-    "ratio_energy_chip_only": 14.007344441104419
+    "ratio_rate_per_user": 10.75974564221529,
+    "ratio_aggregate": 10.759745642215291,
+    "ratio_energy_with_static": 19.296604494622756,
+    "ratio_energy_chip_only": 15.152664391530065
    },
    "sat1024": {
     "hbm": {
@@ -1470,26 +1470,26 @@
      "tokens_s_per_user": 65.72743531537212,
      "aggregate_tokens_s": 67304.89376294105,
      "switch_j": 0.13929150580075644,
-     "wall_j": 0.4299037027168895,
-     "dynamic_j": 0.05811772991631181,
-     "static_j": 0.14916950222612288,
-     "total_j": 0.2072872321424347,
-     "nonclock_j": 0.04202565887936563,
+     "wall_j": 0.38101298955930984,
+     "dynamic_j": 0.0556702505657838,
+     "static_j": 0.1122023834789574,
+     "total_j": 0.1678726340447412,
+     "nonclock_j": 0.03957817952883762,
      "clock_j": 0.016092071036946185
     },
     "rom": {
      "tokens_s_per_user": 869.9395509245768,
      "aggregate_tokens_s": 890818.1001467666,
-     "total_j": 0.03080355259584637,
-     "dynamic_j": 0.014104381583404981,
-     "static_j": 0.01669917101244139,
+     "total_j": 0.024252329636263704,
+     "dynamic_j": 0.011656902232876984,
+     "static_j": 0.012595427403386723,
      "switch_j": 0.0012310781140234864,
-     "wall_j": 0.03973644326559528
+     "wall_j": 0.03161016574389072
     },
     "ratio_rate_per_user": 13.235562086827967,
     "ratio_aggregate": 13.235562086827967,
-    "ratio_energy_with_static": 10.818877266982522,
-    "ratio_energy_chip_only": 6.7293287518526625
+    "ratio_energy_with_static": 12.053495468714775,
+    "ratio_energy_chip_only": 6.921917876034755
    },
    "sat1024_mtp": {
     "hbm": {
@@ -1498,54 +1498,54 @@
      "tokens_s_per_user": 82.65004218611831,
      "aggregate_tokens_s": 84633.64319858515,
      "switch_j": 0.11077155189931284,
-     "wall_j": 0.400230091193558,
-     "dynamic_j": 0.09325795766555021,
-     "static_j": 0.1186270272738045,
-     "total_j": 0.2118849849393547,
-     "nonclock_j": 0.016511823581746563,
+     "wall_j": 0.359847743066102,
+     "dynamic_j": 0.0901007093033691,
+     "static_j": 0.08922893089076243,
+     "total_j": 0.17932964019413153,
+     "nonclock_j": 0.013354575219565446,
      "clock_j": 0.07674613408380365
     },
     "rom": {
-     "tokens_s_per_user": 1500.840900383201,
-     "aggregate_tokens_s": 1536861.0819923978,
-     "total_j": 0.02176367291656129,
-     "dynamic_j": 0.012084252980932665,
-     "static_j": 0.009679419935628627,
-     "switch_j": 0.0007135756637450537,
-     "wall_j": 0.027881261409479614
+     "tokens_s_per_user": 1336.4688878140405,
+     "aggregate_tokens_s": 1368544.1411215775,
+     "total_j": 0.01732172522375479,
+     "dynamic_j": 0.009123060399669505,
+     "static_j": 0.008198664824085284,
+     "switch_j": 0.0008013381766173095,
+     "wall_j": 0.02248023668915888
     },
-    "ratio_rate_per_user": 18.158985291301864,
-    "ratio_aggregate": 18.158985291301864,
-    "ratio_energy_with_static": 14.354805735492297,
-    "ratio_energy_chip_only": 9.735718127711737
+    "ratio_rate_per_user": 16.170214224506594,
+    "ratio_aggregate": 16.170214224506594,
+    "ratio_energy_with_static": 16.007293341339196,
+    "ratio_energy_chip_only": 10.352874086017783
    }
   }
  },
  "gpu_crosscheck": {
   "modelled_1M": {
    "b1": {
-    "chip_w_per_package": 322.3388170941712,
-    "wall_w_per_package": 632.4150077940151
+    "chip_w_per_package": 272.36479746176593,
+    "wall_w_per_package": 570.426161602478
    },
    "b1_mtp": {
-    "chip_w_per_package": 520.9034348735019,
-    "wall_w_per_package": 878.7188200777633
+    "chip_w_per_package": 470.22432244402154,
+    "wall_w_per_package": 815.8553616523064
    },
    "fill28": {
-    "chip_w_per_package": 525.2455274787558,
-    "wall_w_per_package": 884.1048449089933
+    "chip_w_per_package": 473.4655972611576,
+    "wall_w_per_package": 819.8759084800757
    },
    "fill28_mtp": {
-    "chip_w_per_package": 600.491299977394,
-    "wall_w_per_package": 977.4413155849859
+    "chip_w_per_package": 546.3802017430299,
+    "wall_w_per_package": 910.3207483306741
    },
    "sat1024": {
-    "chip_w_per_package": 297.16180299591,
-    "wall_w_per_package": 601.1848993100608
+    "chip_w_per_package": 243.59501712432177,
+    "wall_w_per_package": 534.7395087892688
    },
    "sat1024_mtp": {
-    "chip_w_per_package": 366.6560753397205,
-    "wall_w_per_package": 687.3870857901705
+    "chip_w_per_package": 310.4100257507521,
+    "wall_w_per_package": 617.6182790682223
    }
   },
   "reference": {
@@ -1557,53 +1557,79 @@
   "note": "a check only: the comparator stays modelled (its engines, HBM and SerDes), not scaled to a GPU's measured draw"
  },
  "rom_worst_die_w": {
-  "static_w": 98.7963990503202,
-  "dynamic_w": 197.24919759312277,
-  "worst_point": "1048576/sat1024_mtp",
+  "static_w": 77.7717906686181,
+  "dynamic_w": 171.11284647973315,
+  "worst_point": "1048576/sat1024",
   "dynamic_w_by_point": {
-   "1048576/sat1024": 189.38511148216656,
-   "1048576/sat1024_mtp": 197.24919759312277,
-   "200000/sat1024": 112.18248576673099,
-   "200000/sat1024_mtp": 165.81980456558958
+   "1048576/sat1024": 171.11284647973315,
+   "1048576/sat1024_mtp": 147.0324605099129,
+   "200000/sat1024": 92.71588839900069,
+   "200000/sat1024_mtp": 111.47598981308909
   },
-  "total_w": 296.045596643443,
-  "cooling_limit_w": 407.5,
-  "provisioned_wall_w": 440.6655720152399,
+  "total_w": 248.88463714835126,
+  "cooling_limit_w": {
+   "air": 374.56,
+   "liquid": 474.56
+  },
+  "cooling_basis": "configs/hardware/power_scenarios.json cooling classes, 2-die packages (tools/power_scenarios.cooling_limits: per-die W, air / liquid)",
+  "provisioned_wall_w": 370.4662127667988,
   "basis": "max over saturation without and with MTP at the design point (R-L8 pools doubled, m = 2): the array's dynamic energy per token x its rate over the 112 layer dies, plus the static die. No separate HBM-interface active term: the dynamic energy charges every HBM byte at the system-level 13 pJ/b, which contains the I/O (adae6788's ruling); the interface idle is in the static 98.8 W"
  },
  "rom_design_point": {
   "1048576": {
-   "ar": 8622.047603391655,
-   "mtp": 23577.550266865917
+   "ar": 7578.981495298372,
+   "mtp": 21005.94986438209,
+   "T_us": 131.9438503208315,
+   "verify_us": 223.7939203331244,
+   "breakdown_us": {
+    "compute_chain": 75.263,
+    "weight_sweep": 8.548,
+    "kv_sweep": 5.707,
+    "collective_latency": 15.561,
+    "collective_bytes": 12.503,
+    "pipeline_hops": 12.393,
+    "control": 1.969
+   }
   },
   "200000": {
-   "ar": 9041.220574931696,
-   "mtp": 24602.01201946047
+   "ar": 7905.41350038117,
+   "mtp": 21815.28744657373,
+   "T_us": 126.49559696678531,
+   "verify_us": 214.96319356219576,
+   "breakdown_us": {
+    "compute_chain": 74.115,
+    "weight_sweep": 8.548,
+    "kv_sweep": 1.407,
+    "collective_latency": 15.561,
+    "collective_bytes": 12.503,
+    "pipeline_hops": 12.393,
+    "control": 1.969
+   }
   }
  },
  "ratios_batch1": {
   "1048576": {
    "ar": {
-    "rom": 8622.047603391655,
+    "rom": 7578.981495298372,
     "hbm": 3580.375802755708,
-    "ratio": 2.4081403959761776
+    "ratio": 2.116811729501986
    },
    "mtp": {
-    "rom": 23577.550266865917,
+    "rom": 21005.94986438209,
     "hbm": 11977.864259442315,
-    "ratio": 1.9684269045109115
+    "ratio": 1.7537308329256456
    }
   },
   "200000": {
    "ar": {
-    "rom": 9041.220574931696,
+    "rom": 7905.41350038117,
     "hbm": 3580.375802755708,
-    "ratio": 2.525215528485289
+    "ratio": 2.2079842831851924
    },
    "mtp": {
-    "rom": 24602.01201946047,
+    "rom": 21815.28744657373,
     "hbm": 11977.864259442315,
-    "ratio": 2.0539564889513895
+    "ratio": 1.8213002730746795
    }
   }
  },
@@ -1629,8 +1655,8 @@
   "bytes_per_token_upper": 7832.0,
   "residual_hop_bytes_per_token": 41000,
   "stage_link_Bps_per_group": 368941176470.58826,
-  "worst_aggregate_tokens_s": 1290637.8745439025,
-  "link_load_fraction": 0.1708251415378465,
+  "worst_aggregate_tokens_s": 1230942.9212669025,
+  "link_load_fraction": 0.16292408807911216,
   "batch1_write_time_s": 2.122831632653061e-08,
   "note": "upper bound: every source layer's new compressed row + index key (288 + 68 B) written to each distinct reader group, all on one stage link (store-and-forward along the ring); off the critical path (the readers need it from the next token on)"
  }

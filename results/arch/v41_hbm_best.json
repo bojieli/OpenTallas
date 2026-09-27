@@ -9,12 +9,12 @@
   "bw_Bps_per_die": 3600000000000.0,
   "logic_mm2_per_die": 628.3,
   "first_access_s": 1e-06,
-  "static_w_per_die": 107.126,
-  "logic_leak_w_per_mm2": 0.1
+  "static_w_per_die": 81.994,
+  "logic_leak_w_per_mm2": 0.06
  },
  "rom_static_w": {
-  "layer_die": 98.7963990503202,
-  "nonlayer_die_right_sized": 50.14114607490968
+  "layer_die": 77.7717906686181,
+  "nonlayer_die_right_sized": 33.02360730442441
  },
  "method": "that approximation with a full derivation at each group G:\n\n* GRAPH.  decode_critical_path.v41_graph is BUILT for a machine of tensor group G (heads, experts, index keys,\n  vocabulary and every split matrix divided G ways; collectives spanning G dies) with the packed placement of the\n  checkpoint over the comparator's dies (layer groups of G consecutive dies, stage hops where a layer crosses a\n  group boundary).\n* COLLECTIVES.  Every all-reduce / all-gather is priced on the realistic fabric at span G\n  (decode_critical_path.ArrayFabric: 2-die packages, UCIe inside, a board mesh of G/2 packages at the 130 ns\n  light-FEC hop; hierarchical, best algorithm per collective incl. one-shot), bytes overlapped behind producers.\n* HBM STREAMING.  Each die streams its 1/G share of every weight from its own 4 HBM3E stacks at 90% (user\n  decision: 4 stacks per die); dense weights prefetched across dependency points (read once per pass); routed\n  experts at the UNION of the pass's experts (U(n) = 384 (1 - (1 - 6/384)^n) over users x positions) and fetched\n  after the router with the 1 us first-access latency exposed; KV rows and index keys once per user per pass.\n* MTP.  The verify pass at 6 positions with the m-way core (weights read once, routed union, MACs x 6), plus the\n  DSpark draft priced on the same G graph (3 layer-0 spans at 5 rows + 5 Markov steps of the G-split lm_head).\n* ENERGY.  Dynamic (the budget model's per-format MAC, HBM byte and link energies at the point's microbatch, plus the\n  gated clock of the die's block area over the die-time the token's stages hold it) + static (every die, all the\n  time: logic leakage at the analytical density x the die's logic area -- ASSUMED -- plus 4 stacks x 2.8 W,\n  technology.json power.memory_interface_idle_w_per_stack) per emitted token.",
  "rungs": {
@@ -345,10 +345,10 @@
       "rom": {
        "tokens_s_per_user": 7037.978976508167,
        "aggregate_tokens_s": 7037.978976508167,
-       "dynamic_j": 0.03515009821160779,
-       "static_j": 2.1136641420758493,
-       "total_j": 2.1488142402874573,
-       "nonclock_j": 0.031889955065344006,
+       "dynamic_j": 0.03218030336155979,
+       "static_j": 1.5942410097377564,
+       "total_j": 1.6264213130993161,
+       "nonclock_j": 0.028920160215296004,
        "clock_j": 0.003260143146263787
       },
       "hbm": {
@@ -358,25 +358,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 2843.9648754227724,
        "aggregate_tokens_s": 2843.9648754227724,
-       "dynamic_j": 1.4946737704269564,
-       "static_j": 3.7291156763753746,
-       "total_j": 5.223789446802331,
-       "nonclock_j": 1.3948335309655038,
+       "dynamic_j": 1.4917039755769084,
+       "static_j": 2.8542567702399273,
+       "total_j": 4.345960745816836,
+       "nonclock_j": 1.3918637361154558,
        "clock_j": 0.09984023946145269
       },
       "ratio_rate_per_user": 2.4747067157297185,
       "ratio_aggregate": 2.4747067157297185,
-      "ratio_energy_with_static": 2.4310102515439023,
-      "ratio_energy_dynamic": 42.52260580977162
+      "ratio_energy_with_static": 2.6721002183223685,
+      "ratio_energy_dynamic": 46.354565363071984
      },
      "b1_mtp": {
       "rom": {
        "tokens_s_per_user": 17573.578095281435,
        "aggregate_tokens_s": 17573.578095281435,
-       "dynamic_j": 0.019606945226075832,
-       "static_j": 0.8464937370564981,
-       "total_j": 0.866100682282574,
-       "nonclock_j": 0.016997105812376026,
+       "dynamic_j": 0.01577590986951391,
+       "static_j": 0.6384718381872473,
+       "total_j": 0.6542477480567612,
+       "nonclock_j": 0.013166070455814104,
        "clock_j": 0.002609839413699806
       },
       "hbm": {
@@ -386,25 +386,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 8474.16372650688,
        "aggregate_tokens_s": 8474.16372650688,
-       "dynamic_j": 0.994822233164037,
-       "static_j": 1.2515068556943805,
-       "total_j": 2.2463290888584173,
-       "nonclock_j": 0.7939670302457134,
+       "dynamic_j": 0.9909911978074747,
+       "static_j": 0.9579005388589608,
+       "total_j": 1.9488917366664356,
+       "nonclock_j": 0.7901359948891511,
        "clock_j": 0.2008552029183236
       },
       "ratio_rate_per_user": 2.073783167572266,
       "ratio_aggregate": 2.073783167572266,
-      "ratio_energy_with_static": 2.59361196083844,
-      "ratio_energy_dynamic": 50.73825737223944
+      "ratio_energy_with_static": 2.9788283451567246,
+      "ratio_energy_dynamic": 62.81673805214312
      },
      "fill28": {
       "rom": {
        "tokens_s_per_user": 7037.978976508167,
        "aggregate_tokens_s": 197063.41134222868,
-       "dynamic_j": 0.035150098211607785,
-       "static_j": 0.07548800507413747,
-       "total_j": 0.11063810328574525,
-       "nonclock_j": 0.031889955065344,
+       "dynamic_j": 0.03218030336155979,
+       "static_j": 0.056937178919205585,
+       "total_j": 0.08911748228076538,
+       "nonclock_j": 0.028920160215296004,
        "clock_j": 0.003260143146263787
       },
       "hbm": {
@@ -414,25 +414,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 1044.203874006507,
        "aggregate_tokens_s": 29237.7084721822,
-       "dynamic_j": 0.5391623000477879,
-       "static_j": 0.36273273639383974,
-       "total_j": 0.9018950364416276,
-       "nonclock_j": 0.5197392912677172,
+       "dynamic_j": 0.5361925051977398,
+       "static_j": 0.2776348224322433,
+       "total_j": 0.813827327629983,
+       "nonclock_j": 0.5167694964176691,
        "clock_j": 0.019423008780070625
       },
       "ratio_rate_per_user": 6.7400429664220045,
       "ratio_aggregate": 6.7400429664220045,
-      "ratio_energy_with_static": 8.151757935620981,
-      "ratio_energy_dynamic": 15.338856147768535
+      "ratio_energy_with_static": 9.132072706744712,
+      "ratio_energy_dynamic": 16.662133329614154
      },
      "fill28_mtp": {
       "rom": {
        "tokens_s_per_user": 17573.578095281435,
        "aggregate_tokens_s": 492060.18666788016,
-       "dynamic_j": 0.01960694522607584,
-       "static_j": 0.03023191918058922,
-       "total_j": 0.04983886440666506,
-       "nonclock_j": 0.016997105812376033,
+       "dynamic_j": 0.01577590986951392,
+       "static_j": 0.022802565649544547,
+       "total_j": 0.038578475519058464,
+       "nonclock_j": 0.013166070455814116,
        "clock_j": 0.002609839413699806
       },
       "hbm": {
@@ -442,25 +442,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 1964.9478150477762,
        "aggregate_tokens_s": 55018.53882133773,
-       "dynamic_j": 0.431518800959158,
-       "static_j": 0.1927618258718078,
-       "total_j": 0.6242806268309657,
-       "nonclock_j": 0.36964584281398377,
+       "dynamic_j": 0.4276877656025961,
+       "static_j": 0.14753946894808923,
+       "total_j": 0.5752272345506853,
+       "nonclock_j": 0.36581480745742184,
        "clock_j": 0.061872958145174246
       },
       "ratio_rate_per_user": 8.94353425607598,
       "ratio_aggregate": 8.94353425607598,
-      "ratio_energy_with_static": 12.525980161527904,
-      "ratio_energy_dynamic": 22.00846669297922
+      "ratio_energy_with_static": 14.910574531814058,
+      "ratio_energy_dynamic": 27.11018059434272
      },
      "sat1024": {
       "rom": {
        "tokens_s_per_user": 352.35168284660557,
        "aggregate_tokens_s": 360808.1232349241,
-       "dynamic_j": 0.030783294432367228,
-       "static_j": 0.0412294591982986,
-       "total_j": 0.07201275363066584,
-       "nonclock_j": 0.029002694472181678,
+       "dynamic_j": 0.027813499582319226,
+       "static_j": 0.031097511357070878,
+       "total_j": 0.05891101093939011,
+       "nonclock_j": 0.026032899622133676,
        "clock_j": 0.0017805999601855482
       },
       "hbm": {
@@ -470,25 +470,25 @@
        "binding": "occupancy",
        "tokens_s_per_user": 68.07953456032403,
        "aggregate_tokens_s": 69713.44338977181,
-       "dynamic_j": 0.09687676748347981,
-       "static_j": 0.15212953892844158,
-       "total_j": 0.2490063064119214,
-       "nonclock_j": 0.08873078816082225,
+       "dynamic_j": 0.09390697263343181,
+       "static_j": 0.1164396077039994,
+       "total_j": 0.2103465803374312,
+       "nonclock_j": 0.08576099331077425,
        "clock_j": 0.00814597932265757
       },
       "ratio_rate_per_user": 5.175588892053796,
       "ratio_aggregate": 5.175588892053796,
-      "ratio_energy_with_static": 3.4578084277822256,
-      "ratio_energy_dynamic": 3.1470565210726216
+      "ratio_energy_with_static": 3.570581746659275,
+      "ratio_energy_dynamic": 3.3763091320276564
      },
      "sat1024_mtp": {
       "rom": {
        "tokens_s_per_user": 607.0689399493681,
        "aggregate_tokens_s": 621638.5945081529,
-       "dynamic_j": 0.01728468013074175,
-       "static_j": 0.023930180536970984,
-       "total_j": 0.04121486066771274,
-       "nonclock_j": 0.015218852686269149,
+       "dynamic_j": 0.01345364477417983,
+       "static_j": 0.018049449968432302,
+       "total_j": 0.031503094742612134,
+       "nonclock_j": 0.01138781732970723,
        "clock_j": 0.0020658274444726008
       },
       "hbm": {
@@ -498,16 +498,16 @@
        "binding": "critical_path",
        "tokens_s_per_user": 99.11625974307316,
        "aggregate_tokens_s": 101495.04997690691,
-       "dynamic_j": 0.061327403937089194,
-       "static_j": 0.10449252453605427,
-       "total_j": 0.16581992847314347,
-       "nonclock_j": 0.027787248525807363,
+       "dynamic_j": 0.05749636858052727,
+       "static_j": 0.07997834378964241,
+       "total_j": 0.13747471237016967,
+       "nonclock_j": 0.02395621316924544,
        "clock_j": 0.03354015541128183
       },
       "ratio_rate_per_user": 6.124816871853295,
       "ratio_aggregate": 6.124816871853295,
-      "ratio_energy_with_static": 4.023304356407662,
-      "ratio_energy_dynamic": 3.5480786148894388
+      "ratio_energy_with_static": 4.3638478534687195,
+      "ratio_energy_dynamic": 4.273664835485624
      }
     },
     "200000": {
@@ -515,10 +515,10 @@
       "rom": {
        "tokens_s_per_user": 7547.610134400964,
        "aggregate_tokens_s": 7547.610134400964,
-       "dynamic_j": 0.018656179340202143,
-       "static_j": 1.9709449124202365,
-       "total_j": 1.9896010917604388,
-       "nonclock_j": 0.015616168195584007,
+       "dynamic_j": 0.016208699989674145,
+       "static_j": 1.4865943669879293,
+       "total_j": 1.5028030669776036,
+       "nonclock_j": 0.013168688845056009,
        "clock_j": 0.0030400111446181365
       },
       "hbm": {
@@ -528,25 +528,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 2851.557697333645,
        "aggregate_tokens_s": 2851.557697333645,
-       "dynamic_j": 1.4781341396787862,
-       "static_j": 3.7191861872255543,
-       "total_j": 5.19732032690434,
-       "nonclock_j": 1.3785597440957438,
+       "dynamic_j": 1.4756866603282583,
+       "static_j": 2.8466567615272864,
+       "total_j": 4.322343421855544,
+       "nonclock_j": 1.376112264745216,
        "clock_j": 0.09957439558304247
       },
       "ratio_rate_per_user": 2.646837600886832,
       "ratio_aggregate": 2.646837600886832,
-      "ratio_energy_with_static": 2.612242397950057,
-      "ratio_energy_dynamic": 79.23027071751822
+      "ratio_energy_with_static": 2.8761875170700333,
+      "ratio_energy_dynamic": 91.04287581782339
      },
      "b1_mtp": {
       "rom": {
        "tokens_s_per_user": 19202.894921353905,
        "aggregate_tokens_s": 19202.894921353905,
-       "dynamic_j": 0.014656825371582706,
-       "static_j": 0.7746708950006672,
-       "total_j": 0.78932772037225,
-       "nonclock_j": 0.012268424198705623,
+       "dynamic_j": 0.011499577009401588,
+       "static_j": 0.5842991255211428,
+       "total_j": 0.5957987025305445,
+       "nonclock_j": 0.009111175836524505,
        "clock_j": 0.002388401172877083
       },
       "hbm": {
@@ -556,25 +556,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 8474.16372650688,
        "aggregate_tokens_s": 8474.16372650688,
-       "dynamic_j": 0.9900935515503665,
-       "static_j": 1.2515068556943805,
-       "total_j": 2.241600407244747,
-       "nonclock_j": 0.7892383486320429,
+       "dynamic_j": 0.9869363031881854,
+       "static_j": 0.9579005388589608,
+       "total_j": 1.9448368420471462,
+       "nonclock_j": 0.7860811002698618,
        "clock_j": 0.2008552029183236
       },
       "ratio_rate_per_user": 2.2660519127436656,
       "ratio_aggregate": 2.2660519127436656,
-      "ratio_energy_with_static": 2.839885575268533,
-      "ratio_energy_dynamic": 67.5517055330415
+      "ratio_energy_with_static": 3.2642515564179857,
+      "ratio_energy_dynamic": 85.82370485290949
      },
      "fill28": {
       "rom": {
        "tokens_s_per_user": 7547.610134400964,
        "aggregate_tokens_s": 211333.08376322698,
-       "dynamic_j": 0.018656179340202132,
-       "static_j": 0.07039088972929416,
-       "total_j": 0.0890470690694963,
-       "nonclock_j": 0.015616168195583997,
+       "dynamic_j": 0.016208699989674134,
+       "static_j": 0.053092655963854624,
+       "total_j": 0.06930135595352876,
+       "nonclock_j": 0.013168688845055999,
        "clock_j": 0.0030400111446181365
       },
       "hbm": {
@@ -584,25 +584,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 1056.5377322386487,
        "aggregate_tokens_s": 29583.05650268216,
-       "dynamic_j": 0.5226617719747321,
-       "static_j": 0.3584982504778859,
-       "total_j": 0.8811600224526179,
-       "nonclock_j": 0.5034655043979571,
+       "dynamic_j": 0.520214292624204,
+       "static_j": 0.27439375641472447,
+       "total_j": 0.7946080490389285,
+       "nonclock_j": 0.5010180250474291,
        "clock_j": 0.019196267576774992
       },
       "ratio_rate_per_user": 7.143720384134965,
       "ratio_aggregate": 7.143720384134965,
-      "ratio_energy_with_static": 9.895441047755556,
-      "ratio_energy_dynamic": 28.01547746962585
+      "ratio_energy_with_static": 11.465981265529159,
+      "ratio_energy_dynamic": 32.09475731894663
      },
      "fill28_mtp": {
       "rom": {
        "tokens_s_per_user": 19202.894921353905,
        "aggregate_tokens_s": 537681.0577979094,
-       "dynamic_j": 0.014656825371582716,
-       "static_j": 0.02766681767859526,
-       "total_j": 0.042323643050177974,
-       "nonclock_j": 0.012268424198705634,
+       "dynamic_j": 0.011499577009401593,
+       "static_j": 0.020867825911469386,
+       "total_j": 0.03236740292087098,
+       "nonclock_j": 0.00911117583652451,
        "clock_j": 0.002388401172877083
       },
       "hbm": {
@@ -612,25 +612,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 1964.9478150477762,
        "aggregate_tokens_s": 55018.53882133773,
-       "dynamic_j": 0.4267901193454876,
-       "static_j": 0.1927618258718078,
-       "total_j": 0.6195519452172954,
-       "nonclock_j": 0.36491716120031337,
+       "dynamic_j": 0.42363287098330643,
+       "static_j": 0.14753946894808923,
+       "total_j": 0.5711723399313957,
+       "nonclock_j": 0.3617599128381322,
        "clock_j": 0.061872958145174246
       },
       "ratio_rate_per_user": 9.772725145317409,
       "ratio_aggregate": 9.77272514531741,
-      "ratio_energy_with_static": 14.638436121455054,
-      "ratio_energy_dynamic": 29.118865001487066
+      "ratio_energy_with_static": 17.64652979195607,
+      "ratio_energy_dynamic": 36.83899595932626
      },
      "sat1024": {
       "rom": {
        "tokens_s_per_user": 462.1070909628561,
        "aggregate_tokens_s": 473197.66114596464,
-       "dynamic_j": 0.014086595906101935,
-       "static_j": 0.03143701885445352,
-       "total_j": 0.045523614760555456,
-       "nonclock_j": 0.012728907602421681,
+       "dynamic_j": 0.011639116555573934,
+       "static_j": 0.023711517683432586,
+       "total_j": 0.03535063423900652,
+       "nonclock_j": 0.01028142825189368,
        "clock_j": 0.0013576883036802536
       },
       "hbm": {
@@ -640,25 +640,25 @@
        "binding": "occupancy",
        "tokens_s_per_user": 74.02058627939671,
        "aggregate_tokens_s": 75797.08035010223,
-       "dynamic_j": 0.07994916676420866,
-       "static_j": 0.13991929439780454,
-       "total_j": 0.2198684611620132,
-       "nonclock_j": 0.07245700129106225,
+       "dynamic_j": 0.07750168741368066,
+       "static_j": 0.10709391394109354,
+       "total_j": 0.1845956013547742,
+       "nonclock_j": 0.07000952194053425,
        "clock_j": 0.00749216547314641
       },
       "ratio_rate_per_user": 6.24295367262555,
       "ratio_aggregate": 6.24295367262555,
-      "ratio_energy_with_static": 4.8297671948608345,
-      "ratio_energy_dynamic": 5.67554910335554
+      "ratio_energy_with_static": 5.221846943585756,
+      "ratio_energy_dynamic": 6.658725947422991
      },
      "sat1024_mtp": {
       "rom": {
        "tokens_s_per_user": 776.017444960559,
        "aggregate_tokens_s": 794641.8636396124,
-       "dynamic_j": 0.012106242573282648,
-       "static_j": 0.018720287057611598,
-       "total_j": 0.030826529630894245,
-       "nonclock_j": 0.010490171072598751,
+       "dynamic_j": 0.008948994211101529,
+       "static_j": 0.014119863580595478,
+       "total_j": 0.023068857791697005,
+       "nonclock_j": 0.007332922710417631,
        "clock_j": 0.0016160715006838975
       },
       "hbm": {
@@ -668,16 +668,16 @@
        "binding": "critical_path",
        "tokens_s_per_user": 99.11625974307316,
        "aggregate_tokens_s": 101495.04997690691,
-       "dynamic_j": 0.05659872232341879,
-       "static_j": 0.10449252453605427,
-       "total_j": 0.16109124685947307,
-       "nonclock_j": 0.02305856691213696,
+       "dynamic_j": 0.053441473961237676,
+       "static_j": 0.07997834378964241,
+       "total_j": 0.13341981775088008,
+       "nonclock_j": 0.019901318549955842,
        "clock_j": 0.03354015541128183
       },
       "ratio_rate_per_user": 7.829365706213423,
       "ratio_aggregate": 7.829365706213423,
-      "ratio_energy_with_static": 5.225734092949209,
-      "ratio_energy_dynamic": 4.675168367130435
+      "ratio_energy_with_static": 5.783546760555299,
+      "ratio_energy_dynamic": 5.971785510257871
      }
     }
    }
@@ -1009,10 +1009,10 @@
       "rom": {
        "tokens_s_per_user": 8634.678265715687,
        "aggregate_tokens_s": 8634.678265715687,
-       "dynamic_j": 0.03695796223710071,
-       "static_j": 1.7228115903744101,
-       "total_j": 1.759769552611511,
-       "nonclock_j": 0.03188995506534398,
+       "dynamic_j": 0.03398816738705271,
+       "static_j": 1.2994386547755743,
+       "total_j": 1.333426822162627,
+       "nonclock_j": 0.028920160215295976,
        "clock_j": 0.005068007171756737
       },
       "hbm": {
@@ -1022,25 +1022,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 2932.5746896637033,
        "aggregate_tokens_s": 2932.5746896637033,
-       "dynamic_j": 1.579496369287205,
-       "static_j": 3.6164378139730164,
-       "total_j": 5.1959341832602215,
-       "nonclock_j": 1.3948335309655038,
+       "dynamic_j": 1.576526574437157,
+       "static_j": 2.7680133872160213,
+       "total_j": 4.344539961653179,
+       "nonclock_j": 1.3918637361154558,
        "clock_j": 0.1846628383217013
       },
       "ratio_rate_per_user": 2.9444018241546916,
       "ratio_aggregate": 2.9444018241546916,
-      "ratio_energy_with_static": 2.952621935951453,
-      "ratio_energy_dynamic": 42.73764768614888
+      "ratio_energy_with_static": 3.258176518908595,
+      "ratio_energy_dynamic": 46.38457132695279
      },
      "b1_mtp": {
       "rom": {
        "tokens_s_per_user": 26211.512864645047,
        "aggregate_tokens_s": 26211.512864645047,
-       "dynamic_j": 0.020335173405418665,
-       "static_j": 0.5675339638786793,
-       "total_j": 0.587869137284098,
-       "nonclock_j": 0.016997105812376026,
+       "dynamic_j": 0.016504138048856743,
+       "static_j": 0.4280651318358546,
+       "total_j": 0.44456926988471135,
+       "nonclock_j": 0.013166070455814104,
        "clock_j": 0.0033380675930426394
       },
       "hbm": {
@@ -1050,25 +1050,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 8631.933457027371,
        "aggregate_tokens_s": 8631.933457027371,
-       "dynamic_j": 1.1702039973895861,
-       "static_j": 1.2286325019530755,
-       "total_j": 2.3988364993426616,
-       "nonclock_j": 0.793967030245713,
+       "dynamic_j": 1.1663729620330245,
+       "static_j": 0.9403925598373922,
+       "total_j": 2.106765521870417,
+       "nonclock_j": 0.7901359948891513,
        "clock_j": 0.37623696714387317
       },
       "ratio_rate_per_user": 3.036574945246584,
       "ratio_aggregate": 3.036574945246584,
-      "ratio_energy_with_static": 4.080562062545193,
-      "ratio_energy_dynamic": 57.54580863705665
+      "ratio_energy_with_static": 4.738891472226043,
+      "ratio_energy_dynamic": 70.67154664970948
      },
      "fill28": {
       "rom": {
        "tokens_s_per_user": 8634.678265715687,
        "aggregate_tokens_s": 241770.99144003924,
-       "dynamic_j": 0.03695796223710074,
-       "static_j": 0.06152898537051465,
-       "total_j": 0.0984869476076154,
-       "nonclock_j": 0.031889955065344,
+       "dynamic_j": 0.03398816738705274,
+       "static_j": 0.046408523384841936,
+       "total_j": 0.08039669077189468,
+       "nonclock_j": 0.028920160215295997,
        "clock_j": 0.005068007171756737
       },
       "hbm": {
@@ -1078,25 +1078,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 1076.0237978266969,
        "aggregate_tokens_s": 30128.666339147516,
-       "dynamic_j": 0.5556876176680822,
-       "static_j": 0.35200608883971196,
-       "total_j": 0.9076937065077941,
-       "nonclock_j": 0.5197392912677172,
+       "dynamic_j": 0.552717822818034,
+       "static_j": 0.26942467046583785,
+       "total_j": 0.8221424932838719,
+       "nonclock_j": 0.5167694964176691,
        "clock_j": 0.03594832640036495
       },
       "ratio_rate_per_user": 8.024616447290118,
       "ratio_aggregate": 8.024616447290116,
-      "ratio_energy_with_static": 9.216385811083942,
-      "ratio_energy_dynamic": 15.0356671210148
+      "ratio_energy_with_static": 10.22607380217295,
+      "ratio_energy_dynamic": 16.26206604562573
      },
      "fill28_mtp": {
       "rom": {
        "tokens_s_per_user": 26211.512864645047,
        "aggregate_tokens_s": 733922.3602100613,
-       "dynamic_j": 0.020335173405418672,
-       "static_j": 0.020269070138524258,
-       "total_j": 0.04060424354394293,
-       "nonclock_j": 0.016997105812376033,
+       "dynamic_j": 0.016504138048856754,
+       "static_j": 0.015288040422709093,
+       "total_j": 0.031792178471565846,
+       "nonclock_j": 0.013166070455814116,
        "clock_j": 0.0033380675930426394
       },
       "hbm": {
@@ -1106,25 +1106,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 1987.710227441109,
        "aggregate_tokens_s": 55655.88636835106,
-       "dynamic_j": 0.4863505680955309,
-       "static_j": 0.19055439940007576,
-       "total_j": 0.6769049674956067,
-       "nonclock_j": 0.36964584281398377,
+       "dynamic_j": 0.48251953273896897,
+       "static_j": 0.14584990968028128,
+       "total_j": 0.6283694424192503,
+       "nonclock_j": 0.36581480745742184,
        "clock_j": 0.11670472528154711
       },
       "ratio_rate_per_user": 13.186787743396883,
       "ratio_aggregate": 13.186787743396883,
-      "ratio_energy_with_static": 16.670793700738276,
-      "ratio_energy_dynamic": 23.916716046588228
+      "ratio_energy_with_static": 19.764906735826507,
+      "ratio_energy_dynamic": 29.2362758546117
      },
      "sat1024": {
       "rom": {
        "tokens_s_per_user": 672.9518655501923,
        "aggregate_tokens_s": 689102.710323397,
-       "dynamic_j": 0.030780799680860692,
-       "static_j": 0.02158738250840387,
-       "total_j": 0.05236818218926456,
-       "nonclock_j": 0.02900269447218168,
+       "dynamic_j": 0.02781100483081269,
+       "static_j": 0.01628238365911492,
+       "total_j": 0.04409338848992761,
+       "nonclock_j": 0.02603289962213368,
        "clock_j": 0.001778105208679011
       },
       "hbm": {
@@ -1134,25 +1134,25 @@
        "binding": "occupancy",
        "tokens_s_per_user": 86.52050785588904,
        "aggregate_tokens_s": 88597.00004443037,
-       "dynamic_j": 0.10095552636893555,
-       "static_j": 0.11970466262606497,
-       "total_j": 0.2206601889950005,
-       "nonclock_j": 0.08873078816082225,
+       "dynamic_j": 0.09798573151888755,
+       "static_j": 0.09162168014638435,
+       "total_j": 0.1896074116652719,
+       "nonclock_j": 0.08576099331077425,
        "clock_j": 0.012224738208113298
       },
       "ratio_rate_per_user": 7.777946318473762,
       "ratio_aggregate": 7.777946318473762,
-      "ratio_energy_with_static": 4.213630868406115,
-      "ratio_energy_dynamic": 3.2798214281518185
+      "ratio_energy_with_static": 4.300132472435964,
+      "ratio_energy_dynamic": 3.5232718887713856
      },
      "sat1024_mtp": {
       "rom": {
        "tokens_s_per_user": 1260.3885493592798,
        "aggregate_tokens_s": 1290637.8745439025,
-       "dynamic_j": 0.01711704775302429,
-       "static_j": 0.011526024525342547,
-       "total_j": 0.028643072278366835,
-       "nonclock_j": 0.01521885268626915,
+       "dynamic_j": 0.013286012396462368,
+       "static_j": 0.008693557605371369,
+       "total_j": 0.02197957000183374,
+       "nonclock_j": 0.01138781732970723,
        "clock_j": 0.0018981950667551375
       },
       "hbm": {
@@ -1162,16 +1162,16 @@
        "binding": "critical_path",
        "tokens_s_per_user": 100.76431720488415,
        "aggregate_tokens_s": 103182.66081780137,
-       "dynamic_j": 0.09073682626919141,
-       "static_j": 0.10278349013238776,
-       "total_j": 0.19352031640157918,
-       "nonclock_j": 0.027787248525807363,
+       "dynamic_j": 0.08690579091262948,
+       "static_j": 0.07867025269229694,
+       "total_j": 0.16557604360492642,
+       "nonclock_j": 0.02395621316924544,
        "clock_j": 0.06294957774338404
       },
       "ratio_rate_per_user": 12.508282538118438,
       "ratio_aggregate": 12.508282538118438,
-      "ratio_energy_with_static": 6.756269527265016,
-      "ratio_energy_dynamic": 5.3009623843083435
+      "ratio_energy_with_static": 7.533179383905715,
+      "ratio_energy_dynamic": 6.541149316989172
      }
     },
     "200000": {
@@ -1179,10 +1179,10 @@
       "rom": {
        "tokens_s_per_user": 9055.110194560553,
        "aggregate_tokens_s": 9055.110194560553,
-       "dynamic_j": 0.020448866024346608,
-       "static_j": 1.6428208465386798,
-       "total_j": 1.6632697125630265,
-       "nonclock_j": 0.01561616819558398,
+       "dynamic_j": 0.018001386673818637,
+       "static_j": 1.2391052642033586,
+       "total_j": 1.2571066508771773,
+       "nonclock_j": 0.013168688845056009,
        "clock_j": 0.004832697828762628
       },
       "hbm": {
@@ -1192,25 +1192,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 2940.062383490817,
        "aggregate_tokens_s": 2940.062383490817,
-       "dynamic_j": 1.5627522866841426,
-       "static_j": 3.6072275403244434,
-       "total_j": 5.169979827008586,
-       "nonclock_j": 1.3785597440957438,
+       "dynamic_j": 1.5603048073336148,
+       "static_j": 2.7609638644340535,
+       "total_j": 4.321268671767668,
+       "nonclock_j": 1.376112264745216,
        "clock_j": 0.18419254258839884
       },
       "ratio_rate_per_user": 3.079904101833775,
       "ratio_aggregate": 3.079904101833775,
-      "ratio_energy_with_static": 3.108323194944656,
-      "ratio_energy_dynamic": 76.42244243878929
+      "ratio_energy_with_static": 3.437471807783688,
+      "ratio_energy_dynamic": 86.67692303965309
      },
      "b1_mtp": {
       "rom": {
        "tokens_s_per_user": 27483.83125540927,
        "aggregate_tokens_s": 27483.83125540927,
-       "dynamic_j": 0.01545196148813907,
-       "static_j": 0.5412609201783384,
-       "total_j": 0.5567128816664775,
-       "nonclock_j": 0.012268424198705623,
+       "dynamic_j": 0.012294713125957951,
+       "static_j": 0.408248566429877,
+       "total_j": 0.4205432795558349,
+       "nonclock_j": 0.009111175836524505,
        "clock_j": 0.003183537289433446
       },
       "hbm": {
@@ -1220,25 +1220,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 8631.933457027371,
        "aggregate_tokens_s": 8631.933457027371,
-       "dynamic_j": 1.1654753157759161,
-       "static_j": 1.2286325019530755,
-       "total_j": 2.3941078177289916,
-       "nonclock_j": 0.7892383486320429,
+       "dynamic_j": 1.162318067413735,
+       "static_j": 0.9403925598373922,
+       "total_j": 2.102710627251127,
+       "nonclock_j": 0.7860811002698618,
        "clock_j": 0.37623696714387317
       },
       "ratio_rate_per_user": 3.1839716318751647,
       "ratio_aggregate": 3.1839716318751647,
-      "ratio_energy_with_static": 4.300435460667647,
-      "ratio_energy_dynamic": 75.42571968423137
+      "ratio_energy_with_static": 4.999986278396712,
+      "ratio_energy_dynamic": 94.53803887133577
      },
      "fill28": {
       "rom": {
        "tokens_s_per_user": 9055.110194560553,
        "aggregate_tokens_s": 253543.08544769548,
-       "dynamic_j": 0.02044886602434663,
-       "static_j": 0.058672173090667135,
-       "total_j": 0.07912103911501377,
-       "nonclock_j": 0.015616168195584,
+       "dynamic_j": 0.01800138667381863,
+       "static_j": 0.04425375943583424,
+       "total_j": 0.06225514610965287,
+       "nonclock_j": 0.013168688845056002,
        "clock_j": 0.0048326978287626275
       },
       "hbm": {
@@ -1248,25 +1248,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 1088.4366001478431,
        "aggregate_tokens_s": 30476.224804139612,
-       "dynamic_j": 0.539003867122603,
-       "static_j": 0.34799172365205316,
-       "total_j": 0.8869955907746561,
-       "nonclock_j": 0.5034655043979571,
+       "dynamic_j": 0.5365563877720749,
+       "static_j": 0.26635208435978613,
+       "total_j": 0.8029084721318611,
+       "nonclock_j": 0.5010180250474291,
        "clock_j": 0.03553836272464588
       },
       "ratio_rate_per_user": 8.319373120428503,
       "ratio_aggregate": 8.319373120428502,
-      "ratio_energy_with_static": 11.2106160472094,
-      "ratio_energy_dynamic": 26.358618931771545
+      "ratio_energy_with_static": 12.897061886541255,
+      "ratio_energy_dynamic": 29.806392001592137
      },
      "fill28_mtp": {
       "rom": {
        "tokens_s_per_user": 27483.83125540927,
        "aggregate_tokens_s": 769547.2751514595,
-       "dynamic_j": 0.015451961488139081,
-       "static_j": 0.01933074714922637,
-       "total_j": 0.03478270863736545,
-       "nonclock_j": 0.012268424198705635,
+       "dynamic_j": 0.012294713125957955,
+       "static_j": 0.01458030594392418,
+       "total_j": 0.026875019069882135,
+       "nonclock_j": 0.009111175836524509,
        "clock_j": 0.003183537289433446
       },
       "hbm": {
@@ -1276,25 +1276,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 1987.710227441109,
        "aggregate_tokens_s": 55655.88636835106,
-       "dynamic_j": 0.4816218864818605,
-       "static_j": 0.19055439940007576,
-       "total_j": 0.6721762858819362,
-       "nonclock_j": 0.36491716120031337,
+       "dynamic_j": 0.4784646381196793,
+       "static_j": 0.14584990968028128,
+       "total_j": 0.6243145477999605,
+       "nonclock_j": 0.3617599128381322,
        "clock_j": 0.11670472528154711
       },
       "ratio_rate_per_user": 13.826880234344193,
       "ratio_aggregate": 13.826880234344191,
-      "ratio_energy_with_static": 19.325012692077937,
-      "ratio_energy_dynamic": 31.168980511086133
+      "ratio_energy_with_static": 23.230292271666045,
+      "ratio_energy_dynamic": 38.916291353678844
      },
      "sat1024": {
       "rom": {
        "tokens_s_per_user": 869.9395509245768,
        "aggregate_tokens_s": 890818.1001467666,
-       "dynamic_j": 0.014104381583404981,
-       "static_j": 0.01669917101244139,
-       "total_j": 0.03080355259584637,
-       "nonclock_j": 0.012728907602421678,
+       "dynamic_j": 0.011656902232876984,
+       "static_j": 0.012595427403386721,
+       "total_j": 0.024252329636263704,
+       "nonclock_j": 0.01028142825189368,
        "clock_j": 0.001375473980983303
       },
       "hbm": {
@@ -1304,25 +1304,25 @@
        "binding": "critical_path",
        "tokens_s_per_user": 90.84368475131835,
        "aggregate_tokens_s": 93023.93318534999,
-       "dynamic_j": 0.08409997417428079,
-       "static_j": 0.11400801532298807,
-       "total_j": 0.19810798949726888,
-       "nonclock_j": 0.07245700129106225,
+       "dynamic_j": 0.0816524948237528,
+       "static_j": 0.08726147908437806,
+       "total_j": 0.16891397390813084,
+       "nonclock_j": 0.07000952194053425,
        "clock_j": 0.011642972883218545
       },
       "ratio_rate_per_user": 9.57622484497418,
       "ratio_aggregate": 9.57622484497418,
-      "ratio_energy_with_static": 6.431335764952717,
-      "ratio_energy_dynamic": 5.9626842677903475
+      "ratio_energy_with_static": 6.964855601152616,
+      "ratio_energy_dynamic": 7.004647820881701
      },
      "sat1024_mtp": {
       "rom": {
        "tokens_s_per_user": 1515.038431518883,
        "aggregate_tokens_s": 1551399.3538753362,
-       "dynamic_j": 0.012069314727845776,
-       "static_j": 0.00958871341422794,
-       "total_j": 0.021658028142073717,
-       "nonclock_j": 0.010490171072598751,
+       "dynamic_j": 0.008912066365664656,
+       "static_j": 0.007232331689447829,
+       "total_j": 0.016144398055112485,
+       "nonclock_j": 0.007332922710417631,
        "clock_j": 0.0015791436552470253
       },
       "hbm": {
@@ -1332,16 +1332,16 @@
        "binding": "critical_path",
        "tokens_s_per_user": 100.76431720488415,
        "aggregate_tokens_s": 103182.66081780137,
-       "dynamic_j": 0.08600814465552101,
-       "static_j": 0.10278349013238776,
-       "total_j": 0.18879163478790878,
-       "nonclock_j": 0.02305856691213696,
+       "dynamic_j": 0.08285089629333989,
+       "static_j": 0.07867025269229694,
+       "total_j": 0.16152114898563683,
+       "nonclock_j": 0.019901318549955842,
        "clock_j": 0.06294957774338404
       },
       "ratio_rate_per_user": 15.035465664282272,
       "ratio_aggregate": 15.035465664282272,
-      "ratio_energy_with_static": 8.716935519220003,
-      "ratio_energy_dynamic": 7.126182935397891
+      "ratio_energy_with_static": 10.00477988923765,
+      "ratio_energy_dynamic": 9.296485561702942
      }
     }
    }

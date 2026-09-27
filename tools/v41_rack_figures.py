@@ -602,6 +602,12 @@ code{font-family:"IBM Plex Mono",monospace;font-size:.88em;background:var(--code
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--splice-atlas", action="store_true",
+                    help="rewrite the atlas section between the V41_RACK_FIGURES markers from this tool's template "
+                         "(off by default: the atlas section is curated; replace only the <svg> bodies by hand)")
+    a = ap.parse_args()
     rec = json.loads(REC.read_text())
     sens = rec["reprice_sensitivity"]
     FIG.mkdir(parents=True, exist_ok=True)
@@ -616,7 +622,7 @@ def main():
             + "".join(figs.values()) + "".join(extra.values()) + "</main></body></html>\n")
     (FIG / "v41_rack_preview.html").write_text(prev)
     atlas = ROOT / "docs/ARCHITECTURE_ATLAS.html"
-    if atlas.exists():
+    if a.splice_atlas and atlas.exists():
         start = "<!-- V41_RACK_FIGURES_BEGIN -->"
         end = "<!-- V41_RACK_FIGURES_END -->"
         base_lane = "R-L9" in sens["baseline"].get("basis", "")

@@ -56,3 +56,13 @@ def test_every_cited_reference_exists():
     used |= {r for v in rec["values_checked"] for r in v["refs"]}
     used |= {r for p in json.loads(S.OUT_P.read_text())["rows"] for r in p["refs"]}
     assert used <= set(rec["references"])
+
+
+def test_per_token_row_reads_the_design_point_headline():
+    """The V4.1 per-token synchronisation row is the adopted design point with the measured C7 exposure."""
+    ln = json.loads((ROOT / "results/arch/v41_lanes.json").read_text())["design_point"]["1048576"]
+    b = ln["breakdown_us"]
+    rec = json.loads(S.OUT.read_text())
+    row = next(r for r in rec["rows"] if r["event"].startswith("Per token, V4.1"))
+    assert abs(row["ot"]["value"] - round(b["collective_latency"] + b["collective_bytes"] + b["pipeline_hops"], 1)) < 0.11
+    assert abs(rec["ladder"]["T_us"] - ln["T_us"]) < 1e-2

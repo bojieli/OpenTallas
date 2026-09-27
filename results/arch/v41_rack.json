@@ -4,7 +4,7 @@
  "context": 1048576,
  "fill": 28,
  "inputs": {
-  "budget": "results/arch/arch_budget_v41.json",
+  "budget": "results/arch/arch_budget_v41_dp.json",
   "utilisation": "results/arch/v41_utilization.json",
   "model": "configs/models/candidates/deepseek-v4.1-flash.json"
  },
@@ -6811,27 +6811,31 @@
  "power": {
   "basis": "design point: results/arch/v41_hbm_switched.json (energy, rom_worst_die_w) and results/arch/v41_lanes.json static_w, utilisation agent b07a5745 on the spec's validated per-die terms",
   "energy_j_per_token_b1": {
-   "chip": 1.7623007684823913,
-   "wall_with_switch": 2.343768980426962,
-   "rack_input": 2.4989047283198866,
+   "chip": 1.5151350729163722,
+   "wall_with_switch": 2.0588930810231565,
+   "rack_input": 2.235379565935454,
    "note": "chip = static + dynamic of the ROM dies; wall = x 1.24 + the off-path switch (utilisation agent); rack_input adds the host and management trays"
   },
-  "mac_energy_delta_j_per_token": -4.1225575841963295e-19,
+  "mac_energy_delta_j_per_token": 0.0025673313812479997,
   "per_die": {
    "static_w": {
-    "leakage": 54.50039905032021,
+    "leakage": 33.47579066861809,
     "hbm_interface_idle": 11.2,
     "serdes_always_on": 30.576,
     "ucie_idle": 2.52,
-    "total": 98.7963990503202
+    "total": 77.7717906686181
    },
-   "layer_static_w": 98.7963990503202,
-   "worst_case_w": 296.045596643443,
+   "layer_static_w": 77.7717906686181,
+   "worst_case_w": 248.88463714835126,
    "hbm_interface_worst_w": 34.239999999999995,
-   "table_static_w": 47.797993490320195,
-   "table_leakage_w": 44.546835938320214,
-   "cooling_limit_w": 407.5,
-   "spec_provisioned_wall_w": 303.24445526775355
+   "table_static_w": 30.75354733261809,
+   "table_leakage_w": 27.503652801418085,
+   "cooling_limit_w": {
+    "air": 374.56,
+    "liquid": 474.56
+   },
+   "cooling_basis": "configs/hardware/power_scenarios.json cooling classes, 2-die packages (B200 HGX air / GB200 liquid, less the stacks); the budget's 0.5 W/mm2 x 815 mm2 rule (407.5 W) is withdrawn",
+   "spec_provisioned_wall_w": 263.467759575509
   },
   "serdes": {
    "lane_w": 0.728,
@@ -6842,59 +6846,59 @@
    "note": "always-on PAM4 lanes; part of the spec's static_w_per_die"
   },
   "static": {
-   "layer_dies": 11065.196693635862,
-   "head_dies": 369.2715703900808,
-   "table_dies": 3441.455531303054
+   "layer_dies": 8710.440554885226,
+   "head_dies": 295.5387471877524,
+   "table_dies": 2214.2554079485026
   },
-  "static_total_w": 14875.923795328998,
+  "static_total_w": 11220.234710021483,
   "infra_w": {
    "switch": 1500.0,
    "host": 900.0,
    "mgmt": 100.0
   },
   "dynamic_w": {
-   "b1": 318.7173220198757,
-   "fill": 8924.085016556526,
-   "fill_mtp": 13670.885713537546,
-   "saturated_mtp": 22091.91013042975
+   "b1": 262.9459704892515,
+   "fill": 7362.487173699048,
+   "fill_mtp": 10193.725291787669,
+   "saturated_mtp": 16467.635577110246
   },
   "scenarios": {
    "b1": {
-    "dynamic_w": 318.7173220198757,
-    "chips_w": 15194.641117348874,
-    "rack_input_w": 21545.675523914553
+    "dynamic_w": 262.9459704892515,
+    "chips_w": 11483.180680510734,
+    "rack_input_w": 16941.900365192912
    },
    "fill": {
-    "dynamic_w": 8924.085016556526,
-    "chips_w": 23800.008811885524,
-    "rack_input_w": 32219.958248459534
+    "dynamic_w": 7362.487173699048,
+    "chips_w": 18582.72188372053,
+    "rack_input_w": 25748.323600975178
    },
    "fill_mtp": {
-    "dynamic_w": 13670.885713537546,
-    "chips_w": 28546.809508866543,
-    "rack_input_w": 38107.99168005956
+    "dynamic_w": 10193.725291787669,
+    "chips_w": 21413.96000180915,
+    "rack_input_w": 29260.252109523804
    },
    "saturated_mtp": {
-    "dynamic_w": 22091.91013042975,
-    "chips_w": 36967.83392575875,
-    "rack_input_w": 48553.611047756305
+    "dynamic_w": 16467.635577110246,
+    "chips_w": 27687.87028713173,
+    "rack_input_w": 37042.54504007241
    }
   },
   "wall_factor": 1.2404214559386975,
   "per_package": {
-   "layer_worst_w": 592.091193286886,
-   "table_w": 95.59598698064039
+   "layer_worst_w": 497.7692742967025,
+   "table_w": 61.50709466523618
   },
   "per_tray": {
-   "stage_w": 2782.2583599397058,
-   "table_w": 479.5217792213351
+   "stage_w": 2348.5943645825405,
+   "table_w": 322.7912398401663
   },
-  "worst_case_rack_input_w": 48553.611047756305,
+  "worst_case_rack_input_w": 40387.96571158843,
   "provision_margin": 1.2,
-  "provisioned_rack_input_w": 58264.33325730757,
-  "provisioned_chips_w": 36967.83392575875,
+  "provisioned_rack_input_w": 48465.55885390612,
+  "provisioned_chips_w": 30384.873515751595,
   "reconciliation": {
-   "spec_rule_w": 43536.48314788407,
+   "spec_rule_w": 37095.69201109618,
    "note": "116 x the spec's 303 W provisioned per die + 72 table dies + infrastructure, each at 1.2 x wall"
   },
   "shelves": {
@@ -6906,15 +6910,15 @@
    "redundancy": "2N (sides A and B, 3 shelves each), each shelf N+1 inside",
    "fits": true
   },
-  "busbar_a": 1165.2866651461513,
+  "busbar_a": 969.3111770781225,
   "cooling": {
-   "stage_tray_w": 2782.2583599397058,
-   "stage_tray_w_per_ou_liquid": 2782.2583599397058,
-   "stage_tray_w_per_ou_air": 1391.1291799698529,
-   "table_tray_w": 479.5217792213351,
+   "stage_tray_w": 2348.5943645825405,
+   "stage_tray_w_per_ou_liquid": 2348.5943645825405,
+   "stage_tray_w_per_ou_air": 1174.2971822912702,
+   "table_tray_w": 322.7912398401663,
    "choice": "liquid cold plates on the stage packages (1 OU trays); table trays, switch and host air-cooled",
-   "basis": "a 1 OU stage tray dissipates 2.78 kW: above what 1U/2U air handles (ASHRAE TC9.9; the 700 W/OU figure is an assumption), so the packages take cold plates. The ALTERNATIVE all-air rack with 2 OU stage trays (1391 W/OU) fills 49 OU.",
-   "liquid_fraction": 0.9069067574201286
+   "basis": "a 1 OU stage tray dissipates 2.35 kW: above what 1U/2U air handles (ASHRAE TC9.9; the 700 W/OU figure is an assumption), so the packages take cold plates. The ALTERNATIVE all-air rack with 2 OU stage trays (1174 W/OU) fills 49 OU.",
+   "liquid_fraction": 0.9271263904784521
   }
  },
  "head_draft_sram": {
@@ -6941,7 +6945,7 @@
    "accelerators": 94,
    "accel_unit": "two-die ROM packages (188 reticle dies, 464 HBM3E stacks)",
    "racks": 1,
-   "rack_kw": 58.3,
+   "rack_kw": 48.5,
    "cooling": "liquid cold plates on the stage packages (1 OU trays); table trays, switch and host air-cooled",
    "weight_kg": 768,
    "fabric": "point-to-point folded ring of 29 stage modules + on-board TP + one 51.2T switch for Engram/host",
@@ -7027,13 +7031,13 @@
    "id": "C4",
    "severity": "resolved-in-model",
    "item": "SerDes power in static power",
-   "finding": "84 always-on 112G lanes per layer/head package at ~0.73 W each = 61 W per package (31 W per die); table packages 1.46 W; 3.60 kW per rack. The rack power scenarios carry it as static. The utilisation record (results/arch/v41_lanes.json static_w) charges 3599 W of ROM SerDes in a ROM chip static total of 14876 W; batch-1 energy 1.762 J per token at 1M at the chips (the comparator's SerDes is charged on the same basis in results/arch/v41_hbm_switched.json)."
+   "finding": "84 always-on 112G lanes per layer/head package at ~0.73 W each = 61 W per package (31 W per die); table packages 1.46 W; 3.60 kW per rack. The rack power scenarios carry it as static. The utilisation record (results/arch/v41_lanes.json static_w) charges 3599 W of ROM SerDes in a ROM chip static total of 11220 W; batch-1 energy 1.515 J per token at 1M at the chips (the comparator's SerDes is charged on the same basis in results/arch/v41_hbm_switched.json)."
   },
   {
    "id": "C5",
    "severity": "resolved-in-budget",
    "item": "HBM interface power scaled to four stacks",
-   "finding": "arch_budget_v41.json kv_state.stacks_per_die = 4 and capacity 962 users at 1M; HBM interface 11.2 W idle per die (4 x 2.8 W) and 34.2 W at full bandwidth (idle + 0.8 pJ/b active I/O), the latter in the spec's worst-case die. The worst case adds full-bandwidth I/O on top of dynamic energy that already charges the actual HBM bytes at 13.1 pJ/b (which includes the I/O): conservative, overlap <= ~2 W per die."
+   "finding": "arch_budget_v41_dp.json kv_state.stacks_per_die = 4 and capacity 962 users at 1M; HBM interface 11.2 W idle per die (4 x 2.8 W) and 34.2 W at full bandwidth (idle + 0.8 pJ/b active I/O), the latter in the spec's worst-case die. The worst case adds full-bandwidth I/O on top of dynamic energy that already charges the actual HBM bytes at 13.1 pJ/b (which includes the I/O): conservative, overlap <= ~2 W per die."
   },
   {
    "id": "C6",
@@ -7063,34 +7067,36 @@
    "id": "C7",
    "severity": "gate",
    "item": "collective overlap and whole-system clock must be demonstrated",
-   "finding": "the lane-priced rate assumes collective bytes chase their producers (0.93 us of exposed bytes per token) and a 1.087 GHz clock on every die; neither is shown in RTL or routed silicon. With no overlap the stress bound is 8295 tok/s/user. The demonstration plan (record key demonstration_plan) states the benches, parameters and acceptance for both."
+   "status": "NOT MET (measured)",
+   "finding": "the overlap-assumed lane-priced rate assumes collective bytes chase their producers (0.93 us of exposed bytes per token) and a 1.087 GHz clock on every die. Overlap is MEASURED NOT MET (RTL stage bench, results/rtl/v41_stage_collective_campaign.json): the one-shot engine's exposed tails exceed the overlap model, and the design point drops from 8622 to 7579 tok/s/user at 1M (9041 to 7905 at 200K); recovery levers are in progress. The whole-system clock is not shown. Serialising only the collective bytes from the conditional point gives 8295 tok/s/user -- not a bound, since the bench's fold, hop and row-gather tails add more. The demonstration plan (record key demonstration_plan) states the benches, parameters and acceptance for both."
   }
  ],
  "reprice_sensitivity": {
   "evidence_class": "analytical sensitivity; not a routed whole-system result",
   "baseline": {
-   "rate_tokens_s": 8622.047603391655,
-   "period_s": 0.00011598173032663726,
+   "rate_tokens_s": 7578.981495298372,
+   "period_s": 0.0001319438503208315,
    "clock_hz": 1087000000.0,
-   "dynamic_j_per_token": 0.03695796223710071,
-   "static_w": 11276.691795328998,
-   "basis": "design point priced on the R-L9 lanes (results/arch/v41_lanes.json best_split)",
+   "dynamic_j_per_token": 0.03655549876830071,
+   "static_w": 7621.002710021483,
+   "basis": "design point priced on the R-L9 lanes with the measured C7 collective exposure (results/arch/v41_lanes.json design_point)",
+   "conditional_rate_tokens_s": 8622.047603391655,
    "overlap_assumed_rate_tokens_s": 8634.678265715687
   },
   "geometry": {
    "extra_s_per_token": 1.0645319999999989e-07,
-   "rate_tokens_s": 8614.141160805939,
+   "rate_tokens_s": 7572.871650705792,
    "note": "29 ring cables at the worst layout-estimated length; adopted ladder already has a one-hop return"
   },
   "no_collective_overlap_stress": {
    "extra_s_per_token": 4.462428571428571e-06,
    "rate_tokens_s": 8295.271028458299,
-   "note": "all 209 token-collective peer payloads serialised after their producers on one 13-lane peer link (two-step all-reduce: n/2 per peer), minus the bytes the lane-priced baseline already exposes; a pessimistic bound pending the streamed RTL demonstration"
+   "note": "from the CONDITIONAL (overlap-assumed) point: all 209 token-collective peer payloads serialised after their producers on one 13-lane peer link (two-step all-reduce: n/2 per peer), minus the bytes it already exposes. Bytes only: the RTL stage bench also measures fold, hop and row-gather tails, so the measured headline (baseline) is BELOW this row -- it is not a lower bound"
   },
   "serdes_static": {
    "additional_w": 3599.2320000000004,
-   "geometry_j_per_token": 1.7638769339175238,
-   "no_overlap_j_per_token": 1.830259681288194,
+   "geometry_j_per_token": 1.5181908978016063,
+   "no_overlap_j_per_token": 1.3891616609453548,
    "note": "ROM chip-side correction only; no HBM rack SerDes/infrastructure model, so no energy ratio"
   },
   "embedding_return": {
@@ -7390,10 +7396,8 @@
     {
      "id": "K3",
      "what": "plesiochronous link endpoint",
-     "status": "PASS",
-     "accept": "two-clock bench (TX and RX clocks offset by +-100 and +-200 ppm), 1e9 flits, zero overflow/underflow, idle-insertion rate sized, first-flit latency within the budgeted 4 CDC + 5 endpoint cycles",
-     "evidence": "results/rtl/v41_link_cdc_campaign.json",
-     "result": "1,410,000,000 flits across two clocks at 0, +-100 and +-200 ppm (1e9 at +200 ppm): zero mismatches, zero overflow/underflow; the idle-starved negative case (1 idle per 65,536 at 200 ppm) latches overflow as required. Crossing latency 3.0-4.2 RX cycles with 2-flop synchronisers, inside the budgeted 4 + 1 (output register); 3-flop synchronisers reach 5.2 cycles, i.e. +1 cycle (~0.9 ns) per hop if the MTBF analysis demands them."
+     "status": "to build: ot_rom_pkg_link.sv has one clock and a delay-line CDC stand-in",
+     "accept": "two-clock bench (TX and RX clocks offset by +-100 and +-200 ppm), 1e9 flits, zero overflow/underflow, idle-insertion rate sized, first-flit latency within the budgeted 4 CDC + 5 endpoint cycles"
     },
     {
      "id": "K4",
@@ -7422,8 +7426,48 @@
     {
      "id": "O2",
      "what": "producer-chased collectives in a stage module",
-     "status": "to build: package TP bench with the design-point matvec engines streaming into the one-shot",
-     "accept": "measured exposed collective time per token, summed over the layer program, <= the lane model's 0.93 us (results/arch/v41_lanes.json best_split); any excess re-prices the headline between it and the no-overlap bound"
+     "status": "NOT MET (measured)",
+     "accept": "measured exposed collective time per token, summed over the layer program, <= the lane model's 0.93 us (results/arch/v41_lanes.json best_split); any excess re-prices the headline between it and the no-overlap bound",
+     "evidence": [
+      "results/rtl/v41_stage_collective_campaign.json",
+      "results/arch/v41_lanes.json"
+     ],
+     "result": {
+      "bench_all_pass": true,
+      "bit_exact": true,
+      "source_binding": true,
+      "exposed_tail_cycles": {
+       "allreduce_wo_b": 254,
+       "allreduce_down": 254,
+       "gather_router": 149,
+       "gather_topk": 177,
+       "gather_rows": 653,
+       "stage_hop": 473
+      },
+      "headline_tokens_s_per_user": {
+       "1048576": {
+        "overlap_assumed": {
+         "ar": 8622.047603391655,
+         "mtp": 23577.550266865917
+        },
+        "measured_exposure": {
+         "ar": 7578.981495298372,
+         "mtp": 21005.94986438209
+        }
+       },
+       "200000": {
+        "overlap_assumed": {
+         "ar": 9041.220574931696,
+         "mtp": 24602.01201946047
+        },
+        "measured_exposure": {
+         "ar": 7905.41350038117,
+         "mtp": 21815.28744657373
+        }
+       }
+      },
+      "recovery": "in progress (claude/v41-collective-levers): 3-cycle fold adders, the rows all-gather row bubble, stage-hop payload partitioning, streaming top-k / consumer early start, the ucie_link rounding fix"
+     }
     },
     {
      "id": "O3",
@@ -7433,6 +7477,6 @@
     }
    ]
   },
-  "note": "headline rates stay conditional on K2 and O2 (and K3/O1 until their records land)"
+  "note": "O2 measured: the headline is the measured-exposure design point (v41_lanes.json design_point); the overlap-assumed rate is conditional on recovering C7; K2 pending"
  }
 }

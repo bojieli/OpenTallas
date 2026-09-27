@@ -2871,5 +2871,63 @@
    }
   ]
  },
+ "c7_measured_exposure": {
+  "gate": "C7 / O2",
+  "status": "NOT MET (measured)",
+  "campaign": "results/rtl/v41_stage_collective_campaign.json",
+  "campaign_binding": {
+   "pinned": false,
+   "current": false,
+   "stale": []
+  },
+  "terms_residual_cycles": {
+   "all_reduce": 98.07069445787795,
+   "all_gather_small": 7.689999999999998,
+   "all_gather_select": 34.0627381834947,
+   "all_gather_rows": 402.3321886583679,
+   "hop": 84.14148782980965
+  },
+  "note": "ladder top without the lane split; the headline is results/arch/v41_lanes.json design_point",
+  "1048576": {
+   "overlap_assumed": {
+    "ar": 8634.678265715687,
+    "mtp": 26211.512864645047
+   },
+   "measured_exposure": {
+    "ar": 7563.220265625025,
+    "mtp": 23467.19028790859,
+    "T_us": 132.21881220953176,
+    "breakdown_us": {
+     "compute_chain": 75.213,
+     "weight_sweep": 8.548,
+     "kv_sweep": 5.707,
+     "collective_latency": 15.561,
+     "collective_bytes": 12.828,
+     "pipeline_hops": 12.393,
+     "control": 1.969
+    }
+   }
+  },
+  "200000": {
+   "overlap_assumed": {
+    "ar": 9055.110194560553,
+    "mtp": 27483.83125540927
+   },
+   "measured_exposure": {
+    "ar": 7888.020136459685,
+    "mtp": 24481.877674523832,
+    "T_us": 126.77452424060642,
+    "breakdown_us": {
+     "compute_chain": 74.069,
+     "weight_sweep": 8.548,
+     "kv_sweep": 1.407,
+     "collective_latency": 15.561,
+     "collective_bytes": 12.828,
+     "pipeline_hops": 12.393,
+     "control": 1.969
+    }
+   }
+  }
+ },
  "stop": "the ladder stops at the envelope: beyond it are a 4-die package (option c, ~2028+), a sub-100 ns board link (no FEC-free 112G board-reach standard), clocks past the 1,087-1,123 MHz routed blocks (every stream lane, select and link endpoint would need retiming), or the rejected norm folding (changes the FP8 quantisation point)"
 }

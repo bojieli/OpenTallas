@@ -39,7 +39,7 @@ def test_same_wall_chain_and_switches_on_both_machines(rec):
 
 def test_rom_worst_die_under_the_cooling_limit(rec):
     w = rec["rom_worst_die_w"]
-    assert w["total_w"] < w["cooling_limit_w"]
+    assert w["total_w"] < min(w["cooling_limit_w"].values())      # air and liquid classes (power_scenarios)
 
 
 def test_kv_replicate_on_write_fits_the_stage_lanes(rec):

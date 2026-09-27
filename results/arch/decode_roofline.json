@@ -1,0 +1,1214 @@
+{
+ "schema": "opentallas.decode-roofline.v1",
+ "tool": "tools/decode_roofline_figure.py",
+ "inputs": {
+  "qwen3_budget": {
+   "from": "worktree:results/arch/qwen3_budget.json",
+   "sha256": "9e245b2dc2c63e6c66575cac4949f162cbbe80c51b1f4af16acf8ac4f0dc8fd8"
+  },
+  "iso_qwen": {
+   "from": "b42f8606:results/roofline/iso_area/qwen3_8b.json",
+   "sha256": "26bc5acadb614dc14cce25cab9f2c3913215625f418cd828e39d7d55db1d141e"
+  },
+  "sync": {
+   "from": "worktree:results/arch/sync_cost_table.json",
+   "sha256": "2cd876a95fc9d012c5925b7fcbc5e9a6e056bea1d67098dd4c802e53c610de25"
+  },
+  "v41_lanes": {
+   "from": "worktree:results/arch/v41_lanes.json",
+   "sha256": "a3152977fcbe8be5fcff152d313a7690f01911b5e31f23f3d7e09a13fb57d52d"
+  },
+  "v41_hbm_best": {
+   "from": "worktree:results/arch/v41_hbm_best.json",
+   "sha256": "c30708ee19309960a5388397e476a42d7d9cb22ef4b74704e80accbb65aa82cb"
+  },
+  "v41_ladder": {
+   "from": "worktree:results/arch/v41_latency_ladder.json",
+   "sha256": "c9f73cbb5a908914b813f70da9793973c12062997a8c6b3174fa1b841acd5990"
+  },
+  "v41_budget": {
+   "from": "worktree:results/arch/arch_budget_v41_dp.json",
+   "sha256": "80869e5dbb42ed052af378112215e39a486207f8233bb0e1e86a2cec303715ba"
+  },
+  "v41_switched": {
+   "from": "worktree:results/arch/v41_hbm_switched.json",
+   "sha256": "ddc955df43d64b546b737b71484efe4ceb51227b29d4f4b00d6eddafeed53890"
+  },
+  "idle_floor": {
+   "from": "worktree:results/roofline/gpu_clocked_idle_floor.json",
+   "sha256": "01da87e4e293f237ab6c623700c1045ff81737e9e39648741e0fd8a16eb37635"
+  }
+ },
+ "cited": {
+  "hbm_efficiency": {
+   "value": 0.9,
+   "unit": "",
+   "evidence": "assumed (repository-wide)",
+   "source": "configs/hardware/technology.json efficiencies.hbm_bandwidth: 0.90 of peak on ANY HBM device"
+  },
+  "b200_hbm_Bps": {
+   "value": 8000000000000.0,
+   "unit": "B/s",
+   "evidence": "published",
+   "source": "NVIDIA Blackwell architecture page: B200 8 TB/s over 8 HBM3E stacks"
+  },
+  "b200_capacity_B": {
+   "value": 180000000000.0,
+   "unit": "B",
+   "evidence": "published",
+   "source": "configs/hardware/architectures.json NVIDIA-B200 weight_capacity_bytes_per_device"
+  },
+  "b200_logic_mm2": {
+   "value": 1600.0,
+   "unit": "mm2",
+   "evidence": "approximate",
+   "source": "results/roofline/iso_area/qwen3_8b.json area.b200: ~1,600 mm2, two reticle-limited dies (per-die area unpublished)"
+  },
+  "b300_hbm_Bps": {
+   "value": 7750000000000.0,
+   "unit": "B/s",
+   "evidence": "published",
+   "source": "configs/hardware/architectures.json: DGX B300 62 TB/s aggregate / 8"
+  },
+  "h200_hbm_Bps": {
+   "value": 4800000000000.0,
+   "unit": "B/s",
+   "evidence": "published",
+   "source": "NVIDIA H200 product page: 4.8 TB/s"
+  },
+  "rtx6000_Bps": {
+   "value": 1792000000000.0,
+   "unit": "B/s",
+   "evidence": "published",
+   "source": "RTX PRO 6000 Blackwell (GB202) architecture whitepaper: GDDR7 512-bit 1.792 TB/s"
+  },
+  "hbm_capacity_utilization": {
+   "value": 0.9,
+   "unit": "",
+   "evidence": "assumed",
+   "source": "configs/hardware/architectures.json hbm_capacity_utilization"
+  },
+  "dflash_b200": {
+   "value": {
+    "ar": 230.0,
+    "dflash": 1175.0,
+    "tau": 8.01
+   },
+   "unit": "tok/s",
+   "evidence": "cited (author measurement)",
+   "source": "DFlash (Chen, Liang, Liu, ICML 2026, arXiv:2602.06036v2) Table 3: one B200, SGLang, concurrency 1, Qwen3-8B, MATH-500"
+  },
+  "lmsys_v4pro": {
+   "value": {
+    "tok_s": 383.7,
+    "tau": 5.0,
+    "gpus": 8
+   },
+   "unit": "tok/s",
+   "evidence": "cited (SGLang integration measurement)",
+   "source": "LMSYS Org, 'DSpark in SGLang', https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ (6 Jul 2026): '383.7 tok/s at accept length ~5 at batch size 1 on DeepSeek-V4-Pro, TP=8, B300' (V4-Pro: 49 B active parameters against V4.1-Flash's 13 B; context not stated)"
+  },
+  "megatron_ar_per_layer": {
+   "value": 2,
+   "unit": "all-reduces per layer",
+   "evidence": "published",
+   "source": "Shoeybi et al., Megatron-LM, arXiv:1909.08053, s3: two all-reduces per transformer layer in the forward pass"
+  },
+  "b200_decode_draw_w": {
+   "value": 689.0,
+   "unit": "W",
+   "evidence": "measured (cited)",
+   "source": "arXiv:2609.11133: B200 decode natural draw 688-689 W"
+  },
+  "b200_tdp_hgx_w": {
+   "value": 1000.0,
+   "unit": "W",
+   "evidence": "published",
+   "source": "NVIDIA Blackwell datasheet: HGX B200 1,000 W"
+  },
+  "v41_text_model_B": {
+   "value": 509300000000.0,
+   "unit": "B",
+   "evidence": "measured (safetensors headers)",
+   "source": "docs/ARCH_SPEC_V41.md s2.1: text model 509.3 GB (Engram tables 202.8 GB, routed experts 288.8 GB)"
+  },
+  "qwen_on_chip_boundaries": {
+   "value": 220,
+   "unit": "all-SM boundaries per token",
+   "evidence": "model on measured primitive",
+   "source": "results/arch/sync_cost_table.json row 'Per token, Qwen3-8B on one die (~220 all-SM boundaries)'"
+  }
+ },
+ "gpu_collective_us": {
+  "sol_floor": {
+   "value": 1.404,
+   "source": "GB200 speed-of-light all-reduce floor, 'independent of the number of ranks' [Shen et al., arXiv:2607.16100]"
+  },
+  "best_kernel": {
+   "value": 2.37,
+   "source": "best measured low-latency kernel, 4 x GB200 [Shen et al., arXiv:2607.16100, Fig. 1]"
+  },
+  "nccl_2_27": {
+   "value": 5.0,
+   "source": "NCCL 2.27 small-message all-reduce, GB200, 32 ranks, ~5 us [NVIDIA technical blog, 14 Jul 2025]"
+  },
+  "nccl_ring": {
+   "value": 11.0,
+   "source": "NCCL ring, 4 x GB200 [Shen et al., Fig. 1]"
+  }
+ },
+ "axes": {
+  "x": "off-chip memory bandwidth devoted to the user, sustained (TB/s)",
+  "y": "tokens/s for one user"
+ },
+ "ladder_definition": "S0 GPU application or shipped-library baseline, modeled where a same-model measurement is unavailable; S1 same GPUs, idealised runtime (software gap); S2 specialised HBM accelerator at no more silicon and HBM bandwidth than S1 (specialisation); S3 a specialised ROM accelerator at equal logic area. Qwen3-8B adds S1f (the ROM's 3.5-bit weight format). Qwen S2 has B200-class bandwidth while S3 has six stacks; the matched six-stack HBM/ROM comparison is separate. The order is part of the definition: the factors are not independent (ROM without specialisation is not a meaningful machine). Each step keeps or reduces the silicon and bandwidth of the step before it. V4.1 S2-to-S3 also changes die count, topology and HBM allocation, so its multiplier is not an isolated ROM effect. S2-S3 are conditional on the design's open gates (clock; V4.1 collectives at their measured exposure).",
+ "models": {
+  "qwen3": {
+   "title": "Qwen3-8B, 8K context, FP8 KV, one user",
+   "x_range": [
+    1.0,
+    100.0
+   ],
+   "y_range": [
+    50.0,
+    1000000.0
+   ],
+   "bytes_per_token": {
+    "weights_bf16_plus_kv": 15740200000.0,
+    "weights_fp8_plus_kv": 8172080000.0,
+    "weights_rom35_plus_kv": 3915020000.0,
+    "kv_fp8": 603980000.0
+   },
+   "gpu_model": {
+    "n_dep": 220,
+    "t_dep_ns": 1004.0,
+    "n_coll_tp": 73,
+    "t_coll_us": {
+     "sol_floor": 1.404,
+     "best_kernel": 2.37,
+     "nccl_2_27": 5.0,
+     "nccl_ring": 11.0
+    },
+    "tp8_bf16_tok_s": {
+     "sol_floor": 2661.28,
+     "best_kernel": 2240.76,
+     "nccl_2_27": 1566.74,
+     "nccl_ring": 929.138
+    },
+    "tp8_rom35_tok_s": 2538.78,
+    "kv_floor_rom_tok_s": 8940.7
+   },
+   "points": [
+    {
+     "key": "rtx_bf16",
+     "label": "RTX PRO 6000, BF16",
+     "x": 1.6128,
+     "y": 93.6,
+     "evidence": "measured",
+     "family": "gpu",
+     "spec": false,
+     "basis": "this machine, MATH-500, short context (iso_qwen local_gpu_rtx_pro_6000)"
+    },
+    {
+     "key": "rtx_fp8",
+     "label": "RTX PRO 6000, FP8",
+     "x": 1.6128,
+     "y": 151.4,
+     "evidence": "measured",
+     "family": "gpu",
+     "spec": false,
+     "basis": "this machine, MATH-500, short context"
+    },
+    {
+     "key": "rtx_bf16_dflash",
+     "label": "RTX PRO 6000 + DFlash",
+     "x": 1.6128,
+     "y": 270.2,
+     "evidence": "measured",
+     "family": "gpu",
+     "spec": true,
+     "basis": "tau 3.65; host-bound on a loaded host"
+    },
+    {
+     "key": "h200_bf16",
+     "label": "H200, BF16",
+     "x": 4.32,
+     "y": 133.269,
+     "evidence": "calibrated",
+     "family": "gpu",
+     "spec": false,
+     "basis": "NIM H200 two-point fit, shape-adjusted to Qwen3-8B at 8K (iso_qwen gpu_calibration)"
+    },
+    {
+     "key": "b200_bf16",
+     "label": "B200, SGLang, BF16",
+     "x": 7.2,
+     "y": 230.0,
+     "evidence": "cited",
+     "family": "gpu",
+     "spec": false,
+     "basis": "DFlash (Chen, Liang, Liu, ICML 2026, arXiv:2602.06036v2) Table 3: one B200, SGLang, concurrency 1, Qwen3-8B, MATH-500"
+    },
+    {
+     "key": "b200_dflash",
+     "label": "B200 + DFlash",
+     "x": 7.2,
+     "y": 1175.0,
+     "evidence": "cited",
+     "family": "gpu",
+     "spec": true,
+     "basis": "same source; tau 8.01 (MATH-500), not the 4.1 used for our designs"
+    },
+    {
+     "key": "b200_ideal_bf16",
+     "label": "B200 idealised, BF16",
+     "x": 7.2,
+     "y": 457.428,
+     "evidence": "modelled",
+     "family": "gpu",
+     "spec": false,
+     "basis": "bandwidth roof at 0.90; 220 measured all-SM boundaries overlapped"
+    },
+    {
+     "key": "b200_ideal_rom35",
+     "label": "B200 idealised, 3.5-bit",
+     "x": 7.2,
+     "y": 1839.07,
+     "evidence": "modelled",
+     "family": "gpu",
+     "spec": false,
+     "basis": "as above at the ROM's weight format (byte-proportional; no GPU has shown it: on an H20 AWQ-INT4 ran 0.96x FP8)"
+    },
+    {
+     "key": "nvl72_tp8_bf16",
+     "label": "NVL72 slice, TP8, BF16",
+     "x": 57.6,
+     "y": 2240.76,
+     "evidence": "modelled",
+     "family": "gpu",
+     "spec": false,
+     "basis": "TP8 (8 KV heads: the largest legal split), 73 all-reduces at the best measured kernel 2.37 us"
+    },
+    {
+     "key": "hdc_bf16",
+     "label": "HDC-HBM, BF16",
+     "x": 5.4,
+     "y": 343.1,
+     "evidence": "modelled",
+     "family": "hbm",
+     "spec": false,
+     "basis": "one reticle, 6 HBM3E stacks at 0.90 (qwen3_budget hbm_comparator)"
+    },
+    {
+     "key": "hdc_rom35",
+     "label": "HDC-HBM, 3.5-bit",
+     "x": 5.4,
+     "y": 1379.3,
+     "evidence": "modelled",
+     "family": "hbm",
+     "spec": false,
+     "basis": "same machine at the ROM's weight format"
+    },
+    {
+     "key": "hdc_rom35_dflash",
+     "label": "HDC-HBM + DFlash",
+     "x": 5.4,
+     "y": 4966.7,
+     "evidence": "modelled",
+     "family": "hbm",
+     "spec": true,
+     "basis": "tau 4.1 (measured on real Qwen3-8B, 561 blocks)"
+    },
+    {
+     "key": "hdc_matched",
+     "label": "S2: HDC core at B200 bandwidth",
+     "x": 7.2,
+     "y": 1839.07,
+     "evidence": "modelled",
+     "family": "hbm",
+     "spec": false,
+     "basis": "specialised core on a B200-sized package (8 stacks, 7.2 TB/s), 3.5-bit weights, 220 x 4.8 ns handoffs"
+    },
+    {
+     "key": "rom",
+     "label": "ROM reticle",
+     "x": 5.4,
+     "y": 8910.2,
+     "evidence": "calibrated",
+     "family": "rom",
+     "spec": false,
+     "basis": "RTL-calibrated sequencer model at spec widths, 123,301 cycles at 1.099 GHz; KV-bound (qwen3_budget power_production)"
+    },
+    {
+     "key": "rom_dflash",
+     "label": "ROM + DFlash (m=3)",
+     "x": 5.4,
+     "y": 13612.1,
+     "evidence": "modelled",
+     "family": "rom",
+     "spec": true,
+     "basis": "tau 4.1, block 3, three MAC copies per weight read in the freed SRAM; conditional on the lane copies"
+    }
+   ],
+   "roofs": [
+    {
+     "key": "roof_bf16",
+     "label": "weights BF16 + KV",
+     "bytes_per_token": 15740200000.0
+    },
+    {
+     "key": "roof_rom35",
+     "label": "weights 3.5-bit + KV",
+     "bytes_per_token": 3915020000.0
+    },
+    {
+     "key": "roof_kv",
+     "label": "KV only (ROM)",
+     "bytes_per_token": 603980000.0,
+     "rom": true
+    }
+   ],
+   "ceilings": [
+    {
+     "key": "gpu_onchip",
+     "family": "gpu",
+     "label": "GPU on-chip sync, 1 die",
+     "y": 4527.35,
+     "evidence": "model on measured primitive",
+     "basis": "220 all-SM boundaries x 1004 ns (GB202 measured)"
+    },
+    {
+     "key": "rom_sweep",
+     "family": "rom",
+     "label": "ROM weight sweep",
+     "y": 19027.4,
+     "evidence": "modelled",
+     "basis": "57,740 cycles: one weight per lane per cycle"
+    },
+    {
+     "key": "ours_onchip",
+     "family": "rom",
+     "label": "our on-chip sync",
+     "y": 946970.0,
+     "evidence": "RTL-derived",
+     "basis": "220 x 4.8 ns"
+    }
+   ],
+   "curves": [
+    {
+     "key": "gpu_tp_best",
+     "family": "gpu",
+     "label": "B200 TP-N, best kernel",
+     "pts": [
+      [
+       7.2,
+       457.428
+      ],
+      [
+       14.4,
+       789.841
+      ],
+      [
+       28.8,
+       1389.77
+      ],
+      [
+       57.6,
+       2240.76
+      ]
+     ]
+    },
+    {
+     "key": "gpu_tp_band",
+     "family": "gpu",
+     "label": "TP-N band: SoL floor to NCCL 2.27",
+     "band": true,
+     "lo": [
+      [
+       7.2,
+       457.428
+      ],
+      [
+       14.4,
+       685.839
+      ],
+      [
+       28.8,
+       1097.05
+      ],
+      [
+       57.6,
+       1566.74
+      ]
+     ],
+     "hi": [
+      [
+       7.2,
+       457.428
+      ],
+      [
+       14.4,
+       836.428
+      ],
+      [
+       28.8,
+       1540.77
+      ],
+      [
+       57.6,
+       2661.28
+      ]
+     ]
+    }
+   ],
+   "arrows": [
+    [
+     "b200_bf16",
+     "b200_ideal_bf16",
+     "software"
+    ],
+    [
+     "b200_ideal_bf16",
+     "b200_ideal_rom35",
+     "format"
+    ],
+    [
+     "hdc_matched",
+     "rom",
+     "ROM"
+    ]
+   ],
+   "ladders": {
+    "per_user": [
+     {
+      "step": "S0",
+      "label": "B200, SGLang, BF16 weights",
+      "value": 230.0,
+      "unit": "tok/s",
+      "evidence": "cited",
+      "basis": "DFlash (Chen, Liang, Liu, ICML 2026, arXiv:2602.06036v2) Table 3: one B200, SGLang, concurrency 1, Qwen3-8B, MATH-500",
+      "matching": "2 reticles of logic, 8 HBM3E stacks (7.2 TB/s sustained)",
+      "multiplier": null
+     },
+     {
+      "step": "S1",
+      "label": "same B200, idealised runtime",
+      "value": 457.428,
+      "unit": "tok/s",
+      "evidence": "modelled on measured primitives",
+      "basis": "bandwidth roof at 0.90 with 220 measured all-SM boundaries overlapped (GPU-optimistic)",
+      "matching": "same GPU",
+      "multiplier": 1.98882
+     },
+     {
+      "step": "S1f",
+      "label": "same, weights at the ROM's 3.5-bit format",
+      "value": 1839.07,
+      "unit": "tok/s",
+      "evidence": "modelled",
+      "basis": "byte-proportional; not demonstrated on a GPU",
+      "matching": "same GPU, weight format matched to the ROM",
+      "multiplier": 4.02046
+     },
+     {
+      "step": "S2",
+      "label": "specialised HBM core, same bandwidth",
+      "value": 1839.07,
+      "unit": "tok/s",
+      "evidence": "modelled (RTL-calibrated handoff)",
+      "basis": "bandwidth roof; 220 handoffs at 4.8 ns (RTL)",
+      "matching": "<= B200 logic area, = B200 HBM bandwidth, 3.5-bit",
+      "multiplier": 1.0
+     },
+     {
+      "step": "S3",
+      "label": "same core, weights in ROM",
+      "value": 8910.2,
+      "unit": "tok/s",
+      "evidence": "calibrated model",
+      "basis": "RTL-calibrated sequencer model; KV-bound on 6 stacks",
+      "matching": "one reticle + 6 stacks for KV (less than S2)",
+      "multiplier": 4.84495
+     }
+    ],
+    "energy": [
+     {
+      "step": "S0",
+      "label": "B200, SGLang, BF16",
+      "value": 2995.65,
+      "unit": "mJ/token",
+      "evidence": "measured draw / cited rate",
+      "basis": "689 W measured B200 decode draw [arXiv:2609.11133] / 230 tok/s [DFlash]; different workloads",
+      "matching": "",
+      "multiplier": null
+     },
+     {
+      "step": "S1",
+      "label": "idealised runtime, BF16",
+      "value": 1506.25,
+      "unit": "mJ/token",
+      "evidence": "modelled",
+      "basis": "draw held at the measured 689 W",
+      "matching": "same GPU",
+      "multiplier": 1.98882
+     },
+     {
+      "step": "S1f",
+      "label": "idealised, 3.5-bit",
+      "value": 374.646,
+      "unit": "mJ/token",
+      "evidence": "modelled",
+      "basis": "draw held at 689 W",
+      "matching": "same GPU",
+      "multiplier": 4.02046
+     },
+     {
+      "step": "S2",
+      "label": "HDC-HBM, 3.5-bit (iso-area, 6 stacks)",
+      "value": 540.597,
+      "unit": "mJ/token",
+      "evidence": "modelled (production power inputs)",
+      "basis": "package energy; HBM priced at the conservative 13.1 pJ/bit system figure, so S1f->S2 mixes a measured GPU draw with a conservative model",
+      "matching": "one reticle, 6 stacks",
+      "multiplier": 0.693023
+     },
+     {
+      "step": "S3",
+      "label": "ROM reticle",
+      "value": 82.38,
+      "unit": "mJ/token",
+      "evidence": "modelled (production power inputs)",
+      "basis": "same power model as S2: the matched-format ratio",
+      "matching": "one reticle, 6 stacks",
+      "multiplier": 6.56224
+     }
+    ],
+    "aggregate": [
+     {
+      "step": "S0",
+      "label": "B200, real software",
+      "value": null,
+      "unit": "tok/s",
+      "evidence": "not available",
+      "basis": "no measured Qwen3-8B 8K fill-batch B200 figure in the repository",
+      "matching": "",
+      "multiplier": null
+     },
+     {
+      "step": "S1",
+      "label": "B200, KV-stream bound",
+      "value": 11920.9,
+      "unit": "tok/s",
+      "evidence": "bound",
+      "basis": "weights amortised over the batch; 7.2 TB/s / 604 MB of FP8 KV per token",
+      "matching": "8 stacks",
+      "multiplier": null
+     },
+     {
+      "step": "S2",
+      "label": "HDC-HBM, 3.5-bit, batch 128",
+      "value": 8573.5,
+      "unit": "tok/s",
+      "evidence": "modelled",
+      "basis": "qwen3_budget power_production",
+      "matching": "6 stacks (0.75x the B200's KV bandwidth)",
+      "multiplier": 0.719197
+     },
+     {
+      "step": "S3",
+      "label": "ROM reticle, batch 128",
+      "value": 8940.7,
+      "unit": "tok/s",
+      "evidence": "modelled",
+      "basis": "KV-bound: 5.4 TB/s / 604 MB",
+      "matching": "6 stacks",
+      "multiplier": 1.04283
+     }
+    ]
+   },
+   "speculation": [
+    {
+     "machine": "B200, SGLang (measured)",
+     "ar": 230.0,
+     "spec": 1175.0,
+     "tau": 8.01,
+     "evidence": "cited"
+    },
+    {
+     "machine": "B200 idealised, BF16 (bound: tau x AR)",
+     "ar": 457.428,
+     "spec": 1875.46,
+     "tau": 4.1,
+     "evidence": "bound"
+    },
+    {
+     "machine": "HDC-HBM, 3.5-bit",
+     "ar": 1379.3,
+     "spec": 4966.7,
+     "tau": 4.1,
+     "evidence": "modelled"
+    },
+    {
+     "machine": "HDC-HBM, BF16",
+     "ar": 343.1,
+     "spec": 1235.4,
+     "tau": 4.1,
+     "evidence": "modelled"
+    },
+    {
+     "machine": "ROM reticle (m = 3 lane copies)",
+     "ar": 8910.2,
+     "spec": 13612.1,
+     "tau": 4.1,
+     "evidence": "modelled"
+    }
+   ]
+  },
+  "v41": {
+   "title": "DeepSeek-V4.1-Flash, 1M context, one user",
+   "x_range": [
+    10.0,
+    1000.0
+   ],
+   "y_range": [
+    100.0,
+    100000.0
+   ],
+   "bytes_per_token": {
+    "1048576": {
+     "weights": 13033800000.0,
+     "kv": 196637056,
+     "total": 13230400000.0
+    },
+    "200000": {
+     "weights": 13033800000.0,
+     "kv": 52379136,
+     "total": 13086200000.0
+    }
+   },
+   "gpu_model": {
+    "n_collectives": 209,
+    "n_min_by_capacity": 4,
+    "n_iso": 50,
+    "t_coll_us": {
+     "sol_floor": 1.404,
+     "best_kernel": 2.37,
+     "nccl_2_27": 5.0,
+     "nccl_ring": 11.0
+    },
+    "sol_floor_tok_s": 3028.59,
+    "sync_table_per_token_us": 517,
+    "note": "GPU pays only the weight/KV stream and the collectives of the ROM array's graph (209 per token): no on-chip boundaries, no compute, no stage hops (the sync table's 517 us includes 27 hops; dropped here)"
+   },
+   "points": [
+    {
+     "key": "gpu_s0",
+     "label": "50 x B200, modelled NCCL 2.27",
+     "x": 360.0,
+     "y": 924.427,
+     "evidence": "modelled on cited latency",
+     "family": "gpu",
+     "spec": false,
+     "basis": "209 collectives x ~5 us (NCCL 2.27) + weight/KV stream over 50 GPUs"
+    },
+    {
+     "key": "gpu_s1",
+     "label": "50 x B200, best kernel",
+     "x": 360.0,
+     "y": 1879.41,
+     "evidence": "modelled on measured primitives",
+     "family": "gpu",
+     "spec": false,
+     "basis": "209 collectives x 2.37 us (best measured GB200 kernel)"
+    },
+    {
+     "key": "gpu_nvl72",
+     "label": "NVL72, 72 x B200",
+     "x": 518.4,
+     "y": 1919.93,
+     "evidence": "modelled on measured primitives",
+     "family": "gpu",
+     "spec": false,
+     "basis": "the whole rack on one user: sync-bound, so 72 GPUs add only 2%"
+    },
+    {
+     "key": "gpu_mtp_bound",
+     "label": "B200 set + MTP, bound",
+     "x": 360.0,
+     "y": 9397.06,
+     "evidence": "bound",
+     "family": "gpu",
+     "spec": true,
+     "basis": "tau x AR (tau 5.0): free draft and verify; an upper bound"
+    },
+    {
+     "key": "v4pro_b300",
+     "label": "V4-Pro + DSpark, 8 x B300",
+     "x": 55.8,
+     "y": 383.7,
+     "evidence": "cited",
+     "family": "gpu",
+     "spec": true,
+     "basis": "LMSYS Org, 'DSpark in SGLang', https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ (6 Jul 2026): '383.7 tok/s at accept length ~5 at batch size 1 on DeepSeek-V4-Pro, TP=8, B300' (V4-Pro: 49 B active parameters against V4.1-Flash's 13 B; context not stated)"
+    },
+    {
+     "key": "hbm_ar",
+     "label": "HBM comparator (G=96)",
+     "x": 345.6,
+     "y": 3580.38,
+     "evidence": "modelled (RTL-calibrated + validated links)",
+     "family": "hbm",
+     "spec": false,
+     "basis": "99 dies x 4 HBM3E stacks, equal logic area to the ROM array; best tensor group G=96"
+    },
+    {
+     "key": "hbm_mtp",
+     "label": "HBM comparator + MTP (G=96)",
+     "x": 345.6,
+     "y": 11977.9,
+     "evidence": "modelled",
+     "family": "hbm",
+     "spec": true,
+     "basis": "DSpark gamma 5, tau 5.0, m = 6"
+    },
+    {
+     "key": "rom_ar",
+     "label": "ROM array",
+     "x": 34.4554,
+     "y": 7578.98,
+     "evidence": "modelled, C7 measured",
+     "family": "rom",
+     "spec": false,
+     "basis": "rack lane-split design point with the RTL stage bench's measured collective exposure (v41_lanes design_point); conditional on the 1.087 GHz clock"
+    },
+    {
+     "key": "rom_mtp",
+     "label": "ROM array + MTP",
+     "x": 34.4554,
+     "y": 21005.9,
+     "evidence": "modelled, C7 measured",
+     "family": "rom",
+     "spec": true,
+     "basis": "DSpark gamma 5, tau 5.0"
+    }
+   ],
+   "roofs": [
+    {
+     "key": "roof_w",
+     "label": "weights (checkpoint dtypes) + KV",
+     "bytes_per_token": 13230400000.0
+    },
+    {
+     "key": "roof_kv",
+     "label": "KV + index only (ROM)",
+     "bytes_per_token": 196637056,
+     "rom": true
+    }
+   ],
+   "ceilings": [
+    {
+     "key": "gpu_sync",
+     "family": "gpu",
+     "label": "GPU sync, 209 collectives",
+     "y": 2018.86,
+     "band": [
+      434.972,
+      3407.9
+     ],
+     "evidence": "model on measured primitives",
+     "basis": "best kernel 2.37 us; band NCCL ring 11 us to the SoL floor 1.404 us"
+    },
+    {
+     "key": "hbm_sync",
+     "family": "hbm",
+     "label": "comparator sync at G=96",
+     "y": 7889.55,
+     "evidence": "modelled",
+     "basis": "its collectives at span G on the realistic fabric"
+    },
+    {
+     "key": "rom_chain",
+     "family": "rom",
+     "label": "ROM compiled chain",
+     "y": 12948.0,
+     "evidence": "modelled",
+     "basis": "compute chain + control of the design point's headline token"
+    },
+    {
+     "key": "ours_sync",
+     "family": "rom",
+     "label": "ROM array sync",
+     "y": 24717.6,
+     "evidence": "model, normative basis",
+     "basis": "15.6 us collectives + 12.5 us measured exposed collective bytes + 12.39 us stage hops (209 ns cable tier)"
+    }
+   ],
+   "curves": [
+    {
+     "key": "gpu_best",
+     "family": "gpu",
+     "label": "B200 set, best kernel",
+     "pts": [
+      [
+       28.8,
+       1047.43
+      ],
+      [
+       57.6,
+       1379.26
+      ],
+      [
+       115.2,
+       1638.87
+      ],
+      [
+       230.4,
+       1809.12
+      ],
+      [
+       360.0,
+       1879.41
+      ],
+      [
+       518.4,
+       1919.93
+      ]
+     ]
+    },
+    {
+     "key": "gpu_band",
+     "family": "gpu",
+     "label": "band: SoL floor to NCCL 2.27",
+     "band": true,
+     "lo": [
+      [
+       28.8,
+       664.721
+      ],
+      [
+       57.6,
+       784.501
+      ],
+      [
+       115.2,
+       862.182
+      ],
+      [
+       230.4,
+       907.092
+      ],
+      [
+       360.0,
+       924.427
+      ],
+      [
+       518.4,
+       934.124
+      ]
+     ],
+     "hi": [
+      [
+       28.8,
+       1328.33
+      ],
+      [
+       57.6,
+       1911.57
+      ],
+      [
+       115.2,
+       2449.28
+      ],
+      [
+       230.4,
+       2850.14
+      ],
+      [
+       360.0,
+       3028.59
+      ],
+      [
+       518.4,
+       3135.21
+      ]
+     ]
+    },
+    {
+     "key": "hbm_grid",
+     "family": "hbm",
+     "label": "comparator vs tensor group G",
+     "pts": [
+      [
+       14.4,
+       1054.36
+      ],
+      [
+       28.8,
+       1618.21
+      ],
+      [
+       57.6,
+       2415.91
+      ],
+      [
+       86.4,
+       2680.41
+      ],
+      [
+       115.2,
+       2938.02
+      ],
+      [
+       172.8,
+       3236.69
+      ],
+      [
+       230.4,
+       3417.38
+      ],
+      [
+       345.6,
+       3580.38
+      ]
+     ]
+    },
+    {
+     "key": "hbm_grid_mtp",
+     "family": "hbm",
+     "label": "comparator + MTP vs G",
+     "spec": true,
+     "pts": [
+      [
+       14.4,
+       1629.43
+      ],
+      [
+       28.8,
+       2948.45
+      ],
+      [
+       57.6,
+       5165.6
+      ],
+      [
+       86.4,
+       6618.62
+      ],
+      [
+       115.2,
+       7841.7
+      ],
+      [
+       172.8,
+       9566.29
+      ],
+      [
+       230.4,
+       10734.3
+      ],
+      [
+       345.6,
+       11977.9
+      ]
+     ]
+    }
+   ],
+   "arrows": [
+    [
+     "gpu_s0",
+     "gpu_s1",
+     "software"
+    ],
+    [
+     "gpu_s1",
+     "hbm_ar",
+     "specialisation"
+    ],
+    [
+     "hbm_ar",
+     "rom_ar",
+     "ROM array"
+    ]
+   ],
+   "ladders": {
+    "per_user": [
+     {
+      "step": "S0",
+      "label": "50 x B200, modelled NCCL",
+      "value": 924.427,
+      "unit": "tok/s",
+      "evidence": "modelled on cited latency",
+      "basis": "no published V4.1-Flash batch-1 GPU figure exists; nearest: V4-Pro + DSpark 383.7 tok/s on 8 x B300 [LMSYS]",
+      "matching": "50 B200: >= the comparator's logic area (62,202 mm2) and HBM bandwidth (356 TB/s)",
+      "multiplier": null
+     },
+     {
+      "step": "S1",
+      "label": "same GPUs, best measured all-reduce",
+      "value": 1879.41,
+      "unit": "tok/s",
+      "evidence": "modelled on measured primitives",
+      "basis": "fixed 209-collective graph, 2.37 us per collective; against the SoL floor 1.404 us: 3,029 tok/s; a different GPU mapping could change the graph",
+      "matching": "same GPUs",
+      "multiplier": 2.03306
+     },
+     {
+      "step": "S2",
+      "label": "specialised HBM accelerator",
+      "value": 3580.38,
+      "unit": "tok/s",
+      "evidence": "modelled (RTL-calibrated + validated links)",
+      "basis": "best switched HBM comparator, G = 96",
+      "matching": "99 dies, 62,202 mm2 logic, 356 TB/s",
+      "multiplier": 1.90505
+     },
+     {
+      "step": "S3",
+      "label": "equal-area specialised ROM array",
+      "value": 7578.98,
+      "unit": "tok/s",
+      "evidence": "modelled, C7 measured",
+      "basis": "ROM array design point, collective exposure measured in the RTL stage bench (gate C7 not met; full overlap would give the conditional point); open gate: 1.087 GHz clock",
+      "matching": "equal logic area (188 x 328.9 mm2); die count, topology, HBM allocation and weight placement all differ",
+      "multiplier": 2.11681
+     }
+    ],
+    "energy": [
+     {
+      "step": "S0",
+      "label": "50 x B200, modelled NCCL",
+      "value": 37.2663,
+      "unit": "J/token",
+      "evidence": "modelled",
+      "basis": "50 x 689 W measured decode draw; a sync-bound GPU may draw less: at the clocked-idle floor (124 W) 6.7 J",
+      "matching": "",
+      "multiplier": null
+     },
+     {
+      "step": "S1",
+      "label": "best measured all-reduce",
+      "value": 18.3302,
+      "unit": "J/token",
+      "evidence": "modelled",
+      "basis": "at the clocked-idle floor 3.31 J",
+      "matching": "same GPUs",
+      "multiplier": 2.03306
+     },
+     {
+      "step": "S2",
+      "label": "HBM comparator",
+      "value": 7.96601,
+      "unit": "J/token",
+      "evidence": "modelled",
+      "basis": "dynamic + static + switches + wall overhead (v41_hbm_switched energy b1)",
+      "matching": "",
+      "multiplier": 2.30105
+     },
+     {
+      "step": "S3",
+      "label": "ROM array",
+      "value": 2.05889,
+      "unit": "J/token",
+      "evidence": "modelled, C7 measured",
+      "basis": "same wall energy model",
+      "matching": "",
+      "multiplier": 3.86907
+     }
+    ],
+    "aggregate": [
+     {
+      "step": "S0",
+      "label": "B200 set, real software",
+      "value": null,
+      "unit": "tok/s",
+      "evidence": "not available",
+      "basis": "no measured or cited V4.1 throughput at 1M",
+      "matching": "",
+      "multiplier": null
+     },
+     {
+      "step": "S1",
+      "label": "B200 set, idealised",
+      "value": null,
+      "unit": "tok/s",
+      "evidence": "not derived",
+      "basis": "needs a routed-expert-union and KV-capacity model for the GPU set; not built",
+      "matching": "",
+      "multiplier": null
+     },
+     {
+      "step": "S2",
+      "label": "HBM comparator, fill batch (28 users)",
+      "value": 33985.0,
+      "unit": "tok/s",
+      "evidence": "modelled",
+      "basis": "per user 1,214 tok/s; at 1,024 users 64,069",
+      "matching": "",
+      "multiplier": null
+     },
+     {
+      "step": "S3",
+      "label": "ROM array, fill batch (28 users)",
+      "value": 212211.0,
+      "unit": "tok/s",
+      "evidence": "modelled, C7 measured",
+      "basis": "per user 7,579 tok/s; at 1,024 users 689,103",
+      "matching": "",
+      "multiplier": 6.24427
+     }
+    ]
+   },
+   "speculation": [
+    {
+     "machine": "V4-Pro + DSpark, 8 x B300 (different model)",
+     "ar": null,
+     "spec": 383.7,
+     "tau": 5.0,
+     "evidence": "cited"
+    },
+    {
+     "machine": "50 x B200, best kernel (bound: tau x AR)",
+     "ar": 1879.41,
+     "spec": 9397.06,
+     "tau": 5.0,
+     "evidence": "bound"
+    },
+    {
+     "machine": "HBM comparator",
+     "ar": 3580.38,
+     "spec": 11977.9,
+     "tau": 5.0,
+     "evidence": "modelled"
+    },
+    {
+     "machine": "ROM array",
+     "ar": 7578.98,
+     "spec": 21005.9,
+     "tau": 5.0,
+     "evidence": "modelled, C7 measured"
+    }
+   ],
+   "secondary": {
+    "200000": {
+     "gpu_s0": 924.77,
+     "gpu_s1": 1880.83,
+     "gpu_sol": 3032.27,
+     "hbm_ar": 3580.38,
+     "hbm_mtp": 11977.9,
+     "rom_ar": 7905.41,
+     "rom_mtp": 21815.3,
+     "bytes_per_token": {
+      "weights": 13033800000.0,
+      "kv": 52379136,
+      "total": 13086200000.0
+     }
+    }
+   }
+  }
+ },
+ "captions": {
+  "qwen3": "Figure 8-R1. Qwen3-8B decode roofline for one user (8K context, FP8 KV, batch 1). Diagonals are bandwidth roofs, tokens/s = bandwidth / bytes per token, for BF16 and for the ROM's 3.5-bit weights (each with FP8 KV); the dashed orange diagonal is the KV-only roof a ROM design lives under, because its weights never cross the memory interface. Dotted horizontals are ceilings: one GPU's on-chip synchronisation (220 all-SM boundaries at the measured 1.0 \u00b5s), the ROM weight sweep, and our compiled handoffs (4.8 ns, RTL; off scale). The grey curve is B200 tensor parallelism on an NVL72 slice (TP \u2264 8, the KV-head limit) with 73 all-reduces at the best measured GB200 kernel, the band spanning the speed-of-light floor to NCCL 2.27. Arrows are the attribution ladder: software (measured B200 to its idealised roof), weight format (to the ROM's 3.5-bit), specialisation (\u00d71.00: on one die both machines are on the same roof) and ROM. Sources: DFlash Table 3 [DFlash]; local RTX PRO 6000 measurement; H200 calibrated on NIM; results/arch/qwen3_budget.json; results/arch/sync_cost_table.json [Shen et al.; NCCL 2.27]; tools/decode_roofline_figure.py.",
+  "v41": "Figure 8-R2. DeepSeek-V4.1-Flash decode roofline for one user (1M context, batch 1). The diagonal is the bandwidth roof for the checkpoint's own weight dtypes plus KV and index reads (13.2 GB per token); the dashed orange diagonal is the KV-only roof of the ROM array. GPU points are modelled on measured primitives: the weight/KV stream over N B200s plus the 209 collectives of the array's graph at the best measured GB200 all-reduce (2.37 \u00b5s), the band spanning the speed-of-light floor (1.40 \u00b5s) to NCCL 2.27 (~5 \u00b5s); no on-chip boundaries or compute are charged, so the GPU curve is optimistic for this graph. A different GPU mapping could change the 209-collective graph. It flattens at the synchronisation ceiling: 72 GPUs add 2% over the iso-area set. The blue curve is the specialised HBM comparator against its tensor-group span G, which peaks at G = 96 on the validated switched fabric. The ROM array leaves the weight roof and is bound by its compiled chain. The only published V4-class batch-1 GPU figure is V4-Pro (49 B active) with DSpark on 8 B300s [LMSYS]; no V4.1-Flash figure exists. ROM rates carry the collective exposure measured in the RTL stage bench (rack gate C7 not met) and are conditional on the 1.087 GHz clock. Sources: results/arch/v41_lanes.json, v41_hbm_switched.json, v41_latency_ladder.json, arch_budget_v41.json, sync_cost_table.json; tools/decode_roofline_figure.py."
+ },
+ "findings": "Why GPUs plateau. A GPU's per-user rate is bounded twice: by the bandwidth roof of the devices serving the user (tokens/s <= bandwidth / bytes per token) and by a synchronisation ceiling that more devices cannot raise. On one B200, the Qwen3-8B modeled 8K roof is 457 tok/s at BF16; the cited 230-tok/s application point has no verified 8K context match. Spreading it over an NVL72 slice (TP8, the largest split its 8 KV heads allow) raises the roof eightfold but adds 73 dependent all-reduces, so the idealised rate stops at 2,241. DeepSeek-V4.1-Flash never reaches its roof on GPUs under the modeled collective graph: its 209 collectives per token at the best measured GB200 kernel (2.37 us) cap it near 2,019 tok/s however many GPUs are added (1,879 on 50 B200s, 1,920 on all 72 of an NVL72; 3,029 even at the speed-of-light collective floor). The specialised HBM accelerator raises the synchronisation ceiling, not the roof: with compiled handoffs (4.8 ns on chip against 1.0 us) and in-switch reduction it reaches 3,580 tok/s on V4.1 at roughly matched HBM bandwidth (346 against 360 TB/s), 1.91x the best-kernel GPU; on a single die at the same modeled bandwidth roof, this model assigns no added rate to the specialised HBM core (1.00x on Qwen3-8B). ROM removes the weight term: the design leaves the weights-plus-KV roof for the KV-only roof, 8,941 tok/s on six stacks for Qwen3-8B at 8K, where the ROM reticle sits (8,910, 4.8x the same core streaming 3.5-bit weights at the B200's bandwidth); for V4.1 it is bound by its compiled chain and reaches 7,579 tok/s, 2.1x the equal-area HBM array (21,006 with MTP); this V4.1 step also changes topology and HBM allocation. End to end, S0 -> S3 is 39x for Qwen3-8B (illustrative because S0 context is unverified; 4.0x is the modeled format step) and a modeled 8.2x for V4.1 at 1M; the steps are ordered by definition and S2-S3 are conditional on the design's open gates. The same roofline shows where ROM does not help: at 8K and a full batch, aggregate throughput is KV-bound on every machine, and the B200's eight stacks out-stream the ROM reticle's six (11,921 against 8,941 tok/s)."
+}

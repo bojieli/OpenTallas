@@ -37,3 +37,36 @@ def test_serdes_static_on_both_machines(rec):
     for c, rows in rec["energy"].items():
         for k, v in rows.items():
             assert v["ratio_energy_with_static"] > 1.5, (c, k)
+
+
+def test_headline_is_the_measured_collective_exposure(rec):
+    """Gate C7 measured NOT MET: design_point prices the RTL stage bench's exposed tails and sits below the
+    overlap-assumed (conditional) point at both contexts, with and without MTP."""
+    cx = rec["collective_exposure"]
+    assert cx["status"].startswith("NOT MET")
+    assert set(cx["terms"]) == {"all_reduce", "all_gather_small", "all_gather_select", "all_gather_rows", "hop"}
+    for c in ("1048576", "200000"):
+        d, o = rec["design_point"][c], rec["design_point_overlap_assumed"][c]
+        assert d["ar"] < o["ar"] and d["mtp"] < o["mtp"]
+        assert 0.05 < cx["loss"][c]["ar"] < 0.25
+        assert o["ar"] == rec["best_split"][c]["ar"]            # the conditional point is the adopted split's row
+
+
+def test_energy_rows_are_at_the_headline(rec):
+    for c in ("1048576", "200000"):
+        assert abs(rec["energy"][c]["b1"]["rom"]["tokens_s_per_user"] - rec["design_point"][c]["ar"]) < 1e-6
+        assert abs(rec["energy"][c]["b1_mtp"]["rom"]["tokens_s_per_user"] - rec["design_point"][c]["mtp"]) < 1e-6
+
+
+def test_exposure_record_agrees_with_the_design_point(rec):
+    x = json.loads((ROOT / "results/arch/v41_collective_exposure.json").read_text())
+    assert x["terms"] == rec["collective_exposure"]["terms"]
+    for c in ("1048576", "200000"):
+        assert abs(x["design_point_rates"][c]["measured_exposure"]["ar"] - rec["design_point"][c]["ar"]) < 1e-6
+        assert abs(x["design_point_rates"][c]["overlap_assumed"]["ar"]
+                   - rec["design_point_overlap_assumed"][c]["ar"]) < 1e-6
+
+
+def test_campaign_record_binds_the_sources_on_disk(rec):
+    b = rec["collective_exposure"]["campaign_binding"]
+    assert b["pinned"] and b["current"], b["stale"]

@@ -46,7 +46,10 @@ def test_repricing_does_not_double_count_the_embedding_return():
     s = record["reprice_sensitivity"]
     assert s["embedding_return"]["previous_switched_s"] > s["embedding_return"]["adopted_ring_s"]
     assert s["geometry"]["rate_tokens_s"] <= s["baseline"]["rate_tokens_s"]
-    assert s["no_collective_overlap_stress"]["rate_tokens_s"] < s["geometry"]["rate_tokens_s"]
+    # the bytes-only serialisation starts from the conditional (overlapped) point and lies below it; the measured
+    # C7 exposure (the baseline) is worse still, so the bytes-only row is not a bound
+    assert s["no_collective_overlap_stress"]["rate_tokens_s"] < s["baseline"]["conditional_rate_tokens_s"]
+    assert s["baseline"]["rate_tokens_s"] < s["no_collective_overlap_stress"]["rate_tokens_s"]
     assert s["serdes_static"]["geometry_j_per_token"] > s["baseline"]["dynamic_j_per_token"]
 
 
@@ -60,6 +63,10 @@ def test_unresolved_physical_conflicts_remain_explicit():
         assert sev["C4"] == "conflict" and sev["C8"] == "conflict"
     # overlap + whole-system clock, and the head-die draft SRAM floorplan, stay open gates
     assert sev["C7"] == "gate" and sev["C10"] in ("gate", "conflict")
+    c7 = next(e for e in record["conflicts"] if e["id"] == "C7")
+    assert c7["status"] == "NOT MET (measured)"              # the RTL stage bench measured the overlap (O2)
+    o2 = next(s for s in record["demonstration_plan"]["overlap"]["steps"] if s["id"] == "O2")
+    assert o2["status"] == "NOT MET (measured)"
     assert sev["C3"] != "conflict" and sev["C6"] != "conflict"
 
 
@@ -98,10 +105,12 @@ def test_report_contains_generated_rack_figures_and_caveat():
     report = (ROOT / "docs/ARCHITECTURE_ATLAS.html").read_text()
     assert report.count("<!-- V41_RACK_FIGURES_BEGIN -->") == 1
     assert report.count("<!-- V41_RACK_FIGURES_END -->") == 1
-    assert "before the headline rates can use this layout" in report
-    assert "No collective overlap (stress case)" in report
-    assert "(C7)" in report and "(C10)" in report and "demonstration_plan" in report
-    assert "no corrected ROM:HBM energy ratio" in report
+    section = report[report.index("<!-- V41_RACK_FIGURES_BEGIN -->"):report.index("<!-- V41_RACK_FIGURES_END -->")]
+    assert "Gate C7" in section and "NOT met" in section and "C10" in section and "demonstration plan" in section
+    assert "not a bound" in section                     # the bytes-only row sits above the measured headline
+    import re
     for name in ("logical", "elevation", "links", "compare"):
+        # the atlas section is curated (captions, numbering); the figure bodies are the generated SVGs
         figure = (ROOT / f"results/arch/figures/v41_rack_{name}.html").read_text()
-        assert report.count(figure) == 1
+        svg = re.search(r"<svg.*?</svg>", figure, re.S).group(0)
+        assert section.count(svg) == 1, name
