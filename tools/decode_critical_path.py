@@ -77,8 +77,19 @@ WAFER_DESIGN = "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x12"
 PHYS = ROOT / "results/physical_abi3/asap7/hdc"
 
 # -- measured RTL constants -------------------------------------------------------------------------------
-K = hdc_timing.K
-SU = {name: K["su_depth"][getattr(I, "SFU_" + name)] for name in ("NONE", "EXP", "RECIP", "RSQRT", "SIGM")}
+# PINNED, not read live from tools/hdc_timing.py K.  hdc_timing.K is the Qwen core's model, refitted when that core
+# gained the prefetched sequencer (seq_gap 5 -> 1), the vector stream unit and the 3-cycle ot_hdc_fastfp adders
+# (me_tree 6 -> 4, su_depth 29/121/75/90/172 -> 21/70/49/58/101, red_tail 32 -> 21).  This analytical model prices
+# every machine with the constants below together with FADD 5 (ot_hdc_fpu) and the routed ot_hdc_matvec /
+# ot_hdc_stream areas and clock, all measured on the pre-pipeline RTL, and its record
+# (results/roofline/critical_path/decode_critical_path.json rtl_constants.K) and every figure derived from it (the
+# V4.1 headline arch_budget_v41 re-prices; its Spec.seq_gap 5) are stated at these values.  Reading the refit live
+# mixed the two generations (V4.1 plain-(b) 4,522 -> 5,105 tok/s/user with no record or area change).  Move these
+# only together with FADD, the lane areas and the clock, and regenerate the record and its dependants.
+K = dict(seq_gap=5, me_start=1, me_lat=16, me_tree=6, su_start=1,
+         su_depth={I.SFU_NONE: 29, I.SFU_EXP: 121, I.SFU_RECIP: 75, I.SFU_RSQRT: 90, I.SFU_SIGM: 172},
+         red_tail=32, idle_reg=2)
+SU ={name: K["su_depth"][getattr(I, "SFU_" + name)] for name in ("NONE", "EXP", "RECIP", "RSQRT", "SIGM")}
 SU_BASE = SU["NONE"]            # stream address-to-write with no SFU (29); every SU class = base + unit depth
 FADD = 5                        # rtl/hdc/ot_hdc_fpu.sv LATENCY (fadd / fmul)
 IL = I.INTERLEAVE               # 8 outputs in flight per matrix-engine lane
