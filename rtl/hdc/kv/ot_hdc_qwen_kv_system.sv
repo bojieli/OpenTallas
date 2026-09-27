@@ -64,7 +64,7 @@ module ot_hdc_qwen_kv_system #(
         else begin
             if (stream_kvd_v) desc_pending<=0;
             if (kvd_v) begin
-                if (desc_pending) desc_overrun<=1;
+                if (desc_pending && !stream_kvd_v) desc_overrun<=1;
                 desc_pending<=1;
                 desc_wbase<=kvd_wbase; desc_ts<=kvd_ts; desc_ks<=kvd_ks; desc_js<=kvd_js;
                 desc_jsh<=kvd_jsh; desc_tiles<=kvd_tiles; desc_k<=kvd_k;
