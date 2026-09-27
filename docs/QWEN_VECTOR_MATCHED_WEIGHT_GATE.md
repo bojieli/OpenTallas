@@ -13,4 +13,17 @@ The HBM-weight run accepted 41,787 weight read commands covering 167,156 physica
 
 The HBM model has three distinct read events. It **accepts** sectors into per-channel queues, **schedules** a sector into a response queue (where its `st_rd` counter increments), and later **delivers** it through valid/ready. At the HBM-weight terminal check, 167,332 read sectors had been accepted, 167,140 scheduled, and 167,019 delivered. Thus 192 were queued but unscheduled and 121 scheduled responses were still in flight. These pending prefetch reads do not affect the completed token and must not be counted as delivered traffic or inferred energy. The gate checks accepted ≥ scheduled ≥ delivered, all delivered weight words against the ROM reference, every output and state snapshot, and every physically written KV byte.
 
-The HBM timing parameters and one-cycle core clock are behavioral assumptions. This result establishes exact functional operation with modeled sharing and backpressure. It does not establish a physical memory bandwidth, ASIC timing closure, energy per token, or a GPU comparison. The next gate extends the same binary and oracle to all 16 prompt steps plus three generated steps.
+The HBM timing parameters and one-cycle core clock are behavioral assumptions. This result establishes exact functional operation with modeled sharing and backpressure. It does not establish a physical memory bandwidth, ASIC timing closure, energy per token, or a GPU comparison. The full sequence below extends the same binary and oracle to all 16 prompt steps plus three generated steps.
+
+## Full prompt and generation sequence
+
+The [18-step source-pinned record](../results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json) runs both cached executables concurrently with independent logs over all 16 prompt steps and three generated steps. All 18 output tokens match the ISA oracle in both modes, including generated tokens **1073, 382, 93**. Every step has zero token, logit, VM, and KV mismatch or fault; every physically written KV byte and every delivered weight word matches its reference. Both modes completed 128 K flush writes and 144 V reads from sectors written by earlier steps. The record pins 40 sources, 18 image files, the model checkpoint, and both executable hashes; the images and executable hashes equal the two-step checkpoint.
+
+| Weight source | Summed 18 core cycles | Pre-token K boot cycles | KV HBM reads / writes | Weight HBM sectors accepted | Weight delivery errors |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Synchronous ROM | 494,099 | 5,610 | 1,200 / 272 | 0 | 0 |
+| Shared timed HBM | 521,782 | 5,610 | 1,200 / 272 | 1,477,976 | 0 |
+
+The HBM-weight mode used 27,683 more simulated core cycles (5.60% of the ROM-mode count) in this **reduced behavioral model with this chunked program**. It experienced 3,978 weight-window wait cycles, 2,947 embedding wait cycles, and 506 weight-request denial cycles at the shared arbiter. These counters overlap in time and should not be summed as an explanation of the cycle delta. The HBM controller completed 1,200 KV read sectors in either mode. At the HBM-weight terminal boundary, it had accepted 1,479,176 read sectors in total, scheduled 1,478,982, and delivered 1,478,858. The outstanding 194 queued sectors and 124 scheduled responses are weight prefetch pipeline state, not completed token traffic.
+
+Both modes use the same timed KV HBM path. The cycle comparison isolates weight source inside the tested vector controller and schedule; it does not measure Qwen3 8B production throughput, energy, or a physical ROM versus HBM chip. The model's four pseudo-channels, timing parameters, and weight-stream rate remain assumptions.
