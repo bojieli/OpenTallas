@@ -48,7 +48,7 @@
   "claim_boundary": "functional RTL of the digital link endpoint: framing, credits, cut-through. CHANNEL_CYCLES is a delay-line stand-in for SerDes, FEC, flight and the clock-domain crossing (200 + 4 cycles); no PHY. Credits return immediately here; a real return crosses the channel, so full rate needs ~418 flits of receive buffer, not 256.",
   "digital_endpoint_cycles": 5,
   "input_sha256": {
-    "rtl/rom/ot_rom_pkg_link.sv": "d6b50e8e7d0387019710fbf2469143bdd280bfd761563462e11b1abe9ca124cd",
+    "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
     "rtl/test/tb_rom_pkg_link.sv": "51cc40e9c82f4ab282bb9aa7b286c7bfe585d4ee94f409525ae476f4990d6919",
     "tools/rtl_rom_pkg_link_campaign.py": "6239e6c15eb6fb0205fb2c352164f35addff4148c00d67af531ab568fbfce012"
   },

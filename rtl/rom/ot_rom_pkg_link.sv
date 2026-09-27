@@ -89,21 +89,36 @@ module ot_rom_pkg_link #(
         assign arrive_last = pipe_last[DEPTH-1];
     end endgenerate
 
-    integer i;
+    // One process per stage keeps variable-tap simulation legal in the HDL
+    // simulator while preserving the static link's registered shift behavior.
+    genvar pi;
+    generate for (pi = 0; pi < DEPTH; pi = pi + 1) begin : g_pipe
+        if (pi == 0) begin : g_first
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) pipe_valid[pi] <= 1'b0;
+                else begin
+                    pipe_valid[pi] <= send;
+                    pipe_data[pi] <= in_data;
+                    pipe_last[pi] <= in_last;
+                end
+            end
+        end else begin : g_rest
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) pipe_valid[pi] <= 1'b0;
+                else begin
+                    pipe_valid[pi] <= pipe_valid[pi-1];
+                    pipe_data[pi] <= pipe_data[pi-1];
+                    pipe_last[pi] <= pipe_last[pi-1];
+                end
+            end
+        end
+    end endgenerate
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             credits <= CREDITS; head <= 0; tail <= 0; fill <= 0; credit_stalls <= 0;
             out_valid_r <= 1'b0; out_last_r <= 1'b0; out_data_r <= 0;
-            for (i = 0; i < DEPTH; i = i + 1) pipe_valid[i] <= 1'b0;
         end else begin
-            pipe_valid[0] <= send;
-            pipe_data[0]  <= in_data;
-            pipe_last[0]  <= in_last;
-            for (i = 1; i < DEPTH; i = i + 1) begin
-                pipe_valid[i] <= pipe_valid[i-1];
-                pipe_data[i]  <= pipe_data[i-1];
-                pipe_last[i]  <= pipe_last[i-1];
-            end
             if (arrive) begin
                 fifo_data[tail] <= arrive_data;
                 fifo_last[tail] <= arrive_last;
