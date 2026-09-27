@@ -153,6 +153,34 @@ def set_arith(mode):
     ARITH = mode
 
 
+# R-ARITH v2 (docs/ARCH_SPEC_V41.md 12, lever 1: reductions off the critical path), a comma list:
+#   nfold  an RMSNorm feeding matrix products (the sublayer norms, q_norm, the final norm) returns the gained
+#          input x*w (BF16) and its rstd; every consumer matvec multiplies its FP32 accumulator by rstd before
+#          its own output rounding, so the sum of squares and the rsqrt run beside the weight sweep;
+#   osm    attention is always the online softmax in the release kernel's 64-entry blocks (vendor_blocks:
+#          window ring oldest slot first, then the compressed selections; running max, exp(m_old - m_new)
+#          rescale of the partial sums).
+FUSE = set(filter(None, os.environ.get("HDC_V41_FUSE", "").split(",")))
+assert FUSE <= {"nfold", "osm"}, FUSE
+
+
+def set_fuse(names):
+    global FUSE
+    FUSE = set(filter(None, names.split(","))) if isinstance(names, str) else set(names)
+    assert FUSE <= {"nfold", "osm"}, FUSE
+
+
+class Folded:
+    """A normed activation under nfold: xw = bf16(x * gain), r = rstd; consumers scale their outputs by r."""
+    __slots__ = ("xw", "r")
+
+    def __init__(self, xw, r):
+        self.xw, self.r = xw, r
+
+    def __len__(self):
+        return len(self.xw)
+
+
 def chunked(cls):
     """Does operator class `cls` follow R-ARITH under the current mode?"""
     return ARITH == "chunk8" or (ARITH != "legacy" and cls in ARITH.split(","))
@@ -336,15 +364,21 @@ def linear_q(w: Q8, x):
     """FP8 activation x FP8/FP4 weight, output BF16.  Per 32-wide K block: exact dot
     product of the quantised operands, rounded once to FP32, scaled by 2^(e_w+e_x);
     blocks accumulated sequentially from +0."""
+    scale = None
+    if isinstance(x, Folded):
+        x, scale = x.xw, x.r
     xq, xe = quant_fp8(x)
     n, k = w.q.shape
     blocks = [np.ldexp((w.q[:, b * 32:(b + 1) * 32] @ xq[b * 32:(b + 1) * 32]).astype(F),   # exact, rounded once
                        w.e[:, b] + xe[b]).astype(F) for b in range(k // 32)]
     if chunked("qe"):
-        return to_bf16(csum(np.stack(blocks, axis=-1)))
-    acc = np.zeros(n, dtype=F)
-    for d in blocks:
-        acc = add(acc, d)
+        acc = csum(np.stack(blocks, axis=-1))
+    else:
+        acc = np.zeros(n, dtype=F)
+        for d in blocks:
+            acc = add(acc, d)
+    if scale is not None:
+        acc = mul(acc, scale)
     return to_bf16(acc)
 
 
@@ -352,11 +386,15 @@ def mv(w, x):
     """A matrix-engine matvec: the engine's K-split (hdc_golden.split_for), each
     chunk sequential from +0, the chunks a pairwise tree; x BF16-rounded."""
     n, k = w.shape
+    if isinstance(x, Folded):
+        return mul(matvec_c(w, x.xw, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL)), x.r)
     return matvec_c(w, x, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL))
 
 
 def linear_bf16(w, x):
     """BF16 weight, BF16 activation: exact products, split FP32 sum (mv), BF16 out."""
+    if isinstance(x, Folded):
+        return to_bf16(mv(w, x))
     return to_bf16(mv(w, to_bf16(x)))
 
 
@@ -472,6 +510,14 @@ def rmsnorm_bf16(x, w, eps):
     """The release's RMSNorm: x * rsqrt(mean(x^2) + eps), times the gain, stored BF16."""
     r = rsqrt(add(div(split_sum(mul(x, x), RMS_SPLIT), F(len(x))), F(eps)))
     return to_bf16(mul(w, mul(x, r)))
+
+
+def rmsnorm_fold(x, w, eps):
+    """rmsnorm_bf16, or under nfold the Folded (bf16(x * gain), rstd) its consumer matvecs scale by."""
+    if "nfold" not in FUSE:
+        return rmsnorm_bf16(x, w, eps)
+    r = rsqrt(add(div(split_sum(mul(x, x), RMS_SPLIT), F(len(x))), F(eps)))
+    return Folded(to_bf16(mul(w, x)), r)
 
 
 def topk_lowest_index(v, k):
@@ -847,7 +893,7 @@ class Model:
         the candidate blocks), so positions can run layer-major."""
         yarn = self.ratio[L] > 0
         cs = rope_cs(self.freqs_yarn if yarn else self.freqs_plain, pos)
-        qr = rmsnorm_bf16(linear_q(self.lw(L, "attn.wq_a.weight"), x), self.lw(L, "attn.q_norm.weight"), self.eps)
+        qr = rmsnorm_fold(linear_q(self.lw(L, "attn.wq_a.weight"), x), self.lw(L, "attn.q_norm.weight"), self.eps)
         q = rope_tail(linear_q(self.lw(L, "attn.wq_b.weight"), qr).reshape(self.heads, self.hd), cs)
         kv = rmsnorm_bf16(linear_q(self.lw(L, "attn.wkv.weight"), x), self.lw(L, "attn.kv_norm.weight"), self.eps)
         kv = qdq_fp8(rope_tail(kv, cs))
@@ -869,7 +915,8 @@ class Model:
             rows = rows + [state["ckv"][src][i] for i in ctx["sel"]]
         kvm = np.stack(rows)                                      # [T, hd]: keys and values alike
         blocks = self.vendor_blocks(pos, len(rows) - len(state["win"][L][-self.window:])) \
-            if self.vendor_decode_from is not None and pos >= self.vendor_decode_from else [np.arange(len(rows))]
+            if ("osm" in FUSE or (self.vendor_decode_from is not None and pos >= self.vendor_decode_from)) \
+            else [np.arange(len(rows))]
         return self.attend(L, q, kvm, cs, blocks)
 
     def attend(self, L, q, kvm, cs, blocks=None):
@@ -946,14 +993,14 @@ class Model:
             ctx["mh"].append(self.main_hidden_part(h))      # the DSpark head reads the layer's INPUT
         res = h
         a_pre, a_post, a_comb = self.hc_mixes(h, L, "attn")
-        x = rmsnorm_bf16(self.hc_pre(h, ctx["pre"]), self.lw(L, "attn_norm.weight"), self.eps)
+        x = rmsnorm_fold(self.hc_pre(h, ctx["pre"]), self.lw(L, "attn_norm.weight"), self.eps)
         y = self.attention(L, x, pos, state, trace, ctx)
         h = self.hc_post(y, res, a_post, a_comb)
         if trace is not None:
             trace[f"L{L}.attn_norm"], trace[f"L{L}.attn"] = x, y
         res = h
         f_pre, f_post, f_comb = self.hc_mixes(h, L, "ffn")
-        x = rmsnorm_bf16(self.hc_pre(h, a_pre), self.lw(L, "ffn_norm.weight"), self.eps)
+        x = rmsnorm_fold(self.hc_pre(h, a_pre), self.lw(L, "ffn_norm.weight"), self.eps)
         y = self.moe(L, x, trace)
         h = self.hc_post(y, res, f_post, f_comb)
         ctx["h"], ctx["pre"] = h, f_pre
@@ -992,7 +1039,7 @@ class Model:
                 self.layer(L, ctx, state, trace)
         out = []
         for ctx, trace in zip(ctxs, traces):
-            xf = rmsnorm_bf16(self.hc_pre(ctx["h"], ctx["pre"]), self.w["norm.weight"], self.eps)
+            xf = rmsnorm_fold(self.hc_pre(ctx["h"], ctx["pre"]), self.w["norm.weight"], self.eps)
             logits = mv(self.w["head.weight"], xf)
             if trace is not None:
                 trace["final_norm"], trace["logits"] = xf, logits
