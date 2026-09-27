@@ -1,11 +1,12 @@
 # DeepSeek-V4.1-Flash ROM array: logical map, link topology and rack
 
-Status: an analytical design, 2026-09-27. Nothing here is a routed rack or a measured result.
+Status: an analytical design, 2026-09-27. Nothing here is a routed rack or a measured result, except gate C7 (collective overlap), which the RTL stage bench measured as NOT met (§5, `results/rtl/v41_stage_collective_campaign.json`). Ported from v41-rack-gates 0facdc17 and regenerated on main's inputs: the rates below are the design-point model with the measured collective exposure (`results/arch/v41_lanes.json` `design_point`; overlap-assumed in `design_point_overlap_assumed`), and the power is on `configs/hardware/technology.json` production values with the power-scenario cooling classes.
 
 - Model: `tools/v41_rack_design.py`, recorded in `results/arch/v41_rack.json`, tested by
   `tests/test_v41_rack_design.py`.
 - Figures: `tools/v41_rack_figures.py` writes `results/arch/figures/v41_rack_{logical,elevation,links,compare}.html`
-  and a preview page, and splices them into `docs/ARCHITECTURE_ATLAS.html` as Figures R-1 to R-4 with Table R-1.
+  and a preview page; `--splice-atlas` rewrites the atlas section from its template (off by default: the atlas
+  section is curated, so only the `<svg>` bodies are replaced).
 - Inputs:
   - die roles: the spec's integer placement, `results/arch/v41_die_placement.json`;
   - package lanes: requirement R-L9, `results/arch/v41_lanes.json`;
@@ -90,7 +91,8 @@ peer link and every hop on the stage lanes. At 1M it gives:
 
 | split | tok/s/user, without / with MTP |
 |---|---|
-| R-L9 (recommended; re-derived on the validated links, b07a5745) | 8,622 / 23,578 |
+| R-L9 (recommended), collectives fully overlapped | 8,622 / 23,578 |
+| R-L9 with the collective exposure measured in RTL (gate C7, the headline) | 7,579 / 21,006 |
 | this study's first split (TP 32 / stage 24 + 24) | 8,572 / 18,839 |
 
 | tier | medium, length | reach limit (source) | latency per hop | bandwidth per link, per direction |
@@ -133,7 +135,7 @@ returns, so credits need no extra lanes. That is 116 ring cables in total.
 **Stage module.** One board carries a package pair, with the TP link as 52 lanes per package on a ~120 mm trace.
 
 **Trays (ORv3, 21 in, 48 mm OU).**
-- A 1 OU stage tray holds two modules and dissipates **2.78 kW** on cold plates (design point).
+- A 1 OU stage tray holds two modules and dissipates **2.35 kW** on cold plates (design point).
 - A 1 OU table tray holds four packages, runs at **0.48 kW** and is air-cooled.
 
 **Elevation (bottom-up), 34 of 44 OU:**
@@ -166,28 +168,32 @@ worst die, and `results/arch/v41_lanes.json` for static power, both on the spec'
 
 | operating point | rack input |
 |---|---|
-| batch 1 | 21.5 kW |
-| 28-user fill | 32.2 kW |
-| fill + MTP | 38.1 kW |
-| worst case (saturated + MTP) | 48.6 kW |
-| provisioned (1.2 × worst case) | **58.3 kW** |
+| batch 1 | 16.9 kW |
+| 28-user fill | 25.7 kW |
+| fill + MTP | 29.3 kW |
+| saturated + MTP | 37.0 kW |
+| worst case (saturated) | 40.4 kW |
+| provisioned (1.2 × worst case) | **48.5 kW** |
 
-- **Energy per token at batch 1:** 1.76 J at the chips; 2.34 J at the wall with the switch on the symmetric per-port
-  basis the ROM:HBM ratio uses; 2.50 J at the rack input, which adds the host, management and the physical switch.
+- **Energy per token at batch 1:** 1.52 J at the chips; 2.06 J at the wall with the switch on the symmetric per-port
+  basis the ROM:HBM ratio uses; 2.24 J at the rack input, which adds the host, management and the physical switch.
+  Every figure charges each user's KV reads from HBM, as the HBM comparator's do.
 - **Check against the spec's rule.** Summing the spec's rule (116 × ~440 W provisioned per die + tables +
   infrastructure) gives about 59.3 kW. The difference is the 4 head dies, which carry their own lower static and no
   layer work here.
-- **Shelves.** 58.3 kW exceeds two 33 kW shelves (55 kW N+1), so each side has **three** shelves (82.5 kW N+1), 2N
-  across the A and B sides: six shelves, 1,165 A at 50 V.
-- **Per package and tray.** The worst layer package is 592 W: 296 W per die against the 407.5 W per-die cooling
-  limit. A stage tray is **2.78 kW** in 1 OU, on cold plates; NVL72's 1U compute trays carry four ~1.2 kW GPUs on
+- **Shelves.** The record keeps **three** 33 kW shelves per side (82.5 kW N+1), 2N across the A and B sides: six
+  shelves, 969 A at 50 V for the 48.5 kW provision.
+- **Per package and tray.** The worst layer package is 498 W: 249 W per die against 374.6 W per die for an
+  air-cooled and 474.6 W for a liquid-cooled two-die package (power scenarios: B200 HGX / GB200 package ratings
+  less their stacks). On the measured ASAP7 MAC lane (power scenario A) a batch-1 layer die is 782 W and the 1M
+  rate is capped at 2,947 tok/s (air) / 4,085 (liquid). A stage tray is **2.35 kW** in 1 OU, on cold plates; NVL72's 1U compute trays carry four ~1.2 kW GPUs on
   cold plates.
 - **Liquid** carries ~91% of the heat.
 - **Weight:** the rack is ~768 kg (ESTIMATE).
 
 The 1.5 kW switch tray and the 700 W/OU air limit have no primary source and are graded as assumptions.
 
-**Why liquid.** At 2.78 kW per OU, the stage trays are above what 1U/2U air cooling handles (ASHRAE TC9.9). The rack
+**Why liquid.** At 2.35 kW per OU, the stage trays are above what 1U/2U air cooling handles (ASHRAE TC9.9). The rack
 total is above Uptime Institute's 20-25 kW threshold for liquid.
 
 ## 4. Comparison (Figure R-4)
@@ -196,7 +202,7 @@ total is above Uptime Institute's 20-25 kW threshold for liquid.
 |---|---|---|---|
 | racks | 1 | 1 | 16 (12 compute + 4 network) |
 | accelerators | 94 packages | 72 B200 + 36 Grace | 384 Ascend 910C + 192 Kunpeng |
-| power | 58.3 kW provisioned (48.6 kW worst case) | 132 kW provisioned (Supermicro 125-135 kW operating; NVIDIA guide ~120 kW) | ~559 kW (SemiAnalysis, via a search summary; re-check before citing) |
+| power | 48.5 kW provisioned (40.4 kW worst case) | 132 kW provisioned (Supermicro 125-135 kW operating; NVIDIA guide ~120 kW) | ~559 kW (SemiAnalysis, via a search summary; re-check before citing) |
 | scale-up fabric | point-to-point folded ring (116 DACs) + on-board TP; one switch off the path | NVLink 5 through 9 switch trays; 1.8 TB/s bidirectional per GPU; > 5,000 copper cables | Unified Bus, all-to-all over 2 switch tiers; 6,912 × 400G LPO |
 | built for | one fixed model, pipeline decode, latency-bound collectives | any model; all-to-all TP/EP | large-scale MoE expert parallelism and KV access |
 
@@ -207,7 +213,7 @@ total is above Uptime Institute's 20-25 kW threshold for liquid.
 | C4 SerDes power | **resolved in the model** | 84 always-on lanes per package at the validated 6.5 pJ/b (61 W), 3.60 kW per rack, in every rack power scenario. The utilisation record charges SerDes on both machines; it is re-deriving at 6.5 pJ/b. |
 | C8 two-die link (T1) | **resolved in the model** | R-L9 as in §2. A 20 KB partial crosses a peer link in 120 ns, and large all-reduces use the two-step. |
 | C10 head-die draft KV | **floorplan done analytically; routed floorplan remains** | The head dies carry 4 HBM3E stacks each (spec ruling); the 28-user fill's draft windows are in SRAM. Figure R-5 and `head_draft_floorplan`: 112 × `ot_sram_1r1w_1024x256_m2_r2c2` from this repository's ASAP7 SRAM compiler (32 KB, 1R1W, 2 spare rows and columns). Each user slot is a 4-macro row, giving a 1,024-bit read port (128 B/cycle) and an independent 1,024-bit write port. The layout is two columns of 14 rows around a bus channel, beside the drafter's BF16 attention engine: 1.50 × 1.06 mm = 1.58 mm². It displaces 8.8 MB of the head die's 69 MB spare ROM. The macros' fmax is 1,489 MHz at the ss corner. The read is registered at the macro, 2-cycle latency: the single-cycle path would close with 8 ps margin, too thin for estimated wire and select delays. Leakage is 6.9 mW, and a draft block reads in 132 cycles and 0.73 nJ. Beyond the fill, users page to HBM. |
-| C7 overlap and clock | **gate: demonstration** | See §6. |
+| C7 overlap and clock | **NOT MET (measured)**; clock open | The RTL stage bench (`results/rtl/v41_stage_collective_campaign.json`) exposes 254-cycle all-reduce tails (153-164 modelled) and residual tails of 114 cycles per stage hop and 188 per KV-row gather; fed back, the design point falls 8,622 -> 7,579 tok/s/user at 1M (9,041 -> 7,905 at 200K). Recovery levers in progress: 3-cycle fold adders, the rows all-gather row bubble, stage-hop payload partitioning, streaming top-k / consumer early start, the ucie_link rounding fix. See §6. |
 | C2 FEC on the ring cables | **adopted baseline** | The validation found the light FEC not qualified on CR copper, so the ring runs full KP4 (209 ns). That costs 29 hops × 82.7 ns = 2.4 µs per token (Table R-1). |
 | C3, C5, C6 | resolved | Folded-ring one-hop return; 4-stack HBM power; embedding on the head dies. |
 
@@ -216,13 +222,14 @@ total is above Uptime Institute's 20-25 kW threshold for liquid.
 | case | tok/s/user |
 |---|---|
 | overlap assumed (130 ns hops, before the validation) | 8,858 |
-| design point on the R-L9 lanes (209 ns ring hops, b07a5745) | 8,622 |
-| with the ring cables' actual flight beyond the 209 ns | **8,614** |
-| stress bound: no collective overlap at all | 8,295 |
+| design point on the R-L9 lanes (209 ns ring hops), collectives fully overlapped | 8,622 |
+| design point with the collective exposure measured in RTL (headline) | **7,579** |
+| headline with the ring cables' actual flight beyond the 209 ns | 7,573 |
+| overlapped point with every collective payload serialised, bytes only (not a bound) | 8,295 |
 
-The no-overlap bound was −13% at the first split; the two-step and the 13-lane peer links shrink it. On validated
-static power, the ROM chip energy at batch 1 is **1.76 J per token** (1.83 J with no overlap; 2.34 J at the wall with the switch): static
-power dominates at batch 1.
+The bytes-only row charges serialised bytes but not the fold, hop and row-gather tails the RTL bench measured, so
+the measured headline lies below it: it is not a bound. On validated static power, the ROM chip energy at batch 1
+is **1.52 J per token** (2.06 J at the wall with the switch): static power dominates at batch 1.
 
 These rows are provisional until the spec re-derives its budget and ladder, and the utilisation agent re-derives
 R-L9, on the validated links. The spec agent notes that the two-step all-reduce choice may change now that an
@@ -241,7 +248,7 @@ extra board crossing costs 130 ns.
 |---|---|---|---|
 | K1 | per-block closure | exists for the qualified blocks; design-point pools pending | post-route WNS ≥ 0 at 1.087 GHz, read from `pnr.json`, never pre-layout |
 | K2 | layer-die and head-die P&R | blocked on the spec's P&R gate (R-U2, R-U9 in RTL) | the routed die closes at 1.087 GHz at the signoff corner |
-| K3 | plesiochronous link endpoint | **PASS** (`results/rtl/v41_link_cdc_campaign.json`; `rtl/rom/ot_rom_link_cdc.sv`: async FIFO, Gray pointers, open-loop idle insertion, latched overflow) | 1.41 × 10⁹ flits across two clocks at 0, ±100 and ±200 ppm (10⁹ at +200 ppm): zero mismatches, overflows or underflows. The idle-starved negative case latches overflow, as required. Crossing latency is 3.0–4.2 RX cycles with 2-flop synchronisers, inside the budgeted 4 (+1 output register). 3-flop synchronisers take 5.2, i.e. +1 cycle (~0.9 ns) per hop if the MTBF analysis requires them. |
+| K3 | plesiochronous link endpoint | **PASS on v41-rack-gates 0facdc17** (record and RTL not yet on main: `results/rtl/v41_link_cdc_campaign.json`; `rtl/rom/ot_rom_link_cdc.sv`: async FIFO, Gray pointers, open-loop idle insertion, latched overflow) | 1.41 × 10⁹ flits across two clocks at 0, ±100 and ±200 ppm (10⁹ at +200 ppm): zero mismatches, overflows or underflows. The idle-starved negative case latches overflow, as required. Crossing latency is 3.0–4.2 RX cycles with 2-flop synchronisers, inside the budgeted 4 (+1 output register). 3-flop synchronisers take 5.2, i.e. +1 cycle (~0.9 ns) per hop if the MTBF analysis requires them. |
 | K4 | two-module system run | to build | 8 dies on independent clocks, reduced vehicle bit-exact, cycle count within 2% of the model |
 
 **Collective overlap.** The claim is that a partial streams onto its peer links as the matvec produces it, so only
@@ -254,10 +261,10 @@ the last beats plus one hop are exposed. The link parameters are:
 | step | what | status | acceptance |
 |---|---|---|---|
 | O1 | one-shot unit at the rack link rate | exists at optimistic all-to-all UCIe links (`results/rtl/hdc_package_tp_campaign.json`) | two remote peers on the T1 model: a 20 KB all-reduce completes ≤ 40 cycles after the last partial beat (R-U3) plus one hop; the two-step variant bit-identical on all 4 dies |
-| O2 | producer-chased collectives in a stage module | to build | exposed collective time per token ≤ the lane model's 0.93 µs; any excess re-prices the headline between 8,815 and 8,481 |
+| O2 | producer-chased collectives in a stage module | **NOT MET (measured)**: `results/rtl/v41_stage_collective_campaign.json` (44 cases bit-exact), fed into `results/arch/v41_lanes.json` `collective_exposure` | exposed collective time per token ≤ the lane model's 0.93 µs; measured 12.5 µs of exposed collective bytes, and the headline is re-priced to 7,579 tok/s/user at 1M |
 | O3 | link bench parameters | stale: `rom_pkg_link_campaign` uses 1,800 B flits (1.8 TB/s) | FLIT_BYTES set to the R-L9 stage and TP rates |
 
-The headline rates stay conditional on K2, K3 and O2.
+The headline rates carry the measured O2 exposure and stay conditional on K2 (and on K3 until its record lands on main).
 
 ## 7. Review of the Codex rack design against the user's rules
 
