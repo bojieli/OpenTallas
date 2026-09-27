@@ -6,15 +6,15 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.00764744,
+        "hold_wns_ns": 0.006562750000000001,
         "max_cap_violations": 0.0,
         "max_fanout_violations": 0.0,
-        "max_slew_violations": 38.0,
+        "max_slew_violations": 4.0,
         "met": false,
         "physically_clean": false,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 0.0934335,
+        "setup_wns_ns": 0.0978839,
         "signal_integrity_clean": false,
         "stage": "place_and_route",
         "timing_met": true
@@ -26,7 +26,7 @@
     "status": "not_met"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-27T17:32:04.015684+00:00",
+  "completed_at": "2026-09-27T18:27:33.001349+00:00",
   "corner": {
     "liberty": [
       {
@@ -65,9 +65,9 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 10707.6,
+    "area_um2": 11012.8,
     "block": "ot_hdc_matvec_memory_tile",
-    "cells": 112611,
+    "cells": 114445,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 1.5,
     "clock_port": "clk",
@@ -79,16 +79,16 @@
     "false_path_from_ports": [],
     "false_path_io": false,
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 710951000.0,
-    "hold_wns_ns": 0.00764744,
+    "fmax_hz": 713208000.0,
+    "hold_wns_ns": 0.006562750000000001,
     "io_delay_fraction": 0.2,
     "parameters": {},
-    "setup_wns_ns": 0.0934335,
+    "setup_wns_ns": 0.0978839,
     "signal_integrity_clean": false,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 38
+      "max_slew_violations": 4
     },
     "sources": [
       {
@@ -148,14 +148,14 @@
       }
     ],
     "top": "ot_hdc_matvec_memory_tile",
-    "utilization_fraction": 0.156515
+    "utilization_fraction": 0.157156
   },
-  "elapsed_seconds": 4221.45,
+  "elapsed_seconds": 3217.81,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-27T16:21:42.566181+00:00",
+  "generated_at": "2026-09-27T17:33:55.191249+00:00",
   "git": {
-    "commit": "1b0a04b0851938ac7eefb7f199b40c472ce135f5",
+    "commit": "8f9b83fa8189453d3243d1cbbde18db454bb68ed",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
     "untracked_results": [],
     "worktree_dirty": false,
@@ -176,37 +176,37 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "cc5e1f87863f610ae5f1914824f06c788a5beecb328cd78694317780f1737af6",
-        "size_bytes": 270922816
+        "sha256": "5cd24da16c6c2a446f6c35a5dcaaf849389848dd300f8855c1534f4c01422e36",
+        "size_bytes": 273164559
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "7be857776877f460d66d4daf6c3fe0ef6e4a1cc0a2e61428b7427a23465d6105",
-        "size_bytes": 245307734
+        "sha256": "228b22af96ee52e28edd7ee198a9970838d3c3842df3e96d933503ea23ebfe78",
+        "size_bytes": 248201432
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "cb8e737c48121643080915bcb373ff013b4425e10d5d8efab0683bc834bb4aad",
-        "size_bytes": 554151009
+        "sha256": "25eab841a2edd26d5b27cfba3fd011b3c06fb648d7dfa65d02bd527e1d41ae7d",
+        "size_bytes": 557350915
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "7c296d84fbec6e620b06fc6572c4951b84628f817f9814f543935985d50946d1",
-        "size_bytes": 120273814
+        "sha256": "a16e12b4aa95de0fc1251a6b53ca74396297a2c3394b36ed80a9170b46b59c01",
+        "size_bytes": 122690780
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "aabf205d7e280777d8635a22d6c35eac13b4f32ea838fa864cf6903269cbe4a9",
-        "size_bytes": 8849340
+        "sha256": "534fe94927d713efcfbcb43eb568dcf0774b0a66c1d4e0f4a4186576e61e4524",
+        "size_bytes": 8996711
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "292cdf0ef9f70fd37748d83b341580fb0ed934317b0dc9feda33f605ef2e7125",
-        "size_bytes": 86838
+        "sha256": "4e7d8cbc5e06faaacae1d7cf5ee59964cd9d117b5e776d9583b6346533aa45e1",
+        "size_bytes": 83891
       },
       "config.mk": {
         "retained": true,
-        "sha256": "94e450f3854397335c49f5bf9bd5f187c4d623db58a3afe927e3dfddf6c3a886",
+        "sha256": "a475e5edfb0ed5949ca521d2c4978c3fc420eecd66aa7303a63720cd08266d4c",
         "size_bytes": 1811
       },
       "constraint.sdc": {
@@ -216,8 +216,8 @@
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "5a6e75900d2c21e3cb7ee6ab8ab29f1d70a7059e8af800d3baf1bb0749780624",
-        "size_bytes": 24444
+        "sha256": "1ed9a8945354933ad15f30191b8ba8fcc852ca9136df3e34ca48780a13715bff",
+        "size_bytes": 24445
       }
     },
     "clock_period_ns": 1.5,
@@ -342,36 +342,36 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 710951000.0,
+      "fmax_hz": 713208000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.00764744,
-      "instance_count": 1480243,
+      "hold_wns_ns": 0.006562750000000001,
+      "instance_count": 1482880,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 63846.9,
       "macro_count": 5,
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 38,
+      "max_slew_violations": 4,
       "missing_metadata_keys": [],
-      "power_total_w": 0.0785757,
+      "power_total_w": 0.0791802,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 7.64744,
+        "hold_wns_ns": 6.56275,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 93.4335
+        "setup_wns_ns": 97.8839
       },
-      "routed_nets": 79116,
-      "routed_wirelength_um": 992647,
-      "sequential_area_um2": 3465.67,
+      "routed_nets": 80952,
+      "routed_wirelength_um": 982473,
+      "sequential_area_um2": 3466.91,
       "sequential_cell_count": 10814,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 0.0934335,
-      "standard_cell_area_um2": 10707.6,
-      "standard_cell_count": 112611,
-      "utilization_fraction": 0.156515,
-      "vias": 669069
+      "setup_wns_ns": 0.0978839,
+      "standard_cell_area_um2": 11012.8,
+      "standard_cell_count": 114445,
+      "utilization_fraction": 0.157156,
+      "vias": 691545
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "ea295c98ec76829bddf5630c20b8e2e8ad960416c4a2a6fb3cc2df2659e122c7",
@@ -562,7 +562,7 @@
         "set_max_fanout 32 [current_design]",
         "set_max_transition 320 [current_design]"
       ],
-      "slew_margin_percent": 25.0
+      "slew_margin_percent": 45.0
     },
     "synth_memory_max_bits": 65536,
     "toolchain": {
@@ -634,16 +634,16 @@
       "hdc_mem_tile",
       "--max-transition-ns",
       "--slew-margin-percent",
-      "25",
+      "45",
       "--force"
     ],
     "driver": {
-      "commit": "1b0a04b0851938ac7eefb7f199b40c472ce135f5",
+      "commit": "8f9b83fa8189453d3243d1cbbde18db454bb68ed",
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
       "path": "/home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-physical-tile-review/tools/run_abi3_physical.py",
       "same_tree_as_sources": true,
-      "sha256": "4d5ebb4d9e1cd3263e05a43398a96133d6575e23b6a79f351b95bcae4ad11c4b",
+      "sha256": "490fdb9671b2aeee6866661748ca436fbf41cc92163ee068926e377a1840aad0",
       "tree": "/home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-physical-tile-review"
     },
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",

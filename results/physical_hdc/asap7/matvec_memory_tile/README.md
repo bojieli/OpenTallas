@@ -11,7 +11,7 @@ matvec defaults are `W=16`, `G=4`, `IL=8`, `AW=24`, `NW=16`.
 From this worktree root:
 
 ```sh
-tools/run_hdc_matvec_memory_tile.sh --max-transition-ns --slew-margin-percent 25 --force
+tools/run_hdc_matvec_memory_tile.sh --max-transition-ns --slew-margin-percent 45 --force
 ```
 
 The script lists every RTL source and macro blackbox source. It invokes
@@ -23,7 +23,7 @@ configuration. Clock: ASAP7 RVT TT at 0.7 V, 0 °C, 1.5 ns target; all
 non-clock inputs and outputs have 0.2-period delays, outputs have 3.898 fF
 load, and max fanout is 32. Core utilization target 15%, place density 0.55,
 macro halo 5 µm in both axes. No false path or multicycle exception was used.
-The explicit max transition is the ASAP7 library limit of 0.32 ns. The 25%
+The explicit max transition is the ASAP7 library limit of 0.32 ns. The 45%
 repair margin makes OpenROAD target a faster transition under estimated
 parasitics; the final extracted acceptance limit remains 0.32 ns.
 
@@ -48,28 +48,28 @@ a full-depth memory system.
 | Measure | Result |
 | --- | ---: |
 | Flow | Completed synthesis, placement, CTS, global and detailed route, extraction and final report |
-| Standard-cell area | 10,707.6 µm² |
+| Standard-cell area | 11,012.8 µm² |
 | Macro abstract area | 63,846.9 µm² across five macros |
-| Core area | 476,340 µm²; final utilization 15.6515% |
-| Standard cells after route | 112,611 |
-| Routed wire / vias | 992,647 µm / 669,069 |
-| Detailed-route DRC | 10,687 initially; 1,067, 517, 12, then **0** after repair |
+| Core area | 476,340 µm²; final utilization 15.7156% |
+| Standard cells after route | 114,445 |
+| Routed wire / vias | 982,473 µm / 691,545 |
+| Detailed-route DRC | 11,733 initially; 1,130, 659, 23, then **0** after repair |
 | Antenna | 0 violating nets and pins |
-| Extracted setup WNS / violations | +0.0934335 ns / 0 |
-| Extracted hold WNS / violations | +0.00764744 ns / 0 |
-| Derived routed Fmax | 710.951 MHz at this proxy corner |
-| Max slew / max capacitance / max fanout violations | **38 / 0 / 0** |
+| Extracted setup WNS / violations | +0.0978839 ns / 0 |
+| Extracted hold WNS / violations | +0.00656275 ns / 0 |
+| Derived routed Fmax | 713.208 MHz at this proxy corner |
+| Max slew / max capacitance / max fanout violations | **4 / 0 / 0** |
 | Engineering acceptance | **NOT_MET**: signal-integrity violations remain |
 
 The initial no-margin route at commit `1b0a04b0` had eight max-capacitance
-violations on `g_bank[1].u_kv/rd_out` and 51 max-slew violations. The explicit
-transition constraint and repair margin cleared all eight macro output load
-violations and reduced slew violations to 38. The worst remaining slew is
-477.26 ps against the 320 ps library limit at SRAM write input
-`g_bank[0].u_kv/wd_in[195]`; most remaining violators are SRAM write-data or
-address pins. This is the concrete operand-loading blocker even though setup,
-hold and DRC passed. The global router ran extra congestion removal iterations,
-and detailed routing reduced
+violations on `g_bank[1].u_kv/rd_out` and 51 max-slew violations. The 25%
+margin route at commit `8f9b83fa` cleared the capacitance violations and
+reduced slew violations to 38. This 45% margin route leaves four slew
+violations against the 320 ps library limit: `g_bank[0].u_kv/wd_in[220]`
+351.85 ps, `wire15045/A` 343.67 ps, `g_bank[0].u_kv/wd_in[251]` 327.34 ps,
+and `o_data[179]` 320.17 ps. These are the remaining electrical blockers
+even though setup, hold and DRC passed. The global router ran extra congestion
+removal iterations, and detailed routing reduced
 its DRC count to zero; no separate post-route congestion heatmap was retained.
 The final DRC count is the available routability evidence, not a density or
 yield signoff.
@@ -91,7 +91,7 @@ macro manufacturability, extracted internal memory parasitics, full-die
 closure, target-node timing, power, or Qwen token throughput. It is an ASAP7
 predictive proxy for this exact reduced compute-plus-operand path only.
 
-Next physical action: isolate SRAM write inputs and address fanout in a matched
-route, then repeat with complete vector/output banking and the production HDC
-lane count. The current routed gate must not be counted as closed at 1.5 ns
-while those 38 slew violations remain.
+Next physical action: reduce the four specific input and output transition
+violations in a matched route, then repeat with complete vector/output banking
+and the production HDC lane count. The current routed gate must not be counted
+as closed at 1.5 ns while those four slew violations remain.
