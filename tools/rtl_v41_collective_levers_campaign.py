@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures as cf
+import hashlib
 import json
 import math
 import shutil
@@ -56,6 +57,13 @@ LANE_BPC = B.LANE_NET_BPS / CLOCK               # one 112G lane, bytes per cycle
 
 def sources():
     return [B.ADDER, FAST, ENGINE, TB, TB_HOP]
+
+
+def source_sha256():
+    """SHA-256 of every source the result depends on: the RTL and benches, this driver, the O2 driver it imports
+    (patterns, schedules, link parameters) and the golden (tools/audit_source_currency_drift.py re-hashes them)."""
+    pins = sources() + [Path(__file__).resolve(), Path(B.__file__).resolve(), ROOT / "tools/hdc_golden.py"]
+    return {str(q.relative_to(ROOT)): hashlib.sha256(q.read_bytes()).hexdigest() for q in pins}
 
 
 def build(scratch: Path, top: str, params: dict) -> Path:
@@ -376,7 +384,7 @@ def main():
                gate="C7 / O2 levers", baseline=str(BASE_REC.relative_to(ROOT)), link_parameters=lp,
                lane_bytes_per_cycle=LANE_BPC, levers={k: dict(relay=v[0], add_lat=v[1], gather_words_per_cycle=v[2])
                                                       for k, v in LEVERS.items()},
-               sources=[str(p.relative_to(ROOT)) for p in sources()],
+               sources=[str(p.relative_to(ROOT)) for p in sources()], source_sha256=source_sha256(),
                area_assumptions=dict(bitcell_um2=BITCELL_UM2, rf_overhead=RF_OVERHEAD, flop_um2=FLOP_UM2,
                                      die_mm2=DIE_MM2,
                                      note="receive FIFOs and producer queues as 1R1W register-file macros; head, "

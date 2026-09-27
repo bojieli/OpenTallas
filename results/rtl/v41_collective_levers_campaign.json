@@ -80,6 +80,16 @@
   "rtl/test/tb_v41_stage_collective_px.sv",
   "rtl/test/tb_v41_stage_hop_px.sv"
  ],
+ "source_sha256": {
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/rom/ot_rom_oneshot_px.sv": "1a4e72d08b20a3b78824d4791a4750238a30ca736e1a5e567306b3029d7898bf",
+  "rtl/test/tb_v41_stage_collective_px.sv": "1ef5ea0c7e6df525eeca7c1f585605037ac5860c0315aaa61d9972c7eefc6bae",
+  "rtl/test/tb_v41_stage_hop_px.sv": "d5d6a445fc06da2b848eb7d759f4f5095dcf9a7da14e3807eee375d227afeedf",
+  "tools/rtl_v41_collective_levers_campaign.py": "2b3e04f9fa967ed7240419b5d13afbc04069426f0510cc6f2cc70872798dcd89",
+  "tools/rtl_v41_stage_collective_campaign.py": "b1d8a57b03d2e54f2764418382921019b1ae8be16124c985e24935dd394739e6",
+  "tools/hdc_golden.py": "930415fe9e9e6d24d308b0fc72be89b3b3665539063e71abf74106a1a160e788"
+ },
  "area_assumptions": {
   "bitcell_um2": 0.021,
   "rf_overhead": 2.5,
