@@ -18,9 +18,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+# Set image semantics before imports. The historical KV campaign imported below
+# resets both variables for its own unsplit scalar regression; restore our
+# adopted configuration immediately afterward for this runner's children.
+os.environ.update(HDC_GROUPS="4", HDC_SU_WIDTH="1", HDC_RMAX="0",
+                  HDC_KV_FMT="bf16", HDC_ATTN_SPLIT="1")
 import hdc_timing as T  # noqa: E402
 import rtl_hdc_decode_campaign as C  # noqa: E402
 import rtl_hdc_hbm_campaign as H  # noqa: E402
+os.environ.update(HDC_SU_WIDTH="1", HDC_ATTN_SPLIT="1")
 
 TB = ROOT / "rtl/test/tb_hdc_core_whbm.sv"
 CORE = ROOT / "rtl/hdc/ot_hdc_core_whbm.sv"
@@ -41,8 +47,6 @@ def main():
     ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/hdc_qwen_whbm_split_single.json")
     ap.add_argument("--executable", type=Path, help="reuse a Verilator binary built from these exact sources")
     args = ap.parse_args()
-    # The imported KV campaign sets HDC_ATTN_SPLIT=0 in this process.
-    # Force the adopted interleaved K-split for the generated program.
     env = dict(os.environ, HDC_GROUPS="4", HDC_SU_WIDTH="1", HDC_RMAX="0",
                HDC_KV_FMT="bf16", HDC_ATTN_SPLIT="1")
     record = {

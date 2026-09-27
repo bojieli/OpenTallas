@@ -14,7 +14,7 @@
   "core_fault": 0,
   "cycles": 30539,
   "expected_token": 1073,
-  "generation_stdout": "program: 120 instructions, 20 barriers; weight ROM 45056 words; constant ROM 2305; KV 16384 elements\nISA simulator: token 1073 (oracle 1073), logits bit-exact with golden: True\nwrote /tmp/hdc_qwen_whbm_split_hsd3kyka/img",
+  "generation_stdout": "program: 120 instructions, 20 barriers; weight ROM 45056 words; constant ROM 2305; KV 16384 elements\nISA simulator: token 1073 (oracle 1073), logits bit-exact with golden: True\nwrote /tmp/hdc_qwen_whbm_split_tcfoi8oj/img",
   "image_sha256": {
     "crom.hex": "e157a192218bd016d8cfa941f7dea7394269d82553c6d26b2b17c200df62d7b3",
     "hbm.args": "18ced0a078747978e089b494a011f8fd7d08504705175b5426e3f5869926f519",
@@ -54,7 +54,7 @@
     "tools/hdc_isa.py": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
     "tools/hdc_program.py": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
     "tools/hdc_timing.py": "51f4225e88c9a9dc12289a3cc1644e14804075cdf268afefdf35a93b77ae2436",
-    "tools/rtl_hdc_qwen_whbm_split_single.py": "fecf161cba4c70f0ab462e12b986bfc98f555806a1f37a50e3aa8f4a5d60c952"
+    "tools/rtl_hdc_qwen_whbm_split_single.py": "82626aa6708ec3c9f6d5c34ded459983ac6bb5d52cc4e64434c9b084a16b21a3"
   },
   "kv_mismatches": 0,
   "logit_mismatches": 0,
