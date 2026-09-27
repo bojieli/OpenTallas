@@ -554,8 +554,13 @@ cache is therefore a different, equally valid starting state, not the
 golden's. Token-level agreement with a GPU-prefilled reference is a quality
 metric, not a bit-exactness claim.
 
-**Sizing.** At the KV-bound batch, a 4:1 chat load
-needs 0.3 B200 of prefill per chip, and 20:1 needs 1.5. The sustained ingest
-is 2.6–13.2 GB/s a chip, well inside R-P1's link. The HBM comparator takes
+**Sizing.** A load of R:1 prefills R new prompt (input) tokens per generated
+(output) token, averaged over a chip's users. 4:1 is a chat load; 20:1 is an
+agentic load, where tool outputs are appended each turn. The sustained ingest
+is R × the decode aggregate × 73,728 B (one position's FP8 K and V over 36
+layers), and the B200s needed are R × the decode aggregate / ~120,000 prompt
+tokens a second per B200. At the KV-bound aggregate (8,941 tok/s), a 4:1 load
+needs 0.3 B200 per chip and 20:1 needs 1.5. The sustained ingest is 2.6–13.2
+GB/s a chip, well inside R-P1's link. The HBM comparator takes
 the same endpoint, engine and arbiter; its ingest share of the stacks is the
 same 0.9% bound.
