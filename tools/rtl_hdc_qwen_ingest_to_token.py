@@ -78,7 +78,11 @@ def main() -> None:
                   "LLG": int(math.log2(lay.L * lay.KV)), "V0_WORD": lay.kv_v0 // 16}
         params = [*(f"-G{k}={v}" for k, v in layout.items()), f"-GNPC={KC.NPC}", "-GPACKED_HBM=1"]
         sources = [*KC.core.HDC, *KC.KV_RTL, KC.HBM, *KC.core.PIPES, KC.TB_CORE, KC.HARNESS_CORE]
-        exe = KC.verilate("tb_hdc_core_hbm", work / "core_obj", sources, params)
+        try:
+            exe = KC.verilate("tb_hdc_core_hbm", work / "core_obj", sources, params)
+        except subprocess.CalledProcessError as exc:
+            print((exc.stderr or "")[-4000:], file=sys.stderr)
+            raise
         raw = KC.run(exe, f"+DIR={img}", *(img / "run.args").read_text().split(), f"+LEAD={KC.LEAD}")
         token = KC.parse_core(raw)
         token_exact = (token.get("pass") and token.get("fault") == 0 and token.get("stream_fault") == 0

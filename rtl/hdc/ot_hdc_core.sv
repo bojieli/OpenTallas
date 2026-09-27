@@ -48,7 +48,8 @@ module ot_hdc_core #(
     // the configurations not yet moved (the KV-in-HBM streamer).
     parameter integer SU_VEC = 0,
     parameter integer SW     = 1,
-    parameter integer LV     = 4
+    parameter integer LV     = 4,
+    parameter integer KV_FP8 = (SU_VEC != 0)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -305,7 +306,7 @@ module ot_hdc_core #(
     wire       su_active;             // observation (test benches)
     wire [7:0] su_inflight;
     generate if (SU_VEC != 0) begin : g_vsu
-    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW)) u_su (
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
         .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
         .i_nout(su_nout), .i_nin(su_nin),
         .i_asrc(a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),
@@ -326,7 +327,7 @@ module ot_hdc_core #(
     assign su_active = u_su.active;
     assign su_inflight = u_su.inflight;
     end else begin : g_ssu
-    ot_hdc_stream #(.W(W), .WR(G * W), .AW(AW), .NW(NW)) u_su (
+    ot_hdc_stream #(.W(W), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
         .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
         .i_nout(su_nout), .i_nin(su_nin),
         .i_asrc(a_src), .i_abase(a_base), .i_aso(a_so), .i_asi(a_si),

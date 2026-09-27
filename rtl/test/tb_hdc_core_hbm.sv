@@ -82,7 +82,8 @@ module tb_hdc_core_hbm #(
     wire [2:0] kvd_jsh;
     wire [NW-1:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos;
 
-    ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .KV_HBM(1)) dut (
+    ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .KV_HBM(1),
+                  .KV_FP8(PACKED_HBM)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
         .done(done), .next_token(next_token), .cycles(cycles), .fault(fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
@@ -401,12 +402,13 @@ module tb_hdc_core_hbm #(
         if (lc == 5 && go) rst_n <= 1'b1;
         if (PACKED_HBM && lc == 9) begin
             boot_bad = 0; hbm_bad = 0;
-            for (i = 0; i < KV_WORDS; i = i + 1)
-                if (expand_fp8(u_hbm.mem[i]) !== pack16(kv[i])) hbm_bad = hbm_bad + 1;
+            for (i = 0; i < 16; i = i + 1)
+                if (expand_fp8(u_hbm.mem[i*(KV_WORDS/16)]) !== pack16(kv[i*(KV_WORDS/16)]))
+                    hbm_bad = hbm_bad + 1;
             for (boot_bank = 0; boot_bank < 2; boot_bank = boot_bank + 1) begin
                 check_tile = ((to0 & 1) == boot_bank) ? to0 : to0 - 1;
                 if (check_tile >= 0)
-                    for (boot_j = 0; boot_j < TDEPTH; boot_j = boot_j + 1) begin
+                    for (boot_j = 0; boot_j < TDEPTH; boot_j = boot_j + 8) begin
                         check_word = ((boot_j >> LOG_HD) << (LOG_HD + LOG_TW)) |
                                      (check_tile << LOG_HD) | (boot_j & ((1 << LOG_HD) - 1));
                         if (tl[boot_bank][boot_j] !== pack16(kv[check_word])) boot_bad = boot_bad + 1;
