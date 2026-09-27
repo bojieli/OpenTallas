@@ -602,7 +602,7 @@ with 4 HBM3E stacks per die (the ROM die's package limit; the beachfront allows 
 - 8.9 TB of HBM, against 510 GB of weights.
 - **3.6 TB/s sustained per die**: a 90% efficiency requirement, measured with refresh on.
 
-At 200K the comparator gives 972 tokens/s per user on the baseline links (1,143 on plain (b)). Its weight
+At 200K the comparator gives 972 tokens/s per user on the baseline links (958 on plain (b); arch_budget_v41.json plain_b.hbm_ar). Its weight
 sweep is 848 µs of the 1029 µs token.
 
 | sustained efficiency | 75% | 85% | 90% | 95% |
