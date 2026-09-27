@@ -1,5 +1,5 @@
 {
-  "claim_boundary": "Source57 five-package, two-user switched-array gate with 109-cycle half-link delay failed because the router raised overflow=1. All four emitted tokens matched pinned expectations, eight LM-head logit checks had zero mismatches, all five package KV/VM final-state sweeps had zero mismatches, and both users completed; these exact numeric results do not override the protocol failure. Router overflow origin is under investigation. X_HE=1, other X units=0; behavioral ROM/HBM, delay-line PHY stand-in, testbench-injected stalls, immediate credit return. The 228-cycle stress delay and production throughput were not checked in this run.",
+  "claim_boundary": "Source57 five-package, two-user switched-array gate with 109-cycle half-link delay failed because the router raised overflow=1. All four emitted tokens matched pinned expectations, eight LM-head logit checks had zero mismatches, all five package KV/VM final-state sweeps had zero mismatches, and both users completed; these exact numeric results do not override the protocol failure. The router overflow latch treats a held-valid cycle during ready/valid backpressure as a fault; a corrected-mode full-array rerun is pending. X_HE=1, other X units=0; behavioral ROM/HBM, delay-line PHY stand-in, testbench-injected stalls, immediate credit return. The 228-cycle stress delay and production throughput were not checked in this run. An independently relinked O1-rest binary reproduced the complete failure log byte for byte.",
   "configuration": {
     "active_link_delay_cycles_per_half": 109,
     "body_packages": 3,
@@ -151,9 +151,23 @@
     "total_cycles": 746513,
     "users_completed": 2
   },
+  "optimized_reproduction": {
+    "build_stamp": "54663fb43348cf525898c86da36d216c7445921195d2216497d5ebba8c0560ea",
+    "container_image_sha256": "sha256:760104a7f8f31f970fb3c1ff5bf91cfa0cb79ace21ada4454b157421df715555",
+    "full_log_byte_identical_to_reference": true,
+    "full_log_sha256": "22cca2ed525166e4e3f17053038905c88437af71592fec42137218260a7b9d04",
+    "image_sha256_identical_to_reference": true,
+    "optimization_script_sha256": "581e6ec5d8d0792a10061e33522fbaac4055c0513f95d3f00853fee30f77df5e",
+    "optimized_binary_sha256": "7c6f80e798672ae13bd42df25a1753cf9967cccf973a8001f288ddb9a696a15b",
+    "reference_binary_sha256": "13dd803f14997fcf1a48e191a04751cd668678dc32890b87b757aaea1eebc553",
+    "simulator_command": "/tmp/codex_v41x_array_sw/work/obj_b3_h2_switch_stall_o1rest/Vtb_hdc_v41x_array +DIR=/tmp/codex_v41x_array_sw/work/cfg_b3_h2_switch_stall +ROMS=/tmp/codex_v41x_array_sw/work/roms +NUSERS=2 +NPROMPT=2 +NGEN=1 +LINK_CH=109 +HB=100000",
+    "source_snapshot_commit": "57e942dcec534c3787f33848f461e05d0f68a4fc",
+    "status": "fail",
+    "verdict": "Router overflow=1 reproduced at cycle 746513; all four tokens, eight LM-head checks, and all five package state sweeps match the primary log."
+  },
   "provenance": {
     "binary_sha256": "13dd803f14997fcf1a48e191a04751cd668678dc32890b87b757aaea1eebc553",
-    "build_note": "Verilator source57 binary; 737 hot FP generated translation units optimized at O1, remaining generated units O0; this exact executable is still running on ot-pve2.",
+    "build_note": "Verilator source57 binary; 737 hot FP generated translation units optimized at O1, remaining generated units O0; this exact executable completed on ot-pve2 with the router overflow failure.",
     "build_stamp": "54663fb43348cf525898c86da36d216c7445921195d2216497d5ebba8c0560ea",
     "campaign_command": [
       "python3",
