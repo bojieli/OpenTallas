@@ -339,7 +339,7 @@ def lane_sweep(s: Path, widths) -> list:
     return out
 
 
-def run(ngen: int, context: int, sweep=()) -> dict:
+def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None) -> dict:
     with tempfile.TemporaryDirectory(dir=os.environ.get("OT_SCRATCH")) as scratch:   # a pool worker's /tmp is a 16 GB tmpfs
         s = Path(scratch)
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core_v41x",
@@ -365,6 +365,29 @@ def run(ngen: int, context: int, sweep=()) -> dict:
         one["golden_next_token"] = expect["golden"]
         one["oracle_next_token"] = expect["oracle"]
         one["pass"] = one["pass"] and one["next_token"] == expect["golden"]
+        single_record = {
+            "schema": "opentallas.hdc-v41x-decode-single.v1",
+            "mode": "single_step",
+            "respecified_units": list(UNITS),
+            "as_built_units": [u for u in X_UNITS if u not in UNITS],
+            "hdc_v41_arith": arith(),
+            "engine_parameters": dict(PARAMS),
+            "not_exercised": {u: NOT_EXERCISED.get(u, []) for u in UNITS},
+            **({"indexer": indexer_record(prog, tags, issues)} if "idx" in UNITS else {}),
+            "status": "pass" if one["pass"] and lint.returncode == 0 else "fail",
+            "single_step": one,
+            "per_operator_cycles": bd,
+            "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
+                               "messages": lint.stderr.strip().splitlines()[:20]},
+            "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, *RTL, TB, HARNESS, *TOOLS)},
+        }
+        if single_output is not None:
+            single_output.parent.mkdir(parents=True, exist_ok=True)
+            pending = single_output.with_name(single_output.name + ".tmp")
+            pending.write_text(json.dumps(single_record, indent=2) + "\n")
+            pending.replace(single_output)
+        if single_only:
+            return single_record
         multi = subprocess.run([str(exe), f"+DIR={img}", "+MULTI", "+NPROMPT=8", f"+NGEN={ngen}"], check=True,
                                capture_output=True, text=True).stdout
         steps = [dict(zip(("position", "input", "output", "isa_output", "cycles", "fault"), map(int, x.groups())))
@@ -440,6 +463,9 @@ def main() -> int:
     parser.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
     parser.add_argument("--sun", type=int, default=16, help="vector-unit light lanes")
     parser.add_argument("--sum", type=int, default=8, help="vector-unit SFU lanes")
+    parser.add_argument("--single-only", action="store_true", help="stop after the bit-exact single decode step")
+    parser.add_argument("--single-output", type=Path, help="incremental single-step JSON path; defaults to "
+                        "<output stem>.single.json")
     args = parser.parse_args()
     global UNITS
     UNITS = tuple(u for u in args.units.split(",") if u)
@@ -447,11 +473,13 @@ def main() -> int:
     PARAMS["hhw"] = args.hhw
     PARAMS["mg"] = args.mg
     PARAMS["sun"], PARAMS["sum"] = args.sun, args.sum
-    result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x])
+    single_output = args.single_output or args.output.with_name(args.output.stem + ".single.json")
+    result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x],
+                 single_only=args.single_only, single_output=single_output)
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     s = result["single_step"]
     print(result["status"], "next token", s["next_token"], "cycles", s["cycles"],
-          "generated", result["end_to_end"]["generated_tokens"])
+          "generated", result.get("end_to_end", {}).get("generated_tokens", []))
     return 0 if result["status"] == "pass" else 1
 
 
