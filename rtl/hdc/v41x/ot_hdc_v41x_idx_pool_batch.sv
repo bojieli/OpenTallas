@@ -62,6 +62,7 @@ module ot_hdc_v41x_idx_pool_batch #(
     wire [G*M-1:0] p_f, p_fs;
     wire [31:0] cnt_rom, cnt_stream, cnt_split;
     wire [47:0] cnt_refused;
+    wire [L*264-1:0] zero_w = 0;
 
     assign b_ready = state == IDLE;
     assign busy = state != IDLE;
@@ -84,7 +85,7 @@ module ot_hdc_v41x_idx_pool_batch #(
         .d_tag(4'd0), .d_src(1'b1), .d_split(1'b1),
         .rq_v(rq_v), .rq_a(rq_a), .rq_q(rq_q), .rq_plg(rq_plg), .rq_tag(rq_tag),
         .rq_src(rq_src), .rq_split(rq_split), .rq_rg(rq_rg),
-        .rd_w({L*264{1'b0}}), .rd_k(rd_k), .rd_x(rd_x),
+        .rd_w(zero_w), .rd_k(rd_k), .rd_x(rd_x),
         .o_cr(p_v), .o_v(p_v), .o_rg(p_rg), .o_tag(p_tag),
         .o_mask(p_mask), .o_y(p_y), .o_bf(p_bf), .o_f(p_f),
         .o_smask(p_smask), .o_ys(p_ys), .o_bfs(p_bfs), .o_fs(p_fs),

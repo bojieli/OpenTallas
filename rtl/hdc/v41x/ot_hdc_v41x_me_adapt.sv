@@ -216,10 +216,13 @@ module ot_hdc_v41x_me_adapt #(
                            .EIW(9), .TGW(4), .RL(RL), .OCRED(128)) u_t (
         .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_rdy(d_rdy), .d_plg(plg), .d_nb(K[NBW-1:0]),
         .d_nrows(nrows), .d_wbase(sbase[BAW-1:0]), .d_ind(1'b0), .d_eid(9'd0), .d_estride({BAW{1'b0}}),
-        .d_fp4(1'b0), .d_tag(4'd0),
+        .d_fp4(1'b0), .d_tag(4'd0), .d_src(1'b0), .d_split(1'b0),
         .rq_v(rq_v), .rq_a(rq_a), .rq_q(rq_q), .rq_plg(rq_plg), .rq_tag(),
-        .rd_w(wb_q), .rd_x(xr[RL-1]),
+        .rq_src(), .rq_split(), .rq_rg(),
+        .rd_w(wb_q), .rd_k('0), .rd_x(xr[RL-1]),
         .o_cr(t_ov), .o_v(t_ov), .o_rg(t_rg), .o_tag(), .o_mask(t_mask), .o_y(t_y), .o_bf(t_bf), .o_f(t_f),
+        .o_smask(), .o_ys(), .o_bfs(), .o_fs(),
+        .o_cnt_rom(), .o_cnt_stream(), .o_cnt_split(),
         .idle(t_idle));
 
     // ---- results: slot s of a row group is row rho = rg*rpg + s -> (t, j, l) -> word port s of position p

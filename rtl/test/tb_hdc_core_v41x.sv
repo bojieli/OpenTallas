@@ -375,6 +375,62 @@ module tb_hdc_core_v41x (input wire clk);
             assign x_cnt_sel = 64'd0; assign x_sel_reps = 32'd0; assign x_cnt_eg = 64'd0;
         end
     endgenerate
+    // Optional first pooled instruction trace. Keep the default token log small;
+    // this shows the VM input, replicated HBM image, HBM request/response and
+    // score/write timing at the first fused indexer dispatch.
+    generate if (`HDC_X_IDX == 2) begin : g_idx_trace
+        integer ops=0, qreads=0, reqs=0, rsps=0, scores=0, writes=0;
+        reg active=0;
+        integer sector;
+        always @(posedge clk) if ($test$plusargs("IDXTRACE")) begin
+            if (dut.e_go[3] && ops==0) begin
+                ops=1;active=1;
+                sector=(((dut.me_wbase-dut.cfg_ik_base)>>7)*17)*128;
+                $display("IDXTRACE go cyc=%0d pc=%0d n=%0d k=%0d hg=%0d round=%0d mmode=%0d fuse=%0d wbase=%0d ikbase=%0d xbase=%0d xks=%0d xjs=%0d xcs=%0d wts=%0d obase=%0d sector=%0d vm0=%h vm1=%h scale0=%h",
+                    cycles,dut.pc,dut.me_nout,dut.me_k,dut.me_hg,dut.me_round,dut.me_mmode,dut.me_fuse,
+                    dut.me_wbase,dut.cfg_ik_base,dut.me_xbase,dut.me_xks,dut.me_xjs,dut.me_xcs,
+                    dut.me_wts,dut.me_obase,sector,vm[dut.me_xbase],vm[dut.me_xbase+1],vm[dut.me_wts]);
+                $display("IDXTRACE image stack0 scale=%h code=%h",g_pikh.g_stack[0].hm.mem[sector],g_pikh.g_stack[0].hm.mem[sector+128]);
+                $display("IDXTRACE image stack1 scale=%h code=%h",g_pikh.g_stack[1].hm.mem[sector],g_pikh.g_stack[1].hm.mem[sector+128]);
+                $display("IDXTRACE image stack2 scale=%h code=%h",g_pikh.g_stack[2].hm.mem[sector],g_pikh.g_stack[2].hm.mem[sector+128]);
+                $display("IDXTRACE image stack3 scale=%h code=%h",g_pikh.g_stack[3].hm.mem[sector],g_pikh.g_stack[3].hm.mem[sector+128]);
+            end
+            if(active) begin
+                if (|dut.e_vx_re[3*G +: G] && qreads<8) begin
+                    $display("IDXTRACE qread cyc=%0d addr0=%0d data0=%h addr1=%0d data1=%h",cycles,
+                        dut.e_vx_addr[3*G*AW +: AW],vm[dut.e_vx_addr[3*G*AW +: AW]],
+                        dut.e_vx_addr[3*G*AW+AW +: AW],vm[dut.e_vx_addr[3*G*AW+AW +: AW]]);
+                    qreads=qreads+1;
+                end
+                if (|pikh_req_v && reqs<8) begin
+                    $display("IDXTRACE req cyc=%0d stack3=%h addr3pc0=%0d stack0=%h",cycles,
+                        pikh_req_v[96 +: 32],pikh_req_addr[96*28 +: 28],pikh_req_v[0 +: 32]);
+                    reqs=reqs+1;
+                end
+                if (|pikh_rsp_v && rsps<8) begin
+                    $display("IDXTRACE rsp cyc=%0d stack3=%h data3pc0=%h stack0=%h",cycles,
+                        pikh_rsp_v[96 +: 32],pikh_rsp_data[96*256 +: 256],pikh_rsp_v[0 +: 32]);
+                    rsps=rsps+1;
+                end
+                if (dut.g_idx_x.g_pool.u_idx.b_valid && scores<8) begin
+                    $display("IDXTRACE score cyc=%0d index=%0d write=%0d score=%h fault=%0d",cycles,
+                        dut.g_idx_x.g_pool.u_idx.b_index,dut.g_idx_x.g_pool.u_idx.b_write,
+                        dut.g_idx_x.g_pool.u_idx.b_score,dut.g_idx_x.g_pool.u_idx.b_fault);
+                    scores=scores+1;
+                end
+                if (dut.e_ov[3] && writes<8) begin
+                    $display("IDXTRACE write cyc=%0d addr=%0d mask=%h data=%h fault=%0d",cycles,
+                        dut.e_addr[3*G*AW +: AW],dut.e_mask[3*G*W +: W],
+                        dut.e_data[3*G*W*32 +: 32],dut.e_fault[3]);
+                    writes=writes+1;
+                end
+                if (dut.e_idle[3] && scores>0) begin
+                    $display("IDXTRACE done cyc=%0d qreads=%0d reqs=%0d rsps=%0d scores=%0d writes=%0d",cycles,qreads,reqs,rsps,scores,writes);
+                    active=0;
+                end
+            end
+        end
+    end endgenerate
     reg [8*512-1:0] dir;
     integer cyc = 0, i, bad_lg, bad_vm, bad_kv, n_prime = 0, pfirst = 0, prime_i = 0;
     reg trace = 1'b0, multi = 1'b0, running = 1'b0, dbg = 1'b0;
