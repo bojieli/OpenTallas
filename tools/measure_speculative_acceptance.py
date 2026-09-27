@@ -1135,6 +1135,164 @@ def aggregate(args) -> None:
     print(f"wrote {args.out}")
 
 
+# ---------------------------------------------------------------------------
+# block-sweep: DFlash run directly at each block size vs truncation of block 16
+# ---------------------------------------------------------------------------
+
+PRIMARY_CLASSES = ("reasoning", "agentic", "chat")   # the crosscheck workloads repeat math/code thinking-off
+
+
+def _pool(recs: list[dict], key=lambda r: r["acceptance_lengths"]) -> tuple[int, int]:
+    """(committed tokens, cycles) over records."""
+    return sum(sum(key(r)) for r in recs), sum(len(key(r)) for r in recs)
+
+
+def block_sweep(args) -> None:
+    """Join run-hf records made at several ``--block-size`` values into one table.  For each block B
+    and workload: the DIRECT tau of the run at B (the drafter given B-1 mask slots, the reference's own
+    ``block_size`` argument), and the TRUNCATED tau the architecture model used so far -- every cycle
+    of the block-16 run with its committed length L cut to min(L, B), i.e. 1 + the first B-1 survival
+    terms of the block-16 run, evaluated on the very same records."""
+    ref_path = Path(args.reference)
+    ref = [json.loads(l) for l in open(ref_path)]
+    ref_meta = json.loads(Path(str(ref_path) + ".meta.json").read_text())
+    ref_block = ref_meta["block_size"]
+    ref_by = {}
+    for r in ref:
+        ref_by.setdefault(r["workload"], []).append(r)
+    ref_rec = {(r["workload"], r["prompt_id"], r["turn"]): r for r in ref}
+
+    def key(r):
+        return r["workload"], r["prompt_id"], r["turn"]
+
+    def prefix(r):
+        """Tokens this run shares with the block-16 run's output before the first difference."""
+        a, b = r["output_ids"], ref_rec[key(r)]["output_ids"]
+        n = 0
+        for x, y in zip(a, b):
+            if x != y:
+                break
+            n += 1
+        return n
+    runs = {}
+    for spec in args.run:
+        b, p = spec.split("=", 1)
+        runs[int(b)] = Path(p)
+    if ref_block not in runs:
+        runs[ref_block] = ref_path
+    classes = {r["workload"]: r["class"] for r in ref}
+    workloads = sorted(ref_by, key=lambda w: (classes[w] == "crosscheck", w))
+    blocks = {}
+    for B in sorted(runs):
+        path = runs[B]
+        meta = json.loads(Path(str(path) + ".meta.json").read_text())
+        assert meta["block_size"] == B, (path, meta["block_size"], B)
+        recs = [json.loads(l) for l in open(path)]
+        by = {}
+        for r in recs:
+            by.setdefault(r["workload"], []).append(r)
+        per_w = {}
+        for w in workloads:
+            rs = by.get(w, [])
+            if not rs:
+                continue
+            tok, cyc = _pool(rs)
+            ref_same = [ref_rec[key(r)] for r in rs]   # the same prompt turns, so a partial run compares fairly
+            rtok, rcyc = _pool(ref_same, key=lambda r: [min(a, B) for a in r["acceptance_lengths"]])
+            per_prompt = [sum(r["acceptance_lengths"]) / len(r["acceptance_lengths"]) for r in rs
+                          if r["acceptance_lengths"]]
+            weights = [len(r["acceptance_lengths"]) for r in rs if r["acceptance_lengths"]]
+            hist = _hist_from_lengths([a for r in rs for a in r["acceptance_lengths"]], B)
+            st = _stats_from_hist(hist, B - 1)
+            gc = [r["greedy_consistency"] for r in rs if r.get("greedy_consistency", {}).get("tokens")]
+            same = sum(ref_rec[key(r)]["output_sha256"] == r["output_sha256"] for r in rs)
+            per_w[w] = {
+                "class": classes[w], "samples": len(rs), "complete": len(rs) == len(ref_by[w]),
+                "cycles": cyc, "generated_tokens": sum(r["tokens"] for r in rs),
+                "tau_direct": round(tok / cyc, 4),
+                "tau_direct_ci95_prompt_bootstrap": _bootstrap_ci(per_prompt, weights),
+                "tau_direct_macro_mean_of_prompt_means": round(sum(per_prompt) / len(per_prompt), 4),
+                "tau_truncated_from_block16": round(rtok / rcyc, 4),
+                "direct_over_truncated": round((tok / cyc) / (rtok / rcyc), 4),
+                "histogram_committed_length": hist,
+                "survival_by_position": st.get("survival_by_position"),
+                "teacher_forced_every_token": {
+                    "tokens": sum(g["tokens"] for g in gc), "not_target_argmax": sum(g["not_argmax"] for g in gc),
+                    "deficit_above_tol": sum(g["above_tol"] for g in gc),
+                    "max_deficit_logits": max((g["max_deficit"] for g in gc), default=None)},
+                "outputs_identical_to_block16_run": same,
+                "tokens_before_first_difference_from_block16_run": sum(prefix(r) for r in rs),
+                "wall_s": round(sum(r["seconds"] for r in rs), 1)}
+        pooled = {}
+        for label, keep in (("primary", lambda w: classes[w] in PRIMARY_CLASSES), ("all", lambda w: True)):
+            ws = [w for w in per_w if keep(w)]
+            rs = [r for w in ws for r in by[w]]
+            if not rs:
+                continue
+            tok, cyc = _pool(rs)
+            rtok, rcyc = _pool([ref_rec[key(r)] for r in rs],
+                               key=lambda r: [min(a, B) for a in r["acceptance_lengths"]])
+            pooled[label] = {
+                "workloads": ws, "cycles": cyc,
+                "tau_direct_cycle_weighted": round(tok / cyc, 4),
+                "tau_truncated_cycle_weighted": round(rtok / rcyc, 4),
+                "tau_direct_mean_of_workloads": round(sum(per_w[w]["tau_direct"] for w in ws) / len(ws), 4),
+                "tau_truncated_mean_of_workloads": round(
+                    sum(per_w[w]["tau_truncated_from_block16"] for w in ws) / len(ws), 4),
+                "tau_direct_workload_range": [min(per_w[w]["tau_direct"] for w in ws),
+                                              max(per_w[w]["tau_direct"] for w in ws)]}
+        blocks[str(B)] = {"block_size": B, "draft_tokens_per_cycle": B - 1,
+                          "raw_records": f"results/speculative/raw/dflash_b{B}_hf_spec.jsonl.gz",
+                          "raw_records_sha256": _sha256_file(path),
+                          "implementation": meta.get("implementation"), "environment": meta.get("environment"),
+                          "in_training_distribution": B == ref_block, "pooled": pooled, "workloads": per_w}
+    result = {
+        "schema_version": 1,
+        "what": ("DFlash acceptance of z-lab/Qwen3-8B-DFlash-b16 on Qwen3-8B MEASURED at each block size by running "
+                 "the reference dflash_generate with that block_size (anchor + B-1 mask slots, the drafter's "
+                 "within-block attention over B positions), greedy, batch 1, BF16 weights and activations, on the "
+                 "same 264 prompt turns as results/speculative/acceptance_tau.json; beside it, the truncation of "
+                 "the block-16 run that the architecture model used until now."),
+        "tool": "tools/measure_speculative_acceptance.py block-sweep",
+        "drafter": ref_meta["drafter"], "trained_block_size": ref_block,
+        "out_of_distribution": (f"The drafter was trained at block {ref_block}. A shorter block is a supported "
+                                "argument of the reference (dflash_generate(block_size=...)) but out of its training "
+                                "distribution: the drafter sees fewer mask slots in its bidirectional block. These "
+                                "rows measure that drafter at that block; a drafter trained at the short block would "
+                                "do at least as well (not measured)."),
+        "convention": {
+            "tau_direct": "committed tokens / verification cycles of the run at block B (bonus token included)",
+            "tau_truncated_from_block16": "sum_c min(L_c, B) / cycles over the block-16 run's cycles c",
+            "direct_over_truncated": "tau_direct / tau_truncated_from_block16",
+            "primary": "reasoning + agentic + chat workloads (9); 'all' adds the two thinking-off crosschecks",
+            "outputs_identical_to_block16_run": ("samples whose output token sequence equals the block-16 run's: greedy "
+                                                 "speculation is lossless, so every block follows the target's greedy "
+                                                 "path up to bf16 near-ties between differently shaped verify forwards "
+                                                 "(teacher_forced_every_token grades those); after the first such tie "
+                                                 "the two runs continue on different texts"),
+            "tokens_before_first_difference_from_block16_run": "summed over samples: the shared-trajectory prefix",
+        },
+        "arithmetic": ("BF16 weights, BF16 activations, BF16 KV, sdpa attention on the GPU. NOT the deployment arithmetic "
+                       "(3.5-bit ROM weights, FP8 KV): no quantised emulation existed when this ran (branch "
+                       "claude/quality-eval had no commits past main); the vLLM FP8 W8A8 run in acceptance_tau.json "
+                       "(block 16) moved MATH-500 tau from 3.65 to 3.72."),
+        "prompts_sha256": _sha256_file(Path(args.prompts)) if args.prompts else None,
+        "reference_run": {"path_sha256": _sha256_file(ref_path), "block_size": ref_block,
+                          "raw_records": "results/speculative/raw/dflash_b16_hf_spec.jsonl.gz"},
+        "blocks": blocks,
+    }
+    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.out).write_text(json.dumps(result, indent=1) + "\n")
+    print(f"wrote {args.out}")
+    print(f"{'B':>3} {'direct':>8} {'trunc':>8} {'ratio':>6}  (primary, cycle-weighted; mean of workloads)")
+    for B, e in blocks.items():
+        p = e["pooled"].get("primary", {})
+        if p:
+            print(f"{B:>3} {p['tau_direct_cycle_weighted']:8.4f} {p['tau_truncated_cycle_weighted']:8.4f} "
+                  f"{p['tau_direct_cycle_weighted'] / p['tau_truncated_cycle_weighted']:6.3f}  "
+                  f"{p['tau_direct_mean_of_workloads']:.4f} / {p['tau_truncated_mean_of_workloads']:.4f}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -1183,9 +1341,14 @@ def main() -> None:
     p.add_argument("--manifest", required=True)
     p.add_argument("--out", default=str(REPO / "results/speculative/acceptance_tau.json"))
     p.add_argument("--extra", action="append", default=[])
+    p = sub.add_parser("block-sweep")
+    p.add_argument("--reference", required=True, help="run-hf spec records at the drafter's own block (16)")
+    p.add_argument("--run", action="append", default=[], help="B=path of run-hf spec records at --block-size B")
+    p.add_argument("--prompts", default="")
+    p.add_argument("--out", default=str(REPO / "results/speculative/dflash_block_acceptance.json"))
     a = ap.parse_args()
     {"prepare": prepare, "run-hf": run_hf, "run-vllm": run_vllm, "sweep": run_sweep,
-     "aggregate": aggregate}[a.cmd](a)
+     "aggregate": aggregate, "block-sweep": block_sweep}[a.cmd](a)
 
 
 if __name__ == "__main__":
