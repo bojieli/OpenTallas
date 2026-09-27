@@ -72,6 +72,7 @@ module tb_hdc_v41x_array #(
     localparam integer XSQ = 4, XSW = 16;
     localparam integer NPC = 8, LWIN = 10, LAW = 12, SPW = BL * QLB / 256;
     localparam integer HMEM = 1 << 20, IKH_WORDS = 1 << 18;
+    localparam integer IKH_USER_SHIFT = $clog2(IKH_WORDS);
     localparam integer HROM_WORDS = 1 << 16, WROM_WORDS = 1 << 19, QROM_WORDS = 1 << 16, EROM_WORDS = 1 << 19;
     localparam integer CROM_WORDS = 1 << 15, KVW = 32768, PS = 16384, PROG_WORDS = 1 << PAW;
     localparam integer VMP = PB + USERS * PS;       // physical vector memory, elements
@@ -111,6 +112,7 @@ module tb_hdc_v41x_array #(
     wire [NODES-1:0] qs_fault_w;
     wire [NODES*32-1:0] qs_bad_w, qs_words_w, qs_hbm_reads_w;
     wire [NODES*32-1:0] idx_records_w, idx_writes_w, idx_stalls_w;
+    wire [NODES*USERS-1:0] idx_user_read_w, idx_user_record_w;
     wire [7:0] users_done;
     wire tok_v; wire [7:0] tok_u; wire [NW-1:0] tok_p, tok_i;
 
@@ -416,15 +418,56 @@ module tb_hdc_v41x_array #(
                 wire [128*32-1:0] h_wstrb;
                 wire bridge_busy;
                 wire [4*64-1:0] stack_refs;
+                wire [27:0] user_sector_base = {cur_u, {IKH_USER_SHIFT{1'b0}}};
+                wire [27:0] physical_csec = pikw_csec + user_sector_base;
+                wire [27:0] physical_ssec = pikw_ssec + user_sector_base;
+                wire [128*28-1:0] physical_raddr;
+                reg [31:0] user_reads [0:USERS-1];
+                reg [31:0] user_records [0:USERS-1];
+                for (genvar u = 0; u < USERS; u = u + 1) begin : g_user_activity
+                    assign idx_user_read_w[n*USERS+u] = user_reads[u] != 0;
+                    assign idx_user_record_w[n*USERS+u] = user_records[u] != 0;
+                end
+                for (genvar pc = 0; pc < 128; pc = pc + 1) begin : g_user_addr
+                    assign physical_raddr[pc*28 +: 28] =
+                        pikh_req_addr[pc*28 +: 28] + user_sector_base;
+                end
+                // The writer FIFO captures these physical addresses at admission.
+                // Requests are checked while the current package user is known;
+                // the HBM can finish an older user's queued writes later.
+                always @(posedge clk) begin
+                    if (!rst_n) begin
+                        for (integer u = 0; u < USERS; u = u + 1) begin
+                            user_reads[u] <= 0;
+                            user_records[u] <= 0;
+                        end
+                    end else begin
+                        if (cur_u >= n_users || cur_u >= USERS)
+                            $fatal(1, "IDXHBM user out of range pkg=%0d user=%0d", n, cur_u);
+                        if (pikw_v && pikw_rdy) begin
+                            if (pikw_csec + 1 >= IKH_WORDS || pikw_ssec >= IKH_WORDS)
+                                $fatal(1, "IDXHBM write outside user slice pkg=%0d user=%0d code=%0d scale=%0d",
+                                       n, cur_u, pikw_csec, pikw_ssec);
+                            user_records[cur_u] <= user_records[cur_u] + 1;
+                        end
+                        for (integer pc = 0; pc < 128; pc = pc + 1)
+                            if (pikh_req_v[pc] && pikh_req_rdy[pc]) begin
+                                if (pikh_req_addr[pc*28 +: 28] + pikh_req_len[pc*4 +: 4] > IKH_WORDS)
+                                    $fatal(1, "IDXHBM read outside user slice pkg=%0d user=%0d pc=%0d addr=%0d len=%0d",
+                                           n, cur_u, pc, pikh_req_addr[pc*28 +: 28], pikh_req_len[pc*4 +: 4]);
+                                user_reads[cur_u] <= user_reads[cur_u] + 1;
+                            end
+                    end
+                end
                 assign idxwr_refreshes = stack_refs[0 +: 64] + stack_refs[64 +: 64]
                     + stack_refs[128 +: 64] + stack_refs[192 +: 64];
                 ot_hdc_v41x_idx_pool_hbm_bridge u_bridge (
                     .clk(clk), .rst_n(rst_n), .w_v(pikw_v), .w_rdy(pikw_rdy),
-                    .w_stack_mask(pikw_stack_mask), .w_csec(pikw_csec),
-                    .w_codes(pikw_codes), .w_ssec(pikw_ssec),
+                    .w_stack_mask(pikw_stack_mask), .w_csec(physical_csec),
+                    .w_codes(pikw_codes), .w_ssec(physical_ssec),
                     .w_sslot(pikw_sslot), .w_scales(pikw_scales),
                     .r_v(pikh_req_v), .r_rdy(pikh_req_rdy),
-                    .r_addr(pikh_req_addr), .r_len(pikh_req_len),
+                    .r_addr(physical_raddr), .r_len(pikh_req_len),
                     .r_tag(pikh_req_tag), .h_v(h_v), .h_rdy(h_rdy),
                     .h_addr(h_addr), .h_len(h_len), .h_tag(h_tag),
                     .h_we(h_we), .h_wdata(h_wdata), .h_wstrb(h_wstrb),
@@ -435,7 +478,7 @@ module tb_hdc_v41x_array #(
                     .dbg_writer_stalls(idxwr_writer_stalls));
                 for (genvar s = 0; s < 4; s = s + 1) begin : g_stack
                     ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(28), .DW(256),
-                        .MEM_WORDS(IKH_WORDS), .TAGW(16), .LENW(4), .BEATW(4),
+                        .MEM_WORDS(USERS*IKH_WORDS), .TAGW(16), .LENW(4), .BEATW(4),
                         .QD(64), .REFPB(3), .MEM_MODE(0)) hm (
                         .clk(clk), .rst_n(rst_n), .req_v(h_v[s*32 +: 32]),
                         .req_rdy(h_rdy[s*32 +: 32]),
@@ -458,10 +501,12 @@ module tb_hdc_v41x_array #(
                             refresh_count = refresh_count + hm.st_ref[p];
                     end
                     assign stack_refs[s*64 +: 64] = refresh_count;
-                    initial for (integer i = 0; i < IKH_WORDS; i = i + 1)
+                    initial for (integer i = 0; i < USERS*IKH_WORDS; i = i + 1)
                         hm.mem[i] = 256'd0;
                 end
             end else begin : g_pooled_idx_n
+                assign idx_user_read_w[n*USERS +: USERS] = '0;
+                assign idx_user_record_w[n*USERS +: USERS] = '0;
                 assign pikh_req_rdy = 0;
                 assign pikh_rsp_v = 0;
                 assign pikh_rsp_tag = 0;
@@ -741,16 +786,20 @@ module tb_hdc_v41x_array #(
 
     reg [31:0] l_stall_sum;
     reg [31:0] q_bad_sum, q_words_sum, q_reads_sum, idx_records_sum, idx_writes_sum;
+    reg [USERS-1:0] idx_users_read, idx_users_wrote;
     always @(*) begin
         l_stall_sum = 0;
         for (i = 0; i < NLINKS; i = i + 1) l_stall_sum = l_stall_sum + l_stalls[i*32 +: 32];
         q_bad_sum = 0; q_words_sum = 0; q_reads_sum = 0; idx_records_sum = 0; idx_writes_sum = 0;
+        idx_users_read = 0; idx_users_wrote = 0;
         for (i = 0; i < NODES; i = i + 1) begin
             q_bad_sum = q_bad_sum + qs_bad_w[i*32 +: 32];
             q_words_sum = q_words_sum + qs_words_w[i*32 +: 32];
             q_reads_sum = q_reads_sum + qs_hbm_reads_w[i*32 +: 32];
             idx_records_sum = idx_records_sum + idx_records_w[i*32 +: 32];
             idx_writes_sum = idx_writes_sum + idx_writes_w[i*32 +: 32];
+            idx_users_read = idx_users_read | idx_user_read_w[i*USERS +: USERS];
+            idx_users_wrote = idx_users_wrote | idx_user_record_w[i*USERS +: USERS];
         end
     end
     initial begin
@@ -797,6 +846,15 @@ module tb_hdc_v41x_array #(
             if (`HDC_X_IDX == 2 && (idx_records_sum == 0 || idx_writes_sum != 12 * idx_records_sum)) begin
                 bad = bad + 1;
                 $display("IDXHBM_FAIL records=%0d writes=%0d", idx_records_sum, idx_writes_sum);
+            end
+            if (`HDC_X_IDX == 2) begin
+                for (integer ui = 0; ui < USERS; ui = ui + 1)
+                    if (ui < n_users && (!idx_users_read[ui] || !idx_users_wrote[ui])) begin
+                        bad = bad + 1;
+                        $display("IDXHBM_USER_FAIL user=%0d read=%0d wrote=%0d", ui,
+                                 idx_users_read[ui], idx_users_wrote[ui]);
+                    end
+                $display("IDXHBM_USERS read=%b wrote=%b", idx_users_read, idx_users_wrote);
             end
             $display("HDC41_ARRAY nodes=%0d users=%0d generated=%0d mismatches=%0d logit_mismatch=%0d lm_head_checks=%0d state_mismatch=%0d total_cycles=%0d",
                      NODES, n_users, gen_total, bad, lg_bad, lg_checked, st_bad, end_cyc);

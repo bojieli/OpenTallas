@@ -65,6 +65,7 @@ MG_SIDE, MG_HEAD, DESTS = 32, 48, 64
 #        channel-delay sweep in cycles per link/half-link).
 CONFIGS = {
     "b2_p2p": (2, 0, False, "relay", "p2p", 1, (), 0, 3, 1, (60,)),
+    "b2_p2p_u2": (2, 0, False, "relay", "p2p", 2, (), 0, 3, 1, (60,)),
     "b3_h2_switch_stall": (3, 2, True, "mcast", "switch", 2, (), 10, 2, 1, (30, 109, 228)),
 }
 RES = re.compile(r"HDC41_ARRAY nodes=(\d+) users=(\d+) generated=(\d+) mismatches=(\d+) logit_mismatch=(\d+) "
@@ -341,7 +342,8 @@ def run(names, scratch: Path) -> dict:
         "claim_boundary": ("All-unit X_HE=1 X_ME=1 X_ATT=1 X_IDX=2 X_SEL=1 X_EG=1 "
                            "X_SU=1 W_HBM=1; per-package QE qstream and timed HBM model, "
                            "bounded pooled index-key writer/read bridge and four timed HBM stack models; "
-                           "one-user reduced array gate. Behavioral memories, link PHY stand-in, "
+                           "reduced array gate with per-user pooled index-key HBM sectors. "
+                           "Behavioral memories, link PHY stand-in, "
                            "and bit-equivalent simulation-only FP DPI units; "
                            "no full-model or production-rate claim." if ALL_UNIT else
                            "functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of "
@@ -368,11 +370,11 @@ def main() -> int:
                         help="with --scratch: keep builds and run logs made from the same sources")
     parser.add_argument("--all-unit", action="store_true", help="all adopted V4.1x X units and timed weight/index HBM")
     args = parser.parse_args()
-    if args.all_unit and args.only != ["b2_p2p"]:
-        parser.error("--all-unit currently requires --only b2_p2p (multiuser key namespace is a later gate)")
+    if args.all_unit and args.only not in (["b2_p2p"], ["b2_p2p_u2"]):
+        parser.error("--all-unit requires --only b2_p2p or --only b2_p2p_u2")
     global REUSE
     REUSE = args.reuse
-    names = args.only or list(CONFIGS)
+    names = args.only or [n for n in CONFIGS if n != "b2_p2p_u2"]
     with tempfile.TemporaryDirectory() as tmp:
         scratch = args.scratch or Path(tmp)
         scratch.mkdir(parents=True, exist_ok=True)
