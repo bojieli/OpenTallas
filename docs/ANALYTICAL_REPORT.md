@@ -589,6 +589,20 @@ implements that specialisation on the reduced Qwen3 vehicle.
   V reads from previously written sectors and 128 <!-- figure: 128 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#physical_hbm.k_flush_writes" name="Qwen vector K-tail physical HBM flush writes" -->
   K-tail flush writes. The one-cycle behavioral HBM model makes this a
   functional sequence result, not a calibrated token-rate measurement.
+- Repeating those 18 steps with the existing four-pseudo-channel timing HBM
+  controller on the KV path also matches every token, logit, vector-memory
+  word, KV word, and physically written sector. Weights remain in synchronous
+  ROM. The sum of per-token core cycles is 492,687 <!-- figure: 492687 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#summary.total_cycles" name="Qwen vector timed-KV-HBM multi-step core cycles" -->
+  under this model, versus 439,897 <!-- figure: 439897 src="results/rtl/hdc_qwen_vector_system_multi_g4sw16.json#summary.total_cycles" name="Qwen vector one-cycle-KV-HBM comparison core cycles" -->
+  with the one-cycle KV model above. Both sums exclude the autonomous
+  pre-token K-tail boot.
+  The HBM controller completes 1,200 <!-- figure: 1200 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#hbm_timing.completed_reads" name="Qwen timed-KV-HBM completed sector reads" -->
+  sector reads and 272 <!-- figure: 272 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#physical_hbm.committed_writes" name="Qwen timed-KV-HBM committed sector writes" -->
+  writes, with 496 <!-- figure: 496 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#hbm_timing.refreshes" name="Qwen timed-KV-HBM modeled refreshes" -->
+  modeled refreshes and a 57,073 ps <!-- figure: 57073 src="results/rtl/hdc_qwen_vector_system_timed_g4sw16.json#hbm_timing.read_latency_avg_ps" name="Qwen timed-KV-HBM modeled average read latency ps" -->
+  average read latency. The DRAM timings and controller latency are model
+  assumptions; this gate does not establish physical bandwidth, chip energy,
+  or a shipped-model token rate.
 - The scalar weight-HBM configuration also passes a complete split-aware
   position-15 token with weights and KV in the behavioral HBM model at
   30,539 cycles. <!-- figure: 30539 src="results/rtl/hdc_qwen_whbm_split_single.json#cycles" name="Qwen split-aware scalar weight-HBM single-token cycles" -->
