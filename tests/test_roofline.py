@@ -702,6 +702,10 @@ ASSUMED_INPUTS = frozenset(
         "links.rom_wafer_express.wire_track_pitch_um",
         "links.rom_wafer_express.wire_track_share",
         "serial_latency.hardware_links.rom_wafer_express",
+        # The normative-source check (2026-09-27): the two rack overheads no
+        # primary source publishes.
+        "power.rack_overheads.fan_fraction_of_it",
+        "power.rack_overheads.switch_tray_w",
     }
 )
 

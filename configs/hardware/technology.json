@@ -105,48 +105,54 @@
       "range_high": 1.1776e-10,
       "range_low": 9.344e-11,
       "source": "https://escholarship.org/content/qt6189368s/qt6189368s.pdf -- Measuring the Energy of Data Movement on Modern GPU Systems, SC 2025, doi:10.1145/3712285.3759815, Table 3",
-      "value": 1.0488e-10
+      "value": 1.0488e-10,
+      "validated_2026_09_27": "KEPT (conservative). 0.105 nJ/B = 13 pJ/bit is a SYSTEM-level measurement (A100, includes the GPU-side path). The device alone is 'approximately 3.97 pJ/bit' incl. I/O 0.80 (O'Connor MICRO 2017); 13 pJ/bit x 1.2 TB/s would be ~126 W per stack, which no stack dissipates, so do not label it stack power. It over-charges both the ROM designs (KV only) and the HBM comparator equally. Record: results/arch/power_assumptions.json."
     },
     "mac_energy_j_per_op": {
       "bf16": {
         "grade": "assumed",
         "note": "0.33 pJ per operation for a 16-bit multiply-accumulate datapath. WAS 1e-13, which is 3.3x below the MEASURED datapath plane of a shipping N7 tensor core and 2.1x below Horowitz's 45 nm FP16 MAC -- a 7 nm number below a 45 nm one. Antepara et al., SC'25 Table 3 measures the A100 Matrix-FP16 path at control 0.37 / datapath 0.33 / total 0.70 pJ/FLOP. GRADED `assumed`, NOT `derived`, AND THE REASON IS THE WHOLE POINT: taking the datapath plane and dropping the control plane has no published basis -- a real MAC array pays some of its own instruction issue, operand collection and scheduling -- so this value stands on a BRACKET (1.3e-13 datapath-only at a better node, 7.0e-13 total) and not on a derivation. Sweep 1.3e-13 to 7.0e-13. DIRECTION: raises arithmetic energy on BOTH sides; Qwen3-8B is 100% bf16 in these studies and no other model uses it.",
         "range_high": 7e-13,
-        "range_low": 1.3e-13,
-        "source": "Antepara, Williams et al., Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 3 (A100 Matrix-FP16: control 0.37 / datapath 0.33 / total 0.70 pJ/FLOP) ; Horowitz, Computing's Energy Problem, ISSCC 2014, for the 45 nm cross-check",
-        "value": 3.3e-13
+        "range_low": 3.3e-13,
+        "source": "Antepara, Williams et al., Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 3 (A100 Matrix-FP16: control 0.37 / datapath 0.33 / total 0.70 pJ/FLOP) ; Horowitz, Computing's Energy Problem, ISSCC 2014, for the 45 nm cross-check ; Jouppi et al., ISCA 2021, doi:10.1109/ISCA52012.2021.00010, Table 2",
+        "value": 4.1e-13,
+        "validated_2026_09_27": "CORRECTED 2026-09-27 (user directive: conservative production value when sources disagree). WAS 3.3e-13 (1.3e-13-7e-13). Jouppi et al. ISCA 2021 Table 2 (7 nm): 'BFloat 16 [mult] 0.210', 'IEEE FP 32 [add] 0.380' pJ = 0.59 pJ per MAC with FP32 accumulate, x0.7 to N5 = 0.41 pJ. Record: results/arch/power_assumptions.json."
       },
       "fp32": {
         "grade": "assumed",
         "note": "1.09 pJ per operation for a 32-bit floating-point datapath. WAS 4e-13. Same SC'25 table times Horowitz's 45 nm FP32-to-FP16 MAC ratio, and the arithmetic is stated so it can be checked: HOROWITZ'S 45 nm 32-bit float MULT IS 3.7 pJ, NOT 4 -- verified through EIE (arXiv:1602.01528) Table I, on which Horowitz is a co-author -- so the FP32 MAC is 4.6 pJ and the FP32/FP16 ratio is 3.29, giving 3.3e-13 x 3.29 = 1.09e-12. The 1.2e-12 first proposed is 6-14% high on its own formula. Sweep 4e-13 (the incumbent, kept as the floor) to 1.07e-11 (the A100 Vector-FP32 TOTAL in the same table); the gap between 1.09e-12 and 1.07e-11 is the honest measure of how much of a GPU FP32 FLOP is not arithmetic. Carries 0.06% of DeepSeek-V4-Pro's operations and nothing else in either study.",
         "range_high": 1.07e-11,
-        "range_low": 4e-13,
-        "source": "Antepara, Williams et al., SC'25, doi:10.1145/3712285.3759815, Table 3 ; Horowitz, Computing's Energy Problem, ISSCC 2014, as reproduced in Han et al., EIE, arXiv:1602.01528, Table I (45 nm 32-bit float MULT 3.7 pJ, ADD 0.9 pJ)",
-        "value": 1.09e-12
+        "range_low": 1.09e-12,
+        "source": "Antepara, Williams et al., SC'25, doi:10.1145/3712285.3759815, Table 3 ; Horowitz, Computing's Energy Problem, ISSCC 2014, as reproduced in Han et al., EIE, arXiv:1602.01528, Table I (45 nm 32-bit float MULT 3.7 pJ, ADD 0.9 pJ) ; Jouppi et al., ISCA 2021, doi:10.1109/ISCA52012.2021.00010, Table 2",
+        "value": 1.18e-12,
+        "validated_2026_09_27": "CORRECTED 2026-09-27 (user directive: conservative production value when sources disagree). WAS 1.09e-12 (4e-13-1.07e-11). Jouppi et al. ISCA 2021 Table 2: 'IEEE FP 32 [mult] 1.310', '[add] 0.380' = 1.69 pJ at 7 nm, x0.7 = 1.18 pJ at N5. Record: results/arch/power_assumptions.json."
       },
       "fp4": {
         "grade": "assumed",
         "note": "0.023 pJ per operation for a 4-bit multiply-accumulate datapath. WAS 1.5e-14. Evidentially the cleanest leg in the ladder: Keller et al. Table 2 measures INT4 at 91.1 TOPS/W against INT8 at 39.1 TOPS/W on ONE FABRICATED DIE, both at 0.46 V, both at 50% density, on two dedicated datapaths -- so process, PVT, leakage and dataflow all cancel and the energy ratio is 0.4292. More conservative than argued: the pure-datapath ratio is nearer 0.38. LIKE fp8, IT MOVES NOTHING -- zero operations at every point in either study. Sweep 1.5e-14 (the incumbent) to 2.9e-14.",
-        "range_high": 2.9e-14,
-        "range_low": 1.5e-14,
-        "source": "Keller et al., 2022 Symposium on VLSI Technology and Circuits, Digest pp. 16-17, Table 2 (fabricated TSMC 5nm: INT4 91.1 and INT8 39.1 TOPS/W at 0.46 V), https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
-        "value": 2.3e-14
+        "range_high": 1e-13,
+        "range_low": 2.3e-14,
+        "source": "Keller et al., 2022 Symposium on VLSI Technology and Circuits, Digest pp. 16-17, Table 2 (fabricated TSMC 5nm: INT4 91.1 and INT8 39.1 TOPS/W at 0.46 V), https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF ; Keller et al., JSSC 2023, doi:10.1109/JSSC.2023.3234893 ; Dally, Hot Chips 2023 keynote slides",
+        "value": 5.2e-14,
+        "validated_2026_09_27": "CORRECTED 2026-09-27 (user directive: conservative production value when sources disagree). WAS 2.3e-14 (1.5e-14-2.9e-14). The 0.023 pJ point is Keller et al.'s best case: '95.6 TOPS/W at 0.46 V on a 4-bit benchmarking layer' with '50%-dense 4-bit input' at the bottom of '152 MHz - 1760 MHz'. At nominal voltage the same die gives 'At a nominal voltage of 0.67 V ... 38.7 TOPS/W' = 0.052 pJ per MAC (2 ops/MAC). A 1 GHz design runs near nominal. Record: results/arch/power_assumptions.json."
       },
       "fp8": {
         "grade": "assumed",
         "note": "0.054 pJ per operation for an 8-bit multiply-accumulate datapath. WAS 3e-14. Same SC'25 bf16 plane times Horowitz's INT8/FP16 ratio, cross-checked against Keller et al. (2022 Symp. VLSI Tech. & Circuits, Table 2), a FABRICATED TSMC 5nm die measuring INT8 at 39.1 TOPS/W at 0.46 V. Best-sourced rung in the ladder AND IT MOVES NOTHING IN EITHER STUDY: `points[].operations_by_canonical_format` charges fp8 on ZERO operations at every point. Sweep 3e-14 (the incumbent) to 6.8e-14.",
-        "range_high": 6.8e-14,
-        "range_low": 3e-14,
-        "source": "Antepara, Williams et al., SC'25, doi:10.1145/3712285.3759815, Table 3 ; Keller et al., A 95.6-TOPS/W Deep Learning Inference Accelerator with Per-Vector Scaled 4-bit Quantization in 5nm, 2022 Symposium on VLSI Technology and Circuits, Digest pp. 16-17, Table 2, https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
-        "value": 5.4e-14
+        "range_high": 2.7e-13,
+        "range_low": 5.4e-14,
+        "source": "Antepara, Williams et al., SC'25, doi:10.1145/3712285.3759815, Table 3 ; Keller et al., A 95.6-TOPS/W Deep Learning Inference Accelerator with Per-Vector Scaled 4-bit Quantization in 5nm, 2022 Symposium on VLSI Technology and Circuits, Digest pp. 16-17, Table 2, https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF ; Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, doi:10.1109/ISCA52012.2021.00010, Table 2 ; Yeap et al. (TSMC), 5nm CMOS, IEDM 2020, doi:10.1109/IEDM13553.2020.9372009",
+        "value": 1.3e-13,
+        "validated_2026_09_27": "CORRECTED 2026-09-27 (user directive: conservative production value when sources disagree). WAS 5.4e-14 (3e-14-6.8e-14). Keller's INT8 39.1 TOPS/W is also the 0.46 V point (0.051 pJ/MAC); the same 2.47x nominal-voltage factor gives 0.126 pJ/MAC for INT8, and FP8 costs at least INT8. Cross-check at 7 nm (Jouppi et al., ISCA 2021 Table 2): 'Int 8 [mult] 0.070', 'Int 32 [add] 0.030' pJ -> 0.10 pJ, x0.7 to N5 (TSMC IEDM 2020: '30% power reduction'). Whole-chip ceilings: B200 dense FP8 0.44 pJ/MAC at 1,000 W; MTIA v2 INT8 0.51 pJ/MAC at 90 W TDP. Record: results/arch/power_assumptions.json."
       },
       "w4a8": {
         "grade": "assumed",
         "note": "0.039 pJ per operation for a 4-bit-weight by 8-bit-activation datapath, AND IT IS AN INTERVAL RATHER THAN A VALUE. THIS RUNG CARRIES 99.9% OF THIS STUDY'S OPERATIONS AND HAS NO SOURCE OF ANY KIND: DeepSeek-V4-Pro-0813 is 99.94% w4a8, DeepSeek-V4-Flash is 99.86% w4a8, and no published or measured mixed 4-bit-weight by 8-bit-activation MAC energy exists at any node. The interval [2.33e-14, 5.42e-14] is bounded below by the fp4 rung and above by the fp8 rung, which share the accumulator; the point 3.9e-14 is their arithmetic mean and is a MIDPOINT, not an estimate. Read the interval and not the point. The evidence in this whole domain was spent almost exactly inversely to where it matters -- fp8 and fp4, the two rungs with fabricated silicon behind them, are charged on zero operations.",
-        "range_high": 5.42e-14,
-        "range_low": 2.33e-14,
-        "source": "no source of any kind exists for a mixed 4-bit-weight x 8-bit-activation MAC energy; the interval is bounded by this file's own fp4 and fp8 rungs, which share the accumulator",
-        "value": 3.9e-14
+        "range_high": 1.3e-13,
+        "range_low": 3.9e-14,
+        "source": "no source of any kind exists for a mixed 4-bit-weight x 8-bit-activation MAC energy; the interval is bounded by this file's own fp4 and fp8 rungs, which share the accumulator ; this file's corrected fp4 and fp8 entries",
+        "value": 9e-14,
+        "validated_2026_09_27": "CORRECTED 2026-09-27 (user directive: conservative production value when sources disagree). WAS 3.9e-14 (2.33e-14-5.42e-14). Interpolates the corrected fp4 (0.052) and fp8 (0.13) points, as the entry always has. Record: results/arch/power_assumptions.json."
       }
     },
     "operand_delivery_j_per_byte": {
@@ -172,6 +178,35 @@
       "range_low": 1.44e-12,
       "source": "Antepara, Williams et al., Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 3 (A100 L1: control 1.26 / datapath 0.33 / total 1.59 pJ/bit; MI250X L1 datapath 0.18 pJ/bit)",
       "value": 2.6e-12
+    },
+    "link_j_per_bit": {
+      "purpose": "Energy per bit moved on each link class (NEW 2026-09-27, normative/peer-reviewed check). Record: results/arch/power_assumptions.json.",
+      "board_serdes_112g": {
+        "grade": "published",
+        "value": 6.5e-12,
+        "range_low": 5.6e-12,
+        "range_high": 7.5e-12,
+        "note": "112G PAM4 with DSP. The only primary LR-class figure including DSP: 'a total power efficiency of 5.6pJ/b per lane including analog and DSP at 112Gb/s' (5 nm, VLSI 2022); at 7 nm the analog alone is '602 mW per channel, excluding DSP' (JSSC 2021) = 5.4 pJ/b, so LR with DSP at 7 nm is ~6-7 pJ/b. WAS 5 pJ/b (3.5-7) in the V4.1 budget/rack: optimistic for LR; MR measured 2.29 pJ/b (ISSCC 2022, excl. FEC/DSP) and OIF VSR '< 3 pJ/bit likely'. RS FEC adds ~0.9 pJ/b at 40 nm (RS(528,514) '90 mW', IEEE P802.3bj gustlin_01_0312 slide 6), less at N5. Always-on (ungated) lane power at 112 Gb/s = 0.73 W.",
+        "source": "VLSI 2022 doi:10.1109/VLSITechnologyandCir46769.2022.9830304 ; JSSC Jan 2021 doi:10.1109/JSSC.2020.3024261 ; ISSCC 2022 doi:10.1109/ISSCC42614.2022.9731591"
+      },
+      "ucie_advanced": {
+        "grade": "published",
+        "value": 5e-13,
+        "range_low": 2.9e-13,
+        "range_high": 6e-13,
+        "idle_fraction_of_peak": 0.15,
+        "note": "UCIe Hot Chips 2023 electrical summary: 'Power Efficiency Target (pJ/b) ... 0.3-0.6 [Adv 16] 0.3-0.6 [Adv 24/32]'; 'Idle Power (% of peak) 15%'. Measured best case: 'exhibit 0.29 pJ/bit power efficiency with 5.27Tb/s/mm ... and 3.5 ns measured FDI-to-FDI latency' (3 nm CoWoS, 16 Gb/s/pin, JSSC 2026). WAS 0.29 pJ/b from a secondary summary: the best case, optimistic for an N5/N6 die; 0.5 pJ/b is the conservative spec-range value.",
+        "source": "UCIe Consortium, Hot Chips 2023 tutorial, Electrical Summary ; JSSC 2026 doi:10.1109/JSSC.2026.3651425"
+      },
+      "ucie_standard": {
+        "grade": "published",
+        "value": 1e-12,
+        "range_low": 5.2e-13,
+        "range_high": 1.25e-12,
+        "idle_fraction_of_peak": 0.15,
+        "note": "Spec target 0.5-1 (16G), 0.75-1.25 (24/32G) pJ/b; measured 0.52 (3 nm, 16G, 25 mm, JSSC 2026), 0.58 (22 nm, 32G, CICC 2026), 1.2 (48G, 30 mm, ISSCC 2026).",
+        "source": "UCIe Hot Chips 2023 tutorial ; JSSC 2026 doi:10.1109/JSSC.2026.3651425 ; CICC 2026 doi:10.1109/CICC65509.2026.11509556 ; ISSCC 2026 doi:10.1109/ISSCC49663.2026.11409120"
+      }
     }
   },
   "floorplan": {
@@ -1065,9 +1100,10 @@
         "grade": "assumed",
         "note": "0.06 W per mm2 of STANDARD-CELL (logic) region at a 7 nm-class node, at 0.70-0.75 V and 85-105 C junction, on a mix weighted toward RVT. THE UNIT IS LOAD-BEARING AND WAS THE SUBMISSION'S worst defect: it is per mm2 of standard-cell region, NOT per mm2 of die, so on a part that is mostly array this term is charged over the logic only. VERIFIER-CORRECTED, 2x UP from the submitted 0.03. The chain is: an executed ASAP7 place-and-route base of 0.74e-3 W/mm2 of 100%-filled cell area at 25 C/0.70 V typical (from this repository's own results/physical_abi3/asap7 metadata, cross-checked three ways against the liberty's 1 pW leakage unit and against real-scale ASAP7 cell areas), times a threshold-flavour mix, a temperature factor and a voltage factor. The correction is in the threshold ladder: the submission put RELATIVE per-flavour offsets (SLVT 0, LVT 0.071, RVT 0.142 V) inside an exponential that needs the ABSOLUTE saturation threshold, and a device with Vth = 0 is not off. That ladder predicts a 25->100 C ratio of 12.69x at typical/nominal, which is BELOW the 13.82x ASAP7's own SS liberty measures at a slower process AND a lower voltage -- impossible. Re-anchoring to absolute Vth_sat (RVT 0.24, LVT 0.169, SLVT 0.098 V, the lowest ladder clearing that floor) moves the combined mix x T x V factor from 14.8 to 25.3 at the low end and 62.4 to 114.8 at the point. The submission's structural claim that leakier flavours scale less steeply, so mix and temperature partly cancel, is separately FALSIFIED by the same library: measured INVx1 FF/TT ratios are 0.638 / 0.546 / 0.646 across RVT/LVT/SLVT -- flat and non-monotonic -- where the model needs a 1.5x spread. The high end 0.20 is CAPPED BY MEASUREMENT, NOT BY THE CHAIN: the chain's own 40/40/20 mix at 105 C and 0.85 V gives 0.43 W/mm2, which is 86% of thermal.cooling_limit_w_per_mm2 and is not physical for a shipping part; 0.19-0.20 is where an A100 lands at ~39% of TDP, the top of ReGate's measured 30-72% static-power band. Grade stays `assumed` and correctly so: ASAP7 is a predictive academic PDK, no datacentre die's Vt mix is published anywhere, and the absolute threshold ladder is inferred from Ioff-per-micron rather than read off a datasheet. WHAT WOULD SETTLE IT: a foundry N7/N6 leakage-per-mm2 figure at a stated PVT, or an ASAP7 SRAM-flavour and LVT/SLVT SS liberty.",
         "range_high": 0.2,
-        "range_low": 0.011,
-        "source": "ASAP7 7.5-track predictive PDK NLDM libraries (RVT/LVT/SLVT TT and SS corners) and this repository's executed ASAP7 place-and-route leakage at results/physical_abi3/asap7/add_bf16_sram_engine/pnr_artifacts/metadata.json ; ReGate, MICRO 2025, arXiv:2508.02536, which reports static power at 30-72% of NPU energy",
-        "value": 0.06
+        "range_low": 0.06,
+        "source": "ASAP7 7.5-track predictive PDK NLDM libraries (RVT/LVT/SLVT TT and SS corners) and this repository's executed ASAP7 place-and-route leakage at results/physical_abi3/asap7/add_bf16_sram_engine/pnr_artifacts/metadata.json ; ReGate, MICRO 2025, arXiv:2508.02536, which reports static power at 30-72% of NPU energy ; arXiv:2605.23918 Table 2 ; Jouppi et al., ISCA 2021 Table 1 ; Jouppi et al., TPU v4, ISCA 2023, arXiv:2304.01433 Table 4",
+        "value": 0.1,
+        "validated_2026_09_27": "CORRECTED 2026-09-27 (user directive: conservative production value when sources disagree). WAS 0.06 (0.011-0.2). No N5 leakage density is published per mm2. The only production anchors are whole-chip IDLE readings, taken cool: H100 'Bare idle: 71.8 W' at 345 MHz over 814 mm2 = 0.088 W/mm2 including HBM3 and regulators (arXiv:2605.23918 Table 2); TPUv4i '55' W idle on a '< 400' mm2 7 nm die = >= 0.14 W/mm2 (Jouppi ISCA 2021 Table 1); TPUv4 'Idle ... 90' W on '<600 mm2' incl. HBM = >= 0.15 W/mm2 (arXiv:2304.01433 Table 4). An idle T4 'at the lowest clock rate ran at 35C' (Jouppi 2021), so hot-junction leakage sits above these. 0.06 (the ASAP7-derived point) is kept as the low end; 0.10 W/mm2 of logic is the conservative charge (~53 W on a ~525 mm2 logic region instead of ~31.5 W). Record: results/arch/power_assumptions.json."
       },
       "rom_array": {
         "grade": "assumed",
@@ -1084,6 +1120,84 @@
         "range_low": 0.001,
         "source": "TSMC N7 0.027 um2 6T HD bitcell (this file, nodes.N7) at sram.array_efficiency, times a per-cell off current of 0.05-1.0 nA at 0.8 V; no vendor SRAM macro leakage published for the target arrays",
         "value": 0.005
+      }
+    },
+    "memory_interface_active_j_per_bit": {
+      "grade": "published",
+      "value": 8e-13,
+      "range_low": 7.7e-13,
+      "range_high": 1e-12,
+      "note": "NEW 2026-09-27. HBM I/O energy (both ends, 50% toggle) per bit moved: O'Connor et al. MICRO 2017 Table 3 'I/O (pJ/b)* 0.80' (HBM2) and '0.77' (QB-HBM). At an HBM3E stack's 9.6 Tb/s this is ~7.7 W per stack at full bandwidth, against the 2.8 W per stack the V4.1 budget charges as 'hbm_interface_w_per_die' 11.2 W (= 4 x 2.8): that figure is an IDLE value (memory_interface_idle_w_per_stack) and is optimistic as an active interface power by ~2.7x at full bandwidth. Charge idle (2.8 W, unverified) + 0.8 pJ/b x bits moved; the worst case (saturated KV sweep) is 7.7 W/stack, 30.8 W per 4-stack die. No vendor publishes HBM3E pJ/bit or W/stack (Micron/SK hynix/Samsung give only relative claims). Record: results/arch/power_assumptions.json.",
+      "source": "O'Connor et al., Fine-Grained DRAM: Energy-Efficient DRAM for Extreme Bandwidth Systems, MICRO 2017, s1-2 and Table 3 ('The energy to access a bit in HBM2 is approximately 3.97 pJ/bit'), https://d1qx31qr3h6wln.cloudfront.net/publications/MICRO_2017_Fine_Grained_DRAM.pdf"
+    },
+    "rack_overheads": {
+      "purpose": "Conversion and facility overheads between die power and wall power (NEW 2026-09-27; conservative production values). Record: results/arch/power_assumptions.json.",
+      "psu_efficiency": {
+        "grade": "published",
+        "value": 0.96,
+        "range_low": 0.91,
+        "range_high": 0.975,
+        "note": "80 PLUS Titanium (230 V internal redundant) 10/20/50/100% load: 'N.D. | 90% | 94% | 96% | 91%'. WAS 0.975 (a vendor peak, not reached in a primary source).",
+        "source": "https://en.wikipedia.org/wiki/80_Plus -- 80 PLUS Titanium table (https://en.wikipedia.org/wiki/80_Plus, citing CLEAResult) ; NVIDIA DGX GB200 user guide s1.4 (8 x 33 kW shelves, N+N)"
+      },
+      "vr_efficiency_48v_to_core": {
+        "grade": "published",
+        "value": 0.87,
+        "range_low": 0.6,
+        "range_high": 0.9,
+        "note": "48 V -> 12 V bus converter 'Efficiency ... 95.6 %' at full load (Vicor NBM2317, '97.9% peak'), times ~0.91 for the 12 V -> core multiphase stage = 0.87. The 0.90 used before is the edge: 'The reference architecture (A0) is modeled with a 90% efficient 48V-to-1V converter' and 'over 30% power loss has recently been reported in state-of-the-art AI accelerators' (arXiv:2309.10141).",
+        "source": "https://arxiv.org/abs/2309.10141 (2023) -- Vicor NBM2317S60D1580T0R datasheet ; arXiv:2309.10141 s2-3"
+      },
+      "cdu_fraction_of_it": {
+        "grade": "published",
+        "value": 0.006,
+        "note": "CoolIT CHx2000 row CDU: 'Cooling Capacity: 2000 kW', 'Power Consumption: 12.24 kW' (rated). In-rack CDU power not published.",
+        "source": "https://www.coolitsystems.com/chx2000/"
+      },
+      "fan_fraction_of_it": {
+        "grade": "assumed",
+        "value": 0.03,
+        "range_low": 0.01,
+        "range_high": 0.06,
+        "note": "'fans contribute only a few percent' (H100 air nodes, arXiv:2512.03024); liquid-cooled trays and air-cooled PSUs keep fans. No primary number for a cold-plate tray.",
+        "source": "arXiv:2512.03024"
+      },
+      "switch_tray_w": {
+        "grade": "assumed",
+        "value": 1500.0,
+        "note": "UNVERIFIED: no primary power figure for a 51.2 Tb/s switch tray (NVIDIA gives none for the NVLink switch tray either).",
+        "source": "none found"
+      }
+    },
+    "gpu_reference_power": {
+      "purpose": "Measured or vendor-stated GPU power for the comparator rows (NEW 2026-09-27). Record: results/arch/power_assumptions.json.",
+      "b200_tdp_nvl72_w": {
+        "grade": "published",
+        "value": 1200.0,
+        "note": "'Max Thermal Design Power (TDP) Configurable up to 1,200 W' (GB200 NVL72); 1,000 W HGX B200.",
+        "source": "NVIDIA Blackwell datasheet (2025-10-28)"
+      },
+      "nvl72_rack_w": {
+        "grade": "published",
+        "value": 132000.0,
+        "range_low": 120000.0,
+        "range_high": 135000.0,
+        "note": "NVIDIA: 'The rack power consumption is approximately 120kW'; Supermicro: 'total power 132kW', 'Operating Power 125kW to 135kW'.",
+        "source": "NVIDIA DGX GB200 user guide s1.4 ; Supermicro SuperCluster GB200 NVL72 datasheet (2025-09-12)"
+      },
+      "b200_measured_wall_w_per_gpu_saturated": {
+        "grade": "measured",
+        "value": 1300.0,
+        "note": "MLPerf Inference v5.1, 8 x B200 (Lenovo SR680a V3, ID 5.1-0061), Llama-2-70B Offline: 'Power_Result: 10400.9988793425' W at the wall = 1.30 kW per GPU all-in.",
+        "source": "https://github.com/mlcommons/inference_results_v5.1 (MLPerf Inference v5.1, 2025) -- mlcommons/inference_results_v5.1 summary_results.json"
+      },
+      "b200_measured_decode_w": {
+        "grade": "measured",
+        "value": 689.0,
+        "range_low": 567.0,
+        "range_high": 994.0,
+        "note": "'Decode natural draw held at 688-689 W' (disaggregated decode lane, not batch 1).",
+        "source": "https://arxiv.org/abs/2609.11133 (2026) -- arXiv:2609.11133"
       }
     }
   },

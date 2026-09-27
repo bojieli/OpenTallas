@@ -574,24 +574,45 @@ def evaluate():
     return out
 
 
-# Production power inputs (user directive: the conservative PRODUCTION value wherever sources disagree), checked
-# against normative and production sources by worktree-agent-adae6788cbf2f3f86 and recorded, each with its
-# quoted source, in configs/hardware/technology.json there (power.*, energy.*; record
-# results/arch/power_assumptions.json).  They supersede the ASAP7-measured basis above for every energy,
-# die-, package- and rack-power figure; the measured basis stays as the sign-off cross-check.
-PROD = dict(
-    mac_j=dict(w4a8=0.09e-12, fp8=0.13e-12, bf16=0.41e-12, fp32=1.18e-12, fp4=0.052e-12),  # Jouppi ISCA'21 T2 x0.7
-    leak_w_mm2=dict(logic=0.10, rom=0.0067, sram=0.005),           # H100 idle 71.8 W / 814 mm2; TPUv4i
-    clock_j_mm2_cycle=8.5e-11, clock_mult=dict(logic=1.0, rom=0.15, sram=0.15),
-    rom_read_j_b=0.08e-12, delivery_j_b=0.23e-12, sram_j_b=2.6e-12,
-    hbm_core_j_b=1.0488e-10,                                        # 13.1 pJ/bit, system-level
-    hbm_if_j_b=0.8e-12 * 8,                                         # O'Connor MICRO'17 T3: 0.8 pJ/bit active I/O
-    hbm_idle_w_stack=2.8,
-    psu=0.96, vr=0.87, cdu=0.006, fans=0.03, margin=1.2,
-    b200=dict(tdp_hgx_w=1000.0, tdp_nvl72_w=1200.0, wall_saturated_w=1300.0, decode_measured_w=689.0,
-              hbm_bytes_s=8.0e12, efficiency=0.90),
-)
+# Production power inputs (user directive: the conservative PRODUCTION value wherever sources disagree), read
+# from configs/hardware/technology.json, where each entry quotes its normative or production source (checked
+# on worktree-agent-adae6788cbf2f3f86, 16272bbf; record results/arch/power_assumptions.json there).  They
+# supersede the ASAP7-measured basis above for every energy, die-, package- and rack-power figure; the
+# measured basis stays as the sign-off cross-check.  Rulings: logic leakage applies to logic area only (the
+# ROM and SRAM arrays keep their own densities); the 0.8 pJ/bit HBM interface is INSIDE the 13.1 pJ/bit
+# system figure -- it is charged to the die and the rest to the stacks, never added on top.
+TECH = ROOT / "configs/hardware/technology.json"
 
+
+def _prod_inputs():
+    t = json.loads(TECH.read_text())
+    v = lambda d: d["value"]                                   # noqa: E731
+    e, pw, b = t["energy"], t["power"], t["reference_parts"]["b200_sxm"]
+    mac = {k: v(e["mac_energy_j_per_op"][k]) for k in ("w4a8", "fp8", "bf16", "fp32", "fp4")}
+    leak, cm = pw["static_leakage_w_per_mm2"], pw["clock_region_multiplier"]
+    ro, gp = pw["rack_overheads"], pw["gpu_reference_power"]
+    hbm_sys = v(e["hbm_j_per_byte"])
+    hbm_if = v(pw["memory_interface_active_j_per_bit"]) * 8
+    return dict(
+        mac_j=mac,
+        leak_w_mm2=dict(logic=v(leak["logic"]), rom=v(leak["rom_array"]), sram=v(leak["sram_array"])),
+        clock_j_mm2_cycle=v(pw["clock_energy_j_per_mm2_per_cycle"]),
+        clock_mult=dict(logic=v(cm["logic"]), rom=v(cm["rom_array"]), sram=v(cm["sram_array"])),
+        rom_read_j_b=v(e["rom_read_j_per_byte"]), delivery_j_b=v(e["operand_delivery_j_per_byte"]),
+        sram_j_b=v(e["sram_read_j_per_byte"]),
+        hbm_system_j_b=hbm_sys, hbm_if_j_b=hbm_if, hbm_core_j_b=hbm_sys - hbm_if,
+        hbm_idle_w_stack=v(pw["memory_interface_idle_w_per_stack"]),
+        psu=v(ro["psu_efficiency"]), vr=v(ro["vr_efficiency_48v_to_core"]), cdu=v(ro["cdu_fraction_of_it"]),
+        fans=v(ro["fan_fraction_of_it"]), margin=1.2,
+        link_j_bit={k: v(x) for k, x in e["link_j_per_bit"].items() if isinstance(x, dict) and "value" in x},
+        b200=dict(tdp_hgx_w=v(b["power_w"]), tdp_nvl72_w=v(gp["b200_tdp_nvl72_w"]),
+                  wall_saturated_w=v(gp["b200_measured_wall_w_per_gpu_saturated"]),
+                  decode_measured_w=v(gp["b200_measured_decode_w"]),
+                  hbm_bytes_s=v(b["hbm_bandwidth_bytes_s"]), efficiency=v(t["efficiencies"]["hbm_bandwidth"])),
+    )
+
+
+PROD = _prod_inputs()
 
 def _rom_areas(out, copies_on):
     """Logic / ROM / SRAM mm2 of the ROM reticle (area ledger); idle lane copies clock-gated."""
@@ -721,9 +742,10 @@ def power_production(out, clock):
                      "MLPerf v5.1) is the upper bound", **{k: v for k, v in g.items()})
     r1 = rom["ar_batch1"]["energy_per_token_mj"]
     h1 = hbm["batch1"]["energy_per_token_mj"]
-    return dict(basis="production (conservative) inputs: configs/hardware/technology.json on "
-                      "worktree-agent-adae6788cbf2f3f86 (each entry quotes its source); supersedes the "
-                      "ASAP7-measured basis of `power` and `batch` for energy and power",
+    return dict(basis="production (conservative) inputs read from configs/hardware/technology.json (each entry "
+                      "quotes its source); supersedes the ASAP7-measured basis of `power` and `batch` for energy "
+                      "and power; the 0.8 pJ/bit HBM interface is inside the 13.1 pJ/bit system figure (die "
+                      "share), not added to it",
                 inputs=PROD, rom=rom, hbm_comparator=hbm, b200=gpu,
                 worst_case=dict(worst, basis="saturated hardwired schedule: every lane copy MACs every cycle (BF16), "
                                              "the 1,024-lane stream unit and the ROM read path run every cycle, "

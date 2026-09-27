@@ -2802,7 +2802,7 @@
   ]
  },
  "power_production": {
-  "basis": "production (conservative) inputs: configs/hardware/technology.json on worktree-agent-adae6788cbf2f3f86 (each entry quotes its source); supersedes the ASAP7-measured basis of `power` and `batch` for energy and power",
+  "basis": "production (conservative) inputs read from configs/hardware/technology.json (each entry quotes its source); supersedes the ASAP7-measured basis of `power` and `batch` for energy and power; the 0.8 pJ/bit HBM interface is inside the 13.1 pJ/bit system figure (die share), not added to it",
   "inputs": {
    "mac_j": {
     "w4a8": 9e-14,
@@ -2825,14 +2825,20 @@
    "rom_read_j_b": 8e-14,
    "delivery_j_b": 2.3e-13,
    "sram_j_b": 2.6e-12,
-   "hbm_core_j_b": 1.0488e-10,
+   "hbm_system_j_b": 1.0488e-10,
    "hbm_if_j_b": 6.4e-12,
+   "hbm_core_j_b": 9.848e-11,
    "hbm_idle_w_stack": 2.8,
    "psu": 0.96,
    "vr": 0.87,
    "cdu": 0.006,
    "fans": 0.03,
    "margin": 1.2,
+   "link_j_bit": {
+    "board_serdes_112g": 6.5e-12,
+    "ucie_advanced": 5e-13,
+    "ucie_standard": 1e-12
+   },
    "b200": {
     "tdp_hgx_w": 1000.0,
     "tdp_nvl72_w": 1200.0,
@@ -2847,7 +2853,7 @@
     "step_cycles": 123301,
     "tokens_per_step": 1,
     "tokens_s": 8910.2,
-    "energy_per_token_mj": 86.246,
+    "energy_per_token_mj": 82.38,
     "die_energy_per_token_mj": 21.015,
     "die_components_mj_per_token": {
      "mac_weights": 0.6811,
@@ -2860,15 +2866,15 @@
      "hbm_interface": 3.8655
     },
     "die_w": 187.2,
-    "stacks_w": 581.2,
-    "package_w": 768.5,
-    "wall_w": 953.2
+    "stacks_w": 546.8,
+    "package_w": 734.0,
+    "wall_w": 910.5
    },
    "dflash_tau4.1_block3": {
     "step_cycles": 176514,
     "tokens_per_step": 2.187,
     "tokens_s": 13612.1,
-    "energy_per_token_mj": 49.909,
+    "energy_per_token_mj": 47.896,
     "die_energy_per_token_mj": 15.688,
     "die_components_mj_per_token": {
      "mac_weights": 1.115,
@@ -2881,15 +2887,15 @@
      "hbm_interface": 2.013
     },
     "die_w": 213.5,
-    "stacks_w": 465.8,
-    "package_w": 679.4,
-    "wall_w": 842.7
+    "stacks_w": 438.4,
+    "package_w": 652.0,
+    "wall_w": 808.7
    },
    "kv_bound_batch2": {
     "step_cycles": 245762,
     "tokens_per_step": 2,
     "tokens_s": 8940.7,
-    "energy_per_token_mj": 86.414,
+    "energy_per_token_mj": 82.549,
     "die_energy_per_token_mj": 21.19,
     "die_components_mj_per_token": {
      "mac_weights": 0.6811,
@@ -2902,15 +2908,15 @@
      "hbm_interface": 3.8655
     },
     "die_w": 189.5,
-    "stacks_w": 583.2,
-    "package_w": 772.6,
-    "wall_w": 958.4
+    "stacks_w": 548.6,
+    "package_w": 738.0,
+    "wall_w": 915.5
    },
    "batch128": {
     "step_cycles": 15728743,
     "tokens_per_step": 128,
     "tokens_s": 8940.7,
-    "energy_per_token_mj": 86.969,
+    "energy_per_token_mj": 83.103,
     "die_energy_per_token_mj": 21.744,
     "die_components_mj_per_token": {
      "mac_weights": 0.6811,
@@ -2923,15 +2929,15 @@
      "hbm_interface": 3.8655
     },
     "die_w": 194.4,
-    "stacks_w": 583.2,
-    "package_w": 777.6,
-    "wall_w": 964.5
+    "stacks_w": 548.6,
+    "package_w": 743.0,
+    "wall_w": 921.6
    }
   },
   "hbm_comparator": {
    "batch1": {
     "tokens_s": 660.8,
-    "energy_per_token_mj": 1178.154,
+    "energy_per_token_mj": 1125.853,
     "die_components_mj_per_token": {
      "mac_weights": 0.9839,
      "mac_attention": 0.9905,
@@ -2942,13 +2948,13 @@
      "hbm_interface": 52.3013
     },
     "die_w": 195.4,
-    "stacks_w": 583.2,
-    "package_w": 778.5,
-    "wall_w": 965.7
+    "stacks_w": 548.6,
+    "package_w": 743.9,
+    "wall_w": 922.8
    },
    "batch16": {
     "tokens_s": 5014.0,
-    "energy_per_token_mj": 157.824,
+    "energy_per_token_mj": 150.931,
     "die_components_mj_per_token": {
      "mac_weights": 0.9839,
      "mac_attention": 0.9905,
@@ -2959,13 +2965,13 @@
      "hbm_interface": 6.8927
     },
     "die_w": 208.2,
-    "stacks_w": 583.2,
-    "package_w": 791.3,
-    "wall_w": 981.6
+    "stacks_w": 548.6,
+    "package_w": 756.8,
+    "wall_w": 938.7
    },
    "batch128": {
     "tokens_s": 8143.5,
-    "energy_per_token_mj": 98.305,
+    "energy_per_token_mj": 94.061,
     "die_components_mj_per_token": {
      "mac_weights": 0.9839,
      "mac_attention": 0.9905,
@@ -2976,9 +2982,9 @@
      "hbm_interface": 4.2439
     },
     "die_w": 217.4,
-    "stacks_w": 583.2,
-    "package_w": 800.5,
-    "wall_w": 993.0
+    "stacks_w": 548.6,
+    "package_w": 766.0,
+    "wall_w": 950.1
    }
   },
   "b200": {
@@ -2995,17 +3001,17 @@
   },
   "worst_case": {
    "die_w": 407.9,
-   "stacks_w": 646.1,
-   "package_w": 1054.0,
-   "wall_w": 1307.4,
+   "stacks_w": 607.7,
+   "package_w": 1015.6,
+   "wall_w": 1259.7,
    "basis": "saturated hardwired schedule: every lane copy MACs every cycle (BF16), the 1,024-lane stream unit and the ROM read path run every cycle, the 6 stacks at full raw bandwidth, clock on every mm2, leakage"
   },
-  "provisioned_w": 1514.3,
+  "provisioned_w": 1459.1,
   "provisioned_basis": "1.2 x worst case (die + stacks) / (VR 0.87 x PSU 0.96)",
   "ratios_batch1": {
-   "hbm_over_rom": 13.66,
-   "b200_measured_over_rom": 9.07,
-   "b200_measured_over_hbm": 0.66
+   "hbm_over_rom": 13.67,
+   "b200_measured_over_rom": 9.49,
+   "b200_measured_over_hbm": 0.69
   }
  }
 }
