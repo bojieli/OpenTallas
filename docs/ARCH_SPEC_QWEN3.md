@@ -525,3 +525,37 @@ The comparator's lanes are 5% used at batch 1, and a smaller array was tried.
 are MAC-bound, and it would cost them 23% of their throughput (13,564 against
 17,621 tok/s). **The comparator keeps its 131,072 lanes rather than be
 handicapped.** Its stacks and controllers bind every 8K row.
+
+## 16. Prefill and KV ingest (both designs)
+
+**Policy: the GPU does every prefill, cold and incremental, and the chip
+ingests the KV.** One B200 prefills 8K in 62 ms, about 120,000 prompt tokens
+a second. On-chip chunked prefill on the ROM die (m = 3) would manage 31,800
+positions a second, and it would stall the batch being decoded.
+
+The source is `docs/ARCH_SPEC_PREFILL.md` (worktree-agent-ab5912eff5bdb5981,
+b6d39bd4), which holds the measurements; these rows make them requirements of
+this spec:
+
+| id | requirement |
+|---|---|
+| R-P1 | A PCIe Gen5 x16 endpoint on the reticle, beside the 6 HBM PHYs as on GH100. It sits behind a host PCIe switch shared with a 400G ConnectX-7. Ingest is an RDMA write, peer to peer into the ingest window, with no host bounce. Link goodput is 49.5 GB/s. |
+| R-P2 | One KV ingest engine (`rtl/hdc/ingest/ot_hdc_kv_ingest.sv`, QKV mode). It takes vLLM NHD pages (BF16, FP32 or FP8) and writes this core's FP8 layout: K corner-turned into 16-position tiles (`Layout.k_elem`), V position-major, one byte an element. It read-modify-writes the open tile when a turn is appended. It needs 64 KB of block SRAM. Measured: 68 GB/s in (BF16) and one sector a cycle out. It is bit-exact against the golden's own FP8 cache, and the ISA decode from the ingested image is bit-exact. |
+| R-P3 | A decode-first HBM arbiter (`ot_hdc_ingest_arb`): a token-bucket share CSR (default 64/256) and 16-sector write bursts; refresh stays with the controller. At the full link rate, ingest takes at most 0.9% of the 5.4 TB/s. The measured share is exact. |
+| R-P4 | The KV streamer's tail SRAM, which holds the open tile and the one before it, must be loadable from the ingested image at decode start. The alternative is for the streamer to read the open tile from HBM on its first token. Either way this is a small tail-preload step in `ot_hdc_kv_stream`. |
+| R-P5 | Numerics. Decode is bit-exact given the ingested KV. For bit-identity with this core's own rounding, the GPU sends FP32, or FP8 cast from FP32 with round-to-nearest-even and saturation (`hdc_golden.to_fp8`). BF16 on the wire double-rounds 3.1% of values. |
+
+**Numerics contract.** The chip's decode is bit-exact to the golden *given
+the KV it holds*. The KV itself is not bit-identical across prefill paths.
+The golden's prefill attends to FP8 KV, while a GPU prefill attends to wide
+KV. On the reduced vehicle 34% of the resulting elements differ
+(`results/arch/prefill_numerics.json` on the prefill branch). An ingested
+cache is therefore a different, equally valid starting state, not the
+golden's. Token-level agreement with a GPU-prefilled reference is a quality
+metric, not a bit-exactness claim.
+
+**Sizing.** At the KV-bound batch, a 4:1 chat load
+needs 0.3 B200 of prefill per chip, and 20:1 needs 1.5. The sustained ingest
+is 2.6–13.2 GB/s a chip, well inside R-P1's link. The HBM comparator takes
+the same endpoint, engine and arbiter; its ingest share of the stacks is the
+same 0.9% bound.
