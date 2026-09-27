@@ -94,9 +94,12 @@ clock sink cluster size 12 it left five pairs. All three stopped with
 `DPL-0033` before global or detailed routing. Their partial records are
 `attempt_isolation_cts_failure.json`,
 `attempt_isolation_u12_cts_failure.json`, and
-`attempt_isolation_u10_c12_cts_failure.json`. The current wrapper restores the
-completed 45% margin route's source; no routed timing or slew result can be
-inferred from the explicit-buffer trials.
+`attempt_isolation_u10_c12_cts_failure.json`. The explicit-buffer trials did
+not produce a completed route, so no routed timing or slew result can be
+inferred from them. The wrapper was subsequently changed to register the
+KV/vector load ingress; that separate, source-pinned route is documented at
+`results/physical_hdc/asap7/matvec_memory_tile_ingress/README.md`. The
+numbers above remain the historical direct-load baseline.
 
 ## Collateral and inference limits
 
@@ -109,7 +112,5 @@ macro manufacturability, extracted internal memory parasitics, full-die
 closure, target-node timing, power, or Qwen token throughput. It is an ASAP7
 predictive proxy for this exact reduced compute-plus-operand path only.
 
-Next physical action: reduce the four specific input and output transition
-violations in a matched route, then repeat with complete vector/output banking
-and the production HDC lane count. The current routed gate must not be counted
-as closed at 1.5 ns while those four slew violations remain.
+The registered-ingress follow-up and its remaining electrical violations are
+reported in the linked record. Neither routed gate closes at 1.5 ns.
