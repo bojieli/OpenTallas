@@ -659,6 +659,21 @@ module ot_hdc_core_v41x #(
     // engine 3: the indexer engine (X_IDX)
     generate if (X_IDX != 0) begin : g_idx_x
         wire f_eng, f_kwr;
+        // The key writer must observe the KV writes of the selected stream engine.
+        // X_SU uses its own SUN-lane memory interface; the legacy KV ports are tied off there.
+        localparam integer KNL = (X_SU != 0) ? SUN : MP*SW;
+        wire [KNL-1:0] kwr_kv_we;
+        wire [KNL*AW-1:0] kwr_kv_waddr;
+        wire [KNL*32-1:0] kwr_kv_wdata;
+        if (X_SU != 0) begin : g_kwr_vec
+            assign kwr_kv_we = xs_kv_we;
+            assign kwr_kv_waddr = xs_kv_waddr;
+            assign kwr_kv_wdata = xs_kv_wdata;
+        end else begin : g_kwr_legacy
+            assign kwr_kv_we = kv_we;
+            assign kwr_kv_waddr = kv_waddr;
+            assign kwr_kv_wdata = kv_wdata;
+        end
         ot_hdc_v41x_idx_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_idx (
             .clk(clk), .rst_n(rst_n), .go(e_go[3]), .ready(e_ready[3]), .idle(e_idle[3]), .cfg_ik_base(cfg_ik_base),
             .i_nout(me_nout), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
@@ -673,9 +688,9 @@ module ot_hdc_core_v41x #(
             .dbg_ops(), .dbg_elems(), .dbg_keys_streamed(), .dbg_hbm_beats(), .dbg_keys_scored(),
             .dbg_headsums_fused());
         //: the key writer: every index-key row the stream unit writes goes to the HBM key image too
-        ot_hdc_v41x_idx_kwr #(.AW(AW), .NW(NW), .NL(MP*SW), .HAW(28)) u_kwr (
+        ot_hdc_v41x_idx_kwr #(.AW(AW), .NW(NW), .NL(KNL), .HAW(28)) u_kwr (
             .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base), .su_go(su_go), .i_dst(dst), .i_obase(o_base),
-            .i_orow(o_row), .i_nout(su_nout), .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+            .i_orow(o_row), .i_nout(su_nout), .kv_we(kwr_kv_we), .kv_waddr(kwr_kv_waddr), .kv_wdata(kwr_kv_wdata),
             .w_v(ikw_v), .w_csec(ikw_csec), .w_codes(ikw_codes), .w_ssec(ikw_ssec), .w_sslot(ikw_sslot),
             .w_scale(ikw_scale), .fault(f_kwr), .dbg_keys());
         assign e_fault[3] = f_eng || f_kwr;
