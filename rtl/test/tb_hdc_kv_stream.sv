@@ -111,6 +111,14 @@ module tb_hdc_kv_stream #(
             add_op(24'd40000, 24'd1, 24'd1, 24'd3000, 3'd2, 16'd1, 16'd3000, 16'd16);
             // and a long G-mode op: 2,000 positions of head_dim 64
             add_op(24'd8000, 24'd1, 24'd4, 24'd9000, 3'd2, 16'd1, 16'd2000, 16'd64);
+        end else if (set == 3) begin
+            // Vector Qwen K-split score walk: ks=4, ts=16, one live tile.
+            // The fetcher must issue separately tagged words for each k step.
+            add_op(24'd1000,24'd16,24'd4,24'd512,3'd3,16'd1,16'd4,16'd16);
+        end else if (set == 4) begin
+            // Actual vector K-split count and GQA share: 16 k steps x 2
+            // head-share lines, inside a 256-line window with BK=16.
+            add_op(24'd1000,24'd16,24'd4,24'd512,3'd2,16'd1,16'd16,16'd16);
         end else begin
             // set 1: jsh 0, 8 KV heads per op, 4 words per cycle; set 2: jsh 2 (GQA 4:1 as Qwen3),
             // 1 word per cycle, run on one pseudo-channel to measure its sustained rate

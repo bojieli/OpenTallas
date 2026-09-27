@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.qwen-strided-k-stream.v1",
+  "status": "pass",
+  "configuration": {
+    "groups": 4,
+    "window_lines": 256,
+    "block_k_steps": 16,
+    "ks": 4,
+    "ts": 16,
+    "jsh": 2,
+    "k_steps": 16
+  },
+  "metrics": {
+    "checked_words": 512,
+    "word_mismatches": 0,
+    "zero_mismatches": 0,
+    "fault": 0,
+    "wait_cycles": 107,
+    "cycles": 248
+  },
+  "hbm_reads": 32,
+  "input_sha256": {
+    "rtl/hdc/kv/ot_hdc_kv_walk.sv": "2e79a4bc0d7109302b421bc9e1f08ce7a8714028c375ba083612dc8e3df0c9b6",
+    "rtl/hdc/kv/ot_hdc_kv_stream.sv": "713c3aa40c99af0a08aa358f4ea8e79c08ad64bbf93c619c65c0e01bc55c02ec",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "1f943130e1fea3993df1f026872ce42a925986140c46eda6b107360fb5e62263",
+    "rtl/test/tb_hdc_kv_stream.sv": "df4eceaff41466fbe81c7c88f27cb4c217ccd08ff7c90f38ce85d8323865e434",
+    "rtl/test/hdc_kv_stream_harness.cpp": "f3ca138da5873e6bd91e97f4aa5fb11e75a2b942248052330c96c6e23342fe33"
+  },
+  "stdout": "OP 0 issued after 107 cycles\nKVSTREAM_UNIT set=4 ops=1/1 checked=512 mismatches=0 zero_mismatches=0 fault=0 wait_cycles=107 cycles=248 hbm_rd_lat_max_ps=64299\nHBM_PC pc=0 reads=16 writes=0 acts=4 row_hits=12 row_conflicts=0 refreshes=0\nHBM_PC pc=1 reads=16 writes=0 acts=4 row_hits=12 row_conflicts=0 refreshes=0\nHBM req_backpressure_cycles=0 rd_lat_avg_ps=54210\nPASS\n- /home/ubuntu/OpenTallas/.claude/worktrees/agent-abf1bc09b689f4063/rtl/test/tb_hdc_kv_stream.sv:215: Verilog $finish\n"
+}

@@ -233,7 +233,7 @@ module ot_hdc_kv_stream #(
     reg [NW-1:0] f_r, f_k0, blen, f_kk;
     reg [LG-1:0] f_g;
     reg [LIL-1:0] f_jh, f_jh_end;
-    reg [AW-1:0] f_rb, a_blk, a_nblk, a_outer, f_addr;
+    reg [AW-1:0] f_rb, a_blk, a_nblk, a_outer, a_k, f_addr;
     reg [LWIN-1:0] t_lb, t_outer, f_tline;
     reg [G-1:0]  f_mask;                 // groups of round f_r read from HBM (K-mode)
     reg [LBK:0]  f_nval;                 // HBM groups of round f_r (G-mode: a prefix)
@@ -244,15 +244,17 @@ module ot_hdc_kv_stream #(
     wire [NW-1:0] f_krem = f_k - f_k0;
     wire [NW-1:0] f_rt = f_r << LG;
     wire         f_emit = f_km ? f_mask[f_g] : (f_nval != 0);
+    wire         f_stride = f_km && f_ks != 1;
     wire         f_req_v = (f_st == F_ISSUE) && f_emit && vf_empty;
     wire [AW-1:0] f_req_addr = f_addr;
-    wire [LBK:0] f_req_len = f_km ? blen[LBK:0] : f_nval;
+    wire [LBK:0] f_req_len = f_km ? (f_stride ? 1 : blen[LBK:0]) : f_nval;
     wire [TAGW-1:0] f_req_tag = {!f_km, f_tline, f_km ? f_g : {LG{1'b0}}, f_jsh};
     wire         hq_free = !hq_v || hq_rdy;
     wire         f_take = hq_free && f_req_v;
     wire         f_adv = (f_st == F_ISSUE) && (!f_emit || f_take);
     wire         f_kk_last = (f_kk + 1'b1 == blen);
-    wire         f_blk_last_it = (f_jh == f_jh_end) && (f_km ? (f_g == G - 1) : f_kk_last);
+    wire         f_blk_last_it = (f_jh == f_jh_end) &&
+                                  (f_km ? ((f_g == G - 1) && (!f_stride || f_kk_last)) : f_kk_last);
     wire         f_alloc = (f_st == F_ALLOC) && (occ + blines <= WIN);
     wire         c_step;
     integer gf;
@@ -287,8 +289,8 @@ module ot_hdc_kv_stream #(
                 F_ALLOC: if (f_alloc) begin
                     fetch_line <= fetch_line + blines;
                     t_lb <= fetch_line[LWIN-1:0]; t_outer <= fetch_line[LWIN-1:0]; f_tline <= fetch_line[LWIN-1:0];
-                    f_addr <= a_blk; a_outer <= a_blk;
-                    if (f_km) a_nblk <= a_blk + blen;              // K-mode: ks = 1
+                    f_addr <= a_blk; a_outer <= a_blk; a_k <= a_blk;
+                    if (f_km) a_nblk <= a_blk + f_ks * blen;
                     f_g <= 0; f_jh <= 0; f_kk <= 0;
                     f_st <= F_ISSUE;
                 end
@@ -305,11 +307,18 @@ module ot_hdc_kv_stream #(
                                 a_outer <= a_outer + f_js; f_addr <= a_outer + f_js;
                                 t_outer <= t_outer + 1'b1; f_tline <= t_outer + 1'b1;
                             end
-                        end else if (f_jh != f_jh_end) begin      // K-mode: jh inner, g outer
+                        end else if (f_jh != f_jh_end) begin      // K-mode: jh inner
                             f_jh <= f_jh + 1'b1; f_addr <= f_addr + f_js; f_tline <= f_tline + 1'b1;
+                        end else if (f_stride && !f_kk_last) begin
+                            // K-split layout: stride between k words, one tagged
+                            // HBM word per k step instead of a contiguous burst.
+                            f_kk <= f_kk + 1'b1; f_jh <= 0;
+                            a_k <= a_k + f_ks; f_addr <= a_k + f_ks;
+                            f_tline <= t_lb + ((f_kk + 1'b1) << (LIL - f_jsh));
                         end else begin
-                            f_jh <= 0; f_g <= f_g + 1'b1;
-                            a_outer <= a_outer + f_ts; f_addr <= a_outer + f_ts; f_tline <= t_lb;
+                            f_jh <= 0; f_kk <= 0; f_g <= f_g + 1'b1;
+                            a_outer <= a_outer + f_ts; a_k <= a_outer + f_ts;
+                            f_addr <= a_outer + f_ts; f_tline <= t_lb;
                         end
                     end else if (!f_last_k) begin
                         f_k0 <= f_k0 + blen; a_blk <= a_nblk; f_st <= F_PREP;
@@ -485,7 +494,9 @@ module ot_hdc_kv_stream #(
             d_ntile[wptr] <= (kvd_nout + W - 1) >> LW; d_to[wptr] <= kvd_pos >> LW;
             d_T[wptr] <= (t_lead > t_cap) ? t_cap : t_lead;
             d_capped[wptr] <= (t_lead > t_cap);
-            d_kindk[wptr] <= kvd_kindk; d_kmode[wptr] <= (kvd_ks == 1); d_gmode[wptr] <= (kvd_ts == 1);
+            d_kindk[wptr] <= kvd_kindk;
+            d_kmode[wptr] <= (kvd_ts != 1); // dense and strided K score walks
+            d_gmode[wptr] <= (kvd_ts == 1);
         end
     end
 
