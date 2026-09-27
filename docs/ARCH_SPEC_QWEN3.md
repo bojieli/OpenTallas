@@ -286,29 +286,35 @@ tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
      reducer's time levels for short segments, and waiting for a unit's main
      writes only.
 
-## 9. Speculation (DFlash, τ 4.1)
+## 9. Speculation (DFlash, measured per block, serial step)
 
-τ 4.1 is the default: the pooled measured acceptance over 561 blocks. The mean
-over prompts, 5.18, is a band only. A verify's slots share the KV stream and
-the weight words. On the ROM die their MACs are real work unless lane copies
+Every DFlash figure is read from `results/speculative/dflash_step_timing.json`
+(`tools/dflash_step_timing.py`); `tools/arch_budget_qwen3.py` and
+`tools/power_scenarios.py` restate none of it. Tokens a step are measured by
+running the drafter at each block B on 264 prompt turns
+(`results/speculative/dflash_block_acceptance.json`, primary workloads,
+cycle-weighted; the equal-weighted mean of workloads is the band), not cut
+from a block-16 histogram. The step is three serial phases on the same core:
+the draft (the drafter's 5 layers over the B slots, its fc and K/V
+projections, the shared lm_head over the B − 1 drafts), the verify (the target
+over B slots) and the commit. A verify's slots share the KV stream and the
+weight words. On the ROM die their MACs are real work unless lane copies
 carry them.
 
-For block B, tokens a step are E[min(L, B)] over the measured block-16
-acceptance lengths, assuming a smaller block keeps the first B − 1 drafts:
+| ROM die, FP8 KV | best block | tokens a step | tok/s | speedup |
+|---|---|---|---|---|
+| 8K, m = 1 | 1 (no speculation) | 1 | 7,689 | 1.0 |
+| **8K, m = 3** | **B = 3** | **2.265** | **13,052** (band 13,371) | **1.70×** |
+| 2K, m = 1 | 1 (no speculation) | 1 | 8,994 | 1.0 |
+| 2K, m = 3 | B = 3 | 2.265 | 16,447 | 1.83× |
 
-| ROM die, FP8 KV | best block | tok/s | speedup |
-|---|---|---|---|
-| 8K, m = 1 | 1 (no speculation) | 7,327 | 1.0 |
-| **8K, m = 3** | **B = 3** | **13,090** | **1.79×** |
-| 2K, m = 1 | B = 2 | 8,596 | 1.01× |
-| 2K, m = 3 | B = 3 | 16,336 | 1.92× |
+The rates are against the spec chain's plain token. At 8K, m = 3 the step is
+190,687 cycles: draft 28,211, verify 162,468, commit 8.
 
-The rates are against the spec chain's plain token.
-
-On the HBM comparator (8K, FP8 KV, m = 16) the bytes bind. The step reads the
-target's and the drafter's weights once for 16 slots: **3.6×** at τ 4.1, taking
-BF16 weights from 343 to 1,235 tok/s, FP8 from 661 to 2,380 and 3.5-bit from
-1,379 to 4,967.
+On the HBM comparator (8K, FP8 KV) the bytes bind each phase. BF16 weights
+go from 343 to 1,030 tok/s and FP8 from 661 to 1,989 (block 16, 3.66 tokens a
+step, 3.0×); 3.5-bit weights from 1,379 to 3,762 (block 8, 3.30 tokens a
+step, 2.7×).
 
 Requirements this adds:
 
@@ -383,8 +389,11 @@ The record is `results/arch/qwen3_budget.json` `power_production` (energy and
 power per scenario) and `power` (the requirement). Weights are priced at the
 W4A8 lane, attention at BF16, idle lane copies clock-gated, and the users' KV
 is read from HBM on the ROM die and on the comparator alike. The ROM rows at
-batch 1 and with DFlash are the design points `power_scenarios.json` pins; a
-test holds the two records equal.
+batch 1 and with DFlash are the design points `power_scenarios.json` prices;
+the DFlash point (block, tokens a step, step cycles with the draft phase, and
+the MACs of the draft and the verify) is read by both tools from
+`results/speculative/dflash_step_timing.json`, and a test holds the two
+records equal.
 
 ### 11.2 Energy per token and power at 8K, FP8 KV
 
@@ -393,7 +402,7 @@ Scenario B / scenario A; cooling-capped rates are the same in air and liquid:
 | design | tok/s | mJ/token, B / A | die W, B / A | stacks W | package W, B / A | wall W, B / A | capped tok/s, B / A |
 |---|---|---|---|---|---|---|---|
 | ROM, batch 1 | 8,910 | **88.1** <!-- figure: 88.116 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM scenario-B mJ/token 8K batch 1" --> / **123.0** <!-- figure: 122.965 src="results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM scenario-A mJ/token 8K batch 1" --> | 636.6 / 947.1 | 148.5 | 785.1 / 1,095.6 | 973.9 / 1,359.1 | 7,442 / 4,689 |
-| ROM, DFlash τ 4.1 (block 3, m = 3) | 13,612 | 54.3 / 109.2 | 621.1 / 1,368.1 | 118.2 | 739.2 / 1,486.3 | 917.0 / 1,843.6 | 11,665 / 4,680 |
+| ROM, DFlash (block 3, m = 3, serial step, 2.265 tokens a step) | 13,052 | 53.6 / 108.3 | 590.0 / 1,303.7 | 109.4 | 699.4 / 1,413.1 | 867.5 / 1,752.8 | 11,925 / 4,731 |
 | ROM, batch 2 (KV-bound) | 8,941 | 88.3 / 123.1 | 640.3 / 951.9 | 149.0 | 789.3 / 1,100.9 | 979.1 / 1,365.6 | 7,398 / 4,646 |
 | ROM, batch 128 | 8,941 | 88.8 / 123.7 | 645.2 / 956.8 | 149.0 | 794.3 / 1,105.9 | 985.2 / 1,371.7 | 7,309 / 4,585 |
 | HBM comparator, FP8 weights, batch 1 | 661 | 1,164 / 1,198 | 620.4 / 642.7 | 149.0 | 769.4 / 791.8 | 954.4 / 982.1 | 556 / 529 |
@@ -407,8 +416,9 @@ Scenario B / scenario A; cooling-capped rates are the same in air and liquid:
 * **Power caps the reticle in both scenarios.** At 8,910 tok/s the die draws
   636.6 W on the production lane and 947.1 W on the measured lane against
   549.5 W. The die check binds (not the package), capping autoregressive
-  decoding at 7,442 (B) and 4,689 (A) tok/s, and DFlash at 11,665 and 4,680.
-  On the measured lane speculation runs no faster than plain decoding.
+  decoding at 7,442 (B) and 4,689 (A) tok/s, and DFlash at 11,925 and 4,731.
+  On the measured lane speculation runs less than 1% faster than plain
+  decoding.
 * **The HBM path is the die's energy.** At batch 1 on the ROM die (scenario
   B), 16.7 mJ of the 88.1 mJ is in the stacks and 71.4 mJ on the die:
   * the die's share of the HBM path 49.2 (604 MB of FP8 KV at 10.19 pJ/bit);
@@ -455,24 +465,26 @@ Scenario B / scenario A; cooling-capped rates are the same in air and liquid:
 
 The die's power other than its MACs does not depend on the lane: static
 107.7 W (leakage 52.5, clock 38.4, stack idle 16.8) plus 54.5 mJ a token of
-non-MAC dynamic energy for autoregressive decoding (120.6 W and 29.2 mJ with
+non-MAC dynamic energy for autoregressive decoding (120.6 W and 28.4 mJ with
 DFlash). At the design rate that is:
 
 * **autoregressive, 8,910 tok/s: 593.6 W before any MAC**, above the 549.5 W
   limit, so no MAC energy fits (−0.50 pJ/MAC; −0.25 at the 8,494 tok/s
   target). With free MACs the die would still cap at 8,102 tok/s: the die's
   share of the HBM path binds, not the lane;
-* **DFlash, 13,612 tok/s: 518.6 W before any MAC**, leaving **≤ 0.145
-  pJ/MAC** at 214 TMAC/s.
+* **DFlash, 13,052 tok/s (the serial step): 491.4 W before any MAC**,
+  leaving **≤ 0.284 pJ/MAC** at 204 TMAC/s. The step's 35.5 G MACs include
+  the drafter's 5.5 G, and its draft phase's 28,211 cycles are in the step
+  time.
 
 Die energy per token that fits 549.5 W: 61.7 mJ at 8,910 tok/s and 64.7 mJ at
 the 8,494 tok/s target. Capped rates by lane (air = liquid):
 
 | lane | pJ/MAC (W4A8 / BF16) | autoregressive | DFlash |
 |---|---|---|---|
-| scenario A, routed ASAP7 matrix engine | 3.97 / 3.97 | 4,689 | 4,680 |
-| scenario B, derived production lane | 0.45 / 0.59 | 7,442 | 11,665 |
-| a lane no better than an A100 tensor core (sensitivity) | 1.40 / 1.40 | 6,449 | 8,373 |
+| scenario A, routed ASAP7 matrix engine | 3.97 / 3.97 | 4,689 | 4,731 |
+| scenario B, derived production lane | 0.45 / 0.59 | 7,442 | 11,925 |
+| a lane no better than an A100 tensor core (sensitivity) | 1.40 / 1.40 | 6,449 | 8,521 |
 
 MAC requirements that follow:
 
@@ -503,11 +515,11 @@ withdrawn; its figures are superseded by 11.1-11.3 and appear nowhere else:
 | HBM path | 13.1 pJ/bit (A100), 0.8 pJ/bit of it on the die, 12.3 in the stacks | 13.64 pJ/bit (MI250X), 10.19 on the die, 3.45 in the stacks |
 | W4A8 MAC | 0.09 pJ, a per-operation entry charged once a MAC (2× under-charge) | 0.45 pJ/MAC incl. FP32 accumulate (B); 3.97 routed (A) |
 | ROM, batch 1: mJ/token; die / package / wall W | 82.4; 187.2 / 734.0 / 910.5 | 88.1 / 123.0; 636.6 / 785.1 / 973.9 (B), 947.1 / 1,095.6 / 1,359.1 (A) |
-| ROM, DFlash: mJ/token | 47.9 | 54.3 (B) / 109.2 (A) |
+| ROM, DFlash: mJ/token | 47.9 | 53.6 (B) / 108.3 (A), at the serial step |
 | HBM comparator 3.5-bit / FP8, batch 1: mJ/token; ratio to ROM | 540.6 / 1,126; 6.6× / 13.7× | 560.4 / 1,164 (B), 595.2 / 1,198 (A); 6.36× / 13.21× (B), 4.84× / 9.74× (A) |
 | worst case die / package / wall; provisioned | 407.9 / 1,015.6 / 1,259.7 W; 1,459.1 W | 953.7 / 1,119.3 / 1,388.4 W; 1,608.2 W (B); 2,415.8 / 2,581.4 / 3,202.0 W; 3,708.9 W (A) |
-| MAC energy that fits, autoregressive / DFlash | ≤ 3.41 / ≤ 1.35 pJ (75% of 408 W to the lanes) | none (−0.50) / ≤ 0.145 pJ (549.5 W less the whole non-MAC die) |
-| 3.97 pJ/MAC lane capped, autoregressive / DFlash | 7,720 / 4,909 tok/s (MAC power only) | 4,689 / 4,680 tok/s (whole die) |
+| MAC energy that fits, autoregressive / DFlash | ≤ 3.41 / ≤ 1.35 pJ (75% of 408 W to the lanes) | none (−0.50) / ≤ 0.284 pJ (549.5 W less the whole non-MAC die) |
+| 3.97 pJ/MAC lane capped, autoregressive / DFlash | 7,720 / 4,909 tok/s (MAC power only) | 4,689 / 4,731 tok/s (whole die) |
 
 The stacks' power fell (546.8 → 148.5 W at batch 1) and the die's rose
 because the controller, PHY and I/O energy of the HBM path now sits on the
@@ -569,7 +581,8 @@ The rule is to improve utilisation without slowing the single user. Every block
 of both designs is priced in four scenarios at 8K with FP8 KV:
 
 * batch 1, autoregressive;
-* batch 1 with DFlash at τ 4.1 (ROM: block 3 at m = 3; HBM: block 16);
+* batch 1 with DFlash at the serial step of section 9 (ROM: block 3 at m = 3;
+  HBM: block 16);
 * the smallest KV-bound batch (ROM 2, HBM 16);
 * batch 128.
 
@@ -585,17 +598,17 @@ KV-bound rows are exact.
 
 | block | AR 1 | DFlash | batch 2 | batch 128 | area mm² | verdict |
 |---|---|---|---|---|---|---|
-| matrix engine, base lanes | 0.62 | 0.49 | 0.31 | 0.21 | 146.7 | right-sized |
-| 2 lane copies | 0 | 0.49 | 0.15 | 0.21 | 138.4 | justified by DFlash, conditional on power |
-| weight ROM read path | 0.47 | 0.37 | 0.23 | 0.16 | 262.0 | right-sized |
+| matrix engine, base lanes | 0.62 | 0.47 | 0.31 | 0.21 | 146.7 | right-sized |
+| 2 lane copies | 0 | 0.47 | 0.15 | 0.21 | 138.4 | justified by DFlash, conditional on power |
+| weight ROM read path | 0.47 | 0.34 | 0.23 | 0.16 | 262.0 | right-sized |
 | attention (engine share) | 0.15 | 0.10 | 0.08 | 0.05 | (engine) | right-sized with the engine |
-| vector stream unit, 1,024 lanes | 0.24 | 0.50 | 0.24 | 0.24 | 12.8 | right-sized |
-| SFUs / reducers (on the stream lanes) | 0.08 / 0.15 | 0.16 / 0.32 | 0.08 / 0.16 | 0.08 / 0.16 | (stream) | with the stream unit |
-| KV streamer, controllers, 6 PHYs | 0.90 | 0.71 | 0.90 | 0.90 | 60.0 | binding |
+| vector stream unit, 1,024 lanes | 0.24 | 0.46 | 0.24 | 0.24 | 12.8 | right-sized |
+| SFUs / reducers (on the stream lanes) | 0.08 / 0.15 | 0.15 / 0.30 | 0.08 / 0.16 | 0.08 / 0.16 | (stream) | with the stream unit |
+| KV streamer, controllers, 6 PHYs | 0.90 | 0.66 | 0.90 | 0.90 | 60.0 | binding |
 | KV ring buffer, capacity | 1.00 | 1.00 | 1.00 | 1.00 | 6.2 | **right-sized (was 0.56)** |
 | KV ring buffer, engine read port | 0.04 | 0.03 | 0.04 | 0.04 | (ring) | justified (latency) |
-| drafter ROM | 0 | 0.05 | 0 | 0 | 33.5 | justified by DFlash |
-| sequencer / argmax (busy) | 0.01 / 0.04 | 0.01 / 0.03 | 0.01 / 0.02 | 0.01 / 0.01 | small | justified (latency) |
+| drafter ROM | 0 | 0.04 | 0 | 0 | 33.5 | justified by DFlash |
+| sequencer / argmax (busy) | 0.01 / 0.04 | 0.01 / 0.02 | 0.01 / 0.02 | 0.01 / 0.01 | small | justified (latency) |
 
 The verdicts:
 
@@ -612,10 +625,10 @@ The verdicts:
   (5.4 TB/s × 350 ns). That is 18.7 MB, and 5.0 mm² go to slack (section 4).
 * **Lane copies.** They are idle in autoregressive decode and in every
   KV-bound batch, since each user's KV is its own and from batch 2 the step is
-  the KV stream. They carry the DFlash verify, 1.77× single-user tokens/s. Under the
+  the KV stream. They carry the DFlash verify, 1.70× single-user tokens/s. Under the
   549.5 W die limit the gain survives on the production lane (scenario B:
-  DFlash capped at 11,665 against 7,442 tok/s autoregressive), but not on the
-  measured 3.97 pJ/MAC lane (scenario A: 4,680 against 4,689), where the
+  DFlash capped at 11,925 against 7,442 tok/s autoregressive), but not on the
+  measured 3.97 pJ/MAC lane (scenario A: 4,731 against 4,689), where the
   copies would not pay (section 11). They stay on that condition.
 * **Batch.** From batch 2 the base lanes are 69–79% idle and nothing on the die can
   use it: the KV stream is the whole step. Only KV bytes move it. The stacks
@@ -640,14 +653,14 @@ outside an op's tiles, are therefore requirements, not options.
 | scenario | MFU | MBU (raw) | binding |
 |---|---|---|---|
 | batch 1 | 0.05 | 0.90 | bytes |
-| DFlash τ 4.1, block 16 | 0.74 | 0.90 | bytes |
+| DFlash, block 16 (serial step) | 0.72 | 0.90 | bytes |
 | batch 16 | 0.35 | 0.90 | bytes |
 | batch 128 | 0.56 | 0.90 | bytes |
 | 2K, batch 128 | 1.00 | 0.62 | MACs |
 
 The comparator's lanes are 5% used at batch 1, and a smaller array was tried.
 6,656 groups (106,496 lanes, tiling 0.947) still cover the DFlash step's
-97,471-lane need and slow no 8K row. At 2K, however, the batches from 32 users
+96,080-lane need and slow no 8K row. At 2K, however, the batches from 32 users
 are MAC-bound, and it would cost them 23% of their throughput (13,564 against
 17,621 tok/s). **The comparator keeps its 131,072 lanes rather than be
 handicapped.** Its stacks and controllers bind every 8K row.

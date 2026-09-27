@@ -4,7 +4,7 @@
  "inputs": {
   "qwen3_budget": {
    "from": "worktree:results/arch/qwen3_budget.json",
-   "sha256": "e6c973267351f578ad4f51349a4ff8b167759be3644663da113d1326281272bc"
+   "sha256": "bcf27f58ad18b4f4793ae8563945212228bbb09f129e7336139a42f23de2fd8a"
   },
   "iso_qwen": {
    "from": "b42f8606:results/roofline/iso_area/qwen3_8b.json",
@@ -36,7 +36,7 @@
   },
   "power": {
    "from": "worktree:results/arch/power_scenarios.json",
-   "sha256": "85ca58922432a05be844a947d1918cc83af8c8248c8ba5f48f669d12bbf3f0b1"
+   "sha256": "8a1afa6d598f7cab4a535557582dc3189047705b36971819dcc6d5ed0d18336a"
   },
   "idle_floor": {
    "from": "worktree:results/roofline/gpu_clocked_idle_floor.json",
@@ -261,7 +261,7 @@
      "evidence": "cited",
      "family": "gpu",
      "spec": true,
-     "basis": "same source; tau 8.01 (MATH-500), not the 4.1 used for our designs"
+     "basis": "same source; tau 8.01 (MATH-500), not the per-block measured tau of our designs"
     },
     {
      "key": "b200_ideal_bf16",
@@ -317,11 +317,11 @@
      "key": "hdc_rom35_dflash",
      "label": "HDC-HBM + DFlash",
      "x": 5.4,
-     "y": 4966.7,
+     "y": 3762.4,
      "evidence": "modelled",
      "family": "hbm",
      "spec": true,
-     "basis": "tau 4.1 (measured on real Qwen3-8B, 561 blocks)"
+     "basis": "block 8, tau 3.30 measured at that block on real Qwen3-8B (264 prompt turns); serial draft + verify + commit"
     },
     {
      "key": "hdc_matched",
@@ -347,11 +347,11 @@
      "key": "rom_dflash",
      "label": "ROM + DFlash (m=3)",
      "x": 5.4,
-     "y": 13612.1,
+     "y": 13052.1,
      "evidence": "modelled",
      "family": "rom",
      "spec": true,
-     "basis": "tau 4.1, block 3, three MAC copies per weight read in the freed SRAM; conditional on the lane copies"
+     "basis": "block 3, tau 2.27 measured at that block; serial draft + verify + commit; three MAC copies per weight read in the freed SRAM; conditional on the lane copies"
     }
    ],
    "roofs": [
@@ -641,29 +641,29 @@
     {
      "machine": "B200 idealised, BF16 (bound: tau x AR)",
      "ar": 457.428,
-     "spec": 1875.46,
-     "tau": 4.1,
+     "spec": 1672.31,
+     "tau": 3.6559,
      "evidence": "bound"
     },
     {
      "machine": "HDC-HBM, 3.5-bit",
      "ar": 1379.3,
-     "spec": 4966.7,
-     "tau": 4.1,
+     "spec": 3762.4,
+     "tau": 3.2956,
      "evidence": "modelled"
     },
     {
      "machine": "HDC-HBM, BF16",
      "ar": 343.1,
-     "spec": 1235.4,
-     "tau": 4.1,
+     "spec": 1030.0,
+     "tau": 3.6559,
      "evidence": "modelled"
     },
     {
      "machine": "ROM reticle (m = 3 lane copies)",
      "ar": 8910.2,
-     "spec": 13612.1,
-     "tau": 4.1,
+     "spec": 13052.1,
+     "tau": 2.2654,
      "evidence": "modelled"
     }
    ]

@@ -428,14 +428,11 @@
     "lane_copies_on": 0
    },
    "dflash": {
-    "tau": 4.1,
-    "block": 3,
-    "step_cycles": 176514,
-    "tokens_per_step": 2.187,
+    "from_record": "results/speculative/dflash_step_timing.json",
+    "select": "rom['<context>/fp8/m<lane_multiplier_m>'].best",
+    "basis": "the serial draft + verify + commit step at the measured per-block acceptance (primary workloads, cycle-weighted tau); block, tokens per step, step cycles (draft phase included) and MAC counts (drafter included) are read from the record by tools/power_scenarios.dflash_point, never restated here. Was: tau 4.1 block-16 histogram truncated at block 3 (2.187 tokens a step), 176,514 cycles with the drafter's latency overlapped (13,612 tok/s).",
     "users": 1,
-    "slots": 3,
-    "drafter": true,
-    "lane_copies_on": 2
+    "drafter": true
    },
    "area_mm2": {
     "compute": 146.7,

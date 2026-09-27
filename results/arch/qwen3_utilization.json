@@ -164,25 +164,25 @@
     }
    ]
   },
-  "dflash_tau4.1_block3": {
-   "step_cycles": 176514,
-   "basis": "budget model, best ROM block at m = 3 (2.187 tokens a step)",
+  "dflash_block3": {
+   "step_cycles": 190687,
+   "basis": "serial draft + verify + commit step (results/speculative/dflash_step_timing.json), best ROM block at m = 3 (2.2654 tokens a step, measured at this block)",
    "users": 1,
    "slots": 3,
-   "tokens_s_total": 13612.1,
+   "tokens_s_total": 13052.1,
    "energy_per_step_mj": {
-    "matrix_engine": 136.489,
-    "other_logic_upper": 431.782,
+    "matrix_engine": 140.991,
+    "other_logic_upper": 446.025,
     "rom_read": 0.302,
-    "rom_leakage": 0.282,
+    "rom_leakage": 0.305,
     "kv_hbm_stacks": 75.06
    },
    "energy_share": {
-    "matrix_engine": 0.212,
-    "other_logic_upper": 0.6706,
+    "matrix_engine": 0.2128,
+    "other_logic_upper": 0.6731,
     "rom_read": 0.0005,
-    "rom_leakage": 0.0004,
-    "kv_hbm_stacks": 0.1166
+    "rom_leakage": 0.0005,
+    "kv_hbm_stacks": 0.1133
    },
    "blocks": [
     {
@@ -190,10 +190,10 @@
      "kind": "compute (MFU)",
      "peak_per_cycle": 131072,
      "unit": "MAC",
-     "demand_per_step": 11447478954.666666,
-     "utilization": 0.4948,
-     "busy_cycles": 87341,
-     "busy_fraction": 0.4948,
+     "demand_per_step": 11825089194.666666,
+     "utilization": 0.4731,
+     "busy_cycles": 90222,
+     "busy_fraction": 0.4731,
      "area_mm2": 146.7
     },
     {
@@ -201,10 +201,10 @@
      "kind": "compute (MFU)",
      "peak_per_cycle": 262144,
      "unit": "MAC",
-     "demand_per_step": 22894957909.333332,
-     "utilization": 0.4948,
-     "busy_cycles": 87341,
-     "busy_fraction": 0.4948,
+     "demand_per_step": 23650178389.333332,
+     "utilization": 0.4731,
+     "busy_cycles": 90222,
+     "busy_fraction": 0.4731,
      "area_mm2": 138.4,
      "copies_in_use": 2
     },
@@ -214,9 +214,9 @@
      "peak_per_cycle": 57344.0,
      "unit": "byte",
      "demand_per_step": 3769816624.0,
-     "utilization": 0.3724,
+     "utilization": 0.3448,
      "busy_cycles": 65740,
-     "busy_fraction": 0.3724,
+     "busy_fraction": 0.3448,
      "area_mm2": 261.98,
      "weight_sweeps": 1
     },
@@ -226,7 +226,7 @@
      "peak_per_cycle": 57344.0,
      "unit": "byte",
      "demand_per_step": 458774064.0,
-     "utilization": 0.0453,
+     "utilization": 0.042,
      "area_mm2": 33.5
     },
     {
@@ -235,9 +235,9 @@
      "peak_per_cycle": 393216,
      "unit": "MAC",
      "demand_per_step": 7247757312,
-     "utilization": 0.1044,
+     "utilization": 0.0967,
      "busy_cycles": 18432,
-     "busy_fraction": 0.1044
+     "busy_fraction": 0.0967
     },
     {
      "block": "vector stream unit (1024 lanes)",
@@ -245,9 +245,9 @@
      "peak_per_cycle": 1024,
      "unit": "element",
      "demand_per_step": 89943867,
-     "utilization": 0.4976,
+     "utilization": 0.4606,
      "busy_cycles": 63531,
-     "busy_fraction": 0.3599,
+     "busy_fraction": 0.3332,
      "area_mm2": 12.8
     },
     {
@@ -256,7 +256,7 @@
      "peak_per_cycle": 1024,
      "unit": "transcendental",
      "demand_per_step": 29646651,
-     "utilization": 0.164
+     "utilization": 0.1518
     },
     {
      "block": "reducers (R-ARITH segments, split tree)",
@@ -264,7 +264,7 @@
      "peak_per_cycle": 1024,
      "unit": "element",
      "demand_per_step": 58528896,
-     "utilization": 0.3238
+     "utilization": 0.2997
     },
     {
      "block": "KV streamer, HBM controllers and PHYs (6 stacks, raw peak)",
@@ -272,11 +272,11 @@
      "peak_per_cycle": 5461.297604310785,
      "unit": "byte",
      "demand_per_step": 687865856.0,
-     "utilization": 0.7136,
+     "utilization": 0.6605,
      "busy_cycles": 139948,
-     "busy_fraction": 0.7928,
+     "busy_fraction": 0.7339,
      "area_mm2": 60.0,
-     "mbu_of_sustained": 0.7928
+     "mbu_of_sustained": 0.7339
     },
     {
      "block": "KV ring buffer (SRAM): capacity",
@@ -295,9 +295,9 @@
      "peak_per_cycle": 131072,
      "unit": "byte",
      "demand_per_step": 687865856.0,
-     "utilization": 0.0297,
+     "utilization": 0.0275,
      "busy_cycles": 5248,
-     "busy_fraction": 0.0297
+     "busy_fraction": 0.0275
     },
     {
      "block": "sequencer / issue",
@@ -305,9 +305,9 @@
      "peak_per_cycle": 1,
      "unit": "instruction",
      "demand_per_step": 1193.5555555555554,
-     "utilization": 0.0068,
+     "utilization": 0.0063,
      "busy_cycles": 1194,
-     "busy_fraction": 0.0068
+     "busy_fraction": 0.0063
     },
     {
      "block": "argmax (streaming compare tree on the LM head's results)",
@@ -317,7 +317,7 @@
      "demand_per_step": 759680,
      "utilization": 0.0,
      "busy_cycles": 4752,
-     "busy_fraction": 0.0269
+     "busy_fraction": 0.0249
     }
    ]
   },
@@ -686,8 +686,8 @@
       }
      ]
     },
-    "dflash_tau4.1_block16": {
-     "step_cycles": 1893036,
+    "dflash_block16": {
+     "step_cycles": 2019663,
      "slowed_by_lanes": 0.0,
      "blocks": [
       {
@@ -695,19 +695,19 @@
        "kind": "compute (MFU)",
        "peak_per_cycle": 131072,
        "unit": "MAC",
-       "demand_per_step": 184514248704,
-       "utilization": 0.7436,
-       "busy_cycles": 1407830,
-       "busy_fraction": 0.7437
+       "demand_per_step": 191906709504,
+       "utilization": 0.7249,
+       "busy_cycles": 1464233,
+       "busy_fraction": 0.725
       },
       {
        "block": "HBM (6 stacks, raw peak): weights + KV",
        "kind": "bandwidth (MBU)",
        "peak_per_cycle": 5461.297604310785,
        "unit": "byte",
-       "demand_per_step": 9304589568.0,
+       "demand_per_step": 9926919424.0,
        "utilization": 0.9,
-       "busy_cycles": 1893036,
+       "busy_cycles": 2019650,
        "busy_fraction": 1.0,
        "mbu_of_sustained": 1.0
       },
@@ -717,7 +717,7 @@
        "peak_per_cycle": 1024,
        "unit": "element",
        "demand_per_step": 479700624,
-       "utilization": 0.2475
+       "utilization": 0.2319
       },
       {
        "block": "sequencer / issue",
@@ -725,7 +725,7 @@
        "peak_per_cycle": 1,
        "unit": "instruction",
        "demand_per_step": 1048,
-       "utilization": 0.0006
+       "utilization": 0.0005
       }
      ]
     },
@@ -909,8 +909,8 @@
       }
      ]
     },
-    "dflash_tau4.1_block16": {
-     "step_cycles": 1893036,
+    "dflash_block16": {
+     "step_cycles": 2019663,
      "slowed_by_lanes": 0.0,
      "blocks": [
       {
@@ -918,19 +918,19 @@
        "kind": "compute (MFU)",
        "peak_per_cycle": 106496,
        "unit": "MAC",
-       "demand_per_step": 184514248704,
-       "utilization": 0.9152,
-       "busy_cycles": 1828735,
-       "busy_fraction": 0.966
+       "demand_per_step": 191906709504,
+       "utilization": 0.8922,
+       "busy_cycles": 1902002,
+       "busy_fraction": 0.9417
       },
       {
        "block": "HBM (6 stacks, raw peak): weights + KV",
        "kind": "bandwidth (MBU)",
        "peak_per_cycle": 5461.297604310785,
        "unit": "byte",
-       "demand_per_step": 9304589568.0,
+       "demand_per_step": 9926919424.0,
        "utilization": 0.9,
-       "busy_cycles": 1893036,
+       "busy_cycles": 2019650,
        "busy_fraction": 1.0,
        "mbu_of_sustained": 1.0
       },
@@ -940,7 +940,7 @@
        "peak_per_cycle": 1024,
        "unit": "element",
        "demand_per_step": 479700624,
-       "utilization": 0.2475
+       "utilization": 0.2319
       },
       {
        "block": "sequencer / issue",
@@ -948,7 +948,7 @@
        "peak_per_cycle": 1,
        "unit": "instruction",
        "demand_per_step": 1048,
-       "utilization": 0.0006
+       "utilization": 0.0005
       }
      ]
     },
@@ -1099,7 +1099,7 @@
   {
    "block": "ROM: 2 lane copies",
    "verdict": "JUSTIFIED (DFlash only), conditional on power",
-   "why": "idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry the DFlash block-3 verify (1.77x single-user tokens/s). Under the 549.5 W die limit the capped DFlash / autoregressive rates are 11,665 / 7,442 tokens/s on the production lane (scenario B: the copies pay) and 4,680 / 4,689 on the routed 3.97 pJ/MAC lane (scenario A: they do not)"
+   "why": "idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry the DFlash block-3 verify (1.697x single-user tokens/s). Under the 549.5 W die limit the capped DFlash / autoregressive rates are 11,925 / 7,442 tokens/s on the production lane (scenario B: the copies pay) and 4,731 / 4,689 on the routed 3.97 pJ/MAC lane (scenario A: they do not)"
   },
   {
    "block": "ROM: weight ROM read path",
@@ -1139,7 +1139,7 @@
   {
    "block": "HBM: matrix engine",
    "verdict": "JUSTIFIED (batch throughput), right-sizing rejected",
-   "why": "131,072 lanes are 4.6% used at batch 1 and bytes bind every 8k row, but at 2k the rows from 32 users are MAC-bound (utilisation ~1). The smallest array that keeps the DFlash step (106,496 lanes, tiling 0.947, against a 97,471-lane need) slows no single user and no 8k row, but costs the 2k batch rows 23% of their throughput; the comparator keeps its lanes rather than be handicapped"
+   "why": "131,072 lanes are 4.6% used at batch 1 and bytes bind every 8k row, but at 2k the rows from 32 users are MAC-bound (utilisation ~1). The smallest array that keeps the DFlash step (106,496 lanes, tiling 0.947, against a 96,080-lane need) slows no single user and no 8k row, but costs the 2k batch rows 23% of their throughput; the comparator keeps its lanes rather than be handicapped"
   },
   {
    "block": "HBM: stacks and controllers",

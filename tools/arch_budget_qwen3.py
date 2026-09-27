@@ -31,6 +31,7 @@ ASAP7 areas and clocks, and the RTL-calibrated unit latencies.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import sys
@@ -39,6 +40,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
+import dflash_step_timing as DST  # noqa: E402
 import hdc_isa as I  # noqa: E402
 import hdc_timing as T  # noqa: E402
 
@@ -68,11 +70,11 @@ GROUPS_BUDGET = 7680              # floor(146.7 mm2 x 0.9 / MAC_UM2 / 16): the r
 GROUPS_ROM = 8192                 # the spec: a power of two, so every split tiles whole rounds (see split_rounds)
 LANES_ROM = GROUPS_ROM * W
 # The HBM comparator's MAC array: the ROM die's lanes.  The utilisation gate
-# tried the smallest array that still covers the DFlash tau-4.1 step at 8k
-# (GROUPS_HBM_CANDIDATE: 6,656 groups, tiling 0.947, 100,897 effective lanes
-# against a 97,471-lane need) -- it slows no 8k row, but at 2k the batch rows
-# from 32 users are MAC-bound and lose 23% of their throughput, so the
-# comparator keeps 131,072 lanes (qwen3_utilization.json).
+# tried a smaller array (GROUPS_HBM_CANDIDATE: 6,656 groups, tiling 0.947,
+# 100,897 effective lanes) against the DFlash step's lane need at 8k
+# (dflash.hbm.fp8.mac_lanes_min) -- at 2k the batch rows from 32 users are
+# MAC-bound and lose 23% of their throughput, so the comparator keeps 131,072
+# lanes (qwen3_utilization.json).
 GROUPS_HBM = GROUPS_ROM
 LANES_HBM = GROUPS_HBM * W
 GROUPS_HBM_CANDIDATE = 6656
@@ -85,7 +87,6 @@ ROM_KV_HBM = dict(stacks=6, basis="the reticle's beachfront at 60% edge use hold
                                   "KV (the ROM die has no weight traffic)")
 LANE_COPY_UM2 = 528.08            # routed MAC-only lane copy (ot_hdc_lane_copy, 16 lanes 8,449.24 um2, closed 1.2 GHz)
 SU_SPILL_MM2 = 12.8               # the vector stream unit beyond the compute share (estimated, 25,000 um2 a lane)
-DFLASH_SLOTS = 16
 SPEC_SU_WIDTH = 1024              # the stream unit the spec sizes (requirements(): the one-pass softmax at 8k)
 
 
@@ -655,14 +656,15 @@ def qwen_design_point(out, clock):
     batch = {r["batch"]: r for r in out["batch"]["per_context"][str(CTX_HEAD)]["rom"] if r["lane_multiplier"] == m}
     b_kv = min(b for b, r in batch.items() if r["binding"] == "kv_stream")
     best = out["dflash"]["rom"][f"{CTX_HEAD}/{KV_FMT_SPEC}/m{m}"]["best"]
+    dfl = dict(PS_CFG["design_points"]["qwen3"]["dflash"])        # tools/power_scenarios.dflash_point: the record
+    assert (dfl["block"], dfl["step_cycles"], dfl["tokens_per_step"]) == \
+        (best["block"], best["step_cycles"], best["tokens_per_step"]), "power config and budget read different points"
     one = dict(users=1, slots=1, drafter=False)
     dp = dict(context=CTX_HEAD, kv_format_bytes_per_elem=KV_FORMATS[KV_FMT_SPEC], clock_hz=clock,
               hbm_stacks=ROM_KV_HBM["stacks"], dies_per_package=1,
               ar_batch1=dict(step_cycles=round(max(out["as_built_calibrated"][str(CTX_HEAD)]["cycles"], kv_cyc)),
                              tokens_per_step=1, lane_copies_on=0, **one),
-              dflash=dict(tau=TAU_CENTRAL, block=best["block"], step_cycles=best["step_cycles"],
-                          tokens_per_step=best["tokens_per_step"], users=1, slots=best["block"], drafter=True,
-                          lane_copies_on=min(m, best["block"]) - 1),
+              dflash=dfl,
               area_mm2=dict(compute=RETICLE["compute_mm2"], interconnect=RETICLE["interconnect_mm2"],
                             overhead=RETICLE["overhead_mm2"], hbm_phy=a["hbm_phy_mm2"],
                             stream_unit_spill=a["stream_unit_spill_mm2"], lane_copy=a["lane_copy_mm2"],
@@ -687,7 +689,7 @@ def _rom_points(dp, scenario):
     res = {}
     for key in (k for k, v in dp.items() if isinstance(v, dict) and "step_cycles" in v):
         r = PS.qwen_point(cfg, scenario, key)
-        label = f"dflash_tau{TAU_CENTRAL}_block{dp['dflash']['block']}" if key == "dflash" else key
+        label = f"dflash_block{dp['dflash']['block']}" if key == "dflash" else key
         res[label] = dict(step_cycles=r["step_cycles"], tokens_per_step=r["tokens_per_step"],
                           tokens_s=round(r["design_rate_tokens_s"], 1),
                           energy_per_token_mj=round(r["energy_per_token_mj"], 3),
@@ -818,7 +820,7 @@ def _blk(name, peak, unit, demand, step, *, busy=None, area_mm2=None, kind="comp
 def utilization(out, clock):
     """The utilisation gate (user, binding before the core P&R): for every block
     of the ROM reticle and of the HBM comparator, its peak, its demand at batch
-    1 (autoregressive and DFlash tau 4.1), at the KV-bound batch and at the
+    1 (autoregressive and DFlash at its best block), at the KV-bound batch and at the
     largest batch; utilisation (MFU for compute, MBU for memory and bandwidth)
     and busy fraction over the step; area and energy share; and a verdict:
     RIGHT-SIZED (binding, or smaller would slow the single user -- measured by
@@ -830,8 +832,6 @@ def utilization(out, clock):
     kvb1 = kv_bytes(wl, KV_FMT_SPEC)
     kv_cyc = kvb1 / rom_kv_bw() * clock
     macs_tok = wl["weight_macs"] + wl["attention_macs"]
-    per_layer, _ = matrices()
-    layer_macs = sum(a * b for a, b in per_layer.values())
     wbytes = wl["bytes"]["weights_rom_format"]
     drafter_bytes = DRAFTER_PARAMS * RETICLE["weight_bits"] / 8
     rom_peak_b = LANES_ROM * RETICLE["weight_bits"] / 8
@@ -847,15 +847,16 @@ def utilization(out, clock):
     b_max = max(batch)
     best = out["dflash"]["rom"][f"{CTX_HEAD}/{KV_FMT_SPEC}/m{m}"]["best"]
     Bd = best["block"]
-    draft_macs = Bd * DRAFTER_LAYERS * layer_macs + (Bd - 1) * Q["V"] * Q["H"] + Bd * DFLASH_FC[0] * DFLASH_FC[1]
+    draft_macs = best["draft_weight_macs"] + best["draft_attention_macs"]
     area = out["area"]
     ub = ar["unit_busy"]
     attn_busy = ub["attn_scores"] + ub["attn_pv"]
     # scenarios: (label, step cycles, positions sharing a weight word, users, slots, drafter, basis)
     scen = [("ar_batch1", max(ar["cycles"], kv_cyc), 1, 1, 1, False,
              "calibrated sequencer model at HEAD (unit busy measured on the replayed program)"),
-            (f"dflash_tau{TAU_CENTRAL}_block{Bd}", best["step_cycles"], min(m, Bd), 1, Bd, True,
-             f"budget model, best ROM block at m = {m} ({best['tokens_per_step']} tokens a step)"),
+            (f"dflash_block{Bd}", best["step_cycles"], min(m, Bd), 1, Bd, True,
+             f"serial draft + verify + commit step (results/speculative/dflash_step_timing.json), best ROM block "
+             f"at m = {m} ({best['tokens_per_step']} tokens a step, measured at this block)"),
             (f"kv_bound_batch{b_kv}", batch[b_kv]["step_cycles"], min(m, b_kv), b_kv, 1, False,
              "budget model, smallest KV-bound batch"),
             (f"max_batch{b_max}", batch[b_max]["step_cycles"], m, b_max, 1, False, "budget model")]
@@ -921,14 +922,13 @@ def utilization(out, clock):
     comp = out["dependency_chain"][f"{CTX_HEAD}/spec"]["components"]
     lat = (comp["latency"] + comp["control"]) / clock
     dh = out["dflash"]["hbm"]["fp8"]
-    n16 = DFLASH_SLOTS
-    step_macs16 = n16 * DRAFTER_LAYERS * layer_macs + (n16 - 1) * Q["V"] * Q["H"] + \
-        n16 * (Q["L"] * layer_macs + Q["V"] * Q["H"]) + n16 * wl["attention_macs"]
+    n16 = dh["block"]
+    step_macs16 = dh["macs_per_step"]
     hbatch = [r["batch"] for r in out["batch"]["per_context"][str(CTX_HEAD)]["hbm"]["fp8"]]
     hb_kv = min(b for b in hbatch if b * kvb1 >= wl["weight_macs"])
     wl2 = out["workload"]["2048"]
     kvb2 = kv_bytes(wl2, KV_FMT_SPEC)
-    hscen = [("ar_batch1", 1, None, wl, kvb1), (f"dflash_tau{TAU_CENTRAL}_block{n16}", None, dh["step_s"], wl, kvb1),
+    hscen = [("ar_batch1", 1, None, wl, kvb1), (f"dflash_block{n16}", None, dh["step_s"], wl, kvb1),
              (f"kv_bound_batch{hb_kv}", hb_kv, None, wl, kvb1), (f"max_batch{b_max}", b_max, None, wl, kvb1),
              (f"ctx2048_max_batch{b_max}", b_max, None, wl2, kvb2)]
     hbm = {}
@@ -939,7 +939,8 @@ def utilization(out, clock):
         for label, B, fixed, w_, kvb_ in hscen:
             if fixed:
                 macs = step_macs16
-                byt = (w_["weight_macs"] + DRAFTER_PARAMS) + kvb_ * (1 + DRAFTER_LAYERS / Q["L"])
+                # the draft phase re-reads the shared lm_head (FP8 weights: one byte a weight)
+                byt = (w_["weight_macs"] + DRAFTER_PARAMS + Q["V"] * Q["H"]) + kvb_ * (1 + DRAFTER_LAYERS / Q["L"])
                 bound_t = fixed
                 t = max(fixed, macs / (lanes * eff * clock))
             else:
@@ -1106,87 +1107,57 @@ def gap_table(out):
     ]
 
 
-DRAFTER_PARAMS = 1_048_626_432     # z-lab/Qwen3-8B-DFlash-b16 safetensors header (BF16, all its own)
-DRAFTER_LAYERS = 5
-DFLASH_FC = (4096, 5 * 4096)
-TAU_CENTRAL = 4.1                  # user decision: the pooled measured tau (561 blocks); 5.18 (mean of prompts) is a band
-
-
-# Pooled acceptance lengths (tokens a step, accepted drafts + 1) of DFlash-b16
-# on Qwen3-8B, fp32 torch reference, 6 prompts x 512 tokens, 561 blocks:
-# results/speculative/dflash_validation_parts/reference_fp32.json at
-# worktree-agent-a5d8c1340cfb92fbc 0b576189 (pooled tau 4.10; mean of prompts 5.18).
-ACCEPT_HIST = {1: 169, 2: 118, 3: 79, 4: 51, 5: 29, 6: 13, 7: 12, 8: 9, 9: 14, 10: 9, 11: 5, 12: 3, 13: 3,
-               14: 9, 15: 4, 16: 34}
-
-
-def tokens_per_step(B):
-    n = sum(ACCEPT_HIST.values())
-    return sum(min(k, B) * v for k, v in ACCEPT_HIST.items()) / n
-
-
-def rom_block_sweep(out, clock, ctx, fmt, m):
-    """ROM speculative configurations: block B = 2..16 (B-1 drafts, B verified
-    slots), tokens a step E[min(L, B)] from the measured block-16 acceptance
-    lengths (a smaller block keeps the first B-1 drafts -- an approximation:
-    DFlash drafts the block jointly).  The verify is KV-shared and
-    slot-parallel (rom_token with B slots); the drafter's 5 layers over B
-    slots, the target lm_head over B-1 and the context projection of B slots
-    add their MACs (their latency overlapped); the KV stream carries the
-    target's and the drafter's KV once a step."""
-    per_layer, _ = matrices()
-    layer_macs = sum(a * b for a, b in per_layer.values())
-    head_macs = Q["V"] * Q["H"]
-    plain, _, _ = rom_token(out, ctx, fmt)
-    rows = []
-    for B in (1, 2, 3, 4, 5, 6, 8, 12, 16):
-        tok = tokens_per_step(B)
-        if B == 1:
-            step = plain
-        else:
-            _, comp, kv = rom_token(out, ctx, fmt, slots=B, m=m, drafter=True)
-            draft_macs = B * DRAFTER_LAYERS * layer_macs + (B - 1) * head_macs + \
-                B * (DFLASH_FC[0] * DFLASH_FC[1] + DRAFTER_LAYERS * 2 * Q["KV"] * Q["HD"] * Q["H"]) + \
-                B * DRAFTER_LAYERS * 2 * Q["NH"] * Q["HD"] * (ctx + B)
-            step = max(comp + draft_macs / (LANES_ROM * min(m, B)), kv)
-        rows.append(dict(block=B, tokens_per_step=round(tok, 3), step_cycles=round(step),
-                         tokens_s=round(tok * clock / step, 1), speedup=round(tok * plain / step, 3)))
-    return rows
+# DFlash: ONE source.  The drafter's shape and the operating points -- tokens a step measured at each block (not a
+# block-16 histogram cut at B), the serial draft + verify + commit step (the draft phase on the critical path, not
+# overlapped), and the MACs of both phases -- are tools/dflash_step_timing.py's record; nothing is restated here.
+DFLASH_REC = ROOT / "results/speculative/dflash_step_timing.json"
+DRAFTER_PARAMS, DRAFTER_LAYERS, DFLASH_FC = DST.DRAFTER_PARAMS, DST.DRAFTER_LAYERS, DST.DFLASH_FC
+_ROW_KEYS = ("block", "tokens_per_step", "tokens_per_step_band", "step_cycles", "draft_cycles", "verify_cycles",
+             "commit_cycles", "tokens_s", "tokens_s_band", "speedup", "draft_weight_macs", "draft_attention_macs",
+             "verify_weight_macs", "verify_attention_macs", "macs_per_step")
 
 
 def dflash_budget(out, clock):
-    """DFlash at the design point and at 2k, m = 1 and the area ledger's m.
-    On the ROM reticle the MACs of every slot are real work; with KV in HBM the
-    verify's slots share the KV stream, so speculation now amortises the KV
-    term.  On the HBM comparator the BYTES bind, and m = 16 reads each weight
-    once for 16 slots."""
+    """DFlash at the design point and at 2k, m = 1 and the area ledger's m, read from the serial step record
+    (results/speculative/dflash_step_timing.json).  This tool checks the record prices the same machine -- the
+    clock, and its plain token equal to rom_token at each context -- and restates none of its figures.  On the ROM
+    reticle the MACs of every slot are real work and the drafter's forward is a serial phase; on the HBM comparator
+    each phase is max(bytes, MACs / lanes, latency) and the bytes bind."""
+    raw = DFLASH_REC.read_bytes()
+    rec = json.loads(raw)
+    assert rec["clock_hz"] == clock, "the DFlash step record prices another clock"
+    assert rec["checks"]["all"], rec["checks"]
     m_max = out["area"]["lane_multiplier_m"]
     rom = {}
     for ctx in CONTEXTS:
+        plain = out["rom_token"][f"{ctx}/{KV_FMT_SPEC}"]["cycles"]
         for m in sorted({1, m_max}):
             key = f"{ctx}/{KV_FMT_SPEC}/m{m}"
-            sweep = rom_block_sweep(out, clock, ctx, KV_FMT_SPEC, m)
-            best = max(sweep, key=lambda r: r["tokens_s"])
-            rom[key] = dict(context=ctx, kv_format=KV_FMT_SPEC, lane_multiplier=m, sweep=sweep, best=best)
-    wl = out["workload"][str(CTX_HEAD)]
-    bw = HBM["stacks"] * HBM["stack_bytes_s"] * HBM["efficiency"]
-    per_layer, _ = matrices()
-    layer_macs = sum(a * b for a, b in per_layer.values())
-    n = DFLASH_SLOTS
-    step_macs = n * DRAFTER_LAYERS * layer_macs + (n - 1) * Q["V"] * Q["H"] + n * (Q["L"] * layer_macs + Q["V"] * Q["H"]) \
-        + n * wl["attention_macs"]
+            r = rec["rom"][key]
+            assert r["plain_cycles"] == plain, (key, r["plain_cycles"], plain)
+            rom[key] = dict(context=ctx, kv_format=KV_FMT_SPEC, lane_multiplier=m, plain_tokens_s=r["plain_tokens_s"],
+                            sweep=[{k: x[k] for k in _ROW_KEYS} for x in r["sweep"]],
+                            best={k: r["best"][k] for k in _ROW_KEYS})
     hbm = {}
-    for fmt, bpp in (("bf16", 2), ("fp8", 1), ("rom_format_3.5b", 3.5 / 8)):
-        wbytes = (wl["weight_macs"] + DRAFTER_PARAMS) * bpp
-        kvb = kv_bytes(wl, KV_FMT_SPEC) * (1 + DRAFTER_LAYERS / Q["L"])
-        step_s = (wbytes + kvb) / bw
-        plain_s = (wl["weight_macs"] * bpp + kv_bytes(wl, KV_FMT_SPEC)) / bw
-        hbm[fmt] = dict(context=CTX_HEAD, step_s=step_s, plain_token_s=plain_s, tokens_s_plain=round(1 / plain_s, 1),
-                        tokens_s_at_tau_central=round(TAU_CENTRAL / step_s, 1),
-                        speedup_at_tau_central=round(TAU_CENTRAL * plain_s / step_s, 2),
-                        mac_lanes_min=math.ceil(step_macs / (step_s * clock)))
-    return dict(tau_central=TAU_CENTRAL, drafter_parameters=DRAFTER_PARAMS, rom=rom, hbm=hbm,
-                requirements=["lane multiplier m (one weight or KV word feeds m slots); HBM m = 16",
+    for fmt, h in rec["hbm"].items():
+        b = h["best"]
+        d_s, v_s = b["draft_us"] * 1e-6, b["verify_us"] * 1e-6
+        need = max((b["draft_weight_macs"] + b["draft_attention_macs"]) / d_s,
+                   (b["verify_weight_macs"] + b["verify_attention_macs"]) / v_s) / clock
+        hbm[fmt] = dict(context=h["context"], tokens_s_plain=h["plain_tokens_s"], block=b["block"],
+                        tokens_per_step=b["tokens_per_step"], tokens_per_step_band=b["tokens_per_step_band"],
+                        step_s=b["step_us"] * 1e-6, draft_s=d_s, verify_s=v_s, binding=b["binding"],
+                        tokens_s=b["tokens_s"], tokens_s_band=b["tokens_s_band"], speedup=b["speedup"],
+                        macs_per_step=b["macs_per_step"], mac_lanes_min=math.ceil(need),
+                        block16_tokens_s=h["block16"]["tokens_s"])
+    best = rom[f"{CTX_HEAD}/{KV_FMT_SPEC}/m{m_max}"]["best"]
+    return dict(source=str(DFLASH_REC.relative_to(ROOT)), source_sha256=hashlib.sha256(raw).hexdigest(),
+                acceptance=rec["acceptance"]["path"], tau_convention=rec["acceptance"]["central"],
+                tau_band=rec["acceptance"]["band"], tau_design_point=best["tokens_per_step"],
+                block_design_point=best["block"], drafter_parameters=DRAFTER_PARAMS, rom=rom, hbm=hbm,
+                requirements=["lane multiplier m (one weight or KV word feeds m slots)",
+                              "the draft phase is serial with the verify: the drafter's layers, fc, K/V projections "
+                              "and the shared lm_head over the draft slots run on the same engine before each verify",
                               "KV-shared verify attention: one K/V read serves every slot, the causal mask per slot",
                               "slot-parallel non-weight work: one op over all slots (the stream unit's lanes take "
                               "slots), never serial ops",
@@ -1276,15 +1247,12 @@ def power_budget(out, clock):
     wl = out["workload"][str(CTX_HEAD)]
     macs_tok = wl["weight_macs"] + wl["attention_macs"]
     target = out["budget"]["target_tokens_s"]
-    per_layer, _ = matrices()
-    layer_macs = sum(a * b for a, b in per_layer.values())
     lim = P["cooling"]
     points = {}
     for key in ("ar_batch1", "dflash"):
         pt = dp[key]
         n = pt["users"] * pt["slots"]
-        step_macs = n * macs_tok + ((pt["slots"] * DRAFTER_LAYERS * layer_macs + (pt["slots"] - 1) * Q["V"] * Q["H"]
-                                     + pt["slots"] * DFLASH_FC[0] * DFLASH_FC[1]) if pt["drafter"] else 0)
+        step_macs = pt["macs_per_step"] if pt["drafter"] else n * macs_tok   # drafter MACs: the step record's
         lanes = {s: PS.qwen_point(cfg, s, key) for s in SCENARIOS + (GPU_TENSOR,)}
         r = lanes["B_proposed_production"]
         c = r["die_components_mj_per_token"]

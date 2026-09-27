@@ -75,13 +75,28 @@ def test_record_is_current(rec, fresh):
 
 
 def test_speculation(rec):
+    """DFlash is read from the serial step record, never restated: no tau constant or acceptance histogram in the
+    tool, and the design point's block, tokens a step, step cycles and MACs are the record's."""
+    for name in ("TAU_CENTRAL", "ACCEPT_HIST", "tokens_per_step", "rom_block_sweep", "DFLASH_SLOTS"):
+        assert not hasattr(A, name), name
     d = rec["dflash"]
-    assert d["tau_central"] == 4.1
+    timing = json.loads((ROOT / d["source"]).read_text())
     m = rec["area"]["lane_multiplier_m"]
+    for key, r in d["rom"].items():
+        want = timing["rom"][key]["best"]
+        assert {k: want[k] for k in r["best"]} == r["best"], key
+    best = d["rom"][f"8192/fp8/m{m}"]["best"]
+    assert d["tau_design_point"] == best["tokens_per_step"] and d["block_design_point"] == best["block"]
+    # the draft phase is on the step: step = draft + verify + commit, and its MACs are charged
+    assert best["step_cycles"] == best["draft_cycles"] + best["verify_cycles"] + best["commit_cycles"]
+    assert best["draft_weight_macs"] > 0 and best["draft_attention_macs"] > 0
+    assert best["macs_per_step"] == sum(best[k] for k in ("draft_weight_macs", "draft_attention_macs",
+                                                          "verify_weight_macs", "verify_attention_macs"))
     # with lane copies the ROM die gains; at m = 1 it does not at 8k
-    assert d["rom"][f"8192/fp8/m{m}"]["best"]["speedup"] > 1.3
+    assert best["speedup"] > 1.3
     assert d["rom"]["8192/fp8/m1"]["best"]["speedup"] <= 1.01
-    assert all(v["speedup_at_tau_central"] > 3 for v in d["hbm"].values())
+    assert all(v["speedup"] > 2 for v in d["hbm"].values())
+    assert all(v["tokens_s"] == timing["hbm"][f]["best"]["tokens_s"] for f, v in d["hbm"].items())
 
 
 # The performance gate: the calibrated model replaying the program the core
@@ -153,10 +168,24 @@ def test_power_reads_the_sourced_scenarios_and_matches_their_record(rec):
     for s in A.SCENARIOS:
         mine = rec["power_production"]["scenarios"][s]["rom"]
         theirs = ps["scenarios"][s]["qwen3_8b_rom_8k"]
-        for k, t in (("ar_batch1", "ar_batch1"), (f"dflash_tau{A.TAU_CENTRAL}_block3", "dflash")):
+        for k, t in (("ar_batch1", "ar_batch1"), (f"dflash_block{dp['dflash']['block']}", "dflash")):
             assert mine[k]["energy_per_token_mj"] == pytest.approx(theirs[t]["energy_per_token_mj"], rel=1e-4)
             assert mine[k]["die_w"] == pytest.approx(theirs[t]["die_w_at_design_rate"], abs=0.1)
             assert mine[k]["cooling"]["air"]["capped_tokens_s"] == pytest.approx(theirs[t]["capped_rate"], abs=0.1)
+
+
+def test_power_prices_the_serial_dflash_step(rec):
+    """The DFlash power point is the step record's best ROM block: its rate is tokens a step over the serial step
+    (the draft phase's time charged), and its MACs include the drafter's."""
+    dfl = rec["dflash"]["rom"][f"8192/fp8/m{rec['area']['lane_multiplier_m']}"]["best"]
+    dp = rec["power_production"]["design_point"]["dflash"]
+    assert (dp["block"], dp["step_cycles"], dp["tokens_per_step"]) == (dfl["block"], dfl["step_cycles"],
+                                                                       dfl["tokens_per_step"])
+    pt = rec["power"]["points"]["dflash"]
+    assert pt["macs_per_step"] == dfl["macs_per_step"]
+    for s in A.SCENARIOS:
+        r = rec["power_production"]["scenarios"][s]["rom"][f"dflash_block{dfl['block']}"]
+        assert r["tokens_s"] == pytest.approx(dfl["tokens_s"], abs=0.1)
 
 
 def test_power_budget_is_the_die_limit_less_the_non_mac_power(rec):

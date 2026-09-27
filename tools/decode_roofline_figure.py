@@ -229,11 +229,13 @@ def build_qwen(src: dict) -> dict:
 
     pp = qb["power_production"]["scenarios"]["B_proposed_production"]   # the production lane (scenario B)
     rom_ar = pp["rom"]["ar_batch1"]["tokens_s"]
-    rom_df = pp["rom"]["dflash_tau4.1_block3"]["tokens_s"]
+    qd = qb["dflash"]   # the serial draft + verify + commit step at the measured per-block acceptance
+    rom_blk, rom_tau = qd["block_design_point"], qd["tau_design_point"]
+    rom_df = pp["rom"][f"dflash_block{rom_blk}"]["tokens_s"]
     hdc_bf16 = qb["hbm_comparator"]["8192"]["bf16"]["tokens_s"]
     hdc_35 = qb["hbm_comparator"]["8192"]["rom_format_3.5b"]["tokens_s"]
-    hdc_35_df = qb["dflash"]["hbm"]["rom_format_3.5b"]["tokens_s_at_tau_central"]
-    hdc_bf16_df = qb["dflash"]["hbm"]["bf16"]["tokens_s_at_tau_central"]
+    h35, hbf = qd["hbm"]["rom_format_3.5b"], qd["hbm"]["bf16"]
+    hdc_35_df, hdc_bf16_df = h35["tokens_s"], hbf["tokens_s"]
     auto = iq["contexts"]["8192"]["autoregressive"]
     loc = iq["local_gpu_rtx_pro_6000"]["concurrency_1"]
     dfl = CITED["dflash_b200"]["value"]
@@ -244,7 +246,7 @@ def build_qwen(src: dict) -> dict:
     tp8_35 = g("rom35", 8)
     rom_sweep_ceiling = qb["budget"]["ceiling_tokens_s"]
     kv_floor = hdc / kv
-    tau = qb["dflash"]["hbm"]["bf16"].get("tau", 4.1)
+    tau = hbf["tokens_per_step"]   # block 16, the bound's tau
 
     points = [
         # key, label, x (TB/s), y, evidence, family, spec, basis
@@ -259,7 +261,7 @@ def build_qwen(src: dict) -> dict:
         dict(key="b200_bf16", label="B200, SGLang, BF16", x=b200 / 1e12, y=dfl["ar"], evidence="cited", family="gpu", spec=False,
              basis=CITED["dflash_b200"]["source"]),
         dict(key="b200_dflash", label="B200 + DFlash", x=b200 / 1e12, y=dfl["dflash"], evidence="cited", family="gpu", spec=True,
-             basis=f"same source; tau {dfl['tau']} (MATH-500), not the 4.1 used for our designs"),
+             basis=f"same source; tau {dfl['tau']} (MATH-500), not the per-block measured tau of our designs"),
         dict(key="b200_ideal_bf16", label="B200 idealised, BF16", x=b200 / 1e12, y=s1, evidence="modelled", family="gpu", spec=False,
              basis="bandwidth roof at 0.90; 220 measured all-SM boundaries overlapped"),
         dict(key="b200_ideal_rom35", label="B200 idealised, 3.5-bit", x=b200 / 1e12, y=s1f, evidence="modelled", family="gpu", spec=False,
@@ -271,13 +273,15 @@ def build_qwen(src: dict) -> dict:
         dict(key="hdc_rom35", label="HDC-HBM, 3.5-bit", x=hdc / 1e12, y=hdc_35, evidence="modelled", family="hbm", spec=False,
              basis="same machine at the ROM's weight format"),
         dict(key="hdc_rom35_dflash", label="HDC-HBM + DFlash", x=hdc / 1e12, y=hdc_35_df, evidence="modelled", family="hbm", spec=True,
-             basis=f"tau {tau} (measured on real Qwen3-8B, 561 blocks)"),
+             basis=f"block {h35['block']}, tau {h35['tokens_per_step']:.2f} measured at that block on real Qwen3-8B "
+                   "(264 prompt turns); serial draft + verify + commit"),
         dict(key="hdc_matched", label="S2: HDC core at B200 bandwidth", x=b200 / 1e12, y=s2, evidence="modelled", family="hbm", spec=False,
              basis="specialised core on a B200-sized package (8 stacks, 7.2 TB/s), 3.5-bit weights, 220 x 4.8 ns handoffs"),
         dict(key="rom", label="ROM reticle", x=hdc / 1e12, y=rom_ar, evidence="calibrated", family="rom", spec=False,
              basis="RTL-calibrated sequencer model at spec widths, 123,301 cycles at 1.099 GHz; KV-bound (qwen3_budget power_production)"),
         dict(key="rom_dflash", label="ROM + DFlash (m=3)", x=hdc / 1e12, y=rom_df, evidence="modelled", family="rom", spec=True,
-             basis="tau 4.1, block 3, three MAC copies per weight read in the freed SRAM; conditional on the lane copies"),
+             basis=f"block {rom_blk}, tau {rom_tau:.2f} measured at that block; serial draft + verify + commit; three MAC "
+                   "copies per weight read in the freed SRAM; conditional on the lane copies"),
     ]
     roofs = [
         dict(key="roof_bf16", label="weights BF16 + KV", bytes_per_token=W["bf16"]),
@@ -346,9 +350,9 @@ def build_qwen(src: dict) -> dict:
     spec_rows = [
         dict(machine="B200, SGLang (measured)", ar=dfl["ar"], spec=dfl["dflash"], tau=dfl["tau"], evidence="cited"),
         dict(machine="B200 idealised, BF16 (bound: tau x AR)", ar=s1, spec=tau * s1, tau=tau, evidence="bound"),
-        dict(machine="HDC-HBM, 3.5-bit", ar=hdc_35, spec=hdc_35_df, tau=tau, evidence="modelled"),
-        dict(machine="HDC-HBM, BF16", ar=hdc_bf16, spec=hdc_bf16_df, tau=tau, evidence="modelled"),
-        dict(machine="ROM reticle (m = 3 lane copies)", ar=rom_ar, spec=rom_df, tau=tau, evidence="modelled"),
+        dict(machine="HDC-HBM, 3.5-bit", ar=hdc_35, spec=hdc_35_df, tau=h35["tokens_per_step"], evidence="modelled"),
+        dict(machine="HDC-HBM, BF16", ar=hdc_bf16, spec=hdc_bf16_df, tau=hbf["tokens_per_step"], evidence="modelled"),
+        dict(machine="ROM reticle (m = 3 lane copies)", ar=rom_ar, spec=rom_df, tau=rom_tau, evidence="modelled"),
     ]
     return dict(
         title="Qwen3-8B, 8K context, FP8 KV, one user",

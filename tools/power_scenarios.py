@@ -24,7 +24,9 @@ and two checks bind -- the die against its share and the package (dies + our sta
 design point the record gives energy per token by component, die power against each class's limit and the rate each
 class allows:
 
-* Qwen3-8B ROM reticle, 8K context, FP8 KV: autoregressive batch 1 and DFlash (tau 4.1, block 3);
+* Qwen3-8B ROM reticle, 8K context, FP8 KV: autoregressive batch 1 and DFlash at the best block of the serial
+  draft + verify + commit step (results/speculative/dflash_step_timing.json: tau, tokens per step, step cycles with
+  the draft phase, and the drafter's MACs are read from that record, see dflash_point);
 * DeepSeek-V4.1 ROM array at 1M and 200K: batch 1 without and with MTP (gamma 5, tau 5.0) and the saturated batch,
   on the specification widths (deepseek_v41_rom_array) and on the adopted design point (deepseek_v41_design_point,
   which adds the 28-user fill and the saturated batch with MTP);
@@ -57,12 +59,39 @@ V41_LANES = ROOT / "results/arch/v41_lanes.json"          # the adopted design p
 V41_LADDER = ROOT / "results/arch/v41_latency_ladder.json"
 V41_SWITCHED = ROOT / "results/arch/v41_hbm_switched.json"   # the best switched HBM comparator (design-point model)
 OUT = ROOT / "results/arch/power_scenarios.json"
+DFLASH_REC = ROOT / "results/speculative/dflash_step_timing.json"   # the Qwen3 DFlash operating point (single source)
 SCHEMA = "opentallas.power-scenarios-result.v1"
 SCENARIOS = ("A_measured_implementation", "B_proposed_production")
 
 
+def dflash_point(qdp, rec_path=DFLASH_REC):
+    """The Qwen3 DFlash operating point of design point `qdp` (the config's design_points.qwen3), read from the serial
+    step record (tools/dflash_step_timing.py): the best block at the design context, FP8 KV and the lane multiplier;
+    tokens a step (measured, cycle-weighted), step cycles with the draft phase, and the MACs of both phases."""
+    spec = qdp["dflash"]
+    assert ROOT / spec["from_record"] == rec_path, spec["from_record"]
+    rec = json.loads(rec_path.read_text())
+    assert rec["clock_hz"] == qdp["clock_hz"], "DFlash step record and design point clocks differ"
+    m = qdp["area_mm2"]["lane_multiplier_m"]
+    key = f"{qdp['context']}/fp8/m{m}"
+    b = rec["rom"][key]["best"]
+    B = b["block"]
+    macs = {k: b[k] for k in ("draft_weight_macs", "draft_attention_macs", "verify_weight_macs",
+                              "verify_attention_macs", "macs_per_step")}
+    return dict(spec, record_key=key, tau=b["tokens_per_step"], block=B, slots=B, users=spec["users"],
+                drafter=spec["drafter"], tokens_per_step=b["tokens_per_step"],
+                tokens_per_step_band=b["tokens_per_step_band"], step_cycles=b["step_cycles"],
+                draft_cycles=b["draft_cycles"], verify_cycles=b["verify_cycles"], commit_cycles=b["commit_cycles"],
+                record_tokens_s=b["tokens_s"], record_tokens_s_band=b["tokens_s_band"],
+                lane_copies_on=min(m, B) - 1, **macs)
+
+
 def load_cfg(path=CFG):
-    return json.loads(Path(path).read_text())
+    cfg = json.loads(Path(path).read_text())
+    q = cfg["design_points"]["qwen3"]
+    if "from_record" in q["dflash"]:
+        q["dflash"] = dflash_point(q)
+    return cfg
 
 
 def val(x):
@@ -184,13 +213,15 @@ def qwen_point(cfg, scenario, key, hbm_die_pj=None):
     clock = dp["clock_hz"]
     wl = QB.workload(dp["context"])
     kv_per_user = wl["bytes"]["kv_read"] * dp["kv_format_bytes_per_elem"] / 2     # workload() counts BF16 (2 B)
-    per_layer, _ = QB.matrices()
-    layer_macs = sum(a * b for a, b in per_layer.values())
     Q = QB.Q
     n = pt["users"] * pt["slots"]
     dr = pt["drafter"]
-    draft_macs = (pt["slots"] * QB.DRAFTER_LAYERS * layer_macs + (pt["slots"] - 1) * Q["V"] * Q["H"]
-                  + pt["slots"] * QB.DFLASH_FC[0] * QB.DFLASH_FC[1]) if dr else 0
+    if dr:   # the serial step record's MACs: the verify over the slots and the drafter's forward (dflash_point)
+        assert pt["verify_weight_macs"] == n * wl["weight_macs"] and pt["verify_attention_macs"] == n * wl["attention_macs"]
+        mac_w = pt["verify_weight_macs"] + pt["draft_weight_macs"]
+        mac_a = pt["verify_attention_macs"] + pt["draft_attention_macs"]
+    else:
+        mac_w, mac_a = n * wl["weight_macs"], n * wl["attention_macs"]
     kvb = pt["users"] * kv_per_user * ((1 + QB.DRAFTER_LAYERS / Q["L"]) if dr else 1)
     sweeps = 1 if dr else math.ceil(n / dp["area_mm2"]["lane_multiplier_m"])
     wbytes = sweeps * wl["bytes"]["weights_rom_format"] + (QB.DRAFTER_PARAMS * 3.5 / 8 if dr else 0)
@@ -201,11 +232,13 @@ def qwen_point(cfg, scenario, key, hbm_die_pj=None):
     sram, dlv = val(d["sram_j_per_byte"]), val(d["operand_delivery_j_per_byte"])
     toks = pt["tokens_per_step"]
     dyn = dict(   # joules per STEP, die-side dynamic
-        mac_weights=(n * wl["weight_macs"] + draft_macs) * mac_pj(cfg, scenario, "qwen3", "w4a8") * 1e-12,
-        mac_attention=n * wl["attention_macs"] * mac_pj(cfg, scenario, "qwen3", "bf16") * 1e-12,
+        mac_weights=mac_w * mac_pj(cfg, scenario, "qwen3", "w4a8") * 1e-12,
+        mac_attention=mac_a * mac_pj(cfg, scenario, "qwen3", "bf16") * 1e-12,
         weight_read_and_delivery=wbytes * (val(d["rom_read_j_per_byte"]) + dlv),
         kv_ring_sram_and_delivery=kvb * (2 * sram + dlv),
-        stream_unit=n * wl["elementwise_total"] * (val(d["stream_fp32_op_j"]) + 12 * sram),
+        # the drafter's 5 layers add their elementwise work over the same slots (5/36 of the target's)
+        stream_unit=n * wl["elementwise_total"] * ((1 + QB.DRAFTER_LAYERS / Q["L"]) if dr else 1)
+        * (val(d["stream_fp32_op_j"]) + 12 * sram),
         hbm_controller_phy_io=kvb * 8 * die_pj * 1e-12,
     )
     st = _die_static(cfg, _qwen_areas(dp, pt["lane_copies_on"]), clock, dp["hbm_stacks"])
@@ -480,7 +513,7 @@ def build(cfg_path=CFG):
     hb = hbm_split(cfg)
     rec = dict(schema=SCHEMA, tool="tools/power_scenarios.py",
                inputs={str(p.relative_to(ROOT)): _sha(p) for p in (Path(cfg_path), V41_REC, V41_LANES, V41_LADDER,
-                                                                    V41_SWITCHED,
+                                                                    V41_SWITCHED, DFLASH_REC,
                                                                     ROOT / "configs/hardware/technology.json")},
                hbm_split_pj_per_bit=hb,
                mac_pj={s: dict(qwen3_w4a8=mac_pj(cfg, s, "qwen3", "w4a8"), qwen3_bf16=mac_pj(cfg, s, "qwen3", "bf16"),

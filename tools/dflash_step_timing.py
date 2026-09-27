@@ -169,12 +169,28 @@ class Machine:
     def plain(self):
         return self.verify(1, 1)["cycles"]
 
+    def draft_mac_split(self, B, ctx):
+        """The drafter's MACs a step, (weight, attention): its 5 layers over B slots, the shared lm_head over the
+        B-1 draft slots, fc and K/V projections over B context positions (weights); scores and P.V of its 5
+        layers over ctx + B positions (attention).  B = 1 drafts nothing."""
+        if B == 1:
+            return 0, 0
+        q = self.q
+        w = B * DRAFTER_LAYERS * self.layer_macs + (B - 1) * self.head_macs + \
+            B * (DFLASH_FC[0] * DFLASH_FC[1] + DRAFTER_LAYERS * 2 * q["KV"] * q["HD"] * q["H"])
+        return w, B * DRAFTER_LAYERS * 2 * q["NH"] * q["HD"] * (ctx + B)
+
     def draft_macs(self, B, ctx):
         """The atlas's rom_block_sweep drafter MAC count (fc and K/V projections over B positions)."""
-        q = self.q
-        return B * DRAFTER_LAYERS * self.layer_macs + (B - 1) * self.head_macs + \
-            B * (DFLASH_FC[0] * DFLASH_FC[1] + DRAFTER_LAYERS * 2 * q["KV"] * q["HD"] * q["H"]) + \
-            B * DRAFTER_LAYERS * 2 * q["NH"] * q["HD"] * (ctx + B)
+        return sum(self.draft_mac_split(B, ctx))
+
+    def step_macs(self, B, ctx):
+        """MACs of one step, by phase and kind: the drafter's (draft_mac_split) and the target's verify over B slots
+        (weights incl. lm_head, and attention over the ctx positions), the totals the power model charges."""
+        dw, da = self.draft_mac_split(B, ctx)
+        vw, va = B * self.wl["weight_macs"], B * self.wl["attention_macs"]
+        return dict(draft_weight_macs=dw, draft_attention_macs=da, verify_weight_macs=vw, verify_attention_macs=va,
+                    macs_per_step=dw + da + vw + va)
 
     def legacy_step(self, B, m):
         """atlas rom_block_sweep: max(verify compute + drafter MACs / (lanes x min(m, B)), KV x (1 + 5/36))."""
@@ -276,7 +292,8 @@ def evaluate(basis: dict, acc: dict) -> dict:
                            speedup=round(t["direct"] * plain / s["cycles"], 3),
                            legacy_step_cycles=round(leg),
                            tokens_s_legacy_timing_measured_tau=round(t["direct"] * mc.clock / leg, 1),
-                           tokens_s_serial_timing_truncated_tau=round(t["truncated"] * mc.clock / s["cycles"], 1))
+                           tokens_s_serial_timing_truncated_tau=round(t["truncated"] * mc.clock / s["cycles"], 1),
+                           **mc.step_macs(B, ctx))
                 if B > 1:
                     row["draft_detail"] = {k: round(v) for k, v in s["draft_parts"].items()} | dict(
                         compute=round(s["draft_compute"]), kv_stream=round(s["draft_kv"]))
@@ -315,7 +332,8 @@ def evaluate(basis: dict, acc: dict) -> dict:
                                      tokens_s=round(t["direct"] / s["seconds"], 1),
                                      tokens_s_band=round(t["direct_mean_of_workloads"] / s["seconds"], 1),
                                      speedup=round(t["direct"] * p["seconds"] / s["seconds"], 3),
-                                     tokens_s_legacy_pricing_measured_tau=round(t["direct"] / legacy["seconds"], 1)))
+                                     tokens_s_legacy_pricing_measured_tau=round(t["direct"] / legacy["seconds"], 1),
+                                     **mc.step_macs(B, ctx)))
                 best = max(rows, key=lambda r: r["tokens_s"])
                 b16 = next(r for r in rows if r["block"] == 16)
                 legacy_b16 = basis["legacy_dflash"]["hbm"][fmt]
