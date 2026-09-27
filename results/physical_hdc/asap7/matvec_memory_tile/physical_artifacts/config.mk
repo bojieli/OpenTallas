@@ -20,6 +20,7 @@ export SKIP_REPORT_METRICS = 0
 export REPORT_CLOCK_SKEW = 1
 export CORNER = TC
 export ASAP7_USE_VT = RVT
+export SLEW_MARGIN = 25
 export ADDITIONAL_LEFS = /src/physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.lef /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef
 export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_tt.lib /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
 export SYNTH_BLACKBOXES = ot_rom_8192x266_m8 ot_sram_1r1w_1024x256_m2_r2c2

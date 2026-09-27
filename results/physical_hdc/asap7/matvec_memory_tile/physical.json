@@ -6,15 +6,15 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.0006819539999999999,
-        "max_cap_violations": 8.0,
+        "hold_wns_ns": 0.00764744,
+        "max_cap_violations": 0.0,
         "max_fanout_violations": 0.0,
-        "max_slew_violations": 51.0,
+        "max_slew_violations": 38.0,
         "met": false,
         "physically_clean": false,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 0.117703,
+        "setup_wns_ns": 0.0934335,
         "signal_integrity_clean": false,
         "stage": "place_and_route",
         "timing_met": true
@@ -26,7 +26,7 @@
     "status": "not_met"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-27T16:07:30.878179+00:00",
+  "completed_at": "2026-09-27T17:32:04.015684+00:00",
   "corner": {
     "liberty": [
       {
@@ -65,9 +65,9 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 10502.6,
+    "area_um2": 10707.6,
     "block": "ot_hdc_matvec_memory_tile",
-    "cells": 111142,
+    "cells": 112611,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 1.5,
     "clock_port": "clk",
@@ -79,16 +79,16 @@
     "false_path_from_ports": [],
     "false_path_io": false,
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 723433000.0,
-    "hold_wns_ns": 0.0006819539999999999,
+    "fmax_hz": 710951000.0,
+    "hold_wns_ns": 0.00764744,
     "io_delay_fraction": 0.2,
     "parameters": {},
-    "setup_wns_ns": 0.117703,
+    "setup_wns_ns": 0.0934335,
     "signal_integrity_clean": false,
     "signal_integrity_violations": {
-      "max_cap_violations": 8,
+      "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 51
+      "max_slew_violations": 38
     },
     "sources": [
       {
@@ -148,23 +148,18 @@
       }
     ],
     "top": "ot_hdc_matvec_memory_tile",
-    "utilization_fraction": 0.156085
+    "utilization_fraction": 0.156515
   },
-  "elapsed_seconds": 4256.672,
+  "elapsed_seconds": 4221.45,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-27T14:56:34.206603+00:00",
+  "generated_at": "2026-09-27T16:21:42.566181+00:00",
   "git": {
-    "commit": "aa9eed5b7d311b118a5918dbbe94d03b91219cfe",
+    "commit": "1b0a04b0851938ac7eefb7f199b40c472ce135f5",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
-    "untracked_results": [
-      "results/physical_hdc/"
-    ],
-    "worktree_dirty": true,
-    "worktree_status": [
-      "?? rtl/hdc/physical/",
-      "?? tools/run_hdc_matvec_memory_tile.sh"
-    ]
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
   },
   "place_and_route": {
     "artifact_dir": "results/physical_hdc/asap7/matvec_memory_tile/physical_artifacts",
@@ -181,48 +176,48 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "f9879b76e1dca78ea33a7f076e7f391c3d55dce6e7d2bfeb0cba266c1ae2ed42",
-        "size_bytes": 269858832
+        "sha256": "cc5e1f87863f610ae5f1914824f06c788a5beecb328cd78694317780f1737af6",
+        "size_bytes": 270922816
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "0eb8d96a1e3f9d7e7101dfd489e8a5ff8141e98d6f29d7d7ce7e44aafa84b631",
-        "size_bytes": 244028438
+        "sha256": "7be857776877f460d66d4daf6c3fe0ef6e4a1cc0a2e61428b7427a23465d6105",
+        "size_bytes": 245307734
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "cb7ee1b61c1a1f3a4dbe3be8a3593c8ff604bd91f0ba5d266ba109f22011acdc",
-        "size_bytes": 552411892
+        "sha256": "cb8e737c48121643080915bcb373ff013b4425e10d5d8efab0683bc834bb4aad",
+        "size_bytes": 554151009
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "adc77003916a69d470f75226bc0f6ff3420d6ae726d85378190f5e4d6006a7b6",
-        "size_bytes": 118623228
+        "sha256": "7c296d84fbec6e620b06fc6572c4951b84628f817f9814f543935985d50946d1",
+        "size_bytes": 120273814
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "339d919ed8a38e029322ffdbd6a8a6b88badf2f9cb2182ecf0af5c50f21c8885",
-        "size_bytes": 8731376
+        "sha256": "aabf205d7e280777d8635a22d6c35eac13b4f32ea838fa864cf6903269cbe4a9",
+        "size_bytes": 8849340
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "31c7136691b62927c44a6fdc60d4ec01416a51bafa5ddbb8f23eee76681664f8",
-        "size_bytes": 81895
+        "sha256": "292cdf0ef9f70fd37748d83b341580fb0ed934317b0dc9feda33f605ef2e7125",
+        "size_bytes": 86838
       },
       "config.mk": {
         "retained": true,
-        "sha256": "27e26f6944adf8154cf5cdef3c1aeb8e2ba8a6e382560e2ed1db39fe1f237d0b",
-        "size_bytes": 1787
+        "sha256": "94e450f3854397335c49f5bf9bd5f187c4d623db58a3afe927e3dfddf6c3a886",
+        "size_bytes": 1811
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "d8a7a80489b9d38d0bb3b6ea2be35890f13d80bb828a2d61467d9baf92d298fb",
-        "size_bytes": 340
+        "sha256": "761642202ad4bae185cdf17cdcdb66ef7a5494f91df58452e5cf817f9b5d88f6",
+        "size_bytes": 380
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "013b120a327c1bcd0db438a7b22c22d42641ef2076f6bbba7af400571426c7cc",
-        "size_bytes": 24243
+        "sha256": "5a6e75900d2c21e3cb7ee6ab8ab29f1d70a7059e8af800d3baf1bb0749780624",
+        "size_bytes": 24444
       }
     },
     "clock_period_ns": 1.5,
@@ -347,36 +342,36 @@
         "placeopt__flow__errors__count": 0,
         "synth__flow__errors__count": 0
       },
-      "fmax_hz": 723433000.0,
+      "fmax_hz": 710951000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.0006819539999999999,
-      "instance_count": 1478745,
+      "hold_wns_ns": 0.00764744,
+      "instance_count": 1480243,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 63846.9,
       "macro_count": 5,
-      "max_cap_violations": 8,
+      "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 51,
+      "max_slew_violations": 38,
       "missing_metadata_keys": [],
-      "power_total_w": 0.0784781,
+      "power_total_w": 0.0785757,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 0.681954,
+        "hold_wns_ns": 7.64744,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 117.703
+        "setup_wns_ns": 93.4335
       },
-      "routed_nets": 77674,
-      "routed_wirelength_um": 992335,
-      "sequential_area_um2": 3465.64,
+      "routed_nets": 79116,
+      "routed_wirelength_um": 992647,
+      "sequential_area_um2": 3465.67,
       "sequential_cell_count": 10814,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 0.117703,
-      "standard_cell_area_um2": 10502.6,
-      "standard_cell_count": 111142,
-      "utilization_fraction": 0.156085,
-      "vias": 658200
+      "setup_wns_ns": 0.0934335,
+      "standard_cell_area_um2": 10707.6,
+      "standard_cell_count": 112611,
+      "utilization_fraction": 0.156515,
+      "vias": 669069
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "ea295c98ec76829bddf5630c20b8e2e8ad960416c4a2a6fb3cc2df2659e122c7",
@@ -531,6 +526,44 @@
       "lib/NLDM/fakeregfile_64x64.lib": "e28fc92bff8066e8a3e194db7b4afc5aec7247cf8e52f4def7ed5208e39b51e5"
     },
     "sdc_clock_period_library_units": 1500.0,
+    "signal_integrity_constraints": {
+      "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+      "library_default_max_transition": [
+        {
+          "default_max_transition": 320.0,
+          "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+          "pin_max_transition_count": 224
+        },
+        {
+          "default_max_transition": 320.0,
+          "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+          "pin_max_transition_count": 37
+        },
+        {
+          "default_max_transition": 320.0,
+          "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+          "pin_max_transition_count": 185
+        },
+        {
+          "default_max_transition": 320.0,
+          "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+          "pin_max_transition_count": 94
+        },
+        {
+          "default_max_transition": 4000.0,
+          "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+          "pin_max_transition_count": 158
+        }
+      ],
+      "max_transition_library_units": 320.0,
+      "max_transition_ns": 0.32,
+      "max_transition_source": "library: the smallest default_max_transition declared by the corner's liberty files, in the library time unit",
+      "sdc_lines": [
+        "set_max_fanout 32 [current_design]",
+        "set_max_transition 320 [current_design]"
+      ],
+      "slew_margin_percent": 25.0
+    },
     "synth_memory_max_bits": 65536,
     "toolchain": {
       "binary_sha256": {
@@ -599,10 +632,13 @@
       "results/physical_hdc/asap7/matvec_memory_tile/physical.json",
       "--nickname-tag",
       "hdc_mem_tile",
+      "--max-transition-ns",
+      "--slew-margin-percent",
+      "25",
       "--force"
     ],
     "driver": {
-      "commit": "aa9eed5b7d311b118a5918dbbe94d03b91219cfe",
+      "commit": "1b0a04b0851938ac7eefb7f199b40c472ce135f5",
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
       "path": "/home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-physical-tile-review/tools/run_abi3_physical.py",
