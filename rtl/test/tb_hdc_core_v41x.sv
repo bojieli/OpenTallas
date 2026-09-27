@@ -30,6 +30,12 @@
 `ifndef HDC_X_IDX
 `define HDC_X_IDX 0
 `endif
+`ifndef HDC_X_SEL
+`define HDC_X_SEL 0
+`endif
+`ifndef HDC_X_EG
+`define HDC_X_EG 0
+`endif
 `ifndef HDC_HHW
 `define HDC_HHW 8
 `endif
@@ -41,6 +47,7 @@ module tb_hdc_core_v41x (input wire clk);
     localparam integer HROM_WORDS = 1 << 16;
     localparam integer WROM_WORDS = 1 << 19, QROM_WORDS = 1 << 16, EROM_WORDS = 1 << 19, CROM_WORDS = 1 << 15;
     localparam integer HHW = `HDC_HHW, HBAW = 16;
+    localparam integer XSQ = 4, XSW = 16;       // X_SEL: select quarters x lanes
     localparam integer KV_WORDS = 32768, VM_ELEMS = 65536, VOCAB = 4040, PROG_WORDS = 1 << PAW;
 
     reg [G*W*16-1:0]    wrom [0:WROM_WORDS-1];
@@ -71,6 +78,7 @@ module tb_hdc_core_v41x (input wire clk);
     wire [SW-1:0] ewrom_re; wire [SW*AW-1:0] ewrom_addr; reg [SW*G*W*16-1:0] ewrom_q;
     wire qrom_re; wire [AW-1:0] qrom_addr; reg [BL*QLB-1:0] qrom_q;
     wire hrom_re; wire [AW-1:0] hrom_addr; reg [HS*HNL*32-1:0] hrom_q;
+    wire [XSQ-1:0] vsl_re; wire [XSQ*AW-1:0] vsl_addr; reg [XSQ*XSW*32-1:0] vsl_q;
     wire [7:0] hb_re; wire [8*HBAW-1:0] hb_addr; reg [8*HHW*32-1:0] hb_q;
     wire [HS-1:0] vh_re; wire [HS*AW-1:0] vh_addr; reg [HS*32-1:0] vh_q;
     wire ww_h_we; wire [AW-1:0] ww_h_addr; wire [31:0] ww_h_mask; wire [1023:0] ww_h_data;
@@ -97,6 +105,7 @@ module tb_hdc_core_v41x (input wire clk);
 
     reg [AW-1:0] cfg [0:15];                   // tools/hdc_images_v41x.py cfg.hex: [0] the index keys' KV word base
     ot_hdc_core_v41x #(.SW(SW), .HS(HS), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
+                       .X_SEL(`HDC_X_SEL), .X_EG(`HDC_X_EG), .XSQ(XSQ), .XSW(XSW),
                        .HHW(HHW), .HBAW(HBAW)) dut (
         .cfg_ik_base(cfg[0]),
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry({PAW{1'b0}}), .acc_n(), .acc_tok(),
@@ -117,6 +126,7 @@ module tb_hdc_core_v41x (input wire clk);
         .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .vq_re(vq_re), .vq_addr(vq_addr), .vq_q(vq_q),
         .vr_re(vr_re), .vr_addr(vr_addr), .vr_q(vr_q), .wqr_re(wqr_re), .wqr_addr(wqr_addr), .wqr_q(wqr_q),
         .wxr_re(wxr_re), .wxr_addr(wxr_addr), .wxr_q(wxr_q),
+        .vsl_re(vsl_re), .vsl_addr(vsl_addr), .vsl_q(vsl_q),
         .vw_me_we(vw_me_we), .vw_me_addr(vw_me_addr), .vw_me_mask(vw_me_mask), .vw_me_data(vw_me_data),
         .vw_su_we(vw_su_we), .vw_su_addr(vw_su_addr), .vw_su_data(vw_su_data),
         .vw_rd_we(vw_rd_we), .vw_rd_addr(vw_rd_addr), .vw_rd_data(vw_rd_data),
@@ -148,6 +158,8 @@ module tb_hdc_core_v41x (input wire clk);
         if (vr_re) vr_q <= vm[vr_addr[15:0]];
         if (wqr_re) for (q = 0; q < 32; q = q + 1) wqr_q[32*q +: 32] <= vm[wqr_addr[15:0] + q];
         if (wxr_re) for (q = 0; q < 32; q = q + 1) wxr_q[32*q +: 32] <= vm[wxr_addr[15:0] + q];
+        for (q = 0; q < XSQ; q = q + 1)
+            if (vsl_re[q]) for (l = 0; l < XSW; l = l + 1) vsl_q[32*(q*XSW + l) +: 32] <= vm[vsl_addr[q*AW +: 16] + l];
         for (q = 0; q < SW; q = q + 1)
             if (kv_we[q]) kv[kv_waddr[q*AW+4 +: 15]][32*kv_waddr[q*AW +: 4] +: 32] <= kv_wdata[32*q +: 32];
         for (q = 0; q < G; q = q + 1)

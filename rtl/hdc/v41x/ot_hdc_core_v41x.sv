@@ -71,6 +71,10 @@ module ot_hdc_core_v41x #(
     parameter integer X_ME  = 0,           // ME weight ops -> the BF16/FP32 weight engine
     parameter integer X_ATT = 0,           // ME KV-sourced attention ops -> the attention engine
     parameter integer X_IDX = 0,           // ME KV-sourced index-key ops -> the indexer engine
+    parameter integer X_SEL = 0,           // XU index-score SELECT -> the streaming-filter select
+    parameter integer X_EG  = 0,           // XU EGATHER -> the per-bank Engram gather
+    parameter integer XSQ   = 4,           // select: quarters
+    parameter integer XSW   = 16,          // select: lanes per quarter
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
     parameter integer HTL   = 9,           // HCP tail levels
@@ -160,6 +164,9 @@ module ot_hdc_core_v41x #(
     output wire              wxr_re,          // XU 32-element read
     output wire [AW-1:0]     wxr_addr,
     input  wire [1023:0]     wxr_q,
+    output wire [XSQ-1:0]    vsl_re,          // X_SEL: the select's score reads, XSW elements per quarter
+    output wire [XSQ*AW-1:0] vsl_addr,
+    input  wire [XSQ*XSW*32-1:0] vsl_q,
     output wire [MP*G-1:0]   vw_me_we,
     output wire [MP*G*AW-1:0] vw_me_addr,
     output wire [MP*G*W-1:0] vw_me_mask,
@@ -266,6 +273,7 @@ module ot_hdc_core_v41x #(
     reg [NW-1:0] xu_n;
     reg [4:0]    xu_k;
     reg          xu_layer;
+    reg          xu_bf16;                   // SEL with a dynamic count: an index-score select (BF16 scores)
     // HE
     reg [NW-1:0] he_nout, he_k;
     reg [AW-1:0] he_wbase, he_xbase, he_obase;
@@ -467,6 +475,9 @@ module ot_hdc_core_v41x #(
         qe_nb <= `F(QE_NB); qe_nout <= `F(QE_NOUT); qe_tiles <= `F(QE_TILES);
         xu_op <= `F(XU_OP); xu_src <= `F(XU_SRC); xu_dst <= `F(XU_DST); xu_n <= c_xu_n;
         xu_k <= c_xu_k[4:0]; xu_layer <= `F(XU_LAYER);
+        //: the index-score SELECTs are the ones whose count is dynamic (xu_d_n: the positions so far);
+        //: the router's top-k and a draft's top-1 have static counts and FP32 values
+        xu_bf16 <= (`F(XU_D_N) != 0);
         he_nout <= `F(HE_NOUT); he_k <= `F(HE_K); he_wbase <= `F(HE_WBASE); he_xbase <= `F(HE_XBASE);
         he_obase <= `F(HE_OBASE);
     end
@@ -641,22 +652,47 @@ module ot_hdc_core_v41x #(
         .w_we(ww_q_we), .w_addr(ww_q_addr), .w_mask(ww_q_mask), .w_data(ww_q_data),
         .qr_re(qrom_re), .qr_addr(qrom_addr), .qr_q(qrom_q), .fault(qe_fault));
 
-    ot_hdc_v41_xu #(.AW(AW), .NW(NW), .K(TOPK)) u_xu (
-        .clk(clk), .rst_n(rst_n), .go(xu_go), .ready(xu_ready), .idle(xu_idle),
-        .i_op(xu_op), .i_src(xu_src), .i_dst(xu_dst), .i_n(xu_n), .i_k(xu_k), .i_layer(xu_layer),
-        .token(xu_tok), .first(xu_first), .i_hslot(xu_hslot), .rst_v(xu_rst_v),
-`ifdef HDC_MUTATE_RESTORE
-        .rst_slot(acc_a + 1'b1),                 // MUTATION CHECK ONLY: the wrong slot's history
-`else
-        .rst_slot(acc_a),
-`endif
-        .sel_first(xu_sel_first), .prime_v(prime_v && st == S_IDLE), .prime_first(prime_first),
-        .prime_cid(prime_cid),
-        .vr_re(vr_re), .vr_addr(vr_addr), .vr_q(vr_q), .xr_re(wxr_re), .xr_addr(wxr_addr), .xr_q(wxr_q),
-        .vw_we(vw_xe_we), .vw_addr(vw_xe_addr), .vw_data(vw_xe_data),
-        .w_we(ww_x_we), .w_addr(ww_x_addr), .w_mask(ww_x_mask), .w_data(ww_x_data),
-        .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
-        .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
+    // the XU: the as-built unit, or (X_SEL / X_EG) its recomposition with the re-specified select and gather
+    generate
+        if (X_SEL != 0 || X_EG != 0) begin : g_xu_x
+            ot_hdc_v41x_xu_adapt #(.AW(AW), .NW(NW), .K(TOPK), .X_SEL(X_SEL), .X_EG(X_EG), .SQ(XSQ), .SW(XSW)) u_xu (
+                .clk(clk), .rst_n(rst_n), .go(xu_go), .ready(xu_ready), .idle(xu_idle),
+                .i_op(xu_op), .i_src(xu_src), .i_dst(xu_dst), .i_n(xu_n), .i_k(xu_k), .i_layer(xu_layer), .i_bf16(xu_bf16),
+                .token(xu_tok), .first(xu_first), .i_hslot(xu_hslot), .rst_v(xu_rst_v),
+        `ifdef HDC_MUTATE_RESTORE
+                .rst_slot(acc_a + 1'b1),                 // MUTATION CHECK ONLY: the wrong slot's history
+        `else
+                .rst_slot(acc_a),
+        `endif
+                .sel_first(xu_sel_first), .prime_v(prime_v && st == S_IDLE), .prime_first(prime_first),
+                .prime_cid(prime_cid),
+                .vr_re(vr_re), .vr_addr(vr_addr), .vr_q(vr_q), .xr_re(wxr_re), .xr_addr(wxr_addr), .xr_q(wxr_q),
+                .vsl_re(vsl_re), .vsl_addr(vsl_addr), .vsl_q(vsl_q),
+                .vw_we(vw_xe_we), .vw_addr(vw_xe_addr), .vw_data(vw_xe_data),
+                .w_we(ww_x_we), .w_addr(ww_x_addr), .w_mask(ww_x_mask), .w_data(ww_x_data),
+                .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
+                .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
+        end else begin : g_xu_a
+            ot_hdc_v41_xu #(.AW(AW), .NW(NW), .K(TOPK)) u_xu (
+                .clk(clk), .rst_n(rst_n), .go(xu_go), .ready(xu_ready), .idle(xu_idle),
+                .i_op(xu_op), .i_src(xu_src), .i_dst(xu_dst), .i_n(xu_n), .i_k(xu_k), .i_layer(xu_layer),
+                .token(xu_tok), .first(xu_first), .i_hslot(xu_hslot), .rst_v(xu_rst_v),
+        `ifdef HDC_MUTATE_RESTORE
+                .rst_slot(acc_a + 1'b1),                 // MUTATION CHECK ONLY: the wrong slot's history
+        `else
+                .rst_slot(acc_a),
+        `endif
+                .sel_first(xu_sel_first), .prime_v(prime_v && st == S_IDLE), .prime_first(prime_first),
+                .prime_cid(prime_cid),
+                .vr_re(vr_re), .vr_addr(vr_addr), .vr_q(vr_q), .xr_re(wxr_re), .xr_addr(wxr_addr), .xr_q(wxr_q),
+                .vw_we(vw_xe_we), .vw_addr(vw_xe_addr), .vw_data(vw_xe_data),
+                .w_we(ww_x_we), .w_addr(ww_x_addr), .w_mask(ww_x_mask), .w_data(ww_x_data),
+                .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
+                .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
+            assign vsl_re = {XSQ{1'b0}};
+            assign vsl_addr = {(XSQ*AW){1'b0}};
+        end
+    endgenerate
 
     generate
         if (X_HE != 0) begin : g_he_x
