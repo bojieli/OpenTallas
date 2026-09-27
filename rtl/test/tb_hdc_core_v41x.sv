@@ -21,6 +21,15 @@
 `ifndef HDC_X_HE
 `define HDC_X_HE 1
 `endif
+`ifndef HDC_X_ME
+`define HDC_X_ME 0
+`endif
+`ifndef HDC_X_ATT
+`define HDC_X_ATT 0
+`endif
+`ifndef HDC_X_IDX
+`define HDC_X_IDX 0
+`endif
 `ifndef HDC_HHW
 `define HDC_HHW 8
 `endif
@@ -86,7 +95,10 @@ module tb_hdc_core_v41x (input wire clk);
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
     wire [4:0] unit_busy; wire [2:0] issue_unit;
 
-    ot_hdc_core_v41x #(.SW(SW), .HS(HS), .X_HE(`HDC_X_HE), .HHW(HHW), .HBAW(HBAW)) dut (
+    reg [AW-1:0] cfg [0:15];                   // tools/hdc_images_v41x.py cfg.hex: [0] the index keys' KV word base
+    ot_hdc_core_v41x #(.SW(SW), .HS(HS), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
+                       .HHW(HHW), .HBAW(HBAW)) dut (
+        .cfg_ik_base(cfg[0]),
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry({PAW{1'b0}}), .acc_n(), .acc_tok(),
         .done(done), .next_token(next_token), .next_val(next_val), .cycles(cycles), .fault(fault),
         .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -187,6 +199,7 @@ module tb_hdc_core_v41x (input wire clk);
         $readmemh({dir, "/qrom.hex"}, qrom);
         $readmemh({dir, "/hrom.hex"}, hrom);
         if (`HDC_X_HE) $readmemh({dir, "/hbank.hex"}, hbank);
+        $readmemh({dir, "/cfg.hex"}, cfg);
         $readmemh({dir, "/erom.hex"}, erom);
         $readmemh({dir, "/crom.hex"}, crom);
         $readmemh({dir, "/prog.hex"}, prog);

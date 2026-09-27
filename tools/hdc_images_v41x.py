@@ -8,6 +8,8 @@ layout (Layout).  Each re-specified engine reads its weights from memories in IT
 those images from the same Layout, and fixes, per engine, the translation from an as-built base (the value the
 instruction field carries) to the engine's base -- the adapter applies it (rtl/hdc/v41x/ot_hdc_v41x_*_adapt.sv).
 
+* cfg.hex: straps of the bench -- [0] the KV word where the index keys start (the ME slot routes a KV-sourced
+  op at or above it to the indexer engine, below it to the attention engine).
 * HE -> ot_hdc_v41x_hcp: 8 weight banks of HHW binary32 lanes.  Matrix fn [nout, K] (K = 8 * he_k) at as-built
   HE ROM word b is placed at bank word b + o*R + r (R = ceil(he_k / HHW)), bank k, lane l = fn[o][8*(r*HHW+l)+k]:
   the IDENTITY translation, legal because the engine's footprint nout*R words fits the as-built he_k*IL
@@ -86,7 +88,11 @@ def write(out, lay, hhw=8):
     out.mkdir(parents=True, exist_ok=True)
     hb = hbank_image(lay, hhw)
     write_banked(out / "hbank.hex", hb, 32, hhw)
-    meta = {"hhw": hhw, "hbank_lines": len(hb), "hbank_top": max(hb) + 1 if hb else 0}
+    # cfg.hex (the bench's straps): [0] the KV word where the index keys start (ME-slot class of a KV op)
+    ik = min(a for n, a in lay.kv.map.items() if n.startswith("IK")) // I.W_LANES
+    assert all(a < ik * I.W_LANES for n, a in lay.kv.map.items() if not n.startswith("IK"))
+    (out / "cfg.hex").write_text(f"{ik:06x}\n")
+    meta = {"hhw": hhw, "hbank_lines": len(hb), "hbank_top": max(hb) + 1 if hb else 0, "ik_base_word": ik}
     (out / "v41x_images.json").write_text(json.dumps(meta))
     return meta
 

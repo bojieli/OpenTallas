@@ -68,6 +68,9 @@ module ot_hdc_core_v41x #(
     parameter integer MP    = 1,           // lane multiplier of the ME, QE and HE
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
     parameter integer X_HE  = 1,
+    parameter integer X_ME  = 0,           // ME weight ops -> the BF16/FP32 weight engine
+    parameter integer X_ATT = 0,           // ME KV-sourced attention ops -> the attention engine
+    parameter integer X_IDX = 0,           // ME KV-sourced index-key ops -> the indexer engine
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
     parameter integer HTL   = 9,           // HCP tail levels
@@ -105,6 +108,8 @@ module ot_hdc_core_v41x #(
     output wire              hrom_re,
     output wire [AW-1:0]     hrom_addr,
     input  wire [HS*HNL*32-1:0] hrom_q,
+    // the KV word address where the index keys start (the ME slot's class of a KV-sourced op)
+    input  wire [AW-1:0]     cfg_ik_base,
     // HCP weight banks (X_HE): 8 banks of HHW binary32 lanes, bank k addressed by hb_addr[k]
     output wire [7:0]        hb_re,
     output wire [8*HBAW-1:0] hb_addr,
@@ -478,23 +483,109 @@ module ot_hdc_core_v41x #(
     assign qd_wbase = qe_wbase; assign qd_nb = qe_nb; assign qd_tiles = qe_tiles;
 
     // -- units -----------------------------------------------------------------------------------------
-    wire me_wrom_re;
-    wire [AW-1:0] me_wrom_addr;
+    // -- the ME SLOT: one issue slot, up to four engines behind it ------------------------------------
+    // An ME op's class: 0 a weight op (me_wsrc = 0: the BF16/FP32 weight engine), 1 a KV-sourced op of
+    // attention (q.k, p.v: the attention engine), 2 a KV-sourced op on the index keys (the indexer
+    // engine) -- derived from the KV base: the index keys are the KV region at and above cfg_ik_base
+    // (words; tools/hdc_images_v41x.py writes it, the Layout places every IK region after the KT/KR ones).
+    // A class runs on its re-specified engine when that engine is built (X_ME, X_ATT, X_IDX), else on
+    // the as-built ot_hdc_v41_matvec.  The slot serialises its ops (an op issues only when every engine
+    // of the slot is idle but the one it goes to, which must be ready), as the as-built single engine
+    // did, so the vector-memory, KV and logit ports are multiplexed by the owner of the running op.
+    localparam [1:0] MC_W = 2'd0, MC_A = 2'd1, MC_I = 2'd2;
+    wire [1:0] me_cls = !me_wsrc ? MC_W : (me_wbase >= cfg_ik_base) ? MC_I : MC_A;
+    //: which engine takes each class: 0 the as-built engine, 1 its re-specified one
+    wire [1:0] me_eng = (me_cls == MC_W) ? ((X_ME != 0) ? 2'd1 : 2'd0) :
+                        (me_cls == MC_A) ? ((X_ATT != 0) ? 2'd2 : 2'd0) : ((X_IDX != 0) ? 2'd3 : 2'd0);
+    reg  [1:0] me_own;                          // engine of the op issued last
+    always @(posedge clk or negedge rst_n) if (!rst_n) me_own <= 2'd0; else if (me_go) me_own <= me_eng;
+    // per engine e (0 as built, 1 weight, 2 attention, 3 indexer): the as-built ME's port bundle
+    wire [3:0]            e_go, e_ready, e_idle, e_fault, e_kv_re, e_ov;
+    wire [4*AW-1:0]       e_wrom_addr_u;                     // (as built only)
+    wire [4*G*AW-1:0]     e_kv_raddr;
+    wire [4*MP*G-1:0]     e_vx_re, e_we;
+    wire [4*MP*G*AW-1:0]  e_vx_addr, e_addr;
+    wire [4*MP*G*W-1:0]   e_mask;
+    wire [4*MP*G*W*32-1:0] e_data;
+    wire [4*MP*NW-1:0]    e_am_idx;
+    wire [4*MP*32-1:0]    e_am_val;
+    wire [4*MP-1:0]       e_am_any;
+    genvar ge;
+    generate for (ge = 0; ge < 4; ge = ge + 1) begin : g_ego
+        assign e_go[ge] = me_go && me_eng == ge;
+    end endgenerate
+    assign me_ready = e_ready[me_eng] && ((e_idle & ~(4'd1 << me_eng) & ~e_go) == (4'hF & ~(4'd1 << me_eng)));
+    assign me_idle = &e_idle;
+    assign me_fault = |e_fault;
+    assign kv_re = e_kv_re[me_own];
+    assign kv_raddr = e_kv_raddr[me_own*G*AW +: G*AW];
+    assign vx_re = e_vx_re[me_own*MP*G +: MP*G];
+    assign vx_addr = e_vx_addr[me_own*MP*G*AW +: MP*G*AW];
+    assign me_ov = e_ov[me_own];
+    assign vw_me_we = e_we[me_own*MP*G +: MP*G];
+    assign vw_me_addr = e_addr[me_own*MP*G*AW +: MP*G*AW];
+    assign vw_me_mask = e_mask[me_own*MP*G*W +: MP*G*W];
+    assign vw_me_data = e_data[me_own*MP*G*W*32 +: MP*G*W*32];
+    //: the argmax is a weight op's (the LM head, the Markov head)
+    localparam integer EAM = (X_ME != 0) ? 1 : 0;
+    assign am_idx_v = e_am_idx[EAM*MP*NW +: MP*NW];
+    assign am_val_v = e_am_val[EAM*MP*32 +: MP*32];
+    assign am_any_v = e_am_any[EAM*MP +: MP];
+    assign me_oaddr = vw_me_addr;
+    assign me_omask = vw_me_mask;
+    assign me_odata = vw_me_data;
+
+    // engine 0: the as-built matrix engine (every class not re-specified)
     ot_hdc_v41_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_me (
-        .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
+        .clk(clk), .rst_n(rst_n), .go(e_go[0]), .ready(e_ready[0]), .idle(e_idle[0]),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
         .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_hg(me_hg), .i_ogs(me_ogs), .i_round(me_round), .i_obase(me_obase),
         .i_ots(me_ots), .i_ojs(me_ojs), .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax),
         .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
-        .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
-        .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
-        .ov(me_ov), .o_we(vw_me_we), .o_addr(vw_me_addr), .o_mask(vw_me_mask), .o_data(vw_me_data),
-        .am_idx(am_idx_v), .am_val(am_val_v), .am_any(am_any_v), .progress(me_progress), .fault(me_fault));
-    assign me_oaddr = vw_me_addr;
-    assign me_omask = vw_me_mask;
-    assign me_odata = vw_me_data;
+        .kv_re(e_kv_re[0]), .kv_addr(e_kv_raddr[0 +: G*AW]), .kv_q(kv_q),
+        .x_re(e_vx_re[0 +: MP*G]), .x_addr(e_vx_addr[0 +: MP*G*AW]), .x_q(vx_q),
+        .ov(e_ov[0]), .o_we(e_we[0 +: MP*G]), .o_addr(e_addr[0 +: MP*G*AW]), .o_mask(e_mask[0 +: MP*G*W]),
+        .o_data(e_data[0 +: MP*G*W*32]),
+        .am_idx(e_am_idx[0 +: MP*NW]), .am_val(e_am_val[0 +: MP*32]), .am_any(e_am_any[0 +: MP]),
+        .progress(me_progress), .fault(e_fault[0]));
+
+    // engine 1: the BF16/FP32 weight engine (X_ME)
+    generate if (X_ME != 0) begin : g_me_x
+        // (weight-engine adapter: ot_hdc_v41x_me_adapt)
+    end else begin : g_me_n
+        assign e_ready[1] = 1'b1; assign e_idle[1] = 1'b1; assign e_fault[1] = 1'b0; assign e_kv_re[1] = 1'b0;
+        assign e_kv_raddr[1*G*AW +: G*AW] = 0; assign e_vx_re[1*MP*G +: MP*G] = 0;
+        assign e_vx_addr[1*MP*G*AW +: MP*G*AW] = 0; assign e_ov[1] = 1'b0; assign e_we[1*MP*G +: MP*G] = 0;
+        assign e_addr[1*MP*G*AW +: MP*G*AW] = 0; assign e_mask[1*MP*G*W +: MP*G*W] = 0;
+        assign e_data[1*MP*G*W*32 +: MP*G*W*32] = 0; assign e_am_idx[1*MP*NW +: MP*NW] = 0;
+        assign e_am_val[1*MP*32 +: MP*32] = 0; assign e_am_any[1*MP +: MP] = 0;
+    end endgenerate
+
+    // engine 2: the attention engine (X_ATT)
+    generate if (X_ATT != 0) begin : g_att_x
+        // (attention adapter: ot_hdc_v41x_att_adapt)
+    end else begin : g_att_n
+        assign e_ready[2] = 1'b1; assign e_idle[2] = 1'b1; assign e_fault[2] = 1'b0; assign e_kv_re[2] = 1'b0;
+        assign e_kv_raddr[2*G*AW +: G*AW] = 0; assign e_vx_re[2*MP*G +: MP*G] = 0;
+        assign e_vx_addr[2*MP*G*AW +: MP*G*AW] = 0; assign e_ov[2] = 1'b0; assign e_we[2*MP*G +: MP*G] = 0;
+        assign e_addr[2*MP*G*AW +: MP*G*AW] = 0; assign e_mask[2*MP*G*W +: MP*G*W] = 0;
+        assign e_data[2*MP*G*W*32 +: MP*G*W*32] = 0; assign e_am_idx[2*MP*NW +: MP*NW] = 0;
+        assign e_am_val[2*MP*32 +: MP*32] = 0; assign e_am_any[2*MP +: MP] = 0;
+    end endgenerate
+
+    // engine 3: the indexer engine (X_IDX)
+    generate if (X_IDX != 0) begin : g_idx_x
+        // (indexer adapter: ot_hdc_v41x_idx_adapt)
+    end else begin : g_idx_n
+        assign e_ready[3] = 1'b1; assign e_idle[3] = 1'b1; assign e_fault[3] = 1'b0; assign e_kv_re[3] = 1'b0;
+        assign e_kv_raddr[3*G*AW +: G*AW] = 0; assign e_vx_re[3*MP*G +: MP*G] = 0;
+        assign e_vx_addr[3*MP*G*AW +: MP*G*AW] = 0; assign e_ov[3] = 1'b0; assign e_we[3*MP*G +: MP*G] = 0;
+        assign e_addr[3*MP*G*AW +: MP*G*AW] = 0; assign e_mask[3*MP*G*W +: MP*G*W] = 0;
+        assign e_data[3*MP*G*W*32 +: MP*G*W*32] = 0; assign e_am_idx[3*MP*NW +: MP*NW] = 0;
+        assign e_am_val[3*MP*32 +: MP*32] = 0; assign e_am_any[3*MP +: MP] = 0;
+    end endgenerate
 
     // the stream unit: MP copies; copy p runs slot p of a batched op (mx_m), its
     // vector-memory streams moved by p slot strides (mx_xps reads, mx_ops writes)

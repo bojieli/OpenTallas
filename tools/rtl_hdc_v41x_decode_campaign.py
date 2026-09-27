@@ -48,8 +48,8 @@ import hdc_isa_v41 as I  # noqa: E402
 
 OUT = ROOT / "results/rtl/hdc_v41x_decode_campaign.json"
 # the re-specified units (bring-up switches of ot_hdc_core_v41x) and the R-ARITH classes each one brings
-X_UNITS = ("he",)
-X_CLASSES = {"he": ("he",)}
+X_UNITS = ("he", "me", "att", "idx")
+X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",)}
 UNITS = X_UNITS           # set by main(): the units built re-specified
 PARAMS = {"hhw": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
@@ -300,7 +300,7 @@ def main() -> int:
     parser.add_argument("--context", type=int, default=40)
     parser.add_argument("--sweep-lanes", default="", help="also run the single step at these stream-unit widths, "
                                                           "e.g. 4,16")
-    parser.add_argument("--units", default=",".join(X_UNITS),
+    parser.add_argument("--units", default="he",
                         help="the re-specified units to build (the rest as built), e.g. he,qe; '' for none")
     parser.add_argument("--hhw", type=int, default=8, help="HCP lanes per group")
     args = parser.parse_args()
