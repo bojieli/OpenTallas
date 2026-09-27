@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.qwen-kv-system-bridge-boundaries.v1",
   "status": "pass",
-  "scope": "A full 1,024-element vector V instruction buffers under held-off HBM writes; SW8/SW16 banked K output and logical 16-byte to physical 32-byte HBM read/partial-write RMW and shared-port response routing are verified. These focused gates do not claim full vector KV reads.",
+  "scope": "A full 1,024-element vector V instruction buffers under held-off HBM writes; SW8/SW16 banked K output and logical 16-byte to physical 32-byte HBM read/partial-write RMW and shared-port response routing are verified. Actual streamer K-tail reads through vector FP8 banks and dependent V-sector reads through the physical HBM port are verified at SW8/SW16 after vector writes. A full vector token through this system remains open.",
   "runs": {
     "vector_sw8": {
       "status": "pass",
@@ -30,6 +30,34 @@
       "returncode": 0,
       "stdout": "PASS QWEN_KV_PHYS_ARBITER",
       "stderr": ""
+    },
+    "system_tail_sw8": {
+      "status": "pass",
+      "phase": "simulation",
+      "returncode": 0,
+      "stdout": "PASS QWEN_KV_SYSTEM_ SW=8",
+      "stderr": ""
+    },
+    "system_v_sector_sw8": {
+      "status": "pass",
+      "phase": "simulation",
+      "returncode": 0,
+      "stdout": "PASS QWEN_KV_SYSTEM_V_SECTOR SW=8",
+      "stderr": ""
+    },
+    "system_tail_sw16": {
+      "status": "pass",
+      "phase": "simulation",
+      "returncode": 0,
+      "stdout": "PASS QWEN_KV_SYSTEM_ SW=16",
+      "stderr": ""
+    },
+    "system_v_sector_sw16": {
+      "status": "pass",
+      "phase": "simulation",
+      "returncode": 0,
+      "stdout": "PASS QWEN_KV_SYSTEM_V_SECTOR SW=16",
+      "stderr": ""
     }
   },
   "input_sha256": {
@@ -41,6 +69,12 @@
     "rtl/test/tb_hdc_qwen_hbm_sector_bridge.sv": "f34ab2186d7e3182de0dddbe7d06fafd850e3910cda340681deb5b7266f8e839",
     "rtl/hdc/kv/ot_hdc_qwen_kv_phys_arbiter.sv": "02c0698d1cb76cf7e10984461a9e844bacc7f3e5111f2a7581c11be96334b053",
     "rtl/test/tb_hdc_qwen_kv_phys_arbiter.sv": "6ba6c5a65997c1c0b67cac6ac41ede5bdf97561bc80455c2159a2e39c2b105af",
-    "tools/run_qwen_kv_system_bridge_campaign.py": "1de4e4d1129ad3660f7468c998f1ef577534c7280cf6777fca240e64fd0aa1a6"
+    "rtl/hdc/kv/ot_hdc_kv_walk.sv": "2e79a4bc0d7109302b421bc9e1f08ce7a8714028c375ba083612dc8e3df0c9b6",
+    "rtl/hdc/kv/ot_hdc_kv_stream.sv": "b7d320289ffbb51384b7ea18cdd6b7b1503fe71dd00b369dc4f9ffdafcae3a7d",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_read_mux.sv": "c424d6a9299b12f93f2b569be7681839e48b5c24a5ee2c577312b9df91a7a892",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_bank_port.sv": "24d973adf95ee82ee83dca2a511589b0f199959f51919b06df536b6d0f2d4bd5",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "377c926efee5563bf4e3f59be606c0a6a043c80f7ca2a8449715f9152146b6f4",
+    "rtl/test/tb_hdc_qwen_kv_system_tail.sv": "5f81b2f03520bcbecc3e9e86e1028279fc6634e872921dca062541ca5c1bff5b",
+    "tools/run_qwen_kv_system_bridge_campaign.py": "e6406441e7a966633fcb4e54abfa6b1f4f4de2222e842147e0bf4f92bc80b1ce"
   }
 }

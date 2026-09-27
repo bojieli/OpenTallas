@@ -85,6 +85,7 @@ module ot_hdc_core #(
     // issued, so the bridge buffers one whole KV-write op and drains before
     // the sequencer starts another stream op or retires the token.
     input  wire              kv_write_drained,
+    output wire              kv_write_flush, // finish a partial V sector while SU is idle
     // vector memory: G + 3 element read ports, G + 2 write ports
     output wire [G-1:0]      vx_re,
     output wire [G*AW-1:0]   vx_addr,
@@ -187,6 +188,7 @@ module ot_hdc_core #(
     //: the units' idle and progress are registered and cleared on the edge
     //: that accepts an op, so a go needs no guard term here
     wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+    assign kv_write_flush = su_idle && !(|kv_we);
     //: A chasing op waits only until the OTHER unit's latest op has made
     //: chase_n progress.
     wire chased = ((d_unit == 2'd1) ? (d_chase_rows ? su_rows : su_progress) : me_progress) >= d_chase_n;

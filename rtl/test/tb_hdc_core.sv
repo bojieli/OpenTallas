@@ -54,6 +54,7 @@ module tb_hdc_core #(
     wire [SW-1:0] crom_re; wire [SW*AW-1:0] crom_addr; reg [SW*64-1:0] crom_q;
     wire kv_re; wire [SW-1:0] kv_we; wire [G*AW-1:0] kv_raddr; wire [SW*AW-1:0] kv_waddr; reg [G*W*32-1:0] kv_q;
     wire [SW*32-1:0] kv_wdata;
+    wire kv_write_flush;
     wire [SW-1:0] va_re, vb_re, vc_re; wire [SW*AW-1:0] va_addr, vb_addr, vc_addr;
     wire [G-1:0] vx_re; wire [G*AW-1:0] vx_addr; reg [G*32-1:0] vx_q;
     reg [SW*32-1:0] va_q, vb_q, vc_q;
@@ -101,6 +102,7 @@ module tb_hdc_core #(
         .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q),
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
         .kv_write_drained(bridge_drained),
+        .kv_write_flush(kv_write_flush),
         .vx_re(vx_re), .vx_addr(vx_addr), .vx_q(vx_q),
         .va_re(va_re), .va_addr(va_addr), .va_q(va_q),
         .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
@@ -152,7 +154,7 @@ module tb_hdc_core #(
             .drained(bridge_drained), .tl_we(bridge_tl_we), .tl_row(bridge_tl_row),
             .tl_mask(bridge_tl_mask), .tl_data(bridge_tl_data),
             .fl_v(1'b0), .fl_ready(), .fl_word_addr('0), .fl_word_data('0),
-            .flush(dut.su_idle && !(|kv_we)),
+            .flush(kv_write_flush),
             .mem_r_v(bridge_mem_r_v), .mem_r_ready(1'b1),
             .mem_r_sector(bridge_mem_r_sector), .mem_r_resp_v(bridge_mem_r_resp_v),
             .mem_r_resp_data(bridge_mem_r_resp_data),
