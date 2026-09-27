@@ -390,11 +390,15 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
             "not_exercised": {u: NOT_EXERCISED.get(u, []) for u in UNITS},
             **({"indexer": indexer_record(prog, tags, issues)} if "idx" in UNITS else {}),
             "status": "pass" if one["pass"] and lint.returncode == 0 else "fail",
+            "claim_boundary": "Functional, cycle-accurate single-token core simulation with behavioural "
+                              "multiported vector memory; the FP arithmetic uses bit-equivalent DPI "
+                              "simulation stand-ins when engine_parameters.fp is dpi. No routed full-core "
+                              "frequency or energy is claimed.",
             "single_step": one,
             "per_operator_cycles": bd,
             "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                                "messages": lint.stderr.strip().splitlines()[:20]},
-            "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, *RTL, TB, HARNESS, *TOOLS)},
+            "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, VLT, *rtl_sources(True), TB, HARNESS, *TOOLS)},
         }
         if single_output is not None:
             single_output.parent.mkdir(parents=True, exist_ok=True)
@@ -461,7 +465,7 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
         **({"su_lane_sweep": sweep_rec} if sweep_rec else {}),
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                            "messages": lint.stderr.strip().splitlines()[:20]},
-        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, *rtl_sources(True), TB, HARNESS, *TOOLS)},
+        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, VLT, *rtl_sources(True), TB, HARNESS, *TOOLS)},
     }
 
 
