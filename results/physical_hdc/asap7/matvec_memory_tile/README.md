@@ -80,6 +80,24 @@ stopped during CTS: hold repair left nine overlapping cells, and OpenROAD
 reported `DPL-0033`. The 15% run avoided that legalization failure. This is
 one floorplan comparison, not a sweep or proof that 15% is optimal.
 
+Three later characterization trials inserted four combinational ASAP7 BUFx24
+cells in this physical wrapper at the exact remaining slew endpoints: two KV
+SRAM write-data bits, one vector SRAM write-address bit, and output data bit
+179. Commit `39ae7539` records the trial RTL after rebasing onto main; the
+partial JSON records the original execution commit `9d55ce39`, and its RTL
+source SHA256 matches `39ae7539`. Yosys retained exactly four
+cells in its mapped netlist; the pinned INVBUF Liberty defines each output as
+`Y=A`, and Verilator lint passed with that identity model. The adopted matvec
+RTL was not changed. At 15% core utilization, CTS hold repair could not
+legalize four overlapping cell pairs. At 12% it left one pair. At 10% with
+clock sink cluster size 12 it left five pairs. All three stopped with
+`DPL-0033` before global or detailed routing. Their partial records are
+`attempt_isolation_cts_failure.json`,
+`attempt_isolation_u12_cts_failure.json`, and
+`attempt_isolation_u10_c12_cts_failure.json`. The current wrapper restores the
+completed 45% margin route's source; no routed timing or slew result can be
+inferred from the explicit-buffer trials.
+
 ## Collateral and inference limits
 
 The ROM and SRAM LEF/Liberty views under `physical/asap7_memory_macros/` are
