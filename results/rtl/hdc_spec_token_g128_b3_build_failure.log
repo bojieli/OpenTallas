@@ -52,4 +52,3 @@ stderr:
   167 |                     if (me_omask[q*W + l]) lg[{me_oaddr[q*AW +: 8], 4'b0} + l] <= me_odata[32*(q*W + l) +: 32];
       |                                                                                ^~
 %Error: Exiting due to 2 error(s)
-
