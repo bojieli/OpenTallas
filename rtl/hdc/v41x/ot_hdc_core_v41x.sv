@@ -127,6 +127,24 @@ module ot_hdc_core_v41x #(
     output wire [7:0]        hb_re,
     output wire [8*HBAW-1:0] hb_addr,
     input  wire [8*HHW*32-1:0] hb_q,
+    // index-key HBM (X_IDX): one stack's 32 pseudo-channel request / response ports (the key stream), and
+    // the key records the index-key writer produces (the bench applies them to its HBM model)
+    output wire [31:0]       ikh_req_v,
+    input  wire [31:0]       ikh_req_rdy,
+    output wire [32*28-1:0]  ikh_req_addr,
+    output wire [32*4-1:0]   ikh_req_len,
+    output wire [32*16-1:0]  ikh_req_tag,
+    input  wire [31:0]       ikh_rsp_v,
+    output wire [31:0]       ikh_rsp_rdy,
+    input  wire [32*16-1:0]  ikh_rsp_tag,
+    input  wire [32*4-1:0]   ikh_rsp_beat,
+    input  wire [32*256-1:0] ikh_rsp_data,
+    output wire              ikw_v,
+    output wire [27:0]       ikw_csec,
+    output wire [127:0]      ikw_codes,
+    output wire [27:0]       ikw_ssec,
+    output wire [2:0]        ikw_sslot,
+    output wire [7:0]        ikw_scale,
     // quantised weight ROM, Engram table ROM
     output wire              qrom_re,
     output wire [AW-1:0]     qrom_addr,
@@ -257,7 +275,8 @@ module ot_hdc_core_v41x #(
     reg          xu_first;
     reg [2:0]    xu_hslot;
     reg [NW-1:0] me_nout, me_tiles, me_k;
-    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode;
+    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, me_fuse;
+    reg [AW-1:0] me_wts;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs, me_xcs;
     reg [2:0]    me_jsh;
     reg [1:0]    me_split, me_hg;
@@ -462,6 +481,7 @@ module ot_hdc_core_v41x #(
         me_obase <= `F(ME_OBASE) + `DY(ME_D_OBASE);
         me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
         me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE);
+        me_fuse <= `F(ME_FUSE); me_wts <= `F(ME_WTS);
         me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS); me_hg <= `F(ME_HG); me_ogs <= `F(ME_OGS);
         su_nout <= c_su_nout; su_nin <= c_su_nin; su_vec <= `F(SU_VEC); su_chase <= `F(SU_CHASE);
         a_src <= `F(A_SRC); a_base <= `F(A_BASE) + `DY(A_D); a_so <= `F(A_SO); a_si <= `F(A_SI);
@@ -536,7 +556,11 @@ module ot_hdc_core_v41x #(
     end endgenerate
     assign me_ready = e_ready[me_eng] && ((e_idle & ~(4'd1 << me_eng) & ~e_go) == (4'hF & ~(4'd1 << me_eng)));
     assign me_idle = &e_idle;
-    assign me_fault = |e_fault;
+    //: a fused indexer op (me_fuse) has no engine but the indexer's: routed elsewhere it faults
+    reg fuse_orphan;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) fuse_orphan <= 1'b0; else fuse_orphan <= me_go && me_fuse && me_eng != 2'd3;
+    assign me_fault = (|e_fault) || fuse_orphan;
     assign kv_re = e_kv_re[me_own];
     assign kv_raddr = e_kv_raddr[me_own*G*AW +: G*AW];
     assign vx_re = e_vx_re[me_own*MP*G +: MP*G];
@@ -610,7 +634,30 @@ module ot_hdc_core_v41x #(
 
     // engine 3: the indexer engine (X_IDX)
     generate if (X_IDX != 0) begin : g_idx_x
-        // (indexer adapter: ot_hdc_v41x_idx_adapt)
+        wire f_eng, f_kwr;
+        ot_hdc_v41x_idx_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_idx (
+            .clk(clk), .rst_n(rst_n), .go(e_go[3]), .ready(e_ready[3]), .idle(e_idle[3]), .cfg_ik_base(cfg_ik_base),
+            .i_nout(me_nout), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
+            .i_xcs(me_xcs), .i_hg(me_hg), .i_round(me_round), .i_obase(me_obase), .i_mmode(me_mmode),
+            .i_oen(me_oen), .i_fuse(me_fuse), .i_wts(me_wts),
+            .x_re(e_vx_re[3*MP*G +: MP*G]), .x_addr(e_vx_addr[3*MP*G*AW +: MP*G*AW]), .x_q(vx_q),
+            .ov(e_ov[3]), .o_we(e_we[3*MP*G +: MP*G]), .o_addr(e_addr[3*MP*G*AW +: MP*G*AW]),
+            .o_mask(e_mask[3*MP*G*W +: MP*G*W]), .o_data(e_data[3*MP*G*W*32 +: MP*G*W*32]),
+            .h_req_v(ikh_req_v), .h_req_rdy(ikh_req_rdy), .h_req_addr(ikh_req_addr), .h_req_len(ikh_req_len),
+            .h_req_tag(ikh_req_tag), .h_rsp_v(ikh_rsp_v), .h_rsp_rdy(ikh_rsp_rdy), .h_rsp_tag(ikh_rsp_tag),
+            .h_rsp_beat(ikh_rsp_beat), .h_rsp_data(ikh_rsp_data), .fault(f_eng),
+            .dbg_ops(), .dbg_elems(), .dbg_keys_streamed(), .dbg_hbm_beats(), .dbg_keys_scored(),
+            .dbg_headsums_fused());
+        //: the key writer: every index-key row the stream unit writes goes to the HBM key image too
+        ot_hdc_v41x_idx_kwr #(.AW(AW), .NW(NW), .NL(MP*SW), .HAW(28)) u_kwr (
+            .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base), .su_go(su_go), .i_dst(dst), .i_obase(o_base),
+            .i_orow(o_row), .i_nout(su_nout), .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+            .w_v(ikw_v), .w_csec(ikw_csec), .w_codes(ikw_codes), .w_ssec(ikw_ssec), .w_sslot(ikw_sslot),
+            .w_scale(ikw_scale), .fault(f_kwr), .dbg_keys());
+        assign e_fault[3] = f_eng || f_kwr;
+        assign e_kv_re[3] = 1'b0; assign e_kv_raddr[3*G*AW +: G*AW] = 0;
+        assign e_am_idx[3*MP*NW +: MP*NW] = 0; assign e_am_val[3*MP*32 +: MP*32] = 0;
+        assign e_am_any[3*MP +: MP] = 0;
     end else begin : g_idx_n
         assign e_ready[3] = 1'b1; assign e_idle[3] = 1'b1; assign e_fault[3] = 1'b0; assign e_kv_re[3] = 1'b0;
         assign e_kv_raddr[3*G*AW +: G*AW] = 0; assign e_vx_re[3*MP*G +: MP*G] = 0;
@@ -618,6 +665,9 @@ module ot_hdc_core_v41x #(
         assign e_addr[3*MP*G*AW +: MP*G*AW] = 0; assign e_mask[3*MP*G*W +: MP*G*W] = 0;
         assign e_data[3*MP*G*W*32 +: MP*G*W*32] = 0; assign e_am_idx[3*MP*NW +: MP*NW] = 0;
         assign e_am_val[3*MP*32 +: MP*32] = 0; assign e_am_any[3*MP +: MP] = 0;
+        assign ikh_req_v = 0; assign ikh_req_addr = 0; assign ikh_req_len = 0; assign ikh_req_tag = 0;
+        assign ikh_rsp_rdy = 0; assign ikw_v = 1'b0; assign ikw_csec = 0; assign ikw_codes = 0; assign ikw_ssec = 0;
+        assign ikw_sslot = 0; assign ikw_scale = 0;
     end endgenerate
 
     // the stream unit: MP copies; copy p runs slot p of a batched op (mx_m), its

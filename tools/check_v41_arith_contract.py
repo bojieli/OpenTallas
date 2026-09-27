@@ -24,8 +24,13 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results/arch/v41_arith_contract.json"
 
 
+MODES = {"legacy": ("legacy", ""), "chunk8": ("chunk8", ""), "chunk8_v2": ("chunk8", "nfold,osm")}
+
+
 def run(mode, seq):
-    V.set_arith(mode)
+    arith, fuse = MODES[mode]
+    V.set_arith(arith)
+    V.set_fuse(fuse)
     m = V.Model()
     st = m.new_state()
     rows, traces = [], []
@@ -45,7 +50,7 @@ def main():
     prompt, gen = V.prompt_and_expected()
     seq = list(prompt) + list(gen)
     n0 = len(prompt) - 1                      # the step whose logits predict gen[0]
-    res = {mode: run(mode, seq) for mode in ("legacy", "chunk8")}
+    res = {mode: run(mode, seq) for mode in MODES}
     lg = {mode: r[0] for mode, r in res.items()}
     tr = {mode: r[1] for mode, r in res.items()}
     positions = []
@@ -59,7 +64,7 @@ def main():
     for i, want in enumerate(gen):
         s = n0 + i
         row = dict(step=i, position=s, oracle=int(want))
-        for mode in ("legacy", "chunk8"):
+        for mode in MODES:
             x = lg[mode][s]
             top = np.sort(x)[-2:]
             t = int(np.argmax(x))
@@ -72,15 +77,19 @@ def main():
         steps.append(row)
     summary = {mode: dict(matches=sum(r[mode]["match"] for r in steps), steps=len(steps),
                           mean_oracle_gap=float(np.mean([r[mode]["oracle_gap"] for r in steps])))
-               for mode in ("legacy", "chunk8")}
+               for mode in MODES}
     summary["same_token_steps"] = sum(r["legacy_vs_chunk8"]["same_token"] for r in steps)
     summary["max_abs_logit_delta"] = max(r["legacy_vs_chunk8"]["max_abs"] for r in steps)
+    v2 = [float(np.max(np.abs(lg["chunk8"][p] - lg["chunk8_v2"][p]))) for p in range(len(seq) - 1)]
+    summary["chunk8_vs_v2_max_abs_logit_delta_by_position"] = v2
     first = next((i for i, q in enumerate(positions) if q["selection_flips"]), len(positions))
     summary["first_selection_flip_position"] = first
     summary["max_abs_logit_delta_before_first_flip"] = max(q["logit_max_abs"] for q in positions[:first])
     rec = dict(schema="opentallas.v41-arith-contract.v1", tool="tools/check_v41_arith_contract.py",
                contract=dict(chunk=V.CHUNK, rule="every accumulation: contiguous chunks of <= 8 terms sequential "
-                             "from +0, chunk sums by a pairwise tree padded with +0 (hdc_golden_v41.csum)"),
+                             "from +0, chunk sums by a pairwise tree padded with +0 (hdc_golden_v41.csum)",
+                             v2="chunk8_v2 adds HDC_V41_FUSE=nfold,osm: norm rstd applied to the consumer matvecs' "
+                                "outputs, online softmax in the release kernel's 64-entry blocks"),
                workload=V.WORKLOAD, teacher_forced=True, summary=summary, steps=steps, positions=positions,
                finding=("positions before the first discrete flip differ by a few ulp of the logits; the larger "
                         "differences follow a routed-expert (or index) selection that flips at a near-tie of the "

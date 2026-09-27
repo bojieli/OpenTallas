@@ -30,7 +30,7 @@
 // Timing (ot_hdc_fastfp adds, LATENCY 3): block dots 3 cycles after the input
 // register; the NB-1 sequential block adds 3 each (block i's key operands are
 // skewed 3(i-1) cycles so each block dot meets the running sum); score to
-// BF16 + ReLU 1; the product 2; the 7 sequential head adds 3 each; the
+// BF16 + ReLU 1; the product 3; the 7 sequential head adds 3 each; the
 // output register.  Tail: input register, log2(IH/8) tree levels x 3, to_bf16
 // + mask + output register.
 //
@@ -69,32 +69,41 @@ module ot_hdc_v41x_idx_chunk #(
     localparam integer HC = 8;
     localparam integer KW = NB * 136;
     localparam integer LAT_SC = 3 + 3 * (NB - 1);       // block dots + sequential block adds
-    localparam integer LAT_T  = LAT_SC + 1 + 2;         // + bf16/ReLU + product
+    localparam integer LAT_T  = LAT_SC + 1 + 3;         // + bf16/ReLU + product
     localparam integer LAT    = LAT_T + 3 * (HC - 1);   // + 7 sequential head adds
 
     // -- query registers (loaded between tokens) -----------------------------------
     reg [HC*NB*128-1:0] qc;
     reg [HC*NB*8-1:0]   qs;
     reg [HC*16-1:0]     qw;
+    // A q-load beat is registered, its head decoded into a per-head write enable
+    // and registered again with the data (a head's 553 query flops hang off one
+    // registered enable, which repair buffers as a tree), then written: 2 cycles.
     reg              rql_v;
     reg [7:0]        rql_head;
-    reg [NB*128-1:0] rql_codes;
-    reg [NB*8-1:0]   rql_sc;
-    reg [15:0]       rql_w;
+    reg [NB*128-1:0] rql_codes, rq2_codes;
+    reg [NB*8-1:0]   rql_sc, rq2_sc;
+    reg [15:0]       rql_w, rq2_w;
+    reg [HC-1:0]     rq2_we;
+    integer hq;
     always @(posedge clk) begin
         rql_v <= ql_v && rst_n;
         rql_head <= ql_head;
         rql_codes <= ql_codes;
         rql_sc <= ql_sc;
         rql_w <= ql_w;
+        for (hq = 0; hq < HC; hq = hq + 1)
+            rq2_we[hq] <= rst_n && rql_v && (rql_head == HB + hq);
+        rq2_codes <= rql_codes;
+        rq2_sc <= rql_sc;
+        rq2_w <= rql_w;
     end
-    integer hq;
     always @(posedge clk)
         for (hq = 0; hq < HC; hq = hq + 1)
-            if (rql_v && rql_head == HB + hq) begin
-                qc[hq*NB*128 +: NB*128] <= rql_codes;
-                qs[hq*NB*8 +: NB*8] <= rql_sc;
-                qw[hq*16 +: 16] <= rql_w;
+            if (rq2_we[hq]) begin
+                qc[hq*NB*128 +: NB*128] <= rq2_codes;
+                qs[hq*NB*8 +: NB*8] <= rq2_sc;
+                qw[hq*16 +: 16] <= rq2_w;
             end
 
     // -- input register ---------------------------------------------------------------
@@ -168,7 +177,7 @@ module ot_hdc_v41x_idx_chunk #(
                 wire        tmo;
                 ot_hdc_v41x_bmul u_m (.clk(clk), .a(rsc), .w(qw[16*h +: 16]), .y(tm), .ovf(tmo));
                 wire        rscf_d;
-                ot_hdc_delay #(.W(1), .D(2)) u_tf (.clk(clk), .rst_n(rst_n), .d(rscf), .q(rscf_d));
+                ot_hdc_delay #(.W(1), .D(3)) u_tf (.clk(clk), .rst_n(rst_n), .d(rscf), .q(rscf_d));
                 assign term[16*h +: 16] = tm;
                 assign tfault[h] = rscf_d || tmo;
             end
@@ -290,7 +299,9 @@ endmodule
 // consumer that is always ready the engine takes a beat every cycle, and a
 // consumer that stalls backs the key stream up without losing a beat.  FD >=
 // LATENCY + 2 sustains one beat per cycle.  q load: ql_v, head index, codes,
-// scales, BF16 weight; one head per cycle, before the keys it scores.
+// scales, BF16 weight; one head per cycle, before the keys it scores and after
+// the previous token's keys have left the tile (k_ready holds keys off for 3
+// cycles after the last q-load beat).
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_idx_engine #(
     parameter integer NK = 8,          // keys per cycle
@@ -314,11 +325,17 @@ module ot_hdc_v41x_idx_engine #(
     input  wire                 o_ready,
     output reg  [NK-1:0]        o_kv,
     output reg  [NK*16-1:0]     o_score,
-    output reg  [NK-1:0]        o_fault
+    output reg  [NK-1:0]        o_fault,
+    // activation counters (since reset; for the benches): keys scored (score
+    // slots delivered), head terms fused (ReLU x weight terms summed inside the
+    // engine: IH per scored key), keys whose score faulted
+    output reg  [47:0]          cnt_keys_scored,
+    output reg  [47:0]          cnt_headsums_fused,
+    output reg  [47:0]          cnt_faults
 );
     localparam integer NCH = IH / 8;
     localparam integer LVT = (NCH <= 1) ? 0 : $clog2(NCH);
-    localparam integer LAT_C = 1 + 3 + 3 * (NB - 1) + 1 + 2 + 3 * 7 + 1;   // chunk in-reg .. out-reg
+    localparam integer LAT_C = 1 + 3 + 3 * (NB - 1) + 1 + 3 + 3 * 7 + 1;   // chunk in-reg .. out-reg
     localparam integer LAT_T = 1 + 3 * LVT + 1;
     localparam integer LAT = LAT_C + LAT_T;                              // k beat -> tail output
     localparam integer CW = $clog2(FD + 1);
@@ -367,11 +384,35 @@ module ot_hdc_v41x_idx_engine #(
     reg [CW-1:0] fcnt, infl;
     reg [PW-1:0] wp, rp;
     wire deq = o_valid && o_ready;
+    integer ck;
+    reg [$clog2(NK+1)-1:0] nk_out, nf_out;
+    always @* begin
+        nk_out = 0; nf_out = 0;
+        for (ck = 0; ck < NK; ck = ck + 1) begin
+            nk_out = nk_out + o_kv[ck];
+            nf_out = nf_out + (o_kv[ck] & o_fault[ck]);
+        end
+    end
+    always @(posedge clk)
+        if (!rst_n) begin
+            cnt_keys_scored <= 0; cnt_headsums_fused <= 0; cnt_faults <= 0;
+        end else if (deq) begin
+            cnt_keys_scored <= cnt_keys_scored + nk_out;
+            cnt_headsums_fused <= cnt_headsums_fused + nk_out * IH;
+            cnt_faults <= cnt_faults + nf_out;
+        end
     wire out_free = !o_valid || o_ready;
     wire from_fifo = (fcnt != 0) && out_free;
     wire bypass = tv && (fcnt == 0) && out_free;
     wire push = tv && !bypass;
-    assign k_ready = rst_n && ((infl + fcnt + (o_valid ? 1 : 0)) < FD);
+    // a q-load beat reaches the query registers 3 edges after it is presented
+    // (tile input register, enable register, write); keys wait for it
+    reg [1:0] qsettle;
+    always @(posedge clk)
+        if (!rst_n) qsettle <= 2'd0;
+        else if (ql_v) qsettle <= 2'd3;
+        else if (qsettle != 0) qsettle <= qsettle - 2'd1;
+    assign k_ready = rst_n && !ql_v && (qsettle == 0) && ((infl + fcnt + (o_valid ? 1 : 0)) < FD);
     always @(posedge clk) begin
         if (!rst_n) begin
             fcnt <= 0; infl <= 0; wp <= 0; rp <= 0; o_valid <= 1'b0;
