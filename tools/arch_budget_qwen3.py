@@ -730,7 +730,7 @@ def power_production(out, clock):
                  hbm_interface=byt * P["hbm_if_j_b"])
         die = sum(e.values())
         stacks = byt * P["hbm_core_j_b"] + HBM["stacks"] * P["hbm_idle_w_stack"] * t
-        key = f"batch{B}" if fmt == "fp8" else f"{fmt}/batch{B}"
+        key = f"batch{B}" if fmt == "fp8" else f"rom35_batch{B}"   # (no "." in a key: figure paths split on it)
         hbm[key] = dict(weight_format=fmt, tokens_s=round(B / t, 1),
                         energy_per_token_mj=round((die + stacks) / B * 1e3, 3),
                                 die_components_mj_per_token={k: round(v / B * 1e3, 4) for k, v in e.items()},
@@ -747,7 +747,7 @@ def power_production(out, clock):
                      "MLPerf v5.1) is the upper bound", **{k: v for k, v in g.items()})
     r1 = rom["ar_batch1"]["energy_per_token_mj"]
     h1 = hbm["batch1"]["energy_per_token_mj"]
-    h35 = hbm["rom_format_3.5b/batch1"]["energy_per_token_mj"]
+    h35 = hbm["rom35_batch1"]["energy_per_token_mj"]
     return dict(basis="production (conservative) inputs read from configs/hardware/technology.json (each entry "
                       "quotes its source); supersedes the ASAP7-measured basis of `power` and `batch` for energy "
                       "and power; the 0.8 pJ/bit HBM interface is inside the 13.1 pJ/bit system figure (die "

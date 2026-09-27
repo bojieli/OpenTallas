@@ -377,7 +377,7 @@ BF16, and idle lane copies are clock-gated. All figures are at 8K with FP8 KV:
 | HBM comparator, batch 1 | 661 | 1,126 | 195.4 | 548.6 | 743.9 | 922.8 |
 | HBM comparator, batch 16 | 5,014 | 150.9 | 208.2 | 548.6 | 756.8 | 938.7 |
 | HBM comparator, batch 128 | 8,144 | 94.1 | 217.4 | 548.6 | 766.0 | 950.1 |
-| HBM comparator, ROM's 3.5-bit weights, batch 1 | 1,379 | **540.6** <!-- figure: 540.597 src="results/arch/qwen3_budget.json#power_production.hbm_comparator.rom_format_3.5b/batch1.energy_per_token_mj" name="Qwen3-8B HBM comparator 3.5-bit weights production-basis mJ/token 8K batch 1" --> | 197.1 | 548.6 | 745.6 | 924.9 |
+| HBM comparator, ROM's 3.5-bit weights, batch 1 | 1,379 | **540.6** <!-- figure: 540.597 src="results/arch/qwen3_budget.json#power_production.hbm_comparator.rom35_batch1.energy_per_token_mj" name="Qwen3-8B HBM comparator 3.5-bit weights production-basis mJ/token 8K batch 1" --> | 197.1 | 548.6 | 745.6 | 924.9 |
 | HBM comparator, 3.5-bit weights, batch 16 | 6,659 | 114.1 | 211.0 | 548.6 | 759.6 | 942.2 |
 | HBM comparator, 3.5-bit weights, batch 128 | 8,574 | 89.2 | 216.1 | 548.6 | 764.7 | 948.5 |
 | B200, batch 1 (measured 689 W decode draw, roofline rate) | 881 | 782 | | | | |
