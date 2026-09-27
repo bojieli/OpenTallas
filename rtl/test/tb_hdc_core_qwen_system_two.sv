@@ -161,11 +161,10 @@ module tb_hdc_core #(
     integer system_hbm_reads=0,system_hbm_writes=0,system_wait_cycles=0;
     integer system_hbm_v_reads_after_write=0;
     integer system_hbm_k_writes=0,system_flush_mismatches=0,system_done_flush_wait=0;
+    integer system_boot_hbm_reads=0;
     reg system_waiting=0;
-    wire system_boot_v=(lc>=6 && lc<262 && rst_n);
-    wire [7:0] system_boot_idx=lc-6;
-    wire [1:0] system_boot_tile=system_boot_idx[7] ? pos[5:4] : (pos[5:4]-2'd1);
-    wire [AW-1:0] system_boot_word={1'b0,system_boot_idx[6:4],system_boot_tile,system_boot_idx[3:0]};
+    wire system_boot_busy,system_boot_done;
+    wire system_boot_start=(lc==6 && rst_n);
     function automatic [7:0] packed_fp8(input [15:0] b);
         reg [7:0] e;
         begin
@@ -188,8 +187,8 @@ module tb_hdc_core #(
         .kv_re(kv_re),.kv_raddr(kv_raddr),.kv_q(system_kv_q),
         .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
         .kv_write_flush(kv_write_flush),.kv_write_drained(system_drained),
-        .boot_v(system_boot_v),.boot_word(system_boot_word),.boot_data(kv_fp8[system_boot_word]),
-        .boot_start(1'b0),.boot_busy(),.boot_done(),
+        .boot_v(1'b0),.boot_word('0),.boot_data('0),
+        .boot_start(system_boot_start),.boot_busy(system_boot_busy),.boot_done(system_boot_done),
         .win_we(system_win_we),.win_waddr(system_win_waddr),.win_wdata(system_win_wdata),
         .win_re(system_win_re),.win_raddr(system_win_raddr),.win_q(system_win_q),
         .bank_we(system_bank_we),.bank_re(system_bank_re),
@@ -215,6 +214,7 @@ module tb_hdc_core #(
             end
             else begin
                 system_hbm_reads<=system_hbm_reads+1;
+                if (system_boot_busy) system_boot_hbm_reads<=system_boot_hbm_reads+1;
                 if (two_step && system_hq_sector >= 256 &&
                     system_hbm_written_before_second[system_hq_sector])
                     system_hbm_v_reads_after_write<=system_hbm_v_reads_after_write+1;
@@ -496,6 +496,9 @@ module tb_hdc_core #(
         cyc <= cyc + 1;
         if (lc < 5 || go) lc <= lc + 1;
         if (lc == 5) rst_n <= 1'b1;
+        if (lc == START-1 && (!system_boot_done || system_boot_hbm_reads != 128))
+            $fatal(1,"physical K boot incomplete: done=%b HBM reads=%0d",
+                   system_boot_done,system_boot_hbm_reads);
         start <= (lc == START) && (lc < 5 || go);
         if (lc == START - 1 && multi) begin token <= prompt[0]; pos <= 0; step <= 0; end
         if (multi && lc > START + 2 && done && !start) begin
@@ -593,6 +596,7 @@ module tb_hdc_core #(
             $display("KV_SYSTEM fault=%0d drained=%0d hbm_reads=%0d hbm_writes=%0d wait_cycles=%0d",
                      system_fault,system_drained,system_hbm_reads,system_hbm_writes,system_wait_cycles);
             $display("KV_SYSTEM_ORDER v_reads_after_write=%0d",system_hbm_v_reads_after_write);
+            $display("KV_SYSTEM_BOOT done=%0d hbm_reads=%0d",system_boot_done,system_boot_hbm_reads);
             if (two_token) begin
                 for (i=0;i<W;i=i+1) expected_flushed_word[i*8 +: 8]=packed_fp8(e_kv[i][31:16]);
                 system_flush_mismatches=(system_hbm[0][0 +: 128] !== expected_flushed_word);
@@ -623,6 +627,7 @@ module tb_hdc_core #(
             if (next_token == expect_tok && !first_bad && !fault && !system_fault && system_drained &&
                 (!two_token || system_hbm_v_reads_after_write > 0) &&
                 (!two_token || system_flush_mismatches == 0) &&
+                system_boot_done && system_boot_hbm_reads == 128 &&
                 bad_lg == 0 && bad_vm == 0 && bad_kv == 0 &&
                 (!KV_BRIDGE || (!bridge_fault && bridge_drained && bridge_bad == 0)))
                 $display("PASS");

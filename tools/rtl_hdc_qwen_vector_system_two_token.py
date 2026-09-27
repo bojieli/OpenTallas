@@ -89,6 +89,7 @@ print(first,second)
                                   r'hbm_writes=(\d+) wait_cycles=(\d+)',output)
                 ordering=re.search(r'KV_SYSTEM_ORDER v_reads_after_write=(\d+)',output)
                 flush=re.search(r'KV_SYSTEM_FLUSH k_writes=(\d+) word0_mismatch=(\d+)',output)
+                boot=re.search(r'KV_SYSTEM_BOOT done=(\d+) hbm_reads=(\d+)',output)
                 first=re.search(r'KV_SYSTEM_FIRST pos=(\d+) next_token=(\d+) expect=(\d+) '
                                 r'cycles=(\d+) fault=(\d+)',output)
                 if m:
@@ -103,12 +104,16 @@ print(first,second)
                 if flush and traffic:
                     rec['kv_system']['k_flush_writes']=int(flush.group(1))
                     rec['kv_system']['k_flush_word0_mismatch']=int(flush.group(2))
+                if boot and traffic:
+                    rec['kv_system']['boot_done']=int(boot.group(1))
+                    rec['kv_system']['boot_hbm_reads']=int(boot.group(2))
                 if first:
                     rec['first_step']=dict(zip(('position','next_token','expected_token','cycles','fault'),
                                                map(int,first.groups())))
                 rec.update(status='pass' if sim.returncode==0 and 'PASS' in output and m and
                            traffic and ordering and int(ordering.group(1))>0 and flush and
-                           int(flush.group(1))>=128 and int(flush.group(2))==0 and first and
+                           int(flush.group(1))>=128 and int(flush.group(2))==0 and boot and
+                           int(boot.group(1))==1 and int(boot.group(2))==128 and first and
                            rec['next_token']==rec['expected_token'] and
                            rec['first_step']['next_token']==rec['first_step']['expected_token'] else 'fail',
                            phase='simulation',returncode=sim.returncode,
