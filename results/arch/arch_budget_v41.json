@@ -8581,6 +8581,136 @@
    }
   }
  ],
+ "collective_exposure": {
+  "source": "results/arch/v41_collective_exposure.json",
+  "terms_residual_cycles": {
+   "all_reduce": 10.162853943619012,
+   "all_gather_small": 6.2532087912087775,
+   "all_gather_select": 17.697560439560448,
+   "all_gather_rows": 187.5392307692308,
+   "hop": 113.61569697278912
+  },
+  "spec": {
+   "8192": {
+    "overlap_assumed": 5506.820252925507,
+    "measured_exposure": 5401.486419949434,
+    "us": [
+     181.5929981496579,
+     185.1342245917118
+    ],
+    "breakdown_us": {
+     "compute_chain": 110.031,
+     "weight_sweep": 26.598,
+     "kv_sweep": 0.236,
+     "collective_latency": 26.354,
+     "collective_bytes": 3.541,
+     "pipeline_hops": 11.946,
+     "control": 6.428
+    }
+   },
+   "200000": {
+    "overlap_assumed": 5392.968133722219,
+    "measured_exposure": 5291.904810212757,
+    "us": [
+     185.42664729409432,
+     188.96787373614828
+    ],
+    "breakdown_us": {
+     "compute_chain": 111.17,
+     "weight_sweep": 26.851,
+     "kv_sweep": 2.752,
+     "collective_latency": 26.354,
+     "collective_bytes": 3.541,
+     "pipeline_hops": 11.946,
+     "control": 6.354
+    }
+   },
+   "1048576": {
+    "overlap_assumed": 4912.5927928677365,
+    "measured_exposure": 4828.5916976540375,
+    "us": [
+     203.5584959233407,
+     207.0997223653945
+    ],
+    "breakdown_us": {
+     "compute_chain": 119.284,
+     "weight_sweep": 26.851,
+     "kv_sweep": 12.77,
+     "collective_latency": 26.354,
+     "collective_bytes": 3.541,
+     "pipeline_hops": 11.946,
+     "control": 6.354
+    }
+   }
+  },
+  "ladder_step3": {
+   "8192": {
+    "overlap_assumed": 7600.06444806025,
+    "measured_exposure": 7397.8380041509545,
+    "us": [
+     131.5778315873661,
+     135.17462797088774
+    ],
+    "breakdown_us": {
+     "compute_chain": 75.059,
+     "weight_sweep": 13.584,
+     "kv_sweep": 0.015,
+     "collective_latency": 26.634,
+     "collective_bytes": 4.014,
+     "pipeline_hops": 11.946,
+     "control": 3.922
+    }
+   },
+   "200000": {
+    "overlap_assumed": 7487.863748559542,
+    "measured_exposure": 7291.487076224264,
+    "us": [
+     133.54943860889193,
+     137.14623499241364
+    ],
+    "breakdown_us": {
+     "compute_chain": 74.744,
+     "weight_sweep": 13.584,
+     "kv_sweep": 2.392,
+     "collective_latency": 26.634,
+     "collective_bytes": 4.014,
+     "pipeline_hops": 11.946,
+     "control": 3.832
+    }
+   },
+   "1048576": {
+    "overlap_assumed": 6990.960761470521,
+    "measured_exposure": 6819.4844007847205,
+    "us": [
+     143.04185563611344,
+     146.63865201963506
+    ],
+    "breakdown_us": {
+     "compute_chain": 74.218,
+     "weight_sweep": 13.584,
+     "kv_sweep": 12.41,
+     "collective_latency": 26.634,
+     "collective_bytes": 4.014,
+     "pipeline_hops": 11.946,
+     "control": 3.832
+    }
+   }
+  },
+  "ladder_mtp_m2_tau41": {
+   "8192": {
+    "overlap_assumed": 16129.406762506893,
+    "measured_exposure": 15831.488975546821
+   },
+   "200000": {
+    "overlap_assumed": 15756.190220896455,
+    "measured_exposure": 15471.778345401448
+   },
+   "1048576": {
+    "overlap_assumed": 14335.461425135476,
+    "measured_exposure": 14099.643889590625
+   }
+  }
+ },
  "replay": {
   "validation": [
    {

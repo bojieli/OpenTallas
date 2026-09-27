@@ -509,7 +509,7 @@ ATT_COLL = ("attn.a_allgather", "attn.rows_allgather", "attn.out_allreduce", "at
 
 
 def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, expert_overlap=0.0, hbm=None,
-          fill=False, base=None, levers=()):
+          fill=False, base=None, levers=(), exposure=None):
     """Re-price the report's DAG node by node from `spec`; returns T (critical path), the occupancy bound,
     tokens/s per user and the per-category / per-resource critical-path breakdown.
 
@@ -534,7 +534,10 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
       short_stages the measured short stages beyond the spec's fast FP: stream-unit base depth 21 (not 29),
                    reducer tail 25 (not 32), rsqrt path 58 (not 90), sqrt(softplus) 161 (not 259);
       att_local    attention and its projections on the two dies of ONE package (tensor group 2 for the
-                   attention sublayer, UCIe collectives), MoE still striped over the four-die group."""
+                   attention sublayer, UCIe collectives), MoE still striped over the four-die group.
+    exposure: None (overlap as assumed), True (the committed measured terms, results/arch/
+    v41_collective_exposure.json) or a terms dict: every streaming collective / stage hop is re-priced from its
+    producer's last output with the RTL stage bench's exposed tail (gate C7 / O2, tools/collective_exposure.py)."""
     E = _env()
     clock = E["clock"]
     m = fill_machine(batch) if fill else dag_machine(batch)
@@ -681,6 +684,8 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
                 if name.endswith("softplus_sqrt"):
                     cut += 98
                 nd["depth"] = max(0.0, nd["depth"] - cut * cyc)
+    if exposure and base.get("overlap_collectives"):     # after the producers' issue is priced (their window)
+        D.expose_collectives(b.g, D.load_exposure_terms() if exposure is True else exposure)
     fin = b.g.solve(spec.chaining)
     T = fin[b.sink]
     path = b.g.path(b.sink)
@@ -1476,6 +1481,36 @@ def chain_ladder(req, c, areas=None):
     return out
 
 
+def collective_exposure_rows(req, c):
+    """Gate C7 / O2: the spec and its chain-ladder top re-priced with the RTL stage bench's measured collective
+    exposure (results/arch/v41_collective_exposure.json terms; tools/collective_exposure.py) instead of bytes that
+    stream behind their producer from its start.  The width derivation above keeps the overlap-assumed pricing
+    (the exposure is latency, not width); these rows are the rates to quote."""
+    if not D.COLLECTIVE_EXPOSURE_REC.exists():
+        return None
+    terms = D.load_exposure_terms()
+    L3 = ("fuse", "chain_all", "short_stages")
+    out = dict(source=str(D.COLLECTIVE_EXPOSURE_REC.relative_to(ROOT)),
+               terms_residual_cycles={k: v["residual_cycles"] for k, v in terms.items()})
+    for tag, lv in (("spec", ()), ("ladder_step3", L3)):
+        row = {}
+        for ctx in CONTEXTS:
+            r0, r1 = price(req, ctx, levers=lv), price(req, ctx, levers=lv, exposure=terms)
+            row[str(ctx)] = dict(overlap_assumed=r0["tokens_s_per_user"], measured_exposure=r1["tokens_s_per_user"],
+                                 us=[r0["T_s"] * 1e6, r1["T_s"] * 1e6],
+                                 breakdown_us={k: round(v, 3) for k, v in r1["breakdown_us"].items()})
+        out[tag] = row
+    mt = {}
+    for ctx in CONTEXTS:
+        sp = replace(req, lane_mult=2)
+        d = draft_cost_s(sp, ctx, 5, c)["total_s"]
+        v0 = price(sp, ctx, positions=6, levers=L3)["period_s"]
+        v1 = price(sp, ctx, positions=6, levers=L3, exposure=terms)["period_s"]
+        mt[str(ctx)] = dict(overlap_assumed=4.1 / (v0 + d), measured_exposure=4.1 / (v1 + d))
+    out["ladder_mtp_m2_tau41"] = mt
+    return out
+
+
 def build(quick=False):
     E = _env()
     c, clock = E["c"], E["clock"]
@@ -1629,6 +1664,7 @@ def build(quick=False):
     if not quick:
         rec["power"] = power_requirements(rec, req, areas)
     rec["chain_ladder"] = chain_ladder(req, c, areas)
+    rec["collective_exposure"] = collective_exposure_rows(req, c)
     rec["replay"] = replay_summary()
     return rec
 

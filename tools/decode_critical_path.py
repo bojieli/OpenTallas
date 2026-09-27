@@ -901,6 +901,13 @@ def price_communication(g: Graph, fabric, mb, clock):
     return events
 
 
+# -- measured collective exposure (gate C7 / O2): tools/collective_exposure.py ------------------------------------
+import collective_exposure as CX  # noqa: E402
+
+COLLECTIVE_EXPOSURE_REC = CX.REC
+exposure_class, load_exposure_terms, expose_collectives = CX.exposure_class, CX.load_terms, CX.expose_collectives
+
+
 # -- routed-expert load imbalance ---------------------------------------------------------------------------------
 def expert_load(g, experts, topk, mb, basis, trials, seed):
     """(E[max die load] / mean die load, E[max experts on one die]) for g dies holding experts in
