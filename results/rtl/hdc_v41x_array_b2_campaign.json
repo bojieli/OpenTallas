@@ -2,7 +2,7 @@
   "schema": "opentallas.hdc-v41x-array-hcp-gate.v1",
   "status": "pass",
   "simulation_build_note": "Verilator_badfba67_all_576_fast_generated_objects_O1_remaining_slow_O1_or_Os_manual_relink",
-  "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of V4.1x cores with X_HE=1 and other X units=0; package control is ot_rom_pkg_ctrl_x; the selected fabric is RTL point-to-point links or ot_rom_fabric_router; memories are behavioral and the link PHY is a delay-line stand-in (60 cycles point-to-point, 30 per switch half-link); per-user persistent state uses base offsets in behavioral memories; Engram history restore is testbench logic. Clock rate is not claimed.",
+ "claim_boundary": "This PASS was executed on source snapshot d03622c9; it does not establish a pass for later source revisions. Functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of V4.1x cores with X_HE=1 and other X units=0; package control is ot_rom_pkg_ctrl_x; the selected fabric is RTL point-to-point links or ot_rom_fabric_router; memories are behavioral and the link PHY is a delay-line stand-in (60 cycles point-to-point, 30 per switch half-link); per-user persistent state uses base offsets in behavioral memories; Engram history restore is testbench logic. Clock rate is not claimed.",
   "vehicle": "deepseek-v4.1-flash-reduced-v2 (40 layers, vocab 4040)",
   "configurations": [
     {
