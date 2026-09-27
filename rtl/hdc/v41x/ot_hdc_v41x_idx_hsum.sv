@@ -22,25 +22,33 @@
 //       + 3 log2(IH/8) (tree) + 1 (to_bf16, mask, output) = 33 at IH = 32.
 // Faults fail closed as in the engine: a faulted score (pool fault), a BF16
 // rounding to infinity, a product overflow or an adder refusal -> fault, 0.
+// The standalone engine also REFUSES a UE8M0 scale byte >= 253 in q or in the
+// key; the pool lane does not, so this stage applies the same rule: a key
+// refused at ingest (i_ref, from ot_hdc_v41x_idx_kmerge) or any head whose q
+// was loaded with such a scale (w_qsc) faults the key; cnt_refused counts.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_idx_hsum #(
     parameter integer IH  = 32,
-    parameter integer NKT = 1
+    parameter integer NKT = 1,
+    parameter integer NBQ = 4           // q blocks per head (scale bytes checked)
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
     input  wire                  w_v,
     input  wire [7:0]            w_head,
     input  wire [15:0]           w_w,
+    input  wire [NBQ*8-1:0]      w_qsc,       // the head's q UE8M0 scale bytes (refusal check)
     input  wire                  i_v,
     input  wire [NKT-1:0]        i_kv,
+    input  wire [NKT-1:0]        i_ref,       // key refused at ingest (ot_hdc_v41x_idx_kmerge o_ref)
     input  wire [NKT-1:0]        i_keep,
     input  wire [NKT*IH*32-1:0]  i_score,     // key g, head h at [(g*IH+h)*32 +: 32]
     input  wire [NKT*IH-1:0]     i_fault,
     output reg                   o_v,
     output reg  [NKT-1:0]        o_kv,
     output reg  [NKT*16-1:0]     o_score,
-    output reg  [NKT-1:0]        o_fault
+    output reg  [NKT-1:0]        o_fault,
+    output reg  [47:0]           cnt_refused  // keys faulted by a refused key or q scale
 );
     localparam integer HC = 8;
     localparam integer NCH = IH / HC;
@@ -54,20 +62,27 @@ module ot_hdc_v41x_idx_hsum #(
     reg             rw_v;
     reg [7:0]       rw_h;
     reg [15:0]      rw_w;
+    reg             rw_r;
+    reg [IH-1:0]    qref;                           // head h's q holds a scale >= 253
     integer hq;
     always @(posedge clk) begin
         rw_v <= w_v && rst_n;
         rw_h <= w_head;
         rw_w <= w_w;
+        rw_r <= 1'b0;
+        for (hq = 0; hq < NBQ; hq = hq + 1) if (w_qsc[8*hq +: 8] >= 8'd253) rw_r <= 1'b1;
         for (hq = 0; hq < IH; hq = hq + 1)
-            if (rw_v && rw_h == hq) qw[16*hq +: 16] <= rw_w;
+            if (rw_v && rw_h == hq) begin qw[16*hq +: 16] <= rw_w; qref[hq] <= rw_r; end
     end
+    wire anyq = |qref;
 
     reg              rv;
     reg [NKT-1:0]    rkv, rkeep;
     reg [NKT*IH*32-1:0] rsc;
     reg [NKT*IH-1:0] rf;
+    reg [NKT-1:0]    rref;
     always @(posedge clk) begin
+        rref <= i_ref;
         rv <= i_v && rst_n;
         rkv <= i_kv;
         rkeep <= i_keep;
@@ -77,6 +92,18 @@ module ot_hdc_v41x_idx_hsum #(
     wire [2*NKT:0] vl;
     ot_hdc_delay #(.W(2 * NKT + 1), .D(LAT), .RESET(1)) u_vl (.clk(clk), .rst_n(rst_n),
         .d({rkeep, rkv, rv}), .q(vl));
+    wire [NKT-1:0] refd;                            // refused (key or q), with the key
+    ot_hdc_delay #(.W(NKT), .D(LAT), .RESET(1)) u_rf (.clk(clk), .rst_n(rst_n),
+        .d(rref | {NKT{anyq}}), .q(refd));
+    integer cr;
+    reg [$clog2(NKT+1)-1:0] nrf;
+    always @* begin
+        nrf = 0;
+        for (cr = 0; cr < NKT; cr = cr + 1) nrf = nrf + (refd[cr] & vl[1 + cr]);
+    end
+    always @(posedge clk)
+        if (!rst_n) cnt_refused <= 0;
+        else if (vl[0]) cnt_refused <= cnt_refused + nrf;
 
     genvar g, h, c, l, i;
     generate
@@ -142,8 +169,8 @@ module ot_hdc_v41x_idx_hsum #(
             wire        so;
             ot_hdc_v41x_bf16 u_b (.x(t[32*LV*NCH +: 32]), .y(s16), .ovf(so));
             always @(posedge clk) begin
-                o_fault[g] <= tf[LV*NCH] || so;
-                o_score[16*g +: 16] <= (tf[LV*NCH] || so) ? 16'd0 : (vl[1 + NKT + g] ? s16 : 16'hFF80);
+                o_fault[g] <= tf[LV*NCH] || so || refd[g];
+                o_score[16*g +: 16] <= (tf[LV*NCH] || so || refd[g]) ? 16'd0 : (vl[1 + NKT + g] ? s16 : 16'hFF80);
             end
         end
     endgenerate

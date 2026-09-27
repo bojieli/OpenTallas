@@ -2,9 +2,9 @@
 // Bench of ot_hdc_v41x_idx_hsum (the post-pool head-sum stage) against the
 // golden: per key the IH per-head FP32 scores sc32 = dots_q4 (as the pooled
 // block-dot engine delivers them) and the expected BF16 index score.
-//   hs_w.mem  per token, IH lines: BF16 head weight
+//   hs_w.mem  per token, IH lines: {q scale bytes[31:0], BF16 head weight}
 //   hs_n.mem  per token, its key count
-//   hs_k.mem  per key {keep, faults[IH], scores[IH*32]}
+//   hs_k.mem  per key {ref, keep, faults[IH], scores[IH*32]}
 //   hs_e.mem  per key {fault, score[15:0]}
 // Keys stream back to back, NKT per cycle; +BUBBLE (1/16ths) inserts gaps.
 module tb_hdc_v41x_idx_hsum #(
@@ -13,8 +13,8 @@ module tb_hdc_v41x_idx_hsum #(
     parameter integer MAXT = 4096,
     parameter integer MAXK = 1 << 18
 ) (input wire clk);
-    localparam integer KW = 1 + IH + IH * 32;
-    reg [15:0]   wm [0:MAXT*IH-1];
+    localparam integer KW = 2 + IH + IH * 32;
+    reg [47:0]   wm [0:MAXT*IH-1];
     reg [31:0]   nm [0:MAXT-1];
     reg [KW-1:0] km [0:MAXK-1];
     reg [16:0]   em [0:MAXK-1];
@@ -33,6 +33,9 @@ module tb_hdc_v41x_idx_hsum #(
     reg w_v = 1'b0;
     reg [7:0] w_head = 0;
     reg [15:0] w_w = 0;
+    reg [31:0] w_qsc = 0;
+    reg [NKT-1:0] i_ref = 0;
+    wire [47:0] cnt_ref;
     reg i_v = 1'b0;
     reg [NKT-1:0] i_kv = 0, i_keep = 0;
     reg [NKT*IH*32-1:0] i_score = 0;
@@ -41,7 +44,7 @@ module tb_hdc_v41x_idx_hsum #(
     wire [NKT-1:0] o_kv, o_fault;
     wire [NKT*16-1:0] o_score;
     ot_hdc_v41x_idx_hsum #(.IH(IH), .NKT(NKT)) dut (.clk(clk), .rst_n(rst_n), .w_v(w_v), .w_head(w_head),
-        .w_w(w_w), .i_v(i_v), .i_kv(i_kv), .i_keep(i_keep), .i_score(i_score), .i_fault(i_fault), .o_v(o_v),
+        .w_w(w_w), .w_qsc(w_qsc), .i_ref(i_ref), .cnt_refused(cnt_ref), .i_v(i_v), .i_kv(i_kv), .i_keep(i_keep), .i_score(i_score), .i_fault(i_fault), .o_v(o_v),
         .o_kv(o_kv), .o_score(o_score), .o_fault(o_fault));
     integer cyc = 0, st = 0, tok = 0, h = 0, kn = 0, kend = 0, kout = 0, errors = 0, faults = 0, j, nf, wait_c = 0;
     integer t_in = -1, lat = -1, beats = 0, span0 = -1, span1 = 0, span = 0;
@@ -68,7 +71,7 @@ module tb_hdc_v41x_idx_hsum #(
         if (rst_n) case (st)
             0: if (tok >= ntok) st = 9;
                else begin
-                   w_v <= 1'b1; w_head <= h[7:0]; w_w <= wm[tok * IH + h];
+                   w_v <= 1'b1; w_head <= h[7:0]; {w_qsc, w_w} <= wm[tok * IH + h];
                    if (h == IH - 1) begin h = 0; st = 1; wait_c = 0; kend = kn + nm[tok]; span0 = -1; end
                    else h = h + 1;
                end
@@ -85,7 +88,8 @@ module tb_hdc_v41x_idx_hsum #(
                        for (j = 0; j < NKT; j = j + 1) begin
                            kk = km[kn + j];
                            i_kv[j] <= (j < nf);
-                           i_keep[j] <= (j < nf) && kk[KW-1];
+                           i_keep[j] <= (j < nf) && kk[KW-2];
+                           i_ref[j] <= (j < nf) && kk[KW-1];
                            i_fault[IH*j +: IH] <= kk[IH*32 +: IH];
                            i_score[IH*32*j +: IH*32] <= kk[IH*32-1:0];
                        end
@@ -98,6 +102,7 @@ module tb_hdc_v41x_idx_hsum #(
                end
             3: if (kout >= kend) begin span = span + span1 - span0 + 1; tok = tok + 1; st = 0; end
             default: begin
+                $display("V41XHSUMCNT refused=%0d", cnt_ref);
                 $display("V41XHSUM keys=%0d checked=%0d errors=%0d faults_expected_and_raised=%0d beats=%0d span=%0d latency=%0d cycles=%0d",
                          nkey, kout, errors, faults, beats, span, lat, cyc);
                 $finish;

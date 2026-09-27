@@ -342,13 +342,15 @@ def hsum_bench(work: Path, name, toks, ih):
             nbk = q.shape[1] // 32
             blk = np.stack([a64[:, i * 32:(i + 1) * 32] @ b64[:, i * 32:(i + 1) * 32].T for i in range(nbk)], -1)
             hf = ~np.isfinite(blk.astype(F)).all(-1) | ~np.isfinite(sc)
-        hf |= np.asarray(t["qu"] >= 253).any(1)[:, None] | np.asarray(t["ku"] >= 253).any(1)[None, :]
-        wl += [f"{int(G.bits(t['w'][h])) >> 16:04x}" for h in range(ih)]
+        # the pool lane has no scale refusal: refused scales reach this stage as i_ref (key) / w_qsc (q)
+        kref = np.asarray(t["ku"] >= 253).any(1)
+        wl += [hexline([(int(G.bits(t['w'][h])) >> 16, 16)] + [(int(u), 8) for u in t["qu"][h]] +
+                       [(0, 8)] * (4 - t["qu"].shape[1])) for h in range(ih)]
         n = len(t["keep"])
         nl.append(f"{n:08x}")
         for j in range(n):
             f = [(0 if hf[h, j] else int(G.bits(sc[h, j])), 32) for h in range(ih)] + \
-                [(int(hf[h, j]), 1) for h in range(ih)] + [(int(t["keep"][j]), 1)]
+                [(int(hf[h, j]), 1) for h in range(ih)] + [(int(t["keep"][j]), 1), (int(kref[j]), 1)]
             kl.append(hexline(f))
             el.append(hexline([(t["exp"][j], 16), (int(t["fault"][j]), 1)]))
     for nm_, lines in (("hs_w.mem", wl), ("hs_n.mem", nl), ("hs_k.mem", kl), ("hs_e.mem", el)):
@@ -371,8 +373,12 @@ def hsum_bench(work: Path, name, toks, ih):
     res = dict(zip(("keys", "checked", "errors", "faults_expected_and_raised", "beats", "span", "latency_cycles",
                     "cycles"), map(int, m.groups())))
     res["expected_faults"] = int(sum(int(t["fault"].sum()) for t in toks))
+    cn = re.search(r"V41XHSUMCNT refused=(\d+)", r.stdout)
+    res["refused"] = int(cn.group(1)) if cn else None
+    res["expected_refused"] = int(sum(int((np.asarray(t["ku"] >= 253).any(1) |
+                                           np.asarray(t["qu"] >= 253).any()).sum()) for t in toks))
     res["bit_exact"] = res["errors"] == 0 and res["checked"] == res["keys"] and \
-        res["faults_expected_and_raised"] == res["expected_faults"]
+        res["faults_expected_and_raised"] == res["expected_faults"] and res["refused"] == res["expected_refused"]
     return res
 
 
@@ -474,9 +480,12 @@ def hbm_scan(work: Path, quick=False):
             raise RuntimeError(so[-2000:])
         g = list(map(int, m.groups()))
         hb = [list(map(int, h)) for h in HRE.findall(so)]
+        cnt = [list(map(int, c)) for c in re.findall(r"V41XSCANCNT stack=(\d+) keys_streamed=(\d+) hbm_beats=(\d+)", so)]
         row = dict(params=params, keys=g[5], delivered=g[6], errors=g[7], cycles=g[8], win_keys=g[9],
                    win_cycles=g[10], sectors_read=sum(h[1] for h in hb), refreshes=sum(h[2] for h in hb),
-                   read_latency_max_ns=max(h[4] for h in hb) / 1000)
+                   read_latency_max_ns=max(h[4] for h in hb) / 1000,
+                   counters={"keys_streamed": sum(c[1] for c in cnt), "hbm_beats": sum(c[2] for c in cnt)})
+        assert row["counters"]["hbm_beats"] == row["sectors_read"], row
         ns = params["NS"]
         row["bytes_per_cycle"] = g[5] * 68 / g[8]
         row["win_bytes_per_cycle"] = g[9] * 68 / g[10]
