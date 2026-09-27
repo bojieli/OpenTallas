@@ -16,6 +16,8 @@ Steps:
             the design point, and on the specification model (tools/arch_budget_v41.py price, exposure=terms).
 
     python3 tools/v41_collective_exposure.py [--out results/arch/v41_collective_exposure.json]
+    python3 tools/v41_collective_exposure.py --levers [results/rtl/v41_collective_levers_campaign.json]
+            (every lever alone and the recommended set: results/arch/v41_collective_levers.json)
 """
 from __future__ import annotations
 
@@ -82,7 +84,10 @@ def dump_on_path(U, A, sp, muts, hz, ctx=1048576):
     return out
 
 
-def derive_terms(camp, dump):
+def derive_terms(camp, dump, bytes_scale=None):
+    """bytes_scale: {class: share of the modelled per-link bytes a link carries} (a lever that moves bytes off the
+    measured link, e.g. the receive-side relay's 0.5); default 1."""
+    bytes_scale = bytes_scale or {}
     clock = dump["clock_hz"]
     pats = camp["summary"]["patterns"]
     sched = camp["schedules"]
@@ -98,7 +103,8 @@ def derive_terms(camp, dump):
             e = max(ex, key=lambda x: x["depth_cyc"])            # the full (board) instance, not a group-boundary one
             span = max(sched[pat]) - min(sched[pat]) + 1
             window = e["producer_window_cyc"] if c["window"] == "producer" else span
-            formula = max(0.0, e["issue_cyc"] - window) + e["depth_cyc"]
+            sc = bytes_scale.get(cls, 1.0)
+            formula = max(0.0, e["issue_cyc"] * sc - window) + e["depth_cyc"]
             meas = pats[pat]["measured_exposed_tail_cycles"]
             resid = meas - formula
             rows[pat] = dict(class_=cls, design_point_node=e["node"], bytes_cycles=e["issue_cyc"],
@@ -112,18 +118,22 @@ def derive_terms(camp, dump):
         if best:
             terms[cls] = dict(window=c["window"], window_s=best[1] / clock, residual_s=best[0] / clock,
                               residual_cycles=best[0], from_pattern=best[2])
+            if cls in bytes_scale:
+                terms[cls]["bytes_scale"] = bytes_scale[cls]
     return terms, rows
 
 
-def design_point_rates(dp, terms):
-    """Batch-1 tokens/s per user at 200K and 1M, without and with MTP, overlap-assumed vs measured exposure."""
+def design_point_rates(dp, terms, consumers=()):
+    """Batch-1 tokens/s per user at 200K and 1M, without and with MTP, overlap-assumed vs measured exposure
+    (consumers: early-start mutations of tools/collective_exposure.consumer_mutation, measured side only)."""
     import arch_latency_ladder_v41 as LX
     import collective_exposure as CX
     base = list(dp["muts"]) + [dp["ml"]]
+    extra = [CX.mutation(terms)] + ([CX.consumer_mutation(tuple(consumers))] if consumers else [])
     out = {}
     for ctx in CONTEXTS:
         e0 = LX.evaluate(dp["sp"], ctx, base, hz=dp["hz"])
-        e1 = LX.evaluate(dp["sp"], ctx, base + [CX.mutation(terms)], hz=dp["hz"])
+        e1 = LX.evaluate(dp["sp"], ctx, base + extra, hz=dp["hz"])
         out[str(ctx)] = {k: dict(ar=e["ar"], mtp=e["mtp"], T_us=e["T_us"], verify_us=e["verify_us"],
                                  breakdown_us=e["breakdown_us"])
                          for k, e in (("overlap_assumed", e0), ("measured_exposure", e1))}
@@ -139,12 +149,110 @@ def derive(camp):
     return terms, rows, dump, dp
 
 
+# -- levers (tools/rtl_v41_collective_levers_campaign.py) ------------------------------------------------------------------
+LEVERS_CAMPAIGN = ROOT / "results/rtl/v41_collective_levers_campaign.json"
+LEVERS_OUT = ROOT / "results/arch/v41_collective_levers.json"
+AR = ("allreduce_wo_b", "allreduce_down")
+
+
+def lever_scenarios(lev):
+    """(name, {pattern: measured tail}, consumers, {class: bytes scale}, why) -- every lever alone, then the
+    recommended set."""
+    P = lev["summary"]["patterns"]
+
+    def t(pat, key):
+        return P[pat]["levers"][key]["exposed_tail_cycles"]
+    hop = P["stage_hop"]["levers"]
+    split = {k: v for k, v in hop.items() if "split" in k and not k.endswith(("_d32", "_d64", "split40"))}
+    best_split = min(split, key=lambda k: split[k]["exposed_tail_cycles"])
+    # the small gathers take whichever lever is fastest (the relay is a per-message routing choice: on a one-word
+    # gather it only adds the UCIe relay flight); ties go to the direct route
+    gath = {pat: min(P[pat]["levers"], key=lambda k: (P[pat]["levers"][k]["exposed_tail_cycles"],
+                                                      k.startswith("relay"))) for pat in ("gather_router",
+                                                                                          "gather_topk")}
+    rec = {**{p: t(p, "relay_add3") for p in AR}, "gather_rows": t("gather_rows", "relay_gw4"),
+           **{p: t(p, gath[p]) for p in gath}, "stage_hop": hop[best_split]["exposed_tail_cycles"]}
+    cls = {"gather_router": "all_gather_small", "gather_topk": "all_gather_select"}
+    R, RW = {"all_reduce": 0.5}, {"all_gather_rows": 0.5}
+    RG = {cls[p]: 0.5 for p, k in gath.items() if k.startswith("relay")}
+    return [
+        ("measured_baseline", {}, (), {}, "the O2 record (overlap not assumed)"),
+        ("rows_bubble_free_gw1", {"gather_rows": t("gather_rows", "base_nobubble")}, (), {}, "lever 1"),
+        ("rows_gw4", {"gather_rows": t("gather_rows", "gw4")}, (), {}, "lever 1"),
+        ("rows_relay_gw2", {"gather_rows": t("gather_rows", "relay_gw2")}, (), RW, "lever 1"),
+        ("rows_relay_gw4", {"gather_rows": rec["gather_rows"]}, (), RW, "lever 1"),
+        ("allreduce_add3", {p: t(p, "add3") for p in AR}, (), {}, "lever 2"),
+        ("allreduce_relay", {p: t(p, "relay") for p in AR}, (), R, "lever 2"),
+        ("allreduce_relay_add3", {p: rec[p] for p in AR}, (), R, "lever 2"),
+        ("small_gathers_best", {p: rec[p] for p in gath}, (), RG,
+         "levers 1-2 on the router and top-k gathers (the fastest of wide emission / relay)"),
+        ("hop_physical_full_per_package", {"stage_hop": hop["hop_perdie7_full"]["exposed_tail_cycles"]}, (), {},
+         "lever 3: the O2 hop on the physical 7-lanes-per-die cables (UCIe swap)"),
+        ("hop_split_" + best_split.split("split")[-1], {"stage_hop": rec["stage_hop"]}, (), {}, "lever 3"),
+        ("hop_half_payload_t1", {"stage_hop": hop["hop_perdie7_split40"]["exposed_tail_cycles"]}, (), {},
+         "lever 3: the model's half-payload split, with its other half crossing over T1"),
+        ("hc_post_streams", {}, ("hc_post",), {}, "lever 4"),
+        ("top6_streams_sensitivity", {}, ("top6",), {}, "lever 4 sensitivity (no RTL)"),
+        ("recommended", rec, ("hc_post",), {**R, **RW, **RG}, "levers 1-4 adopted"),
+        ("recommended_plus_top6_sensitivity", rec, ("hc_post", "top6"), {**R, **RW, **RG}, "sensitivity"),
+    ], dict(best_hop_split=best_split, gather_levers=gath)
+
+
+def lever_rates(camp, lev, lev_path, out):
+    import copy
+    import arch_lanes_v41 as AL
+    dp = AL.design_point()
+    dump = dump_on_path(AL.U, AL.A, dp["sp"], list(dp["muts"]) + [dp["ml"]], dp["hz"])
+    scen, picks = lever_scenarios(lev)
+    rows = {}
+    for name, over, cons, scale, why in scen:
+        c2 = copy.deepcopy(camp)
+        for pat, tail in over.items():
+            c2["summary"]["patterns"][pat]["measured_exposed_tail_cycles"] = tail
+        terms, _ = derive_terms(c2, dump, scale)
+        ev = design_point_rates(dp, terms, cons)
+        rows[name] = dict(why=why, tails=over, consumers=list(cons), bytes_scale=scale,
+                          residual_cycles={k: round(v["residual_cycles"], 2) for k, v in terms.items()},
+                          rates={ctx: dict(ar=r["measured_exposure"]["ar"], mtp=r["measured_exposure"]["mtp"],
+                                           T_us=r["measured_exposure"]["T_us"]) for ctx, r in ev.items()},
+                          overlap_assumed={ctx: dict(ar=r["overlap_assumed"]["ar"], mtp=r["overlap_assumed"]["mtp"])
+                                           for ctx, r in ev.items()})
+    base = rows["measured_baseline"]["rates"]
+    for r in rows.values():
+        r["gain_vs_measured"] = {ctx: dict(ar=r["rates"][ctx]["ar"] / base[ctx]["ar"] - 1,
+                                           mtp=r["rates"][ctx]["mtp"] / base[ctx]["mtp"] - 1) for ctx in base}
+    rel = (lambda q: str(q.relative_to(ROOT)) if q.resolve().is_relative_to(ROOT) else str(q))
+    rec = dict(schema="v41_collective_levers/2", tool="tools/v41_collective_exposure.py --levers",
+               gate="C7 / O2 levers", campaign=rel(lev_path), baseline_campaign=str(CAMPAIGN.relative_to(ROOT)),
+               design_point_model=dict(tools=["tools/arch_budget_v41.py", "tools/arch_utilization_v41.py",
+                                              "tools/arch_latency_ladder_v41.py", "tools/arch_lanes_v41.py"],
+                                       split=dp["split"]),
+               picks=picks,
+               lever_tails={p: dict(before=v["before_tail_cycles"], best=v["best_tail_cycles"], lever=v["best_lever"],
+                                    levers={k: x["exposed_tail_cycles"] for k, x in v["levers"].items()},
+                                    queue_cost_per_die=v.get("queue_cost_per_die"),
+                                    queue_cost_per_die_before=v.get("queue_cost_per_die_before"))
+                            for p, v in lev["summary"]["patterns"].items()},
+               scenarios=rows)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rec, indent=1) + "\n")
+    print(json.dumps({k: {c: (round(v["rates"][c]["ar"]), round(v["rates"][c]["mtp"])) for c in v["rates"]}
+                      for k, v in rows.items()}, indent=1))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--campaign", type=Path, default=CAMPAIGN)
     ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--levers", nargs="?", const=LEVERS_CAMPAIGN, type=Path,
+                    help="re-derive the design point's rates with each lever of the lever campaign "
+                         "(default results/rtl/v41_collective_levers_campaign.json); writes --levers-out")
+    ap.add_argument("--levers-out", type=Path, default=LEVERS_OUT)
     a = ap.parse_args()
     camp = json.loads(a.campaign.read_text())
+    if a.levers:
+        lever_rates(camp, json.loads(a.levers.read_text()), a.levers, a.levers_out)
+        return
     bind = campaign_binding(camp)
     terms, rows, dump, dp = derive(camp)
     rates = design_point_rates(dp, terms)

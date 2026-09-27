@@ -9,7 +9,7 @@ so a collective's bytes cross the link during its producer's pipeline depth, bef
 stage bench (tools/rtl_v41_stage_collective_campaign.py) measures what is exposed after the producer's LAST output
 on the real one-shot engine with credit queues and the validated links.  expose_collectives() re-prices every
 streaming collective and stage hop as store-and-forward from its producer's last output:
-    issue = max(0, bytes - window) + residual,     depth unchanged (hop + fold),
+    issue = max(0, bytes x bytes_scale - window) + residual,     depth unchanged (hop + fold),
 window = the producer's emission window (its issue, or the class's measured span for select / HBM-gather producers
 whose outputs appear at the end); residual = measured tail - that formula at the bench's design point.
 """
@@ -55,7 +55,9 @@ def expose_collectives(g, terms):
         else:
             window = t["window_s"]
         nd["_stream_issue_s"] = nd["issue"]
-        nd["issue"] = max(0.0, nd["issue"] - window) + t["residual_s"]
+        # bytes_scale: the share of the modelled per-link bytes a link still carries (0.5 under the receive-side
+        # relay, rtl/rom/ot_rom_oneshot_px.sv); the residual was measured against the same scaled formula
+        nd["issue"] = max(0.0, max(0.0, nd["issue"] * t.get("bytes_scale", 1.0) - window) + t["residual_s"])
         nd["stream"] = False
         nd["ctrl"] = 0.0
         nd["_exposed"] = cls
@@ -68,3 +70,36 @@ def mutation(terms):
     def m_exposed(g, sp):
         expose_collectives(g, terms)
     return m_exposed
+
+
+# -- consumer early start (gate C7 / O2 levers, tools/rtl_v41_collective_levers_campaign.py) ---------------------------
+def stream_consumers(g):
+    """hc_post after an all-reduce is elementwise in index order, and the one-shot emits the reduced words in index
+    order, so it can start on the first word that lands: price it as STREAMING (its issue overlaps the arrivals;
+    it still ends no earlier than its last input's finish + its depth).  Idempotent."""
+    for name, nd in g.nodes.items():
+        if not name.endswith(".hc_post") or nd["stream"] or nd.get("_early"):
+            continue
+        if any(g.nodes[d]["kind"] == "collective" and g.nodes[d].get("op") != "all_gather" for d in nd["deps"]):
+            nd["stream"] = True
+            nd["_early"] = "hc_post"
+    return g
+
+
+def stream_top6(g):
+    """SENSITIVITY (no RTL): a streaming top-6 that ingests router scores as they land, so its issue overlaps the
+    router all-gather; its depth (and top6_order's) still follows the last score."""
+    for name, nd in g.nodes.items():
+        if name.endswith(".ffn.top6") and not nd["stream"] and not nd.get("_early"):
+            nd["stream"] = True
+            nd["_early"] = "top6"
+    return g
+
+
+def consumer_mutation(which=("hc_post",)):
+    fns = dict(hc_post=stream_consumers, top6=stream_top6)
+
+    def m_consumers(g, sp):
+        for w in which:
+            fns[w](g)
+    return m_consumers
