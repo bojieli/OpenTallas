@@ -45,14 +45,19 @@ def main() -> None:
     ap.add_argument("--legacy-width", action="store_true", help="diagnostic: BF16-width HBM with FP8 core writes")
     ap.add_argument("--bisect", action="store_true", help="find first ISA instruction whose state differs")
     ap.add_argument("--probe-stop", type=int, help="run one cut point and retain first VM/KV mismatch lines")
+    ap.add_argument("--two-token", action="store_true",
+                    help="prefill through position 14, then run positions 15 and 16 across tail tile reuse")
     args = ap.parse_args()
+    if args.two_token and (args.bisect or args.probe_stop is not None):
+        ap.error("--two-token cannot be combined with instruction probes")
+    context = 16 if args.two_token else 64
     checkpoint = ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"
     if args.weights is not None and not checkpoint.exists():
         checkpoint.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(args.weights / checkpoint.name, checkpoint)
     if not checkpoint.exists():
         raise FileNotFoundError(f"missing reduced Qwen3 checkpoint: {checkpoint}")
-    cap = IC.qwen_capture()
+    cap = IC.qwen_capture(context)
     case = IC.case_qwen_reduced(R.FMT_FP32, cap)
     assert case["meta"]["image_equals_golden_cache"]
     nd, npay = len(case["descs"]), len(case["beats"])
@@ -66,7 +71,7 @@ def main() -> None:
         packed = IC.final_image(ing, case["exp"].size)
         packed_equal = bool(np.array_equal(packed, case["exp"]))
         subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img),
-                        "--context", "64"], check=True, capture_output=True, text=True)
+                        "--context", str(context)], check=True, capture_output=True, text=True)
         word_bits = R.fp8_value(packed).view(np.uint32).reshape(-1, 16)
         decoded_hex = P.hexwords((P.pack_lanes(w, 32) for w in word_bits), 512)
         original_hex = (img / "kv.hex").read_text()
@@ -76,7 +81,19 @@ def main() -> None:
         packed_words = packed.reshape(-1, 16)
         (img / "kv_fp8.hex").write_text(P.hexwords((int.from_bytes(w.tobytes(), "little")
                                                    for w in packed_words), 128))
-        lay = P.Layout(P.golden_state(64)[0])
+        lay = P.Layout(P.golden_state(context)[0])
+        second_token = None
+        if args.two_token:
+            # The first token is already the program's generated expectation.
+            # Run the same ISA machine for one more position and retain its
+            # complete terminal state, including the KV writes across tile 16.
+            machine = P.Machine(lay, R.fp8_value(packed).copy())
+            first_token = int(machine.run(P.build_program(lay), int(cap[1][-1]), context - 1))
+            second_token = int(machine.run(P.build_program(lay), first_token, context))
+            (img / "generated.hex").write_text(P.hexwords([first_token, second_token], 16))
+            (img / "expect_logits.hex").write_text(P.hexwords(P.G.bits(machine.logits), 32))
+            (img / "expect_vm.hex").write_text(P.hexwords(P.G.bits(machine.vm), 32))
+            (img / "expect_kv.hex").write_text(P.hexwords(P.G.bits(machine.kv), 32))
         layout = {"LOG_HD": int(math.log2(lay.HD)), "LOG_TW": int(math.log2(lay.TW)),
                   "LLG": int(math.log2(lay.L * lay.KV)), "V0_WORD": lay.kv_v0 // 16}
         params = [*(f"-G{k}={v}" for k, v in layout.items()), f"-GNPC={KC.NPC}",
@@ -87,7 +104,11 @@ def main() -> None:
         except subprocess.CalledProcessError as exc:
             print((exc.stderr or "")[-4000:], file=sys.stderr)
             raise
-        raw = KC.run(exe, f"+DIR={img}", *(img / "run.args").read_text().split(), f"+LEAD={KC.LEAD}")
+        run_args = (img / "run.args").read_text().split()
+        if args.two_token:
+            run_args = [a for a in run_args if not a.startswith("+EXPECT=")]
+            run_args += [f"+EXPECT={second_token}", "+PREFILL_MULTI", "+NPROMPT=1", "+NGEN=2", "+CHECKLAST"]
+        raw = KC.run(exe, f"+DIR={img}", *run_args, f"+LEAD={KC.LEAD}")
         token = KC.parse_core(raw)
         bisection = None
         if args.bisect or args.probe_stop is not None:
@@ -155,6 +176,9 @@ def main() -> None:
                "checkpoint_sha256": sha(checkpoint),
                "scope": "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write; hardware tail boot transfers active K words. Legacy-width diagnostic uses BF16 HBM words and direct tail preload.",
                "legacy_width": args.legacy_width,
+               "two_token": args.two_token,
+               "first_token": first_token if args.two_token else None,
+               "second_token": second_token,
                "instruction_bisection": bisection,
                "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in
                                 [*IC.RTL, IC.TB, IC.HARNESS, *sources[:-1], sources[-1],

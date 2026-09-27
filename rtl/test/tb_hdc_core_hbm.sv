@@ -243,7 +243,7 @@ module tb_hdc_core_hbm #(
     reg go = PACKED_HBM ? 1'b0 : 1'b1;
     integer boot_i = 0, boot_check_i = 0, boot_j, boot_bank, boot_tile, boot_word;
     integer boot_bad, hbm_bad, check_tile, check_word;
-    reg trace = 1'b0, multi = 1'b0, checklast = 1'b0;
+    reg trace = 1'b0, multi = 1'b0, prefill_multi = 1'b0, checklast = 1'b0;
     reg [NW-1:0] prompt [0:255];
     reg [NW-1:0] gold_gen [0:255];
     integer n_prompt = 0, n_gen = 0, step = 0, gen_bad = 0;
@@ -311,13 +311,15 @@ module tb_hdc_core_hbm #(
         $readmemh({dir, "/wrom.hex"}, wrom);
         $readmemh({dir, "/crom.hex"}, crom);
         if ($test$plusargs("MULTI")) multi = 1'b1;
+        if ($test$plusargs("PREFILL_MULTI")) begin multi = 1'b1; prefill_multi = 1'b1; end
         if ($test$plusargs("CHECKLAST")) checklast = 1'b1;
         if (!$value$plusargs("NPROMPT=%d", n_prompt)) n_prompt = 0;
         if (!$value$plusargs("NGEN=%d", n_gen)) n_gen = 0;
         if (multi) begin
             $readmemh({dir, "/prompt.hex"}, prompt);
             $readmemh({dir, "/generated.hex"}, gold_gen);
-            for (i = 0; i < KV_WORDS; i = i + 1) kv[i] = {(W*32){1'b0}};
+            if (!prefill_multi)
+                for (i = 0; i < KV_WORDS; i = i + 1) kv[i] = {(W*32){1'b0}};
         end else
             $readmemh({dir, "/kv.hex"}, kv);
         // HBM holds the whole image; the tail the open tile and the one before it
@@ -326,7 +328,7 @@ module tb_hdc_core_hbm #(
             u_hbm.mem[i] = PACKED_HBM ? kv_fp8[i] : pack16(kv[i]);
         for (b = 0; b < 2; b = b + 1)
             for (i = 0; i < TDEPTH; i = i + 1) tl[b][i] = 0;
-        to0 = multi ? 0 : (pos >> 4);
+        to0 = (multi && !prefill_multi) ? 0 : (pos >> 4);
         for (T = to0 - 1; T <= to0; T = T + 1)
             if (T >= 0 && !PACKED_HBM)
                 for (i = 0; i < TDEPTH; i = i + 1)
@@ -446,10 +448,13 @@ module tb_hdc_core_hbm #(
             end
         end
         start <= (lc == 10);
-        if (lc == 9 && multi) begin token <= prompt[0]; pos <= 0; step <= 0; end
+        if (lc == 9 && multi) begin
+            if (!prefill_multi) begin token <= prompt[0]; pos <= 0; end
+            step <= 0;
+        end
         if (multi && lc > 12 && done && !start) begin
             total_cycles = total_cycles + cycles;
-            if (step >= n_prompt - 1 && !checklast) begin
+            if (step >= n_prompt - 1 && (!checklast || prefill_multi)) begin
                 $display("STEP pos=%0d in=%0d out=%0d gold=%0d cycles=%0d fault=%0d", pos, token, next_token,
                          gold_gen[step - (n_prompt - 1)], cycles, fault);
                 if (next_token != gold_gen[step - (n_prompt - 1)] || fault || kvs_fault) gen_bad = gen_bad + 1;

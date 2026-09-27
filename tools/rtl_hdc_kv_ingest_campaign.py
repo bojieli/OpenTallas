@@ -68,7 +68,7 @@ def sha(p):
 
 
 # -- cases ------------------------------------------------------------------------------
-def qwen_capture():
+def qwen_capture(context=64):
     """The reduced Qwen3 vehicle's prefill: FP32 K/V rows before the cache's FP8 rounding."""
     import hdc_golden as G
     import hdc_program as P
@@ -80,7 +80,7 @@ def qwen_capture():
         return orig(x)
     G.kv_round = spy
     try:
-        model, prompt, expected, cache = P.golden_state(64)
+        model, prompt, expected, cache = P.golden_state(context)
     finally:
         G.kv_round = orig
     L = model.layers
