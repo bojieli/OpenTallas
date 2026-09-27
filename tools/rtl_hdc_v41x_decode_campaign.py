@@ -48,10 +48,14 @@ import hdc_isa_v41 as I  # noqa: E402
 
 OUT = ROOT / "results/rtl/hdc_v41x_decode_campaign.json"
 # the re-specified units (bring-up switches of ot_hdc_core_v41x) and the R-ARITH classes each one brings
-X_UNITS = ("he", "me", "att", "idx")
-X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",)}
+X_UNITS = ("he", "me", "att", "idx", "su")
+# su: the vector unit sums under R-ARITH everywhere, including the indexer-tagged stream sums (the index head
+# sum), which the ISA model files under "idx"; "idx" also switches the ISA's index dots on the matrix engine,
+# which the as-built engine still matches: FP4 x FP4 products of one 32-block share its scales, so every
+# partial sum is exact and the order cannot change the result
+X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "su": ("su", "idx")}
 UNITS = X_UNITS           # set by main(): the units built re-specified
-PARAMS = {"hhw": 8}      # engine geometry of the build
+PARAMS = {"hhw": 8, "sun": 16, "sum": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
        [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
                                            "ot_hdc_reduce", "ot_hdc_accept")] +
@@ -63,7 +67,10 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                "ot_hdc_v41_stream", "ot_hdc_v41_qe", "ot_hdc_v41_xu",
                                                "ot_hdc_v41_hcproj")] +
        [ROOT / "rtl/hdc/ot_hdc_fastfp.sv"] +
-       [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt", "ot_hdc_core_v41x")])
+       [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt",
+                                                  "ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side",
+                                                  "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec", "ot_hdc_v41x_su_adapt",
+                                                  "ot_hdc_core_v41x")])
 SVH = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
 TB = ROOT / "rtl/test/tb_hdc_core_v41x.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_v41x_harness.cpp"
@@ -71,7 +78,7 @@ TOOLS = [ROOT / f"tools/{n}.py" for n in ("hdc_golden", "hdc_golden_v41", "hdc_i
                                           "hdc_timing_v41", "hdc_timing_v41x", "hdc_images_v41x")] + \
         [Path(__file__)]
 LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-BLKSEQ", "-Wno-PINCONNECTEMPTY",
-              "-Wno-IMPORTSTAR")
+              "-Wno-IMPORTSTAR", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT")
 SINGLE = re.compile(r"HDC41 token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) cycles=(\d+) fault=(\d+) "
                     r"logit_mismatch=(\d+) vm_mismatch=(\d+) kv_mismatch=(\d+)")
 UTIL = re.compile(r"UTIL me_busy=(\d+) su_busy=(\d+) qe_busy=(\d+) xu_busy=(\d+) he_busy=(\d+) all_idle=(\d+)")
@@ -109,7 +116,8 @@ def breakdown(trace, tags, cycles):
 
 
 def defines(lanes=None):
-    return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}"] + \
+    return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}",
+            f"+define+HDC_SUN={PARAMS['sun']}", f"+define+HDC_SUM={PARAMS['sum']}"] + \
         [f"+define+HDC_X_{u.upper()}={int(u in UNITS)}" for u in X_UNITS]
 
 
@@ -214,7 +222,7 @@ def run(ngen: int, context: int, sweep=()) -> dict:
     with tempfile.TemporaryDirectory() as scratch:
         s = Path(scratch)
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core_v41x",
-                               f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}",
+                               f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}", f"-GSUN={PARAMS['sun']}", f"-GSUM={PARAMS['sum']}",
                                *[f"-GX_{u.upper()}={int(u in UNITS)}" for u in X_UNITS],
                                f"-I{SVH.parent}", *map(str, RTL)], capture_output=True, text=True)
         img = s / "img"
@@ -303,11 +311,14 @@ def main() -> int:
     parser.add_argument("--units", default="he",
                         help="the re-specified units to build (the rest as built), e.g. he,qe; '' for none")
     parser.add_argument("--hhw", type=int, default=8, help="HCP lanes per group")
+    parser.add_argument("--sun", type=int, default=16, help="vector-unit light lanes")
+    parser.add_argument("--sum", type=int, default=8, help="vector-unit SFU lanes")
     args = parser.parse_args()
     global UNITS
     UNITS = tuple(u for u in args.units.split(",") if u)
     assert set(UNITS) <= set(X_UNITS), UNITS
     PARAMS["hhw"] = args.hhw
+    PARAMS["sun"], PARAMS["sum"] = args.sun, args.sum
     result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x])
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     s = result["single_step"]
