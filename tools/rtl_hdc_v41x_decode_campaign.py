@@ -447,7 +447,14 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
                           "with behavioural synchronous-read memories (many-ported vector memory: four operand reads, "
                           "an element write and a reducer write per stream lane); the Sinkhorn "
                           "is the routed one-normalisation-per-step unit (ot_hdc_sinkhorn) run as a 7-core-cycle "
-                          "multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here.",
+                          "multicycle path (its 151.9 MHz route at a 1 GHz core); clock rate is not claimed here. "
+                          + ("FP arithmetic uses bit-equivalent DPI simulation stand-ins; physical FP RTL is not "
+                             "elaborated in this full-core gate. " if PARAMS.get("fp") == "dpi" else "")
+                          + ("X_IDX=2 uses four replicated HBM images (272 encoded bytes per logical key), "
+                             "four runtime writes per key, and a prefix-rereading correctness-rate selector; "
+                             "full-rate read bandwidth and tile replication are not claimed."
+                             if IDX_POOL else ""),
+        "fp_simulation": PARAMS.get("fp", "rtl"),
         "vehicle": "deepseek-v4.1-flash-reduced-v2 (dim 160, 40 layers, 64 heads of 32, hc 4, 12 experts top-6 "
                    "inter 64, window 128, index top-16, Engram layers 1 and 14, vocab 4040)",
         "parameters": {"su_lanes": I.SU_LANES, "me_lanes_per_group": I.W_LANES, "me_groups": I.GROUPS,
