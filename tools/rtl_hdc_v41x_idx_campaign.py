@@ -321,6 +321,61 @@ def run(exe: Path, d: Path, ntok, nkey, seed=1, bubble=0, ordy=0):
     return res
 
 
+HS_RTL = [ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv", ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+          ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROOT / "rtl/hdc/ot_hdc_delay.sv"]
+HS_TB = ROOT / "rtl/test/tb_hdc_v41x_idx_hsum.sv"
+HRE_HS = re.compile(r"V41XHSUM keys=(\d+) checked=(\d+) errors=(\d+) faults_expected_and_raised=(\d+) beats=(\d+) "
+                    r"span=(\d+) latency=(-?\d+) cycles=(\d+)")
+
+
+def hsum_bench(work: Path, name, toks, ih):
+    """The post-pool head-sum stage (spec R-U2): per key the IH per-head FP32 scores dots_q4 (what the pooled
+    block-dot engine delivers, with its per-head fault) in, the BF16 index score out, against the golden."""
+    d = work / f"{name}_hsum"
+    d.mkdir(parents=True, exist_ok=True)
+    wl, nl, kl, el = [], [], [], []
+    for t in toks:
+        q, k = values(t["qc"], t["qu"]), values(t["kc"], t["ku"])
+        with np.errstate(all="ignore"):
+            sc = G.dots_q4(q, k)                                   # [ih, n]
+            a64, b64 = q.astype(np.float64), k.astype(np.float64)
+            nbk = q.shape[1] // 32
+            blk = np.stack([a64[:, i * 32:(i + 1) * 32] @ b64[:, i * 32:(i + 1) * 32].T for i in range(nbk)], -1)
+            hf = ~np.isfinite(blk.astype(F)).all(-1) | ~np.isfinite(sc)
+        hf |= np.asarray(t["qu"] >= 253).any(1)[:, None] | np.asarray(t["ku"] >= 253).any(1)[None, :]
+        wl += [f"{int(G.bits(t['w'][h])) >> 16:04x}" for h in range(ih)]
+        n = len(t["keep"])
+        nl.append(f"{n:08x}")
+        for j in range(n):
+            f = [(0 if hf[h, j] else int(G.bits(sc[h, j])), 32) for h in range(ih)] + \
+                [(int(hf[h, j]), 1) for h in range(ih)] + [(int(t["keep"][j]), 1)]
+            kl.append(hexline(f))
+            el.append(hexline([(t["exp"][j], 16), (int(t["fault"][j]), 1)]))
+    for nm_, lines in (("hs_w.mem", wl), ("hs_n.mem", nl), ("hs_k.mem", kl), ("hs_e.mem", el)):
+        (d / nm_).write_text("\n".join(lines) + "\n")
+    obj = work / f"obj_hsum_ih{ih}"
+    exe = obj / "Vtb_hdc_v41x_idx_hsum"
+    stamp = hashlib.sha256(b"".join(p.read_bytes() for p in HS_RTL + [VLT, HS_TB, HARNESS])).hexdigest()
+    if not (exe.exists() and (obj / "stamp").exists() and (obj / "stamp").read_text() == stamp):
+        subprocess.run(["verilator", "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
+                        "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-DECLFILENAME", "-Wno-UNOPTFLAT",
+                        "--top-module", "tb_hdc_v41x_idx_hsum", f"-GIH={ih}", "-CFLAGS",
+                        "-DVTOP=Vtb_hdc_v41x_idx_hsum -O1", "-j", "16", "--Mdir", str(obj), str(VLT), str(HS_TB)]
+                       + [str(p) for p in HS_RTL] + [str(HARNESS)], check=True, capture_output=True, text=True)
+        (obj / "stamp").write_text(stamp)
+    r = subprocess.run([str(exe), f"+NTOK={len(toks)}", f"+NKEY={len(kl)}", "+BUBBLE=3"], cwd=d, capture_output=True,
+                       text=True, timeout=36000)
+    m = HRE_HS.search(r.stdout)
+    if not m:
+        raise RuntimeError(r.stdout[-3000:] + r.stderr[-2000:])
+    res = dict(zip(("keys", "checked", "errors", "faults_expected_and_raised", "beats", "span", "latency_cycles",
+                    "cycles"), map(int, m.groups())))
+    res["expected_faults"] = int(sum(int(t["fault"].sum()) for t in toks))
+    res["bit_exact"] = res["errors"] == 0 and res["checked"] == res["keys"] and \
+        res["faults_expected_and_raised"] == res["expected_faults"]
+    return res
+
+
 def shape_bench(work, name, ih, nb, nk, fd, toks, long_n, rng):
     """Correctness under bubbles/back-pressure on `toks`, then one long back-to-back scan for throughput and
     latency."""
@@ -514,7 +569,7 @@ def main():
     rng = np.random.default_rng(20260926)
     rec = {"schema": "opentallas-hdc-v41x-idx-campaign-v1", "block": "idx",
            "tool": "tools/rtl_hdc_v41x_idx_campaign.py", "arith": G.ARITH, "spec": SPEC,
-           "sources": {str(p.relative_to(ROOT)): sha(p) for p in RTL + [VLT, TB, HARNESS, ROOT / "tools/hdc_golden_v41.py",
+           "sources": {str(p.relative_to(ROOT)): sha(p) for p in RTL + HS_RTL[:1] + [VLT, TB, HS_TB, HARNESS, ROOT / "tools/hdc_golden_v41.py",
                                                                         Path(__file__).resolve()]}}
     per_class = 2 if a.quick else 12
     nkeys = (lambda: int(rng.integers(1, 40))) if a.quick else (lambda: int(rng.integers(1, 400)))
@@ -550,6 +605,7 @@ def main():
             toks += veh
         print(f"{name}: {len(toks)} tokens, {sum(len(t['keep']) for t in toks)} keys", flush=True)
         rec[name] = shape_bench(work, name, ih, nb, a.nk, 64, toks, long_n, rng)
+        rec[name]["hsum"] = hsum_bench(work, name, toks, ih)
         if name == "reduced":
             rec[name]["vehicle"] = {"tokens": len(veh), "keys": int(sum(len(t["keep"]) for t in veh)),
                                     "layers": sorted({t["cls"] for t in veh})}
@@ -568,7 +624,7 @@ def main():
         r["verdict"] = {"bit_exact": exact, "throughput_keys_per_cycle": b["keys_per_cycle"],
                         "throughput_ok": thr, "latency_cycles": b["lat_min"],
                         "latency_ok": b["lat_min"] <= SPEC["latency_key_to_score_cycles"]}
-        ok &= exact and thr
+        ok &= exact and thr and r.get("hsum", {"bit_exact": True})["bit_exact"]
     if "hbm_scan" in rec:
         ok &= rec["hbm_scan"]["verdict"]["bit_exact"] and rec["hbm_scan"]["verdict"]["meets_90pct_of_peak_with_refresh"]
     rec["die"] = die_summary(rec)
