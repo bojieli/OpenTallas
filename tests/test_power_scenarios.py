@@ -45,7 +45,12 @@ def test_every_input_carries_a_class_and_a_boundary(cfg):
 def test_hbm_split_counts_every_joule_once_and_charges_the_controller_to_the_die(cfg):
     h = P.hbm_split(cfg)
     assert h["die"] + h["stack"] == pytest.approx(h["total"])
-    assert h["total"] == pytest.approx(13.11)
+    # the least favourable measured path without a last-level cache on it (MI250X GCD), not the A100's
+    parts = cfg["memory"]["hbm_path_total"]["measured_parts"]
+    assert h["total"] == pytest.approx(parts["mi250x_gcd"]) == pytest.approx(13.64)
+    assert h["total"] == max(v for k, v in parts.items() if k != "mi300a")
+    assert h["die"] == pytest.approx(10.19)
+    assert cfg["memory"]["die_share"]["evidence_class"] != "assumed"
     # the stack keeps only in-DRAM energy (O'Connor: activation 1.21 + data movement 2.24)
     assert h["stack"] == pytest.approx(1.21 + 2.24)
     assert h["stack"] <= h["stack_high"] < 4.0
@@ -124,3 +129,40 @@ def test_v41_stack_count_matches_the_budget(cfg):
     import arch_budget_v41 as V
     assert cfg["design_points"]["v41"]["hbm_stacks_per_die"] == V.ROM_DIE_HBM_STACKS == 4
     assert V.ROM_DIE_HBM_BPS == pytest.approx(3.6e12)
+
+
+def test_cooling_limits_come_from_shipping_packages_less_their_stacks(cfg):
+    L = P.cooling_limits(cfg)
+    hi = cfg["memory"]["stack_share"]["stack_high_pj_per_bit"]
+    # air, one die + six stacks: H200 SXM 700 W less 4.8 TB/s x 3.92 pJ/b; the least favourable of H200 / H100
+    assert L["air"]["1"]["reference"] == "h200_sxm"
+    assert L["air"]["1"]["die_w"] == pytest.approx(700 - 4.8e12 * 8 * hi * 1e-12)
+    assert L["air"]["1"]["die_w"] == min(c["die_w"] for c in L["air"]["1"]["candidates"])
+    # two dies + eight stacks: B200 HGX (air, 1,000 W) and GB200 (liquid, 1,200 W), per die
+    assert L["air"]["2"]["die_w"] == pytest.approx((1000 - 8e12 * 8 * hi * 1e-12) / 2)
+    assert L["liquid"]["2"]["die_w"] == pytest.approx((1200 - 8e12 * 8 * hi * 1e-12) / 2)
+    # no single-reticle liquid rating exists: liquid falls back to air, and is never below it
+    assert L["liquid"]["1"]["die_w"] == L["air"]["1"]["die_w"]
+    for n in ("1", "2"):
+        assert L["liquid"][n]["die_w"] >= L["air"][n]["die_w"]
+    # the withdrawn A100-derived 407.5 W is gone from the model
+    assert "w_per_mm2" not in cfg["cooling"]
+    for r in cfg["cooling"]["references"].values():
+        assert r["evidence_class"] == "published-spec" and "http" in r["source"] and r["quote"]
+
+
+def test_every_point_is_capped_per_class_and_liquid_never_caps_lower(rec):
+    for s in P.SCENARIOS:
+        body = rec["scenarios"][s]
+        pts = list(body["qwen3_8b_rom_8k"].values()) + [p for c in body["deepseek_v41_rom_array"]["per_context"].values()
+                                                        for p in c.values()]
+        for p in pts:
+            cc = p["cooling_classes"]
+            assert set(cc) == set(P.COOLING_CLASSES)
+            assert cc["liquid"]["capped_rate"] >= cc["air"]["capped_rate"]
+            assert p["capped_rate"] == cc["air"]["capped_rate"]
+            for c in cc.values():
+                assert c["die_w_at_cap"] <= c["die_limit_w"] * (1 + 1e-6)
+                assert c["package_w_at_cap"] <= c["package_limit_w"] * (1 + 1e-6)
+    classes = {r["cooling"] for r in rec["summary"]}
+    assert classes == set(P.COOLING_CLASSES)

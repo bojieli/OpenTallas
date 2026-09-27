@@ -14,17 +14,22 @@ FP4 MAC, and charged HBM controller energy to the DRAM stacks.  Here
 
 every other input is the same in both and is read from configs/hardware/power_scenarios.json, where each carries
 its evidence class (measured-ours / published-measured / published-spec / assumed) and boundary.  The HBM path
-energy is split between the DRAM stack (O'Connor's in-DRAM 3.45 pJ/bit) and the logic die (the rest of SC'25's
-13.11 pJ/bit: controller, PHY, I/O, control plane), and the die's share is charged to die cooling.
+energy is split between the DRAM stack (O'Connor's in-DRAM 3.45 pJ/bit) and the logic die (the rest of the least
+favourable SC'25 path without a last-level cache, MI250X 13.64 pJ/bit: controller, PHY, I/O, control plane), and the
+die's share is charged to die cooling.
 
-For each design point the record gives energy per token by component, die power against the cooling limit
-(0.5 W/mm2 x 815 mm2) and the rate the cooling limit allows:
+Cooling is stated per COOLING CLASS (air, direct liquid) and package topology (logic dies per package): each limit is
+a shipping package's rating (H200 SXM / B200 HGX air, GB200 liquid) less its own stacks at peak bandwidth, per die,
+and two checks bind -- the die against its share and the package (dies + our stacks) against the rating.  For each
+design point the record gives energy per token by component, die power against each class's limit and the rate each
+class allows:
 
 * Qwen3-8B ROM reticle, 8K context, FP8 KV: autoregressive batch 1 and DFlash (tau 4.1, block 3);
 * DeepSeek-V4.1 ROM array at 1M and 200K: batch 1 without and with MTP (gamma 5, tau 4.1) and the saturated batch.
 
 The die's power is static (leakage + clock + HBM idle) plus dynamic energy per token x rate, so the cooling-capped
-rate is (cooling - static) / dynamic energy per token -- per die for the V4.1 array (see _v41_point).
+rate is (cooling - static) / dynamic energy per token -- per die for the V4.1 array (see v41_points).  The top-level
+cooling_limit_w / capped_rate / binds of each point are the AIR class; cooling_classes carries both.
 """
 from __future__ import annotations
 
@@ -71,8 +76,44 @@ def mac_pj(cfg, scenario, design, fmt):
     return val(L["scenario_B"]["per_mac"][fmt])
 
 
-def cooling_w(cfg):
-    return val(cfg["cooling"]["w_per_mm2"]) * cfg["cooling"]["die_mm2"]
+COOLING_CLASSES = ("air", "liquid")
+
+
+def reference_die_w(cfg, r):
+    """Watts one logic die of reference package `r` may dissipate: the package rating minus its stacks at PEAK
+    bandwidth charged at the stack's high-end energy (the largest deduction, so the smallest die share), per die."""
+    stacks_w = r["hbm_bw_Bps"] * 8 * cfg["memory"]["stack_share"]["stack_high_pj_per_bit"] * 1e-12
+    return (r["package_w"] - stacks_w) / r["dies"], stacks_w
+
+
+def cooling_limits(cfg):
+    """{class: {dies_per_package: limit}}: per-die watts from the LEAST favourable matched reference of the class and
+    topology, the package rating it came with; liquid never below air, and air where no liquid reference exists."""
+    C = cfg["cooling"]
+    refs = C["references"]
+    out = {}
+    for cls in COOLING_CLASSES:
+        out[cls] = {}
+        for n in ("1", "2"):
+            cands = []
+            for k in C["classes"][cls][n]:
+                r = refs[k]
+                assert r["cooling"] == cls and str(r["dies"]) == n, k
+                die_w, stk = reference_die_w(cfg, r)
+                cands.append(dict(reference=k, die_w=die_w, package_w=r["package_w"], reference_stacks_w=stk,
+                                  reference_die_w_per_mm2=(die_w / r["die_mm2"]) if r.get("die_mm2") else None))
+            if cands:
+                lim = dict(min(cands, key=lambda x: x["die_w"]), candidates=cands)
+            else:
+                lim = dict(out["air"][n], candidates=[], note="no liquid reference of this topology: the air limit")
+            if cls != "air" and lim["die_w"] < out["air"][n]["die_w"]:
+                lim = dict(out["air"][n], candidates=cands, note="liquid never below air")
+            out[cls][n] = lim
+    return out
+
+
+def cooling_w(cfg, cls="air", dies_per_package=1):
+    return cooling_limits(cfg)[cls][str(dies_per_package)]["die_w"]
 
 
 def _cap(cool, static_w, dyn_w_per_rate, design_rate):
@@ -81,6 +122,26 @@ def _cap(cool, static_w, dyn_w_per_rate, design_rate):
     head = cool - static_w
     thermal = head / dyn_w_per_rate if head > 0 else 0.0
     return dict(thermal_rate_limit=thermal, capped_rate=min(design_rate, thermal), binds=thermal < design_rate)
+
+
+def _class_caps(cfg, n, static_w, dyn_w_per_rate, stk_w_per_rate, design_rate, logic_mm2):
+    """Per cooling class: the die check (static + dyn x rate <= per-die limit) and the package check (every one of
+    the n dies as hot as this one, plus its stacks at the high-end energy, within the reference package rating)."""
+    out = {}
+    for cls, lims in cooling_limits(cfg).items():
+        lim = lims[str(n)]
+        die = _cap(lim["die_w"], static_w, dyn_w_per_rate, design_rate)
+        pkg = _cap(lim["package_w"] / n, static_w, dyn_w_per_rate + stk_w_per_rate, design_rate)
+        thermal = min(die["thermal_rate_limit"], pkg["thermal_rate_limit"])
+        capped = min(design_rate, thermal)
+        die_w_cap = static_w + dyn_w_per_rate * capped
+        out[cls] = dict(reference=lim["reference"], die_limit_w=lim["die_w"], package_limit_w=lim["package_w"],
+                        dies_per_package=n, thermal_rate_limit=thermal, capped_rate=capped, binds=thermal < design_rate,
+                        bound_by="die" if die["thermal_rate_limit"] <= pkg["thermal_rate_limit"] else "package",
+                        die_w_at_cap=die_w_cap, package_w_at_cap=n * (die_w_cap + stk_w_per_rate * capped),
+                        die_w_per_mm2_at_cap=die_w_cap / cfg["cooling"]["die_mm2"],
+                        logic_w_per_mm2_at_cap_upper=die_w_cap / logic_mm2)
+    return out
 
 
 # -- Qwen3-8B ROM reticle -----------------------------------------------------------------------------------------------
@@ -143,8 +204,11 @@ def qwen_point(cfg, scenario, key, hbm_die_pj=None):
     dyn_tok = sum(dyn.values()) / toks
     stack_tok = kvb * 8 * stack_pj * 1e-12 / toks
     die_w = static_w + dyn_tok * rate
-    cool = cooling_w(cfg)
-    cap = _cap(cool, static_w, dyn_tok, rate)
+    n_pkg = dp["dies_per_package"]
+    cool = cooling_w(cfg, "air", n_pkg)
+    ar = _qwen_areas(dp, pt["lane_copies_on"])
+    classes = _class_caps(cfg, n_pkg, static_w, dyn_tok, kvb * 8 * hb["stack_high"] * 1e-12 / toks, rate, ar["logic"])
+    cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
     comp = {k: v / toks * 1e3 for k, v in dyn.items()}
     comp.update({k.replace("_w", ""): v / rate * 1e3 for k, v in st.items()})
     return dict(design_rate_tokens_s=rate, step_cycles=pt["step_cycles"], tokens_per_step=toks,
@@ -154,7 +218,7 @@ def qwen_point(cfg, scenario, key, hbm_die_pj=None):
                 die_components_mj_per_token=comp, die_static_w=st, die_w_at_design_rate=die_w,
                 stacks_w_at_design_rate=stack_tok * rate + 0.0,
                 stacks_w_high=kvb * 8 * hb["stack_high"] * 1e-12 / toks * rate,
-                cooling_limit_w=cool, die_over_cooling=die_w / cool, **cap)
+                cooling_limit_w=cool, die_over_cooling=die_w / cool, cooling_classes=classes, **cap)
 
 
 # -- DeepSeek-V4.1 ROM array ------------------------------------------------------------------------------------------
@@ -206,7 +270,10 @@ def v41_points(cfg, scenario, hbm_die_pj=None):
     rec = json.loads(V41_REC.read_text())
     st = _v41_static(cfg, E, V, D)
     static_w = sum(st.values())
-    cool = cooling_w(cfg)
+    n_pkg = dp["dies_per_package"]
+    cool = cooling_w(cfg, "air", n_pkg)
+    ad = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]
+    logic_mm2 = ad["total_mm2"] - ad["rom_mm2"] - ad["sram_mm2"]
     ld, stages, dies = dp["layer_dies"], dp["stages"], dp["dies"]
     g, tau, ovh = dp["mtp"]["gamma"], dp["mtp"]["tau"], dp["mtp"]["draft_overhead"]
     out = {}
@@ -235,7 +302,9 @@ def v41_points(cfg, scenario, hbm_die_pj=None):
         for k, p in pts.items():
             e_dyn = sum(p["dyn"].values())
             die_w = static_w + e_dyn * p["per_die"] * p["rate"]
-            cap = _cap(cool, static_w, e_dyn * p["per_die"], p["rate"])
+            classes = _class_caps(cfg, n_pkg, static_w, e_dyn * p["per_die"], p["stk_hi"] * p["per_die"], p["rate"],
+                                  logic_mm2)
+            cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
             # whole-array energy per token: dynamic + stacks + the static of every die over the time a token
             # holds the array (idle dies' clock gated: leakage + HBM idle only; active dies clock too)
             active = min(dies, ld) if k.startswith("sat") else ld / stages
@@ -248,9 +317,10 @@ def v41_points(cfg, scenario, hbm_die_pj=None):
                           die_components_j_per_token=p["dyn"],
                           hottest_die_w=die_w, die_over_cooling=die_w / cool,
                           hottest_die_stacks_w=p["stk"] * p["per_die"] * p["rate"],
-                          hottest_die_stacks_w_high=p["stk_hi"] * p["per_die"] * p["rate"], **cap)
+                          hottest_die_stacks_w_high=p["stk_hi"] * p["per_die"] * p["rate"],
+                          cooling_classes=classes, **cap)
         out[str(ctx)] = res
-    return dict(per_context=out, die_static_w=st, cooling_limit_w=cool,
+    return dict(per_context=out, die_static_w=st, cooling_limit_w=cool, dies_per_package=n_pkg,
                 layer_dies=ld, stages=stages, dies=dies)
 
 
@@ -281,24 +351,43 @@ def build(cfg_path=CFG):
     rec["sensitivities"]["B_old_hbm_allocation_die_0p8"] = dict(
         qwen3_8b_rom_8k={k: qwen_point(cfg, "B_proposed_production", k, hbm_die_pj=0.8) for k in ("ar_batch1", "dflash")},
         deepseek_v41_rom_array=v41_points(cfg, "B_proposed_production", hbm_die_pj=0.8))
+    # the favourable end of the measured HBM paths: GH200 (HBM3) leaves 11.68 - 3.45 = 8.23 pJ/bit on the die
+    gh = cfg["memory"]["hbm_path_total"]["measured_parts"]["gh200"] - hb["stack"]
+    rec["sensitivities"]["B_hbm_die_gh200_8p23"] = dict(
+        qwen3_8b_rom_8k={k: qwen_point(cfg, "B_proposed_production", k, hbm_die_pj=gh) for k in ("ar_batch1", "dflash")},
+        deepseek_v41_rom_array=v41_points(cfg, "B_proposed_production", hbm_die_pj=gh))
+    # an undemonstrated single-die liquid package at GB200's module rating: what liquid would buy the Qwen reticle
+    hyp = json.loads(json.dumps(cfg))
+    hyp["cooling"]["references"]["single_die_liquid_1200w"] = cfg["cooling"]["sensitivity_references"]["single_die_liquid_1200w"]
+    hyp["cooling"]["classes"]["liquid"]["1"] = ["single_die_liquid_1200w"]
+    for s in SCENARIOS:
+        rec["sensitivities"][f"{s[0]}_qwen_single_die_liquid_1200w"] = dict(
+            qwen3_8b_rom_8k={k: qwen_point(hyp, s, k) for k in ("ar_batch1", "dflash")},
+            deepseek_v41_rom_array=dict(per_context={}))
+    rec["cooling_limits_w"] = cooling_limits(cfg)
+    rec["cooling_withdrawn"] = cfg["cooling"]["withdrawn"]
     rec["was"] = cfg["design_points"]["qwen3"]["was"]
     rec["summary"] = summary(rec)
     return rec
 
 
 def summary(rec):
+    """One row per scenario x design point x cooling class."""
     rows = []
+
+    def row(s, design, k, e_mj, die_w, r):
+        for cls, c in r["cooling_classes"].items():
+            rows.append(dict(scenario=s, design=design, point=k, cooling=cls, energy_per_token_mj=e_mj, die_w=die_w,
+                             cooling_w=c["die_limit_w"], package_w=c["package_limit_w"], reference=c["reference"],
+                             design_rate=r["design_rate_tokens_s"], capped_rate=c["capped_rate"], binds=c["binds"],
+                             bound_by=c["bound_by"]))
+
     for s, body in list(rec["scenarios"].items()) + [(k, v) for k, v in rec["sensitivities"].items()]:
         for k, r in body["qwen3_8b_rom_8k"].items():
-            rows.append(dict(scenario=s, design="Qwen3-8B ROM 8K", point=k, energy_per_token_mj=r["energy_per_token_mj"],
-                             die_w=r["die_w_at_design_rate"], cooling_w=r["cooling_limit_w"],
-                             design_rate=r["design_rate_tokens_s"], capped_rate=r["capped_rate"], binds=r["binds"]))
+            row(s, "Qwen3-8B ROM 8K", k, r["energy_per_token_mj"], r["die_w_at_design_rate"], r)
         for ctx, pts in body["deepseek_v41_rom_array"]["per_context"].items():
             for k, r in pts.items():
-                rows.append(dict(scenario=s, design=f"V4.1 ROM array {int(ctx):,}", point=k,
-                                 energy_per_token_mj=r["energy_per_token_j"] * 1e3, die_w=r["hottest_die_w"],
-                                 cooling_w=body["deepseek_v41_rom_array"]["cooling_limit_w"],
-                                 design_rate=r["design_rate_tokens_s"], capped_rate=r["capped_rate"], binds=r["binds"]))
+                row(s, f"V4.1 ROM array {int(ctx):,}", k, r["energy_per_token_j"] * 1e3, r["hottest_die_w"], r)
     return rows
 
 
@@ -320,9 +409,9 @@ def main():
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1) + "\n")
     for r in rec["summary"]:
-        print(f"{r['scenario'][:30]:30s} {r['design']:24s} {r['point']:22s} {r['energy_per_token_mj']:9.2f} mJ/tok "
-              f"die {r['die_w']:7.1f} W / {r['cooling_w']:.0f}  rate {r['design_rate']:9.0f} -> {r['capped_rate']:9.0f}"
-              f"{'  BINDS' if r['binds'] else ''}")
+        print(f"{r['scenario'][:28]:28s} {r['design']:24s} {r['point']:20s} {r['cooling']:6s} {r['energy_per_token_mj']:8.2f} mJ "
+              f"die {r['die_w']:7.1f} W / {r['cooling_w']:.0f} (pkg {r['package_w']:.0f})  rate {r['design_rate']:8.0f} -> "
+              f"{r['capped_rate']:8.0f}{'  BINDS ' + r['bound_by'] if r['binds'] else ''}")
 
 
 if __name__ == "__main__":

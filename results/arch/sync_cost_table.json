@@ -652,7 +652,7 @@
    "text": "O. Antepara, Z. Zhao, B. Austin, N. Ding, L. Oliker, N. J. Wright, S. Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, Fig. 1 and Table 3",
    "url": "https://escholarship.org/content/qt6189368s/qt6189368s.pdf",
    "cls": "measured (regressed from board power), peer-reviewed",
-   "quote": "Fig. 1: 'n.b., memory controller energy is tabulated with HBM energy.'; Table 3 A100 HBM [pJ/bit] Control 8.47, Datapath 4.64, Total 13.11; Matrix-FP16 control 0.37 / datapath 0.33 pJ/FLOP"
+   "quote": "Fig. 1: 'n.b., memory controller energy is tabulated with HBM energy.'; Table 3 HBM [pJ/bit] control / datapath / total: A100 8.47 / 4.64 / 13.11, GH200 8.69 / 2.99 / 11.68, MI250X GCD 11.82 / 1.82 / 13.64, MI300A 13.47 / 1.25 / 14.72; s4.1 'by performing computations on zeros, we exercise only the control plane'; Matrix-FP16 control 0.37 / datapath 0.33 pJ/FLOP"
   },
   "r-signoff": {
    "text": "OpenTallas, ASAP7 energy-per-token sign-off, results/physical_abi3/asap7/signoff/energy_per_token.json (routed matrix engine, TT, RTL activity)",
@@ -731,6 +731,30 @@
    "url": "https://docs.nvidia.com/dgx/dgxgb200-user-guide/hardware.html",
    "cls": "vendor normative",
    "quote": "The rack power consumption is approximately 120kW; ... 33kW per power shelf; Max Thermal Design Power (TDP) Configurable up to 1,200 W"
+  },
+  "r-h200": {
+   "text": "NVIDIA H200 product page (H200 SXM / NVL specifications); NVIDIA Hopper Architecture In-Depth (GH100 die size); NVIDIA DGX H100/H200 User Guide, Introduction (environmental and power specifications)",
+   "url": "https://www.nvidia.com/en-us/data-center/h200/",
+   "cls": "vendor specification",
+   "quote": "H200 SXM 'Max Thermal Design Power (TDP) Up to 700W (configurable)', 'GPU Memory 141GB', 'GPU Memory Bandwidth 4.8TB/s'; Hopper blog 'a die size of 814 mm 2'; DGX H100/H200 'Airflow 1105 CFM Front-to-Back', '10.2 kW max.'"
+  },
+  "r-dgxb200": {
+   "text": "NVIDIA DGX B200 product page and DGX B200 User Guide, Introduction; NVIDIA Blackwell architecture page",
+   "url": "https://docs.nvidia.com/dgx/dgxb200-user-guide/introduction-to-dgxb200.html",
+   "cls": "vendor specification",
+   "quote": "'8x NVIDIA Blackwell GPUs', '1,440 GB total, 64 TB/s HBM3e bandwidth', '~14.3 kW max'; 'Airflow 1,550 CFM'; 'All NVIDIA Blackwell products feature two reticle-limited dies'; Blackwell datasheet '1,000 W HGX B200'"
+  },
+  "r-gaudi3": {
+   "text": "Intel Gaudi 3 AI Accelerator White Paper",
+   "url": "https://cdrdv2-public.intel.com/817486/gaudi-3-ai-accelerator-white-paper.pdf",
+   "cls": "vendor specification",
+   "quote": "'supports up to 900W Total Device Power (TDP) with passive cooling and up to 900W TDP with liquid cooling'; 'two compute dies'; '8 HBM2e devices ... 3.7 TB/s'"
+  },
+  "r-amd-instinct": {
+   "text": "AMD Instinct MI300X, MI350X and MI355X product specifications",
+   "url": "https://www.amd.com/en/products/accelerators/instinct/mi350/mi355x.html",
+   "cls": "vendor specification",
+   "quote": "MI300X 'Total Board Power (TBP) 750W Peak', 'Cooling Passive OAM'; MI350X 'Total Board Power (TBP) 1000W', 'Cooling Passive OAM'; MI355X 'Total Board Power (TBP) 1400W', 'Cooling Passive & Active'"
   },
   "r-smc-nvl72": {
    "text": "Supermicro SuperCluster GB200 NVL72 datasheet (2025-09-12)",

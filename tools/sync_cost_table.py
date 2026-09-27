@@ -160,7 +160,7 @@ REFS = {
    quote="Table 2: 'INT4 / INT4 VSQ / INT8'; '91.1\u2020 (0.46V)' '95.6\u2020 (0.46V)' '39.1\u2020 (0.46V)' TOPS/W; '\u2020 Measured with 50% non-zero input densities. Includes estimated leakage power.'; p.16: '24b partial sums are temporally accumulated in a 16-entry latch array'"),
  "r-sc25": dict(text="O. Antepara, Z. Zhao, B. Austin, N. Ding, L. Oliker, N. J. Wright, S. Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, Fig. 1 and Table 3",
    url="https://escholarship.org/content/qt6189368s/qt6189368s.pdf", cls="measured (regressed from board power), peer-reviewed",
-   quote="Fig. 1: 'n.b., memory controller energy is tabulated with HBM energy.'; Table 3 A100 HBM [pJ/bit] Control 8.47, Datapath 4.64, Total 13.11; Matrix-FP16 control 0.37 / datapath 0.33 pJ/FLOP"),
+   quote="Fig. 1: 'n.b., memory controller energy is tabulated with HBM energy.'; Table 3 HBM [pJ/bit] control / datapath / total: A100 8.47 / 4.64 / 13.11, GH200 8.69 / 2.99 / 11.68, MI250X GCD 11.82 / 1.82 / 13.64, MI300A 13.47 / 1.25 / 14.72; s4.1 'by performing computations on zeros, we exercise only the control plane'; Matrix-FP16 control 0.37 / datapath 0.33 pJ/FLOP"),
  "r-signoff": dict(text="OpenTallas, ASAP7 energy-per-token sign-off, results/physical_abi3/asap7/signoff/energy_per_token.json (routed matrix engine, TT, RTL activity)",
    url="", cls="measured-ours (predictive PDK)", quote=""),
  "r-tpuv4i": dict(text="N. Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, doi:10.1109/ISCA52012.2021.00010, Tables 1-2",
@@ -193,6 +193,18 @@ REFS = {
  "r-gb200-guide": dict(text="NVIDIA DGX GB200 User Guide, s1.4 Hardware (updated 2026-09-17); NVIDIA Blackwell datasheet (2025-10-28)",
    url="https://docs.nvidia.com/dgx/dgxgb200-user-guide/hardware.html", cls="vendor normative",
    quote="The rack power consumption is approximately 120kW; ... 33kW per power shelf; Max Thermal Design Power (TDP) Configurable up to 1,200 W"),
+ "r-h200": dict(text="NVIDIA H200 product page (H200 SXM / NVL specifications); NVIDIA Hopper Architecture In-Depth (GH100 die size); NVIDIA DGX H100/H200 User Guide, Introduction (environmental and power specifications)",
+   url="https://www.nvidia.com/en-us/data-center/h200/", cls="vendor specification",
+   quote="H200 SXM 'Max Thermal Design Power (TDP) Up to 700W (configurable)', 'GPU Memory 141GB', 'GPU Memory Bandwidth 4.8TB/s'; Hopper blog 'a die size of 814 mm 2'; DGX H100/H200 'Airflow 1105 CFM Front-to-Back', '10.2 kW max.'"),
+ "r-dgxb200": dict(text="NVIDIA DGX B200 product page and DGX B200 User Guide, Introduction; NVIDIA Blackwell architecture page",
+   url="https://docs.nvidia.com/dgx/dgxb200-user-guide/introduction-to-dgxb200.html", cls="vendor specification",
+   quote="'8x NVIDIA Blackwell GPUs', '1,440 GB total, 64 TB/s HBM3e bandwidth', '~14.3 kW max'; 'Airflow 1,550 CFM'; 'All NVIDIA Blackwell products feature two reticle-limited dies'; Blackwell datasheet '1,000 W HGX B200'"),
+ "r-gaudi3": dict(text="Intel Gaudi 3 AI Accelerator White Paper",
+   url="https://cdrdv2-public.intel.com/817486/gaudi-3-ai-accelerator-white-paper.pdf", cls="vendor specification",
+   quote="'supports up to 900W Total Device Power (TDP) with passive cooling and up to 900W TDP with liquid cooling'; 'two compute dies'; '8 HBM2e devices ... 3.7 TB/s'"),
+ "r-amd-instinct": dict(text="AMD Instinct MI300X, MI350X and MI355X product specifications",
+   url="https://www.amd.com/en/products/accelerators/instinct/mi350/mi355x.html", cls="vendor specification",
+   quote="MI300X 'Total Board Power (TBP) 750W Peak', 'Cooling Passive OAM'; MI350X 'Total Board Power (TBP) 1000W', 'Cooling Passive OAM'; MI355X 'Total Board Power (TBP) 1400W', 'Cooling Passive & Active'"),
  "r-smc-nvl72": dict(text="Supermicro SuperCluster GB200 NVL72 datasheet (2025-09-12)", url="https://www.supermicro.com/datasheet/datasheet_SuperCluster_GB200_NVL72.pdf",
    cls="OEM datasheet", quote="total power 132kW; Operating Power 125kW to 135kW"),
  "r-mlperf51": dict(text="MLCommons, MLPerf Inference v5.1 results, ID 5.1-0061 (Lenovo SR680a V3, 8 x B200), Llama-2-70B Offline",
@@ -407,13 +419,23 @@ def power_record(tech):
           verdict="relabelled: integer 4-bit with per-vector scales and 24-bit partial sums; lower bound only", refs=["r-keller"]),
      dict(quantity="Tensor-core sensitivity", value=f"{L['bounds']['gpu_tensor_measured']['value']:.2f} pJ per MAC", was="-",
           cls="published-measured (A100, control included)", verdict="scenario-B sensitivity row", refs=["r-sc25"]),
-     dict(quantity="HBM path energy", value=f"{hb['total']:.2f} pJ/b (A100 path, controller included)", was="13.11, cited to O'Connor",
-          cls="published-measured", verdict="kept; citation corrected to SC'25", refs=["r-sc25"]),
+     dict(quantity="HBM path energy", value=f"{hb['total']:.2f} pJ/b (MI250X path, controller included; measured range 11.68-14.72)",
+          was="13.11 (A100)", cls="published-measured",
+          verdict="least favourable SC'25 path without a last-level cache (MI300A's 14.72 carries a 256 MB cache)", refs=["r-sc25"]),
      dict(quantity="HBM path, stack share", value=f"{hb['stack']:.2f} pJ/b (high {hb['stack_high']:.2f})", was="12.31 (13.11 - 0.8)",
           cls="published-spec (DRAM model)", verdict="corrected: in-DRAM activation + data movement only", refs=["r-oconnor"]),
      dict(quantity="HBM path, die share (controller, PHY, I/O, control plane)", value=f"{hb['die']:.2f} pJ/b, charged to die cooling",
-          was="0.80 (I/O only)", cls="assumed (difference of two published figures)",
-          verdict="corrected, conservative for die cooling", refs=["r-sc25", "r-oconnor"]),
+          was="9.66 (A100, assumed); 0.80 (I/O only) before that", cls="published-spec (measured path minus DRAM model)",
+          verdict="no fixed-function credit: no source measures an HBM controller or PHY alone; GH200 (HBM3) would leave 8.23",
+          refs=["r-sc25", "r-oconnor"]),
+     *[dict(quantity=f"Cooling, {cls}, {n}-die package", value=f"{lim['die_w']:.1f} W per die; package {lim['package_w']:,.0f} W",
+            was="407.5 W (0.5 W/mm2 x 815, A100 module over die area)",
+            cls="vendor package rating less its stacks at peak bandwidth x 3.92 pJ/b",
+            verdict=(f"least favourable matched reference: {lim['reference']}" + (f" ({lim['note']})" if lim.get("note") else "")),
+            refs={"h200_sxm": ["r-h200"], "b200_hgx": ["r-dgxb200"], "gb200_nvl72": ["r-gb200-guide"]}[lim["reference"]])
+       for cls, lims in ps["cooling_limits_w"].items() for n, lim in lims.items()],
+     dict(quantity="Cooling cross-checks (chiplet / unmatched)", value="Gaudi 3 900 W air = liquid; MI300X 750 W air; MI350X 1,000 W air; MI355X 1,400 W liquid",
+          was="-", cls="vendor specification", verdict="class envelopes only, not per-die limits", refs=["r-gaudi3", "r-amd-instinct"]),
      dict(quantity="HBM stack idle", value=f"{M['idle_w_per_stack']['value']} W/stack, charged to the die", was="2.8", cls="assumed",
           verdict="unverified; die side for cooling", refs=[]),
      dict(quantity="Logic leakage", value=f"{Dd['leakage_w_per_mm2']['logic']['value']:.2f} W/mm2", was="0.06", cls="assumed (idle anchors)",
@@ -437,8 +459,9 @@ def power_record(tech):
           refs=["r-gb200-guide", "r-smc-nvl72"]),
     ]
     scen = [dict(scenario=r["scenario"], design=r["design"], point=r["point"],
-                 energy_per_token_mj=r["energy_per_token_mj"], die_w=r["die_w"], cooling_w=r["cooling_w"],
-                 design_rate=r["design_rate"], capped_rate=r["capped_rate"], cooling_binds=r["binds"])
+                 cooling=r["cooling"], energy_per_token_mj=r["energy_per_token_mj"], die_w=r["die_w"], cooling_w=r["cooling_w"],
+                 package_w=r["package_w"], design_rate=r["design_rate"], capped_rate=r["capped_rate"], cooling_binds=r["binds"],
+                 bound_by=r["bound_by"])
             for r in ps["summary"]]
     worst = dict(
       statement=("A statically scheduled machine has a knowable ceiling: the saturated schedule (every die issuing every cycle) IS its worst "
@@ -459,6 +482,7 @@ def power_record(tech):
                 unverified=["HBM3E stack idle/self-refresh W", "HBM3E pJ/b (vendor)", "HBM controller vs PHY pJ/b split",
                             "SerDes always-on idle per lane (measured)", "mask-ROM leakage", "SRAM leakage at N5/N3", "SFU energy per op",
                             "switch tray W", "air limit 700 W/OU", "batch-1 GPU decode W",
+                            "a single-reticle package rated above 700 W (liquid)", "sustainable hot-spot W/mm2 of a logic region",
                             "any measured FP8 or FP4 x FP8 MAC with FP32 accumulation"])
 
 
@@ -524,16 +548,18 @@ def render(rec, prec):
     out += ['  </tbody>', '</table></div>', '']
     out += ['<div class="tablebox"><table class="data">',
             '  <caption>Table 8-Q. Scenario A (the routed lane) against scenario B (the proposed lane): energy per token, the hottest '
-            'die against its 407.5 W cooling limit, and the rate the limit allows (results/arch/power_scenarios.json).</caption>',
-            '  <thead><tr><th>Scenario</th><th>Design</th><th>Point</th><th class="r">mJ/token</th><th class="r">Die W</th>'
-            '<th class="r">Design tok/s</th><th class="r">Cooling-capped tok/s</th></tr></thead>', '  <tbody>']
+            'die against its cooling class\'s per-die limit (air: H200 SXM for one die, B200 HGX for two; liquid: GB200 for two, '
+            'air for one, no single-reticle part being rated higher), and the rate each class allows (results/arch/power_scenarios.json).</caption>',
+            '  <thead><tr><th>Scenario</th><th>Design</th><th>Point</th><th>Cooling</th><th class="r">mJ/token</th><th class="r">Die W</th>'
+            '<th class="r">Limit W</th><th class="r">Design tok/s</th><th class="r">Cooling-capped tok/s</th></tr></thead>', '  <tbody>']
     for r in prec["scenarios"]:
         if not r["scenario"].startswith(("A_", "B_proposed")):
             continue
-        out.append(f'    <tr><td>{e(r["scenario"][0])}</td><td>{e(r["design"])}</td><td>{e(r["point"])}</td>'
+        out.append(f'    <tr><td>{e(r["scenario"][0])}</td><td>{e(r["design"])}</td><td>{e(r["point"])}</td><td>{e(r["cooling"])}</td>'
                    f'<td class="r m">{r["energy_per_token_mj"]:,.1f}</td><td class="r m">{r["die_w"]:,.0f}</td>'
+                   f'<td class="r m">{r["cooling_w"]:,.0f}</td>'
                    f'<td class="r m">{r["design_rate"]:,.0f}</td><td class="r m">{r["capped_rate"]:,.0f}'
-                   f'{" (binds)" if r["cooling_binds"] else ""}</td></tr>')
+                   f'{" (binds, " + r["bound_by"] + ")" if r["cooling_binds"] else ""}</td></tr>')
     w = prec["worst_case"]
     out += ['  </tbody>', '</table></div>', '',
             '<p><b>Finding.</b> ' + e(rec["narrowed_claim"]["statement"]) +
@@ -544,7 +570,7 @@ def render(rec, prec):
             'channel, so the cable tier now runs full RS(544,514) at 209 ns (' + e(CABLE_EFFECT) + '). '
             'Power is stated in two scenarios that are never mixed: A charges every MAC at the routed matrix engine\'s reported energy, B at '
             'a derived floating-point lane; the HBM path is split between the DRAM stack and the logic die, whose share (controller, PHY, '
-            'I/O) is charged to die cooling. ' + e(w["statement"]) + '</p>',
+            'I/O) is charged to die cooling, and die cooling is stated per class from shipping packages less their own stacks. ' + e(w["statement"]) + '</p>',
             '', '<ol class="refs">']
     used = sorted({r for row in rec["rows"] for r in row["gpu"]["refs"] + row["ot"]["refs"]} |
                   {r for h in rec["hpc_precedents"] for r in h["refs"]} | {r for v in rec["values_checked"] for r in v["refs"]} |
