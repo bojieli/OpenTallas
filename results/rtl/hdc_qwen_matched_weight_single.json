@@ -20,9 +20,9 @@
     "weight_guaranteed_rate_x256": 201
   },
   "hbm": {
-    "binary_sha256": "5b23630a1bc259780a90e478165623567fa663a84d431f186415b2ebaa4bc244",
+    "binary_sha256": "1d35cf16d987609360348bb2c459c9e567fbc324c337fd4164e1d8f870615f12",
     "command_arguments": [
-      "+DIR=/tmp/qwen_matched_weight_0sqx2isu/image",
+      "+DIR=/tmp/qwen_matched_weight_rsmbfct9/image",
       "+TOKEN=271",
       "+POS=15",
       "+EXPECT=1073",
@@ -42,7 +42,7 @@
     "position": 15,
     "returncode": 0,
     "stderr_tail": "",
-    "stdout_tail": "HDC token=271 pos=15 next_token=1073 expect=1073 cycles=30539 fault=0 logit_mismatch=0 vm_mismatch=0 kv_mismatch=0\nUTIL me_issue_cycles=20736 su_issue_cycles=7505 both_idle_cycles=3782\nMATCHED_WEIGHT whbm=1 w_stall_cycles=248 emb_stall_cycles=59 w_ops=24 w_words=20608 wq_bad=0 ws_fault=0 ws_why=0 fetched=21523 consumed=20480 kv_stall_cycles=770 kv_ops=8 kvs_fault=0 kvq_bad=0 hbm_reads=85999 hbm_writes=8 acts=2845 row_hits=83166 row_conflicts=1852 refreshes=28 rd_lat_avg_ps=85670 rd_lat_max_ps=487354 req_backpressure_cycles=0 total_cycles=30539\nPASS\n- /home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-matched-comparator/rtl/test/tb_hdc_qwen_matched_weight.sv:390: Verilog $finish\n",
+    "stdout_tail": "HDC token=271 pos=15 next_token=1073 expect=1073 cycles=30539 fault=0 logit_mismatch=0 vm_mismatch=0 kv_mismatch=0\nUTIL me_issue_cycles=20736 su_issue_cycles=7505 both_idle_cycles=3782\nMATCHED_WEIGHT whbm=1 w_stall_cycles=248 emb_stall_cycles=59 w_ops=24 w_words=20608 wq_bad=0 ws_fault=0 ws_why=0 fetched=21523 consumed=20480 kv_stall_cycles=770 kv_ops=8 kvs_fault=0 kvq_bad=0 hbm_reads=85999 hbm_writes=8 acts=2845 row_hits=83166 row_conflicts=1852 refreshes=28 rd_lat_avg_ps=85670 rd_lat_max_ps=487354 req_backpressure_cycles=0 total_cycles=30539\nPASS\n- /home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-whbm-integration/rtl/test/tb_hdc_qwen_matched_weight.sv:390: Verilog $finish\n",
     "stream": {
       "acts": 2845,
       "consumed": 20480,
@@ -88,9 +88,9 @@
   },
   "model_sha256": "60b80d48b08addc971fad4af357611d2f5838a9ad4186284d3c2c5f8144748e2",
   "rom": {
-    "binary_sha256": "9bad226595e539798433705753bbdad871a9c4995a8198b8b88f22ebfc149133",
+    "binary_sha256": "c3efd1b343f6a208e780614ab5ecbd46cf3ae34435ee175c67d89cfe8194caaa",
     "command_arguments": [
-      "+DIR=/tmp/qwen_matched_weight_0sqx2isu/image",
+      "+DIR=/tmp/qwen_matched_weight_rsmbfct9/image",
       "+TOKEN=271",
       "+POS=15",
       "+EXPECT=1073",
@@ -110,7 +110,7 @@
     "position": 15,
     "returncode": 0,
     "stderr_tail": "",
-    "stdout_tail": "HDC token=271 pos=15 next_token=1073 expect=1073 cycles=30127 fault=0 logit_mismatch=0 vm_mismatch=0 kv_mismatch=0\nUTIL me_issue_cycles=20736 su_issue_cycles=7505 both_idle_cycles=3411\nMATCHED_WEIGHT whbm=0 w_stall_cycles=0 emb_stall_cycles=0 w_ops=0 w_words=20608 wq_bad=0 ws_fault=0 ws_why=0 fetched=0 consumed=0 kv_stall_cycles=469 kv_ops=8 kvs_fault=0 kvq_bad=0 hbm_reads=128 hbm_writes=8 acts=64 row_hits=72 row_conflicts=0 refreshes=15 rd_lat_avg_ps=58976 rd_lat_max_ps=110399 req_backpressure_cycles=0 total_cycles=30127\nPASS\n- /home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-matched-comparator/rtl/test/tb_hdc_qwen_matched_weight.sv:390: Verilog $finish\n",
+    "stdout_tail": "HDC token=271 pos=15 next_token=1073 expect=1073 cycles=30127 fault=0 logit_mismatch=0 vm_mismatch=0 kv_mismatch=0\nUTIL me_issue_cycles=20736 su_issue_cycles=7505 both_idle_cycles=3411\nMATCHED_WEIGHT whbm=0 w_stall_cycles=0 emb_stall_cycles=0 w_ops=0 w_words=20608 wq_bad=0 ws_fault=0 ws_why=0 fetched=0 consumed=0 kv_stall_cycles=469 kv_ops=8 kvs_fault=0 kvq_bad=0 hbm_reads=128 hbm_writes=8 acts=64 row_hits=72 row_conflicts=0 refreshes=15 rd_lat_avg_ps=58976 rd_lat_max_ps=110399 req_backpressure_cycles=0 total_cycles=30127\nPASS\n- /home/ubuntu/OpenTallas/.claude/worktrees/codex-qwen-whbm-integration/rtl/test/tb_hdc_qwen_matched_weight.sv:390: Verilog $finish\n",
     "stream": {
       "acts": 64,
       "consumed": 0,

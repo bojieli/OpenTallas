@@ -568,17 +568,28 @@ implements that specialisation on the reduced Qwen3 vehicle.
 - A static program drives a 64-lane matrix engine and a 16-element vector
   stream unit with exp, reciprocal, rsqrt and sigmoid pipelines.
 - In the source-pinned joined Verilator gate, the core decodes positions 15
-  and 16 in 24,408 <!-- figure: 24408 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_g4sw16.json#first_step.cycles" name="Qwen joined physical-KV-HBM first-step cycles" -->
-  and 24,685 <!-- figure: 24685 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_g4sw16.json#cycles" name="Qwen joined physical-KV-HBM second-step cycles" -->
+  and 16 in 24,408 <!-- figure: 24408 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_autoboot_g4sw16.json#first_step.cycles" name="Qwen joined autonomous-boot first-step cycles" -->
+  and 24,685 <!-- figure: 24685 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_autoboot_g4sw16.json#cycles" name="Qwen joined autonomous-boot second-step cycles" -->
   cycles. Both tokens, all logits, vector memory, and KV entries match the ISA
-  oracle. Its KV cache uses a serialized 32-byte HBM interface; the testbench
-  initializes the resident K tail before the first token.
+  oracle. Its KV cache uses a serialized 32-byte HBM interface. Before the
+  first token, the hardware boot controller reads 128 <!-- figure: 128 src="results/rtl/hdc_qwen_vector_system_two_token_integrated_autoboot_g4sw16.json#kv_system.boot_hbm_reads" name="Qwen autonomous K-tail boot HBM reads" -->
+  physical HBM sectors into the resident K tail. The second token reads V
+  sectors written by the first, while a closed K tile is flushed to HBM and
+  read back exactly. The behavioral HBM model has one-cycle reads and no
+  calibrated bandwidth or refresh timing; these cycles establish functional
+  scheduling only.
 - The scalar weight-HBM configuration also passes a complete split-aware
   position-15 token with weights and KV in the behavioral HBM model at
   30,539 cycles. <!-- figure: 30539 src="results/rtl/hdc_qwen_whbm_split_single.json#cycles" name="Qwen split-aware scalar weight-HBM single-token cycles" -->
   From an empty KV cache, the same configuration consumes the prompt and
   generates 3 <!-- figure: 3 src="results/rtl/hdc_qwen_whbm_split_e2e.json#generated" name="Qwen scalar weight-HBM generated tokens" -->
   oracle tokens with 0 mismatches. <!-- figure: 0 src="results/rtl/hdc_qwen_whbm_split_e2e.json#mismatches" name="Qwen scalar weight-HBM generated-token mismatches" -->
+- A matched reduced-vehicle run changes only the scalar controller's weight
+  supply: synchronous ROM takes 30,127 <!-- figure: 30127 src="results/rtl/hdc_qwen_matched_weight_single.json#rom.cycles" name="Qwen matched scalar ROM-weight token cycles" -->
+  cycles and streamed HBM takes 30,539 <!-- figure: 30539 src="results/rtl/hdc_qwen_matched_weight_single.json#hbm.cycles" name="Qwen matched scalar HBM-weight token cycles" -->
+  cycles. Both keep KV in the same behavioral HBM system and produce the same
+  token and full state. This controlled RTL comparison supports a cycle count
+  for this vehicle, not a chip energy or full-model performance ratio.
 - On ASAP7 the stream unit routes at 1,111 MHz. <!-- figure: 1111 src="results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json#place_and_route.metrics.fmax_hz" scale="1e-6" name="HDC stream unit routed fmax MHz" -->
 
 The same vehicle takes 7.9 M cycles on the general ABI 3.0 token path, whose
