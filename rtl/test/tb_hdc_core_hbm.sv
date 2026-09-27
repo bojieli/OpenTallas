@@ -78,6 +78,7 @@ module tb_hdc_core_hbm #(
     wire [G-1:0] vw_me_we; wire [G*AW-1:0] vw_me_addr;
     wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [31:0] vw_su_data, vw_rd_data;
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
+    wire vw_mx_we; wire [AW-1:0] vw_mx_addr; wire [W-1:0] vw_mx_mask; wire [W*32-1:0] vw_mx_data;
     wire kvd_v, kvd_kindk, kv_ok;
     wire [AW-1:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js;
     wire [2:0] kvd_jsh;
@@ -99,6 +100,7 @@ module tb_hdc_core_hbm #(
         .vw_me_we(vw_me_we), .vw_me_addr(vw_me_addr), .vw_me_mask(vw_me_mask), .vw_me_data(vw_me_data),
         .vw_su_we(vw_su_we), .vw_su_addr(vw_su_addr), .vw_su_data(vw_su_data),
         .vw_rd_we(vw_rd_we), .vw_rd_addr(vw_rd_addr), .vw_rd_data(vw_rd_data),
+        .vw_mx_we(vw_mx_we), .vw_mx_addr(vw_mx_addr), .vw_mx_mask(vw_mx_mask), .vw_mx_data(vw_mx_data),
         .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
         .kvd_jsh(kvd_jsh), .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_nout(kvd_nout),
@@ -194,6 +196,9 @@ module tb_hdc_core_hbm #(
                     if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: 8], 4'b0} + l] <= vw_me_data[32*(q*W + l) +: 32];
         if (vw_su_we) vm[vw_su_addr[11:0]] <= vw_su_data;
         if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
+        if (vw_mx_we)
+            for (l = 0; l < W; l = l + 1)
+                if (vw_mx_mask[l]) vm[{vw_mx_addr[7:0], 4'b0} + l] <= vw_mx_data[32*l +: 32];
         if (me_ov && vw_me_we == 0)
             for (q = 0; q < G; q = q + 1)
                 for (l = 0; l < W; l = l + 1)
