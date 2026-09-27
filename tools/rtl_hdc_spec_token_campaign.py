@@ -71,9 +71,16 @@ def sha(p: Path) -> str:
 def point(s: Path, groups: int, sw: int, build_log: Path) -> dict:
     env = dict(os.environ, HDC_GROUPS=str(groups), HDC_SU_WIDTH=str(sw))
     img, obj = s / f"img{groups}", s / f"obj{groups}"
-    gen = subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img),
-                          "--context", str(CONTEXT)], check=True, capture_output=True, text=True, env=env,
-                         cwd=ROOT).stdout
+    generate = subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img),
+                               "--context", str(CONTEXT)], capture_output=True, text=True, env=env,
+                              cwd=ROOT)
+    if generate.returncode:
+        build_log.parent.mkdir(parents=True, exist_ok=True)
+        build_log.write_text(f"source_sha256={sha(Path(__file__))}\n"
+                             f"image_generation_returncode={generate.returncode}\n"
+                             f"stdout:\n{generate.stdout}\nstderr:\n{generate.stderr}\n")
+        raise RuntimeError(f"Program generation failed for {groups}:{sw}; full output: {build_log}")
+    gen = generate.stdout
     isa_exact = "bit-exact with golden: True" in gen
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
            "-Wno-BLKSEQ", "-Wno-VARHIDDEN", "--unroll-count", "65536",   # the testbench's per-group loops
