@@ -1715,6 +1715,9 @@ def resolve_macro_views(
 # the config.mk is byte-for-byte what it was.
 
 PIN_EDGES = ("left", "right", "top", "bottom")
+PIN_EDGE_REGION_RE = re.compile(
+    r"^(left|right|top|bottom)(?::([0-9]+(?:\.[0-9]+)?)-([0-9]+(?:\.[0-9]+)?))?$"
+)
 
 
 def floorplan_size_lines(core_utilization: int, floorplan: dict[str, Any] | None) -> list[str]:
@@ -1761,8 +1764,12 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]]) -> str:
         "}",
     ]
     for region in pin_regions:
+        edge_region = region["edge"] + ":*"
+        if "range_um" in region:
+            lo, hi = region["range_um"]
+            edge_region = f"{region['edge']}:{lo:g}-{hi:g}"
         lines.append(
-            f"set_io_pin_constraint -group -order -region {region['edge']}:* "
+            f"set_io_pin_constraint -group -order -region {edge_region} "
             f"-pin_names [ot_match_pins {{{region['regex']}}}]"
         )
     return "\n".join(lines) + "\n"
@@ -1792,10 +1799,20 @@ def resolve_floorplan(
     if pin_regions:
         regions = []
         for item in pin_regions:
-            regex, sep, edge = item.rpartition("=")
-            if not sep or not regex or edge not in PIN_EDGES:
-                raise ValueError(f"--pin-region {item!r}: expected REGEX=EDGE, EDGE in {PIN_EDGES}")
-            regions.append({"regex": regex, "edge": edge})
+            regex, sep, edge_spec = item.rpartition("=")
+            match = PIN_EDGE_REGION_RE.fullmatch(edge_spec)
+            if not sep or not regex or match is None:
+                raise ValueError(
+                    f"--pin-region {item!r}: expected REGEX=EDGE or "
+                    "REGEX=EDGE:LOW-HIGH, EDGE in " + str(PIN_EDGES)
+                )
+            region = {"regex": regex, "edge": match.group(1)}
+            if match.group(2) is not None:
+                lo, hi = float(match.group(2)), float(match.group(3))
+                if hi <= lo:
+                    raise ValueError(f"--pin-region {item!r}: HIGH must exceed LOW")
+                region["range_um"] = [lo, hi]
+            regions.append(region)
         floorplan["pin_regions"] = regions
     if routing_layers:
         floorplan["routing_layers"] = list(routing_layers)
@@ -2848,8 +2865,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--pin-region", action="append", default=None, metavar="REGEX=EDGE",
-        help="pin every port whose name matches REGEX to die edge EDGE "
-             "(left/right/top/bottom); repeatable. Recorded under place_and_route.floorplan",
+        help="pin matching ports to EDGE (left/right/top/bottom), optionally "
+             "within EDGE:LOW-HIGH microns along that edge; repeatable and recorded",
     )
     parser.add_argument(
         "--routing-layers", nargs=2, default=None, metavar=("MIN", "MAX"),

@@ -54,7 +54,7 @@ def test_explicit_area_replaces_utilisation():
 
 
 def test_pin_regions_and_layers():
-    fp = flow.resolve_floorplan(None, None, ["^in_=left", "^(out|local)_=right"], ["M2", "M9"])
+    fp = flow.resolve_floorplan(None, None, ["^in_=left", "^(out|local)_=right", "^kv_=left:450-530"], ["M2", "M9"])
     lines = _config(fp)
     assert "export IO_CONSTRAINTS = /work/io_constraints.tcl" in lines
     assert "export MIN_ROUTING_LAYER = M2" in lines
@@ -62,6 +62,7 @@ def test_pin_regions_and_layers():
     tcl = flow.io_constraints_tcl(fp["pin_regions"])
     assert "set_io_pin_constraint -group -order -region left:* -pin_names [ot_match_pins {^in_}]" in tcl
     assert "-region right:* -pin_names [ot_match_pins {^(out|local)_}]" in tcl
+    assert "-region left:450-530 -pin_names [ot_match_pins {^kv_}]" in tcl
 
 
 @pytest.mark.parametrize(
@@ -71,6 +72,8 @@ def test_pin_regions_and_layers():
         ([0, 0, 10, 10], [2, 2, 12, 8], None),        # core outside die
         ([0, 0, 10, 10], [5, 2, 4, 8], None),         # inverted core
         (None, None, ["^in_=north"]),                 # unknown edge
+        (None, None, ["^in_=left:530-450"]),          # inverted coordinate range
+        (None, None, ["^in_=left:abc-530"]),          # malformed coordinate range
         (None, None, ["left"]),                       # no regex
     ],
 )
