@@ -260,9 +260,9 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>DeepSeek-V4.1 array, adopted design, per user, batch 1, 1M / 200K (with MTP, τ 5.0)</td><td class="r m">8,622 / 9,041 (23,578 / 24,602)</td><td><span class="tag spec">spec model</span>, <span class="tag pend">conditional</span> on collective overlap and the 1.087 GHz clock</td><td>§8.4</td></tr>
       <tr><td>V4.1 ROM array ÷ HBM array of equal logic area at its best (96-die tensor group in an NVL72-class switched domain), 1M / 200K (with MTP)</td><td class="r m">2.4× / 2.5× (2.0× / 2.05×)</td><td><span class="tag spec">spec model</span></td><td>§8.4</td></tr>
       <tr><td>V4.1 design requirement, 1M / 200K (with MTP at τ 5.0), at the validated links</td><td class="r m">4,933 / 5,418 (13,014 / 14,937)</td><td><span class="tag spec">spec model</span></td><td>§8.4</td></tr>
-      <tr><td>Golden (sequential) summation orders: V4.1 ceiling at any width, 200K</td><td class="r m">1,183 tok/s</td><td><span class="tag spec">spec model</span></td><td>§6.5</td></tr>
+      <tr><td>Golden (sequential) summation orders: V4.1 ceiling at any width, 200K</td><td class="r m">1,179 tok/s</td><td><span class="tag spec">spec model</span></td><td>§6.5</td></tr>
       <tr><td>Qwen3-8B reticle, total throughput from batch 2 (KV-stream-bound)</td><td class="r m">8,941 tok/s</td><td><span class="tag spec">spec model</span></td><td>§8.7</td></tr>
-      <tr><td>V4.1 array: per-user rate flat to 28 users; aggregate at 1,024 users; users held at 200K</td><td class="r m">5,448 · 442 K tok/s · 5,018 (4 stacks)</td><td><span class="tag spec">spec model</span></td><td>§8.7</td></tr>
+      <tr><td>V4.1 array: per-user rate flat to 28 users; aggregate at 1,024 users; users held at 200K</td><td class="r m">5,365 · 442 K tok/s · 5,018 (4 stacks)</td><td><span class="tag spec">spec model</span></td><td>§8.7</td></tr>
       <tr><td>Energy per step, same core: HBM ÷ ROM (reduced Qwen3, ASAP7)</td><td class="r m">5.7×</td><td><span class="tag spec">derived</span> (routed activity + HBM model)</td><td>§8.4</td></tr>
       <tr><td>Qwen3-8B energy per token at batch 1, production values: ROM reticle / same core on HBM at the ROM's 3.5-bit weights (with FP8 weights)</td><td class="r m">82.4 / 541 mJ: 6.6× (13.7×)</td><td><span class="tag spec">spec model</span></td><td>§8.8</td></tr>
       <tr><td>V4.1 energy per token at the wall, 1M, HBM ÷ ROM: batch 1 / 28-user fill (with MTP)</td><td class="r m">3.8× / 10.2× (4.2× / 15.5×)</td><td><span class="tag spec">spec model</span></td><td>§8.8</td></tr>
@@ -445,7 +445,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
   <p>A System-2 model needs tens of reticle dies (Table 4-2). Splitting it adds two kinds of serial cost: pipeline hops, where a token's activations move from the dies holding one group of layers to the next, and collectives, where the dies of a tensor group combine partial results inside a layer. Both are latency-bound, because decode activations are kilobytes, not megabytes. Keeping every die's weights local and moving only activations keeps the bytes small, but the latency does not shrink with them: on shippable packaging a V4.1 token spends a fifth to a quarter of its time on links (Table 4-4), and the collective latency after the last partial sum is the largest single fixed term of the token.</p>
   <p>Packaging is a hard constraint rather than a parameter. High-density die-to-die links reach only adjacent dies, board links pay forward-error-correction latency, and interposers are limited in size: four reticle-sized dies with their HBM exceed the 5.5-reticle CoWoS in production in 2026 [<a href="#r-tsmc26">TSMC 2026</a>], and the one announced four-die product was reportedly cut back to two [<a href="#r-rubinultra">Rubin Ultra</a>]. The packaging choice is therefore evaluated, not assumed (§6.9).</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-4. Communication is a fifth to a quarter of a V4.1 token on shippable packaging (200K, batch 1; results/arch/arch_budget_v41.json; link constants configs/hardware/technology.json). The time shares are the specification's, before the link validation; on the adopted design at 1M synchronisation is 24.7 µs of a 119.9 µs token, 21% (§8.9)</caption>
+    <caption>Table 4-4. Communication is a fifth to a quarter of a V4.1 token on shippable packaging (200K, batch 1; results/arch/arch_budget_v41.json; link constants configs/hardware/technology.json). The time shares are the specification's on the validated links (stage hops on the 209 ns rack-cable tier); on the adopted design at 1M synchronisation is 24.7 µs of a 119.9 µs token, 21% (§8.9)</caption>
     <thead><tr><th>Mechanism</th><th class="r">Latency</th><th class="r">Bandwidth</th><th>Evidence</th></tr></thead>
     <tbody>
       <tr><td>In-package UCIe, edge-adjacent dies (diagonal relayed)</td><td class="r m">10 ns (3–30)</td><td class="r m">edge share</td><td><span class="tag cite">cited</span></td></tr>
@@ -453,7 +453,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>Package link with a light, reduced-interleave FEC: the on-module link between the two packages of a tensor group (≈120 mm trace) only</td><td class="r m">130 ns (100–170)</td><td class="r m">same</td><td>derived from cited components, checked in §8.9 [<a href="#r-dassharma">UCIe PHY</a>, <a href="#r-ualink">UALink</a>, <a href="#r-oif112">OIF CEI-112G</a>, <a href="#r-sue">SUE</a>]</td></tr>
       <tr><td>Rack-cable stage hop (≤0.8 m twinax): a light FEC is not qualified on CR copper, so full RS(544,514)</td><td class="r m">209 ns (160–300)</td><td class="r m">per lane split</td><td>checked in §8.9 [<a href="#r-llfec">LL-FEC</a>, <a href="#r-gustlin3ck">802.3ck</a>]</td></tr>
       <tr><td>Plain (b): collective latency 40.3 + bytes 3.3 + hops 11.9 µs</td><td class="r m">55.6 of 224.7 µs</td><td class="r m">25%</td><td><span class="tag dag">DAG model</span></td></tr>
-      <tr><td>Baseline, specification widths: collective latency 26.4 + hops 9.1 µs (bytes overlapped)</td><td class="r m">35.5 of 183.6 µs</td><td class="r m">19%</td><td><span class="tag spec">spec model</span></td></tr>
+      <tr><td>Baseline, specification widths: collective latency 26.4 + hops 11.9 µs (bytes overlapped)</td><td class="r m">38.3 of 186.4 µs</td><td class="r m">21%</td><td><span class="tag spec">spec model</span></td></tr>
       <tr><td>Collectives on the critical path</td><td colspan="2" class="r m">≈210 per token (about five per layer)</td><td><span class="tag dag">DAG model</span></td></tr>
     </tbody>
   </table></div>
@@ -461,21 +461,21 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
 
   <h3 id="s4-c4">4.5 Challenge 4 — Modern models are irregular, and hardwiring must stay exact and fast</h3>
   <p><b><i>MoE routing, top-k indexers, Sinkhorn-normalised hyper-connections, Engram lookups and sparse attention must become fixed-latency pipelines at about 1 GHz while matching the reference bit for bit — and the reference's own summation order is part of the latency.</i></b></p>
-  <p>The System-2 line of models adds operators that are neither matrix products nor element-wise functions, and each sits on the critical path (Table 4-5). They are data-dependent selections, iterative normalisations and hashed lookups — exactly the operations a conventional datapath implements with loops, sorts and serial reducers. Built that way they cost from a few percent of the per-user rate (a two-pass top-512: 2% at 200K, 9% at 1M) to most of it (an 8-lane stream unit: 1,482 instead of 5,448 tokens/s); each needs its own pipeline, sized to its share of the budget.</p>
-  <p>The same operators make exactness hard. Floating-point addition is not associative, so a different reduction order is a different model, and faults in selection or indexing produce fluent but wrong tokens. The full-scale compiler lane found three such faults only by comparing against the reference token by token (<code>results/abi3/deepseek_v41_pool_and_decode_path.json</code>). Worse, the reference fixes an order that hardware cannot make fast: the released golden sums sequentially — 2,560 terms in a hyper-connection mix, 2,048 in <code>wo_a</code>, 640 in p·v — and a dependent FP32 chain of n terms takes at least n adder latencies however wide the engine is, 12,800 cycles for the longest at a 5-cycle add. Under those orders the fixed part of a V4.1 token is 838 µs at 200K, which caps it near 1,183 tokens/s at any width (§6.5). Finally, every unit must close timing near 1 GHz on a 7 nm-class process, where a single combinational binary32 addition already takes several nanoseconds.</p>
+  <p>The System-2 line of models adds operators that are neither matrix products nor element-wise functions, and each sits on the critical path (Table 4-5). They are data-dependent selections, iterative normalisations and hashed lookups — exactly the operations a conventional datapath implements with loops, sorts and serial reducers. Built that way they cost from a few percent of the per-user rate (a two-pass top-512: 2% at 200K, 9% at 1M) to most of it (an 8-lane stream unit: 1,481 instead of 5,365 tokens/s); each needs its own pipeline, sized to its share of the budget.</p>
+  <p>The same operators make exactness hard. Floating-point addition is not associative, so a different reduction order is a different model, and faults in selection or indexing produce fluent but wrong tokens. The full-scale compiler lane found three such faults only by comparing against the reference token by token (<code>results/abi3/deepseek_v41_pool_and_decode_path.json</code>). Worse, the reference fixes an order that hardware cannot make fast: the released golden sums sequentially — 2,560 terms in a hyper-connection mix, 2,048 in <code>wo_a</code>, 640 in p·v — and a dependent FP32 chain of n terms takes at least n adder latencies however wide the engine is, 12,800 cycles for the longest at a 5-cycle add. Under those orders the fixed part of a V4.1 token is 841 µs at 200K, which caps it near 1,179 tokens/s at any width (§6.5). Finally, every unit must close timing near 1 GHz on a 7 nm-class process, where a single combinational binary32 addition already takes several nanoseconds.</p>
   <div class="tablebox"><table class="data">
-    <caption>Table 4-5. Irregular operators and what building them conventionally costs (V4.1 array, batch 1, per-user tok/s at 200K / 1M; specification model with one requirement undone, results/arch/arch_budget_v41.json <code>ablations_tokens_s_per_user</code>; pipelined column = the specification, 5,448 / 4,978)</caption>
+    <caption>Table 4-5. Irregular operators and what building them conventionally costs (V4.1 array, batch 1, per-user tok/s at 200K / 1M; specification model with one requirement undone, results/arch/arch_budget_v41.json <code>ablations_tokens_s_per_user</code>; pipelined column = the specification, 5,365 / 4,909)</caption>
     <thead><tr><th>Operator</th><th>Hardware difficulty</th><th class="r">Conventional</th><th>Pipelined design</th></tr></thead>
     <tbody>
-      <tr><td>Indexer top-512 over up to 262,144 keys per die</td><td>data-dependent selection, output in position order</td><td class="r m">two-pass select: 5,333 / 4,530</td><td>streaming exact filter + threshold select (§6.4)</td></tr>
-      <tr><td>Exact reduction order</td><td>non-associative addition; the golden sums sequentially</td><td class="r m">golden orders: 1,183 / 1,160</td><td>chunks of 8 + pairwise tree (§6.5)</td></tr>
-      <tr><td>Element-wise work, 4 × 5,120 residual per sublayer</td><td>replicated on every die of a tensor group</td><td class="r m">8-lane stream unit: 1,482 / 1,445</td><td>1,024 light + 256 SFU lanes, lane-parallel reducer</td></tr>
+      <tr><td>Indexer top-512 over up to 262,144 keys per die</td><td>data-dependent selection, output in position order</td><td class="r m">two-pass select: 5,254 / 4,472</td><td>streaming exact filter + threshold select (§6.4)</td></tr>
+      <tr><td>Exact reduction order</td><td>non-associative addition; the golden sums sequentially</td><td class="r m">golden orders: 1,179 / 1,156</td><td>chunks of 8 + pairwise tree (§6.5)</td></tr>
+      <tr><td>Element-wise work, 4 × 5,120 residual per sublayer</td><td>replicated on every die of a tensor group</td><td class="r m">8-lane stream unit: 1,481 / 1,444</td><td>1,024 light + 256 SFU lanes, lane-parallel reducer</td></tr>
       <tr><td>MoE router, √softplus, top-6 of 384</td><td>exp, divide and square root on the path</td><td class="r m">dependent SFU operations</td><td>fast SFU set (exp 49, softplus 161 cycles)</td></tr>
-      <tr><td>Producer → consumer</td><td>unit drains between dependent operations</td><td class="r m">no chaining: 5,038 / 4,634</td><td>vector-credit chaining</td></tr>
+      <tr><td>Producer → consumer</td><td>unit drains between dependent operations</td><td class="r m">no chaining: 4,967 / 4,573</td><td>vector-credit chaining</td></tr>
       <tr><td>mHC Sinkhorn, 20 iterations per mix</td><td>40 dependent divisions per sublayer, 80 sublayers per token</td><td colspan="2">Sinkhorn unit, about 270 ns per Sinkhorn: off the critical path (§6.6)</td></tr>
       <tr><td>Engram hash and gather</td><td>exact modulo by primes; 48 row addresses per token</td><td colspan="2">per-bank gather prefetched from token ids (§6.4)</td></tr>
       <tr><td>FP8 / MXFP4 block-scaled weights</td><td>per-block scales; exact dot products</td><td colspan="2">block-dot lane, the dot rounded once: 78.5 µm² per MAC against 1,169 µm² for an FP32 MAC</td></tr>
-      <tr><td>binary32 add</td><td>≈6.4 ns combinational on ASAP7 (≈155 MHz)</td><td class="r m">5-cycle adder: 5,350 / 4,896</td><td>3-cycle pipelined adder, routed 1,312 MHz</td></tr>
+      <tr><td>binary32 add</td><td>≈6.4 ns combinational on ASAP7 (≈155 MHz)</td><td class="r m">5-cycle adder: 5,269 / 4,829</td><td>3-cycle pipelined adder, routed 1,312 MHz</td></tr>
     </tbody>
   </table></div>
   <p class="implication"><b>Implication.</b> Every operator, however irregular, must be a fixed-latency pipeline specified by a golden model whose own reduction order is chosen for hardware, and multi-die reductions must preserve that order.</p>
@@ -556,22 +556,22 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <div class="svgbox"><svg id="flow" viewBox="0 0 1000 330" role="img" aria-label="Top-down design flow with the values for both workloads"></svg></div>
     <figcaption><b>Figure 6-1.</b> <b>Top-down design: every block's width and depth follows from the token's target.</b> Copper lines give the Qwen3-8B reticle at 8K, blue lines the DeepSeek-V4.1 array at 200K (docs/ARCH_SPEC_QWEN3.md, docs/ARCH_SPEC_V41.md). Steps 7 and 8 gate each other: no whole-core run until every block meets its bench.</figcaption>
   </figure>
-  <p><b>Choosing the target.</b> For Qwen3-8B two resources bind on the reticle: the weight sweep through 131,072 lanes (57,740 cycles, a ceiling of 19,027 tokens/s) and the KV stream from six HBM3E stacks. The target is the larger of the sweep over 55% of the token and the KV stream over 95% of it: at 8K with FP8 KV the stream binds, giving 129,348 cycles or 8,494 tokens/s per user at 1.0986 GHz, the slowest routed Qwen3 token-path clock (4,247 with a BF16 cache; at 2K the sweep binds at 10,465). For V4.1 the requirement is the report's own dependency graph of the array, re-priced at the committed packaging: 4,992 / 4,904 / 4,660 tokens/s per user at 8K / 200K / 1M. The budget model reproduces the published graph exactly when given its assumptions (a committed test), so the only question is whether each node can be built at the widths and depths the graph assumed. The V4.1 specification first picked 200K as its target because the ROM:HBM advantage is larger there; by later user decision 1M is the primary context, 200K secondary and 8K tertiary (§8.4).</p>
+  <p><b>Choosing the target.</b> For Qwen3-8B two resources bind on the reticle: the weight sweep through 131,072 lanes (57,740 cycles, a ceiling of 19,027 tokens/s) and the KV stream from six HBM3E stacks. The target is the larger of the sweep over 55% of the token and the KV stream over 95% of it: at 8K with FP8 KV the stream binds, giving 129,348 cycles or 8,494 tokens/s per user at 1.0986 GHz, the slowest routed Qwen3 token-path clock (4,247 with a BF16 cache; at 2K the sweep binds at 10,465). For V4.1 the requirement is the report's own dependency graph of the array, re-priced at the committed packaging: 4,922 / 4,837 / 4,599 tokens/s per user at 8K / 200K / 1M. The budget model reproduces the published graph exactly when given its assumptions (a committed test), so the only question is whether each node can be built at the widths and depths the graph assumed. The V4.1 specification first picked 200K as its target because the ROM:HBM advantage is larger there; by later user decision 1M is the primary context, 200K secondary and 8K tertiary (§8.4).</p>
   <div class="tablebox"><table class="data">
     <caption>Table 6-3. The two budgets. Qwen3-8B at 8K in cycles at 1.0986 GHz; V4.1 at 200K in µs at 1.034 GHz (spec model; results/arch/qwen3_budget.json <code>budget</code>, results/arch/arch_budget_v41.json <code>budget</code>)</caption>
     <thead><tr><th>Qwen3-8B reticle, 8K, FP8 KV</th><th class="r">Cycles</th><th class="r">Share</th><th>DeepSeek-V4.1 array, 200K</th><th class="r">µs</th></tr></thead>
     <tbody>
-      <tr><td>Target (KV stream ÷ 0.95)</td><td class="r m">129,348</td><td class="r m">100%</td><td>Target (published graph at the baseline links)</td><td class="r m">203.9</td></tr>
+      <tr><td>Target (KV stream ÷ 0.95)</td><td class="r m">129,348</td><td class="r m">100%</td><td>Target (published graph at the baseline links)</td><td class="r m">206.7</td></tr>
       <tr><td>Weight sweep, 131,072 lanes</td><td class="r m">57,740</td><td class="r m">44.6%</td><td>Compute-chain depths (units, chunk-8 orders)</td><td class="r m">99.0</td></tr>
       <tr><td>Attention</td><td class="r m">19,402</td><td class="r m">15%</td><td>Sequential-chain floors on the weight path</td><td class="r m">10.9</td></tr>
       <tr><td>Element-wise</td><td class="r m">12,935</td><td class="r m">10%</td><td>KV gather and index-key scan latency</td><td class="r m">2.2</td></tr>
       <tr><td>Exposed dependency latency (720 stages)</td><td class="r m">38,804</td><td class="r m">30%</td><td>Collective latency (bytes overlapped)</td><td class="r m">26.4</td></tr>
-      <tr><td>Control</td><td class="r m">3,880</td><td class="r m">3%</td><td>Pipeline hops 9.1 · control 6.4</td><td class="r m">15.5</td></tr>
-      <tr><td>KV stream (the binding resource)</td><td class="r m">122,881</td><td class="r m">95%</td><td><b>Fixed part</b> → <b>issue budget for all block widths</b></td><td class="r m">154.0 → 49.9</td></tr>
+      <tr><td>Control</td><td class="r m">3,880</td><td class="r m">3%</td><td>Pipeline hops 11.9 · control 6.4</td><td class="r m">18.3</td></tr>
+      <tr><td>KV stream (the binding resource)</td><td class="r m">122,881</td><td class="r m">95%</td><td><b>Fixed part</b> → <b>issue budget for all block widths</b></td><td class="r m">156.8 → 49.9</td></tr>
     </tbody>
   </table></div>
   <p class="note">The Qwen3 shares are as recorded; they total 102.6% of the target because the weight share is the ideal sweep rather than a share. The V4.1 fixed part is the graph re-priced with every issue time set to zero.</p>
-  <p><b>From budget to block requirements.</b> On Qwen3-8B the budget translates directly: 38,804 cycles over 36 layers × 20 dependent stages is at most 54 exposed cycles per stage, which rules out any full-unit drain between dependent operations; 12,935 cycles for about 30 M element-operations is a stream unit of 1,024 elements per cycle; attention's 2.4 G multiply-accumulates in 19,402 cycles need at least 124,520 lanes busy, so attention must be split over every lane group. On V4.1 the fixed part is the requirement: of the 203.9 µs target, 154 µs is unit depth, links and control before any block does any work, so all the widths together get only 49.9 µs, <b>24% of the token</b>. The widths are then chosen by the area-optimal rule for serial stages — each resource's time proportional to √(area × work), which minimises Σ area × work / time at a fixed total — rounded to hardware granularity, repaired greedily until the target holds and shrunk while it still holds, at 8K, 200K, 1M and batch 64, taking the maximum of each width over the four (§6.4.2).</p>
+  <p><b>From budget to block requirements.</b> On Qwen3-8B the budget translates directly: 38,804 cycles over 36 layers × 20 dependent stages is at most 54 exposed cycles per stage, which rules out any full-unit drain between dependent operations; 12,935 cycles for about 30 M element-operations is a stream unit of 1,024 elements per cycle; attention's 2.4 G multiply-accumulates in 19,402 cycles need at least 124,520 lanes busy, so attention must be split over every lane group. On V4.1 the fixed part is the requirement: of the 206.7 µs target, 157 µs is unit depth, links and control before any block does any work, so all the widths together get only 49.9 µs, <b>24% of the token</b>. The widths are then chosen by the area-optimal rule for serial stages — each resource's time proportional to √(area × work), which minimises Σ area × work / time at a fixed total — rounded to hardware granularity, repaired greedily until the target holds and shrunk while it still holds, at 8K, 200K, 1M and batch 64, taking the maximum of each width over the four (§6.4.2).</p>
 
   <h3 id="s6-4">6.4 Adopted decode cores at design shape</h3>
   <h4 id="s6-4-1">6.4.1 Qwen3-8B reticle</h4>
@@ -623,7 +623,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     </table></div>
     <div class="fig">
       <h4>Three integration requirements from the dependency chain</h4>
-      <p class="note">At the design widths, the dependency chain sets the token time. Three requirements for the integration core <code>ot_hdc_core_v41x</code>, take it to 131.5 µs (§8.5):</p>
+      <p class="note">At the design widths, the dependency chain sets the token time. Three requirements for the integration core <code>ot_hdc_core_v41x</code>, take it to 134.3 µs (§8.5):</p>
       <ul class="note">
         <li><b>Reductions off the path.</b> An RMSNorm's reciprocal root scales the next matrix-vector product's outputs instead of its input, and softmax becomes online in the release kernel's 64-row blocks — a golden change (R-ARITH v2, committed as a golden mode).</li>
         <li><b>Chaining for every unit.</b> Matrix, attention, indexer and select units start on their producer's first tile, not its last element.</li>
@@ -631,7 +631,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       </ul>
     </div>
   </div>
-  <p><b>Program-level timing.</b> The shipped-shape instruction stream of one die — about 3,840 instructions per token — replayed on an event model of the re-specified core (every operation on its new unit at the specification widths, with region dependences and vector chaining, plus the graph's communication) gives 5,889 / 5,718 / 5,118 tokens/s per user at 8K / 200K / 1M on the baseline links, above the targets of 4,992 / 4,904 / 4,660. At reduced shape the event model reproduces the recorded token program timing (344,131 cycles) (<code>tools/hdc_timing_v41x.py</code>, <code>results/arch/v41x_replay.json</code>). With chaining, dependent-stage depth dominates the 139 µs of compute at 200K: stream-unit depth 27 µs, the scalar side pipe (rsqrt and softplus) 21 µs, the BF16 weight engine 16 µs and transcendental depth 15 µs.</p>
+  <p><b>Program-level timing.</b> The shipped-shape instruction stream of one die — about 3,840 instructions per token — replayed on an event model of the re-specified core (every operation on its new unit at the specification widths, with region dependences and vector chaining, plus the graph's communication) gives 5,889 / 5,718 / 5,118 tokens/s per user at 8K / 200K / 1M on the baseline links, above the targets of 4,922 / 4,837 / 4,599. At reduced shape the event model reproduces the recorded token program timing (344,131 cycles) (<code>tools/hdc_timing_v41x.py</code>, <code>results/arch/v41x_replay.json</code>). With chaining, dependent-stage depth dominates the 139 µs of compute at 200K: stream-unit depth 27 µs, the scalar side pipe (rsqrt and softplus) 21 µs, the BF16 weight engine 16 µs and transcendental depth 15 µs.</p>
 
   <h3 id="s6-5">6.5 The arithmetic contract (R-ARITH)</h3>
   <p class="finding">Bit-exactness and speed are compatible only if the reference's summation order is designed for hardware. The released golden sums sequentially, and that order alone caps a V4.1 token near 1,180 tokens/s at any width. We change the golden, not the tolerance: every accumulation becomes chunks of at most eight terms summed from +0, combined by a pairwise tree.</p>
@@ -653,13 +653,13 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <caption>Table 6-7. What the order costs: fixed part of a 200K token and the rate it allows (spec model; results/arch/arch_budget_v41.json)</caption>
       <thead><tr><th>Orders</th><th class="r">Fixed part µs</th><th class="r">Issue budget µs</th><th class="r">tok/s at best</th></tr></thead>
       <tbody>
-        <tr><td>Golden (sequential)</td><td class="r m">837.9</td><td class="r m">&lt; 0</td><td class="r m">1,183</td></tr>
-        <tr><td>R-ARITH (chunks ≤ 8, fast FP)</td><td class="r m">154.0</td><td class="r m">49.9</td><td class="r m">5,448</td></tr>
+        <tr><td>Golden (sequential)</td><td class="r m">840.7</td><td class="r m">&lt; 0</td><td class="r m">1,179</td></tr>
+        <tr><td>R-ARITH (chunks ≤ 8, fast FP)</td><td class="r m">156.8</td><td class="r m">49.9</td><td class="r m">5,365</td></tr>
 
       </tbody>
     </table></div>
   </div>
-  <p>A dependent FP32 chain of n terms cannot finish in fewer than n adder latencies, however wide the engine: 12,800 cycles for the 2,560-term mix at a 5-cycle add. Under the golden orders the fixed part of a 200K token is 838 µs, four times the whole 204 µs target, and the best any width can do is 1,183 tokens/s (1,187 at 8K, 1,160 at 1M). The contract that removes this is the golden's own <code>split_sum</code> with the chunk length fixed instead of the chunk count:</p>
+  <p>A dependent FP32 chain of n terms cannot finish in fewer than n adder latencies, however wide the engine: 12,800 cycles for the 2,560-term mix at a 5-cycle add. Under the golden orders the fixed part of a 200K token is 841 µs, four times the whole 207 µs target, and the best any width can do is 1,179 tokens/s (1,183 at 8K, 1,156 at 1M). The contract that removes this is the golden's own <code>split_sum</code> with the chunk length fixed instead of the chunk count:</p>
   <ul>
     <li>every accumulation is cut into contiguous chunks of at most 8 terms, each summed sequentially from +0, and the chunk sums are added by a pairwise tree padded with +0;</li>
     <li>a tree level that crosses dies is the one-shot collective's fixed rank order;</li>
@@ -841,7 +841,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <tbody>
       <tr><td class="m">(a)</td><td>2 dies + HBM; tensor group 2 inside the package</td><td>shipping</td><td class="r m">4,136 (−7%)</td><td class="r m">412,404</td><td class="r m">—</td></tr>
       <tr><td class="m">(b)</td><td>2 dies + HBM; tensor group 4 across a package pair, full-FEC link</td><td>shipping</td><td class="r m">4,450</td><td class="r m">357,043</td><td class="r m">4,890</td></tr>
-      <tr class="sel"><td class="m">(b) + light FEC + overlap</td><td>as (b); 130 ns package link; collectives chase their producers</td><td>shippable (derived from published components)</td><td class="r m">4,904 (+10%)</td><td class="r m">357,043</td><td class="r m">5,448</td></tr>
+      <tr class="sel"><td class="m">(b) + light FEC + overlap</td><td>as (b); 130 ns package link; collectives chase their producers</td><td>shippable (derived from published components)</td><td class="r m">4,837 (+9%)</td><td class="r m">357,043</td><td class="r m">5,365</td></tr>
       <tr><td class="m">(b) + substrate pairing</td><td>the package pair as one substrate module on standard-package UCIe</td><td>roadmap (≈6.6 reticles of package)</td><td class="r m">5,375 (+21%)</td><td class="r m">357,043</td><td class="r m">—</td></tr>
       <tr class="rej"><td class="m">(c)</td><td>4 dies + HBM; tensor group 4 in one package</td><td>beyond the 5.5-reticle class in production</td><td class="r m">future</td><td class="r m">—</td><td class="r m">—</td></tr>
     </tbody>
@@ -1290,12 +1290,12 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>RTX PRO 6000, BF16 / FP8, MATH-500 thinking (τ 3.65 / 3.72)</td><td>GDDR7 bandwidth</td><td class="r m">93.6 / 151.4</td><td class="r m">270.2 / 390.3</td><td class="r m">2.89× / 2.58×</td><td><span class="tag meas">measured</span></td></tr>
       <tr><td>One B200, SGLang, MATH-500 thinking off (τ 8.01)</td><td>HBM bandwidth</td><td class="r m">230</td><td class="r m">1,175</td><td class="r m">5.1×</td><td><span class="tag cite">cited</span> [<a href="#r-dflash">DFlash</a>]</td></tr>
       <tr><td colspan="6"><b>DeepSeek-V4.1, 200K, DSpark (6 positions)</b></td></tr>
-      <tr><td>ROM array, m = 1 / 2 (design) / 3 / 6</td><td>MAC lanes; routed union</td><td class="r m">5,448</td><td class="r m">8,862 / 11,950 / 13,429 / 15,255</td><td class="r m">1.63× / 2.19× / 2.46× / 2.80×</td><td><span class="tag spec">spec model</span></td></tr>
-      <tr><td>ROM array with the chain levers, m = 2</td><td>dependency chain</td><td class="r m">7,602</td><td class="r m">15,818</td><td class="r m">2.08×</td><td><span class="tag spec">spec model</span></td></tr>
-      <tr style="background:var(--hbm-soft)"><td>HBM array, m = 6</td><td>HBM bandwidth; routed union</td><td class="r m">1,167</td><td class="r m">1,709</td><td class="r m">1.46×</td><td><span class="tag spec">spec model</span></td></tr>
+      <tr><td>ROM array, m = 1 / 2 (design) / 3 / 6</td><td>MAC lanes; routed union</td><td class="r m">5,365</td><td class="r m">8,808 / 11,851 / 13,305 / 15,096</td><td class="r m">1.64× / 2.21× / 2.48× / 2.81×</td><td><span class="tag spec">spec model</span></td></tr>
+      <tr><td>ROM array with the chain levers, m = 2</td><td>dependency chain</td><td class="r m">7,446</td><td class="r m">15,651</td><td class="r m">2.10×</td><td><span class="tag spec">spec model</span></td></tr>
+      <tr style="background:var(--hbm-soft)"><td>HBM array, m = 6</td><td>HBM bandwidth; routed union</td><td class="r m">1,163</td><td class="r m">1,707</td><td class="r m">1.47×</td><td><span class="tag spec">spec model</span></td></tr>
     </tbody>
   </table></div>
-  <p><b>Routed experts cost their union on both machines.</b> "Speculation trades multiply-accumulates for bandwidth" holds for V4.1's dense weights and fails for its routed experts (Table 8-17). Six positions touch on average 34.6 distinct experts of 384 rather than six, so the HBM array streams 5.3× the expert bytes and the ROM array streams the same union through its weight lanes at 5.35× the lane time; a lane multiplier cannot help, because only positions that share an expert share a weight read. The HBM array's routed-expert fetch — the ids exist only after the router — is already its critical path, so its speculative gain is capped at 1.5×. If adjacent tokens share experts the union shrinks: at 25% and 50% overlap of the union's excess, the ROM verify pass falls from 252 to 242 and 232 µs and the HBM one from 2,077 to 1,778 and 1,479 µs; no measurement of adjacent-token routing on real prompts exists yet, so independent draws are the conservative case. The pre-specification remodel of speculation (<code>tools/hdc_speculative_model.py</code>) charged routed experts one sweep at m ≥ B and therefore overstated the ROM's MTP gain; the specification corrects it.</p>
+  <p><b>Routed experts cost their union on both machines.</b> "Speculation trades multiply-accumulates for bandwidth" holds for V4.1's dense weights and fails for its routed experts (Table 8-17). Six positions touch on average 34.6 distinct experts of 384 rather than six, so the HBM array streams 5.3× the expert bytes and the ROM array streams the same union through its weight lanes at 5.35× the lane time; a lane multiplier cannot help, because only positions that share an expert share a weight read. The HBM array's routed-expert fetch — the ids exist only after the router — is already its critical path, so its speculative gain is capped at 1.5×. If adjacent tokens share experts the union shrinks: at 25% and 50% overlap of the union's excess, the ROM verify pass falls from 255 to 245 and 235 µs and the HBM one from 2,080 to 1,781 and 1,482 µs; no measurement of adjacent-token routing on real prompts exists yet, so independent draws are the conservative case. The pre-specification remodel of speculation (<code>tools/hdc_speculative_model.py</code>) charged routed experts one sweep at m ≥ B and therefore overstated the ROM's MTP gain; the specification corrects it.</p>
   <div class="tablebox"><table class="data">
     <caption>Table 8-17. Cost of a 6-position V4.1 verify pass relative to a plain step, by operator class, 200K (results/arch/arch_budget_v41.json <code>mtp.speculation</code>; docs/ARCH_SPEC_V41.md §7)</caption>
     <thead><tr><th>Operator class</th><th class="r">ROM, m = 1</th><th class="r">ROM, m = 6</th><th class="r">HBM, m = 1</th><th class="r">HBM, m = 6</th><th>Binding resource</th></tr></thead>
@@ -1306,8 +1306,8 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>Attention (q·k, p·v, softmax)</td><td class="r m">5.6×</td><td class="r m">2.2×</td><td class="r m">5.6×</td><td class="r m">2.2×</td><td>MAC lanes; KV rows shared</td></tr>
       <tr><td>Indexer (scan + select)</td><td class="r m">6.0×</td><td class="r m">1.7×</td><td class="r m">6.0×</td><td class="r m">1.7×</td><td>MAC lanes; keys read once per pass</td></tr>
       <tr><td>Stream unit</td><td class="r m">3.2×</td><td class="r m">1.5×</td><td class="r m">3.2×</td><td class="r m">1.5×</td><td>lanes</td></tr>
-      <tr><td>Fixed (depths, control, collectives, hops)</td><td class="r m">1.18×</td><td class="r m">1.16×</td><td class="r m">1.15×</td><td class="r m">1.12×</td><td>latency, once per pass</td></tr>
-      <tr><td><b>Whole verify pass</b></td><td class="r m"><b>2.38×</b></td><td class="r m"><b>1.44×</b></td><td class="r m"><b>2.55×</b></td><td class="r m"><b>2.45×</b></td><td></td></tr>
+      <tr><td>Fixed (depths, control, collectives, hops)</td><td class="r m">1.17×</td><td class="r m">1.16×</td><td class="r m">1.15×</td><td class="r m">1.12×</td><td>latency, once per pass</td></tr>
+      <tr><td><b>Whole verify pass</b></td><td class="r m"><b>2.36×</b></td><td class="r m"><b>1.44×</b></td><td class="r m"><b>2.54×</b></td><td class="r m"><b>2.44×</b></td><td></td></tr>
     </tbody>
   </table></div>
   <p><b>Consequences for the design.</b> Speculation no longer narrows the ROM's lead the way it did without lane copies: on V4.1 at 1M the ROM ÷ HBM ratio against the comparator's best goes from 2.4× to 2.0× with MTP (2.5× to 2.05× at 200K), because a wide-group HBM machine gains more from MTP than the ROM array does (3.3× against 2.7×), and on Qwen3-8B at 8K the reticle with DFlash (13,613) is 2.8× the same core on HBM with DFlash (4,795) and 24× the speculating H200 at FP8 (569). The lane copies are cheap in area (§6.8) and, on production energy values, in power: the reticle's DFlash configuration draws 214 W on the die against 187 W without speculation, and spends 47.9 mJ per token against 82.4. Every rejected draft position still costs multiply-accumulates, so at the ASAP7-signed-off 3.97 pJ per BF16 MAC the same configuration would draw 1,132 W and be capped below its plain rate — the lane must be designed for the weight format (§8.8). On V4.1, acceptance on representative workloads remains a measurement gap.</p>
@@ -1466,7 +1466,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>Qwen3-8B HDC-HBM with DFlash at τ 4.10 / 5.18 / 6.49 / 8.01</td><td class="r m">4,795 / 6,050 / 7,587 / 9,364</td><td><span class="tag spec">spec model</span></td></tr>
       <tr><td>H200 at the batch-1 efficiency measured on GB202 (80% / 65% of roofline)</td><td class="r m">FP8: 384 tok/s instead of 217</td><td>sensitivity</td></tr>
       <tr><td>V4.1 HBM comparator fabric at 1M: no NVLS / 1.8 TB/s with NVLS / 1.8 TB/s without; ROM ÷ HBM without / with MTP</td><td class="r m">2.67× / 2.40× / 2.51×; 2.24× / 1.89× / 2.16×</td><td><span class="tag spec">spec model</span></td></tr>
-      <tr><td>V4.1 correlated routing, 25% / 50% overlap (6-position verify)</td><td class="r m">ROM 252 → 242 / 232 µs; HBM 2,077 → 1,778 / 1,479 µs</td><td><span class="tag spec">spec model</span></td></tr>
+      <tr><td>V4.1 correlated routing, 25% / 50% overlap (6-position verify)</td><td class="r m">ROM 255 → 245 / 235 µs; HBM 2,080 → 1,781 / 1,482 µs</td><td><span class="tag spec">spec model</span></td></tr>
       <tr><td>V4.1 stream-unit width beyond 1,024 lanes</td><td class="r m">saturates; softplus depth is the next latency lever</td><td><span class="tag spec">spec model</span> (replay)</td></tr>
     </tbody>
   </table></div>
@@ -1481,8 +1481,8 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>Decode energy is data movement; weights are the costliest data</td><td>common-KV reduced-step HBM ÷ ROM energy 5.7× (derived); HBM weight reads 276.65 µJ; ROM weight reads 0.21 µJ</td><td>put weights where they are consumed (P1); next levers are on-chip movement and per-user state</td><td class="m">signoff/energy_per_token.json</td></tr>
       <tr><td>Once weights are free, a token is a dependency chain</td><td>V4.1 on the published graph: 78% of the token dependent latency, 19% weight sweep; Qwen3-8B: 720 dependent stages at ≤54 exposed cycles each</td><td>budget latency per stage, top-down (P6)</td><td class="m">arch/arch_budget_v41.json, arch/qwen3_budget.json</td></tr>
       <tr><td>The Qwen3 chain was cut to the KV floor</td><td>174,856 → 123,301 cycles in three rounds of levers, 0.3% above the 122,881-cycle FP8 KV stream; calibrated now 14% below the analytical chain</td><td>KV bandwidth and format are the limit; 4-bit KV is an accuracy question</td><td class="m">arch/qwen3_budget.json</td></tr>
-      <tr><td>The reference's summation order is a latency wall</td><td>sequential sums cap V4.1 at 1,183 tok/s at any width; chunk-8 + tree cuts the fixed part from 838 to 154 µs with logits within 2.4 × 10⁻⁷</td><td>design the golden's order for hardware (P5)</td><td class="m">arch/arch_budget_v41.json, arch/v41_arith_contract.json</td></tr>
-      <tr><td>A latency floor leaves a quarter of the token for all widths</td><td>V4.1 at 200K: 154 of 204 µs fixed; every required block fits 87 mm² of a 329 mm² envelope</td><td>spend area on depth and chaining, not width</td><td class="m">arch/arch_budget_v41.json</td></tr>
+      <tr><td>The reference's summation order is a latency wall</td><td>sequential sums cap V4.1 at 1,179 tok/s at any width; chunk-8 + tree cuts the fixed part from 841 to 157 µs with logits within 2.4 × 10⁻⁷</td><td>design the golden's order for hardware (P5)</td><td class="m">arch/arch_budget_v41.json, arch/v41_arith_contract.json</td></tr>
+      <tr><td>A latency floor leaves a quarter of the token for all widths</td><td>V4.1 at 200K: 157 of 207 µs fixed; every required block fits 87 mm² of a 329 mm² envelope</td><td>spend area on depth and chaining, not width</td><td class="m">arch/arch_budget_v41.json</td></tr>
       <tr><td>Link latency after the last partial is the largest fixed term</td><td>26.4 µs of collective latency per token on the specification; the light-FEC link is worth +9%; putting attention in one package loses</td><td>in-network reduction or a shorter pair link next</td><td class="m">arch/arch_budget_v41.json</td></tr>
       <tr><td>The synchronisation advantage is on chip; across packages both machines pay link physics</td><td>77× and 208× a GPU's measured on-chip boundaries; 7.9–13.4× a GB200 four-die all-reduce; 21× per V4.1 token for the same graph; the light FEC is not qualified on rack copper (209 ns, −2.2%)</td><td>claim speed from the compiled schedule on chip and from fewer, fixed-function crossings between packages; validate every link value against its standard</td><td class="m">arch/sync_cost_table.json</td></tr>
       <tr><td>DRAM refresh is a bandwidth term and a controller problem</td><td>all-bank refresh costs 9%; a 64-beat queue costs up to 15% of a V4.1 token; tie-break 0.956 vs 0.851 on a sequential scan</td><td>refresh-aware per-bank refresh, deep queues, no head-of-line blocking (P7)</td><td class="m">rtl/hdc_hbm_campaign.json</td></tr>
@@ -1688,8 +1688,8 @@ Qwen3-8B, 8.19 G params
 collectives on the critical path         ≈210 (about five per layer)
   per collective after the last partial  ≈135 ns (light-FEC 130 ns hop) · ≈220 ns (full FEC, 209 ns)
   collective latency per token           26.4 µs (baseline) · 40.3 µs (plain b)
-pipeline hops per token                  9.1 µs (baseline) · 11.9 µs (plain b)
-share of the token                       35.5 of 183.6 µs = 19% (spec, baseline)
+pipeline hops per token                  11.9 µs (baseline and plain b)
+share of the token                       38.3 of 186.4 µs = 21% (spec, baseline)
                                          55.6 of 224.7 µs = 25% (graph, plain b, incl. 3.3 µs of bytes)</div>
   <h4>D.5 Energy of moving weights and KV (§5.2)</h4>
 <div class="calc">Energy of moving Qwen3-8B's weights once (first-order; weight movement only)
@@ -1708,10 +1708,10 @@ stream unit       10% × 129,348 = 12,935 cycles for ≈30 M element-ops → 1,0
 attention         2.416 G MACs in 19,402 cycles → ≥124,520 lanes busy
 
 DeepSeek-V4.1 array, 200K                             results/arch/arch_budget_v41.json
-target            the published graph at the baseline links = 203.9 µs → 4,904 tok/s
-fixed part        depths 99.0 + chain floors 10.9 + KV 2.2 + collectives 26.4 + hops 9.1 + control 6.4
-                  = 154.0 µs  (golden orders: 837.9 µs → infeasible)
-issue budget      203.9 − 154.0 = 49.9 µs = 24% of the token for all block widths
+target            the published graph at the baseline links = 206.7 µs → 4,837 tok/s
+fixed part        depths 99.0 + chain floors 10.9 + KV 2.2 + collectives 26.4 + hops 11.9 + control 6.4
+                  = 156.8 µs  (golden orders: 840.7 µs → infeasible)
+issue budget      206.7 − 156.8 = 49.9 µs = 24% of the token for all block widths
 width rule        t_r ∝ √(area_r × work_r); greedy repair, then shrink; max over 8K / 200K / 1M / batch 64</div>
   <h4>D.7 The power requirement (§6.8)</h4>
 <div class="calc">Qwen3-8B reticle                                       results/arch/qwen3_budget.json
@@ -1988,10 +1988,10 @@ function drawV41Array(){
   let xx=10; const fw=440/815; parts.forEach(([n,a,f,st])=>{const w=a*fw; el("rect",{x:xx,y:cy0+26,width:w,height:22,fill:f,stroke:st},svg);
     txt(svg,xx+w/2,cy0+62,n,{anchor:"middle",fs:9.5,fill:I}); txt(svg,xx+w/2,cy0+74,a.toFixed(0)+" mm²",{anchor:"middle",fs:9.5,cls:"t-mono"}); xx+=w;});
   txt(svg,10,cy0+92,"of compute, the required blocks take 87 mm² (174 with MTP lane copies)",{fs:9.5});
-  const sc=460/183.6;
-  budgetBar(svg,520,cy0+26,460,sc,"",[[111.7,Rs,R,"compute chain 111.7 µs"],[27.5,P,M,"weights 27.5"],[2.5,Bs,B,""],[26.4,B,B,"links 26.4"],[9.1,css("--warn"),css("--warn"),""],[6.4,G,M,""]]);
-  txt(svg,520,cy0+62,"183.6 µs per token → 5,448 tok/s per user (4,978 at 1M)",{fs:10,fill:I});
-  txt(svg,520,cy0+76,"KV + keys 2.5 · collective latency 26.4 · hops 9.1 · control 6.4 µs",{fs:10,fill:R});
+  const sc=460/186.4;
+  budgetBar(svg,520,cy0+26,460,sc,"",[[111.7,Rs,R,"compute chain 111.7 µs"],[27.5,P,M,"weights 27.5"],[2.5,Bs,B,""],[26.4,B,B,"links 26.4"],[11.9,css("--warn"),css("--warn"),""],[6.4,G,M,""]]);
+  txt(svg,520,cy0+62,"186.4 µs per token → 5,365 tok/s per user (4,909 at 1M)",{fs:10,fill:I});
+  txt(svg,520,cy0+76,"KV + keys 2.5 · collective latency 26.4 · hops 11.9 · control 6.4 µs",{fs:10,fill:R});
 }
 
 function drawOpGraph(id, rows, opts){
@@ -2105,7 +2105,7 @@ function drawCeiling(){
   [[16.38e9,488,"488 on B200",1],[13.0e9,615,"615 on B200",-1],[8.19e9,217,"H200 FP8, 8K: 217",1]].forEach(([b,v,t,side])=>{el("circle",{cx:X(b),cy:Y(v),r:4.5,fill:css("--hbm")},svg);el("text",{x:X(b)+8*side,y:side>0?Y(v)+16:Y(v)-8,"text-anchor":side>0?"start":"end","font-size":11,fill:css("--hbm"),class:"t-mono"},svg,t);});
   el("line",{x1:X(2.6e9),x2:X(6.4e9),y1:Y(8941),y2:Y(8941),stroke:css("--rom"),"stroke-width":1.6,"stroke-dasharray":"6 3"},svg);
   el("text",{x:X(2.6e9),y:Y(8941)-8,"font-size":10.5,fill:css("--rom")},svg,"KV-stream floor, 8K FP8: 8,941");
-  [[4.10e9,8910,"Qwen3-8B reticle, 8K: 8,910 (calibrated)"],[13.0e9,5448,"V4.1 array, 200K: 5,448 (spec model)"]].forEach(([b,v,t],i)=>{
+  [[4.10e9,8910,"Qwen3-8B reticle, 8K: 8,910 (calibrated)"],[13.0e9,5365,"V4.1 array, 200K: 5,365 (spec model)"]].forEach(([b,v,t],i)=>{
     el("rect",{x:X(b)-5,y:Y(v)-5,width:10,height:10,fill:css("--rom")},svg);
     el("text",{x:W-R+8,y:Y(v)+4+(i?8:-6),"font-size":11.5,fill:css("--rom")},svg,t);
     el("line",{x1:X(b)+6,x2:W-R+4,y1:Y(v),y2:Y(v),stroke:css("--rom"),"stroke-dasharray":"2 3",opacity:0.6},svg);});
@@ -2181,7 +2181,7 @@ function drawFlow(){
   const R=css("--rom"),B=css("--hbm"),P=css("--panel"),M=css("--muted"),I=css("--ink");
   const steps=[["Target","8K, batch 1, FP8 KV","200K and 1M, batch 1 and 64"],
     ["Workload from the graph","7.57 G MACs · 604 MB KV · 20 stages/layer","16.1 G MACs · 38.5 MB keys · ≈5 collectives/layer"],
-    ["Binding resource","KV stream: 122,881 cycles","dependent latency: 154 of 204 µs"],
+    ["Binding resource","KV stream: 122,881 cycles","dependent latency: 157 of 207 µs"],
     ["Budget","129,348 cycles; ≤54 per stage","issue budget 49.9 µs (24%)"],
     ["Per-block requirements","SU 1,024 el/cycle; K-split attention","231 K block-dot MACs/cycle; 64 scores/cycle"],
     ["Microarchitecture","vector SU, prefetched issue, row chasing","weight, attention, indexer engines; streaming select"],
