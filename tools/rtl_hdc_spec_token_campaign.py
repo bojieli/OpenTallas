@@ -49,6 +49,10 @@ TB = ROOT / "rtl/test/tb_hdc_core.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_harness.cpp"
 TOOLS = [ROOT / f"tools/{n}.py" for n in ("hdc_golden", "hdc_isa", "hdc_program", "hdc_timing")] + [Path(__file__)]
 CONTEXT = 64
+BRIDGE_RTL = [ROOT / p for p in (
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv")]
 SPEC = dict(groups=8192, lanes=131072, su_width=1024, hidden=4096)
 SINGLE = re.compile(r"HDC token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) cycles=(\d+) fault=(\d+) "
                     r"logit_mismatch=(\d+) vm_mismatch=(\d+) kv_mismatch=(\d+)")
@@ -68,7 +72,7 @@ def sha(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
-def point(s: Path, groups: int, sw: int, build_log: Path) -> dict:
+def point(s: Path, groups: int, sw: int, build_log: Path, kv_bridge: bool = False) -> dict:
     env = dict(os.environ, HDC_GROUPS=str(groups), HDC_SU_WIDTH=str(sw))
     img, obj = s / f"img{groups}", s / f"obj{groups}"
     generate = subprocess.run([sys.executable, str(ROOT / "tools/hdc_program.py"), "--out", str(img),
@@ -86,7 +90,9 @@ def point(s: Path, groups: int, sw: int, build_log: Path) -> dict:
            "-Wno-BLKSEQ", "-Wno-VARHIDDEN", "--unroll-count", "65536",   # the testbench's per-group loops
            "--top-module", "tb_hdc_core", f"-GG={groups}", "-GSU_VEC=1",
            f"-GSW={sw}", "-Mdir", str(obj), f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES),
-           str(TB), str(HARNESS), "-CFLAGS", "-O1"]
+           *(map(str, BRIDGE_RTL) if kv_bridge else ()), str(TB), str(HARNESS), "-CFLAGS", "-O1"]
+    if kv_bridge:
+        cmd.insert(cmd.index("-Mdir"), "-GKV_BRIDGE=1")
     build = subprocess.run(cmd, capture_output=True, text=True, env=dict(os.environ, MAKEFLAGS="-j8"))
     if build.returncode:
         build_log.parent.mkdir(parents=True, exist_ok=True)
@@ -101,14 +107,18 @@ def point(s: Path, groups: int, sw: int, build_log: Path) -> dict:
     tok, pos, nxt, isa_tok, cyc, fault, bad_lg, bad_vm, bad_kv = map(int, m.groups())
     mod = json.loads(subprocess.run([sys.executable, "-c", MODEL.format(ctx=CONTEXT, g=groups, sw=sw)],
                                     check=True, capture_output=True, text=True, env=env, cwd=ROOT).stdout)
+    bridge = re.search(r"KV_BRIDGE written_byte_mismatches=(\d+) fault=(\d+) drained=(\d+)", out)
     return {"groups": groups, "lanes": 16 * groups, "su_width": sw, "position": pos, "token": tok,
             "next_token": nxt, "isa_next_token": isa_tok, "isa_logits_bit_exact_with_golden": isa_exact,
             "rtl_cycles": cyc, "model_cycles": mod["model_cycles"], "instructions": mod["instructions"],
             "model_error_pct": round(100.0 * (mod["model_cycles"] - cyc) / cyc, 3),
             "fault": fault, "logit_mismatches": bad_lg, "vector_memory_mismatches": bad_vm,
             "kv_cache_mismatches": bad_kv,
+            "kv_bridge": ({"written_byte_mismatches": int(bridge[1]), "fault": int(bridge[2]),
+                           "drained": bool(int(bridge[3]))} if bridge else None),
             "pass": "PASS" in out and nxt == isa_tok and fault == 0 and bad_lg + bad_vm + bad_kv == 0
-            and isa_exact}
+            and isa_exact and (not kv_bridge or (bridge is not None and bridge[1] == "0" and
+                                                  bridge[2] == "0" and bridge[3] == "1"))}
 
 
 def main() -> int:
@@ -116,6 +126,7 @@ def main() -> int:
     ap.add_argument("--output", type=Path, default=OUT)
     ap.add_argument("--points", nargs="+", default=["64:8", "256:32"], help="groups:su_width")
     ap.add_argument("--merge", nargs="+", type=Path, help="combine the points of part records (same inputs)")
+    ap.add_argument("--kv-bridge", action="store_true", help="exercise packed KV write boundary from vector core")
     a = ap.parse_args()
     pts = []
     if a.merge:
@@ -127,20 +138,25 @@ def main() -> int:
             for p in a.points:
                 g, sw = map(int, p.split(":"))
                 pts.append(point(Path(scratch), g, sw,
-                                 a.output.with_name(f"{a.output.stem}.g{g}.build_error.log")))
+                                 a.output.with_name(f"{a.output.stem}.g{g}.build_error.log"), a.kv_bridge))
                 print(json.dumps(pts[-1]), flush=True)
     spec_ratio = dict(lanes_per_hidden=SPEC["lanes"] // SPEC["hidden"], lanes_per_su_lane=SPEC["lanes"] // SPEC["su_width"])
     rec = {
         "schema": "opentallas.hdc-spec-token-campaign.v1",
-        "status": "pass" if all(p["pass"] for p in pts) and all(abs(p["model_error_pct"]) <= 2.0 for p in pts)
+        "status": "pass" if all(p["pass"] for p in pts) and
+                  (a.kv_bridge or all(abs(p["model_error_pct"]) <= 2.0 for p in pts))
         else "fail",
-        "claim_boundary": "whole-token RTL simulation (Verilator) of the reduced vehicle on the vector core scaled "
+        "claim_boundary": ("whole-token vector core with the elastic packed-KV write bridge, using direct KV reads "
+                          "for compute and checking every emitted K-tail/V-sector byte; timing model is not calibrated "
+                          "for bridge drain stalls" if a.kv_bridge else
+                          "whole-token RTL simulation (Verilator) of the reduced vehicle on the vector core scaled "
                           "to the spec's lane ratios, behavioural memories, KV on core; the shipped token's cycles "
-                          "are the calibrated model's, whose error at these ratios is recorded here",
+                          "are the calibrated model's, whose error at these ratios is recorded here"),
         "vehicle": "qwen3-reduced-v1 (hidden 128, 4 layers, 8/2 heads, head_dim 16, ffn 384, vocab 4096)",
         "kv_format": "fp8_e4m3", "context": CONTEXT, "spec": SPEC, "spec_ratios": spec_ratio,
-        "points": pts,
-        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (ISA_SVH, *HDC, *PIPES, TB, HARNESS, *TOOLS)},
+        "points": pts, "kv_bridge": a.kv_bridge,
+        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in
+                         (ISA_SVH, *HDC, *PIPES, *(BRIDGE_RTL if a.kv_bridge else ()), TB, HARNESS, *TOOLS)},
     }
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")

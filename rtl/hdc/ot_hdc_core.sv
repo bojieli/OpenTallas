@@ -49,7 +49,8 @@ module ot_hdc_core #(
     parameter integer SU_VEC = 0,
     parameter integer SW     = 1,
     parameter integer LV     = 4,
-    parameter integer KV_FP8 = (SU_VEC != 0)
+    parameter integer KV_FP8 = (SU_VEC != 0),
+    parameter integer KV_VEC_WRITE_BRIDGE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -80,6 +81,10 @@ module ot_hdc_core #(
     output wire [SW-1:0]     kv_we,
     output wire [SW*AW-1:0]  kv_waddr,
     output wire [SW*32-1:0]  kv_wdata,
+    // Optional vector KV bridge drain. The vector stream cannot stall once
+    // issued, so the bridge buffers one whole KV-write op and drains before
+    // the sequencer starts another stream op or retires the token.
+    input  wire              kv_write_drained,
     // vector memory: G + 3 element read ports, G + 2 write ports
     output wire [G-1:0]      vx_re,
     output wire [G*AW-1:0]   vx_addr,
@@ -174,13 +179,14 @@ module ot_hdc_core #(
     wire [15:0] su_progress, me_progress, su_rows;
     reg          d_chase_rows;
     reg          me_kindk;
-    wire unit_ready = (d_unit == 2'd1) ? me_ready : su_ready;
+    wire unit_ready = (d_unit == 2'd1) ? me_ready :
+                      (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
     //: KV_HBM: a KV op waits for the streamer; never on the cycle its
     //: descriptor is announced, when kv_ok may still describe the previous op.
     wire kv_gate = (KV_HBM == 0) || !(d_unit == 2'd1 && me_wsrc) || (kv_ok && !kvd_v);
     //: the units' idle and progress are registered and cleared on the edge
     //: that accepts an op, so a go needs no guard term here
-    wire drained = me_idle && su_idle;
+    wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
     //: A chasing op waits only until the OTHER unit's latest op has made
     //: chase_n progress.
     wire chased = ((d_unit == 2'd1) ? (d_chase_rows ? su_rows : su_progress) : me_progress) >= d_chase_n;
