@@ -379,13 +379,24 @@ module tb_hdc_core_v41x (input wire clk);
     // this shows the VM input, replicated HBM image, HBM request/response and
     // score/write timing at the first fused indexer dispatch.
     generate if (`HDC_X_IDX == 2) begin : g_idx_trace
-        integer ops=0, qreads=0, reqs=0, rsps=0, scores=0, writes=0, qewrites=0;
+        integer ops=0, qreads=0, reqs=0, rsps=0, scores=0, writes=0, qewrites=0, linwrites=0;
         reg active=0;
         integer sector;
         always @(posedge clk) if ($test$plusargs("IDXTRACE")) begin
-            if (dut.qe_go && dut.pc==240)
-                $display("IDXTRACE qe_go cyc=%0d pc=%0d mode=%0d obase=%0d nb=%0d vm_before=%h",cycles,
-                    dut.pc,dut.qe_mode,dut.qe_obase,dut.qe_nb,vm[17536]);
+            if (dut.qe_go && (dut.pc==238 || dut.pc==240)) begin
+                $display("IDXTRACE qe_go cyc=%0d pc=%0d mode=%0d xbase=%0d obase=%0d nb=%0d vm_input=%h vm_output_before=%h",cycles,
+                    dut.pc,dut.qe_mode,dut.qe_xbase,dut.qe_obase,dut.qe_nb,
+                    vm[dut.qe_xbase],vm[dut.qe_obase]);
+                if ($test$plusargs("IDXSNAP")) begin
+                    if (dut.pc==238) $writememh({dir,"/rtl_vm_pc238.hex"},vm);
+                    else $writememh({dir,"/rtl_vm_pc240.hex"},vm);
+                end
+            end
+            if (ww_q_we && linwrites<8 && ww_q_addr<=16512 && ww_q_addr+32>16512) begin
+                $display("IDXTRACE lin_write cyc=%0d addr=%0d mask=%h data0=%h vm_before=%h",cycles,
+                    ww_q_addr,ww_q_mask,ww_q_data[0 +: 32],vm[16512]);
+                linwrites=linwrites+1;
+            end
             if (ww_q_we && qewrites<8 && ww_q_addr<=17536 && ww_q_addr+32>17536) begin
                 $display("IDXTRACE qe_write cyc=%0d addr=%0d mask=%h data0=%h vm_before=%h",cycles,
                     ww_q_addr,ww_q_mask,ww_q_data[0 +: 32],vm[17536]);
@@ -393,6 +404,7 @@ module tb_hdc_core_v41x (input wire clk);
             end
             if (dut.e_go[3] && ops==0) begin
                 ops=1;active=1;
+                if ($test$plusargs("IDXSNAP")) $writememh({dir,"/rtl_vm_pc243.hex"},vm);
                 sector=(((dut.me_wbase-dut.cfg_ik_base)>>7)*17)*128;
                 $display("IDXTRACE go cyc=%0d pc=%0d n=%0d k=%0d hg=%0d round=%0d mmode=%0d fuse=%0d wbase=%0d ikbase=%0d xbase=%0d xks=%0d xjs=%0d xcs=%0d wts=%0d obase=%0d sector=%0d vm0=%h vm1=%h scale0=%h",
                     cycles,dut.pc,dut.me_nout,dut.me_k,dut.me_hg,dut.me_round,dut.me_mmode,dut.me_fuse,
