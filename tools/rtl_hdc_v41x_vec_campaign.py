@@ -1224,8 +1224,9 @@ def perf_mix(exe, N, M, scratch, rng):
 
 def sfu_equivalence(scratch, n=200000):
     exe = scratch / "obj_sfu" / "Vtb"
+    (scratch / "obj_sfu").mkdir(parents=True, exist_ok=True)
     if not exe.exists():
-        cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
+        cmd = [VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
                "-Wno-BLKSEQ", "--top-module", "tb_hdc_v41x_vec_sfu", "--prefix", "Vtb", "-Mdir",
                str(scratch / "obj_sfu"), *map(str, LIB), str(RTL[0]), str(TB_SFU), str(HARNESS), "-CFLAGS", "-O1"]
         subprocess.run(cmd, check=True, capture_output=True)
@@ -1304,6 +1305,7 @@ def main():
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     scratch = Path(args.scratch or tempfile.mkdtemp(prefix="v41xvec_"))
+    scratch.mkdir(parents=True, exist_ok=True)
     only = set(args.only.split(",")) if args.only else {"sfu", "random", "vehicle", "perf64", "perf1024"}
     if args.no_1024 or args.quick:
         only.discard("perf1024")

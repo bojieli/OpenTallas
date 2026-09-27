@@ -48,14 +48,19 @@ import hdc_isa_v41 as I  # noqa: E402
 
 OUT = ROOT / "results/rtl/hdc_v41x_decode_campaign.json"
 # the re-specified units (bring-up switches of ot_hdc_core_v41x) and the R-ARITH classes each one brings
-X_UNITS = ("he", "me", "att", "idx", "sel", "eg")
+X_UNITS = ("he", "me", "att", "idx", "sel", "eg", "su")
 # idx: the FUSED indexer (tools/hdc_program_v41.py Builder idx_fused, HDC_V41_IDX_FUSED=1): one ME op per
 # indexer computes the index scores on the indexer engine (dots, ReLU x weight, the head sum under R-ARITH
 # class "idx"), the per-head score op and the stream unit's head-sum op are dropped from the program, and the
 # keys stream from the HBM model through ot_hdc_v41x_idx_kstream
-X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "sel": (), "eg": ()}
+X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "sel": (), "eg": (),
+             "su": ("su", "idx")}
+# su: the vector unit sums under R-ARITH everywhere, including the indexer-tagged stream sums (the index head
+# sum), which the ISA model files under "idx"; "idx" also switches the ISA's index dots on the matrix engine,
+# which the as-built engine still matches: FP4 x FP4 products of one 32-block share its scales, so every
+# partial sum is exact and the order cannot change the result
 UNITS = X_UNITS           # set by main(): the units built re-specified
-PARAMS = {"hhw": 8, "mg": 8}      # engine geometry of the build
+PARAMS = {"hhw": 8, "mg": 8, "sun": 16, "sum": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
        [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
                                            "ot_hdc_reduce", "ot_hdc_accept")] +
@@ -74,7 +79,9 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                  "ot_hdc_v41x_egather", "ot_hdc_v41x_xu_adapt",
                                                  "ot_hdc_v41x_idx_arith", "ot_hdc_v41x_idx", "ot_hdc_v41x_idx_kstream",
                                                  "ot_hdc_v41x_idx_hbm", "ot_hdc_v41x_idx_adapt",
-                                                 "ot_hdc_core_v41x")])
+                                                  "ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side",
+                                                  "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec", "ot_hdc_v41x_su_adapt",
+                                                  "ot_hdc_core_v41x")])
 SVH = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
 VLT = ROOT / "rtl/test/tb_hdc_v41x_idx.vlt"       # no_inline on the indexer's replicated arithmetic
 TB = ROOT / "rtl/test/tb_hdc_core_v41x.sv"
@@ -88,7 +95,7 @@ LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-B
               # (idx_arith): the bodies are identical, only the default W differs and every instance sets W
               "-Wno-MODDUP",
               # the index-key stream (block RTL) resets some flops synchronously
-              "-Wno-SYNCASYNCNET")
+              "-Wno-SYNCASYNCNET", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT")
 SINGLE = re.compile(r"HDC41 token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) cycles=(\d+) fault=(\d+) "
                     r"logit_mismatch=(\d+) vm_mismatch=(\d+) kv_mismatch=(\d+)")
 UTIL = re.compile(r"UTIL me_busy=(\d+) su_busy=(\d+) qe_busy=(\d+) xu_busy=(\d+) he_busy=(\d+) all_idle=(\d+)")
@@ -96,7 +103,7 @@ ISSUE = re.compile(r"ISSUE cyc=(\d+) pc=(\d+) unit=(\d+)")
 STEP = re.compile(r"STEP pos=(\d+) in=(\d+) out=(\d+) gold=(\d+) cycles=(\d+) fault=(\d+)")
 XCNT = re.compile(r"XCNT unit=(\w+) ops=(\d+) elems=(\d+)")
 # classes whose counters the bench prints (a re-specified unit not listed here has no activation proof yet)
-COUNTED = ("he", "me", "idx", "sel", "eg")
+COUNTED = ("he", "me", "idx", "sel", "eg", "su")
 # the indexer's extra counters (bench XCNT lines): keys the HBM key stream delivered (elems: HBM beats), keys
 # the engine scored (elems: head terms fused), index keys written to the HBM image (the key writer)
 IDX_COUNTERS = ("idx_hbm", "idx_fused", "idx_kwr")
@@ -107,8 +114,7 @@ NOT_EXERCISED = {
             "modelled)", "more than one HBM stack (ot_hdc_v41x_idx_kmerge) and the 128-dim shipped key "
             "(the reduced key is 32-dim, NB = 1)", "the candidate mask (k_keep): every block is kept at the "
             "reduced shapes", "MTP lane multiplier"],
-    "me": ["wo_a in the checkpoint's FP8 image format (the image feeds it as expanded BF16)",
-           "MTP lane multiplier (mx_m > 1) and the MTP layout's images"],
+    "me": ["MTP lane multiplier (mx_m > 1) and the MTP layout's images"],
     "sel": ["static-count SELECTs (router top-6 over FP32 biased scores, a draft's top-1 over FP32 logits) stay "
             "on the as-built FP32 select: the re-specified select takes BF16 keys only -- not exercised on the new "
             "unit (SPEC GAP, owner a2e48e15: an FP32-key mode of the streaming select)",
@@ -225,7 +231,8 @@ def breakdown(trace, tags, cycles):
 
 def defines(lanes=None):
     return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}",
-            f"+define+HDC_MG={PARAMS['mg']}"] + \
+            f"+define+HDC_MG={PARAMS['mg']}",
+            f"+define+HDC_SUN={PARAMS['sun']}", f"+define+HDC_SUM={PARAMS['sum']}"] + \
         [f"+define+HDC_X_{u.upper()}={int(u in UNITS)}" for u in X_UNITS]
 
 
@@ -337,6 +344,7 @@ def run(ngen: int, context: int, sweep=()) -> dict:
         s = Path(scratch)
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core_v41x",
                                f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}", f"-GMG={PARAMS['mg']}",
+                               f"-GSUN={PARAMS['sun']}", f"-GSUM={PARAMS['sum']}",
                                *[f"-GX_{u.upper()}={int(u in UNITS)}" for u in X_UNITS],
                                f"-I{SVH.parent}", *map(str, RTL)], capture_output=True, text=True)
         img = s / "img"
@@ -430,12 +438,15 @@ def main() -> int:
                         help="the re-specified units to build (the rest as built), e.g. he,qe; '' for none")
     parser.add_argument("--hhw", type=int, default=8, help="HCP lanes per group")
     parser.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
+    parser.add_argument("--sun", type=int, default=16, help="vector-unit light lanes")
+    parser.add_argument("--sum", type=int, default=8, help="vector-unit SFU lanes")
     args = parser.parse_args()
     global UNITS
     UNITS = tuple(u for u in args.units.split(",") if u)
     assert set(UNITS) <= set(X_UNITS), UNITS
     PARAMS["hhw"] = args.hhw
     PARAMS["mg"] = args.mg
+    PARAMS["sun"], PARAMS["sum"] = args.sun, args.sum
     result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x])
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     s = result["single_step"]
