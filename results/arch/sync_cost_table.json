@@ -1,0 +1,772 @@
+{
+ "schema": "opentallas.sync-cost-table.v1",
+ "tool": "tools/sync_cost_table.py",
+ "inputs": {
+  "configs/hardware/technology.json": "359545b4a283beb76601edb40c3b8c7539ff60d4353fda982c1f48176f87a61d",
+  "results/gpu/blackwell_dependency_latency.json": "78fccad39c375636028c3389b5d78e022814432b5216ddbd8f07eb3881d35d26",
+  "results/gpu/blackwell_gather_designs.json": "717e6cfc4ca04056844cf57385212853eace6d63abc3222e630ed05ff367078e",
+  "results/rtl/hdc_package_tp_campaign.json": "15814bf8112c36d6dbab63fce050146f41506299927057c10c316983493879c6",
+  "results/arch/arch_budget_v41.json": "0d1836615435e0f3a19ce0a27dc0574f65305fce99e5e3f3e86a3c2df0d20755"
+ },
+ "ladder": {
+  "T_us": 119.925,
+  "collective_latency_us": 15.301,
+  "pipeline_hops_us": 9.373,
+  "stage_hops": 27,
+  "collectives": 209,
+  "source": "results/arch/v41_latency_ladder.json final_attribution_1M @ b07a5745 (adopted V4.1 design, 209 ns rack-cable tier); pinned, the artifact is not on this branch"
+ },
+ "v41_spec_budget": {
+  "T_us": 203.5584959233407,
+  "tokens_s_per_user": 4912.5927928677365,
+  "collective_latency_us": 26.353769223329085,
+  "pipeline_hops_us": 11.946211283672527,
+  "source": "results/arch/arch_budget_v41.json required_priced['1048576'] (tools/arch_budget_v41.py)"
+ },
+ "rows": [
+  {
+   "event": "On-chip dependent handoff (one producer -> consumer)",
+   "gpu": {
+    "value": 371,
+    "unit": "ns",
+    "evidence": "measured",
+    "refs": [
+     "r-gpu-meas"
+    ],
+    "note": "persistent-kernel flag handoff through L2 (PDL boundary 366 ns); GB202, not B200"
+   },
+   "ot": {
+    "value": 4.8,
+    "unit": "ns",
+    "evidence": "RTL simulation",
+    "refs": [
+     "r-rtl-tp"
+    ],
+    "note": "5-cycle dependent issue at 1.034 GHz (routed units)"
+   },
+   "ratio": 77
+  },
+  {
+   "event": "On-chip all-unit gather (every SM / lane -> next op)",
+   "gpu": {
+    "value": 1004,
+    "unit": "ns",
+    "evidence": "measured",
+    "refs": [
+     "r-gpu-meas"
+    ],
+    "note": "best of 12 designs, bf16 vector delivered to all 188 SMs"
+   },
+   "ot": {
+    "value": 4.8,
+    "unit": "ns",
+    "evidence": "RTL simulation",
+    "refs": [
+     "r-rtl-tp"
+    ],
+    "note": "the schedule is compiled: a lane-array reduction retires into the next issue"
+   },
+   "ratio": 208
+  },
+  {
+   "event": "In-package die-to-die collective (all-reduce over the dies of one package)",
+   "gpu": {
+    "value": null,
+    "unit": "ns",
+    "evidence": "not published",
+    "refs": [],
+    "note": "B200 NV-HBI cross-die latency is not published; the nearest measured analogue is the all-SM gather above"
+   },
+   "ot": {
+    "value": 37,
+    "unit": "ns",
+    "evidence": "RTL simulation",
+    "refs": [
+     "r-rtl-tp",
+     "r-ucie-tcpmt",
+     "r-ucie-jssc26"
+    ],
+    "note": "one-shot fixed-order all-reduce of 128 fp32 over 4 dies: 331 cycles per token step / 9 collectives = 36.8 cycles, with a 12-cycle UCIe model (spec <2 ns PHY+adapter; measured 3.5 ns FDI-to-FDI; model charges 10 ns)"
+   },
+   "ratio": 27
+  },
+  {
+   "event": "Cross-package point-to-point handoff (pipeline stage hop)",
+   "gpu": {
+    "value": 792,
+    "unit": "ns",
+    "evidence": "measured",
+    "refs": [
+     "r-sol"
+    ],
+    "note": "GB200 remote store over NVLink, one way"
+   },
+   "ot": {
+    "value": 219,
+    "unit": "ns",
+    "evidence": "model, normative basis",
+    "refs": [
+     "r-ualink",
+     "r-gustlin3ck",
+     "r-llfec",
+     "r-sue"
+    ],
+    "note": "rack-cable tier 209 ns (full RS(544,514), un-interleaved) + UCIe fan-out"
+   },
+   "ratio": 3.6
+  },
+  {
+   "event": "Cross-package collective (TP4 all-reduce, 20 KB)",
+   "gpu": {
+    "value": 2370.0,
+    "unit": "ns",
+    "evidence": "measured",
+    "refs": [
+     "r-sol",
+     "r-nccl227"
+    ],
+    "note": "best low-latency kernel, 4 GB200; speed-of-light floor 1.404 us; NCCL 2.27 ~5 us (32 ranks); NCCL ring 11.0 us"
+   },
+   "ot": {
+    "value": 177,
+    "unit": "ns",
+    "evidence": "model, normative basis",
+    "refs": [
+     "r-sue",
+     "r-sun3cd",
+     "r-gustlin3ck",
+     "r-ucie-tcpmt",
+     "r-rtl-tp"
+    ],
+    "note": "one-shot: reduce over UCIe, ONE exchange across the pair on the on-module link (130 ns light FEC), broadcast over UCIe: 150 ns latency + 27 ns serialisation; 256 ns with full KP4"
+   },
+   "ratio": 13.4,
+   "ratio_vs": {
+    "sol_floor": 7.9,
+    "nccl_2_27": 28,
+    "nccl_ring": 62
+   }
+  },
+  {
+   "event": "Rack-wide all-reduce (72 GPUs)",
+   "gpu": {
+    "value": 1404.0,
+    "unit": "ns",
+    "evidence": "measured floor + vendor cost model",
+    "refs": [
+     "r-sol",
+     "r-nccl-cost"
+    ],
+    "note": "floor 'independent of the number of ranks'; no measured NCCL figure at 72 found; NCCL cost model: ring LL 6.6 + 142 x 0.6 = 92 us, symmetric LL ~11 us"
+   },
+   "ot": {
+    "value": null,
+    "unit": "ns",
+    "evidence": "not on the decode path",
+    "refs": [],
+    "note": "tensor groups span 4 dies; no rack-wide collective per token. The token return is one cable hop; Engram requests take the switch (2 x 209 + 250 ns + cable, ~680 ns)"
+   },
+   "ratio": null
+  },
+  {
+   "event": "Per token, V4.1 at 1M context, batch 1 (209 collectives + 27 stage hops)",
+   "gpu": {
+    "value": 517,
+    "unit": "us",
+    "evidence": "model on measured primitives",
+    "refs": [
+     "r-sol",
+     "r-nccl227"
+    ],
+    "note": "same graph priced at 2.37 us per collective + 0.79 us per stage handoff; NCCL 2.27: 1066 us; NCCL ring: 2320 us; SoL floor: 315 us"
+   },
+   "ot": {
+    "value": 24.7,
+    "unit": "us",
+    "evidence": "model, normative basis",
+    "refs": [
+     "r-rtl-tp",
+     "r-sue",
+     "r-ualink"
+    ],
+    "note": "adopted-design ladder: collectives 15.301 us + hops 9.373 us (27 stage hops on the 209 ns cable tier); 21% of the 119.9 us token. Specification widths (this branch's budget): 38.3 us of 203.6 us"
+   },
+   "ratio": 21,
+   "ratio_vs": {
+    "sol_floor": 13,
+    "nccl_2_27": 43,
+    "nccl_ring": 94
+   }
+  },
+  {
+   "event": "Per token, Qwen3-8B on one die (~220 all-SM boundaries)",
+   "gpu": {
+    "value": 221,
+    "unit": "us",
+    "evidence": "model on measured primitive",
+    "refs": [
+     "r-gpu-meas"
+    ],
+    "note": "220 x 1,004 ns"
+   },
+   "ot": {
+    "value": 1.06,
+    "unit": "us",
+    "evidence": "RTL-derived",
+    "refs": [
+     "r-rtl-tp"
+    ],
+    "note": "220 x 4.8 ns"
+   },
+   "ratio": 208
+  }
+ ],
+ "hpc_precedents": [
+  {
+   "system": "D. E. Shaw Anton 3 (HPCA 2022)",
+   "per_hop": "34.2 ns/hop",
+   "end_to_end": "~55 ns one-way to a neighbour node",
+   "fec": "not stated",
+   "refs": [
+    "r-anton3"
+   ],
+   "evidence": "measured"
+  },
+  {
+   "system": "D. E. Shaw Anton 2",
+   "per_hop": "not found",
+   "end_to_end": "99 ns minimum inter-node",
+   "fec": "not stated",
+   "refs": [
+    "r-anton3"
+   ],
+   "evidence": "measured (quoted in Anton 3 paper)"
+  },
+  {
+   "system": "IBM Blue Gene/Q 5-D torus",
+   "per_hop": "~35 ns/hop",
+   "end_to_end": "0.3 us one-way to a neighbour; 2.5 us for 31 hops",
+   "fec": "RS error detection + link retry",
+   "refs": [
+    "r-bgq"
+   ],
+   "evidence": "vendor technical document"
+  },
+  {
+   "system": "HPE Slingshot (Rosetta switch)",
+   "per_hop": "350 ns per switch (300-400)",
+   "end_to_end": "~2-3.5 us MPI",
+   "fec": "low-latency FEC + LLR",
+   "refs": [
+    "r-slingshot"
+   ],
+   "evidence": "measured"
+  },
+  {
+   "system": "Fujitsu Tofu-D (Fugaku)",
+   "per_hop": "not found",
+   "end_to_end": "490 ns minimum one-way",
+   "fec": "-",
+   "refs": [
+    "r-anton3"
+   ],
+   "evidence": "secondary"
+  },
+  {
+   "system": "Broadcom SUE budget (Tomahawk-Ultra class)",
+   "per_hop": "endpoint link+PHY <100 ns; switch <250 ns",
+   "end_to_end": "477.6 ns one-way, 3 m copper, switched",
+   "fec": "RS-544 or RS-272 + LLR",
+   "refs": [
+    "r-sue"
+   ],
+   "evidence": "production spec"
+  },
+  {
+   "system": "PCIe 6.0 FLIT / CXL",
+   "per_hop": "FEC <2 ns; PHY Tx+Rx <10 ns",
+   "end_to_end": "PHY pin-to-app and back 21-25 ns",
+   "fec": "3-way single-symbol FEC + CRC + replay",
+   "refs": [
+    "r-pcie6-fec",
+    "r-cxl-survey",
+    "r-dassharma-ofa"
+   ],
+   "evidence": "spec authors / vendor"
+  },
+  {
+   "system": "UCIe (advanced package)",
+   "per_hop": "<2 ns PHY+adapter (spec); 3.5 ns FDI-to-FDI (measured)",
+   "end_to_end": "-",
+   "fec": "CRC + retry",
+   "refs": [
+    "r-ucie-tcpmt",
+    "r-ucie-jssc26"
+   ],
+   "evidence": "normative + measured"
+  }
+ ],
+ "hop_decomposition": {
+  "on_module_light_fec_130ns": {
+   "phy_tx_rx_ns": [
+    20,
+    60
+   ],
+   "fec_accumulate_ns": 25.6,
+   "fec_decode_ns": [
+    25,
+    50
+   ],
+   "pcs_alignment_ns": [
+    3,
+    5
+   ],
+   "flight_ns": 0.9,
+   "cdc_ns": 4,
+   "endpoint_ns": 5,
+   "total_ns": [
+    89,
+    185
+   ],
+   "point_ns": 130,
+   "derivation": "RS(272,257) codeword 2,720 b / 106.25 Gb/s = 25.6 ns to accumulate on one lane (6.4 ns striped over 4); decode ~half of KP4's 50-100 ns processing; PHY '20+ ns' (Das Sharma) to 56-106 ns (DSP-heavy, inferred); flight 120 mm x 7.15 ns/m (TI); CDC and endpoint from rtl/rom/ot_rom_pkg_link.sv",
+   "cross_check": "Broadcom SUE: endpoint Ethernet link + PHY Tx+Rx <100 ns -> <100 + 0.9 + 9 = <110 ns",
+   "includes": "PHY, FEC, PCS, flight, CDC, fixed-function framing and credit check (credits pre-provisioned)",
+   "excludes": "general bridge/transport layer (Broadcom budgets a separate <100 ns 'Bridge NOC to Ethernet'); link-level retry (only on an uncorrectable codeword)"
+  },
+  "rack_cable_full_kp4_209ns": {
+   "phy_tx_rx_ns": [
+    20,
+    60
+   ],
+   "fec_accumulate_ns": 51.2,
+   "fec_decode_ns": [
+    50,
+    100
+   ],
+   "flight_ns": 3.7,
+   "cdc_ns": 4,
+   "endpoint_ns": 5,
+   "total_ns": [
+    139,
+    225
+   ],
+   "point_ns": 209,
+   "derivation": "RS(544,514) 5,440 b / 106.25 Gb/s = 51.2 ns block + 50-100 ns processing = Clause 91 '101-151ns Total' (Gustlin); flight 0.8 m x 4.6 ns/m (Broadcom SUE); Clause 161 2-way interleave would add 51-102 ns",
+   "normative_ceiling_ns": 583.7,
+   "ceiling_basis": "IEEE 802.3 RS-FEC 409.6 + PMA 92.16 + CR/KR PMD 81.92 ns per direction (Nicholl & Jones; Brown & Ran)"
+  },
+  "ber_tail": {
+   "method": "random-symbol-error arithmetic on 10-bit symbols, P(codeword uncorrectable) = P(> t symbol errors); DFE bursts make it worse (LL-FEC Table 1)",
+   "codewords_per_token": {
+    "rs272": 47000,
+    "rs544": 23500,
+    "basis": "T1 13.9 MB + T2 1.15 MB per token (results/arch/v41_rack.json traffic.per_token)"
+   },
+   "rs272_t7": {
+    "ber_1e_6": 6.7e-26,
+    "ber_1e_5": 6.5e-18,
+    "ber_1e_4": 5.3e-10,
+    "ber_2_4e_4": 4.2e-07
+   },
+   "rs544_t15": {
+    "ber_1e_6": 2.2e-50,
+    "ber_1e_5": 2.1e-34,
+    "ber_1e_4": 1.4e-18,
+    "ber_2_4e_4": 8.2e-13
+   },
+   "reading": "On the OIF MR-class on-module channel (raw BER <= 1e-6) the light code's retry probability per token is ~3e-21: nothing. On a CR-class cable at a compliant-limit raw BER near 2.4e-4 it would be ~2% of tokens retrying (47,000 x 4.2e-7), and under DFE bursts the LL-FEC spec needs raw BER <= 8.9e-9; hence the cable tier runs full RS(544,514), whose tail at 2.4e-4 is 2e-8 per token."
+  },
+  "all_reduce_crossings": "A one-shot TP4 all-reduce across a package pair crosses the package link ONCE (each package sends its partial and both reduce in fixed order) plus two UCIe hops and the 20 KB serialisation (27 ns at the per-neighbour link rate). A two-step reduce-scatter/all-gather would cross it twice; the model picks one-shot, the RTL engine implements it."
+ },
+ "values_checked": [
+  {
+   "value": "On-module package link, light FEC",
+   "model": "130 ns (100-170)",
+   "verdict": "HELD; band 100-185",
+   "basis": "Broadcom SUE <100 ns link+PHY -> <110 ns; component sum 89-124 ns (IEEE 802.3 contributions); DSP-heavy PHY inference 108-184 ns",
+   "refs": [
+    "r-sue",
+    "r-sun3cd",
+    "r-gustlin3ck",
+    "r-dassharma-ofa",
+    "r-oif-cei5"
+   ]
+  },
+  {
+   "value": "Rack-cable stage hop (T2, <= 0.8 m twinax)",
+   "model": "130 ns (light FEC)",
+   "verdict": "CHANGED to 209 ns (160-300)",
+   "basis": "light RS(272) not qualified on CR-class copper (LL-FEC Table 1; 802.3ck mandates RS(544,514)); UALink 1.0 in-rack mode is un-interleaved RS(544,514)",
+   "refs": [
+    "r-llfec",
+    "r-ualink",
+    "r-ieee3ck-obj",
+    "r-gustlin3ck"
+   ],
+   "effect": "+79 ns per stage hop; adopted design 8,819 -> 8,622 tok/s/user at 1M (b07a5745); specification budget at batch 1: 4,978 -> 4,909 at 1M (-1.4%), 5,448 -> 5,365 at 200K (-1.5%), with MTP 10,383 -> 10,309 at 1M; pipeline hops 9.10 -> 11.95 us per token"
+  },
+  {
+   "value": "Full-KP4 hop",
+   "model": "209 ns (129-409)",
+   "verdict": "HELD (conservative end of 139-199 typical; 190-300 with Clause 161 interleave)",
+   "refs": [
+    "r-gustlin3ck",
+    "r-nicholl3ck",
+    "r-brown3cd"
+   ]
+  },
+  {
+   "value": "UCIe hop",
+   "model": "10 ns (3-30)",
+   "verdict": "HELD, pessimistic (~3x measured)",
+   "basis": "spec <2 ns PHY+adapter; measured 3.5 ns FDI-to-FDI",
+   "refs": [
+    "r-ucie-tcpmt",
+    "r-ucie-jssc26"
+   ]
+  },
+  {
+   "value": "On-module trace",
+   "model": "~120 mm at 6.7 ns/m",
+   "verdict": "HELD (0.8 ns; 6.1-7.15 ns/m sourced)",
+   "refs": [
+    "r-ti-scaa082",
+    "r-megtron6"
+   ]
+  },
+  {
+   "value": "Stage cable",
+   "model": "<= 0.80 m twinax, 4.79 ns/m, no retimer",
+   "verdict": "HELD (4.3-5.1 ns/m; 2 m DAC reach at 100G/lane, but only 1.0 m at 200G/lane)",
+   "refs": [
+    "r-belden",
+    "r-sue",
+    "r-ieee3ck-obj"
+   ]
+  },
+  {
+   "value": "Switch",
+   "model": "250 ns port-to-port",
+   "verdict": "HELD (production spec budget, switch ports included; our switched path double-counts the switch-side PHY, conservative)",
+   "refs": [
+    "r-sue"
+   ]
+  },
+  {
+   "value": "One-shot all-reduce engine",
+   "model": "331 cycles per token step per die (9 collectives)",
+   "verdict": "HELD (RTL simulation, bit-exact); 36.8 cycles per collective with a 12-cycle UCIe model",
+   "refs": [
+    "r-rtl-tp"
+   ]
+  },
+  {
+   "value": "NVL72 collective (GPU side)",
+   "model": "1.2 us per traversal (0.7-5.5)",
+   "verdict": "HELD: 2 x 1.2 = 2.4 us ~ measured best kernel 2.37 us",
+   "refs": [
+    "r-sol",
+    "r-nccl227",
+    "r-nccl-cost"
+   ]
+  }
+ ],
+ "narrowed_claim": {
+  "on_chip": "77-208x (dependent handoff and all-unit gather: RTL cycles vs measured Blackwell)",
+  "cross_package": "7.9-13.4x against the GPU speed-of-light floor and best measured kernel; 28-62x against NCCL",
+  "stage_hop": "3.6x (point-to-point hop vs NVLink remote store)",
+  "per_token_v41": "13x vs the GPU floor, 21x vs the best kernel, 43-94x vs NCCL",
+  "statement": "The order-of-magnitude synchronisation advantage is an ON-CHIP property (a compiled schedule replaces L2 fences: ~80-200x). Across packages both machines pay SerDes and FEC physics; there the advantage narrows to ~8-13x against the best GPU kernel and its speed-of-light floor (fixed-function one-shot endpoints, no software, one link crossing), and ~28-62x against shipped NCCL."
+ },
+ "references": {
+  "r-sue": {
+   "text": "Broadcom, Scale-Up Ethernet Framework Specification, Scale-Ethernet-RM104, 26 Sep 2025, Appendix A, Figure 22",
+   "url": "https://docs.broadcom.com/doc/scale-up-ethernet-framework",
+   "cls": "production spec",
+   "quote": "Ethernet Link and PHY Tx+Rx Latency <100ns; Switch Tx+Rx Latency <250ns; Twinax Copper Cable latency/m 4.6ns; 3m Twinax Copper - 100 + 100 + 13.8 + 13.8 + 250 =477.6 ns"
+  },
+  "r-ucie-tcpmt": {
+   "text": "D. Das Sharma, G. Pasdast, Z. Qian, K. Aygun, Universal Chiplet Interconnect Express (UCIe): An Open Industry Standard for Innovations With Chiplets at Package Level, IEEE Trans. CPMT 12(9):1423, Sept 2022, Table I",
+   "url": "http://emlab.uiuc.edu/ece546/appnotes/UCie_Paper.pdf",
+   "cls": "normative (spec key metrics), peer-reviewed",
+   "quote": "Latency (Tx + Rx) < 2ns Includes D2D Adapter and PHY (FDI to bump and back); Channel Reach (mm) <= 25 <=2"
+  },
+  "r-ucie-jssc26": {
+   "text": "UCIe advanced-package transceiver, 3 nm CoWoS, IEEE JSSC 2026, doi:10.1109/JSSC.2026.3651425",
+   "url": "https://doi.org/10.1109/JSSC.2026.3651425",
+   "cls": "measured silicon, peer-reviewed",
+   "quote": "exhibit 0.29 pJ/bit power efficiency with 5.27Tb/s/mm bandwidth density and 3.5 ns measured FDI-to-FDI latency ... for 16 Gb/s/pin operation"
+  },
+  "r-ucie-hc23": {
+   "text": "UCIe Consortium, Hot Chips 2023 tutorial, Electrical Summary",
+   "url": "https://www.hc2023.hotchips.org/assets/program/tutorials/ucie/Electrical%20Form%20Factor%20and%20Compliance.pdf",
+   "cls": "consortium spec targets",
+   "quote": "Power Efficiency Target (pJ/b) ... 0.3-0.6 [Adv 16] 0.3-0.6 [Adv 24/32]; Idle Power (% of peak) 15%"
+  },
+  "r-gustlin3ck": {
+   "text": "M. Gustlin et al., Interleaved 100GbE FEC Sublayer, IEEE P802.3ck, Nov 2018, p.8",
+   "url": "https://www.ieee802.org/3/ck/public/18_11/gustlin_3ck_01_1118.pdf",
+   "cls": "standards-body contribution",
+   "quote": "Current Clause 91 RS544 Latency: 51ns Block time / 50-100ns Processing* / 101-151ns Total; Potential RS544 Interleaved: 102ns Block time / 50-150ns Processing* / 152-252ns Total"
+  },
+  "r-nicholl3ck": {
+   "text": "G. Nicholl, P. Jones, Sublayer Delay for Interleaved 100G FEC, IEEE P802.3ck, Jan 2020 (quoting IEEE 802.3-2018 Table 80-5 and Clause 91.4)",
+   "url": "https://www.ieee802.org/3/ck/public/20_01/nicholl_3ck_01a_0120.pdf",
+   "cls": "normative text (quoted) / standards-body contribution",
+   "quote": "The current 100GBASE-R RS-FEC Sublayer delay is 40960 bit times = 80 pause_quanta = 409.60 ns; CL161 Interleaved 100G FEC consumes an additional 51-102 ns of latency beyond CL91 latency"
+  },
+  "r-brown3cd": {
+   "text": "T. Brown, A. Ran, Addressing Delay, Skew, and Skew Variation, IEEE P802.3cd, Nov 2016, slides 7-9",
+   "url": "https://www.ieee802.org/3/cd/public/Nov16/brown_3cd_03_1116.pdf",
+   "cls": "standards-body contribution (adopted)",
+   "quote": "The minimum decoding delay is ~55 ns for storing a codeword; another ~55 for error marking; PMA 92.16 ns; CR/KR PMD 81.92 ns"
+  },
+  "r-sun3cd": {
+   "text": "P. Sun (Credo), Feasibility of 50GE Low-latency Schemes, IEEE 802.3 50GE/NGOATH ad hoc, 2 Mar 2016, slide 7",
+   "url": "https://www.ieee802.org/3/cd/public/adhoc/archive/sun_030216_50GE_NGOATH_adhoc.pdf",
+   "cls": "standards-body contribution",
+   "quote": "RS(272,257) ... ~99ns; RS(544,514), KP4 ... ~198ns; RS(272,257), RS(181,172), or RS(136,129) can be added to KP4 implementation with negligible cost, and achieves 1/2, 1/3, or 1/4 of KP4 latency"
+  },
+  "r-llfec": {
+   "text": "25G/50G Ethernet Consortium (Ethernet Technology Consortium), Low Latency Reed Solomon FEC Specification 1.0, 9 Nov 2018, s3 and Annex A Table 1",
+   "url": "https://ethernettechnologyconsortium.org/wp-content/uploads/2020/03/LL-FEC-Specification-1.0-25G-Consortium.pdf",
+   "cls": "consortium spec",
+   "quote": "As the codeword length is half the codeword length of RS(544), it expected that the overall latency associated with error correction will scale accordingly; required BER (FLR 6.2e-10): RS(544,514) 3.7677e-04 random / 5.7878e-05 burst a=0.75; RS(272,258) 9.9248e-05 / 8.8834e-09"
+  },
+  "r-ualink": {
+   "text": "UALink Consortium, UALink 200G 1.0 Specification white paper, Apr 2025",
+   "url": "https://ualinkconsortium.org/wp-content/uploads/2025/04/UALink-1.0-White_Paper_FINAL.pdf",
+   "cls": "consortium white paper",
+   "quote": "operates in additional codeword interleave modes, with reduced interleave, to achieve better FEC latency at the cost of decreased burst error correction; 640-byte Flits from the DL fit exactly into one RS (544, 514) codeword; cable length < 4 meters"
+  },
+  "r-oif-cei5": {
+   "text": "OIF, Common Electrical I/O (CEI) 5.0 Implementation Agreement, OIF-CEI-05.0, 5 May 2022, clauses 26-27",
+   "url": "https://www.oiforum.com/wp-content/uploads/OIF-CEI-5.0.pdf",
+   "cls": "industry implementation agreement",
+   "quote": "CEI-112G-MR: up to 500 mm of PCB and up to 1 connector, raw BER 10-6 or better; CEI-112G-LR: up to 1000 mm of backplane and up to 2 connectors, raw BER 10-4 or better; The definition of FEC is outside the scope of this IA"
+  },
+  "r-ieee3ck-obj": {
+   "text": "IEEE P802.3ck objectives (Mar 2018); IEEE Std 802.3ck-2022 approved 21 Sep 2022; IEEE P802.3dj objectives (14 Mar 2024)",
+   "url": "https://www.ieee802.org/3/ck/P802_3ck_Objectives_2018mar.pdf",
+   "cls": "standards body",
+   "quote": "twin-axial copper cables with lengths up to at least 2 m (100 Gb/s per lane); P802.3dj: a reach of up to at least 1.0 meter (200 Gb/s per lane)"
+  },
+  "r-dassharma-ofa": {
+   "text": "D. Das Sharma, OpenFabrics Workshop 2023 keynote; D. Das Sharma, UCIe 2.0, IEEE BUSS 2025",
+   "url": "https://www.openfabrics.org/wp-content/uploads/2023-workshop/2023-workshop-presentations/day-2/201_DDasSharma.pdf",
+   "cls": "spec-chair presentation",
+   "quote": "PHY latency (Tx + Rx) = 20+ ns (+ >100 FEC) [networking]; PCIe/CXL: PHY latency (Tx+ Rx: PHY-PIPE) = <10ns (0-1ns FEC overhead); UCIe: <2ns"
+  },
+  "r-cxl-survey": {
+   "text": "D. Das Sharma, R. Blankenship, D. Berger, An Introduction to the Compute Express Link (CXL) Interconnect, arXiv:2306.11227 (ACM CSUR), s5.1, s6",
+   "url": "https://arxiv.org/abs/2306.11227",
+   "cls": "peer-reviewed survey by the spec authors",
+   "quote": "The total latency from the SERDES pin to the internal application layer ... and back is 21 ns in common reference clock mode and 25 ns in independent reference clock mode; applying CRC first helps reduce the latency by 2 nanoseconds on a x16 link"
+  },
+  "r-uec": {
+   "text": "Ultra Ethernet Consortium, UE Specification 1.0.3, 16 Jul 2026, s6.3, Tables 6-7, 6-10, 6-11",
+   "url": "https://ultraethernet.org/wp-content/uploads/sites/20/2026/08/UE-Specification-1.0.3.pdf",
+   "cls": "normative spec",
+   "quote": "FLR = UCR x (CIR + 1/FPC); MTBPE = T_CW / UCR; the link is always protected by ... RS(544,514)"
+  },
+  "r-ti-scaa082": {
+   "text": "Texas Instruments, High-Speed Layout Guidelines, SCAA082A, s1.3.1 Table 2",
+   "url": "https://www.ti.com/lit/an/scaa082a/scaa082a.pdf",
+   "cls": "vendor application note",
+   "quote": "Stripline ... 4.6 [er] ... 139.8 [mm/ns] ... 715.3 [ps per 100 mm]"
+  },
+  "r-megtron6": {
+   "text": "Panasonic, MEGTRON 6 (R-5775) datasheet",
+   "url": "https://industrial.panasonic.com/ww/products/pt/megtron/megtron6",
+   "cls": "manufacturer datasheet",
+   "quote": "Dk 3.34 (R-5775(N), 13 GHz); 3.62 (normal glass)"
+  },
+  "r-belden": {
+   "text": "Belden 9207 and 9182 twinax datasheets (rev. 0.535, 2026-02-20)",
+   "url": "https://catalog.belden.com/techdata/EN/9207_techdata.pdf",
+   "cls": "manufacturer datasheet",
+   "quote": "Nom. Velocity of Prop. 66% (9207); 78% (9182)"
+  },
+  "r-sol": {
+   "text": "Shen, Korzh, Bachan et al., Every Microsecond Matters: Achieving Near Speed-of-Light Latency in GPU Collectives, arXiv:2607.16100 (2026), s1 Fig. 1, s6, s7-C",
+   "url": "https://arxiv.org/abs/2607.16100",
+   "cls": "measured (GB200 NVL72), preprint",
+   "quote": "On two GB200, we measured the L_L2_RTT and L_remote_store as 0.306 us and 0.792 us, respectively. Therefore, the SoL latency of an AllReduce is computed to be 1.404 us; ... an absolute lower bound that is independent of the number of ranks involved; [Fig. 1, 4 GB200] 2.37 us low-latency kernel vs 11.0 us NCCL ring"
+  },
+  "r-nccl227": {
+   "text": "NVIDIA, Enabling Fast Inference and Resilient Training with NCCL 2.27, technical blog, 14 Jul 2025 (Fig. 1 corrected 1 Oct 2025)",
+   "url": "https://developer.nvidia.com/blog/enabling-fast-inference-and-resilient-training-with-nccl-2-27/",
+   "cls": "vendor measurement",
+   "quote": "up to 9x reduction in latency for small message sizes ... Results from NVIDIA GB200, 32-Ranks [chart: ~5 us all-reduce, 8 B-4 KB]"
+  },
+  "r-nccl-cost": {
+   "text": "NVIDIA NCCL v2.32.3, src/tuning/cost_model.cc (baseLatencies, hwLatencies) and src/tuning/sym_model/lsa_base.cc",
+   "url": "https://github.com/NVIDIA/nccl",
+   "cls": "vendor source code (cost model)",
+   "quote": "{6.6, 14.0, 8.4}, // Ring [baseLat, us]; {0.6, 1.9, 3.4}, // Ring (LL/LL128/Simple) [NVLINK hwLat, us]; Blackwell symmetric LL all-reduce baseLat 11.0"
+  },
+  "r-anton3": {
+   "text": "K. Shim et al., The Specialized High-Performance Network on Anton 3, HPCA 2022, arXiv:2201.08357, s3-C, Fig. 5-6",
+   "url": "https://arxiv.org/abs/2201.08357",
+   "cls": "measured, peer-reviewed",
+   "quote": "a linear fit of 55.9 ns of fixed overhead plus 34.2 ns of per-hop latency; The minimum inter-node latency measured for a single hop was approximately 55 ns, almost half that of the Anton 2 network (99 ns); Tofu interconnect D ... has a minimum one-way latency of 490 ns"
+  },
+  "r-bgq": {
+   "text": "IBM, IBM System Blue Gene Solution: Blue Gene/Q Application Development, Redbook SG24-7872-01, s2.1, May 2013",
+   "url": "https://www.redbooks.ibm.com/redbooks/pdfs/sg247872.pdf",
+   "cls": "vendor technical document",
+   "quote": "The latency of each hop is approximately 35 ns ... The direct neighbor one-way latency is 0.3 us; powerful Reed-Solomon error detection codes with retry on the links"
+  },
+  "r-slingshot": {
+   "text": "D. De Sensi et al., An In-Depth Analysis of the Slingshot Interconnect, SC20, arXiv:2008.08886, s2-A, Fig. 2",
+   "url": "https://arxiv.org/abs/2008.08886",
+   "cls": "measured, peer-reviewed",
+   "quote": "ROSETTA has a mean and median latency of 350 nanoseconds, with all the distribution lying between 300 and 400 nanoseconds; low-latency Forward Error Correction (FEC)"
+  },
+  "r-pcie6-fec": {
+   "text": "Synopsys, PCIe 6.0 Verification of FEC and CRC, 22 Aug 2022",
+   "url": "https://www.synopsys.com/blogs/chip-design/pcie-6-verifaction-fec-crc.html",
+   "cls": "vendor",
+   "quote": "To keep the latency (<2ns) and complexity low, a lightweight FEC is used which can correct a single byte error; The retry probability per FLIT is around 5x10^-6"
+  },
+  "r-gpu-meas": {
+   "text": "OpenTallas, Blackwell dependent-boundary microbenchmarks (RTX PRO 6000 Blackwell, GB202, 188 SMs): results/gpu/blackwell_dependency_latency.json, blackwell_gather_designs.json, blackwell_sync_breakdown.json",
+   "url": "",
+   "cls": "measured (this work)",
+   "quote": ""
+  },
+  "r-rtl-tp": {
+   "text": "OpenTallas, package tensor-group RTL campaign, results/rtl/hdc_package_tp_campaign.json (Verilator, one-shot all-reduce engine rtl/rom/ot_rom_oneshot_allreduce.sv)",
+   "url": "",
+   "cls": "RTL simulation (this work)",
+   "quote": ""
+  },
+  "r-keller": {
+   "text": "B. Keller et al., A 17-95.6 TOPS/W Deep Learning Inference Accelerator with Per-Vector Scaled 4-bit Quantization for Transformers in 5nm, 2022 Symposium on VLSI Technology and Circuits, pp. 16-17, Table 2 (journal version IEEE JSSC 2023, doi:10.1109/JSSC.2023.3234893)",
+   "url": "https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
+   "cls": "measured silicon, peer-reviewed; INTEGER arithmetic",
+   "quote": "Table 2: 'INT4 / INT4 VSQ / INT8'; '91.1\u2020 (0.46V)' '95.6\u2020 (0.46V)' '39.1\u2020 (0.46V)' TOPS/W; '\u2020 Measured with 50% non-zero input densities. Includes estimated leakage power.'; p.16: '24b partial sums are temporally accumulated in a 16-entry latch array'"
+  },
+  "r-sc25": {
+   "text": "O. Antepara, Z. Zhao, B. Austin, N. Ding, L. Oliker, N. J. Wright, S. Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, Fig. 1 and Table 3",
+   "url": "https://escholarship.org/content/qt6189368s/qt6189368s.pdf",
+   "cls": "measured (regressed from board power), peer-reviewed",
+   "quote": "Fig. 1: 'n.b., memory controller energy is tabulated with HBM energy.'; Table 3 A100 HBM [pJ/bit] Control 8.47, Datapath 4.64, Total 13.11; Matrix-FP16 control 0.37 / datapath 0.33 pJ/FLOP"
+  },
+  "r-signoff": {
+   "text": "OpenTallas, ASAP7 energy-per-token sign-off, results/physical_abi3/asap7/signoff/energy_per_token.json (routed matrix engine, TT, RTL activity)",
+   "url": "",
+   "cls": "measured-ours (predictive PDK)",
+   "quote": ""
+  },
+  "r-tpuv4i": {
+   "text": "N. Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, doi:10.1109/ISCA52012.2021.00010, Tables 1-2",
+   "url": "https://doi.org/10.1109/ISCA52012.2021.00010",
+   "cls": "peer-reviewed",
+   "quote": "[7 nm, pJ] Int 8 mult 0.070; Int 32 add 0.030; BFloat 16 mult 0.210; IEEE FP 32 add 0.380, mult 1.310; Idle Power (Watts) Chip 55; Die Size < 400 mm2"
+  },
+  "r-tsmc-n5": {
+   "text": "G. Yeap et al. (TSMC), 5nm CMOS Production Technology Platform, IEDM 2019/2020, doi:10.1109/IEDM13553.2020.9372009",
+   "url": "https://doi.org/10.1109/IEDM13553.2020.9372009",
+   "cls": "peer-reviewed (foundry)",
+   "quote": "~1.8x improvement in logic density, 15% speed gain and 30% power reduction as compared to its previous 7nm generation"
+  },
+  "r-h100-idle": {
+   "text": "H100 power characterisation, arXiv:2605.23918, Table 2",
+   "url": "https://arxiv.org/abs/2605.23918",
+   "cls": "measured, preprint",
+   "quote": "Bare idle: 71.8 W; Bare idle (345 MHz): mean 74.7 W +/- 7.9 W"
+  },
+  "r-tpuv4": {
+   "text": "N. Jouppi et al., TPU v4: An Optically Reconfigurable Supercomputer, ISCA 2023, arXiv:2304.01433, Table 4",
+   "url": "https://arxiv.org/abs/2304.01433",
+   "cls": "measured, peer-reviewed",
+   "quote": "Idle, min/mean/max power 90, 121/170/192 W; 7 nm, <600 mm2; Measured power is for the ASIC and HBM"
+  },
+  "r-oconnor": {
+   "text": "M. O'Connor et al., Fine-Grained DRAM: Energy-Efficient DRAM for Extreme Bandwidth Systems, MICRO 2017, s1-2, Table 3",
+   "url": "https://d1qx31qr3h6wln.cloudfront.net/publications/MICRO_2017_Fine_Grained_DRAM.pdf",
+   "cls": "peer-reviewed",
+   "quote": "The energy to access a bit in HBM2 is approximately 3.97 pJ/bit; ... requires 2.24 pJ/bit ... an additional 0.3 pJ/bit ... with the average of 1.21 pJ/bit of activation energy, each HBM2 access incurs 3.92 pJ/bit of energy (including ECC overhead); Table 3 I/O (pJ/b)* 0.80 (*at 50% activity)"
+  },
+  "r-serdes-vlsi22": {
+   "text": "112 Gb/s PAM4 transceiver with DSP in 5 nm, VLSI 2022, doi:10.1109/VLSITechnologyandCir46769.2022.9830304",
+   "url": "https://doi.org/10.1109/VLSITechnologyandCir46769.2022.9830304",
+   "cls": "measured silicon, peer-reviewed",
+   "quote": "achieves a total power efficiency of 5.6pJ/b per lane including analog and DSP at 112Gb/s"
+  },
+  "r-serdes-jssc21": {
+   "text": "7 nm 112 Gb/s PAM4 long-reach transceiver, IEEE JSSC Jan 2021, doi:10.1109/JSSC.2020.3024261",
+   "url": "https://doi.org/10.1109/JSSC.2020.3024261",
+   "cls": "measured silicon, peer-reviewed",
+   "quote": "dissipating 602 mW per channel, excluding DSP"
+  },
+  "r-80plus": {
+   "text": "80 PLUS Titanium efficiency table (230 V internal redundant)",
+   "url": "https://en.wikipedia.org/wiki/80_Plus",
+   "cls": "normative table (secondary copy)",
+   "quote": "N.D. | 90% | 94% | 96% | 91% [10/20/50/100% load]"
+  },
+  "r-vicor": {
+   "text": "Vicor NBM2317S60D1580T0R bus converter datasheet",
+   "url": "https://www.vicorpower.com/documents/datasheets/ds-NBM2317S60D1580T0R-VICOR.pdf",
+   "cls": "production datasheet",
+   "quote": "97.9% peak efficiency; Efficiency (Ambient) ... I_LO_OUT_DC = 80A ... 95.6 %"
+  },
+  "r-vr48": {
+   "text": "Vertical power delivery for AI accelerators, arXiv:2309.10141, s2-3",
+   "url": "https://arxiv.org/abs/2309.10141",
+   "cls": "peer-reviewed modelling",
+   "quote": "The reference architecture (A0) is modeled with a 90% efficient 48V-to-1V converter; over 30% power loss has recently been reported in state-of-the-art AI accelerators"
+  },
+  "r-coolit": {
+   "text": "CoolIT Systems CHx2000 CDU datasheet",
+   "url": "https://www.coolitsystems.com/chx2000/",
+   "cls": "production datasheet",
+   "quote": "Cooling Capacity: 2000 kW; Power Consumption: 12.24 kW"
+  },
+  "r-gb200-guide": {
+   "text": "NVIDIA DGX GB200 User Guide, s1.4 Hardware (updated 2026-09-17); NVIDIA Blackwell datasheet (2025-10-28)",
+   "url": "https://docs.nvidia.com/dgx/dgxgb200-user-guide/hardware.html",
+   "cls": "vendor normative",
+   "quote": "The rack power consumption is approximately 120kW; ... 33kW per power shelf; Max Thermal Design Power (TDP) Configurable up to 1,200 W"
+  },
+  "r-smc-nvl72": {
+   "text": "Supermicro SuperCluster GB200 NVL72 datasheet (2025-09-12)",
+   "url": "https://www.supermicro.com/datasheet/datasheet_SuperCluster_GB200_NVL72.pdf",
+   "cls": "OEM datasheet",
+   "quote": "total power 132kW; Operating Power 125kW to 135kW"
+  },
+  "r-mlperf51": {
+   "text": "MLCommons, MLPerf Inference v5.1 results, ID 5.1-0061 (Lenovo SR680a V3, 8 x B200), Llama-2-70B Offline",
+   "url": "https://github.com/mlcommons/inference_results_v5.1",
+   "cls": "measured, audited",
+   "quote": "Power_Result: 10400.9988793425, Power_Units: Watts"
+  },
+  "r-b200-decode": {
+   "text": "B200 disaggregated serving power measurement, arXiv:2609.11133",
+   "url": "https://arxiv.org/abs/2609.11133",
+   "cls": "measured, preprint",
+   "quote": "Decode natural draw held at 688-689 W"
+  },
+  "r-fan-barroso": {
+   "text": "X. Fan, W.-D. Weber, L. A. Barroso, Power Provisioning for a Warehouse-sized Computer, ISCA 2007",
+   "url": "https://static.googleusercontent.com/media/research.google.com/en//archive/power_provisioning.pdf",
+   "cls": "measured, peer-reviewed",
+   "quote": "only reach a maximum of 145W, which is less than 60% of the nameplate value; noticeable gap (7 - 16%) between achieved and theoretical aggregate peak"
+  },
+  "r-polca": {
+   "text": "P. Patel et al., POLCA: Power Oversubscription in LLM Cloud Providers, arXiv:2308.12908",
+   "url": "https://arxiv.org/abs/2308.12908",
+   "cls": "measured, production data",
+   "quote": "LLM inference clusters utilize only up to 80% of the provisioned power ... often going beyond GPU's TDP values"
+  }
+ },
+ "caveats": [
+  "GPU on-chip primitives are measured on an RTX PRO 6000 Blackwell (GB202), not a B200.",
+  "The GPU per-token rows price the SAME collective graph as the ROM array; a GPU deployment would choose its own parallelism.",
+  "No production measurement of a 112G PAM4 port's end-to-end latency was found; the 130/209 ns points are component sums cross-checked against Broadcom's budget.",
+  "The V4.1 ROM per-token figure is the adopted design's latency ladder (b07a5745, 209 ns cable tier), pinned; the specification-width budget on this branch is reported beside it."
+ ]
+}

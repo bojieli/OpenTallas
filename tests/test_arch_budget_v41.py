@@ -131,3 +131,14 @@ def test_block_table_names_every_gap(rec):
     blocks = {b["block"]: b for b in rec["blocks"]}
     assert blocks["stream unit, linear lanes"]["ratio"] >= 64
     assert blocks["indexer engine (FP4 x FP4)"]["ratio"] > 1000
+
+
+def test_rom_and_comparator_dies_carry_four_stacks(rec):
+    """Standing decision: 4 HBM3E stacks per die (today's interposers), for the ROM die and the comparator."""
+    assert A.ROM_DIE_HBM_STACKS == 4
+    assert rec["kv_state"]["stacks_per_die"] == 4
+    assert rec["kv_state"]["sustained_Bps_per_die"] == pytest.approx(3.6e12)
+    assert rec["hbm_comparator"]["hbm_stacks_per_die"] == 4
+    hb = rec["hbm_comparator"]
+    ctx = "200000"
+    assert rec["capacity"][ctx]["rom_users"] == int(4 * hb["stack_capacity_B"] // rec["capacity"][ctx]["per_user_bytes_busiest_die"])

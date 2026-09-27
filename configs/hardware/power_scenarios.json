@@ -1,0 +1,339 @@
+{
+ "schema": "opentallas.power-scenarios.v1",
+ "purpose": "Two SEPARATE power scenarios for the ROM designs (Qwen3-8B reticle at 8K; DeepSeek-V4.1 ROM array at 1M and 200K), every input tagged with an evidence class and a measurement boundary. Scenario A (measured implementation) prices the multiply-accumulate at the energy OUR routed lanes report; scenario B (proposed production) prices it at a derived floating-point target lane. Every other input is identical in A and B, because nothing better than the entry below exists for either. Answers docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md finding 3. Computed by tools/power_scenarios.py into results/arch/power_scenarios.json.",
+ "evidence_classes": {
+  "measured-ours": "reported by this repository's own routed ASAP7 sign-off (predictive 7 nm PDK, not foundry silicon)",
+  "published-measured": "a peer-reviewed measurement of fabricated silicon or a shipping system, transferred to our design",
+  "published-spec": "a published specification, vendor figure, or published design/model estimate (not a silicon measurement of the quantity)",
+  "assumed": "no source measures this quantity at our boundary; a stated engineering value"
+ },
+ "conservative_rule": "When sources disagree or a boundary is unclear, take the value that makes the die hotter and the rate cap lower. Die cooling and stack power are each checked at their own conservative end; per-token energy counts every joule once.",
+ "cooling": {
+  "w_per_mm2": {
+   "value": 0.5,
+   "unit": "W/mm2",
+   "evidence_class": "published-spec",
+   "boundary": "whole-die heat flux a cold plate removes, A100-class package",
+   "source": "configs/hardware/technology.json thermal.cooling_limit_w_per_mm2 (A100 datasheet: 400 W over 826 mm2)"
+  },
+  "die_mm2": 815.0
+ },
+ "mac_lane": {
+  "scenario_A": {
+   "note": "The only lanes routed are BF16 x BF16 products into FP32 accumulators. Scenario A charges EVERY multiply-accumulate, whatever its weight format, at the matrix engine's reported pJ per MAC: that is what the implementation that exists would spend. ASAP7 is a 7 nm predictive PDK; no node scaling is applied.",
+   "qwen3": {
+    "value": 3.9743577368555187,
+    "unit": "pJ/MAC",
+    "evidence_class": "measured-ours",
+    "boundary": "routed matrix-engine block (u_me) logic only: dynamic + leakage, TT corner, 0.9 ns clock, activity from the reduced Qwen3 decode step's RTL registers (1,277,952 MACs); excludes the die clock tree, operand delivery, SRAM/ROM reads",
+    "source": "results/physical_abi3/asap7/signoff/energy_per_token.json#architectures.qwen3_8b_rom_reticle.pj_per_mac.matrix_engine_logic_pj_per_mac",
+    "whole_step_pj_per_mac": 16.547206649595186
+   },
+   "v41": {
+    "value": 11.512761880960333,
+    "unit": "pJ/MAC",
+    "evidence_class": "measured-ours",
+    "boundary": "routed V4.1 matrix-engine block (u_me) logic only, TT, 0.9 ns clock, activity from the reduced V4.1 step at position 7 (10,264,576 MACs over 1,088,551 cycles: a low-utilisation vehicle, so idle clock-pin power is amortised over few MACs)",
+    "source": "results/physical_abi3/asap7/signoff/energy_per_token.json#architectures.deepseek_v41_rom_array_die.pj_per_mac.matrix_engine_logic_pj_per_mac",
+    "whole_step_pj_per_mac": 66.54012140038643
+   }
+  },
+  "scenario_B": {
+   "note": "A proposed lane for each weight format, derived as (multiplier) + (one FP32 add per product), because the golden fixes FP32 accumulation of exact products: a k-product tree retires k-1 FP32 adds. Arithmetic datapath only: the lane's pipeline registers and clock pins are charged by the die clock term, operand movement by operand delivery. Component energies are Jouppi et al.'s 7 nm table (published design estimates, NOT silicon measurements); no credit is taken for N6/N5 over 7 nm. Where no entry exists for a format, the next-WIDER multiplier is used (an upper bound).",
+   "components": {
+    "fp32_add": {
+     "value": 0.38,
+     "unit": "pJ",
+     "evidence_class": "published-spec",
+     "boundary": "one IEEE FP32 add at 7 nm, arithmetic only",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010",
+     "quote": "IEEE FP 32 [add] 45 nm 0.900, 7 nm 0.380"
+    },
+    "fp32_mult": {
+     "value": 1.31,
+     "unit": "pJ",
+     "evidence_class": "published-spec",
+     "boundary": "one IEEE FP32 multiply at 7 nm",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010",
+     "quote": "IEEE FP 32 [mult] 3.700 / 1.310"
+    },
+    "bf16_mult": {
+     "value": 0.21,
+     "unit": "pJ",
+     "evidence_class": "published-spec",
+     "boundary": "one BFloat16 multiply at 7 nm",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010",
+     "quote": "BFloat 16 [mult] -- / 0.210"
+    },
+    "int8_mult": {
+     "value": 0.07,
+     "unit": "pJ",
+     "evidence_class": "published-spec",
+     "boundary": "one 8-bit integer multiply at 7 nm",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010",
+     "quote": "Int 8 [mult] 0.200 / 0.070"
+    }
+   },
+   "per_mac": {
+    "w4a8": {
+     "value": 0.45,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "4-bit weight (FP4 E2M1 / 3.5-bit grouped) x FP8 activation, FP32 accumulate: int8_mult (upper bound: a 2-4 bit mantissa product is smaller than 8x8) + fp32_add; group scale applied once per group, not per MAC",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    },
+    "fp4": {
+     "value": 0.45,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "as w4a8 (V4.1 FP4 weights and FP4 indexer keys against FP8/BF16 operands)",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    },
+    "fp8": {
+     "value": 0.59,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "FP8 x FP8/BF16, FP32 accumulate: bf16_mult (upper bound for an E4M3 product) + fp32_add",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    },
+    "bf16": {
+     "value": 0.59,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "BF16 x BF16 (and BF16 x FP8 attention), FP32 accumulate: bf16_mult + fp32_add",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    },
+    "fp32": {
+     "value": 1.69,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "FP32 FMA: fp32_mult + fp32_add",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    }
+   },
+   "was": {
+    "w4a8_pj_per_mac_in_qwen_production_model": 0.09,
+    "note": "The 2026-09-27 Qwen production model (codex/qwen-* @5e12dc08 _prod_inputs/_rom_step) charged technology.json mac_energy_j_per_op.w4a8 = 9e-14 per MAC; that entry is per OPERATION (the V4.1 budget charges 2 ops per MAC), so the model under-charged its own input 2x, and the input itself is an interpolation between an integer (Keller) and an unmeasured FP8 rung. Replaced by 0.45 (5x)."
+   }
+  },
+  "bounds": {
+   "integer_lower_bound": {
+    "value": 0.021,
+    "unit": "pJ/MAC",
+    "evidence_class": "published-measured",
+    "boundary": "INTEGER 4-bit with per-vector 8-bit scale factors and 24-bit partial sums; whole 0.153 mm2 accelerator incl. 132 KB SRAM; 0.46 V, 50% non-zero inputs, leakage ESTIMATED; 2 ops per MAC",
+    "source": "Keller et al., A 17-95.6 TOPS/W Deep Learning Inference Accelerator with Per-Vector Scaled 4-bit Quantization for Transformers in 5nm, 2022 Symposium on VLSI Technology and Circuits, pp. 16-17, https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
+    "quote": "Table 2: data formats 'INT4 / INT4 VSQ / INT8'; TOPS/W '91.1† (0.46V)' '95.6† (0.46V)' '39.1† (0.46V)', '† Measured with 50% non-zero input densities. Includes estimated leakage power.'; p.16: '24b partial sums are temporally accumulated in a 16-entry latch array'",
+    "use": "lower bound only: not a floating-point MAC and not our accumulation contract",
+    "int8_pj_per_mac": 0.051
+   },
+   "gpu_tensor_measured": {
+    "value": 1.4,
+    "unit": "pJ/MAC",
+    "evidence_class": "published-measured",
+    "boundary": "A100 Matrix-FP16 tensor core, control 0.37 + datapath 0.33 = 0.70 pJ/FLOP, 2 FLOP per MAC; includes the GPU's instruction/operand control plane",
+    "source": "Antepara, Zhao, Austin, Ding, Oliker, Wright, Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, https://escholarship.org/content/qt6189368s/qt6189368s.pdf Table 3",
+    "use": "scenario-B sensitivity: a lane no better than a shipping tensor core"
+   }
+  }
+ },
+ "memory": {
+  "hbm_path_total": {
+   "value": 13.11,
+   "unit": "pJ/bit",
+   "evidence_class": "published-measured",
+   "boundary": "A100 HBM2e path beyond L2, regressed from board power: DRAM device + TSV + interposer + PHY + memory controller + L2-to-controller movement + control plane",
+   "source": "Antepara, Zhao, Austin, Ding, Oliker, Wright, Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, https://escholarship.org/content/qt6189368s/qt6189368s.pdf Table 3 and Fig. 1",
+   "quote": "Fig. 1 caption: 'n.b., memory controller energy is tabulated with HBM energy.'; Table 3 A100 HBM control 8.47 / datapath 4.64 / total 13.11 pJ/bit"
+  },
+  "stack_share": {
+   "value": 3.45,
+   "unit": "pJ/bit",
+   "evidence_class": "published-spec",
+   "boundary": "inside the DRAM stack: row activation 1.21 + bank-to-base-layer data movement incl. TSVs 2.24 pJ/bit (HBM2, 28 nm DRAM model after Rambus; application toggle rates); excludes the 0.3 pJ/bit interposer I/O and ECC",
+   "source": "O'Connor et al., Fine-Grained DRAM: Energy-Efficient DRAM for Extreme Bandwidth Systems, MICRO 2017, https://d1qx31qr3h6wln.cloudfront.net/publications/MICRO_2017_Fine_Grained_DRAM.pdf s2 (Fig. 2 discussion)",
+   "quote": "'switching the capacitance on this datapath requires 2.24 pJ/bit of energy on average. In contrast, transferring the data over the I/O wires on the silicon interposer requires an additional 0.3 pJ/bit ... with the average of 1.21 pJ/bit of activation energy, each HBM2 access incurs 3.92 pJ/bit of energy (including ECC overhead)'",
+   "stack_high_pj_per_bit": 3.92,
+   "stack_high_basis": "O'Connor's whole 3.92 pJ/bit charged to the stack (I/O and ECC included): the stack-power check's conservative end"
+  },
+  "die_share": {
+   "value": null,
+   "unit": "pJ/bit",
+   "evidence_class": "assumed",
+   "boundary": "hbm_path_total - stack_share = 9.66 pJ/bit charged to the LOGIC DIE: memory controller, PHY, interposer I/O (both ends), ECC, on-die movement to the controller and the control plane. This assumes our controller costs what the A100's does; it is the conservative end for die cooling (the A100 figure carries a GPU control plane a fixed-schedule die may not need), and no source separates controller from PHY energy (Micron, SK hynix, Rambus, Synopsys: none publishes pJ/bit, checked 2026-09-27).",
+   "source": "derived: SC'25 Table 3 minus O'Connor s2",
+   "was": "0.8 pJ/bit to the die (O'Connor Table 3 'I/O (pJ/b)* 0.80', an I/O-only boundary) and 12.31 pJ/bit to the stacks: controller and control-plane energy placed in DRAM stacks that do not dissipate it."
+  },
+  "idle_w_per_stack": {
+   "value": 2.8,
+   "unit": "W/stack",
+   "evidence_class": "assumed",
+   "boundary": "traffic-independent DRAM standby + refresh + trained PHY/controller; charged WHOLLY to the die (conservative for die cooling)",
+   "source": "configs/hardware/technology.json power.memory_interface_idle_w_per_stack (band 1.2-6.4 W)"
+  }
+ },
+ "die": {
+  "rom_read_j_per_byte": {
+   "value": 8e-14,
+   "unit": "J/B",
+   "evidence_class": "assumed",
+   "boundary": "mask-ROM macro read to its output latch, N6",
+   "source": "configs/hardware/technology.json energy.rom_read_j_per_byte"
+  },
+  "operand_delivery_j_per_byte": {
+   "value": 2.3e-13,
+   "unit": "J/B",
+   "evidence_class": "assumed",
+   "boundary": "array-to-lane wire + operand register, tile-local floor",
+   "source": "configs/hardware/technology.json energy.operand_delivery_j_per_byte"
+  },
+  "sram_j_per_byte": {
+   "value": 2.6e-12,
+   "unit": "J/B",
+   "evidence_class": "published-measured",
+   "boundary": "A100 L1 access (control 1.26 + datapath 0.33 pJ/bit), transferred to on-die SRAM",
+   "source": "configs/hardware/technology.json energy.sram_read_j_per_byte (SC'25 Table 3)"
+  },
+  "stream_fp32_op_j": {
+   "value": 1.69e-12,
+   "unit": "J",
+   "evidence_class": "published-spec",
+   "boundary": "one FP32 FMA-class stream-unit operation (fp32_mult + fp32_add at 7 nm); no routed stream-unit energy per element exists",
+   "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+  },
+  "clock_j_per_mm2_per_cycle": {
+   "value": 8.5e-11,
+   "unit": "J/mm2/cycle",
+   "evidence_class": "assumed",
+   "boundary": "whole-die clock distribution, fitted to GPU TDP/area/clock tables",
+   "source": "configs/hardware/technology.json power.clock_energy_j_per_mm2_per_cycle"
+  },
+  "clock_region_multiplier": {
+   "logic": 1.0,
+   "rom_array": 0.15,
+   "sram_array": 0.15,
+   "source": "configs/hardware/technology.json power.clock_region_multiplier (assumed)"
+  },
+  "leakage_w_per_mm2": {
+   "logic": {
+    "value": 0.1,
+    "unit": "W/mm2",
+    "evidence_class": "assumed",
+    "boundary": "standard-cell region at operating temperature, N5-N7",
+    "source": "conservative production value (validation record 2026-09-27, whole-chip idle anchor: H100 bare idle 71.8 W over 814 mm2); configs/hardware/technology.json power.static_leakage_w_per_mm2.logic still carries 0.06 for the roofline study",
+    "was": 0.06
+   },
+   "rom_array": {
+    "value": 0.0067,
+    "unit": "W/mm2",
+    "evidence_class": "assumed",
+    "boundary": "mask-ROM array",
+    "source": "configs/hardware/technology.json power.static_leakage_w_per_mm2.rom_array"
+   },
+   "sram_array": {
+    "value": 0.005,
+    "unit": "W/mm2",
+    "evidence_class": "assumed",
+    "boundary": "SRAM array",
+    "source": "configs/hardware/technology.json power.static_leakage_w_per_mm2.sram_array"
+   }
+  },
+  "link_j_per_bit": {
+   "board": {
+    "value": 6.5e-12,
+    "unit": "J/bit",
+    "evidence_class": "published-measured",
+    "boundary": "112G PAM4 lane incl. DSP",
+    "source": "configs/hardware/technology.json energy.link_j_per_bit.board_serdes_112g"
+   },
+   "ucie": {
+    "value": 5e-13,
+    "unit": "J/bit",
+    "evidence_class": "published-spec",
+    "boundary": "UCIe advanced-package target 0.3-0.6",
+    "source": "configs/hardware/technology.json energy.link_j_per_bit.ucie_advanced"
+   }
+  }
+ },
+ "design_points": {
+  "qwen3": {
+   "source": "codex/qwen-coupled-schedule @5e12dc08 results/arch/qwen3_budget.json (power_production, area, dflash): the Qwen3 production power model the atlas and the review cite is NOT on main; its design point is pinned here so both scenarios price the same machine. Workload (MACs, bytes, elements) is recomputed from main's tools/arch_budget_qwen3.workload().",
+   "context": 8192,
+   "kv_format_bytes_per_elem": 1,
+   "clock_hz": 1098640000.0,
+   "hbm_stacks": 6,
+   "ar_batch1": {
+    "step_cycles": 123301,
+    "tokens_per_step": 1,
+    "users": 1,
+    "slots": 1,
+    "drafter": false,
+    "lane_copies_on": 0
+   },
+   "dflash": {
+    "tau": 4.1,
+    "block": 3,
+    "step_cycles": 176514,
+    "tokens_per_step": 2.187,
+    "users": 1,
+    "slots": 3,
+    "drafter": true,
+    "lane_copies_on": 2
+   },
+   "area_mm2": {
+    "compute": 146.7,
+    "interconnect": 65.2,
+    "overhead": 81.5,
+    "hbm_phy": 60.0,
+    "stream_unit_spill": 12.8,
+    "lane_copy": 69.2,
+    "lane_multiplier_m": 3,
+    "rom": 261.98,
+    "drafter_rom": 33.5,
+    "sram": 6.2
+   },
+   "was": {
+    "source": "5e12dc08 power_production.rom",
+    "ar_batch1": {
+     "energy_per_token_mj": 82.38,
+     "die_energy_per_token_mj": 21.015,
+     "die_w": 187.2,
+     "stacks_w": 546.8,
+     "tokens_s": 8910.2
+    },
+    "dflash": {
+     "energy_per_token_mj": 47.896,
+     "die_energy_per_token_mj": 15.688,
+     "die_w": 213.5,
+     "stacks_w": 438.4,
+     "tokens_s": 13612.1
+    },
+    "atlas_cross_check": {
+     "pj_per_mac": 3.97,
+     "ar_die_w": 448.9,
+     "ar_tokens_s_capped": 7720.1,
+     "dflash_die_w": 1131.5,
+     "dflash_tokens_s_capped": 4908.5,
+     "basis": "MAC-only: 75% of 408 W to the lanes, nothing else charged (5e12dc08 power_budget)"
+    }
+   }
+  },
+  "v41": {
+   "source": "main tools/arch_budget_v41.py (token_workload, distinct_experts, fill_machine) and results/arch/arch_budget_v41.json batch rows (rates)",
+   "contexts": [
+    1048576,
+    200000
+   ],
+   "dies": 188,
+   "layer_dies": 112,
+   "stages": 28,
+   "hbm_stacks_per_die": 4,
+   "mtp": {
+    "gamma": 5,
+    "tau": 4.1,
+    "draft_overhead": 0.075
+   },
+   "links_formula": "collective bytes x 8 x (board + UCIe) x 4, as tools/arch_budget_v41.energy_per_token"
+  }
+ }
+}
