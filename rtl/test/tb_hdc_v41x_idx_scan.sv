@@ -87,7 +87,8 @@ module tb_hdc_v41x_idx_scan #(
                 .busy(busy[gs]), .req_v(req_v), .req_rdy(req_rdy), .req_addr(req_addr), .req_len(req_len),
                 .req_tag(req_tag), .rsp_v(rsp_v), .rsp_rdy(rsp_rdy), .rsp_tag(rsp_tag), .rsp_beat(rsp_beat),
                 .rsp_data(rsp_data), .o_valid(sv[gs]), .o_ready(sr[gs]), .o_kv(skv[16*gs +: 16]),
-                .o_key(skey[16*544*gs +: 16*544]));
+                .o_key(skey[16*544*gs +: 16*544]), .cnt_keys_streamed(cks), .cnt_hbm_beats(chb));
+            wire [47:0] cks, chb;
             integer pp;
             longint sref, srd;
             final begin
@@ -98,6 +99,7 @@ module tb_hdc_v41x_idx_scan #(
                 end
                 $display("V41XHBM stack=%0d rd=%0d ref=%0d lat_sum=%0d lat_max_ps=%0d", gs, srd, sref,
                          u_hbm.st_rd_lat_sum, u_hbm.st_rd_lat_max);
+                $display("V41XSCANCNT stack=%0d keys_streamed=%0d hbm_beats=%0d", gs, cks, chb);
             end
         end
     endgenerate

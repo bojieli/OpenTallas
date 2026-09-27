@@ -131,7 +131,7 @@ def golden(q, wts, keys, keep, qu=None, ku=None):
         score = G.to_bf16(sc32)
         prod = G.mul(np.maximum(score, F(0)), wts[:, None])
         terms = G.to_bf16(prod)
-        s32 = G.reduce_rows(terms.T)
+        s32 = G.reduce_rows(terms.T, cls="idx")
         s = G.to_bf16(s32)
     bad = ~np.isfinite(blkf).all(axis=(0, 2)) | ~np.isfinite(sc32).all(0) | ~np.isfinite(score).all(0) \
         | ~np.isfinite(prod).all(0) | ~np.isfinite(terms).all(0) | ~np.isfinite(s32) | ~np.isfinite(s)
@@ -220,14 +220,14 @@ def vehicle_tokens(positions, seed=7):
     orig_ix, orig_dq = G.Model.indexer, G.dots_q4
     cap = {}
 
-    def dq(a, b, block=32):
+    def dq(a, b, block=32, **kw):
         cap["q"], cap["k"] = np.array(a), np.array(b)
-        return orig_dq(a, b, block)
+        return orig_dq(a, b, block, **kw)
 
-    def ix(self, L, x, qr, pos, state, trace, ctx):
+    def ix(self, L, x, qr, pos, state, trace, ctx, **kw):
         tr = {}
         cand_before = ctx.get("cand")
-        sel = orig_ix(self, L, x, qr, pos, state, tr, ctx)
+        sel = orig_ix(self, L, x, qr, pos, state, tr, ctx, **kw)
         n = (pos + 1) // self.ratio[L]
         if n == 0:
             return sel
@@ -314,6 +314,9 @@ def run(exe: Path, d: Path, ntok, nkey, seed=1, bubble=0, ordy=0):
     k = ("keys", "checked", "errors", "faults_expected_and_raised", "beats", "span", "stall", "lat_min", "lat_max",
          "cycles")
     res = dict(zip(k, map(int, m.groups())))
+    c = re.search(r"V41XIDXCNT keys_scored=(\d+) headsums_fused=(\d+) faults=(\d+)", r.stdout)
+    if c:
+        res["counters"] = dict(zip(("keys_scored", "headsums_fused", "faults"), map(int, c.groups())))
     res["mismatch_lines"] = [ln for ln in r.stdout.splitlines() if ln.startswith(("MISMATCH", "MISS-FAULT"))][:10]
     return res
 
@@ -476,13 +479,13 @@ def die_summary(rec):
                       "128 x 4 KB = 512 KB SRAM) + ot_hdc_v41x_idx_kmerge -> 64 keys/cycle",
         "latency_shipped_cycles": {
             "input register": 1, "block dots (exact, rounded once)": 3, "3 sequential block adds": 9,
-            "to_bf16 + ReLU": 1, "x head weight, to_bf16": 2, "7 sequential head adds (chunk of 8)": 21,
+            "to_bf16 + ReLU": 1, "x head weight, to_bf16": 3, "7 sequential head adds (chunk of 8)": 21,
             "chunk output register": 1, "tail input register": 1, "2 tree levels": 6,
             "to_bf16 + mask + output register": 1, "engine output register": 1},
         "latency_note": "R-ARITH fixes the dependent adds: 3 block adds + 7 head adds + 2 tree levels = 12 x 3 "
-                        "cycles = 36 of the 47.  The per-head score (the dot product the spec's ~30-cycle budget "
+                        "cycles = 36 of the 48.  The per-head score (the dot product the spec's ~30-cycle budget "
                         "covers) is ready 13 cycles after the key arrives; the fused ReLU-weight head sum, which "
-                        "spec section 6 item 5 places on the stream unit, adds the other 34.",
+                        "spec section 6 item 5 places on the stream unit, adds the other 35.",
         "routed": {"chunk": chunk, "tail": tail, "kctl": kctl},
     }
     if chunk and tail:
@@ -556,6 +559,9 @@ def main():
             continue
         r = rec[name]
         m, b = r["mixed"], r["back_to_back"]
+        for x in (m, b):
+            cn = x.get("counters")
+            assert cn is None or (cn["keys_scored"] == x["keys"] and cn["headsums_fused"] == x["keys"] * 32), cn
         exact = m["errors"] == 0 and m["checked"] == m["keys"] and b["errors"] == 0 and b["checked"] == b["keys"] \
             and m["faults_expected_and_raised"] == m["expected_faults"]
         thr = b["keys_per_cycle"] >= 0.99 * a.nk * (1 - 1.0 / max(1, b["beats"]))
