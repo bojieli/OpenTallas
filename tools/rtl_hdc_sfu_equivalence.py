@@ -98,6 +98,8 @@ def run(jobs, fast_vectors):
             results = list(ex.map(one, runs))
     red = subprocess.run([sys.executable, str(CHECK)], capture_output=True, text=True)
     mr = re.search(r"EXP_REDUCTION words=(\d+) mismatches=(\d+)", red.stdout)
+    if mr is None:   # the exhaustive check died (it holds 2^32-word slices: memory, beside the parallel benches)
+        raise RuntimeError(f"{CHECK.name} failed ({red.returncode}):\n{red.stdout[-2000:]}\n{red.stderr[-2000:]}")
     funcs = {}
     for f, name in FUNCS.items():
         rows = [r for k, ff, r in results if ff == f]

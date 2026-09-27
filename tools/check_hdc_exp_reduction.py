@@ -34,7 +34,7 @@ def rtl_table():
 
 
 def rtl_rint(t):
-    """ot_hdc_exp_q.s integer step: n = rint-to-even(t) from t's encoding."""
+    """ot_hdc_exp_q's integer step: n = rint-to-even(t) from t's encoding."""
     b = G.bits(t).astype(np.int64)
     te = (b >> 23) & 0xFF
     tm = (b & 0x7FFFFF) | 0x800000
