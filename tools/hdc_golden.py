@@ -236,7 +236,7 @@ def reciprocal(d):
     d = np.asarray(d, dtype=F)
     db = bits(d)
     # The bit seed otherwise wraps for finite positive d above ~1.6e38.
-    # Its reciprocal is below 2^-127; +0 avoids a spurious Newton NaN.
+    # The contract saturates that unsupported range to +0 to avoid a NaN.
     saturated = ((db & np.uint32(0x80000000)) == 0) & ((db & np.uint32(0x7F800000)) != np.uint32(0x7F800000)) & (db > np.uint32(0x7EF311C7))
     y = from_bits(np.where(saturated, np.uint32(0), np.uint32(0x7EF311C7) - db))
     for _ in range(3):
