@@ -32,7 +32,10 @@ from pathlib import Path
 
 # The first package gate adopts the new HCP arithmetic order only. Keep the
 # ISA/golden contract aligned with X_HE=1 in the array bench.
-os.environ["HDC_V41_ARITH"] = "he"
+ALL_UNIT = "--all-unit" in sys.argv
+os.environ["HDC_V41_ARITH"] = "chunk8" if ALL_UNIT else "he"
+if ALL_UNIT:
+    os.environ["HDC_V41_IDX_FUSED"] = "1"
 
 import numpy as np
 
@@ -45,6 +48,9 @@ import hdc_program_v41_array as A  # noqa: E402
 import hdc_timing_v41 as T  # noqa: E402
 import rtl_hdc_v41x_decode_campaign as core  # noqa: E402
 import hdc_images_v41x as ximg  # noqa: E402
+if ALL_UNIT:
+    core.UNITS = tuple(core.X_UNITS)
+    core.PARAMS["fp"] = "dpi"
 
 OUT = ROOT / "results/rtl/hdc_v41x_array_campaign.json"
 TB = ROOT / "rtl/test/tb_hdc_v41x_array.sv"
@@ -140,7 +146,7 @@ def config_svh(plan, lay, fabric):
 def build(obj: Path, svh: str, users: int, stall: int) -> Path:
     obj.mkdir(parents=True, exist_ok=True)
     exe = obj / "Vtb_hdc_v41x_array"
-    stamp = hashlib.sha256((svh + f"{users} {stall}" + "".join(
+    stamp = hashlib.sha256((svh + f"{users} {stall} all_unit={ALL_UNIT}" + "".join(
         hashlib.sha256(p.read_bytes()).hexdigest() for p in rtl_sources())).encode()).hexdigest()
     if REUSE and exe.exists() and (obj / "stamp").exists() and (obj / "stamp").read_text() == stamp:
         return exe
@@ -148,10 +154,22 @@ def build(obj: Path, svh: str, users: int, stall: int) -> Path:
     with BUILD_SLOTS:
         sh([*GATE, "verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
             "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MULTIDRIVEN", "-Wno-TIMESCALEMOD",
+            "-Wno-MODDUP", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT", "-Wno-PINMISSING",
             "--top-module", "tb_hdc_v41x_array",
             f"-GUSERS={users}", f"-GSTALL={stall}", "-Mdir", str(obj), f"-I{obj}", f"-I{core.SVH.parent}",
+            *([str(core.VLT)] if ALL_UNIT else []),
             f"+define+HDC_SW={I.SU_LANES}",
-            *map(str, core.RTL), str(LINK), str(ROUTER), str(CTRL), str(TB), str(HARNESS),
+            *([f"+define+HDC_X_{x}={2 if x == 'IDX' else 1}" for x in
+               ("HE", "ME", "ATT", "IDX", "SEL", "EG", "SU")] + ["+define+HDC_W_HBM=1"]
+              if ALL_UNIT else []),
+            *map(str, core.rtl_sources(True) if ALL_UNIT else core.RTL),
+            *([str(p) for p in (ROOT / "rtl/hdc/v41x").glob("ot_hdc_v41x_idx_pool_*.sv")]
+              + [str(ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv"),
+                 str(ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv"),
+                 str(ROOT / "rtl/hdc/hbm/ot_hdc_qstream.sv"),
+                 str(ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv")]
+              if ALL_UNIT else []),
+            str(LINK), str(ROUTER), str(CTRL), str(TB), str(HARNESS),
             "-CFLAGS", "-O1", "-MAKEFLAGS", "OPT_FAST=-O0 OPT_GLOBAL=-O0", "-j", "16"])
     (obj / "stamp").write_text(stamp)
     return exe
@@ -193,10 +211,19 @@ def run_config(name, spec, ctx, scratch: Path, log) -> dict:
         t0 = time.time()
         gold = A.golden_runs(model, ngen, scratch / "gold.json", plen)
         plan = A.Plan(lay, A.split(model, body), hp, hmc, shared)
-        progs = A.stage_programs(plan)
+        progs = ([A.StageBuilder(plan.lay, qchunk=P.QCHUNK).stage(plan, k)
+                  for k in range(plan.n)] if ALL_UNIT else A.stage_programs(plan))
         recs, states = A.run_pipeline(plan, progs, base, gold)
         img = scratch / f"cfg_{name}"
         steps = A.write_config(img, plan, progs, gold, states)
+        if ALL_UNIT:
+            sectors, first = P.qe_hbm_image(lay)
+            for k, prog in enumerate(progs):
+                ents = P.qe_fetch_list(lay, prog, first)
+                (img / f"qlist_stage{k:02d}.hex").write_text(
+                    P.hexwords(P.encode_list(ents), P.LIST_BITS))
+                if not ents:
+                    raise RuntimeError(f"stage {k}: empty QE HBM fetch list")
         log(f"{name}: ISA pipeline {recs} ({time.time() - t0:.0f} s)")
     isa_ok = all(r["logits_bit_exact_every_step"] and r["argmax_and_value_every_step"] for r in recs)
     if not isa_ok:
@@ -262,7 +289,13 @@ def run_config(name, spec, ctx, scratch: Path, log) -> dict:
 
 
 def rtl_sources():
-    return [TB, HARNESS, LINK, ROUTER, CTRL, core.SVH, *core.RTL]
+    pool = list((ROOT / "rtl/hdc/v41x").glob("ot_hdc_v41x_idx_pool_*.sv")) + [
+        ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+        ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+        ROOT / "rtl/hdc/hbm/ot_hdc_qstream.sv",
+        ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv", core.VLT]
+    return [TB, HARNESS, LINK, ROUTER, CTRL, core.SVH,
+            *(core.rtl_sources(True) if ALL_UNIT else core.RTL), *(pool if ALL_UNIT else [])]
 
 
 def sources():
@@ -285,6 +318,11 @@ def run(names, scratch: Path) -> dict:
     if not (roms / "qrom.hex").exists():
         A.write_roms(roms, lay)
         ximg.write_banked(roms / "hbank.hex", ximg.hbank_image(lay, 8), 32, 8)
+    if ALL_UNIT:
+        ximg.write(roms, lay, hhw=8, mg=8)
+        if not (roms / "hbm_q.hex").exists():
+            sectors, _ = P.qe_hbm_image(lay)
+            (roms / "hbm_q.hex").write_text(P.hexwords(sectors, P.QSEC))
     base = P.Machine(lay, np.zeros(I.KV_WORDS * I.W_LANES, dtype=np.float32),
                      np.zeros(I.VM_ELEMS, dtype=np.float32))
     ctx = dict(lay=lay, model=model, base=base, roms=roms, isa_lock=threading.Lock())
@@ -296,17 +334,24 @@ def run(names, scratch: Path) -> dict:
             r["bottleneck_package"] = int(np.argmax(busy))
             r["bottleneck_busy_cycles_per_token_step"] = round(max(busy) / r["token_steps"], 1)
     return {
-        "schema": "opentallas.hdc-v41x-array-hcp-gate.v1",
+        "schema": ("opentallas.hdc-v41x-array-allunit-hbm-gate.v1" if ALL_UNIT else
+                   "opentallas.hdc-v41x-array-hcp-gate.v1"),
         "status": "pass" if all(c["pass"] for c in results) else "fail",
         "simulation_build_note": os.environ.get("OT_ARRAY_BUILD_NOTE", "Verilator --build, 16 jobs, OPT_FAST=-O0 OPT_GLOBAL=-O0"),
-        "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of "
+        "claim_boundary": ("All-unit X_HE=1 X_ME=1 X_ATT=1 X_IDX=2 X_SEL=1 X_EG=1 "
+                           "X_SU=1 W_HBM=1; per-package QE qstream and timed HBM model, "
+                           "bounded pooled index-key writer/read bridge and four timed HBM stack models; "
+                           "one-user reduced array gate. Behavioral memories, link PHY stand-in, "
+                           "and bit-equivalent simulation-only FP DPI units; "
+                           "no full-model or production-rate claim." if ALL_UNIT else
+                           "functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of "
                           "V4.1x cores with X_HE=1 and other X units=0; package control is ot_rom_pkg_ctrl_x; "
                           "the selected fabric is RTL point-to-point links or ot_rom_fabric_router; memories "
                           "are behavioral and the link PHY is a delay-line stand-in (60 cycles point-to-point, "
                           "30, 109 or 228 cycles per switched half-link; the 109-cycle setting represents about "
                           "209.76 ns over two half-links at an assumed 0.92 ns cycle before router latency; "
                           "credit return is immediate in the link RTL); per-user persistent state uses base offsets in behavioral "
-                          "memories; Engram history restore is testbench logic. Clock rate is not claimed.",
+                          "memories; Engram history restore is testbench logic. Clock rate is not claimed."),
         "vehicle": "deepseek-v4.1-flash-reduced-v2 (40 layers, vocab 4040)",
                 "configurations": results,
         "log": lines,
@@ -321,7 +366,10 @@ def main() -> int:
     parser.add_argument("--scratch", type=Path, help="build and run here and keep it")
     parser.add_argument("--reuse", action="store_true",
                         help="with --scratch: keep builds and run logs made from the same sources")
+    parser.add_argument("--all-unit", action="store_true", help="all adopted V4.1x X units and timed weight/index HBM")
     args = parser.parse_args()
+    if args.all_unit and args.only != ["b2_p2p"]:
+        parser.error("--all-unit currently requires --only b2_p2p (multiuser key namespace is a later gate)")
     global REUSE
     REUSE = args.reuse
     names = args.only or list(CONFIGS)
