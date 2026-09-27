@@ -48,7 +48,14 @@ module tb_hdc_v41x_array #(
     localparam integer CROM_WORDS = 1 << 15, KVW = 32768, PS = 16384, PROG_WORDS = 1 << PAW;
     localparam integer VMP = PB + USERS * PS;       // physical vector memory, elements
     localparam integer FLIT = 512, MAXU = 16, DESTS = 64;
-    localparam integer LINK_CH = FABRIC ? 30 : 60;
+    localparam integer LINK_CH_MAX = FABRIC ? 228 : 60;
+    integer link_ch = FABRIC ? 30 : 60;
+    initial begin
+        if ($value$plusargs("LINK_CH=%d", link_ch)) begin
+            if (link_ch < 1 || link_ch > LINK_CH_MAX)
+                $fatal(1, "LINK_CH=%0d outside 1..%0d", link_ch, LINK_CH_MAX);
+        end
+    end
 
     // -- shared ROMs -----------------------------------------------------------------------
     reg [G*W*16-1:0]  wrom [0:WROM_WORDS-1];
@@ -83,9 +90,10 @@ module tb_hdc_v41x_array #(
         if (FABRIC == 0) begin : g_p2p
             for (n = 0; n < NODES; n = n + 1) begin : g_link
                 localparam integer DST = (n + 1) % NODES;
-                ot_rom_pkg_link #(.FLIT_BYTES(FLIT / 8), .TX_STAGES(2), .CHANNEL_CYCLES(LINK_CH), .RX_STAGES(2),
-                                  .CREDITS(32)) u_link (
+                ot_rom_pkg_link #(.FLIT_BYTES(FLIT / 8), .TX_STAGES(2), .CHANNEL_CYCLES(LINK_CH_MAX), .RX_STAGES(2),
+                                  .CREDITS(32), .DYNAMIC_DELAY(FABRIC)) u_link (
                     .clk(clk), .rst_n(rst_n),
+                    .channel_cycles(link_ch[15:0]),
                     .in_valid(tx_v[n]), .in_ready(tx_r[n]), .in_data(tx_d[n*FLIT +: FLIT]), .in_last(tx_l[n]),
                     .out_valid(rx_v[DST]), .out_ready(rx_r[DST]), .out_data(rx_d[DST*FLIT +: FLIT]),
                     .out_last(rx_l[DST]), .credit_stalls(l_stalls[n*32 +: 32]));
@@ -100,15 +108,17 @@ module tb_hdc_v41x_array #(
                 .out_valid(ro_v), .out_ready(ro_r), .out_data(ro_d), .out_last(ro_l),
                 .cfg_we(1'b0), .cfg_dest(8'd0), .cfg_mask({NODES{1'b0}}), .drops(r_drops), .overflow(r_overflow));
             for (n = 0; n < NODES; n = n + 1) begin : g_link
-                ot_rom_pkg_link #(.FLIT_BYTES(FLIT / 8), .TX_STAGES(2), .CHANNEL_CYCLES(LINK_CH), .RX_STAGES(2),
-                                  .CREDITS(32)) u_up (
+                ot_rom_pkg_link #(.FLIT_BYTES(FLIT / 8), .TX_STAGES(2), .CHANNEL_CYCLES(LINK_CH_MAX), .RX_STAGES(2),
+                                  .CREDITS(32), .DYNAMIC_DELAY(FABRIC)) u_up (
                     .clk(clk), .rst_n(rst_n),
+                    .channel_cycles(link_ch[15:0]),
                     .in_valid(tx_v[n]), .in_ready(tx_r[n]), .in_data(tx_d[n*FLIT +: FLIT]), .in_last(tx_l[n]),
                     .out_valid(ri_v[n]), .out_ready(ri_r[n]), .out_data(ri_d[n*FLIT +: FLIT]),
                     .out_last(ri_l[n]), .credit_stalls(l_stalls[n*32 +: 32]));
-                ot_rom_pkg_link #(.FLIT_BYTES(FLIT / 8), .TX_STAGES(2), .CHANNEL_CYCLES(LINK_CH), .RX_STAGES(2),
-                                  .CREDITS(32)) u_down (
+                ot_rom_pkg_link #(.FLIT_BYTES(FLIT / 8), .TX_STAGES(2), .CHANNEL_CYCLES(LINK_CH_MAX), .RX_STAGES(2),
+                                  .CREDITS(32), .DYNAMIC_DELAY(FABRIC)) u_down (
                     .clk(clk), .rst_n(rst_n),
+                    .channel_cycles(link_ch[15:0]),
                     .in_valid(ro_v[n]), .in_ready(ro_r[n]), .in_data(ro_d[n*FLIT +: FLIT]), .in_last(ro_l[n]),
                     .out_valid(rx_v[n]), .out_ready(rx_r[n]), .out_data(rx_d[n*FLIT +: FLIT]),
                     .out_last(rx_l[n]), .credit_stalls(l_stalls[(NODES + n)*32 +: 32]));
@@ -475,6 +485,8 @@ module tb_hdc_v41x_array #(
     reg [63:0] end_cyc = 0;
     always @(posedge clk) begin
         cyc <= cyc + 1;
+        if (hb > 0 && cyc != 0 && cyc % hb == 0)
+            $display("HEARTBEAT cycle=%0d finished=%0d", cyc, finished);
         if (cyc == 5) rst_n <= 1'b1;
         if (finished == n_users && !checking) begin checking <= 1'b1; end_cyc <= cyc; end
         if (checking && checked_pkgs == NODES) begin

@@ -16,7 +16,9 @@
 // throttles a long message once the pipe outgrows it); a real return crosses the
 // channel too and needs ~2 x 209 = 418 flits of receive buffer for full rate.
 module tb_rom_pkg_link;
-    localparam integer FLIT_BYTES = 1800, TX = 2, CH = 204, RX = 2, CREDITS = 256;
+    parameter integer DYNAMIC_DELAY = 0;
+    localparam integer FLIT_BYTES = 1800, TX = 2, CH = DYNAMIC_DELAY ? 228 : 204,
+                       RX = 2, CREDITS = 256;
     localparam integer W = FLIT_BYTES * 8;
     reg clk = 0, rst_n = 0;
     reg in_valid = 0, in_last = 0, out_ready = 1;
@@ -24,10 +26,12 @@ module tb_rom_pkg_link;
     wire in_ready, out_valid, out_last;
     wire [W-1:0] out_data;
     wire [31:0] credit_stalls;
+    reg [15:0] channel_cycles = 204;
 
     ot_rom_pkg_link #(.FLIT_BYTES(FLIT_BYTES), .TX_STAGES(TX), .CHANNEL_CYCLES(CH),
-                      .RX_STAGES(RX), .CREDITS(CREDITS)) dut (
-        .clk(clk), .rst_n(rst_n), .in_valid(in_valid), .in_ready(in_ready),
+                      .RX_STAGES(RX), .CREDITS(CREDITS), .DYNAMIC_DELAY(DYNAMIC_DELAY)) dut (
+        .clk(clk), .rst_n(rst_n), .channel_cycles(channel_cycles),
+        .in_valid(in_valid), .in_ready(in_ready),
         .in_data(in_data), .in_last(in_last), .out_valid(out_valid), .out_ready(out_ready),
         .out_data(out_data), .out_last(out_last), .credit_stalls(credit_stalls));
 
@@ -86,6 +90,10 @@ module tb_rom_pkg_link;
     endtask
 
     initial begin
+        if (DYNAMIC_DELAY && $value$plusargs("LINK_CH=%d", channel_cycles)) begin
+            if (channel_cycles < 1 || channel_cycles > CH)
+                $fatal(1, "LINK_CH outside 1..%0d", CH);
+        end
         repeat (3) @(posedge clk);
         rst_n = 1;
         repeat (2) @(posedge clk);

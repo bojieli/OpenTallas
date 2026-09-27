@@ -21,12 +21,14 @@
 module ot_rom_pkg_link #(
     parameter integer FLIT_BYTES     = 1800,   // 1.8 TB/s at 1 GHz
     parameter integer TX_STAGES      = 2,
-    parameter integer CHANNEL_CYCLES = 60,     // PHY + FEC + flight stand-in
+    parameter integer CHANNEL_CYCLES = 60,     // PHY + FEC + flight stand-in (maximum if DYNAMIC_DELAY)
     parameter integer RX_STAGES      = 2,
-    parameter integer CREDITS        = 128     // receiver buffer, in flits
+    parameter integer CREDITS        = 128,    // receiver buffer, in flits
+    parameter integer DYNAMIC_DELAY  = 0      // testbench delay sweep; static link is unchanged
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
+    input  wire [15:0]              channel_cycles, // used only with DYNAMIC_DELAY=1
     // sender side
     input  wire                     in_valid,
     output wire                     in_ready,
@@ -70,7 +72,22 @@ module ot_rom_pkg_link #(
     assign out_last  = out_last_r;
     // Pop the FIFO into the output register whenever it is empty or draining.
     wire drain = (fill != 0) && (!out_valid_r || out_ready);
-    wire arrive = pipe_valid[DEPTH-1];
+    wire arrive;
+    wire [W-1:0] arrive_data;
+    wire arrive_last;
+    generate if (DYNAMIC_DELAY) begin : g_delay_sweep
+        // Select a tap without changing the credit FIFO or data ordering.
+        // The testbench holds channel_cycles constant for the whole run.
+        wire [15:0] bounded_cycles = channel_cycles > CHANNEL_CYCLES ? CHANNEL_CYCLES : channel_cycles;
+        wire [$clog2(DEPTH)-1:0] tap = TX_STAGES + bounded_cycles + RX_STAGES - 1;
+        assign arrive = pipe_valid[tap];
+        assign arrive_data = pipe_data[tap];
+        assign arrive_last = pipe_last[tap];
+    end else begin : g_static_delay
+        assign arrive = pipe_valid[DEPTH-1];
+        assign arrive_data = pipe_data[DEPTH-1];
+        assign arrive_last = pipe_last[DEPTH-1];
+    end endgenerate
 
     integer i;
     always @(posedge clk or negedge rst_n) begin
@@ -88,8 +105,8 @@ module ot_rom_pkg_link #(
                 pipe_last[i]  <= pipe_last[i-1];
             end
             if (arrive) begin
-                fifo_data[tail] <= pipe_data[DEPTH-1];
-                fifo_last[tail] <= pipe_last[DEPTH-1];
+                fifo_data[tail] <= arrive_data;
+                fifo_last[tail] <= arrive_last;
                 tail <= (tail + 1 == CREDITS) ? 0 : tail + 1;
             end
             if (drain) begin

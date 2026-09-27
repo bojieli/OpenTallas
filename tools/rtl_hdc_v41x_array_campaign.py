@@ -5,7 +5,9 @@ Each package combines an ot_hdc_core_v41x (X_HE=1, other X units=0) and an
 ot_rom_pkg_ctrl_x in a contiguous layer-range pipeline. The point-to-point
 gate runs three prompt tokens and one generated token for one user. The
 switched gate has three body packages, two split head packages, two users,
-SIDE messages, head multicast, result collection, and injected link stalls.
+SIDE messages, head multicast, result collection, injected link stalls, and
+30/109/228-cycle half-link delay taps (about 210 ns for two 109-cycle halves
+at an assumed 0.92 ns cycle, before the router).
 Both start from empty persistent state.
 The ISA pipeline is checked against hdc_golden_v41 before RTL simulation.
 RTL then checks reduced tokens, generated tokens, all 4,040 lm_head logits,
@@ -53,10 +55,11 @@ CTRL = ROOT / "rtl/rom/ot_rom_pkg_ctrl_x.sv"
 MG_SIDE, MG_HEAD, DESTS = 32, 48, 64
 
 # name: (body packages, lm_head parts, lm_head multicast, shared state, fabric,
-#        users, extra user counts, stall %, prompt tokens, generated tokens).
+#        users, extra user counts, stall %, prompt tokens, generated tokens,
+#        channel-delay sweep in cycles per link/half-link).
 CONFIGS = {
-    "b2_p2p": (2, 0, False, "relay", "p2p", 1, (), 0, 3, 1),
-    "b3_h2_switch_stall": (3, 2, True, "mcast", "switch", 2, (), 10, 2, 1),
+    "b2_p2p": (2, 0, False, "relay", "p2p", 1, (), 0, 3, 1, (60,)),
+    "b3_h2_switch_stall": (3, 2, True, "mcast", "switch", 2, (), 10, 2, 1, (30, 109, 228)),
 }
 RES = re.compile(r"HDC41_ARRAY nodes=(\d+) users=(\d+) generated=(\d+) mismatches=(\d+) logit_mismatch=(\d+) "
                  r"lm_head_checks=(\d+) state_mismatch=(\d+) total_cycles=(\d+)")
@@ -149,7 +152,7 @@ def build(obj: Path, svh: str, users: int, stall: int) -> Path:
             f"-GUSERS={users}", f"-GSTALL={stall}", "-Mdir", str(obj), f"-I{obj}", f"-I{core.SVH.parent}",
             f"+define+HDC_SW={I.SU_LANES}",
             *map(str, core.RTL), str(LINK), str(ROUTER), str(CTRL), str(TB), str(HARNESS),
-            "-CFLAGS", "-O1", "-j", "4"])
+            "-CFLAGS", "-O1", "-MAKEFLAGS", "OPT_FAST=-O0 OPT_GLOBAL=-O0", "-j", "16"])
     (obj / "stamp").write_text(stamp)
     return exe
 
@@ -184,7 +187,7 @@ def timing(plan, progs, steps):
 
 
 def run_config(name, spec, ctx, scratch: Path, log) -> dict:
-    body, hp, hmc, shared, fabric, users, fewer, stall, plen, ngen = spec
+    body, hp, hmc, shared, fabric, users, fewer, stall, plen, ngen, link_delays = spec
     lay, model, base = ctx["lay"], ctx["model"], ctx["base"]
     with ctx["isa_lock"]:
         t0 = time.time()
@@ -204,30 +207,42 @@ def run_config(name, spec, ctx, scratch: Path, log) -> dict:
     log(f"{name}: built ({time.time() - t0:.0f} s)")
     tm = timing(plan, progs, steps)
     runs = []
-    for active in (users, *fewer):
-        t0 = time.time()
-        log_path = scratch / f"out_{name}_u{active}.txt"
-        if REUSE and log_path.exists() and RES.search(log_path.read_text()) and \
-                (scratch / f"obj_{name}" / "stamp").read_text() == (scratch / f"stamp_{name}_u{active}").read_text():
-            runs.append(parse(log_path.read_text(), active, steps, ngen))
-            log(f"{name} u{active}: reused")
-            continue
-        with open(log_path, "w") as fh:          # streamed, so a long run can be watched
-            rc = subprocess.run(["stdbuf", "-oL", str(exe), f"+DIR={img}", f"+ROMS={ctx['roms']}",
-                                 f"+NUSERS={active}", f"+NPROMPT={plen}", f"+NGEN={ngen}", "+HB=1000000"],
-                                stdout=fh, stderr=subprocess.STDOUT).returncode
-        out = log_path.read_text()
-        (scratch / f"stamp_{name}_u{active}").write_text((scratch / f"obj_{name}" / "stamp").read_text())
-        if rc:
-            raise RuntimeError(f"{name}: simulator exited {rc}\n{out[-3000:]}")
-        r = parse(out, active, steps, ngen)
-        log(f"{name} u{active}: {'PASS' if r['pass'] else 'FAIL'} {r['total_cycles']} cycles "
-            f"({time.time() - t0:.0f} s)")
-        runs.append(r)
+
+    def link_record(r, link_ch):
+        r["link_channel_cycles"] = link_ch
+        r["two_half_link_cycles_before_router"] = 2 * (2 + link_ch + 2 + 1) if fabric == "switch" else None
+        r["two_half_link_ns_at_assumed_0p92ns_before_router"] = (
+            round(r["two_half_link_cycles_before_router"] * 0.92, 2) if fabric == "switch" else None)
+        return r
+
+    for link_ch in link_delays:
+        for active in (users, *fewer):
+            t0 = time.time()
+            log_path = scratch / f"out_{name}_u{active}_ch{link_ch}.txt"
+            run_stamp = scratch / f"stamp_{name}_u{active}_ch{link_ch}"
+            if REUSE and log_path.exists() and run_stamp.exists() and RES.search(log_path.read_text()) and \
+                    (scratch / f"obj_{name}" / "stamp").read_text() == run_stamp.read_text():
+                runs.append(link_record(parse(log_path.read_text(), active, steps, ngen), link_ch))
+                log(f"{name} u{active} ch{link_ch}: reused")
+                continue
+            with open(log_path, "w") as fh:          # streamed, so a long run can be watched
+                rc = subprocess.run(["stdbuf", "-oL", str(exe), f"+DIR={img}", f"+ROMS={ctx['roms']}",
+                                     f"+NUSERS={active}", f"+NPROMPT={plen}", f"+NGEN={ngen}",
+                                     f"+LINK_CH={link_ch}", "+HB=1000000"],
+                                    stdout=fh, stderr=subprocess.STDOUT).returncode
+            out = log_path.read_text()
+            run_stamp.write_text((scratch / f"obj_{name}" / "stamp").read_text())
+            if rc:
+                raise RuntimeError(f"{name}: simulator exited {rc}\n{out[-3000:]}")
+            r = link_record(parse(out, active, steps, ngen), link_ch)
+            log(f"{name} u{active} ch{link_ch}: {'PASS' if r['pass'] else 'FAIL'} {r['total_cycles']} cycles "
+                f"({time.time() - t0:.0f} s)")
+            runs.append(r)
     roles = [plan.role(k) for k in range(plan.n)]
     return {
         "name": name, "body_packages": body, "lm_head_packages": hp or 0, "lm_head_multicast": hmc,
         "shared_state": shared, "fabric": fabric, "stall_percent": stall,
+        "link_flit_bytes": 64, "link_credits_flits": 32, "link_delay_sweep_cycles_per_half": list(link_delays),
         "prompt_tokens": plen, "generated_tokens_per_user": ngen, "steps_per_user": steps,
         "prompts": [g["prompt"] for g in gold], "golden_generated": [g["generated"] for g in gold],
         "layers_per_package": [plan.body[k] if k < plan.nb else [] for k in range(plan.n)],
@@ -283,12 +298,14 @@ def run(names, scratch: Path) -> dict:
     return {
         "schema": "opentallas.hdc-v41x-array-hcp-gate.v1",
         "status": "pass" if all(c["pass"] for c in results) else "fail",
-        "simulation_build_note": os.environ.get("OT_ARRAY_BUILD_NOTE", "Verilator --build as invoked by this campaign"),
+        "simulation_build_note": os.environ.get("OT_ARRAY_BUILD_NOTE", "Verilator --build, 16 jobs, OPT_FAST=-O0 OPT_GLOBAL=-O0"),
         "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of "
                           "V4.1x cores with X_HE=1 and other X units=0; package control is ot_rom_pkg_ctrl_x; "
                           "the selected fabric is RTL point-to-point links or ot_rom_fabric_router; memories "
                           "are behavioral and the link PHY is a delay-line stand-in (60 cycles point-to-point, "
-                          "30 per switch half-link); per-user persistent state uses base offsets in behavioral "
+                          "30, 109 or 228 cycles per switched half-link; the 109-cycle setting represents about "
+                          "209.76 ns over two half-links at an assumed 0.92 ns cycle before router latency; "
+                          "credit return is immediate in the link RTL); per-user persistent state uses base offsets in behavioral "
                           "memories; Engram history restore is testbench logic. Clock rate is not claimed.",
         "vehicle": "deepseek-v4.1-flash-reduced-v2 (40 layers, vocab 4040)",
                 "configurations": results,
