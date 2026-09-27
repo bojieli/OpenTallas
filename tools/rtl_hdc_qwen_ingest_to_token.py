@@ -47,9 +47,13 @@ def main() -> None:
     ap.add_argument("--probe-stop", type=int, help="run one cut point and retain first VM/KV mismatch lines")
     ap.add_argument("--two-token", action="store_true",
                     help="prefill through position 14, then run positions 15 and 16 across tail tile reuse")
+    ap.add_argument("--physical-sector", action="store_true",
+                    help="route logical FP8 KV traffic through 32-byte HBM sector bridge")
     args = ap.parse_args()
     if args.two_token and (args.bisect or args.probe_stop is not None):
         ap.error("--two-token cannot be combined with instruction probes")
+    if args.physical_sector and args.legacy_width:
+        ap.error("--physical-sector requires packed FP8 HBM")
     context = 16 if args.two_token else 64
     checkpoint = ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"
     if args.weights is not None and not checkpoint.exists():
@@ -97,8 +101,12 @@ def main() -> None:
         layout = {"LOG_HD": int(math.log2(lay.HD)), "LOG_TW": int(math.log2(lay.TW)),
                   "LLG": int(math.log2(lay.L * lay.KV)), "V0_WORD": lay.kv_v0 // 16}
         params = [*(f"-G{k}={v}" for k, v in layout.items()), f"-GNPC={KC.NPC}",
-                  "-GPACKED_HBM=0" if args.legacy_width else "-GPACKED_HBM=1", "-GCORE_FP8=1"]
-        sources = [*KC.core.HDC, *KC.KV_RTL, KC.HBM, *KC.core.PIPES, KC.TB_CORE, KC.HARNESS_CORE]
+                  "-GPACKED_HBM=0" if args.legacy_width else "-GPACKED_HBM=1", "-GCORE_FP8=1",
+                  f"-GPHYSICAL_HBM={int(args.physical_sector)}"]
+        sector_rtl = ROOT / "rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv"
+        sources = [*KC.core.HDC, *KC.KV_RTL, KC.HBM,
+                   *( [sector_rtl] if args.physical_sector else [] ),
+                   *KC.core.PIPES, KC.TB_CORE, KC.HARNESS_CORE]
         try:
             exe = KC.verilate("tb_hdc_core_hbm", work / "core_obj", sources, params)
         except subprocess.CalledProcessError as exc:
@@ -178,6 +186,10 @@ def main() -> None:
                          if args.two_token else
                          "Reduced Qwen3 vehicle context 64, one token after FP32 prefill. Ingest RTL packed FP8 output populates HBM model; streamer expands FP8 on read and packs FP8 on write; hardware tail boot transfers active K words. Legacy-width diagnostic uses BF16 HBM words and direct tail preload."),
                "legacy_width": args.legacy_width,
+               "physical_sector": args.physical_sector,
+               "physical_sector_boundary": ("Serialized, order-preserving 16-byte logical to 32-byte physical "
+                                            "HBM read and partial-write RMW. Functional correctness gate; no "
+                                            "HBM bandwidth or shipped scheduler claim." if args.physical_sector else None),
                "two_token": args.two_token,
                "first_token": first_token if args.two_token else None,
                "second_token": second_token,
