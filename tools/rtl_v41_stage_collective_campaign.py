@@ -270,9 +270,9 @@ def cases():
     for depth in (16, 32, 64, 128, 256):
         out.append(dict(name=f"gather_rows_d{depth}_q128", pattern="gather_rows", depth=depth, qtx=128))
     for depth in (16, 32, 64, 128, 256):
-        out.append(dict(name=f"stage_hop_full_d{depth}_q64", pattern="stage_hop", depth=depth, qtx=64))
-    out.append(dict(name="stage_hop_half_d256_q64", pattern="stage_hop", depth=256, qtx=64, words=41))
-    for q in (4, 16):
+        out.append(dict(name=f"stage_hop_full_d{depth}_q128", pattern="stage_hop", depth=depth, qtx=128))
+    out.append(dict(name="stage_hop_half_d256_q128", pattern="stage_hop", depth=256, qtx=128, words=41))
+    for q in (4, 16, 64):
         out.append(dict(name=f"stage_hop_full_d256_q{q}", pattern="stage_hop", depth=256, qtx=q))
     return out
 

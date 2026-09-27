@@ -61,7 +61,9 @@ module ot_v41sb_link #(
     output wire          cr_out           // ... arriving at the sender LAT cycles later
 );
     localparam integer C   = COST * BPC_DEN;
-    localparam integer CAP = (BPC_NUM > C) ? BPC_NUM : C;
+    // the bucket holds one record plus a cycle's accrual, so a fractional rate keeps its remainder (a cap at one
+    // record would round every record up to whole cycles: 3.25 -> 4 cycles per 512 B on the T1 link)
+    localparam integer CAP = C + BPC_NUM;
     localparam integer AB  = (LAT > 1) ? $clog2(LAT) : 1;
     reg [39:0] tokens;
     assign in_ready = tokens >= C;
