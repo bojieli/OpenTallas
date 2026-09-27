@@ -577,7 +577,19 @@ module ot_hdc_core_v41x #(
 
     // engine 3: the indexer engine (X_IDX)
     generate if (X_IDX != 0) begin : g_idx_x
-        // (indexer adapter: ot_hdc_v41x_idx_adapt)
+        ot_hdc_v41x_idx_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_idx (
+            .clk(clk), .rst_n(rst_n), .go(e_go[3]), .ready(e_ready[3]), .idle(e_idle[3]),
+            .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_ts(me_ts), .i_ks(me_ks),
+            .i_js(me_js), .i_jsh(me_jsh), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs), .i_xcs(me_xcs),
+            .i_hg(me_hg), .i_ogs(me_ogs), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots),
+            .i_ojs(me_ojs), .i_mmode(me_mmode), .i_oen(me_oen),
+            .kv_re(e_kv_re[3]), .kv_addr(e_kv_raddr[3*G*AW +: G*AW]), .kv_q(kv_q),
+            .x_re(e_vx_re[3*MP*G +: MP*G]), .x_addr(e_vx_addr[3*MP*G*AW +: MP*G*AW]), .x_q(vx_q),
+            .ov(e_ov[3]), .o_we(e_we[3*MP*G +: MP*G]), .o_addr(e_addr[3*MP*G*AW +: MP*G*AW]),
+            .o_mask(e_mask[3*MP*G*W +: MP*G*W]), .o_data(e_data[3*MP*G*W*32 +: MP*G*W*32]),
+            .fault(e_fault[3]));
+        assign e_am_idx[3*MP*NW +: MP*NW] = 0; assign e_am_val[3*MP*32 +: MP*32] = 0;
+        assign e_am_any[3*MP +: MP] = 0;
     end else begin : g_idx_n
         assign e_ready[3] = 1'b1; assign e_idle[3] = 1'b1; assign e_fault[3] = 1'b0; assign e_kv_re[3] = 1'b0;
         assign e_kv_raddr[3*G*AW +: G*AW] = 0; assign e_vx_re[3*MP*G +: MP*G] = 0;

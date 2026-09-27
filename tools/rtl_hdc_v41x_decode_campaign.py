@@ -49,7 +49,10 @@ import hdc_isa_v41 as I  # noqa: E402
 OUT = ROOT / "results/rtl/hdc_v41x_decode_campaign.json"
 # the re-specified units (bring-up switches of ot_hdc_core_v41x) and the R-ARITH classes each one brings
 X_UNITS = ("he", "me", "att", "idx")
-X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",)}
+# idx: the index dots are FP4 x FP4 QDQ blocks, exact in binary32 in any order, so the indexer engine's
+# lanes match the ISA under either contract; the "idx" class's other member, the SU head sum tagged
+# "indexer", runs on the stream unit and switches with it (su)
+X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ()}
 UNITS = X_UNITS           # set by main(): the units built re-specified
 PARAMS = {"hhw": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
@@ -63,7 +66,8 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                "ot_hdc_v41_stream", "ot_hdc_v41_qe", "ot_hdc_v41_xu",
                                                "ot_hdc_v41_hcproj")] +
        [ROOT / "rtl/hdc/ot_hdc_fastfp.sv"] +
-       [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt", "ot_hdc_core_v41x")])
+       [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt", "ot_hdc_v41x_idx_arith",
+                                                "ot_hdc_v41x_idx_adapt", "ot_hdc_core_v41x")])
 SVH = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
 TB = ROOT / "rtl/test/tb_hdc_core_v41x.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_v41x_harness.cpp"
