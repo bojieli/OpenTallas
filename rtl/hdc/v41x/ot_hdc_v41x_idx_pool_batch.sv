@@ -42,6 +42,7 @@ module ot_hdc_v41x_idx_pool_batch #(
     output wire [29:0]             o_index,
     output wire [15:0]             o_score,
     output wire                    o_fault,
+    output wire                    busy,
     output wire                    protocol_fault
 );
     localparam integer L = 8*G;
@@ -63,6 +64,7 @@ module ot_hdc_v41x_idx_pool_batch #(
     wire [47:0] cnt_refused;
 
     assign b_ready = state == IDLE;
+    assign busy = state != IDLE;
     wire m_v = state == META && sent < 64;
     wire [5:0] m_slot = sent[5:0];
     ot_hdc_v41x_idx_pool_finish #(.G(G), .M(M), .IH(IH), .MD(128)) finish (

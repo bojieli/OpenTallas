@@ -18,7 +18,7 @@ module tb_hdc_v41x_idx_pool_batch (input wire clk);
     end
     reg rst_n=0, cmd_v=0, b_valid=0;
     reg [29:0] cmd_nkeys=0;
-    wire b_ready, o_valid, o_write, o_fault, protocol_fault;
+    wire b_ready, o_valid, o_write, o_fault, busy, protocol_fault;
     wire [29:0] o_index;
     wire [15:0] o_score;
     reg [63:0] b_kv=0,b_ref=0,b_keep=0;
@@ -39,7 +39,7 @@ module tb_hdc_v41x_idx_pool_batch (input wire clk);
         .w_v(w_v),.w_head(w_head),.w_w(w_w),.w_qsc(w_qsc),
         .rq_v(rq_v),.rq_a(rq_a),.rq_q(rq_q),.rq_plg(rq_plg),.rq_tag(rq_tag),.rq_src(rq_src),
         .rq_split(rq_split),.rq_rg(rq_rg),.rd_x(rd_x),
-        .o_valid(o_valid),.o_write(o_write),.o_index(o_index),.o_score(o_score),.o_fault(o_fault),
+        .o_valid(o_valid),.o_write(o_write),.o_index(o_index),.o_score(o_score),.o_fault(o_fault),.busy(busy),
         .protocol_fault(protocol_fault));
     reg [L*M*XW-1:0] xp [0:1];
     assign rd_x=xp[1];

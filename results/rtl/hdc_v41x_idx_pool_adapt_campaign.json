@@ -1,68 +1,43 @@
 {
- "schema": "opentallas-hdc-v41x-idx-pool-batch-v1",
+ "schema": "opentallas-hdc-v41x-idx-pool-adapt-v1",
  "status": "pass",
  "rows": [
   {
-   "name": "typical",
-   "keys": 32,
+   "k": 32,
    "checked": 32,
    "errors": 0,
-   "faults": 0,
-   "cycles": 288,
-   "protocol_fault": 0
+   "keys": 80,
+   "beats": 170,
+   "cycles": 639
   },
   {
-   "name": "wide",
-   "keys": 15,
-   "checked": 15,
+   "k": 128,
+   "checked": 32,
    "errors": 0,
-   "faults": 7,
-   "cycles": 302,
-   "protocol_fault": 0
-  },
-  {
-   "name": "masked",
-   "keys": 16,
-   "checked": 16,
-   "errors": 0,
-   "faults": 0,
-   "cycles": 304,
-   "protocol_fault": 0
-  },
-  {
-   "name": "fault",
-   "keys": 13,
-   "checked": 13,
-   "errors": 0,
-   "faults": 13,
-   "cycles": 298,
-   "protocol_fault": 0
-  },
-  {
-   "name": "vehicle",
-   "keys": 1,
-   "checked": 1,
-   "errors": 0,
-   "faults": 0,
-   "cycles": 274,
-   "protocol_fault": 0
+   "keys": 80,
+   "beats": 170,
+   "cycles": 1503
   }
  ],
- "limitation": "One G4/M2 tile back-pressures 64-key kmerge beats; query FP8 read words and head weights are supplied by a testbench memory. Core X_IDX adapter and full-rate replication remain.",
+ "limitation": "Four-stack zero-key token proves loader/replicated-image group selection/merge/pooled score/VM write coupling. The selector rereads each key-group prefix; HBM bandwidth and tile replication remain unmeasured. Runtime writer is separately unit-gated; core dispatch remains.",
  "sources": {
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "d117ce3dbf6522353f7a63584f16502872f96ca6f45b20f949bc5b533dbe8de7",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv": "fc2ec3d8cd5cebb4e0db9ce4882104455e81c4c7947dd1475d53af945a133dc5",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv": "c3c4b2f36875e44daf75818b5355aad5ad3cb4803acd6b1c1d5fccf49070c37c",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv": "a2c4e44ff1d581b6d2e5cfe8e221e2c4553e4cbedd750e20819d6d7b29f30136",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv": "9d0638579b17a9f2323cf623d7f9e6330fd13a5ba8bdd358080cacebb3c2d676",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv": "6025df0bda8d70e63a7675816382399c24075edb61258c9145e52b23e56e0cba",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c81f49cd36bbd55a79655c761d7d776125ce81cceae1514d35dbd539cc7faeac",
   "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
   "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
   "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee",
   "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
   "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
-  "rtl/test/tb_hdc_v41x_idx_pool_batch.sv": "35bd68e546c1f93a9e5b4037807e5d3e0480e2fdd8055bac1f190fbbef66bc33",
+  "rtl/test/tb_hdc_v41x_idx_pool_adapt.sv": "7eaa5d4ae1a9bcb0af33e92acef2a4c24c35341e4f78557b57b9e6e24a6a8da6",
   "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
-  "tools/rtl_hdc_v41x_idx_pool_batch_campaign.py": "aba160088df4a84249c91b1c6c402a50be4e8349a8fbe99f011f1913da120996"
+  "tools/rtl_hdc_v41x_idx_pool_adapt_campaign.py": "2fc6e53683ce3630ced81876bd06531a3480b51288d6df1fdee9dcd89246fd40"
  }
 }

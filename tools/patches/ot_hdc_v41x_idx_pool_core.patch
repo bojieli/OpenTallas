@@ -1,0 +1,79 @@
+--- a/rtl/hdc/v41x/ot_hdc_core_v41x.sv
++++ b/rtl/hdc/v41x/ot_hdc_core_v41x.sv
+@@ -169,6 +169,24 @@
+     output wire [27:0]       ikw_ssec,
+     output wire [2:0]        ikw_sslot,
+     output wire [7:0]        ikw_scale,
++    // X_IDX=2 pooled indexer: four replicated HBM stacks and full K128 key updates
++    output wire [127:0]      pikh_req_v,
++    input  wire [127:0]      pikh_req_rdy,
++    output wire [128*28-1:0] pikh_req_addr,
++    output wire [128*4-1:0] pikh_req_len,
++    output wire [128*16-1:0] pikh_req_tag,
++    input  wire [127:0]      pikh_rsp_v,
++    output wire [127:0]      pikh_rsp_rdy,
++    input  wire [128*16-1:0] pikh_rsp_tag,
++    input  wire [128*4-1:0] pikh_rsp_beat,
++    input  wire [128*256-1:0] pikh_rsp_data,
++    output wire              pikw_v,
++    output wire [3:0]        pikw_stack_mask,
++    output wire [27:0]       pikw_csec,
++    output wire [511:0]      pikw_codes,
++    output wire [27:0]       pikw_ssec,
++    output wire [2:0]        pikw_sslot,
++    output wire [31:0]       pikw_scales,
+     // quantised weight ROM, Engram table ROM
+     output wire              qrom_re,
+     output wire [AW-1:0]     qrom_addr,
+@@ -674,6 +692,30 @@
+             assign kwr_kv_waddr = kv_waddr;
+             assign kwr_kv_wdata = kv_wdata;
+         end
++        if (X_IDX == 2) begin : g_pool
++            ot_hdc_v41x_idx_pool_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_idx (
++                .clk(clk), .rst_n(rst_n), .go(e_go[3]), .ready(e_ready[3]), .idle(e_idle[3]), .cfg_ik_base(cfg_ik_base),
++                .i_nout(me_nout), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
++                .i_xcs(me_xcs), .i_hg(me_hg), .i_round(me_round), .i_obase(me_obase), .i_mmode(me_mmode),
++                .i_oen(me_oen), .i_fuse(me_fuse), .i_wts(me_wts),
++                .x_re(e_vx_re[3*MP*G +: MP*G]), .x_addr(e_vx_addr[3*MP*G*AW +: MP*G*AW]), .x_q(vx_q),
++                .ov(e_ov[3]), .o_we(e_we[3*MP*G +: MP*G]), .o_addr(e_addr[3*MP*G*AW +: MP*G*AW]),
++                .o_mask(e_mask[3*MP*G*W +: MP*G*W]), .o_data(e_data[3*MP*G*W*32 +: MP*G*W*32]),
++                .h_req_v(pikh_req_v), .h_req_rdy(pikh_req_rdy), .h_req_addr(pikh_req_addr), .h_req_len(pikh_req_len),
++                .h_req_tag(pikh_req_tag), .h_rsp_v(pikh_rsp_v), .h_rsp_rdy(pikh_rsp_rdy), .h_rsp_tag(pikh_rsp_tag),
++                .h_rsp_beat(pikh_rsp_beat), .h_rsp_data(pikh_rsp_data), .fault(f_eng),
++                .dbg_ops(), .dbg_elems(), .dbg_keys_streamed(), .dbg_hbm_beats(), .dbg_keys_scored(),
++                .dbg_headsums_fused());
++            ot_hdc_v41x_idx_pool_kwr #(.AW(AW), .NW(NW), .NL(KNL), .HAW(28)) u_kwr (
++                .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base), .su_go(su_go), .i_dst(dst), .i_obase(o_base),
++                .i_orow(o_row), .i_nout(su_nout), .i_kdim(su_nin), .kv_we(kwr_kv_we),
++                .kv_waddr(kwr_kv_waddr), .kv_wdata(kwr_kv_wdata), .w_v(pikw_v),
++                .w_stack_mask(pikw_stack_mask), .w_csec(pikw_csec), .w_codes(pikw_codes),
++                .w_ssec(pikw_ssec), .w_sslot(pikw_sslot), .w_scales(pikw_scales), .fault(f_kwr), .dbg_keys());
++            assign ikh_req_v = 0; assign ikh_req_addr = 0; assign ikh_req_len = 0; assign ikh_req_tag = 0;
++            assign ikh_rsp_rdy = 0; assign ikw_v = 0; assign ikw_csec = 0; assign ikw_codes = 0;
++            assign ikw_ssec = 0; assign ikw_sslot = 0; assign ikw_scale = 0;
++        end else begin : g_legacy
+         ot_hdc_v41x_idx_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_idx (
+             .clk(clk), .rst_n(rst_n), .go(e_go[3]), .ready(e_ready[3]), .idle(e_idle[3]), .cfg_ik_base(cfg_ik_base),
+             .i_nout(me_nout), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
+@@ -693,6 +735,10 @@
+             .i_orow(o_row), .i_nout(su_nout), .kv_we(kwr_kv_we), .kv_waddr(kwr_kv_waddr), .kv_wdata(kwr_kv_wdata),
+             .w_v(ikw_v), .w_csec(ikw_csec), .w_codes(ikw_codes), .w_ssec(ikw_ssec), .w_sslot(ikw_sslot),
+             .w_scale(ikw_scale), .fault(f_kwr), .dbg_keys());
++            assign pikh_req_v = 0; assign pikh_req_addr = 0; assign pikh_req_len = 0; assign pikh_req_tag = 0;
++            assign pikh_rsp_rdy = 0; assign pikw_v = 0; assign pikw_stack_mask = 0; assign pikw_csec = 0;
++            assign pikw_codes = 0; assign pikw_ssec = 0; assign pikw_sslot = 0; assign pikw_scales = 0;
++        end
+         assign e_fault[3] = f_eng || f_kwr;
+         assign e_kv_re[3] = 1'b0; assign e_kv_raddr[3*G*AW +: G*AW] = 0;
+         assign e_am_idx[3*MP*NW +: MP*NW] = 0; assign e_am_val[3*MP*32 +: MP*32] = 0;
+@@ -705,6 +751,9 @@
+         assign e_data[3*MP*G*W*32 +: MP*G*W*32] = 0; assign e_am_idx[3*MP*NW +: MP*NW] = 0;
+         assign e_am_val[3*MP*32 +: MP*32] = 0; assign e_am_any[3*MP +: MP] = 0;
+         assign ikh_req_v = 0; assign ikh_req_addr = 0; assign ikh_req_len = 0; assign ikh_req_tag = 0;
++        assign pikh_req_v = 0; assign pikh_req_addr = 0; assign pikh_req_len = 0; assign pikh_req_tag = 0;
++        assign pikh_rsp_rdy = 0; assign pikw_v = 0; assign pikw_stack_mask = 0; assign pikw_csec = 0;
++        assign pikw_codes = 0; assign pikw_ssec = 0; assign pikw_sslot = 0; assign pikw_scales = 0;
+         assign ikh_rsp_rdy = 0; assign ikw_v = 1'b0; assign ikw_csec = 0; assign ikw_codes = 0; assign ikw_ssec = 0;
+         assign ikw_sslot = 0; assign ikw_scale = 0;
+     end endgenerate
