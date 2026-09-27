@@ -690,3 +690,61 @@ its engine reproduces `hdc_timing_v41.simulate` exactly (344,131 cycles). Comput
   `technology.json`'s, charged on the spec's block area.
 - **Batch policy.** Beyond 28 users, "pipeline fill" is a policy the array controller must implement:
   microbatches per stage.
+
+## 12. Attacking the dependency chain (user-approved order)
+
+V4.1 on this array is dependency-chain-bound, not weight-bound. On the plain-(b) DAG the token is ~176 of
+225 µs of dependent latency: compute chain 117, collectives 40 (about 210 on-path collectives), hops 12,
+control 7, and weights only 43. The spec above (§4-§6) already takes the chain from the widths' side. This
+section prices the further levers, each added to the previous, on the spec's widths at batch 1
+(`tools/arch_budget_v41.py` `chain_ladder`, `results/arch/arch_budget_v41.json` `chain_ladder`):
+
+| step | levers | µs/token at 200K | tok/s/user 8K / 200K / 1M | block area |
+|---|---|---|---|---|
+| 0 | the spec on the baseline links | 183.6 | 5,558 / 5,448 / 4,978 | 87 mm² |
+| 1 | reductions off the critical path | 160.9 | 6,329 / 6,214 / 5,610 | 87 mm² |
+| 2 | + tile/row chaining for every unit | 144.9 | 6,994 / 6,903 / 6,521 | 87 mm² |
+| 3 | + shorter stages | **131.5** | **7,715 / 7,602 / 7,138** | 87 mm² |
+| 4a | + attention on one package, spec widths | 136.9 | 7,527 / 7,304 / 6,451 | 87 mm² |
+| 4b | + attention on one package, attention/indexer/weight engines ×2 | 116.7 | 8,869 / 8,571 / 7,530 | 157 mm² |
+| 4c | the same engines ×2, attention kept on the four-die group | 119.4 | 8,512 / 8,377 / 7,844 | 157 mm² |
+| 5 | MTP m = 2, τ = 4.1, on step 3 | 238.9 per cycle | **16,204 / 15,818 / 14,311** | 174 mm² |
+
+1. **Reductions off the critical path (−23 µs).** An RMSNorm's rstd scales the next matvec's outputs instead
+   of its input, so the sum of squares and the rsqrt run beside the weight sweep. The attention softmax
+   becomes online: exp streams behind the scores with a running-max rescale, as the release's own
+   sparse-attention kernel does in 64-row blocks (`hdc_golden_v41` `vendor_blocks`). Fused SiLU·mul and the
+   hyper-connection/Sinkhorn side branch are already in the graph. **Both are contract changes:** the golden
+   must adopt them (an R-ARITH v2), and the ISA and RTL follow, with the token re-checked against the oracle
+   as in §4.
+2. **Chaining for every unit (−16 µs).** Matvecs, the attention and indexer scans and the local selects start
+   on their producer's first tile or row instead of its last element. This extends the vector unit's
+   per-vector credits to the ME/QE, attention, indexer and select outputs. The weight sweep on the path
+   falls from 23 to 13 µs because each matvec now overlaps its producer.
+3. **Shorter stages (−13 µs).** The stream unit's base depth drops to 21 cycles (29 in the DAG) and its reducer
+   tail to 25 (32). Beyond the spec's exp and sigmoid, rsqrt goes to 58 cycles (90) and sqrt(softplus) to 161
+   (259); the vector-unit agent measured these depths. The chain floor is already chunk-of-8 plus the tree,
+   on 3-cycle adds.
+4. **Collectives and hops: fewer tensor-parallel boundaries (not adopted).** Keeping attention and its
+   projections on the two dies of one package halves the attention collectives' latency on the path (26 →
+   13 µs). But it doubles each die's attention, indexer and projection work.
+   - At the spec's widths this is a net loss: 7,304 against 7,602 tok/s at 200K, and 6,451 against 7,138
+     at 1M.
+   - With those engines doubled it gains only 2-3% at 8K and 200K over spending the same area without the
+     move (step 4c), and loses 4% at 1M, where the doubled index scan dominates.
+   - The attention stays on the four-die group.
+   - What remains of the collective term (26 µs) is link latency after the last partial. In-package
+     reduction is already the one-shot engine's first level. The next lever is in-network reduction, which
+     removes the package-pair round trip, or a shorter pair link. The substrate module is +12.5% but not
+     shippable (the packaging agent's study).
+5. **MTP on top (×2.1).** On step 3 the m = 2 core verifies 6 positions in 238.9 µs per cycle with its draft.
+   At τ = 4.1 that is **15,818 tok/s per user at 200K**, against 11,950 with MTP on the spec alone.
+
+Levers 1-3 are the integration requirements for `ot_hdc_core_v41x`:
+- lever 1 is a golden/ISA/RTL contract change;
+- lever 2 is the chaining protocol on every unit boundary;
+- lever 3 is the vector unit's measured depths.
+
+Doubling the engines (step 4c, +8% at 200K for +70 mm²) stays inside the 329 mm² envelope. It is the next
+width lever if the silicon falls short. Every number in this section is the model's, on the report's DAG,
+not silicon.

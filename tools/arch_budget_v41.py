@@ -500,8 +500,15 @@ def fill_machine(batch):
     return replace(m1, batch=batch, microbatch=max(1.0, batch / S), slots=float(min(batch, S)))
 
 
+CHAIN_LEVERS = ("fuse", "chain_all", "short_stages", "att_local")
+ATT_NODES = ("attn.a_proj", "attn.wq_b", "attn.wo_a", "attn.wo_b", "attn.cmp.wk", "attn.scores", "attn.pv",
+             "attn.idx.score", "attn.idx.topk_local", "attn.cand.topk_local")
+ATT_COLL = ("attn.a_allgather", "attn.rows_allgather", "attn.out_allreduce", "attn.idx.topk_merge",
+            "attn.cand.merge")
+
+
 def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, expert_overlap=0.0, hbm=None,
-          fill=False, base=None):
+          fill=False, base=None, levers=()):
     """Re-price the report's DAG node by node from `spec`; returns T (critical path), the occupancy bound,
     tokens/s per user and the per-category / per-resource critical-path breakdown.
 
@@ -514,16 +521,34 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
 
     hbm = dict(bw_Bps, lat_s) prices the HBM comparator: every weight byte (and the index keys and KV rows)
     streams from the die's stacks at bw_Bps, and the routed experts' fetch pays lat_s after the router
-    (their addresses exist only then); dense weights are prefetched across dependency points."""
+    (their addresses exist only then); dense weights are prefetched across dependency points.
+
+    levers (the dependency-chain attack, docs/ARCH_SPEC_V41.md 12):
+      fuse         reductions off the critical path: an RMSNorm's rstd scales the NEXT matvec's outputs (the
+                   sum of squares and rsqrt run beside the sweep) and the attention softmax is online (exp
+                   streams behind the scores with a running-max rescale) -- decode_critical_path Params.fuse;
+                   a change of the arithmetic contract (the golden must adopt it);
+      chain_all    tile/row-granular chaining for every unit: matvecs, attention/indexer scans and the local
+                   selects start on their producer's first tile instead of its last element;
+      short_stages the measured short stages beyond the spec's fast FP: stream-unit base depth 21 (not 29),
+                   reducer tail 25 (not 32), rsqrt path 58 (not 90), sqrt(softplus) 161 (not 259);
+      att_local    attention and its projections on the two dies of ONE package (tensor group 2 for the
+                   attention sublayer, UCIe collectives), MoE still striped over the four-die group."""
     E = _env()
     clock = E["clock"]
     m = fill_machine(batch) if fill else dag_machine(batch)
     users = m.microbatch
     if positions > 1:
         m = replace(m, microbatch=users * positions)
-    b = D.Built(m, E["p"], clock, D.v41_graph, E["c"], ctx)
+    levers = set(levers)
+    params = replace(E["p"], fuse=True) if "fuse" in levers else E["p"]
+    b = D.Built(m, params, clock, D.v41_graph, E["c"], ctx)
     base = BASELINE if base is None else base
     fab = D.ArrayFabric(links or links_for(base), 2, "mesh", 4)
+    if "att_local" in levers:
+        for name, nd in b.g.nodes.items():
+            if nd["kind"] == "collective" and name.split(".", 1)[-1] in ATT_COLL:
+                nd["span"] = 2
     D.price_communication(b.g, fab, m.microbatch, clock)
     if base.get("overlap_collectives"):
         for nd in b.g.nodes.values():            # a collective's bytes stream behind its producer
@@ -545,6 +570,8 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
         if k == "matvec":
             sw = nd["sweep"]
             f = die_fraction(name, c, G)
+            if "att_local" in levers and name.split(".", 1)[-1] in ATT_NODES:
+                f *= 2
             hc = name.endswith("hc.fn")
             wide = name.endswith(("wo_a", "cmp.wk", "router"))
             lanes = spec.hc_macs if hc else (spec.bf16_macs if wide else spec.weight_macs)
@@ -581,6 +608,8 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
         elif k == "kvscan":
             if name.endswith("idx.score"):
                 n_keys = int(nd["desc"].split()[2]) if nd["desc"].startswith("index scores") else 0
+                if "att_local" in levers:
+                    n_keys *= 2
                 by = n_keys * IDX_KEY_B * users                      # keys read once per user per pass
                 macs = n_keys * c["index_heads"] * c["index_head_dim"] * mb
                 ib = min(spec.idx_bytes, (hbm["bw_Bps"] if hbm else ROM_DIE_HBM_BPS) / clock)
@@ -592,7 +621,7 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
                 r = c["compress_ratios"][L]
                 n_sel = min(c["index_topk"], ctx // r) if r else 0
                 R = min(c["window_tokens"], ctx) + n_sel
-                hpd = math.ceil(c["num_attention_heads"] / G)
+                hpd = math.ceil(c["num_attention_heads"] / (2 if "att_local" in levers else G))
                 macs = hpd * R * c["head_dim"] * mb
                 by = (min(c["window_tokens"], ctx) * WIN_ROW_B + n_sel * CKV_ROW_B) * users \
                     if name.endswith("scores") else 0
@@ -617,7 +646,8 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
             nd["resource"] = None
             continue
         elif k == "select":
-            issue, depth, rname, rwork = _select_price(name, nd, spec, c, ctx, mb / lm, clock)
+            issue, depth, rname, rwork = _select_price(name, nd, spec, c, ctx, mb / lm, clock,
+                                                       ways=2 if "att_local" in levers else 4)
             nd["depth"] = depth
             nd["resource"] = (rname, rwork)
             nd["_work"] = ("sel", rwork * spec.sel_lanes)
@@ -637,6 +667,19 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
         for nd in b.g.nodes.values():
             if nd["ctrl"] > 0:
                 nd["ctrl"] += (spec.seq_gap - 5) * cyc
+    if "chain_all" in levers:
+        for name, nd in b.g.nodes.items():
+            if nd["kind"] in ("matvec", "kvscan") or (nd["kind"] == "select" and name.endswith("topk_local")):
+                nd["stream"] = True
+    if "short_stages" in levers:
+        for name, nd in b.g.nodes.items():
+            if nd["kind"] in ("vector", "reduce"):
+                cut = 8 + (7 if nd["kind"] == "reduce" else 0)
+                if name.endswith(".rsqrt"):
+                    cut += 32 - 8
+                if name.endswith("softplus_sqrt"):
+                    cut += 98
+                nd["depth"] = max(0.0, nd["depth"] - cut * cyc)
     fin = b.g.solve(spec.chaining)
     T = fin[b.sink]
     path = b.g.path(b.sink)
@@ -677,7 +720,7 @@ def _dag_resource(name, nd):
     return None
 
 
-def _select_price(name, nd, spec, c, ctx, mb, clock):
+def _select_price(name, nd, spec, c, ctx, mb, clock, ways=4):
     """(issue s, depth s, resource, work) of a select node under the spec's select unit."""
     cyc = 1.0 / clock
     TOPK, CK, CB = c["index_topk"], c["candidate_topk_blocks"], c["candidate_block_size"]
@@ -691,7 +734,7 @@ def _select_price(name, nd, spec, c, ctx, mb, clock):
     n_comp = ctx // r if r else 0
     cap = mode.get("index_scan_entries_cap") or 0
     n_scan = min(n_comp, cap) if cap else n_comp
-    per_die = math.ceil(n_scan / 4)
+    per_die = math.ceil(n_scan / ways)
     W = max(1, spec.sel_lanes)
     lat0 = D.TS["lat0"]
     if ".cand." in name:
@@ -1392,6 +1435,43 @@ def power_requirements(rec, req, areas):
                      "at 1 GHz ungated and is the upper bound if nothing gates")
 
 
+def chain_ladder(req, c, areas=None):
+    """The dependency-chain attack in the user-approved order: each step adds one lever to the previous; us per
+    token and tokens/s per user at batch 1.  Step 4 (attention on one package) is priced at the spec's widths
+    and with its attention, indexer and weight engines doubled (it doubles their per-die work); MTP (m = 2,
+    tau 4.1) goes on top of the best step that keeps the spec's area."""
+    areas = areas or unit_areas()[0]
+    L3 = ("fuse", "chain_all", "short_stages")
+    steps = [("0 spec (baseline links)", (), req), ("1 reductions off the path", ("fuse",), req),
+             ("2 chaining for every unit", ("fuse", "chain_all"), req),
+             ("3 shorter stages", L3, req),
+             ("4a attention on one package, spec widths", L3 + ("att_local",), req),
+             ("4b attention on one package, attention/indexer/weight engines x2", L3 + ("att_local",),
+              _with_widths(req, dict(att=req.att_macs * 2, idx=req.idx_macs * 2, weight=req.weight_macs * 2,
+                                     bf16=req.bf16_macs * 2))),
+             ("4c same engines x2, attention kept on the four-die group", L3,
+              _with_widths(req, dict(att=req.att_macs * 2, idx=req.idx_macs * 2, weight=req.weight_macs * 2,
+                                     bf16=req.bf16_macs * 2)))]
+    out = []
+    for tag, lv, sp in steps:
+        row = dict(step=tag, levers=list(lv), area_mm2=spec_area_mm2(sp, areas)["total"])
+        for ctx in CONTEXTS:
+            r = price(sp, ctx, levers=lv)
+            row[str(ctx)] = dict(us=r["T_s"] * 1e6, tokens_s_per_user=r["tokens_s_per_user"],
+                                 breakdown_us={k: round(v, 2) for k, v in r["breakdown_us"].items()})
+        out.append(row)
+    mt = dict(step="5 MTP m = 2, tau 4.1, on step 3", levers=list(L3) + ["mtp_m2"],
+              area_mm2=2 * spec_area_mm2(req, areas)["total"])
+    for ctx in CONTEXTS:
+        sp = replace(req, lane_mult=2)
+        v = price(sp, ctx, positions=6, levers=L3)
+        d = draft_cost_s(sp, ctx, 5, c)["total_s"]
+        mt[str(ctx)] = dict(verify_us=v["period_s"] * 1e6, draft_us=d * 1e6,
+                            tokens_s_per_user=4.1 / (v["period_s"] + d))
+    out.append(mt)
+    return out
+
+
 def build(quick=False):
     E = _env()
     c, clock = E["c"], E["clock"]
@@ -1544,6 +1624,7 @@ def build(quick=False):
         hbm_ar={str(ctx): price(req, ctx, hbm=hbm_kw, base=PLAIN_B)["tokens_s_per_user"] for ctx in CONTEXTS})
     if not quick:
         rec["power"] = power_requirements(rec, req, areas)
+    rec["chain_ladder"] = chain_ladder(req, c, areas)
     rec["replay"] = replay_summary()
     return rec
 

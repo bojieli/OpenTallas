@@ -49,12 +49,16 @@ import hdc_isa_v41 as I  # noqa: E402
 OUT = ROOT / "results/rtl/hdc_v41x_decode_campaign.json"
 # the re-specified units (bring-up switches of ot_hdc_core_v41x) and the R-ARITH classes each one brings
 X_UNITS = ("he", "me", "att", "idx", "sel", "eg", "su")
+# idx: the FUSED indexer (tools/hdc_program_v41.py Builder idx_fused, HDC_V41_IDX_FUSED=1): one ME op per
+# indexer computes the index scores on the indexer engine (dots, ReLU x weight, the head sum under R-ARITH
+# class "idx"), the per-head score op and the stream unit's head-sum op are dropped from the program, and the
+# keys stream from the HBM model through ot_hdc_v41x_idx_kstream
+X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "sel": (), "eg": (),
+             "su": ("su", "idx")}
 # su: the vector unit sums under R-ARITH everywhere, including the indexer-tagged stream sums (the index head
 # sum), which the ISA model files under "idx"; "idx" also switches the ISA's index dots on the matrix engine,
 # which the as-built engine still matches: FP4 x FP4 products of one 32-block share its scales, so every
 # partial sum is exact and the order cannot change the result
-X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "sel": (), "eg": (),
-             "su": ("su", "idx")}
 UNITS = X_UNITS           # set by main(): the units built re-specified
 PARAMS = {"hhw": 8, "mg": 8, "sun": 16, "sum": 8}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
@@ -73,17 +77,25 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                  "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_me_adapt",
                                                  "ot_hdc_v41x_sel_lib", "ot_hdc_v41x_sel_slice", "ot_hdc_v41x_sel",
                                                  "ot_hdc_v41x_egather", "ot_hdc_v41x_xu_adapt",
-                                                 "ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side",
-                                                 "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec", "ot_hdc_v41x_su_adapt",
-                                                 "ot_hdc_core_v41x")])
+                                                 "ot_hdc_v41x_idx_arith", "ot_hdc_v41x_idx", "ot_hdc_v41x_idx_kstream",
+                                                 "ot_hdc_v41x_idx_hbm", "ot_hdc_v41x_idx_adapt",
+                                                  "ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side",
+                                                  "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec", "ot_hdc_v41x_su_adapt",
+                                                  "ot_hdc_core_v41x")])
 SVH = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
+VLT = ROOT / "rtl/test/tb_hdc_v41x_idx.vlt"       # no_inline on the indexer's replicated arithmetic
 TB = ROOT / "rtl/test/tb_hdc_core_v41x.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_v41x_harness.cpp"
 TOOLS = [ROOT / f"tools/{n}.py" for n in ("hdc_golden", "hdc_golden_v41", "hdc_isa_v41", "hdc_program_v41",
                                           "hdc_timing_v41", "hdc_timing_v41x", "hdc_images_v41x")] + \
         [Path(__file__)]
 LINT_FLAGS = ("-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-WIDTH", "-Wno-BLKSEQ", "-Wno-PINCONNECTEMPTY",
-              "-Wno-IMPORTSTAR", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT")
+              "-Wno-IMPORTSTAR",
+              # ot_hdc_v41x_csa is declared by both the weight block (wgt_bdot) and the indexer block
+              # (idx_arith): the bodies are identical, only the default W differs and every instance sets W
+              "-Wno-MODDUP",
+              # the index-key stream (block RTL) resets some flops synchronously
+              "-Wno-SYNCASYNCNET", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT")
 SINGLE = re.compile(r"HDC41 token=(\d+) pos=(\d+) next_token=(\d+) expect=(\d+) cycles=(\d+) fault=(\d+) "
                     r"logit_mismatch=(\d+) vm_mismatch=(\d+) kv_mismatch=(\d+)")
 UTIL = re.compile(r"UTIL me_busy=(\d+) su_busy=(\d+) qe_busy=(\d+) xu_busy=(\d+) he_busy=(\d+) all_idle=(\d+)")
@@ -91,14 +103,18 @@ ISSUE = re.compile(r"ISSUE cyc=(\d+) pc=(\d+) unit=(\d+)")
 STEP = re.compile(r"STEP pos=(\d+) in=(\d+) out=(\d+) gold=(\d+) cycles=(\d+) fault=(\d+)")
 XCNT = re.compile(r"XCNT unit=(\w+) ops=(\d+) elems=(\d+)")
 # classes whose counters the bench prints (a re-specified unit not listed here has no activation proof yet)
-COUNTED = ("he", "me", "sel", "eg", "su")   # su: ops accepted, VECTORS retired
+COUNTED = ("he", "me", "idx", "sel", "eg", "su")
+# the indexer's extra counters (bench XCNT lines): keys the HBM key stream delivered (elems: HBM beats), keys
+# the engine scored (elems: head terms fused), index keys written to the HBM image (the key writer)
+IDX_COUNTERS = ("idx_hbm", "idx_fused", "idx_kwr")
 # coverage the runs do NOT prove, per unit (recorded, never counted as proven)
 NOT_EXERCISED = {
-    "su": ["MTP batched copies (mx_m > 1) and the MTP class-change drain: the MTP program is not run on this core",
-           "exact chase lead/mul: a chased op waits for its producer's completion (SELF done), conservative"],
     "he": ["MTP lane multiplier (mx_m > 1): the MTP program is not run on this core"],
-    "me": ["wo_a in the checkpoint's FP8 image format (the image feeds it as expanded BF16)",
-           "MTP lane multiplier (mx_m > 1) and the MTP layout's images"],
+    "idx": ["the HBM model's write path: runtime index keys reach it through a backdoor (write timing not "
+            "modelled)", "more than one HBM stack (ot_hdc_v41x_idx_kmerge) and the 128-dim shipped key "
+            "(the reduced key is 32-dim, NB = 1)", "the candidate mask (k_keep): every block is kept at the "
+            "reduced shapes", "MTP lane multiplier"],
+    "me": ["MTP lane multiplier (mx_m > 1) and the MTP layout's images"],
     "sel": ["static-count SELECTs (router top-6 over FP32 biased scores, a draft's top-1 over FP32 logits) stay "
             "on the as-built FP32 select: the re-specified select takes BF16 keys only -- not exercised on the new "
             "unit (SPEC GAP, owner a2e48e15: an FP32-key mode of the streaming select)",
@@ -146,6 +162,24 @@ def xu_check(rec, img):
     rec["activation"]["pass"] = rec["activation"]["pass"] and not bad
     rec["pass"] = rec["pass"] and not bad
     return rec
+def indexer_record(prog, tags, issues):
+    """The fused indexer in the record: the program's indexer ops, the dropped stream-unit head sum (an SU op
+    tagged indexer that reduces -- none may be issued) and the key source."""
+    issued = collections.Counter(tags[pc] for _, pc, _ in issues)
+    su_hs = [n for n, f in enumerate(prog) if f["unit"] == I.UNIT_SU and "indexer" in tags[n] and f["red"]]
+    fused = [n for n, f in enumerate(prog) if f["unit"] == I.UNIT_ME and f.get("me_fuse")]
+    su_idx = [n for n, f in enumerate(prog) if f["unit"] == I.UNIT_SU and "indexer" in tags[n]]
+    return {
+        "fused_ops_in_program": len(fused),
+        "su_indexer_headsum_ops_in_program": len(su_hs),
+        "su_indexer_headsum_ops_issued": sum(1 for _, pc, u in issues if u == I.UNIT_SU and pc in set(su_hs)),
+        "su_indexer_other_ops_in_program": len(su_idx) - len(su_hs),
+        "dropped": "the per-head index-score ME op (S region) and the stream unit's ReLU x weight head-sum op "
+                   "(S, WTS -> IS): the fused ME op (me_fuse, me_wts) writes IS on the indexer engine",
+        "key_source": "HBM: ot_hdc_v41x_idx_kstream (one stack, 32 pseudo-channels, 68-B FP4 keys) from the "
+                      "bench's ot_hdc_v41x_idx_hbm (REFPB = 3 refresh-aware per-bank refresh, MRU tie-break, "
+                      "64-beat queues); runtime keys written by ot_hdc_v41x_idx_kwr through the model's backdoor",
+    }
 
 
 def counters(run):
@@ -157,6 +191,8 @@ def activation(cnt):
     """Every selected unit must have run ops and processed elements; one that stayed at 0 FAILS the run."""
     missing = [u for u in UNITS if u in COUNTED and (cnt.get(u, {}).get("ops", 0) == 0 or
                                                      cnt.get(u, {}).get("elements", 0) == 0)]
+    if "idx" in UNITS:
+        missing += [c for c in IDX_COUNTERS if cnt.get(c, {}).get("ops", 0) == 0]
     uncounted = [u for u in UNITS if u not in COUNTED]
     return {"counters": cnt, "zero_counter_units": missing, "units_without_counters": uncounted,
             "pass": not missing and not uncounted}
@@ -195,7 +231,8 @@ def breakdown(trace, tags, cycles):
 
 def defines(lanes=None):
     return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}",
-            f"+define+HDC_MG={PARAMS['mg']}", f"+define+HDC_SUN={PARAMS['sun']}", f"+define+HDC_SUM={PARAMS['sum']}"] + \
+            f"+define+HDC_MG={PARAMS['mg']}",
+            f"+define+HDC_SUN={PARAMS['sun']}", f"+define+HDC_SUM={PARAMS['sum']}"] + \
         [f"+define+HDC_X_{u.upper()}={int(u in UNITS)}" for u in X_UNITS]
 
 
@@ -209,7 +246,7 @@ def build(scratch: Path, lanes=None) -> Path:
     obj = scratch / f"obj{lanes or ''}"
     r = subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
                         "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "--top-module", "tb_hdc_core_v41x", "-Mdir", str(obj),
-                        f"-I{SVH.parent}", *defines(lanes), *map(str, RTL), str(TB),
+                        f"-I{SVH.parent}", *defines(lanes), str(VLT), *map(str, RTL), str(TB),
                         str(HARNESS), "-CFLAGS", "-O1", "-j", "8"],
                        capture_output=True, text=True)
     if r.returncode:
@@ -218,7 +255,8 @@ def build(scratch: Path, lanes=None) -> Path:
 
 
 def images(out: Path, *extra, lanes=None):
-    env = dict(os.environ, HDC_SW=str(lanes or I.SU_LANES), HDC_V41_ARITH=arith())
+    env = dict(os.environ, HDC_SW=str(lanes or I.SU_LANES), HDC_V41_ARITH=arith(),
+               HDC_V41_IDX_FUSED=str(int("idx" in UNITS)))
     r = subprocess.run([sys.executable, str(ROOT / "tools/hdc_program_v41.py"), "--out", str(out), *extra],
                        capture_output=True, text=True, env=env)
     if r.returncode:
@@ -301,7 +339,7 @@ def lane_sweep(s: Path, widths) -> list:
     return out
 
 
-def run(ngen: int, context: int, sweep=()) -> dict:
+def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None) -> dict:
     with tempfile.TemporaryDirectory(dir=os.environ.get("OT_SCRATCH")) as scratch:   # a pool worker's /tmp is a 16 GB tmpfs
         s = Path(scratch)
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core_v41x",
@@ -327,6 +365,29 @@ def run(ngen: int, context: int, sweep=()) -> dict:
         one["golden_next_token"] = expect["golden"]
         one["oracle_next_token"] = expect["oracle"]
         one["pass"] = one["pass"] and one["next_token"] == expect["golden"]
+        single_record = {
+            "schema": "opentallas.hdc-v41x-decode-single.v1",
+            "mode": "single_step",
+            "respecified_units": list(UNITS),
+            "as_built_units": [u for u in X_UNITS if u not in UNITS],
+            "hdc_v41_arith": arith(),
+            "engine_parameters": dict(PARAMS),
+            "not_exercised": {u: NOT_EXERCISED.get(u, []) for u in UNITS},
+            **({"indexer": indexer_record(prog, tags, issues)} if "idx" in UNITS else {}),
+            "status": "pass" if one["pass"] and lint.returncode == 0 else "fail",
+            "single_step": one,
+            "per_operator_cycles": bd,
+            "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
+                               "messages": lint.stderr.strip().splitlines()[:20]},
+            "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, *RTL, TB, HARNESS, *TOOLS)},
+        }
+        if single_output is not None:
+            single_output.parent.mkdir(parents=True, exist_ok=True)
+            pending = single_output.with_name(single_output.name + ".tmp")
+            pending.write_text(json.dumps(single_record, indent=2) + "\n")
+            pending.replace(single_output)
+        if single_only:
+            return single_record
         multi = subprocess.run([str(exe), f"+DIR={img}", "+MULTI", "+NPROMPT=8", f"+NGEN={ngen}"], check=True,
                                capture_output=True, text=True).stdout
         steps = [dict(zip(("position", "input", "output", "isa_output", "cycles", "fault"), map(int, x.groups())))
@@ -360,6 +421,7 @@ def run(ngen: int, context: int, sweep=()) -> dict:
         "hdc_v41_arith": arith(),
         "engine_parameters": dict(PARAMS),
         "not_exercised": {u: NOT_EXERCISED.get(u, []) for u in UNITS},
+        **({"indexer": indexer_record(prog, tags, issues)} if "idx" in UNITS else {}),
         "status": status,
         "claim_boundary": "functional token-level RTL simulation (Verilator, cycle-accurate at the core boundary) "
                           "with behavioural synchronous-read memories (many-ported vector memory: four operand reads, "
@@ -401,6 +463,9 @@ def main() -> int:
     parser.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
     parser.add_argument("--sun", type=int, default=16, help="vector-unit light lanes")
     parser.add_argument("--sum", type=int, default=8, help="vector-unit SFU lanes")
+    parser.add_argument("--single-only", action="store_true", help="stop after the bit-exact single decode step")
+    parser.add_argument("--single-output", type=Path, help="incremental single-step JSON path; defaults to "
+                        "<output stem>.single.json")
     args = parser.parse_args()
     global UNITS
     UNITS = tuple(u for u in args.units.split(",") if u)
@@ -408,11 +473,13 @@ def main() -> int:
     PARAMS["hhw"] = args.hhw
     PARAMS["mg"] = args.mg
     PARAMS["sun"], PARAMS["sum"] = args.sun, args.sum
-    result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x])
+    single_output = args.single_output or args.output.with_name(args.output.stem + ".single.json")
+    result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x],
+                 single_only=args.single_only, single_output=single_output)
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     s = result["single_step"]
     print(result["status"], "next token", s["next_token"], "cycles", s["cycles"],
-          "generated", result["end_to_end"]["generated_tokens"])
+          "generated", result.get("end_to_end", {}).get("generated_tokens", []))
     return 0 if result["status"] == "pass" else 1
 
 

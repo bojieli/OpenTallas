@@ -8223,6 +8223,364 @@
   "requirement": "per-die power <= the cooling limit at every batch with stage clock gating: an idle stage's clock tree gated (ICG at the block boundaries), its ROM macros and engines quiescent; the worst case is the saturated array (every die busy)",
   "note": "ASAP7 unit areas; the analytical design's 48 W/die clock term charges all 525 mm2 of logic at 1 GHz ungated and is the upper bound if nothing gates"
  },
+ "chain_ladder": [
+  {
+   "step": "0 spec (baseline links)",
+   "levers": [],
+   "area_mm2": 87.214456496,
+   "8192": {
+    "us": 179.91879241448845,
+    "tokens_s_per_user": 5558.063093799824,
+    "breakdown_us": {
+     "compute_chain": 110.57,
+     "weight_sweep": 27.24,
+     "kv_sweep": 0.22,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.0,
+     "pipeline_hops": 9.1,
+     "control": 6.43
+    }
+   },
+   "200000": {
+    "us": 183.5525432622954,
+    "tokens_s_per_user": 5448.0312951643855,
+    "breakdown_us": {
+     "compute_chain": 111.71,
+     "weight_sweep": 27.49,
+     "kv_sweep": 2.54,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.0,
+     "pipeline_hops": 9.1,
+     "control": 6.35
+    }
+   },
+   "1048576": {
+    "us": 200.8780687778461,
+    "tokens_s_per_user": 4978.144234878692,
+    "breakdown_us": {
+     "compute_chain": 119.83,
+     "weight_sweep": 27.49,
+     "kv_sweep": 11.75,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.0,
+     "pipeline_hops": 9.1,
+     "control": 6.35
+    }
+   }
+  },
+  {
+   "step": "1 reductions off the path",
+   "levers": [
+    "fuse"
+   ],
+   "area_mm2": 87.214456496,
+   "8192": {
+    "us": 157.99643738365785,
+    "tokens_s_per_user": 6329.2566374248745,
+    "breakdown_us": {
+     "compute_chain": 94.56,
+     "weight_sweep": 22.47,
+     "kv_sweep": 0.22,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 5.2
+    }
+   },
+   "200000": {
+    "us": 160.93379593046842,
+    "tokens_s_per_user": 6213.7352457158895,
+    "breakdown_us": {
+     "compute_chain": 95.04,
+     "weight_sweep": 22.72,
+     "kv_sweep": 2.54,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 5.09
+    }
+   },
+   "1048576": {
+    "us": 178.2593214460192,
+    "tokens_s_per_user": 5609.8048163098265,
+    "breakdown_us": {
+     "compute_chain": 103.16,
+     "weight_sweep": 22.72,
+     "kv_sweep": 11.75,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 5.09
+    }
+   }
+  },
+  {
+   "step": "2 chaining for every unit",
+   "levers": [
+    "fuse",
+    "chain_all"
+   ],
+   "area_mm2": 87.214456496,
+   "8192": {
+    "us": 142.97237561395224,
+    "tokens_s_per_user": 6994.35814580123,
+    "breakdown_us": {
+     "compute_chain": 90.38,
+     "weight_sweep": 13.32,
+     "kv_sweep": 0.0,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 3.73
+    }
+   },
+   "200000": {
+    "us": 144.86734925119626,
+    "tokens_s_per_user": 6902.866692659819,
+    "breakdown_us": {
+     "compute_chain": 91.35,
+     "weight_sweep": 13.32,
+     "kv_sweep": 0.94,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 3.71
+    }
+   },
+   "1048576": {
+    "us": 153.35212717628124,
+    "tokens_s_per_user": 6520.939868349401,
+    "breakdown_us": {
+     "compute_chain": 89.54,
+     "weight_sweep": 13.32,
+     "kv_sweep": 11.33,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 3.62
+    }
+   }
+  },
+  {
+   "step": "3 shorter stages",
+   "levers": [
+    "fuse",
+    "chain_all",
+    "short_stages"
+   ],
+   "area_mm2": 87.214456496,
+   "8192": {
+    "us": 129.6191563681576,
+    "tokens_s_per_user": 7714.909030573363,
+    "breakdown_us": {
+     "compute_chain": 75.66,
+     "weight_sweep": 14.27,
+     "kv_sweep": 0.0,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 4.14
+    }
+   },
+   "200000": {
+    "us": 131.5420760139389,
+    "tokens_s_per_user": 7602.1302863886285,
+    "breakdown_us": {
+     "compute_chain": 75.5,
+     "weight_sweep": 14.27,
+     "kv_sweep": 2.18,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 4.05
+    }
+   },
+   "1048576": {
+    "us": 140.09552595759433,
+    "tokens_s_per_user": 7137.986692756277,
+    "breakdown_us": {
+     "compute_chain": 74.85,
+     "weight_sweep": 14.27,
+     "kv_sweep": 11.39,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 4.05
+    }
+   }
+  },
+  {
+   "step": "4a attention on one package, spec widths",
+   "levers": [
+    "fuse",
+    "chain_all",
+    "short_stages",
+    "att_local"
+   ],
+   "area_mm2": 87.214456496,
+   "8192": {
+    "us": 132.85275278328209,
+    "tokens_s_per_user": 7527.130443666937,
+    "breakdown_us": {
+     "compute_chain": 81.22,
+     "weight_sweep": 24.96,
+     "kv_sweep": 0.16,
+     "collective_latency": 13.28,
+     "collective_bytes": 0.02,
+     "pipeline_hops": 9.1,
+     "control": 4.12
+    }
+   },
+   "200000": {
+    "us": 136.90733069878104,
+    "tokens_s_per_user": 7304.210774514089,
+    "breakdown_us": {
+     "compute_chain": 80.59,
+     "weight_sweep": 25.27,
+     "kv_sweep": 4.65,
+     "collective_latency": 13.28,
+     "collective_bytes": 0.02,
+     "pipeline_hops": 9.1,
+     "control": 4.0
+    }
+   },
+   "1048576": {
+    "us": 155.01226065846305,
+    "tokens_s_per_user": 6451.102614413771,
+    "breakdown_us": {
+     "compute_chain": 80.27,
+     "weight_sweep": 25.27,
+     "kv_sweep": 23.07,
+     "collective_latency": 13.28,
+     "collective_bytes": 0.02,
+     "pipeline_hops": 9.1,
+     "control": 4.0
+    }
+   }
+  },
+  {
+   "step": "4b attention on one package, attention/indexer/weight engines x2",
+   "levers": [
+    "fuse",
+    "chain_all",
+    "short_stages",
+    "att_local"
+   ],
+   "area_mm2": 156.567162992,
+   "8192": {
+    "us": 112.7534343288313,
+    "tokens_s_per_user": 8868.909456749892,
+    "breakdown_us": {
+     "compute_chain": 76.59,
+     "weight_sweep": 9.5,
+     "kv_sweep": 0.11,
+     "collective_latency": 13.28,
+     "collective_bytes": 0.02,
+     "pipeline_hops": 9.1,
+     "control": 4.15
+    }
+   },
+   "200000": {
+    "us": 116.67545137255992,
+    "tokens_s_per_user": 8570.783213058843,
+    "breakdown_us": {
+     "compute_chain": 76.72,
+     "weight_sweep": 9.5,
+     "kv_sweep": 3.99,
+     "collective_latency": 13.28,
+     "collective_bytes": 0.02,
+     "pipeline_hops": 9.1,
+     "control": 4.06
+    }
+   },
+   "1048576": {
+    "us": 132.8037036213267,
+    "tokens_s_per_user": 7529.910482401726,
+    "breakdown_us": {
+     "compute_chain": 76.82,
+     "weight_sweep": 9.5,
+     "kv_sweep": 20.02,
+     "collective_latency": 13.28,
+     "collective_bytes": 0.02,
+     "pipeline_hops": 9.1,
+     "control": 4.06
+    }
+   }
+  },
+  {
+   "step": "4c same engines x2, attention kept on the four-die group",
+   "levers": [
+    "fuse",
+    "chain_all",
+    "short_stages"
+   ],
+   "area_mm2": 156.567162992,
+   "8192": {
+    "us": 117.48510809674451,
+    "tokens_s_per_user": 8511.71706950755,
+    "breakdown_us": {
+     "compute_chain": 73.48,
+     "weight_sweep": 4.32,
+     "kv_sweep": 0.0,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 4.15
+    }
+   },
+   "200000": {
+    "us": 119.3740465061759,
+    "tokens_s_per_user": 8377.03026133293,
+    "breakdown_us": {
+     "compute_chain": 74.55,
+     "weight_sweep": 4.32,
+     "kv_sweep": 0.83,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 4.13
+    }
+   },
+   "1048576": {
+    "us": 127.48798402431112,
+    "tokens_s_per_user": 7843.876484934507,
+    "breakdown_us": {
+     "compute_chain": 73.7,
+     "weight_sweep": 4.32,
+     "kv_sweep": 9.87,
+     "collective_latency": 26.35,
+     "collective_bytes": 0.09,
+     "pipeline_hops": 9.1,
+     "control": 4.06
+    }
+   }
+  },
+  {
+   "step": "5 MTP m = 2, tau 4.1, on step 3",
+   "levers": [
+    "fuse",
+    "chain_all",
+    "short_stages",
+    "mtp_m2"
+   ],
+   "area_mm2": 174.428912992,
+   "8192": {
+    "verify_us": 232.68562870095573,
+    "draft_us": 20.34119885328231,
+    "tokens_s_per_user": 16203.815380490181
+   },
+   "200000": {
+    "verify_us": 238.85249450898627,
+    "draft_us": 20.34119885328231,
+    "tokens_s_per_user": 15818.28611188287
+   },
+   "1048576": {
+    "verify_us": 266.1578301623251,
+    "draft_us": 20.34119885328231,
+    "tokens_s_per_user": 14310.694224993855
+   }
+  }
+ ],
  "replay": {
   "validation": [
    {

@@ -29,6 +29,14 @@ instruction field carries) to the engine's base -- the adapter applies it (rtl/h
   File mbank.hex: line a*8*MG + b = bank b word a.  The adapter (ot_hdc_v41x_me_adapt) derives the same plg,
   nbeat, nrg, bases (me_geometry below is the reference).
 
+* IDX -> the index-key HBM (ot_hdc_v41x_idx_kstream's 68-B format: per key 128 E2M1 codes + 4 UE8M0 scales,
+  1,024-key super-blocks of 17 4-KB blocks, block 0 the scales, blocks 1..16 the codes of 64 keys each).  The
+  key array of the index-key region at KV word wb starts at HBM block (wb - ik_base) / 128 * 17; key t's codes
+  (dims 0..31 of the reduced 32-dim key, the rest zero) are sector (B0 + 1 + t/64)*128 + 2*(t%64), its scale
+  byte the low byte of 32-bit field t%8 of sector B0*128 + t/8.  File ikhbm.hex (sectors of 256 bits): the keys
+  of the golden-prefilled KV image (kv.hex, when present -- the single-step state); keys written at run time
+  reach the HBM through the core's key writer (ot_hdc_v41x_idx_kwr).
+
 MTP builds (--mtp GAMMA) use tools/hdc_program_v41.mtp_layout, so the MTP-only weights (mtp.0-2 layers, their
 hyper-connection projections) are covered by the same placement rule.
 """
@@ -199,6 +207,59 @@ def program_of(lay):
     return P.Builder(lay).build()
 
 
+MAG2 = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 6: 5, 8: 6, 12: 7}      # doubled E2M1 magnitude -> code
+
+
+def enc_fp4(vals):
+    """Exact FP4 (E2M1 x UE8M0) encoding of a QDQ4 block of 32 BF16-valued floats: (codes nibble list, u),
+    or None when the block does not encode exactly (the RTL's rule, ot_hdc_v41x_idx_enc32)."""
+    v = np.asarray(vals, dtype=np.float32)
+    nz = v != 0
+    if not nz.any():
+        return [0] * 32, 0
+    b = (G.bits(v).astype(np.int64) >> 16)
+    emax = int(((b >> 7) & 255)[nz].max())
+    u = emax - 2
+    if not (0 <= u <= 252):
+        return None
+    codes = []
+    for x in v:
+        if x == 0:
+            codes.append(0)
+            continue
+        m2 = abs(float(x)) / 2.0 ** (u - 127) * 2
+        if m2 not in MAG2:
+            return None
+        codes.append(MAG2[int(m2)] | (8 if x < 0 else 0))
+    return codes, u
+
+
+def ikhbm_image(lay, kv):
+    """{sector: 256-bit int} of the index keys held in the KV image kv (elements)."""
+    W = I.W_LANES
+    ik = min(a for n, a in lay.kv.map.items() if n.startswith("IK")) // W
+    img = {}
+    for name, base in lay.kv.map.items():
+        if not name.startswith("IK"):
+            continue
+        off = base // W - ik
+        assert base % W == 0 and off % 128 == 0, name       # the adapter's map: 128-word units
+        b0 = off // 128 * 17
+        s = int(name[2:])
+        for t in range(lay.nrows[s]):
+            row = np.array([kv[lay.kt_elem(base, t, d)] for d in range(P.HD)], dtype=np.float32)
+            if not row.any():
+                continue
+            enc = enc_fp4(row)
+            assert enc is not None, (name, t)
+            codes, u = enc
+            cs = (b0 + 1 + t // 64) * 128 + 2 * (t % 64)
+            img[cs] = img.get(cs, 0) | P.pack_lanes(codes, 4)
+            ss = b0 * 128 + t // 8
+            img[ss] = img.get(ss, 0) | (u << (32 * (t % 8)))
+    return img
+
+
 def write(out, lay, hhw=8, mg=8):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -210,8 +271,14 @@ def write(out, lay, hhw=8, mg=8):
     ik = min(a for n, a in lay.kv.map.items() if n.startswith("IK")) // I.W_LANES
     assert all(a < ik * I.W_LANES for n, a in lay.kv.map.items() if not n.startswith("IK"))
     (out / "cfg.hex").write_text(f"{ik:06x}\n{me_xs:06x}\n")
+    ikh = {}
+    if (out / "kv.hex").exists():
+        kv = G.from_bits(np.array([int(x, 16) for x in (out / "kv.hex").read_text().split()], dtype=np.uint32))
+        ikh = ikhbm_image(lay, kv)
+    write_words(out / "ikhbm.hex", ikh, 256)
     meta = {"hhw": hhw, "hbank_lines": len(hb), "hbank_top": max(hb) + 1 if hb else 0, "ik_base_word": ik,
-            "mg": mg, "me_xs": me_xs, "mbank_words": len(mb), "mbank_top_line": max(mb) + 1 if mb else 0}
+            "mg": mg, "me_xs": me_xs, "mbank_words": len(mb), "mbank_top_line": max(mb) + 1 if mb else 0,
+            "ikhbm_sectors": len(ikh)}
     (out / "v41x_images.json").write_text(json.dumps(meta))
     return meta
 

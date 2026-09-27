@@ -87,7 +87,8 @@ module ot_hdc_v41x_su_adapt #(
     output wire [N/8-1:0]    res_we,
     output wire [N/8*AW-1:0] res_addr,
     output wire [N/8*32-1:0] res_data,
-    output reg               fault
+    output reg               fault,
+    output reg [31:0]        dbg_ops, dbg_elems
 );
     localparam [1:0] SRC_VM = 2'd0, DST_VM = 2'd1, CH_NONE = 2'd0, CH_SELF = 2'd1;
     localparam [2:0] M1_BYP = 3'd0, M1_DIVB = 3'd4, M1_DIVIMM = 3'd5, M1_MAXB = 3'd6;
@@ -122,6 +123,7 @@ module ot_hdc_v41x_su_adapt #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             pend <= 1'b0; cp <= 3'd0; seq <= 8'd0; any_op <= 1'b0; cls_last <= 9'd0;
+            dbg_ops <= 0;
         end else begin
             if (go && !pend) begin
                 pend <= 1'b1; cp <= 3'd0; m_r <= (i_m == 3'd0) ? 3'd1 : i_m;
@@ -129,6 +131,7 @@ module ot_hdc_v41x_su_adapt #(
                 prev_seq <= seq - 8'd1;
                 wait_prev <= any_op && ((i_chase != 0) || (CLS_DRAIN != 0 && cls_in != cls_last));
             end else if (v_acc) begin
+                dbg_ops <= dbg_ops + 1'b1;
                 seq <= seq + 8'd1;
                 cp <= cp + 3'd1;
                 if (cp + 3'd1 == m_r) pend <= 1'b0;
@@ -189,14 +192,19 @@ module ot_hdc_v41x_su_adapt #(
         if (!rst_n) fault <= 1'b0;
         else fault <= v_fault || v_ofault;
     end
-    // ---- activation counters (bench only, read hierarchically by rtl/test/tb_hdc_core_v41x.sv): ops the vector
-    // unit accepted and the vectors it retired (the campaign fails a selected unit whose counters stay 0)
-    reg [31:0] dbg_ops, dbg_elems;
+    // Activation counters: accepted ops and elements written by the vector unit.
+    integer ci;
+    reg [31:0] written;
+    always @(*) begin
+        written = 0;
+        for (ci = 0; ci < N; ci = ci + 1) written = written + vm_we[ci] + kv_we[ci];
+        for (ci = 0; ci < N / 8; ci = ci + 1) written = written + res_we[ci];
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin dbg_ops <= 0; dbg_elems <= 0; end
         else begin
             if (v_acc) dbg_ops <= dbg_ops + 1;
-            if (retire_o) dbg_elems <= dbg_elems + 1;
+            dbg_elems <= dbg_elems + written;
         end
     end
 endmodule

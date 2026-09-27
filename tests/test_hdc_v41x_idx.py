@@ -41,7 +41,7 @@ def test_golden_mirror_is_the_indexer(C):
     q, k = C.values(t["qc"], t["qu"]), C.values(t["kc"], t["ku"])
     G = C.G
     s = G.to_bf16(G.reduce_rows(G.to_bf16(G.mul(np.maximum(G.to_bf16(G.dots_q4(q, k)), np.float32(0)),
-                                                t["w"][:, None])).T))
+                                                t["w"][:, None])).T, cls="idx"))
     assert np.array_equal((G.bits(s) >> 16).astype(np.int64), t["exp"])
 
 
