@@ -53,4 +53,11 @@ def test_legacy_path_is_per_bit_and_cells_scale_both_densities_together():
 def test_hc1_gate_fails_per_bit_and_passes_per_weight_cell():
     assert not taalas_hc1_anchor(TECH, LLAMA, per_bit_cim=True).passed
     check = taalas_hc1_anchor(TECH, LLAMA)
-    assert check.passed and 1.0 < check.ratio < 2.0
+    assert check.passed and check.tolerance == 2.0
+    # Per-weight cells hold the weights, so capacity no longer binds.  Since
+    # 0d139468 the serial part of the step is the Llama decode graph priced
+    # with measured RTL depths, and the gate lands BELOW the shipping part
+    # (about 0.64x), bound by that chain -- the same contract as
+    # tests/test_roofline.py::test_gate_taalas_hc1_passes_with_one_select_cell_per_weight.
+    assert 0.5 < check.ratio < 1.0
+    assert check.detail["binding_constraint"] == "layer_fixed_latency"
