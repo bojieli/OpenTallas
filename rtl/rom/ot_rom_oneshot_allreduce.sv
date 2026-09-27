@@ -307,8 +307,12 @@ module ot_rom_ucie_link #(
     input  wire          cr_in,          // at the receiving die
     output wire          cr_out          // at the sending die
 );
-    localparam integer CAP = ((BPC_NUM > FLIT_BYTES * BPC_DEN) ? BPC_NUM : FLIT_BYTES * BPC_DEN);
     localparam integer COST = FLIT_BYTES * BPC_DEN;
+    // The bucket holds one record plus one cycle's accrual.  Capped at one record (the earlier max(BPC_NUM, COST))
+    // a fractional rate lost its remainder on every record: at 3.25 cycles per record the bucket refilled to the cap
+    // in 4 cycles and dropped the quarter, so the link ran at 4 cycles per record (tests/test_rom_ucie_link_rate.py).
+    // For BPC_NUM >= COST (one record or more per cycle) the two caps give the same schedule.
+    localparam integer CAP = COST + BPC_NUM;
     reg [31:0] tokens;
     assign in_ready = tokens >= COST;
     always @(posedge clk or negedge rst_n) begin
