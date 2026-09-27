@@ -16,7 +16,7 @@ module tb_hdc_v41x_idx_pool_kwr;
         .clk(clk),.rst_n(rst_n),.cfg_ik_base(24'd0),.su_go(su_go),
         .i_dst(2'd3),.i_obase(24'd0),.i_orow(24'd0),.i_nout(16'd1),.i_kdim(kd),
         .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
-        .w_v(w_v),.w_stack_mask(w_stack_mask),.w_csec(w_csec),.w_codes(w_codes),
+        .w_v(w_v),.w_rdy(1'b1),.w_stack_mask(w_stack_mask),.w_csec(w_csec),.w_codes(w_codes),
         .w_ssec(w_ssec),.w_sslot(w_sslot),.w_scales(w_scales),.fault(fault),.dbg_keys(dbg_keys));
     integer errors=0;
     task automatic run_case(input integer k);

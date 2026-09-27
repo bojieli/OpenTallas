@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hdc-v41x-idx-pool-hbm-bridge.v1",
+  "status": "pass",
+  "records_committed": 6,
+  "sector_writes_committed": 72,
+  "returned_reads_last_phase": 4,
+  "fifo_highwater": 4,
+  "read_stall_cycles": 4,
+  "writer_stall_cycles": 242,
+  "errors": 0,
+  "hbm_refresh_mode": "REFPB=3 (refresh-aware per-bank with MRU tie-break)",
+  "coverage": "Four-stack three-sector writes, partial scale-sector byte update, read hold until write commit, four-record FIFO full/backpressure and fifth-record drain.",
+  "limitation": "Simulation HBM controller with timed queues; no physical HBM PHY or routed core timing.",
+  "input_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
+    "rtl/test/tb_hdc_v41x_idx_pool_hbm_bridge.sv": "0b13645c4c34ce8bd449e611f1ebef6c1fc0dba5300b6959c333b68bb0e98501",
+    "tools/rtl_hdc_v41x_idx_pool_hbm_bridge_campaign.py": "081213c34bbbb7fac479622fb29d35e7e05c83911a82e436bc30ce3584bdb9ca"
+  }
+}

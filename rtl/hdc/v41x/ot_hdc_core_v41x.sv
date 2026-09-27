@@ -181,6 +181,7 @@ module ot_hdc_core_v41x #(
     input  wire [128*4-1:0] pikh_rsp_beat,
     input  wire [128*256-1:0] pikh_rsp_data,
     output wire              pikw_v,
+    input  wire              pikw_rdy,
     output wire [3:0]        pikw_stack_mask,
     output wire [27:0]       pikw_csec,
     output wire [511:0]      pikw_codes,
@@ -722,7 +723,7 @@ module ot_hdc_core_v41x #(
             ot_hdc_v41x_idx_pool_kwr #(.AW(AW), .NW(NW), .NL(KNL), .HAW(28)) u_kwr (
                 .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base), .su_go(su_go), .i_dst(dst), .i_obase(o_base),
                 .i_orow(o_row), .i_nout(su_nout), .i_kdim(su_nin), .kv_we(kwr_kv_we),
-                .kv_waddr(kwr_kv_waddr), .kv_wdata(kwr_kv_wdata), .w_v(pikw_v),
+                .kv_waddr(kwr_kv_waddr), .kv_wdata(kwr_kv_wdata), .w_v(pikw_v), .w_rdy(pikw_rdy),
                 .w_stack_mask(pikw_stack_mask), .w_csec(pikw_csec), .w_codes(pikw_codes),
                 .w_ssec(pikw_ssec), .w_sslot(pikw_sslot), .w_scales(pikw_scales), .fault(f_kwr), .dbg_keys());
             assign ikh_req_v = 0; assign ikh_req_addr = 0; assign ikh_req_len = 0; assign ikh_req_tag = 0;

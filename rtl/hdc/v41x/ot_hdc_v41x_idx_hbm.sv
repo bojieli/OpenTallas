@@ -9,7 +9,7 @@
 //     with a queue per pseudo-channel behind independent ports, so a channel
 //     held by a refresh backs up only its own requests (no head-of-line
 //     blocking across channels);
-//   * read-only, and the returned data either the backing array (MEM_MODE 0,
+//   * returned data either the backing array (MEM_MODE 0,
 //     optionally preloaded from MEMFILE) or a pattern of the sector address
 //     (MEM_MODE 1: pat(s), so a scan of any length needs no storage).
 // and one addition: REFPB = 3, the refresh-aware choice with a most-recently-
@@ -118,6 +118,10 @@ module ot_hdc_v41x_idx_hbm #(
     input  wire [NPC*AW-1:0]    req_addr,
     input  wire [NPC*LENW-1:0]  req_len,
     input  wire [NPC*TAGW-1:0]  req_tag,
+    input  wire [NPC-1:0]       req_we,
+    input  wire [NPC*DW-1:0]    req_wdata,
+    input  wire [NPC*(DW/8)-1:0] req_wstrb,
+    output reg  [NPC-1:0]       wr_done,
     output reg  [NPC-1:0]       rsp_v,
     input  wire [NPC-1:0]       rsp_rdy,
     output reg  [NPC*TAGW-1:0]  rsp_tag,
@@ -137,6 +141,7 @@ module ot_hdc_v41x_idx_hbm #(
     reg [TAGW-1:0]   q_tag  [0:NPC-1][0:QD-1];
     reg [BEATW-1:0]  q_beat [0:NPC-1][0:QD-1];
     reg [DW-1:0]     q_data [0:NPC-1][0:QD-1];
+    reg [DW/8-1:0]   q_strb [0:NPC-1][0:QD-1];
     longint          q_arr  [0:NPC-1][0:QD-1];
     integer          q_rp [0:NPC-1], q_n [0:NPC-1];
     // return queue
@@ -332,11 +337,12 @@ module ot_hdc_v41x_idx_hbm #(
     integer p, i, j, k, e, o, sel, slot, iter;
     reg ok, t_we;
     longint best, est;
-    reg [AW-1:0] t_addr; reg [TAGW-1:0] t_tag; reg [BEATW-1:0] t_beat; reg [DW-1:0] t_data; longint t_arr;
+    reg [AW-1:0] t_addr; reg [TAGW-1:0] t_tag; reg [BEATW-1:0] t_beat;
+    reg [DW-1:0] t_data; reg [DW/8-1:0] t_strb; longint t_arr;
     longint now;
     always @(posedge clk) begin
         if (!rst_n) begin
-            cyc <= 0; rsp_v <= 0;
+            cyc <= 0; rsp_v <= 0; wr_done <= 0;
             for (p = 0; p < NPC; p = p + 1) q_free[p] <= 0;
             for (p = 0; p < NPC; p = p + 1) begin
                 q_rp[p] = 0; q_n[p] = 0; r_rp[p] = 0; r_n[p] = 0; h_sched[p] = 1'b0; h_skip[p] = 0;
@@ -356,6 +362,7 @@ module ot_hdc_v41x_idx_hbm #(
             st_bp_cycles = 0; st_rd_lat_sum = 0; st_rd_lat_max = 0;
         end else begin
             cyc <= cyc + 1;
+            wr_done <= 0;
             now = cyc * CLK_PS;
             // responses taken this cycle (rsp_v is the registered offer)
             for (p = 0; p < NPC; p = p + 1)
@@ -374,7 +381,10 @@ module ot_hdc_v41x_idx_hbm #(
                             $finish;
                         end
                         slot = (q_rp[p] + q_n[p]) % QD;
-                        q_we[p][slot] = 1'b0; q_addr[p][slot] = req_addr[j*AW +: AW] + i;
+                        q_we[p][slot] = req_we[j] === 1'b1;
+                        q_addr[p][slot] = req_addr[j*AW +: AW] + i;
+                        q_data[p][slot] = req_wdata[j*DW +: DW];
+                        q_strb[p][slot] = req_wstrb[j*(DW/8) +: DW/8];
                         q_tag[p][slot] = req_tag[j*TAGW +: TAGW];
                         q_beat[p][slot] = i[BEATW-1:0]; q_arr[p][slot] = now;
                         q_n[p] = q_n[p] + 1;
@@ -408,15 +418,18 @@ module ot_hdc_v41x_idx_hbm #(
                                 h_skip[p] = h_skip[p] + 1;
                                 e = (q_rp[p] + sel) % QD;
                                 t_we = q_we[p][e]; t_addr = q_addr[p][e]; t_tag = q_tag[p][e];
-                                t_beat = q_beat[p][e]; t_data = q_data[p][e]; t_arr = q_arr[p][e];
+                                t_beat = q_beat[p][e]; t_data = q_data[p][e];
+                                t_strb = q_strb[p][e]; t_arr = q_arr[p][e];
                                 for (i = sel; i >= 1; i = i - 1) begin
                                     e = (q_rp[p] + i) % QD; o = (q_rp[p] + i - 1) % QD;
                                     q_we[p][e] = q_we[p][o]; q_addr[p][e] = q_addr[p][o]; q_tag[p][e] = q_tag[p][o];
-                                    q_beat[p][e] = q_beat[p][o]; q_data[p][e] = q_data[p][o]; q_arr[p][e] = q_arr[p][o];
+                                q_beat[p][e] = q_beat[p][o]; q_data[p][e] = q_data[p][o];
+                                q_strb[p][e] = q_strb[p][o]; q_arr[p][e] = q_arr[p][o];
                                 end
                                 e = q_rp[p];
                                 q_we[p][e] = t_we; q_addr[p][e] = t_addr; q_tag[p][e] = t_tag;
-                                q_beat[p][e] = t_beat; q_data[p][e] = t_data; q_arr[p][e] = t_arr;
+                                q_beat[p][e] = t_beat; q_data[p][e] = t_data;
+                                q_strb[p][e] = t_strb; q_arr[p][e] = t_arr;
                             end else h_skip[p] = 0;
                             h_tcol[p] = schedule(p, q_we[p][q_rp[p]], q_addr[p][q_rp[p]],
                                                  q_arr[p][q_rp[p]], now);
@@ -425,8 +438,12 @@ module ot_hdc_v41x_idx_hbm #(
                         if (h_tcol[p] <= now) begin
                             slot = q_rp[p];
                             if (q_we[p][slot]) begin
-                                mem[q_addr[p][slot] % MEM_WORDS] = q_data[p][slot];
+                                for (integer byte_i=0; byte_i<DW/8; byte_i=byte_i+1)
+                                    if (q_strb[p][slot][byte_i])
+                                        mem[q_addr[p][slot] % MEM_WORDS][8*byte_i +: 8] =
+                                            q_data[p][slot][8*byte_i +: 8];
                                 st_wr[p] = st_wr[p] + 1;
+                                wr_done[p] <= 1'b1;
                             end else begin
                                 k = (r_rp[p] + r_n[p]) % RQD;
                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
