@@ -645,15 +645,13 @@
    },
    "status": "pass",
    "vectors": {
-    "ops": 22,
-    "rows": 582,
-    "results_checked": 582,
+    "ops": 20,
+    "rows": 534,
+    "results_checked": 534,
     "faults_expected_and_raised": 15,
     "real_ops": [
-     "real_mv_24x640",
      "real_mv_32x256",
      "real_mv_32x256",
-     "real_mv_24x640",
      "real_mv_12x160",
      "real_mv_12x160",
      "real_mv_64x160",
@@ -682,22 +680,22 @@
     ]
    },
    "throughput": {
-    "beats": 4177,
-    "issue_span_cycles": 4255,
-    "beats_per_cycle": 0.9817,
-    "depth_gap_cycles_owed": 78,
+    "beats": 3685,
+    "issue_span_cycles": 3748,
+    "beats_per_cycle": 0.9832,
+    "depth_gap_cycles_owed": 63,
     "no_bubble": true,
     "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
-    "useful_lane_items": 261518,
-    "lane_utilisation": 0.9783,
-    "macs_per_cycle_sustained": 61.5,
-    "total_cycles_incl_fill_drain": 4294,
+    "useful_lane_items": 230798,
+    "lane_utilisation": 0.9786,
+    "macs_per_cycle_sustained": 61.6,
+    "total_cycles_incl_fill_drain": 3790,
     "errors": 0
    },
    "throttled_credits": {
     "errors": 0,
-    "checked": 582,
-    "cycles": 4294
+    "checked": 534,
+    "cycles": 3790
    },
    "latency": [
     {
@@ -772,15 +770,13 @@
    },
    "status": "pass",
    "vectors": {
-    "ops": 22,
-    "rows": 574,
-    "results_checked": 1148,
+    "ops": 20,
+    "rows": 526,
+    "results_checked": 1052,
     "faults_expected_and_raised": 46,
     "real_ops": [
-     "real_mv_24x640",
      "real_mv_32x256",
      "real_mv_32x256",
-     "real_mv_24x640",
      "real_mv_12x160",
      "real_mv_12x160",
      "real_mv_64x160",
@@ -809,22 +805,22 @@
     ]
    },
    "throughput": {
-    "beats": 4102,
-    "issue_span_cycles": 4174,
-    "beats_per_cycle": 0.9828,
-    "depth_gap_cycles_owed": 72,
+    "beats": 3591,
+    "issue_span_cycles": 3642,
+    "beats_per_cycle": 0.986,
+    "depth_gap_cycles_owed": 51,
     "no_bubble": true,
     "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
-    "useful_lane_items": 259369,
-    "lane_utilisation": 0.988,
-    "macs_per_cycle_sustained": 124.3,
-    "total_cycles_incl_fill_drain": 4216,
+    "useful_lane_items": 228649,
+    "lane_utilisation": 0.9949,
+    "macs_per_cycle_sustained": 125.6,
+    "total_cycles_incl_fill_drain": 3681,
     "errors": 0
    },
    "throttled_credits": {
     "errors": 0,
-    "checked": 1148,
-    "cycles": 4216
+    "checked": 1052,
+    "cycles": 3681
    },
    "latency": [
     {
@@ -899,15 +895,13 @@
    },
    "status": "pass",
    "vectors": {
-    "ops": 22,
-    "rows": 901,
-    "results_checked": 901,
+    "ops": 20,
+    "rows": 853,
+    "results_checked": 853,
     "faults_expected_and_raised": 22,
     "real_ops": [
-     "real_mv_24x640",
      "real_mv_32x256",
      "real_mv_32x256",
-     "real_mv_24x640",
      "real_mv_12x160",
      "real_mv_12x160",
      "real_mv_64x160",
@@ -937,22 +931,22 @@
     ]
    },
    "throughput": {
-    "beats": 3141,
-    "issue_span_cycles": 3225,
-    "beats_per_cycle": 0.974,
-    "depth_gap_cycles_owed": 84,
+    "beats": 3008,
+    "issue_span_cycles": 3071,
+    "beats_per_cycle": 0.9795,
+    "depth_gap_cycles_owed": 63,
     "no_bubble": true,
     "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
-    "useful_lane_items": 771857,
-    "lane_utilisation": 0.9599,
-    "macs_per_cycle_sustained": 239.3,
-    "total_cycles_incl_fill_drain": 3267,
+    "useful_lane_items": 741137,
+    "lane_utilisation": 0.9625,
+    "macs_per_cycle_sustained": 241.3,
+    "total_cycles_incl_fill_drain": 3116,
     "errors": 0
    },
    "throttled_credits": {
     "errors": 0,
-    "checked": 901,
-    "cycles": 3267
+    "checked": 853,
+    "cycles": 3116
    },
    "latency": [
     {
@@ -1247,8 +1241,8 @@
   "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
   "rtl/test/tb_hdc_v41x_wgt.sv": "95e0bfdefd8f51adeb8ed2abb74ed0c3d0baa311fb63fb94cd34179df279fd7c",
   "rtl/test/hdc_v41x_wgt_harness.cpp": "b0ee7123f6c2f18970f37c79ddc1b662d99416e59a3f8091af7869283b3fc66f",
-  "tools/hdc_golden_v41.py": "e6e95d8cf6ee1835bf7a1229f605d3d2b6756fd0234fdec0c4da2b3d12326a8e",
+  "tools/hdc_golden_v41.py": "6a991a1eb346220fdcff3b32dbfde286c0e526bfdd7f4c24a52ea553034ae734",
   "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
-  "tools/rtl_hdc_v41x_wgt_campaign.py": "52faed365198f34a486edeb200b6e743c9f97d0d52f5db004e9e0231d4c8eb2f"
+  "tools/rtl_hdc_v41x_wgt_campaign.py": "3e27f4c104fffdc4e3a11e7f572c0d41babb93097e9835095d45c11198e5150f"
  }
 }

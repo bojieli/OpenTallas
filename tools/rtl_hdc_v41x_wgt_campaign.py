@@ -227,16 +227,18 @@ def capture_real(positions=2):
     lq, mc = V.linear_q, V.matvec_c
     calls = {}
 
-    def lq2(w, x):
+    def lq2(w, x, *a, **kw):
         key = ("q", w.q.__array_interface__["data"][0], w.q.shape)
         calls.setdefault(key, {"w": w, "xs": []})["xs"].append(np.asarray(x, F).copy())
-        return lq(w, x)
+        return lq(w, x, *a, **kw)
 
-    def mc2(w, x, s):
+    def mc2(w, x, s, *a, **kw):
         w = np.asarray(w)
+        if kw.get("cls", a[0] if a else "me") != "me":        # the hyper-connection mixes run on their own engine
+            return mc(w, x, s, *a, **kw)
         key = ("m", w.__array_interface__["data"][0], w.shape)
         calls.setdefault(key, {"w": w, "xs": []})["xs"].append(np.asarray(x, F).copy())
-        return mc(w, x, s)
+        return mc(w, x, s, *a, **kw)
 
     V.linear_q, V.matvec_c = lq2, mc2
     try:
