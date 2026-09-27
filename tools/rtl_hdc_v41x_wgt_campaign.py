@@ -699,7 +699,7 @@ def die_mapping(depth_q, depth_m):
                     "G/P parts of equal length and the row groups scheduled longest-first onto the tiles. "
                     "latency = makespan (beats) + measured tile base depth + 3 x (the part's tree levels in the tile) + collector levels.",
            "collect_hop_cycles": 2,
-           "choice": "per matrix, the fewest K-split parts that meet the budget (the cross-tile collector is modelled, not built)"}
+           "choice": "per matrix, the fewest K-split parts that meet the budget (the cross-tile collector is ot_hdc_v41x_wgt_kcol, built and benched: latency 3S + 2 = the modelled 3s + hop)"}
     hop = 2
     for label, ops, lanes_die, G, T, depth, per, pmin in (
             ("quantised: 985 tiles x 8 block-dot lanes (G=1)", qops, 7880, 1, 985, depth_q, 8, 0),
@@ -742,9 +742,79 @@ def die_mapping(depth_q, depth_m):
                                 "tile_depth_cycles": depth + 3 * tree, "latency_cycles": lat, "_key": key}
             best.pop("_key")
             rows.append({"matrix": n, "rows_per_die": r, "terms_per_row": nb * per, **best, "budget_cycles": bud,
-                         "meets": best["latency_cycles"] <= bud})
+                         "meets": best["latency_cycles"] <= bud, "margin_cycles": bud - best["latency_cycles"],
+                         "margin_fraction": round((bud - best["latency_cycles"]) / bud, 4)})
         out[label] = rows
     return out
+
+
+KCOL_RTL = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_wgt_kcol.sv"
+KCOL_TB = ROOT / "rtl/test/tb_hdc_v41x_wgt_kcol.sv"
+KCOL_RE = re.compile(r"V41XKCOL rows=(\d+) errors=(\d+) cycles=(\d+)")
+
+
+def kcol_vectors(S, nrows, rng):
+    """Rows cut into 2^S aligned parts of the padded chunk tree: each part's root is csum of its terms (the tile's
+    FP32 result for that part; an empty part is +0), the expected row is csum of the whole row (the golden).  Rows
+    use wo_b's K (256 blocks = 32 chunks of block values) and random lengths; a few overflow (fault expected), a few
+    carry a faulting part."""
+    P = 1 << S
+    ins, exp = [], []
+    for r in range(nrows):
+        n = 256 if r % 3 == 0 else int(rng.integers(1, 300))
+        t = (rng.standard_normal(n) * np.exp2(rng.integers(-20, 20, n))).astype(F)
+        if r % 17 == 5:
+            t[:] = F(3.0e38)                                  # the tree overflows: fault
+        nc = -(-n // 8)
+        NP = 1 << max(0, (nc - 1).bit_length())
+        per = max(1, NP // P) * 8
+        pf = [0] * P
+        if r % 23 == 7:
+            pf[int(rng.integers(0, P))] = 1                   # a part arrives faulted
+        roots = []
+        with np.errstate(over="ignore", invalid="ignore"):
+            for p in range(P):
+                seg = t[p * per:(p + 1) * per]
+                roots.append(F(V.csum(seg)) if seg.size else F(0))
+            want = F(V.csum(t))
+        for p in range(P):
+            ok = np.isfinite(roots[p]) and not pf[p]
+            ins.append(((0 if ok else 1) << 32) | (int(u32(roots[p])) if np.isfinite(roots[p]) else 0))
+        fault = (not np.isfinite(want)) or any(pf) or not all(np.isfinite(x) for x in roots)
+        y = 0 if fault else int(u32(want))
+        bf = 0 if fault else int(u32(V.to_bf16(want))) >> 16
+        exp.append((int(fault) << 48) | (bf << 32) | y)
+    return ins, exp
+
+
+def run_kcol(scratch: Path, seed: int, S=1, nrows=400):
+    rng = np.random.default_rng(seed)
+    d = scratch / f"kcol_s{S}"
+    d.mkdir(parents=True, exist_ok=True)
+    ins, exp = kcol_vectors(S, nrows, rng)
+    (d / "in.hex").write_text("\n".join(hexline(v, 33) for v in ins) + "\n")
+    (d / "exp.hex").write_text("\n".join(hexline(v, 49) for v in exp) + "\n")
+    obj = d / "obj"
+    subprocess.run([VERILATOR, "--cc", "--exe", "--build", "-j", "4", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
+                    "-Wno-BLKSEQ", "--top-module", "tb_hdc_v41x_wgt_kcol", "--prefix", "Vtb", "-Mdir", str(obj),
+                    f"-GS={S}", f"-GNR={nrows}", *map(str, LIB), str(ROOT / "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv"),
+                    str(KCOL_RTL), str(KCOL_TB), str(HARNESS), "-CFLAGS", "-O1"], check=True, capture_output=True)
+    out = {}
+    for stall in (0, 3, 6):
+        r = subprocess.run([str(obj / "Vtb"), f"+in={d / 'in.hex'}", f"+exp={d / 'exp.hex'}", f"+stall={stall}"],
+                           capture_output=True, text=True, check=True)
+        m = KCOL_RE.search(r.stdout)
+        if not m:
+            raise RuntimeError(r.stdout[-2000:])
+        rows, errs, cyc = map(int, m.groups())
+        out[f"stall_{stall}_of_8"] = {"rows": rows, "errors": errs, "cycles": cyc}
+    faults = sum(1 for e in exp if e >> 48)
+    ok = all(v["errors"] == 0 and v["rows"] == nrows for v in out.values())
+    return {"status": "pass" if ok else "fail", "parts": 1 << S, "rows": nrows, "faults_expected": faults,
+            "latency_cycles": 3 * S + 2, "runs": out,
+            "claim": "the parts' FP32 roots added by the top S levels of the row's padded pairwise tree, in fixed "
+                     "order, equal hdc_golden_v41.csum of the whole row bit for bit, with the ports skewed by "
+                     "independent stalls; a faulted part or an overflowing sum raises the row's fault"}
 
 
 def run(seed, configs, real, quick=False, scratch=None):
@@ -780,6 +850,10 @@ def main() -> int:
     a = ap.parse_args()
     configs = a.configs.split(",")
     res, lint, ok = run(a.seed, configs, not a.no_real, scratch=a.scratch)
+    ks = a.scratch or Path(tempfile.mkdtemp())
+    kcol = {f"S{S}": run_kcol(Path(ks), a.seed + 100 + S, S=S) for S in (1, 2)}
+    kcol["status"] = "pass" if all(v["status"] == "pass" for v in kcol.values()) else "fail"
+    kcol["rtl"] = "rtl/hdc/v41x/ot_hdc_v41x_wgt_kcol.sv (bench rtl/test/tb_hdc_v41x_wgt_kcol.sv)"
     dq = [r["depth_base"] for c, v in res.items() if v["config"]["G"] == 1 and "quantised" in v["config"]["kind"]
           for r in v["latency"] if r["op"] == "lat_single_block_row"]
     dm = [r["depth_base"] for c, v in res.items() if v["config"]["G"] == 32 for r in v["latency"]
@@ -787,7 +861,7 @@ def main() -> int:
     ckpt = V.CHECKPOINT
     rec = {
         "schema": "opentallas.hdc-v41x-wgt-campaign.v1",
-        "status": "pass" if ok else "fail",
+        "status": "pass" if ok and kcol["status"] == "pass" else "fail",
         "block": "wgt (weight engines: quantised FP8/FP4 block-dot + BF16/FP32)",
         "claim_boundary": "bit-exact cycle simulation (Verilator) of the weight-engine TILE against "
                           "tools/hdc_golden_v41.linear_q / matvec_c under R-ARITH chunk8, with a behavioural banked "
@@ -803,6 +877,7 @@ def main() -> int:
                           "checkpoint_sha256": sha(ckpt) if not a.no_real else None},
         "configs": res,
         "die_mapping": die_mapping(dq[0], dm[0]) if (dq and dm) else None,
+        "kcol": kcol,
         "per_die": {
             "quantised": {"tiles": 985, "tile": "ot_hdc_v41x_wgt_qtile (G=1: 8 block-dot lanes)", "block_dot_lanes": 7880,
                           "macs_per_cycle_m1": 985 * 8 * 32, "macs_per_cycle_m2": 985 * 8 * 32 * 2,
@@ -821,15 +896,16 @@ def main() -> int:
                          "stored once and broadcast by the read network into the lane word; routed FP4 carries one "
                          "per row x 32; the lane multiplier m does not change the read"}},
         "verilator_lint": {"flags": list(LINT_FLAGS), "tops": lint},
-        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (*RTL, *LIB, TB, HARNESS, *TOOLS)},
+        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (*RTL, *LIB, TB, HARNESS, KCOL_RTL, KCOL_TB, *TOOLS)},
     }
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     for c, v in res.items():
         print(c, v["status"], v["throughput"]["beats_per_cycle"], v["throughput"]["lane_utilisation"],
               [(r["op"], r["measured_cycles"], r["spec_budget_cycles"]) for r in v["latency"]], v["error_lines"][:3])
+    print("kcol", kcol["status"])
     print("status", rec["status"])
-    return 0 if ok else 1
+    return 0 if rec["status"] == "pass" else 1
 
 
 if __name__ == "__main__":

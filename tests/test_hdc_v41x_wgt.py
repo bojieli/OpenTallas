@@ -71,3 +71,16 @@ def test_campaign_record():
         assert c["status"] == "pass"
         assert c["throughput"]["no_bubble"]
         assert all(x["meets"] for x in c["latency"])
+    if "kcol" in rec:
+        assert rec["kcol"]["status"] == "pass"
+    for rows in (rec.get("die_mapping") or {}).values():
+        if isinstance(rows, list):
+            assert all(r["meets"] for r in rows)
+
+
+@needs_verilator
+def test_kcol_bit_exact(tmp_path):
+    """Cross-tile K-split collector: 2 and 4 aligned parts re-assemble csum bit for bit under skewed ports."""
+    for S in (1, 2):
+        r = C.run_kcol(tmp_path, 11 + S, S=S, nrows=120)
+        assert r["status"] == "pass", r
