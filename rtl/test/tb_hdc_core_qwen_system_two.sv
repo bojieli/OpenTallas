@@ -132,6 +132,7 @@ module tb_hdc_core #(
     localparam integer SYS_TAGW=1+SYS_LWIN+$clog2(G)+3,SYS_LBK=$clog2(SYS_BK);
     reg [127:0] kv_fp8 [0:KV_WORDS-1];
     reg [255:0] system_hbm [0:KV_WORDS/2-1];
+    reg [127:0] expected_flushed_word;
     reg system_hbm_written [0:KV_WORDS/2-1];
     reg [W*16-1:0] system_win [0:G-1][0:(1<<SYS_LWIN)-1];
     reg [127:0] system_bank [0:2*SW-1][0:15];
@@ -158,6 +159,7 @@ module tb_hdc_core #(
     reg [SYS_NPC*256-1:0] system_hr_data=0;
     integer system_hbm_reads=0,system_hbm_writes=0,system_wait_cycles=0;
     integer system_hbm_v_reads_after_write=0;
+    integer system_hbm_k_writes=0,system_flush_mismatches=0,system_done_flush_wait=0;
     reg system_waiting=0;
     wire system_boot_v=(lc>=6 && lc<262 && rst_n);
     wire [7:0] system_boot_idx=lc-6;
@@ -207,6 +209,7 @@ module tb_hdc_core #(
                 system_hbm[system_hq_sector] <= system_hq_data;
                 system_hbm_written[system_hq_sector] <= 1;
                 system_hbm_writes<=system_hbm_writes+1;
+                if (system_hq_sector < 256) system_hbm_k_writes<=system_hbm_k_writes+1;
             end
             else begin
                 system_hbm_reads<=system_hbm_reads+1;
@@ -508,6 +511,13 @@ module tb_hdc_core #(
             start <= 1'b1;
         end
         if (two_token && two_step && !done) second_armed<=1;
+        if (two_token && two_step && second_armed && done && system_hbm_k_writes<128) begin
+            system_done_flush_wait<=system_done_flush_wait+1;
+            if (system_done_flush_wait>5000) begin
+                $display("FAIL K_FLUSH_TIMEOUT writes=%0d fault=%0d",system_hbm_k_writes,system_fault);
+                $finish;
+            end
+        end
         if (!multi && two_token && !two_step && lc > START + 2 && done) begin
             first_bad <= (next_token != gold_gen[0]) || fault || system_fault;
             $display("KV_SYSTEM_FIRST pos=%0d next_token=%0d expect=%0d cycles=%0d fault=%0d",
@@ -517,7 +527,8 @@ module tb_hdc_core #(
             expect_tok <= gold_gen[1];
             start <= 1'b1;
             two_step <= 1'b1;
-        end else if (!multi && lc > START + 2 && done && !finishing && (!two_token || second_armed)) begin
+        end else if (!multi && lc > START + 2 && done && !finishing &&
+                     (!two_token || (second_armed && system_hbm_k_writes>=128))) begin
 `ifdef OT_HDC_MEMSYS
             finishing <= 1'b1;
             dump_i <= 0;
@@ -574,6 +585,13 @@ module tb_hdc_core #(
             $display("KV_SYSTEM fault=%0d drained=%0d hbm_reads=%0d hbm_writes=%0d wait_cycles=%0d",
                      system_fault,system_drained,system_hbm_reads,system_hbm_writes,system_wait_cycles);
             $display("KV_SYSTEM_ORDER v_reads_after_write=%0d",system_hbm_v_reads_after_write);
+            if (two_token) begin
+                for (i=0;i<W;i=i+1) expected_flushed_word[i*8 +: 8]=packed_fp8(e_kv[i][31:16]);
+                system_flush_mismatches=(system_hbm[0][0 +: 128] !== expected_flushed_word);
+                $display("KV_SYSTEM_FLUSH k_writes=%0d word0_mismatch=%0d actual=%h expected=%h",
+                         system_hbm_k_writes,system_flush_mismatches,
+                         system_hbm[0][0 +: 128],expected_flushed_word);
+            end
 `ifdef OT_HDC_MEMSYS
             $display("ROM_ECC corrected=%0d uncorrectable=%0d", ecc_corrected, ecc_uncorrectable);
 `endif
@@ -596,6 +614,7 @@ module tb_hdc_core #(
 `endif
             if (next_token == expect_tok && !first_bad && !fault && !system_fault && system_drained &&
                 (!two_token || system_hbm_v_reads_after_write > 0) &&
+                (!two_token || system_flush_mismatches == 0) &&
                 bad_lg == 0 && bad_vm == 0 && bad_kv == 0 &&
                 (!KV_BRIDGE || (!bridge_fault && bridge_drained && bridge_bad == 0)))
                 $display("PASS");
