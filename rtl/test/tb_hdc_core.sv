@@ -163,14 +163,16 @@ module tb_hdc_core #(
             bridge_mem_r_resp_v <= rst_n && bridge_mem_r_v;
             if (bridge_mem_r_v) bridge_mem_r_resp_data <= bridge_sector[bridge_mem_r_sector];
             if (bridge_mem_w_v) bridge_sector[bridge_mem_w_sector] <= bridge_mem_w_data;
+            // Shadow banks are write-only until the terminal check. Apply
+            // masked bytes in bank/byte order; no same-cycle read observes them.
             for (integer z=0;z<2*SW;z=z+1) if (bridge_tl_we[z])
                 for (integer k=0;k<16;k=k+1) if (bridge_tl_mask[z*16+k])
-                    bridge_bank[z][bridge_tl_row[z*AW +: AW]][k*8 +: 8] <=
+                    bridge_bank[z][bridge_tl_row[z*AW +: AW]][k*8 +: 8] =
                         bridge_tl_data[z*128+k*8 +: 8];
             for (integer z=0;z<SW;z=z+1) if (kv_we[z]) begin
                 bridge_a = kv_waddr[z*AW +: AW];
-                bridge_written[bridge_a] <= 1'b1;
-                bridge_expect[bridge_a] <= bridge_q[z*8 +: 8];
+                bridge_written[bridge_a] = 1'b1;
+                bridge_expect[bridge_a] = bridge_q[z*8 +: 8];
             end
         end
     end else begin : g_no_bridge
