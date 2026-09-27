@@ -242,7 +242,7 @@ def lane_sweep(s: Path, widths) -> list:
 
 
 def run(ngen: int, context: int, sweep=()) -> dict:
-    with tempfile.TemporaryDirectory() as scratch:
+    with tempfile.TemporaryDirectory(dir=os.environ.get("OT_SCRATCH"))  # pool workers: /tmp is a 16 GB tmpfs as scratch:
         s = Path(scratch)
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core_v41x",
                                f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}", f"-GMG={PARAMS['mg']}",
