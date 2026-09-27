@@ -9,11 +9,25 @@ those images from the same Layout, and fixes, per engine, the translation from a
 instruction field carries) to the engine's base -- the adapter applies it (rtl/hdc/v41x/ot_hdc_v41x_*_adapt.sv).
 
 * cfg.hex: straps of the bench -- [0] the KV word where the index keys start (the ME slot routes a KV-sourced
-  op at or above it to the indexer engine, below it to the attention engine).
+  op at or above it to the indexer engine, below it to the attention engine); [1] me_xs (the ME weight-tile base
+  shift, below).
 * HE -> ot_hdc_v41x_hcp: 8 weight banks of HHW binary32 lanes.  Matrix fn [nout, K] (K = 8 * he_k) at as-built
   HE ROM word b is placed at bank word b + o*R + r (R = ceil(he_k / HHW)), bank k, lane l = fn[o][8*(r*HHW+l)+k]:
   the IDENTITY translation, legal because the engine's footprint nout*R words fits the as-built he_k*IL
   (asserted).  File hbank.hex: line a*8 + k = bank k word a, lanes 0..HHW-1 (lane 0 in the low bits).
+
+* ME weight ops -> ot_hdc_v41x_wgt_tile KIND 1 (the BF16/FP32 weight engine, MG chunk units = 8*MG lanes,
+  lane = one bank of binary32 weights).  The image is built from the PROGRAM's ME weight ops (me_wsrc = 0), so it
+  is exactly what the ISA model multiplies: row n = (t*IL + j)*W + l of an op takes, at term i = c*kc + k, the
+  as-built ROM lane (q*S + c)*W + l of word wbase + r*ts + k*ks + (j >> jsh)*js (t = r*per_round + q), against x
+  element xbase + j*xjs + i (asserted: xks = 1, xcs = kc).  An op whose x moves with the slot j (xjs != 0, grouped
+  wo_a) runs as IL sub-ops, sub-op j over rows t*W + l; any other op is one sub-op over rows n = 0 .. nout-1.
+  A sub-op of nrows rows x K terms runs at segment plg = clamp(ceil(log2(ceil(K/8))), ME_PMIN_LG, log2 MG):
+  nbeat = ceil(K / 8P) beats, rpg = MG/P rows per row group, nrg = ceil(nrows / rpg) groups; bank b (= slot*8P +
+  (i mod 8P)) word base + rg*nbeat + q holds row rg*rpg + slot, term q*8P + (i mod 8P).  Base of sub-op j:
+  (wbase << me_xs) + j*nrg*nbeat, me_xs the smallest shift that keeps every op's image disjoint (cfg.hex [1]).
+  File mbank.hex: line a*8*MG + b = bank b word a.  The adapter (ot_hdc_v41x_me_adapt) derives the same plg,
+  nbeat, nrg, bases (me_geometry below is the reference).
 
 MTP builds (--mtp GAMMA) use tools/hdc_program_v41.mtp_layout, so the MTP-only weights (mtp.0-2 layers, their
 hyper-connection projections) are covered by the same placement rule.
@@ -83,16 +97,121 @@ def write_banked(path, img, lane_bits, lanes):
             prev = a
 
 
-def write(out, lay, hhw=8):
+ME_PMIN_LG = 1
+
+
+def me_geometry(f, mg):
+    """Sub-op geometry of an ME weight op on the weight tile of mg chunk units (the adapter's own rule)."""
+    S = 1 << f["me_split"]
+    K = S * f["me_k"]
+    per_round = I.GROUPS // S
+    lg = mg.bit_length() - 1
+    nch = -(-K // 8)
+    plg = min(lg, max(ME_PMIN_LG, (nch - 1).bit_length()))
+    nbeat = -(-K // (8 << plg))
+    rpg = mg >> plg
+    splitj = f["me_xjs"] != 0
+    T = f["me_tiles"] * per_round
+    nrows = T * I.W_LANES if splitj else f["me_nout"]
+    nrg = -(-nrows // rpg)
+    return dict(S=S, K=K, per_round=per_round, plg=plg, nbeat=nbeat, rpg=rpg, splitj=splitj, nsub=IL if splitj else 1,
+                nrows=nrows, nrg=nrg, subfp=nrg * nbeat)
+
+
+def me_ops(lay, prog):
+    """{as-built wbase: an ME weight op of the program that reads it} (every op of a base has one shape)."""
+    ops = {}
+    keys = ("me_nout", "me_tiles", "me_k", "me_ts", "me_ks", "me_js", "me_jsh", "me_split", "me_xks", "me_xcs",
+            "me_xjs")
+    for f in prog:
+        if f["unit"] != I.UNIT_ME or f.get("me_wsrc", 0):
+            continue
+        f = {k: f.get(k, 0) for k, _ in I.FIELDS}
+        assert f["me_d_wbase"] == 0 and f["me_d_k"] == 0 and f["me_d_tiles"] == 0 and f["me_d_nout"] == 0, f
+        assert f["me_xks"] == 1 and f["me_xcs"] == f["me_k"] and f["me_hg"] == 0 and f["me_mmode"] == 0, f
+        old = ops.get(f["me_wbase"])
+        assert old is None or all(old[k] == f[k] for k in keys), (old, f)
+        ops[f["me_wbase"]] = f
+    return ops
+
+
+def mbank_image(lay, prog, mg):
+    """({line: uint32}, me_xs) of the weight-tile banks for every ME weight op of prog."""
+    W = I.W_LANES
+    L = 8 * mg
+    words = np.stack(lay.words).astype(np.uint32)            # [nwords, W*GROUPS] BF16
+    ops = me_ops(lay, prog)
+    subs = []
+    for wb, f in sorted(ops.items()):
+        g = me_geometry(f, mg)
+        S, K, kc = g["S"], g["K"], f["me_k"]
+        for sj in range(g["nsub"]):
+            rows = np.arange(g["nrows"])
+            if g["splitj"]:
+                t, l, j = rows // W, rows % W, np.full(len(rows), sj)
+            else:
+                t, j, l = rows // (W * IL), (rows // W) % IL, rows % W
+            nidx = (t * IL + j) * W + l
+            r, q = t // g["per_round"], t % g["per_round"]
+            i = np.arange(K)
+            c, kk = i // kc, i % kc
+            word = wb + r[:, None] * f["me_ts"] + kk[None, :] * f["me_ks"] + (j[:, None] >> f["me_jsh"]) * f["me_js"]
+            lane = (q[:, None] * S + c[None, :]) * W + l[:, None]
+            w = words[word, lane] << 16                          # [rows, K] binary32 bits
+            w[nidx >= f["me_nout"]] = 0
+            subs.append((wb, sj, g, w))
+    xs = 0
+    while True:
+        spans = sorted(((wb << xs) + sj * g["subfp"], (wb << xs) + (sj + 1) * g["subfp"]) for wb, sj, g, _ in subs)
+        if all(a[1] <= b[0] for a, b in zip(spans, spans[1:])):
+            break
+        xs += 1
+    img = {}
+    for wb, sj, g, w in subs:
+        base = (wb << xs) + sj * g["subfp"]
+        P8 = 8 << g["plg"]
+        rows, K = w.shape
+        for rho in range(rows):
+            rg, slot = divmod(rho, g["rpg"])
+            for i in range(K):
+                q, b = divmod(i, P8)
+                img[(base + rg * g["nbeat"] + q) * L + slot * P8 + b] = int(w[rho, i])
+    return img, xs
+
+
+def write_words(path, img, bits):
+    """A sparse $readmemh image of single words."""
+    digits = bits // 4
+    with open(path, "w") as fh:
+        prev = None
+        for a in sorted(img):
+            if prev is None or a != prev + 1:
+                fh.write(f"@{a:x}\n")
+            fh.write(f"{img[a]:0{digits}x}\n")
+            prev = a
+
+
+def program_of(lay):
+    """The program(s) whose weight ops the images serve: the one-position program, or the MTP image's."""
+    if lay.mtp:
+        gamma = lay.nslots - 1
+        return P.build_mtp(lay, min(gamma, lay.m.dspark_block))[0]
+    return P.Builder(lay).build()
+
+
+def write(out, lay, hhw=8, mg=8):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     hb = hbank_image(lay, hhw)
     write_banked(out / "hbank.hex", hb, 32, hhw)
+    mb, me_xs = mbank_image(lay, program_of(lay), mg)
+    write_words(out / "mbank.hex", mb, 32)
     # cfg.hex (the bench's straps): [0] the KV word where the index keys start (ME-slot class of a KV op)
     ik = min(a for n, a in lay.kv.map.items() if n.startswith("IK")) // I.W_LANES
     assert all(a < ik * I.W_LANES for n, a in lay.kv.map.items() if not n.startswith("IK"))
-    (out / "cfg.hex").write_text(f"{ik:06x}\n")
-    meta = {"hhw": hhw, "hbank_lines": len(hb), "hbank_top": max(hb) + 1 if hb else 0, "ik_base_word": ik}
+    (out / "cfg.hex").write_text(f"{ik:06x}\n{me_xs:06x}\n")
+    meta = {"hhw": hhw, "hbank_lines": len(hb), "hbank_top": max(hb) + 1 if hb else 0, "ik_base_word": ik,
+            "mg": mg, "me_xs": me_xs, "mbank_words": len(mb), "mbank_top_line": max(mb) + 1 if mb else 0}
     (out / "v41x_images.json").write_text(json.dumps(meta))
     return meta
 
@@ -102,10 +221,11 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--mtp", type=int, help="MTP layout with this gamma (tools/hdc_program_v41.mtp_layout)")
     ap.add_argument("--hhw", type=int, default=8)
+    ap.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
     a = ap.parse_args()
     model = V.Model()
     lay = P.mtp_layout(model, a.mtp) if a.mtp else P.Layout(model)
-    print(json.dumps(write(a.out, lay, a.hhw)))
+    print(json.dumps(write(a.out, lay, a.hhw, a.mg)))
 
 
 if __name__ == "__main__":
