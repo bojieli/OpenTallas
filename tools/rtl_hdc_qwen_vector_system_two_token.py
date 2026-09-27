@@ -21,6 +21,7 @@ KV=[ROOT/p for p in (
     'rtl/hdc/kv/ot_hdc_qwen_kv_tail_group_port.sv',
     'rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv',
     'rtl/hdc/kv/ot_hdc_qwen_kv_phys_arbiter.sv',
+    'rtl/hdc/kv/ot_hdc_qwen_kv_hbm_boot.sv',
     'rtl/hdc/kv/ot_hdc_qwen_kv_system.sv')]
 TB=ROOT/'rtl/test/tb_hdc_core_qwen_system_two.sv'
 INPUTS=[*BASE.HDC,*BASE.PIPES,*BASE.BRIDGE_RTL,*KV,TB,BASE.HARNESS,BASE.ISA_SVH,

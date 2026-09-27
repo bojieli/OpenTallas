@@ -183,6 +183,7 @@ module tb_hdc_core #(
         .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
         .kv_write_flush(kv_write_flush),.kv_write_drained(system_drained),
         .boot_v(system_boot_v),.boot_word(system_boot_word),.boot_data(kv_fp8[system_boot_word]),
+        .boot_start(1'b0),.boot_busy(),.boot_done(),
         .win_we(system_win_we),.win_waddr(system_win_waddr),.win_wdata(system_win_wdata),
         .win_re(system_win_re),.win_raddr(system_win_raddr),.win_q(system_win_q),
         .bank_we(system_bank_we),.bank_re(system_bank_re),
