@@ -26,6 +26,10 @@ module ot_hdc_qwen_kv_system #(
     // Physical pre-token K-tail boot, one logical FP8 word per cycle.
     input wire boot_v, input wire [AW-1:0] boot_word,
     input wire [127:0] boot_data,
+    // Optional autonomous resident-tail boot from the same physical HBM port.
+    // Assert before tok_start; the controller reports completion after all
+    // sector responses have reached the bank write ports.
+    input wire boot_start, output wire boot_busy,boot_done,
     // G-bank BF16 prefetch window SRAM.
     output wire [G-1:0] win_we,
     output wire [G*LWIN-1:0] win_waddr,
@@ -53,14 +57,14 @@ module ot_hdc_qwen_kv_system #(
 );
     localparam integer LBK=$clog2(BK), TAGW=1+LWIN+$clog2(G)+3;
     localparam integer TAW=LLG+LOG_HD, LSW=$clog2(SW);
-    wire kvs_ok,kvs_fault,tail_fault,sector_fault,arb_fault,write_fault;
+    wire kvs_ok,kvs_fault,tail_fault,sector_fault,arb_fault,write_fault,boot_fault;
     reg desc_pending,desc_overrun;
     reg [AW-1:0] desc_wbase,desc_ts,desc_ks,desc_js,desc_wcs;
     reg [3:0] desc_split;
     reg [2:0] desc_jsh;
     reg [NW-1:0] desc_tiles,desc_k,desc_nout,desc_pos;
     reg desc_kindk;
-    wire stream_kvd_v = desc_pending && kv_write_drained;
+    wire stream_kvd_v = desc_pending && kv_write_drained && !boot_busy;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin desc_pending<=0; desc_overrun<=0; end
         else begin
@@ -109,17 +113,31 @@ module ot_hdc_qwen_kv_system #(
     wire vr_v,vr_ready,vr_resp_v,vw_v,vw_ready;
     wire [AW-1:0] vr_sector,vw_sector;
     wire [255:0] vr_resp_data,vw_data;
+    wire auto_boot_v,boot_req_v,boot_req_ready,boot_rsp_v;
+    wire [AW-1:0] auto_boot_word,boot_req_sector;
+    wire [127:0] auto_boot_data;
+    wire [255:0] boot_rsp_data;
+    wire boot_any_v=boot_v || auto_boot_v;
+    wire [AW-1:0] boot_any_word=boot_v ? boot_word : auto_boot_word;
+    wire [127:0] boot_any_data=boot_v ? boot_data : auto_boot_data;
     wire [AW-1:0] boot_row =
-        ((boot_word >> (LOG_HD+LOG_TW)) << (LOG_HD-LSW)) |
-        ((boot_word & ((1<<LOG_HD)-1)) >> LSW);
+        ((boot_any_word >> (LOG_HD+LOG_TW)) << (LOG_HD-LSW)) |
+        ((boot_any_word & ((1<<LOG_HD)-1)) >> LSW);
     wire [$clog2(2*SW)-1:0] boot_bank =
-        (boot_word[LOG_HD] ? SW : 0) + boot_word[LSW-1:0];
+        (boot_any_word[LOG_HD] ? SW : 0) + boot_any_word[LSW-1:0];
     initial begin
         if (W!=16 || SW>(1<<LOG_HD)) $error("Unsupported Qwen KV tail geometry");
     end
-    assign kv_ok=kvs_ok && kv_write_drained && !boot_v && !desc_pending && !kvd_v;
-    assign fault=kvs_fault || tail_fault || sector_fault || arb_fault || write_fault || desc_overrun;
+    assign kv_ok=kvs_ok && kv_write_drained && !boot_any_v && !boot_busy && !desc_pending && !kvd_v;
+    assign fault=kvs_fault || tail_fault || sector_fault || arb_fault || write_fault ||
+                 boot_fault || (boot_v && auto_boot_v) ||
+                 (boot_any_v && (|vec_tl_we)) || desc_overrun;
     assign tail_fault=group_fault || flush_fault || tail_collision;
+    ot_hdc_qwen_kv_hbm_boot #(.AW(AW),.NW(NW),.W(W),.LOG_HD(LOG_HD),.LOG_TW(LOG_TW),.LLG(LLG)) u_boot (
+        .clk(clk),.rst_n(rst_n),.start(boot_start),.pos(tok_pos),.busy(boot_busy),.done(boot_done),
+        .req_v(boot_req_v),.req_ready(boot_req_ready),.req_sector(boot_req_sector),
+        .rsp_v(boot_rsp_v),.rsp_data(boot_rsp_data),
+        .wr_v(auto_boot_v),.wr_word(auto_boot_word),.wr_data(auto_boot_data),.fault(boot_fault));
     ot_hdc_kv_stream #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.LWIN(LWIN),.NPC(NPC),.BK(BK),.SPLIT_AWARE(1),
                        .LOG_HD(LOG_HD),.LOG_TW(LOG_TW),.LLG(LLG),.V0_WORD(V0_WORD),.HBM_FP8(1)) u_stream (
         .clk(clk),.rst_n(rst_n),.tok_start(tok_start),.tok_pos(tok_pos),.cfg_lead(cfg_lead),
@@ -154,10 +172,10 @@ module ot_hdc_qwen_kv_system #(
     end endgenerate
     genvar b;
     generate for (b=0;b<2*SW;b=b+1) begin : g_bank
-        assign bank_we[b]=boot_v ? (boot_bank==b) : vec_tl_we[b];
-        assign bank_wrow[b*AW +: AW]=boot_v ? boot_row : vec_tl_row[b*AW +: AW];
-        assign bank_wmask[b*16 +: 16]=boot_v ? 16'hffff : vec_tl_mask[b*16 +: 16];
-        assign bank_wdata[b*128 +: 128]=boot_v ? boot_data : vec_tl_data[b*128 +: 128];
+        assign bank_we[b]=boot_any_v ? (boot_bank==b) : vec_tl_we[b];
+        assign bank_wrow[b*AW +: AW]=boot_any_v ? boot_row : vec_tl_row[b*AW +: AW];
+        assign bank_wmask[b*16 +: 16]=boot_any_v ? 16'hffff : vec_tl_mask[b*16 +: 16];
+        assign bank_wdata[b*128 +: 128]=boot_any_v ? boot_any_data : vec_tl_data[b*128 +: 128];
     end endgenerate
     ot_hdc_qwen_kv_vector_bridge #(.SW(SW),.AW(AW),.LOG_HD(LOG_HD),.LOG_TW(LOG_TW),
                                     .V0_ELEMENT(V0_WORD*W)) u_write (
@@ -187,6 +205,8 @@ module ot_hdc_qwen_kv_system #(
         .b_r_v(vr_v),.b_r_ready(vr_ready),.b_r_sector(vr_sector),
         .b_r_resp_v(vr_resp_v),.b_r_resp_data(vr_resp_data),
         .b_w_v(vw_v),.b_w_ready(vw_ready),.b_w_sector(vw_sector),.b_w_data(vw_data),
+        .c_r_v(boot_req_v),.c_r_ready(boot_req_ready),.c_r_sector(boot_req_sector),
+        .c_r_resp_v(boot_rsp_v),.c_r_resp_data(boot_rsp_data),
         .h_req_v(h_req_v),.h_req_ready(h_req_ready),.h_req_we(h_req_we),
         .h_req_sector(h_req_sector),.h_req_len(h_req_len),.h_req_tag(h_req_tag),
         .h_req_data(h_req_data),.h_rsp_v(h_rsp_v),.h_rsp_ready(h_rsp_ready),

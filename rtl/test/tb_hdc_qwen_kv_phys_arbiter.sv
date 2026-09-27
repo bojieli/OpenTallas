@@ -28,6 +28,7 @@ module tb_hdc_qwen_kv_phys_arbiter;
         .a_rsp_data(a_rsp_data),.b_r_v(b_r_v),.b_r_ready(b_r_ready),
         .b_r_sector(b_r_sector),.b_r_resp_v(b_r_resp_v),.b_r_resp_data(b_r_resp_data),
         .b_w_v(b_w_v),.b_w_ready(b_w_ready),.b_w_sector(b_w_sector),.b_w_data(b_w_data),
+        .c_r_v(1'b0),.c_r_ready(),.c_r_sector('0),.c_r_resp_v(),.c_r_resp_data(),
         .h_req_v(h_req_v),.h_req_ready(h_req_ready),.h_req_we(h_req_we),
         .h_req_sector(h_req_sector),.h_req_len(h_req_len),.h_req_tag(h_req_tag),
         .h_req_data(h_req_data),.h_rsp_v(h_rsp_v),.h_rsp_ready(h_rsp_ready),
