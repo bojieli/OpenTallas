@@ -1061,7 +1061,7 @@
  "die_mapping": {
   "model": "each matrix alone on the die's tiles. A row's padded chunk tree (NP = pow2(chunks)) may be cut into 2^s ALIGNED parts (s = 0: whole rows); a part is a row of a tile op (the tile's FP32 o_y is the part's subtree root) and the parts' top s tree levels are added by the output collector (3 cycles per level + COLLECT_HOP). Parts are packed into tile row groups of G/P parts of equal length and the row groups scheduled longest-first onto the tiles. latency = makespan (beats) + measured tile base depth + 3 x (the part's tree levels in the tile) + collector levels.",
   "collect_hop_cycles": 2,
-  "choice": "per matrix, the fewest K-split parts that meet the budget (the cross-tile collector is modelled, not built)",
+  "choice": "per matrix, the fewest K-split parts that meet the budget (the cross-tile collector is ot_hdc_v41x_wgt_kcol, built and benched: latency 3S + 2 = the modelled 3s + hop)",
   "quantised: 985 tiles x 8 block-dot lanes (G=1)": [
    {
     "matrix": "wq_a",
@@ -1073,7 +1073,9 @@
     "tile_depth_cycles": 53,
     "latency_cycles": 93,
     "budget_cycles": 101,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 8,
+    "margin_fraction": 0.0792
    },
    {
     "matrix": "wkv",
@@ -1085,7 +1087,9 @@
     "tile_depth_cycles": 53,
     "latency_cycles": 73,
     "budget_cycles": 86,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 13,
+    "margin_fraction": 0.1512
    },
    {
     "matrix": "wq_b",
@@ -1097,7 +1101,9 @@
     "tile_depth_cycles": 47,
     "latency_cycles": 217,
     "budget_cycles": 236,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 19,
+    "margin_fraction": 0.0805
    },
    {
     "matrix": "idx.wq_b",
@@ -1109,7 +1115,9 @@
     "tile_depth_cycles": 47,
     "latency_cycles": 72,
     "budget_cycles": 90,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 18,
+    "margin_fraction": 0.2
    },
    {
     "matrix": "wo_b",
@@ -1121,7 +1129,9 @@
     "tile_depth_cycles": 50,
     "latency_cycles": 231,
     "budget_cycles": 242,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 11,
+    "margin_fraction": 0.0455
    },
    {
     "matrix": "shared_w13",
@@ -1133,7 +1143,9 @@
     "tile_depth_cycles": 53,
     "latency_cycles": 153,
     "budget_cycles": 169,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 16,
+    "margin_fraction": 0.0947
    },
    {
     "matrix": "shared_w2",
@@ -1145,7 +1157,9 @@
     "tile_depth_cycles": 50,
     "latency_cycles": 104,
     "budget_cycles": 119,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 15,
+    "margin_fraction": 0.1261
    },
    {
     "matrix": "experts_w13",
@@ -1157,7 +1171,9 @@
     "tile_depth_cycles": 53,
     "latency_cycles": 633,
     "budget_cycles": 637,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 4,
+    "margin_fraction": 0.0063
    },
    {
     "matrix": "experts_w2",
@@ -1169,7 +1185,9 @@
     "tile_depth_cycles": 50,
     "latency_cycles": 338,
     "budget_cycles": 353,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 15,
+    "margin_fraction": 0.0425
    }
   ],
   "bf16: 145 tiles x 256 MAC lanes (G=32)": [
@@ -1183,7 +1201,9 @@
     "tile_depth_cycles": 61,
     "latency_cycles": 301,
     "budget_cycles": 315,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 14,
+    "margin_fraction": 0.0444
    },
    {
     "matrix": "lm_head",
@@ -1195,7 +1215,9 @@
     "tile_depth_cycles": 64,
     "latency_cycles": 4524,
     "budget_cycles": 4572,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 48,
+    "margin_fraction": 0.0105
    },
    {
     "matrix": "router_gate",
@@ -1207,7 +1229,9 @@
     "tile_depth_cycles": 64,
     "latency_cycles": 84,
     "budget_cycles": 104,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 20,
+    "margin_fraction": 0.1923
    },
    {
     "matrix": "idx.weights_proj",
@@ -1219,7 +1243,9 @@
     "tile_depth_cycles": 64,
     "latency_cycles": 84,
     "budget_cycles": 95,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 11,
+    "margin_fraction": 0.1158
    },
    {
     "matrix": "cmp.wkv",
@@ -1231,7 +1257,9 @@
     "tile_depth_cycles": 64,
     "latency_cycles": 144,
     "budget_cycles": 161,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 17,
+    "margin_fraction": 0.1056
    },
    {
     "matrix": "cmp.wk",
@@ -1243,9 +1271,65 @@
     "tile_depth_cycles": 52,
     "latency_cycles": 54,
     "budget_cycles": 80,
-    "meets": true
+    "meets": true,
+    "margin_cycles": 26,
+    "margin_fraction": 0.325
    }
   ]
+ },
+ "kcol": {
+  "S1": {
+   "status": "pass",
+   "parts": 2,
+   "rows": 400,
+   "faults_expected": 41,
+   "latency_cycles": 5,
+   "runs": {
+    "stall_0_of_8": {
+     "rows": 400,
+     "errors": 0,
+     "cycles": 410
+    },
+    "stall_3_of_8": {
+     "rows": 400,
+     "errors": 0,
+     "cycles": 658
+    },
+    "stall_6_of_8": {
+     "rows": 400,
+     "errors": 0,
+     "cycles": 1716
+    }
+   },
+   "claim": "the parts' FP32 roots added by the top S levels of the row's padded pairwise tree, in fixed order, equal hdc_golden_v41.csum of the whole row bit for bit, with the ports skewed by independent stalls; a faulted part or an overflowing sum raises the row's fault"
+  },
+  "S2": {
+   "status": "pass",
+   "parts": 4,
+   "rows": 400,
+   "faults_expected": 41,
+   "latency_cycles": 8,
+   "runs": {
+    "stall_0_of_8": {
+     "rows": 400,
+     "errors": 0,
+     "cycles": 413
+    },
+    "stall_3_of_8": {
+     "rows": 400,
+     "errors": 0,
+     "cycles": 662
+    },
+    "stall_6_of_8": {
+     "rows": 400,
+     "errors": 0,
+     "cycles": 1743
+    }
+   },
+   "claim": "the parts' FP32 roots added by the top S levels of the row's padded pairwise tree, in fixed order, equal hdc_golden_v41.csum of the whole row bit for bit, with the ports skewed by independent stalls; a faulted part or an overflowing sum raises the row's fault"
+  },
+  "status": "pass",
+  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_wgt_kcol.sv (bench rtl/test/tb_hdc_v41x_wgt_kcol.sv)"
  },
  "per_die": {
   "quantised": {
@@ -1304,8 +1388,10 @@
   "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
   "rtl/test/tb_hdc_v41x_wgt.sv": "95e0bfdefd8f51adeb8ed2abb74ed0c3d0baa311fb63fb94cd34179df279fd7c",
   "rtl/test/hdc_v41x_wgt_harness.cpp": "b0ee7123f6c2f18970f37c79ddc1b662d99416e59a3f8091af7869283b3fc66f",
+  "rtl/hdc/v41x/ot_hdc_v41x_wgt_kcol.sv": "25e3c2579fb73d541480acd4ee3e4d7902f8be86909a8ffb6cab43867539eeb1",
+  "rtl/test/tb_hdc_v41x_wgt_kcol.sv": "321e8cd9d1bf015b9bd2cd0bc9b91b47003aaa87e845b11a4d894144568122a3",
   "tools/hdc_golden_v41.py": "6a991a1eb346220fdcff3b32dbfde286c0e526bfdd7f4c24a52ea553034ae734",
   "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
-  "tools/rtl_hdc_v41x_wgt_campaign.py": "4451459fc3d7d78ee98a68fd01b43367a00d640498af48be1a6238f2d151aa14"
+  "tools/rtl_hdc_v41x_wgt_campaign.py": "33ca9d083e067da9ace4812a48ea6e8b4de9c24498535df97931f73f5969ca22"
  }
 }
