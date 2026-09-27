@@ -1,4 +1,6 @@
 import sys
+import shutil
+import subprocess
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +20,32 @@ def test_special_functions_are_within_three_ulp():
     d = np.exp(np.random.default_rng(0).uniform(-40, 40, 5000)).astype(np.float32)
     assert np.max(np.abs(G.reciprocal(d) * d.astype(np.float64) - 1)) < 3.6e-7
     assert max(abs(float(G.rsqrt(v)) * np.sqrt(float(v)) - 1) for v in d[:500]) < 3.6e-7
+
+
+def test_reciprocal_finite_extreme_does_not_wrap_into_nan():
+    d = G.from_bits(np.array([0x7EF311C7, 0x7EF311C8, 0x7F7FFFFF], dtype=np.uint32))
+    with np.errstate(all="ignore"):
+        out = G.reciprocal(d)
+        silu = G.silu(np.float32(-88))
+    assert np.array_equal(G.bits(out), np.zeros(3, dtype=np.uint32))
+    assert np.isfinite(silu) and silu == 0
+
+
+def test_rtl_reciprocal_finite_extreme(tmp_path):
+    if not shutil.which("iverilog") or not shutil.which("vvp"):
+        pytest.skip("Icarus Verilog is not installed")
+    sources = [
+        "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+        "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_sfu_q.sv",
+        "rtl/test/ot_hdc_sfu_ref.sv", "rtl/test/tb_hdc_recip_extreme.sv",
+        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    ]
+    sim = tmp_path / "recip.vvp"
+    subprocess.run(["iverilog", "-g2012", "-s", "tb_hdc_recip_extreme", "-o", str(sim),
+                    *(str(ROOT / p) for p in sources)], check=True)
+    out = subprocess.run(["vvp", "-n", str(sim)], check=True, capture_output=True, text=True).stdout
+    assert "RECIP_EXTREME full=2 short=2 reference=2" in out and "PASS" in out
 
 
 def test_bf16_rounding_is_nearest_even():

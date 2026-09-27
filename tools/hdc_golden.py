@@ -234,7 +234,11 @@ def rsqrt(v):
 
 def reciprocal(d):
     d = np.asarray(d, dtype=F)
-    y = from_bits(np.uint32(0x7EF311C7) - bits(d))
+    db = bits(d)
+    # The bit seed otherwise wraps for finite positive d above ~1.6e38.
+    # Its reciprocal is below 2^-127; +0 avoids a spurious Newton NaN.
+    saturated = ((db & np.uint32(0x80000000)) == 0) & ((db & np.uint32(0x7F800000)) != np.uint32(0x7F800000)) & (db > np.uint32(0x7EF311C7))
+    y = from_bits(np.where(saturated, np.uint32(0), np.uint32(0x7EF311C7) - db))
     for _ in range(3):
         y = mul(y, add(F(2.0), neg(mul(d, y))))
     return y

@@ -393,7 +393,10 @@ module ot_hdc_recip_q (
 
     reg [31:0] y0, d1;
     always @(posedge clk) begin
-        y0 <= 32'h7EF311C7 - x;
+        // Keep the short pipeline bit-exact with the full pipeline at the
+        // finite-denominator end where the reciprocal rounds to +0.
+        y0 <= (!x[31] && x[30:23] != 8'hff && x > 32'h7EF311C7)
+            ? 32'h00000000 : 32'h7EF311C7 - x;
         d1 <= x;
     end
     wire [31:0] yi [0:3];

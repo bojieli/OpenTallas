@@ -119,7 +119,10 @@ module ot_hdc_recip (
 
     reg [31:0] y0, d1;
     always @(posedge clk) begin
-        y0 <= 32'h7EF311C7 - x;
+        // The bit seed wraps above this finite positive denominator.  Its
+        // reciprocal is below 2^-127, so return +0 before Newton iteration.
+        y0 <= (!x[31] && x[30:23] != 8'hff && x > 32'h7EF311C7)
+            ? 32'h00000000 : 32'h7EF311C7 - x;
         d1 <= x;
     end
     wire [31:0] yi [0:3];
