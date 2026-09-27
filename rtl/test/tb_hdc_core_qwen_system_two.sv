@@ -32,7 +32,7 @@ module tb_hdc_core #(
     reg [63:0]      crom [0:CROM_WORDS-1];
     reg [INSTR_BITS-1:0] prog [0:PROG_WORDS-1];
     reg [31:0]      vm   [0:VM_ELEMS-1];
-    localparam integer START = 300; // 256 logical K words booted through the hardware bank port
+    localparam integer START = 800; // 128 physical sectors read, then 256 K words written through the tail banks
 `else
     localparam integer START = 10 + KV_WORDS + 4;   // after the KV preload through the test port
 `endif
