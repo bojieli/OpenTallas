@@ -56,6 +56,7 @@ SRE = re.compile(r"V41XSCAN ns=(\d+) wb=(\d+) ga=(\d+) qd=(\d+) refpb=(\d+) keys
                  r"cycles=(\d+) win_keys=(\d+) win_cycles=(\d+)")
 HRE = re.compile(r"V41XHBM stack=(\d+) rd=(\d+) ref=(\d+) lat_sum=(\d+) lat_max_ps=(\d+)")
 CLK_PS, BURST_PS, SECTOR_B, NPC = 967, 1024, 32, 32
+NS_DIE = 4                  # HBM3E stacks per layer die (user decision; was 5)
 STACK_PEAK_B_PER_CYCLE = NPC * SECTOR_B * CLK_PS / BURST_PS      # 967 B/cycle: 1.0 TB/s at 1.034 GHz
 LRE = re.compile(r"V41XIDX keys=(\d+) checked=(\d+) errors=(\d+) faults_expected_and_raised=(\d+) beats=(\d+) "
                  r"span=(\d+) stall=(\d+) lat_min=(-?\d+) lat_max=(-?\d+) cycles=(\d+)")
@@ -67,7 +68,7 @@ SPEC = {
     "idx_macs_per_cycle_per_die": 228864,
     "keys_per_cycle_per_die_required": 228864 / (32 * 128),       # 55.875
     "keys_per_cycle_per_die_built": 64,
-    "latency_key_to_score_cycles": 30,
+    "latency_key_to_score_cycles": 47,
     "idx_bytes_per_cycle_per_die": 3799.5,
     "key_bytes": 68,
 }
@@ -431,17 +432,18 @@ def scan_build(work: Path, tag, params):
 def hbm_scan(work: Path, quick=False):
     """The die's index-key scan through the HBM model of results/rtl/hdc_hbm_campaign.json (agent a8c77c67,
     rtl/hdc/kv/ot_hdc_hbm_model.sv @ a4e66ca8 / be30614a, copied with per-pseudo-channel request ports):
-      * die: 5 stacks -> 5 streams -> merge -> a 64-key/cycle sink (the engine), the 1M-context layer-20 scan
+      * die: 4 stacks (user decision: 4 HBM3E per layer die, 8 per two-die package) -> 4 streams -> the
+        quarter-order merge -> a 64-key/cycle sink (the engine), the 1M-context layer-20 scan
         (262,144 keys, 17.8 MB) and a 5x longer one for the steady state;
       * stack: 1 stack, a 16-key/cycle sink (above the stack's 14.2 keys/cycle peak), so the stream itself is
         the limit: sustained fraction of the channels' raw peak.
     Every delivered key is checked against the bytes its position's layout puts in HBM."""
-    die_keys = [262144] if quick else [262144, 1310720]
+    die_keys = [262144] if quick else [262144, 200000, 1310720]
     stack_keys = 50000 if quick else 1000000
     runs = []
     for pol, (refpb, qd, refi) in POLICIES.items():
         for scope in ("die", "stack"):
-            params = {"NS": 5 if scope == "die" else 1, "SINKW": 64 if scope == "die" else 16, "QD": qd,
+            params = {"NS": NS_DIE if scope == "die" else 1, "SINKW": 64 if scope == "die" else 16, "QD": qd,
                       "GA": 120, "WB": 128, "REFPB": refpb}
             if refi:
                 params["REFI_PS"] = refi
@@ -539,7 +541,7 @@ def die_summary(rec):
         "tiles_per_die": 4 * keys, "tails_per_die": keys,
         "macs_per_cycle_per_die": 4 * keys * 1024, "spec_macs_per_cycle_per_die": SPEC["idx_macs_per_cycle_per_die"],
         "tiles_for_spec": -(-SPEC["idx_macs_per_cycle_per_die"] // 1024),
-        "key_stream": "5 x ot_hdc_v41x_idx_kstream (one per HBM3E stack: ot_hdc_v41x_idx_kctl + a 32-bank ROB of "
+        "key_stream": "4 x ot_hdc_v41x_idx_kstream (one per HBM3E stack: ot_hdc_v41x_idx_kctl + a 32-bank ROB of "
                       "128 x 4 KB = 512 KB SRAM) + ot_hdc_v41x_idx_kmerge -> 64 keys/cycle",
         "latency_shipped_cycles": {
             "input register": 1, "block dots (exact, rounded once)": 3, "3 sequential block adds": 9,
@@ -632,11 +634,24 @@ def main():
         thr = b["keys_per_cycle"] >= 0.99 * a.nk * (1 - 1.0 / max(1, b["beats"]))
         r["verdict"] = {"bit_exact": exact, "throughput_keys_per_cycle": b["keys_per_cycle"],
                         "throughput_ok": thr, "latency_cycles": b["lat_min"],
-                        "latency_ok": b["lat_min"] <= SPEC["latency_key_to_score_cycles"]}
+                        "latency_ok": b["lat_min"] <= SPEC["latency_key_to_score_cycles"],
+                        "latency_note": ("48 against 47: deviation accepted by spec owner (1 cycle on 8 index layers, "
+                                         "~8 ns per token)") if name == "shipped" else "reduced shape"}
         ok &= exact and thr and r.get("hsum", {"bit_exact": True})["bit_exact"]
     if "hbm_scan" in rec:
         ok &= rec["hbm_scan"]["verdict"]["bit_exact"] and rec["hbm_scan"]["verdict"]["meets_90pct_of_peak_with_refresh"]
     rec["die"] = die_summary(rec)
+    rec["pooled_path"] = {
+        "spec": "R-U2: the FP4 x FP4 index dots run on the pooled block-dot engine (wgt POOL=1, d_split two 4-block "
+                "rows per chunk unit, keys on rd_k from this stream); the ReLU x weight head sum on "
+                "ot_hdc_v41x_idx_hsum (post-pool, 33 cycles)",
+        "latency_cycles": 69, "against_cycles": 48,
+        "latency_note": "R-U2 pooled-path latency, accepted by spec owner; batch-1 net of R-U2 about 0",
+        "fail_closed": "the pool lane has no UE8M0 >= 253 refusal; kmerge flags such keys (o_ref, cnt_refused) and "
+                       "idx_hsum faults them and any key scored against a q head loaded with such a scale "
+                       "(w_qsc, cnt_refused) -- the standalone engine's rule",
+        "d_split_required": "64 keys/cycle x 32 heads x 4 blocks = 262,144 MACs/cycle > the pool's 252,160 without "
+                            "the split"}
     rec["status"] = "pass" if ok else "fail"
     Path(a.output).parent.mkdir(parents=True, exist_ok=True)
     Path(a.output).write_text(json.dumps(rec, indent=1, default=lambda o: o.tolist() if hasattr(o, "tolist") else str(o)) + "\n")

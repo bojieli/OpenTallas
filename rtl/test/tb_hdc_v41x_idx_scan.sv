@@ -37,8 +37,9 @@ module tb_hdc_v41x_idx_scan #(
     // Die image (NS > 1): G = 4 ceil(n / 64) full 16-key groups in quarter order
     // (ot_hdc_v41x_idx_kmerge); NS = 1: ceil(n / 16) groups in position order,
     // the last one partial.  Group g on stack g mod NS.
+    // quarters: Qs = 8 floor(n/32), L3 = n - 3 Qs, B = ceil(L3/16) beats of 4 groups
     function automatic integer ngroups(input integer n);
-        ngroups = (NS > 1) ? 4 * ((n + 63) / 64) : (n + 15) / 16;
+        ngroups = (NS > 1) ? 4 * ((n - 3 * 8 * (n / 32) + 15) / 16) : (n + 15) / 16;
     endfunction
     function automatic integer skeys(input integer s, input integer n);
         integer g, full, k;
@@ -121,17 +122,19 @@ module tb_hdc_v41x_idx_scan #(
             assign sr[0] = dr;
             assign dkv = skv;
             assign dkey = skey;
+            assign dlast = 4'd0;
         end else begin : g_merge
             wire [63:0] dref;
             wire [47:0] cref;
             ot_hdc_v41x_idx_kmerge #(.NS(NS), .FQ(FQ)) u_m (.clk(clk), .rst_n(rst_n), .cmd_v(cmd_v),
-                .cmd_nkeys(nkeys[29:0]), .o_ref(dref), .cnt_refused(cref), .i_valid(sv), .i_ready(sr),
+                .cmd_nkeys(nkeys[29:0]), .o_ref(dref), .cnt_refused(cref), .o_last(dlast), .i_valid(sv), .i_ready(sr),
                 .i_kv(skv), .i_key(skey), .o_valid(dv), .o_ready(dr), .o_kv(dkv), .o_key(dkey));
         end
     endgenerate
 
     integer cyc = 0, t0 = -1, tend = -1, kout = 0, errors = 0, i, p, s, tw0 = -1, tw1 = -1, kw0 = 0, kw1 = 0;
-    integer beat = 0, gq, qsz, pos, pexp [0:3], order_err = 0;
+    integer beat = 0, gq, qsz, pos, lql, order_err = 0, lastseen = 0;
+    wire [3:0] dlast;
     reg [31:0] seed = 32'h9a3c5e71;
     reg started = 1'b0;
     always @(posedge clk) begin
@@ -146,7 +149,7 @@ module tb_hdc_v41x_idx_scan #(
             dr <= !(ordy > 0 && seed[7:4] < ordy);
         end
         if (dv && dr) begin
-            qsz = 16 * ((nkeys + 63) / 64);
+            qsz = 8 * (nkeys / 32);
             for (i = 0; i < SINKW; i = i + 1)
                 if (dkv[i]) begin
                     // NS > 1: lane i of beat b is image group 4b + i/16 (quarter i/16), position
@@ -157,8 +160,15 @@ module tb_hdc_v41x_idx_scan #(
                         errors = errors + 1;
                         if (errors <= 5) $display("KEY MISMATCH position %0d lane %0d", pos, i);
                     end
-                    if (NS > 1 && pos >= nkeys) order_err = order_err + 1;
+                    lql = (i / 16 == 3) ? nkeys - 3 * qsz : qsz;
+                    if (NS > 1 && (16 * beat + i % 16 >= lql || pos >= nkeys)) order_err = order_err + 1;
                     kout = kout + 1;
+                end
+            if (NS > 1)
+                for (i = 0; i < 4; i = i + 1) begin
+                    lql = (i == 3) ? nkeys - 3 * qsz : qsz;
+                    // last beat of port i: ceil(L/16) - 1 (0 when empty)
+                    if (dlast[i] !== ((lql == 0) ? (beat == 0) : (beat == (lql - 1) / 16))) order_err = order_err + 1;
                 end
             beat = beat + 1;
             // steady-state window marks (keys and HBM sectors read so far)

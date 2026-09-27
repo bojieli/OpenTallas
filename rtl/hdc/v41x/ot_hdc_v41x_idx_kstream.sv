@@ -432,18 +432,19 @@ module ot_hdc_v41x_idx_kstream #(
 endmodule
 
 // ---------------------------------------------------------------------------
-// Die merge, QUARTER ORDER (the 4 x 16 streaming select takes one contiguous
-// position quarter per port).  A scan of N keys is laid out as G = 4 *
-// ceil(N / 64) groups of 16 keys: quarter q (q = 0..3) is positions
-// [q Qs, (q+1) Qs), Qs = 16 ceil(N / 64); global group g holds quarter g mod 4,
-// positions (g mod 4) Qs + 16 floor(g / 4) + lane; group g lives on stack
-// g mod NS (the image is written that way; the streams are unchanged).  Every
-// beat carries 4 consecutive groups 4b .. 4b+3, so lane group q of beat b is
-// quarter q, positions q Qs + 16 b .. + 15, and each select port sees its
-// quarter in position order at 16 keys/cycle.  Slots past N (quarter 3's
-// padding, < 64 keys) leave with o_kv = 0.  Each stack's beats queue in a small
-// FIFO; a beat leaves only when all 4 of its groups are in.  valid/ready both
-// sides; cmd_v/cmd_nkeys start a scan (the same N as the streams).
+// Die merge, QUARTER ORDER (contract with the 4 x 16 streaming select).
+// A scan of N >= 1 keys is split into 4 contiguous position quarters:
+//   Qs = 8 floor(N / 32);  quarter q < 3: [q Qs, (q+1) Qs);  quarter 3:
+//   [3 Qs, N), length L3 = N - 3 Qs in [Qs, Qs + 31] -- never empty, every
+//   quarter start a multiple of 8 (N < 32: quarters 0-2 empty, all on port 3).
+// Beats: B = ceil(L3 / 16).  Beat b, lane group q (lanes 16q .. 16q+15) holds
+// positions q Qs + 16 b + (0..15), present (o_kv) while 16 b + lane < L_q: a
+// lane prefix.  o_last[q] marks port q's last beat (beat ceil(L_q/16) - 1, or
+// beat 0 for an empty quarter, with an empty prefix); a port ignores beats
+// after its last.  The image holds 4 B groups of 16 keys: group g = quarter
+// g mod 4, beat g / 4, on stack g mod NS (lanes past L_q are padding keys);
+// the per-stack streams are unchanged.  A beat leaves only when all 4 of its
+// groups are in.  valid/ready both sides; cmd_v/cmd_nkeys start a scan (N).
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_idx_kmerge #(
     parameter integer NS = 5,
@@ -460,6 +461,7 @@ module ot_hdc_v41x_idx_kmerge #(
     output reg                   o_valid,
     input  wire                  o_ready,
     output reg  [63:0]           o_kv,
+    output reg  [3:0]            o_last,
     output reg  [64*544-1:0]     o_key,
     // fail-closed key refusal (the standalone engine's rule, applied at ingest
     // for the pooled path): a key with a UE8M0 scale byte >= 253 (2^126 and up,
@@ -499,18 +501,22 @@ module ot_hdc_v41x_idx_kmerge #(
         if (take != 0)
             for (jc = 0; jc < 4; jc = jc + 1) pop[(gs + jc) % NS] = 1'b1;
     end
-    // quarter geometry of the scan: Qs = 16 ceil(N / 64); beat b's lane group q
-    // holds positions q Qs + 16 b + (0..15), present while < N
-    reg [29:0] nq, qs3, bpos;                    // N, 3 Qs, 16 b
+    // quarter geometry: L0..L2 = Qs = 8 floor(N/32), L3 = N - 3 Qs; bpos = 16 b
+    reg [29:0] lq0, lq3, bpos, lb0, lb3;          // lengths, last-beat positions
+    wire [29:0] qs_c = {cmd_nkeys[29:5], 3'b000};
+    wire [29:0] l3_c = cmd_nkeys - 3 * qs_c;
     always @(posedge clk)
         if (cmd_v) begin
-            nq <= cmd_nkeys;
-            qs3 <= 3 * (((cmd_nkeys + 30'd63) >> 6) << 4);
+            lq0 <= qs_c;
+            lq3 <= l3_c;
+            lb0 <= (qs_c == 0) ? 30'd0 : (((qs_c - 30'd1) >> 4) << 4);
+            lb3 <= (l3_c == 0) ? 30'd0 : (((l3_c - 30'd1) >> 4) << 4);
             bpos <= 0;
         end else if (take != 0) bpos <= bpos + 30'd16;
-    reg [15:0] q3kv;                              // quarter 3's lanes present
+    reg [63:0] lkv;                               // lanes present (the prefixes)
     integer lq;
-    always @* for (lq = 0; lq < 16; lq = lq + 1) q3kv[lq] = (qs3 + bpos + lq) < nq;
+    always @* for (lq = 0; lq < 64; lq = lq + 1)
+        lkv[lq] = (bpos + (lq % 16)) < ((lq >= 48) ? lq3 : lq0);
     reg [GW-1:0] g;
     always @(posedge clk) begin
         if (!rst_n) begin
@@ -531,11 +537,12 @@ module ot_hdc_v41x_idx_kmerge #(
                 for (j = 0; j < 4; j = j + 1) begin
                     s = (gs + j) % NS;
                     g = fq[s][fr[s]];
-                    o_kv[16*j +: 16] <= (j == 3) ? (g[GW-1 -: 16] & q3kv) : g[GW-1 -: 16];
+                    o_kv[16*j +: 16] <= g[GW-1 -: 16] & lkv[16*j +: 16];
+                    o_last[j] <= (bpos == ((j == 3) ? lb3 : lb0));
                     o_key[16*544*j +: 16*544] <= g[16*544-1:0];
                     for (sc = 0; sc < 16; sc = sc + 1) begin
                         o_ref[16*j + sc] <= kref(g[544*sc +: 544]);
-                        if (g[16*544 + sc] && (j != 3 || q3kv[sc]) && kref(g[544*sc +: 544])) nref = nref + 1;
+                        if (g[16*544 + sc] && lkv[16*j + sc] && kref(g[544*sc +: 544])) nref = nref + 1;
                     end
                 end
                 cnt_refused <= cnt_refused + nref;
