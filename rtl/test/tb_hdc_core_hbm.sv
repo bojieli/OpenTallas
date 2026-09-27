@@ -235,6 +235,7 @@ module tb_hdc_core_hbm #(
     integer cyc = 0, lc = 0, i, bad_lg, bad_vm, bad_kv, lgi, T;
     reg go = PACKED_HBM ? 1'b0 : 1'b1;
     integer boot_i = 0, boot_j, boot_bank, boot_tile, boot_word;
+    integer boot_bad, hbm_bad, check_tile, check_word;
     reg trace = 1'b0, multi = 1'b0, checklast = 1'b0;
     reg [NW-1:0] prompt [0:255];
     reg [NW-1:0] gold_gen [0:255];
@@ -398,6 +399,22 @@ module tb_hdc_core_hbm #(
         end
         if (lc < 5 || go) lc <= lc + 1;
         if (lc == 5 && go) rst_n <= 1'b1;
+        if (PACKED_HBM && lc == 9) begin
+            boot_bad = 0; hbm_bad = 0;
+            for (i = 0; i < KV_WORDS; i = i + 1)
+                if (expand_fp8(u_hbm.mem[i]) !== pack16(kv[i])) hbm_bad = hbm_bad + 1;
+            for (boot_bank = 0; boot_bank < 2; boot_bank = boot_bank + 1) begin
+                check_tile = ((to0 & 1) == boot_bank) ? to0 : to0 - 1;
+                if (check_tile >= 0)
+                    for (boot_j = 0; boot_j < TDEPTH; boot_j = boot_j + 1) begin
+                        check_word = ((boot_j >> LOG_HD) << (LOG_HD + LOG_TW)) |
+                                     (check_tile << LOG_HD) | (boot_j & ((1 << LOG_HD) - 1));
+                        if (tl[boot_bank][boot_j] !== pack16(kv[check_word])) boot_bad = boot_bad + 1;
+                    end
+            end
+            $display("BOOT packed_hbm_bad=%0d tail_bad=%0d words=%0d", hbm_bad, boot_bad, boot_i);
+            if (hbm_bad != 0 || boot_bad != 0) $fatal(1, "packed KV image or tail boot mismatch");
+        end
         start <= (lc == 10);
         if (lc == 9 && multi) begin token <= prompt[0]; pos <= 0; step <= 0; end
         if (multi && lc > 12 && done && !start) begin
