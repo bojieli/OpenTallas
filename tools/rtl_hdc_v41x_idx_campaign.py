@@ -432,11 +432,15 @@ def pool_bench(work: Path, name, toks, ih=32, GT=1, M=1):
         (d / nm_).write_text("\n".join(lines) + "\n")
     obj = work / f"obj_pool_g{GT}m{M}"
     exe = obj / "Vtb_hdc_v41x_idx_pool"
-    stamp = hashlib.sha256(b"".join(p.read_bytes() for p in POOL_RTL + [POOL_TB, HARNESS])).hexdigest()
+    kd = 1 << max(10, kmax.bit_length())
+    # KD is an elaboration parameter.  Reusing a binary built for a smaller
+    # campaign silently truncates $readmemh unless the stamp includes it.
+    stamp = hashlib.sha256(f"G={GT},M={M},KD={kd}".encode() +
+                           b"".join(p.read_bytes() for p in POOL_RTL + [POOL_TB, HARNESS])).hexdigest()
     if not (exe.exists() and (obj / "stamp").exists() and (obj / "stamp").read_text() == stamp):
         subprocess.run(["verilator", "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
                         "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-DECLFILENAME", "-Wno-UNOPTFLAT",
-                        "--top-module", "tb_hdc_v41x_idx_pool", f"-GG={GT}", f"-GM={M}", f"-GKD={1 << max(10, kmax.bit_length())}",
+                        "--top-module", "tb_hdc_v41x_idx_pool", f"-GG={GT}", f"-GM={M}", f"-GKD={kd}",
                         "-CFLAGS", "-DVTOP=Vtb_hdc_v41x_idx_pool -O1", "-j", "16", "--Mdir", str(obj), str(POOL_TB)]
                        + [str(p) for p in POOL_RTL] + [str(HARNESS)], check=True, capture_output=True, text=True)
         (obj / "stamp").write_text(stamp)
@@ -651,7 +655,8 @@ def main():
     ap.add_argument("--positions", type=int, default=40, help="vehicle positions decoded")
     ap.add_argument("--checkpoint", default=None, help="reduced-vehicle safetensors (default: the golden's)")
     ap.add_argument("--output", default=str(OUT))
-    ap.add_argument("--only", choices=("shipped", "reduced", "hbm"), default=None)
+    ap.add_argument("--only", choices=("shipped", "reduced", "hbm", "core_pool"), default=None,
+                    help="core_pool adds the G=4, M=2 pooled RTL gate to a pinned existing campaign")
     ap.add_argument("--reuse-engine", default=None,
                     help="take the shipped/reduced sections from an earlier output of this tool, if every engine "
                          "source (RTL, bench, golden) it recorded is byte-identical now; the HBM scan is re-run")
@@ -683,9 +688,17 @@ def main():
         rec["engine_sections_from"] = {"tool_sha256": old["sources"].get("tools/rtl_hdc_v41x_idx_campaign.py"),
                                        "note": "shipped/reduced sections produced by an earlier run of this tool; "
                                                "every engine source it recorded is byte-identical"}
-        for k in ("shipped", "reduced", "vehicle_capture_s"):
+        for k in ("shipped", "reduced", "vehicle_capture_s", "hbm_scan"):
             if k in old:
                 rec[k] = old[k]
+        rec["sources"] = {**old["sources"], **rec["sources"]}
+    if a.only == "core_pool":
+        assert reused is not None and not a.quick, "core_pool needs --reuse-engine with the full committed record"
+        # The shipped vectors are deterministic from this seed.  Regenerate
+        # only them, so the dedicated engine and HBM scans are not recompiled.
+        toks = [finish(rand_token(rng, 32, 4, nkeys(), c)) for c in CLASSES for _ in range(per_class)]
+        assert sum(len(t["keep"]) for t in toks) == rec["shipped"]["mixed"]["keys"]
+        rec["shipped"]["pooled_core_geometry"] = pool_bench(work, "shipped_core", toks, 32, GT=4, M=2)
     for name, (ih, nb) in shapes.items():
         if reused is not None or (a.only and a.only != name):
             continue
@@ -700,6 +713,10 @@ def main():
         rec[name]["hsum"] = hsum_bench(work, name, toks, ih)
         if name == "shipped":
             rec[name]["pooled"] = pool_bench(work, name, toks, ih, GT=1, M=2)
+            # The core's ME geometry is G=4, MP=2.  Exercise the collector's
+            # four-chunk ordering and the pooled tile's split key port at that
+            # exact interface width, across every numeric/fault class.
+            rec[name]["pooled_core_geometry"] = pool_bench(work, name + "_core", toks, ih, GT=4, M=2)
         if name == "reduced":
             rec[name]["vehicle"] = {"tokens": len(veh), "keys": int(sum(len(t["keep"]) for t in veh)),
                                     "layers": sorted({t["cls"] for t in veh})}
@@ -723,6 +740,8 @@ def main():
         ok &= exact and thr and r.get("hsum", {"bit_exact": True})["bit_exact"]
         if "pooled" in r:
             ok &= r["pooled"]["bit_exact"] and r["pooled"]["split_mode_used"]
+        if "pooled_core_geometry" in r:
+            ok &= r["pooled_core_geometry"]["bit_exact"] and r["pooled_core_geometry"]["split_mode_used"]
     if "hbm_scan" in rec:
         ok &= rec["hbm_scan"]["verdict"]["bit_exact"] and rec["hbm_scan"]["verdict"]["meets_90pct_of_peak_with_refresh"]
     rec["die"] = die_summary(rec)

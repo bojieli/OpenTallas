@@ -63,6 +63,9 @@ def test_committed_record():
         v = r[shape]["verdict"]
         assert v["bit_exact"] and v["throughput_ok"], shape
         assert r[shape]["mixed"]["errors"] == 0
+    p = r["shipped"]["pooled_core_geometry"]
+    assert p["tile"]["G"] == 4 and p["tile"]["M"] == 2
+    assert p["bit_exact"] and p["split_mode_used"]
     assert r["reduced"]["vehicle"]["keys"] > 0
     h = r.get("hbm_scan")
     if h:

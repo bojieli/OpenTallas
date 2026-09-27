@@ -28,11 +28,239 @@
   "rtl/test/tb_hdc_v41x_idx_pool.sv": "57e1cdd8223d477a69333498828c18aa3b6e6c582ddc9b475820cfd3fe394200",
   "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
   "tools/hdc_golden_v41.py": "ba257b599ffe411032e403a4e96976038c83f78dbb83dd2c4e1e44f428e9eac2",
-  "tools/rtl_hdc_v41x_idx_campaign.py": "30d5dbd1b51bf6e520d0cb2af50bf004b633f33fab3012db3475b0f279ac6d1c",
+  "tools/rtl_hdc_v41x_idx_campaign.py": "83d52a2e1f8fd5f4500ea4d42737dd5e1ce0d1d2dc6ba723a4fcb8916c7d6474",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c81f49cd36bbd55a79655c761d7d776125ce81cceae1514d35dbd539cc7faeac",
   "rtl/test/tb_hdc_v41x_idx_scan.sv": "26c9959e69ce74c2a2f1828cd9c78f72dba802fe15bb109fcd234752a8ca16e4"
  },
+ "engine_sections_from": {
+  "tool_sha256": "30d5dbd1b51bf6e520d0cb2af50bf004b633f33fab3012db3475b0f279ac6d1c",
+  "note": "shipped/reduced sections produced by an earlier run of this tool; every engine source it recorded is byte-identical"
+ },
+ "shipped": {
+  "shape": {
+   "index_heads": 32,
+   "index_head_dim": 128,
+   "blocks_per_head": 4,
+   "keys_per_cycle": 8,
+   "fifo_beats": 64
+  },
+  "mixed": {
+   "keys": 14530,
+   "checked": 14530,
+   "errors": 0,
+   "faults_expected_and_raised": 4139,
+   "beats": 1850,
+   "span": 2423,
+   "stall": 161,
+   "lat_min": 48,
+   "lat_max": 70,
+   "cycles": 8749,
+   "counters": {
+    "keys_scored": 14530,
+    "headsums_fused": 464960,
+    "faults": 4139
+   },
+   "mismatch_lines": [],
+   "tokens": 72,
+   "classes": {
+    "fault": 2720,
+    "masked": 2654,
+    "sparse": 2613,
+    "typical": 2461,
+    "underflow": 2088,
+    "wide": 1994
+   },
+   "expected_faults": 4139
+  },
+  "back_to_back": {
+   "keys": 16384,
+   "checked": 16384,
+   "errors": 0,
+   "faults_expected_and_raised": 0,
+   "beats": 2048,
+   "span": 2048,
+   "stall": 3,
+   "lat_min": 48,
+   "lat_max": 48,
+   "cycles": 2138,
+   "counters": {
+    "keys_scored": 16384,
+    "headsums_fused": 524288,
+    "faults": 0
+   },
+   "mismatch_lines": [],
+   "keys_per_cycle": 8.0
+  },
+  "hsum": {
+   "keys": 14530,
+   "checked": 14530,
+   "errors": 0,
+   "faults_expected_and_raised": 4139,
+   "beats": 14530,
+   "span": 17935,
+   "latency_cycles": 33,
+   "cycles": 22926,
+   "expected_faults": 4139,
+   "refused": 2720,
+   "expected_refused": 2720,
+   "bit_exact": true
+  },
+  "pooled": {
+   "keys": 14530,
+   "checked": 14530,
+   "errors": 0,
+   "faults_expected_and_raised": 4139,
+   "latency_first_cycles": 80,
+   "latency_last_key_cycles": 51,
+   "cycles": 124022,
+   "counters": {
+    "stream_beats": 116240,
+    "split_beats": 116240,
+    "rom_beats": 0,
+    "expected_beats": 116240,
+    "refused": 2720
+   },
+   "mismatch_lines": [],
+   "expected_faults": 4139,
+   "expected_refused": 2720,
+   "split_mode_used": true,
+   "bit_exact": true,
+   "tile": {
+    "G": 1,
+    "M": 2,
+    "rd_k": "behavioural read network (tb_hdc_v41x_wgt model): key words from the image, RL = 2 after each chain position's request"
+   }
+  },
+  "verdict": {
+   "bit_exact": true,
+   "throughput_keys_per_cycle": 8.0,
+   "throughput_ok": true,
+   "latency_cycles": 48,
+   "latency_ok": false,
+   "latency_note": "48 against 47: deviation accepted by spec owner (1 cycle on 8 index layers, ~8 ns per token)"
+  },
+  "pooled_core_geometry": {
+   "keys": 14530,
+   "checked": 14530,
+   "errors": 0,
+   "faults_expected_and_raised": 4139,
+   "latency_first_cycles": 74,
+   "latency_last_key_cycles": 51,
+   "cycles": 36842,
+   "counters": {
+    "stream_beats": 29060,
+    "split_beats": 29060,
+    "rom_beats": 0,
+    "expected_beats": 29060,
+    "refused": 2720
+   },
+   "mismatch_lines": [],
+   "expected_faults": 4139,
+   "expected_refused": 2720,
+   "split_mode_used": true,
+   "bit_exact": true,
+   "tile": {
+    "G": 4,
+    "M": 2,
+    "rd_k": "behavioural read network (tb_hdc_v41x_wgt model): key words from the image, RL = 2 after each chain position's request"
+   }
+  }
+ },
+ "reduced": {
+  "shape": {
+   "index_heads": 32,
+   "index_head_dim": 32,
+   "blocks_per_head": 1,
+   "keys_per_cycle": 8,
+   "fifo_beats": 64
+  },
+  "mixed": {
+   "keys": 19314,
+   "checked": 19314,
+   "errors": 0,
+   "faults_expected_and_raised": 2403,
+   "beats": 2590,
+   "span": 3289,
+   "stall": 873,
+   "lat_min": 39,
+   "lat_max": 57,
+   "cycles": 33062,
+   "counters": {
+    "keys_scored": 19314,
+    "headsums_fused": 618048,
+    "faults": 2403
+   },
+   "mismatch_lines": [],
+   "tokens": 389,
+   "classes": {
+    "fault": 1706,
+    "masked": 2081,
+    "sparse": 3025,
+    "typical": 1909,
+    "underflow": 2810,
+    "vehicle": 5300,
+    "wide": 2483
+   },
+   "expected_faults": 2403
+  },
+  "back_to_back": {
+   "keys": 16384,
+   "checked": 16384,
+   "errors": 0,
+   "faults_expected_and_raised": 0,
+   "beats": 2048,
+   "span": 2048,
+   "stall": 3,
+   "lat_min": 39,
+   "lat_max": 39,
+   "cycles": 2129,
+   "counters": {
+    "keys_scored": 16384,
+    "headsums_fused": 524288,
+    "faults": 0
+   },
+   "mismatch_lines": [],
+   "keys_per_cycle": 8.0
+  },
+  "hsum": {
+   "keys": 19314,
+   "checked": 19314,
+   "errors": 0,
+   "faults_expected_and_raised": 2403,
+   "beats": 19314,
+   "span": 23729,
+   "latency_cycles": 33,
+   "cycles": 50658,
+   "expected_faults": 2403,
+   "refused": 877,
+   "expected_refused": 877,
+   "bit_exact": true
+  },
+  "vehicle": {
+   "tokens": 317,
+   "keys": 5300,
+   "layers": [
+    "vehicle.L14",
+    "vehicle.L2",
+    "vehicle.L20",
+    "vehicle.L24",
+    "vehicle.L28",
+    "vehicle.L32",
+    "vehicle.L36",
+    "vehicle.L8"
+   ]
+  },
+  "verdict": {
+   "bit_exact": true,
+   "throughput_keys_per_cycle": 8.0,
+   "throughput_ok": true,
+   "latency_cycles": 39,
+   "latency_ok": true,
+   "latency_note": "reduced shape"
+  }
+ },
+ "vehicle_capture_s": 71.4,
  "hbm_scan": {
   "model": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv = rtl/hdc/kv/ot_hdc_hbm_model.sv @ a4e66ca8 (unchanged at be30614a) with one request port per pseudo-channel; REFPB 3 adds a most-recently-activated tie-break to the refresh-aware choice",
   "clock_ps": 967,
@@ -573,204 +801,6 @@
    "tie_break_note": "the refresh-aware tie-break is workload-dependent: be30614a chose closed-before-open on QE weight streams (not one sequential scan); on a sequential scan every bank the stream has left stays open and only the banks it is about to enter are closed, so closed-first refreshes the next bank set just before it is needed (tRFCpb 200 ns > the 64-beat queue's ~70 ns horizon); the most-recently-activated tie-break refreshes the set just left.  REFab with 512-beat queues is the recorded fallback (at the 0.90 floor).",
    "meets_90pct_of_peak_with_refresh": true,
    "record_policy_meets_90pct": false
-  }
- },
- "shipped": {
-  "shape": {
-   "index_heads": 32,
-   "index_head_dim": 128,
-   "blocks_per_head": 4,
-   "keys_per_cycle": 8,
-   "fifo_beats": 64
-  },
-  "mixed": {
-   "keys": 14530,
-   "checked": 14530,
-   "errors": 0,
-   "faults_expected_and_raised": 4139,
-   "beats": 1850,
-   "span": 2423,
-   "stall": 161,
-   "lat_min": 48,
-   "lat_max": 70,
-   "cycles": 8749,
-   "counters": {
-    "keys_scored": 14530,
-    "headsums_fused": 464960,
-    "faults": 4139
-   },
-   "mismatch_lines": [],
-   "tokens": 72,
-   "classes": {
-    "fault": 2720,
-    "masked": 2654,
-    "sparse": 2613,
-    "typical": 2461,
-    "underflow": 2088,
-    "wide": 1994
-   },
-   "expected_faults": 4139
-  },
-  "back_to_back": {
-   "keys": 16384,
-   "checked": 16384,
-   "errors": 0,
-   "faults_expected_and_raised": 0,
-   "beats": 2048,
-   "span": 2048,
-   "stall": 3,
-   "lat_min": 48,
-   "lat_max": 48,
-   "cycles": 2138,
-   "counters": {
-    "keys_scored": 16384,
-    "headsums_fused": 524288,
-    "faults": 0
-   },
-   "mismatch_lines": [],
-   "keys_per_cycle": 8.0
-  },
-  "hsum": {
-   "keys": 14530,
-   "checked": 14530,
-   "errors": 0,
-   "faults_expected_and_raised": 4139,
-   "beats": 14530,
-   "span": 17935,
-   "latency_cycles": 33,
-   "cycles": 22926,
-   "expected_faults": 4139,
-   "refused": 2720,
-   "expected_refused": 2720,
-   "bit_exact": true
-  },
-  "pooled": {
-   "keys": 14530,
-   "checked": 14530,
-   "errors": 0,
-   "faults_expected_and_raised": 4139,
-   "latency_first_cycles": 80,
-   "latency_last_key_cycles": 51,
-   "cycles": 124022,
-   "counters": {
-    "stream_beats": 116240,
-    "split_beats": 116240,
-    "rom_beats": 0,
-    "expected_beats": 116240,
-    "refused": 2720
-   },
-   "mismatch_lines": [],
-   "expected_faults": 4139,
-   "expected_refused": 2720,
-   "split_mode_used": true,
-   "bit_exact": true,
-   "tile": {
-    "G": 1,
-    "M": 2,
-    "rd_k": "behavioural read network (tb_hdc_v41x_wgt model): key words from the image, RL = 2 after each chain position's request"
-   }
-  },
-  "verdict": {
-   "bit_exact": true,
-   "throughput_keys_per_cycle": 8.0,
-   "throughput_ok": true,
-   "latency_cycles": 48,
-   "latency_ok": false,
-   "latency_note": "48 against 47: deviation accepted by spec owner (1 cycle on 8 index layers, ~8 ns per token)"
-  }
- },
- "vehicle_capture_s": 71.4,
- "reduced": {
-  "shape": {
-   "index_heads": 32,
-   "index_head_dim": 32,
-   "blocks_per_head": 1,
-   "keys_per_cycle": 8,
-   "fifo_beats": 64
-  },
-  "mixed": {
-   "keys": 19314,
-   "checked": 19314,
-   "errors": 0,
-   "faults_expected_and_raised": 2403,
-   "beats": 2590,
-   "span": 3289,
-   "stall": 873,
-   "lat_min": 39,
-   "lat_max": 57,
-   "cycles": 33062,
-   "counters": {
-    "keys_scored": 19314,
-    "headsums_fused": 618048,
-    "faults": 2403
-   },
-   "mismatch_lines": [],
-   "tokens": 389,
-   "classes": {
-    "fault": 1706,
-    "masked": 2081,
-    "sparse": 3025,
-    "typical": 1909,
-    "underflow": 2810,
-    "vehicle": 5300,
-    "wide": 2483
-   },
-   "expected_faults": 2403
-  },
-  "back_to_back": {
-   "keys": 16384,
-   "checked": 16384,
-   "errors": 0,
-   "faults_expected_and_raised": 0,
-   "beats": 2048,
-   "span": 2048,
-   "stall": 3,
-   "lat_min": 39,
-   "lat_max": 39,
-   "cycles": 2129,
-   "counters": {
-    "keys_scored": 16384,
-    "headsums_fused": 524288,
-    "faults": 0
-   },
-   "mismatch_lines": [],
-   "keys_per_cycle": 8.0
-  },
-  "hsum": {
-   "keys": 19314,
-   "checked": 19314,
-   "errors": 0,
-   "faults_expected_and_raised": 2403,
-   "beats": 19314,
-   "span": 23729,
-   "latency_cycles": 33,
-   "cycles": 50658,
-   "expected_faults": 2403,
-   "refused": 877,
-   "expected_refused": 877,
-   "bit_exact": true
-  },
-  "vehicle": {
-   "tokens": 317,
-   "keys": 5300,
-   "layers": [
-    "vehicle.L14",
-    "vehicle.L2",
-    "vehicle.L20",
-    "vehicle.L24",
-    "vehicle.L28",
-    "vehicle.L32",
-    "vehicle.L36",
-    "vehicle.L8"
-   ]
-  },
-  "verdict": {
-   "bit_exact": true,
-   "throughput_keys_per_cycle": 8.0,
-   "throughput_ok": true,
-   "latency_cycles": 39,
-   "latency_ok": true,
-   "latency_note": "reduced shape"
   }
  },
  "die": {
