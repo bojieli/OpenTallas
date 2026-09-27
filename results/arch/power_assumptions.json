@@ -1,0 +1,607 @@
+{
+ "schema": "opentallas.power-assumptions.v2",
+ "tool": "tools/sync_cost_table.py",
+ "inputs": {
+  "configs/hardware/technology.json": "3cfaccbb71675dfb317fd05bce8eda008b14d450033f800c4171f8161ffc96d8",
+  "configs/hardware/power_scenarios.json": "111dcc893d296dfb28e8f7809addc363a290fa139402ca8372681952e1e8721c",
+  "results/arch/power_scenarios.json": "d8f86205e06a4d946c33d7eeeda69152f1cd16c4419732db87e050bca19cc380"
+ },
+ "rows": [
+  {
+   "quantity": "MAC lane, scenario A (measured implementation)",
+   "value": "Qwen3 3.97 / V4.1 11.51 pJ per MAC, every format",
+   "was": "-",
+   "cls": "measured-ours (ASAP7 routed matrix engine, BF16 x BF16 -> FP32)",
+   "verdict": "new scenario: the lane that exists",
+   "refs": [
+    "r-signoff"
+   ]
+  },
+  {
+   "quantity": "MAC lane, scenario B: W4A8 / FP4 (FP32 accumulate)",
+   "value": "0.45 pJ per MAC",
+   "was": "0.09 (a per-op value charged per MAC)",
+   "cls": "published-spec (7 nm per-op estimates)",
+   "verdict": "re-derived: INT8 mult 0.07 (upper bound) + FP32 add 0.38; 5x the old input",
+   "refs": [
+    "r-tpuv4i"
+   ]
+  },
+  {
+   "quantity": "MAC lane, scenario B: FP8 / BF16 (FP32 accumulate)",
+   "value": "0.59 / 0.59 pJ per MAC",
+   "was": "0.26 / 0.82 (2 x per-op)",
+   "cls": "published-spec (7 nm per-op estimates)",
+   "verdict": "re-derived: BF16 mult 0.21 + FP32 add 0.38, no node credit",
+   "refs": [
+    "r-tpuv4i"
+   ]
+  },
+  {
+   "quantity": "MAC lane, scenario B: FP32 FMA",
+   "value": "1.69 pJ per MAC",
+   "was": "2.36 (2 x per-op)",
+   "cls": "published-spec",
+   "verdict": "re-derived: FP32 mult 1.31 + add 0.38",
+   "refs": [
+    "r-tpuv4i"
+   ]
+  },
+  {
+   "quantity": "4-bit MAC lower bound (Keller)",
+   "value": "0.021 pJ per MAC (INT4 VSQ, 0.46 V)",
+   "was": "labelled an FP4 MAC",
+   "cls": "published-measured, INTEGER",
+   "verdict": "relabelled: integer 4-bit with per-vector scales and 24-bit partial sums; lower bound only",
+   "refs": [
+    "r-keller"
+   ]
+  },
+  {
+   "quantity": "Tensor-core sensitivity",
+   "value": "1.40 pJ per MAC",
+   "was": "-",
+   "cls": "published-measured (A100, control included)",
+   "verdict": "scenario-B sensitivity row",
+   "refs": [
+    "r-sc25"
+   ]
+  },
+  {
+   "quantity": "HBM path energy",
+   "value": "13.11 pJ/b (A100 path, controller included)",
+   "was": "13.11, cited to O'Connor",
+   "cls": "published-measured",
+   "verdict": "kept; citation corrected to SC'25",
+   "refs": [
+    "r-sc25"
+   ]
+  },
+  {
+   "quantity": "HBM path, stack share",
+   "value": "3.45 pJ/b (high 3.92)",
+   "was": "12.31 (13.11 - 0.8)",
+   "cls": "published-spec (DRAM model)",
+   "verdict": "corrected: in-DRAM activation + data movement only",
+   "refs": [
+    "r-oconnor"
+   ]
+  },
+  {
+   "quantity": "HBM path, die share (controller, PHY, I/O, control plane)",
+   "value": "9.66 pJ/b, charged to die cooling",
+   "was": "0.80 (I/O only)",
+   "cls": "assumed (difference of two published figures)",
+   "verdict": "corrected, conservative for die cooling",
+   "refs": [
+    "r-sc25",
+    "r-oconnor"
+   ]
+  },
+  {
+   "quantity": "HBM stack idle",
+   "value": "2.8 W/stack, charged to the die",
+   "was": "2.8",
+   "cls": "assumed",
+   "verdict": "unverified; die side for cooling",
+   "refs": []
+  },
+  {
+   "quantity": "Logic leakage",
+   "value": "0.10 W/mm2",
+   "was": "0.06",
+   "cls": "assumed (idle anchors)",
+   "verdict": "conservative",
+   "refs": [
+    "r-h100-idle",
+    "r-tpuv4i",
+    "r-tpuv4"
+   ]
+  },
+  {
+   "quantity": "Stream-unit FP32 op",
+   "value": "1.69 pJ",
+   "was": "1.18",
+   "cls": "published-spec",
+   "verdict": "FP32 mult + add at 7 nm, no node credit",
+   "refs": [
+    "r-tpuv4i"
+   ]
+  },
+  {
+   "quantity": "112G PAM4 SerDes",
+   "value": "6.5 pJ/b (5.6-7.5)",
+   "was": "5 pJ/b",
+   "cls": "measured silicon",
+   "verdict": "corrected",
+   "refs": [
+    "r-serdes-vlsi22",
+    "r-serdes-jssc21"
+   ]
+  },
+  {
+   "quantity": "UCIe, advanced package",
+   "value": "0.5 pJ/b; idle 15% of peak",
+   "was": "0.29 pJ/b",
+   "cls": "spec target + measured",
+   "verdict": "corrected (0.29 is a 3 nm best case)",
+   "refs": [
+    "r-ucie-hc23",
+    "r-ucie-jssc26"
+   ]
+  },
+  {
+   "quantity": "PSU efficiency",
+   "value": "0.96",
+   "was": "0.975",
+   "cls": "normative table",
+   "verdict": "corrected",
+   "refs": [
+    "r-80plus",
+    "r-gb200-guide"
+   ]
+  },
+  {
+   "quantity": "48 V -> core VR",
+   "value": "0.87",
+   "was": "0.90",
+   "cls": "datasheet + peer-reviewed model",
+   "verdict": "corrected",
+   "refs": [
+    "r-vicor",
+    "r-vr48"
+   ]
+  },
+  {
+   "quantity": "CDU",
+   "value": "0.6% of IT",
+   "was": "-",
+   "cls": "datasheet (rated)",
+   "verdict": "added",
+   "refs": [
+    "r-coolit"
+   ]
+  },
+  {
+   "quantity": "Fans",
+   "value": "3% of IT (1-6%)",
+   "was": "-",
+   "cls": "assumed",
+   "verdict": "added, no primary number",
+   "refs": []
+  },
+  {
+   "quantity": "Switch tray",
+   "value": "1.5 kW",
+   "was": "1.5 kW",
+   "cls": "assumed",
+   "verdict": "unverified",
+   "refs": []
+  },
+  {
+   "quantity": "B200 in NVL72",
+   "value": "TDP 1200 W; measured 1.30 kW/GPU at the wall saturated (8xB200); decode 689 W",
+   "was": "1,000 W",
+   "cls": "vendor + measured",
+   "verdict": "GPU rows",
+   "refs": [
+    "r-gb200-guide",
+    "r-mlperf51",
+    "r-b200-decode"
+   ]
+  },
+  {
+   "quantity": "GB200 NVL72 rack",
+   "value": "132 kW provisioned (125-135 operating)",
+   "was": "120 kW",
+   "cls": "vendor / OEM",
+   "verdict": "GPU rows",
+   "refs": [
+    "r-gb200-guide",
+    "r-smc-nvl72"
+   ]
+  }
+ ],
+ "scenarios": [
+  {
+   "scenario": "A_measured_implementation",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 120.404,
+   "die_w": 924.296,
+   "cooling_w": 407.5,
+   "design_rate": 8910.23,
+   "capped_rate": 3271.29,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "dflash",
+   "energy_per_token_mj": 107.853,
+   "die_w": 1349.94,
+   "cooling_w": 407.5,
+   "design_rate": 13612.1,
+   "capped_rate": 3176.61,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 3020.38,
+   "die_w": 549.098,
+   "cooling_w": 407.5,
+   "design_rate": 4908.65,
+   "capped_rate": 3294.46,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1798.98,
+   "die_w": 1481.71,
+   "cooling_w": 407.5,
+   "design_rate": 10308.6,
+   "capped_rate": 2185.38,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 406.289,
+   "die_w": 1192.68,
+   "cooling_w": 407.5,
+   "design_rate": 346022.0,
+   "capped_rate": 93092.7,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 200,000",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2678.28,
+   "die_w": 439.533,
+   "cooling_w": 407.5,
+   "design_rate": 5364.91,
+   "capped_rate": 4829.59,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 200,000",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1471.94,
+   "die_w": 1209.18,
+   "cooling_w": 407.5,
+   "design_rate": 11851.4,
+   "capped_rate": 3140.25,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 200,000",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 279.144,
+   "die_w": 1051.28,
+   "cooling_w": 407.5,
+   "design_rate": 442378.0,
+   "capped_rate": 137058.0,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 85.5551,
+   "die_w": 613.783,
+   "cooling_w": 407.5,
+   "design_rate": 8910.23,
+   "capped_rate": 5278.4,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "dflash",
+   "energy_per_token_mj": 52.9737,
+   "die_w": 602.918,
+   "cooling_w": 407.5,
+   "design_rate": 13612.1,
+   "capped_rate": 8096.76,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2703.79,
+   "die_w": 160.59,
+   "cooling_w": 407.5,
+   "design_rate": 4908.65,
+   "capped_rate": 4908.65,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1300.93,
+   "die_w": 198.158,
+   "cooling_w": 407.5,
+   "design_rate": 10308.6,
+   "capped_rate": 10308.6,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 89.6984,
+   "die_w": 214.582,
+   "cooling_w": 407.5,
+   "design_rate": 346022.0,
+   "capped_rate": 346022.0,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 200,000",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2457.82,
+   "die_w": 143.843,
+   "cooling_w": 407.5,
+   "design_rate": 5364.91,
+   "capped_rate": 5364.91,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 200,000",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1125.12,
+   "die_w": 181.588,
+   "cooling_w": 407.5,
+   "design_rate": 11851.4,
+   "capped_rate": 11851.4,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 200,000",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 58.6823,
+   "die_w": 180.498,
+   "cooling_w": 407.5,
+   "design_rate": 442378.0,
+   "capped_rate": 442378.0,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 94.7017,
+   "die_w": 695.282,
+   "cooling_w": 407.5,
+   "design_rate": 8910.23,
+   "capped_rate": 4546.28,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "dflash",
+   "energy_per_token_mj": 67.4275,
+   "die_w": 799.665,
+   "cooling_w": 407.5,
+   "design_rate": 13612.1,
+   "capped_rate": 5750.8,
+   "cooling_binds": true
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2729.67,
+   "die_w": 192.355,
+   "cooling_w": 407.5,
+   "design_rate": 4908.65,
+   "capped_rate": 4908.65,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1341.65,
+   "die_w": 303.103,
+   "cooling_w": 407.5,
+   "design_rate": 10308.6,
+   "capped_rate": 10308.6,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 115.583,
+   "die_w": 294.552,
+   "cooling_w": 407.5,
+   "design_rate": 346022.0,
+   "capped_rate": 346022.0,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 200,000",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2475.45,
+   "die_w": 167.489,
+   "cooling_w": 407.5,
+   "design_rate": 5364.91,
+   "capped_rate": 5364.91,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 200,000",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1152.85,
+   "die_w": 263.762,
+   "cooling_w": 407.5,
+   "design_rate": 11851.4,
+   "capped_rate": 11851.4,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 200,000",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 76.3121,
+   "die_w": 250.132,
+   "cooling_w": 407.5,
+   "design_rate": 442378.0,
+   "capped_rate": 442378.0,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 85.5551,
+   "die_w": 232.336,
+   "cooling_w": 407.5,
+   "design_rate": 8910.23,
+   "capped_rate": 8910.23,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "dflash",
+   "energy_per_token_mj": 52.9737,
+   "die_w": 299.456,
+   "cooling_w": 407.5,
+   "design_rate": 13612.1,
+   "capped_rate": 13612.1,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2703.79,
+   "die_w": 144.21,
+   "cooling_w": 407.5,
+   "design_rate": 4908.65,
+   "capped_rate": 4908.65,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1300.93,
+   "die_w": 189.139,
+   "cooling_w": 407.5,
+   "design_rate": 10308.6,
+   "capped_rate": 10308.6,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 89.6984,
+   "die_w": 173.343,
+   "cooling_w": 407.5,
+   "design_rate": 346022.0,
+   "capped_rate": 346022.0,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 200,000",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2457.82,
+   "die_w": 139.655,
+   "cooling_w": 407.5,
+   "design_rate": 5364.91,
+   "capped_rate": 5364.91,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 200,000",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1125.12,
+   "die_w": 179.162,
+   "cooling_w": 407.5,
+   "design_rate": 11851.4,
+   "capped_rate": 11851.4,
+   "cooling_binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 200,000",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 58.6823,
+   "die_w": 168.163,
+   "cooling_w": 407.5,
+   "design_rate": 442378.0,
+   "capped_rate": 442378.0,
+   "cooling_binds": false
+  }
+ ],
+ "worst_case": {
+  "statement": "A statically scheduled machine has a knowable ceiling: the saturated schedule (every die issuing every cycle) IS its worst case, so it can be provisioned at 1.2x that ceiling rather than at nameplate. GPUs cannot: measured draw depends on the workload and spikes past TDP, so operators provision at nameplate and oversubscribe (Fan/Weber/Barroso; POLCA).",
+  "refs": [
+   "r-fan-barroso",
+   "r-polca"
+  ]
+ },
+ "withdrawn": {
+  "note": "Figures the 2026-09-27 validation record (worktree-agent-adae6788 @872da542) carried that depend on code absent from this branch or on the withdrawn HBM allocation; NOT re-stated here",
+  "items": [
+   "V4.1 rack power 21.4 / 36.9 / 44.3 kW and per-die 98.8 W static / 203.7 W worst (v41-rack-gates @6424ca03, results/arch/v41_rack.json: not on this branch)",
+   "V4.1 headline 8,622 tok/s/user at 1M and 2.34 J/token wall (worktree-agent-ad495baa @ef5b95e2: not on this branch)",
+   "Qwen3 82.4 mJ/token, 187.2 W die, 1,459 W provisioned (codex/qwen-* @f04f3c17: the 0.8 pJ/b die / 12.31 pJ/b stack allocation and the 0.09 pJ W4A8 MAC, both corrected in results/arch/power_scenarios.json)"
+  ]
+ },
+ "unverified": [
+  "HBM3E stack idle/self-refresh W",
+  "HBM3E pJ/b (vendor)",
+  "HBM controller vs PHY pJ/b split",
+  "SerDes always-on idle per lane (measured)",
+  "mask-ROM leakage",
+  "SRAM leakage at N5/N3",
+  "SFU energy per op",
+  "switch tray W",
+  "air limit 700 W/OU",
+  "batch-1 GPU decode W",
+  "any measured FP8 or FP4 x FP8 MAC with FP32 accumulation"
+ ]
+}

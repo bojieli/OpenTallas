@@ -1,0 +1,1324 @@
+{
+ "schema": "opentallas.power-scenarios-result.v1",
+ "tool": "tools/power_scenarios.py",
+ "inputs": {
+  "configs/hardware/power_scenarios.json": "111dcc893d296dfb28e8f7809addc363a290fa139402ca8372681952e1e8721c",
+  "results/arch/arch_budget_v41.json": "f50fd6b1bcaa532af7bd1e17b8f1562e88b76aa007d8a8d14448f3b8e0735551",
+  "configs/hardware/technology.json": "3cfaccbb71675dfb317fd05bce8eda008b14d450033f800c4171f8161ffc96d8"
+ },
+ "hbm_split_pj_per_bit": {
+  "total": 13.11,
+  "die": 9.66,
+  "stack": 3.45,
+  "stack_high": 3.92
+ },
+ "mac_pj": {
+  "A_measured_implementation": {
+   "qwen3_w4a8": 3.97436,
+   "qwen3_bf16": 3.97436,
+   "v41_fp4": 11.5128,
+   "v41_fp8": 11.5128,
+   "v41_bf16": 11.5128,
+   "v41_fp32": 11.5128
+  },
+  "B_proposed_production": {
+   "qwen3_w4a8": 0.45,
+   "qwen3_bf16": 0.59,
+   "v41_fp4": 0.45,
+   "v41_fp8": 0.59,
+   "v41_bf16": 0.59,
+   "v41_fp32": 1.69
+  },
+  "B_gpu_tensor_sensitivity": {
+   "qwen3_w4a8": 1.4,
+   "qwen3_bf16": 1.4,
+   "v41_fp4": 1.4,
+   "v41_fp8": 1.4,
+   "v41_bf16": 1.4,
+   "v41_fp32": 1.4
+  }
+ },
+ "scenarios": {
+  "A_measured_implementation": {
+   "qwen3_8b_rom_8k": {
+    "ar_batch1": {
+     "design_rate_tokens_s": 8910.23,
+     "step_cycles": 123301,
+     "tokens_per_step": 1,
+     "energy_per_token_mj": 120.404,
+     "die_energy_per_token_mj": 103.734,
+     "die_dynamic_mj_per_token": 91.6477,
+     "stack_energy_per_token_mj": 16.6698,
+     "die_components_mj_per_token": {
+      "mac_weights": 30.0783,
+      "mac_attention": 9.60173,
+      "weight_read_and_delivery": 1.02642,
+      "kv_ring_sram_and_delivery": 3.27961,
+      "stream_unit": 0.986085,
+      "hbm_controller_phy_io": 46.6756,
+      "leakage": 5.88882,
+      "clock": 4.31226,
+      "hbm_idle": 1.88547
+     },
+     "die_static_w": {
+      "leakage_w": 52.4707,
+      "clock_w": 38.4232,
+      "hbm_idle_w": 16.8
+     },
+     "die_w_at_design_rate": 924.296,
+     "stacks_w_at_design_rate": 148.532,
+     "stacks_w_high": 168.767,
+     "cooling_limit_w": 407.5,
+     "die_over_cooling": 2.26821,
+     "thermal_rate_limit": 3271.29,
+     "capped_rate": 3271.29,
+     "binds": true
+    },
+    "dflash": {
+     "design_rate_tokens_s": 13612.1,
+     "step_cycles": 176514,
+     "tokens_per_step": 2.187,
+     "energy_per_token_mj": 107.853,
+     "die_energy_per_token_mj": 99.1718,
+     "die_dynamic_mj_per_token": 90.3107,
+     "stack_energy_per_token_mj": 8.68089,
+     "die_components_mj_per_token": {
+      "mac_weights": 49.2382,
+      "mac_attention": 13.1711,
+      "weight_read_and_delivery": 0.534359,
+      "kv_ring_sram_and_delivery": 1.70787,
+      "stream_unit": 1.35265,
+      "hbm_controller_phy_io": 24.3065,
+      "leakage": 3.85471,
+      "clock": 3.7722,
+      "hbm_idle": 1.2342
+     },
+     "die_static_w": {
+      "leakage_w": 52.4707,
+      "clock_w": 51.3476,
+      "hbm_idle_w": 16.8
+     },
+     "die_w_at_design_rate": 1349.94,
+     "stacks_w_at_design_rate": 118.165,
+     "stacks_w_high": 134.263,
+     "cooling_limit_w": 407.5,
+     "die_over_cooling": 3.31273,
+     "thermal_rate_limit": 3176.61,
+     "capped_rate": 3176.61,
+     "binds": true
+    }
+   },
+   "deepseek_v41_rom_array": {
+    "per_context": {
+     "1048576": {
+      "ar_batch1": {
+       "design_rate_tokens_s": 4908.65,
+       "basis": "per user; hottest die = a layer die during its stage window",
+       "array_dynamic_j_per_token": 0.350884,
+       "stack_j_per_token": 0.00519757,
+       "array_static_j_per_token": 2.6643,
+       "energy_per_token_j": 3.02038,
+       "die_components_j_per_token": {
+        "mac": 0.330951,
+        "weight_read_and_delivery": 0.00435769,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.00053988,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.0145532
+       },
+       "hottest_die_w": 549.098,
+       "die_over_cooling": 1.34748,
+       "hottest_die_stacks_w": 6.37826,
+       "hottest_die_stacks_w_high": 7.24718,
+       "thermal_rate_limit": 3294.46,
+       "capped_rate": 3294.46,
+       "binds": true
+      },
+      "mtp_batch1": {
+       "design_rate_tokens_s": 10308.6,
+       "basis": "per user, gamma 5, tau 4.1",
+       "array_dynamic_j_per_token": 0.528958,
+       "stack_j_per_token": 0.00136278,
+       "array_static_j_per_token": 1.26866,
+       "energy_per_token_j": 1.79898,
+       "die_components_j_per_token": {
+        "mac": 0.520642,
+        "weight_read_and_delivery": 0.00289213,
+        "kv_sram": 3.39764e-05,
+        "stream": 0.000849323,
+        "links": 0.000724402,
+        "hbm_controller_phy_io": 0.00381578
+       },
+       "hottest_die_w": 1481.71,
+       "die_over_cooling": 3.6361,
+       "hottest_die_stacks_w": 3.51208,
+       "hottest_die_stacks_w_high": 3.99054,
+       "thermal_rate_limit": 2185.38,
+       "capped_rate": 2185.38,
+       "binds": true
+      },
+      "saturated_batch1024": {
+       "design_rate_tokens_s": 346022.0,
+       "basis": "aggregate tokens/s of the array",
+       "array_dynamic_j_per_token": 0.347688,
+       "stack_j_per_token": 0.00519757,
+       "array_static_j_per_token": 0.0534036,
+       "energy_per_token_j": 0.406289,
+       "die_components_j_per_token": {
+        "mac": 0.330951,
+        "weight_read_and_delivery": 0.00116189,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.00053988,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.0145532
+       },
+       "hottest_die_w": 1192.68,
+       "die_over_cooling": 2.92683,
+       "hottest_die_stacks_w": 16.0578,
+       "hottest_die_stacks_w_high": 18.2454,
+       "thermal_rate_limit": 93092.7,
+       "capped_rate": 93092.7,
+       "binds": true
+      }
+     },
+     "200000": {
+      "ar_batch1": {
+       "design_rate_tokens_s": 5364.91,
+       "basis": "per user; hottest die = a layer die during its stage window",
+       "array_dynamic_j_per_token": 0.239352,
+       "stack_j_per_token": 0.00121605,
+       "array_static_j_per_token": 2.43771,
+       "energy_per_token_j": 2.67828,
+       "die_components_j_per_token": {
+        "mac": 0.230912,
+        "weight_read_and_delivery": 0.00435769,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.000195697,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.00340494
+       },
+       "hottest_die_w": 439.533,
+       "die_over_cooling": 1.07861,
+       "hottest_die_stacks_w": 1.631,
+       "hottest_die_stacks_w_high": 1.85319,
+       "thermal_rate_limit": 4829.59,
+       "capped_rate": 4829.59,
+       "binds": true
+      },
+      "mtp_batch1": {
+       "design_rate_tokens_s": 11851.4,
+       "basis": "per user, gamma 5, tau 4.1",
+       "array_dynamic_j_per_token": 0.368115,
+       "stack_j_per_token": 0.000318842,
+       "array_static_j_per_token": 1.10351,
+       "energy_per_token_j": 1.47194,
+       "die_components_j_per_token": {
+        "mac": 0.363264,
+        "weight_read_and_delivery": 0.00289213,
+        "kv_sram": 3.39764e-05,
+        "stream": 0.000307865,
+        "links": 0.000724402,
+        "hbm_controller_phy_io": 0.000892759
+       },
+       "hottest_die_w": 1209.18,
+       "die_over_cooling": 2.9673,
+       "hottest_die_stacks_w": 0.944682,
+       "hottest_die_stacks_w_high": 1.07338,
+       "thermal_rate_limit": 3140.25,
+       "capped_rate": 3140.25,
+       "binds": true
+      },
+      "saturated_batch1024": {
+       "design_rate_tokens_s": 442378.0,
+       "basis": "aggregate tokens/s of the array",
+       "array_dynamic_j_per_token": 0.236156,
+       "stack_j_per_token": 0.00121605,
+       "array_static_j_per_token": 0.0417716,
+       "energy_per_token_j": 0.279144,
+       "die_components_j_per_token": {
+        "mac": 0.230912,
+        "weight_read_and_delivery": 0.00116189,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.000195697,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.00340494
+       },
+       "hottest_die_w": 1051.28,
+       "die_over_cooling": 2.57982,
+       "hottest_die_stacks_w": 4.80315,
+       "hottest_die_stacks_w_high": 5.4575,
+       "thermal_rate_limit": 137058.0,
+       "capped_rate": 137058.0,
+       "binds": true
+      }
+     }
+    },
+    "die_static_w": {
+     "leakage_w": 54.5004,
+     "clock_w": 50.0066,
+     "hbm_idle_w": 14.0
+    },
+    "cooling_limit_w": 407.5,
+    "layer_dies": 112,
+    "stages": 28,
+    "dies": 188
+   }
+  },
+  "B_proposed_production": {
+   "qwen3_8b_rom_8k": {
+    "ar_batch1": {
+     "design_rate_tokens_s": 8910.23,
+     "step_cycles": 123301,
+     "tokens_per_step": 1,
+     "energy_per_token_mj": 85.5551,
+     "die_energy_per_token_mj": 68.8853,
+     "die_dynamic_mj_per_token": 56.7987,
+     "stack_energy_per_token_mj": 16.6698,
+     "die_components_mj_per_token": {
+      "mac_weights": 3.40564,
+      "mac_attention": 1.42539,
+      "weight_read_and_delivery": 1.02642,
+      "kv_ring_sram_and_delivery": 3.27961,
+      "stream_unit": 0.986085,
+      "hbm_controller_phy_io": 46.6756,
+      "leakage": 5.88882,
+      "clock": 4.31226,
+      "hbm_idle": 1.88547
+     },
+     "die_static_w": {
+      "leakage_w": 52.4707,
+      "clock_w": 38.4232,
+      "hbm_idle_w": 16.8
+     },
+     "die_w_at_design_rate": 613.783,
+     "stacks_w_at_design_rate": 148.532,
+     "stacks_w_high": 168.767,
+     "cooling_limit_w": 407.5,
+     "die_over_cooling": 1.50622,
+     "thermal_rate_limit": 5278.4,
+     "capped_rate": 5278.4,
+     "binds": true
+    },
+    "dflash": {
+     "design_rate_tokens_s": 13612.1,
+     "step_cycles": 176514,
+     "tokens_per_step": 2.187,
+     "energy_per_token_mj": 52.9737,
+     "die_energy_per_token_mj": 44.2928,
+     "die_dynamic_mj_per_token": 35.4317,
+     "stack_energy_per_token_mj": 8.68089,
+     "die_components_mj_per_token": {
+      "mac_weights": 5.57504,
+      "mac_attention": 1.95527,
+      "weight_read_and_delivery": 0.534359,
+      "kv_ring_sram_and_delivery": 1.70787,
+      "stream_unit": 1.35265,
+      "hbm_controller_phy_io": 24.3065,
+      "leakage": 3.85471,
+      "clock": 3.7722,
+      "hbm_idle": 1.2342
+     },
+     "die_static_w": {
+      "leakage_w": 52.4707,
+      "clock_w": 51.3476,
+      "hbm_idle_w": 16.8
+     },
+     "die_w_at_design_rate": 602.918,
+     "stacks_w_at_design_rate": 118.165,
+     "stacks_w_high": 134.263,
+     "cooling_limit_w": 407.5,
+     "die_over_cooling": 1.47955,
+     "thermal_rate_limit": 8096.76,
+     "capped_rate": 8096.76,
+     "binds": true
+    }
+   },
+   "deepseek_v41_rom_array": {
+    "per_context": {
+     "1048576": {
+      "ar_batch1": {
+       "design_rate_tokens_s": 4908.65,
+       "basis": "per user; hottest die = a layer die during its stage window",
+       "array_dynamic_j_per_token": 0.0342931,
+       "stack_j_per_token": 0.00519757,
+       "array_static_j_per_token": 2.6643,
+       "energy_per_token_j": 2.70379,
+       "die_components_j_per_token": {
+        "mac": 0.0143603,
+        "weight_read_and_delivery": 0.00435769,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.00053988,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.0145532
+       },
+       "hottest_die_w": 160.59,
+       "die_over_cooling": 0.394086,
+       "hottest_die_stacks_w": 6.37826,
+       "hottest_die_stacks_w_high": 7.24718,
+       "thermal_rate_limit": 33708.6,
+       "capped_rate": 4908.65,
+       "binds": false
+      },
+      "mtp_batch1": {
+       "design_rate_tokens_s": 10308.6,
+       "basis": "per user, gamma 5, tau 4.1",
+       "array_dynamic_j_per_token": 0.0309067,
+       "stack_j_per_token": 0.00136278,
+       "array_static_j_per_token": 1.26866,
+       "energy_per_token_j": 1.30093,
+       "die_components_j_per_token": {
+        "mac": 0.0225911,
+        "weight_read_and_delivery": 0.00289213,
+        "kv_sram": 3.39764e-05,
+        "stream": 0.000849323,
+        "links": 0.000724402,
+        "hbm_controller_phy_io": 0.00381578
+       },
+       "hottest_die_w": 198.158,
+       "die_over_cooling": 0.486278,
+       "hottest_die_stacks_w": 3.51208,
+       "hottest_die_stacks_w_high": 3.99054,
+       "thermal_rate_limit": 37401.9,
+       "capped_rate": 10308.6,
+       "binds": false
+      },
+      "saturated_batch1024": {
+       "design_rate_tokens_s": 346022.0,
+       "basis": "aggregate tokens/s of the array",
+       "array_dynamic_j_per_token": 0.0310973,
+       "stack_j_per_token": 0.00519757,
+       "array_static_j_per_token": 0.0534036,
+       "energy_per_token_j": 0.0896984,
+       "die_components_j_per_token": {
+        "mac": 0.0143603,
+        "weight_read_and_delivery": 0.00116189,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.00053988,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.0145532
+       },
+       "hottest_die_w": 214.582,
+       "die_over_cooling": 0.52658,
+       "hottest_die_stacks_w": 16.0578,
+       "hottest_die_stacks_w_high": 18.2454,
+       "thermal_rate_limit": 1040840.0,
+       "capped_rate": 346022.0,
+       "binds": false
+      }
+     },
+     "200000": {
+      "ar_batch1": {
+       "design_rate_tokens_s": 5364.91,
+       "basis": "per user; hottest die = a layer die during its stage window",
+       "array_dynamic_j_per_token": 0.0188904,
+       "stack_j_per_token": 0.00121605,
+       "array_static_j_per_token": 2.43771,
+       "energy_per_token_j": 2.45782,
+       "die_components_j_per_token": {
+        "mac": 0.01045,
+        "weight_read_and_delivery": 0.00435769,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.000195697,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.00340494
+       },
+       "hottest_die_w": 143.843,
+       "die_over_cooling": 0.35299,
+       "hottest_die_stacks_w": 1.631,
+       "hottest_die_stacks_w_high": 1.85319,
+       "thermal_rate_limit": 61193.6,
+       "capped_rate": 5364.91,
+       "binds": false
+      },
+      "mtp_batch1": {
+       "design_rate_tokens_s": 11851.4,
+       "basis": "per user, gamma 5, tau 4.1",
+       "array_dynamic_j_per_token": 0.0212908,
+       "stack_j_per_token": 0.000318842,
+       "array_static_j_per_token": 1.10351,
+       "energy_per_token_j": 1.12512,
+       "die_components_j_per_token": {
+        "mac": 0.0164397,
+        "weight_read_and_delivery": 0.00289213,
+        "kv_sram": 3.39764e-05,
+        "stream": 0.000307865,
+        "links": 0.000724402,
+        "hbm_controller_phy_io": 0.000892759
+       },
+       "hottest_die_w": 181.588,
+       "die_over_cooling": 0.445616,
+       "hottest_die_stacks_w": 0.944682,
+       "hottest_die_stacks_w_high": 1.07338,
+       "thermal_rate_limit": 54294.4,
+       "capped_rate": 11851.4,
+       "binds": false
+      },
+      "saturated_batch1024": {
+       "design_rate_tokens_s": 442378.0,
+       "basis": "aggregate tokens/s of the array",
+       "array_dynamic_j_per_token": 0.0156946,
+       "stack_j_per_token": 0.00121605,
+       "array_static_j_per_token": 0.0417716,
+       "energy_per_token_j": 0.0586823,
+       "die_components_j_per_token": {
+        "mac": 0.01045,
+        "weight_read_and_delivery": 0.00116189,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.000195697,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.00340494
+       },
+       "hottest_die_w": 180.498,
+       "die_over_cooling": 0.442939,
+       "hottest_die_stacks_w": 4.80315,
+       "hottest_die_stacks_w_high": 5.4575,
+       "thermal_rate_limit": 2062310.0,
+       "capped_rate": 442378.0,
+       "binds": false
+      }
+     }
+    },
+    "die_static_w": {
+     "leakage_w": 54.5004,
+     "clock_w": 50.0066,
+     "hbm_idle_w": 14.0
+    },
+    "cooling_limit_w": 407.5,
+    "layer_dies": 112,
+    "stages": 28,
+    "dies": 188
+   }
+  }
+ },
+ "sensitivities": {
+  "B_lane_at_gpu_tensor_1p40pj": {
+   "qwen3_8b_rom_8k": {
+    "ar_batch1": {
+     "design_rate_tokens_s": 8910.23,
+     "step_cycles": 123301,
+     "tokens_per_step": 1,
+     "energy_per_token_mj": 94.7017,
+     "die_energy_per_token_mj": 78.0318,
+     "die_dynamic_mj_per_token": 65.9453,
+     "stack_energy_per_token_mj": 16.6698,
+     "die_components_mj_per_token": {
+      "mac_weights": 10.5953,
+      "mac_attention": 3.38229,
+      "weight_read_and_delivery": 1.02642,
+      "kv_ring_sram_and_delivery": 3.27961,
+      "stream_unit": 0.986085,
+      "hbm_controller_phy_io": 46.6756,
+      "leakage": 5.88882,
+      "clock": 4.31226,
+      "hbm_idle": 1.88547
+     },
+     "die_static_w": {
+      "leakage_w": 52.4707,
+      "clock_w": 38.4232,
+      "hbm_idle_w": 16.8
+     },
+     "die_w_at_design_rate": 695.282,
+     "stacks_w_at_design_rate": 148.532,
+     "stacks_w_high": 168.767,
+     "cooling_limit_w": 407.5,
+     "die_over_cooling": 1.70621,
+     "thermal_rate_limit": 4546.28,
+     "capped_rate": 4546.28,
+     "binds": true
+    },
+    "dflash": {
+     "design_rate_tokens_s": 13612.1,
+     "step_cycles": 176514,
+     "tokens_per_step": 2.187,
+     "energy_per_token_mj": 67.4275,
+     "die_energy_per_token_mj": 58.7467,
+     "die_dynamic_mj_per_token": 49.8855,
+     "stack_energy_per_token_mj": 8.68089,
+     "die_components_mj_per_token": {
+      "mac_weights": 17.3446,
+      "mac_attention": 4.63963,
+      "weight_read_and_delivery": 0.534359,
+      "kv_ring_sram_and_delivery": 1.70787,
+      "stream_unit": 1.35265,
+      "hbm_controller_phy_io": 24.3065,
+      "leakage": 3.85471,
+      "clock": 3.7722,
+      "hbm_idle": 1.2342
+     },
+     "die_static_w": {
+      "leakage_w": 52.4707,
+      "clock_w": 51.3476,
+      "hbm_idle_w": 16.8
+     },
+     "die_w_at_design_rate": 799.665,
+     "stacks_w_at_design_rate": 118.165,
+     "stacks_w_high": 134.263,
+     "cooling_limit_w": 407.5,
+     "die_over_cooling": 1.96237,
+     "thermal_rate_limit": 5750.8,
+     "capped_rate": 5750.8,
+     "binds": true
+    }
+   },
+   "deepseek_v41_rom_array": {
+    "per_context": {
+     "1048576": {
+      "ar_batch1": {
+       "design_rate_tokens_s": 4908.65,
+       "basis": "per user; hottest die = a layer die during its stage window",
+       "array_dynamic_j_per_token": 0.0601779,
+       "stack_j_per_token": 0.00519757,
+       "array_static_j_per_token": 2.6643,
+       "energy_per_token_j": 2.72967,
+       "die_components_j_per_token": {
+        "mac": 0.040245,
+        "weight_read_and_delivery": 0.00435769,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.00053988,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.0145532
+       },
+       "hottest_die_w": 192.355,
+       "die_over_cooling": 0.472037,
+       "hottest_die_stacks_w": 6.37826,
+       "hottest_die_stacks_w_high": 7.24718,
+       "thermal_rate_limit": 19209.3,
+       "capped_rate": 4908.65,
+       "binds": false
+      },
+      "mtp_batch1": {
+       "design_rate_tokens_s": 10308.6,
+       "basis": "per user, gamma 5, tau 4.1",
+       "array_dynamic_j_per_token": 0.0716279,
+       "stack_j_per_token": 0.00136278,
+       "array_static_j_per_token": 1.26866,
+       "energy_per_token_j": 1.34165,
+       "die_components_j_per_token": {
+        "mac": 0.0633123,
+        "weight_read_and_delivery": 0.00289213,
+        "kv_sram": 3.39764e-05,
+        "stream": 0.000849323,
+        "links": 0.000724402,
+        "hbm_controller_phy_io": 0.00381578
+       },
+       "hottest_die_w": 303.103,
+       "die_over_cooling": 0.743811,
+       "hottest_die_stacks_w": 3.51208,
+       "hottest_die_stacks_w_high": 3.99054,
+       "thermal_rate_limit": 16138.6,
+       "capped_rate": 10308.6,
+       "binds": false
+      },
+      "saturated_batch1024": {
+       "design_rate_tokens_s": 346022.0,
+       "basis": "aggregate tokens/s of the array",
+       "array_dynamic_j_per_token": 0.0569821,
+       "stack_j_per_token": 0.00519757,
+       "array_static_j_per_token": 0.0534036,
+       "energy_per_token_j": 0.115583,
+       "die_components_j_per_token": {
+        "mac": 0.040245,
+        "weight_read_and_delivery": 0.00116189,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.00053988,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.0145532
+       },
+       "hottest_die_w": 294.552,
+       "die_over_cooling": 0.722827,
+       "hottest_die_stacks_w": 16.0578,
+       "hottest_die_stacks_w_high": 18.2454,
+       "thermal_rate_limit": 568025.0,
+       "capped_rate": 346022.0,
+       "binds": false
+      }
+     },
+     "200000": {
+      "ar_batch1": {
+       "design_rate_tokens_s": 5364.91,
+       "basis": "per user; hottest die = a layer die during its stage window",
+       "array_dynamic_j_per_token": 0.0365202,
+       "stack_j_per_token": 0.00121605,
+       "array_static_j_per_token": 2.43771,
+       "energy_per_token_j": 2.47545,
+       "die_components_j_per_token": {
+        "mac": 0.0280798,
+        "weight_read_and_delivery": 0.00435769,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.000195697,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.00340494
+       },
+       "hottest_die_w": 167.489,
+       "die_over_cooling": 0.411016,
+       "hottest_die_stacks_w": 1.631,
+       "hottest_die_stacks_w_high": 1.85319,
+       "thermal_rate_limit": 31652.9,
+       "capped_rate": 5364.91,
+       "binds": false
+      },
+      "mtp_batch1": {
+       "design_rate_tokens_s": 11851.4,
+       "basis": "per user, gamma 5, tau 4.1",
+       "array_dynamic_j_per_token": 0.0490255,
+       "stack_j_per_token": 0.000318842,
+       "array_static_j_per_token": 1.10351,
+       "energy_per_token_j": 1.15285,
+       "die_components_j_per_token": {
+        "mac": 0.0441744,
+        "weight_read_and_delivery": 0.00289213,
+        "kv_sram": 3.39764e-05,
+        "stream": 0.000307865,
+        "links": 0.000724402,
+        "hbm_controller_phy_io": 0.000892759
+       },
+       "hottest_die_w": 263.762,
+       "die_over_cooling": 0.647269,
+       "hottest_die_stacks_w": 0.944682,
+       "hottest_die_stacks_w_high": 1.07338,
+       "thermal_rate_limit": 23579.0,
+       "capped_rate": 11851.4,
+       "binds": false
+      },
+      "saturated_batch1024": {
+       "design_rate_tokens_s": 442378.0,
+       "basis": "aggregate tokens/s of the array",
+       "array_dynamic_j_per_token": 0.0333244,
+       "stack_j_per_token": 0.00121605,
+       "array_static_j_per_token": 0.0417716,
+       "energy_per_token_j": 0.0763121,
+       "die_components_j_per_token": {
+        "mac": 0.0280798,
+        "weight_read_and_delivery": 0.00116189,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.000195697,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.00340494
+       },
+       "hottest_die_w": 250.132,
+       "die_over_cooling": 0.61382,
+       "hottest_die_stacks_w": 4.80315,
+       "hottest_die_stacks_w_high": 5.4575,
+       "thermal_rate_limit": 971276.0,
+       "capped_rate": 442378.0,
+       "binds": false
+      }
+     }
+    },
+    "die_static_w": {
+     "leakage_w": 54.5004,
+     "clock_w": 50.0066,
+     "hbm_idle_w": 14.0
+    },
+    "cooling_limit_w": 407.5,
+    "layer_dies": 112,
+    "stages": 28,
+    "dies": 188
+   }
+  },
+  "B_old_hbm_allocation_die_0p8": {
+   "qwen3_8b_rom_8k": {
+    "ar_batch1": {
+     "design_rate_tokens_s": 8910.23,
+     "step_cycles": 123301,
+     "tokens_per_step": 1,
+     "energy_per_token_mj": 85.5551,
+     "die_energy_per_token_mj": 26.0752,
+     "die_dynamic_mj_per_token": 13.9886,
+     "stack_energy_per_token_mj": 59.4799,
+     "die_components_mj_per_token": {
+      "mac_weights": 3.40564,
+      "mac_attention": 1.42539,
+      "weight_read_and_delivery": 1.02642,
+      "kv_ring_sram_and_delivery": 3.27961,
+      "stream_unit": 0.986085,
+      "hbm_controller_phy_io": 3.86547,
+      "leakage": 5.88882,
+      "clock": 4.31226,
+      "hbm_idle": 1.88547
+     },
+     "die_static_w": {
+      "leakage_w": 52.4707,
+      "clock_w": 38.4232,
+      "hbm_idle_w": 16.8
+     },
+     "die_w_at_design_rate": 232.336,
+     "stacks_w_at_design_rate": 529.98,
+     "stacks_w_high": 168.767,
+     "cooling_limit_w": 407.5,
+     "die_over_cooling": 0.570149,
+     "thermal_rate_limit": 21432.1,
+     "capped_rate": 8910.23,
+     "binds": false
+    },
+    "dflash": {
+     "design_rate_tokens_s": 13612.1,
+     "step_cycles": 176514,
+     "tokens_per_step": 2.187,
+     "energy_per_token_mj": 52.9737,
+     "die_energy_per_token_mj": 21.9993,
+     "die_dynamic_mj_per_token": 13.1381,
+     "stack_energy_per_token_mj": 30.9744,
+     "die_components_mj_per_token": {
+      "mac_weights": 5.57504,
+      "mac_attention": 1.95527,
+      "weight_read_and_delivery": 0.534359,
+      "kv_ring_sram_and_delivery": 1.70787,
+      "stream_unit": 1.35265,
+      "hbm_controller_phy_io": 2.01296,
+      "leakage": 3.85471,
+      "clock": 3.7722,
+      "hbm_idle": 1.2342
+     },
+     "die_static_w": {
+      "leakage_w": 52.4707,
+      "clock_w": 51.3476,
+      "hbm_idle_w": 16.8
+     },
+     "die_w_at_design_rate": 299.456,
+     "stacks_w_at_design_rate": 421.627,
+     "stacks_w_high": 134.263,
+     "cooling_limit_w": 407.5,
+     "die_over_cooling": 0.734862,
+     "thermal_rate_limit": 21835.8,
+     "capped_rate": 13612.1,
+     "binds": false
+    }
+   },
+   "deepseek_v41_rom_array": {
+    "per_context": {
+     "1048576": {
+      "ar_batch1": {
+       "design_rate_tokens_s": 4908.65,
+       "basis": "per user; hottest die = a layer die during its stage window",
+       "array_dynamic_j_per_token": 0.0209451,
+       "stack_j_per_token": 0.0185455,
+       "array_static_j_per_token": 2.6643,
+       "energy_per_token_j": 2.70379,
+       "die_components_j_per_token": {
+        "mac": 0.0143603,
+        "weight_read_and_delivery": 0.00435769,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.00053988,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.00120523
+       },
+       "hottest_die_w": 144.21,
+       "die_over_cooling": 0.35389,
+       "hottest_die_stacks_w": 22.7584,
+       "hottest_die_stacks_w_high": 7.24718,
+       "thermal_rate_limit": 55190.5,
+       "capped_rate": 4908.65,
+       "binds": false
+      },
+      "mtp_batch1": {
+       "design_rate_tokens_s": 10308.6,
+       "basis": "per user, gamma 5, tau 4.1",
+       "array_dynamic_j_per_token": 0.027407,
+       "stack_j_per_token": 0.00486255,
+       "array_static_j_per_token": 1.26866,
+       "energy_per_token_j": 1.30093,
+       "die_components_j_per_token": {
+        "mac": 0.0225911,
+        "weight_read_and_delivery": 0.00289213,
+        "kv_sram": 3.39764e-05,
+        "stream": 0.000849323,
+        "links": 0.000724402,
+        "hbm_controller_phy_io": 0.000316006
+       },
+       "hottest_die_w": 189.139,
+       "die_over_cooling": 0.464145,
+       "hottest_die_stacks_w": 12.5315,
+       "hottest_die_stacks_w_high": 3.99054,
+       "thermal_rate_limit": 42178.0,
+       "capped_rate": 10308.6,
+       "binds": false
+      },
+      "saturated_batch1024": {
+       "design_rate_tokens_s": 346022.0,
+       "basis": "aggregate tokens/s of the array",
+       "array_dynamic_j_per_token": 0.0177493,
+       "stack_j_per_token": 0.0185455,
+       "array_static_j_per_token": 0.0534036,
+       "energy_per_token_j": 0.0896984,
+       "die_components_j_per_token": {
+        "mac": 0.0143603,
+        "weight_read_and_delivery": 0.00116189,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.00053988,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.00120523
+       },
+       "hottest_die_w": 173.343,
+       "die_over_cooling": 0.425382,
+       "hottest_die_stacks_w": 57.2961,
+       "hottest_die_stacks_w_high": 18.2454,
+       "thermal_rate_limit": 1823570.0,
+       "capped_rate": 346022.0,
+       "binds": false
+      }
+     },
+     "200000": {
+      "ar_batch1": {
+       "design_rate_tokens_s": 5364.91,
+       "basis": "per user; hottest die = a layer die during its stage window",
+       "array_dynamic_j_per_token": 0.0157675,
+       "stack_j_per_token": 0.00433901,
+       "array_static_j_per_token": 2.43771,
+       "energy_per_token_j": 2.45782,
+       "die_components_j_per_token": {
+        "mac": 0.01045,
+        "weight_read_and_delivery": 0.00435769,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.000195697,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.000281983
+       },
+       "hottest_die_w": 139.655,
+       "die_over_cooling": 0.342711,
+       "hottest_die_stacks_w": 5.81959,
+       "hottest_die_stacks_w_high": 1.85319,
+       "thermal_rate_limit": 73313.8,
+       "capped_rate": 5364.91,
+       "binds": false
+      },
+      "mtp_batch1": {
+       "design_rate_tokens_s": 11851.4,
+       "basis": "per user, gamma 5, tau 4.1",
+       "array_dynamic_j_per_token": 0.020472,
+       "stack_j_per_token": 0.00113767,
+       "array_static_j_per_token": 1.10351,
+       "energy_per_token_j": 1.12512,
+       "die_components_j_per_token": {
+        "mac": 0.0164397,
+        "weight_read_and_delivery": 0.00289213,
+        "kv_sram": 3.39764e-05,
+        "stream": 0.000307865,
+        "links": 0.000724402,
+        "hbm_controller_phy_io": 7.39345e-05
+       },
+       "hottest_die_w": 179.162,
+       "die_over_cooling": 0.439662,
+       "hottest_die_stacks_w": 3.37074,
+       "hottest_die_stacks_w_high": 1.07338,
+       "thermal_rate_limit": 56466.1,
+       "capped_rate": 11851.4,
+       "binds": false
+      },
+      "saturated_batch1024": {
+       "design_rate_tokens_s": 442378.0,
+       "basis": "aggregate tokens/s of the array",
+       "array_dynamic_j_per_token": 0.0125717,
+       "stack_j_per_token": 0.00433901,
+       "array_static_j_per_token": 0.0417716,
+       "energy_per_token_j": 0.0586823,
+       "die_components_j_per_token": {
+        "mac": 0.01045,
+        "weight_read_and_delivery": 0.00116189,
+        "kv_sram": 2.15974e-05,
+        "stream": 0.000195697,
+        "links": 0.000460472,
+        "hbm_controller_phy_io": 0.000281983
+       },
+       "hottest_die_w": 168.163,
+       "die_over_cooling": 0.412669,
+       "hottest_die_stacks_w": 17.1382,
+       "hottest_die_stacks_w_high": 5.4575,
+       "thermal_rate_limit": 2574620.0,
+       "capped_rate": 442378.0,
+       "binds": false
+      }
+     }
+    },
+    "die_static_w": {
+     "leakage_w": 54.5004,
+     "clock_w": 50.0066,
+     "hbm_idle_w": 14.0
+    },
+    "cooling_limit_w": 407.5,
+    "layer_dies": 112,
+    "stages": 28,
+    "dies": 188
+   }
+  }
+ },
+ "was": {
+  "source": "5e12dc08 power_production.rom",
+  "ar_batch1": {
+   "energy_per_token_mj": 82.38,
+   "die_energy_per_token_mj": 21.015,
+   "die_w": 187.2,
+   "stacks_w": 546.8,
+   "tokens_s": 8910.2
+  },
+  "dflash": {
+   "energy_per_token_mj": 47.896,
+   "die_energy_per_token_mj": 15.688,
+   "die_w": 213.5,
+   "stacks_w": 438.4,
+   "tokens_s": 13612.1
+  },
+  "atlas_cross_check": {
+   "pj_per_mac": 3.97,
+   "ar_die_w": 448.9,
+   "ar_tokens_s_capped": 7720.1,
+   "dflash_die_w": 1131.5,
+   "dflash_tokens_s_capped": 4908.5,
+   "basis": "MAC-only: 75% of 408 W to the lanes, nothing else charged (5e12dc08 power_budget)"
+  }
+ },
+ "summary": [
+  {
+   "scenario": "A_measured_implementation",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 120.404,
+   "die_w": 924.296,
+   "cooling_w": 407.5,
+   "design_rate": 8910.23,
+   "capped_rate": 3271.29,
+   "binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "dflash",
+   "energy_per_token_mj": 107.853,
+   "die_w": 1349.94,
+   "cooling_w": 407.5,
+   "design_rate": 13612.1,
+   "capped_rate": 3176.61,
+   "binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 3020.38,
+   "die_w": 549.098,
+   "cooling_w": 407.5,
+   "design_rate": 4908.65,
+   "capped_rate": 3294.46,
+   "binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1798.98,
+   "die_w": 1481.71,
+   "cooling_w": 407.5,
+   "design_rate": 10308.6,
+   "capped_rate": 2185.38,
+   "binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 406.289,
+   "die_w": 1192.68,
+   "cooling_w": 407.5,
+   "design_rate": 346022.0,
+   "capped_rate": 93092.7,
+   "binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 200,000",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2678.28,
+   "die_w": 439.533,
+   "cooling_w": 407.5,
+   "design_rate": 5364.91,
+   "capped_rate": 4829.59,
+   "binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 200,000",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1471.94,
+   "die_w": 1209.18,
+   "cooling_w": 407.5,
+   "design_rate": 11851.4,
+   "capped_rate": 3140.25,
+   "binds": true
+  },
+  {
+   "scenario": "A_measured_implementation",
+   "design": "V4.1 ROM array 200,000",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 279.144,
+   "die_w": 1051.28,
+   "cooling_w": 407.5,
+   "design_rate": 442378.0,
+   "capped_rate": 137058.0,
+   "binds": true
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 85.5551,
+   "die_w": 613.783,
+   "cooling_w": 407.5,
+   "design_rate": 8910.23,
+   "capped_rate": 5278.4,
+   "binds": true
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "dflash",
+   "energy_per_token_mj": 52.9737,
+   "die_w": 602.918,
+   "cooling_w": 407.5,
+   "design_rate": 13612.1,
+   "capped_rate": 8096.76,
+   "binds": true
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2703.79,
+   "die_w": 160.59,
+   "cooling_w": 407.5,
+   "design_rate": 4908.65,
+   "capped_rate": 4908.65,
+   "binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1300.93,
+   "die_w": 198.158,
+   "cooling_w": 407.5,
+   "design_rate": 10308.6,
+   "capped_rate": 10308.6,
+   "binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 89.6984,
+   "die_w": 214.582,
+   "cooling_w": 407.5,
+   "design_rate": 346022.0,
+   "capped_rate": 346022.0,
+   "binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 200,000",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2457.82,
+   "die_w": 143.843,
+   "cooling_w": 407.5,
+   "design_rate": 5364.91,
+   "capped_rate": 5364.91,
+   "binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 200,000",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1125.12,
+   "die_w": 181.588,
+   "cooling_w": 407.5,
+   "design_rate": 11851.4,
+   "capped_rate": 11851.4,
+   "binds": false
+  },
+  {
+   "scenario": "B_proposed_production",
+   "design": "V4.1 ROM array 200,000",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 58.6823,
+   "die_w": 180.498,
+   "cooling_w": 407.5,
+   "design_rate": 442378.0,
+   "capped_rate": 442378.0,
+   "binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 94.7017,
+   "die_w": 695.282,
+   "cooling_w": 407.5,
+   "design_rate": 8910.23,
+   "capped_rate": 4546.28,
+   "binds": true
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "dflash",
+   "energy_per_token_mj": 67.4275,
+   "die_w": 799.665,
+   "cooling_w": 407.5,
+   "design_rate": 13612.1,
+   "capped_rate": 5750.8,
+   "binds": true
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2729.67,
+   "die_w": 192.355,
+   "cooling_w": 407.5,
+   "design_rate": 4908.65,
+   "capped_rate": 4908.65,
+   "binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1341.65,
+   "die_w": 303.103,
+   "cooling_w": 407.5,
+   "design_rate": 10308.6,
+   "capped_rate": 10308.6,
+   "binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 115.583,
+   "die_w": 294.552,
+   "cooling_w": 407.5,
+   "design_rate": 346022.0,
+   "capped_rate": 346022.0,
+   "binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 200,000",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2475.45,
+   "die_w": 167.489,
+   "cooling_w": 407.5,
+   "design_rate": 5364.91,
+   "capped_rate": 5364.91,
+   "binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 200,000",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1152.85,
+   "die_w": 263.762,
+   "cooling_w": 407.5,
+   "design_rate": 11851.4,
+   "capped_rate": 11851.4,
+   "binds": false
+  },
+  {
+   "scenario": "B_lane_at_gpu_tensor_1p40pj",
+   "design": "V4.1 ROM array 200,000",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 76.3121,
+   "die_w": 250.132,
+   "cooling_w": 407.5,
+   "design_rate": 442378.0,
+   "capped_rate": 442378.0,
+   "binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 85.5551,
+   "die_w": 232.336,
+   "cooling_w": 407.5,
+   "design_rate": 8910.23,
+   "capped_rate": 8910.23,
+   "binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "Qwen3-8B ROM 8K",
+   "point": "dflash",
+   "energy_per_token_mj": 52.9737,
+   "die_w": 299.456,
+   "cooling_w": 407.5,
+   "design_rate": 13612.1,
+   "capped_rate": 13612.1,
+   "binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2703.79,
+   "die_w": 144.21,
+   "cooling_w": 407.5,
+   "design_rate": 4908.65,
+   "capped_rate": 4908.65,
+   "binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1300.93,
+   "die_w": 189.139,
+   "cooling_w": 407.5,
+   "design_rate": 10308.6,
+   "capped_rate": 10308.6,
+   "binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 1,048,576",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 89.6984,
+   "die_w": 173.343,
+   "cooling_w": 407.5,
+   "design_rate": 346022.0,
+   "capped_rate": 346022.0,
+   "binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 200,000",
+   "point": "ar_batch1",
+   "energy_per_token_mj": 2457.82,
+   "die_w": 139.655,
+   "cooling_w": 407.5,
+   "design_rate": 5364.91,
+   "capped_rate": 5364.91,
+   "binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 200,000",
+   "point": "mtp_batch1",
+   "energy_per_token_mj": 1125.12,
+   "die_w": 179.162,
+   "cooling_w": 407.5,
+   "design_rate": 11851.4,
+   "capped_rate": 11851.4,
+   "binds": false
+  },
+  {
+   "scenario": "B_old_hbm_allocation_die_0p8",
+   "design": "V4.1 ROM array 200,000",
+   "point": "saturated_batch1024",
+   "energy_per_token_mj": 58.6823,
+   "die_w": 168.163,
+   "cooling_w": 407.5,
+   "design_rate": 442378.0,
+   "capped_rate": 442378.0,
+   "binds": false
+  }
+ ]
+}
