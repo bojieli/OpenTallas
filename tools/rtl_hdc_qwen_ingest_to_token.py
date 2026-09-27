@@ -108,10 +108,13 @@ def main() -> None:
                 output = KC.run(exe, f"+DIR={cut}", *run_args,
                                 f"+LEAD={KC.LEAD}")
                 rec = KC.parse_core(output)
+                # The bench initializes unwritten logits to all-ones, while
+                # Machine starts at zero; a cut before the final projection
+                # therefore cannot compare logits.  VM/KV are initialized
+                # identically and locate the first numeric divergence.
                 rec["exact_state"] = bool(rec.get("fault") == 0 and rec.get("stream_fault") == 0
                                           and all(rec.get(k) == 0 for k in
-                                                  ("logit_mismatches", "vector_memory_mismatches",
-                                                   "kv_cache_mismatches")))
+                                                  ("vector_memory_mismatches", "kv_cache_mismatches")))
                 return rec
             lo, hi = 0, len(P.build_program(lay))
             probes = {}
