@@ -1,27 +1,19 @@
 #!/usr/bin/env python3
-"""Two-package RTL token gate for the V4.1x HCP core and package controller.
+"""RTL package-array token gates for the V4.1x HCP core and controller.
 
-rtl/test/tb_hdc_v41x_array.sv builds each package from one ot_hdc_core_v41x and
-one ot_rom_pkg_ctrl_x (the package controller with token forwarding and SIDE
-messages; memories behavioural), in the layer-range pipeline that
-tools/hdc_program_v41_array.py plans: body package k holds a contiguous range
-of the 40 layers (package 0 also the embedding), lm_head shares the last body
-package or is split by vocabulary over its own packages.  Every user starts from
-an EMPTY state, runs an 8-token prompt and generates 3 tokens; users alternate
-between two prompts (the oracle's and a different one), so per-user state
-slices are exercised with different contexts in flight at once.
+Each package combines an ot_hdc_core_v41x (X_HE=1, other X units=0) and an
+ot_rom_pkg_ctrl_x in a contiguous layer-range pipeline. The point-to-point
+gate runs three prompt tokens and one generated token for one user. The
+switched gate has three body packages, two split head packages, two users,
+SIDE messages, head multicast, result collection, and injected link stalls.
+Both start from empty persistent state.
+The ISA pipeline is checked against hdc_golden_v41 before RTL simulation.
+RTL then checks reduced tokens, generated tokens, all 4,040 lm_head logits,
+and final KV/vector-memory state bit for bit against that ISA pipeline.
 
-Checked, bit for bit, against hdc_golden_v41 (through the ISA pipeline model,
-which is itself checked against the golden before any RTL runs):
-* every step's reduced token at package 0 (prompt positions too), and the
-  generated tokens;
-* every step's logits of every lm_head package (all 4,040 rows);
-* at the end, every package's KV slice and persistent vector-memory segment of
-  every user against the ISA pipeline model's final state for that prompt.
-
-Reports cycles per token-step (aggregate over users), per-package busy /
-starved / waiting-for-SIDE / waiting-for-send cycles, link credit stalls, and
-the one-user step latency.  Writes results/rtl/hdc_v41x_array_campaign.json.
+The record includes cycles per token-step, per-package utilization and waits,
+and link credit stalls. Memories are behavioral and the package link uses a
+delay-line PHY stand-in. Writes results/rtl/hdc_v41x_array_campaign.json.
 """
 import argparse
 import hashlib
@@ -60,11 +52,11 @@ ROUTER = ROOT / "rtl/rom/ot_rom_fabric_router.sv"
 CTRL = ROOT / "rtl/rom/ot_rom_pkg_ctrl_x.sv"
 MG_SIDE, MG_HEAD, DESTS = 32, 48, 64
 
-# name: (body packages, lm_head parts, lm_head multicast, shared state, fabric, users, extra user counts, stall %,
-#        prompt tokens, generated tokens).  A V4.1 token step costs ~1.05 M core cycles, so the wider arrays
-#        run a prefix of each prompt (every package still sees every user at several positions).
+# name: (body packages, lm_head parts, lm_head multicast, shared state, fabric,
+#        users, extra user counts, stall %, prompt tokens, generated tokens).
 CONFIGS = {
     "b2_p2p": (2, 0, False, "relay", "p2p", 1, (), 0, 3, 1),
+    "b3_h2_switch_stall": (3, 2, True, "mcast", "switch", 2, (), 10, 2, 1),
 }
 RES = re.compile(r"HDC41_ARRAY nodes=(\d+) users=(\d+) generated=(\d+) mismatches=(\d+) logit_mismatch=(\d+) "
                  r"lm_head_checks=(\d+) state_mismatch=(\d+) total_cycles=(\d+)")
@@ -292,11 +284,11 @@ def run(names, scratch: Path) -> dict:
         "schema": "opentallas.hdc-v41x-array-hcp-gate.v1",
         "status": "pass" if all(c["pass"] for c in results) else "fail",
         "claim_boundary": "functional, cycle-accurate RTL simulation (Verilator) of a layer-range pipeline of "
-                          "V4.1x cores with X_HE=1 and other X units=0; package control (ot_rom_pkg_ctrl_x) and the switch "
-                          "(ot_rom_fabric_router) are RTL, the memories behavioural, the package link's PHY a "
-                          "delay-line stand-in (60 cycles point-to-point, 30 per switch half-link); per-user "
-                          "persistent state by base offsets in the behavioural memories; the Engram history "
-                          "restore is testbench logic. Clock rate is not claimed.",
+                          "V4.1x cores with X_HE=1 and other X units=0; package control is ot_rom_pkg_ctrl_x; "
+                          "the selected fabric is RTL point-to-point links or ot_rom_fabric_router; memories "
+                          "are behavioral and the link PHY is a delay-line stand-in (60 cycles point-to-point, "
+                          "30 per switch half-link); per-user persistent state uses base offsets in behavioral "
+                          "memories; Engram history restore is testbench logic. Clock rate is not claimed.",
         "vehicle": "deepseek-v4.1-flash-reduced-v2 (40 layers, vocab 4040)",
                 "configurations": results,
         "log": lines,
