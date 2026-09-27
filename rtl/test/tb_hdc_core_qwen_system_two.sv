@@ -96,7 +96,8 @@ module tb_hdc_core #(
     wire system_drained, system_kv_ok, system_fault;
     wire [G*W*32-1:0] system_kv_q;
     wire kvd_v,kvd_kindk;
-    wire [AW-1:0] kvd_wbase,kvd_ts,kvd_ks,kvd_js;
+    wire [AW-1:0] kvd_wbase,kvd_ts,kvd_ks,kvd_js,kvd_wcs;
+    wire [3:0] kvd_split;
     wire [2:0] kvd_jsh;
     wire [NW-1:0] kvd_tiles,kvd_k,kvd_nout,kvd_pos;
     assign kv_q=system_kv_q;
@@ -113,6 +114,7 @@ module tb_hdc_core #(
         .kv_write_drained(system_drained),
         .kv_write_flush(kv_write_flush),
         .kvd_v(kvd_v),.kvd_wbase(kvd_wbase),.kvd_ts(kvd_ts),.kvd_ks(kvd_ks),.kvd_js(kvd_js),
+        .kvd_wcs(kvd_wcs),.kvd_split(kvd_split),
         .kvd_jsh(kvd_jsh),.kvd_tiles(kvd_tiles),.kvd_k(kvd_k),.kvd_nout(kvd_nout),
         .kvd_kindk(kvd_kindk),.kvd_pos(kvd_pos),.kv_ok(system_kv_ok),
         .vx_re(vx_re), .vx_addr(vx_addr), .vx_q(vx_q),
@@ -175,6 +177,7 @@ module tb_hdc_core #(
                              .LOG_HD(4),.LOG_TW(2),.LLG(3),.V0_WORD(512)) u_system (
         .clk(clk),.rst_n(rst_n),.tok_start(start),.tok_pos(pos),.cfg_lead(16'd512),
         .kvd_v(kvd_v),.kvd_wbase(kvd_wbase),.kvd_ts(kvd_ts),.kvd_ks(kvd_ks),.kvd_js(kvd_js),
+        .kvd_wcs(kvd_wcs),.kvd_split(kvd_split),
         .kvd_jsh(kvd_jsh),.kvd_tiles(kvd_tiles),.kvd_k(kvd_k),.kvd_nout(kvd_nout),
         .kvd_pos(kvd_pos),.kvd_kindk(kvd_kindk),.kv_ok(system_kv_ok),
         .kv_re(kv_re),.kv_raddr(kv_raddr),.kv_q(system_kv_q),

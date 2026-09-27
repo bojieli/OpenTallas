@@ -122,6 +122,8 @@ module ot_hdc_core #(
     // KV-streaming handshake (KV_HBM = 1 only)
     output reg               kvd_v,           // descriptor of the KV op now waiting to issue
     output wire [AW-1:0]     kvd_wbase, kvd_ts, kvd_ks, kvd_js,
+    output wire [AW-1:0]     kvd_wcs,
+    output wire [3:0]        kvd_split,
     output wire [2:0]        kvd_jsh,
     output wire [NW-1:0]     kvd_tiles, kvd_k, kvd_nout,
     output wire              kvd_kindk,       // positions tile the lanes (scores); else positions are k (weighted sum)
@@ -245,6 +247,7 @@ module ot_hdc_core #(
         else kvd_v <= load && ir[O_UNIT +: W_UNIT] == 2'd1 && ir[O_ME_WSRC];
     end
     assign kvd_wbase = me_wbase; assign kvd_ts = me_ts; assign kvd_ks = me_ks; assign kvd_js = me_js;
+    assign kvd_wcs = me_wcs; assign kvd_split = me_split;
     assign kvd_jsh = me_jsh; assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
     assign kvd_kindk = me_kindk; assign kvd_pos = pos_r;
 

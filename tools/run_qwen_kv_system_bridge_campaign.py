@@ -21,6 +21,7 @@ INPUTS = [ROOT / p for p in (
     "rtl/hdc/kv/ot_hdc_kv_stream.sv",
     "rtl/hdc/kv/ot_hdc_qwen_kv_tail_read_mux.sv",
     "rtl/hdc/kv/ot_hdc_qwen_kv_tail_bank_port.sv",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_group_port.sv",
     "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv",
     "rtl/test/tb_hdc_qwen_kv_system_tail.sv",
     Path(__file__).relative_to(ROOT),
@@ -28,12 +29,16 @@ INPUTS = [ROOT / p for p in (
 
 
 def run(sources: list[Path], top: str, out: Path, sw: int | None = None,
-        v_mode: bool = False) -> dict:
+        v_mode: bool = False, split_mode: bool = False, hbm_split_mode: bool = False) -> dict:
     cmd = ["iverilog", "-g2012", "-s", top]
     if sw is not None:
         cmd += [f"-P{top}.SW={sw}"]
     if v_mode:
         cmd += [f"-P{top}.V_MODE=1"]
+    if split_mode:
+        cmd += [f"-P{top}.SPLIT_MODE=1"]
+    if hbm_split_mode:
+        cmd += [f"-P{top}.HBM_SPLIT_MODE=1"]
     cmd += ["-o", str(out), *(str(p) for p in sources)]
     build = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if build.returncode:
@@ -49,7 +54,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/qwen_kv_system_bridge_boundaries.json")
     args = ap.parse_args()
-    q, w, v, s, b_v, b_s, arb, b_arb, walk, stream, mux, tail, system, b_system = INPUTS[:14]
+    q, w, v, s, b_v, b_s, arb, b_arb, walk, stream, mux, tail, group, system, b_system = INPUTS[:15]
     with tempfile.TemporaryDirectory(prefix="qwen_kv_bridge_") as td:
         td = Path(td)
         runs = {f"vector_sw{sw}": run([q, w, v, b_v], "tb_hdc_qwen_kv_vector_bridge",
@@ -58,11 +63,22 @@ def main() -> int:
         runs["physical_arbiter"] = run([arb, b_arb], "tb_hdc_qwen_kv_phys_arbiter", td / "arbiter")
         for sw in (8, 16):
             runs[f"system_tail_sw{sw}"] = run(
-                [walk, stream, mux, tail, q, w, v, s, arb, system, b_system],
+                [walk, stream, mux, tail, group, q, w, v, s, arb, system, b_system],
                 "tb_hdc_qwen_kv_system_tail", td / f"system_tail{sw}", sw)
             runs[f"system_v_sector_sw{sw}"] = run(
-                [walk, stream, mux, tail, q, w, v, s, arb, system, b_system],
+                [walk, stream, mux, tail, group, q, w, v, s, arb, system, b_system],
                 "tb_hdc_qwen_kv_system_tail", td / f"system_v{sw}", sw, v_mode=True)
+            runs[f"system_split_tail_sw{sw}"] = run(
+                [walk, stream, mux, tail, group, q, w, v, s, arb, system, b_system],
+                "tb_hdc_qwen_kv_system_tail", td / f"system_split{sw}", sw, split_mode=True)
+            runs[f"system_split_hbm_sw{sw}"] = run(
+                [walk, stream, mux, tail, group, q, w, v, s, arb, system, b_system],
+                "tb_hdc_qwen_kv_system_tail", td / f"system_split_hbm{sw}", sw,
+                split_mode=True, hbm_split_mode=True)
+            runs[f"system_split_v_sw{sw}"] = run(
+                [walk, stream, mux, tail, group, q, w, v, s, arb, system, b_system],
+                "tb_hdc_qwen_kv_system_tail", td / f"system_split_v{sw}", sw,
+                v_mode=True, split_mode=True)
     rec = {"schema": "opentallas.qwen-kv-system-bridge-boundaries.v1",
            "status": "pass" if all(x["status"] == "pass" for x in runs.values()) else "fail",
            "scope": "A full 1,024-element vector V instruction buffers under held-off HBM writes; "

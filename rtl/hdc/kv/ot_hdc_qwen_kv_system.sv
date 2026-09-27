@@ -13,6 +13,7 @@ module ot_hdc_qwen_kv_system #(
     input wire clk,rst_n,
     input wire tok_start, input wire [NW-1:0] tok_pos,cfg_lead,
     input wire kvd_v, input wire [AW-1:0] kvd_wbase,kvd_ts,kvd_ks,kvd_js,
+    input wire [AW-1:0] kvd_wcs, input wire [3:0] kvd_split,
     input wire [2:0] kvd_jsh,
     input wire [NW-1:0] kvd_tiles,kvd_k,kvd_nout,kvd_pos,
     input wire kvd_kindk, output wire kv_ok,
@@ -54,7 +55,8 @@ module ot_hdc_qwen_kv_system #(
     localparam integer TAW=LLG+LOG_HD, LSW=$clog2(SW);
     wire kvs_ok,kvs_fault,tail_fault,sector_fault,arb_fault,write_fault;
     reg desc_pending,desc_overrun;
-    reg [AW-1:0] desc_wbase,desc_ts,desc_ks,desc_js;
+    reg [AW-1:0] desc_wbase,desc_ts,desc_ks,desc_js,desc_wcs;
+    reg [3:0] desc_split;
     reg [2:0] desc_jsh;
     reg [NW-1:0] desc_tiles,desc_k,desc_nout,desc_pos;
     reg desc_kindk;
@@ -67,6 +69,7 @@ module ot_hdc_qwen_kv_system #(
                 if (desc_pending && !stream_kvd_v) desc_overrun<=1;
                 desc_pending<=1;
                 desc_wbase<=kvd_wbase; desc_ts<=kvd_ts; desc_ks<=kvd_ks; desc_js<=kvd_js;
+                desc_wcs<=kvd_wcs; desc_split<=kvd_split;
                 desc_jsh<=kvd_jsh; desc_tiles<=kvd_tiles; desc_k<=kvd_k;
                 desc_nout<=kvd_nout; desc_pos<=kvd_pos; desc_kindk<=kvd_kindk;
             end
@@ -76,6 +79,10 @@ module ot_hdc_qwen_kv_system #(
     wire [2*TAW-1:0] tl_raddr,ignored_tl_waddr;
     wire [2*W-1:0] ignored_tl_wmask;
     wire [2*W*16-1:0] tl_q,ignored_tl_wdata;
+    assign tl_q='0;
+    wire [G-1:0] tl_group_re;
+    wire [G*AW-1:0] tl_group_raddr;
+    wire [G*W*16-1:0] tl_group_q;
     wire [2*SW-1:0] vec_tl_we,tail_bank_re;
     wire [2*SW*AW-1:0] vec_tl_row,tail_bank_row;
     wire [2*SW*16-1:0] vec_tl_mask;
@@ -111,10 +118,11 @@ module ot_hdc_qwen_kv_system #(
     end
     assign kv_ok=kvs_ok && kv_write_drained && !boot_v && !desc_pending && !kvd_v;
     assign fault=kvs_fault || tail_fault || sector_fault || arb_fault || write_fault || desc_overrun;
-    ot_hdc_kv_stream #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.LWIN(LWIN),.NPC(NPC),.BK(BK),
+    ot_hdc_kv_stream #(.W(W),.G(G),.IL(IL),.AW(AW),.NW(NW),.LWIN(LWIN),.NPC(NPC),.BK(BK),.SPLIT_AWARE(1),
                        .LOG_HD(LOG_HD),.LOG_TW(LOG_TW),.LLG(LLG),.V0_WORD(V0_WORD),.HBM_FP8(1)) u_stream (
         .clk(clk),.rst_n(rst_n),.tok_start(tok_start),.tok_pos(tok_pos),.cfg_lead(cfg_lead),
         .kvd_v(stream_kvd_v),.kvd_wbase(desc_wbase),.kvd_ts(desc_ts),.kvd_ks(desc_ks),.kvd_js(desc_js),
+        .kvd_wcs(desc_wcs),.kvd_split(desc_split),
         .kvd_jsh(desc_jsh),.kvd_tiles(desc_tiles),.kvd_k(desc_k),.kvd_nout(desc_nout),
         .kvd_kindk(desc_kindk),.kvd_pos(desc_pos),.kv_ok(kvs_ok),
         .kv_re(kv_re),.kv_raddr(kv_raddr),.kv_q(kv_q),
@@ -124,13 +132,14 @@ module ot_hdc_qwen_kv_system #(
         .tl_we(ignored_tl_we),.tl_waddr(ignored_tl_waddr),
         .tl_wmask(ignored_tl_wmask),.tl_wdata(ignored_tl_wdata),
         .tl_re(tl_re),.tl_raddr(tl_raddr),.tl_q(tl_q),
+        .tl_group_re(tl_group_re),.tl_group_raddr(tl_group_raddr),.tl_group_q(tl_group_q),
         .boot_v(1'b0),.boot_addr('0),.boot_data('0),
         .hq_v(lq_v),.hq_rdy(lq_ready),.hq_we(lq_we),.hq_addr(lq_addr),
         .hq_len(lq_len),.hq_tag(lq_tag),.hq_wdata(lq_data),
         .hr_v(lr_v),.hr_rdy(lr_ready),.hr_tag(lr_tag),.hr_beat(lr_beat),.hr_data(lr_data),
         .fault(kvs_fault));
-    ot_hdc_qwen_kv_tail_bank_port #(.SW(SW),.AW(AW),.LOG_HD(LOG_HD),.LOG_TW(LOG_TW),.LLG(LLG),.W(W)) u_tail (
-        .clk(clk),.rst_n(rst_n),.tl_re(tl_re),.tl_raddr(tl_raddr),.tl_q(tl_q),
+    ot_hdc_qwen_kv_tail_group_port #(.G(G),.SW(SW),.AW(AW),.LOG_HD(LOG_HD),.LOG_TW(LOG_TW),.W(W)) u_tail (
+        .clk(clk),.rst_n(rst_n),.rd_v(tl_group_re),.rd_word(tl_group_raddr),.rd_data(tl_group_q),
         .bank_re(tail_bank_re),.bank_row(tail_bank_row),.bank_q(bank_q),.addr_error(tail_fault));
     assign bank_re=tail_bank_re;
     assign bank_rrow=tail_bank_row;

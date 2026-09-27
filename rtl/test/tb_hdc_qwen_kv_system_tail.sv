@@ -4,6 +4,8 @@
 module tb_hdc_qwen_kv_system_tail;
     parameter integer SW=8;
     parameter integer V_MODE=0;
+    parameter integer SPLIT_MODE=0;
+    parameter integer HBM_SPLIT_MODE=0;
     localparam AW=24,G=4,W=16,LWIN=4,NPC=2,BK=4,TAGW=1+LWIN+$clog2(G)+3,LBK=$clog2(BK);
     reg clk=0,rst_n=0,boot_v=0,kvd_v=0,kv_re=0;
     always #5 clk=~clk;
@@ -44,10 +46,14 @@ module tb_hdc_qwen_kv_system_tail;
                              .NPC(NPC),.BK(BK),.LOG_HD(4),.LOG_TW(2),.LLG(3),.V0_WORD(512)) dut (
         .clk(clk),.rst_n(rst_n),.tok_start(1'b0),.tok_pos(16'd0),.cfg_lead(16'd0),
         .kvd_v(kvd_v),.kvd_wbase(V_MODE ? 24'd512 : 24'd0),
-        .kvd_ts(V_MODE ? 24'd1 : 24'd16),.kvd_ks(24'd1),.kvd_js(24'd16),
-        .kvd_jsh(3'd3),.kvd_tiles(16'd1),.kvd_k(16'd1),.kvd_nout(16'd16),
-        .kvd_pos(16'd0),.kvd_kindk(!V_MODE),.kv_ok(kv_ok),
-        .kv_re(kv_re),.kv_raddr(V_MODE ? {{((G-1)*AW){1'b0}},24'd512} : '0),.kv_q(kv_q),
+        .kvd_ts(V_MODE ? 24'd1 : 24'd16),.kvd_ks(SPLIT_MODE ? 24'd4 : 24'd1),.kvd_js(24'd16),
+        .kvd_wcs(SPLIT_MODE ? 24'd1 : 24'd0),.kvd_split(SPLIT_MODE ? 4'd2 : 4'd0),
+        .kvd_jsh(SPLIT_MODE ? 3'd2 : 3'd3),.kvd_tiles(16'd1),
+        .kvd_k(SPLIT_MODE ? 16'd16 : 16'd1),.kvd_nout(16'd16),
+        .kvd_pos(HBM_SPLIT_MODE ? 16'd62 : 16'd0),.kvd_kindk(!V_MODE),.kv_ok(kv_ok),
+        .kv_re(kv_re),.kv_raddr(SPLIT_MODE ? (V_MODE ? {24'd515,24'd514,24'd513,24'd512} :
+                                                {24'd3,24'd2,24'd1,24'd0}) :
+                                      (V_MODE ? {{((G-1)*AW){1'b0}},24'd512} : '0)),.kv_q(kv_q),
         .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
         .kv_write_flush(1'b1),.kv_write_drained(drained),
         .boot_v(boot_v),.boot_word(boot_word),.boot_data(boot_data),
@@ -88,20 +94,41 @@ module tb_hdc_qwen_kv_system_tail;
         for (b=0;b<2*SW;b=b+1)
             for (r=0;r<16;r=r+1) bank_mem[b][r]=0;
         for (b=0;b<512;b=b+1) h_mem[b]=0;
+        if (HBM_SPLIT_MODE) begin
+            h_mem[0][0 +: 128]={16{8'h38}}; h_mem[0][128 +: 128]={16{8'h40}};
+            h_mem[1][0 +: 128]={16{8'h48}}; h_mem[1][128 +: 128]={16{8'h50}};
+        end
+        if (V_MODE && SPLIT_MODE) begin
+            h_mem[256][128 +: 128]={16{8'h40}};
+            h_mem[257][0 +: 128]={16{8'h48}};
+            h_mem[257][128 +: 128]={16{8'h50}};
+        end
         for (b=0;b<G;b=b+1)
             for (r=0;r<(1<<LWIN);r=r+1) win_mem[b][r]=0;
         repeat(2) @(negedge clk); rst_n=1; boot_v=1;
+        if (SPLIT_MODE) begin
+            for (integer s=0;s<4;s=s+1) begin
+                boot_word=s; boot_data={16{8'(8'h38+s*8)}};
+                @(negedge clk);
+            end
+        end
         // The KV descriptor arrives with a vector K write. The system must
         // hold the descriptor until that write retires to the physical bank.
         @(negedge clk); boot_v=0; kvd_v=1;
         kv_we[0]=1; kv_waddr[0 +: AW]=V_MODE ? 8192 : 0; kv_wdata[0 +: 32]=32'h3f800000;
         @(negedge clk); kvd_v=0; kv_we=0;
-        for (integer n=0;n<300 && !kv_ok;n=n+1) @(negedge clk);
+        for (integer n=0;n<(HBM_SPLIT_MODE ? 2000 : 300) && !kv_ok;n=n+1) @(negedge clk);
         if (!kv_ok || !drained || fault) $fatal(1,"descriptor did not become ready");
         kv_re=1;
         @(posedge clk); #1;
-        if (kv_q[31:0] !== 32'h3f800000 || fault || (!V_MODE && h_req_v))
+        if (kv_q[31:0] !== 32'h3f800000 || fault || (!V_MODE && !HBM_SPLIT_MODE && h_req_v))
             $fatal(1,"KV physical read mismatch SW=%0d V=%0d got=%h fault=%b hq=%b",SW,V_MODE,kv_q[31:0],fault,h_req_v);
+        if (SPLIT_MODE)
+            for (integer s=1;s<4;s=s+1)
+                if (kv_q[(s*W)*32 +: 32] !== (32'h3f800000 + (s<<23)))
+                    $fatal(1,"split tail group %0d read %h",s,kv_q[(s*W)*32 +: 32]);
+        if (HBM_SPLIT_MODE && h_reads < 4)
+            $fatal(1,"split HBM walk did not fetch four group words: reads=%0d",h_reads);
         if (V_MODE && (h_mem[256][7:0] !== 8'h38 || h_reads<2 || h_writes!=1))
             $fatal(1,"V sector did not pass RMW+fetch: byte=%h reads=%0d writes=%0d",
                    h_mem[256][7:0],h_reads,h_writes);
