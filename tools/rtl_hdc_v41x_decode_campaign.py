@@ -84,6 +84,19 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                   "ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side",
                                                   "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec", "ot_hdc_v41x_su_adapt",
                                                   "ot_hdc_core_v41x")])
+FASTFP = ROOT / "rtl/hdc/ot_hdc_fastfp.sv"
+DPI_SV = ROOT / "rtl/test/sim_hdc_v41x_fastfp_dpi.sv"
+DPI_WRAP = ROOT / "rtl/test/sim_hdc_v41x_fastfp_wrap.sv"
+DPI_CPP = ROOT / "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp"
+
+
+def rtl_sources(build=False):
+    """Select bit-level RTL or bit-equivalent simulation stand-ins for the large full-core gate."""
+    if PARAMS.get("fp", "rtl") != "dpi":
+        return list(RTL)
+    return [p for p in RTL if p != FASTFP] + [DPI_SV, DPI_WRAP] + ([DPI_CPP] if build else [])
+
+
 SVH = ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh"
 VLT = ROOT / "rtl/test/tb_hdc_v41x_idx.vlt"       # no_inline on the indexer's replicated arithmetic
 TB = ROOT / "rtl/test/tb_hdc_core_v41x.sv"
@@ -251,7 +264,7 @@ def build(scratch: Path, lanes=None) -> Path:
     obj = scratch / f"obj{lanes or ''}"
     r = subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
                         "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "--top-module", "tb_hdc_core_v41x", "-Mdir", str(obj),
-                        f"-I{SVH.parent}", *defines(lanes), str(VLT), *map(str, RTL), str(TB),
+                        f"-I{SVH.parent}", *defines(lanes), str(VLT), *map(str, rtl_sources(True)), str(TB),
                         str(HARNESS), "-CFLAGS", "-O1", "-j", "8"],
                        capture_output=True, text=True)
     if r.returncode:
@@ -350,8 +363,10 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core_v41x",
                                f"-GSW={I.SU_LANES}", f"-GHHW={PARAMS['hhw']}", f"-GMG={PARAMS['mg']}",
                                f"-GSUN={PARAMS['sun']}", f"-GSUM={PARAMS['sum']}",
-                               *[f"-GX_{u.upper()}={int(u in UNITS)}" for u in X_UNITS],
-                               f"-I{SVH.parent}", *map(str, RTL)], capture_output=True, text=True)
+                               *[f"-GX_{u.upper()}={2 if u == 'idx' and IDX_POOL else int(u in UNITS)}"
+                                 for u in X_UNITS],
+                               "-Wno-TIMESCALEMOD", f"-I{SVH.parent}", *map(str, rtl_sources())],
+                              capture_output=True, text=True)
         img = s / "img"
         isa_out = images(img, "--multi", str(ngen))
         exe = build(s)
@@ -451,7 +466,7 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
         **({"su_lane_sweep": sweep_rec} if sweep_rec else {}),
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                            "messages": lint.stderr.strip().splitlines()[:20]},
-        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, *RTL, TB, HARNESS, *TOOLS)},
+        "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, *rtl_sources(True), TB, HARNESS, *TOOLS)},
     }
 
 
@@ -469,6 +484,8 @@ def main() -> int:
     parser.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
     parser.add_argument("--sun", type=int, default=16, help="vector-unit light lanes")
     parser.add_argument("--sum", type=int, default=8, help="vector-unit SFU lanes")
+    parser.add_argument("--fp", choices=("rtl", "dpi"), default="rtl",
+                        help="bit-level RTL or bit-equivalent host-float stand-ins for the large full-core simulator")
     parser.add_argument("--single-only", action="store_true", help="stop after the bit-exact single decode step")
     parser.add_argument("--single-output", type=Path, help="incremental single-step JSON path; defaults to "
                         "<output stem>.single.json")
@@ -492,6 +509,7 @@ def main() -> int:
     PARAMS["hhw"] = args.hhw
     PARAMS["mg"] = args.mg
     PARAMS["sun"], PARAMS["sum"] = args.sun, args.sum
+    PARAMS["fp"] = args.fp
     single_output = args.single_output or args.output.with_name(args.output.stem + ".single.json")
     result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x],
                  single_only=args.single_only, single_output=single_output)

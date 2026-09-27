@@ -793,7 +793,8 @@ module ot_hdc_core_v41x #(
             .rd_addr(xs_rd_addr), .rd_re(xs_rd_re), .rd_src(xs_rd_src), .rd_q(xs_rd_q),
             .vm_we(xs_vm_we), .vm_waddr(xs_vm_waddr), .vm_wdata(xs_vm_wdata),
             .kv_we(xs_kv_we), .kv_waddr(xs_kv_waddr), .kv_wdata(xs_kv_wdata),
-            .res_we(xs_res_we), .res_addr(xs_res_addr), .res_data(xs_res_data), .fault(su_fault));
+            .res_we(xs_res_we), .res_addr(xs_res_addr), .res_data(xs_res_data), .fault(su_fault),
+            .dbg_ops(), .dbg_elems());
         assign vi_re = 0; assign vi_addr = 0; assign vs_re = 0; assign vs_addr = 0; assign crom_re = 0;
         assign crom_addr = 0; assign ewrom_re = 0; assign ewrom_addr = 0; assign vw_su_we = 0; assign vw_su_addr = 0;
         assign vw_su_data = 0; assign kv_we = 0; assign kv_waddr = 0; assign kv_wdata = 0; assign vw_rd_we = 0;
