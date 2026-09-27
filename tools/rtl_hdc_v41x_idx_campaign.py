@@ -131,7 +131,7 @@ def golden(q, wts, keys, keep, qu=None, ku=None):
         score = G.to_bf16(sc32)
         prod = G.mul(np.maximum(score, F(0)), wts[:, None])
         terms = G.to_bf16(prod)
-        s32 = G.reduce_rows(terms.T)
+        s32 = G.reduce_rows(terms.T, cls="idx")
         s = G.to_bf16(s32)
     bad = ~np.isfinite(blkf).all(axis=(0, 2)) | ~np.isfinite(sc32).all(0) | ~np.isfinite(score).all(0) \
         | ~np.isfinite(prod).all(0) | ~np.isfinite(terms).all(0) | ~np.isfinite(s32) | ~np.isfinite(s)
@@ -220,14 +220,14 @@ def vehicle_tokens(positions, seed=7):
     orig_ix, orig_dq = G.Model.indexer, G.dots_q4
     cap = {}
 
-    def dq(a, b, block=32):
+    def dq(a, b, block=32, **kw):
         cap["q"], cap["k"] = np.array(a), np.array(b)
-        return orig_dq(a, b, block)
+        return orig_dq(a, b, block, **kw)
 
-    def ix(self, L, x, qr, pos, state, trace, ctx):
+    def ix(self, L, x, qr, pos, state, trace, ctx, **kw):
         tr = {}
         cand_before = ctx.get("cand")
-        sel = orig_ix(self, L, x, qr, pos, state, tr, ctx)
+        sel = orig_ix(self, L, x, qr, pos, state, tr, ctx, **kw)
         n = (pos + 1) // self.ratio[L]
         if n == 0:
             return sel
