@@ -28,19 +28,26 @@ def req_spec(rec):
 
 
 def test_dag_spec_reproduces_the_headline_exactly(env):
-    """Re-pricing the report's own graph at the report's assumptions returns the report's numbers."""
+    """Re-pricing the report's own graph at the report's assumptions (plain option b) returns the report's numbers."""
     hl = A.headline()
     dag = A.dag_spec(A.dag_machine(1), env["clock"])
     for ctx in A.CONTEXTS:
-        assert A.price(dag, ctx)["tokens_s_per_user"] == pytest.approx(hl["tokens_s_per_user"][ctx], rel=1e-9)
+        assert A.price(dag, ctx, base=A.PLAIN_B)["tokens_s_per_user"] == pytest.approx(hl["tokens_s_per_user"][ctx],
+                                                                                     rel=1e-9)
+
+
+def test_baseline_is_faster_than_plain_b(rec):
+    req = rec["requirement"]["headline"]
+    for ctx in ("8192", "200000", "1048576"):
+        assert req["tokens_s_per_user"][ctx] > req["tokens_s_per_user_plain_b"][ctx]
 
 
 def test_required_spec_meets_the_headline_at_every_context_and_batch_64(rec):
-    hl = A.headline()
+    hl = rec["requirement"]["headline"]
     sp = req_spec(rec)
     for ctx in A.CONTEXTS:
-        assert A.price(sp, ctx)["tokens_s_per_user"] >= hl["tokens_s_per_user"][ctx] * 0.999
-    assert A.price(sp, 200000, batch=64)["tokens_s_per_user"] >= hl["tokens_s_per_user_b64"][200000] * 0.999
+        assert A.price(sp, ctx)["tokens_s_per_user"] >= hl["tokens_s_per_user"][str(ctx)] * 0.999
+    assert A.price(sp, 200000, batch=64)["tokens_s_per_user"] >= hl["tokens_s_per_user_b64"]["200000"] * 0.999
 
 
 def test_required_spec_fits_the_compute_envelope(rec):
