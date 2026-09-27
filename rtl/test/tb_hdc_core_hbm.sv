@@ -236,7 +236,7 @@ module tb_hdc_core_hbm #(
     reg [8*512-1:0] dir;
     integer cyc = 0, lc = 0, i, bad_lg, bad_vm, bad_kv, lgi, T;
     reg go = PACKED_HBM ? 1'b0 : 1'b1;
-    integer boot_i = 0, boot_j, boot_bank, boot_tile, boot_word;
+    integer boot_i = 0, boot_check_i = 0, boot_j, boot_bank, boot_tile, boot_word;
     integer boot_bad, hbm_bad, check_tile, check_word;
     reg trace = 1'b0, multi = 1'b0, checklast = 1'b0;
     reg [NW-1:0] prompt [0:255];
@@ -397,6 +397,25 @@ module tb_hdc_core_hbm #(
                     boot_data <= u_hbm.mem[boot_word];
                 end
                 boot_i <= boot_i + 1;
+            end else if (boot_check_i < KV_WORDS) begin
+                if (expand_fp8(u_hbm.mem[boot_check_i]) !== pack16(kv[boot_check_i])) begin
+                    $display("FAIL packed HBM word %0d actual=%h expected=%h", boot_check_i,
+                             expand_fp8(u_hbm.mem[boot_check_i]), pack16(kv[boot_check_i]));
+                    $finish;
+                end
+                if (boot_check_i < 2*TDEPTH) begin
+                    boot_bank = boot_check_i / TDEPTH;
+                    boot_j = boot_check_i % TDEPTH;
+                    boot_tile = ((to0 & 1) == boot_bank) ? to0 : to0 - 1;
+                    boot_word = ((boot_j >> LOG_HD) << (LOG_HD + LOG_TW)) |
+                                (boot_tile << LOG_HD) | (boot_j & ((1 << LOG_HD) - 1));
+                    if (boot_tile >= 0 && tl[boot_bank][boot_j] !== pack16(kv[boot_word])) begin
+                        $display("FAIL boot tail word bank=%0d index=%0d actual=%h expected=%h",
+                                 boot_bank, boot_j, tl[boot_bank][boot_j], pack16(kv[boot_word]));
+                        $finish;
+                    end
+                end
+                boot_check_i <= boot_check_i + 1;
             end else go <= 1'b1;
         end
         if (lc < 5 || go) lc <= lc + 1;
