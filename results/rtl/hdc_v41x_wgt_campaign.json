@@ -1,0 +1,1254 @@
+{
+ "schema": "opentallas.hdc-v41x-wgt-campaign.v1",
+ "status": "pass",
+ "block": "wgt (weight engines: quantised FP8/FP4 block-dot + BF16/FP32)",
+ "claim_boundary": "bit-exact cycle simulation (Verilator) of the weight-engine TILE against tools/hdc_golden_v41.linear_q / matvec_c under R-ARITH chunk8, with a behavioural banked ROM + activation-broadcast model answering the tile's read requests; throughput and latency are measured at tile level. The per-die figures are tile count x measured tile (die_mapping); the die-level read network, activation buffer and cross-tile wiring are not simulated. Clock rate: results/physical_abi3/asap7/hdc/v41x.",
+ "spec": {
+  "weight_macs_per_cycle": 231936,
+  "bf16_macs_per_cycle": 31360,
+  "rom_bytes_per_cycle": 301904,
+  "lane_mult_design_point": 2,
+  "depth_formula_q": "60 + 3*ceil(log2(K/32/8))",
+  "depth_formula_m": "60 + 3*ceil(log2(K/8))",
+  "latency_formula": "ceil(rows*K/lanes) + depth",
+  "source": "docs/ARCH_SPEC_V41.md 5-6; results/arch/arch_budget_v41.json"
+ },
+ "arith": "chunk8",
+ "seed": 4141,
+ "real_operands": {
+  "enabled": true,
+  "positions_decoded": 2,
+  "checkpoint": "models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors",
+  "checkpoint_sha256": "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d"
+ },
+ "configs": {
+  "q_g1_m1": {
+   "config": {
+    "kind": "quantised FP8/FP4 block-dot",
+    "G": 1,
+    "lanes": 8,
+    "M_POS": 1,
+    "LB": 5,
+    "PMIN_LG": 0,
+    "RL": 2,
+    "macs_per_cycle": 256
+   },
+   "status": "pass",
+   "vectors": {
+    "ops": 34,
+    "rows": 1238,
+    "results_checked": 1238,
+    "faults_expected_and_raised": 6,
+    "real_ops": [
+     "real_fp8_32x160",
+     "real_fp8_2048x32",
+     "real_fp8_32x160",
+     "real_fp8_160x256",
+     "real_fp4_64x160",
+     "real_fp4_64x160",
+     "real_fp4_160x64",
+     "real_fp4_160x64",
+     "real_fp8_64x160",
+     "real_fp8_64x160",
+     "real_fp8_160x64",
+     "real_fp8_800x768",
+     "real_fp8_2048x32",
+     "real_fp8_160x256",
+     "real_fp8_160x64",
+     "real_fp8_800x768",
+     "real_fp8_1024x32",
+     "real_fp8_1024x32"
+    ],
+    "random_ops": [
+     "shipped_wq_a_fp8_K5120",
+     "shipped_wq_a_fp4_K5120",
+     "shipped_wq_b_fp8_K1280",
+     "shipped_wq_b_fp4_K1280",
+     "shipped_wo_b_fp8_K8192",
+     "shipped_wo_b_fp4_K8192",
+     "shipped_experts_w2_fp8_K2304",
+     "shipped_experts_w2_fp4_K2304",
+     "edge_sub_fp8_K288",
+     "edge_sub_fp4_K1024",
+     "edge_ovf_fp8_K928",
+     "edge_ovf_fp4_K480",
+     "edge_cancel_fp8_K128",
+     "edge_cancel_fp4_K1248",
+     "edge_nan_fp8_K1152",
+     "routed_expert_indirect_fp4_K2304"
+    ],
+    "plg_used": [
+     0
+    ]
+   },
+   "throughput": {
+    "beats": 3557,
+    "issue_span_cycles": 3605,
+    "beats_per_cycle": 0.9867,
+    "depth_gap_cycles_owed": 48,
+    "no_bubble": true,
+    "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
+    "useful_lane_items": 24121,
+    "lane_utilisation": 0.8477,
+    "macs_per_cycle_sustained": 214.1,
+    "total_cycles_incl_fill_drain": 3643,
+    "errors": 0
+   },
+   "throttled_credits": {
+    "errors": 0,
+    "checked": 1238,
+    "cycles": 6194
+   },
+   "latency": [
+    {
+     "op": "lat_wq_a_K5120",
+     "rows": 8,
+     "K": 5120,
+     "plg": 0,
+     "nlev": 5,
+     "beats": 160,
+     "measured_cycles": 213,
+     "spec_budget_cycles": 235,
+     "depth_measured": 53,
+     "depth_base": 38,
+     "depth_budget": 75,
+     "meets": true
+    },
+    {
+     "op": "lat_wq_b_K1280",
+     "rows": 8,
+     "K": 1280,
+     "plg": 0,
+     "nlev": 3,
+     "beats": 40,
+     "measured_cycles": 87,
+     "spec_budget_cycles": 109,
+     "depth_measured": 47,
+     "depth_base": 38,
+     "depth_budget": 69,
+     "meets": true
+    },
+    {
+     "op": "lat_wo_b_K8192",
+     "rows": 8,
+     "K": 8192,
+     "plg": 0,
+     "nlev": 5,
+     "beats": 256,
+     "measured_cycles": 309,
+     "spec_budget_cycles": 331,
+     "depth_measured": 53,
+     "depth_base": 38,
+     "depth_budget": 75,
+     "meets": true
+    },
+    {
+     "op": "lat_experts_w2_K2304",
+     "rows": 8,
+     "K": 2304,
+     "plg": 0,
+     "nlev": 4,
+     "beats": 72,
+     "measured_cycles": 122,
+     "spec_budget_cycles": 144,
+     "depth_measured": 50,
+     "depth_base": 38,
+     "depth_budget": 72,
+     "meets": true
+    },
+    {
+     "op": "lat_single_block_row",
+     "rows": 1,
+     "K": 32,
+     "plg": 0,
+     "nlev": 0,
+     "beats": 1,
+     "measured_cycles": 39,
+     "spec_budget_cycles": 61,
+     "depth_measured": 38,
+     "depth_base": 38,
+     "depth_budget": 60,
+     "meets": true
+    }
+   ],
+   "error_lines": []
+  },
+  "q_g1_m2": {
+   "config": {
+    "kind": "quantised FP8/FP4 block-dot",
+    "G": 1,
+    "lanes": 8,
+    "M_POS": 2,
+    "LB": 5,
+    "PMIN_LG": 0,
+    "RL": 2,
+    "macs_per_cycle": 512
+   },
+   "status": "pass",
+   "vectors": {
+    "ops": 34,
+    "rows": 1236,
+    "results_checked": 2472,
+    "faults_expected_and_raised": 16,
+    "real_ops": [
+     "real_fp8_32x160",
+     "real_fp8_2048x32",
+     "real_fp8_32x160",
+     "real_fp8_160x256",
+     "real_fp4_64x160",
+     "real_fp4_64x160",
+     "real_fp4_160x64",
+     "real_fp4_160x64",
+     "real_fp8_64x160",
+     "real_fp8_64x160",
+     "real_fp8_160x64",
+     "real_fp8_800x768",
+     "real_fp8_2048x32",
+     "real_fp8_160x256",
+     "real_fp8_160x64",
+     "real_fp8_800x768",
+     "real_fp8_1024x32",
+     "real_fp8_1024x32"
+    ],
+    "random_ops": [
+     "shipped_wq_a_fp8_K5120",
+     "shipped_wq_a_fp4_K5120",
+     "shipped_wq_b_fp8_K1280",
+     "shipped_wq_b_fp4_K1280",
+     "shipped_wo_b_fp8_K8192",
+     "shipped_wo_b_fp4_K8192",
+     "shipped_experts_w2_fp8_K2304",
+     "shipped_experts_w2_fp4_K2304",
+     "edge_sub_fp8_K928",
+     "edge_sub_fp4_K1024",
+     "edge_ovf_fp8_K608",
+     "edge_ovf_fp4_K32",
+     "edge_cancel_fp8_K928",
+     "edge_cancel_fp4_K512",
+     "edge_nan_fp8_K832",
+     "routed_expert_indirect_fp4_K2304"
+    ],
+    "plg_used": [
+     0
+    ]
+   },
+   "throughput": {
+    "beats": 3533,
+    "issue_span_cycles": 3581,
+    "beats_per_cycle": 0.9866,
+    "depth_gap_cycles_owed": 48,
+    "no_bubble": true,
+    "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
+    "useful_lane_items": 23921,
+    "lane_utilisation": 0.8463,
+    "macs_per_cycle_sustained": 427.5,
+    "total_cycles_incl_fill_drain": 3619,
+    "errors": 0
+   },
+   "throttled_credits": {
+    "errors": 0,
+    "checked": 2472,
+    "cycles": 6187
+   },
+   "latency": [
+    {
+     "op": "lat_wq_a_K5120",
+     "rows": 8,
+     "K": 5120,
+     "plg": 0,
+     "nlev": 5,
+     "beats": 160,
+     "measured_cycles": 213,
+     "spec_budget_cycles": 235,
+     "depth_measured": 53,
+     "depth_base": 38,
+     "depth_budget": 75,
+     "meets": true
+    },
+    {
+     "op": "lat_wq_b_K1280",
+     "rows": 8,
+     "K": 1280,
+     "plg": 0,
+     "nlev": 3,
+     "beats": 40,
+     "measured_cycles": 87,
+     "spec_budget_cycles": 109,
+     "depth_measured": 47,
+     "depth_base": 38,
+     "depth_budget": 69,
+     "meets": true
+    },
+    {
+     "op": "lat_wo_b_K8192",
+     "rows": 8,
+     "K": 8192,
+     "plg": 0,
+     "nlev": 5,
+     "beats": 256,
+     "measured_cycles": 309,
+     "spec_budget_cycles": 331,
+     "depth_measured": 53,
+     "depth_base": 38,
+     "depth_budget": 75,
+     "meets": true
+    },
+    {
+     "op": "lat_experts_w2_K2304",
+     "rows": 8,
+     "K": 2304,
+     "plg": 0,
+     "nlev": 4,
+     "beats": 72,
+     "measured_cycles": 122,
+     "spec_budget_cycles": 144,
+     "depth_measured": 50,
+     "depth_base": 38,
+     "depth_budget": 72,
+     "meets": true
+    },
+    {
+     "op": "lat_single_block_row",
+     "rows": 1,
+     "K": 32,
+     "plg": 0,
+     "nlev": 0,
+     "beats": 1,
+     "measured_cycles": 39,
+     "spec_budget_cycles": 61,
+     "depth_measured": 38,
+     "depth_base": 38,
+     "depth_budget": 60,
+     "meets": true
+    }
+   ],
+   "error_lines": []
+  },
+  "q_g8_m1": {
+   "config": {
+    "kind": "quantised FP8/FP4 block-dot",
+    "G": 8,
+    "lanes": 64,
+    "M_POS": 1,
+    "LB": 5,
+    "PMIN_LG": 0,
+    "RL": 2,
+    "macs_per_cycle": 2048
+   },
+   "status": "pass",
+   "vectors": {
+    "ops": 34,
+    "rows": 2238,
+    "results_checked": 2238,
+    "faults_expected_and_raised": 28,
+    "real_ops": [
+     "real_fp8_32x160",
+     "real_fp8_2048x32",
+     "real_fp8_32x160",
+     "real_fp8_160x256",
+     "real_fp4_64x160",
+     "real_fp4_64x160",
+     "real_fp4_160x64",
+     "real_fp4_160x64",
+     "real_fp8_64x160",
+     "real_fp8_64x160",
+     "real_fp8_160x64",
+     "real_fp8_800x768",
+     "real_fp8_2048x32",
+     "real_fp8_160x256",
+     "real_fp8_160x64",
+     "real_fp8_800x768",
+     "real_fp8_1024x32",
+     "real_fp8_1024x32"
+    ],
+    "random_ops": [
+     "shipped_wq_a_fp8_K5120",
+     "shipped_wq_a_fp4_K5120",
+     "shipped_wq_b_fp8_K1280",
+     "shipped_wq_b_fp4_K1280",
+     "shipped_wo_b_fp8_K8192",
+     "shipped_wo_b_fp4_K8192",
+     "shipped_experts_w2_fp8_K2304",
+     "shipped_experts_w2_fp4_K2304",
+     "edge_sub_fp8_K32",
+     "edge_sub_fp4_K448",
+     "edge_ovf_fp8_K640",
+     "edge_ovf_fp4_K1248",
+     "edge_cancel_fp8_K1216",
+     "edge_cancel_fp4_K768",
+     "edge_nan_fp8_K768",
+     "routed_expert_indirect_fp4_K2304"
+    ],
+    "plg_used": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "throughput": {
+    "beats": 2807,
+    "issue_span_cycles": 2927,
+    "beats_per_cycle": 0.959,
+    "depth_gap_cycles_owed": 120,
+    "no_bubble": true,
+    "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
+    "useful_lane_items": 146304,
+    "lane_utilisation": 0.8144,
+    "macs_per_cycle_sustained": 1599.5,
+    "total_cycles_incl_fill_drain": 2968,
+    "errors": 0
+   },
+   "throttled_credits": {
+    "errors": 0,
+    "checked": 2238,
+    "cycles": 3944
+   },
+   "latency": [
+    {
+     "op": "lat_wq_a_K5120",
+     "rows": 64,
+     "K": 5120,
+     "plg": 0,
+     "nlev": 5,
+     "beats": 160,
+     "measured_cycles": 213,
+     "spec_budget_cycles": 235,
+     "depth_measured": 53,
+     "depth_base": 38,
+     "depth_budget": 75,
+     "meets": true
+    },
+    {
+     "op": "lat_wq_b_K1280",
+     "rows": 64,
+     "K": 1280,
+     "plg": 0,
+     "nlev": 3,
+     "beats": 40,
+     "measured_cycles": 87,
+     "spec_budget_cycles": 109,
+     "depth_measured": 47,
+     "depth_base": 38,
+     "depth_budget": 69,
+     "meets": true
+    },
+    {
+     "op": "lat_wo_b_K8192",
+     "rows": 64,
+     "K": 8192,
+     "plg": 0,
+     "nlev": 5,
+     "beats": 256,
+     "measured_cycles": 309,
+     "spec_budget_cycles": 331,
+     "depth_measured": 53,
+     "depth_base": 38,
+     "depth_budget": 75,
+     "meets": true
+    },
+    {
+     "op": "lat_experts_w2_K2304",
+     "rows": 64,
+     "K": 2304,
+     "plg": 0,
+     "nlev": 4,
+     "beats": 72,
+     "measured_cycles": 122,
+     "spec_budget_cycles": 144,
+     "depth_measured": 50,
+     "depth_base": 38,
+     "depth_budget": 72,
+     "meets": true
+    },
+    {
+     "op": "lat_single_block_row",
+     "rows": 1,
+     "K": 32,
+     "plg": 0,
+     "nlev": 0,
+     "beats": 1,
+     "measured_cycles": 39,
+     "spec_budget_cycles": 61,
+     "depth_measured": 38,
+     "depth_base": 38,
+     "depth_budget": 60,
+     "meets": true
+    }
+   ],
+   "error_lines": []
+  },
+  "q_g8_m2": {
+   "config": {
+    "kind": "quantised FP8/FP4 block-dot",
+    "G": 8,
+    "lanes": 64,
+    "M_POS": 2,
+    "LB": 5,
+    "PMIN_LG": 0,
+    "RL": 2,
+    "macs_per_cycle": 4096
+   },
+   "status": "pass",
+   "vectors": {
+    "ops": 34,
+    "rows": 2241,
+    "results_checked": 4482,
+    "faults_expected_and_raised": 80,
+    "real_ops": [
+     "real_fp8_32x160",
+     "real_fp8_2048x32",
+     "real_fp8_32x160",
+     "real_fp8_160x256",
+     "real_fp4_64x160",
+     "real_fp4_64x160",
+     "real_fp4_160x64",
+     "real_fp4_160x64",
+     "real_fp8_64x160",
+     "real_fp8_64x160",
+     "real_fp8_160x64",
+     "real_fp8_800x768",
+     "real_fp8_2048x32",
+     "real_fp8_160x256",
+     "real_fp8_160x64",
+     "real_fp8_800x768",
+     "real_fp8_1024x32",
+     "real_fp8_1024x32"
+    ],
+    "random_ops": [
+     "shipped_wq_a_fp8_K5120",
+     "shipped_wq_a_fp4_K5120",
+     "shipped_wq_b_fp8_K1280",
+     "shipped_wq_b_fp4_K1280",
+     "shipped_wo_b_fp8_K8192",
+     "shipped_wo_b_fp4_K8192",
+     "shipped_experts_w2_fp8_K2304",
+     "shipped_experts_w2_fp4_K2304",
+     "edge_sub_fp8_K928",
+     "edge_sub_fp4_K1216",
+     "edge_ovf_fp8_K960",
+     "edge_ovf_fp4_K1056",
+     "edge_cancel_fp8_K320",
+     "edge_cancel_fp4_K128",
+     "edge_nan_fp8_K416",
+     "routed_expert_indirect_fp4_K2304"
+    ],
+    "plg_used": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "throughput": {
+    "beats": 2653,
+    "issue_span_cycles": 2749,
+    "beats_per_cycle": 0.9651,
+    "depth_gap_cycles_owed": 96,
+    "no_bubble": true,
+    "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
+    "useful_lane_items": 146143,
+    "lane_utilisation": 0.8607,
+    "macs_per_cycle_sustained": 3402.4,
+    "total_cycles_incl_fill_drain": 2790,
+    "errors": 0
+   },
+   "throttled_credits": {
+    "errors": 0,
+    "checked": 4482,
+    "cycles": 3434
+   },
+   "latency": [
+    {
+     "op": "lat_wq_a_K5120",
+     "rows": 64,
+     "K": 5120,
+     "plg": 0,
+     "nlev": 5,
+     "beats": 160,
+     "measured_cycles": 213,
+     "spec_budget_cycles": 235,
+     "depth_measured": 53,
+     "depth_base": 38,
+     "depth_budget": 75,
+     "meets": true
+    },
+    {
+     "op": "lat_wq_b_K1280",
+     "rows": 64,
+     "K": 1280,
+     "plg": 0,
+     "nlev": 3,
+     "beats": 40,
+     "measured_cycles": 87,
+     "spec_budget_cycles": 109,
+     "depth_measured": 47,
+     "depth_base": 38,
+     "depth_budget": 69,
+     "meets": true
+    },
+    {
+     "op": "lat_wo_b_K8192",
+     "rows": 64,
+     "K": 8192,
+     "plg": 0,
+     "nlev": 5,
+     "beats": 256,
+     "measured_cycles": 309,
+     "spec_budget_cycles": 331,
+     "depth_measured": 53,
+     "depth_base": 38,
+     "depth_budget": 75,
+     "meets": true
+    },
+    {
+     "op": "lat_experts_w2_K2304",
+     "rows": 64,
+     "K": 2304,
+     "plg": 0,
+     "nlev": 4,
+     "beats": 72,
+     "measured_cycles": 122,
+     "spec_budget_cycles": 144,
+     "depth_measured": 50,
+     "depth_base": 38,
+     "depth_budget": 72,
+     "meets": true
+    },
+    {
+     "op": "lat_single_block_row",
+     "rows": 1,
+     "K": 32,
+     "plg": 0,
+     "nlev": 0,
+     "beats": 1,
+     "measured_cycles": 39,
+     "spec_budget_cycles": 61,
+     "depth_measured": 38,
+     "depth_base": 38,
+     "depth_budget": 60,
+     "meets": true
+    }
+   ],
+   "error_lines": []
+  },
+  "m_g8_m1": {
+   "config": {
+    "kind": "BF16/FP32",
+    "G": 8,
+    "lanes": 64,
+    "M_POS": 1,
+    "LB": 7,
+    "PMIN_LG": 1,
+    "RL": 2,
+    "macs_per_cycle": 64
+   },
+   "status": "pass",
+   "vectors": {
+    "ops": 22,
+    "rows": 582,
+    "results_checked": 582,
+    "faults_expected_and_raised": 15,
+    "real_ops": [
+     "real_mv_24x640",
+     "real_mv_32x256",
+     "real_mv_32x256",
+     "real_mv_24x640",
+     "real_mv_12x160",
+     "real_mv_12x160",
+     "real_mv_64x160",
+     "real_mv_64x160",
+     "real_mv_32x160",
+     "real_mv_32x32",
+     "real_mv_32x160",
+     "real_mv_4040x160",
+     "real_mv_32x32"
+    ],
+    "random_ops": [
+     "shipped_router_gate_fp32_K5120",
+     "shipped_wo_a_group_K4096",
+     "shipped_cmp_wk_K512",
+     "edge_wide_bf16_K161",
+     "edge_wide_fp32_K145",
+     "edge_ovf_bf16_K280",
+     "edge_ovf_fp32_K139",
+     "edge_sub_bf16_K61",
+     "edge_sub_fp32_K100"
+    ],
+    "plg_used": [
+     1,
+     2,
+     3
+    ]
+   },
+   "throughput": {
+    "beats": 4177,
+    "issue_span_cycles": 4255,
+    "beats_per_cycle": 0.9817,
+    "depth_gap_cycles_owed": 78,
+    "no_bubble": true,
+    "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
+    "useful_lane_items": 261518,
+    "lane_utilisation": 0.9783,
+    "macs_per_cycle_sustained": 61.5,
+    "total_cycles_incl_fill_drain": 4294,
+    "errors": 0
+   },
+   "throttled_credits": {
+    "errors": 0,
+    "checked": 582,
+    "cycles": 4294
+   },
+   "latency": [
+    {
+     "op": "lat_router_gate_fp32_K5120",
+     "rows": 32,
+     "K": 5120,
+     "plg": 3,
+     "nlev": 7,
+     "beats": 2560,
+     "measured_cycles": 2623,
+     "spec_budget_cycles": 2650,
+     "depth_measured": 63,
+     "depth_base": 33,
+     "depth_budget": 90,
+     "meets": true
+    },
+    {
+     "op": "lat_wo_a_group_K4096",
+     "rows": 32,
+     "K": 4096,
+     "plg": 2,
+     "nlev": 7,
+     "beats": 2048,
+     "measured_cycles": 2108,
+     "spec_budget_cycles": 2135,
+     "depth_measured": 60,
+     "depth_base": 33,
+     "depth_budget": 87,
+     "meets": true
+    },
+    {
+     "op": "lat_cmp_wk_K512",
+     "rows": 32,
+     "K": 512,
+     "plg": 1,
+     "nlev": 5,
+     "beats": 256,
+     "measured_cycles": 307,
+     "spec_budget_cycles": 334,
+     "depth_measured": 51,
+     "depth_base": 33,
+     "depth_budget": 78,
+     "meets": true
+    },
+    {
+     "op": "lat_single_chunk_row",
+     "rows": 1,
+     "K": 8,
+     "plg": 1,
+     "nlev": 0,
+     "beats": 1,
+     "measured_cycles": 37,
+     "spec_budget_cycles": 61,
+     "depth_measured": 36,
+     "depth_base": 33,
+     "depth_budget": 60,
+     "meets": true
+    }
+   ],
+   "error_lines": []
+  },
+  "m_g8_m2": {
+   "config": {
+    "kind": "BF16/FP32",
+    "G": 8,
+    "lanes": 64,
+    "M_POS": 2,
+    "LB": 7,
+    "PMIN_LG": 1,
+    "RL": 2,
+    "macs_per_cycle": 128
+   },
+   "status": "pass",
+   "vectors": {
+    "ops": 22,
+    "rows": 574,
+    "results_checked": 1148,
+    "faults_expected_and_raised": 46,
+    "real_ops": [
+     "real_mv_24x640",
+     "real_mv_32x256",
+     "real_mv_32x256",
+     "real_mv_24x640",
+     "real_mv_12x160",
+     "real_mv_12x160",
+     "real_mv_64x160",
+     "real_mv_64x160",
+     "real_mv_32x160",
+     "real_mv_32x32",
+     "real_mv_32x160",
+     "real_mv_4040x160",
+     "real_mv_32x32"
+    ],
+    "random_ops": [
+     "shipped_router_gate_fp32_K5120",
+     "shipped_wo_a_group_K4096",
+     "shipped_cmp_wk_K512",
+     "edge_wide_bf16_K38",
+     "edge_wide_fp32_K175",
+     "edge_ovf_bf16_K231",
+     "edge_ovf_fp32_K180",
+     "edge_sub_bf16_K77",
+     "edge_sub_fp32_K94"
+    ],
+    "plg_used": [
+     1,
+     2,
+     3
+    ]
+   },
+   "throughput": {
+    "beats": 4102,
+    "issue_span_cycles": 4174,
+    "beats_per_cycle": 0.9828,
+    "depth_gap_cycles_owed": 72,
+    "no_bubble": true,
+    "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
+    "useful_lane_items": 259369,
+    "lane_utilisation": 0.988,
+    "macs_per_cycle_sustained": 124.3,
+    "total_cycles_incl_fill_drain": 4216,
+    "errors": 0
+   },
+   "throttled_credits": {
+    "errors": 0,
+    "checked": 1148,
+    "cycles": 4216
+   },
+   "latency": [
+    {
+     "op": "lat_router_gate_fp32_K5120",
+     "rows": 32,
+     "K": 5120,
+     "plg": 3,
+     "nlev": 7,
+     "beats": 2560,
+     "measured_cycles": 2623,
+     "spec_budget_cycles": 2650,
+     "depth_measured": 63,
+     "depth_base": 33,
+     "depth_budget": 90,
+     "meets": true
+    },
+    {
+     "op": "lat_wo_a_group_K4096",
+     "rows": 32,
+     "K": 4096,
+     "plg": 2,
+     "nlev": 7,
+     "beats": 2048,
+     "measured_cycles": 2108,
+     "spec_budget_cycles": 2135,
+     "depth_measured": 60,
+     "depth_base": 33,
+     "depth_budget": 87,
+     "meets": true
+    },
+    {
+     "op": "lat_cmp_wk_K512",
+     "rows": 32,
+     "K": 512,
+     "plg": 1,
+     "nlev": 5,
+     "beats": 256,
+     "measured_cycles": 307,
+     "spec_budget_cycles": 334,
+     "depth_measured": 51,
+     "depth_base": 33,
+     "depth_budget": 78,
+     "meets": true
+    },
+    {
+     "op": "lat_single_chunk_row",
+     "rows": 1,
+     "K": 8,
+     "plg": 1,
+     "nlev": 0,
+     "beats": 1,
+     "measured_cycles": 37,
+     "spec_budget_cycles": 61,
+     "depth_measured": 36,
+     "depth_base": 33,
+     "depth_budget": 60,
+     "meets": true
+    }
+   ],
+   "error_lines": []
+  },
+  "m_g32_m1": {
+   "config": {
+    "kind": "BF16/FP32",
+    "G": 32,
+    "lanes": 256,
+    "M_POS": 1,
+    "LB": 5,
+    "PMIN_LG": 2,
+    "RL": 2,
+    "macs_per_cycle": 256
+   },
+   "status": "pass",
+   "vectors": {
+    "ops": 22,
+    "rows": 901,
+    "results_checked": 901,
+    "faults_expected_and_raised": 22,
+    "real_ops": [
+     "real_mv_24x640",
+     "real_mv_32x256",
+     "real_mv_32x256",
+     "real_mv_24x640",
+     "real_mv_12x160",
+     "real_mv_12x160",
+     "real_mv_64x160",
+     "real_mv_64x160",
+     "real_mv_32x160",
+     "real_mv_32x32",
+     "real_mv_32x160",
+     "real_mv_4040x160",
+     "real_mv_32x32"
+    ],
+    "random_ops": [
+     "shipped_router_gate_fp32_K5120",
+     "shipped_wo_a_group_K4096",
+     "shipped_cmp_wk_K512",
+     "edge_wide_bf16_K299",
+     "edge_wide_fp32_K269",
+     "edge_ovf_bf16_K47",
+     "edge_ovf_fp32_K241",
+     "edge_sub_bf16_K117",
+     "edge_sub_fp32_K206"
+    ],
+    "plg_used": [
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "throughput": {
+    "beats": 3141,
+    "issue_span_cycles": 3225,
+    "beats_per_cycle": 0.974,
+    "depth_gap_cycles_owed": 84,
+    "no_bubble": true,
+    "no_bubble_basis": "issue span == beats + the depth gaps owed between ops of decreasing depth (ops in this run vary their geometry on purpose; equal-depth ops owe none)",
+    "useful_lane_items": 771857,
+    "lane_utilisation": 0.9599,
+    "macs_per_cycle_sustained": 239.3,
+    "total_cycles_incl_fill_drain": 3267,
+    "errors": 0
+   },
+   "throttled_credits": {
+    "errors": 0,
+    "checked": 901,
+    "cycles": 3267
+   },
+   "latency": [
+    {
+     "op": "lat_router_gate_fp32_K5120",
+     "rows": 128,
+     "K": 5120,
+     "plg": 5,
+     "nlev": 5,
+     "beats": 2560,
+     "measured_cycles": 2623,
+     "spec_budget_cycles": 2650,
+     "depth_measured": 63,
+     "depth_base": 33,
+     "depth_budget": 90,
+     "meets": true
+    },
+    {
+     "op": "lat_wo_a_group_K4096",
+     "rows": 128,
+     "K": 4096,
+     "plg": 4,
+     "nlev": 5,
+     "beats": 2048,
+     "measured_cycles": 2108,
+     "spec_budget_cycles": 2135,
+     "depth_measured": 60,
+     "depth_base": 33,
+     "depth_budget": 87,
+     "meets": true
+    },
+    {
+     "op": "lat_cmp_wk_K512",
+     "rows": 128,
+     "K": 512,
+     "plg": 2,
+     "nlev": 4,
+     "beats": 256,
+     "measured_cycles": 307,
+     "spec_budget_cycles": 334,
+     "depth_measured": 51,
+     "depth_base": 33,
+     "depth_budget": 78,
+     "meets": true
+    },
+    {
+     "op": "lat_single_chunk_row",
+     "rows": 1,
+     "K": 8,
+     "plg": 2,
+     "nlev": 0,
+     "beats": 1,
+     "measured_cycles": 40,
+     "spec_budget_cycles": 61,
+     "depth_measured": 39,
+     "depth_base": 33,
+     "depth_budget": 60,
+     "meets": true
+    }
+   ],
+   "error_lines": []
+  }
+ },
+ "die_mapping": {
+  "model": "each matrix alone on the die's tiles. A row's padded chunk tree (NP = pow2(chunks)) may be cut into 2^s ALIGNED parts (s = 0: whole rows); a part is a row of a tile op (the tile's FP32 o_y is the part's subtree root) and the parts' top s tree levels are added by the output collector (3 cycles per level + COLLECT_HOP). Parts are packed into tile row groups of G/P parts of equal length and the row groups scheduled longest-first onto the tiles. latency = makespan (beats) + measured tile base depth + 3 x (the part's tree levels in the tile) + collector levels.",
+  "collect_hop_cycles": 2,
+  "choice": "per matrix, the fewest K-split parts that meet the budget (the cross-tile collector is modelled, not built)",
+  "quantised: 906 tiles x 8 block-dot lanes (G=1)": [
+   {
+    "matrix": "wq_a",
+    "rows_per_die": 1280,
+    "terms_per_row": 1280,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 40,
+    "tile_depth_cycles": 53,
+    "latency_cycles": 93,
+    "budget_cycles": 104,
+    "meets": true
+   },
+   {
+    "matrix": "wkv",
+    "rows_per_die": 512,
+    "terms_per_row": 1280,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 20,
+    "tile_depth_cycles": 53,
+    "latency_cycles": 73,
+    "budget_cycles": 87,
+    "meets": true
+   },
+   {
+    "matrix": "wq_b",
+    "rows_per_die": 32768,
+    "terms_per_row": 320,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 185,
+    "tile_depth_cycles": 47,
+    "latency_cycles": 232,
+    "budget_cycles": 250,
+    "meets": true
+   },
+   {
+    "matrix": "idx.wq_b",
+    "rows_per_die": 4096,
+    "terms_per_row": 320,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 25,
+    "tile_depth_cycles": 47,
+    "latency_cycles": 72,
+    "budget_cycles": 92,
+    "meets": true
+   },
+   {
+    "matrix": "wo_b",
+    "rows_per_die": 5120,
+    "terms_per_row": 2048,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 192,
+    "tile_depth_cycles": 53,
+    "latency_cycles": 245,
+    "budget_cycles": 256,
+    "meets": true
+   },
+   {
+    "matrix": "shared_w13",
+    "rows_per_die": 4608,
+    "terms_per_row": 1280,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 120,
+    "tile_depth_cycles": 53,
+    "latency_cycles": 173,
+    "budget_cycles": 177,
+    "meets": true
+   },
+   {
+    "matrix": "shared_w2",
+    "rows_per_die": 5120,
+    "terms_per_row": 576,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 54,
+    "tile_depth_cycles": 50,
+    "latency_cycles": 104,
+    "budget_cycles": 123,
+    "meets": true
+   },
+   {
+    "matrix": "experts_w13",
+    "rows_per_die": 27648,
+    "terms_per_row": 1280,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 620,
+    "tile_depth_cycles": 53,
+    "latency_cycles": 673,
+    "budget_cycles": 686,
+    "meets": true
+   },
+   {
+    "matrix": "experts_w2",
+    "rows_per_die": 30720,
+    "terms_per_row": 576,
+    "k_split_parts": 1,
+    "segment_P": 1,
+    "issue_cycles": 306,
+    "tile_depth_cycles": 50,
+    "latency_cycles": 356,
+    "budget_cycles": 378,
+    "meets": true
+   }
+  ],
+  "bf16: 123 tiles x 256 MAC lanes (G=32)": [
+   {
+    "matrix": "wo_a",
+    "rows_per_die": 2048,
+    "terms_per_row": 4096,
+    "k_split_parts": 1,
+    "segment_P": 32,
+    "issue_cycles": 272,
+    "tile_depth_cycles": 60,
+    "latency_cycles": 332,
+    "budget_cycles": 355,
+    "meets": true
+   },
+   {
+    "matrix": "router_gate",
+    "rows_per_die": 96,
+    "terms_per_row": 5120,
+    "k_split_parts": 1,
+    "segment_P": 32,
+    "issue_cycles": 20,
+    "tile_depth_cycles": 63,
+    "latency_cycles": 83,
+    "budget_cycles": 106,
+    "meets": true
+   },
+   {
+    "matrix": "idx.weights_proj",
+    "rows_per_die": 32,
+    "terms_per_row": 5120,
+    "k_split_parts": 1,
+    "segment_P": 32,
+    "issue_cycles": 20,
+    "tile_depth_cycles": 63,
+    "latency_cycles": 83,
+    "budget_cycles": 96,
+    "meets": true
+   },
+   {
+    "matrix": "cmp.wkv",
+    "rows_per_die": 512,
+    "terms_per_row": 5120,
+    "k_split_parts": 1,
+    "segment_P": 32,
+    "issue_cycles": 100,
+    "tile_depth_cycles": 63,
+    "latency_cycles": 163,
+    "budget_cycles": 174,
+    "meets": true
+   },
+   {
+    "matrix": "cmp.wk",
+    "rows_per_die": 128,
+    "terms_per_row": 512,
+    "k_split_parts": 1,
+    "segment_P": 16,
+    "issue_cycles": 4,
+    "tile_depth_cycles": 51,
+    "latency_cycles": 55,
+    "budget_cycles": 81,
+    "meets": true
+   }
+  ]
+ },
+ "per_die": {
+  "quantised": {
+   "tiles": 906,
+   "tile": "ot_hdc_v41x_wgt_qtile (G=1: 8 block-dot lanes)",
+   "block_dot_lanes": 7248,
+   "macs_per_cycle_m1": 231936,
+   "macs_per_cycle_m2": 463872,
+   "spec_macs_per_cycle": 231936
+  },
+  "bf16_fp32": {
+   "tiles": 123,
+   "tile": "G=32 (256 MAC lanes) = 4 x ot_hdc_v41x_wgt_mtile slices (G=8, routed)",
+   "mac_lanes": 31488,
+   "macs_per_cycle_m1": 31488,
+   "macs_per_cycle_m2": 62976,
+   "spec_macs_per_cycle": 31360
+  },
+  "rom_read_port_bytes_per_cycle": {
+   "quantised_fp8_33B_per_lane": 239184,
+   "quantised_fp4_17B_per_lane": 123216,
+   "bf16_2B_per_lane": 62976,
+   "fp32_4B_per_lane": 125952,
+   "peak_both_engines_fp8_plus_fp32": 365136,
+   "spec_bytes_per_cycle": 301904,
+   "basis": "one ROM word per lane per cycle at full issue (the bench's read port); the lane multiplier m does not change the read"
+  }
+ },
+ "verilator_lint": {
+  "flags": [
+   "-Wall",
+   "-Wno-DECLFILENAME",
+   "-Wno-UNUSED",
+   "-Wno-WIDTH",
+   "-Wno-BLKSEQ"
+  ],
+  "tops": {
+   "kind0_g2_m2": {
+    "returncode": 0,
+    "messages": []
+   },
+   "kind1_g2_m2": {
+    "returncode": 0,
+    "messages": []
+   }
+  }
+ },
+ "input_sha256": {
+  "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "f32642f22a5deba80f8248ddc47310c1ab5d152c4bf2ee791b3b32e998b2c4f3",
+  "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "3f247b6389dcbae5215d57e37fb2af5b55bde4058398f9b7999316195ac5d80d",
+  "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "4019a66fa9e49dc263745ad2c09a6f667d1fbf7ff2a8621937ab3c36d8be024e",
+  "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "a8f85464b0a3f9fd9c1576eb14105a90b6bd85d1f1672258e1f749e2b0dd23b3",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/test/tb_hdc_v41x_wgt.sv": "95e0bfdefd8f51adeb8ed2abb74ed0c3d0baa311fb63fb94cd34179df279fd7c",
+  "rtl/test/hdc_v41x_wgt_harness.cpp": "b0ee7123f6c2f18970f37c79ddc1b662d99416e59a3f8091af7869283b3fc66f",
+  "tools/hdc_golden_v41.py": "e6e95d8cf6ee1835bf7a1229f605d3d2b6756fd0234fdec0c4da2b3d12326a8e",
+  "tools/hdc_golden.py": "cdba9f29cf30c309d652b1d3d915905f3a8c8253ac7aa5dfb1c3ac0c023d04fa",
+  "tools/rtl_hdc_v41x_wgt_campaign.py": "52faed365198f34a486edeb200b6e743c9f97d0d52f5db004e9e0231d4c8eb2f"
+ }
+}
