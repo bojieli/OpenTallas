@@ -39,7 +39,7 @@
 //
 // Timing from an issue cycle c: memories return at c+1, operands are captured
 // at c+2 and conditioned at c+3, products leave at c+8, sums at c+13, the
-// split tree adds 6 per level (5 in the adder, 1 output register), and a result
+// split tree adds 4 per level (3 in the low-latency adder, 1 output register), and a result
 // is written one cycle later.
 // ---------------------------------------------------------------------------
 module ot_hdc_matvec #(
@@ -77,6 +77,8 @@ module ot_hdc_matvec #(
     input  wire              i_mmode,
     input  wire              i_oen,
     input  wire              i_amax,
+    input  wire              i_rmax,      // per-slot maxima of the results -> word mbase / W, lanes mbase % W + j
+    input  wire [AW-1:0]     i_mbase,
     // weight ROM: G*W bf16 lanes per word
     output reg               wrom_re,
     output reg  [AW-1:0]     wrom_addr,
@@ -99,6 +101,11 @@ module ot_hdc_matvec #(
     output reg  [NW-1:0]     am_idx,
     output reg  [31:0]       am_val,
     output reg               am_any,
+    // the per-slot maxima word (one masked word write after the op's last result)
+    output reg               mx_we,
+    output reg  [AW-1:0]     mx_addr,
+    output reg  [W-1:0]      mx_mask,
+    output reg  [W*32-1:0]   mx_data,
     // result slots the latest accepted instruction has produced
     output reg  [15:0]       progress,
     output reg               fault
@@ -106,14 +113,16 @@ module ot_hdc_matvec #(
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
     localparam integer FB = IL - 5;       // circulation delay after the adder
-    localparam integer TL = 6;            // split-tree cycles per level: 5 in the adder + 1 output register
+    localparam integer TA = 3;            // split-tree adder: ot_hdc_qadd (rtl/hdc/ot_hdc_fastfp.sv), LATENCY 3
+    localparam integer TL = TA + 1;       // split-tree cycles per level: the adder + 1 output register
     localparam integer OD = TL * LG;      // split tree
 
     // -- issue loop -----------------------------------------------------------
     integer gi;
     reg              active;
     reg [NW-1:0]     nout_r, tiles_r, k_r;
-    reg              wsrc_r, round_r, oen_r, amax_r, mmode_r;
+    reg              wsrc_r, round_r, oen_r, amax_r, mmode_r, rmax_r;
+    reg [AW-1:0]     mbase_r;
     reg [3:0]        split_r;
     reg [AW-1:0]     tstep_r;          // weight step per round: ts, or (G/S)*ts for KV ops
     reg [AW-1:0]     wcs_r;
@@ -144,6 +153,7 @@ module ot_hdc_matvec #(
                 active <= 1'b1;
                 nout_r <= i_nout; tiles_r <= i_tiles; k_r <= kc_in; ktot_r <= i_k;
                 wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
+                rmax_r <= i_rmax; mbase_r <= i_mbase;
                 mmode_r <= i_mmode; split_r <= i_split; wcs_r <= i_wcs;
                 ts_r <= i_ts; tstep_r <= i_wsrc ? (i_ts * per_round) : i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
                 xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
@@ -200,6 +210,9 @@ module ot_hdc_matvec #(
     //: KV ops: group g's element k*S + c lies past K -> its operands are zeroed
     //: (a +0 product; the sum is unchanged, so a ragged last chunk is exact)
     reg [G-1:0]  e_gm;
+    reg          e_rmax, e_opend;
+    reg [2:0]    e_j;
+    reg [AW-1:0] e_mbase;
     reg [AW-1:0] e_oa, e_ots;
     reg [NW:0]   e_nb, e_lb, e_rem;
     always @(posedge clk or negedge rst_n) begin
@@ -211,14 +224,17 @@ module ot_hdc_matvec #(
         e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsrc_r; e_round <= round_r; e_mmode <= mmode_r;
         e_split <= split_r; e_oa <= oa; e_ots <= ots_r; e_nb <= nb; e_lb <= lb;
         e_rem <= {1'b0, nout_r};
+        e_rmax <= rmax_r; e_j <= j; e_mbase <= mbase_r;
+        e_opend <= t_last && k_last && j_last;           // the op's last element
         for (gi = 0; gi < G; gi = gi + 1)
             e_gm[gi] <= !wsrc_r || (({{(32-NW){1'b0}}, k} << split_r) + (gi & ((1 << split_r) - 1))
                                     < {{(32-NW){1'b0}}, ktot_r});
     end
 
     // -- S1 (memories answer) -> S2 (capture) -> S3 (condition) -----------------
-    localparam integer TW = 1 + 1 + 1 + 1 + 1 + 4 + AW + AW + 3 * (NW + 1);
-    wire [TW-1:0] e_tag = {e_last, e_oen, e_amax, e_wsrc, e_mmode, e_split, e_oa, e_ots, e_nb, e_lb, e_rem};
+    localparam integer TW = 1 + 1 + 1 + 1 + 1 + 4 + AW + AW + 3 * (NW + 1) + 1 + 3 + 1 + AW;
+    wire [TW-1:0] e_tag = {e_last, e_oen, e_amax, e_wsrc, e_mmode, e_split, e_oa, e_ots, e_nb, e_lb, e_rem,
+                           e_rmax, e_j, e_opend, e_mbase};
     reg  [TW-1:0] s1_tag, s1b_tag, s2_tag, s3_tag;
     reg          s1_v, s1b_v, s2_v, s3_v, s1_first, s1b_first, s2_first, s3_first;
     reg          s1b_wsrc, s1b_round;
@@ -308,18 +324,18 @@ module ot_hdc_matvec #(
     generate
         for (lv = 1; lv <= LG; lv = lv + 1) begin : g_lvl
             wire [3:0] sp_sel;                      // split when the level's sums emerge
-            ot_hdc_delay #(.W(4), .D(5)) u_sd (.clk(clk), .rst_n(rst_n), .d(split_at[4*lv-1 -: 4]), .q(sp_sel));
+            ot_hdc_delay #(.W(4), .D(TA)) u_sd (.clk(clk), .rst_n(rst_n), .d(split_at[4*lv-1 -: 4]), .q(sp_sel));
             reg  [3:0] sp_out;
             always @(posedge clk) sp_out <= sp_sel;
             assign split_at[4*lv+3 -: 4] = sp_out;
             wire [G*W*32-1:0] held;
-            ot_hdc_delay #(.W(G*W*32), .D(5)) u_hold (.clk(clk), .rst_n(rst_n), .d(lvl[lv-1]), .q(held));
+            ot_hdc_delay #(.W(G*W*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n), .d(lvl[lv-1]), .q(held));
             wire [(G >> lv)*W-1:0] pf;
             reg  [G*W*32-1:0] lq;
             for (p = 0; p < (G >> lv) * W; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
-                ot_hdc_fadd u_add (clk, rst_n, vline[10 + TL*(lv-1)] && (split_at[4*lv-1 -: 4] >= lv),
+                ot_hdc_qadd u_add (clk, rst_n, vline[10 + TL*(lv-1)] && (split_at[4*lv-1 -: 4] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
                 always @(posedge clk) lq[32*p +: 32] <= (sp_sel >= lv) ? s_out : held[32*p +: 32];
@@ -355,7 +371,11 @@ module ot_hdc_matvec #(
     wire [3:0]    r_split;
     wire [AW-1:0] r_oa, r_ots;
     wire [NW:0]   r_nb, r_lb, r_nout;
-    assign {r_last, r_oen, r_amax, r_wsrc, r_mmode, r_split, r_oa, r_ots, r_nb, r_lb, r_nout} = a_tag;
+    wire          r_rmax, r_opend;
+    wire [2:0]    r_j;
+    wire [AW-1:0] r_mbase;
+    assign {r_last, r_oen, r_amax, r_wsrc, r_mmode, r_split, r_oa, r_ots, r_nb, r_lb, r_nout,
+            r_rmax, r_j, r_opend, r_mbase} = a_tag;
     wire [LG:0]   r_ports = G >> r_split;
     reg  [G*W-1:0] r_mask;
     integer q, ql;
@@ -405,8 +425,16 @@ module ot_hdc_matvec #(
     reg  [LV:0] tv;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) tv <= 0;
-        else tv <= {tv[LV-1:0], r_v && r_last && r_amax};
+        else tv <= {tv[LV-1:0], r_v && r_last && (r_amax || r_rmax)};
     end
+    //: the result's op kind, slot and the op's end travel beside the tree
+    wire [1+3+1+AW-1:0] ttag;
+    ot_hdc_delay #(.W(1 + 3 + 1 + AW), .D(LV + 1)) u_ttag (.clk(clk), .rst_n(rst_n),
+        .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag));
+    wire          t_rmax, t_opend;
+    wire [2:0]    t_j;
+    wire [AW-1:0] t_mbase;
+    assign {t_rmax, t_j, t_opend, t_mbase} = ttag;
     genvar e;
     generate
         for (e = 0; e < NL; e = e + 1) begin : g_leaf
@@ -444,9 +472,44 @@ module ot_hdc_matvec #(
             am_any <= 1'b0; am_idx <= 0; am_val <= 0; best_key <= 0;
         end else begin
             if (go && ready && i_amax) am_any <= 1'b0;
-            else if (tv[LV] && top_v && (!am_any || top_key > best_key ||
+            else if (tv[LV] && !t_rmax && top_v && (!am_any || top_key > best_key ||
                                          (top_key == best_key && top_idx < am_idx))) begin
                 am_any <= 1'b1; best_key <= top_key; am_idx <= top_idx; am_val <= top_val;
+            end
+        end
+    end
+
+    // -- per-slot maxima (RMAX: the attention rows' max, taken as the scores
+    // emerge): slot j's key is the max over the op's rounds of the tree's top;
+    // after the op's last result the IL maxima are written as one masked word.
+    reg [31:0] rk [0:IL-1];
+    reg [IL-1:0] rseen;
+    integer rj;
+    wire [31:0] nk = (!top_v || (rseen[t_j] && top_key <= rk[t_j])) ? rk[t_j] : top_key;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin rseen <= 0; mx_we <= 1'b0; end
+        else begin
+            mx_we <= 1'b0;
+            if (tv[LV] && t_rmax) begin
+                if (t_opend) begin
+                    mx_we <= 1'b1;
+                    rseen <= 0;
+                end else if (top_v) begin
+                    rk[t_j] <= nk;
+                    rseen[t_j] <= 1'b1;
+                end
+            end
+        end
+    end
+    always @(posedge clk) begin
+        if (tv[LV] && t_rmax && t_opend) begin
+            mx_addr <= t_mbase >> LW;
+            mx_mask <= {W{1'b0}};
+            mx_data <= {(W*32){1'b0}};
+            for (rj = 0; rj < IL; rj = rj + 1) begin
+                mx_mask[(t_mbase[LW-1:0] + rj) % W] <= 1'b1;
+                mx_data[32*((t_mbase[LW-1:0] + rj) % W) +: 32] <=
+                    (rj == t_j) ? (nk[31] ? {1'b0, nk[30:0]} : ~nk) : (rk[rj][31] ? {1'b0, rk[rj][30:0]} : ~rk[rj]);
             end
         end
     end
@@ -472,7 +535,8 @@ module ot_hdc_matvec #(
 
     //: Registered: the OR of every valid bit is wide.  Cleared on the
     //: accepting edge so a just-issued op never reads as drained.
-    wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov1 && !ov;
+    wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov1 && !ov
+                  && !mx_we;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(go && ready);

@@ -102,6 +102,11 @@ module ot_hdc_core #(
     output wire              vw_rd_we,
     output wire [AW-1:0]     vw_rd_addr,
     output wire [31:0]       vw_rd_data,
+    // the engine's per-slot maxima (one masked word; me_rmax)
+    output wire              vw_mx_we,
+    output wire [AW-1:0]     vw_mx_addr,
+    output wire [W-1:0]      vw_mx_mask,
+    output wire [W*32-1:0]   vw_mx_data,
     // observation: every matrix-vector result word
     output wire              me_ov,
     output wire [G*AW-1:0]   me_oaddr,
@@ -148,7 +153,8 @@ module ot_hdc_core #(
     reg [1:0]    d_unit;
     reg          d_barrier;
     reg [NW-1:0] me_nout, me_tiles, me_k;
-    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase, d_wait_me, d_wait_su;
+    reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, d_chase, d_wait_me, d_wait_su, me_rmax;
+    reg [AW-1:0] me_mbase;
     reg [15:0]   d_chase_n;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs;
     reg [2:0]    me_jsh;
@@ -164,7 +170,8 @@ module ot_hdc_core #(
     reg [2:0]    ad;
     reg [31:0]   imm1, imm2;
 
-    wire [15:0] su_progress, me_progress;
+    wire [15:0] su_progress, me_progress, su_rows;
+    reg          d_chase_rows;
     reg          me_kindk;
     wire unit_ready = (d_unit == 2'd1) ? me_ready : su_ready;
     //: KV_HBM: a KV op waits for the streamer; never on the cycle its
@@ -175,7 +182,7 @@ module ot_hdc_core #(
     wire drained = me_idle && su_idle;
     //: A chasing op waits only until the OTHER unit's latest op has made
     //: chase_n progress.
-    wire chased = ((d_unit == 2'd1) ? su_progress : me_progress) >= d_chase_n;
+    wire chased = ((d_unit == 2'd1) ? (d_chase_rows ? su_rows : su_progress) : me_progress) >= d_chase_n;
     //: issue NEXT this cycle; the unit latches its fields on this edge
     wire issue = (st == S_RUN) && nx_v && (d_unit != 2'd0) &&
                  (d_barrier ? drained : ((!d_chase || chased) && (!d_wait_me || me_idle) && (!d_wait_su || su_idle)))
@@ -261,7 +268,9 @@ module ot_hdc_core #(
         me_xks <= `F(ME_XKS); me_xjs <= `F(ME_XJS); me_jsh <= `F(ME_JSH);
         me_ots <= `F(ME_OTS); me_ojs <= `F(ME_OJS); me_mmode <= `F(ME_MMODE);
         d_chase <= `F(CHASE); d_chase_n <= `F(CHASE_N); d_wait_me <= `F(WAIT_ME); d_wait_su <= `F(WAIT_SU);
+        d_chase_rows <= `F(CHASE_ROWS);
         me_split <= `F(ME_SPLIT); me_xcs <= `F(ME_XCS); me_wcs <= `F(ME_WCS);
+        me_rmax <= `F(ME_RMAX); me_mbase <= `F(ME_MBASE);
         su_nout <= `F(SU_NOUT);
         su_nin <= `F(SU_NIN) + dyn[`F(SU_D_NIN)];
         a_src <= `F(A_SRC); a_base <= `F(A_BASE) + dyn[`F(A_D)]; a_so <= `F(A_SO); a_si <= `F(A_SI);
@@ -282,7 +291,8 @@ module ot_hdc_core #(
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
         .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_wcs(me_wcs), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
-        .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax),
+        .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax), .i_rmax(me_rmax), .i_mbase(me_mbase),
+        .mx_we(vw_mx_we), .mx_addr(vw_mx_addr), .mx_mask(vw_mx_mask), .mx_data(vw_mx_data),
         .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(wrom_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
@@ -312,7 +322,7 @@ module ot_hdc_core #(
         .vm_we(vw_su_we), .vm_waddr(vw_su_addr), .vm_wdata(vw_su_data),
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
         .red_we(vw_rd_we), .red_addr(vw_rd_addr), .red_data(vw_rd_data),
-        .progress(su_progress), .fault(su_fault));
+        .progress(su_progress), .progress_rows(su_rows), .fault(su_fault));
     assign su_active = u_su.active;
     assign su_inflight = u_su.inflight;
     end else begin : g_ssu
@@ -334,6 +344,7 @@ module ot_hdc_core #(
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
         .red_we(vw_rd_we), .red_addr(vw_rd_addr), .red_data(vw_rd_data),
         .progress(su_progress), .fault(su_fault));
+    assign su_rows = 16'd0;
     assign su_active = u_su.active;
     assign su_inflight = u_su.inflight;
     end endgenerate

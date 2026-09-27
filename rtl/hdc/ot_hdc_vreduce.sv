@@ -15,20 +15,21 @@
 // the result is the golden's.  MAX is the same structure with max for +
 // (order-free).  `sq` squares every element first.
 //
-// Pipeline (every stage one result a cycle):
-//   SQ    optional square                                      5 (+1)
-//   CHAIN per chunk, 7 chained ops, lane 8k+j delayed 5(j-1)    35
-//   TREE  log2(SW/8) pairwise levels inside the vector          6 a level
+// Pipeline (every stage one result a cycle; the adder and multiplier are the
+// low-latency units of rtl/hdc/ot_hdc_fastfp.sv, LA = LM = 3):
+//   SQ    optional square                                      LM (+1)
+//   CHAIN per chunk, 7 chained ops, lane 8k+j delayed LA(j-1)   7 LA
+//   TREE  log2(SW/8) pairwise levels inside the vector          LA + 1 a level
 //   TIME  LV levels pairing the segment's vectors in time: a level holds a
 //         left operand until its right sibling arrives; a segment's LAST
 //         item combines with a held left operand or passes (its sibling is
 //         +0); every path has the op's latency, so items stay in order
-//                                                               6 a level
+//                                                               LA + 1 a level
 // A segment of at most 2^LV vectors ends with its LAST item at the top;
 // an item leaving the top without LAST (a longer segment) raises `fault`.
 // ---------------------------------------------------------------------------
 module ot_hdc_vred_op #(
-    parameter integer LA = 5
+    parameter integer LA = 3
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -44,7 +45,7 @@ module ot_hdc_vred_op #(
     endfunction
     wire [31:0] ys, ym;
     wire f, mxd;
-    ot_hdc_fadd u_add (clk, rst_n, v && !mx, a, b, ys, f);
+    ot_hdc_qadd u_add (clk, rst_n, v && !mx, a, b, ys, f);
     ot_hdc_delay #(.W(33), .D(LA)) u_m (.clk(clk), .rst_n(rst_n),
         .d({mx, (okey(a) >= okey(b)) ? a : b}), .q({mxd, ym}));
     assign y = mxd ? ym : ys;
@@ -70,6 +71,8 @@ module ot_hdc_vreduce #(
     output wire            busy,
     output reg             fault
 );
+    localparam integer LA = 3, LM = 3;       // ot_hdc_qadd / ot_hdc_qmul
+    localparam integer CD = 7 * LA;          // the 8-element chain
     localparam integer NC = SW / 8;
     localparam integer LC = $clog2(NC);
     localparam integer TAG = 1 + 1 + AW;   // mx, last, addr
@@ -79,21 +82,21 @@ module ot_hdc_vreduce #(
     wire [SW-1:0]    fsq;
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_sq
-        ot_hdc_fmul u_sq (clk, rst_n, v_in && sq_in, x_in[32*l +: 32], x_in[32*l +: 32], xsq[32*l +: 32], fsq[l]);
+        ot_hdc_qmul u_sq (clk, rst_n, v_in && sq_in, x_in[32*l +: 32], x_in[32*l +: 32], xsq[32*l +: 32], fsq[l]);
     end endgenerate
     wire [SW*32-1:0] xq;
     wire [TAG-1:0]   tq;
     wire             vq, sqq;
-    ot_hdc_delay #(.W(SW*32 + TAG + 1), .D(5)) u_sqd (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(SW*32 + TAG + 1), .D(LM)) u_sqd (.clk(clk), .rst_n(rst_n),
         .d({x_in, mx_in, last_in, addr_in, sq_in}), .q({xd, tq, sqq}));
-    wire [5:0] vqs;
-    ot_hdc_vline #(.D(5)) u_vq (.clk(clk), .rst_n(rst_n), .v(v_in), .vd(vqs));
+    wire [LM:0] vqs;
+    ot_hdc_vline #(.D(LM)) u_vq (.clk(clk), .rst_n(rst_n), .v(v_in), .vd(vqs));
     reg  [SW*32-1:0] c_x;
     reg  [TAG-1:0]   c_t;
     reg              c_v;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) c_v <= 1'b0;
-        else c_v <= vqs[5];
+        else c_v <= vqs[LM];
     end
     always @(posedge clk) begin
         c_x <= sqq ? xsq : xd;
@@ -104,26 +107,26 @@ module ot_hdc_vreduce #(
     // -- CHAIN: chunk k = lanes 8k .. 8k+7, sequential from lane 8k -----------------
     wire [NC*32-1:0] chunk;
     wire [NC*7-1:0]  fch;
-    wire [35:0]      vch;
-    ot_hdc_vline #(.D(35)) u_vch (.clk(clk), .rst_n(rst_n), .v(c_v), .vd(vch));
-    wire [35:0] mxl;
-    ot_hdc_vline #(.D(35)) u_mxl (.clk(clk), .rst_n(rst_n), .v(c_v && c_mx), .vd(mxl));
+    wire [CD:0]      vch;
+    ot_hdc_vline #(.D(CD)) u_vch (.clk(clk), .rst_n(rst_n), .v(c_v), .vd(vch));
+    wire [CD:0] mxl;
+    ot_hdc_vline #(.D(CD)) u_mxl (.clk(clk), .rst_n(rst_n), .v(c_v && c_mx), .vd(mxl));
     genvar k, j;
     generate for (k = 0; k < NC; k = k + 1) begin : g_chunk
         wire [32*8-1:0] acc;                 // acc[j]: after element j joins
         assign acc[31:0] = c_x[32*(8*k) +: 32];
         for (j = 1; j < 8; j = j + 1) begin : g_step
             wire [31:0] xj;
-            ot_hdc_delay #(.W(32), .D(5 * (j - 1))) u_xd (.clk(clk), .rst_n(rst_n),
+            ot_hdc_delay #(.W(32), .D(LA * (j - 1))) u_xd (.clk(clk), .rst_n(rst_n),
                 .d(c_x[32*(8*k + j) +: 32]), .q(xj));
-            ot_hdc_vred_op u_op (.clk(clk), .rst_n(rst_n), .v(vch[5 * (j - 1)]), .mx(mxl[5 * (j - 1)]),
+            ot_hdc_vred_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(vch[LA * (j - 1)]), .mx(mxl[LA * (j - 1)]),
                 .a(acc[32*(j-1) +: 32]), .b(xj), .y(acc[32*j +: 32]), .fault(fch[7*k + j - 1]));
         end
         assign chunk[32*k +: 32] = acc[32*7 +: 32];
     end endgenerate
     wire [TAG-1:0] ct;
-    ot_hdc_delay #(.W(TAG), .D(35)) u_ct (.clk(clk), .rst_n(rst_n), .d(c_t), .q(ct));
-    wire cv = vch[35];
+    ot_hdc_delay #(.W(TAG), .D(CD)) u_ct (.clk(clk), .rst_n(rst_n), .d(c_t), .q(ct));
+    wire cv = vch[CD];
 
     // -- TREE: pairwise over the vector's NC chunk sums ----------------------------------
     wire [NC*32-1:0] lvl [0:LC];
@@ -140,13 +143,13 @@ module ot_hdc_vreduce #(
     generate for (lv = 1; lv <= LC; lv = lv + 1) begin : g_tree
         wire [(NC >> lv)-1:0] pf;
         reg  [NC*32-1:0] q;
-        wire [5:0] vd;
-        ot_hdc_vline #(.D(5)) u_vd (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .vd(vd));
+        wire [LA:0] vd;
+        ot_hdc_vline #(.D(LA)) u_vd (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .vd(vd));
         wire [TAG-1:0] td;
-        ot_hdc_delay #(.W(TAG), .D(5)) u_td (.clk(clk), .rst_n(rst_n), .d(tt[lv-1]), .q(td));
+        ot_hdc_delay #(.W(TAG), .D(LA)) u_td (.clk(clk), .rst_n(rst_n), .d(tt[lv-1]), .q(td));
         for (p = 0; p < (NC >> lv); p = p + 1) begin : g_pair
             wire [31:0] s;
-            ot_hdc_vred_op u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
+            ot_hdc_vred_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
                 .a(lvl[lv-1][32*(2*p) +: 32]), .b(lvl[lv-1][32*(2*p+1) +: 32]), .y(s), .fault(pf[p]));
             always @(posedge clk) q[32*p +: 32] <= s;
         end
@@ -157,7 +160,7 @@ module ot_hdc_vreduce #(
         reg [TAG-1:0] rt;
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) rv <= 1'b0;
-            else rv <= vd[5];
+            else rv <= vd[LA];
         end
         always @(posedge clk) rt <= td;
         assign lvl[lv] = q;
@@ -198,19 +201,19 @@ module ot_hdc_vreduce #(
         always @(posedge clk) if (in_v && !held_v && !pass) held <= in_x;
         wire [31:0] s, pd;
         wire f;
-        ot_hdc_vred_op u_op (.clk(clk), .rst_n(rst_n), .v(pair), .mx(in_t[TAG-1]), .a(held), .b(in_x),
-                             .y(s), .fault(f));
+        ot_hdc_vred_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(pair), .mx(in_t[TAG-1]), .a(held),
+                                        .b(in_x), .y(s), .fault(f));
         wire [TAG+2-1:0] od;
-        ot_hdc_delay #(.W(TAG + 2 + 32), .D(5)) u_od (.clk(clk), .rst_n(rst_n),
+        ot_hdc_delay #(.W(TAG + 2 + 32), .D(LA)) u_od (.clk(clk), .rst_n(rst_n),
             .d({in_t, pair, pass, in_x}), .q({od, pd}));
-        wire [5:0] vd;
-        ot_hdc_vline #(.D(5)) u_vd (.clk(clk), .rst_n(rst_n), .v(pair || pass), .vd(vd));
+        wire [LA:0] vd;
+        ot_hdc_vline #(.D(LA)) u_vd (.clk(clk), .rst_n(rst_n), .v(pair || pass), .vd(vd));
         reg  [31:0] q;
         reg         qv;
         reg  [TAG-1:0] qt;
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) qv <= 1'b0;
-            else qv <= vd[5];
+            else qv <= vd[LA];
         end
         always @(posedge clk) begin
             q <= od[1] ? s : pd;               // od = {tag, pair, pass}

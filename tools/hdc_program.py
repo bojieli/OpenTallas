@@ -114,6 +114,9 @@ class Layout:
             self.cb[(L, "qk")] = self.put_const(qk)
             self.cb[(L, "post")] = self.put_const(model.lw(L, "post_attention_layernorm.weight"))
         self.cb["final"] = self.put_const(model.w["model.norm.weight"])
+        # (0, 1/sqrt(head_dim)): the exp pass subtracts M x scale through Q = C x (-B.hi)
+        self.cb["qscale"] = len(self.crom)
+        self.crom.append((F(0), F(1.0 / np.sqrt(self.HD))))
         self.cb["rope"] = len(self.crom)
         for pos in range(TMAX):
             cos, sin, _ = G.rope_tables(pos, self.HD, model.theta)
@@ -279,13 +282,22 @@ def build_program(lay, layers=None, embed=True, head=True):
                    me_wsrc=1, me_ts=HD, me_ks=s_sc, me_js=kjs,
                    me_jsh=jsh, me_xks=s_sc, me_xjs=HD, me_ots=1, me_ojs=S_STRIDE // W, me_mmode=1,
                    me_d_nout=I.DYN_T, me_d_tiles=I.DYN_TTILES,
-                   reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"}, writes={f"S{h}" for h in range(hb, hb + nb)})
+                   **(dict(me_rmax=1, me_mbase=VM["M"] + hb) if I.RMAX else {}),
+                   reads={"QRlo", "QRhi", f"K{L}lo", f"K{L}hi"},
+                   writes={f"S{h}" for h in range(hb, hb + nb)} | ({f"M{hb}"} if I.RMAX else set()))
             sm = dict(su_nout=NH, su_d_nin=I.DYN_T, a_base=VM["S"], a_so=S_STRIDE, a_si=1,
                       d_base=VM["S"], d_so=S_STRIDE, d_si=1, dst=I.DST_VM)
-            su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
-               reads=heads, writes=heads, red_writes={"M"}, **sm)
-            su(b_base=VM["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"],
-               r_so=1, reads=heads | {"M"}, writes=heads, red_writes={"Z"}, **sm)
+            if I.RMAX:
+                # the row max came with the scores (me_rmax, unscaled): e = exp(s*scale - M*scale),
+                # scale > 0 so max(s)*scale is the max of the scaled scores exactly
+                su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), mb=I.MB_NEG, b_src=I.SRC_ALT, b_base=lay.cb["qscale"],
+                   c_base=VM["M"], c_so=1, ad=I.AD_Q, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"], r_so=1,
+                   reads=heads | {f"M{hb}" for hb in range(0, NH, IL)}, writes=heads, red_writes={"Z"}, **sm)
+            else:
+                su(ma=I.MA_AIMM, imm1=f32(1.0 / np.sqrt(HD)), red=I.RED_MAX, r_base=VM["M"], r_so=1,
+                   reads=heads, writes=heads, red_writes={"M"}, **sm)
+                su(b_base=VM["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, r_base=VM["Z"],
+                   r_so=1, reads=heads | {"M"}, writes=heads, red_writes={"Z"}, **sm)
             # (normalise-after-sum: the weighted sum takes the unnormalised
             # exp; hdc_golden.attend)
             # attn[h, d] = sum_t V[g(h), t, d] e[h, t]: lanes d, slots h, k = t
@@ -438,6 +450,16 @@ def me_write_slots(f, groups=GR):
 
 def chase_threshold(f, prod, groups=GR):
     """chase_n for consumer `f` of producer `prod` (other unit), or None."""
+    if (f["unit"] == I.UNIT_ME and prod["unit"] == I.UNIT_SU and f.get("me_wsrc") and I.SU_WIDTH > 1
+            and prod.get("dst", 0) == I.DST_VM and prod.get("d_so", 0) > 0 and prod.get("d_si", 0) == 1):
+        # a KV op reading rows of a stream op's output (P.V of the exp pass): the
+        # rows its slots read must be complete -- slot j reads from x base + j*xjs
+        # on, within one producer row (xjs = the row stride)
+        rows = [(f["me_xbase"] + j * f.get("me_xjs", 0) - prod["d_base"]) // prod["d_so"] for j in range(IL)]
+        if min(rows) < 0 or max(rows) >= prod["su_nout"] or f.get("me_xjs", 0) != prod["d_so"]:
+            return None
+        f["chase_rows"] = 1
+        return max(rows) + 1
     if f["unit"] == I.UNIT_ME and prod["unit"] == I.UNIT_SU:
         if f.get("me_wsrc") or f.get("me_xjs") or f.get("me_d_k") or f.get("me_xks", 1) != 1:
             return None
@@ -538,6 +560,11 @@ class Machine:
         acc = parts[0]
         if f["me_oen"]:
             self.vm[(ob + t * f["me_ots"] + j * f["me_ojs"]) * W + l] = acc
+        if f["me_rmax"]:
+            for jj in range(IL):
+                sel = acc[j == jj]
+                if len(sel):
+                    self.vm[f["me_mbase"] + jj] = F(np.max(sel))
         if f["me_amax"]:
             order = np.argsort(nidx)
             self.logits = acc[order]

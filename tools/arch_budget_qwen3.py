@@ -585,9 +585,9 @@ def gap_table(out):
              cycles_head_8k=sum(v for k2, v in head["sequencer_stalls"].items() if k2 != "unit_busy"),
              status="MISS"),
         dict(block="softmax", requirement="one stream-unit pass over the scores, 1/Z beside P.V",
-             as_built="normalise-after-sum (landed: max pass + exp pass; the scale pass is 32 x 128); the row "
-                      "max stays a stream pass (the engine-side max is not built)",
-             cycles_baseline_2k=None, cycles_head_8k=None, status="PARTIAL"),
+             as_built="landed: the row max on the engine's result path (me_rmax), one exp pass, "
+                      "normalise-after-sum (1/Z on 32 x 128 beside P.V), P.V chasing the exp pass by rows",
+             cycles_baseline_2k=None, cycles_head_8k=None, status="MEETS"),
         dict(block="sequencer issue", requirement=req["instruction_issue"]["requirement"],
              as_built=f"prefetched issue pipeline: {head['instructions']} instructions at gap {T.K['seq_gap']} (landed)",
              cycles_baseline_2k=ab["seq_gap_total"], cycles_head_8k=head["seq_gap_total"], status="MEETS"),

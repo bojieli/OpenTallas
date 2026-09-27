@@ -34,23 +34,27 @@ ROOT = Path(__file__).resolve().parents[1]
 IL = I.INTERLEAVE
 
 # RTL constants (cycles); fitted by `calibrate` and fixed here.
-# Fitted to the reduced vehicle's Verilator issue trace at 4 groups with the
-# prefetched sequencer (issue pipeline: fetch FIFO + decoded NEXT, combinational
-# go): 31,369 model cycles against 31,374 RTL cycles, every issue within 2
-# cycles (tools/rtl_hdc_decode_campaign.py; the pre-pipeline fit was 32,191 vs
-# 32,196 at seq_gap 5).
+# Fitted to the reduced vehicle's Verilator issue trace (4 groups, SW 8): the
+# prefetched sequencer, the vector stream unit, the 3-cycle adders
+# (ot_hdc_fastfp) in the stream unit, reducers and split tree, the engine's
+# row max: 24,986 model cycles against 24,992 RTL cycles, every issue within 3
+# cycles (the pre-pipeline fit was 32,191 vs 32,196 at seq_gap 5).
 K = dict(seq_gap=1,        # go -> next go: NEXT is decoded on the issuing edge
-         start=4,          # start -> first issue: DYN, the first fetch, decode into NEXT
-         idle_me=3,        # matrix engine's last write -> a barrier releases
+         start=3,          # start -> first issue: DYN, the first fetch, decode into NEXT
+         idle_me=4,        # matrix engine's last write -> a barrier releases
          idle_su=1,        # stream unit's last write -> a barrier releases
          me_start=1,       # go -> first element issued
          me_lat=16,        # element issue -> its result written (memory stage, lanes, output registers)
-         me_tree=6,        # per split-tree level (5 in the adder + the level's output register)
+         me_tree=4,        # per split-tree level (the 3-cycle ot_hdc_qadd + the level's output register)
          su_start=1,
-         su_depth={I.SFU_NONE: 29, I.SFU_EXP: 121, I.SFU_RECIP: 75, I.SFU_RSQRT: 90, I.SFU_SIGM: 172},
-         red_tail=31,      # last element retired -> reducer result written (scalar unit)
-         red_tail_vec=43,  # the vector reducer's fixed part, fitted (27,187 model vs 27,192 RTL at SW 8, every issue within 3)
+         # the low-latency (3-stage) adder and multiplier and the table-driven
+         # exp range reduction (rtl/hdc/ot_hdc_fastfp.sv, ot_hdc_sfu.sv; the
+         # worktree-agent-a516a664 branch at acc46e61): 29/121/75/90/172 -> 21/70/49/58/101
+         su_depth={I.SFU_NONE: 21, I.SFU_EXP: 70, I.SFU_RECIP: 49, I.SFU_RSQRT: 58, I.SFU_SIGM: 101},
+         red_tail=21,      # last element retired -> reducer result written (scalar unit; a516: 22 at seq_gap 5)
+         red_tail_vec=26,  # the vector reducer's fixed part: read 1 + square 3+1 + the 3-cycle-adder chain 21
          red_lv=4,         # the vector reducer's time levels (ot_hdc_core LV)
+         rmax_tail=4,      # last result -> the maxima word written, beyond the compare tree's levels
          idle_reg=2)       # last write -> registered idle seen by the sequencer
 
 
@@ -60,7 +64,9 @@ K = dict(seq_gap=1,        # go -> next go: NEXT is decoded on the issuing edge
 # Qwen3-like two-KV-head stream) at a 1 GHz core; c0 (announce to first fetch,
 # issue iterations, completion walk, kv_ok registers) and lat (fetch to data)
 # are fitted to the reduced vehicle's Verilator runs.
-KV = dict(npc=4, bw_per_pc=0.70, c0=12, lat=108, lead=512, win=256)
+# lat was 108 with the 5-stage stream unit; a516 refitted it to 140 when the
+# shorter stream unit reached each KV op sooner (+0.30% / -0.31% at positions 15 / 59).
+KV = dict(npc=4, bw_per_pc=0.70, c0=12, lat=140, lead=512, win=256)
 
 
 def me_loop(f, dyn, pos, groups):
@@ -88,11 +94,11 @@ def su_vectors(f, dyn, su_width=None):
 def red_tail(k, su_width=None):
     """Last element retired -> the reducer's result written.  The vector
     reducer (rtl/hdc/ot_hdc_vreduce.sv): squaring stage, the 8-element chain,
-    log2(SW/8) tree levels and LV time levels of 6 cycles each."""
+    log2(SW/8) tree levels and LV time levels of LA + 1 = 4 cycles each."""
     sw = I.SU_WIDTH if su_width is None else su_width
     if sw == 1:
         return k["red_tail"]
-    return k["red_tail_vec"] + 6 * ((sw // 8).bit_length() - 1 + k["red_lv"])
+    return k["red_tail_vec"] + 4 * ((sw // 8).bit_length() - 1 + k["red_lv"])
 
 
 def kv_op(f, dyn, pos, groups):
@@ -150,8 +156,11 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
 
         elif f["chase"]:
             n = f["chase_n"]
-            if u == I.UNIT_ME:
-                first, cnt = su_el_t
+            if u == I.UNIT_ME and f["chase_rows"]:
+                first, cnt, per_row = su_el_t
+                c = first + min(n * per_row, cnt) - 1 + 1 + k.get("chase_me", 0)
+            elif u == I.UNIT_ME:
+                first, cnt, _ = su_el_t
                 c = first + min(n, cnt) - 1 + 1 + k.get("chase_me", 0)
             else:
                 c = me_slot_t[min(n, len(me_slot_t)) - 1] + 1 + k.get("chase_su", 0)
@@ -188,7 +197,8 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             lat = k["me_lat"] + k["me_tree"] * (groups.bit_length() - 1)
             me_slot_t = [e0 + r * kc * IL + (kc - 1) * IL + j + lat for r in range(rounds) for j in range(IL)]
             me_free = e0 + n_el
-            me_idle = max(me_idle, me_slot_t[-1])
+            me_idle = max(me_idle, me_slot_t[-1] + (k.get("rmax_tail", 0) + (groups * I.W_LANES - 1).bit_length()
+                                                    if f["me_rmax"] else 0))
         else:
             cls = f["sfu"]
             go = max(ready, su_free)
@@ -200,7 +210,7 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             n_el = su_vectors(f, dyn, su_width)
             e0 = go + k["su_start"]
             d = k["su_depth"][cls]
-            su_el_t = (e0 + d, n_el)
+            su_el_t = (e0 + d, n_el, n_el // max(1, f["su_nout"]))
             last = e0 + n_el - 1 + d
             tail = last + (red_tail(k, su_width) if f["red"] else 0)
             su_free = e0 + n_el
@@ -248,7 +258,7 @@ class ShapeLayout:
             self.mat[(L, "gu")] = mat(2 * self.FF, self.H)
             self.mat[(L, "down")] = mat(self.H, self.FF)
         self.mat["lm_head"] = mat(self.V, self.H)
-        self.cb = {k: 0 for k in [(L, n) for L in range(self.L) for n in ("in", "qk", "post")] + ["final", "rope"]}
+        self.cb = {k: 0 for k in [(L, n) for L in range(self.L) for n in ("in", "qk", "post")] + ["final", "rope", "qscale"]}
 
     def k_elem(self, L, g, t, d):
         return ((L * self.KV + g) * self.TW + t) * self.HD + d

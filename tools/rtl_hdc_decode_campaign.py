@@ -55,13 +55,16 @@ WROM_ROWS = 6
 VERILATOR5 = Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"
 PIPES = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"]
 ISA_SVH = ROOT / "rtl/hdc/ot_hdc_isa.svh"
-HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
+HDC = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_fastfp", "ot_hdc_sfu",
                                           "ot_hdc_reduce", "ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_vstream_lane",
                                           "ot_hdc_vreduce", "ot_hdc_vstream", "ot_hdc_core")]
 TB_SFU = ROOT / "rtl/test/tb_hdc_sfu.sv"
 TB_MUL = ROOT / "rtl/test/tb_hdc_mul_equiv.sv"
 HARNESS_MUL = ROOT / "rtl/test/hdc_mul_equiv_harness.cpp"
 MUL_VECTORS = 20_000_000
+TB_FAST = ROOT / "rtl/test/tb_hdc_fastfp_equiv.sv"
+HARNESS_FAST = ROOT / "rtl/test/hdc_fastfp_equiv_harness.cpp"
+FAST_VECTORS = 20_000_000
 TB_CORE = ROOT / "rtl/test/tb_hdc_core.sv"
 HARNESS = ROOT / "rtl/test/hdc_core_harness.cpp"
 TOOLS = [ROOT / "tools/hdc_golden.py", ROOT / "tools/hdc_isa.py", ROOT / "tools/hdc_program.py", Path(__file__)]
@@ -145,7 +148,7 @@ def run(memsys: bool = False) -> dict:
         # 1. special functions
         n_vec = sfu_vectors(s / "sfu.txt")
         subprocess.run(["iverilog", "-g2012", "-o", str(s / "sfu.vvp"), str(TB_SFU),
-                        *map(str, HDC[0:4]), *map(str, PIPES)], check=True)
+                        *map(str, HDC[0:5]), *map(str, PIPES)], check=True)
         sfu = subprocess.run(["vvp", "-n", str(s / "sfu.vvp"), f"+VEC={s / 'sfu.txt'}"],
                              check=True, capture_output=True, text=True).stdout
         m = re.search(r"SFU vectors=(\d+) checked=(\d+) errors=(\d+)", sfu)
@@ -164,6 +167,17 @@ def run(memsys: bool = False) -> dict:
                    "fp32_rebalanced_mismatches": int(m1.group(2)), "bf16_exact_checked": int(m2.group(1)),
                    "bf16_refused": int(m2.group(2)), "bf16_mismatches": int(m2.group(3)),
                    "pass": "PASS" in mul}
+        # 1c. low-latency adder and multiplier (worktree-agent-a516a664)
+        subprocess.run(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_fastfp_equiv", "-Mdir", str(s / "objq"),
+                        str(HDC[1]), str(HDC[2]), str(HDC[3]), *map(str, PIPES), str(TB_FAST), str(HARNESS_FAST),
+                        "-CFLAGS", "-O1"], check=True, capture_output=True)
+        fast = subprocess.run([str(s / "objq" / "Vtb_hdc_fastfp_equiv"), f"+N={FAST_VECTORS}"], check=True,
+                              capture_output=True, text=True).stdout
+        mf = re.search(r"FASTFP checked=(\d+) add_mismatches=(\d+) mul_mismatches=(\d+)", fast)
+        fast_rec = {"vectors": FAST_VECTORS, "checked": int(mf.group(1)), "add_mismatches": int(mf.group(2)),
+                    "mul_mismatches": int(mf.group(3)), "latency_cycles": 3, "reference_latency_cycles": 5,
+                    "pass": "PASS" in fast}
         # 2. lint
         lint = subprocess.run(["verilator", "--lint-only", *LINT_FLAGS, "--top-module", "ot_hdc_core", *sup,
                                f"-I{ISA_SVH.parent}", *map(str, HDC), *map(str, PIPES)], capture_output=True, text=True)
@@ -274,7 +288,7 @@ def run(memsys: bool = False) -> dict:
         bist_ok = (c["bist_pass"] == 1 and c["token_pass"] and f["token_pass"] and f["bist_pass"] == 0
                    and f["sram_status"][-2:] == "10" and f["rom_ecc_corrected"] > 0
                    and f["rom_status"][-2 * 6:-2 * 5] == "11" and f["cycles"] == c["cycles"])
-    status = "pass" if bist_ok and sfu_rec["pass"] and mul_rec["pass"] and single["pass"] and scale8["pass"] and longc["pass"] and multi_rec["pass"] and lint.returncode == 0 \
+    status = "pass" if bist_ok and sfu_rec["pass"] and mul_rec["pass"] and fast_rec["pass"] and single["pass"] and scale8["pass"] and longc["pass"] and multi_rec["pass"] and lint.returncode == 0 \
         else "fail"
     record = {
         "schema": "opentallas.hdc-decode-campaign.v1",
@@ -291,6 +305,7 @@ def run(memsys: bool = False) -> dict:
         "weight_macs_per_token": macs,
         "sfu": sfu_rec,
         "multipliers": mul_rec,
+        "low_latency_fp_units": fast_rec,
         "single_step": single,
         "end_to_end": multi_rec,
         "scaling_8_groups": scale8,
@@ -298,7 +313,8 @@ def run(memsys: bool = False) -> dict:
         "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                            "messages": lint.stderr.strip().splitlines()[:20]},
         "input_sha256": {str(p.relative_to(ROOT)): sha(p)
-                         for p in (ISA_SVH, *HDC, *PIPES, TB_SFU, TB_MUL, HARNESS_MUL, TB_CORE, HARNESS, *TOOLS,
+                         for p in (ISA_SVH, *HDC, *PIPES, TB_SFU, TB_MUL, HARNESS_MUL, TB_FAST, HARNESS_FAST, TB_CORE,
+                                   HARNESS, *TOOLS,
                                    *(MEMSYS_RTL if memsys else []))},
     }
     if memsys:

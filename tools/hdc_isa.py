@@ -22,9 +22,15 @@ The core runs a static program of macro-operations.  Two units execute them:
       wbase + t*ts + c*wcs + k*ks + (j >> jsh)*js,  x  xbase + c*xcs + k*xks + j*xjs,
   and DYN_TTILES counts rounds of G/S position tiles (pos >> (log2(W*G) - s)) + 1.
   (tools/hdc_golden.py matvec_il / attn_splits.)  Every product is BF16 x BF16.
+  `me_rmax`: the engine also takes, per result slot j, the max over the op's
+  valid results (a compare tree on the result lanes, beside the argmax tree)
+  and writes the IL maxima to elements me_mbase + j after the op's last
+  result -- the attention rows' max as the scores emerge.
   `wait_me` / `wait_su`: instead of a barrier (both units drained), wait for
   that unit only -- the unit whose in-flight ops touch what this op reads or
   writes; the other unit keeps running (tools/hdc_program.py).
+  `chase_rows` (a matrix-engine op chasing the vector stream unit): chase_n
+  counts the producer's completed ROWS (outer iterations) instead of vectors.
   `chase` (either unit): instead of waiting for a barrier, start once the
   OTHER unit's latest instruction has made `chase_n` progress -- elements
   written for the stream unit, result slots (one per slot per round) for the
@@ -59,6 +65,7 @@ PKG = ROOT / "rtl/hdc/ot_hdc_isa.svh"
 W_LANES = 16          # lanes per ME group, and the vector/KV memory word width
 GROUPS = int(os.environ.get("HDC_GROUPS", 4))   # ME lane groups: W_LANES * GROUPS MACs per cycle
 SU_WIDTH = int(os.environ.get("HDC_SU_WIDTH", 8))  # stream-unit lanes (a multiple of 8): elements per cycle
+RMAX = os.environ.get("HDC_RMAX", "1") != "0"      # the attention rows' max on the engine (me_rmax); 0: a stream pass
 INTERLEAVE = 8        # ME outputs in flight per lane (adder latency 5 + 3)
 T_MAX = 64            # KV positions provisioned
 VM_ELEMS = 4096       # vector memory, FP32 elements
@@ -84,7 +91,7 @@ DST_NONE, DST_VM, DST_KV = range(3)
 RED_NONE, RED_SUM, RED_MAX = range(3)
 
 FIELDS = [
-    ("unit", 2), ("barrier", 1), ("chase", 1), ("chase_n", N), ("wait_me", 1), ("wait_su", 1),
+    ("unit", 2), ("barrier", 1), ("chase", 1), ("chase_n", N), ("wait_me", 1), ("wait_su", 1), ("chase_rows", 1),
     # ME
     ("me_nout", N), ("me_tiles", N), ("me_k", N), ("me_wsrc", 1),
     ("me_wbase", A), ("me_ts", A), ("me_ks", A), ("me_js", A),
@@ -92,7 +99,7 @@ FIELDS = [
     ("me_d_wbase", D), ("me_d_xbase", D), ("me_d_obase", D),
     ("me_d_nout", D), ("me_d_tiles", D), ("me_d_k", D),
     ("me_xks", A), ("me_xjs", A), ("me_jsh", 3), ("me_ots", A), ("me_ojs", A), ("me_mmode", 1),
-    ("me_split", 4), ("me_xcs", A), ("me_wcs", A),
+    ("me_split", 4), ("me_xcs", A), ("me_wcs", A), ("me_rmax", 1), ("me_mbase", A),
     # SU
     ("su_nout", N), ("su_nin", N), ("su_d_nin", D),
     ("a_src", 1), ("a_base", A), ("a_so", A), ("a_si", A), ("a_d", D),

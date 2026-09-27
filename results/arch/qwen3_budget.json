@@ -292,13 +292,13 @@
    "su_width": 1,
    "attention_mapping": "as_built",
    "chained_elementwise": false,
-   "layer_cycles": 1099889,
-   "token_cycles": 39600756,
+   "layer_cycles": 1099683,
+   "token_cycles": 39593340,
    "components": {
     "weights": 57744,
     "attention": 9584640,
     "elementwise": 29899368,
-    "latency": 58248,
+    "latency": 50832,
     "control": 756
    },
    "tokens_s": 27.7,
@@ -319,13 +319,13 @@
      "stage": "qkv",
      "kind": "mv",
      "throughput": 192,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "qk_norm.sumsq",
      "kind": "red",
      "throughput": 5120,
-     "exposed_latency": 60
+     "exposed_latency": 50
     },
     {
      "stage": "qk_norm.rsqrt",
@@ -349,19 +349,19 @@
      "stage": "scores",
      "kind": "attn",
      "throughput": 4096,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "softmax.max",
      "kind": "red",
      "throughput": 262144,
-     "exposed_latency": 60
+     "exposed_latency": 50
     },
     {
      "stage": "softmax.exp_sum",
      "kind": "red",
      "throughput": 262144,
-     "exposed_latency": 152
+     "exposed_latency": 142
     },
     {
      "stage": "softmax.recip",
@@ -379,19 +379,19 @@
      "stage": "pv",
      "kind": "attn",
      "throughput": 262144,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "o",
      "kind": "mv",
      "throughput": 128,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4096,
-     "exposed_latency": 60
+     "exposed_latency": 50
     },
     {
      "stage": "ffn_norm.rsqrt",
@@ -409,7 +409,7 @@
      "stage": "gate_up",
      "kind": "mv",
      "throughput": 768,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "silu_mul",
@@ -421,13 +421,13 @@
      "stage": "down",
      "kind": "mv",
      "throughput": 384,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4096,
-     "exposed_latency": 60
+     "exposed_latency": 50
     }
    ]
   },
@@ -436,16 +436,16 @@
    "su_width": 1024,
    "attention_mapping": "ksplit",
    "chained_elementwise": true,
-   "layer_cycles": 4452,
-   "token_cycles": 165024,
+   "layer_cycles": 4246,
+   "token_cycles": 157608,
    "components": {
     "weights": 57744,
     "attention": 18432,
     "elementwise": 19044,
-    "latency": 69048,
+    "latency": 61632,
     "control": 756
    },
-   "tokens_s": 6657.5,
+   "tokens_s": 6970.7,
    "stages": [
     {
      "stage": "attn_norm.rsqrt",
@@ -463,13 +463,13 @@
      "stage": "qkv",
      "kind": "mv",
      "throughput": 192,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "qk_norm.sumsq",
      "kind": "red",
      "throughput": 5,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "qk_norm.rsqrt",
@@ -493,19 +493,19 @@
      "stage": "scores",
      "kind": "attn",
      "throughput": 256,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "softmax.max",
      "kind": "red",
      "throughput": 256,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "softmax.exp_sum",
      "kind": "red",
      "throughput": 256,
-     "exposed_latency": 212
+     "exposed_latency": 202
     },
     {
      "stage": "softmax.recip",
@@ -523,19 +523,19 @@
      "stage": "pv",
      "kind": "attn",
      "throughput": 256,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "o",
      "kind": "mv",
      "throughput": 128,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "ffn_norm.rsqrt",
@@ -553,7 +553,7 @@
      "stage": "gate_up",
      "kind": "mv",
      "throughput": 768,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "silu_mul",
@@ -565,13 +565,13 @@
      "stage": "down",
      "kind": "mv",
      "throughput": 384,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4,
-     "exposed_latency": 120
+     "exposed_latency": 110
     }
    ]
   },
@@ -580,16 +580,16 @@
    "su_width": 1024,
    "attention_mapping": "ksplit",
    "chained_elementwise": true,
-   "layer_cycles": 4033,
-   "token_cycles": 149940,
+   "layer_cycles": 3837,
+   "token_cycles": 142884,
    "components": {
     "weights": 57744,
     "attention": 18432,
     "elementwise": 9792,
-    "latency": 63252,
+    "latency": 56196,
     "control": 720
    },
-   "tokens_s": 7327.2,
+   "tokens_s": 7689.0,
    "stages": [
     {
      "stage": "attn_norm.rsqrt",
@@ -607,13 +607,13 @@
      "stage": "qkv",
      "kind": "mv",
      "throughput": 192,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "qk_norm.sumsq",
      "kind": "red",
      "throughput": 5,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "qk_norm.rsqrt",
@@ -637,7 +637,7 @@
      "stage": "scores",
      "kind": "attn",
      "throughput": 256,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "scores.max",
@@ -649,13 +649,13 @@
      "stage": "softmax.exp_sum",
      "kind": "red",
      "throughput": 256,
-     "exposed_latency": 212
+     "exposed_latency": 202
     },
     {
      "stage": "pv",
      "kind": "attn",
      "throughput": 256,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "pv.scale",
@@ -667,13 +667,13 @@
      "stage": "o",
      "kind": "mv",
      "throughput": 128,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "ffn_norm.rsqrt",
@@ -691,7 +691,7 @@
      "stage": "gate_up",
      "kind": "mv",
      "throughput": 768,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "silu_mul",
@@ -703,13 +703,13 @@
      "stage": "down",
      "kind": "mv",
      "throughput": 384,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4,
-     "exposed_latency": 120
+     "exposed_latency": 110
     }
    ]
   },
@@ -718,16 +718,16 @@
    "su_width": 1,
    "attention_mapping": "as_built",
    "chained_elementwise": false,
-   "layer_cycles": 313457,
-   "token_cycles": 11289204,
+   "layer_cycles": 313251,
+   "token_cycles": 11281788,
    "components": {
     "weights": 57744,
     "attention": 2506752,
     "elementwise": 8665704,
-    "latency": 58248,
+    "latency": 50832,
     "control": 756
    },
-   "tokens_s": 97.3,
+   "tokens_s": 97.4,
    "stages": [
     {
      "stage": "attn_norm.rsqrt",
@@ -745,13 +745,13 @@
      "stage": "qkv",
      "kind": "mv",
      "throughput": 192,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "qk_norm.sumsq",
      "kind": "red",
      "throughput": 5120,
-     "exposed_latency": 60
+     "exposed_latency": 50
     },
     {
      "stage": "qk_norm.rsqrt",
@@ -775,19 +775,19 @@
      "stage": "scores",
      "kind": "attn",
      "throughput": 4096,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "softmax.max",
      "kind": "red",
      "throughput": 65536,
-     "exposed_latency": 60
+     "exposed_latency": 50
     },
     {
      "stage": "softmax.exp_sum",
      "kind": "red",
      "throughput": 65536,
-     "exposed_latency": 152
+     "exposed_latency": 142
     },
     {
      "stage": "softmax.recip",
@@ -805,19 +805,19 @@
      "stage": "pv",
      "kind": "attn",
      "throughput": 65536,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "o",
      "kind": "mv",
      "throughput": 128,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4096,
-     "exposed_latency": 60
+     "exposed_latency": 50
     },
     {
      "stage": "ffn_norm.rsqrt",
@@ -835,7 +835,7 @@
      "stage": "gate_up",
      "kind": "mv",
      "throughput": 768,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "silu_mul",
@@ -847,13 +847,13 @@
      "stage": "down",
      "kind": "mv",
      "throughput": 384,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4096,
-     "exposed_latency": 60
+     "exposed_latency": 50
     }
    ]
   },
@@ -862,16 +862,16 @@
    "su_width": 1024,
    "attention_mapping": "ksplit",
    "chained_elementwise": true,
-   "layer_cycles": 3684,
-   "token_cycles": 137376,
+   "layer_cycles": 3478,
+   "token_cycles": 129960,
    "components": {
     "weights": 57744,
     "attention": 4608,
     "elementwise": 5220,
-    "latency": 69048,
+    "latency": 61632,
     "control": 756
    },
-   "tokens_s": 7997.3,
+   "tokens_s": 8453.7,
    "stages": [
     {
      "stage": "attn_norm.rsqrt",
@@ -889,13 +889,13 @@
      "stage": "qkv",
      "kind": "mv",
      "throughput": 192,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "qk_norm.sumsq",
      "kind": "red",
      "throughput": 5,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "qk_norm.rsqrt",
@@ -919,19 +919,19 @@
      "stage": "scores",
      "kind": "attn",
      "throughput": 64,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "softmax.max",
      "kind": "red",
      "throughput": 64,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "softmax.exp_sum",
      "kind": "red",
      "throughput": 64,
-     "exposed_latency": 212
+     "exposed_latency": 202
     },
     {
      "stage": "softmax.recip",
@@ -949,19 +949,19 @@
      "stage": "pv",
      "kind": "attn",
      "throughput": 64,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "o",
      "kind": "mv",
      "throughput": 128,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "ffn_norm.rsqrt",
@@ -979,7 +979,7 @@
      "stage": "gate_up",
      "kind": "mv",
      "throughput": 768,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "silu_mul",
@@ -991,13 +991,13 @@
      "stage": "down",
      "kind": "mv",
      "throughput": 384,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4,
-     "exposed_latency": 120
+     "exposed_latency": 110
     }
    ]
   },
@@ -1006,16 +1006,16 @@
    "su_width": 1024,
    "attention_mapping": "ksplit",
    "chained_elementwise": true,
-   "layer_cycles": 3457,
-   "token_cycles": 129204,
+   "layer_cycles": 3261,
+   "token_cycles": 122148,
    "components": {
     "weights": 57744,
     "attention": 4608,
     "elementwise": 2880,
-    "latency": 63252,
+    "latency": 56196,
     "control": 720
    },
-   "tokens_s": 8503.1,
+   "tokens_s": 8994.3,
    "stages": [
     {
      "stage": "attn_norm.rsqrt",
@@ -1033,13 +1033,13 @@
      "stage": "qkv",
      "kind": "mv",
      "throughput": 192,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "qk_norm.sumsq",
      "kind": "red",
      "throughput": 5,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "qk_norm.rsqrt",
@@ -1063,7 +1063,7 @@
      "stage": "scores",
      "kind": "attn",
      "throughput": 64,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "scores.max",
@@ -1075,13 +1075,13 @@
      "stage": "softmax.exp_sum",
      "kind": "red",
      "throughput": 64,
-     "exposed_latency": 212
+     "exposed_latency": 202
     },
     {
      "stage": "pv",
      "kind": "attn",
      "throughput": 64,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "pv.scale",
@@ -1093,13 +1093,13 @@
      "stage": "o",
      "kind": "mv",
      "throughput": 128,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4,
-     "exposed_latency": 120
+     "exposed_latency": 110
     },
     {
      "stage": "ffn_norm.rsqrt",
@@ -1117,7 +1117,7 @@
      "stage": "gate_up",
      "kind": "mv",
      "throughput": 768,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "silu_mul",
@@ -1129,13 +1129,13 @@
      "stage": "down",
      "kind": "mv",
      "throughput": 384,
-     "exposed_latency": 94
+     "exposed_latency": 68
     },
     {
      "stage": "residual+sumsq",
      "kind": "red",
      "throughput": 4,
-     "exposed_latency": 120
+     "exposed_latency": 110
     }
    ]
   }
@@ -1274,44 +1274,44 @@
  "rom_token": {
   "8192/bf16": {
    "cycles": 245762,
-   "compute_cycles": 149940,
+   "compute_cycles": 142884,
    "kv_stream_cycles": 245762,
    "tokens_s": 4470.3,
    "binding": "kv_stream"
   },
   "8192/fp8": {
-   "cycles": 149940,
-   "compute_cycles": 149940,
+   "cycles": 142884,
+   "compute_cycles": 142884,
    "kv_stream_cycles": 122881,
-   "tokens_s": 7327.2,
+   "tokens_s": 7689.0,
    "binding": "compute"
   },
   "8192/int4": {
-   "cycles": 149940,
-   "compute_cycles": 149940,
+   "cycles": 142884,
+   "compute_cycles": 142884,
    "kv_stream_cycles": 61440,
-   "tokens_s": 7327.2,
+   "tokens_s": 7689.0,
    "binding": "compute"
   },
   "2048/bf16": {
-   "cycles": 129204,
-   "compute_cycles": 129204,
+   "cycles": 122148,
+   "compute_cycles": 122148,
    "kv_stream_cycles": 61440,
-   "tokens_s": 8503.1,
+   "tokens_s": 8994.3,
    "binding": "compute"
   },
   "2048/fp8": {
-   "cycles": 129204,
-   "compute_cycles": 129204,
+   "cycles": 122148,
+   "compute_cycles": 122148,
    "kv_stream_cycles": 30720,
-   "tokens_s": 8503.1,
+   "tokens_s": 8994.3,
    "binding": "compute"
   },
   "2048/int4": {
-   "cycles": 129204,
-   "compute_cycles": 129204,
+   "cycles": 122148,
+   "compute_cycles": 122148,
    "kv_stream_cycles": 15360,
-   "tokens_s": 8503.1,
+   "tokens_s": 8994.3,
    "binding": "compute"
   }
  },
@@ -1393,24 +1393,24 @@
    "su_width": 1024,
    "reducer_time_levels": 3,
    "max_split": null,
-   "instructions": 4540,
-   "cycles": 174856,
+   "instructions": 4504,
+   "cycles": 131185,
    "unit_busy": {
-    "stream": 29817,
+    "stream": 20601,
     "weights": 52992,
     "attn_scores": 9216,
     "attn_pv": 9216,
     "lm_head": 4752
    },
    "sequencer_stalls": {
-    "wait_su": 57827,
-    "chase": 66597,
+    "wait_su": 20994,
+    "chase": 66805,
     "unit_busy": 20052,
-    "barrier_su": 9504,
-    "wait_me": 5760,
-    "barrier_me": 5724
+    "barrier_su": 5796,
+    "wait_me": 5616,
+    "barrier_me": 2592
    },
-   "seq_gap_total": 4540
+   "seq_gap_total": 4504
   },
   "2048": {
    "context": 2048,
@@ -1418,24 +1418,23 @@
    "su_width": 1024,
    "reducer_time_levels": 2,
    "max_split": null,
-   "instructions": 4540,
-   "cycles": 146122,
+   "instructions": 4504,
+   "cycles": 115989,
    "unit_busy": {
-    "stream": 15993,
+    "stream": 13689,
     "weights": 52992,
     "attn_scores": 2304,
     "attn_pv": 2304,
     "lm_head": 4752
    },
    "sequencer_stalls": {
-    "wait_su": 42917,
-    "chase": 66597,
+    "wait_su": 20414,
+    "chase": 65077,
     "unit_busy": 9684,
-    "barrier_su": 9504,
-    "wait_me": 4032,
-    "barrier_me": 3996
+    "barrier_su": 7596,
+    "wait_me": 3888
    },
-   "seq_gap_total": 4540
+   "seq_gap_total": 4504
   }
  },
  "gap": [
@@ -1444,7 +1443,7 @@
    "requirement": "1024 elements/cycle",
    "as_built": "vector stream unit, SW lanes (landed: RTL parameter; 1024 at the spec), R-ARITH reducer",
    "cycles_baseline_2k": 8710761,
-   "cycles_head_8k": 29817,
+   "cycles_head_8k": 20601,
    "status": "MEETS"
   },
   {
@@ -1468,23 +1467,23 @@
    "requirement": "<= 54 cycles exposed a stage",
    "as_built": "per-unit waits (landed: wait_me / wait_su, barrier = both), element chaining across units; still whole-op granular within a unit",
    "cycles_baseline_2k": 13463058,
-   "cycles_head_8k": 145412,
+   "cycles_head_8k": 101803,
    "status": "MISS"
   },
   {
    "block": "softmax",
    "requirement": "one stream-unit pass over the scores, 1/Z beside P.V",
-   "as_built": "normalise-after-sum (landed: max pass + exp pass; the scale pass is 32 x 128); the row max stays a stream pass (the engine-side max is not built)",
+   "as_built": "landed: the row max on the engine's result path (me_rmax), one exp pass, normalise-after-sum (1/Z on 32 x 128 beside P.V), P.V chasing the exp pass by rows",
    "cycles_baseline_2k": null,
    "cycles_head_8k": null,
-   "status": "PARTIAL"
+   "status": "MEETS"
   },
   {
    "block": "sequencer issue",
    "requirement": "<= 3880 control cycles a token exposed",
-   "as_built": "prefetched issue pipeline: 4540 instructions at gap 1 (landed)",
+   "as_built": "prefetched issue pipeline: 4504 instructions at gap 1 (landed)",
    "cycles_baseline_2k": 22700,
-   "cycles_head_8k": 4540,
+   "cycles_head_8k": 4504,
    "status": "MEETS"
   },
   {
@@ -1512,8 +1511,8 @@
   "controller_queue_beats_per_pseudo_channel_min": 512,
   "controller_queue_basis": "bandwidth x tRFC (350 ns) = ~350 beats; on the V4.1 HBM vehicle a refreshing channel's full 64-beat queue stalled the in-order stream for ~tRFC (up to 15% of a token); neutral for Qwen3 (+0.1%)",
   "refresh_policy": "0.90 of RAW peak with refresh on: REFab (tRFC 350 ns / tREFI 3.9 us, 9.0% floor) meets it as measured on the Qwen3 reduced vehicle (0.904 / 0.910 at 1 / 2 pseudo-channels); REFpb is allowed only with a record showing >= 0.90; a refreshing channel must not stall requests to other channels",
-  "longest_weight_free_interval_cycles": 1505,
-  "prefetch_buffer_bytes_min": 7397328,
+  "longest_weight_free_interval_cycles": 1433,
+  "prefetch_buffer_bytes_min": 7043436,
   "hbm_bytes_per_cycle": 4915,
   "per_context": {
    "8192": {
@@ -1565,72 +1564,72 @@
      {
       "block": 1,
       "tokens_per_step": 1.0,
-      "step_cycles": 149940,
-      "tokens_s": 7327.2,
+      "step_cycles": 142884,
+      "tokens_s": 7689.0,
       "speedup": 1.0
      },
      {
       "block": 2,
       "tokens_per_step": 1.699,
-      "step_cycles": 262417,
-      "tokens_s": 7112.0,
-      "speedup": 0.971
+      "step_cycles": 255361,
+      "tokens_s": 7308.5,
+      "speedup": 0.951
      },
      {
       "block": 3,
       "tokens_per_step": 2.187,
-      "step_cycles": 364015,
-      "tokens_s": 6601.1,
-      "speedup": 0.901
+      "step_cycles": 356959,
+      "tokens_s": 6731.6,
+      "speedup": 0.875
      },
      {
       "block": 4,
       "tokens_per_step": 2.535,
-      "step_cycles": 465613,
-      "tokens_s": 5980.9,
-      "speedup": 0.816
+      "step_cycles": 458557,
+      "tokens_s": 6072.9,
+      "speedup": 0.79
      },
      {
       "block": 5,
       "tokens_per_step": 2.791,
-      "step_cycles": 567212,
-      "tokens_s": 5406.8,
-      "speedup": 0.738
+      "step_cycles": 560156,
+      "tokens_s": 5474.9,
+      "speedup": 0.712
      },
      {
       "block": 6,
       "tokens_per_step": 2.996,
-      "step_cycles": 668811,
-      "tokens_s": 4922.2,
-      "speedup": 0.672
+      "step_cycles": 661755,
+      "tokens_s": 4974.7,
+      "speedup": 0.647
      },
      {
       "block": 8,
       "tokens_per_step": 3.339,
-      "step_cycles": 872012,
-      "tokens_s": 4206.4,
-      "speedup": 0.574
+      "step_cycles": 864956,
+      "tokens_s": 4240.7,
+      "speedup": 0.552
      },
      {
       "block": 12,
       "tokens_per_step": 3.8,
-      "step_cycles": 1278421,
-      "tokens_s": 3265.9,
-      "speedup": 0.446
+      "step_cycles": 1271365,
+      "tokens_s": 3284.0,
+      "speedup": 0.427
      },
      {
       "block": 16,
       "tokens_per_step": 4.102,
-      "step_cycles": 1684840,
-      "tokens_s": 2674.5,
-      "speedup": 0.365
+      "step_cycles": 1677784,
+      "tokens_s": 2685.8,
+      "speedup": 0.349
      }
     ],
     "best": {
      "block": 1,
      "tokens_per_step": 1.0,
-     "step_cycles": 149940,
-     "tokens_s": 7327.2,
+     "step_cycles": 142884,
+     "tokens_s": 7689.0,
      "speedup": 1.0
     }
    },
@@ -1642,73 +1641,73 @@
      {
       "block": 1,
       "tokens_per_step": 1.0,
-      "step_cycles": 149940,
-      "tokens_s": 7327.2,
+      "step_cycles": 142884,
+      "tokens_s": 7689.0,
       "speedup": 1.0
      },
      {
       "block": 2,
       "tokens_per_step": 1.699,
-      "step_cycles": 172987,
-      "tokens_s": 10788.8,
-      "speedup": 1.472
+      "step_cycles": 165931,
+      "tokens_s": 11247.6,
+      "speedup": 1.463
      },
      {
       "block": 3,
       "tokens_per_step": 2.187,
-      "step_cycles": 183570,
-      "tokens_s": 13089.9,
-      "speedup": 1.786
+      "step_cycles": 176514,
+      "tokens_s": 13613.1,
+      "speedup": 1.77
      },
      {
       "block": 4,
       "tokens_per_step": 2.535,
-      "step_cycles": 274748,
-      "tokens_s": 10135.8,
-      "speedup": 1.383
+      "step_cycles": 267692,
+      "tokens_s": 10402.9,
+      "speedup": 1.353
      },
      {
       "block": 5,
       "tokens_per_step": 2.791,
-      "step_cycles": 289751,
-      "tokens_s": 10584.2,
-      "speedup": 1.445
+      "step_cycles": 282695,
+      "tokens_s": 10848.4,
+      "speedup": 1.411
      },
      {
       "block": 6,
       "tokens_per_step": 2.996,
-      "step_cycles": 304753,
-      "tokens_s": 10802.2,
-      "speedup": 1.474
+      "step_cycles": 297697,
+      "tokens_s": 11058.2,
+      "speedup": 1.438
      },
      {
       "block": 8,
       "tokens_per_step": 3.339,
-      "step_cycles": 410935,
-      "tokens_s": 8926.0,
-      "speedup": 1.218
+      "step_cycles": 403879,
+      "tokens_s": 9082.0,
+      "speedup": 1.181
      },
      {
       "block": 12,
       "tokens_per_step": 3.8,
-      "step_cycles": 547124,
-      "tokens_s": 7631.2,
-      "speedup": 1.041
+      "step_cycles": 540068,
+      "tokens_s": 7730.9,
+      "speedup": 1.005
      },
      {
       "block": 16,
       "tokens_per_step": 4.102,
-      "step_cycles": 759493,
-      "tokens_s": 5933.1,
-      "speedup": 0.81
+      "step_cycles": 752437,
+      "tokens_s": 5988.8,
+      "speedup": 0.779
      }
     ],
     "best": {
      "block": 3,
      "tokens_per_step": 2.187,
-     "step_cycles": 183570,
-     "tokens_s": 13089.9,
-     "speedup": 1.786
+     "step_cycles": 176514,
+     "tokens_s": 13613.1,
+     "speedup": 1.77
     }
    },
    "2048/fp8/m1": {
@@ -1719,73 +1718,73 @@
      {
       "block": 1,
       "tokens_per_step": 1.0,
-      "step_cycles": 129204,
-      "tokens_s": 8503.1,
+      "step_cycles": 122148,
+      "tokens_s": 8994.3,
       "speedup": 1.0
      },
      {
       "block": 2,
       "tokens_per_step": 1.699,
-      "step_cycles": 217105,
-      "tokens_s": 8596.4,
-      "speedup": 1.011
+      "step_cycles": 210049,
+      "tokens_s": 8885.1,
+      "speedup": 0.988
      },
      {
       "block": 3,
       "tokens_per_step": 2.187,
-      "step_cycles": 296047,
-      "tokens_s": 8116.6,
-      "speedup": 0.955
+      "step_cycles": 288991,
+      "tokens_s": 8314.8,
+      "speedup": 0.924
      },
      {
       "block": 4,
       "tokens_per_step": 2.535,
-      "step_cycles": 374989,
-      "tokens_s": 7426.3,
-      "speedup": 0.873
+      "step_cycles": 367933,
+      "tokens_s": 7568.7,
+      "speedup": 0.842
      },
      {
       "block": 5,
       "tokens_per_step": 2.791,
-      "step_cycles": 453932,
-      "tokens_s": 6756.1,
-      "speedup": 0.795
+      "step_cycles": 446876,
+      "tokens_s": 6862.7,
+      "speedup": 0.763
      },
      {
       "block": 6,
       "tokens_per_step": 2.996,
-      "step_cycles": 532875,
-      "tokens_s": 6177.8,
-      "speedup": 0.727
+      "step_cycles": 525819,
+      "tokens_s": 6260.7,
+      "speedup": 0.696
      },
      {
       "block": 8,
       "tokens_per_step": 3.339,
-      "step_cycles": 690764,
-      "tokens_s": 5310.1,
-      "speedup": 0.624
+      "step_cycles": 683708,
+      "tokens_s": 5364.9,
+      "speedup": 0.596
      },
      {
       "block": 12,
       "tokens_per_step": 3.8,
-      "step_cycles": 1006549,
-      "tokens_s": 4148.1,
-      "speedup": 0.488
+      "step_cycles": 999493,
+      "tokens_s": 4177.3,
+      "speedup": 0.464
      },
      {
       "block": 16,
       "tokens_per_step": 4.102,
-      "step_cycles": 1322344,
-      "tokens_s": 3407.7,
-      "speedup": 0.401
+      "step_cycles": 1315288,
+      "tokens_s": 3426.0,
+      "speedup": 0.381
      }
     ],
     "best": {
-     "block": 2,
-     "tokens_per_step": 1.699,
-     "step_cycles": 217105,
-     "tokens_s": 8596.4,
-     "speedup": 1.011
+     "block": 1,
+     "tokens_per_step": 1.0,
+     "step_cycles": 122148,
+     "tokens_s": 8994.3,
+     "speedup": 1.0
     }
    },
    "2048/fp8/m3": {
@@ -1796,73 +1795,73 @@
      {
       "block": 1,
       "tokens_per_step": 1.0,
-      "step_cycles": 129204,
-      "tokens_s": 8503.1,
+      "step_cycles": 122148,
+      "tokens_s": 8994.3,
       "speedup": 1.0
      },
      {
       "block": 2,
       "tokens_per_step": 1.699,
-      "step_cycles": 143419,
-      "tokens_s": 13013.1,
-      "speedup": 1.53
+      "step_cycles": 136363,
+      "tokens_s": 13686.4,
+      "speedup": 1.522
      },
      {
       "block": 3,
       "tokens_per_step": 2.187,
-      "step_cycles": 147090,
-      "tokens_s": 16336.3,
-      "speedup": 1.921
+      "step_cycles": 140034,
+      "tokens_s": 17159.4,
+      "speedup": 1.908
      },
      {
       "block": 4,
       "tokens_per_step": 2.535,
-      "step_cycles": 216892,
-      "tokens_s": 12839.5,
-      "speedup": 1.51
+      "step_cycles": 209836,
+      "tokens_s": 13271.2,
+      "speedup": 1.476
      },
      {
       "block": 5,
       "tokens_per_step": 2.791,
-      "step_cycles": 224343,
-      "tokens_s": 13670.1,
-      "speedup": 1.608
+      "step_cycles": 217287,
+      "tokens_s": 14114.0,
+      "speedup": 1.569
      },
      {
       "block": 6,
       "tokens_per_step": 2.996,
-      "step_cycles": 231793,
-      "tokens_s": 14202.3,
-      "speedup": 1.67
+      "step_cycles": 224737,
+      "tokens_s": 14648.2,
+      "speedup": 1.629
      },
      {
       "block": 8,
       "tokens_per_step": 3.339,
-      "step_cycles": 309047,
-      "tokens_s": 11868.8,
-      "speedup": 1.396
+      "step_cycles": 301991,
+      "tokens_s": 12146.1,
+      "speedup": 1.35
      },
      {
       "block": 12,
       "tokens_per_step": 3.8,
-      "step_cycles": 401204,
-      "tokens_s": 10406.7,
-      "speedup": 1.224
+      "step_cycles": 394148,
+      "tokens_s": 10593.0,
+      "speedup": 1.178
      },
      {
       "block": 16,
       "tokens_per_step": 4.102,
-      "step_cycles": 555717,
-      "tokens_s": 8108.8,
-      "speedup": 0.954
+      "step_cycles": 548661,
+      "tokens_s": 8213.1,
+      "speedup": 0.913
      }
     ],
     "best": {
      "block": 3,
      "tokens_per_step": 2.187,
-     "step_cycles": 147090,
-     "tokens_s": 16336.3,
-     "speedup": 1.921
+     "step_cycles": 140034,
+     "tokens_s": 17159.4,
+     "speedup": 1.908
     }
    }
   },
@@ -1910,12 +1909,12 @@
      {
       "lane_multiplier": 1,
       "batch": 1,
-      "step_cycles": 149940,
-      "per_user_tokens_s": 7327.2,
-      "total_tokens_s": 7327.2,
+      "step_cycles": 142884,
+      "per_user_tokens_s": 7689.0,
+      "total_tokens_s": 7689.0,
       "binding": "compute",
-      "energy_per_token_mj": 228.59,
-      "energy_per_token_mj_matrix_engine_only": 103.49
+      "energy_per_token_mj": 228.57,
+      "energy_per_token_mj_matrix_engine_only": 103.48
      },
      {
       "lane_multiplier": 1,
@@ -1990,12 +1989,12 @@
      {
       "lane_multiplier": 3,
       "batch": 1,
-      "step_cycles": 149940,
-      "per_user_tokens_s": 7327.2,
-      "total_tokens_s": 7327.2,
+      "step_cycles": 142884,
+      "per_user_tokens_s": 7689.0,
+      "total_tokens_s": 7689.0,
       "binding": "compute",
-      "energy_per_token_mj": 228.59,
-      "energy_per_token_mj_matrix_engine_only": 103.49
+      "energy_per_token_mj": 228.57,
+      "energy_per_token_mj_matrix_engine_only": 103.48
      },
      {
       "lane_multiplier": 3,
@@ -2299,29 +2298,29 @@
      {
       "lane_multiplier": 1,
       "batch": 1,
-      "step_cycles": 129204,
-      "per_user_tokens_s": 8503.1,
-      "total_tokens_s": 8503.1,
+      "step_cycles": 122148,
+      "per_user_tokens_s": 8994.3,
+      "total_tokens_s": 8994.3,
       "binding": "compute",
-      "energy_per_token_mj": 151.15,
-      "energy_per_token_mj_matrix_engine_only": 48.75
+      "energy_per_token_mj": 151.14,
+      "energy_per_token_mj_matrix_engine_only": 48.74
      },
      {
       "lane_multiplier": 1,
       "batch": 2,
-      "step_cycles": 194436,
-      "per_user_tokens_s": 5650.4,
-      "total_tokens_s": 11300.8,
+      "step_cycles": 187380,
+      "per_user_tokens_s": 5863.2,
+      "total_tokens_s": 11726.3,
       "binding": "compute",
-      "energy_per_token_mj": 151.1,
-      "energy_per_token_mj_matrix_engine_only": 48.7
+      "energy_per_token_mj": 151.09,
+      "energy_per_token_mj_matrix_engine_only": 48.69
      },
      {
       "lane_multiplier": 1,
       "batch": 4,
-      "step_cycles": 324900,
-      "per_user_tokens_s": 3381.5,
-      "total_tokens_s": 13525.9,
+      "step_cycles": 317844,
+      "per_user_tokens_s": 3456.5,
+      "total_tokens_s": 13826.2,
       "binding": "compute",
       "energy_per_token_mj": 151.07,
       "energy_per_token_mj_matrix_engine_only": 48.67
@@ -2329,9 +2328,9 @@
      {
       "lane_multiplier": 1,
       "batch": 8,
-      "step_cycles": 585828,
-      "per_user_tokens_s": 1875.4,
-      "total_tokens_s": 15002.9,
+      "step_cycles": 578772,
+      "per_user_tokens_s": 1898.2,
+      "total_tokens_s": 15185.8,
       "binding": "compute",
       "energy_per_token_mj": 151.06,
       "energy_per_token_mj_matrix_engine_only": 48.66
@@ -2339,9 +2338,9 @@
      {
       "lane_multiplier": 1,
       "batch": 16,
-      "step_cycles": 1107684,
-      "per_user_tokens_s": 991.8,
-      "total_tokens_s": 15869.4,
+      "step_cycles": 1100628,
+      "per_user_tokens_s": 998.2,
+      "total_tokens_s": 15971.1,
       "binding": "compute",
       "energy_per_token_mj": 151.05,
       "energy_per_token_mj_matrix_engine_only": 48.65
@@ -2349,9 +2348,9 @@
      {
       "lane_multiplier": 1,
       "batch": 32,
-      "step_cycles": 2151396,
-      "per_user_tokens_s": 510.7,
-      "total_tokens_s": 16341.2,
+      "step_cycles": 2144340,
+      "per_user_tokens_s": 512.3,
+      "total_tokens_s": 16395.0,
       "binding": "compute",
       "energy_per_token_mj": 151.05,
       "energy_per_token_mj_matrix_engine_only": 48.65
@@ -2359,9 +2358,9 @@
      {
       "lane_multiplier": 1,
       "batch": 64,
-      "step_cycles": 4238820,
-      "per_user_tokens_s": 259.2,
-      "total_tokens_s": 16587.9,
+      "step_cycles": 4231764,
+      "per_user_tokens_s": 259.6,
+      "total_tokens_s": 16615.5,
       "binding": "compute",
       "energy_per_token_mj": 151.05,
       "energy_per_token_mj_matrix_engine_only": 48.65
@@ -2369,9 +2368,9 @@
      {
       "lane_multiplier": 1,
       "batch": 128,
-      "step_cycles": 8413668,
-      "per_user_tokens_s": 130.6,
-      "total_tokens_s": 16714.0,
+      "step_cycles": 8406612,
+      "per_user_tokens_s": 130.7,
+      "total_tokens_s": 16728.0,
       "binding": "compute",
       "energy_per_token_mj": 151.05,
       "energy_per_token_mj_matrix_engine_only": 48.65
@@ -2379,29 +2378,29 @@
      {
       "lane_multiplier": 3,
       "batch": 1,
-      "step_cycles": 129204,
-      "per_user_tokens_s": 8503.1,
-      "total_tokens_s": 8503.1,
+      "step_cycles": 122148,
+      "per_user_tokens_s": 8994.3,
+      "total_tokens_s": 8994.3,
       "binding": "compute",
-      "energy_per_token_mj": 151.15,
-      "energy_per_token_mj_matrix_engine_only": 48.75
+      "energy_per_token_mj": 151.14,
+      "energy_per_token_mj_matrix_engine_only": 48.74
      },
      {
       "lane_multiplier": 3,
       "batch": 2,
-      "step_cycles": 136692,
-      "per_user_tokens_s": 8037.3,
-      "total_tokens_s": 16074.7,
+      "step_cycles": 129636,
+      "per_user_tokens_s": 8474.8,
+      "total_tokens_s": 16949.6,
       "binding": "compute",
-      "energy_per_token_mj": 151.05,
+      "energy_per_token_mj": 151.04,
       "energy_per_token_mj_matrix_engine_only": 48.65
      },
      {
       "lane_multiplier": 3,
       "batch": 4,
-      "step_cycles": 209412,
-      "per_user_tokens_s": 5246.3,
-      "total_tokens_s": 20985.2,
+      "step_cycles": 202356,
+      "per_user_tokens_s": 5429.2,
+      "total_tokens_s": 21717.0,
       "binding": "compute",
       "energy_per_token_mj": 151.02,
       "energy_per_token_mj_matrix_engine_only": 48.63
@@ -2409,9 +2408,9 @@
      {
       "lane_multiplier": 3,
       "batch": 8,
-      "step_cycles": 297108,
-      "per_user_tokens_s": 3697.8,
-      "total_tokens_s": 29582.2,
+      "step_cycles": 290052,
+      "per_user_tokens_s": 3787.7,
+      "total_tokens_s": 30301.9,
       "binding": "compute",
       "energy_per_token_mj": 151.0,
       "energy_per_token_mj_matrix_engine_only": 48.6
@@ -2419,9 +2418,9 @@
      {
       "lane_multiplier": 3,
       "batch": 16,
-      "step_cycles": 530244,
-      "per_user_tokens_s": 2072.0,
-      "total_tokens_s": 33151.2,
+      "step_cycles": 523188,
+      "per_user_tokens_s": 2099.9,
+      "total_tokens_s": 33598.3,
       "binding": "compute",
       "energy_per_token_mj": 150.99,
       "energy_per_token_mj_matrix_engine_only": 48.6
@@ -2697,28 +2696,28 @@
   "dflash_best": {
    "block": 3,
    "tokens_per_step": 2.187,
-   "step_cycles": 183570,
-   "tokens_s": 13089.9,
-   "speedup": 1.786,
+   "step_cycles": 176514,
+   "tokens_s": 13613.1,
+   "speedup": 1.77,
    "lane_multiplier": 3
   },
-  "dflash_mac_rate_per_s": 205550555238259.53,
+  "dflash_mac_rate_per_s": 213766359064160.25,
   "pj_per_mac_required_ar": 3.41,
-  "pj_per_mac_required_dflash": 1.41,
+  "pj_per_mac_required_dflash": 1.35,
   "pj_per_mac_as_built_asap7": 3.97,
   "pj_per_mac_gpu": 1.4,
   "at": {
    "3.97_pj": {
     "ar_die_w": 448.9,
     "ar_tokens_s_capped": 7720.1,
-    "dflash_die_w": 1088.0,
+    "dflash_die_w": 1131.5,
     "dflash_tokens_s_capped": 4908.5
    },
    "1.40_pj": {
     "ar_die_w": 158.3,
     "ar_tokens_s_capped": 8493.7,
-    "dflash_die_w": 383.7,
-    "dflash_tokens_s_capped": 13089.9
+    "dflash_die_w": 399.0,
+    "dflash_tokens_s_capped": 13613.1
    }
   },
   "hbm_dram_w_at_target": 538.0,
@@ -2727,7 +2726,7 @@
    "the lane is designed for the ROM's weight format: 4-bit weights (3.5 bits a weight with group scales) x FP8/BF16 activations, FP32 accumulation -- not a BF16 x BF16 lane (a golden change: the quantised checkpoint)",
    "operand isolation and clock gating of idle lanes: groups outside an op's tiles, masked elements, idle lane copies",
    "accumulation width FP32 (the golden's order), products exact",
-   "<= 1.41 pJ/MAC for the best speculative configuration uncapped; <= 3.41 for autoregressive decoding at the target"
+   "<= 1.35 pJ/MAC for the best speculative configuration uncapped; <= 3.41 for autoregressive decoding at the target"
   ]
  }
 }

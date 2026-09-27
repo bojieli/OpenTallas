@@ -87,6 +87,7 @@ module tb_hdc_core #(
     wire [G-1:0] vw_me_we; wire [G*AW-1:0] vw_me_addr;
     wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [SW*32-1:0] vw_su_data; wire [31:0] vw_rd_data;
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
+    wire vw_mx_we; wire [AW-1:0] vw_mx_addr; wire [W-1:0] vw_mx_mask; wire [W*32-1:0] vw_mx_data;
 
     ot_hdc_core #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(SU_VEC), .SW(SW)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos),
@@ -103,7 +104,8 @@ module tb_hdc_core #(
         .vw_me_we(vw_me_we), .vw_me_addr(vw_me_addr), .vw_me_mask(vw_me_mask), .vw_me_data(vw_me_data),
         .vw_su_we(vw_su_we), .vw_su_addr(vw_su_addr), .vw_su_data(vw_su_data),
         .vw_rd_we(vw_rd_we), .vw_rd_addr(vw_rd_addr), .vw_rd_data(vw_rd_data),
-        .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata));
+        .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
+        .vw_mx_we(vw_mx_we), .vw_mx_addr(vw_mx_addr), .vw_mx_mask(vw_mx_mask), .vw_mx_data(vw_mx_data));
 
     integer l, q;
 `ifdef OT_HDC_MEMSYS
@@ -153,6 +155,9 @@ module tb_hdc_core #(
         for (q = 0; q < SW; q = q + 1)
             if (vw_su_we[q]) vm[vw_su_addr[q*AW +: 12]] <= vw_su_data[32*q +: 32];
         if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
+        if (vw_mx_we)
+            for (l = 0; l < W; l = l + 1)
+                if (vw_mx_mask[l]) vm[{vw_mx_addr[7:0], 4'b0} + l] <= vw_mx_data[32*l +: 32];
 `endif
         // the result words of the one unwritten matrix-vector op are the logits
         if (me_ov && vw_me_we == 0)

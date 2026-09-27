@@ -131,21 +131,31 @@ All figures are cycles per token at 8K, FP8 KV:
 | KV stream (FP8, 6 stacks) | 122,881 | 8,941 |
 | calibrated model, before this work (SU 1, split ≤ 8, 7,680 groups; KV on core) | 49,888,993 | 22 |
 | calibrated model, K-split attention + 4-bit split + prefetched issue (8fb2059d) | 30,090,973 | 36.5 |
-| calibrated model, at HEAD (+ the 1,024-lane vector stream unit, normalise-after-sum, per-unit waits) | **174,856** <!-- figure: 174,856 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | 6,283 |
+| calibrated model, + the 1,024-lane vector stream unit, normalise-after-sum, per-unit waits (0a23b3fe) | 174,856 | 6,283 |
+| calibrated model, at HEAD (+ 3-cycle FP units, the row max on the engine, P·V chasing the exp pass by rows) | **131,185** <!-- figure: 131,185 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | 8,375 |
 
 The HEAD figure is the RTL's parameters set to the spec's: 8,192 groups, SW =
-1,024, and LV = 3 time levels. It is not a shipped-scale simulation. What is
-left:
+1,024, and LV = 3 time levels. It is not a shipped-scale simulation.
+
+HEAD is **1.4% above the design point's target** of 129,348. The KV stream
+(122,881) sits under both. What is left:
 
 * weights 57,744;
-* stream busy 29,817;
+* stream busy 20,601;
 * attention 18,432;
-* waits and chases, the exposed latency: 5,760 on the matrix engine, 57,827
-  on the stream unit and 66,597 in chases.
+* waits and chases, the exposed latency: about 101,000, of which 66,805 are
+  chases on the matrix-vector results.
 
-The exposed latency is the wall between HEAD and the target (129,348). The
-next levers are the fast FP units, the row max on the engine, the reducer's
-time levels skipped for short segments, and waits for main writes only.
+The chases are each projection's latency: its loop plus a 68-cycle result
+path (16 through the lanes, 13 split-tree levels of 4). That makes them the
+remaining lever. Tile-granular chaining would help: a consumer starting on a
+round's first slots rather than on the op's.
+
+**One lever was tried and rejected: the attention norm applied after the
+projection.** The idea is h = x·w, then qkv = W·h·r, so the rsqrt runs beside
+the projection. It was bit-exact and on the oracle token, but it saves
+nothing. The stream unit drains between SFU classes, so the rsqrt and the
+x·w pass still serialise. It was reverted.
 
 The analytical `decode_critical_path.py` prices 2K with KV on chip (8,680
 tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
@@ -159,8 +169,8 @@ tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
 | attention Q·K | K-split over head_dim | **landed**: interleaved K-split | 147,456 | 9,216 |
 | matrix engine | 8,192 groups, split field to 2^13 | **landed**: 4-bit split | 892,928 | 57,744 |
 | sequencer | ≤ 3,880 control cycles | **landed**: prefetched issue, gap 1 | 22,700 | 4,540 |
-| dependency | ≤ 54 exposed per stage | **partly landed**: per-unit waits (`wait_me` / `wait_su`); still whole-op within a unit | 13.46 M | 130,184 of waits and chases |
-| softmax | one stream pass, 1/Z beside P·V | **partly landed**: normalise-after-sum; the row max is still a stream pass | — | — |
+| dependency | ≤ 54 exposed per stage | **partly landed**: per-unit waits (`wait_me` / `wait_su`) and row-granular P·V chasing; projections are still whole-op granular | 13.46 M | about 101,000 of waits and chases |
+| softmax | one stream pass, 1/Z beside P·V | **landed**: the row max on the engine's result path (`me_rmax`), one exp pass, normalise-after-sum | — | — |
 | KV in HBM (ROM die) | 6 stacks, FP8, prefetched | `ot_hdc_kv_stream` exists for the unsplit attention order, BF16 | — | 122,881 |
 
 ## 8. Microarchitecture, in implementation order
@@ -222,16 +232,30 @@ tok/s). Against it, the spec chain at 2K is 129,204 cycles (8,503 tok/s).
      conflicts with. Both units is the old barrier.
    * The weighted-sum ops write per-head-batch regions, so they no longer
      serialise.
-6. **Normalise-after-sum (landed, part of the one-pass softmax).**
+6. **One-pass softmax (landed).**
    * The golden's `attend`: e = exp(s − max), P·V over bf16(e), then × 1/Z.
-   * The scale pass over 32 × T is gone. The reciprocal runs beside P·V.
-   * The row max on the engine's result path is not built yet.
-7. **Latency.**
-   * The fast FP units: the `a516` branch, with add and multiply at 3 cycles,
-     exp 49, recip 28 and rsqrt 37. Waiting on its merge.
-   * Skip the reducer's time levels for short segments.
-   * Wait for a unit's main writes only (not its reducer tail).
-   * Take the row max on the engine's result path.
+     The scale pass over 32 × T is gone, and the reciprocal runs beside P·V.
+   * The row max rides the matrix engine's result path. `me_rmax` feeds the
+     score op's results through the argmax compare tree and writes the IL
+     per-slot maxima as one masked word after the op.
+   * The exp pass subtracts M × scale through the Q multiplier. The scale is a
+     positive power of two, so max(s)·scale is exactly the scaled max: no
+     golden change.
+   * P·V chases the exp pass by rows: `chase_rows`, with `progress_rows` in
+     the vector unit. It starts once its heads' rows are written.
+7. **Latency (landed in part).**
+   * The low-latency FP units were brought over from the `a516` branch
+     (acc46e61), selectively: `ot_hdc_fastfp.sv`, `ot_hdc_sfu.sv`,
+     `ot_hdc_stream.sv`, `ot_hdc_reduce.sv`, their equivalence benches and
+     `results/rtl/hdc_sfu_equivalence.json`. Add and multiply take 3 cycles
+     (were 5); exp is 49, recip 28, rsqrt 37.
+     * The vector reducer and the matrix engine's split tree now use the
+       3-cycle adder: 4 cycles a tree level (was 6).
+     * The reduced vehicle is bit-exact at 24,992 cycles. The timing model is
+       within 6 cycles of it, every issue within 3.
+   * Still open: tile-granular chaining on the projections, skipping the
+     reducer's time levels for short segments, and waiting for a unit's main
+     writes only.
 
 ## 9. Speculation (DFlash, τ 4.1)
 
