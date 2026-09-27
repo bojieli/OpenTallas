@@ -291,6 +291,8 @@ def single(exe, img, trace=True):
     run = subprocess.run([str(exe), f"+DIR={img}", *args, *(["+TRACE"] if trace else [])], check=True,
                          capture_output=True, text=True).stdout
     m = SINGLE.search(run)
+    if m is None:
+        raise RuntimeError("core token did not produce a result:\n" + run[-4000:])
     token, pos, nxt, exp_tok, cycles, fault, bad_lg, bad_vm, bad_kv = map(int, m.groups())
     u = list(map(int, UTIL.search(run).groups()))
     rec = {"token": token, "position": pos, "next_token": nxt, "isa_next_token": exp_tok, "cycles": cycles,
