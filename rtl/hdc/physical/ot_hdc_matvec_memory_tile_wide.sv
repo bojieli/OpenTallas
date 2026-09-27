@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
-// Reduced, bank-explicit physical wrapper for the adopted matvec. W is a
-// multiple of 8 and G a power of two. This is not the full ot_hdc_memsys:
+// Reduced, bank-explicit physical wrapper for the adopted matvec. W is 4
+// or a multiple of 8 and G a power of two. This is not the full ot_hdc_memsys:
 // ROM depth is 8192, KV/vector depth is 1024, and vector SRAM uses only 32
 // of 256 stored bits per independently addressed group.
 module ot_hdc_matvec_memory_tile_wide #(
@@ -42,11 +42,13 @@ module ot_hdc_matvec_memory_tile_wide #(
     output wire [15:0] progress,
     output wire fault
 );
-    localparam integer KR = W / 8;      // 256-bit KV macro slices per group
+    localparam integer KR = (W + 7) / 8; // 256-bit KV macro slices per group
+    localparam integer KB = (W < 8) ? W*32 : 256;
     localparam integer RR = G * W / 16; // 256-bit ROM data slices
     initial begin
-        if (W < 8 || W % 8 != 0 || G < 2 || (G & (G-1)) != 0)
-            $fatal(1, "wide tile requires W multiple of 8 and G power of two >=2");
+        if ((W != 4 && (W < 8 || W % 8 != 0)) || G < 2 ||
+            (G & (G-1)) != 0 || (G*W) % 16 != 0)
+            $fatal(1, "wide tile requires W=4 or multiple of 8, G power of two >=2, and G*W multiple of 16");
     end
 
     wire wrom_re, kv_re;
@@ -131,15 +133,18 @@ module ot_hdc_matvec_memory_tile_wide #(
             .cr_en(2'b00), .cr_sel(16'd0));
         assign x_q[g*32 +: 32] = x_word[31:0];
         for (k = 0; k < KR; k = k + 1) begin : g_kv
+            wire [255:0] kv_word;
             ot_sram_1r1w_1024x256_m2_r2c2 u_kv (
                 .clk(clk), .r_ce_in(kv_re),
                 .r_addr_in(kv_addr[g*AW +: 10]),
-                .rd_out(kv_q[(g*KR+k)*256 +: 256]),
+                .rd_out(kv_word),
                 .w_ce_in(kv_load_q), .w_addr_in(kv_load_addr_q),
-                .wd_in(kv_load_data_q[(g*KR+k)*256 +: 256]),
+                .wd_in({{(256-KB){1'b0}},
+                        kv_load_data_q[g*W*32+k*256 +: KB]}),
                 .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(18'd0),
                 .cr_en(2'b00), .cr_sel(16'd0));
+            assign kv_q[g*W*32+k*256 +: KB] = kv_word[KB-1:0];
         end
     end endgenerate
 endmodule

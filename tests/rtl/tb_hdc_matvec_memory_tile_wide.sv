@@ -1,6 +1,12 @@
 `timescale 1ns/1ps
 module tb_hdc_matvec_memory_tile_wide;
-  localparam integer W=8, G=4, AW=16, NW=8;
+`ifdef TILE_W4
+  localparam integer W=4;
+`else
+  localparam integer W=8;
+`endif
+  localparam integer G=4, AW=16, NW=8;
+  localparam integer NOUT=G*W;
   reg clk=0;
   always #1 clk=~clk;
   reg rst_n=0, go=0, kv_load=0, x_load=0;
@@ -46,7 +52,7 @@ module tb_hdc_matvec_memory_tile_wide;
   end
   ot_hdc_matvec_memory_tile_wide #(.W(W),.G(G),.AW(AW),.NW(NW)) a (
     .clk(clk),.rst_n(rst_n),.go(go),.ready(ready_a),.idle(idle_a),
-    .i_nout(8'd32),.i_tiles(8'd1),.i_k(8'd1),.i_wsrc(1'b1),
+    .i_nout(NOUT[NW-1:0]),.i_tiles(8'd1),.i_k(8'd1),.i_wsrc(1'b1),
     .i_wbase(wbase),.i_ts(16'd0),.i_ks(16'd0),.i_js(16'd0),
     .i_xbase(xbase),.i_xks(16'd0),.i_xjs(16'd0),.i_xcs(16'd0),
     .i_jsh(3'd0),.i_split(4'd0),.i_wcs(16'd0),.i_round(1'b0),
@@ -62,7 +68,7 @@ module tb_hdc_matvec_memory_tile_wide;
   );
   ot_hdc_matvec #(.W(W),.G(G),.IL(8),.AW(AW),.NW(NW)) b (
     .clk(clk),.rst_n(rst_n),.go(go),.ready(ready_b),.idle(idle_b),
-    .i_nout(8'd32),.i_tiles(8'd1),.i_k(8'd1),.i_wsrc(1'b1),
+    .i_nout(NOUT[NW-1:0]),.i_tiles(8'd1),.i_k(8'd1),.i_wsrc(1'b1),
     .i_wbase(wbase),.i_ts(16'd0),.i_ks(16'd0),.i_js(16'd0),
     .i_xbase(xbase),.i_xks(16'd0),.i_xjs(16'd0),.i_xcs(16'd0),
     .i_jsh(3'd0),.i_split(4'd0),.i_wcs(16'd0),.i_round(1'b0),
@@ -134,7 +140,7 @@ module tb_hdc_matvec_memory_tile_wide;
     repeat (150) @(negedge clk);
     if (slots != 16 || nonzero != 16) $fatal(1,"second banked address diverged: %0d, %0d",slots,nonzero);
     if (!idle_a || !idle_b || fault_a || fault_b) $fatal(1,"second matvec not drained");
-    $display("PASS G4/W8 independent 10-macro bank model; 16 exact output slots across 2 addresses and ingress commits");
+    $display("PASS G4/W%0d independent bank model; 16 exact output slots of %0d lanes across 2 addresses and ingress commits",W,G*W);
     $finish;
   end
 endmodule
