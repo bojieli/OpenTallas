@@ -392,6 +392,14 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
             "as_built_units": [u for u in X_UNITS if u not in UNITS],
             "hdc_v41_arith": arith(),
             "engine_parameters": dict(PARAMS),
+            "fp_simulation": PARAMS.get("fp", "rtl"),
+            "claim_boundary": (
+                "Single-token functional Verilator gate with DPI bit-equivalent FP simulation stand-ins; "
+                "physical FP RTL is not elaborated. Four replicated HBM key images use 272 encoded bytes/key "
+                "and four runtime writes/key; the selector rereads super-block prefixes and one pooled "
+                "tile back-pressures kmerge, so full-rate bandwidth is not claimed."
+                if IDX_POOL and PARAMS.get("fp") == "dpi" else
+                "Single-token functional Verilator gate; physical timing is not established."),
             "not_exercised": {u: NOT_EXERCISED.get(u, []) for u in UNITS},
             **({"indexer": indexer_record(prog, tags, issues)} if "idx" in UNITS else {}),
             "status": "pass" if one["pass"] and lint.returncode == 0 else "fail",
@@ -399,7 +407,8 @@ def run(ngen: int, context: int, sweep=(), single_only=False, single_output=None
             "per_operator_cycles": bd,
             "verilator_lint": {"returncode": lint.returncode, "flags": list(LINT_FLAGS),
                                "messages": lint.stderr.strip().splitlines()[:20]},
-            "input_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (SVH, *RTL, TB, HARNESS, *TOOLS)},
+            "input_sha256": {str(p.relative_to(ROOT)): sha(p)
+                             for p in (SVH, *rtl_sources(True), TB, HARNESS, *TOOLS)},
         }
         if single_output is not None:
             single_output.parent.mkdir(parents=True, exist_ok=True)
