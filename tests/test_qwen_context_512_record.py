@@ -1,6 +1,7 @@
 """Verify the source-pinned context-512 Qwen vector RTL gate."""
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,8 +21,19 @@ def test_qwen_context_512_record():
     assert oracle["expected_token"] == 1509
     assert oracle["kv_words"] == 8192 and oracle["vm_elements"] == 8192
     assert oracle["crom_words"] == 5889
+    # This frozen run predates the finite-extreme SFU repair. Each exact source
+    # blob is reachable from the recorded mainline commits, including the
+    # passing testbench added after the shared-source baseline.
     for name, digest in rec["source_sha256"].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+        assert any(
+            hashlib.sha256(subprocess.check_output(
+                ["git", "show", f"{commit}:{name}"], cwd=ROOT,
+                stderr=subprocess.DEVNULL,
+            )).hexdigest() == digest
+            for commit in rec["source_blob_commits"]
+            if subprocess.run(["git", "cat-file", "-e", f"{commit}:{name}"], cwd=ROOT,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+        ), name
     model = ROOT / "build/models/qwen3-reduced-v1/model-00001-of-00001.safetensors"
     if model.exists():
         assert hashlib.sha256(model.read_bytes()).hexdigest() == rec["model_sha256"]

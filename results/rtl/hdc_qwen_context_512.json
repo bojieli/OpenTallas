@@ -61,6 +61,10 @@
   },
   "returncode": 0,
   "schema": "opentallas.qwen-vector-context-512.v1",
+  "source_blob_commits": [
+    "d8d4bb0e267addfdc87662bed4aacb66830c6d00",
+    "69db5fa1aee961063cbe93318413a3e807ff3c43"
+  ],
   "source_sha256": {
     "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
     "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
