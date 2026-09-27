@@ -2953,12 +2953,19 @@ def _service_terms(
             if stored_weight_bytes > 0
             else 1.0
         )
+        # ``engaged_fraction`` is the share of the STORED bytes a step engages
+        # (coverage-driven, and what ``engaged_weight_fraction`` reports); the
+        # share of the array's read bandwidth that serves them is a separate
+        # quantity that depends on the bank layout.
+        bandwidth_fraction = engaged_fraction
         if budget.rom_bank_pooling == "striped":
             # Striped banks: every expert spans every read bank, so the bytes
             # a step engages are read at the whole array's rate instead of
-            # taking the full sweep a dedicated-bank layout implies.
-            engaged_fraction = 1.0
-        effective_weight_bw = budget.weight_read_bytes_s * engaged_fraction
+            # taking the full sweep a dedicated-bank layout implies.  Only the
+            # bandwidth share changes: the step still engages ``engaged_fraction``
+            # of the stored bytes.
+            bandwidth_fraction = 1.0
+        effective_weight_bw = budget.weight_read_bytes_s * bandwidth_fraction
         weight_time = (
             engaged_weight_bytes / effective_weight_bw
             if effective_weight_bw > 0

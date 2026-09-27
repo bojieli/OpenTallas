@@ -7302,11 +7302,20 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
 
     lines.extend(_render_corrections(result))
 
-    lines.extend(
-        [
-            "",
-            "## Sparse-MoE engagement on a ROM machine",
-            "",
+    engagement_rows = _engagement_rows(result)
+    if engagement_rows and all(_reads_at_full_rate(row) for row in engagement_rows):
+        engagement_prose = [
+            "Expected distinct experts touched by a batch is `1 - (1 - k/N)^B`, so the",
+            "bytes a step engages grow with batch. These designs stripe every expert",
+            "across all of the ROM read banks, so the engaged bytes are read at the",
+            "whole array's rate (effective = peak below) and the weight-read time grows",
+            "with the engaged fraction rather than being a fixed full-array sweep. A",
+            "selected expert is still read once however many batch members chose it,",
+            "so **MoE sparsity on a striped ROM machine lowers batch-1 latency, and",
+            "batching converts the remaining reads into aggregate throughput**.",
+        ]
+    else:
+        engagement_prose = [
             "Expected distinct experts touched by a batch is `1 - (1 - k/N)^B`, so the",
             "bytes a step engages grow with batch while the ROM full-array sweep time",
             "does not: an unselected expert's read ports cannot be borrowed, and a",
@@ -7315,13 +7324,20 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "not into lower per-token latency** -- which is the opposite of what it does",
             "on an HBM machine, where bandwidth is global and sparsity directly",
             "reduces the bytes fetched.",
+        ]
+    lines.extend(
+        [
+            "",
+            "## Sparse-MoE engagement on a ROM machine",
+            "",
+            *engagement_prose,
             "",
             "| Model | B | Expert coverage | Engaged weight bytes | Engaged fraction | "
             "Effective ROM read | Peak ROM read | Per-user tok/s | Aggregate tok/s |",
             "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
-    for row in _engagement_rows(result):
+    for row in engagement_rows:
         lines.append(
             f"| {row['model']} | {row['batch_size']} | "
             f"{row['expert_coverage'] * 100:,.2f}% | "
@@ -7747,6 +7763,28 @@ def _findings(result: dict[str, Any]) -> list[str]:
         )
         if high is None:
             continue
+        if _reads_at_full_rate(low) and _reads_at_full_rate(high):
+            low_read = low["component_times_s"]["weight_read"]
+            high_read = high["component_times_s"]["weight_read"]
+            findings.append(
+                "**Sparse MoE on a striped ROM machine buys both latency and "
+                f"aggregate throughput.** {low['model']} engages "
+                f"{low['engaged_weight_fraction'] * 100:.1f}% of its stored weights "
+                f"at batch 1 and {high['engaged_weight_fraction'] * 100:.1f}% at "
+                f"batch {high['batch_size']}. Every expert is striped across all "
+                "read banks, so the engaged bytes are read at the whole array's "
+                "rate and the weight-read term follows them: it is "
+                f"{high_read / low_read:,.2f}x longer at batch {high['batch_size']} "
+                "than at batch 1, not a fixed full-array sweep. "
+                f"What the machine delivers rises from "
+                f"{low['delivered_tokens_s']:,.0f} to "
+                f"{high['delivered_tokens_s']:,.0f} tok/s, and its rate with every "
+                f"slot occupied from {low['aggregate_tokens_s']:,.0f} to "
+                f"{high['aggregate_tokens_s']:,.0f}; this design has "
+                f"{low['token_slots']:,.0f} slots, so the batch-1 figure is already "
+                "a full-machine number."
+            )
+            break
         findings.append(
             "**Sparse MoE buys aggregate throughput on a ROM machine, not "
             f"latency.** {low['model']} engages "
@@ -7990,6 +8028,19 @@ def _findings(result: dict[str, Any]) -> list[str]:
             "have power-limited points."
         )
     return findings
+
+
+def _reads_at_full_rate(row: dict[str, Any]) -> bool:
+    """True when a ROM row's engaged bytes are read at the array's peak rate.
+
+    That is the striped-bank layout: ``engaged_weight_fraction`` is still the
+    coverage-driven share of the stored bytes, but the bandwidth serving it is
+    the whole array's, so the dedicated-bank "fixed full sweep" reading of the
+    engagement table does not apply.
+    """
+
+    peak = row["peak_weight_read_bytes_s"]
+    return peak > 0 and row["effective_weight_read_bytes_s"] >= peak * (1.0 - 1e-9)
 
 
 def _engagement_rows(result: dict[str, Any]) -> list[dict[str, Any]]:

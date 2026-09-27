@@ -2028,7 +2028,19 @@ def test_rom_sweep_time_does_not_depend_on_model_size(technology, qwen, flash) -
         assert step.component_times_s["weight_read"] == pytest.approx(expected)
 
 
-def test_moe_engagement_follows_the_coverage_formula(technology, flash) -> None:
+@pytest.mark.parametrize("bank_pooling", ["dedicated", "striped"])
+def test_moe_engagement_follows_the_coverage_formula(
+    technology, flash, bank_pooling
+) -> None:
+    """The engaged fraction is a byte fraction under EITHER bank layout.
+
+    What the bank layout changes is the bandwidth that serves the engaged
+    bytes, not how many of them a step engages: a striped array reports the
+    same coverage-driven fraction and reads it at the whole array's rate.
+    Reporting 1.0 for the striped layout published "engages 100.0% of its ROM
+    array at batch 1" for a model that engages a few percent.
+    """
+
     stored = flash.checkpoint_bytes
     # One slot: tensor-parallel across the fields, so the batch this test varies
     # is the batch one array pass actually serves.  On a pipelined wafer the
@@ -2052,7 +2064,9 @@ def test_moe_engagement_follows_the_coverage_formula(technology, flash) -> None:
         kv_store="hbm",
         hbm_stacks=40,
         hbm_generation="hbm3e",
+        bank_pooling=bank_pooling,
     )
+    assert budget.rom_bank_pooling == bank_pooling
     fractions = []
     for batch in (1, 8, 32, 64, 256):
         step = evaluate(
@@ -2066,12 +2080,22 @@ def test_moe_engagement_follows_the_coverage_formula(technology, flash) -> None:
             flash.num_experts, flash.experts_per_token, batch
         )
         assert step.metrics["expert_coverage"] == pytest.approx(expected)
-        fractions.append(step.metrics["engaged_weight_fraction"])
-        # Locality: the effective bandwidth is the engaged fraction of the peak.
-        assert step.metrics["effective_weight_read_bytes_s"] == pytest.approx(
-            step.metrics["peak_weight_read_bytes_s"]
-            * step.metrics["engaged_weight_fraction"]
+        fraction = step.metrics["engaged_weight_fraction"]
+        assert fraction == pytest.approx(
+            step.metrics["engaged_weight_bytes"] / step.metrics["stored_weight_bytes"]
         )
+        fractions.append(fraction)
+        if bank_pooling == "dedicated":
+            # Locality: the effective bandwidth is the engaged fraction of the
+            # peak, because an unselected expert's banks cannot be borrowed.
+            assert step.metrics["effective_weight_read_bytes_s"] == pytest.approx(
+                step.metrics["peak_weight_read_bytes_s"] * fraction
+            )
+        else:
+            # Striped: every bank serves the selected experts.
+            assert step.metrics["effective_weight_read_bytes_s"] == pytest.approx(
+                step.metrics["peak_weight_read_bytes_s"]
+            )
     assert fractions == sorted(fractions)
     assert fractions[0] < 0.1 < fractions[-1]
 
