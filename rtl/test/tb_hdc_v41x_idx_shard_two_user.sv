@@ -1,9 +1,11 @@
 `timescale 1ns/1ps
-module tb_hdc_v41x_idx_shard_roundtrip;
+module tb_hdc_v41x_idx_shard_two_user;
     localparam integer NPC=4,AW=28,NPORT=4*NPC;
     reg clk=0,rst_n=0,su_go=0,cmd_v=0;
     always #5 clk=~clk;
     reg [23:0] row=0;
+    reg [AW-1:0] user_base=0;
+    integer owner=0;
     reg [7:0] kv_we=0;
     reg [8*24-1:0] kv_waddr=0;
     reg [8*32-1:0] kv_wdata=0;
@@ -13,8 +15,8 @@ module tb_hdc_v41x_idx_shard_roundtrip;
     wire [511:0] codes;
     wire [2:0] sslot;
     wire [31:0] scales,written_keys;
-    ot_hdc_v41x_idx_pool_kwr #(.SHARDED(1)) writer (
-        .clk(clk),.rst_n(rst_n),.cfg_ik_base(24'd0),.i_user_base_sec(28'd0),.su_go(su_go),
+    ot_hdc_v41x_idx_pool_kwr #(.SHARDED(1),.SLICE_SECTORS(2176)) writer (
+        .clk(clk),.rst_n(rst_n),.cfg_ik_base(24'd0),.i_user_base_sec(user_base),.su_go(su_go),
         .i_dst(2'd3),.i_obase(24'd0),.i_orow(row),.i_nout(16'd1),.i_kdim(16'd32),
         .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
         .w_v(w_v),.w_rdy(w_rdy),.w_stack_mask(mask),.w_csec(csec),
@@ -34,7 +36,7 @@ module tb_hdc_v41x_idx_shard_roundtrip;
     wire [64*544-1:0] o_key;
     wire [47:0] keys_read,sectors_read,refused;
     ot_hdc_v41x_idx_shard_reader #(.NPC(NPC),.HAW(AW)) reader (
-        .clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_base_sec(28'd0),.cmd_nkeys(cmd_nkeys),
+        .clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_base_sec(user_base),.cmd_nkeys(cmd_nkeys),
         .busy(reader_busy),.fault(reader_fault),.req_v(rv),.req_rdy(rrdy),
         .req_addr(ra),.req_len(rl),.req_tag(rt),.rsp_v(resp_v),
         .rsp_rdy(resp_rdy),.rsp_tag(resp_tag),.rsp_beat(resp_beat),.rsp_data(resp_data),
@@ -54,7 +56,7 @@ module tb_hdc_v41x_idx_shard_roundtrip;
         .dbg_fifo_highwater(highwater),.dbg_read_stalls(read_stalls),
         .dbg_writer_stalls(writer_stalls));
     for(genvar s=0;s<4;s=s+1) begin : g_hbm
-        ot_hdc_v41x_idx_hbm #(.NPC(NPC),.AW(AW),.DW(256),.MEM_WORDS(512),
+        ot_hdc_v41x_idx_hbm #(.NPC(NPC),.AW(AW),.DW(256),.MEM_WORDS(4096),
             .TAGW(16),.LENW(4),.BEATW(4),.QD(16),.RQD(8),.REFPB(3),.MEM_MODE(0)) hm (
             .clk(clk),.rst_n(rst_n),.req_v(hv[s*NPC +: NPC]),.req_rdy(hrdy[s*NPC +: NPC]),
             .req_addr(ha[s*NPC*AW +: NPC*AW]),.req_len(hl[s*NPC*4 +: NPC*4]),
@@ -63,7 +65,7 @@ module tb_hdc_v41x_idx_shard_roundtrip;
             .wr_done(hwr_done[s*NPC +: NPC]),.rsp_v(resp_v[s*NPC +: NPC]),
             .rsp_rdy(resp_rdy[s*NPC +: NPC]),.rsp_tag(resp_tag[s*NPC*16 +: NPC*16]),
             .rsp_beat(resp_beat[s*NPC*4 +: NPC*4]),.rsp_data(resp_data[s*NPC*256 +: NPC*256]));
-        initial for(integer i=0;i<512;i=i+1) hm.mem[i]=0;
+        initial for(integer i=0;i<4096;i=i+1) hm.mem[i]=0;
     end
     integer cycle=0;
     always @(posedge clk) begin
@@ -82,7 +84,7 @@ module tb_hdc_v41x_idx_shard_roundtrip;
                 kv_we=8'hff;
                 for(l=0;l<8;l=l+1) begin
                     kv_waddr[l*24 +:24]=vm_base+16*(i+l);
-                    kv_wdata[l*32 +:32]={16'((127+r)<<7),16'd0};
+                    kv_wdata[l*32 +:32]={16'((127+r+owner)<<7),16'd0};
                 end
                 @(negedge clk);
             end
@@ -93,7 +95,7 @@ module tb_hdc_v41x_idx_shard_roundtrip;
         end
     endtask
 
-    task automatic read_scan(input integer n);
+    task automatic read_scan(input integer n,input integer expected_owner);
         integer prior_k,prior_s,qs,l3,beats,b,q,l,k,j,qlen,start_cycle;
         reg [543:0] got;
         begin
@@ -116,7 +118,7 @@ module tb_hdc_v41x_idx_shard_roundtrip;
                             for(j=0;j<64;j=j+1)
                                 if(got[8*j +:8] !== (j<16 ? 8'h66 : 8'h00))
                                     $fatal(1,"roundtrip code n=%0d key=%0d byte=%0d got=%0h",n,k,j,got[8*j +:8]);
-                            if(got[543:512] !== {24'd0,8'(125+k)})
+                            if(got[543:512] !== {24'd0,8'(125+k+expected_owner)})
                                 $fatal(1,"roundtrip scale n=%0d key=%0d scale=%h",n,k,got[543:512]);
                             if(o_ref[16*q+l] !== 1'b0) $fatal(1,"roundtrip refusal key=%0d",k);
                         end
@@ -134,17 +136,18 @@ module tb_hdc_v41x_idx_shard_roundtrip;
     endtask
     initial begin
         repeat(3) @(negedge clk);rst_n=1;
-        write_row(0);
+        for(integer r=0;r<16;r=r+1) write_row(r);
+        // The first user's writes may still be draining from the bridge FIFO.
+        @(negedge clk);owner=1;user_base=2176;
+        for(integer r=0;r<16;r=r+1) write_row(r);
         if(!bridge_busy) $fatal(1,"read-after-write not pending");
-        read_scan(1);
-        for(integer r=1;r<=64;r=r+1) write_row(r);
-        wait(!bridge_busy);
-        read_scan(40); // Qs=8: several quarter groups straddle stack stripes
-        read_scan(65); // row 63/64 crosses a 64-key global stripe cycle
-        if(records!=65 || writes!=195 || read_stalls==0 || written_keys!=65)
+        read_scan(16,1);
+        @(negedge clk);owner=0;user_base=0;
+        read_scan(16,0);
+        if(records!=32 || writes!=96 || read_stalls==0 || written_keys!=32)
             $fatal(1,"writer/bridge accounting records=%0d writes=%0d stalls=%0d keys=%0d",
                    records,writes,read_stalls,written_keys);
-        $display("V41X_SHARD_ROUNDTRIP_PASS rows=65 records=%0d writes=%0d stalls=%0d",
+        $display("V41X_SHARD_TWO_USER_PASS rows=32 users=2 records=%0d writes=%0d stalls=%0d",
                  records,writes,read_stalls);
         $finish;
     end

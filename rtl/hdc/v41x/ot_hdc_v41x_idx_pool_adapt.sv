@@ -10,12 +10,13 @@
 module ot_hdc_v41x_idx_pool_adapt #(
     parameter integer W=16, G=4, IL=8, AW=24, NW=16, MP=2,
     parameter integer IH=32, NPC=32, HAW=28, HLENW=4, HTAGW=16, HBEATW=4,
-    parameter integer SHARDED=0
+    parameter integer SHARDED=0, SLICE_SECTORS=0
 ) (
     input wire clk, rst_n, go,
     output wire ready,
     output reg idle,
     input wire [AW-1:0] cfg_ik_base,
+    input wire [HAW-1:0] i_user_base_sec,
     input wire [NW-1:0] i_nout, i_k,
     input wire [AW-1:0] i_wbase, i_xbase, i_xks, i_xjs, i_xcs,
     input wire [1:0] i_hg,
@@ -61,6 +62,14 @@ module ot_hdc_v41x_idx_pool_adapt #(
     reg [12:0] qtotal;
     reg [2:0] drain;
     reg [NW:0] done_count;
+    wire [HAW-1:0] local_base_now=(HAW'((i_wbase-cfg_ik_base)>>7)*HAW'(17))<<7;
+    wire [HAW:0] local_keys_now=({1'b0,HAW'(i_nout)}+3)>>2;
+    wire [HAW:0] super_count_now=(local_keys_now+1023)>>10;
+    wire [HAW:0] local_end_now={1'b0,local_base_now}+super_count_now*(HAW+1)'(2176);
+    wire [HAW:0] physical_end_now={1'b0,i_user_base_sec}+local_end_now;
+    wire bad_cfg_now=!i_fuse || (i_k!=32 && i_k!=128) || !i_mmode || ((IL<<i_hg)!=IH) ||
+        (i_user_base_sec[6:0]!=0) || physical_end_now[HAW] ||
+        (SHARDED && SLICE_SECTORS>0 && local_end_now>(HAW+1)'(SLICE_SECTORS));
     assign ready=st==A_IDLE;
 
     function automatic [15:0] bf16(input [31:0] x);
@@ -75,9 +84,9 @@ module ot_hdc_v41x_idx_pool_adapt #(
                 A_IDLE: if(go) begin
                     n<=i_nout;xbase<=i_xbase;xks<=i_xks;xjs<=i_xjs;xcs<=i_xcs;
                     wts<=i_wts;wbase<=i_wbase;obase<=i_obase;rnd<=i_round;oen<=i_oen;
-                    cfg_bad<=!i_fuse || (i_k!=32 && i_k!=128) || !i_mmode || ((IL<<i_hg)!=IH);
+                    cfg_bad<=bad_cfg_now;
                     kdim<=i_k;qtotal<=IH*i_k+IH;
-                    qe<=0;qh<=0;qb<=0;st<=A_LOAD;
+                    qe<=0;qh<=0;qb<=0;st<=bad_cfg_now ? A_IDLE : A_LOAD;
                 end
                 A_LOAD: begin
                     x_re[G-1:0]<={G{1'b1}};q1_v<=1;
@@ -178,6 +187,7 @@ module ot_hdc_v41x_idx_pool_adapt #(
 
     wire scan_cmd=st==A_START;
     wire [AW-1:0] ik_off=wbase-cfg_ik_base;
+    wire [HAW-1:0] key_base_sec=i_user_base_sec+((HAW'(ik_off>>7)*HAW'(17))<<7);
     wire [3:0] ks_busy;
     wire merge_v,merge_r;
     wire [63:0] merge_kv,merge_ref;
@@ -195,7 +205,7 @@ module ot_hdc_v41x_idx_pool_adapt #(
         ot_hdc_v41x_idx_shard_reader #(.NPC(NPC),.HAW(HAW),.TAGW(HTAGW),
             .LENW(HLENW),.BEATW(HBEATW)) reader (
             .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),
-            .cmd_base_sec(HAW'((ik_off>>7)*17)),.cmd_nkeys(30'(n)),
+            .cmd_base_sec(key_base_sec),.cmd_nkeys(30'(n)),
             .busy(shard_busy),.fault(shard_fault),
             .req_v(h_req_v),.req_rdy(h_req_rdy),.req_addr(h_req_addr),
             .req_len(h_req_len),.req_tag(h_req_tag),
@@ -216,7 +226,7 @@ module ot_hdc_v41x_idx_pool_adapt #(
         for(s=0;s<4;s=s+1) begin:g_stack
             ot_hdc_v41x_idx_pool_replica #(.S(s),.NPC(NPC),.AW(HAW),.HW(HW),
                 .TAGW(HTAGW),.LENW(HLENW),.BEATW(HBEATW)) stream (
-                .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),.cmd_base((ik_off>>7)*17),
+                .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),.cmd_base(key_base_sec>>7),
                 .cmd_nkeys(n),.busy(ks_busy[s]),
                 .req_v(h_req_v[s*NPC +: NPC]),.req_rdy(h_req_rdy[s*NPC +: NPC]),
                 .req_addr(h_req_addr[s*NPC*HAW +: NPC*HAW]),

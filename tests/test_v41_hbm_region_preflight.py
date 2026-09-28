@@ -20,5 +20,8 @@ def test_replicated_keys_reduce_capacity_and_user_width_is_insufficient():
     assert rec["sharding"]["correctness_reader_opt_in_available"]
     assert not rec["sharding"]["read_scheduler_integrated"]
     assert not rec["sharding"]["multiuser_slice_integrated"]
+    assert rec["sharding"]["two_user_physical_gate"]
+    assert not rec["sharding"]["controller_namespace_integrated"]
+    assert rec["isolation"]["standalone_two_user_key_address_isolation"]
     assert rec["capacity"]["key_sectors_per_user_per_stack_striped"] == 139264
     assert rec["capacity"]["max_striped_users_with_28_bit_key_window"] >= 866

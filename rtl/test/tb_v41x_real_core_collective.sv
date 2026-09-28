@@ -49,7 +49,7 @@ module tb_v41x_real_core_collective #(
         .entry(core_entry),.done(core_done),.fault(core_fault),
         .prime_v(1'b0),.prime_first(1'b0),.prime_cid(12'd0),
         .prog_re(prog_re),.prog_addr(prog_addr),.prog_q(prog_q),
-        .cfg_ik_base(24'd0),.cfg_me_xs(4'd0),
+        .cfg_ik_base(24'd0),.idx_user_base_sec(28'd0),.cfg_me_xs(4'd0),
         .xs_vi_q('0),.xs_rd_re(xs_rd_re),.xs_rd_addr(xs_rd_addr),
         .xs_rd_src(xs_rd_src),.xs_rd_q(xs_rd_q),
         .xs_vm_we(xs_vm_we),.xs_vm_waddr(xs_vm_waddr),.xs_vm_wdata(xs_vm_wdata)

@@ -292,7 +292,7 @@ module tb_hdc_v41x_array #(
                 .ewrom_re(ewrom_re), .ewrom_addr(ewrom_addr), .ewrom_q(ewrom_q),
                 .qrom_re(qrom_re), .qrom_addr(qrom_addr), .qrom_q(qrom_q),
                 .hrom_re(hrom_re), .hrom_addr(hrom_addr), .hrom_q(hrom_q),
-                .cfg_ik_base(cfg[0]), .cfg_me_xs(cfg[1][3:0]),
+                .cfg_ik_base(cfg[0]), .idx_user_base_sec(28'd0), .cfg_me_xs(cfg[1][3:0]),
                 .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
                 .pikh_req_v(pikh_req_v), .pikh_req_rdy(pikh_req_rdy),
                 .pikh_req_addr(pikh_req_addr), .pikh_req_len(pikh_req_len),

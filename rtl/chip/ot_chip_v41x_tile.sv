@@ -68,8 +68,10 @@ module ot_chip_v41x_tile #(
     parameter integer X_ME  = 1,
     parameter integer X_ATT = 1,
     parameter integer X_IDX = 2,
-    parameter integer PIKH_HAW = 28,        // pooled-index physical HBM sector address
+    parameter integer PIKH_HAW = FULL_SHAPE ? 30 : 28, // pooled-index physical HBM sector address
     parameter integer IDX_SHARDED = 0,      // paired compact index-key layout
+    parameter integer IDX_MULTIUSER = 0,    // latch a physical key-slice base at start
+    parameter integer IDX_KEY_SLICE_SECTORS = 0,
     parameter integer X_SEL = 1,
     parameter integer X_EG  = 1,
     parameter integer X_SU  = 1,
@@ -106,6 +108,7 @@ module ot_chip_v41x_tile #(
     input  wire [11:0]       prime_cid,
     // -- configuration ----------------------------------------------------------------
     input  wire [AW-1:0]     cfg_ik_base,
+    input  wire [PIKH_HAW-1:0] idx_user_base_sec,
     input  wire [3:0]        cfg_me_xs,
     input  wire [AW-1:0]     cfg_q_base,      // HBM sector of the quantised weight region
     input  wire [LAW-1:0]    cfg_q_lbase,
@@ -333,12 +336,27 @@ module ot_chip_v41x_tile #(
     wire [128*PIKH_HAW-1:0] pikh_req_addr; wire [128*4-1:0] pikh_req_len; wire [128*16-1:0] pikh_req_tag;
     wire pikw_v, pikw_rdy; wire [3:0] pikw_stack_mask;
     wire [PIKH_HAW-1:0] pikw_csec, pikw_ssec; wire [511:0] pikw_codes; wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
+    wire core_fault;
+    reg idx_user_fault;
+    reg [PIKH_HAW-1:0] idx_user_base_q;
+    wire [PIKH_HAW:0] idx_slice_end={1'b0,idx_user_base_sec}+
+                                  (PIKH_HAW+1)'(IDX_KEY_SLICE_SECTORS);
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n) begin idx_user_base_q<=0;idx_user_fault<=0;end
+        else if(start) begin
+            idx_user_base_q<=IDX_MULTIUSER ? idx_user_base_sec : '0;
+            idx_user_fault<=IDX_MULTIUSER &&
+                (idx_user_base_sec[6:0]!=0 || idx_slice_end[PIKH_HAW]);
+        end
+    end
+    assign fault=core_fault || idx_user_fault;
 
     ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .AW(AW), .NW(NW), .INSTR_BITS(INSTR_BITS),
                        .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
                        .X_SEL(X_SEL), .X_EG(X_EG), .XSQ(XSQ), .XSW(XSW), .X_SU(X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW),
-                       .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED)) u_core (
+                       .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_MULTIUSER(IDX_MULTIUSER),
+                       .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(core_fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -353,7 +371,7 @@ module ot_chip_v41x_tile #(
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .ewrom_re(ewrom_re), .ewrom_addr(ewrom_addr), .ewrom_q(ewrom_q),
         .hrom_re(hrom_re), .hrom_addr(hrom_addr), .hrom_q(hrom_q),
-        .cfg_ik_base(cfg_ik_base), .cfg_me_xs(cfg_me_xs),
+        .cfg_ik_base(cfg_ik_base), .idx_user_base_sec(idx_user_base_q), .cfg_me_xs(cfg_me_xs),
         .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
         .xs_vi_re(xs_vi_re), .xs_vi_addr(xs_vi_addr), .xs_vi_q(xs_vi_q), .xs_rd_re(xs_rd_re),
         .xs_rd_addr(xs_rd_addr), .xs_rd_src(xs_rd_src), .xs_rd_q(xs_rd_q), .xs_vm_we(xs_vm_we),

@@ -285,7 +285,7 @@ module tb_hdc_core_v41x_whbm #(
                        .X_SEL(`HDC_X_SEL), .X_EG(`HDC_X_EG), .XSQ(XSQ), .XSW(XSW),
                        .X_SU(`HDC_X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) dut (
-        .cfg_ik_base(cfg[0]), .cfg_me_xs(cfg[1][3:0]),
+        .cfg_ik_base(cfg[0]), .idx_user_base_sec(28'd0), .cfg_me_xs(cfg[1][3:0]),
         .ikh_req_v(ikh_req_v), .ikh_req_rdy(ikh_req_rdy), .ikh_req_addr(ikh_req_addr), .ikh_req_len(ikh_req_len),
         .ikh_req_tag(ikh_req_tag), .ikh_rsp_v(ikh_rsp_v), .ikh_rsp_rdy(ikh_rsp_rdy), .ikh_rsp_tag(ikh_rsp_tag),
         .ikh_rsp_beat(ikh_rsp_beat), .ikh_rsp_data(ikh_rsp_data), .ikw_v(ikw_v), .ikw_csec(ikw_csec),

@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas-hdc-v41x-index-shard-two-user-v1",
+  "status": "pass",
+  "scope": "two compact key slices through writer, bridge, four timed HBM stacks and serial reader; no controller namespace or full-token gate",
+  "user_base_sectors": [
+    0,
+    2176
+  ],
+  "rows_written": 32,
+  "users": 2,
+  "bridge_records": 32,
+  "sector_writes": 96,
+  "read_stall_cycles": 289,
+  "scans": [
+    {
+      "keys": 16,
+      "sectors": 34,
+      "cycles": 1621
+    },
+    {
+      "keys": 16,
+      "sectors": 34,
+      "cycles": 1457
+    }
+  ],
+  "input_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "6e6ed8fe1927de57b531ab97345511939da3459672e90aef3ca6d7777216cd6e",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420",
+    "rtl/test/tb_hdc_v41x_idx_shard_two_user.sv": "6007bec6b4da711a9d5669c7690f57fe5b57fb018cb1dcb1705dacf441591dba",
+    "tools/rtl_v41x_idx_shard_two_user.py": "2286d5e16eb217d9438bbe09b3da9bbca75479e047f6064427418dd80baedde3"
+  }
+}

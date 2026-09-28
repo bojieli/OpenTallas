@@ -25,12 +25,12 @@
   "coverage": "SHARDED K32 writer through write arbiter and four timed HBM3E simulation stacks to compact reader; distinct key scales, all code/scale bytes, quarter valid/last/refusal, Qs mod16=8, global rows63/64, and read issued before write commit.",
   "limitation": "Small-shape correctness gate. Serial one-outstanding-sector reader and behavioural HBM; no pooled-adapter token integration, modeled-bandwidth claim or physical closure.",
   "input_sha256": {
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "a4ce9d82f1489d14824b7ef5ebea200c31af86859a80fbad3bbe421f5790eafd",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "6e6ed8fe1927de57b531ab97345511939da3459672e90aef3ca6d7777216cd6e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420",
-    "rtl/test/tb_hdc_v41x_idx_shard_roundtrip.sv": "6d5b55838b10a16a618d2a7a6a50eeaf25018fdac39194d17909e2968f9b69e4",
+    "rtl/test/tb_hdc_v41x_idx_shard_roundtrip.sv": "57ca20db3346933106cac1de17698286727f9c9ebc8d8413557e1c32edea16ac",
     "tools/rtl_v41x_idx_shard_roundtrip.py": "eca2f623c4379196cf1a1c942621802e71df1b36922a16630ab204e8a35447de"
   }
 }

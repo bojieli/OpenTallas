@@ -25,7 +25,8 @@
   },
   "isolation": {
     "multiuser_key_address_isolation": false,
-    "reason": "writer and scanner derive sectors from layer-local bases with no user slice offset"
+    "reason": "writer and scanner accept an early physical user base and a standalone two-user gate passes, but the die still ties that base low and no full-token namespace gate exists",
+    "standalone_two_user_key_address_isolation": true
   },
   "per_stack_per_user_bytes": {
     "ckv_striped": 18874368,
@@ -43,35 +44,34 @@
     "unpacked_example_words": 58116276224
   },
   "schema": "v41_hbm_region_preflight_v1",
-  "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in serial sharded writer/reader has exact reduced roundtrip but no full-token or throughput claim",
+  "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in sharded writer/reader has exact two-user timed-HBM roundtrip but no controller namespace, full-token or throughput claim",
   "sharding": {
+    "controller_namespace_integrated": false,
     "correctness_reader_opt_in_available": true,
     "multiuser_slice_integrated": false,
     "read_address_mapper_available": true,
     "read_scheduler_integrated": false,
+    "two_user_physical_gate": true,
     "writer_opt_in_available": true
   },
   "source_sha256": {
     "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
-    "rtl/chip/ot_chip_v41x_die.sv": "ce0904801595f11064483ee4da971f900e8c7567daf865126893347725bb02dd",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6a3ddc746cd5985d376bf893127877212034581e46defa893da59c3b2bb539e5",
+    "rtl/chip/ot_chip_v41x_die.sv": "cd106a8ca1392e2ffffdec6eba27e17ae5b3f3fb4294569975772c5f74a632a3",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "c21e96fa6601d198dbdff534acd4138fb73cdaa5b99709f31cfd2798a046fd8e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "a4ce9d82f1489d14824b7ef5ebea200c31af86859a80fbad3bbe421f5790eafd",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "6e6ed8fe1927de57b531ab97345511939da3459672e90aef3ca6d7777216cd6e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420",
-    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "c82eb5893f70285932741c4111d817817aea27d0d36ba49103c31f2c8913a508",
     "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735"
   },
   "status": "capacity_mismatch",
   "widths": {
-    "controller_full_profile_header_overlap_bits": 0,
-    "controller_full_profile_user_id_bits": 10,
     "current_controller_user_id_bits": 8,
     "current_index_sector_address_bits": 28,
-    "full_mode_header_idx_val_overlap_bits": 0,
-    "full_mode_header_pos_idx_overlap_bits": 0,
-    "full_mode_header_tok_addr_overlap_bits": 0,
-    "historical_reduced_controller_user_id_bits": 8,
+    "full_mode_header_idx_val_overlap_bits": 5,
+    "full_mode_header_pos_idx_overlap_bits": 5,
+    "full_mode_header_tok_addr_overlap_bits": 1,
     "index_sector_bits_for_current_layout_users": 29,
     "user_id_bits_for_current_layout_users": 10,
     "user_id_bits_for_model_users": 10

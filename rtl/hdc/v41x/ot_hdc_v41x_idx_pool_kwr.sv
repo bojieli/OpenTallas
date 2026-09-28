@@ -3,10 +3,11 @@
 // placed on successive stacks and each stack's groups are packed locally.
 // SHARDED=0 preserves the reduced vehicle's replicated image.
 module ot_hdc_v41x_idx_pool_kwr #(
-    parameter integer AW=24, NW=16, NL=8, HAW=28, SHARDED=0
+    parameter integer AW=24, NW=16, NL=8, HAW=28, SHARDED=0, SLICE_SECTORS=0
 ) (
     input wire clk, rst_n,
     input wire [AW-1:0] cfg_ik_base,
+    input wire [HAW-1:0] i_user_base_sec,
     input wire su_go,
     input wire [1:0] i_dst,
     input wire [AW-1:0] i_obase, i_orow,
@@ -36,6 +37,12 @@ module ot_hdc_v41x_idx_pool_kwr #(
     wire hit=su_go && i_dst==2'd3 && (i_obase>>4)>=cfg_ik_base;
     wire [AW-1:0] rb_e=rbase+(row>>4)*kdim*16+row[3:0];
     reg [AW-1:0] off,b0;
+    wire [HAW-1:0] local_csec=HAW'((b0+1+(local_row>>6))*128+2*(local_row&63));
+    wire [HAW-1:0] local_ssec=HAW'(b0*128+(local_row>>3));
+    wire [HAW:0] physical_csec={1'b0,i_user_base_sec}+{1'b0,local_csec};
+    wire [HAW:0] physical_ssec={1'b0,i_user_base_sec}+{1'b0,local_ssec};
+    wire local_bad=(SLICE_SECTORS>0) &&
+                   (local_csec >= HAW'(SLICE_SECTORS-1) || local_ssec >= HAW'(SLICE_SECTORS));
     reg [511:0] block;
     reg [136:0] enc[0:3];
     integer i,j;
@@ -69,15 +76,16 @@ module ot_hdc_v41x_idx_pool_kwr #(
                     end
                 end
                 if((got&need)==need) begin
-                    busy<=0;got<=0;w_v<=1;dbg_keys<=dbg_keys+1;
-                    if(enc[0][136] || enc[1][136] || enc[2][136] || enc[3][136] || wbad) fault<=1;
+                    busy<=0;got<=0;w_v<=!(physical_csec[HAW] || physical_ssec[HAW] || local_bad);dbg_keys<=dbg_keys+1;
+                    if(enc[0][136] || enc[1][136] || enc[2][136] || enc[3][136] || wbad ||
+                       physical_csec[HAW] || physical_ssec[HAW] || local_bad) fault<=1;
                 end
             end
         end
     end
     always @(posedge clk) begin
-        w_csec<=(b0+1+(local_row>>6))*128+2*(local_row&63);
-        w_ssec<=b0*128+(local_row>>3);
+        w_csec<=physical_csec[HAW-1:0];
+        w_ssec<=physical_ssec[HAW-1:0];
         w_sslot<=local_row[2:0];
         for(integer b=0;b<4;b=b+1) begin
             w_codes[128*b +: 128]<=enc[b][127:0];
