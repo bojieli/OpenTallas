@@ -89,6 +89,7 @@ module ot_hdc_matvec #(
     // One independent scale read per group. Row-word address is the matrix's
     // weight base plus output-row-word offset. Non-INT8 mode ties requests low.
     output reg               scale_re,
+    output reg  [G-1:0]      scale_gre,  // active group read enables; scale_re is their OR
     output reg  [G*AW-1:0]  scale_addr,
     input  wire [G*W*16-1:0] scale_q,
     // KV SRAM: one port per group, W lanes (BF16 values in 32-bit words) per word
@@ -419,22 +420,38 @@ module ot_hdc_matvec #(
         assign {pre_last, pre_oen, pre_amax, pre_wsrc, pre_mmode, pre_split,
                 pre_oa, pre_ots, pre_nb, pre_lb, pre_nout,
                 pre_rmax, pre_j, pre_opend, pre_mbase, pre_sbase} = pre_tag;
+        wire [G-1:0] pre_scale_active;
+        genvar pg;
+        for (pg = 0; pg < G; pg = pg + 1) begin : g_scale_request_mask
+            // A group with no output rows cannot need a scale word. This also
+            // drops the incomplete G % S tail in a K-split operation.
+            assign pre_scale_active[pg] = pre_vline[8+OD] && pre_last && !pre_wsrc &&
+                (pg < (G >> pre_split)) &&
+                (pre_mmode ? (pre_lb + pg*W < pre_nout) :
+                             (pre_nb + pg*(W*IL) < pre_nout));
+        end
         // pre_tag precedes a_tag by two cycles. The registered request becomes
         // visible to the synchronous ROM at the next edge, and scale_q is
         // stable when raw_res enters the FP32 multiplier at the following edge.
         integer sg;
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) scale_re <= 1'b0;
-            else scale_re <= pre_vline[8+OD] && pre_last && !pre_wsrc;
+            if (!rst_n) begin scale_re <= 1'b0; scale_gre <= 0; end
+            else begin scale_re <= |pre_scale_active; scale_gre <= pre_scale_active; end
         end
         always @(posedge clk) begin
             for (sg = 0; sg < G; sg = sg + 1)
-                scale_addr[sg*AW +: AW] <= pre_sbase + (pre_nb >> LW) + sg * IL;
+                scale_addr[sg*AW +: AW] <= pre_scale_active[sg] ?
+                    pre_sbase + (pre_nb >> LW) + sg * IL : pre_sbase;
         end
         genvar si;
         for (si = 0; si < G*W; si = si + 1) begin : g_scale
+            localparam integer GROUP = si / W;
+            localparam integer LANE = si % W;
+            wire active_lane = (GROUP < (G >> raw_split)) &&
+                (raw_mmode ? (raw_lb + GROUP*W + LANE < raw_nout) :
+                             (raw_nb + GROUP*(W*IL) + LANE < raw_nout));
             ot_hdc_fmul u_mul (
-                .clk(clk), .rst_n(rst_n), .v(raw_v && raw_last),
+                .clk(clk), .rst_n(rst_n), .v(raw_v && raw_last && active_lane),
                 .a(raw_res[32*si +: 32]),
                 .b({raw_wsrc ? 16'h3F80 : scale_q[16*si +: 16], 16'd0}),
                 .y(scaled[32*si +: 32]), .fault(scale_faults[si])
@@ -446,6 +463,7 @@ module ot_hdc_matvec #(
         assign post_pending = {2'b00, vd};
     end else begin : g_no_post_scale
         assign scale_re = 1'b0;
+        assign scale_gre = 0;
         assign scale_addr = 0;
         assign scale_faults = 0;
         assign res = raw_res;
