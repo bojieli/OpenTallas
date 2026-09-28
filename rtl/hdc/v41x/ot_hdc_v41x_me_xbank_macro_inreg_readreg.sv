@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
-// Registered local cut for the 16-macro ME activation store.  The external
+// Registered local cut for the ME activation store (8 macros at MP=1, 16 at
+// MP=2). The external
 // producer's preload/write/read request is captured once before the SRAM
 // ports; SRAM read and bank output are registered. Sustained service is one beat per
 // cycle, with one additional request/write fill cycle versus the direct macro.
