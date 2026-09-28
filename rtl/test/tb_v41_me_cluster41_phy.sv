@@ -60,10 +60,7 @@ module tb_v41_me_cluster41_phy;
             expected[(i*2+0)*16 +:16]=16'h3f80+i;
             expected[(i*2+1)*16 +:16]=16'h4000+i;
         end
-        expected_digest=0;
-        for (k=0;k<32;k=k+1)
-            for (t=0;t<64;t=t+1)
-                expected_digest[k]=expected_digest[k]^expected[k+32*t];
+        expected_digest=expected[31:0];
         for (j=0;j<41;j=j+1) begin
             if (!seen_valid[j]) $fatal(1,"consumer %0d missing beat",j);
             if (observed_digest[j] !== expected_digest)

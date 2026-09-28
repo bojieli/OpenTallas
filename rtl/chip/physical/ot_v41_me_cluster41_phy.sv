@@ -56,24 +56,18 @@ module ot_v41_me_cluster41_phy #(
         end
     end
 
-    genvar c,k,t;
+    genvar c;
     generate for (c=0;c<CONSUMERS;c=c+1) begin : g_consumer
         // This capture flop bank represents each adapter's existing local
         // xr register. No extra operand stage beyond RL3 is credited.
-        reg [2047:0] operand_q;
+        (* keep *) reg [2047:0] operand_q;
         always @(posedge clk) begin
             if (consumer_take[c]) operand_q <= multicast_q;
             if (!rst_n) consumer_valid[c] <= 1'b0;
             else consumer_valid[c] <= multicast_v_q && consumer_take[c];
         end
-        // Observe every operand bit without exporting 83,968 top-level pins.
-        // The reduction is a measurement sink, not part of the accelerator.
-        for (k=0;k<32;k=k+1) begin : g_digest
-            wire [63:0] fold;
-            for (t=0;t<64;t=t+1) begin : g_term
-                assign fold[t] = operand_q[k+32*t];
-            end
-            assign consumer_digest[c*32+k] = ^fold;
-        end
+        // Keep the complete physical capture bank, but sample only 32 bits
+        // at the top port to avoid an artificial 80k-gate reduction tree.
+        assign consumer_digest[c*32 +: 32] = operand_q[31:0];
     end endgenerate
 endmodule

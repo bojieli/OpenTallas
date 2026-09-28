@@ -27,9 +27,9 @@ selector and full read4-to-converter link are not in the cluster route.
 [`ot_v41_me_cluster41_phy.sv`](../rtl/chip/physical/ot_v41_me_cluster41_phy.sv)
 is a physical load envelope. Its capture banks stand in for the adapter's
 existing local `xr` register; per-consumer enables keep them separate through
-synthesis. The digest outputs make every operand bit observable without
-exporting 83,968 data pins. The digest XOR trees are measurement sinks, not
-accelerator logic. This probe does not instantiate the MAC tiles, weight banks,
+synthesis. The capture banks carry `keep` attributes and the 32-bit sample
+outputs avoid exporting 83,968 data pins or adding an artificial reduction
+tree. This probe does not instantiate the MAC tiles, weight banks,
 vector memory, global preload tree, or a cluster scheduler. Any positive
 route is an operand-delivery gate, not a complete compute-cluster or token-rate
 result.
@@ -43,7 +43,7 @@ checkpoint values before any full-shape performance claim.
 
 `rtl/test/tb_v41_me_cluster41_phy.sv` exercises both positions through the
 converter, the 16 behavioral macro models, the registered multicast and all
-41 capture banks. It checks every capture through the observable digest and
+41 capture banks. It checks every capture through the 32-bit sample and
 checks the complete 2,048-bit operand at consumers 0 and 40, including the
 `rd_rot=2` lane order. The bench passes in Icarus Verilog with the macro's
 behavioral Verilog model. It is a boundary test, not a checkpoint token gate.
