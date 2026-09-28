@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.v41-idx-reader-score-select.v1",
+  "status": "pass_exact_bounded_one_quarter",
+  "source_sha256": {
+    "rtl/test/tb_hdc_v41x_idx_reader_score_select.sv": "c2fc8f85f7d98a67572e9e12bae9c47a32ef7fa91cbf6cde23fddce6a932f96f",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_range.sv": "6e47d8e09370a84244b3e69de9438a6cd57fddecac357fa9f537198b2f88603d",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_range_pc_arb.sv": "298084d727242936b12fbacab8f00a181fc29afeea50b727b03254ce9b83424a",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_ranges.sv": "d6956ae3b1519df1cbac709e2c65134fc6c4e81ba4188d9acf073371407fc065",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv": "923de29d3940ba86ced334baa3d14eb637c43c7a6bf2c0c2531a0516d82803ad",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv": "076ee392bcb94633e85ae27c362cf14077580e836333ec3ddd6b65beaf786661",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx.sv": "a7efc680c563abca19a59f4b83c8f1f6a6d5c33390b46cdac4f354b7a9c44630",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/v41/ot_hdc_tselect.sv": "85051117373f13200472ca4aac704914ade30d17644323cb81e469d7fbed7e4b",
+    "rtl/hdc/v41/ot_hdc_tselect_q.sv": "24723b4d6552d1fd9386e0e59477d26ad19e40db5ac4b4f8f4da699f605e415a",
+    "tools/rtl_v41x_idx_reader_score_select.py": "48f856fb92ec50b55d2d409224a8c64ee3f56b742daf232c1155a47609bff1c2"
+  },
+  "measurement": {
+    "global_keys_read": 1040,
+    "global_keys_checked": 1040,
+    "quarter0_keys_scored": 256,
+    "quarter0_topk": 8,
+    "hbm_sectors": 2210,
+    "cycles": 417,
+    "collector_handoffs": 17,
+    "collector_stall_cycles": 48,
+    "stream_stall_cycles": 81,
+    "first_score_cycle": 146,
+    "last_score_cycle": 224,
+    "last_select_cycle": 414
+  },
+  "configuration": {
+    "timed_hbm_stacks": 4,
+    "pseudochannels_per_stack": 32,
+    "global_keys": 1040,
+    "quarter0_keys": 256,
+    "key_dim": 128,
+    "heads": 32,
+    "score_slice_keys_per_cycle": 4,
+    "selector_lanes": 4,
+    "selector_topk": 8,
+    "hbm_fixture": "all-zero sector, scale and FP4 codes; zero query and head weights",
+    "score_fixture": "golden BF16 +0 for all 256 quarter0 keys",
+    "topk_fixture": "eight lowest global indices, 0..7"
+  },
+  "scope": "Four-stack timed reader and quarter collector read/check all 1040 global keys; one finite NK4 full-dimension score slice scores quarter0's 256 keys in four subbeats per 16-key collector beat, then a W4 threshold selector chooses exact top8. Other three quarters are checked at reader output but not scored/selected. No full-die index rate or chip token claim.",
+  "comparison_caution": "The prior 132-cycle always-ready reader and 4621-cycle old scorer gates have different sink widths and coverage; this quarter0 gate is not a like-for-like full-1040 speedup."
+}

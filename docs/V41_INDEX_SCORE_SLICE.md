@@ -39,3 +39,24 @@ more slices. The selector's 8,270-cycle measured tail and the physical cost
 of the score slices remain separate bottlenecks. Final choice of eight or
 sixteen slices needs a same-controller reader/scorer/selector gate and a
 representative slice route.
+
+## First integrated gates
+
+The [real checkpoint score/select gate](../results/rtl/v41_idx_score_select_checkpoint.json)
+uses two reduced-shape layer indexer calls from the released checkpoint.
+All 80 BF16 scores and 16 top-8 indices/values match the golden under
+ready/valid stalls. A second query is loaded only after the first segment's
+scores enter the selector: starting that load immediately after the final
+input key changed a late first-segment score in the initial test. The exact
+minimum safe turnaround or a double-buffered query register is still open.
+
+The [timed reader/score/select gate](../results/rtl/v41_idx_reader_score_select.json)
+joins the four-stack reader to one `NK=4`, 32-head × 128-dimension scorer
+and one exact top-8 selector. It checks all 1,040 keys and 2,210 sectors at
+the reader boundary, scores quarter 0's 256 keys, and selects the exact
+eight lowest indices from the all-zero fixture. It takes 417 cycles, with
+48 collector stall cycles. The other three quarters are not scored in this
+gate, so this is an integration milestone rather than a full-index service
+rate. The remaining gate must score all four quarters, preserve their
+separate index order through selection, and measure the combined controller
+and physical path.
