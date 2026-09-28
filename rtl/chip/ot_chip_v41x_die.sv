@@ -110,7 +110,7 @@ module ot_chip_v41x_die #(
     parameter integer LAW     = 12,
     parameter integer NPC_W   = 8,
     // HBM address map and KV prefetch
-    parameter integer K_HAW   = 28,           // sector addresses; full mode uses 30
+    parameter integer K_HAW   = FULL_SHAPE ? 30 : 28, // HBM sector address
     parameter integer KEY_USERS = 1,          // index-key user slices (the pooled indexer's)
     parameter integer IKH_SLICE = 1 << 18,    // index-key sectors a user slice
     parameter integer KV_USERS  = 1,          // attention-KV user slices
@@ -119,6 +119,7 @@ module ot_chip_v41x_die #(
     parameter integer KV_STG  = 2048,         // KV staging words a slot (two slots)
     parameter integer KV_SAW  = 11,
     parameter integer KV_WQD  = 128,          // KV write-queue sectors a stack
+    parameter integer WIN_STACK = 0,          // stack holding the packed FP8 window ring
     parameter integer W_MEM   = 1 << 20,
     parameter integer W_STACK = 0,            // stack that holds the QE weight region
     parameter integer CLK_PS  = 1000,
@@ -162,34 +163,35 @@ module ot_chip_v41x_die #(
     // -- host / CSR ----------------------------------------------------------------------
     input  wire              host_mode,        // 1: the host drives the core's step port; 0: u_ctrl does
     input  wire              host_start,
-    input  wire [15:0]       host_token,
-    input  wire [15:0]       host_pos,
+    input  wire [(FULL_SHAPE ? 21 : 16)-1:0] host_token,
+    input  wire [(FULL_SHAPE ? 21 : 16)-1:0] host_pos,
+    input  wire [9:0]        host_user,        // packed window owner in host mode
     input  wire [13:0]       host_entry,
     input  wire              host_prime_v,
     input  wire              host_prime_first,
     input  wire [11:0]       host_prime_cid,
     output wire              core_done,
-    output wire [15:0]       core_next_token,
+    output wire [(FULL_SHAPE ? 21 : 16)-1:0] core_next_token,
     output wire [31:0]       core_next_val,
     output wire [31:0]       core_cycles,
     output wire [3:0]        core_acc_n,
-    input  wire [23:0]       cfg_ik_base,
+    input  wire [(FULL_SHAPE ? 30 : 24)-1:0] cfg_ik_base,
     input  wire [3:0]        cfg_me_xs,
-    input  wire [23:0]       cfg_q_base,
+    input  wire [(FULL_SHAPE ? 30 : 24)-1:0] cfg_q_base,
     input  wire [LAW-1:0]    cfg_q_lbase,
     input  wire [15:0]       cfg_q_lead,
     input  wire [15:0]       cfg_q_rate,
     input  wire [7:0]        cfg_users,
-    input  wire [15:0]       cfg_prompt_len,
-    input  wire [15:0]       cfg_gen_len,
+    input  wire [(FULL_SHAPE ? 21 : 16)-1:0] cfg_prompt_len,
+    input  wire [(FULL_SHAPE ? 21 : 16)-1:0] cfg_gen_len,
     output wire              pr_re,
     output wire [7:0]        pr_user,
-    output wire [15:0]       pr_pos,
-    input  wire [15:0]       pr_q,
+    output wire [(FULL_SHAPE ? 21 : 16)-1:0] pr_pos,
+    input  wire [(FULL_SHAPE ? 21 : 16)-1:0] pr_q,
     output wire              tok_valid,
     output wire [7:0]        tok_user,
-    output wire [15:0]       tok_pos,
-    output wire [15:0]       tok_id,
+    output wire [(FULL_SHAPE ? 21 : 16)-1:0] tok_pos,
+    output wire [(FULL_SHAPE ? 21 : 16)-1:0] tok_id,
     output wire [7:0]        users_done,
     input  wire              rcfg_we,
     input  wire [7:0]        rcfg_dest,
@@ -261,7 +263,9 @@ module ot_chip_v41x_die #(
     output wire [31:0]       kv_hbm_grants,
     output wire [4:0]        kv_fault_code
 );
-    localparam integer AW = 24, G = 4, W = 16, FLIT = 512;
+    localparam integer AW = FULL_SHAPE ? 30 : 24;
+    localparam integer NW = FULL_SHAPE ? 21 : 16;
+    localparam integer G = 4, W = 16, FLIT = 512;
     localparam integer VWA = VM_AW - 4;
     localparam integer PEER = RANK ^ 1;
     localparam integer CL_RB = (N_TP > 1) ? $clog2(N_TP) : 1;
@@ -273,10 +277,10 @@ module ot_chip_v41x_die #(
     wire rn = rst_s[1];
 
     // -- core step port: host or package controller ------------------------------------------
-    wire c_start; wire [15:0] c_token, c_pos; wire [AW-1:0] kv_base;
+    wire c_start; wire [NW-1:0] c_token, c_pos; wire [AW-1:0] kv_base;
     wire t_start = host_mode ? host_start : c_start;
-    wire [15:0] t_token = host_mode ? host_token : c_token;
-    wire [15:0] t_pos = host_mode ? host_pos : c_pos;
+    wire [NW-1:0] t_token = host_mode ? host_token : c_token;
+    wire [NW-1:0] t_pos = host_mode ? host_pos : c_pos;
     wire t_fault, qs_fault, kb_busy;
     wire [31:0] kb_rs, kb_ws;
     assign kb_stalls = kb_rs + kb_ws;
@@ -291,8 +295,15 @@ module ot_chip_v41x_die #(
     wire [127:0] kh_v, kh_rdy, kh_we, kh_wr_done, kr_v, kr_rdy;
     wire [128*K_HAW-1:0] kh_addr; wire [128*4-1:0] kh_len, kr_beat; wire [128*16-1:0] kh_tag, kr_tag;
     wire [128*256-1:0] kh_wdata, kr_data; wire [128*32-1:0] kh_wstrb;
-    wire kvd_v, kv_ok, kvd_mmode; wire [23:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js;
-    wire [15:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos; wire [1:0] kvd_hg;
+    wire kvd_v, kv_ok, kvd_mmode; wire [AW-1:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js;
+    wire [NW-1:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos; wire [1:0] kvd_hg;
+    wire win_blk_v, win_blk_ready;
+    wire [9:0] win_blk_user;
+    wire [AW-1:0] win_blk_kvt_base, win_blk_first_elem;
+    wire [NW-1:0] win_blk_row;
+    wire [3:0] win_blk_idx;
+    wire [255:0] win_blk_codes;
+    wire [7:0] win_blk_scale;
     wire xa_we, xa_re, xb_we, xb_re; wire [VWA-1:0] xa_waddr, xa_raddr, xb_waddr, xb_raddr;
     wire [511:0] xa_wdata, xa_rq, xb_wdata, xb_rq;
     localparam integer COLL_AW = FULL_SHAPE ? 30 : 24;
@@ -305,7 +316,7 @@ module ot_chip_v41x_die #(
     wire [7:0] core_coll_seq;
     wire die_coll_fault;
 
-    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM),
+    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .PIKH_HAW(K_HAW), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
                         .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW)) u_tile (
         .clk(clk), .rst_n(rn),
@@ -313,6 +324,10 @@ module ot_chip_v41x_die #(
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),
         .fault(t_fault), .acc_n(core_acc_n),
         .prime_v(host_prime_v), .prime_first(host_prime_first), .prime_cid(host_prime_cid),
+        .window_user(host_mode ? host_user : 10'd0),
+        .win_blk_v(win_blk_v), .win_blk_ready(win_blk_ready), .win_blk_user(win_blk_user),
+        .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row), .win_blk_idx(win_blk_idx),
+        .win_blk_first_elem(win_blk_first_elem), .win_blk_codes(win_blk_codes), .win_blk_scale(win_blk_scale),
         .cfg_ik_base(cfg_ik_base), .cfg_me_xs(cfg_me_xs), .cfg_q_base(cfg_q_base), .cfg_q_lbase(cfg_q_lbase),
         .cfg_q_lead(cfg_q_lead), .cfg_q_rate(cfg_q_rate),
         .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q), .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
@@ -343,12 +358,15 @@ module ot_chip_v41x_die #(
     localparam integer KEY_SECTORS = KEY_USERS * IKH_SLICE;
     localparam integer KV_SBASE    = KEY_SECTORS;
     localparam integer KV_SECTORS  = 2 * ((KV_USERS << KV_AW) / 4);
+    localparam integer WIN_SECTORS = KV_USERS * 128 * 17;
 
     // -- attention KV prefetch (the core's KV_HBM handshake) ------------------------------------------
     wire [3:0] pm_v, pm_rdy, pm_we, ps_v, ps_rdy, pk_wd;
     wire [4*K_HAW-1:0] pm_addr; wire [4*4-1:0] pm_len, ps_beat; wire [4*16-1:0] pm_tag, ps_tag;
     wire [4*256-1:0] pm_wdata, ps_data; wire [4*32-1:0] pm_wstrb;
     wire kv_fault; wire [4:0] kv_code;
+    generate if (!FULL_SHAPE) begin : g_reduced_kv
+    assign win_blk_ready = 1'b0;
     ot_chip_v41x_kv_prefetch #(.G(G), .W(W), .SW(SW), .SUN(SUN), .AW(AW), .STG(KV_STG), .SAW(KV_SAW),
                                .KV_SBASE(KV_SBASE), .KV_SECTORS(KV_SECTORS), .HAW(K_HAW), .TAGW(16), .WQD(KV_WQD)) u_kv (
         .clk(clk), .rst_n(rn), .base(host_mode ? {AW{1'b0}} : kv_base),
@@ -361,6 +379,85 @@ module ot_chip_v41x_die #(
         .s_data(ps_data), .fault(kv_fault), .fault_code(kv_code), .st_ops(kv_ops), .st_words(kv_words),
         .st_sectors_written(kv_sectors_written), .st_refetches(kv_refetches), .st_wq_high(kv_wq_high),
         .st_hold_cycles(kv_hold_cycles));
+    end else begin : g_packed_kv
+        // This path publishes only the 128-row FP8 window.  A selected main
+        // CKV row is FP4/288 B and needs its SEL source ID plus a remote-row
+        // all-gather.  Until the mixed-row scheduler is wired, any legacy
+        // scalar KVD read faults and cannot release the core's kv_ok barrier.
+        wire [3:0] w_v, w_rdy, w_we, w_wdone, w_sv, w_srdy;
+        wire [4*K_HAW-1:0] w_addr;
+        wire [15:0] w_len, w_tag, w_s_tag, w_s_beat;
+        wire [1023:0] w_wdata, w_s_data;
+        wire [127:0] w_wstrb;
+        wire win_fault;
+        wire [4:0] win_code;
+        wire [31:0] rows_fetched, blocks_written, sectors_read, sectors_written;
+        wire packed_valid;
+        wire [4223:0] packed_row;
+        wire [255:0] packed_codes;
+        wire [7:0] packed_scale;
+        wire [30:0] first_expected = {1'b0, win_blk_kvt_base} +
+            ({10'd0, win_blk_row} >> 4 << 13) +
+            ({27'd0, win_blk_idx} << 9) + {27'd0, win_blk_row[3:0]};
+        wire bad_block_addr = first_expected[30] ||
+            win_blk_first_elem != first_expected[29:0];
+        reg unsupported_read;
+        reg bad_block;
+        always @(posedge clk or negedge rn)
+            if (!rn) begin unsupported_read <= 0; bad_block <= 0; end
+            else begin
+                if (kvd_v || kv_re) unsupported_read <= 1;
+                if (win_blk_v && win_blk_ready && bad_block_addr) bad_block <= 1;
+            end
+        ot_chip_v41x_window_kv_prefetch #(.POS_W(NW), .SEC_W(K_HAW),
+            .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+            .clk(clk), .rst_n(rn),
+            .region_base_sector(K_HAW'(KV_SBASE)),
+            .region_sector_count(K_HAW'(WIN_SECTORS)),
+            .prime_v(1'b0), .prime_ready(), .prime_user(10'd0), .prime_row(NW'(0)),
+            .blk_v(win_blk_v && !bad_block_addr && !bad_block),
+            .blk_ready(win_blk_ready), .blk_user(win_blk_user),
+            .blk_row(win_blk_row), .blk_idx(win_blk_idx),
+            .blk_codes(win_blk_codes), .blk_scale(win_blk_scale),
+            .prefetch_v(1'b0), .prefetch_ready(),
+            .prefetch_user(10'd0), .prefetch_row(NW'(0)), .kv_ok(),
+            .re(1'b0), .ruser(10'd0), .rrow(NW'(0)), .relem(9'd0), .q(),
+            .packed_re(1'b0), .packed_ruser(10'd0), .packed_rrow(NW'(0)),
+            .packed_ridx(4'd0), .packed_valid(packed_valid), .packed_row(packed_row),
+            .packed_codes(packed_codes), .packed_scale(packed_scale),
+            .fault(win_fault), .fault_code(win_code),
+            .st_rows_fetched(rows_fetched), .st_blocks_written(blocks_written),
+            .st_sectors_read(sectors_read), .st_sectors_written(sectors_written),
+            .m_v(w_v), .m_rdy(w_rdy), .m_addr(w_addr), .m_len(w_len),
+            .m_tag(w_tag), .m_we(w_we), .m_wdata(w_wdata), .m_wstrb(w_wstrb),
+            .m_wr_done(w_wdone), .s_v(w_sv), .s_rdy(w_srdy),
+            .s_tag(w_s_tag), .s_beat(w_s_beat), .s_data(w_s_data));
+        // The reqmux is the stable K-side boundary for a future selected-CKV
+        // DMA.  Its currently idle C input cannot be mistaken for window data.
+        ot_chip_v41x_kv_reqmux #(.HAW(K_HAW), .TAGW(16)) u_kv_mux (
+            .w_v(w_v), .w_rdy(w_rdy), .w_addr(w_addr), .w_len(w_len),
+            .w_tag(w_tag), .w_we(w_we), .w_wdata(w_wdata), .w_wstrb(w_wstrb),
+            .w_wr_done(w_wdone), .w_sv(w_sv), .w_srdy(w_srdy),
+            .w_stag(w_s_tag), .w_sbeat(w_s_beat), .w_sdata(w_s_data),
+            .c_v(4'b0), .c_rdy(), .c_addr('0), .c_len('0), .c_tag('0),
+            .c_we(4'b0), .c_wdata('0), .c_wstrb('0), .c_wr_done(),
+            .c_sv(), .c_srdy(4'b0), .c_stag(), .c_sbeat(), .c_sdata(),
+            .m_v(pm_v), .m_rdy(pm_rdy), .m_addr(pm_addr), .m_len(pm_len),
+            .m_tag(pm_tag), .m_we(pm_we), .m_wdata(pm_wdata),
+            .m_wstrb(pm_wstrb), .m_wr_done(pk_wd),
+            .s_v(ps_v), .s_rdy(ps_rdy), .s_tag(ps_tag),
+            .s_beat(ps_beat), .s_data(ps_data));
+        assign kv_ok = 1'b0;
+        assign kv_q = '0;
+        assign kv_fault = win_fault | unsupported_read | bad_block;
+        assign kv_code = win_code | {1'b0, unsupported_read, bad_block, 2'b0};
+        assign kv_ops = 0;
+        assign kv_words = rows_fetched * 32;
+        assign kv_sectors_written = sectors_written;
+        assign kv_refetches = 0;
+        assign kv_wq_high = 0;
+        assign kv_hold_cycles = 0;
+    end endgenerate
 
     // -- four HBM3E stacks: K ports shared by the pooled indexer (pseudo-channels [32s, 32s + 32) of
     //    u_tile's key bridge) and the KV prefetch through a per-stack arbiter; W_STACK the weights --------
@@ -417,7 +514,7 @@ module ot_chip_v41x_die #(
     wire pc_in_valid, pc_in_ready, pc_in_last, pc_out_valid, pc_out_ready, pc_out_last;
     wire [FLIT-1:0] pc_in_data, pc_out_data;
     wire proto_fault, ctrl_busy;
-    ot_rom_pkg_ctrl_x #(.PKG_ID(PKG_ID), .FLIT(FLIT), .NW(16), .AW(AW), .VWA(VWA), .MAXU(MAXU), .KVW(KVW),
+    ot_rom_pkg_ctrl_x #(.PKG_ID(PKG_ID), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA), .MAXU(MAXU), .KVW(KVW),
                         .XWORDS(XWORDS), .RXWORDS(RXWORDS), .RXB(RXB), .TXB(TXB), .SOURCE(SOURCE),
                         .RESULT_PARTS(RESULT_PARTS), .SEND_HIDDEN(SEND_HIDDEN), .HID_DEST(HID_DEST),
                         .SEND_RESULT(SEND_RESULT), .RES_DEST(RES_DEST), .COMBINE_IN(COMBINE_IN), .ROW0(ROW0),
@@ -544,9 +641,12 @@ module ot_chip_v41x_die #(
         if (CL_FW != FLIT) $fatal(1, "ot_chip_v41x_die: the collective word must be one vector-memory word");
         if (KV_SBASE < KEY_SECTORS)
             $fatal(1, "ot_chip_v41x_die: KV region [%0d, ..) overlaps the index keys [0, %0d)", KV_SBASE, KEY_SECTORS);
-        if (KV_SBASE + KV_SECTORS > K_MEM)
+        if (!FULL_SHAPE && KV_SBASE + KV_SECTORS > K_MEM)
             $fatal(1, "ot_chip_v41x_die: KV region ends at %0d, past the stack's %0d sectors", KV_SBASE + KV_SECTORS,
                    K_MEM);
+        if (FULL_SHAPE && (K_HAW < 30 || WIN_STACK < 0 || WIN_STACK > 3 ||
+                           KV_SBASE + WIN_SECTORS > K_MEM))
+            $fatal(1, "ot_chip_v41x_die: packed window region exceeds HBM or HAW<30");
     end
 `endif
 endmodule
