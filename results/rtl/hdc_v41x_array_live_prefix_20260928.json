@@ -1,0 +1,113 @@
+{
+  "claim_boundary": "Immutable prefixes from running reduced-model RTL simulations. Listed tokens passed testbench exact checks so far; all final token, logit, persistent-state, protocol/router, HBM and per-user namespace checks remain pending. These are not full array PASS or throughput claims.",
+  "created_utc": "2026-09-28T01:07:52.233552+00:00",
+  "runs": {
+    "switched_o1all": {
+      "binary_sha256": "fdf37ddd3d89a2da0c6095d929afcceb3eca4b213d3063fa8a6a52b35795fcb6",
+      "final_checker_pending": true,
+      "image_files_pinned": 41,
+      "immutable_prefix": "results/rtl/hdc_v41x_array_b5_316_o1all_two_token_prefix.log",
+      "prefix_bytes": 82,
+      "prefix_sha256": "4544890b1bb7223ad321d2a08057abd853eb19790ac89f4985a2b05200ebe72b",
+      "source_files_pinned": 81,
+      "source_pin_record": "results/rtl/hdc_v41x_array_b5_router_rv_316_o1all_build_checkpoint.json",
+      "source_snapshot_commit": "3160861ce6ab72ac40dd7ba1f66efe0564e4e601",
+      "tokens": [
+        {
+          "cycle": 312808,
+          "position": 0,
+          "token": 2815,
+          "user": 0
+        },
+        {
+          "cycle": 421432,
+          "position": 0,
+          "token": 1209,
+          "user": 1
+        }
+      ]
+    },
+    "two_user_o0": {
+      "binary_sha256": "dc4ef54d4ce863b0ea0adbacfc37f0eb77b6b98448d27e2ed69db08b7ef1f6b3",
+      "final_checker_pending": true,
+      "image_files_pinned": 30,
+      "immutable_prefix": "results/rtl/hdc_v41x_array_two_user_o0_four_token_prefix.log",
+      "prefix_bytes": 350,
+      "prefix_sha256": "d2043e3ee45fd4d7c3087482d66c1d901e526c839d23a7c779af05924e714923",
+      "source_files_pinned": 84,
+      "source_pin_record": "results/rtl/hdc_v41x_array_two_user_namespace_in_progress.json",
+      "source_snapshot_commit": "e2dc204f9b9c431b4bf10fdc98244e0bd0e72b3a",
+      "tokens": [
+        {
+          "cycle": 423090,
+          "position": 0,
+          "token": 2815,
+          "user": 0
+        },
+        {
+          "cycle": 635523,
+          "position": 0,
+          "token": 1209,
+          "user": 1
+        },
+        {
+          "cycle": 854039,
+          "position": 1,
+          "token": 3537,
+          "user": 0
+        },
+        {
+          "cycle": 1075376,
+          "position": 1,
+          "token": 1918,
+          "user": 1
+        }
+      ]
+    },
+    "two_user_o1rest": {
+      "binary_sha256": "cb4ca7ec3dc24ea7217bf93520bca4b8f320781a91895be93b520c70593b064d",
+      "final_checker_pending": true,
+      "image_files_pinned": 30,
+      "immutable_prefix": "results/rtl/hdc_v41x_array_two_user_o1rest_five_token_prefix.log",
+      "prefix_bytes": 392,
+      "prefix_sha256": "6a0a85597ba58beaf4f130c537e6667dd5f76c5a87b8f593f59c2b6e086a9b3b",
+      "source_files_pinned": 84,
+      "source_pin_record": "results/rtl/hdc_v41x_array_two_user_namespace_o1rest_checkpoint.json",
+      "source_snapshot_commit": "e2dc204f9b9c431b4bf10fdc98244e0bd0e72b3a",
+      "tokens": [
+        {
+          "cycle": 423090,
+          "position": 0,
+          "token": 2815,
+          "user": 0
+        },
+        {
+          "cycle": 635523,
+          "position": 0,
+          "token": 1209,
+          "user": 1
+        },
+        {
+          "cycle": 854039,
+          "position": 1,
+          "token": 3537,
+          "user": 0
+        },
+        {
+          "cycle": 1075376,
+          "position": 1,
+          "token": 1918,
+          "user": 1
+        },
+        {
+          "cycle": 1291715,
+          "position": 2,
+          "token": 2047,
+          "user": 0
+        }
+      ]
+    }
+  },
+  "schema": "opentallas.rtl.hdc_v41x_array_live_prefix_20260928.v1",
+  "status": "in_progress"
+}
