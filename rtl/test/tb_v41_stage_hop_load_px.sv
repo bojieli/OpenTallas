@@ -23,8 +23,12 @@
 // a conflict), 1 hop first, 2 background first.  A hop word pops only when both
 // of its T1 links grant it.  Records carry a flag bit: 0 residual word
 // {index, data}, 1 background word {link-local index, data}.  Every background
-// word is checked bit for bit against its source, exactly once (BGA lines), and
-// every residual word as in the parent bench (ARR lines).
+// word is checked bit for bit against its source, exactly once and in its
+// source's send order (BGA lines), and every residual word as in the parent
+// bench (ARR lines: the residual's consumer, hc_pre, is elementwise, so any
+// order; the record's index selects the golden word).  The campaign tags lane 0
+// of every word with (source, index), so no two words of a run are equal and a
+// reordered, dropped or duplicated word cannot alias.
 // ---------------------------------------------------------------------------
 module tb_v41_stage_hop_load_px #(
     parameter integer LANES     = 128,
@@ -152,7 +156,8 @@ module tb_v41_stage_hop_load_px #(
             integer ucred = DEPTH_F, xcred0 = DEPTH_F, xcred1 = DEPTH_F;
             reg [MAXW-1:0] got = {MAXW{1'b0}};
             reg [MAXB-1:0] bgot0 = {MAXB{1'b0}}, bgot1 = {MAXB{1'b0}};
-            integer ngot = 0, rfirst = -1, rlast = -1, dup = 0, nbg = 0, bdup = 0;
+            integer ngot = 0, rfirst = -1, rlast = -1, dup = 0, nbg = 0, bdup = 0, bord = 0;
+            integer blast0 = -1, blast1 = -1;     // last background index per source link (order check)
             wire [IW-1:0] hw = b[h][FW +: IW];
             wire need_x = uniq[hw];
             assign c_pop[d] = (n > 0) && ucred > 0 && u_rdy[d]
@@ -181,12 +186,18 @@ module tb_v41_stage_hop_load_px #(
                     if (rec[PW-1]) begin
                         w = rec[FW +: IW];
                         if (rec[FW-1:0] !== bgd[l*MAXB + w]) bgbad = bgbad + 1;
+                        // the collective engine pops each source's words in index order (its per-source FIFO):
+                        // a background word must land in exactly the order its source sent it
                         if (slot == 0) begin
                             if (bgot0[w]) bdup = bdup + 1;
+                            if (w != blast0 + 1) bord = bord + 1;
                             bgot0[w] = 1'b1;
+                            blast0 = w;
                         end else begin
                             if (bgot1[w]) bdup = bdup + 1;
+                            if (w != blast1 + 1) bord = bord + 1;
                             bgot1[w] = 1'b1;
+                            blast1 = w;
                         end
                         nbg = nbg + 1;
                         $display("BGA link=%0d word=%0d cyc=%0d", l, w, cyc);
@@ -259,7 +270,8 @@ module tb_v41_stage_hop_load_px #(
         if (!fin && ((all_got && all_bg && cyc > START) || cyc > TIMEOUT)) fin <= 1'b1;
         if (fin) begin
             faults = g_r[0].ovf + g_r[1].ovf + g_r[2].ovf + g_r[3].ovf + g_r[0].dup + g_r[1].dup + g_r[2].dup
-                     + g_r[3].dup + g_r[0].bdup + g_r[1].bdup + g_r[2].bdup + g_r[3].bdup;
+                     + g_r[3].dup + g_r[0].bdup + g_r[1].bdup + g_r[2].bdup + g_r[3].bdup
+                     + g_r[0].bord + g_r[1].bord + g_r[2].bord + g_r[3].bord;
             lastref = START + rdy[WORDS > 0 ? WORDS - 1 : 0];
             $display("SB die=10 start=%0d ref=%0d pushed_last=%0d stall=%0d hold=0 qmax=%0d first=-1 last=-1 fault=0 code=0",
                      START, lastref, g_s[0].pushed_last, g_s[0].stall, g_s[0].qmax);
@@ -282,8 +294,8 @@ module tb_v41_stage_hop_load_px #(
                      g_b[2].busy, g_b[2].hsent, g_b[2].qmax, g_b[3].busy, g_b[3].hsent, g_b[3].qmax,
                      g_b[4].busy, g_b[4].hsent, g_b[4].qmax, g_b[5].busy, g_b[5].hsent, g_b[5].qmax,
                      g_b[6].busy, g_b[6].hsent, g_b[6].qmax, g_b[7].busy, g_b[7].hsent, g_b[7].qmax);
-            $display("BGDONE bg=%0d/%0d bg_mismatches=%0d", g_r[0].nbg + g_r[1].nbg + g_r[2].nbg + g_r[3].nbg, 8 * NB,
-                     bgbad);
+            $display("BGDONE bg=%0d/%0d bg_mismatches=%0d bg_order=%0d", g_r[0].nbg + g_r[1].nbg + g_r[2].nbg + g_r[3].nbg,
+                     8 * NB, bgbad, g_r[0].bord + g_r[1].bord + g_r[2].bord + g_r[3].bord);
             $display("SBDONE done=%0d mismatches=%0d out_err=%0d timeout=%0d %s", all_got && all_bg, bad, bgbad,
                      cyc > TIMEOUT, (all_got && all_bg && bad == 0 && bgbad == 0 && faults == 0) ? "PASS" : "FAIL");
             $finish;

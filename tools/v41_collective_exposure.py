@@ -18,6 +18,10 @@ Steps:
     python3 tools/v41_collective_exposure.py [--out results/arch/v41_collective_exposure.json]
     python3 tools/v41_collective_exposure.py --levers [results/rtl/v41_collective_levers_campaign.json]
             (every lever alone and the recommended set: results/arch/v41_collective_levers.json)
+    python3 tools/v41_collective_exposure.py --hop-batch [results/rtl/v41_hop_batch_campaign.json]
+            (the adopted hop split at pipeline fills 1-28 against full payload per package, under the T1 load of
+             the other users' collectives: results/arch/v41_hop_batch_sensitivity.json, a batch-sensitivity
+             record; the batch-1 headline is not changed)
 
 The --levers rates are a CONDITIONED DESIGN-POINT MODEL RESULT: the analytical decode DAG with each streaming
 collective / stage hop re-priced from a bench-measured tail (RTL of the collective engine and behavioural links).
@@ -334,6 +338,118 @@ def lever_rates(camp, lev, lev_path, out):
                       for k, v in rows.items()}, indent=1))
 
 
+# -- the hop split at batch > 1 (tools/rtl_v41_hop_batch_campaign.py) ------------------------------------------------------
+HOP_BATCH_CAMPAIGN = ROOT / "results/rtl/v41_hop_batch_campaign.json"
+HOP_BATCH_OUT = ROOT / "results/arch/v41_hop_batch_sensitivity.json"
+
+
+def hop_batch_terms(hb, mode="ar"):
+    """Per fill and hop scheme, the per-hop cycles one user's token pays at that fill: its own hop tail plus the delay
+    the hop behind it imposes on its collectives (the campaign's effective_hop_cycles: mean over the pass's stage
+    hops), and the per-pass token cycles against the no-load adopted split."""
+    s = hb["summary"]["fills"][mode]
+    noload = {}
+    for c in hb["cases"]:
+        if c["mode"] == mode and c["fill"] == 0:
+            noload.setdefault(c["scheme"], []).append(c["hop_tail_cycles"])
+    base = sum(noload[s["adopted"]])
+    out = {}
+    for n, f in s["per_fill"].items():
+        out[n] = {k: dict(effective_hop_cycles=v["effective_hop_cycles"], tail_mean=v["tail_mean"],
+                          victim_delay_mean=v["victim_delay_mean"], token_cycles=v["token_cycles"],
+                          token_cycles_vs_batch1_split=v["token_cycles"] - base,
+                          token_cycles_vs_full=v["token_cycles_vs_full"])
+                  for k, v in f["schemes"].items()}
+    return out, dict(no_load_token_cycles={k: sum(v) for k, v in noload.items()}, hops=len(noload[s["adopted"]]))
+
+
+def hop_batch_sensitivity(camp, lev, hb, hb_path, out):
+    """Batch-sensitivity of the adopted hop split: the design point re-priced with, per fill, the hop term each
+    scheme costs a user at that fill (hop tail + the delay imposed on its collectives by the hop behind it), in
+    place of the batch-1 stage_hop tail; every other lever as adopted.  The batch-1 headline is not changed."""
+    import arch_lanes_v41 as AL
+    import arch_latency_ladder_v41 as LX
+    dp = AL.design_point()
+    dump = dump_on_path(AL.U, AL.A, dp["sp"], list(dp["muts"]) + [dp["ml"]], dp["hz"])
+    scen, picks = lever_scenarios(lev)
+    _name, over, cons, scale, _why = next(s for s in scen if s[0] == "recommended")
+    terms0, _ = scenario_terms(camp, dump, over, scale)
+    head = design_point_rates(dp, terms0, cons)
+    headline = {ctx: dict(ar=r["measured_exposure"]["ar"], mtp=r["measured_exposure"]["mtp"])
+                for ctx, r in head.items()}
+    clock = dump["clock_hz"]
+    ar_terms, ar_meta = hop_batch_terms(hb, "ar")
+    mtp_terms, mtp_meta = hop_batch_terms(hb, "mtp")
+    fills = {}
+    for n, sch in ar_terms.items():
+        rows = {}
+        for s, v in sch.items():
+            o = dict(over, stage_hop=v["effective_hop_cycles"])
+            terms, _ = scenario_terms(camp, dump, o, scale)
+            ev = design_point_rates(dp, terms, cons)
+            mt = mtp_terms.get(n, {}).get(s) or mtp_terms.get(n, {}).get(
+                s.replace(f"split{hb['modes']['ar']['adopted']}", f"split{hb['modes']['mtp']['adopted']}"))
+            r = dict(ar_hop_term_cycles=v["effective_hop_cycles"], ar_tail_mean=v["tail_mean"],
+                     ar_victim_delay_mean=v["victim_delay_mean"],
+                     ar_token_cycles_vs_full=v["token_cycles_vs_full"],
+                     rates={ctx: dict(ar=e["measured_exposure"]["ar"], mtp=e["measured_exposure"]["mtp"])
+                            for ctx, e in ev.items()})
+            if mt:
+                # the 6-position verify pass measured directly (481-word hop, 6x collectives): its per-pass cycles
+                # against the no-load adopted split, applied to the headline MTP rate (tau / pass time)
+                d = mt["token_cycles_vs_batch1_split"] / clock
+                r.update(mtp_pass_cycles_vs_batch1_split=mt["token_cycles_vs_batch1_split"],
+                         mtp_pass_cycles_vs_full=mt["token_cycles_vs_full"],
+                         mtp_direct={ctx: LX.TAU / (LX.TAU / headline[ctx]["mtp"] + d) for ctx in headline})
+            rows[s] = r
+        fills[n] = rows
+    ad_ar = f"split{hb['modes']['ar']['adopted']}"
+    ad_mtp = f"split{hb['modes']['mtp']['adopted']}"
+    policy = {}
+    for n, rows in fills.items():
+        best = max(rows, key=lambda s: rows[s]["rates"]["1048576"]["ar"])
+        policy[n] = dict(ar_best_scheme=best, ar_split_gain_vs_full_1m={
+            ctx: rows[ad_ar]["rates"][ctx]["ar"] / rows["full"]["rates"][ctx]["ar"] - 1 for ctx in headline},
+            mtp_best_scheme=hb["summary"]["fills"]["mtp"]["policy"][n],
+            mtp_split_gain_cycles_per_pass=hb["summary"]["fills"]["mtp"]["split_gain_cycles_per_token"][n])
+    rel = (lambda q: str(q.relative_to(ROOT)) if q.resolve().is_relative_to(ROOT) else str(q))
+    rec = dict(schema="v41_hop_batch_sensitivity/1", tool="tools/v41_collective_exposure.py --hop-batch",
+               gate="C7 / O2 levers at batch > 1",
+               result_kind=("batch-SENSITIVITY record: a conditioned design-point model result using bench-measured "
+                            "hop tails and victim delays under the derived T1 load; NOT measured chip throughput; "
+                            "the batch-1 headline (results/arch/v41_lanes.json design_point) is unchanged"),
+               campaign=rel(hb_path), campaign_binding=campaign_binding(hb, hb_path),
+               lever_campaign=str(LEVERS_CAMPAIGN.relative_to(ROOT)),
+               baseline_campaign=str(CAMPAIGN.relative_to(ROOT)),
+               method=[
+                   "per fill n and hop scheme, the campaign's effective hop cycles = mean over the pass's 27 stage "
+                   "hops of (hop tail + the summed completion delay the hop's T1 words impose on the collectives "
+                   "of the users running on the receiving module), from the 'ar' (one-position) mode;",
+                   "that figure replaces the adopted stage_hop tail in lever_scenarios 'recommended' (every other "
+                   "lever as adopted) and the design point is re-priced (design_point_rates): tok/s/user at 200K "
+                   "and 1M, without MTP ('ar') and with it ('mtp', the verify pass priced as the headline prices "
+                   "it, from the one-position hop term);",
+                   "mtp_direct: the 6-position verify pass measured in the 'mtp' mode (481-word hop, 6x collectives, "
+                   "T1 up to ~37% busy at fill 28): its per-pass cycles against the no-load adopted split added "
+                   "to the headline MTP pass time (tau / rate);",
+                   "victim delays are charged in full to the victim's token (every delayed collective assumed on "
+                   "its critical path): conservative; the campaign also records the critical-path-only figure."],
+               headline_batch1=headline, adopted=dict(ar=ad_ar, mtp=ad_mtp),
+               measured_terms=dict(ar=ar_terms, mtp=mtp_terms, ar_no_load=ar_meta, mtp_no_load=mtp_meta),
+               t1_busy=dict(ar={n: hb["summary"]["fills"]["ar"]["per_fill"][n]["t1_busy_fraction_max"]
+                                for n in fills},
+                            mtp={n: hb["summary"]["fills"]["mtp"]["per_fill"][n]["t1_busy_fraction_max"]
+                                 for n in fills}),
+               crossover=dict(ar=hb["summary"]["fills"]["ar"]["crossover_fill_interpolated"],
+                              mtp=hb["summary"]["fills"]["mtp"]["crossover_fill_interpolated"]),
+               fills=fills, policy=policy)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rec, indent=1) + "\n")
+    print(json.dumps({n: {s: (round(v["rates"]["1048576"]["ar"]), round(v["rates"]["1048576"]["mtp"]),
+                              round(v.get("mtp_direct", {}).get("1048576", 0)))
+                          for s, v in rows.items()} for n, rows in fills.items()}, indent=1))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--campaign", type=Path, default=CAMPAIGN)
@@ -342,8 +458,16 @@ def main():
                     help="re-derive the design point's rates with each lever of the lever campaign "
                          "(default results/rtl/v41_collective_levers_campaign.json); writes --levers-out")
     ap.add_argument("--levers-out", type=Path, default=LEVERS_OUT)
+    ap.add_argument("--hop-batch", nargs="?", const=HOP_BATCH_CAMPAIGN, type=Path,
+                    help="the adopted hop split's batch sensitivity from results/rtl/v41_hop_batch_campaign.json; "
+                         "writes --hop-batch-out (the batch-1 headline is not changed)")
+    ap.add_argument("--hop-batch-out", type=Path, default=HOP_BATCH_OUT)
     a = ap.parse_args()
     camp = json.loads(a.campaign.read_text())
+    if a.hop_batch:
+        hop_batch_sensitivity(camp, json.loads(LEVERS_CAMPAIGN.read_text()), json.loads(a.hop_batch.read_text()),
+                              a.hop_batch, a.hop_batch_out)
+        return
     if a.levers:
         lever_rates(camp, json.loads(a.levers.read_text()), a.levers, a.levers_out)
         return

@@ -31,7 +31,10 @@ DAG tools/v41_collective_exposure.recommended_exposure prices):
 Events whose words fall within [lo, hi] cycles of the hop's producer finish are injected (whole events).
 
 Modes: "ar" (one position, the 81-word hop the lever was adopted on) and "mtp" (the DSpark verify pass, gamma + 1 =
-6 positions: a 481-word hop and 6x payload collectives on the m = 2 core; T1 ~15% busy at the 28-user fill).
+6 positions: a 481-word hop and 6x payload collectives on the m = 2 core).  The per-link busy fraction derived here
+(traffic.t1_busy_fraction_at_fill) is per receiving stage: at the 28-user fill up to ~13% ("ar") and ~37% ("mtp") on
+the busiest stages, above docs/ARCH_V41_RACK.md's rack-average 15% (bytes per token over all T1 capacity).
+Every word of a run is unique (lane 0 carries (source, index)); background words are checked in send order.
 
     python3 tools/rtl_v41_hop_batch_campaign.py plan  --plan <plan.json>
     python3 tools/rtl_v41_hop_batch_campaign.py run   --plan <plan.json> --shard i/N --scratch <dir> --part <part.json>
@@ -68,7 +71,7 @@ CTX = 1048576
 MODES = {
     # hop words, one-package-word sweep (u), the adopted u, injection window around the hop's producer finish
     "ar": dict(mtp=False, words=81, splits=(8, 14, 20, 24), adopted=20, lo=-3000, hi=4000),
-    "mtp": dict(mtp=True, words=481, splits=(60, 119, 180), adopted=119, lo=-4000, hi=9000),
+    "mtp": dict(mtp=True, words=481, splits=(60, 119, 150, 180, 200, 240), adopted=119, lo=-4000, hi=9000),
 }
 ARBS = {0: "round_robin", 1: "hop_first", 2: "background_first"}
 MAXW = 512
@@ -274,7 +277,17 @@ def plan(path: Path):
             for sname, u, arb in [("bgonly", None, 0), ("split20", 20, 0), ("split20_hop_first", 20, 1)]:
                 cases.append(dict(name=f"scan_h{h:02d}_o{off:+07d}_{sname}", mode="ar", hop=h, fill=-1,
                                   scheme=sname, u=u, arb=arb, group=f"scan_h{h:02d}_o{off:+07d}", offset=off))
-        scan.append(h)
+        scan.append(["ar", h])
+    # the same for the verify pass on its heaviest receiving stage (step 256)
+    t = tr["mtp"]
+    h = max(range(len(t["hops"])), key=lambda h: sum(t["events"][e]["words"] for e in t["hops"][h]["stage_events"]))
+    hop = t["hops"][h]
+    ts = [x for e in hop["stage_events"] for x in t["events"][e]["rel"]]
+    for off in range(math.floor((min(ts) - hop["ref"] - 2000) / 256) * 256, int(max(ts) - hop["ref"]) + 2256, 256):
+        for sname, u, arb in [("bgonly", None, 0), ("split119", 119, 0), ("split180", 180, 0), ("full", 0, 0)]:
+            cases.append(dict(name=f"scanmtp_h{h:02d}_o{off:+07d}_{sname}", mode="mtp", hop=h, fill=-1,
+                              scheme=sname, u=u, arb=arb, group=f"scanmtp_h{h:02d}_o{off:+07d}", offset=off))
+    scan.append(["mtp", h])
     # background word lists
     for c in cases:
         m = MODES[c["mode"]]
@@ -324,7 +337,7 @@ def build(scratch: Path, lp: dict, maxb: int) -> Path:
 
 BGA = re.compile(r"BGA link=(\d+) word=(\d+) cyc=(\d+)")
 BGL = re.compile(r"BGL " + " ".join(rf"l{i}=(\d+)/(\d+)/(\d+)" for i in range(8)))
-BGDONE = re.compile(r"BGDONE bg=(\d+)/(\d+) bg_mismatches=(\d+)")
+BGDONE = re.compile(r"BGDONE bg=(\d+)/(\d+) bg_mismatches=(\d+) bg_order=(\d+)")
 
 
 def run_case(exe: Path, scratch: Path, c: dict, tr: dict, maxb: int) -> dict:
@@ -344,6 +357,10 @@ def run_case(exe: Path, scratch: Path, c: dict, tr: dict, maxb: int) -> dict:
     else:
         lists, uniq = [[], [], [], []], [0]
     part = B.rand_f32(rng, max(W, 1) * LANES).reshape(max(W, 1), LANES)
+    # lane 0 tags every word with (source, index): no two words of a run are equal, so a reordered, dropped or
+    # duplicated word cannot alias (residual word k: 0x4000_0000 | k; background word w of link l: 0x8000_0000 |
+    # l << 16 | w; the background index runs over every user's words on the link)
+    part[:, 0] = 0x40000000 | np.arange(max(W, 1), dtype=np.uint32)
     (vec / "part.hex").write_text("\n".join(B.hexw(part[k]) for k in range(max(W, 1))) + "\n")
     (vec / "ready.hex").write_text("\n".join(f"{x:08x}" for x in sch) + "\n")
     ll = []
@@ -359,6 +376,11 @@ def run_case(exe: Path, scratch: Path, c: dict, tr: dict, maxb: int) -> dict:
         if NB > maxb:
             raise RuntimeError(f"{c['name']}: {NB} background words > MAXB {maxb}")
         bgd = B.rand_f32(rng, 8 * NB * LANES).reshape(8, NB, LANES)
+        for l_ in range(8):
+            bgd[l_, :, 0] = 0x80000000 | (l_ << 16) | np.arange(NB, dtype=np.uint32)
+        allw = [part[k].tobytes() for k in range(W)] + [bgd[l_, k].tobytes() for l_ in range(8) for k in range(NB)]
+        if len(set(allw)) != len(allw):
+            raise RuntimeError(f"{c['name']}: stimulus words repeat")
         lines = []
         for l_ in range(8):
             lines.append(f"@{l_ * maxb:x}")
@@ -389,7 +411,7 @@ def run_case(exe: Path, scratch: Path, c: dict, tr: dict, maxb: int) -> dict:
                arb=ARBS[c["arb"]], group=c["group"], offset=c.get("offset"), hop_words=W, background_words=NB,
                background_events=len(c["events"]), start=start, ref=ref_bench,
                mismatches=int(dn.group(2)), background_mismatches=int(bd.group(3)),
-               background_received=int(bd.group(1)), background_expected=int(bd.group(2)),
+               background_order_faults=int(bd.group(4)), background_received=int(bd.group(1)), background_expected=int(bd.group(2)),
                timeout=int(dn.group(4)), passed=dn.group(5) == "PASS",
                link_words=[x[0] for x in lk], link_hop_words=[x[1] for x in lk], link_bg_queue_max=[x[2] for x in lk],
                event_completion_rel={k: v for k, v in sorted(last.items())})
@@ -455,7 +477,7 @@ def summarise(pl, cases):
                          background_events=c["background_events"]))
     out = dict(all_pass=all(c["passed"] for c in cases),
                bit_exact=all(c["mismatches"] == 0 and c["background_mismatches"] == 0 for c in cases),
-               cases=len(cases))
+               background_in_order=all(c["background_order_faults"] == 0 for c in cases), cases=len(cases))
     # no-load reference: must reproduce the lever campaign's per-hop tails
     lev = json.loads(L.OUT.read_text())
     lev_t = {c["case"]: c["exposed_tail_cycles"] for c in lev["cases"]}
@@ -514,8 +536,8 @@ def summarise(pl, cases):
                            policy={str(n): fm[str(n)]["best_scheme"] for n in ns})
     out["fills"] = fills
     scan = {}
-    for h in pl["scan_hops"]:
-        R = [r for r in rows if r["fill"] == -1 and r["hop"] == h]
+    for mode, h in pl["scan_hops"]:
+        R = [r for r in rows if r["fill"] == -1 and r["hop"] == h and r["mode"] == mode]
         sc = {}
         for s in sorted({r["scheme"] for r in R}):
             rs = sorted((r for r in R if r["scheme"] == s), key=lambda r: r["offset"])
@@ -524,7 +546,7 @@ def summarise(pl, cases):
                          victim_delay_max=max(r["victim_delay"] for r in rs),
                          worst_offset=worst["offset"], worst_tail_plus_victim=worst["tail"] + worst["victim_delay"],
                          mean_tail_plus_victim=sum(r["tail"] + r["victim_delay"] for r in rs) / len(rs))
-        scan[str(h)] = dict(hop=pl["traffic"]["ar"]["hops"][h]["hop"], schemes=sc)
+        scan[f"{mode}_{h}"] = dict(mode=mode, hop=pl["traffic"][mode]["hops"][h]["hop"], schemes=sc)
     out["phase_scan"] = scan
     return out, rows
 
