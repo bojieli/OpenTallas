@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.rtl.v41x_me_preload64.v1",
+  "status": "pass",
+  "claim_scope": "Standalone registered 64-wide FP32-to-BF16 preload conversion, not VM port or ME-rate gate",
+  "exact_elements": 8256,
+  "checkpoint_elements": 8192,
+  "edge_elements": 64,
+  "beats": 129,
+  "latency_cycles_after_registered_vm_data": 1,
+  "fixture_sha256": {
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/v41_200k_l0_wo_a_acc_rank0.f32le.bin": "12be81f72514fd6b140e7bf9eb3e709394ed1b470be682a3cc676bdbb1e051b8",
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/hdc_v41x_fullshape_200k_l0_wo_a_vectors.json": "244eef6c0d0e69dae9987d4e0ec363efe18e3b72f8a741b92a25079ccafc692b"
+  },
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64.sv": "216fc152704474616ff00917248a8e2f543add5d0a242ec7b794c280dcdbb770",
+    "tools/rtl_v41x_me_preload64.py": "e7a61b55465e0ac25aa6a4bdd77eeff530a3b5c669a304991625855655cdb658"
+  }
+}
