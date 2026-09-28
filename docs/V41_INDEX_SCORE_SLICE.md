@@ -45,10 +45,10 @@ representative slice route.
 The [real checkpoint score/select gate](../results/rtl/v41_idx_score_select_checkpoint.json)
 uses two reduced-shape layer indexer calls from the released checkpoint.
 All 80 BF16 scores and 16 top-8 indices/values match the golden under
-ready/valid stalls. A second query is loaded only after the first segment's
-scores enter the selector: starting that load immediately after the final
-input key changed a late first-segment score in the initial test. The exact
-minimum safe turnaround or a double-buffered query register is still open.
+ready/valid stalls. A source-pinned turnaround sweep found that the current
+single query register requires two idle clock edges between the previous
+segment's last accepted key and the next query load. Zero or one edge
+corrupts an in-flight score. A double-buffered query register remains open.
 
 The [timed reader/score/select gate](../results/rtl/v41_idx_reader_score_select.json)
 joins the four-stack reader to one `NK=4`, 32-head × 128-dimension scorer
@@ -57,6 +57,14 @@ the reader boundary, scores quarter 0's 256 keys, and selects the exact
 eight lowest indices from the all-zero fixture. It takes 417 cycles, with
 48 collector stall cycles. The other three quarters are not scored in this
 gate, so this is an integration milestone rather than a full-index service
-rate. The remaining gate must score all four quarters, preserve their
-separate index order through selection, and measure the combined controller
-and physical path.
+rate.
+
+The [all-quarter composition gate](../results/rtl/v41_idx_reader_score_select_all.json)
+uses the same timed reader and a bounded 64-key beat buffer to serialize all
+four quarters through one exact full-dimension `NK=4` scorer. Four separate
+W4 selectors choose the local top eight. All 1,040 keys and 2,210 HBM
+sectors are checked; all 1,040 scores and 32 local winners are exact for the
+all-zero fixture, including the 272-key final quarter. It takes 634 cycles,
+with 240 collector stall and 213 stream stall cycles. The final top-32 merge,
+checkpoint key image, shipped shape and routed physical path remain open.
+This bounded single-slice gate does not establish a production token rate.

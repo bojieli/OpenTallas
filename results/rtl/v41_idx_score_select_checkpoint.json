@@ -10,10 +10,10 @@
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/v41/ot_hdc_tselect.sv": "85051117373f13200472ca4aac704914ade30d17644323cb81e469d7fbed7e4b",
     "rtl/hdc/v41/ot_hdc_tselect_q.sv": "24723b4d6552d1fd9386e0e59477d26ad19e40db5ac4b4f8f4da699f605e415a",
-    "rtl/test/tb_hdc_v41x_idx_score_select_checkpoint.sv": "95df0aa1cc7402a9601fd5eca17a0f97ac9f970be6436d66b9d0ce694e5c6514",
+    "rtl/test/tb_hdc_v41x_idx_score_select_checkpoint.sv": "55593f1e5e75fce3936b2f6051b7a900baae202aa27eb4000d31cd32bc3eda30",
     "tools/rtl_hdc_v41x_idx_campaign.py": "febfb22eaad34dcabfc65cb481fd34cd1a1d9aad8fa7f6d5345f6c5e27c83bc9",
-    "tools/hdc_golden_v41.py": "ba257b599ffe411032e403a4e96976038c83f78dbb83dd2c4e1e44f428e9eac2",
-    "tools/rtl_v41x_idx_score_select_checkpoint.py": "136232bd378bc6e8d542ce381e9880bc5917fc6b3a3beb01f4be06d7a124015a"
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/rtl_v41x_idx_score_select_checkpoint.py": "9451354c0d956ca28df64f70a0489a72175c7d22b9d3e639abc4f3a86b326f05"
   },
   "vector_sha256": {
     "idx_q.mem": "eb74d529d90904c3b2765bd6390e456401cee859362796f7da2908fc6b0235af",
@@ -62,5 +62,72 @@
     "first_select": 163,
     "last_select": 255
   },
+  "query_turnaround_probe": [
+    {
+      "gap_cycles": 0,
+      "pass": false,
+      "first_failure": "FATAL: /tmp/opentallas-v41-index-score-combined/rtl/test/tb_hdc_v41x_idx_score_select_checkpoint.sv:63: score mismatch index=33 got=3b8b expected=3b5e"
+    },
+    {
+      "gap_cycles": 1,
+      "pass": false,
+      "first_failure": "FATAL: /tmp/opentallas-v41-index-score-combined/rtl/test/tb_hdc_v41x_idx_score_select_checkpoint.sv:63: score mismatch index=38 got=bcae expected=bcc3"
+    },
+    {
+      "gap_cycles": 2,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 3,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 4,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 6,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 8,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 12,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 16,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 24,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 32,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 40,
+      "pass": true,
+      "first_failure": null
+    },
+    {
+      "gap_cycles": 48,
+      "pass": true,
+      "first_failure": null
+    }
+  ],
   "scope": "real reduced-checkpoint 32-head x 32-dim index query/key scores; NK4 scorer directly into W4 exact threshold selector, two segments, topK8, periodic valid/ready gate backpressure; no timed HBM reader or shipped 128-dim checkpoint claim"
 }

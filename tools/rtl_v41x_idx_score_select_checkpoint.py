@@ -67,6 +67,13 @@ def main() -> None:
         if not match:
             raise RuntimeError(sim.stdout[-4000:] + sim.stderr[-1000:])
         values = list(map(int, match.groups()))
+        gap_sweep = []
+        for gap in (0, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 40, 48):
+            probe = subprocess.run(["vvp", str(exe), f"+GAP={gap}"], cwd=work,
+                                   capture_output=True, text=True, timeout=120)
+            gap_sweep.append({"gap_cycles": gap, "pass": bool(PAT.search(probe.stdout)),
+                              "first_failure": next((line for line in probe.stdout.splitlines()
+                                                     if "FATAL:" in line), None)})
         vector_sha = {p: hashlib.sha256((work / p).read_bytes()).hexdigest() for p in
                       ("idx_q.mem", "idx_k.mem", "idx_e.mem", "top_idx.mem", "top_val.mem")}
     assert values[0] == 80 and values[1] == 16 and values[3] > 0
@@ -81,6 +88,7 @@ def main() -> None:
                   for c, t in enumerate(chosen)],
         "measurement": dict(zip(("scores", "selected", "cycles", "score_stalls",
                                 "first_score", "last_score", "first_select", "last_select"), values)),
+        "query_turnaround_probe": gap_sweep,
         "scope": "real reduced-checkpoint 32-head x 32-dim index query/key scores; NK4 scorer directly into W4 exact threshold selector, two segments, topK8, periodic valid/ready gate backpressure; no timed HBM reader or shipped 128-dim checkpoint claim",
     }
     target = ROOT / "results/rtl/v41_idx_score_select_checkpoint.json"

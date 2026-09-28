@@ -18,7 +18,7 @@ module tb_hdc_v41x_idx_score_select_checkpoint;
     reg [136:0] kmem[0:79];
     reg [16:0] emem[0:79];
     reg [15:0] topidx[0:15],topval[0:15];
-    integer case_no,head,beat,lane,hits,cycles=0,scores_seen=0,selected=0,score_stalls=0,select_segments=0;
+    integer case_no,head,beat,lane,hits,gap_cycles,cycles=0,scores_seen=0,selected=0,score_stalls=0,select_segments=0;
     integer first_score=-1,last_score=-1,first_select=-1,last_select=-1;
     wire gate_ready=(cycles%7)!=0;
     assign score_ready=sel_ready && gate_ready;
@@ -85,6 +85,7 @@ module tb_hdc_v41x_idx_score_select_checkpoint;
         end
     end
     initial begin
+        if(!$value$plusargs("GAP=%d",gap_cycles)) gap_cycles=-1;
         $readmemh("idx_q.mem",qmem);
         $readmemh("idx_k.mem",kmem);
         $readmemh("idx_e.mem",emem);
@@ -109,8 +110,10 @@ module tb_hdc_v41x_idx_score_select_checkpoint;
                 @(negedge clk);
             end
             i_valid=0;
-            wait(scores_seen==(case_no+1)*N);
-            repeat(2) @(negedge clk);
+            if(gap_cycles<0) begin
+                wait(scores_seen==(case_no+1)*N);
+                repeat(2) @(negedge clk);
+            end else repeat(gap_cycles) @(negedge clk);
         end
         wait(selected==2*K);
         repeat(4) @(negedge clk);
