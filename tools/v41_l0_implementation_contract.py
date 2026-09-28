@@ -116,6 +116,7 @@ def derive() -> dict:
             "contexts": [
                 {"context_tokens": 200000, "position": 199999, "binding_status": "exact_instruction_and_selected_image",
                  "selected_expert_ids": binder["source_experts"],
+                 "selected_id_origin": "golden_preloaded_not_emitted_by_integrated_selector",
                  "program_binding_record": BIND, "token_latency_cycles": None},
                 {"context_tokens": 1048576, "position": 1048575, "binding_status": "missing_position_and_selected_ID_binding",
                  "selected_expert_ids": None, "program_binding_record": None, "token_latency_cycles": None,
@@ -161,6 +162,7 @@ def derive() -> dict:
                                          {"path": "remaining QE SU XU attention and feedback", "known_local_floor_cycles": None,
                                           "allocated_cycles": None, "missing": "complete finite service and exact commit trace"}]},
             "missing_contracts": [
+                "real_selected_ID_origin_and_lifetime_into_all_expert_weight_accesses",
                 "one_M_context_position_and_selected_expert_image_binding",
                 "full_integer_stage_die_cluster_and_ROM_bank_ownership_for_all_111_ops",
                 "all_111_op_producer_first_last_and_consumer_accept_timing",
@@ -198,6 +200,7 @@ def validate(c: dict) -> None:
     assert coll["program_bind_sha256"] == digest(ROOT / BIND)
     assert c["contexts"][0]["position"] == binder["rope_token_patch"]["position"]
     assert c["contexts"][0]["selected_expert_ids"] == binder["source_experts"]
+    assert c["contexts"][0]["selected_id_origin"] == "golden_preloaded_not_emitted_by_integrated_selector"
     cases = {x["descriptor"]["pc"]: x for x in coll["cases"]}
     assert len(cases) == 12
     for o, t in zip(c["operations"], binder["instruction_trace"], strict=True):

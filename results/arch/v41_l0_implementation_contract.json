@@ -21,6 +21,7 @@
         357,
         361
       ],
+      "selected_id_origin": "golden_preloaded_not_emitted_by_integrated_selector",
       "token_latency_cycles": null
     },
     {
@@ -81,6 +82,7 @@
     "synthetic_ready_blocked_cycles_sum": 2780
   },
   "missing_contracts": [
+    "real_selected_ID_origin_and_lifetime_into_all_expert_weight_accesses",
     "one_M_context_position_and_selected_expert_image_binding",
     "full_integer_stage_die_cluster_and_ROM_bank_ownership_for_all_111_ops",
     "all_111_op_producer_first_last_and_consumer_accept_timing",
@@ -6925,7 +6927,7 @@
     "rtl/chip/ot_chip_v41x_die.sv": "a7153c0cbb934ad932e1046c1762de0999c84b8c8caef9fb60a47fe65af43d3a",
     "rtl/chip/ot_chip_v41x_tile.sv": "504dd668151a456af98cbea899b5c2c663465aa4787c4cd20aec7189b0acd4dd",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv": "156c67e8101b2d10ebf69a771b6599b8f7c3a707688d14d110121652bf15f5c2",
-    "tools/v41_l0_implementation_contract.py": "4b096c0581933953ddfe6c447c74ad4ee700bdce37946c23fa9bbfac9383fa01"
+    "tools/v41_l0_implementation_contract.py": "b1397012faaad59ac266ea92db94c62fb6aaa565c302c4d767c5edf73436a7d9"
   },
   "status": "proposal_blocked",
   "total_latency_cycles": null,

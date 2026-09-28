@@ -18,6 +18,8 @@ def test_contract_is_current_and_blocked():
     assert all(x["allocated_cycles"] is None for x in saved["critical_path_budget"]["component_inputs"])
     assert saved["clock"]["achieved_hz"] is None
     assert saved["contexts"][0]["binding_status"] == "exact_instruction_and_selected_image"
+    assert saved["contexts"][0]["selected_id_origin"] == \
+        "golden_preloaded_not_emitted_by_integrated_selector"
     assert saved["contexts"][1]["binding_status"] == "missing_position_and_selected_ID_binding"
     assert saved["weight_source_binding"]["ROM_die_mode_status"].startswith("blocked")
 
