@@ -45,7 +45,7 @@
     "v41_executable_weight_program": {
       "evidence": "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json; results/rtl/hdc_v41x_fullshape_weight_rtl_preflight.json; results/rtl/hdc_v41x_fullshape_program_bind.json",
       "observed": {
-        "program_binding": "missing",
+        "program_binding": "blocked",
         "rtl_geometry_gaps": {
           "he_kcmax": {
             "current": 128,
@@ -135,7 +135,7 @@
     "results/rtl/hdc_qwen_int8_tp2_ar.json": "910a716387a148622edc5786001a57f99223f98fcd20cb6fc60c4b30a58a7f3c",
     "results/rtl/hdc_v41x_fullshape_golden.json": "1c329cf169f21eae9298c0fde71e756cdda2060de9757a20b7741b86e685859b",
     "results/rtl/hdc_v41x_fullshape_hbm_matched.json": "missing",
-    "results/rtl/hdc_v41x_fullshape_program_bind.json": "missing",
+    "results/rtl/hdc_v41x_fullshape_program_bind.json": "a7fbd5f477e9de97fba0c2d0e429edffeb0d0f28b6c5b39212dccf0c51777e7d",
     "results/rtl/hdc_v41x_fullshape_token_rtl.json": "missing",
     "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
     "results/rtl/hdc_v41x_fullshape_weight_rtl_preflight.json": "8a45de03b920043fc8ebaee636c942543570ce986f293012b98b9cd08d4b6429",
