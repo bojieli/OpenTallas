@@ -1,8 +1,29 @@
 """Check finite shared-HBM service arbitration and response ownership."""
+import json
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_mixed_owner_four_stack_record_is_current():
+    from tools.rtl_hdc_qwen_hbm_mixed_service import run
+
+    current = run()
+    recorded = json.loads((ROOT / "results/rtl/qwen_o4_hbm_mixed_service.json").read_text())
+    assert current == recorded
+
+
+def test_full_token_owner_regions_fault_closed(tmp_path):
+    image = tmp_path / "region_guard.vvp"
+    subprocess.run(["iverilog", "-g2012", "-s", "tb_hdc_qwen_hbm_region_guard",
+                    "-o", str(image),
+                    "rtl/hdc/hbm/ot_hdc_qwen_hbm_regions.sv",
+                    "rtl/hdc/hbm/ot_hdc_qwen_hbm_region_guard.sv",
+                    "rtl/test/tb_hdc_qwen_hbm_region_guard.sv"], cwd=ROOT, check=True)
+    run = subprocess.run(["vvp", str(image)], cwd=ROOT, capture_output=True,
+                         text=True, check=True)
+    assert "PASS Qwen HBM region guard checks=18 layer=35 user=1" in run.stdout
 
 
 def test_pc_slice_fairness_credits_and_write_completion(tmp_path):
