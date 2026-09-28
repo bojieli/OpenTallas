@@ -27,6 +27,14 @@ antenna repair, formal equivalence or chip signoff. The physical record in
 stage, timing, DRC and source hashes. No full G=6144 tile or die route is
 implied by this shard.
 
+The global-route STA checks the ROM pins directly. The worst ROM-output to
+first product register path launches at 794.62 ps and arrives at 2,127.78 ps:
+1,333.16 ps after the ROM output, for −1,218.18 ps setup slack at the
+0.92 ns target. This path needs a registered ROM-output/code stage or a
+different nibble-product schedule before the current BF16 product pipeline.
+The full global-route worst path is an internal product stage at −2,347.08 ps;
+this direct flow has not repaired slew, so it is a diagnosis, not closure.
+
 To replay the pilot, check out its source commit at
 `/tmp/opentallas-qwen-o4-physical-lane`, create
 `/tmp/qwen-o4-shard-route`, and run:
@@ -35,6 +43,7 @@ To replay the pilot, check out its source commit at
 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s physical/qwen_o4_int8_shard/synth.ys
 python3 physical/qwen_o4_int8_shard/prepare_mapped.py
 openroad -exit physical/qwen_o4_int8_shard/place_route.tcl
+openroad -exit physical/qwen_o4_int8_shard/macro_sta.tcl
 openroad -exit physical/qwen_o4_int8_shard/detailed_route.tcl
 ```
 

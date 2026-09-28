@@ -1,5 +1,6 @@
 {
   "artifact_hashes_sha256": {
+    "results/physical_hdc/asap7/qwen_o4_int8_shard/artifacts/macro_sta.log.gz": "6291e0e75b258804bbbe874d84b25eb11ee7d23d53fa9a2d71905312c6fcd3ec",
     "results/physical_hdc/asap7/qwen_o4_int8_shard/artifacts/mapped.v.gz": "bf2e6104b6ac20f2b71669815e81661b1b2ebf6e2ef175674bf7fe04572f86ec",
     "results/physical_hdc/asap7/qwen_o4_int8_shard/artifacts/place_global_route.log.gz": "423b6fc5e7e35d2bcf1f79f578f71eec1434d398ca9d1a5a354893f647407a0b",
     "results/physical_hdc/asap7/qwen_o4_int8_shard/artifacts/synth.log.gz": "e13dcb711a62b6dafba285629fe699134dc2d39bb1c29444725fbac34a2a00f0"
@@ -32,7 +33,13 @@
   "global_route_timing": {
     "critical_path": "internal BF16 product pipeline flip-flop to flip-flop; no timing/slew repair in direct flow",
     "engineering_acceptance": "NOT_MET",
+    "post_rom_to_first_register_data_delay_ps": 1333.16,
     "recovery_wns_ps": -3070.91,
+    "rom_clk_to_q_ps_on_that_path": 794.62,
+    "rom_output_to_product_register_setup_wns_ps": -1218.18,
+    "rom_path_endpoint": "first signed-INT8 product pipeline flop _46339_/D",
+    "rom_path_practical_implication": "register ROM output / code before the product pipeline or reschedule nibble arithmetic; post-ROM 1.33ns combinational delay cannot meet a single 0.92ns cycle as routed",
+    "rom_path_startpoint": "u_weight_rom/rd_out[8]",
     "setup_wns_ps": -2347.08
   },
   "limitations": [
@@ -63,6 +70,7 @@
     "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_tt.lib": "a7ce0e45d5d181b6365823963792f0234fe7d3b9414ea212debef51603a7cf92",
     "physical/qwen_o4_int8_shard/constraint.sdc": "036b9da59fd9ea43a74a71e45c70383e2deeee205c5e7c35e3b13200d121775a",
     "physical/qwen_o4_int8_shard/detailed_route.tcl": "03741021b1687a0e3fdce5854ae695fdd0bc5805247493d7e53520ef38039387",
+    "physical/qwen_o4_int8_shard/macro_sta.tcl": "3d9898c16d39619c3611fde907400b708d15bcf5890203ed5d86673c485f659b",
     "physical/qwen_o4_int8_shard/ot_qwen_o4_int8_shard.sv": "315405bc00d2040bc587274a09a4044a6563044121d8ec74ad71b88b736f4fb6",
     "physical/qwen_o4_int8_shard/place_route.tcl": "a1b40ac2050e4aec08ccd3eff7adc20fe61fee98125e02682f07eec8e1fd5c54",
     "physical/qwen_o4_int8_shard/prepare_mapped.py": "582c2fe4b7539b9582595a82594a09ac663472efa18b63b0fb7acd3c6c7045dc",
