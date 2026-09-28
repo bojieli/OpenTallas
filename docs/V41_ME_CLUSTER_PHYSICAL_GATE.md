@@ -29,6 +29,13 @@ order and the xbank read selector uses `rd_rot=2`; no 2,048-bit ingress
 crossbar is credited. The owner is checking this bank-major mapping against
 checkpoint values before any full-shape performance claim.
 
+`rtl/test/tb_v41_me_cluster41_phy.sv` exercises both positions through the
+converter, the 16 behavioral macro models, the registered multicast and all
+41 capture banks. It checks every capture through the observable digest and
+checks the complete 2,048-bit operand at consumers 0 and 40, including the
+`rd_rot=2` lane order. The bench passes in Icarus Verilog with the macro's
+behavioral Verilog model. It is a boundary test, not a checkpoint token gate.
+
 Area and power decisions must add the macro-only shared-store sweep in
 [`v41_me_shared_cluster_budget.json`](../results/physical_abi3/asap7/chip/v41_me_shared_cluster_budget.json)
 to the converter, multicast wires and buffers, adapter capture clocks, VM
