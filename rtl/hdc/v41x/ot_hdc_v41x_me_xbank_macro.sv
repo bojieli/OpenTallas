@@ -49,10 +49,13 @@ module ot_hdc_v41x_me_xbank_macro #(
                 assign wm[u*16 +:16] = {16{pos_pre ||
                                              (pos_wr && wr_e[5:3]==u)}};
             end
-            wire [3:0] plg = rq_plg[c*4 +:4];
+            wire [1:0] plg = rq_plg[c*4 +:2];
             wire [NBW-1:0] beat = rq_q[c*NBW +:NBW];
-            wire [NBW+3:0] first_term = {4'b0,beat} << (3+plg);
-            wire [6:0] ra = first_term >> LG;
+            // p is legally 0..3.  The row bits are beat>>(3-p); selecting
+            // these four fixed shifts avoids a wide variable barrel shifter.
+            wire [6:0] ra = plg==0 ? 7'(beat>>3) :
+                            plg==1 ? 7'(beat>>2) :
+                            plg==2 ? 7'(beat>>1) : 7'(beat);
             wire [255:0] q;
             ot_sram_1r1w_128x256_m1_r2c2 u_mem (
                 .clk(clk), .r_ce_in(rq_v[c] && ra < ROWS), .r_addr_in(ra), .rd_out(q),
@@ -68,15 +71,19 @@ module ot_hdc_v41x_me_xbank_macro #(
             $fatal(1,"ME macro store requires G4-aligned narrow writes");
 `endif
     generate for (b=0;b<LANES;b=b+1) begin : g_broadcast
-        wire [3:0] plg = rq_plg[(b%8)*4 +:4];
+        localparam [5:0] BI = b;
+        wire [1:0] plg = rq_plg[(b%8)*4 +:2];
         wire [NBW-1:0] beat = rq_q[(b%8)*NBW +:NBW];
-        wire [LG-1:0] logical_src = ((beat << (3+plg)) + (b & ((8 << plg)-1))) & (LANES-1);
-        wire [LG-1:0] src = ((((logical_src >> 4)+rd_rot)&3)<<4) | (logical_src&15);
+        wire [5:0] logical_src = plg==0 ? {beat[2:0],BI[2:0]} :
+                                 plg==1 ? {beat[1:0],BI[3:0]} :
+                                 plg==2 ? {beat[0],BI[4:0]} : BI;
+        wire [1:0] quarter = logical_src[5:4] + rd_rot;
+        wire [2:0] src_u = {quarter,logical_src[3]};
         // Every source keeps chain index c=b%8.  Select only among the eight
         // lanes of this local macro; a dynamic c select would synthesize an
         // unnecessary die-wide 16-macro crossbar.
         reg [$clog2(MG)-1:0] src_u_q;
-        always @(posedge clk) src_u_q <= src >> 3;
+        always @(posedge clk) src_u_q <= src_u;
         for (p=0;p<MP;p=p+1) begin : g_bpos
             assign rd_x[(b*MP+p)*16 +:16] = q_bus[(p*8+(b%8))*128+src_u_q*16 +:16];
         end

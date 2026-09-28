@@ -13,12 +13,12 @@
     "two_group": {
       "marker": "ME_TWO_GROUP_PASS load_cycles=2048 reads=8192 errors=0",
       "status": "pass",
-      "stdout_sha256": "81173b461e2af09786b08c6e7ebb6a565d0528ea8f8f69d90acd0068160806eb"
+      "stdout_sha256": "90b873ee5e9686353a27d4185457b6cd9aedb351bfefb3816602f1479332c0ba"
     },
     "two_group_wide": {
       "marker": "ME_TWO_GROUP_WIDE_PASS preload_cycles=128 reads=8192 errors=0",
       "status": "pass",
-      "stdout_sha256": "b32d19dc017829f7d3d85cdbeea5546ce8c1efe5887003d783a2b5c8bcac7a48"
+      "stdout_sha256": "cc93b227c66dce9a8f4b20e44ff1662f2eb8017f8f57054db91ea1ded118449e"
     }
   },
   "claim_scope": "Analytical ASAP7 128x256 1R1W SRAM-model exact-order gate for two TP4 wo_a activation groups, wide preload, both ME positions and one wide HE activation slice. No HCP adapter, timing, foundry, or token-rate claim.",
@@ -29,7 +29,7 @@
   "source_sha256": {
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
     "rtl/hdc/v41x/ot_hdc_v41x_he_xslice_macro.sv": "61a7c19ff374bd7f13ad4000d69fac5939e286524d9506207f478404b036807d",
-    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": "f5064de72493a39023c97bb1152d4ae54659091e25769e8c4323a5c0c382628b",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": "de02a610928d08647aa0eafc5a4704bbf4e1426b6207507d50cc21c116a0da9b",
     "rtl/test/data/v41x_he_xslice_l0_real.hex": "b34ccb3cf04c113bf9180825fffe53655dc729ba3b0f3778be53c1ac6065218c",
     "rtl/test/data/v41x_me_xbank_l0_real.hex": "210bd2c26cdf7ed09295f96abd94e8a3553c04b638aa947f0645d9f9b223d0e7",
     "rtl/test/tb_v41x_he_xslice_wide.sv": "6be84d3cecbb1644d0eb3ef1bc0253e8dd89e12a5547593f25afbd87377b69e1",
