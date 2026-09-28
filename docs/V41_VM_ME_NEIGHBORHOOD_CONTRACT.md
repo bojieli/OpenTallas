@@ -16,21 +16,24 @@ missed setup by 1.584 ns at 0.92 ns and remains a separate negative record.
   stages, one beat per cycle. Input is the bank-major four-word payload;
   logical ACC base 74,272 has rotation 2.
 - Shared activation store: `ot_hdc_v41x_me_xbank_macro_inreg_readreg` at ME
-  source `5f11f91a`, 16 analytic 128×256 1R1W macros, one 1,024-bit preload
-  write and one 2,048-bit selected operand read per cycle. Its RL5 adapter
-  adds one registered multicast stage and one local alignment stage.
-- Representative local multicast: four observable 2,048-bit registered
-  consumers placed around one shared store. Synthesis must retain all 8,192
-  sink data flops and the four full-width payload paths. This gate says
+  source `5f11f91a`, with **MP=1** for the exact wo_a checkpoint gate:
+  eight analytic 128×256 1R1W macros, one 1,024-bit preload write and one
+  1,024-bit selected operand read per cycle. Its RL5 adapter adds one
+  registered multicast stage and one local alignment stage. The earlier
+  16-macro, 2,048-bit MP=2 physical cut is a separate two-position candidate;
+  the checkpoint test has not proved position 1.
+- Representative local multicast: four observable 1,024-bit registered
+  consumers placed around one shared MP=1 store. Synthesis must retain all
+  4,096 sink data flops and the four full-width payload paths. This gate says
   nothing about a 41-consumer cluster until composed and routed.
 
 ## Floorplan and timing boundary
 
 The first neighborhood must place the VM producer registers adjacent to
-the four VM banks, the converter between VM and store, the 16 store macros
+the four VM banks, the converter between VM and store, the eight MP=1 store macros
 as a cluster, and the four consumer registers around that cluster. A
 1,100×1,100 µm pilot die is an upper-bound envelope, not a priced die area.
-The 48 VM macros occupy 0.248191 mm² and 16 store macros occupy 0.062265
+The 48 VM macros occupy 0.248191 mm² and eight store macros occupy 0.031133
 mm² before halos, cells, clock and power. The complete 2 MiB VM would use
 256 VM macros and 1.323687 mm² of macro outline, so a 48-macro route must
 not be called full-capacity closure.
