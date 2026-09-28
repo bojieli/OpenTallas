@@ -86,7 +86,8 @@ def main() -> None:
     (work / "start_pins.json").write_text(json.dumps(source_pins, indent=2, sort_keys=True) + "\n")
     binary = work / "obj" / "Vtb_hdc_qwen_layer0_tp2"
     if not args.skip_build:
-        cmd = ["verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH",
+        cmd = ["verilator", "--cc", "--exe", "--build", "-O1",
+               "--unroll-count", "131072", "-Wno-fatal", "-Wno-WIDTH",
                "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-TIMESCALEMOD", "-Wno-PINMISSING",
                "--top-module", "tb_hdc_qwen_layer0_tp2", "-GG=6144", "-Mdir", str(work / "obj"),
                f"-I{C.ISA_SVH.parent}", *map(str, RTL), str(HARNESS),
