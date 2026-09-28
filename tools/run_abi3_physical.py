@@ -1171,6 +1171,30 @@ PNR_METRIC_KEYS = {
 }
 
 
+def conservative_fmax_metrics(raw: dict[str, Any], stage: str) -> dict[str, Any]:
+    """Keep ORFS's aggregate Fmax, but use the slowest constrained clock.
+
+    ORFS can report the fastest clock under ``<stage>__timing__fmax`` in a
+    multi-clock design. A fast ingress clock must not hide a slower core.
+    """
+    key = f"{stage}__timing__fmax"
+    clock_prefix = key + "__clock:"
+    per_clock = {
+        name[len(clock_prefix):]: float(value)
+        for name, value in raw.items()
+        if name.startswith(clock_prefix) and value is not None
+        and math.isfinite(float(value)) and float(value) > 0
+    }
+    aggregate = float(raw[key]) if raw.get(key) is not None else None
+    limiting = min(per_clock.values()) if per_clock else aggregate
+    return {
+        "fmax_hz": limiting,
+        "per_clock_fmax_hz": per_clock,
+        "orfs_aggregate_fmax_hz": aggregate,
+        "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
+    }
+
+
 def orfs_identity() -> dict[str, Any]:
     proc = run(["docker", "image", "inspect", ORFS_IMAGE, "--format", "{{.Id}}"], timeout=300)
     require_success(proc, "docker image inspect")
@@ -2159,7 +2183,8 @@ def run_pnr(
         errors = {k: v for k, v in cts.items() if k.endswith("__flow__errors__count")}
         if any(int(v) != 0 for v in errors.values()):
             raise FlowError(f"ORFS reported flow errors: {errors}")
-        fmax = cts.get("cts__timing__fmax")
+        fmax_info = conservative_fmax_metrics(cts, "cts")
+        fmax = fmax_info["fmax_hz"]
         return {
             "platform": platform_name,
             "design_nickname": nickname,
@@ -2179,7 +2204,7 @@ def run_pnr(
                 "setup_violations": cts.get("cts__timing__drv__setup_violation_count"),
                 "hold_violations": cts.get("cts__timing__drv__hold_violation_count"),
                 "fmax_mhz": float(fmax) / 1e6 if fmax is not None else None,
-                "fmax_hz": float(fmax) if fmax is not None else None,
+                **fmax_info,
                 "hold_buffers": cts.get("cts__design__instance__count__hold_buffer"),
                 "setup_buffers": cts.get("cts__design__instance__count__setup_buffer"),
                 "instance_count": cts.get("cts__design__instance__count"),
@@ -2218,6 +2243,7 @@ def run_pnr(
     metrics["missing_metadata_keys"] = missing
     metrics["raw_timing_library_units"] = raw_timing
     metrics["library_time_unit_ns"] = time_unit_ns
+    metrics.update(conservative_fmax_metrics(metadata, "finish"))
 
     flow_errors = {
         key: metadata[key]
