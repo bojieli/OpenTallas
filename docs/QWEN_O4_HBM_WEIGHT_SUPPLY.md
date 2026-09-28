@@ -101,6 +101,8 @@ CROM addresses [4,096, 6,656), or 640 sectors per die, while the o/down
 true-scale source preloads 2,048 sectors. RoPE values are deterministic and
 remain local; this layer starts from an already prepared activation, so it
 does not exercise embedding.
+The Q/K norm source passes its own real-image, source-pinned, bit-exact
+one-cycle CROM gate on both dies in `results/rtl/qwen_qk_norm_hbm.json`.
 The PC response tag is 17 bits and a source fault reaches the package verdict;
 the local matrix read is disabled in the HBM arm. Both matrix and post-TP-scale
 HBM modes lint at reduced G=4 with Verilator 5.050. The real G=6,144 matrix
@@ -150,6 +152,80 @@ operation generation and response tag; bounded per-PC credits must prevent
 one source from bypassing another's measured queue. Current RTL sources
 preload independently and have no such arbiter. Their sector counts establish
 layout and exactness, not simultaneous service or a sustainable token rate.
+
+The first shared-service RTL is `ot_hdc_qwen_hbm_service`, which instantiates
+128 local PC arbiters as four groups of 32. For physical PC `p`, the stack is
+`p/32`, the local channel is `p%32`, and an accepted 32-byte sector address
+must have low seven bits equal to `p`. Each PC gives rotating priority to six
+traffic owners: matrix code and row scales, Q/K norm, o/down true scales,
+embedding, head final norm, and FP8 KV. Per-owner outstanding credits are
+finite (16 per PC by default); a prefixed response tag returns an out-of-order
+read to its owner, and a write completion releases a KV credit. A delayed
+response whose owner is backpressured holds the physical response. The PC
+slice passes fairness, credit, backpressure and write-completion checks;
+the 128-PC wrapper elaborates cleanly. This is an arbitration boundary,
+awaiting the region-map adapter, packed-KV sector packer, shared controller,
+finite client windows and source-matched token replay. It does not turn the
+earlier independent-bank cycle counts into a four-stack throughput result.
+The client ID order is 0 matrix code/scale, 1 Q/K norm, 2 o/down scales,
+3 embedding, 4 head final norm, and 5 KV. Code and scale use separate sector
+regions but one client credit pool; the CROM owners may be inactive on a
+given layer. The layer controller must supply a 0–35 stage ID for the KV page.
+With 4 KV heads and 128 dimensions per die, a full 8K stage holds
+8,388,608 FP8 bytes = 262,144 physical sectors; all 36 stages need 288 MiB
+of HBM per die for one user. The ~19.3 MiB on-die ring is staging, not that
+HBM residency. Physical KV sector `base + stage*262144 + (logical_addr>>5)`
+packs 32 logical E4M3 elements, with `logical_addr[4:0]` selecting the byte.
+Exact FP8 pack/unpack, writes and token read-after-write still need a shared
+controller gate.
+The shared service uses a 32-bit **physical sector address**. Four modeled
+HBM3E stacks provide 90 GB per die (22.5 GB each), or 2.8125 billion
+32-byte sectors, which exceeds 28- and 31-bit sector addressing. The core
+keeps its 24-bit logical per-layer element address; the layer/user/page
+controller translates it to this physical address. The historical HAW28
+standalone sources were sufficient for their isolated image slices but cannot
+cover the physical capacity or a multiuser KV layout.
+`ot_hdc_qwen_hbm_regions` registers a concrete one-die region binding at
+stage start. The physical sector ranges do not overlap and each region starts
+on a 128-PC boundary: layer code `[0,109707264)`, head code
+`[109707264,119439360)`, 36 padded layer-scale pages
+`[119439360,119494656)`, head scales `[119494656,119499408)`, 36 Q/K
+norm pages starting `119499520`, 36 post-TP scale pages starting
+`119522560`, head final norm starting `119596288`, embedding codes starting
+`119597312`, embedding scales starting `139045120`, and packed KV pages
+starting `139054720`. A layer code page spans 992×3,072 sectors; each layer
+scale page reserves 1,536 sectors around 1,488 useful scales, preserving
+physical-PC alignment. A user KV page spans 36×262,144 sectors. The last
+sector for 283 full 8K users is `2809777791`, below the modeled four-stack
+capacity endpoint `2812500000`. This is an addressability ceiling before
+controller metadata, ECC, inactive regions and reserves; it is not a user
+capacity claim. Invalid stage or user IDs fault closed. The module and its
+0/35-stage, 0/282-user boundary test do not yet drive the HBM sources.
+An `ot_hdc_qwen_pc_lane_map` sits between each source's PC-local output and
+the shared service. It routes every request to physical PC `sector[6:0]` and
+returns responses to the original source bank by carrying that bank's 7-bit
+lane number in the tag. This is needed for independent matrix scale bases:
+gate/up scale base 456 sends source lanes 0 and 63 to physical PCs 72 and 7.
+The same rule covers an embedding scale sector selected by `token>>4`.
+The adopted G=6,144 KV streamer needs a 25-bit source tag
+(`1+LWIN+$clog2(G)+3`, with LWIN=8). The shared service therefore uses a
+32-bit client tag (7 lane bits + 25 source bits) and a 35-bit physical tag
+after its 3-bit client ID. Elaboration rejects a narrower full-shape tag. Its
+lane-mapping RTL passes an out-of-order two-PC response test. Physical tag
+storage, cross-PC wiring and route are open implementation costs.
+`ot_hdc_qwen_kv_pc_adapter` maps the existing exact FP8 logical-word sector
+bridge to the same physical PC fabric, adding the bound user/layer KV base.
+It checks every logical sector is inside the 262,144-sector layer page and
+uses the adopted 25-bit G=6,144 KV response tag without truncation. The
+bridge's half-sector read/modify/write logic and FP8 conversion stay as
+implemented. The adapter holds a physical write until the shared PC service
+returns its completion tag; request acceptance alone cannot advance the
+bridge to a following read. An integrated bridge, adapter and PC-arbiter gate
+delays write completion by five cycles and checks read-after-write bytes,
+the retained half-sector, the exact physical transaction count and tags.
+The inherited bridge permits one logical request at a time, so this is a
+correctness path pending a bounded multi-outstanding scheduler and
+shared-controller timing gate.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs
