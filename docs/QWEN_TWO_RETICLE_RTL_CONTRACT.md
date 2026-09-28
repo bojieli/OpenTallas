@@ -3,13 +3,22 @@
 This is the integration contract for the proposed Qwen3-8B package, based on
 the 28 September 2026 architecture decision. It is an implementation plan,
 not a measured package result. The package has two reticles, each allocated
-6,144 lane groups, with layers divided across a UCIe boundary. Both the ROM
+6,144 lane groups, with every layer partitioned across the two dies (TP-2)
+and reductions crossing a UCIe boundary. Both the ROM
 design and its iso-area HBM-weight comparator use two reticles and eight HBM3E
 stacks per package. Weights are signed INT8 with one BF16 scale per output
 channel; KV is in HBM in both designs. Autoregressive decode uses `m=1` and
-the DFlash verification path uses multiplier `m=5`. The layer cut, activation
-format, exact quantization rounding and saturation, and stack allocation
-remain open until the model and package rebaseline fixes them.
+the DFlash verification path uses multiplier `m=5`. The tensor slices,
+activation and partial-sum formats, exact quantization rounding and saturation,
+and stack address map must be pinned before a package exactness claim.
+
+`docs/ARCH_QWEN3_O4_RTL_SPEC.md` is the advisory O4 requirement and gap audit.
+Its model says TP-2 is needed for the O4 rates; the best contiguous layer cut
+falls to 5,960 autoregressive and 12,461 DFlash tokens/s. Those are model
+figures, not package RTL measurements. The audit also identifies a mismatch
+between its proposed post-accumulation INT8 scale order and the current
+quality harness's per-product order. The deployed numerical contract remains
+open until the quality and arithmetic paths agree.
 
 ## Current source boundary
 
@@ -29,26 +38,26 @@ cannot serve as the current vector long-context package top.
 
 ## Logical token path
 
-For a contiguous layer cut at layer `P`, reticle A executes its assigned
-embedding and layers before `P`, sends the hidden state for one token, and
-reticle B executes the remaining layers and final token selection. This
-contiguous cut is a *proposed* minimum-transfer topology, not a fixed layer
-assignment. The compiler must place every weight and layer-local KV segment
-on the reticle that executes that layer. Normal decode should therefore
-transfer activations, not the full KV cache, across UCIe. Any alternative
-partition must declare its additional transfers before performance modeling.
+Under TP-2, each die owns a tensor slice of every layer. QKV and gate/up use
+output-row slices; o and down use input-column slices and a rank-ordered
+cross-die reduction. Embedding, lm_head and the drafter are also split. Each
+die holds the KV heads for its slice on its local HBM stacks. The advisory O4
+audit counts 73 exchanges per token across the pair; a single hidden-state
+handoff at one layer cut cannot represent that schedule or its rate.
 
-One logical handoff consists of a header followed by the complete activation
-vector. The header must identify at least the transaction, user, token
-position, layer-cut revision, activation format, payload length, and an end
-marker. The receiver may start the next layer only after accepting all beats
-for that transaction. A credit or ready/valid interface must hold payload and
-metadata stable through stalls, provide bounded buffering, and prove no beat
-is dropped, duplicated, reordered within a transaction, or attributed to
-another user/position. Reset and link error behavior needs an explicit
-abort/replay rule before a multi-user gate. Exact bit widths and packet layout
-are deliberately unset until the activation representation and UCIe endpoint
-are selected.
+The logical UCIe endpoint must carry repeated tagged transfers for partial
+reductions, token control and any activation payload. A transfer header must
+identify at least transaction, user, token position, layer, operation, slot,
+payload format and length, plus an end marker. The receiver may consume a
+reduction only after every beat of that tagged transfer is accepted. A credit
+or ready/valid interface must hold payload and metadata stable through
+stalls, provide bounded buffering, and prove no beat is dropped, duplicated,
+reordered within a transfer or attributed to another user, position or slot.
+Reset and link errors need an explicit abort/replay rule before a multi-user
+gate. Exact bit widths and packet layout remain open until the partial-sum
+representation and UCIe endpoint are pinned. The advisory audit says the
+current golden fold needs FP32 partials while the O4 rate model priced BF16
+partials; the two must be reconciled before claiming the modeled rate.
 
 The package controller owns token ordering and final output. A reticle must
 not report `done` merely because its local layers drained: it must also prove
@@ -69,10 +78,10 @@ equivalence. ROM and HBM modes must use the same quantized tensors, layer
 placement, arithmetic, ISA image, activation format, KV format, and UCIe
 schedule. Only the weight supply changes.
 
-Each die needs an address ownership map for its weights, K/V, boot traffic,
-and any program or scratch traffic. The eight package HBM3E stacks require a
-declared per-reticle allocation; four per reticle is a candidate, not an
-assumption of this contract. K/V requests remain physical in both ROM and
+Each die needs an address ownership map for its tensor-slice weights, K/V,
+boot traffic, and any program or scratch traffic. The O4 model assigns four
+of the eight package HBM3E stacks to each die; the RTL manifest must pin the
+corresponding address and ownership map. K/V requests remain physical in both ROM and
 HBM-weight modes. The HBM-weight comparator must arbitrate its weight and KV
 requests over the assigned controllers with backpressure and response tags;
 accepted, scheduled, delivered, and outstanding sectors are separate
@@ -82,18 +91,18 @@ HBM timing model.
 
 ## Integration gates
 
-1. Freeze the model cut, embedding and final-head ownership, exact INT8/BF16
-   quantization arithmetic, activation format, and eight-stack address map in
-   a versioned manifest. The manifest must have unique layer and HBM
-   ownership, capacity bounds for 6,144 groups on each die, and a
+1. Freeze the TP-2 tensor slices, embedding/drafter/final-head ownership,
+   exact INT8/BF16 quantization arithmetic, partial-sum representation and
+   four-stack-per-die address map in a versioned manifest. The manifest must
+   have unique slice and HBM ownership, capacity bounds for 6,144 groups on each die, and a
    compiler-generated image for each reticle.
 2. Prove a standalone UCIe handoff with variable latency, credit exhaustion,
    reset/abort, and two interleaved user/position tags. Compare every payload
    byte and all accepted/completed/queued counts.
-3. Compose two reduced vector reticles around that handoff. Run one exact
+3. Compose two reduced vector reticles around repeated TP-2 exchanges. Run one exact
    token, then consecutive tokens including a K-tile close, with local timed
    physical HBM K/V on both sides. Check logits, intermediate boundary
-   activations, VM/KV state, cross-token V reads, and committed physical K
+   cross-die partials, VM/KV state, cross-token V reads, and committed physical K
    bytes under deterministic link and HBM stalls.
 4. Repeat the same image in ROM-weight and HBM-weight modes, changing only the
    weight source. Check identical numerical results and report link, weight,

@@ -15,7 +15,8 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 ## 1. Qwen3-8B on the ROM two-reticle package
 
 ### Architecture and model
-- [x] **Decision (user):** use signed INT8 weights with per-output-channel BF16 scales on two reticles in one package, split layers across UCIe, with eight HBM3E stacks and 6,144 lane groups per die. DFlash verify uses lane multiplier m=5. The HBM comparator also uses two reticles.
+- [x] **Decision (user):** use signed INT8 weights with per-output-channel BF16 scales on two reticles in one package, eight HBM3E stacks and 6,144 lane groups per die. The O4 rate model uses TP-2 across every layer; DFlash verify uses lane multiplier m=5. The HBM comparator also uses two reticles.
+- [x] **C:** O4 advisory RTL gap audit and per-block AR/DFlash requirements are in `docs/ARCH_QWEN3_O4_RTL_SPEC.md`. It shows a best contiguous cut below the TP-2 O4 rates and flags FP32 golden partials versus BF16-priced UCIe traffic; neither is a package RTL pass.
 - [~] **C:** re-baseline area, autoregressive and DFlash rates, cooling, GPU prefill and the iso-area HBM comparator for that decision. The published single-reticle 3.5-bit numbers are superseded.
 - [~] **C `claude/qwen-weight-format`**: validate the selected 8-bit format against the quality bar (≤2% perplexity rise, ≤1 point on MMLU); the emulated 3.5-bit format failed it.
 - [x] The earlier DFlash acceptance was measured per block in BF16; draft, verify and commit were serialized in that model. This is historical evidence, not a two-reticle rate.
@@ -33,7 +34,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] SFU reciprocal saturation fix (golden and RTL).
 - [x] Consecutive-token 2047→2048 reduced-core gate: two exact tokens with timed physical HBM KV, zero logit/VM/KV/physical-byte mismatches and cross-token V reads (**X**).
 - [~] **X:** 8K single-token reduced-core gate is running and awaits a final source-pinned verdict.
-- [~] **X:** two-reticle INT8 RTL integration: a format-neutral, backpressured logical UCIe activation handoff is now being implemented. Next freeze the layer and HBM stack split, implement signed INT8 × BF16 with per-output BF16 post-accumulation scaling, and prove the same deployed program in autoregressive m=1 and DFlash verify m=5 modes. Current G4/SW16 gates are reduced single-core evidence. Claude supplies an advisory gap/performance audit; Codex owns core, testbench and integrated RTL.
+- [~] **X:** two-reticle INT8 RTL integration: a format-neutral, backpressured logical UCIe endpoint for repeated tagged TP-2 exchanges is being implemented. Next pin tensor-slice/HBM ownership and exact INT8 scale/product order, then prove the same deployed program in autoregressive m=1 and DFlash verify m=5 modes. Current G4/SW16 gates are reduced single-core evidence. Claude supplies advisory numerics and performance requirements; Codex owns core, testbench and integrated RTL.
 - [ ] **X:** queue-depth-2 pressure gate; its optional elaboration was stopped and no QD2 run is active.
 - [ ] 8K in RTL: correctness, area and timing are all unproven (R1).
 - [ ] Offered-load knee: KV-path headroom under sustained queue pressure (R1).
