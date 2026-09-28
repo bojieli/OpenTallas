@@ -17,6 +17,7 @@ SOURCES = (
     "tools/arch_budget_v41.py",
     "configs/hardware/technology.json",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv",
     "rtl/chip/ot_chip_v41x_die.sv",
     "rtl/rom/ot_rom_pkg_ctrl_x.sv",
@@ -26,13 +27,17 @@ SOURCES = (
 def build() -> dict:
     source_text = {p: (ROOT / p).read_text() for p in SOURCES}
     writer = source_text[SOURCES[2]]
-    bridge = source_text[SOURCES[3]]
+    scanner = source_text[SOURCES[3]]
+    bridge = source_text[SOURCES[4]]
     budget = source_text[SOURCES[0]]
-    controller = source_text[SOURCES[5]]
+    controller = source_text[SOURCES[6]]
     assert re.search(r"assign\s+w_stack_mask\s*=\s*4'b1111", writer)
     assert re.search(r"for\s*\(s=0;s<4;s=s\+1\)", bridge)
     assert "(rows * CKV_ROW_B + rows * IDX_KEY_B) / 4" in budget
     assert "IDX_KEY_B = 68" in budget and "CKV_ROW_B = 288" in budget
+    assert "b0=((rbase>>4)-cfg_ik_base)/128*17" in writer
+    assert "ik_off=wbase-cfg_ik_base" in scanner
+    assert "user_base" not in writer and "user_base" not in scanner
     assert "HDR_USER = 32" in controller and "HDR_POS = 40, HDR_IDX = 56" in controller
 
     tech = json.loads(source_text[SOURCES[1]])
@@ -89,6 +94,8 @@ def build() -> dict:
                      "key_sectors_for_model_users_per_stack": users_model * key_sectors_per_user,
                      "key_sectors_for_current_layout_users_per_stack": users_rtl * key_sectors_per_user,
                      "max_replicated_users_with_28_bit_key_window": (1 << 28) // key_sectors_per_user},
+        "isolation": {"multiuser_key_address_isolation": False,
+                      "reason": "writer and scanner derive sectors from layer-local bases with no user slice offset"},
         "widths": {"user_id_bits_for_model_users": user_id_bits_model,
                    "user_id_bits_for_current_layout_users": user_id_bits_rtl,
                    "current_controller_user_id_bits": 8,

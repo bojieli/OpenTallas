@@ -20,6 +20,10 @@
     "tp_dies": 4,
     "window_bytes_per_die_per_user": 135168
   },
+  "isolation": {
+    "multiuser_key_address_isolation": false,
+    "reason": "writer and scanner derive sectors from layer-local bases with no user slice offset"
+  },
   "per_stack_per_user_bytes": {
     "ckv_striped": 18874368,
     "key_replicated": 17825792,
@@ -33,6 +37,7 @@
   "source_sha256": {
     "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
     "rtl/chip/ot_chip_v41x_die.sv": "0b4ce00e5d997f42ba1cf07356f56a1e9b3c3232c7ef6d246bfae4485dc5552b",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "d117ce3dbf6522353f7a63584f16502872f96ca6f45b20f949bc5b533dbe8de7",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "76a7658ee2e9a7ab063ec799412b94b200b60a7a4c8803c70fafd9875be9f21a",
     "rtl/rom/ot_rom_pkg_ctrl_x.sv": "c82eb5893f70285932741c4111d817817aea27d0d36ba49103c31f2c8913a508",
