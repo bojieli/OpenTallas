@@ -172,13 +172,13 @@ def collective_fifo128() -> dict:
 
 
 def karb_pc1_pipe_m9(slew_repair: bool = False, slew_margin: bool = False,
-                     slew_margin40: bool = False) -> dict:
+                     slew_margin40: bool = False, fit_height: bool = False) -> dict:
     """One-PC local request/response slice, with its own registered HBM output.
 
     This physical boundary is a partition study.  NPC=1 removes the 32-way K
     demux/response select and therefore cannot certify the parent arbiter.
     """
-    w, h = PHY_PC_WINDOW_UM, 30.24
+    w, h = PHY_PC_WINDOW_UM, 17.28 if fit_height else 30.24
     m = 8 * ROW_UM
     scalar = {"b_v", "b_rdy", "b_we", "b_wr_done", "b_rsp_v", "b_rsp_rdy",
               "h_v", "h_rdy", "h_we", "h_wr_done", "r_v", "r_rdy"}
@@ -189,7 +189,7 @@ def karb_pc1_pipe_m9(slew_repair: bool = False, slew_margin: bool = False,
                f"{pin_regex(local_pins('b'))}=top:20-195",
                r"^k_(v|rdy|we|wr_done|rsp_v|rsp_rdy)$|^k_(addr|len|tag|wdata|wstrb|rsp_tag|rsp_beat|rsp_data)\[\d+\]$=top:210-370",
                r"^(k_grants|b_grants|contended)\[\d+\]$=bottom:210-370",
-               r"^(clk|rst_n)$=left:10-20"]
+               r"^(clk|rst_n)$=left:5-12" if fit_height else r"^(clk|rst_n)$=left:10-20"]
     args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb",
             "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
             "--param", "NPC=1", "--param", "PIPE_OUT=1",
@@ -203,7 +203,8 @@ def karb_pc1_pipe_m9(slew_repair: bool = False, slew_margin: bool = False,
         args += ["--slew-margin-percent", "40" if slew_margin40 else "25"]
     for r in regions:
         args += ["--pin-region", r]
-    name = ("karb_pc1_pipe_slewmargin40_m9" if slew_margin40 else
+    name = ("karb_pc1_pipe_fit_slewmargin40_m9" if fit_height else
+            "karb_pc1_pipe_slewmargin40_m9" if slew_margin40 else
             "karb_pc1_pipe_slewmargin_m9" if slew_margin else
             "karb_pc1_pipe_slew_m9" if slew_repair else "karb_pc1_pipe_m9")
     return {"args": args, "nickname": f"codex_v41x_{name}",
@@ -638,6 +639,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_pc1_pipe_slew_m9": lambda: karb_pc1_pipe_m9(slew_repair=True),
          "karb_pc1_pipe_slewmargin_m9": lambda: karb_pc1_pipe_m9(slew_margin=True),
          "karb_pc1_pipe_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True),
+         "karb_pc1_pipe_fit_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True, fit_height=True),
          "karb_group4_m9": karb_group4_m9,
          "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
          "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
