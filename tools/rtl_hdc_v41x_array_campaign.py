@@ -33,6 +33,7 @@ from pathlib import Path
 # The first package gate adopts the new HCP arithmetic order only. Keep the
 # ISA/golden contract aligned with X_HE=1 in the array bench.
 ALL_UNIT = "--all-unit" in sys.argv
+KV_HBM = "--kv-hbm" in sys.argv
 LINK_ONLY = None
 os.environ["HDC_V41_ARITH"] = "chunk8" if ALL_UNIT else "he"
 if ALL_UNIT:
@@ -68,6 +69,8 @@ BENCH_AUX_RTL = sorted((ROOT / "rtl/hdc/v41x").glob("ot_hdc_v41x_idx_pool_*.sv")
     ROOT / "rtl/hdc/hbm/ot_hdc_qstream.sv",
     ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv",
 ]
+KV_HBM_RTL = [ROOT / "rtl/chip/ot_chip_v41x_kv_prefetch.sv",
+              ROOT / "rtl/chip/ot_chip_v41x_hbm_karb.sv"]
 MG_SIDE, MG_HEAD, DESTS = 32, 48, 64
 
 # name: (body packages, lm_head parts, lm_head multicast, shared state, fabric,
@@ -85,6 +88,7 @@ NODE = re.compile(r"NODE node=(\d+) busy=(\d+) side_wait=(\d+) tx_wait=(\d+) sta
 TOK = re.compile(r"TOK user=(\d+) pos=(\d+) token=(\d+) cycle=(\d+)")
 STALLS = re.compile(r"LINK_STALLS (\d+)")
 DONE = re.compile(r"USERS_DONE (\d+)")
+KV_STATUS = re.compile(r"KVHBM ops=(\d+) words=(\d+) writes=(\d+) holds=(\d+) state_bad=(\d+) fault=([01]+)")
 BUILD_SLOTS = threading.Semaphore(2)       # Verilator builds of this bench take ~6.5 GB each
 # a machine-wide gate for heavy builds, if the host provides one (waits for a slot and free memory)
 GATE = [g] if (g := os.environ.get("OT_BUILD_GATE", "/tmp/claude-1000/orfs_gate.sh")) and Path(g).exists() else []
@@ -157,7 +161,7 @@ def config_svh(plan, lay, fabric):
 def build(obj: Path, svh: str, users: int, stall: int) -> Path:
     obj.mkdir(parents=True, exist_ok=True)
     exe = obj / "Vtb_hdc_v41x_array"
-    stamp = hashlib.sha256((svh + f"{users} {stall} all_unit={ALL_UNIT}" + "".join(
+    stamp = hashlib.sha256((svh + f"{users} {stall} all_unit={ALL_UNIT} kv_hbm={KV_HBM}" + "".join(
         hashlib.sha256(p.read_bytes()).hexdigest() for p in rtl_sources())).encode()).hexdigest()
     if REUSE and exe.exists() and (obj / "stamp").exists() and (obj / "stamp").read_text() == stamp:
         return exe
@@ -173,8 +177,9 @@ def build(obj: Path, svh: str, users: int, stall: int) -> Path:
             *([f"+define+HDC_X_{x}={2 if x == 'IDX' else 1}" for x in
                ("HE", "ME", "ATT", "IDX", "SEL", "EG", "SU")] + ["+define+HDC_W_HBM=1"]
               if ALL_UNIT else []),
+            *(["+define+HDC_KV_HBM=1"] if KV_HBM else []),
             *map(str, core.rtl_sources(True) if ALL_UNIT else core.RTL),
-            *map(str, BENCH_AUX_RTL),
+            *map(str, BENCH_AUX_RTL), *map(str, KV_HBM_RTL if KV_HBM else []),
             str(LINK), str(ROUTER), str(CTRL), str(TB), str(HARNESS),
             "-CFLAGS", "-O1", "-MAKEFLAGS", "OPT_FAST=-O0 OPT_GLOBAL=-O0", "-j", "16"])
     (obj / "stamp").write_text(stamp)
@@ -192,13 +197,21 @@ def parse(out: str, users: int, steps_per_user: int, ngen: int) -> dict:
     toks = [dict(zip(("user", "position", "token", "cycle"), map(int, t))) for t in TOK.findall(out)]
     steps = u * steps_per_user
     done = int(DONE.search(out).group(1))
+    kv_match = KV_STATUS.search(out)
+    if KV_HBM and kv_match is None:
+        raise RuntimeError("KV HBM run lacks mandatory KVHBM status line")
+    kv = (dict(zip(("ops", "words", "sectors_written", "hold_cycles", "state_mismatches"),
+                   map(int, kv_match.groups()[:5]))) | {"fault_bits": kv_match.group(6)}) if kv_match else None
     return {"packages": nodes, "users": u, "generated_tokens": gen, "token_mismatches": bad,
             "logit_mismatches": lbad, "lm_head_steps_checked": lchk, "state_mismatches": sbad,
             "total_cycles": cycles, "token_steps": steps, "cycles_per_token_step": round(cycles / steps, 1),
             "users_completed": done, "link_credit_stalls": int(STALLS.search(out).group(1)),
-            "per_package": per, "tokens": toks,
+            "per_package": per, "tokens": toks, "kv_hbm": kv,
             "pass": "PASS" in out and bad == 0 and lbad == 0 and sbad == 0 and done == u
-            and gen == u * ngen and lchk > 0}
+            and gen == u * ngen and lchk > 0
+            and (not KV_HBM or (kv is not None and kv["ops"] > 0 and kv["words"] > 0
+                                and kv["sectors_written"] > 0 and kv["state_mismatches"] == 0
+                                and "1" not in kv["fault_bits"]))}
 
 
 def timing(plan, progs, steps):
@@ -299,7 +312,7 @@ def run_config(name, spec, ctx, scratch: Path, log) -> dict:
 
 
 def rtl_sources():
-    pool = [*BENCH_AUX_RTL, *([core.VLT] if ALL_UNIT else [])]
+    pool = [*BENCH_AUX_RTL, *(KV_HBM_RTL if KV_HBM else []), *([core.VLT] if ALL_UNIT else [])]
     return [TB, HARNESS, LINK, ROUTER, CTRL, core.SVH,
             *(core.rtl_sources(True) if ALL_UNIT else core.RTL), *pool]
 
@@ -340,11 +353,18 @@ def run(names, scratch: Path) -> dict:
             r["bottleneck_package"] = int(np.argmax(busy))
             r["bottleneck_busy_cycles_per_token_step"] = round(max(busy) / r["token_steps"], 1)
     return {
-        "schema": ("opentallas.hdc-v41x-array-allunit-hbm-gate.v1" if ALL_UNIT else
+        "schema": ("opentallas.hdc-v41x-array-kv-hbm-gate.v1" if KV_HBM else
+                   "opentallas.hdc-v41x-array-allunit-hbm-gate.v1" if ALL_UNIT else
                    "opentallas.hdc-v41x-array-hcp-gate.v1"),
         "status": "pass" if all(c["pass"] for c in results) else "fail",
         "simulation_build_note": os.environ.get("OT_ARRAY_BUILD_NOTE", "Verilator --build, 16 jobs, OPT_FAST=-O0 OPT_GLOBAL=-O0"),
-        "claim_boundary": ("All-unit X_HE=1 X_ME=1 X_ATT=1 X_IDX=2 X_SEL=1 X_EG=1 "
+        "claim_boundary": ("All-unit V4.1x array with attention KV descriptor issue gating, "
+                           "two-slot KV prefetch, runtime KV sector writes and the pooled indexer "
+                           "sharing four modeled HBM K stacks per package; per-user KV and key slices "
+                           "are disjoint and final KV HBM sectors are checked against exact shadow state. "
+                           "This reduced array gate uses behavioral HBM timing and a link PHY stand-in; "
+                           "it does not establish physical HBM/link closure or full-model throughput." if KV_HBM else
+                           "All-unit X_HE=1 X_ME=1 X_ATT=1 X_IDX=2 X_SEL=1 X_EG=1 "
                            "X_SU=1 W_HBM=1; per-package QE qstream and timed HBM model, "
                            "bounded pooled index-key writer/read bridge and four timed HBM stack models; "
                            "reduced array gate with per-user pooled index-key HBM sectors. "
@@ -374,10 +394,13 @@ def main() -> int:
     parser.add_argument("--reuse", action="store_true",
                         help="with --scratch: keep builds and run logs made from the same sources")
     parser.add_argument("--all-unit", action="store_true", help="all adopted V4.1x X units and timed weight/index HBM")
+    parser.add_argument("--kv-hbm", action="store_true", help="attention KV descriptor/prefetch on shared modeled K stacks; requires --all-unit")
     parser.add_argument("--link-delay", type=int, help="run one configured link delay (cycles per link/half-link)")
     args = parser.parse_args()
     if args.all_unit and args.only not in (["b2_p2p"], ["b2_p2p_u2"], ["b3_h2_switch_stall"]):
         parser.error("--all-unit requires one explicit b2 or b3 configuration")
+    if args.kv_hbm and not args.all_unit:
+        parser.error("--kv-hbm requires --all-unit")
     if args.link_delay is not None and (not args.only or len(args.only) != 1):
         parser.error("--link-delay requires exactly one --only configuration")
     global REUSE, LINK_ONLY
