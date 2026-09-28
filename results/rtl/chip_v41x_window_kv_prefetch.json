@@ -8,6 +8,7 @@
     "region_fault": 1,
     "rows": 5,
     "stale_fault": 1,
+    "stalls": 82,
     "writes": 128
   },
   "hbm_pitch_bytes": 544,
@@ -18,8 +19,8 @@
   "sources": {
     "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "85a449dfe4f8e22c69f2d21819f644c5508166c4113b3cbee67fcda30862e053",
     "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
-    "rtl/test/tb_chip_v41x_window_kv_prefetch.sv": "74e21e9aff81a6df0a6c434e11d9bcabc4164fedcd6fe194dfac33c72551fbc3",
-    "tools/rtl_chip_v41x_window_kv_prefetch.py": "b7d2c20d3545a83f1e738a946b6de3cb61fdc87cf94d211a7fc2b3e6e0666623"
+    "rtl/test/tb_chip_v41x_window_kv_prefetch.sv": "f9b72748bee68ba089347927c886e101d4dca97f5aaea0062b25f10378fb8fc0",
+    "tools/rtl_chip_v41x_window_kv_prefetch.py": "a1312586f13d7d7277dcf34a4e3d5fcbc5cd91d5a8342d9bc395fe8fa01e626e"
   },
   "status": "pass",
   "user_slices": 2,

@@ -23,11 +23,11 @@ module tb_chip_v41x_window_kv_prefetch;
     wire [4*TAGW-1:0] m_tag, s_tag;
     wire [1023:0] m_wdata, s_data;
     wire [127:0] m_wstrb;
-    reg [3:0] m_wr_done = 0, s_v = 0;
+    reg [3:0] m_wr_done = 0, s_v = 0, m_rdy = 4'hf;
     reg [4*TAGW-1:0] rsp_tag = 0;
     reg [1023:0] rsp_data = 0;
     reg [255:0] mem [0:BASE+COUNT-1];
-    integer errors = 0;
+    integer errors = 0, cycles = 0, held_requests = 0;
     integer addr, b;
     ot_chip_v41x_window_kv_prefetch #(.WIN_STACK(2)) dut (
         .clk(clk), .rst_n(rst_n), .region_base_sector(SEC_W'(BASE)),
@@ -44,7 +44,7 @@ module tb_chip_v41x_window_kv_prefetch;
         .fault(fault), .fault_code(fault_code),
         .st_rows_fetched(st_rows), .st_blocks_written(st_blocks),
         .st_sectors_read(st_reads), .st_sectors_written(st_writes),
-        .m_v(m_v), .m_rdy(4'hf), .m_addr(m_addr), .m_len(m_len),
+        .m_v(m_v), .m_rdy(m_rdy), .m_addr(m_addr), .m_len(m_len),
         .m_tag(m_tag), .m_we(m_we), .m_wdata(m_wdata), .m_wstrb(m_wstrb),
         .m_wr_done(m_wr_done), .s_v(s_v), .s_rdy(s_rdy), .s_tag(s_tag),
         .s_beat(s_beat), .s_data(s_data));
@@ -52,8 +52,11 @@ module tb_chip_v41x_window_kv_prefetch;
     assign s_data = rsp_data;
     assign s_beat = 0;
     always @(posedge clk) begin
+        cycles <= cycles + 1;
+        m_rdy[2] <= (cycles % 3) != 0;
         m_wr_done <= 0; s_v <= 0;
-        if (rst_n && m_v[2]) begin
+        if (rst_n && m_v[2] && !m_rdy[2]) held_requests <= held_requests + 1;
+        if (rst_n && m_v[2] && m_rdy[2]) begin
             addr = m_addr[2*HAW +: HAW];
             if (addr < BASE || addr >= BASE+COUNT || m_len[2*4 +: 4] != 1) begin
                 $display("BADADDR %0d", addr); errors = errors + 1;
@@ -172,9 +175,10 @@ module tb_chip_v41x_window_kv_prefetch;
         if (!fault_code[1] || st_writes != 128) begin
             $display("UNRESERVED USER NOT REJECTED"); errors = errors + 1;
         end
-        $display("WINDOW_KV rows=%0d blocks=%0d reads=%0d writes=%0d stale_fault=%0d region_fault=%0d context_fault=%0d errors=%0d",
-                 st_rows, st_blocks, st_reads, st_writes, fault_code[0], fault_code[1], context_fault_seen, errors);
-        if (errors == 0 && st_rows == 5 && st_blocks == 64 && st_reads == 85 && st_writes == 128)
+        $display("WINDOW_KV rows=%0d blocks=%0d reads=%0d writes=%0d stalls=%0d stale_fault=%0d region_fault=%0d context_fault=%0d errors=%0d",
+                 st_rows, st_blocks, st_reads, st_writes, held_requests,
+                 fault_code[0], fault_code[1], context_fault_seen, errors);
+        if (errors == 0 && held_requests > 0 && st_rows == 5 && st_blocks == 64 && st_reads == 85 && st_writes == 128)
             $display("PASS");
         else $display("FAIL");
         $finish;

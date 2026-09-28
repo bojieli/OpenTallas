@@ -39,7 +39,8 @@ def run(output: Path = OUTPUT):
     stat = next(line for line in lines if line.startswith("WINDOW_KV "))
     fields = dict(part.split("=", 1) for part in stat.split()[1:])
     values = {key: int(value) for key, value in fields.items()}
-    assert values == {
+    assert values["stalls"] > 0
+    assert {key: value for key, value in values.items() if key != "stalls"} == {
         "rows": 5, "blocks": 64, "reads": 85, "writes": 128,
         "stale_fault": 1, "region_fault": 1, "context_fault": 1, "errors": 0,
     }, values

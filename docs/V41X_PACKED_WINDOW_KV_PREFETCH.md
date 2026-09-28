@@ -29,6 +29,8 @@ of position 1,048,576, and eviction at the 128-row ring wrap. The
 standalone row codec gate separately checks
 the exact deployed golden quantization and thousands of packed decode
 vectors.
+The sector responder withholds request readiness on a deterministic subset
+of cycles; all commands hold their address and payload until accepted.
 
 The current component issues one HBM transaction at a time. It does not yet
 wire the full die's mixed attention descriptor, which contains up to 128
