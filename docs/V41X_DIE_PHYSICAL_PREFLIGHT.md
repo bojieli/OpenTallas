@@ -219,6 +219,13 @@ excludes the group response buffers, K trunk, clock distribution across
 adjacent slices and the full four-stack die. Its 17.28 µm height is 0.08 µm
 above the modeled streamer-and-staging band, so the die area budget still
 needs a composed placement or repricing.
+The 375 by 17.01 µm local-child sensitivity fits inside the 17.2 µm
+band height and completed detailed route, but
+`results/asap7_physical/v41x_die_karb_pc_local_budget_m9/physical.json`
+is **not met**: `h_wstrb[28]` has 326.74 ps slew against the 320 ps limit.
+Setup/hold WNS remain positive at +144.753/+66.322 ps, with zero
+DRC/antenna violations and 564.611 µm² of routed standard cells. A stronger
+slew-repair rerun is pending; the actual height constraint is not yet closed.
 The earlier unspecialized one-PC top also detailed-routed at 375 by 17.28 µm
 in `results/asap7_physical/v41x_die_karb_pc1_pipe_fit_slewmargin40_m9/physical.json`.
 It has +161.847 ps setup and +55.333 ps hold WNS with zero DRC and antenna
@@ -243,9 +250,18 @@ four local arbiters and passes the exact gate in
 recorded in
 `results/asap7_physical/v41x_die_karb_group4_tailpipe_m9/physical.json`:
 it also stops at the CTS hold-buffer cap, after 8,157 insertions with a
-−306 ps remaining hold path. A larger-buffer-cap sensitivity is under test;
-the standard flow has no four-PC routed result. None of these four-PC cases
+−306 ps remaining hold path. The standard flow has no four-PC routed result.
+None of these four-PC cases
 yet fits the 17.2 µm budgeted band.
+
+The bounded 100%-buffer-cap sensitivity, source-pinned in
+`results/asap7_physical/v41x_die_karb_group4_cts100_m9/cts_diagnostic.json`,
+inserted 38,702 hold buffers and still left CTS setup WNS −897 ps and hold
+WNS −493 ps. Global routing showed persistent congestion through iteration
+15; the diagnostic was stopped because the CTS timing and area cost already
+ruled it out. Its `physical.json` is an incomplete-flow error record, with
+the CTS report and log retained beside it. This is evidence against simply
+raising the buffer limit, not a routed timing result.
 
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
