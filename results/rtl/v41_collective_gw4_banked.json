@@ -138,7 +138,7 @@
   "scope": "exact 64B pairwise one-shot engine, adopted behavioural links and double-buffered transpose; bank sink accepts four words/cycle; no die token or route claim",
   "source_sha256": {
     "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
-    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "ac6f7c6dbcaa8e87677dacb613395b21f0766d6d078a109003ff1c69fd25f98c",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "b857ec83fbe8a4c006067f5bd6320f06f0fbcda3c1d1f09a406f5fcb6e377a9f",
     "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",
