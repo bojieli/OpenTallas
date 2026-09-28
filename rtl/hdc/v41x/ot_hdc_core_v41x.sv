@@ -47,6 +47,7 @@
 // strides); their vector-memory ports widen by MP.
 // ---------------------------------------------------------------------------
 module ot_hdc_core_v41x #(
+    parameter integer FULL_SHAPE = 0,
     parameter integer INSTR_BITS = 1536,
     parameter integer W    = 16,
     parameter integer G    = 4,
@@ -285,7 +286,7 @@ module ot_hdc_core_v41x #(
     input  wire              kv_ok,
     output reg               wrel_v           // an instruction marked wrel issued
 );
-    `include "ot_hdc_isa_v41.svh"
+    `include "ot_hdc_isa_v41_profiles.svh"
     localparam integer LG = $clog2(W * G);
 
     // -- sequencer -----------------------------------------------------------------------------
