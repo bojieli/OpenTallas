@@ -52,7 +52,7 @@ def main() -> None:
     sectors, first = C.P.qe_hbm_image(lay)
     for k, prog in enumerate(progs):
         ents = C.P.qe_fetch_list(lay, prog, first)
-        assert ents, f"stage {k}: empty QE fetch list"
+        assert ents or k >= plan.nb, f"body stage {k}: empty QE fetch list"
         (cfg / f"qlist_stage{k:02d}.hex").write_text(C.P.hexwords(C.P.encode_list(ents), C.P.LIST_BITS))
     obj = scratch / "obj"
     obj.mkdir(exist_ok=True)

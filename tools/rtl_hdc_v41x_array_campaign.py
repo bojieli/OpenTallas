@@ -232,8 +232,8 @@ def run_config(name, spec, ctx, scratch: Path, log) -> dict:
                 ents = P.qe_fetch_list(lay, prog, first)
                 (img / f"qlist_stage{k:02d}.hex").write_text(
                     P.hexwords(P.encode_list(ents), P.LIST_BITS))
-                if not ents:
-                    raise RuntimeError(f"stage {k}: empty QE HBM fetch list")
+                if not ents and k < plan.nb:
+                    raise RuntimeError(f"body stage {k}: empty QE HBM fetch list")
         log(f"{name}: ISA pipeline {recs} ({time.time() - t0:.0f} s)")
     isa_ok = all(r["logits_bit_exact_every_step"] and r["argmax_and_value_every_step"] for r in recs)
     if not isa_ok:
