@@ -152,15 +152,15 @@
     "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
     "rtl/rom/ot_rom_tp_seq.sv": "dee434197ff25553a41ba7acf5f439c88c174a2b265ad5f1f29de544b8427f57",
     "rtl/test/hdc_array_harness.cpp": "b4c272a6903d459265d13b82e020437be32a884bfb707d572d4262742160e685",
-    "rtl/test/hdc_package_tp_harness.cpp": "a0f354883dcf63c07e10748b72a0767c9932e90c7f8b5faa10ed4c6e4ba3e936",
+    "rtl/test/hdc_package_tp_harness.cpp": "344759383aac0d4a6ffb7df9ba7872a744f546714cc10e975ee129e791dc81b2",
     "rtl/test/tb_hdc_array.sv": "f55f9d77c59807b06ac5d20f0a9f469c5f94c7a0fb02bc99183017fbc4a7996f",
-    "rtl/test/tb_hdc_package_tp.sv": "735d1868301829f1a7e8918930b4e5797a30991fefdc2698899bc58552b44f8c",
+    "rtl/test/tb_hdc_package_tp.sv": "2022c44a7bd55ad1c66007e77f24d99d47a00a5d828bd285152c175c16bbb84b",
     "rtl/test/tb_rom_oneshot_allreduce.sv": "085525e22554d905f2715f674b24b18682a323455b6b38b94e4ccb6d7bfddd17",
     "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
     "tools/hdc_isa.py": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
     "tools/hdc_program.py": "a7cf701c89fa0cf3ecc709dbeaf37d84bd8a440993da9918e622267e11112768",
     "tools/rtl_hdc_package_tp2_smoke.py": "311675ec738c5c8ceb12262653cefd6d1b7be21516d1e44eaa28b85e43ad2913",
-    "tools/rtl_hdc_package_tp_campaign.py": "0cc732681802aa169ccd7ff94ff51849dc37c95dc04b342921b55035ab9bb333"
+    "tools/rtl_hdc_package_tp_campaign.py": "57ee265643a665fc51dad9abb987450a266aeae0d416612ef25d4b1dc56098c8"
   },
   "package": {
     "board_link_credit_stalls": 0,
@@ -176,17 +176,17 @@
         "busy_cycles": 314210,
         "collective_cycles": 4482,
         "die": 1,
-        "kv_mismatches": 1485,
+        "kv_mismatches": 0,
         "package": 0,
-        "vm_mismatches": 1424
+        "vm_mismatches": 0
       },
       {
         "busy_cycles": 314210,
         "collective_cycles": 4482,
         "die": 0,
-        "kv_mismatches": 1402,
+        "kv_mismatches": 0,
         "package": 0,
-        "vm_mismatches": 1424
+        "vm_mismatches": 0
       }
     ],
     "dies_per_package": 2,
@@ -194,7 +194,7 @@
       {
         "cycle": 279850,
         "position": 15,
-        "token": 3525,
+        "token": 1073,
         "user": 0
       },
       {
@@ -206,22 +206,22 @@
       {
         "cycle": 315462,
         "position": 17,
-        "token": 382,
+        "token": 93,
         "user": 0
       }
     ],
     "generated_ids_per_user": [
       [
-        3525,
+        1073,
         382,
-        382
+        93
       ]
     ],
     "generated_tokens": 3,
-    "kv_mismatches": 2887,
-    "mismatches": 39,
+    "kv_mismatches": 0,
+    "mismatches": 0,
     "packages": 1,
-    "pass": false,
+    "pass": true,
     "steps_checked_bit_exact": 18,
     "token_steps": 18,
     "total_cycles": 315465,
@@ -229,8 +229,8 @@
     "ucie_lat_setting": "nominal",
     "users": 1,
     "vector_memory_checked": true,
-    "vector_memory_mismatches": 2848
+    "vector_memory_mismatches": 0
   },
   "schema": "opentallas.hdc-package-tp2-smoke.v1",
-  "status": "fail"
+  "status": "pass"
 }
