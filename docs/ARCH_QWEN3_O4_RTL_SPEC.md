@@ -22,7 +22,7 @@ Every figure here is written by `tools/qwen3_o4_rtl_gaps.py` into `results/arch/
   This is not bit-exact with the quality harness's quantised kernel, which scales inside every product (section 3.2).
 - **The die split** is in section 1.1. The O4 rates need every layer split across both dies (TP-2). A contiguous cut, at its best P = 20, reaches 0.574 of the autoregressive rate and 0.753 of the DFlash rate.
 
-**Quality of the 8-bit format is unverified.** No 8-bit quality record is on main; `claude/qwen-weight-format` owns that study. The DFlash acceptance used below (2.8591 tokens a step at block 5) was measured in BF16 on a GPU, not at 8 bits.
+**The 8-bit format passes the deployment-arithmetic quality test, but exact O4 TP-2 quality is open.** The full-model w8 study uses its published FP32 K-split order. A separate 6,144-group TP-2 numeric gate finds occasional BF16 differences from that order, so the quality pass is representative of the format rather than an exact two-die verdict. DFlash acceptance (2.8591 tokens a step at block 5) was measured in BF16 on a GPU, not at 8 bits.
 
 ## 1. The target and what binds it
 

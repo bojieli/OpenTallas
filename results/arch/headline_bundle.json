@@ -1781,7 +1781,7 @@
      "status": "agrees"
     },
     {
-     "in": "The design's weights are 8-bit, exactly as the RTL contract specifies",
+     "in": "The tested format uses 8-bit weights with the RTL's row-scale placement",
      "text": "by −1.59% at 2K",
      "printed_value": "-1.59",
      "status": "agrees"
@@ -1820,7 +1820,7 @@
      "status": "agrees"
     },
     {
-     "in": "The design's weights are 8-bit, exactly as the RTL contract specifies",
+     "in": "The tested format uses 8-bit weights with the RTL's row-scale placement",
      "text": "−1.03% at 8K",
      "printed_value": "-1.03",
      "status": "agrees"
@@ -1859,7 +1859,7 @@
      "status": "agrees"
     },
     {
-     "in": "The design's weights are 8-bit, exactly as the RTL contract specifies",
+     "in": "The tested format uses 8-bit weights with the RTL's row-scale placement",
      "text": "MMLU by −0.5 points",
      "printed_value": "-0.5",
      "status": "agrees"
@@ -1892,7 +1892,7 @@
    ],
    "printed": [
     {
-     "in": "The design's weights are 8-bit, exactly as the RTL contract specifies",
+     "in": "The tested format uses 8-bit weights with the RTL's row-scale placement",
      "text": "top-1 agreement with BF16 is 95.7%",
      "printed_value": "95.7",
      "status": "agrees"
