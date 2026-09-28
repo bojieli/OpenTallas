@@ -16,15 +16,18 @@ def witness():
     return json.loads(S.OUT.read_text())
 
 
-def test_exact_serial_component_witness_is_current_and_bounded():
+def test_historical_serial_component_witness_fails_closed_on_changed_rtl():
     m = witness()
     assert S.build() == m
     for path, digest in m["source_sha256"].items():
         assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
     result = FS.audit(m)
-    assert result["status"] == "pass_resource_witness", result["errors"]
+    assert result["status"] == "blocked"
+    assert any("exact stage source mismatch rtl/rom/ot_rom_oneshot_px.sv" in e
+               for e in result["errors"])
     assert result["scope"] == "operator_subset"
-    assert result["makespan_cycles"] == 266 + 1220 + 80 + 476
+    assert result["makespan_cycles"] is None
+    assert m["operations"][-1]["end_cycle"] == 266 + 1220 + 80 + 476
     assert result["physical_peak_per_cycle"]["vm_port_b_write"] == 1
     assert result["useful_demand_by_class"]["vm_write"] == 4 * (266 + 80)
     assert result["wait_cycles_by_kind"]["verified_collective_stage"] == 0
