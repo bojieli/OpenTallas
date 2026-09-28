@@ -32,6 +32,13 @@
     "rtl_replicated_keys": 36733952,
     "window": 33792
   },
+  "region_arithmetic": {
+    "current_kv_sector_formula_uses_32_bit_integer": true,
+    "unpacked_example_exceeds_32_bit": true,
+    "unpacked_example_kv_aw": 26,
+    "unpacked_example_users": 866,
+    "unpacked_example_words": 58116276224
+  },
   "schema": "v41_hbm_region_preflight_v1",
   "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; current replicated index-key writer; no throughput claim",
   "source_sha256": {

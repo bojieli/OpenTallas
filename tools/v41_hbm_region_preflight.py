@@ -31,6 +31,7 @@ def build() -> dict:
     bridge = source_text[SOURCES[4]]
     budget = source_text[SOURCES[0]]
     controller = source_text[SOURCES[6]]
+    die = source_text[SOURCES[5]]
     assert re.search(r"assign\s+w_stack_mask\s*=\s*4'b1111", writer)
     assert re.search(r"for\s*\(s=0;s<4;s=s\+1\)", bridge)
     assert "(rows * CKV_ROW_B + rows * IDX_KEY_B) / 4" in budget
@@ -39,6 +40,7 @@ def build() -> dict:
     assert "ik_off=wbase-cfg_ik_base" in scanner
     assert "user_base" not in writer and "user_base" not in scanner
     assert "HDR_USER = 32" in controller and "HDR_POS = 40, HDR_IDX = 56" in controller
+    assert "localparam integer KV_SECTORS  = 2 * ((KV_USERS << KV_AW) / 4)" in die
 
     tech = json.loads(source_text[SOURCES[1]])
     stack_bytes = int(tech["hbm"]["hbm3e"]["stack_capacity_bytes"]["value"])
@@ -96,6 +98,11 @@ def build() -> dict:
                      "max_replicated_users_with_28_bit_key_window": (1 << 28) // key_sectors_per_user},
         "isolation": {"multiuser_key_address_isolation": False,
                       "reason": "writer and scanner derive sectors from layer-local bases with no user slice offset"},
+        "region_arithmetic": {"current_kv_sector_formula_uses_32_bit_integer": True,
+                              "unpacked_example_users": users_model,
+                              "unpacked_example_kv_aw": 26,
+                              "unpacked_example_words": users_model * (1 << 26),
+                              "unpacked_example_exceeds_32_bit": users_model * (1 << 26) >= (1 << 32)},
         "widths": {"user_id_bits_for_model_users": user_id_bits_model,
                    "user_id_bits_for_current_layout_users": user_id_bits_rtl,
                    "current_controller_user_id_bits": 8,
