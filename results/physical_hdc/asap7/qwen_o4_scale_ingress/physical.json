@@ -9,6 +9,8 @@
       "macro_count": 0,
       "movable_area_um2": 4575.918,
       "placement_total_area_um2": 4575.918,
+      "placement_check": "PASS",
+      "placement_check_log_sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
       "reset_recovery_slack_ps_grt": -7680.35,
       "source": "external staged local 256-bit HBM scale word; controller PHY stack and prefetch outside cut",
       "source_to_capture_setup_slack_ps_placement": 425.47
@@ -22,6 +24,8 @@
       "macro_count": 1,
       "movable_area_um2": 4577.274,
       "placement_total_area_um2": 19206.773,
+      "placement_check": "FAIL DPL-0033: analytical ROM macro overlaps one flip-flop and fails padding",
+      "placement_check_log_sha256": "b17018ea02f4e877835da2f26c6fbf8333185ba240a639aacfd56a93ef40bf7e",
       "reset_recovery_slack_ps_grt": -9724.31,
       "source": "one analytical 8192x266 synchronous ROM macro; 256 useful output bits",
       "source_to_capture_setup_slack_ps_placement": -314.67
@@ -59,6 +63,7 @@
   ],
   "interpretation": [
     "same downstream arithmetic, clock, die outline, input/output constraints",
+    "direct ROM global-route database fails check_placement and cannot support a legal routed timing claim",
     "ROM macro output capture and common enable/reset fanout do not meet 0.92 ns in the direct unrepaired cut",
     "HBM boundary excludes local HBM supply timing, area and power, so these figures do not compare whole chips",
     "one 8192-word ROM macro per group is not a validated full-die scale mapping; the active layer0 range is sparse and needs remap or multi-bank proof",
@@ -80,6 +85,7 @@
   "scope_correction": "The 256-bit source-capture register is a proposed wrapper boundary; production ot_hdc_matvec receives synchronous scale_q directly into fmul. This cut is not a measured production core path. A future added stage requires +1 cycle tag/valid/writeback alignment and bit-exact verification.",
   "source_base": "ae5277388ea1fa16380ef0472396f8d317fb925a",
   "source_sha256": {
+    "physical/qwen_o4_scale_ingress/check_direct_placement.tcl": "d577fc8721ae666b9a68a8c4ab46d7a91e1ec3c229e0e5d65ee6eaa4b1fd1cea",
     "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.lef": "d193a5f43f7ff2ecd56adf29ba388dfcf3d4d7ff8e8392da78fea78eb81015a5",
     "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_bb.v": "ef399648cd311941a2c09fbda401e95e62d8bef0f89bdc5101aa849fae7ad01d",
     "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_tt.lib": "a7ce0e45d5d181b6365823963792f0234fe7d3b9414ea212debef51603a7cf92",

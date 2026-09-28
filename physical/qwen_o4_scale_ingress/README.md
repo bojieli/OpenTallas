@@ -40,7 +40,15 @@ signoff. This direct flow has no PDN, DFT, antenna repair or formal
 equivalence.
 
 The source-pinned direct cut reached placement, clock-tree synthesis and
-global routing in both arms. At the 0.92 ns target, the ROM source-to-capture
+global routing in both arms. A subsequent `check_placement -verbose` on the
+saved global-route databases found that the direct ROM database is **illegal**:
+the analytical macro overlaps one flip-flop and fails macro padding. The
+direct HBM database passes the check. The direct ROM route is therefore a
+diagnostic only, even if its eventual detailed route reports fewer violations.
+The registered follow-up in `REGISTERED.md` uses a macro-edge blockage and
+passes the same placement check in both arms.
+
+At the 0.92 ns target, the ROM source-to-capture
 path is **−314.67 ps** with placement parasitics; the staged HBM boundary is
 **+425.47 ps** under its stated 184 ps input arrival. Those figures isolate
 the scale source. The overall cut is further blocked by the group-read enable:
