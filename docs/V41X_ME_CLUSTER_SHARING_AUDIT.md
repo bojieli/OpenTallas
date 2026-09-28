@@ -100,9 +100,11 @@ The direct one-stage converter and direct macro store have not closed a
 0.92-ns route. Their source-pinned route records describe the actual setup
 and hold failures. The two-stage converter's completed global route has
 setup +8.4 ps and hold +15.8 ps at 0.92 ns. Its detailed route was resumed
-on a host with more memory and completed with zero DRC and antenna
-violations; final SPEF extraction is complete, while routed setup and hold
-analysis remains active. The stage-bound continuation record is
+on a host with more memory and passed final routed STA at 0.92 ns:
+setup +87.3 ps, hold +22.3 ps, zero setup/hold/DRC/antenna violations,
+and 1.201 GHz reported fmax. This is the standalone converter with a
+0.35–0.50 ns input-arrival assumption, not a measured VM-macro arrival
+or combined cluster route. The source-pinned final record is
 `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2/route_continuation.json`;
 the earlier local interrupted-flow record remains at
 `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2/physical.json`.
