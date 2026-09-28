@@ -50,13 +50,19 @@ timing at 0.92 ns by 0.807 ns
 This moves the word selection upstream to one arriving word per cycle. It
 still needs the collective DMA's exact physical-bank-order implementation and
 an integrated macro route before timing credit.
-At 10% core utilization the standalone static-bank boundary has **4,209 I/O
-pins but only 3,604 pin positions**; ORFS pin placement requires a perimeter
-of at least 404.06 µm rather than its 351.99 µm trial. A 7% utilization
-floorplan is being tested to provide that perimeter
+At 10% core utilization the standalone static-bank boundary had **4,209 I/O
+pins but only 3,604 pin positions**; ORFS pin placement required a perimeter
+of at least 404.06 µm rather than its 351.99 µm trial
 ([pin-placement failure record](../results/physical_abi3/asap7/chip/v41_vm_gw4_bank_order/physical.json)).
-This is an interface
-partition and floorplan constraint, not an integrated die pin budget.
+At 7% utilization the boundary completed standalone ASAP7 place and route:
+4,209 pins fitted in 4,288 sites, **+0.426 ns routed setup WNS** and
+**+0.077 ns hold WNS** at 0.92 ns, 94,248 µm routed wire, 64,423 vias,
+zero DRC and antenna violations, and zero signal-integrity violations
+([routed full-width boundary](../results/physical_abi3/asap7/chip/v41_vm_gw4_bank_order/physical_u7.json)).
+This is a 4 × 512-bit *register boundary*, so it proves the four-bank data
+width can be carried through this isolated cut. The collective transpose and
+the SRAM macro pins remain outside it. The low-utilization floorplan reflects
+the artificial all-bus-I/O partition, not an integrated die pin budget.
 
 ## SRAM abstract and capacity
 
