@@ -81,6 +81,9 @@ jobs:
       - name: Prose figures match their artifacts
         run: make check-figures
 
+      - name: Final-number readiness report matches current evidence
+        run: make check-final-number-readiness
+
       - name: Evidence grades
         run: make check-evidence-grades
 

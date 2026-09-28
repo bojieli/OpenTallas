@@ -82,7 +82,10 @@ check-prose-coverage:
 check-headline-bundle:
 	python3 tools/headline_bundle.py --check
 
-check-figures: check-evidence-grades check-prose-figures check-prose-coverage check-headline-bundle
+check-final-number-readiness:
+	python3 tools/final_number_readiness.py --check
+
+check-figures: check-evidence-grades check-prose-figures check-prose-coverage check-headline-bundle check-final-number-readiness
 
 # Speculative decoding as an ADDITIVE layer over the roofline artifacts that
 # already exist.  `tools/run_speculative_roofline.py` READS

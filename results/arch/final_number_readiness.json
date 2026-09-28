@@ -1,0 +1,138 @@
+{
+  "claim_boundary": "a passed reference or reduced gate does not imply chip throughput",
+  "gates": {
+    "qwen_fullshape_hbm": {
+      "evidence": "results/rtl/qwen_o4_fullshape_hbm_matched.json",
+      "observed": "fullshape matched A/B and routed weight supply missing",
+      "required": "same full-shape program/images, all weights in HBM, exact state, sustained controller and route",
+      "status": "blocked"
+    },
+    "qwen_fullshape_rom": {
+      "evidence": "results/rtl/hdc_qwen_int8_tp2_ar.json",
+      "observed": {
+        "fullshape_ar": "missing",
+        "fullshape_dflash": "missing",
+        "reduced_tp2": "pass"
+      },
+      "required": "real-checkpoint two-die INT8 full-shape bit-exact AR and DFlash token records",
+      "status": "blocked"
+    },
+    "v41_collective_model_binding": {
+      "evidence": "results/rtl/v41_collective_depth_campaign.json; results/arch/v41_tp_rowsplit_measured_reprice.json",
+      "observed": {
+        "act_one_write_port_floor": 1064,
+        "exact_stage_tails": {
+          "act": 1220,
+          "y": 476
+        },
+        "model_tails": {
+          "act": 1220,
+          "y": 476
+        }
+      },
+      "required": "model binds both exact adopted-width tails; any new bank/packing result must reprice from its own gate",
+      "status": "pass"
+    },
+    "v41_executable_weight_program": {
+      "evidence": "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json; results/rtl/hdc_v41x_fullshape_weight_rtl_preflight.json; results/rtl/hdc_v41x_fullshape_program_bind.json",
+      "observed": {
+        "program_binding": "missing",
+        "rtl_geometry_gaps": {
+          "he_kcmax": {
+            "current": 128,
+            "required": 2560
+          },
+          "me_bank_aw": {
+            "current": 17,
+            "required": 18
+          },
+          "me_kmax": {
+            "current": 512,
+            "required": 5120
+          }
+        },
+        "token_runnable": false
+      },
+      "required": "same full-shape ISA, packed images, ROM address units and RTL geometry; exact layer replay",
+      "status": "blocked"
+    },
+    "v41_full_die_route": {
+      "evidence": "results/physical_abi3/asap7/chip/v41x_full_die/physical.json",
+      "observed": {
+        "flow_completed": false,
+        "fmax_hz": null
+      },
+      "required": "full adopted die detailed route with extracted setup/hold/DRC/power and >=1.087 GHz",
+      "status": "blocked"
+    },
+    "v41_fullshape_hbm_matched": {
+      "evidence": "results/rtl/hdc_v41x_fullshape_hbm_matched.json",
+      "observed": "missing",
+      "required": "same full-shape program and images, all weight families sourced from shared HBM, both arms exact",
+      "status": "blocked"
+    },
+    "v41_fullshape_rom_token": {
+      "evidence": "results/rtl/hdc_v41x_fullshape_token_rtl.json",
+      "observed": "missing",
+      "required": "same checkpoint/ISA/image as golden, all 40 layers, exact terminal token/logits/KV/index and cycles",
+      "status": "blocked"
+    },
+    "v41_hbm_pin_layout": {
+      "evidence": "results/physical_abi3/asap7/chip/v41x_hbm_karb/strip_pin_placement.json",
+      "observed": {
+        "pin_placement": "pin_placement_pass",
+        "route_completed": false
+      },
+      "required": "all pseudo-channel pins placed in physical PHY windows; routing is a separate full-die gate",
+      "status": "pass"
+    },
+    "v41_index_bandwidth": {
+      "evidence": "results/rtl/hdc_v41x_idx_shard_reader_pc.json",
+      "observed": {
+        "effective_modeled_sectors_per_cycle": 103.496,
+        "measured_sectors_per_cycle": 2.153996
+      },
+      "required": "four-stack concurrent exact scan at or above the adopted effective HBM rate, with user isolation",
+      "status": "blocked"
+    },
+    "v41_rate_covers_activation_load": {
+      "evidence": "results/arch/v41_tp_rowsplit_measured_reprice.json; results/arch/v41_fullshape_load_floor.json",
+      "observed": {
+        "gather_only_ar_tok_s": 5032.84495509468,
+        "wo_a_load_floor_ar_tok_s": 3667.905330818357
+      },
+      "required": "headline rate no greater than a source-pinned critical-path load floor, or widen and remeasure the load path",
+      "status": "blocked"
+    },
+    "v41_reference_200k_1m": {
+      "evidence": "results/rtl/hdc_v41x_fullshape_golden.json",
+      "observed": {
+        "1048576": 40,
+        "200000": 40
+      },
+      "required": "40 source-pinned golden layers at both contexts (reference only)",
+      "status": "pass"
+    }
+  },
+  "schema": "opentallas.final-number-readiness.v1",
+  "source_sha256": {
+    "results/arch/v41_fullshape_load_floor.json": "53d97af165854a6fb542911d00fc687aac9b4b695adbbe5f58e42dcda244b51c",
+    "results/arch/v41_tp_rowsplit_measured_reprice.json": "3b642a904469134926f7d8c0aa9f454177c41b93e6b3c02351a21abb33e77b85",
+    "results/physical_abi3/asap7/chip/v41x_full_die/physical.json": "missing",
+    "results/physical_abi3/asap7/chip/v41x_hbm_karb/strip_pin_placement.json": "c605dc5d26471af93b12a99fa0677aa5067cc1004052f8ac71adce559cb1f64a",
+    "results/rtl/hdc_qwen_int8_tp2_ar.json": "910a716387a148622edc5786001a57f99223f98fcd20cb6fc60c4b30a58a7f3c",
+    "results/rtl/hdc_v41x_fullshape_golden.json": "1c329cf169f21eae9298c0fde71e756cdda2060de9757a20b7741b86e685859b",
+    "results/rtl/hdc_v41x_fullshape_hbm_matched.json": "missing",
+    "results/rtl/hdc_v41x_fullshape_program_bind.json": "missing",
+    "results/rtl/hdc_v41x_fullshape_token_rtl.json": "missing",
+    "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
+    "results/rtl/hdc_v41x_fullshape_weight_rtl_preflight.json": "8a45de03b920043fc8ebaee636c942543570ce986f293012b98b9cd08d4b6429",
+    "results/rtl/hdc_v41x_idx_shard_reader_pc.json": "b86adbef20492be7778c5375dac13c4cfb78f8814e0568900dfd69fcb3fb1928",
+    "results/rtl/qwen_o4_fullshape_hbm_matched.json": "missing",
+    "results/rtl/qwen_o4_fullshape_tp2_ar.json": "missing",
+    "results/rtl/qwen_o4_fullshape_tp2_dflash.json": "missing",
+    "results/rtl/v41_collective_depth_campaign.json": "2c99155903830e712f1ca283a681dbecc464eadfac45960a8b577c499d887bd8",
+    "tools/final_number_readiness.py": "cdd04252919b6582c97e014bc3b05453884006b339d3e9a240c0597e46296d36"
+  },
+  "terminal_ready": false
+}
