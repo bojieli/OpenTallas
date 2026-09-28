@@ -416,6 +416,7 @@ def run(a):
     a.part.parent.mkdir(parents=True, exist_ok=True)
     a.part.write_text(json.dumps(dict(shard=a.shard, git_head=git_head(), source_sha256=source_sha256(),
                                       cases=res)) + "\n")
+    shutil.rmtree(exe.parent, ignore_errors=True)        # the executable is not evidence (disk)
     print(f"shard {a.shard}: {len(res)} cases, all pass {all(r['passed'] for r in res)}")
 
 
