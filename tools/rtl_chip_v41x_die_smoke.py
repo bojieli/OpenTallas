@@ -56,6 +56,8 @@ KVTB = ROOT / "rtl/test/tb_chip_v41x_kv_prefetch.sv"
 KVTB_SOURCES = [ROOT / p for p in ("rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv", "rtl/hdc/kv/ot_hdc_hbm_model.sv",
                                    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
                                    "rtl/chip/ot_chip_v41x_kv_prefetch.sv")]
+KV_GROUP_SOURCES = [ROOT / p for p in ("rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
+                                      "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv")]
 TOOLS_ROOT = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/opentallas-tools"))
 VERILATOR = os.environ.get("OT_VERILATOR", str(TOOLS_ROOT / "verilator-5.050/bin/verilator"))
 YOSYS = os.environ.get("OT_YOSYS", str(TOOLS_ROOT / "yosys-0.68/bin/yosys"))
@@ -207,8 +209,7 @@ def kvtest(scratch: Path, pipe_out: bool = False, group4: bool = False) -> dict:
            "-Wno-BLKSEQ", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_kv_prefetch", "-Mdir", str(obj),
            *(["-DHDC_KARB_GROUP4"] if group4 else (["-DHDC_KARB_PIPE_OUT"] if pipe_out else [])),
            *map(str, KVTB_SOURCES),
-           *([str(ROOT / "rtl/chip/ot_chip_v41x_hbm_karb_group4.sv"),
-              str(ROOT / "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv")] if group4 else []),
+           *map(str, KV_GROUP_SOURCES if group4 else []),
            str(KVTB), "-j", "8"]
     b = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if b.returncode:
@@ -356,7 +357,8 @@ def main() -> int:
         rec["reference_comparison"] = compare(rec["smoke"], a.reference)
     ok = {k: rec[k]["pass"] if k != "smoke" else rec[k]["status"] == "pass"
           for k in ("lint", "synth", "kvtest", "smoke") if k in rec}
-    srcs = sorted(set(sources("rtl") + sources("dpi", build=True) + KVTB_SOURCES + [KVTB]), key=str)
+    srcs = sorted(set(sources("rtl") + sources("dpi", build=True) + KVTB_SOURCES +
+                      (KV_GROUP_SOURCES if a.kv_group4 else []) + [KVTB]), key=str)
     rec.update({
         "schema": "opentallas.rtl.hdc_v41x_die_top_smoke.v1",
         "tops": {"die": "rtl/chip/ot_chip_v41x_die.sv", "tile": "rtl/chip/ot_chip_v41x_tile.sv"},
