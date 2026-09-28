@@ -147,13 +147,20 @@ and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
 `test_v41x_die_pnr` checks every port width, the LEF pin count and window
 alignment. Its assumed boundary timing does not measure an HBM3E controller or
 PHY. The previous one-request-channel macro remains incompatible.
+This abstract and the current strip use 28-bit K sector addresses, as in the
+reduced die smoke. The full packed-KV placement needs 30 sector-address bits;
+the full-mode die hookup and a separately regenerated
+PHY view must be checked before this boundary supports the shipped context.
 
 The same campaign builds a reduced-scale physical surrogate of the die:
 four adopted K arbiters and the adopted KV prefetch, four placed HBM interface
 abstracts, four connected physical tiles, 44 tile blockages, and registered
 spine-to-edge trunks. The tile uses the real block-dot/BF16 lane-group RTL and
-compiled ROM/SRAM macro views. Its one-bank ROM depth and broadcast credit
-path are physical study stand-ins. The die's synthetic sources, key streamer,
+compiled ROM/SRAM macro views. At `NQ=2`, its 16 ROM macros hold 4.156 MiB of
+logical weights. Dividing the die ROM budget evenly across 48 tiles
+gives 53.92 MiB per tile (decimal GB basis), 12.97 times that case's ROM.
+Its one-bank depth and broadcast credit path are physical study stand-ins.
+The die's synthetic sources, key streamer,
 collective and link abstracts cannot validate an exact token or full-shape
 capacity. The die case also uses one-quarter linear dimensions to bound the
 route experiment. A routed result from this case will characterize those
