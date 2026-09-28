@@ -3,7 +3,7 @@
   "status": "pass",
   "banked_activation_store": false,
   "macro_activation_store": false,
-  "claim_scope": "TP4 rank-0 layer-0 wo_a groups 0 and 1, first 16 of 1024 rows per group, bit-exact raw FP32 ME outputs against checkpoint golden. Uses a 384 KiB four-bank VM macro slice, bank-major two-stage converter and input-registered 16-macro SRAM; VM contents are initialized from the checkpoint before timed service. No full VM/controller, full-layer or chip-throughput claim.",
+  "claim_scope": "TP4 rank-0 layer-0 wo_a groups 0 and 1, first 16 of 1024 rows per group, bit-exact raw FP32 ME outputs against checkpoint golden. Uses a 384 KiB four-bank VM macro slice, bank-major two-stage converter and input-registered eight-macro MP1 SRAM; VM contents are initialized from the checkpoint before timed service. No full VM/controller, full-layer or chip-throughput claim.",
   "rows_per_group": 16,
   "exact_rows": 32,
   "bank_read_cycles": 2084,
@@ -63,7 +63,7 @@
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
     "rtl/test/tb_hdc_v41x_fullshape_woa_vmread_exact.sv": "b5bc864479f487a08422ebc1733139cfd1fb280275778c433eed39a3b40597fe",
     "tools/rtl_hdc_v41x_fullshape_woa_exact.py": "16bff388cf3c8ef515d7221e2a3f0140723ced7d300db08957091ac2059dfcaf",
-    "tools/rtl_hdc_v41x_fullshape_woa_vmread_exact.py": "f17365b6e40a66b09020af4acf8326e558124b0c99be4c32621d73568d7b4c64"
+    "tools/rtl_hdc_v41x_fullshape_woa_vmread_exact.py": "5ecff71de0ea0345edb2eec1287a625a52f0b7124dc744ab35826d954c66d72c"
   },
   "converter_pipeline_cycles": 2,
   "sram_input_register_cycles": 1,

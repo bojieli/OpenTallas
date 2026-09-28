@@ -25,7 +25,7 @@ def main():
     d['converter_pipeline_cycles']=2
     d['sram_input_register_cycles']=1
     d['claim_scope']=d['claim_scope'].replace('No full-layer or chip-throughput claim.',
-        'Uses bank-major 64-wide two-stage converter and input-registered 16-macro SRAM; no VM controller, full-layer or chip-throughput claim.')
+        'Uses bank-major 64-wide two-stage converter and input-registered eight-macro MP1 SRAM; no VM controller, full-layer or chip-throughput claim.')
     d['source_sha256'][str(Path(__file__).relative_to(ROOT))]=base.sha(Path(__file__))
     a.output.write_text(json.dumps(d,indent=2)+'\n')
     print(json.dumps({k:d[k] for k in ('status','exact_rows','simulation_cycles','preload_issue_cycles','converter_pipeline_cycles','sram_input_register_cycles')}))

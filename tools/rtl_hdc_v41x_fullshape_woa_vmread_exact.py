@@ -41,7 +41,7 @@ def main():
     d['vm_checked_words']=512
     d['memory_cap_bytes']=4*1024**3
     d['claim_scope']=d['claim_scope'].replace('No full-layer or chip-throughput claim.',
-        'Uses a 384 KiB four-bank VM macro slice, bank-major two-stage converter and input-registered 16-macro SRAM; VM contents are initialized from the checkpoint before timed service. No full VM/controller, full-layer or chip-throughput claim.')
+        'Uses a 384 KiB four-bank VM macro slice, bank-major two-stage converter and input-registered eight-macro MP1 SRAM; VM contents are initialized from the checkpoint before timed service. No full VM/controller, full-layer or chip-throughput claim.')
     d['source_sha256'][str(Path(__file__).relative_to(ROOT))]=base.sha(Path(__file__))
     a.output.write_text(json.dumps(d,indent=2)+'\n')
     print(json.dumps({k:d[k] for k in ('status','exact_rows','simulation_cycles','preload_issue_cycles','converter_pipeline_cycles','sram_input_register_cycles','vm_read_pipeline_cycles','vm_read_issue_beats')}))
