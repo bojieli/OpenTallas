@@ -49,8 +49,8 @@ def quantize_full_rows_then_partition(weight: torch.Tensor, *, die: int,
     return codes[:, die * k:(die + 1) * k].contiguous(), scales.contiguous()
 
 
-def first_layer_tp2_matrices(snapshot: Path, die: int, *, rows_per_matrix: Optional[int] = None):
-    """Stream the shipped checkpoint's layer-0 tensors into exact TP-2 W8 slices.
+def layer_tp2_matrices(snapshot: Path, layer: int, die: int, *, rows_per_matrix: Optional[int] = None):
+    """Stream one shipped checkpoint layer into exact TP-2 W8 slices.
 
     ``rows_per_matrix`` limits each source matrix to its first complete rows
     for a quick image preflight; an unrestricted call emits the entire layer.
@@ -58,6 +58,8 @@ def first_layer_tp2_matrices(snapshot: Path, die: int, *, rows_per_matrix: Optio
     mapping to ROM engine words belongs to the shipped-shape program emitter.
     """
     from safetensors import safe_open
+    if not 0 <= layer < 36 or die not in (0, 1):
+        raise ValueError('shipped layer or TP die out of range')
     snapshot = Path(snapshot)
     idx = json.loads((snapshot / "model.safetensors.index.json").read_text())["weight_map"]
 
@@ -65,7 +67,7 @@ def first_layer_tp2_matrices(snapshot: Path, die: int, *, rows_per_matrix: Optio
         with safe_open(str(snapshot / idx[key]), framework="pt", device="cpu") as sf:
             return sf.get_tensor(key)
 
-    p = "model.layers.0."
+    p = f"model.layers.{layer}."
     norms = {"input": get(p + "input_layernorm.weight"),
              "post": get(p + "post_attention_layernorm.weight")}
     specs = (("q", "self_attn.q_proj.weight", "rows", "input"),
@@ -109,6 +111,39 @@ def first_layer_tp2_matrices(snapshot: Path, die: int, *, rows_per_matrix: Optio
                              selected_rows=selected_rows, tp_axis=axis,
                              source_rows_sha256=source_hash, norm_sha256=norm_hash)
     return result
+
+
+def first_layer_tp2_matrices(snapshot: Path, die: int, *, rows_per_matrix: Optional[int] = None):
+    """Backward-compatible layer-0 source for the reduced/shipped audit."""
+    return layer_tp2_matrices(snapshot, 0, die, rows_per_matrix=rows_per_matrix)
+
+
+def shipped_vocab_rows(snapshot: Path, kind: str, *, start: int, count: int, die: Optional[int] = None):
+    """Quantize a bounded embedding or TP2 lm_head row window from the lock.
+
+    Rows are independent under W8, so consecutive windows compose into the
+    complete shipped image without changing any code or BF16 row scale.
+    ``start`` is a local die row for lm_head and a global token for embedding.
+    """
+    from safetensors import safe_open
+    if kind not in ('embedding', 'lm_head') or start < 0 or count < 1:
+        raise ValueError('invalid vocabulary image window')
+    if kind == 'lm_head':
+        if die not in (0, 1) or start + count > 75968:
+            raise ValueError('lm_head TP2 window exceeds die vocabulary slice')
+        key, global_start = 'lm_head.weight', die * 75968 + start
+    else:
+        if die is not None or start + count > 151936:
+            raise ValueError('embedding window exceeds global vocabulary')
+        key, global_start = 'model.embed_tokens.weight', start
+    snapshot = Path(snapshot)
+    index = json.loads((snapshot / 'model.safetensors.index.json').read_text())['weight_map']
+    with safe_open(str(snapshot / index[key]), framework='pt', device='cpu') as sf:
+        rows = sf.get_slice(key)[global_start:global_start + count]
+    codes, scales, _ = quantize_w8(rows.float())
+    return {'codes': codes.contiguous(), 'scales': scales.contiguous(),
+            'source': key, 'global_start': global_start, 'count': count,
+            'kind': kind, 'die': die}
 
 
 def write_first_layer_tp2_images(snapshot: Path, out: Path, *, die: int,

@@ -38,6 +38,9 @@ module ot_rom_tp_seq #(
     parameter integer DAW  = 6,
     parameter integer FW   = 512,
     parameter integer TAGW = 32,
+    // Qwen full-vocabulary descriptors extend row0 with reserved bits
+    // [19:18]; the existing 64-bit descriptor shape is unchanged.
+    parameter integer QWEN_FULLSHAPE = 0,
     parameter integer RB   = (N > 1) ? $clog2(N) : 1
 ) (
     input  wire              clk,
@@ -151,7 +154,9 @@ module ot_rom_tp_seq #(
                 S_DESC: begin desc_re <= 1'b1; desc_addr <= seg; st <= S_DLAT; end
                 S_DLAT: if (!desc_re) begin
                     kind <= desc_q[1:0]; vw <= desc_q[2 +: 8]; nw <= desc_q[10 +: 8];
-                    prog_base <= desc_q[32 +: PAW]; row0 <= desc_q[48 +: NW];
+                    prog_base <= desc_q[32 +: PAW];
+                    row0 <= (QWEN_FULLSHAPE != 0) ?
+                            ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];
                     st <= S_RUN;
                 end
                 S_RUN: st <= S_CWAIT;              // the core samples core_start on this edge

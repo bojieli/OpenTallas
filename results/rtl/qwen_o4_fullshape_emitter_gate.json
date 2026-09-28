@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.qwen-o4-fullshape-emitter-gate.v1",
+  "status": "exact_sampled_real_checkpoint_images",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+  "sampled_layer_images": [
+    {
+      "layer": 0,
+      "die": 0,
+      "codes_checked": 229376,
+      "manifest_sha256": "37cbea2a5ac39e85370f637f4f00d838e421ab86168d1d89348eb50929885f8a"
+    },
+    {
+      "layer": 0,
+      "die": 1,
+      "codes_checked": 229376,
+      "manifest_sha256": "cfeed5851c63c84c8c20c0ea2dd3461f169f2c87257e954bf2acba1d324d0a58"
+    },
+    {
+      "layer": 35,
+      "die": 0,
+      "codes_checked": 229376,
+      "manifest_sha256": "4153194ba5d2e26fdbe47d77c919f184d502034f53817b50ba8f6b3822d26f30"
+    }
+  ],
+  "vocabulary_windows": [
+    {
+      "kind": "embedding",
+      "global_start": 0,
+      "rows": 1,
+      "manifest_sha256": "ca76a9d171b9eb4fb5b7c0ee7b19cde48a29c2f6cba2507f36278f4c8d1b2a6f",
+      "image_sha256": {
+        "embedding_int8_window.hex": "7f761c62322aa11053f44b6f9201bd09a74335c1cb5d97a7c1e91f7778567885",
+        "embedding_scale_bf16_window.hex": "ba49350a5d87e1d47d88b4f08f96b5fe5e46c7da979b210e6ab8c77cb7ff2502",
+        "vm_x_fp32.hex": "11f5ae1f3a68ddad9e459b113f35b3a13625932e41533aab31f44ee804dcc948"
+      }
+    },
+    {
+      "kind": "embedding",
+      "global_start": 151935,
+      "rows": 1,
+      "manifest_sha256": "1edc9486a97354725384bb55ec7852d113bb36c8614f287d3691f823248f950d",
+      "image_sha256": {
+        "embedding_int8_window.hex": "754bc7d910c9e668c62015e6c9d256bee58ae2efa124154b2b8f070f7ec8491a",
+        "embedding_scale_bf16_window.hex": "c272a91211866a59ef5fc57033af483dfa07f64e3cf1dbe15e4426f3614d226f",
+        "vm_x_fp32.hex": "0492d839419838ef4b3912b098cc4a06257c0ebaed554039ca9aac294cd7616e"
+      }
+    },
+    {
+      "kind": "lm_head",
+      "global_start": 151935,
+      "rows": 1,
+      "manifest_sha256": "d7c1453137cb904bfa5c09b51f99d040afc11c26d799b69fcc37cee03bd490a0",
+      "image_sha256": {
+        "lm_head_int8_window.hex": "ddb2c21ca8c7ab52926c0cb22022ab4abf01e1fb994c24ed13011ee174d7a86b",
+        "lm_head_scale_bf16_window.hex": "9863e356f29c07125945488b25bc9f77a295b0efb2b25893de97a5a4d562c7c1"
+      }
+    }
+  ],
+  "total_code_addresses_checked": 688128,
+  "claim_boundary": "Sampled shipped layer ROM/ISA and vocabulary images only; no RTL layer or full token pass."
+}

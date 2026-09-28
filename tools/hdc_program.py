@@ -181,7 +181,7 @@ class Layout:
 
 
 # -- program -----------------------------------------------------------------------
-def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
+def build_program(lay, layers=None, embed=True, head=True, wchunk=None, scale_bases=False):
     """The decode program; with `layers`/`embed`/`head` one pipeline stage of it
     (layer-per-package ROM array): a stage without the embedding starts from
     the hidden state X delivered by the previous package.
@@ -199,6 +199,7 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
     def me(mat, x, out, rnd=True, amax=False, oen=True, reads=(), writes=(), **over):
         f = dict(unit=I.UNIT_ME, me_nout=mat["n"], me_tiles=mat["tiles"], me_k=mat["k"], me_wsrc=0,
                  me_wbase=mat["base"], me_ts=mat["k"] * IL, me_ks=IL, me_js=1, me_xbase=x, me_xks=1,
+                 me_wcs=mat.get("scale_base", mat["base"]) if scale_bases else 0,
                  me_round=int(rnd), me_obase=out // W, me_ots=IL, me_ojs=1, me_oen=int(oen),
                  me_amax=int(amax), me_split=mat.get("split", 1).bit_length() - 1,
                  me_xcs=mat["k"])
@@ -213,6 +214,9 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
                 c = dict(f, me_tiles=min(rc, f["me_tiles"] - r0), me_wbase=f["me_wbase"] + r0 * rw,
                          me_obase=f["me_obase"] + r0 * f["me_ots"] * per_round,
                          me_nout=f["me_nout"] - r0 * per_round * W * IL)
+                if scale_bases and not f["me_wsrc"]:
+                    c["me_wcs"] = f["me_wcs"] + r0 * per_round * IL
+                    c["me_nout"] = min(c["me_nout"], c["me_tiles"] * per_round * W * IL)
                 if f["me_amax"]:
                     c["me_row0"] = r0 * per_round * W * IL
                     if r0:
@@ -275,7 +279,7 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
         L, part = item if isinstance(item, tuple) else (item, "both")
         if part in ("both", "attn"):
             nh = NH + KV
-            fold = G.NORM_FOLD and lay.tp == 1
+            fold = getattr(lay, 'norm_fold', G.NORM_FOLD and lay.tp == 1)
             if fold:
                 # the norm weight is in the projection; 1/rms (RX) is formed beside it
                 me(lay.mat[(L, "qkv")], VM["X"], VM["QKV"], reads={"X"}, writes={"QKVqk", "QKVv"})
@@ -385,7 +389,7 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
         if part in ("both", "mlp"):
             FF = lay.FF
             tb = lay.GUB
-            if G.NORM_FOLD and lay.tp == 1:
+            if getattr(lay, 'norm_fold', G.NORM_FOLD and lay.tp == 1):
                 me(lay.mat[(L, "gu")], VM["X"], VM["GU"], reads={"X"}, writes={"GUall"})
                 rsqrt_rx(H)
                 # gate/up x r in place (one pass, chasing the projection), then SiLU per tile
@@ -395,7 +399,7 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
             else:
                 rmsnorm("X", H, lay.cb[(L, "post")], "H")
                 me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(FF // tb)})
-            if G.NORM_FOLD and lay.tp == 1:
+            if getattr(lay, 'norm_fold', G.NORM_FOLD and lay.tp == 1):
                 # one fused SiLU*up op over every tile pair (a row per tile): the
                 # scaled gate/up are all written before it starts
                 su(su_nout=FF // tb, su_nin=tb, a_base=VM["GU"], a_so=2 * tb, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0),
