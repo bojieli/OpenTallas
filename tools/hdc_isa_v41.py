@@ -116,6 +116,16 @@ FULL_N = 21             # 1,048,576 context rows and per-die scans
 FULL_XU_K = 12          # 2,048 router candidates
 FULL_D = 6              # 28 reduced DYN values + shipped-shape selectors
 
+# Software-only full-shape collective contract. Die request/response wiring is
+# defined separately with the die owner before these fields drive RTL.
+UNIT_COLL = 6
+COLL_ALL_REDUCE_SUM, COLL_ALL_GATHER, COLL_TOPK_MERGE, COLL_ARGMAX_MERGE = range(4)
+FULL_COLL_FIELDS = [
+    ("coll_op", 2), ("coll_src", FULL_A), ("coll_dst", FULL_A),
+    ("coll_n", FULL_N), ("coll_k", FULL_XU_K), ("coll_ibase", FULL_A),
+    ("coll_seq", 8), ("coll_rnd", 1),
+]
+
 A = 24   # address / stride width
 N = 16   # count width
 D = 5    # DYN select width
@@ -231,10 +241,11 @@ def fields_for(*, full_shape=False):
         return FIELDS
     # Preserve the reduced instruction contract. The full-shape image is a
     # separate, wider profile so existing RTL images keep their exact offsets.
-    return [(name, FULL_XU_K if name == "xu_k" else
+    widened = [(name, FULL_XU_K if name == "xu_k" else
              FULL_A if width == A else FULL_N if width == N else
              FULL_D if width == D else width)
             for name, width in FIELDS]
+    return widened + FULL_COLL_FIELDS
 
 
 def layout_for(*, full_shape=False):

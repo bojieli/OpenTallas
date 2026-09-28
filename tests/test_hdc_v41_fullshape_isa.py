@@ -45,3 +45,22 @@ def test_full_shape_dynamic_values_fit_address_space_at_both_contexts():
         assert values["NC1"] == position + 1
         assert values["SC1"] == (position + 4) // 4
         assert max(values.values()) < 1 << isa.FULL_A
+
+
+def test_full_shape_collective_fields_round_trip():
+    cases = (
+        (isa.COLL_ALL_REDUCE_SUM, 5_120, 0, 1),
+        (isa.COLL_ALL_GATHER, 1_280, 0, 0),
+        (isa.COLL_TOPK_MERGE, 2_048, 2_048, 0),
+        (isa.COLL_ARGMAX_MERGE, 1, 0, 0),
+    )
+    for seq, (op, n, k, rnd) in enumerate(cases):
+        fields = dict(unit=isa.UNIT_COLL, coll_op=op,
+                      coll_src=(1 << 19) + seq * 8192,
+                      coll_dst=(1 << 20) + seq * 8192,
+                      coll_n=n, coll_k=k, coll_ibase=(1 << 19) + 4096,
+                      coll_seq=seq, coll_rnd=rnd)
+        decoded = isa.decode(isa.encode(full_shape=True, **fields), full_shape=True)
+        assert {name: decoded[name] for name in fields} == fields
+    assert "coll_op" not in isa.LAYOUT
+    assert max(offset + width for offset, width in isa.FULL_LAYOUT.values()) <= isa.FULL_INSTR_BITS
