@@ -84,6 +84,7 @@ module ot_hdc_core_vector_weight #(
     output wire [AW-1:0]     int8_wrom_addr,
     input  wire [G*W*8-1:0] int8_wrom_q,
     output wire              scale_re,
+    output wire [G-1:0]      scale_gre,
     output wire [G*AW-1:0]   scale_addr,
     input  wire [G*W*16-1:0] scale_q,
     // Independent 8-bit embedding bank and one BF16 scale per token row.
@@ -429,7 +430,7 @@ module ot_hdc_core_vector_weight #(
         .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax), .i_rmax(me_rmax), .i_mbase(me_mbase),
         .mx_we(vw_mx_we), .mx_addr(vw_mx_addr), .mx_mask(vw_mx_mask), .mx_data(vw_mx_data),
         .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(me_wrom_q),
-        .scale_re(scale_re), .scale_addr(scale_addr), .scale_q(scale_q),
+        .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
         .ov(me_ov), .o_we(vw_me_we), .o_addr(vw_me_addr), .o_mask(vw_me_mask), .o_data(vw_me_data),
