@@ -22,6 +22,7 @@ def test_o4_hbm_address_and_controller_contract():
     area = gate["staging_area_sensitivity"]
     assert area["code_window_bytes_per_die"] == 512 * 98_304
     assert area["code_window_mib_per_die"] == 48
+    assert 46 < area["minimum_starting_prefetch_mib_for_unstalled_round_with_perfect_streaming"] < 47
     assert 16 < area["code_window_mm2_at_kv_buffer_density"] < 17
     assert area["status"] == "conditional_unpriced"
 

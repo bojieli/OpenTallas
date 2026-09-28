@@ -36,7 +36,7 @@
     "rtl/hdc/ot_hdc_matvec.sv": "8d2b8fe92887e1b7475ea9a31ef24dbd49d76856f7dbfd5d8af81cb802241a53",
     "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
     "tools/hdc_qwen_int8_image.py": "ce1e699514eeb80344b68e6dbdbfeee2c85bbb8d4f75bf06e672b7350b26f606",
-    "tools/qwen_o4_hbm_weight_preflight.py": "e7d3032d2cb912c5a0c5a0a579dd2e6e5c2d7448acdb355cf49583d6683df64b"
+    "tools/qwen_o4_hbm_weight_preflight.py": "2668a257a7d3bdb6b239edc1928d9a8c251092013e131dd86bf8b89314d7948c"
   },
   "matrix_traffic_per_die": [
     {
@@ -147,14 +147,17 @@
     }
   },
   "staging_area_sensitivity": {
-    "boundary": "KV-buffer density is a budget proxy only. PC-local SRAM macro area, code/scale muxes, tag RAM, wiring, power and route are not measured; do not use the iso-area HBM headline as physically closed.",
+    "boundary": "KV-buffer density is a budget proxy only. PC-local SRAM macro area, code/scale muxes, tag RAM, wiring, power and route are not measured; do not use the iso-area HBM headline as physically closed. Streaming within an uninterrupted K round saves little staging at this bandwidth. A substantially smaller buffer needs an exact FP32 accumulator continuation or a pipeline-wide stall, neither implemented.",
     "code_window_bytes_per_die": 50331648,
     "code_window_mib_per_die": 48.0,
     "code_window_mm2_at_kv_buffer_density": 16.692695319366276,
+    "core_code_bytes_per_cycle": 98304,
     "minimum_indivisible_gate_up_round_words": 512,
+    "minimum_starting_prefetch_mib_for_unstalled_round_with_perfect_streaming": 46.40001046748708,
     "proxy_kv_buffer_bytes": 19297216.0,
     "proxy_kv_buffer_mm2": 6.4,
-    "status": "conditional_unpriced"
+    "status": "conditional_unpriced",
+    "sustained_hbm_bytes_per_core_cycle_per_die": 3276.7785625864703
   },
   "status": "pass"
 }

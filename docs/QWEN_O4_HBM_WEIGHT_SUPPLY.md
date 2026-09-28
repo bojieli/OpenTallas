@@ -53,6 +53,13 @@ The source-pinned area sensitivity in
 a density proxy. The PC bank macros, code/scale muxes, response tags, wiring,
 power and route are unpriced, so the iso-area HBM comparison remains
 conditional on their physical implementation.
+Streaming weight sectors during an uninterrupted 512-cycle gate/up K round
+barely changes this bound: the modeled four-stack die bandwidth provides
+about 3,312 bytes per core cycle against 98,304 bytes consumed, so at least
+46.4 MiB must still be prefetched before the round. A much smaller buffer
+requires an exact FP32 accumulator continuation between K chunks or a
+pipeline-wide stall. Neither exists in the adopted matvec, and either must
+be bit-exact and routed before replacing the 48 MiB staging assumption.
 The source also needs an operation-drain protocol or double buffering before
 overlapping the next preload with current code and scale reads. Full-shape
 bit-exact timing and placement are therefore open.

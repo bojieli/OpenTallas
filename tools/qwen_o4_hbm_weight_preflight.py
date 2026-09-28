@@ -113,6 +113,9 @@ def evaluate() -> dict:
     # density is a proxy, not a SRAM macro or routed result.
     round_window_words = 512
     round_window_bytes = round_window_words * MATRIX_WORD_BYTES
+    round_stream_bytes_per_cycle = bw_die / clock
+    round_prefetch_bytes_min = round_window_words * max(
+        0, MATRIX_WORD_BYTES - round_stream_bytes_per_cycle)
     kv_buffer_bytes = wl["area"]["kv_prefetch_buffer_bytes"]
     kv_buffer_mm2 = wl["area"]["kv_prefetch_buffer_mm2"]
     round_window_proxy_mm2 = round_window_bytes / (kv_buffer_bytes / kv_buffer_mm2)
@@ -154,11 +157,15 @@ def evaluate() -> dict:
             "minimum_indivisible_gate_up_round_words": round_window_words,
             "code_window_bytes_per_die": round_window_bytes,
             "code_window_mib_per_die": round_window_bytes / (1024 * 1024),
+            "sustained_hbm_bytes_per_core_cycle_per_die": round_stream_bytes_per_cycle,
+            "core_code_bytes_per_cycle": MATRIX_WORD_BYTES,
+            "minimum_starting_prefetch_mib_for_unstalled_round_with_perfect_streaming":
+            round_prefetch_bytes_min / (1024 * 1024),
             "proxy_kv_buffer_bytes": kv_buffer_bytes,
             "proxy_kv_buffer_mm2": kv_buffer_mm2,
             "code_window_mm2_at_kv_buffer_density": round_window_proxy_mm2,
             "status": "conditional_unpriced",
-            "boundary": "KV-buffer density is a budget proxy only. PC-local SRAM macro area, code/scale muxes, tag RAM, wiring, power and route are not measured; do not use the iso-area HBM headline as physically closed."},
+            "boundary": "KV-buffer density is a budget proxy only. PC-local SRAM macro area, code/scale muxes, tag RAM, wiring, power and route are not measured; do not use the iso-area HBM headline as physically closed. Streaming within an uninterrupted K round saves little staging at this bandwidth. A substantially smaller buffer needs an exact FP32 accumulator continuation or a pipeline-wide stall, neither implemented."},
         "sector_roundtrip": sector_roundtrip(),
         "input_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in _PINNED},
     }
