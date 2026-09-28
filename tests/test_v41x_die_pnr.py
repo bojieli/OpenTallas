@@ -127,3 +127,13 @@ def test_karb_bank4_pipe_m9_keeps_the_same_boundary():
     assert [piped["args"][i + 1] for i, x in enumerate(piped["args"]) if x == "--param"] == ["NPC=4", "PIPE_OUT=1"]
     assert piped["nickname"] != direct["nickname"]
     assert piped["output"] != direct["output"]
+
+
+def test_collective_fifo128_physical_case_is_the_measured_engine_configuration():
+    case = pnr.CASES["collective_fifo128"]()
+    args = case["args"]
+    params = [args[i + 1] for i, x in enumerate(args) if x == "--param"]
+    assert {"N=4", "LANES=16", "DEPTH=128", "RELAY=1", "ADD_LAT=3",
+            "PAIRWISE=1", "GW=1", "FW=512", "TAGW=32"} <= set(params)
+    assert args[args.index("--clock-period-ns") + 1] == "0.92"
+    assert case["floorplan"]["scope"].startswith("one standalone")

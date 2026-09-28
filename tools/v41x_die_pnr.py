@@ -132,6 +132,31 @@ def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bo
                           "pc_pin_span_um": PC_PIN_SPAN, "scope": "local bank characterization only"}}
 
 
+def collective_fifo128() -> dict:
+    """Representative routed collective boundary with the measured depth-128 receive FIFO.
+
+    This is one engine, not the eight-engine die assembly.  The generous
+    850-um square exposes its actual standard-cell cost and 0.92-ns timing
+    before a die floorplan credits it.
+    """
+    args = ["--view", "asap7", "--top", "ot_rom_oneshot_die_px",
+            "--source", "rtl/rom/ot_rom_oneshot_px.sv",
+            "--source", "rtl/hdc/ot_hdc_fastfp.sv",
+            "--source", "rtl/proto/ot_fp32_add_rne_pipe.sv",
+            "--param", "N=4", "--param", "RANK=0", "--param", "LANES=16",
+            "--param", "DEPTH=128", "--param", "RELAY=1", "--param", "ADD_LAT=3",
+            "--param", "PAIRWISE=1", "--param", "GW=1", "--param", "FW=512",
+            "--param", "TAGW=32", "--clock-period-ns", f"{CLOCK_NS:g}",
+            "--io-delay-fraction", "0.2", "--stages", "synth,pnr",
+            "--die-area", "0", "0", "850", "850",
+            "--core-area", "20", "20", "830", "830", "--place-density", "0.60",
+            "--routing-layers", "M2", "M9"]
+    return {"args": args, "nickname": "codex_v41x_collective_fifo128",
+            "output": "results/asap7_physical/v41x_collective_fifo128/physical.json",
+            "floorplan": {"die_um": [850.0, 850.0], "core_um": [20.0, 20.0, 830.0, 830.0],
+                          "scope": "one standalone 16-lane engine; no eight-engine die placement"}}
+
+
 # ------------------------------------------------------------------------------------------------ physical tile
 MACRO_DIR = "physical/asap7_memory_macros"
 MACROS = {   # name: (width, height) um, from the compiler LEFs
@@ -504,6 +529,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_bank4": karb_bank4,
          "karb_bank4_m9": lambda: karb_bank4(high_layers=True),
          "karb_bank4_pipe_m9": lambda: karb_bank4(high_layers=True, pipe_out=True),
+         "collective_fifo128": collective_fifo128,
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),
