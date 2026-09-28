@@ -109,3 +109,16 @@ def test_combine_rejects_overlap_and_preserves_sparse_expert_flag(tmp_path: Path
     b.write_text(json.dumps(sparse))
     with pytest.raises(ValueError, match="overlap"):
         W.combine_layout_records([a, b])
+
+
+def test_me_he_bank_row_order_and_roundtrip():
+    me = np.arange(8 * 32, dtype=np.uint16).reshape(8, 32)
+    me_image, me_geom = W.pack_me_bf16(me, base_word=17)
+    W.verify_me(me_image, me, me_geom)
+    address, bank = W.bank_slot(7, 31, me_geom, 17)
+    assert me_image[address - 17, bank] == np.uint32(me[7, 31]) << 16
+    he = np.arange(3 * 64, dtype=np.uint32).reshape(3, 64)
+    he_image, he_geom = W.pack_he_fp32(he, base_word=23)
+    W.verify_he(he_image, he, he_geom)
+    assert he_geom["word_count"] == 3
+    assert he_image[2, 7, 7] == he[2, 63]

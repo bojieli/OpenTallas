@@ -6,9 +6,11 @@
   "layer": 0,
   "rank": 0,
   "source_records_sha256": {
-    "results/rtl/hdc_v41x_fullshape_wq_a_layout.json": "d502e76c015cc2d9143861c34948b713cfb74c46290a4879e581b2d7a3b197d0",
-    "results/rtl/hdc_v41x_fullshape_exp110_w1_layout.json": "558ad6c68788d9a500bbde9e56b6494ffb27264d77beb0a2164d2ea0a5f7d255",
-    "results/rtl/hdc_v41x_fullshape_attn_norm_crom.json": "734cced1cb4f46cbed75d2c9abff9fedc4f561e5fcefa03a08ef4ebd3ec50d76"
+    "results/rtl/hdc_v41x_fullshape_wq_a_layout.json": "3c942a37de793ee504508e0b22fd08e98777015626a80741e3999b75f1434b1b",
+    "results/rtl/hdc_v41x_fullshape_exp110_w1_layout.json": "ff86d2d530d355fb4fad19c43d8f956f88353e3f698b5c3f39d7017afaf880e3",
+    "results/rtl/hdc_v41x_fullshape_attn_norm_crom.json": "dae7a8fd7d181b141f22cef9cadb0d31fe6b3622577d255a3b14b00260b9a50f",
+    "results/rtl/hdc_v41x_fullshape_gate_me_layout.json": "b78339b08c857884bba0ef2b61d00a5ed5669ca164ad46e65b12f7831817c9e9",
+    "results/rtl/hdc_v41x_fullshape_hc_attn_fn_he_layout.json": "4bc08ff9a641e8187ec707c3f011a61bc06e34a55bbf2e637f76eef24a57baca"
   },
   "matrices": {
     "wq_a": {
@@ -76,6 +78,60 @@
       "expert_reserved_end_word_exclusive": 553760,
       "output_image_sha256": "b8b26fadc3bcd08ce5e95e8a731334a409bb02ed919d3c4dc39c9e192545419f",
       "output_image_bytes": 1566720
+    },
+    "gate": {
+      "engine": "me",
+      "base_word": 0,
+      "word_count": 7680,
+      "nrows": 96,
+      "ncols": 5120,
+      "format": "BF16_as_FP32_bank_word",
+      "source_weight_sha256": "4898f3acdfde40c057917f845ec8f241508015af4a1c04ed992b651e17f7f433",
+      "geometry": {
+        "chunks": 8,
+        "banks": 64,
+        "plg": 1,
+        "blocks_per_beat": 16,
+        "rows_per_group": 4,
+        "nbeat": 320,
+        "nrg": 24,
+        "word_count": 7680,
+        "useful_bank_words": 491520,
+        "padded_bank_words": 0,
+        "image_bytes": 1966080,
+        "base_word": 0,
+        "end_word_exclusive": 7680
+      },
+      "output_image_sha256": "24f3d75f7ad011a4a4128bd0bf0ea11b2ad7f4cd1774bcc14625f8610c9e5fc5",
+      "output_image_bytes": 1966080,
+      "expert_stride_words": null,
+      "expert_id_base": null,
+      "expert_ids_materialized": null,
+      "all_experts_materialized": null
+    },
+    "hc_attn_fn": {
+      "engine": "he",
+      "base_word": 0,
+      "word_count": 7680,
+      "nrows": 24,
+      "ncols": 20480,
+      "format": "FP32_HCP_8bank",
+      "source_weight_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+      "geometry": {
+        "banks": 8,
+        "hhw": 8,
+        "words_per_row": 320,
+        "word_count": 7680,
+        "image_bytes": 1966080,
+        "base_word": 0,
+        "end_word_exclusive": 7680
+      },
+      "output_image_sha256": "123553128f7cde2b5d01605e3ac70e236d0c07b02aa346044041c4078993fb15",
+      "output_image_bytes": 1966080,
+      "expert_stride_words": null,
+      "expert_id_base": null,
+      "expert_ids_materialized": null,
+      "all_experts_materialized": null
     }
   },
   "constants": {
@@ -91,7 +147,7 @@
     }
   },
   "rom_capacity_bytes": 2714287356,
-  "reserved_bytes": 603351040,
+  "reserved_bytes": 607283200,
   "regions": [
     {
       "engine": "crom",
@@ -99,6 +155,20 @@
       "end_word_exclusive": 5120,
       "bytes_per_bank_word": 8,
       "name": "attn_norm"
+    },
+    {
+      "engine": "he",
+      "start_word": 0,
+      "end_word_exclusive": 7680,
+      "bytes_per_bank_word": 32,
+      "name": "hc_attn_fn"
+    },
+    {
+      "engine": "me",
+      "start_word": 0,
+      "end_word_exclusive": 7680,
+      "bytes_per_bank_word": 4,
+      "name": "gate"
     },
     {
       "engine": "qe",

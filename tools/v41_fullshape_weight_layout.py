@@ -26,7 +26,7 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def geometry(nrows: int, nblocks: int, chunks: int = 8) -> dict:
+def geometry(nrows: int, nblocks: int, chunks: int = 8, min_plg: int = 0) -> dict:
     """Choose an exact row layout minimizing padded bank words.
 
     The tile has 8*chunks 264-bit lane banks.  A segment uses 8*2**plg
@@ -35,7 +35,7 @@ def geometry(nrows: int, nblocks: int, chunks: int = 8) -> dict:
     if nrows <= 0 or nblocks <= 0 or chunks <= 0 or chunks & (chunks - 1):
         raise ValueError("positive shape and power-of-two chunk count required")
     choices = []
-    for plg in range(chunks.bit_length()):
+    for plg in range(min_plg, chunks.bit_length()):
         p = 1 << plg
         if p > chunks:
             break
@@ -48,6 +48,67 @@ def geometry(nrows: int, nblocks: int, chunks: int = 8) -> dict:
     return dict(chunks=chunks, banks=8 * chunks, plg=plg,
                 blocks_per_beat=8 << plg, rows_per_group=rows_per_group,
                 nbeat=beats, nrg=groups, word_count=depth)
+
+
+def pack_me_bf16(bits: np.ndarray, base_word: int = 0, chunks: int = 8) -> tuple[np.ndarray, dict]:
+    """One BF16 matrix into KIND=1 bank words (BF16 shifted to FP32 bits)."""
+    if bits.dtype != np.uint16 or bits.ndim != 2 or base_word < 0:
+        raise ValueError("ME source must be a BF16 uint16 matrix with nonnegative base")
+    nrows, ncols = bits.shape
+    geom = geometry(nrows, ncols, chunks, min_plg=1)
+    image = np.zeros((geom["word_count"], geom["banks"]), dtype="<u4")
+    touched = np.zeros(image.shape, dtype=np.bool_)
+    for row in range(nrows):
+        for term in range(ncols):
+            address, bank = bank_slot(row, term, geom, base_word)
+            offset = address - base_word
+            if touched[offset, bank]:
+                raise AssertionError("ME weight layout collision")
+            image[offset, bank] = np.uint32(bits[row, term]) << np.uint32(16)
+            touched[offset, bank] = True
+    geom.update(useful_bank_words=int(touched.sum()),
+                padded_bank_words=int(touched.size - touched.sum()),
+                image_bytes=int(image.nbytes), base_word=base_word,
+                end_word_exclusive=base_word + geom["word_count"])
+    return image, geom
+
+
+def verify_me(image: np.ndarray, bits: np.ndarray, geom: dict) -> None:
+    for row in range(bits.shape[0]):
+        for term in range(bits.shape[1]):
+            address, bank = bank_slot(row, term, geom, geom["base_word"])
+            if image[address - geom["base_word"], bank] != np.uint32(bits[row, term]) << 16:
+                raise AssertionError(f"ME readback mismatch row={row} term={term}")
+
+
+def pack_he_fp32(bits: np.ndarray, base_word: int = 0, hhw: int = 8) -> tuple[np.ndarray, dict]:
+    """HCP 8 banks; bank k/lane l reads matrix[o, 8*(r*HHW+l)+k]."""
+    if bits.dtype != np.uint32 or bits.ndim != 2 or base_word < 0 or hhw <= 0:
+        raise ValueError("HE source must be an FP32 uint32 matrix with nonnegative base")
+    nrows, ncols = bits.shape
+    if ncols % 8:
+        raise ValueError("HE K must be divisible by 8 banks")
+    words_per_row = (ncols + 8 * hhw - 1) // (8 * hhw)
+    depth = nrows * words_per_row
+    image = np.zeros((depth, 8, hhw), dtype="<u4")
+    for row in range(nrows):
+        for col in range(ncols):
+            q, bank = divmod(col, 8)
+            beat, lane = divmod(q, hhw)
+            image[row * words_per_row + beat, bank, lane] = bits[row, col]
+    geom = dict(banks=8, hhw=hhw, words_per_row=words_per_row,
+                word_count=depth, image_bytes=int(image.nbytes),
+                base_word=base_word, end_word_exclusive=base_word + depth)
+    return image, geom
+
+
+def verify_he(image: np.ndarray, bits: np.ndarray, geom: dict) -> None:
+    for row in range(bits.shape[0]):
+        for col in range(bits.shape[1]):
+            q, bank = divmod(col, 8)
+            beat, lane = divmod(q, geom["hhw"])
+            if image[row * geom["words_per_row"] + beat, bank, lane] != bits[row, col]:
+                raise AssertionError(f"HE readback mismatch row={row} col={col}")
 
 
 def bank_slot(row: int, block: int, geom: dict, base_word: int = 0) -> tuple[int, int]:
@@ -304,6 +365,71 @@ def pack_constant_from_manifest(manifest_path: Path, image_dir: Path, name: str,
     }
 
 
+def pack_unquantized_from_manifest(manifest_path: Path, image_dir: Path, name: str,
+                                   engine: str, output: Path, base_word: int = 0) -> dict:
+    """One source-pinned BF16 ME or FP32 HE matrix with exact bank readback."""
+    manifest = json.loads(manifest_path.read_text())
+    if manifest.get("schema") != "opentallas.rtl.hdc_v41x_fullshape_layers.v1.die_layer_images":
+        raise ValueError("unrecognized input manifest schema")
+    key = f"w.{name}"
+    entry = manifest["files"].get(key)
+    required = "BF16" if engine == "me" else "F32" if engine == "he" else None
+    if required is None or entry is None or entry["format"] != required:
+        raise ValueError("missing or wrong-format ME/HE matrix")
+    path = image_dir / f"{key}.bin"
+    if not path.is_file() or sha256(path) != entry["sha256"]:
+        raise ValueError("missing or wrong source-pinned ME/HE matrix")
+    raw = np.fromfile(path, dtype=np.uint8)
+    if int(np.prod(entry["shape"])) != raw.size:
+        raise ValueError("ME/HE source byte shape mismatch")
+    nrows, row_bytes = entry["shape"]
+    if engine == "me":
+        if row_bytes % 2:
+            raise ValueError("odd BF16 row byte count")
+        bits = np.frombuffer(raw.tobytes(), dtype="<u2").reshape(nrows, row_bytes // 2)
+        image, geom = pack_me_bf16(bits, base_word)
+        verify_me(image, bits, geom)
+        width_per_address = geom["banks"] * 4
+        fmt = "BF16_as_FP32_bank_word"
+    else:
+        if row_bytes % 4:
+            raise ValueError("FP32 row byte count not divisible by four")
+        bits = np.frombuffer(raw.tobytes(), dtype="<u4").reshape(nrows, row_bytes // 4)
+        image, geom = pack_he_fp32(bits, base_word)
+        verify_he(image, bits, geom)
+        width_per_address = geom["banks"] * geom["hhw"] * 4
+        fmt = "FP32_HCP_8bank"
+    if geom["end_word_exclusive"] >= (1 << 30):
+        raise ValueError("ME/HE address outside A30")
+    if geom["end_word_exclusive"] * width_per_address > CAPACITY_BYTES:
+        raise ValueError("ME/HE placement exceeds per-die ROM capacity")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.tofile(output)
+    return {
+        "schema": SCHEMA, "status": "one_matrix_exact_readback",
+        "claim_boundary": f"One source-pinned {engine.upper()} matrix; no complete die ROM or token execution.",
+        "source_image_manifest": str(manifest_path),
+        "source_image_manifest_sha256": sha256(manifest_path),
+        "layout_tool_sha256": sha256(Path(__file__)),
+        "source_commit": manifest["source_commit"],
+        "source_sha256": manifest["source_sha256"],
+        "checkpoint": manifest["checkpoint"],
+        "layer": manifest["layer"], "rank": manifest["rank"],
+        "matrices": {name: {
+            "engine": engine, "base_word": base_word,
+            "word_count": geom["word_count"], "nrows": nrows,
+            "ncols": int(bits.shape[1]), "format": fmt,
+            "source_weight_sha256": entry["sha256"],
+            "geometry": geom, "output_image_sha256": sha256(output),
+            "output_image_bytes": output.stat().st_size,
+            "expert_stride_words": None, "expert_id_base": None,
+            "expert_ids_materialized": None, "all_experts_materialized": None,
+        }},
+        "matrix_coverage": "one_matrix_only",
+        "unplaced_note": "All other matrices and constants remain unplaced.",
+    }
+
+
 def combine_layout_records(paths: list[Path]) -> dict:
     """Merge partial gates while checking physical region overlap and capacity."""
     if not paths:
@@ -321,7 +447,12 @@ def combine_layout_records(paths: list[Path]) -> dict:
             start = entry["expert_id_base"] if entry["expert_stride_words"] is not None else entry["base_word"]
             end = (entry["expert_reserved_end_word_exclusive"] if entry["expert_stride_words"] is not None
                    else entry["base_word"] + entry["word_count"])
-            bytes_per_bank = 17 if entry["format"].startswith("F4_") else 33
+            if entry["engine"] == "qe":
+                bytes_per_bank = 17 if entry["format"].startswith("F4_") else 33
+            elif entry["engine"] == "me":
+                bytes_per_bank = 4
+            else:
+                bytes_per_bank = 32
             regions.append((entry["engine"], start, end, bytes_per_bank, name))
         for name, entry in data.get("constants", {}).items():
             if name in constants:
@@ -333,7 +464,7 @@ def combine_layout_records(paths: list[Path]) -> dict:
         for left, right in zip(part, part[1:]):
             if left[2] > right[1]:
                 raise ValueError(f"ROM region overlap: {left[4]} and {right[4]}")
-    reserved_bytes = sum((end - start) * (64 if engine == "qe" else 1) * width
+    reserved_bytes = sum((end - start) * (64 if engine in ("qe", "me") else 8 if engine == "he" else 1) * width
                          for engine, start, end, width, _ in regions)
     if reserved_bytes > CAPACITY_BYTES:
         raise ValueError("combined placement exceeds per-die ROM capacity")
@@ -360,6 +491,8 @@ def main() -> None:
     one = ap.add_mutually_exclusive_group(required=True)
     one.add_argument("--matrix")
     one.add_argument("--constant")
+    one.add_argument("--me")
+    one.add_argument("--he")
     one.add_argument("--combine-record", type=Path, nargs="+")
     ap.add_argument("--output", type=Path)
     ap.add_argument("--record", type=Path, required=True)
@@ -375,9 +508,14 @@ def main() -> None:
                                     a.base_word, a.chunks)
     else:
         if not a.input_manifest or not a.image_dir or not a.output:
-            ap.error("constant packing requires --input-manifest, --image-dir, and --output")
-        record = pack_constant_from_manifest(a.input_manifest, a.image_dir, a.constant,
-                                             a.output, a.base_word)
+            ap.error("weight/constant packing requires --input-manifest, --image-dir, and --output")
+        if a.constant:
+            record = pack_constant_from_manifest(a.input_manifest, a.image_dir, a.constant,
+                                                 a.output, a.base_word)
+        else:
+            engine, name = ("me", a.me) if a.me else ("he", a.he)
+            record = pack_unquantized_from_manifest(a.input_manifest, a.image_dir, name,
+                                                    engine, a.output, a.base_word)
     a.record.parent.mkdir(parents=True, exist_ok=True)
     a.record.write_text(json.dumps(record, indent=2) + "\n")
     summary = {"status": record["status"]}
@@ -386,8 +524,11 @@ def main() -> None:
                        reserved_bytes=record["reserved_bytes"])
     elif a.matrix:
         summary.update(matrix=a.matrix, geometry=record["matrices"][a.matrix]["geometry"])
-    else:
+    elif a.constant:
         summary.update(constant=a.constant, entry=record["constants"][a.constant])
+    else:
+        name = a.me if a.me else a.he
+        summary.update(matrix=name, entry=record["matrices"][name])
     print(json.dumps(summary))
 
 

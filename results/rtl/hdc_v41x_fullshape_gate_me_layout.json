@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.v41x.fullshape.weight_layout.v1",
-  "status": "one_constant_exact_readback",
-  "claim_boundary": "One source-pinned CROM tensor; no complete die CROM or token execution.",
+  "status": "one_matrix_exact_readback",
+  "claim_boundary": "One source-pinned ME matrix; no complete die ROM or token execution.",
   "source_image_manifest": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
   "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
   "layout_tool_sha256": "cade27b18b00e0c19dda6369e1b8e095c15c4938042607993f5b8ab7ee717f2f",
@@ -215,18 +215,38 @@
   },
   "layer": 0,
   "rank": 0,
-  "constants": {
-    "attn_norm": {
-      "engine": "crom",
+  "matrices": {
+    "gate": {
+      "engine": "me",
       "base_word": 0,
-      "word_count": 5120,
-      "format": "FP32_lo_plus_zero_hi",
-      "source_format": "BF16",
-      "source_tensor_sha256": "1e862a4492423ffe1663b101267ac4710ba72ec0cea51b1396ea5c9c0a1fa682",
-      "output_image_sha256": "62f21e446cfedf7cbe5ba9957f472e9a487c7ea16ee549eb33155d133ab866b0",
-      "output_image_bytes": 40960
+      "word_count": 7680,
+      "nrows": 96,
+      "ncols": 5120,
+      "format": "BF16_as_FP32_bank_word",
+      "source_weight_sha256": "4898f3acdfde40c057917f845ec8f241508015af4a1c04ed992b651e17f7f433",
+      "geometry": {
+        "chunks": 8,
+        "banks": 64,
+        "plg": 1,
+        "blocks_per_beat": 16,
+        "rows_per_group": 4,
+        "nbeat": 320,
+        "nrg": 24,
+        "word_count": 7680,
+        "useful_bank_words": 491520,
+        "padded_bank_words": 0,
+        "image_bytes": 1966080,
+        "base_word": 0,
+        "end_word_exclusive": 7680
+      },
+      "output_image_sha256": "24f3d75f7ad011a4a4128bd0bf0ea11b2ad7f4cd1774bcc14625f8610c9e5fc5",
+      "output_image_bytes": 1966080,
+      "expert_stride_words": null,
+      "expert_id_base": null,
+      "expert_ids_materialized": null,
+      "all_experts_materialized": null
     }
   },
-  "matrix_coverage": "none",
-  "unplaced_note": "All other CROM entries, generated RoPE values, Engram token map, and ME/QE/HE weights remain unplaced."
+  "matrix_coverage": "one_matrix_only",
+  "unplaced_note": "All other matrices and constants remain unplaced."
 }
