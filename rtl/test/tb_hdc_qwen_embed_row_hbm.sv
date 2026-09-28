@@ -37,8 +37,20 @@ module tb_hdc_qwen_embed_row_hbm;
         code_re=1; code_addr=7;
         @(negedge clk); code_re=0;
         if (code_q !== {hmem[15],hmem[14]}) $fatal(1,"embedding word 7 mismatch");
-        if (reads!=5) $fatal(1,"wrong HBM sector count %0d",reads);
-        $display("PASS Qwen embedding HBM row: token 3, 5 sectors, exact 2 code words and scale");
+        // A completed core can leave a trailing read on the next token's
+        // preload edge. It must not poison the new row's ready handshake.
+        token=4; scale_addr=3; code_addr=6;
+        @(negedge clk); load=1;
+        @(negedge clk); load=0; code_re=1; scale_re=1;
+        @(negedge clk); code_re=0; scale_re=0;
+        while (!ready && cycles<200) begin @(negedge clk); cycles=cycles+1; end
+        if (!ready || fault) $fatal(1,"stale read poisoned next embedding row");
+        code_re=1; code_addr=8; scale_re=1; scale_addr=4;
+        @(negedge clk); code_re=0; scale_re=0;
+        if (code_q !== {hmem[17],hmem[16]} ||
+            scale_q !== hmem[100][4*16 +: 16]) $fatal(1,"embedding token 4 mismatch");
+        if (reads!=10) $fatal(1,"wrong HBM sector count %0d",reads);
+        $display("PASS Qwen embedding HBM rows: tokens 3/4, 10 sectors, exact codes/scales and stale-read drain");
         $finish;
     end
     always @(posedge clk) if (rst_n) begin

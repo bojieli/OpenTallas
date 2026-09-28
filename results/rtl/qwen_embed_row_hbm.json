@@ -1,17 +1,20 @@
 {
   "claim_boundary": "Reduced 128-code row, one BF16 scale, exact synchronous core read ports. HBM controller, package-level token exactness, full Qwen embedding and route are separate gates.",
   "observed": {
-    "code_words": 2,
-    "scale_words": 1,
-    "sectors": 5,
-    "token": 3
+    "code_words_per_token": 2,
+    "scale_words_per_token": 1,
+    "sectors": 10,
+    "tokens": [
+      3,
+      4
+    ]
   },
   "schema": "opentallas.qwen-embed-row-hbm.v1",
   "source_sha256": {
-    "rtl/hdc/hbm/ot_hdc_qwen_embed_row_hbm.sv": "dedbece79a907a4298d3ee3f4988b838ab02d31771f87166212111c53984d5a7",
-    "rtl/test/tb_hdc_qwen_embed_row_hbm.sv": "74a769bd52a7b8f3aba0f4a62b4aa0ee09b0f4009223e6e2a1225697de2c19ea",
-    "tools/rtl_hdc_qwen_embed_row_hbm.py": "b9477bd876d24fd44503bd76f3fd8150c78b5ea5c1990d10240d410bf1786ad7"
+    "rtl/hdc/hbm/ot_hdc_qwen_embed_row_hbm.sv": "e6351a45e25cda62fd6505450a6fff9af6bc983c62ad74b9c29481ddd714dc59",
+    "rtl/test/tb_hdc_qwen_embed_row_hbm.sv": "f4f4ed297893c61a791b0cf6c6a719d249b0da71c79ca45ed025c69a4f1daef3",
+    "tools/rtl_hdc_qwen_embed_row_hbm.py": "9e5574bd7571cc6e59bed0b9879647ae023831abc2580859f6db4c7031a23f51"
   },
   "status": "pass",
-  "stdout": "PASS Qwen embedding HBM row: token 3, 5 sectors, exact 2 code words and scale"
+  "stdout": "PASS Qwen embedding HBM rows: tokens 3/4, 10 sectors, exact codes/scales and stale-read drain"
 }

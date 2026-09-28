@@ -96,16 +96,19 @@ module ot_hdc_qwen_embed_row_hbm #(
                     else begin state<=DONE; ready<=1; end
                 end
             end
-            if (code_re) begin
-                if (!ready || code_addr < tok_r*ROW_WORDS ||
+            // The prior token can leave a trailing synchronous read after
+            // package done. While the new row is being prefetched, the core
+            // is gated from starting; those old reads have no consumer.
+            if (code_re && ready) begin
+                if (code_addr < tok_r*ROW_WORDS ||
                     code_addr >= tok_r*ROW_WORDS+ROW_WORDS) fault<=1;
                 else begin
                     off=code_addr-tok_r*ROW_WORDS;
                     code_q<={code_bank[off*2+1],code_bank[off*2]};
                 end
             end
-            if (scale_re) begin
-                if (!ready || scale_addr!=tok_r) fault<=1;
+            if (scale_re && ready) begin
+                if (scale_addr!=tok_r) fault<=1;
                 else scale_q<=scale_sector[tok_r[3:0]*16 +: 16];
             end
         end

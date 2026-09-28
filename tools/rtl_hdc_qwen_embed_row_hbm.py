@@ -23,12 +23,12 @@ def main():
                        cwd=ROOT, check=True, capture_output=True, text=True)
         run = subprocess.run(["vvp", str(binary)], cwd=ROOT, check=True,
                              capture_output=True, text=True)
-    assert "PASS Qwen embedding HBM row: token 3, 5 sectors" in run.stdout
+    assert "PASS Qwen embedding HBM rows: tokens 3/4, 10 sectors" in run.stdout
     record = {
         "schema": "opentallas.qwen-embed-row-hbm.v1",
         "status": "pass",
-        "observed": {"token": 3, "sectors": 5, "code_words": 2,
-                     "scale_words": 1},
+        "observed": {"tokens": [3, 4], "sectors": 10,
+                     "code_words_per_token": 2, "scale_words_per_token": 1},
         "claim_boundary": "Reduced 128-code row, one BF16 scale, exact synchronous core read ports. HBM controller, package-level token exactness, full Qwen embedding and route are separate gates.",
         "source_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                           for p in SOURCES},
