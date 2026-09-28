@@ -285,6 +285,47 @@ proc repair_timing_helper {args} {
     return c
 
 
+def karb_group4_macro_m9() -> dict:
+    """Four routed one-PC macros plus real group K trunk and receive logic.
+
+    The macro's Liberty view has no arcs, so this case probes composed
+    geometry and top-level interconnect only, never end-to-end Fmax.
+    """
+    c = karb_group4_m9(tailpipe=True)
+    args = c["args"].copy()
+    args[args.index("--stages") + 1] = "pnr"
+    i = args.index("--source")
+    while i < len(args) and args[i] == "--source":
+        del args[i:i+2]
+    pcdir = "physical/asap7_v41x_karb_pc_budget/ot_chip_v41x_hbm_karb_pc_local"
+    args[i:i] = ["--source", "rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
+                 "--source", "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+                 "--source", f"{pcdir}/ot_chip_v41x_hbm_karb_pc_local_bb.v"]
+    args += ["--macro-view", f"ot_chip_v41x_hbm_karb_pc_local={pcdir}",
+             "--macro-place-halo", "2", "2"]
+    args[args.index("--die-area") + 3] = "1550"
+    args[args.index("--core-area") + 3] = "1547.84"
+    hook = [
+        "# Geometry-only hierarchy from the routed 375 x 17.01 um PC LEF.",
+        "proc ot_place {want x y} {",
+        "  foreach inst [[ord::get_db_block] getInsts] {",
+        "    set n [$inst getName]",
+        "    if {[string map {\\ {}} $n] eq $want} {",
+        "      place_macro -macro_name $n -location [list $x $y] -orientation R0",
+        "      return",
+        "    }",
+        "  }",
+        "  error \"macro placement: no instance $want\"",
+        "}",
+        *[f"ot_place {{g_pc[{p}].u_local}} {5+385*p:g} 6.48" for p in range(4)],
+    ]
+    return {"args": args, "nickname": "codex_v41x_karb_group4_macro_m9",
+            "hook": ("PRE_MACRO_PLACE", "\n".join(hook) + "\n"),
+            "output": "results/asap7_physical/v41x_die_karb_group4_macro_m9/physical.json",
+            "floorplan": {"die_um": [1550.0, 30.24], "macro_um": [375.0, 17.01],
+                          "scope": "four real routed PC macros; macro timing arcs deliberately absent"}}
+
+
 # ------------------------------------------------------------------------------------------------ physical tile
 MACRO_DIR = "physical/asap7_memory_macros"
 MACROS = {   # name: (width, height) um, from the compiler LEFs
@@ -673,6 +714,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
          "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
          "karb_group4_cts100_m9": karb_group4_cts100_m9,
+         "karb_group4_macro_m9": karb_group4_macro_m9,
          "karb_group4_fit_m9": lambda: karb_group4_m9(height_um=17.28),
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
