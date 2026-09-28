@@ -107,8 +107,9 @@ ASAP7 representative slice routes are run as **standard-cell memory**
 characterisations.  Their area and timing cannot be extrapolated to a
 foundry SRAM macro or to the full lane array.  The repository does have an
 analytical 128x256 SRAM LEF/liberty/Verilog view, now used by the grouped ME
-prototype; it has not been routed inside the ME tile.  The full HCP slice
-still needs a macro mapping and physical gate.  Before placement, synthesis
+prototype; it has not been routed inside the ME tile.  The HCP slice now has
+a local macro-backed simulation model, but still needs integration with the
+full HCP and physical closure.  Before placement, synthesis
 maps the 16x80 ME slice to 6,933 cells,
 861.9 µm² and -462 ps setup slack at 0.92 ns.  The 128x80 HE slice maps to
 6,960 µm² with -9,546 ps setup slack.  These negative standard-cell results
