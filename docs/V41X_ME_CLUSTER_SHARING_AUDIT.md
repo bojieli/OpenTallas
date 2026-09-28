@@ -96,7 +96,16 @@ The input-registered macro store has a negative
 physical verdict: post-place setup −371 ps and CTS hold −112 ps after 9507
 hold buffers, ending in RSZ-0060. Its wider bank-local path needs another
 microarchitecture revision (`results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg/physical.json`).
-Its 3323 pins fit 20772 sites, and the
+The checkpoint-exact MP=1 RL5 revision passed 2297/20772 pin placement but
+still missed global-place setup by 677 ps at 0.92 ns: the worst path is
+`pre_e_r[11]` through write-data selection to a macro `wd_in` pin, while
+hold has 44 ps slack. The source-pinned result is
+`results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg_readreg_mp1/preflight.json`.
+A bank-local write register is being characterized as an additional pipeline
+cut; its first 16 checkpoint rows remain exact, with the extra write stage
+absorbed by the existing preload drain. Neither revision has a routed timing
+claim.
+The earlier MP=2 input-registered cut's 3323 pins fit 20772 sites, and the
 converter's 3108 pins fit 18688 sites. These are local pin cuts, not a routed
 41-tile multicast. Full die geometry, weight ROM bank
 placement and sustained cluster service remain open; no row in this audit
