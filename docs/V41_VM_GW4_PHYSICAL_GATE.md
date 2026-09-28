@@ -26,10 +26,23 @@ A one-stage 128-bit slice failed pre-route ASAP7 timing at 0.92 ns
 (−0.827 ns WNS) because the select flop drove 512 data mux bits. The
 two-stage slice duplicates bank select in 16-bit local groups. Its pre-route
 STA is **+0.214 ns WNS** at 0.92 ns, with 2,844 mapped standard cells and
-512.2 µm² standard-cell area for the quarter-width gate. The full-route
-verdict is separately recorded in
-[`physical.json`](../results/physical_abi3/asap7/chip/v41_vm_gw4_slice/physical.json)
-when available; the pre-route result alone does not establish routed closure.
+512.2 µm² standard-cell area for the quarter-width gate
+([source-pinned record](../results/physical_abi3/asap7/chip/v41_vm_gw4_slice/synth_sta.json)).
+The pre-route result alone does not establish routed closure.
+
+The **actual full 4 × 512-bit distributor** was also synthesized. It fails
+pre-route timing at 0.92 ns by **1.498 ns**, because synthesis shares the
+selector logic and the late 2,048-bit rotation creates a high-fanout path
+([negative full-width record](../results/physical_abi3/asap7/chip/v41_vm_gw4_slice/full2048_synth_sta.json)).
+The quarter-width passing result cannot be used to credit GW4 throughput.
+The preferred boundary places each incoming word in the transpose buffer slot
+selected by `word_addr[1:0]`; four completed slots then drive four **static**
+512-bit bank wires. The full-width static register boundary passes pre-route
+timing at 0.92 ns by 0.807 ns
+([source-pinned record](../results/physical_abi3/asap7/chip/v41_vm_gw4_bank_order/synth_sta.json)).
+This moves the word selection upstream to one arriving word per cycle. It
+still needs the collective DMA's exact physical-bank-order implementation and
+an integrated macro route before timing credit.
 
 ## SRAM abstract and capacity
 
@@ -69,8 +82,20 @@ The ME xbank can instead retain physical VM bank order and latch the initial
 word-address modulo four. On term read, that two-bit rotation selects the
 corresponding xbank group. This removes the wide crossbar from the preload
 write path, but its xbank implementation and timing gate are separate work.
+For source word address `B+j`, VM bank is `(B+j) mod 4` and that bank's row is
+`floor((B+j)/4)`. An ACC base aligned to 32 FP32 elements can have `B mod 4 =
+2`, so four consecutive input words may read two different physical bank
+rows; the per-bank read addresses must retain that carry. The xbank's local
+write row still advances once per 64-element beat.
 The core and package controller must not request conflicting reads of the
 same bank during this blocking preload.
+
+The same four-bank read phase can supply HE's 20,480-element activation:
+64 FP32 elements per cycle gives a **320-cycle read floor** before fill,
+transpose, and drain. After BF16 rounding, the eight HCP banks each receive
+one 128-bit word from a fixed 8×8 transpose of the four fetched VM words.
+That fixed wiring still needs a registered four-quarter rotation when the
+physical VM bank order differs from logical order, and an exact tile hook-up.
 
 ## Other vector-memory ports
 
