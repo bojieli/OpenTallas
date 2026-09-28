@@ -59,16 +59,19 @@
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "a4ce9d82f1489d14824b7ef5ebea200c31af86859a80fbad3bbe421f5790eafd",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420",
-    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "c82eb5893f70285932741c4111d817817aea27d0d36ba49103c31f2c8913a508",
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
     "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735"
   },
   "status": "capacity_mismatch",
   "widths": {
+    "controller_full_profile_header_overlap_bits": 0,
+    "controller_full_profile_user_id_bits": 10,
     "current_controller_user_id_bits": 8,
     "current_index_sector_address_bits": 28,
-    "full_mode_header_idx_val_overlap_bits": 5,
-    "full_mode_header_pos_idx_overlap_bits": 5,
-    "full_mode_header_tok_addr_overlap_bits": 1,
+    "full_mode_header_idx_val_overlap_bits": 0,
+    "full_mode_header_pos_idx_overlap_bits": 0,
+    "full_mode_header_tok_addr_overlap_bits": 0,
+    "historical_reduced_controller_user_id_bits": 8,
     "index_sector_bits_for_current_layout_users": 29,
     "user_id_bits_for_current_layout_users": 10,
     "user_id_bits_for_model_users": 10

@@ -44,7 +44,13 @@ def build() -> dict:
     assert "b0=((rbase>>4)-cfg_ik_base)/128*17" in writer
     assert "ik_off=wbase-cfg_ik_base" in scanner
     assert "user_base" not in writer and "user_base" not in scanner
-    assert "HDR_USER = 32" in controller and "HDR_POS = 40, HDR_IDX = 56" in controller
+    assert re.search(r"HDR_USER\s*=\s*32,\s*HDR_POS\s*=\s*40,\s*HDR_IDX\s*=\s*HDR_POS\s*\+\s*NW", controller)
+    assert "HDR_USER_HI = HDR_ADDR + 16" in controller
+    assert "parameter integer USER_W       = 8" in controller
+    assert "header[HDR_USER_HI +: UHIW]" in controller
+    assert "output wire [USER_W-1:0]  core_user" in controller
+    # The adopted die still instantiates the controller at its reduced default.
+    assert ".MAXU(MAXU)" in die and ".USER_W(10)" not in die
     assert "localparam integer KV_SECTORS  = 2 * ((KV_USERS << KV_AW) / 4)" in die
 
     tech = json.loads(source_text[SOURCES[1]])
@@ -119,11 +125,14 @@ def build() -> dict:
         "widths": {"user_id_bits_for_model_users": user_id_bits_model,
                    "user_id_bits_for_current_layout_users": user_id_bits_rtl,
                    "current_controller_user_id_bits": 8,
+                   "historical_reduced_controller_user_id_bits": 8,
+                   "controller_full_profile_user_id_bits": 10,
+                   "controller_full_profile_header_overlap_bits": 0,
                    "current_index_sector_address_bits": 28,
                    "index_sector_bits_for_current_layout_users": (users_rtl * key_sectors_per_user - 1).bit_length(),
-                   "full_mode_header_pos_idx_overlap_bits": 5,
-                   "full_mode_header_idx_val_overlap_bits": 5,
-                   "full_mode_header_tok_addr_overlap_bits": 1},
+                   "full_mode_header_pos_idx_overlap_bits": 0,
+                   "full_mode_header_idx_val_overlap_bits": 0,
+                   "full_mode_header_tok_addr_overlap_bits": 0},
     }
 
 
