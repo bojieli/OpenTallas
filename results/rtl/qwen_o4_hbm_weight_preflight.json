@@ -1,0 +1,147 @@
+{
+  "ar_per_die": {
+    "code_sector_reads": 119439360,
+    "code_stream_cycles_lower_bound_at_stated_hbm_bw": 1166408,
+    "padding_bytes": 38010880,
+    "rom_word_identical_code_bytes": 3822059520,
+    "useful_code_bytes": 3784048640,
+    "useful_scale_bytes": 1847680
+  },
+  "claim_boundary": "Static full-shape INT8 code/scale address and traffic preflight plus byte-exact sector roundtrip; no O4 weight-HBM RTL, token bit-exactness, sustained controller measurement, full-die route, or throughput verdict.",
+  "configuration": {
+    "dies": 2,
+    "groups_per_die": 6144,
+    "hbm_stacks_per_die": 4,
+    "int8_word_bytes": 98304,
+    "lanes_per_group": 16,
+    "scale_word_bytes": 196608,
+    "sector_bytes": 32
+  },
+  "existing_wstream_incompatibilities": {
+    "default_burst_length_field_bits": 5,
+    "default_hbm_sector_address_bits": 24,
+    "default_hbm_sector_address_bits_sufficient_for_resident_layout": false,
+    "default_window_bytes_if_scaled_to_full_o4_word": 201326592,
+    "note": "A full-width 2048-word window would be 192 MiB per die. Use PC-local sector windows and buffered scale words; a WB parameter change alone is not an implementation.",
+    "sectors_per_o4_int8_word": 3072,
+    "weight_port": "BF16-only ot_hdc_core_whbm.wrom_q; O4 core has independent INT8 code and BF16 scale ports"
+  },
+  "input_sha256": {
+    "results/arch/qwen3_budget.json": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
+    "rtl/hdc/hbm/ot_hdc_wstream.sv": "70393355dc96dc834fa5e94e75580756ce1a0276c3f9385f98dca7515526f81d",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "8550fe4c7cc84461300729a9ccb766fa530c13fd589d225dc94beb513c10086f",
+    "rtl/hdc/ot_hdc_matvec.sv": "83c7b48b9031b8107611d825cac43d9dfb0be93b6573fcb806747595bfd5867f",
+    "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+    "tools/hdc_qwen_int8_image.py": "166d292992bc0157443b77ee62ed74f5ff57defabed833f96fd1c186c37b0924",
+    "tools/qwen_o4_hbm_weight_preflight.py": "f1968940c0c834d8800cb9c549cbfdc259afa172c1000796e35e2d41652b6da7"
+  },
+  "matrix_traffic_per_die": [
+    {
+      "code_sectors": 14155776,
+      "cols_per_die": 4096,
+      "count": 36,
+      "identical_rom_word_bytes": 452984832,
+      "k_per_chunk": 16,
+      "k_split": 256,
+      "name": "qkv",
+      "padding_bytes": 0,
+      "rounds": 1,
+      "rows_per_die": 3072,
+      "useful_code_bytes": 452984832,
+      "useful_scale_bytes": 221184,
+      "word_cycles": 4608
+    },
+    {
+      "code_sectors": 9732096,
+      "cols_per_die": 2048,
+      "count": 36,
+      "identical_rom_word_bytes": 311427072,
+      "k_per_chunk": 1,
+      "k_split": 2048,
+      "name": "o",
+      "padding_bytes": 9437184,
+      "rounds": 11,
+      "rows_per_die": 4096,
+      "useful_code_bytes": 301989888,
+      "useful_scale_bytes": 294912,
+      "word_cycles": 3168
+    },
+    {
+      "code_sectors": 56623104,
+      "cols_per_die": 4096,
+      "count": 36,
+      "identical_rom_word_bytes": 1811939328,
+      "k_per_chunk": 64,
+      "k_split": 64,
+      "name": "gate_up",
+      "padding_bytes": 0,
+      "rounds": 1,
+      "rows_per_die": 12288,
+      "useful_code_bytes": 1811939328,
+      "useful_scale_bytes": 884736,
+      "word_cycles": 18432
+    },
+    {
+      "code_sectors": 29196288,
+      "cols_per_die": 6144,
+      "count": 36,
+      "identical_rom_word_bytes": 934281216,
+      "k_per_chunk": 3,
+      "k_split": 2048,
+      "name": "down",
+      "padding_bytes": 28311552,
+      "rounds": 11,
+      "rows_per_die": 4096,
+      "useful_code_bytes": 905969664,
+      "useful_scale_bytes": 294912,
+      "word_cycles": 9504
+    },
+    {
+      "code_sectors": 9732096,
+      "cols_per_die": 4096,
+      "count": 1,
+      "identical_rom_word_bytes": 311427072,
+      "k_per_chunk": 4,
+      "k_split": 1024,
+      "name": "lm_head",
+      "padding_bytes": 262144,
+      "rounds": 99,
+      "rows_per_die": 75968,
+      "useful_code_bytes": 311164928,
+      "useful_scale_bytes": 151936,
+      "word_cycles": 3168
+    }
+  ],
+  "package": {
+    "bandwidth_only_upper_rate_for_identical_words_tokens_s": 872.5375168640173,
+    "delta_bytes_vs_model_if_fetching_identical_rom_words_and_scales": 76611584.0,
+    "minimum_sector_address_bits": 28,
+    "model_amortized_scale_bytes_per_token": 3105536.000000193,
+    "model_hbm_bytes_per_token_including_kv": 8175182592.0,
+    "modeled_weight_macs": 7568097280,
+    "resident_bytes_per_die_even_partition_lower_bound": 4923753472,
+    "resident_target_drafter_and_kv_bytes_lower_bound": 9847506944.0,
+    "rom_word_identical_weight_and_kv_bytes_per_token": 8251794176.0
+  },
+  "schema": "opentallas.qwen-o4-hbm-weight-preflight.v1",
+  "sector_roundtrip": {
+    "code_endpoints": [
+      -128,
+      -1,
+      0,
+      1,
+      127
+    ],
+    "code_word": {
+      "bytes": 98304,
+      "sectors": 3072,
+      "sha256": "0fb558dbe26d34b9c48c8bb61e4f1e3bbb354f06672355ab77685e2d1b360bbb"
+    },
+    "scale_word": {
+      "bytes": 196608,
+      "sectors": 6144,
+      "sha256": "f45b39df1940217df1391f7a7c6bfca59462d66142d8786dd0f0ddfd774e888c"
+    }
+  },
+  "status": "pass"
+}
