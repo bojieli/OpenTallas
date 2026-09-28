@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.rtl.v41x_me_xbank_macro_inreg.v1",
+  "status": "pass",
+  "claim_scope": "Standalone input-registered 16-macro store, two K4096 activation groups, bank-major rotation2; no adapter, cluster timing or chip-rate claim",
+  "preload_issue_cycles": 128,
+  "exact_read_elements": 8192,
+  "extra_request_latency_cycles": 1,
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg.sv": "cf8c26327605cee2917ea70698ef292ef3666139355c21190a4a65ba94726567",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": "f5064de72493a39023c97bb1152d4ae54659091e25769e8c4323a5c0c382628b",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/test/tb_v41x_me_two_group_wide_inreg.sv": "b0a8f318ebe9dd4b0a496fc7a4fbbc88dcd58fee135d2bf62670253c490efa55",
+    "rtl/test/data/v41x_me_xbank_l0_real.hex": "210bd2c26cdf7ed09295f96abd94e8a3553c04b638aa947f0645d9f9b223d0e7",
+    "tools/rtl_v41x_me_xbank_inreg_campaign.py": "d0e07ab0ccb740537eda61e71c5c143428256b4a2c84532867299a6cdc4d8e08"
+  },
+  "stdout_sha256": "b10921db9579d761d40bd0c89626620b9fde38f877feb60e8526c85816053811"
+}
