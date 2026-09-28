@@ -31,7 +31,8 @@ module ot_chip_v41x_hbm_karb #(
     // One registered request per pseudo-channel.  Ready acknowledges enqueue;
     // the HBM handshake may occur a cycle later.  Default keeps the reduced
     // die's previously verified combinational timing and cycle counts.
-    parameter integer PIPE_OUT = 0
+    parameter integer PIPE_OUT = 0,
+    parameter integer PIPE_RSP = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -157,7 +158,6 @@ module ot_chip_v41x_hbm_karb #(
         // responses
         wire mine_k = r_tag[p*(TAGW+1) + TAGW];
         assign b_rsp_v[p] = r_v[p] && !mine_k;
-        assign r_rdy[p] = mine_k ? (kany && ksel == p && k_rsp_rdy) : b_rsp_rdy[p];
         assign b_rsp_tag[p*TAGW +: TAGW] = r_tag[p*(TAGW+1) +: TAGW];
         assign b_rsp_beat[p*BEATW +: BEATW] = r_beat[p*BEATW +: BEATW];
         assign b_rsp_data[p*DW +: DW] = r_data[p*DW +: DW];
@@ -176,10 +176,22 @@ module ot_chip_v41x_hbm_karb #(
     reg [NPC-1:0] kwd;
     always @(*) for (i = 0; i < NPC; i = i + 1) kwd[i] = h_wr_done[i] && bw_out[i] == 0 && kw_out[i] != 0;
     assign k_wr_done = |kwd;
-    assign k_rsp_v = kany;
-    assign k_rsp_tag = r_tag[ksel*(TAGW+1) +: TAGW];
-    assign k_rsp_beat = r_beat[ksel*BEATW +: BEATW];
-    assign k_rsp_data = r_data[ksel*DW +: DW];
+    generate if (PIPE_RSP != 0) begin : g_rsp_pipe
+        ot_chip_v41x_hbm_rsp_pipe #(.NPC(NPC), .TAGW(TAGW), .BEATW(BEATW), .DW(DW)) u_rsp (
+            .clk(clk), .rst_n(rst_n), .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag),
+            .r_beat(r_beat), .r_data(r_data), .b_rsp_rdy(b_rsp_rdy),
+            .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_tag(k_rsp_tag),
+            .k_rsp_beat(k_rsp_beat), .k_rsp_data(k_rsp_data));
+    end else begin : g_rsp_direct
+        for (genvar q = 0; q < NPC; q = q + 1) begin : g_pc
+            wire mine_k = r_tag[q*(TAGW+1) + TAGW];
+            assign r_rdy[q] = mine_k ? (kany && ksel == q && k_rsp_rdy) : b_rsp_rdy[q];
+        end
+        assign k_rsp_v = kany;
+        assign k_rsp_tag = r_tag[ksel*(TAGW+1) +: TAGW];
+        assign k_rsp_beat = r_beat[ksel*BEATW +: BEATW];
+        assign k_rsp_data = r_data[ksel*DW +: DW];
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin k_grants <= 0; b_grants <= 0; contended <= 0; end
         else begin
