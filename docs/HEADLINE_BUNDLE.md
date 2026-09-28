@@ -394,7 +394,7 @@ Each record is reproduced by its command, from the sources it pins. `current` pi
 | `results/rtl/hdc_v41x_hcp_campaign.json` | yes | `python3 tools/rtl_hdc_v41x_hcp_campaign.py  (inferred; the record names no command)` | current 8, stale 4 | — |
 | `results/rtl/hdc_qwen_vector_system_multi_g4sw16.json` | yes | `python3 tools/rtl_hdc_qwen_vector_system_multi.py  (inferred; the record names no command)` | current 29, stale 5 | — |
 | `results/rtl/hdc_qwen_vector_system_timed_g4sw16.json` | yes | `python3 tools/rtl_hdc_qwen_vector_system_timed.py  (inferred; the record names no command)` | current 30, stale 5 | — |
-| `results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json` | yes | `python3 tools/rtl_hdc_qwen_vector_matched_weight_full.py  (inferred; the record names no command)` | current 32, stale 8 | — |
+| `results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json` | yes | `python3 tools/rtl_hdc_qwen_vector_matched_weight_full.py  (inferred; the record names no command)` | current 31, stale 9 | — |
 | `results/rtl/hdc_qwen_context_2048.json` | yes | `python3 tools/rtl_hdc_qwen_context_2048.py  (inferred; the record names no command)` | current 32, stale 4 | — |
 | `results/rtl/hdc_qwen_context_1024.json` | yes | `python3 tools/rtl_hdc_qwen_context_ladder.py  (inferred; the record names no command)` | current 32, stale 4 | — |
 | `results/rtl/hdc_qwen_context_512.json` | yes | `python3 tools/rtl_hdc_qwen_context_ladder.py  (inferred; the record names no command)` | current 30, stale 6 | — |
@@ -431,7 +431,7 @@ Everything below is known to the check. A new entry of any kind fails it; a valu
 - `results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json`: provenance.source_snapshot_commit 6afcfba39b4d6e2b92252030b24986d26e36e4ce is not in HEAD's history
 - `results/rtl/hdc_v41x_whbm_pooled_multi.json`: provenance.execution_source_commit 351aecd4a1827eaccb2c4476282db4db1629d5a6 is not in HEAD's history
 
-### stale-pin (106)
+### stale-pin (107)
 
 - `results/arch/decode_roofline.json`: inputs[v41_budget] -> results/arch/arch_budget_v41.json is stale
 - `results/arch/decode_roofline.json`: inputs[power] -> results/arch/power_scenarios.json is stale
@@ -444,7 +444,7 @@ Everything below is known to the check. A new entry of any kind fails it; a valu
 - `results/rtl/hdc_qwen_context_512.json`: 6 pins, e.g. source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale
 - `results/rtl/hdc_qwen_long_context_256_control.json`: 6 pins, e.g. source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale
 - `results/rtl/hdc_qwen_matched_weight_single.json`: 6 pins, e.g. source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale
-- `results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json`: 8 pins, e.g. source_sha256[rtl/hdc/ot_hdc_core_vector_weight.sv] -> rtl/hdc/ot_hdc_core_vector_weight.sv is stale; source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale
+- `results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json`: 9 pins, e.g. source_sha256[rtl/hdc/ot_hdc_core_vector_weight.sv] -> rtl/hdc/ot_hdc_core_vector_weight.sv is stale; source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale
 - `results/rtl/hdc_qwen_vector_system_multi_g4sw16.json`: 5 pins, e.g. input_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; input_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale
 - `results/rtl/hdc_qwen_vector_system_timed_g4sw16.json`: 5 pins, e.g. input_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale; input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; input_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale
 - `results/rtl/hdc_v41_decode_campaign.json`: 15 pins, e.g. input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; input_sha256[rtl/hdc/v41/ot_hdc_core_v41.sv] -> rtl/hdc/v41/ot_hdc_core_v41.sv is stale; input_sha256[rtl/hdc/v41/ot_hdc_engram_hash.sv] -> rtl/hdc/v41/ot_hdc_engram_hash.sv is stale

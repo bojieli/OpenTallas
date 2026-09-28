@@ -32,13 +32,13 @@
   "records": 38,
   "records_with_source_pins": 27,
   "pins_by_status": {
-   "current": 529,
+   "current": 528,
    "path-only": 3,
-   "stale": 106
+   "stale": 107
   },
   "findings_by_kind": {
    "commit-outside-head": 4,
-   "stale-pin": 106
+   "stale-pin": 107
   }
  },
  "headlines": [
@@ -7898,7 +7898,7 @@
      "key": "tools/rtl_hdc_qwen_vector_matched_weight.py",
      "path": "tools/rtl_hdc_qwen_vector_matched_weight.py",
      "pinned": "836a476008fa7d45d927535b0dbbc0b158c233493af43db824368af8dbfc4b39",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -7909,8 +7909,8 @@
     }
    ],
    "pin_counts": {
-    "current": 32,
-    "stale": 8
+    "current": 31,
+    "stale": 9
    },
    "commits": []
   },
@@ -11393,6 +11393,12 @@
    "detail": "source_sha256[tools/hdc_timing.py] -> tools/hdc_timing.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/rtl_hdc_qwen_vector_matched_weight.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
+   "detail": "source_sha256[tools/rtl_hdc_qwen_vector_matched_weight.py] -> tools/rtl_hdc_qwen_vector_matched_weight.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_vector_system_multi_g4sw16.json",
@@ -11819,6 +11825,7 @@
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_timing.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/rtl_hdc_qwen_vector_matched_weight.py",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_sfu_q.sv",
