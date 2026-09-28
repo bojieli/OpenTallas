@@ -71,6 +71,11 @@ completed synthesis, macro placement, power-grid generation and pin placement.
 Its bounded run timed out during timing-driven global placement; clock tree
 and detailed route did not start. The full row store would require the other
 sector slices, and no routed timing, DRC or power is claimed from this probe.
-The separate one-bank SRAM route diagnostic records a detailed-route pin
-access failure on the current macro abstract. A routable macro pin boundary
-and a measured refill schedule are still required for the full-rate claim.
+The remote continuation in
+`results/physical_abi3/asap7/chip/v41x_window_bank4_phy/route_diagnostic.json`
+completed placement. The baseline stopped at the clock-tree hold-buffer cap.
+An explicit larger-cap sensitivity reached global route, then failed detailed
+route on SRAM pin access. Its global-route slack is an estimate and cannot
+establish closure. The separate one-bank SRAM route diagnostic found the same
+class of pin-access failure. A routable macro pin boundary and a measured
+refill schedule are still required for the full-rate claim.
