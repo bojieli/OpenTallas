@@ -105,5 +105,9 @@ still needs a macro mapping and physical gate.  Before placement, synthesis
 maps the 16x80 ME slice to 6,933 cells,
 861.9 µm² and -462 ps setup slack at 0.92 ns.  The 128x80 HE slice maps to
 6,960 µm² with -9,546 ps setup slack.  These negative standard-cell results
-are physical evidence that an SRAM macro is necessary, not a routed clock
-claim; routed records will supersede them when the runs finish.
+are physical evidence that an SRAM macro is necessary.  The 16x80
+standard-cell ME slice subsequently routed with no DRC or antenna violation;
+its routed Fmax is 1,633 MHz, but the combined run remains `NOT_MET` because
+the separate pre-route static-timing stage reports -462 ps at 0.92 ns.
+This tiny surrogate is not the complete ME tile or the grouped SRAM boundary.
+The larger 128x80 HE standard-cell route remains in progress.
