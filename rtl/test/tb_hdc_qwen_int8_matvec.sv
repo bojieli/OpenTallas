@@ -4,6 +4,7 @@
 // only scaling makes row 16 the winner.
 module tb_hdc_qwen_int8_matvec;
     parameter integer SPLIT = 0;
+    parameter integer SCALE_SEPARATE = 0;
     reg clk = 0, rst_n = 0, go = 0;
     always #5 clk = ~clk;
     wire ready, idle, scale_re, wrom_re, kv_re, ov, mx_we, fault, am_any;
@@ -46,13 +47,15 @@ module tb_hdc_qwen_int8_matvec;
         endcase
     endfunction
 
-    ot_hdc_matvec #(.G(2), .W(2), .IL(8), .INT8_WEIGHT(1)) dut (
+    ot_hdc_matvec #(.G(2), .W(2), .IL(8), .INT8_WEIGHT(1),
+                    .INT8_SCALE_WCS_BASE(SCALE_SEPARATE)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(SPLIT ? 16'd2 : 16'd18), .i_tiles(16'd1), .i_k(16'd2),
         .i_wsrc(1'b0), .i_wbase(24'd100), .i_ts(24'd0),
         .i_ks(24'd0), .i_js(24'd0),
         .i_xbase(24'd0), .i_xks(24'd0), .i_xjs(24'd0), .i_xcs(24'd0),
-        .i_jsh(3'd0), .i_split(SPLIT ? 4'd1 : 4'd0), .i_wcs(24'd0), .i_round(1'b1),
+        .i_jsh(3'd0), .i_split(SPLIT ? 4'd1 : 4'd0),
+        .i_wcs(SCALE_SEPARATE ? 24'd300 : 24'd0), .i_round(1'b1),
         .i_obase(24'd0), .i_ots(24'd8), .i_ojs(24'd1),
         .i_mmode(1'b0), .i_oen(1'b1), .i_amax(1'b1),
         .i_rmax(1'b0), .i_mbase(24'd0),
@@ -70,8 +73,9 @@ module tb_hdc_qwen_int8_matvec;
     always @(posedge clk) if (scale_re) begin
         if (scale_gre !== (SPLIT ? 2'b01 : (scale_reads == 0 ? 2'b11 : 2'b01)))
             $fatal(1, "active scale groups mismatch split=%0d read=%0d mask=%b", SPLIT, scale_reads, scale_gre);
-        if (scale_addr[23:0] !== 24'd100 + scale_reads ||
-            scale_addr[47:24] !== (scale_gre[1] ? 24'd108 + scale_reads : 24'd100))
+        if (scale_addr[23:0] !== (SCALE_SEPARATE ? 24'd300 : 24'd100) + scale_reads ||
+            scale_addr[47:24] !== (SCALE_SEPARATE ? 24'd300 : 24'd100) +
+                                    (scale_gre[1] ? 24'd8 + scale_reads : 24'd0))
             $fatal(1, "scale address mismatch at request %0d: %h", scale_reads, scale_addr);
         scale_q <= {scale_gre[1] ? 16'h3F80 : 16'h7FC0,
                     scale_gre[1] ? 16'h4040 : 16'h7FC0,

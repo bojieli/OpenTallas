@@ -50,7 +50,10 @@ module ot_hdc_matvec #(
     parameter integer IL = 8,
     parameter integer AW = 24,
     parameter integer NW = 16,
-    parameter integer INT8_WEIGHT = 0
+    parameter integer INT8_WEIGHT = 0,
+    // Full-shape INT8 programs put the scale image at ME_WCS. Reduced
+    // programs keep the historical shared ME_WBASE address by default.
+    parameter integer INT8_SCALE_WCS_BASE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -178,7 +181,7 @@ module ot_hdc_matvec #(
                 nout_r <= i_nout; tiles_r <= i_tiles; k_r <= kc_in; ktot_r <= i_k;
                 wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
                 rmax_r <= i_rmax; mbase_r <= i_mbase;
-                scale_base_r <= i_wbase;
+                scale_base_r <= (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? i_wcs : i_wbase;
                 mmode_r <= i_mmode; split_r <= i_split; wcs_r <= i_wcs;
                 ts_r <= i_ts; tstep_r <= i_wsrc ? (i_ts * per_round) : i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
                 xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;

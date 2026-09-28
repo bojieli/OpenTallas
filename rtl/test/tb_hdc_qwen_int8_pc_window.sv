@@ -3,7 +3,7 @@ module tb_hdc_qwen_int8_pc_window;
     localparam G=4, W=16, AW=24, HAW=28, PC=2, TAGW=16;
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0, load=0, code_re=0, scale_re=0;
-    reg [AW-1:0] op_base=5, code_addr=0;
+    reg [AW-1:0] op_base=5, op_scale_base=9, code_addr=0;
     reg [15:0] op_words=2, op_nout=32;
     reg [G*AW-1:0] scale_addr=0;
     reg [G-1:0] scale_gre={G{1'b1}};
@@ -20,7 +20,8 @@ module tb_hdc_qwen_int8_pc_window;
     integer i,j,cyc=0, reqs=0;
     ot_hdc_qwen_int8_pc_window #(.G(G),.W(W),.AW(AW),.HAW(HAW),.PCS(PC),
                                    .WIN_WORDS(2),.SCALE_WORDS(2),.TAGW(TAGW)) dut (
-        .clk(clk),.rst_n(rst_n),.load(load),.op_base(op_base),.op_words(op_words),.op_nout(op_nout),
+        .clk(clk),.rst_n(rst_n),.load(load),.op_base(op_base),.op_scale_base(op_scale_base),
+        .op_words(op_words),.op_nout(op_nout),
         .code_base_sector(28'd100),.scale_base_sector(28'd1000),.ready(ready),.fault(fault),
         .code_re(code_re),.code_addr(code_addr),.code_q(code_q),
         .scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr),.scale_q(scale_q),
@@ -39,11 +40,11 @@ module tb_hdc_qwen_int8_pc_window;
         if (!ready || fault) $fatal(1,"prefetch failed ready=%b fault=%b",ready,fault);
         code_re=1; code_addr=5;
         scale_re=1;
-        scale_addr[0 +: AW]=5; scale_addr[AW +: AW]=6;
-        scale_addr[2*AW +: AW]=7; scale_addr[3*AW +: AW]=5;
+        scale_addr[0 +: AW]=9; scale_addr[AW +: AW]=10;
+        scale_addr[2*AW +: AW]=11; scale_addr[3*AW +: AW]=9;
         @(negedge clk); code_re=0; scale_re=0;
         if (code_q !== {hmem[111],hmem[110]}) $fatal(1,"code word 5 mismatch");
-        if (scale_q !== {hmem[1005],256'd0,hmem[1006],hmem[1005]})
+        if (scale_q !== {hmem[1009],256'd0,hmem[1010],hmem[1009]})
             $fatal(1,"scale word mismatch");
         code_re=1; code_addr=6;
         @(negedge clk); code_re=0;

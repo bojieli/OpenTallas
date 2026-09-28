@@ -34,7 +34,7 @@ def main():
                           "hbm_sector_address_bits": 28, "window_words": 2,
                           "weight_bytes_per_word": 64, "scale_bytes_per_word": 128},
         "observed": {"sector_reads": int(m.group(1)), "preload_cycles": int(m.group(2))} if m else {},
-        "claim_boundary": "Standalone bounded PC-local INT8 code/BF16-scale supply with exact 32-byte sector reconstruction and one-cycle synchronous core ports. Synthetic 2-word operation only; no same-program package token, full G6144 bandwidth, HBM controller or P&R claim.",
+        "claim_boundary": "Standalone bounded PC-local INT8 code/BF16-scale supply with exact 32-byte sector reconstruction, independent code/scale bases and one-cycle synchronous core ports. Synthetic 2-word operation only; no same-program package token, full G6144 bandwidth, HBM controller or P&R claim.",
         "input_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCES},
         "build_stderr": build.stderr[-1000:],
         "simulation_stdout": run.stdout[-1000:] if run else "",

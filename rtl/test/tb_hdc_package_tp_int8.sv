@@ -183,7 +183,7 @@ module tb_hdc_package_tp_int8 #(
                 wire [G*W*8-1:0] hbm_int8_q;
                 wire [G*W*16-1:0] hbm_scale_q;
                 wire wd_v, w_ok, hbm_fault;
-                wire [AW-1:0] wd_wbase;
+                wire [AW-1:0] wd_wbase, wd_sbase;
                 wire [NW-1:0] wd_tiles, wd_k, wd_nout;
                 reg [64*8-1:0] embed_code_q;
                 reg [15:0] embed_scale_q;
@@ -214,7 +214,7 @@ module tb_hdc_package_tp_int8 #(
                     .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
                     .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_jsh(), .kvd_tiles(), .kvd_k(),
                     .kvd_nout(), .kvd_kindk(), .kvd_pos(), .kv_ok(1'b1),
-                    .kv_write_drained(1'b1), .wd_v(wd_v), .wd_wbase(wd_wbase),
+                    .kv_write_drained(1'b1), .wd_v(wd_v), .wd_wbase(wd_wbase), .wd_sbase(wd_sbase),
                     .wd_tiles(wd_tiles), .wd_k(wd_k), .wd_nout(wd_nout),
                     .w_ok(w_ok), .emb_ok(1'b1));
                 assign cfault_w[n*D + d] = core_fault | hbm_fault;
@@ -232,7 +232,7 @@ module tb_hdc_package_tp_int8 #(
                     wire [NW-1:0] wd_words = wd_tiles*wd_k*8;
                     ot_hdc_qwen_int8_pc_window #(.G(G),.W(W),.AW(AW),.HAW(HAW),.NW(NW),
                         .PCS(PC),.WIN_WORDS(4096),.SCALE_WORDS(128),.TAGW(HTAG)) source (
-                        .clk(clk),.rst_n(rst_n),.load(wd_v),.op_base(wd_wbase),
+                        .clk(clk),.rst_n(rst_n),.load(wd_v),.op_base(wd_wbase),.op_scale_base(wd_sbase),
                         .op_words(wd_words),.op_nout(wd_nout),
                         .code_base_sector(28'd0),.scale_base_sector(SCALE_REGION),
                         .ready(w_ok),.fault(hbm_fault),
