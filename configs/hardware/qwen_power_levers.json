@@ -1,0 +1,225 @@
+{
+ "schema": "opentallas.qwen-power-levers-inputs.v1",
+ "purpose": "Inputs of the batch-1 power levers of the Qwen3-8B ROM reticle (tools/qwen_power_levers.py -> results/arch/qwen_power_levers.json). Each lever is a NAMED scenario against the baseline of configs/hardware/power_scenarios.json; nothing here changes the baseline. Evidence classes as configs/hardware/power_scenarios.json evidence_classes. Conservative rule as there: where sources disagree take the value that makes the die hotter.",
+ "target_tokens_s": 8910.23,
+ "sram": {
+  "density_bytes_per_mm2": {
+   "value": 3008750.0,
+   "unit": "B/mm2",
+   "evidence_class": "assumed",
+   "boundary": "usable SRAM macro density at N6: 24.07 Mb/mm2 = HD bitcell 0.027 um2 (N7 = N6) at 0.65 array efficiency (bitcell over macro incl. decoders, sense amps, redundancy); the value tools/arch_budget_qwen3.SRAM_BITS_PER_MM2 sizes the KV prefetch buffer with (18.67 MB in 6.2 mm2)",
+   "source": "configs/hardware/technology.json nodes.N6.sram_hd_bitcell_um2 (derived from https://pr.tsmc.com/english/news/1989) and sram.array_efficiency (assumed, 0.55-0.75); tools/arch_budget_qwen3.py SRAM_BITS_PER_MM2"
+  },
+  "resident_read_j_per_byte": {
+   "value": 1.272e-11,
+   "unit": "J/B",
+   "evidence_class": "published-measured",
+   "boundary": "one byte read from a large on-die SRAM holding resident KV: the A100 L1's WHOLE measured access energy (control 1.26 + datapath 0.33 = 1.59 pJ/bit), i.e. the top of technology.json's sram_read_j_per_byte range, 4.9x the 2.6 pJ/B the baseline charges its KV ring. Charged IN ADDITION to the ring's write + read + delivery, which the resident bytes still pay (no credit for a direct SRAM-to-lane path).",
+   "source": "Antepara, Zhao, Austin, Ding, Oliker, Wright, Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, Table 3 (as quoted in configs/hardware/technology.json energy.sram_read_j_per_byte.range_high)",
+   "quote": "A100 L1: control 1.26 / datapath 0.33 / total 1.59 pJ/bit"
+  },
+  "cross_checks": {
+   "tpuv4i_1mb_sram_7nm": {
+    "value": 0.8875,
+    "unit": "pJ/B",
+    "evidence_class": "published-spec",
+    "boundary": "one 64-bit access of a single-bank 1 MB SRAM at 7 nm (7.1 pJ / 8 B); a design estimate; the resident KV read is charged 14x this",
+    "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2, doi:10.1109/ISCA52012.2021.00010",
+    "quote": "'Energy per Operation: 45 nm [16] vs 7 nm. Memory is pJ per 64-bit access.' ... '1 MB SRAM 100.000 14.000 7.1'"
+   },
+   "dally_hotchips2023_mb_sram": {
+    "value": 12.5,
+    "unit": "pJ/B",
+    "evidence_class": "published-spec",
+    "boundary": "'On-Chip SRAM MB' access, 50 pJ per 32-bit word (45 nm-era table): the order of the charged 12.72 pJ/B",
+    "source": "W. Dally, keynote, Hot Chips 2023",
+    "quote": "'On-Chip SRAM MB 50pJ/word'"
+   },
+   "tsmc_n5_bitcell": {
+    "value": 0.021,
+    "unit": "um2",
+    "evidence_class": "published-measured",
+    "boundary": "N5 6T HD bitcell (the N6 bitcell charged is 0.027, i.e. 29% larger: conservative); no macro-level Mb/mm2 found",
+    "source": "Chang et al. (TSMC), JSSC 2021, doi:10.1109/JSSC.2020.3034241 (abstract)",
+    "quote": "'A 135-Mb 0.021-um2 6-T high-density SRAM bit cell ... 5-nm HK-metal gate FinFET with EUV'"
+   }
+  }
+ },
+ "hbm_controller": {
+  "note": "Lever 2 (fixed-function streaming controller = a measured PHY + a sourced controller-logic estimate). Re-searched 2026-09-28: no measured host-side HBM2E/HBM3/HBM3E PHY energy per bit and no memory-controller logic energy per bit was found in any loadable source (SK hynix HBM3 JSSC 2023 doi:10.1109/JSSC.2022.3193354 and Samsung HBM3 JSSC 2023 doi:10.1109/JSSC.2022.3232096 abstracts state bandwidth and relative efficiency only; Rambus/Synopsys/Cadence PHY pages give no pJ/bit). The only interface figures are MODELS (O'Connor MICRO 2017: interposer I/O 0.80 pJ/b at 50% activity; Chatterjee HPCA 2017: 0.54 pJ/b) and measured die-to-die links that are not HBM PHYs (LIPINCON 0.56 pJ/bit, GRS 0.54 pJ/b). The lever therefore CANNOT be built from measured parts: scenario_die_pj_per_bit is null and the record carries only the requirement (the die share that would reach the target) and the existing sensitivities (GH200 8.23, the withdrawn 0.8 I/O floor) for scale.",
+  "scenario_die_pj_per_bit": null,
+  "scenario_parts": [],
+  "searched": {
+   "oconnor_micro2017_io": {
+    "value": 0.8,
+    "unit": "pJ/bit",
+    "evidence_class": "published-spec",
+    "boundary": "HBM2 interposer I/O, both ends, 50% toggle; MODEL (28 nm DRAM parameters after Rambus), no controller",
+    "source": "O'Connor et al., Fine-Grained DRAM, MICRO 2017, Table 3, https://www.cs.utexas.edu/users/skeckler/pubs/MICRO_2017_Fine_Grained_DRAM.pdf",
+    "quote": "I/O (pJ/b)* 0.80 0.77 0.77 ... * at 50% activity"
+   },
+   "chatterjee_hpca2017_io": {
+    "value": 0.54,
+    "unit": "pJ/bit",
+    "evidence_class": "published-spec",
+    "boundary": "HBM data transfer on the interposer only, 50% toggle; MODEL; no controller",
+    "source": "Chatterjee et al., Architecting an Energy-Efficient DRAM System for GPUs, HPCA 2017, https://d1qx31qr3h6wln.cloudfront.net/publications/HPCA_2017_Subchannels.pdf",
+    "quote": "the rest of the datapath consumes 2.85pJ/b at 50% toggle rate (2.31 pJ/b for column, 0.54 pJ/b for I/O)"
+   },
+   "lipincon_cowos_link": {
+    "value": 0.56,
+    "unit": "pJ/bit",
+    "evidence_class": "published-measured",
+    "boundary": "TSMC 7 nm CoWoS die-to-die parallel link (8 Gb/s/pin, 0.3 V swing, unterminated), TX+RX; a die-to-die link, NOT an HBM PHY, no controller",
+    "source": "Lin et al., A 7-nm 4-GHz Arm-Core-Based CoWoS Chiplet Design for High-Performance Computing, IEEE JSSC 2020, doi:10.1109/JSSC.2019.2960207 (abstract)",
+    "quote": "The scalable link module offers 320 GB/s of aggregate bandwidth, operating at 8.0 Gb/s/pin and 0.3-V transmitter swing without receiver termination to achieve 0.56-pJ/bit energy efficiency and 1.6-Tb/s/mm2 bandwidth density."
+   },
+   "hmc_gen1_whole_cube": {
+    "value": 10.82,
+    "unit": "pJ/bit",
+    "evidence_class": "published-spec",
+    "boundary": "Micron HMC Gen1 whole cube (DRAM + logic base die with vault controllers + SerDes), from IDD7; no logic-die split",
+    "source": "Pawlowski, Hybrid Memory Cube (HMC), Hot Chips 23, 2011, slide 21",
+    "quote": "HMC, 4 DRAM w / Logic 1.2 9.23 128.00 11.08 86.53 10.82 13.7"
+   }
+  }
+ },
+ "two_die": {
+  "link_j_per_bit": {
+   "value": 6e-13,
+   "unit": "J/bit",
+   "evidence_class": "published-spec",
+   "boundary": "UCIe advanced-package link, both ends; the top of the UCIe target range (the measured 3 nm best case is 0.29, TSMC's 7 nm CoWoS LIPINCON 0.56)",
+   "source": "configs/hardware/technology.json energy.link_j_per_bit.ucie_advanced.range_high (UCIe Consortium, Hot Chips 2023 tutorial, Electrical Summary)",
+   "quote": "'Power Efficiency Target (pJ/b) ... 0.3-0.6 [Adv 16] 0.3-0.6 [Adv 24/32]'"
+  },
+  "d2d_bytes_s": {
+   "value": 2700000000000.0,
+   "unit": "B/s",
+   "evidence_class": "assumed",
+   "boundary": "die-to-die bandwidth each direction, sized to carry half of a die's KV (the remote 3 stacks) at the 6-stack sustained 5.4 TB/s during its stage: 2.7 TB/s = 21.6 Tb/s each way. Blackwell's shipping die-to-die link is 10 TB/s (NVIDIA), so the rate is shipped practice; the area is priced from a measured link below.",
+   "source": "tools/arch_budget_qwen3.py requirements.kv_hbm.sustained_bytes_s / 2; NVIDIA Blackwell architecture page ('10 TB/s chip-to-chip interconnect')"
+  },
+  "d2d_phy_mm2": {
+   "value": 27.0,
+   "unit": "mm2",
+   "evidence_class": "published-measured",
+   "boundary": "die-to-die PHY area on EACH die for 2 x 21.6 Tb/s (both directions) at LIPINCON's measured 1.6 Tb/s/mm2 area density (7 nm, 8 Gb/s/pin): 43.2 / 1.6 = 27 mm2; the 3 nm UCIe test chip's 5.27 Tb/s/mm shoreline would need ~8.2 mm of the edge the 3 dropped stacks free",
+   "source": "Lin et al., IEEE JSSC 2020, doi:10.1109/JSSC.2019.2960207 (abstract); configs/hardware/technology.json energy.link_j_per_bit.ucie_advanced (JSSC 2026 doi:10.1109/JSSC.2026.3651425)",
+   "quote": "'0.56-pJ/bit energy efficiency and 1.6-Tb/s/mm2 bandwidth density'; 'exhibit 0.29 pJ/bit power efficiency with 5.27Tb/s/mm ... and 3.5 ns measured FDI-to-FDI latency'"
+  },
+  "hop_latency_s": {
+   "value": 3.5e-09,
+   "unit": "s",
+   "evidence_class": "published-measured",
+   "boundary": "one die-to-die crossing, FDI to FDI (adapter + PHY both ends), 3 nm CoWoS UCIe test chip; charged once per hop plus the hop's bytes at d2d_bytes_s",
+   "source": "configs/hardware/technology.json energy.link_j_per_bit.ucie_advanced (JSSC 2026 doi:10.1109/JSSC.2026.3651425)",
+   "quote": "'3.5 ns measured FDI-to-FDI latency'"
+  },
+  "hop_bytes_per_slot": {
+   "value": 8192.0,
+   "unit": "B",
+   "evidence_class": "assumed",
+   "boundary": "one slot's BF16 hidden state (4,096 x 2 B) per hop; with DFlash each hop carries the drafter's 5 tapped layers' states (x5), 4 hops a step (verify A->B, token back, draft taps both ways)",
+   "source": "Qwen3-8B config.json hidden_size 4096 (tools/hdc_timing.SHAPES); z-lab/Qwen3-8B-DFlash-b16 fc input 5 x 4096 (tools/dflash_step_timing.DFLASH_FC)"
+  },
+  "package_ratings": {
+   "note": "the two-die per-die and per-package limits are the baseline's own (configs/hardware/power_scenarios.json cooling.references b200_hgx 1,000 W air and gb200_nvl72 1,200 W liquid, each less its 8 stacks at peak, per die): 374.6 W air / 474.6 W liquid a die, 1,000 / 1,200 W a package"
+  }
+ },
+ "dvfs": {
+  "note": "Lever 4. The only sourced V/f relation for the node is a vendor OPP (operating performance point) table of a TSMC N6 SoC's GPU. It is transferred by NORMALISING to its top point: our routed 1.0986 GHz is taken to sit at the table's top (0.75 V) and a lower clock at the table's relative voltage. What scales: core dynamic energy per operation and clock power (x V^2, clock also x f); what does not: leakage (no credit, conservative), stack idle, and the HBM die share (the PHY/controller energy per bit is charged at the measured path, whose I/O supply is not the core rail). The batch-1 step is compute-chain bound (123,301 cycles against a 122,881-cycle KV stream at 8K), so the rate scales with f: DVFS lowers the per-user rate and can only raise the CAPPED rate.",
+  "curve": {
+   "table_hz_uv": [
+    [
+     390000000,
+     625000
+    ],
+    [
+     410000000,
+     631250
+    ],
+    [
+     431000000,
+     631250
+    ],
+    [
+     473000000,
+     637500
+    ],
+    [
+     515000000,
+     637500
+    ],
+    [
+     556000000,
+     643750
+    ],
+    [
+     598000000,
+     650000
+    ],
+    [
+     640000000,
+     650000
+    ],
+    [
+     670000000,
+     662500
+    ],
+    [
+     700000000,
+     675000
+    ],
+    [
+     730000000,
+     687500
+    ],
+    [
+     760000000,
+     700000
+    ],
+    [
+     790000000,
+     712500
+    ],
+    [
+     820000000,
+     725000
+    ],
+    [
+     850000000,
+     737500
+    ],
+    [
+     880000000,
+     750000
+    ]
+   ],
+   "evidence_class": "published-spec",
+   "boundary": "MediaTek MT8195 (Kompanio 1380, TSMC 6 nm) Mali-G57 GPU operating points as shipped in the mainline Linux device tree: vendor DVFS table (frequency, core supply), not a silicon measurement of our die; transferred by normalising to its top point",
+   "source": "Linux mainline arch/arm64/boot/dts/mediatek/mt8195.dtsi gpu_opp_table, https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/arch/arm64/boot/dts/mediatek/mt8195.dtsi (fetched 2026-09-28); node: https://www.mediatek.com/products/chromebooks/mediatek-kompanio-1380",
+   "quote": "'opp-hz = /bits/ 64 <880000000>; opp-microvolt = <750000>;' ... 'opp-hz = /bits/ 64 <390000000>; opp-microvolt = <625000>;'; MediaTek: 'Manufactured using the latest TSMC 6nm process', 'MediaTek Kompanio 1380 (MT8195T)'",
+   "cross_check": "Keller et al. (NVIDIA, TSMC 5 nm, measured) as summarised by Dally, Hot Chips 2023: 'Voltage range: 0.46V - 1.05V', 'Frequency range: 152 MHz - 1760 MHz' (range ends only; intermediate points unpublished)"
+  },
+  "levers_at_hz": [
+   850000000,
+   820000000,
+   760000000,
+   700000000
+  ]
+ },
+ "atlas_figures_if_adopted": {
+  "1": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the 'Power caps the reticle' bullet (7,442 / 4,689 AR; 11,925 / 4,731 DFlash); s11.3 capped-rate table and the 'MAC energy that fits' bullets (593.6 W before any MAC, -0.50 pJ/MAC, 8,102 tok/s with free MACs); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (7,442 x18, 4,689 x17, 11,925 x9, 549.5 W x23); for the lane-copy trades additionally the area ledger (results/arch/qwen3_budget.json area: lane_copies_added 2, lane_multiplier_m 3, slack 8.6 mm2) and every DFlash figure at m = 3 (13,052 tok/s x12 in the atlas, 2.265 tokens a step, block 3), since the multiplier is the DFlash lever",
+  "2": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the 'Power caps the reticle' bullet (7,442 / 4,689 AR; 11,925 / 4,731 DFlash); s11.3 capped-rate table and the 'MAC energy that fits' bullets (593.6 W before any MAC, -0.50 pJ/MAC, 8,102 tok/s with free MACs); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (7,442 x18, 4,689 x17, 11,925 x9, 549.5 W x23); configs/hardware/power_scenarios.json memory.die_share (10.19 pJ/bit) -- not adoptable: no measured part exists",
+  "3": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the 'Power caps the reticle' bullet (7,442 / 4,689 AR; 11,925 / 4,731 DFlash); s11.3 capped-rate table and the 'MAC energy that fits' bullets (593.6 W before any MAC, -0.50 pJ/MAC, 8,102 tok/s with free MACs); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (7,442 x18, 4,689 x17, 11,925 x9, 549.5 W x23); plus the machine's framing everywhere: 'single reticle' / one 815 mm2 die becomes a two-die package (2 x die area, 2 x leakage), the cooling reference moves from H200 SXM (549.5 W a die, 700 W package) to B200 HGX / GB200 (374.6 / 474.6 W a die, 1,000 / 1,200 W package), the iso-area comparison (docs/ARCH_SPEC_QWEN3.md iso-area rows, results/roofline/iso_area/qwen3_8b.json) is no longer one reticle each side, and 6 stacks split 3 + 3",
+  "4": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the 'Power caps the reticle' bullet (7,442 / 4,689 AR; 11,925 / 4,731 DFlash); s11.3 capped-rate table and the 'MAC energy that fits' bullets (593.6 W before any MAC, -0.50 pJ/MAC, 8,102 tok/s with free MACs); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (7,442 x18, 4,689 x17, 11,925 x9, 549.5 W x23); also the per-user batch-1 rate 8,910 tok/s itself (a DVFS point runs slower by f)",
+  "sensitivity": "none (a sensitivity is not adoptable under the FP8-KV rule)"
+ },
+ "not_evaluated": {
+  "stacked_sram_die": "a hybrid-bonded SRAM die over the logic (3D V-Cache class) could hold a whole 8K user KV (604 MB) off the reticle area, but no source gives the thermal derating of a cache die stacked on a ~550 W logic die, and the only shipping part (AMD 3D V-Cache, ISSCC 2022 doi:10.1109/ISSCC42614.2022.9731565: 'expands Zen3's on-die L3 Cache from 32MB to 96MB') is a ~100 W-class CPU; its die area was not verifiable. Not priced.",
+  "hbm_controller_measured": "no measured host PHY or controller energy per bit exists in a loadable source (see hbm_controller.note); the record gives the requirement instead (hbm_die_share_needed_for_target)",
+  "kv_int4": "4-bit KV is a SENSITIVITY only (user rule); it is in the record as sensitivity_kv_int4 and not a lever",
+  "web_search_budget": "the session's web-search quota was exhausted during this work; sources were loaded by direct URL/DOI. A measured HBM3 PHY paper (ISSCC/VLSI), Intel's UCIe test chip, SC'25 Table 3's L2 row and a macro-level N5/N6 SRAM density remain to be fetched."
+ }
+}
