@@ -91,7 +91,7 @@ def derive() -> dict:
             "write_macros_per_preload_cycle": write_macros_per_preload_cycle,
             "read_ports": "one 128-bit read per macro per cycle, all 16 macros for two-position 2048-bit tile payload",
             "write_ports": "one 128-bit write per macro per cycle, eight macros for one-position 1024-bit preload payload",
-            "read_write_overlap": "1R1W physically possible; same-address semantics and schedule unresolved",
+            "read_write_overlap": "wo_a preload and tile-read phases are serialized in the exact single-user schedule; simultaneous users or dissimilar ME ops need arbitration, and same-address read-during-write semantics are not credited",
             "preload_issue_cycles_two_4096_element_groups": 128,
             "macro_write_energy_pj_per_preload_cycle": round(
                 write_macros_per_preload_cycle * tt["write_energy_fj"] / 1000, 6

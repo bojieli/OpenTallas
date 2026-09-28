@@ -72,7 +72,7 @@
     "preload_issue_cycles_two_4096_element_groups": 128,
     "read_macros_per_cycle": 16,
     "read_ports": "one 128-bit read per macro per cycle, all 16 macros for two-position 2048-bit tile payload",
-    "read_write_overlap": "1R1W physically possible; same-address semantics and schedule unresolved",
+    "read_write_overlap": "wo_a preload and tile-read phases are serialized in the exact single-user schedule; simultaneous users or dissimilar ME ops need arbitration, and same-address read-during-write semantics are not credited",
     "time_left_at_0p92ns_ps_before_route_and_logic": 539.9721250275472,
     "useful_activation_bits_per_store": 131072,
     "write_macros_per_preload_cycle": 8,
