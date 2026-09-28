@@ -32,6 +32,7 @@ module ot_hdc_qwen_int8_pc_window #(
     input  wire [AW-1:0] code_addr,
     output reg  [G*W*8-1:0] code_q,
     input  wire scale_re,
+    input  wire [G-1:0] scale_gre,
     input  wire [G*AW-1:0] scale_addr,
     output reg  [G*W*16-1:0] scale_q,
     // One request/response lane per pseudo-channel. Response tags echo the
@@ -136,7 +137,7 @@ module ot_hdc_qwen_int8_pc_window #(
             if (scale_re) begin
                 if (!ready) fault <= 1;
                 else for (g=0; g<G; g=g+1) begin
-                    if (scale_addr[g*AW +: AW] < base_r ||
+                    if (!scale_gre[g] || scale_addr[g*AW +: AW] < base_r ||
                         scale_addr[g*AW +: AW] >= base_r + scales_r)
                         scale_q[g*W*16 +: W*16] <= 0;
                     else begin
