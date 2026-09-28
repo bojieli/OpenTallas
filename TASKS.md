@@ -4,6 +4,20 @@ Updated 2026-09-28 against the current integration branch. The goal is four **fu
 
 **Statuses:** `[x]` published and passed at the stated scope; `[~]` assigned/in progress; `[ ]` queued; `[!]` a measured blocker. Owner names below identify responsibility; their branch/worktree is the handoff location, not evidence until merged. The live assignment table below supersedes older agent activity descriptions. Completed agents resume only for a concrete, nonoverlapping critical-path task. Optional sweeps and superseded routes stay stopped. Root stopped the old DEPTH32 non-px collective detailed route (checkpoint retained), recovering about 30 GiB locally; large new gates run remotely with memory caps. The root agent integrates and pushes main. On every substantive merge, the owner of that item updates its gate, source-pinned record and next blocker here. Old campaign details belong in their records.
 
+## Architecture-owned execution — current priority
+
+The user approved [the architecture ownership and verification contract](ARCHITECTURE_EXECUTION_CONTRACT.md). Root owns topology and all budgets. Agent proposals and measurements inform root decisions; agents do not independently change pipeline latency, replication, memory layout or physical partitioning.
+
+- [~] **Root:** review and adopt the complete implementation contract; publish approved integrations and invalidate dependent evidence when contracts change.
+- [~] **v41_model_reprice:** machine-readable dependency/service/budget proposal, with unknown terminal latency kept null; no headline changes.
+- [~] **v41_hbm_region_audit:** complete single-user HBM region/service candidate and executable constraints, including disconnected clients and width limits.
+- [~] **v41_fullshape_core:** actual layer connection manifest, selected-ID/descriptor lifecycle and full-shape width propagation proposal.
+- [~] **v41_vm_bank_physical + v41_me_he_macro_pipeline:** macro/register placement and real timing budgets before the next neighborhood implementation; preserve current negative evidence.
+- [~] **v41_index_score_major:** query lifetime and reader/scorer/selector burst/queue contract before replication.
+- [~] **Qwen owners:** continue bounded exactness and existing physical verification; root reviews architecture-changing fixes first.
+
+The older assignment snapshot below describes file ownership; this section supersedes its activity count and sequencing. Completed implementation branches await integration or a reviewed next contract. Existing independent runs may finish.
+
 ## Live parallel assignments — 2026-09-28
 
 Root owns publication, this tracker, and the architectural acceptance boundary. Twelve subagents are assigned active work after the requested parallelism increase; this is an assignment snapshot, not a count of background processes. Integration reviewers use isolated branches and never change frozen simulation inputs.
