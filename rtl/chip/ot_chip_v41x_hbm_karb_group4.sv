@@ -129,11 +129,41 @@ module ot_chip_v41x_hbm_karb_group4 #(
         assign b_rsp_data[p*DW +: DW] = r_data[p*DW +: DW];
     end endgenerate
     assign k_wr_done = |child_k_wr_done;
+    // Terminate the four-way response selection at the group boundary.  The
+    // upstream receive buffers see a conventional one-entry elastic sink;
+    // the external K port is driven only by this local register.
+    wire mid_rsp_v;
+    wire mid_rsp_rdy = !out_rsp_v || k_rsp_rdy;
+    wire [TAGW-1:0] mid_rsp_tag;
+    wire [BEATW-1:0] mid_rsp_beat;
+    wire [DW-1:0] mid_rsp_data;
+    reg out_rsp_v;
+    reg [TAGW-1:0] out_rsp_tag;
+    reg [BEATW-1:0] out_rsp_beat;
+    reg [DW-1:0] out_rsp_data;
+    assign k_rsp_v = out_rsp_v;
+    assign k_rsp_tag = out_rsp_tag;
+    assign k_rsp_beat = out_rsp_beat;
+    assign k_rsp_data = out_rsp_data;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            out_rsp_v <= 1'b0;
+            out_rsp_tag <= '0;
+            out_rsp_beat <= '0;
+            out_rsp_data <= '0;
+        end else if (mid_rsp_rdy) begin
+            out_rsp_v <= mid_rsp_v;
+            if (mid_rsp_v) begin
+                out_rsp_tag <= mid_rsp_tag;
+                out_rsp_beat <= mid_rsp_beat;
+                out_rsp_data <= mid_rsp_data;
+            end
+        end
     ot_chip_v41x_hbm_rsp_pipe #(.NPC(4), .TAGW(TAGW), .BEATW(BEATW), .DW(DW), .NG(4)) u_rsp (
         .clk(clk), .rst_n(rst_n), .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag),
         .r_beat(r_beat), .r_data(r_data), .b_rsp_rdy(b_rsp_rdy),
-        .k_rsp_rdy(k_rsp_rdy), .k_rsp_v(k_rsp_v), .k_rsp_tag(k_rsp_tag),
-        .k_rsp_beat(k_rsp_beat), .k_rsp_data(k_rsp_data));
+        .k_rsp_rdy(mid_rsp_rdy), .k_rsp_v(mid_rsp_v), .k_rsp_tag(mid_rsp_tag),
+        .k_rsp_beat(mid_rsp_beat), .k_rsp_data(mid_rsp_data));
     always @(*) begin
         k_grants = kg[0] + kg[1] + kg[2] + kg[3];
         b_grants = bg[0] + bg[1] + bg[2] + bg[3];
