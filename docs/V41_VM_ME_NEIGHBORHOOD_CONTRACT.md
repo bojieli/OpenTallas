@@ -54,6 +54,16 @@ antenna, and macro power-grid connectivity. A digest-only output is not
 sufficient evidence that all four consumers survived synthesis. Macro
 instances and data paths must remain connected in the final netlist.
 
+Both selected SRAM views expose VDD and VSS power pins in their LEFs. PDN
+generation must connect all 48 VM and eight MP=1 store instances and pass a
+connectivity check; a completed routing database without macro power
+connectivity does not pass. VM has one read and one write port per bank. The
+four-word ME preload consumes the four reads together. The GW4 collective
+consumes the four writes together during its blocking phase, so these two
+operations require no extra macro ports. A concurrent core read or write
+must be scheduled or arbitrated explicitly; the scoped wo_a checkpoint
+gate does not prove such contention handling.
+
 The ME checkpoint gate at `5f11f91a` is a source-pinned first-16 RL5 pass;
 full 2,048-row replay and the integrated pipelined VM-to-RL5 exact replay
 are separate functional prerequisites. No rate credit follows from this
