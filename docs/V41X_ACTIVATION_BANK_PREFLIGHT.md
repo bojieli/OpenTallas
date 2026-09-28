@@ -62,6 +62,13 @@ placed next to the associated eight MAC lanes: exposing the entire
 problem.  HW=8 uses a different, deeper image and remains the first
 full-shape numerical profile until an HW=256 weight-bank image is generated.
 
+`ot_hdc_v41x_he_xslice_macro` maps one such slice to one analytical 128x256
+SRAM abstract, with bit-masked legacy writes and full-word preload.  Its
+80-word real-data preload and 640 readbacks pass the macro simulation model.
+At HW=256 and PMAX=8 the 256 slices would occupy about 0.996 mm² of these
+macro outlines, before wiring and whitespace.  This is a floorplan estimate
+for local memories, not a routed HCP or measured SRAM area.
+
 The two ME `wo_a` groups can be loaded once each through the existing four
 VM ports, as the corrected no-`splitj` program does.  The stand-alone xbank
 also has a separate 64-element BF16 preload port.  Four 512-bit logical VM
