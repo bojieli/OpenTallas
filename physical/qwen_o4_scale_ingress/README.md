@@ -21,6 +21,15 @@ cut; the HBM input-arrival constraint is a stated test condition, not a
 measurement of them. These two arms cannot by themselves establish a ROM/HBM
 token-rate or energy ratio.
 
+The source-capture register is a proposed wrapper boundary in this physical
+cut. The current `ot_hdc_matvec` receives the synchronous scale word directly
+and feeds `ot_hdc_fmul`; it does not contain that capture register. Its
+registered scale request is scheduled two cycles before the unscaled result.
+Consequently these paths diagnose a possible boundary, not the production
+matvec's exact clock path. Any added capture stage must also delay the result
+tag, result-valid and writeback by one cycle, and pass the post-TP scale
+bit-exact gate.
+
 The probe connects a `scale_group_re` activity signal to the ROM chip enable
 and the common source capture. The scale read schedule, bit-exact token,
 full-bank address translation and all 6,144 clusters remain with the E2E RTL
