@@ -91,6 +91,7 @@
 //     and synthesised, not exercised by the smoke.
 // ---------------------------------------------------------------------------
 module ot_chip_v41x_die #(
+    parameter integer FULL_SHAPE = 0,
     // tile (core + ROM + buffers)
     parameter integer SW      = 8,
     parameter integer MG      = 8,
@@ -291,8 +292,17 @@ module ot_chip_v41x_die #(
     wire [15:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos; wire [1:0] kvd_hg;
     wire xa_we, xa_re, xb_we, xb_re; wire [VWA-1:0] xa_waddr, xa_raddr, xb_waddr, xb_raddr;
     wire [511:0] xa_wdata, xa_rq, xb_wdata, xb_rq;
+    localparam integer COLL_AW = FULL_SHAPE ? 30 : 24;
+    localparam integer COLL_NW = FULL_SHAPE ? 21 : 16;
+    wire core_coll_go, core_coll_rnd;
+    wire [1:0] core_coll_op;
+    wire [COLL_AW-1:0] core_coll_src, core_coll_dst, core_coll_ibase;
+    wire [COLL_NW-1:0] core_coll_n;
+    wire [11:0] core_coll_k;
+    wire [7:0] core_coll_seq;
+    wire die_coll_fault;
 
-    ot_chip_v41x_tile #(.SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM),
+    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
                         .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW)) u_tile (
         .clk(clk), .rst_n(rn),
@@ -314,6 +324,9 @@ module ot_chip_v41x_die #(
         .kr_v(kr_v), .kr_rdy(kr_rdy), .kr_tag(kr_tag), .kr_beat(kr_beat), .kr_data(kr_data),
         .xa_we(xa_we), .xa_waddr(xa_waddr), .xa_wdata(xa_wdata), .xa_re(xa_re), .xa_raddr(xa_raddr), .xa_rq(xa_rq),
         .xb_we(xb_we), .xb_waddr(xb_waddr), .xb_wdata(xb_wdata), .xb_re(xb_re), .xb_raddr(xb_raddr), .xb_rq(xb_rq),
+        .coll_go(core_coll_go), .coll_op(core_coll_op), .coll_src(core_coll_src), .coll_dst(core_coll_dst),
+        .coll_ibase(core_coll_ibase), .coll_n(core_coll_n), .coll_k(core_coll_k), .coll_seq(core_coll_seq),
+        .coll_rnd(core_coll_rnd), .coll_busy(coll_busy), .coll_fault(die_coll_fault),
         .unit_busy(unit_busy), .issue_unit(issue_unit),
         .qs_fault(qs_fault), .qs_why(qs_why), .qs_fetched(qs_fetched), .qs_consumed(qs_consumed),
         .kb_busy(kb_busy), .kb_records(kb_records), .kb_writes(kb_writes), .kb_highwater(kb_highwater),
@@ -446,8 +459,28 @@ module ot_chip_v41x_die #(
     wire o_valid, o_last, o_err, cl_fault; wire [CL_FW-1:0] o_data; wire [CL_RB-1:0] o_rank; wire [2:0] cl_code;
     wire [N_TP-1:0] tx_valid, tx_ready, rx_valid; wire [CL_PW-1:0] tx_rec; wire [N_TP*CL_PW-1:0] rx_rec;
     wire [2*N_TP-1:0] cr_in, cr_out;
+    wire dma_fault;
+    reg coll_issue_fault;
+    wire coll_issue_bad = core_coll_op[1] ||
+        (core_coll_src[3:0] != 0) || (core_coll_dst[3:0] != 0) ||
+        (core_coll_n[3:0] != 0) || (core_coll_n == 0) ||
+        (64'(core_coll_src) >= (64'd1 << VM_AW)) ||
+        (64'(core_coll_dst) >= (64'd1 << VM_AW)) ||
+        (64'(core_coll_n) >= (64'd1 << VM_AW));
+    always @(posedge clk or negedge rn)
+        if (!rn) coll_issue_fault <= 1'b0;
+        else if (FULL_SHAPE && core_coll_go && coll_issue_bad)
+            coll_issue_fault <= 1'b1;
+    assign die_coll_fault = dma_fault | coll_issue_fault | cl_fault | o_err;
+    wire cmd_go = FULL_SHAPE ? (core_coll_go && !coll_issue_bad) : coll_go;
+    wire cmd_mode = FULL_SHAPE ? core_coll_op[0] : coll_mode;
+    wire [CL_TAGW-1:0] cmd_tag = FULL_SHAPE ? CL_TAGW'(core_coll_seq) : coll_tag;
+    wire [VWA-1:0] cmd_src = FULL_SHAPE ? VWA'(core_coll_src >> 4) : coll_src;
+    wire [VWA-1:0] cmd_dst = FULL_SHAPE ? VWA'(core_coll_dst >> 4) : coll_dst;
+    wire [VWA-1:0] cmd_n = FULL_SHAPE ? VWA'(core_coll_n >> 4) : coll_n;
     ot_rom_oneshot_die_px #(.N(N_TP), .RANK(RANK), .LANES(CL_LANES), .TAGW(CL_TAGW), .DEPTH(CL_DEPTH),
-                            .PKG_DIES(PKG_DIES), .RELAY(CL_RELAY), .ADD_LAT(CL_ADD_LAT), .GW(1)) u_coll (
+                            .PKG_DIES(PKG_DIES), .RELAY(CL_RELAY), .ADD_LAT(CL_ADD_LAT),
+                            .PAIRWISE(FULL_SHAPE), .GW(1)) u_coll (
         .clk(clk), .rst_n(rn),
         .in_valid(e_valid), .in_ready(e_ready), .in_data(e_data), .in_last(e_last), .in_mode(e_mode), .in_tag(e_tag),
         .tx_valid(tx_valid), .tx_rec(tx_rec), .tx_ready(tx_ready), .cr_in(cr_in),
@@ -456,12 +489,14 @@ module ot_chip_v41x_die #(
         .rl_rx_valid(ucie_rl_rx_valid), .rl_rx_rec(ucie_rl_rx_rec),
         .out_valid(o_valid), .out_data(o_data), .out_last(o_last), .out_rank(o_rank), .out_err(o_err),
         .fault(cl_fault), .fault_code(cl_code));
-    ot_chip_v41x_coll_dma #(.WA(VWA), .FW(CL_FW), .TAGW(CL_TAGW)) u_cdma (
-        .clk(clk), .rst_n(rn), .go(coll_go), .mode(coll_mode), .tag(coll_tag), .src(coll_src), .n(coll_n),
-        .dst(coll_dst), .busy(coll_busy), .words_out(), .words_in(),
+    ot_chip_v41x_coll_dma #(.WA(VWA), .FW(CL_FW), .TAGW(CL_TAGW), .N(N_TP)) u_cdma (
+        .clk(clk), .rst_n(rn), .go(cmd_go), .mode(cmd_mode), .rnd(FULL_SHAPE ? core_coll_rnd : 1'b0),
+        .tag(cmd_tag), .src(cmd_src), .n(cmd_n), .dst(cmd_dst),
+        .busy(coll_busy), .fault(dma_fault), .words_out(), .words_in(),
         .vm_re(xb_re), .vm_raddr(xb_raddr), .vm_rq(xb_rq), .vm_we(xb_we), .vm_waddr(xb_waddr), .vm_wdata(xb_wdata),
         .e_valid(e_valid), .e_ready(e_ready), .e_data(e_data), .e_last(e_last), .e_mode(e_mode), .e_tag(e_tag),
-        .o_valid(o_valid), .o_data(o_data), .o_last(o_last));
+        .o_valid(o_valid), .o_data(o_data), .o_last(o_last), .o_rank(o_rank),
+        .o_err(o_err), .engine_fault(cl_fault));
     // per-destination ports: self (unused), the in-package peer (UCIe), the partner package (T1)
     assign ucie_ctx_rec = tx_rec;
     assign bl_ctx_rec = tx_rec;
@@ -494,7 +529,7 @@ module ot_chip_v41x_die #(
     reg [7:0] fault_r;
     always @(posedge clk or negedge rn)
         if (!rn) fault_r <= 8'd0;
-        else fault_r <= fault_r | {|oor, kv_fault, rtr_overflow, cl_fault | o_err, proto_fault, qs_fault, 1'b0, t_fault};
+        else fault_r <= fault_r | {|oor, kv_fault, rtr_overflow, die_coll_fault, proto_fault, qs_fault, 1'b0, t_fault};
     assign kv_fault_code = kv_code;
     assign fault = fault_r;
 
