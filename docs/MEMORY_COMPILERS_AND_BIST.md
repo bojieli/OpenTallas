@@ -422,14 +422,14 @@ more cycles per failing event and three cycles per search subset.
 
 | Architecture | Memory compilers | Self-test and repair |
 |---|---|---|
-| **HBM comparator** (core + KV streamer; `results/memory/memory_plan.json` `hbm_comparator`) | Program and constant ROM, KV prefetch window (4 × `ot_sram_1r1w_256x256_m2_r2c2`) and KV tail (2 × `ot_sram_1r1w_128x256_m1_r2c2`) compiled. The flush and write-combine FIFOs and the vector memory are register files. The HBM3E PHY has a hard-macro abstract (`ot_hbm3e_phy`, see "HBM comparator integration"). **Open:** the HBM weight streamer's prefetch buffers, whose RTL is not on main yet. | Collars and one shared controller on the KV window and tail macros (`rtl/hdc/kv/ot_hdc_kv_bufs.sv`), verified in the KV-stream campaign (see below). |
+| **HBM comparator** (core + KV and weight streamers; `results/memory/memory_plan.json` `hbm_comparator`) | Program and constant ROM, KV prefetch window (4 × `ot_sram_1r1w_256x256_m2_r2c2`) and KV tail (2 × `ot_sram_1r1w_128x256_m1_r2c2`) compiled. The flush and write-combine FIFOs and the vector memory are register files. The HBM3E PHY has a hard-macro abstract (`ot_hbm3e_phy`, see "HBM comparator integration"). **Open:** mapping the existing `ot_hdc_wstream.sv` weight-window banks to physical SRAM macros. | Collars and one shared controller on the KV window and tail macros (`rtl/hdc/kv/ot_hdc_kv_bufs.sv`), verified in the KV-stream campaign (see below). |
 | **Qwen3-8B ROM reticle** | Partial reduced tile map: 35 macros, including an illustrative reduced weight ROM image and the current KV streamer's window and tail buffers. Full model at compiled density: 62,491 × `ot_rom_8192x266_m8` for BF16 weights (**1.12 reticles** of macro area, so BF16 Qwen3-8B does not fit one 815 mm² reticle at ASAP7 density), or 15,623 macros (0.28 reticle) at 4 bits per weight (`full_scale_weight_rom`). The production bank geometry and routed tile are still open. | The reduced memory-system campaign verified MBIST, repair, ROM signatures and SECDED. Those collars still need integration with the adopted tile and its HBM KV buffers. |
 | **DeepSeek-V4.1 ROM array** | Adopted V41x tile map pending. Its KV is in HBM with a row staging buffer. Dedicated weight, attention and index engines and their actual ROM and SRAM port views must be mapped before a per-die macro count is reported. | ROM signature and SECDED schemes exist, but memory collars, BIST and die-level content checks remain to be integrated with the adopted V41x tile. |
 
 **Open items.**
 
-- **HBM comparator:** the weight streamer's buffers are not mapped, because
-  that RTL is not on main.
+- **HBM comparator:** the weight streamer's RTL exists, but its BF × WS
+  weight-window banks still need physical macro mapping and timing closure.
 - **V4.1:** complete KV HBM prefetch, map the adopted tile's memories to
   physical macros, then verify its collars and BIST in the integrated die.
 

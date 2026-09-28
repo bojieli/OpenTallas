@@ -67,11 +67,12 @@ def plan(index: dict) -> dict:
     macros = index["macros"]
     archs = {
         "hbm_comparator": {
-            "description": "the Qwen decode core with KV (and, when its RTL lands, weights) streamed from HBM",
+            "description": "Qwen matched HBM comparator: KV through ot_hdc_kv_stream and weights "
+                           "through ot_hdc_wstream; weight-window banks are not macro mapped here",
             "memories": qwen_core_memories("") + qwen_kv_stream_memories() + [
                 m("weight ROM", None, 1024, "1R", "weights", "HBM",
-                  note="streamed from HBM; no on-die weight macro. The weight streamer's prefetch buffers have "
-                       "no RTL on main yet, so they are not mapped"),
+                  note="streamed from HBM by rtl/hdc/hbm/ot_hdc_wstream.sv; no on-die weight ROM. "
+                       "The streamer's BF*WS weight-window SRAM banks are not macro mapped here"),
             ],
             "hard_macros": [{"name": "HBM3E PHY", "area_mm2_per_stack": asap7.tech_value("hbm.hbm3e.phy_area_mm2_per_stack"),
                              "source": "configs/hardware/technology.json hbm.hbm3e.phy_area_mm2_per_stack (assumed)",
