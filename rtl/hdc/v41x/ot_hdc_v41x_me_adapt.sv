@@ -207,10 +207,17 @@ module ot_hdc_v41x_me_adapt #(
             wire [32:0] rb = {1'b0,x_q[32*bc +:32]} + 33'h7fff + {32'd0,x_q[32*bc+16]};
             assign wr_bf[16*bc +:16] = rb[31:16];
         end
-        ot_hdc_v41x_me_xbank #(.MG(MG),.MP(MP),.G(G),.KMAX(KMAX),.NBW(NBW),.EW(EW)) u_xbank (
-            .clk(clk),.wr_v(l2_v),.wr_p(l2_p[PW-1:0]),.wr_e(l2_e[EW-1:0]),.wr_d(wr_bf),
-            .pre_v(1'b0),.pre_p(PW'(0)),.pre_e(EW'(0)),.pre_d(XBW'(0)),.rd_rot(2'd0),
-            .rq_v(rq_v),.rq_q(rq_q),.rq_plg(rq_plg),.rd_x(xr0));
+        if (XBANK == 2) begin : g_macro
+            ot_hdc_v41x_me_xbank_macro #(.MG(MG),.MP(MP),.G(G),.KMAX(KMAX),.NBW(NBW),.EW(EW)) u_xbank (
+                .clk(clk),.wr_v(l2_v),.wr_p(l2_p[PW-1:0]),.wr_e(l2_e[EW-1:0]),.wr_d(wr_bf),
+                .pre_v(1'b0),.pre_p(PW'(0)),.pre_e(EW'(0)),.pre_d(XBW'(0)),.rd_rot(2'd0),
+                .rq_v(rq_v),.rq_q(rq_q),.rq_plg(rq_plg),.rd_x(xr0));
+        end else begin : g_local
+            ot_hdc_v41x_me_xbank #(.MG(MG),.MP(MP),.G(G),.KMAX(KMAX),.NBW(NBW),.EW(EW)) u_xbank (
+                .clk(clk),.wr_v(l2_v),.wr_p(l2_p[PW-1:0]),.wr_e(l2_e[EW-1:0]),.wr_d(wr_bf),
+                .pre_v(1'b0),.pre_p(PW'(0)),.pre_e(EW'(0)),.pre_d(XBW'(0)),.rd_rot(2'd0),
+                .rq_v(rq_v),.rq_q(rq_q),.rd_x(xr0),.rq_plg(rq_plg));
+        end
     end else begin : g_xflat
         reg [15:0] xb [0:MP*KMAX-1];
         reg [32:0] rb;
