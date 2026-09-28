@@ -36,6 +36,10 @@ The current component issues one HBM transaction at a time. It does not yet
 wire the full die's mixed attention descriptor, which contains up to 128
 window rows and 512 selected **compressed** KV rows. Those compressed rows
 have a distinct 288-byte format and require a separate fetch/decoder. The
+`ot_chip_v41x_kv_reqmux` lets the two fetchers share the die's K-side HBM
+arbiter with a response-owner tag bit. Its focused gate checks same-stack
+priority, parallel grants to different stacks, response demultiplexing, and
+suppression of writes from the read-only compressed fetcher. The
 640-row stage and four-row-per-cycle attention feed need a banked packed-row
 SRAM boundary and measured scheduling before the modeled V4.1 throughput can
 be attributed to RTL. This gate establishes the window block write, packed

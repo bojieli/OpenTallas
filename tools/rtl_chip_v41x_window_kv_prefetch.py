@@ -15,6 +15,8 @@ SOURCES = (
     "rtl/chip/ot_chip_v41x_window_row_codec.sv",
     "rtl/test/tb_chip_v41x_window_kv_prefetch.sv",
     "tools/rtl_chip_v41x_window_kv_prefetch.py",
+    "rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+    "rtl/test/tb_chip_v41x_kv_reqmux.sv",
 )
 OUTPUT = ROOT / "results/rtl/chip_v41x_window_kv_prefetch.json"
 
@@ -33,9 +35,18 @@ def run(output: Path = OUTPUT):
         )
         sim = subprocess.run(["vvp", str(binary)], capture_output=True,
                              text=True, check=True)
+        mux_bin = Path(temp) / "mux.vvp"
+        subprocess.run(
+            ["iverilog", "-g2012", "-s", "tb_chip_v41x_kv_reqmux", "-o", str(mux_bin),
+             str(ROOT / SOURCES[4]), str(ROOT / SOURCES[5])],
+            capture_output=True, text=True, check=True,
+        )
+        mux_sim = subprocess.run(["vvp", str(mux_bin)], capture_output=True,
+                                 text=True, check=True)
     lines = sim.stdout.splitlines()
     assert "PASS" in lines and "FAIL" not in lines and "TIMEOUT" not in lines, sim.stdout
     assert not build.stderr, build.stderr
+    assert "KV_REQMUX bad=0\nPASS" in mux_sim.stdout, mux_sim.stdout
     stat = next(line for line in lines if line.startswith("WINDOW_KV "))
     fields = dict(part.split("=", 1) for part in stat.split()[1:])
     values = {key: int(value) for key, value in fields.items()}
@@ -55,6 +66,9 @@ def run(output: Path = OUTPUT):
         "hbm_pitch_bytes": 544,
         "sectors_per_row": 17,
         "checks": values,
+        "request_mux": {"status": "pass", "bad": 0,
+                        "cases": ["same-stack priority", "different-stack parallel grants",
+                                  "tagged response demux", "CKV write suppression"]},
         "sources": sources(),
     }
     output.parent.mkdir(parents=True, exist_ok=True)
