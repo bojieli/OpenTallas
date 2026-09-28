@@ -153,7 +153,10 @@ streamer-and-staging band, so this cannot be counted as a die fit. The
 four-channel M2–M9 bank case in
 `results/asap7_physical/v41x_die_karb_bank4_m9/physical.json` reached CTS
 with −623 ps setup WNS and failed global route (`GRT-0116` local congestion).
-The four-channel M2–M7 case remains a separate routing sensitivity.
+The four-channel M2–M7 case also failed `GRT-0116` local congestion in
+`results/asap7_physical/v41x_die_karb_bank4/physical.json`; the added M8/M9
+layers improved CTS setup WNS but did not make the original pin pattern
+routable.
 
 The arbiter now offers `PIPE_OUT=1`, a registered one-entry request output per
 pseudo-channel with ready/valid replacement in the acceptance cycle. A queued
@@ -167,7 +170,11 @@ original 20%-clock I/O delays failed CTS hold repair at the maximum buffer
 count (`RSZ-0060`), recorded in
 `results/asap7_physical/v41x_die_karb_bank4_pipe_m9/physical.json`. A wider
 pin-window case characterizes internal register timing with I/O paths
-excluded; even a route pass there cannot establish the HBM PHY interface
+excluded; its first 0.60-density run failed global placement numerical
+convergence (`GPL-0305`), recorded in
+`results/asap7_physical/v41x_die_karb_bank4_pipe_wide_m9/physical.json`.
+A 0.40-density retry and a single-pseudo-channel partition are under test.
+Even a pass with I/O paths excluded cannot establish the HBM PHY interface
 timing. The required 0.92 ns full-boundary route remains open.
 
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
