@@ -60,10 +60,17 @@ numeric and address order only. A bank-local ME output register passes the
 full 2048/2048 checkpoint rows at RL5 in
 `results/rtl/hdc_v41x_fullshape_woa_readreg_full1024.json`: 131349 cycles,
 128 preload issues, 131108 weight-bank reads, and one extra fill cycle per
-group versus RL4. The matching MP=1, eight-macro physical cut is still in
-progress. Thus two
+group versus RL4. The matching MP=1, eight-macro physical cuts are reported
+below. Thus two
 K4096 `wo_a` groups have a 128-cycle VM read-issue
 floor, plus VM read latency, conversion, store write and any barriers. The
+bank-local-write-stage integrated VM→converter→RL5 gate in
+`results/rtl/hdc_v41x_fullshape_woa_vmread_pipe_rl5_writepipe_full1024.json`
+passes all 2048/2048 checkpoint rows and checks all 512 returned 512-bit VM
+words. Its **timed** two-group service is 131363 cycles, including 128 VM
+read issues, 128 preload writes, converter/store latency and the drain after
+each group; untimed ACC initialization is excluded. This is 14 cycles beyond
+the standalone RL5 boundary's 131349 cycles. The
 existing four-wide adapter consumes 2048 LOAD issue cycles for those two
 groups. The checkpoint-backed matched shared-adapter gate now measures the
 isolated LOAD saving: `results/rtl/hdc_v41x_fullshape_woa_preload_matched.json`
@@ -101,10 +108,15 @@ still missed global-place setup by 677 ps at 0.92 ns: the worst path is
 `pre_e_r[11]` through write-data selection to a macro `wd_in` pin, while
 hold has 44 ps slack. The source-pinned result is
 `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg_readreg_mp1/preflight.json`.
-A bank-local write register is being characterized as an additional pipeline
-cut; its first 16 checkpoint rows remain exact, with the extra write stage
-absorbed by the existing preload drain. Neither revision has a routed timing
-claim.
+A bank-local write register is an additional pipeline cut. Its integrated
+VM→converter→store gate is exact on the first 16 rows/group, with the extra
+write stage absorbed by the existing preload drain. Its 2297 pins fit 20772
+sites and detailed placement has +203 ps setup and +43 ps hold at 0.92 ns,
+but CTS fails: after 7584 hold buffers it still has −25 ps worst hold slack
+on input-boundary registers and hits RSZ-0060. The source-pinned record is
+`results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg_readreg_writepipe_mp1/preflight.json`.
+The next physical cut must include the actual nearby producer and registered
+consumer boundaries. Neither local store revision has a routed timing claim.
 The earlier MP=2 input-registered cut's 3323 pins fit 20772 sites, and the
 converter's 3108 pins fit 18688 sites. These are local pin cuts, not a routed
 41-tile multicast. Full die geometry, weight ROM bank
