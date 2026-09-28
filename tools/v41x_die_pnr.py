@@ -238,6 +238,26 @@ def karb_group4_m9(height_um: float = 30.24, outpipe: bool = False,
             "floorplan": {**c["floorplan"], "scope": "four local PC slices and registered K group boundary"}}
 
 
+def karb_group4_cts100_m9() -> dict:
+    """Diagnose whether CTS's hold-buffer cap alone blocks four-PC routing.
+
+    This is an area-cost sensitivity, not an adopted implementation.  The
+    standard ORFS CTS helper is replaced only at PRE_CTS, and the hook is
+    captured by the physical record.
+    """
+    c = karb_group4_m9(tailpipe=True)
+    c["nickname"] = "codex_v41x_karb_group4_cts100_m9"
+    c["output"] = "results/asap7_physical/v41x_die_karb_group4_cts100_m9/physical.json"
+    c["hook"] = ("PRE_CTS", """# Source-pinned hold-repair cap sensitivity, not the standard CTS flow.
+rename repair_timing_helper ot_original_repair_timing_helper
+proc repair_timing_helper {args} {
+    log_cmd repair_timing -max_buffer_percent 100 {*}$args -verbose
+}
+""")
+    c["floorplan"]["scope"] = "four-PC CTS 100%-buffer-cap sensitivity; not adopted"
+    return c
+
+
 # ------------------------------------------------------------------------------------------------ physical tile
 MACRO_DIR = "physical/asap7_memory_macros"
 MACROS = {   # name: (width, height) um, from the compiler LEFs
@@ -621,6 +641,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_group4_m9": karb_group4_m9,
          "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
          "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
+         "karb_group4_cts100_m9": karb_group4_cts100_m9,
          "karb_group4_fit_m9": lambda: karb_group4_m9(height_um=17.28),
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
