@@ -87,7 +87,7 @@ class Image:
             count = meta['scale_span_words']
             slots = np.empty((count, W), dtype=np.uint16)
             with (self.dir / 'matrix_scale_bf16.hex').open('rb') as stream:
-                for _ in range(meta['base']):
+                for _ in range(meta['scale_base']):
                     stream.readline()
                 for addr in range(count):
                     line = stream.readline().strip()
@@ -173,7 +173,8 @@ def run(image_dirs, preload, out):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     result = {'schema': 'opentallas.qwen-o4-layer0-tp2-oracle.v1', 'status': 'ISA_golden_only',
-              'token': 0, 'position': 0, 'emitter_source_commit': '7ed6bb26',
+              'token': 0, 'position': 0, 'emitter_basis_commit': '7ed6bb26',
+              'emitter_source_sha256': images[0].manifest['source_sha256'],
               'arithmetic': {'groups_per_die': GROUPS, 'su_width': G.SU_WIDTH,
                              'kv_format': G.KV_FMT, 'weight_format': 'signed-int8-per-row-bf16-scale'},
               'oracle_source_sha256': {p: _sha(ROOT / p) for p in

@@ -96,20 +96,24 @@ def word_hex(lanes, width):
     return ''.join(f'{int(v):04x}' for v in np.asarray(lanes, dtype=np.uint16)[::-1])
 
 
-def matrix_plan(matrices):
-    rows, base = [], 0
+def matrix_plan(matrices, compact_banks=False):
+    rows, base, scale_base = [], 0, 0
     for name in ('qkv', 'o', 'gu', 'down'):
         codes, scales = matrices[name]
         row = matrix(base, name, *codes.shape)
-        row['scale_base'] = base
+        row['scale_base'] = scale_base if compact_banks else base
         row['scale_span_words'] = row['rounds'] * (GROUPS // row['split']) * IL
         row['code_span_words'] = row['words']
-        row['allocated_words'] = max(row['code_span_words'], row['scale_span_words'])
+        row['allocated_words'] = (row['code_span_words'] if compact_banks else
+                                  max(row['code_span_words'], row['scale_span_words']))
         row['end'] = base + row['allocated_words']
+        row['scale_end'] = row['scale_base'] + row['scale_span_words']
         if len(scales) != row['rows']:
             raise ValueError(f'{name}: missing one scale per row')
         rows.append(row)
         base = row['end']
+        if compact_banks:
+            scale_base = row['scale_end']
     return rows
 
 
@@ -137,31 +141,34 @@ def constant_words(snapshot, true_o_scales, true_down_scales, lay, layer):
     return data, (o_base, down_base)
 
 
-def emit(snapshot: Path, out: Path, die: int, layer: int = 0):
+def emit(snapshot: Path, out: Path, die: int, layer: int = 0, compact_banks=False):
     pinned_snapshot(snapshot)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     source = layer_tp2_matrices(snapshot, layer, die)
     matrices = joined_matrices(source)
-    rows = matrix_plan(matrices)
+    rows = matrix_plan(matrices, compact_banks=compact_banks)
     lay = FP.LayerZero(None, die, rows)
     crom, scale_bases = constant_words(snapshot, matrices['o'][1], matrices['down'][1], lay, layer)
     prog = FP.profile(die, matrix_rows=rows, post_scale_bases=scale_bases)
     code_path, scale_path = out / 'matrix_int8.hex', out / 'matrix_scale_bf16.hex'
-    scale_depth = max(row['base'] + (row['rounds'] - 1) * (GROUPS // row['split']) * IL
-                      + (GROUPS - 1) * IL + IL for row in rows)
+    scale_depth = (rows[-1]['scale_end'] if compact_banks else
+                   max(row['base'] + (row['rounds'] - 1) * (GROUPS // row['split']) * IL
+                       + (GROUPS - 1) * IL + IL for row in rows))
     with code_path.open('w') as code_file, scale_path.open('w') as scale_file:
         for row in rows:
             codes, scales = matrices[row['name']]
             words = engine_word_arrays(codes, scales, split=row['split'],
                                        raw_partial=row['name'] in ('o', 'down'))
-            for code, scale in words:
-                code_file.write(word_hex(code, 8) + '\n')
-                scale_file.write(word_hex(scale, 16) + '\n')
+            for address, (code, scale) in enumerate(words):
+                if not compact_banks or address < row['code_span_words']:
+                    code_file.write(word_hex(code, 8) + '\n')
+                if not compact_banks or address < row['scale_span_words']:
+                    scale_file.write(word_hex(scale, 16) + '\n')
         # The current core requests a scale word for every physical group,
         # including groups outside G/S valid output tiles. Those words still
         # need a defined finite ROM response until RTL masks the requests.
-        for _ in range(rows[-1]['end'], scale_depth):
+        for _ in range(rows[-1]['scale_end'] if compact_banks else rows[-1]['end'], scale_depth):
             scale_file.write('3f80' * W + '\n')
     (out / 'crom.hex').write_text(P.hexwords(((int(G.bits(hi)) << 32) | int(G.bits(lo))
                                              for lo, hi in crom), 64))
@@ -180,6 +187,7 @@ def emit(snapshot: Path, out: Path, die: int, layer: int = 0):
                 'checkpoint_index_sha256': hashlib.sha256((snapshot / 'model.safetensors.index.json').read_bytes()).hexdigest(),
                 'source_sha256': source_pins,
                 'matrix_word_bits': GROUPS * W * 8,
+                'rom_bank_layout': 'independent_compact' if compact_banks else 'shared_base_padded',
                 'matrix_words': rows[-1]['end'], 'matrix_layout': rows,
                 'scale_rom_words': scale_depth,
                 'constant_words': len(crom), 'post_tp_scale_bases': scale_bases,
@@ -255,7 +263,7 @@ def verify_sample(snapshot: Path, out: Path, die: int, rows_per_matrix=8, layer:
             per_round = GROUPS // meta['split']
             tile, slot, lane = row // (W * IL), (row // W) % IL, row % W
             round_idx, q = divmod(tile, per_round)
-            address = meta['base'] + (round_idx * per_round + q) * IL + slot
+            address = meta['scale_base'] + (round_idx * per_round + q) * IL + slot
             offset = 4 * (W - 1 - lane)
             return int(scale_word(address)[offset:offset + 4], 16)
 
@@ -291,13 +299,15 @@ def main():
     ap.add_argument('--die', type=int, choices=(0, 1), required=True)
     ap.add_argument('--layer', type=int, choices=range(36), default=0)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--compact-banks', action='store_true',
+                    help='Use separate compact code and scale ROM address spaces')
     ap.add_argument('--verify-sample', type=int, metavar='ROWS',
                     help='Verify existing image against this many complete real rows per source matrix')
     args = ap.parse_args()
     if args.verify_sample is not None:
         print(json.dumps(verify_sample(args.snapshot, args.out, args.die, args.verify_sample, args.layer)))
     else:
-        result = emit(args.snapshot, args.out, args.die, args.layer)
+        result = emit(args.snapshot, args.out, args.die, args.layer, args.compact_banks)
         print(json.dumps({k: result[k] for k in ('status', 'layer', 'die', 'matrix_words', 'program_words', 'segments')}))
 
 

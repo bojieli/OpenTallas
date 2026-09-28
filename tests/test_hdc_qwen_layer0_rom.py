@@ -44,3 +44,19 @@ def test_raw_partial_scale_and_post_fold_program():
     assert [f['c_base'] for f in post] == [600000, 604096]
     assert all(f['mc'] == I.MC_C and f['dst'] == I.DST_VM and f['su_nin'] == 4096 for f in post)
     assert report['allreduce_segments'] == 4
+
+
+def test_independent_compact_code_and_scale_bases():
+    matrices = {
+        name: (np.zeros((n, 16), dtype=np.int8), np.full(n, 0x3F80, dtype=np.uint16))
+        for name, n in (('qkv', 128), ('o', 16), ('gu', 256), ('down', 32))
+    }
+    shared = R.matrix_plan(matrices)
+    compact = R.matrix_plan(matrices, compact_banks=True)
+    assert compact[-1]['end'] == sum(row['code_span_words'] for row in compact)
+    assert compact[-1]['scale_end'] == sum(row['scale_span_words'] for row in compact)
+    assert compact[-1]['end'] < shared[-1]['end']
+    for previous, current in zip(compact, compact[1:]):
+        assert current['base'] == previous['end']
+        assert current['scale_base'] == previous['scale_end']
+    assert any(row['base'] != row['scale_base'] for row in compact)

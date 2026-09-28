@@ -26,7 +26,9 @@ def _bits(die, name):
 def test_oracle_sources_outputs_and_tp_collectives_are_pinned():
     record = json.loads((OUT / 'oracle.json').read_text())
     assert record['status'] == 'ISA_golden_only'
-    assert record['emitter_source_commit'] == '7ed6bb26'
+    assert record['emitter_basis_commit'] == '7ed6bb26'
+    for name, digest in record['emitter_source_sha256'].items():
+        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
     assert record['arithmetic'] == {'groups_per_die': 6144, 'su_width': 1024,
                                     'kv_format': 'fp8', 'weight_format': 'signed-int8-per-row-bf16-scale'}
     for name, digest in record['oracle_source_sha256'].items():
@@ -64,8 +66,18 @@ def test_initial_x_is_the_signed_int8_embedding_row_zero():
 
 def test_independent_layer0_arithmetic_matches_isa_trace(monkeypatch):
     """A direct one-position decode checks the ISA interpreter's dataflow."""
-    directories = [Path('/tmp/qwen-real-layer0-d0'), Path('/tmp/qwen-real-layer0-d1')]
-    if not all((d / 'layer0_rom.json').is_file() for d in directories):
+    prefixes = ('/tmp/qwen-real-layer0-padded', '/tmp/qwen-real-layer0-compact',
+                '/tmp/qwen-real-layer0')
+    directories = None
+    for prefix in prefixes:
+        candidate = [Path(f'{prefix}-d{d}') for d in (0, 1)]
+        if all((d / 'layer0_rom.json').is_file() for d in candidate):
+            manifests = [json.loads((d / 'layer0_rom.json').read_text()) for d in candidate]
+            if all(all(hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
+                       for name, digest in m['source_sha256'].items()) for m in manifests):
+                directories = candidate
+                break
+    if directories is None:
         pytest.skip('full layer-0 emitted images unavailable')
     monkeypatch.setattr(G, 'SU_WIDTH', 1024)
     images = [Image(d) for d in directories]
