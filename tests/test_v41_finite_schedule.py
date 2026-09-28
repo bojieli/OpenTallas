@@ -43,8 +43,8 @@ def test_full_layer_needs_actual_program_placement_and_queues():
     m["scope"] = "full_layer"
     m["operations"][0]["kind"] = "collective"
     errors = FS.audit(m)["errors"]
-    assert any("program_sha256" in e for e in errors)
-    assert any("all_unit_trace" in e for e in errors)
+    assert any("program_path" in e for e in errors)
+    assert any("all_unit_trace_path" in e for e in errors)
     assert any("shared-service queue IDs" in e for e in errors)
 
 

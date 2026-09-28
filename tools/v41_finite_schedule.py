@@ -57,13 +57,26 @@ def audit(m: dict, root: Path = ROOT) -> dict:
     if not isinstance(contract.get("tensor_specs"), dict):
         errors.append("contract: tensor_specs required")
     if scope in ("full_layer", "full_token"):
-        for key in ("program_sha256", "checkpoint_sha256", "placement_sha256", "clock_hz"):
+        for key in ("program_path", "checkpoint_manifest_path", "placement_path", "all_unit_trace_path", "clock_hz"):
             if not contract.get(key):
                 errors.append(f"contract: {key} required for {scope}")
-        if not contract.get("all_unit_trace"):
-            errors.append(f"contract: all_unit_trace required for {scope}")
+        for key in ("program_path", "checkpoint_manifest_path", "placement_path", "all_unit_trace_path"):
+            if contract.get(key) and contract[key] not in pins:
+                errors.append(f"contract: {key} must be source-pinned")
         if not contract.get("tensor_specs"):
             errors.append(f"contract: complete integer tensor coverage required for {scope}")
+        if scope == "full_layer" and not isinstance(contract.get("layer_id"), int):
+            errors.append("contract: exact layer_id required")
+        if scope == "full_token" and contract.get("layer_ids") != list(range(40)):
+            errors.append("contract: all 40 ordered layer_ids required")
+        program_path = contract.get("program_path")
+        if program_path in pins and (root / program_path).is_file():
+            try:
+                program = json.loads((root / program_path).read_text())
+                if program.get("status") != "pass" or program.get("instruction_count") != len(contract.get("instruction_ids", [])):
+                    errors.append("contract: complete passing program instruction count required")
+            except (ValueError, TypeError):
+                errors.append("contract: program manifest must be parseable JSON")
     resources = m.get("resources")
     if not isinstance(resources, dict) or not resources:
         errors.append("resources: concrete physical resources required")
