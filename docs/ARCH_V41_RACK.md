@@ -1,6 +1,6 @@
 # DeepSeek-V4.1-Flash ROM array: logical map, link topology and rack
 
-Status: an analytical design, 2026-09-27. Nothing here is a routed rack or a measured result, except gate C7 (collective overlap), which the RTL stage bench measured as NOT met (§5, `results/rtl/v41_stage_collective_campaign.json`). Ported from v41-rack-gates 0facdc17 and regenerated on main's inputs: the rates below are the design-point model with the measured collective exposure (`results/arch/v41_lanes.json` `design_point`; overlap-assumed in `design_point_overlap_assumed`), and the power is on `configs/hardware/technology.json` production values (logic leakage 0.10 W/mm², one value for every model since 2026-09-27) with the power-scenario cooling classes. The spec and budget under the design point are the single V4.1 budget model, `tools/arch_budget_v41.py` (`results/arch/arch_budget_v41.json`).
+Status: an analytical design, 2026-09-27. Nothing here is a routed rack or a measured result, except gate C7 (collective overlap), which the RTL stage bench measured as NOT met and which adopted collective levers partly recover (§5, `results/rtl/v41_stage_collective_campaign.json`, `results/rtl/v41_collective_levers_campaign.json`). Ported from v41-rack-gates 0facdc17 and regenerated on main's inputs: the rates below are a conditioned design-point model result using bench-measured collective tails, not measured chip throughput (`results/arch/v41_lanes.json` `design_point`, with the adopted levers; the ablation without them in `design_point_no_levers`; overlap-assumed in `design_point_overlap_assumed`), and the power is on `configs/hardware/technology.json` production values (logic leakage 0.10 W/mm², one value for every model since 2026-09-27) with the power-scenario cooling classes. The spec and budget under the design point are the single V4.1 budget model, `tools/arch_budget_v41.py` (`results/arch/arch_budget_v41.json`).
 
 - Model: `tools/v41_rack_design.py`, recorded in `results/arch/v41_rack.json`, tested by
   `tests/test_v41_rack_design.py`.
@@ -92,7 +92,8 @@ peer link and every hop on the stage lanes. At 1M it gives:
 | split | tok/s/user, without / with MTP |
 |---|---|
 | R-L9 (recommended), collectives fully overlapped | 8,622 / 23,578 |
-| R-L9 with the collective exposure measured in RTL (gate C7, the headline) | 7,579 / 21,006 |
+| R-L9 with the collective tails measured in RTL and the adopted levers (gate C7, the headline) | 8,185 / 23,818 |
+| R-L9 with the collective exposure measured in RTL, no levers (ablation) | 7,579 / 21,006 |
 | this study's first split (TP 32 / stage 24 + 24) | 8,572 / 18,839 |
 
 | tier | medium, length | reach limit (source) | latency per hop | bandwidth per link, per direction |
@@ -170,13 +171,13 @@ worst die, and `results/arch/v41_lanes.json` for static power, both on the spec'
 | operating point | rack input |
 |---|---|
 | batch 1 | 21.5 kW |
-| 28-user fill | 30.3 kW |
-| fill + MTP | 33.8 kW |
-| saturated + MTP | 41.6 kW |
+| 28-user fill | 30.9 kW |
+| fill + MTP | 35.1 kW |
+| saturated + MTP | 42.4 kW |
 | worst case (saturated) | 44.9 kW |
 | provisioned (1.2 × worst case) | **53.9 kW** |
 
-- **Energy per token at batch 1:** 2.00 J at the chips; 2.66 J at the wall with the switch on a per-port basis; 2.83 J at
+- **Energy per token at batch 1:** 1.85 J at the chips; 2.46 J at the wall with the switch on a per-port basis; 2.63 J at
   the rack input, which adds the host, management and the physical switch. Every figure charges each user's KV
   reads from HBM. The ROM:HBM energy ratios are not taken from these rack figures but from
   `tools/power_scenarios.py`, which prices the design point and the best HBM comparator on one model (logic dies
@@ -218,7 +219,7 @@ total is above Uptime Institute's 20-25 kW threshold for liquid.
 | C4 SerDes power | **resolved in the model** | 84 always-on lanes per package at the validated 6.5 pJ/b (61 W), 3.60 kW per rack, in every rack power scenario. The utilisation record charges SerDes on both machines; it is re-deriving at 6.5 pJ/b. |
 | C8 two-die link (T1) | **resolved in the model** | R-L9 as in §2. A 20 KB partial crosses a peer link in 120 ns, and large all-reduces use the two-step. |
 | C10 head-die draft KV | **floorplan done analytically; routed floorplan remains** | The head dies carry 4 HBM3E stacks each (spec ruling); the 28-user fill's draft windows are in SRAM. Figure R-5 and `head_draft_floorplan`: 112 × `ot_sram_1r1w_1024x256_m2_r2c2` from this repository's ASAP7 SRAM compiler (32 KB, 1R1W, 2 spare rows and columns). Each user slot is a 4-macro row, giving a 1,024-bit read port (128 B/cycle) and an independent 1,024-bit write port. The layout is two columns of 14 rows around a bus channel, beside the drafter's BF16 attention engine: 1.50 × 1.06 mm = 1.58 mm². It displaces 8.8 MB of the head die's 69 MB spare ROM. The macros' fmax is 1,489 MHz at the ss corner. The read is registered at the macro, 2-cycle latency: the single-cycle path would close with 8 ps margin, too thin for estimated wire and select delays. Leakage is 6.9 mW, and a draft block reads in 132 cycles and 0.73 nJ. Beyond the fill, users page to HBM. |
-| C7 overlap and clock | **NOT MET (measured)**; clock open | The RTL stage bench (`results/rtl/v41_stage_collective_campaign.json`) exposes 254-cycle all-reduce tails (153-164 modelled) and residual tails of 114 cycles per stage hop and 188 per KV-row gather; fed back, the design point falls 8,622 -> 7,579 tok/s/user at 1M (9,041 -> 7,905 at 200K). Recovery levers in progress: 3-cycle fold adders, the rows all-gather row bubble, stage-hop payload partitioning, streaming top-k / consumer early start, the ucie_link rounding fix. See §6. |
+| C7 overlap and clock | **NOT MET (measured)**; clock open | The RTL stage bench (`results/rtl/v41_stage_collective_campaign.json`) exposes 254-cycle all-reduce tails (153-164 modelled) and residual tails of 114 cycles per stage hop and 188 per KV-row gather; fed back with no recovery, the design point would be 7,579 tok/s/user at 1M against 8,622 overlapped (`design_point_no_levers`). Adopted levers, each bit-exact on `ot_rom_oneshot_die_px` (`results/rtl/v41_collective_levers_campaign.json`): relay + 4-word gather on the KV-rows all-gather (653 -> 309 cycles), relay + 3-cycle fold adders on the all-reduces (254 -> 195), a partial stage-hop split (473 -> 419), hc_post early start. The design point is 8,185 / 8,568 tok/s/user at 1M / 200K, about 58% of the loss at 1M (`collective_exposure.recovered_share`); not met. The hop split's extra T1 traffic at batch > 1 is unmeasured; the added queue SRAM, 0.069 mm² per die in total, is analytical (bitcell x an assumed 2.5x two-port overhead; `results/arch/v41_collective_levers.json` `queue_area_per_die`). See §6. |
 | C2 FEC on the ring cables | **adopted baseline** | The validation found the light FEC not qualified on CR copper, so the ring runs full KP4 (209 ns). That costs 29 hops × 82.7 ns = 2.4 µs per token (Table R-1). |
 | C3, C5, C6 | resolved | Folded-ring one-hop return; 4-stack HBM power; embedding on the head dies. |
 
@@ -228,13 +229,13 @@ total is above Uptime Institute's 20-25 kW threshold for liquid.
 |---|---|
 | overlap assumed (130 ns hops, before the validation) | 8,858 |
 | design point on the R-L9 lanes (209 ns ring hops), collectives fully overlapped | 8,622 |
-| design point with the collective exposure measured in RTL (headline) | **7,579** |
-| headline with the ring cables' actual flight beyond the 209 ns | 7,573 |
+| design point with the collective tails measured in RTL and the adopted levers (headline) | **8,185** |
+| headline with the ring cables' actual flight beyond the 209 ns | 8,178 |
 | overlapped point with every collective payload serialised, bytes only (not a bound) | 8,295 |
 
 The bytes-only row charges serialised bytes but not the fold, hop and row-gather tails the RTL bench measured, so
-the measured headline lies below it: it is not a bound. On validated static power, the ROM chip energy at batch 1
-is **2.00 J per token** (2.66 J at the wall with the switch): static power dominates at batch 1.
+the headline lies below it: it is not a bound. On validated static power, the ROM chip energy at batch 1
+is **1.85 J per token** (2.46 J at the wall with the switch): static power dominates at batch 1.
 
 The spec's budget, the ladder and R-L9 are derived on the validated links and on the single budget model
 (`tools/arch_budget_v41.py`, 2026-09-27). The spec agent notes that the two-step all-reduce choice may change now
@@ -266,10 +267,10 @@ the last beats plus one hop are exposed. The link parameters are:
 | step | what | status | acceptance |
 |---|---|---|---|
 | O1 | one-shot unit at the rack link rate | exists at optimistic all-to-all UCIe links (`results/rtl/hdc_package_tp_campaign.json`) | two remote peers on the T1 model: a 20 KB all-reduce completes ≤ 40 cycles after the last partial beat (R-U3) plus one hop; the two-step variant bit-identical on all 4 dies |
-| O2 | producer-chased collectives in a stage module | **NOT MET (measured)**: `results/rtl/v41_stage_collective_campaign.json` (44 cases bit-exact), fed into `results/arch/v41_lanes.json` `collective_exposure` | exposed collective time per token ≤ the lane model's 0.93 µs; measured 12.5 µs of exposed collective bytes, and the headline is re-priced to 7,579 tok/s/user at 1M |
+| O2 | producer-chased collectives in a stage module | **NOT MET (measured)**: `results/rtl/v41_stage_collective_campaign.json` (44 cases bit-exact), fed into `results/arch/v41_lanes.json` `collective_exposure` | exposed collective time per token ≤ the lane model's 0.93 µs; measured 12.5 µs of exposed collective bytes without recovery; with the adopted levers (`results/rtl/v41_collective_levers_campaign.json`, 55 cases bit-exact) 4.8 µs, and the headline is 8,185 tok/s/user at 1M against 8,622 overlapped |
 | O3 | link bench parameters | stale: `rom_pkg_link_campaign` uses 1,800 B flits (1.8 TB/s) | FLIT_BYTES set to the R-L9 stage and TP rates |
 
-The headline rates carry the measured O2 exposure and stay conditional on K2 and on O1, whose rack-rate record has not landed.
+The headline rates carry the bench-measured O2 tails with the adopted levers and stay conditional on K2 and on O1, whose rack-rate record has not landed.
 
 ## 7. Review of the Codex rack design against the user's rules
 

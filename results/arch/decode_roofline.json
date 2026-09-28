@@ -12,11 +12,11 @@
   },
   "sync": {
    "from": "worktree:results/arch/sync_cost_table.json",
-   "sha256": "8b04b7b15c930f4e410b77e447ea59448e4860c3ed00e61289ae717df8f15b2b"
+   "sha256": "4e013cc7d85917bc14f18993c1cb5f906c1eca4ccca625a35b376a2d800af227"
   },
   "v41_lanes": {
    "from": "worktree:results/arch/v41_lanes.json",
-   "sha256": "0b9ad2d1c9565e6a75f795f5996ddebcbe0aee233d338527f72a1437bebce909"
+   "sha256": "beb9db8926d2421cdee6b4718ac664a521b094e9d43714bca2ad1d0efa0050cf"
   },
   "v41_hbm_best": {
    "from": "worktree:results/arch/v41_hbm_best.json",
@@ -32,11 +32,11 @@
   },
   "v41_switched": {
    "from": "worktree:results/arch/v41_hbm_switched.json",
-   "sha256": "7abcdf94f90b8df90166188d893bd7ffac265641cce411bf9d4d5b52b8000214"
+   "sha256": "a220d55ee7b8795727288c35acfe234aa3b10b22fe1fe1185bf2dbb1e4a0247e"
   },
   "power": {
    "from": "worktree:results/arch/power_scenarios.json",
-   "sha256": "734c61d64be6361f6a93aa2561d4dd9fd71af3acbfb881dc9e4c0513b4563a24"
+   "sha256": "d2b0dc5dd685144aec347e0ade5eeb349a8f8183f478e2d1491055920fe69909"
   },
   "idle_floor": {
    "from": "worktree:results/roofline/gpu_clocked_idle_floor.json",
@@ -165,7 +165,7 @@
   "x": "off-chip memory bandwidth devoted to the user, sustained (TB/s)",
   "y": "tokens/s for one user"
  },
- "ladder_definition": "S0 GPU application or shipped-library baseline, modeled where a same-model measurement is unavailable; S1 same GPUs, idealised runtime (software gap); S2 specialised HBM accelerator at no more silicon and HBM bandwidth than S1 (specialisation); S3 a specialised ROM accelerator at equal logic area. Qwen3-8B adds S1f (the ROM's 3.5-bit weight format). Qwen S2 has B200-class bandwidth while S3 has six stacks; the matched six-stack HBM/ROM comparison is separate. The order is part of the definition: the factors are not independent (ROM without specialisation is not a meaningful machine). Each step keeps or reduces the silicon and bandwidth of the step before it. V4.1 S2-to-S3 also changes die count, topology and HBM allocation, so its multiplier is not an isolated ROM effect. S2-S3 are conditional on the design's open gates (clock; V4.1 collectives at their measured exposure).",
+ "ladder_definition": "S0 GPU application or shipped-library baseline, modeled where a same-model measurement is unavailable; S1 same GPUs, idealised runtime (software gap); S2 specialised HBM accelerator at no more silicon and HBM bandwidth than S1 (specialisation); S3 a specialised ROM accelerator at equal logic area. Qwen3-8B adds S1f (the ROM's 3.5-bit weight format). Qwen S2 has B200-class bandwidth while S3 has six stacks; the matched six-stack HBM/ROM comparison is separate. The order is part of the definition: the factors are not independent (ROM without specialisation is not a meaningful machine). Each step keeps or reduces the silicon and bandwidth of the step before it. V4.1 S2-to-S3 also changes die count, topology and HBM allocation, so its multiplier is not an isolated ROM effect. S2-S3 are conditional on the design's open gates (clock; V4.1 collectives at their bench-measured tails with the adopted levers).",
  "models": {
   "qwen3": {
    "title": "Qwen3-8B, 8K context, FP8 KV, one user",
@@ -779,18 +779,18 @@
      "key": "rom_ar",
      "label": "ROM array",
      "x": 34.4554,
-     "y": 7578.98,
-     "evidence": "modelled, C7 measured",
+     "y": 8184.91,
+     "evidence": "modelled, C7 bench tails",
      "family": "rom",
      "spec": false,
-     "basis": "rack lane-split design point with the RTL stage bench's measured collective exposure (v41_lanes design_point); conditional on the 1.087 GHz clock"
+     "basis": "rack lane-split design point with the bench-measured collective tails of the adopted levers (v41_lanes design_point); conditional on the 1.087 GHz clock"
     },
     {
      "key": "rom_mtp",
      "label": "ROM array + MTP",
      "x": 34.4554,
-     "y": 21005.9,
-     "evidence": "modelled, C7 measured",
+     "y": 23817.7,
+     "evidence": "modelled, C7 bench tails",
      "family": "rom",
      "spec": true,
      "basis": "DSpark gamma 5, tau 5.0"
@@ -834,7 +834,7 @@
      "key": "rom_chain",
      "family": "rom",
      "label": "ROM compiled chain",
-     "y": 12948.0,
+     "y": 13012.5,
      "evidence": "modelled",
      "basis": "compute chain + control of the design point's headline token"
     },
@@ -842,9 +842,9 @@
      "key": "ours_sync",
      "family": "rom",
      "label": "ROM array sync",
-     "y": 24717.6,
+     "y": 32183.3,
      "evidence": "model, normative basis",
-     "basis": "15.6 us collectives + 12.5 us measured exposed collective bytes + 12.39 us stage hops (209 ns cable tier)"
+     "basis": "15.3 us collectives + 4.8 us measured exposed collective bytes + 11.00 us stage hops (209 ns cable tier)"
     }
    ],
    "curves": [
@@ -1069,12 +1069,12 @@
      {
       "step": "S3",
       "label": "equal-area specialised ROM array",
-      "value": 7578.98,
+      "value": 8184.91,
       "unit": "tok/s",
-      "evidence": "modelled, C7 measured",
-      "basis": "ROM array design point, collective exposure measured in the RTL stage bench (gate C7 not met; full overlap would give the conditional point); open gate: 1.087 GHz clock",
+      "evidence": "modelled, C7 bench tails",
+      "basis": "ROM array design point, collective tails measured in the RTL stage bench with the adopted levers (gate C7 partly recovered, not met; full overlap would give the conditional point); open gate: 1.087 GHz clock",
       "matching": "equal logic area (188 x 328.9 mm2); die count, topology, HBM allocation and weight placement all differ",
-      "multiplier": 2.11681
+      "multiplier": 2.28605
      }
     ],
     "energy": [
@@ -1111,12 +1111,12 @@
      {
       "step": "S3",
       "label": "ROM array",
-      "value": 1.69601,
+      "value": 1.5734,
       "unit": "J/token",
-      "evidence": "modelled, C7 measured",
+      "evidence": "modelled, C7 bench tails",
       "basis": "the same power model and boundary (power_scenarios deepseek_v41_design_point); KV from HBM",
       "matching": "",
-      "multiplier": 3.50513
+      "multiplier": 3.77828
      }
     ],
     "aggregate": [
@@ -1153,12 +1153,12 @@
      {
       "step": "S3",
       "label": "ROM array, fill batch (28 users)",
-      "value": 212211.0,
+      "value": 229178.0,
       "unit": "tok/s",
-      "evidence": "modelled, C7 measured",
-      "basis": "per user 7,579 tok/s; at 1,024 users 689,103",
+      "evidence": "modelled, C7 bench tails",
+      "basis": "per user 8,185 tok/s; at 1,024 users 689,103",
       "matching": "",
-      "multiplier": 6.24427
+      "multiplier": 6.74349
      }
     ]
    },
@@ -1186,10 +1186,10 @@
     },
     {
      "machine": "ROM array",
-     "ar": 7578.98,
-     "spec": 21005.9,
+     "ar": 8184.91,
+     "spec": 23817.7,
      "tau": 5.0,
-     "evidence": "modelled, C7 measured"
+     "evidence": "modelled, C7 bench tails"
     }
    ],
    "secondary": {
@@ -1199,8 +1199,8 @@
      "gpu_sol": 3032.27,
      "hbm_ar": 3580.38,
      "hbm_mtp": 11977.9,
-     "rom_ar": 7905.41,
-     "rom_mtp": 21815.3,
+     "rom_ar": 8567.55,
+     "rom_mtp": 24863.6,
      "bytes_per_token": {
       "weights": 13033800000.0,
       "kv": 52379136,
@@ -1212,7 +1212,7 @@
  },
  "captions": {
   "qwen3": "Figure 8-R1. Qwen3-8B decode roofline for one user (8K context, FP8 KV, batch 1). Diagonals are bandwidth roofs, tokens/s = bandwidth / bytes per token, for BF16 and for the ROM's 3.5-bit weights (each with FP8 KV); the dashed orange diagonal is the KV-only roof a ROM design lives under, because its weights never cross the memory interface. Dotted horizontals are ceilings: one GPU's on-chip synchronisation (220 all-SM boundaries at the measured 1.0 \u00b5s), the ROM weight sweep, and our compiled handoffs (4.8 ns, RTL; off scale). The grey curve is B200 tensor parallelism on an NVL72 slice (TP \u2264 8, the KV-head limit) with 73 all-reduces at the best measured GB200 kernel, the band spanning the speed-of-light floor to NCCL 2.27. Arrows are the attribution ladder: software (measured B200 to its idealised roof), weight format (to the ROM's 3.5-bit), specialisation (\u00d71.00: on one die both machines are on the same roof) and ROM. Sources: DFlash Table 3 [DFlash]; local RTX PRO 6000 measurement; H200 calibrated on NIM; results/arch/qwen3_budget.json; results/arch/sync_cost_table.json [Shen et al.; NCCL 2.27]; tools/decode_roofline_figure.py.",
-  "v41": "Figure 8-R2. DeepSeek-V4.1-Flash decode roofline for one user (1M context, batch 1). The diagonal is the bandwidth roof for the checkpoint's own weight dtypes plus KV and index reads (13.2 GB per token); the dashed orange diagonal is the KV-only roof of the ROM array. GPU points are modelled on measured primitives: the weight/KV stream over N B200s plus the 209 collectives of the array's graph at the best measured GB200 all-reduce (2.37 \u00b5s), the band spanning the speed-of-light floor (1.40 \u00b5s) to NCCL 2.27 (~5 \u00b5s); no on-chip boundaries or compute are charged, so the GPU curve is optimistic for this graph. A different GPU mapping could change the 209-collective graph. It flattens at the synchronisation ceiling: 72 GPUs add 2% over the iso-area set. The blue curve is the specialised HBM comparator against its tensor-group span G, which peaks at G = 96 on the validated switched fabric. The ROM array leaves the weight roof and is bound by its compiled chain. The only published V4-class batch-1 GPU figure is V4-Pro (49 B active) with DSpark on 8 B300s [LMSYS]; no V4.1-Flash figure exists. ROM rates carry the collective exposure measured in the RTL stage bench (rack gate C7 not met) and are conditional on the 1.087 GHz clock. Sources: results/arch/v41_lanes.json, v41_hbm_switched.json, v41_latency_ladder.json, arch_budget_v41.json, sync_cost_table.json; tools/decode_roofline_figure.py."
+  "v41": "Figure 8-R2. DeepSeek-V4.1-Flash decode roofline for one user (1M context, batch 1). The diagonal is the bandwidth roof for the checkpoint's own weight dtypes plus KV and index reads (13.2 GB per token); the dashed orange diagonal is the KV-only roof of the ROM array. GPU points are modelled on measured primitives: the weight/KV stream over N B200s plus the 209 collectives of the array's graph at the best measured GB200 all-reduce (2.37 \u00b5s), the band spanning the speed-of-light floor (1.40 \u00b5s) to NCCL 2.27 (~5 \u00b5s); no on-chip boundaries or compute are charged, so the GPU curve is optimistic for this graph. A different GPU mapping could change the 209-collective graph. It flattens at the synchronisation ceiling: 72 GPUs add 2% over the iso-area set. The blue curve is the specialised HBM comparator against its tensor-group span G, which peaks at G = 96 on the validated switched fabric. The ROM array leaves the weight roof and is bound by its compiled chain. The only published V4-class batch-1 GPU figure is V4-Pro (49 B active) with DSpark on 8 B300s [LMSYS]; no V4.1-Flash figure exists. ROM rates carry the collective tails measured in the RTL stage bench with the adopted levers (rack gate C7 partly recovered, not met) and are conditional on the 1.087 GHz clock. Sources: results/arch/v41_lanes.json, v41_hbm_switched.json, v41_latency_ladder.json, arch_budget_v41.json, sync_cost_table.json; tools/decode_roofline_figure.py."
  },
- "findings": "Why GPUs plateau. A GPU's per-user rate is bounded twice: by the bandwidth roof of the devices serving the user (tokens/s <= bandwidth / bytes per token) and by a synchronisation ceiling that more devices cannot raise. On one B200, the Qwen3-8B modeled 8K roof is 457 tok/s at BF16; the cited 230-tok/s application point has no verified 8K context match. Spreading it over an NVL72 slice (TP8, the largest split its 8 KV heads allow) raises the roof eightfold but adds 73 dependent all-reduces, so the idealised rate stops at 2,241. DeepSeek-V4.1-Flash never reaches its roof on GPUs under the modeled collective graph: its 209 collectives per token at the best measured GB200 kernel (2.37 us) cap it near 2,019 tok/s however many GPUs are added (1,879 on 50 B200s, 1,920 on all 72 of an NVL72; 3,029 even at the speed-of-light collective floor). The specialised HBM accelerator raises the synchronisation ceiling, not the roof: with compiled handoffs (4.8 ns on chip against 1.0 us) and in-switch reduction it reaches 3,580 tok/s on V4.1 at roughly matched HBM bandwidth (346 against 360 TB/s), 1.91x the best-kernel GPU; on a single die at the same modeled bandwidth roof, this model assigns no added rate to the specialised HBM core (1.00x on Qwen3-8B). ROM removes the weight term: the design leaves the weights-plus-KV roof for the KV-only roof, 8,941 tok/s on six stacks for Qwen3-8B at 8K, where the ROM reticle sits (8,910, 4.8x the same core streaming 3.5-bit weights at the B200's bandwidth); for V4.1 it is bound by its compiled chain and reaches 7,579 tok/s, 2.1x the equal-area HBM array (21,006 with MTP); this V4.1 step also changes topology and HBM allocation. End to end, S0 -> S3 is 39x for Qwen3-8B (illustrative because S0 context is unverified; 4.0x is the modeled format step) and a modeled 8.2x for V4.1 at 1M; the steps are ordered by definition and S2-S3 are conditional on the design's open gates. The same roofline shows where ROM does not help: at 8K and a full batch, aggregate throughput is KV-bound on every machine, and the B200's eight stacks out-stream the ROM reticle's six (11,921 against 8,941 tok/s)."
+ "findings": "Why GPUs plateau. A GPU's per-user rate is bounded twice: by the bandwidth roof of the devices serving the user (tokens/s <= bandwidth / bytes per token) and by a synchronisation ceiling that more devices cannot raise. On one B200, the Qwen3-8B modeled 8K roof is 457 tok/s at BF16; the cited 230-tok/s application point has no verified 8K context match. Spreading it over an NVL72 slice (TP8, the largest split its 8 KV heads allow) raises the roof eightfold but adds 73 dependent all-reduces, so the idealised rate stops at 2,241. DeepSeek-V4.1-Flash never reaches its roof on GPUs under the modeled collective graph: its 209 collectives per token at the best measured GB200 kernel (2.37 us) cap it near 2,019 tok/s however many GPUs are added (1,879 on 50 B200s, 1,920 on all 72 of an NVL72; 3,029 even at the speed-of-light collective floor). The specialised HBM accelerator raises the synchronisation ceiling, not the roof: with compiled handoffs (4.8 ns on chip against 1.0 us) and in-switch reduction it reaches 3,580 tok/s on V4.1 at roughly matched HBM bandwidth (346 against 360 TB/s), 1.91x the best-kernel GPU; on a single die at the same modeled bandwidth roof, this model assigns no added rate to the specialised HBM core (1.00x on Qwen3-8B). ROM removes the weight term: the design leaves the weights-plus-KV roof for the KV-only roof, 8,941 tok/s on six stacks for Qwen3-8B at 8K, where the ROM reticle sits (8,910, 4.8x the same core streaming 3.5-bit weights at the B200's bandwidth); for V4.1 it is bound by its compiled chain and reaches 8,185 tok/s, 2.3x the equal-area HBM array (23,818 with MTP); this V4.1 step also changes topology and HBM allocation. End to end, S0 -> S3 is 39x for Qwen3-8B (illustrative because S0 context is unverified; 4.0x is the modeled format step) and a modeled 8.9x for V4.1 at 1M; the steps are ordered by definition and S2-S3 are conditional on the design's open gates. The same roofline shows where ROM does not help: at 8K and a full batch, aggregate throughput is KV-bound on every machine, and the B200's eight stacks out-stream the ROM reticle's six (11,921 against 8,941 tok/s)."
 }

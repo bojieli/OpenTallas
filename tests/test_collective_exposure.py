@@ -105,3 +105,12 @@ def test_lever_records():
         assert best[ctx]["ar"] > base[ctx]["ar"] and best[ctx]["mtp"] > base[ctx]["mtp"]
     # the model's half-payload hop (its other half crossing over T1) is slower than the full payload per package
     assert rec["scenarios"]["hop_half_payload_t1"]["rates"]["1048576"]["ar"] < base["1048576"]["ar"]
+    # record-bound derived figures: the recovered share of the overlap loss and the analytical queue-area total
+    sh = rec["recovered_share_of_overlap_loss"]
+    for ctx in base:
+        ovl = rec["scenarios"]["recommended"]["overlap_assumed"][ctx]
+        assert abs(sh[ctx]["ar"] - (best[ctx]["ar"] - base[ctx]["ar"]) / (ovl["ar"] - base[ctx]["ar"])) < 1e-12
+        assert 0.0 < sh[ctx]["ar"] < 1.0
+    q = rec["queue_area_per_die"]
+    assert q["kind"].startswith("ANALYTICAL")
+    assert abs(q["growth_mm2"] - sum(q["growth_by_pattern_mm2"].values())) < 1e-12

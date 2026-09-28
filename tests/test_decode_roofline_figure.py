@@ -19,4 +19,4 @@ def test_v41_rom_point_is_the_design_point_headline():
     dp = json.loads((ROOT / "results/arch/v41_lanes.json").read_text())["design_point"]
     s3 = next(r for r in rec["models"]["v41"]["ladders"]["per_user"] if r["step"] == "S3")
     assert abs(s3["value"] - dp["1048576"]["ar"]) / dp["1048576"]["ar"] < 1e-5
-    assert "C7 measured" in s3["evidence"]
+    assert "C7 bench tails" in s3["evidence"]

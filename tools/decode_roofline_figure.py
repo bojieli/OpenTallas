@@ -48,8 +48,8 @@ Qwen3-8B needs one extra rung, S1f, because the ROM stores the HC1-class 3.5-bit
 format: S1f re-prices the idealised GPU at that weight format. Qwen S2 has
 B200-class bandwidth and S3 has six stacks; the matched six-stack HBM/ROM
 comparison is reported separately. Steps S2 and S3 are conditional on the
-design's open gates (the 1.087 GHz clock for V4.1; its collectives are priced with the exposure the RTL stage
-bench measured, rack gate C7 not met).
+design's open gates (the 1.087 GHz clock for V4.1; its collectives are priced with the tails the RTL stage
+bench measured with the adopted collective levers, rack gate C7 partly recovered, not met).
 
 INPUTS are read with `git show <commit>:<path>` at the pinned commits below (the
 producing branches are not all merged); each input's sha256 is recorded.  Cited
@@ -86,7 +86,7 @@ SOURCES = {
     "iso_qwen": ("b42f86065977850499995c874f2b630aa1aa5bf0", "results/roofline/iso_area/qwen3_8b.json"),   # NOT on main: pinned
     # validated synchronisation costs
     "sync": (None, "results/arch/sync_cost_table.json"),
-    # V4.1 design-point model: the headline (measured collective exposure), best HBM comparator, ladder, spec budget
+    # V4.1 design-point model: the headline (bench-measured collective tails with the adopted levers), best HBM comparator, ladder, spec budget
     "v41_lanes": (None, "results/arch/v41_lanes.json"),
     "v41_hbm_best": (None, "results/arch/v41_hbm_best.json"),
     "v41_ladder": (None, "results/arch/v41_latency_ladder.json"),
@@ -399,7 +399,7 @@ def build_v41(src: dict) -> dict:
 
     ctx = "1048576"
     dp = ln["design_point"]
-    bd = dp[ctx]["breakdown_us"]                     # the headline token (measured collective exposure)
+    bd = dp[ctx]["breakdown_us"]                     # the headline token (bench-measured collective tails, adopted levers)
     rom_x = per_ctx[ctx]["kv"] / (bd["kv_sweep"] * 1e-6) / 1e12
     switched_case = switched["configs"][switched["headline_config"]][ctx]
     grid = switched_case["grid"]
@@ -429,10 +429,10 @@ def build_v41(src: dict) -> dict:
              basis=f"{comp['dies']} dies x {comp['stacks_per_die']} HBM3E stacks, equal logic area to the ROM array; best tensor group G={g_ar}"),
         dict(key="hbm_mtp", label=f"HBM comparator + MTP (G={g_mtp})", x=g_mtp * comp["bw_Bps_per_die"] / 1e12, y=hbm_mtp,
              evidence="modelled", family="hbm", spec=True, basis=f"DSpark gamma 5, tau {tau}, m = {switched_case['best_mtp']['m']}"),
-        dict(key="rom_ar", label="ROM array", x=rom_x, y=dp[ctx]["ar"], evidence="modelled, C7 measured", family="rom", spec=False,
-             basis="rack lane-split design point with the RTL stage bench's measured collective exposure (v41_lanes "
-                   "design_point); conditional on the 1.087 GHz clock"),
-        dict(key="rom_mtp", label="ROM array + MTP", x=rom_x, y=dp[ctx]["mtp"], evidence="modelled, C7 measured", family="rom", spec=True,
+        dict(key="rom_ar", label="ROM array", x=rom_x, y=dp[ctx]["ar"], evidence="modelled, C7 bench tails", family="rom", spec=False,
+             basis="rack lane-split design point with the bench-measured collective tails of the adopted levers "
+                   "(v41_lanes design_point); conditional on the 1.087 GHz clock"),
+        dict(key="rom_mtp", label="ROM array + MTP", x=rom_x, y=dp[ctx]["mtp"], evidence="modelled, C7 bench tails", family="rom", spec=True,
              basis=f"DSpark gamma 5, tau {tau}"),
     ]
     roofs = [
@@ -478,9 +478,10 @@ def build_v41(src: dict) -> dict:
              basis=f"fixed 209-collective graph, 2.37 us per collective; against the SoL floor 1.404 us: {s1_sol:,.0f} tok/s; a different GPU mapping could change the graph", matching="same GPUs"),
         dict(key="S2", label="specialised HBM accelerator", value=hbm_ar, unit="tok/s", evidence="modelled (RTL-calibrated + validated links)",
              basis=f"best switched HBM comparator, G = {g_ar}", matching=f"{comp['dies']} dies, {comp_logic:,.0f} mm2 logic, {comp_bw_total/1e12:.0f} TB/s"),
-        dict(key="S3", label="equal-area specialised ROM array", value=dp[ctx]["ar"], unit="tok/s", evidence="modelled, C7 measured",
-             basis="ROM array design point, collective exposure measured in the RTL stage bench (gate C7 not met; "
-                   "full overlap would give the conditional point); open gate: 1.087 GHz clock",
+        dict(key="S3", label="equal-area specialised ROM array", value=dp[ctx]["ar"], unit="tok/s", evidence="modelled, C7 bench tails",
+             basis="ROM array design point, collective tails measured in the RTL stage bench with the adopted levers "
+                   "(gate C7 partly recovered, not met; full overlap would give the conditional point); open gate: "
+                   "1.087 GHz clock",
              matching="equal logic area (188 x 328.9 mm2); die count, topology, HBM allocation and weight placement all differ"),
     ])
     energy = ladder([
@@ -497,7 +498,7 @@ def build_v41(src: dict) -> dict:
                    "the GPUs' device draw", matching=""),
         dict(key="S3", label="ROM array",
              value=ps["deepseek_v41_design_point"]["per_context"][ctx]["ar_batch1"]["energy_per_token_j"],
-             unit="J/token", evidence="modelled, C7 measured",
+             unit="J/token", evidence="modelled, C7 bench tails",
              basis="the same power model and boundary (power_scenarios deepseek_v41_design_point); KV from HBM",
              matching=""),
     ])
@@ -510,7 +511,7 @@ def build_v41(src: dict) -> dict:
              evidence="modelled", basis=f"per user {en['fill28']['hbm']['tokens_s_per_user']:,.0f} tok/s; at 1,024 users "
                                         f"{en['sat1024']['hbm']['aggregate_tokens_s']:,.0f}", matching=""),
         dict(key="S3", label="ROM array, fill batch (28 users)", value=en["fill28"]["rom"]["aggregate_tokens_s"], unit="tok/s",
-             evidence="modelled, C7 measured", basis=f"per user {en['fill28']['rom']['tokens_s_per_user']:,.0f} tok/s; at 1,024 users "
+             evidence="modelled, C7 bench tails", basis=f"per user {en['fill28']['rom']['tokens_s_per_user']:,.0f} tok/s; at 1,024 users "
                                                      f"{en['sat1024']['rom']['aggregate_tokens_s']:,.0f}", matching=""),
     ])
     secondary = {}
@@ -526,7 +527,7 @@ def build_v41(src: dict) -> dict:
         dict(machine="V4-Pro + DSpark, 8 x B300 (different model)", ar=None, spec=lm["tok_s"], tau=lm["tau"], evidence="cited"),
         dict(machine=f"{n_iso} x B200, best kernel (bound: tau x AR)", ar=s1, spec=tau * s1, tau=tau, evidence="bound"),
         dict(machine="HBM comparator", ar=hbm_ar, spec=hbm_mtp, tau=tau, evidence="modelled"),
-        dict(machine="ROM array", ar=dp[ctx]["ar"], spec=dp[ctx]["mtp"], tau=tau, evidence="modelled, C7 measured"),
+        dict(machine="ROM array", ar=dp[ctx]["ar"], spec=dp[ctx]["mtp"], tau=tau, evidence="modelled, C7 bench tails"),
     ]
     out = dict(
         title="DeepSeek-V4.1-Flash, 1M context, one user",
@@ -856,8 +857,8 @@ CAPTIONS = {
         "ceiling: 72 GPUs add 2% over the iso-area set. The blue curve is the specialised HBM comparator against its "
         "tensor-group span G, which peaks at G = 96 on the validated switched fabric. The ROM array leaves the weight roof "
         "and is bound by its compiled chain. The only published V4-class batch-1 GPU figure is V4-Pro (49 B active) with "
-        "DSpark on 8 B300s [LMSYS]; no V4.1-Flash figure exists. ROM rates carry the collective exposure measured in the RTL "
-        "stage bench (rack gate C7 not met) and are conditional on the 1.087 GHz clock. Sources: results/arch/v41_lanes.json, v41_hbm_switched.json, v41_latency_ladder.json, "
+        "DSpark on 8 B300s [LMSYS]; no V4.1-Flash figure exists. ROM rates carry the collective tails measured in the RTL "
+        "stage bench with the adopted levers (rack gate C7 partly recovered, not met) and are conditional on the 1.087 GHz clock. Sources: results/arch/v41_lanes.json, v41_hbm_switched.json, v41_latency_ladder.json, "
         "arch_budget_v41.json, sync_cost_table.json; tools/decode_roofline_figure.py."
     ),
 }
@@ -900,7 +901,7 @@ def build() -> dict:
             "S1f (the ROM's 3.5-bit weight format). Qwen S2 has B200-class bandwidth while S3 has six stacks; the matched six-stack HBM/ROM comparison is separate. The order is part of "
             "the definition: the factors are not independent (ROM without specialisation is not a meaningful machine). "
             "Each step keeps or reduces the silicon and bandwidth of the step before it. V4.1 S2-to-S3 also changes die count, topology and HBM allocation, so its multiplier is not an isolated ROM effect. "
-            "S2-S3 are conditional on the design's open gates (clock; V4.1 collectives at their measured exposure)."
+            "S2-S3 are conditional on the design's open gates (clock; V4.1 collectives at their bench-measured tails with the adopted levers)."
         ),
         "models": {"qwen3": q, "v41": v},
         "captions": CAPTIONS,

@@ -5,8 +5,8 @@ Inputs: results/rtl/v41_stage_collective_campaign.json (tools/rtl_v41_stage_coll
 DESIGN-POINT MODEL on this tree (tools/arch_lanes_v41.py design_point(): the adopted ladder rungs of
 results/arch/v41_latency_ladder.json, the lane split of results/arch/v41_lanes.json, on the design-point base
 tools/arch_budget_v41.py).  The design point itself now prices the measured exposure (arch_lanes_v41.build ->
-v41_lanes.json design_point is the exposure-corrected headline; design_point_overlap_assumed is the conditional
-point); this tool writes the standalone C7 record with the derivation and the specification model's rows.
+v41_lanes.json design_point_no_levers is this measured exposure, the ablation; design_point, the headline, adds the
+adopted levers through recommended_exposure(); design_point_overlap_assumed is the conditional point); this tool writes the standalone C7 record with the derivation and the specification model's rows.
 
 Steps:
   1. dump   the design point's on-path collectives and stage hops (bytes time, depth, producer window) at 1M;
@@ -248,18 +248,50 @@ DERIVATION = [
 ]
 
 
-def lever_rates(camp, lev, lev_path, out):
+def scenario_terms(camp, dump, over, scale):
+    """Exposure terms with the bench tails of `over` ({pattern: measured tail}) replacing the O2 campaign's."""
     import copy
+    c2 = copy.deepcopy(camp)
+    for pat, tail in over.items():
+        c2["summary"]["patterns"][pat]["measured_exposed_tail_cycles"] = tail
+    return derive_terms(c2, dump, scale)
+
+
+def recommended_exposure(dump, camp=None, lev=None):
+    """The ADOPTED lever set (lever_scenarios 'recommended': levers 1-4) priced on `dump`: its exposure terms, its
+    consumer early starts and the tails they come from.  tools/arch_lanes_v41.py prices the design point with it,
+    tools/v41_collective_exposure.py --levers with the same function, so both read the one lever campaign."""
+    camp = camp or json.loads(CAMPAIGN.read_text())
+    lev = lev or json.loads(LEVERS_CAMPAIGN.read_text())
+    scen, picks = lever_scenarios(lev)
+    _name, over, cons, scale, why = next(s for s in scen if s[0] == "recommended")
+    terms, rows = scenario_terms(camp, dump, over, scale)
+    return dict(scenario="recommended", why=why, tails=over, consumers=list(cons), bytes_scale=scale,
+                picks=picks, terms=terms, per_pattern=rows)
+
+
+def queue_area_totals(lev):
+    """Per-die queue area summed over the lever campaign's per-queue entries (ANALYTICAL: bitcell x assumed
+    two-port overhead + flops; not a compiled macro), before and with the adopted levers."""
+    P = lev["summary"]["patterns"]
+    qs = {p: (v["queue_cost_per_die_before"]["area_mm2"], v["queue_cost_per_die"]["area_mm2"])
+          for p, v in P.items() if v.get("queue_cost_per_die") and v.get("queue_cost_per_die_before")}
+    before, after = sum(b for b, _ in qs.values()), sum(a for _, a in qs.values())
+    return dict(kind="ANALYTICAL estimate (bitcell area x an assumed 2.5x two-port overhead + flops), not a "
+                     "compiled SRAM macro; one queue set per pattern per die, summed",
+                patterns=sorted(qs), before_mm2=before, with_levers_mm2=after, growth_mm2=after - before,
+                growth_by_pattern_mm2={p: a - b for p, (b, a) in qs.items()},
+                die_mm2=lev.get("area_assumptions", {}).get("die_mm2"))
+
+
+def lever_rates(camp, lev, lev_path, out):
     import arch_lanes_v41 as AL
     dp = AL.design_point()
     dump = dump_on_path(AL.U, AL.A, dp["sp"], list(dp["muts"]) + [dp["ml"]], dp["hz"])
     scen, picks = lever_scenarios(lev)
     rows = {}
     for name, over, cons, scale, why in scen:
-        c2 = copy.deepcopy(camp)
-        for pat, tail in over.items():
-            c2["summary"]["patterns"][pat]["measured_exposed_tail_cycles"] = tail
-        terms, _ = derive_terms(c2, dump, scale)
+        terms, _ = scenario_terms(camp, dump, over, scale)
         ev = design_point_rates(dp, terms, cons)
         rows[name] = dict(why=why, tails=over, consumers=list(cons), bytes_scale=scale,
                           residual_cycles={k: round(v["residual_cycles"], 2) for k, v in terms.items()},
@@ -271,6 +303,9 @@ def lever_rates(camp, lev, lev_path, out):
     for r in rows.values():
         r["gain_vs_measured"] = {ctx: dict(ar=r["rates"][ctx]["ar"] / base[ctx]["ar"] - 1,
                                            mtp=r["rates"][ctx]["mtp"] / base[ctx]["mtp"] - 1) for ctx in base}
+    rec_rates, ovl = rows["recommended"]["rates"], rows["recommended"]["overlap_assumed"]
+    recovered = {ctx: {k: (rec_rates[ctx][k] - base[ctx][k]) / (ovl[ctx][k] - base[ctx][k]) for k in ("ar", "mtp")}
+                 for ctx in base}
     rel = (lambda q: str(q.relative_to(ROOT)) if q.resolve().is_relative_to(ROOT) else str(q))
     rec = dict(schema="v41_collective_levers/3", tool="tools/v41_collective_exposure.py --levers",
                gate="C7 / O2 levers", result_kind=("conditioned design-point model result using bench-measured "
@@ -286,7 +321,13 @@ def lever_rates(camp, lev, lev_path, out):
                                     queue_cost_per_die=v.get("queue_cost_per_die"),
                                     queue_cost_per_die_before=v.get("queue_cost_per_die_before"))
                             for p, v in lev["summary"]["patterns"].items()},
-               scenarios=rows)
+               scenarios=rows,
+               recovered_share_of_overlap_loss=dict(
+                   definition="(recommended - measured_baseline) / (overlap_assumed - measured_baseline), tokens/s",
+                   note=("above 1 with MTP: the relay halves the bytes each T1 link carries, which the overlap-"
+                         "assumed point still charges in full"),
+                   **recovered),
+               queue_area_per_die=queue_area_totals(lev))
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps({k: {c: (round(v["rates"][c]["ar"]), round(v["rates"][c]["mtp"])) for c in v["rates"]}

@@ -56,7 +56,7 @@ CABLE_EFFECT = ("+79 ns per stage hop; adopted design (overlap assumed) 8,819 ->
 
 
 # The ADOPTED V4.1 design point's headline token at 1M, batch 1 (results/arch/v41_lanes.json design_point: the
-# design-point model with the RTL stage bench's measured collective exposure, rack gate C7 measured NOT MET).  The
+# design-point model with the RTL stage bench's measured collective tails and the adopted levers, C7 NOT MET).  The
 # synchronisation cost is its collective latency + the collective bytes the bench measured as exposed + the stage
 # hops; the specification-width budget (results/arch/arch_budget_v41.json) is reported beside it (v41_spec_budget)
 # so the two are never confused.
@@ -68,8 +68,8 @@ def v41_design_point():
     return dict(T_us=round(d["T_us"], 3), tokens_s_per_user=d["ar"], collective_latency_us=round(b["collective_latency"], 3),
                 collective_exposed_bytes_us=round(b["collective_bytes"], 3), pipeline_hops_us=round(b["pipeline_hops"], 3),
                 stage_hops=STAGE_HOPS, collectives=V41_COLLECTIVES, overlap_assumed_tokens_s_per_user=c["ar"],
-                source="results/arch/v41_lanes.json design_point['1048576'] (design-point model, collective exposure "
-                       "measured in the RTL stage bench, 209 ns rack-cable tier)")
+                source="results/arch/v41_lanes.json design_point['1048576'] (design-point model, collective tails "
+                       "measured in the RTL stage bench with the adopted levers, 209 ns rack-cable tier)")
 
 
 LADDER = v41_design_point()
@@ -314,7 +314,7 @@ def build():
           gpu=cell(round(gpu_tok["best_kernel"]), "us", "model on measured primitives", ["r-sol", "r-nccl227"],
                    f"same graph priced at 2.37 us per collective + 0.79 us per stage handoff; NCCL 2.27: {gpu_tok['nccl_2_27']:.0f} us; NCCL ring: {gpu_tok['nccl_ring']:.0f} us; SoL floor: {gpu_tok['sol']:.0f} us"),
           ot=cell(round(rom_tok_us, 1), "us", "model, normative basis", ["r-rtl-tp", "r-sue", "r-ualink"],
-                  f"adopted design point, collective exposure measured in the RTL stage bench: collectives {LADDER['collective_latency_us']:.1f} us "
+                  f"adopted design point, collective tails measured in the RTL stage bench with the adopted levers: collectives {LADDER['collective_latency_us']:.1f} us "
                   f"+ exposed collective bytes {LADDER['collective_exposed_bytes_us']:.1f} us + hops {LADDER['pipeline_hops_us']:.1f} us "
                   f"(27 stage hops on the {cable['value']*1e9:.0f} ns cable tier); {rom_tok_us/LADDER['T_us']:.0%} of the {LADDER['T_us']:.1f} us token. "
                   f"Specification widths (this branch's budget): {spec['collective_latency_us'] + spec['pipeline_hops_us']:.1f} us of "
@@ -397,7 +397,7 @@ def build():
                caveats=["GPU on-chip primitives are measured on an RTX PRO 6000 Blackwell (GB202), not a B200.",
                         "The GPU per-token rows price the SAME collective graph as the ROM array; a GPU deployment would choose its own parallelism.",
                         "No production measurement of a 112G PAM4 port's end-to-end latency was found; the 130/209 ns points are component sums cross-checked against Broadcom's budget.",
-                        "The V4.1 ROM per-token figure is the adopted design point with the measured collective exposure (results/arch/v41_lanes.json design_point, 209 ns cable tier); the specification-width budget is reported beside it."])
+                        "The V4.1 ROM per-token figure is the adopted design point with the bench-measured collective tails of the adopted levers (results/arch/v41_lanes.json design_point, 209 ns cable tier); the specification-width budget is reported beside it."])
     return rec, tech
 
 

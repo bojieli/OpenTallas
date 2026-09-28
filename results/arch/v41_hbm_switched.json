@@ -1196,18 +1196,18 @@
      "clock_j": 0.3025031983329105
     },
     "rom": {
-     "tokens_s_per_user": 7578.981495298372,
-     "aggregate_tokens_s": 7578.981495298372,
-     "total_j": 1.9974807664076843,
-     "dynamic_j": 0.034694103772699575,
-     "static_j": 1.9627866626349848,
-     "switch_j": 0.1446984225185119,
-     "wall_j": 2.65720502840941
+     "tokens_s_per_user": 8184.912902114869,
+     "aggregate_tokens_s": 8184.912902114869,
+     "total_j": 1.851747670432346,
+     "dynamic_j": 0.03426665710534254,
+     "static_j": 1.8174810133270034,
+     "switch_j": 0.13398635755590058,
+     "wall_j": 2.463147094104195
     },
-    "ratio_rate_per_user": 2.116811729501986,
-    "ratio_aggregate": 2.116811729501986,
-    "ratio_energy_with_static": 3.3222882171531065,
-    "ratio_energy_chip_only": 2.252084993934204
+    "ratio_rate_per_user": 2.2860485471427854,
+    "ratio_aggregate": 2.2860485471427854,
+    "ratio_energy_with_static": 3.584033197844875,
+    "ratio_energy_chip_only": 2.4293247571083105
    },
    "b1_mtp": {
     "hbm": {
@@ -1224,18 +1224,18 @@
      "clock_j": 0.5422757169583947
     },
     "rom": {
-     "tokens_s_per_user": 21005.94986438209,
-     "aggregate_tokens_s": 21005.94986438209,
-     "total_j": 0.7255080351654994,
-     "dynamic_j": 0.017331357063798,
-     "static_j": 0.7081766781017015,
-     "switch_j": 0.052207430454082264,
-     "wall_j": 0.9646949501698836
+     "tokens_s_per_user": 23817.724415076806,
+     "aggregate_tokens_s": 23817.724415076806,
+     "total_j": 0.6414133092018938,
+     "dynamic_j": 0.01683962885850963,
+     "static_j": 0.6245736803433841,
+     "switch_j": 0.04604414122671048,
+     "wall_j": 0.8527369715565543
     },
-    "ratio_rate_per_user": 1.7537308329256456,
-    "ratio_aggregate": 1.7537308329256456,
-    "ratio_energy_with_static": 3.7974104152831325,
-    "ratio_energy_chip_only": 2.991849727134565
+    "ratio_rate_per_user": 1.9884784047624322,
+    "ratio_aggregate": 1.9884784047624322,
+    "ratio_energy_with_static": 4.295981965762818,
+    "ratio_energy_chip_only": 3.384106606307734
    },
    "fill28": {
     "hbm": {
@@ -1252,18 +1252,18 @@
      "clock_j": 0.031869200485587106
     },
     "rom": {
-     "tokens_s_per_user": 7578.981495298372,
-     "aggregate_tokens_s": 212211.4818683544,
-     "total_j": 0.10479362743823478,
-     "dynamic_j": 0.0346941037726996,
-     "static_j": 0.07009952366553518,
-     "switch_j": 0.005167800804232567,
-     "wall_j": 0.13639851491761995
+     "tokens_s_per_user": 8184.912902114869,
+     "aggregate_tokens_s": 229177.56125921634,
+     "total_j": 0.0991766932955927,
+     "dynamic_j": 0.03426665710534257,
+     "static_j": 0.06491003619025013,
+     "switch_j": 0.004785227055567878,
+     "wall_j": 0.1289565966041695
     },
-    "ratio_rate_per_user": 6.244266961627199,
-    "ratio_aggregate": 6.244266961627199,
-    "ratio_energy_with_static": 9.509222397390042,
-    "ratio_energy_chip_only": 7.345778453345508
+    "ratio_rate_per_user": 6.743489379170203,
+    "ratio_aggregate": 6.743489379170203,
+    "ratio_energy_with_static": 10.057987316512621,
+    "ratio_energy_chip_only": 7.761811216969767
    },
    "fill28_mtp": {
     "hbm": {
@@ -1280,18 +1280,18 @@
      "clock_j": 0.11441489806330515
     },
     "rom": {
-     "tokens_s_per_user": 21005.94986438209,
-     "aggregate_tokens_s": 588166.5962026985,
-     "total_j": 0.042623381281715916,
-     "dynamic_j": 0.017331357063798007,
-     "static_j": 0.025292024217917913,
-     "switch_j": 0.001864551087645795,
-     "wall_j": 0.055183785841305955
+     "tokens_s_per_user": 23817.724415076806,
+     "aggregate_tokens_s": 666896.2836221505,
+     "total_j": 0.03914583172791622,
+     "dynamic_j": 0.016839628858509637,
+     "static_j": 0.02230620286940658,
+     "switch_j": 0.00164443361523966,
+     "wall_j": 0.050597120325083206
     },
-    "ratio_rate_per_user": 10.360563804964952,
-    "ratio_aggregate": 10.360563804964952,
-    "ratio_energy_with_static": 15.514160413445175,
-    "ratio_energy_chip_only": 12.318406743084726
+    "ratio_rate_per_user": 11.747388482055372,
+    "ratio_aggregate": 11.747388482055372,
+    "ratio_energy_with_static": 16.920530264620695,
+    "ratio_energy_chip_only": 13.412721718193259
    },
    "sat1024": {
     "hbm": {
@@ -1336,18 +1336,18 @@
      "clock_j": 0.07674613408380365
     },
     "rom": {
-     "tokens_s_per_user": 1202.0926965497094,
-     "aggregate_tokens_s": 1230942.9212669025,
-     "total_j": 0.02546304855482661,
-     "dynamic_j": 0.013378065946519715,
-     "static_j": 0.012084982608306894,
-     "switch_j": 0.0008909159374652101,
-     "wall_j": 0.032690023005285354
+     "tokens_s_per_user": 1260.3885493592798,
+     "aggregate_tokens_s": 1290637.8745439025,
+     "total_j": 0.024812036921804913,
+     "dynamic_j": 0.013286012396462368,
+     "static_j": 0.011526024525342547,
+     "switch_j": 0.0008497090379082645,
+     "wall_j": 0.031831380285276406
     },
-    "ratio_rate_per_user": 14.544368820075567,
-    "ratio_aggregate": 14.544368820075567,
-    "ratio_energy_with_static": 12.27724895775781,
-    "ratio_energy_chip_only": 8.356526153508414
+    "ratio_rate_per_user": 15.249702432347595,
+    "ratio_aggregate": 15.249702432347595,
+    "ratio_energy_with_static": 12.608424368463838,
+    "ratio_energy_chip_only": 8.575782466673223
    }
   },
   "200000": {
@@ -1366,18 +1366,18 @@
      "clock_j": 0.3025031983329105
     },
     "rom": {
-     "tokens_s_per_user": 7905.41350038117,
-     "aggregate_tokens_s": 7905.41350038117,
-     "total_j": 1.9004430744273009,
-     "dynamic_j": 0.018704213504752702,
-     "static_j": 1.8817388609225483,
-     "switch_j": 0.13872350467357458,
-     "wall_j": 2.5294259769498413
+     "tokens_s_per_user": 8567.550390932485,
+     "aggregate_tokens_s": 8567.550390932485,
+     "total_j": 1.7545864484062708,
+     "dynamic_j": 0.018276404514026387,
+     "static_j": 1.7363100438922443,
+     "switch_j": 0.1280023596741643,
+     "wall_j": 2.3352035502530306
     },
-    "ratio_rate_per_user": 2.2079842831851924,
-    "ratio_aggregate": 2.2079842831851924,
-    "ratio_energy_with_static": 3.4823958374999293,
-    "ratio_energy_chip_only": 2.3587894047705564
+    "ratio_rate_per_user": 2.3929193087324236,
+    "ratio_aggregate": 2.3929193087324236,
+    "ratio_energy_with_static": 3.7720319894340175,
+    "ratio_energy_chip_only": 2.5548726837600246
    },
    "b1_mtp": {
     "hbm": {
@@ -1394,18 +1394,18 @@
      "clock_j": 0.5422757169583947
     },
     "rom": {
-     "tokens_s_per_user": 21815.28744657373,
-     "aggregate_tokens_s": 21815.28744657373,
-     "total_j": 0.6950255665422596,
-     "dynamic_j": 0.013121932140899241,
-     "static_j": 0.6819036344013603,
-     "switch_j": 0.05027055771565858,
-     "wall_j": 0.9244813035574752
+     "tokens_s_per_user": 24863.62688630105,
+     "aggregate_tokens_s": 24863.62688630105,
+     "total_j": 0.6109308405786539,
+     "dynamic_j": 0.012630203935610877,
+     "static_j": 0.598300636643043,
+     "switch_j": 0.044107268488286805,
+     "wall_j": 0.8125233249441459
     },
-    "ratio_rate_per_user": 1.8213002730746795,
-    "ratio_aggregate": 1.8213002730746795,
-    "ratio_energy_with_static": 3.9571518201410374,
-    "ratio_energy_chip_only": 3.117232267013032
+    "ratio_rate_per_user": 2.0757980177226263,
+    "ratio_aggregate": 2.0757980177226263,
+    "ratio_energy_with_static": 4.502409667205923,
+    "ratio_energy_chip_only": 3.5463197771656985
    },
    "fill28": {
     "hbm": {
@@ -1422,18 +1422,18 @@
      "clock_j": 0.031869200485587106
     },
     "rom": {
-     "tokens_s_per_user": 7905.41350038117,
-     "aggregate_tokens_s": 221351.57801067276,
-     "total_j": 0.08590917282341513,
-     "dynamic_j": 0.018704213504752695,
-     "static_j": 0.06720495931866244,
-     "switch_j": 0.004954410881199091,
-     "wall_j": 0.11270913879068528
+     "tokens_s_per_user": 8567.550390932485,
+     "aggregate_tokens_s": 239891.4109461096,
+     "total_j": 0.08028747751017795,
+     "dynamic_j": 0.01827640451402638,
+     "static_j": 0.06201107299615158,
+     "switch_j": 0.0045715128455058665,
+     "wall_j": 0.1052609123664852
     },
-    "ratio_rate_per_user": 6.513211883292559,
-    "ratio_aggregate": 6.51321188329256,
-    "ratio_energy_with_static": 11.334532085704302,
-    "ratio_energy_chip_only": 8.77716865768661
+    "ratio_rate_per_user": 7.0587415843888115,
+    "ratio_aggregate": 7.0587415843888115,
+    "ratio_energy_with_static": 12.136559728147255,
+    "ratio_energy_chip_only": 9.391742305241474
    },
    "fill28_mtp": {
     "hbm": {
@@ -1450,18 +1450,18 @@
      "clock_j": 0.11441489806330515
     },
     "rom": {
-     "tokens_s_per_user": 21815.28744657373,
-     "aggregate_tokens_s": 610828.0485040644,
-     "total_j": 0.03747563336951922,
-     "dynamic_j": 0.01312193214089921,
-     "static_j": 0.02435370122862001,
-     "switch_j": 0.0017953770612735207,
-     "wall_j": 0.04871260393474771
+     "tokens_s_per_user": 24863.62688630105,
+     "aggregate_tokens_s": 696181.5528164294,
+     "total_j": 0.033998083815719525,
+     "dynamic_j": 0.012630203935610849,
+     "static_j": 0.021367879880108676,
+     "switch_j": 0.0015752595888673857,
+     "wall_j": 0.04412593841852496
     },
-    "ratio_rate_per_user": 10.75974564221529,
-    "ratio_aggregate": 10.759745642215291,
-    "ratio_energy_with_static": 17.471870906674745,
-    "ratio_energy_chip_only": 13.902293461922481
+    "ratio_rate_per_user": 12.263248957627733,
+    "ratio_aggregate": 12.263248957627733,
+    "ratio_energy_with_static": 19.28798248783711,
+    "ratio_energy_chip_only": 15.324312264139433
    },
    "sat1024": {
     "hbm": {
@@ -1506,18 +1506,18 @@
      "clock_j": 0.07674613408380365
     },
     "rom": {
-     "tokens_s_per_user": 1336.4688878140405,
-     "aggregate_tokens_s": 1368544.1411215775,
-     "total_j": 0.019992950049803532,
-     "dynamic_j": 0.009123060399669505,
-     "static_j": 0.010869889650134029,
-     "switch_j": 0.0008013381766173095,
-     "wall_j": 0.025793681277025856
+     "tokens_s_per_user": 1515.038431518883,
+     "aggregate_tokens_s": 1551399.3538753362,
+     "total_j": 0.018500779779892597,
+     "dynamic_j": 0.008912066365664656,
+     "static_j": 0.00958871341422794,
+     "switch_j": 0.0007068886962774835,
+     "wall_j": 0.023825604096398712
     },
-    "ratio_rate_per_user": 16.170214224506594,
-    "ratio_aggregate": 16.170214224506594,
-    "ratio_energy_with_static": 15.364761947972642,
-    "ratio_energy_chip_only": 10.440066926452644
+    "ratio_rate_per_user": 18.33076416473197,
+    "ratio_aggregate": 18.33076416473197,
+    "ratio_energy_with_static": 16.633944347429363,
+    "ratio_energy_chip_only": 11.282104811821359
    }
   }
  },
@@ -1562,9 +1562,9 @@
   "worst_point": "1048576/sat1024",
   "dynamic_w_by_point": {
    "1048576/sat1024": 171.11284647973315,
-   "1048576/sat1024_mtp": 147.0324605099129,
+   "1048576/sat1024_mtp": 153.10206071905472,
    "200000/sat1024": 92.71588839900069,
-   "200000/sat1024_mtp": 111.47598981308909
+   "200000/sat1024_mtp": 123.4479821552345
   },
   "total_w": 269.90924553005334,
   "cooling_limit_w": {
@@ -1577,59 +1577,67 @@
  },
  "rom_design_point": {
   "1048576": {
-   "ar": 7578.981495298372,
-   "mtp": 21005.94986438209,
-   "T_us": 131.9438503208315,
-   "verify_us": 223.7939203331244,
+   "ar": 8184.912902114869,
+   "mtp": 23817.724415076806,
+   "T_us": 122.1760099293926,
+   "verify_us": 195.69381747276674,
    "breakdown_us": {
-    "compute_chain": 75.263,
+    "compute_chain": 75.16,
     "weight_sweep": 8.548,
     "kv_sweep": 5.707,
-    "collective_latency": 15.561,
-    "collective_bytes": 12.503,
-    "pipeline_hops": 12.393,
-    "control": 1.969
+    "collective_latency": 15.301,
+    "collective_bytes": 4.769,
+    "pipeline_hops": 11.002,
+    "control": 1.689
    }
   },
   "200000": {
-   "ar": 7905.41350038117,
-   "mtp": 21815.28744657373,
-   "T_us": 126.49559696678531,
-   "verify_us": 214.96319356219576,
+   "ar": 8567.550390932485,
+   "mtp": 24863.62688630105,
+   "T_us": 116.71947690653278,
+   "verify_us": 186.86309070183813,
    "breakdown_us": {
-    "compute_chain": 74.115,
+    "compute_chain": 74.004,
     "weight_sweep": 8.548,
     "kv_sweep": 1.407,
-    "collective_latency": 15.561,
-    "collective_bytes": 12.503,
-    "pipeline_hops": 12.393,
-    "control": 1.969
+    "collective_latency": 15.301,
+    "collective_bytes": 4.769,
+    "pipeline_hops": 11.002,
+    "control": 1.689
    }
   }
  },
  "ratios_batch1": {
   "1048576": {
    "ar": {
-    "rom": 7578.981495298372,
+    "rom": 8184.912902114869,
     "hbm": 3580.375802755708,
-    "ratio": 2.116811729501986
+    "ratio": 2.2860485471427854
    },
    "mtp": {
-    "rom": 21005.94986438209,
+    "rom": 23817.724415076806,
     "hbm": 11977.864259442315,
-    "ratio": 1.7537308329256456
+    "ratio": 1.9884784047624322
+   },
+   "mtp_speedup": {
+    "rom": 2.909954534631961,
+    "hbm": 3.345420961180475
    }
   },
   "200000": {
    "ar": {
-    "rom": 7905.41350038117,
+    "rom": 8567.550390932485,
     "hbm": 3580.375802755708,
-    "ratio": 2.2079842831851924
+    "ratio": 2.3929193087324236
    },
    "mtp": {
-    "rom": 21815.28744657373,
+    "rom": 24863.62688630105,
     "hbm": 11977.864259442315,
-    "ratio": 1.8213002730746795
+    "ratio": 2.0757980177226263
+   },
+   "mtp_speedup": {
+    "rom": 2.9020695241682626,
+    "hbm": 3.345420961180475
    }
   }
  },
@@ -1655,8 +1663,8 @@
   "bytes_per_token_upper": 7832.0,
   "residual_hop_bytes_per_token": 41000,
   "stage_link_Bps_per_group": 368941176470.58826,
-  "worst_aggregate_tokens_s": 1230942.9212669025,
-  "link_load_fraction": 0.16292408807911216,
+  "worst_aggregate_tokens_s": 1290637.8745439025,
+  "link_load_fraction": 0.1708251415378465,
   "batch1_write_time_s": 2.122831632653061e-08,
   "note": "upper bound: every source layer's new compressed row + index key (288 + 68 B) written to each distinct reader group, all on one stage link (store-and-forward along the ring); off the critical path (the readers need it from the next token on)"
  }

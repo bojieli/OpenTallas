@@ -322,8 +322,9 @@ def _spec_rates(ctx):
 
 
 def _dp_rates(ctx):
-    """The adopted DESIGN POINT's headline rates (results/arch/v41_lanes.json design_point: collective exposure
-    measured in the RTL stage bench) and its saturated aggregate at 1,024 users (energy rows, same exposure)."""
+    """The adopted DESIGN POINT's headline rates (results/arch/v41_lanes.json design_point: collective tails
+    measured in the RTL stage bench with the adopted levers) and its saturated aggregate at 1,024 users (energy rows,
+    same pricing)."""
     ln = json.loads(V41_LANES.read_text())
     d = ln["design_point"][str(ctx)]
     en = ln["energy"][str(ctx)]

@@ -606,8 +606,9 @@ follows engine throughput, and the design point is the spec after the adopted la
 (`results/arch/v41_latency_ladder.json`: the pooled block-dot / BF16 engines of `arch_utilization_v41.unified`
 with the pools widened ×2 inside the envelope (`widths_x2`, the R-L8 pools), the 1.087 GHz clock, the
 four-wide lm_head engine, the split index scan, the shorter sequencer gap and the fast-FP formulas), with the
-package's 112G lane split priced per collective and the RTL stage bench's measured collective exposure
-(`tools/arch_lanes_v41.py`). The spec rows here are the width derivation at m = 1 without those levers; the
+package's 112G lane split priced per collective and the RTL stage bench's measured collective tails with the
+adopted collective levers (`tools/arch_lanes_v41.py`; the saturated aggregates are occupancy-bound, so the levers
+leave them unchanged). The spec rows here are the width derivation at m = 1 without those levers; the
 atlas quotes only the design point.
 
 ### 8.3 Target context: 1M

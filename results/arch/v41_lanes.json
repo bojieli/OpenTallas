@@ -859,7 +859,7 @@
    "mtp": 24602.01201946047
   }
  },
- "design_point": {
+ "design_point_no_levers": {
   "1048576": {
    "ar": 7578.981495298372,
    "mtp": 21005.94986438209,
@@ -891,9 +891,41 @@
    }
   }
  },
+ "design_point": {
+  "1048576": {
+   "ar": 8184.912902114869,
+   "mtp": 23817.724415076806,
+   "T_us": 122.1760099293926,
+   "verify_us": 195.69381747276674,
+   "breakdown_us": {
+    "compute_chain": 75.16,
+    "weight_sweep": 8.548,
+    "kv_sweep": 5.707,
+    "collective_latency": 15.301,
+    "collective_bytes": 4.769,
+    "pipeline_hops": 11.002,
+    "control": 1.689
+   }
+  },
+  "200000": {
+   "ar": 8567.550390932485,
+   "mtp": 24863.62688630105,
+   "T_us": 116.71947690653278,
+   "verify_us": 186.86309070183813,
+   "breakdown_us": {
+    "compute_chain": 74.004,
+    "weight_sweep": 8.548,
+    "kv_sweep": 1.407,
+    "collective_latency": 15.301,
+    "collective_bytes": 4.769,
+    "pipeline_hops": 11.002,
+    "control": 1.689
+   }
+  }
+ },
  "collective_exposure": {
   "gate": "C7 / O2",
-  "status": "NOT MET (measured): the one-shot engine's exposed tails exceed the overlap model",
+  "status": "NOT MET (measured): the one-shot engine's exposed tails exceed the overlap model; the adopted levers recover part of the loss",
   "campaign": "results/rtl/v41_stage_collective_campaign.json",
   "campaign_binding": {
    "pinned": true,
@@ -1024,7 +1056,7 @@
     "min_tx_queue_words": 128
    }
   },
-  "loss": {
+  "loss_no_levers": {
    "1048576": {
     "ar": 0.12097661206173027,
     "mtp": 0.1090698725430248
@@ -1034,7 +1066,190 @@
     "mtp": 0.11327222223460465
    }
   },
-  "note": "design_point is the headline (measured exposure); design_point_overlap_assumed is the conditional point that holds only if C7 is recovered (tools/collective_exposure.py, results/rtl/v41_stage_collective_campaign.json)"
+  "levers": {
+   "campaign": "results/rtl/v41_collective_levers_campaign.json",
+   "campaign_binding": {
+    "pinned": true,
+    "current": true,
+    "stale": [],
+    "source_sha256": {
+     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+     "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+     "rtl/rom/ot_rom_oneshot_px.sv": "1a4e72d08b20a3b78824d4791a4750238a30ca736e1a5e567306b3029d7898bf",
+     "rtl/test/tb_v41_stage_collective_px.sv": "1ef5ea0c7e6df525eeca7c1f585605037ac5860c0315aaa61d9972c7eefc6bae",
+     "rtl/test/tb_v41_stage_hop_px.sv": "d5d6a445fc06da2b848eb7d759f4f5095dcf9a7da14e3807eee375d227afeedf",
+     "tools/rtl_v41_collective_levers_campaign.py": "645c3bde4719ecc531f806475dd69e0fec6185aa8f9d294a2339afea6bb2aefa",
+     "tools/rtl_v41_stage_collective_campaign.py": "b1d8a57b03d2e54f2764418382921019b1ae8be16124c985e24935dd394739e6",
+     "tools/hdc_golden.py": "f69499aff8dde029e48ac1733ad571d9779317f13556fe72e4beb62d5061e5b1"
+    }
+   },
+   "scenario": "recommended",
+   "why": "levers 1-4 adopted",
+   "tails": {
+    "allreduce_wo_b": 195,
+    "allreduce_down": 195,
+    "gather_rows": 309,
+    "gather_router": 146,
+    "gather_topk": 160,
+    "stage_hop": 419
+   },
+   "consumers": [
+    "hc_post"
+   ],
+   "bytes_scale": {
+    "all_reduce": 0.5,
+    "all_gather_rows": 0.5,
+    "all_gather_select": 0.5
+   },
+   "picks": {
+    "best_hop_split": "hop_perdie7_split20",
+    "gather_levers": {
+     "gather_router": "gw4",
+     "gather_topk": "relay_gw4"
+    }
+   },
+   "terms": {
+    "all_reduce": {
+     "window": "producer",
+     "window_s": 3.5878564857405706e-08,
+     "residual_s": 1.4851842543438745e-08,
+     "residual_cycles": 16.143952844717916,
+     "from_pattern": "allreduce_wo_b",
+     "bytes_scale": 0.5
+    },
+    "all_gather_small": {
+     "window": "producer",
+     "window_s": 9.199632014719411e-10,
+     "residual_s": 2.9928323746170905e-09,
+     "residual_cycles": 3.2532087912087775,
+     "from_pattern": "gather_router"
+    },
+    "all_gather_select": {
+     "window": "fixed",
+     "window_s": 7.359705611775529e-09,
+     "residual_s": 1.2597773891242155e-08,
+     "residual_cycles": 13.693780219780223,
+     "from_pattern": "gather_topk",
+     "bytes_scale": 0.5
+    },
+    "all_gather_rows": {
+     "window": "fixed",
+     "window_s": 1.5639374425023e-08,
+     "residual_s": 1.2984926756775876e-08,
+     "residual_cycles": 14.114615384615377,
+     "from_pattern": "gather_rows",
+     "bytes_scale": 0.5
+    },
+    "hop": {
+     "window": "producer",
+     "window_s": 9.19963201471941e-09,
+     "residual_s": 5.484424744506819e-08,
+     "residual_cycles": 59.615696972789124,
+     "from_pattern": "stage_hop"
+    }
+   },
+   "per_pattern": {
+    "allreduce_wo_b": {
+     "class_": "all_reduce",
+     "design_point_node": "L22.attn.out_allreduce",
+     "bytes_cycles": 129.9621978021978,
+     "depth_cycles": 152.87494825418318,
+     "window_cycles": 39.0,
+     "model_exposed_cycles": 152.87494825418938,
+     "formula_cycles": 178.85604715528208,
+     "measured_tail_cycles": 195,
+     "residual_cycles": 16.143952844717916,
+     "min_rx_depth_words": 64,
+     "min_tx_queue_words": 32
+    },
+    "allreduce_down": {
+     "class_": "all_reduce",
+     "design_point_node": "L20.ffn.combine_allreduce",
+     "bytes_cycles": 129.9621978021978,
+     "depth_cycles": 152.87494825418318,
+     "window_cycles": 38.95652173913044,
+     "model_exposed_cycles": 163.8371460563917,
+     "formula_cycles": 178.89952541615165,
+     "measured_tail_cycles": 195,
+     "residual_cycles": 16.100474583848353,
+     "min_rx_depth_words": 64,
+     "min_tx_queue_words": 32
+    },
+    "gather_router": {
+     "class_": "all_gather_small",
+     "design_point_node": "L2.ffn.router_allgather",
+     "bytes_cycles": 2.4367912087912083,
+     "depth_cycles": 141.31,
+     "window_cycles": 1.0,
+     "model_exposed_cycles": 141.31000000000049,
+     "formula_cycles": 142.74679120879122,
+     "measured_tail_cycles": 146,
+     "residual_cycles": 3.2532087912087775,
+     "min_rx_depth_words": 2,
+     "min_tx_queue_words": 16
+    },
+    "gather_topk": {
+     "class_": "all_gather_select",
+     "design_point_node": "L2.attn.idx.topk_merge",
+     "bytes_cycles": 25.992439560439557,
+     "depth_cycles": 141.31,
+     "window_cycles": 8,
+     "model_exposed_cycles": 141.31000000000049,
+     "formula_cycles": 146.30621978021978,
+     "measured_tail_cycles": 160,
+     "residual_cycles": 13.693780219780223,
+     "min_rx_depth_words": 8,
+     "min_tx_queue_words": 16
+    },
+    "gather_rows": {
+     "class_": "all_gather_rows",
+     "design_point_node": "L14.attn.rows_allgather",
+     "bytes_cycles": 341.1507692307692,
+     "depth_cycles": 141.31,
+     "window_cycles": 17,
+     "model_exposed_cycles": 212.7107692307769,
+     "formula_cycles": 294.8853846153846,
+     "measured_tail_cycles": 309,
+     "residual_cycles": 14.114615384615377,
+     "min_rx_depth_words": 64,
+     "min_tx_queue_words": 128
+    },
+    "stage_hop": {
+     "class_": "hop",
+     "design_point_node": "L20.substage_hop0",
+     "bytes_cycles": 131.33130302721088,
+     "depth_cycles": 238.05300000000003,
+     "window_cycles": 10.0,
+     "model_exposed_cycles": 328.38430302722054,
+     "formula_cycles": 359.3843030272109,
+     "measured_tail_cycles": 419,
+     "residual_cycles": 59.615696972789124,
+     "min_rx_depth_words": 128,
+     "min_tx_queue_words": 128
+    }
+   }
+  },
+  "loss": {
+   "1048576": {
+    "ar": 0.05069963903989927,
+    "mtp": -0.01018656075344726
+   },
+   "200000": {
+    "ar": 0.052390070574380276,
+    "mtp": -0.010633880945738694
+   }
+  },
+  "recovered_share": {
+   "1048576": {
+    "ar": 0.5809137140158217,
+    "mtp": 1.0933948166981589
+   },
+   "200000": {
+    "ar": 0.5829659854983235,
+    "mtp": 1.0938789822955386
+   }
+  },
+  "note": "design_point is the headline (bench-measured tails with the adopted levers: a conditioned design-point model result, not measured chip throughput); design_point_no_levers is the ablation (measured exposure, no recovery); design_point_overlap_assumed is the conditional point that holds only if C7 is fully recovered.  With MTP the lever point can exceed the overlap-assumed one: the relay halves the bytes each T1 link carries, which the overlap-assumed point charges in full (tools/collective_exposure.py, tools/v41_collective_exposure.py)"
  },
  "static_w": {
   "rom_total": 14875.923795328998,
@@ -1051,13 +1266,13 @@
   "1048576": {
    "b1": {
     "rom": {
-     "tokens_s_per_user": 7578.981495298372,
-     "aggregate_tokens_s": 7578.981495298372,
-     "dynamic_j": 0.034694103772699575,
-     "static_j": 1.9627866626349848,
-     "total_j": 1.9974807664076843,
+     "tokens_s_per_user": 8184.912902114869,
+     "aggregate_tokens_s": 8184.912902114869,
+     "dynamic_j": 0.03426665710534254,
+     "static_j": 1.8174810133270034,
+     "total_j": 1.851747670432346,
      "nonclock_j": 0.028920160215295976,
-     "clock_j": 0.005773943557403599
+     "clock_j": 0.0053464968900465626
     },
     "hbm": {
      "G": 32,
@@ -1068,19 +1283,19 @@
      "static_j": 3.6164378139730164,
      "total_j": 5.192964388410173
     },
-    "ratio_rate_per_user": 2.584412094263659,
-    "ratio_energy_with_static": 2.5997568916517384,
-    "ratio_energy_dynamic": 45.440763789889544
+    "ratio_rate_per_user": 2.7910330573894044,
+    "ratio_energy_with_static": 2.8043585372502293,
+    "ratio_energy_dynamic": 46.007597694476
    },
    "b1_mtp": {
     "rom": {
-     "tokens_s_per_user": 21005.94986438209,
-     "aggregate_tokens_s": 21005.94986438209,
-     "dynamic_j": 0.017331357063798,
-     "static_j": 0.7081766781017015,
-     "total_j": 0.7255080351654994,
+     "tokens_s_per_user": 23817.724415076806,
+     "aggregate_tokens_s": 23817.724415076806,
+     "dynamic_j": 0.01683962885850963,
+     "static_j": 0.6245736803433841,
+     "total_j": 0.6414133092018938,
      "nonclock_j": 0.013166070455814104,
-     "clock_j": 0.004165286607983895
+     "clock_j": 0.003673558402695528
     },
     "hbm": {
      "G": 48,
@@ -1091,19 +1306,19 @@
      "static_j": 1.2286325019530755,
      "total_j": 2.3950054639861
     },
-    "ratio_rate_per_user": 2.4335161952946787,
-    "ratio_energy_with_static": 3.3011425758224204,
-    "ratio_energy_dynamic": 67.29842087607565
+    "ratio_rate_per_user": 2.759257185386025,
+    "ratio_energy_with_static": 3.7339503711985476,
+    "ratio_energy_dynamic": 69.26357889672948
    },
    "fill28": {
     "rom": {
-     "tokens_s_per_user": 7578.981495298372,
-     "aggregate_tokens_s": 212211.4818683544,
-     "dynamic_j": 0.0346941037726996,
-     "static_j": 0.07009952366553518,
-     "total_j": 0.10479362743823478,
+     "tokens_s_per_user": 8184.912902114869,
+     "aggregate_tokens_s": 229177.56125921634,
+     "dynamic_j": 0.03426665710534257,
+     "static_j": 0.06491003619025013,
+     "total_j": 0.0991766932955927,
      "nonclock_j": 0.028920160215296004,
-     "clock_j": 0.005773943557403599
+     "clock_j": 0.0053464968900465626
     },
     "hbm": {
      "G": 32,
@@ -1114,19 +1329,19 @@
      "static_j": 0.35200608883971196,
      "total_j": 0.904723911657746
     },
-    "ratio_rate_per_user": 7.043507318895779,
-    "ratio_energy_with_static": 8.633386721830858,
-    "ratio_energy_dynamic": 15.931174543063467
+    "ratio_rate_per_user": 7.606628142097208,
+    "ratio_energy_with_static": 9.122343986215064,
+    "ratio_energy_dynamic": 16.12990205373313
    },
    "fill28_mtp": {
     "rom": {
-     "tokens_s_per_user": 21005.94986438209,
-     "aggregate_tokens_s": 588166.5962026985,
-     "dynamic_j": 0.017331357063798007,
-     "static_j": 0.025292024217917913,
-     "total_j": 0.042623381281715916,
+     "tokens_s_per_user": 23817.724415076806,
+     "aggregate_tokens_s": 666896.2836221505,
+     "dynamic_j": 0.016839628858509637,
+     "static_j": 0.02230620286940658,
+     "total_j": 0.03914583172791622,
      "nonclock_j": 0.01316607045581411,
-     "clock_j": 0.004165286607983895
+     "clock_j": 0.003673558402695528
     },
     "hbm": {
      "G": 48,
@@ -1137,9 +1352,9 @@
      "static_j": 0.19055439940007576,
      "total_j": 0.6730739321390448
     },
-    "ratio_rate_per_user": 10.567913559223484,
-    "ratio_energy_with_static": 15.79119046634088,
-    "ratio_energy_dynamic": 27.840839638972234
+    "ratio_rate_per_user": 11.982493266002207,
+    "ratio_energy_with_static": 17.194012808752074,
+    "ratio_energy_dynamic": 28.65381041311581
    },
    "sat1024": {
     "rom": {
@@ -1166,13 +1381,13 @@
    },
    "sat1024_mtp": {
     "rom": {
-     "tokens_s_per_user": 1202.0926965497094,
-     "aggregate_tokens_s": 1230942.9212669025,
-     "dynamic_j": 0.013378065946519715,
-     "static_j": 0.012084982608306894,
-     "total_j": 0.02546304855482661,
+     "tokens_s_per_user": 1260.3885493592798,
+     "aggregate_tokens_s": 1290637.8745439025,
+     "dynamic_j": 0.013286012396462368,
+     "static_j": 0.011526024525342547,
+     "total_j": 0.024812036921804913,
      "nonclock_j": 0.01138781732970723,
-     "clock_j": 0.001990248616812485
+     "clock_j": 0.0018981950667551375
     },
     "hbm": {
      "G": 48,
@@ -1183,21 +1398,21 @@
      "static_j": 0.10278349013238776,
      "total_j": 0.18968928104501726
     },
-    "ratio_rate_per_user": 11.929745865349274,
-    "ratio_energy_with_static": 7.449590359794565,
-    "ratio_energy_dynamic": 6.496140119210423
+    "ratio_rate_per_user": 12.508282538118438,
+    "ratio_energy_with_static": 7.645050732546572,
+    "ratio_energy_dynamic": 6.541149316989172
    }
   },
   "200000": {
    "b1": {
     "rom": {
-     "tokens_s_per_user": 7905.41350038117,
-     "aggregate_tokens_s": 7905.41350038117,
-     "dynamic_j": 0.018704213504752702,
-     "static_j": 1.8817388609225483,
-     "total_j": 1.9004430744273009,
+     "tokens_s_per_user": 8567.550390932485,
+     "aggregate_tokens_s": 8567.550390932485,
+     "dynamic_j": 0.018276404514026387,
+     "static_j": 1.7363100438922443,
+     "total_j": 1.7545864484062708,
      "nonclock_j": 0.013168688845056009,
-     "clock_j": 0.005535524659696695
+     "clock_j": 0.005107715668970377
     },
     "hbm": {
      "G": 32,
@@ -1208,19 +1423,19 @@
      "static_j": 3.6072275403244434,
      "total_j": 5.167532347658058
     },
-    "ratio_rate_per_user": 2.6888591020285952,
-    "ratio_energy_with_static": 2.7191197764317647,
-    "ratio_energy_dynamic": 83.41996347171425
+    "ratio_rate_per_user": 2.914070952725839,
+    "ratio_energy_with_static": 2.9451568786205096,
+    "ratio_energy_dynamic": 85.37263476173035
    },
    "b1_mtp": {
     "rom": {
-     "tokens_s_per_user": 21815.28744657373,
-     "aggregate_tokens_s": 21815.28744657373,
-     "dynamic_j": 0.013121932140899241,
-     "static_j": 0.6819036344013603,
-     "total_j": 0.6950255665422596,
+     "tokens_s_per_user": 24863.62688630105,
+     "aggregate_tokens_s": 24863.62688630105,
+     "dynamic_j": 0.012630203935610877,
+     "static_j": 0.598300636643043,
+     "total_j": 0.6109308405786539,
      "nonclock_j": 0.009111175836524541,
-     "clock_j": 0.0040107563043747
+     "clock_j": 0.003519028099086334
     },
     "hbm": {
      "G": 48,
@@ -1231,19 +1446,19 @@
      "static_j": 1.2286325019530755,
      "total_j": 2.3909505693668107
     },
-    "ratio_rate_per_user": 2.527277064307489,
-    "ratio_energy_with_static": 3.440090098068981,
-    "ratio_energy_dynamic": 88.57827147199998
+    "ratio_rate_per_user": 2.8804238366850754,
+    "ratio_energy_with_static": 3.913619039271581,
+    "ratio_energy_dynamic": 92.02686459690312
    },
    "fill28": {
     "rom": {
-     "tokens_s_per_user": 7905.41350038117,
-     "aggregate_tokens_s": 221351.57801067276,
-     "dynamic_j": 0.018704213504752695,
-     "static_j": 0.06720495931866244,
-     "total_j": 0.08590917282341513,
-     "nonclock_j": 0.013168688845056,
-     "clock_j": 0.005535524659696695
+     "tokens_s_per_user": 8567.550390932485,
+     "aggregate_tokens_s": 239891.4109461096,
+     "dynamic_j": 0.01827640451402638,
+     "static_j": 0.06201107299615158,
+     "total_j": 0.08028747751017795,
+     "nonclock_j": 0.013168688845056002,
+     "clock_j": 0.005107715668970377
     },
     "hbm": {
      "G": 32,
@@ -1254,19 +1469,19 @@
      "static_j": 0.34799172365205316,
      "total_j": 0.884548111424128
     },
-    "ratio_rate_per_user": 7.263090472433003,
-    "ratio_energy_with_static": 10.296317405386988,
-    "ratio_energy_dynamic": 28.68639131154792
+    "ratio_rate_per_user": 7.87142805540419,
+    "ratio_energy_with_static": 11.017261207540054,
+    "ratio_energy_dynamic": 29.35787437623687
    },
    "fill28_mtp": {
     "rom": {
-     "tokens_s_per_user": 21815.28744657373,
-     "aggregate_tokens_s": 610828.0485040644,
-     "dynamic_j": 0.01312193214089921,
-     "static_j": 0.02435370122862001,
-     "total_j": 0.03747563336951922,
-     "nonclock_j": 0.00911117583652451,
-     "clock_j": 0.0040107563043747
+     "tokens_s_per_user": 24863.62688630105,
+     "aggregate_tokens_s": 696181.5528164294,
+     "dynamic_j": 0.012630203935610849,
+     "static_j": 0.021367879880108676,
+     "total_j": 0.033998083815719525,
+     "nonclock_j": 0.009111175836524515,
+     "clock_j": 0.003519028099086334
     },
     "hbm": {
      "G": 48,
@@ -1277,9 +1492,9 @@
      "static_j": 0.19055439940007576,
      "total_j": 0.6690190375197551
     },
-    "ratio_rate_per_user": 10.975084368639473,
-    "ratio_energy_with_static": 17.852107552741224,
-    "ratio_energy_dynamic": 36.46297153361833
+    "ratio_rate_per_user": 12.50867784602054,
+    "ratio_energy_with_static": 19.678139542982834,
+    "ratio_energy_dynamic": 37.88257422911824
    },
    "sat1024": {
     "rom": {
@@ -1306,13 +1521,13 @@
    },
    "sat1024_mtp": {
     "rom": {
-     "tokens_s_per_user": 1336.4688878140405,
-     "aggregate_tokens_s": 1368544.1411215775,
-     "dynamic_j": 0.009123060399669505,
-     "static_j": 0.010869889650134029,
-     "total_j": 0.019992950049803532,
+     "tokens_s_per_user": 1515.038431518883,
+     "aggregate_tokens_s": 1551399.3538753362,
+     "dynamic_j": 0.008912066365664656,
+     "static_j": 0.00958871341422794,
+     "total_j": 0.018500779779892597,
      "nonclock_j": 0.007332922710417631,
-     "clock_j": 0.0017901376892518741
+     "clock_j": 0.0015791436552470253
     },
     "hbm": {
      "G": 48,
@@ -1323,9 +1538,9 @@
      "static_j": 0.10278349013238776,
      "total_j": 0.18563438642572766
     },
-    "ratio_rate_per_user": 13.263315079053207,
-    "ratio_energy_with_static": 9.284992257936036,
-    "ratio_energy_dynamic": 9.081480628621211
+    "ratio_rate_per_user": 15.035465664282272,
+    "ratio_energy_with_static": 10.033868227948028,
+    "ratio_energy_dynamic": 9.296485561702942
    }
   }
  },

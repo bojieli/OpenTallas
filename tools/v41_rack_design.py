@@ -865,10 +865,14 @@ def _c7_measured_text():
     if not ln:
         return "Neither is shown in RTL or routed silicon."
     dp, cond = ln["design_point"], ln["design_point_overlap_assumed"]
+    nl = ln.get("design_point_no_levers", dp)
+    rs = ln["collective_exposure"].get("recovered_share", {}).get("1048576", {}).get("ar", 0.0)
     return ("Overlap is MEASURED NOT MET (RTL stage bench, results/rtl/v41_stage_collective_campaign.json): the "
-            "one-shot engine's exposed tails exceed the overlap model, and the design point drops from %.0f to %.0f "
-            "tok/s/user at 1M (%.0f to %.0f at 200K); recovery levers are in progress. The whole-system clock is not "
-            "shown." % (cond["1048576"]["ar"], dp["1048576"]["ar"], cond["200000"]["ar"], dp["200000"]["ar"]))
+            "one-shot engine's exposed tails exceed the overlap model (without recovery the design point would be "
+            "%.0f against %.0f tok/s/user overlapped at 1M). The adopted levers (results/rtl/"
+            "v41_collective_levers_campaign.json, bit-exact) give %.0f tok/s/user at 1M (%.0f at 200K), %.0f%% of the "
+            "overlap loss at 1M. The whole-system clock is not shown."
+            % (nl["1048576"]["ar"], cond["1048576"]["ar"], dp["1048576"]["ar"], dp["200000"]["ar"], 100 * rs))
 
 
 def compare(pwr, el, pl):
@@ -1170,14 +1174,18 @@ def _attach_results(plan):
                     bench_all_pass=o["summary"]["all_pass"], bit_exact=o["summary"]["bit_exact"],
                     source_binding=cx["campaign_binding"]["current"],
                     exposed_tail_cycles={k: v["measured_exposed_tail_cycles"] for k, v in o["summary"]["patterns"].items()},
-                    headline_tokens_s_per_user={c: dict(overlap_assumed=cond[c], measured_exposure=dict(
-                        ar=dp[c]["ar"], mtp=dp[c]["mtp"])) for c in dp},
-                    recovery=("in progress (claude/v41-collective-levers): 3-cycle fold adders, the rows all-gather "
-                              "row bubble, stage-hop payload partitioning, streaming top-k / consumer early start, the "
-                              "ucie_link rounding fix"))
+                    headline_tokens_s_per_user={c: dict(
+                        overlap_assumed=cond[c],
+                        measured_exposure_no_levers=dict(ar=ln["design_point_no_levers"][c]["ar"],
+                                                         mtp=ln["design_point_no_levers"][c]["mtp"]),
+                        with_adopted_levers=dict(ar=dp[c]["ar"], mtp=dp[c]["mtp"])) for c in dp},
+                    recovery=dict(levers=cx["levers"]["why"], campaign=cx["levers"]["campaign"],
+                                  tails=cx["levers"]["tails"], consumers=cx["levers"]["consumers"],
+                                  recovered_share=cx["recovered_share"]))
         if cx:
-            plan["note"] = ("O2 measured: the headline is the measured-exposure design point (v41_lanes.json "
-                            "design_point); the overlap-assumed rate is conditional on recovering C7; K2 pending")
+            plan["note"] = ("O2 measured: the headline is the design point with the bench-measured tails of the adopted "
+                            "collective levers (v41_lanes.json design_point; design_point_no_levers is the ablation); "
+                            "the overlap-assumed rate is conditional on recovering all of C7; K2 pending")
     return plan
 
 
@@ -1186,11 +1194,11 @@ def reprice_sensitivity(pl, links, tr, pwr):
 
     The adopted ladder already credits a one-hop ring return, so relocating the embedding is a
     physical validation of that lever, not a second speed credit.  The baseline is the HEADLINE: the design
-    point with the RTL stage bench's measured collective exposure (gate C7, results/arch/v41_lanes.json
+    point with the RTL stage bench's measured collective tails and the adopted levers (gate C7, v41_lanes.json
     design_point); the overlap-assumed (conditional) point is kept beside it.  The bytes-only serialisation row
     serialises every on-path collective's payload on one peer link after its producer, from the conditional
     point; it charges bytes only, not the measured fold / hop / row-gather tails, so it is NOT a lower bound (the
-    measured headline sits below it).
+    headline sits below it).
     """
     best = json.loads(HBM_BEST.read_text())["rungs"]["top"]["energy"][str(CTX)]["b1"]["rom"]
     top_rung = json.loads(LADDER.read_text())["ladder"][-1]
@@ -1220,8 +1228,8 @@ def reprice_sensitivity(pl, links, tr, pwr):
         evidence_class="analytical sensitivity; not a routed whole-system result",
         baseline=dict(rate_tokens_s=baseline_rate, period_s=baseline_t, clock_hz=top_rung["clock_hz"],
                       dynamic_j_per_token=dyn_j, static_w=baseline_static_w,
-                      basis=("design point priced on the R-L9 lanes with the measured C7 collective exposure "
-                             "(results/arch/v41_lanes.json design_point)" if ln else
+                      basis=("design point priced on the R-L9 lanes with the bench-measured C7 collective tails of "
+                             "the adopted levers (results/arch/v41_lanes.json design_point)" if ln else
                              "design point priced on the R-L9 lanes (results/arch/v41_lanes.json best_split)"
                              if LANES_R_L9 else "adopted ladder top, collective overlap assumed"),
                       conditional_rate_tokens_s=conditional_rate,
@@ -1233,7 +1241,7 @@ def reprice_sensitivity(pl, links, tr, pwr):
                                                "peer payloads serialised after their producers on one %d-lane peer link "
                                                "(two-step all-reduce: n/2 per peer), minus the bytes it already exposes. "
                                                "Bytes only: the RTL stage bench also measures fold, hop and row-gather "
-                                               "tails, so the measured headline (baseline) is BELOW this row -- it is not "
+                                               "tails, so the headline (baseline) is BELOW this row -- it is not "
                                                "a lower bound" % lb["tp_lanes_per_die_pair"]),
         serdes_static=dict(additional_w=serdes_w,
                            geometry_j_per_token=dyn_j + (baseline_static_w + serdes_w) / geom_rate,

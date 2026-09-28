@@ -1068,5 +1068,38 @@
     }
    }
   }
+ },
+ "recovered_share_of_overlap_loss": {
+  "definition": "(recommended - measured_baseline) / (overlap_assumed - measured_baseline), tokens/s",
+  "note": "above 1 with MTP: the relay halves the bytes each T1 link carries, which the overlap-assumed point still charges in full",
+  "200000": {
+   "ar": 0.5829659854983235,
+   "mtp": 1.0938789822955386
+  },
+  "1048576": {
+   "ar": 0.5809137140158217,
+   "mtp": 1.0933948166981589
+  }
+ },
+ "queue_area_per_die": {
+  "kind": "ANALYTICAL estimate (bitcell area x an assumed 2.5x two-port overhead + flops), not a compiled SRAM macro; one queue set per pattern per die, summed",
+  "patterns": [
+   "allreduce_down",
+   "allreduce_wo_b",
+   "gather_router",
+   "gather_rows",
+   "gather_topk"
+  ],
+  "before_mm2": 0.42800000000000005,
+  "with_levers_mm2": 0.49670000000000003,
+  "growth_mm2": 0.06869999999999998,
+  "growth_by_pattern_mm2": {
+   "allreduce_wo_b": -0.012200000000000003,
+   "allreduce_down": -0.012200000000000003,
+   "gather_router": 0.018299999999999997,
+   "gather_topk": 0.0131,
+   "gather_rows": 0.061700000000000005
+  },
+  "die_mm2": 815.0
  }
 }

@@ -243,6 +243,8 @@ def build():
                            / v[str(ctx)]["best_ar" if k == "ar" else "best_mtp"]["rate"])
                    for k in ("ar", "mtp") for v in [rec["configs"]["nvl_0p9_nvls"]]}
         for ctx in CONTEXTS}
+    for r in rec["ratios_batch1"].values():   # what MTP buys each machine at batch 1 (with / without, same machine)
+        r["mtp_speedup"] = {m: r["mtp"][m] / r["ar"][m] for m in ("rom", "hbm")}
     # replicate-on-write KV to reader stages (spec requirement) on R-L9's stage lanes
     cS = c
     src = cS["kv_source_layer_ids"]

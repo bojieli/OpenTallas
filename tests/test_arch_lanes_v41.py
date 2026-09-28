@@ -39,16 +39,20 @@ def test_serdes_static_on_both_machines(rec):
             assert v["ratio_energy_with_static"] > 1.5, (c, k)
 
 
-def test_headline_is_the_measured_collective_exposure(rec):
-    """Gate C7 measured NOT MET: design_point prices the RTL stage bench's exposed tails and sits below the
-    overlap-assumed (conditional) point at both contexts, with and without MTP."""
+def test_headline_is_the_measured_collective_exposure_with_the_levers(rec):
+    """Gate C7 measured NOT MET: design_point_no_levers (the ablation) prices the RTL stage bench's exposed tails and
+    sits below the overlap-assumed (conditional) point at both contexts, with and without MTP; design_point (the
+    headline) re-prices it with the adopted levers' bench tails and recovers part of the loss without MTP."""
     cx = rec["collective_exposure"]
     assert cx["status"].startswith("NOT MET")
     assert set(cx["terms"]) == {"all_reduce", "all_gather_small", "all_gather_select", "all_gather_rows", "hop"}
+    assert set(cx["levers"]["terms"]) == set(cx["terms"]) and cx["levers"]["consumers"] == ["hc_post"]
     for c in ("1048576", "200000"):
-        d, o = rec["design_point"][c], rec["design_point_overlap_assumed"][c]
-        assert d["ar"] < o["ar"] and d["mtp"] < o["mtp"]
-        assert 0.05 < cx["loss"][c]["ar"] < 0.25
+        d, n, o = rec["design_point"][c], rec["design_point_no_levers"][c], rec["design_point_overlap_assumed"][c]
+        assert n["ar"] < o["ar"] and n["mtp"] < o["mtp"]
+        assert n["ar"] < d["ar"] < o["ar"] and d["mtp"] > n["mtp"]
+        assert 0.05 < cx["loss_no_levers"][c]["ar"] < 0.25
+        assert 0.0 < cx["recovered_share"][c]["ar"] < 1.0
         assert o["ar"] == rec["best_split"][c]["ar"]            # the conditional point is the adopted split's row
 
 
@@ -58,15 +62,29 @@ def test_energy_rows_are_at_the_headline(rec):
         assert abs(rec["energy"][c]["b1_mtp"]["rom"]["tokens_s_per_user"] - rec["design_point"][c]["mtp"]) < 1e-6
 
 
-def test_exposure_record_agrees_with_the_design_point(rec):
+def test_exposure_record_agrees_with_the_ablation(rec):
     x = json.loads((ROOT / "results/arch/v41_collective_exposure.json").read_text())
     assert x["terms"] == rec["collective_exposure"]["terms"]
     for c in ("1048576", "200000"):
-        assert abs(x["design_point_rates"][c]["measured_exposure"]["ar"] - rec["design_point"][c]["ar"]) < 1e-6
+        assert abs(x["design_point_rates"][c]["measured_exposure"]["ar"] - rec["design_point_no_levers"][c]["ar"]) < 1e-6
         assert abs(x["design_point_rates"][c]["overlap_assumed"]["ar"]
                    - rec["design_point_overlap_assumed"][c]["ar"]) < 1e-6
 
 
+def test_lever_record_agrees_with_the_headline(rec):
+    lv = json.loads((ROOT / "results/arch/v41_collective_levers.json").read_text())
+    for c in ("1048576", "200000"):
+        for k in ("ar", "mtp", "T_us"):
+            assert abs(lv["scenarios"]["recommended"]["rates"][c][k] - rec["design_point"][c][k]) < 1e-6
+            if k != "T_us":
+                assert abs(lv["scenarios"]["measured_baseline"]["rates"][c][k]
+                           - rec["design_point_no_levers"][c][k]) < 1e-6
+                assert abs(lv["recovered_share_of_overlap_loss"][c][k]
+                           - rec["collective_exposure"]["recovered_share"][c][k]) < 1e-9
+
+
 def test_campaign_record_binds_the_sources_on_disk(rec):
     b = rec["collective_exposure"]["campaign_binding"]
+    assert b["pinned"] and b["current"], b["stale"]
+    b = rec["collective_exposure"]["levers"]["campaign_binding"]
     assert b["pinned"] and b["current"], b["stale"]

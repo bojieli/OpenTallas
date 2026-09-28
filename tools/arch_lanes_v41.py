@@ -137,8 +137,9 @@ def build():
     # the CONDITIONAL design point: every streaming collective / stage hop overlaps its producer (rack gate C7)
     rec["design_point_overlap_assumed"] = {str(c): dict(ar=chosen[str(c)]["ar"], mtp=chosen[str(c)]["mtp"])
                                            for c in CONTEXTS}
-    # the HEADLINE: the same point with the RTL stage bench's measured collective exposure (gate C7 / O2, measured
-    # NOT MET): terms derived here from the committed campaign against this design point's own on-path nodes
+    # the ABLATION: the same point with the RTL stage bench's measured collective exposure and no recovery lever
+    # (gate C7 / O2, measured NOT MET): terms derived here from the committed campaign against this design point's
+    # own on-path nodes
     import collective_exposure as CX
     import v41_collective_exposure as VX
     camp = json.loads(VX.CAMPAIGN.read_text())
@@ -146,19 +147,42 @@ def build():
     dump = VX.dump_on_path(U, A, sp, list(muts) + [ml], hz)
     terms, per_pattern = VX.derive_terms(camp, dump)
     xm = CX.mutation(terms)
-    exp = {str(c): LX.evaluate(sp, c, muts + [ml, xm], hz=hz) for c in CONTEXTS}
+    ab = {str(c): LX.evaluate(sp, c, muts + [ml, xm], hz=hz) for c in CONTEXTS}
+    rec["design_point_no_levers"] = {c: dict(ar=v["ar"], mtp=v["mtp"], T_us=v["T_us"], verify_us=v["verify_us"],
+                                             breakdown_us=v["breakdown_us"]) for c, v in ab.items()}
+    # the HEADLINE: the adopted collective levers (results/rtl/v41_collective_levers_campaign.json, levers 1-4 of
+    # tools/v41_collective_exposure.lever_scenarios 'recommended'): their bench-measured tails, the relayed classes'
+    # halved T1 bytes, and hc_post's early start.  A conditioned design-point model result, not chip throughput.
+    lev_camp = json.loads(VX.LEVERS_CAMPAIGN.read_text())
+    lev = VX.recommended_exposure(dump, camp, lev_camp)
+    lx = [CX.mutation(lev["terms"])] + ([CX.consumer_mutation(tuple(lev["consumers"]))] if lev["consumers"] else [])
+    exp = {str(c): LX.evaluate(sp, c, muts + [ml] + lx, hz=hz) for c in CONTEXTS}
     rec["design_point"] = {c: dict(ar=v["ar"], mtp=v["mtp"], T_us=v["T_us"], verify_us=v["verify_us"],
                                    breakdown_us=v["breakdown_us"]) for c, v in exp.items()}
+    dpo, dpn, dpl = rec["design_point_overlap_assumed"], rec["design_point_no_levers"], rec["design_point"]
     rec["collective_exposure"] = dict(
-        gate="C7 / O2", status="NOT MET (measured): the one-shot engine's exposed tails exceed the overlap model",
+        gate="C7 / O2",
+        status=("NOT MET (measured): the one-shot engine's exposed tails exceed the overlap model; the adopted "
+                "levers recover part of the loss"),
         campaign=str(VX.CAMPAIGN.relative_to(ROOT)), campaign_binding=VX.campaign_binding(camp),
         terms=terms, per_pattern=per_pattern,
-        loss={c: dict(ar=1 - rec["design_point"][c]["ar"] / rec["design_point_overlap_assumed"][c]["ar"],
-                      mtp=1 - rec["design_point"][c]["mtp"] / rec["design_point_overlap_assumed"][c]["mtp"])
-              for c in rec["design_point"]},
-        note=("design_point is the headline (measured exposure); design_point_overlap_assumed is the conditional "
-              "point that holds only if C7 is recovered (tools/collective_exposure.py, results/rtl/"
-              "v41_stage_collective_campaign.json)"))
+        loss_no_levers={c: dict(ar=1 - dpn[c]["ar"] / dpo[c]["ar"], mtp=1 - dpn[c]["mtp"] / dpo[c]["mtp"])
+                        for c in dpn},
+        levers=dict(campaign=str(VX.LEVERS_CAMPAIGN.relative_to(ROOT)),
+                    campaign_binding=VX.campaign_binding(lev_camp, VX.LEVERS_CAMPAIGN),
+                    scenario=lev["scenario"], why=lev["why"], tails=lev["tails"], consumers=lev["consumers"],
+                    bytes_scale=lev["bytes_scale"], picks=lev["picks"], terms=lev["terms"],
+                    per_pattern=lev["per_pattern"]),
+        loss={c: dict(ar=1 - dpl[c]["ar"] / dpo[c]["ar"], mtp=1 - dpl[c]["mtp"] / dpo[c]["mtp"]) for c in dpl},
+        recovered_share={c: dict(ar=(dpl[c]["ar"] - dpn[c]["ar"]) / (dpo[c]["ar"] - dpn[c]["ar"]),
+                                 mtp=(dpl[c]["mtp"] - dpn[c]["mtp"]) / (dpo[c]["mtp"] - dpn[c]["mtp"]))
+                         for c in dpl},
+        note=("design_point is the headline (bench-measured tails with the adopted levers: a conditioned "
+              "design-point model result, not measured chip throughput); design_point_no_levers is the ablation "
+              "(measured exposure, no recovery); design_point_overlap_assumed is the conditional point that holds "
+              "only if C7 is fully recovered.  With MTP the lever point can exceed the overlap-assumed one: the "
+              "relay halves the bytes each T1 link carries, which the overlap-assumed point charges in full "
+              "(tools/collective_exposure.py, tools/v41_collective_exposure.py)"))
     # energy with SerDes static (C4) and head-die HBM (C10), against the best comparator (its SerDes added too)
     hbrec = json.loads((ROOT / "results/arch/v41_hbm_best.json").read_text())
     rs = json.loads((ROOT / "results/arch/v41_utilization.json").read_text())["nonlayer_right_size"]
@@ -179,7 +203,7 @@ def build():
                                         "kW trays, ASSUMED, over 72 GPUs x 14.4 Tb/s); the ROM rack's off-path switch "
                                         "carries 4 lanes x 112G both ways per package",
                            source=ST["source"])
-    ms = muts + [ml, xm]                                  # energy and aggregates at the headline (measured exposure)
+    ms = muts + [ml] + lx                                 # energy and aggregates at the headline (with the levers)
     energy = {}
     for ctx in CONTEXTS:
         rows = {}
@@ -219,7 +243,8 @@ def main():
     a.out.write_text(json.dumps(rec, indent=1, default=lambda o: None) + "\n")
     print("ladder top, no lane pricing:", {c: (round(v["ar"]), round(v["mtp"])) for c, v in rec["ladder_top_overlap_assumed"].items()})
     print("design point, overlap assumed (conditional):", {c: (round(v["ar"]), round(v["mtp"])) for c, v in rec["design_point_overlap_assumed"].items()})
-    print("design point, measured C7 exposure (headline):", {c: (round(v["ar"]), round(v["mtp"])) for c, v in rec["design_point"].items()})
+    print("design point, measured C7 exposure without levers (ablation):", {c: (round(v["ar"]), round(v["mtp"])) for c, v in rec["design_point_no_levers"].items()})
+    print("design point, bench tails with the adopted levers (headline):", {c: (round(v["ar"]), round(v["mtp"])) for c, v in rec["design_point"].items()})
     for r in rec["grid"]:
         print(r["tp"], r["stage"], r["spare"], r["two_step"], {c: (round(r[c]["ar"]), round(r[c]["mtp"]), round(r[c]["collective_bytes_us"], 2),
                                                     round(r[c]["hops_us"], 2)) for c in ("1048576", "200000")})
