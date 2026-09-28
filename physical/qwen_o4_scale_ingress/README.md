@@ -45,6 +45,14 @@ reset needs a real distribution and deassertion constraint.
 Detailed route is still running separately; `physical.json` records only the
 reached stages, with no routed timing or DRC claim.
 
+An exploratory rebuffer from the placed ROM database inserted 977 buffers
+over 577 nets and removed the enable from the worst reported path. It left
+157 cells illegally placed, and its remaining core setup path was −928.65 ps.
+The rebuffered result is recorded as an **invalid placement diagnostic** in
+`rom/repair_probe.log`; it cannot be used as a timing or area result. A valid
+repair needs buffering before placement, plus a short register-to-register
+arithmetic path.
+
 The selected full-shape layer-0 image has 50,616 addressable 32-byte scale
 words per die, but only 1,488 words in its active address range and 1,472
 active group reads. The one-bank 8,192-word probe does not implement that
