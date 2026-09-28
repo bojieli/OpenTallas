@@ -174,6 +174,13 @@ HBM residency. Physical KV sector `base + stage*262144 + (logical_addr>>5)`
 packs 32 logical E4M3 elements, with `logical_addr[4:0]` selecting the byte.
 Exact FP8 pack/unpack, writes and token read-after-write still need a shared
 controller gate.
+The shared service uses a 32-bit **physical sector address**. Four modeled
+HBM3E stacks provide 90 GB per die (22.5 GB each), or 2.8125 billion
+32-byte sectors, which exceeds 28- and 31-bit sector addressing. The core
+keeps its 24-bit logical per-layer element address; the layer/user/page
+controller translates it to this physical address. The historical HAW28
+standalone sources were sufficient for their isolated image slices but cannot
+cover the physical capacity or a multiuser KV layout.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs

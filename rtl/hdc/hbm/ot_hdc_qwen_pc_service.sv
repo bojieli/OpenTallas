@@ -6,7 +6,7 @@
 // a streaming matrix preload from starving KV writes and reads.
 module ot_hdc_qwen_pc_service #(
     parameter integer NC=5,
-    parameter integer AW=28,
+    parameter integer AW=32,
     parameter integer CTAGW=17,
     parameter integer MAX_OUT=16,
     parameter integer CW=$clog2(MAX_OUT+1),

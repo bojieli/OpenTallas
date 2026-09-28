@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_hdc_qwen_hbm_service;
-    localparam NPC=128, NC=6, AW=28, CTAGW=17, PTAGW=20;
+    localparam NPC=128, NC=6, AW=32, CTAGW=17, PTAGW=20;
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0;
     reg [NPC*NC-1:0] c_req_v=0, c_req_we=0, c_rsp_rdy='1;
@@ -25,14 +25,14 @@ module tb_hdc_qwen_hbm_service;
         for (integer k=0;k<4;k=k+1) begin
             case(k) 0:pc=0; 1:pc=31; 2:pc=32; default:pc=127; endcase
             c_req_v[pc*NC + 5]=1;
-            c_req_addr[(pc*NC+5)*AW +: AW]=28'(pc);
+            c_req_addr[(pc*NC+5)*AW +: AW]=32'(pc);
             c_req_tag[(pc*NC+5)*CTAGW +: CTAGW]=17'(k+1);
         end
         #1;
         for (integer k=0;k<4;k=k+1) begin
             case(k) 0:pc=0; 1:pc=31; 2:pc=32; default:pc=127; endcase
             if (!p_req_v[pc] || !c_req_rdy[pc*NC+5] ||
-                p_req_addr[pc*AW +: AW] !== 28'(pc))
+                p_req_addr[pc*AW +: AW] !== 32'(pc))
                 $fatal(1,"stack/PC ownership request %0d",pc);
         end
         @(negedge clk); c_req_v=0;
@@ -52,7 +52,7 @@ module tb_hdc_qwen_hbm_service;
         end
         @(negedge clk); p_rsp_v=0;
         c_req_v[32*NC]=1;
-        c_req_addr[32*NC*AW +: AW]=28'd31;
+        c_req_addr[32*NC*AW +: AW]=32'd31;
         @(negedge clk); c_req_v=0;
         #1;
         if (!pc_fault[32] || |(pc_fault & ~(128'b1<<32)))
