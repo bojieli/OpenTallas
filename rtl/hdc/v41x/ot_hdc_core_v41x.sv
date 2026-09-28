@@ -4,17 +4,11 @@
 // reduced DeepSeek-V4.1-Flash (tools/hdc_program_v41.py, format
 // tools/hdc_isa_v41.py).
 //
-// The sibling of ot_hdc_core (the reduced Qwen3 core).  Its matrix-vector
-// engine is ot_hdc_v41_matvec: the Qwen3 core's ot_hdc_matvec plus head groups
-// for KV-sourced ops (attention and index scores, the weighted sum over
-// positions).  It shares the arithmetic primitives, and adds four units:
-//
-//   SU  ot_hdc_v41_stream  the four-operand stream pipeline, SW lanes (norms,
-//                          RoPE, softmax, divides, sigmoid/SiLU/softplus, mixes)
-//   QE  ot_hdc_v41_qe      activation quantiser + block-dot lanes (FP8/FP4)
-//   XU  ot_hdc_v41_xu      top-k SELECT, Sinkhorn, Engram hash and gather
-//   HE  ot_hdc_v41_hcproj  the FP32-weight hyper-connection projections,
-//                          beside the matrix engine
+// The adopted configuration dispatches matrix operations to dedicated weight,
+// attention and pooled-index engines. It also uses the vector stream unit,
+// quantised block-dot unit, streaming select, Engram gather and hyper-
+// connection projection unit. The X_* parameters select these engines for
+// focused gates; the all-unit design enables them together.
 //
 // The sequencer fetches an instruction, adds the per-token DYN values, skips it
 // when its predicate fails or a count is zero, waits for the units named in
@@ -31,6 +25,10 @@
 // raises q_ok (its start threshold is in the window: the QE never stalls); the
 // issue of an instruction marked wrel pulses wrel_v, releasing the fetch of the
 // expert-indexed ops whose ids it waited for.
+// KV_HBM = 1: an attention-class ME op announces its KV window descriptor
+// (kvd_*) and waits for kv_ok before issuing. Index-key ops use the pooled
+// indexer's separate HBM path. The prefetcher maps the descriptor to its HBM
+// sector layout.
 //
 // MULTI-TOKEN PREDICTION (NSLOT > 1; tools/hdc_isa_v41.py, tools/hdc_program_v41.py
 // build_mtp).  `start` runs the program at `entry` (the image holds the one-
@@ -131,7 +129,7 @@ module ot_hdc_core_v41x #(
     input  wire [8*MG*32-1:0] mb_q,
     // vector-unit ports (X_SU): per lane a gather-index read, four operand reads (the source selected by
     // xs_rd_src: 0 vector memory, 1 / 2 constant ROM lo / hi word, 3 the BF16 weight ROM element in
-    // bits 31:16), an element write to the vector memory and to the KV SRAM; SUN/8 reducer result writes
+    // bits 31:16), an element write to vector memory and the KV staging port; SUN/8 reducer result writes
     output wire [SUN-1:0]    xs_vi_re,
     output wire [SUN*AW-1:0] xs_vi_addr,
     input  wire [SUN*32-1:0] xs_vi_q,
