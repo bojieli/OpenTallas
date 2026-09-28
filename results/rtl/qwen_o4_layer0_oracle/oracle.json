@@ -1,0 +1,104 @@
+{
+  "arithmetic": {
+    "groups_per_die": 6144,
+    "kv_format": "fp8",
+    "su_width": 1024,
+    "weight_format": "signed-int8-per-row-bf16-scale"
+  },
+  "claim_boundary": "One shipped layer0 ISA golden trace, not an RTL bit-exact gate or chip throughput.",
+  "emitter_source_commit": "7ed6bb26",
+  "input_image_sha256": {
+    "die0": {
+      "crom.hex": "3721b9635f7928126620c2311fa317809c4276b5b4a46d166790eca40cca6ce1",
+      "matrix_int8.hex": "9c7497bbc25d1f30b624e9236a624a0926399664251d27e926b170d0a757efee",
+      "matrix_scale_bf16.hex": "d963242871dc1c90c55bb758a022871932419acc949cc71a80177ac9e8192236",
+      "program.hex": "e733b031faf99e0009f0e3a518b2f73cd181f302bba13901212c992db1b8af2d",
+      "segments.hex": "5483f2be9d48e9b861a81a2cc84241d897d7c384d159ce1d88bbb4bf4ee0a00e"
+    },
+    "die1": {
+      "crom.hex": "3721b9635f7928126620c2311fa317809c4276b5b4a46d166790eca40cca6ce1",
+      "matrix_int8.hex": "d1bf9a095c9b855d5a817b1a28356a09ecbca628fced0a0cea8a5f753cb1901a",
+      "matrix_scale_bf16.hex": "27a4e91de37d1046a70f0fff5132ef51922e141462cde8ef00a8e72b9289b1e4",
+      "program.hex": "e733b031faf99e0009f0e3a518b2f73cd181f302bba13901212c992db1b8af2d",
+      "segments.hex": "5483f2be9d48e9b861a81a2cc84241d897d7c384d159ce1d88bbb4bf4ee0a00e"
+    }
+  },
+  "oracle_source_sha256": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+    "tools/hdc_qwen_fullshape_isa.py": "86237e27205c7dd8d3b6a3ee066b1592eca2b17e5e962e48440c6e34cb490357",
+    "tools/qwen_o4_layer0_oracle.py": "1c40d124649ffcb0b66b75ccb9f8a56033ca5abcc9fb7e652ffb348b81ee5d04"
+  },
+  "outputs": {
+    "die0": {
+      "k_pos0": {
+        "elements": 512,
+        "nonzero": 509,
+        "sha256": "d38fb91c0147f117712af0a2df558d1123c605d8fd7def3ffb06ef68b70ad34d"
+      },
+      "t1_after_down_scale": {
+        "elements": 4096,
+        "nonzero": 4096,
+        "sha256": "0b4c189c447515fefad0ded552c29c4359136621d79f51628bba8ed6dd7e8691"
+      },
+      "t1_after_o_scale": {
+        "elements": 4096,
+        "nonzero": 4096,
+        "sha256": "8b3a7edb8c354778eb03a64a7c91eef3b5631e18af26c97fb2871a75bf6ede98"
+      },
+      "v_pos0": {
+        "elements": 512,
+        "nonzero": 495,
+        "sha256": "ad4a732d6f4b81d4d6e2bb81e4f2ee24c34959b65f110f5329f4958e13aac126"
+      },
+      "x_final": {
+        "elements": 4096,
+        "nonzero": 4096,
+        "sha256": "300035ae842c439cdd67d9fd6852254482f92c334efe623a9aa156b0370a495f"
+      },
+      "x_initial": {
+        "elements": 4096,
+        "nonzero": 4010,
+        "sha256": "dfd9c77b863c36dc32e8941e42eedce866ff1604ce2d34537872fad44a27ff57"
+      }
+    },
+    "die1": {
+      "k_pos0": {
+        "elements": 512,
+        "nonzero": 512,
+        "sha256": "1edad4a1fa7cc718b12262ea13b51f41e3301113db12c9444d1a72b4a468c364"
+      },
+      "t1_after_down_scale": {
+        "elements": 4096,
+        "nonzero": 4096,
+        "sha256": "0b4c189c447515fefad0ded552c29c4359136621d79f51628bba8ed6dd7e8691"
+      },
+      "t1_after_o_scale": {
+        "elements": 4096,
+        "nonzero": 4096,
+        "sha256": "8b3a7edb8c354778eb03a64a7c91eef3b5631e18af26c97fb2871a75bf6ede98"
+      },
+      "v_pos0": {
+        "elements": 512,
+        "nonzero": 482,
+        "sha256": "ac6e74606cfb4657871ac93aaa7fa545c22e189d7464356c99add789dc8083df"
+      },
+      "x_final": {
+        "elements": 4096,
+        "nonzero": 4096,
+        "sha256": "300035ae842c439cdd67d9fd6852254482f92c334efe623a9aa156b0370a495f"
+      },
+      "x_initial": {
+        "elements": 4096,
+        "nonzero": 4010,
+        "sha256": "dfd9c77b863c36dc32e8941e42eedce866ff1604ce2d34537872fad44a27ff57"
+      }
+    }
+  },
+  "position": 0,
+  "schema": "opentallas.qwen-o4-layer0-tp2-oracle.v1",
+  "status": "ISA_golden_only",
+  "token": 0,
+  "x_preload_sha256": "11f5ae1f3a68ddad9e459b113f35b3a13625932e41533aab31f44ee804dcc948"
+}
