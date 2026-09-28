@@ -59,7 +59,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] Matched same-controller RTL gates (reduced vehicle): vector core +5.60%, scalar core +1.37%.
 - [~] **C `claude/roofline-rebaseline`**: iso-area record still uses τ 4.1 (Table 8-9); 19 stale figures in `ANALYTICAL_REPORT.md`.
 - [ ] Capped rate ratio: no record carries a cooling-capped ROM÷HBM ratio.
-- [ ] Bandwidth-bound RTL comparison: the reduced workload never saturates HBM.
+- [ ] **X:** bandwidth-bound RTL comparison: the reduced workload never saturates HBM. Codex owns this after the running Qwen context gates finish.
 
 ## 3. DeepSeek-V4.1-Flash on the ROM array
 
@@ -105,8 +105,9 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [~] **C `claude/v41x-die-top`**: adopted V4.1x tile and die tops.
   - KV-HBM prefetch, shared-port arbitration and staging RTL exist on the branch, but exact-token validation is still pending, so this stays staged.
   - Verify the separate KV region, write-through staging, generation-wrap protection, `K_MEM` range, maximum-descriptor case and nonzero-user-slice case in the final gate.
+- [~] **X (isolated wrapper)**: latest-source array-side attention KV-HBM gate, using the core `kvd_*`/`kv_ok` interface and Claude's finalized prefetch/arbiter interface; exact token, KV and VM checks are required.
 - [ ] Die-top exact-token test. After it passes, the atlas statement "no V4.1x tile/die exists" changes (diff to Codex first).
-- [ ] Host integration for V4.1x; the `v41-rom` runtime target is historical.
+- [ ] **X:** host integration for V4.1x after the adopted die exact-token gate; the `v41-rom` runtime target is historical.
 
 ### Physical (ASAP7)
 - [x] Block routes: select, indexer and HCP tiles (see atlas Table 8-4).
@@ -120,7 +121,8 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] Best switched comparator derived: 99 dies with 4 stacks each.
 - [x] Priced by the same power model as the ROM design, including always-on links.
 - [ ] Link-bandwidth cap and drafter input transfer are not applied to the comparator (both favour it; the atlas says so).
-- [ ] No V4.1 HBM-comparator RTL: it is model-only.
+- [ ] **X:** full V4.1 HBM-only comparator die/array RTL is unbuilt and model-only today. The existing `W_HBM=1` reduced core and two-package bench cover QE weight reads, not the modeled 99-die comparator. Codex owns this target after the adopted die interface is validated.
+  - Stream the ME, QE, expert and head weight families from HBM through bounded windows while sharing HBM with attention KV and pooled index keys; first gate one matched program and exact state, then integrate the switched array.
 
 ## 5. Cross-cutting
 - [x] Headline reproducibility bundle: 121 of 134 headlines bound to records, with a checker in `make check-figures` (R6).
