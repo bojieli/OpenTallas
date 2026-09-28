@@ -216,7 +216,13 @@ def karb_group4_m9(height_um: float = 30.24) -> dict:
     args[i + 1:i + 2] = ["rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
                          "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
                          "--source", "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv"]
-    args += ["--param", "PIPE_OUT=1", "--param", "PIPE_RSP=1", "--max-transition-ns"]
+    # Yosys 0.68 hits an RTLIL duplicate-module assertion when `hierarchy`
+    # reprocesses this parameterized top with -chparam.  The top's defaults
+    # are NPC=4, PIPE_OUT=1 and PIPE_RSP=1, checked by the exact RTL gate.
+    j = args.index("NPC=4")
+    assert args[j - 1] == "--param"
+    del args[j - 1:j + 1]
+    args += ["--max-transition-ns"]
     args[args.index("--place-density") + 1] = "0.40"
     name = "karb_group4_fit_m9" if height_um <= 17.28 else "karb_group4_m9"
     return {"args": args, "nickname": f"codex_v41x_{name}",

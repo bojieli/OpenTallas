@@ -178,8 +178,7 @@ def test_karb_group4_composes_four_local_slices_on_the_same_phy_windows():
     assert group["floorplan"]["pc_pin_span_um"] == flat["floorplan"]["pc_pin_span_um"]
     args = group["args"]
     assert args[args.index("--top") + 1] == "ot_chip_v41x_hbm_karb_group4"
-    assert {"NPC=4", "PIPE_OUT=1", "PIPE_RSP=1"} <= {
-        args[i + 1] for i, x in enumerate(args) if x == "--param"}
+    assert "--param" not in args  # top defaults avoid a Yosys 0.68 reprocessing bug
     assert "--max-transition-ns" in args
     assert group["output"] != flat["output"]
 
