@@ -25,9 +25,12 @@ placement or its timing.
 
 The reduced TP-2 gate sets `WIN_WORDS=4096`, enough for its largest unchanged
 weight operation. Its two arms are compiled from the same sources with only
-`WEIGHT_HBM=0/1`; the same image files supply both arms. The standalone PC
-window test has passed. The package A/B is still running and has no cycle or
-exact-token verdict yet.
+`WEIGHT_HBM=0/1`; the same image files supply both arms. Both arms pass 16/16
+prompt steps, generated token 1073, and exact logits, vector memory and KV.
+ROM weights take 281,485 cycles; the behavioural two-PC HBM source takes
+421,965 cycles (+140,480, +49.9%). This delta measures the reduced serial
+operation preload with two 32-byte sectors per code word. It is not a
+full-shape bandwidth ratio or chip throughput measurement.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs
@@ -45,3 +48,4 @@ The byte-traffic and sector-address bounds are source-pinned in
 `results/rtl/qwen_o4_hbm_weight_preflight.json` (separate handoff branch).
 The PC-window RTL gate is source-pinned in
 `results/rtl/qwen_o4_hbm_pc_window.json`.
+The matched two-arm record is `results/rtl/qwen_int8_hbm_matched.json`.
