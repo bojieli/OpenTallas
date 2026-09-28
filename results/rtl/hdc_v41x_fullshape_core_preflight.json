@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.rtl.v41_fullshape_core_preflight.v1",
   "status": "pass",
-  "claim_scope": "Full-width ISA and core lint with X_ATT/X_IDX/X_SEL/X_EG disabled; no full-shape bit-exact layer or chip cycle measurement",
+  "claim_scope": "Full-width ISA and core lint with KV_HBM and the packed window block boundary enabled, X_ATT/X_IDX/X_SEL/X_EG disabled; no full-shape bit-exact layer or chip cycle measurement",
   "full_layer_ready": false,
   "full_layer_blockers": [
     "The TP emitter now addresses attention's local rows 0..639, but die prefetch still needs 128 FP8 window rows (528 bytes each), up to 512 selected CKV FP4 rows (288 bytes each), and explicit selected source IDs",
@@ -22,15 +22,17 @@
     "top": "ot_hdc_core_v41x",
     "parameters": {
       "FULL_SHAPE": 1,
+      "KV_HBM": 1,
       "X_ATT": 0,
       "X_IDX": 0,
       "X_SEL": 0,
       "X_EG": 0
     },
     "errors": [],
-    "warning_count": 539
+    "warning_count": 547
   },
   "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
     "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
     "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
@@ -59,9 +61,10 @@
     "rtl/hdc/v41/ot_hdc_v41_qe.sv": "57a05fd92b950bb6daa8e41918a336bee855e2758bd89880c7e00cde08cca6a7",
     "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
     "rtl/hdc/v41/ot_hdc_v41_xu.sv": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "5e415d3ae0231064f7df92cf0375fdbcfab1e69fbd0c9aab1d581600c8eab39a",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "1fc21312829ab19ea3bfd06a3b74f56eadfc51c0d2316a6556ae7474d49f30c6",
     "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "302db959961034636d8028ee8ccb4868acb8d7744591574abea0d68566184afd",
-    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "b96f2f75fd9d9bc26f4e0b03915958cccd13e3274e197679f09f68668ae3cca6",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "ed2a13a5fd91fa94ef02dc48098c16b3587e74047a67655c9b4533af9f777758",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
     "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "8eb0873a911d875a85048fbad1c496b391f019396f4c626a616c95e6ff1d16b2",
     "rtl/hdc/v41x/ot_hdc_v41x_egather.sv": "d1ac9dc69dadfe10e7093ea99aa027f3420885d6a8bd7d35132cf3d22ed2db21",
     "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173",
@@ -85,11 +88,12 @@
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "2285dd95f37eabfc1e7a3ef1f8608fbb591f841d56b995b42a3847583ea761c5",
     "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
     "tools/hdc_replay_v41.py": "6b189dd431ba5ddcff90ff8c1f2b2ffc999baa55d75588cf5320fd7dbe81d609",
-    "tools/rtl_v41_fullshape_core_preflight.py": "f08aa63fc0295f40708fc485fea49153ee63391afa1e250a9e209de67fd1ac95"
+    "tools/rtl_v41_fullshape_core_preflight.py": "04c6e8d37d026f476069ecfc544fc915e906a9e7a1c84034a751a3662503db1d"
   }
 }
