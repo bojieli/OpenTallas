@@ -1,164 +1,5 @@
 {
   "architectures": {
-    "deepseek_v41_rom_array": {
-      "description": "universal die personalised per die by via mask; reduced vehicle deepseek-v4.1-flash-reduced-v2 (rtl/test/tb_hdc_core_v41.sv)",
-      "macro_area_mm2": 13.3866,
-      "macro_instances": 992,
-      "memories": [
-        {
-          "area_um2": 183934.8,
-          "bits": 1536,
-          "column_tiles": 6,
-          "depth_tiles": 4,
-          "ecc_data_bits_per_tile": 256,
-          "fmax_mhz_ss": 1414.2,
-          "fmax_mhz_tt": 1789.0,
-          "holds": "program (4,416 instructions)",
-          "instances": 24,
-          "macro": "ot_rom_4096x266_m8",
-          "macro_area_um2": 7663.948,
-          "memory": "program ROM",
-          "note": "",
-          "ports": "1R",
-          "replicas": 1,
-          "source": "rtl/test/tb_hdc_core_v41.sv",
-          "words": 16384
-        },
-        {
-          "area_um2": 2451125.2,
-          "bits": 1024,
-          "column_tiles": 4,
-          "depth_tiles": 21,
-          "ecc_data_bits_per_tile": 256,
-          "fmax_mhz_ss": 1017.5,
-          "fmax_mhz_tt": 1298.1,
-          "holds": "matrix-engine weights (169,844 used)",
-          "instances": 168,
-          "macro": "ot_rom_8192x266_m8",
-          "macro_area_um2": 14590.031,
-          "memory": "weight ROM",
-          "note": "two concurrent read ports -> two copies",
-          "ports": "2R (wrom, ewrom)",
-          "replicas": 2,
-          "source": "rtl/test/tb_hdc_core_v41.sv:99-100",
-          "words": 169984
-        },
-        {
-          "area_um2": 1736213.7,
-          "bits": 4352,
-          "column_tiles": 17,
-          "depth_tiles": 7,
-          "ecc_data_bits_per_tile": 256,
-          "fmax_mhz_ss": 1017.5,
-          "fmax_mhz_tt": 1298.1,
-          "holds": "FP8/FP4 weights (54,080 used)",
-          "instances": 119,
-          "macro": "ot_rom_8192x266_m8",
-          "macro_area_um2": 14590.031,
-          "memory": "quantised weight ROM",
-          "note": "",
-          "ports": "1R",
-          "replicas": 1,
-          "source": "rtl/test/tb_hdc_core_v41.sv",
-          "words": 57344
-        },
-        {
-          "area_um2": 6238.1,
-          "bits": 96,
-          "column_tiles": 1,
-          "depth_tiles": 1,
-          "ecc_data_bits_per_tile": 96,
-          "fmax_mhz_ss": 1090.7,
-          "fmax_mhz_tt": 1419.6,
-          "holds": "FP32 HC weights",
-          "instances": 1,
-          "macro": "ot_rom_8192x104_m8",
-          "macro_area_um2": 6238.14,
-          "memory": "hyper-connection ROM",
-          "note": "",
-          "ports": "1R",
-          "replicas": 1,
-          "source": "rtl/test/tb_hdc_core_v41.sv",
-          "words": 8192
-        },
-        {
-          "area_um2": 5760948.5,
-          "bits": 2112,
-          "column_tiles": 8,
-          "depth_tiles": 48,
-          "ecc_data_bits_per_tile": 264,
-          "fmax_mhz_ss": 1012.6,
-          "fmax_mhz_tt": 1290.1,
-          "holds": "Engram rows, 264 B each",
-          "instances": 384,
-          "macro": "ot_rom_8192x274_m8",
-          "macro_area_um2": 15002.47,
-          "memory": "Engram table ROM",
-          "note": "",
-          "ports": "1R",
-          "replicas": 1,
-          "source": "rtl/test/tb_hdc_core_v41.sv",
-          "words": 385590
-        },
-        {
-          "area_um2": 95663.5,
-          "bits": 64,
-          "column_tiles": 1,
-          "depth_tiles": 8,
-          "ecc_data_bits_per_tile": 64,
-          "fmax_mhz_ss": 1574.9,
-          "fmax_mhz_tt": 2054.1,
-          "holds": "constants, token map (28,492 used)",
-          "instances": 40,
-          "macro": "ot_rom_4096x72_m8",
-          "macro_area_um2": 2391.587,
-          "memory": "constant ROM",
-          "note": "",
-          "ports": "5R",
-          "replicas": 5,
-          "source": "rtl/test/tb_hdc_core_v41.sv:106-107",
-          "words": 32768
-        },
-        {
-          "area_um2": 3152437.8,
-          "bits": 512,
-          "column_tiles": 2,
-          "depth_tiles": 32,
-          "ecc_data_bits_per_tile": null,
-          "fmax_mhz_ss": 1489.2,
-          "fmax_mhz_tt": 1896.9,
-          "holds": "KV (2 MiB)",
-          "instances": 256,
-          "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
-          "macro_area_um2": 12314.21,
-          "memory": "KV SRAM",
-          "note": "",
-          "ports": "4R + 1W (32-bit element)",
-          "replicas": 4,
-          "source": "rtl/test/tb_hdc_core_v41.sv",
-          "words": 32768
-        },
-        {
-          "bits": 32,
-          "column_tiles": 1,
-          "depth_tiles": 1,
-          "ecc_data_bits_per_tile": null,
-          "holds": "activations (256 KiB)",
-          "macro": "register_file",
-          "memory": "vector memory",
-          "note": "register file; a banked 8-bank 1R1W organisation exists on an unmerged branch",
-          "ports": "12R/10W incl. 2 x 1,024-bit reads",
-          "replicas": 1,
-          "source": "rtl/hdc/v41/ot_hdc_core_v41.sv:55-139",
-          "words": 65536
-        }
-      ],
-      "per_die_content_signature": "each ROM instance's CRC-32 via-map signature (rom_gen.py personalise) and the die signature over them (rom_gen.die_signature): same LEF/Liberty on every die, a different via map and signature per die",
-      "slowest_macro_fmax_mhz": {
-        "ss": 1012.6,
-        "tt": 1290.1
-      }
-    },
     "hbm_comparator": {
       "description": "the Qwen decode core with KV (and, when its RTL lands, weights) streamed from HBM",
       "hard_macros": [
@@ -402,24 +243,6 @@
   "full_scale_weight_rom": {
     "ot_rom_16384x266_m16": {
       "cases": {
-        "DeepSeek-V4.1-Flash Engram tables (both)": {
-          "bytes": 202758032400,
-          "fraction_of_815_mm2_reticle": 13.461,
-          "full_sweep_time_us_tt": 16.785,
-          "instances": 386731,
-          "macro_area_mm2": 10970.7,
-          "source": "configs/models/candidates/deepseek-v4.1-flash.json metadata.engram",
-          "sweep_bandwidth_bytes_s_tt": 1.20796201312e+16
-        },
-        "DeepSeek-V4.1-Flash per die (510.29 GB / 188 dies)": {
-          "bytes": 2714287356.382979,
-          "fraction_of_815_mm2_reticle": 0.18,
-          "full_sweep_time_us_tt": 16.782,
-          "instances": 5178,
-          "macro_area_mm2": 146.9,
-          "source": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json ROM-N5-native-HBMKV-array-hw-hybrid-x188",
-          "sweep_bandwidth_bytes_s_tt": 161735865600000.0
-        },
         "Qwen3-8B BF16 weights": {
           "bytes": 16381470720,
           "fraction_of_815_mm2_reticle": 1.088,
@@ -444,24 +267,6 @@
     },
     "ot_rom_8192x266_m8": {
       "cases": {
-        "DeepSeek-V4.1-Flash Engram tables (both)": {
-          "bytes": 202758032400,
-          "fraction_of_815_mm2_reticle": 13.846,
-          "full_sweep_time_us_tt": 6.311,
-          "instances": 773461,
-          "macro_area_mm2": 11284.8,
-          "source": "configs/models/candidates/deepseek-v4.1-flash.json metadata.engram",
-          "sweep_bandwidth_bytes_s_tt": 3.2128951171199996e+16
-        },
-        "DeepSeek-V4.1-Flash per die (510.29 GB / 188 dies)": {
-          "bytes": 2714287356.382979,
-          "fraction_of_815_mm2_reticle": 0.185,
-          "full_sweep_time_us_tt": 6.31,
-          "instances": 10355,
-          "macro_area_mm2": 151.1,
-          "source": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json ROM-N5-native-HBMKV-array-hw-hybrid-x188",
-          "sweep_bandwidth_bytes_s_tt": 430138415999999.94
-        },
         "Qwen3-8B BF16 weights": {
           "bytes": 16381470720,
           "fraction_of_815_mm2_reticle": 1.119,
@@ -487,5 +292,13 @@
   },
   "generated_by": "tools/mem_compiler/memory_plan.py",
   "macro_index_sha256": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
-  "schema": "opentallas.memory-plan.v1"
+  "schema": "opentallas.memory-plan.v1",
+  "unmapped_architectures": {
+    "deepseek_v41_flash": {
+      "core": "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+      "kv_storage": "HBM with row staging; no full-cache SRAM macro allocation",
+      "reason": "KV HBM prefetch, dedicated engine banks and physical port mapping are not yet closed",
+      "status": "pending_adopted_tile_memory_characterization"
+    }
+  }
 }

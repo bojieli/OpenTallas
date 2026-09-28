@@ -24,7 +24,7 @@ grade: *measured*, *published*, *calibrated* or *assumed*.
 | ASAP7 inputs: measured bitcells, the standard-cell calibration frozen from the pinned ORFS image, published and assumed constants | `tools/mem_compiler/asap7.py`, `asap7_calibration.json` |
 | SECDED code and the ROM signature (CRC-32) | `tools/mem_compiler/ecc.py` |
 | Macro library: 16 macros with LEF, TT/SS/FF liberty, behavioural and blackbox views, datasheet, index with view hashes | `physical/asap7_memory_macros/` (config `configs/memories/asap7_macros.json`, build `tools/mem_compiler/build_library.py`) |
-| Memory map of the three architectures onto the macros | `tools/mem_compiler/memory_plan.py` → `results/memory/memory_plan.json` |
+| Implemented reduced memory maps and the open DeepSeek map | `tools/mem_compiler/memory_plan.py` → `results/memory/memory_plan.json` |
 | ROM defect tolerance, SECDED against spare rows | `tools/mem_compiler/rom_repair_eval.py` → `results/memory/rom_repair_evaluation.json` |
 | MBIST: shared March controller, BIRA repair analysis, SRAM and ROM collars, SECDED decoder | `rtl/dft/ot_mbist_ctrl.sv`, `ot_mbist_bira.sv`, `ot_mbist_sram_collar.sv`, `ot_mbist_rom_collar.sv`, `ot_rom_secded_dec.sv` |
 | Fault campaign (Verilator) | `tools/rtl_mbist_campaign.py` → `results/rtl/mbist_campaign.json` |
@@ -424,13 +424,14 @@ more cycles per failing event and three cycles per search subset.
 |---|---|---|
 | **HBM comparator** (core + KV streamer; `results/memory/memory_plan.json` `hbm_comparator`) | Program and constant ROM, KV prefetch window (4 × `ot_sram_1r1w_256x256_m2_r2c2`) and KV tail (2 × `ot_sram_1r1w_128x256_m1_r2c2`) compiled. The flush and write-combine FIFOs and the vector memory are register files. The HBM3E PHY has a hard-macro abstract (`ot_hbm3e_phy`, see "HBM comparator integration"). **Open:** the HBM weight streamer's prefetch buffers, whose RTL is not on main yet. | Collars and one shared controller on the KV window and tail macros (`rtl/hdc/kv/ot_hdc_kv_bufs.sv`), verified in the KV-stream campaign (see below). |
 | **Qwen3-8B ROM reticle** | Reduced vehicle fully mapped and simulated: 37 macros. Full model at compiled density: 62,491 × `ot_rom_8192x266_m8` for BF16 weights (**1.12 reticles** of macro area, so BF16 Qwen3-8B does not fit one 815 mm2 reticle at ASAP7 density), or 15,623 macros (0.28 reticle) at 4 bits per weight (`full_scale_weight_rom`). | Integrated in `ot_hdc_memsys.sv`: MBIST with repair on the KV SRAM, signature BIST and SECDED on every ROM. Verified inside the decode campaign. The BIST hard-macro route closes at 1 GHz. |
-| **DeepSeek-V4.1 ROM array** | Reduced vehicle mapped: 992 macros, including the 2-read weight ROM as two copies, the quantised ROM, the HC ROM, 384 Engram-table macros (274-bit rows = 264 B + SECDED) and the 5-read constant ROM as five copies. The vector memory (12 reads, 10 writes) is a register file. Full model: about 10,355 weight macros per die (0.185 reticle). | ROM signature, SECDED and the per-die content signature (`content_signature`, `viamap_set_sha256`). Instantiation in the V4.1 test bench: see "V4.1 ROM array integration" when present. |
+| **DeepSeek-V4.1 ROM array** | Adopted V41x tile map pending. Its KV is in HBM with a row staging buffer. Dedicated weight, attention and index engines and their actual ROM and SRAM port views must be mapped before a per-die macro count is reported. | ROM signature and SECDED schemes exist, but memory collars, BIST and die-level content checks remain to be integrated with the adopted V41x tile. |
 
 **Open items.**
 
 - **HBM comparator:** the weight streamer's buffers are not mapped, because
   that RTL is not on main.
-- **V4.1:** the memory subsystem's campaign is in progress on this branch.
+- **V4.1:** complete KV HBM prefetch, map the adopted tile's memories to
+  physical macros, then verify its collars and BIST in the integrated die.
 
 ## Reproduction
 

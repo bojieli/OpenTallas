@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-"""Map every memory of the three architectures onto the compiled ASAP7 macros.
+"""Map implemented reduced memory systems onto the compiled ASAP7 macros.
 
-For each architecture of docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md section 6
-(HBM comparator, Qwen3-8B ROM reticle, DeepSeek-V4.1-Flash ROM array) this
-lists each memory the RTL holds (sizes and port counts as the RTL and its
-test benches declare them), the macro (or register file) it maps to, the
-instance count and macro area -- for the reduced simulation vehicles -- and,
-for the full models, the weight-ROM macro count, area and sweep bandwidth at
-the compiled density.  Writes results/memory/memory_plan.json.
+For the reduced Qwen ROM and HBM vehicles this lists each implemented memory,
+its macro (or register file), instance count and area. For full models it
+reports weight-ROM capacity arithmetic at the compiled density. DeepSeek V41x
+uses HBM KV and dedicated engines; its adopted tile memory map remains open
+until those ports and staging buffers are characterized. Writes
+results/memory/memory_plan.json.
 
 Every size is quoted with the file it came from; nothing here is a new
 measurement of the architectures, only their memories expressed in macros.
@@ -83,33 +82,6 @@ def plan(index: dict) -> dict:
                   note="one replica per read port; every write goes to all replicas"),
             ],
         },
-        "deepseek_v41_rom_array": {
-            "description": "universal die personalised per die by via mask; reduced vehicle "
-                           "deepseek-v4.1-flash-reduced-v2 (rtl/test/tb_hdc_core_v41.sv)",
-            "memories": [
-                m("program ROM", 16384, 1536, "1R", "program (4,416 instructions)", "rtl/test/tb_hdc_core_v41.sv",
-                  "ot_rom_4096x266_m8", tiles_w=6, tiles_d=4, ecc_data_bits=256),
-                m("weight ROM", 169984, 1024, "2R (wrom, ewrom)", "matrix-engine weights (169,844 used)",
-                  "rtl/test/tb_hdc_core_v41.sv:99-100", "ot_rom_8192x266_m8", tiles_w=4, tiles_d=21,
-                  replicas=2, ecc_data_bits=256, note="two concurrent read ports -> two copies"),
-                m("quantised weight ROM", 57344, 4352, "1R", "FP8/FP4 weights (54,080 used)",
-                  "rtl/test/tb_hdc_core_v41.sv", "ot_rom_8192x266_m8", tiles_w=17, tiles_d=7, ecc_data_bits=256),
-                m("hyper-connection ROM", 8192, 96, "1R", "FP32 HC weights", "rtl/test/tb_hdc_core_v41.sv",
-                  "ot_rom_8192x104_m8", ecc_data_bits=96),
-                m("Engram table ROM", 385590, 2112, "1R", "Engram rows, 264 B each", "rtl/test/tb_hdc_core_v41.sv",
-                  "ot_rom_8192x274_m8", tiles_w=8, tiles_d=48, ecc_data_bits=264),
-                m("constant ROM", 32768, 64, "5R", "constants, token map (28,492 used)",
-                  "rtl/test/tb_hdc_core_v41.sv:106-107", "ot_rom_4096x72_m8", tiles_d=8, replicas=5, ecc_data_bits=64),
-                m("KV SRAM", 32768, 512, "4R + 1W (32-bit element)", "KV (2 MiB)", "rtl/test/tb_hdc_core_v41.sv",
-                  "ot_sram_1r1w_1024x256_m2_r2c2", tiles_w=2, tiles_d=32, replicas=4),
-                m("vector memory", 65536, 32, "12R/10W incl. 2 x 1,024-bit reads", "activations (256 KiB)",
-                  "rtl/hdc/v41/ot_hdc_core_v41.sv:55-139", RF,
-                  note="register file; a banked 8-bank 1R1W organisation exists on an unmerged branch"),
-            ],
-            "per_die_content_signature": "each ROM instance's CRC-32 via-map signature (rom_gen.py personalise) and "
-                                         "the die signature over them (rom_gen.die_signature): same LEF/Liberty "
-                                         "on every die, a different via map and signature per die",
-        },
     }
     for arch in archs.values():
         total_area = 0.0
@@ -140,11 +112,6 @@ def full_scale(index: dict) -> dict:
     cases = {
         "Qwen3-8B BF16 weights": (16_381_470_720, "configs/models/qwen3-8b.json checkpoint_bytes"),
         "Qwen3-8B at 4 bits per weight": (16_381_470_720 // 4, "BF16 checkpoint / 4"),
-        "DeepSeek-V4.1-Flash per die (510.29 GB / 188 dies)": (
-            510_286_023_000 / 188, "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json "
-                                   "ROM-N5-native-HBMKV-array-hw-hybrid-x188"),
-        "DeepSeek-V4.1-Flash Engram tables (both)": (
-            (384_006_168 + 384_016_682) * 264, "configs/models/candidates/deepseek-v4.1-flash.json metadata.engram"),
     }
     reticle = 815.0
     for macro in ("ot_rom_16384x266_m16", "ot_rom_8192x266_m8"):
@@ -171,6 +138,14 @@ def main() -> int:
     index = json.loads(INDEX.read_text())
     result = {"schema": "opentallas.memory-plan.v1", "generated_by": "tools/mem_compiler/memory_plan.py",
               "macro_index_sha256": asap7.sha256_file(INDEX), "architectures": plan(index),
+              "unmapped_architectures": {
+                  "deepseek_v41_flash": {
+                      "status": "pending_adopted_tile_memory_characterization",
+                      "core": "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+                      "kv_storage": "HBM with row staging; no full-cache SRAM macro allocation",
+                      "reason": "KV HBM prefetch, dedicated engine banks and physical port mapping are not yet closed"
+                  }
+              },
               "full_scale_weight_rom": full_scale(index),
               "claim_boundary": "macro counts and areas from the compiled ASAP7 abstracts; ASAP7 is predictive, "
                                 "the full-model rows are capacity arithmetic at the compiled density, not a floorplan"}
