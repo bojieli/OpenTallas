@@ -49,7 +49,8 @@ def snapshot_pin(snapshot: Path) -> dict:
             "verification": "snapshot's content-addressed blob IDs and existence; full shard rehash not run"}
 
 
-def collect(scratch: Path, contexts: list[int], snapshot: Path, source_root: Path = ROOT) -> dict:
+def collect(scratch: Path, contexts: list[int], snapshot: Path, source_root: Path = ROOT,
+            annotate_shards: bool = False) -> dict:
     checkpoint = snapshot_pin(snapshot)
     source_files = ["tools/rtl_v41_fullshape_layer_campaign.py", "tools/v41_fullshape_golden_collect.py",
                     "tools/v41_fullshape_shard_compare.py", "tools/hdc_golden_v41.py", "tools/hdc_golden.py",
@@ -101,6 +102,17 @@ def collect(scratch: Path, contexts: list[int], snapshot: Path, source_root: Pat
             if (row["input_sha256"], row["output_sha256"]) != (
                     original["input_sha256"], original["output_sha256"]):
                 raise ValueError(f"context {context} layer {row['layer']}: summary/shard mismatch")
+            if annotate_shards:
+                path = scratch / f"ctx{context}_L{row['layer']:02d}.json"
+                shard = json.loads(path.read_text())
+                pins = {"token_history": history,
+                        "checkpoint_index_sha256": checkpoint["index_sha256"],
+                        "checkpoint_revision": checkpoint["revision"]}
+                for key, value in pins.items():
+                    if key in shard and shard[key] != value:
+                        raise ValueError(f"{path}: existing {key} pin disagrees")
+                shard.update(pins)
+                path.write_text(json.dumps(shard, indent=1) + "\n")
         out["contexts"][str(context)] = {
             "position": context - 1, "token_history": history,
             "initial_state_segments": state_segments,
@@ -119,8 +131,11 @@ def main() -> None:
     parser.add_argument("--contexts", default="200000,1048576")
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--annotate-shards", action="store_true",
+                        help="add token-history and checkpoint pins to each validated shard JSON")
     args = parser.parse_args()
-    record = collect(args.scratch, [int(x) for x in args.contexts.split(",")], args.snapshot)
+    record = collect(args.scratch, [int(x) for x in args.contexts.split(",")], args.snapshot,
+                     annotate_shards=args.annotate_shards)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(record, indent=2) + "\n")
     print(json.dumps({"status": record["status"], "contexts": list(record["contexts"]),
