@@ -47,8 +47,9 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="v41-four-vlt-") as td:
         for n in (65, 1040, 262_144):
             obj = Path(td) / f"obj{n}"
-            cmd = ["verilator", "--cc", "--exe", "--build", "-j", "4",
+            cmd = ["verilator", "--cc", "--exe", "--build", "-j", "2",
                    "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNOPTFLAT",
+                   "--output-split", "20000", "--output-split-cfuncs", "10000",
                    "--top-module", "tb_hdc_v41x_idx_four_stack_verilator",
                    f"-GNKEYS={n}", "-GQUANTUM=64", "--Mdir", str(obj),
                    *map(str, SOURCES), str(CPP)]
@@ -56,7 +57,8 @@ def main() -> None:
             build = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT,
                                    timeout=3600)
             if build.returncode:
-                raise RuntimeError(f"Verilator build N{n} failed:\n{build.stdout[-4000:]}\n{build.stderr[-4000:]}")
+                (ROOT / "results/rtl/v41_four_stack_verilator_build_failure.log").write_text(build.stdout + "\n" + build.stderr)
+                raise RuntimeError(f"Verilator build N{n} failed; full log: results/rtl/v41_four_stack_verilator_build_failure.log\n{build.stdout[-1500:]}\n{build.stderr[-3000:]}")
             build_wall = round(time.perf_counter() - started, 3)
             binary = obj / "Vtb_hdc_v41x_idx_four_stack_verilator"
             started = time.perf_counter()
