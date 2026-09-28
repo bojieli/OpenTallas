@@ -49,7 +49,15 @@ and 131345 total cycles; its extra fill stage is hidden by the existing
 preload barrier. An input register on the 16-macro store is also checkpoint
 exact: `results/rtl/hdc_v41x_fullshape_woa_pipe2_inreg_full1024.json` passes
 2048/2048 rows in 131347 cycles. That RL4 boundary adds one fill cycle per
-group to the RL3 result while sustaining one read beat per cycle. Thus two
+group to the RL3 result while sustaining one read beat per cycle. A real
+four-bank VM macro slice now supplies the first 16 rows/group through the
+same converter and store: `results/rtl/hdc_v41x_fullshape_woa_vmread_first16.json`
+passes 32/32 output rows and all 512 returned 512-bit VM words against the
+checkpoint. The slice is 384 KiB and initializes resident ACC before timed
+service. Its original VM read RTL is physically unclosed, so this establishes
+numeric and address order only. A bank-local ME output register also passes
+the first 16 rows/group at RL5, adding one cycle per group; its full-depth
+and physical gates remain pending. Thus two
 K4096 `wo_a` groups have a 128-cycle VM read-issue
 floor, plus VM read latency, conversion, store write and any barriers. The
 existing four-wide adapter consumes 2048 LOAD issue cycles for those two
