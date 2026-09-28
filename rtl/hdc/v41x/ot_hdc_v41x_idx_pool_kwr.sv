@@ -1,10 +1,9 @@
 `timescale 1ns/1ps
-// Runtime index-key writer for a replicated four-stack key image.  One KVT
-// stream row is encoded to the 68-byte lossless record, then each of the
-// four stack controllers must apply the same code and scale-sector update.
-// Replication keeps physical key addresses independent of scan length.
+// Runtime index-key writer.  In SHARDED mode consecutive 16-key groups are
+// placed on successive stacks and each stack's groups are packed locally.
+// SHARDED=0 preserves the reduced vehicle's replicated image.
 module ot_hdc_v41x_idx_pool_kwr #(
-    parameter integer AW=24, NW=16, NL=8, HAW=28
+    parameter integer AW=24, NW=16, NL=8, HAW=28, SHARDED=0
 ) (
     input wire clk, rst_n,
     input wire [AW-1:0] cfg_ik_base,
@@ -26,9 +25,10 @@ module ot_hdc_v41x_idx_pool_kwr #(
     output reg fault,
     output reg [31:0] dbg_keys
 );
-    assign w_stack_mask=4'b1111;
     reg busy;
     reg [AW-1:0] rbase,row;
+    wire [AW-1:0] local_row = SHARDED ? ((row >> 6) << 4) | (row & 4'hf) : row;
+    assign w_stack_mask=SHARDED ? (4'b0001 << row[5:4]) : 4'b1111;
     reg [NW-1:0] kdim;
     reg [15:0] elem[0:127];
     reg [127:0] got,need;
@@ -76,9 +76,9 @@ module ot_hdc_v41x_idx_pool_kwr #(
         end
     end
     always @(posedge clk) begin
-        w_csec<=(b0+1+(row>>6))*128+2*(row&63);
-        w_ssec<=b0*128+(row>>3);
-        w_sslot<=row[2:0];
+        w_csec<=(b0+1+(local_row>>6))*128+2*(local_row&63);
+        w_ssec<=b0*128+(local_row>>3);
+        w_sslot<=local_row[2:0];
         for(integer b=0;b<4;b=b+1) begin
             w_codes[128*b +: 128]<=enc[b][127:0];
             w_scales[8*b +: 8]<=enc[b][135:128];
