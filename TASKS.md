@@ -15,7 +15,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 ## 1. Qwen3-8B on the ROM two-reticle package
 
 ### Architecture and model
-- [x] **Decision (user):** use 8-bit weights on two reticles in one package, split layers across UCIe, with eight HBM3E stacks and 6,144 lane groups per die. The HBM comparator also uses two reticles.
+- [x] **Decision (user):** use signed INT8 weights with per-output-channel BF16 scales on two reticles in one package, split layers across UCIe, with eight HBM3E stacks and 6,144 lane groups per die. DFlash verify uses lane multiplier m=5. The HBM comparator also uses two reticles.
 - [~] **C:** re-baseline area, autoregressive and DFlash rates, cooling, GPU prefill and the iso-area HBM comparator for that decision. The published single-reticle 3.5-bit numbers are superseded.
 - [~] **C `claude/qwen-weight-format`**: validate the selected 8-bit format against the quality bar (≤2% perplexity rise, ≤1 point on MMLU); the emulated 3.5-bit format failed it.
 - [x] The earlier DFlash acceptance was measured per block in BF16; draft, verify and commit were serialized in that model. This is historical evidence, not a two-reticle rate.
@@ -32,7 +32,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] Pressure gates, with the pressure absorbed by slack.
 - [x] SFU reciprocal saturation fix (golden and RTL).
 - [~] **X:** consecutive-token gate at 2047→2048 and 8K single-token gate are running; both await final source-pinned verdicts.
-- [ ] **X:** two-reticle 8-bit RTL integration: freeze the layer and HBM stack split, implement the 8-bit weight path and credit-controlled UCIe activation handoff, then prove the same program with and without DFlash. Current G4/SW16 gates are reduced single-core evidence.
+- [~] **X:** two-reticle INT8 RTL integration: freeze the layer and HBM stack split, implement signed INT8 × BF16 with per-output BF16 post-accumulation scaling and a credit-controlled UCIe activation handoff, then prove the same deployed program in autoregressive m=1 and DFlash verify m=5 modes. Current G4/SW16 gates are reduced single-core evidence. Claude supplies an advisory gap/performance audit; Codex owns core, testbench and integrated RTL.
 - [ ] **X:** queue-depth-2 pressure gate; its optional elaboration was stopped and no QD2 run is active.
 - [ ] 8K in RTL: correctness, area and timing are all unproven (R1).
 - [ ] Offered-load knee: KV-path headroom under sustained queue pressure (R1).
