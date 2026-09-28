@@ -43,8 +43,8 @@ def main() -> None:
             "startpoint": start.group(1), "endpoint": end.group(1),
             "arrival_ps": float(arrival.group(1)), "slack_ps": float(slack.group(1)),
         }
-    if len(timing) != 15:
-        raise ValueError(f"expected 15 input/output path groups, got {len(timing)}")
+    if len(timing) != 23:
+        raise ValueError(f"expected 23 input/output path groups, got {len(timing)}")
     record = {
         "schema": 1,
         "status": "pass",

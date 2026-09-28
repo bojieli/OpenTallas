@@ -30,6 +30,14 @@ foreach {label from to} {
   state_to_h_wdata @registers h_wdata*
   state_to_h_wstrb @registers h_wstrb*
   state_to_k_grants @registers k_grants*
+  b_v_to_b_rdy b_v b_rdy
+  k_v_to_k_rdy k_v k_rdy
+  b_we_to_b_rdy b_we b_rdy
+  k_we_to_k_rdy k_we k_rdy
+  h_rdy_to_b_rdy h_rdy b_rdy
+  h_rdy_to_k_rdy h_rdy k_rdy
+  h_wr_done_to_b_wr_done h_wr_done b_wr_done
+  h_wr_done_to_k_wr_done h_wr_done k_wr_done
 } {
   if {$from eq "@registers"} {set a [all_registers]} else {set a [get_ports $from]}
   if {$to eq "@registers"} {set z [all_registers]} else {set z [get_ports $to]}

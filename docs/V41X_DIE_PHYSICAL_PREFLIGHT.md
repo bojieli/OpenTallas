@@ -236,14 +236,16 @@ closed within the modeled height. The shared group response, K trunk and
 multi-PC clock/routing composition are still outside this result.
 The retained routed ODB and SPEF were probed at the same 0.92 ns TT corner
 in `results/asap7_physical/v41x_die_karb_pc_local_budget_slew50_m9/timing_probe/record.json`.
-Among 15 input/output path groups, the request outputs have extracted
+Among 23 sequential and direct path groups, the request outputs have extracted
 arrival times of 337.918 ps (`h_wstrb`), 313.662 ps (`h_wdata`), 270.387 ps
 (`h_addr`) and 301.937 ps (`h_v`), including propagated local clock. With
 the 184 ps output allowance, the worst request output leaves 398.083 ps for
 the external request trunk at 0.92 ns. The local `b_rdy` output is tighter:
 601.820 ps arrival and 134.180 ps margin. These are extracted path probes,
 not complete sequential Liberty arcs for a reusable hard macro; the group
-response and clock trunks still need extraction.
+response and clock trunks still need extraction. The directly coupled
+`h_rdy`→`b_rdy` path has 535.995 ps arrival and 200.005 ps margin; the
+`h_wr_done`→`k_wr_done` path has 379.633 ps arrival and 356.367 ps margin.
 The earlier unspecialized one-PC top also detailed-routed at 375 by 17.28 µm
 in `results/asap7_physical/v41x_die_karb_pc1_pipe_fit_slewmargin40_m9/physical.json`.
 It has +161.847 ps setup and +55.333 ps hold WNS with zero DRC and antenna

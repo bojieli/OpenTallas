@@ -548,3 +548,276 @@ Path Type: max
            396.8323   slack (MET)
 
 
+
+=== b_v_to_b_rdy ===
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: b_v (input port clocked by core_clk)
+Endpoint: b_rdy (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (propagated)
+ 184.0000  184.0000 ^ input external delay
+   0.0000  184.0000 ^ b_v (in)
+  48.3010  232.3010 ^ wire1909/Y (BUFx10_ASAP7_75t_R)
+  35.2179  267.5189 ^ _3047_/Y (AND4x1_ASAP7_75t_R)
+  40.1463  307.6652 ^ _3048_/Y (AO32x1_ASAP7_75t_R)
+  22.6009  330.2661 v _3054_/Y (AOI21x1_ASAP7_75t_R)
+  45.9161  376.1822 ^ _4681_/Y (NOR2x1_ASAP7_75t_R)
+  67.1275  443.3096 ^ output1164/Y (BUFx2_ASAP7_75t_R)
+  52.8820  496.1917 ^ b_rdy (out)
+           496.1917   data arrival time
+
+ 920.0000  920.0000   clock core_clk (rise edge)
+   0.0000  920.0000   clock network delay (propagated)
+   0.0000  920.0000   clock reconvergence pessimism
+-184.0000  736.0001   output external delay
+           736.0001   data required time
+-------------------------------------------------------------
+           736.0001   data required time
+          -496.1917   data arrival time
+-------------------------------------------------------------
+           239.8084   slack (MET)
+
+
+
+=== k_v_to_k_rdy ===
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: k_v (input port clocked by core_clk)
+Endpoint: k_rdy (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (propagated)
+ 184.0000  184.0000 v input external delay
+   0.0000  184.0000 v k_v (in)
+  31.1862  215.1862 v input841/Y (BUFx2_ASAP7_75t_R)
+  38.8442  254.0305 ^ _4559_/Y (NAND2x1_ASAP7_75t_R)
+  31.3205  285.3510 ^ _4560_/Y (AO211x2_ASAP7_75t_R)
+  31.0156  316.3665 v _4635_/Y (INVx1_ASAP7_75t_R)
+  46.0311  362.3976 v output1569/Y (BUFx2_ASAP7_75t_R)
+   3.4985  365.8961 v k_rdy (out)
+           365.8961   data arrival time
+
+ 920.0000  920.0000   clock core_clk (rise edge)
+   0.0000  920.0000   clock network delay (propagated)
+   0.0000  920.0000   clock reconvergence pessimism
+-184.0000  736.0001   output external delay
+           736.0001   data required time
+-------------------------------------------------------------
+           736.0001   data required time
+          -365.8961   data arrival time
+-------------------------------------------------------------
+           370.1039   slack (MET)
+
+
+
+=== b_we_to_b_rdy ===
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: b_we (input port clocked by core_clk)
+Endpoint: b_rdy (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (propagated)
+ 184.0000  184.0000 v input external delay
+   0.0000  184.0000 v b_we (in)
+  55.5116  239.5116 v input758/Y (BUFx2_ASAP7_75t_R)
+  31.4940  271.0056 ^ _3045_/Y (INVx1_ASAP7_75t_R)
+  40.9303  311.9359 ^ _3048_/Y (AO32x1_ASAP7_75t_R)
+  22.6009  334.5368 v _3054_/Y (AOI21x1_ASAP7_75t_R)
+  45.9161  380.4529 ^ _4681_/Y (NOR2x1_ASAP7_75t_R)
+  67.1275  447.5803 ^ output1164/Y (BUFx2_ASAP7_75t_R)
+  52.8820  500.4623 ^ b_rdy (out)
+           500.4623   data arrival time
+
+ 920.0000  920.0000   clock core_clk (rise edge)
+   0.0000  920.0000   clock network delay (propagated)
+   0.0000  920.0000   clock reconvergence pessimism
+-184.0000  736.0001   output external delay
+           736.0001   data required time
+-------------------------------------------------------------
+           736.0001   data required time
+          -500.4623   data arrival time
+-------------------------------------------------------------
+           235.5377   slack (MET)
+
+
+
+=== k_we_to_k_rdy ===
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: k_we (input port clocked by core_clk)
+Endpoint: k_rdy (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (propagated)
+ 184.0000  184.0000 ^ input external delay
+   0.0000  184.0000 ^ k_we (in)
+  32.6376  216.6376 ^ input1098/Y (BUFx2_ASAP7_75t_R)
+  60.0726  276.7102 ^ _4560_/Y (AO211x2_ASAP7_75t_R)
+  31.0156  307.7258 v _4635_/Y (INVx1_ASAP7_75t_R)
+  46.0311  353.7569 v output1569/Y (BUFx2_ASAP7_75t_R)
+   3.4985  357.2553 v k_rdy (out)
+           357.2553   data arrival time
+
+ 920.0000  920.0000   clock core_clk (rise edge)
+   0.0000  920.0000   clock network delay (propagated)
+   0.0000  920.0000   clock reconvergence pessimism
+-184.0000  736.0001   output external delay
+           736.0001   data required time
+-------------------------------------------------------------
+           736.0001   data required time
+          -357.2553   data arrival time
+-------------------------------------------------------------
+           378.7447   slack (MET)
+
+
+
+=== h_rdy_to_b_rdy ===
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: h_rdy (input port clocked by core_clk)
+Endpoint: b_rdy (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (propagated)
+ 184.0000  184.0000 v input external delay
+   0.0000  184.0000 v h_rdy (in)
+  18.4073  202.4073 v input791/Y (BUFx2_ASAP7_75t_R)
+  40.3581  242.7654 v _3026_/Y (OR2x2_ASAP7_75t_R)
+  67.8512  310.6165 v place2002/Y (BUFx3_ASAP7_75t_R)
+  63.9119  374.5284 ^ _4651_/Y (NAND3x1_ASAP7_75t_R)
+  46.7903  421.3187 v _4681_/Y (NOR2x1_ASAP7_75t_R)
+  61.8216  483.1403 v output1164/Y (BUFx2_ASAP7_75t_R)
+  52.8549  535.9952 v b_rdy (out)
+           535.9952   data arrival time
+
+ 920.0000  920.0000   clock core_clk (rise edge)
+   0.0000  920.0000   clock network delay (propagated)
+   0.0000  920.0000   clock reconvergence pessimism
+-184.0000  736.0001   output external delay
+           736.0001   data required time
+-------------------------------------------------------------
+           736.0001   data required time
+          -535.9952   data arrival time
+-------------------------------------------------------------
+           200.0048   slack (MET)
+
+
+
+=== h_rdy_to_k_rdy ===
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: h_rdy (input port clocked by core_clk)
+Endpoint: k_rdy (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (propagated)
+ 184.0000  184.0000 v input external delay
+   0.0000  184.0000 v h_rdy (in)
+  18.4073  202.4073 v input791/Y (BUFx2_ASAP7_75t_R)
+  40.3581  242.7654 v _3026_/Y (OR2x2_ASAP7_75t_R)
+  67.8512  310.6165 v place2002/Y (BUFx3_ASAP7_75t_R)
+  71.8808  382.4973 v place2001/Y (BUFx3_ASAP7_75t_R)
+  32.1169  414.6143 ^ _4559_/Y (NAND2x1_ASAP7_75t_R)
+  31.3205  445.9348 ^ _4560_/Y (AO211x2_ASAP7_75t_R)
+  31.0156  476.9503 v _4635_/Y (INVx1_ASAP7_75t_R)
+  46.0312  522.9815 v output1569/Y (BUFx2_ASAP7_75t_R)
+   3.4985  526.4800 v k_rdy (out)
+           526.4800   data arrival time
+
+ 920.0000  920.0000   clock core_clk (rise edge)
+   0.0000  920.0000   clock network delay (propagated)
+   0.0000  920.0000   clock reconvergence pessimism
+-184.0000  736.0001   output external delay
+           736.0001   data required time
+-------------------------------------------------------------
+           736.0001   data required time
+          -526.4800   data arrival time
+-------------------------------------------------------------
+           209.5201   slack (MET)
+
+
+
+=== h_wr_done_to_b_wr_done ===
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: h_wr_done (input port clocked by core_clk)
+Endpoint: b_wr_done (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (propagated)
+ 184.0000  184.0000 ^ input external delay
+   0.0000  184.0000 ^ h_wr_done (in)
+  86.3884  270.3884 ^ input792/Y (BUFx2_ASAP7_75t_R)
+  26.1163  296.5046 ^ _4682_/Y (AND2x2_ASAP7_75t_R)
+  54.0347  350.5393 ^ output1165/Y (BUFx2_ASAP7_75t_R)
+  27.2918  377.8311 ^ b_wr_done (out)
+           377.8311   data arrival time
+
+ 920.0000  920.0000   clock core_clk (rise edge)
+   0.0000  920.0000   clock network delay (propagated)
+   0.0000  920.0000   clock reconvergence pessimism
+-184.0000  736.0001   output external delay
+           736.0001   data required time
+-------------------------------------------------------------
+           736.0001   data required time
+          -377.8311   data arrival time
+-------------------------------------------------------------
+           358.1689   slack (MET)
+
+
+
+=== h_wr_done_to_k_wr_done ===
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: h_wr_done (input port clocked by core_clk)
+Endpoint: k_wr_done (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (propagated)
+ 184.0000  184.0000 v input external delay
+   0.0000  184.0000 v h_wr_done (in)
+  92.5656  276.5656 v input792/Y (BUFx2_ASAP7_75t_R)
+  53.4782  330.0438 v _4686_/Y (OA211x2_ASAP7_75t_R)
+  48.0141  378.0580 v output1570/Y (BUFx2_ASAP7_75t_R)
+   1.5753  379.6332 v k_wr_done (out)
+           379.6332   data arrival time
+
+ 920.0000  920.0000   clock core_clk (rise edge)
+   0.0000  920.0000   clock network delay (propagated)
+   0.0000  920.0000   clock reconvergence pessimism
+-184.0000  736.0001   output external delay
+           736.0001   data required time
+-------------------------------------------------------------
+           736.0001   data required time
+          -379.6332   data arrival time
+-------------------------------------------------------------
+           356.3668   slack (MET)
+
+
