@@ -46,7 +46,11 @@ checkpoint-backed two-stage gate in
 `results/rtl/hdc_v41x_fullshape_woa_pipe2_full1024.json` passes 2048/2048
 raw FP32 outputs with 128 preload issues and writes, 131108 weight-bank reads
 and 131345 total cycles; its extra fill stage is hidden by the existing
-preload barrier. Thus two K4096 `wo_a` groups have a 128-cycle VM read-issue
+preload barrier. An input register on the 16-macro store is also checkpoint
+exact: `results/rtl/hdc_v41x_fullshape_woa_pipe2_inreg_full1024.json` passes
+2048/2048 rows in 131347 cycles. That RL4 boundary adds one fill cycle per
+group to the RL3 result while sustaining one read beat per cycle. Thus two
+K4096 `wo_a` groups have a 128-cycle VM read-issue
 floor, plus VM read latency, conversion, store write and any barriers. The
 existing four-wide adapter consumes 2048 LOAD issue cycles for those two
 groups. The checkpoint-backed matched shared-adapter gate now measures the
@@ -73,6 +77,8 @@ The direct one-stage converter and direct macro store have not closed a
 0.92-ns route. Their source-pinned route records describe the actual setup
 and hold failures. A two-stage converter and input-registered macro store
 are being routed as explicit alternatives. Their physical service cannot be
-assumed from their exact functional gates. Full die geometry, weight ROM bank
+assumed from their exact functional gates. The input-registered store's
+3323 pins fit 20772 sites; the converter's 3108 pins fit 18688 sites.
+These are local pin cuts, not a routed 41-tile multicast. Full die geometry, weight ROM bank
 placement and sustained cluster service remain open; no row in this audit
 licenses a token-rate claim.
