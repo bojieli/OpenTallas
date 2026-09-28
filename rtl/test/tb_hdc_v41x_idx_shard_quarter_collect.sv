@@ -17,6 +17,8 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
         .o_valid(o_valid),.o_ready(o_ready),.o_kv(o_kv),.o_last(o_last),.o_key(o_key),.o_ref(o_ref));
     integer first[0:15],cnt[0:15],src[0:15],total[0:15],delay_ctr[0:15];
     integer n,qs,received,expected_beats,cycles,seed=32'h31415926;
+    integer max_gap,last_accept_cycle;
+    reg fast;
     integer s,q,j,i,physical,local_key,global_key,qlen,pos;
     reg [543:0] word;
     reg [31:0] scales;
@@ -67,12 +69,12 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
             for(integer a=0;a<16;a=a+1) begin
                 lo=(a%4)*qs;hi=(a%4==3)?n:lo+qs;
                 first[a]=rank(lo,a/4);cnt[a]=rank(hi,a/4)-first[a];
-                src[a]=0;delay_ctr[a]=a%4;
+                src[a]=0;delay_ctr[a]=fast ? 0 : a%4;
                 total[a]=((first[a]+cnt[a]+15)/16)-((first[a]&~1023)/16);
             end
             @(negedge clk);cmd_nkeys=keys;cmd_v=1;
             @(negedge clk);cmd_v=0;
-            cycles=0;
+            cycles=0;max_gap=0;last_accept_cycle=-1;
             while(received<expected_beats && cycles<20000) begin
                 @(negedge clk);cycles=cycles+1;
             end
@@ -80,6 +82,10 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
             @(negedge clk);
             if(busy || fault) $fatal(1,"busy/fault after n=%0d busy=%b fault=%b",n,busy,fault);
             $display("PASS n=%0d beats=%0d cycles=%0d",n,received,cycles);
+            if(fast && keys==5000) begin
+                if(max_gap>2) $fatal(1,"fast output gap=%0d exceeds 2 cycles",max_gap);
+                $display("FAST_PASS n=%0d beats=%0d cycles=%0d max_gap=%0d",n,received,cycles,max_gap);
+            end
         end
     endtask
     always @(posedge clk) if(rst_n && busy) begin
@@ -90,14 +96,17 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
         if(stalled_prev) begin
             held_out_kv=o_kv;held_out_ref=o_ref;held_out_last=o_last;held_out_key=o_key;
         end
-        o_ready<=($random(seed)&3)!=0;
+        o_ready<=fast ? 1'b1 : (($random(seed)&3)!=0);
         for(integer a=0;a<16;a=a+1) begin
             if(i_valid[a] && i_ready[a]) begin
                 src[a]=src[a]+1;
-                delay_ctr[a]=$random(seed)&3;
+                delay_ctr[a]=fast ? 0 : ($random(seed)&3);
             end else if(delay_ctr[a]>0) delay_ctr[a]=delay_ctr[a]-1;
         end
         if(o_valid && o_ready) begin
+            if(last_accept_cycle>=0 && cycles-last_accept_cycle>max_gap)
+                max_gap=cycles-last_accept_cycle;
+            last_accept_cycle=cycles;
             for(integer a=0;a<4;a=a+1) begin
                 qlen=(a==3)?n-3*qs:qs;
                 if(o_last[a] !== ((qlen==0)?(received==0):(received==(qlen-1)/16)))
@@ -121,6 +130,7 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
         end
     end
     initial begin
+        fast=$test$plusargs("fast");
         repeat(4) @(negedge clk);rst_n=1;
         start_case(1);start_case(7);start_case(8);start_case(16);
         start_case(31);start_case(32);start_case(64);start_case(96);

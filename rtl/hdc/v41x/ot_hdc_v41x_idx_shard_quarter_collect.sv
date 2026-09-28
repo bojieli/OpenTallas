@@ -69,6 +69,7 @@ module ot_hdc_v41x_idx_shard_quarter_collect (
     integer i,j,s,quarter,slot;
     reg [29:0] physical, local_key, global_key, relative, key_beat;
     reg future;
+    reg [63:0] collected;
     reg [543:0] key_word;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
@@ -108,11 +109,11 @@ module ot_hdc_v41x_idx_shard_quarter_collect (
                     if(beat==((qlen3-1'b1)>>4)) run<=0;
                     else beat<=beat+1'b1;
                 end
-            end else if(filled==expect_mask) begin
-                o_kv<=expect_mask;
-                o_last<=last_mask;
-                o_valid<=1;
             end else begin
+                // The keys captured at this edge are already in o_key/o_ref
+                // when o_valid becomes visible.  Completing the mask here
+                // removes a separate valid-raise cycle from every output beat.
+                collected=filled;
                 for(i=0;i<16;i=i+1) if(have[i]) begin
                     s=i/4; quarter=i%4; future=0;
                     // seq counts accepted beats, so the held beat is seq-1.
@@ -127,16 +128,22 @@ module ot_hdc_v41x_idx_shard_quarter_collect (
                             else if(key_beat==beat) begin
                                 slot=quarter*16+int'(relative[3:0]);
                                 if(!held_kv[i][j]) fault<=1;
-                                else if(!filled[slot]) begin
+                                else if(!collected[slot]) begin
                                     key_word=held_key[i][j*544 +: 544];
                                     o_key[slot*544 +: 544]<=key_word;
                                     o_ref[slot]<=ref_key(key_word[543:512]);
                                     filled[slot]<=1;
+                                    collected[slot]=1;
                                 end
                             end
                         end
                     end
                     if(!future) have[i]<=0;
+                end
+                if(collected==expect_mask) begin
+                    o_kv<=expect_mask;
+                    o_last<=last_mask;
+                    o_valid<=1;
                 end
             end
         end

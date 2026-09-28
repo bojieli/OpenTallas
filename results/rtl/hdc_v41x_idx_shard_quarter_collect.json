@@ -5,80 +5,86 @@
     {
       "keys": 1,
       "output_beats": 1,
-      "cycles": 9
+      "cycles": 6
     },
     {
       "keys": 7,
       "output_beats": 1,
-      "cycles": 7
+      "cycles": 6
     },
     {
       "keys": 8,
       "output_beats": 1,
-      "cycles": 7
+      "cycles": 6
     },
     {
       "keys": 16,
       "output_beats": 1,
-      "cycles": 8
+      "cycles": 6
     },
     {
       "keys": 31,
       "output_beats": 2,
-      "cycles": 10
+      "cycles": 8
     },
     {
       "keys": 32,
       "output_beats": 1,
-      "cycles": 9
+      "cycles": 6
     },
     {
       "keys": 64,
       "output_beats": 1,
-      "cycles": 7
+      "cycles": 8
     },
     {
       "keys": 96,
       "output_beats": 2,
-      "cycles": 14
+      "cycles": 11
     },
     {
       "keys": 160,
       "output_beats": 3,
-      "cycles": 20
+      "cycles": 16
     },
     {
       "keys": 1000,
       "output_beats": 16,
-      "cycles": 87
+      "cycles": 70
     },
     {
       "keys": 1032,
       "output_beats": 17,
-      "cycles": 96
+      "cycles": 83
     },
     {
       "keys": 2048,
       "output_beats": 32,
-      "cycles": 183
+      "cycles": 146
     },
     {
       "keys": 2080,
       "output_beats": 33,
-      "cycles": 186
+      "cycles": 144
     },
     {
       "keys": 5000,
       "output_beats": 79,
-      "cycles": 419
+      "cycles": 346
     }
   ],
   "total_output_beats_checked": 190,
-  "coverage": "Four-stack 16-stream sampled HBM-like keys with independent stream delays and random output backpressure; exact 64-key kv/last/key/ref/padding, stable stalled output, leading placeholders, Qs mod16=8, 1024-key boundaries and repeated commands.",
+  "continuous_input": {
+    "keys": 5000,
+    "output_beats": 79,
+    "cycles_including_prefix": 275,
+    "maximum_output_gap_cycles": 2
+  },
+  "coverage": "Four-stack 16-stream sampled HBM-like keys with independent stream delays and random output backpressure; exact 64-key kv/last/key/ref/padding, stable stalled output, leading placeholders, Qs mod16=8, 1024-key boundaries and repeated commands. Continuous-input, always-ready mode proves no more than two cycles between output beats after the first of a 5000-key scan.",
   "limitation": "Sampled stream input only; timed HBM and per-PC four-context arbiter are gated separately. No four-stack bandwidth or physical closure claim.",
   "input_sha256": {
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv": "97f11ed51b33e5b4313d9e8922298dd8f3f9645895747059a22a2a220d678946",
-    "rtl/test/tb_hdc_v41x_idx_shard_quarter_collect.sv": "c5f725f516cb70757c35720a138d2e7dfdfd02fa56e51593943153b09ad25233",
-    "tools/rtl_v41x_idx_shard_quarter_collect.py": "39d43811cf632c2923a80ceb80767d009f1a8224e309152eebb679428c701cac"
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv": "923de29d3940ba86ced334baa3d14eb637c43c7a6bf2c0c2531a0516d82803ad",
+    "rtl/test/tb_hdc_v41x_idx_shard_quarter_collect.sv": "0694c1bb5aaa7d4ed42f309ef0a99fd51c779826fb377940f684d6913f9511b5",
+    "tools/rtl_v41x_idx_shard_quarter_collect.py": "270b37744711082d9a71f12a066bf9dd5a82bdf0aba092ce13ff34f721be1156"
   }
 }
