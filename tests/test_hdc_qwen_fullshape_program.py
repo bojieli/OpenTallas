@@ -15,7 +15,7 @@ def test_first_layer_program_round_trip_and_die_order():
     a, b = F.profile(0), F.profile(1)
     assert (P.VM, P.GR, P.S_STRIDE) == before
     assert a['program_hex'] == b['program_hex']
-    assert a['program_words'] == len(a['program_hex']) == 79
+    assert a['program_words'] == len(a['program_hex']) == 31
     assert a['segment_count'] == 5
     assert a['allreduce_segments'] == 4
     assert a['descriptor_hex'] == b['descriptor_hex']

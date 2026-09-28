@@ -39,16 +39,17 @@ def vm_map(h=4096, ff=6144, nh=16, kv=4, hd=128):
 class LayerZero:
     """Shape-only Layout adapter for build_program, with one paged KV layer."""
 
-    def __init__(self, report, die):
+    def __init__(self, report, die, matrix_rows=None):
         if die not in (0, 1):
             raise ValueError('TP2 die must be 0 or 1')
         # This layer has no lm_head, so the 16-bit descriptor row0 is zero.
         # The 75,968-row vocabulary offset needs a wider head descriptor later.
         self.tp, self.die, self.row0 = 2, die, 0
         self.H, self.L, self.NH, self.KV, self.HD, self.FF = 4096, 1, 16, 4, 128, 6144
+        self.norm_fold = True
         self.half, self.GUB, self.groups, self.eps = 64, 128, GROUPS, 1e-6
         self.kv_v0 = self.KV * TMAX * self.HD
-        rows = report['matrices_per_die'][:4]
+        rows = report['matrices_per_die'][:4] if matrix_rows is None else matrix_rows
         self.mat = {(0, name): {'base': row['base'], 'n': row['rows'],
                                 'k': row['k_per_split'], 'tiles': row['rounds'],
                                 'split': row['split']}
@@ -93,12 +94,33 @@ def split_collectives(program):
     return out
 
 
-def profile(die):
+def insert_post_tp_scales(program, vm, bases):
+    """Scale each rank-folded raw o/down partial once, before residual add."""
+    out, index = [], 0
+    for f in program:
+        out.append(f)
+        if f.get('_coll', (None,))[0] == P.COLL_ALLREDUCE:
+            if index >= len(bases):
+                raise ValueError('more TP reductions than post-fold scales')
+            out.append(dict(unit=I.UNIT_SU, barrier=1, su_nout=1, su_nin=4096,
+                            a_base=vm['T1'], a_si=1, c_src=I.SRC_ALT,
+                            c_base=bases[index], c_si=1, mc=I.MC_C,
+                            dst=I.DST_VM, d_base=vm['T1'], d_si=1))
+            index += 1
+    if index != len(bases):
+        raise ValueError('post-fold scale count differs from TP reductions')
+    return out
+
+
+def profile(die, matrix_rows=None, post_scale_bases=None):
     place = placement()
     vm, vm_elems = vm_map()
-    lay = LayerZero(place, die)
+    lay = LayerZero(place, die, matrix_rows)
     with program_geometry(vm):
-        program = split_collectives(P.build_program(lay, layers=[0], embed=False, head=False))
+        program = P.build_program(lay, layers=[0], embed=False, head=False)
+        if post_scale_bases is not None:
+            program = insert_post_tp_scales(program, vm, post_scale_bases)
+        program = split_collectives(program)
     encoded = [I.encode(**{k: v for k, v in f.items() if not k.startswith('_')}) for f in program]
     for f, word in zip(program, encoded):
         decoded = I.decode(word)
@@ -136,6 +158,7 @@ def profile(die):
             'vm_elems': vm_elems, 'vm_map': vm,
             'kv_window_elems': 2 * lay.kv_v0,
             'program_words': len(words), 'segment_count': len(desc),
+            'post_tp_scale_instructions': 0 if post_scale_bases is None else len(post_scale_bases),
             'allreduce_segments': sum((x & 3) == P.COLL_ALLREDUCE for x in desc),
             'program_hex': [f'{x:0256x}' for x in words],
             'descriptor_hex': [f'{x:016x}' for x in desc],

@@ -275,7 +275,7 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
         L, part = item if isinstance(item, tuple) else (item, "both")
         if part in ("both", "attn"):
             nh = NH + KV
-            fold = G.NORM_FOLD and lay.tp == 1
+            fold = getattr(lay, 'norm_fold', G.NORM_FOLD and lay.tp == 1)
             if fold:
                 # the norm weight is in the projection; 1/rms (RX) is formed beside it
                 me(lay.mat[(L, "qkv")], VM["X"], VM["QKV"], reads={"X"}, writes={"QKVqk", "QKVv"})
@@ -385,7 +385,7 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
         if part in ("both", "mlp"):
             FF = lay.FF
             tb = lay.GUB
-            if G.NORM_FOLD and lay.tp == 1:
+            if getattr(lay, 'norm_fold', G.NORM_FOLD and lay.tp == 1):
                 me(lay.mat[(L, "gu")], VM["X"], VM["GU"], reads={"X"}, writes={"GUall"})
                 rsqrt_rx(H)
                 # gate/up x r in place (one pass, chasing the projection), then SiLU per tile
@@ -395,7 +395,7 @@ def build_program(lay, layers=None, embed=True, head=True, wchunk=None):
             else:
                 rmsnorm("X", H, lay.cb[(L, "post")], "H")
                 me(lay.mat[(L, "gu")], VM["H"], VM["GU"], reads={"H"}, writes={f"GU{r}" for r in range(FF // tb)})
-            if G.NORM_FOLD and lay.tp == 1:
+            if getattr(lay, 'norm_fold', G.NORM_FOLD and lay.tp == 1):
                 # one fused SiLU*up op over every tile pair (a row per tile): the
                 # scaled gate/up are all written before it starts
                 su(su_nout=FF // tb, su_nin=tb, a_base=VM["GU"], a_so=2 * tb, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0),
