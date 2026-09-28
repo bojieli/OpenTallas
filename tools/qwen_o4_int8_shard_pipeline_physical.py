@@ -20,6 +20,7 @@ INPUTS = (
     "rtl/hdc/ot_hdc_qwen_int8_arith.sv",
     "rtl/hdc/ot_hdc_fpu.sv",
     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "tools/qwen_o4_int8_shard_pipeline_physical.py",
 )
 ARTIFACTS = pathlib.Path("results/physical_hdc/asap7/qwen_o4_int8_shard_pipeline/artifacts")
 
@@ -73,6 +74,10 @@ def collect(work: pathlib.Path) -> None:
     macro_slack = re.findall(r"([-\d.]+)\s+slack \((?:VIOLATED|MET)\)", macro)
     if not grt_slack or not macro_slack:
         raise RuntimeError("STA slack not found")
+    inst = re.search(r"NumInstances:\s+(\d+)", place)
+    std_area = re.search(r"StdInstsArea:\s+([\d.]+)", place)
+    if not inst or not std_area:
+        raise RuntimeError("placed instance count or standard-cell area not found")
     output = ROOT / ARTIFACTS
     output.mkdir(parents=True, exist_ok=True)
     artifacts = {}
@@ -85,16 +90,18 @@ def collect(work: pathlib.Path) -> None:
         "schema": "qwen-o4-int8-registered-rom-shard-grt/1",
         "scope": "one analytical 266-bit ROM, 32 INT8 lanes, ROM-output register; not full G6144 tile or token",
         "target_clock_ns": 0.92,
+        "placed_instances": int(inst.group(1)),
+        "standard_cell_area_um2_before_cts": float(std_area.group(1)),
         "source_hashes_sha256": {name: sha(ROOT / name) for name in INPUTS},
         "artifact_hashes_sha256": artifacts,
         "stages": {"synthesis": "PASS", "placement": "PASS", "clock_tree": "PASS", "global_route": "PASS", "detailed_route": "NOT_RUN"},
-        "global_route_worst_setup_slack_ns": float(grt_slack[-1]),
-        "rom_output_to_capture_slack_ns": float(macro_slack[-1]),
+        "global_route_worst_setup_slack_ps": float(grt_slack[-1]),
+        "rom_output_to_capture_slack_ps": float(macro_slack[-1]),
         "limitations": ["analytical ROM compiler timing/current", "no full reduction tree or die route", "no DRC or extracted post-route timing"],
     }
     dest = ROOT / "results/physical_hdc/asap7/qwen_o4_int8_shard_pipeline/global_route.json"
     dest.write_text(json.dumps(record, indent=2) + "\n")
-    print(json.dumps({"record": str(dest.relative_to(ROOT)), "worst_slack_ns": record["global_route_worst_setup_slack_ns"], "rom_slack_ns": record["rom_output_to_capture_slack_ns"]}))
+    print(json.dumps({"record": str(dest.relative_to(ROOT)), "worst_slack_ps": record["global_route_worst_setup_slack_ps"], "rom_slack_ps": record["rom_output_to_capture_slack_ps"]}))
 
 
 def main() -> None:

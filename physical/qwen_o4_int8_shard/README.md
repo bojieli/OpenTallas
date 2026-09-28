@@ -27,12 +27,23 @@ selection, lane wires, spare bits, power, timing and placement still need a
 die floorplan. The macro LEF and Liberty are compiler **analytical views**;
 the bitcell was laid out, but the macro periphery and current were assumed.
 
+The registered-ROM grouped probe passes global route, and the worst
+macro-output-to-capture setup path has **+36.33 ps** slack at the 0.92 ns
+clock. The whole probe still fails setup: its worst path launches from an
+activation register into a BF16 product lane at **−1,079.59 ps**. This is
+global-route STA, not extracted detailed-route timing. The record and compressed
+logs are in `results/physical_hdc/asap7/qwen_o4_int8_shard_pipeline/`.
+Activation fanout, multiplier placement and the row-scale path still need
+timing repair before claiming the O4 clock.
+
 The probe uses Yosys 0.68 and OpenROAD v2.0-17598-ga008522d8, ASAP7 RVT TT
 at 0.7 V. It is a direct placement/route diagnostic with no PDN, DFT,
 antenna repair, formal equivalence or chip signoff. The physical record in
 `results/physical_hdc/asap7/qwen_o4_int8_shard/` states the exact reached
 stage, timing, DRC and source hashes. No full G=6144 tile or die route is
 implied by this shard.
+
+Historical direct-flow record (pre-registration, `global_route.json`; its source pins name the unregistered shard RTL, which the registered-ROM change below replaced):
 
 The global-route STA checks the ROM pins directly. The worst ROM-output to
 first product register path launches at 794.62 ps and arrives at 2,127.78 ps:
@@ -54,7 +65,17 @@ openroad -exit physical/qwen_o4_int8_shard/macro_sta.tcl
 openroad -exit physical/qwen_o4_int8_shard/detailed_route.tcl
 ```
 
-The first command writes the mapped netlist in the scratch directory. The
-second only removes signed declarations for wires in that already-mapped
-Verilog; it makes no logic change. `place_route.tcl` writes the global-route
-database consumed by `detailed_route.tcl`.
+Registered-ROM probe (ported from Codex branch `codex/qwen-int8-rom-pipeline`, commit `eadcbcc7`).
+To replay this registered-ROM probe and collect its source-pinned record, run:
+
+```bash
+python3 tools/qwen_o4_int8_shard_pipeline_physical.py \
+    --workdir /tmp/qwen-o4-shard-pipeline-groups-route
+```
+
+The runner generates worktree-specific Yosys and OpenROAD scripts, maps the
+netlist, places and globally routes the shard, then writes an STA report for
+all ROM outputs. It strips signed declarations from the mapped netlist only
+because OpenROAD's Verilog reader rejects them; the mapped cell logic is
+unchanged. The detailed-route Tcl remains available for a follow-up and is
+not part of this record.

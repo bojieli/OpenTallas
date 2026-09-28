@@ -18,6 +18,7 @@ SOURCES = (
     "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
     "rtl/test/tb_qwen_o4_int8_shard_pipeline.sv",
 )
+HASH_SOURCES = SOURCES + ("tools/rtl_qwen_o4_int8_shard_pipeline.py",)
 
 
 def f32_bits(value: float) -> int:
@@ -82,7 +83,7 @@ def main() -> None:
         "exact_products": 112,
         "request_to_result_edges": 7,
         "initiation_interval_cycles": 1,
-        "sources_sha256": {s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in SOURCES},
+        "sources_sha256": {s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in HASH_SOURCES},
     }
     output = ROOT / "results/rtl/qwen_o4_int8_rom_shard_pipeline.json"
     output.write_text(json.dumps(record, indent=2) + "\n")

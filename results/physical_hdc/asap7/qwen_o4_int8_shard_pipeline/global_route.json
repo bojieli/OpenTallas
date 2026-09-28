@@ -1,0 +1,38 @@
+{
+  "schema": "qwen-o4-int8-registered-rom-shard-grt/1",
+  "scope": "one analytical 266-bit ROM, 32 INT8 lanes, ROM-output register; not full G6144 tile or token",
+  "target_clock_ns": 0.92,
+  "placed_instances": 26799,
+  "standard_cell_area_um2_before_cts": 3349.74,
+  "source_hashes_sha256": {
+    "physical/qwen_o4_int8_shard/ot_qwen_o4_int8_shard.sv": "5f2be775ca66488ebe99a15b857dcd9e969b42c8e932d24150801354591a6b54",
+    "physical/qwen_o4_int8_shard/constraint.sdc": "036b9da59fd9ea43a74a71e45c70383e2deeee205c5e7c35e3b13200d121775a",
+    "physical/qwen_o4_int8_shard/synth.ys": "3d015fc6b865c63eaedb83c8773fdce657e9c567a9aeb1841cb0b7e419411da2",
+    "physical/qwen_o4_int8_shard/place_route.tcl": "a1b40ac2050e4aec08ccd3eff7adc20fe61fee98125e02682f07eec8e1fd5c54",
+    "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_tt.lib": "a7ce0e45d5d181b6365823963792f0234fe7d3b9414ea212debef51603a7cf92",
+    "rtl/hdc/ot_hdc_qwen_int8_arith.sv": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "tools/qwen_o4_int8_shard_pipeline_physical.py": "aa3492aec303cc52f0eba7a2cc00379c81cf84514a59f3d49a9eaaca0b2b415d"
+  },
+  "artifact_hashes_sha256": {
+    "results/physical_hdc/asap7/qwen_o4_int8_shard_pipeline/artifacts/synth.log.gz": "2d9627c7526e7fac75b87552b4b5f09667238e096a5ce3d53dcddfc9a76044f7",
+    "results/physical_hdc/asap7/qwen_o4_int8_shard_pipeline/artifacts/mapped.v.gz": "ee16cb096d781727e00596d17e0aeb5a6963b404fac46416e9b1e3d5daf8c68b",
+    "results/physical_hdc/asap7/qwen_o4_int8_shard_pipeline/artifacts/place_route.log.gz": "be998f43cfd5dff067b1a13f9b321e6a32ebb8519f9fb48fe3597b0b238956b6",
+    "results/physical_hdc/asap7/qwen_o4_int8_shard_pipeline/artifacts/macro_sta.log.gz": "866c2aeccb0f03a7d9a020f8df515867a9e074897fb39c679e64061587a07767"
+  },
+  "stages": {
+    "synthesis": "PASS",
+    "placement": "PASS",
+    "clock_tree": "PASS",
+    "global_route": "PASS",
+    "detailed_route": "NOT_RUN"
+  },
+  "global_route_worst_setup_slack_ps": -1079.59,
+  "rom_output_to_capture_slack_ps": 36.33,
+  "limitations": [
+    "analytical ROM compiler timing/current",
+    "no full reduction tree or die route",
+    "no DRC or extracted post-route timing"
+  ]
+}
