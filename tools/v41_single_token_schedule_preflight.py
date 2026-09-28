@@ -22,6 +22,7 @@ import hdc_replay_v41 as R  # noqa: E402
 import v41_fullshape_program_bind as B  # noqa: E402
 
 BINDER = ROOT / "results/rtl/hdc_v41x_fullshape_program_bind.json"
+COLLECTIVE = ROOT / "results/rtl/v41_tp_layer0_collective_sequence.json"
 OUT = ROOT / "results/arch/v41_single_token_schedule_preflight.json"
 UNIT_NAMES = {I.UNIT_END: "END", I.UNIT_ME: "ME", I.UNIT_SU: "SU",
               I.UNIT_QE: "QE", I.UNIT_XU: "XU", I.UNIT_HE: "HE",
@@ -56,9 +57,9 @@ def classify(f: dict) -> str:
 def missing_for(f: dict) -> list[str]:
     unit = f["unit"]
     if unit == I.UNIT_COLL:
-        return ["per_descriptor_first_last_producer_and_consumer_cycles",
-                "physical_vm_read_write_ports_and_queue_events",
-                "persistent_tp_link_credit_and_engine_trace", "routed_frequency_and_power"]
+        return ["first_last_real_producer_and_consumer_ready_cycles",
+                "shared_physical_VM_read_write_ports_and_queue_events",
+                "die_integrated_link_engine_and_DMA_contention", "routed_frequency_and_power"]
     if unit == I.UNIT_ME:
         if f.get("me_wsrc"):
             return ["packed_window_or_selected_ckv_HBM_prefetch_and_arbiter_trace",
@@ -94,6 +95,48 @@ def component_floor(f: dict) -> tuple[int, str]:
     return 0, "no source-pinned full-width completion service; zero only for a lower bound"
 
 
+def collective_service(binder: dict, path: Path = COLLECTIVE) -> dict[int, dict]:
+    """Bind a measured stage service only to the exact emitted descriptor set."""
+    rec = json.loads(path.read_text())
+    assert rec["schema"] == "v41_tp_layer0_collective_sequence_v1" and rec["passed"]
+    assert rec["program_bind_sha256"] == sha(BINDER)
+    for name, digest in rec["source_sha256"].items():
+        assert sha(ROOT / name) == digest, name
+    assert rec["contract"]["blocked_COLL_v1"] and rec["contract"]["CL_LANES"] == 16
+    assert rec["contract"]["GW"] == 4 and rec["contract"]["bank_vm_writes_per_cycle"] == 4
+    trace = binder["instruction_trace"]
+    cases = rec["cases"]
+    assert len(cases) == 12
+    bound = {}
+    for case in cases:
+        d = case["descriptor"]
+        pc = d["pc"]
+        t = trace[pc]
+        f = t["fields"]
+        assert t["unit"] == I.UNIT_COLL and t["tag"] == d["tag"]
+        assert (f["coll_seq"], f["coll_op"], f["coll_src"], f["coll_dst"], f["coll_n"]) == (
+            d["seq"], d["mode"], d["src_element"], d["dst_element"], d["source_elements"])
+        assert d["source_words"] == f["coll_n"] // 16
+        assert len(case["per_die"]) == 4
+        assert all(x["writes"] == (4 if f["coll_op"] == I.COLL_ALL_GATHER else 1) *
+                   d["source_words"] for x in case["per_die"])
+        assert all(x["finish"] - x["start"] == case["cycles_blocked_to_all_done"]
+                   for x in case["per_die"])
+        assert pc not in bound
+        bound[pc] = dict(source_record=str(path.relative_to(ROOT)),
+                         source_record_sha256=sha(path),
+                         service_cycles=case["cycles_blocked_to_all_done"],
+                         first_input_tx_after_issue=min(x["first_tx"] - x["start"] for x in case["per_die"]),
+                         last_input_tx_after_issue=max(x["last_tx"] - x["start"] for x in case["per_die"]),
+                         first_vm_write_after_issue=min(x["first_vm"] - x["start"] for x in case["per_die"]),
+                         last_vm_write_after_issue=max(x["last_vm"] - x["start"] for x in case["per_die"]),
+                         peak_receive_fifo_words=max(x["peak_fifo"] for x in case["per_die"]),
+                         producer_ready_at_issue="assumed_by_synthetic_fixture_not_proven",
+                         scope="isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route")
+    assert sum(x["service_cycles"] for x in bound.values()) == rec["sum_blocked_service_cycles"] == 2780
+    return bound
+
+
 def build(binder_path: Path = BINDER) -> dict:
     binder = json.loads(binder_path.read_text())
     assert binder["schema"] == "opentallas.v41x.fullshape.program_bind.v1"
@@ -123,6 +166,7 @@ def build(binder_path: Path = BINDER) -> dict:
     me_pcs = [f["pc"] for f in binder["me_wo_a_trace"]]
     assert me_pcs == [35, 36]
     assert all(program[pc]["unit"] == I.UNIT_ME and not program[pc].get("me_xjs") for pc in me_pcs)
+    measured_coll = collective_service(binder)
 
     # These are structural dependencies. A region RAW edge does not by itself
     # say whether the first chunk or full producer result is required.
@@ -185,6 +229,7 @@ def build(binder_path: Path = BINDER) -> dict:
                                      output_vm_words_per_die=4 * words if gather else words,
                                      one_write_port_output_floor_cycles=4 * words if gather else words,
                                      seq=f["coll_seq"], rounded=bool(f.get("coll_rnd")))
+            row["collective"]["measured_stage_service"] = measured_coll[pc]
             last_coll = pc
         rows.append(row)
         floor_starts.append(lower_start)
@@ -206,6 +251,11 @@ def build(binder_path: Path = BINDER) -> dict:
     source_paths = ("tools/v41_single_token_schedule_preflight.py", "tools/hdc_replay_v41.py",
                     "tools/hdc_program_v41.py", "tools/hdc_isa_v41.py",
                     "tools/v41_fullshape_program_bind.py", str(binder_path.relative_to(ROOT)),
+                    str(COLLECTIVE.relative_to(ROOT)),
+                    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv",
+                    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+                    "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json",
+                    "results/rtl/v41x_qe_local_tile_bank_l0.json",
                     str(B.DEFAULT_LAYOUT.relative_to(ROOT)), str(B.DEFAULT_SHARD.relative_to(ROOT)),
                     str(B.DEFAULT_QE.relative_to(ROOT)), str(B.DEFAULT_ROPE.relative_to(ROOT)))
     pins = {p: sha(ROOT / p) for p in source_paths}
@@ -220,6 +270,9 @@ def build(binder_path: Path = BINDER) -> dict:
                              total_expert_activation_input_vm_words=sum(r["collective"]["input_vm_words_per_die"] for r in acts),
                              all_collective_input_vm_words_per_die=sum(r["collective"]["input_vm_words_per_die"] for r in coll),
                              all_collective_output_vm_words_per_die=sum(r["collective"]["output_vm_words_per_die"] for r in coll),
+                             measured_isolated_collective_blocked_service_cycles=sum(
+                                 r["collective"]["measured_stage_service"]["service_cycles"] for r in coll),
+                             measured_collective_source_ready="synthetic_fixture_only",
                              one_vm_write_port_aggregate_output_floor_cycles=sum(r["collective"]["output_vm_words_per_die"] for r in coll),
                              bound_qe_accesses=len(binder["qe_address_trace"]),
                              me_wo_a_pcs=me_pcs, service_reservations_complete=False,
@@ -244,6 +297,34 @@ def build(binder_path: Path = BINDER) -> dict:
                     "shared_four_stack_HBM_KV_constant_index_and_all_weight_HBM_trace",
                     "routed_local_and_TP_link_latency_frequency_area_power",
                     "exact_layer_output_and_committed_state_through_full_die",
+                ], ranked_missing_paths=[
+                    dict(rank=1, scope="index_heavy_layer_not_L0",
+                         path="sharded_key_delivery_to_score_and_topk",
+                         current_resource="one ot_hdc_v41x_idx_pool_batch serial META/DESC/RUN scorer after 64-key beat",
+                         structural_floor_cycles_at_262144_keys=4096 * (1 + 64 + 1 + 64),
+                         floor_basis="4096 beats; IDLE accept >=1, META >=64, DESC >=1, RUN >=64 cycles per beat",
+                         index_only_delivery_cycles=9278,
+                         gap="score and selector ready/backpressure absent from index-only HBM collector gate",
+                         required_gate="same 262144-key four-stack scan with actual pooled score/selector ready and exact top-k"),
+                    dict(rank=2, scope="L0_and_all_weighted_layers",
+                         path="checkpoint_to_local_ROM_QE_ME_HE_port_ownership",
+                         bound_selected_QE_accesses=len(binder["qe_address_trace"]),
+                         physical_lower_bound_cycles=None,
+                         gap="local QE tile witness maps two matrices only; full die bank/cluster/read-port map absent",
+                         required_gate="all selected program weight accesses mapped to finite macro rows/ports with exact token outputs"),
+                    dict(rank=3, scope="L0",
+                         path="VM_and_activation_readiness_across_ME_HE_and_collectives",
+                         isolated_collective_blocked_cycles=2780,
+                         separate_HE_load_floor_cycles=2 * 2560,
+                         separate_wo_a_G4_load_floor_cycles=2 * 1024,
+                         gap="producer first/last availability and VM/convert/store conflicts unmeasured; component costs cannot be summed or overlapped as token latency",
+                         required_gate="bound PC-level issue/read/write trace including ME/HE adapter loads and twelve exact COLLs"),
+                    dict(rank=4, scope="L0_cold_window",
+                         path="shared_HBM_window_RoPE_weight_arbitration",
+                         cold_window_refill_sectors=2176, rope_position_sectors=8,
+                         physical_lower_bound_cycles=None,
+                         gap="per-token hit/miss and shared stack/PC service absent; preloaded window is not HBM throughput",
+                         required_gate="timed packed-window and RoPE prefetch sharing HBM with QE weights and emitted program"),
                 ], instructions=rows)
 
 

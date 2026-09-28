@@ -322,6 +322,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 20,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 22,
+          "last_vm_write_after_issue": 186,
+          "peak_receive_fifo_words": 54,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 190,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 80,
         "op": "all_gather",
         "output_vm_words_per_die": 80,
@@ -336,9 +348,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 80,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 9,
@@ -368,6 +380,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 8,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 10,
+          "last_vm_write_after_issue": 172,
+          "peak_receive_fifo_words": 26,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 176,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 32,
         "op": "all_gather",
         "output_vm_words_per_die": 32,
@@ -382,9 +406,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 32,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 10,
@@ -1485,6 +1509,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 320,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 153,
+          "last_input_tx_after_issue": 363,
+          "last_vm_write_after_issue": 524,
+          "peak_receive_fifo_words": 311,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 525,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 320,
         "op": "all_reduce",
         "output_vm_words_per_die": 320,
@@ -1499,9 +1535,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 320,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 39,
@@ -2146,6 +2182,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 36,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 38,
+          "last_vm_write_after_issue": 204,
+          "peak_receive_fifo_words": 86,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 208,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
@@ -2160,9 +2208,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 144,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 55,
@@ -2268,6 +2316,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 6,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 8,
+          "last_vm_write_after_issue": 172,
+          "peak_receive_fifo_words": 20,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 176,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 24,
         "op": "all_gather",
         "output_vm_words_per_die": 24,
@@ -2282,9 +2342,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 24,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 58,
@@ -2704,6 +2764,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 36,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 38,
+          "last_vm_write_after_issue": 204,
+          "peak_receive_fifo_words": 86,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 208,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
@@ -2718,9 +2790,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 144,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 69,
@@ -3107,6 +3179,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 36,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 38,
+          "last_vm_write_after_issue": 204,
+          "peak_receive_fifo_words": 86,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 208,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
@@ -3121,9 +3205,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 144,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 79,
@@ -3312,6 +3396,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 36,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 38,
+          "last_vm_write_after_issue": 204,
+          "peak_receive_fifo_words": 86,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 208,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
@@ -3326,9 +3422,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 144,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 84,
@@ -3517,6 +3613,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 36,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 38,
+          "last_vm_write_after_issue": 204,
+          "peak_receive_fifo_words": 86,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 208,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
@@ -3531,9 +3639,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 144,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 89,
@@ -3722,6 +3830,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 36,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 38,
+          "last_vm_write_after_issue": 204,
+          "peak_receive_fifo_words": 86,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 208,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
@@ -3736,9 +3856,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 144,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 94,
@@ -3847,6 +3967,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 36,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 38,
+          "last_vm_write_after_issue": 204,
+          "peak_receive_fifo_words": 86,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 208,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
@@ -3861,9 +3993,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 144,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 97,
@@ -4182,6 +4314,18 @@
     {
       "collective": {
         "input_vm_words_per_die": 80,
+        "measured_stage_service": {
+          "first_input_tx_after_issue": 3,
+          "first_vm_write_after_issue": 165,
+          "last_input_tx_after_issue": 82,
+          "last_vm_write_after_issue": 253,
+          "peak_receive_fifo_words": 174,
+          "producer_ready_at_issue": "assumed_by_synthetic_fixture_not_proven",
+          "scope": "isolated persistent four-rank link/DMA/behavioral-VM stage; no producer, HBM or route",
+          "service_cycles": 257,
+          "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
+          "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
+        },
         "one_write_port_output_floor_cycles": 320,
         "op": "all_gather",
         "output_vm_words_per_die": 320,
@@ -4196,9 +4340,9 @@
       "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
       "known_component_floor_cycles": 320,
       "missing_contract": [
-        "per_descriptor_first_last_producer_and_consumer_cycles",
-        "physical_vm_read_write_ports_and_queue_events",
-        "persistent_tp_link_credit_and_engine_trace",
+        "first_last_real_producer_and_consumer_ready_cycles",
+        "shared_physical_VM_read_write_ports_and_queue_events",
+        "die_integrated_link_engine_and_DMA_contention",
         "routed_frequency_and_power"
       ],
       "pc": 105,
@@ -4455,6 +4599,48 @@
     "routed_local_and_TP_link_latency_frequency_area_power",
     "exact_layer_output_and_committed_state_through_full_die"
   ],
+  "ranked_missing_paths": [
+    {
+      "current_resource": "one ot_hdc_v41x_idx_pool_batch serial META/DESC/RUN scorer after 64-key beat",
+      "floor_basis": "4096 beats; IDLE accept >=1, META >=64, DESC >=1, RUN >=64 cycles per beat",
+      "gap": "score and selector ready/backpressure absent from index-only HBM collector gate",
+      "index_only_delivery_cycles": 9278,
+      "path": "sharded_key_delivery_to_score_and_topk",
+      "rank": 1,
+      "required_gate": "same 262144-key four-stack scan with actual pooled score/selector ready and exact top-k",
+      "scope": "index_heavy_layer_not_L0",
+      "structural_floor_cycles_at_262144_keys": 532480
+    },
+    {
+      "bound_selected_QE_accesses": 115,
+      "gap": "local QE tile witness maps two matrices only; full die bank/cluster/read-port map absent",
+      "path": "checkpoint_to_local_ROM_QE_ME_HE_port_ownership",
+      "physical_lower_bound_cycles": null,
+      "rank": 2,
+      "required_gate": "all selected program weight accesses mapped to finite macro rows/ports with exact token outputs",
+      "scope": "L0_and_all_weighted_layers"
+    },
+    {
+      "gap": "producer first/last availability and VM/convert/store conflicts unmeasured; component costs cannot be summed or overlapped as token latency",
+      "isolated_collective_blocked_cycles": 2780,
+      "path": "VM_and_activation_readiness_across_ME_HE_and_collectives",
+      "rank": 3,
+      "required_gate": "bound PC-level issue/read/write trace including ME/HE adapter loads and twelve exact COLLs",
+      "scope": "L0",
+      "separate_HE_load_floor_cycles": 5120,
+      "separate_wo_a_G4_load_floor_cycles": 2048
+    },
+    {
+      "cold_window_refill_sectors": 2176,
+      "gap": "per-token hit/miss and shared stack/PC service absent; preloaded window is not HBM throughput",
+      "path": "shared_HBM_window_RoPE_weight_arbitration",
+      "physical_lower_bound_cycles": null,
+      "rank": 4,
+      "required_gate": "timed packed-window and RoPE prefetch sharing HBM with QE weights and emitted program",
+      "rope_position_sectors": 8,
+      "scope": "L0_cold_window"
+    }
+  ],
   "schema": "opentallas.v41.single-token-schedule-preflight.v1",
   "selected_expert_ids": [
     110,
@@ -4470,11 +4656,16 @@
     "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json": "e049806a52898fad344f4b8fcc30def1d082ada2cde86569271167aa4bed59e6",
     "results/rtl/hdc_v41x_fullshape_rope_sparse_patch.json": "2a32391fd9d5c505e66cea7e199b049f6512bd1778631d3f2163ad932e48b45c",
     "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
+    "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json": "80b8bf96f01bc495aa09562fe2d123d3dc4463cb8af3dec85850d4206c18baf7",
+    "results/rtl/v41_tp_layer0_collective_sequence.json": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0",
+    "results/rtl/v41x_qe_local_tile_bank_l0.json": "1133dfd0fd30526dc420f34562c6073670186893dbcee61e8ddd7ef8490972e5",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6a3ddc746cd5985d376bf893127877212034581e46defa893da59c3b2bb539e5",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv": "156c67e8101b2d10ebf69a771b6599b8f7c3a707688d14d110121652bf15f5c2",
     "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
     "tools/hdc_program_v41.py": "7031fa78094e67cec1329e27640c216f53c06d0f7d50db7844095982dfd06542",
     "tools/hdc_replay_v41.py": "91b2897effabca8ec33d203a7411d771baf943ef153e6fb8ef35bf8872209e00",
     "tools/v41_fullshape_program_bind.py": "8d83770ac80ba6c0a8f06c758ba5e6caced03f6cc3f0d9bd82f8e9c0cdba5b0a",
-    "tools/v41_single_token_schedule_preflight.py": "f9870f2483cdfda66597c418478427bb68165aab5b02bb4a323189791736c9a1"
+    "tools/v41_single_token_schedule_preflight.py": "c0dec63118893f0aa4e059ebeedba54d06a80ae2de793c5b55ddf362383a3238"
   },
   "status": "blocked_missing_finite_service_contract",
   "summary": {
@@ -4499,6 +4690,8 @@
       35,
       36
     ],
+    "measured_collective_source_ready": "synthetic_fixture_only",
+    "measured_isolated_collective_blocked_service_cycles": 2780,
     "one_vm_write_port_aggregate_output_floor_cycles": 1784,
     "separate_expert_activation_gathers": 7,
     "service_reservations_complete": false,

@@ -48,6 +48,29 @@ def test_external_memory_demand_is_conditional_and_distinct():
     assert "unmeasured" in demand["warm_window_hit"]
 
 
+def test_exact_collective_stage_service_binds_to_all_twelve_descriptors():
+    rec = S.build()
+    coll = [r for r in rec["instructions"] if r["unit"] == "COLL"]
+    assert [r["collective"]["measured_stage_service"]["service_cycles"] for r in coll] == [
+        190, 176, 525, 208, 176, 208, 208, 208, 208, 208, 208, 257]
+    assert sum(r["collective"]["measured_stage_service"]["service_cycles"] for r in coll) == 2780
+    assert all(r["collective"]["measured_stage_service"]["producer_ready_at_issue"] ==
+               "assumed_by_synthetic_fixture_not_proven" for r in coll)
+    assert rec["summary"]["token_latency_cycles"] is None
+    assert rec["ranked_missing_paths"][0]["structural_floor_cycles_at_262144_keys"] == 532480
+    assert rec["ranked_missing_paths"][0]["index_only_delivery_cycles"] == 9278
+
+
+def test_collective_descriptor_mismatch_is_rejected(tmp_path: Path):
+    binder = json.loads(S.BINDER.read_text())
+    campaign = json.loads(S.COLLECTIVE.read_text())
+    campaign["cases"][0]["descriptor"]["source_words"] += 1
+    path = tmp_path / "wrong_descriptor.json"
+    path.write_text(json.dumps(campaign))
+    with pytest.raises(AssertionError):
+        S.collective_service(binder, path)
+
+
 def test_rejects_stale_binder_source_pin(tmp_path: Path):
     binder = json.loads(S.BINDER.read_text())
     first = next(iter(binder["source_sha256"]))
