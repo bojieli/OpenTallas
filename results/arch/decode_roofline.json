@@ -12,11 +12,11 @@
   },
   "sync": {
    "from": "worktree:results/arch/sync_cost_table.json",
-   "sha256": "1b3972f9fb88b990d67fa28ba662f91b22c5cadf1a2c1a0c7ea0969c2e789400"
+   "sha256": "8b04b7b15c930f4e410b77e447ea59448e4860c3ed00e61289ae717df8f15b2b"
   },
   "v41_lanes": {
    "from": "worktree:results/arch/v41_lanes.json",
-   "sha256": "642b47edc17e66bd7f48961a00b5e184065c0ab1881b8a0d84324a83ab695726"
+   "sha256": "0b9ad2d1c9565e6a75f795f5996ddebcbe0aee233d338527f72a1437bebce909"
   },
   "v41_hbm_best": {
    "from": "worktree:results/arch/v41_hbm_best.json",
@@ -36,7 +36,7 @@
   },
   "power": {
    "from": "worktree:results/arch/power_scenarios.json",
-   "sha256": "8a1afa6d598f7cab4a535557582dc3189047705b36971819dcc6d5ed0d18336a"
+   "sha256": "734c61d64be6361f6a93aa2561d4dd9fd71af3acbfb881dc9e4c0513b4563a24"
   },
   "idle_floor": {
    "from": "worktree:results/roofline/gpu_clocked_idle_floor.json",
