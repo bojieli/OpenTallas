@@ -40,6 +40,9 @@ have a distinct 288-byte format and require a separate fetch/decoder. The
 arbiter with a response-owner tag bit. Its focused gate checks same-stack
 priority, parallel grants to different stacks, response demultiplexing, and
 suppression of writes from the read-only compressed fetcher. The
+full-mode K arbiter gate checks that addresses with bits 28 and 29 set pass
+through its 30-bit port without truncation. The HBM PHY K address port is
+parameterized to 30 bits in full mode and remains 28 bits by default. The
 640-row stage and four-row-per-cycle attention feed need a banked packed-row
 SRAM boundary and measured scheduling before the modeled V4.1 throughput can
 be attributed to RTL. This gate establishes the window block write, packed
