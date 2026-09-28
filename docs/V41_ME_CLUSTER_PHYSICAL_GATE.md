@@ -25,11 +25,16 @@ four-bank preload occupies all read ports. The 16:1 depth-group VM read
 selector and full read4-to-converter link are not in the cluster route.
 
 [`ot_v41_me_cluster41_phy.sv`](../rtl/chip/physical/ot_v41_me_cluster41_phy.sv)
-is a physical load envelope. Its capture banks stand in for the adapter's
-existing local `xr` register; per-consumer enables keep them separate through
-synthesis. The capture banks carry `keep` attributes and the 32-bit sample
-outputs avoid exporting 83,968 data pins or adding an artificial reduction
-tree. This probe does not instantiate the MAC tiles, weight banks,
+is a parameterized physical load envelope. Its capture banks stand in for the
+adapter's existing local `xr` register; per-consumer enables keep them
+separate. Every capture bit is exported so the physical flow cannot remove
+unobserved loads. The exact functional bench sets 41 consumers. The physical
+route sets `CONSUMERS=4`, whose 8,192 output bits fit a bounded top-level pin
+cut. Four physical consumers do not prove the intended 41-consumer multicast;
+the latter remains an open hierarchical composition gate. The earlier 41-way
+probe using `keep` with only 32-bit samples was invalid: OpenROAD removed its
+unobserved flops after synthesis, despite Yosys emitting them. This probe
+does not instantiate the MAC tiles, weight banks,
 vector memory, global preload tree, or a cluster scheduler. Any positive
 route is an operand-delivery gate, not a complete compute-cluster or token-rate
 result.
@@ -43,8 +48,8 @@ checkpoint values before any full-shape performance claim.
 
 `rtl/test/tb_v41_me_cluster41_phy.sv` exercises both positions through the
 converter, the 16 behavioral macro models, the registered multicast and all
-41 capture banks. It checks every capture through the 32-bit sample and
-checks the complete 2,048-bit operand at consumers 0 and 40, including the
+41 capture banks. It checks the complete 2,048-bit operand at every consumer,
+including the
 `rd_rot=2` lane order. The bench passes in Icarus Verilog with the macro's
 behavioral Verilog model. It is a boundary test, not a checkpoint token gate.
 

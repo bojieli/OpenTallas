@@ -23,7 +23,7 @@ module ot_v41_me_cluster41_phy #(
     output wire pre_fault,
     output wire pre_saturated,
     output reg  [CONSUMERS-1:0] consumer_valid,
-    output wire [CONSUMERS*32-1:0] consumer_digest
+    output wire [CONSUMERS*2048-1:0] consumer_operand
 );
     wire cv_v;
     wire [1:0] cv_p;
@@ -60,14 +60,12 @@ module ot_v41_me_cluster41_phy #(
     generate for (c=0;c<CONSUMERS;c=c+1) begin : g_consumer
         // This capture flop bank represents each adapter's existing local
         // xr register. No extra operand stage beyond RL3 is credited.
-        (* keep *) reg [2047:0] operand_q;
+        reg [2047:0] operand_q;
         always @(posedge clk) begin
             if (consumer_take[c]) operand_q <= multicast_q;
             if (!rst_n) consumer_valid[c] <= 1'b0;
             else consumer_valid[c] <= multicast_v_q && consumer_take[c];
         end
-        // Keep the complete physical capture bank, but sample only 32 bits
-        // at the top port to avoid an artificial 80k-gate reduction tree.
-        assign consumer_digest[c*32 +: 32] = operand_q[31:0];
+        assign consumer_operand[c*2048 +: 2048] = operand_q;
     end endgenerate
 endmodule

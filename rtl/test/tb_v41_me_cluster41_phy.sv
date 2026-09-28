@@ -12,19 +12,16 @@ module tb_v41_me_cluster41_phy;
     reg [40:0] consumer_take={41{1'b1}};
     wire pre_fault,pre_saturated;
     wire [40:0] consumer_valid;
-    wire [41*32-1:0] consumer_digest;
+    wire [41*2048-1:0] consumer_operand;
     ot_v41_me_cluster41_phy dut (.*);
 
     reg [2047:0] expected;
-    reg [31:0] expected_digest;
     reg [40:0] seen_valid=0;
-    reg [31:0] observed_digest [0:40];
     integer i,p,j,k,t,logical_lane;
     always @(posedge clk) if (rst_n)
         for (integer c=0;c<41;c=c+1)
             if (consumer_valid[c]) begin
                 seen_valid[c] <= 1'b1;
-                observed_digest[c] <= consumer_digest[c*32 +:32];
             end
     task automatic preload(input integer pos);
         begin
@@ -60,18 +57,16 @@ module tb_v41_me_cluster41_phy;
             expected[(i*2+0)*16 +:16]=16'h3f80+i;
             expected[(i*2+1)*16 +:16]=16'h4000+i;
         end
-        expected_digest=expected[31:0];
         for (j=0;j<41;j=j+1) begin
             if (!seen_valid[j]) $fatal(1,"consumer %0d missing beat",j);
-            if (observed_digest[j] !== expected_digest)
-                $fatal(1,"consumer %0d digest mismatch got=%h expected=%h",j,
-                       observed_digest[j],expected_digest);
+            if (consumer_operand[j*2048 +:2048] !== expected)
+                $fatal(1,"consumer %0d full operand mismatch",j);
         end
         if (dut.g_consumer[0].operand_q !== expected)
             $fatal(1,"consumer 0 full operand mismatch");
         if (dut.g_consumer[40].operand_q !== expected)
             $fatal(1,"consumer 40 full operand mismatch");
-        $display("PASS 41 consumers; bank-major rotation 2; digest=%h",expected_digest);
+        $display("PASS 41 consumers; bank-major rotation 2; every full operand exact");
         $finish;
     end
 endmodule
