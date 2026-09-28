@@ -173,28 +173,6 @@ BLOCKS.update({
 })
 
 
-COLL_SOURCES = [
-    "rtl/rom/collectives/ot_rom_coll_pkg.sv", "rtl/rom/collectives/ot_rom_coll_skid.sv",
-    "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/rom/collectives/ot_rom_moe_dispatch.sv",
-    "rtl/rom/collectives/ot_rom_moe_expert_port.sv", "rtl/rom/collectives/ot_rom_moe_combine.sv",
-    "rtl/rom/collectives/ot_rom_argmax_reduce.sv", "rtl/rom/collectives/ot_rom_mcast_node.sv",
-    "rtl/chip/ot_chip_mesh_link.sv", "rtl/chip/ot_chip_v41_coll.sv",
-]
-_COLL_EDGES = [(r"^t_", "N"),
-               (r"^u_(tx|rx)_data$", "W", 0, 511), (r"^u_(tx|rx)_data$", "E", 512, 1023),
-               (r"^u_(tx|rx)_(valid|last|cr)$", "W", 0, 0), (r"^u_(tx|rx)_(valid|last|cr)$", "E", 1, 1)]
-BLOCKS.update({
-    "ot_chip_v41_coll_moe": Block(
-        "ot_chip_v41_coll_moe", COLL_SOURCES, 460.0, 460.0, _COLL_EDGES, default_edge="N",
-        record="results/physical_abi3/asap7/rom/collectives/ot_rom_moe_combine/physical.json",
-        notes="MoE dispatch + expert port + combine (TAGS 2) with four link adapters"),
-    "ot_chip_v41_coll_ar": Block(
-        "ot_chip_v41_coll_ar", COLL_SOURCES, 330.0, 330.0, _COLL_EDGES, default_edge="N",
-        record="results/physical_abi3/asap7/rom/collectives/ot_rom_argmax_reduce/physical.json",
-        notes="argmax reduce + multicast node with four link adapters"),
-})
-
-
 def clock_latency_ps(block: Block, netlist: Path | None = None) -> dict[str, Any]:
     """The block's expected clock insertion delay (clock pin to its flops).
 

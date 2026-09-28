@@ -99,11 +99,10 @@ the same edge, so the mesh channel between them is a 20 µm, flop-to-flop gap.
 - **Qwen ROM and HBM die:** every tile's outward S port and its KV HBM port
   face a PHY strip. The strip holds a UCIe module and an HBM PHY-and-controller
   slice under each tile. The outward W ports go to board SerDes.
-- **V4.1 universal die:** the S ports of the two tiles in a row meet a
-  collectives node at the middle of the package edge
-  (`rtl/chip/ot_chip_v41_coll.sv`). The node holds MoE dispatch, the expert
-  port and MoE combine on the south edge, and argmax reduce and the multicast
-  node on the north edge. Each node sits between two UCIe modules.
+- **V4.1 universal die:** the adopted die design connects a vector-memory
+  collective DMA to a one-shot reduction and multicast engine, then to UCIe
+  and board links. Its tile, die and collective paths still need integrated
+  token and physical closure before they define a placed die.
 
 ## 2. Timing budgets
 
