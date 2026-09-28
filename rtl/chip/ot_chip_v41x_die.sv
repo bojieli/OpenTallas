@@ -397,10 +397,16 @@ module ot_chip_v41x_die #(
         wire [4223:0] packed_row;
         wire [255:0] packed_codes;
         wire [7:0] packed_scale;
+        reg [NW-1:0] step_pos;
+        always @(posedge clk or negedge rn)
+            if (!rn) step_pos <= '0;
+            else if (t_start) step_pos <= t_pos;
         wire [30:0] first_expected = {1'b0, win_blk_kvt_base} +
             ({10'd0, win_blk_row} >> 4 << 13) +
             ({27'd0, win_blk_idx} << 9) + {27'd0, win_blk_row[3:0]};
-        wire bad_block_addr = first_expected[30] ||
+        // Until the producer carries a distinct absolute HBM row and local
+        // KVT row, never let a saturated WINM1=127 alias later positions.
+        wire bad_block_addr = win_blk_row != step_pos || first_expected[30] ||
             win_blk_first_elem != first_expected[29:0];
         reg unsupported_read;
         reg bad_block;

@@ -15,6 +15,13 @@ forwarding it. A bad address sets sticky KV fault. The window DMA separately
 checks user capacity, context range, block order, HBM responses and stale
 ring tags. Unreserved users cannot alias user zero.
 
+The current full-shape emitter uses a saturated local `WINM1` row for the
+KVT write. At positions 128 and above, that row remains 127 and is not the
+absolute HBM ring position. The die checks each block row against the current
+step position and faults on that mismatch, so this unfinished producer
+contract cannot silently alias older window rows. The producer must supply
+both the absolute HBM row and the local KVT row before a long-context gate.
+
 This is a **write-path and port-boundary milestone**. Full-shape scalar KVD
 reads fault and `kv_ok` stays low. The adopted attention job also needs up to
 512 selected compressed-KV rows, each 288 B of FP4 data, in addition to up
