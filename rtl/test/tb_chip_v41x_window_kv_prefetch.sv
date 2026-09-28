@@ -13,7 +13,8 @@ module tb_chip_v41x_window_kv_prefetch;
     reg [8:0] relem = 0;
     wire blk_ready, prefetch_ready, kv_ok, fault;
     wire [31:0] q, st_rows, st_blocks, st_reads, st_writes;
-    wire packed_valid; wire [255:0] packed_codes; wire [7:0] packed_scale;
+    wire packed_valid; wire [4223:0] packed_row;
+    wire [255:0] packed_codes; wire [7:0] packed_scale;
     wire [4:0] fault_code;
     wire [3:0] m_v, m_we, s_rdy;
     wire [4*HAW-1:0] m_addr;
@@ -36,7 +37,8 @@ module tb_chip_v41x_window_kv_prefetch;
         .prefetch_user(user_id), .prefetch_row(prefetch_row), .kv_ok(kv_ok),
         .re(re), .ruser(user_id), .rrow(rrow), .relem(relem), .q(q),
         .packed_re(1'b0), .packed_ruser(user_id), .packed_rrow(prefetch_row), .packed_ridx(4'd1),
-        .packed_valid(packed_valid), .packed_row(), .packed_codes(packed_codes), .packed_scale(packed_scale),
+        .packed_valid(packed_valid), .packed_row(packed_row),
+        .packed_codes(packed_codes), .packed_scale(packed_scale),
         .fault(fault), .fault_code(fault_code),
         .st_rows_fetched(st_rows), .st_blocks_written(st_blocks),
         .st_sectors_read(st_reads), .st_sectors_written(st_writes),
@@ -94,6 +96,7 @@ module tb_chip_v41x_window_kv_prefetch;
         end
     endtask
     integer idx;
+    reg [4223:0] expected_row;
     initial begin
         for (idx = 0; idx < BASE+COUNT; idx = idx + 1) mem[idx] = 0;
         repeat (5) @(negedge clk); rst_n = 1;
@@ -113,6 +116,12 @@ module tb_chip_v41x_window_kv_prefetch;
         check_elem(0, 511, 32'h3f800000);
         if (!packed_valid || packed_codes !== {32{8'h38}} || packed_scale !== 8'h80)
             errors = errors + 1;
+        for (idx = 0; idx < 16; idx = idx + 1)
+            expected_row[256*idx +: 256] = mem[BASE+idx];
+        expected_row[4096 +: 128] = mem[BASE+16][127:0];
+        if (packed_row !== expected_row) begin
+            $display("PACKED STAGE DIFFERS FROM HBM IMAGE"); errors = errors + 1;
+        end
         if (fault || st_rows != 1 || st_reads != 17) errors = errors + 1;
         // Row 128 replaces ring slot zero. The old absolute-position tag must
         // be rejected even though the HBM sector addresses are the same.
