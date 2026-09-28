@@ -39,6 +39,12 @@ def test_switched_parser_checks_all_users_and_package_state():
     assert not c.parse(sample(1).replace("1918", "1919"), 1, man)["pass_"]
 
 
+def test_build_command_uses_actual_o0_for_generated_cpp(tmp_path):
+    cmd = campaign().build_cmd(tmp_path, 0, 8)
+    assert cmd[cmd.index("-CFLAGS") + 1] == "-O0"
+    assert cmd[cmd.index("-MAKEFLAGS") + 1] == "OPT_FAST=-O0 OPT_GLOBAL=-O0"
+
+
 def test_switched_combine_normalises_remote_paths(tmp_path):
     import json
     c = campaign()

@@ -88,7 +88,8 @@ def prepare(scratch):
                golden_tokens={str(u): [s["argmax"] for s in g["steps"]] for u, g in enumerate(gold)},
                packages=plan.n, users=USERS, prompt_tokens=PLEN, generated_tokens=NGEN,
                steps_per_user=steps, program_instructions=[len(p) for p in progs],
-               verilator_makeflags="OPT_FAST=-O0 OPT_GLOBAL=-O0")
+               verilator_makeflags="OPT_FAST=-O0 OPT_GLOBAL=-O0",
+               verilator_cflags="-O0")
     (scratch / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
     return man
 
@@ -105,7 +106,7 @@ def build_cmd(obj, whbm, jobs):
               ("HE", "ME", "ATT", "IDX", "SEL", "EG", "SU")],
             f"+define+HDC_W_HBM={whbm}", *map(str, core.rtl_sources(True)),
             *map(str, AC.BENCH_AUX_RTL), str(AC.LINK), str(AC.ROUTER), str(AC.CTRL),
-            str(AC.TB), str(AC.HARNESS), "-CFLAGS", "-O1", "-MAKEFLAGS",
+            str(AC.TB), str(AC.HARNESS), "-CFLAGS", "-O0", "-MAKEFLAGS",
             "OPT_FAST=-O0 OPT_GLOBAL=-O0", "-j", str(jobs)]
 
 
