@@ -3,7 +3,7 @@
  "tool": "tools/power_scenarios.py",
  "inputs": {
   "configs/hardware/power_scenarios.json": "7d9c8045f56c0bafd9d0c5089b4fba5f85f92fb19b784b524e2f2569a7c1eea4",
-  "results/arch/arch_budget_v41.json": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
+  "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
   "results/arch/v41_latency_ladder.json": "43ebef09b314aa84e00457924a66ce00900a2d56adda1831bafa15556fbde2a5",
   "results/arch/v41_hbm_switched.json": "186e387495977d227d6720b617ae44e731084fac4eed0dc872a0349e789ebde0",
@@ -392,13 +392,13 @@
        "binds": true
       },
       "saturated_batch512": {
-       "design_rate_tokens_s": 358688.0,
+       "design_rate_tokens_s": 84385.0,
        "basis": "aggregate tokens/s of the array, batch 512",
        "array_dynamic_j_per_token": 0.348678,
        "stack_j_per_token": 0.00519757,
-       "array_static_j_per_token": 0.0614055,
-       "array_links_always_on_j_per_token": 0.0113553,
-       "energy_per_token_j": 0.415281,
+       "array_static_j_per_token": 0.261011,
+       "array_links_always_on_j_per_token": 0.0482668,
+       "energy_per_token_j": 0.614886,
        "die_components_j_per_token": {
         "mac": 0.330951,
         "weight_read_and_delivery": 0.00135289,
@@ -450,11 +450,11 @@
         "27": 0.00149782,
         "head": 0.00191088
        },
-       "array_average_die_w": 1265.47,
-       "hottest_die_w": 3580.49,
-       "die_over_cooling": 7.54487,
-       "hottest_die_stacks_w": 16.6456,
-       "hottest_die_stacks_w_high": 58.1234,
+       "array_average_die_w": 411.51,
+       "hottest_die_w": 956.144,
+       "die_over_cooling": 2.0148,
+       "hottest_die_stacks_w": 3.91604,
+       "hottest_die_stacks_w_high": 13.6741,
        "batch": 512,
        "cooling_classes": {
         "air": {
@@ -692,13 +692,13 @@
        "binds": true
       },
       "saturated_batch1024": {
-       "design_rate_tokens_s": 473018.0,
+       "design_rate_tokens_s": 237086.0,
        "basis": "aggregate tokens/s of the array, batch 1024",
        "array_dynamic_j_per_token": 0.236335,
        "stack_j_per_token": 0.00121605,
-       "array_static_j_per_token": 0.0465635,
-       "array_links_always_on_j_per_token": 0.00861064,
-       "energy_per_token_j": 0.284114,
+       "array_static_j_per_token": 0.0929004,
+       "array_links_always_on_j_per_token": 0.0171794,
+       "energy_per_token_j": 0.330451,
        "die_components_j_per_token": {
         "mac": 0.230912,
         "weight_read_and_delivery": 0.00115321,
@@ -750,11 +750,11 @@
         "27": 0.0014963,
         "head": 0.00190807
        },
-       "array_average_die_w": 1146.93,
-       "hottest_die_w": 2431.01,
-       "die_over_cooling": 5.12267,
-       "hottest_die_stacks_w": 5.13584,
-       "hottest_die_stacks_w_high": 13.3428,
+       "array_average_die_w": 649.086,
+       "hottest_die_w": 1292.69,
+       "die_over_cooling": 2.72398,
+       "hottest_die_stacks_w": 2.57418,
+       "hottest_die_stacks_w_high": 6.68767,
        "batch": 1024,
        "cooling_classes": {
         "air": {
@@ -3143,13 +3143,13 @@
        "binds": false
       },
       "saturated_batch512": {
-       "design_rate_tokens_s": 358688.0,
+       "design_rate_tokens_s": 84385.0,
        "basis": "aggregate tokens/s of the array, batch 512",
        "array_dynamic_j_per_token": 0.0320003,
        "stack_j_per_token": 0.00519757,
-       "array_static_j_per_token": 0.0614055,
-       "array_links_always_on_j_per_token": 0.0113553,
-       "energy_per_token_j": 0.0986033,
+       "array_static_j_per_token": 0.261011,
+       "array_links_always_on_j_per_token": 0.0482668,
+       "energy_per_token_j": 0.298209,
        "die_components_j_per_token": {
         "mac": 0.0142738,
         "weight_read_and_delivery": 0.00135289,
@@ -3201,11 +3201,11 @@
         "27": 8.58079e-05,
         "head": 0.000103399
        },
-       "array_average_die_w": 251.286,
-       "hottest_die_w": 559.723,
-       "die_over_cooling": 1.17946,
-       "hottest_die_stacks_w": 16.6456,
-       "hottest_die_stacks_w_high": 75.8353,
+       "array_average_die_w": 172.913,
+       "hottest_die_w": 245.476,
+       "die_over_cooling": 0.517271,
+       "hottest_die_stacks_w": 3.91604,
+       "hottest_die_stacks_w_high": 17.841,
        "batch": 512,
        "cooling_classes": {
         "air": {
@@ -3214,13 +3214,13 @@
          "package_limit_w": 1000.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 197061.0,
-         "capped_rate": 197061.0,
-         "binds": true,
+         "capped_rate": 84385.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 374.56,
-         "package_w_at_cap": 832.447,
-         "die_w_per_mm2_at_cap": 0.459583,
-         "logic_w_per_mm2_at_cap_upper": 0.712613
+         "die_w_at_cap": 245.476,
+         "package_w_at_cap": 526.635,
+         "die_w_per_mm2_at_cap": 0.301198,
+         "logic_w_per_mm2_at_cap_upper": 0.467027
         },
         "liquid": {
          "reference": "gb200_nvl72",
@@ -3228,18 +3228,18 @@
          "package_limit_w": 1200.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 284350.0,
-         "capped_rate": 284350.0,
-         "binds": true,
+         "capped_rate": 84385.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 474.56,
-         "package_w_at_cap": 1069.36,
-         "die_w_per_mm2_at_cap": 0.582282,
-         "logic_w_per_mm2_at_cap_upper": 0.902866
+         "die_w_at_cap": 245.476,
+         "package_w_at_cap": 526.635,
+         "die_w_per_mm2_at_cap": 0.301198,
+         "logic_w_per_mm2_at_cap_upper": 0.467027
         }
        },
        "thermal_rate_limit": 284350.0,
-       "capped_rate": 284350.0,
-       "binds": true
+       "capped_rate": 84385.0,
+       "binds": false
       }
      },
      "200000": {
@@ -3443,13 +3443,13 @@
        "binds": false
       },
       "saturated_batch1024": {
-       "design_rate_tokens_s": 473018.0,
+       "design_rate_tokens_s": 237086.0,
        "basis": "aggregate tokens/s of the array, batch 1024",
        "array_dynamic_j_per_token": 0.0157863,
        "stack_j_per_token": 0.00121605,
-       "array_static_j_per_token": 0.0465635,
-       "array_links_always_on_j_per_token": 0.00861064,
-       "energy_per_token_j": 0.0635658,
+       "array_static_j_per_token": 0.0929004,
+       "array_links_always_on_j_per_token": 0.0171794,
+       "energy_per_token_j": 0.109903,
        "die_components_j_per_token": {
         "mac": 0.0103635,
         "weight_read_and_delivery": 0.00115321,
@@ -3501,11 +3501,11 @@
         "27": 8.42832e-05,
         "head": 0.000100593
        },
-       "array_average_die_w": 215.474,
-       "hottest_die_w": 390.234,
-       "die_over_cooling": 0.822306,
-       "hottest_die_stacks_w": 5.13584,
-       "hottest_die_stacks_w_high": 21.1316,
+       "array_average_die_w": 182.22,
+       "hottest_die_w": 269.813,
+       "die_over_cooling": 0.568554,
+       "hottest_die_stacks_w": 2.57418,
+       "hottest_die_stacks_w_high": 10.5916,
        "batch": 1024,
        "cooling_classes": {
         "air": {
@@ -3514,13 +3514,13 @@
          "package_limit_w": 1000.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 442310.0,
-         "capped_rate": 442310.0,
-         "binds": true,
+         "capped_rate": 237086.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 374.56,
-         "package_w_at_cap": 788.639,
-         "die_w_per_mm2_at_cap": 0.459583,
-         "logic_w_per_mm2_at_cap_upper": 0.712613
+         "die_w_at_cap": 269.813,
+         "package_w_at_cap": 560.809,
+         "die_w_per_mm2_at_cap": 0.331059,
+         "logic_w_per_mm2_at_cap_upper": 0.513328
         },
         "liquid": {
          "reference": "gb200_nvl72",
@@ -3528,17 +3528,17 @@
          "package_limit_w": 1200.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 638233.0,
-         "capped_rate": 473018.0,
+         "capped_rate": 237086.0,
          "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 390.234,
-         "package_w_at_cap": 822.73,
-         "die_w_per_mm2_at_cap": 0.478814,
-         "logic_w_per_mm2_at_cap_upper": 0.742432
+         "die_w_at_cap": 269.813,
+         "package_w_at_cap": 560.809,
+         "die_w_per_mm2_at_cap": 0.331059,
+         "logic_w_per_mm2_at_cap_upper": 0.513328
         }
        },
        "thermal_rate_limit": 638233.0,
-       "capped_rate": 473018.0,
+       "capped_rate": 237086.0,
        "binds": false
       }
      }
@@ -5897,13 +5897,13 @@
        "binds": true
       },
       "saturated_batch512": {
-       "design_rate_tokens_s": 358688.0,
+       "design_rate_tokens_s": 84385.0,
        "basis": "aggregate tokens/s of the array, batch 512",
        "array_dynamic_j_per_token": 0.0579715,
        "stack_j_per_token": 0.00519757,
-       "array_static_j_per_token": 0.0614055,
-       "array_links_always_on_j_per_token": 0.0113553,
-       "energy_per_token_j": 0.124575,
+       "array_static_j_per_token": 0.261011,
+       "array_links_always_on_j_per_token": 0.0482668,
+       "energy_per_token_j": 0.32418,
        "die_components_j_per_token": {
         "mac": 0.040245,
         "weight_read_and_delivery": 0.00135289,
@@ -5955,11 +5955,11 @@
         "27": 0.00019936,
         "head": 0.000237436
        },
-       "array_average_die_w": 334.461,
-       "hottest_die_w": 811.491,
-       "die_over_cooling": 1.70999,
-       "hottest_die_stacks_w": 16.6456,
-       "hottest_die_stacks_w_high": 67.509,
+       "array_average_die_w": 192.481,
+       "hottest_die_w": 304.707,
+       "die_over_cooling": 0.642084,
+       "hottest_die_stacks_w": 3.91604,
+       "hottest_die_stacks_w_high": 15.8822,
        "batch": 512,
        "cooling_classes": {
         "air": {
@@ -5968,13 +5968,13 @@
          "package_limit_w": 1000.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 122194.0,
-         "capped_rate": 122194.0,
-         "binds": true,
+         "capped_rate": 84385.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 374.56,
-         "package_w_at_cap": 795.116,
-         "die_w_per_mm2_at_cap": 0.459583,
-         "logic_w_per_mm2_at_cap_upper": 0.712613
+         "die_w_at_cap": 304.707,
+         "package_w_at_cap": 641.179,
+         "die_w_per_mm2_at_cap": 0.373874,
+         "logic_w_per_mm2_at_cap_upper": 0.579716
         },
         "liquid": {
          "reference": "gb200_nvl72",
@@ -5982,18 +5982,18 @@
          "package_limit_w": 1200.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 176320.0,
-         "capped_rate": 176320.0,
-         "binds": true,
+         "capped_rate": 84385.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 474.56,
-         "package_w_at_cap": 1015.49,
-         "die_w_per_mm2_at_cap": 0.582282,
-         "logic_w_per_mm2_at_cap_upper": 0.902866
+         "die_w_at_cap": 304.707,
+         "package_w_at_cap": 641.179,
+         "die_w_per_mm2_at_cap": 0.373874,
+         "logic_w_per_mm2_at_cap_upper": 0.579716
         }
        },
        "thermal_rate_limit": 176320.0,
-       "capped_rate": 176320.0,
-       "binds": true
+       "capped_rate": 84385.0,
+       "binds": false
       }
      },
      "200000": {
@@ -6197,13 +6197,13 @@
        "binds": true
       },
       "saturated_batch1024": {
-       "design_rate_tokens_s": 473018.0,
+       "design_rate_tokens_s": 237086.0,
        "basis": "aggregate tokens/s of the array, batch 1024",
        "array_dynamic_j_per_token": 0.0335026,
        "stack_j_per_token": 0.00121605,
-       "array_static_j_per_token": 0.0465635,
-       "array_links_always_on_j_per_token": 0.00861064,
-       "energy_per_token_j": 0.0812822,
+       "array_static_j_per_token": 0.0929004,
+       "array_links_always_on_j_per_token": 0.0171794,
+       "energy_per_token_j": 0.127619,
        "die_components_j_per_token": {
         "mac": 0.0280798,
         "weight_read_and_delivery": 0.00115321,
@@ -6255,11 +6255,11 @@
         "27": 0.000197836,
         "head": 0.000234631
        },
-       "array_average_die_w": 290.297,
-       "hottest_die_w": 557.833,
-       "die_over_cooling": 1.17547,
-       "hottest_die_stacks_w": 5.13584,
-       "hottest_die_stacks_w_high": 16.8692,
+       "array_average_die_w": 219.723,
+       "hottest_die_w": 353.817,
+       "die_over_cooling": 0.745568,
+       "hottest_die_stacks_w": 2.57418,
+       "hottest_die_stacks_w_high": 8.45518,
        "batch": 1024,
        "cooling_classes": {
         "air": {
@@ -6268,13 +6268,13 @@
          "package_limit_w": 1000.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 261074.0,
-         "capped_rate": 261074.0,
-         "binds": true,
+         "capped_rate": 237086.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 374.56,
-         "package_w_at_cap": 767.741,
-         "die_w_per_mm2_at_cap": 0.459583,
-         "logic_w_per_mm2_at_cap_upper": 0.712613
+         "die_w_at_cap": 353.817,
+         "package_w_at_cap": 724.544,
+         "die_w_per_mm2_at_cap": 0.434131,
+         "logic_w_per_mm2_at_cap_upper": 0.673148
         },
         "liquid": {
          "reference": "gb200_nvl72",
@@ -6282,18 +6282,18 @@
          "package_limit_w": 1200.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 376719.0,
-         "capped_rate": 376719.0,
-         "binds": true,
+         "capped_rate": 237086.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 474.56,
-         "package_w_at_cap": 975.99,
-         "die_w_per_mm2_at_cap": 0.582282,
-         "logic_w_per_mm2_at_cap_upper": 0.902866
+         "die_w_at_cap": 353.817,
+         "package_w_at_cap": 724.544,
+         "die_w_per_mm2_at_cap": 0.434131,
+         "logic_w_per_mm2_at_cap_upper": 0.673148
         }
        },
        "thermal_rate_limit": 376719.0,
-       "capped_rate": 376719.0,
-       "binds": true
+       "capped_rate": 237086.0,
+       "binds": false
       }
      }
     },
@@ -6672,13 +6672,13 @@
        "binds": false
       },
       "saturated_batch512": {
-       "design_rate_tokens_s": 358688.0,
+       "design_rate_tokens_s": 84385.0,
        "basis": "aggregate tokens/s of the array, batch 512",
        "array_dynamic_j_per_token": 0.0178538,
        "stack_j_per_token": 0.019344,
-       "array_static_j_per_token": 0.0614055,
-       "array_links_always_on_j_per_token": 0.0113553,
-       "energy_per_token_j": 0.0986033,
+       "array_static_j_per_token": 0.261011,
+       "array_links_always_on_j_per_token": 0.0482668,
+       "energy_per_token_j": 0.298209,
        "die_components_j_per_token": {
         "mac": 0.0142738,
         "weight_read_and_delivery": 0.00135289,
@@ -6730,11 +6730,11 @@
         "27": 8.30387e-05,
         "head": 0.000103399
        },
-       "array_average_die_w": 205.981,
-       "hottest_die_w": 317.582,
-       "die_over_cooling": 0.669214,
-       "hottest_die_stacks_w": 61.9505,
-       "hottest_die_stacks_w_high": 55.8283,
+       "array_average_die_w": 162.255,
+       "hottest_die_w": 188.51,
+       "die_over_cooling": 0.397231,
+       "hottest_die_stacks_w": 14.5745,
+       "hottest_die_stacks_w_high": 13.1342,
        "batch": 512,
        "cooling_classes": {
         "air": {
@@ -6743,13 +6743,13 @@
          "package_limit_w": 1000.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 479777.0,
-         "capped_rate": 358688.0,
+         "capped_rate": 84385.0,
          "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 317.582,
-         "package_w_at_cap": 746.821,
-         "die_w_per_mm2_at_cap": 0.389671,
-         "logic_w_per_mm2_at_cap_upper": 0.60421
+         "die_w_at_cap": 188.51,
+         "package_w_at_cap": 403.288,
+         "die_w_per_mm2_at_cap": 0.231301,
+         "logic_w_per_mm2_at_cap_upper": 0.358646
         },
         "liquid": {
          "reference": "gb200_nvl72",
@@ -6757,17 +6757,17 @@
          "package_limit_w": 1200.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 692296.0,
-         "capped_rate": 358688.0,
+         "capped_rate": 84385.0,
          "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 317.582,
-         "package_w_at_cap": 746.821,
-         "die_w_per_mm2_at_cap": 0.389671,
-         "logic_w_per_mm2_at_cap_upper": 0.60421
+         "die_w_at_cap": 188.51,
+         "package_w_at_cap": 403.288,
+         "die_w_per_mm2_at_cap": 0.231301,
+         "logic_w_per_mm2_at_cap_upper": 0.358646
         }
        },
        "thermal_rate_limit": 692296.0,
-       "capped_rate": 358688.0,
+       "capped_rate": 84385.0,
        "binds": false
       }
      },
@@ -6972,13 +6972,13 @@
        "binds": false
       },
       "saturated_batch1024": {
-       "design_rate_tokens_s": 473018.0,
+       "design_rate_tokens_s": 237086.0,
        "basis": "aggregate tokens/s of the array, batch 1024",
        "array_dynamic_j_per_token": 0.0124765,
        "stack_j_per_token": 0.00452582,
-       "array_static_j_per_token": 0.0465635,
-       "array_links_always_on_j_per_token": 0.00861064,
-       "energy_per_token_j": 0.0635658,
+       "array_static_j_per_token": 0.0929004,
+       "array_links_always_on_j_per_token": 0.0171794,
+       "energy_per_token_j": 0.109903,
        "die_components_j_per_token": {
         "mac": 0.0103635,
         "weight_read_and_delivery": 0.00115321,
@@ -7030,11 +7030,11 @@
         "27": 8.15139e-05,
         "head": 0.000100593
        },
-       "array_average_die_w": 201.496,
-       "hottest_die_w": 266.801,
-       "die_over_cooling": 0.562207,
-       "hottest_die_stacks_w": 19.1142,
-       "hottest_die_stacks_w_high": 13.0678,
+       "array_average_die_w": 175.214,
+       "hottest_die_w": 207.946,
+       "die_over_cooling": 0.438187,
+       "hottest_die_stacks_w": 9.58044,
+       "hottest_die_stacks_w_high": 6.54982,
        "batch": 1024,
        "cooling_classes": {
         "air": {
@@ -7043,13 +7043,13 @@
          "package_limit_w": 1000.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 904991.0,
-         "capped_rate": 473018.0,
+         "capped_rate": 237086.0,
          "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 266.801,
-         "package_w_at_cap": 559.738,
-         "die_w_per_mm2_at_cap": 0.327363,
-         "logic_w_per_mm2_at_cap_upper": 0.507598
+         "die_w_at_cap": 207.946,
+         "package_w_at_cap": 428.992,
+         "die_w_per_mm2_at_cap": 0.255148,
+         "logic_w_per_mm2_at_cap_upper": 0.395624
         },
         "liquid": {
          "reference": "gb200_nvl72",
@@ -7057,17 +7057,17 @@
          "package_limit_w": 1200.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 1305860.0,
-         "capped_rate": 473018.0,
+         "capped_rate": 237086.0,
          "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 266.801,
-         "package_w_at_cap": 559.738,
-         "die_w_per_mm2_at_cap": 0.327363,
-         "logic_w_per_mm2_at_cap_upper": 0.507598
+         "die_w_at_cap": 207.946,
+         "package_w_at_cap": 428.992,
+         "die_w_per_mm2_at_cap": 0.255148,
+         "logic_w_per_mm2_at_cap_upper": 0.395624
         }
        },
        "thermal_rate_limit": 1305860.0,
-       "capped_rate": 473018.0,
+       "capped_rate": 237086.0,
        "binds": false
       }
      }
@@ -7447,13 +7447,13 @@
        "binds": false
       },
       "saturated_batch512": {
-       "design_rate_tokens_s": 358688.0,
+       "design_rate_tokens_s": 84385.0,
        "basis": "aggregate tokens/s of the array, batch 512",
        "array_dynamic_j_per_token": 0.0290474,
        "stack_j_per_token": 0.00815039,
-       "array_static_j_per_token": 0.0614055,
-       "array_links_always_on_j_per_token": 0.0113553,
-       "energy_per_token_j": 0.0986033,
+       "array_static_j_per_token": 0.261011,
+       "array_links_always_on_j_per_token": 0.0482668,
+       "energy_per_token_j": 0.298209,
        "die_components_j_per_token": {
         "mac": 0.0142738,
         "weight_read_and_delivery": 0.00135289,
@@ -7505,11 +7505,11 @@
         "27": 8.52299e-05,
         "head": 0.000103399
        },
-       "array_average_die_w": 241.829,
-       "hottest_die_w": 509.18,
-       "die_over_cooling": 1.07295,
-       "hottest_die_stacks_w": 26.1022,
-       "hottest_die_stacks_w_high": 73.2684,
+       "array_average_die_w": 170.688,
+       "hottest_die_w": 233.586,
+       "die_over_cooling": 0.492215,
+       "hottest_die_stacks_w": 6.14081,
+       "hottest_die_stacks_w_high": 17.2372,
        "batch": 512,
        "cooling_classes": {
         "air": {
@@ -7518,13 +7518,13 @@
          "package_limit_w": 1000.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 224699.0,
-         "capped_rate": 224699.0,
-         "binds": true,
+         "capped_rate": 84385.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 374.56,
-         "package_w_at_cap": 840.917,
-         "die_w_per_mm2_at_cap": 0.459583,
-         "logic_w_per_mm2_at_cap_upper": 0.712613
+         "die_w_at_cap": 233.586,
+         "package_w_at_cap": 501.645,
+         "die_w_per_mm2_at_cap": 0.286608,
+         "logic_w_per_mm2_at_cap_upper": 0.444404
         },
         "liquid": {
          "reference": "gb200_nvl72",
@@ -7532,18 +7532,18 @@
          "package_limit_w": 1200.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 324230.0,
-         "capped_rate": 324230.0,
-         "binds": true,
+         "capped_rate": 84385.0,
+         "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 474.56,
-         "package_w_at_cap": 1081.58,
-         "die_w_per_mm2_at_cap": 0.582282,
-         "logic_w_per_mm2_at_cap_upper": 0.902866
+         "die_w_at_cap": 233.586,
+         "package_w_at_cap": 501.645,
+         "die_w_per_mm2_at_cap": 0.286608,
+         "logic_w_per_mm2_at_cap_upper": 0.444404
         }
        },
        "thermal_rate_limit": 324230.0,
-       "capped_rate": 324230.0,
-       "binds": true
+       "capped_rate": 84385.0,
+       "binds": false
       }
      },
      "200000": {
@@ -7747,13 +7747,13 @@
        "binds": false
       },
       "saturated_batch1024": {
-       "design_rate_tokens_s": 473018.0,
+       "design_rate_tokens_s": 237086.0,
        "basis": "aggregate tokens/s of the array, batch 1024",
        "array_dynamic_j_per_token": 0.0150954,
        "stack_j_per_token": 0.00190691,
-       "array_static_j_per_token": 0.0465635,
-       "array_links_always_on_j_per_token": 0.00861064,
-       "energy_per_token_j": 0.0635658,
+       "array_static_j_per_token": 0.0929004,
+       "array_links_always_on_j_per_token": 0.0171794,
+       "energy_per_token_j": 0.109903,
        "die_components_j_per_token": {
         "mac": 0.0103635,
         "weight_read_and_delivery": 0.00115321,
@@ -7805,11 +7805,11 @@
         "27": 8.37051e-05,
         "head": 0.000100593
        },
-       "array_average_die_w": 212.557,
-       "hottest_die_w": 364.469,
-       "die_over_cooling": 0.768015,
-       "hottest_die_stacks_w": 8.05359,
-       "hottest_die_stacks_w_high": 19.7404,
+       "array_average_die_w": 180.758,
+       "hottest_die_w": 256.899,
+       "die_over_cooling": 0.541342,
+       "hottest_die_stacks_w": 4.03662,
+       "hottest_die_stacks_w_high": 9.89428,
        "batch": 1024,
        "cooling_classes": {
         "air": {
@@ -7818,13 +7818,13 @@
          "package_limit_w": 1000.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 495150.0,
-         "capped_rate": 473018.0,
+         "capped_rate": 237086.0,
          "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 364.469,
-         "package_w_at_cap": 768.419,
-         "die_w_per_mm2_at_cap": 0.447201,
-         "logic_w_per_mm2_at_cap_upper": 0.693414
+         "die_w_at_cap": 256.899,
+         "package_w_at_cap": 533.587,
+         "die_w_per_mm2_at_cap": 0.315214,
+         "logic_w_per_mm2_at_cap_upper": 0.488759
         },
         "liquid": {
          "reference": "gb200_nvl72",
@@ -7832,17 +7832,17 @@
          "package_limit_w": 1200.0,
          "dies_per_package": 2,
          "thermal_rate_limit": 714479.0,
-         "capped_rate": 473018.0,
+         "capped_rate": 237086.0,
          "binds": false,
          "bound_by": "die",
-         "die_w_at_cap": 364.469,
-         "package_w_at_cap": 768.419,
-         "die_w_per_mm2_at_cap": 0.447201,
-         "logic_w_per_mm2_at_cap_upper": 0.693414
+         "die_w_at_cap": 256.899,
+         "package_w_at_cap": 533.587,
+         "die_w_per_mm2_at_cap": 0.315214,
+         "logic_w_per_mm2_at_cap_upper": 0.488759
         }
        },
        "thermal_rate_limit": 714479.0,
-       "capped_rate": 473018.0,
+       "capped_rate": 237086.0,
        "binds": false
       }
      }
@@ -8304,12 +8304,12 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "air",
-   "energy_per_token_mj": 415.281,
-   "die_w": 3580.49,
+   "energy_per_token_mj": 614.886,
+   "die_w": 956.144,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 358688.0,
+   "design_rate": 84385.0,
    "capped_rate": 23596.6,
    "binds": true,
    "bound_by": "die"
@@ -8319,12 +8319,12 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "liquid",
-   "energy_per_token_mj": 415.281,
-   "die_w": 3580.49,
+   "energy_per_token_mj": 614.886,
+   "die_w": 956.144,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 358688.0,
+   "design_rate": 84385.0,
    "capped_rate": 34048.8,
    "binds": true,
    "bound_by": "die"
@@ -8394,12 +8394,12 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "air",
-   "energy_per_token_mj": 284.114,
-   "die_w": 2431.01,
+   "energy_per_token_mj": 330.451,
+   "die_w": 1292.69,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 473018.0,
+   "design_rate": 237086.0,
    "capped_rate": 46791.1,
    "binds": true,
    "bound_by": "die"
@@ -8409,12 +8409,12 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "liquid",
-   "energy_per_token_mj": 284.114,
-   "die_w": 2431.01,
+   "energy_per_token_mj": 330.451,
+   "die_w": 1292.69,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 473018.0,
+   "design_rate": 237086.0,
    "capped_rate": 67517.4,
    "binds": true,
    "bound_by": "die"
@@ -9264,14 +9264,14 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "air",
-   "energy_per_token_mj": 98.6033,
-   "die_w": 559.723,
+   "energy_per_token_mj": 298.209,
+   "die_w": 245.476,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 358688.0,
-   "capped_rate": 197061.0,
-   "binds": true,
+   "design_rate": 84385.0,
+   "capped_rate": 84385.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -9279,14 +9279,14 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "liquid",
-   "energy_per_token_mj": 98.6033,
-   "die_w": 559.723,
+   "energy_per_token_mj": 298.209,
+   "die_w": 245.476,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 358688.0,
-   "capped_rate": 284350.0,
-   "binds": true,
+   "design_rate": 84385.0,
+   "capped_rate": 84385.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -9354,14 +9354,14 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "air",
-   "energy_per_token_mj": 63.5658,
-   "die_w": 390.234,
+   "energy_per_token_mj": 109.903,
+   "die_w": 269.813,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 473018.0,
-   "capped_rate": 442310.0,
-   "binds": true,
+   "design_rate": 237086.0,
+   "capped_rate": 237086.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -9369,13 +9369,13 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "liquid",
-   "energy_per_token_mj": 63.5658,
-   "die_w": 390.234,
+   "energy_per_token_mj": 109.903,
+   "die_w": 269.813,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 473018.0,
-   "capped_rate": 473018.0,
+   "design_rate": 237086.0,
+   "capped_rate": 237086.0,
    "binds": false,
    "bound_by": "die"
   },
@@ -10224,14 +10224,14 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "air",
-   "energy_per_token_mj": 124.575,
-   "die_w": 811.491,
+   "energy_per_token_mj": 324.18,
+   "die_w": 304.707,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 358688.0,
-   "capped_rate": 122194.0,
-   "binds": true,
+   "design_rate": 84385.0,
+   "capped_rate": 84385.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -10239,14 +10239,14 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "liquid",
-   "energy_per_token_mj": 124.575,
-   "die_w": 811.491,
+   "energy_per_token_mj": 324.18,
+   "die_w": 304.707,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 358688.0,
-   "capped_rate": 176320.0,
-   "binds": true,
+   "design_rate": 84385.0,
+   "capped_rate": 84385.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -10314,14 +10314,14 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "air",
-   "energy_per_token_mj": 81.2822,
-   "die_w": 557.833,
+   "energy_per_token_mj": 127.619,
+   "die_w": 353.817,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 473018.0,
-   "capped_rate": 261074.0,
-   "binds": true,
+   "design_rate": 237086.0,
+   "capped_rate": 237086.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -10329,14 +10329,14 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "liquid",
-   "energy_per_token_mj": 81.2822,
-   "die_w": 557.833,
+   "energy_per_token_mj": 127.619,
+   "die_w": 353.817,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 473018.0,
-   "capped_rate": 376719.0,
-   "binds": true,
+   "design_rate": 237086.0,
+   "capped_rate": 237086.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -10464,13 +10464,13 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "air",
-   "energy_per_token_mj": 98.6033,
-   "die_w": 317.582,
+   "energy_per_token_mj": 298.209,
+   "die_w": 188.51,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 358688.0,
-   "capped_rate": 358688.0,
+   "design_rate": 84385.0,
+   "capped_rate": 84385.0,
    "binds": false,
    "bound_by": "die"
   },
@@ -10479,13 +10479,13 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "liquid",
-   "energy_per_token_mj": 98.6033,
-   "die_w": 317.582,
+   "energy_per_token_mj": 298.209,
+   "die_w": 188.51,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 358688.0,
-   "capped_rate": 358688.0,
+   "design_rate": 84385.0,
+   "capped_rate": 84385.0,
    "binds": false,
    "bound_by": "die"
   },
@@ -10554,13 +10554,13 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "air",
-   "energy_per_token_mj": 63.5658,
-   "die_w": 266.801,
+   "energy_per_token_mj": 109.903,
+   "die_w": 207.946,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 473018.0,
-   "capped_rate": 473018.0,
+   "design_rate": 237086.0,
+   "capped_rate": 237086.0,
    "binds": false,
    "bound_by": "die"
   },
@@ -10569,13 +10569,13 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "liquid",
-   "energy_per_token_mj": 63.5658,
-   "die_w": 266.801,
+   "energy_per_token_mj": 109.903,
+   "die_w": 207.946,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 473018.0,
-   "capped_rate": 473018.0,
+   "design_rate": 237086.0,
+   "capped_rate": 237086.0,
    "binds": false,
    "bound_by": "die"
   },
@@ -10704,14 +10704,14 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "air",
-   "energy_per_token_mj": 98.6033,
-   "die_w": 509.18,
+   "energy_per_token_mj": 298.209,
+   "die_w": 233.586,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 358688.0,
-   "capped_rate": 224699.0,
-   "binds": true,
+   "design_rate": 84385.0,
+   "capped_rate": 84385.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -10719,14 +10719,14 @@
    "design": "V4.1 ROM array 1,048,576",
    "point": "saturated_batch512",
    "cooling": "liquid",
-   "energy_per_token_mj": 98.6033,
-   "die_w": 509.18,
+   "energy_per_token_mj": 298.209,
+   "die_w": 233.586,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 358688.0,
-   "capped_rate": 324230.0,
-   "binds": true,
+   "design_rate": 84385.0,
+   "capped_rate": 84385.0,
+   "binds": false,
    "bound_by": "die"
   },
   {
@@ -10794,13 +10794,13 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "air",
-   "energy_per_token_mj": 63.5658,
-   "die_w": 364.469,
+   "energy_per_token_mj": 109.903,
+   "die_w": 256.899,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 473018.0,
-   "capped_rate": 473018.0,
+   "design_rate": 237086.0,
+   "capped_rate": 237086.0,
    "binds": false,
    "bound_by": "die"
   },
@@ -10809,13 +10809,13 @@
    "design": "V4.1 ROM array 200,000",
    "point": "saturated_batch1024",
    "cooling": "liquid",
-   "energy_per_token_mj": 63.5658,
-   "die_w": 364.469,
+   "energy_per_token_mj": 109.903,
+   "die_w": 256.899,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 473018.0,
-   "capped_rate": 473018.0,
+   "design_rate": 237086.0,
+   "capped_rate": 237086.0,
    "binds": false,
    "bound_by": "die"
   }

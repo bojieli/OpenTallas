@@ -250,6 +250,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/ARCH_SPEC_QWEN3.md": 18,
     "docs/ARCH_QWEN3_O4_RTL_SPEC.md": 21,
     "docs/ARCH_V41_DIE_ASSEMBLY.md": 15,
+    "docs/ARCH_SPEC_V41.md": 41,
     "docs/ANALYTICAL_REPORT.md": 280,
     "docs/CHIP_ARCHITECTURE_DESIGN.md": 19,
     "docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md": 55,

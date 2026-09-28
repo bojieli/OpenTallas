@@ -170,7 +170,16 @@ def headline():
     rec = json.loads((ROOT / "results/roofline/critical_path/decode_critical_path.json").read_text())
     o = rec["packaging_options"]["options"][HEADLINE_KEY]
     by = {int(k): v for k, v in o["by_context"].items()}
-    return dict(option=o["id"], label=o["label"], packages=o["packages"], hbm_stacks_per_package=o["hbm_stacks_per_package"],
+    # HBM stacks: the adopted ROM_DIE_HBM_STACKS per die (user decision 2026-09-27) on each die of a layer package
+    # (non-layer dies carry none, R-U1), NOT the report DAG's option row, which multiplies its design's
+    # 5-per-die beachfront count (10 per package, no shipping interposer).  placement.per_die_capacity_bytes is
+    # the per-die ROM capacity (checkpoint / 188), which the adopted placement keeps.
+    return dict(option=o["id"], label=o["label"], packages=o["packages"],
+                hbm_stacks_per_die=ROM_DIE_HBM_STACKS,
+                hbm_stacks_per_package=ROM_DIE_HBM_STACKS * o["dies_per_package"],
+                hbm_stacks_per_package_basis=(f"ROM_DIE_HBM_STACKS ({ROM_DIE_HBM_STACKS}) x {o['dies_per_package']} "
+                                              "dies per layer package; the report DAG's option row carries "
+                                              f"{o['hbm_stacks_per_package']} (5 per die, superseded)"),
                 placement={k: o["placement"][k] for k in ("dies", "group", "per_die_capacity_bytes", "layer_groups",
                                                           "layer_dies", "non_layer_dies", "dies_per_layer")},
                 batch1=o["batch1"], batch64=o["batch64"],
@@ -612,6 +621,28 @@ def fill_machine(batch):
     return replace(m1, batch=batch, microbatch=max(1.0, batch / S), slots=float(min(batch, S)))
 
 
+# The occupancy basis of price() (2026-09-28): "busiest_stage" (stage_bound) for every operating point this model
+# reports -- the same bound tools/arch_utilization_v41.solve puts on the design point.  "stage_mean" (total issue /
+# stages) is kept ONLY for the batch-64 width-sizing step (build(): the b64 derivation and its target), because on
+# the busiest-stage basis the 1M batch-64 requirement is bound by the unsplit layer-20 index scan's HBM key stream
+# on one stage, which no engine width relieves (the derivation widens to ~318 mm2 and still misses); the design
+# point relieves it by the split scan (tools/v41_stage_rebalance.py), not by width.  A one-element list so the
+# sizing step can switch it (occupancy_basis()).
+OCC_BASIS = ["busiest_stage"]
+
+
+class occupancy_basis:
+    """with occupancy_basis("stage_mean"): price() calls without an explicit occupancy= use that basis."""
+    def __init__(self, basis):
+        self.basis = basis
+
+    def __enter__(self):
+        self.prev, OCC_BASIS[0] = OCC_BASIS[0], self.basis
+
+    def __exit__(self, *exc):
+        OCC_BASIS[0] = self.prev
+
+
 CHAIN_LEVERS = ("osm", "fuse", "chain_all", "short_stages", "att_local")
 ATT_NODES = ("attn.a_proj", "attn.wq_b", "attn.wo_a", "attn.wo_b", "attn.cmp.wk", "attn.scores", "attn.pv",
              "attn.idx.score", "attn.idx.topk_local", "attn.cand.topk_local")
@@ -620,7 +651,7 @@ ATT_COLL = ("attn.a_allgather", "attn.rows_allgather", "attn.out_allreduce", "at
 
 
 def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, expert_overlap=0.0, hbm=None,
-          fill=False, base=None, levers=(), exposure=None):
+          fill=False, base=None, levers=(), exposure=None, occupancy=None):
     """Re-price the report's DAG node by node from `spec`; returns T (critical path), the occupancy bound,
     tokens/s per user and the per-category / per-resource critical-path breakdown.
 
@@ -822,12 +853,20 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
             nd["_issue_on_path"] = max(0.0, part)
             by_res[rr[0]] = by_res.get(rr[0], 0.0) + max(0.0, part)
     occ = sum(nd["issue"] for nd in b.g.nodes.values() if nd["kind"] not in ("collective", "hop"))
-    # an autoregressive user has one token in flight: the occupancy bound counts the users actually in flight
-    # (the stage MEAN: the specification sizing; the operating points re-bound on the busiest stage, stage_bound, in
-    # tools/arch_utilization_v41.solve)
-    occ_bound = occ * min(m.slots, batch) / max(1, m.stages)
+    # an autoregressive user has one token in flight: the occupancy bound counts the users actually in flight.
+    # ONE basis (2026-09-28): the BUSIEST pipeline stage (stage_bound -- the placement is packed by ROM bytes, not by
+    # time), the bound tools/arch_utilization_v41.solve puts on the design point, so the specification and the
+    # design point are priced alike.  The stage MEAN (the previous specification sizing) stays as an info field.
+    slots = min(m.slots, batch)
+    occ_mean = occ * slots / max(1, m.stages)
+    occ_busy, busiest, imb = stage_bound(b.g, slots)
+    basis = occupancy or OCC_BASIS[0]
+    occ_bound = occ_busy if basis == "busiest_stage" else occ_mean
     period = max(T, occ_bound)
-    out = dict(T_s=T, occupancy_bound_s=occ_bound, period_s=period, tokens_s_per_user=1 / period,
+    out = dict(T_s=T, occupancy_bound_s=occ_bound, occupancy_basis=basis, busiest_stage=busiest,
+               occupancy_bound_busiest_stage_s=occ_busy,
+               stage_imbalance=imb, occupancy_bound_stage_mean_s=occ_mean, period_s=period,
+               tokens_s_per_user=1 / period,
                aggregate_tokens_s=batch / period, binding="critical_path" if T >= occ_bound else "occupancy",
                breakdown_us={k: v * 1e6 for k, v in cats.items()},
                critical_issue_us_by_resource={k: v * 1e6 for k, v in sorted(by_res.items(), key=lambda kv: -kv[1])},
@@ -1658,7 +1697,10 @@ def power_requirements(rec, req, areas):
     serdes_w = SERDES_LANES_PER_PACKAGE_2DIE * 112e9 * serdes_j_bit / 2        # per die, always on
     ucie_idle = 0.15 * E["links"]["rom_package_ucie"]["bw"] * 8 * et["link_pj_per_bit"]["ucie"] * 1e-12
     static = leak + hbm_idle + serdes_w + ucie_idle
-    dyn_worst = max(r["saturated_die_dynamic_w"] for r in rows.values())    # the hottest die
+    # the hottest die at its worst point: saturated, or its batch-1 active power (the pipeline fill keeps every
+    # stage holding a token) -- on the busiest-stage basis the saturated rate is held down by the busiest stage, so
+    # the saturated average can fall below the active power and no longer bounds it alone
+    dyn_worst = max(max(r["saturated_die_dynamic_w"], r["active_die_dynamic_w_b1"]) for r in rows.values())
     worst = dyn_worst + leak + hbm_worst + serdes_w + ucie_idle
     ro = P["rack_overheads"]
     ro = {k: (v["value"] if isinstance(v, dict) else v) for k, v in ro.items() if k != "purpose"}
@@ -1685,7 +1727,10 @@ def power_requirements(rec, req, areas):
                                   "technology.json power.rack_overheads",
                 requirement=("per-die power <= the cooling limit at every batch with stage clock gating: an idle "
                              "stage's clock tree gated (ICG at the block boundaries), its ROM macros and engines "
-                             "quiescent; the worst case is the saturated array (every die busy)"),
+                             "quiescent; the worst case is the hottest die saturated or at the pipeline fill (its "
+                             "batch-1 active power), whichever is higher"),
+                worst_case_point=("fill" if max(r["active_die_dynamic_w_b1"] for r in rows.values()) >
+                                  max(r["saturated_die_dynamic_w"] for r in rows.values()) else "saturated"),
                 note="ASAP7 unit areas; the analytical design's 48 W/die clock term charges all 525 mm2 of logic "
                      "at 1 GHz ungated and is the upper bound if nothing gates")
 
@@ -1795,8 +1840,11 @@ def build(quick=False):
     hl = dict(hl, baseline=BASELINE, plain_b=PLAIN_B,
               tokens_s_per_user_plain_b=dict(hl["tokens_s_per_user"]),
               tokens_s_per_user={ctx: price(dag, ctx)["tokens_s_per_user"] for ctx in CONTEXTS},
-              tokens_s_per_user_b64={ctx: price(dag_spec(dag_machine(64), clock), ctx, batch=64)["tokens_s_per_user"]
-                                     for ctx in CONTEXTS},
+              tokens_s_per_user_b64={ctx: price(dag_spec(dag_machine(64), clock), ctx, batch=64,
+                                                occupancy="stage_mean")["tokens_s_per_user"] for ctx in CONTEXTS},
+              tokens_s_per_user_b64_basis="stage_mean: the batch-64 SIZING target only (OCC_BASIS)",
+              tokens_s_per_user_b64_busiest_stage={
+                  ctx: price(dag_spec(dag_machine(64), clock), ctx, batch=64)["tokens_s_per_user"] for ctx in CONTEXTS},
               source="decode_critical_path's option-(b) DAG re-priced at the baseline (light-FEC 130 ns package "
                      "link, overlapped reductions); plain (b) from " + hl["source"])
     built = as_built_spec()
@@ -1842,8 +1890,10 @@ def build(quick=False):
     # batch 64: the report's per-user rate at 64 users (the occupancy bound joins the critical path)
     for c64 in (200000, TARGET_CTX):
         t64 = 1.0 / hl["tokens_s_per_user_b64"][c64]
-        sp64, info64 = derive(t64, c64, derived[c64], areas, batch=64)
+        with occupancy_basis("stage_mean"):                  # the sizing step's basis (OCC_BASIS)
+            sp64, info64 = derive(t64, c64, derived[c64], areas, batch=64)
         budgets[f"{c64}_b64"] = dict(target_us=t64 * 1e6, target_tokens_s=1 / t64, feasible=info64["feasible"],
+                                     occupancy_basis="stage_mean (width sizing only; see occupancy_basis)",
                                      history=info64["history"], spec=asdict(sp64) if sp64 else None,
                                      area_mm2=spec_area_mm2(sp64, areas) if sp64 else None)
         if sp64:
@@ -1857,6 +1907,20 @@ def build(quick=False):
     # (hc_mtp_sizing below).  The batch-1 MTP rate is the requirement, so the HC floor is 5,120 per weight lane.
     req = _with_widths(req, {"hc": max(req.hc_macs, HC_MTP_LANES)})
     rec["required_spec"] = asdict(req)
+    rec["occupancy_basis"] = dict(
+        reported="busiest_stage",
+        sizing_b64="stage_mean",
+        rule=("every operating point in this record (batch curves, the batch model's aggregates, the HBM comparator, "
+              "plain (b)) is bound by the BUSIEST pipeline stage (stage_bound), as the design point is "
+              "(tools/arch_utilization_v41.solve); only the batch-64 width derivation (budget.*_b64 and "
+              "requirement.headline.tokens_s_per_user_b64) sizes on the stage mean"),
+        why_sizing_differs=("on the busiest-stage basis the 1M batch-64 requirement is bound by the unsplit layer-20 "
+                            "index scan's HBM key stream on one stage; widening every engine (to ~318 mm2) does not "
+                            "meet it -- the design point relieves that stage by the split scan "
+                            "(results/arch/v41_stage_rebalance.json), not by width"),
+        required_b64_tokens_s_per_user={
+            str(ctx): {b_: price(req, ctx, batch=64, occupancy=b_)["tokens_s_per_user"]
+                       for b_ in ("stage_mean", "busiest_stage")} for ctx in (200000, TARGET_CTX)})
     rec["required_area_mm2"] = spec_area_mm2(req, areas)
     rec["compute_envelope_mm2"] = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]["compute_mm2"]
     rec["required_priced"] = {}

@@ -6889,7 +6889,8 @@
     "liquid": 474.56
    },
    "cooling_basis": "configs/hardware/power_scenarios.json cooling classes, 2-die packages (B200 HGX air / GB200 liquid, less the stacks), as the budget's power check (arch_budget_v41.json power.cooling_limit_w_per_die_by_class)",
-   "spec_provisioned_wall_w": 556.3726626510918
+   "provisioned_wall_w": 590.4030395339233,
+   "spec_provisioned_wall_w": 411.2133155636817
   },
   "serdes": {
    "lane_w": 0.728,
@@ -6952,8 +6953,8 @@
   "provisioned_rack_input_w": 39949.35729921875,
   "provisioned_chips_w": 24663.5643631817,
   "reconciliation": {
-   "spec_rule_w": 72899.3552043513,
-   "note": "116 x the spec's 556 W provisioned per die (its HOTTEST die's worst case, charged to every die: an upper bound) + 72 table dies + infrastructure, each at 1.2 x wall"
+   "spec_rule_w": 56060.87094221174,
+   "note": "116 x the spec's 411 W provisioned per die (its HOTTEST die's worst case, charged to every die: an upper bound) + 72 table dies + infrastructure, each at 1.2 x wall"
   },
   "shelves": {
    "shelf_w": 33000.0,

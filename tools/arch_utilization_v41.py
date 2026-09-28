@@ -186,7 +186,7 @@ def solve(spec, ctx, batch=1, positions=1, levers=(), muts=(), hbm=None):
     if not muts:
         ob, busiest, imb = A.stage_bound(b.g, min(b.mach.slots, batch))
         period = max(r["T_s"], ob)
-        r.update(occupancy_bound_stage_mean_s=r["occupancy_bound_s"], occupancy_bound_s=ob, busiest_stage=busiest,
+        r.update(occupancy_bound_s=ob, busiest_stage=busiest,
                  stage_imbalance=imb, period_s=period, tokens_s_per_user=1 / period, aggregate_tokens_s=batch / period,
                  binding="critical_path" if r["T_s"] >= ob else "occupancy")
     if muts:

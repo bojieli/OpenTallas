@@ -205,8 +205,10 @@ deficit); every per-die, per-package and per-tray check uses the hottest die.
   comparator's own fabric (0.9 TB/s per package per direction, 2.46 kW on 99 dies) and its UCIe idle; with the lanes
   alone the ratio would be 3.3× (gate C4, `gates.C4.power_scenarios_crosscheck`).
 - **Check against the spec's rule.** The spec's rule charges every die its hottest die's worst case (116 × the
-  budget's 556.4 W provisioned per die + tables + infrastructure, `power.reconciliation`), 72.9 kW: an upper
-  bound that no operating point reaches, since only the stage holding the index scan runs that hot. The provision
+  budget's 411.2 W provisioned per die + tables + infrastructure, `power.reconciliation`), 56.1 kW: an upper
+  bound on the rack total that no operating point reaches, since only the stage holding the index scan runs that
+  hot. The per-die figure is priced at the specification's widths on the busiest-stage basis; the design point's
+  own hottest die, provisioned the same way, is 590 W (`power.per_die.provisioned_wall_w`). The provision
   here sums the array-average die instead.
 - **Shelves.** The record keeps **three** 33 kW shelves per side (82.5 kW N+1), 2N across the A and B sides: six
   shelves, 799 A at 50 V for the 39.9 kW provision.

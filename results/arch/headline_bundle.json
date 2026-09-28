@@ -32,13 +32,13 @@
   "records": 38,
   "records_with_source_pins": 27,
   "pins_by_status": {
-   "current": 541,
+   "current": 537,
    "path-only": 3,
-   "stale": 94
+   "stale": 98
   },
   "findings_by_kind": {
    "commit-outside-head": 4,
-   "stale-pin": 94
+   "stale-pin": 98
   }
  },
  "headlines": [
@@ -6079,7 +6079,7 @@
   "results/arch/power_scenarios.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "0374612a8aeb4f5789ef5cd9fe869817dd32e3c363d5416301bc464f4309f128",
+   "sha256": "3b1acec88067e597feab65dc556870c57658d05dc361a5f86d35f559e718d6f3",
    "schema": "opentallas.power-scenarios-result.v1",
    "tool": "tools/power_scenarios.py",
    "command": "python3 tools/power_scenarios.py",
@@ -6095,7 +6095,7 @@
      "field": "inputs",
      "key": "results/arch/arch_budget_v41.json",
      "path": "results/arch/arch_budget_v41.json",
-     "pinned": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
+     "pinned": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
      "status": "current"
     },
     {
@@ -6205,7 +6205,7 @@
      "key": "v41_budget",
      "path": "results/arch/arch_budget_v41.json",
      "pinned": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "inputs",
@@ -6219,7 +6219,7 @@
      "key": "power",
      "path": "results/arch/power_scenarios.json",
      "pinned": "0374612a8aeb4f5789ef5cd9fe869817dd32e3c363d5416301bc464f4309f128",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "inputs",
@@ -6230,7 +6230,8 @@
     }
    ],
    "pin_counts": {
-    "current": 10
+    "current": 8,
+    "stale": 2
    },
    "commits": []
   },
@@ -6281,7 +6282,7 @@
   "results/arch/v41_rack.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "ef80a30627853bc625e439855eef397a0087e0716ead18cd435f996b70516b20",
+   "sha256": "98ffbb563a56131b0b1f550ffbce499b6dffce085bf93bd3943712c225f10523",
    "schema": "v41_rack/1",
    "tool": "tools/v41_rack_design.py",
    "command": "python3 tools/v41_rack_design.py",
@@ -6316,7 +6317,7 @@
   "results/arch/arch_budget_v41.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
+   "sha256": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
    "schema": "opentallas.arch-budget-v41.v2",
    "tool": "tools/arch_budget_v41.py",
    "command": "python3 tools/arch_budget_v41.py",
@@ -6376,7 +6377,7 @@
      "key": "results/arch/arch_budget_v41.json",
      "path": "results/arch/arch_budget_v41.json",
      "pinned": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "inputs",
@@ -6390,11 +6391,12 @@
      "key": "results/arch/v41_rack.json",
      "path": "results/arch/v41_rack.json",
      "pinned": "ef80a30627853bc625e439855eef397a0087e0716ead18cd435f996b70516b20",
-     "status": "current"
+     "status": "stale"
     }
    ],
    "pin_counts": {
-    "current": 7
+    "current": 5,
+    "stale": 2
    },
    "commits": []
   },
@@ -11133,6 +11135,30 @@
    "detail": "provenance.execution_source_commit 351aecd4a1827eaccb2c4476282db4db1629d5a6 is not in HEAD's history"
   },
   {
+   "key": "stale-pin:results/arch/decode_roofline.json:results/arch/arch_budget_v41.json",
+   "kind": "stale-pin",
+   "record": "results/arch/decode_roofline.json",
+   "detail": "inputs[v41_budget] -> results/arch/arch_budget_v41.json is stale"
+  },
+  {
+   "key": "stale-pin:results/arch/decode_roofline.json:results/arch/power_scenarios.json",
+   "kind": "stale-pin",
+   "record": "results/arch/decode_roofline.json",
+   "detail": "inputs[power] -> results/arch/power_scenarios.json is stale"
+  },
+  {
+   "key": "stale-pin:results/arch/sync_cost_table.json:results/arch/arch_budget_v41.json",
+   "kind": "stale-pin",
+   "record": "results/arch/sync_cost_table.json",
+   "detail": "inputs[results/arch/arch_budget_v41.json] -> results/arch/arch_budget_v41.json is stale"
+  },
+  {
+   "key": "stale-pin:results/arch/sync_cost_table.json:results/arch/v41_rack.json",
+   "kind": "stale-pin",
+   "record": "results/arch/sync_cost_table.json",
+   "detail": "inputs[results/arch/v41_rack.json] -> results/arch/v41_rack.json is stale"
+  },
+  {
    "key": "stale-pin:results/quality/qwen3_8b_deployment_arithmetic.json:tools/hdc_golden.py",
    "kind": "stale-pin",
    "record": "results/quality/qwen3_8b_deployment_arithmetic.json",
@@ -11702,6 +11728,10 @@
   "commit-outside-head:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:39a0cd4115d665e988de505d097a527b3102e267",
   "commit-outside-head:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:6afcfba39b4d6e2b92252030b24986d26e36e4ce",
   "commit-outside-head:results/rtl/hdc_v41x_whbm_pooled_multi.json:351aecd4a1827eaccb2c4476282db4db1629d5a6",
+  "stale-pin:results/arch/decode_roofline.json:results/arch/arch_budget_v41.json",
+  "stale-pin:results/arch/decode_roofline.json:results/arch/power_scenarios.json",
+  "stale-pin:results/arch/sync_cost_table.json:results/arch/arch_budget_v41.json",
+  "stale-pin:results/arch/sync_cost_table.json:results/arch/v41_rack.json",
   "stale-pin:results/quality/qwen3_8b_deployment_arithmetic.json:tools/hdc_golden.py",
   "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_golden.py",

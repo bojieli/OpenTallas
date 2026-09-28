@@ -766,6 +766,9 @@ def power(el, pl):
                      cooling_basis="configs/hardware/power_scenarios.json cooling classes, 2-die packages (B200 HGX "
                                    "air / GB200 liquid, less the stacks), as the budget's power check "
                                    "(arch_budget_v41.json power.cooling_limit_w_per_die_by_class)",
+                     # the design point's hottest die at 1.2 x its worst case through the wall chain (the spec's
+                     # figure below is priced on the spec's widths and saturated rate, not the design point's)
+                     provisioned_wall_w=PROVISION_MARGIN * die_worst * over / (vr * psu),
                      spec_provisioned_wall_w=pw["provisioned_wall_w_per_die"]),
         serdes=dict(lane_w=serdes_lane_w, active_lanes_per_layer_pkg=active_lanes,
                     per_layer_pkg_w=2 * st["serdes_always_on"], per_table_pkg_w=2 * serdes_lane_w,

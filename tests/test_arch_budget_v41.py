@@ -47,7 +47,19 @@ def test_required_spec_meets_the_headline_at_every_context_and_batch_64(rec):
     sp = req_spec(rec)
     for ctx in A.CONTEXTS:
         assert A.price(sp, ctx)["tokens_s_per_user"] >= hl["tokens_s_per_user"][str(ctx)] * 0.999
-    assert A.price(sp, 200000, batch=64)["tokens_s_per_user"] >= hl["tokens_s_per_user_b64"]["200000"] * 0.999
+    # the batch-64 sizing target is on the stage-mean basis (arch_budget_v41.OCC_BASIS); reported points are not
+    assert A.price(sp, 200000, batch=64, occupancy="stage_mean")["tokens_s_per_user"] >= \
+        hl["tokens_s_per_user_b64"]["200000"] * 0.999
+
+
+def test_one_occupancy_basis_for_reported_points_and_adopted_hbm_stacks(rec):
+    assert A.OCC_BASIS == ["busiest_stage"]
+    assert rec["occupancy_basis"]["reported"] == "busiest_stage"
+    hl = rec["requirement"]["headline"]
+    assert hl["hbm_stacks_per_die"] == A.ROM_DIE_HBM_STACKS == rec["kv_state"]["stacks_per_die"]
+    assert hl["hbm_stacks_per_package"] == 2 * A.ROM_DIE_HBM_STACKS
+    for ctx, row in rec["occupancy_basis"]["required_b64_tokens_s_per_user"].items():
+        assert row["busiest_stage"] <= row["stage_mean"] * (1 + 1e-9)
 
 
 def test_required_spec_fits_the_compute_envelope(rec):

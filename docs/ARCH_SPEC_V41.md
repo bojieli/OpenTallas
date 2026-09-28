@@ -25,6 +25,10 @@ delivers **4,933 without MTP and 9,500 with DSpark MTP at 1M** (5,418 and 10,904
 without MTP and 1,221 with it at 1M (942 and 1,228 at 200K). Every figure below comes from the budget model at its current spec, not from silicon; the
 adopted design point built on this spec is in `docs/ARCH_V41_RACK.md` and the atlas.
 
+**One occupancy basis (2026-09-28).** Every operating point here is bound by the busiest pipeline stage, the
+same bound the adopted design point uses. §8.4 is the record-bound ladder from this specification (4,933 at 1M)
+to the design point (7,049).
+
 ## 1. Requirement
 
 The requirement is the report's own dependency DAG (`tools/decode_critical_path.py`, `packaging_options`,
@@ -425,7 +429,7 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
     wait-mask drains. The replay counts ~3,840 instructions per token per die, so issue is 1.9% of the token.
 
 11. **KV state and HBM controller on the ROM die (user decision).**
-    - **Stacks:** four HBM3E stacks per die (standing user decision: what today's interposers carry; the beachfront rule, 60% of the perimeter at 12 mm per stack, would allow five).
+    - **Stacks:** four HBM3E stacks per die, 4 <!-- figure: 4 src="results/arch/arch_budget_v41.json#requirement.headline.hbm_stacks_per_die" name="V4.1 HBM stacks per ROM die" --> per layer die and 8 <!-- figure: 8 src="results/arch/arch_budget_v41.json#requirement.headline.hbm_stacks_per_package" name="V4.1 HBM stacks per layer package" --> per two-die layer package. This is a standing user decision: it is what today's interposers carry. The beachfront rule, 60% of the perimeter at 12 mm per stack, would allow five per die, and 10 per package is the report DAG's superseded figure.
     - **Bandwidth:** 3.6 TB/s sustained at 90%, measured with refresh on.
     - **Controller:** refresh-aware per-bank refresh (REFpb, tRFCpb 200 ns: refresh the not-yet-refreshed
       bank that the fewest queued bursts need, never the head burst's bank) with at least 64 beats of queue
@@ -479,15 +483,18 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
     | block area (ASAP7) | 99.5 mm² | 199.1 mm² |
     | active clock of the blocks | 8.7 W | 17.5 W |
     | dynamic while its stage holds the token, batch 1 | 145.7 W (44.4) | 154.4 W (53.2) |
-    | dynamic at the saturated batch (every die busy) | 234.4 W (58.8) | 251.9 W (76.3) |
+    | dynamic at the saturated batch (busiest-stage bound) | 81.8 W (20.5) | 99.3 W (38.0) |
 
     Static power on the validated inputs is 98.8 W per die: leakage 54.5 W (0.10 W/mm² of logic, 0.0067 W/mm² of
     ROM array; `technology.json` power.static_leakage_w_per_mm2), HBM idle 11.2 W (4 stacks), always-on SerDes
-    30.6 W and UCIe idle 2.5 W. With the HBM interface at its worst-case traffic (34.2 W) the worst case is
-    **373.8 W for the hottest die, within liquid (0.79× of 474.6 W) and at the air limit (1.00×)**; provisioned
-    at 1.2 × worst case through the wall chain it is 556.4 W. At the specification's widths the saturated rate
-    is the stage-mean bound, so this hottest-die figure is an upper bound; at the adopted design point, whose
-    operating points are bound by the busiest stage, the hottest die draws 383 W at batch 1 and the fill, 455 W
+    30.6 W and UCIe idle 2.5 W. On the busiest-stage basis the spec's saturated rate is held down by S14 (layer
+    20's unsplit scan), so the saturated average falls below the active power. The worst point is therefore the
+    pipeline fill, where every stage holds a token and every die runs at its batch-1 active power. With the HBM
+    interface at its worst-case traffic (34.2 W), the worst case is **276.3 W for the hottest die, within liquid
+    (0.58× of 474.6 W) and within air (0.74× of 374.6 W)**. Provisioned at 1.2 × worst case through the wall
+    chain, it is 411.2 W. Before 2026-09-28 the saturated rate used the stage mean, which gave 373.8 W and
+    556.4 W. These are specification-width figures and do not bound the design point, which is faster. At the
+    adopted design point, whose operating points are bound by the busiest stage, the hottest die draws 383 W at batch 1 and the fill, 455 W
     at batch 1 with MTP (a head die, the draft), 426 W at the fill with MTP and 461 / 471 W saturated without /
     with MTP at 1M (production lane, `results/arch/power_scenarios.json`): **within liquid at every operating
     point over 200K–1M, over air at every 1M point** (`results/arch/v41_stage_rebalance.json`
@@ -588,11 +595,13 @@ their union across users and positions, and KV and index keys are per user.
 |---|---|---|---|---|---|---|---|---|
 | 1 | 4,933 | 4,933 | 36.0 | 9,500 | 926 | 926 | 1,430 | 1,192 |
 | 8 | 4,933 | 39,465 | 29.8 | 9,500 | 926 | 7,408 | 1,397 | 1,192 |
-| 28 | 4,933 | 138,127 | 29.2 | 9,500 | 926 | 25,928 | 1,393 | 1,192 |
-| 64 | 3,357 | 214,877 | 27.4 | 5,345 | 693 | 44,352 | 828 | 676 |
-| 128 | 2,223 | 284,532 | 27.1 | 3,058 | 410 | 52,489 | 723 | 419 |
-| 256 | 1,314 | 336,305 | 26.6 | 1,670 | 265 | 67,941 | 561 | 258 |
-| 1,024 | 352 | 360,704 | 26.1 | 439 | 86 | 88,231 | 415 | 134 |
+| 16 | 4,933 | 78,930 | 29.4 | 6,443 | 679 | 10,867 | 1,395 | 1,192 |
+| 28 | 2,867 | 80,272 | 29.4 | 3,736 | 388 | 10,867 | 1,395 | 967 |
+| 64 | 1,282 | 82,061 | 27.7 | 1,665 | 388 | 24,819 | 828 | 522 |
+| 128 | 653 | 83,591 | 27.4 | 842 | 276 | 35,384 | 723 | 306 |
+| 256 | 328 | 84,036 | 26.9 | 425 | 163 | 41,792 | 561 | 177 |
+| 512 | 165 | 84,385 | 26.6 | 215 | 89 | 45,399 | 483 | 109 |
+| 1,024 | 83 | 84,525 | 26.4 | 107 | 48 | 48,857 | 416 | 69 |
 
 The HBM MTP column uses m = 2 here, the batch model's single design point; §7 gives HBM at m = 6.
 
@@ -601,37 +610,32 @@ The HBM MTP column uses m = 2 here, the batch model's single design point; §7 g
 | batch | ROM tok/s/user | ROM array tok/s | ROM mJ/token (gated) | ROM + MTP tok/s/user | HBM tok/s/user | HBM array tok/s | HBM mJ/token (gated) | HBM + MTP tok/s/user |
 |---|---|---|---|---|---|---|---|---|
 | 1 | 5,418 | 5,418 | 19.6 | 10,904 | 942 | 942 | 1,413 | 1,212 |
-| 64 | 3,898 | 249,484 | 11.6 | 6,404 | 713 | 45,660 | 812 | 690 |
-| 1,024 | 462 | 473,018 | 10.4 | 565 | 91 | 93,672 | 400 | 144 |
+| 28 | 5,418 | 151,695 | 13.4 | 9,347 | 388 | 10,867 | 1,379 | 1,064 |
+| 64 | 3,056 | 195,577 | 11.7 | 4,286 | 388 | 24,819 | 812 | 629 |
+| 256 | 911 | 233,278 | 10.9 | 1,130 | 234 | 59,993 | 545 | 239 |
+| 1,024 | 232 | 237,086 | 10.4 | 292 | 76 | 77,791 | 400 | 116 |
 
 Batch-1 energy per token without gating at 1M: ROM 362 mJ (clock 333 mJ), HBM 2,327 mJ (weights 1,367 mJ); at
 200K 317 mJ (clock 304) and 2,296 mJ. Every die clocks every cycle while only one layer group works, so
 **idle-stage clock gating is a requirement**. Gated, the ROM token at batch 1 is 36.0 mJ at 1M, **39.7× below
 HBM** (19.6 mJ and 72.0× at 200K).
 
-The pipeline keeps the batch-1 per-user rate up to 28 users at the stage-mean bound these rows use. The spec's
-array then saturates at 359K tokens/s at 1M with 512 users (the 1,024-user row, 361K, is beyond the 866 users
-the HBM holds after the 0.9 capacity reserve and is flagged `fits_capacity: false`) and 473K at 200K; the HBM
-comparator reaches 88K (94K) at 1,024 users. Per-user MTP gains shrink with batch,
-because the verify pass's extra positions compete for the lanes that other users' tokens use. These are the
-specification's widths; the adopted design point's aggregates are higher (see the reconciliation note below).
+These rows are bound by the busiest pipeline stage (`arch_budget_v41.stage_bound`), the same basis the design
+point uses. At the specification's widths, with no split scan, the busiest stage is S14, which holds layer 20's
+whole index scan: 4.5× the mean stage's work at 1M saturated and 2.1× at 200K.
 
-**Reconciliation with the design point (internal note).** At 200K and 1,024 users the specification/budget model
-gives an aggregate of 473K tokens/s (`arch_budget_v41.json` `batch['200000']`, batch 1,024; previously ~450K
-at τ 4.1 on the retired spec model), while the adopted design point gives 436K (`results/arch/v41_lanes.json`
-`energy['200000']['sat1024']['rom']['aggregate_tokens_s']`; 273K at 1M with the 866 users held, against 359K
-here). They are two machines priced by the same model, not two measurements of one, and they now differ in
-their occupancy bound: these spec rows use the stage mean, while the design point's operating points are bound
-by the busiest pipeline stage (`arch_budget_v41.stage_bound`: with the adopted stage rebalancing the busiest
-stage is S9, layer 14's scan, at 2.3× the mean stage's work at 1M batch 1 and 2.6× saturated, and S14 at 2.0× at
-200K; before the split, S14 carried 3.4× at 1M), which is why its saturated aggregates are the lower ones. The design point is the spec after the adopted latency-ladder rungs
-(`results/arch/v41_latency_ladder.json`: the pooled block-dot / BF16 engines of `arch_utilization_v41.unified`
-with the pools widened ×2 inside the envelope (`widths_x2`, the R-L8 pools), the 1.087 GHz clock, the
-four-wide lm_head engine, the split index scan, the shorter sequencer gap and the fast-FP formulas), with the
-package's 112G lane split priced per collective and the RTL stage bench's measured collective tails with the
-adopted collective levers and the layer die's registered on-die wire (`tools/arch_lanes_v41.py`; the saturated
-aggregates are occupancy-bound, so the levers and the wire leave them unchanged). The spec rows here are the width derivation at m = 1 without those levers; the
-atlas quotes only the design point.
+- **Where the batch-1 rate stops.** At 1M it holds up to 16 users. At 200K it holds up to the 28-user fill.
+- **Where the array saturates.** At 1M it saturates at 84K tokens/s with 512 users. The 1,024-user row, 85K, is
+  beyond the 866 users the HBM holds after the 0.9 capacity reserve, so it is flagged `fits_capacity: false`.
+  At 200K the array saturates at 237K with 1,024 users.
+- **The HBM comparator** reaches 49K (78K at 200K) at 1,024 users.
+- **MTP gains shrink with batch,** because the verify pass's extra positions compete for the lanes that other
+  users' tokens use.
+
+These are the specification's widths. The adopted design point relieves S14 by the split scan and the stage
+rebalancing, and it saturates higher: 273K at 1M and 436K at 200K. §8.4 gives the record-bound ladder from these
+rows to the design point. Before 2026-09-28 these rows used the stage mean (359K at 1M, 473K at 200K), which is
+why they used to sit above the design point's.
 
 ### 8.3 Target context: 1M
 
@@ -640,14 +644,71 @@ atlas quotes only the design point.
 | per-user rate, with MTP (τ = 3.65) | 9.00× | **7.97×** |
 | per-user rate, without MTP | 5.75× | **5.33×** |
 | energy per token, batch 1, gated | 72.0× | **39.7×** |
-| array throughput, batch 64 | 5.46× | **4.84×** |
-| array throughput, saturated | 5.05× | **4.09×** |
+| array throughput, batch 64 (busiest stage) | 7.88× | **3.31×** |
+| array throughput, saturated (busiest stage) | 3.05× | **1.86×** |
+
+The two throughput ratios are specification-width ratios with both machines bound by the busiest stage. At 1M
+the ROM array's S14 is bound by layer 20's unsplit HBM key stream, which both machines stream at the same
+per-die bandwidth. The adopted design point splits that scan (§8.4).
 
 1M is the headline by user decision (2026-09-27: the default context of most agent APIs). The ratio rule the
 spec used before, the largest ROM:HBM per-user rate with MTP, then without, would still pick 200K
 (`target_context.ratio_rule_pick`): the context-dependent cost is the indexer's key scan plus its KV, both
 machines hold it in HBM, stream it at the same per-die bandwidth and pay for it equally, and the ROM advantage
 is in the weight path, which does not grow with context, so a longer context dilutes it.
+
+### 8.4 From the specification to the adopted design point (record-bound ladder)
+
+The specification (§1-§6, this record) and the adopted design point (`results/arch/v41_lanes.json`
+`design_point`, the atlas headline) are one machine at two stages of the same ladder, priced by the same
+`price()` and on the same occupancy basis (the busiest pipeline stage). Each row adds its lever to the row above;
+batch 1, autoregressive, tokens/s per user. Every cell is bound to the record that produces it.
+
+| # | step (cumulative) | record | 1M | 200K |
+|---|---|---|---|---|
+| 0 | required spec: 264,960 <!-- figure: 264,960 src="results/arch/arch_budget_v41.json#required_spec.weight_macs" name="V4.1 spec weight MAC lanes" --> weight MAC lanes, 41,664 <!-- figure: 41,664 src="results/arch/arch_budget_v41.json#required_spec.bf16_macs" name="V4.1 spec BF16 MAC lanes" --> BF16, 1,024 <!-- figure: 1,024 src="results/arch/arch_budget_v41.json#required_spec.su_lanes" name="V4.1 spec stream-unit lanes" --> stream-unit lanes, sequencer gap 5 <!-- figure: 5 src="results/arch/arch_budget_v41.json#required_spec.seq_gap" name="V4.1 spec sequencer gap" -->, 1.0339 GHz <!-- figure: 1.0339 src="results/arch/arch_budget_v41.json#clock_hz" scale="1e-9" name="V4.1 spec clock" -->, m = 1 | `arch_budget_v41.json` `required_priced` | 4,933 <!-- figure: 4,933 src="results/arch/arch_budget_v41.json#required_priced.1048576.tokens_s_per_user" name="V4.1 spec rate 1M" --> | 5,418 <!-- figure: 5,418 src="results/arch/arch_budget_v41.json#required_priced.200000.tokens_s_per_user" name="V4.1 spec rate 200K" --> |
+| 1 | + chain levers L1-L3 (online softmax, chaining for every unit, shorter stages), spec widths | `arch_budget_v41.json` `chain_ladder[4]` | 6,555 <!-- figure: 6,555 src="results/arch/arch_budget_v41.json#chain_ladder[4].1048576.tokens_s_per_user" name="V4.1 chain ladder step 3, 1M" --> | 6,992 <!-- figure: 6,992 src="results/arch/arch_budget_v41.json#chain_ladder[4].200000.tokens_s_per_user" name="V4.1 chain ladder step 3, 200K" --> |
+| 2 | + pooled engines and the adopted communication levers (R-U2..R-U8), HC 5,120 lanes per weight lane: the latency ladder's start | `v41_latency_ladder.json` `ladder[key=start]` | 7,038 <!-- figure: 7,038 src="results/arch/v41_latency_ladder.json#ladder[key=start].1048576.rom.ar" name="V4.1 ladder start 1M" --> | 7,548 <!-- figure: 7,548 src="results/arch/v41_latency_ladder.json#ladder[key=start].200000.rom.ar" name="V4.1 ladder start 200K" --> |
+| 3 | + four-wide lm_head BF16 engine | `ladder[key=wide_head]` | 7,184 <!-- figure: 7,184 src="results/arch/v41_latency_ladder.json#ladder[key=wide_head].1048576.rom.ar" name="V4.1 ladder wide head 1M" --> | 7,715 <!-- figure: 7,715 src="results/arch/v41_latency_ladder.json#ladder[key=wide_head].200000.rom.ar" name="V4.1 ladder wide head 200K" --> |
+| 4 | + uncapped index scans split over 8 dies | `ladder[key=idx_split]` | 7,420 <!-- figure: 7,420 src="results/arch/v41_latency_ladder.json#ladder[key=idx_split].1048576.rom.ar" name="V4.1 ladder idx split 1M" --> | 7,717 <!-- figure: 7,717 src="results/arch/v41_latency_ladder.json#ladder[key=idx_split].200000.rom.ar" name="V4.1 ladder idx split 200K" --> |
+| 5 | + sequencer gap 5 → 2 cycles | `ladder[key=seq_gap2]` | 7,576 <!-- figure: 7,576 src="results/arch/v41_latency_ladder.json#ladder[key=seq_gap2].1048576.rom.ar" name="V4.1 ladder seq gap 1M" --> | 7,886 <!-- figure: 7,886 src="results/arch/v41_latency_ladder.json#ladder[key=seq_gap2].200000.rom.ar" name="V4.1 ladder seq gap 200K" --> |
+| 6 | + fast-FP formulas, matrix-engine tree on the 3-cycle add, radix-4 divider (three rungs); one Sinkhorn unit per verified position (MTP only) | `ladder[key=sinkhorn_per_position]` | 7,784 <!-- figure: 7,784 src="results/arch/v41_latency_ladder.json#ladder[key=sinkhorn_per_position].1048576.rom.ar" name="V4.1 ladder fast-FP rungs 1M" --> | 8,118 <!-- figure: 8,118 src="results/arch/v41_latency_ladder.json#ladder[key=sinkhorn_per_position].200000.rom.ar" name="V4.1 ladder fast-FP rungs 200K" --> |
+| 7 | + core clock 1.034 → 1.087 GHz | `ladder[key=clock_1087]` | 8,068 <!-- figure: 8,068 src="results/arch/v41_latency_ladder.json#ladder[key=clock_1087].1048576.rom.ar" name="V4.1 ladder clock 1M" --> | 8,434 <!-- figure: 8,434 src="results/arch/v41_latency_ladder.json#ladder[key=clock_1087].200000.rom.ar" name="V4.1 ladder clock 200K" --> |
+| 8 | + pooled engines ×2 inside the envelope (R-L8): the ladder's top | `ladder[key=widths_x2]` | 8,635 <!-- figure: 8,635 src="results/arch/v41_latency_ladder.json#ladder[key=widths_x2].1048576.rom.ar" name="V4.1 ladder top 1M" --> | 9,055 <!-- figure: 9,055 src="results/arch/v41_latency_ladder.json#ladder[key=widths_x2].200000.rom.ar" name="V4.1 ladder top 200K" --> |
+| 9 | + the layer die's registered on-die wire (ASAP7 routed-wire model) and the adopted stage rebalancing (layer 20's keys over S14, S13, S12), collectives' bytes still overlap-assumed | `v41_lanes.json` `ladder_top_overlap_assumed` | 7,362 <!-- figure: 7,362 src="results/arch/v41_lanes.json#ladder_top_overlap_assumed.1048576.ar" name="V4.1 ladder top with wire, 1M" --> | 7,610 <!-- figure: 7,610 src="results/arch/v41_lanes.json#ladder_top_overlap_assumed.200000.ar" name="V4.1 ladder top with wire, 200K" --> |
+| 10 | + the package's 112G lanes split TP 52 <!-- figure: 52 src="results/arch/v41_lanes.json#best_split.tp" name="V4.1 TP lanes per package" --> / stage 14 <!-- figure: 14 src="results/arch/v41_lanes.json#best_split.stage" name="V4.1 stage lanes each way" -->, every collective's bytes priced per link | `v41_lanes.json` `best_split` | 7,374 <!-- figure: 7,374 src="results/arch/v41_lanes.json#best_split.1048576.ar" name="V4.1 best lane split 1M" --> | 7,623 <!-- figure: 7,623 src="results/arch/v41_lanes.json#best_split.200000.ar" name="V4.1 best lane split 200K" --> |
+| 11 | + the collective tails measured in the RTL stage bench (gate C7), no collective levers | `v41_lanes.json` `design_point_no_levers` | 6,592 <!-- figure: 6,592 src="results/arch/v41_lanes.json#design_point_no_levers.1048576.ar" name="V4.1 measured tails no levers 1M" --> | 6,803 <!-- figure: 6,803 src="results/arch/v41_lanes.json#design_point_no_levers.200000.ar" name="V4.1 measured tails no levers 200K" --> |
+| 12 | + the adopted collective levers: **the design point** | `v41_lanes.json` `design_point` | **7,049** <!-- figure: 7,049 src="results/arch/v41_lanes.json#design_point.1048576.ar" name="V4.1 design point 1M" --> | **7,286** <!-- figure: 7,286 src="results/arch/v41_lanes.json#design_point.200000.ar" name="V4.1 design point 200K" --> |
+
+Two single-lever ablations of row 12 separate what row 9 adds together. Without the on-die wire the design point
+would run at 8,246 <!-- figure: 8,246 src="results/arch/v41_lanes.json#on_die_wire.design_point_pre_wire.1048576.ar" name="V4.1 design point without wire 1M" -->
+(8,568 <!-- figure: 8,568 src="results/arch/v41_lanes.json#on_die_wire.design_point_pre_wire.200000.ar" name="V4.1 design point without wire 200K" --> at 200K),
+so the wire costs about 15%. Without the stage rebalancing it runs at 7,009 <!-- figure: 7,009 src="results/arch/v41_stage_rebalance.json#scenarios.baseline.batch1.1048576.ar" name="V4.1 design point without rebalance 1M" -->
+at 1M. At 200K the rebalancing costs nothing (7,286 <!-- figure: 7,286 src="results/arch/v41_stage_rebalance.json#scenarios.baseline.batch1.200000.ar" name="V4.1 design point without rebalance 200K" -->),
+because its helper groups engage only from position 400,000. At batch 1 the rebalancing is a small latency
+term. Its purpose is the busiest stage: it takes that stage down to a level the liquid limit holds at every
+operating point (§6 item 12).
+
+**The saturated aggregates on one basis.** The specification and the design point now both bound every operating
+point by the busiest pipeline stage (`arch_budget_v41.stage_bound`; the record's `occupancy_basis`). The two
+saturated aggregates therefore order as the ladder does:
+
+- **Specification (§8.1-§8.2).** No split scan and no rebalancing, so its busiest stage is S14, which holds layer
+  20's whole index scan. That stage carries 4.5× the mean stage's work at 1M saturated and 2.1× at 200K. The
+  spec saturates at 84K tokens/s at 1M with 512 users and at 237K at 200K with 1,024 users.
+- **Design point.** It saturates at 273K <!-- figure: 273 src="results/arch/v41_lanes.json#energy.1048576.sat1024.rom.aggregate_tokens_s" scale="0.001" name="V4.1 design point saturated aggregate 1M" -->
+  at 1M with the 866 users the HBM holds, and 436K <!-- figure: 436 src="results/arch/v41_lanes.json#energy.200000.sat1024.rom.aggregate_tokens_s" scale="0.001" name="V4.1 design point saturated aggregate 200K" -->
+  at 200K.
+
+Before this change the specification's rows used the stage mean, which gave 359K (1M) and 473K (200K). Those
+figures were higher than the design point's, and a reader had to be told why. That difference was a difference
+of basis, not of machine.
+
+One step of the specification still uses the stage mean: the batch-64 width derivation (`budget.*_b64`, and
+`requirement.headline.tokens_s_per_user_b64` as its target). On the busiest-stage basis, the 1M batch-64
+requirement is bound by S14's unsplit HBM key stream, and no engine width relieves that. Widening every engine to
+about 318 mm² still misses the target. The design point relieves S14 by the split scan (row 4) and the
+rebalancing (row 9), not by width. That is why the widths in row 0 stay the stage-mean derivation's.
 
 ## 9. HBM comparator specification (equal total logic area)
 
