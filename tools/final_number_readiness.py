@@ -42,6 +42,7 @@ def build() -> dict:
     index_p = "results/rtl/hdc_v41x_idx_shard_reader_pc.json"
     route_p = "results/physical_abi3/asap7/chip/v41x_hbm_karb/strip_pin_placement.json"
     die_route_p = "results/physical_abi3/asap7/chip/v41x_full_die/physical.json"
+    qwen_route_p = "results/physical_hdc/asap7/qwen_o4_full_die/physical.json"
     v41_rtl_p = "results/rtl/hdc_v41x_fullshape_token_rtl.json"
     v41_hbm_p = "results/rtl/hdc_v41x_fullshape_hbm_matched.json"
     program_p = "results/rtl/hdc_v41x_fullshape_program_bind.json"
@@ -65,6 +66,7 @@ def build() -> dict:
     qwen_full = read(qwen_full_p, used)
     qwen_dflash = read(qwen_dflash_p, used)
     qwen_hbm = read(qwen_hbm_p, used)
+    qwen_route = read(qwen_route_p, used)
     used["tools/final_number_readiness.py"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
     contexts = g.get("contexts", {})
@@ -74,7 +76,8 @@ def build() -> dict:
     old = rate.get("points", {}).get("1048576", {}).get("ar", {})
     ld = load.get("points", {}).get("1048576", {}).get("gw1_depth128_exact_stage", {})
     tails = coll.get("summary", {})
-    measured_index = index.get("timed_1040_key_scan", {}).get("sectors_per_cycle", 0)
+    full_index = index.get("timed_1m_four_stack_concurrent", {})
+    measured_index = full_index.get("sectors_per_cycle", 0)
     # The adopted 3.6 TB/s per die at 1.087 GHz is 103.5 32-byte sectors/cycle.
     effective_index_target = 3.6e12 / (1.087e9 * 32)
     model_ar = old.get("row_split_measured_gathers", 0)
@@ -104,8 +107,13 @@ def build() -> dict:
              "act_one_write_port_floor": tails.get("act", {}).get("output_port_minimum_cycles")},
             "model binds both exact adopted-width tails; any new bank/packing result must reprice from its own gate",
             f"{coll_p}; {rate_p}"),
-        "v41_index_bandwidth": gate(measured_index >= effective_index_target,
+        "v41_index_bandwidth": gate(
+            full_index.get("status") == "pass_exact" and
+            full_index.get("keys") == 262_144 and
+            full_index.get("user_count", 0) >= 2 and
+            measured_index >= effective_index_target,
             {"measured_sectors_per_cycle": measured_index,
+             "keys": full_index.get("keys"), "user_count": full_index.get("user_count"),
              "effective_modeled_sectors_per_cycle": round(effective_index_target, 3)},
             "four-stack concurrent exact scan at or above the adopted effective HBM rate, with user isolation",
             index_p),
@@ -135,6 +143,12 @@ def build() -> dict:
             qwen_hbm.get("status", "fullshape matched A/B and routed weight supply missing"),
             "same full-shape program/images, all weights in HBM, exact state, sustained controller and route",
             qwen_hbm_p),
+        "qwen_full_die_route": gate(qwen_route.get("flow_completed") is True and
+            qwen_route.get("setup_hold_drc_power_fmax", {}).get("fmax_hz", 0) >= 0.92e9,
+            {"flow_completed": qwen_route.get("flow_completed", False),
+             "fmax_hz": qwen_route.get("setup_hold_drc_power_fmax", {}).get("fmax_hz")},
+            "adopted O4 die detailed route with extracted setup/hold/DRC/power and >=0.92 GHz",
+            qwen_route_p),
     }
     return {"schema": "opentallas.final-number-readiness.v1", "source_sha256": used,
             "claim_boundary": "a passed reference or reduced gate does not imply chip throughput",

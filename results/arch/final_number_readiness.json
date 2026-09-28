@@ -1,6 +1,15 @@
 {
   "claim_boundary": "a passed reference or reduced gate does not imply chip throughput",
   "gates": {
+    "qwen_full_die_route": {
+      "evidence": "results/physical_hdc/asap7/qwen_o4_full_die/physical.json",
+      "observed": {
+        "flow_completed": false,
+        "fmax_hz": null
+      },
+      "required": "adopted O4 die detailed route with extracted setup/hold/DRC/power and >=0.92 GHz",
+      "status": "blocked"
+    },
     "qwen_fullshape_hbm": {
       "evidence": "results/rtl/qwen_o4_fullshape_hbm_matched.json",
       "observed": "fullshape matched A/B and routed weight supply missing",
@@ -90,7 +99,9 @@
       "evidence": "results/rtl/hdc_v41x_idx_shard_reader_pc.json",
       "observed": {
         "effective_modeled_sectors_per_cycle": 103.496,
-        "measured_sectors_per_cycle": 2.153996
+        "keys": null,
+        "measured_sectors_per_cycle": 0,
+        "user_count": null
       },
       "required": "four-stack concurrent exact scan at or above the adopted effective HBM rate, with user isolation",
       "status": "blocked"
@@ -120,6 +131,7 @@
     "results/arch/v41_tp_rowsplit_measured_reprice.json": "3b642a904469134926f7d8c0aa9f454177c41b93e6b3c02351a21abb33e77b85",
     "results/physical_abi3/asap7/chip/v41x_full_die/physical.json": "missing",
     "results/physical_abi3/asap7/chip/v41x_hbm_karb/strip_pin_placement.json": "c605dc5d26471af93b12a99fa0677aa5067cc1004052f8ac71adce559cb1f64a",
+    "results/physical_hdc/asap7/qwen_o4_full_die/physical.json": "missing",
     "results/rtl/hdc_qwen_int8_tp2_ar.json": "910a716387a148622edc5786001a57f99223f98fcd20cb6fc60c4b30a58a7f3c",
     "results/rtl/hdc_v41x_fullshape_golden.json": "1c329cf169f21eae9298c0fde71e756cdda2060de9757a20b7741b86e685859b",
     "results/rtl/hdc_v41x_fullshape_hbm_matched.json": "missing",
@@ -132,7 +144,7 @@
     "results/rtl/qwen_o4_fullshape_tp2_ar.json": "missing",
     "results/rtl/qwen_o4_fullshape_tp2_dflash.json": "missing",
     "results/rtl/v41_collective_depth_campaign.json": "2c99155903830e712f1ca283a681dbecc464eadfac45960a8b577c499d887bd8",
-    "tools/final_number_readiness.py": "cdd04252919b6582c97e014bc3b05453884006b339d3e9a240c0597e46296d36"
+    "tools/final_number_readiness.py": "6e5e449049c8ab084ad633f642035c9afb6b4d6310b65f127baa0a0f317b790d"
   },
   "terminal_ready": false
 }
