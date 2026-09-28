@@ -15,8 +15,8 @@ import subprocess
 
 import numpy as np
 
-import hdc_golden_v41 as V
 import rtl_v41_fullshape_layer_campaign as C
+V = C.V  # campaign sets HDC_V41_ARITH=chunk8 before importing the golden
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTEXT = 200000
