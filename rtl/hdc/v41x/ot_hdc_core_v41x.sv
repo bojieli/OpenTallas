@@ -64,6 +64,7 @@ module ot_hdc_core_v41x #(
     parameter integer SW   = 8,            // stream-unit lanes (elements per cycle)
     parameter integer HS   = 8,            // HE K chunks (hdc_golden_v41.HC_SPLIT)
     parameter integer W_HBM = 0,
+    parameter integer KV_HBM = 0,
     parameter integer NSLOT = 1,           // position slots (1: the one-position core)
     parameter integer MP    = 1,           // lane multiplier of the ME, QE and HE
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
@@ -276,6 +277,14 @@ module ot_hdc_core_v41x #(
     output wire [7:0]        qd_nb,
     output wire [NW-1:0]     qd_tiles,
     input  wire              q_ok,
+    // Attention KV prefetch handshake (KV_HBM = 1). The index-key engine has
+    // its own pooled HBM path and does not use this descriptor.
+    output reg               kvd_v,
+    output wire [AW-1:0]     kvd_wbase, kvd_ts, kvd_ks, kvd_js,
+    output wire [NW-1:0]     kvd_tiles, kvd_k, kvd_nout, kvd_pos,
+    output wire [1:0]        kvd_hg,
+    output wire              kvd_mmode,
+    input  wire              kv_ok,
     output reg               wrel_v           // an instruction marked wrel issued
 );
     `include "ot_hdc_isa_v41.svh"
@@ -318,6 +327,7 @@ module ot_hdc_core_v41x #(
     reg          xu_first;
     reg [2:0]    xu_hslot;
     reg [NW-1:0] me_nout, me_tiles, me_k;
+    reg [NW-1:0] me_pos;
     reg          me_wsrc, me_round, me_oen, me_amax, me_mmode, me_fuse;
     reg [AW-1:0] me_wts;
     reg [AW-1:0] me_wbase, me_ts, me_ks, me_js, me_xbase, me_obase, me_xks, me_xjs, me_ots, me_ojs, me_xcs;
@@ -426,7 +436,7 @@ module ot_hdc_core_v41x #(
                         end
                     end else if (d_skip) begin
                         pc <= pc + 1'b1; st <= S_FETCH;
-                    end else if (waited && unit_ready && q_gate) begin
+                    end else if (waited && unit_ready && q_gate && kv_gate) begin
                         wrel_v <= d_wrel;
                         me_go <= (d_unit == 3'd1); su_go <= (d_unit == 3'd2);
                         qe_go <= (d_unit == 3'd3); xu_go <= (d_unit == 3'd4); he_go <= (d_unit == 3'd5);
@@ -497,6 +507,7 @@ module ot_hdc_core_v41x #(
     wire [NW-1:0] c_me_nout = `F(ME_NOUT) + `DY(ME_D_NOUT);
     wire [NW-1:0] c_me_tiles = `F(ME_TILES) + `DY(ME_D_TILES);
     wire [NW-1:0] c_me_k = `F(ME_K) + `DY(ME_D_K);
+    wire [AW-1:0] c_me_wbase = `F(ME_WBASE) + `DY(ME_D_WBASE);
     wire [NW-1:0] c_su_nout = `F(SU_NOUT) + `DY(SU_D_NOUT);
     wire [NW-1:0] c_su_nin = `F(SU_NIN) + `DY(SU_D_NIN);
     wire [NW-1:0] c_xu_n = `F(XU_N) + `DY(XU_D_N);
@@ -517,8 +528,9 @@ module ot_hdc_core_v41x #(
             xu_first <= (c_pos == 0); xu_hslot <= c_dslot;
         end
         me_nout <= c_me_nout; me_tiles <= c_me_tiles; me_k <= c_me_k;
+        me_pos <= c_pos;
         me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
-        me_wbase <= `F(ME_WBASE) + `DY(ME_D_WBASE);
+        me_wbase <= c_me_wbase;
         me_ts <= `F(ME_TS); me_ks <= `F(ME_KS); me_js <= `F(ME_JS);
         me_xbase <= `F(ME_XBASE) + `DY(ME_D_XBASE);
         me_obase <= `F(ME_OBASE) + `DY(ME_D_OBASE);
@@ -564,6 +576,21 @@ module ot_hdc_core_v41x #(
         else qd_v <= (W_HBM != 0) && (st == S_DEC) && c_unit == 3'd3 && ir[O_QE_MODE +: W_QE_MODE] == 2'd0 && pred_ok;
     end
     assign qd_wbase = qe_wbase; assign qd_nb = qe_nb; assign qd_tiles = qe_tiles;
+
+    // Only an attention-class ME op reads the window KV through the shared KV
+    // port. The descriptor is emitted after decode captures its dynamic fields.
+    // Holding issue for one cycle after kvd_v also prevents a stale kv_ok from
+    // the previous operation from granting this one.
+    wire kv_gate = (KV_HBM == 0) || !(d_unit == 3'd1 && me_cls == MC_A) || (kv_ok && !kvd_v);
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) kvd_v <= 1'b0;
+        else kvd_v <= (KV_HBM != 0) && (st == S_DEC) && c_unit == 3'd1 &&
+                      ir[O_ME_WSRC] && (c_me_wbase < cfg_ik_base) &&
+                      pred_ok && !zero;
+    end
+    assign kvd_wbase = me_wbase; assign kvd_ts = me_ts; assign kvd_ks = me_ks; assign kvd_js = me_js;
+    assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
+    assign kvd_hg = me_hg; assign kvd_mmode = me_mmode; assign kvd_pos = me_pos;
 
     // -- units -----------------------------------------------------------------------------------------
     // -- the ME SLOT: one issue slot, up to four engines behind it ------------------------------------
