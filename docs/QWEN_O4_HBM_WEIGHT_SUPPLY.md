@@ -176,6 +176,13 @@ requests to their exact owner and sector, with 16 controller stalls, six
 backpressured response cycles and eight credit-blocked cycles. Its 74 cycles
 measure this synthetic contention case only; the actual four-stack controller,
 client windows and full-token rate are still unmeasured.
+`ot_hdc_qwen_hbm_region_guard` sits before the shared arbiter and gates each
+owner to its bound code, scale, CROM, embedding or current user/layer KV
+sector range. Only the KV owner may write. It blocks a deliberate embedding
+request into the KV page without forwarding or acknowledging it, and raises
+a local sticky fault. The guard uses the same registered region bases as the
+mixed-client gate; its bounds correspond to the current compact full-token
+binding and need rerun if that binding changes.
 The layer controller must supply a 0–35 stage ID for the KV page.
 With 4 KV heads and 128 dimensions per die, a full 8K stage holds
 8,388,608 FP8 bytes = 262,144 physical sectors; all 36 stages need 288 MiB
