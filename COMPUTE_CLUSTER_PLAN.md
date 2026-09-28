@@ -13,6 +13,22 @@ separately, and the agreed Qwen context. Multi-user saturation is a separate res
 If a candidate improves one operating point and hurts another, retain a Pareto
 comparison rather than averaging away the regression.
 
+Multi-user spatial pipelining is a required operating point: independent requests
+can occupy different layer stages while each request preserves its autoregressive
+dependency. Measure isolated token latency L and sustainable pipeline initiation
+interval II separately. For homogeneous users with one outstanding token each,
+aggregate rate is bounded by min(U/L, 1/II); include sampling/commit/feedback in L
+and real resource conflicts in II. Approximately L/II independent users are needed
+to fill an ideal pipeline, subject to state capacity and load balance. Pipeline
+fill increases aggregate throughput; it does not shorten the isolated token path.
+
+Report stage occupancy and within-stage expert/engine occupancy separately. Sparse
+expert selection, differing contexts, MTP bursts, shared HBM, backpressure and
+finite queues can reduce utilization or increase queue latency. Per-user KV,
+activation and in-flight state must fit before crediting pipeline concurrency.
+Use asynchronous tagged requests with bounded credits and explicit lifetimes;
+evaluate latency versus concurrent users, not only saturated throughput.
+
 ## Proposed sharing boundary
 
 User steering: prioritize single-user latency with decentralized, weight-stationary

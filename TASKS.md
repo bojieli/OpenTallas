@@ -18,6 +18,12 @@ sharing. Count replicated idle hardware and activation/result networks in the sa
 area/power budget. Whole-die MFU is diagnostic; no global weight-routing or target
 token rate is assumed.
 
+**Pipeline operating point:** also evaluate independent users streamed through
+different layer stages. Record isolated token latency, initiation interval,
+aggregate throughput, queue latency, stage/expert occupancy and per-user state
+capacity. Multi-user pipeline fill can improve utilization of dedicated ROM
+tiles; it does not remove one user's autoregressive feedback dependency.
+
 - [~] **Root: integration and architectural contract** — integrate completed exact
   operator/local-route records; define concrete tensor/expert placement, all
   storage and the finite shared-resource schedule before selecting cluster width.
