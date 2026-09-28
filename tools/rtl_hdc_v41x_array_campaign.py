@@ -33,6 +33,7 @@ from pathlib import Path
 # The first package gate adopts the new HCP arithmetic order only. Keep the
 # ISA/golden contract aligned with X_HE=1 in the array bench.
 ALL_UNIT = "--all-unit" in sys.argv
+LINK_ONLY = None
 os.environ["HDC_V41_ARITH"] = "chunk8" if ALL_UNIT else "he"
 if ALL_UNIT:
     os.environ["HDC_V41_IDX_FUSED"] = "1"
@@ -211,6 +212,10 @@ def timing(plan, progs, steps):
 
 def run_config(name, spec, ctx, scratch: Path, log) -> dict:
     body, hp, hmc, shared, fabric, users, fewer, stall, plen, ngen, link_delays = spec
+    if LINK_ONLY is not None:
+        if LINK_ONLY not in link_delays:
+            raise ValueError(f"{name}: link delay {LINK_ONLY} is not in configured sweep {link_delays}")
+        link_delays = (LINK_ONLY,)
     lay, model, base = ctx["lay"], ctx["model"], ctx["base"]
     with ctx["isa_lock"]:
         t0 = time.time()
@@ -369,11 +374,15 @@ def main() -> int:
     parser.add_argument("--reuse", action="store_true",
                         help="with --scratch: keep builds and run logs made from the same sources")
     parser.add_argument("--all-unit", action="store_true", help="all adopted V4.1x X units and timed weight/index HBM")
+    parser.add_argument("--link-delay", type=int, help="run one configured link delay (cycles per link/half-link)")
     args = parser.parse_args()
-    if args.all_unit and args.only not in (["b2_p2p"], ["b2_p2p_u2"]):
-        parser.error("--all-unit requires --only b2_p2p or --only b2_p2p_u2")
-    global REUSE
+    if args.all_unit and args.only not in (["b2_p2p"], ["b2_p2p_u2"], ["b3_h2_switch_stall"]):
+        parser.error("--all-unit requires one explicit b2 or b3 configuration")
+    if args.link_delay is not None and (not args.only or len(args.only) != 1):
+        parser.error("--link-delay requires exactly one --only configuration")
+    global REUSE, LINK_ONLY
     REUSE = args.reuse
+    LINK_ONLY = args.link_delay
     names = args.only or [n for n in CONFIGS if n != "b2_p2p_u2"]
     with tempfile.TemporaryDirectory() as tmp:
         scratch = args.scratch or Path(tmp)
