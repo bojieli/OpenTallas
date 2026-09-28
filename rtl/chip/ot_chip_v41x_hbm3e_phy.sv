@@ -27,6 +27,7 @@
 // ---------------------------------------------------------------------------
 module ot_chip_v41x_hbm3e_phy #(
     parameter integer NPC       = 32,
+    parameter integer K_AW      = 28,          // full-shape packed regions need 30
     parameter integer K_MEM     = 1 << 18,     // K port sectors
     parameter integer W_PORT    = 0,
     parameter integer NPC_W     = 8,
@@ -40,7 +41,7 @@ module ot_chip_v41x_hbm3e_phy #(
     // K port
     input  wire [NPC-1:0]       k_v,
     output wire [NPC-1:0]       k_rdy,
-    input  wire [NPC*28-1:0]    k_addr,
+    input  wire [NPC*K_AW-1:0]  k_addr,
     input  wire [NPC*4-1:0]     k_len,
     input  wire [NPC*KTAGW-1:0] k_tag,
     input  wire [NPC-1:0]       k_we,
@@ -69,7 +70,7 @@ module ot_chip_v41x_hbm3e_phy #(
     output wire [63:0]          refreshes,     // K port refresh events
     output wire [31:0]          w_reads        // W port sector reads
 );
-    ot_hdc_v41x_idx_hbm #(.NPC(NPC), .AW(28), .DW(256), .MEM_WORDS(K_MEM), .TAGW(KTAGW), .LENW(4), .BEATW(4),
+    ot_hdc_v41x_idx_hbm #(.NPC(NPC), .AW(K_AW), .DW(256), .MEM_WORDS(K_MEM), .TAGW(KTAGW), .LENW(4), .BEATW(4),
                           .QD(64), .REFPB(3), .MEM_MODE(0)) u_k (
         .clk(clk), .rst_n(rst_n), .req_v(k_v), .req_rdy(k_rdy), .req_addr(k_addr), .req_len(k_len),
         .req_tag(k_tag), .req_we(k_we), .req_wdata(k_wdata), .req_wstrb(k_wstrb), .wr_done(k_wr_done),
@@ -79,11 +80,11 @@ module ot_chip_v41x_hbm3e_phy #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) k_oor <= 1'b0;
         else for (c = 0; c < NPC; c = c + 1)
-            if (k_v[c] && k_rdy[c] && (32'(k_addr[c*28 +: 28]) + 32'(k_len[c*4 +: 4]) > K_MEM)) begin
+            if (k_v[c] && k_rdy[c] && (64'(k_addr[c*K_AW +: K_AW]) + 64'(k_len[c*4 +: 4]) > 64'(K_MEM))) begin
                 k_oor <= 1'b1;
 `ifndef SYNTHESIS
                 $error("ot_chip_v41x_hbm3e_phy: K request sector %0d + %0d past the stack's %0d sectors",
-                       k_addr[c*28 +: 28], k_len[c*4 +: 4], K_MEM);
+                       k_addr[c*K_AW +: K_AW], k_len[c*4 +: 4], K_MEM);
 `endif
             end
     reg [63:0] ref_n;
