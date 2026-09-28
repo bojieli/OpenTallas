@@ -37,9 +37,14 @@ one gate/up round consumes 512. A 512-word PC-local window therefore needs
 48 MiB of code sectors per die. The current ISA cannot divide these K rounds
 into 32-word chunks while preserving the accumulator order. The `lm_head`
 can be divided between complete rounds, but its code and scale addresses
-then advance by different strides. The proposed interface reuses the existing
-weight-op `me_wcs` field as an independent scale base under a new mode; that
-mode and a full-shape chunked emitter are not implemented in this gate.
+then advance by different strides. The opt-in `INT8_SCALE_WCS_BASE=1` mode
+reuses the existing weight-op `me_wcs` field as an independent scale base;
+the core descriptor forwards it as `wd_sbase` to the PC window. Reduced
+programs keep the shared-base default. The four reduced split/base gates are
+source-pinned in `results/rtl/qwen_int8_scale_base.json`. A full-shape chunked
+emitter and package token gate using this mode are still pending. At 512 words
+and 32 PCs, each PC tracks 49,152 code sectors, so the response tag must be
+at least 17 bits including its code/scale selector.
 The source also needs an operation-drain protocol or double buffering before
 overlapping the next preload with current code and scale reads. Full-shape
 bit-exact timing and placement are therefore open.
