@@ -89,3 +89,17 @@ and all 512 returned words. Its standalone MP=1 physical cut still fails
 CTS hold by 24.932 ps on `rq_q_r[45]` after 7,584 hold buffers, which is
 why the registered producer in the neighborhood is required. The full
 integration result did not contain that extra producer edge.
+
+The first real mixed-macro physical attempt is pinned at
+`results/physical_abi3/asap7/chip/v41_vm_me_neighborhood4/placed_failure.json`.
+It preserved all 56 SRAM macros and 4,096 distinct consumer capture flops,
+and 6,403 pins fit 35,352 sites. With top I/O false-pathed, **internal**
+setup misses 0.92 ns by 307.866 ps after resize and 317.225 ps after
+detailed placement. VM read CE and write data each traverse long buffered
+wires to their SRAM pins; the MP=1 SRAM read to its local output register
+also misses. CTS repair did not converge and was stopped, so there is no
+route, DRC or power claim. The next physical cut must localize the VM
+macro enable/write registers and the store read capture at the SRAM bank,
+then re-run exact latency and the whole neighborhood. The positive
+standalone full-width GW4 static-bank write boundary does not close this
+VM-read/ME-preload service.
