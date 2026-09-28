@@ -5,6 +5,13 @@
   "rank": 0,
   "layout_sha256": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
   "shard_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
+  "source_sha256": {
+    "tools/v41_fullshape_program_bind.py": "d5cfae2e0cf3ab50df13e512dd3ef21d050f38eb1f0d3d4d53b0d1252fe090bb",
+    "tools/hdc_replay_v41.py": "91b2897effabca8ec33d203a7411d771baf943ef153e6fb8ef35bf8872209e00",
+    "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "57a05fd92b950bb6daa8e41918a336bee855e2758bd89880c7e00cde08cca6a7",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a"
+  },
   "source_experts": [
     110,
     112,

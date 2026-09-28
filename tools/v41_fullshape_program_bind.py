@@ -189,6 +189,11 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
     return dict(schema="opentallas.v41x.fullshape.program_bind.v1",
                 status="runnable" if not blockers else "blocked", layer=0, rank=0,
                 layout_sha256=sha(layout_path), shard_sha256=sha(shard_path),
+                source_sha256={str(p.relative_to(ROOT)): sha(p) for p in (
+                    Path(__file__).resolve(), ROOT / "tools/hdc_replay_v41.py",
+                    ROOT / "tools/hdc_isa_v41.py",
+                    ROOT / "rtl/hdc/v41/ot_hdc_v41_qe.sv",
+                    ROOT / "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv")},
                 source_experts=list(selected), matrix_count=len(expected),
                 constant_count=len(names), instruction_count=len(program),
                 qe_address_trace=trace, me_wo_a_trace=me_trace, blockers=blockers,
