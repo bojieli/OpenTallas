@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.rtl.v41x_fullshape_hc_attn_exact.v1",
+  "status": "pass",
+  "claim_scope": "200K context, layer-0 rank-0 HC attention projection: all 24 raw FP32 rows bit-exact against checkpoint golden through the full-depth HE adapter and packed ROM image. No full-layer, token or chip-rate claim.",
+  "input_elements": 20480,
+  "exact_rows": 24,
+  "he_k_chunks": 2560,
+  "bank_read_cycles": 7701,
+  "simulation_cycles": 10324,
+  "build_seconds": 35.98,
+  "simulation_seconds": 38.03,
+  "memory_cap_bytes": 17179869184,
+  "fixture_sha256": {
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/v41_200k_l0_hc_attn_fn_x.f32le.bin": "079f3aad7756fff51f227f53cc45a6f9e8d20c253f7d57f3b7e67fb083060bae",
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/v41_200k_l0_hc_attn_fn_y_raw.f32le.bin": "7b93f117e08d9b81bac7e9ee6e382c87344891143170dfa40f98762e913fbcec",
+    "/tmp/v41_fullshape_rank0_rom_images/hc_attn_fn.he.bin": "123553128f7cde2b5d01605e3ac70e236d0c07b02aa346044041c4078993fb15",
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/hdc_v41x_fullshape_200k_l0_hc_attn_vectors.json": "67bde7fc2b8f160c12bc15f4a054aa9ab47bbf24d519f1ded2cedfaba371aed8",
+    "/tmp/v41_fullshape_rank0_rom_images/hc_attn_fn.he.json": "7ffb9e7ee7c021bbeb422104a00eb225fb6192c6b7f7e1f3bfdfdc6c964ea3a8"
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173",
+    "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c",
+    "rtl/test/tb_hdc_v41x_fullshape_hc_exact.sv": "a587541d1bf60ebe72f12898655387f5ba1419619305ff1335a02a74f1373fb6",
+    "tools/rtl_hdc_v41x_fullshape_hc_exact.py": "4a9d0047f55e0b54ed2f5280ea2a915bfc7603504838dcd38f1caf028240408b"
+  }
+}
