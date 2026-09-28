@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.qwen3-dflash-int8-acceptance-summary.v1",
+ "source_record": "results/speculative/qwen3_dflash_int8_drafter_pilot.json",
+ "source_record_sha256": "c5d769f3ae6434ef33f94885e995986807ee8472b3d042b9c712c3d912af9f4b",
+ "scope": "Bounded greedy acceptance of deployed signed-INT8/FP8 target and per-row INT8 drafter, on a subset of published prompts at 128 generated tokens. Not a TP-2 RTL timing or nine-workload production tau.",
+ "measurement": {
+  "post_prefill_tokens": 912,
+  "int8_verify_cycles": 326,
+  "bf16_verify_cycles_at_matched_output_length": 332,
+  "int8_tau": 2.7975460122699385,
+  "bf16_prefix_tau": 2.746987951807229,
+  "int8_over_bf16_tau": 1.01840490797546
+ },
+ "ci95_prompt_bootstrap_stratified_by_workload": {
+  "seed": 42,
+  "replicates": 10000,
+  "int8_tau": [
+   2.6147308781869687,
+   3.0133779264214047
+  ],
+  "int8_over_bf16_tau": [
+   0.9889196675900277,
+   1.0549828178694158
+  ]
+ },
+ "sample": {
+  "prompts": 10,
+  "workloads": {
+   "agentic_bfcl": 2,
+   "agentic_json_mode": 2,
+   "chat_mt_bench": 2,
+   "reasoning_humaneval": 2,
+   "reasoning_math500": 2
+  },
+  "max_new_tokens": 128,
+  "block": 5
+ },
+ "limitations": [
+  "The paired BF16 reference is the prefix of a 2048-token BF16 run on the same prompts; target arithmetic can change the later greedy trajectory.",
+  "DFlash's released block-16 drafter runs at block 5 outside its training distribution.",
+  "The INT8 drafter matvec uses the target's K-split and BF16 output boundary; its non-matrix operations are the released BF16 implementation, while an exact drafter RTL contract and full TP-2 path are pending.",
+  "The prompt subset excludes the longest agentic contexts and does not support replacing the nine-workload production tau."
+ ]
+}
