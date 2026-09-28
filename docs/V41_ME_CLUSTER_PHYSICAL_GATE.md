@@ -12,6 +12,18 @@ schedule requires all 41 consumers to issue the same read descriptor and
 accept each beat together. A single store cannot concurrently satisfy
 unrelated experts, user requests, or tile schedules without an arbiter.
 
+The matching 2 MiB logical VM is four static 512-bit banks, each 8,192 words
+deep. A bank uses four 512×128 1R1W macros in parallel for width and 16
+macro groups for depth: 64 macros per bank, 256 for the VM. Preload consumes
+one read port in every VM bank each cycle for 128 issue cycles over the two
+K=4,096 groups, plus conversion, macro-write and pipeline fill/drain. The
+COLLv1 GW4 write service consumes the write port in every bank in a separate
+blocking phase. The 1R1W ports permit concurrent reads and writes at distinct
+addresses, but this candidate gives no performance credit for such overlap,
+same-address read-during-write behavior, or any other core VM read while the
+four-bank preload occupies all read ports. The 16:1 depth-group VM read
+selector and full read4-to-converter link are not in the cluster route.
+
 [`ot_v41_me_cluster41_phy.sv`](../rtl/chip/physical/ot_v41_me_cluster41_phy.sv)
 is a physical load envelope. Its capture banks stand in for the adapter's
 existing local `xr` register; per-consumer enables keep them separate through
