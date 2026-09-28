@@ -25,6 +25,12 @@ module ot_chip_v41x_window_kv_prefetch #(
     input  wire                  rst_n,
     input  wire [SEC_W-1:0]      region_base_sector,
     input  wire [SEC_W-1:0]      region_sector_count,
+    // A host/prefill image may already contain packed rows.  Priming only
+    // restores the absolute-position tag after that image is installed.
+    input  wire                  prime_v,
+    output wire                  prime_ready,
+    input  wire [USER_W-1:0]     prime_user,
+    input  wire [POS_W-1:0]      prime_row,
     input  wire                  blk_v,
     output wire                  blk_ready,
     input  wire [USER_W-1:0]     blk_user,
@@ -132,7 +138,8 @@ module ot_chip_v41x_window_kv_prefetch #(
         .sector_address(), .sector_data(), .sector_strobe(), .address_fault(),
         .element_index(relem), .element_fp32(decoded), .element_fault(dec_fault));
     assign blk_ready = state == IDLE;
-    assign prefetch_ready = state == IDLE && !blk_v;
+    assign prime_ready = state == IDLE && !blk_v;
+    assign prefetch_ready = state == IDLE && !blk_v && !prime_v;
     assign kv_ok = state == IDLE && stage_valid[aslot] &&
                    stage_tag[aslot] == active_row && stage_user[aslot] == active_user;
     assign s_rdy = 4'hf;
@@ -212,6 +219,20 @@ module ot_chip_v41x_window_kv_prefetch #(
                             end
                             stage_valid[blk_row[6:0]] <= 0;
                             state <= WC;
+                        end
+                    end else if (prime_v) begin
+                        if (prime_row >= POS_W'(MAX_CONTEXT) ||
+                            {1'b0, region_sector_count} <
+                              ((SEC_W+1)'(prime_user) + 1'b1) * (SEC_W+1)'(REGION_SECTORS) ||
+                            region_end[SEC_W]) begin
+                            fault <= 1'b1; fault_code[0] <= 1'b1;
+                        end else begin
+                            row_user[prime_row[6:0]] <= prime_user;
+                            row_tag[prime_row[6:0]] <= prime_row;
+                            row_active[prime_row[6:0]] <= 1'b1;
+                            block_valid[prime_row[6:0]] <= 16'hffff;
+                            row_valid[prime_row[6:0]] <= 1'b1;
+                            stage_valid[prime_row[6:0]] <= 1'b0;
                         end
                     end else if (prefetch_v) begin
                         row <= prefetch_row; user_id <= prefetch_user;

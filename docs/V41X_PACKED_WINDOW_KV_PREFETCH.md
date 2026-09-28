@@ -8,6 +8,9 @@ block is accepted. A row becomes readable after all 16 blocks commit. The
 128-slot ring holds an absolute-position and user tag, so position `r + 128`
 evicts position `r` within a user and a stale read faults. User `u` has its
 own 2,176-sector window region beginning at `region_base + u * 2176`.
+For a prefilled HBM image, the host primes each already installed row's
+absolute user and position tag through `prime_v`; a row cannot be prefetched
+before its tag is published.
 
 The fetched stage stores 528 packed bytes per row. It exposes the full packed
 row and one 32-code/scale block for the attention engine, as well as an exact
@@ -18,8 +21,9 @@ staged copy of the same ring slot; a dependent read must prefetch again.
 
 `python -m tools.rtl_chip_v41x_window_kv_prefetch` runs a focused HBM-sector
 bench and writes `results/rtl/chip_v41x_window_kv_prefetch.json`. It checks
-48 atomic block commits across three rows and two users, 17 sectors per
-fetched row, exact FP32 values at a scale boundary, user-region separation,
+48 atomic block commits across three written rows and two users, one preloaded
+row restored by priming, 17 sectors per fetched row, exact FP32 values at a
+scale boundary, user-region separation,
 the HBM code and scale bytes, and eviction at the 128-row ring wrap. The
 standalone row codec gate separately checks
 the exact deployed golden quantization and thousands of packed decode

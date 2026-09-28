@@ -40,7 +40,7 @@ def run(output: Path = OUTPUT):
     fields = dict(part.split("=", 1) for part in stat.split()[1:])
     values = {key: int(value) for key, value in fields.items()}
     assert values == {
-        "rows": 3, "blocks": 48, "reads": 51, "writes": 96,
+        "rows": 4, "blocks": 48, "reads": 68, "writes": 96,
         "stale_fault": 1, "region_fault": 1, "errors": 0,
     }, values
     result = {
@@ -49,6 +49,7 @@ def run(output: Path = OUTPUT):
         "profile": "opentallas.deepseek_v41.window_fp8_e4m3_s32_e8m0.row.v1",
         "window_slots": 128,
         "user_slices": 2,
+        "preloaded_rows": 1,
         "bytes_per_row": 528,
         "hbm_pitch_bytes": 544,
         "sectors_per_row": 17,

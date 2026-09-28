@@ -4,14 +4,15 @@ module tb_chip_v41x_window_kv_prefetch;
     localparam integer BASE = 64, COUNT = 2*2176;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
-    reg blk_v = 0, prefetch_v = 0, re = 0;
+    reg blk_v = 0, prime_v = 0, prefetch_v = 0, re = 0;
     reg [20:0] blk_row = 0, prefetch_row = 0, rrow = 0;
+    reg [20:0] prime_row = 0;
     reg [9:0] user_id = 0;
     reg [3:0] blk_idx = 0;
     reg [255:0] blk_codes = 0;
     reg [7:0] blk_scale = 0;
     reg [8:0] relem = 0;
-    wire blk_ready, prefetch_ready, kv_ok, fault;
+    wire blk_ready, prime_ready, prefetch_ready, kv_ok, fault;
     wire [31:0] q, st_rows, st_blocks, st_reads, st_writes;
     wire packed_valid; wire [4223:0] packed_row;
     wire [255:0] packed_codes; wire [7:0] packed_scale;
@@ -31,6 +32,7 @@ module tb_chip_v41x_window_kv_prefetch;
     ot_chip_v41x_window_kv_prefetch #(.WIN_STACK(2)) dut (
         .clk(clk), .rst_n(rst_n), .region_base_sector(SEC_W'(BASE)),
         .region_sector_count(SEC_W'(COUNT)),
+        .prime_v(prime_v), .prime_ready(prime_ready), .prime_user(user_id), .prime_row(prime_row),
         .blk_v(blk_v), .blk_ready(blk_ready), .blk_user(user_id), .blk_row(blk_row),
         .blk_idx(blk_idx), .blk_codes(blk_codes), .blk_scale(blk_scale),
         .prefetch_v(prefetch_v), .prefetch_ready(prefetch_ready),
@@ -123,6 +125,13 @@ module tb_chip_v41x_window_kv_prefetch;
             $display("PACKED STAGE DIFFERS FROM HBM IMAGE"); errors = errors + 1;
         end
         if (fault || st_rows != 1 || st_reads != 17) errors = errors + 1;
+        // The host may preload a historical packed row and then publish its
+        // absolute position tag. No core-side block rewrite is required.
+        for (idx = 0; idx < 17; idx = idx + 1) mem[BASE+17+idx] = mem[BASE+idx];
+        @(negedge clk); prime_row = 1; prime_v = 1;
+        @(negedge clk); prime_v = 0;
+        fetch_row(1);
+        check_elem(1, 32, 32'h40000000);
         // Row 128 replaces ring slot zero. The old absolute-position tag must
         // be rejected even though the HBM sector addresses are the same.
         for (idx = 0; idx < 16; idx = idx + 1) push_block(128, idx);
@@ -153,7 +162,7 @@ module tb_chip_v41x_window_kv_prefetch;
         end
         $display("WINDOW_KV rows=%0d blocks=%0d reads=%0d writes=%0d stale_fault=%0d region_fault=%0d errors=%0d",
                  st_rows, st_blocks, st_reads, st_writes, fault_code[0], fault_code[1], errors);
-        if (errors == 0 && st_rows == 3 && st_blocks == 48 && st_reads == 51 && st_writes == 96)
+        if (errors == 0 && st_rows == 4 && st_blocks == 48 && st_reads == 68 && st_writes == 96)
             $display("PASS");
         else $display("FAIL");
         $finish;
