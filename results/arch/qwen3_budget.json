@@ -4222,6 +4222,10 @@
     },
     "ratios_batch1": {
      "hbm_over_rom": 10.12,
+     "rom_over_hbm_capped_rate": {
+      "liquid": 9.1123,
+      "air": 9.9345
+     },
      "b200_measured_over_rom": 6.0
     }
    },
@@ -4578,6 +4582,10 @@
     },
     "ratios_batch1": {
      "hbm_over_rom": 13.31,
+     "rom_over_hbm_capped_rate": {
+      "liquid": 12.4536,
+      "air": 14.6392
+     },
      "b200_measured_over_rom": 8.1
     }
    }

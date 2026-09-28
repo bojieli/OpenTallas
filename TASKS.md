@@ -52,7 +52,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] **C `claude/qwen-o4`**: the matched two-reticle specification model gives 881 AR / 2,651 DFlash tok/s for the HBM comparator, or 12.5× / 7.1× ROM speed and 13.3× batch-one energy advantage in scenario B. These are model comparisons pending full INT8 TP-2 RTL.
 - [x] Matched same-controller RTL gates (reduced vehicle): vector core +5.60%, scalar core +1.37%.
 - [~] **C `claude/roofline-rebaseline`**: iso-area record still uses τ 4.1 (Table 8-9); 19 stale figures in `ANALYTICAL_REPORT.md`.
-- [~] Capped rate ratio: no record yet carries a cooling-capped ROM÷HBM ratio; a separate Codex instance is preparing a source-pinned record in isolation.
+- [x] **X `dd0127b9`:** batch-one AR cooling-capped ROM÷HBM ratios are now source-pinned in `results/arch/qwen3_budget.json`: scenario A 9.1123× liquid / 9.9345× air; production B 12.4536× liquid / 14.6392× air. The isolated record and focused test are applied to this worktree, awaiting main merge. A capped DFlash comparison is still open because the HBM comparator lacks a capped speculative point.
 - [ ] **X:** bandwidth-bound RTL comparison: the reduced workload never saturates HBM. Codex owns this after the running Qwen context gates finish.
 
 ## 3. DeepSeek-V4.1-Flash on the ROM array

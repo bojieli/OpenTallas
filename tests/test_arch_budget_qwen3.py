@@ -188,6 +188,22 @@ def test_production_power_basis(rec):
         assert body["rom"]["ar_batch1"]["die_components_mj_per_token"]["hbm_controller_phy_io"] > 0
 
 
+def test_cooling_capped_rom_over_hbm_rate_ratio(rec, fresh):
+    """Compare the two-reticle ROM and matched INT8 HBM packages at the same cooling class."""
+    for scenario in ("A_measured_implementation", "B_proposed_production"):
+        saved = rec["power_production"]["scenarios"][scenario]
+        calculated = fresh["power_production"]["scenarios"][scenario]
+        ratios = saved["ratios_batch1"]["rom_over_hbm_capped_rate"]
+        assert ratios == calculated["ratios_batch1"]["rom_over_hbm_capped_rate"]
+        assert set(ratios) == {"liquid", "air"}
+        for cooling in ("liquid", "air"):
+            rom = saved["rom"]["ar_batch1"]["cooling"][cooling]["capped_tokens_s"]
+            hbm = saved["hbm_comparator"]["batch1"]["cooling"][cooling]["capped_tokens_s"]
+            assert ratios[cooling] == round(rom / hbm, 4)
+            assert rom <= saved["rom"]["ar_batch1"]["tokens_s"]
+            assert hbm <= saved["hbm_comparator"]["batch1"]["tokens_s"]
+
+
 def test_power_reads_the_sourced_scenarios_and_matches_their_record(rec):
     """Single source of truth: every power input is tools/power_scenarios' (no 408 W cooling, no 0.8-inside-13.1
     HBM split, W4A8 priced per MAC not per operation), and the ROM points this tool prices are the ones

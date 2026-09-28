@@ -6068,7 +6068,7 @@
   "results/arch/qwen3_budget.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "4cd7f5ff3c1c5a89a47a9957f385d5bb94ceb184cfa9fcdb2df124b5447bf6f2",
+   "sha256": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
    "schema": "opentallas.arch-budget-qwen3.v1",
    "tool": "tools/arch_budget_qwen3.py",
    "command": "python3 tools/arch_budget_qwen3.py",
@@ -6153,7 +6153,7 @@
   "results/arch/decode_roofline.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "ab4d59f8a552836b5e40fdd6a753659f2098317fe955f096eb62ddb5b7d6219b",
+   "sha256": "4780d857fdb51a68137efbe3d9bd2863fce88dd9ba6ca3364d84ec11c2e24c46",
    "schema": "opentallas.decode-roofline.v1",
    "tool": "tools/decode_roofline_figure.py",
    "command": "python3 tools/decode_roofline_figure.py",
@@ -6162,7 +6162,7 @@
      "field": "inputs",
      "key": "qwen3_budget",
      "path": "results/arch/qwen3_budget.json",
-     "pinned": "4cd7f5ff3c1c5a89a47a9957f385d5bb94ceb184cfa9fcdb2df124b5447bf6f2",
+     "pinned": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
      "status": "current"
     },
     {

@@ -1158,8 +1158,14 @@ def power_production(out, clock):
         rom, hbm = _rom_points(dp, s), _hbm_comparator(out, clock, s)
         r1 = rom["ar_batch1"]["energy_per_token_mj"]
         h1 = hbm["batch1"]["energy_per_token_mj"]
+        capped_rate_ratio = {
+            cooling: round(rom["ar_batch1"]["cooling"][cooling]["capped_tokens_s"] /
+                           hbm["batch1"]["cooling"][cooling]["capped_tokens_s"], 4)
+            for cooling in ("liquid", "air")
+        }
         scen[s] = dict(mac_pj=P["mac_pj"][s], rom=rom, hbm_comparator=hbm, worst_case=_worst_case(out, clock, s, dp),
                        ratios_batch1=dict(hbm_over_rom=round(h1 / r1, 2),
+                                          rom_over_hbm_capped_rate=capped_rate_ratio,
                                           b200_measured_over_rom=round(gpu["energy_per_token_mj_at_measured_decode_draw"] / r1, 2)))
     lim = PROD["cooling"]
     return dict(basis="two power scenarios on the sourced inputs of configs/hardware/power_scenarios.json (read "
