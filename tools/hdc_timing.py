@@ -94,7 +94,7 @@ def me_loop(f, dyn, pos, groups):
     if f["me_wsrc"]:
         s = f["me_split"]
         if f["me_d_tiles"] == I.DYN_TTILES:
-            rounds = f["me_tiles"] + (pos >> ((I.W_LANES * groups).bit_length() - 1 - s)) + 1
+            rounds = f["me_tiles"] + pos // (I.W_LANES * (groups >> s)) + 1
         k = -(-k // (1 << s))
     return rounds, k
 

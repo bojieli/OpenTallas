@@ -1,0 +1,18 @@
+{
+  "claim_boundary": "Exact position-round count in a combinational RTL helper and timing model. Full vector-core decode and shipped-shape token execution are not proved by this focused gate.",
+  "context_max_tested": 8191,
+  "groups": [
+    4,
+    6144
+  ],
+  "rtl_cases": 756,
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/test/tb_hdc_dyn_ttiles.sv": "6a4888a6e1cc7eb05f6e53ca6da68d16d1f2910e69e0d228b466fc26b58c1ee9",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "tools/hdc_timing.py": "08c5ab6d01dff1479cd0d90a1033f5cbfbe9cfde3cdd6c407e31ef7f850c6339",
+    "tools/rtl_hdc_dyn_ttiles.py": "f5823f3f4e00c28c32c688db4d471ca99db6ecb163abae92d3199217fe69cda2"
+  },
+  "status": "pass",
+  "timing_model_cases": 900
+}

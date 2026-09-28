@@ -28,7 +28,7 @@ def main():
     img = work / "images"
     expect = R.build(img, args.ngen)
     rtl = [*C.HDC, *C.PIPES,
-           *(ROOT / f"rtl/hdc/{x}.sv" for x in ("ot_hdc_qwen_int8_arith", "ot_hdc_qwen_int8_embed_decode",
+           *(ROOT / f"rtl/hdc/{x}.sv" for x in ("ot_hdc_dyn_ttiles", "ot_hdc_qwen_int8_arith", "ot_hdc_qwen_int8_embed_decode",
                                                        "ot_hdc_core_vector_weight")),
            *(ROOT / f"rtl/rom/{x}.sv" for x in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl",
                                                        "ot_rom_oneshot_allreduce", "ot_rom_tp_seq")),

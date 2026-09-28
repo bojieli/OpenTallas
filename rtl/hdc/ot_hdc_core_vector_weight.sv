@@ -141,7 +141,6 @@ module ot_hdc_core_vector_weight #(
     `include "ot_hdc_isa.svh"
     localparam integer LW = $clog2(W);
     localparam integer LT = $clog2(W * IL);
-    localparam integer LT0 = $clog2(W * G);
 
     // -- sequencer ----------------------------------------------------------------
     localparam [1:0] S_IDLE = 0, S_DYN = 1, S_RUN = 2;
@@ -151,6 +150,8 @@ module ot_hdc_core_vector_weight #(
     reg [PAW-1:0] fpc;                    // next word to fetch
     reg [NW-1:0] tok_r, pos_r;
     reg [AW-1:0] dyn [0:7];
+    wire [NW-1:0] dyn_tiles_zero, dyn_tiles_split;
+    wire dyn_tiles_invalid;
     reg [INSTR_BITS-1:0] fq [0:NFQ-1];
     reg [1:0]  fq_rd, fq_wr;
     reg [2:0]  fq_n;
@@ -165,6 +166,12 @@ module ot_hdc_core_vector_weight #(
     wire       am_any;
 
     `define F(name) ir[O_``name +: W_``name]
+    ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_dyn_tiles_zero (
+        .pos(pos_r),.split_log2(4'd0),.rounds(dyn_tiles_zero),.invalid_split());
+    ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_dyn_tiles_split (
+        .pos(pos_r),.split_log2(`F(ME_SPLIT)),.rounds(dyn_tiles_split),
+        .invalid_split(dyn_tiles_invalid));
+    wire dyn_tiles_bad_instruction = load && `F(ME_D_TILES) == 3'd6 && dyn_tiles_invalid;
 
     // decoded, DYN-adjusted fields
     reg [1:0]    d_unit;
@@ -299,7 +306,7 @@ module ot_hdc_core_vector_weight #(
         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
         dyn[4] <= pos_r * HD;
         dyn[5] <= pos_r + 1;
-        dyn[6] <= (pos_r >> LT0) + 1;            // rounds of G position tiles (split 0; see S_DEC)
+        dyn[6] <= dyn_tiles_zero;                 // rounds of G position tiles (split 0)
         dyn[7] <= 0;
     end
 
@@ -307,8 +314,8 @@ module ot_hdc_core_vector_weight #(
     always @(posedge clk) if (load) begin
         d_unit <= `F(UNIT); d_barrier <= `F(BARRIER);
         me_nout <= `F(ME_NOUT) + dyn[`F(ME_D_NOUT)];
-        //: DYN_TTILES counts rounds of G/S position tiles (S = 2^split)
-        me_tiles <= `F(ME_TILES) + ((`F(ME_D_TILES) == 3'd6) ? ((pos_r >> (LT0 - `F(ME_SPLIT))) + 1'b1)
+        //: DYN_TTILES counts exact rounds of G/S position tiles (S = 2^split)
+        me_tiles <= `F(ME_TILES) + ((`F(ME_D_TILES) == 3'd6) ? dyn_tiles_split
                                                                : dyn[`F(ME_D_TILES)]);
         me_k <= `F(ME_K) + dyn[`F(ME_D_K)];
         me_kindk <= (`F(ME_D_TILES) == 3'd6);        // DYN_TTILES: rounds of position tiles
@@ -411,6 +418,6 @@ module ot_hdc_core_vector_weight #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else if (start && st == S_IDLE) fault <= 1'b0;
-        else if (me_fault || su_fault) fault <= 1'b1;
+        else if (me_fault || su_fault || dyn_tiles_bad_instruction) fault <= 1'b1;
     end
 endmodule
