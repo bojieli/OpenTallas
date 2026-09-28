@@ -1,0 +1,28 @@
+{
+  "accepted_drafts": 2,
+  "claim_boundary": "Reduced m5 arithmetic/argmax/acceptance handoff. The drafter tokens and KV drain handshake are scripted; the arithmetic receives decoded BF16 weights, and its four-row final chunk does not scan the full vocabulary. No full TP-2 program, KV HBM, physical route, or shipped-shape token is exercised.",
+  "emitted_tokens": 3,
+  "kv_drain_barrier": "pass",
+  "next_pos": 203,
+  "next_token": 101,
+  "result_beats": 8,
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_lane_copy.sv": "3fd657d85db5d099ed9b7c990e9b792e06162e6860a9ab6c53e1a3a41cb6c68a",
+    "rtl/hdc/ot_hdc_qwen_dflash_step_ctrl.sv": "038d3f71dca2a81aefeb40d1b5e5030f3566473497d0626b3e4eadfc0024613e",
+    "rtl/hdc/ot_hdc_qwen_m5_mac_array.sv": "66136f49a649c45607e76d587a801cd071fd3ddbc7172acf3f96613d5e042eec",
+    "rtl/hdc/ot_hdc_qwen_m5_mac_reduce.sv": "e0c9da313217188025f63fb1d822441a56f5574e3e0db0eea9b04012b8f02401",
+    "rtl/hdc/ot_hdc_qwen_m5_reduce_scale.sv": "c1bf988fa675561ee3ec2e6249ee4aba40eca4b0110c7c0a60d05620167679ea",
+    "rtl/hdc/ot_hdc_qwen_m5_result_tokens.sv": "ed6ea4e7cc7f6fbe26f97ca6b02abcecfe856aeb28d325fb4951d7a4a50ab9f4",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/test/tb_hdc_qwen_m5_arith_commit.sv": "8cbcd1a3285e864dd031f9b78311f2170c4c681f88b54a273b1d438a42c9c8d6",
+    "tools/rtl_hdc_qwen_m5_arith_commit.py": "c77f88fc346b6ab7f33537beda6bfd70b5ac5248c4033f4f40f268e963c5b598"
+  },
+  "status": "pass",
+  "verify_tokens": 5
+}
