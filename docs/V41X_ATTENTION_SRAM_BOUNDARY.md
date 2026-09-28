@@ -28,6 +28,18 @@ inflation and the attempt was stopped. The physical record is an error, with
 no routed setup, hold, DRC or power value. It cannot be scaled into a die
 timing or power claim.
 
+The next physical probe isolated one literal 256-bit SRAM bank with registered
+I/O. The ASAP7 macro LEF puts the wide read, write and mask ports on one
+edge, so `v41x_attn_bank_post_macro_place.tcl` moves that edge into a local
+standard-cell channel. At the adopted clock target in the recorded die outline,
+synthesis, placement, clock tree and global route completed. Global-route
+estimates were +339.82 ps setup and +14.98 ps hold. Detailed routing then
+failed with `DRT-0255` maze paths to the SRAM mask pins; the bounded driver
+record has `flow_completed=false`. The source-pinned
+`results/physical_abi3/asap7/chip/v41x_attn_sram_bank_phy/route_diagnostic.json`
+records the stage metrics and failure. There is no routed timing, DRC or power
+claim for even this bank, and no inference to the full engine.
+
 The full attention adapter is a distinct blocker. It currently materializes
 640 × 512 BF16 elements (5,242,880 bits) in `rowbuf`, then presents four
 8,192-bit combinational reads to four `encode_row` trees. That is why the
