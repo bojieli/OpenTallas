@@ -88,6 +88,17 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
     lay.mat[(0, "ffn", "fn")]["base"] = mats["hc_ffn_fn"]["base_word"]
     lay.cb["rope_plain"] = 0
     program = R.ShapeBuilder(lay).build([0], embed=False, head=False)
+    # Packing is an additional gate: the full ISA must preserve every bound
+    # address/count and collective field without truncation.
+    for pc, fields in enumerate(program):
+        try:
+            packed = I.encode(full_shape=True, **fields)
+            decoded = I.decode(packed, full_shape=True)
+        except (ValueError, KeyError, OverflowError) as exc:
+            raise ValueError(f"full-shape ISA cannot encode PC {pc}: {exc}") from exc
+        for key, value in fields.items():
+            if key in I.FULL_LAYOUT and isinstance(value, int):
+                _require(decoded[key] == value, f"full-shape ISA truncates {key} at PC {pc}")
 
     # The adopted QE issues one word per cycle over tiles * nb * IL.  Compare
     # that exact RTL address interval with each matrix's materialized interval.
