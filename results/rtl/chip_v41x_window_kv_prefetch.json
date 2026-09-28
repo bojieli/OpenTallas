@@ -1,23 +1,24 @@
 {
   "bytes_per_row": 528,
   "checks": {
-    "blocks": 32,
+    "blocks": 48,
     "errors": 0,
-    "reads": 34,
-    "rows": 2,
+    "reads": 51,
+    "rows": 3,
     "stale_fault": 1,
-    "writes": 64
+    "writes": 96
   },
   "hbm_pitch_bytes": 544,
   "profile": "opentallas.deepseek_v41.window_fp8_e4m3_s32_e8m0.row.v1",
   "scope": "window-only packed HBM row DMA; serialized functional path, no mixed compressed-KV token or rate claim",
   "sectors_per_row": 17,
   "sources": {
-    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "e07d22307ff6072ac4903e7ea494134e242474d72d85fb119ccd431c5dc16333",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "60be1c313c4a23b817be528fdf4c4ec2116557f983fbb71333d0796c131c1774",
     "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
-    "rtl/test/tb_chip_v41x_window_kv_prefetch.sv": "2270f5062cbfb8303989e97694e44aa61c4a4ef7f9c5c3e71a3ed1d08d8b6d86",
-    "tools/rtl_chip_v41x_window_kv_prefetch.py": "006bb95c3af1c4604df7de0b64bc0c30e75727af96866fd0e365f18975d31894"
+    "rtl/test/tb_chip_v41x_window_kv_prefetch.sv": "0de64bfaea31871a3b6bab6f02065a5b688aed521e4a710b471c916fc0d54437",
+    "tools/rtl_chip_v41x_window_kv_prefetch.py": "b1e85f8eb396dcd401703ce8c30c1680c4707227fd3ba42bb1a7a656a060ae3a"
   },
   "status": "pass",
+  "user_slices": 2,
   "window_slots": 128
 }

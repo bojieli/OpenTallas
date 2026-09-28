@@ -40,7 +40,7 @@ def run(output: Path = OUTPUT):
     fields = dict(part.split("=", 1) for part in stat.split()[1:])
     values = {key: int(value) for key, value in fields.items()}
     assert values == {
-        "rows": 2, "blocks": 32, "reads": 34, "writes": 64,
+        "rows": 3, "blocks": 48, "reads": 51, "writes": 96,
         "stale_fault": 1, "errors": 0,
     }, values
     result = {
@@ -48,6 +48,7 @@ def run(output: Path = OUTPUT):
         "scope": "window-only packed HBM row DMA; serialized functional path, no mixed compressed-KV token or rate claim",
         "profile": "opentallas.deepseek_v41.window_fp8_e4m3_s32_e8m0.row.v1",
         "window_slots": 128,
+        "user_slices": 2,
         "bytes_per_row": 528,
         "hbm_pitch_bytes": 544,
         "sectors_per_row": 17,

@@ -16,6 +16,7 @@ module ot_chip_v41x_window_kv_prefetch #(
     parameter integer SEC_W = 30,
     parameter integer HAW = 30,
     parameter integer TAGW = 16,
+    parameter integer USER_W = 10,
     parameter integer WIN_STACK = 0,
     parameter integer WINDOW_SLOTS = 128,
     parameter integer MAX_CONTEXT = 1048576
@@ -26,21 +27,25 @@ module ot_chip_v41x_window_kv_prefetch #(
     input  wire [SEC_W-1:0]      region_sector_count,
     input  wire                  blk_v,
     output wire                  blk_ready,
+    input  wire [USER_W-1:0]     blk_user,
     input  wire [POS_W-1:0]      blk_row,
     input  wire [3:0]            blk_idx,
     input  wire [255:0]          blk_codes,
     input  wire [7:0]            blk_scale,
     input  wire                  prefetch_v,
     output wire                  prefetch_ready,
+    input  wire [USER_W-1:0]     prefetch_user,
     input  wire [POS_W-1:0]      prefetch_row,
     output wire                  kv_ok,
     input  wire                  re,
+    input  wire [USER_W-1:0]     ruser,
     input  wire [POS_W-1:0]      rrow,
     input  wire [8:0]            relem,
     output reg  [31:0]           q,
     // A packed block can feed the attention engine without a 32-bit-lane
     // re-encoder.  One block is 32 code bytes plus its E8M0 scale byte.
     input  wire                  packed_re,
+    input  wire [USER_W-1:0]     packed_ruser,
     input  wire [POS_W-1:0]      packed_rrow,
     input  wire [3:0]            packed_ridx,
     output wire                  packed_valid,
@@ -73,6 +78,7 @@ module ot_chip_v41x_window_kv_prefetch #(
     localparam [2:0] IDLE = 0, WC = 1, WC_DONE = 2, WS = 3,
                      WS_DONE = 4, FR = 5, FR_DONE = 6;
     reg [2:0] state;
+    reg [USER_W-1:0] user_id, active_user;
     reg [POS_W-1:0] row;
     reg [3:0] bidx;
     reg [4:0] sec;
@@ -80,9 +86,11 @@ module ot_chip_v41x_window_kv_prefetch #(
     reg [7:0] scale;
     reg [POS_W-1:0] active_row;
     reg [15:0] block_valid [0:WINDOW_SLOTS-1];
+    reg [USER_W-1:0] row_user [0:WINDOW_SLOTS-1];
     reg [POS_W-1:0] row_tag [0:WINDOW_SLOTS-1];
     reg [WINDOW_SLOTS-1:0] row_active, row_valid;
     reg [4223:0] stage [0:WINDOW_SLOTS-1];
+    reg [USER_W-1:0] stage_user [0:WINDOW_SLOTS-1];
     reg [POS_W-1:0] stage_tag [0:WINDOW_SLOTS-1];
     reg [WINDOW_SLOTS-1:0] stage_valid;
     wire [6:0] slot = row[6:0];
@@ -91,14 +99,18 @@ module ot_chip_v41x_window_kv_prefetch #(
     wire [6:0] aslot = active_row[6:0];
     wire [SEC_W:0] region_end = {1'b0, region_base_sector} + {1'b0, region_sector_count};
     wire [SEC_W:0] addr_wide = {1'b0, region_base_sector} +
+                              (SEC_W+1)'(user_id) * (SEC_W+1)'(REGION_SECTORS) +
                               (SEC_W+1)'(slot) * (SEC_W+1)'(PITCH) + (SEC_W+1)'(sec);
     wire addr_bad = (row >= POS_W'(MAX_CONTEXT)) ||
-                    region_sector_count < SEC_W'(REGION_SECTORS) ||
+                    {1'b0, region_sector_count} <
+                    ((SEC_W+1)'(user_id) + 1'b1) * (SEC_W+1)'(REGION_SECTORS) ||
                     region_end[SEC_W] || addr_wide[SEC_W] ||
                     (addr_wide >= region_end);
     wire [4223:0] read_row = stage[rslot];
     assign packed_valid = stage_valid[pslot] && stage_tag[pslot] == packed_rrow &&
-                          row_valid[pslot] && row_tag[pslot] == packed_rrow;
+                          stage_user[pslot] == packed_ruser &&
+                          row_valid[pslot] && row_tag[pslot] == packed_rrow &&
+                          row_user[pslot] == packed_ruser;
     assign packed_row = packed_valid ? stage[pslot] : '0;
     assign packed_codes = packed_valid ? stage[pslot][256*packed_ridx +: 256] : '0;
     assign packed_scale = packed_valid ? stage[pslot][4096+8*packed_ridx +: 8] : '0;
@@ -121,7 +133,8 @@ module ot_chip_v41x_window_kv_prefetch #(
         .element_index(relem), .element_fp32(decoded), .element_fault(dec_fault));
     assign blk_ready = state == IDLE;
     assign prefetch_ready = state == IDLE && !blk_v;
-    assign kv_ok = state == IDLE && stage_valid[aslot] && stage_tag[aslot] == active_row;
+    assign kv_ok = state == IDLE && stage_valid[aslot] &&
+                   stage_tag[aslot] == active_row && stage_user[aslot] == active_user;
     assign s_rdy = 4'hf;
     wire grant = m_rdy[WIN_STACK] && m_v[WIN_STACK];
     wire response = s_v[WIN_STACK];
@@ -156,14 +169,14 @@ module ot_chip_v41x_window_kv_prefetch #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE; row <= 0; bidx <= 0; sec <= 0; codes <= 0; scale <= 0;
-            active_row <= 0; q <= 0; fault <= 0; fault_code <= 0;
+            user_id <= 0; active_row <= 0; active_user <= 0; q <= 0; fault <= 0; fault_code <= 0;
             st_rows_fetched <= 0; st_blocks_written <= 0;
             st_sectors_read <= 0; st_sectors_written <= 0;
             row_active <= 0; row_valid <= 0; stage_valid <= 0;
         end else begin
             if (re) begin
-                if (!kv_ok || rrow != active_row ||
-                    !row_valid[rslot] || row_tag[rslot] != rrow) begin
+                if (!kv_ok || rrow != active_row || ruser != active_user ||
+                    !row_valid[rslot] || row_tag[rslot] != rrow || row_user[rslot] != ruser) begin
                     fault <= 1'b1; fault_code[3] <= 1'b1;
                 end else if (dec_fault) begin
                     fault <= 1'b1; fault_code[4] <= 1'b1;
@@ -177,19 +190,22 @@ module ot_chip_v41x_window_kv_prefetch #(
             end else case (state)
                 IDLE: begin
                     if (blk_v) begin
-                        row <= blk_row; bidx <= blk_idx; sec <= {1'b0, blk_idx};
+                        row <= blk_row; user_id <= blk_user; bidx <= blk_idx; sec <= {1'b0, blk_idx};
                         codes <= blk_codes; scale <= blk_scale;
                         if (blk_row >= POS_W'(MAX_CONTEXT) || blk_scale == 8'hff ||
                             poison_codes(blk_codes) ||
-                            region_sector_count < SEC_W'(REGION_SECTORS) ||
+                            {1'b0, region_sector_count} <
+                              ((SEC_W+1)'(blk_user) + 1'b1) * (SEC_W+1)'(REGION_SECTORS) ||
                             region_end[SEC_W] ||
                             ((blk_idx != 0) && (!row_active[blk_row[6:0]] ||
                              row_tag[blk_row[6:0]] != blk_row ||
+                             row_user[blk_row[6:0]] != blk_user ||
                              block_valid[blk_row[6:0]] != (16'h1 << blk_idx)-1))) begin
                             fault <= 1'b1; fault_code[1] <= 1'b1;
                         end else begin
                             if (blk_idx == 0) begin
                                 row_tag[blk_row[6:0]] <= blk_row;
+                                row_user[blk_row[6:0]] <= blk_user;
                                 block_valid[blk_row[6:0]] <= 0;
                                 row_active[blk_row[6:0]] <= 1'b1;
                                 row_valid[blk_row[6:0]] <= 0;
@@ -198,16 +214,20 @@ module ot_chip_v41x_window_kv_prefetch #(
                             state <= WC;
                         end
                     end else if (prefetch_v) begin
-                        row <= prefetch_row; active_row <= prefetch_row;
+                        row <= prefetch_row; user_id <= prefetch_user;
+                        active_row <= prefetch_row; active_user <= prefetch_user;
                         sec <= 0;
                         if (prefetch_row >= POS_W'(MAX_CONTEXT) ||
                             !row_valid[prefetch_row[6:0]] ||
                             row_tag[prefetch_row[6:0]] != prefetch_row ||
-                            region_sector_count < SEC_W'(REGION_SECTORS) ||
+                            row_user[prefetch_row[6:0]] != prefetch_user ||
+                            {1'b0, region_sector_count} <
+                              ((SEC_W+1)'(prefetch_user) + 1'b1) * (SEC_W+1)'(REGION_SECTORS) ||
                             region_end[SEC_W]) begin
                             fault <= 1'b1; fault_code[0] <= 1'b1;
                         end else if (!(stage_valid[prefetch_row[6:0]] &&
-                                       stage_tag[prefetch_row[6:0]] == prefetch_row)) begin
+                            stage_tag[prefetch_row[6:0]] == prefetch_row &&
+                            stage_user[prefetch_row[6:0]] == prefetch_user)) begin
                             stage_valid[prefetch_row[6:0]] <= 0;
                             state <= FR;
                         end
@@ -239,6 +259,7 @@ module ot_chip_v41x_window_kv_prefetch #(
                         st_sectors_read <= st_sectors_read + 1;
                         if (sec == 5'd16) begin
                             stage_tag[slot] <= row;
+                            stage_user[slot] <= user_id;
                             stage_valid[slot] <= 1'b1;
                             st_rows_fetched <= st_rows_fetched + 1;
                             state <= IDLE;

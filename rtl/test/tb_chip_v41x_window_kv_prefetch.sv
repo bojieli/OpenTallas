@@ -1,11 +1,12 @@
 `timescale 1ns/1ps
 module tb_chip_v41x_window_kv_prefetch;
     localparam integer SEC_W = 30, HAW = 30, TAGW = 16;
-    localparam integer BASE = 64, COUNT = 2176;
+    localparam integer BASE = 64, COUNT = 2*2176;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
     reg blk_v = 0, prefetch_v = 0, re = 0;
     reg [20:0] blk_row = 0, prefetch_row = 0, rrow = 0;
+    reg [9:0] user_id = 0;
     reg [3:0] blk_idx = 0;
     reg [255:0] blk_codes = 0;
     reg [7:0] blk_scale = 0;
@@ -29,13 +30,13 @@ module tb_chip_v41x_window_kv_prefetch;
     ot_chip_v41x_window_kv_prefetch #(.WIN_STACK(2)) dut (
         .clk(clk), .rst_n(rst_n), .region_base_sector(SEC_W'(BASE)),
         .region_sector_count(SEC_W'(COUNT)),
-        .blk_v(blk_v), .blk_ready(blk_ready), .blk_row(blk_row),
+        .blk_v(blk_v), .blk_ready(blk_ready), .blk_user(user_id), .blk_row(blk_row),
         .blk_idx(blk_idx), .blk_codes(blk_codes), .blk_scale(blk_scale),
         .prefetch_v(prefetch_v), .prefetch_ready(prefetch_ready),
-        .prefetch_row(prefetch_row), .kv_ok(kv_ok),
-        .re(re), .rrow(rrow), .relem(relem), .q(q),
-        .packed_re(1'b0), .packed_rrow(prefetch_row), .packed_ridx(4'd1),
-        .packed_valid(packed_valid), .packed_codes(packed_codes), .packed_scale(packed_scale),
+        .prefetch_user(user_id), .prefetch_row(prefetch_row), .kv_ok(kv_ok),
+        .re(re), .ruser(user_id), .rrow(rrow), .relem(relem), .q(q),
+        .packed_re(1'b0), .packed_ruser(user_id), .packed_rrow(prefetch_row), .packed_ridx(4'd1),
+        .packed_valid(packed_valid), .packed_row(), .packed_codes(packed_codes), .packed_scale(packed_scale),
         .fault(fault), .fault_code(fault_code),
         .st_rows_fetched(st_rows), .st_blocks_written(st_blocks),
         .st_sectors_read(st_reads), .st_sectors_written(st_writes),
@@ -118,6 +119,14 @@ module tb_chip_v41x_window_kv_prefetch;
         for (idx = 0; idx < 16; idx = idx + 1) push_block(128, idx);
         fetch_row(128);
         check_elem(128, 32, 32'h40000000);
+        // A second user's ring starts 2,176 sectors later and shares no HBM
+        // bytes with the first user's slot zero.
+        user_id = 1;
+        for (idx = 0; idx < 16; idx = idx + 1) push_block(0, idx);
+        fetch_row(0);
+        check_elem(0, 32, 32'h40000000);
+        if (mem[BASE+2176] !== {32{8'h38}}) errors = errors + 1;
+        user_id = 0;
         @(negedge clk); prefetch_row = 0; prefetch_v = 1;
         @(negedge clk); prefetch_v = 0;
         @(negedge clk);
@@ -126,7 +135,7 @@ module tb_chip_v41x_window_kv_prefetch;
         end
         $display("WINDOW_KV rows=%0d blocks=%0d reads=%0d writes=%0d stale_fault=%0d errors=%0d",
                  st_rows, st_blocks, st_reads, st_writes, fault_code[0], errors);
-        if (errors == 0 && st_rows == 2 && st_blocks == 32 && st_reads == 34 && st_writes == 64)
+        if (errors == 0 && st_rows == 3 && st_blocks == 48 && st_reads == 51 && st_writes == 96)
             $display("PASS");
         else $display("FAIL");
         $finish;
