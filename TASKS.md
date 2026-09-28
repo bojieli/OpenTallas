@@ -2,7 +2,28 @@
 
 Updated 2026-09-28 against the current integration branch. The goal is four **full-shape, bit-exact, source-pinned end-to-end** ROM/HBM results, with physical evidence for the implemented blocks and a rate model calibrated from those results. A reduced test, design-point model, or placed block cannot be promoted to a full-chip throughput claim. The paper is [`docs/ARCHITECTURE_ATLAS.html`](docs/ARCHITECTURE_ATLAS.html); this file tracks its remaining proof obligations.
 
-**Statuses:** `[x]` published and passed at the stated scope; `[~]` assigned/in progress; `[ ]` queued; `[!]` a measured blocker. Owner names below identify responsibility; their branch/worktree is the handoff location, not evidence until merged. The user reset subagent service usage; ten critical-path owners resumed and the index owner continues its existing full-stack gates. Optional sweeps and superseded routes stay stopped. Root stopped the old DEPTH32 non-px collective detailed route (checkpoint retained), recovering about 30 GiB locally; large new gates run remotely with memory caps. The root agent integrates and pushes main. On every substantive merge, the owner of that item updates its gate, source-pinned record and next blocker here. Old campaign details belong in their records.
+**Statuses:** `[x]` published and passed at the stated scope; `[~]` assigned/in progress; `[ ]` queued; `[!]` a measured blocker. Owner names below identify responsibility; their branch/worktree is the handoff location, not evidence until merged. The live assignment table below supersedes older agent activity descriptions. Completed agents resume only for a concrete, nonoverlapping critical-path task. Optional sweeps and superseded routes stay stopped. Root stopped the old DEPTH32 non-px collective detailed route (checkpoint retained), recovering about 30 GiB locally; large new gates run remotely with memory caps. The root agent integrates and pushes main. On every substantive merge, the owner of that item updates its gate, source-pinned record and next blocker here. Old campaign details belong in their records.
+
+## Live parallel assignments — 2026-09-28
+
+Root owns publication, this tracker, and the architectural acceptance boundary. Twelve subagents are assigned active work after the requested parallelism increase; this is an assignment snapshot, not a count of background processes. Integration reviewers use isolated branches and never change frozen simulation inputs.
+
+| Owner | Current deliverable | Edit/coordination boundary |
+| --- | --- | --- |
+| `qwen_o4_end_to_end` | Full-size compilation and identical-source hierarchical/flat exactness checks | Owns frozen simulation inputs and verdicts; no duplicate full-size builds |
+| `v41_fullshape_core` | All-unit layer execution and real-checkpoint local ROM-bank bridge | Owns harness/QE source; coordinates core/tile/die edits with attention owner |
+| `v41_attention_physical` | Full-mode direct packed-KV input, removing redundant buffer/re-encoders | Owns attention bypass and agreed core/tile/die plumbing; reduced mode preserved |
+| `v41_me_he_macro_pipeline` | Exact checkpoint replay and registered SRAM operand/control route | Owns MAC/store implementation and its physical cut |
+| `v41_vm_bank_physical` | Composed VM interface and collective output physical closure | Owns VM/collective physical boundary; coordinates with MAC owner |
+| `v41_index_score_major` | Combined finite reader/scorer/selector exact gate | Owns new scoring integration; reuses measured reader, no core/die edits |
+| `qwen_o4_hbm_comparator` | Mixed-client finite timed HBM gate and completion ordering | Owns PC service/adapters; no frozen-build or core edits |
+| `qwen_int8_tile_physical` | Existing route verdicts and legal local scale/control timing fix | Owns scale physical probe; production RTL changes coordinated first |
+| `v41_hbm_region_audit` | Executable packed-KV/index/RoPE/weight region and capacity checks | Audit/tests only; no live RTL or model repricing |
+| `v41_hbm_comparator_weights` | Missing weight-family bounded HBM service with exact checkpoint gate | New standalone adapter/tests; core owner agrees interface before hookup |
+| `critical_path_tracker` | Tested Qwen integration candidate including shared-HBM fixes | Isolated integration only; root publishes and maintains TASKS |
+| `v41_integration` | Tested packed-KV/RoPE/core integration candidate | Isolated integration of agreed stable commits; no new feature RTL |
+
+Acceptance remains full-shape bit-exact execution plus finite shared resources and physical evidence. Component cycles are not token rates. Existing remote jobs are reused; new substantial jobs require checking host memory and use bounded resources. Other completed or pending agents remain inactive until a distinct useful dependency is available.
 
 ## Immediate architecture recovery priority
 
