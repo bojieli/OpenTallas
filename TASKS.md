@@ -12,6 +12,12 @@ power and arithmetic constraints; no arbitrary token-rate target is adopted.
 sharing boundary, executable contract, experiments and ownership. This is a
 proposal to validate, not a claim that a new cluster is implemented.
 
+**Latest user direction:** lead with weight-stationary ROM-bank-local compute for
+single-user latency, comparing fixed local tiles against limited nearby-bank MAC
+sharing. Count replicated idle hardware and activation/result networks in the same
+area/power budget. Whole-die MFU is diagnostic; no global weight-routing or target
+token rate is assumed.
+
 - [~] **Root: integration and architectural contract** — integrate completed exact
   operator/local-route records; define concrete tensor/expert placement, all
   storage and the finite shared-resource schedule before selecting cluster width.

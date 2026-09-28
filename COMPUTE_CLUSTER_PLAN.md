@@ -15,6 +15,20 @@ comparison rather than averaging away the regression.
 
 ## Proposed sharing boundary
 
+User steering: prioritize single-user latency with decentralized, weight-stationary
+ROM compute. The lead candidate couples dot-product lanes to their nearby ROM
+banks and moves activations/results between tiles. Compare it with bounded sharing
+across a small nearby bank set under the same chip count, area and power budget.
+Do not assume a central ROM store feeding a die-wide flexible compute pool.
+Low whole-system MAC utilization is acceptable if the measured token path improves;
+idle replicated engines still consume area and must be priced. In particular,
+per-expert compute replication must account for sparse expert activation.
+
+The experiment must measure ROM bank access, local compute and ordered reductions,
+hierarchical activation multicast, local intermediate storage, and output routing
+together. A near-ROM digital MAC tile is not evidence of in-memory multiplication;
+any compute-in-ROM variant requires its own macro arithmetic/port/area/power proof.
+
 A cluster owns nearby ROM banks, distributed banked activation/accumulator storage,
 small queues, a local scheduler, matrix tiles, and connections to vector/SFU
 pipelines. Matrix tiles are reused across compatible matrices and experts.
