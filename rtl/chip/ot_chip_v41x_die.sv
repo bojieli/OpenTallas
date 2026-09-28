@@ -127,7 +127,9 @@ module ot_chip_v41x_die #(
     parameter integer N_TP    = 4,
     parameter integer PKG_DIES = 2,
     parameter integer CL_LANES = 16,
-    parameter integer CL_DEPTH = 16,
+    // Full-shape gathers need enough per-parity credits to cover the T1
+    // round trip.  Keep the reduced die's qualified 16-word configuration.
+    parameter integer CL_DEPTH = FULL_SHAPE ? 128 : 16,
     parameter integer CL_RELAY = 1,
     parameter integer CL_ADD_LAT = 3,
     parameter integer CL_TAGW = 32,
