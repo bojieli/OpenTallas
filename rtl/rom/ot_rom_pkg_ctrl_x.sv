@@ -67,6 +67,7 @@ module ot_rom_pkg_ctrl_x #(
     parameter integer AW           = 24,     // KV address bits
     parameter integer VWA          = 8,      // vector-memory word address bits
     parameter integer MAXU         = 16,     // user contexts
+    parameter integer USER_W       = 8,      // 10 for the full-shape 866-user namespace
     parameter integer KVW          = 1024,   // KV words per user
     parameter integer XWORDS       = 8,      // payload flits of a HIDDEN message
     parameter integer RXB          = 0,      // vector-memory word of received payload flit 0
@@ -93,7 +94,7 @@ module ot_rom_pkg_ctrl_x #(
     input  wire               clk,
     input  wire               rst_n,
     // run configuration (SOURCE)
-    input  wire [7:0]         cfg_users,
+    input  wire [((MAXU > 255) ? $clog2(MAXU+1) : 8)-1:0] cfg_users,
     input  wire [NW-1:0]      cfg_prompt_len,
     input  wire [NW-1:0]      cfg_gen_len,
     // inbound link
@@ -110,6 +111,7 @@ module ot_rom_pkg_ctrl_x #(
     output reg                core_start,
     output reg  [NW-1:0]      core_token,
     output reg  [NW-1:0]      core_pos,
+    output wire [USER_W-1:0]  core_user,
     input  wire               core_done,
     input  wire [NW-1:0]      core_next_token,
     input  wire [31:0]        core_next_val,
@@ -123,30 +125,43 @@ module ot_rom_pkg_ctrl_x #(
     input  wire [FLIT-1:0]    vm_rq,
     // prompt tokens (SOURCE), synchronous read
     output reg                pr_re,
-    output reg  [7:0]         pr_user,
+    output reg  [USER_W-1:0]  pr_user,
     output reg  [NW-1:0]      pr_pos,
     input  wire [NW-1:0]      pr_q,
     // observation
     output wire               core_busy,
     output reg                tok_valid,      // SOURCE: a step's reduced token
-    output reg  [7:0]         tok_user,
+    output reg  [USER_W-1:0]  tok_user,
     output reg  [NW-1:0]      tok_pos,
     output reg  [NW-1:0]      tok_id,
-    output reg  [7:0]         users_done,
+    output reg  [((MAXU > 255) ? $clog2(MAXU+1) : 8)-1:0] users_done,
     output reg                proto_fault
 );
     // -- header ----------------------------------------------------------------------
     localparam integer HDR_DEST = 0, HDR_SRC = 8, HDR_TYPE = 16, HDR_LEN = 24, HDR_USER = 32,
-                       HDR_POS = 40, HDR_IDX = 56, HDR_VAL = 72, HDR_TOK = 104, HDR_ADDR = 120;
+                       HDR_POS = 40, HDR_IDX = HDR_POS + NW, HDR_VAL = HDR_IDX + NW,
+                       HDR_TOK = HDR_VAL + 32, HDR_ADDR = HDR_TOK + NW,
+                       HDR_USER_HI = HDR_ADDR + 16;
     localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     localparam integer RXW = (RXWORDS > 0) ? RXWORDS : XWORDS;
     localparam [7:0] SIDE_D = SIDE_DEST, SLEN = SIDE_WORDS;
     localparam [15:0] SIDE_A = SIDE_RXB;
     localparam integer UB = (MAXU > 1) ? $clog2(MAXU) : 1;
+    localparam integer UCW = (MAXU > 255) ? $clog2(MAXU+1) : 8;
+    localparam integer UHIW = (USER_W > 8) ? USER_W - 8 : 1;
+    initial begin
+        if (USER_W < 8 || USER_W > 16 || MAXU > (1 << USER_W) ||
+            FLIT < HDR_USER_HI + USER_W - 8)
+            $fatal(1, "ot_rom_pkg_ctrl_x: user/header widths cannot represent MAXU");
+        if (SIDE_IN != 0 && (64'(MAXU-1) << SIDE_USH) + SIDE_RXB + SIDE_WORDS > (64'd1 << VWA))
+            $fatal(1, "ot_rom_pkg_ctrl_x: per-user SIDE staging exceeds VM address space");
+        if (64'(MAXU-1) * KVW > (64'd1 << AW) - 1)
+            $fatal(1, "ot_rom_pkg_ctrl_x: per-user KV base exceeds address space");
+    end
     localparam [7:0] SRC_ID = PKG_ID, HID_D = HID_DEST, RES_D = RES_DEST, XLEN = XWORDS;
 
     function automatic [FLIT-1:0] header(input [7:0] dest, input [3:0] typ, input [7:0] len,
-                                         input [7:0] user, input [NW-1:0] pos,
+                                         input [USER_W-1:0] user, input [NW-1:0] pos,
                                          input [NW-1:0] idx, input [31:0] val,
                                          input [NW-1:0] tok, input [15:0] addr);
         begin
@@ -155,7 +170,8 @@ module ot_rom_pkg_ctrl_x #(
             header[HDR_SRC +: 8]  = SRC_ID;
             header[HDR_TYPE +: 4] = typ;
             header[HDR_LEN +: 8]  = len;
-            header[HDR_USER +: 8] = user;
+            header[HDR_USER +: 8] = user[7:0];
+            if (USER_W > 8) header[HDR_USER_HI +: UHIW] = user >> 8;
             header[HDR_POS +: NW] = pos;
             header[HDR_IDX +: NW] = idx;
             header[HDR_VAL +: 32] = val;
@@ -173,7 +189,8 @@ module ot_rom_pkg_ctrl_x #(
     endfunction
 
     wire [3:0]    in_type = in_data[HDR_TYPE +: 4];
-    wire [7:0]    in_user = in_data[HDR_USER +: 8];
+    wire [USER_W-1:0] in_user = USER_W'(in_data[HDR_USER +: 8]) |
+                                  (USER_W'(in_data[HDR_USER_HI +: UHIW]) << 8);
     wire [NW-1:0] in_pos  = in_data[HDR_POS +: NW];
 
     // -- per-user context --------------------------------------------------------------
@@ -181,7 +198,8 @@ module ot_rom_pkg_ctrl_x #(
 
     // -- core -------------------------------------------------------------------------
     reg          running;              // from the start edge until the job is handed to TX
-    reg [7:0]    cur_user;
+    reg [USER_W-1:0] cur_user;
+    assign core_user = cur_user;
     reg [NW-1:0] cur_pos, cur_pa_idx, cur_tok;
     reg [31:0]   cur_pa_val;
     assign core_busy = running;
@@ -201,7 +219,7 @@ module ot_rom_pkg_ctrl_x #(
     reg [QB:0]     txq_n;
     reg            rd_inflight, rd_last;
     reg [VWA-1:0]  tx_k;
-    reg [7:0]      tx_user;
+    reg [USER_W-1:0] tx_user;
     reg [NW-1:0]   tx_pos, tx_idx, tx_tok;
     reg [31:0]     tx_val;
     assign out_valid = (txq_n != 0);
@@ -230,7 +248,7 @@ module ot_rom_pkg_ctrl_x #(
     localparam [1:0] R_IDLE = 2'd0, R_DATA = 2'd1, R_SIDE = 2'd2;
     reg [1:0]    rx_st;
     reg [VWA-1:0] rx_j;
-    reg [7:0]    hdr_user, side_user;
+    reg [USER_W-1:0] hdr_user, side_user;
     reg [15:0]   side_addr;
     reg [3:0]    side_cnt [0:MAXU-1];   // SIDE messages received and not yet consumed, per user
     reg [NW-1:0] hdr_pos, hdr_pa_idx, hdr_tok;
@@ -243,23 +261,23 @@ module ot_rom_pkg_ctrl_x #(
 
     // -- SOURCE: step scheduling and argmax reduction ------------------------------------
     reg          res_v;                  // registered RESULT header
-    reg [7:0]    res_u;
+    reg [USER_W-1:0] res_u;
     reg [NW-1:0] res_p, res_i;
     reg [31:0]   res_val;
     reg [3:0]    rcnt [0:MAXU-1];
     reg [NW-1:0] rbi  [0:MAXU-1];
     reg [31:0]   rbv  [0:MAXU-1];
     reg [NW-1:0] ptok [0:MAXU-1];        // prompt token of the user's next position
-    reg [7:0]    next_u;
+    reg [UCW-1:0] next_u;
     reg          nu_ok;                  // next new user's first token fetched
     reg [NW-1:0] nu_tok;
     reg          nu_pend;                // ... being fetched
     // prompt reads: issued (registered port) at t, performed at t+1, data at t+2;
     // tag 1: new-user fetch, 2: prefetch of the next token of user pr_u*
     reg [1:0]    pr_t0, pr_t1;
-    reg [7:0]    pr_u0, pr_u1;
+    reg [USER_W-1:0] pr_u0, pr_u1;
     // ready-job queue
-    reg [7:0]    jq_u [0:MAXU-1];
+    reg [USER_W-1:0] jq_u [0:MAXU-1];
     reg [NW-1:0] jq_p [0:MAXU-1];
     reg [NW-1:0] jq_t [0:MAXU-1];
     reg [UB-1:0] jq_w, jq_r;
@@ -284,9 +302,11 @@ module ot_rom_pkg_ctrl_x #(
 
     // -- combinational port control -------------------------------------------------------
     reg rx_hdr, rx_res, rx_last_word, rx_side, rx_side_last;
-    wire side_ok = (SIDE_IN == 0) || (side_cnt[hdr_user[UB-1:0]] >= SIDE_IN);
+    wire side_ok = (SIDE_IN == 0) ||
+                   ((hdr_user < MAXU) && (side_cnt[hdr_user[UB-1:0]] >= SIDE_IN));
+    wire side_payload = (rx_st == R_SIDE) && in_valid && in_ready;
     reg st_rx, st_new, st_q, st_fb;
-    reg [7:0] st_user;
+    reg [USER_W-1:0] st_user;
     always @(*) begin
         in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0;
         vm_we = 1'b0; vm_waddr = rx_word;
@@ -300,22 +320,22 @@ module ot_rom_pkg_ctrl_x #(
             end
         end else if (rx_st == R_SIDE) begin
             in_ready = 1'b1;
-            vm_we = in_valid;
-            vm_waddr = side_addr[VWA-1:0] + rx_j + (side_user << SIDE_USH);
+            vm_we = in_valid && side_user < MAXU;
+            vm_waddr = VWA'(side_addr) + rx_j + (VWA'(side_user) << SIDE_USH);
         end else begin
             in_ready = core_free && rx_word_free;
             vm_we = in_valid && in_ready;
         end
         rx_last_word = (rx_st == R_DATA) && vm_we && (rx_j == RXW - 1);
-        rx_side_last = (rx_st == R_SIDE) && vm_we && in_last;
+        rx_side_last = side_payload && in_last && side_user < MAXU;
         vm_re = (job_done && SEND_HIDDEN) || ((tx_st == T_DATA || tx_st == T_SDATA) && tx_space);
         vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? SIDE_TXB + tx_k : TXB + tx_k;
 
         // core start: at most one source per cycle; the core samples it on this edge
-        st_rx = (rx_last_word || pend) && !running && !tx_hold && side_ok;
+        st_rx = (rx_last_word || pend) && !running && !tx_hold && side_ok && hdr_user < MAXU;
         st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0;
         if (SOURCE && !running && !tx_hold && !pend && rx_st == R_IDLE) begin
-            st_new = nu_ok;
+            st_new = nu_ok && next_u < MAXU;
             st_q   = !nu_ok && jq_n != 0;
             st_fb  = !nu_ok && jq_n == 0 && fb_v && fb_cont;
         end
@@ -381,8 +401,11 @@ module ot_rom_pkg_ctrl_x #(
                 hdr_user <= in_user; hdr_pos <= in_pos;
                 hdr_pa_idx <= in_data[HDR_IDX +: NW]; hdr_pa_val <= in_data[HDR_VAL +: 32];
                 hdr_tok <= in_data[HDR_TOK +: NW];
-                if (upos[in_user[UB-1:0]] != in_pos || in_last || in_user >= MAXU) proto_fault <= 1'b1;
-                upos[in_user[UB-1:0]] <= in_pos + 1'b1;
+                if (in_last || in_user >= MAXU) proto_fault <= 1'b1;
+                else begin
+                    if (upos[in_user[UB-1:0]] != in_pos) proto_fault <= 1'b1;
+                    upos[in_user[UB-1:0]] <= in_pos + 1'b1;
+                end
                 rx_j <= 0; rx_st <= R_DATA;
             end
             if (rx_st == R_DATA && vm_we) begin
@@ -396,17 +419,20 @@ module ot_rom_pkg_ctrl_x #(
                 side_user <= in_user; side_addr <= in_data[HDR_ADDR +: 16];
                 rx_j <= 0; rx_st <= R_SIDE;
             end
-            if (rx_st == R_SIDE && vm_we) begin
+            if (side_payload) begin
                 rx_j <= rx_j + 1'b1;
                 if (in_last) rx_st <= R_IDLE;
             end
-            for (u = 0; u < MAXU; u = u + 1)
-                side_cnt[u] <= side_cnt[u] + ((rx_side_last && side_user[UB-1:0] == u) ? 4'd1 : 4'd0)
-                                           - ((st_rx && hdr_user[UB-1:0] == u) ? SIDE_IN[3:0] : 4'd0);
+            if (rx_side_last && st_rx && side_user == hdr_user) begin
+                side_cnt[side_user] <= side_cnt[side_user] + 4'd1 - SIDE_IN[3:0];
+            end else begin
+                if (rx_side_last) side_cnt[side_user] <= side_cnt[side_user] + 4'd1;
+                if (st_rx) side_cnt[hdr_user] <= side_cnt[hdr_user] - SIDE_IN[3:0];
+            end
             res_v <= 1'b0;
             if (rx_res) begin
                 if (!SOURCE || in_type != MT_RESULT || !in_last || in_user >= MAXU) proto_fault <= 1'b1;
-                res_v <= SOURCE && in_type == MT_RESULT;
+                res_v <= SOURCE && in_type == MT_RESULT && in_user < MAXU;
                 res_u <= in_user; res_p <= in_pos;
                 res_i <= in_data[HDR_IDX +: NW]; res_val <= in_data[HDR_VAL +: 32];
             end
@@ -435,7 +461,7 @@ module ot_rom_pkg_ctrl_x #(
                     // prefetch the prompt token of the step after this one
                     pr_re <= 1'b1; pr_user <= st_user; pr_pos <= core_pos + 1'b1; pr_t0 <= 2; pr_u0 <= st_user;
                     if (st_new) begin next_u <= next_u + 1'b1; nu_ok <= 1'b0; end
-                end else if (!nu_ok && !nu_pend && next_u < cfg_users) begin
+                end else if (!nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU) begin
                     // fetch the next new user's first prompt token
                     pr_re <= 1'b1; pr_user <= next_u; pr_pos <= 0; pr_t0 <= 1; nu_pend <= 1'b1;
                 end else begin
@@ -446,6 +472,7 @@ module ot_rom_pkg_ctrl_x #(
                 if (pr_t1 == 1) begin nu_tok <= pr_q; nu_ok <= 1'b1; nu_pend <= 1'b0; end
                 if (pr_t1 == 2) ptok[pr_u1[UB-1:0]] <= pr_q;
             end
+            if (SOURCE && cfg_users > MAXU) proto_fault <= 1'b1;
 
             // ---- outbound framing
             if (vm_re && !job_done) begin
