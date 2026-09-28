@@ -15,7 +15,7 @@
     "wq_a": "a38c2a1245bc65e676226f04712f8abc6c300000fb513c1146850cb9fabcf66d",
     "exp110.w1": "4d28ae46e1080ca68dbdba05429281e59e35b530dfe48afc090592f2ba089f76"
   },
-  "tool_sha256": "ae9544acd976d3cfdc670e56c534aaff40a6792df48f3ce9500109c738b9601f",
+  "tool_sha256": "fef02a2e2765ec8f2f8bc258b8131826ddc69ef1f386293a58b84992e816d3d9",
   "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
   "checkpoint": {
     "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
@@ -559,11 +559,57 @@
   "physical_file_bytes": 4587520,
   "valid_macro_words": 97280,
   "padded_macro_words": 33792,
-  "physical_bytes_read_per_two_ops": 3331840,
+  "physical_bytes_read_per_two_ops": 4515520,
   "source_checkpoint_bytes": 3206720,
   "required_simultaneous_ports": {
     "fp8": 8,
-    "fp4": 4
+    "fp4": 7
+  },
+  "qtile_skew_port_witnesses": {
+    "wq_a": {
+      "chain_skew_cycles": [
+        0,
+        0,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18
+      ],
+      "qtile_beats": 6400,
+      "lane_requests": 51200,
+      "macro_row_conflicts": 0,
+      "same_row_shared_lane_requests": 0,
+      "macro_read_transactions": 51200,
+      "physical_bytes_read": 1753600,
+      "ideal_synchronous_macro_reads": 51200,
+      "max_active_macro_ports": 8,
+      "max_distinct_macro_rows_per_cycle": 1,
+      "scope": "one descriptor, no overlapping second descriptor"
+    },
+    "exp110.w1": {
+      "chain_skew_cycles": [
+        0,
+        0,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18
+      ],
+      "qtile_beats": 11520,
+      "lane_requests": 92160,
+      "macro_row_conflicts": 0,
+      "same_row_shared_lane_requests": 11520,
+      "macro_read_transactions": 80640,
+      "physical_bytes_read": 2761920,
+      "ideal_synchronous_macro_reads": 46080,
+      "max_active_macro_ports": 7,
+      "max_distinct_macro_rows_per_cycle": 1,
+      "scope": "one descriptor, no overlapping second descriptor"
+    }
   },
   "local_bank_set_mux_required": true,
   "ecc_generated": false,

@@ -35,9 +35,14 @@ def test_real_checkpoint_tile_roundtrip_and_sparse_claim(tmp_path: Path):
     assert result["physical_macro_bytes_allocated"] == 4_489_216
     assert result["valid_macro_words"] == 97_280
     assert result["padded_macro_words"] == 33_792
-    assert result["physical_bytes_read_per_two_ops"] == 3_331_840
+    assert result["physical_bytes_read_per_two_ops"] == 4_515_520
     assert result["source_checkpoint_bytes"] == 3_206_720
-    assert result["required_simultaneous_ports"] == {"fp8": 8, "fp4": 4}
+    assert result["required_simultaneous_ports"] == {"fp8": 8, "fp4": 7}
+    fp4_ports = result["qtile_skew_port_witnesses"]["exp110.w1"]
+    assert fp4_ports["macro_row_conflicts"] == 0
+    assert fp4_ports["macro_read_transactions"] == 80_640
+    assert fp4_ports["ideal_synchronous_macro_reads"] == 46_080
+    assert fp4_ports["physical_bytes_read"] == 2_761_920
     assert result["ecc_generated"] is False
     image = np.stack([np.fromfile(tmp_path / m["image_file"], np.uint8).reshape(B.DEPTH,B.FILE_BYTES)
                       for m in result["macros"]])

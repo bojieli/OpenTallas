@@ -68,6 +68,50 @@ def local_slot(name: str, row: int, block: int) -> dict:
                 half_lane=half)
 
 
+def skew_port_witness(name: str) -> dict:
+    """Replay qtile's eight staggered chain-position requests, one bank port.
+
+    The RTL uses SK(c)=0 for c<2, else 3*(c-1). A bank may answer two
+    lanes only when both request the *same* physical macro row that cycle.
+    """
+    nrows = 320 if name == "wq_a" else 576
+    beats = nrows * 20
+    skew = [0 if c < 2 else 3 * (c - 1) for c in range(8)]
+    conflicts = 0
+    same_row_shares = 0
+    max_distinct = 0
+    max_active_ports = 0
+    read_transactions = 0
+    issued = 0
+    for cycle in range(beats + max(skew)):
+        bank_rows: dict[int, set[int]] = {}
+        bank_accesses: dict[int, int] = {}
+        for c in range(8):
+            beat = cycle - skew[c]
+            if not 0 <= beat < beats:
+                continue
+            row, q = divmod(beat, 20)
+            loc = local_slot(name, row, q * 8 + c)
+            bank_rows.setdefault(loc["macro_id"], set()).add(loc["macro_row"])
+            bank_accesses[loc["macro_id"]] = bank_accesses.get(loc["macro_id"], 0) + 1
+            issued += 1
+        conflicts += sum(len(rows) > 1 for rows in bank_rows.values())
+        same_row_shares += sum(n - 1 for n in bank_accesses.values() if n > 1)
+        read_transactions += len(bank_rows)
+        max_active_ports = max(max_active_ports,len(bank_rows))
+        max_distinct = max(max_distinct, max((len(rows) for rows in bank_rows.values()),default=0))
+    if conflicts:
+        raise AssertionError(f"{name} single-read macro port conflicts: {conflicts}")
+    return dict(chain_skew_cycles=skew, qtile_beats=beats, lane_requests=issued,
+                macro_row_conflicts=conflicts, same_row_shared_lane_requests=same_row_shares,
+                macro_read_transactions=read_transactions,
+                physical_bytes_read=read_transactions*WORD_BITS//8,
+                ideal_synchronous_macro_reads=beats*(8 if name=="wq_a" else 4),
+                max_active_macro_ports=max_active_ports,
+                max_distinct_macro_rows_per_cycle=max_distinct,
+                scope="one descriptor, no overlapping second descriptor")
+
+
 def pack_tile(source_manifest: Path, source_dir: Path, output_dir: Path) -> dict:
     src = json.loads(source_manifest.read_text())
     if (src.get("layer"), src.get("rank"), src.get("tp")) != (0, 0, 4):
@@ -127,7 +171,8 @@ def pack_tile(source_manifest: Path, source_dir: Path, output_dir: Path) -> dict
         if actual_hash != q_record["matrices"][name]["logical_stream_sha256"]:
             raise ValueError(f"logical stream hash mismatch: {name}")
         logical_hashes[name] = actual_hash
-    physical_read = wbeats * 8 * WORD_BITS // 8 + ebeats * 4 * WORD_BITS // 8
+    port_witnesses = {name:skew_port_witness(name) for name in MATRICES}
+    physical_read = sum(w["physical_bytes_read"] for w in port_witnesses.values())
     useful_source = int(w_codes.nbytes + w_scale.nbytes + e_codes.nbytes + e_scale.nbytes)
     out = dict(schema=SCHEMA, status="source_pinned_local_tile_roundtrip_pass",
                claim_boundary="two matrix/local tile witness only; no full-die fit, P&R, or rate",
@@ -171,7 +216,8 @@ def pack_tile(source_manifest: Path, source_dir: Path, output_dir: Path) -> dict
                padded_macro_words=8*(DEPTH-wbeats)+8*(DEPTH-ebeats//2),
                physical_bytes_read_per_two_ops=physical_read,
                source_checkpoint_bytes=useful_source,
-               required_simultaneous_ports=dict(fp8=8,fp4=4),
+               required_simultaneous_ports=dict(fp8=8,fp4=7),
+               qtile_skew_port_witnesses=port_witnesses,
                local_bank_set_mux_required=True,
                ecc_generated=False, macro_q_to_lane_timing_closed=False,
                unsupported_full_die_reasons=["only wq_a and exp110.w1 mapped", "qtile bank-address and paired-FP4 expander RTL absent",
