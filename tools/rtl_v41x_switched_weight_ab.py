@@ -163,8 +163,19 @@ def combine(images, arm_a, arm_b, output):
     man = json.loads((images / "manifest.json").read_text())
     a = json.loads((arm_a / "arm.json").read_text())
     b = json.loads((arm_b / "arm.json").read_text())
-    ca = [x.replace(str(arm_a), "ARM") for x in a["build_command"]]
-    cb = [x.replace(str(arm_b), "ARM") for x in b["build_command"]]
+    def portable_build(rec, scratch):
+        source_file = next(x for x in rec["build_command"]
+                           if x.endswith("/rtl/test/tb_hdc_v41x_array.sv"))
+        source_root = str(Path(source_file).parents[2])
+        return [x.replace(str(scratch), "ARM").replace(source_root, "SOURCE")
+                for x in rec["build_command"]]
+
+    def portable_run(rec, scratch):
+        return [("+DIR=IMAGES/" + Path(x[5:]).name if x.startswith("+DIR=") else
+                 "+ROMS=IMAGES/roms" if x.startswith("+ROMS=") else
+                 x.replace(str(scratch), "ARM")) for x in rec["run_command"]]
+
+    ca, cb = portable_build(a, arm_a), portable_build(b, arm_b)
     matched = dict(same_sources=a["source_sha256"] == b["source_sha256"] == man["source_sha256"],
                    same_images=a["image_sha256"] == b["image_sha256"] == man["image_sha256"],
                    same_weight_words=man["weight_equivalence"]["pass_"],
@@ -172,7 +183,7 @@ def combine(images, arm_a, arm_b, output):
                    only_weight_source_diff=len(ca) == len(cb) and
                    [(x, y) for x, y in zip(ca, cb) if x != y] ==
                    [("+define+HDC_W_HBM=0", "+define+HDC_W_HBM=1")],
-                   same_run_args=a["run_command"][3:] == b["run_command"][3:])
+                   same_run_args=portable_run(a, arm_a) == portable_run(b, arm_b))
     ok = a["pass"] and b["pass"] and all(matched.values())
     ac, bc = a["result"]["total_cycles"], b["result"]["total_cycles"]
     rec = dict(schema="opentallas.rtl.hdc_v41x_switched_weight_ab.v1",
@@ -183,6 +194,7 @@ def combine(images, arm_a, arm_b, output):
                                   link_channel_cycles=LINK_CH, stall_percent=STALL),
                matching=matched, image_sha256=man["image_sha256"],
                source_sha256=man["source_sha256"], manifest_sha256=sha(images/"manifest.json"),
+               combine_tool_sha256=sha(Path(__file__).resolve()),
                arms=dict(A=a, B=b),
                delta=(dict(A_cycles=ac, B_cycles=bc, cycles=bc-ac,
                            percent=round(100*(bc-ac)/ac, 4)) if ok else None))

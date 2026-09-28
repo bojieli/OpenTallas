@@ -37,3 +37,29 @@ def test_switched_parser_checks_all_users_and_package_state():
     assert c.parse(sample(1), 1, man)["pass_"]
     assert not c.parse(sample(1, bad_state=True), 1, man)["pass_"]
     assert not c.parse(sample(1).replace("1918", "1919"), 1, man)["pass_"]
+
+
+def test_switched_combine_normalises_remote_paths(tmp_path):
+    import json
+    c = campaign()
+    images, aa, bb = (tmp_path / x for x in ("images", "a", "b"))
+    for path in (images, aa, bb):
+        path.mkdir()
+    man = dict(source_sha256={"x": "a"}, image_sha256={"x": "b"},
+               weight_equivalence={"pass_": True}, packages=5)
+    (images / "manifest.json").write_text(json.dumps(man))
+    base = dict(source_sha256=man["source_sha256"], image_sha256=man["image_sha256"],
+                verilator_version="Verilator 5.050", **{"pass": True},
+                result={"total_cycles": 100}, checks={"exact": True})
+    for scratch, root, whbm in ((aa, "/src/a", 0), (bb, "/remote/src/b", 1)):
+        rec = dict(base, whbm=whbm,
+                   build_command=["verilator", "-Mdir", str(scratch / "obj"),
+                                  root + "/rtl/test/tb_hdc_v41x_array.sv",
+                                  f"+define+HDC_W_HBM={whbm}"],
+                   run_command=["stdbuf", "-oL", str(scratch / "obj/Vtop"),
+                                "+DIR=" + str(scratch / "images/cfg_b3_h2_switch_stall"),
+                                "+ROMS=" + str(scratch / "images/roms"), "+NUSERS=2"])
+        (scratch / "arm.json").write_text(json.dumps(rec))
+    result = c.combine(images, aa, bb, tmp_path / "out.json")
+    assert result["status"] == "pass"
+    assert all(result["matching"].values())
