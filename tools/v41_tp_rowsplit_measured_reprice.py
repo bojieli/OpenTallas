@@ -51,9 +51,11 @@ def build():
     bench = json.loads(BENCH.read_text())
     sensitivity = json.loads(SENSITIVITY.read_text())
     assert bench["schema"] == "v41_tp_rowsplit_die_collectives_v1"
-    assert bench["die_contract"] == dict(CL_LANES=16, flit_bytes=64, CL_DEPTH=16,
-                                          DMA_VM_words_per_cycle=1, DMA_skid_words=2,
-                                          RELAY=1, ADD_LAT=3, GW=1)
+    contract = bench["die_contract"]
+    for key, value in dict(CL_LANES=16, flit_bytes=64, CL_DEPTH=16,
+                           DMA_VM_words_per_cycle=1, DMA_skid_words=2,
+                           RELAY=1, ADD_LAT=3, PAIRWISE=1, GW=1).items():
+        assert contract[key] == value, key
     for record in (bench, sensitivity):
         for path, digest in record["source_sha256"].items():
             assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest, path
@@ -95,6 +97,7 @@ def build():
                 scope="batch-one per-user AR model with adopted-width gather stage RTL tails; MTP is an uncalibrated sensitivity; not full-shape chip throughput",
                 measured_tail_cycles=tails, points=points,
                 limits=["stage bench has producer timing stubs and behavioural UCIe/T1, not a routed die",
+                        "one 64-byte VM write/cycle imposes a 1064-cycle minimum for the 266-flit four-rank activation gather; the old 219-cycle model exposure is physically unattainable at this port width",
                         "full-shape TP layer and die exact-token simulation is pending",
                         "local per-expert BF16 rounding and ordered sum are not separately timed",
                         "other collective tails are inherited from prior campaigns",

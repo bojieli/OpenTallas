@@ -78,7 +78,6 @@ def build(scratch: Path) -> dict:
     sources = ("tools/rtl_v41_tp_rowsplit_collectives.py",
                "tools/v41_tp_exact_reprice.py", "tools/arch_lanes_v41.py",
                "tools/decode_critical_path.py", "tools/rtl_v41_stage_collective_campaign.py",
-               "rtl/chip/ot_chip_v41x_die.sv",
                "rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
                "rtl/test/tb_v41_stage_collective.sv")
     pins = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in sources}
@@ -94,6 +93,8 @@ def build(scratch: Path) -> dict:
                              measured_best_minus_model_cycles=best["exposed_tail_cycles"]
                              - patterns[name]["model_exposed"])
     return dict(schema="v41_tp_rowsplit_collectives_v1", source_sha256=pins,
+                historical_width_reference=dict(commit="159e179c", die_CL_LANES=16,
+                                                note="die top is not instantiated by this standalone stage bench"),
                 scope="one-shot gather RTL with behavioural T1 and producer schedule from current model; no die/full-shape throughput claim",
                 link=lp, patterns=patterns, cases=rows, summary=summary)
 

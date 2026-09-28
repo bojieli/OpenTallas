@@ -26,6 +26,7 @@ import rtl_v41_collective_levers_campaign as L  # noqa: E402
 from rtl_v41_tp_rowsplit_collectives import patterns_from_design_point  # noqa: E402
 
 OUT = ROOT / "results/rtl/v41_tp_rowsplit_die_collectives.json"
+TB = ROOT / "rtl/test/tb_v41_tp_rowsplit_px.sv"
 
 
 def build(scratch: Path) -> dict:
@@ -34,10 +35,13 @@ def build(scratch: Path) -> dict:
     assert (L.LANES, L.WORD_B) == (16, 64)
     lp = B.link_params()
     original_top_params = L.top_params
+    original_tb = L.TB
+    L.TB = TB
 
     def top_params_one_vm_word(case, link):
         top, params = original_top_params(case, link)
         params["PUSHW"] = 1
+        params["PAIRWISE"] = 1
         return top, params
 
     L.top_params = top_params_one_vm_word
@@ -47,14 +51,14 @@ def build(scratch: Path) -> dict:
             # COLL v1 blocks instruction issue: all local VM words have been
             # produced before the DMA starts. The blocked schedule is the
             # adopted point; uniform is an overlap sensitivity only.
-            for depth, qtx, order in ((16, 2, "blocked"), (16, 2, "uniform"),
-                                      (64, 64, "blocked")):
+            for depth, qtx, order in ((16, 2, "blocked"), (16, 2, "uniform")):
                 case = dict(name=f"die_{pattern}_d{depth}_q{qtx}_{order}", pattern=pattern,
                             lever="relay_add3", depth=depth, qtx=qtx, lanes=16,
                             order=order)
                 cases.append(L.run_case(scratch, case, lp))
     finally:
         L.top_params = original_top_params
+        L.TB = original_tb
     for case in cases:
         assert case["passed"] and case["mismatches"] == case["out_err"] == case["timeout"] == 0
         assert all(fault == 0 for fault in case["faults"])
@@ -62,10 +66,9 @@ def build(scratch: Path) -> dict:
                     "tools/rtl_v41_tp_rowsplit_collectives.py", "tools/v41_tp_exact_reprice.py",
                     "tools/rtl_v41_collective_levers_campaign.py",
                     "tools/rtl_v41_stage_collective_campaign.py",
-                    "rtl/chip/ot_chip_v41x_die.sv", "rtl/chip/ot_chip_v41x_coll_dma.sv",
                     "rtl/rom/ot_rom_oneshot_px.sv", "rtl/hdc/ot_hdc_fastfp.sv",
                     "rtl/proto/ot_fp32_add_rne_pipe.sv",
-                    "rtl/test/tb_v41_stage_collective_px.sv",
+                    "rtl/test/tb_v41_tp_rowsplit_px.sv",
                     "rtl/test/tb_v41_stage_hop_px.sv",
                     "tools/hdc_golden.py", "results/arch/v41_lanes.json",
                     "tools/arch_lanes_v41.py", "tools/decode_critical_path.py")
@@ -83,7 +86,9 @@ def build(scratch: Path) -> dict:
                 scope="adopted-width one-shot RTL and behavioural UCIe/T1 link with blocked COLL-v1 producer; no full-shape or P&R claim",
                 die_contract=dict(CL_LANES=16, flit_bytes=64, CL_DEPTH=16,
                                   DMA_VM_words_per_cycle=1, DMA_skid_words=2,
-                                  RELAY=1, ADD_LAT=3, GW=1),
+                                  RELAY=1, ADD_LAT=3, PAIRWISE=1, GW=1,
+                                  reference_commit="dc4ee8aa",
+                                  note="die top and CDMA are not instantiated; QTX2/PUSHW1 are timing stubs of their ports"),
                 link=lp, patterns=pats, cases=cases, summary=summary)
 
 

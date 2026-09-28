@@ -325,6 +325,11 @@
       "words_per_die": 266
     }
   ],
+  "historical_width_reference": {
+    "commit": "159e179c",
+    "die_CL_LANES": 16,
+    "note": "die top is not instantiated by this standalone stage bench"
+  },
   "link": {
     "BPC_C": 16971,
     "BPC_C_DEN": 100,
@@ -378,14 +383,13 @@
   "schema": "v41_tp_rowsplit_collectives_v1",
   "scope": "one-shot gather RTL with behavioural T1 and producer schedule from current model; no die/full-shape throughput claim",
   "source_sha256": {
-    "rtl/chip/ot_chip_v41x_die.sv": "0b4ce00e5d997f42ba1cf07356f56a1e9b3c3232c7ef6d246bfae4485dc5552b",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
     "rtl/test/tb_v41_stage_collective.sv": "9ecce59a8d5898b8c1da81106a2f134c35e08e106e692f7a0cf6ad4e6a83daf9",
     "tools/arch_lanes_v41.py": "1c5dde7d9041e25dc53fa90b9ea9b30c493dd690e6e776315735a7d948c76325",
     "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
     "tools/rtl_v41_stage_collective_campaign.py": "b1d8a57b03d2e54f2764418382921019b1ae8be16124c985e24935dd394739e6",
-    "tools/rtl_v41_tp_rowsplit_collectives.py": "3f3abcaf46971312ba4e9581e2d25898d16823250cddf6d7bb6c844da9e06aa0",
+    "tools/rtl_v41_tp_rowsplit_collectives.py": "419d2e3b58ab2e9f322fc2f3e94b1ea0ede5d27263e2ed4eee4d166b589bbe3f",
     "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303"
   },
   "summary": {
