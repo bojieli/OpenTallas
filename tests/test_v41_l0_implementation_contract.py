@@ -19,6 +19,7 @@ def test_contract_is_current_and_blocked():
     assert saved["clock"]["achieved_hz"] is None
     assert saved["contexts"][0]["binding_status"] == "exact_instruction_and_selected_image"
     assert saved["contexts"][1]["binding_status"] == "missing_position_and_selected_ID_binding"
+    assert saved["weight_source_binding"]["ROM_die_mode_status"].startswith("blocked")
 
 
 def test_all_real_descriptors_and_dependencies_are_present():
@@ -33,7 +34,7 @@ def test_all_real_descriptors_and_dependencies_are_present():
         190, 176, 525, 208, 176, 208, 208, 208, 208, 208, 208, 257]
     assert ops[55]["dependency_edges"]["raw_producer_pcs"]["ACT6"] == 54
     assert ops[35]["address_fields"]["me_wbase"]["unit"] == \
-        "logical_engine_ROM_word_unmapped_to_physical_macro"
+        "logical_engine_weight_word_ROM_or_HBM_unselected_unmapped"
     assert ops[55]["address_fields"]["coll_src"]["unit"] == "VM_FP32_element"
 
 

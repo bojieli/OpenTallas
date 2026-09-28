@@ -21,6 +21,8 @@ DIE = "results/arch/v41_die_assembly.json"
 REGION = "results/arch/v41_hbm_region_preflight.json"
 QE_LOCAL = "results/rtl/v41x_qe_local_tile_bank_l0.json"
 INDEX_SCORE_RTL = "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv"
+DIE_RTL = "rtl/chip/ot_chip_v41x_die.sv"
+TILE_RTL = "rtl/chip/ot_chip_v41x_tile.sv"
 
 
 def digest(path: Path) -> str:
@@ -35,7 +37,7 @@ def address_unit(name: str, fields: dict) -> str:
     if name in ("coll_src", "coll_dst", "coll_ibase"):
         return "VM_FP32_element"
     if name in ("qe_wbase", "me_wbase", "he_wbase"):
-        return "logical_engine_ROM_word_unmapped_to_physical_macro"
+        return "logical_engine_weight_word_ROM_or_HBM_unselected_unmapped"
     if name == "me_obase":
         return "VM_16_FP32_element_word"
     if name in ("qe_xbase", "qe_obase", "me_xbase", "he_xbase", "he_obase"):
@@ -100,11 +102,17 @@ def derive() -> dict:
                     "address_fields": _address_fields(fields), "collective_descriptor": descriptor,
                     "service": service})
     paths = ("tools/v41_l0_implementation_contract.py", PRE, BIND, COLL, DIE,
-             REGION, QE_LOCAL, INDEX_SCORE_RTL)
+             REGION, QE_LOCAL, INDEX_SCORE_RTL, DIE_RTL, TILE_RTL)
     pins = {p: digest(ROOT / p) for p in paths}
     return {"schema": "opentallas.v41.l0-implementation-contract.v1", "status": "proposal_blocked",
             "source_sha256": pins,
             "scope": "one real layer-0 rank-0 200K instruction binding; 1M position/selected-ID binding open",
+            "weight_source_binding": {"logical_program_is_source_agnostic": True,
+                                      "tile_default_W_HBM": 1,
+                                      "die_forwards_weight_source_parameter": False,
+                                      "ROM_die_mode_status": "blocked_until_die_exposes_W_HBM_0_and_exact_gate",
+                                      "HBM_die_mode_status": "tile_default_only_full_layer_service_unproved",
+                                      "source_files": [DIE_RTL, TILE_RTL]},
             "contexts": [
                 {"context_tokens": 200000, "position": 199999, "binding_status": "exact_instruction_and_selected_image",
                  "selected_expert_ids": binder["source_experts"],
@@ -175,6 +183,10 @@ def validate(c: dict) -> None:
     assert c["contexts"][1]["binding_status"] == "missing_position_and_selected_ID_binding"
     assert all(x["token_latency_cycles"] is None for x in c["contexts"])
     assert c["clock"]["target_hz"] == 1_087_000_000 and c["clock"]["achieved_hz"] is None
+    assert c["weight_source_binding"]["tile_default_W_HBM"] == 1
+    assert c["weight_source_binding"]["die_forwards_weight_source_parameter"] is False
+    assert "parameter integer W_HBM = 1" in (ROOT / TILE_RTL).read_text()
+    assert "W_HBM" not in (ROOT / DIE_RTL).read_text()
     bank = c["resource_interfaces"]["collective_stage_VM"]
     collective_evidence = load(COLL)
     assert bank["read_ports_64B_per_cycle"] == bank["write_ports_64B_per_cycle"] == \
