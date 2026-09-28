@@ -70,7 +70,10 @@ passes all 2048/2048 checkpoint rows and checks all 512 returned 512-bit VM
 words. Its **timed** two-group service is 131363 cycles, including 128 VM
 read issues, 128 preload writes, converter/store latency and the drain after
 each group; untimed ACC initialization is excluded. This is 14 cycles beyond
-the standalone RL5 boundary's 131349 cycles. The
+the standalone RL5 boundary's 131349 cycles. The matching no-bank-write-stage
+VM gate in `results/rtl/hdc_v41x_fullshape_woa_vmread_pipe_rl5_full1024.json`
+is also 2048/2048 exact and takes 131363 timed cycles, so the extra bank
+write register is hidden by the same preload drain on this workload. The
 existing four-wide adapter consumes 2048 LOAD issue cycles for those two
 groups. The checkpoint-backed matched shared-adapter gate now measures the
 isolated LOAD saving: `results/rtl/hdc_v41x_fullshape_woa_preload_matched.json`
