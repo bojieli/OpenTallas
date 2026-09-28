@@ -21,7 +21,7 @@ SOURCES = [ROOT / p for p in (
     "rtl/test/tb_hdc_v41x_idx_four_stack_verilator.sv",
 )]
 CPP = ROOT / "rtl/test/hdc_v41x_idx_four_stack_verilator.cpp"
-OUT = ROOT / "results/rtl/hdc_v41x_idx_four_stack_verilator.json"
+OUT = ROOT / "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json"
 PAT = re.compile(r"V41X_FOUR_STACK_PASS n=(\d+) quantum=(\d+) checked=(\d+) sectors=(\d+) cycles=(\d+) stalled=(\d+) request_stalls=(\d+) output_stalls=(\d+)")
 
 
@@ -74,7 +74,9 @@ def main() -> None:
             print(run.stdout.strip(), flush=True)
             assert (keys, quantum, checked, got_sectors) == (n, 64, n, sectors(n))
             if n in (65, 1040):
-                assert cycles == {65: 82, 1040: 149}[n], (n, cycles)
+                short = json.loads((ROOT / "results/rtl/hdc_v41x_idx_four_stack_pipeline_icarus_short.json").read_text())
+                expected_cycles = {r["keys"]: r["cycles"] for r in short["cases"]}
+                assert cycles == expected_cycles[n], (n, cycles, expected_cycles[n])
             row = {"keys": n, "checked": checked, "sectors": got_sectors,
                    "cycles": cycles, "sector_per_cycle": round(got_sectors / cycles, 6),
                    "collector_empty_cycles": stalled, "request_stall_cycles": req_stalls,
@@ -85,13 +87,15 @@ def main() -> None:
     rec = {
         "schema": "opentallas.hdc-v41x-idx-four-stack-verilator.v1",
         "status": "pass", "source_baseline": "6e2b7ae38fe3019e38d2574ffad9df89538bd08a",
+        "collector_fix_commit": "fa249d47",
         "simulator": "Verilator", "configuration": {"stacks": 4, "contexts_per_stack": 4,
             "WB": 32, "GA": 24, "quantum": 64, "hbm_QD": 64, "hbm_RQD": 32, "hbm_REFPB": 3},
         "cases": rows,
         "coverage": "Same six RTL modules and exact key/mask/last/reference-bit testbench checks as Icarus gate; external C++ clock/reset/command driver; short-case cycle equality required before full run.",
         "limitation": "Behavioral timed HBM; no physical or model throughput claim.",
         "input_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-                         for p in [*SOURCES, CPP, script]},
+                         for p in [*SOURCES, CPP, script,
+                                   ROOT / "results/rtl/hdc_v41x_idx_four_stack_pipeline_icarus_short.json"]},
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(rec, indent=2) + "\n")

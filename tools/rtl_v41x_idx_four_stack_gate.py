@@ -87,6 +87,7 @@ def main() -> None:
         "schema": "opentallas.hdc-v41x-idx-four-stack-gate.v1",
         "status": "pass",
         "source_baseline": "6e2b7ae38fe3019e38d2574ffad9df89538bd08a",
+        "collector_fix_commit": "fa249d47",
         "collector_source_commits": ["a1843d61", "c00a0141"],
         "configuration": {
             "stacks": 4, "quarter_contexts_per_stack": 4,
