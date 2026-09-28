@@ -8,6 +8,8 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import hdc_isa as I  # noqa: E402
 import hdc_program as P  # noqa: E402
 import hdc_qwen_fullshape_program as F  # noqa: E402
+import hdc_qwen_fullshape_isa as QI  # noqa: E402
+from hdc_qwen_fullshape_placement import matrix  # noqa: E402
 
 
 def test_first_layer_program_round_trip_and_die_order():
@@ -41,3 +43,19 @@ def test_vm_regions_do_not_overlap_and_first_layer_kv_window():
     report = F.profile(0)
     assert report['kv_window_elems'] == 2 * 4 * 8192 * 128
     assert any('DYN_TTILES' in item for item in report['blockers'])
+
+
+def test_lm_head_512_word_chunks_keep_independent_scale_stride():
+    meta = matrix(0, 'lm_head', 75968, 4096)
+    meta['scale_base'] = 0
+    a, b = F.profile_lm_head(0, meta, 535041), F.profile_lm_head(1, meta, 535041)
+    assert a['program_words'] == b['program_words'] == 11
+    assert QI.decode_descriptor(int(b['descriptor_hex'][0], 16))['row0'] == 75968
+    assert QI.decode_descriptor(int(a['descriptor_hex'][0], 16))['row0'] == 0
+    assert [x['code_base'] for x in b['chunks']] == [0, 512, 1024, 1536, 2048, 2560, 3072]
+    assert [x['scale_base'] for x in b['chunks']] == [0, 768, 1536, 2304, 3072, 3840, 4608]
+    assert b['chunks'][-1]['first_row'] == 73728 and b['chunks'][-1]['rows'] == 2240
+    decoded = [QI.decode_instruction(int(word, 16)) for word in b['program_hex']]
+    chunks = [f for f in decoded if f['unit'] == I.UNIT_ME]
+    assert len(chunks) == 7 and chunks[-1]['me_row0'] == 73728
+    assert [f['me_amc'] for f in chunks] == [0] + [1] * 6

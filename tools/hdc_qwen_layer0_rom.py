@@ -21,7 +21,7 @@ import hdc_isa as I
 import hdc_program as P
 import hdc_qwen_fullshape_program as FP
 from hdc_qwen_fullshape_placement import CONFIG, LOCK, GROUPS, matrix
-from hdc_qwen_int8_image import first_layer_tp2_matrices
+from hdc_qwen_int8_image import layer_tp2_matrices
 
 W, IL = I.W_LANES, I.INTERLEAVE
 ROOT = Path(__file__).resolve().parents[1]
@@ -113,7 +113,7 @@ def matrix_plan(matrices):
     return rows
 
 
-def constant_words(snapshot, true_o_scales, true_down_scales, lay):
+def constant_words(snapshot, true_o_scales, true_down_scales, lay, layer):
     """Build the exact first-layer constant addresses used by the ISA profile."""
     index = json.loads((snapshot / 'model.safetensors.index.json').read_text())['weight_map']
     def tensor(name):
@@ -121,8 +121,8 @@ def constant_words(snapshot, true_o_scales, true_down_scales, lay):
             return sf.get_tensor(name).float().numpy()
     cb = lay.cb
     data = [(np.float32(0), np.float32(0)) for _ in range(cb['rope'])]
-    qn = tensor('model.layers.0.self_attn.q_norm.weight')
-    kn = tensor('model.layers.0.self_attn.k_norm.weight')
+    qn = tensor(f'model.layers.{layer}.self_attn.q_norm.weight')
+    kn = tensor(f'model.layers.{layer}.self_attn.k_norm.weight')
     norms = np.concatenate((np.tile(qn, lay.NH), np.tile(kn, lay.KV)))
     for i, value in enumerate(norms):
         data[cb[(0, 'qk')] + i] = (np.float32(value), np.float32(0))
@@ -137,15 +137,15 @@ def constant_words(snapshot, true_o_scales, true_down_scales, lay):
     return data, (o_base, down_base)
 
 
-def emit(snapshot: Path, out: Path, die: int):
+def emit(snapshot: Path, out: Path, die: int, layer: int = 0):
     pinned_snapshot(snapshot)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
-    source = first_layer_tp2_matrices(snapshot, die)
+    source = layer_tp2_matrices(snapshot, layer, die)
     matrices = joined_matrices(source)
     rows = matrix_plan(matrices)
     lay = FP.LayerZero(None, die, rows)
-    crom, scale_bases = constant_words(snapshot, matrices['o'][1], matrices['down'][1], lay)
+    crom, scale_bases = constant_words(snapshot, matrices['o'][1], matrices['down'][1], lay, layer)
     prog = FP.profile(die, matrix_rows=rows, post_scale_bases=scale_bases)
     code_path, scale_path = out / 'matrix_int8.hex', out / 'matrix_scale_bf16.hex'
     scale_depth = max(row['base'] + (row['rounds'] - 1) * (GROUPS // row['split']) * IL
@@ -169,11 +169,12 @@ def emit(snapshot: Path, out: Path, die: int):
     (out / 'segments.hex').write_text('\n'.join(prog['descriptor_hex']) + '\n')
     images = [code_path, scale_path, out / 'crom.hex', out / 'program.hex', out / 'segments.hex']
     source_files = ('tools/hdc_qwen_layer0_rom.py', 'tools/hdc_qwen_int8_image.py',
-                    'tools/hdc_qwen_fullshape_program.py', 'tools/hdc_qwen_fullshape_placement.py',
+                    'tools/hdc_qwen_fullshape_program.py', 'tools/hdc_qwen_fullshape_isa.py',
+                    'tools/hdc_qwen_fullshape_placement.py',
                     'tools/hdc_program.py', 'tools/hdc_isa.py', 'tools/qwen3_deployment_quality.py')
     source_pins = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in source_files}
-    manifest = {'schema': 'opentallas.qwen-o4-layer0-tp2-rom.v1', 'status': 'image_and_isa_emitted',
-                'die': die, 'tp': 2, 'checkpoint_revision': snapshot.name,
+    manifest = {'schema': 'opentallas.qwen-o4-layer-tp2-rom.v1', 'status': 'image_and_isa_emitted',
+                'layer': layer, 'die': die, 'tp': 2, 'checkpoint_revision': snapshot.name,
                 'checkpoint_lock_sha256': hashlib.sha256(LOCK.read_bytes()).hexdigest(),
                 'config_sha256': hashlib.sha256(CONFIG.read_bytes()).hexdigest(),
                 'checkpoint_index_sha256': hashlib.sha256((snapshot / 'model.safetensors.index.json').read_bytes()).hexdigest(),
@@ -188,17 +189,17 @@ def emit(snapshot: Path, out: Path, die: int):
                              if 'TP2 norm-folded INT8 matrix payloads and constant payloads' not in item]
                             + ['first-layer RTL execution and bit-exact TP2 shard comparison remain unrun',
                                'embedding/lm_head and all 36 layer payloads are not emitted'],
-                'claim_boundary': 'Real checkpoint layer-0 ROM/ISA mapping only; RTL bit exactness and full token unproved.'}
-    (out / 'layer0_rom.json').write_text(json.dumps(manifest, indent=2) + '\n')
+                'claim_boundary': 'Real checkpoint layer ROM/ISA mapping only; RTL bit exactness and full token unproved.'}
+    (out / f'layer{layer}_rom.json').write_text(json.dumps(manifest, indent=2) + '\n')
     return manifest
 
 
-def verify_sample(snapshot: Path, out: Path, die: int, rows_per_matrix=8):
+def verify_sample(snapshot: Path, out: Path, die: int, rows_per_matrix=8, layer: int = 0):
     """Compare packed ROM addresses with independently re-read real W8 rows."""
     pinned_snapshot(snapshot)
     out = Path(out)
-    manifest = json.loads((out / 'layer0_rom.json').read_text())
-    if manifest['die'] != die or manifest['checkpoint_revision'] != Path(snapshot).name:
+    manifest = json.loads((out / f'layer{layer}_rom.json').read_text())
+    if manifest['layer'] != layer or manifest['die'] != die or manifest['checkpoint_revision'] != Path(snapshot).name:
         raise ValueError('image source/die identity mismatch')
     if manifest['checkpoint_lock_sha256'] != hashlib.sha256(LOCK.read_bytes()).hexdigest():
         raise ValueError('checkpoint lock pin mismatch')
@@ -208,7 +209,7 @@ def verify_sample(snapshot: Path, out: Path, die: int, rows_per_matrix=8):
     for name, digest in manifest['image_sha256'].items():
         if hashlib.sha256((out / name).read_bytes()).hexdigest() != digest:
             raise ValueError(f'image digest mismatch: {name}')
-    source = first_layer_tp2_matrices(snapshot, die, rows_per_matrix=rows_per_matrix)
+    source = layer_tp2_matrices(snapshot, layer, die, rows_per_matrix=rows_per_matrix)
     layout = {item['name']: item for item in manifest['matrix_layout']}
     encoded = [I.decode(int(word, 16)) for word in (out / 'program.hex').read_text().splitlines()]
     post_su = [f for f in encoded if f['unit'] == I.UNIT_SU and f['c_src'] == I.SRC_ALT
@@ -278,8 +279,8 @@ def verify_sample(snapshot: Path, out: Path, die: int, rows_per_matrix=8):
                     word = crom.read(17)
                     if len(word) != 17 or int(word[8:16], 16) != int(scales[row]) << 16:
                         raise ValueError(f'{name} post-TP scale mismatch at row={row}')
-    return {'schema': 'opentallas.qwen-o4-layer0-rom-sample-gate.v1',
-            'status': 'exact_sampled_rows', 'die': die, 'rows_per_matrix': rows_per_matrix,
+    return {'schema': 'opentallas.qwen-o4-layer-rom-sample-gate.v1',
+            'status': 'exact_sampled_rows', 'layer': layer, 'die': die, 'rows_per_matrix': rows_per_matrix,
             'codes_checked': checks, 'full_row_scale_after_tp': True,
             'claim_boundary': 'Real checkpoint sampled ROM code/scale address gate; no RTL layer or full token pass.'}
 
@@ -288,15 +289,16 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--snapshot', type=Path, required=True)
     ap.add_argument('--die', type=int, choices=(0, 1), required=True)
+    ap.add_argument('--layer', type=int, choices=range(36), default=0)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--verify-sample', type=int, metavar='ROWS',
                     help='Verify existing image against this many complete real rows per source matrix')
     args = ap.parse_args()
     if args.verify_sample is not None:
-        print(json.dumps(verify_sample(args.snapshot, args.out, args.die, args.verify_sample)))
+        print(json.dumps(verify_sample(args.snapshot, args.out, args.die, args.verify_sample, args.layer)))
     else:
-        result = emit(args.snapshot, args.out, args.die)
-        print(json.dumps({k: result[k] for k in ('status', 'die', 'matrix_words', 'program_words', 'segments')}))
+        result = emit(args.snapshot, args.out, args.die, args.layer)
+        print(json.dumps({k: result[k] for k in ('status', 'layer', 'die', 'matrix_words', 'program_words', 'segments')}))
 
 
 if __name__ == '__main__':

@@ -13,6 +13,7 @@ from pathlib import Path
 
 import hdc_isa as I
 import hdc_program as P
+import hdc_qwen_fullshape_isa as QI
 from hdc_qwen_fullshape_placement import CONFIG, LOCK, GROUPS, placement
 
 W = I.W_LANES
@@ -52,7 +53,8 @@ class LayerZero:
         rows = report['matrices_per_die'][:4] if matrix_rows is None else matrix_rows
         self.mat = {(0, name): {'base': row['base'], 'n': row['rows'],
                                 'k': row['k_per_split'], 'tiles': row['rounds'],
-                                'split': row['split']}
+                                'split': row['split'],
+                                'scale_base': row.get('scale_base', row['base'])}
                     for name, row in zip(('qkv', 'o', 'gu', 'down'), rows)}
         # Constant payloads are intentionally absent. These bases reserve
         # ordinary qscale/RMSNorm rows plus a full RoPE table in the profile.
@@ -117,17 +119,17 @@ def profile(die, matrix_rows=None, post_scale_bases=None):
     vm, vm_elems = vm_map()
     lay = LayerZero(place, die, matrix_rows)
     with program_geometry(vm):
-        program = P.build_program(lay, layers=[0], embed=False, head=False)
+        program = P.build_program(lay, layers=[0], embed=False, head=False, scale_bases=True)
         if post_scale_bases is not None:
             program = insert_post_tp_scales(program, vm, post_scale_bases)
         program = split_collectives(program)
-    encoded = [I.encode(**{k: v for k, v in f.items() if not k.startswith('_')}) for f in program]
+    encoded = [QI.encode_instruction(f) for f in program]
     for f, word in zip(program, encoded):
-        decoded = I.decode(word)
+        decoded = QI.decode_instruction(word)
         for key, value in f.items():
             if not key.startswith('_') and decoded[key] != value:
                 raise ValueError(f'ISA round trip failed: {key}')
-    words, desc = P.encode_segments(program)
+    words, desc = QI.encode_segments(program)
     assert encoded == words
     for f in program:
         if f.get('_coll'):
@@ -138,13 +140,14 @@ def profile(die, matrix_rows=None, post_scale_bases=None):
         raise ValueError('first-layer program exceeds PAW12')
     if vm_elems > (1 << I.A) or 2 * lay.kv_v0 > (1 << I.A):
         raise ValueError('first-layer VM or KV window exceeds AW24')
-    blockers = ['core DYN_TTILES uses power-of-two shift at G6144; exact division required',
+    blockers = ['fullshape G6144 DYN_TTILES integration with this program remains unrun',
                 'core VM must provision the reported full-context element count',
                 'TP2 norm-folded INT8 matrix payloads and constant payloads are not emitted',
                 'KV needs layer paging before 36-layer execution',
                 'lm_head die-1 row0=75968 exceeds the TP descriptor 16-bit row0 field',
                 'NW18 token and argmax path, ROM depths, and PAW12 integration remain untested']
     sources = [Path(__file__), Path(P.__file__), Path(I.__file__),
+               Path(QI.__file__),
                Path(__file__).with_name('hdc_qwen_fullshape_placement.py')]
     return {'schema': 'opentallas.qwen-o4-fullshape-first-layer-program.v1',
             'status': 'profile_only', 'die': die, 'tp': 2,
@@ -164,6 +167,39 @@ def profile(die, matrix_rows=None, post_scale_bases=None):
             'descriptor_hex': [f'{x:016x}' for x in desc],
             'blockers': blockers,
             'claim_boundary': 'First-layer ISA address and encode/decode profile only; no weights, golden trace, or RTL execution.'}
+
+
+def profile_lm_head(die, matrix_row, final_norm_base, chunk_words=512):
+    """Chunk one TP2 vocabulary half with independent code and scale bases."""
+    place = placement()
+    vm, vm_elems = vm_map()
+    lay = LayerZero(place, die)
+    lay.row0 = die * 75968
+    lay.cb['final'] = final_norm_base
+    lay.mat['lm_head'] = {'base': matrix_row['base'], 'scale_base': matrix_row['scale_base'],
+                          'n': 75968, 'k': matrix_row['k_per_split'],
+                          'tiles': matrix_row['rounds'], 'split': matrix_row['split']}
+    with program_geometry(vm):
+        program = P.build_program(lay, layers=[], embed=False, head=True,
+                                  wchunk=chunk_words, scale_bases=True)
+    words, desc = QI.encode_segments(program)
+    if len(words) >= 1 << 12 or len(desc) != 1:
+        raise ValueError('lm_head stage exceeds PAW12 or has wrong segment count')
+    chunks = [f for f in program if f['unit'] == I.UNIT_ME and not f.get('me_wsrc')]
+    if not chunks or any(f['me_tiles'] * f['me_k'] * I.INTERLEAVE > chunk_words for f in chunks):
+        raise ValueError('lm_head chunk exceeds code-word window')
+    if any(f['me_nout'] >= 1 << I.N for f in chunks):
+        raise ValueError('lm_head chunk exceeds legacy count field')
+    return {'schema': 'opentallas.qwen-o4-lm-head-tp2-program.v1',
+            'die': die, 'row0': lay.row0, 'required_token_bits': 18,
+            'program_words': len(words), 'segment_count': len(desc),
+            'program_hex': [f'{word:0256x}' for word in words],
+            'descriptor_hex': [f'{word:016x}' for word in desc],
+            'chunks': [{'code_base': f['me_wbase'], 'scale_base': f['me_wcs'],
+                        'first_row': f.get('me_row0', 0), 'rows': f['me_nout'],
+                        'rounds': f['me_tiles']} for f in chunks],
+            'vm_elems': vm_elems,
+            'claim_boundary': 'lm_head ISA chunk and row-offset profile only; no logits or RTL token pass.'}
 
 
 def main():
