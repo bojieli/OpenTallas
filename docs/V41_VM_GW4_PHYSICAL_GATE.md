@@ -43,6 +43,13 @@ timing at 0.92 ns by 0.807 ns
 This moves the word selection upstream to one arriving word per cycle. It
 still needs the collective DMA's exact physical-bank-order implementation and
 an integrated macro route before timing credit.
+At 10% core utilization the standalone static-bank boundary has **4,209 I/O
+pins but only 3,604 pin positions**; ORFS pin placement requires a perimeter
+of at least 404.06 µm rather than its 351.99 µm trial. A 7% utilization
+floorplan is being tested to provide that perimeter
+([pin-placement failure record](../results/physical_abi3/asap7/chip/v41_vm_gw4_bank_order/physical.json)).
+This is an interface
+partition and floorplan constraint, not an integrated die pin budget.
 
 ## SRAM abstract and capacity
 
