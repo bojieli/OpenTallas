@@ -13,12 +13,12 @@
     "die1/embed_scale_bf16.hex": "f29d6b2acc0e3a4fa6ebc8e3a8b97069d580449e2eae6ea04f6963ab76d0dbc6",
     "die1/matrix_int8.hex": "d930a9d90fb4edca64b347be0390fa1071e847b6dd33e405dd3e5b221a288ffa",
     "die1/matrix_scale_bf16.hex": "41f7fb25b575473b3d19380cb5fb798c034ad80b6db7a2630880d804603091cc",
-    "expect_kv_d0.hex": "c45d5ec03e50b159ff46e18f30dc3579a7afdc5fa9c3f0d84a917d8cae35a2b7",
-    "expect_kv_d1.hex": "f68508f61f0f4af27baf1ab8bfa9b043ab9d0a78976f138e4d3bf89b52fbd5db",
-    "expect_steps.hex": "2d6526648cecd84fdb7c5f486e7ced4cfe66c10211afd8f0af79de36b2bba4bb",
-    "expect_vm_d0.hex": "907d1b7b3ac0712b79ecc88a101c51b6003fce5ad2e52d8c5eee80451a62eacc",
-    "expect_vm_d1.hex": "ef6a989619c7d1da4486283effd5ab1b71c10e6ef1476f113ad1a2815589bbaa",
-    "generated.hex": "3e9412db3a321581d17766eb5278ca3868cc6443a97a85b4d7c007a920dc5d47",
+    "expect_kv_d0.hex": "8b5f16ee1e04f540f2e3d10179a131f8e2a2c7bd398953042f860d564c0d7c91",
+    "expect_kv_d1.hex": "bb5991bdac7c5fcc93b276d23dd493922540050aa300e3dcee64898043a1cc99",
+    "expect_steps.hex": "275229a7ad360c0bb3666a993c972ea4360dcbb15761164c0425ba107247eb80",
+    "expect_vm_d0.hex": "63f888e82d86ee474973302370b7eebc873fd7989694b741885f362106409ce2",
+    "expect_vm_d1.hex": "71b1d04ca171a6610b5acb1c362290ce177d9a88f29a38cca450e342b29f0cee",
+    "generated.hex": "8c4789b86a19d33c32a296a579e0db98a0d113b282456cb10101fd21979400ba",
     "prog_d0.hex": "08055f825dbb4ec3042cba892d2eef705a5cb8032351d56bcd7faf1298ea98c0",
     "prog_d1.hex": "08055f825dbb4ec3042cba892d2eef705a5cb8032351d56bcd7faf1298ea98c0",
     "prompt.hex": "f042667a0ed1ff76d6eb9f30465b379b51228e5c1416a7ec09e1d5de855a5347"
@@ -26,7 +26,9 @@
   "reference": {
     "claim_boundary": "Reduced unfolded-norm signed-INT8 ISA reference; RTL bit-exactness and full O4 pending.",
     "generated": [
-      1073
+      1073,
+      382,
+      93
     ],
     "matrix_words_per_die": [
       10240,
@@ -132,18 +134,30 @@
         "pos": 15,
         "token_in": 271,
         "token_out": 1073
+      },
+      {
+        "logit_bits": 1063326404,
+        "pos": 16,
+        "token_in": 1073,
+        "token_out": 382
+      },
+      {
+        "logit_bits": 1063605771,
+        "pos": 17,
+        "token_in": 382,
+        "token_out": 93
       }
     ],
     "tp": 2
   },
   "rtl": {
     "dies": 2,
-    "generated": 1,
+    "generated": 3,
     "kv_mismatches": 0,
     "mismatches": 0,
     "nodes": 1,
-    "steps_checked": 16,
-    "total_cycles": 281485,
+    "steps_checked": 18,
+    "total_cycles": 317329,
     "users": 1,
     "vm_mismatches": 0
   },
