@@ -32,13 +32,13 @@
   "records": 38,
   "records_with_source_pins": 27,
   "pins_by_status": {
-   "current": 537,
+   "current": 529,
    "path-only": 3,
-   "stale": 98
+   "stale": 106
   },
   "findings_by_kind": {
    "commit-outside-head": 4,
-   "stale-pin": 98
+   "stale-pin": 106
   }
  },
  "headlines": [
@@ -6610,7 +6610,7 @@
      "key": "tools/hdc_isa.py",
      "path": "tools/hdc_isa.py",
      "pinned": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -6628,8 +6628,8 @@
     }
    ],
    "pin_counts": {
-    "current": 25,
-    "stale": 3
+    "current": 24,
+    "stale": 4
    },
    "commits": []
   },
@@ -7877,7 +7877,7 @@
      "key": "tools/hdc_isa.py",
      "path": "tools/hdc_isa.py",
      "pinned": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -7891,7 +7891,7 @@
      "key": "tools/hdc_timing.py",
      "path": "tools/hdc_timing.py",
      "pinned": "51f4225e88c9a9dc12289a3cc1644e14804075cdf268afefdf35a93b77ae2436",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -7909,8 +7909,8 @@
     }
    ],
    "pin_counts": {
-    "current": 34,
-    "stale": 6
+    "current": 32,
+    "stale": 8
    },
    "commits": []
   },
@@ -8158,7 +8158,7 @@
      "key": "tools/hdc_isa.py",
      "path": "tools/hdc_isa.py",
      "pinned": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8176,8 +8176,8 @@
     }
    ],
    "pin_counts": {
-    "current": 33,
-    "stale": 3
+    "current": 32,
+    "stale": 4
    },
    "commits": []
   },
@@ -8425,7 +8425,7 @@
      "key": "tools/hdc_isa.py",
      "path": "tools/hdc_isa.py",
      "pinned": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8443,8 +8443,8 @@
     }
    ],
    "pin_counts": {
-    "current": 33,
-    "stale": 3
+    "current": 32,
+    "stale": 4
    },
    "commits": []
   },
@@ -8692,7 +8692,7 @@
      "key": "tools/hdc_isa.py",
      "path": "tools/hdc_isa.py",
      "pinned": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8710,8 +8710,8 @@
     }
    ],
    "pin_counts": {
-    "current": 31,
-    "stale": 5
+    "current": 30,
+    "stale": 6
    },
    "commits": []
   },
@@ -8959,7 +8959,7 @@
      "key": "tools/hdc_isa.py",
      "path": "tools/hdc_isa.py",
      "pinned": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8977,8 +8977,8 @@
     }
    ],
    "pin_counts": {
-    "current": 31,
-    "stale": 5
+    "current": 30,
+    "stale": 6
    },
    "commits": []
   },
@@ -9177,7 +9177,7 @@
      "key": "tools/hdc_isa.py",
      "path": "tools/hdc_isa.py",
      "pinned": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -9195,8 +9195,8 @@
     }
    ],
    "pin_counts": {
-    "current": 24,
-    "stale": 5
+    "current": 23,
+    "stale": 6
    },
    "commits": []
   },
@@ -11177,6 +11177,12 @@
    "detail": "input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_isa.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_decode_campaign.json",
+   "detail": "input_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_program.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_decode_campaign.json",
@@ -11195,6 +11201,12 @@
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_isa.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_1024.json",
+   "detail": "source_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_program.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_context_1024.json",
@@ -11211,6 +11223,12 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_context_2048.json",
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_isa.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_2048.json",
+   "detail": "source_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_program.py",
@@ -11243,6 +11261,12 @@
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_512.json:tools/hdc_isa.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_512.json",
+   "detail": "source_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_context_512.json:tools/hdc_program.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_context_512.json",
@@ -11273,6 +11297,12 @@
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:tools/hdc_isa.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_long_context_256_control.json",
+   "detail": "source_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:tools/hdc_program.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_long_context_256_control.json",
@@ -11301,6 +11331,12 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_matched_weight_single.json",
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:tools/hdc_isa.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_matched_weight_single.json",
+   "detail": "source_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:tools/hdc_program.py",
@@ -11339,10 +11375,22 @@
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_isa.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
+   "detail": "source_sha256[tools/hdc_isa.py] -> tools/hdc_isa.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_program.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
    "detail": "source_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_timing.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
+   "detail": "source_sha256[tools/hdc_timing.py] -> tools/hdc_timing.py is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
@@ -11735,34 +11783,42 @@
   "stale-pin:results/quality/qwen3_8b_deployment_arithmetic.json:tools/hdc_golden.py",
   "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_qwen_context_1024.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_qwen_context_2048.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_qwen_context_512.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_context_512.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_context_512.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_context_512.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_context_512.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_qwen_context_512.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_core_vector_weight.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_timing.py",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_sfu_q.sv",
