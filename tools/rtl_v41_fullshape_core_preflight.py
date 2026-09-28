@@ -35,9 +35,11 @@ def run(output: Path) -> dict:
     assert len(collectives) == 12
     assert [fields["coll_seq"] for fields in collectives] == list(range(12))
     verilator = os.environ.get("OT_VERILATOR", str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
-    source_paths = list(campaign.rtl_sources(False))
+    source_paths = list(campaign.rtl_sources(False)) + [
+        ROOT / "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv"
+    ]
     cmd = [verilator, "--lint-only", "-Wno-fatal", "-Wno-TIMESCALEMOD", "--top-module",
-           "ot_hdc_core_v41x", "-GFULL_SHAPE=1", "-GX_ATT=0", "-GX_IDX=0",
+           "ot_hdc_core_v41x", "-GFULL_SHAPE=1", "-GKV_HBM=1", "-GX_ATT=0", "-GX_IDX=0",
            "-GX_SEL=0", "-GX_EG=0", f"-I{campaign.SVH.parent}",
            *map(str, source_paths)]
     try:
@@ -56,8 +58,9 @@ def run(output: Path) -> dict:
     rec = {
         "schema": "opentallas.rtl.v41_fullshape_core_preflight.v1",
         "status": status,
-        "claim_scope": "Full-width ISA and core lint with X_ATT/X_IDX/X_SEL/X_EG disabled; "
-                       "no full-shape bit-exact layer or chip cycle measurement",
+        "claim_scope": "Full-width ISA and core lint with KV_HBM and the packed window block "
+                       "boundary enabled, X_ATT/X_IDX/X_SEL/X_EG disabled; no full-shape "
+                       "bit-exact layer or chip cycle measurement",
         "full_layer_ready": False,
         "full_layer_blockers": [
             "The TP emitter now addresses attention's local rows 0..639, but die prefetch still needs "
@@ -71,7 +74,7 @@ def run(output: Path) -> dict:
                     "encoded_words": len(words), "tp": replay.SHIPPED["tp"]},
         "lint": {"returncode": returncode, "memory_cap_bytes": 28 * 1024**3,
                  "timeout_seconds": 300, "top": "ot_hdc_core_v41x",
-                 "parameters": {"FULL_SHAPE": 1, "X_ATT": 0, "X_IDX": 0, "X_SEL": 0, "X_EG": 0},
+                 "parameters": {"FULL_SHAPE": 1, "KV_HBM": 1, "X_ATT": 0, "X_IDX": 0, "X_SEL": 0, "X_EG": 0},
                  "errors": errors, "warning_count": len(warnings)},
         "source_sha256": pins,
     }

@@ -22,6 +22,8 @@ module ot_hdc_v41x_window_kv_blocks #(
     input  wire [255:0]      cap_codes,
     input  wire [7:0]        cap_scale,
     output wire              cap_ready,
+    output wire [AW-1:0]     cap_src_base,
+    output wire              idle,
     input  wire              issue,
     input  wire [AW-1:0]     issue_src_base,
     input  wire [AW-1:0]     issue_kvt_base,
@@ -57,6 +59,8 @@ module ot_hdc_v41x_window_kv_blocks #(
                                   ((((AW+1)'(issue_row) >> 4) << KVT_SH)) +
                                   ((AW+1)'(511) << 4) + (AW+1)'(issue_row[3:0]);
     assign cap_ready = (state == EMPTY || state == FILL) && count < 5'd16;
+    assign cap_src_base = src_base;
+    assign idle = state == EMPTY;
     assign issue_ready = state == FULL;
     assign blk_v = state == DRAIN;
     assign blk_kvt_base = kvt_base;

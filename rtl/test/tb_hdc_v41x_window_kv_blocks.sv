@@ -7,7 +7,8 @@ module tb_hdc_v41x_window_kv_blocks;
     reg [255:0] cap_codes = 0;
     reg [7:0] cap_scale = 0;
     reg [20:0] issue_row = 0;
-    wire cap_ready, issue_ready, blk_v, fault;
+    wire cap_ready, issue_ready, blk_v, fault, idle;
+    wire [29:0] cap_src_base;
     wire [29:0] blk_kvt_base, blk_first_elem;
     wire [20:0] blk_row;
     wire [3:0] blk_idx;
@@ -17,6 +18,7 @@ module tb_hdc_v41x_window_kv_blocks;
     ot_hdc_v41x_window_kv_blocks dut (
         .clk(clk), .rst_n(rst_n), .cap_v(cap_v), .cap_src_addr(cap_src_addr),
         .cap_codes(cap_codes), .cap_scale(cap_scale), .cap_ready(cap_ready),
+        .cap_src_base(cap_src_base), .idle(idle),
         .issue(issue), .issue_src_base(issue_src_base),
         .issue_kvt_base(issue_kvt_base), .issue_row(issue_row),
         .issue_ready(issue_ready), .blk_v(blk_v), .blk_ready(blk_ready),
@@ -26,6 +28,7 @@ module tb_hdc_v41x_window_kv_blocks;
     initial begin
         repeat (2) @(negedge clk);
         rst_n = 1;
+        if (!idle) $fatal(1, "writer not idle after reset");
         for (b = 0; b < 16; b = b + 1) begin
             if (!cap_ready) $fatal(1, "capture not ready at %0d", b);
             cap_v = 1; cap_src_addr = 30'd4096 + b*32;
@@ -33,7 +36,8 @@ module tb_hdc_v41x_window_kv_blocks;
             @(negedge clk);
         end
         cap_v = 0;
-        if (!issue_ready) $fatal(1, "row incomplete");
+        if (!issue_ready || idle || cap_src_base !== 30'd4096)
+            $fatal(1, "captured row provenance missing");
         issue = 1; issue_src_base = 4096; issue_kvt_base = 30'd32768;
         issue_row = 21'd12345;
         @(negedge clk);
@@ -52,7 +56,8 @@ module tb_hdc_v41x_window_kv_blocks;
             @(negedge clk);
             blk_ready = 0;
         end
-        if (blk_v || !cap_ready || fault) $fatal(1, "writer did not return cleanly");
+        if (blk_v || !cap_ready || !idle || fault)
+            $fatal(1, "writer did not return cleanly");
         $display("PASS window KV exact block handoff");
         $finish;
     end

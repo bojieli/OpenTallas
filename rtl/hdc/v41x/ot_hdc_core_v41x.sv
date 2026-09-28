@@ -215,6 +215,16 @@ module ot_hdc_core_v41x #(
     output wire [MP*SW-1:0]  kv_we,
     output wire [MP*SW*AW-1:0] kv_waddr,
     output wire [MP*SW*32-1:0] kv_wdata,
+    // Full-shape window QDQ8 writes use an atomic packed block handoff.
+    // Selected compressed KV still uses the scalar KV port above.
+    output wire              win_blk_v,
+    input  wire              win_blk_ready,
+    output wire [AW-1:0]     win_blk_kvt_base,
+    output wire [NW-1:0]     win_blk_row,
+    output wire [3:0]        win_blk_idx,
+    output wire [AW-1:0]     win_blk_first_elem,
+    output wire [255:0]      win_blk_codes,
+    output wire [7:0]        win_blk_scale,
     // vector memory
     output wire [MP*G-1:0]   vx_re,           // matrix-engine x reads
     output wire [MP*G*AW-1:0] vx_addr,
@@ -326,6 +336,27 @@ module ot_hdc_core_v41x #(
     wire [NW-1:0] am_idx = am_idx_v[NW-1:0];
     wire [31:0] am_val = am_val_v[31:0];
     wire [15:0] me_progress;
+    wire win_idle, win_issue_ready, win_cap_ready, win_fault;
+    wire [AW-1:0] win_cap_src_base;
+    wire win_capture_v;
+    wire [AW-1:0] win_capture_addr;
+    wire [255:0] win_capture_codes;
+    wire [7:0] win_capture_scale;
+    wire win_capture_fault;
+    // The captured QDQ8 VM row is the provenance for a packed window row.
+    // A selected compressed-KV gather has a different source and keeps its
+    // scalar write path; it must never be treated as a 528-byte FP8 row.
+    wire win_su_match = FULL_SHAPE && KV_HBM && d_unit == 3'd2 &&
+                        dst == 2'd3 && a_src == 2'd0 &&
+                        su_nout == NW'(1) && su_nin == NW'(512) &&
+                        a_base == win_cap_src_base;
+    wire win_issue = su_go && win_su_match && win_issue_ready;
+    reg win_scalar_suppress;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) win_scalar_suppress <= 1'b0;
+        else if (win_issue) win_scalar_suppress <= 1'b1;
+        else if (su_idle && !su_go) win_scalar_suppress <= 1'b0;
+    end
 
     //: the instruction's DYN bank (its position slot)
     wire [2:0] c_dslot = (NSLOT > 1) ? ir[O_DSLOT +: W_DSLOT] : 3'd0;
@@ -437,7 +468,10 @@ module ot_hdc_core_v41x #(
                 S_FETCH: begin prog_re <= 1'b1; prog_addr <= pc; st <= S_WAIT; end
                 S_WAIT: st <= S_CAP;
                 S_CAP: begin ir <= prog_q; st <= S_DEC; end
-                S_DEC: st <= S_ISSUE;
+                // Do not announce a dependent attention prefetch while a
+                // packed window row is still being committed to HBM.
+                S_DEC: if (!FULL_SHAPE || win_idle ||
+                           (win_su_match && win_issue_ready)) st <= S_ISSUE;
                 S_ISSUE: begin
                     if (d_unit == 3'd0) begin
                         if (waited) begin
@@ -462,7 +496,9 @@ module ot_hdc_core_v41x #(
                         if (waited && (&idles) && !coll_busy) begin
                             coll_go <= 1'b1; issue_unit <= d_unit; st <= S_COLL_ARM;
                         end
-                    end else if (waited && unit_ready && q_gate && kv_gate) begin
+                    end else if (waited && unit_ready && q_gate && kv_gate &&
+                                 (!(FULL_SHAPE && KV_HBM && d_unit == 3'd2 && dst == 2'd3) ||
+                                  win_idle || (win_su_match && win_issue_ready))) begin
                         wrel_v <= d_wrel;
                         me_go <= (d_unit == 3'd1); su_go <= (d_unit == 3'd2);
                         qe_go <= (d_unit == 3'd3); xu_go <= (d_unit == 3'd4); he_go <= (d_unit == 3'd5);
@@ -636,7 +672,8 @@ module ot_hdc_core_v41x #(
 
     //: W_HBM: a LINQ op waits for the QE weight streamer; never on the cycle its
     //: shape is announced, when q_ok may still describe the previous op
-    wire q_gate = (W_HBM == 0) || !(d_unit == 3'd3 && qe_mode == 2'd0) || (q_ok && !qd_v);
+    wire q_gate = ((W_HBM == 0) || !(d_unit == 3'd3 && qe_mode == 2'd0) || (q_ok && !qd_v)) &&
+                  (!(FULL_SHAPE && KV_HBM && d_unit == 3'd3 && qe_mode == 2'd1) || win_idle);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) qd_v <= 1'b0;
         else qd_v <= (W_HBM != 0) && (st == S_DEC) && c_unit == 3'd3 && ir[O_QE_MODE +: W_QE_MODE] == 2'd0 && pred_ok;
@@ -647,12 +684,13 @@ module ot_hdc_core_v41x #(
     // port. The descriptor is emitted after decode captures its dynamic fields.
     // Holding issue for one cycle after kvd_v also prevents a stale kv_ok from
     // the previous operation from granting this one.
-    wire kv_gate = (KV_HBM == 0) || !(d_unit == 3'd1 && me_cls == MC_A) || (kv_ok && !kvd_v);
+    wire kv_gate = ((KV_HBM == 0) || !(d_unit == 3'd1 && me_cls == MC_A) || (kv_ok && !kvd_v)) &&
+                   (!FULL_SHAPE || win_idle);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) kvd_v <= 1'b0;
         else kvd_v <= (KV_HBM != 0) && (st == S_DEC) && c_unit == 3'd1 &&
                       ir[O_ME_WSRC] && (c_me_wbase < cfg_ik_base) &&
-                      pred_ok && !zero;
+                      pred_ok && !zero && (!FULL_SHAPE || win_idle);
     end
     assign kvd_wbase = me_wbase; assign kvd_ts = me_ts; assign kvd_ks = me_ks; assign kvd_js = me_js;
     assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
@@ -868,6 +906,7 @@ module ot_hdc_core_v41x #(
     // else the as-built MP copies of ot_hdc_v41_stream
     genvar sp;
     generate if (X_SU != 0) begin : g_su_x
+        wire [SUN-1:0] raw_kv_we;
         ot_hdc_v41x_su_adapt #(.N(SUN), .M(SUM), .LV(SULV), .AW(AW), .NW(NW), .CLS_DRAIN((NSLOT > 1) ? 1 : 0))
             u_su (
             .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
@@ -885,9 +924,10 @@ module ot_hdc_core_v41x #(
             .vi_re(xs_vi_re), .vi_addr(xs_vi_addr), .vi_q(xs_vi_q),
             .rd_addr(xs_rd_addr), .rd_re(xs_rd_re), .rd_src(xs_rd_src), .rd_q(xs_rd_q),
             .vm_we(xs_vm_we), .vm_waddr(xs_vm_waddr), .vm_wdata(xs_vm_wdata),
-            .kv_we(xs_kv_we), .kv_waddr(xs_kv_waddr), .kv_wdata(xs_kv_wdata),
+            .kv_we(raw_kv_we), .kv_waddr(xs_kv_waddr), .kv_wdata(xs_kv_wdata),
             .res_we(xs_res_we), .res_addr(xs_res_addr), .res_data(xs_res_data), .fault(su_fault),
             .dbg_ops(), .dbg_elems());
+        assign xs_kv_we = raw_kv_we & {SUN{!win_scalar_suppress}};
         assign vi_re = 0; assign vi_addr = 0; assign vs_re = 0; assign vs_addr = 0; assign crom_re = 0;
         assign crom_addr = 0; assign ewrom_re = 0; assign ewrom_addr = 0; assign vw_su_we = 0; assign vw_su_addr = 0;
         assign vw_su_data = 0; assign kv_we = 0; assign kv_waddr = 0; assign kv_wdata = 0; assign vw_rd_we = 0;
@@ -901,6 +941,7 @@ module ot_hdc_core_v41x #(
     assign su_idle = &su_idle_v;
     assign su_fault = |su_fault_v;
         for (sp = 0; sp < MP; sp = sp + 1) begin : g_su
+            wire [SW-1:0] raw_kv_we;
             wire [AW-1:0] xo = sp * mx_xps;
             wire [AW-1:0] oo = sp * mx_ops;
             ot_hdc_v41_stream #(.AW(AW), .NW(NW), .WR(G * W), .SW(SW)) u_su (
@@ -928,10 +969,11 @@ module ot_hdc_core_v41x #(
                 .wrom_q(ewrom_q[sp*SW*G*W*16 +: SW*G*W*16]),
                 .vm_we(vw_su_we[sp*SW +: SW]), .vm_waddr(vw_su_addr[sp*SW*AW +: SW*AW]),
                 .vm_wdata(vw_su_data[sp*SW*32 +: SW*32]),
-                .kv_we(kv_we[sp*SW +: SW]), .kv_waddr(kv_waddr[sp*SW*AW +: SW*AW]),
+                .kv_we(raw_kv_we), .kv_waddr(kv_waddr[sp*SW*AW +: SW*AW]),
                 .kv_wdata(kv_wdata[sp*SW*32 +: SW*32]),
                 .red_we(vw_rd_we[sp*SW +: SW]), .red_addr(vw_rd_addr[sp*SW*AW +: SW*AW]),
                 .red_data(vw_rd_data[sp*SW*32 +: SW*32]), .fault(su_fault_v[sp]));
+            assign kv_we[sp*SW +: SW] = raw_kv_we & {SW{!win_scalar_suppress}};
         end
 
         assign xs_vi_re = 0; assign xs_vi_addr = 0; assign xs_rd_re = 0; assign xs_rd_addr = 0; assign xs_rd_src = 0;
@@ -951,7 +993,33 @@ module ot_hdc_core_v41x #(
         .vi_re(vq_re), .vi_addr(vq_addr), .vi_q(vq_q),
         .xr_re(wqr_re), .xr_addr(wqr_addr), .xr_q(wqr_q),
         .w_we(ww_q_we), .w_addr(ww_q_addr), .w_mask(ww_q_mask), .w_data(ww_q_data),
+        .kvb_v(win_capture_v), .kvb_src_addr(win_capture_addr),
+        .kvb_codes(win_capture_codes), .kvb_scale(win_capture_scale),
+        .kvb_fault(win_capture_fault),
         .qr_re(qrom_re), .qr_addr(qrom_addr), .qr_q(qrom_q), .fault(qe_fault));
+
+    generate if (FULL_SHAPE && KV_HBM) begin : g_packed_window_write
+        ot_hdc_v41x_window_kv_blocks #(.AW(AW), .POS_W(NW), .KVT_SH(13)) u_blocks (
+            .clk(clk), .rst_n(rst_n), .cap_v(win_capture_v),
+            .cap_src_addr(win_capture_addr), .cap_codes(win_capture_codes),
+            .cap_scale(win_capture_scale), .cap_ready(win_cap_ready),
+            .cap_src_base(win_cap_src_base), .idle(win_idle),
+            .issue(win_issue), .issue_src_base(a_base),
+            .issue_kvt_base(o_base), .issue_row(o_row[NW-1:0]),
+            .issue_ready(win_issue_ready), .blk_v(win_blk_v),
+            .blk_ready(win_blk_ready), .blk_kvt_base(win_blk_kvt_base),
+            .blk_row(win_blk_row), .blk_idx(win_blk_idx),
+            .blk_first_elem(win_blk_first_elem), .blk_codes(win_blk_codes),
+            .blk_scale(win_blk_scale), .fault(win_fault));
+    end else begin : g_no_packed_window_write
+        assign win_idle = 1'b1; assign win_issue_ready = 1'b0;
+        assign win_cap_ready = 1'b0; assign win_fault = 1'b0;
+        assign win_cap_src_base = '0;
+        assign win_blk_v = 1'b0; assign win_blk_kvt_base = '0;
+        assign win_blk_row = '0; assign win_blk_idx = '0;
+        assign win_blk_first_elem = '0; assign win_blk_codes = '0;
+        assign win_blk_scale = '0;
+    end endgenerate
 
     // the XU: the as-built unit, or (X_SEL / X_EG) its recomposition with the re-specified select and gather
     generate
@@ -1024,6 +1092,7 @@ module ot_hdc_core_v41x #(
         if (!rst_n) fault <= 1'b0;
         else if (start && st == S_IDLE) fault <= 1'b0;
         else if (me_fault || su_fault || qe_fault || xu_fault || he_fault ||
+                 (FULL_SHAPE && KV_HBM && (win_fault || win_capture_fault)) ||
                  (FULL_SHAPE && coll_fault)) fault <= 1'b1;
     end
 endmodule

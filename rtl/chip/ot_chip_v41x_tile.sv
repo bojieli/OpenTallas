@@ -50,6 +50,9 @@
 // ---------------------------------------------------------------------------
 module ot_chip_v41x_tile #(
     parameter integer FULL_SHAPE = 0,
+    parameter integer AW = FULL_SHAPE ? 30 : 24,
+    parameter integer NW = FULL_SHAPE ? 21 : 16,
+    parameter integer INSTR_BITS = FULL_SHAPE ? 2048 : 1536,
     // core configuration (adopted)
     parameter integer SW    = 8,             // stream-unit lanes
     parameter integer HS    = 8,             // HE K chunks
@@ -86,11 +89,11 @@ module ot_chip_v41x_tile #(
     input  wire              rst_n,
     // -- step control ---------------------------------------------------------------
     input  wire              start,
-    input  wire [15:0]       token,
-    input  wire [15:0]       pos,
+    input  wire [NW-1:0]     token,
+    input  wire [NW-1:0]     pos,
     input  wire [13:0]       entry,
     output wire              done,
-    output wire [15:0]       next_token,
+    output wire [NW-1:0]     next_token,
     output wire [31:0]       next_val,
     output wire [31:0]       cycles,
     output wire              fault,
@@ -99,39 +102,51 @@ module ot_chip_v41x_tile #(
     input  wire              prime_first,
     input  wire [11:0]       prime_cid,
     // -- configuration ----------------------------------------------------------------
-    input  wire [23:0]       cfg_ik_base,
+    input  wire [AW-1:0]     cfg_ik_base,
     input  wire [3:0]        cfg_me_xs,
-    input  wire [23:0]       cfg_q_base,      // HBM sector of the quantised weight region
+    input  wire [AW-1:0]     cfg_q_base,      // HBM sector of the quantised weight region
     input  wire [LAW-1:0]    cfg_q_lbase,
     input  wire [15:0]       cfg_q_lead,
     input  wire [15:0]       cfg_q_rate,
     // -- KV port (served by the die) -------------------------------------------------------
     output wire              kv_re,
-    output wire [4*24-1:0]   kv_raddr,
+    output wire [4*AW-1:0]   kv_raddr,
     input  wire [4*16*32-1:0] kv_q,
     output wire [SW-1:0]     kv_we,
-    output wire [SW*24-1:0]  kv_waddr,
+    output wire [SW*AW-1:0]  kv_waddr,
     output wire [SW*32-1:0]  kv_wdata,
     output wire [SUN-1:0]    xs_kv_we,
-    output wire [SUN*24-1:0] xs_kv_waddr,
+    output wire [SUN*AW-1:0] xs_kv_waddr,
+    // Packed QDQ8 window-row block handoff. The 10-bit user is package
+    // context supplied by the die; CKV selected rows never use this path.
+    input  wire [9:0]        window_user,
+    output wire              win_blk_v,
+    input  wire              win_blk_ready,
+    output wire [9:0]        win_blk_user,
+    output wire [AW-1:0]     win_blk_kvt_base,
+    output wire [NW-1:0]     win_blk_row,
+    output wire [3:0]        win_blk_idx,
+    output wire [AW-1:0]     win_blk_first_elem,
+    output wire [255:0]      win_blk_codes,
+    output wire [7:0]        win_blk_scale,
     output wire [SUN*32-1:0] xs_kv_wdata,
     // -- attention KV descriptor / issue permission (the core's KV_HBM handshake) -----------
     output wire              kvd_v,
-    output wire [23:0]       kvd_wbase,
-    output wire [23:0]       kvd_ts,
-    output wire [23:0]       kvd_ks,
-    output wire [23:0]       kvd_js,
-    output wire [15:0]       kvd_tiles,
-    output wire [15:0]       kvd_k,
-    output wire [15:0]       kvd_nout,
+    output wire [AW-1:0]     kvd_wbase,
+    output wire [AW-1:0]     kvd_ts,
+    output wire [AW-1:0]     kvd_ks,
+    output wire [AW-1:0]     kvd_js,
+    output wire [NW-1:0]     kvd_tiles,
+    output wire [NW-1:0]     kvd_k,
+    output wire [NW-1:0]     kvd_nout,
     output wire [1:0]        kvd_hg,
     output wire              kvd_mmode,
-    output wire [15:0]       kvd_pos,
+    output wire [NW-1:0]     kvd_pos,
     input  wire              kv_ok,
     // -- QE weight HBM channel (ot_hdc_hbm_model protocol) ----------------------------------
     output wire              wq_v,
     input  wire              wq_rdy,
-    output wire [23:0]       wq_addr,
+    output wire [AW-1:0]     wq_addr,
     output wire [5:0]        wq_len,
     output wire [LWIN-1:0]   wq_tag,
     input  wire [NPC_W-1:0]  wq_room,
@@ -191,9 +206,8 @@ module ot_chip_v41x_tile #(
     output wire [31:0]       kb_read_stalls,
     output wire [31:0]       kb_writer_stalls
 );
-    localparam integer INSTR_BITS = FULL_SHAPE ? 2048 : 1536;
-    localparam integer W = 16, G = 4, BL = 16, QLB = 272;
-    localparam integer AW = FULL_SHAPE ? 30 : 24, NW = FULL_SHAPE ? 21 : 16, PAW = 14, HNL = 3;
+    localparam integer W = 16, G = 4, BL = 16, QLB = 272, PAW = 14, HNL = 3;
+    assign win_blk_user = FULL_SHAPE ? window_user : 10'd0;
     localparam integer ML = 2;                        // ME weight-tile bank read latency
     localparam integer SPW = BL * QLB / 256;          // QE window banks
 
@@ -250,7 +264,8 @@ module ot_chip_v41x_tile #(
     wire pikw_v, pikw_rdy; wire [3:0] pikw_stack_mask;
     wire [27:0] pikw_csec, pikw_ssec; wire [511:0] pikw_codes; wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
 
-    ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
+    ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .AW(AW), .NW(NW), .INSTR_BITS(INSTR_BITS),
+                       .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
                        .X_SEL(X_SEL), .X_EG(X_EG), .XSQ(XSQ), .XSW(XSW), .X_SU(X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
@@ -285,6 +300,10 @@ module ot_chip_v41x_tile #(
         .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
         .xcrom_re(xcrom_re), .xcrom_addr(xcrom_addr), .xcrom_q(xcrom_q),
         .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q), .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+        .win_blk_v(win_blk_v), .win_blk_ready(win_blk_ready),
+        .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row),
+        .win_blk_idx(win_blk_idx), .win_blk_first_elem(win_blk_first_elem),
+        .win_blk_codes(win_blk_codes), .win_blk_scale(win_blk_scale),
         .vx_re(vx_re), .vx_addr(vx_addr), .vx_q(vx_q), .vs_re(vs_re), .vs_addr(vs_addr), .vs_q(vs_q),
         .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .vq_re(vq_re), .vq_addr(vq_addr), .vq_q(vq_q),
         .vr_re(vr_re), .vr_addr(vr_addr), .vr_q(vr_q), .wqr_re(wqr_re), .wqr_addr(wqr_addr), .wqr_q(wqr_q),
