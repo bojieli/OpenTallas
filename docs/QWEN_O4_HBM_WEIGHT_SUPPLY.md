@@ -85,6 +85,20 @@ stay local. The copied TB and C++ harness lint and link at G4 with Verilator
 5.050. The G6144 two-arm execution and its exact output/cycle verdict have
 not run, so no layer-0 timing delta is claimed.
 
+An isolated `tb_hdc_qwen_layer0_tp2_matrixscale_ab` adds the full G=6,144
+matrix descriptor to the same layer-0 TP-2 program. Its opt-in `MATRIX_HBM`
+path connects `wd_v`, independent code/scale bases, count, useful row scales,
+`w_ok`, the one-cycle code/scale ports, and a 32-PC sector source. The four
+real layer-0 descriptors require respectively 128/192, 88/256, 512/768 and
+264/256 code/scale words. A 512-code-word and 768-scale-word window therefore
+covers each complete K round without changing the ISA or FP32 accumulation.
+The PC response tag is 17 bits and a source fault reaches the package verdict;
+the local matrix read is disabled in the HBM arm. Both matrix and post-TP-scale
+HBM modes lint at reduced G=4 with Verilator 5.050. The real G=6,144 matrix
+arm has not run or passed exact vectors, and this stand-alone source has no
+shared arbitration with KV. The running `POST_SCALE_HBM` campaign remains
+source-frozen on its earlier copied TB, separate from this new opt-in gate.
+
 ## Full-shape memory ownership still to close
 
 The compute-cluster contract requires a tensor and buffer owner for every
