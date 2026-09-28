@@ -652,6 +652,47 @@ def derive_hbm_sector_map(layout: dict) -> dict:
     }
 
 
+def rtl_engine_preflight(layout: dict) -> dict:
+    """Compare exact image geometry with current adopted core bank/buffer defaults."""
+    sources = {
+        "core": ROOT / "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+        "me": ROOT / "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+        "he": ROOT / "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+    }
+
+    def param(path: Path, name: str) -> int:
+        match = re.search(rf"parameter\s+integer\s+{name}\s*=\s*(\d+)", path.read_text())
+        if match is None:
+            raise ValueError(f"cannot read RTL parameter {name} in {path}")
+        return int(match.group(1))
+
+    matrices = layout["matrices"]
+    me = [x for x in matrices.values() if x["engine"] == "me"]
+    he = [x for x in matrices.values() if x["engine"] == "he"]
+    me_end = max((x["base_word"] + x["word_count"] for x in me), default=0)
+    he_end = max((x["base_word"] + x["word_count"] for x in he), default=0)
+    required = {
+        "me_bank_aw": (me_end - 1).bit_length() if me_end else 0,
+        "me_kmax": max((x["ncols"] for x in me), default=0),
+        "he_bank_aw": (he_end - 1).bit_length() if he_end else 0,
+        "he_kcmax": max((x["ncols"] // 8 for x in he), default=0),
+    }
+    current = {
+        "me_bank_aw": param(sources["core"], "MBAW"),
+        "me_kmax": param(sources["me"], "KMAX"),
+        "he_bank_aw": param(sources["core"], "HBAW"),
+        "he_kcmax": param(sources["he"], "KCMAX"),
+    }
+    gaps = {name: {"required": value, "current": current[name]}
+            for name, value in required.items() if value > current[name]}
+    return {
+        "status": "rtl_parameter_gap" if gaps else "rtl_parameter_widths_sufficient",
+        "required": required, "current_defaults": current, "gaps": gaps,
+        "source_sha256": {name: sha256(path) for name, path in sources.items()},
+        "claim_boundary": "Static parameter check only; sufficient widths would still need elaboration, exact shard simulation and physical closure.",
+    }
+
+
 def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -> dict:
     """Address-plan all supported weights of one token-selected layer-0 shard.
 
@@ -740,6 +781,7 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
         token_runnable=False,
     )
     combined["hbm_weight_layout"] = derive_hbm_sector_map(combined)
+    combined["rtl_engine_preflight"] = rtl_engine_preflight(combined)
     return combined
 
 
@@ -755,6 +797,7 @@ def main() -> None:
     one.add_argument("--combine-record", type=Path, nargs="+")
     one.add_argument("--assemble-token-layer0", action="store_true")
     one.add_argument("--derive-hbm-map", action="store_true")
+    one.add_argument("--preflight-rtl", action="store_true")
     ap.add_argument("--output", type=Path)
     ap.add_argument("--out-dir", type=Path)
     ap.add_argument("--input-layout", type=Path)
@@ -762,7 +805,20 @@ def main() -> None:
     ap.add_argument("--base-word", type=int, default=0)
     ap.add_argument("--chunks", type=int, default=8)
     a = ap.parse_args()
-    if a.derive_hbm_map:
+    if a.preflight_rtl:
+        if not a.input_layout:
+            ap.error("RTL preflight requires --input-layout")
+        layout = json.loads(a.input_layout.read_text())
+        record = {
+            "schema": "opentallas.v41x.fullshape.weight_rtl_preflight.v1",
+            "status": "source_pinned_parameter_preflight",
+            "source_layout_sha256": sha256(a.input_layout),
+            "source_image_manifest_sha256": layout["source_image_manifest_sha256"],
+            "source_commit": layout["source_commit"],
+            "layout_tool_sha256": sha256(Path(__file__)),
+            "rtl_engine_preflight": rtl_engine_preflight(layout),
+        }
+    elif a.derive_hbm_map:
         if not a.input_layout:
             ap.error("HBM map requires --input-layout")
         layout = json.loads(a.input_layout.read_text())
@@ -799,7 +855,9 @@ def main() -> None:
     a.record.parent.mkdir(parents=True, exist_ok=True)
     a.record.write_text(json.dumps(record, indent=2) + "\n")
     summary = {"status": record["status"]}
-    if a.derive_hbm_map:
+    if a.preflight_rtl:
+        summary.update(gaps=record["rtl_engine_preflight"]["gaps"])
+    elif a.derive_hbm_map:
         summary.update(sectors=record["hbm_weight_layout"]["hbm_sector_count_reserved"],
                        matrices=len(record["hbm_weight_layout"]["matrices"]))
     elif a.assemble_token_layer0:

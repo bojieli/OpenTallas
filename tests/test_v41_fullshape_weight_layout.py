@@ -176,3 +176,14 @@ def test_same_payload_hbm_sector_pitch_for_adopted_bank_words():
     assert hbm["matrices"]["gate"]["sectors_per_word"] == 8
     assert hbm["matrices"]["hc_attn_fn"]["sectors_per_word"] == 8
     assert hbm["hbm_bytes_reserved"] <= W.CAPACITY_BYTES
+
+
+def test_full_shape_image_flags_current_me_he_rtl_parameter_gaps():
+    path = W.ROOT / "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json"
+    layout = json.loads(path.read_text())
+    pre = W.rtl_engine_preflight(layout)
+    assert pre["required"]["me_bank_aw"] == 18
+    assert pre["required"]["me_kmax"] == 5120
+    assert pre["required"]["he_kcmax"] == 2560
+    assert pre["required"]["he_bank_aw"] <= pre["current_defaults"]["he_bank_aw"]
+    assert {"me_bank_aw", "me_kmax", "he_kcmax"} <= set(pre["gaps"])
