@@ -110,6 +110,7 @@ module ot_chip_v41x_die #(
     parameter integer LAW     = 12,
     parameter integer NPC_W   = 8,
     // HBM address map and KV prefetch
+    parameter integer K_HAW   = 28,           // sector addresses; full mode uses 30
     parameter integer KEY_USERS = 1,          // index-key user slices (the pooled indexer's)
     parameter integer IKH_SLICE = 1 << 18,    // index-key sectors a user slice
     parameter integer KV_USERS  = 1,          // attention-KV user slices
@@ -286,7 +287,7 @@ module ot_chip_v41x_die #(
     wire [NPC_W-1:0] wq_room, wr_v, wr_rdy; wire [NPC_W*LWIN-1:0] wr_tag;
     wire [NPC_W*5-1:0] wr_beat; wire [NPC_W*256-1:0] wr_data;
     wire [127:0] kh_v, kh_rdy, kh_we, kh_wr_done, kr_v, kr_rdy;
-    wire [128*28-1:0] kh_addr; wire [128*4-1:0] kh_len, kr_beat; wire [128*16-1:0] kh_tag, kr_tag;
+    wire [128*K_HAW-1:0] kh_addr; wire [128*4-1:0] kh_len, kr_beat; wire [128*16-1:0] kh_tag, kr_tag;
     wire [128*256-1:0] kh_wdata, kr_data; wire [128*32-1:0] kh_wstrb;
     wire kvd_v, kv_ok, kvd_mmode; wire [23:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js;
     wire [15:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos; wire [1:0] kvd_hg;
@@ -343,11 +344,11 @@ module ot_chip_v41x_die #(
 
     // -- attention KV prefetch (the core's KV_HBM handshake) ------------------------------------------
     wire [3:0] pm_v, pm_rdy, pm_we, ps_v, ps_rdy, pk_wd;
-    wire [4*28-1:0] pm_addr; wire [4*4-1:0] pm_len, ps_beat; wire [4*16-1:0] pm_tag, ps_tag;
+    wire [4*K_HAW-1:0] pm_addr; wire [4*4-1:0] pm_len, ps_beat; wire [4*16-1:0] pm_tag, ps_tag;
     wire [4*256-1:0] pm_wdata, ps_data; wire [4*32-1:0] pm_wstrb;
     wire kv_fault; wire [4:0] kv_code;
     ot_chip_v41x_kv_prefetch #(.G(G), .W(W), .SW(SW), .SUN(SUN), .AW(AW), .STG(KV_STG), .SAW(KV_SAW),
-                               .KV_SBASE(KV_SBASE), .KV_SECTORS(KV_SECTORS), .HAW(28), .TAGW(16), .WQD(KV_WQD)) u_kv (
+                               .KV_SBASE(KV_SBASE), .KV_SECTORS(KV_SECTORS), .HAW(K_HAW), .TAGW(16), .WQD(KV_WQD)) u_kv (
         .clk(clk), .rst_n(rn), .base(host_mode ? {AW{1'b0}} : kv_base),
         .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
         .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_hg(kvd_hg), .kv_ok(kv_ok),
@@ -368,17 +369,17 @@ module ot_chip_v41x_die #(
     genvar s;
     generate for (s = 0; s < 4; s = s + 1) begin : g_hbm
         wire [31:0] h_v, h_rdy, h_we, h_wr_done, r_v, r_rdy;
-        wire [32*28-1:0] h_addr; wire [32*4-1:0] h_len, r_beat; wire [32*17-1:0] h_tag, r_tag;
+        wire [32*K_HAW-1:0] h_addr; wire [32*4-1:0] h_len, r_beat; wire [32*17-1:0] h_tag, r_tag;
         wire [32*256-1:0] h_wdata, r_data; wire [32*32-1:0] h_wstrb;
-        ot_chip_v41x_hbm_karb #(.NPC(32), .AW(28), .TAGW(16)) u_arb (
+        ot_chip_v41x_hbm_karb #(.NPC(32), .AW(K_HAW), .TAGW(16)) u_arb (
             .clk(clk), .rst_n(rn),
-            .b_v(kh_v[s*32 +: 32]), .b_rdy(kh_rdy[s*32 +: 32]), .b_addr(kh_addr[s*32*28 +: 32*28]),
+            .b_v(kh_v[s*32 +: 32]), .b_rdy(kh_rdy[s*32 +: 32]), .b_addr(kh_addr[s*32*K_HAW +: 32*K_HAW]),
             .b_len(kh_len[s*32*4 +: 32*4]), .b_tag(kh_tag[s*32*16 +: 32*16]), .b_we(kh_we[s*32 +: 32]),
             .b_wdata(kh_wdata[s*32*256 +: 32*256]), .b_wstrb(kh_wstrb[s*32*32 +: 32*32]),
             .b_wr_done(kh_wr_done[s*32 +: 32]),
             .b_rsp_v(kr_v[s*32 +: 32]), .b_rsp_rdy(kr_rdy[s*32 +: 32]), .b_rsp_tag(kr_tag[s*32*16 +: 32*16]),
             .b_rsp_beat(kr_beat[s*32*4 +: 32*4]), .b_rsp_data(kr_data[s*32*256 +: 32*256]),
-            .k_v(pm_v[s]), .k_rdy(pm_rdy[s]), .k_addr(pm_addr[s*28 +: 28]), .k_len(pm_len[s*4 +: 4]),
+            .k_v(pm_v[s]), .k_rdy(pm_rdy[s]), .k_addr(pm_addr[s*K_HAW +: K_HAW]), .k_len(pm_len[s*4 +: 4]),
             .k_tag(pm_tag[s*16 +: 16]), .k_we(pm_we[s]), .k_wdata(pm_wdata[s*256 +: 256]),
             .k_wstrb(pm_wstrb[s*32 +: 32]), .k_wr_done(pk_wd[s]),
             .k_rsp_v(ps_v[s]), .k_rsp_rdy(ps_rdy[s]), .k_rsp_tag(ps_tag[s*16 +: 16]),
@@ -387,7 +388,7 @@ module ot_chip_v41x_die #(
             .h_wdata(h_wdata), .h_wstrb(h_wstrb), .h_wr_done(h_wr_done),
             .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat), .r_data(r_data),
             .k_grants(kgr[s*32 +: 32]), .b_grants(), .contended());
-        ot_chip_v41x_hbm3e_phy #(.NPC(32), .K_MEM(K_MEM), .W_PORT(s == W_STACK), .NPC_W(NPC_W), .W_MEM(W_MEM),
+        ot_chip_v41x_hbm3e_phy #(.NPC(32), .K_AW(K_HAW), .K_MEM(K_MEM), .W_PORT(s == W_STACK), .NPC_W(NPC_W), .W_MEM(W_MEM),
                                  .LWIN(LWIN), .KTAGW(17), .CLK_PS(CLK_PS)) u_hbm (
             .clk(clk), .rst_n(rn),
             .k_v(h_v), .k_rdy(h_rdy), .k_addr(h_addr), .k_len(h_len), .k_tag(h_tag), .k_we(h_we),
