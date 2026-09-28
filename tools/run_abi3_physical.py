@@ -3234,7 +3234,12 @@ def main(argv: list[str] | None = None) -> int:
             work = ROOT / work
         work.mkdir(parents=True, exist_ok=True)
     else:
-        workdir_ctx = tempfile.TemporaryDirectory(prefix="abi3-physical-")
+        # OT_PHYSICAL_WORK_ROOT puts the (deleted-on-exit) work dir on a disk rather than a
+        # small /tmp tmpfs; it does not change the record.
+        work_root = os.environ.get("OT_PHYSICAL_WORK_ROOT") or None
+        if work_root:
+            Path(work_root).mkdir(parents=True, exist_ok=True)
+        workdir_ctx = tempfile.TemporaryDirectory(prefix="abi3-physical-", dir=work_root)
         work = Path(workdir_ctx.name)
 
     started = datetime.now(timezone.utc)
