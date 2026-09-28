@@ -583,7 +583,7 @@ Scenario B / scenario A. Die W is one die; package W is both dies and the
   plain decoding once capped (6,680 against 7,859 in liquid, 4,804 against
   5,766 in air): its extra MACs cost more power than the KV bytes they save.
 * **The HBM path is the dies' energy.** At batch 1 on the ROM package
-  (scenario B), 16.7 mJ of the 96.7 mJ is in the stacks and 79.8 mJ on the
+  (scenario B), 16.7 mJ of the 96.7 mJ is in the stacks and 80.0 mJ on the
   dies:
   * the dies' share of the HBM path 49.2 (604 MB of FP8 KV at 10.19 pJ/bit);
   * leakage 9.9;
@@ -604,7 +604,7 @@ Scenario B / scenario A. Die W is one die; package W is both dies and the
     package; an illustration only, since its workload and context are not
     matched.
 
-  At batch 128 the gap closes to 96.7 mJ (ROM) against 110.5 mJ (HBM,
+  At batch 128 the gap closes to 96.4 mJ (ROM) against 110.5 mJ (HBM,
   scenario B), at totals of 11,921 and 10,858 tok/s. The comparator's dies
   spend 1,058.6 mJ of its 1,284.2 (B) at batch 1: 666.4 on their share of the
   HBM path (weights and KV), and 383.3 of leakage, clock and stack idle over a
