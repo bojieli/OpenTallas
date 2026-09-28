@@ -45,11 +45,11 @@ air-cooled B200 HGX class, 374.6 W a die, is a sensitivity (§11):
 
 | operating point | design rate, tok/s | capped liquid (design), B / A | capped air (sensitivity), B / A | mJ/token, B / A |
 |---|---|---|---|---|
-| autoregressive (calibrated chain) | **10,968** <!-- figure: 10,967.9 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.ar_batch1.tokens_s" name="Qwen3-8B ROM autoregressive design rate 8K" --> | 10,968 / 7,859 | 8,921 / 5,766 | 96.5 / 130.3 |
+| autoregressive (calibrated chain) | **10,874** <!-- figure: 10,873.6 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.ar_batch1.tokens_s" name="Qwen3-8B ROM autoregressive design rate 8K" --> | 10,874 / 7,859 | 8,921 / 5,766 | 96.7 / 130.4 |
 | DFlash, block 5, m = 5 (specification chain) | **18,720** | 18,720 / 6,680 | 14,176 / 4,804 | 55.4 / 125.9 |
 | HBM comparator, same package, INT8 weights | 880.7 (DFlash 2,651) | 881 / 863 | 609 / 580 | 1,284 / 1,318 |
 
-On the production lane each die draws 437.8 W autoregressive and 457.5 W with
+On the production lane each die draws 434.8 W autoregressive and 457.5 W with
 DFlash, inside the 474.6 W liquid limit, so both design rates are uncapped.
 Both are above the 374.6 W air limit: **O4 needs liquid cooling to reach its
 design rates.** The measured lane (A) is capped in either class.
@@ -91,7 +91,7 @@ stream over 95% of it:
 | 2K | any | ≤ 46,080 | 15,698 | weights |
 
 So the design target is **8K with FP8 KV: 97,011 cycles, 11,325 tok/s per
-user.** The calibrated chain (100,169 cycles, 10,968 tok/s; §6) is 3% short
+user.** The calibrated chain (101,037 cycles, 10,874 tok/s; §6) is 4% short
 of it: the package is bound by its compiled chain, which sits 9% above the KV
 stream's floor of 92,161 cycles (11,921 tok/s). FP8 KV (E4M3, round to nearest even,
 saturating) is in the golden, the ISA model and the RTL (8a91421a); the scalar
@@ -150,7 +150,7 @@ at a time, so every matrix runs on one die's 6,144 groups, and each layer's
 KV streams from that die's four stacks alone, which doubles the KV floor.
 Priced on the same model it reaches **5,959.6 tok/s autoregressive** <!-- figure: 5,959.6 src="results/arch/qwen3_budget.json#layer_cut_alternative.ar_tokens_s" name="Qwen3-8B contiguous layer cut autoregressive rate" -->
 (184,348 cycles, bound by the stack stream) and 12,106.1 with DFlash, 0.54×
-and 0.65× the tensor-parallel split's 10,968 and 18,720
+and 0.65× the tensor-parallel split's 10,874 and 18,720
 (`layer_cut_alternative`, read from `results/arch/qwen3_8bit_design.json`
 `o4_contiguous_cut_scenario`; the RTL-gaps record's 12,461.0 omits the
 per-row scale stage). The cut is evidence only: tensor-parallel 2 is the only
@@ -254,7 +254,7 @@ groups (6,144 a die), the 1,419 UCIe cycles included:
 | spec dependency chain, reference graph (SU 1,024, K-split attention, as-built unit latencies) | 129,075 | 8,512 |
 | **spec dependency chain** (one-pass softmax, prefetched issue): weights 38,880, attention 18,432, elementwise 5,112, latency 57,276, control 720, UCIe 1,419; the post-tree stage priced on weight and KV attention matvecs | **121,839** | 9,017 |
 | KV stream (FP8, 8 stacks) | 92,161 | 11,921 |
-| **calibrated model at HEAD** (one die's sequencer replay 97,665 + scale multiply 1,085 + UCIe 1,419) | **100,169** <!-- figure: 100,169 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | **10,968** |
+| **calibrated model at HEAD** (one die's sequencer replay 98,533 + scale multiply 1,085 + UCIe 1,419) | **101,037** <!-- figure: 101,037 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="Qwen3-8B calibrated HEAD cycles 8K" --> | **10,874** |
 
 The calibrated figure is the RTL-calibrated sequencer model replaying the
 program one die runs at HEAD: the die's tensor-parallel slice (16 query and
@@ -266,23 +266,23 @@ package's chain. Two stages the program does not yet contain are added: the
 INT8 contract's per-row scale multiply after each of the token's 145 weight and 72 exposed attention matvecs
 (5 cycles each, 1,085 a token) and the 73 UCIe exchanges with the
 embedding-row handoff (1,419). It is not a shipped-scale simulation. It is
-**3.3% over the design target** of 97,011 and 9% over the KV stream: **the
+**4.2% over the design target** of 97,011 and 10% over the KV stream: **the
 chain binds the autoregressive token**. The analytical spec chain, which the
-speculation and batch sections price, is 22% pessimistic against it. One
+speculation and batch sections price, is 21% pessimistic against it. One
 decoder layer (the middle one, of 36) at HEAD, on one die's slice:
 
 | stage (cut at the matrix engine's weight-op issues) | cycles | engine busy | exposed |
 |---|---|---|---|
-| QKV projection, then q/k norm, RoPE | 476 | 128 | 348 |
-| attention: scores, softmax, P·V, 1/Z | 844 | 512 | 332 |
-| O projection, residual, FFN norm | 179 | 88 | 91 |
-| gate/up projection, fused SiLU·up | 764 | 512 | 252 |
-| down projection, residual, next norm | 355 | 264 | 91 |
-| **layer** | **2,618** <!-- figure: 2,618 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.layer_chain.cycles" name="Qwen3-8B calibrated layer chain 8K" --> | 1,504 | 1,114 |
+| QKV projection, then q/k norm, RoPE | 480 | 128 | 352 |
+| attention: scores, softmax, P·V, 1/Z | 852 | 512 | 340 |
+| O projection, residual, FFN norm | 183 | 88 | 95 |
+| gate/up projection, fused SiLU·up | 768 | 512 | 256 |
+| down projection, residual, next norm | 359 | 264 | 95 |
+| **layer** | **2,642** <!-- figure: 2,642 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.layer_chain.cycles" name="Qwen3-8B calibrated layer chain 8K" --> | 1,504 | 1,138 |
 
 The per-layer share of the KV stream is 2,560 cycles, so a layer's chain is
-58 cycles over it before the layer's scale multiplies and two exchanges. The
-exposed 1,114 cycles a layer are the stream-unit passes and result paths
+82 cycles over it before the layer's scale multiplies and two exchanges. The
+exposed 1,138 cycles a layer are the stream-unit passes and result paths
 between projections; the die's half-matrices on its 6,144 groups keep the
 weight passes short and these do not shrink with them, so they set the
 rate. The dependency requirement (≤ 40 exposed cycles a stage) is the lever
@@ -468,7 +468,7 @@ verify 143,543, commit 10. The step's 59.5 G MACs include the drafter's
 On the HBM comparator (8K, FP8 KV) the bytes bind each phase. BF16 weights go
 from 457 to 1,373 tok/s, and the ROM's INT8 weights from 880.7 to 2,651
 (block 16, 3.66 tokens a step, 3.0×). With DFlash on both, the ROM package is
-7.1× the comparator (18,720 against 2,651); without, 12.5× (10,968 against
+7.1× the comparator (18,720 against 2,651); without, 12.3× (10,874 against
 880.7).
 
 Requirements this adds:
@@ -495,7 +495,7 @@ Capacity is no longer a limit: 8 × 24 GB of HBM.
 | 8 | 1,490 | 11,921 | 580.5 | 4,644 |
 | 128 | 93 | 11,921 | 84.8 | 10,858 |
 
-Rates are tok/s on the spec chain (the calibrated batch-1 rate is 10,968).
+Rates are tok/s on the spec chain (the calibrated batch-1 rate is 10,874).
 From batch 2 the ROM package is **KV-stream-bound at 11,921 tok/s total**,
 which is 7.2 TB/s over 604 MB a token; more users only divide it. Lane copies
 do not help, because each user's KV is its own. At 2K the stream leaves room:
@@ -562,7 +562,7 @@ Scenario B / scenario A. Die W is one die; package W is both dies and the
 
 | design | tok/s | mJ/token, B / A | die W, B / A | stacks W | package W, B / A | wall W, B / A | capped liquid (design), B / A | capped air (sensitivity), B / A |
 |---|---|---|---|---|---|---|---|---|
-| ROM, batch 1 | 10,968 | **96.5** <!-- figure: 96.49 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM scenario-B mJ/token 8K batch 1" --> / **130.3** <!-- figure: 130.28 src="results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM scenario-A mJ/token 8K batch 1" --> | **437.8** <!-- figure: 437.8 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.ar_batch1.die_w" name="Qwen3-8B ROM scenario-B die W autoregressive" --> / 623.1 | 182.8 | 1,058.3 / 1,428.9 | 1,312.8 / 1,772.5 | 10,968 / **7,859** <!-- figure: 7,859.4 src="results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.rom.ar_batch1.cooling.liquid.capped_tokens_s" name="Qwen3-8B ROM autoregressive liquid-capped rate scenario A" --> | 8,921 / 5,766 |
+| ROM, batch 1 | 10,874 | **96.7** <!-- figure: 96.65 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM scenario-B mJ/token 8K batch 1" --> / **130.4** <!-- figure: 130.44 src="results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.rom.ar_batch1.energy_per_token_mj" name="Qwen3-8B ROM scenario-A mJ/token 8K batch 1" --> | **434.8** <!-- figure: 434.8 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.ar_batch1.die_w" name="Qwen3-8B ROM scenario-B die W autoregressive" --> / 618.6 | 181.3 | 1,050.9 / 1,418.4 | 1,303.6 / 1,759.4 | 10,874 / **7,859** <!-- figure: 7,859.4 src="results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.rom.ar_batch1.cooling.liquid.capped_tokens_s" name="Qwen3-8B ROM autoregressive liquid-capped rate scenario A" --> | 8,921 / 5,766 |
 | ROM, DFlash (block 5, m = 5, serial step, 2.859 tokens a step) | 18,720 | 55.4 / 125.9 | 456.6 / 1,116.3 | 124.3 | 1,037.6 / 2,356.9 | 1,287.0 / 2,923.6 | 18,720 / 6,680 | **14,176** <!-- figure: 14,176.2 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.dflash_block5.cooling.air.capped_tokens_s" name="Qwen3-8B ROM DFlash air-capped rate scenario B (sensitivity)" --> / 4,804 |
 | ROM, batch 2 (KV-bound) | 11,921 | 94.7 / 128.5 | 465.0 / 666.4 | 198.7 | 1,128.8 / 1,531.6 | 1,400.2 / 1,899.8 | 11,921 / 7,854 | 8,934 / 5,735 |
 | ROM, batch 128 | 11,921 | 96.4 / 130.2 | 475.4 / 676.8 | 198.7 | 1,149.6 / 1,552.4 | 1,425.9 / 1,925.6 | 11,892 / 7,602 | 8,552 / 5,467 |
@@ -572,7 +572,7 @@ Scenario B / scenario A. Die W is one die; package W is both dies and the
 | B200, batch 1 (measured 689 W decode draw, roofline rate) | 881 | 782 | | | | | | |
 
 * **Liquid cooling carries the production lane uncapped; air would not.** At
-  10,968 tok/s each die draws 437.8 W on the production lane and 623.1 W on
+  10,874 tok/s each die draws 434.8 W on the production lane and 618.6 W on
   the measured lane; with DFlash at 18,720 tok/s, 457.5 W and 1,118.8 W. In
   the design class (474.6 W a die) the production lane runs both points
   uncapped; the measured lane caps at 7,859 (autoregressive) and 6,680
@@ -583,7 +583,7 @@ Scenario B / scenario A. Die W is one die; package W is both dies and the
   plain decoding once capped (6,680 against 7,859 in liquid, 4,804 against
   5,766 in air): its extra MACs cost more power than the KV bytes they save.
 * **The HBM path is the dies' energy.** At batch 1 on the ROM package
-  (scenario B), 16.7 mJ of the 96.5 mJ is in the stacks and 79.8 mJ on the
+  (scenario B), 16.7 mJ of the 96.7 mJ is in the stacks and 79.8 mJ on the
   dies:
   * the dies' share of the HBM path 49.2 (604 MB of FP8 KV at 10.19 pJ/bit);
   * leakage 9.9;
@@ -595,16 +595,16 @@ Scenario B / scenario A. Die W is one die; package W is both dies and the
   * the stream unit 1.0;
   * the UCIe exchanges 0.009.
 
-  The KV stream costs 65.9 mJ of the 96.5 in all, so halving the KV bytes
+  The KV stream costs 65.9 mJ of the 96.7 in all, so halving the KV bytes
   (4-bit KV, a sensitivity) is the largest energy lever.
 * **Ratios per token at batch 1**, the HBM comparator being the same package
   with the ROM's INT8 weights and the KV streamed, scenario B / A:
-  * **13.31× / 10.12×** <!-- figure: 13.31 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.ratios_batch1.hbm_over_rom" name="Qwen3-8B HBM INT8 over ROM energy ratio scenario B" --> against the comparator in the ROM's own weight format: the matched ratio;
-  * a B200 at its measured decode draw is 782 mJ, 8.11× / 6.01× the ROM
+  * **13.29× / 10.10×** <!-- figure: 13.29 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.ratios_batch1.hbm_over_rom" name="Qwen3-8B HBM INT8 over ROM energy ratio scenario B" --> against the comparator in the ROM's own weight format: the matched ratio;
+  * a B200 at its measured decode draw is 782 mJ, 8.09× / 6.00× the ROM
     package; an illustration only, since its workload and context are not
     matched.
 
-  At batch 128 the gap closes to 96.5 mJ (ROM) against 110.5 mJ (HBM,
+  At batch 128 the gap closes to 96.7 mJ (ROM) against 110.5 mJ (HBM,
   scenario B), at totals of 11,921 and 10,858 tok/s. The comparator's dies
   spend 1,058.6 mJ of its 1,284.2 (B) at batch 1: 666.4 on their share of the
   HBM path (weights and KV), and 383.3 of leakage, clock and stack idle over a
@@ -632,10 +632,10 @@ A die's power other than its MACs does not depend on the lane: static 99.1 W
 dynamic energy for autoregressive decoding (118.5 W and 11.9 mJ with DFlash).
 At the design rate that is, per die:
 
-* **autoregressive, 10,968 tok/s: 405.4 W before any MAC.** In the design
-  class (474.6 W liquid) **≤ 1.238 pJ/MAC** fits (≤ 1.046 at the 11,325 tok/s
+* **autoregressive, 10,874 tok/s: 402.8 W before any MAC.** In the design
+  class (474.6 W liquid) **≤ 1.322 pJ/MAC** fits (≤ 1.046 at the 11,325 tok/s
   target). In air the die is over the 374.6 W limit before any MAC, so no MAC
-  energy fits (−0.582 pJ/MAC; −0.723 at the target), and with free MACs it
+  energy fits (−0.521 pJ/MAC; −0.723 at the target), and with free MACs it
   would cap at 9,862 tok/s: the die's share of the HBM path binds, not the
   lane;
 * **DFlash, 18,720 tok/s (the serial step): 342.2 W before any MAC**,
@@ -643,14 +643,14 @@ At the design rate that is, per die:
   die. The step's 59.5 G MACs include the drafter's 9.6 G, and its draft
   phase's 24,243 cycles are in the step time.
 
-Die energy per token that fits 474.6 W: 43.3 mJ at 10,968 tok/s and 41.9 mJ
-at the 11,325 tok/s target (34.0 and 33.1 mJ in air). Capped rates by lane
+Die energy per token that fits 474.6 W: 43.6 mJ at 10,874 tok/s and 41.9 mJ
+at the 11,325 tok/s target (34.5 and 33.1 mJ in air). Capped rates by lane
 (liquid, the design / air, the sensitivity):
 
 | lane | pJ/MAC (8-bit weight / BF16) | autoregressive | DFlash |
 |---|---|---|---|
 | scenario A, routed ASAP7 matrix engine | 3.97 / 3.97 | 7,859 / 5,766 | 6,680 / 4,804 |
-| scenario B, derived production lane | 0.59 / 0.59 | 10,968 / 8,921 | 18,720 / 14,176 |
+| scenario B, derived production lane | 0.59 / 0.59 | 10,874 / 8,921 | 18,720 / 14,176 |
 | a lane no better than an A100 tensor core (sensitivity) | 1.40 / 1.40 | 10,752 / 7,888 | 13,438 / 9,664 |
 
 MAC requirements that follow:
@@ -791,7 +791,7 @@ The verdicts:
 
 * **Base lanes.** Each die's 6,144 groups are the most its half of the 8-bit
   ROM feeds (read headroom 1.017; 6,656 would be 0.939). The chain binds the
-  autoregressive token (100,169 against a 92,161-cycle KV floor), and half the
+  autoregressive token (101,037 against a 92,161-cycle KV floor), and half the
   groups is 156,217 cycles in the calibrated model, 57% slower a token.
 * **Stream unit.** 512 lanes a die is 102,841 cycles (+3.0% a token); 2,048
   is 98,293 (−1.5%), not worth doubling the unit.
@@ -804,7 +804,7 @@ The verdicts:
   KV-bound batch, since each user's KV is its own and from batch 2 the step is
   the KV stream. They carry the DFlash verify, 2.08× single-user tokens/s.
   In the liquid design class the gain holds on the production lane
-  (scenario B: 18,720 against 10,968 tok/s, both uncapped) but not on the
+  (scenario B: 18,720 against 10,874 tok/s, both uncapped) but not on the
   measured 3.97 pJ/MAC lane (scenario A: capped at 6,680 against 7,859), where
   the copies would not pay (section 11); air (the sensitivity) gives the same
   ordering, 14,176 against 8,921 (B) and 4,804 against 5,766 (A). They stay on
@@ -947,7 +947,7 @@ without the drafter). The options, each priced for rate, power and cost:
 | O1: embedding table in the KV stacks | no (−30.1 mm²) | 8,192, 1 | — | — |
 | O2: embedding and lm_head in the KV stacks | yes | 8,192, 1 | 4,402 | 5,412 (3) |
 | O3a–c: fewer MAC lanes (4,096–6,144 groups) | yes | 4,096–6,144, 1–2 | 5,498–6,775 | 5,020–7,008 |
-| **O4: two reticles in one package, every layer split (adopted)** | **yes** | **6,144, 5** | **10,968** | **18,720 (5)** |
+| **O4: two reticles in one package, every layer split (adopted)** | **yes** | **6,144, 5** | **10,874** | **18,720 (5)** |
 | O5: low-end floorplan assumption (interconnect 5%, overhead 6%) | yes | 8,192, 1 | 8,819 | 7,621 (1) |
 
 A single reticle would fit only by slowing the single user (fewer lanes, or

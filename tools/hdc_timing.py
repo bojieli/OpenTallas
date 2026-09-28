@@ -49,6 +49,13 @@ import hdc_isa as I
 ROOT = Path(__file__).resolve().parents[1]
 IL = I.INTERLEAVE
 
+
+def split_tree_levels(groups):
+    """Match RTL $clog2(G), including non-power-of-two group counts."""
+    if groups < 1:
+        raise ValueError("groups must be positive")
+    return (groups - 1).bit_length()
+
 # RTL constants (cycles); fitted by `calibrate` and fixed here.
 # Fitted to the reduced vehicle's Verilator issue trace (4 groups, SW 8): the
 # prefetched sequencer, the vector stream unit, the 3-cycle adders
@@ -308,7 +315,7 @@ def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_
             rounds, kc = me_loop(f, dyn, pos, groups)
             n_el = rounds * kc * IL
             e0 = go + k["me_start"]
-            lat = k["me_lat"] + k["me_tree"] * (groups.bit_length() - 1)
+            lat = k["me_lat"] + k["me_tree"] * split_tree_levels(groups)
             me_slot_t = [e0 + r * kc * IL + (kc - 1) * IL + j + lat for r in range(rounds) for j in range(IL)]
             me_free = e0 + n_el
             me_idle = max(me_idle, me_slot_t[-1] + (k.get("rmax_tail", 0) + (groups * I.W_LANES - 1).bit_length()

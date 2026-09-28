@@ -9,16 +9,16 @@
  "rule": "improve utilisation without slowing the single user",
  "rom": {
   "ar_batch1": {
-   "step_cycles": 100169,
+   "step_cycles": 101037,
    "basis": "calibrated sequencer model at HEAD (unit busy measured on the replayed program)",
    "users": 1,
    "slots": 1,
-   "tokens_s_total": 10967.9,
+   "tokens_s_total": 10873.6,
    "energy_per_step_mj": {
     "matrix_engine": 39.68,
     "other_logic_upper": 125.528,
     "rom_read": 0.606,
-    "rom_leakage": 0.274,
+    "rom_leakage": 0.277,
     "kv_hbm_stacks": 65.906
    },
    "energy_share": {
@@ -35,9 +35,9 @@
      "peak_per_cycle": 196608,
      "unit": "MAC",
      "demand_per_step": 9984016384.0,
-     "utilization": 0.507,
+     "utilization": 0.5026,
      "busy_cycles": 57312,
-     "busy_fraction": 0.5722,
+     "busy_fraction": 0.5672,
      "area_mm2": 220.04
     },
     {
@@ -58,9 +58,9 @@
      "peak_per_cycle": 196608.0,
      "unit": "byte",
      "demand_per_step": 7571202816.0,
-     "utilization": 0.3844,
+     "utilization": 0.3811,
      "busy_cycles": 38509,
-     "busy_fraction": 0.3844,
+     "busy_fraction": 0.3811,
      "area_mm2": 449.3,
      "weight_sweeps": 1
     },
@@ -79,9 +79,9 @@
      "peak_per_cycle": 196608,
      "unit": "MAC",
      "demand_per_step": 2415919104,
-     "utilization": 0.1227,
+     "utilization": 0.1216,
      "busy_cycles": 18432,
-     "busy_fraction": 0.184
+     "busy_fraction": 0.1824
     },
     {
      "block": "vector stream unit (1024 lanes a die; the chain model runs one)",
@@ -89,9 +89,9 @@
      "peak_per_cycle": 1024,
      "unit": "element",
      "demand_per_step": 29981289,
-     "utilization": 0.2923,
+     "utilization": 0.2898,
      "busy_cycles": 10809,
-     "busy_fraction": 0.1079,
+     "busy_fraction": 0.107,
      "area_mm2": 25.6
     },
     {
@@ -100,7 +100,7 @@
      "peak_per_cycle": 1024,
      "unit": "transcendental",
      "demand_per_step": 9882217,
-     "utilization": 0.0963
+     "utilization": 0.0955
     },
     {
      "block": "reducers (R-ARITH segments, split tree)",
@@ -108,7 +108,7 @@
      "peak_per_cycle": 1024,
      "unit": "element",
      "demand_per_step": 19509632,
-     "utilization": 0.1902
+     "utilization": 0.1886
     },
     {
      "block": "KV streamer, HBM controllers and PHYs (8 stacks, raw peak)",
@@ -116,11 +116,11 @@
      "peak_per_cycle": 7281.730139081045,
      "unit": "byte",
      "demand_per_step": 603979776.0,
-     "utilization": 0.828,
+     "utilization": 0.8209,
      "busy_cycles": 92161,
-     "busy_fraction": 0.9201,
+     "busy_fraction": 0.9121,
      "area_mm2": 80.0,
-     "mbu_of_sustained": 0.9201
+     "mbu_of_sustained": 0.9121
     },
     {
      "block": "KV ring buffer (SRAM, one a die): capacity",
@@ -141,7 +141,7 @@
      "demand_per_step": 73,
      "utilization": 0.0,
      "busy_cycles": 1419,
-     "busy_fraction": 0.0142,
+     "busy_fraction": 0.014,
      "area_mm2": 20.0
     },
     {
@@ -150,9 +150,9 @@
      "peak_per_cycle": 196608,
      "unit": "byte",
      "demand_per_step": 603979776.0,
-     "utilization": 0.0307,
+     "utilization": 0.0304,
      "busy_cycles": 3072,
-     "busy_fraction": 0.0307
+     "busy_fraction": 0.0304
     },
     {
      "block": "sequencer / issue",
@@ -160,9 +160,9 @@
      "peak_per_cycle": 1,
      "unit": "instruction",
      "demand_per_step": 904,
-     "utilization": 0.009,
+     "utilization": 0.0089,
      "busy_cycles": 904,
-     "busy_fraction": 0.009
+     "busy_fraction": 0.0089
     },
     {
      "block": "argmax (streaming compare tree on the LM head's results)",
@@ -172,7 +172,7 @@
      "demand_per_step": 151936,
      "utilization": 0.0,
      "busy_cycles": 3168,
-     "busy_fraction": 0.0316
+     "busy_fraction": 0.0314
     }
    ]
   },
@@ -1130,21 +1130,21 @@
   }
  },
  "su_width_sweep_cycles": {
-  "512": 103201,
-  "1024": 100169,
-  "2048": 98653
+  "512": 104069,
+  "1024": 101037,
+  "2048": 99521
  },
- "half_groups_cycles": 156577,
+ "half_groups_cycles": 157445,
  "verdicts": [
   {
    "block": "ROM: matrix engine base lanes (196,608 on 2 dies)",
    "verdict": "RIGHT-SIZED (ROM-read bound)",
-   "why": "each die's 6,144 groups are the most its half of the 8-bit ROM feeds (read headroom 1.017; 6,656 groups a die would be 0.939); the compute chain binds the autoregressive token (100,169 vs a 92,161-cycle KV floor); half the groups is 156,577 cycles (+56% a token) in the calibrated model"
+   "why": "each die's 6,144 groups are the most its half of the 8-bit ROM feeds (read headroom 1.017; 6,656 groups a die would be 0.939); the compute chain binds the autoregressive token (101,037 vs a 92,161-cycle KV floor); half the groups is 157,445 cycles (+56% a token) in the calibrated model"
   },
   {
    "block": "ROM: 4 lane copies a die",
    "verdict": "JUSTIFIED (DFlash only), conditional on power",
-   "why": "idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry the DFlash block-5 verify (2.076x single-user tokens/s). Under the 474.6 W per-die liquid limit the capped DFlash / autoregressive rates are 18,720 / 10,968 tokens/s on the production lane (scenario B: the copies pay) and 6,680 / 7,859 on the routed 3.97 pJ/MAC lane (scenario A: they do not)"
+   "why": "idle in autoregressive decode and in KV-bound batches (each user's KV is its own); they carry the DFlash block-5 verify (2.076x single-user tokens/s). Under the 474.6 W per-die liquid limit the capped DFlash / autoregressive rates are 18,720 / 10,874 tokens/s on the production lane (scenario B: the copies pay) and 6,680 / 7,859 on the routed 3.97 pJ/MAC lane (scenario A: they do not)"
   },
   {
    "block": "ROM: weight ROM read path",
@@ -1154,12 +1154,12 @@
   {
    "block": "ROM: vector stream unit (1,024 lanes; SFUs and reducers on its lanes)",
    "verdict": "RIGHT-SIZED",
-   "why": "calibrated: 512 lanes is 103,201 cycles (+3.0% a token), 2,048 is 98,653 (-1.5%)"
+   "why": "calibrated: 512 lanes is 104,069 cycles (+3.0% a token), 2,048 is 99,521 (-1.5%)"
   },
   {
    "block": "ROM: KV streamer, controllers, 8 PHYs (4 a die)",
    "verdict": "RIGHT-SIZED (beachfront-limited)",
-   "why": "the KV floor (92,161 cycles) sits 8% under the autoregressive chain; the stacks are what each die's free edge holds, and KV-bound batches bind on them"
+   "why": "the KV floor (92,161 cycles) sits 9% under the autoregressive chain; the stacks are what each die's free edge holds, and KV-bound batches bind on them"
   },
   {
    "block": "ROM: KV ring buffer (one a die)",
@@ -1201,6 +1201,6 @@
  "notes": [
   "busy fractions of the autoregressive row are the calibrated model's; the other rows scale the per-position busy by positions over copies in use",
   "SFU and reducer demand counts operations whose peak is the stream unit's lanes; their busy time is inside the stream unit's",
-  "the other rows' steps are the budget model's (analytical chain, conservative against the calibrated 100,169); KV-bound rows are exact either way"
+  "the other rows' steps are the budget model's (analytical chain, conservative against the calibrated 101,037); KV-bound rows are exact either way"
  ]
 }

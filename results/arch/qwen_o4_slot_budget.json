@@ -17,8 +17,8 @@
   "claim_boundary": "The m=3 point fits only a linear replication of a G2/W2 ASAP7 pre-layout tile. Neither m=3 nor m=5 has routed timing, power, full-die area or full-shape exact-token evidence. The serial step model omits additional reducer stalls and is not a measured rate. The m=5 design rate should remain conditional until physical closure or a validated time-multiplex schedule.",
   "evidence_class": "conditional analytical area and timing; pre-layout G2/W2 area extrapolation",
   "inputs_sha256": {
-    "results/arch/qwen3_budget.json": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
-    "results/arch/qwen_m5_area_latency_tradeoff.json": "88086fc2d7f186dd505e5f6f592faf91dcb05a3b9ee7b2f88aa07f49457fe192",
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+    "results/arch/qwen_m5_area_latency_tradeoff.json": "8f1d677c862ff6b404ac01b243addaceff7516dfa6aa33eb9277edbdfd2c5764",
     "results/physical_hdc/asap7/qwen_m5_reduce_g2w2_n1/physical.json": "c3d5b80d48898bfe861cf68e327476425832196e11cf6a94e879b916ea666a6b",
     "results/physical_hdc/asap7/qwen_m5_reduce_g2w2_n5/physical.json": "961a4a09fb8c7877f7c7313efd716f11ef36e53fde46d2c649e3ad19acae5019",
     "results/speculative/dflash_block_acceptance.json": "b1b92957d24db13ea7f80ce27bc526d17f8a81cc839498faeb5697681bd5e31c",

@@ -2,7 +2,7 @@
  "schema": "opentallas.power-scenarios-result.v1",
  "tool": "tools/power_scenarios.py",
  "inputs": {
-  "configs/hardware/power_scenarios.json": "7d9c8045f56c0bafd9d0c5089b4fba5f85f92fb19b784b524e2f2569a7c1eea4",
+  "configs/hardware/power_scenarios.json": "727435b50f6acb1f6c542a095715388cf5e3ba1e4713b8ffd3cf5b48a6242a59",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
   "results/arch/v41_latency_ladder.json": "43ebef09b314aa84e00457924a66ce00900a2d56adda1831bafa15556fbde2a5",
@@ -46,12 +46,12 @@
   "A_measured_implementation": {
    "qwen3_8b_rom_8k": {
     "ar_batch1": {
-     "design_rate_tokens_s": 10967.9,
-     "step_cycles": 100169,
+     "design_rate_tokens_s": 10873.6,
+     "step_cycles": 101037,
      "tokens_per_step": 1,
      "dies_per_package": 2,
-     "energy_per_token_mj": 130.284,
-     "die_energy_per_token_mj": 113.614,
+     "energy_per_token_mj": 130.44,
+     "die_energy_per_token_mj": 113.771,
      "die_dynamic_mj_per_token": 95.5387,
      "stack_energy_per_token_mj": 16.6698,
      "die_components_mj_per_token": {
@@ -62,9 +62,9 @@
       "stream_unit": 0.986085,
       "hbm_controller_phy_io": 49.2364,
       "ucie_exchange": 0.00947003,
-      "leakage": 9.92825,
-      "clock": 6.10465,
-      "hbm_idle": 2.04233
+      "leakage": 10.0143,
+      "clock": 6.15755,
+      "hbm_idle": 2.06003
      },
      "die_static_w": {
       "leakage_w": 54.4458,
@@ -76,13 +76,13 @@
       "clock_w": 66.955,
       "hbm_idle_w": 22.4
      },
-     "die_w_at_design_rate": 623.051,
-     "package_dies_w_at_design_rate": 1246.1,
-     "stacks_w_at_design_rate": 182.833,
-     "stacks_w_high": 207.74,
+     "die_w_at_design_rate": 618.55,
+     "package_dies_w_at_design_rate": 1237.1,
+     "stacks_w_at_design_rate": 181.262,
+     "stacks_w_high": 205.956,
      "cooling_class": "liquid",
      "cooling_limit_w": 474.56,
-     "die_over_cooling": 1.3129,
+     "die_over_cooling": 1.30342,
      "cooling_classes": {
       "air": {
        "reference": "b200_hgx",
@@ -2797,12 +2797,12 @@
   "B_proposed_production": {
    "qwen3_8b_rom_8k": {
     "ar_batch1": {
-     "design_rate_tokens_s": 10967.9,
-     "step_cycles": 100169,
+     "design_rate_tokens_s": 10873.6,
+     "step_cycles": 101037,
      "tokens_per_step": 1,
      "dies_per_package": 2,
-     "energy_per_token_mj": 96.4943,
-     "die_energy_per_token_mj": 79.8245,
+     "energy_per_token_mj": 96.6509,
+     "die_energy_per_token_mj": 79.9811,
      "die_dynamic_mj_per_token": 61.7492,
      "stack_energy_per_token_mj": 16.6698,
      "die_components_mj_per_token": {
@@ -2813,9 +2813,9 @@
       "stream_unit": 0.986085,
       "hbm_controller_phy_io": 49.2364,
       "ucie_exchange": 0.00947003,
-      "leakage": 9.92825,
-      "clock": 6.10465,
-      "hbm_idle": 2.04233
+      "leakage": 10.0143,
+      "clock": 6.15755,
+      "hbm_idle": 2.06003
      },
      "die_static_w": {
       "leakage_w": 54.4458,
@@ -2827,13 +2827,13 @@
       "clock_w": 66.955,
       "hbm_idle_w": 22.4
      },
-     "die_w_at_design_rate": 437.752,
-     "package_dies_w_at_design_rate": 875.504,
-     "stacks_w_at_design_rate": 182.833,
-     "stacks_w_high": 207.74,
+     "die_w_at_design_rate": 434.843,
+     "package_dies_w_at_design_rate": 869.686,
+     "stacks_w_at_design_rate": 181.262,
+     "stacks_w_high": 205.956,
      "cooling_class": "liquid",
      "cooling_limit_w": 474.56,
-     "die_over_cooling": 0.922438,
+     "die_over_cooling": 0.916307,
      "cooling_classes": {
       "air": {
        "reference": "b200_hgx",
@@ -2855,17 +2855,17 @@
        "package_limit_w": 1200.0,
        "dies_per_package": 2,
        "thermal_rate_limit": 12160.0,
-       "capped_rate": 10967.9,
+       "capped_rate": 10873.6,
        "binds": false,
        "bound_by": "die",
-       "die_w_at_cap": 437.752,
-       "package_w_at_cap": 1083.24,
-       "die_w_per_mm2_at_cap": 0.537119,
-       "logic_w_per_mm2_at_cap_upper": 0.830397
+       "die_w_at_cap": 434.843,
+       "package_w_at_cap": 1075.64,
+       "die_w_per_mm2_at_cap": 0.53355,
+       "logic_w_per_mm2_at_cap_upper": 0.824878
       }
      },
      "thermal_rate_limit": 12160.0,
-     "capped_rate": 10967.9,
+     "capped_rate": 10873.6,
      "binds": false
     },
     "dflash": {
@@ -5551,12 +5551,12 @@
   "B_lane_at_gpu_tensor_1p40pj": {
    "qwen3_8b_rom_8k": {
     "ar_batch1": {
-     "design_rate_tokens_s": 10967.9,
-     "step_cycles": 100169,
+     "design_rate_tokens_s": 10873.6,
+     "step_cycles": 101037,
      "tokens_per_step": 1,
      "dies_per_package": 2,
-     "energy_per_token_mj": 104.581,
-     "die_energy_per_token_mj": 87.9115,
+     "energy_per_token_mj": 104.738,
+     "die_energy_per_token_mj": 88.0682,
      "die_dynamic_mj_per_token": 69.8363,
      "stack_energy_per_token_mj": 16.6698,
      "die_components_mj_per_token": {
@@ -5567,9 +5567,9 @@
       "stream_unit": 0.986085,
       "hbm_controller_phy_io": 49.2364,
       "ucie_exchange": 0.00947003,
-      "leakage": 9.92825,
-      "clock": 6.10465,
-      "hbm_idle": 2.04233
+      "leakage": 10.0143,
+      "clock": 6.15755,
+      "hbm_idle": 2.06003
      },
      "die_static_w": {
       "leakage_w": 54.4458,
@@ -5581,13 +5581,13 @@
       "clock_w": 66.955,
       "hbm_idle_w": 22.4
      },
-     "die_w_at_design_rate": 482.101,
-     "package_dies_w_at_design_rate": 964.202,
-     "stacks_w_at_design_rate": 182.833,
-     "stacks_w_high": 207.74,
+     "die_w_at_design_rate": 478.811,
+     "package_dies_w_at_design_rate": 957.621,
+     "stacks_w_at_design_rate": 181.262,
+     "stacks_w_high": 205.956,
      "cooling_class": "liquid",
      "cooling_limit_w": 474.56,
-     "die_over_cooling": 1.01589,
+     "die_over_cooling": 1.00896,
      "cooling_classes": {
       "air": {
        "reference": "b200_hgx",
@@ -6325,12 +6325,12 @@
   "B_old_hbm_allocation_die_0p8": {
    "qwen3_8b_rom_8k": {
     "ar_batch1": {
-     "design_rate_tokens_s": 10967.9,
-     "step_cycles": 100169,
+     "design_rate_tokens_s": 10873.6,
+     "step_cycles": 101037,
      "tokens_per_step": 1,
      "dies_per_package": 2,
-     "energy_per_token_mj": 96.4943,
-     "die_energy_per_token_mj": 34.4535,
+     "energy_per_token_mj": 96.6509,
+     "die_energy_per_token_mj": 34.6101,
      "die_dynamic_mj_per_token": 16.3783,
      "stack_energy_per_token_mj": 62.0408,
      "die_components_mj_per_token": {
@@ -6341,9 +6341,9 @@
       "stream_unit": 0.986085,
       "hbm_controller_phy_io": 3.86547,
       "ucie_exchange": 0.00947003,
-      "leakage": 9.92825,
-      "clock": 6.10465,
-      "hbm_idle": 2.04233
+      "leakage": 10.0143,
+      "clock": 6.15755,
+      "hbm_idle": 2.06003
      },
      "die_static_w": {
       "leakage_w": 54.4458,
@@ -6355,13 +6355,13 @@
       "clock_w": 66.955,
       "hbm_idle_w": 22.4
      },
-     "die_w_at_design_rate": 188.941,
-     "package_dies_w_at_design_rate": 377.881,
-     "stacks_w_at_design_rate": 680.455,
-     "stacks_w_high": 207.74,
+     "die_w_at_design_rate": 188.169,
+     "package_dies_w_at_design_rate": 376.338,
+     "stacks_w_at_design_rate": 674.609,
+     "stacks_w_high": 205.956,
      "cooling_class": "liquid",
      "cooling_limit_w": 474.56,
-     "die_over_cooling": 0.398139,
+     "die_over_cooling": 0.396513,
      "cooling_classes": {
       "air": {
        "reference": "b200_hgx",
@@ -6369,13 +6369,13 @@
        "package_limit_w": 1000.0,
        "dies_per_package": 2,
        "thermal_rate_limit": 22700.3,
-       "capped_rate": 10967.9,
+       "capped_rate": 10873.6,
        "binds": false,
        "bound_by": "package",
-       "die_w_at_cap": 188.941,
-       "package_w_at_cap": 585.622,
-       "die_w_per_mm2_at_cap": 0.231829,
-       "logic_w_per_mm2_at_cap_upper": 0.358412
+       "die_w_at_cap": 188.169,
+       "package_w_at_cap": 582.294,
+       "die_w_per_mm2_at_cap": 0.230882,
+       "logic_w_per_mm2_at_cap_upper": 0.356949
       },
       "liquid": {
        "reference": "gb200_nvl72",
@@ -6383,17 +6383,17 @@
        "package_limit_w": 1200.0,
        "dies_per_package": 2,
        "thermal_rate_limit": 28362.9,
-       "capped_rate": 10967.9,
+       "capped_rate": 10873.6,
        "binds": false,
        "bound_by": "package",
-       "die_w_at_cap": 188.941,
-       "package_w_at_cap": 585.622,
-       "die_w_per_mm2_at_cap": 0.231829,
-       "logic_w_per_mm2_at_cap_upper": 0.358412
+       "die_w_at_cap": 188.169,
+       "package_w_at_cap": 582.294,
+       "die_w_per_mm2_at_cap": 0.230882,
+       "logic_w_per_mm2_at_cap_upper": 0.356949
       }
      },
      "thermal_rate_limit": 28362.9,
-     "capped_rate": 10967.9,
+     "capped_rate": 10873.6,
      "binds": false
     },
     "dflash": {
@@ -7100,12 +7100,12 @@
   "B_hbm_die_gh200_8p23": {
    "qwen3_8b_rom_8k": {
     "ar_batch1": {
-     "design_rate_tokens_s": 10967.9,
-     "step_cycles": 100169,
+     "design_rate_tokens_s": 10873.6,
+     "step_cycles": 101037,
      "tokens_per_step": 1,
      "dies_per_package": 2,
-     "energy_per_token_mj": 96.4943,
-     "die_energy_per_token_mj": 70.3541,
+     "energy_per_token_mj": 96.6509,
+     "die_energy_per_token_mj": 70.5107,
      "die_dynamic_mj_per_token": 52.2788,
      "stack_energy_per_token_mj": 26.1402,
      "die_components_mj_per_token": {
@@ -7116,9 +7116,9 @@
       "stream_unit": 0.986085,
       "hbm_controller_phy_io": 39.766,
       "ucie_exchange": 0.00947003,
-      "leakage": 9.92825,
-      "clock": 6.10465,
-      "hbm_idle": 2.04233
+      "leakage": 10.0143,
+      "clock": 6.15755,
+      "hbm_idle": 2.06003
      },
      "die_static_w": {
       "leakage_w": 54.4458,
@@ -7130,13 +7130,13 @@
       "clock_w": 66.955,
       "hbm_idle_w": 22.4
      },
-     "die_w_at_design_rate": 385.817,
-     "package_dies_w_at_design_rate": 771.634,
-     "stacks_w_at_design_rate": 286.703,
-     "stacks_w_high": 207.74,
+     "die_w_at_design_rate": 383.354,
+     "package_dies_w_at_design_rate": 766.708,
+     "stacks_w_at_design_rate": 284.24,
+     "stacks_w_high": 205.956,
      "cooling_class": "liquid",
      "cooling_limit_w": 474.56,
-     "die_over_cooling": 0.812999,
+     "die_over_cooling": 0.807809,
      "cooling_classes": {
       "air": {
        "reference": "b200_hgx",
@@ -7158,17 +7158,17 @@
        "package_limit_w": 1200.0,
        "dies_per_package": 2,
        "thermal_rate_limit": 14065.7,
-       "capped_rate": 10967.9,
+       "capped_rate": 10873.6,
        "binds": false,
        "bound_by": "package",
-       "die_w_at_cap": 385.817,
-       "package_w_at_cap": 979.374,
-       "die_w_per_mm2_at_cap": 0.473395,
-       "logic_w_per_mm2_at_cap_upper": 0.731878
+       "die_w_at_cap": 383.354,
+       "package_w_at_cap": 972.663,
+       "die_w_per_mm2_at_cap": 0.470373,
+       "logic_w_per_mm2_at_cap_upper": 0.727206
       }
      },
      "thermal_rate_limit": 14065.7,
-     "capped_rate": 10967.9,
+     "capped_rate": 10873.6,
      "binds": false
     },
     "dflash": {
@@ -8184,12 +8184,12 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "air",
-   "energy_per_token_mj": 130.284,
-   "die_w": 623.051,
+   "energy_per_token_mj": 130.44,
+   "die_w": 618.55,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 10967.9,
+   "design_rate": 10873.6,
    "capped_rate": 5765.97,
    "binds": true,
    "bound_by": "die"
@@ -8199,12 +8199,12 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "liquid",
-   "energy_per_token_mj": 130.284,
-   "die_w": 623.051,
+   "energy_per_token_mj": 130.44,
+   "die_w": 618.55,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 10967.9,
+   "design_rate": 10873.6,
    "capped_rate": 7859.36,
    "binds": true,
    "bound_by": "die"
@@ -9144,12 +9144,12 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "air",
-   "energy_per_token_mj": 96.4943,
-   "die_w": 437.752,
+   "energy_per_token_mj": 96.6509,
+   "die_w": 434.843,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 10967.9,
+   "design_rate": 10873.6,
    "capped_rate": 8921.13,
    "binds": true,
    "bound_by": "die"
@@ -9159,13 +9159,13 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "liquid",
-   "energy_per_token_mj": 96.4943,
-   "die_w": 437.752,
+   "energy_per_token_mj": 96.6509,
+   "die_w": 434.843,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 10967.9,
-   "capped_rate": 10967.9,
+   "design_rate": 10873.6,
+   "capped_rate": 10873.6,
    "binds": false,
    "bound_by": "die"
   },
@@ -10104,12 +10104,12 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "air",
-   "energy_per_token_mj": 104.581,
-   "die_w": 482.101,
+   "energy_per_token_mj": 104.738,
+   "die_w": 478.811,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 10967.9,
+   "design_rate": 10873.6,
    "capped_rate": 7888.07,
    "binds": true,
    "bound_by": "die"
@@ -10119,12 +10119,12 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "liquid",
-   "energy_per_token_mj": 104.581,
-   "die_w": 482.101,
+   "energy_per_token_mj": 104.738,
+   "die_w": 478.811,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 10967.9,
+   "design_rate": 10873.6,
    "capped_rate": 10751.9,
    "binds": true,
    "bound_by": "die"
@@ -10344,13 +10344,13 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "air",
-   "energy_per_token_mj": 96.4943,
-   "die_w": 188.941,
+   "energy_per_token_mj": 96.6509,
+   "die_w": 188.169,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 10967.9,
-   "capped_rate": 10967.9,
+   "design_rate": 10873.6,
+   "capped_rate": 10873.6,
    "binds": false,
    "bound_by": "package"
   },
@@ -10359,13 +10359,13 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "liquid",
-   "energy_per_token_mj": 96.4943,
-   "die_w": 188.941,
+   "energy_per_token_mj": 96.6509,
+   "die_w": 188.169,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 10967.9,
-   "capped_rate": 10967.9,
+   "design_rate": 10873.6,
+   "capped_rate": 10873.6,
    "binds": false,
    "bound_by": "package"
   },
@@ -10584,12 +10584,12 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "air",
-   "energy_per_token_mj": 96.4943,
-   "die_w": 385.817,
+   "energy_per_token_mj": 96.6509,
+   "die_w": 383.354,
    "cooling_w": 374.56,
    "package_w": 1000.0,
    "reference": "b200_hgx",
-   "design_rate": 10967.9,
+   "design_rate": 10873.6,
    "capped_rate": 10537.2,
    "binds": true,
    "bound_by": "die"
@@ -10599,13 +10599,13 @@
    "design": "Qwen3-8B ROM 8K",
    "point": "ar_batch1",
    "cooling": "liquid",
-   "energy_per_token_mj": 96.4943,
-   "die_w": 385.817,
+   "energy_per_token_mj": 96.6509,
+   "die_w": 383.354,
    "cooling_w": 474.56,
    "package_w": 1200.0,
    "reference": "gb200_nvl72",
-   "design_rate": 10967.9,
-   "capped_rate": 10967.9,
+   "design_rate": 10873.6,
+   "capped_rate": 10873.6,
    "binds": false,
    "bound_by": "package"
   },

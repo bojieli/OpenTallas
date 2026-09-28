@@ -90,7 +90,7 @@ def test_die_split_and_ucie_exchange(rec):
         assert ch["ucie_exchange_cycles"] == x["cycles_per_token"]
     ab = rec["as_built_calibrated"]["8192"]
     assert ab["groups"] == 6144 and ab["scale_multiply_cycles"] == 5 * (6 * rec["shape"]["L"] + 1)
-    assert ab["cycles"] == ab["sequencer_cycles"] + ab["scale_multiply_cycles"] + x["cycles_per_token"] == 100169
+    assert ab["cycles"] == ab["sequencer_cycles"] + ab["scale_multiply_cycles"] + x["cycles_per_token"] == 101037
     alt = rec["layer_cut_alternative"]
     assert alt["ar_tokens_s"] < 0.6 * rec["power"]["points"]["ar_batch1"]["at"]["design"]["tokens_s"]
 
@@ -102,7 +102,8 @@ def test_o4_frozen_study_has_the_same_configuration(rec):
     o4 = o4["configurations"]["O4_two_reticles_one_package"]
     pp = rec["power_production"]["scenarios"]
     assert pp["B_proposed_production"]["rom"]["ar_batch1"]["step_cycles"] == rec["as_built_calibrated"]["8192"]["cycles"]
-    assert rec["as_built_calibrated"]["8192"]["cycles"] - o4["performance"]["ar_step_cycles"] == 360
+    # The current replay also charges the RTL's ceil(log2(6144)) split tree.
+    assert rec["as_built_calibrated"]["8192"]["cycles"] - o4["performance"]["ar_step_cycles"] == 1228
     best = o4["performance"]["dflash"]["best"]
     assert pp["B_proposed_production"]["rom"][f"dflash_block{best['block']}"]["step_cycles"] - best["step_cycles"] == 410
 
@@ -142,9 +143,9 @@ def test_speculation(rec):
 # runs, at shipped shapes and the design context, must not regress past the
 # ratchet, and the gap to the budget target is reported.  Lower RATCHET as
 # blocks land; the gate is met when RATCHET <= the budget target.
-# Updated when INT8_WEIGHT's uniform post-tree pipeline was measured on the
-# 145 weight and 72 exposed KV-attention results in the TP-2 replay.
-RATCHET_8K = 100_169
+# The 868-cycle correction is a model bug fix: the RTL uses $clog2(G), while
+# the former replay used floor(log2(G)) at G=6144.  It does not mark a slower RTL.
+RATCHET_8K = 101_037
 
 
 def test_performance_gate(rec, fresh):

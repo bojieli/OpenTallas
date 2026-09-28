@@ -1632,43 +1632,43 @@
    "max_split": null,
    "shape": "one die's TP-2 slice",
    "instructions": 904,
-   "sequencer_cycles": 97665,
+   "sequencer_cycles": 98533,
    "scale_multiply_cycles": 1085,
    "ucie_exchange_cycles": 1419,
-   "cycles": 100169,
+   "cycles": 101037,
    "layer_chain": {
     "layer": 18,
-    "cycles": 2618,
+    "cycles": 2642,
     "stages": [
      {
       "stage": "QKV projection, then q/k norm, RoPE",
-      "cycles": 476,
+      "cycles": 480,
       "engine_busy": 128,
-      "exposed": 348
+      "exposed": 352
      },
      {
       "stage": "attention: scores, softmax, P\u00b7V, 1/Z",
-      "cycles": 844,
+      "cycles": 852,
       "engine_busy": 512,
-      "exposed": 332
+      "exposed": 340
      },
      {
       "stage": "O projection, residual, FFN norm",
-      "cycles": 179,
+      "cycles": 183,
       "engine_busy": 88,
-      "exposed": 91
+      "exposed": 95
      },
      {
       "stage": "gate/up projection, fused SiLU\u00b7up",
-      "cycles": 764,
+      "cycles": 768,
       "engine_busy": 512,
-      "exposed": 252
+      "exposed": 256
      },
      {
       "stage": "down projection, residual, next norm",
-      "cycles": 355,
+      "cycles": 359,
       "engine_busy": 264,
-      "exposed": 91
+      "exposed": 95
      }
     ]
    },
@@ -1680,11 +1680,11 @@
     "lm_head": 3168
    },
    "sequencer_stalls": {
-    "chase": 30625,
+    "chase": 30913,
     "wait_su": 14370,
-    "barrier_me": 30096,
+    "barrier_me": 30528,
     "unit_busy": 10656,
-    "wait_me": 7776
+    "wait_me": 7920
    },
    "seq_gap_total": 904
   },
@@ -1696,43 +1696,43 @@
    "max_split": null,
    "shape": "one die's TP-2 slice",
    "instructions": 904,
-   "sequencer_cycles": 81965,
+   "sequencer_cycles": 82833,
    "scale_multiply_cycles": 1085,
    "ucie_exchange_cycles": 1419,
-   "cycles": 84469,
+   "cycles": 85337,
    "layer_chain": {
     "layer": 18,
-    "cycles": 2182,
+    "cycles": 2206,
     "stages": [
      {
       "stage": "QKV projection, then q/k norm, RoPE",
-      "cycles": 472,
+      "cycles": 476,
       "engine_busy": 128,
-      "exposed": 344
+      "exposed": 348
      },
      {
       "stage": "attention: scores, softmax, P\u00b7V, 1/Z",
-      "cycles": 412,
+      "cycles": 420,
       "engine_busy": 128,
-      "exposed": 284
+      "exposed": 292
      },
      {
       "stage": "O projection, residual, FFN norm",
-      "cycles": 179,
+      "cycles": 183,
       "engine_busy": 88,
-      "exposed": 91
+      "exposed": 95
      },
      {
       "stage": "gate/up projection, fused SiLU\u00b7up",
-      "cycles": 764,
+      "cycles": 768,
       "engine_busy": 512,
-      "exposed": 252
+      "exposed": 256
      },
      {
       "stage": "down projection, residual, next norm",
-      "cycles": 355,
+      "cycles": 359,
       "engine_busy": 264,
-      "exposed": 91
+      "exposed": 95
      }
     ]
    },
@@ -1744,11 +1744,11 @@
     "lm_head": 3168
    },
    "sequencer_stalls": {
-    "chase": 28897,
+    "chase": 29185,
     "wait_su": 15518,
-    "barrier_me": 25344,
+    "barrier_me": 25776,
     "unit_busy": 3744,
-    "wait_me": 4320
+    "wait_me": 4464
    },
    "seq_gap_total": 904
   }
@@ -1807,7 +1807,7 @@
    "requirement": "<= 40 cycles exposed a stage",
    "as_built": "per-unit waits (landed: wait_me / wait_su, barrier = both), element chaining across units; still whole-op granular within a unit",
    "cycles_baseline_2k": 13463058,
-   "cycles_head_8k": 82867,
+   "cycles_head_8k": 83731,
    "status": "MISS"
   },
   {
@@ -3498,16 +3498,16 @@
     "die_non_mac_dynamic_mj_per_token": 27.929,
     "at": {
      "design": {
-      "tokens_s": 10967.9,
-      "mac_rate_per_s": 54751668480856.15,
-      "die_w_without_macs": 405.4,
+      "tokens_s": 10873.6,
+      "mac_rate_per_s": 54281301701939.68,
+      "die_w_without_macs": 402.8,
       "die_energy_budget_mj_per_token": {
-       "air": 34.15,
-       "liquid": 43.27
+       "air": 34.45,
+       "liquid": 43.64
       },
       "pj_per_mac_that_fits": {
-       "air": -0.564,
-       "liquid": 1.262
+       "air": -0.521,
+       "liquid": 1.322
       }
      },
      "target": {
@@ -3532,8 +3532,8 @@
      "A_measured_implementation": {
       "pj_per_mac_w8": 3.9743577368555187,
       "pj_per_mac_bf16": 3.9743577368555187,
-      "energy_per_token_mj": 130.284,
-      "die_w_at_design_rate": 623.1,
+      "energy_per_token_mj": 130.44,
+      "die_w_at_design_rate": 618.6,
       "cooling": {
        "air": {
         "reference": "b200_hgx",
@@ -3558,8 +3558,8 @@
      "B_proposed_production": {
       "pj_per_mac_w8": 0.59,
       "pj_per_mac_bf16": 0.59,
-      "energy_per_token_mj": 96.494,
-      "die_w_at_design_rate": 437.8,
+      "energy_per_token_mj": 96.651,
+      "die_w_at_design_rate": 434.8,
       "cooling": {
        "air": {
         "reference": "b200_hgx",
@@ -3574,18 +3574,18 @@
         "reference": "gb200_nvl72",
         "die_limit_w": 474.6,
         "package_limit_w": 1200.0,
-        "capped_tokens_s": 10967.9,
+        "capped_tokens_s": 10873.6,
         "binds": false,
         "bound_by": "die",
-        "die_w_at_cap": 437.8
+        "die_w_at_cap": 434.8
        }
       }
      },
      "B_gpu_tensor_sensitivity": {
       "pj_per_mac_w8": 1.4,
       "pj_per_mac_bf16": 1.4,
-      "energy_per_token_mj": 104.581,
-      "die_w_at_design_rate": 482.1,
+      "energy_per_token_mj": 104.738,
+      "die_w_at_design_rate": 478.8,
       "cooling": {
        "air": {
         "reference": "b200_hgx",
@@ -3720,7 +3720,7 @@
    "the lane takes the ROM's weight format: an INT8 weight (exact in BF16) x a BF16 activation into FP32, the per-output-channel BF16 scale applied once per output row after accumulation -- the routed exact BF16 lane with a weight decode, no datapath change (a golden change: the INT8 per-channel checkpoint)",
    "operand isolation and clock gating of idle lanes: groups outside an op's tiles, masked elements, idle lane copies",
    "accumulation width FP32 (the golden's order), products exact",
-   "at the design rate the die's non-MAC power leaves 1.262 pJ/MAC for autoregressive decoding and 0.682 pJ/MAC for the best DFlash configuration under the 474.6 W per-die liquid limit (negative: the die is over the limit with free MACs; the die's share of the HBM path binds)"
+   "at the design rate the die's non-MAC power leaves 1.322 pJ/MAC for autoregressive decoding and 0.682 pJ/MAC for the best DFlash configuration under the 474.6 W per-die liquid limit (negative: the die is over the limit with free MACs; the die's share of the HBM path binds)"
   ]
  },
  "power_production": {
@@ -3806,7 +3806,7 @@
    "weight_scale_bytes": 3105536,
    "weight_mac_format": "fp8",
    "ar_batch1": {
-    "step_cycles": 100169,
+    "step_cycles": 101037,
     "tokens_per_step": 1,
     "lane_copies_on": 0,
     "users": 1,
@@ -3877,11 +3877,11 @@
     },
     "rom": {
      "ar_batch1": {
-      "step_cycles": 100169,
+      "step_cycles": 101037,
       "tokens_per_step": 1,
-      "tokens_s": 10967.9,
-      "energy_per_token_mj": 130.284,
-      "die_energy_per_token_mj": 113.614,
+      "tokens_s": 10873.6,
+      "energy_per_token_mj": 130.44,
+      "die_energy_per_token_mj": 113.771,
       "stack_energy_per_token_mj": 16.67,
       "die_components_mj_per_token": {
        "mac_weights": 30.0783,
@@ -3891,9 +3891,9 @@
        "stream_unit": 0.9861,
        "hbm_controller_phy_io": 49.2364,
        "ucie_exchange": 0.0095,
-       "leakage": 9.9282,
-       "clock": 6.1047,
-       "hbm_idle": 2.0423
+       "leakage": 10.0143,
+       "clock": 6.1576,
+       "hbm_idle": 2.06
       },
       "die_static_w": {
        "leakage_w": 54.45,
@@ -3920,11 +3920,11 @@
         "die_w_at_cap": 474.6
        }
       },
-      "die_w": 623.1,
+      "die_w": 618.6,
       "dies": 2,
-      "stacks_w": 182.8,
-      "package_w": 1428.9,
-      "wall_w": 1772.5
+      "stacks_w": 181.3,
+      "package_w": 1418.4,
+      "wall_w": 1759.4
      },
      "dflash_block5": {
       "step_cycles": 167796,
@@ -4221,7 +4221,7 @@
      "basis": "saturated hardwired schedule, per die of the package: every lane copy MACs every cycle (BF16 lane energy), the die's 1,024-lane stream unit and ROM read path run every cycle, its 4 stacks at full raw bandwidth (the die's share of the HBM path on the die), clock on every mm2, leakage, stack idle; provisioned = 1.2 x (die + stacks) / (VR x PSU)"
     },
     "ratios_batch1": {
-     "hbm_over_rom": 10.12,
+     "hbm_over_rom": 10.1,
      "rom_over_hbm_capped_rate": {
       "liquid": 9.1123,
       "air": 9.9345
@@ -4237,11 +4237,11 @@
     },
     "rom": {
      "ar_batch1": {
-      "step_cycles": 100169,
+      "step_cycles": 101037,
       "tokens_per_step": 1,
-      "tokens_s": 10967.9,
-      "energy_per_token_mj": 96.494,
-      "die_energy_per_token_mj": 79.824,
+      "tokens_s": 10873.6,
+      "energy_per_token_mj": 96.651,
+      "die_energy_per_token_mj": 79.981,
       "stack_energy_per_token_mj": 16.67,
       "die_components_mj_per_token": {
        "mac_weights": 4.4652,
@@ -4251,9 +4251,9 @@
        "stream_unit": 0.9861,
        "hbm_controller_phy_io": 49.2364,
        "ucie_exchange": 0.0095,
-       "leakage": 9.9282,
-       "clock": 6.1047,
-       "hbm_idle": 2.0423
+       "leakage": 10.0143,
+       "clock": 6.1576,
+       "hbm_idle": 2.06
       },
       "die_static_w": {
        "leakage_w": 54.45,
@@ -4274,17 +4274,17 @@
         "reference": "gb200_nvl72",
         "die_limit_w": 474.6,
         "package_limit_w": 1200.0,
-        "capped_tokens_s": 10967.9,
+        "capped_tokens_s": 10873.6,
         "binds": false,
         "bound_by": "die",
-        "die_w_at_cap": 437.8
+        "die_w_at_cap": 434.8
        }
       },
-      "die_w": 437.8,
+      "die_w": 434.8,
       "dies": 2,
-      "stacks_w": 182.8,
-      "package_w": 1058.3,
-      "wall_w": 1312.8
+      "stacks_w": 181.3,
+      "package_w": 1050.9,
+      "wall_w": 1303.6
      },
      "dflash_block5": {
       "step_cycles": 167796,
@@ -4581,12 +4581,12 @@
      "basis": "saturated hardwired schedule, per die of the package: every lane copy MACs every cycle (BF16 lane energy), the die's 1,024-lane stream unit and ROM read path run every cycle, its 4 stacks at full raw bandwidth (the die's share of the HBM path on the die), clock on every mm2, leakage, stack idle; provisioned = 1.2 x (die + stacks) / (VR x PSU)"
     },
     "ratios_batch1": {
-     "hbm_over_rom": 13.31,
+     "hbm_over_rom": 13.29,
      "rom_over_hbm_capped_rate": {
-      "liquid": 12.4536,
+      "liquid": 12.3465,
       "air": 14.6392
      },
-     "b200_measured_over_rom": 8.1
+     "b200_measured_over_rom": 8.09
     }
    }
   },
