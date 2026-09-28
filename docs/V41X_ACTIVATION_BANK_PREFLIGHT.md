@@ -69,6 +69,14 @@ occupy 1.00 and 1.99 mm² respectively; each would drive roughly 81 or 41
 64-MAC slices.  Neither fanout, wire energy, nor timing is validated yet.
 The SRAM candidate is therefore a **bank and cluster boundary**, not an
 instruction to replicate one bank per 64 MACs.
+For the checkpoint-backed `wo_a` groups, output rows in a group share the
+same 4,096-element activation and can issue the same `q/plg` schedule in
+lockstep, so one SRAM read may feed a registered multicast tree.  That
+lockstep and single-read condition is not established for compressor,
+router, shared expert, multiple-user, or sparse-expert schedules; those may
+require separate banks or a different issue schedule.  Each registered
+multicast stage adds a fill/tail cycle and its weight-data path must be
+delayed by the same amount before an exact arithmetic claim.
 
 `ot_hdc_v41x_he_xslice` is a local 128-bit by 80-word SRAM slice for eight
 HCP lanes at the design HW=256 and PMAX=8.  A full HCP has 32 slices in each
