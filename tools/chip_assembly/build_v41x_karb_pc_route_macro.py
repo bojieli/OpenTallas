@@ -89,7 +89,11 @@ def main() -> None:
     lib_out = a.output_dir / f"{NAME}_tt.lib"
     lib_out.write_text(mc.liberty_text(s))
     stub_out = a.output_dir / f"{NAME}_bb.v"
-    stub_out.write_text(mc.verilog_stub(s))
+    stub = mc.verilog_stub(s).replace(
+        f"module {NAME} (",
+        f"module {NAME} #(parameter integer AW=28, TAGW=16, LENW=4, BEATW=4, DW=256) (",
+    )
+    stub_out.write_text(stub)
     manifest = {
         "schema_version": 1,
         "purpose": "geometry-only routed one-PC macro for composed placement/routing; no timing arcs",
