@@ -145,6 +145,31 @@ functional or timing result.
 measuring whether the die's upper layers relieve congestion. Its result
 cannot be transferred to the original case's narrower routing stack.
 
+The completed `karb_strip_fit` attempt is recorded as an **error** in
+`results/asap7_physical/v41x_die_karb_fit/physical.json`: synthesis and pin
+placement passed, but global placement exited during routability repair. Its
+17.28 µm strip is already 0.08 µm taller than the entire modeled 17.2 µm
+streamer-and-staging band, so this cannot be counted as a die fit. The
+four-channel M2–M9 bank case in
+`results/asap7_physical/v41x_die_karb_bank4_m9/physical.json` reached CTS
+with −623 ps setup WNS and failed global route (`GRT-0116` local congestion).
+The four-channel M2–M7 case remains a separate routing sensitivity.
+
+The arbiter now offers `PIPE_OUT=1`, a registered one-entry request output per
+pseudo-channel with ready/valid replacement in the acceptance cycle. A queued
+write counts as outstanding when its source handshakes, so write ownership
+remains exclusive until `h_wr_done`. The default remains the previous direct
+path. `results/rtl/v41x_karb_pipe_kv_gate.json` pins both modes of the reduced
+four-stack KV/index bench: 38 attention ops, no KV or index mismatches, and the
+generation-wrap case passing in each mode. This is a functional reduced bench,
+not a shipped-shape token or clock verdict. The registered case with the
+original 20%-clock I/O delays failed CTS hold repair at the maximum buffer
+count (`RSZ-0060`), recorded in
+`results/asap7_physical/v41x_die_karb_bank4_pipe_m9/physical.json`. A wider
+pin-window case characterizes internal register timing with I/O paths
+excluded; even a route pass there cannot establish the HBM PHY interface
+timing. The required 0.92 ns full-boundary route remains open.
+
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
 `test_v41x_die_pnr` checks every port width, the LEF pin count and window
