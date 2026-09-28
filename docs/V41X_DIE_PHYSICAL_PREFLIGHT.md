@@ -118,3 +118,33 @@ The route dependency order is:
 
 The reduced die smoke is a correctness gate for step 1. The analytical
 floorplan is a budget for step 3. Neither supplies a valid routed die today.
+
+## Physical implementation now under test
+
+`tools/v41x_die_pnr.py` defines a 12 mm by 30.24 µm arbiter strip beside one
+HBM3E PHY. It places each pseudo-channel's stack-side and index-side pins in
+the corresponding 375 µm PHY window. The source-pinned ORFS pin-placement
+record is `results/physical_abi3/asap7/chip/v41x_hbm_karb/strip_pin_placement.json`.
+It passed with all 40,332 pins, which removes the standalone square block's
+`PPL-0024` pin-count failure.
+Global placement and routing are still running; this is no setup, hold, DRC,
+power or frequency verdict. The strip's wide single K request still spans its
+length, so routed timing remains the deciding check.
+
+`ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
+and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
+`test_v41x_die_pnr` checks every port width, the LEF pin count and window
+alignment. Its assumed boundary timing does not measure an HBM3E controller or
+PHY. The previous one-request-channel macro remains incompatible.
+
+The same campaign builds a reduced-scale physical surrogate of the die:
+four adopted K arbiters and the adopted KV prefetch, four placed HBM interface
+abstracts, four connected physical tiles, 44 tile blockages, and registered
+spine-to-edge trunks. The tile uses the real block-dot/BF16 lane-group RTL and
+compiled ROM/SRAM macro views. Its one-bank ROM depth and broadcast credit
+path are physical study stand-ins. The die's synthetic sources, key streamer,
+collective and link abstracts cannot validate an exact token or full-shape
+capacity. The die case also uses one-quarter linear dimensions to bound the
+route experiment. A routed result from this case will characterize those
+explicit wires and cells only; the adopted full-size die and 48 active
+tiles still require their own hierarchy and signoff.
