@@ -35,12 +35,16 @@ and scales from local arrays in both arms. Its delta measures the reduced
 serial matrix-operation preload with two 32-byte sectors per code word. It is not a
 full-shape bandwidth ratio or chip throughput measurement.
 
-The newer reduced all-weight comparator sources the token's INT8 embedding
+The newer reduced matrix-plus-embedding comparator sources the token's INT8 embedding
 row and BF16 scale through HBM sectors before package start; the core's
 embedding ports then read only the row bank. Its standalone 5-sector row gate
 is source-pinned in `results/rtl/qwen_embed_row_hbm.json`. The all-weight
 package A/B verdict is pending; the historical matrix-only cycle delta above
 is not evidence for its cycles.
+The shipped layer emitter also stores o/down post-TP BF16 row scales in
+CROM. Those weight-scale ranges must be mapped to HBM before a full-shape
+comparator is described as entirely HBM sourced; they are not exercised by
+the reduced matrix-plus-embedding gate.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs
