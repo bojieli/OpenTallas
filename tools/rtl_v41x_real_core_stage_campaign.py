@@ -41,7 +41,13 @@ def main() -> None:
     ap.add_argument("--lint-only", action="store_true")
     ap.add_argument("--lat", type=int, default=142)
     ap.add_argument("--fp", choices=("rtl", "dpi"), default="dpi")
+    ap.add_argument("--replay-binary", type=Path,
+                    help="reuse an already pinned executable built from the same RTL and testbench")
+    ap.add_argument("--replay-origin", type=Path,
+                    help="original build result, required with --replay-binary")
     args = ap.parse_args()
+    if bool(args.replay_binary) != bool(args.replay_origin):
+        ap.error("--replay-binary and --replay-origin must be given together")
     scratch = args.scratch.resolve()
     scratch.mkdir(parents=True, exist_ok=True)
     core.PARAMS["fp"] = args.fp
@@ -70,8 +76,20 @@ def main() -> None:
              f"-I{ROOT / 'rtl/hdc/v41'}", *defines, str(core.VLT),
              *[str(p) for p in core.rtl_sources(True)], str(ENGINE), str(LINK),
              str(TB), str(DRIVER), "-CFLAGS", "-O1", "-j", "16"]
-    run(build, scratch / "build.log")
-    exe = obj / f"V{TOP}"
+    if args.replay_binary is None:
+        run(build, scratch / "build.log")
+        exe = obj / f"V{TOP}"
+    else:
+        exe = args.replay_binary.resolve()
+        origin = json.loads(args.replay_origin.read_text())
+        if origin["lat_cycles"] != args.lat or origin["binary_sha256"] != sha(exe):
+            raise RuntimeError("replay executable or link latency differs from original build")
+        generated = {"tools/rtl_v41x_real_core_stage_campaign.py",
+                     "tools/rtl_v41x_real_core_stage_images.py"}
+        for name, digest in origin["source_sha256"].items():
+            if name not in generated and manifest[name] != digest:
+                raise RuntimeError(f"replay RTL/build source changed: {name}")
+        build = None
     sim = [str(exe), f"+VEC={images}"]
     run(sim, scratch / "sim.log")
     log = (scratch / "sim.log").read_text()
@@ -79,7 +97,9 @@ def main() -> None:
             "lat_cycles": args.lat, "fp_simulation": args.fp,
             "source_sha256": manifest, "image_sha256": image_manifest["files"],
             "binary_sha256": sha(exe), "sim_log_sha256": sha(scratch / "sim.log"),
-            "build_command": build, "sim_command": sim}
+            "build_command": build, "replay_binary": str(exe) if args.replay_binary else None,
+            "replay_origin_sha256": sha(args.replay_origin) if args.replay_origin else None,
+            "sim_command": sim}
     (scratch / "result.json").write_text(json.dumps(pins, indent=2, sort_keys=True) + "\n")
     print(json.dumps({"status": pins["status"], "result": str(scratch / "result.json")}))
     if pins["status"] != "pass":

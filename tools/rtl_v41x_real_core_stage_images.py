@@ -24,12 +24,15 @@ def write_lines(path: Path, items: list[str]) -> str:
 
 def build(out: Path) -> dict:
     out.mkdir(parents=True, exist_ok=True)
-    init = [bits(float((j % 8) + 1)) for j in range(WORDS * LANES)]
+    # Give every word a distinct exact integer payload so the oracle catches
+    # word reordering as well as dropped or duplicated records.
+    values = [(j // LANES) * 16 + (j % 8) + 1 for j in range(WORDS * LANES)]
+    init = [bits(float(v)) for v in values]
     # Every rank's partial is finite and exactly representable in binary32.
     part = [[init[j] if rank == 0 else bits(float(rank)) for j in range(WORDS * LANES)]
             for rank in range(4)]
-    expect = [bits(float((j % 8) + 7)) for j in range(WORDS * LANES)]
-    consumed = [bits(float((j % 8) + 8)) for j in range(WORDS * LANES)]
+    expect = [bits(float(v + 6)) for v in values]
+    consumed = [bits(float(v + 7)) for v in values]
     producer = I.encode(unit=I.UNIT_SU, su_nout=1, su_nin=WORDS * LANES,
                         a_base=IN_BASE, a_si=1, dst=I.DST_VM, o_base=PRODUCED, o_si=1,
                         su_vec=I.VEC_I)
