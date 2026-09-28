@@ -169,6 +169,8 @@ DT = "results/speculative/dflash_step_timing.json"
 GG = "results/gpu/blackwell_gather_designs.json"
 MT = "results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json"
 DFT = "results/dft/summary.json"
+ECK = "results/physical_abi3/asap7/signoff/energy_common_kv.json"
+HDCP = "results/physical_abi3/asap7/hdc"
 PF = "results/arch/prefill_ingest.json"
 # Prefill / ingest / TTFT anchors (§6.7, §6.9, §6.11, §8.4 Table 8-T1, §8.7).
 S67CAP = "In the HBM capacity model, six 22.5 GB stacks hold 201 users"
@@ -441,11 +443,14 @@ HEADLINES: list[dict[str, Any]] = [
     dict(id="qwen.h200_fp8", section="Qwen3-8B ROM / HBM", cls="model",
          claim="H200 FP8 Qwen3-8B batch-1, calibrated to NVIDIA NIM", binding=None,
          unbound="results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main "
-                 "(last committed at b42f8606 on a side branch); no tracked record holds 217",
+                 "(last committed at b42f8606 on a side branch, where it holds 217.408); its tool "
+                 "tools/iso_area_qwen3.py does not run on main (qwen3_budget.json no longer carries "
+                 "dflash.tau_central), so it waits on the roofline re-baseline's iso-area port",
          printed=[at("Serving systems and hardware roadmaps, however", "217 on an H200 at FP8")]),
     dict(id="qwen.hbm_class_ceiling", section="Qwen3-8B ROM / HBM", cls="model",
          claim="HBM-class ceiling, (weights + KV) over six-stack bandwidth, and ROM / ceiling", binding=None,
-         unbound="bound only in results/roofline/iso_area/qwen3_8b.json, which is not on main",
+         unbound="bound only in results/roofline/iso_area/qwen3_8b.json (contexts.8192.hbm_roofline_tok_s.w4 "
+                 "= 1532.51 at b42f8606), which is not on main (see qwen.h200_fp8)",
          printed=[at("HBM-class ceiling: (weights + KV)", "1,533"),
                   at("HBM-class ceiling: (weights + KV)", "5.8×")]),
     # ---------------------------------------------------------------- Qwen3 energy
@@ -527,10 +532,14 @@ HEADLINES: list[dict[str, Any]] = [
          binding=B(QB, f"{QPB}.rom.batch128.energy_per_token_mj"),
          printed=[at("At large batch, energy per token is KV bytes", "88.8 vs 95.0 mJ")]),
     dict(id="qwen.energy_b128_table10", section="Qwen3-8B batching", cls="model",
-         claim="Table 10-1: Qwen3-8B energy per token at 128 users, ROM vs HBM (mJ)", binding=None,
-         unbound="no tracked record holds 83.1 or 89.2; Table 8-26 prints 88.8 vs 95.0 for the same "
-                 "measure from results/arch/qwen3_budget.json -- the two tables disagree",
-         printed=[at("Energy per token at 128 users (V4.1: saturated, the users each machine holds)", "83.1 vs 89.2 mJ")]),
+         claim="Table 10-1: Qwen3-8B ROM energy per token at 128 users, scenario B (mJ)",
+         binding=B(QB, f"{QPB}.rom.batch128.energy_per_token_mj"),
+         printed=[at("Energy per token at 128 users (V4.1: saturated, the users each machine holds)", "88.8 vs 95.0 mJ")]),
+    dict(id="qwen.energy_b128_hbm", section="Qwen3-8B batching", cls="model",
+         claim="Qwen3-8B same core on HBM (ROM weight format) energy per token at 128 users, scenario B (mJ)",
+         binding=B(QB, f"{QPB}.hbm_comparator.rom35_batch128.energy_per_token_mj"),
+         printed=[at("At large batch, energy per token is KV bytes", "88.8 vs 95.0 mJ", pick=1),
+                  at("Energy per token at 128 users (V4.1: saturated, the users each machine holds)", "88.8 vs 95.0 mJ", pick=1)]),
     # ---------------------------------------------------------------- quality
     dict(id="quality.contract_ppl_2k", section="Qwen3-8B quality", cls="measured-quality",
          claim="Arithmetic contract + FP8 KV: WikiText-2 perplexity change at 2K vs vendor BF16 (%)",
@@ -832,26 +841,24 @@ HEADLINES: list[dict[str, Any]] = [
          binding=B(GG, "summary_table[design=2d_ll16_rep8].fp32_16KiB_min_ns"),
          printed=[at("GPU all-SM boundary, vector delivered", "1,004–1,151 ns", pick=1)]),
     dict(id="sync.handoff_cycles", section="Synchronisation", cls="measured-RTL",
-         claim="OpenTallas on-chip dependent handoff (cycles)", binding=None,
-         unbound="results/arch/sync_cost_table.json carries 4.8 ns and the phrase '5-cycle' only as note "
-                 "text; no record field holds the cycle count",
+         claim="OpenTallas on-chip dependent handoff (cycles)",
+         binding=B(SC, "rows[0].ot.cycles"),
          printed=[at(ABS, "a dependent handoff costs 5 cycles in RTL")]),
     # ---------------------------------------------------------------- energy cross-check
     dict(id="energy.common_kv_ratio", section="Energy cross-check", cls="model",
-         claim="Reduced Qwen3 step, common HBM KV: energy HBM weights / ROM weights (derived)", binding=None,
-         unbound="results/physical_abi3/asap7/signoff/energy_common_kv.json, the record Figures 8-1/8-2 cite, is "
-                 "not on main (only on a side branch at 66434aa3); no tracked record holds 5.7 or 58.82/335.35",
+         claim="Reduced Qwen3 step, common HBM KV: energy HBM weights / ROM weights (derived)",
+         binding=B(ECK, "hbm_over_rom"),
          printed=[at(ABS, "gives a derived 5.7× energy ratio"),
                   at("Energy per step, same core: HBM ÷ ROM (reduced Qwen3, ASAP7)", "5.7×"),
                   at(S84E, "(5.7×)"),
                   at(S101, "gives 5.7× lower energy")]),
     dict(id="energy.common_kv_rom_uj", section="Energy cross-check", cls="model",
-         claim="Reduced Qwen3 step energy with ROM weights, common HBM KV (uJ)", binding=None,
-         unbound="energy_common_kv.json not on main (see energy.common_kv_ratio)",
+         claim="Reduced Qwen3 step energy with ROM weights, common HBM KV (uJ)",
+         binding=B(ECK, "rom_common_hbm_kv_j", scale=1e6),
          printed=[at(S84E, "the ROM-weight step is 58.82 µJ")]),
     dict(id="energy.common_kv_hbm_uj", section="Energy cross-check", cls="model",
-         claim="Reduced Qwen3 step energy with HBM weights, common HBM KV (uJ)", binding=None,
-         unbound="energy_common_kv.json not on main (see energy.common_kv_ratio)",
+         claim="Reduced Qwen3 step energy with HBM weights, common HBM KV (uJ)",
+         binding=B(ECK, "hbm_comparator_j", scale=1e6),
          printed=[at(S84E, "versus 335.35 µJ")]),
     dict(id="energy.mac_pj", section="Energy cross-check", cls="measured-physical",
          claim="Routed matrix-engine energy per MAC in the reduced step (pJ, ASAP7)",
@@ -860,9 +867,9 @@ HEADLINES: list[dict[str, Any]] = [
                   at("Reduced Qwen3 routed matrix-engine energy, pJ per MAC (ASAP7)", "3.97")]),
     # ---------------------------------------------------------------- RTL gates
     dict(id="rtl.qwen_reduced_token", section="RTL gates", cls="measured-RTL",
-         claim="Reduced Qwen3 token, bit-exact in logits, vector memory and KV (cycles)", binding=None,
-         unbound="no tracked record under results/ holds 24,992 cycles",
-         printed=[at("Reduced Qwen3 token, bit-exact in logits", "24,992 cycles")]),
+         claim="Reduced Qwen3 token, bit-exact in logits, vector memory and KV (cycles)",
+         binding=B("results/rtl/hdc_decode_campaign.json", "single_step.cycles"),
+         printed=[at("Reduced Qwen3 token, bit-exact in logits", "24,440 cycles")]),
     dict(id="rtl.v41_reduced_token", section="RTL gates", cls="measured-RTL",
          claim="Reduced DeepSeek-V4.1 token, 40 layers, bit-exact (cycles)",
          binding=B("results/rtl/hdc_v41_decode_campaign.json", "single_step.cycles"),
@@ -970,26 +977,35 @@ HEADLINES: list[dict[str, Any]] = [
          claim="Lowest stuck-at test coverage over the DFT blocks (%)",
          binding=AGG("min", DFT, "blocks.*.atpg.test_coverage", scale=100),
          printed=[at("Table 7-2. Stuck-at test coverage", "≥99.6%")]),
+    # Table 8-4 routed Fmax: each record's design.fmax_hz, single-clock routes (clock_count 1, one core_clk),
+    # so the minimum per-clock Fmax (tools/run_abi3_physical.conservative_fmax_metrics) equals ORFS's aggregate.
     dict(id="phys.engram_fmax", section="Physical closure", cls="measured-physical",
-         claim="V4.1 Engram gather slice / assembler routed Fmax (MHz)", binding=None,
-         unbound="no tracked record field holds 1,656 or 1,179 MHz (the route directories carry slack, "
-                 "not a published Fmax field)",
+         claim="V4.1 Engram gather slice routed Fmax at 0.9 ns (MHz)",
+         binding=B(f"{HDCP}/v41x/ot_hdc_v41x_egather_slice/physical.json", "design.fmax_hz", scale=1e-6),
          printed=[at("V4.1 Engram gather slice / assembler", "1,656 / 1,179 MHz")]),
+    dict(id="phys.engram_asm_fmax", section="Physical closure", cls="measured-physical",
+         claim="V4.1 Engram gather assembler routed Fmax at 0.9 ns (MHz)",
+         binding=B(f"{HDCP}/v41x/ot_hdc_v41x_egather_asm/physical.json", "design.fmax_hz", scale=1e-6),
+         printed=[at("V4.1 Engram gather slice / assembler", "1,656 / 1,179 MHz", pick=1)]),
     dict(id="phys.indexer_tree_fmax", section="Physical closure", cls="measured-physical",
-         claim="V4.1 indexer output tree routed Fmax (MHz)", binding=None,
-         unbound="no tracked record field holds 1,153 MHz",
+         claim="V4.1 indexer output tree (ot_hdc_v41x_idx_tail) routed Fmax at 0.9 ns (MHz)",
+         binding=B(f"{HDCP}/v41x/ot_hdc_v41x_idx_tail/physical.json", "design.fmax_hz", scale=1e-6),
          printed=[at("V4.1 indexer output tree", "1,153 MHz")]),
     dict(id="phys.select_ctrl_fmax", section="Physical closure", cls="measured-physical",
-         claim="V4.1 select control routed Fmax (MHz)", binding=None,
-         unbound="no tracked record field holds 1,094 MHz",
-         printed=[at("V4.1 select control", "1,094 MHz")]),
+         claim="V4.1 select control (ot_hdc_tselect, W=16) routed Fmax at 0.9 ns, not closed (MHz)",
+         binding=B(f"{HDCP}/v41/ot_hdc_tselect_w16/physical.json", "design.fmax_hz", scale=1e-6),
+         printed=[at("V4.1 select control", "1,087 MHz")]),
+    dict(id="phys.select_ctrl_wns", section="Physical closure", cls="measured-physical",
+         claim="V4.1 select control routed setup WNS at 0.9 ns (ps)",
+         binding=B(f"{HDCP}/v41/ot_hdc_tselect_w16/physical.json", "design.setup_wns_ns", scale=1e3),
+         printed=[at("V4.1 select control", "−20 ps at 0.9 ns")]),
     dict(id="phys.host_if_fmax", section="Physical closure", cls="measured-physical",
-         claim="Shared host interface routed Fmax (MHz)", binding=None,
-         unbound="no tracked record field holds 1,135 MHz for the host interface",
+         claim="Shared host interface routed Fmax at 0.9 ns (MHz)",
+         binding=B("results/physical_abi3/asap7/host/ot_host_if/physical.json", "design.fmax_hz", scale=1e-6),
          printed=[at("Shared host interface", "1,135 MHz")]),
     dict(id="phys.lane_copy_fmax", section="Physical closure", cls="measured-physical",
-         claim="Qwen3 lane copy, 16 lanes, routed Fmax (GHz)", binding=None,
-         unbound="no tracked record field holds the lane copy's ~1.2 GHz",
+         claim="Qwen3 lane copy, 16 lanes, routed Fmax at 0.9 ns (GHz)",
+         binding=B(f"{HDCP}/ot_hdc_lane_copy/physical.json", "design.fmax_hz", scale=1e-9),
          printed=[at("Qwen3 lane copy, 16 lanes", "≈1.2 GHz")]),
     # ---------------------------------------------------------------- prefill, KV ingest, time to first token
     # GPU prefill for every prompt; the decode chips ingest the KV (atlas §6.7, §6.9, §6.11, §8.4, §8.7).

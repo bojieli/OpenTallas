@@ -47,7 +47,9 @@
     "refs": [
      "r-rtl-tp"
     ],
-    "note": "5-cycle dependent issue at 1.034 GHz (routed units)"
+    "note": "5-cycle dependent issue at 1.034 GHz (routed units)",
+    "cycles": 5,
+    "clock_hz": 1034000000.0
    },
    "ratio": 77
   },

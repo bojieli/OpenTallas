@@ -161,9 +161,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 1293: the atlas's prefill, KV-ingest and time-to-first-token figures
     # (§6.7, §6.9, §6.11, §8.4 Table 8-T1, §8.7) bind to
     # results/arch/prefill_ingest.json and the budget records (118 -> 182).
-    # 1312: docs/ARCH_QWEN3_O4_RTL_SPEC.md binds the O4 performance requirements, die split and INT8 numerics
-    # audit (19) to results/arch/qwen3_o4_rtl_gaps.json.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1312
+    # The O4 RTL audit adds 19 bindings. The headline update adds 14 more
+    # (common-KV energy, routed Fmax, handoff, Qwen token and 128-user rows).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1326
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

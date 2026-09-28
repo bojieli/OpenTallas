@@ -6,11 +6,11 @@ This appendix answers finding 6 and recommendation 6 of `docs/ARCHITECTURE_ATLAS
 
 ## B.1 Coverage
 
-- Headlines enumerated: 200 (388 printed occurrences in the atlas).
-- Bound to a record: 187, of which 5 are a ratio or an aggregate of record fields computed here. Unbound: 13 (Section B.5).
-- Printed occurrences that agree with their record under the written-precision rule: 371.
+- Headlines enumerated: 203 (392 printed occurrences in the atlas).
+- Bound to a record: 201, of which 5 are a ratio or an aggregate of record fields computed here. Unbound: 2 (Section B.5).
+- Printed occurrences that agree with their record under the written-precision rule: 389.
 - Headlines with a sensitivity range taken from the record's own variants: 26.
-- Records: 29, of which 20 pin their sources.
+- Records: 37, of which 27 pin their sources.
 
 Written-precision rule (from `tools/check_prose_figures.py`): a printed figure agrees with its record when they differ by at most half of the last digit printed, so `2.3` agrees with 2.286 and `8,185` with 8,184.9.
 
@@ -19,10 +19,10 @@ Written-precision rule (from `tools/check_prose_figures.py`): a printed figure a
 | Class | Headlines | Meaning |
 |---|---|---|
 | measured-RTL | 21 | Observed in an RTL simulation of this repository's RTL (Verilator or Icarus) against a golden; reduced vehicles unless stated. |
-| measured-physical | 11 | Read from an ASAP7 synthesis, place-and-route or DFT run of this repository's RTL (predictive 7 nm PDK; not silicon). |
+| measured-physical | 13 | Read from an ASAP7 synthesis, place-and-route or DFT run of this repository's RTL (predictive 7 nm PDK; not silicon). |
 | measured-quality | 8 | Measured model quality or acceptance on real weights, on a GPU, under an emulation of the deployment arithmetic. |
 | measured-gpu | 6 | Measured by this project on GPU hardware (microbenchmarks, application runs). |
-| model | 149 | An analytical, specification, calibrated or design-point model evaluated by a repository tool; RTL-calibrated where stated. Not a measurement of a chip. |
+| model | 150 | An analytical, specification, calibrated or design-point model evaluated by a repository tool; RTL-calibrated where stated. Not a measurement of a chip. |
 | third-party | 5 | A figure published by someone else and carried into a record as a cited input. |
 
 No headline in the atlas is a measurement of fabricated silicon. Every rate of a full-size chip is `model`; the RTL and physical classes are reduced vehicles, blocks and tiles.
@@ -120,7 +120,8 @@ Sensitivity variants:
 | `qwen.total_throughput` | Qwen3-8B reticle total throughput from batch 2 (KV-stream-bound) | 8,941 | 2 | 8940.7 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s` |  | <!-- figure: 8,941 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s" name="qwen.total_throughput" -->
 | `qwen.hbm_batch128` | Same core on HBM at 128 users, total throughput | 8,573 | 1 | 8573.5 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch128.tokens_s` |  | <!-- figure: 8,573 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch128.tokens_s" name="qwen.hbm_batch128" -->
 | `qwen.energy_b128_rom` | Qwen3-8B ROM energy per token at 128 users, scenario B (mJ) | 88.8 | 1 | 88.839 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.batch128.energy_per_token_mj` |  | <!-- figure: 88.8 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.batch128.energy_per_token_mj" name="qwen.energy_b128_rom" -->
-| `qwen.energy_b128_table10` | Table 10-1: Qwen3-8B energy per token at 128 users, ROM vs HBM (mJ) | 83.1 | 1 | unbound | model | — |  |
+| `qwen.energy_b128_table10` | Table 10-1: Qwen3-8B ROM energy per token at 128 users, scenario B (mJ) | 88.8 | 1 | 88.839 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.batch128.energy_per_token_mj` |  | <!-- figure: 88.8 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.batch128.energy_per_token_mj" name="qwen.energy_b128_table10" -->
+| `qwen.energy_b128_hbm` | Qwen3-8B same core on HBM (ROM weight format) energy per token at 128 users, scenario B (mJ) | 95.0 | 2 | 95.034 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch128.energy_per_token_mj` |  | <!-- figure: 95.0 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch128.energy_per_token_mj" name="qwen.energy_b128_hbm" -->
 
 ### Qwen3-8B quality
 
@@ -227,22 +228,22 @@ Sensitivity variants:
 | `sync.per_token` | Synchronisation per V4.1 token at 1M, GPU / OpenTallas, same graph | 17 | 2 | 17 | model | `results/arch/sync_cost_table.json#rows[6].ratio` |  | <!-- figure: 17 src="results/arch/sync_cost_table.json#rows[6].ratio" name="sync.per_token" -->
 | `sync.gpu_boundary_low` | GPU all-SM boundary, vector delivered, best design (ns) | 1,004 | 1 | 1003.5 | measured-gpu | `results/gpu/blackwell_gather_designs.json#summary_table[design=3d_sharded1_rep8].bf16_8KiB_min_ns` |  | <!-- figure: 1,004 src="results/gpu/blackwell_gather_designs.json#summary_table[design=3d_sharded1_rep8].bf16_8KiB_min_ns" name="sync.gpu_boundary_low" -->
 | `sync.gpu_boundary_high` | GPU all-SM boundary, vector delivered, flag-in-data design (ns) | 1,151 | 1 | 1151 | measured-gpu | `results/gpu/blackwell_gather_designs.json#summary_table[design=2d_ll16_rep8].fp32_16KiB_min_ns` |  | <!-- figure: 1,151 src="results/gpu/blackwell_gather_designs.json#summary_table[design=2d_ll16_rep8].fp32_16KiB_min_ns" name="sync.gpu_boundary_high" -->
-| `sync.handoff_cycles` | OpenTallas on-chip dependent handoff (cycles) | 5 | 1 | unbound | measured-RTL | — |  |
+| `sync.handoff_cycles` | OpenTallas on-chip dependent handoff (cycles) | 5 | 1 | 5 | measured-RTL | `results/arch/sync_cost_table.json#rows[0].ot.cycles` |  | <!-- figure: 5 src="results/arch/sync_cost_table.json#rows[0].ot.cycles" name="sync.handoff_cycles" -->
 
 ### Energy cross-check
 
 | Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
 |---|---|---|---|---|---|---|---|
-| `energy.common_kv_ratio` | Reduced Qwen3 step, common HBM KV: energy HBM weights / ROM weights (derived) | 5.7 | 4 | unbound | model | — |  |
-| `energy.common_kv_rom_uj` | Reduced Qwen3 step energy with ROM weights, common HBM KV (uJ) | 58.82 | 1 | unbound | model | — |  |
-| `energy.common_kv_hbm_uj` | Reduced Qwen3 step energy with HBM weights, common HBM KV (uJ) | 335.35 | 1 | unbound | model | — |  |
+| `energy.common_kv_ratio` | Reduced Qwen3 step, common HBM KV: energy HBM weights / ROM weights (derived) | 5.7 | 4 | 5.70131 | model | `results/physical_abi3/asap7/signoff/energy_common_kv.json#hbm_over_rom` |  | <!-- figure: 5.7 src="results/physical_abi3/asap7/signoff/energy_common_kv.json#hbm_over_rom" name="energy.common_kv_ratio" -->
+| `energy.common_kv_rom_uj` | Reduced Qwen3 step energy with ROM weights, common HBM KV (uJ) | 58.82 | 1 | 58.8197 | model | `results/physical_abi3/asap7/signoff/energy_common_kv.json#rom_common_hbm_kv_j x 1e+06` |  | <!-- figure: 58.82 src="results/physical_abi3/asap7/signoff/energy_common_kv.json#rom_common_hbm_kv_j" scale="1e+06" name="energy.common_kv_rom_uj" -->
+| `energy.common_kv_hbm_uj` | Reduced Qwen3 step energy with HBM weights, common HBM KV (uJ) | 335.35 | 1 | 335.349 | model | `results/physical_abi3/asap7/signoff/energy_common_kv.json#hbm_comparator_j x 1e+06` |  | <!-- figure: 335.35 src="results/physical_abi3/asap7/signoff/energy_common_kv.json#hbm_comparator_j" scale="1e+06" name="energy.common_kv_hbm_uj" -->
 | `energy.mac_pj` | Routed matrix-engine energy per MAC in the reduced step (pJ, ASAP7) | 3.97 | 2 | 3.97436 | measured-physical | `results/arch/power_scenarios.json#mac_pj.A_measured_implementation.qwen3_w4a8` |  | <!-- figure: 3.97 src="results/arch/power_scenarios.json#mac_pj.A_measured_implementation.qwen3_w4a8" name="energy.mac_pj" -->
 
 ### RTL gates
 
 | Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
 |---|---|---|---|---|---|---|---|
-| `rtl.qwen_reduced_token` | Reduced Qwen3 token, bit-exact in logits, vector memory and KV (cycles) | 24,992 | 1 | unbound | measured-RTL | — |  |
+| `rtl.qwen_reduced_token` | Reduced Qwen3 token, bit-exact in logits, vector memory and KV (cycles) | 24,440 | 1 | 24440 | measured-RTL | `results/rtl/hdc_decode_campaign.json#single_step.cycles` |  | <!-- figure: 24,440 src="results/rtl/hdc_decode_campaign.json#single_step.cycles" name="rtl.qwen_reduced_token" -->
 | `rtl.v41_reduced_token` | Reduced DeepSeek-V4.1 token, 40 layers, bit-exact (cycles) | 344,109 | 1 | 344109 | measured-RTL | `results/rtl/hdc_v41_decode_campaign.json#single_step.cycles` |  | <!-- figure: 344,109 src="results/rtl/hdc_v41_decode_campaign.json#single_step.cycles" name="rtl.v41_reduced_token" -->
 | `rtl.egather_bw` | Engram per-bank gather, measured bytes per cycle | 32.9 | 2 | 32.94 | measured-RTL | `results/rtl/hdc_v41x_egather_campaign.json#spec.measured_bytes_per_cycle` |  | <!-- figure: 32.9 src="results/rtl/hdc_v41x_egather_campaign.json#spec.measured_bytes_per_cycle" name="rtl.egather_bw" -->
 | `rtl.egather_required` | Engram gather requirement (bytes per cycle) | 13.7 | 1 | 13.7328 | model | `results/rtl/hdc_v41x_egather_campaign.json#spec.required_bytes_per_cycle` |  | <!-- figure: 13.7 src="results/rtl/hdc_v41x_egather_campaign.json#spec.required_bytes_per_cycle" name="rtl.egather_required" -->
@@ -273,11 +274,13 @@ Sensitivity variants:
 | `phys.matvec_tile_cells` | Reduced matvec tile: standard-cell area (um2) | 12,217.6 | 1 | 12217.6 | measured-physical | `results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json#place_and_route.metrics.standard_cell_area_um2` |  | <!-- figure: 12,217.6 src="results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json#place_and_route.metrics.standard_cell_area_um2" name="phys.matvec_tile_cells" -->
 | `phys.matvec_tile_macros` | Reduced matvec tile: macro area (um2) | 63,846.9 | 1 | 63846.9 | measured-physical | `results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json#place_and_route.metrics.macro_area_um2` |  | <!-- figure: 63,846.9 src="results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json#place_and_route.metrics.macro_area_um2" name="phys.matvec_tile_macros" -->
 | `phys.dft_coverage` | Lowest stuck-at test coverage over the DFT blocks (%) | 99.6 | 1 | 99.5987 | measured-physical | `min(results/dft/summary.json#blocks.*.atpg.test_coverage) x 100` |  |
-| `phys.engram_fmax` | V4.1 Engram gather slice / assembler routed Fmax (MHz) | 1,656 | 1 | unbound | measured-physical | — |  |
-| `phys.indexer_tree_fmax` | V4.1 indexer output tree routed Fmax (MHz) | 1,153 | 1 | unbound | measured-physical | — |  |
-| `phys.select_ctrl_fmax` | V4.1 select control routed Fmax (MHz) | 1,094 | 1 | unbound | measured-physical | — |  |
-| `phys.host_if_fmax` | Shared host interface routed Fmax (MHz) | 1,135 | 1 | unbound | measured-physical | — |  |
-| `phys.lane_copy_fmax` | Qwen3 lane copy, 16 lanes, routed Fmax (GHz) | 1.2 | 1 | unbound | measured-physical | — |  |
+| `phys.engram_fmax` | V4.1 Engram gather slice routed Fmax at 0.9 ns (MHz) | 1,656 | 1 | 1656.24 | measured-physical | `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_slice/physical.json#design.fmax_hz x 1e-06` |  | <!-- figure: 1,656 src="results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_slice/physical.json#design.fmax_hz" scale="1e-06" name="phys.engram_fmax" -->
+| `phys.engram_asm_fmax` | V4.1 Engram gather assembler routed Fmax at 0.9 ns (MHz) | 1,179 | 1 | 1178.59 | measured-physical | `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_asm/physical.json#design.fmax_hz x 1e-06` |  | <!-- figure: 1,179 src="results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_asm/physical.json#design.fmax_hz" scale="1e-06" name="phys.engram_asm_fmax" -->
+| `phys.indexer_tree_fmax` | V4.1 indexer output tree (ot_hdc_v41x_idx_tail) routed Fmax at 0.9 ns (MHz) | 1,153 | 1 | 1152.98 | measured-physical | `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_tail/physical.json#design.fmax_hz x 1e-06` |  | <!-- figure: 1,153 src="results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_tail/physical.json#design.fmax_hz" scale="1e-06" name="phys.indexer_tree_fmax" -->
+| `phys.select_ctrl_fmax` | V4.1 select control (ot_hdc_tselect, W=16) routed Fmax at 0.9 ns, not closed (MHz) | 1,087 | 1 | 1087.1 | measured-physical | `results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json#design.fmax_hz x 1e-06` |  | <!-- figure: 1,087 src="results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json#design.fmax_hz" scale="1e-06" name="phys.select_ctrl_fmax" -->
+| `phys.select_ctrl_wns` | V4.1 select control routed setup WNS at 0.9 ns (ps) | -20 | 1 | -19.8823 | measured-physical | `results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json#design.setup_wns_ns x 1000` |  | <!-- figure: -20 src="results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json#design.setup_wns_ns" scale="1000" name="phys.select_ctrl_wns" -->
+| `phys.host_if_fmax` | Shared host interface routed Fmax at 0.9 ns (MHz) | 1,135 | 1 | 1135.07 | measured-physical | `results/physical_abi3/asap7/host/ot_host_if/physical.json#design.fmax_hz x 1e-06` |  | <!-- figure: 1,135 src="results/physical_abi3/asap7/host/ot_host_if/physical.json#design.fmax_hz" scale="1e-06" name="phys.host_if_fmax" -->
+| `phys.lane_copy_fmax` | Qwen3 lane copy, 16 lanes, routed Fmax at 0.9 ns (GHz) | 1.2 | 1 | 1.20059 | measured-physical | `results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json#design.fmax_hz x 1e-09` |  | <!-- figure: 1.2 src="results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json#design.fmax_hz" scale="1e-09" name="phys.lane_copy_fmax" -->
 
 ### Prefill, ingest and time to first token
 
@@ -380,6 +383,8 @@ Each record is reproduced by its command, from the sources it pins. `current` pi
 | `results/arch/v41_hbm_switched.json` | yes | `python3 tools/arch_hbm_switched_v41.py` | none | — |
 | `results/arch/sync_cost_table.json` | yes | `python3 tools/sync_cost_table.py` | current 7 | — |
 | `results/gpu/blackwell_gather_designs.json` | yes | `./gather_designs 500 21 64 16  (steps, trials, GEMVs per trial, weight matrices)` | none | — |
+| `results/physical_abi3/asap7/signoff/energy_common_kv.json` | yes | `not recorded` | none | — |
+| `results/rtl/hdc_decode_campaign.json` | yes | `not recorded` | current 28 | — |
 | `results/rtl/hdc_v41_decode_campaign.json` | yes | `python3 tools/rtl_hdc_v41_decode_campaign.py  (inferred; the record names no command)` | current 21, stale 15 | — |
 | `results/rtl/hdc_v41x_egather_campaign.json` | yes | `python3 tools/rtl_hdc_v41x_egather_campaign.py  (inferred; the record names no command)` | current 6, stale 2 | — |
 | `results/rtl/hdc_v41x_sel_campaign.json` | yes | `python3 tools/rtl_hdc_v41x_sel_campaign.py  (inferred; the record names no command)` | current 2, stale 1 | — |
@@ -397,6 +402,12 @@ Each record is reproduced by its command, from the sources it pins. `current` pi
 | `results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json` | yes | `python3 tools/rtl_hdc_v41x_array_campaign.py --all-unit --only b2_p2p --scratch /tmp/codex_v41x_array_allunit/run --output /tmp/codex_v41x_array_allunit/result.json` | current 74, stale 10 | 39a0cd41 (outside HEAD), 8235c4fe |
 | `results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json` | yes | `python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_matvec_memory_tile --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv --source rtl/hdc/ot_hdc_fpu.sv --source rtl/proto/ot_fp32_add_rne_pipe.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_matvec.sv --source rtl/dft/ot_rom_secded_dec.sv --source physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_bb.v --source physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v --source rtl/hdc/physical/ot_hdc_matvec_memory_tile.sv --clock-period-ns 1.5 --stages pnr --corner TT --core-utilization 15 --place-density 0.55 --macro-view ot_rom_8192x266_m8=physical/asap7_memory_macros/ot_rom_8192x266_m8 --macro-view ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 --macro-place-halo 5 5 --output results/physical_hdc/asap7/matvec_memory_tile_ingress/physical.json --nickname-tag hdc_mem_tile_ingress --max-transition-ns --slew-margin-percent 60 --nickname-tag hdc_mem_tile_ingress_slew60 --output results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json` | none | d9364a8e (outside HEAD) |
 | `results/dft/summary.json` | yes | `python3 tools/dft/summarize.py  (inferred; the record names no command)` | none | — |
+| `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_slice/physical.json` | yes | `python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_v41x_egather_slice --clock-period-ns 0.9 --io-delay-fraction 0 --false-path-from rst_n --slew-margin-percent 40 --stages synth,pnr --source rtl/hdc/v41x/ot_hdc_v41x_egather.sv --false-path-io --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/hx_egs3/physical.json --keep-workdir /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/hx_egs3/work --force` | current 2 | 0dc7a5b9 |
+| `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_asm/physical.json` | yes | `python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_v41x_egather_asm --clock-period-ns 0.9 --io-delay-fraction 0 --false-path-from rst_n --slew-margin-percent 40 --stages synth,pnr --source rtl/hdc/v41x/ot_hdc_v41x_egather.sv --false-path-io --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/hx_ega3/physical.json --keep-workdir /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/hx_ega3/work --force` | current 2 | 0dc7a5b9 |
+| `results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_tail/physical.json` | yes | `python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_v41x_idx_tail --source rtl/hdc/v41x/ot_hdc_v41x_idx.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_delay.sv --param NCH=4 --param NKT=1 --clock-period-ns 0.9 --io-delay-fraction 0 --false-path-from rst_n --stages synth,pnr --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/tail1/physical.json --force` | current 2 | eee9623b |
+| `results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json` | yes | `python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_tselect --source rtl/hdc/v41/ot_hdc_tselect.sv --param W=16 --param VW=16 --param IW=16 --param K=512 --param AW=12 --clock-period-ns 0.9 --io-delay-fraction 0 --slew-margin-percent 20 --stages synth,pnr --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/phys_w16/physical.json` | current 2 | a732dfa4 |
+| `results/physical_abi3/asap7/host/ot_host_if/physical.json` | yes | `python3 tools/run_abi3_physical.py --view asap7 --top ot_host_if --source rtl/host/ot_host_if.sv --clock-period-ns 0.9 --false-path-io --slew-margin-percent 40 --stages synth,pnr --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/phys_host2/physical.json --force` | current 2 | 4710e831 |
+| `results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json` | yes | `python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_lane_copy --source-root /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/mp/src --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv --source rtl/hdc/ot_hdc_fpu.sv --source rtl/proto/ot_fp32_add_rne_pipe.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_lane_copy.sv --clock-period-ns 0.9 --false-path-io --core-utilization 25 --place-density 0.55 --slew-margin-percent 20 --stages synth,pnr --nickname-tag lc --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/mp/out_lc/physical.json --force` | current 2 | — |
 | `results/arch/prefill_ingest.json` | yes | `python3 tools/arch_prefill.py` | none | — |
 
 ## B.5 Unbound headlines
@@ -405,19 +416,8 @@ These figures are printed in the atlas and produced by no tracked record. They a
 
 | Id | Printed | Where | Why unbound |
 |---|---|---|---|
-| `qwen.h200_fp8` | 217 | Serving systems and hardware roadmaps, however | results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main (last committed at b42f8606 on a side branch); no tracked record holds 217 |
-| `qwen.hbm_class_ceiling` | 1,533 / 5.8 | HBM-class ceiling: (weights + KV); HBM-class ceiling: (weights + KV) | bound only in results/roofline/iso_area/qwen3_8b.json, which is not on main |
-| `qwen.energy_b128_table10` | 83.1 | Energy per token at 128 users (V4.1: saturated,  | no tracked record holds 83.1 or 89.2; Table 8-26 prints 88.8 vs 95.0 for the same measure from results/arch/qwen3_budget.json -- the two tables disagree |
-| `sync.handoff_cycles` | 5 | Interactive and agentic use of language models | results/arch/sync_cost_table.json carries 4.8 ns and the phrase '5-cycle' only as note text; no record field holds the cycle count |
-| `energy.common_kv_ratio` | 5.7 / 5.7 / 5.7 / 5.7 | Interactive and agentic use of language models; Energy per step, same core: HBM ÷ ROM (reduced Q; Finding: data movement, not arithmetic, dominate; The modeled operating energy is lower at the bat | results/physical_abi3/asap7/signoff/energy_common_kv.json, the record Figures 8-1/8-2 cite, is not on main (only on a side branch at 66434aa3); no tracked record holds 5.7 or 58.82/335.35 |
-| `energy.common_kv_rom_uj` | 58.82 | Finding: data movement, not arithmetic, dominate | energy_common_kv.json not on main (see energy.common_kv_ratio) |
-| `energy.common_kv_hbm_uj` | 335.35 | Finding: data movement, not arithmetic, dominate | energy_common_kv.json not on main (see energy.common_kv_ratio) |
-| `rtl.qwen_reduced_token` | 24,992 | Reduced Qwen3 token, bit-exact in logits | no tracked record under results/ holds 24,992 cycles |
-| `phys.engram_fmax` | 1,656 | V4.1 Engram gather slice / assembler | no tracked record field holds 1,656 or 1,179 MHz (the route directories carry slack, not a published Fmax field) |
-| `phys.indexer_tree_fmax` | 1,153 | V4.1 indexer output tree | no tracked record field holds 1,153 MHz |
-| `phys.select_ctrl_fmax` | 1,094 | V4.1 select control | no tracked record field holds 1,094 MHz |
-| `phys.host_if_fmax` | 1,135 | Shared host interface | no tracked record field holds 1,135 MHz for the host interface |
-| `phys.lane_copy_fmax` | 1.2 | Qwen3 lane copy, 16 lanes | no tracked record field holds the lane copy's ~1.2 GHz |
+| `qwen.h200_fp8` | 217 | Serving systems and hardware roadmaps, however | results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main (last committed at b42f8606 on a side branch, where it holds 217.408); its tool tools/iso_area_qwen3.py does not run on main (qwen3_budget.json no longer carries dflash.tau_central), so it waits on the roofline re-baseline's iso-area port |
+| `qwen.hbm_class_ceiling` | 1,533 / 5.8 | HBM-class ceiling: (weights + KV); HBM-class ceiling: (weights + KV) | bound only in results/roofline/iso_area/qwen3_8b.json (contexts.8192.hbm_roofline_tok_s.w4 = 1532.51 at b42f8606), which is not on main (see qwen.h200_fp8) |
 
 ## B.6 Findings
 

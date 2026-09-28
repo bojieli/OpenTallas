@@ -259,7 +259,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "docs/EVIDENCE_LEDGER.md": 44,
     "docs/HOST_INTERFACE_AND_RUNTIME.md": 15,
     "docs/FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md": 2,
-    "docs/HEADLINE_BUNDLE.md": 182,
+    "docs/HEADLINE_BUNDLE.md": 196,
     "docs/OVERVIEW.md": 6,
     "docs/ROM_DENSITY_NODE_TRANSFER.md": 24,
     "docs/ROM_PHYSICAL_METHODOLOGY.md": 64,
