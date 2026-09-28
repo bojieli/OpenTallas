@@ -130,6 +130,13 @@ It passed with all 40,332 pins, which removes the standalone square block's
 Global placement and routing are still running; this is no setup, hold, DRC,
 power or frequency verdict. The strip's wide single K request still spans its
 length, so routed timing remains the deciding check.
+The die-assembly floorplan gives its entire KV/key streamer plus staging band
+17.2 µm of height. This first arbiter-only strip is 30.24 µm high, 1.76 times
+that allocation. Even a successful route here would therefore be a boundary
+characterization, not proof that the block fits the adopted floorplan. The
+`karb_strip_fit` case uses a row-aligned 17.28 µm height (0.08 µm above the
+budget) to test that tighter boundary directly; packed staging is still
+outside its scope.
 The `karb_bank4` case routes four local pseudo-channels in four adjacent PHY
 windows as a fallback physical partition. It uses `NPC=4`, which changes the
 address-to-channel hash, and cannot substitute for the 32-channel strip's

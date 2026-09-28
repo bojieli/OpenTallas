@@ -87,8 +87,10 @@ def karb_strip(height_um: float = 30.24) -> dict:
             "--place-density", "0.60"]
     for r in regions:
         args += ["--pin-region", r]
-    return {"args": args, "nickname": "claude_v41x_karb_strip",
-            "output": "results/asap7_physical/v41x_die_karb/physical.json",
+    fit = height_um <= 17.28
+    return {"args": args, "nickname": "codex_v41x_karb_strip_fit" if fit else "claude_v41x_karb_strip",
+            "output": "results/asap7_physical/v41x_die_karb_fit/physical.json" if fit
+                      else "results/asap7_physical/v41x_die_karb/physical.json",
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM, "pc_pin_span_um": PC_PIN_SPAN}}
 
 
@@ -492,6 +494,7 @@ def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_k
 
 
 CASES = {"karb_strip": karb_strip,
+         "karb_strip_fit": lambda: karb_strip(height_um=17.28),
          "karb_bank4": karb_bank4,
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),

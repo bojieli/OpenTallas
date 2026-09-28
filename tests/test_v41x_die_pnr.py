@@ -83,3 +83,12 @@ def test_karb_bank4_is_a_separate_local_route_boundary():
     pats = [re.compile(r.rpartition("=")[0]) for r in regions]
     for b in all_bits:
         assert sum(1 for p in pats if p.search(b)) == 1, b
+
+
+def test_karb_strip_fit_uses_the_floorplan_band_without_overwriting_the_wider_case():
+    fit = pnr.CASES["karb_strip_fit"]()
+    wide = pnr.karb_strip()
+    assert fit["floorplan"]["die_um"] == [12000.0, 17.28]
+    assert fit["floorplan"]["die_um"][1] <= 17.2 + 0.08 + 1e-9
+    assert fit["nickname"] != wide["nickname"]
+    assert fit["output"] != wide["output"]
