@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.rtl.v41x_fullshape_depth_gate.v1",
+  "status": "pass",
+  "claim_scope": "ME K=5120 and HE he_k=2560 adapter maximum-depth zero-weight gate, including 18-bit ME bank address above 2^17. No checkpoint-backed arithmetic, full layer, P&R timing, or token-rate claim.",
+  "me_k": 5120,
+  "he_k": 2560,
+  "me_bank_reads": 640,
+  "he_bank_reads": 2560,
+  "max_me_bank_address": 131179,
+  "max_he_bank_address": 10319,
+  "simulation_cycles": 2964,
+  "build_seconds": 100.42,
+  "memory_cap_bytes": 25769803776,
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "5cf9f17b17f251555114ed7d47bc0d462a3a74f5cfb69fc3dd0fa24b9ebfb643",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173",
+    "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c",
+    "rtl/test/tb_hdc_v41x_fullshape_depths.sv": "ccae75748ce90d288ad942b147928c7fc6c6e0914ed4b8e00a665ad7e346e6f3",
+    "tools/rtl_hdc_v41x_fullshape_depth_gate.py": "527f060d33d964365b3ed4597425998ab400b996cd88562de444b6aeabc3f762",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "e8df3028a3898fbad7eddb6f2616efb68495e51d2a542722be1ced81a6961819"
+  }
+}

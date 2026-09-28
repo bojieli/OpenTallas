@@ -95,7 +95,7 @@ module ot_hdc_core_v41x #(
     parameter integer HBAW  = 16,          // HCP weight-bank word address
     // ME weight ops: ot_hdc_v41x_wgt_tile KIND 1 geometry
     parameter integer MG    = 8,           // chunk units (8 x MG BF16/FP32 MAC lanes)
-    parameter integer MBAW  = 17           // weight-bank word address
+    parameter integer MBAW  = FULL_SHAPE ? 18 : 17 // weight-bank word address
 ) (
     input  wire              clk,
     input  wire              rst_n,
