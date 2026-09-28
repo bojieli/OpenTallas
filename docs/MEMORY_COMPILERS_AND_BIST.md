@@ -28,7 +28,7 @@ grade: *measured*, *published*, *calibrated* or *assumed*.
 | ROM defect tolerance, SECDED against spare rows | `tools/mem_compiler/rom_repair_eval.py` → `results/memory/rom_repair_evaluation.json` |
 | MBIST: shared March controller, BIRA repair analysis, SRAM and ROM collars, SECDED decoder | `rtl/dft/ot_mbist_ctrl.sv`, `ot_mbist_bira.sv`, `ot_mbist_sram_collar.sv`, `ot_mbist_rom_collar.sv`, `ot_rom_secded_dec.sv` |
 | Fault campaign (Verilator) | `tools/rtl_mbist_campaign.py` → `results/rtl/mbist_campaign.json` |
-| Qwen decode-core memory subsystem built from the macros, with MBIST | `rtl/hdc/ot_hdc_memsys.sv`; `tools/rtl_hdc_decode_campaign.py --memory-macros` → `results/rtl/hdc_decode_campaign_memory_macros.json` |
+| Reduced Qwen MBIST test vehicle built from the macros | `rtl/hdc/ot_hdc_memsys.sv`; `tools/rtl_hdc_decode_campaign.py --memory-macros` → `results/rtl/hdc_decode_campaign_memory_macros.json` |
 | Hard-macro route of an SRAM, a ROM and the BIST on ASAP7 | `rtl/dft/ot_mbist_macro_testtop.sv` → `results/physical_abi3/asap7/mbist_macro_testtop/` |
 | Tests | `tests/test_mem_compiler.py`, `tests/test_mem_compiler_mbist.py` |
 
@@ -346,9 +346,13 @@ corrected and uncorrectable reads. The BIST signature covers the raw
 codewords, so every defective via is seen at test even though functional reads
 correct it.
 
-## 5. Integration and the hard-macro route
+## 5. Reduced MBIST vehicle and hard-macro route
 
-**Qwen decode core** (`rtl/hdc/ot_hdc_memsys.sv`, selected in
+This source-pinned test vehicle exercises memory collars and BIST. Its full
+KV SRAM is specific to that test; the adopted Qwen tile stores KV in HBM and
+uses the finite window and tail buffers listed in the current memory plan.
+
+**Reduced Qwen memory test** (`rtl/hdc/ot_hdc_memsys.sv`, selected in
 `rtl/test/tb_hdc_core.sv` with `+define+OT_HDC_MEMSYS`):
 
 | Memory | Behavioural array it replaces | Macros |
