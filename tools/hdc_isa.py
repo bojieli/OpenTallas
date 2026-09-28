@@ -20,7 +20,7 @@ The core runs a static program of macro-operations.  Two units execute them:
   ..., the loop runs kc = ceil(K/S) steps and an element with k*S + c >= K
   multiplies +0; group g = q*S + c takes tile t = r*(G/S) + q, word
       wbase + t*ts + c*wcs + k*ks + (j >> jsh)*js,  x  xbase + c*xcs + k*xks + j*xjs,
-  and DYN_TTILES counts rounds of G/S position tiles (pos >> (log2(W*G) - s)) + 1.
+  and DYN_TTILES counts rounds of G/S position tiles floor(pos/(W*(G/S))) + 1.
   (tools/hdc_golden.py matvec_il / attn_splits.)  Every product is BF16 x BF16.
   `me_rmax`: the engine also takes, per result slot j, the max over the op's
   valid results (a compare tree on the result lanes, beside the argmax tree)

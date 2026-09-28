@@ -602,7 +602,7 @@ class Machine:
         wsrc = f["me_wsrc"]
         if wsrc and f["me_d_tiles"] == I.DYN_TTILES:
             # rounds of G/S position tiles
-            tiles = f["me_tiles"] + (self.pos >> ((W * GR).bit_length() - 1 - split)) + 1
+            tiles = f["me_tiles"] + self.pos // (W * (GR >> split)) + 1
         kc = -(-K // S) if wsrc else K          # KV ops: me_k is the whole K, cut interleaved
         r, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(per_round), np.arange(IL),
                                                          np.arange(W), indexing="ij"))
