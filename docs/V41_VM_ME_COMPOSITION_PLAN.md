@@ -70,6 +70,23 @@ congested; the widths above are a starting constraint, not a derived wire
 capacity. Reject any placement that extends a macro-to-first-flop route
 outside its corridor, even if global placement WNS appears positive.
 
+For a **reviewable pilot placement hypothesis**, one VM macro microblock
+including its 5 µm halo and the above left/right corridors occupies
+228.096×39.700 µm. Four microblocks stacked with 16 µm row channels form a
+228.096×206.800 µm bank group; three groups with 24 µm intergroup channels
+form a 228.096×668.400 µm bank strip. In an 1,100×1,100 µm exploratory
+outline, place VM bank strips at x=40, 280, 520 and 760 µm, y=40 µm. The
+last strip ends at x=988.096, y=708.400 µm. Reserve y=728–808 µm for the
+four adjacent converter slices and bank-output pipeline registers. An MP1
+microblock with 5 µm halo and its left/right corridors is 160.824×51.040
+µm; four columns by two rows with 16 µm channels occupy 691.296×118.080
+µm, provisionally x=184–875.296 and y=832–950.080 µm. Reserve y=970–1060
+µm for the four distinct consumer capture strips and the local multicast
+clock buffers. This is a **packing test**, not a routed area claim: it leaves
+only 11.904 µm between bank strips and 16–24 µm above/below blocks, and routing
+may force a larger outline. No macro orientation or coordinate is approved
+until the pin-access/PG and wire-delay checks pass.
+
 ## Cycle timing acceptance budget at 0.92 ns
 
 The table separates measured source arcs from **proposed** engineering
