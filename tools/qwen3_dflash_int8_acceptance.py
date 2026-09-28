@@ -19,6 +19,7 @@ import time
 from pathlib import Path
 
 import torch
+import torch.nn as nn
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -63,6 +64,46 @@ def reference_rows(path):
     with gzip.open(path, "rt") as f:
         return {(r["workload"], r["prompt_id"], r.get("turn", 0)): r
                 for r in map(json.loads, f)}
+
+
+class W8DraftLinear(nn.Module):
+    """Drafter matrix with O4's signed INT8, one BF16 scale per output row.
+
+    DFlash's non-matrix operations remain the released BF16 GPU implementation.
+    The matrix output rounds to BF16 at the original nn.Linear boundary.  This is
+    a weight-format sensitivity, because the drafter RTL arithmetic order is not
+    yet frozen; the target verifier below is the exact deployment contract.
+    """
+
+    def __init__(self, source, groups):
+        super().__init__()
+        q, s, _ = Q.quantize_w8(source.weight.detach())
+        self.register_buffer("qT", q.t().contiguous())
+        self.register_buffer("sT", s.t().contiguous())
+        self.splits = Q.split_for(source.out_features, source.in_features, groups)
+        self.out_features = source.out_features
+        self.in_features = source.in_features
+        if source.bias is not None:
+            self.register_buffer("bias", source.bias.detach().clone())
+        else:
+            self.bias = None
+
+    def forward(self, x):
+        shape = x.shape[:-1]
+        y = Q.int8_mv_t(x.reshape(-1, self.in_features).to(Q.F32),
+                         self.qT, self.sT, self.splits).to(Q.BF16)
+        if self.bias is not None:
+            y = (y + self.bias).to(Q.BF16)
+        return y.reshape(*shape, self.out_features)
+
+
+def quantize_drafter(draft, groups):
+    names = [name for name, module in draft.named_modules() if isinstance(module, nn.Linear)]
+    for name in names:
+        parent_name, attr = name.rsplit(".", 1) if "." in name else ("", name)
+        parent = draft.get_submodule(parent_name) if parent_name else draft
+        setattr(parent, attr, W8DraftLinear(getattr(parent, attr), groups))
+    return names
 
 
 @torch.inference_mode()
@@ -138,6 +179,7 @@ def main():
     ap.add_argument("--max-new", type=int, default=128)
     ap.add_argument("--block", type=int, default=5)
     ap.add_argument("--groups", type=int, default=6144)
+    ap.add_argument("--draft-weights", choices=("bf16", "w8"), default="bf16")
     ap.add_argument("--gpu-memory-fraction", type=float, default=0.55)
     args = ap.parse_args()
     if not 2 <= args.block <= 16 or args.max_new < 2:
@@ -152,6 +194,7 @@ def main():
     target = Q.Qwen3(snap, "contract", "w8", "fp8", groups=args.groups)
     draft = DFlashDraftModel.from_pretrained(str(draft_snap), attn_implementation="sdpa",
                                               dtype=torch.bfloat16).to("cuda").eval()
+    quantized_draft_matrices = quantize_drafter(draft, args.groups) if args.draft_weights == "w8" else []
     rec = {"schema": "opentallas.qwen3-dflash-int8-acceptance.v1",
            "scope": "bounded deployed-arithmetic acceptance; no TP-2 RTL cycle or final DFlash rate claim",
            "source_commit": subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip(),
@@ -161,6 +204,8 @@ def main():
            "target_checkpoint": snap.name, "drafter_checkpoint": draft_snap.name,
            "prompts_sha256": sha(args.prompts), "bf16_reference_sha256": sha(args.bf16_reference),
            "mode": "e_full_w8", "groups": args.groups,
+           "draft_weights": args.draft_weights,
+           "drafter_quantized_matrices": quantized_draft_matrices,
            "block": args.block, "max_new": args.max_new,
            "environment": {"host": platform.node(), "torch": torch.__version__,
                            "gpu": torch.cuda.get_device_name(0)}, "rows": []}
