@@ -29,10 +29,18 @@ The reduced TP-2 gate sets `WIN_WORDS=4096`, enough for its largest unchanged
 weight operation. Its two arms are compiled from the same sources with only
 `WEIGHT_HBM=0/1`; the same image files supply both arms. Both arms pass 16/16
 prompt steps, generated token 1073, and exact logits, vector memory and KV.
-ROM weights take 281,485 cycles; the behavioural two-PC HBM source takes
-421,965 cycles (+140,480, +49.9%). This delta measures the reduced serial
-operation preload with two 32-byte sectors per code word. It is not a
+ROM weights take 281,485 cycles; the behavioural two-PC HBM matrix source takes
+421,965 cycles (+140,480, +49.9%). That historical gate reads embedding codes
+and scales from local arrays in both arms. Its delta measures the reduced
+serial matrix-operation preload with two 32-byte sectors per code word. It is not a
 full-shape bandwidth ratio or chip throughput measurement.
+
+The newer reduced all-weight comparator sources the token's INT8 embedding
+row and BF16 scale through HBM sectors before package start; the core's
+embedding ports then read only the row bank. Its standalone 5-sector row gate
+is source-pinned in `results/rtl/qwen_embed_row_hbm.json`. The all-weight
+package A/B verdict is pending; the historical matrix-only cycle delta above
+is not evidence for its cycles.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs
