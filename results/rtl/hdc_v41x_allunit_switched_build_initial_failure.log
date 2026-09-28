@@ -1,0 +1,39 @@
+b3_h2_switch_stall: ISA pipeline [{'logits_bit_exact_every_step': True, 'argmax_and_value_every_step': True}, {'logits_bit_exact_every_step': True, 'argmax_and_value_every_step': True}] (35 s)
+Traceback (most recent call last):
+  File "/work/tools/rtl_hdc_v41x_array_campaign.py", line 400, in <module>
+    raise SystemExit(main())
+  File "/work/tools/rtl_hdc_v41x_array_campaign.py", line 390, in main
+    result = run(names, scratch)
+  File "/work/tools/rtl_hdc_v41x_array_campaign.py", line 336, in run
+    results = list(pool.map(lambda nm: run_config(nm, CONFIGS[nm], ctx, scratch, log), names))
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/work/tools/rtl_hdc_v41x_array_campaign.py", line 336, in <lambda>
+    results = list(pool.map(lambda nm: run_config(nm, CONFIGS[nm], ctx, scratch, log), names))
+  File "/work/tools/rtl_hdc_v41x_array_campaign.py", line 243, in run_config
+    exe = build(scratch / f"obj_{name}", svh, users, stall)
+  File "/work/tools/rtl_hdc_v41x_array_campaign.py", line 166, in build
+    sh([*GATE, "verilator", "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
+  File "/work/tools/rtl_hdc_v41x_array_campaign.py", line 97, in sh
+    raise RuntimeError(f"{cmd[0]} failed ({r.returncode}):\n{r.stdout[-3000:]}\n{r.stderr[-3000:]}")
+RuntimeError: verilator failed (2):
+able -Wno-shadow     -O1   -c -o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__2__Slow.o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__2__Slow.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1   -c -o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__3__Slow.o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__3__Slow.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1   -c -o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__4__Slow.o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__4__Slow.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1   -c -o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__5__Slow.o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__5__Slow.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1   -c -o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__6__Slow.o Vtb_hdc_v41x_array_ot_hdc_fp32_add_fast__6__Slow.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1   -c -o Vtb_hdc_v41x_array__Syms.o Vtb_hdc_v41x_array__Syms.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1   -c -o Vtb_hdc_v41x_array__Syms__1.o Vtb_hdc_v41x_array__Syms__1.cpp
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -O1   -c -o Vtb_hdc_v41x_array__Syms__2.o Vtb_hdc_v41x_array__Syms__2.cpp
+make: Leaving directory '/scratch/run/obj_b3_h2_switch_stall'
+
+DC_X_EG\=1 \+define\+HDC_X_SU\=1 \+define\+HDC_W_HBM\=1 /work/rtl/proto/ot_fp32_add_rne_pipe.sv /work/rtl/proto/ot_fp32_mul_rne_pipe.sv /work/rtl/hdc/ot_hdc_delay.sv /work/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /work/rtl/hdc/ot_hdc_fpu.sv /work/rtl/hdc/ot_hdc_sfu.sv /work/rtl/hdc/ot_hdc_reduce.sv /work/rtl/hdc/ot_hdc_accept.sv /work/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv /work/rtl/hdc/v41/ot_hdc_engram_hash.sv /work/rtl/hdc/v41/ot_hdc_select.sv /work/rtl/hdc/v41/ot_hdc_blockdot.sv /work/rtl/hdc/v41/ot_hdc_actquant.sv /work/rtl/hdc/v41/ot_hdc_fp4qdq.sv /work/rtl/hdc/v41/ot_hdc_fdiv.sv /work/rtl/hdc/v41/ot_hdc_fsqrt.sv /work/rtl/hdc/v41/ot_hdc_softplus.sv /work/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv /work/rtl/hdc/v41/ot_hdc_sk_arith.sv /work/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv /work/rtl/hdc/v41/ot_hdc_sinkhorn.sv /work/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv /work/rtl/hdc/v41/ot_hdc_v41_matvec.sv /work/rtl/hdc/v41/ot_hdc_v41_stream.sv /work/rtl/hdc/v41/ot_hdc_v41_qe.sv /work/rtl/hdc/v41/ot_hdc_v41_xu.sv /work/rtl/hdc/v41/ot_hdc_v41_hcproj.sv /work/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv /work/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv /work/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv /work/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv /work/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv /work/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv /work/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv /work/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv /work/rtl/hdc/v41x/ot_hdc_v41x_attn.sv /work/rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv /work/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv /work/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv /work/rtl/hdc/v41x/ot_hdc_v41x_sel.sv /work/rtl/hdc/v41x/ot_hdc_v41x_egather.sv /work/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv /work/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv /work/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv /work/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv /work/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv /work/rtl/hdc/v41x/ot_hdc_v41x_vec.sv /work/rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv /work/rtl/hdc/v41x/ot_hdc_core_v41x.sv /work/rtl/test/sim_hdc_v41x_fastfp_dpi.sv /work/rtl/test/sim_hdc_v41x_fastfp_wrap.sv /work/rtl/test/sim_hdc_v41x_fastfp_dpi.cpp /work/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv /work/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv /work/rtl/hdc/hbm/ot_hdc_qstream.sv /work/rtl/hdc/kv/ot_hdc_hbm_model.sv /work/rtl/rom/ot_rom_pkg_link.sv /work/rtl/rom/ot_rom_fabric_router.sv /work/rtl/rom/ot_rom_pkg_ctrl_x.sv /work/rtl/test/tb_hdc_v41x_array.sv /work/rtl/test/hdc_v41x_array_harness.cpp -CFLAGS -O1 -MAKEFLAGS OPT_FAST\=-O0\ OPT_GLOBAL\=-O0 -j 16
+
