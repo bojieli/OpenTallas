@@ -4,11 +4,13 @@
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_qwen_vector_matched_weight as base
 
-ROOT = Path(__file__).resolve().parents[1]
 ARM = ROOT / "tools/rtl_hdc_qwen_weight_bandwidth_arm.py"
 
 
