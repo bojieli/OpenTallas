@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / 'compiler/models/qwen3-8b/config.json'
 LOCK = ROOT / 'compiler/models/qwen3-8b/checkpoint_source.json'
 GROUPS, W, IL = 6144, I.W_LANES, I.INTERLEAVE
+EMBED_CODES_PER_WORD = 64  # tools/hdc_qwen_int8_image.py separate embedding ROM
 
 
 def matrix(base, name, n, k, groups=GROUPS):
@@ -65,13 +66,13 @@ def placement(config=None, groups=GROUPS):
     matrices.append(head)
     base = head['end']
     scale_base = head['scale_end']
-    embed_words = (vocab * h + W * groups - 1) // (W * groups)
+    embed_words = (vocab * h + EMBED_CODES_PER_WORD - 1) // EMBED_CODES_PER_WORD
     embedding_element_base = base * W * groups
     a_limit = 1 << I.A
     n_limit = 1 << I.N
     blockers = []
-    if base + embed_words > a_limit:
-        blockers.append('matrix+embedding BF16-compatible word address exceeds ISA AW24')
+    if embed_words > a_limit:
+        blockers.append('separate INT8 embedding code-word address exceeds ISA AW24')
     if embedding_element_base + vocab * h > a_limit:
         blockers.append('legacy hdc_program embedding element address exceeds ISA AW24; separate INT8 embed ROM requires a new base contract')
     if vocab > n_limit:
@@ -96,6 +97,7 @@ def placement(config=None, groups=GROUPS):
             'matrix_code_word_bits': 8 * W * groups,
             'matrix_scale_words_per_die': scale_base,
             'embedding_code_words_per_die': embed_words,
+            'embedding_codes_per_word': EMBED_CODES_PER_WORD,
             'embedding_element_address_base': embedding_element_base,
             'embedding_scale_rows_per_die': vocab,
             'matrix_scale_rows_per_die': sum(x['scale_rows'] for x in matrices),

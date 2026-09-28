@@ -26,6 +26,8 @@ def test_shipped_tp2_addresses_are_contiguous_and_scales_independent():
     assert rows[0]['rows'] == 3072 and rows[0]['columns'] == 4096
     assert rows[-1]['rows'] == 75968
     assert report['embedding_scale_rows_per_die'] == 151936
+    assert report['embedding_codes_per_word'] == 64
+    assert report['embedding_code_words_per_die'] == 151936 * 4096 // 64
     assert any('me_nout' in x for x in report['blockers'])
 
 
