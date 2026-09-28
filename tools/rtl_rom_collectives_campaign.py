@@ -167,8 +167,8 @@ def capture_real(positions: int):
                     "wgt": [np.float32(wgt[i]) for i in ids], "outs": outs, "y": y})
         return y
 
-    def indexer_capture(L, x, qr, pos, state, trace):
-        s = orig_indexer(L, x, qr, pos, state, trace)
+    def indexer_capture(L, x, qr, pos, state, trace, ctx):
+        s = orig_indexer(L, x, qr, pos, state, trace, ctx)
         sel.append({"pos": pos, "layer": L, "sel": [int(v) for v in s]})
         return s
 

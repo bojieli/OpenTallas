@@ -100,7 +100,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] Two-package array, all units.
 - [x] Two-user, all units.
 - [!] Five-package switched array (source57): FAIL on a router flag.
-- [~] **X:** corrected switched rerun (source316, three-token optimized prefix exact so far); the separate combined all-unit source972 build is being diagnosed before its token replay.
+- [~] **X:** corrected switched rerun (source316, three-token optimized prefix exact so far); the separate combined all-unit source972 binary is pinned and its two-user token replay is running.
 - [~] **C `claude/v41x-matched-weight-ab`**: same program, weights from ROM vs from HBM; replaces the configuration-delta caveat for this bench point only.
 - [~] **C `claude/v41x-die-top`**: adopted V4.1x tile and die tops.
   - KV-HBM prefetch, shared-port arbitration and staging RTL exist on the branch, but exact-token validation is still pending, so this stays staged.
@@ -131,7 +131,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] HBM energy split: die share 10.19 pJ/bit, stack share 3.45 pJ/bit.
 - [x] Per-class cooling limits.
 - [ ] Measured HBM3E PHY and controller energy: no source found, so the die share takes no credit.
-- [ ] `test_rom_collectives`: stale pin on `ot_rom_pkg_link.sv` (**X**).
+- [~] **X:** `test_rom_collectives` record has stale RTL pins; the current-source rerun is underway after fixing its golden indexer callback signature.
 - [ ] `test_hdc_package_tp`: its bench does not build on main.
 - [ ] `test_hdc_host_runtime`: 20 stale input pins in a historical target (**X**).
 - [ ] `runtime/abi3/builder.py`: LOOP_INDUCTION failures in `test_abi3_heterogeneous_batch_runner` (**X**).
