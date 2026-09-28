@@ -48,3 +48,16 @@ another −3.372 ns path crosses the bank depth selector into the registered
 commands and fault status, and pipelining the bank-local depth selection,
 must be exact-gated and physically measured before the read service is
 claimed at the design clock.
+
+The separate
+[`ot_v41_vm_bank4_macro_pipe.sv`](../rtl/chip/ot_v41_vm_bank4_macro_pipe.sv)
+implements that repair candidate. It registers read/write commands and fault
+status, stages writes inside each depth group, masks each group's read output
+into local 16-bit segments, then reduces the group outputs over two more
+register stages. Read output arrives after five clock edges from issue and
+writes commit after three; consecutive four-word beats still issue each
+cycle. A source-pinned
+[functional record](../results/rtl/v41_vm_bank4_macro_pipe.json) passes the
+same three-group bank/rotation/carry/fault tests. Physical placement and
+routing of this pipelined candidate are in progress. The extra fill edges
+must be charged in a complete ME preload schedule after physical closure.
