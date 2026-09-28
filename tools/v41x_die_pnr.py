@@ -311,7 +311,7 @@ def karb_group4_macro_m9() -> dict:
         "proc ot_place {want x y} {",
         "  foreach inst [[ord::get_db_block] getInsts] {",
         "    set n [$inst getName]",
-        "    if {[string map {\\ {}} $n] eq $want} {",
+        "    if {[string map {\\\\ {}} $n] eq $want} {",
         "      place_macro -macro_name $n -location [list $x $y] -orientation R0",
         "      return",
         "    }",
