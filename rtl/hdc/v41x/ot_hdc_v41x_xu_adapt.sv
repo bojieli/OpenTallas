@@ -45,6 +45,7 @@ module ot_hdc_v41x_xu_adapt #(
     parameter integer AW = 24,
     parameter integer NW = 16,
     parameter integer K = 16,              // the as-built FP32 select's k
+    parameter integer IKW = 5,
     parameter integer SK_STEP = 7,
     parameter integer X_SEL = 1,
     parameter integer X_EG = 1,
@@ -61,7 +62,7 @@ module ot_hdc_v41x_xu_adapt #(
     input  wire [1:0]        i_op,
     input  wire [AW-1:0]     i_src, i_dst,
     input  wire [NW-1:0]     i_n,
-    input  wire [4:0]        i_k,
+    input  wire [IKW-1:0]    i_k,
     input  wire              i_layer,
     input  wire              i_bf16,          // SEL: an index-score select (dynamic count, BF16 scores)
     input  wire [NW-1:0]     token,
@@ -113,7 +114,7 @@ module ot_hdc_v41x_xu_adapt #(
     reg [1:0]    op;
     reg [AW-1:0] src, dst;
     reg [NW-1:0] n, ni, nw;
-    reg [4:0]    k;
+    reg [IKW-1:0] k;
     reg          layer;
     reg [NW-1:0] tok_l;
     reg          first_l;
@@ -130,7 +131,7 @@ module ot_hdc_v41x_xu_adapt #(
     wire [15:0]  so_idx;
     reg          r1_v, r1_last;
     reg [NW-1:0] r1_idx;
-    wire [KW-1:0] kk = (k > n) ? n[KW-1:0] : k[KW-1:0];
+    wire [KW-1:0] kk = (k > n) ? KW'(n) : KW'(k);
     ot_hdc_select #(.K(K), .VW(32), .IW(16), .ORDER(1)) u_sel (.clk(clk), .rst_n(rst_n),
         .in_valid(s_v), .in_ready(sel_ready), .in_last(s_last), .in_val(vr_q), .in_idx(s_idx[15:0]),
         .in_k(kk), .out_valid(so_v), .out_last(so_last), .out_idx(so_idx), .out_ninf(so_ninf), .busy(sel_busy));

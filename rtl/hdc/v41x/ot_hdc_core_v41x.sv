@@ -48,17 +48,23 @@
 // ---------------------------------------------------------------------------
 module ot_hdc_core_v41x #(
     parameter integer FULL_SHAPE = 0,
-    parameter integer INSTR_BITS = 1536,
+    parameter integer INSTR_BITS = FULL_SHAPE ? 2048 : 1536,
     parameter integer W    = 16,
     parameter integer G    = 4,
     parameter integer IL   = 8,
     parameter integer BL   = 16,
     parameter integer QLB  = 272,
-    parameter integer AW   = 24,
-    parameter integer NW   = 16,
+    parameter integer AW   = FULL_SHAPE ? 30 : 24,
+    parameter integer NW   = FULL_SHAPE ? 21 : 16,
     parameter integer PAW  = 14,
-    parameter integer DIM  = 160,
-    parameter integer TOPK = 16,
+    parameter integer DIM  = FULL_SHAPE ? 5120 : 160,
+    parameter integer TOPK = FULL_SHAPE ? 512 : 16,
+    parameter integer HDIM = FULL_SHAPE ? 512 : 32,
+    parameter integer ROPE_PAIR = FULL_SHAPE ? 32 : 2,
+    parameter integer FULL_WINDOW = 128,
+    parameter integer FULL_SCAN_CAP = 16384,
+    parameter integer FULL_TP = 4,
+    parameter integer XU_KW = FULL_SHAPE ? 12 : 5,
     parameter integer HNL  = 3,            // HE lanes
     parameter integer SW   = 8,            // stream-unit lanes (elements per cycle)
     parameter integer HS   = 8,            // HE K chunks (hdc_golden_v41.HC_SPLIT)
@@ -296,7 +302,8 @@ module ot_hdc_core_v41x #(
     reg [3:0]  st;
     reg [PAW-1:0] pc;
     reg [NW-1:0] tok_r, pos_r;
-    reg [AW-1:0] dyn [0:NSLOT*32-1];
+    localparam integer NDYN = FULL_SHAPE ? 64 : 32;
+    reg [AW-1:0] dyn [0:NSLOT*NDYN-1];
     reg [2:0]    ds;                        // DYN bank being computed
     reg [INSTR_BITS-1:0] ir;
     reg        me_go, su_go, qe_go, xu_go, he_go;
@@ -312,7 +319,7 @@ module ot_hdc_core_v41x #(
     //: the instruction's DYN bank (its position slot)
     wire [2:0] c_dslot = (NSLOT > 1) ? ir[O_DSLOT +: W_DSLOT] : 3'd0;
     `define F(name) ir[O_``name +: W_``name]
-    `define DY(name) dyn[c_dslot * 32 + ir[O_``name +: W_``name]]
+    `define DY(name) dyn[c_dslot * NDYN + ir[O_``name +: W_``name]]
 
     reg [2:0]  d_unit;
     reg [2:0]  d_ctl, d_cslot, d_clane;
@@ -351,7 +358,7 @@ module ot_hdc_core_v41x #(
     reg [1:0]    xu_op;
     reg [AW-1:0] xu_src, xu_dst;
     reg [NW-1:0] xu_n;
-    reg [4:0]    xu_k;
+    reg [XU_KW-1:0] xu_k;
     reg          xu_layer;
     reg          xu_bf16;                   // SEL with a dynamic count: an index-score select (BF16 scores)
     // HE
@@ -467,12 +474,12 @@ module ot_hdc_core_v41x #(
         rnd16 = (x == 0) ? 0 : ((x - 1) >> $clog2(W)) + 1;
     endfunction
     integer di;
-    wire [$clog2(NSLOT*32)-1:0] db = ds * 32;
+    wire [$clog2(NSLOT*NDYN)-1:0] db = ds * NDYN;
     always @(posedge clk) if (st == S_DYN) begin
-        for (di = 0; di < 32; di = di + 1) dyn[db + di] <= 0;
+        for (di = 0; di < NDYN; di = di + 1) dyn[db + di] <= 0;
         dyn[db + 1] <= b_tok * DIM;
-        dyn[db + 2] <= b_pos * 2;
-        dyn[db + 3] <= (b_pos == 0) ? 0 : (b_pos - 1) * 2;
+        dyn[db + 2] <= b_pos * ROPE_PAIR;
+        dyn[db + 3] <= (b_pos == 0) ? 0 : (b_pos - 1) * ROPE_PAIR;
         dyn[db + 4] <= b_pos;
         dyn[db + 5] <= p1;
         dyn[db + 6] <= n2;
@@ -485,11 +492,11 @@ module ot_hdc_core_v41x #(
         dyn[db + 13] <= rnds(n2);
         dyn[db + 14] <= rnds(p1 + ns1);
         dyn[db + 15] <= rnds(p1 + ns2);
-        dyn[db + 16] <= b_pos * 32;
-        dyn[db + 17] <= p1 * 32;
+        dyn[db + 16] <= b_pos * HDIM;
+        dyn[db + 17] <= p1 * HDIM;
         dyn[db + 18] <= b_pos[0] ? 4 : 0;
         dyn[db + 19] <= b_pos[0] ? 64 : 0;
-        dyn[db + 20] <= (n2 == 0) ? 0 : (n2 - 1) * 32;
+        dyn[db + 20] <= (n2 == 0) ? 0 : (n2 - 1) * HDIM;
         dyn[db + 21] <= rnd16(p1);
         dyn[db + 22] <= rnd16(n2);
         dyn[db + 23] <= rnd16(p1 + ns1);
@@ -499,6 +506,32 @@ module ot_hdc_core_v41x #(
             dyn[db + 25] <= {b_pos[2:0], 2'b00};
             dyn[db + 26] <= {b_pos[2:1], 7'd0};
             dyn[db + 27] <= b_tok * 32;
+        end
+        if (FULL_SHAPE) begin
+            dyn[db + FDYN_WIN] <= (p1 < FULL_WINDOW) ? p1 : FULL_WINDOW;
+            dyn[db + FDYN_NC1] <= p1;
+            dyn[db + FDYN_NC2] <= n2;
+            dyn[db + FDYN_NS1] <= ns1;
+            dyn[db + FDYN_NS2] <= ns2;
+            dyn[db + FDYN_T0] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW);
+            dyn[db + FDYN_T1] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns1;
+            dyn[db + FDYN_T2] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns2;
+            dyn[db + FDYN_SC1] <= (p1 + FULL_TP - 1) / FULL_TP;
+            dyn[db + FDYN_SC2] <= (n2 + FULL_TP - 1) / FULL_TP;
+            dyn[db + FDYN_SCR] <= (((p1 < FULL_SCAN_CAP) ? p1 : FULL_SCAN_CAP) + FULL_TP - 1) / FULL_TP;
+            dyn[db + FDYN_NSL1] <= (((p1 + FULL_TP - 1) / FULL_TP) < TOPK) ?
+                                     ((p1 + FULL_TP - 1) / FULL_TP) : TOPK;
+            dyn[db + FDYN_NSL2] <= (((n2 + FULL_TP - 1) / FULL_TP) < TOPK) ?
+                                     ((n2 + FULL_TP - 1) / FULL_TP) : TOPK;
+            dyn[db + FDYN_NSLR] <= (((((p1 < FULL_SCAN_CAP) ? p1 : FULL_SCAN_CAP) + FULL_TP - 1) / FULL_TP) < TOPK) ?
+                                     ((((p1 < FULL_SCAN_CAP) ? p1 : FULL_SCAN_CAP) + FULL_TP - 1) / FULL_TP) : TOPK;
+            dyn[db + FDYN_CEIL_SC1_16] <= (((p1 + FULL_TP - 1) / FULL_TP) + 15) >> 4;
+            dyn[db + FDYN_CEIL_SC1_8] <= (((p1 + FULL_TP - 1) / FULL_TP) + 7) >> 3;
+            dyn[db + FDYN_CEIL_SC2_16] <= (((n2 + FULL_TP - 1) / FULL_TP) + 15) >> 4;
+            dyn[db + FDYN_CEIL_SCR_16] <= (((((p1 < FULL_SCAN_CAP) ? p1 : FULL_SCAN_CAP) + FULL_TP - 1) / FULL_TP) + 15) >> 4;
+            dyn[db + FDYN_CEIL_T0_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + 31) >> 5;
+            dyn[db + FDYN_CEIL_T1_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns1 + 31) >> 5;
+            dyn[db + FDYN_CEIL_T2_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns2 + 31) >> 5;
         end
     end
 
@@ -557,7 +590,7 @@ module ot_hdc_core_v41x #(
         qe_istride <= `F(QE_ISTRIDE); qe_obase <= `F(QE_OBASE) + `DY(QE_D_OBASE);
         qe_nb <= `F(QE_NB); qe_nout <= `F(QE_NOUT); qe_tiles <= `F(QE_TILES);
         xu_op <= `F(XU_OP); xu_src <= `F(XU_SRC); xu_dst <= `F(XU_DST); xu_n <= c_xu_n;
-        xu_k <= c_xu_k[4:0]; xu_layer <= `F(XU_LAYER);
+        xu_k <= c_xu_k[XU_KW-1:0]; xu_layer <= `F(XU_LAYER);
         //: the index-score SELECTs are the ones whose count is dynamic (xu_d_n: the positions so far);
         //: the router's top-k and a draft's top-1 have static counts and FP32 values
         xu_bf16 <= (`F(XU_D_N) != 0);
@@ -691,9 +724,8 @@ module ot_hdc_core_v41x #(
 
     // engine 2: the attention engine (X_ATT)
     generate if (X_ATT != 0) begin : g_att_x
-        // The reduced vehicle uses 16 heads per job, head dimension 32 and at most 144 rows.
-        ot_hdc_v41x_att_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .H(16), .D(32), .TD(32),
-                                .NL(4), .TROWS(160), .NHMAX(32)) u_att (
+        ot_hdc_v41x_att_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .H(16), .D(HDIM), .TD(32),
+                                .NL(4), .TROWS(FULL_SHAPE ? 640 : 160), .NHMAX(FULL_SHAPE ? 16 : 32)) u_att (
             .clk(clk), .rst_n(rst_n), .go(e_go[2]), .ready(e_ready[2]), .idle(e_idle[2]),
             .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_ts(me_ts), .i_ks(me_ks),
             .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs), .i_xcs(me_xcs), .i_hg(me_hg),
@@ -887,7 +919,7 @@ module ot_hdc_core_v41x #(
     // the XU: the as-built unit, or (X_SEL / X_EG) its recomposition with the re-specified select and gather
     generate
         if (X_SEL != 0 || X_EG != 0) begin : g_xu_x
-            ot_hdc_v41x_xu_adapt #(.AW(AW), .NW(NW), .K(TOPK), .X_SEL(X_SEL), .X_EG(X_EG), .SQ(XSQ), .SW(XSW)) u_xu (
+            ot_hdc_v41x_xu_adapt #(.AW(AW), .NW(NW), .K(TOPK), .IKW(XU_KW), .SK(FULL_SHAPE ? 2048 : 512), .X_SEL(X_SEL), .X_EG(X_EG), .SQ(XSQ), .SW(XSW)) u_xu (
                 .clk(clk), .rst_n(rst_n), .go(xu_go), .ready(xu_ready), .idle(xu_idle),
                 .i_op(xu_op), .i_src(xu_src), .i_dst(xu_dst), .i_n(xu_n), .i_k(xu_k), .i_layer(xu_layer), .i_bf16(xu_bf16),
                 .token(xu_tok), .first(xu_first), .i_hslot(xu_hslot), .rst_v(xu_rst_v),
@@ -905,7 +937,7 @@ module ot_hdc_core_v41x #(
                 .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
                 .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
         end else begin : g_xu_a
-            ot_hdc_v41_xu #(.AW(AW), .NW(NW), .K(TOPK)) u_xu (
+            ot_hdc_v41_xu #(.AW(AW), .NW(NW), .K(TOPK), .IKW(XU_KW)) u_xu (
                 .clk(clk), .rst_n(rst_n), .go(xu_go), .ready(xu_ready), .idle(xu_idle),
                 .i_op(xu_op), .i_src(xu_src), .i_dst(xu_dst), .i_n(xu_n), .i_k(xu_k), .i_layer(xu_layer),
                 .token(xu_tok), .first(xu_first), .i_hslot(xu_hslot), .rst_v(xu_rst_v),
