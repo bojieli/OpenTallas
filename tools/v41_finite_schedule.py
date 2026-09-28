@@ -113,12 +113,14 @@ def audit(m: dict, root: Path = ROOT) -> dict:
         fragments = []
     covered = defaultdict(list)
     fragment_ids = set()
+    fragment_by_id = {}
     for f in fragments:
         key = f.get("tensor_id")
         fragment_id = f.get("fragment_id")
         if not fragment_id or fragment_id in fragment_ids:
             errors.append(f"tensor fragment {key}: unique fragment_id required")
         fragment_ids.add(fragment_id)
+        fragment_by_id[fragment_id] = f
         a, b, expert = f.get("row_start"), f.get("row_end"), f.get("expert_id")
         if not key or not isinstance(a, int) or not isinstance(b, int) or b <= a:
             errors.append(f"tensor fragment {key}: integer nonempty row range required")
@@ -184,12 +186,20 @@ def audit(m: dict, root: Path = ROOT) -> dict:
             errors.append(f"operation {oid}: measured stall reasons required")
         if not isinstance(op.get("die"), int) or not isinstance(op.get("cluster"), int):
             errors.append(f"operation {oid}: concrete die/cluster required")
-        if not isinstance(op.get("tensor_fragment_ids"), list):
+        op_die, op_cluster = op.get("die"), op.get("cluster")
+        fragment_refs = op.get("tensor_fragment_ids")
+        if not isinstance(fragment_refs, list):
             errors.append(f"operation {oid}: tensor fragment binding list required")
-        elif any(t not in fragment_ids for t in op["tensor_fragment_ids"]):
+            fragment_refs = []
+        elif any(t not in fragment_ids for t in fragment_refs):
             errors.append(f"operation {oid}: unknown tensor fragment binding")
-        elif kind in ("qe_rom", "qe_hbm", "me_rom", "me_hbm", "he_rom", "he_hbm") and not op["tensor_fragment_ids"]:
+        elif kind in ("qe_rom", "qe_hbm", "me_rom", "me_hbm", "he_rom", "he_hbm") and not fragment_refs:
             errors.append(f"operation {oid}: weight fragment owner required")
+        if kind in ("qe_rom", "me_rom", "he_rom"):
+            for fid in fragment_refs:
+                f = fragment_by_id.get(fid, {})
+                if (f.get("owner_die"), f.get("owner_cluster")) != (op_die, op_cluster):
+                    errors.append(f"operation {oid}: ROM fragment {fid} is not local to compute cluster")
         if not isinstance(op.get("deps"), list):
             errors.append(f"operation {oid}: dependency list required")
         if scope in ("full_layer", "full_token") and kind in ("collective", "index_scan", "kv_prefetch", "rope_prefetch", "qe_hbm", "me_hbm", "he_hbm"):
@@ -202,6 +212,12 @@ def audit(m: dict, root: Path = ROOT) -> dict:
             continue
         if set(demands) != KINDS[kind]:
             errors.append(f"operation {oid}: required resource classes {sorted(KINDS[kind])}")
+        if kind in ("qe_rom", "me_rom", "he_rom", "qe_hbm", "me_hbm", "he_hbm"):
+            source_class = "weight_rom" if kind.endswith("rom") else "weight_hbm"
+            physical_bytes = sum(f["physical_bytes"] for fid in fragment_refs
+                                 if (f := fragment_by_id.get(fid)) and isinstance(f.get("physical_bytes"), int))
+            if demands.get(source_class, 0) < physical_bytes:
+                errors.append(f"operation {oid}: physical weight bytes exceed reserved source demand")
         for cls, amount in demands.items():
             if not isinstance(amount, (int, float)) or amount <= 0:
                 errors.append(f"operation {oid}: positive demand required for {cls}")
@@ -217,6 +233,18 @@ def audit(m: dict, root: Path = ROOT) -> dict:
             if not isinstance(r, dict) or cls not in r.get("classes", []):
                 errors.append(f"operation {oid}: unbound class/resource {cls}/{rn}")
                 continue
+            owner_die = r.get("owner_die")
+            serves = r.get("serves_clusters")
+            if owner_die is not None and owner_die != op_die:
+                errors.append(f"operation {oid}: resource {rn} belongs to another die")
+            if serves is not None and op_cluster not in serves:
+                errors.append(f"operation {oid}: resource {rn} cannot serve cluster {op_cluster}")
+            allowed_experts = r.get("served_expert_ids")
+            if allowed_experts is not None and cls in ("quant_mac", "bf16_mac", "weight_rom"):
+                for fid in fragment_refs:
+                    expert = fragment_by_id.get(fid, {}).get("expert_id")
+                    if expert is not None and expert not in allowed_experts:
+                        errors.append(f"operation {oid}: expert {expert} outside resource {rn} locality")
             if (not isinstance(rs, int) or not isinstance(re, int) or
                     not isinstance(rate, (int, float)) or rate <= 0 or rs < start or re > end or re <= rs):
                 errors.append(f"operation {oid}: invalid reservation {rn}")

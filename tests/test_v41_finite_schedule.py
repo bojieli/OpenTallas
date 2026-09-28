@@ -72,3 +72,72 @@ def test_index_and_kv_on_same_stack_cannot_claim_independent_bandwidth():
         m["resources"][name] = dict(physical_id=name, capacity_per_cycle=32,
                                     unit="32B_sector", classes=[cls], owner_die=0, stack_id=0)
     assert any("same physical HBM stack" in e for e in FS.audit(m)["errors"])
+
+
+def two_expert_bank_witness():
+    """Synthetic local-bank schedule for checking fixed versus shared MAC ownership."""
+    m = witness()
+    m["contract"]["instruction_ids"] = ["expert0", "expert1"]
+    m["contract"]["tensor_specs"] = {f"w{i}": {"rows": 1} for i in (0, 1)}
+    m["tensor_fragments"] = [dict(fragment_id=f"f{i}", tensor_id=f"w{i}", expert_id=i,
+                                  row_start=0, row_end=1, owner_die=0,
+                                  owner_cluster=0, physical_bytes=10) for i in (0, 1)]
+    m["resources"] = {}
+    m["operations"] = []
+    for i in (0, 1):
+        start = i
+        for suffix, cls, cap, unit in (("issue", "issue", 1, "issue"),
+                                       ("mac", "quant_mac", 1, "MAC"),
+                                       ("rom", "weight_rom", 10, "byte"),
+                                       ("read", "vm_read", 1, "word"),
+                                       ("write", "vm_write", 1, "word")):
+            m["resources"][f"{suffix}{i}"] = dict(physical_id=f"{suffix}{i}",
+                                                     capacity_per_cycle=cap, unit=unit,
+                                                     classes=[cls], owner_die=0,
+                                                     serves_clusters=[0], served_expert_ids=[i])
+        m["operations"].append(dict(id=f"e{i}", kind="qe_rom", instruction_id=f"expert{i}",
+                                    die=0, cluster=0, start_cycle=start, end_cycle=start + 10,
+                                    ready_cycle=start, deps=[], tensor_fragment_ids=[f"f{i}"],
+                                    demands=dict(issue=1, quant_mac=10, weight_rom=10,
+                                                 vm_read=1, vm_write=1),
+                                    reservations=[
+                                        dict(resource=f"issue{i}", **{"class": "issue"},
+                                             start_cycle=start, end_cycle=start + 1, rate=1),
+                                        dict(resource=f"mac{i}", **{"class": "quant_mac"},
+                                             start_cycle=start, end_cycle=start + 10, rate=1),
+                                        dict(resource=f"rom{i}", **{"class": "weight_rom"},
+                                             start_cycle=start, end_cycle=start + 1, rate=10),
+                                        dict(resource=f"read{i}", **{"class": "vm_read"},
+                                             start_cycle=start, end_cycle=start + 1, rate=1),
+                                        dict(resource=f"write{i}", **{"class": "vm_write"},
+                                             start_cycle=start + 9, end_cycle=start + 10, rate=1),
+                                    ]))
+    return m
+
+
+def test_fixed_near_rom_tiles_and_bounded_bank_local_pool():
+    fixed = two_expert_bank_witness()
+    assert FS.audit(fixed)["status"] == "pass_resource_witness"
+    equal_mac_area_pool = deepcopy(fixed)
+    equal_mac_area_pool["resources"]["mac0"]["capacity_per_cycle"] = 2
+    equal_mac_area_pool["resources"]["mac1"]["capacity_per_cycle"] = 2
+    equal_mac_area_pool["resources"]["mac1"]["physical_id"] = "mac0"
+    assert FS.audit(equal_mac_area_pool)["status"] == "pass_resource_witness"
+    pooled = deepcopy(fixed)
+    pooled["resources"]["mac1"]["physical_id"] = "mac0"
+    assert any("over capacity" in e for e in FS.audit(pooled)["errors"])
+    # A one-lane shared candidate needs a serial schedule; counters reveal it.
+    second = pooled["operations"][1]
+    second["start_cycle"], second["end_cycle"] = 10, 20
+    for reservation in second["reservations"]:
+        reservation["start_cycle"] += 9
+        reservation["end_cycle"] += 9
+    verdict = FS.audit(pooled)
+    assert verdict["status"] == "pass_resource_witness", verdict["errors"]
+    assert verdict["wait_cycles_by_kind"]["qe_rom"] == 9
+
+
+def test_remote_rom_fragment_requires_explicit_local_mapping():
+    m = two_expert_bank_witness()
+    m["tensor_fragments"][1]["owner_cluster"] = 1
+    assert any("not local to compute cluster" in e for e in FS.audit(m)["errors"])
