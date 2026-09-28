@@ -68,7 +68,7 @@ The MP=1 ME checkpoint gate at `c4591c26` passes all 2,048 wo_a rows
 bit-exact at 131,349 cycles for two groups, with 128 four-word preload
 issues and 131,108 weight-bank reads. It supplies the bank-major VM words
 from its checkpoint fixture. The integrated pipelined VM-to-RL5 exact
-first-16 replay at `b94b8783` also passes 32 rows, checking all 512 VM
+first-16 replay at `02c03b8a` also passes 32 rows, checking all 512 VM
 words and 128 preload beats. Corrected measurement-window records exclude
 134 initialization/reset cycles and report 2,339 timed cycles, 14 more
 than the 2,325-cycle standalone RL5 first-16 gate; this finite VM/drain
