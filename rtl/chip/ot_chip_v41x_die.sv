@@ -139,7 +139,7 @@ module ot_chip_v41x_die #(
     parameter [DESTS*3-1:0] ROUTE_INIT = {DESTS*3{1'b0}},
     // package controller (ot_rom_pkg_ctrl_x)
     parameter integer PKG_ID   = 0,
-    parameter integer MAXU     = 16,
+    parameter integer MAXU     = FULL_SHAPE ? 866 : 16,
     parameter integer KVW      = 32768,
     parameter integer XWORDS   = 1,
     parameter integer RXWORDS  = 1,
@@ -181,18 +181,18 @@ module ot_chip_v41x_die #(
     input  wire [LAW-1:0]    cfg_q_lbase,
     input  wire [15:0]       cfg_q_lead,
     input  wire [15:0]       cfg_q_rate,
-    input  wire [7:0]        cfg_users,
+    input  wire [((MAXU > 255) ? $clog2(MAXU+1) : 8)-1:0] cfg_users,
     input  wire [(FULL_SHAPE ? 21 : 16)-1:0] cfg_prompt_len,
     input  wire [(FULL_SHAPE ? 21 : 16)-1:0] cfg_gen_len,
     output wire              pr_re,
-    output wire [7:0]        pr_user,
+    output wire [(FULL_SHAPE ? 10 : 8)-1:0] pr_user,
     output wire [(FULL_SHAPE ? 21 : 16)-1:0] pr_pos,
     input  wire [(FULL_SHAPE ? 21 : 16)-1:0] pr_q,
     output wire              tok_valid,
-    output wire [7:0]        tok_user,
+    output wire [(FULL_SHAPE ? 10 : 8)-1:0] tok_user,
     output wire [(FULL_SHAPE ? 21 : 16)-1:0] tok_pos,
     output wire [(FULL_SHAPE ? 21 : 16)-1:0] tok_id,
-    output wire [7:0]        users_done,
+    output wire [((MAXU > 255) ? $clog2(MAXU+1) : 8)-1:0] users_done,
     input  wire              rcfg_we,
     input  wire [7:0]        rcfg_dest,
     input  wire [2:0]        rcfg_mask,
@@ -278,6 +278,7 @@ module ot_chip_v41x_die #(
 
     // -- core step port: host or package controller ------------------------------------------
     wire c_start; wire [NW-1:0] c_token, c_pos; wire [AW-1:0] kv_base;
+    wire [(FULL_SHAPE ? 10 : 8)-1:0] c_user;
     wire t_start = host_mode ? host_start : c_start;
     wire [NW-1:0] t_token = host_mode ? host_token : c_token;
     wire [NW-1:0] t_pos = host_mode ? host_pos : c_pos;
@@ -324,7 +325,7 @@ module ot_chip_v41x_die #(
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),
         .fault(t_fault), .acc_n(core_acc_n),
         .prime_v(host_prime_v), .prime_first(host_prime_first), .prime_cid(host_prime_cid),
-        .window_user(host_mode ? host_user : 10'd0),
+        .window_user(host_mode ? host_user : 10'(c_user)),
         .win_blk_v(win_blk_v), .win_blk_ready(win_blk_ready), .win_blk_user(win_blk_user),
         .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row), .win_blk_idx(win_blk_idx),
         .win_blk_first_elem(win_blk_first_elem), .win_blk_codes(win_blk_codes), .win_blk_scale(win_blk_scale),
@@ -514,7 +515,8 @@ module ot_chip_v41x_die #(
     wire pc_in_valid, pc_in_ready, pc_in_last, pc_out_valid, pc_out_ready, pc_out_last;
     wire [FLIT-1:0] pc_in_data, pc_out_data;
     wire proto_fault, ctrl_busy;
-    ot_rom_pkg_ctrl_x #(.PKG_ID(PKG_ID), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA), .MAXU(MAXU), .KVW(KVW),
+    ot_rom_pkg_ctrl_x #(.PKG_ID(PKG_ID), .FLIT(FLIT), .NW(NW), .AW(AW), .VWA(VWA),
+                        .USER_W(FULL_SHAPE ? 10 : 8), .MAXU(MAXU), .KVW(KVW),
                         .XWORDS(XWORDS), .RXWORDS(RXWORDS), .RXB(RXB), .TXB(TXB), .SOURCE(SOURCE),
                         .RESULT_PARTS(RESULT_PARTS), .SEND_HIDDEN(SEND_HIDDEN), .HID_DEST(HID_DEST),
                         .SEND_RESULT(SEND_RESULT), .RES_DEST(RES_DEST), .COMBINE_IN(COMBINE_IN), .ROW0(ROW0),
@@ -523,7 +525,7 @@ module ot_chip_v41x_die #(
         .cfg_users(cfg_users), .cfg_prompt_len(cfg_prompt_len), .cfg_gen_len(cfg_gen_len),
         .in_valid(pc_in_valid), .in_ready(pc_in_ready), .in_data(pc_in_data), .in_last(pc_in_last),
         .out_valid(pc_out_valid), .out_ready(pc_out_ready), .out_data(pc_out_data), .out_last(pc_out_last),
-        .core_start(c_start), .core_token(c_token), .core_pos(c_pos),
+        .core_start(c_start), .core_token(c_token), .core_pos(c_pos), .core_user(c_user),
         .core_done(host_mode ? 1'b0 : core_done),
         .core_next_token(core_next_token), .core_next_val(core_next_val), .kv_base(kv_base),
         .vm_we(xa_we), .vm_waddr(xa_waddr), .vm_wdata(xa_wdata), .vm_re(xa_re), .vm_raddr(xa_raddr), .vm_rq(xa_rq),
