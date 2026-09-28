@@ -64,3 +64,12 @@ def test_drafter_row_parallel_int8_rounds_once_after_partial_fold():
     p1 = G.matvec(q[:, 16:], xf[16:], split)
     expect = torch.from_numpy(G.mul(G.add(p0, p1), s)).to(torch.bfloat16).float().numpy()
     np.testing.assert_array_equal(G.bits(got), G.bits(expect))
+
+
+def test_released_separate_drafter_k_splits_and_fc_split():
+    # The released drafter calls q/k/v separately; these are its numerical
+    # splits, even though the timing inventory currently prices a fused qkv.
+    assert Q.split_for(2048, 4096, 6144) == 4096       # q die slice
+    assert Q.split_for(512, 4096, 6144) == 4096        # k or v die slice
+    assert Q.split_for(2048, 20480, 6144) == 4096     # drafter fc die slice
+    assert Q.split_for(3072, 4096, 6144) == 256       # target fused qkv

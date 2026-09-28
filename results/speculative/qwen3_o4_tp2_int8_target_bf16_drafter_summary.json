@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen3-dflash-int8-acceptance-summary.v1",
- "summary_tool_sha256": "113b77e0e2a0e28f863df04eb90963b88ca8bbce54f14230d9fd4b278c8cb817",
+ "summary_tool_sha256": "f1a0ea675649e24763730e80e18b952b14cea748408c8d31a55cd3db55404acb",
  "source_record": "results/speculative/qwen3_o4_tp2_int8_target_bf16_drafter_pilot.json",
  "source_record_sha256": "2ab2c3a3347362a3e871e23f041c4552f3c53140db8858fe561efb1d9618d016",
  "scope": "Bounded greedy acceptance of a signed-INT8/FP8 TP-2 target with a released BF16 drafter. Not a routed RTL throughput or nine-workload production tau.",
