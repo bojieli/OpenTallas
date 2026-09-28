@@ -1,0 +1,115 @@
+{
+  "claim_boundary": "a placement and connection abstract for licensed IP; footprint and boundary timing are assumed, the port list is the adopted RTL's",
+  "footprint": {
+    "area_mm2": 10.00196001504,
+    "basis": "the technology.json entries of ot_hbm3e_phy (beachfront 12.0 mm, 10 mm2 per stack); results/arch/v41_die_assembly.json draws each PHY 12.0001 x 0.8335 mm",
+    "height_um": 833.49,
+    "width_um": 12000.096
+  },
+  "generator": "tools/mem_compiler/hbm_phy_gen.py --variant v41x v1.0",
+  "interface": {
+    "controller_clock_mhz": {
+      "grade": "assumed",
+      "note": "the die clock; min_period 900 ps",
+      "value": 1087.0
+    },
+    "parameters": {
+      "KTAGW": 17,
+      "LWIN": 10,
+      "NPC": 32,
+      "NPC_W": 8
+    },
+    "port_list": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv: K, 32 pseudo-channel request / response ports (ot_hdc_v41x_idx_hbm protocol); W, the QE weight port (ot_hdc_hbm_model protocol, 8 response pseudo-channels); status"
+  },
+  "kind": "hbm_phy_abstract",
+  "name": "ot_hbm3e_phy_v41x",
+  "pins": {
+    "k_pins_in_window_um": [
+      20.0,
+      195.0
+    ],
+    "longest_window_fill_um": 119.04,
+    "matches": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv ports at KTAGW = 17, NPC_W = 8, LWIN = 10 (ot_chip_v41x_die.sv g_hbm[s].u_hbm) and the pin windows of the karb strip (tools/v41x_die_pnr.py karb_strip)",
+    "pin_edge": "top (core-facing)",
+    "pin_layer": "M5",
+    "pin_pitch_um": 0.192,
+    "placement": "pseudo-channel p's K request and response bits in [p*window + 20, p*window + 195] um; W pseudo-channel c's bits (c < 8) in [c*window + 205, c*window + 360] um, the shared W request in window 0's; clk, rst_n and status in window 16's W span",
+    "pseudo_channel_window_um": 375.003,
+    "signal_pins": 22173,
+    "w_pins_in_window_um": [
+      205.0,
+      360.0
+    ]
+  },
+  "schema": "opentallas.hbm-phy-abstract.v1",
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
+  "views": {
+    "ot_hbm3e_phy_v41x.lef": "01216a77082686d320788fcadd86e8c96ea4f412ec46a7552e5c0bfbae14dce5",
+    "ot_hbm3e_phy_v41x_bb.v": "f26348e44e57fd637cc16ae7410b0a723b0ccf761cb54169d3f2332da46711e5",
+    "ot_hbm3e_phy_v41x_ff.lib": "7e7276f32e5a31a1f3980538b81df3260e13be9e05eccf509ff075a2b601a3ed",
+    "ot_hbm3e_phy_v41x_ss.lib": "4dea67c288a93f81e8a6faf4c612c1f72c94507875684a7fc9c393904e8bb707",
+    "ot_hbm3e_phy_v41x_tt.lib": "461b9cad93b505ad30cc546ccc9d12c4150040fb1d8fa27dcff6a23bcab99a2a"
+  }
+}

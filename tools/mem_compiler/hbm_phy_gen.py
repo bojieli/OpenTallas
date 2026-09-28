@@ -193,10 +193,167 @@ def generate(out: Path | None, npc: int = 32, aw: int = 31, tagw: int = 16, lenw
     return sheet
 
 
+# ---------------------------------------------------------------------------------------------------------
+# The adopted V4.1 die's stack interface (rtl/chip/ot_chip_v41x_hbm3e_phy.sv, as ot_chip_v41x_die.sv
+# instantiates it: KTAGW = 17, NPC_W = 8, LWIN = 10): 32 independent K request / response pseudo-channel
+# ports, the QE weight W port, status.  The v1 abstract above has ONE request port and cannot stand in
+# for it (docs/V41X_DIE_PHYSICAL_PREFLIGHT.md).
+V41X = "ot_hbm3e_phy_v41x"
+V41X_WINDOW_SPAN_UM = (20.0, 195.0)     # K pins inside each pseudo-channel's (edge / 32) window
+V41X_W_SPAN_UM = (205.0, 360.0)         # W-port pins, windows 0..7 (one W pseudo-channel each)
+
+
+def v41x_pins(npc: int = 32, ktagw: int = 17, npc_w: int = 8, lwin: int = 10) -> tuple[list[Pin], dict]:
+    """(the port list in declaration order, the (window, group) of every bit)."""
+    k = [("k_v", 1, "input"), ("k_rdy", 1, "output"), ("k_addr", 28, "input"), ("k_len", 4, "input"),
+         ("k_tag", ktagw, "input"), ("k_we", 1, "input"), ("k_wdata", 256, "input"), ("k_wstrb", 32, "input"),
+         ("k_wr_done", 1, "output"), ("kr_v", 1, "output"), ("kr_rdy", 1, "input"), ("kr_tag", ktagw, "output"),
+         ("kr_beat", 4, "output"), ("kr_data", 256, "output")]
+    w = [("w_v", 1, "input", "shared"), ("w_rdy", 1, "output", "shared"), ("w_addr", 24, "input", "shared"),
+         ("w_len", 6, "input", "shared"), ("w_tag", lwin, "input", "shared"), ("w_room", 1, "output", "pc"),
+         ("wr_v", 1, "output", "pc"), ("wr_rdy", 1, "input", "pc"), ("wr_tag", lwin, "output", "pc"),
+         ("wr_beat", 5, "output", "pc"), ("wr_data", 256, "output", "pc")]
+    kind = {"input": "data_in", "output": "data_out"}
+    plist = [Pin("clk", 1, "input", "clock"), Pin("rst_n", 1, "input", "control")]
+    plist += [Pin(n, npc * b, d, kind[d]) for n, b, d in k]
+    plist += [Pin(n, (npc_w if s == "pc" else 1) * b, d, kind[d]) for n, b, d, s in w]
+    plist += [Pin("k_oor", 1, "output", "control"), Pin("refreshes", 64, "output", "control"),
+              Pin("w_reads", 32, "output", "control")]
+    place: dict[str, tuple[int, str]] = {}
+    for n, b, _ in k:
+        for p in range(npc):
+            for i in range(b):
+                place[f"{n}[{p * b + i}]" if npc * b > 1 else n] = (p, "k")
+    for n, b, _, s in w:
+        reps = npc_w if s == "pc" else 1
+        for c in range(reps):
+            for i in range(b):
+                place[f"{n}[{c * b + i}]" if reps * b > 1 else n] = (c, "w")
+    for nm in (["clk", "rst_n", "k_oor"] + [f"refreshes[{i}]" for i in range(64)]
+               + [f"w_reads[{i}]" for i in range(32)]):
+        place[nm] = (npc // 2, "w")
+    return plist, place
+
+
+def write_lef_v41x(w: float, h: float, plist: list[Pin], place: dict, npc: int,
+                   pitch: float) -> tuple[str, dict[str, Any]]:
+    L = ["# OpenTallas tools/mem_compiler/hbm_phy_gen.py --variant v41x: HBM3E PHY + controller ABSTRACT for the",
+         "# adopted V4.1 die (rtl/chip/ot_chip_v41x_hbm3e_phy.sv port list); controller-side pins only",
+         "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {V41X}",
+         f"  FOREIGN {V41X} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
+    win = w / npc
+    cursor: dict[tuple[int, str], float] = {}
+    pw, pl = 0.024, 0.192
+    worst = 0.0
+    for p in plist:
+        for b in p.bits():
+            wi, grp = place[b]
+            lo, hi = V41X_WINDOW_SPAN_UM if grp == "k" else V41X_W_SPAN_UM
+            x = cursor.get((wi, grp), round(wi * win + lo, 3))
+            if x + pw > wi * win + hi:
+                raise SystemExit(f"{b}: window {wi} group {grp} overflows at {x:.3f} um")
+            cursor[(wi, grp)] = round(x + pitch, 3)
+            worst = max(worst, x - (wi * win + lo))
+            L += [f"  PIN {b}", f"    DIRECTION {p.direction.upper()} ;",
+                  "    USE CLOCK ;" if p.kind == "clock" else "    USE SIGNAL ;", "    SHAPE ABUTMENT ;",
+                  "    PORT", "      LAYER M5 ;", f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;",
+                  "    END", f"  END {b}"]
+    sw, sp = 0.288, 2.4
+    straps: dict[str, list[float]] = {"VDD": [], "VSS": []}
+    y, kk = 1.0, 0
+    while y + sw < h - 1.0:
+        straps["VDD" if kk % 2 == 0 else "VSS"].append(y)
+        y += sp / 2
+        kk += 1
+    for net, use in (("VDD", "POWER"), ("VSS", "GROUND")):
+        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", "      LAYER M4 ;"]
+        L += [f"      RECT 0.500 {yy:.3f} {w - 0.5:.3f} {yy + sw:.3f} ;" for yy in straps[net]]
+        L += ["    END", f"  END {net}"]
+    L += ["  OBS"]
+    for layer in ("M1", "M2", "M3", "M4"):
+        L += [f"    LAYER {layer} ;", f"    RECT 0 0 {w:.3f} {h:.3f} ;"]
+    L += ["    LAYER M5 ;", f"    RECT 0 0 {w:.3f} {h - 0.4:.3f} ;"]
+    L += ["  END", f"END {V41X}", "", "END LIBRARY"]
+    return "\n".join(L) + "\n", {
+        "signal_pins": sum(pp.width for pp in plist), "pin_pitch_um": pitch, "pin_layer": "M5",
+        "pin_edge": "top (core-facing)", "pseudo_channel_window_um": round(win, 3),
+        "k_pins_in_window_um": list(V41X_WINDOW_SPAN_UM), "w_pins_in_window_um": list(V41X_W_SPAN_UM),
+        "longest_window_fill_um": round(worst + pitch, 3),
+        "placement": "pseudo-channel p's K request and response bits in [p*window + 20, p*window + 195] um; W "
+                     "pseudo-channel c's bits (c < 8) in [c*window + 205, c*window + 360] um, the shared W request "
+                     "in window 0's; clk, rst_n and status in window 16's W span",
+        "matches": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv ports at KTAGW = 17, NPC_W = 8, LWIN = 10 "
+                   "(ot_chip_v41x_die.sv g_hbm[s].u_hbm) and the pin windows of the karb strip "
+                   "(tools/v41x_die_pnr.py karb_strip)"}
+
+
+def generate_v41x(out: Path | None, npc: int = 32) -> dict[str, Any]:
+    area = tech("hbm.hbm3e.phy_area_mm2_per_stack")
+    beach = tech("hbm.hbm3e.stack_beachfront_mm")
+    w_um = asap7.snap_up(beach["value"] * 1000.0, asap7.METAL["width_snap_um"])
+    h_um = asap7.snap_up(area["value"] * 1e6 / (beach["value"] * 1000.0), asap7.METAL["height_snap_um"])
+    plist, place = v41x_pins(npc)
+    lef, pin_info = write_lef_v41x(w_um, h_um, plist, place, npc, 0.192)
+    cal = asap7.calibration()
+    energy = tech("energy.hbm_j_per_byte")
+    per_corner = {}
+    for c in asap7.CORNERS:
+        k = cal["corners"][c]
+        fo4 = k["fo4_ps"]
+        per_corner[c] = Timing(
+            corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
+            clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
+            out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
+            min_period_ps=900.0, min_pulse_ps=360.0,
+            read_energy_fj=energy["value"] * 1e15 * 32, write_energy_fj=0.0,
+            leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0,
+            breakdown={"fo4_ps": fo4})
+    sheet: dict[str, Any] = {
+        "schema": "opentallas.hbm-phy-abstract.v1",
+        "generator": f"tools/mem_compiler/hbm_phy_gen.py --variant v41x v{GENERATOR_VERSION}",
+        "kind": "hbm_phy_abstract", "name": V41X,
+        "footprint": {"width_um": w_um, "height_um": h_um, "area_mm2": w_um * h_um / 1e6,
+                      "basis": "the technology.json entries of ot_hbm3e_phy (beachfront 12.0 mm, 10 mm2 per stack); "
+                               "results/arch/v41_die_assembly.json draws each PHY 12.0001 x 0.8335 mm"},
+        "interface": {"port_list": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv: K, 32 pseudo-channel request / response "
+                                   "ports (ot_hdc_v41x_idx_hbm protocol); W, the QE weight port (ot_hdc_hbm_model "
+                                   "protocol, 8 response pseudo-channels); status",
+                      "parameters": {"NPC": npc, "KTAGW": 17, "NPC_W": 8, "LWIN": 10},
+                      "controller_clock_mhz": {"value": 1087.0, "grade": "assumed",
+                                               "note": "the die clock; min_period 900 ps"}},
+        "pins": pin_info,
+        "timing": {c: asdict(t) for c, t in per_corner.items()},
+        "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
+        "claim_boundary": "a placement and connection abstract for licensed IP; footprint and boundary timing are "
+                          "assumed, the port list is the adopted RTL's",
+    }
+    if out is not None:
+        d = out / V41X
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{V41X}.lef").write_text(lef)
+        comment = ("HBM3E PHY + controller abstract for the adopted V4.1 die, controller-side boundary timing "
+                   "only (assumed)")
+        for c, t in per_corner.items():
+            (d / f"{V41X}_{c}.lib").write_text(write_liberty(V41X, t, plist, w_um * h_um, None, comment))
+        (d / f"{V41X}_bb.v").write_text(blackbox_verilog(V41X, plist, comment + "; functional model: "
+                                                         "rtl/chip/ot_chip_v41x_hbm3e_phy.sv"))
+        files = sorted(p.name for p in d.iterdir() if p.name != f"{V41X}.json")
+        sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
+        (d / f"{V41X}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
+    return sheet
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=asap7.ROOT / "physical/asap7_memory_macros")
+    ap.add_argument("--variant", choices=["v1", "v41x"], default="v1")
     args = ap.parse_args()
+    if args.variant == "v41x":
+        s = generate_v41x(args.out)
+        f = s["footprint"]
+        print(f"{V41X}: {f['width_um']:.1f} x {f['height_um']:.1f} um ({f['area_mm2']:.2f} mm2), "
+              f"{s['pins']['signal_pins']} controller-side pins, {s['pins']['pseudo_channel_window_um']} um windows")
+        return 0
     s = generate(args.out)
     f = s["footprint"]
     print(f"{NAME}: {f['width_um']:.1f} x {f['height_um']:.1f} um ({f['area_mm2']:.2f} mm2), "
