@@ -24,15 +24,18 @@ def write_lines(path: Path, items: list[str]) -> str:
 
 def build(out: Path) -> dict:
     out.mkdir(parents=True, exist_ok=True)
-    # Give every word a distinct exact integer payload so the oracle catches
-    # word reordering as well as dropped or duplicated records.
-    values = [(j // LANES) * 16 + (j % 8) + 1 for j in range(WORDS * LANES)]
+    # Give every rank, word, and lane a distinct exact integer payload so the
+    # oracle catches misrouted ranks, word reordering, and lane permutation.
+    values = [1000 + (j // LANES) * 32 + (j % LANES) for j in range(WORDS * LANES)]
     init = [bits(float(v)) for v in values]
     # Every rank's partial is finite and exactly representable in binary32.
-    part = [[init[j] if rank == 0 else bits(float(rank)) for j in range(WORDS * LANES)]
+    part = [[init[j] if rank == 0 else bits(float(rank * 100 + (j // LANES) * 16 + j % LANES))
+             for j in range(WORDS * LANES)]
             for rank in range(4)]
-    expect = [bits(float(v + 6)) for v in values]
-    consumed = [bits(float(v + 7)) for v in values]
+    peer_sums = [sum(rank * 100 + (j // LANES) * 16 + j % LANES for rank in range(1, 4))
+                 for j in range(WORDS * LANES)]
+    expect = [bits(float(v + peer_sums[j])) for j, v in enumerate(values)]
+    consumed = [bits(float(v + peer_sums[j] + 1)) for j, v in enumerate(values)]
     producer = I.encode(unit=I.UNIT_SU, su_nout=1, su_nin=WORDS * LANES,
                         a_base=IN_BASE, a_si=1, dst=I.DST_VM, o_base=PRODUCED, o_si=1,
                         su_vec=I.VEC_I)
@@ -51,7 +54,7 @@ def build(out: Path) -> dict:
         'addresses': {'input': IN_BASE, 'produced': PRODUCED, 'reduced': REDUCED, 'consumed': CONSUMED},
         'producer_entry': 0,
         'consumer_entries': [2 + 2 * k for k in range(WORDS)],
-        'oracle': 'rank-order FP32 fold of real rank-0 values and synthetic rank-1/2/3 constants 1/2/3; consumer adds +1',
+        'oracle': 'rank-order FP32 fold of rank/word/lane-distinct exact integer partials; consumer adds +1',
         'files': {},
     }
     manifest['files']['program.hex'] = write_lines(out / 'program.hex', [f'{p:0384x}' for p in prog])
