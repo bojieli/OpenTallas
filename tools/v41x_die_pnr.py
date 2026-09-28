@@ -209,7 +209,188 @@ def ptile(nq: int = 2, nm: int = 0, np_: int = 2, util: float = 0.68, density: f
                           "columns": {"A": len(cols_a), "B": len(cols_b)}, "channel_um": CHANNEL_UM}}
 
 
+# ------------------------------------------------------------------------------------------------ reduced die
+PDIE_DIR = "physical/asap7_v41x_pdie_macros"
+S4 = 0.25                                         # linear scale of the reduced die
+TILE_CHANNEL_UM = 20.0                            # die-level channel between tiles (repeaters, pipeline flops)
+OPW, RESW, RECW, FLW = 380, 140, 547, 512
+
+
+def die_assembly_rects() -> dict:
+    d = json.loads((ROOT / "results/arch/v41_die_assembly.json").read_text())
+    return d["floorplan"]["layer"]
+
+
+def pdie_specs() -> dict:
+    """The reduced die's hard-macro abstracts (tools/chip_assembly/macros.py MacroSpec)."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    from chip_assembly import macros as mc
+    sys.path.insert(0, str(ROOT / "tools/mem_compiler"))
+    import hbm_phy_gen
+    fp = die_assembly_rects()
+    tw, th = fp["tiles"]["w_mm"] * 1000 * S4 - TILE_CHANNEL_UM, fp["tiles"]["h_mm"] * 1000 * S4 - TILE_CHANNEL_UM
+    phy = next(r for r in fp["rects"] if r["name"] == "HBM3E PHY 0")
+    pw, ph = mc.snap(phy["w"] * 1000 * S4, mc.SITE_W), mc.snap(phy["h"] * 1000 * S4, mc.SITE_H)
+    win = pw / NPC
+    plist, place = hbm_phy_gen.v41x_pins()
+    pins = []
+    for p in plist:
+        if p.kind == "clock":
+            continue
+        edges = []
+        for i in range(p.width):
+            wi, grp = place[p.name if p.width == 1 else f"{p.name}[{i}]"]
+            span = (wi * win + 2.0, wi * win + 0.66 * win) if grp == "k" else (wi * win + 0.68 * win, wi * win + win - 2)
+            edges.append((i, i, "N", span))
+        pins.append(mc.Pin(p.name, p.direction, p.width, edges))
+    phy_t = hbm_phy_gen.v41x_pins()  # noqa: F841  (the same list the full-size abstract uses)
+    specs = {
+        "ot_hbm3e_phy_v41x_s4": mc.MacroSpec(
+            "ot_hbm3e_phy_v41x_s4", pw, ph, pins, clk_to_q_ns=0.117, setup_ns=0.065, hold_ns=0.031,
+            obs_layers=("M1", "M2", "M3", "M4"), kind="phy",
+            basis="ot_hbm3e_phy_v41x (the adopted port list) at 1/4 of the die assembly's 12.0 x 0.8335 mm; "
+                  "pseudo-channel p's K bits in the first two-thirds of its edge window, W bits in the rest; "
+                  "boundary timing as the full-size abstract (assumed)"),
+        "ot_pdie_tile_io": mc.MacroSpec(
+            "ot_pdie_tile_io", mc.snap(tw, mc.SITE_W), mc.snap(th, mc.SITE_H),
+            mc.pins(("op_in", "input", OPW, "E"), ("res_out", "output", RESW, "E")),
+            clk_to_q_ns=0.10, setup_ns=0.08, obs_layers=tuple(f"M{i}" for i in range(1, 8)), kind="tile",
+            basis="a die-assembly tile at 1/4 scale less the die channel; operand in and result out registered at "
+                  "its spine-facing edge (the physical tile's edge registers, ot_chip_v41x_ptile NP stages); "
+                  "routes M2-M7 inside (obstructed), die wiring passes over it on M8/M9"),
+        "ot_pdie_tile_bk": mc.MacroSpec(
+            "ot_pdie_tile_bk", mc.snap(tw, mc.SITE_W), mc.snap(th, mc.SITE_H), [],
+            obs_layers=tuple(f"M{i}" for i in range(1, 8)), kind="tile",
+            basis="as ot_pdie_tile_io without die-level pins: an M1-M7 blockage"),
+        "ot_pdie_coll": mc.MacroSpec(
+            "ot_pdie_coll", mc.snap(900 * S4, mc.SITE_W), mc.snap(442.4 * S4, mc.SITE_H),
+            mc.pins(("rec_in", "input", RECW, "W"), ("rec_out", "output", RECW, "W"),
+                    ("link_out", "output", FLW, "E"), ("link_in", "input", FLW, "E")),
+            obs_layers=tuple(f"M{i}" for i in range(1, 7)), kind="collective",
+            basis="the die assembly's one-shot collective engine block (0.9 x 0.4424 mm) at 1/4; records of "
+                  "32 x CL_LANES + 3 + CL_TAGW = 547 bits (ot_chip_v41x_die CL_PW), 512-bit link flits"),
+        "ot_pdie_ucie": mc.MacroSpec(
+            "ot_pdie_ucie", mc.snap(1043 * S4, mc.SITE_W), mc.snap(6609.6 * S4, mc.SITE_H),
+            mc.pins(("tx", "input", FLW, "W"), ("rx", "output", FLW, "W")),
+            obs_layers=("M1", "M2", "M3", "M4"), kind="link",
+            basis="UCIe-A shoreline (die assembly 1.043 x 6.61 mm) at 1/4, one 512-bit flit port each way"),
+        "ot_pdie_serdes": mc.MacroSpec(
+            "ot_pdie_serdes", mc.snap(1000 * S4, mc.SITE_W), mc.snap(9000 * S4, mc.SITE_H),
+            mc.pins(("tx", "input", FLW, "E"), ("rx", "output", FLW, "E")),
+            obs_layers=("M1", "M2", "M3", "M4"), kind="link",
+            basis="half of the 112G SerDes strip (die assembly 1.0 x 18.0 mm) at 1/4: the package-pair "
+                  "collective lanes, or the stage-hop lanes"),
+    }
+    return specs
+
+
+def write_pdie_views(out: Path | None = None) -> dict:
+    sys.path.insert(0, str(ROOT / "tools"))
+    from chip_assembly import macros as mc
+    out = out or ROOT / PDIE_DIR
+    rec = {}
+    for name, spec in pdie_specs().items():
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{name}.lef").write_text(mc.lef_text(spec))
+        (d / f"{name}_tt.lib").write_text(mc.liberty_text(spec))
+        (d / f"{name}_bb.v").write_text(mc.verilog_stub(spec))
+        rec[name] = mc.describe(spec)
+    (out / "index.json").write_text(json.dumps({"generator": "tools/v41x_die_pnr.py write_pdie_views",
+                                                "scale": S4, "macros": rec}, indent=1, sort_keys=True) + "\n")
+    return rec
+
+
+def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_key: int = 2, n_coll: int = 3,
+           n_ser: int = 3, stop: str | None = None) -> dict:
+    fp = die_assembly_rects()
+    k = 1000 * S4
+    W, H = snap(fp["die_w_mm"] * k), snap(fp["die_h_mm"] * k, 0.27)
+    specs = {n: (s.width_um, s.height_um) for n, s in pdie_specs().items()}
+    place = []
+    # HBM PHYs: the long edges, pins facing the core
+    for i, r in enumerate([r for r in fp["rects"] if r["cls"] == "phy_hbm"]):
+        top = r["y"] > fp["die_h_mm"] / 2
+        y = H - specs["ot_hbm3e_phy_v41x_s4"][1] if top else 0.0
+        place.append((f"g_s[{i}].u_phy", r["x"] * k, y, "MX" if top else "R0"))
+    # tiles: the lane columns' tiles, shrunk by the channel
+    tiles = {}
+    for r in fp["rects"]:
+        if r.get("tile"):
+            key = r["name"].split()[1]
+            x0, y0, x1, y1 = r["x"], r["y"], r["x"] + r["w"], r["y"] + r["h"]
+            b = tiles.get(key, [x0, y0, x1, y1])
+            tiles[key] = [min(b[0], x0), min(b[1], y0), max(b[2], x1), max(b[3], y1)]
+    spine = next(r for r in fp["rects"] if r["cls"] == "vector")
+    sx = (spine["x"] + spine["w"] / 2) * k
+    order = sorted(tiles.items(), key=lambda kv: -(abs((kv[1][0] + kv[1][2]) / 2 * k - sx)
+                                                   + abs((kv[1][1] + kv[1][3]) / 2 * k - H / 2)))
+    far0 = order[0]
+    far1 = next(t for t in order if (t[1][0] * k < sx) != (far0[1][0] * k < sx))
+    mid = order[len(order) // 2]
+    near = order[-1]
+    io = [far0[0], far1[0], mid[0], near[0]]
+    bk = 0
+    for key, (x0, y0, x1, y1) in sorted(tiles.items()):
+        west = x1 * k <= sx
+        if key in io:
+            inst = f"g_tio[{io.index(key)}].u_tile"
+        else:
+            inst = f"g_tbk[{bk}].u_tile"
+            bk += 1
+        place.append((inst, x0 * k + TILE_CHANNEL_UM / 2, y0 * k + TILE_CHANNEL_UM / 2, "R0" if west else "MY"))
+    coll = [r for r in fp["rects"] if r["cls"] == "collective"]
+    ucie = next(r for r in fp["rects"] if r["cls"] == "phy_ucie")
+    ser = next(r for r in fp["rects"] if r["cls"] == "phy_serdes")
+    cu = next(r for r in coll if "UCIe" in r["name"])
+    cp = next(r for r in coll if "package-pair" in r["name"])
+    place.append(("g_coll[0].u_coll", cu["x"] * k, cu["y"] * k, "R0"))
+    place.append(("g_coll[1].u_coll", cp["x"] * k, cp["y"] * k + 10, "MY"))
+    place.append(("g_coll[0].g_ucie.u_link", W - specs["ot_pdie_ucie"][0], ucie["y"] * k, "R0"))
+    place.append(("g_coll[1].g_ser.u_link", 0.0, ser["y"] * k + specs["ot_pdie_serdes"][1] + 10, "R0"))
+    place.append(("u_hop", 0.0, ser["y"] * k, "R0"))
+    tcl = ["# Macro placement of ot_chip_v41x_pdie (tools/v41x_die_pnr.py die_s4): the die assembly x 1/4.",
+           "proc ot_place {want x y orient} {",
+           "  foreach inst [[ord::get_db_block] getInsts] {",
+           "    set n [$inst getName]",
+           "    if {[string map {\\\\ {}} $n] eq $want} {",
+           "      place_macro -macro_name $n -location [list $x $y] -orientation $orient",
+           "      return",
+           "    }",
+           "  }",
+           "  error \"macro placement: no instance $want\"",
+           "}"]
+    tcl += [f"ot_place {{{i}}} {snap(x):g} {snap(y, 0.27):g} {o}" for i, x, y, o in place]
+    srcs = ["rtl/chip/ot_chip_v41x_hbm_karb.sv", "rtl/chip/ot_chip_v41x_kv_prefetch.sv"]
+    srcs += [f"{PDIE_DIR}/{n}/{n}_bb.v" for n in specs] + ["rtl/chip/ot_chip_v41x_pdie.sv"]
+    args = ["--view", "asap7", "--top", "ot_chip_v41x_pdie"]
+    for s_ in srcs:
+        args += ["--source", s_]
+    for n, v in (("N_FAR", n_far), ("N_FAR2", n_far2), ("N_MID", n_mid), ("N_NEAR", n_near), ("N_KEY", n_key),
+                 ("N_COLL", n_coll), ("N_SER", n_ser)):
+        args += ["--param", f"{n}={v}"]
+    m = 2.16
+    args += ["--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2", "--stages", "pnr",
+             "--die-area", "0", "0", f"{W:g}", f"{H:g}", "--core-area", f"{m:g}", f"{m:g}", f"{W - m:g}", f"{H - m:g}",
+             "--place-density", "0.60", "--macro-place-halo", "2", "2", "--routing-layers", "M2", "M9",
+             "--pin-region", ".*=left:100-800",
+             "--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_v41x_pdie.tcl"]
+    for n in specs:
+        args += ["--macro-view", f"{n}={PDIE_DIR}/{n}"]
+    if stop:
+        args += ["--pnr-stop-after", stop]
+    tag = f"s4_f{n_far}{n_far2}m{n_mid}n{n_near}k{n_key}c{n_coll}h{n_ser}"
+    return {"args": args, "nickname": f"claude_v41x_pdie_{tag}", "hook": ("PRE_MACRO_PLACE", "\n".join(tcl) + "\n"),
+            "output": f"results/asap7_physical/v41x_die_{tag}/physical.json",
+            "floorplan": {"die_um": [W, H], "scale": S4, "tile_channel_um": TILE_CHANNEL_UM,
+                          "spine_centre_x_um": round(sx, 1),
+                          "io_tiles": {"far": far0[0], "far_other_side": far1[0], "mid": mid[0], "near": near[0]},
+                          "macros": [{"inst": i, "x": snap(x), "y": snap(y, 0.27), "orient": o}
+                                     for i, x, y, o in place]}}
+
+
 CASES = {"karb_strip": karb_strip,
+         "die_s4": die_s4,
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),
          "tile_q2_u75": lambda: ptile(2, 0, 2, 0.75),
          "tile_q4m1_u68": lambda: ptile(4, 1, 2, 0.68)}

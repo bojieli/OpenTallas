@@ -2877,6 +2877,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--orfs-var",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="set an ORFS config.mk variable verbatim (repeatable; e.g. PDN_TCL=/src/...); recorded "
+             "under the view's pnr.extra_config.  Absent: nothing added",
+    )
+    parser.add_argument(
         "--pnr-stop-after",
         default="finish",
         choices=["finish", "cts"],
@@ -3102,6 +3110,22 @@ def main(argv: list[str] | None = None) -> int:
         view["pnr"] = dict(view["pnr"])
         view["pnr"]["extra_config"] = dict(view["pnr"]["extra_config"])
         view["pnr"]["extra_config"]["ASAP7_USE_VT"] = " ".join(flavours)
+
+    if args.orfs_var:
+        # --orfs-var KEY=VALUE: an ORFS variable set verbatim in config.mk (e.g. PDN_TCL for a
+        # die-level power grid); recorded with the view under pnr.extra_config
+        if view.get("pnr") is None:
+            print(f"--orfs-var: view {args.view} has no place-and-route platform", file=sys.stderr)
+            return 2
+        view = dict(view)
+        view["pnr"] = dict(view["pnr"])
+        view["pnr"]["extra_config"] = dict(view["pnr"]["extra_config"])
+        for item in args.orfs_var:
+            key, sep, value = item.partition("=")
+            if not sep or not re.fullmatch(r"[A-Z][A-Z0-9_]*", key):
+                print(f"--orfs-var {item!r}: expected KEY=VALUE", file=sys.stderr)
+                return 2
+            view["pnr"]["extra_config"][key] = value
 
     try:
         if args.cts_cluster_size is not None and "pnr" not in stages:
