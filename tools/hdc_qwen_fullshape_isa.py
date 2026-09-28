@@ -9,9 +9,10 @@ import hdc_isa as I
 import hdc_program as P
 
 ROW_OFFSET, ROW_WIDTH = I.LAYOUT['me_row0']
-ROW_HIGH_OFFSET = ROW_OFFSET + ROW_WIDTH
+ROW_HIGH_OFFSET = ROW_OFFSET + ROW_WIDTH + I.LAYOUT['me_amc'][1]
 DESC_ROW_HIGH_OFFSET = 18
-assert ROW_WIDTH == 16 and ROW_HIGH_OFFSET + 2 <= I.INSTR_BITS
+assert ROW_WIDTH == 16 and I.LAYOUT['me_amc'] == (ROW_OFFSET + ROW_WIDTH, 1)
+assert ROW_HIGH_OFFSET + 2 <= I.INSTR_BITS
 
 
 def encode_instruction(fields):

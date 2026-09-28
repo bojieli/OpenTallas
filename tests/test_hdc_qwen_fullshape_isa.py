@@ -29,3 +29,14 @@ def test_out_of_range_rejected():
         Q.encode_instruction({'me_row0': 1 << 18})
     with pytest.raises(ValueError, match='exceeds'):
         Q.encode_descriptor(2, 0, 0, 0, 1 << 18)
+
+
+@pytest.mark.parametrize('row', [0, 12288, 65536, 73728, 75968, 151935])
+@pytest.mark.parametrize('continue_argmax', [0, 1])
+def test_row_offset_does_not_alias_argmax_continuation(row, continue_argmax):
+    assert Q.ROW_HIGH_OFFSET == I.LAYOUT['me_amc'][0] + 1
+    instruction = Q.encode_instruction({'unit': I.UNIT_ME, 'me_row0': row,
+                                        'me_amc': continue_argmax})
+    decoded = Q.decode_instruction(instruction)
+    assert decoded['me_row0'] == row
+    assert decoded['me_amc'] == continue_argmax
