@@ -7,15 +7,15 @@
   "tp": 32,
   "stage": 24
  },
- "basis": "(agent a84f863e, results/arch/v41_rack.json on its branch at 5aa3bba1):\n\nC8  A 2-die package has 90 lanes of 112G PAM4 (1.19 TB/s per direction, 13.18 GB/s net per lane,\n    technology.json).  The rack allocates TP 32 (each die 2 x 8 lanes to the two dies of the partner package,\n    105 GB/s per die pair), stage 24 out + 24 in, switch 4, spare 6.  Every collective's bytes are therefore priced\n    per PEER link: a one-shot all-reduce sends the die's whole partial to each peer (the remote ones in parallel on\n    their own lanes, 105 GB/s each at TP 32), an all-gather sends the die's quarter; the in-package peer is UCIe\n    (4.2 TB/s).  The bytes still chase their producer (overlapped reductions), so they cost time only where they\n    outlast it -- the DAG decides.  A stage hop's 41 KB residual crosses on the 2 packages' stage lanes in parallel.\n    The search: TP lanes t in multiples of 4 (2 peers x 2 dies), stage = (90 - 4 switch - 6 spare - t) / 2 each way.\nC4  SerDes static power: 84 always-on lanes per layer/head package at 0.728 W each (6.5 pJ/bit at 112 Gb/s) = 61 W\n    per package, 30.6 W per die; the 72 Engram table dies carry 1 lane each (2 per package, 0.728 W per die).  The\n    switched HBM comparator's SerDes is charged on its own fabric (tools/arch_hbm_switched_v41.serdes_w_per_die: the\n    lanes that carry 0.9 TB/s per direction per package).\nC10 The 4 head dies carry 4 HBM3E stacks each for the drafter's per-user state (+16 x 2.8 W).\n\nRack model gaps (closed here; results/arch/v41_rack.json gates C8 / C10):\n*   The draft is conditioned on the inputs of target layers 37-39 at every verified position (DSpark\n    dspark_target_layer_ids): 3 x 5,120 BF16 x 6 positions = 184 KB per verify step, which reach the head module\n    over the S27 -> H stage link behind the residual.  Priced on the MTP critical path as a head hop's bytes\n    (stage lanes of both packages + the UCIe half, the m_lanes rule) before the draft can start: draft_extra_s.\n*   At batch > 1 with MTP the drafts of different users overlap on the head group; the aggregate points carry\n    tools/arch_utilization_v41.draft_contention (conservative interference bound + unit throughput cap).\n*   Every aggregate point is capped by its busiest package link (tools/v41_rack_design.stage_link_demand: the\n    busiest stage's T1 link and UCIe link, and with MTP the head module's draft traffic): aggregate x\n    min(1, 1 / the highest utilisation).",
+ "basis": "(agent a84f863e, results/arch/v41_rack.json on its branch at 5aa3bba1):\n\nC8  A 2-die package has 90 lanes of 112G PAM4 (1.19 TB/s per direction, 13.18 GB/s net per lane,\n    technology.json).  The rack allocates TP 32 (each die 2 x 8 lanes to the two dies of the partner package,\n    105 GB/s per die pair), stage 24 out + 24 in, switch 4, spare 6.  Every collective's bytes are therefore priced\n    per PEER link: a one-shot all-reduce sends the die's whole partial to each peer (the remote ones in parallel on\n    their own lanes, 105 GB/s each at TP 32), an all-gather sends the die's quarter; the in-package peer is UCIe\n    (4.2 TB/s).  The bytes still chase their producer (overlapped reductions), so they cost time only where they\n    outlast it -- the DAG decides.  A stage hop's 41 KB residual crosses on the 2 packages' stage lanes in parallel.\n    The search: TP lanes t in multiples of 4 (2 peers x 2 dies), stage = (90 - 4 switch - 6 spare - t) / 2 each way.\nC4  SerDes static power: 84 always-on lanes per layer/head package at 0.728 W each (6.5 pJ/bit at 112 Gb/s) = 61 W\n    per package, 30.6 W per die; the 72 Engram table dies carry 1 lane each (2 per package, 0.728 W per die).  The\n    switched HBM comparator's SerDes is charged on its own fabric (tools/arch_hbm_switched_v41.serdes_w_per_die: the\n    lanes that carry 0.9 TB/s per direction per package).\nC10 The 4 head dies carry 4 HBM3E stacks each for the drafter's per-user state (+16 x 2.8 W).\n\nDesign-point re-derivation (2026-09-28):\n*   On-die wire: every registered traversal of the layer die (tools/v41_die_assembly.TRAVERSALS on its floorplan\n    distances) is charged on its node's edges in the DAG (wire_mutation), on the ASAP7 routed-wire model; the\n    150 ps/mm technology entry is a sensitivity and the no-wire point one ablation (record on_die_wire).\n*   The MTP verify pass's stage hop carries its own bench-measured tail at its best measured T1 split\n    (tools/v41_collective_exposure.mtp_hop_term, lever 5; record mtp_hop_split); the one-position hop keeps split20.\n*   A saturated point holds at most the users the HBM holds after the capacity reserve (arch_budget_v41.point_batch).\n*   The adopted split (R-L9) is kept unless another gains more than SPLIT_TOLERANCE.\n\nRack model gaps (closed here; results/arch/v41_rack.json gates C8 / C10):\n*   The draft is conditioned on the inputs of target layers 37-39 at every verified position (DSpark\n    dspark_target_layer_ids): 3 x 5,120 BF16 x 6 positions = 184 KB per verify step, which reach the head module\n    over the S27 -> H stage link behind the residual.  Priced on the MTP critical path as a head hop's bytes\n    (stage lanes of both packages + the UCIe half, the m_lanes rule) before the draft can start: draft_extra_s.\n*   At batch > 1 with MTP the drafts of different users overlap on the head group; the aggregate points carry\n    tools/arch_utilization_v41.draft_contention (conservative interference bound + unit throughput cap).\n*   Every aggregate point is capped by its busiest package link (tools/v41_rack_design.stage_link_demand: the\n    busiest stage's T1 link and UCIe link, and with MTP the head module's draft traffic): aggregate x\n    min(1, 1 / the highest utilisation).",
  "ladder_top_overlap_assumed": {
   "1048576": {
-   "ar": 8634.678265715687,
-   "mtp": 26211.512864645047
+   "ar": 7310.427009446538,
+   "mtp": 23676.1778626569
   },
   "200000": {
-   "ar": 9055.110194560553,
-   "mtp": 27483.83125540927
+   "ar": 7609.555532327167,
+   "mtp": 24709.416224427066
   }
  },
  "grid": [
@@ -26,19 +26,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 5628.667151196621,
-    "mtp": 7994.821400959112,
-    "T_us": 177.66195320101775,
-    "verify_us": 610.9327905948327,
-    "collective_bytes_us": 64.746,
+    "ar": 5093.994195088112,
+    "mtp": 7775.960803010868,
+    "T_us": 196.30960729485142,
+    "verify_us": 628.5353069570409,
+    "collective_bytes_us": 62.478,
     "hops_us": 6.767
    },
    "200000": {
-    "ar": 5804.343986940372,
-    "mtp": 8109.325208119541,
-    "T_us": 172.28475814837557,
-    "verify_us": 602.1020638239032,
-    "collective_bytes_us": 64.746,
+    "ar": 5237.455433870694,
+    "mtp": 7884.238815817572,
+    "T_us": 190.93241224220958,
+    "verify_us": 619.7045801861113,
+    "collective_bytes_us": 62.478,
     "hops_us": 6.767
    }
   },
@@ -49,19 +49,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 6337.705665518096,
-    "mtp": 11108.639512478527,
-    "T_us": 157.78580653259982,
-    "verify_us": 435.62807249783464,
-    "collective_bytes_us": 33.661,
+    "ar": 5667.859126321391,
+    "mtp": 10690.553333922337,
+    "T_us": 176.43346062643403,
+    "verify_us": 453.23058886004094,
+    "collective_bytes_us": 31.392,
     "hops_us": 6.767
    },
    "200000": {
-    "ar": 6561.309038180589,
-    "mtp": 11330.946704838732,
-    "T_us": 152.40861147995767,
-    "verify_us": 426.797345726905,
-    "collective_bytes_us": 33.661,
+    "ar": 5846.029647879862,
+    "mtp": 10896.286901686859,
+    "T_us": 171.0562655737921,
+    "verify_us": 444.39986208911097,
+    "collective_bytes_us": 31.392,
     "hops_us": 6.767
    }
   },
@@ -72,19 +72,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 6616.301001807649,
-    "mtp": 10769.530467927818,
-    "T_us": 151.1418539946699,
-    "verify_us": 449.78931587191033,
-    "collective_bytes_us": 38.155,
+    "ar": 5889.6454277889925,
+    "mtp": 10369.870933997898,
+    "T_us": 169.78950808850405,
+    "verify_us": 467.682600140543,
+    "collective_bytes_us": 35.886,
     "hops_us": 6.839
    },
    "200000": {
-    "ar": 6860.373476383674,
-    "mtp": 10978.344690118774,
-    "T_us": 145.76465894202784,
-    "verify_us": 440.9585891009807,
-    "collective_bytes_us": 38.155,
+    "ar": 6082.2695182317375,
+    "mtp": 10563.335243362515,
+    "T_us": 164.41231303586233,
+    "verify_us": 458.8518733696132,
+    "collective_bytes_us": 35.886,
     "hops_us": 6.839
    }
   },
@@ -95,19 +95,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7060.770038102112,
-    "mtp": 14239.354834283715,
-    "T_us": 141.62761208815596,
-    "verify_us": 336.65602634634513,
-    "collective_bytes_us": 17.431,
+    "ar": 6239.265881889187,
+    "mtp": 13548.931566622232,
+    "T_us": 160.27526618199033,
+    "verify_us": 354.54931061497604,
+    "collective_bytes_us": 15.163,
     "hops_us": 6.839
    },
    "200000": {
-    "ar": 7339.427076684455,
-    "mtp": 14606.695259479819,
-    "T_us": 136.25041703551395,
-    "verify_us": 327.8252995754154,
-    "collective_bytes_us": 17.431,
+    "ar": 6455.858311914962,
+    "mtp": 13881.097662675451,
+    "T_us": 154.89807112934858,
+    "verify_us": 345.71858384404624,
+    "collective_bytes_us": 15.163,
     "hops_us": 6.839
    }
   },
@@ -118,19 +118,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7250.250641682181,
-    "mtp": 13015.748474404087,
-    "T_us": 137.92626619705152,
-    "verify_us": 369.6536819433364,
-    "collective_bytes_us": 24.859,
+    "ar": 6382.092693069252,
+    "mtp": 12436.471350311434,
+    "T_us": 156.68841680816826,
+    "verify_us": 387.54696621196837,
+    "collective_bytes_us": 22.406,
     "hops_us": 6.919
    },
    "200000": {
-    "ar": 7544.375764885753,
-    "mtp": 13321.990443402208,
-    "T_us": 132.54907114440942,
-    "verify_us": 360.82295517240675,
-    "collective_bytes_us": 24.859,
+    "ar": 6608.895152639116,
+    "mtp": 12715.768319845665,
+    "T_us": 151.3112217555263,
+    "verify_us": 378.7162394410383,
+    "collective_bytes_us": 22.406,
     "hops_us": 6.919
    }
   },
@@ -141,19 +141,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7457.729748707065,
-    "mtp": 16550.677207229623,
-    "T_us": 134.0890637896028,
-    "verify_us": 287.6061067034865,
-    "collective_bytes_us": 9.813,
+    "ar": 6479.908971602629,
+    "mtp": 15625.208684197454,
+    "T_us": 154.32315552307477,
+    "verify_us": 305.49939097211586,
+    "collective_bytes_us": 8.831,
     "hops_us": 6.919
    },
    "200000": {
-    "ar": 7769.291284579421,
-    "mtp": 17049.035898958882,
-    "T_us": 128.7118687369608,
-    "verify_us": 278.77537993255646,
-    "collective_bytes_us": 9.813,
+    "ar": 6713.844382496762,
+    "mtp": 16068.645281758152,
+    "T_us": 148.9459604704328,
+    "verify_us": 296.66866420118686,
+    "collective_bytes_us": 8.831,
     "hops_us": 6.919
    }
   },
@@ -164,19 +164,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7682.908134592013,
-    "mtp": 14862.848836803836,
-    "T_us": 130.15904687152727,
-    "verify_us": 321.89835477320753,
-    "collective_bytes_us": 16.765,
+    "ar": 6714.564969575314,
+    "mtp": 14105.850771117328,
+    "T_us": 148.9299760343593,
+    "verify_us": 339.9519386595682,
+    "collective_bytes_us": 14.557,
     "hops_us": 7.009
    },
    "200000": {
-    "ar": 8013.985891565788,
-    "mtp": 15263.51537391467,
-    "T_us": 124.78185181888536,
-    "verify_us": 313.06762800227784,
-    "collective_bytes_us": 16.765,
+    "ar": 6966.078909522188,
+    "mtp": 14466.248162869857,
+    "T_us": 143.55278098171746,
+    "verify_us": 331.121211888638,
+    "collective_bytes_us": 14.557,
     "hops_us": 7.009
    }
   },
@@ -187,19 +187,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7634.479353175485,
-    "mtp": 18314.13851413798,
-    "T_us": 130.9847016069354,
-    "verify_us": 258.5022081047862,
-    "collective_bytes_us": 6.381,
+    "ar": 6612.550790098951,
+    "mtp": 17178.193256565486,
+    "T_us": 151.2275718921224,
+    "verify_us": 276.5557919911448,
+    "collective_bytes_us": 5.645,
     "hops_us": 7.009
    },
    "200000": {
-    "ar": 7961.307627484455,
-    "mtp": 18926.318434573717,
-    "T_us": 125.60750655429344,
-    "verify_us": 249.67148133385615,
-    "collective_bytes_us": 6.381,
+    "ar": 6856.341558174901,
+    "mtp": 17715.672338539855,
+    "T_us": 145.85037683948045,
+    "verify_us": 267.72506522021536,
+    "collective_bytes_us": 5.645,
     "hops_us": 7.009
    }
   },
@@ -210,19 +210,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7998.084011589541,
-    "mtp": 16388.26857051055,
-    "T_us": 125.02994449057553,
-    "verify_us": 290.5687339151833,
-    "collective_bytes_us": 11.532,
+    "ar": 6954.060671496523,
+    "mtp": 15470.68141244718,
+    "T_us": 143.80087365340728,
+    "verify_us": 308.66441008813666,
+    "collective_bytes_us": 9.324,
     "hops_us": 7.113
    },
    "200000": {
-    "ar": 8357.517940017944,
-    "mtp": 16876.75031857657,
-    "T_us": 119.65274943793337,
-    "verify_us": 281.7380071442537,
-    "collective_bytes_us": 11.532,
+    "ar": 7224.197551375217,
+    "mtp": 15905.268574631815,
+    "T_us": 138.4236786007655,
+    "verify_us": 299.8336833172074,
+    "collective_bytes_us": 9.324,
     "hops_us": 7.113
    }
   },
@@ -233,19 +233,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7998.084011589541,
-    "mtp": 19674.62632750804,
-    "T_us": 125.02994449057553,
-    "verify_us": 239.60687296104757,
-    "collective_bytes_us": 11.532,
+    "ar": 6954.060671496523,
+    "mtp": 18366.814828103918,
+    "T_us": 143.80087365340728,
+    "verify_us": 257.702549134,
+    "collective_bytes_us": 9.324,
     "hops_us": 7.113
    },
    "200000": {
-    "ar": 8357.517940017944,
-    "mtp": 20382.896301547127,
-    "T_us": 119.65274943793337,
-    "verify_us": 230.7761461901186,
-    "collective_bytes_us": 11.532,
+    "ar": 7224.197551375217,
+    "mtp": 18982.5805983768,
+    "T_us": 138.4236786007655,
+    "verify_us": 248.87182236306964,
+    "collective_bytes_us": 9.324,
     "hops_us": 7.113
    }
   },
@@ -256,19 +256,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8236.42733463931,
-    "mtp": 17665.30635118708,
-    "T_us": 121.4118645586026,
-    "verify_us": 268.49388697640694,
-    "collective_bytes_us": 7.794,
+    "ar": 7090.156119770426,
+    "mtp": 16603.775001595386,
+    "T_us": 141.04061788027022,
+    "verify_us": 286.5895631493602,
+    "collective_bytes_us": 6.444,
     "hops_us": 7.233
    },
    "200000": {
-    "ar": 8618.113915932981,
-    "mtp": 18234.204388061433,
-    "T_us": 116.0346695059602,
-    "verify_us": 259.66316020547737,
-    "collective_bytes_us": 7.794,
+    "ar": 7371.183618672088,
+    "mtp": 17105.384942702804,
+    "T_us": 135.66342282762847,
+    "verify_us": 277.7588363784301,
+    "collective_bytes_us": 6.444,
     "hops_us": 7.233
    }
   },
@@ -279,19 +279,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8236.42733463931,
-    "mtp": 20750.294677139467,
-    "T_us": 121.4118645586026,
-    "verify_us": 226.41365867533332,
-    "collective_bytes_us": 7.794,
+    "ar": 7090.156119770426,
+    "mtp": 19300.83798032307,
+    "T_us": 141.04061788027022,
+    "verify_us": 244.50933484828408,
+    "collective_bytes_us": 6.444,
     "hops_us": 7.233
    },
    "200000": {
-    "ar": 8618.113915932981,
-    "mtp": 21539.681719914246,
-    "T_us": 116.0346695059602,
-    "verify_us": 217.58293190440475,
-    "collective_bytes_us": 7.794,
+    "ar": 7371.183618672088,
+    "mtp": 19981.985610907308,
+    "T_us": 135.66342282762847,
+    "verify_us": 235.678608077355,
+    "collective_bytes_us": 6.444,
     "hops_us": 7.233
    }
   },
@@ -302,19 +302,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8386.150142944713,
-    "mtp": 18740.210909933576,
-    "T_us": 119.24422803726002,
-    "verify_us": 252.2367696294667,
-    "collective_bytes_us": 5.487,
+    "ar": 7169.121818623941,
+    "mtp": 17549.916637819657,
+    "T_us": 139.4870983224473,
+    "verify_us": 270.33244580241967,
+    "collective_bytes_us": 4.751,
     "hops_us": 7.372
    },
    "200000": {
-    "ar": 8782.173152215983,
-    "mtp": 19381.705362008066,
-    "T_us": 113.86703298461757,
-    "verify_us": 243.40604285853698,
-    "collective_bytes_us": 5.487,
+    "ar": 7456.57088416637,
+    "mtp": 18111.288779098002,
+    "T_us": 134.1099032698055,
+    "verify_us": 261.50171903148976,
+    "collective_bytes_us": 4.751,
     "hops_us": 7.372
    }
   },
@@ -325,19 +325,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8386.150142944713,
-    "mtp": 21608.823760133808,
-    "T_us": 119.24422803726002,
-    "verify_us": 216.8177658181912,
-    "collective_bytes_us": 5.487,
+    "ar": 7169.121818623941,
+    "mtp": 20041.475081799945,
+    "T_us": 139.4870983224473,
+    "verify_us": 234.91344199114167,
+    "collective_bytes_us": 4.751,
     "hops_us": 7.372
    },
    "200000": {
-    "ar": 8782.173152215983,
-    "mtp": 22466.232322666696,
-    "T_us": 113.86703298461757,
-    "verify_us": 207.98703904726264,
-    "collective_bytes_us": 5.487,
+    "ar": 7456.57088416637,
+    "mtp": 20776.897428133903,
+    "T_us": 134.1099032698055,
+    "verify_us": 226.08271522021298,
+    "collective_bytes_us": 4.751,
     "hops_us": 7.372
    }
   },
@@ -348,19 +348,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8467.951497125361,
-    "mtp": 19644.33431890964,
-    "T_us": 118.09231551922241,
-    "verify_us": 239.93062785457514,
-    "collective_bytes_us": 4.17,
+    "ar": 7228.818858955271,
+    "mtp": 18340.41341147941,
+    "T_us": 138.33518580440992,
+    "verify_us": 258.02630402752743,
+    "collective_bytes_us": 3.434,
     "hops_us": 7.537
    },
    "200000": {
-    "ar": 8871.924155876675,
-    "mtp": 20350.38586468431,
-    "T_us": 112.71512046657995,
-    "verify_us": 231.09990108364616,
-    "collective_bytes_us": 4.17,
+    "ar": 7521.172622614272,
+    "mtp": 18954.3805981698,
+    "T_us": 132.95799075176814,
+    "verify_us": 249.19557725659726,
+    "collective_bytes_us": 3.434,
     "hops_us": 7.537
    }
   },
@@ -371,19 +371,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8467.951497125361,
-    "mtp": 22292.740371646807,
-    "T_us": 118.09231551922241,
-    "verify_us": 209.69257642425214,
-    "collective_bytes_us": 4.17,
+    "ar": 7228.818858955271,
+    "mtp": 20628.429554254628,
+    "T_us": 138.33518580440992,
+    "verify_us": 227.7882525972024,
+    "collective_bytes_us": 3.434,
     "hops_us": 7.537
    },
    "200000": {
-    "ar": 8871.924155876675,
-    "mtp": 23206.42899575639,
-    "T_us": 112.71512046657995,
-    "verify_us": 200.8618496533234,
-    "collective_bytes_us": 4.17,
+    "ar": 7521.172622614272,
+    "mtp": 21408.397527182966,
+    "T_us": 132.95799075176814,
+    "verify_us": 218.957525826274,
+    "collective_bytes_us": 3.434,
     "hops_us": 7.537
    }
   },
@@ -394,19 +394,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8529.748516585976,
-    "mtp": 20399.08913153576,
-    "T_us": 117.23675065630762,
-    "verify_us": 230.48150534375262,
-    "collective_bytes_us": 3.117,
+    "ar": 7273.80533312317,
+    "mtp": 18996.62417632037,
+    "T_us": 137.47962094149526,
+    "verify_us": 248.57718151670372,
+    "collective_bytes_us": 2.381,
     "hops_us": 7.735
    },
    "200000": {
-    "ar": 8939.781627089125,
-    "mtp": 21161.490145665775,
-    "T_us": 111.85955560366514,
-    "verify_us": 221.65077857282392,
-    "collective_bytes_us": 3.117,
+    "ar": 7569.883696468729,
+    "mtp": 19656.102118109284,
+    "T_us": 132.10242588885342,
+    "verify_us": 239.74645474577426,
+    "collective_bytes_us": 2.381,
     "hops_us": 7.735
    }
   },
@@ -417,19 +417,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8529.748516585976,
-    "mtp": 22829.41423413152,
-    "T_us": 117.23675065630762,
-    "verify_us": 204.38821581819184,
-    "collective_bytes_us": 3.117,
+    "ar": 7273.80533312317,
+    "mtp": 21087.137231311874,
+    "T_us": 137.47962094149526,
+    "verify_us": 222.48389199114206,
+    "collective_bytes_us": 2.381,
     "hops_us": 7.735
    },
    "200000": {
-    "ar": 8939.781627089125,
-    "mtp": 23788.570934004154,
-    "T_us": 111.85955560366514,
-    "verify_us": 195.557489047263,
-    "collective_bytes_us": 3.117,
+    "ar": 7569.883696468729,
+    "mtp": 21902.864507049155,
+    "T_us": 132.10242588885342,
+    "verify_us": 213.65316522021374,
+    "collective_bytes_us": 2.381,
     "hops_us": 7.735
    }
   },
@@ -440,19 +440,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8575.101105885418,
-    "mtp": 21017.54450107175,
-    "T_us": 116.61670080060769,
-    "verify_us": 223.23015166409866,
-    "collective_bytes_us": 2.255,
+    "ar": 7306.759710456161,
+    "mtp": 19531.847928639974,
+    "T_us": 136.8595710857953,
+    "verify_us": 241.3258278370493,
+    "collective_bytes_us": 1.519,
     "hops_us": 7.977
    },
    "200000": {
-    "ar": 8989.61203824202,
-    "mtp": 21827.793020024958,
-    "T_us": 111.23950574796518,
-    "verify_us": 214.3994248931701,
-    "collective_bytes_us": 2.255,
+    "ar": 7605.582057232128,
+    "mtp": 20229.69308997288,
+    "T_us": 131.4823760331535,
+    "verify_us": 232.4951010661204,
+    "collective_bytes_us": 1.519,
     "hops_us": 7.977
    }
   },
@@ -463,19 +463,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8575.101105885418,
-    "mtp": 23234.809015861676,
-    "T_us": 116.61670080060769,
-    "verify_us": 200.52803096970675,
-    "collective_bytes_us": 2.255,
+    "ar": 7306.759710456161,
+    "mtp": 21414.867309884026,
+    "T_us": 136.8595710857953,
+    "verify_us": 218.81631621919058,
+    "collective_bytes_us": 1.519,
     "hops_us": 7.977
    },
    "200000": {
-    "ar": 8989.61203824202,
-    "mtp": 24229.07452968547,
-    "T_us": 111.23950574796518,
-    "verify_us": 191.69730419877797,
-    "collective_bytes_us": 2.255,
+    "ar": 7605.582057232128,
+    "mtp": 22256.653296440414,
+    "T_us": 131.4823760331535,
+    "verify_us": 209.9855894482622,
+    "collective_bytes_us": 1.519,
     "hops_us": 7.977
    }
   },
@@ -486,19 +486,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8605.794754505185,
-    "mtp": 21504.734055693436,
-    "T_us": 116.20077268011697,
-    "verify_us": 217.7920374866095,
-    "collective_bytes_us": 1.537,
+    "ar": 7329.033278994783,
+    "mtp": 19951.906303297208,
+    "T_us": 136.44364296530463,
+    "verify_us": 235.88771365955995,
+    "collective_bytes_us": 0.801,
     "hops_us": 8.279
    },
    "200000": {
-    "ar": 9023.350638989732,
-    "mtp": 22353.73996680181,
-    "T_us": 110.82357762747448,
-    "verify_us": 208.961310715681,
-    "collective_bytes_us": 1.537,
+    "ar": 7629.717718957014,
+    "mtp": 20680.650370842395,
+    "T_us": 131.06644791266282,
+    "verify_us": 227.05698688863131,
+    "collective_bytes_us": 0.801,
     "hops_us": 8.279
    }
   },
@@ -509,19 +509,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8605.794754505185,
-    "mtp": 23500.166228456677,
-    "T_us": 116.20077268011697,
-    "verify_us": 198.0495457853575,
-    "collective_bytes_us": 1.537,
+    "ar": 7329.033278994783,
+    "mtp": 21520.92048917726,
+    "T_us": 136.44364296530463,
+    "verify_us": 217.6171630806626,
+    "collective_bytes_us": 0.801,
     "hops_us": 8.279
    },
    "200000": {
-    "ar": 9023.350638989732,
-    "mtp": 24517.76911070391,
-    "T_us": 110.82357762747448,
-    "verify_us": 189.2188190144288,
-    "collective_bytes_us": 1.537,
+    "ar": 7629.717718957014,
+    "mtp": 22371.23022858467,
+    "T_us": 131.06644791266282,
+    "verify_us": 208.78643630973428,
+    "collective_bytes_us": 0.801,
     "hops_us": 8.279
    }
   },
@@ -532,19 +532,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8622.047603391655,
-    "mtp": 21856.462305322606,
-    "T_us": 115.98173032663726,
-    "verify_us": 213.98793721188508,
-    "collective_bytes_us": 0.929,
+    "ar": 7322.939822717542,
+    "mtp": 20254.315697357215,
+    "T_us": 136.55717842959143,
+    "verify_us": 232.08361338483542,
+    "collective_bytes_us": 0.525,
     "hops_us": 8.668
    },
    "200000": {
-    "ar": 9041.220574931696,
-    "mtp": 22734.03444068985,
-    "T_us": 110.60453527399476,
-    "verify_us": 205.15721044095653,
-    "collective_bytes_us": 0.929,
+    "ar": 7623.114245459769,
+    "mtp": 21005.73419847408,
+    "T_us": 131.17998337694956,
+    "verify_us": 223.25288661390695,
+    "collective_bytes_us": 0.525,
     "hops_us": 8.668
    }
   },
@@ -555,19 +555,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8622.047603391655,
-    "mtp": 23517.280794490536,
-    "T_us": 115.98173032663726,
-    "verify_us": 197.83225869744547,
-    "collective_bytes_us": 0.929,
+    "ar": 7322.939822717542,
+    "mtp": 21535.272708791596,
+    "T_us": 136.55717842959143,
+    "verify_us": 217.3998759927506,
+    "collective_bytes_us": 0.525,
     "hops_us": 8.668
    },
    "200000": {
-    "ar": 9041.220574931696,
-    "mtp": 24536.398543000123,
-    "T_us": 110.60453527399476,
-    "verify_us": 189.00153192651675,
-    "collective_bytes_us": 0.929,
+    "ar": 7623.114245459769,
+    "mtp": 22386.73939883795,
+    "T_us": 131.17998337694956,
+    "verify_us": 208.56914922182227,
+    "collective_bytes_us": 0.525,
     "hops_us": 8.668
    }
   },
@@ -578,19 +578,19 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8622.244184071176,
-    "mtp": 22055.72224814417,
-    "T_us": 115.97908603045717,
-    "verify_us": 211.83791758865055,
-    "collective_bytes_us": 0.408,
+    "ar": 7304.80810985825,
+    "mtp": 20425.319307297577,
+    "T_us": 136.89613538929842,
+    "verify_us": 229.93359376160075,
+    "collective_bytes_us": 0.346,
     "hops_us": 9.186
    },
    "200000": {
-    "ar": 9041.436734572535,
-    "mtp": 22949.695778843085,
-    "T_us": 110.60189097781465,
-    "verify_us": 203.00719081772192,
-    "collective_bytes_us": 0.408,
+    "ar": 7603.467587559954,
+    "mtp": 21189.71898450291,
+    "T_us": 131.5189403366566,
+    "verify_us": 221.10286699067228,
+    "collective_bytes_us": 0.346,
     "hops_us": 9.186
    }
   },
@@ -601,19 +601,19 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8622.244184071176,
-    "mtp": 23406.347103902837,
-    "T_us": 115.97908603045717,
-    "verify_us": 198.75665037719384,
-    "collective_bytes_us": 0.408,
+    "ar": 7304.80810985825,
+    "mtp": 21442.21278489976,
+    "T_us": 136.89613538929842,
+    "verify_us": 218.32426767249896,
+    "collective_bytes_us": 0.346,
     "hops_us": 9.186
    },
    "200000": {
-    "ar": 9041.436734572535,
-    "mtp": 24415.666619650794,
-    "T_us": 110.60189097781465,
-    "verify_us": 189.92592360626514,
-    "collective_bytes_us": 0.408,
+    "ar": 7603.467587559954,
+    "mtp": 22286.19232558443,
+    "T_us": 131.5189403366566,
+    "verify_us": 209.49354090157064,
+    "collective_bytes_us": 0.346,
     "hops_us": 9.186
    }
   },
@@ -624,18 +624,18 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8584.613362331478,
-    "mtp": 22064.309235368535,
-    "T_us": 116.48748263817114,
-    "verify_us": 211.63311962946716,
+    "ar": 7274.5089462765045,
+    "mtp": 20432.683471421802,
+    "T_us": 137.4663234845364,
+    "verify_us": 229.72879580241738,
     "collective_bytes_us": 0.191,
     "hops_us": 9.912
    },
    "200000": {
-    "ar": 9000.066706066587,
-    "mtp": 22958.99312429901,
-    "T_us": 111.11028758552864,
-    "verify_us": 202.8023928585385,
+    "ar": 7570.6457592049455,
+    "mtp": 21197.64476433881,
+    "T_us": 132.08912843189458,
+    "verify_us": 220.89806903148886,
     "collective_bytes_us": 0.191,
     "hops_us": 9.912
    }
@@ -647,18 +647,18 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8584.613362331478,
-    "mtp": 23127.426125376223,
-    "T_us": 116.48748263817114,
-    "verify_us": 201.21634221392895,
+    "ar": 7274.5089462765045,
+    "mtp": 21207.904525532067,
+    "T_us": 137.4663234845364,
+    "verify_us": 220.7839595092341,
     "collective_bytes_us": 0.191,
     "hops_us": 9.912
    },
    "200000": {
-    "ar": 9000.066706066587,
-    "mtp": 24112.327820991955,
-    "T_us": 111.11028758552864,
-    "verify_us": 192.38561544300015,
+    "ar": 7570.6457592049455,
+    "mtp": 22033.18482963859,
+    "T_us": 132.08912843189458,
+    "verify_us": 211.95323273830573,
     "collective_bytes_us": 0.191,
     "hops_us": 9.912
    }
@@ -670,18 +670,18 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8514.993072720823,
-    "mtp": 21802.924518491094,
-    "T_us": 117.43990763817108,
-    "verify_us": 214.17498391518168,
+    "ar": 7224.4548585245775,
+    "mtp": 20208.33094889737,
+    "T_us": 138.41874848453634,
+    "verify_us": 232.27066008813208,
     "collective_bytes_us": 0.055,
     "hops_us": 11.0
    },
    "200000": {
-    "ar": 8923.574817420014,
-    "mtp": 22676.11678254392,
-    "T_us": 112.06271258552862,
-    "verify_us": 205.34425714425313,
+    "ar": 7516.448614769907,
+    "mtp": 20956.278331644236,
+    "T_us": 133.0415534318945,
+    "verify_us": 223.43993331720358,
     "collective_bytes_us": 0.055,
     "hops_us": 11.0
    }
@@ -693,18 +693,18 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8514.993072720823,
-    "mtp": 22599.71943930803,
-    "T_us": 117.43990763817108,
-    "verify_us": 206.0896350710714,
+    "ar": 7224.4548585245775,
+    "mtp": 20763.317533282836,
+    "T_us": 138.41874848453634,
+    "verify_us": 225.65725236637635,
     "collective_bytes_us": 0.055,
     "hops_us": 11.0
    },
    "200000": {
-    "ar": 8923.574817420014,
-    "mtp": 23539.275239620132,
-    "T_us": 112.06271258552862,
-    "verify_us": 197.25890830014248,
+    "ar": 7516.448614769907,
+    "mtp": 21553.71459432405,
+    "T_us": 133.0415534318945,
+    "verify_us": 216.826525595448,
     "collective_bytes_us": 0.055,
     "hops_us": 11.0
    }
@@ -716,18 +716,18 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8389.315945182734,
-    "mtp": 21098.53457829712,
-    "T_us": 119.19922989361419,
-    "verify_us": 221.53980534375287,
+    "ar": 7133.783442168582,
+    "mtp": 19601.773535984106,
+    "T_us": 140.17807073997923,
+    "verify_us": 239.63548151670332,
     "collective_bytes_us": 0.0,
     "hops_us": 12.814
    },
    "200000": {
-    "ar": 8785.645076519375,
-    "mtp": 21915.160948184726,
-    "T_us": 113.82203484097172,
-    "verify_us": 212.70907857282435,
+    "ar": 7418.349435054418,
+    "mtp": 20304.71424068967,
+    "T_us": 134.80087568733737,
+    "verify_us": 230.80475474577455,
     "collective_bytes_us": 0.0,
     "hops_us": 12.814
    }
@@ -739,18 +739,18 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8389.315945182734,
-    "mtp": 21649.23176957487,
-    "T_us": 119.19922989361419,
-    "verify_us": 215.51159935678504,
+    "ar": 7133.783442168582,
+    "mtp": 19958.271665377717,
+    "T_us": 140.17807073997923,
+    "verify_us": 235.0792166520901,
     "collective_bytes_us": 0.0,
     "hops_us": 12.814
    },
    "200000": {
-    "ar": 8785.645076519375,
-    "mtp": 22509.913860377364,
-    "T_us": 113.82203484097172,
-    "verify_us": 206.6808725858565,
+    "ar": 7418.349435054418,
+    "mtp": 20687.489294645948,
+    "T_us": 134.80087568733737,
+    "verify_us": 226.24848988116156,
     "collective_bytes_us": 0.0,
     "hops_us": 12.814
    }
@@ -762,18 +762,18 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 8141.511637173916,
-    "mtp": 19515.526308133107,
-    "T_us": 122.82731322694765,
-    "verify_us": 240.1799243913715,
+    "ar": 6953.805325258894,
+    "mtp": 18228.088640620088,
+    "T_us": 143.80615407331229,
+    "verify_us": 258.2756005643232,
     "collective_bytes_us": 0.0,
     "hops_us": 16.442
    },
    "200000": {
-    "ar": 8514.252821065033,
-    "mtp": 20212.184860538844,
-    "T_us": 117.45011817430526,
-    "verify_us": 231.34919762044257,
+    "ar": 7223.921981893094,
+    "mtp": 18834.434130709928,
+    "T_us": 138.4289590206705,
+    "verify_us": 249.44487379339324,
     "collective_bytes_us": 0.0,
     "hops_us": 16.442
    }
@@ -785,23 +785,37 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 8141.511637173916,
-    "mtp": 19840.7482291346,
-    "T_us": 122.82731322694765,
-    "verify_us": 235.9802898329751,
+    "ar": 6953.805325258894,
+    "mtp": 18405.09081169512,
+    "T_us": 143.80615407331229,
+    "verify_us": 255.63763269647174,
     "collective_bytes_us": 0.0,
     "hops_us": 16.442
    },
    "200000": {
-    "ar": 8514.252821065033,
-    "mtp": 20561.248195500448,
-    "T_us": 117.45011817430526,
-    "verify_us": 227.14956306204627,
+    "ar": 7223.921981893094,
+    "mtp": 19023.468941630523,
+    "T_us": 138.4289590206705,
+    "verify_us": 246.80690592554186,
     "collective_bytes_us": 0.0,
     "hops_us": 16.442
    }
   }
  ],
+ "split_resolution": {
+  "adopted": {
+   "tp": 52,
+   "stage": 14,
+   "two_step": true
+  },
+  "tolerance": 0.005,
+  "argmax": {
+   "tp": 48,
+   "stage": 16,
+   "two_step": true
+  },
+  "argmax_gain_over_adopted": 8.254605037061324e-05
+ },
  "rack_split_result": {
   "tp": 32,
   "stage": 24,
@@ -809,19 +823,19 @@
   "spare": 6,
   "two_step": false,
   "1048576": {
-   "ar": 8386.150142944713,
-   "mtp": 18740.210909933576,
-   "T_us": 119.24422803726002,
-   "verify_us": 252.2367696294667,
-   "collective_bytes_us": 5.487,
+   "ar": 7169.121818623941,
+   "mtp": 17549.916637819657,
+   "T_us": 139.4870983224473,
+   "verify_us": 270.33244580241967,
+   "collective_bytes_us": 4.751,
    "hops_us": 7.372
   },
   "200000": {
-   "ar": 8782.173152215983,
-   "mtp": 19381.705362008066,
-   "T_us": 113.86703298461757,
-   "verify_us": 243.40604285853698,
-   "collective_bytes_us": 5.487,
+   "ar": 7456.57088416637,
+   "mtp": 18111.288779098002,
+   "T_us": 134.1099032698055,
+   "verify_us": 261.50171903148976,
+   "collective_bytes_us": 4.751,
    "hops_us": 7.372
   }
  },
@@ -832,31 +846,31 @@
   "spare": 6,
   "two_step": true,
   "1048576": {
-   "ar": 8622.047603391655,
-   "mtp": 23517.280794490536,
-   "T_us": 115.98173032663726,
-   "verify_us": 197.83225869744547,
-   "collective_bytes_us": 0.929,
+   "ar": 7322.939822717542,
+   "mtp": 21535.272708791596,
+   "T_us": 136.55717842959143,
+   "verify_us": 217.3998759927506,
+   "collective_bytes_us": 0.525,
    "hops_us": 8.668
   },
   "200000": {
-   "ar": 9041.220574931696,
-   "mtp": 24536.398543000123,
-   "T_us": 110.60453527399476,
-   "verify_us": 189.00153192651675,
-   "collective_bytes_us": 0.929,
+   "ar": 7623.114245459769,
+   "mtp": 22386.73939883795,
+   "T_us": 131.17998337694956,
+   "verify_us": 208.56914922182227,
+   "collective_bytes_us": 0.525,
    "hops_us": 8.668
   }
  },
  "best_adopted": true,
  "design_point_overlap_assumed": {
   "1048576": {
-   "ar": 8622.047603391655,
-   "mtp": 23517.280794490536
+   "ar": 7322.939822717542,
+   "mtp": 21535.272708791596
   },
   "200000": {
-   "ar": 9041.220574931696,
-   "mtp": 24536.398543000123
+   "ar": 7623.114245459769,
+   "mtp": 22386.73939883795
   }
  },
  "draft_conditioning": {
@@ -869,67 +883,364 @@
  },
  "design_point_no_levers": {
   "1048576": {
-   "ar": 7578.981495298372,
-   "mtp": 20958.097237771664,
-   "T_us": 131.9438503208315,
-   "verify_us": 223.7939203331244,
+   "ar": 6561.435594060711,
+   "mtp": 19341.087958926302,
+   "T_us": 152.40567184796896,
+   "verify_us": 243.7396425042349,
    "breakdown_us": {
-    "compute_chain": 75.263,
+    "compute_chain": 74.809,
     "weight_sweep": 8.548,
-    "kv_sweep": 5.707,
+    "kv_sweep": 5.634,
     "collective_latency": 15.561,
     "collective_bytes": 12.503,
     "pipeline_hops": 12.393,
-    "control": 1.969
+    "control": 1.969,
+    "on_die_wire": 20.99
    }
   },
   "200000": {
-   "ar": 7905.41350038117,
-   "mtp": 21763.680888491566,
-   "T_us": 126.49559696678531,
-   "verify_us": 214.96319356219576,
+   "ar": 6803.031294686293,
+   "mtp": 20025.129825857402,
+   "T_us": 146.99329705878014,
+   "verify_us": 234.9089157333058,
    "breakdown_us": {
-    "compute_chain": 74.115,
+    "compute_chain": 73.697,
     "weight_sweep": 8.548,
-    "kv_sweep": 1.407,
+    "kv_sweep": 1.333,
     "collective_latency": 15.561,
     "collective_bytes": 12.503,
     "pipeline_hops": 12.393,
-    "control": 1.969
+    "control": 1.969,
+    "on_die_wire": 20.99
    }
   }
  },
  "design_point": {
   "1048576": {
-   "ar": 8184.912902114869,
-   "mtp": 23756.222412952255,
-   "T_us": 122.1760099293926,
-   "verify_us": 195.69381747276674,
+   "ar": 7008.864184990315,
+   "mtp": 21669.895050703144,
+   "T_us": 142.67646991099198,
+   "verify_us": 215.95749509575452,
    "breakdown_us": {
-    "compute_chain": 75.16,
+    "compute_chain": 74.681,
     "weight_sweep": 8.548,
-    "kv_sweep": 5.707,
+    "kv_sweep": 5.634,
     "collective_latency": 15.301,
     "collective_bytes": 4.769,
     "pipeline_hops": 11.002,
-    "control": 1.689
+    "control": 1.689,
+    "on_die_wire": 21.052
    }
   },
   "200000": {
-   "ar": 8567.550390932485,
-   "mtp": 24796.612439077035,
-   "T_us": 116.71947690653278,
-   "verify_us": 186.86309070183813,
+   "ar": 7285.665796379299,
+   "mtp": 22532.25361767204,
+   "T_us": 137.25581545299022,
+   "verify_us": 207.12676832482612,
    "breakdown_us": {
-    "compute_chain": 74.004,
+    "compute_chain": 73.561,
     "weight_sweep": 8.548,
-    "kv_sweep": 1.407,
+    "kv_sweep": 1.333,
     "collective_latency": 15.301,
     "collective_bytes": 4.769,
     "pipeline_hops": 11.002,
-    "control": 1.689
+    "control": 1.689,
+    "on_die_wire": 21.052
    }
   }
+ },
+ "on_die_wire": {
+  "model": "asap7_routed_fit",
+  "basis": "registered traversals on the design-point DAG (wire_mutation): floorplan distances of tools/v41_die_assembly.traversal_geometry at the design point's pooled widths, cycles = ceil(distance / per-cycle reach) at the design clock; the DAG charges a traversal only where its node is on the critical path",
+  "distances_mm": {
+   "far_tile": 23.24382303272263,
+   "spine_half": 11.98097540880503,
+   "collective_edge": 14.8785,
+   "serdes_edge": 14.8785,
+   "hbm_request": 19.273475408805034,
+   "hbm_to_tile": 16.052111691368157,
+   "in_tile": 3.6156523760824015
+  },
+  "cycles": {
+   "asap7_routed_fit": {
+    "far_tile": 20,
+    "spine_half": 10,
+    "collective_edge": 13,
+    "serdes_edge": 13,
+    "hbm_request": 16,
+    "hbm_to_tile": 14,
+    "in_tile": 3
+   },
+   "tech_global_wire": {
+    "far_tile": 5,
+    "spine_half": 3,
+    "collective_edge": 4,
+    "serdes_edge": 4,
+    "hbm_request": 4,
+    "hbm_to_tile": 4,
+    "in_tile": 1
+   },
+   "tech_global_wire_high": {
+    "far_tile": 8,
+    "spine_half": 5,
+    "collective_edge": 6,
+    "serdes_edge": 6,
+    "hbm_request": 7,
+    "hbm_to_tile": 6,
+    "in_tile": 2
+   }
+  },
+  "models": {
+   "asap7_routed_fit": {
+    "ps_per_mm": 599.7,
+    "flop_overhead_ps": 189.5,
+    "grade": "measured-ours",
+    "source": "tools/chip_assembly/floorplans.py wire_delay_model(): least-squares fit of the routed ot_rom_express_link records"
+   },
+   "tech_global_wire": {
+    "ps_per_mm": 150.0,
+    "flop_overhead_ps": 189.5,
+    "grade": "assumed",
+    "source": "technology.json latency.global_wire_delay_s_per_mm"
+   },
+   "tech_global_wire_high": {
+    "ps_per_mm": 250.00000000000003,
+    "flop_overhead_ps": 189.5,
+    "grade": "assumed",
+    "source": "same entry, range_high"
+   }
+  },
+  "traversals": {
+   "pool_operand_in": {
+    "dist": "far_tile",
+    "nodes": "matvec + kvscan (pool lanes), wire_in",
+    "what": "spine (vector unit, chaining buffers) -> the farthest tile: the operand vector of a matvec or of an attention / indexer scan (the pooled lanes live in the tiles)",
+    "exposure": "latency on the operator's input edge: charged on every such node; the DAG hides it only where the node is off the critical path"
+   },
+   "pool_result_out": {
+    "dist": "far_tile",
+    "nodes": "matvec + kvscan (pool lanes), wire_out",
+    "what": "the farthest tile -> spine: partial sums / scores back into the reducer tree",
+    "exposure": "latency on the output edge; charged, exposed where on path"
+   },
+   "spine_reduce": {
+    "dist": "spine_half",
+    "nodes": "reduce (in + out), select (in), hc.fn (in + out)",
+    "what": "spine lanes -> the reducer / select / HC root at the spine's centre, and the result back along the spine (half the spine's length each way)",
+    "exposure": "charged; the vector unit is one strip the core's height long"
+   },
+   "collective_edge": {
+    "dist": "collective_edge",
+    "nodes": "collective, wire_in + wire_out",
+    "what": "spine -> the one-shot engine at the UCIe / package-pair edge and back (the two levels run in parallel: the longer is charged)",
+    "exposure": "charged: the bench-measured tails (behavioural links) contain no on-die wire"
+   },
+   "stage_hop_edge": {
+    "dist": "serdes_edge",
+    "nodes": "hop, wire_in (sender spine -> SerDes) + wire_out (SerDes -> receiver spine)",
+    "what": "the residual from the sender's spine to its SerDes edge and from the receiver's SerDes edge to its spine",
+    "exposure": "charged: the RTL hop tails start and end at the link endpoints"
+   },
+   "kv_gather_request": {
+    "dist": "hbm_request",
+    "nodes": "op .gather, wire_in",
+    "what": "the top-k indices from the select (spine) to the nearest HBM3E controller",
+    "exposure": "charged: a data-dependent address exists only after the select; the rows' return PHY -> tile is shorter than the scan's operand broadcast charged on the scan (far_tile >= hbm_to_tile), so it is covered there"
+   },
+   "rom_to_lane_in_tile": {
+    "dist": "in_tile",
+    "nodes": "none",
+    "what": "the farthest ROM macro -> its tile's lane column (weights never leave the tile)",
+    "exposure": "HIDDEN: a static-address stream issued ahead of the activation"
+   },
+   "kv_static_rows": {
+    "dist": "hbm_to_tile",
+    "nodes": "none",
+    "what": "HBM3E PHY -> tiles for window rows, reuse-layer selections and index keys",
+    "exposure": "HIDDEN: static addresses, prefetched one layer ahead into the staging buffers (docs/ARCH_SPEC_V41.md s6 item 4; arch_budget_v41 kv_state prefetch)"
+   }
+  },
+  "attribution": {
+   "1048576": {
+    "ar": {
+     "exposed_us": 21.052437902483895,
+     "exposed_us_by_kind": {
+      "reduce": 3.0174793008279654,
+      "matvec": 10.340386384544614,
+      "collective": 4.233670653173878,
+      "kvscan": 1.766329346826126,
+      "select": 0.883164673413063,
+      "hop": 0.6936522539098434,
+      "op": 0.11775528978840845
+     },
+     "on_path_nodes_by_kind": {
+      "reduce": 164,
+      "matvec": 281,
+      "collective": 177,
+      "kvscan": 48,
+      "select": 96,
+      "hop": 29,
+      "op": 8
+     },
+     "exposed_cycles": 22883.999999999993,
+     "charged_in_full_us": 21.05243790248387,
+     "T_us": 142.67646991099198
+    },
+    "mtp_verify": {
+     "exposed_us": 20.989880404783804,
+     "exposed_us_by_kind": {
+      "reduce": 2.980680772769088,
+      "matvec": 10.266789328426858,
+      "collective": 4.281508739650418,
+      "kvscan": 1.766329346826126,
+      "select": 0.883164673413063,
+      "hop": 0.6936522539098434,
+      "op": 0.11775528978840845
+     },
+     "on_path_nodes_by_kind": {
+      "reduce": 162,
+      "matvec": 279,
+      "collective": 179,
+      "kvscan": 48,
+      "select": 96,
+      "hop": 29,
+      "op": 8
+     },
+     "exposed_cycles": 22815.999999999996,
+     "charged_in_full_us": 20.989880404783783,
+     "T_us": 215.95749509575452
+    }
+   },
+   "200000": {
+    "ar": {
+     "exposed_us": 21.052437902483895,
+     "exposed_us_by_kind": {
+      "reduce": 3.0174793008279654,
+      "matvec": 10.340386384544614,
+      "collective": 4.233670653173878,
+      "kvscan": 1.766329346826126,
+      "select": 0.883164673413063,
+      "hop": 0.6936522539098434,
+      "op": 0.11775528978840845
+     },
+     "on_path_nodes_by_kind": {
+      "reduce": 164,
+      "matvec": 281,
+      "collective": 177,
+      "kvscan": 48,
+      "select": 96,
+      "hop": 29,
+      "op": 8
+     },
+     "exposed_cycles": 22883.999999999993,
+     "charged_in_full_us": 21.05243790248387,
+     "T_us": 137.25581545299022
+    },
+    "mtp_verify": {
+     "exposed_us": 20.989880404783804,
+     "exposed_us_by_kind": {
+      "reduce": 2.980680772769088,
+      "matvec": 10.266789328426858,
+      "collective": 4.281508739650418,
+      "kvscan": 1.766329346826126,
+      "select": 0.883164673413063,
+      "hop": 0.6936522539098434,
+      "op": 0.11775528978840845
+     },
+     "on_path_nodes_by_kind": {
+      "reduce": 162,
+      "matvec": 279,
+      "collective": 179,
+      "kvscan": 48,
+      "select": 96,
+      "hop": 29,
+      "op": 8
+     },
+     "exposed_cycles": 22815.999999999996,
+     "charged_in_full_us": 20.989880404783783,
+     "T_us": 207.12676832482612
+    }
+   }
+  },
+  "sensitivities": {
+   "tech_global_wire": {
+    "1048576": {
+     "ar": 7827.615439943,
+     "mtp": 23122.957963687153,
+     "T_us": 127.75282685671667,
+     "verify_us": 201.45795507736008
+    },
+    "200000": {
+     "ar": 8175.940130266868,
+     "mtp": 24107.471034839826,
+     "T_us": 122.31009328187916,
+     "verify_us": 192.6272283064312
+    }
+   },
+   "tech_global_wire_high": {
+    "1048576": {
+     "ar": 7630.998187126892,
+     "mtp": 22784.65045381287,
+     "T_us": 131.04445519158287,
+     "verify_us": 204.66862665049797
+    },
+    "200000": {
+     "ar": 7961.149508522228,
+     "mtp": 23739.970723617927,
+     "T_us": 125.61000128555845,
+     "verify_us": 195.83789987956894
+    }
+   }
+  },
+  "design_point_pre_wire": {
+   "1048576": {
+    "ar": 8184.912902114869,
+    "mtp": 23720.38839967264,
+    "T_us": 122.1760099293926,
+    "verify_us": 196.0117729246442
+   },
+   "200000": {
+    "ar": 8567.550390932485,
+    "mtp": 24757.573617007536,
+    "T_us": 116.71947690653278,
+    "verify_us": 187.18104615371553
+   }
+  },
+  "note": "design_point is the headline WITH the wire (ASAP7 routed-wire fit, the conservative model); design_point_pre_wire is the single ablation without any on-die wire; sensitivities re-price the same traversals at technology.json's 150 ps/mm and its 250 ps/mm high end"
+ },
+ "mtp_hop_split": {
+  "lever": "the MTP verify pass's stage hop at its best bench-measured T1 split (split20 kept for the one-position hop)",
+  "term": {
+   "window": "producer",
+   "window_s": 2.7598896044158234e-08,
+   "residual_s": 6.619979929782414e-08,
+   "residual_cycles": 71.95918183673484,
+   "from_pattern": "hop_batch mtp split200 fill 1",
+   "scheme": "split200",
+   "words": 481,
+   "measured_tail_cycles": 1068.0,
+   "model_node": "L11.substage_hop0",
+   "model_formula_cycles": 996.0408181632652,
+   "model_extrapolated_exposed_cycles": 965.0408181632886,
+   "tails_measured": {
+    "split119": 1305.0,
+    "split150": 1216.0,
+    "split180": 1128.0,
+    "split200": 1068.0,
+    "split240": 1076.0,
+    "split60": 1482.0
+   },
+   "proportional_scheme": "split119",
+   "proportional_tail_cycles": 1305.0,
+   "full_payload_tail_cycles": 1660.0
+  },
+  "campaign": "results/rtl/v41_hop_batch_campaign.json",
+  "campaign_binding_note": "not embedded: the campaign pins this record (its T1 background is derived from this design point), so its binding is read live (tools/v41_collective_exposure.campaign_binding) and recorded in results/arch/v41_hop_batch_sensitivity.json",
+  "design_point_proportional_split_extrapolated": {
+   "1048576": 21699.79763777026,
+   "200000": 22564.585296715355
+  },
+  "note": "before this lever the verify pass's hop was the one-position residual extrapolated to 6 positions (model_extrapolated_exposed_cycles per hop); the bench measures the 6-position hop at the proportional split (proportional_tail_cycles) and at its best split (measured_tail_cycles); the headline now carries the measured best"
  },
  "collective_exposure": {
   "gate": "C7 / O2",
@@ -987,11 +1298,11 @@
   "per_pattern": {
    "allreduce_wo_b": {
     "class_": "all_reduce",
-    "design_point_node": "L22.attn.out_allreduce",
+    "design_point_node": "L18.attn.out_allreduce",
     "bytes_cycles": 129.9621978021978,
     "depth_cycles": 152.87494825418318,
     "window_cycles": 39.0,
-    "model_exposed_cycles": 152.87494825418938,
+    "model_exposed_cycles": 152.87494825419714,
     "formula_cycles": 243.837146056381,
     "measured_tail_cycles": 254,
     "residual_cycles": 10.162853943619012,
@@ -1000,11 +1311,11 @@
    },
    "allreduce_down": {
     "class_": "all_reduce",
-    "design_point_node": "L20.ffn.combine_allreduce",
+    "design_point_node": "L17.ffn.combine_allreduce",
     "bytes_cycles": 129.9621978021978,
     "depth_cycles": 152.87494825418318,
     "window_cycles": 38.95652173913044,
-    "model_exposed_cycles": 163.8371460563917,
+    "model_exposed_cycles": 152.87494825419714,
     "formula_cycles": 243.88062431725055,
     "measured_tail_cycles": 254,
     "residual_cycles": 10.11937568274945,
@@ -1013,11 +1324,11 @@
    },
    "gather_router": {
     "class_": "all_gather_small",
-    "design_point_node": "L2.ffn.router_allgather",
+    "design_point_node": "L17.ffn.router_allgather",
     "bytes_cycles": 2.4367912087912083,
     "depth_cycles": 141.31,
     "window_cycles": 1.0,
-    "model_exposed_cycles": 141.31000000000049,
+    "model_exposed_cycles": 141.31000000000824,
     "formula_cycles": 142.74679120879122,
     "measured_tail_cycles": 149,
     "residual_cycles": 6.2532087912087775,
@@ -1026,11 +1337,11 @@
    },
    "gather_topk": {
     "class_": "all_gather_select",
-    "design_point_node": "L2.attn.idx.topk_merge",
+    "design_point_node": "L20.attn.idx.topk_merge",
     "bytes_cycles": 25.992439560439557,
     "depth_cycles": 141.31,
     "window_cycles": 8,
-    "model_exposed_cycles": 141.31000000000049,
+    "model_exposed_cycles": 141.31000000000824,
     "formula_cycles": 159.30243956043955,
     "measured_tail_cycles": 177,
     "residual_cycles": 17.697560439560448,
@@ -1039,11 +1350,11 @@
    },
    "gather_rows": {
     "class_": "all_gather_rows",
-    "design_point_node": "L14.attn.rows_allgather",
+    "design_point_node": "L2.attn.rows_allgather",
     "bytes_cycles": 341.1507692307692,
     "depth_cycles": 141.31,
     "window_cycles": 17,
-    "model_exposed_cycles": 212.7107692307769,
+    "model_exposed_cycles": 212.71076923076993,
     "formula_cycles": 465.4607692307692,
     "measured_tail_cycles": 653,
     "residual_cycles": 187.5392307692308,
@@ -1052,11 +1363,11 @@
    },
    "stage_hop": {
     "class_": "hop",
-    "design_point_node": "L20.substage_hop0",
+    "design_point_node": "L19.substage_hop0",
     "bytes_cycles": 131.33130302721088,
     "depth_cycles": 238.05300000000003,
     "window_cycles": 10.0,
-    "model_exposed_cycles": 328.38430302722054,
+    "model_exposed_cycles": 328.3843030272283,
     "formula_cycles": 359.3843030272109,
     "measured_tail_cycles": 473,
     "residual_cycles": 113.61569697278912,
@@ -1066,12 +1377,12 @@
   },
   "loss_no_levers": {
    "1048576": {
-    "ar": 0.12097661206173027,
-    "mtp": 0.10882140580293698
+    "ar": 0.10398886882757918,
+    "mtp": 0.10188794818323965
    },
    "200000": {
-    "ar": 0.12562541364157653,
-    "mtp": 0.11300426383478246
+    "ar": 0.10757846785018432,
+    "mtp": 0.1054914487950458
    }
   },
   "levers": {
@@ -1092,7 +1403,7 @@
     }
    },
    "scenario": "recommended",
-   "why": "levers 1-4 adopted",
+   "why": "levers 1-4 adopted; lever 5: the MTP verify pass's hop at its best bench-measured split",
    "tails": {
     "allreduce_wo_b": 195,
     "allreduce_down": 195,
@@ -1154,16 +1465,40 @@
      "residual_s": 5.484424744506819e-08,
      "residual_cycles": 59.615696972789124,
      "from_pattern": "stage_hop"
+    },
+    "hop_mtp": {
+     "window": "producer",
+     "window_s": 2.7598896044158234e-08,
+     "residual_s": 6.619979929782414e-08,
+     "residual_cycles": 71.95918183673484,
+     "from_pattern": "hop_batch mtp split200 fill 1",
+     "scheme": "split200",
+     "words": 481,
+     "measured_tail_cycles": 1068.0,
+     "model_node": "L11.substage_hop0",
+     "model_formula_cycles": 996.0408181632652,
+     "model_extrapolated_exposed_cycles": 965.0408181632886,
+     "tails_measured": {
+      "split119": 1305.0,
+      "split150": 1216.0,
+      "split180": 1128.0,
+      "split200": 1068.0,
+      "split240": 1076.0,
+      "split60": 1482.0
+     },
+     "proportional_scheme": "split119",
+     "proportional_tail_cycles": 1305.0,
+     "full_payload_tail_cycles": 1660.0
     }
    },
    "per_pattern": {
     "allreduce_wo_b": {
      "class_": "all_reduce",
-     "design_point_node": "L22.attn.out_allreduce",
+     "design_point_node": "L18.attn.out_allreduce",
      "bytes_cycles": 129.9621978021978,
      "depth_cycles": 152.87494825418318,
      "window_cycles": 39.0,
-     "model_exposed_cycles": 152.87494825418938,
+     "model_exposed_cycles": 152.87494825419714,
      "formula_cycles": 178.85604715528208,
      "measured_tail_cycles": 195,
      "residual_cycles": 16.143952844717916,
@@ -1172,11 +1507,11 @@
     },
     "allreduce_down": {
      "class_": "all_reduce",
-     "design_point_node": "L20.ffn.combine_allreduce",
+     "design_point_node": "L17.ffn.combine_allreduce",
      "bytes_cycles": 129.9621978021978,
      "depth_cycles": 152.87494825418318,
      "window_cycles": 38.95652173913044,
-     "model_exposed_cycles": 163.8371460563917,
+     "model_exposed_cycles": 152.87494825419714,
      "formula_cycles": 178.89952541615165,
      "measured_tail_cycles": 195,
      "residual_cycles": 16.100474583848353,
@@ -1185,11 +1520,11 @@
     },
     "gather_router": {
      "class_": "all_gather_small",
-     "design_point_node": "L2.ffn.router_allgather",
+     "design_point_node": "L17.ffn.router_allgather",
      "bytes_cycles": 2.4367912087912083,
      "depth_cycles": 141.31,
      "window_cycles": 1.0,
-     "model_exposed_cycles": 141.31000000000049,
+     "model_exposed_cycles": 141.31000000000824,
      "formula_cycles": 142.74679120879122,
      "measured_tail_cycles": 146,
      "residual_cycles": 3.2532087912087775,
@@ -1198,11 +1533,11 @@
     },
     "gather_topk": {
      "class_": "all_gather_select",
-     "design_point_node": "L2.attn.idx.topk_merge",
+     "design_point_node": "L20.attn.idx.topk_merge",
      "bytes_cycles": 25.992439560439557,
      "depth_cycles": 141.31,
      "window_cycles": 8,
-     "model_exposed_cycles": 141.31000000000049,
+     "model_exposed_cycles": 141.31000000000824,
      "formula_cycles": 146.30621978021978,
      "measured_tail_cycles": 160,
      "residual_cycles": 13.693780219780223,
@@ -1211,11 +1546,11 @@
     },
     "gather_rows": {
      "class_": "all_gather_rows",
-     "design_point_node": "L14.attn.rows_allgather",
+     "design_point_node": "L2.attn.rows_allgather",
      "bytes_cycles": 341.1507692307692,
      "depth_cycles": 141.31,
      "window_cycles": 17,
-     "model_exposed_cycles": 212.7107692307769,
+     "model_exposed_cycles": 212.71076923076993,
      "formula_cycles": 294.8853846153846,
      "measured_tail_cycles": 309,
      "residual_cycles": 14.114615384615377,
@@ -1224,11 +1559,11 @@
     },
     "stage_hop": {
      "class_": "hop",
-     "design_point_node": "L20.substage_hop0",
+     "design_point_node": "L19.substage_hop0",
      "bytes_cycles": 131.33130302721088,
      "depth_cycles": 238.05300000000003,
      "window_cycles": 10.0,
-     "model_exposed_cycles": 328.38430302722054,
+     "model_exposed_cycles": 328.3843030272283,
      "formula_cycles": 359.3843030272109,
      "measured_tail_cycles": 419,
      "residual_cycles": 59.615696972789124,
@@ -1239,22 +1574,22 @@
   },
   "loss": {
    "1048576": {
-    "ar": 0.05069963903989927,
-    "mtp": -0.01016025707009871
+    "ar": 0.04288928290150462,
+    "mtp": -0.00625124853220882
    },
    "200000": {
-    "ar": 0.052390070574380276,
-    "mtp": -0.010605219654420184
+    "ar": 0.044266481940953506,
+    "mtp": -0.006500018436880639
    }
   },
   "recovered_share": {
    "1048576": {
-    "ar": 0.5809137140158217,
-    "mtp": 1.0933663464015317
+    "ar": 0.5875589052457335,
+    "mtp": 1.061354150747704
    },
    "200000": {
-    "ar": 0.5829659854983235,
-    "mtp": 1.0938479601966657
+    "ar": 0.5885191263125272,
+    "mtp": 1.0616165434367018
    }
   },
   "note": "design_point is the headline (bench-measured tails with the adopted levers: a conditioned design-point model result, not measured chip throughput); design_point_no_levers is the ablation (measured exposure, no recovery); design_point_overlap_assumed is the conditional point that holds only if C7 is fully recovered.  With MTP the lever point can exceed the overlap-assumed one: the relay halves the bytes each T1 link carries, which the overlap-assumed point charges in full (tools/collective_exposure.py, tools/v41_collective_exposure.py)"
@@ -1305,29 +1640,64 @@
  "energy": {
   "1048576": {
    "b1": {
+    "batch": 1,
+    "users_held": 866,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 0.5174489180187016,
+     "0": 2.2556122816838475,
+     "9": 4.684917429747981,
+     "1": 3.4368086985709043,
+     "2": 2.224987266228663,
+     "3": 1.1820849614611981,
+     "4": 2.2250067214504545,
+     "5": 3.438073287987328,
+     "6": 1.1819876853522422,
+     "7": 2.2250164490613504,
+     "8": 1.182084961461198,
+     "10": 1.1804215399980564,
+     "11": 2.2250164490613504,
+     "12": 1.182084961461198,
+     "13": 1.1820752338503024,
+     "14": 7.130111093645868,
+     "15": 1.1820752338503024,
+     "16": 2.3630834540255963,
+     "17": 1.18203632340672,
+     "18": 2.2250164490613504,
+     "19": 1.3201227835927574,
+     "20": 1.1820557786285113,
+     "21": 2.2250164490613504,
+     "22": 1.3201033283709662,
+     "23": 2.2250067214504545,
+     "24": 1.1820849614611981,
+     "25": 2.3630250883602226,
+     "26": 1.182084961461198,
+     "27": 1.1820849614611981
+    },
+    "pass_T_us": 142.67646991099198,
     "rom": {
-     "tokens_s_per_user": 8184.912902114869,
-     "aggregate_tokens_s": 8184.912902114869,
-     "dynamic_j": 0.03426665710534254,
-     "static_j": 1.8174810133270034,
-     "total_j": 1.851747670432346,
+     "tokens_s_per_user": 7008.864184990315,
+     "aggregate_tokens_s": 7008.864184990315,
+     "dynamic_j": 0.03516376976763596,
+     "static_j": 2.1224442937824675,
+     "total_j": 2.1576080635501036,
      "nonclock_j": 0.028920160215295976,
-     "clock_j": 0.0053464968900465626
+     "clock_j": 0.006243609552339984
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.005903660748968281,
-      "stage_ucie": 0.0009442115523879713
+      "stage_t1": 0.0050553936100023,
+      "stage_ucie": 0.0008085425723804828
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 8184.912902114869,
+     "aggregate_tokens_s_uncapped": 7008.864184990315,
      "utilisation": {
-      "stage_t1": 0.005903660748968281,
-      "stage_ucie": 0.0009442115523879713
+      "stage_t1": 0.0050553936100023,
+      "stage_ucie": 0.0008085425723804828
      }
     },
     "draft_contention": null,
@@ -1341,38 +1711,73 @@
      "static_j": 3.6164378139730164,
      "total_j": 5.192964388410173
     },
-    "ratio_rate_per_user": 2.7910330573894044,
-    "ratio_energy_with_static": 2.8043585372502293,
-    "ratio_energy_dynamic": 46.007597694476
+    "ratio_rate_per_user": 2.3900036407236622,
+    "ratio_energy_with_static": 2.4068154342479278,
+    "ratio_energy_dynamic": 44.83383280162871
    },
    "b1_mtp": {
+    "batch": 1,
+    "users_held": 866,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 1.4833495139457096,
+     "0": 4.592720716385795,
+     "9": 9.60537583782824,
+     "1": 7.160654307495623,
+     "2": 4.894465173079247,
+     "3": 2.8318432242643716,
+     "4": 4.894572696321552,
+     "5": 7.167643318245444,
+     "6": 2.8313056080528467,
+     "7": 4.894626457942705,
+     "8": 2.8318432242643716,
+     "10": 2.8226499870472996,
+     "11": 4.894626457942705,
+     "12": 2.8318432242643716,
+     "13": 2.831789462643219,
+     "14": 14.862035093372217,
+     "15": 2.831789462643219,
+     "16": 5.191355061255337,
+     "17": 2.831574416158609,
+     "18": 4.894626457942705,
+     "19": 3.128410542713547,
+     "20": 2.831681939400914,
+     "21": 4.894626457942705,
+     "22": 3.1283030194712422,
+     "23": 4.894572696321552,
+     "24": 2.8318432242643716,
+     "25": 5.191032491528422,
+     "26": 2.8318432242643716,
+     "27": 2.8318432242643716
+    },
+    "pass_T_us": 215.95749509575452,
     "rom": {
-     "tokens_s_per_user": 23756.222412952255,
-     "aggregate_tokens_s": 23756.222412952255,
-     "dynamic_j": 0.01684913925931157,
-     "static_j": 0.6261906264700745,
-     "total_j": 0.643039765729386,
+     "tokens_s_per_user": 21669.895050703144,
+     "aggregate_tokens_s": 21669.895050703144,
+     "dynamic_j": 0.017203736602944466,
+     "static_j": 0.6864788112966105,
+     "total_j": 0.703682547899555,
      "nonclock_j": 0.013166070455814104,
-     "clock_j": 0.0036830688034974694
+     "clock_j": 0.004037666147130361
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.020562028622227873,
-      "stage_ucie": 0.0032886213810698066,
-      "head_t1": 0.024610793776345653,
-      "head_ucie": 0.0010037343344078227
+      "stage_t1": 0.018756222876171458,
+      "stage_ucie": 0.002999806911658938,
+      "head_t1": 0.022449415945741347,
+      "head_ucie": 0.0009155840228851374
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 23756.222412952255,
+     "aggregate_tokens_s_uncapped": 21669.895050703144,
      "utilisation": {
-      "stage_t1": 0.020562028622227873,
-      "stage_ucie": 0.0032886213810698066,
-      "head_t1": 0.024610793776345653,
-      "head_ucie": 0.0010037343344078227
+      "stage_t1": 0.018756222876171458,
+      "stage_ucie": 0.002999806911658938,
+      "head_t1": 0.022449415945741347,
+      "head_ucie": 0.0009155840228851374
      }
     },
     "draft_contention": null,
@@ -1386,34 +1791,69 @@
      "static_j": 1.2286325019530755,
      "total_j": 2.3950054639861
     },
-    "ratio_rate_per_user": 2.7521322460626707,
-    "ratio_energy_with_static": 3.724505997338279,
-    "ratio_energy_dynamic": 69.22448346365444
+    "ratio_rate_per_user": 2.51043351510795,
+    "ratio_energy_with_static": 3.403531139339792,
+    "ratio_energy_dynamic": 67.79765285603109
    },
    "fill28": {
+    "batch": 28,
+    "users_held": 866,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 0.5174489180187016,
+     "0": 2.2556122816838475,
+     "9": 4.684917429747981,
+     "1": 3.4368086985709043,
+     "2": 2.224987266228663,
+     "3": 1.1820849614611981,
+     "4": 2.2250067214504545,
+     "5": 3.438073287987328,
+     "6": 1.1819876853522422,
+     "7": 2.2250164490613504,
+     "8": 1.182084961461198,
+     "10": 1.1804215399980564,
+     "11": 2.2250164490613504,
+     "12": 1.182084961461198,
+     "13": 1.1820752338503024,
+     "14": 7.130111093645868,
+     "15": 1.1820752338503024,
+     "16": 2.3630834540255963,
+     "17": 1.18203632340672,
+     "18": 2.2250164490613504,
+     "19": 1.3201227835927574,
+     "20": 1.1820557786285113,
+     "21": 2.2250164490613504,
+     "22": 1.3201033283709662,
+     "23": 2.2250067214504545,
+     "24": 1.1820849614611981,
+     "25": 2.3630250883602226,
+     "26": 1.182084961461198,
+     "27": 1.1820849614611981
+    },
+    "pass_T_us": 142.67646991099198,
     "rom": {
-     "tokens_s_per_user": 8184.912902114869,
-     "aggregate_tokens_s": 229177.56125921634,
-     "dynamic_j": 0.03426665710534257,
-     "static_j": 0.06491003619025013,
-     "total_j": 0.0991766932955927,
-     "nonclock_j": 0.028920160215296004,
-     "clock_j": 0.0053464968900465626
+     "tokens_s_per_user": 5008.938184162819,
+     "aggregate_tokens_s": 140250.26915655893,
+     "dynamic_j": 0.03765666479321647,
+     "static_j": 0.10606698928130585,
+     "total_j": 0.1437236540745223,
+     "nonclock_j": 0.028920160215296,
+     "clock_j": 0.008736504577920473
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.16530250097111188,
-      "stage_ucie": 0.026437923466863196
+      "stage_t1": 0.10116051556735228,
+      "stage_ucie": 0.016179271049900638
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 229177.56125921634,
+     "aggregate_tokens_s_uncapped": 140250.26915655893,
      "utilisation": {
-      "stage_t1": 0.16530250097111188,
-      "stage_ucie": 0.026437923466863196
+      "stage_t1": 0.10116051556735228,
+      "stage_ucie": 0.016179271049900638
      }
     },
     "draft_contention": null,
@@ -1427,46 +1867,81 @@
      "static_j": 0.35200608883971196,
      "total_j": 0.904723911657746
     },
-    "ratio_rate_per_user": 7.606628142097208,
-    "ratio_energy_with_static": 9.122343986215064,
-    "ratio_energy_dynamic": 16.12990205373313
+    "ratio_rate_per_user": 4.655044055976867,
+    "ratio_energy_with_static": 6.294885260770204,
+    "ratio_energy_dynamic": 14.677821996535432
    },
    "fill28_mtp": {
+    "batch": 28,
+    "users_held": 866,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 1.4833495139457096,
+     "0": 4.592720716385795,
+     "9": 9.60537583782824,
+     "1": 7.160654307495623,
+     "2": 4.894465173079247,
+     "3": 2.8318432242643716,
+     "4": 4.894572696321552,
+     "5": 7.167643318245444,
+     "6": 2.8313056080528467,
+     "7": 4.894626457942705,
+     "8": 2.8318432242643716,
+     "10": 2.8226499870472996,
+     "11": 4.894626457942705,
+     "12": 2.8318432242643716,
+     "13": 2.831789462643219,
+     "14": 14.862035093372217,
+     "15": 2.831789462643219,
+     "16": 5.191355061255337,
+     "17": 2.831574416158609,
+     "18": 4.894626457942705,
+     "19": 3.128410542713547,
+     "20": 2.831681939400914,
+     "21": 4.894626457942705,
+     "22": 3.1283030194712422,
+     "23": 4.894572696321552,
+     "24": 2.8318432242643716,
+     "25": 5.191032491528422,
+     "26": 2.8318432242643716,
+     "27": 2.8318432242643716
+    },
+    "pass_T_us": 215.95749509575452,
     "rom": {
-     "tokens_s_per_user": 23479.836575053745,
-     "aggregate_tokens_s": 657435.4241015048,
-     "dynamic_j": 0.016892493396553496,
-     "static_j": 0.022627201471018127,
-     "total_j": 0.03951969486757162,
+     "tokens_s_per_user": 11576.375500334907,
+     "aggregate_tokens_s": 324138.5140093774,
+     "dynamic_j": 0.020724204835228518,
+     "static_j": 0.045893724911994366,
+     "total_j": 0.06661792974722289,
      "nonclock_j": 0.013166070455814114,
-     "clock_j": 0.003726422940739381
+     "clock_j": 0.007558134379414403
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.5690385353637424,
-      "stage_ucie": 0.09101010062921952,
-      "head_t1": 0.681085037956409,
-      "head_ucie": 0.027777585861751584
+      "stage_t1": 0.2805557755257165,
+      "stage_ucie": 0.04487114277134613,
+      "head_t1": 0.33579859560948394,
+      "head_ucie": 0.013695315271916208
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 657435.4241015048,
+     "aggregate_tokens_s_uncapped": 324138.5140093774,
      "utilisation": {
-      "stage_t1": 0.5690385353637424,
-      "stage_ucie": 0.09101010062921952,
-      "head_t1": 0.681085037956409,
-      "head_ucie": 0.027777585861751584
+      "stage_t1": 0.2805557755257165,
+      "stage_ucie": 0.04487114277134613,
+      "head_t1": 0.33579859560948394,
+      "head_ucie": 0.013695315271916208
      }
     },
     "draft_contention": {
      "isolated_draft_s": 1.477735564076344e-05,
-     "contended_draft_s": 1.7254853784693038e-05,
-     "contention_s": 2.4774981439295976e-06,
-     "drafts_per_s": 131487.08482030098,
-     "drafts_in_flight": 2.268790423149825,
+     "contended_draft_s": 1.5777134187969904e-05,
+     "contention_s": 9.997785472064638e-07,
+     "drafts_per_s": 64827.70280187547,
+     "drafts_in_flight": 1.0227953662030218,
      "engine_work_per_draft_s": 6.6831801621335666e-06,
      "engine_work_by_unit_s": {
       "su": 1.1848263569457224e-06,
@@ -1482,20 +1957,20 @@
       "bf16": 1.3701940401646607e-06
      },
      "others_load_by_unit": {
-      "bf16": 0.3235014792019588,
-      "hc": 0.1679661538248555,
-      "sel": 0.010497884614053469,
-      "sfu": 0.026594641022268786,
-      "su": 0.16457256681940977,
-      "weight": 0.342310698287661
+      "bf16": 0.15949747291403732,
+      "hc": 0.08281315169328815,
+      "sel": 0.005175821980830509,
+      "sfu": 0.013112082351437291,
+      "su": 0.08113999535156831,
+      "weight": 0.1687710716594177
      },
      "head_unit_load": {
-      "bf16": 0.335483015468698,
-      "hc": 0.17418712248503535,
-      "sel": 0.010886695155314709,
-      "sfu": 0.02757962772679726,
-      "su": 0.17066784707198052,
-      "weight": 0.3549888722983151
+      "bf16": 0.16540478672566833,
+      "hc": 0.08588030545970624,
+      "sel": 0.00536751909123164,
+      "sfu": 0.013597715031120153,
+      "su": 0.08414518036458936,
+      "weight": 0.175021852091248
      },
      "busiest_head_unit": "weight",
      "throughput_cap": 1.0,
@@ -1512,34 +1987,69 @@
      "static_j": 0.19055439940007576,
      "total_j": 0.6730739321390448
     },
-    "ratio_rate_per_user": 11.812504786112942,
-    "ratio_energy_with_static": 17.031354477671943,
-    "ratio_energy_dynamic": 28.564139195544417
+    "ratio_rate_per_user": 5.823975416797963,
+    "ratio_energy_with_static": 10.103495180546394,
+    "ratio_energy_dynamic": 23.282897296920506
    },
    "sat1024": {
+    "batch": 866,
+    "users_held": 866,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 15.038156568975337,
+     "0": 37.76572326028911,
+     "9": 113.36711547629588,
+     "1": 91.15625648938655,
+     "2": 41.597758526863196,
+     "3": 22.95621044218445,
+     "4": 41.59836163873872,
+     "5": 91.19545876129568,
+     "6": 22.953194882806823,
+     "7": 41.59866319467649,
+     "8": 22.95621044218445,
+     "10": 22.904644376827065,
+     "11": 41.59866319467649,
+     "12": 22.95621044218445,
+     "13": 22.955908886246686,
+     "14": 191.73785288458726,
+     "15": 22.955908886246686,
+     "16": 46.15116605588267,
+     "17": 22.954702662495638,
+     "18": 41.59866319467649,
+     "19": 27.507808635577348,
+     "20": 22.955305774371162,
+     "21": 41.59866319467649,
+     "22": 27.507205523701824,
+     "23": 41.59836163873873,
+     "24": 22.95621044218445,
+     "25": 46.1493567202561,
+     "26": 22.95621044218445,
+     "27": 22.95621044218445
+    },
+    "pass_T_us": 833.341835397279,
     "rom": {
-     "tokens_s_per_user": 672.9518655501923,
-     "aggregate_tokens_s": 689102.710323397,
-     "dynamic_j": 0.02781100483081269,
-     "static_j": 0.02158738250840387,
-     "total_j": 0.04939838733921656,
-     "nonclock_j": 0.02603289962213368,
-     "clock_j": 0.001778105208679011
+     "tokens_s_per_user": 186.2662232677822,
+     "aggregate_tokens_s": 161306.5493498994,
+     "dynamic_j": 0.03367921222085638,
+     "static_j": 0.09222144950271528,
+     "total_j": 0.12590066172357167,
+     "nonclock_j": 0.026083134296686097,
+     "clock_j": 0.007596077924170285
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.497039940631833,
-      "stage_ucie": 0.07949488866290708
+      "stage_t1": 0.116348109666806,
+      "stage_ucie": 0.018608323533004394
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 689102.710323397,
+     "aggregate_tokens_s_uncapped": 161306.5493498994,
      "utilisation": {
-      "stage_t1": 0.497039940631833,
-      "stage_ucie": 0.07949488866290708
+      "stage_t1": 0.116348109666806,
+      "stage_ucie": 0.018608323533004394
      }
     },
     "draft_contention": null,
@@ -1553,46 +2063,81 @@
      "static_j": 0.11970466262606497,
      "total_j": 0.2176903941449525
     },
-    "ratio_rate_per_user": 7.777946318473762,
-    "ratio_energy_with_static": 4.406832001419036,
-    "ratio_energy_dynamic": 3.5232718887713856
+    "ratio_rate_per_user": 2.152856332952095,
+    "ratio_energy_with_static": 1.7290647337733218,
+    "ratio_energy_dynamic": 2.9093831196624116
    },
    "sat1024_mtp": {
+    "batch": 866,
+    "users_held": 866,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 45.10711000131423,
+     "0": 111.89721593043673,
+     "9": 266.1805107541098,
+     "1": 200.6375867923357,
+     "2": 122.64340840512878,
+     "3": 67.79369773882296,
+     "4": 122.64521774075536,
+     "5": 200.75519360806302,
+     "6": 67.78465106069008,
+     "7": 122.64612240856864,
+     "8": 67.79369773882296,
+     "10": 67.63899954275078,
+     "11": 122.64612240856864,
+     "12": 67.79369773882296,
+     "13": 67.79279307100967,
+     "14": 429.6873478559317,
+     "15": 67.79279307100967,
+     "16": 131.82737508379498,
+     "17": 67.7891743997565,
+     "18": 122.64612240856864,
+     "19": 76.9722364106094,
+     "20": 67.79098373538308,
+     "21": 122.64612240856864,
+     "22": 76.97042707498282,
+     "23": 122.64521774075536,
+     "24": 67.79369773882296,
+     "25": 131.82194707691525,
+     "26": 67.79369773882296,
+     "27": 67.79369773882296
+    },
+    "pass_T_us": 2757.3324150380035,
     "rom": {
-     "tokens_s_per_user": 942.6528929126425,
-     "aggregate_tokens_s": 965276.562342546,
-     "dynamic_j": 0.013925828239742345,
-     "static_j": 0.015411048372735695,
-     "total_j": 0.02933687661247804,
-     "nonclock_j": 0.01138781732970723,
-     "clock_j": 0.002538010910035115
+     "tokens_s_per_user": 415.03443522524327,
+     "aggregate_tokens_s": 359419.8209050607,
+     "dynamic_j": 0.018286354561190963,
+     "static_j": 0.041388712948188834,
+     "total_j": 0.0596750675093798,
+     "nonclock_j": 0.01147014047411729,
+     "clock_j": 0.006816214087073673
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 1.1142665776444576,
-      "stage_ucie": 0.17821203144770298,
-      "head_t1": 1.3336711789534963,
-      "head_ucie": 0.054392863769083775
+      "stage_t1": 0.3110932586999402,
+      "stage_ucie": 0.04975520464752936,
+      "head_t1": 0.37234906028673886,
+      "head_ucie": 0.015186000890125822
      },
      "busiest_link": "head_t1",
-     "cap": 0.7498100099791306,
+     "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
-     "binds": true,
-     "aggregate_tokens_s_uncapped": 1287361.5309155614,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 359419.8209050607,
      "utilisation": {
-      "stage_t1": 0.8354882337030024,
-      "stage_ucie": 0.1336251650782033,
-      "head_t1": 0.9999999999999999,
-      "head_ucie": 0.0407843137254902
+      "stage_t1": 0.3110932586999402,
+      "stage_ucie": 0.04975520464752936,
+      "head_t1": 0.37234906028673886,
+      "head_ucie": 0.015186000890125822
      }
     },
     "draft_contention": {
      "isolated_draft_s": 1.477735564076344e-05,
-     "contended_draft_s": 2.4329997373466314e-05,
-     "contention_s": 9.552641732702874e-06,
-     "drafts_per_s": 257472.30618311226,
-     "drafts_in_flight": 6.264300533175436,
+     "contended_draft_s": 1.594739784294806e-05,
+     "contention_s": 1.1700422021846204e-06,
+     "drafts_per_s": 71883.96418101214,
+     "drafts_in_flight": 1.1463621753228286,
      "engine_work_per_draft_s": 6.6831801621335666e-06,
      "engine_work_by_unit_s": {
       "su": 1.1848263569457224e-06,
@@ -1602,31 +2147,31 @@
       "bf16": 1.18125818746052e-06,
       "sel": 8.27966881324747e-08
      },
-     "head_verify_work_per_pass_s": 5.335084372354752e-05,
+     "head_verify_work_per_pass_s": 4.510711000131423e-05,
      "head_verify_work_by_unit_s": {
-      "su": 3.1103955841766326e-06,
-      "bf16": 5.024044813937089e-05
+      "su": 2.6310947562097518e-06,
+      "bf16": 4.247601524510448e-05
      },
      "others_load_by_unit": {
-      "bf16": 0.6449176446991515,
-      "hc": 0.34075257633220946,
-      "sel": 0.02129703602076309,
-      "sfu": 0.05395249125259983,
-      "su": 0.32587798195056467,
-      "weight": 0.6944449800834658
+      "bf16": 0.1800121172595039,
+      "hc": 0.09511810349890765,
+      "sel": 0.005944881468681728,
+      "sfu": 0.015060366387327044,
+      "su": 0.09096843925713154,
+      "weight": 0.1938482467274957
      },
      "head_unit_load": {
-      "bf16": 0.6578470053591515,
-      "hc": 0.3410856678046749,
-      "sel": 0.021317854237792182,
-      "sfu": 0.0540052307357402,
-      "su": 0.3269579631016868,
-      "weight": 0.6951238119310547
+      "bf16": 0.18363597162401563,
+      "hc": 0.0952280666243399,
+      "sel": 0.005951754164021244,
+      "sfu": 0.015077777215520486,
+      "su": 0.09128518698994405,
+      "weight": 0.19407234874683385
      },
      "busiest_head_unit": "weight",
      "throughput_cap": 1.0,
      "basis": "per-unit processor sharing of the head group's pooled units among the users' drafts and verify passes (tools/arch_utilization_v41.draft_contention)",
-     "evaluated_at": "the uncapped aggregate (the link cap applies after: an upper bound on the head load)"
+     "evaluated_at": "the point's aggregate"
     },
     "draft_conditioning_us": 0.5434775510204081,
     "hbm": {
@@ -1638,36 +2183,71 @@
      "static_j": 0.10278349013238776,
      "total_j": 0.18968928104501726
     },
-    "ratio_rate_per_user": 9.355026849394967,
-    "ratio_energy_with_static": 6.465898996361989,
-    "ratio_energy_dynamic": 6.24061918734662
+    "ratio_rate_per_user": 4.118863172380293,
+    "ratio_energy_with_static": 3.178702412279662,
+    "ratio_energy_dynamic": 4.752494031646373
    }
   },
   "200000": {
    "b1": {
+    "batch": 1,
+    "users_held": 4516,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 0.5174489180187016,
+     "0": 2.2556122816838475,
+     "9": 3.336900723216242,
+     "1": 2.0887919920391655,
+     "2": 2.224987266228663,
+     "3": 1.1820849614611981,
+     "4": 2.2250067214504545,
+     "5": 2.090056581455589,
+     "6": 1.1819876853522422,
+     "7": 2.2250164490613504,
+     "8": 1.182084961461198,
+     "10": 1.1804215399980564,
+     "11": 2.2250164490613504,
+     "12": 1.182084961461198,
+     "13": 1.1820752338503024,
+     "14": 3.580990692950786,
+     "15": 1.1820752338503024,
+     "16": 2.3630834540255963,
+     "17": 1.18203632340672,
+     "18": 2.2250164490613504,
+     "19": 1.3201227835927574,
+     "20": 1.1820557786285113,
+     "21": 2.2250164490613504,
+     "22": 1.3201033283709662,
+     "23": 2.2250067214504545,
+     "24": 1.1820849614611981,
+     "25": 2.3630250883602226,
+     "26": 1.182084961461198,
+     "27": 1.1820849614611981
+    },
+    "pass_T_us": 137.25581545299022,
     "rom": {
-     "tokens_s_per_user": 8567.550390932485,
-     "aggregate_tokens_s": 8567.550390932485,
-     "dynamic_j": 0.018276404514026387,
-     "static_j": 1.7363100438922443,
-     "total_j": 1.7545864484062708,
+     "tokens_s_per_user": 7285.665796379299,
+     "aggregate_tokens_s": 7285.665796379299,
+     "dynamic_j": 0.019175087244253305,
+     "static_j": 2.041807051144423,
+     "total_j": 2.060982138388676,
      "nonclock_j": 0.013168688845056009,
-     "clock_j": 0.005107715668970377
+     "clock_j": 0.006006398399197298
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.0061796517034025875,
-      "stage_ucie": 0.0009883526130979715
+      "stage_t1": 0.005255046657988439,
+      "stage_ucie": 0.0008404744062703159
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 8567.550390932485,
+     "aggregate_tokens_s_uncapped": 7285.665796379299,
      "utilisation": {
-      "stage_t1": 0.0061796517034025875,
-      "stage_ucie": 0.0009883526130979715
+      "stage_t1": 0.005255046657988439,
+      "stage_ucie": 0.0008404744062703159
      }
     },
     "draft_contention": null,
@@ -1681,38 +2261,73 @@
      "static_j": 3.6072275403244434,
      "total_j": 5.167532347658058
     },
-    "ratio_rate_per_user": 2.914070952725839,
-    "ratio_energy_with_static": 2.9451568786205096,
-    "ratio_energy_dynamic": 85.37263476173035
+    "ratio_rate_per_user": 2.4780650360652645,
+    "ratio_energy_with_static": 2.507315445100439,
+    "ratio_energy_dynamic": 81.37145805170883
    },
    "b1_mtp": {
+    "batch": 1,
+    "users_held": 4516,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 1.4833495139457096,
+     "0": 4.592720716385795,
+     "9": 6.9936323075694515,
+     "1": 4.548910777236833,
+     "2": 4.894465173079247,
+     "3": 2.8318432242643716,
+     "4": 4.894572696321552,
+     "5": 4.555899787986654,
+     "6": 2.8313056080528467,
+     "7": 4.894626457942705,
+     "8": 2.8318432242643716,
+     "10": 2.8226499870472996,
+     "11": 4.894626457942705,
+     "12": 2.8318432242643716,
+     "13": 2.831789462643219,
+     "14": 7.962641735773189,
+     "15": 2.831789462643219,
+     "16": 5.191355061255337,
+     "17": 2.831574416158609,
+     "18": 4.894626457942705,
+     "19": 3.128410542713547,
+     "20": 2.831681939400914,
+     "21": 4.894626457942705,
+     "22": 3.1283030194712422,
+     "23": 4.894572696321552,
+     "24": 2.8318432242643716,
+     "25": 5.191032491528422,
+     "26": 2.8318432242643716,
+     "27": 2.8318432242643716
+    },
+    "pass_T_us": 207.12676832482612,
     "rom": {
-     "tokens_s_per_user": 24796.612439077035,
-     "aggregate_tokens_s": 24796.612439077035,
-     "dynamic_j": 0.012639714336412818,
-     "static_j": 0.5999175827697334,
-     "total_j": 0.6125572971061463,
+     "tokens_s_per_user": 22532.25361767204,
+     "aggregate_tokens_s": 22532.25361767204,
+     "dynamic_j": 0.012994311680045712,
+     "static_j": 0.6602057675962699,
+     "total_j": 0.6732000792763156,
      "nonclock_j": 0.009111175836524541,
-     "clock_j": 0.0035285384998882756
+     "clock_j": 0.00388313584352117
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.021462530777982845,
-      "stage_ucie": 0.003432644653166312,
-      "head_t1": 0.02568860926126735,
-      "head_ucie": 0.0010476922992830606
+      "stage_t1": 0.019502631174107332,
+      "stage_ucie": 0.0031191849328015752,
+      "head_t1": 0.023342795729951703,
+      "head_ucie": 0.0009520199042803832
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 24796.612439077035,
+     "aggregate_tokens_s_uncapped": 22532.25361767204,
      "utilisation": {
-      "stage_t1": 0.021462530777982845,
-      "stage_ucie": 0.003432644653166312,
-      "head_t1": 0.02568860926126735,
-      "head_ucie": 0.0010476922992830606
+      "stage_t1": 0.019502631174107332,
+      "stage_ucie": 0.0031191849328015752,
+      "head_t1": 0.023342795729951703,
+      "head_ucie": 0.0009520199042803832
      }
     },
     "draft_contention": null,
@@ -1726,34 +2341,69 @@
      "static_j": 1.2286325019530755,
      "total_j": 2.3909505693668107
     },
-    "ratio_rate_per_user": 2.8726602866580007,
-    "ratio_energy_with_static": 3.9032276338265506,
-    "ratio_energy_dynamic": 91.95762154729232
+    "ratio_rate_per_user": 2.610336806909492,
+    "ratio_energy_with_static": 3.5516195600230205,
+    "ratio_energy_dynamic": 89.44822134739238
    },
    "fill28": {
+    "batch": 28,
+    "users_held": 4516,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 0.5174489180187016,
+     "0": 2.2556122816838475,
+     "9": 3.336900723216242,
+     "1": 2.0887919920391655,
+     "2": 2.224987266228663,
+     "3": 1.1820849614611981,
+     "4": 2.2250067214504545,
+     "5": 2.090056581455589,
+     "6": 1.1819876853522422,
+     "7": 2.2250164490613504,
+     "8": 1.182084961461198,
+     "10": 1.1804215399980564,
+     "11": 2.2250164490613504,
+     "12": 1.182084961461198,
+     "13": 1.1820752338503024,
+     "14": 3.580990692950786,
+     "15": 1.1820752338503024,
+     "16": 2.3630834540255963,
+     "17": 1.18203632340672,
+     "18": 2.2250164490613504,
+     "19": 1.3201227835927574,
+     "20": 1.1820557786285113,
+     "21": 2.2250164490613504,
+     "22": 1.3201033283709662,
+     "23": 2.2250067214504545,
+     "24": 1.1820849614611981,
+     "25": 2.3630250883602226,
+     "26": 1.182084961461198,
+     "27": 1.1820849614611981
+    },
+    "pass_T_us": 137.25581545299022,
     "rom": {
-     "tokens_s_per_user": 8567.550390932485,
-     "aggregate_tokens_s": 239891.4109461096,
-     "dynamic_j": 0.01827640451402638,
-     "static_j": 0.06201107299615158,
-     "total_j": 0.08028747751017795,
+     "tokens_s_per_user": 7285.665796379299,
+     "aggregate_tokens_s": 203998.64229862037,
+     "dynamic_j": 0.0191750872442533,
+     "static_j": 0.0729216803980151,
+     "total_j": 0.0920967676422684,
      "nonclock_j": 0.013168688845056002,
-     "clock_j": 0.005107715668970377
+     "clock_j": 0.006006398399197298
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.17303024769527248,
-      "stage_ucie": 0.027673873166743204
+      "stage_t1": 0.14714130642367632,
+      "stage_ucie": 0.023533283375568845
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 239891.4109461096,
+     "aggregate_tokens_s_uncapped": 203998.64229862037,
      "utilisation": {
-      "stage_t1": 0.17303024769527248,
-      "stage_ucie": 0.027673873166743204
+      "stage_t1": 0.14714130642367632,
+      "stage_ucie": 0.023533283375568845
      }
     },
     "draft_contention": null,
@@ -1767,46 +2417,81 @@
      "static_j": 0.34799172365205316,
      "total_j": 0.884548111424128
     },
-    "ratio_rate_per_user": 7.87142805540419,
-    "ratio_energy_with_static": 11.017261207540054,
-    "ratio_energy_dynamic": 29.35787437623687
+    "ratio_rate_per_user": 6.693697910736998,
+    "ratio_energy_with_static": 9.604551104985351,
+    "ratio_energy_dynamic": 27.98195288174654
    },
    "fill28_mtp": {
+    "batch": 28,
+    "users_held": 4516,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 1.4833495139457096,
+     "0": 4.592720716385795,
+     "9": 6.9936323075694515,
+     "1": 4.548910777236833,
+     "2": 4.894465173079247,
+     "3": 2.8318432242643716,
+     "4": 4.894572696321552,
+     "5": 4.555899787986654,
+     "6": 2.8313056080528467,
+     "7": 4.894626457942705,
+     "8": 2.8318432242643716,
+     "10": 2.8226499870472996,
+     "11": 4.894626457942705,
+     "12": 2.8318432242643716,
+     "13": 2.831789462643219,
+     "14": 7.962641735773189,
+     "15": 2.831789462643219,
+     "16": 5.191355061255337,
+     "17": 2.831574416158609,
+     "18": 4.894626457942705,
+     "19": 3.128410542713547,
+     "20": 2.831681939400914,
+     "21": 4.894626457942705,
+     "22": 3.1283030194712422,
+     "23": 4.894572696321552,
+     "24": 2.8318432242643716,
+     "25": 5.191032491528422,
+     "26": 2.8318432242643716,
+     "27": 2.8318432242643716
+    },
+    "pass_T_us": 207.12676832482612,
     "rom": {
-     "tokens_s_per_user": 24477.052842797282,
-     "aggregate_tokens_s": 685357.4795983239,
-     "dynamic_j": 0.012685781089045296,
-     "static_j": 0.021705349745431417,
-     "total_j": 0.034391130834476716,
+     "tokens_s_per_user": 20848.350292536106,
+     "aggregate_tokens_s": 583753.808191011,
+     "dynamic_j": 0.013307949222926035,
+     "static_j": 0.02548321498994217,
+     "total_j": 0.038791164212868205,
      "nonclock_j": 0.009111175836524515,
-     "clock_j": 0.0035746052525207797
+     "clock_j": 0.004196773386401518
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.5932062710557606,
-      "stage_ucie": 0.09487540661575518,
-      "head_t1": 0.7100115203616769,
-      "head_ucie": 0.028957332595142903
+      "stage_t1": 0.5052639390096709,
+      "stage_ucie": 0.08081020717549801,
+      "head_t1": 0.6047529080933546,
+      "head_ucie": 0.024664432330081913
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 685357.4795983239,
+     "aggregate_tokens_s_uncapped": 583753.808191011,
      "utilisation": {
-      "stage_t1": 0.5932062710557606,
-      "stage_ucie": 0.09487540661575518,
-      "head_t1": 0.7100115203616769,
-      "head_ucie": 0.028957332595142903
+      "stage_t1": 0.5052639390096709,
+      "stage_ucie": 0.08081020717549801,
+      "head_t1": 0.6047529080933546,
+      "head_ucie": 0.024664432330081913
      }
     },
     "draft_contention": {
      "isolated_draft_s": 1.477735564076344e-05,
-     "contended_draft_s": 1.7409867816177252e-05,
-     "contention_s": 2.6325121754138116e-06,
-     "drafts_per_s": 137071.49591966477,
-     "drafts_in_flight": 2.386396625327043,
+     "contended_draft_s": 1.687316063600767e-05,
+     "contention_s": 2.0958049952442283e-06,
+     "drafts_per_s": 116750.7616382022,
+     "drafts_in_flight": 1.9699543554976275,
      "engine_work_per_draft_s": 6.6831801621335666e-06,
      "engine_work_by_unit_s": {
       "su": 1.1848263569457224e-06,
@@ -1822,20 +2507,20 @@
       "bf16": 1.3701940401646607e-06
      },
      "others_load_by_unit": {
-      "bf16": 0.3372409674078537,
-      "hc": 0.17509987387818918,
-      "sel": 0.010943742117386824,
-      "sfu": 0.027724146697379954,
-      "su": 0.17156215724232562,
-      "weight": 0.35684903614465363
+      "bf16": 0.28724527689948726,
+      "hc": 0.14914146446620127,
+      "sel": 0.00932134152913758,
+      "sfu": 0.023614065207148534,
+      "su": 0.14612821135383078,
+      "weight": 0.3039464658951725
      },
      "head_unit_load": {
-      "bf16": 0.34973137360814455,
-      "hc": 0.1815850543921962,
-      "sel": 0.011349065899512262,
-      "sfu": 0.028750966945431063,
-      "su": 0.1779163112142636,
-      "weight": 0.3700656671129742
+      "bf16": 0.2978839908587275,
+      "hc": 0.1546652224093939,
+      "sel": 0.009666576400587119,
+      "sfu": 0.0244886602148207,
+      "su": 0.15154036732989856,
+      "weight": 0.3152037424098085
      },
      "busiest_head_unit": "weight",
      "throughput_cap": 1.0,
@@ -1852,34 +2537,69 @@
      "static_j": 0.19055439940007576,
      "total_j": 0.6690190375197551
     },
-    "ratio_rate_per_user": 12.314195753929367,
-    "ratio_energy_with_static": 19.453243359159075,
-    "ratio_energy_dynamic": 37.71660844225458
+    "ratio_rate_per_user": 10.488626563729744,
+    "ratio_energy_with_static": 17.24668622597878,
+    "ratio_energy_dynamic": 35.95329604169309
    },
    "sat1024": {
+    "batch": 1024,
+    "users_held": 4516,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 17.937698283159303,
+     "0": 44.79189518770212,
+     "9": 69.67695523102574,
+     "1": 43.35777674356496,
+     "2": 49.30753153060604,
+     "3": 27.228644914137067,
+     "4": 49.30825137381231,
+     "5": 43.40456655197263,
+     "6": 27.225045698105706,
+     "7": 49.30861129541545,
+     "8": 27.228644914137067,
+     "10": 27.167098320000832,
+     "11": 49.30861129541545,
+     "12": 27.228644914137067,
+     "13": 27.228284992533933,
+     "14": 83.88589175252692,
+     "15": 27.228284992533933,
+     "16": 54.695467858943374,
+     "17": 27.226845306121387,
+     "18": 49.30861129541545,
+     "19": 32.61442171285559,
+     "20": 27.227565149327663,
+     "21": 49.30861129541545,
+     "22": 32.61370186964932,
+     "23": 49.30825137381231,
+     "24": 27.228644914137067,
+     "25": 54.693308329324566,
+     "26": 27.228644914137067,
+     "27": 27.228644914137067
+    },
+    "pass_T_us": 784.3543363538587,
     "rom": {
-     "tokens_s_per_user": 869.9395509245768,
-     "aggregate_tokens_s": 890818.1001467666,
-     "dynamic_j": 0.011656902232876984,
-     "static_j": 0.01669917101244139,
-     "total_j": 0.028356073245318372,
-     "nonclock_j": 0.01028142825189368,
-     "clock_j": 0.001375473980983303
+     "tokens_s_per_user": 425.7484180968951,
+     "aggregate_tokens_s": 435966.38013122056,
+     "dynamic_j": 0.013091959463433563,
+     "static_j": 0.03412172239256506,
+     "total_j": 0.04721368185599862,
+     "nonclock_j": 0.010281428251893682,
+     "clock_j": 0.0028105312115398805
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.6425343696630035,
-      "stage_ucie": 0.102764776032931
+      "stage_t1": 0.31445632189750466,
+      "stage_ucie": 0.0502930816119376
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 890818.1001467666,
+     "aggregate_tokens_s_uncapped": 435966.38013122056,
      "utilisation": {
-      "stage_t1": 0.6425343696630035,
-      "stage_ucie": 0.102764776032931
+      "stage_t1": 0.31445632189750466,
+      "stage_ucie": 0.0502930816119376
      }
     },
     "draft_contention": null,
@@ -1893,46 +2613,81 @@
      "static_j": 0.11400801532298807,
      "total_j": 0.19566051014674085
     },
-    "ratio_rate_per_user": 9.57622484497418,
-    "ratio_energy_with_static": 6.900127124585019,
-    "ratio_energy_dynamic": 7.004647820881701
+    "ratio_rate_per_user": 4.686604459763688,
+    "ratio_energy_with_static": 4.144148527613329,
+    "ratio_energy_dynamic": 6.236842930335365
    },
    "sat1024_mtp": {
+    "batch": 1024,
+    "users_held": 4516,
+    "hbm_batch": null,
+    "stage_busy_us": {
+     "head": 53.35084372354752,
+     "0": 132.28837583253895,
+     "9": 189.70323469603042,
+     "1": 112.19696815006172,
+     "2": 144.98518140276687,
+     "3": 80.12775358286817,
+     "4": 144.98731591852908,
+     "5": 112.33571167460644,
+     "6": 80.11708100405704,
+     "7": 144.9883831764102,
+     "8": 80.12775358286817,
+     "10": 79.9452524851978,
+     "11": 144.9883831764102,
+     "12": 80.12775358286817,
+     "13": 80.12668632498705,
+     "14": 216.2505761437739,
+     "15": 80.12668632498706,
+     "16": 155.84509608452882,
+     "17": 80.1224172934626,
+     "18": 144.9883831764102,
+     "19": 90.98126471734341,
+     "20": 80.12455180922483,
+     "21": 144.9883831764102,
+     "22": 90.97913020158119,
+     "23": 144.98731591852908,
+     "24": 80.12775358286817,
+     "25": 155.8386925372421,
+     "26": 80.12775358286817,
+     "27": 80.12775358286817
+    },
+    "pass_T_us": 2820.378120917241,
     "rom": {
-     "tokens_s_per_user": 942.6528929126425,
-     "aggregate_tokens_s": 965276.562342546,
-     "dynamic_j": 0.009870933620452745,
-     "static_j": 0.015411048372735695,
-     "total_j": 0.02528198199318844,
+     "tokens_s_per_user": 823.232362830026,
+     "aggregate_tokens_s": 842989.9395379466,
+     "dynamic_j": 0.010239105016424015,
+     "static_j": 0.017646620792986782,
+     "total_j": 0.027885725809410795,
      "nonclock_j": 0.007332922710417631,
-     "clock_j": 0.0025380109100351135
+     "clock_j": 0.0029061823060063836
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 1.3348708324097294,
-      "stage_ucie": 0.2134947305580322,
-      "head_t1": 1.5977135027903293,
-      "head_ucie": 0.06516164874125266
+      "stage_t1": 0.7296439208103587,
+      "stage_ucie": 0.11669678331011703,
+      "head_t1": 0.8733144182970395,
+      "head_ucie": 0.03561752921682044
      },
      "busiest_link": "head_t1",
-     "cap": 0.6258944411833213,
+     "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
-     "binds": true,
-     "aggregate_tokens_s_uncapped": 1542235.3975817168,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 842989.9395379466,
      "utilisation": {
-      "stage_t1": 0.8354882337030025,
-      "stage_ucie": 0.1336251650782033,
-      "head_t1": 1.0,
-      "head_ucie": 0.040784313725490205
+      "stage_t1": 0.7296439208103587,
+      "stage_ucie": 0.11669678331011703,
+      "head_t1": 0.8733144182970395,
+      "head_ucie": 0.03561752921682044
      }
     },
     "draft_contention": {
      "isolated_draft_s": 1.477735564076344e-05,
-     "contended_draft_s": 3.384392791223121e-05,
-     "contention_s": 1.9066572271467773e-05,
-     "drafts_per_s": 308447.07951634336,
-     "drafts_in_flight": 10.439060723889373,
+     "contended_draft_s": 1.8603207733397837e-05,
+     "contention_s": 3.825852092634397e-06,
+     "drafts_per_s": 168597.98790758933,
+     "drafts_in_flight": 3.136463392477781,
      "engine_work_per_draft_s": 6.6831801621335666e-06,
      "engine_work_by_unit_s": {
       "su": 1.1848263569457224e-06,
@@ -1948,25 +2703,25 @@
       "bf16": 5.024044813937089e-05
      },
      "others_load_by_unit": {
-      "bf16": 0.772599457335577,
-      "hc": 0.40821530892177055,
-      "sel": 0.02551345680761066,
-      "sfu": 0.06463409057928034,
-      "su": 0.3903958188802063,
-      "weight": 0.8319322927072135
+      "bf16": 0.42230490290108846,
+      "hc": 0.22313156547050006,
+      "sel": 0.013945722841906254,
+      "sfu": 0.03532916453282918,
+      "su": 0.21339138517358186,
+      "weight": 0.4547363873430739
      },
      "head_unit_load": {
-      "bf16": 0.7880885932147355,
-      "hc": 0.4086143463693969,
-      "sel": 0.025538396648087307,
-      "sfu": 0.06469727150848785,
-      "su": 0.39168961640326655,
-      "weight": 0.8327455207548257
+      "bf16": 0.43077130546112624,
+      "hc": 0.22334968039275863,
+      "sel": 0.013959355024547414,
+      "sfu": 0.035363699395520115,
+      "su": 0.21409857831507575,
+      "weight": 0.45518089994067223
      },
      "busiest_head_unit": "weight",
      "throughput_cap": 1.0,
      "basis": "per-unit processor sharing of the head group's pooled units among the users' drafts and verify passes (tools/arch_utilization_v41.draft_contention)",
-     "evaluated_at": "the uncapped aggregate (the link cap applies after: an upper bound on the head load)"
+     "evaluated_at": "the point's aggregate"
     },
     "draft_conditioning_us": 0.5434775510204081,
     "hbm": {
@@ -1978,9 +2733,9 @@
      "static_j": 0.10278349013238776,
      "total_j": 0.18563438642572766
     },
-    "ratio_rate_per_user": 9.355026849394967,
-    "ratio_energy_with_static": 7.342556706026526,
-    "ratio_energy_dynamic": 8.393420468522997
+    "ratio_rate_per_user": 8.169879831132553,
+    "ratio_energy_with_static": 6.656968073718931,
+    "ratio_energy_dynamic": 8.091615054288738
    }
   }
  },

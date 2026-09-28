@@ -314,6 +314,94 @@ def _v41_energy(cfg, scenario, V, E, ctx, users, positions, hbm_die_pj=None, wei
     return dyn, bits * (hb["total"] - die_pj) * 1e-12, bits * hb["stack_high"] * 1e-12
 
 
+PLACEMENT = ROOT / "results/arch/v41_die_placement.json"
+ROUTED_OPS = ("ffn.experts_w13", "ffn.experts_w2", "ffn.experts_swiglu")
+
+
+def v41_die_workloads(V, c, ctx, G=4):
+    """Per-DIE op lists of the V4.1 ROM array: each layer die (stage s of results/arch/v41_die_placement.json, tensor
+    group G) and a head die.  A layer's routed experts are split over the stages that hold its bytes, in the
+    placement's fractions (the experts are ~all of a layer's stored bytes); every other op of the layer (attention,
+    indexer, KV, hyper-connections, router, shared expert, combine, Engram) and its collectives run on the stage where
+    the layer starts (its attention and KV owner, tools/v41_rack_design.placement) -- the conservative assignment for
+    that stage.  Within a stage an op runs at its die share ('tp' = 1/G, 'rep' = every die), KV-SRAM rows are read by
+    every die (the rows are all-gathered), as tools/arch_budget_v41.token_workload's die share.  Returns
+    {stage: [(op, weight)]} and {stage: collective payload bytes per die}, with 'head' for a head die."""
+    P_ = json.loads(PLACEMENT.read_text())
+    frac, start = {}, {}
+    for st in P_["stages"]:
+        for l in st["layers"]:
+            frac.setdefault(l["layer"], []).append((st["stage"], l["fraction"]))
+            start.setdefault(l["layer"], st["stage"])
+    ops = {st["stage"]: [] for st in P_["stages"]}
+    coll = {st["stage"]: 0.0 for st in P_["stages"]}
+    for L in range(c["num_layers"]):
+        lops, _meta = V.ops_of_layer(c, L, ctx)
+        tot = sum(f for _, f in frac[L])
+        for o in lops:
+            if o["name"] in ROUTED_OPS:
+                for s_, f in frac[L]:
+                    ops[s_].append((o, f / tot))
+            else:
+                ops[start[L]].append((o, 1.0))
+        coll[start[L]] += sum(p for _, _, p in V.collectives_of_layer(c, L, G))
+    ops["head"] = [(o, 1.0) for o in V.head_ops(c)]
+    coll["head"] = 0.0
+    return ops, coll
+
+
+def _die_energy(cfg, scenario, V, E, die_ops, coll_B, users, positions, hbm_die_pj=None, G=4):
+    """Die-side dynamic joules per POSITION on ONE die (the _v41_energy components, priced op by op at the die's
+    share): weights read once per pass (routed experts at their union), KV rows per user."""
+    c = E["c"]
+    tokens = max(1.0, users * positions)
+    NE, KE = c["num_routed_experts"], c["experts_per_token"]
+    Ux = V.distinct_experts(round(tokens), NE, KE)
+    d = cfg["die"]
+    hb = hbm_split(cfg)
+    die_pj = hb["die"] if hbm_die_pj is None else hbm_die_pj
+    lj = d["link_j_per_bit"]
+    w_j = val(d["rom_read_j_per_byte"]) + val(d["operand_delivery_j_per_byte"])
+    dyn = dict(mac=0.0, weight_read_and_delivery=0.0, kv_sram=0.0, stream=0.0, links=0.0, hbm_controller_phy_io=0.0)
+    for o, w in die_ops:
+        sh = (1.0 if o["share"] == "rep" else 1.0 / G) * w
+        if o["macs"]:
+            dyn["mac"] += o["macs"] * sh * mac_pj(cfg, scenario, "v41", FMT.get(o["fmt"], "bf16")) * 1e-12
+        rb = o["bytes"]["rom"] * sh
+        rb = rb * (Ux / KE) if o["name"] in ROUTED_OPS else rb
+        dyn["weight_read_and_delivery"] += rb / tokens * w_j
+        dyn["kv_sram"] += o["bytes"]["kv_sram"] * w * val(d["sram_j_per_byte"])
+        if o["elems"] and o["cls"] in ("su", "sfu", "sinkhorn"):
+            dyn["stream"] += o["elems"] * sh * 3 * val(d["stream_fp32_op_j"])
+        dyn["hbm_controller_phy_io"] += ((o["bytes"]["kv_hbm"] + o["bytes"]["idx"]) * sh / positions * 8
+                                         * die_pj * 1e-12)
+    dyn["links"] = coll_B * 8 * (val(lj["board"]) + val(lj["ucie"]))
+    return dyn
+
+
+def v41_hottest_die(cfg, scenario, V, E, ctx, users, positions, mtp_factor, draft_overhead, hbm_die_pj=None,
+                    window=None):
+    """The HOTTEST die's dynamic joules per emitted token by component, and every die's total, for one operating
+    point: layer dies per stage (v41_die_workloads) and the head die (LM head + argmax per position, plus, with MTP,
+    the draft: draft_overhead x the layer dies' verify work, on the 4 head dies).  mtp_factor = (gamma + 1) / tau
+    with MTP, else 1.  window: {die: factor} -- the die's power is its joules per token x rate x factor (batch 1:
+    the pass time over the die's active window; saturated: 1); the hottest die is the one with the most power."""
+    ops, coll = v41_die_workloads(V, E["c"], ctx)
+    per = {s: {k: v * mtp_factor for k, v in _die_energy(cfg, scenario, V, E, o, coll[s], users, positions,
+                                                         hbm_die_pj).items()} for s, o in ops.items()}
+    if draft_overhead:
+        layer_total = 4 * sum(sum(v.values()) for s, v in per.items() if s != "head")
+        per["head"]["draft"] = draft_overhead * layer_total / 4
+    tot = {str(s): sum(v.values()) for s, v in per.items()}
+    win = {s: (window or {}).get(s, 1.0) for s in tot}
+    hot = max(tot, key=lambda s: tot[s] * win[s])
+    layer = [v for s, v in tot.items() if s != "head"]
+    return dict(hottest=hot, hottest_components_j_per_token=per[hot if hot == "head" else int(hot)],
+                hottest_j_per_token=tot[hot], hottest_window_factor=win[hot], die_j_per_token=tot,
+                window_factor=win, layer_die_mean_j_per_token=sum(layer) / len(layer),
+                hottest_over_layer_mean=tot[hot] / (sum(layer) / len(layer)))
+
+
 def v41_links_static():
     """Always-on link watts of both V4.1 machines, from their records (see the module doc): per hottest die and per
     machine.  ROM: a layer die's lanes (the budget's serdes_always_on, 84 lanes per package / 2) + UCIe idle; the
@@ -351,7 +439,7 @@ def _v41_static(cfg, E, V, D):
 def _spec_rates(ctx):
     """The SPECIFICATION model's rates (results/arch/arch_budget_v41.json batch rows), MTP at the config's tau."""
     rows = json.loads(V41_REC.read_text())["batch"][str(ctx)]["rows"]["rom"]
-    sat = max(rows, key=lambda r: r["ar_aggregate_tokens_s"])
+    sat = max((r for r in rows if r.get("fits_capacity", True)), key=lambda r: r["ar_aggregate_tokens_s"])
     return dict(ar=rows[0]["ar_tokens_s_per_user"], mtp=rows[0]["mtp_tokens_s_per_user"],
                 sat_rate=sat["ar_aggregate_tokens_s"], sat_batch=sat["batch"])
 
@@ -364,10 +452,21 @@ def _dp_rates(ctx):
     d = ln["design_point"][str(ctx)]
     en = ln["energy"][str(ctx)]
     sat = en["sat1024"]["rom"]
-    return dict(ar=d["ar"], mtp=d["mtp"], sat_rate=sat["aggregate_tokens_s"], sat_batch=1024,
+    sb = en["sat1024"].get("batch", 1024)            # the saturated point holds at most the users held (capacity)
+
+    def win(k):
+        """Batch 1: a die is active for max(pass / stages, its stage's busy time) of each pass (T / stages alone
+        would under-count a heavy stage's window and over-state its power)."""
+        e = en[k]
+        tau = json.loads(V41_LADDER.read_text())["tau"] if k.endswith("_mtp") else 1.0
+        cyc, st = tau / e["rom"]["tokens_s_per_user"] * 1e6, 28          # one pass (verify + draft with MTP), us
+        return {s: cyc / max(cyc / st, b) for s, b in e.get("stage_busy_us", {}).items()}
+    return dict(ar=d["ar"], mtp=d["mtp"], sat_rate=sat["aggregate_tokens_s"], sat_batch=sb, sat_key=1024,
+                windows=dict(ar_batch1=win("b1"), mtp_batch1=win("b1_mtp")),
                 extra={"fill28": (28, False, en["fill28"]["rom"]["aggregate_tokens_s"]),
                        "fill28_mtp": (28, True, en["fill28_mtp"]["rom"]["aggregate_tokens_s"]),
-                       "saturated_batch1024_mtp": (1024, True, en["sat1024_mtp"]["rom"]["aggregate_tokens_s"])})
+                       "saturated_batch1024_mtp": (en["sat1024_mtp"].get("batch", 1024), True,
+                                                   en["sat1024_mtp"]["rom"]["aggregate_tokens_s"])})
 
 
 def v41_design_points(cfg, scenario, hbm_die_pj=None):
@@ -401,19 +500,23 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
         # batch 1, autoregressive: one token at a time; a layer die works only while its stage holds it (T/stages),
         # so the hottest die spends (die energy / layer dies) in T/stages: power = E x rate x stages / layer dies
         dyn, stk, stk_hi = _v41_energy(cfg, scenario, V, E, ctx, 1, 1, hbm_die_pj)
-        pts["ar_batch1"] = dict(rate=rt["ar"], per_die=stages / ld, dyn=dyn, stk=stk, stk_hi=stk_hi,
-                                basis="per user; hottest die = a layer die during its stage window")
+        pts["ar_batch1"] = dict(rate=rt["ar"], per_die=stages / ld, dyn=dyn, stk=stk, stk_hi=stk_hi, users=1, pos=1,
+                                mtp=False, window=stages,
+                                basis="per user; hottest die = the hottest die during its stage window (T / stages)")
         # batch 1 with MTP: a verify pass is gamma+1 positions per tau emitted tokens (+ the draft's ~3/40)
         dv, sv, sv_hi = _v41_energy(cfg, scenario, V, E, ctx, 1, g + 1, hbm_die_pj)
         f = (g + 1) / tau * (1 + ovh)
         pts["mtp_batch1"] = dict(rate=rt["mtp"], per_die=stages / ld,
                                  dyn={k: v * f for k, v in dv.items()}, stk=sv * f, stk_hi=sv_hi * f,
+                                 users=1, pos=g + 1, mtp=True, window=stages,
                                  basis=f"per user, gamma {g}, tau {tau}")
         # saturated batch: every layer die busy all the time; its share of the aggregate is 1 / layer dies
         m = V.fill_machine(rt["sat_batch"])
         ds, ss, ss_hi = _v41_energy(cfg, scenario, V, E, ctx, m.microbatch, 1, hbm_die_pj)
-        pts[f"saturated_batch{rt['sat_batch']}"] = dict(rate=rt["sat_rate"], per_die=1 / ld, dyn=ds, stk=ss,
-                                                     stk_hi=ss_hi, basis="aggregate tokens/s of the array")
+        pts[f"saturated_batch{rt.get('sat_key', rt['sat_batch'])}"] = dict(
+            rate=rt["sat_rate"], per_die=1 / ld, dyn=ds, stk=ss, stk_hi=ss_hi, batch=rt["sat_batch"],
+            users=m.microbatch, pos=1, mtp=False, window=1,
+            basis=f"aggregate tokens/s of the array, batch {rt['sat_batch']}")
         # the design point's further operating points: every layer die holds a user (fill) or a microbatch (sat)
         for k, (bt, mtp, rate) in rt.get("extra", {}).items():
             mm = V.fill_machine(bt)
@@ -421,14 +524,23 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
             de, se, se_hi = _v41_energy(cfg, scenario, V, E, ctx, mm.microbatch, pos, hbm_die_pj)
             ff = (g + 1) / tau * (1 + ovh) if mtp else 1.0
             pts[k] = dict(rate=rate, per_die=1 / ld, dyn={kk: vv * ff for kk, vv in de.items()}, stk=se * ff,
-                          stk_hi=se_hi * ff, basis=f"aggregate tokens/s of the array, batch {bt}"
+                          stk_hi=se_hi * ff, users=mm.microbatch, pos=pos, mtp=mtp, window=1, batch=bt, basis=f"aggregate tokens/s of the array, batch {bt}"
                                                    + (f", gamma {g}, tau {tau}" if mtp else ""))
         res = {}
         for k, p in pts.items():
             e_dyn = sum(p["dyn"].values())
-            die_w = static_w + e_dyn * p["per_die"] * p["rate"]
-            classes = _class_caps(cfg, n_pkg, static_w, e_dyn * p["per_die"], p["stk_hi"] * p["per_die"], p["rate"],
-                                  logic_mm2)
+            # the HOTTEST die (not the average over layer dies): its own ops at its die share, per emitted token,
+            # over its stage window at batch 1 (window = stages: the average window, conservative for a heavy stage)
+            wf = rt.get("windows", {}).get(k) if p["window"] > 1 else None
+            if p["window"] > 1 and not wf:
+                wf = {s: p["window"] for s in [str(i) for i in range(stages)] + ["head"]}
+            hd = v41_hottest_die(cfg, scenario, V, E, ctx, p["users"], p["pos"], (g + 1) / tau if p["mtp"] else 1.0,
+                                 ovh if p["mtp"] else 0.0, hbm_die_pj, window=wf)
+            hot_j = hd["hottest_j_per_token"] * hd["hottest_window_factor"]
+            die_w = static_w + hot_j * p["rate"]
+            avg_die_w = static_w + e_dyn * p["per_die"] * p["rate"]
+            stk_die = p["stk_hi"] * p["per_die"] * hot_j / max(1e-30, e_dyn * p["per_die"])   # stacks scale with the die
+            classes = _class_caps(cfg, n_pkg, static_w, hot_j, stk_die, p["rate"], logic_mm2)
             cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
             # whole-array energy per token: dynamic + stacks + the static of every die over the time a token
             # holds the array (idle dies' clock gated: leakage + HBM idle only; active dies clock too)
@@ -441,9 +553,15 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
                           array_links_always_on_j_per_token=links["array_w"] / p["rate"],
                           energy_per_token_j=e_dyn + p["stk"] + arr_static,
                           die_components_j_per_token=p["dyn"],
+                          hottest_die=hd["hottest"], hottest_die_components_j_per_token=hd["hottest_components_j_per_token"],
+                          hottest_die_dynamic_j_per_token=hot_j,
+                          hottest_over_layer_mean=hd["hottest_over_layer_mean"],
+                          hottest_die_window_factor=hd["hottest_window_factor"],
+                          die_dynamic_j_per_token_by_stage=hd["die_j_per_token"],
+                          array_average_die_w=avg_die_w,
                           hottest_die_w=die_w, die_over_cooling=die_w / cool,
                           hottest_die_stacks_w=p["stk"] * p["per_die"] * p["rate"],
-                          hottest_die_stacks_w_high=p["stk_hi"] * p["per_die"] * p["rate"],
+                          hottest_die_stacks_w_high=stk_die * p["rate"], batch=p.get("batch", 1),
                           cooling_classes=classes, **cap)
         out[str(ctx)] = res
     return dict(per_context=out, die_static_w=st, links_always_on=links, cooling_limit_w=cool, dies_per_package=n_pkg,

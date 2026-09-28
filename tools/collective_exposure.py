@@ -47,6 +47,8 @@ def expose_collectives(g, terms):
         if nd["kind"] not in ("collective", "hop") or not nd.get("stream") or nd.get("_exposed"):
             continue
         cls = exposure_class(name, nd)
+        if cls == "hop" and getattr(g, "positions", 1) > 1 and "hop_mtp" in terms:
+            cls = "hop_mtp"            # the MTP verify pass's hop: its own bench-measured multi-position tail
         t = terms.get(cls) if cls else None
         if not t:
             continue

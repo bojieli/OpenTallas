@@ -508,10 +508,13 @@ def build_v41(src: dict) -> dict:
         dict(key="S1", label="B200 set, idealised", value=None, unit="tok/s", evidence="not derived",
              basis="needs a routed-expert-union and KV-capacity model for the GPU set; not built", matching=""),
         dict(key="S2", label="HBM comparator, fill batch (28 users)", value=en["fill28"]["hbm"]["aggregate_tokens_s"], unit="tok/s",
-             evidence="modelled", basis=f"per user {en['fill28']['hbm']['tokens_s_per_user']:,.0f} tok/s; at 1,024 users "
+             evidence="modelled", basis=f"per user {en['fill28']['hbm']['tokens_s_per_user']:,.0f} tok/s; at "
+                                        f"{en['sat1024'].get('hbm_batch', 1024):,} users "
                                         f"{en['sat1024']['hbm']['aggregate_tokens_s']:,.0f}", matching=""),
         dict(key="S3", label="ROM array, fill batch (28 users)", value=en["fill28"]["rom"]["aggregate_tokens_s"], unit="tok/s",
-             evidence="modelled, C7 bench tails", basis=f"per user {en['fill28']['rom']['tokens_s_per_user']:,.0f} tok/s; at 1,024 users "
+             evidence="modelled, C7 bench tails", basis=f"per user {en['fill28']['rom']['tokens_s_per_user']:,.0f} tok/s, bound by "
+                                                     "its busiest pipeline stage; at the "
+                                                     f"{en['sat1024'].get('batch', 1024):,} users held "
                                                      f"{en['sat1024']['rom']['aggregate_tokens_s']:,.0f}", matching=""),
     ])
     secondary = {}

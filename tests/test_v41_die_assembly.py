@@ -96,14 +96,16 @@ def test_long_wire_cycles_follow_the_reach(rec):
     for key, m in W_["by_model"].items():
         wm = W_["wire_models"][key]
         assert math.isclose(wm["reach_mm_per_cycle"], (wm["period_ps"] - wm["flop_overhead_ps"]) / wm["ps_per_mm"])
-        tot = 0.0
         for name, p in m["paths"].items():
             assert p["cycles"] == math.ceil(p["mm"] / wm["reach_mm_per_cycle"])
-            tot += p.get("us_per_token", 0.0)
-        assert math.isclose(tot, m["exposed_us_per_token"])
-    # the routed-wire model is the slower one, so it exposes more
-    assert W_["by_model"]["asap7_routed_fit"]["exposed_us_per_token"] > W_["by_model"]["tech_global_wire"]["exposed_us_per_token"]
-    assert W_["budget_charges_on_die_wire_us"] == 0.0
+        assert m["rate"] < m["rate_pre_wire"] and m["rate_mtp"] < m["rate_mtp_pre_wire"]
+    # the routed-wire model is the slower one, so it exposes more; the headline carries it
+    a, t = W_["by_model"]["asap7_routed_fit"], W_["by_model"]["tech_global_wire"]
+    assert a["exposed_us_per_token"] > t["exposed_us_per_token"] > 0 and a["rate"] < t["rate"]
+    assert W_["headline_model"] == "asap7_routed_fit"
+    assert W_["budget_charges_on_die_wire_us"] == a["exposed_us_per_token"] > 0
+    assert a["exposed_us_per_token"] <= a["charged_in_full_us"] + 1e-9
+    assert not a["paths"]["rom_to_lane_in_tile"]["charged"] and not a["paths"]["kv_static_rows"]["charged"]
     assert W_["on_path_kinds"]["matvec"] > 0 and W_["on_path_kinds"]["collective"] > 0
 
 
@@ -120,9 +122,15 @@ def test_power_map_reprices_the_scenarios(rec):
             # (power_scenarios v41_links_static), so they differ only by the map's static re-pricing
             assert abs(v["die_w"] - v["scenario_hottest_die_w"]) < 10
             assert add["serdes_w"] + add["ucie_idle_w"] > 10
+    # the map is the HOTTEST die (at 1M the stage holding layer 20's uncapped index scan): scenario B needs liquid
+    # at batch 1 and exceeds even liquid with MTP or at saturation; scenario A fails everywhere
     B = PM["points"]["B_proposed_production"]
-    assert B["ar_batch1"]["within_air_die_limit"]
+    assert all(v["hottest_die"] == B["ar_batch1"]["hottest_die"] for v in B.values())
+    assert not B["ar_batch1"]["within_air_die_limit"] and B["ar_batch1"]["within_liquid_die_limit"]
+    assert not B["saturated_batch1024_mtp"]["within_liquid_die_limit"]
     assert all(not v["within_air_die_limit"] for v in PM["points"]["A_measured_implementation"].values())
+    v = rec["verdict"]["criteria"]["power"]["cooling_by_point"]
+    assert set(v) == set(B) and set(v.values()) <= {"air", "liquid", "neither"}
 
 
 def test_ir_closed_form_matches_a_numeric_disk():
@@ -152,7 +160,7 @@ def test_ir_and_clock_records(rec):
 def test_verdict_names_criteria_risks_and_missing_routes(rec):
     v = rec["verdict"]
     assert set(v["criteria"]) == {"area", "long_wire_timing", "power", "ir", "clock"}
-    assert v["closes"] in ("conditionally", "no")
+    assert v["closes"] in ("conditionally", "not at every operating point", "no")
     assert len(v["top_risks"]) >= 5 and len(v["missing_routes"]) >= 8 and v["next_physical_steps"]
     assert rec["proposed_atlas_additions"]
 

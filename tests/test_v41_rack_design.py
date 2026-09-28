@@ -188,9 +188,11 @@ def test_rack_model_gaps_are_priced_not_open():
     xc = g["C4"]["power_scenarios_crosscheck"]
     assert xc["status"].startswith("APPLIED") and xc["rom_serdes_matches_c4"] and xc["hbm_serdes_matches_switched"]
     sat = g["C8"]["saturation"]
-    assert sat["link_bound"] and max(sat["uncapped_utilisation"].values()) > 1.0
+    # saturation is bound by its busiest pipeline stage before any link: no link runs past 100%, and the link cap
+    # (which would bind above 100%) is recorded as not binding
+    assert sat["link_bound"] == (max(sat["uncapped_utilisation"].values()) > 1.0)
     assert max(sat["t1_utilisation"], sat["head_t1_utilisation"]) <= 1.0 + 1e-9
-    assert sat["aggregate_tokens_s"] < sat["aggregate_tokens_s_uncapped"]
+    assert sat["aggregate_tokens_s"] <= sat["aggregate_tokens_s_uncapped"] + 1e-6
     c10 = g["C10"]
     assert c10["conditioning"]["priced"] and len(c10["closed_items"]) == 2
     fc = c10["concurrency"]["fill28_mtp"]

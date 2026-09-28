@@ -544,6 +544,62 @@ def distinct_experts(tokens, E, k):
     return E * (1 - (1 - k / E) ** max(1, tokens))
 
 
+PLACEMENT_REC = ROOT / "results/arch/v41_die_placement.json"
+EXPERT_NODES = ("ffn.experts_gu", "ffn.down")
+
+
+def _placement_map():
+    E = _env()
+    if "_placement" not in E:
+        P = json.loads(PLACEMENT_REC.read_text())
+        frac, start = {}, {}
+        for st in P["stages"]:
+            for l in st["layers"]:
+                frac.setdefault(l["layer"], []).append((st["stage"], l["fraction"]))
+                start.setdefault(l["layer"], st["stage"])
+        E["_placement"] = (frac, start, len(P["stages"]))
+    return E["_placement"]
+
+
+def stage_occupancy(g, units=None):
+    """Busy (issue) seconds per pass on ONE die of each pipeline stage, by unit: the layer stages of the physical
+    placement (results/arch/v41_die_placement.json, packed by ROM bytes) and the head group.  A layer's routed-expert
+    matvecs split over the stages holding its bytes in the placement's fractions; every other node of the layer
+    (attention, indexer scan, KV, norms, router, shared expert) runs on the stage where the layer starts.  units: a
+    {work class: unit} map (pooled units); None keeps each node's own work class."""
+    frac, start, _n = _placement_map()
+    occ = {}
+    for name, nd in g.nodes.items():
+        if nd["kind"] in ("collective", "hop"):
+            continue
+        L = nd.get("layer")
+        w = nd.get("_work")
+        u = (units or {}).get(w[0], w[0]) if w else "other"
+        if L is None or L not in start:
+            parts = [("head", 1.0)]
+        elif name.endswith(EXPERT_NODES):
+            tot = sum(f for _, f in frac[L])
+            parts = [(s, f / tot) for s, f in frac[L]]
+        else:
+            parts = [(start[L], 1.0)]
+        for s, f in parts:
+            row = occ.setdefault(s, {})
+            row[u] = row.get(u, 0.0) + nd["issue"] * f
+    return occ
+
+
+def stage_bound(g, slots, units=None, per_unit=False):
+    """The occupancy bound of the busiest stage: slots microbatch passes per period through its die.  per_unit=False
+    serialises every unit of the die (the budget's bound); True lets the units overlap (the busiest unit binds).
+    Returns (seconds, busiest stage, its occupancy over the stage mean)."""
+    occ = stage_occupancy(g, units)
+    tot = {s: (max(v.values()) if per_unit else sum(v.values())) for s, v in occ.items()}
+    busiest = max(tot, key=tot.get)
+    layer = [v for s, v in tot.items() if s != "head"]
+    mean = sum(layer) / len(layer) if layer else 0.0
+    return tot[busiest] * slots, busiest, (tot[busiest] / mean if mean else 1.0)
+
+
 def fill_machine(batch):
     """The pipeline-fill batch policy: S layer-group stages; b < S users ride one per stage, b >= S users
     share each stage in microbatches of b / S (every weight read serves the whole microbatch)."""
@@ -752,7 +808,7 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
     cats = dict.fromkeys(D.CATS, 0.0)
     for n in path:
         for k_, v in b.g.contrib[n].items():
-            cats[k_] += v
+            cats[k_] = cats.get(k_, 0.0) + v
     by_res = {}
     for n in path:
         nd = b.g.nodes[n]
@@ -763,6 +819,8 @@ def price(spec, ctx=200000, batch=1, positions=1, *, links=None, keep=False, exp
             by_res[rr[0]] = by_res.get(rr[0], 0.0) + max(0.0, part)
     occ = sum(nd["issue"] for nd in b.g.nodes.values() if nd["kind"] not in ("collective", "hop"))
     # an autoregressive user has one token in flight: the occupancy bound counts the users actually in flight
+    # (the stage MEAN: the specification sizing; the operating points re-bound on the busiest stage, stage_bound, in
+    # tools/arch_utilization_v41.solve)
     occ_bound = occ * min(m.slots, batch) / max(1, m.stages)
     period = max(T, occ_bound)
     out = dict(T_s=T, occupancy_bound_s=occ_bound, period_s=period, tokens_s_per_user=1 / period,
@@ -1401,7 +1459,8 @@ def batch_model(req, hb, ctx, mtp_m, tau=TAU_DEFAULT, gamma=5, batches=BATCH_SWE
             # a verify pass spends B positions' work per tau emitted tokens; the draft adds ~3/40 of a token's
             # layer work per draft row
             e_mtp = (e_v["total_j"] - e_v["parts_j"]["clock"]) * (gamma + 1) / tau * (1 + 3 / 40) + e_v["parts_j"]["clock"]
-            rows.append(dict(batch=bt, users_per_stage=users, ar_tokens_s_per_user=ar["tokens_s_per_user"],
+            rows.append(dict(batch=bt, fits_capacity=bt <= users_held(ctx, mach),
+                             users_per_stage=users, ar_tokens_s_per_user=ar["tokens_s_per_user"],
                              ar_aggregate_tokens_s=ar["aggregate_tokens_s"], ar_binding=ar["binding"],
                              ar_energy_j_per_token=e_ar["total_j"], ar_energy_j_per_token_gated=e_ar_g["total_j"],
                              ar_energy_parts_j=e_ar["parts_j"], distinct_experts_ar=ar["distinct_experts"],
@@ -1412,18 +1471,48 @@ def batch_model(req, hb, ctx, mtp_m, tau=TAU_DEFAULT, gamma=5, batches=BATCH_SWE
     return dict(ctx=ctx, tau=tau, gamma=gamma, mtp_lane_mult=mtp_m, rows=out)
 
 
+def hbm_capacity_efficiency(tech=None):
+    """technology.json efficiencies.hbm_capacity: the fraction of physical HBM left for checkpoint and KV after the
+    runtime workspace, allocator and safety reserve (the Qwen3 budget applies the same entry)."""
+    e = (tech or _env()["tech"])["efficiencies"]["hbm_capacity"]
+    return e["value"] if isinstance(e, dict) else e
+
+
 def capacity_limit(c, hb, ctx):
-    """Users whose KV + index state fits one die's HBM (the busiest die: the layer-20 group), both machines."""
+    """Users whose KV + index state fits one die's HBM (the busiest die: the layer-20 group), both machines, after
+    the capacity reserve (technology.json efficiencies.hbm_capacity) on the usable stack bytes."""
     r20 = 1
     rows = ctx // r20
     per_user_die = (rows * CKV_ROW_B + rows * IDX_KEY_B) / 4 + c["window_tokens"] * WIN_ROW_B * 2
-    rom_cap = ROM_DIE_HBM_STACKS * hb["stack_capacity_B"]
-    hbm_cap = hb["hbm_stacks_per_die"] * hb["stack_capacity_B"] - hb["weights_B"] / hb["dies"]
+    eff = hbm_capacity_efficiency()
+    raw_rom = ROM_DIE_HBM_STACKS * hb["stack_capacity_B"]
+    raw_hbm = hb["hbm_stacks_per_die"] * hb["stack_capacity_B"] - hb["weights_B"] / hb["dies"]
+    rom_cap = eff * raw_rom
+    hbm_cap = eff * hb["hbm_stacks_per_die"] * hb["stack_capacity_B"] - hb["weights_B"] / hb["dies"]
     return dict(per_user_bytes_busiest_die=per_user_die, rom_users=int(rom_cap // per_user_die),
-                hbm_users=int(hbm_cap // per_user_die),
+                hbm_users=int(hbm_cap // per_user_die), capacity_efficiency=eff,
+                capacity_efficiency_source="configs/hardware/technology.json efficiencies.hbm_capacity",
+                rom_users_without_reserve=int(raw_rom // per_user_die),
+                hbm_users_without_reserve=int(raw_hbm // per_user_die),
                 note="layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the "
                      "group's 4 dies, plus 2 window rings; ROM layer die: 4 HBM3E stacks for KV; HBM die: its stacks less "
-                     "its weight share")
+                     "its weight share; usable bytes = capacity efficiency x physical (the reserve)")
+
+
+def users_held(ctx, machine="rom"):
+    """Users whose KV + index state the machine holds at ctx after the capacity reserve (capacity_limit)."""
+    E = _env()
+    key = ("_users_held", ctx, machine)
+    if key not in E:
+        cap = capacity_limit(E["c"], hbm_comparator(E["c"]), ctx)
+        E[key] = cap["rom_users" if machine == "rom" else "hbm_users"]
+    return E[key]
+
+
+def point_batch(tag, batch, ctx, machine="rom"):
+    """The batch an operating point actually runs: a SATURATED point ('sat*') runs min(its nominal batch, the users
+    the machine holds at ctx) -- a user whose KV does not fit cannot be in flight; every other point runs as named."""
+    return min(batch, users_held(ctx, machine)) if str(tag).startswith("sat") else batch
 
 
 def kv_state_requirements(c, req, clock):
@@ -1469,8 +1558,8 @@ def choose_target_context(rec):
         r1, h1 = b["rom"][0], b["hbm"][0]
         r64 = next(r for r in b["rom"] if r["batch"] == 64)
         h64 = next(r for r in b["hbm"] if r["batch"] == 64)
-        rs = max(b["rom"], key=lambda r: r["ar_aggregate_tokens_s"])
-        hs = max(b["hbm"], key=lambda r: r["ar_aggregate_tokens_s"])
+        rs = max((r for r in b["rom"] if r.get("fits_capacity", True)), key=lambda r: r["ar_aggregate_tokens_s"])
+        hs = max((r for r in b["hbm"] if r.get("fits_capacity", True)), key=lambda r: r["ar_aggregate_tokens_s"])
         rows[ctx] = dict(
             rom_ar=r1["ar_tokens_s_per_user"], hbm_ar=h1["ar_tokens_s_per_user"],
             rom_mtp=r1["mtp_tokens_s_per_user"], hbm_mtp=h1["mtp_tokens_s_per_user"],
@@ -1510,18 +1599,28 @@ def power_requirements(rec, req, areas):
     rows = {}
     b = rec["batch"][str(TARGET_CTX)]["rows"]["rom"]
     b1 = b[0]
-    sat = max(b, key=lambda r: r["ar_aggregate_tokens_s"])
+    sat = max((r for r in b if r.get("fits_capacity", True)), key=lambda r: r["ar_aggregate_tokens_s"])
     T = 1.0 / b1["ar_tokens_s_per_user"]
     nonclock = sum(v for k, v in b1["ar_energy_parts_j"].items() if k != "clock")
     layer_dies = 112.0                                          # 28 groups x 4 dies hold the 40 layers
     stages = 28
+    # the HOTTEST die, not the average: its share of the per-die work over the layer-die mean (power_scenarios.
+    # v41_hottest_die on the placement's stages, scenario B inputs); batch 1 keeps the average stage window
+    pcfg = PS.load_cfg()
+    hot_b1 = PS.v41_hottest_die(pcfg, "B_proposed_production", sys.modules[__name__], E, TARGET_CTX, 1, 1, 1.0, 0.0)
+    hot_sat = PS.v41_hottest_die(pcfg, "B_proposed_production", sys.modules[__name__], E, TARGET_CTX,
+                                 fill_machine(sat["batch"]).microbatch, 1, 1.0, 0.0)
     for m in (1, 2):
         blk = spec_area_mm2(req, areas)["total"] * m
         clk_w = et["clock"] * blk * clock
-        active = nonclock / layer_dies / (T / stages) + clk_w
-        sat_w = sat["ar_aggregate_tokens_s"] * sat["ar_energy_j_per_token"] / 188 + (clk_w if m > 1 else 0.0)
+        active_avg = nonclock / layer_dies / (T / stages)
+        sat_avg = sat["ar_aggregate_tokens_s"] * sat["ar_energy_j_per_token"] / 188
+        active = active_avg * hot_b1["hottest_over_layer_mean"] + clk_w
+        sat_w = sat_avg * hot_sat["hottest_over_layer_mean"] + (clk_w if m > 1 else 0.0)
         rows[f"m{m}"] = dict(block_mm2=blk, clock_w_active=clk_w, active_die_dynamic_w_b1=active,
-                             saturated_die_dynamic_w=sat_w)
+                             saturated_die_dynamic_w=sat_w,
+                             average_die=dict(active_dynamic_w_b1=active_avg + clk_w,
+                                              saturated_dynamic_w=sat_avg + (clk_w if m > 1 else 0.0)))
     # STATIC, from the validated technology values (research agent adae6788, 2026-09-27, results/arch/
     # power_assumptions.json): leakage per mm2 of logic / ROM array; HBM interface = idle per stack + active I/O
     # energy x the die's HBM traffic (worst case: the die's sustained 3.6 TB/s); always-on package SerDes lanes
@@ -1540,7 +1639,7 @@ def power_requirements(rec, req, areas):
     serdes_w = SERDES_LANES_PER_PACKAGE_2DIE * 112e9 * serdes_j_bit / 2        # per die, always on
     ucie_idle = 0.15 * E["links"]["rom_package_ucie"]["bw"] * 8 * et["link_pj_per_bit"]["ucie"] * 1e-12
     static = leak + hbm_idle + serdes_w + ucie_idle
-    dyn_worst = max(r["saturated_die_dynamic_w"] for r in rows.values())
+    dyn_worst = max(r["saturated_die_dynamic_w"] for r in rows.values())    # the hottest die
     worst = dyn_worst + leak + hbm_worst + serdes_w + ucie_idle
     ro = P["rack_overheads"]
     ro = {k: (v["value"] if isinstance(v, dict) else v) for k, v in ro.items() if k != "purpose"}
@@ -1555,6 +1654,11 @@ def power_requirements(rec, req, areas):
                 hbm_interface_worst_w_per_die=hbm_worst,
                 static_leakage_w_per_die_n5_analytical=leak, hbm_interface_w_per_die=hbm_worst,
                 token_time_us_b1=T * 1e6, nonclock_energy_per_token_j_b1=nonclock, by_lane_mult=rows,
+                hottest_die=dict(basis="power_scenarios.v41_hottest_die (scenario B inputs): the hottest die's work "
+                                       "over the layer-die mean, applied to the array-average dynamic power",
+                                 batch1=dict(die=hot_b1["hottest"], factor=hot_b1["hottest_over_layer_mean"]),
+                                 saturated=dict(die=hot_sat["hottest"], factor=hot_sat["hottest_over_layer_mean"],
+                                                batch=sat["batch"])),
                 worst_case_die_w=worst, margin=cool / worst,
                 margin_by_class={k: v / worst for k, v in cool_cls.items()},
                 wall_factor=wall, provisioned_wall_w_per_die=provisioned,

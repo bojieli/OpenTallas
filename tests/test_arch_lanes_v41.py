@@ -46,7 +46,7 @@ def test_headline_is_the_measured_collective_exposure_with_the_levers(rec):
     cx = rec["collective_exposure"]
     assert cx["status"].startswith("NOT MET")
     assert set(cx["terms"]) == {"all_reduce", "all_gather_small", "all_gather_select", "all_gather_rows", "hop"}
-    assert set(cx["levers"]["terms"]) == set(cx["terms"]) and cx["levers"]["consumers"] == ["hc_post"]
+    assert set(cx["levers"]["terms"]) == set(cx["terms"]) | {"hop_mtp"} and cx["levers"]["consumers"] == ["hc_post"]
     for c in ("1048576", "200000"):
         d, n, o = rec["design_point"][c], rec["design_point_no_levers"][c], rec["design_point_overlap_assumed"][c]
         assert n["ar"] < o["ar"] and n["mtp"] < o["mtp"]
@@ -116,6 +116,50 @@ def test_every_aggregate_is_capped_at_its_busiest_link(rec):
             lk = v["link_cap"]
             assert max(lk["utilisation"].values()) <= 1.0 + 1e-9, (c, k)
             assert abs(v["rom"]["aggregate_tokens_s"] - lk["aggregate_tokens_s_uncapped"] * lk["cap"]) < 1e-6
+        # the saturated MTP point is bound by its busiest pipeline STAGE before any package link
+        # (arch_budget_v41.stage_bound): the link cap no longer binds there
         sat = rec["energy"][c]["sat1024_mtp"]["link_cap"]
-        assert sat["binds"] and sat["busiest_link"] == "head_t1"
+        assert not sat["binds"] and max(sat["utilisation"].values()) < 1.0
+
+
+def test_on_die_wire_is_charged_on_the_dag(rec):
+    """The headline carries the registered on-die traversals of the layer die's floorplan (ASAP7 routed-wire
+    model); the pre-wire point is the one ablation; 150 / 250 ps/mm are sensitivities between the two."""
+    ow = rec["on_die_wire"]
+    assert ow["model"] == "asap7_routed_fit"
+    for c in ("1048576", "200000"):
+        d, pre = rec["design_point"][c], ow["design_point_pre_wire"][c]
+        s150, s250 = ow["sensitivities"]["tech_global_wire"][c], ow["sensitivities"]["tech_global_wire_high"][c]
+        assert d["ar"] < s250["ar"] < s150["ar"] < pre["ar"]
+        assert d["mtp"] < s250["mtp"] < s150["mtp"] < pre["mtp"]
+        att = ow["attribution"][c]["ar"]
+        assert att["exposed_us"] > 0 and att["exposed_us"] <= att["charged_in_full_us"] + 1e-9
+        assert abs(d["breakdown_us"]["on_die_wire"] - att["exposed_us"]) < 1e-3       # breakdown rounds to ns
+        # the cycles follow the distances at the reach
+        cyc = ow["cycles"]["asap7_routed_fit"]
+        assert cyc["far_tile"] >= cyc["hbm_to_tile"] and cyc["far_tile"] > cyc["in_tile"]
+
+
+def test_mtp_hop_split_is_bench_measured(rec):
+    import sys
+    """Lever 5: the verify pass's hop carries the shortest MEASURED 6-position tail at fill 1 (no interpolation);
+    the one-position hop keeps split20."""
+    t = rec["mtp_hop_split"]["term"]
+    assert t["scheme"] in t["tails_measured"] and t["measured_tail_cycles"] == min(t["tails_measured"].values())
+    assert t["measured_tail_cycles"] < t["proportional_tail_cycles"] < t["full_payload_tail_cycles"]
+    assert rec["collective_exposure"]["levers"]["terms"]["hop_mtp"]["scheme"] == t["scheme"]
+    sys.path.insert(0, str(ROOT / "tools"))
+    import v41_collective_exposure as VX
+    b = VX.campaign_binding(None, VX.HOP_BATCH_CAMPAIGN)
+    assert b["current"], b["stale"]
+
+
+def test_saturated_points_hold_only_the_users_held(rec):
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import arch_budget_v41 as A
+    for c in ("1048576", "200000"):
+        for k in ("sat1024", "sat1024_mtp"):
+            e = rec["energy"][c][k]
+            assert e["batch"] == min(1024, e["users_held"]) == A.point_batch(k, 1024, int(c))
         assert not rec["energy"][c]["fill28_mtp"]["link_cap"]["binds"]

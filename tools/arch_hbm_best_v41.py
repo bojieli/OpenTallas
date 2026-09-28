@@ -197,7 +197,7 @@ def price_g(spec, ctx, G, hbm, batch=1, positions=1, levers=(), muts=(), keep=Fa
     cats = dict.fromkeys(D.CATS, 0.0)
     for n in b.g.path(b.sink):
         for k_, v in b.g.contrib[n].items():
-            cats[k_] += v
+            cats[k_] = cats.get(k_, 0.0) + v
     occ = sum(nd["issue"] for nd in b.g.nodes.values() if nd["kind"] not in ("collective", "hop"))
     ob = occ * min(m.slots, batch) / max(1, m.stages)
     period = max(T, ob)
@@ -335,10 +335,11 @@ def build():
             for ptag, bt in POINTS:
                 for mtp in (False, True):
                     Gx, mx = (Gb, mb_) if mtp else (Ge, 1)
-                    h = evaluate_g(sp, ctx, Gx, hbm, bt, mtp, mx, U.CHAIN_L3, rung_muts(Gx, muts_all), hz)
-                    h.update(batch=bt, mtp=mtp)
+                    bh, br = A.point_batch(ptag, bt, ctx, "hbm"), A.point_batch(ptag, bt, ctx)
+                    h = evaluate_g(sp, ctx, Gx, hbm, bh, mtp, mx, U.CHAIN_L3, rung_muts(Gx, muts_all), hz)
+                    h.update(batch=bh, mtp=mtp)
                     with LX.clock(hz[0]), U.params(**hz[1]):
-                        r_ = U.op_point(sp, ctx, bt, mtp=mtp, levers=U.CHAIN_L3, muts=muts_all, units=U.POOLED_UNITS)
+                        r_ = U.op_point(sp, ctx, br, mtp=mtp, levers=U.CHAIN_L3, muts=muts_all, units=U.POOLED_UNITS)
                     r_["cycle_s"] = r_["period_us"] * 1e-6
                     a_rom = LX.area(sp, U.MTP_M if mtp else 1)
                     a_hbm = LX.area(sp, mx if mtp else 1)

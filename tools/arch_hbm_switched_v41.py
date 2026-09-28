@@ -181,6 +181,7 @@ def build():
                 k = ptag + ("_mtp" if mtp else "")
                 best = main[str(ctx)]["best_mtp" if mtp else "best_ar"]
                 G, m = best["G"], (best.get("m") if mtp else 1)
+                bt = A.point_batch(ptag, bt, ctx, "hbm")
                 h = HB.evaluate_g(sp, ctx, G, hbm, bt, mtp, m, U.CHAIN_L3, HB.rung_muts(G, muts), hz)
                 h.update(batch=bt, mtp=mtp)
                 e = HB.energy_point(sp, ctx, h, hb["dies"], h["stages"], LX.area(sp, m if mtp else 1),
@@ -190,7 +191,8 @@ def build():
                 r_sw = rom_switch_w / r["aggregate_tokens_s"]
                 h_wall = (e["total_j"] + h_sw) * wall
                 r_wall = (r["total_j"] + r_sw) * wall
-                rows[k] = dict(hbm=dict(G=G, m=m if mtp else None, tokens_s_per_user=h["tokens_s_per_user"],
+                rows[k] = dict(batch=lanes["energy"][str(ctx)][k].get("batch"), hbm_batch=bt,
+                               hbm=dict(G=G, m=m if mtp else None, tokens_s_per_user=h["tokens_s_per_user"],
                                         aggregate_tokens_s=h["aggregate_tokens_s"], switch_j=h_sw, wall_j=h_wall, **e),
                                rom=dict(tokens_s_per_user=r["tokens_s_per_user"],
                                         aggregate_tokens_s=r["aggregate_tokens_s"], total_j=r["total_j"],
@@ -215,23 +217,36 @@ def build():
                                  note="a check only: the comparator stays modelled (its engines, HBM and SerDes), not "
                                       "scaled to a GPU's measured draw")
     # the ROM design point's worst-case die (saturated, MTP m = 2, the R-L8 pools doubled)
-    dyns = {}
+    # the HOTTEST layer die, not the average: the array-average die's dynamic power x the hottest die's share of
+    # the per-die work over the layer-die mean (tools/power_scenarios.v41_hottest_die, scenario B inputs)
+    import power_scenarios as PS
+    pcfg = PS.load_cfg()
+    ovh = pcfg["design_points"]["v41"]["mtp"]["draft_overhead"]
+    dyns, avg, hot_f = {}, {}, {}
     for ctx in CONTEXTS:
         for k in ("sat1024", "sat1024_mtp"):
             r = lanes["energy"][str(ctx)][k]["rom"]
-            dyns[f"{ctx}/{k}"] = r["dynamic_j"] * r["aggregate_tokens_s"] / U.LAYER_DIES
+            mtp = k.endswith("_mtp")
+            mb = A.fill_machine(lanes["energy"][str(ctx)][k].get("batch", 1024)).microbatch
+            hd = PS.v41_hottest_die(pcfg, "B_proposed_production", A, E, ctx, mb, U.GAMMA + 1 if mtp else 1,
+                                    (U.GAMMA + 1) / U.TAU if mtp else 1.0, ovh if mtp else 0.0)
+            avg[f"{ctx}/{k}"] = r["dynamic_j"] * r["aggregate_tokens_s"] / U.LAYER_DIES
+            hot_f[f"{ctx}/{k}"] = dict(factor=hd["hottest_over_layer_mean"], hottest_die=hd["hottest"])
+            dyns[f"{ctx}/{k}"] = avg[f"{ctx}/{k}"] * hd["hottest_over_layer_mean"]
     worst_key = max(dyns, key=dyns.get)
     dyn_die = dyns[worst_key]
     worst = lanes["static_w"]["layer_die"] + dyn_die
     rec["rom_worst_die_w"] = dict(static_w=lanes["static_w"]["layer_die"], dynamic_w=dyn_die, worst_point=worst_key,
-                                  dynamic_w_by_point=dyns, total_w=worst,
+                                  dynamic_w_by_point=dyns, average_die_dynamic_w_by_point=avg,
+                                  hottest_die_factor_by_point=hot_f, total_w=worst,
                                   cooling_limit_w=_cooling_2die(),
                                   cooling_basis="configs/hardware/power_scenarios.json cooling classes, 2-die packages "
                                                 "(tools/power_scenarios.cooling_limits: per-die W, air / liquid)",
                                   provisioned_wall_w=1.2 * worst * wall,
                                   basis="max over saturation without and with MTP at the design point (R-L8 pools "
-                                        "doubled, m = 2): the array's dynamic energy per token x its rate over the "
-                                        "112 layer dies, plus the static die. No separate HBM-interface active term: "
+                                        "doubled, m = 2): the HOTTEST die -- the array's dynamic energy per token x "
+                                        "its rate over the 112 layer dies, x the hottest die's work over the "
+                                        "layer-die mean (power_scenarios.v41_hottest_die) -- plus the static die. No separate HBM-interface active term: "
                                         "the dynamic energy charges every HBM byte at the system-level 13 pJ/b, which "
                                         "contains the I/O (adae6788's ruling); the interface idle is in the static "
                                         "98.8 W")

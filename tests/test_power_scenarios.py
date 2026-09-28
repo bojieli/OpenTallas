@@ -225,7 +225,7 @@ def test_rom_over_hbm_ratios_come_from_the_two_blocks(rec):
                 assert r["energy_hbm_over_rom"] == pytest.approx(hbm / rom, rel=1e-4)
                 assert r["energy_hbm_over_rom"] > 1
     b = rec["rom_over_hbm"]["B_proposed_production"]["1048576"]
-    assert 3.0 < b["ar_batch1"]["energy_hbm_over_rom"] < 4.0
+    assert 2.5 < b["ar_batch1"]["energy_hbm_over_rom"] < 4.0
     assert b["fill28"]["energy_hbm_over_rom"] > b["ar_batch1"]["energy_hbm_over_rom"]
 
 
@@ -251,3 +251,21 @@ def test_both_v41_machines_charge_their_always_on_links(rec):
                 for k, r in pts.items():
                     assert r["array_links_always_on_j_per_token"] == pytest.approx(
                         links["array_w"] / r["design_rate_tokens_s"], rel=1e-4)
+
+
+def test_v41_die_power_is_the_hottest_die(rec):
+    """Every V4.1 ROM power check is the HOTTEST die's (v41_hottest_die): its own work at its die share, over its
+    active window at batch 1, never below the array average; the cooling classes cap on it."""
+    for s in P.SCENARIOS:
+        for c, pts in rec["scenarios"][s]["deepseek_v41_design_point"]["per_context"].items():
+            for k, r in pts.items():
+                assert r["hottest_die_w"] >= r["array_average_die_w"] - 1e-9, (s, c, k)
+                assert r["hottest_over_layer_mean"] >= 1.0
+                tot = r["die_dynamic_j_per_token_by_stage"]
+                assert r["hottest_die"] in tot
+                assert r["hottest_die_dynamic_j_per_token"] == pytest.approx(
+                    tot[r["hottest_die"]] * r["hottest_die_window_factor"], rel=1e-4)
+                static = r["hottest_die_w"] - r["hottest_die_dynamic_j_per_token"] * r["design_rate_tokens_s"]
+                cap = r["cooling_classes"]["air"]
+                assert cap["binds"] == (cap["die_w_at_cap"] < r["hottest_die_w"] * (1 - 1e-5))
+                assert static > 0

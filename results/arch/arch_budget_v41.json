@@ -6372,6 +6372,7 @@
     "rom": [
      {
       "batch": 1,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5531.647084402795,
       "ar_aggregate_tokens_s": 5531.647084402795,
@@ -6397,6 +6398,7 @@
      },
      {
       "batch": 2,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5531.647084402795,
       "ar_aggregate_tokens_s": 11063.29416880559,
@@ -6422,6 +6424,7 @@
      },
      {
       "batch": 4,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5531.647084402795,
       "ar_aggregate_tokens_s": 22126.58833761118,
@@ -6447,6 +6450,7 @@
      },
      {
       "batch": 8,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5531.647084402795,
       "ar_aggregate_tokens_s": 44253.17667522236,
@@ -6472,6 +6476,7 @@
      },
      {
       "batch": 16,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5531.647084402795,
       "ar_aggregate_tokens_s": 88506.35335044473,
@@ -6497,6 +6502,7 @@
      },
      {
       "batch": 28,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5531.647084402795,
       "ar_aggregate_tokens_s": 154886.11836327828,
@@ -6522,6 +6528,7 @@
      },
      {
       "batch": 32,
+      "fits_capacity": true,
       "users_per_stage": 1.1428571428571428,
       "ar_tokens_s_per_user": 5005.313618873997,
       "ar_aggregate_tokens_s": 160170.0358039679,
@@ -6547,6 +6554,7 @@
      },
      {
       "batch": 64,
+      "fits_capacity": true,
       "users_per_stage": 2.2857142857142856,
       "ar_tokens_s_per_user": 4054.16472943693,
       "ar_aggregate_tokens_s": 259466.54268396352,
@@ -6572,6 +6580,7 @@
      },
      {
       "batch": 128,
+      "fits_capacity": true,
       "users_per_stage": 4.571428571428571,
       "ar_tokens_s_per_user": 2880.3617264527866,
       "ar_aggregate_tokens_s": 368686.3009859567,
@@ -6597,6 +6606,7 @@
      },
      {
       "batch": 256,
+      "fits_capacity": true,
       "users_per_stage": 9.142857142857142,
       "ar_tokens_s_per_user": 1797.9580651580159,
       "ar_aggregate_tokens_s": 460277.26468045206,
@@ -6622,6 +6632,7 @@
      },
      {
       "batch": 512,
+      "fits_capacity": true,
       "users_per_stage": 18.285714285714285,
       "ar_tokens_s_per_user": 991.0160070972847,
       "ar_aggregate_tokens_s": 507400.1956338098,
@@ -6647,6 +6658,7 @@
      },
      {
       "batch": 1024,
+      "fits_capacity": true,
       "users_per_stage": 36.57142857142857,
       "ar_tokens_s_per_user": 499.4570578633396,
       "ar_aggregate_tokens_s": 511444.0272520598,
@@ -6674,6 +6686,7 @@
     "hbm": [
      {
       "batch": 1,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 945.8483901198591,
       "ar_aggregate_tokens_s": 945.8483901198591,
@@ -6699,6 +6712,7 @@
      },
      {
       "batch": 2,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 945.8483901198591,
       "ar_aggregate_tokens_s": 1891.6967802397182,
@@ -6724,6 +6738,7 @@
      },
      {
       "batch": 4,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 945.8483901198591,
       "ar_aggregate_tokens_s": 3783.3935604794365,
@@ -6749,6 +6764,7 @@
      },
      {
       "batch": 8,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 945.8483901198591,
       "ar_aggregate_tokens_s": 7566.787120958873,
@@ -6774,6 +6790,7 @@
      },
      {
       "batch": 16,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 945.8483901198591,
       "ar_aggregate_tokens_s": 15133.574241917746,
@@ -6799,6 +6816,7 @@
      },
      {
       "batch": 28,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 945.8483901198591,
       "ar_aggregate_tokens_s": 26483.754923356057,
@@ -6824,6 +6842,7 @@
      },
      {
       "batch": 32,
+      "fits_capacity": true,
       "users_per_stage": 1.1428571428571428,
       "ar_tokens_s_per_user": 943.2596719305226,
       "ar_aggregate_tokens_s": 30184.309501776723,
@@ -6849,6 +6868,7 @@
      },
      {
       "batch": 64,
+      "fits_capacity": true,
       "users_per_stage": 2.2857142857142856,
       "ar_tokens_s_per_user": 718.6607055005322,
       "ar_aggregate_tokens_s": 45994.28515203406,
@@ -6874,6 +6894,7 @@
      },
      {
       "batch": 128,
+      "fits_capacity": true,
       "users_per_stage": 4.571428571428571,
       "ar_tokens_s_per_user": 428.0992944214357,
       "ar_aggregate_tokens_s": 54796.709685943766,
@@ -6899,6 +6920,7 @@
      },
      {
       "batch": 256,
+      "fits_capacity": true,
       "users_per_stage": 9.142857142857142,
       "ar_tokens_s_per_user": 280.666721978266,
       "ar_aggregate_tokens_s": 71850.6808264361,
@@ -6924,6 +6946,7 @@
      },
      {
       "batch": 512,
+      "fits_capacity": true,
       "users_per_stage": 18.285714285714285,
       "ar_tokens_s_per_user": 163.15549446206373,
       "ar_aggregate_tokens_s": 83535.61316457663,
@@ -6949,6 +6972,7 @@
      },
      {
       "batch": 1024,
+      "fits_capacity": true,
       "users_per_stage": 36.57142857142857,
       "ar_tokens_s_per_user": 92.85783801947599,
       "ar_aggregate_tokens_s": 95086.42613194342,
@@ -6984,6 +7008,7 @@
     "rom": [
      {
       "batch": 1,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5417.685767461598,
       "ar_aggregate_tokens_s": 5417.685767461598,
@@ -7009,6 +7034,7 @@
      },
      {
       "batch": 2,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5417.685767461598,
       "ar_aggregate_tokens_s": 10835.371534923195,
@@ -7034,6 +7060,7 @@
      },
      {
       "batch": 4,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5417.685767461598,
       "ar_aggregate_tokens_s": 21670.74306984639,
@@ -7059,6 +7086,7 @@
      },
      {
       "batch": 8,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5417.685767461598,
       "ar_aggregate_tokens_s": 43341.48613969278,
@@ -7084,6 +7112,7 @@
      },
      {
       "batch": 16,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5417.685767461598,
       "ar_aggregate_tokens_s": 86682.97227938556,
@@ -7109,6 +7138,7 @@
      },
      {
       "batch": 28,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 5417.685767461598,
       "ar_aggregate_tokens_s": 151695.20148892474,
@@ -7134,6 +7164,7 @@
      },
      {
       "batch": 32,
+      "fits_capacity": true,
       "users_per_stage": 1.1428571428571428,
       "ar_tokens_s_per_user": 4891.162255851137,
       "ar_aggregate_tokens_s": 156517.1921872364,
@@ -7159,6 +7190,7 @@
      },
      {
       "batch": 64,
+      "fits_capacity": true,
       "users_per_stage": 2.2857142857142856,
       "ar_tokens_s_per_user": 3898.180737837769,
       "ar_aggregate_tokens_s": 249483.5672216172,
@@ -7184,6 +7216,7 @@
      },
      {
       "batch": 128,
+      "fits_capacity": true,
       "users_per_stage": 4.571428571428571,
       "ar_tokens_s_per_user": 2722.334354697029,
       "ar_aggregate_tokens_s": 348458.7974012197,
@@ -7209,6 +7242,7 @@
      },
      {
       "batch": 256,
+      "fits_capacity": true,
       "users_per_stage": 9.142857142857142,
       "ar_tokens_s_per_user": 1677.1349343798875,
       "ar_aggregate_tokens_s": 429346.5432012512,
@@ -7234,6 +7268,7 @@
      },
      {
       "batch": 512,
+      "fits_capacity": true,
       "users_per_stage": 18.285714285714285,
       "ar_tokens_s_per_user": 917.1039268983677,
       "ar_aggregate_tokens_s": 469557.2105719643,
@@ -7259,6 +7294,7 @@
      },
      {
       "batch": 1024,
+      "fits_capacity": true,
       "users_per_stage": 36.57142857142857,
       "ar_tokens_s_per_user": 461.9319175864325,
       "ar_aggregate_tokens_s": 473018.2836085069,
@@ -7286,6 +7322,7 @@
     "hbm": [
      {
       "batch": 1,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 941.7970760113858,
       "ar_aggregate_tokens_s": 941.7970760113858,
@@ -7311,6 +7348,7 @@
      },
      {
       "batch": 2,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 941.7970760113858,
       "ar_aggregate_tokens_s": 1883.5941520227716,
@@ -7336,6 +7374,7 @@
      },
      {
       "batch": 4,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 941.7970760113858,
       "ar_aggregate_tokens_s": 3767.188304045543,
@@ -7361,6 +7400,7 @@
      },
      {
       "batch": 8,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 941.7970760113858,
       "ar_aggregate_tokens_s": 7534.376608091086,
@@ -7386,6 +7426,7 @@
      },
      {
       "batch": 16,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 941.7970760113858,
       "ar_aggregate_tokens_s": 15068.753216182173,
@@ -7411,6 +7452,7 @@
      },
      {
       "batch": 28,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 941.7970760113858,
       "ar_aggregate_tokens_s": 26370.318128318802,
@@ -7436,6 +7478,7 @@
      },
      {
       "batch": 32,
+      "fits_capacity": true,
       "users_per_stage": 1.1428571428571428,
       "ar_tokens_s_per_user": 938.6744632126088,
       "ar_aggregate_tokens_s": 30037.58282280348,
@@ -7461,6 +7504,7 @@
      },
      {
       "batch": 64,
+      "fits_capacity": true,
       "users_per_stage": 2.2857142857142856,
       "ar_tokens_s_per_user": 713.4332727757674,
       "ar_aggregate_tokens_s": 45659.72945764911,
@@ -7486,6 +7530,7 @@
      },
      {
       "batch": 128,
+      "fits_capacity": true,
       "users_per_stage": 4.571428571428571,
       "ar_tokens_s_per_user": 424.4374320952947,
       "ar_aggregate_tokens_s": 54327.99130819772,
@@ -7511,6 +7556,7 @@
      },
      {
       "batch": 256,
+      "fits_capacity": true,
       "users_per_stage": 9.142857142857142,
       "ar_tokens_s_per_user": 277.5454788370365,
       "ar_aggregate_tokens_s": 71051.64258228135,
@@ -7536,6 +7582,7 @@
      },
      {
       "batch": 512,
+      "fits_capacity": true,
       "users_per_stage": 18.285714285714285,
       "ar_tokens_s_per_user": 161.01903272061168,
       "ar_aggregate_tokens_s": 82441.74475295318,
@@ -7561,6 +7608,7 @@
      },
      {
       "batch": 1024,
+      "fits_capacity": true,
       "users_per_stage": 36.57142857142857,
       "ar_tokens_s_per_user": 91.47626704615881,
       "ar_aggregate_tokens_s": 93671.69745526662,
@@ -7596,6 +7644,7 @@
     "rom": [
      {
       "batch": 1,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 4933.094756135517,
       "ar_aggregate_tokens_s": 4933.094756135517,
@@ -7621,6 +7670,7 @@
      },
      {
       "batch": 2,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 4933.094756135517,
       "ar_aggregate_tokens_s": 9866.189512271034,
@@ -7646,6 +7696,7 @@
      },
      {
       "batch": 4,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 4933.094756135517,
       "ar_aggregate_tokens_s": 19732.379024542068,
@@ -7671,6 +7722,7 @@
      },
      {
       "batch": 8,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 4933.094756135517,
       "ar_aggregate_tokens_s": 39464.758049084136,
@@ -7696,6 +7748,7 @@
      },
      {
       "batch": 16,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 4933.094756135517,
       "ar_aggregate_tokens_s": 78929.51609816827,
@@ -7721,6 +7774,7 @@
      },
      {
       "batch": 28,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 4933.094756135517,
       "ar_aggregate_tokens_s": 138126.65317179446,
@@ -7746,6 +7800,7 @@
      },
      {
       "batch": 32,
+      "fits_capacity": true,
       "users_per_stage": 1.1428571428571428,
       "ar_tokens_s_per_user": 4441.323153002197,
       "ar_aggregate_tokens_s": 142122.3408960703,
@@ -7771,6 +7826,7 @@
      },
      {
       "batch": 64,
+      "fits_capacity": true,
       "users_per_stage": 2.2857142857142856,
       "ar_tokens_s_per_user": 3357.4530828845286,
       "ar_aggregate_tokens_s": 214876.99730460983,
@@ -7796,6 +7852,7 @@
      },
      {
       "batch": 128,
+      "fits_capacity": true,
       "users_per_stage": 4.571428571428571,
       "ar_tokens_s_per_user": 2222.9088110811467,
       "ar_aggregate_tokens_s": 284532.3278183868,
@@ -7821,6 +7878,7 @@
      },
      {
       "batch": 256,
+      "fits_capacity": true,
       "users_per_stage": 9.142857142857142,
       "ar_tokens_s_per_user": 1313.6931686911362,
       "ar_aggregate_tokens_s": 336305.45118493086,
@@ -7846,6 +7904,7 @@
      },
      {
       "batch": 512,
+      "fits_capacity": true,
       "users_per_stage": 18.285714285714285,
       "ar_tokens_s_per_user": 700.5619683621544,
       "ar_aggregate_tokens_s": 358687.72780142305,
@@ -7871,6 +7930,7 @@
      },
      {
       "batch": 1024,
+      "fits_capacity": false,
       "users_per_stage": 36.57142857142857,
       "ar_tokens_s_per_user": 352.24982965582785,
       "ar_aggregate_tokens_s": 360703.8255675677,
@@ -7898,6 +7958,7 @@
     "hbm": [
      {
       "batch": 1,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 925.9844816192578,
       "ar_aggregate_tokens_s": 925.9844816192578,
@@ -7923,6 +7984,7 @@
      },
      {
       "batch": 2,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 925.9844816192578,
       "ar_aggregate_tokens_s": 1851.9689632385157,
@@ -7948,6 +8010,7 @@
      },
      {
       "batch": 4,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 925.9844816192578,
       "ar_aggregate_tokens_s": 3703.9379264770314,
@@ -7973,6 +8036,7 @@
      },
      {
       "batch": 8,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 925.9844816192578,
       "ar_aggregate_tokens_s": 7407.875852954063,
@@ -7998,6 +8062,7 @@
      },
      {
       "batch": 16,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 925.9844816192578,
       "ar_aggregate_tokens_s": 14815.751705908126,
@@ -8023,6 +8088,7 @@
      },
      {
       "batch": 28,
+      "fits_capacity": true,
       "users_per_stage": 1.0,
       "ar_tokens_s_per_user": 925.9844816192578,
       "ar_aggregate_tokens_s": 25927.56548533922,
@@ -8048,6 +8114,7 @@
      },
      {
       "batch": 32,
+      "fits_capacity": true,
       "users_per_stage": 1.1428571428571428,
       "ar_tokens_s_per_user": 920.7765655256432,
       "ar_aggregate_tokens_s": 29464.85009682058,
@@ -8073,6 +8140,7 @@
      },
      {
       "batch": 64,
+      "fits_capacity": true,
       "users_per_stage": 2.2857142857142856,
       "ar_tokens_s_per_user": 693.0066111105126,
       "ar_aggregate_tokens_s": 44352.42311107281,
@@ -8098,6 +8166,7 @@
      },
      {
       "batch": 128,
+      "fits_capacity": true,
       "users_per_stage": 4.571428571428571,
       "ar_tokens_s_per_user": 410.0731906782323,
       "ar_aggregate_tokens_s": 52489.36840681374,
@@ -8123,6 +8192,7 @@
      },
      {
       "batch": 256,
+      "fits_capacity": true,
       "users_per_stage": 9.142857142857142,
       "ar_tokens_s_per_user": 265.3948291228147,
       "ar_aggregate_tokens_s": 67941.07625544057,
@@ -8148,6 +8218,7 @@
      },
      {
       "batch": 512,
+      "fits_capacity": true,
       "users_per_stage": 18.285714285714285,
       "ar_tokens_s_per_user": 152.73045870466552,
       "ar_aggregate_tokens_s": 78197.99485678875,
@@ -8173,6 +8244,7 @@
      },
      {
       "batch": 1024,
+      "fits_capacity": false,
       "users_per_stage": 36.57142857142857,
       "ar_tokens_s_per_user": 86.16329329989925,
       "ar_aggregate_tokens_s": 88231.21233909683,
@@ -8203,21 +8275,33 @@
  "capacity": {
   "8192": {
    "per_user_bytes_busiest_die": 864256.0,
-   "rom_users": 104135,
-   "hbm_users": 98171,
-   "note": "layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the group's 4 dies, plus 2 window rings; ROM layer die: 4 HBM3E stacks for KV; HBM die: its stacks less its weight share"
+   "rom_users": 93722,
+   "hbm_users": 87758,
+   "capacity_efficiency": 0.9,
+   "capacity_efficiency_source": "configs/hardware/technology.json efficiencies.hbm_capacity",
+   "rom_users_without_reserve": 104135,
+   "hbm_users_without_reserve": 98171,
+   "note": "layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the group's 4 dies, plus 2 window rings; ROM layer die: 4 HBM3E stacks for KV; HBM die: its stacks less its weight share; usable bytes = capacity efficiency x physical (the reserve)"
   },
   "200000": {
    "per_user_bytes_busiest_die": 17935168.0,
-   "rom_users": 5018,
-   "hbm_users": 4730,
-   "note": "layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the group's 4 dies, plus 2 window rings; ROM layer die: 4 HBM3E stacks for KV; HBM die: its stacks less its weight share"
+   "rom_users": 4516,
+   "hbm_users": 4228,
+   "capacity_efficiency": 0.9,
+   "capacity_efficiency_source": "configs/hardware/technology.json efficiencies.hbm_capacity",
+   "rom_users_without_reserve": 5018,
+   "hbm_users_without_reserve": 4730,
+   "note": "layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the group's 4 dies, plus 2 window rings; ROM layer die: 4 HBM3E stacks for KV; HBM die: its stacks less its weight share; usable bytes = capacity efficiency x physical (the reserve)"
   },
   "1048576": {
    "per_user_bytes_busiest_die": 93458432.0,
-   "rom_users": 962,
-   "hbm_users": 907,
-   "note": "layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the group's 4 dies, plus 2 window rings; ROM layer die: 4 HBM3E stacks for KV; HBM die: its stacks less its weight share"
+   "rom_users": 866,
+   "hbm_users": 811,
+   "capacity_efficiency": 0.9,
+   "capacity_efficiency_source": "configs/hardware/technology.json efficiencies.hbm_capacity",
+   "rom_users_without_reserve": 962,
+   "hbm_users_without_reserve": 907,
+   "note": "layer-20 group: 1 compressed row (288 B) + 1 index key (68 B) per position, split over the group's 4 dies, plus 2 window rings; ROM layer die: 4 HBM3E stacks for KV; HBM die: its stacks less its weight share; usable bytes = capacity efficiency x physical (the reserve)"
   }
  },
  "kv_state": {
@@ -8333,7 +8417,7 @@
     "ratio_user_ar": 5.32740543071421,
     "ratio_energy_b1_gated": 39.69822506534546,
     "ratio_aggregate_b64": 4.844763425134369,
-    "ratio_aggregate_saturated": 4.088165808957534
+    "ratio_aggregate_saturated": 4.586917202395294
    }
   },
   "ratio_rule_pick": 200000,
@@ -8386,24 +8470,44 @@
    "m1": {
     "block_mm2": 99.53563112,
     "clock_w_active": 8.747340566272282,
-    "active_die_dynamic_w_b1": 44.41381324244121,
-    "saturated_die_dynamic_w": 58.69503463180476
+    "active_die_dynamic_w_b1": 256.197331963071,
+    "saturated_die_dynamic_w": 433.13059085752593,
+    "average_die": {
+     "active_dynamic_w_b1": 44.41381324244121,
+     "saturated_dynamic_w": 58.796829081285445
+    }
    },
    "m2": {
     "block_mm2": 199.07126224,
     "clock_w_active": 17.494681132544564,
-    "active_die_dynamic_w_b1": 53.161153808713486,
-    "saturated_die_dynamic_w": 76.18971576434933
+    "active_die_dynamic_w_b1": 264.9446725293433,
+    "saturated_die_dynamic_w": 450.6252719900705,
+    "average_die": {
+     "active_dynamic_w_b1": 53.161153808713486,
+     "saturated_dynamic_w": 76.29151021383001
+    }
    }
   },
-  "worst_case_die_w": 198.02611481466954,
-  "margin": 1.891467700361372,
+  "hottest_die": {
+   "basis": "power_scenarios.v41_hottest_die (scenario B inputs): the hottest die's work over the layer-die mean, applied to the array-average dynamic power",
+   "batch1": {
+    "die": "14",
+    "factor": 6.937887961153391
+   },
+   "saturated": {
+    "die": "14",
+    "factor": 7.3665637692592485,
+    "batch": 512
+   }
+  },
+  "worst_case_die_w": 572.4616710403907,
+  "margin": 0.6542970803954008,
   "margin_by_class": {
-   "air": 1.891467700361372,
-   "liquid": 2.3964516015684874
+   "air": 0.6542970803954008,
+   "liquid": 0.8289812646103198
   },
   "wall_factor": 1.2404214559386975,
-  "provisioned_wall_w_per_die": 294.76300998275525,
+  "provisioned_wall_w_per_die": 852.1124873532252,
   "provisioning_rule": "1.2 x worst case / (VR x PSU) x (1 + CDU + fans): technology.json power.rack_overheads",
   "requirement": "per-die power <= the cooling limit at every batch with stage clock gating: an idle stage's clock tree gated (ICG at the block boundaries), its ROM macros and engines quiescent; the worst case is the saturated array (every die busy)",
   "note": "ASAP7 unit areas; the analytical design's 48 W/die clock term charges all 525 mm2 of logic at 1 GHz ungated and is the upper bound if nothing gates"
