@@ -59,14 +59,13 @@ def summarize(raw, raw_path, reference, reference_path):
         "hbm_delivered_at_least_70pct_peak": achieved_sectors_per_cycle >= 0.70 * peak_sectors_per_cycle,
         "four_channel_arms_bit_exact": ref_rom["pass"] and ref_hbm["pass"],
         "same_weight_words_consumed": hbm["weights"]["weight_consumed"] == ref_hbm["weights"]["weight_consumed"],
-        "same_weight_sectors_delivered": sectors == ref_hbm["weights"]["weight_completed_sectors"],
         "one_channel_slower_than_four": hcy > ref_hcy,
         "one_channel_more_supply_stalls": stalls > ref_stalls,
     }
     return {
         "schema": "opentallas.qwen-matched-weight-bandwidth-bound.v1",
         "status": "pass" if all(checks.values()) else "fail",
-        "claim_boundary": "Two or more reduced G4/SW16 Qwen token steps with the same vector controller, "
+        "claim_boundary": "Two reduced G4/SW16 Qwen prompt steps with the same vector controller, "
                           "ISA, arithmetic and timed KV HBM in both arms; only weight source differs. "
                           "One pseudo-channel is a deliberate supply stress, 1/256 of the adopted "
                           "eight-stack package's channel count. The HBM controller is behavioral with "
@@ -79,6 +78,7 @@ def summarize(raw, raw_path, reference, reference_path):
         "image_sha256": raw["image_sha256"],
         "configuration": {
             "steps": raw["configuration"]["steps_executed"],
+            "generated_tokens": rom["summary"]["generated"],
             "pseudo_channels": 1,
             "package_pseudo_channels": PCS_PER_STACK * STACKS_PER_PACKAGE,
             "channel_fraction_of_package": 1 / (PCS_PER_STACK * STACKS_PER_PACKAGE),

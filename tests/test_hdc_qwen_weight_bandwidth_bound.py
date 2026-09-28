@@ -9,7 +9,7 @@ from tools import rtl_hdc_qwen_weight_bandwidth_bound as gate
 
 
 def _record(npc, cycles):
-    summary = {"total_cycles": cycles, "token_mismatches": 0,
+    summary = {"total_cycles": cycles, "generated": 0, "token_mismatches": 0,
                "logit_mismatches": 0, "vm_mismatches": 0,
                "kv_mismatches": 0}
     rom = {"pass": True, "summary": dict(summary, total_cycles=50_000),
@@ -34,6 +34,8 @@ def test_matched_bandwidth_knee_requires_exact_shared_inputs(tmp_path, monkeypat
     digest = hashlib.sha256(pin.read_bytes()).hexdigest()
     monkeypatch.setattr(gate, "ROOT", tmp_path)
     one, four = _record(1, 172_000), _record(4, 53_000)
+    # Different channel counts can leave different speculative prefetch tails.
+    four["hbm"]["weights"]["weight_completed_sectors"] -= 100
     one["source_sha256"] = four["source_sha256"] = {"pin": digest}
     one_path, four_path = tmp_path / "one.json", tmp_path / "four.json"
     one_path.write_text(json.dumps(one))

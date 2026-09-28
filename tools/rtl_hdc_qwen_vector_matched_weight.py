@@ -68,7 +68,7 @@ def main():
                              "kv_hbm_model": "ot_hdc_hbm_model PC_RDY=1; modeled timing/refresh"},
            "claim_boundary": "Reduced Qwen vector behavioral RTL. Both modes run the same chunked ISA program, "
                              "vector controller and arithmetic, autonomous physical K boot, physical K/V sectors, "
-                             "and four-PC timed HBM controller for KV. Weight supply alone differs: synchronous "
+                             "and configured-channel timed HBM controller for KV. Weight supply alone differs: synchronous "
                              "ROM versus shared timed HBM via ot_hdc_wstream/arbiter. Core cycles exclude pre-token "
                              "boot and exclude power/physical constraints. This is not a production bandwidth, "
                              "throughput, or energy estimate.",
