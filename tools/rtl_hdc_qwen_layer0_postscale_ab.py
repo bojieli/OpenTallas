@@ -79,6 +79,7 @@ def prepare(work, image_prefix, preload, oracle_dir):
 
 def build_command(obj, arm, jobs):
     return ["verilator", "--cc", "--exe", "--build", "-O1", "--unroll-count", "131072",
+            "--unroll-limit", "131072",
             "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
             "-Wno-TIMESCALEMOD", "-Wno-PINMISSING",
             "--top-module", "tb_hdc_qwen_layer0_tp2_postscale_ab", "-GG=6144",
