@@ -73,6 +73,13 @@ module ot_hdc_v41_qe #(
     output reg  [MP*AW-1:0]  w_addr,
     output reg  [MP*32-1:0]  w_mask,
     output reg  [MP*1024-1:0] w_data,
+    // Exact QDQ8 block before BF16 dequantisation.  The packed window KV
+    // writer consumes this sideband; w_data alone loses the E4M3 code/scale.
+    output reg               kvb_v,
+    output reg  [AW-1:0]     kvb_src_addr,
+    output reg  [255:0]      kvb_codes,
+    output reg  [7:0]        kvb_scale,
+    output reg               kvb_fault,
     // quantised weight ROM
     output reg               qr_re,
     output reg  [AW-1:0]     qr_addr,
@@ -243,6 +250,22 @@ module ot_hdc_v41_qe #(
     end
     reg [7:0] wb_i;
     always @(posedge clk) if (st == S_IDLE) wb_i <= 0; else if ((aq_vo || fq_vo) && mode != LINQ) wb_i <= wb_i + 1'b1;
+    // The exponent is the signed power of two; UE8M0 stores exponent + 127.
+    // 0xff is poison, so reject it along with exponents outside [ -127, 127 ].
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin kvb_v <= 1'b0; kvb_fault <= 1'b0; end
+        else begin
+            kvb_v <= aq_vo && mode == QDQ8 && !aq_f &&
+                     aq_e >= -10'sd127 && aq_e <= 10'sd127;
+            kvb_fault <= aq_vo && mode == QDQ8 &&
+                         (aq_f || aq_e < -10'sd127 || aq_e > 10'sd127);
+        end
+    end
+    always @(posedge clk) begin
+        kvb_src_addr <= obase + {wb_i, 5'd0};
+        kvb_codes <= aq_q;
+        kvb_scale <= 8'(aq_e + 10'sd127);
+    end
     always @(posedge clk) begin
         for (wp = 0; wp < MP; wp = wp + 1) begin
             if (mode == LINQ) begin
