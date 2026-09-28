@@ -43,6 +43,7 @@
     }
   },
   "weight_image_wo_a_sha256": "93d7dc91d01acf86c0a567d21247c209ac4f989a106f2bf21cc51797ce29f341",
+  "weight_image_wo_a_scale_sha256": "65fa2494808c0eeb7fb6a6e617f93de187a0969991e08a7817336937019cd4f4",
   "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
   "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
   "golden_model_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
@@ -56,6 +57,6 @@
       "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
     }
   },
-  "source_commit": "32d636fb115dc7beedde3c46b4ebe92e2102c20e",
+  "source_commit": "110cbaa49b691e958241590acde52d5039af37a2",
   "claim_boundary": "Exact golden intermediate vectors only; no RTL result or timing claim."
 }
