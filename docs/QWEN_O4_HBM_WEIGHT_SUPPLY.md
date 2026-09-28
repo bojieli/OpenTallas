@@ -10,7 +10,9 @@ stacks per die serve both weights and FP8 KV.
 one-cycle synchronous core ports. Sector `s` of code word `w` has address
 `code_base + w*3072 + s`; pseudo-channel `p` owns sectors `s % PCS == p`.
 Each PC has its own tagged sector bank. Scale word `w` is a separate 32-byte
-sector at `scale_base + w`. The module fully preloads an ISA weight operation
+sector at `scale_base + w`; the opt-in full-shape mode takes its ISA base from
+`me_wcs`, independently of the code base `me_wbase`. The module fully preloads
+an ISA weight operation
 before asserting `w_ok`, then serves the ROM read timing without altering the
 matrix arithmetic. An operation larger than `WIN_WORDS` faults rather than
 silently wrapping. The HBM controller, its KV arbitration, and timing remain
