@@ -15,12 +15,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MACRO = ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json"
+ASSEMBLY = ROOT / "results/arch/v41_die_assembly.json"
 OUTPUT = ROOT / "results/physical_abi3/asap7/chip/v41_me_shared_cluster_budget.json"
 
 
 def derive() -> dict:
     raw = MACRO.read_bytes()
     m = json.loads(raw)
+    assembly_raw = ASSEMBLY.read_bytes()
+    assembly = json.loads(assembly_raw)
     area_um2 = m["area"]["macro_area_um2"]
     tt = m["timing"]["tt"]
     clock_hz = 1.087e9
@@ -32,7 +35,8 @@ def derive() -> dict:
     useful_bits_per_store = 2 * 4096 * 16  # two K4096 BF16 activation groups
     read_macros_per_cycle = 16
     write_macros_per_preload_cycle = 8
-    existing_sram_mm2 = 3.41
+    existing_layer_sram_mm2 = assembly["ledger"]["layer"]["by_group_mm2"]["sram"]
+    existing_head_sram_mm2 = assembly["ledger"]["head"]["by_group_mm2"]["sram"]
     candidates = []
     for stores in (16, 32, 64):
         max_adapters_per_store = math.ceil(adapters / stores)
@@ -44,7 +48,8 @@ def derive() -> dict:
             "allocated_macro_bits": stores * macro_bits_per_store,
             "useful_activation_bits": stores * useful_bits_per_store,
             "added_macro_only_area_mm2": round(added_macro_mm2, 6),
-            "existing_plus_added_macro_area_mm2": round(existing_sram_mm2 + added_macro_mm2, 6),
+            "layer_existing_plus_added_macro_area_mm2": round(existing_layer_sram_mm2 + added_macro_mm2, 6),
+            "head_existing_plus_added_macro_area_mm2": round(existing_head_sram_mm2 + added_macro_mm2, 6),
             "one_store_read_output_bits_per_cycle": 2048,
             "one_store_sink_bits_per_cycle_upper_bound": 2048 * max_adapters_per_store,
             "all_adapter_sink_bits_per_cycle": 2048 * adapters,
@@ -98,7 +103,12 @@ def derive() -> dict:
             "macro_clk_to_q_plus_next_setup_ps": tt["clk_to_q_ps"] + tt["setup_ps"],
             "time_left_at_0p92ns_ps_before_route_and_logic": 920 - tt["clk_to_q_ps"] - tt["setup_ps"],
         },
-        "existing_die_sram_allocation_mm2": existing_sram_mm2,
+        "assembly": {
+            "path": str(ASSEMBLY.relative_to(ROOT)),
+            "sha256": hashlib.sha256(assembly_raw).hexdigest(),
+            "existing_layer_sram_mm2": existing_layer_sram_mm2,
+            "existing_head_sram_mm2": existing_head_sram_mm2,
+        },
         "candidates": candidates,
         "not_included": [
             "multicast buffer and wire area/energy",

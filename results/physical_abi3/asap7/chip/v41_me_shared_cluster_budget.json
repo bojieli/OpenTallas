@@ -1,4 +1,10 @@
 {
+  "assembly": {
+    "existing_head_sram_mm2": 3.40743234956,
+    "existing_layer_sram_mm2": 1.541900891,
+    "path": "results/arch/v41_die_assembly.json",
+    "sha256": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189"
+  },
   "candidates": [
     {
       "added_macro_only_area_mm2": 0.996244,
@@ -8,7 +14,8 @@
       "all_store_macro_read_energy_pj_per_active_cycle": 86.182022,
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.09368,
       "allocated_macro_bits": 8388608,
-      "existing_plus_added_macro_area_mm2": 4.406244,
+      "head_existing_plus_added_macro_area_mm2": 4.403676,
+      "layer_existing_plus_added_macro_area_mm2": 2.538145,
       "macro_count": 256,
       "max_adapters_per_store": 82,
       "one_store_read_output_bits_per_cycle": 2048,
@@ -24,7 +31,8 @@
       "all_store_macro_read_energy_pj_per_active_cycle": 172.364044,
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.18736,
       "allocated_macro_bits": 16777216,
-      "existing_plus_added_macro_area_mm2": 5.402487,
+      "head_existing_plus_added_macro_area_mm2": 5.39992,
+      "layer_existing_plus_added_macro_area_mm2": 3.534388,
       "macro_count": 512,
       "max_adapters_per_store": 41,
       "one_store_read_output_bits_per_cycle": 2048,
@@ -40,7 +48,8 @@
       "all_store_macro_read_energy_pj_per_active_cycle": 344.728087,
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.374719,
       "allocated_macro_bits": 33554432,
-      "existing_plus_added_macro_area_mm2": 7.394975,
+      "head_existing_plus_added_macro_area_mm2": 7.392407,
+      "layer_existing_plus_added_macro_area_mm2": 5.526876,
       "macro_count": 1024,
       "max_adapters_per_store": 21,
       "one_store_read_output_bits_per_cycle": 2048,
@@ -69,7 +78,6 @@
     "write_macros_per_preload_cycle": 8,
     "write_ports": "one 128-bit write per macro per cycle, eight macros for one-position 1024-bit preload payload"
   },
-  "existing_die_sram_allocation_mm2": 3.41,
   "macro": {
     "area_um2": 3891.57696,
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",

@@ -118,7 +118,8 @@ most 82/41/21 adapters reading each store's **2,048-bit tile payload per
 cycle**. Each store uses 16 macros, one 128-bit read from every macro per tile
 cycle, and eight 128-bit writes per 64-element preload cycle. Macro-only area
 added to the die is 0.996/1.992/3.985 mm² for 16/32/64 stores, *in addition*
-to the existing 3.41 mm² SRAM allocation. At 32 stores the macro-only read
+to the assembly record's existing **1.542 mm² layer-die** or **3.407 mm²
+head-die** SRAM allocation. At 32 stores the macro-only read
 energy if all stores run every 1.087 GHz cycle is 0.187 W; clock trees,
 multicast wires and consumers are excluded. The 16-macro read clock-to-Q is
 352 ps, leaving 540 ps of a 0.92 ns cycle for route, logic, and next-register
