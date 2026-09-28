@@ -7,7 +7,8 @@ module ot_hdc_matvec_memory_tile_wide #(
     parameter integer W = 8,
     parameter integer G = 4,
     parameter integer AW = 16,
-    parameter integer NW = 8
+    parameter integer NW = 8,
+    parameter integer SEPARATE_INGRESS_CLOCK = 0
 ) (
     input wire clk, ingress_clk, rst_n, go,
     output wire ready, idle,
@@ -67,10 +68,11 @@ module ot_hdc_matvec_memory_tile_wide #(
     reg [9:0] kv_load_addr_q, x_load_addr_q;
     reg [G*W*32-1:0] kv_load_data_q;
     reg [G*32-1:0] x_load_data_q;
-    // Source-synchronous ingress is captured by its own clock tree. The
-    // interface requires ingress_clk to have the same period and phase as clk;
-    // this is a physical clock-tree experiment, not an asynchronous CDC.
-    always @(posedge ingress_clk or negedge rst_n) begin
+    // The optional source-synchronous ingress tree requires ingress_clk to
+    // have the same period and phase as clk. The default preserves the
+    // original single-clock tile interface and physical timing model.
+    wire capture_clk = SEPARATE_INGRESS_CLOCK ? ingress_clk : clk;
+    always @(posedge capture_clk or negedge rst_n) begin
         if (!rst_n) begin
             kv_load_q <= 1'b0;
             x_load_q <= 1'b0;
@@ -88,7 +90,7 @@ module ot_hdc_matvec_memory_tile_wide #(
             x_load_commit <= x_load_q;
         end
     end
-    always @(posedge ingress_clk) begin
+    always @(posedge capture_clk) begin
         kv_load_addr_q <= kv_load_addr;
         x_load_addr_q <= x_load_addr;
         kv_load_data_q <= kv_load_data;

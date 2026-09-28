@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 python3 tools/run_abi3_physical.py \
-  --view asap7 --top ot_hdc_matvec_memory_tile_wide --param W=4 \
+  --view asap7 --top ot_hdc_matvec_memory_tile_wide --param W=4 --param SEPARATE_INGRESS_CLOCK=1 \
   --source rtl/hdc/ot_hdc_delay.sv \
   --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv \
   --source rtl/hdc/ot_hdc_fpu.sv \
