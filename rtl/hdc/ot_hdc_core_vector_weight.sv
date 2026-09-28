@@ -158,7 +158,7 @@ module ot_hdc_core_vector_weight #(
     output wire              wrom_su,
     output reg               wd_v,
     output wire [AW-1:0]     wd_wbase,
-    output wire [NW-1:0]     wd_tiles, wd_k,
+    output wire [NW-1:0]     wd_tiles, wd_k, wd_nout,
     input  wire              w_ok, emb_ok
 );
     `include "ot_hdc_isa.svh"
@@ -295,6 +295,7 @@ module ot_hdc_core_vector_weight #(
     assign kvd_jsh = me_jsh; assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
     assign kvd_kindk = me_kindk; assign kvd_pos = pos_r;
     assign wd_wbase = me_wbase; assign wd_tiles = me_tiles; assign wd_k = me_k;
+    assign wd_nout = me_nout; // useful BF16 row scales to preload from HBM
 
     // The chunked weight program divides lm_head into bounded streams. Fold
     // each completed chunk's argmax before issuing the next one. The final
