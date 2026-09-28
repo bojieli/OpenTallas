@@ -77,6 +77,16 @@ module ot_chip_v41x_hbm_karb_group4 #(
     reg [TAGW-1:0] in_tag;
     reg [DW-1:0] in_wdata;
     reg [DW/8-1:0] in_wstrb;
+    // The tail entry isolates upstream ready from the four local arbiters.
+    // A full tail conservatively inserts a bubble if the head leaves on the
+    // same edge; the accepted request order and write ownership stay intact.
+    reg tail_v, tail_we;
+    reg [1:0] tail_pc;
+    reg [AW-1:0] tail_addr;
+    reg [LENW-1:0] tail_len;
+    reg [TAGW-1:0] tail_tag;
+    reg [DW-1:0] tail_wdata;
+    reg [DW/8-1:0] tail_wstrb;
     wire [3:0] child_k_rdy, child_k_wr_done;
     wire [3:0] child_k_rsp_v, child_k_rsp_rdy;
     wire [4*TAGW-1:0] child_k_rsp_tag;
@@ -84,18 +94,39 @@ module ot_chip_v41x_hbm_karb_group4 #(
     wire [4*DW-1:0] child_k_rsp_data;
     wire [31:0] kg [0:3], bg [0:3], ct [0:3];
     wire pop = in_v && child_k_rdy[in_pc];
-    assign k_rdy = !in_v || pop;
+    assign k_rdy = !tail_v;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             in_v <= 1'b0; in_we <= 1'b0; in_pc <= '0;
             in_addr <= '0; in_len <= '0; in_tag <= '0;
             in_wdata <= '0; in_wstrb <= '0;
-        end else if (k_rdy) begin
-            in_v <= k_v;
-            if (k_v) begin
+            tail_v <= 1'b0; tail_we <= 1'b0; tail_pc <= '0;
+            tail_addr <= '0; tail_len <= '0; tail_tag <= '0;
+            tail_wdata <= '0; tail_wstrb <= '0;
+        end else begin
+            if (pop) begin
+                in_v <= tail_v;
+                if (tail_v) begin
+                    in_pc <= tail_pc;
+                    in_addr <= tail_addr; in_len <= tail_len;
+                    in_tag <= tail_tag; in_we <= tail_we;
+                    in_wdata <= tail_wdata; in_wstrb <= tail_wstrb;
+                end
+                tail_v <= 1'b0;
+            end
+            if (k_v && k_rdy) begin
+              if (!in_v || (pop && !tail_v)) begin
+                in_v <= 1'b1;
                 in_pc <= pc_of(k_addr);
                 in_addr <= k_addr; in_len <= k_len; in_tag <= k_tag;
                 in_we <= k_we; in_wdata <= k_wdata; in_wstrb <= k_wstrb;
+              end else begin
+                tail_v <= 1'b1;
+                tail_pc <= pc_of(k_addr);
+                tail_addr <= k_addr; tail_len <= k_len;
+                tail_tag <= k_tag; tail_we <= k_we;
+                tail_wdata <= k_wdata; tail_wstrb <= k_wstrb;
+              end
             end
         end
     genvar p;

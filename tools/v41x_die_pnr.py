@@ -210,7 +210,8 @@ def karb_pc1_pipe_m9(slew_repair: bool = False, slew_margin: bool = False) -> di
                           "scope": "one PC with NPC=1; excludes full 32-way K demux/response mux"}}
 
 
-def karb_group4_m9(height_um: float = 30.24, outpipe: bool = False) -> dict:
+def karb_group4_m9(height_um: float = 30.24, outpipe: bool = False,
+                   tailpipe: bool = False) -> dict:
     """Four adjacent PC slices with registered K ingress/return and local PHY pins."""
     c = karb_bank4(height_um=height_um, high_layers=True)
     args = c["args"].copy()
@@ -227,7 +228,8 @@ def karb_group4_m9(height_um: float = 30.24, outpipe: bool = False) -> dict:
     del args[j - 1:j + 1]
     args += ["--max-transition-ns"]
     args[args.index("--place-density") + 1] = "0.40"
-    name = ("karb_group4_fit_m9" if height_um <= 17.28 else
+    name = ("karb_group4_tailpipe_m9" if tailpipe else
+            "karb_group4_fit_m9" if height_um <= 17.28 else
             "karb_group4_outpipe_m9" if outpipe else "karb_group4_m9")
     return {"args": args, "nickname": f"codex_v41x_{name}",
             "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
@@ -615,6 +617,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_pc1_pipe_slewmargin_m9": lambda: karb_pc1_pipe_m9(slew_margin=True),
          "karb_group4_m9": karb_group4_m9,
          "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
+         "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
          "karb_group4_fit_m9": lambda: karb_group4_m9(height_um=17.28),
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
