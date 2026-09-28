@@ -171,17 +171,17 @@ def tile_spec(arch: str, work: Path) -> cs.CaseSpec:
 
 
 def die_spec(arch: str, work: Path) -> cs.CaseSpec:
+    if arch == "v41_rom":
+        raise NotImplementedError(
+            "The V4.1 die must use the adopted ot_hdc_core_v41x and live HBM "
+            "interfaces; the earlier die wrapper has been retired."
+        )
     prof = fp.tile_profile(arch)
-    die = fp.die2x2_v41() if arch == "v41_rom" else fp.die2x2(arch)
+    die = fp.die2x2(arch)
     tres = orfs.results_dir(BLOCK_WORK / f"tile_{arch}", f"chip_tile_{arch}")
     tile_view = cs.MacroView(prof.top, tres / f"{prof.top}.lef",
                              tres / f"{prof.top}_typ.lib", tres / "6_final.gds")
     extra_blocks = []
-    if arch == "v41_rom":
-        for name in ("ot_chip_v41_coll_moe", "ot_chip_v41_coll_ar"):
-            res = orfs.results_dir(BLOCK_WORK / name, f"chip_{name}")
-            extra_blocks.append(cs.MacroView(name, res / f"{name}.lef", res / f"{name}_typ.lib",
-                                             res / "6_final.gds"))
     phys = []
     for name, spec in die.phys.items():
         v = mc.write_views(spec, work / "phy_views")
@@ -200,8 +200,8 @@ def die_spec(arch: str, work: Path) -> cs.CaseSpec:
     ])
     return cs.CaseSpec(
         nickname=f"chip_die2x2_{arch}",
-        top="ot_chip_v41_die2x2" if arch == "v41_rom" else "ot_chip_die2x2",
-        sources=["rtl/chip/ot_chip_v41_die2x2.sv" if arch == "v41_rom" else "rtl/chip/ot_chip_die2x2.sv"],
+        top="ot_chip_die2x2",
+        sources=["rtl/chip/ot_chip_die2x2.sv"],
         die_um=(snap(die.width_um), snap(die.height_um)), core_margin_um=5.0, sdc=sdc,
         pdn_tcl=cs.TCL_DIR / "pdn_die.tcl", max_layer="M9", io_layers=("M4", "M5"),
         place_density=0.5, macros=[tile_view, *extra_blocks, *phys],
@@ -347,6 +347,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--record-only", action="store_true",
                     help="re-run the boundary report and rewrite the record of a finished run")
     args = ap.parse_args(argv)
+    if args.arch == "v41_rom":
+        ap.error("V4.1 chip assembly is pending migration to ot_hdc_core_v41x and live HBM interfaces")
     timeout = int(os.environ.get("OT_FLOW_TIMEOUT_SECONDS", "86400"))
     work = args.work.resolve()
     if args.write_only:

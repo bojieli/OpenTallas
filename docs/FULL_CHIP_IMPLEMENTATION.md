@@ -8,12 +8,14 @@ route, for all three architectures, on ASAP7 at a 1.0 ns clock.
 Flow: `tools/chip_assembly/` (tests: `tests/test_chip_assembly.py`).
 Records: `results/physical_abi3/asap7/chip/`.
 
-**Status (2026-09-26): halted by decision.** The decode core is being
-re-specified top-down, and the full-chip place-and-route will be redone at the
-end on the new blocks. What exists is reusable: the flow, the RTL of the tile
-and die compositions, the floorplans, and the budget method. The block records
-below are of the **pre-redesign (as-built) core** and none of them closed. No
-tile or die was assembled.
+**Status (2026-09-28):** The Qwen tile and reduced-die flow is available,
+with adopted reduced physical-sector tests and physical tile routes tracked in
+`results/physical_hdc/`. The DeepSeek-V4.1 core used by current RTL campaigns
+is `rtl/hdc/v41x/ot_hdc_core_v41x.sv`. Its chip tile and die have not yet
+been wired to the core, the QE weight stream, pooled index-key HBM and KV
+storage. The V4.1 physical assembly is disabled until those connections and
+matching memory macro interfaces are implemented. Block and array campaigns
+are evidence for their stated boundaries, not substitutes for a chip route.
 
 ## 1. The hierarchy
 
@@ -26,8 +28,15 @@ so each block's constraints, pins and power grid belong to this flow.
 | Level | Design | Routing layers | Power pins | Contents |
 |---|---|---|---|---|
 | 1 | hardened block | M2–M6 | M6 stripes | standard cells |
-| 2 | tile (`rtl/chip/ot_chip_hdc_tile.sv`, `ot_chip_v41_tile.sv`) | M2–M8 | M8 | level-1 macros, memories, glue |
-| 3 | reduced die (`ot_chip_die2x2.sv`, `ot_chip_v41_die2x2.sv`) | M2–M9 | M9 | tile macros, PHY placeholders, collectives |
+| 2 | Qwen tile (`rtl/chip/ot_chip_hdc_tile.sv`) | M2–M8 | M8 | level-1 macros, memories, glue |
+| 3 | Qwen reduced die (`rtl/chip/ot_chip_die2x2.sv`) | M2–M9 | M9 | tile macros, PHY placeholders, collectives |
+
+The V4.1 tile and die need an implementation around
+`rtl/hdc/v41x/ot_hdc_core_v41x.sv`, its adopted engines, and live HBM
+interfaces. The previous physical wrappers and their floorplan were removed
+because they were wired to a superseded core and disconnected HBM ports.
+`tools/chip_assembly/assemble.py --arch v41_rom` now rejects the build until
+that integration exists.
 
 Each level's grid is in `tools/chip_assembly/tcl/pdn_{block,tile,die}.tcl`.
 A child's power pins sit on the top layer it uses, and the parent drops vias
@@ -158,66 +167,32 @@ macros' extracted models and the parent's extracted parasitics. It gives the
 worst slack per bus and the clock arrival at every macro (the inter-block
 skew). Records: `results/.../chip/tiles/`, `results/.../chip/dies/`.
 
-## 5. Status per architecture (pre-redesign core, at the halt)
+## 5. Current implementation status
 
-| Step | Qwen3-8B ROM die | HBM comparator die | DeepSeek-V4.1 universal die |
-|---|---|---|---|
-| Tile RTL | `ot_chip_hdc_tile` | the same tile; the weight store is an HBM prefetch buffer | `ot_chip_v41_tile` (the same ME macro) |
-| Die RTL | `ot_chip_die2x2` | `ot_chip_die2x2` | `ot_chip_v41_die2x2` with two collectives nodes |
-| Floorplan | tile 1.16 × 2.42 mm, die 3.60 × 6.72 mm | tile 1.16 × 0.79 mm | tile 1.65 × 1.99 mm, die 4.58 × 5.90 mm |
-| Boundary characterisation | all 5 blocks | shared with Qwen | all 7 blocks; the HE, SU41 and both collectives nodes predate later RTL edits (stale) |
-| Budget table | `tile_qwen_rom`: 3 violations, all the KV streamer's HBM response ready | not derived | not derived; tile synthesis failed on the stale SU41 port list |
-| Blocks against their budgets | 4 of 5 routed, none closed (table below); the SU was cancelled | shares the Qwen blocks | not started |
-| Tile / die route | not started | not started | not started |
+| Gate | Qwen3-8B | DeepSeek-V4.1-Flash |
+|---|---|---|
+| Adopted core RTL | `rtl/hdc/ot_hdc_core.sv`; timed HBM KV and physical sector tests | `rtl/hdc/v41x/ot_hdc_core_v41x.sv`; reduced all-unit, HBM and switched-array campaigns |
+| Chip tile and reduced die | `rtl/chip/ot_chip_hdc_tile.sv` and `rtl/chip/ot_chip_die2x2.sv` | pending adopted tile and die wiring; the earlier wrappers were removed |
+| Memory interface | core KV requests reach the tile HBM interface | QE weight and pooled index-key HBM paths pass separately in RTL benches; tile/die PHY connection is pending |
+| Physical closure | W4/G2 reduced tile accepted at 1.5 ns; wider G4/W4 and G4/W8 routes remain open | adopted block routes exist; no whole-core, tile or die timing closure |
 
-Block routes against the Qwen tile budget at 1.0 ns, ASAP7 TT. All have zero
-DRC. Records: `results/physical_abi3/asap7/chip/blocks/`.
+The flow's former V4.1 tile macro dimensions and placement were tied to an
+older port list. A new floorplan must be derived from the adopted core's
+per-lane vector ports, dedicated weight/attention/index engines, the pooled
+HBM request channels, and actual ROM/SRAM compiler interfaces. The analytical
+die area model does not supply that missing port-level floorplan.
 
-| Block | Setup WNS | Violating endpoints | Hold WNS | Max-slew | Worst path |
-|---|---:|---:|---:|---:|---|
-| Matrix engine (ME) | −48 ps | 2,102 | −5.5 ps | 282 | wide datapath; first budgeted route |
-| KV streamer | −31 ps | 534 | +6 ps | 0 | stream-unit KV write data into the tail buffer |
-| Package controller | −14 ps | 39 | +15 ps | 0 | TX-queue read mux onto the 512-bit router port |
-| Router | −49 ps | 497 | +23 ps | 14 | `out_ready` fanning into the 512-bit output registers |
+## 6. Remaining implementation work
 
-What the budget and route iterations found, in order:
-
-1. **Clock insertion delay took the budgets.** The ME's clock tree inserts
-   about 540 ps, more than half the cycle, and a pin budgeted 150 ps failed by
-   539 ps. The parent balances a macro's insertion, so each block's SDC now
-   shifts its I/O by the insertion measured on its previous route.
-2. **A 150 ps floor is too small for a registered 512-bit output.** The
-   router's routed clock-to-pin was about 270 ps, so the floor became 300 ps.
-3. **Through-paths need pairing.** The KV streamer failed by 244 ps on a
-   window read that crosses it combinationally, from the ME's address through
-   to the ME's data. Each (input → output) pair now gets one through-budget,
-   and the time left outside is split by each side's need.
-4. **Three RTL changes to the tile came out of the budget:**
-   - the controller's core-start bundle is registered (it was a 920 ps
-     combinational path to the core);
-   - the controller's `core_done` is registered;
-   - the HBM response ports pass through register slices (`ot_chip_skid`,
-     tested in `tb_chip_skid`).
-5. **Repair margins.** A 40% slew margin and a 15 ps setup margin are needed
-   to cover the gap between estimated and extracted parasitics. With them the
-   controller came within 14 ps.
-
-## 6. What remains for a tape-out
-
-- **Rerun the flow on the re-specified blocks.** Block closure against the
-  budgets, then the tile and the reduced die. The per-pair through-budgets
-  and the insertion-shifted SDC carry over.
-- **The KV streamer's HBM response ready.** It is combinational through the
-  streamer's bank arbitration, about 500 ps, and still violates with the
-  register slices outside it. It needs a registered ready inside the
-  streamer.
-- **Real memories.** Every memory is a placeholder (§1). The memory
-  compilers' SRAM and via-ROM macros, with BIST and repair, replace them. The
-  vector memory has 13 ports (26 on V4.1) and needs a banked design.
-- **No weight streamer RTL for the HBM die.** Its prefetch buffer has no fill
-  port. The V4.1 core has no KV streaming interface either, so its HBM slices
-  are shoreline only.
-- **The collectives nodes are composition, not a verified datapath.** Each
-  engine is verified in its own bench.
-- **Scan, multi-corner sign-off, IR drop, the full-die route and the 4-die
-  package** (§6 of the plan).
+1. Connect `ot_hdc_core_v41x` to physical program/weight memories, banked
+   vector memory, QE weight-stream window, pooled index-key HBM bridge and KV
+   HBM path in a synthesizable tile. Register and constrain every memory and
+   mesh boundary.
+2. Wire four adopted tiles and the verified collective engines into a die,
+   with live HBM PHY request/response paths and a tested host/controller path.
+3. Run full-token RTL across the integrated die and switched multi-package
+   array, then characterise the adopted tile and die with macro views, clock
+   trees, routing and extracted timing. Treat the 1.087 GHz V4.1 design point
+   as conditional until these gates close.
+4. Complete scan, multi-corner timing, IR drop and power sign-off on the
+   adopted implementation.

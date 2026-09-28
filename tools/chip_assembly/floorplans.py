@@ -425,144 +425,6 @@ def hdc_tile(arch: str) -> TileFloorplan:
 
 
 # --------------------------------------------------------------------------
-# The DeepSeek-V4.1 tile (rtl/chip/ot_chip_v41_tile.sv)
-# --------------------------------------------------------------------------
-#
-#   y ^  +----------------------------------------------+------+
-#        | qrom (FP8/FP4 block weights)   | erom | hrom | N ch |
-#        +------+--------+--------------+---------------+------+
-#        |      | wrom   |     QE       |      XU       |
-#        |      +--------+------+-------+----+----------+-----+
-#        | W    |   ME   | vmem |    SU41    | HE / ewrom      |
-#        +------+--------+------+------------+-----------------+
-#        |router|ctrl| KV SRAM          | crom | prog            |
-#        +--------------------------------------------------------> x
-#
-# The ME is the same hardened macro as the HDC tile's, so it sits with the
-# same neighbours on the same edges: weight ROM north, vector memory east,
-# KV and the sequencer south.
-
-V41_TILES_FULL = 256
-V41_ROM_MM2_PER_DIE = 289.4           # docs/ARCHITECTURE_ATLAS.html die budget
-V41_ROM_SPLIT = {"qrom": 0.68, "wrom": 0.17, "erom": 0.09, "ewrom": 0.04, "hrom": 0.02}
-
-
-def v41_memories() -> dict[str, mc.MacroSpec]:
-    P = mc.pins
-    per_tile_mm2 = V41_ROM_MM2_PER_DIE / V41_TILES_FULL
-    out: dict[str, mc.MacroSpec] = {}
-
-    def rom(name, share, w, pins_, basis):
-        area = per_tile_mm2 * share * 1e6
-        h = mc.snap(area / w, mc.SITE_H)
-        bits = int(area / 1e6 * mc.ROM_BYTES_PER_MM2 * 8)
-        spec = mc.MacroSpec(name, w, h, pins_, kind="rom", basis=basis,
-                            extra={"capacity_bits": bits, "rom_share": share})
-        mc.pin_rects(spec)
-        out[name] = spec
-
-    def box(name, w, h, pins_, kind, basis, bits):
-        spec = mc.MacroSpec(name, w, h, pins_, kind=kind, basis=basis, extra={"capacity_bits": bits})
-        mc.pin_rects(spec)
-        out[name] = spec
-
-    rom("ot_m41_qrom", V41_ROM_SPLIT["qrom"], 1070.0,
-        P(("re", "input", 1, "S"), ("addr", "input", 17, "S"), ("q", "output", 16 * 272, "S")),
-        "quantised weight ROM (FP8/FP4 codes + block exponents), one 4,352-bit read port")
-    rom("ot_m41_wrom", V41_ROM_SPLIT["wrom"], 400.0,
-        P(("re", "input", 1, "S"), ("addr", "input", 17, "S"), ("q", "output", 1024, "S")),
-        "BF16 weight ROM of the matrix engine")
-    rom("ot_m41_erom", V41_ROM_SPLIT["erom"], 240.0,
-        P(("re", "input", 1, "S"), ("addr", "input", 17, "S"), ("q", "output", 264, "S")),
-        "Engram table ROM, one 264-bit row per read")
-    rom("ot_m41_ewrom", V41_ROM_SPLIT["ewrom"], 160.0,
-        P(("re", "input", 1, "W"), ("addr", "input", 17, "W"), ("q", "output", 1024, "W")),
-        "embedding-row ROM of the stream unit")
-    rom("ot_m41_hrom", V41_ROM_SPLIT["hrom"], 110.0,
-        P(("re", "input", 1, "S"), ("addr", "input", 16, "S"), ("q", "output", 96, "S")),
-        "FP32 hyper-connection projection ROM")
-    box("ot_m41_prog", 400.0, mc.snap(mc.rom_area_um2(4096 * 1536) / 400.0, mc.SITE_H),
-        P(("re", "input", 1, "N"), ("addr", "input", 12, "N"), ("q", "output", 1536, "N")),
-        "rom", "program ROM, 4,096 x 1,536-bit instructions", 4096 * 1536)
-    box("ot_m41_crom", 130.0, 130.0,
-        P(("re", "input", 4, "N"), ("addr", "input", 48, "N"), ("q", "output", 256, "N"),
-          ("xre", "input", 1, "N"), ("xaddr", "input", 12, "N"), ("xq", "output", 64, "N")),
-        "rom", "constant ROM, four stream ports and one auxiliary port", 5 * 4096 * 64)
-    box("ot_m41_kv", 580.0, 200.0,
-        P(("re", "input", 1, "N"), ("raddr", "input", 48, "N"), ("q", "output", 2048, "N"),
-          ("we", "input", 1, "N"), ("waddr", "input", 16, "N"), ("wdata", "input", 32, "N")),
-        "sram", "KV SRAM, 4 banks x 1,024 x 512 bits (x1.3 for the element write port)",
-        4 * 1024 * 512)
-    box("ot_m41_vmem", 320.0, 460.0,
-        P(("x_re", "input", 4, "W"), ("x_addr", "input", 56, "W"), ("x_q", "output", 128, "W"),
-          ("me_we", "input", 4, "W"), ("me_addr", "input", 40, "W"), ("me_mask", "input", 64, "W"),
-          ("me_data", "input", 2048, "W"),
-          ("s_re", "input", 4, "E"), ("s_addr", "input", 56, "E"), ("s_q", "output", 128, "E"),
-          ("i_re", "input", 1, "E"), ("i_addr", "input", 14, "E"), ("i_q", "output", 32, "E"),
-          ("su_we", "input", 1, "E"), ("su_addr", "input", 14, "E"), ("su_data", "input", 32, "E"),
-          ("rd_we", "input", 1, "E"), ("rd_addr", "input", 14, "E"), ("rd_data", "input", 32, "E"),
-          ("q_re", "input", 1, "N"), ("q_addr", "input", 14, "N"), ("q_q", "output", 32, "N"),
-          ("r_re", "input", 1, "N"), ("r_addr", "input", 14, "N"), ("r_q", "output", 32, "N"),
-          ("h_re", "input", 1, "E"), ("h_addr", "input", 14, "E"), ("h_q", "output", 32, "E"),
-          ("wq_re", "input", 1, "N"), ("wq_addr", "input", 14, "N"), ("wq_q", "output", 1024, "N"),
-          ("wx_re", "input", 1, "N"), ("wx_addr", "input", 14, "N"), ("wx_q", "output", 1024, "N"),
-          ("xe_we", "input", 1, "N"), ("xe_addr", "input", 14, "N"), ("xe_data", "input", 32, "N"),
-          ("qw_we", "input", 1, "N"), ("qw_addr", "input", 14, "N"), ("qw_mask", "input", 32, "N"),
-          ("qw_data", "input", 1024, "N"),
-          ("hw_we", "input", 1, "E"), ("hw_addr", "input", 14, "E"), ("hw_mask", "input", 32, "E"),
-          ("hw_data", "input", 1024, "E"),
-          ("xw_we", "input", 1, "N"), ("xw_addr", "input", 14, "N"), ("xw_mask", "input", 32, "N"),
-          ("xw_data", "input", 1024, "N"),
-          ("w_we", "input", 1, "S"), ("w_addr", "input", 10, "S"), ("w_data", "input", 512, "S"),
-          ("r_re2", "input", 1, "S"), ("r_addr2", "input", 10, "S"), ("r_q2", "output", 512, "S")),
-        "sram", ("vector memory, 16,384 FP32 elements with 19 read and 7 write ports; sized by "
-                 "its ~9,400 pins (a banked multi-port array in a real design)"), 16384 * 32)
-    return out
-
-
-def v41_tile() -> TileFloorplan:
-    mem = v41_memories()
-    qh = mem["ot_m41_qrom"].height_um
-    place = [
-        Placement("u_router", "ot_chip_router", 10, 10),
-        Placement("u_ctrl", "ot_chip_pkg_ctrl", 230, 40),
-        Placement("u_kv", "ot_m41_kv", 390, 20),
-        Placement("u_crom", "ot_m41_crom", 990, 20),
-        Placement("u_prog", "ot_m41_prog", 1140, 20),
-        Placement("u_core.u_me", "ot_hdc_matvec", 230, 290),
-        Placement("u_vmem", "ot_m41_vmem", 650, 290),
-        Placement("u_core.u_su", "ot_hdc_v41_stream", 990, 290),
-        Placement("u_core.u_he", "ot_hdc_v41_hcproj", 1470, 290),
-        Placement("u_ewrom", "ot_m41_ewrom", 1470, 470),
-        Placement("u_wrom", "ot_m41_wrom", 230, 780),
-        Placement("u_core.u_qe", "ot_hdc_v41_qe", 650, 780),
-        Placement("u_core.u_xu", "ot_hdc_v41_xu", 1090, 780),
-        Placement("u_qrom", "ot_m41_qrom", 10, 1280),
-        Placement("u_erom", "ot_m41_erom", 1090, 1280),
-        Placement("u_hrom", "ot_m41_hrom", 1340, 1280),
-    ]
-    width = 1650.0
-    height = round(1280 + qh + 12, 1)
-    return TileFloorplan(
-        arch="v41_rom", width_um=width, height_um=height, placements=place,
-        glue_center=(620.0, 770.0),
-        pin_groups=[
-            {"regex": r"^m_(out|in)_data$", "bits": (0, 511), "edge": "N", "range": (1470, 1640)},
-            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (0, 0), "edge": "N", "range": (1470, 1640)},
-            {"regex": r"^m_(out|in)_data$", "bits": (512, 1023), "edge": "E", "range": (10, 280)},
-            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (1, 1), "edge": "E", "range": (10, 280)},
-            {"regex": r"^m_(out|in)_data$", "bits": (1024, 1535), "edge": "S", "range": (1270, 1640)},
-            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (2, 2), "edge": "S", "range": (1270, 1640)},
-            {"regex": r"^m_(out|in)_data$", "bits": (1536, 2047), "edge": "W", "range": (10, 260)},
-            {"regex": r"^m_(out|in)_(valid|last|cr)$", "bits": (3, 3), "edge": "W", "range": (10, 260)},
-            {"regex": r".", "edge": "W", "range": (280, 1200)},
-        ],
-        notes=("the hardened ME keeps the HDC tile's neighbours (ROM north, vector memory east, KV "
-               "south); the quantised weight ROM fills the north above QE"),
-    )
-
-
-# --------------------------------------------------------------------------
 # The reduced (2 x 2) die
 # --------------------------------------------------------------------------
 
@@ -667,56 +529,6 @@ def die2x2(arch: str) -> DieFloorplan:
                         notes="tiles mirrored MY in column 1 and MX in row 1 (tile flipping)")
 
 
-def die2x2_v41() -> DieFloorplan:
-    """The reduced V4.1 die: 2 x 2 mirrored V4.1 tiles; in the south strip the
-    MoE collectives node between two UCIe modules under the two tiles' inner
-    S ports, in the north strip the argmax / multicast node likewise; HBM
-    slices in the outer strip corners; board SerDes west and east."""
-    tile = v41_tile()
-    tw, th = tile.width_um, tile.height_um
-    x0 = EDGE_UM + SERDES_W_UM + GAP_UM
-    x1 = x0 + tw + GAP_UM
-    y0 = EDGE_UM + PHY_STRIP_UM + GAP_UM
-    y1 = y0 + th + GAP_UM
-    die_w = x1 + tw + GAP_UM + SERDES_W_UM + EDGE_UM
-    die_h = y1 + th + GAP_UM + PHY_STRIP_UM + EDGE_UM
-    base = die2x2("qwen_rom").phys
-    phys = {k: v for k, v in base.items()}
-    rng = {g.get("bits", g["regex"]): g["range"] for g in tile.pin_groups}
-    w_lo, w_hi = rng[(1536, 2047)]
-    phys["ot_phy_serdes"] = mc.MacroSpec(
-        "ot_phy_serdes", SERDES_W_UM, SERDES_H_UM, _link_pins((w_lo + 5, w_hi - 5), "E"),
-        clk_to_q_ns=PHY_CLK_TO_Q_NS, setup_ns=PHY_SETUP_NS, kind="phy",
-        basis="8-lane board SerDes slice (package-to-package ring link), 0.6 mm x 0.26 mm")
-    ex = EDGE_UM
-    top = die_h - ex - PHY_STRIP_UM
-    mid = x0 + tw + GAP_UM / 2
-    place = [
-        Placement("g_tile[0].u_tile", "ot_chip_v41_tile", x0, y0, "R0"),
-        Placement("g_tile[1].u_tile", "ot_chip_v41_tile", x1, y0, "MY"),
-        Placement("g_tile[2].u_tile", "ot_chip_v41_tile", x0, y1, "MX"),
-        Placement("g_tile[3].u_tile", "ot_chip_v41_tile", x1, y1, "R180"),
-    ]
-    for row, (node, y_strip, orient) in enumerate((("u_coll_moe", ex, "R0"), ("u_coll_ar", top, "MX"))):
-        blk = BLOCKS["ot_chip_v41_coll_moe" if row == 0 else "ot_chip_v41_coll_ar"]
-        yb = y_strip + (PHY_STRIP_UM - blk.height_um if row == 0 else 0.0)
-        place.append(Placement(node, blk.name, mid - blk.width_um / 2, yb, orient))
-        place.append(Placement(f"g_ucie[{2 * row}].u_ucie", "ot_phy_ucie",
-                               mid - blk.width_um / 2 - GAP_UM - UCIE_W_UM, y_strip, orient))
-        place.append(Placement(f"g_ucie[{2 * row + 1}].u_ucie", "ot_phy_ucie",
-                               mid + blk.width_um / 2 + GAP_UM, y_strip, "MY" if row == 0 else "R180"))
-    for k, (c, r) in enumerate(((0, 0), (1, 0), (0, 1), (1, 1))):
-        orient = {(0, 0): "R0", (1, 0): "MY", (0, 1): "MX", (1, 1): "R180"}[(c, r)]
-        y_strip = ex if r == 0 else top
-        xh = x0 + 10.0 if c == 0 else x1 + tw - 10.0 - HBM_SLICE_W_UM
-        place.append(Placement(f"g_hbm[{k}].u_hbm", "ot_phy_hbm", xh, y_strip, orient))
-        xs = ex if c == 0 else die_w - ex - SERDES_W_UM
-        ys = y0 if r == 0 else y1 + th - SERDES_H_UM
-        place.append(Placement(f"g_edge[{k}].u_serdes", "ot_phy_serdes", xs, ys, orient))
-    return DieFloorplan("v41_rom", round(die_w, 3), round(die_h, 3), place, phys, tile,
-                        notes="V4.1 tiles mirrored; collectives nodes at the package edges")
-
-
 # --------------------------------------------------------------------------
 # Tile profiles: what differs between the HDC tile and the V4.1 tile
 # --------------------------------------------------------------------------
@@ -735,23 +547,21 @@ class TileProfile:
         return Path(self.core_source).name
 
     def floorplan(self) -> TileFloorplan:
-        return v41_tile() if self.arch == "v41_rom" else hdc_tile(self.arch)
+        return hdc_tile(self.arch)
 
     def memories(self) -> dict[str, mc.MacroSpec]:
-        return v41_memories() if self.arch == "v41_rom" else tile_memories(self.arch)
+        return tile_memories(self.arch)
 
 
 def tile_profile(arch: str) -> TileProfile:
     link = "rtl/chip/ot_chip_mesh_link.sv"
     if arch == "v41_rom":
-        return TileProfile(
-            arch, "ot_chip_v41_tile", ["rtl/chip/ot_chip_v41_tile.sv", link],
-            "rtl/hdc/v41/ot_hdc_core_v41.sv",
-            ["ot_hdc_matvec", "ot_hdc_v41_stream", "ot_hdc_v41_qe", "ot_hdc_v41_xu",
-             "ot_hdc_v41_hcproj", "ot_chip_pkg_ctrl", "ot_chip_router"],
-            ["rtl/hdc/v41", "rtl/hdc"])
+        raise NotImplementedError(
+            "The pre-adoption V4.1 chip tile was retired. Build a tile around "
+            "rtl/hdc/v41x/ot_hdc_core_v41x.sv with live HBM interfaces before "
+            "running the V4.1 physical assembly."
+        )
     return TileProfile(
         arch, "ot_chip_hdc_tile", ["rtl/chip/ot_chip_hdc_tile.sv", link], "rtl/hdc/ot_hdc_core.sv",
         ["ot_hdc_matvec", "ot_hdc_stream", "ot_hdc_kv_stream", "ot_chip_pkg_ctrl", "ot_chip_router"],
         ["rtl/hdc"])
-
