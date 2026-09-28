@@ -60,12 +60,14 @@ tiles; it does not remove one user's autoregressive feedback dependency.
 
 ## Single-user-first implementation started
 
+**Parallel Qwen ROM/HBM track:** user confirmed ROM, not an SRAM-weight variant. `qwen_o4_end_to_end` owns frozen real G6144 layer0 execution and core integration; `qwen_fullshape_emitter` owns full-token program/image binding; `qwen_o4_hbm_comparator` owns matched full-shape weight supply including remaining scale/constant families; `qwen_int8_tile_physical` owns a coordinated physical boundary on that path. Preserve frozen builds and use available remote capacity. Qwen is evaluated independently; simpler topology is not proof of modeled throughput.
+
 - [x] **Root: finite-resource validation foundation** — integrated the schedule checker and exact collective-subset witness. Nine focused tests pass. Checks cover physical aliases, same-stack HBM accounting, integer tensor coverage, local ROM ownership, and die area/power constraints. This is a component scheduling foundation, not a complete token schedule.
 - [~] **v41_model_reprice: constructive schedule builder** — compile the actual layer-0 instructions into a finite-resource witness or explicit missing-contract report; preserve the emitted seven activation gathers and all producer costs.
 - [~] **v41_fullshape_emitter_binding: executable stage ownership** — implement integer expert/tensor ownership and ordered split-layer forward/return packets, starting with L1 S0/S1 and experts on both sides.
 - [~] **v41_collective_throughput: actual-program baseline** — derive and measure all 12 emitted layer-0 collective descriptors, with exact rank state and commit latency. The fused266 benchmark is not substituted for the emitted sequence.
 - [~] **v41_fullshape_weight_layout: local physical ROM contract** — checkpoint-to-bank/lane/row map and exact packed roundtrip for a representative tile; unresolved full-die fit remains explicit.
-- [~] **v41_index_sharding: index collector cadence** — integrate the exact four-stack baseline and bounded pipeline change; full improved timing and shared-KV/HBM contention remain separate gates.
+- [~] **v41_index_sharding: index collector cadence** — integrated the exact four-stack baseline (262,144 keys, 557,056 sectors, 13,131 cycles) and first pipeline correction. Root rechecks pass: 14 collector lengths/190 beats, 2,208 mapping cases, and short four-stack N65/N1040 at 80/132 cycles (baseline 82/149). Full improved timing and shared-KV/HBM contention remain separate gates.
 - [~] **critical_path_tracker: schedule-checker correctness review** — adversarial resource/queue/evidence tests and bounded fixes; no duplicate tracker editing.
 
 ## Current claim boundary and priority
