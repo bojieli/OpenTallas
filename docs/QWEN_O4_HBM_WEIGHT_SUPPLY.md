@@ -60,6 +60,17 @@ CROM. Those weight-scale ranges must be mapped to HBM before a full-shape
 comparator is described as entirely HBM sourced; they are not exercised by
 the reduced matrix-plus-embedding gate.
 
+The separate full-shape layer-0 post-TP scale supply now has a source-pinned
+standalone RTL gate: `ot_hdc_qwen_post_tp_scale_hbm` preloads the contiguous
+CROM address range [535041, 543233) from the frozen die-0 and die-1 images.
+Each die transfers 2,048 32-byte sectors through 32 PC-local banks, then
+serves all 8,192 64-bit words bit-exact with the existing one-cycle CROM
+read timing. A read outside the owned range latches a fault. The record is
+`results/rtl/qwen_post_tp_scale_hbm.json`. This proves the source and layout
+for the two true-scale ranges; it has not yet been connected to the running
+G6144 layer-0 TB or a shared weight/KV controller. Other CROM constants
+remain local, and the all-weight layer/token comparison remains open.
+
 ## Full-shape memory ownership still to close
 
 The compute-cluster contract requires a tensor and buffer owner for every
@@ -75,7 +86,7 @@ HBM capacity or traffic measurement.
 | --- | --- | --- |
 | Signed INT8 q/k/v, o, gate/up, down and lm-head codes; BF16 matrix row scales | PC-local sectors for the reduced matrices | Bind every layer, die, lm-head and complete-round chunk to code/scale addresses; share eight package stacks with KV. |
 | Embedding INT8 row and BF16 row scale | One token row per die through a two-bank HBM row source | Bind the checkpoint's full TP-2 embedding range, row ownership and 17-bit token IDs. |
-| O/down BF16 scales applied after TP reduction; other CROM weights, biases and norm constants | Local CROM in both arms | Classify every CROM range and fetch all weight-dependent ranges from HBM at the same arithmetic and rounding points. |
+| O/down BF16 scales applied after TP reduction; other CROM weights, biases and norm constants | Local CROM in both reduced arms; real layer-0 scale source passes standalone | Connect the true-scale source to the exact layer program, then classify every other CROM range and fetch all weight-dependent ranges from HBM at the same arithmetic and rounding points. |
 | RoPE tables or angle constants and program/descriptor metadata | Local constant/program images | Price storage and access, including any HBM-resident portions, without silently omitting traffic. |
 | FP8 KV and scales, attention state and user/position metadata | Same local behavioural KV in both arms | Include actual HBM reads/writes, cache occupancy, four-stack-per-die arbitration with weights, and context limits. |
 | Activation/accumulator SRAM, masks, queues, double buffers and DFlash speculative state | Reduced VM and package state only | Bind finite capacity, ports, fill/drain and any HBM spills; count both producer work and accepted output. |
