@@ -21,9 +21,12 @@ clock paths still need route and STA at the adopted 920 ps period.
 models in the same reduced H4/D64/T72 three-job attention campaign. Both pass
 the golden's bit-exact score and p.v checks with identical 444 cycles. The
 full H16/D512/T640 macro instance lints; a full-shape engine exact run remains
-open. The separate representative D32/NL1/TROWS160 physical record measures
-one lane and one 265-bit group only, so it cannot be scaled into a die timing
-or power claim.
+open. The separate representative D32/NL1/TROWS160 physical attempt measures
+one lane and one 265-bit group only. Its macro placement and I/O pin placement
+passed, but post-I/O global placement repeatedly cycled through routability
+inflation and the attempt was stopped. The physical record is an error, with
+no routed setup, hold, DRC or power value. It cannot be scaled into a die
+timing or power claim.
 
 The full attention adapter is a distinct blocker. It currently materializes
 640 × 512 BF16 elements (5,242,880 bits) in `rowbuf`, then presents four
