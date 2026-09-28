@@ -525,6 +525,20 @@ The stacks' power fell (546.8 → 148.5 W at batch 1) and the die's rose
 because the controller, PHY and I/O energy of the HBM path now sits on the
 die; the earlier 75% MAC share left the rest of the die unpriced.
 
+### 11.5 Evidence note: power levers evaluated, baseline kept
+
+The batch-1 power levers were priced as named scenarios on the same inputs
+(`configs/hardware/qwen_power_levers.json` through `tools/qwen_power_levers.py`,
+record `results/arch/qwen_power_levers.json`). They cover KV SRAM in the area
+slack or in place of lane copies, a two-die package with striped or unstriped
+KV, INT4 KV as a sensitivity, and DVFS. By decision, none is adopted. The
+design keeps the single-reticle baseline, and its operating point is DFlash at
+the serial step: the design rate from `results/speculative/dflash_step_timing.json`
+and the cooling-capped rates from `results/arch/power_scenarios.json`
+(`scenarios.*.qwen3_8b_rom_8k.dflash.capped_rate`), which the lever record
+restates as its `baseline` rows. The levers are an evaluated record, not
+design alternatives. The architecture atlas does not present them.
+
 ## 12. HBM comparator requirements
 
 The weight stream never stalls: weights are data-independent, so the stream
