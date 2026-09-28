@@ -226,7 +226,7 @@ def karb_pc_local_fit_m9() -> dict:
             "--place-density", "0.40", "--routing-layers", "M2", "M9",
             "--max-transition-ns", "--slew-margin-percent", "40",
             "--pin-region", "^h_.*=bottom:20-195",
-            "--pin-region", "^b_.*=top:20-195",
+            "--pin-region", "^b_(v|rdy|addr|len|tag|we|wdata|wstrb|wr_done).*=top:20-195",
             "--pin-region", "^k_(v|rdy|addr|len|tag|we|wdata|wstrb|wr_done).*=top:210-370",
             "--pin-region", r"^(k_grants|b_grants|contended)\[\d+\]$=bottom:210-370",
             "--pin-region", r"^(clk|rst_n)$=left:5-12"]
