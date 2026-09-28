@@ -74,6 +74,12 @@ def build():
 
     ar_words = {n: depth["summary"][n]["input_words_per_die"] for n in ("act", "y")}
     mtp_words = {n: mtp["summary"][n]["fused_local_flits_per_die"] for n in ("act", "y")}
+    # Container-preserving packed4: four FP8 codes share one 32-bit entry,
+    # while each UE8M0 scale keeps its own entry.  Pad each expert to 16 VM
+    # entries.  The output packs two BF16s per 32-bit entry.
+    packed_act_entries_per_expert = math.ceil((576 // 4 + 18) / 16) * 16
+    packed_words = dict(act=7 * packed_act_entries_per_expert // 16, y=(1280 // 2) // 16)
+    assert packed_words == {"act": 77, "y": 40}
     cases = [
         dict(name="tagged_reader_negative_gate", index_sectors_cycle=tagged_sectors_cycle, gw=1,
              weight_factor=1.0, evidence="standalone exact tagged per-PC reader; not an integrated full-token rate",
@@ -85,6 +91,10 @@ def build():
         dict(name="reader_at_effective_hbm_cap", index_sectors_cycle=effective_sectors_cycle, gw=1,
              weight_factor=1.0, evidence="existing design-point assumption, not delivered RTL",
              gate="four-stack exact full-token scan at effective 3.6 TB/s and P&R closure"),
+        dict(name="reader_cap_plus_packed4_vm", index_sectors_cycle=effective_sectors_cycle, gw=1,
+             packed4=True, weight_factor=1.0,
+             evidence="optimistic packed4 output-port floor plus measured GW1 fixed overhead; arithmetic bit-copy contract only",
+             gate="packed FP8/UE8M0 activation and BF16 y VM layout, w2 unpack, exact TP program/token and route"),
         dict(name="reader_cap_plus_two_vm_writes", index_sectors_cycle=effective_sectors_cycle, gw=2,
              weight_factor=1.0, evidence="optimistic output-port floor plus measured GW1 fixed overhead",
              gate="two-bank VM/CDMA and GW2 engine exact stage/full-token benches and route"),
@@ -106,9 +116,14 @@ def build():
         rows = []
         for case in cases:
             gw = case["gw"]
-            ar_tails = base if gw == 1 else widened(gw, ar_words)
-            mtp_fused = fused if gw == 1 else widened(gw, mtp_words)
-            mtp_serial = serial if gw == 1 else {n: 6 * ar_tails[n] for n in ("act", "y")}
+            if case.get("packed4"):
+                ar_tails = widened(1, packed_words)
+                mtp_fused = widened(1, {n: 6 * packed_words[n] for n in ("act", "y")})
+                mtp_serial = {n: 6 * ar_tails[n] for n in ("act", "y")}
+            else:
+                ar_tails = base if gw == 1 else widened(gw, ar_words)
+                mtp_fused = fused if gw == 1 else widened(gw, mtp_words)
+                mtp_serial = serial if gw == 1 else {n: 6 * ar_tails[n] for n in ("act", "y")}
             spec = replace(point["sp"], idx_bytes=case["index_sectors_cycle"] * 32)
             factor = case["weight_factor"]
             if factor != 1:
@@ -167,11 +182,13 @@ def build():
                                           tagged_reader_sectors_per_cycle=tagged_sectors_cycle,
                                           liquid_cooling_limit_w_per_die=cool,
                                           analytical_compute_envelope_mm2=envelope,
+                                          packed4_local_flits_per_die=packed_words,
                                           added_vm_bank_area_power="unpriced"),
                 scenarios=rows,
                 limits=["the tagged reader is a standalone exact prototype and does not drive the full die",
                         "four-stack exact scan delivery, user isolation and HBM timing remain open",
                         "the GW2/GW4 tails hold the measured 156-cycle GW1 fixed overhead and divide only output cycles; they are optimistic floors, not measurements",
+                        "packed4 changes the core/emitter VM layout and w2 decode, so its 77/40-flit tails are optimistic one-write-port floors rather than measured RTL",
                         "the four-bank VM/CDMA and widened weight pools have no routed area, power or exact-token verdict",
                         "MTP fused versus six-serial descriptor schedule is not yet emitted by the full-shape program"])
 

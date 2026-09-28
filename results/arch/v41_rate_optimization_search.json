@@ -6,6 +6,10 @@
     "hbm_effective_Bps": 3600000000000.0,
     "hbm_effective_sectors_per_cycle": 103.49586016559337,
     "liquid_cooling_limit_w_per_die": 474.56,
+    "packed4_local_flits_per_die": {
+      "act": 77,
+      "y": 40
+    },
     "reader_nominal_target_sectors_per_cycle": 125.0,
     "tagged_reader_sectors_per_cycle": 2.153996
   },
@@ -13,6 +17,7 @@
     "the tagged reader is a standalone exact prototype and does not drive the full die",
     "four-stack exact scan delivery, user isolation and HBM timing remain open",
     "the GW2/GW4 tails hold the measured 156-cycle GW1 fixed overhead and divide only output cycles; they are optimistic floors, not measurements",
+    "packed4 changes the core/emitter VM layout and w2 decode, so its 77/40-flit tails are optimistic one-write-port floors rather than measured RTL",
     "the four-bank VM/CDMA and widened weight pools have no routed area, power or exact-token verdict",
     "MTP fused versus six-serial descriptor schedule is not yet emitted by the full-shape program"
   ],
@@ -544,6 +549,137 @@
       },
       "analytical_m2_fits_compute_envelope": true,
       "ar_tail_cycles": {
+        "act": 464,
+        "y": 316
+      },
+      "contexts": {
+        "1048576": {
+          "ar_binding": "critical_path",
+          "ar_breakdown_us": {
+            "collective_bytes": 3.241045142440356,
+            "collective_latency": 38.4984249587556,
+            "compute_chain": 75.14670620823553,
+            "control": 1.83624655013798,
+            "kv_sweep": 3.2969633363999056,
+            "on_die_wire": 22.080956761729507,
+            "pipeline_hops": 12.339087052237645,
+            "weight_sweep": 8.547894090380318
+          },
+          "ar_critical_path_groups": [
+            {
+              "cumulative_us": 18.031,
+              "node": "L*.ffn.act_allgather"
+            },
+            {
+              "cumulative_us": 12.585,
+              "node": "L*.ffn.y_allgather"
+            },
+            {
+              "cumulative_us": 11.053,
+              "node": "L*.substage_hop0"
+            },
+            {
+              "cumulative_us": 7.433,
+              "node": "L*.attn.a_proj"
+            },
+            {
+              "cumulative_us": 6.329,
+              "node": "L*.ffn.router_allgather"
+            },
+            {
+              "cumulative_us": 6.256,
+              "node": "L*.ffn.softplus_sqrt"
+            },
+            {
+              "cumulative_us": 5.628,
+              "node": "L*.attn.idx.score"
+            },
+            {
+              "cumulative_us": 5.622,
+              "node": "L*.ffn.experts_gu"
+            }
+          ],
+          "ar_period_us": 164.98732410031567,
+          "ar_tokens_s_per_user": 6061.07169416227,
+          "mtp_fused_stage_sensitivity": 11043.033251116878,
+          "mtp_serial_stage_sensitivity": 9408.893758958688
+        },
+        "200000": {
+          "ar_binding": "critical_path",
+          "ar_breakdown_us": {
+            "collective_bytes": 3.217133054528268,
+            "collective_latency": 38.4984249587556,
+            "compute_chain": 73.93651757871108,
+            "control": 1.83624655013798,
+            "kv_sweep": 1.3332311151998597,
+            "on_die_wire": 22.009199632014695,
+            "pipeline_hops": 11.00200827966882,
+            "weight_sweep": 8.547894090380446
+          },
+          "ar_critical_path_groups": [
+            {
+              "cumulative_us": 18.031,
+              "node": "L*.ffn.act_allgather"
+            },
+            {
+              "cumulative_us": 12.585,
+              "node": "L*.ffn.y_allgather"
+            },
+            {
+              "cumulative_us": 11.053,
+              "node": "L*.substage_hop0"
+            },
+            {
+              "cumulative_us": 7.433,
+              "node": "L*.attn.a_proj"
+            },
+            {
+              "cumulative_us": 6.329,
+              "node": "L*.ffn.router_allgather"
+            },
+            {
+              "cumulative_us": 6.256,
+              "node": "L*.ffn.softplus_sqrt"
+            },
+            {
+              "cumulative_us": 5.622,
+              "node": "L*.ffn.experts_gu"
+            },
+            {
+              "cumulative_us": 4.892,
+              "node": "L*.attn.out_allreduce"
+            }
+          ],
+          "ar_period_us": 160.38065525939587,
+          "ar_tokens_s_per_user": 6235.165945560103,
+          "mtp_fused_stage_sensitivity": 11309.706705180692,
+          "mtp_serial_stage_sensitivity": 9601.7932033136
+        }
+      },
+      "evidence": "optimistic packed4 output-port floor plus measured GW1 fixed overhead; arithmetic bit-copy contract only",
+      "gate": "packed FP8/UE8M0 activation and BF16 y VM layout, w2 unpack, exact TP program/token and route",
+      "gw": 1,
+      "index_sectors_cycle": 103.49586016559337,
+      "mtp_fused_tail_cycles": {
+        "act": 2004,
+        "y": 1116
+      },
+      "mtp_serial_tail_cycles": {
+        "act": 2784,
+        "y": 1896
+      },
+      "name": "reader_cap_plus_packed4_vm",
+      "packed4": true,
+      "physical_status": "not routed; banked VM area and added dynamic power unpriced",
+      "weight_factor": 1.0
+    },
+    {
+      "analytical_compute_area_mm2": {
+        "1": 124.48755248959999,
+        "2": 248.90278857919998
+      },
+      "analytical_m2_fits_compute_envelope": true,
+      "ar_tail_cycles": {
         "act": 688,
         "y": 316
       },
@@ -943,7 +1079,7 @@
     "tools/arch_utilization_v41.py": "ecad26a759b5c57194c99def5100c6ff7685a2736233ee05ceb80b05551deef9",
     "tools/collective_exposure.py": "cd6aad7745ec3d27b161e1dd4291e7b5ab812c4afc682bac85ef030a3184b67b",
     "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
-    "tools/v41_rate_optimization_search.py": "efbb58cb0512a4f2013c363d1281fe573b7398faf8d55b6bab2d3fcf572e6d47",
+    "tools/v41_rate_optimization_search.py": "c686cd86864867ae9883682a92894f7766c01e20908c6888d3b41789d8eb47c2",
     "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303",
     "tools/v41_tp_rowsplit_measured_reprice.py": "3645f7229832955d28a618ffc80d1227ddb5e18d05230a69276010114e45ea2a"
   }

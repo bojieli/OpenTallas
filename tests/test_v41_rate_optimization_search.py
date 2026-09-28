@@ -14,7 +14,7 @@ def test_source_pinned_search_preserves_rate_and_physical_boundaries():
     for path, digest in rec["source_sha256"].items():
         assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest, path
     rows = {x["name"]: x for x in rec["scenarios"]}
-    assert len(rows) == 7
+    assert len(rows) == 8
     limits = rec["baseline_assumptions"]
     assert 100 < limits["hbm_effective_sectors_per_cycle"] < limits["reader_nominal_target_sectors_per_cycle"]
     assert limits["tagged_reader_sectors_per_cycle"] < 3
@@ -23,6 +23,7 @@ def test_source_pinned_search_preserves_rate_and_physical_boundaries():
         assert (rate("tagged_reader_negative_gate") < rate("reader_32_sensitivity")
                 < rate("reader_60_sensitivity") < rate("reader_at_effective_hbm_cap")
                 < rate("reader_cap_plus_two_vm_writes")
+                < rate("reader_cap_plus_packed4_vm")
                 < rate("reader_cap_plus_four_vm_writes")
                 < rate("four_vm_writes_plus_weight_125"))
         assert (rate("four_vm_writes_plus_weight_125") /
@@ -33,6 +34,10 @@ def test_source_pinned_search_preserves_rate_and_physical_boundaries():
             assert c["ar_binding"] == "critical_path"
             assert c["ar_critical_path_groups"]
     wide = rows["four_vm_writes_plus_weight_125"]
+    packed = rows["reader_cap_plus_packed4_vm"]
+    assert limits["packed4_local_flits_per_die"] == {"act": 77, "y": 40}
+    assert packed["ar_tail_cycles"] == {"act": 464, "y": 316}
+    assert "w2 unpack" in packed["gate"]
     assert wide["analytical_m2_fits_compute_envelope"]
     assert wide["analytical_compute_area_mm2"]["2"] < limits["analytical_compute_envelope_mm2"]
     assert "not routed" in wide["physical_status"]
