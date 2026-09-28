@@ -63,3 +63,14 @@ rows through the serialized 17-sector HBM port, checks all packed code and
 scale bytes, rejects a cross-user read and a poisoned scale. The reported
 four-row-per-clock rate is the staged read rate only; the HBM refill schedule
 and mixed window/compressed attention rate remain unmeasured.
+
+The four-bank physical probe in
+`results/physical_abi3/asap7/chip/v41x_window_bank4_phy/preflight.json`
+contains one SRAM sector slice per bank with a local registered digest. It
+completed synthesis, macro placement, power-grid generation and pin placement.
+Its bounded run timed out during timing-driven global placement; clock tree
+and detailed route did not start. The full row store would require the other
+sector slices, and no routed timing, DRC or power is claimed from this probe.
+The separate one-bank SRAM route diagnostic records a detailed-route pin
+access failure on the current macro abstract. A routable macro pin boundary
+and a measured refill schedule are still required for the full-rate claim.
