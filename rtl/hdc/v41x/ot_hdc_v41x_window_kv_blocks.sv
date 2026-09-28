@@ -3,7 +3,7 @@
 // from ot_hdc_v41_qe, then dispatch one 32-code/E8M0-scale block at a time
 // when the following KVT stream instruction names that VM source row.
 //
-// KVT is transposed: element i of absolute row r has logical address
+// KVT is transposed: element i of local attention row r has logical address
 //   kvt_base + ((r >> 4) << KVT_SH) + (i << 4) + (r & 15).
 // Thus a block's first element is NOT necessarily 32-element aligned.  The
 // die-side KVD adds the user base and maps the logical row to packed sectors.
@@ -13,7 +13,8 @@
 module ot_hdc_v41x_window_kv_blocks #(
     parameter integer AW = 30,
     parameter integer POS_W = 21,
-    parameter integer KVT_SH = 13 // 512 dimensions x 16 interleaved rows
+    parameter integer KVT_SH = 13, // 512 dimensions x 16 interleaved rows
+    parameter integer SEPARATE_ROWS = 0 // full shape: HBM absolute row differs from local KVT row
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -25,12 +26,14 @@ module ot_hdc_v41x_window_kv_blocks #(
     input  wire              issue,
     input  wire [AW-1:0]     issue_src_base,
     input  wire [AW-1:0]     issue_kvt_base,
-    input  wire [POS_W-1:0]  issue_row,
+    input  wire [POS_W-1:0]  issue_row,      // local KVT row when SEPARATE_ROWS=1
+    input  wire [POS_W-1:0]  issue_abs_row,  // persistent HBM row when SEPARATE_ROWS=1
     output wire              issue_ready,
     output wire              blk_v,
     input  wire              blk_ready,
     output wire [AW-1:0]     blk_kvt_base,
-    output wire [POS_W-1:0]  blk_row,
+    output wire [POS_W-1:0]  blk_row,       // absolute HBM row
+    output wire [POS_W-1:0]  blk_kvt_row,   // local KVT row for alias checking
     output wire [3:0]        blk_idx,
     output wire [AW-1:0]     blk_first_elem,
     output wire [255:0]      blk_codes,
@@ -46,13 +49,14 @@ module ot_hdc_v41x_window_kv_blocks #(
     reg [4:0] count;
     reg [3:0] rd_idx;
     reg [AW-1:0] src_base, kvt_base;
-    reg [POS_W-1:0] row;
+    reg [POS_W-1:0] row, kvt_row;
     reg [255:0] codes [0:15];
     reg [7:0] scales [0:15];
     wire [AW:0] cap_expected = {1'b0, src_base} + (AW+1)'(count) * (AW+1)'(32);
-    wire [AW:0] block_offset = ((AW+1)'(row) >> 4) << KVT_SH;
+    wire [POS_W-1:0] issue_abs = SEPARATE_ROWS ? issue_abs_row : issue_row;
+    wire [AW:0] block_offset = ((AW+1)'(kvt_row) >> 4) << KVT_SH;
     wire [AW:0] first_wide = {1'b0, kvt_base} + block_offset +
-                             ((AW+1)'(rd_idx) << 9) + (AW+1)'(row[3:0]);
+                             ((AW+1)'(rd_idx) << 9) + (AW+1)'(kvt_row[3:0]);
     wire [AW:0] issue_last_wide = {1'b0, issue_kvt_base} +
                                   ((((AW+1)'(issue_row) >> 4) << KVT_SH)) +
                                   ((AW+1)'(511) << 4) + (AW+1)'(issue_row[3:0]);
@@ -61,6 +65,7 @@ module ot_hdc_v41x_window_kv_blocks #(
     assign blk_v = state == DRAIN;
     assign blk_kvt_base = kvt_base;
     assign blk_row = row;
+    assign blk_kvt_row = kvt_row;
     assign blk_idx = rd_idx;
     assign blk_first_elem = first_wide[AW-1:0];
     assign blk_codes = codes[rd_idx];
@@ -69,7 +74,7 @@ module ot_hdc_v41x_window_kv_blocks #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= EMPTY; count <= 0; rd_idx <= 0; fault <= 0;
-            src_base <= 0; kvt_base <= 0; row <= 0;
+            src_base <= 0; kvt_base <= 0; row <= 0; kvt_row <= 0;
         end else begin
             if (cap_v) begin
                 if (!cap_ready || cap_scale == 8'hff ||
@@ -85,12 +90,14 @@ module ot_hdc_v41x_window_kv_blocks #(
             end
             if (issue) begin
                 if (!issue_ready || issue_src_base != src_base ||
-                    issue_row >= POS_W'(1048576) ||
+                    issue_abs >= POS_W'(1048576) ||
+                    (SEPARATE_ROWS && issue_row >= POS_W'(128)) ||
                     issue_last_wide[AW])
                     fault <= 1'b1;
                 else begin
                     kvt_base <= issue_kvt_base;
-                    row <= issue_row;
+                    row <= issue_abs;
+                    kvt_row <= issue_row;
                     rd_idx <= 0;
                     state <= DRAIN;
                 end
