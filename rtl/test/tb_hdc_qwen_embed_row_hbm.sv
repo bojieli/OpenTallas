@@ -45,6 +45,10 @@ module tb_hdc_qwen_embed_row_hbm;
         @(negedge clk); code_re=0; scale_re=0;
         while (!ready && cycles<200) begin @(negedge clk); cycles=cycles+1; end
         if (!ready || fault) $fatal(1,"stale read poisoned next embedding row");
+        code_re=1; code_addr=6; scale_re=1; scale_addr=3;
+        @(negedge clk); code_re=0; scale_re=0;
+        if (code_q !== 512'd0 || scale_q !== 16'd0 || fault)
+            $fatal(1,"completed token's stale address aliased new row");
         code_re=1; code_addr=8; scale_re=1; scale_addr=4;
         @(negedge clk); code_re=0; scale_re=0;
         if (code_q !== {hmem[17],hmem[16]} ||

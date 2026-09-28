@@ -100,15 +100,20 @@ module ot_hdc_qwen_embed_row_hbm #(
             // package done. While the new row is being prefetched, the core
             // is gated from starting; those old reads have no consumer.
             if (code_re && ready) begin
+                // The scalar SU can leave its last read address asserted
+                // after package done, even after the next row becomes ready.
+                // Return zero for an out-of-row read, never alias another
+                // token's codes into the new row. A real consumer would fail
+                // the package's exact-state gate.
                 if (code_addr < tok_r*ROW_WORDS ||
-                    code_addr >= tok_r*ROW_WORDS+ROW_WORDS) fault<=1;
+                    code_addr >= tok_r*ROW_WORDS+ROW_WORDS) code_q<=0;
                 else begin
                     off=code_addr-tok_r*ROW_WORDS;
                     code_q<={code_bank[off*2+1],code_bank[off*2]};
                 end
             end
             if (scale_re && ready) begin
-                if (scale_addr!=tok_r) fault<=1;
+                if (scale_addr!=tok_r) scale_q<=0;
                 else scale_q<=scale_sector[tok_r[3:0]*16 +: 16];
             end
         end
