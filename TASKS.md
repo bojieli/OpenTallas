@@ -31,7 +31,8 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] Two tokens at positions 254/255.
 - [x] Pressure gates, with the pressure absorbed by slack.
 - [x] SFU reciprocal saturation fix (golden and RTL).
-- [~] **X:** consecutive-token gate at 2047→2048 and 8K single-token gate are running; both await final source-pinned verdicts.
+- [x] Consecutive-token 2047→2048 reduced-core gate: two exact tokens with timed physical HBM KV, zero logit/VM/KV/physical-byte mismatches and cross-token V reads (**X**).
+- [~] **X:** 8K single-token reduced-core gate is running and awaits a final source-pinned verdict.
 - [~] **X:** two-reticle INT8 RTL integration: freeze the layer and HBM stack split, implement signed INT8 × BF16 with per-output BF16 post-accumulation scaling and a credit-controlled UCIe activation handoff, then prove the same deployed program in autoregressive m=1 and DFlash verify m=5 modes. Current G4/SW16 gates are reduced single-core evidence. Claude supplies an advisory gap/performance audit; Codex owns core, testbench and integrated RTL.
 - [ ] **X:** queue-depth-2 pressure gate; its optional elaboration was stopped and no QD2 run is active.
 - [ ] 8K in RTL: correctness, area and timing are all unproven (R1).
