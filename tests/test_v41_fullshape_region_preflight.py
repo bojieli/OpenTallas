@@ -1,4 +1,7 @@
-from tools.v41_fullshape_region_preflight import build
+import subprocess
+import sys
+
+from tools.v41_fullshape_region_preflight import ROOT, build
 
 
 def test_fullshape_region_preflight_exposes_current_gaps_and_optimistic_capacity():
@@ -12,3 +15,10 @@ def test_fullshape_region_preflight_exposes_current_gaps_and_optimistic_capacity
     for case in rec["contexts"].values():
         assert not case["model_users_fit_optimistic_layout"]
     assert not rec["contexts"]["1048576"]["current_key_slice_fits_one_user"]
+
+
+def test_strict_region_gate_fails_until_layout_is_connected():
+    p = subprocess.run([sys.executable, "tools/v41_fullshape_region_preflight.py", "--require-ready"],
+                       cwd=ROOT, capture_output=True, text=True, check=False)
+    assert p.returncode == 2
+    assert '"full_shape_region_gate": "blocked"' in p.stdout

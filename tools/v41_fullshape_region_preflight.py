@@ -6,6 +6,7 @@ layout or a throughput claim. Unknown CKV and weight-HBM mapping stays blocked.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import math
@@ -103,6 +104,7 @@ def build() -> dict:
         "schema": "v41_fullshape_region_preflight_v1",
         "source_sha256": {p: hashlib.sha256(src[p]).hexdigest() for p in SOURCES},
         "scope": "Static necessary bounds for one ratio-1 layer die, four HBM stacks; no full-shape die/token/throughput verdict",
+        "full_shape_region_gate": "blocked",
         "actual_instantiation": {
             "full_shape_die_instantiated_by_shipped_rtl_or_tb": False,
             "observed_die_instantiations": die_instantiations,
@@ -129,4 +131,11 @@ def build() -> dict:
 
 
 if __name__ == "__main__":
-    print(json.dumps(build(), indent=2, sort_keys=True))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--require-ready", action="store_true",
+                        help="exit nonzero while the full-shape physical region gate is blocked")
+    args = parser.parse_args()
+    record = build()
+    print(json.dumps(record, indent=2, sort_keys=True))
+    if args.require_ready and record["full_shape_region_gate"] != "ready":
+        raise SystemExit(2)

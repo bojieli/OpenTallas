@@ -2,6 +2,8 @@
 
 `tools/v41_fullshape_region_preflight.py` reads the current die, tile, packed window, pooled index, RoPE guard, PHY, technology and budget sources. Its source hashes and 200K/1M arithmetic are in `results/arch/v41_fullshape_region_preflight.json`. It is a static **necessary** capacity check, not an implemented full-shape layout or token gate.
 
+For an executable gate, run `python3 tools/v41_fullshape_region_preflight.py --require-ready`. It exits with status 2 while physical region placement or the selected CKV path remains unresolved. The focused test checks this blocked verdict.
+
 ## Present instantiation and ownership
 
 The only RTL/test instantiation of `ot_chip_v41x_die` uses reduced defaults. The die's full-shape branch selects a 30-bit K-sector port and a real 17-sector packed FP8 window ring on `WIN_STACK=0`. It does **not** set the tile's opt-in `IDX_SHARDED`; the tile default is zero, so the current full-shape branch still writes every index key to all four stacks. Its default `IKH_SLICE=2^18` sectors cannot hold even one 1M user's replicated keys (557,056 sectors per stack). The full-shape selected CKV mux client is tied to zero and `kv_ok` is held low. A complete 640-row window-plus-selected-CKV operation cannot pass through this die yet.
