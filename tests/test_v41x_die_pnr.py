@@ -149,6 +149,19 @@ def test_karb_bank4_low_density_retries_the_same_wide_pin_boundary():
     assert low["nickname"] != wide["nickname"]
 
 
+def test_karb_single_pc_partition_covers_all_local_pins():
+    case = pnr.CASES["karb_pc1_pipe_m9"]()
+    args = case["args"]
+    assert case["floorplan"]["die_um"] == [375.0, 30.24]
+    assert [args[i + 1] for i, x in enumerate(args) if x == "--param"] == ["NPC=1", "PIPE_OUT=1"]
+    regions = [args[i + 1] for i, x in enumerate(args) if x == "--pin-region"]
+    ports = rtl_ports(ROOT / "rtl/chip/ot_chip_v41x_hbm_karb.sv", "ot_chip_v41x_hbm_karb", {"NPC": 1})
+    all_bits = [n if w == 1 else f"{n}[{i}]" for n, (_, w) in ports.items() for i in range(w)]
+    pats = [re.compile(r.rpartition("=")[0]) for r in regions]
+    for b in all_bits:
+        assert sum(1 for p in pats if p.search(b)) == 1, b
+
+
 def test_collective_fifo128_physical_case_is_the_measured_engine_configuration():
     case = pnr.CASES["collective_fifo128"]()
     args = case["args"]

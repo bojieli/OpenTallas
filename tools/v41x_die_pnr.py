@@ -46,7 +46,8 @@ def pin_regex(pins: list[str]) -> str:
     for p in pins:
         n, _, rest = p.partition("[")
         by_bus.setdefault(n, []).append(rest.rstrip("]"))
-    alts = [f"^{n}\\[({'|'.join(ix)})\\]$" for n, ix in by_bus.items()]
+    alts = [f"^{n}$" if ix == [""] else f"^{n}\\[({'|'.join(ix)})\\]$"
+            for n, ix in by_bus.items()]
     return "|".join(alts)
 
 
@@ -168,6 +169,39 @@ def collective_fifo128() -> dict:
             "output": "results/asap7_physical/v41x_collective_fifo128/physical.json",
             "floorplan": {"die_um": [850.0, 850.0], "core_um": [20.0, 20.0, 830.0, 830.0],
                           "scope": "one standalone 16-lane engine; no eight-engine die placement"}}
+
+
+def karb_pc1_pipe_m9() -> dict:
+    """One-PC local request/response slice, with its own registered HBM output.
+
+    This physical boundary is a partition study.  NPC=1 removes the 32-way K
+    demux/response select and therefore cannot certify the parent arbiter.
+    """
+    w, h = PHY_PC_WINDOW_UM, 30.24
+    m = 8 * ROW_UM
+    scalar = {"b_v", "b_rdy", "b_we", "b_wr_done", "b_rsp_v", "b_rsp_rdy",
+              "h_v", "h_rdy", "h_we", "h_wr_done", "r_v", "r_rdy"}
+    def local_pins(side: str) -> list[str]:
+        return [x[:-3] if x.endswith("[0]") and x[:-3] in scalar else x
+                for x in karb_pc_pins(0, side)]
+    regions = [f"{pin_regex(local_pins('h'))}=bottom:20-195",
+               f"{pin_regex(local_pins('b'))}=top:20-195",
+               r"^k_(v|rdy|we|wr_done|rsp_v|rsp_rdy)$|^k_(addr|len|tag|wdata|wstrb|rsp_tag|rsp_beat|rsp_data)\[\d+\]$=top:210-370",
+               r"^(k_grants|b_grants|contended)\[\d+\]$=bottom:210-370",
+               r"^(clk|rst_n)$=left:10-20"]
+    args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb",
+            "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+            "--param", "NPC=1", "--param", "PIPE_OUT=1",
+            "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2",
+            "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
+            "--core-area", f"{m:g}", f"{m:g}", f"{w-m:g}", f"{h-m:g}",
+            "--place-density", "0.40", "--routing-layers", "M2", "M9"]
+    for r in regions:
+        args += ["--pin-region", r]
+    return {"args": args, "nickname": "codex_v41x_karb_pc1_pipe_m9",
+            "output": "results/asap7_physical/v41x_die_karb_pc1_pipe_m9/physical.json",
+            "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM,
+                          "scope": "one PC with NPC=1; excludes full 32-way K demux/response mux"}}
 
 
 # ------------------------------------------------------------------------------------------------ physical tile
@@ -546,6 +580,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_bank4_pipe_wide_lowdens_m9": lambda: karb_bank4(high_layers=True, pipe_out=True,
                                                                   wide_pins=True, low_density=True),
          "collective_fifo128": collective_fifo128,
+         "karb_pc1_pipe_m9": karb_pc1_pipe_m9,
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),
