@@ -5,7 +5,7 @@
 module tb_hdc_qwen_hbm_mixed_service;
     localparam NPC=128, NC=6, AW=32, CTAGW=32, PTAGW=35;
     localparam PC=0, REQUESTS=4, MAX_EVENTS=NC*REQUESTS;
-    reg clk=0, rst_n=0, bind_region=0;
+    reg clk=0, rst_n=0, bind_region=0, head_mode=0, inject_bad=0;
     always #5 clk=~clk;
     reg [5:0] layer=0;
     reg [8:0] user_id=0;
@@ -28,7 +28,14 @@ module tb_hdc_qwen_hbm_mixed_service;
     wire [NPC*256-1:0] p_req_data;
     reg [NPC*PTAGW-1:0] p_rsp_tag=0,p_wr_done_tag=0;
     reg [NPC*256-1:0] p_rsp_data=0;
-    ot_hdc_qwen_hbm_service #(.MAX_OUT(2)) u_service (.*);
+    wire [NPC*NC-1:0] g_req_v,g_req_rdy;
+    wire guard_fault;
+    ot_hdc_qwen_hbm_region_guard u_guard (
+        .in_req_v(c_req_v),.in_req_we(c_req_we),.in_req_addr(c_req_addr),
+        .out_req_v(g_req_v),.out_req_rdy(g_req_rdy),
+        .in_req_rdy(c_req_rdy),.fault(guard_fault),.*);
+    ot_hdc_qwen_hbm_service #(.MAX_OUT(2)) u_service (
+        .c_req_v(g_req_v),.c_req_rdy(g_req_rdy),.*);
     integer issued[0:NC-1],finished[0:NC-1];
     integer cycle=0,accepted=0,returned=0,stalled=0,max_wait=0;
     integer rsp_blocked=0,credit_blocked=0;
@@ -64,11 +71,20 @@ module tb_hdc_qwen_hbm_mixed_service;
         total_finished=0;
         for (k=0;k<NC;k=k+1) total_finished+=finished[k];
         if (accepted!=NC*REQUESTS || total_finished!=NC*REQUESTS ||
-            |pc_fault || region_fault || stalled==0 || rsp_blocked==0 ||
+            |pc_fault || guard_fault || region_fault || stalled==0 || rsp_blocked==0 ||
             credit_blocked==0 || max_wait>NC*REQUESTS+20)
             $fatal(1,"mixed service count/fairness/fault mismatch");
         $display("RESULT cycles=%0d requests=%0d responses=%0d phy_stalls=%0d rsp_blocked=%0d credit_blocked=%0d max_wait=%0d pc=%0d clients=%0d",
                  cycle,accepted,returned,stalled,rsp_blocked,credit_blocked,max_wait,PC,NC);
+        inject_bad=1;
+        @(negedge clk);
+        #1;
+        if (p_req_v[PC] || c_req_rdy[PC*NC+3])
+            $fatal(1,"cross-region embedding request escaped guard");
+        @(negedge clk);
+        if (!guard_fault || |pc_fault)
+            $fatal(1,"cross-region request did not fault locally");
+        $display("GUARD PASS rejected cross-region embedding to KV page");
         $finish;
     end
     // Keep one request per owner asserted until accepted. All six owners
@@ -85,6 +101,11 @@ module tb_hdc_qwen_hbm_mixed_service;
             c_req_addr[idx*AW +: AW]=source_addr(j,issued[j]);
             c_req_tag[idx*CTAGW +: CTAGW]=CTAGW'(j*16+issued[j]);
             c_req_data[idx*256 +: 256]=256'hfeed0000+j*16+issued[j];
+        end
+        if (inject_bad) begin
+            c_req_v[PC*NC+3]=1;
+            c_req_addr[(PC*NC+3)*AW +: AW]=packed_kv_base;
+            c_req_tag[(PC*NC+3)*CTAGW +: CTAGW]=32'hbad;
         end
         p_rsp_v=0;p_wr_done_v=0;p_rsp_tag=0;p_wr_done_tag=0;p_rsp_data=0;
         selected=-1;
@@ -104,7 +125,8 @@ module tb_hdc_qwen_hbm_mixed_service;
     end
     always @(posedge clk) if (rst_n && region_valid) begin
         cycle=cycle+1;
-        if (|pc_fault || region_fault) $fatal(1,"shared HBM fault");
+        if (|pc_fault || region_fault || (guard_fault && !inject_bad))
+            $fatal(1,"shared HBM fault");
         if (cycle>300) $fatal(1,"mixed service timeout");
         if (|c_req_v && !p_req_rdy[PC]) stalled=stalled+1;
         if (p_rsp_v[PC] && !p_rsp_rdy[PC]) rsp_blocked=rsp_blocked+1;

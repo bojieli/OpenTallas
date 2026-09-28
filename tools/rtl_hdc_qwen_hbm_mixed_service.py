@@ -17,6 +17,7 @@ SOURCES = (
     "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv",
     "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv",
     "rtl/hdc/hbm/ot_hdc_qwen_hbm_regions.sv",
+    "rtl/hdc/hbm/ot_hdc_qwen_hbm_region_guard.sv",
     "rtl/test/tb_hdc_qwen_hbm_mixed_service.sv",
 )
 PATTERN = re.compile(
@@ -36,7 +37,7 @@ def run() -> dict:
         result = subprocess.run(["vvp", str(binary)], cwd=ROOT, check=True,
                                 capture_output=True, text=True, timeout=30)
     found = PATTERN.search(result.stdout)
-    if not found:
+    if not found or "GUARD PASS rejected cross-region embedding to KV page" not in result.stdout:
         raise RuntimeError(f"missing complete mixed-service verdict: {result.stdout}")
     names = ("cycles", "requests", "responses", "phy_stalls", "rsp_blocked",
              "credit_blocked", "max_wait", "pc", "clients")
@@ -54,7 +55,8 @@ def run() -> dict:
                 "controller_accept_period_cycles": 3,
                 "controller_response_delay_cycles": "24+sequence_mod_3",
                 "sector_bytes": 32},
-            "metrics": metrics, "source_sha256": pins}
+            "metrics": metrics, "region_guard": "cross-region embedding to KV rejected",
+            "source_sha256": pins}
 
 
 def main() -> None:
