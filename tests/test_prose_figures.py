@@ -152,7 +152,9 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # docs/ANALYTICAL_REPORT.md binds the joined/split-aware Qwen token gates,
     # V4.1 multi-step/package gates and Qwen vector timing sensitivity to their
     # tracked records (257 -> 280, from 36c664e2); the floors had not been raised.
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1096
+    # 1111: docs/ARCH_V41_DIE_ASSEMBLY.md binds the V4.1 layer die's analytical
+    # assembly (15) to results/arch/v41_die_assembly.json.
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1111
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
