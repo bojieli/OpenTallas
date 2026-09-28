@@ -11,3 +11,9 @@ def test_replicated_keys_reduce_capacity_and_user_width_is_insufficient():
     assert rec["capacity"]["max_replicated_users_with_28_bit_key_window"] < rec["capacity"]["users_current_replicated_keys"]
     assert not rec["isolation"]["multiuser_key_address_isolation"]
     assert rec["region_arithmetic"]["unpacked_example_exceeds_32_bit"]
+    assert rec["sharding"]["writer_opt_in_available"]
+    assert rec["sharding"]["read_address_mapper_available"]
+    assert not rec["sharding"]["read_scheduler_integrated"]
+    assert not rec["sharding"]["multiuser_slice_integrated"]
+    assert rec["capacity"]["key_sectors_per_user_per_stack_striped"] == 139264
+    assert rec["capacity"]["max_striped_users_with_28_bit_key_window"] >= 866

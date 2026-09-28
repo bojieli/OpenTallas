@@ -18,6 +18,7 @@ SOURCES = (
     "configs/hardware/technology.json",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv",
     "rtl/chip/ot_chip_v41x_die.sv",
     "rtl/rom/ot_rom_pkg_ctrl_x.sv",
@@ -28,11 +29,13 @@ def build() -> dict:
     source_text = {p: (ROOT / p).read_text() for p in SOURCES}
     writer = source_text[SOURCES[2]]
     scanner = source_text[SOURCES[3]]
-    bridge = source_text[SOURCES[4]]
+    bridge = source_text[SOURCES[5]]
     budget = source_text[SOURCES[0]]
-    controller = source_text[SOURCES[6]]
-    die = source_text[SOURCES[5]]
-    assert re.search(r"assign\s+w_stack_mask\s*=\s*4'b1111", writer)
+    controller = source_text[SOURCES[7]]
+    die = source_text[SOURCES[6]]
+    assert re.search(r"assign\s+w_stack_mask\s*=\s*SHARDED\s*\?.*:\s*4'b1111", writer)
+    assert "parameter integer AW=24, NW=16, NL=8, HAW=28, SHARDED=0" in writer
+    assert "ot_hdc_v41x_idx_shard_addr" not in scanner
     assert re.search(r"for\s*\(s=0;s<4;s=s\+1\)", bridge)
     assert "(rows * CKV_ROW_B + rows * IDX_KEY_B) / 4" in budget
     assert "IDX_KEY_B = 68" in budget and "CKV_ROW_B = 288" in budget
@@ -70,13 +73,17 @@ def build() -> dict:
     # per-row sector padding in the present code+scale planes.  Key user
     # slices are 136 sectors per 64-row group on each replicated stack.
     key_sectors_per_user = (rows_die // 64) * 136
+    striped_key_sectors_per_user = key_sectors_per_user // stacks
     assert key_sectors_per_user * 32 == key_stack_replicated
+    assert striped_key_sectors_per_user * 32 == key_stack_striped
     user_id_bits_model = (users_model - 1).bit_length()
     user_id_bits_rtl = (users_rtl - 1).bit_length()
     return {
         "schema": "v41_hbm_region_preflight_v1",
         "status": "capacity_mismatch",
-        "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; current replicated index-key writer; no throughput claim",
+        "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in sharded writer/address mapper not integrated; no throughput claim",
+        "sharding": {"writer_opt_in_available": True, "read_address_mapper_available": True,
+                     "read_scheduler_integrated": False, "multiuser_slice_integrated": False},
         "source_sha256": {p: hashlib.sha256(source_text[p].encode()).hexdigest() for p in SOURCES},
         "inputs": {"context": context, "tp_dies": tp_dies, "stacks_per_die": stacks,
                    "stack_capacity_bytes": stack_bytes, "capacity_efficiency": reserve,
@@ -93,6 +100,9 @@ def build() -> dict:
                      "users_current_replicated_keys": users_rtl,
                      "model_users_fit_current_layout": users_model * per_user_rtl <= usable_stack,
                      "key_sectors_per_user_per_stack_replicated": key_sectors_per_user,
+                     "key_sectors_per_user_per_stack_striped": striped_key_sectors_per_user,
+                     "key_sectors_for_model_users_per_stack_if_striped": users_model * striped_key_sectors_per_user,
+                     "max_striped_users_with_28_bit_key_window": (1 << 28) // striped_key_sectors_per_user,
                      "key_sectors_for_model_users_per_stack": users_model * key_sectors_per_user,
                      "key_sectors_for_current_layout_users_per_stack": users_rtl * key_sectors_per_user,
                      "max_replicated_users_with_28_bit_key_window": (1 << 28) // key_sectors_per_user},
