@@ -37,7 +37,8 @@ module tb_hdc_package_tp_int8 #(
     parameter integer CDEPTH = 16,       // collective receive FIFO words
     parameter integer KVHALF = 256,      // KV words of the K half (one die)
     parameter integer KVLAYER = 64,      // KV words per layer within a half
-    parameter integer WROM_WORDS = 16384 // INT8 matrix words reserved per die
+    parameter integer WROM_WORDS = 16384, // INT8 matrix words reserved per die
+    parameter integer WEIGHT_HBM = 0       // same images/program, timed PC-local INT8 supply
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12, DAW = 6, TAGW = 32;
@@ -178,17 +179,23 @@ module tb_hdc_package_tp_int8 #(
                 wire [NW-1:0] embed_scale_addr;
                 reg [G*W*8-1:0] int8_wrom_q;
                 reg [G*W*16-1:0] scale_q;
+                wire [G*W*8-1:0] hbm_int8_q;
+                wire [G*W*16-1:0] hbm_scale_q;
+                wire wd_v, w_ok, hbm_fault;
+                wire [AW-1:0] wd_wbase;
+                wire [NW-1:0] wd_tiles, wd_k, wd_nout;
                 reg [64*8-1:0] embed_code_q;
                 reg [15:0] embed_scale_q;
                 ot_hdc_core_vector_weight #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW),
-                    .INT8_WEIGHT(1), .INT8_EMBED(1), .EMB_ADDR_BASE(EMB_BASE)) core (
+                    .INT8_WEIGHT(1), .INT8_EMBED(1), .EMB_ADDR_BASE(EMB_BASE), .W_HBM(WEIGHT_HBM)) core (
                     .clk(clk), .rst_n(rst_n), .start(core_start), .token(core_tok), .pos(core_pos),
                     .done(core_done), .next_token(core_ntok), .next_val(core_nval),
                     .cycles(cycles), .fault(core_fault),
                     .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
                     .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
-                    .int8_wrom_re(int8_wrom_re), .int8_wrom_addr(int8_wrom_addr), .int8_wrom_q(int8_wrom_q),
-                    .scale_re(scale_re), .scale_addr(scale_addr), .scale_q(scale_q),
+                    .int8_wrom_re(int8_wrom_re), .int8_wrom_addr(int8_wrom_addr),
+                    .int8_wrom_q(WEIGHT_HBM ? hbm_int8_q : int8_wrom_q),
+                    .scale_re(scale_re), .scale_addr(scale_addr), .scale_q(WEIGHT_HBM ? hbm_scale_q : scale_q),
                     .embed_code_re(embed_code_re), .embed_code_addr(embed_code_addr), .embed_code_q(embed_code_q),
                     .embed_scale_re(embed_scale_re), .embed_scale_addr(embed_scale_addr), .embed_scale_q(embed_scale_q),
                     .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
@@ -205,8 +212,53 @@ module tb_hdc_package_tp_int8 #(
                     .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
                     .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_jsh(), .kvd_tiles(), .kvd_k(),
                     .kvd_nout(), .kvd_kindk(), .kvd_pos(), .kv_ok(1'b1),
-                    .kv_write_drained(1'b1), .w_ok(1'b1), .emb_ok(1'b1));
-                assign cfault_w[n*D + d] = core_fault;
+                    .kv_write_drained(1'b1), .wd_v(wd_v), .wd_wbase(wd_wbase),
+                    .wd_tiles(wd_tiles), .wd_k(wd_k), .wd_nout(wd_nout),
+                    .w_ok(w_ok), .emb_ok(1'b1));
+                assign cfault_w[n*D + d] = core_fault | hbm_fault;
+
+                if (WEIGHT_HBM != 0) begin : g_whbm
+                    localparam integer PC=2, HAW=28, HTAG=16;
+                    localparam [HAW-1:0] SCALE_REGION=28'h1000000;
+                    wire [PC-1:0] rq_v;
+                    wire [PC*HAW-1:0] rq_addr;
+                    wire [PC*HTAG-1:0] rq_tag;
+                    reg [PC-1:0] rsp_v=0;
+                    reg [PC*HTAG-1:0] rsp_tag=0;
+                    reg [PC*256-1:0] rsp_data=0;
+                    wire [PC-1:0] rq_rdy = {PC{1'b1}};
+                    wire [NW-1:0] wd_words = wd_tiles*wd_k*8;
+                    ot_hdc_qwen_int8_pc_window #(.G(G),.W(W),.AW(AW),.HAW(HAW),.NW(NW),
+                        .PCS(PC),.WIN_WORDS(4096),.SCALE_WORDS(128),.TAGW(HTAG)) source (
+                        .clk(clk),.rst_n(rst_n),.load(wd_v),.op_base(wd_wbase),
+                        .op_words(wd_words),.op_nout(wd_nout),
+                        .code_base_sector(28'd0),.scale_base_sector(SCALE_REGION),
+                        .ready(w_ok),.fault(hbm_fault),
+                        .code_re(int8_wrom_re),.code_addr(int8_wrom_addr),.code_q(hbm_int8_q),
+                        .scale_re(scale_re),.scale_addr(scale_addr),.scale_q(hbm_scale_q),
+                        .rq_v(rq_v),.rq_rdy(rq_rdy),.rq_addr(rq_addr),.rq_tag(rq_tag),
+                        .rsp_v(rsp_v),.rsp_tag(rsp_tag),.rsp_data(rsp_data));
+                    for (genvar pp=0; pp<PC; pp=pp+1) begin : g_pc
+                        always @(posedge clk) begin
+                            rsp_v[pp] <= rq_v[pp] && rq_rdy[pp];
+                            if (rq_v[pp] && rq_rdy[pp]) begin
+                                rsp_tag[pp*HTAG +: HTAG] <= rq_tag[pp*HTAG +: HTAG];
+                                if (rq_addr[pp*HAW +: HAW] < SCALE_REGION)
+                                    rsp_data[pp*256 +: 256] <=
+                                        matrix_codes[d*WROM_WORDS + rq_addr[pp*HAW +: HAW]/2]
+                                                    [(rq_addr[pp*HAW +: HAW]%2)*256 +: 256];
+                                else
+                                    rsp_data[pp*256 +: 256] <=
+                                        matrix_scales[d*WROM_WORDS + rq_addr[pp*HAW +: HAW]-SCALE_REGION];
+                            end
+                        end
+                    end
+                end else begin : g_wrom
+                    assign w_ok=1'b1;
+                    assign hbm_fault=1'b0;
+                    assign hbm_int8_q=0;
+                    assign hbm_scale_q=0;
+                end
 
                 ot_rom_tp_seq #(.N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(DAW), .FW(FLIT), .TAGW(TAGW)) seq (
                     .clk(clk), .rst_n(rst_n),
@@ -244,11 +296,11 @@ module tb_hdc_package_tp_int8 #(
                     if (prog_re) prog_q <= prog[prog_base + prog_addr];
                     if (desc_re) desc_q <= desc[desc_addr];
                     if (wrom_re) $fatal(1, "INT8 package requested BF16 ROM");
-                    if (int8_wrom_re) begin
+                    if (int8_wrom_re && WEIGHT_HBM == 0) begin
                         if (int8_wrom_addr >= WROM_WORDS) $fatal(1, "INT8 matrix ROM out of range");
                         int8_wrom_q <= matrix_codes[d*WROM_WORDS + int8_wrom_addr];
                     end
-                    if (scale_re)
+                    if (scale_re && WEIGHT_HBM == 0)
                         for (q = 0; q < G; q = q + 1)
                             scale_q[q*W*16 +: W*16] <= matrix_scales[d*WROM_WORDS + scale_addr[q*AW +: AW]];
                     if (embed_code_re) embed_code_q <= embed_codes[d*EMB_WORDS + embed_code_addr];
