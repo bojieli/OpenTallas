@@ -33,28 +33,21 @@ module ot_hdc_v41x_me_xbank_macro #(
     genvar p,c,b;
     generate for (p=0;p<MP;p=p+1) begin : g_pos
         for (c=0;c<8;c=c+1) begin : g_c
-            reg hit;
-            reg [6:0] wa;
-            reg [127:0] wd,wm;
-            integer j,u;
-            always @* begin
-                hit=1'b0; wa='0; wd='0; wm='0;
-                if (pre_v && pre_p == p && pre_e < KMAX) begin
-                    hit=1'b1;
-                    wa=pre_e >> LG;
-                    for (u=0;u<MG;u=u+1) begin
-                        wd[16*u +:16]=pre_d[(8*u+c)*16 +:16];
-                        wm[16*u +:16]=16'hffff;
-                    end
-                end else if (wr_v && wr_p == p) begin
-                    for (j=0;j<G;j=j+1)
-                        if (wr_e+j < KMAX && ((wr_e+j)%8)==c) begin
-                            hit=1'b1;
-                            wa=(wr_e+j)>>LG;
-                            wd[(((wr_e+j)%LANES)/8)*16 +:16]=wr_d[j*16 +:16];
-                            wm[(((wr_e+j)%LANES)/8)*16 +:16]=16'hffff;
-                        end
-                end
+            // The adapter issues G=4 writes on a four-element boundary.
+            // c=0..3 or c=4..7 therefore maps to one fixed input slot;
+            // wr_e[5:3] chooses one of eight local 16-bit lanes.  Explicit
+            // lane masks avoid a 128-bit variable part-select/write barrel.
+            wire pos_pre = pre_v && pre_p==p && pre_e<KMAX;
+            wire pos_wr = !pre_v && wr_v && wr_p==p && wr_e<KMAX &&
+                          wr_e[2] == (c>=4);
+            wire hit = pos_pre || pos_wr;
+            wire [6:0] wa = pos_pre ? 7'(pre_e>>LG) : 7'(wr_e>>LG);
+            wire [127:0] wd,wm;
+            for (genvar u=0;u<MG;u=u+1) begin : g_lane
+                assign wd[u*16 +:16] = pos_pre ? pre_d[(8*u+c)*16 +:16] :
+                                             wr_d[(c%4)*16 +:16];
+                assign wm[u*16 +:16] = {16{pos_pre ||
+                                             (pos_wr && wr_e[5:3]==u)}};
             end
             wire [3:0] plg = rq_plg[c*4 +:4];
             wire [NBW-1:0] beat = rq_q[c*NBW +:NBW];
@@ -69,6 +62,11 @@ module ot_hdc_v41x_me_xbank_macro #(
             assign q_bus[(p*8+c)*128 +:128] = q[127:0];
         end
     end endgenerate
+`ifndef SYNTHESIS
+    always @(posedge clk)
+        if (wr_v && wr_e[1:0]!=0)
+            $fatal(1,"ME macro store requires G4-aligned narrow writes");
+`endif
     generate for (b=0;b<LANES;b=b+1) begin : g_broadcast
         wire [3:0] plg = rq_plg[(b%8)*4 +:4];
         wire [NBW-1:0] beat = rq_q[(b%8)*NBW +:NBW];
