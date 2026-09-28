@@ -25,6 +25,9 @@ def test_o4_hbm_address_and_controller_contract():
     assert 46 < area["minimum_starting_prefetch_mib_for_unstalled_round_with_perfect_streaming"] < 47
     assert 16 < area["code_window_mm2_at_kv_buffer_density"] < 17
     assert area["status"] == "conditional_unpriced"
+    embed = gate["embedding_traffic_sensitivity"]
+    assert embed["package_upper_bytes_per_token"] == 2 * (4096 + 2)
+    assert embed["fraction_of_rom_word_identical_weight_and_kv_traffic_upper"] < 1e-5
 
 
 def test_padding_changes_with_actual_tiling():

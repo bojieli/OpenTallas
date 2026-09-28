@@ -119,6 +119,9 @@ def evaluate() -> dict:
     kv_buffer_bytes = wl["area"]["kv_prefetch_buffer_bytes"]
     kv_buffer_mm2 = wl["area"]["kv_prefetch_buffer_mm2"]
     round_window_proxy_mm2 = round_window_bytes / (kv_buffer_bytes / kv_buffer_mm2)
+    # A token looks up one embedding row. Until the TP-2 row layout is
+    # committed, use a conservative whole-hidden-row upper bound per die.
+    embed_upper_package = Q.DIES * (Q.Q["H"] + 2)
     return {
         "schema": "opentallas.qwen-o4-hbm-weight-preflight.v1",
         "status": "pass",
@@ -166,6 +169,12 @@ def evaluate() -> dict:
             "code_window_mm2_at_kv_buffer_density": round_window_proxy_mm2,
             "status": "conditional_unpriced",
             "boundary": "KV-buffer density is a budget proxy only. PC-local SRAM macro area, code/scale muxes, tag RAM, wiring, power and route are not measured; do not use the iso-area HBM headline as physically closed. Streaming within an uninterrupted K round saves little staging at this bandwidth. A substantially smaller buffer needs an exact FP32 accumulator continuation or a pipeline-wide stall, neither implemented."},
+        "embedding_traffic_sensitivity": {
+            "one_row_upper_bytes_per_die": Q.Q["H"] + 2,
+            "package_upper_bytes_per_token": embed_upper_package,
+            "fraction_of_rom_word_identical_weight_and_kv_traffic_upper":
+            embed_upper_package / exact_weight_and_kv,
+            "boundary": "Upper bound assumes a full hidden row on each TP-2 die. The exact row partition and HBM controller transaction count require the full-shape emitter; embedding bytes are excluded from the existing modeled matrix+KV rate."},
         "sector_roundtrip": sector_roundtrip(),
         "input_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in _PINNED},
     }

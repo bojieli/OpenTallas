@@ -17,6 +17,12 @@
     "scale_word_bytes": 196608,
     "sector_bytes": 32
   },
+  "embedding_traffic_sensitivity": {
+    "boundary": "Upper bound assumes a full hidden row on each TP-2 die. The exact row partition and HBM controller transaction count require the full-shape emitter; embedding bytes are excluded from the existing modeled matrix+KV rate.",
+    "fraction_of_rom_word_identical_weight_and_kv_traffic_upper": 9.932385400302064e-07,
+    "one_row_upper_bytes_per_die": 4098,
+    "package_upper_bytes_per_token": 8196
+  },
   "existing_wstream_incompatibilities": {
     "default_burst_length_field_bits": 5,
     "default_hbm_sector_address_bits": 24,
@@ -36,7 +42,7 @@
     "rtl/hdc/ot_hdc_matvec.sv": "8d2b8fe92887e1b7475ea9a31ef24dbd49d76856f7dbfd5d8af81cb802241a53",
     "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
     "tools/hdc_qwen_int8_image.py": "ce1e699514eeb80344b68e6dbdbfeee2c85bbb8d4f75bf06e672b7350b26f606",
-    "tools/qwen_o4_hbm_weight_preflight.py": "2668a257a7d3bdb6b239edc1928d9a8c251092013e131dd86bf8b89314d7948c"
+    "tools/qwen_o4_hbm_weight_preflight.py": "df2ec2092c703cc670c7ecab56cd5c8cacc7d82bf92d5100d923ccb1f30b4021"
   },
   "matrix_traffic_per_die": [
     {
