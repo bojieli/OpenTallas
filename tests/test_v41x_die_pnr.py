@@ -162,6 +162,15 @@ def test_karb_single_pc_partition_covers_all_local_pins():
         assert sum(1 for p in pats if p.search(b)) == 1, b
 
 
+def test_karb_single_pc_slew_repair_keeps_same_boundary_and_clock():
+    base = pnr.CASES["karb_pc1_pipe_m9"]()
+    repair = pnr.CASES["karb_pc1_pipe_slew_m9"]()
+    assert repair["floorplan"] == base["floorplan"]
+    i = base["args"].index("--pin-region")
+    assert repair["args"] == base["args"][:i] + ["--max-transition-ns"] + base["args"][i:]
+    assert repair["output"] != base["output"]
+
+
 def test_collective_fifo128_physical_case_is_the_measured_engine_configuration():
     case = pnr.CASES["collective_fifo128"]()
     args = case["args"]

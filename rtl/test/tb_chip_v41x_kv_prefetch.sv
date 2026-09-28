@@ -32,17 +32,28 @@
 // At the end the HBM KV region is compared with the golden (write-through).
 // ---------------------------------------------------------------------------
 module tb_chip_v41x_kv_prefetch;
-`ifdef HDC_KARB_PIPE_OUT
+`ifdef HDC_KARB_GROUP4
+    localparam integer KARB_NPC = 4;
     localparam integer KARB_PIPE_OUT = 1;
+`define HDC_KARB_TOP ot_chip_v41x_hbm_karb_group4
+`elsif HDC_KARB_PIPE_OUT
+    localparam integer KARB_NPC = 32;
+    localparam integer KARB_PIPE_OUT = 1;
+`define HDC_KARB_TOP ot_chip_v41x_hbm_karb
 `else
+    localparam integer KARB_NPC = 32;
     localparam integer KARB_PIPE_OUT = 0;
+`define HDC_KARB_TOP ot_chip_v41x_hbm_karb
 `endif
-`ifdef HDC_KARB_PIPE_RSP
+`ifdef HDC_KARB_GROUP4
+    localparam integer KARB_PIPE_RSP = 1;
+`elsif HDC_KARB_PIPE_RSP
     localparam integer KARB_PIPE_RSP = 1;
 `else
     localparam integer KARB_PIPE_RSP = 0;
 `endif
-    localparam integer G = 4, W = 16, SW = 8, SUN = 16, AW = 24, HAW = 28, NPC = 32;
+    localparam integer G = 4, W = 16, SW = 8, SUN = 16, AW = 24, HAW = 28, NPC = KARB_NPC;
+    localparam integer LPC = (NPC > 1) ? $clog2(NPC) : 1;
     localparam integer STG = 1024, SAW = 10;
     localparam integer KEY_SECTORS = 1 << 18;          // index-key region [0, KEY_SECTORS)
     localparam integer KV_SBASE = KEY_SECTORS;         // attention KV region
@@ -86,8 +97,8 @@ module tb_chip_v41x_kv_prefetch;
         .st_sectors_written(st_sw), .st_refetches(st_ref), .st_wq_high(st_wqh), .st_hold_cycles(st_hold));
 
     // -- the pooled indexer's stand-in, arbiters and stacks --------------------------------------
-    function automatic [4:0] pc_of(input [HAW-1:0] s);
-        pc_of = 5'(((s >> 2) ^ (s >> 7) ^ (s >> 12)) & 31);
+    function automatic [LPC-1:0] pc_of(input [HAW-1:0] s);
+        pc_of = LPC'(((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2*LPC))) & (NPC - 1));
     endfunction
     reg [255:0] keym [0:KEY_SECTORS-1];                 // key mirror (all stacks identical)
     integer kbad = 0, kreads = 0, kwrites = 0, kwdone = 0, contended_total = 0;
@@ -102,8 +113,8 @@ module tb_chip_v41x_kv_prefetch;
         wire [NPC*HAW-1:0] h_addr; wire [NPC*4-1:0] h_len, r_beat; wire [NPC*(TAGW+1)-1:0] h_tag, r_tag;
         wire [NPC*256-1:0] h_wdata, r_data; wire [NPC*32-1:0] h_wstrb;
         wire [31:0] kg, bg, ct;
-        ot_chip_v41x_hbm_karb #(.NPC(NPC), .AW(HAW), .TAGW(TAGW), .PIPE_OUT(KARB_PIPE_OUT),
-                                  .PIPE_RSP(KARB_PIPE_RSP)) u_arb (
+        `HDC_KARB_TOP #(.NPC(NPC), .AW(HAW), .TAGW(TAGW), .PIPE_OUT(KARB_PIPE_OUT),
+                         .PIPE_RSP(KARB_PIPE_RSP)) u_arb (
             .clk(clk), .rst_n(rst_n),
             .b_v(b_v), .b_rdy(b_rdy), .b_addr(b_addr), .b_len(b_len), .b_tag(b_tag), .b_we(b_we), .b_wdata(b_wdata),
             .b_wstrb(b_wstrb), .b_wr_done(b_wr_done), .b_rsp_v(b_rsp_v), .b_rsp_rdy({NPC{1'b1}}),
@@ -147,7 +158,9 @@ module tb_chip_v41x_kv_prefetch;
             for (p = 0; p < NPC; p = p + 1) if (!(b_v[p]) && ($urandom % 4 == 0)) begin
                 // a read of a sector of the read half [0, 2^15) that maps to channel p
                 sec = HAW'($urandom % (1 << 15));
-                sec = (sec & ~HAW'(31 << 2)) | HAW'(((p ^ ((sec >> 7) & 31) ^ ((sec >> 12) & 31)) & 31) << 2);
+                sec = (sec & ~HAW'((NPC - 1) << 2)) |
+                      HAW'(((p ^ ((sec >> (2 + LPC)) & (NPC - 1)) ^
+                              ((sec >> (2 + 2*LPC)) & (NPC - 1))) & (NPC - 1)) << 2);
                 if (pc_of(sec) == p && !(b_we[p] && b_v[p])) begin
                     b_v[p] <= 1'b1; b_we[p] <= 1'b0; b_addr[p*HAW +: HAW] <= sec; b_len[p*4 +: 4] <= 4'd1;
                     b_tag[p*TAGW +: TAGW] <= TAGW'(sec);

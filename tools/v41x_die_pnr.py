@@ -171,7 +171,7 @@ def collective_fifo128() -> dict:
                           "scope": "one standalone 16-lane engine; no eight-engine die placement"}}
 
 
-def karb_pc1_pipe_m9() -> dict:
+def karb_pc1_pipe_m9(slew_repair: bool = False) -> dict:
     """One-PC local request/response slice, with its own registered HBM output.
 
     This physical boundary is a partition study.  NPC=1 removes the 32-way K
@@ -196,10 +196,13 @@ def karb_pc1_pipe_m9() -> dict:
             "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
             "--core-area", f"{m:g}", f"{m:g}", f"{w-m:g}", f"{h-m:g}",
             "--place-density", "0.40", "--routing-layers", "M2", "M9"]
+    if slew_repair:
+        args += ["--max-transition-ns"]
     for r in regions:
         args += ["--pin-region", r]
-    return {"args": args, "nickname": "codex_v41x_karb_pc1_pipe_m9",
-            "output": "results/asap7_physical/v41x_die_karb_pc1_pipe_m9/physical.json",
+    name = "karb_pc1_pipe_slew_m9" if slew_repair else "karb_pc1_pipe_m9"
+    return {"args": args, "nickname": f"codex_v41x_{name}",
+            "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM,
                           "scope": "one PC with NPC=1; excludes full 32-way K demux/response mux"}}
 
@@ -581,6 +584,7 @@ CASES = {"karb_strip": karb_strip,
                                                                   wide_pins=True, low_density=True),
          "collective_fifo128": collective_fifo128,
          "karb_pc1_pipe_m9": karb_pc1_pipe_m9,
+         "karb_pc1_pipe_slew_m9": lambda: karb_pc1_pipe_m9(slew_repair=True),
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),
