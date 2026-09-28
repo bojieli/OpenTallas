@@ -11,7 +11,7 @@
   },
   "limits": [
     "stage bench has producer timing stubs and behavioural UCIe/T1, not a routed die",
-    "one 64-byte VM write/cycle imposes a 1064-cycle minimum for the 266-flit four-rank activation gather; the old 219-cycle model exposure is physically unattainable at this port width",
+    "one 64-byte VM write/cycle imposes 1064/320-cycle activation/output minima; selected depth-128 exact tails are 1220/476 cycles, so the old 219/167-cycle model exposures remain physically unattainable at this port width",
     "full-shape TP layer and die exact-token simulation is pending",
     "local per-expert BF16 rounding and ordered sum are not separately timed",
     "other collective tails are inherited from prior campaigns",
@@ -19,51 +19,53 @@
     "tagged sharded index reader is exact but delivers 2.154 of the modeled 125 sectors/cycle; parallel scan scheduler, exact multiuser isolation and route remain required for the 866-user headline"
   ],
   "measured_tail_cycles": {
-    "act": 4948,
-    "y": 1408
+    "act": 1220,
+    "y": 476
   },
   "points": {
     "1048576": {
       "ar": {
-        "measured_vs_old_tail_fraction": -0.59255672879368,
+        "measured_vs_old_tail_fraction": -0.24091770528612189,
         "old_ksplit_model": 7049.079994455792,
-        "row_split_measured_gathers": 2701.4183129524,
+        "row_split_measured_gathers": 5032.84495509468,
         "row_split_old_tail": 6630.170391461596
       },
       "mtp": {
         "old_ksplit_model": 15890.455574630814,
-        "one_position_tail_transfer_sensitivity": 8118.23410897696,
+        "one_position_tail_transfer_sensitivity": 13123.64146675182,
         "row_split_old_tail": 14600.895590496928,
         "status": "uncalibrated: six-position payload-matched collective RTL bench required"
       }
     },
     "200000": {
       "ar": {
-        "measured_vs_old_tail_fraction": -0.6000237480685997,
+        "measured_vs_old_tail_fraction": -0.2466358716567616,
         "old_ksplit_model": 7285.665796379299,
-        "row_split_measured_gathers": 2735.459851310262,
+        "row_split_measured_gathers": 5152.299209138362,
         "row_split_old_tail": 6839.05566418333
       },
       "mtp": {
         "old_ksplit_model": 16448.545140900587,
-        "one_position_tail_transfer_sensitivity": 8261.438826931495,
+        "one_position_tail_transfer_sensitivity": 13501.990132828401,
         "row_split_old_tail": 15070.74008138845,
         "status": "uncalibrated: six-position payload-matched collective RTL bench required"
       }
     }
   },
   "schema": "v41_tp_rowsplit_measured_reprice_v1",
-  "scope": "batch-one per-user AR model with adopted-width gather stage RTL tails; MTP is an uncalibrated sensitivity; not full-shape chip throughput",
+  "scope": "batch-one per-user AR model with selected 128-entry receive FIFO gather stage RTL tails; MTP is an uncalibrated sensitivity; not full-shape chip throughput",
+  "selected_collective_source": "results/rtl/v41_collective_depth_campaign.json",
   "source_sha256": {
     "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
     "results/arch/v41_tp_exact_reprice.json": "c18c6e47100a93dbe7490d3b8f8673f10e6151e9c3755caaef8e8d8d3c24f876",
     "results/rtl/hdc_v41x_idx_shard_reader_pc.json": "b86adbef20492be7778c5375dac13c4cfb78f8814e0568900dfd69fcb3fb1928",
+    "results/rtl/v41_collective_depth_campaign.json": "2c99155903830e712f1ca283a681dbecc464eadfac45960a8b577c499d887bd8",
     "results/rtl/v41_tp_rowsplit_die_collectives.json": "37c388dc6149b3b1c4c77bf1c7f99860d4640af7a557c8d24cf1b0d7757edc13",
     "tools/arch_lanes_v41.py": "1c5dde7d9041e25dc53fa90b9ea9b30c493dd690e6e776315735a7d948c76325",
     "tools/arch_latency_ladder_v41.py": "3243a74a0948a07f959200c3d12c9e8ce08dd12a45ce98f29313f533d12efdf5",
     "tools/collective_exposure.py": "cd6aad7745ec3d27b161e1dd4291e7b5ab812c4afc682bac85ef030a3184b67b",
     "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
     "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303",
-    "tools/v41_tp_rowsplit_measured_reprice.py": "8d722eb6ae532d431e33a4e877e5d0e1fe2a71069e6e045ee11475ff328cd455"
+    "tools/v41_tp_rowsplit_measured_reprice.py": "ae0ec78d572f3f509678c7bbffc0f241cef14ef8665c45dad2a1a22d32392b59"
   }
 }

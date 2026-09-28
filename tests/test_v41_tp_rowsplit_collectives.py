@@ -49,11 +49,13 @@ def test_measured_ar_reprice_keeps_mtp_open():
     rec = json.loads((ROOT / "results/arch/v41_tp_rowsplit_measured_reprice.json").read_text())
     assert rec["schema"] == "v41_tp_rowsplit_measured_reprice_v1"
     _check_pins(rec)
-    bench = json.loads((ROOT / "results/rtl/v41_tp_rowsplit_die_collectives.json").read_text())
+    bench = json.loads((ROOT / "results/rtl/v41_collective_depth_campaign.json").read_text())
     assert rec["measured_tail_cycles"] == {
-        pattern: bench["summary"][pattern]["measured_tail_cycles"] for pattern in ("act", "y")
+        pattern: bench["summary"][pattern]["selected_tail_cycles"] for pattern in ("act", "y")
     }
+    assert rec["selected_collective_source"] == "results/rtl/v41_collective_depth_campaign.json"
     assert rec["measured_tail_cycles"]["act"] >= 4 * 266
+    assert rec["measured_tail_cycles"]["y"] >= 4 * 80
     scan = rec["index_scan_gate"]
     assert scan["sectors"] == 2210 and scan["cycles"] == 1026
     assert scan["measured_sectors_per_cycle"] < scan["required_sectors_per_cycle"]

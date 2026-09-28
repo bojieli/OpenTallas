@@ -22,6 +22,7 @@ import decode_critical_path as DC  # noqa: E402
 from v41_tp_exact_reprice import v41_moe_rowsplit  # noqa: E402
 
 BENCH = ROOT / "results/rtl/v41_tp_rowsplit_die_collectives.json"
+DEPTH_BENCH = ROOT / "results/rtl/v41_collective_depth_campaign.json"
 SENSITIVITY = ROOT / "results/arch/v41_tp_exact_reprice.json"
 INDEX_READER = ROOT / "results/rtl/hdc_v41x_idx_shard_reader_pc.json"
 OUT = ROOT / "results/arch/v41_tp_rowsplit_measured_reprice.json"
@@ -50,6 +51,7 @@ def measured_gather_mutation(tails: dict[str, int]):
 
 def build():
     bench = json.loads(BENCH.read_text())
+    depth_bench = json.loads(DEPTH_BENCH.read_text())
     sensitivity = json.loads(SENSITIVITY.read_text())
     index_reader = json.loads(INDEX_READER.read_text())
     assert index_reader["schema"] == "opentallas.hdc-v41x-idx-shard-reader-pc.v1"
@@ -63,10 +65,18 @@ def build():
                            DMA_VM_words_per_cycle=1, DMA_skid_words=2,
                            RELAY=1, ADD_LAT=3, PAIRWISE=1, GW=1).items():
         assert contract[key] == value, key
-    for record in (bench, sensitivity):
+    assert depth_bench["schema"] == "v41_collective_depth_campaign_v1"
+    selected = depth_bench["contract"]
+    assert selected["selected_full_shape_CL_DEPTH"] == 128
+    assert selected["PAIRWISE"] == 1 and selected["QTX"] == 2 and selected["PUSHW"] == 1
+    assert selected["CL_LANES"] == 16 and selected["FLIT_BYTES"] == 64
+    for record in (bench, depth_bench, sensitivity):
         for path, digest in record["source_sha256"].items():
             assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest, path
-    tails = {name: bench["summary"][name]["measured_tail_cycles"] for name in ("act", "y")}
+    tails = {name: depth_bench["summary"][name]["selected_tail_cycles"] for name in ("act", "y")}
+    for name in ("act", "y"):
+        assert depth_bench["summary"][name]["old_tail_cycles"] == bench["summary"][name]["measured_tail_cycles"]
+        assert tails[name] >= depth_bench["summary"][name]["output_port_minimum_cycles"]
     lane = json.loads((ROOT / "results/arch/v41_lanes.json").read_text())
     point = AL.design_point()
     lev = lane["collective_exposure"]["levers"]
@@ -99,10 +109,12 @@ def build():
                "tools/decode_critical_path.py", "tools/collective_exposure.py",
                "results/arch/v41_lanes.json", "results/arch/v41_tp_exact_reprice.json",
                "results/rtl/v41_tp_rowsplit_die_collectives.json",
+               "results/rtl/v41_collective_depth_campaign.json",
                "results/rtl/hdc_v41x_idx_shard_reader_pc.json")
     pins = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in sources}
     return dict(schema="v41_tp_rowsplit_measured_reprice_v1", source_sha256=pins,
-                scope="batch-one per-user AR model with adopted-width gather stage RTL tails; MTP is an uncalibrated sensitivity; not full-shape chip throughput",
+                scope="batch-one per-user AR model with selected 128-entry receive FIFO gather stage RTL tails; MTP is an uncalibrated sensitivity; not full-shape chip throughput",
+                selected_collective_source="results/rtl/v41_collective_depth_campaign.json",
                 measured_tail_cycles=tails, points=points,
                 index_scan_gate=dict(source="results/rtl/hdc_v41x_idx_shard_reader_pc.json",
                                      scope="exact tagged per-PC reader prototype; not the integrated full-token scan",
@@ -112,7 +124,7 @@ def build():
                                      attained_fraction=index_reader["fraction_of_target"],
                                      throughput_claim_valid=False),
                 limits=["stage bench has producer timing stubs and behavioural UCIe/T1, not a routed die",
-                        "one 64-byte VM write/cycle imposes a 1064-cycle minimum for the 266-flit four-rank activation gather; the old 219-cycle model exposure is physically unattainable at this port width",
+                        "one 64-byte VM write/cycle imposes 1064/320-cycle activation/output minima; selected depth-128 exact tails are 1220/476 cycles, so the old 219/167-cycle model exposures remain physically unattainable at this port width",
                         "full-shape TP layer and die exact-token simulation is pending",
                         "local per-expert BF16 rounding and ordered sum are not separately timed",
                         "other collective tails are inherited from prior campaigns",
