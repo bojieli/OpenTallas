@@ -1,0 +1,120 @@
+{
+  "schema": "opentallas.v41x.fullshape.weight_layout.v1",
+  "status": "partial_rank_layout_verified",
+  "claim_boundary": "Source-pinned partial rank layout. Missing weights/constants and unmaterialized experts prevent full-layer/token claims.",
+  "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
+  "layer": 0,
+  "rank": 0,
+  "source_records_sha256": {
+    "results/rtl/hdc_v41x_fullshape_wq_a_layout.json": "d502e76c015cc2d9143861c34948b713cfb74c46290a4879e581b2d7a3b197d0",
+    "results/rtl/hdc_v41x_fullshape_exp110_w1_layout.json": "558ad6c68788d9a500bbde9e56b6494ffb27264d77beb0a2164d2ea0a5f7d255",
+    "results/rtl/hdc_v41x_fullshape_attn_norm_crom.json": "734cced1cb4f46cbed75d2c9abff9fedc4f561e5fcefa03a08ef4ebd3ec50d76"
+  },
+  "matrices": {
+    "wq_a": {
+      "engine": "qe",
+      "base_word": 0,
+      "word_count": 800,
+      "nrows": 320,
+      "ncols": 5120,
+      "format": "F8_E4M3_UE8M0_32x32",
+      "source_weight_sha256": "b28303e9cc298160c163e94d64c27faad73f971a80ef138ad40823a286bb3055",
+      "source_scale_sha256": "5ecfde0c3abfbd41e4c14a2613b08714146fb054a2f328d0637723e9ef834d22",
+      "geometry": {
+        "chunks": 8,
+        "banks": 64,
+        "plg": 0,
+        "blocks_per_beat": 8,
+        "rows_per_group": 8,
+        "nbeat": 20,
+        "nrg": 40,
+        "word_count": 800,
+        "useful_bank_words": 51200,
+        "padded_bank_words": 0,
+        "image_bytes": 1689600,
+        "base_word": 0,
+        "end_word_exclusive": 800
+      },
+      "expert_stride_words": null,
+      "expert_id_base": null,
+      "expert_ids_materialized": null,
+      "all_experts_materialized": null,
+      "expert_reserved_end_word_exclusive": null,
+      "output_image_sha256": "0dbaa88f85ae533c7e60771024b9450539a3edd53b641bb3a15c163820046066",
+      "output_image_bytes": 1689600
+    },
+    "exp110.w1": {
+      "engine": "qe",
+      "base_word": 159200,
+      "word_count": 1440,
+      "nrows": 576,
+      "ncols": 5120,
+      "format": "F4_E2M1_UE8M0_rowx32",
+      "source_weight_sha256": "bfccc6fe57da3ccfa205c5d5239abca517d56e6ce640f88138cf154cfad4946f",
+      "source_scale_sha256": "6c16eb1ea18824735629984cc053a1814f230981150171829dad517a75a85eb6",
+      "geometry": {
+        "chunks": 8,
+        "banks": 64,
+        "plg": 0,
+        "blocks_per_beat": 8,
+        "rows_per_group": 8,
+        "nbeat": 20,
+        "nrg": 72,
+        "word_count": 1440,
+        "useful_bank_words": 92160,
+        "padded_bank_words": 0,
+        "image_bytes": 1566720,
+        "base_word": 159200,
+        "end_word_exclusive": 160640
+      },
+      "expert_stride_words": 1440,
+      "expert_id_base": 800,
+      "expert_ids_materialized": [
+        110
+      ],
+      "all_experts_materialized": false,
+      "expert_reserved_end_word_exclusive": 553760,
+      "output_image_sha256": "b8b26fadc3bcd08ce5e95e8a731334a409bb02ed919d3c4dc39c9e192545419f",
+      "output_image_bytes": 1566720
+    }
+  },
+  "constants": {
+    "attn_norm": {
+      "engine": "crom",
+      "base_word": 0,
+      "word_count": 5120,
+      "format": "FP32_lo_plus_zero_hi",
+      "source_format": "BF16",
+      "source_tensor_sha256": "1e862a4492423ffe1663b101267ac4710ba72ec0cea51b1396ea5c9c0a1fa682",
+      "output_image_sha256": "62f21e446cfedf7cbe5ba9957f472e9a487c7ea16ee549eb33155d133ab866b0",
+      "output_image_bytes": 40960
+    }
+  },
+  "rom_capacity_bytes": 2714287356,
+  "reserved_bytes": 603351040,
+  "regions": [
+    {
+      "engine": "crom",
+      "start_word": 0,
+      "end_word_exclusive": 5120,
+      "bytes_per_bank_word": 8,
+      "name": "attn_norm"
+    },
+    {
+      "engine": "qe",
+      "start_word": 0,
+      "end_word_exclusive": 800,
+      "bytes_per_bank_word": 33,
+      "name": "wq_a"
+    },
+    {
+      "engine": "qe",
+      "start_word": 800,
+      "end_word_exclusive": 553760,
+      "bytes_per_bank_word": 17,
+      "name": "exp110.w1"
+    }
+  ],
+  "all_experts_materialized": false,
+  "complete_die_image": false
+}

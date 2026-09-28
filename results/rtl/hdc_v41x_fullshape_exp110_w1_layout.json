@@ -219,15 +219,15 @@
   "rom_capacity_bytes": 2714287356,
   "output_format": "address-major, 64 bank lanes per address, little-endian lane words; FP8: 32 code bytes plus scale byte, FP4: 16 packed code bytes plus scale byte",
   "matrices": {
-    "wq_a": {
+    "exp110.w1": {
       "engine": "qe",
-      "base_word": 0,
-      "word_count": 800,
-      "nrows": 320,
+      "base_word": 159200,
+      "word_count": 1440,
+      "nrows": 576,
       "ncols": 5120,
-      "format": "F8_E4M3_UE8M0_32x32",
-      "source_weight_sha256": "b28303e9cc298160c163e94d64c27faad73f971a80ef138ad40823a286bb3055",
-      "source_scale_sha256": "5ecfde0c3abfbd41e4c14a2613b08714146fb054a2f328d0637723e9ef834d22",
+      "format": "F4_E2M1_UE8M0_rowx32",
+      "source_weight_sha256": "bfccc6fe57da3ccfa205c5d5239abca517d56e6ce640f88138cf154cfad4946f",
+      "source_scale_sha256": "6c16eb1ea18824735629984cc053a1814f230981150171829dad517a75a85eb6",
       "geometry": {
         "chunks": 8,
         "banks": 64,
@@ -235,24 +235,26 @@
         "blocks_per_beat": 8,
         "rows_per_group": 8,
         "nbeat": 20,
-        "nrg": 40,
-        "word_count": 800,
-        "useful_bank_words": 51200,
+        "nrg": 72,
+        "word_count": 1440,
+        "useful_bank_words": 92160,
         "padded_bank_words": 0,
-        "image_bytes": 1689600,
-        "base_word": 0,
-        "end_word_exclusive": 800
+        "image_bytes": 1566720,
+        "base_word": 159200,
+        "end_word_exclusive": 160640
       },
-      "expert_stride_words": null,
-      "expert_id_base": null,
-      "expert_ids_materialized": null,
-      "all_experts_materialized": null,
-      "expert_reserved_end_word_exclusive": null,
-      "output_image_sha256": "0dbaa88f85ae533c7e60771024b9450539a3edd53b641bb3a15c163820046066",
-      "output_image_bytes": 1689600
+      "expert_stride_words": 1440,
+      "expert_id_base": 800,
+      "expert_ids_materialized": [
+        110
+      ],
+      "all_experts_materialized": false,
+      "expert_reserved_end_word_exclusive": 553760,
+      "output_image_sha256": "b8b26fadc3bcd08ce5e95e8a731334a409bb02ed919d3c4dc39c9e192545419f",
+      "output_image_bytes": 1566720
     }
   },
   "matrix_coverage": "one_matrix_only",
   "unplaced_note": "Every other matrix, constant, and all inactive expert rows remain unplaced; any missing ME/QE/HE or indirect expert binding must fail closed.",
-  "reproduction": "python3 tools/v41_fullshape_weight_layout.py --input-manifest results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json --image-dir SCRATCH/images/ctx200000_L00_r0 --matrix wq_a --output SCRATCH/wq_a_qebank.bin --record RESULT.json"
+  "reproduction": "python3 tools/v41_fullshape_weight_layout.py --input-manifest results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json --image-dir SCRATCH/images/ctx200000_L00_r0 --matrix exp110.w1 --output SCRATCH/exp110.w1_qebank.bin --record RESULT.json"
 }

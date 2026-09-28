@@ -58,3 +58,54 @@ def test_manifest_fails_closed_on_mutated_source(tmp_path: Path):
     (tmp_path / "w.x.bin").write_bytes(b"bad")
     with pytest.raises(ValueError, match="source-pinned"):
         W.pack_from_manifest(path, tmp_path, "x", tmp_path / "out.bin")
+
+
+def test_fp4_sparse_expert_uses_absolute_id_and_per_row_scales():
+    packed = np.arange(32 * 32, dtype=np.uint16).reshape(32, 32).astype(np.uint8)
+    scales = np.tile(np.array([113, 114], dtype=np.uint8), (32, 1))
+    image, geom = W.pack_fp4(packed, scales, base_word=110 * 4, chunks=8)
+    W.verify_fp4(image, packed, scales, geom)
+    assert geom["word_count"] == 4
+    assert geom["base_word"] == 440
+    address, bank = W.bank_slot(31, 1, geom, 440)
+    assert image[address - 440, bank, 16] == 114
+    damaged = image.copy()
+    damaged[address - 440, bank, 0] ^= 1
+    with pytest.raises(AssertionError, match="readback mismatch"):
+        W.verify_fp4(damaged, packed, scales, geom)
+
+
+def test_real_constant_manifest_bf16_to_fp32(tmp_path: Path):
+    source = W.ROOT / "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json"
+    image_dir = Path("/tmp/codex_v41_fullshape_golden/images/ctx200000_L00_r0")
+    if not (image_dir / "w.attn_norm.bin").is_file():
+        pytest.skip("source-pinned full-shape scratch image not present")
+    rec = W.pack_constant_from_manifest(source, image_dir, "attn_norm", tmp_path / "crom.bin")
+    words = np.fromfile(tmp_path / "crom.bin", dtype="<u4").reshape(-1, 2)
+    raw = np.fromfile(image_dir / "w.attn_norm.bin", dtype="<u2")
+    assert len(words) == len(raw) == 5120
+    assert np.array_equal(words[:, 0], raw.astype(np.uint32) << 16)
+    assert not words[:, 1].any()
+    assert rec["constants"]["attn_norm"]["word_count"] == 5120
+
+
+def test_combine_rejects_overlap_and_preserves_sparse_expert_flag(tmp_path: Path):
+    base = {"schema": W.SCHEMA, "source_image_manifest_sha256": "same", "layer": 0, "rank": 0}
+    dense = dict(base, matrices={"wq_a": {"engine": "qe", "base_word": 0,
+        "word_count": 8, "format": "F8_E4M3_UE8M0_32x32",
+        "expert_id_base": None, "expert_stride_words": None}})
+    sparse = dict(base, matrices={"exp110.w1": {"engine": "qe", "base_word": 8 + 110 * 2,
+        "word_count": 2, "format": "F4_E2M1_UE8M0_rowx32",
+        "expert_id_base": 8, "expert_stride_words": 2,
+        "expert_reserved_end_word_exclusive": 8 + 384 * 2,
+        "all_experts_materialized": False}})
+    a, b = tmp_path / "a.json", tmp_path / "b.json"
+    a.write_text(json.dumps(dense))
+    b.write_text(json.dumps(sparse))
+    merged = W.combine_layout_records([a, b])
+    assert merged["reserved_bytes"] == 8 * 64 * 33 + 384 * 2 * 64 * 17
+    assert merged["all_experts_materialized"] is False
+    sparse["matrices"]["exp110.w1"]["expert_id_base"] = 7
+    b.write_text(json.dumps(sparse))
+    with pytest.raises(ValueError, match="overlap"):
+        W.combine_layout_records([a, b])

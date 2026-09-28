@@ -1,11 +1,10 @@
 {
   "schema": "opentallas.v41x.fullshape.weight_layout.v1",
-  "status": "one_matrix_exact_readback",
-  "claim_boundary": "One FP8 matrix bank-layout gate; not a complete die ROM image, ISA execution, or bit-exact token.",
+  "status": "one_constant_exact_readback",
+  "claim_boundary": "One source-pinned CROM tensor; no complete die CROM or token execution.",
   "source_image_manifest": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
   "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
   "layout_tool_sha256": "3dfdb73742e1eb3c34d62a57ed3a531407c7c18dfb6984094eeea1b18f0a9171",
-  "capacity_budget_sha256": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
   "source_sha256": {
     "tools/rtl_v41_fullshape_layer_campaign.py": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
@@ -216,43 +215,18 @@
   },
   "layer": 0,
   "rank": 0,
-  "rom_capacity_bytes": 2714287356,
-  "output_format": "address-major, 64 bank lanes per address, little-endian lane words; FP8: 32 code bytes plus scale byte, FP4: 16 packed code bytes plus scale byte",
-  "matrices": {
-    "wq_a": {
-      "engine": "qe",
+  "constants": {
+    "attn_norm": {
+      "engine": "crom",
       "base_word": 0,
-      "word_count": 800,
-      "nrows": 320,
-      "ncols": 5120,
-      "format": "F8_E4M3_UE8M0_32x32",
-      "source_weight_sha256": "b28303e9cc298160c163e94d64c27faad73f971a80ef138ad40823a286bb3055",
-      "source_scale_sha256": "5ecfde0c3abfbd41e4c14a2613b08714146fb054a2f328d0637723e9ef834d22",
-      "geometry": {
-        "chunks": 8,
-        "banks": 64,
-        "plg": 0,
-        "blocks_per_beat": 8,
-        "rows_per_group": 8,
-        "nbeat": 20,
-        "nrg": 40,
-        "word_count": 800,
-        "useful_bank_words": 51200,
-        "padded_bank_words": 0,
-        "image_bytes": 1689600,
-        "base_word": 0,
-        "end_word_exclusive": 800
-      },
-      "expert_stride_words": null,
-      "expert_id_base": null,
-      "expert_ids_materialized": null,
-      "all_experts_materialized": null,
-      "expert_reserved_end_word_exclusive": null,
-      "output_image_sha256": "0dbaa88f85ae533c7e60771024b9450539a3edd53b641bb3a15c163820046066",
-      "output_image_bytes": 1689600
+      "word_count": 5120,
+      "format": "FP32_lo_plus_zero_hi",
+      "source_format": "BF16",
+      "source_tensor_sha256": "1e862a4492423ffe1663b101267ac4710ba72ec0cea51b1396ea5c9c0a1fa682",
+      "output_image_sha256": "62f21e446cfedf7cbe5ba9957f472e9a487c7ea16ee549eb33155d133ab866b0",
+      "output_image_bytes": 40960
     }
   },
-  "matrix_coverage": "one_matrix_only",
-  "unplaced_note": "Every other matrix, constant, and all inactive expert rows remain unplaced; any missing ME/QE/HE or indirect expert binding must fail closed.",
-  "reproduction": "python3 tools/v41_fullshape_weight_layout.py --input-manifest results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json --image-dir SCRATCH/images/ctx200000_L00_r0 --matrix wq_a --output SCRATCH/wq_a_qebank.bin --record RESULT.json"
+  "matrix_coverage": "none",
+  "unplaced_note": "All other CROM entries, generated RoPE values, Engram token map, and ME/QE/HE weights remain unplaced."
 }
