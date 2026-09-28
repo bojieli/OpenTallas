@@ -32,7 +32,7 @@ import hashlib
 import json
 import os
 import re
-import resource
+import threading
 import subprocess
 import sys
 import time
@@ -208,9 +208,21 @@ def run_variant(name: str, scratch: Path, timeout: int) -> dict:
     ys.write_text(script_for(name, top, files, params, scratch))
     log = scratch / f"{name}.log"
     t0 = time.time()
-    cmd = ["/usr/bin/time", "-v", "-o", str(scratch / f"{name}.time"), YOSYS, "-t", "-q", "-l", str(log), "-s", str(ys)]
+    cmd = [YOSYS, "-t", "-q", "-l", str(log), "-s", str(ys)]
     proc = subprocess.Popen(cmd, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
                             start_new_session=True)
+    hwm = [0]
+
+    def watch() -> None:        # peak RSS: VmHWM of the Yosys process, polled
+        while proc.poll() is None:
+            try:
+                for ln in Path(f"/proc/{proc.pid}/status").read_text().splitlines():
+                    if ln.startswith("VmHWM:"):
+                        hwm[0] = max(hwm[0], int(ln.split()[1]))
+            except OSError:
+                pass
+            time.sleep(5)
+    threading.Thread(target=watch, daemon=True).start()
     try:
         _, err = proc.communicate(timeout=timeout)
         rc, timed_out = proc.returncode, False
@@ -220,11 +232,7 @@ def run_variant(name: str, scratch: Path, timeout: int) -> dict:
         proc.communicate()
         rc, timed_out, err = None, True, ""
     wall = time.time() - t0
-    peak_kb = None
-    tf = scratch / f"{name}.time"
-    if tf.is_file():
-        m = re.search(r"Maximum resident set size \(kbytes\): (\d+)", tf.read_text())
-        peak_kb = int(m.group(1)) if m else None
+    peak_kb = hwm[0] or None
     rec = {"variant": name, "top": top, "parameters": params, "scratch_edits": edits,
            "sources": {rel(f): sha(f) for f in files},
            "script": [ln for ln in ys.read_text().splitlines()][1:],
