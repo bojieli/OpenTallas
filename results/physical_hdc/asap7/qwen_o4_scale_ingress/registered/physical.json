@@ -1,0 +1,104 @@
+{
+  "arms": {
+    "hbm": {
+      "artifact_sha256": {
+        "grt_source_sta.log": "42b083091733cc23e71633812abcef04463ffd540b8f269e627c9ce8ce34b108",
+        "place_route.log": "9fc93a7f04ecf923a03ab2ab48bbab2bac846b72d88fdaa775b7bc4f107129b6",
+        "placement_check.log": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098"
+      },
+      "fixed_macro_area_um2": 0,
+      "grt_odb_sha256": "50b5c77146c76d4cf438f363413c64a4b7370e70b61943dc9427fd9660a4a564",
+      "mapped_netlist_sha256": "5eb5acdb32fd065673853c4b0e44bc600306b8a799e6cefb861c583a8fc13948",
+      "movable_cell_area_um2": 5368.823,
+      "place_check": "PASS",
+      "route_status": "RUNNING; no DRC/extracted timing verdict",
+      "scale_enable_hold_slack_ps_grt": -109.9,
+      "scale_enable_setup_slack_ps_grt": 981.82,
+      "source": "external staged local 256-bit scale word; supply outside cut",
+      "source_to_raw_capture_hold_slack_ps_grt": -171.15,
+      "source_to_raw_capture_setup_slack_ps_grt": 979.87,
+      "total_instance_area_um2": 5368.823,
+      "worst_core_hold_slack_ps_grt": -183.86,
+      "worst_core_setup_slack_ps_grt": -324.98
+    },
+    "rom": {
+      "artifact_sha256": {
+        "grt_source_sta.log": "a28acccb40bf199431921f210df376bad39c4a79b9faa92f5729f097857d8e61",
+        "place_route.log": "67eeabd424e63c8f89fda5f35e8ed5bbb83792ce77d4524490399a8bbb873fa9",
+        "placement_check.log": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098"
+      },
+      "fixed_macro_area_um2": 14629.499,
+      "grt_odb_sha256": "4e88aa18a605983ffcda977f68a97bf4f4e809b70d407bbdde6ad2625afd371d",
+      "mapped_netlist_sha256": "052b0bf5097eb9c977f4c418390cb28a79402070eee06c1ccb3a548eb6d07cce",
+      "movable_cell_area_um2": 5368.823,
+      "place_check": "PASS",
+      "route_status": "RUNNING; no DRC/extracted timing verdict",
+      "scale_enable_hold_slack_ps_grt": -185.73,
+      "scale_enable_setup_slack_ps_grt": 1025.19,
+      "source": "analytical 8192x266 synchronous ROM macro; 256 useful bits",
+      "source_to_raw_capture_hold_slack_ps_grt": 629.66,
+      "source_to_raw_capture_setup_slack_ps_grt": 61.99,
+      "total_instance_area_um2": 19998.322,
+      "worst_core_hold_slack_ps_grt": -414.38,
+      "worst_core_setup_slack_ps_grt": -690.21
+    }
+  },
+  "limitations": [
+    "The external completed_sum and staged HBM ports use assumed 184 ps min/max arrival, not measured producer paths.",
+    "The registered scale stage requires +1 cycle tag/valid/writeback alignment in the production core and an exact gate before adoption.",
+    "The per-group ROM macro is not a validated full-die bank mapping and uses analytical LEF/Liberty.",
+    "Both arms have same downstream arithmetic, floorplan outline and clock; HBM source area and latency outside cut.",
+    "Global-route setup/hold misses in complete clusters; no frequency or ROM/HBM full-chip performance claim."
+  ],
+  "orfs_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "schema": "qwen_o4_scale_registered_physical_v1",
+  "scope": {
+    "arithmetic_identity_test": "16 lanes x 2 beats, ROM and staged HBM exact, +1 cycle versus direct probe",
+    "clock_ps": 920,
+    "core_area_um2": 44045.83,
+    "description": "One 16-lane post-K-split scale cluster, proposed two-stage source boundary; not current ot_hdc_matvec path",
+    "die_um": [
+      240,
+      240
+    ],
+    "fp32_multiply_lanes": 16,
+    "full_shape_groups_per_die": 6144,
+    "input_delay_ps": 184,
+    "latency_delta_cycles_vs_direct_probe": 1,
+    "output_delay_ps": 184,
+    "production_core_changed": false,
+    "scale_word_bits_per_group": 256,
+    "source_capture": "unconditional raw_scale_q followed by scale_q; scale_group_re drives ROM CE and local valid only"
+  },
+  "source_base": "ba30e90f23e92fe43f35fac63d46aba917837bd0",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.lef": "d193a5f43f7ff2ecd56adf29ba388dfcf3d4d7ff8e8392da78fea78eb81015a5",
+    "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_bb.v": "ef399648cd311941a2c09fbda401e95e62d8bef0f89bdc5101aa849fae7ad01d",
+    "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_tt.lib": "a7ce0e45d5d181b6365823963792f0234fe7d3b9414ea212debef51603a7cf92",
+    "physical/qwen_o4_scale_ingress/check_registered_placement.tcl": "13def700ec3b52114ec370d690eac62d5ce572fef4edef7016b5421da7097354",
+    "physical/qwen_o4_scale_ingress/constraint.sdc": "036b9da59fd9ea43a74a71e45c70383e2deeee205c5e7c35e3b13200d121775a",
+    "physical/qwen_o4_scale_ingress/grt_registered_sta.tcl": "e0817b689c5c8bb37aef799f2ba04711d331b989863588473b3ec2d167255d2e",
+    "physical/qwen_o4_scale_ingress/ot_qwen_o4_scale_ingress_probe.sv": "569af5444bd6289f15b7b46cbc909708974b23dfd86fedcf0b6e435b45d66d04",
+    "physical/qwen_o4_scale_ingress/ot_qwen_o4_scale_registered_probe.sv": "b11f5fb541537439118de21ec4e9559cd45786a7cf140bace425b0705e449859",
+    "physical/qwen_o4_scale_ingress/place_registered.tcl": "ea16a44e5cc94e5f937b9fed5a3b2f90c584e10ca05fd8212f0b9d447209b558",
+    "physical/qwen_o4_scale_ingress/route_registered.tcl": "da0a23cafaa6fc2a33249693b3de3f7683eee4436f55ff6c31697a1b3ef2eb5a",
+    "physical/qwen_o4_scale_ingress/run_registered.py": "411a365bcebfd3be00c493bab08306de823cbedadffab74cc90814c3e2b22484",
+    "physical/qwen_o4_scale_ingress/tb_scale_registered_probe.sv": "fb8c33b05cd4cdb43c718346818d3bb527cf8cd6973d445e60dceae237d4bd86",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+  },
+  "tool_versions": {
+    "openroad": "26Q3-1510-g6cb3f2b704",
+    "yosys": "0.67"
+  },
+  "unpriced_hbm_costs": [
+    "128 PC-local fair arbiters",
+    "35-bit return tags",
+    "source-lane-to-physical-PC rotation",
+    "weight/KV prefetch storage",
+    "controller",
+    "PHY",
+    "stack"
+  ]
+}
