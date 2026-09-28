@@ -54,6 +54,7 @@ def test_measured_ar_reprice_keeps_mtp_open():
         pattern: bench["summary"][pattern]["selected_tail_cycles"] for pattern in ("act", "y")
     }
     assert rec["selected_collective_source"] == "results/rtl/v41_collective_depth_campaign.json"
+    assert rec["mtp_collective_source"] == "results/rtl/v41_tp_rowsplit_mtp_collectives.json"
     assert rec["measured_tail_cycles"]["act"] >= 4 * 266
     assert rec["measured_tail_cycles"]["y"] >= 4 * 80
     scan = rec["index_scan_gate"]
@@ -64,4 +65,8 @@ def test_measured_ar_reprice_keeps_mtp_open():
         ar = point["ar"]
         assert ar["row_split_measured_gathers"] < ar["row_split_old_tail"]
         assert ar["row_split_old_tail"] < ar["old_ksplit_model"]
-        assert "uncalibrated" in point["mtp"]["status"]
+        mtp = point["mtp"]
+        assert (0 < mtp["six_serial_descriptors_stage_tail_sensitivity"]
+                < mtp["fused_descriptor_stage_tail_sensitivity"]
+                < mtp["one_position_tail_transfer_sensitivity"])
+        assert "unverified" in mtp["status"]

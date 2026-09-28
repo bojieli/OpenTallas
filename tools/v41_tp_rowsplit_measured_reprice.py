@@ -23,6 +23,7 @@ from v41_tp_exact_reprice import v41_moe_rowsplit  # noqa: E402
 
 BENCH = ROOT / "results/rtl/v41_tp_rowsplit_die_collectives.json"
 DEPTH_BENCH = ROOT / "results/rtl/v41_collective_depth_campaign.json"
+MTP_BENCH = ROOT / "results/rtl/v41_tp_rowsplit_mtp_collectives.json"
 SENSITIVITY = ROOT / "results/arch/v41_tp_exact_reprice.json"
 INDEX_READER = ROOT / "results/rtl/hdc_v41x_idx_shard_reader_pc.json"
 OUT = ROOT / "results/arch/v41_tp_rowsplit_measured_reprice.json"
@@ -52,6 +53,7 @@ def measured_gather_mutation(tails: dict[str, int]):
 def build():
     bench = json.loads(BENCH.read_text())
     depth_bench = json.loads(DEPTH_BENCH.read_text())
+    mtp_bench = json.loads(MTP_BENCH.read_text())
     sensitivity = json.loads(SENSITIVITY.read_text())
     index_reader = json.loads(INDEX_READER.read_text())
     assert index_reader["schema"] == "opentallas.hdc-v41x-idx-shard-reader-pc.v1"
@@ -70,13 +72,20 @@ def build():
     assert selected["selected_full_shape_CL_DEPTH"] == 128
     assert selected["PAIRWISE"] == 1 and selected["QTX"] == 2 and selected["PUSHW"] == 1
     assert selected["CL_LANES"] == 16 and selected["FLIT_BYTES"] == 64
-    for record in (bench, depth_bench, sensitivity):
+    assert mtp_bench["schema"] == "v41_tp_rowsplit_mtp_collectives_v1"
+    assert mtp_bench["contract"]["m"] == 6 and mtp_bench["contract"]["CL_DEPTH"] == 128
+    for record in (bench, depth_bench, mtp_bench, sensitivity):
         for path, digest in record["source_sha256"].items():
             assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest, path
     tails = {name: depth_bench["summary"][name]["selected_tail_cycles"] for name in ("act", "y")}
     for name in ("act", "y"):
         assert depth_bench["summary"][name]["old_tail_cycles"] == bench["summary"][name]["measured_tail_cycles"]
         assert tails[name] >= depth_bench["summary"][name]["output_port_minimum_cycles"]
+        assert mtp_bench["summary"][name]["local_flits_per_die"] == depth_bench["summary"][name]["input_words_per_die"]
+    mtp_fused_tails = {name: mtp_bench["summary"][name]["fused_exposed_tail_cycles"]
+                       for name in ("act", "y")}
+    mtp_serial_tails = {name: mtp_bench["summary"][name]["serial_six_exposed_tail_cycles"]
+                        for name in ("act", "y")}
     lane = json.loads((ROOT / "results/arch/v41_lanes.json").read_text())
     point = AL.design_point()
     lev = lane["collective_exposure"]["levers"]
@@ -92,6 +101,12 @@ def build():
                                         hz=point["hz"], draft_extra_s=point["draft_extra_s"])
             priced = AL.LX.evaluate(point["sp"], context, common + [measured_gather_mutation(tails)],
                                     hz=point["hz"], draft_extra_s=point["draft_extra_s"])
+            fused = AL.LX.evaluate(point["sp"], context,
+                                   common + [measured_gather_mutation(mtp_fused_tails)],
+                                   hz=point["hz"], draft_extra_s=point["draft_extra_s"])
+            serial = AL.LX.evaluate(point["sp"], context,
+                                    common + [measured_gather_mutation(mtp_serial_tails)],
+                                    hz=point["hz"], draft_extra_s=point["draft_extra_s"])
             assert abs(unmeasured["ar"] - baseline[str(context)]["ar"]["rowsplit"]) < 1e-8
             points[str(context)] = dict(
                 ar=dict(old_ksplit_model=baseline[str(context)]["ar"]["baseline"],
@@ -101,7 +116,9 @@ def build():
                 mtp=dict(old_ksplit_model=baseline[str(context)]["mtp"]["baseline"],
                          row_split_old_tail=unmeasured["mtp"],
                          one_position_tail_transfer_sensitivity=priced["mtp"],
-                         status="uncalibrated: six-position payload-matched collective RTL bench required"))
+                         fused_descriptor_stage_tail_sensitivity=fused["mtp"],
+                         six_serial_descriptors_stage_tail_sensitivity=serial["mtp"],
+                         status="schedule-conditioned stage sensitivity: full MTP emitter and producer timing unverified"))
     finally:
         DC.v41_moe = previous
     sources = ("tools/v41_tp_rowsplit_measured_reprice.py", "tools/v41_tp_exact_reprice.py",
@@ -110,11 +127,13 @@ def build():
                "results/arch/v41_lanes.json", "results/arch/v41_tp_exact_reprice.json",
                "results/rtl/v41_tp_rowsplit_die_collectives.json",
                "results/rtl/v41_collective_depth_campaign.json",
+               "results/rtl/v41_tp_rowsplit_mtp_collectives.json",
                "results/rtl/hdc_v41x_idx_shard_reader_pc.json")
     pins = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in sources}
     return dict(schema="v41_tp_rowsplit_measured_reprice_v1", source_sha256=pins,
-                scope="batch-one per-user AR model with selected 128-entry receive FIFO gather stage RTL tails; MTP is an uncalibrated sensitivity; not full-shape chip throughput",
+                scope="batch-one per-user AR model with selected 128-entry receive FIFO gather stage RTL tails; MTP fused/serial stage sensitivities have unverified emitter schedules; not full-shape chip throughput",
                 selected_collective_source="results/rtl/v41_collective_depth_campaign.json",
+                mtp_collective_source="results/rtl/v41_tp_rowsplit_mtp_collectives.json",
                 measured_tail_cycles=tails, points=points,
                 index_scan_gate=dict(source="results/rtl/hdc_v41x_idx_shard_reader_pc.json",
                                      scope="exact tagged per-PC reader prototype; not the integrated full-token scan",
@@ -128,7 +147,7 @@ def build():
                         "full-shape TP layer and die exact-token simulation is pending",
                         "local per-expert BF16 rounding and ordered sum are not separately timed",
                         "other collective tails are inherited from prior campaigns",
-                        "MTP verifies six positions and needs its own 1596/480-flit gather bench",
+                        "the six-position 1596/480-flit gather stage is exact, but the MTP emitter, upstream producer schedule and whether fused or six serial descriptors are used remain unverified",
                         "tagged sharded index reader is exact but delivers 2.154 of the modeled 125 sectors/cycle; parallel scan scheduler, exact multiuser isolation and route remain required for the 866-user headline"])
 
 
@@ -136,7 +155,8 @@ def main():
     rec = build()
     OUT.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
     print(json.dumps({c: dict(ar=round(p["ar"]["row_split_measured_gathers"]),
-                              mtp_sensitivity=round(p["mtp"]["one_position_tail_transfer_sensitivity"]))
+                              mtp_fused_stage_sensitivity=round(p["mtp"]["fused_descriptor_stage_tail_sensitivity"]),
+                              mtp_serial_stage_sensitivity=round(p["mtp"]["six_serial_descriptors_stage_tail_sensitivity"]))
                       for c, p in rec["points"].items()}))
 
 
