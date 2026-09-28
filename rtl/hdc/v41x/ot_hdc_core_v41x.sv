@@ -937,7 +937,8 @@ module ot_hdc_core_v41x #(
         assign xs_res_data = 0;
     end endgenerate
 
-    ot_hdc_v41_qe #(.AW(AW), .NW(NW), .BL(BL), .IL(IL), .QLB(QLB), .MP(MP)) u_qe (
+    ot_hdc_v41_qe #(.AW(AW), .NW(NW), .BL(BL), .IL(IL), .NBMAX(FULL_SHAPE ? 192 : 32),
+                     .QLB(QLB), .MP(MP)) u_qe (
         .clk(clk), .rst_n(rst_n), .go(qe_go), .ready(qe_ready), .idle(qe_idle),
         .i_mode(qe_mode), .i_fp4(qe_fp4), .i_unrounded(qe_unrounded),
         .i_xbase(qe_xbase), .i_nb(qe_nb), .i_nout(qe_nout), .i_tiles(qe_tiles),

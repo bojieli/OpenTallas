@@ -105,8 +105,9 @@ class ShapeLayout:
     def rname(self, name, j):
         return name
 
-    def __init__(self, s):
+    def __init__(self, s, tp_exact=False):
         self.s = s
+        self.tp_exact = tp_exact
         G = s["groups"]
         self.G = G
         hd, tp = s["hd"], s["tp"]
@@ -132,7 +133,16 @@ class ShapeLayout:
         for k in range(s["k_exp"] + 1):
             v(f"GU{k}", 2 * self.ff_d)
             v(f"ACT{k}", self.ff_d)
-            v(f"E{k}", s["dim"])
+            v(f"E{k}", s["dim"] // tp if tp_exact else s["dim"])
+        if tp_exact:
+            # The collective writes rank-major full vectors. Keep every source
+            # disjoint from its destination; the die DMA rejects overlap.
+            for name, n in (("QAL", s["q_rank"] // tp), ("KVAL", hd // tp),
+                            ("SCL", s["n_exp"] // tp), ("YTMP", s["dim"]),
+                            ("YALL", s["dim"])):
+                v(name, n)
+            for k in range(s["k_exp"] + 1):
+                v(f"ACTALL{k}", s["moe_ff"])
         for L in KV_SRC:
             v(f"SLOT{L}", 4 * hd)
             v(f"CKV{L}", (s["pmax"] // RATIO[L]) * hd)
@@ -162,10 +172,12 @@ class ShapeLayout:
             if L in IDX_SRC:
                 self.qmat[(L, "iwq_b")] = q(s["ih"] * s["ihd"], s["q_rank"])
             self.qmat[(L, "exp", 0, "w13")] = q(2 * self.ff_d, D, fp4=1)
-            self.qmat[(L, "exp", 0, "w2")] = q(D, self.ff_d, fp4=1)
+            self.qmat[(L, "exp", 0, "w2")] = q(D // tp if tp_exact else D,
+                                                s["moe_ff"] if tp_exact else self.ff_d, fp4=1)
             self.qmat[(L, "exp_stride")] = 1
             self.qmat[(L, "shared", "w13")] = q(2 * self.ff_d, D)
-            self.qmat[(L, "shared", "w2")] = q(D, self.ff_d)
+            self.qmat[(L, "shared", "w2")] = q(D // tp if tp_exact else D,
+                                                s["moe_ff"] if tp_exact else self.ff_d)
             if L in ENGRAM:
                 self.qmat[(L, "ewkv")] = q((hcn + 1) * D // tp, s["ecols"] * s["ehd"])
         self.mat["head"] = self.place(cdiv(s["vocab"], tp), D)
@@ -195,6 +207,8 @@ class ShapeBuilder(P.Builder):
 
     def __init__(self, lay, engram_inline=True):
         self.lay, self.s = lay, lay.s
+        self.tp_exact = lay.tp_exact
+        self.coll_seq = 0
         self.prog = []
         self.qchunk, self.slot, self.serial_id, self.n_serial, self.dslot_over = None, 0, None, 0, None
         self.V = lay.vm.map
@@ -217,6 +231,17 @@ class ShapeBuilder(P.Builder):
     def linq(self, mat, x, out, reads, writes, tag, pred=0, **over):
         super().linq(mat, x, out, reads, writes, tag, pred, **over)
         self.prog[-1][0]["_macs"] = mat["macs"]
+
+    def coll(self, op, src, dst, n, reads, writes, tag, rnd=0):
+        """v1 blocking collective; addresses and count are VM elements."""
+        assert self.tp_exact and self.s["tp"] == 4
+        assert n > 0 and n % 16 == 0 and src % 16 == 0 and dst % 16 == 0
+        out_n = n if op == I.COLL_ALL_REDUCE_SUM else self.s["tp"] * n
+        assert src + n <= dst or dst + out_n <= src, (src, dst, n)
+        self.emit(dict(unit=I.UNIT_COLL, wait=31, coll_op=op, coll_src=src, coll_dst=dst,
+                       coll_n=n, coll_k=0, coll_ibase=0, coll_seq=self.coll_seq & 255,
+                       coll_rnd=rnd), reads, writes, tag)
+        self.coll_seq += 1
 
     # -- composite operations (literals -> shape) --------------------------------------------------------------
     def hc_mix_issue(self, L, wh):
@@ -420,8 +445,13 @@ class ShapeBuilder(P.Builder):
         t = f"L{L}.attn"
         r = RATIO[L]
         table = "rope_yarn" if r > 0 else "rope_plain"
-        self.linq(lay.qmat[(L, "wq_a")], "XN", "QA", set(), set(), t)
-        self.linq(lay.qmat[(L, "wkv")], "XN", "KVA", set(), set(), t)
+        self.linq(lay.qmat[(L, "wq_a")], "XN", "QAL" if self.tp_exact else "QA", set(), set(), t)
+        self.linq(lay.qmat[(L, "wkv")], "XN", "KVAL" if self.tp_exact else "KVA", set(), set(), t)
+        if self.tp_exact:
+            self.coll(I.COLL_ALL_GATHER, V_["QAL"], V_["QA"], s["q_rank"] // s["tp"],
+                      {"QAL"}, {"QA"}, t + ".q_a_gather")
+            self.coll(I.COLL_ALL_GATHER, V_["KVAL"], V_["KVA"], hd // s["tp"],
+                      {"KVAL"}, {"KVA"}, t + ".kv_gather")
         self.rmsnorm("QA", s["q_rank"], 0, "QR", t)
         self.linq(lay.qmat[(L, "wq_b")], "QR", "Q", set(), set(), t)
         self.rmsnorm("KVA", hd, 0, "KVN", t)
@@ -482,7 +512,11 @@ class ShapeBuilder(P.Builder):
         zn = lay.ogr_d * s["o_rank"]
         self.me(mat, V_["ACC"], V_["ZA"], {"ACC"}, {"ZA"}, to, me_xjs=zn, me_ots=1, me_ojs=2)
         self.bf16("ZA", zn, "ZA", to)
-        self.linq(lay.qmat[(L, "wo_b")], "ZA", "Y", set(), set(), to)
+        self.linq(lay.qmat[(L, "wo_b")], "ZA", "YTMP" if self.tp_exact else "Y", set(), set(), to,
+                  **({"qe_unrounded": 1} if self.tp_exact else {}))
+        if self.tp_exact:
+            self.coll(I.COLL_ALL_REDUCE_SUM, V_["YTMP"], V_["Y"], s["dim"],
+                      {"YTMP"}, {"Y"}, to + ".wo_b_reduce", rnd=1)
 
     def moe(self, L, hook=None):
         s, m, V_, lay = self.s, self.m, self.V, self.lay
@@ -504,17 +538,28 @@ class ShapeBuilder(P.Builder):
                      c_clip=1, sfu=I.SFU_SILU, e1=I.E1_MULC, rnd=1, dst=I.DST_VM, o_base=V_[f"ACT{k}"], o_si=1)
             if not shared:
                 f.update(b_base=V_["WGT"] + k, e2=I.E2_MULB)
+            def activate():
+                self.su({f"GU{k}", "WGT"}, {f"ACT{k}"}, te, **f)
+                if self.tp_exact:
+                    self.coll(I.COLL_ALL_GATHER, V_[f"ACT{k}"], V_[f"ACTALL{k}"], ff,
+                              {f"ACT{k}"}, {f"ACTALL{k}"}, te + f".act{k}_gather")
+
             return (lambda: self.linq(w13, "XN", f"GU{k}", {"EID"}, set(), te, **ind),
-                    lambda: self.su({f"GU{k}", "WGT"}, {f"ACT{k}"}, te, **f),
-                    lambda: self.linq(w2, f"ACT{k}", f"E{k}", {"EID"}, set(), te, **ind))
+                    activate,
+                    lambda: self.linq(w2, f"ACTALL{k}" if self.tp_exact else f"ACT{k}",
+                                      f"E{k}", {"EID"}, set(), te, **ind))
 
         sh = expert(m.k_exp)
         sh[0]()
         self.me(lay.mat[(L, "gate")], V_["XN"], V_["G12"], {"XN"}, {"G12"}, t)
         sh[1]()
         sh[2]()
-        self.su({"G12"}, {"SC"}, t, su_nout=1, su_nin=m.n_exp // tp, a_base=V_["G12"], a_si=1, sfu=I.SFU_SPSQRT,
-                dst=I.DST_VM, o_base=V_["SC"], o_si=1)
+        self.su({"G12"}, {"SCL" if self.tp_exact else "SC"}, t,
+                su_nout=1, su_nin=m.n_exp // tp, a_base=V_["G12"], a_si=1, sfu=I.SFU_SPSQRT,
+                dst=I.DST_VM, o_base=V_["SCL"] if self.tp_exact else V_["SC"], o_si=1)
+        if self.tp_exact:
+            self.coll(I.COLL_ALL_GATHER, V_["SCL"], V_["SC"], m.n_exp // tp,
+                      {"SCL"}, {"SC"}, t + ".router_gather")
         self.su({"SC"}, {"BI"}, t, su_nout=1, su_nin=m.n_exp, a_base=V_["SC"], a_si=1, d_src=I.SRC_CLO,
                 d_base=0, d_si=1, ad=I.AD_D, dst=I.DST_VM, o_base=V_["BI"], o_si=1)
         self.xu({"BI"}, {"EID"}, t, xu_op=I.XU_SEL, xu_src=V_["BI"], xu_dst=V_["EID"], xu_n=m.n_exp, xu_k=m.k_exp)
@@ -541,17 +586,22 @@ class ShapeBuilder(P.Builder):
         if hook and P.MOE_HOOK >= m.k_exp:
             hook()
         ty = f"L{L}.moe_sum"
-        D = s["dim"]
+        D = s["dim"] // tp if self.tp_exact else s["dim"]
         for k in range(1, m.k_exp + 1):
             src = V_["E0"] if k == 1 else V_["Y"]
             self.su({"E0" if k == 1 else "Y", f"E{k}"}, {"Y"}, ty, su_nout=1, su_nin=D, a_base=src, a_si=1,
                     c_base=V_[f"E{k}"], c_si=1, ad=I.AD_C, rnd=int(k == m.k_exp), dst=I.DST_VM, o_base=V_["Y"],
                     o_si=1)
+        if self.tp_exact:
+            self.coll(I.COLL_ALL_GATHER, V_["Y"], V_["YALL"], D,
+                      {"Y"}, {"YALL"}, ty + ".y_gather")
 
     def build(self, layers=None, embed=True, head=True):
         s, V_, lay = self.s, self.V, self.lay
         D = s["dim"]
         layers = range(40) if layers is None else layers
+        if self.tp_exact and list(layers) != [0]:
+            raise ValueError("exact TP emission currently supports only layer 0")
         if embed:
             self.xu(set(), {"EH"}, "embed", xu_op=I.XU_EHASH, xu_src=0)
             self.su(set(), {"PF"}, "embed", su_nout=1, su_nin=4, a_src=I.SRC_CLO, a_base=0, a_si=1,
@@ -571,7 +621,7 @@ class ShapeBuilder(P.Builder):
             self.hc_pre("PA", "X", f"L{L}.ffn_norm", "SS")
             self.rmsnorm("X", D, 0, "XN", f"L{L}.ffn_norm", have_ss="SS")
             self.moe(L, hook=lambda: self.hc_mix_finish(L, "ffn"))
-            self.hc_post("Y", "POF", "CF", f"L{L}.hc_post")
+            self.hc_post("YALL" if self.tp_exact else "Y", "POF", "CF", f"L{L}.hc_post")
         if head:
             self.hc_pre("PF", "X", "head", "SS")
             self.rmsnorm("X", D, 0, "XN", "head", have_ss="SS")
@@ -590,6 +640,23 @@ def build(shape, su_lanes=8, engram_inline=True, layers=None, embed=True, head=T
     I.SU_LANES = su_lanes
     try:
         return ShapeBuilder(ShapeLayout(shape), engram_inline).build(layers, embed, head)
+    finally:
+        I.SU_LANES = old
+
+
+def build_tp_layer0(shape=SHIPPED, su_lanes=8, embed=False, head=False):
+    """First exact TP=4 layer program; other layer types are fail closed.
+
+    This is an ISA sequence, not the timing-model program. Its 12 blocking
+    collectives, FP32 VM containers and scratch traffic are not yet priced by
+    `price`/`arch_lanes_v41`; reported design-point rates need rebaseline.
+    """
+    if shape["tp"] != 4:
+        raise ValueError("the exact collective sequence is defined for tp=4")
+    old = I.SU_LANES
+    I.SU_LANES = su_lanes
+    try:
+        return ShapeBuilder(ShapeLayout(shape, tp_exact=True)).build([0], embed, head)
     finally:
         I.SU_LANES = old
 
