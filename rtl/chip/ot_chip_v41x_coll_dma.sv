@@ -1,99 +1,115 @@
 `timescale 1ns/1ps
-// ---------------------------------------------------------------------------
-// Collective DMA of the adopted V4.1 layer die (ot_chip_v41x_die.sv): moves a
-// collective's words between the tile's vector memory (external word port B)
-// and the one-shot collective engine ot_rom_oneshot_die_px.
-//
-// A command (go: mode, tag, n words from vector-memory word src, results to
-// word dst) streams the n local words into the engine (in_valid / in_ready,
-// in_last on the last) and writes every result word the engine emits (it has
-// no out_ready: every beat is taken the cycle it appears) to dst, dst + 1, ...
-// busy falls on the engine's out_last.  Two reads are kept in flight so the
-// producer side can run one word a cycle.
-//
-// Sequencing (when a program segment's producer has written its partial and
-// the consumer may start) is the host's / package controller's, as in the
-// real-core collective bench (rtl/test/tb_v41x_real_core_collective.sv): the
-// adopted core has no collective-issue instruction.
-// ---------------------------------------------------------------------------
+// Blocking V4.1 collective DMA. Addresses and n here are VM words; the die
+// checks the ISA's element alignment and shifts by four before issuing.
 module ot_chip_v41x_coll_dma #(
-    parameter integer WA   = 12,          // vector-memory word address bits
-    parameter integer FW   = 512,
-    parameter integer TAGW = 32
+    parameter integer WA = 12,
+    parameter integer FW = 512,
+    parameter integer TAGW = 32,
+    parameter integer N = 4,
+    parameter integer RB = (N > 1) ? $clog2(N) : 1
 ) (
-    input  wire            clk,
-    input  wire            rst_n,
-    input  wire            go,
-    input  wire            mode,
-    input  wire [TAGW-1:0] tag,
-    input  wire [WA-1:0]   src,
-    input  wire [WA-1:0]   n,
-    input  wire [WA-1:0]   dst,
-    output reg             busy,
-    output reg  [31:0]     words_out,
-    output reg  [31:0]     words_in,
-    // vector-memory port (read latency 1)
-    output wire            vm_re,
-    output wire [WA-1:0]   vm_raddr,
-    input  wire [FW-1:0]   vm_rq,
-    output wire            vm_we,
-    output wire [WA-1:0]   vm_waddr,
-    output wire [FW-1:0]   vm_wdata,
-    // engine
-    output wire            e_valid,
-    input  wire            e_ready,
-    output wire [FW-1:0]   e_data,
-    output wire            e_last,
-    output reg             e_mode,
-    output reg  [TAGW-1:0] e_tag,
-    input  wire            o_valid,
-    input  wire [FW-1:0]   o_data,
-    input  wire            o_last
+    input wire clk, rst_n,
+    input wire go, mode, rnd,
+    input wire [TAGW-1:0] tag,
+    input wire [WA-1:0] src, n, dst,
+    output reg busy, fault,
+    output reg [31:0] words_out, words_in,
+    output wire vm_re,
+    output wire [WA-1:0] vm_raddr,
+    input wire [FW-1:0] vm_rq,
+    output wire vm_we,
+    output wire [WA-1:0] vm_waddr,
+    output wire [FW-1:0] vm_wdata,
+    output wire e_valid,
+    input wire e_ready,
+    output wire [FW-1:0] e_data,
+    output wire e_last,
+    output reg e_mode,
+    output reg [TAGW-1:0] e_tag,
+    input wire o_valid,
+    input wire [FW-1:0] o_data,
+    input wire o_last,
+    input wire [RB-1:0] o_rank,
+    input wire o_err, engine_fault
 );
-    reg [WA-1:0] rd_k, n_r, src_r, dst_r, wr_k;
-    reg          rd_q;                           // a read issued last cycle
+    localparam integer LANES = FW / 32;
+    localparam integer CW = WA + 3;
+    localparam [CW-1:0] N_C = CW'(N);
+    reg [WA-1:0] rd_k, n_r, src_r, dst_r;
+    reg [WA+2:0] wr_k;
+    reg rnd_r, rd_q;
     reg [WA-1:0] rd_qk;
-    // two-entry skid of read words
     reg [FW-1:0] sk_d [0:1];
-    reg          sk_l [0:1];
-    reg [1:0]    sk_n;
-    reg          sk_h;                           // head index
-    wire         pop  = e_valid && e_ready;
-    // a slot is free for a new read when the words held plus the one in flight, less the one leaving, are < 2
-    wire [2:0]   held = {1'b0, sk_n} + {2'b0, rd_q} - {2'b0, pop};
-    assign vm_re    = busy && (rd_k != n_r) && (held < 3'd2);
+    reg sk_l [0:1], sk_h;
+    reg [1:0] sk_n;
+    wire pop = e_valid && e_ready;
+    wire [2:0] held = {1'b0, sk_n} + {2'b0, rd_q} - {2'b0, pop};
+    wire [CW-1:0] limit = (CW'(1) << WA);
+    wire [CW-1:0] src_start = CW'(src), dst_start = CW'(dst), n_ext = CW'(n);
+    wire [CW-1:0] src_end = src_start + n_ext;
+    wire [CW-1:0] dst_end = dst_start + (mode ? (n_ext * N_C) : n_ext);
+    wire bad_command = (n == 0) || (src_end > limit) || (dst_end > limit) ||
+                       ((src_start < dst_end) && (dst_start < src_end));
+    assign vm_re = busy && !fault && rd_k != n_r && held < 3'd2;
     assign vm_raddr = src_r + rd_k;
-    assign e_valid  = sk_n != 2'd0;
-    assign e_data   = sk_d[sk_h];
-    assign e_last   = sk_l[sk_h];
-    assign vm_we    = busy && o_valid;
-    assign vm_waddr = dst_r + wr_k;
-    assign vm_wdata = o_data;
+    assign e_valid = sk_n != 0 && !fault;
+    assign e_data = sk_d[sk_h];
+    assign e_last = sk_l[sk_h];
+    wire [CW-1:0] gather_addr = CW'(dst_r) + (CW'(n_r) * CW'(o_rank)) + (wr_k / N_C);
+    assign vm_we = busy && o_valid && !fault && !o_err && !engine_fault;
+    assign vm_waddr = e_mode ? gather_addr[WA-1:0] : dst_r + wr_k[WA-1:0];
+
+    function automatic [31:0] bf16_rne(input [31:0] x);
+        reg [32:0] tmp;
+        begin
+            tmp = {1'b0, x} + 33'h000007fff + 33'(x[16]);
+            bf16_rne = {tmp[31:16], 16'h0000};
+            if (x[30:0] == 0) bf16_rne = 32'h00000000;
+        end
+    endfunction
+    genvar lane;
+    generate for (lane = 0; lane < LANES; lane = lane + 1) begin : g_round
+        assign vm_wdata[32*lane +: 32] =
+            (!e_mode && rnd_r) ? bf16_rne(o_data[32*lane +: 32]) :
+                                 o_data[32*lane +: 32];
+    end endgenerate
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= 1'b0; rd_k <= 0; n_r <= 0; src_r <= 0; dst_r <= 0; wr_k <= 0; rd_q <= 1'b0; rd_qk <= 0;
-            sk_n <= 2'd0; sk_h <= 1'b0; e_mode <= 1'b0; e_tag <= {TAGW{1'b0}};
+            busy <= 0; fault <= 0; rd_k <= 0; n_r <= 0; src_r <= 0;
+            dst_r <= 0; wr_k <= 0; rnd_r <= 0; rd_q <= 0; rd_qk <= 0;
+            sk_n <= 0; sk_h <= 0; e_mode <= 0; e_tag <= 0;
             words_out <= 0; words_in <= 0;
-            sk_d[0] <= {FW{1'b0}}; sk_d[1] <= {FW{1'b0}}; sk_l[0] <= 1'b0; sk_l[1] <= 1'b0;
+            sk_d[0] <= 0; sk_d[1] <= 0; sk_l[0] <= 0; sk_l[1] <= 0;
         end else begin
+            if (o_err || engine_fault || (go && busy)) fault <= 1;
             if (go && !busy) begin
-                busy <= (n != 0); rd_k <= 0; n_r <= n; src_r <= src; dst_r <= dst; wr_k <= 0;
-                e_mode <= mode; e_tag <= tag;
-            end else begin
-                rd_q <= vm_re; rd_qk <= rd_k;
+                if (bad_command || fault) fault <= 1;
+                else begin
+                    busy <= 1; rd_k <= 0; n_r <= n; src_r <= src;
+                    dst_r <= dst; wr_k <= 0; rnd_r <= rnd;
+                    rd_q <= 0; sk_n <= 0; sk_h <= 0;
+                    e_mode <= mode; e_tag <= tag;
+                end
+            end else if (busy) begin
+                rd_q <= vm_re;
+                rd_qk <= rd_k;
                 if (vm_re) rd_k <= rd_k + 1'b1;
-                // enqueue the word read last cycle, dequeue the one the engine took
                 if (rd_q) begin
-                    // tail slot = head + count (mod 2); a pop this cycle moves both and leaves it in place
                     sk_d[sk_h ^ sk_n[0]] <= vm_rq;
                     sk_l[sk_h ^ sk_n[0]] <= (rd_qk == n_r - 1'b1);
                 end
                 if (pop) begin sk_h <= ~sk_h; words_out <= words_out + 1; end
                 sk_n <= sk_n + {1'b0, rd_q} - {1'b0, pop};
                 if (vm_we) begin
-                    wr_k <= wr_k + 1'b1; words_in <= words_in + 1;
-                    if (o_last) busy <= 1'b0;
+                    wr_k <= wr_k + 1'b1;
+                    words_in <= words_in + 1;
+                    if (e_mode && integer'(o_rank) >= N) fault <= 1;
+                    if (o_last) begin
+                        if (wr_k != (e_mode ? (CW'(n_r) * N_C - CW'(1)) : (CW'(n_r) - CW'(1))))
+                            fault <= 1;
+                        busy <= 0;
+                    end
                 end
             end
         end

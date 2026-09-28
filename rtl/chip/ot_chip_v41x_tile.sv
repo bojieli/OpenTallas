@@ -49,6 +49,7 @@
 // terminated inside the tile.
 // ---------------------------------------------------------------------------
 module ot_chip_v41x_tile #(
+    parameter integer FULL_SHAPE = 0,
     // core configuration (adopted)
     parameter integer SW    = 8,             // stream-unit lanes
     parameter integer HS    = 8,             // HE K chunks
@@ -167,6 +168,15 @@ module ot_chip_v41x_tile #(
     input  wire              xb_re,
     input  wire [VM_AW-5:0]  xb_raddr,
     output reg  [511:0]      xb_rq,
+    // Full-shape core collective command; the die owns DMA and link ordering.
+    output wire              coll_go,
+    output wire [1:0]        coll_op,
+    output wire [(FULL_SHAPE ? 30 : 24)-1:0] coll_src, coll_dst, coll_ibase,
+    output wire [(FULL_SHAPE ? 21 : 16)-1:0] coll_n,
+    output wire [11:0]       coll_k,
+    output wire [7:0]        coll_seq,
+    output wire              coll_rnd,
+    input  wire              coll_busy, coll_fault,
     // -- status -------------------------------------------------------------------------
     output wire [4:0]        unit_busy,
     output wire [2:0]        issue_unit,
@@ -181,8 +191,9 @@ module ot_chip_v41x_tile #(
     output wire [31:0]       kb_read_stalls,
     output wire [31:0]       kb_writer_stalls
 );
-    localparam integer INSTR_BITS = 1536;
-    localparam integer W = 16, G = 4, BL = 16, QLB = 272, AW = 24, NW = 16, PAW = 14, HNL = 3;
+    localparam integer INSTR_BITS = FULL_SHAPE ? 2048 : 1536;
+    localparam integer W = 16, G = 4, BL = 16, QLB = 272;
+    localparam integer AW = FULL_SHAPE ? 30 : 24, NW = FULL_SHAPE ? 21 : 16, PAW = 14, HNL = 3;
     localparam integer ML = 2;                        // ME weight-tile bank read latency
     localparam integer SPW = BL * QLB / 256;          // QE window banks
 
@@ -239,12 +250,15 @@ module ot_chip_v41x_tile #(
     wire pikw_v, pikw_rdy; wire [3:0] pikw_stack_mask;
     wire [27:0] pikw_csec, pikw_ssec; wire [511:0] pikw_codes; wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
 
-    ot_hdc_core_v41x #(.SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
+    ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
                        .X_SEL(X_SEL), .X_EG(X_EG), .XSQ(XSQ), .XSW(XSW), .X_SU(X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
+        .coll_go(coll_go), .coll_op(coll_op), .coll_src(coll_src), .coll_dst(coll_dst),
+        .coll_ibase(coll_ibase), .coll_n(coll_n), .coll_k(coll_k), .coll_seq(coll_seq),
+        .coll_rnd(coll_rnd), .coll_busy(coll_busy), .coll_fault(coll_fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .ewrom_re(ewrom_re), .ewrom_addr(ewrom_addr), .ewrom_q(ewrom_q),

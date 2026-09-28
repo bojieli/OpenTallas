@@ -48,6 +48,7 @@ module ot_rom_oneshot_die_px #(
     parameter integer PKG_DIES = 2,
     parameter integer RELAY    = 1,
     parameter integer ADD_LAT  = 3,            // 3: ot_hdc_fp32_add_fast, 5: ot_fp32_add_rne_pipe
+    parameter integer PAIRWISE = 0,            // full-shape wo_b: ((r0+r1)+(r2+r3))
     parameter integer GW       = 1,            // gather words emitted per cycle (divides N)
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
@@ -87,7 +88,7 @@ module ot_rom_oneshot_die_px #(
     localparam integer PD = DEPTH / 2;                  // words per (source, parity) FIFO
     localparam integer DB = (PD > 1) ? $clog2(PD) : 1;
     localparam integer CB = $clog2(PD + 1);
-    localparam integer DL = (N - 1) * ADD_LAT;
+    localparam integer DL = ((PAIRWISE != 0 && N == 4) ? 2 : (N - 1)) * ADD_LAT;
     localparam integer E  = N / GW;                     // gather beats per index
     localparam integer EB = (E > 1) ? $clog2(E) : 1;
     localparam integer MYPKG = RANK / PKG_DIES;
@@ -233,14 +234,56 @@ module ot_rom_oneshot_die_px #(
         for (r = 1; r < N; r = r + 1) if (s0_t[r] != s0_t[0]) agree = 1'b0;
     end
 
-    // -- all-reduce, rank order --------------------------------------------------------------
+    // -- all-reduce ---------------------------------------------------------------------
+    // Reduced programs retain the historical rank-linear fold.  Full-shape
+    // wo_b uses the golden's aligned chunk-8 subtree: ((r0+r1)+(r2+r3)).
     wire red_in = s0_v && !s0_mode;
-    wire [FW-1:0] sum [0:N-1];
-    wire [N-1:0]  sv, serr;
-    assign sum[0] = s0_d[0];
-    assign sv[0] = red_in;
-    assign serr[0] = 1'b0;
-    generate
+    wire [FW-1:0] red_data;
+    wire red_out, red_err;
+    reg [DL-1:0] ldl;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) ldl <= 0;
+        else ldl <= {ldl[DL-2:0], s0_last};
+    generate if (PAIRWISE != 0 && N == 4) begin : g_pairwise
+        wire [FW-1:0] ab, cd, y;
+        wire [LANES-1:0] av, cv, yv;
+        wire [2*LANES-1:0] ae, ce, ye;
+        reg [ADD_LAT-1:0] err_delay;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) err_delay <= 0;
+            else err_delay <= {err_delay[ADD_LAT-2:0], (|ae) || (|ce)};
+        for (g = 0; g < LANES; g = g + 1) begin : g_lane
+            if (ADD_LAT == 3) begin : g_fast
+                ot_hdc_fp32_add_fast u_ab (.clk(clk), .rst_n(rst_n), .valid_in(red_in),
+                    .a(s0_d[0][32*g +: 32]), .b(s0_d[1][32*g +: 32]),
+                    .y(ab[32*g +: 32]), .err(ae[2*g +: 2]), .valid_out(av[g]));
+                ot_hdc_fp32_add_fast u_cd (.clk(clk), .rst_n(rst_n), .valid_in(red_in),
+                    .a(s0_d[2][32*g +: 32]), .b(s0_d[3][32*g +: 32]),
+                    .y(cd[32*g +: 32]), .err(ce[2*g +: 2]), .valid_out(cv[g]));
+                ot_hdc_fp32_add_fast u_y (.clk(clk), .rst_n(rst_n), .valid_in(av[g]),
+                    .a(ab[32*g +: 32]), .b(cd[32*g +: 32]),
+                    .y(y[32*g +: 32]), .err(ye[2*g +: 2]), .valid_out(yv[g]));
+            end else begin : g_pipe
+                ot_fp32_add_rne_pipe u_ab (.clk(clk), .rst_n(rst_n), .valid_in(red_in),
+                    .a(s0_d[0][32*g +: 32]), .b(s0_d[1][32*g +: 32]),
+                    .y(ab[32*g +: 32]), .err(ae[2*g +: 2]), .valid_out(av[g]));
+                ot_fp32_add_rne_pipe u_cd (.clk(clk), .rst_n(rst_n), .valid_in(red_in),
+                    .a(s0_d[2][32*g +: 32]), .b(s0_d[3][32*g +: 32]),
+                    .y(cd[32*g +: 32]), .err(ce[2*g +: 2]), .valid_out(cv[g]));
+                ot_fp32_add_rne_pipe u_y (.clk(clk), .rst_n(rst_n), .valid_in(av[g]),
+                    .a(ab[32*g +: 32]), .b(cd[32*g +: 32]),
+                    .y(y[32*g +: 32]), .err(ye[2*g +: 2]), .valid_out(yv[g]));
+            end
+        end
+        assign red_data = y;
+        assign red_out = yv[0];
+        assign red_err = (|ye) || err_delay[ADD_LAT-1];
+    end else begin : g_linear
+        wire [FW-1:0] sum [0:N-1];
+        wire [N-1:0] sv, serr;
+        assign sum[0] = s0_d[0];
+        assign sv[0] = red_in;
+        assign serr[0] = 1'b0;
         for (g = 1; g < N; g = g + 1) begin : g_stage
             wire [FW-1:0] pg;
             if (g == 1) begin : g_nd
@@ -261,8 +304,7 @@ module ot_rom_oneshot_die_px #(
                 else edl <= {edl[ADD_LAT-2:0], serr[g-1]};
             wire [LANES-1:0] lv;
             wire [2*LANES-1:0] le;
-            genvar l;
-            for (l = 0; l < LANES; l = l + 1) begin : g_lane
+            for (genvar l = 0; l < LANES; l = l + 1) begin : g_lane
                 if (ADD_LAT == 3) begin : g_fast
                     ot_hdc_fp32_add_fast u_add (
                         .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
@@ -278,12 +320,10 @@ module ot_rom_oneshot_die_px #(
             assign sv[g] = lv[0];
             assign serr[g] = (|le) || edl[ADD_LAT-1];
         end
-    endgenerate
-    reg [DL-1:0] ldl;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) ldl <= 0;
-        else ldl <= {ldl[DL-2:0], s0_last};
-    wire red_out = sv[N-1];
+        assign red_data = sum[N-1];
+        assign red_out = sv[N-1];
+        assign red_err = serr[N-1];
+    end endgenerate
 
     // -- all-gather: GW words per beat, E beats per index, back to back ------------------------------
     reg              go_v, go_last;
@@ -318,10 +358,10 @@ module ot_rom_oneshot_die_px #(
     end
 
     assign out_valid = red_out || go_v;
-    assign out_data  = go_v ? go_d : {{(GW-1)*FW{1'b0}}, sum[N-1]};
+    assign out_data  = go_v ? go_d : {{(GW-1)*FW{1'b0}}, red_data};
     assign out_last  = go_v ? go_last : ldl[DL-1];
     assign out_rank  = go_v ? go_rank : {RB{1'b0}};
-    assign out_err   = red_out && serr[N-1];
+    assign out_err   = red_out && red_err;
 
     // -- faults -------------------------------------------------------------------------------
     reg ovf;
