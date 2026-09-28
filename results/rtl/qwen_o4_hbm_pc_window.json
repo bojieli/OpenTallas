@@ -1,0 +1,27 @@
+{
+  "build_stderr": "",
+  "claim_boundary": "Standalone bounded PC-local INT8 code/BF16-scale supply with exact 32-byte sector reconstruction and one-cycle synchronous core ports. Synthetic 2-word operation only; no same-program package token, full G6144 bandwidth, HBM controller or P&R claim.",
+  "configuration": {
+    "groups": 4,
+    "hbm_sector_address_bits": 28,
+    "lanes_per_group": 16,
+    "pseudo_channels": 2,
+    "scale_bytes_per_word": 128,
+    "weight_bytes_per_word": 64,
+    "window_words": 2
+  },
+  "input_sha256": {
+    "rtl/hdc/hbm/ot_hdc_qwen_int8_pc_window.sv": "75d0e81c9e3a6646e59cf65d1c65c3cc62ff157e06713144fc91644a707ebcc0",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "5e5117518f55f24e491654a18711fbdc4f5f798fc3f5fadd35c715784ef9f386",
+    "rtl/test/tb_hdc_qwen_int8_pc_window.sv": "19b93560999374498b777e1f824ad96072493569c95589d78c1cd7b1566d54ce",
+    "tools/rtl_hdc_qwen_int8_pc_window.py": "d0cff3d619eba762bd952b82d31575c20adb81d8c7911a051dde508b6a3b055d"
+  },
+  "observed": {
+    "preload_cycles": 9,
+    "sector_reads": 6
+  },
+  "schema": "opentallas.qwen-o4-hbm-pc-window.v1",
+  "simulation_stderr": "",
+  "simulation_stdout": "PASS Qwen INT8 PC-local HBM window: 6 sectors, 9 cycles, exact codes/scales\n",
+  "status": "pass"
+}
