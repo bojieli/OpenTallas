@@ -159,32 +159,34 @@ def test_saturated_rows_beyond_the_users_held_are_flagged(rec):
 
 def test_one_budget_model_carries_the_user_decisions(rec):
     """The unified budget (arch_budget_v41_dp retired): checkpoint precision, online softmax with norm folding
-    rejected, tau 5.0 with 3.27-3.80 and 4.1 as sensitivities, 1M primary, the measured collective exposure rows
+    rejected, the measured V4.1-Flash tau 3.65 with the published 3.5-4.1 band as sensitivities, 1M primary, the measured collective exposure rows
     and the per-class cooling limits."""
     assert not (ROOT / "tools/arch_budget_v41_dp.py").exists()
     assert rec["tool"] == "tools/arch_budget_v41.py"
-    assert A.TAU_HEADLINE == 5.0 and A.TAU_DEFAULT == 5.0
+    assert A.TAU_HEADLINE == 3.65 and A.TAU_DEFAULT == A.TAU_HEADLINE and A.TAU_CI95 == (3.5, 3.84)
     taus = {p["label"]: p["tau"] for p in A.tau_points()}
-    assert taus[A.TAU_HEADLINE_LABEL] == 5.0 and 4.1 in taus.values()
+    assert taus[A.TAU_HEADLINE_LABEL] == 3.65 and 3.5 in taus.values() and 4.1 in taus.values()
     assert rec["target_context"]["chosen"] == 1048576
     steps = [s["step"] for s in rec["chain_ladder"]]
     assert any("online softmax" in s for s in steps) and any("REJECTED" in s for s in steps)
     assert "osm" in A.CHAIN_LEVERS
     ce = rec["collective_exposure"]
-    assert ce["tau"] == 5.0
+    assert ce["tau"] == 3.65
     for ctx in ("200000", "1048576"):
         assert ce["spec"][ctx]["measured_exposure"] < ce["spec"][ctx]["overlap_assumed"]
     p = rec["power"]
     assert set(p["cooling_limit_w_per_die_by_class"]) == {"air", "liquid"}
-    assert p["cooling_limit_w_per_die"] == p["cooling_limit_w_per_die_by_class"]["air"]
-    assert p["cooling_limit_w_per_die"] < 407.5          # the withdrawn 0.5 W/mm2 x 815 mm2 rule
+    assert p["cooling_limit_w_per_die"] == p["cooling_limit_w_per_die_by_class"]["liquid"]   # liquid baseline (2026-09-28)
+    assert p["cooling_limit_w_per_die_by_class"]["air"] < 407.5   # the withdrawn 0.5 W/mm2 x 815 mm2 rule
     # the check is the HOTTEST die (the stage holding layer 20's uncapped index scan): at the specification's widths
     # and its stage-mean saturated rate it is over the air limit, an upper bound (docs/ARCH_SPEC_V41.md s6 item 12)
     hd = p["hottest_die"]
     assert hd["batch1"]["factor"] > 1 and hd["saturated"]["factor"] > 1
     for m in p["by_lane_mult"].values():
         assert m["saturated_die_dynamic_w"] > m["average_die"]["saturated_dynamic_w"]
-    assert p["worst_case_die_w"] > p["cooling_limit_w_per_die"]
+    # with layer 20's scan split over S12-S14 (tools/v41_stage_rebalance.py) the spec's worst die fits a liquid-cooled
+    # package (within a watt of the air limit, so no air verdict is asserted)
+    assert p["worst_case_die_w"] < p["cooling_limit_w_per_die_by_class"]["liquid"]
 
 
 def test_checkpoint_precision_prices_router_and_wo_a_as_released(rec):

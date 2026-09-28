@@ -1,0 +1,514 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------
+// ADOPTED DeepSeek-V4.1 layer die top: the adopted decode core tile, four
+// HBM3E stack interfaces, UCIe to the package peer, the board-link SerDes
+// ports, the one-shot collective engine and the package controller.
+//
+// KV lives in HBM.  u_kv (ot_chip_v41x_kv_prefetch.sv) serves the core's
+// KV_HBM handshake: it prefetches each attention op's words from the four
+// stacks' KV region into two staging slots and raises kv_ok; runtime K / V
+// writes are written through.  Its tests and their verdicts are in
+// results/rtl/hdc_v41x_die_top_smoke.json (tools/rtl_chip_v41x_die_smoke.py:
+// the focused bench and the one-token die smoke with the KV starting in HBM).
+//
+// Block list against the die-assembly floorplan study (docs/ARCH_V41_DIE_ASSEMBLY.md,
+// results/arch/v41_die_assembly.json ledger.layer.rows, on claude/v41-die-assembly):
+//
+//   floorplan block                          here
+//   spine: sequencer, vector unit, HC        u_tile.u_core (ot_hdc_core_v41x: sequencer, X_SU
+//     projection, select, Sinkhorn, ...        vector unit, X_HE HCP, X_SEL select, XU, SFUs)
+//   48 tiles, ROM | lane column | ROM        u_tile: the pooled engines' lane columns are the
+//                                              core's engine widths (MG, HHW, SUN, SUM, BL); the ROM
+//                                              banks beside them are the tile's ROMs.  One core
+//                                              drives all tiles: the 48 are a physical partition of
+//                                              ONE core's pools, not 48 sequencers
+//   block-dot pool / BF16 pool / HCP         u_tile.u_core (X_ME wgt tile, QE, X_ATT, X_IDX pooled)
+//   mask-ROM array                           u_tile ROM banks (prog, wrom, hrom, hbank, mbank,
+//                                              erom, crom, qlist)
+//   HBM3E PHY + controller x 4               g_hbm[0..3].u_hbm (ot_chip_v41x_hbm3e_phy, behavioural),
+//                                              K ports shared through g_hbm[s].u_arb
+//                                              (ot_chip_v41x_hbm_karb: indexer / KV prefetch)
+//   KV / key streamer (one per stack)        key streamer: u_tile.u_kb (the pooled indexer's
+//                                              four-stack key path); KV: u_kv (HBM prefetch)
+//   KV row staging buffer                    u_kv staging: 2 slots x KV_STG words (256 KiB)
+//   HBM request / beat queues                inside u_hbm (model queues) and u_tile.u_qs
+//   vector memory                            u_tile.vm
+//   one-shot collective engine               u_coll (ot_rom_oneshot_die_px: relay_add3 lever,
+//                                              RELAY = 1, ADD_LAT = 3; results/arch/
+//                                              v41_collective_levers.json picks) + u_cdma
+//   package controller                       u_ctrl (ot_rom_pkg_ctrl_x)
+//   fabric router                            u_rtr (ot_rom_fabric_router, 3 ports)
+//   package link endpoint                    OUTSIDE the die: the ucie_* / bl_* flit ports are
+//                                              ready/valid; the link (ot_rom_pkg_link, PHY, FEC)
+//                                              sits between dies in the package / board model
+//   UCIe-A modules (package peer)            ucie_* ports: fabric flits, collective records to
+//                                              the in-package peer, relay records
+//   112G SerDes lanes                        bl_* ports: stage-hop flits, T1 collective records
+//                                              to the two partner-package dies
+//   Engram gather slices                     u_tile.u_core X_EG gather (one ROM port stands in)
+//   PLL / clock / reset / DFT                clk in (one clock domain; the plan's regional trees
+//                                              and mesochronous crossings are not modelled), reset
+//                                              synchroniser, no DFT
+//
+// HBM MAP (per stack, 32-byte sectors; checked at elaboration, and at run time
+// on every KV prefetch sector and every K request):
+//   [0, KEY_USERS * IKH_SLICE)             index keys (the pooled indexer's user slices)
+//   [KV_SBASE, KV_SBASE + KV_SECTORS)      attention KV, KV_SBASE = the keys' end
+//   K_MEM                                  the stack model's capacity (a request past it faults)
+// Defaults (reduced vehicle, one user): IKH_SLICE = 2^18, KV_SBASE = 2^18,
+// KV_SECTORS = 2 * (KV_USERS * 2^KV_AW / 4) = 2^14, K_MEM = 2^19.
+//
+// KV INTERFACE (declared stable; changes are flagged):
+//   tile -> die, the core's KV_HBM handshake (ot_hdc_core_v41x, KV_HBM = 1):
+//     kvd_v          1   pulse when the sequencer decodes an attention-class ME op
+//     kvd_wbase      24  KV word base of the op        kvd_ts, kvd_ks, kvd_js  24 each: strides
+//     kvd_tiles      16  output tiles                  kvd_k   16: k steps (words per tile)
+//     kvd_nout       16  outputs                       kvd_pos 16: position
+//     kvd_hg         2   head-group shift              kvd_mmode 1: masked mode
+//     kv_ok          1   die -> core: the newest descriptor's words are staged; the
+//                        core holds the op's issue until kv_ok (and one cycle after kvd_v)
+//   KV port (latency 1, no stall): kv_re, kv_raddr[4 x 24] -> kv_q[4 x 512];
+//     element writes kv_we[SW], kv_waddr[SW x 24], kv_wdata[SW x 32] and
+//     xs_kv_we[SUN], xs_kv_waddr[SUN x 24], xs_kv_wdata[SUN x 32]
+//     (address = word << 4 | lane).
+//   Address layout: an op reads words A(c) = wbase + t*ts + k*ks, c = t*k_n + k,
+//     t < tiles * (4 >> hg), k < k_n (js = 0), G = 4 a cycle in order c.  Word A
+//     of the running user is U = kv_base + A (host mode: 0): stack U mod 4,
+//     sectors KV_SBASE + 2 (U >> 2) + {0, 1} (low half first).
+//   Each stack's K port: 32 pseudo-channel request / response ports of the
+//     ot_hdc_v41x_idx_hbm protocol with 17-bit tags, the top bit the requester
+//     (0 the pooled indexer's bridge, 1 the KV prefetch), arbitrated per channel
+//     (ot_chip_v41x_hbm_karb).
+//
+// STAND-INS AND LIMITS:
+//   * The KV prefetch issues one word request a cycle; its cost shows as the
+//     smoke's cycle difference against the adopted single-token gate.
+//   * The HBM3E interfaces are the adopted gates' simulation timing models, not
+//     PHY RTL.
+//   * One collective engine (the ledger has 8 per die, one per pattern and
+//     level), GW = 1: the gather lever gw4 needs a GW-word result port.  The
+//     package controller, router, collective engine and link ports are linted
+//     and synthesised, not exercised by the smoke.
+// ---------------------------------------------------------------------------
+module ot_chip_v41x_die #(
+    // tile (core + ROM + buffers)
+    parameter integer SW      = 8,
+    parameter integer MG      = 8,
+    parameter integer MBAW    = 17,
+    parameter integer HHW     = 8,
+    parameter integer HBAW    = 16,
+    parameter integer SUN     = 16,
+    parameter integer SUM     = 8,
+    parameter integer PROG_AW = 14,
+    parameter integer WROM_AW = 19,
+    parameter integer HROM_AW = 16,
+    parameter integer EROM_AW = 19,
+    parameter integer CROM_AW = 15,
+    parameter integer VM_AW   = 16,
+    parameter integer LWIN    = 10,
+    parameter integer LAW     = 12,
+    parameter integer NPC_W   = 8,
+    // HBM address map and KV prefetch
+    parameter integer KEY_USERS = 1,          // index-key user slices (the pooled indexer's)
+    parameter integer IKH_SLICE = 1 << 18,    // index-key sectors a user slice
+    parameter integer KV_USERS  = 1,          // attention-KV user slices
+    parameter integer KV_AW   = 15,           // KV words a user slice (log2)
+    parameter integer K_MEM   = 1 << 19,      // K-port sectors a stack (the model's capacity)
+    parameter integer KV_STG  = 2048,         // KV staging words a slot (two slots)
+    parameter integer KV_SAW  = 11,
+    parameter integer KV_WQD  = 128,          // KV write-queue sectors a stack
+    parameter integer W_MEM   = 1 << 20,
+    parameter integer W_STACK = 0,            // stack that holds the QE weight region
+    parameter integer CLK_PS  = 1000,
+    // tensor group: die RANK of N (package pairs, PKG_DIES dies a package)
+    parameter integer RANK    = 0,
+    parameter integer N_TP    = 4,
+    parameter integer PKG_DIES = 2,
+    parameter integer CL_LANES = 16,
+    parameter integer CL_DEPTH = 16,
+    parameter integer CL_RELAY = 1,
+    parameter integer CL_ADD_LAT = 3,
+    parameter integer CL_TAGW = 32,
+    // fabric (router ports: 0 package controller, 1 UCIe, 2 board link)
+    parameter integer DESTS   = 64,
+    parameter [DESTS*3-1:0] ROUTE_INIT = {DESTS*3{1'b0}},
+    // package controller (ot_rom_pkg_ctrl_x)
+    parameter integer PKG_ID   = 0,
+    parameter integer MAXU     = 16,
+    parameter integer KVW      = 32768,
+    parameter integer XWORDS   = 1,
+    parameter integer RXWORDS  = 1,
+    parameter integer RXB      = 0,
+    parameter integer TXB      = 0,
+    parameter integer SOURCE   = 0,
+    parameter integer RESULT_PARTS = 1,
+    parameter integer SEND_HIDDEN  = 0,
+    parameter integer HID_DEST     = 0,
+    parameter integer SEND_RESULT  = 0,
+    parameter integer RES_DEST     = 0,
+    parameter integer COMBINE_IN   = 0,
+    parameter integer ROW0         = 0,
+    parameter integer FWD_TOKEN    = 1,
+    // derived
+    parameter integer CL_FW   = 32 * CL_LANES,
+    parameter integer CL_PW   = CL_FW + 3 + CL_TAGW
+) (
+    input  wire              clk,
+    input  wire              rst_n,            // asynchronous assert, synchronised release
+    // -- host / CSR ----------------------------------------------------------------------
+    input  wire              host_mode,        // 1: the host drives the core's step port; 0: u_ctrl does
+    input  wire              host_start,
+    input  wire [15:0]       host_token,
+    input  wire [15:0]       host_pos,
+    input  wire [13:0]       host_entry,
+    input  wire              host_prime_v,
+    input  wire              host_prime_first,
+    input  wire [11:0]       host_prime_cid,
+    output wire              core_done,
+    output wire [15:0]       core_next_token,
+    output wire [31:0]       core_next_val,
+    output wire [31:0]       core_cycles,
+    output wire [3:0]        core_acc_n,
+    input  wire [23:0]       cfg_ik_base,
+    input  wire [3:0]        cfg_me_xs,
+    input  wire [23:0]       cfg_q_base,
+    input  wire [LAW-1:0]    cfg_q_lbase,
+    input  wire [15:0]       cfg_q_lead,
+    input  wire [15:0]       cfg_q_rate,
+    input  wire [7:0]        cfg_users,
+    input  wire [15:0]       cfg_prompt_len,
+    input  wire [15:0]       cfg_gen_len,
+    output wire              pr_re,
+    output wire [7:0]        pr_user,
+    output wire [15:0]       pr_pos,
+    input  wire [15:0]       pr_q,
+    output wire              tok_valid,
+    output wire [7:0]        tok_user,
+    output wire [15:0]       tok_pos,
+    output wire [15:0]       tok_id,
+    output wire [7:0]        users_done,
+    input  wire              rcfg_we,
+    input  wire [7:0]        rcfg_dest,
+    input  wire [2:0]        rcfg_mask,
+    input  wire              coll_go,
+    input  wire              coll_mode,
+    input  wire [CL_TAGW-1:0] coll_tag,
+    input  wire [VM_AW-5:0]  coll_src,
+    input  wire [VM_AW-5:0]  coll_n,
+    input  wire [VM_AW-5:0]  coll_dst,
+    output wire              coll_busy,
+    // -- UCIe to the package peer ------------------------------------------------------------
+    output wire              ucie_tx_valid,
+    input  wire              ucie_tx_ready,
+    output wire [511:0]      ucie_tx_data,
+    output wire              ucie_tx_last,
+    input  wire              ucie_rx_valid,
+    output wire              ucie_rx_ready,
+    input  wire [511:0]      ucie_rx_data,
+    input  wire              ucie_rx_last,
+    output wire              ucie_ctx_valid,   // collective records to the peer
+    input  wire              ucie_ctx_ready,
+    output wire [CL_PW-1:0]  ucie_ctx_rec,
+    input  wire [1:0]        ucie_ccr_in,      // parity credits from the peer
+    input  wire              ucie_crx_valid,   // collective records from the peer
+    input  wire [CL_PW-1:0]  ucie_crx_rec,
+    output wire [1:0]        ucie_ccr_out,
+    output wire [N_TP-1:0]   ucie_rl_tx_valid, // relay records to the peer, per source rank
+    output wire [N_TP*CL_PW-1:0] ucie_rl_tx_rec,
+    input  wire [N_TP-1:0]   ucie_rl_rx_valid,
+    input  wire [N_TP*CL_PW-1:0] ucie_rl_rx_rec,
+    // -- board-link SerDes ------------------------------------------------------------------
+    output wire              bl_tx_valid,      // stage-hop flits
+    input  wire              bl_tx_ready,
+    output wire [511:0]      bl_tx_data,
+    output wire              bl_tx_last,
+    input  wire              bl_rx_valid,
+    output wire              bl_rx_ready,
+    input  wire [511:0]      bl_rx_data,
+    input  wire              bl_rx_last,
+    output wire [PKG_DIES-1:0] bl_ctx_valid,   // T1 collective records to the partner package's dies
+    input  wire [PKG_DIES-1:0] bl_ctx_ready,
+    output wire [CL_PW-1:0]  bl_ctx_rec,
+    input  wire [2*PKG_DIES-1:0] bl_ccr_in,
+    input  wire [PKG_DIES-1:0] bl_crx_valid,
+    input  wire [PKG_DIES*CL_PW-1:0] bl_crx_rec,
+    output wire [2*PKG_DIES-1:0] bl_ccr_out,
+    // -- status -----------------------------------------------------------------------------
+    output wire [7:0]        fault,            // {HBM out of range, KV prefetch, rtr overflow, coll, ctrl proto,
+                                               //  qstream, 0, core}, sticky
+    output wire [4:0]        unit_busy,
+    output wire [2:0]        issue_unit,
+    output wire [31:0]       qs_fetched,
+    output wire [31:0]       qs_consumed,
+    output wire [3:0]        qs_why,
+    output wire [31:0]       kb_records,
+    output wire [31:0]       kb_writes,
+    output wire [31:0]       kb_highwater,
+    output wire [31:0]       kb_stalls,
+    output wire [63:0]       hbm_refreshes,
+    output wire [31:0]       hbm_w_reads,
+    output wire [31:0]       rtr_drops,
+    output wire [31:0]       kv_ops,
+    output wire [31:0]       kv_words,
+    output wire [31:0]       kv_sectors_written,
+    output wire [31:0]       kv_refetches,
+    output wire [31:0]       kv_wq_high,
+    output wire [31:0]       kv_hold_cycles,
+    output wire [31:0]       kv_hbm_grants,
+    output wire [4:0]        kv_fault_code
+);
+    localparam integer AW = 24, G = 4, W = 16, FLIT = 512;
+    localparam integer VWA = VM_AW - 4;
+    localparam integer PEER = RANK ^ 1;
+    localparam integer CL_RB = (N_TP > 1) ? $clog2(N_TP) : 1;
+
+    // -- reset synchroniser ----------------------------------------------------------------
+    reg [1:0] rst_s;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    wire rn = rst_s[1];
+
+    // -- core step port: host or package controller ------------------------------------------
+    wire c_start; wire [15:0] c_token, c_pos; wire [AW-1:0] kv_base;
+    wire t_start = host_mode ? host_start : c_start;
+    wire [15:0] t_token = host_mode ? host_token : c_token;
+    wire [15:0] t_pos = host_mode ? host_pos : c_pos;
+    wire t_fault, qs_fault, kb_busy;
+    wire [31:0] kb_rs, kb_ws;
+    assign kb_stalls = kb_rs + kb_ws;
+
+    // -- tile <-> die wiring ---------------------------------------------------------------------
+    wire kv_re; wire [G*AW-1:0] kv_raddr; wire [G*W*32-1:0] kv_q;
+    wire [SW-1:0] kv_we; wire [SW*AW-1:0] kv_waddr; wire [SW*32-1:0] kv_wdata;
+    wire [SUN-1:0] xs_kv_we; wire [SUN*AW-1:0] xs_kv_waddr; wire [SUN*32-1:0] xs_kv_wdata;
+    wire wq_v, wq_rdy; wire [23:0] wq_addr; wire [5:0] wq_len; wire [LWIN-1:0] wq_tag;
+    wire [NPC_W-1:0] wq_room, wr_v, wr_rdy; wire [NPC_W*LWIN-1:0] wr_tag;
+    wire [NPC_W*5-1:0] wr_beat; wire [NPC_W*256-1:0] wr_data;
+    wire [127:0] kh_v, kh_rdy, kh_we, kh_wr_done, kr_v, kr_rdy;
+    wire [128*28-1:0] kh_addr; wire [128*4-1:0] kh_len, kr_beat; wire [128*16-1:0] kh_tag, kr_tag;
+    wire [128*256-1:0] kh_wdata, kr_data; wire [128*32-1:0] kh_wstrb;
+    wire kvd_v, kv_ok, kvd_mmode; wire [23:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js;
+    wire [15:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos; wire [1:0] kvd_hg;
+    wire xa_we, xa_re, xb_we, xb_re; wire [VWA-1:0] xa_waddr, xa_raddr, xb_waddr, xb_raddr;
+    wire [511:0] xa_wdata, xa_rq, xb_wdata, xb_rq;
+
+    ot_chip_v41x_tile #(.SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM),
+                        .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
+                        .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW)) u_tile (
+        .clk(clk), .rst_n(rn),
+        .start(t_start), .token(t_token), .pos(t_pos), .entry(host_mode ? host_entry : 14'd0),
+        .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),
+        .fault(t_fault), .acc_n(core_acc_n),
+        .prime_v(host_prime_v), .prime_first(host_prime_first), .prime_cid(host_prime_cid),
+        .cfg_ik_base(cfg_ik_base), .cfg_me_xs(cfg_me_xs), .cfg_q_base(cfg_q_base), .cfg_q_lbase(cfg_q_lbase),
+        .cfg_q_lead(cfg_q_lead), .cfg_q_rate(cfg_q_rate),
+        .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q), .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+        .xs_kv_we(xs_kv_we), .xs_kv_waddr(xs_kv_waddr), .xs_kv_wdata(xs_kv_wdata),
+        .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
+        .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_nout(kvd_nout), .kvd_hg(kvd_hg), .kvd_mmode(kvd_mmode),
+        .kvd_pos(kvd_pos), .kv_ok(kv_ok),
+        .wq_v(wq_v), .wq_rdy(wq_rdy), .wq_addr(wq_addr), .wq_len(wq_len), .wq_tag(wq_tag), .wq_room(wq_room),
+        .wr_v(wr_v), .wr_rdy(wr_rdy), .wr_tag(wr_tag), .wr_beat(wr_beat), .wr_data(wr_data),
+        .kh_v(kh_v), .kh_rdy(kh_rdy), .kh_addr(kh_addr), .kh_len(kh_len), .kh_tag(kh_tag), .kh_we(kh_we),
+        .kh_wdata(kh_wdata), .kh_wstrb(kh_wstrb), .kh_wr_done(kh_wr_done),
+        .kr_v(kr_v), .kr_rdy(kr_rdy), .kr_tag(kr_tag), .kr_beat(kr_beat), .kr_data(kr_data),
+        .xa_we(xa_we), .xa_waddr(xa_waddr), .xa_wdata(xa_wdata), .xa_re(xa_re), .xa_raddr(xa_raddr), .xa_rq(xa_rq),
+        .xb_we(xb_we), .xb_waddr(xb_waddr), .xb_wdata(xb_wdata), .xb_re(xb_re), .xb_raddr(xb_raddr), .xb_rq(xb_rq),
+        .unit_busy(unit_busy), .issue_unit(issue_unit),
+        .qs_fault(qs_fault), .qs_why(qs_why), .qs_fetched(qs_fetched), .qs_consumed(qs_consumed),
+        .kb_busy(kb_busy), .kb_records(kb_records), .kb_writes(kb_writes), .kb_highwater(kb_highwater),
+        .kb_read_stalls(kb_rs), .kb_writer_stalls(kb_ws));
+
+    // -- HBM address map (per stack, 32-byte sectors) ----------------------------------------------
+    //   [0, KEY_SECTORS)                      index keys: the pooled indexer's user slices of IKH_SLICE
+    //                                         sectors (its bridge addresses csec / ssec < IKH_SLICE a user)
+    //   [KV_SBASE, KV_SBASE + KV_SECTORS)     attention KV: KV_USERS slices of 2^KV_AW words, a word on
+    //                                         stack U mod 4 as two sectors at KV_SBASE + 2 (U >> 2)
+    localparam integer KEY_SECTORS = KEY_USERS * IKH_SLICE;
+    localparam integer KV_SBASE    = KEY_SECTORS;
+    localparam integer KV_SECTORS  = 2 * ((KV_USERS << KV_AW) / 4);
+
+    // -- attention KV prefetch (the core's KV_HBM handshake) ------------------------------------------
+    wire [3:0] pm_v, pm_rdy, pm_we, ps_v, ps_rdy, pk_wd;
+    wire [4*28-1:0] pm_addr; wire [4*4-1:0] pm_len, ps_beat; wire [4*16-1:0] pm_tag, ps_tag;
+    wire [4*256-1:0] pm_wdata, ps_data; wire [4*32-1:0] pm_wstrb;
+    wire kv_fault; wire [4:0] kv_code;
+    ot_chip_v41x_kv_prefetch #(.G(G), .W(W), .SW(SW), .SUN(SUN), .AW(AW), .STG(KV_STG), .SAW(KV_SAW),
+                               .KV_SBASE(KV_SBASE), .KV_SECTORS(KV_SECTORS), .HAW(28), .TAGW(16), .WQD(KV_WQD)) u_kv (
+        .clk(clk), .rst_n(rn), .base(host_mode ? {AW{1'b0}} : kv_base),
+        .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js),
+        .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_hg(kvd_hg), .kv_ok(kv_ok),
+        .re(kv_re), .raddr(kv_raddr), .q(kv_q), .we(kv_we), .waddr(kv_waddr), .wdata(kv_wdata),
+        .xwe(xs_kv_we), .xwaddr(xs_kv_waddr), .xwdata(xs_kv_wdata),
+        .m_v(pm_v), .m_rdy(pm_rdy), .m_addr(pm_addr), .m_len(pm_len), .m_tag(pm_tag), .m_we(pm_we),
+        .m_wdata(pm_wdata), .m_wstrb(pm_wstrb), .s_v(ps_v), .s_rdy(ps_rdy), .s_tag(ps_tag), .s_beat(ps_beat),
+        .s_data(ps_data), .fault(kv_fault), .fault_code(kv_code), .st_ops(kv_ops), .st_words(kv_words),
+        .st_sectors_written(kv_sectors_written), .st_refetches(kv_refetches), .st_wq_high(kv_wq_high),
+        .st_hold_cycles(kv_hold_cycles));
+
+    // -- four HBM3E stacks: K ports shared by the pooled indexer (pseudo-channels [32s, 32s + 32) of
+    //    u_tile's key bridge) and the KV prefetch through a per-stack arbiter; W_STACK the weights --------
+    wire [4*64-1:0] refs; wire [4*32-1:0] wreads; wire [3:0] oor;
+    wire [4-1:0] s_w_rdy; wire [4*NPC_W-1:0] s_w_room, s_wr_v; wire [4*NPC_W*LWIN-1:0] s_wr_tag;
+    wire [4*NPC_W*5-1:0] s_wr_beat; wire [4*NPC_W*256-1:0] s_wr_data;
+    wire [4*32-1:0] kgr;
+    genvar s;
+    generate for (s = 0; s < 4; s = s + 1) begin : g_hbm
+        wire [31:0] h_v, h_rdy, h_we, h_wr_done, r_v, r_rdy;
+        wire [32*28-1:0] h_addr; wire [32*4-1:0] h_len, r_beat; wire [32*17-1:0] h_tag, r_tag;
+        wire [32*256-1:0] h_wdata, r_data; wire [32*32-1:0] h_wstrb;
+        ot_chip_v41x_hbm_karb #(.NPC(32), .AW(28), .TAGW(16)) u_arb (
+            .clk(clk), .rst_n(rn),
+            .b_v(kh_v[s*32 +: 32]), .b_rdy(kh_rdy[s*32 +: 32]), .b_addr(kh_addr[s*32*28 +: 32*28]),
+            .b_len(kh_len[s*32*4 +: 32*4]), .b_tag(kh_tag[s*32*16 +: 32*16]), .b_we(kh_we[s*32 +: 32]),
+            .b_wdata(kh_wdata[s*32*256 +: 32*256]), .b_wstrb(kh_wstrb[s*32*32 +: 32*32]),
+            .b_wr_done(kh_wr_done[s*32 +: 32]),
+            .b_rsp_v(kr_v[s*32 +: 32]), .b_rsp_rdy(kr_rdy[s*32 +: 32]), .b_rsp_tag(kr_tag[s*32*16 +: 32*16]),
+            .b_rsp_beat(kr_beat[s*32*4 +: 32*4]), .b_rsp_data(kr_data[s*32*256 +: 32*256]),
+            .k_v(pm_v[s]), .k_rdy(pm_rdy[s]), .k_addr(pm_addr[s*28 +: 28]), .k_len(pm_len[s*4 +: 4]),
+            .k_tag(pm_tag[s*16 +: 16]), .k_we(pm_we[s]), .k_wdata(pm_wdata[s*256 +: 256]),
+            .k_wstrb(pm_wstrb[s*32 +: 32]), .k_wr_done(pk_wd[s]),
+            .k_rsp_v(ps_v[s]), .k_rsp_rdy(ps_rdy[s]), .k_rsp_tag(ps_tag[s*16 +: 16]),
+            .k_rsp_beat(ps_beat[s*4 +: 4]), .k_rsp_data(ps_data[s*256 +: 256]),
+            .h_v(h_v), .h_rdy(h_rdy), .h_addr(h_addr), .h_len(h_len), .h_tag(h_tag), .h_we(h_we),
+            .h_wdata(h_wdata), .h_wstrb(h_wstrb), .h_wr_done(h_wr_done),
+            .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat), .r_data(r_data),
+            .k_grants(kgr[s*32 +: 32]), .b_grants(), .contended());
+        ot_chip_v41x_hbm3e_phy #(.NPC(32), .K_MEM(K_MEM), .W_PORT(s == W_STACK), .NPC_W(NPC_W), .W_MEM(W_MEM),
+                                 .LWIN(LWIN), .KTAGW(17), .CLK_PS(CLK_PS)) u_hbm (
+            .clk(clk), .rst_n(rn),
+            .k_v(h_v), .k_rdy(h_rdy), .k_addr(h_addr), .k_len(h_len), .k_tag(h_tag), .k_we(h_we),
+            .k_wdata(h_wdata), .k_wstrb(h_wstrb), .k_wr_done(h_wr_done),
+            .kr_v(r_v), .kr_rdy(r_rdy), .kr_tag(r_tag), .kr_beat(r_beat), .kr_data(r_data),
+            .w_v(s == W_STACK ? wq_v : 1'b0), .w_rdy(s_w_rdy[s]), .w_addr(wq_addr), .w_len(wq_len), .w_tag(wq_tag),
+            .w_room(s_w_room[s*NPC_W +: NPC_W]), .wr_v(s_wr_v[s*NPC_W +: NPC_W]),
+            .wr_rdy(s == W_STACK ? wr_rdy : {NPC_W{1'b0}}),
+            .wr_tag(s_wr_tag[s*NPC_W*LWIN +: NPC_W*LWIN]), .wr_beat(s_wr_beat[s*NPC_W*5 +: NPC_W*5]),
+            .wr_data(s_wr_data[s*NPC_W*256 +: NPC_W*256]),
+            .k_oor(oor[s]), .refreshes(refs[s*64 +: 64]), .w_reads(wreads[s*32 +: 32]));
+    end endgenerate
+    assign kv_hbm_grants = kgr[0 +: 32] + kgr[32 +: 32] + kgr[64 +: 32] + kgr[96 +: 32];
+    assign wq_rdy  = s_w_rdy[W_STACK];
+    assign wq_room = s_w_room[W_STACK*NPC_W +: NPC_W];
+    assign wr_v    = s_wr_v[W_STACK*NPC_W +: NPC_W];
+    assign wr_tag  = s_wr_tag[W_STACK*NPC_W*LWIN +: NPC_W*LWIN];
+    assign wr_beat = s_wr_beat[W_STACK*NPC_W*5 +: NPC_W*5];
+    assign wr_data = s_wr_data[W_STACK*NPC_W*256 +: NPC_W*256];
+    assign hbm_refreshes = refs[0 +: 64] + refs[64 +: 64] + refs[128 +: 64] + refs[192 +: 64];
+    assign hbm_w_reads = wreads[W_STACK*32 +: 32];
+
+    // -- package controller ----------------------------------------------------------------------
+    wire pc_in_valid, pc_in_ready, pc_in_last, pc_out_valid, pc_out_ready, pc_out_last;
+    wire [FLIT-1:0] pc_in_data, pc_out_data;
+    wire proto_fault, ctrl_busy;
+    ot_rom_pkg_ctrl_x #(.PKG_ID(PKG_ID), .FLIT(FLIT), .NW(16), .AW(AW), .VWA(VWA), .MAXU(MAXU), .KVW(KVW),
+                        .XWORDS(XWORDS), .RXWORDS(RXWORDS), .RXB(RXB), .TXB(TXB), .SOURCE(SOURCE),
+                        .RESULT_PARTS(RESULT_PARTS), .SEND_HIDDEN(SEND_HIDDEN), .HID_DEST(HID_DEST),
+                        .SEND_RESULT(SEND_RESULT), .RES_DEST(RES_DEST), .COMBINE_IN(COMBINE_IN), .ROW0(ROW0),
+                        .FWD_TOKEN(FWD_TOKEN)) u_ctrl (
+        .clk(clk), .rst_n(rn),
+        .cfg_users(cfg_users), .cfg_prompt_len(cfg_prompt_len), .cfg_gen_len(cfg_gen_len),
+        .in_valid(pc_in_valid), .in_ready(pc_in_ready), .in_data(pc_in_data), .in_last(pc_in_last),
+        .out_valid(pc_out_valid), .out_ready(pc_out_ready), .out_data(pc_out_data), .out_last(pc_out_last),
+        .core_start(c_start), .core_token(c_token), .core_pos(c_pos),
+        .core_done(host_mode ? 1'b0 : core_done),
+        .core_next_token(core_next_token), .core_next_val(core_next_val), .kv_base(kv_base),
+        .vm_we(xa_we), .vm_waddr(xa_waddr), .vm_wdata(xa_wdata), .vm_re(xa_re), .vm_raddr(xa_raddr), .vm_rq(xa_rq),
+        .pr_re(pr_re), .pr_user(pr_user), .pr_pos(pr_pos), .pr_q(pr_q),
+        .core_busy(ctrl_busy), .tok_valid(tok_valid), .tok_user(tok_user), .tok_pos(tok_pos), .tok_id(tok_id),
+        .users_done(users_done), .proto_fault(proto_fault));
+
+    // -- fabric router: package controller, UCIe, board link ----------------------------------------
+    wire [2:0] r_in_valid, r_in_ready, r_in_last, r_out_valid, r_out_ready, r_out_last;
+    wire [3*FLIT-1:0] r_in_data, r_out_data;
+    wire rtr_overflow;
+    assign r_in_valid = {bl_rx_valid, ucie_rx_valid, pc_out_valid};
+    assign r_in_data  = {bl_rx_data, ucie_rx_data, pc_out_data};
+    assign r_in_last  = {bl_rx_last, ucie_rx_last, pc_out_last};
+    assign pc_out_ready = r_in_ready[0];
+    assign ucie_rx_ready = r_in_ready[1];
+    assign bl_rx_ready = r_in_ready[2];
+    assign pc_in_valid = r_out_valid[0]; assign pc_in_data = r_out_data[0 +: FLIT]; assign pc_in_last = r_out_last[0];
+    assign ucie_tx_valid = r_out_valid[1]; assign ucie_tx_data = r_out_data[FLIT +: FLIT];
+    assign ucie_tx_last = r_out_last[1];
+    assign bl_tx_valid = r_out_valid[2]; assign bl_tx_data = r_out_data[2*FLIT +: FLIT]; assign bl_tx_last = r_out_last[2];
+    assign r_out_ready = {bl_tx_ready, ucie_tx_ready, pc_in_ready};
+    ot_rom_fabric_router #(.NP(3), .FW(FLIT), .BUF(4), .DESTS(DESTS), .INPUT_READY_VALID(1),
+                           .ROUTE_INIT(ROUTE_INIT)) u_rtr (
+        .clk(clk), .rst_n(rn),
+        .in_valid(r_in_valid), .in_ready(r_in_ready), .in_credit(), .in_data(r_in_data), .in_last(r_in_last),
+        .out_valid(r_out_valid), .out_ready(r_out_ready), .out_data(r_out_data), .out_last(r_out_last),
+        .cfg_we(rcfg_we), .cfg_dest(rcfg_dest), .cfg_mask(rcfg_mask),
+        .drops(rtr_drops), .overflow(rtr_overflow));
+
+    // -- one-shot collective engine + DMA ----------------------------------------------------------
+    wire e_valid, e_ready, e_last, e_mode; wire [CL_FW-1:0] e_data; wire [CL_TAGW-1:0] e_tag;
+    wire o_valid, o_last, o_err, cl_fault; wire [CL_FW-1:0] o_data; wire [CL_RB-1:0] o_rank; wire [2:0] cl_code;
+    wire [N_TP-1:0] tx_valid, tx_ready, rx_valid; wire [CL_PW-1:0] tx_rec; wire [N_TP*CL_PW-1:0] rx_rec;
+    wire [2*N_TP-1:0] cr_in, cr_out;
+    ot_rom_oneshot_die_px #(.N(N_TP), .RANK(RANK), .LANES(CL_LANES), .TAGW(CL_TAGW), .DEPTH(CL_DEPTH),
+                            .PKG_DIES(PKG_DIES), .RELAY(CL_RELAY), .ADD_LAT(CL_ADD_LAT), .GW(1)) u_coll (
+        .clk(clk), .rst_n(rn),
+        .in_valid(e_valid), .in_ready(e_ready), .in_data(e_data), .in_last(e_last), .in_mode(e_mode), .in_tag(e_tag),
+        .tx_valid(tx_valid), .tx_rec(tx_rec), .tx_ready(tx_ready), .cr_in(cr_in),
+        .rx_valid(rx_valid), .rx_rec(rx_rec), .cr_out(cr_out),
+        .rl_tx_valid(ucie_rl_tx_valid), .rl_tx_rec(ucie_rl_tx_rec),
+        .rl_rx_valid(ucie_rl_rx_valid), .rl_rx_rec(ucie_rl_rx_rec),
+        .out_valid(o_valid), .out_data(o_data), .out_last(o_last), .out_rank(o_rank), .out_err(o_err),
+        .fault(cl_fault), .fault_code(cl_code));
+    ot_chip_v41x_coll_dma #(.WA(VWA), .FW(CL_FW), .TAGW(CL_TAGW)) u_cdma (
+        .clk(clk), .rst_n(rn), .go(coll_go), .mode(coll_mode), .tag(coll_tag), .src(coll_src), .n(coll_n),
+        .dst(coll_dst), .busy(coll_busy), .words_out(), .words_in(),
+        .vm_re(xb_re), .vm_raddr(xb_raddr), .vm_rq(xb_rq), .vm_we(xb_we), .vm_waddr(xb_waddr), .vm_wdata(xb_wdata),
+        .e_valid(e_valid), .e_ready(e_ready), .e_data(e_data), .e_last(e_last), .e_mode(e_mode), .e_tag(e_tag),
+        .o_valid(o_valid), .o_data(o_data), .o_last(o_last));
+    // per-destination ports: self (unused), the in-package peer (UCIe), the partner package (T1)
+    assign ucie_ctx_rec = tx_rec;
+    assign bl_ctx_rec = tx_rec;
+    genvar t;
+    generate for (t = 0; t < N_TP; t = t + 1) begin : g_rank
+        if (t == RANK) begin : g_self
+            assign tx_ready[t] = 1'b1;
+            assign cr_in[2*t +: 2] = 2'b00;
+            assign rx_valid[t] = 1'b0;
+            assign rx_rec[t*CL_PW +: CL_PW] = {CL_PW{1'b0}};
+        end else if (t / PKG_DIES == RANK / PKG_DIES) begin : g_ucie
+            assign ucie_ctx_valid = tx_valid[t];
+            assign tx_ready[t] = ucie_ctx_ready;
+            assign cr_in[2*t +: 2] = ucie_ccr_in;
+            assign rx_valid[t] = ucie_crx_valid;
+            assign rx_rec[t*CL_PW +: CL_PW] = ucie_crx_rec;
+            assign ucie_ccr_out = cr_out[2*t +: 2];
+        end else begin : g_t1
+            localparam integer J = t % PKG_DIES;
+            assign bl_ctx_valid[J] = tx_valid[t];
+            assign tx_ready[t] = bl_ctx_ready[J];
+            assign cr_in[2*t +: 2] = bl_ccr_in[2*J +: 2];
+            assign rx_valid[t] = bl_crx_valid[J];
+            assign rx_rec[t*CL_PW +: CL_PW] = bl_crx_rec[J*CL_PW +: CL_PW];
+            assign bl_ccr_out[2*J +: 2] = cr_out[2*t +: 2];
+        end
+    end endgenerate
+
+    // -- sticky faults -------------------------------------------------------------------------------
+    reg [7:0] fault_r;
+    always @(posedge clk or negedge rn)
+        if (!rn) fault_r <= 8'd0;
+        else fault_r <= fault_r | {|oor, kv_fault, rtr_overflow, cl_fault | o_err, proto_fault, qs_fault, 1'b0, t_fault};
+    assign kv_fault_code = kv_code;
+    assign fault = fault_r;
+
+    // elaboration checks
+`ifndef SYNTHESIS
+    initial begin
+        if (N_TP != 2 * PKG_DIES || PKG_DIES != 2)
+            $fatal(1, "ot_chip_v41x_die: the port map assumes a 4-die group of two 2-die packages");
+        if (CL_FW != FLIT) $fatal(1, "ot_chip_v41x_die: the collective word must be one vector-memory word");
+        if (KV_SBASE < KEY_SECTORS)
+            $fatal(1, "ot_chip_v41x_die: KV region [%0d, ..) overlaps the index keys [0, %0d)", KV_SBASE, KEY_SECTORS);
+        if (KV_SBASE + KV_SECTORS > K_MEM)
+            $fatal(1, "ot_chip_v41x_die: KV region ends at %0d, past the stack's %0d sectors", KV_SBASE + KV_SECTORS,
+                   K_MEM);
+    end
+`endif
+endmodule

@@ -31,11 +31,13 @@
 // is valid when (t*IL + j)*W + l < nout (mmode 0: rows) or t*W + l < nout
 // (mmode 1: every slot its own vector -- one attention head per slot).
 //
-// MULTIPLIERS.  Every product is BF16 x BF16: ROM weights times BF16-rounded
-// x, and (KV-sourced ops) the BF16 KV cache times BF16-rounded q or
-// probabilities.  Every lane therefore has the exact BF16 multiplier
-// (ot_hdc_bmul), and KV-sourced ops spread over all groups, each through its
-// own KV port.
+// MULTIPLIERS. BF16 mode reads BF16 ROM weights. INT8 mode reads signed codes
+// packed from two four-bit select cells, converts them exactly to BF16, then
+// uses the same exact BF16 multiplier. KV-sourced ops retain BF16 values.
+// INT8 matrix results receive one BF16 row-scale multiply after the complete
+// K-split tree, before writeback and argmax. Its one-cycle scale ROM request
+// starts two cycles before the tree result; only the five-cycle FP32 multiply
+// extends the result path, and the tags follow those five cycles.
 //
 // Timing from an issue cycle c: memories return at c+1, operands are captured
 // at c+2 and conditioned at c+3, products leave at c+8, sums at c+13, the
@@ -47,7 +49,8 @@ module ot_hdc_matvec #(
     parameter integer G  = 4,
     parameter integer IL = 8,
     parameter integer AW = 24,
-    parameter integer NW = 16
+    parameter integer NW = 16,
+    parameter integer INT8_WEIGHT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -79,10 +82,15 @@ module ot_hdc_matvec #(
     input  wire              i_amax,
     input  wire              i_rmax,      // per-slot maxima of the results -> word mbase / W, lanes mbase % W + j
     input  wire [AW-1:0]     i_mbase,
-    // weight ROM: G*W bf16 lanes per word
+    // Matrix weight ROM: G*W BF16 lanes, or G*W signed INT8 codes.
     output reg               wrom_re,
     output reg  [AW-1:0]     wrom_addr,
-    input  wire [G*W*16-1:0] wrom_q,
+    input  wire [G*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0] wrom_q,
+    // One independent scale read per group. Row-word address is the matrix's
+    // weight base plus output-row-word offset. Non-INT8 mode ties requests low.
+    output reg               scale_re,
+    output reg  [G*AW-1:0]  scale_addr,
+    input  wire [G*W*16-1:0] scale_q,
     // KV SRAM: one port per group, W lanes (BF16 values in 32-bit words) per word
     output reg               kv_re,
     output reg  [G*AW-1:0]   kv_addr,
@@ -116,6 +124,20 @@ module ot_hdc_matvec #(
     localparam integer TA = 3;            // split-tree adder: ot_hdc_qadd (rtl/hdc/ot_hdc_fastfp.sv), LATENCY 3
     localparam integer TL = TA + 1;       // split-tree cycles per level: the adder + 1 output register
     localparam integer OD = TL * LG;      // split tree
+    function automatic [15:0] int8_bf16(input [7:0] code);
+        reg [7:0] mag, norm;
+        reg [2:0] msb;
+        integer bit_index;
+        begin
+            mag = code[7] ? (~code + 8'd1) : code;
+            msb = 0;
+            for (bit_index = 0; bit_index < 8; bit_index = bit_index + 1)
+                if (mag[bit_index]) msb = bit_index[2:0];
+            norm = mag << (3'd7 - msb);
+            int8_bf16 = (mag == 0) ? 16'd0 :
+                        {code[7], (8'd127 + {5'd0, msb}), norm[6:0]};
+        end
+    endfunction
 
     // -- issue loop -----------------------------------------------------------
     integer gi;
@@ -123,6 +145,7 @@ module ot_hdc_matvec #(
     reg [NW-1:0]     nout_r, tiles_r, k_r;
     reg              wsrc_r, round_r, oen_r, amax_r, mmode_r, rmax_r;
     reg [AW-1:0]     mbase_r;
+    reg [AW-1:0]     scale_base_r;
     reg [3:0]        split_r;
     reg [AW-1:0]     tstep_r;          // weight step per round: ts, or (G/S)*ts for KV ops
     reg [AW-1:0]     wcs_r;
@@ -154,6 +177,7 @@ module ot_hdc_matvec #(
                 nout_r <= i_nout; tiles_r <= i_tiles; k_r <= kc_in; ktot_r <= i_k;
                 wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
                 rmax_r <= i_rmax; mbase_r <= i_mbase;
+                scale_base_r <= i_wbase;
                 mmode_r <= i_mmode; split_r <= i_split; wcs_r <= i_wcs;
                 ts_r <= i_ts; tstep_r <= i_wsrc ? (i_ts * per_round) : i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
                 xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
@@ -172,7 +196,11 @@ module ot_hdc_matvec #(
             //: KV ops: group g = q*S + c takes tile r*(G/S) + q, chunk c: its own word
             for (gi = 0; gi < G; gi = gi + 1)
                 kv_addr[gi*AW +: AW] <= cur + (gi >> split_r) * ts_r + (gi & ((1 << split_r) - 1)) * wcs_r;
-            x_re <= {G{1'b1}};
+            // With a non-power-of-two G, the final G % S groups have no
+            // complete K-split tile.  The O4 drafter FC uses G=6144, S=4096;
+            // only groups 0..4095 belong to its one output tile per round.
+            for (gi = 0; gi < G; gi = gi + 1)
+                x_re[gi] <= ((gi >> split_r) < (G >> split_r));
             if (!j_last) begin
                 j <= j + 1'b1; oa <= oa + ojs_r; nb <= nb + W; xc <= xc + xjs_r;
                 //: the weight word advances once per 2^jsh slots
@@ -227,21 +255,22 @@ module ot_hdc_matvec #(
         e_rmax <= rmax_r; e_j <= j; e_mbase <= mbase_r;
         e_opend <= t_last && k_last && j_last;           // the op's last element
         for (gi = 0; gi < G; gi = gi + 1)
-            e_gm[gi] <= !wsrc_r || (({{(32-NW){1'b0}}, k} << split_r) + (gi & ((1 << split_r) - 1))
-                                    < {{(32-NW){1'b0}}, ktot_r});
+            e_gm[gi] <= ((gi >> split_r) < (G >> split_r)) &&
+                        (!wsrc_r || (({{(32-NW){1'b0}}, k} << split_r) + (gi & ((1 << split_r) - 1))
+                                      < {{(32-NW){1'b0}}, ktot_r}));
     end
 
     // -- S1 (memories answer) -> S2 (capture) -> S3 (condition) -----------------
-    localparam integer TW = 1 + 1 + 1 + 1 + 1 + 4 + AW + AW + 3 * (NW + 1) + 1 + 3 + 1 + AW;
+    localparam integer TW = 1 + 1 + 1 + 1 + 1 + 4 + AW + AW + 3 * (NW + 1) + 1 + 3 + 1 + AW + AW;
     wire [TW-1:0] e_tag = {e_last, e_oen, e_amax, e_wsrc, e_mmode, e_split, e_oa, e_ots, e_nb, e_lb, e_rem,
-                           e_rmax, e_j, e_opend, e_mbase};
+                           e_rmax, e_j, e_opend, e_mbase, scale_base_r};
     reg  [TW-1:0] s1_tag, s1b_tag, s2_tag, s3_tag;
     reg          s1_v, s1b_v, s2_v, s3_v, s1_first, s1b_first, s2_first, s3_first;
     reg          s1b_wsrc, s1b_round;
     //: Memory read data is registered once as it arrives (MEM_PIPE): the
     //: weight word is 2,048 bits wide and its lanes span the whole engine, so a
     //: pin-to-lane wire gets a cycle of its own.
-    reg [G*W*16-1:0] mq_wrom;
+    reg [G*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0] mq_wrom;
     reg [G*W*32-1:0] mq_kv;
     reg [G*32-1:0]   mq_x;
     reg          s1_wsrc, s1_round, s2_round, s3_wsrc;
@@ -262,7 +291,12 @@ module ot_hdc_matvec #(
         mq_wrom <= wrom_q; mq_kv <= kv_q; mq_x <= x_q;
         s3_wsrc <= s2_tag[TW-4];
         for (l = 0; l < G * W; l = l + 1)
-            s2_w[32*l +: 32] <= !s1b_gm[l / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*l +: 32] : {mq_wrom[16*l +: 16], 16'h0000};
+            if (INT8_WEIGHT != 0)
+                s2_w[32*l +: 32] <= !s1b_gm[l / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*l +: 32] :
+                                          {int8_bf16(mq_wrom[8*l +: 8]), 16'h0000};
+            else
+                s2_w[32*l +: 32] <= !s1b_gm[l / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*l +: 32] :
+                                          {mq_wrom[16*l +: 16], 16'h0000};
         s2_x <= mq_x;
         s3_w <= s2_w;
         for (l = 0; l < G; l = l + 1)
@@ -330,9 +364,11 @@ module ot_hdc_matvec #(
             assign split_at[4*lv+3 -: 4] = sp_out;
             wire [G*W*32-1:0] held;
             ot_hdc_delay #(.W(G*W*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n), .d(lvl[lv-1]), .q(held));
-            wire [(G >> lv)*W-1:0] pf;
+            localparam integer PAIRS = (G >> lv) * W;
+            wire [(PAIRS > 0 ? PAIRS : 1)-1:0] pf;
+            if (PAIRS == 0) assign pf = 1'b0;
             reg  [G*W*32-1:0] lq;
-            for (p = 0; p < (G >> lv) * W; p = p + 1) begin : g_add
+            for (p = 0; p < PAIRS; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
                 ot_hdc_qadd u_add (clk, rst_n, vline[10 + TL*(lv-1)] && (split_at[4*lv-1 -: 4] >= lv),
@@ -347,7 +383,76 @@ module ot_hdc_matvec #(
             assign tfault[lv] = |pf;
         end
     endgenerate
-    wire [G*W*32-1:0] res = lvl[LG];
+    wire [G*W*32-1:0] raw_res = lvl[LG];
+    wire raw_v = vline[10 + OD];
+    wire raw_last, raw_oen, raw_amax, raw_wsrc, raw_mmode;
+    wire [3:0] raw_split;
+    wire [AW-1:0] raw_oa, raw_ots, raw_mbase, raw_sbase;
+    wire [NW:0] raw_nb, raw_lb, raw_nout;
+    wire raw_rmax, raw_opend;
+    wire [2:0] raw_j;
+    assign {raw_last, raw_oen, raw_amax, raw_wsrc, raw_mmode, raw_split,
+            raw_oa, raw_ots, raw_nb, raw_lb, raw_nout,
+            raw_rmax, raw_j, raw_opend, raw_mbase, raw_sbase} = a_tag;
+    wire [G*W*32-1:0] res;
+    wire [TW-1:0] result_tag;
+    wire result_v;
+    wire [G*W-1:0] scale_faults;
+    wire [7:0] post_pending;
+    generate if (INT8_WEIGHT != 0) begin : g_post_scale
+        wire [TW-1:0] tag_d5, pre_tag;
+        wire [5:0] vd;
+        wire [8+OD:0] pre_vline;
+        wire pre_last, pre_oen, pre_amax, pre_wsrc, pre_mmode;
+        wire [3:0] pre_split;
+        wire [AW-1:0] pre_oa, pre_ots, pre_mbase, pre_sbase;
+        wire [NW:0] pre_nb, pre_lb, pre_nout;
+        wire pre_rmax, pre_opend;
+        wire [2:0] pre_j;
+        wire [G*W*32-1:0] scaled;
+        ot_hdc_delay #(.W(TW), .D(5)) u_tag (.clk(clk), .rst_n(rst_n), .d(a_tag), .q(tag_d5));
+        ot_hdc_vline #(.D(5)) u_v (.clk(clk), .rst_n(rst_n), .v(raw_v), .vd(vd));
+        ot_hdc_delay #(.W(TW), .D(8+OD)) u_pretag (.clk(clk), .rst_n(rst_n),
+            .d(s3_tag), .q(pre_tag));
+        ot_hdc_vline #(.D(8+OD)) u_prev (.clk(clk), .rst_n(rst_n),
+            .v(s3_v), .vd(pre_vline));
+        assign {pre_last, pre_oen, pre_amax, pre_wsrc, pre_mmode, pre_split,
+                pre_oa, pre_ots, pre_nb, pre_lb, pre_nout,
+                pre_rmax, pre_j, pre_opend, pre_mbase, pre_sbase} = pre_tag;
+        // pre_tag precedes a_tag by two cycles. The registered request becomes
+        // visible to the synchronous ROM at the next edge, and scale_q is
+        // stable when raw_res enters the FP32 multiplier at the following edge.
+        integer sg;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) scale_re <= 1'b0;
+            else scale_re <= pre_vline[8+OD] && pre_last && !pre_wsrc;
+        end
+        always @(posedge clk) begin
+            for (sg = 0; sg < G; sg = sg + 1)
+                scale_addr[sg*AW +: AW] <= pre_sbase + (pre_nb >> LW) + sg * IL;
+        end
+        genvar si;
+        for (si = 0; si < G*W; si = si + 1) begin : g_scale
+            ot_hdc_fmul u_mul (
+                .clk(clk), .rst_n(rst_n), .v(raw_v && raw_last),
+                .a(raw_res[32*si +: 32]),
+                .b({raw_wsrc ? 16'h3F80 : scale_q[16*si +: 16], 16'd0}),
+                .y(scaled[32*si +: 32]), .fault(scale_faults[si])
+            );
+        end
+        assign res = scaled;
+        assign result_tag = tag_d5;
+        assign result_v = vd[5];
+        assign post_pending = {2'b00, vd};
+    end else begin : g_no_post_scale
+        assign scale_re = 1'b0;
+        assign scale_addr = 0;
+        assign scale_faults = 0;
+        assign res = raw_res;
+        assign result_tag = a_tag;
+        assign result_v = raw_v;
+        assign post_pending = 0;
+    end endgenerate
     //: A status bit: registered in two levels (see ot_hdc_stream).
     reg [G:0] fault_q;
     integer fg;
@@ -356,7 +461,7 @@ module ot_hdc_matvec #(
         else begin
             for (fg = 0; fg < G; fg = fg + 1) fault_q[fg] <= |lfault[fg*W +: W];
             fault_q[G] <= |tfault;
-            fault <= |fault_q;
+            fault <= |fault_q | (|scale_faults);
         end
     end
 
@@ -366,16 +471,16 @@ module ot_hdc_matvec #(
     reg  [G*AW-1:0] o_addr1;
     reg  [G*W-1:0]  o_mask1;
     reg  [G*W*32-1:0] o_data1;
-    wire          r_v = vline[10 + OD];
+    wire          r_v = result_v;
     wire          r_last, r_oen, r_amax, r_wsrc, r_mmode;
     wire [3:0]    r_split;
     wire [AW-1:0] r_oa, r_ots;
     wire [NW:0]   r_nb, r_lb, r_nout;
     wire          r_rmax, r_opend;
     wire [2:0]    r_j;
-    wire [AW-1:0] r_mbase;
+    wire [AW-1:0] r_mbase, r_sbase;
     assign {r_last, r_oen, r_amax, r_wsrc, r_mmode, r_split, r_oa, r_ots, r_nb, r_lb, r_nout,
-            r_rmax, r_j, r_opend, r_mbase} = a_tag;
+            r_rmax, r_j, r_opend, r_mbase, r_sbase} = result_tag;
     wire [LG:0]   r_ports = G >> r_split;
     reg  [G*W-1:0] r_mask;
     integer q, ql;
@@ -535,7 +640,7 @@ module ot_hdc_matvec #(
 
     //: Registered: the OR of every valid bit is wide.  Cleared on the
     //: accepting edge so a just-issued op never reads as drained.
-    wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|tv) && !ov1 && !ov
+    wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1 && !ov
                   && !mx_we;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;

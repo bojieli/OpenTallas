@@ -69,6 +69,9 @@ def dump_on_path(U, A, sp, muts, hz, ctx=1048576, positions=1):
     import arch_latency_ladder_v41 as LX
     from dataclasses import replace
     hzv, prm = hz
+    # the bench patterns are matched to the unsplit nodes: terms are derived without the stage-rebalance split
+    # (tools/v41_stage_rebalance.py), whose merge carries the helpers' lists and would shift the select residual
+    muts = [m for m in muts if getattr(m, "__name__", "") != "stage_rebalance_split"]
     out = dict(clock_hz=hzv, positions=positions)
     with LX.clock(hzv), U.params(**prm):
         clk = A._env()["clock"]
@@ -223,9 +226,7 @@ def lever_conditions(dp, lev):
                      "chip throughput"),
         contexts=list(CONTEXTS), batch=1, clock_hz=dp["hz"][0], lane_split=dp["split"],
         mtp=dict(tau=LX.TAU, gamma=U.GAMMA, lane_multiplier=U.MTP_M, tau_sensitivity_band=list(U.TAU_BAND),
-                 tau_source=("tools/arch_utilization_v41.py TAU: LMSYS/SGLang accept length ~5 on "
-                             "DeepSeek-V4-Pro-DSpark at batch 1 (https://www.lmsys.org/blog/2026-07-06-dspark-sglang/),"
-                             " third-party, V4-Pro not V4.1-Flash")),
+                 tau_source=("tools/arch_utilization_v41.py TAU = arch_budget_v41.TAU_HEADLINE: " + A.TAU_HEADLINE_SOURCE)),
         hbm_stacks_per_rom_die=A.ROM_DIE_HBM_STACKS,
         links_s=dict(ucie_hop=links["rom_package_ucie"]["hop"], t1_board_hop=links["rom_board_serdes"]["hop"],
                      t2_rack_cable_stage_hop=links["rom_rack_cable_serdes"]["hop"]),

@@ -11,10 +11,14 @@ Records: `results/physical_abi3/asap7/chip/`.
 **Status (2026-09-28):** The Qwen tile and reduced-die flow is available,
 with adopted reduced physical-sector tests and physical tile routes tracked in
 `results/physical_hdc/`. The DeepSeek-V4.1 core used by current RTL campaigns
-is `rtl/hdc/v41x/ot_hdc_core_v41x.sv`. Its chip tile and die have not yet
-been wired to the core, the QE weight stream, pooled index-key HBM and KV
-storage. The V4.1 physical assembly is disabled until those connections and
-matching memory macro interfaces are implemented. Block and array campaigns
+is `rtl/hdc/v41x/ot_hdc_core_v41x.sv`. Its RTL tile and layer die
+(`rtl/chip/ot_chip_v41x_tile.sv`, `rtl/chip/ot_chip_v41x_die.sv`) wire the
+core with all adopted units to its ROM banks, the QE weight stream, the pooled
+index-key path and the attention KV prefetch, all on four behavioural HBM3E
+stack interfaces. A reduced token through the die top is bit-exact with the KV
+starting in HBM (`results/rtl/hdc_v41x_die_top_smoke.json`). The V4.1 physical
+assembly stays disabled until matching memory macro interfaces, a floorplan and
+routes exist. Block and array campaigns
 are evidence for their stated boundaries, not substitutes for a chip route.
 
 ## 1. The hierarchy
@@ -31,12 +35,11 @@ so each block's constraints, pins and power grid belong to this flow.
 | 2 | Qwen tile (`rtl/chip/ot_chip_hdc_tile.sv`) | M2–M8 | M8 | level-1 macros, memories, glue |
 | 3 | Qwen reduced die (`rtl/chip/ot_chip_die2x2.sv`) | M2–M9 | M9 | tile macros, PHY placeholders, collectives |
 
-The V4.1 tile and die need an implementation around
-`rtl/hdc/v41x/ot_hdc_core_v41x.sv`, its adopted engines, and live HBM
-interfaces. The previous physical wrappers and their floorplan were removed
-because they were wired to a superseded core and disconnected HBM ports.
-`tools/chip_assembly/assemble.py --arch v41_rom` now rejects the build until
-that integration exists.
+The V4.1 tile and die exist as RTL around `rtl/hdc/v41x/ot_hdc_core_v41x.sv`
+(`rtl/chip/ot_chip_v41x_tile.sv`, `rtl/chip/ot_chip_v41x_die.sv`), with the
+HBM3E interfaces as the adopted gates' simulation timing models. They have no
+floorplan, macro views or route yet, so
+`tools/chip_assembly/assemble.py --arch v41_rom` still rejects the build.
 
 Each level's grid is in `tools/chip_assembly/tcl/pdn_{block,tile,die}.tcl`.
 A child's power pins sit on the top layer it uses, and the parent drops vias
@@ -99,10 +102,12 @@ the same edge, so the mesh channel between them is a 20 µm, flop-to-flop gap.
 - **Qwen ROM and HBM die:** every tile's outward S port and its KV HBM port
   face a PHY strip. The strip holds a UCIe module and an HBM PHY-and-controller
   slice under each tile. The outward W ports go to board SerDes.
-- **V4.1 universal die:** the adopted die design connects a vector-memory
-  collective DMA to a one-shot reduction and multicast engine, then to UCIe
-  and board links. Its tile, die and collective paths still need integrated
-  token and physical closure before they define a placed die.
+- **V4.1 layer die:** `rtl/chip/ot_chip_v41x_die.sv` connects a vector-memory
+  collective DMA to the one-shot reduction and multicast engine, then to UCIe
+  and board-link ports, beside the package controller and fabric router. The
+  reduced token runs through the die's core tile and HBM stacks; the collective
+  and link paths are linted and elaborated but not yet exercised by a bench,
+  and the die has no physical closure.
 
 ## 2. Timing budgets
 
@@ -171,8 +176,8 @@ skew). Records: `results/.../chip/tiles/`, `results/.../chip/dies/`.
 | Gate | Qwen3-8B | DeepSeek-V4.1-Flash |
 |---|---|---|
 | Adopted core RTL | `rtl/hdc/ot_hdc_core.sv`; timed HBM KV and physical sector tests | `rtl/hdc/v41x/ot_hdc_core_v41x.sv`; reduced all-unit, HBM and switched-array campaigns |
-| Chip tile and reduced die | `rtl/chip/ot_chip_hdc_tile.sv` and `rtl/chip/ot_chip_die2x2.sv` | pending adopted tile and die wiring; the earlier wrappers were removed |
-| Memory interface | core KV requests reach the tile HBM interface | QE weight and pooled index-key HBM paths pass separately in RTL benches; tile/die PHY connection is pending |
+| Chip tile and reduced die | `rtl/chip/ot_chip_hdc_tile.sv` and `rtl/chip/ot_chip_die2x2.sv` | `rtl/chip/ot_chip_v41x_tile.sv` and `rtl/chip/ot_chip_v41x_die.sv`: RTL only; one reduced token bit-exact through the die top (`results/rtl/hdc_v41x_die_top_smoke.json`) |
+| Memory interface | core KV requests reach the tile HBM interface | QE weights, pooled index keys and attention KV (prefetch behind the core's KV_HBM gate, K ports arbitrated with the indexer) on the die's behavioural HBM3E stacks |
 | Physical closure | W4/G2 reduced tile accepted at 1.5 ns; wider G4/W4 and G4/W8 routes remain open | adopted block routes exist; no whole-core, tile or die timing closure |
 
 The flow's former V4.1 tile macro dimensions and placement were tied to an
@@ -183,12 +188,12 @@ die area model does not supply that missing port-level floorplan.
 
 ## 6. Remaining implementation work
 
-1. Connect `ot_hdc_core_v41x` to physical program/weight memories, banked
-   vector memory, QE weight-stream window, pooled index-key HBM bridge and KV
-   HBM path in a synthesizable tile. Register and constrain every memory and
-   mesh boundary.
-2. Wire four adopted tiles and the verified collective engines into a die,
-   with live HBM PHY request/response paths and a tested host/controller path.
+1. Replace the tile's behavioural ROM and vector-memory arrays with compiler
+   macros and a banked vector memory; register and constrain every memory and
+   link boundary.
+2. Exercise the die's package controller, fabric router, collective engine and
+   UCIe / board-link ports in a multi-die bench (the smoke drives the core from
+   the host port), and add the remaining collective engines of the ledger.
 3. Run full-token RTL across the integrated die and switched multi-package
    array, then characterise the adopted tile and die with macro views, clock
    trees, routing and extracted timing. Treat the 1.087 GHz V4.1 design point

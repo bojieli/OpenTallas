@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -46,14 +45,20 @@ def test_window_record_is_lossless():
 
 
 def test_compressed_record_is_lossless():
-    # the E4M3 group scale amax / 6 must be finite in E4M3 (|x| <= 2,688); the golden does not clamp it
+    # Exercise ordinary row scales; the next test covers saturation.
     for x in _vectors(30, 512, 4, -12, 6):
         assert np.array_equal(G.bits(R.decode_ckv(R.encode_ckv(x))), G.bits(G4.qdq_fp4_e4m3(x)))
 
 
-@pytest.mark.xfail(strict=True, reason="R-P5 (saturating E4M3 row scale, decided on branch worktree-agent-ab5912eff5bdb5981 @41259b66) is in tools/kv_ingest_ref.py on main but not in main's hdc_golden_v41.qdq_fp4_e4m3; strict so the gate flips when the golden adopts it")
 def test_compressed_record_saturates_its_scale_above_2688():
     """R-P5: above |x| = 2,688 the E4M3 group scale saturates at 448 and the codes clamp at +-6."""
+    edge = np.zeros(512, dtype=np.float32)
+    edge[:4] = [2688.0, 3000.0, -3000.0, 1e9]
+    rec = R.encode_ckv(edge)
+    scale = R.fp8_value(np.frombuffer(rec[256:], dtype=np.uint8))
+    assert scale[0] == 448.0
+    assert G4.qdq_fp4_e4m3(edge)[:4].tolist() == [2688.0, 2688.0, -2688.0, 2688.0]
+    assert np.array_equal(G.bits(R.decode_ckv(rec)), G.bits(G4.qdq_fp4_e4m3(edge)))
     for x in _vectors(20, 512, 6, 10, 16):
         assert np.max(np.abs(x)) > 2688
         rec = R.encode_ckv(x)

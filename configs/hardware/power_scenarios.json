@@ -414,64 +414,47 @@
  },
  "design_points": {
   "qwen3": {
-   "source": "codex/qwen-coupled-schedule @5e12dc08 results/arch/qwen3_budget.json (power_production, area, dflash): the Qwen3 production power model the atlas and the review cite is NOT on main; its design point is pinned here so both scenarios price the same machine. Workload (MACs, bytes, elements) is recomputed from main's tools/arch_budget_qwen3.workload().",
+   "source": "tools/arch_budget_qwen3.py qwen_design_point (results/arch/qwen3_budget.json power_production.design_point): the Qwen3-8B ROM package the user chose on 2026-09-28 -- 8-bit weights (INT8 per-channel), two reticles in one package over UCIe with every layer split across both dies, 8 HBM3E stacks, 6,144 MAC groups a die, lane multiplier 5, every layer split across both dies (tensor-parallel 2, FP32 partials; O4 of results/arch/qwen3_8bit_design.json). Areas are PACKAGE totals (both dies); tools/power_scenarios.qwen_point prices each die at half. tests/test_arch_budget_qwen3.py holds this block equal to the budget's design point.",
    "context": 8192,
    "kv_format_bytes_per_elem": 1,
    "clock_hz": 1098640000.0,
-   "hbm_stacks": 6,
+   "hbm_stacks": 8,
+   "dies_per_package": 2,
+   "cooling_class": "liquid",
+   "cooling_class_basis": "user decision 2026-09-28: the Qwen3-8B O4 package is liquid-cooled, a GB200 NVL72-class two-die package (1,200 W less its 8 stacks at peak = 474.6 W a die); the air class (B200 HGX, 374.6 W a die) is reported as a sensitivity in every point's cooling_classes",
+   "weight_bits": 8,
+   "drafter_weight_bits": 8,
+   "weight_scale_bytes": 3105536,
+   "weight_mac_format": "fp8",
    "ar_batch1": {
-    "step_cycles": 123301,
+    "step_cycles": 100169,
     "tokens_per_step": 1,
+    "lane_copies_on": 0,
     "users": 1,
     "slots": 1,
-    "drafter": false,
-    "lane_copies_on": 0
+    "drafter": false
    },
    "dflash": {
     "from_record": "results/speculative/dflash_step_timing.json",
     "select": "rom['<context>/fp8/m<lane_multiplier_m>'].best",
-    "basis": "the serial draft + verify + commit step at the measured per-block acceptance (primary workloads, cycle-weighted tau); block, tokens per step, step cycles (draft phase included) and MAC counts (drafter included) are read from the record by tools/power_scenarios.dflash_point, never restated here. Was: tau 4.1 block-16 histogram truncated at block 3 (2.187 tokens a step), 176,514 cycles with the drafter's latency overlapped (13,612 tok/s).",
+    "basis": "the serial draft + verify + commit step at the measured per-block acceptance (primary workloads, cycle-weighted tau); block, tokens per step, step cycles (draft phase included) and MAC counts (drafter included) are read from the record by tools/power_scenarios.dflash_point, never restated here.",
     "users": 1,
     "drafter": true
    },
    "area_mm2": {
-    "compute": 146.7,
-    "interconnect": 65.2,
-    "overhead": 81.5,
-    "hbm_phy": 60.0,
-    "stream_unit_spill": 12.8,
-    "lane_copy": 69.2,
-    "lane_multiplier_m": 3,
-    "rom": 261.98,
-    "drafter_rom": 33.5,
-    "sram": 6.2
+    "compute": 220.04,
+    "interconnect": 130.4,
+    "overhead": 163.0,
+    "hbm_phy": 80.0,
+    "ucie_phy": 20.0,
+    "stream_unit_spill": 25.6,
+    "lane_copy": 103.82,
+    "lane_multiplier_m": 5,
+    "rom": 449.3,
+    "drafter_rom": 57.52,
+    "sram": 12.8
    },
-   "was": {
-    "source": "5e12dc08 power_production.rom",
-    "ar_batch1": {
-     "energy_per_token_mj": 82.38,
-     "die_energy_per_token_mj": 21.015,
-     "die_w": 187.2,
-     "stacks_w": 546.8,
-     "tokens_s": 8910.2
-    },
-    "dflash": {
-     "energy_per_token_mj": 47.896,
-     "die_energy_per_token_mj": 15.688,
-     "die_w": 213.5,
-     "stacks_w": 438.4,
-     "tokens_s": 13612.1
-    },
-    "atlas_cross_check": {
-     "pj_per_mac": 3.97,
-     "ar_die_w": 448.9,
-     "ar_tokens_s_capped": 7720.1,
-     "dflash_die_w": 1131.5,
-     "dflash_tokens_s_capped": 4908.5,
-     "basis": "MAC-only: 75% of 408 W to the lanes, nothing else charged (5e12dc08 power_budget)"
-    }
-   },
-   "dies_per_package": 1
+   "weight_format": "int8_per_channel: INT8 weight-only, a BF16 scale per output channel (user decision 2026-09-28); weight_scale_bytes are the target's and lm_head's scales, read with every sweep; the MAC lane on scenario B is the 'fp8' entry (BF16 multiplier + FP32 add: an INT8 weight is exact in BF16)"
   },
   "v41": {
    "source": "tools/arch_budget_v41.py, the one V4.1 budget model (token_workload, distinct_experts, fill_machine) and results/arch/arch_budget_v41.json batch rows (rates)",
@@ -485,8 +468,8 @@
    "hbm_stacks_per_die": 4,
    "mtp": {
     "gamma": 5,
-    "tau": 5.0,
-    "tau_source": "user decision 2026-09-27: the LMSYS/SGLang DSpark measurement (accept length ~5, tools/arch_budget_v41.TAU_HEADLINE); 3.27-3.80 and 4.1 are sensitivities",
+    "tau": 3.65,
+    "tau_source": "user decision 2026-09-28: the measured V4.1-Flash DSpark tau (results/speculative/v41_flash_dspark_onpolicy_greedy.json headline, gamma 5, greedy, on-policy, 95% CI 3.50-3.84); tools/power_scenarios reads it through tools/arch_budget_v41.TAU_HEADLINE, not from here (this entry is informational); 3.5-4.1 is the published V4.1-Flash band",
     "draft_overhead": 0.075
    },
    "links_formula": "collective bytes x 8 x (board + UCIe) x 4, as tools/arch_budget_v41.energy_per_token",

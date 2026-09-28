@@ -69,15 +69,19 @@ def test_truncation_is_recomputed_from_the_committed_block16_records(acc):
 
 
 def test_step_model_reproduces_the_atlas_sweep_then_reprices_it(timing_tool, acc):
-    basis = json.loads(timing_tool.BASIS.read_text())
+    """The step arithmetic reproduces the earlier atlas lineage's sweep from its pinned basis (the legacy checks),
+    then prices the two-reticle package (tools/arch_budget_qwen3.timing_basis) with the drafter's forward serial."""
+    basis = timing_tool.design_basis()
     res = timing_tool.evaluate(basis, acc)
     assert res["checks"]["all"], res["checks"]
     committed = json.loads(TIMING.read_text())
     assert committed["rom"] == res["rom"] and committed["hbm"] == res["hbm"]
-    m3 = res["rom"]["8192/fp8/m3"]
-    for r in m3["sweep"]:
+    assert res["basis"]["dies"] == 2 and res["basis"]["groups"] == 12288 and res["basis"]["hbm_stacks"] == 8
+    m = basis["lane_multiplier_m"]
+    top = res["rom"][f"8192/fp8/m{m}"]
+    for r in top["sweep"]:
         if r["block"] > 1:
             # the drafter's forward is on the critical path, never free
             assert r["step_cycles"] == r["draft_cycles"] + r["verify_cycles"] + r["commit_cycles"]
             assert r["draft_cycles"] > r["draft_detail"]["chain_latency_only"] > 0
-            assert r["step_cycles"] > r["legacy_step_cycles"]
+    assert top["best"]["block"] > 1 and top["best"]["speedup"] > 1.3

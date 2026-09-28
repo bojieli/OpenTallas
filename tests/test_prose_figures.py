@@ -163,7 +163,14 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # results/arch/prefill_ingest.json and the budget records (118 -> 182).
     # The O4 RTL audit adds 19 bindings. The headline update adds 14 more
     # (common-KV energy, routed Fmax, handoff, Qwen token and 128-user rows).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1326
+    # The two-reticle Qwen3-8B baseline (O4, TP-2, liquid-cooled): docs/ARCH_SPEC_QWEN3.md binds the package's
+    # rates, caps, UCIe exchange and comparator (7 -> 15); docs/HEADLINE_BUNDLE.md drops the headlines of the
+    # superseded single-reticle 3.5-bit design and adds the UCIe exchange and the air-cooling sensitivities
+    # (196 -> 194); docs/ARCH_QWEN3_O4_RTL_SPEC.md binds the corrected TP-2 AR and DFlash rates (19 -> 21).
+    # The measured 8-bit weight pass (results/quality/qwen3_8b_weight_format_search.json) binds three figures in
+    # docs/ARCH_SPEC_QWEN3.md (15 -> 18) and four headlines in docs/HEADLINE_BUNDLE.md (194 -> 198).
+    # The current-tree H200 FP8 calibration binds the last headline (198 -> 199).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1342
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

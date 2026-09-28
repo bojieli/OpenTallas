@@ -14,294 +14,315 @@
   "third-party": "A figure published by someone else and carried into a record as a cited input."
  },
  "summary": {
-  "headlines": 203,
-  "bound": 201,
+  "headlines": 204,
+  "bound": 204,
   "derived_in_bundle": 5,
-  "unbound": 2,
-  "printed_occurrences": 392,
-  "occurrences_agreeing": 389,
-  "with_sensitivity_range": 26,
+  "unbound": 0,
+  "printed_occurrences": 409,
+  "occurrences_agreeing": 409,
+  "with_sensitivity_range": 27,
   "by_evidence_class": {
    "measured-RTL": 21,
    "measured-physical": 13,
-   "measured-quality": 8,
+   "measured-quality": 9,
    "measured-gpu": 6,
    "model": 150,
    "third-party": 5
   },
-  "records": 37,
+  "records": 38,
   "records_with_source_pins": 27,
   "pins_by_status": {
-   "commit-outside-head": 1,
-   "current": 571,
+   "current": 547,
    "path-only": 3,
-   "stale": 63
+   "stale": 88
   },
   "findings_by_kind": {
-   "commit-outside-head": 5,
-   "stale-pin": 63,
-   "unbound": 2
+   "commit-outside-head": 4,
+   "stale-pin": 88
   }
  },
  "headlines": [
   {
    "id": "qwen.dflash",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Qwen3-8B headline: DFlash, three lane copies, block 3, serial draft + verify + commit, design rate (tokens/s)",
+   "claim": "Qwen3-8B headline: DFlash on the two-reticle package, four lane copies (m = 5), block 5, serial draft + verify + commit, design rate (tokens/s)",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m3\"].best.tokens_s",
+   "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m5\"].best.tokens_s",
    "derived": false,
    "derivation": null,
-   "record_value": 13052.1,
+   "record_value": 18719.9,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Mask-ROM weights beside the multipliers",
-     "text": "a 13,052-token/s design rate",
-     "printed_value": "13,052",
+     "text": "gets an 18,720-token/s design rate",
+     "printed_value": "18,720",
      "status": "agrees"
     },
     {
      "in": "Interactive and agentic use of language models",
-     "text": "a design rate of 13,052 tokens/s",
-     "printed_value": "13,052",
+     "text": "a design rate of 18,720 tokens/s",
+     "printed_value": "18,720",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
-     "text": "13,052 tok/s (1.70×",
-     "printed_value": "13,052",
+     "in": "previews the result at the design points we chose",
+     "text": "gets 18,720 tokens/s",
+     "printed_value": "18,720",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash",
+     "text": "18,720 tok/s (2.08×",
+     "printed_value": "18,720",
+     "status": "agrees"
+    },
+    {
+     "in": "S3 · specialized ROM accelerator",
+     "text": "18,720 design rate",
+     "printed_value": "18,720",
      "status": "agrees"
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "at a 13,052-token/s design rate",
-     "printed_value": "13,052",
+     "text": "at an 18,720-token/s design rate",
+     "printed_value": "18,720",
      "status": "agrees"
     },
     {
-     "in": "ROM reticle, specification chain (three lane copies",
-     "text": "13,052",
-     "printed_value": "13,052",
+     "in": "ROM package, specification chain (four lane copies",
+     "text": "18,720",
+     "printed_value": "18,720",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
-     "text": "13,052 / 8,910 tok/s",
-     "printed_value": "13,052",
+     "in": "Qwen3-8B, 8K, FP8 KV, two-reticle package, DFlash (m = 5, block 5) / autoregressive",
+     "text": "18,720 / 10,968 tok/s",
+     "printed_value": "18,720",
      "status": "agrees"
     },
     {
      "in": "Fast per-user decode is limited on today's accelerators",
-     "text": "a 13,052-token/s design rate at 8K",
-     "printed_value": "13,052",
+     "text": "an 18,720-token/s design rate at 8K",
+     "printed_value": "18,720",
      "status": "agrees"
     }
    ],
    "sensitivity": {
     "variants": [
      {
-      "label": "equal-weighted tau 2.321 instead of pooled 2.265",
-      "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m3\"].best.tokens_s_band",
-      "value": 13370.7
+      "label": "equal-weighted tau 3.082 instead of pooled 2.859",
+      "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m5\"].best.tokens_s_band",
+      "value": 20181.3
      },
      {
       "label": "cooling cap, scenario B (production lane)",
       "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate",
-      "value": 11925.3
+      "value": 18719.9
      },
      {
       "label": "cooling cap, scenario A (lane as built)",
       "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate",
-      "value": 4731.32
+      "value": 6679.87
      }
     ],
     "range": [
-     4731.32,
-     13370.7
+     6679.87,
+     20181.3
     ]
    }
   },
   {
-   "id": "qwen.dflash_cap_B",
+   "id": "qwen.dflash_cap_A_air",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Qwen3-8B DFlash cooling-capped rate at the single-die cooling limit, scenario B (production lane)",
+   "claim": "Sensitivity: Qwen3-8B DFlash rate if air-cooled, scenario A (lane as built, ASAP7)",
    "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate",
+   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.cooling_classes.air.capped_rate",
    "derived": false,
    "derivation": null,
-   "record_value": 11925.3,
+   "record_value": 4803.75,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
-     "in": "Mask-ROM weights beside the multipliers",
-     "text": "11,925 tokens/s under the air/liquid cooling limit",
-     "printed_value": "11,925",
+     "in": "Qwen3-8B cooling-capped rate per die, DFlash / autoregressive",
+     "text": "and 4,804 / 5,766",
+     "printed_value": "4,804",
      "status": "agrees"
     },
     {
-     "in": "Interactive and agentic use of language models",
-     "text": "capped at 11,925 tokens/s",
-     "printed_value": "11,925",
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "5,766 / 4,804 (A))",
+     "printed_value": "4,804",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
-     "text": "cap 11,925 / 4,731",
-     "printed_value": "11,925",
-     "status": "agrees"
-    },
-    {
-     "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "capped by cooling at 11,925",
-     "printed_value": "11,925",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
-     "text": "11,925 / 7,442 and 4,731 / 4,689",
-     "printed_value": "11,925",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
-     "text": "7,442 / 11,925 (B)",
-     "printed_value": "11,925",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM die power-capped at 549.5 W, production lane",
-     "text": "11,925",
-     "printed_value": "11,925",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
-     "text": "cooling-capped at 11,925 on the production lane",
-     "printed_value": "11,925",
-     "status": "agrees"
-    },
-    {
-     "in": "Fast per-user decode is limited on today's accelerators",
-     "text": "11,925 tokens/s under the cooling limit",
-     "printed_value": "11,925",
-     "status": "agrees"
-    }
-   ],
-   "sensitivity": {
-    "variants": [
-     {
-      "label": "production lane at 1.40 pJ/MAC (GPU tensor core)",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_lane_at_gpu_tensor_1p40pj.qwen3_8b_rom_8k.dflash.capped_rate",
-      "value": 8521.17
-     },
-     {
-      "label": "older HBM die allocation (0.8)",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_old_hbm_allocation_die_0p8.qwen3_8b_rom_8k.dflash.capped_rate",
-      "value": 13052.1
-     },
-     {
-      "label": "HBM die energy at the GH200 8.23 pJ/bit",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_hbm_die_gh200_8p23.qwen3_8b_rom_8k.dflash.capped_rate",
-      "value": 13052.1
-     }
-    ],
-    "range": [
-     8521.17,
-     13052.1
-    ]
-   }
-  },
-  {
-   "id": "qwen.dflash_cap_A",
-   "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Qwen3-8B DFlash cooling-capped rate at the single-die cooling limit, scenario A (lane as built, ASAP7)",
-   "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate",
-   "derived": false,
-   "derivation": null,
-   "record_value": 4731.32,
-   "records": [
-    "results/arch/power_scenarios.json"
-   ],
-   "printed": [
-    {
-     "in": "Mask-ROM weights beside the multipliers",
-     "text": "(4,731 with the lane as built)",
-     "printed_value": "4,731",
-     "status": "agrees"
-    },
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "4,731 with the lane as built",
-     "printed_value": "4,731",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
-     "text": "cap 11,925 / 4,731",
-     "printed_value": "4,731",
-     "status": "agrees"
-    },
-    {
-     "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "4,731 on the lane as built",
-     "printed_value": "4,731",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
-     "text": "11,925 / 7,442 and 4,731 / 4,689",
-     "printed_value": "4,731",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
-     "text": "4,689 / 4,731 (A)",
-     "printed_value": "4,731",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM die power-capped at 549.5 W, measured ASAP7 lane",
-     "text": "4,731",
-     "printed_value": "4,731",
-     "status": "agrees"
-    },
-    {
-     "in": "Fast per-user decode is limited on today's accelerators",
-     "text": "(4,731 with the lane as built)",
-     "printed_value": "4,731",
+     "in": "ROM package power-capped at 374.6 W a die (air, sensitivity), measured ASAP7 lane",
+     "text": "4,804",
+     "printed_value": "4,804",
      "status": "agrees"
     }
    ]
   },
   {
-   "id": "qwen.dflash_speedup",
+   "id": "qwen.dflash_cap_B_air",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Qwen3-8B DFlash speed-up over the plain chain (three lane copies)",
+   "claim": "Sensitivity: Qwen3-8B DFlash rate if the package were air-cooled (374.6 W a die), scenario B",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m3\"].best.speedup",
+   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.cooling_classes.air.capped_rate",
    "derived": false,
    "derivation": null,
-   "record_value": 1.697,
+   "record_value": 14176.2,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "would cap even the production lane at 14,176",
+     "printed_value": "14,176",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash",
+     "text": "(air 14,176)",
+     "printed_value": "14,176",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B cooling-capped rate per die, DFlash / autoregressive",
+     "text": "air 14,176 / 8,921",
+     "printed_value": "14,176",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "(air: 8,921 / 14,176 (B)",
+     "printed_value": "14,176",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM package power-capped at 374.6 W a die (air, sensitivity), production lane",
+     "text": "14,176",
+     "printed_value": "14,176",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B, 8K, FP8 KV, two-reticle package, DFlash (m = 5, block 5) / autoregressive",
+     "text": "14,176 if air-cooled",
+     "printed_value": "14,176",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.dflash_cap_A",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B DFlash cooling-capped rate in the liquid-cooled package (the design class), scenario A (lane as built, ASAP7); scenario B runs uncapped",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 6679.87,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "the rates cap at 6,680 and 7,859",
+     "printed_value": "6,680",
+     "status": "agrees"
+    },
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "capped at 6,680 tokens/s (power scenarios B and A)",
+     "printed_value": "6,680",
+     "status": "agrees"
+    },
+    {
+     "in": "previews the result at the design points we chose",
+     "text": "(specification model; 6,680 with the lane as built)",
+     "printed_value": "6,680",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash",
+     "text": "cap — / 6,680",
+     "printed_value": "6,680",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B cooling-capped rate per die, DFlash / autoregressive",
+     "text": "uncapped and 6,680 / 7,859",
+     "printed_value": "6,680",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "7,859 / 6,680 (A)",
+     "printed_value": "6,680",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM package power-capped at 474.6 W a die (liquid, the design), scenario B / A",
+     "text": "18,720 / 6,680",
+     "printed_value": "6,680",
+     "status": "agrees"
+    },
+    {
+     "in": "The GPU comparisons in the attribution ladder separate software",
+     "text": "capped at 6,680 on the lane as built",
+     "printed_value": "6,680",
+     "status": "agrees"
+    },
+    {
+     "in": "Fast per-user decode is limited on today's accelerators",
+     "text": "(6,680 with the lane as built)",
+     "printed_value": "6,680",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "scenario B (production lane): uncapped",
+      "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate",
+      "value": 18719.9
+     }
+    ],
+    "range": [
+     6679.87,
+     18719.9
+    ]
+   }
+  },
+  {
+   "id": "qwen.dflash_speedup",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B DFlash speed-up over the plain specification chain (four lane copies)",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m5\"].best.speedup",
+   "derived": false,
+   "derivation": null,
+   "record_value": 2.076,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
-     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
-     "text": "(1.70× the plain chain)",
-     "printed_value": "1.70",
+     "in": "Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash",
+     "text": "(2.08× the plain chain)",
+     "printed_value": "2.08",
      "status": "agrees"
     },
     {
      "in": "Speculation cures the memory wall",
-     "text": "1.70× with three copies",
-     "printed_value": "1.70",
+     "text": "2.08× with four copies",
+     "printed_value": "2.08",
      "status": "agrees"
     }
    ]
@@ -309,26 +330,26 @@
   {
    "id": "qwen.cooling_limit_w",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Single-die package cooling limit, air = liquid (W per die)",
+   "claim": "Two-die package cooling limit of the design class, liquid (W per die)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_limit_w",
    "derived": false,
    "derivation": null,
-   "record_value": 549.472,
+   "record_value": 474.56,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "exceeds the 549.5 W that a shipping single-die package cools",
-     "printed_value": "549.5",
+     "text": "within the 474.6 W per die",
+     "printed_value": "474.6",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
-     "text": "cooling-capped at 549.5 W per die",
-     "printed_value": "549.5",
+     "in": "Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash",
+     "text": "liquid-cooled at 474.6 W per die",
+     "printed_value": "474.6",
      "status": "agrees"
     }
    ]
@@ -336,32 +357,32 @@
   {
    "id": "qwen.dflash_energy_B",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Qwen3-8B reticle with DFlash at its design rate, energy per token, scenario B (mJ)",
+   "claim": "Qwen3-8B package with DFlash at its design rate, energy per token, scenario B (mJ)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 53.5833,
+   "record_value": 55.4255,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "with DFlash spends 53.6 mJ per token",
-     "printed_value": "53.6",
+     "text": "with DFlash spends 55.4 mJ per token",
+     "printed_value": "55.4",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
-     "text": "53.6 / 108 mJ",
-     "printed_value": "53.6",
+     "in": "Qwen3-8B package under the power scenarios, production lane / lane as built",
+     "text": "55.4 / 126 mJ",
+     "printed_value": "55.4",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle with DFlash (m = 3, block 3) at the serial step",
-     "text": "53.6 / 108.3 mJ",
-     "printed_value": "53.6",
+     "in": "Qwen3-8B package with DFlash (m = 5, block 5) at the serial step",
+     "text": "55.4 / 125.9 mJ",
+     "printed_value": "55.4",
      "status": "agrees"
     }
    ],
@@ -370,59 +391,59 @@
      {
       "label": "production lane at 1.40 pJ/MAC (GPU tensor core)",
       "binding": "results/arch/power_scenarios.json#sensitivities.B_lane_at_gpu_tensor_1p40pj.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
-      "value": 67.9498
+      "value": 72.2937
      },
      {
       "label": "older HBM die allocation (0.8)",
       "binding": "results/arch/power_scenarios.json#sensitivities.B_old_hbm_allocation_die_0p8.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
-      "value": 53.5833
+      "value": 55.4255
      },
      {
       "label": "HBM die energy at the GH200 8.23 pJ/bit",
       "binding": "results/arch/power_scenarios.json#sensitivities.B_hbm_die_gh200_8p23.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
-      "value": 53.5833
+      "value": 55.4255
      },
      {
       "label": "scenario A (measured ASAP7 lane)",
       "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
-      "value": 108.263
+      "value": 125.905
      }
     ],
     "range": [
-     53.5833,
-     108.263
+     55.4255,
+     125.905
     ]
    }
   },
   {
    "id": "qwen.dflash_energy_A",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Qwen3-8B reticle with DFlash, energy per token, scenario A (mJ)",
+   "claim": "Qwen3-8B package with DFlash, energy per token, scenario A (mJ)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 108.263,
+   "record_value": 125.905,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "(108 mJ on our measured lane",
-     "printed_value": "108",
+     "text": "(126 mJ on our measured lane",
+     "printed_value": "126",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
-     "text": "53.6 / 108 mJ",
-     "printed_value": "108",
+     "in": "Qwen3-8B package under the power scenarios, production lane / lane as built",
+     "text": "55.4 / 126 mJ",
+     "printed_value": "126",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle with DFlash (m = 3, block 3) at the serial step",
-     "text": "53.6 / 108.3 mJ",
-     "printed_value": "108.3",
+     "in": "Qwen3-8B package with DFlash (m = 5, block 5) at the serial step",
+     "text": "55.4 / 125.9 mJ",
+     "printed_value": "125.9",
      "status": "agrees"
     }
    ]
@@ -430,20 +451,20 @@
   {
    "id": "qwen.dflash_die_power_B",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Qwen3-8B die power with DFlash at its design rate, scenario B (W)",
+   "claim": "Qwen3-8B power of each die with DFlash at its design rate, scenario B (W)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.die_w_at_design_rate",
    "derived": false,
    "derivation": null,
-   "record_value": 589.99,
+   "record_value": 456.627,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
-     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
-     "text": "590 / 1,304 W",
-     "printed_value": "590",
+     "in": "Qwen3-8B package under the power scenarios, production lane / lane as built",
+     "text": "457 / 1,116 W",
+     "printed_value": "457",
      "status": "agrees"
     }
    ]
@@ -451,53 +472,47 @@
   {
    "id": "qwen.dflash_die_power_A",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "Qwen3-8B die power with DFlash at its design rate, scenario A (W)",
+   "claim": "Qwen3-8B power of each die with DFlash at its design rate, scenario A (W)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.die_w_at_design_rate",
    "derived": false,
    "derivation": null,
-   "record_value": 1303.68,
+   "record_value": 1116.31,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
-     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
-     "text": "590 / 1,304 W",
-     "printed_value": "1,304",
-     "status": "agrees"
-    },
-    {
-     "in": "Where the energy goes",
-     "text": "die at 1,304 W with DFlash",
-     "printed_value": "1,304",
+     "in": "Qwen3-8B package under the power scenarios, production lane / lane as built",
+     "text": "457 / 1,116 W",
+     "printed_value": "1,116",
      "status": "agrees"
     }
    ]
   },
   {
-   "id": "qwen.tau_block3",
+   "id": "qwen.tau_block5",
    "section": "Qwen3-8B headline (DFlash)",
-   "claim": "DFlash acceptance tau at block 3, pooled over 264 prompt turns (BF16, GPU)",
+   "claim": "DFlash acceptance tau at block 5, pooled over 264 prompt turns (BF16, GPU)",
    "evidence_class": "measured-quality",
-   "binding": "results/speculative/dflash_block_acceptance.json#blocks.3.pooled.primary.tau_direct_cycle_weighted",
+   "binding": "results/speculative/dflash_block_acceptance.json#blocks.5.pooled.primary.tau_direct_cycle_weighted",
    "derived": false,
    "derivation": null,
-   "record_value": 2.2654,
+   "record_value": 2.8591,
    "records": [
     "results/speculative/dflash_block_acceptance.json"
    ],
    "printed": [
     {
      "in": "DFlash acceptance τ on real Qwen3-8B (BF16, GPU)",
-     "text": "2.265 (1.97",
-     "printed_value": "2.265",
+     "text": "2.859 (2.33",
+     "printed_value": "2.859",
      "status": "agrees"
     },
     {
      "in": "Per-user decode rate at batch 1 at the three design points",
-     "text": "τ = 2.265 measured directly at that block",
-     "printed_value": "2.265",
+     "text": "τ = 2.859 measured directly at that block",
+     "printed_value": "2.859",
      "status": "agrees"
     }
    ],
@@ -505,18 +520,18 @@
     "variants": [
      {
       "label": "lowest workload",
-      "binding": "results/speculative/dflash_block_acceptance.json#blocks.3.pooled.primary.tau_direct_workload_range[0]",
-      "value": 1.9704
+      "binding": "results/speculative/dflash_block_acceptance.json#blocks.5.pooled.primary.tau_direct_workload_range[0]",
+      "value": 2.3309
      },
      {
       "label": "highest workload",
-      "binding": "results/speculative/dflash_block_acceptance.json#blocks.3.pooled.primary.tau_direct_workload_range[1]",
-      "value": 2.8836
+      "binding": "results/speculative/dflash_block_acceptance.json#blocks.5.pooled.primary.tau_direct_workload_range[1]",
+      "value": 4.6285
      }
     ],
     "range": [
-     1.9704,
-     2.8836
+     2.3309,
+     4.6285
     ]
    }
   },
@@ -557,56 +572,68 @@
   {
    "id": "qwen.rate_8k",
    "section": "Qwen3-8B autoregressive (uncapped target)",
-   "claim": "Qwen3-8B without speculation: uncapped autoregressive design rate at specification widths (RTL-calibrated)",
+   "claim": "Qwen3-8B without speculation: uncapped autoregressive design rate of the two-reticle package at specification widths (RTL-calibrated, UCIe exchanges included)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s",
    "derived": false,
    "derivation": null,
-   "record_value": 8910.2,
+   "record_value": 10967.9,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "it decodes 10,968 tokens/s",
+     "printed_value": "10,968",
+     "status": "agrees"
+    },
+    {
      "in": "Interactive and agentic use of language models",
-     "text": "the RTL-calibrated chain targets 8,910 tokens/s",
-     "printed_value": "8,910",
+     "text": "targets 10,968 tokens/s",
+     "printed_value": "10,968",
+     "status": "agrees"
+    },
+    {
+     "in": "previews the result at the design points we chose",
+     "text": "and 10,968 without speculation",
+     "printed_value": "10,968",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B without speculation, at specification widths",
-     "text": "8,910 tok/s (8,941; 8,494)",
-     "printed_value": "8,910",
+     "text": "10,968 tok/s (11,921; 11,325)",
+     "printed_value": "10,968",
      "status": "agrees"
     },
     {
      "in": "S3 · specialized ROM accelerator",
-     "text": "8,910 calibrated",
-     "printed_value": "8,910",
+     "text": "10,968 calibrated",
+     "printed_value": "10,968",
      "status": "agrees"
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "the calibrated model targets 8,910 tokens/s",
-     "printed_value": "8,910",
+     "text": "targets 10,968 tokens/s",
+     "printed_value": "10,968",
      "status": "agrees"
     },
     {
-     "in": "ROM reticle, the core at specification widths",
-     "text": "8,910",
-     "printed_value": "8,910",
+     "in": "ROM package, the core at specification widths",
+     "text": "10,968",
+     "printed_value": "10,968",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
-     "text": "13,052 / 8,910 tok/s",
-     "printed_value": "8,910",
+     "in": "Qwen3-8B, 8K, FP8 KV, two-reticle package, DFlash (m = 5, block 5) / autoregressive",
+     "text": "18,720 / 10,968 tok/s",
+     "printed_value": "10,968",
      "status": "agrees"
     },
     {
      "in": "Fast per-user decode is limited on today's accelerators",
-     "text": "at 8,910 tokens/s, is within 0.3%",
-     "printed_value": "8,910",
+     "text": "reaches 10,968 tokens/s",
+     "printed_value": "10,968",
      "status": "agrees"
     }
    ],
@@ -615,54 +642,54 @@
      {
       "label": "cooling cap, scenario B (production lane)",
       "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 7442.41
+      "value": 10967.9
      },
      {
       "label": "cooling cap, scenario A (lane as built)",
       "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 4689.36
+      "value": 7859.36
      },
      {
-      "label": "KV in BF16 instead of FP8",
-      "binding": "results/arch/qwen3_budget.json#rom_token[\"8192/bf16\"].tokens_s",
-      "value": 4470.3
+      "label": "contiguous layer cut across the two dies instead of tensor-parallel 2",
+      "binding": "results/arch/qwen3_budget.json#layer_cut_alternative.ar_tokens_s",
+      "value": 5959.6
      }
     ],
     "range": [
-     4470.3,
-     8910.2
+     5959.6,
+     10967.9
     ]
    }
   },
   {
    "id": "qwen.kv_floor",
    "section": "Qwen3-8B autoregressive (uncapped target)",
-   "claim": "Qwen3-8B ideal FP8 KV bandwidth ceiling at 8K (tokens/s)",
+   "claim": "Qwen3-8B ideal FP8 KV bandwidth ceiling at 8K on eight stacks (tokens/s)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s",
    "derived": false,
    "derivation": null,
-   "record_value": 8940.7,
+   "record_value": 11920.9,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "ideal FP8 KV bandwidth ceiling of 8,941 tokens/s",
-     "printed_value": "8,941",
+     "text": "ideal FP8 KV bandwidth ceiling of 11,921 tokens/s",
+     "printed_value": "11,921",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B without speculation, at specification widths",
-     "text": "8,910 tok/s (8,941; 8,494)",
-     "printed_value": "8,941",
+     "text": "10,968 tok/s (11,921; 11,325)",
+     "printed_value": "11,921",
      "status": "agrees"
     },
     {
-     "in": "ROM reticle, budget target (KV stream",
-     "text": "8,494 / 8,941",
-     "printed_value": "8,941",
+     "in": "ROM package, budget target (KV stream",
+     "text": "11,325 / 11,921",
+     "printed_value": "11,921",
      "status": "agrees"
     }
    ]
@@ -675,27 +702,27 @@
    "binding": "results/arch/qwen3_budget.json#budget.target_tokens_s",
    "derived": false,
    "derivation": null,
-   "record_value": 8493.7,
+   "record_value": 11324.9,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "above its 8,494 target",
-     "printed_value": "8,494",
+     "text": "short of its 11,325 target",
+     "printed_value": "11,325",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B without speculation, at specification widths",
-     "text": "8,910 tok/s (8,941; 8,494)",
-     "printed_value": "8,494",
+     "text": "10,968 tok/s (11,921; 11,325)",
+     "printed_value": "11,325",
      "status": "agrees"
     },
     {
-     "in": "ROM reticle, budget target (KV stream",
-     "text": "8,494 / 8,941",
-     "printed_value": "8,494",
+     "in": "ROM package, budget target (KV stream",
+     "text": "11,325 / 11,921",
+     "printed_value": "11,325",
      "status": "agrees"
     }
    ]
@@ -703,65 +730,116 @@
   {
    "id": "qwen.chain_cycles",
    "section": "Qwen3-8B autoregressive (uncapped target)",
-   "claim": "Qwen3-8B calibrated dependency chain per token at 8K (cycles)",
+   "claim": "Qwen3-8B calibrated dependency chain per token at 8K, UCIe exchanges included (cycles)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles",
    "derived": false,
    "derivation": null,
-   "record_value": 123301.0,
+   "record_value": 100169.0,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "Its 123,301-cycle dependency chain",
-     "printed_value": "123,301",
+     "text": "its 100,169-cycle dependency chain",
+     "printed_value": "100,169",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
-     "text": "123,301-cycle calibrated chain",
-     "printed_value": "123,301",
+     "in": "Qwen3-8B, 8K, FP8 KV, two-reticle package, DFlash (m = 5, block 5) / autoregressive",
+     "text": "100,169-cycle calibrated chain",
+     "printed_value": "100,169",
      "status": "agrees"
     },
     {
-     "in": "The Qwen3 chain was cut to the KV floor",
-     "text": "174,856 → 123,301 cycles",
-     "printed_value": "123,301",
+     "in": "On two dies, the Qwen3 chain binds again",
+     "text": "100,169 cycles",
+     "printed_value": "100,169",
      "status": "agrees"
     }
    ]
   },
   {
-   "id": "qwen.kv_stream_cycles",
+   "id": "qwen.ucie_cycles",
    "section": "Qwen3-8B autoregressive (uncapped target)",
-   "claim": "Qwen3-8B FP8 KV stream floor at 8K (cycles)",
+   "claim": "Qwen3-8B die-to-die exchanges on the chain a token (73 exchanges, tensor-parallel 2; cycles)",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles",
+   "binding": "results/arch/qwen3_budget.json#ucie.exchange.cycles_per_token",
    "derived": false,
    "derivation": null,
-   "record_value": 122881.0,
+   "record_value": 1419.0,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "the 122,881-cycle KV stream floor",
-     "printed_value": "122,881",
+     "text": "and 1,419 cycles of die-to-die exchanges",
+     "printed_value": "1,419",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
-     "text": "a 122,881-cycle KV stream",
-     "printed_value": "122,881",
+     "in": "Qwen3-8B, 8K, FP8 KV, two-reticle package, DFlash (m = 5, block 5) / autoregressive",
+     "text": "(1,419 of it die-to-die exchanges)",
+     "printed_value": "1,419",
      "status": "agrees"
     },
     {
-     "in": "The Qwen3 chain was cut to the KV floor",
-     "text": "the 122,881-cycle FP8 KV stream",
-     "printed_value": "122,881",
+     "in": "On two dies, the Qwen3 chain binds again",
+     "text": "(1,419 of them",
+     "printed_value": "1,419",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "hop 3 ns",
+      "binding": "results/arch/qwen3_budget.json#ucie.exchange_at_hop_range[0]",
+      "value": 850.0
+     },
+     {
+      "label": "hop 30 ns",
+      "binding": "results/arch/qwen3_budget.json#ucie.exchange_at_hop_range[1]",
+      "value": 3045.0
+     }
+    ],
+    "range": [
+     850.0,
+     3045.0
+    ]
+   }
+  },
+  {
+   "id": "qwen.kv_stream_cycles",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B FP8 KV stream floor at 8K on eight stacks (cycles)",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles",
+   "derived": false,
+   "derivation": null,
+   "record_value": 92161.0,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "the 92,161-cycle KV stream floor",
+     "printed_value": "92,161",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B, 8K, FP8 KV, two-reticle package, DFlash (m = 5, block 5) / autoregressive",
+     "text": "a 92,161-cycle KV stream",
+     "printed_value": "92,161",
+     "status": "agrees"
+    },
+    {
+     "in": "On two dies, the Qwen3 chain binds again",
+     "text": "the 92,161-cycle FP8 KV stream",
+     "printed_value": "92,161",
      "status": "agrees"
     }
    ]
@@ -774,146 +852,169 @@
    "binding": "results/arch/qwen3_budget.json#dependency_chain[\"8192/spec\"].tokens_s",
    "derived": false,
    "derivation": null,
-   "record_value": 7689.0,
+   "record_value": 9017.1,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Same token in the analytical chain at specification widths",
-     "text": "7,689 tok/s",
-     "printed_value": "7,689",
+     "text": "9,017 tok/s",
+     "printed_value": "9,017",
      "status": "agrees"
     },
     {
-     "in": "ROM reticle, specification chain (three lane copies",
-     "text": "7,689",
-     "printed_value": "7,689",
+     "in": "ROM package, specification chain (four lane copies",
+     "text": "9,017",
+     "printed_value": "9,017",
      "status": "agrees"
     }
    ]
   },
   {
-   "id": "qwen.cap_B",
+   "id": "qwen.cap_B_air",
    "section": "Qwen3-8B autoregressive (uncapped target)",
-   "claim": "Qwen3-8B autoregressive cooling-capped rate, scenario B (production lane)",
+   "claim": "Sensitivity: Qwen3-8B autoregressive rate if the package were air-cooled (374.6 W a die), scenario B",
    "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_classes.air.capped_rate",
    "derived": false,
    "derivation": null,
-   "record_value": 7442.41,
+   "record_value": 8921.13,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "Cooling caps this autoregressive rate at 7,442",
-     "printed_value": "7,442",
+     "text": "air would cap the production lane at 8,921",
+     "printed_value": "8,921",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B without speculation, at specification widths",
-     "text": "cap 7,442 / 4,689",
-     "printed_value": "7,442",
+     "text": "(air 8,921)",
+     "printed_value": "8,921",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
-     "text": "11,925 / 7,442 and 4,731 / 4,689",
-     "printed_value": "7,442",
+     "in": "Qwen3-8B cooling-capped rate per die, DFlash / autoregressive",
+     "text": "air 14,176 / 8,921",
+     "printed_value": "8,921",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
-     "text": "7,442 / 11,925 (B)",
-     "printed_value": "7,442",
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "(air: 8,921 / 14,176 (B)",
+     "printed_value": "8,921",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM package power-capped at 374.6 W a die (air, sensitivity), production lane",
+     "text": "8,921",
+     "printed_value": "8,921",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.cap_A",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B autoregressive cooling-capped rate in the liquid-cooled package, scenario A (lane as built, ASAP7); scenario B runs uncapped",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 7859.36,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "the rates cap at 6,680 and 7,859",
+     "printed_value": "7,859",
+     "status": "agrees"
+    },
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "caps it at 7,859 with the lane as built",
+     "printed_value": "7,859",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B without speculation, at specification widths",
+     "text": "cap — / 7,859",
+     "printed_value": "7,859",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B cooling-capped rate per die, DFlash / autoregressive",
+     "text": "uncapped and 6,680 / 7,859",
+     "printed_value": "7,859",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "7,859 / 6,680 (A)",
+     "printed_value": "7,859",
      "status": "agrees"
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "(capped at 7,442 and 4,689)",
-     "printed_value": "7,442",
+     "text": "(7,859 on the lane as built)",
+     "printed_value": "7,859",
      "status": "agrees"
     },
     {
-     "in": "ROM die power-capped at 549.5 W, production lane",
-     "text": "7,442",
-     "printed_value": "7,442",
+     "in": "ROM package power-capped at 474.6 W a die (liquid, the design), scenario B / A",
+     "text": "10,968 / 7,859",
+     "printed_value": "7,859",
      "status": "agrees"
     }
    ],
    "sensitivity": {
     "variants": [
      {
-      "label": "production lane at 1.40 pJ/MAC (GPU tensor core)",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_lane_at_gpu_tensor_1p40pj.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 6448.73
-     },
-     {
-      "label": "older HBM die allocation (0.8)",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_old_hbm_allocation_die_0p8.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 8910.23
-     },
-     {
-      "label": "HBM die energy at the GH200 8.23 pJ/bit",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_hbm_die_gh200_8p23.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 8605.35
+      "label": "if air-cooled",
+      "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.cooling_classes.air.capped_rate",
+      "value": 5765.97
      }
     ],
     "range": [
-     6448.73,
-     8910.23
+     5765.97,
+     7859.36
     ]
    }
   },
   {
-   "id": "qwen.cap_A",
+   "id": "qwen.cap_A_air",
    "section": "Qwen3-8B autoregressive (uncapped target)",
-   "claim": "Qwen3-8B autoregressive cooling-capped rate, scenario A (lane as built, ASAP7)",
+   "claim": "Sensitivity: Qwen3-8B autoregressive rate if air-cooled, scenario A (lane as built, ASAP7)",
    "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.cooling_classes.air.capped_rate",
    "derived": false,
    "derivation": null,
-   "record_value": 4689.36,
+   "record_value": 5765.97,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
-     "in": "Interactive and agentic use of language models",
-     "text": "autoregressive rate at 7,442 and 4,689",
-     "printed_value": "4,689",
+     "in": "Qwen3-8B cooling-capped rate per die, DFlash / autoregressive",
+     "text": "and 4,804 / 5,766",
+     "printed_value": "5,766",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B without speculation, at specification widths",
-     "text": "cap 7,442 / 4,689",
-     "printed_value": "4,689",
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "5,766 / 4,804 (A))",
+     "printed_value": "5,766",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
-     "text": "11,925 / 7,442 and 4,731 / 4,689",
-     "printed_value": "4,689",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
-     "text": "4,689 / 4,731 (A)",
-     "printed_value": "4,689",
-     "status": "agrees"
-    },
-    {
-     "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "(capped at 7,442 and 4,689)",
-     "printed_value": "4,689",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM die power-capped at 549.5 W, measured ASAP7 lane",
-     "text": "4,689",
-     "printed_value": "4,689",
+     "in": "ROM package power-capped at 374.6 W a die (air, sensitivity), measured ASAP7 lane",
+     "text": "5,766",
+     "printed_value": "5,766",
      "status": "agrees"
     }
    ]
@@ -921,20 +1022,20 @@
   {
    "id": "qwen.hdc_hbm_rate",
    "section": "Qwen3-8B ROM / HBM",
-   "claim": "HDC-HBM: the same core on six HBM stacks at the ROM's 3.5-bit weights (tokens/s)",
+   "claim": "HDC-HBM: the same two-reticle package on its eight HBM stacks at the ROM's INT8 weights (tokens/s)",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#hbm_comparator.8192[\"rom_format_3.5b\"].tokens_s",
+   "binding": "results/arch/qwen3_budget.json#hbm_comparator.8192[\"rom_format_int8\"].tokens_s",
    "derived": false,
    "derivation": null,
-   "record_value": 1379.3,
+   "record_value": 880.7,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
-     "in": "HDC-HBM: the same core on six stacks",
-     "text": "1,379",
-     "printed_value": "1,379",
+     "in": "HDC-HBM: the same package streaming its weights from eight stacks",
+     "text": "881",
+     "printed_value": "881",
      "status": "agrees"
     }
    ]
@@ -942,50 +1043,50 @@
   {
    "id": "qwen.rom_over_hdc_hbm",
    "section": "Qwen3-8B ROM / HBM",
-   "claim": "Qwen3-8B ROM / same core on six HBM stacks, per-user rate (derived from two calibrated rows)",
+   "claim": "Qwen3-8B ROM package / the same package on HBM, per-user autoregressive rate (derived from two rows)",
    "evidence_class": "model",
-   "binding": "(results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s) / (results/arch/qwen3_budget.json#hbm_comparator.8192[\"rom_format_3.5b\"].tokens_s)",
+   "binding": "(results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s) / (results/arch/qwen3_budget.json#hbm_comparator.8192[\"rom_format_int8\"].tokens_s)",
    "derived": true,
    "derivation": null,
-   "record_value": 6.45994,
+   "record_value": 12.4536,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "it is 6.5× the same core",
-     "printed_value": "6.5",
+     "text": "it is 12.5× the same package",
+     "printed_value": "12.5",
      "status": "agrees"
     },
     {
      "in": "Mask-ROM weights beside the multipliers",
-     "text": "the two designs are 6.5× and 2.3×",
-     "printed_value": "6.5",
+     "text": "the two designs are 12.5× and 2.0×",
+     "printed_value": "12.5",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B, ROM ÷ same core on 6 HBM stacks",
-     "text": "6.5×",
-     "printed_value": "6.5",
+     "in": "Qwen3-8B, ROM ÷ same package on 8 HBM stacks",
+     "text": "12.5×",
+     "printed_value": "12.5",
      "status": "agrees"
     },
     {
      "in": "previews the result at the design points we chose",
-     "text": "one user gets 6.5× the tokens per second",
-     "printed_value": "6.5",
+     "text": "one user gets 12.5× the tokens per second",
+     "printed_value": "12.5",
      "status": "agrees"
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "that is 6.5× the same core on six HBM stacks",
-     "printed_value": "6.5",
+     "text": "that is 12.5× the same package on eight HBM stacks",
+     "printed_value": "12.5",
      "status": "agrees"
     },
     {
-     "in": "HDC-HBM: the same core on six stacks",
-     "text": "6.5×",
-     "printed_value": "6.5",
+     "in": "HDC-HBM: the same package streaming its weights from eight stacks",
+     "text": "12.5×",
+     "printed_value": "12.5",
      "status": "agrees"
     }
    ]
@@ -998,15 +1099,15 @@
    "binding": "results/arch/decode_roofline.json#models.qwen3.ladders.per_user[step=S3].multiplier",
    "derived": false,
    "derivation": null,
-   "record_value": 4.84495,
+   "record_value": 12.4536,
    "records": [
     "results/arch/decode_roofline.json"
    ],
    "printed": [
     {
      "in": "S3 · specialized ROM accelerator",
-     "text": "4.84× S2",
-     "printed_value": "4.84",
+     "text": "12.5× S2",
+     "printed_value": "12.5",
      "status": "agrees"
     }
    ]
@@ -1056,26 +1157,26 @@
   {
    "id": "qwen.ladder_s2",
    "section": "Qwen3-8B ROM / HBM",
-   "claim": "Ladder S1f/S2: 3.5-bit format / specialised HBM core at B200 bandwidth",
+   "claim": "Ladder S1f/S2: the ROM's 8-bit weights on the B200 / the specialised HBM core on the same package",
    "evidence_class": "model",
    "binding": "results/arch/decode_roofline.json#models.qwen3.ladders.per_user[step=S2].value",
    "derived": false,
    "derivation": null,
-   "record_value": 1839.07,
+   "record_value": 880.7,
    "records": [
     "results/arch/decode_roofline.json"
    ],
    "printed": [
     {
      "in": "S1 · idealized maximum-fusion GPU",
-     "text": "1,839 after a 3.5-bit format substep",
-     "printed_value": "1,839",
+     "text": "881 after an 8-bit weight substep",
+     "printed_value": "881",
      "status": "agrees"
     },
     {
      "in": "S2 · specialized HBM accelerator",
-     "text": "1,839 modeled",
-     "printed_value": "1,839",
+     "text": "881 modeled",
+     "printed_value": "881",
      "status": "agrees"
     }
    ]
@@ -1127,92 +1228,75 @@
    "section": "Qwen3-8B ROM / HBM",
    "claim": "H200 FP8 Qwen3-8B batch-1, calibrated to NVIDIA NIM",
    "evidence_class": "model",
-   "binding": null,
-   "unbound_reason": "results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main (last committed at b42f8606 on a side branch, where it holds 217.408); its tool tools/iso_area_qwen3.py does not run on main (qwen3_budget.json no longer carries dflash.tau_central), so it waits on the roofline re-baseline's iso-area port",
+   "binding": "results/arch/decode_roofline.json#models.qwen3.points[key=h200_fp8].y",
+   "derived": false,
+   "derivation": null,
+   "record_value": 217.413,
+   "records": [
+    "results/arch/decode_roofline.json"
+   ],
    "printed": [
     {
      "in": "Serving systems and hardware roadmaps, however",
      "text": "217 on an H200 at FP8",
      "printed_value": "217",
-     "status": "unbound"
-    }
-   ]
-  },
-  {
-   "id": "qwen.hbm_class_ceiling",
-   "section": "Qwen3-8B ROM / HBM",
-   "claim": "HBM-class ceiling, (weights + KV) over six-stack bandwidth, and ROM / ceiling",
-   "evidence_class": "model",
-   "binding": null,
-   "unbound_reason": "bound only in results/roofline/iso_area/qwen3_8b.json (contexts.8192.hbm_roofline_tok_s.w4 = 1532.51 at b42f8606), which is not on main (see qwen.h200_fp8)",
-   "printed": [
-    {
-     "in": "HBM-class ceiling: (weights + KV)",
-     "text": "1,533",
-     "printed_value": "1,533",
-     "status": "unbound"
-    },
-    {
-     "in": "HBM-class ceiling: (weights + KV)",
-     "text": "5.8×",
-     "printed_value": "5.8",
-     "status": "unbound"
+     "status": "agrees"
     }
    ]
   },
   {
    "id": "qwen.energy_B",
    "section": "Qwen3-8B energy",
-   "claim": "Qwen3-8B ROM reticle energy per token at batch 1, scenario B (mJ)",
+   "claim": "Qwen3-8B ROM package energy per token at batch 1, scenario B (mJ)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 88.116,
+   "record_value": 96.4943,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "88 and 123 mJ without speculation",
-     "printed_value": "88",
+     "text": "96 and 130 mJ without speculation",
+     "printed_value": "96",
      "status": "agrees"
     },
     {
      "in": "Two deployment questions follow",
-     "text": "spends 88 mJ per token at batch 1",
-     "printed_value": "88",
+     "text": "spends 96 mJ per token at batch 1",
+     "printed_value": "96",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B energy per token at batch 1, power scenario B",
-     "text": "B: 88.1 /",
-     "printed_value": "88.1",
+     "text": "B: 96.5 /",
+     "printed_value": "96.5",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
-     "text": "88.1 / 123 mJ;",
-     "printed_value": "88.1",
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "96.5 / 130 mJ;",
+     "printed_value": "96.5",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
-     "text": "(88.1 / 123 mJ",
-     "printed_value": "88.1",
+     "in": "Qwen3-8B package under the power scenarios, production lane / lane as built",
+     "text": "(96.5 / 130 mJ",
+     "printed_value": "96.5",
      "status": "agrees"
     },
     {
      "in": "At large batch, energy per token is KV bytes",
-     "text": "ROM 88.1 mJ",
-     "printed_value": "88.1",
+     "text": "ROM 96.5 mJ",
+     "printed_value": "96.5",
      "status": "agrees"
     },
     {
      "in": "The modeled operating energy is lower at the batch sizes",
-     "text": "spends 88.1 mJ per token",
-     "printed_value": "88.1",
+     "text": "spends 96.5 mJ per token",
+     "printed_value": "96.5",
      "status": "agrees"
     }
    ],
@@ -1221,71 +1305,71 @@
      {
       "label": "production lane at 1.40 pJ/MAC (GPU tensor core)",
       "binding": "results/arch/power_scenarios.json#sensitivities.B_lane_at_gpu_tensor_1p40pj.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj",
-      "value": 97.2626
+      "value": 104.581
      },
      {
       "label": "older HBM die allocation (0.8)",
       "binding": "results/arch/power_scenarios.json#sensitivities.B_old_hbm_allocation_die_0p8.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj",
-      "value": 88.116
+      "value": 96.4943
      },
      {
       "label": "HBM die energy at the GH200 8.23 pJ/bit",
       "binding": "results/arch/power_scenarios.json#sensitivities.B_hbm_die_gh200_8p23.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj",
-      "value": 88.116
+      "value": 96.4943
      },
      {
       "label": "scenario A (measured ASAP7 lane)",
       "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj",
-      "value": 122.965
+      "value": 130.284
      }
     ],
     "range": [
-     88.116,
-     122.965
+     96.4943,
+     130.284
     ]
    }
   },
   {
    "id": "qwen.energy_A",
    "section": "Qwen3-8B energy",
-   "claim": "Qwen3-8B ROM reticle energy per token at batch 1, scenario A (mJ)",
+   "claim": "Qwen3-8B ROM package energy per token at batch 1, scenario A (mJ)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 122.965,
+   "record_value": 130.284,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "88 and 123 mJ without speculation",
-     "printed_value": "123",
+     "text": "96 and 130 mJ without speculation",
+     "printed_value": "130",
      "status": "agrees"
     },
     {
      "in": "Two deployment questions follow",
-     "text": "123 against 595 mJ",
-     "printed_value": "123",
+     "text": "130 against 1,318 mJ",
+     "printed_value": "130",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B energy per token at batch 1, power scenario B",
-     "text": "A: 123 /",
-     "printed_value": "123",
+     "text": "A: 130.3 /",
+     "printed_value": "130.3",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
-     "text": "88.1 / 123 mJ;",
-     "printed_value": "123",
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "96.5 / 130 mJ;",
+     "printed_value": "130",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
-     "text": "(88.1 / 123 mJ",
-     "printed_value": "123",
+     "in": "Qwen3-8B package under the power scenarios, production lane / lane as built",
+     "text": "(96.5 / 130 mJ",
+     "printed_value": "130",
      "status": "agrees"
     }
    ]
@@ -1293,38 +1377,38 @@
   {
    "id": "qwen.hbm_energy_B",
    "section": "Qwen3-8B energy",
-   "claim": "Same core on HBM at 3.5-bit weights, energy per token at batch 1, scenario B (mJ)",
+   "claim": "Same package on HBM at the ROM's INT8 weights, energy per token at batch 1, scenario B (mJ)",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch1.energy_per_token_mj",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.batch1.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 560.372,
+   "record_value": 1284.19,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Two deployment questions follow",
-     "text": "against 560 mJ",
-     "printed_value": "560",
+     "text": "against 1,284 mJ for the same package",
+     "printed_value": "1,284",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B energy per token at batch 1, power scenario B",
-     "text": "88.1 / 560 mJ",
-     "printed_value": "560",
+     "text": "96.5 / 1,284 mJ",
+     "printed_value": "1,284",
      "status": "agrees"
     },
     {
      "in": "At large batch, energy per token is KV bytes",
-     "text": "the HBM core 560 mJ",
-     "printed_value": "560",
+     "text": "1,284 mJ at batch 1",
+     "printed_value": "1,284",
      "status": "agrees"
     },
     {
      "in": "The modeled operating energy is lower at the batch sizes",
-     "text": "against 560 mJ",
-     "printed_value": "560",
+     "text": "against 1,284 mJ for the same package",
+     "printed_value": "1,284",
      "status": "agrees"
     }
    ]
@@ -1332,26 +1416,26 @@
   {
    "id": "qwen.hbm_energy_A",
    "section": "Qwen3-8B energy",
-   "claim": "Same core on HBM at 3.5-bit weights, energy per token at batch 1, scenario A (mJ)",
+   "claim": "Same package on HBM at the ROM's INT8 weights, energy per token at batch 1, scenario A (mJ)",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.hbm_comparator.rom35_batch1.energy_per_token_mj",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.hbm_comparator.batch1.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 595.221,
+   "record_value": 1317.98,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Two deployment questions follow",
-     "text": "123 against 595 mJ",
-     "printed_value": "595",
+     "text": "130 against 1,318 mJ",
+     "printed_value": "1,318",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B energy per token at batch 1, power scenario B",
-     "text": "123 / 595 mJ",
-     "printed_value": "595",
+     "text": "130.3 / 1,318 mJ",
+     "printed_value": "1,318",
      "status": "agrees"
     }
    ]
@@ -1359,53 +1443,38 @@
   {
    "id": "qwen.energy_ratio_B",
    "section": "Qwen3-8B energy",
-   "claim": "Qwen3-8B energy HBM / ROM at batch 1, same 3.5-bit weights, scenario B",
+   "claim": "Qwen3-8B energy HBM / ROM at batch 1, same INT8 weights, same package, scenario B",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.ratios_batch1.hbm_rom_format_over_rom",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.ratios_batch1.hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 6.36,
+   "record_value": 13.31,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Two deployment questions follow",
-     "text": "(6.4×;",
-     "printed_value": "6.4",
+     "text": "(13.3×; on our routed lane",
+     "printed_value": "13.3",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B energy per token at batch 1, power scenario B",
-     "text": "560 mJ: 6.4×",
-     "printed_value": "6.4",
+     "text": "1,284 mJ: 13.3×",
+     "printed_value": "13.3",
      "status": "agrees"
     },
     {
      "in": "At large batch, energy per token is KV bytes",
-     "text": "(6.4×)",
-     "printed_value": "6.4",
+     "text": "(13.3×)",
+     "printed_value": "13.3",
      "status": "agrees"
-    }
-   ]
-  },
-  {
-   "id": "qwen.energy_ratio_B_fp8",
-   "section": "Qwen3-8B energy",
-   "claim": "Qwen3-8B energy HBM (FP8 weights) / ROM at batch 1, scenario B",
-   "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.ratios_batch1.hbm_over_rom",
-   "derived": false,
-   "derivation": null,
-   "record_value": 13.21,
-   "records": [
-    "results/arch/qwen3_budget.json"
-   ],
-   "printed": [
+    },
     {
-     "in": "Qwen3-8B energy per token at batch 1, power scenario B",
-     "text": "(13.2×)",
-     "printed_value": "13.2",
+     "in": "The modeled operating energy is lower at the batch sizes",
+     "text": "(13.3×; 130 against",
+     "printed_value": "13.3",
      "status": "agrees"
     }
    ]
@@ -1413,47 +1482,26 @@
   {
    "id": "qwen.energy_ratio_A",
    "section": "Qwen3-8B energy",
-   "claim": "Qwen3-8B energy HBM / ROM at batch 1, same 3.5-bit weights, scenario A",
+   "claim": "Qwen3-8B energy HBM / ROM at batch 1, same INT8 weights, same package, scenario A",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.ratios_batch1.hbm_rom_format_over_rom",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.ratios_batch1.hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 4.84,
+   "record_value": 10.12,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Two deployment questions follow",
-     "text": "4.8×)",
-     "printed_value": "4.8",
+     "text": "1,318 mJ, 10.1×",
+     "printed_value": "10.1",
      "status": "agrees"
     },
     {
      "in": "Qwen3-8B energy per token at batch 1, power scenario B",
-     "text": "595 mJ: 4.8×",
-     "printed_value": "4.8",
-     "status": "agrees"
-    }
-   ]
-  },
-  {
-   "id": "qwen.energy_ratio_A_fp8",
-   "section": "Qwen3-8B energy",
-   "claim": "Qwen3-8B energy HBM (FP8 weights) / ROM at batch 1, scenario A",
-   "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.ratios_batch1.hbm_over_rom",
-   "derived": false,
-   "derivation": null,
-   "record_value": 9.74,
-   "records": [
-    "results/arch/qwen3_budget.json"
-   ],
-   "printed": [
-    {
-     "in": "Qwen3-8B energy per token at batch 1, power scenario B",
-     "text": "(9.7×)",
-     "printed_value": "9.7",
+     "text": "1,318 mJ: 10.1×",
+     "printed_value": "10.1",
      "status": "agrees"
     }
    ]
@@ -1461,26 +1509,26 @@
   {
    "id": "qwen.die_power_B",
    "section": "Qwen3-8B power",
-   "claim": "Qwen3-8B die power at the design rate, scenario B (W)",
+   "claim": "Qwen3-8B power of each die at the autoregressive design rate, scenario B (W)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate",
    "derived": false,
    "derivation": null,
-   "record_value": 636.601,
+   "record_value": 437.752,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
-     "text": "637 / 947 W",
-     "printed_value": "637",
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "438 / 623 W",
+     "printed_value": "438",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
-     "text": "637 / 947 W)",
-     "printed_value": "637",
+     "in": "Qwen3-8B package under the power scenarios, production lane / lane as built",
+     "text": "438 / 623 W)",
+     "printed_value": "438",
      "status": "agrees"
     }
    ]
@@ -1488,26 +1536,26 @@
   {
    "id": "qwen.die_power_A",
    "section": "Qwen3-8B power",
-   "claim": "Qwen3-8B die power at the design rate, scenario A (W)",
+   "claim": "Qwen3-8B power of each die at the autoregressive design rate, scenario A (W)",
    "evidence_class": "model",
    "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate",
    "derived": false,
    "derivation": null,
-   "record_value": 947.114,
+   "record_value": 623.051,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
-     "text": "637 / 947 W",
-     "printed_value": "947",
+     "in": "Qwen3-8B package at 10,968 tok/s without speculation, power scenarios B / A",
+     "text": "438 / 623 W",
+     "printed_value": "623",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
-     "text": "637 / 947 W)",
-     "printed_value": "947",
+     "in": "Qwen3-8B package under the power scenarios, production lane / lane as built",
+     "text": "438 / 623 W)",
+     "printed_value": "623",
      "status": "agrees"
     }
    ]
@@ -1515,20 +1563,20 @@
   {
    "id": "qwen.provisioned_w",
    "section": "Qwen3-8B power",
-   "claim": "Qwen3-8B package provisioned power at 1.2 times the saturated worst case, scenario B (W)",
+   "claim": "Qwen3-8B package provisioned power at 1.2 times the saturated worst case, scenario B (W, both dies)",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.worst_case.provisioned_w",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.worst_case.provisioned_w_per_die x 2",
    "derived": false,
    "derivation": null,
-   "record_value": 1608.2,
+   "record_value": 2775.2,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Provisioned power at 1.2× the saturated worst case: Qwen3-8B package",
-     "text": "1,608 W",
-     "printed_value": "1,608",
+     "text": "2,775 W",
+     "printed_value": "2,775",
      "status": "agrees"
     }
    ]
@@ -1536,26 +1584,26 @@
   {
    "id": "qwen.total_throughput",
    "section": "Qwen3-8B batching",
-   "claim": "Qwen3-8B reticle total throughput from batch 2 (KV-stream-bound)",
+   "claim": "Qwen3-8B package total throughput from batch 2 (KV-stream-bound)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s",
    "derived": false,
    "derivation": null,
-   "record_value": 8940.7,
+   "record_value": 11920.9,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
-     "in": "Qwen3-8B reticle, total throughput from batch 2",
-     "text": "8,941 tok/s",
-     "printed_value": "8,941",
+     "in": "Qwen3-8B package, total throughput from batch 2",
+     "text": "11,921 tok/s",
+     "printed_value": "11,921",
      "status": "agrees"
     },
     {
      "in": "Throughput per silicon is not the price of speed either",
-     "text": "(8,941 tokens/s, KV-bound)",
-     "printed_value": "8,941",
+     "text": "(11,921 tokens/s, KV-bound)",
+     "printed_value": "11,921",
      "status": "agrees"
     }
    ]
@@ -1563,20 +1611,20 @@
   {
    "id": "qwen.hbm_batch128",
    "section": "Qwen3-8B batching",
-   "claim": "Same core on HBM at 128 users, total throughput",
+   "claim": "Same package on HBM at 128 users, total throughput",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch128.tokens_s",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.batch128.tokens_s",
    "derived": false,
    "derivation": null,
-   "record_value": 8573.5,
+   "record_value": 10857.6,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Throughput per silicon is not the price of speed either",
-     "text": "at 128 users (8,573)",
-     "printed_value": "8,573",
+     "text": "at 128 users (10,858)",
+     "printed_value": "10,858",
      "status": "agrees"
     }
    ]
@@ -1589,15 +1637,15 @@
    "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.batch128.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 88.839,
+   "record_value": 96.432,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "At large batch, energy per token is KV bytes",
-     "text": "88.8 vs 95.0 mJ",
-     "printed_value": "88.8",
+     "text": "96.4 vs 110.5 mJ",
+     "printed_value": "96.4",
      "status": "agrees"
     }
    ]
@@ -1605,20 +1653,20 @@
   {
    "id": "qwen.energy_b128_table10",
    "section": "Qwen3-8B batching",
-   "claim": "Table 10-1: Qwen3-8B ROM energy per token at 128 users, scenario B (mJ)",
+   "claim": "Table 10-1: Qwen3-8B ROM package energy per token at 128 users, scenario B (mJ)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.batch128.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 88.839,
+   "record_value": 96.432,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "Energy per token at 128 users (V4.1: saturated, the users each machine holds)",
-     "text": "88.8 vs 95.0 mJ",
-     "printed_value": "88.8",
+     "text": "96.4 vs 110.5 mJ",
+     "printed_value": "96.4",
      "status": "agrees"
     }
    ]
@@ -1626,26 +1674,26 @@
   {
    "id": "qwen.energy_b128_hbm",
    "section": "Qwen3-8B batching",
-   "claim": "Qwen3-8B same core on HBM (ROM weight format) energy per token at 128 users, scenario B (mJ)",
+   "claim": "Same package on HBM at the ROM's INT8 weights, energy per token at 128 users, scenario B (mJ)",
    "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch128.energy_per_token_mj",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.batch128.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 95.034,
+   "record_value": 110.494,
    "records": [
     "results/arch/qwen3_budget.json"
    ],
    "printed": [
     {
      "in": "At large batch, energy per token is KV bytes",
-     "text": "88.8 vs 95.0 mJ",
-     "printed_value": "95.0",
+     "text": "96.4 vs 110.5 mJ",
+     "printed_value": "110.5",
      "status": "agrees"
     },
     {
      "in": "Energy per token at 128 users (V4.1: saturated, the users each machine holds)",
-     "text": "88.8 vs 95.0 mJ",
-     "printed_value": "95.0",
+     "text": "96.4 vs 110.5 mJ",
+     "printed_value": "110.5",
      "status": "agrees"
     }
    ]
@@ -1714,64 +1762,139 @@
    ]
   },
   {
-   "id": "quality.w35_ppl_2k",
+   "id": "quality.w8_ppl_2k",
    "section": "Qwen3-8B quality",
-   "claim": "Adding the 3.5-bit INT3/INT6 GPTQ stand-in: WikiText-2 perplexity change at 2K (%)",
+   "claim": "The 8-bit weights (signed INT8, BF16 scale per row after the FP32 sum, per-row clipped RTN) with the contract and FP8 KV: WikiText-2 perplexity change at 2K vs vendor BF16 (%)",
    "evidence_class": "measured-quality",
-   "binding": "results/quality/qwen3_8b_deployment_arithmetic.json#modes.e_full_gptq.wikitext2_2048.rel_delta_ppl x 100",
+   "binding": "results/quality/qwen3_8b_weight_format_search.json#modes.e_full_w8_o4_contract_25288d25.wikitext2_2048.rel_delta_ppl x 100",
    "derived": false,
    "derivation": null,
-   "record_value": 22.7307,
+   "record_value": -1.59399,
    "records": [
-    "results/quality/qwen3_8b_deployment_arithmetic.json"
+    "results/quality/qwen3_8b_weight_format_search.json"
    ],
    "printed": [
     {
      "in": "Full Qwen3-8B quality against vendor BF16",
-     "text": "+22.7%",
-     "printed_value": "+22.7",
+     "text": "· −1.59%",
+     "printed_value": "-1.59",
+     "status": "agrees"
+    },
+    {
+     "in": "The design's weights are 8-bit, exactly as the RTL contract specifies",
+     "text": "by −1.59% at 2K",
+     "printed_value": "-1.59",
+     "status": "agrees"
+    },
+    {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "perplexity −1.59% at 2K",
+     "printed_value": "-1.59",
+     "status": "agrees"
+    },
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "by −1.59% at 2K",
+     "printed_value": "-1.59",
      "status": "agrees"
     }
    ]
   },
   {
-   "id": "quality.w35_ppl_8k",
+   "id": "quality.w8_ppl_8k",
    "section": "Qwen3-8B quality",
-   "claim": "Adding the 3.5-bit stand-in: WikiText-2 perplexity change at 8K (%)",
+   "claim": "The 8-bit weights with the contract and FP8 KV: WikiText-2 perplexity change at 8K (%)",
    "evidence_class": "measured-quality",
-   "binding": "results/quality/qwen3_8b_deployment_arithmetic.json#modes.e_full_gptq.wikitext2_8192.rel_delta_ppl x 100",
+   "binding": "results/quality/qwen3_8b_weight_format_search.json#modes.e_full_w8_o4_contract_25288d25.wikitext2_8192.rel_delta_ppl x 100",
    "derived": false,
    "derivation": null,
-   "record_value": 29.5963,
+   "record_value": -1.02824,
    "records": [
-    "results/quality/qwen3_8b_deployment_arithmetic.json"
+    "results/quality/qwen3_8b_weight_format_search.json"
    ],
    "printed": [
     {
      "in": "Full Qwen3-8B quality against vendor BF16",
-     "text": "+29.6%",
-     "printed_value": "+29.6",
+     "text": "/ −1.03%, −0.5 pt",
+     "printed_value": "-1.03",
+     "status": "agrees"
+    },
+    {
+     "in": "The design's weights are 8-bit, exactly as the RTL contract specifies",
+     "text": "−1.03% at 8K",
+     "printed_value": "-1.03",
+     "status": "agrees"
+    },
+    {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "−1.03% at 8K",
+     "printed_value": "-1.03",
+     "status": "agrees"
+    },
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "−1.03% at 8K",
+     "printed_value": "-1.03",
      "status": "agrees"
     }
    ]
   },
   {
-   "id": "quality.w35_mmlu",
+   "id": "quality.w8_mmlu",
    "section": "Qwen3-8B quality",
-   "claim": "Adding the 3.5-bit stand-in: MMLU change (points)",
+   "claim": "The 8-bit weights with the contract and FP8 KV: MMLU change (points)",
    "evidence_class": "measured-quality",
-   "binding": "results/quality/qwen3_8b_deployment_arithmetic.json#modes.e_full_gptq.mmlu.delta_pt",
+   "binding": "results/quality/qwen3_8b_weight_format_search.json#modes.e_full_w8_o4_contract_25288d25.mmlu.delta_pt",
    "derived": false,
    "derivation": null,
-   "record_value": -7.5,
+   "record_value": -0.5,
    "records": [
-    "results/quality/qwen3_8b_deployment_arithmetic.json"
+    "results/quality/qwen3_8b_weight_format_search.json"
    ],
    "printed": [
     {
      "in": "Full Qwen3-8B quality against vendor BF16",
-     "text": "-7.5 pt",
-     "printed_value": "-7.5",
+     "text": "−1.03%, −0.5 pt",
+     "printed_value": "-0.5",
+     "status": "agrees"
+    },
+    {
+     "in": "The design's weights are 8-bit, exactly as the RTL contract specifies",
+     "text": "MMLU by −0.5 points",
+     "printed_value": "-0.5",
+     "status": "agrees"
+    },
+    {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "MMLU −0.5 points",
+     "printed_value": "-0.5",
+     "status": "agrees"
+    },
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "MMLU by −0.5 points",
+     "printed_value": "-0.5",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "quality.w8_top1",
+   "section": "Qwen3-8B quality",
+   "claim": "The 8-bit weights: top-1 agreement with vendor BF16 on WikiText-2 at 2K (%)",
+   "evidence_class": "measured-quality",
+   "binding": "results/quality/qwen3_8b_weight_format_search.json#modes.e_full_w8_o4_contract_25288d25.wikitext2_2048.top1_agree_vs_ref x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 95.6679,
+   "records": [
+    "results/quality/qwen3_8b_weight_format_search.json"
+   ],
+   "printed": [
+    {
+     "in": "The design's weights are 8-bit, exactly as the RTL contract specifies",
+     "text": "top-1 agreement with BF16 is 95.7%",
+     "printed_value": "95.7",
      "status": "agrees"
     }
    ]
@@ -1784,7 +1907,7 @@
    "binding": "results/arch/v41_lanes.json#design_point.1048576.ar",
    "derived": false,
    "derivation": null,
-   "record_value": 7008.86,
+   "record_value": 7049.08,
    "records": [
     "results/arch/v41_lanes.json"
    ],
@@ -1792,43 +1915,43 @@
     {
      "in": "Mask-ROM weights beside the multipliers",
      "text": "at 1M context gets 8,185 tokens/s",
-     "printed_value": "7,009",
+     "printed_value": "7,049",
      "status": "agrees"
     },
     {
      "in": "Interactive and agentic use of language models",
      "text": "the adopted design decodes 8,185 tokens/s",
-     "printed_value": "7,009",
+     "printed_value": "7,049",
      "status": "agrees"
     },
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "7,009 / 7,286",
-     "printed_value": "7,009",
+     "text": "7,049 / 7,286",
+     "printed_value": "7,049",
      "status": "agrees"
     },
     {
      "in": "S3 · specialized ROM accelerator",
      "text": "8,185 design-point model",
-     "printed_value": "7,009",
+     "printed_value": "7,049",
      "status": "agrees"
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
      "text": "decodes 8,185 tokens/s per user at 1M",
-     "printed_value": "7,009",
+     "printed_value": "7,049",
      "status": "agrees"
     },
     {
      "in": "The comparator uses its best configuration on shipping hardware",
      "text": "reaches 8,185 tokens/s per user",
-     "printed_value": "7,009",
+     "printed_value": "7,049",
      "status": "agrees"
     },
     {
      "in": "ROM array, adopted design (top of the latency ladder",
-     "text": "7,009",
-     "printed_value": "7,009",
+     "text": "7,049",
+     "printed_value": "7,049",
      "status": "agrees"
     }
    ],
@@ -1837,22 +1960,22 @@
      {
       "label": "collective exposure without the levers (ablation)",
       "binding": "results/arch/v41_lanes.json#design_point_no_levers.1048576.ar",
-      "value": 6561.44
+      "value": 6591.55
      },
      {
       "label": "every collective fully overlapped (gate C7 recovered)",
       "binding": "results/arch/v41_lanes.json#design_point_overlap_assumed.1048576.ar",
-      "value": 7322.94
+      "value": 7374.41
      },
      {
       "label": "rack geometry: 29 ring cables at worst layout length",
       "binding": "results/arch/v41_rack.json#reprice_sensitivity.geometry.rate_tokens_s",
-      "value": 7003.64
+      "value": 7043.79
      }
     ],
     "range": [
-     6561.44,
-     7322.94
+     6591.55,
+     7374.41
     ]
    }
   },
@@ -1883,7 +2006,7 @@
     },
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "7,009 / 7,286",
+     "text": "7,049 / 7,286",
      "printed_value": "7,286",
      "status": "agrees"
     },
@@ -1928,12 +2051,12 @@
   {
    "id": "v41.mtp_1m",
    "section": "DeepSeek-V4.1 rate",
-   "claim": "V4.1 adopted design with native MTP (tau 5.0, third-party DSpark acceptance), 1M",
+   "claim": "V4.1 adopted design with native MTP (measured V4.1-Flash tau 3.65), 1M",
    "evidence_class": "model",
    "binding": "results/arch/v41_lanes.json#design_point.1048576.mtp",
    "derived": false,
    "derivation": null,
-   "record_value": 21669.9,
+   "record_value": 15890.5,
    "records": [
     "results/arch/v41_lanes.json"
    ],
@@ -1941,31 +2064,31 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "(23,818 with its native MTP",
-     "printed_value": "21,670",
+     "printed_value": "15,890",
      "status": "agrees"
     },
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "(21,670 / 22,532)",
-     "printed_value": "21,670",
+     "text": "(15,890 / 16,449)",
+     "printed_value": "15,890",
      "status": "agrees"
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
      "text": "(23,756 and 24,797 with MTP",
-     "printed_value": "21,670",
+     "printed_value": "15,890",
      "status": "agrees"
     },
     {
      "in": "ROM array, adopted design (top of the latency ladder",
-     "text": "21,670",
-     "printed_value": "21,670",
+     "text": "15,890",
+     "printed_value": "15,890",
      "status": "agrees"
     },
     {
      "in": "Rack gate C7: measured exposure, partly recovered",
      "text": "23,818 at 1M",
-     "printed_value": "21,670",
+     "printed_value": "15,890",
      "status": "agrees"
     }
    ],
@@ -1974,17 +2097,17 @@
      {
       "label": "without the levers",
       "binding": "results/arch/v41_lanes.json#design_point_no_levers.1048576.mtp",
-      "value": 19341.1
+      "value": 14148.2
      },
      {
       "label": "fully overlapped",
       "binding": "results/arch/v41_lanes.json#design_point_overlap_assumed.1048576.mtp",
-      "value": 21535.3
+      "value": 15861.5
      }
     ],
     "range": [
-     19341.1,
-     21669.9
+     14148.2,
+     15890.5
     ]
    }
   },
@@ -1996,7 +2119,7 @@
    "binding": "results/arch/v41_lanes.json#design_point.200000.mtp",
    "derived": false,
    "derivation": null,
-   "record_value": 22532.3,
+   "record_value": 16448.5,
    "records": [
     "results/arch/v41_lanes.json"
    ],
@@ -2004,19 +2127,19 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "8,568 and 24,864 at 200K",
-     "printed_value": "22,532",
+     "printed_value": "16,449",
      "status": "agrees"
     },
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "21,670 / 22,532",
-     "printed_value": "22,532",
+     "text": "15,890 / 16,449",
+     "printed_value": "16,449",
      "status": "agrees"
     },
     {
      "in": "ROM array, adopted design (top of the latency ladder",
-     "text": "22,532",
-     "printed_value": "22,532",
+     "text": "16,449",
+     "printed_value": "16,449",
      "status": "agrees"
     }
    ]
@@ -2029,7 +2152,7 @@
    "binding": "results/arch/v41_lanes.json#design_point_overlap_assumed.1048576.ar",
    "derived": false,
    "derivation": null,
-   "record_value": 7322.94,
+   "record_value": 7374.41,
    "records": [
     "results/arch/v41_lanes.json"
    ],
@@ -2037,37 +2160,37 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "full overlap would give 8,622",
-     "printed_value": "7,323",
+     "printed_value": "7,374",
      "status": "agrees"
     },
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "7,323 / 7,623",
-     "printed_value": "7,323",
+     "text": "7,374 / 7,623",
+     "printed_value": "7,374",
      "status": "agrees"
     },
     {
      "in": "Per-user decode rate at batch 1 at the three design points",
      "text": "they would be 8,622 / 23,578",
-     "printed_value": "7,323",
+     "printed_value": "7,374",
      "status": "agrees"
     },
     {
      "in": "S3 · specialized ROM accelerator",
      "text": "(8,622 with full overlap)",
-     "printed_value": "7,323",
+     "printed_value": "7,374",
      "status": "agrees"
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
      "text": "8,622 and 9,041 if the collectives",
-     "printed_value": "7,323",
+     "printed_value": "7,374",
      "status": "agrees"
     },
     {
      "in": "ROM array, same design with every collective fully overlapped",
-     "text": "7,323",
-     "printed_value": "7,323",
+     "text": "7,374",
+     "printed_value": "7,374",
      "status": "agrees"
     }
    ]
@@ -2087,7 +2210,7 @@
    "printed": [
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "7,323 / 7,623",
+     "text": "7,374 / 7,623",
      "printed_value": "7,623",
      "status": "agrees"
     },
@@ -2107,27 +2230,27 @@
    "binding": "results/arch/v41_lanes.json#design_point_overlap_assumed.1048576.mtp",
    "derived": false,
    "derivation": null,
-   "record_value": 21535.3,
+   "record_value": 15861.5,
    "records": [
     "results/arch/v41_lanes.json"
    ],
    "printed": [
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "(21,535 / 22,387)",
-     "printed_value": "21,535",
+     "text": "(15,862 / 16,342)",
+     "printed_value": "15,862",
      "status": "agrees"
     },
     {
      "in": "ROM array, same design with every collective fully overlapped",
-     "text": "21,535",
-     "printed_value": "21,535",
+     "text": "15,862",
+     "printed_value": "15,862",
      "status": "agrees"
     },
     {
      "in": "Rack gate C7: measured exposure, partly recovered",
      "text": "the overlap-assumed 23,578",
-     "printed_value": "21,535",
+     "printed_value": "15,862",
      "status": "agrees"
     }
    ]
@@ -2140,21 +2263,21 @@
    "binding": "results/arch/v41_lanes.json#design_point_overlap_assumed.200000.mtp",
    "derived": false,
    "derivation": null,
-   "record_value": 22386.7,
+   "record_value": 16342.3,
    "records": [
     "results/arch/v41_lanes.json"
    ],
    "printed": [
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "21,535 / 22,387",
-     "printed_value": "22,387",
+     "text": "15,862 / 16,342",
+     "printed_value": "16,342",
      "status": "agrees"
     },
     {
      "in": "ROM array, same design with every collective fully overlapped",
-     "text": "22,387",
-     "printed_value": "22,387",
+     "text": "16,342",
+     "printed_value": "16,342",
      "status": "agrees"
     }
    ]
@@ -2167,15 +2290,15 @@
    "binding": "results/arch/v41_lanes.json#design_point_no_levers.1048576.ar",
    "derived": false,
    "derivation": null,
-   "record_value": 6561.44,
+   "record_value": 6591.55,
    "records": [
     "results/arch/v41_lanes.json"
    ],
    "printed": [
     {
      "in": "Ablation: same design, collective exposure measured without the levers",
-     "text": "6,561",
-     "printed_value": "6,561",
+     "text": "6,592",
+     "printed_value": "6,592",
      "status": "agrees"
     }
    ]
@@ -2209,7 +2332,7 @@
    "binding": "results/arch/v41_lanes.json#collective_exposure.recovered_share.1048576.ar x 100",
    "derived": false,
    "derivation": null,
-   "record_value": 58.7559,
+   "record_value": 58.4434,
    "records": [
     "results/arch/v41_lanes.json"
    ],
@@ -2217,13 +2340,13 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "recover about 59% of the loss",
-     "printed_value": "59",
+     "printed_value": "58",
      "status": "agrees"
     },
     {
      "in": "Rack gate C7: measured exposure, partly recovered",
      "text": "about 59% of the overlap loss",
-     "printed_value": "59",
+     "printed_value": "58",
      "status": "agrees"
     }
    ]
@@ -2302,15 +2425,15 @@
    "binding": "results/arch/v41_hbm_switched.json#configs.nvl_0p9_nvls.1048576.best_mtp.rate",
    "derived": false,
    "derivation": null,
-   "record_value": 11977.9,
+   "record_value": 8743.84,
    "records": [
     "results/arch/v41_hbm_switched.json"
    ],
    "printed": [
     {
      "in": "HBM comparator at its best: 96-die tensor group",
-     "text": "11,978",
-     "printed_value": "11,978",
+     "text": "8,744",
+     "printed_value": "8,744",
      "status": "agrees"
     }
    ]
@@ -2323,14 +2446,14 @@
    "binding": "results/arch/v41_hbm_switched.json#ratios_batch1.1048576.ar.ratio",
    "derived": false,
    "derivation": null,
-   "record_value": 1.95758,
+   "record_value": 1.96881,
    "records": [
     "results/arch/v41_hbm_switched.json"
    ],
    "printed": [
     {
      "in": "Mask-ROM weights beside the multipliers",
-     "text": "the two designs are 6.5× and 2.3×",
+     "text": "the two designs are 11.8× and 2.0×",
      "printed_value": "2.0",
      "status": "agrees"
     },
@@ -2354,8 +2477,8 @@
     },
     {
      "in": "S3 · specialized ROM accelerator",
-     "text": "1.96× S2",
-     "printed_value": "1.96",
+     "text": "1.97× S2",
+     "printed_value": "1.97",
      "status": "agrees"
     },
     {
@@ -2366,14 +2489,14 @@
     },
     {
      "in": "ROM ÷ best HBM (headline row)",
-     "text": "1.96×",
-     "printed_value": "1.96",
+     "text": "1.97×",
+     "printed_value": "1.97",
      "status": "agrees"
     },
     {
-     "in": "Per-user rate, batch 1, without / with MTP (τ = 5.0)",
-     "text": "1.96× / 1.81×",
-     "printed_value": "1.96",
+     "in": "Per-user rate, batch 1, without / with MTP (τ = 3.65)",
+     "text": "1.97× / 1.82×",
+     "printed_value": "1.97",
      "status": "agrees"
     },
     {
@@ -2388,22 +2511,22 @@
      {
       "label": "comparator without NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.ar) / (results/arch/v41_hbm_switched.json#configs.nvl_0p9.1048576.best_ar.rate)",
-      "value": 2.17321
+      "value": 2.18568
      },
      {
       "label": "comparator at doubled package bandwidth with NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.ar) / (results/arch/v41_hbm_switched.json#configs.nvl_1p8_nvls.1048576.best_ar.rate)",
-      "value": 1.94945
+      "value": 1.96064
      },
      {
       "label": "comparator at doubled package bandwidth without NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.ar) / (results/arch/v41_hbm_switched.json#configs.nvl_1p8.1048576.best_ar.rate)",
-      "value": 2.0439
+      "value": 2.05563
      }
     ],
     "range": [
-     1.94945,
-     2.17321
+     1.96064,
+     2.18568
     ]
    }
   },
@@ -2439,7 +2562,7 @@
      "status": "agrees"
     },
     {
-     "in": "Per-user rate, batch 1, without / with MTP (τ = 5.0)",
+     "in": "Per-user rate, batch 1, without / with MTP (τ = 3.65)",
      "text": "2.03× / 1.88×",
      "printed_value": "2.03",
      "status": "agrees"
@@ -2477,7 +2600,7 @@
    "binding": "results/arch/v41_hbm_switched.json#ratios_batch1.1048576.mtp.ratio",
    "derived": false,
    "derivation": null,
-   "record_value": 1.80916,
+   "record_value": 1.81733,
    "records": [
     "results/arch/v41_hbm_switched.json"
    ],
@@ -2502,14 +2625,14 @@
     },
     {
      "in": "ROM ÷ best HBM (headline row)",
-     "text": "1.81×",
-     "printed_value": "1.81",
+     "text": "1.82×",
+     "printed_value": "1.82",
      "status": "agrees"
     },
     {
-     "in": "Per-user rate, batch 1, without / with MTP (τ = 5.0)",
-     "text": "1.96× / 1.81×",
-     "printed_value": "1.81",
+     "in": "Per-user rate, batch 1, without / with MTP (τ = 3.65)",
+     "text": "1.97× / 1.82×",
+     "printed_value": "1.82",
      "status": "agrees"
     }
    ],
@@ -2518,22 +2641,22 @@
      {
       "label": "comparator without NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.mtp) / (results/arch/v41_hbm_switched.json#configs.nvl_0p9.1048576.best_mtp.rate)",
-      "value": 2.05882
+      "value": 2.06811
      },
      {
       "label": "comparator at doubled package bandwidth with NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.mtp) / (results/arch/v41_hbm_switched.json#configs.nvl_1p8_nvls.1048576.best_mtp.rate)",
-      "value": 1.73543
+      "value": 1.74327
      },
      {
       "label": "comparator at doubled package bandwidth without NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.mtp) / (results/arch/v41_hbm_switched.json#configs.nvl_1p8.1048576.best_mtp.rate)",
-      "value": 1.98441
+      "value": 1.99337
      }
     ],
     "range": [
-     1.73543,
-     2.05882
+     1.74327,
+     2.06811
     ]
    }
   },
@@ -2563,7 +2686,7 @@
      "status": "agrees"
     },
     {
-     "in": "Per-user rate, batch 1, without / with MTP (τ = 5.0)",
+     "in": "Per-user rate, batch 1, without / with MTP (τ = 3.65)",
      "text": "2.03× / 1.88×",
      "printed_value": "1.88",
      "status": "agrees"
@@ -2620,7 +2743,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.rom_energy_j",
    "derived": false,
    "derivation": null,
-   "record_value": 2.41184,
+   "record_value": 2.39831,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2628,19 +2751,19 @@
     {
      "in": "Two deployment questions follow",
      "text": "spends 2.41 J per token at batch 1",
-     "printed_value": "2.41",
+     "printed_value": "2.40",
      "status": "agrees"
     },
     {
      "in": "Energy per token, batch 1 (both static-dominated)",
-     "text": "2.41 vs 6.70 J",
-     "printed_value": "2.41",
+     "text": "2.40 vs 6.70 J",
+     "printed_value": "2.40",
      "status": "agrees"
     },
     {
      "in": "Static power decides array energy at low batch",
      "text": "2.41 J per token",
-     "printed_value": "2.41",
+     "printed_value": "2.40",
      "status": "agrees"
     }
    ],
@@ -2649,12 +2772,12 @@
      {
       "label": "scenario A (measured lane)",
       "binding": "results/arch/power_scenarios.json#rom_over_hbm.A_measured_implementation.1048576.ar_batch1.rom_energy_j",
-      "value": 2.72852
+      "value": 2.71498
      }
     ],
     "range": [
-     2.41184,
-     2.72852
+     2.39831,
+     2.71498
     ]
    }
   },
@@ -2679,7 +2802,7 @@
     },
     {
      "in": "Energy per token, batch 1 (both static-dominated)",
-     "text": "2.41 vs 6.70 J",
+     "text": "2.40 vs 6.70 J",
      "printed_value": "6.70",
      "status": "agrees"
     }
@@ -2693,7 +2816,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 2.77875,
+   "record_value": 2.79442,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2706,7 +2829,7 @@
     },
     {
      "in": "V4.1 energy per token, 1M, HBM ÷ ROM on one power model",
-     "text": "2.8× / 5.2×",
+     "text": "2.8× / 6.8×",
      "printed_value": "2.8",
      "status": "agrees"
     },
@@ -2728,12 +2851,12 @@
      {
       "label": "scenario A (measured lane)",
       "binding": "results/arch/power_scenarios.json#rom_over_hbm.A_measured_implementation.1048576.ar_batch1.energy_hbm_over_rom",
-      "value": 2.5723
+      "value": 2.58512
      }
     ],
     "range": [
-     2.5723,
-     2.77875
+     2.58512,
+     2.79442
     ]
    }
   },
@@ -2745,7 +2868,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.A_measured_implementation.1048576.ar_batch1.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 2.5723,
+   "record_value": 2.58512,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2766,7 +2889,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.mtp_batch1.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 3.02809,
+   "record_value": 3.04131,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2779,7 +2902,7 @@
     },
     {
      "in": "Energy per token, batch 1, with MTP",
-     "text": "2.40 J: 3.0×",
+     "text": "3.29 J: 3.0×",
      "printed_value": "3.0",
      "status": "agrees"
     }
@@ -2793,7 +2916,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 5.19676,
+   "record_value": 6.75607,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2801,25 +2924,25 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "5.2–6.6× lower at a filled 28-user pipeline",
-     "printed_value": "5.2",
+     "printed_value": "6.8",
      "status": "agrees"
     },
     {
      "in": "V4.1 energy per token, 1M, HBM ÷ ROM on one power model",
-     "text": "2.8× / 5.2×",
-     "printed_value": "5.2",
+     "text": "2.8× / 6.8×",
+     "printed_value": "6.8",
      "status": "agrees"
     },
     {
      "in": "Energy per token, 28-user fill: ROM vs HBM",
-     "text": "1,023 mJ: 5.2×",
-     "printed_value": "5.2",
+     "text": "1,023 mJ: 6.8×",
+     "printed_value": "6.8",
      "status": "agrees"
     },
     {
      "in": "Static power decides array energy at low batch",
      "text": "5.2–6.6× at the fill",
-     "printed_value": "5.2",
+     "printed_value": "6.8",
      "status": "agrees"
     }
    ]
@@ -2832,7 +2955,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 6.64382,
+   "record_value": 9.267,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2840,19 +2963,19 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "5.2–6.6× lower",
-     "printed_value": "6.6",
+     "printed_value": "9.3",
      "status": "agrees"
     },
     {
      "in": "V4.1 energy per token, 1M, HBM ÷ ROM on one power model",
-     "text": "3.0× / 6.6×",
-     "printed_value": "6.6",
+     "text": "3.0× / 9.3×",
+     "printed_value": "9.3",
      "status": "agrees"
     },
     {
      "in": "Energy per token, 28-user fill, with MTP",
-     "text": "627 mJ: 6.6×",
-     "printed_value": "6.6",
+     "text": "859 mJ: 9.3×",
+     "printed_value": "9.3",
      "status": "agrees"
     }
    ]
@@ -2865,7 +2988,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rom_energy_j x 1000",
    "derived": false,
    "derivation": null,
-   "record_value": 196.929,
+   "record_value": 151.478,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2873,19 +2996,19 @@
     {
      "in": "Two deployment questions follow",
      "text": "197 mJ against 1,023 mJ",
-     "printed_value": "197",
+     "printed_value": "151",
      "status": "agrees"
     },
     {
      "in": "Energy per token, 28-user fill: ROM vs HBM",
-     "text": "197 vs 1,023 mJ",
-     "printed_value": "197",
+     "text": "151 vs 1,023 mJ",
+     "printed_value": "151",
      "status": "agrees"
     },
     {
      "in": "Static power decides array energy at low batch",
      "text": "197 mJ at the 28-user fill",
-     "printed_value": "197",
+     "printed_value": "151",
      "status": "agrees"
     }
    ]
@@ -2911,7 +3034,7 @@
     },
     {
      "in": "Energy per token, 28-user fill: ROM vs HBM",
-     "text": "197 vs 1,023 mJ",
+     "text": "151 vs 1,023 mJ",
      "printed_value": "1,023",
      "status": "agrees"
     }
@@ -2967,15 +3090,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 4.12683,
+   "record_value": 5.80769,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Aggregate throughput, 28 users, without / with MTP",
-     "text": "4.1× / 6.4×",
-     "printed_value": "4.1",
+     "text": "5.8× / 10.6×",
+     "printed_value": "5.8",
      "status": "agrees"
     }
    ]
@@ -2988,15 +3111,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 6.40237,
+   "record_value": 10.5522,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Aggregate throughput, 28 users, without / with MTP",
-     "text": "4.1× / 6.4×",
-     "printed_value": "6.4",
+     "text": "5.8× / 10.6×",
+     "printed_value": "10.6",
      "status": "agrees"
     }
    ]
@@ -3009,15 +3132,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 4.12683,
+   "record_value": 5.80769,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Throughput per silicon is not the price of speed either",
-     "text": "aggregate is 4.1× the best HBM array's",
-     "printed_value": "4.1",
+     "text": "aggregate is 5.8× the best HBM array's",
+     "printed_value": "5.8",
      "status": "agrees"
     }
    ]
@@ -3030,15 +3153,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 6.40237,
+   "record_value": 10.5522,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Throughput per silicon is not the price of speed either",
-     "text": "(6.4× with MTP",
-     "printed_value": "6.4",
+     "text": "(10.6× with MTP",
+     "printed_value": "10.6",
      "status": "agrees"
     }
    ]
@@ -3093,21 +3216,21 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.saturated_batch1024.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 2.6551,
+   "record_value": 4.49057,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Aggregate throughput, saturated (1M: the 866 users held; 200K: 1,024), without / with MTP",
-     "text": "2.7× / 7.1×",
-     "printed_value": "2.7",
+     "text": "4.5× / 12.6×",
+     "printed_value": "4.5",
      "status": "agrees"
     },
     {
      "in": "Total throughput, ROM vs HBM comparator as defined above",
      "text": "7.2× / 2.7×",
-     "printed_value": "2.7",
+     "printed_value": "4.5",
      "status": "agrees"
     }
    ]
@@ -3147,7 +3270,7 @@
    "binding": "results/arch/v41_rack.json#comparison[0].rack_kw",
    "derived": false,
    "derivation": null,
-   "record_value": 38.2,
+   "record_value": 39.9,
    "records": [
     "results/arch/v41_rack.json"
    ],
@@ -3155,19 +3278,19 @@
     {
      "in": "Two deployment questions follow",
      "text": "provisioned at 53.9 kW",
-     "printed_value": "38.2",
+     "printed_value": "39.9",
      "status": "agrees"
     },
     {
      "in": "Provisioned power at 1.2× the saturated worst case: Qwen3-8B package",
-     "text": "38.2 kW",
-     "printed_value": "38.2",
+     "text": "39.9 kW",
+     "printed_value": "39.9",
      "status": "agrees"
     },
     {
      "in": "A fixed schedule bounds power",
      "text": "provisioned at 53.9 kW",
-     "printed_value": "38.2",
+     "printed_value": "39.9",
      "status": "agrees"
     }
    ]
@@ -3315,7 +3438,7 @@
    "binding": "results/arch/sync_cost_table.json#rows[6].ratio",
    "derived": false,
    "derivation": null,
-   "record_value": 17.0,
+   "record_value": 16.0,
    "records": [
     "results/arch/sync_cost_table.json"
    ],
@@ -3323,13 +3446,13 @@
     {
      "in": "Synchronisation, GPU ÷ OpenTallas",
      "text": "/ 17×",
-     "printed_value": "17",
+     "printed_value": "16",
      "status": "agrees"
     },
     {
      "in": "The synchronisation advantage is on chip",
      "text": "17× per V4.1 token",
-     "printed_value": "17",
+     "printed_value": "16",
      "status": "agrees"
     }
    ]
@@ -3483,7 +3606,7 @@
    "section": "Energy cross-check",
    "claim": "Routed matrix-engine energy per MAC in the reduced step (pJ, ASAP7)",
    "evidence_class": "measured-physical",
-   "binding": "results/arch/power_scenarios.json#mac_pj.A_measured_implementation.qwen3_w4a8",
+   "binding": "results/arch/power_scenarios.json#mac_pj.A_measured_implementation.qwen3_w8",
    "derived": false,
    "derivation": null,
    "record_value": 3.97436,
@@ -3673,7 +3796,7 @@
    "printed": [
     {
      "in": "Qwen3-8B integrated vector core, physical-HBM KV, empty cache",
-     "text": "439,897 cycles",
+     "text": "438,897 cycles",
      "printed_value": "439,897",
      "status": "agrees"
     }
@@ -4225,20 +4348,20 @@
   {
    "id": "cap.qwen_users_8k",
    "section": "Prefill, ingest and time to first token",
-   "claim": "Qwen3-8B users held at 8K with FP8 KV in six HBM3E stacks after the 0.9 capacity reserve",
+   "claim": "Qwen3-8B users held at 8K with FP8 KV in eight HBM3E stacks after the 0.9 capacity reserve",
    "evidence_class": "model",
    "binding": "results/arch/prefill_ingest.json#qwen_cold[0].capacity.users_at_0p9",
    "derived": false,
    "derivation": null,
-   "record_value": 201.0,
+   "record_value": 268.0,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
    "printed": [
     {
-     "in": "In the HBM capacity model, six 22.5 GB stacks hold 201 users",
-     "text": "hold 201 users at 8K",
-     "printed_value": "201",
+     "in": "In the HBM capacity model, eight 22.5 GB stacks hold 268 users",
+     "text": "hold 268 users at 8K",
+     "printed_value": "268",
      "status": "agrees"
     }
    ],
@@ -4247,12 +4370,12 @@
      {
       "label": "without the capacity reserve",
       "binding": "results/arch/prefill_ingest.json#qwen_cold[0].capacity.users_no_efficiency",
-      "value": 223.0
+      "value": 298.0
      }
     ],
     "range": [
-     201.0,
-     223.0
+     268.0,
+     298.0
     ]
    }
   },
@@ -4264,15 +4387,15 @@
    "binding": "results/arch/prefill_ingest.json#qwen_cold[0].capacity.users_no_efficiency",
    "derived": false,
    "derivation": null,
-   "record_value": 223.0,
+   "record_value": 298.0,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
    "printed": [
     {
-     "in": "In the HBM capacity model, six 22.5 GB stacks hold 201 users",
-     "text": "(223 without it)",
-     "printed_value": "223",
+     "in": "In the HBM capacity model, eight 22.5 GB stacks hold 268 users",
+     "text": "(298 without it)",
+     "printed_value": "298",
      "status": "agrees"
     }
    ]
@@ -4291,7 +4414,7 @@
    ],
    "printed": [
     {
-     "in": "In the HBM capacity model, six 22.5 GB stacks hold 201 users",
+     "in": "In the HBM capacity model, eight 22.5 GB stacks hold 268 users",
      "text": "hold 4,516 users at 200K",
      "printed_value": "4,516",
      "status": "agrees"
@@ -4325,7 +4448,7 @@
    ],
    "printed": [
     {
-     "in": "In the HBM capacity model, six 22.5 GB stacks hold 201 users",
+     "in": "In the HBM capacity model, eight 22.5 GB stacks hold 268 users",
      "text": "and 866 at 1M",
      "printed_value": "866",
      "status": "agrees"
@@ -4784,7 +4907,7 @@
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle, cold 8K prompt, KV streamed during the prefill",
+     "in": "Qwen3-8B package, cold 8K prompt, KV streamed during the prefill",
      "text": "142 ms",
      "printed_value": "142",
      "status": "agrees"
@@ -4812,7 +4935,7 @@
    "binding": "results/arch/prefill_ingest.json#qwen_cold[0].ttft_stream_s x 1000",
    "derived": false,
    "derivation": null,
-   "record_value": 142.968,
+   "record_value": 142.947,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -4824,7 +4947,7 @@
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle, cold 8K prompt, KV streamed during the prefill",
+     "in": "Qwen3-8B package, cold 8K prompt, KV streamed during the prefill",
      "text": "143 ms",
      "printed_value": "143",
      "status": "agrees"
@@ -4835,27 +4958,27 @@
      {
       "label": "late-bound BF16 pages",
       "binding": "results/arch/prefill_ingest.json#qwen_cold[0].ttft_late_bind_s x 1000",
-      "value": 166.968
+      "value": 166.947
      },
      {
       "label": "late-bound, FP8 on the wire",
       "binding": "results/arch/prefill_ingest.json#qwen_cold[0].ttft_late_bind_fp8_wire_s x 1000",
-      "value": 154.625
+      "value": 154.604
      },
      {
       "label": "one B200 (modelled)",
       "binding": "results/arch/prefill_ingest.json#qwen_cold[1].ttft_stream_s x 1000",
-      "value": 62.4916
+      "value": 62.4706
      },
      {
       "label": "HBM comparator",
       "binding": "results/arch/prefill_ingest.json#qwen_cold[2].ttft_stream_s x 1000",
-      "value": 143.581
+      "value": 143.992
      }
     ],
     "range": [
-     62.4916,
-     166.968
+     62.4706,
+     166.947
     ]
    }
   },
@@ -5024,7 +5147,7 @@
    ],
    "printed": [
     {
-     "in": "Qwen3-8B reticle, cold 8K prompt, KV streamed during the prefill",
+     "in": "Qwen3-8B package, cold 8K prompt, KV streamed during the prefill",
      "text": "1.21 GB",
      "printed_value": "1.21",
      "status": "agrees"
@@ -5051,7 +5174,7 @@
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle, cold 8K prompt, KV streamed during the prefill",
+     "in": "Qwen3-8B package, cold 8K prompt, KV streamed during the prefill",
      "text": "0.7 ms",
      "printed_value": "0.7",
      "status": "agrees"
@@ -5216,7 +5339,7 @@
    "binding": "results/arch/prefill_ingest.json#slot_reservation[\"1048576\"].late_bind_reserved_fraction x 100",
    "derived": false,
    "derivation": null,
-   "record_value": 0.00543586,
+   "record_value": 0.00919333,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5224,7 +5347,7 @@
     {
      "in": "Late binding keeps the user slot free.",
      "text": "0.005% of a 32,768-token session",
-     "printed_value": "0.005",
+     "printed_value": "0.009",
      "status": "agrees"
     }
    ]
@@ -5237,7 +5360,7 @@
    "binding": "results/arch/prefill_ingest.json#slot_reservation[\"1048576\"].stream_reserved_fraction x 100",
    "derived": false,
    "derivation": null,
-   "record_value": 2.63306,
+   "record_value": 4.37368,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5245,7 +5368,7 @@
     {
      "in": "Late binding keeps the user slot free.",
      "text": "against 2.6% if the KV",
-     "printed_value": "2.6",
+     "printed_value": "4.4",
      "status": "agrees"
     }
    ]
@@ -5381,7 +5504,7 @@
    "binding": "results/arch/prefill_ingest.json#v41_turns[1].ttft_prefix_cached_s x 1000",
    "derived": false,
    "derivation": null,
-   "record_value": 23.1776,
+   "record_value": 23.1768,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5410,17 +5533,17 @@
      {
       "label": "KV read back from the array, pipelined by layer",
       "binding": "results/arch/prefill_ingest.json#v41_turns[1].ttft_readback_layer_pipelined_s x 1000",
-      "value": 25.5522
+      "value": 25.5514
      },
      {
       "label": "KV read back serially",
       "binding": "results/arch/prefill_ingest.json#v41_turns[1].ttft_readback_serial_s x 1000",
-      "value": 32.7036
+      "value": 32.7028
      }
     ],
     "range": [
-     23.1776,
-     32.7036
+     23.1768,
+     32.7028
     ]
    }
   },
@@ -5432,7 +5555,7 @@
    "binding": "results/arch/prefill_ingest.json#v41_turns[1].ttft_readback_layer_pipelined_s x 1000",
    "derived": false,
    "derivation": null,
-   "record_value": 25.5522,
+   "record_value": 25.5514,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5564,7 +5687,7 @@
    "binding": "results/arch/prefill_ingest.json#v41_turns[2].ttft_prefix_cached_s x 1000",
    "derived": false,
    "derivation": null,
-   "record_value": 183.197,
+   "record_value": 183.196,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5696,7 +5819,7 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"4\"].dgx_b200_needed",
    "derived": false,
    "derivation": null,
-   "record_value": 3.14468,
+   "record_value": 4.42551,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5704,7 +5827,7 @@
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
      "text": "needs 3.1 DGX B200 per rack",
-     "printed_value": "3.1",
+     "printed_value": "4.4",
      "status": "agrees"
     }
    ]
@@ -5717,15 +5840,15 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"20\"].dgx_b200_needed",
    "derived": false,
    "derivation": null,
-   "record_value": 15.7234,
+   "record_value": 22.1275,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
    "printed": [
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
-     "text": "needs 15.7",
-     "printed_value": "15.7",
+     "text": "needs 22.1",
+     "printed_value": "22.1",
      "status": "agrees"
     }
    ]
@@ -5738,7 +5861,7 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"4\"].b200_needed",
    "derived": false,
    "derivation": null,
-   "record_value": 25.1574,
+   "record_value": 35.4041,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5746,7 +5869,7 @@
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
      "text": "(25 to 126 B200s)",
-     "printed_value": "25",
+     "printed_value": "35",
      "status": "agrees"
     }
    ]
@@ -5759,7 +5882,7 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"20\"].b200_needed",
    "derived": false,
    "derivation": null,
-   "record_value": 125.787,
+   "record_value": 177.02,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5767,7 +5890,7 @@
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
      "text": "(25 to 126 B200s)",
-     "printed_value": "126",
+     "printed_value": "177",
      "status": "agrees"
     }
    ]
@@ -5780,7 +5903,7 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.sat1024[\"4\"].dgx_b200_needed",
    "derived": false,
    "derivation": null,
-   "record_value": 3.6168,
+   "record_value": 6.1171,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5788,7 +5911,7 @@
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
      "text": "at the 866 users it holds, 3.6 and 18.1",
-     "printed_value": "3.6",
+     "printed_value": "6.1",
      "status": "agrees"
     }
    ]
@@ -5801,7 +5924,7 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.sat1024[\"20\"].dgx_b200_needed",
    "derived": false,
    "derivation": null,
-   "record_value": 18.084,
+   "record_value": 30.5855,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5809,7 +5932,7 @@
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
      "text": "at the 866 users it holds, 3.6 and 18.1",
-     "printed_value": "18.1",
+     "printed_value": "30.6",
      "status": "agrees"
     }
    ]
@@ -5822,7 +5945,7 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"20\"].uplink_fraction_2x400G x 100",
    "derived": false,
    "derivation": null,
-   "record_value": 2.55085,
+   "record_value": 3.58981,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5830,7 +5953,7 @@
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
      "text": "2.6% of two 400G uplinks",
-     "printed_value": "2.6",
+     "printed_value": "3.6",
      "status": "agrees"
     }
    ]
@@ -5843,7 +5966,7 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.sat1024[\"20\"].uplink_fraction_2x400G x 100",
    "derived": false,
    "derivation": null,
-   "record_value": 2.93382,
+   "record_value": 4.96197,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
@@ -5851,7 +5974,7 @@
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
      "text": "2.9% at saturation",
-     "printed_value": "2.9",
+     "printed_value": "5.0",
      "status": "agrees"
     }
    ]
@@ -5859,20 +5982,20 @@
   {
    "id": "tier.qwen_agg",
    "section": "Prefill, ingest and time to first token",
-   "claim": "Qwen3-8B reticle KV-bound aggregate decode rate the prefill tier must feed (tok/s)",
+   "claim": "Qwen3-8B package KV-bound aggregate decode rate the prefill tier must feed (tok/s)",
    "evidence_class": "model",
    "binding": "results/arch/prefill_ingest.json#sustained[\"qwen_rom@8K\"].decode_aggregate_tok_s",
    "derived": false,
    "derivation": null,
-   "record_value": 8940.7,
+   "record_value": 11920.9,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
    "printed": [
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
-     "text": "KV-bound 8,941 tokens/s",
-     "printed_value": "8,941",
+     "text": "KV-bound 11,921 tokens/s",
+     "printed_value": "11,921",
      "status": "agrees"
     }
    ]
@@ -5880,20 +6003,20 @@
   {
    "id": "tier.qwen_h200_4",
    "section": "Prefill, ingest and time to first token",
-   "claim": "H200 per Qwen3-8B reticle at four prompt tokens per output token",
+   "claim": "H200 per Qwen3-8B package at four prompt tokens per output token",
    "evidence_class": "model",
    "binding": "results/arch/prefill_ingest.json#sustained[\"qwen_rom@8K\"].by_R[\"4\"].h200_needed",
    "derived": false,
    "derivation": null,
-   "record_value": 0.689584,
+   "record_value": 0.919443,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
    "printed": [
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
-     "text": "needs 0.69 H200 at 4:1",
-     "printed_value": "0.69",
+     "text": "needs 0.92 H200 at 4:1",
+     "printed_value": "0.92",
      "status": "agrees"
     }
    ]
@@ -5901,20 +6024,20 @@
   {
    "id": "tier.qwen_h200_20",
    "section": "Prefill, ingest and time to first token",
-   "claim": "H200 per Qwen3-8B reticle at twenty prompt tokens per output token",
+   "claim": "H200 per Qwen3-8B package at twenty prompt tokens per output token",
    "evidence_class": "model",
    "binding": "results/arch/prefill_ingest.json#sustained[\"qwen_rom@8K\"].by_R[\"20\"].h200_needed",
    "derived": false,
    "derivation": null,
-   "record_value": 3.44792,
+   "record_value": 4.59722,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
    "printed": [
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
-     "text": "and 3.4 at 20:1",
-     "printed_value": "3.4",
+     "text": "and 4.6 at 20:1",
+     "printed_value": "4.6",
      "status": "agrees"
     }
    ]
@@ -5927,15 +6050,15 @@
    "binding": "results/arch/prefill_ingest.json#sustained[\"qwen_rom@8K\"].by_R[\"20\"].link_fraction x 100",
    "derived": false,
    "derivation": null,
-   "record_value": 26.9417,
+   "record_value": 35.9222,
    "records": [
     "results/arch/prefill_ingest.json"
    ],
    "printed": [
     {
      "in": "The GPU prefill tier scales with prompt tokens, not with users.",
-     "text": "uses 27% of one 400G NIC",
-     "printed_value": "27",
+     "text": "uses 36% of one 400G NIC",
+     "printed_value": "36",
      "status": "agrees"
     }
    ]
@@ -5945,7 +6068,7 @@
   "results/arch/qwen3_budget.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "bcf27f58ad18b4f4793ae8563945212228bbb09f129e7336139a42f23de2fd8a",
+   "sha256": "4cd7f5ff3c1c5a89a47a9957f385d5bb94ceb184cfa9fcdb2df124b5447bf6f2",
    "schema": "opentallas.arch-budget-qwen3.v1",
    "tool": "tools/arch_budget_qwen3.py",
    "command": "python3 tools/arch_budget_qwen3.py",
@@ -5956,7 +6079,7 @@
   "results/arch/power_scenarios.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "170d69c78e901ffc4d862bcee8586ec47546c29b8416393aa330e53395dfece4",
+   "sha256": "0374612a8aeb4f5789ef5cd9fe869817dd32e3c363d5416301bc464f4309f128",
    "schema": "opentallas.power-scenarios-result.v1",
    "tool": "tools/power_scenarios.py",
    "command": "python3 tools/power_scenarios.py",
@@ -5965,42 +6088,42 @@
      "field": "inputs",
      "key": "configs/hardware/power_scenarios.json",
      "path": "configs/hardware/power_scenarios.json",
-     "pinned": "724739ca9983ee79db86b713185dd192b5003da17def1db725dfafebca63653c",
+     "pinned": "7d9c8045f56c0bafd9d0c5089b4fba5f85f92fb19b784b524e2f2569a7c1eea4",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "results/arch/arch_budget_v41.json",
      "path": "results/arch/arch_budget_v41.json",
-     "pinned": "91e4cc4d61342bfebba157385c4fd625d981d90a3042e40a03c1438742da2f14",
+     "pinned": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "results/arch/v41_lanes.json",
      "path": "results/arch/v41_lanes.json",
-     "pinned": "b646e109e6994c467f9961b0801c2cfdf5fb0ffdf7a82a062e93a91014a2511a",
+     "pinned": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "results/arch/v41_latency_ladder.json",
      "path": "results/arch/v41_latency_ladder.json",
-     "pinned": "db61454979559fdb4f1e0ebd436f05d40482ce523890036550b4b6261545420a",
+     "pinned": "43ebef09b314aa84e00457924a66ce00900a2d56adda1831bafa15556fbde2a5",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "results/arch/v41_hbm_switched.json",
      "path": "results/arch/v41_hbm_switched.json",
-     "pinned": "e343c93a06209e6df97d37d21eecb95fdafbc8ccfb0a325cf273f78592bb0b33",
+     "pinned": "186e387495977d227d6720b617ae44e731084fac4eed0dc872a0349e789ebde0",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "results/speculative/dflash_step_timing.json",
      "path": "results/speculative/dflash_step_timing.json",
-     "pinned": "15e4fa0080c9e0d89592107de02748677700afecd29ad1d262a670584260cde5",
+     "pinned": "d80f80368e940e442a42f4c90a84ed2c4b6dbf38191f92bb5b316b4fcd6cc2bc",
      "status": "current"
     },
     {
@@ -6030,7 +6153,7 @@
   "results/arch/decode_roofline.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "3c4196cc7e3bb208db13f699625bbbbba72f5c7d5f63091807e862eed36534ca",
+   "sha256": "ab4d59f8a552836b5e40fdd6a753659f2098317fe955f096eb62ddb5b7d6219b",
    "schema": "opentallas.decode-roofline.v1",
    "tool": "tools/decode_roofline_figure.py",
    "command": "python3 tools/decode_roofline_figure.py",
@@ -6039,64 +6162,63 @@
      "field": "inputs",
      "key": "qwen3_budget",
      "path": "results/arch/qwen3_budget.json",
-     "pinned": "bcf27f58ad18b4f4793ae8563945212228bbb09f129e7336139a42f23de2fd8a",
+     "pinned": "4cd7f5ff3c1c5a89a47a9957f385d5bb94ceb184cfa9fcdb2df124b5447bf6f2",
      "status": "current"
     },
     {
      "field": "inputs",
-     "key": "iso_qwen",
-     "path": "results/roofline/iso_area/qwen3_8b.json",
-     "pinned": "26bc5acadb614dc14cce25cab9f2c3913215625f418cd828e39d7d55db1d141e",
-     "commit": "b42f8606",
-     "status": "commit-outside-head"
+     "key": "gpu_qwen",
+     "path": "results/arch/qwen_gpu_calibration.json",
+     "pinned": "6ae77c9ccad72c915cb8903ee2c61843265248b9dbbdce96a2f88a7c63676ee9",
+     "status": "current"
     },
     {
      "field": "inputs",
      "key": "sync",
      "path": "results/arch/sync_cost_table.json",
-     "pinned": "477feba5a222d1abba8b87fa6bada52824f006c63ed67a22f11322ddfad14f51",
+     "pinned": "2ebcd3b320deaed72479c0e845aaeaacc546d26b5c358794f1810994ec5df273",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "v41_lanes",
      "path": "results/arch/v41_lanes.json",
-     "pinned": "b646e109e6994c467f9961b0801c2cfdf5fb0ffdf7a82a062e93a91014a2511a",
+     "pinned": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "v41_hbm_best",
      "path": "results/arch/v41_hbm_best.json",
-     "pinned": "3e28dea3d2112929133f4ddc284c5761186bc466e44c62b63b26bfef234f3ee6",
+     "pinned": "c1650c6f87751fb2a072ff4356d2575ea4bf1787c1df709975c0e9bec234e795",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "v41_ladder",
      "path": "results/arch/v41_latency_ladder.json",
-     "pinned": "db61454979559fdb4f1e0ebd436f05d40482ce523890036550b4b6261545420a",
+     "pinned": "43ebef09b314aa84e00457924a66ce00900a2d56adda1831bafa15556fbde2a5",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "v41_budget",
      "path": "results/arch/arch_budget_v41.json",
-     "pinned": "91e4cc4d61342bfebba157385c4fd625d981d90a3042e40a03c1438742da2f14",
+     "pinned": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "v41_switched",
      "path": "results/arch/v41_hbm_switched.json",
-     "pinned": "e343c93a06209e6df97d37d21eecb95fdafbc8ccfb0a325cf273f78592bb0b33",
+     "pinned": "186e387495977d227d6720b617ae44e731084fac4eed0dc872a0349e789ebde0",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "power",
      "path": "results/arch/power_scenarios.json",
-     "pinned": "170d69c78e901ffc4d862bcee8586ec47546c29b8416393aa330e53395dfece4",
+     "pinned": "0374612a8aeb4f5789ef5cd9fe869817dd32e3c363d5416301bc464f4309f128",
      "status": "current"
     },
     {
@@ -6108,8 +6230,7 @@
     }
    ],
    "pin_counts": {
-    "commit-outside-head": 1,
-    "current": 9
+    "current": 10
    },
    "commits": []
   },
@@ -6127,18 +6248,29 @@
      "path": "tools/hdc_golden.py",
      "pinned": "657d916762bc39c68124388f1dd74d302c8bf059",
      "hash": "git-blob",
-     "status": "current"
+     "status": "stale"
     }
    ],
    "pin_counts": {
-    "current": 1
+    "stale": 1
    },
+   "commits": []
+  },
+  "results/quality/qwen3_8b_weight_format_search.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "260acab234b96a4c1c22836a0cab82f80a304aa0fa61bb48ffed825d1eb6cbf7",
+   "schema": "opentallas.qwen3-8b-weight-format-search.v1",
+   "tool": "tools/qwen3_weight_format_search.py (formats, quantisers, capacity) on the harness tools/qwen3_deployment_quality.py (same WikiText-2 windows, same 1,000-question MMLU subset, same threshold); the O4 w8 verdict is tools/qwen3_deployment_quality.py --mode e_full_w8 at cf5dbc02 (byte-identical to 25288d25, the copy that ran)",
+   "command": "python3 tools/qwen3_weight_format_search.py (formats, quantisers, capacity) on the harness tools/qwen3_deployment_quality.py (same WikiText-2 windows, same 1,000-question MMLU subset, same threshold); the O4 w8 verdict is tools/qwen3_deployment_quality.py --mode e_full_w8 at cf5dbc02 (byte-identical to 25288d25, the copy that ran)",
+   "pins": [],
+   "pin_counts": {},
    "commits": []
   },
   "results/arch/v41_lanes.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "b646e109e6994c467f9961b0801c2cfdf5fb0ffdf7a82a062e93a91014a2511a",
+   "sha256": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
    "schema": "opentallas.v41-lanes.v1",
    "tool": "tools/arch_lanes_v41.py",
    "command": "python3 tools/arch_lanes_v41.py",
@@ -6149,7 +6281,7 @@
   "results/arch/v41_rack.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "3dd209bc5b2fe38c40cd57c15837dd63989e464f0a6f7550e8def0cc2f3558f6",
+   "sha256": "ef80a30627853bc625e439855eef397a0087e0716ead18cd435f996b70516b20",
    "schema": "v41_rack/1",
    "tool": "tools/v41_rack_design.py",
    "command": "python3 tools/v41_rack_design.py",
@@ -6184,7 +6316,7 @@
   "results/arch/arch_budget_v41.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "91e4cc4d61342bfebba157385c4fd625d981d90a3042e40a03c1438742da2f14",
+   "sha256": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
    "schema": "opentallas.arch-budget-v41.v2",
    "tool": "tools/arch_budget_v41.py",
    "command": "python3 tools/arch_budget_v41.py",
@@ -6195,7 +6327,7 @@
   "results/arch/v41_hbm_switched.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "e343c93a06209e6df97d37d21eecb95fdafbc8ccfb0a325cf273f78592bb0b33",
+   "sha256": "186e387495977d227d6720b617ae44e731084fac4eed0dc872a0349e789ebde0",
    "schema": "opentallas.v41-hbm-switched.v1",
    "tool": "tools/arch_hbm_switched_v41.py",
    "command": "python3 tools/arch_hbm_switched_v41.py",
@@ -6206,7 +6338,7 @@
   "results/arch/sync_cost_table.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "477feba5a222d1abba8b87fa6bada52824f006c63ed67a22f11322ddfad14f51",
+   "sha256": "2ebcd3b320deaed72479c0e845aaeaacc546d26b5c358794f1810994ec5df273",
    "schema": "opentallas.sync-cost-table.v1",
    "tool": "tools/sync_cost_table.py",
    "command": "python3 tools/sync_cost_table.py",
@@ -6243,21 +6375,21 @@
      "field": "inputs",
      "key": "results/arch/arch_budget_v41.json",
      "path": "results/arch/arch_budget_v41.json",
-     "pinned": "91e4cc4d61342bfebba157385c4fd625d981d90a3042e40a03c1438742da2f14",
+     "pinned": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "results/arch/v41_lanes.json",
      "path": "results/arch/v41_lanes.json",
-     "pinned": "b646e109e6994c467f9961b0801c2cfdf5fb0ffdf7a82a062e93a91014a2511a",
+     "pinned": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "results/arch/v41_rack.json",
      "path": "results/arch/v41_rack.json",
-     "pinned": "3dd209bc5b2fe38c40cd57c15837dd63989e464f0a6f7550e8def0cc2f3558f6",
+     "pinned": "ef80a30627853bc625e439855eef397a0087e0716ead18cd435f996b70516b20",
      "status": "current"
     }
    ],
@@ -6343,7 +6475,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -6469,7 +6601,7 @@
      "key": "tools/hdc_golden.py",
      "path": "tools/hdc_golden.py",
      "pinned": "f69499aff8dde029e48ac1733ad571d9779317f13556fe72e4beb62d5061e5b1",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -6483,7 +6615,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -6494,7 +6626,8 @@
     }
    ],
    "pin_counts": {
-    "current": 28
+    "current": 25,
+    "stale": 3
    },
    "commits": []
   },
@@ -7110,7 +7243,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -7208,7 +7341,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -7219,8 +7352,8 @@
     }
    ],
    "pin_counts": {
-    "current": 31,
-    "stale": 3
+    "current": 29,
+    "stale": 5
    },
    "commits": []
   },
@@ -7370,7 +7503,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -7468,7 +7601,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -7479,8 +7612,8 @@
     }
    ],
    "pin_counts": {
-    "current": 32,
-    "stale": 3
+    "current": 30,
+    "stale": 5
    },
    "commits": []
   },
@@ -7602,7 +7735,7 @@
      "key": "rtl/hdc/ot_hdc_core_vector_weight.sv",
      "path": "rtl/hdc/ot_hdc_core_vector_weight.sv",
      "pinned": "1f80fa569b43cc7569c9a2a3f331131417c04ea4698149b3bd81d0a0ead08ea7",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -7644,7 +7777,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -7749,7 +7882,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -7774,8 +7907,8 @@
     }
    ],
    "pin_counts": {
-    "current": 37,
-    "stale": 3
+    "current": 34,
+    "stale": 6
    },
    "commits": []
   },
@@ -7925,7 +8058,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8016,7 +8149,7 @@
      "key": "tools/hdc_golden.py",
      "path": "tools/hdc_golden.py",
      "pinned": "f69499aff8dde029e48ac1733ad571d9779317f13556fe72e4beb62d5061e5b1",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8030,7 +8163,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8041,7 +8174,8 @@
     }
    ],
    "pin_counts": {
-    "current": 36
+    "current": 33,
+    "stale": 3
    },
    "commits": []
   },
@@ -8191,7 +8325,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8282,7 +8416,7 @@
      "key": "tools/hdc_golden.py",
      "path": "tools/hdc_golden.py",
      "pinned": "f69499aff8dde029e48ac1733ad571d9779317f13556fe72e4beb62d5061e5b1",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8296,7 +8430,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8307,7 +8441,8 @@
     }
    ],
    "pin_counts": {
-    "current": 36
+    "current": 33,
+    "stale": 3
    },
    "commits": []
   },
@@ -8457,7 +8592,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8562,7 +8697,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8573,8 +8708,8 @@
     }
    ],
    "pin_counts": {
-    "current": 33,
-    "stale": 3
+    "current": 31,
+    "stale": 5
    },
    "commits": []
   },
@@ -8724,7 +8859,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8829,7 +8964,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -8840,8 +8975,8 @@
     }
    ],
    "pin_counts": {
-    "current": 33,
-    "stale": 3
+    "current": 31,
+    "stale": 5
    },
    "commits": []
   },
@@ -8942,7 +9077,7 @@
      "key": "rtl/hdc/ot_hdc_matvec.sv",
      "path": "rtl/hdc/ot_hdc_matvec.sv",
      "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -9047,7 +9182,7 @@
      "key": "tools/hdc_program.py",
      "path": "tools/hdc_program.py",
      "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -9058,8 +9193,8 @@
     }
    ],
    "pin_counts": {
-    "current": 26,
-    "stale": 3
+    "current": 24,
+    "stale": 5
    },
    "commits": []
   },
@@ -10049,7 +10184,7 @@
      "key": "tools/hdc_golden_v41.py",
      "path": "tools/hdc_golden_v41.py",
      "pinned": "ba257b599ffe411032e403a4e96976038c83f78dbb83dd2c4e1e44f428e9eac2",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -10109,8 +10244,8 @@
     }
    ],
    "pin_counts": {
-    "current": 62,
-    "stale": 9
+    "current": 61,
+    "stale": 10
    },
    "commits": [
     {
@@ -10658,7 +10793,7 @@
      "key": "tools/hdc_golden_v41.py",
      "path": "tools/hdc_golden_v41.py",
      "pinned": "ba257b599ffe411032e403a4e96976038c83f78dbb83dd2c4e1e44f428e9eac2",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -10718,8 +10853,8 @@
     }
    ],
    "pin_counts": {
-    "current": 74,
-    "stale": 10
+    "current": 73,
+    "stale": 11
    },
    "commits": [
     {
@@ -10963,7 +11098,7 @@
   "results/arch/prefill_ingest.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "68fd2bc54f1f1c88829d5d727c6f071daebbbbe9602cb1095a9c26f0d1bf5401",
+   "sha256": "dc7ef4c9991d0711667417438b8b88fcd3961d2295a4c725acfac9735485f9b2",
    "schema": "opentallas.arch-prefill-ingest.v2",
    "tool": "tools/arch_prefill.py",
    "command": "python3 tools/arch_prefill.py",
@@ -10973,12 +11108,6 @@
   }
  },
  "findings": [
-  {
-   "key": "commit-outside-head:results/arch/decode_roofline.json:results/roofline/iso_area/qwen3_8b.json",
-   "kind": "commit-outside-head",
-   "record": "results/arch/decode_roofline.json",
-   "detail": "inputs[iso_qwen] -> results/roofline/iso_area/qwen3_8b.json is commit-outside-head"
-  },
   {
    "key": "commit-outside-head:results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json:d9364a8e317f102c0cd4d078f92c306969fae189",
    "kind": "commit-outside-head",
@@ -11004,6 +11133,72 @@
    "detail": "provenance.execution_source_commit 351aecd4a1827eaccb2c4476282db4db1629d5a6 is not in HEAD's history"
   },
   {
+   "key": "stale-pin:results/quality/qwen3_8b_deployment_arithmetic.json:tools/hdc_golden.py",
+   "kind": "stale-pin",
+   "record": "results/quality/qwen3_8b_deployment_arithmetic.json",
+   "detail": "golden_pin[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_decode_campaign.json",
+   "detail": "input_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_golden.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_decode_campaign.json",
+   "detail": "input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_decode_campaign.json",
+   "detail": "input_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_1024.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_1024.json",
+   "detail": "source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_golden.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_1024.json",
+   "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_1024.json",
+   "detail": "source_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_2048.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_2048.json",
+   "detail": "source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_golden.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_2048.json",
+   "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_2048.json",
+   "detail": "source_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_512.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_512.json",
+   "detail": "source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_context_512.json:rtl/hdc/ot_hdc_sfu.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_context_512.json",
@@ -11020,6 +11215,18 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_context_512.json",
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_context_512.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_context_512.json",
+   "detail": "source_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_long_context_256_control.json",
+   "detail": "source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:rtl/hdc/ot_hdc_sfu.sv",
@@ -11040,6 +11247,18 @@
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_long_context_256_control.json",
+   "detail": "source_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_matched_weight_single.json",
+   "detail": "source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:rtl/hdc/ot_hdc_sfu.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_matched_weight_single.json",
@@ -11056,6 +11275,24 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_matched_weight_single.json",
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_matched_weight_single.json",
+   "detail": "source_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_core_vector_weight.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
+   "detail": "source_sha256[rtl/hdc/ot_hdc_core_vector_weight.sv] -> rtl/hdc/ot_hdc_core_vector_weight.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
+   "detail": "source_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
@@ -11076,6 +11313,18 @@
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
+   "detail": "source_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_system_multi_g4sw16.json",
+   "detail": "input_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_vector_system_multi_g4sw16.json",
@@ -11094,6 +11343,18 @@
    "detail": "input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_system_multi_g4sw16.json",
+   "detail": "input_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_system_timed_g4sw16.json",
+   "detail": "input_sha256[rtl/hdc/ot_hdc_matvec.sv] -> rtl/hdc/ot_hdc_matvec.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_vector_system_timed_g4sw16.json",
@@ -11110,6 +11371,12 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_vector_system_timed_g4sw16.json",
    "detail": "input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:tools/hdc_program.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_system_timed_g4sw16.json",
+   "detail": "input_sha256[tools/hdc_program.py] -> tools/hdc_program.py is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/ot_hdc_sfu.sv",
@@ -11250,6 +11517,12 @@
    "detail": "source_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/hdc_golden_v41.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
+   "detail": "source_sha256[tools/hdc_golden_v41.py] -> tools/hdc_golden_v41.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/hdc_isa_v41.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
@@ -11302,6 +11575,12 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
    "detail": "input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/hdc_golden_v41.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
+   "detail": "input_sha256[tools/hdc_golden_v41.py] -> tools/hdc_golden_v41.py is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/hdc_isa_v41.py",
@@ -11380,44 +11659,54 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_whbm_pooled_multi.json",
    "detail": "provenance.source_sha256[rtl/hdc/v41x/ot_hdc_core_v41x.sv] -> rtl/hdc/v41x/ot_hdc_core_v41x.sv is stale"
-  },
-  {
-   "key": "unbound:qwen.h200_fp8",
-   "kind": "unbound",
-   "headline": "qwen.h200_fp8",
-   "detail": "results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main (last committed at b42f8606 on a side branch, where it holds 217.408); its tool tools/iso_area_qwen3.py does not run on main (qwen3_budget.json no longer carries dflash.tau_central), so it waits on the roofline re-baseline's iso-area port"
-  },
-  {
-   "key": "unbound:qwen.hbm_class_ceiling",
-   "kind": "unbound",
-   "headline": "qwen.hbm_class_ceiling",
-   "detail": "bound only in results/roofline/iso_area/qwen3_8b.json (contexts.8192.hbm_roofline_tok_s.w4 = 1532.51 at b42f8606), which is not on main (see qwen.h200_fp8)"
   }
  ],
  "known_findings": [
-  "commit-outside-head:results/arch/decode_roofline.json:results/roofline/iso_area/qwen3_8b.json",
   "commit-outside-head:results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json:d9364a8e317f102c0cd4d078f92c306969fae189",
   "commit-outside-head:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:39a0cd4115d665e988de505d097a527b3102e267",
   "commit-outside-head:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:6afcfba39b4d6e2b92252030b24986d26e36e4ce",
   "commit-outside-head:results/rtl/hdc_v41x_whbm_pooled_multi.json:351aecd4a1827eaccb2c4476282db4db1629d5a6",
+  "stale-pin:results/quality/qwen3_8b_deployment_arithmetic.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_decode_campaign.json:rtl/hdc/ot_hdc_matvec.sv",
+  "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_decode_campaign.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_context_1024.json:rtl/hdc/ot_hdc_matvec.sv",
+  "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_context_1024.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_context_2048.json:rtl/hdc/ot_hdc_matvec.sv",
+  "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_context_2048.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_context_512.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_context_512.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_context_512.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_context_512.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_context_512.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_long_context_256_control.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_matched_weight_single.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_core_vector_weight.sv",
+  "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_system_multi_g4sw16.json:tools/hdc_program.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:rtl/hdc/ot_hdc_sfu_q.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/v41/ot_hdc_core_v41.sv",
   "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/v41/ot_hdc_engram_hash.sv",
@@ -11441,6 +11730,7 @@
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/rom/ot_rom_pkg_link.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/test/tb_hdc_v41x_array.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/hdc_golden_v41.py",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/hdc_isa_v41.py",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/rtl_hdc_v41x_array_campaign.py",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/ot_hdc_accept.sv",
@@ -11450,6 +11740,7 @@
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/rom/ot_rom_pkg_link.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/test/tb_hdc_v41x_array.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/hdc_golden.py",
+  "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/hdc_golden_v41.py",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/hdc_isa_v41.py",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/rtl_hdc_v41x_array_campaign.py",
   "stale-pin:results/rtl/hdc_v41x_egather_campaign.json:tools/hdc_golden.py",
@@ -11462,8 +11753,6 @@
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/hbm/ot_hdc_qstream.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/ot_hdc_accept.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/ot_hdc_sfu.sv",
-  "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv",
-  "unbound:qwen.h200_fp8",
-  "unbound:qwen.hbm_class_ceiling"
+  "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv"
  ]
 }

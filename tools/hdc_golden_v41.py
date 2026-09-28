@@ -279,6 +279,16 @@ def load_checkpoint(path=CHECKPOINT, mtp=True):
     return t
 
 
+def decode_engram_rows(codes, exps, ids):
+    """Decode selected FP8 Engram rows with one UE8M0 exponent per 32 columns."""
+    selected = codes[ids]
+    scales = exps[ids]
+    if selected.shape[-1] != scales.shape[-1] * 32:
+        raise ValueError("Engram row width must match its 32-column scale blocks")
+    blocks = E4M3[selected].reshape(*selected.shape[:-1], scales.shape[-1], 32)
+    return to_bf16((blocks * np.exp2(scales)[..., None]).astype(F)).reshape(selected.shape)
+
+
 def _blocked(codes, exps, name):
     """E4M3 codes with a 32x32-block (or per-row) UE8M0 exponent -> Q8."""
     q = E4M3[codes] if codes.dtype == np.uint8 else codes
@@ -342,13 +352,16 @@ def _e4m3_round(v):
 
 
 def qdq_fp4_e4m3(x, block=16):
-    """fp4_act_quant with an E4M3 scale (compressed KV rows): s = e4m3(amax / 6),
+    """fp4_act_quant with a saturating E4M3 scale (compressed KV rows):
+    s = min(e4m3(amax / 6), 448),
     q = e2m1(clamp(x / s)).  The E2M1 code is chosen by comparing |x| with each
     code midpoint times s -- exact products, so the rounding is the exact rounding
     of the real quotient (ties to even code) and no divider is needed."""
     x = np.asarray(x, dtype=F).reshape(-1, block)
     amax = np.maximum(np.max(np.abs(x), axis=1), FP4_AMAX_FLOOR_E4M3).astype(F)
-    s = _e4m3_round(amax.astype(np.float64) / FP4_MAX)   # exact quotient, rounded once to E4M3
+    # T.Cast(FP8, ...) uses __NV_SATFINITE.  Above |x| = 6 * 448, the
+    # representable scale stays at 448 and the E2M1 code saturates at 6.
+    s = np.minimum(_e4m3_round(amax.astype(np.float64) / FP4_MAX), 448.0)
     a = np.abs(x.astype(np.float64))
     code = np.zeros(a.shape, dtype=np.int64)
     for i, m in enumerate(E2M1_MIDPOINTS):
@@ -703,7 +716,7 @@ class Model:
         for L in range(self.L + (self.n_mtp if self.has_mtp else 0)):
             k = self.P(L) + "attn.wo_a.weight"
             self.w[k] = to_bf16(self.w[k].dense())
-        self.emb_codes = {L: (t[f"layers.{L}.engram.embed.weight"], t[f"layers.{L}.engram.embed.scale"][:, 0])
+        self.emb_codes = {L: (t[f"layers.{L}.engram.embed.weight"], t[f"layers.{L}.engram.embed.scale"])
                           for L in c["engram_layer_ids"]}
         self.engram = EngramTables(c, c["vocab_size"])
         # the source layer each layer reads compressed KV / index selections from
@@ -793,7 +806,7 @@ class Model:
         li = self.engram.layer_ids.index(L)
         ids = self.engram.hashes(history, li)
         codes, sc = self.emb_codes[L]
-        rows = to_bf16((E4M3[codes[ids]] * np.exp2(sc[ids])[:, None]).astype(F)).reshape(-1)
+        rows = decode_engram_rows(codes, sc, ids).reshape(-1)
         kv = linear_q(self.lw(L, "engram.wkv.weight"), rows)
         key = kv[:self.hc * self.dim].reshape(self.hc, self.dim)
         value = kv[self.hc * self.dim:]

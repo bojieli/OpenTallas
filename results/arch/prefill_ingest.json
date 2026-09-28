@@ -41,20 +41,20 @@
   }
  },
  "decode_rates": {
-  "qwen_hbm_b1_3p5bit": 1379.3,
-  "qwen_rom_b1": 8910.0,
+  "qwen_hbm_b1_int8": 880.7,
+  "qwen_rom_b1": 10967.9,
   "sources": [
    "results/arch/v41_lanes.json design_point",
    "results/arch/v41_hbm_switched.json ratios_batch1",
-   "atlas headline 8,910 (Qwen ROM)",
-   "results/arch/qwen3_budget.json hbm_comparator 8192 rom_format_3.5b"
+   "results/arch/qwen3_budget.json power_production B rom.ar_batch1 (Qwen ROM)",
+   "results/arch/qwen3_budget.json hbm_comparator 8192 rom_format_int8"
   ],
   "v41_hbm": {
    "1048576": 3580.375802755708,
    "200000": 3580.375802755708
   },
   "v41_rom": {
-   "1048576": 7008.864184990315,
+   "1048576": 7049.079994455792,
    "200000": 7285.665796379299
   }
  },
@@ -102,21 +102,21 @@
    "burst_s_bf16": 0.024685611709709555,
    "burst_s_fp8": 0.012342805854854777,
    "capacity": {
-    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 users held apply the same 0.9",
-    "users_at_0p9": 201,
-    "users_no_efficiency": 223
+    "note": "0.9 x stacks x 22.5 GB / 604 MB of FP8 KV a user at 8K; the V4.1 users held apply the same 0.9",
+    "users_at_0p9": 268,
+    "users_no_efficiency": 298
    },
    "context": 8192,
    "design": "qwen_rom",
-   "first_decode_step_s": 0.0001122334455667789,
+   "first_decode_step_s": 9.117515659333145e-05,
    "gpu": "1 x H200",
    "gpu_prefill_s": 0.14216036099741977,
-   "hbm_share_at_link_rate": 0.009061805555555556,
+   "hbm_share_at_link_rate": 0.006796354166666667,
    "kv_bytes_bf16_on_wire": 1207959552,
    "kv_bytes_fp8": 603979776,
    "link": {
     "goodput_Bps": 48933750000.0,
-    "path": "PCIe Gen5 x16 endpoint on the reticle behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1)"
+    "path": "PCIe Gen5 x16 endpoint on die 0 of the package behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1); die 1's KV heads cross the package's UCIe link (4.2 TB/s, ~80x the endpoint)"
    },
    "prefill_flops": {
     "attention": 19793625219072.0,
@@ -127,30 +127,30 @@
     "exposed_last_layer_s": 0.000685711436380821,
     "pace_Bps_needed": 8497161540.142154
    },
-   "ttft_late_bind_fp8_wire_s": 0.15462540029784133,
-   "ttft_late_bind_s": 0.1669682061526961,
-   "ttft_stream_s": 0.14296830587936737,
+   "ttft_late_bind_fp8_wire_s": 0.15460434200886788,
+   "ttft_late_bind_s": 0.16694714786372267,
+   "ttft_stream_s": 0.14294724759039393,
    "wire_format": "BF16 NHD pages (vLLM native); the engine rounds to FP8. FP8 on the wire halves the bytes but must be cast from FP32 with RNE for bit-identity (ARCH_SPEC_QWEN3 R-P5)"
   },
   {
    "burst_s_bf16": 0.024685611709709555,
    "burst_s_fp8": 0.012342805854854777,
    "capacity": {
-    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 users held apply the same 0.9",
-    "users_at_0p9": 201,
-    "users_no_efficiency": 223
+    "note": "0.9 x stacks x 22.5 GB / 604 MB of FP8 KV a user at 8K; the V4.1 users held apply the same 0.9",
+    "users_at_0p9": 268,
+    "users_no_efficiency": 298
    },
    "context": 8192,
    "design": "qwen_rom",
-   "first_decode_step_s": 0.0001122334455667789,
+   "first_decode_step_s": 9.117515659333145e-05,
    "gpu": "1 x B200",
    "gpu_prefill_s": 0.06168366797700992,
-   "hbm_share_at_link_rate": 0.009061805555555556,
+   "hbm_share_at_link_rate": 0.006796354166666667,
    "kv_bytes_bf16_on_wire": 1207959552,
    "kv_bytes_fp8": 603979776,
    "link": {
     "goodput_Bps": 48933750000.0,
-    "path": "PCIe Gen5 x16 endpoint on the reticle behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1)"
+    "path": "PCIe Gen5 x16 endpoint on die 0 of the package behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1); die 1's KV heads cross the package's UCIe link (4.2 TB/s, ~80x the endpoint)"
    },
    "prefill_flops": {
     "attention": 19793625219072.0,
@@ -161,30 +161,30 @@
     "exposed_last_layer_s": 0.000685711436380821,
     "pace_Bps_needed": 19583134265.786816
    },
-   "ttft_late_bind_fp8_wire_s": 0.07414870727743147,
-   "ttft_late_bind_s": 0.08649151313228626,
-   "ttft_stream_s": 0.062491612858957525,
+   "ttft_late_bind_fp8_wire_s": 0.07412764898845803,
+   "ttft_late_bind_s": 0.08647045484331281,
+   "ttft_stream_s": 0.06247055456998408,
    "wire_format": "BF16 NHD pages (vLLM native); the engine rounds to FP8. FP8 on the wire halves the bytes but must be cast from FP32 with RNE for bit-identity (ARCH_SPEC_QWEN3 R-P5)"
   },
   {
    "burst_s_bf16": 0.024685611709709555,
    "burst_s_fp8": 0.012342805854854777,
    "capacity": {
-    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 users held apply the same 0.9",
-    "users_at_0p9": 201,
-    "users_no_efficiency": 223
+    "note": "0.9 x stacks x 22.5 GB / 604 MB of FP8 KV a user at 8K; the V4.1 users held apply the same 0.9",
+    "users_at_0p9": 268,
+    "users_no_efficiency": 298
    },
    "context": 8192,
    "design": "qwen_hbm",
-   "first_decode_step_s": 0.0007250054375407816,
+   "first_decode_step_s": 0.0011354604292040421,
    "gpu": "1 x H200",
    "gpu_prefill_s": 0.14216036099741977,
-   "hbm_share_at_link_rate": 0.009061805555555556,
+   "hbm_share_at_link_rate": 0.006796354166666667,
    "kv_bytes_bf16_on_wire": 1207959552,
    "kv_bytes_fp8": 603979776,
    "link": {
     "goodput_Bps": 48933750000.0,
-    "path": "PCIe Gen5 x16 endpoint on the reticle behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1)"
+    "path": "PCIe Gen5 x16 endpoint on die 0 of the package behind the host PCIe switch shared with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1); die 1's KV heads cross the package's UCIe link (4.2 TB/s, ~80x the endpoint)"
    },
    "prefill_flops": {
     "attention": 19793625219072.0,
@@ -195,19 +195,19 @@
     "exposed_last_layer_s": 0.000685711436380821,
     "pace_Bps_needed": 8497161540.142154
    },
-   "ttft_late_bind_fp8_wire_s": 0.15523817228981535,
-   "ttft_late_bind_s": 0.16758097814467013,
-   "ttft_stream_s": 0.1435810778713414,
+   "ttft_late_bind_fp8_wire_s": 0.1556486272814786,
+   "ttft_late_bind_s": 0.16799143313633338,
+   "ttft_stream_s": 0.14399153286300465,
    "wire_format": "BF16 NHD pages (vLLM native); the engine rounds to FP8. FP8 on the wire halves the bytes but must be cast from FP32 with RNE for bit-identity (ARCH_SPEC_QWEN3 R-P5)"
   }
  ],
  "schema": "opentallas.arch-prefill-ingest.v2",
  "slot_reservation": {
   "1048576": {
-   "late_bind_reserved_fraction": 5.4358595058748665e-05,
-   "session_decode_s": 175.92024697302037,
+   "late_bind_reserved_fraction": 9.19332613481622e-05,
+   "session_decode_s": 104.01478191796338,
    "session_output_tokens": 32768,
-   "stream_reserved_fraction": 0.026330599528908174,
+   "stream_reserved_fraction": 0.04373684118986497,
    "users_held": 866
   },
   "200000": {
@@ -222,25 +222,25 @@
   "qwen_rom@8K": {
    "by_R": {
     "1": {
-     "h200_needed": 0.17239605433373797,
-     "ingest_Bps": 659179929.6,
-     "link_fraction": 0.013470864783508315,
-     "prompt_tok_s": 8940.7
+     "h200_needed": 0.22986076303947753,
+     "ingest_Bps": 878904115.1999999,
+     "link_fraction": 0.017961102821672157,
+     "prompt_tok_s": 11920.9
     },
     "20": {
-     "h200_needed": 3.4479210866747594,
-     "ingest_Bps": 13183598592.0,
-     "link_fraction": 0.2694172956701663,
-     "prompt_tok_s": 178814.0
+     "h200_needed": 4.597215260789551,
+     "ingest_Bps": 17578082304.0,
+     "link_fraction": 0.3592220564334432,
+     "prompt_tok_s": 238418.0
     },
     "4": {
-     "h200_needed": 0.6895842173349519,
-     "ingest_Bps": 2636719718.4,
-     "link_fraction": 0.05388345913403326,
-     "prompt_tok_s": 35762.8
+     "h200_needed": 0.9194430521579101,
+     "ingest_Bps": 3515616460.7999997,
+     "link_fraction": 0.07184441128668863,
+     "prompt_tok_s": 47683.6
     }
    },
-   "decode_aggregate_tok_s": 8940.7,
+   "decode_aggregate_tok_s": 11920.9,
    "flops_per_prompt_token": 18120295936.0,
    "h200_prompt_tok_s": 51861.39575266545
   },
@@ -249,75 +249,75 @@
    "by_batch": {
     "b1": {
      "1": {
-      "b200_needed": 0.31430431138485826,
-      "dgx_b200_needed": 0.03928803892310728,
-      "ingest_sent_Bps": 6237889.12464138,
-      "prompt_tok_s": 7008.864184990315,
-      "uplink_fraction_2x400G": 6.373810636463974e-05
+      "b200_needed": 0.3161077422928077,
+      "dgx_b200_needed": 0.03951346778660096,
+      "ingest_sent_Bps": 6273681.195065655,
+      "prompt_tok_s": 7049.079994455792,
+      "uplink_fraction_2x400G": 6.410382604098046e-05
      },
      "20": {
-      "b200_needed": 6.286086227697166,
-      "dgx_b200_needed": 0.7857607784621458,
-      "ingest_sent_Bps": 124757782.49282762,
-      "prompt_tok_s": 140177.2836998063,
-      "uplink_fraction_2x400G": 0.001274762127292795
+      "b200_needed": 6.322154845856154,
+      "dgx_b200_needed": 0.7902693557320193,
+      "ingest_sent_Bps": 125473623.9013131,
+      "prompt_tok_s": 140981.59988911584,
+      "uplink_fraction_2x400G": 0.001282076520819609
      },
      "4": {
-      "b200_needed": 1.257217245539433,
-      "dgx_b200_needed": 0.15715215569242913,
-      "ingest_sent_Bps": 24951556.49856552,
-      "prompt_tok_s": 28035.45673996126,
-      "uplink_fraction_2x400G": 0.000254952425458559
+      "b200_needed": 1.2644309691712308,
+      "dgx_b200_needed": 0.15805387114640385,
+      "ingest_sent_Bps": 25094724.78026262,
+      "prompt_tok_s": 28196.31997782317,
+      "uplink_fraction_2x400G": 0.0002564153041639218
      },
-     "decode_aggregate_tok_s": 7008.864184990315
+     "decode_aggregate_tok_s": 7049.079994455792
     },
     "fill28": {
      "1": {
-      "b200_needed": 6.289359175084971,
-      "dgx_b200_needed": 0.7861698968856213,
-      "ingest_sent_Bps": 124822739.54933746,
-      "prompt_tok_s": 140250.26915655893,
-      "uplink_fraction_2x400G": 0.0012754258517826394
+      "b200_needed": 8.851016784198615,
+      "dgx_b200_needed": 1.1063770980248269,
+      "ingest_sent_Bps": 175663073.46183833,
+      "prompt_tok_s": 197374.23984476217,
+      "uplink_fraction_2x400G": 0.0017949071291474528
      },
      "20": {
-      "b200_needed": 125.7871835016994,
-      "dgx_b200_needed": 15.723397937712425,
-      "ingest_sent_Bps": 2496454790.9867487,
-      "prompt_tok_s": 2805005.3831311786,
-      "uplink_fraction_2x400G": 0.025508517035652784
+      "b200_needed": 177.0203356839723,
+      "dgx_b200_needed": 22.127541960496536,
+      "ingest_sent_Bps": 3513261469.236767,
+      "prompt_tok_s": 3947484.796895243,
+      "uplink_fraction_2x400G": 0.03589814258294906
      },
      "4": {
-      "b200_needed": 25.157436700339883,
-      "dgx_b200_needed": 3.1446795875424853,
-      "ingest_sent_Bps": 499290958.19734985,
-      "prompt_tok_s": 561001.0766262357,
-      "uplink_fraction_2x400G": 0.0051017034071305575
+      "b200_needed": 35.40406713679446,
+      "dgx_b200_needed": 4.4255083920993075,
+      "ingest_sent_Bps": 702652293.8473533,
+      "prompt_tok_s": 789496.9593790487,
+      "uplink_fraction_2x400G": 0.007179628516589811
      },
-     "decode_aggregate_tok_s": 140250.26915655893
+     "decode_aggregate_tok_s": 197374.23984476217
     },
     "sat1024": {
      "1": {
-      "b200_needed": 7.233603416636592,
-      "dgx_b200_needed": 0.904200427079574,
-      "ingest_sent_Bps": 143562828.92141047,
-      "prompt_tok_s": 161306.5493498994,
-      "uplink_fraction_2x400G": 0.001466910148122824
+      "b200_needed": 12.234196679499318,
+      "dgx_b200_needed": 1.5292745849374147,
+      "ingest_sent_Bps": 242807876.47970206,
+      "prompt_tok_s": 272817.8387412383,
+      "uplink_fraction_2x400G": 0.0024809857866983634
      },
      "20": {
-      "b200_needed": 144.67206833273184,
-      "dgx_b200_needed": 18.08400854159148,
-      "ingest_sent_Bps": 2871256578.4282093,
-      "prompt_tok_s": 3226130.986997988,
-      "uplink_fraction_2x400G": 0.029338202962456476
+      "b200_needed": 244.68393358998637,
+      "dgx_b200_needed": 30.585491698748296,
+      "ingest_sent_Bps": 4856157529.594041,
+      "prompt_tok_s": 5456356.7748247655,
+      "uplink_fraction_2x400G": 0.049619715733967264
      },
      "4": {
-      "b200_needed": 28.93441366654637,
-      "dgx_b200_needed": 3.616801708318296,
-      "ingest_sent_Bps": 574251315.6856419,
-      "prompt_tok_s": 645226.1973995976,
-      "uplink_fraction_2x400G": 0.005867640592491296
+      "b200_needed": 48.93678671799727,
+      "dgx_b200_needed": 6.117098339749659,
+      "ingest_sent_Bps": 971231505.9188082,
+      "prompt_tok_s": 1091271.3549649531,
+      "uplink_fraction_2x400G": 0.009923943146793453
      },
-     "decode_aggregate_tok_s": 161306.5493498994
+     "decode_aggregate_tok_s": 272817.8387412383
     }
    },
    "flops_per_prompt_token_at_context": 56127440512.0,
@@ -404,7 +404,7 @@
   }
  },
  "switch_port_load": {
-  "engram_utilisation_fill_mtp": 0.05124629906488256,
+  "engram_utilisation_fill_mtp": 0.08446226549590179,
   "ingest_package_port_utilisation_2x400G": 0.37050066344279947,
   "ingest_package_port_utilisation_8x400G": 1.0,
   "requirement": "Engram gather in a strict-priority traffic class above KV ingest on the rack switch; ingest in a lower class so a burst cannot queue a token-path gather behind it"
@@ -439,7 +439,7 @@
    "context": 1048576,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.00014267646991099198,
+   "first_decode_step_s": 0.00014186248429391,
    "gpu_prefill_s": 4.7572473147502645,
    "gpu_prefill_s_indexer_at_half_rate": 5.937471604683265,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -472,8 +472,8 @@
     "link_busy_fraction": 0.0020102585975708704,
     "pace_Bps_needed": 196738983.29776716
    },
-   "ttft_late_bind_s": 4.766963288535423,
-   "ttft_stream_s": 4.75750211133155
+   "ttft_late_bind_s": 4.766962474549806,
+   "ttft_stream_s": 4.757501297345933
   },
   {
    "burst": {
@@ -503,7 +503,7 @@
    "context": 1048576,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.00014267646991099198,
+   "first_decode_step_s": 0.00014186248429391,
    "gpu_prefill_s": 3.359501267424382,
    "gpu_prefill_s_indexer_at_half_rate": 4.192959091990541,
    "gpu_rate_flops_per_gpu": 1772366222555136.0,
@@ -536,8 +536,8 @@
     "link_busy_fraction": 0.002846641972717432,
     "pace_Bps_needed": 278593733.2649233
    },
-   "ttft_late_bind_s": 3.3692172412095407,
-   "ttft_stream_s": 3.3597560640056683
+   "ttft_late_bind_s": 3.3692164272239236,
+   "ttft_stream_s": 3.359755250020051
   },
   {
    "burst": {
@@ -567,7 +567,7 @@
    "context": 1048576,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.00014267646991099198,
+   "first_decode_step_s": 0.00014186248429391,
    "gpu_prefill_s": 2.3786236573751323,
    "gpu_prefill_s_indexer_at_half_rate": 2.9687358023416324,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -600,8 +600,8 @@
     "link_busy_fraction": 0.004020517195141741,
     "pace_Bps_needed": 393477966.5955343
    },
-   "ttft_late_bind_s": 2.388339631160291,
-   "ttft_stream_s": 2.3788784539564185
+   "ttft_late_bind_s": 2.388338817174674,
+   "ttft_stream_s": 2.3788776399708014
   },
   {
    "burst": {
@@ -631,7 +631,7 @@
    "context": 1048576,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.00014267646991099198,
+   "first_decode_step_s": 0.00014186248429391,
    "gpu_prefill_s": 4.7572473147502645,
    "gpu_prefill_s_indexer_at_half_rate": 5.937471604683265,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -664,8 +664,8 @@
     "link_busy_fraction": 0.0005025646493927176,
     "pace_Bps_needed": 196738983.29776716
    },
-   "ttft_late_bind_s": 4.760943199220175,
-   "ttft_stream_s": 4.757437936390119
+   "ttft_late_bind_s": 4.760942385234558,
+   "ttft_stream_s": 4.757437122404502
   },
   {
    "burst": {
@@ -1064,9 +1064,9 @@
    "new_tokens": 1024,
    "prefill_flops": 57507704209408.0,
    "resident": 1047552,
-   "ttft_prefix_cached_s": 0.008189611305275131,
-   "ttft_readback_layer_pipelined_s": 0.01057120192524601,
-   "ttft_readback_serial_s": 0.017743596438235514
+   "ttft_prefix_cached_s": 0.00818879731965805,
+   "ttft_readback_layer_pipelined_s": 0.010570387939628929,
+   "ttft_readback_serial_s": 0.01774278245261843
   },
   {
    "context_readback_bytes": 932290560,
@@ -1079,9 +1079,9 @@
    "new_tokens": 4096,
    "prefill_flops": 229897996337152.0,
    "resident": 1044480,
-   "ttft_prefix_cached_s": 0.023177588620749714,
-   "ttft_readback_layer_pipelined_s": 0.025552195104005138,
-   "ttft_readback_serial_s": 0.03270363720684827
+   "ttft_prefix_cached_s": 0.02317677463513263,
+   "ttft_readback_layer_pipelined_s": 0.025551381118388054,
+   "ttft_readback_serial_s": 0.032702823221231185
   },
   {
    "context_readback_bytes": 906772480,
@@ -1094,9 +1094,9 @@
    "new_tokens": 32768,
    "prefill_flops": 1829553977163776.0,
    "resident": 1015808,
-   "ttft_prefix_cached_s": 0.1831968622944797,
-   "ttft_readback_layer_pipelined_s": 0.18550628350172418,
-   "ttft_readback_serial_s": 0.19246216977653452
+   "ttft_prefix_cached_s": 0.18319604830886263,
+   "ttft_readback_layer_pipelined_s": 0.1855054695161071,
+   "ttft_readback_serial_s": 0.19246135579091744
   },
   {
    "context_readback_bytes": 179792000,

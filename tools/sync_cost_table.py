@@ -449,7 +449,7 @@ def power_record(tech):
      dict(quantity="MAC lane, scenario B: W4A8 / FP4 (FP32 accumulate)", value=f"{B['w4a8']['value']:.2f} pJ per MAC",
           was="0.09 (a per-op value charged per MAC)", cls="published-spec (7 nm per-op estimates)",
           verdict="re-derived: INT8 mult 0.07 (upper bound) + FP32 add 0.38; 5x the old input", refs=["r-tpuv4i"]),
-     dict(quantity="MAC lane, scenario B: FP8 / BF16 (FP32 accumulate)", value=f"{B['fp8']['value']:.2f} / {B['bf16']['value']:.2f} pJ per MAC",
+     dict(quantity="MAC lane, scenario B: FP8 or INT8 weight / BF16 (FP32 accumulate)", value=f"{B['fp8']['value']:.2f} / {B['bf16']['value']:.2f} pJ per MAC",
           was="0.26 / 0.82 (2 x per-op)", cls="published-spec (7 nm per-op estimates)",
           verdict="re-derived: BF16 mult 0.21 + FP32 add 0.38, no node credit", refs=["r-tpuv4i"]),
      dict(quantity="MAC lane, scenario B: FP32 FMA", value=f"{B['fp32']['value']:.2f} pJ per MAC", was="2.36 (2 x per-op)",
@@ -522,7 +522,7 @@ def power_record(tech):
                 unverified=["HBM3E stack idle/self-refresh W", "HBM3E pJ/b (vendor)", "HBM controller vs PHY pJ/b split",
                             "SerDes always-on idle per lane (measured)", "mask-ROM leakage", "SRAM leakage at N5/N3", "SFU energy per op",
                             "switch tray W", "air limit 700 W/OU", "batch-1 GPU decode W",
-                            "a single-reticle package rated above 700 W (liquid)", "sustainable hot-spot W/mm2 of a logic region",
+                            "sustainable hot-spot W/mm2 of a logic region",
                             "any measured FP8 or FP4 x FP8 MAC with FP32 accumulation"])
 
 

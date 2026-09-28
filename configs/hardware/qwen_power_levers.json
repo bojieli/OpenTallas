@@ -1,13 +1,15 @@
 {
  "schema": "opentallas.qwen-power-levers-inputs.v1",
- "purpose": "Inputs of the batch-1 power levers of the Qwen3-8B ROM reticle (tools/qwen_power_levers.py -> results/arch/qwen_power_levers.json). Each lever is a NAMED scenario against the baseline of configs/hardware/power_scenarios.json; nothing here changes the baseline. Evidence classes as configs/hardware/power_scenarios.json evidence_classes. Conservative rule as there: where sources disagree take the value that makes the die hotter.",
- "target_tokens_s": 8910.23,
+ "purpose": "Inputs of the batch-1 power levers of the Qwen3-8B ROM package (tools/qwen_power_levers.py -> results/arch/qwen_power_levers.json). The baseline is configs/hardware/power_scenarios.json design_points.qwen3: the O4 package (two reticles over UCIe, every layer split across both dies, INT8 per-channel weights, 8 HBM3E stacks, 4 a die, 6,144 MAC groups a die, lane multiplier 5). Each lever is a NAMED scenario against it, stated for the package with both dies alike; nothing here changes the baseline. Evidence classes as configs/hardware/power_scenarios.json evidence_classes. Conservative rule as there: where sources disagree take the value that makes the die hotter.",
+ "target": {
+  "rule": "the baseline's own autoregressive batch-1 design rate (tools/power_scenarios.qwen_point B_proposed_production ar_batch1 design_rate_tokens_s: the design rate is the same on both scenarios), i.e. batch 1 uncapped; computed by the tool, never restated here"
+ },
  "sram": {
   "density_bytes_per_mm2": {
    "value": 3008750.0,
    "unit": "B/mm2",
    "evidence_class": "assumed",
-   "boundary": "usable SRAM macro density at N6: 24.07 Mb/mm2 = HD bitcell 0.027 um2 (N7 = N6) at 0.65 array efficiency (bitcell over macro incl. decoders, sense amps, redundancy); the value tools/arch_budget_qwen3.SRAM_BITS_PER_MM2 sizes the KV prefetch buffer with (18.67 MB in 6.2 mm2)",
+   "boundary": "usable SRAM macro density at N6: 24.07 Mb/mm2 = HD bitcell 0.027 um2 (N7 = N6) at 0.65 array efficiency (bitcell over macro incl. decoders, sense amps, redundancy); the value tools/arch_budget_qwen3.SRAM_BITS_PER_MM2 sizes each die's KV prefetch buffer with (results/arch/qwen3_budget.json area.kv_prefetch_buffer_bytes in kv_prefetch_buffer_mm2). Applied per die: each die's KV SRAM holds the rows of its own KV heads",
    "source": "configs/hardware/technology.json nodes.N6.sram_hd_bitcell_um2 (derived from https://pr.tsmc.com/english/news/1989) and sram.array_efficiency (assumed, 0.55-0.75); tools/arch_budget_qwen3.py SRAM_BITS_PER_MM2"
   },
   "resident_read_j_per_byte": {
@@ -44,6 +46,14 @@
     "quote": "'A 135-Mb 0.021-um2 6-T high-density SRAM bit cell ... 5-nm HK-metal gate FinFET with EUV'"
    }
   }
+ },
+ "lane_trades": {
+  "note": "Lane copies a die traded for KV SRAM. The design point carries lane_multiplier_m - 1 copies a die (configs/hardware/power_scenarios.json design_points.qwen3.area_mm2.lane_copy is the PACKAGE area of one copy on both dies; results/arch/qwen3_budget.json area.lane_copy_mm2 a die). Each option removes (design m - option) copies from BOTH dies (the split is symmetric) and re-spends their area plus the slack on SRAM; DFlash is re-timed at the option's m on the package basis. The copy area is the routed lane copy of the budget (measured-ours, results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json), not a new input.",
+  "lane_multiplier_options": [
+   4,
+   3,
+   1
+  ]
  },
  "hbm_controller": {
   "note": "Lever 2 (fixed-function streaming controller = a measured PHY + a sourced controller-logic estimate). Re-searched 2026-09-28: no measured host-side HBM2E/HBM3/HBM3E PHY energy per bit and no memory-controller logic energy per bit was found in any loadable source (SK hynix HBM3 JSSC 2023 doi:10.1109/JSSC.2022.3193354 and Samsung HBM3 JSSC 2023 doi:10.1109/JSSC.2022.3232096 abstracts state bandwidth and relative efficiency only; Rambus/Synopsys/Cadence PHY pages give no pJ/bit). The only interface figures are MODELS (O'Connor MICRO 2017: interposer I/O 0.80 pJ/b at 50% activity; Chatterjee HPCA 2017: 0.54 pJ/b) and measured die-to-die links that are not HBM PHYs (LIPINCON 0.56 pJ/bit, GRS 0.54 pJ/b). The lever therefore CANNOT be built from measured parts: scenario_die_pj_per_bit is null and the record carries only the requirement (the die share that would reach the target) and the existing sensitivities (GH200 8.23, the withdrawn 0.8 I/O floor) for scale.",
@@ -84,51 +94,8 @@
    }
   }
  },
- "two_die": {
-  "link_j_per_bit": {
-   "value": 6e-13,
-   "unit": "J/bit",
-   "evidence_class": "published-spec",
-   "boundary": "UCIe advanced-package link, both ends; the top of the UCIe target range (the measured 3 nm best case is 0.29, TSMC's 7 nm CoWoS LIPINCON 0.56)",
-   "source": "configs/hardware/technology.json energy.link_j_per_bit.ucie_advanced.range_high (UCIe Consortium, Hot Chips 2023 tutorial, Electrical Summary)",
-   "quote": "'Power Efficiency Target (pJ/b) ... 0.3-0.6 [Adv 16] 0.3-0.6 [Adv 24/32]'"
-  },
-  "d2d_bytes_s": {
-   "value": 2700000000000.0,
-   "unit": "B/s",
-   "evidence_class": "assumed",
-   "boundary": "die-to-die bandwidth each direction, sized to carry half of a die's KV (the remote 3 stacks) at the 6-stack sustained 5.4 TB/s during its stage: 2.7 TB/s = 21.6 Tb/s each way. Blackwell's shipping die-to-die link is 10 TB/s (NVIDIA), so the rate is shipped practice; the area is priced from a measured link below.",
-   "source": "tools/arch_budget_qwen3.py requirements.kv_hbm.sustained_bytes_s / 2; NVIDIA Blackwell architecture page ('10 TB/s chip-to-chip interconnect')"
-  },
-  "d2d_phy_mm2": {
-   "value": 27.0,
-   "unit": "mm2",
-   "evidence_class": "published-measured",
-   "boundary": "die-to-die PHY area on EACH die for 2 x 21.6 Tb/s (both directions) at LIPINCON's measured 1.6 Tb/s/mm2 area density (7 nm, 8 Gb/s/pin): 43.2 / 1.6 = 27 mm2; the 3 nm UCIe test chip's 5.27 Tb/s/mm shoreline would need ~8.2 mm of the edge the 3 dropped stacks free",
-   "source": "Lin et al., IEEE JSSC 2020, doi:10.1109/JSSC.2019.2960207 (abstract); configs/hardware/technology.json energy.link_j_per_bit.ucie_advanced (JSSC 2026 doi:10.1109/JSSC.2026.3651425)",
-   "quote": "'0.56-pJ/bit energy efficiency and 1.6-Tb/s/mm2 bandwidth density'; 'exhibit 0.29 pJ/bit power efficiency with 5.27Tb/s/mm ... and 3.5 ns measured FDI-to-FDI latency'"
-  },
-  "hop_latency_s": {
-   "value": 3.5e-09,
-   "unit": "s",
-   "evidence_class": "published-measured",
-   "boundary": "one die-to-die crossing, FDI to FDI (adapter + PHY both ends), 3 nm CoWoS UCIe test chip; charged once per hop plus the hop's bytes at d2d_bytes_s",
-   "source": "configs/hardware/technology.json energy.link_j_per_bit.ucie_advanced (JSSC 2026 doi:10.1109/JSSC.2026.3651425)",
-   "quote": "'3.5 ns measured FDI-to-FDI latency'"
-  },
-  "hop_bytes_per_slot": {
-   "value": 8192.0,
-   "unit": "B",
-   "evidence_class": "assumed",
-   "boundary": "one slot's BF16 hidden state (4,096 x 2 B) per hop; with DFlash each hop carries the drafter's 5 tapped layers' states (x5), 4 hops a step (verify A->B, token back, draft taps both ways)",
-   "source": "Qwen3-8B config.json hidden_size 4096 (tools/hdc_timing.SHAPES); z-lab/Qwen3-8B-DFlash-b16 fc input 5 x 4096 (tools/dflash_step_timing.DFLASH_FC)"
-  },
-  "package_ratings": {
-   "note": "the two-die per-die and per-package limits are the baseline's own (configs/hardware/power_scenarios.json cooling.references b200_hgx 1,000 W air and gb200_nvl72 1,200 W liquid, each less its 8 stacks at peak, per die): 374.6 W air / 474.6 W liquid a die, 1,000 / 1,200 W a package"
-  }
- },
  "dvfs": {
-  "note": "Lever 4. The only sourced V/f relation for the node is a vendor OPP (operating performance point) table of a TSMC N6 SoC's GPU. It is transferred by NORMALISING to its top point: our routed 1.0986 GHz is taken to sit at the table's top (0.75 V) and a lower clock at the table's relative voltage. What scales: core dynamic energy per operation and clock power (x V^2, clock also x f); what does not: leakage (no credit, conservative), stack idle, and the HBM die share (the PHY/controller energy per bit is charged at the measured path, whose I/O supply is not the core rail). The batch-1 step is compute-chain bound (123,301 cycles against a 122,881-cycle KV stream at 8K), so the rate scales with f: DVFS lowers the per-user rate and can only raise the CAPPED rate.",
+  "note": "Lever 4. The only sourced V/f relation for the node is a vendor OPP (operating performance point) table of a TSMC N6 SoC's GPU. It is transferred by NORMALISING to its top point: our routed 1.0986 GHz is taken to sit at the table's top (0.75 V) and a lower clock at the table's relative voltage, on both dies alike. What scales: core dynamic energy per operation and clock power (x V^2, clock also x f); what does not: leakage (no credit, conservative), stack idle, the HBM die share (the PHY/controller energy per bit is charged at the measured path, whose I/O supply is not the core rail) and the UCIe exchanges (link I/O). The batch-1 step is compute-chain bound (the record's dvfs_sweep.basis: the design point's step cycles against the 8 stacks' KV stream), so the rate scales with f: DVFS lowers the per-user rate and can only raise the CAPPED rate.",
   "curve": {
    "table_hz_uv": [
     [
@@ -210,14 +177,16 @@
   ]
  },
  "atlas_figures_if_adopted": {
-  "1": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the 'Power caps the reticle' bullet (7,442 / 4,689 AR; 11,925 / 4,731 DFlash); s11.3 capped-rate table and the 'MAC energy that fits' bullets (593.6 W before any MAC, -0.50 pJ/MAC, 8,102 tok/s with free MACs); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (7,442 x18, 4,689 x17, 11,925 x9, 549.5 W x23); for the lane-copy trades additionally the area ledger (results/arch/qwen3_budget.json area: lane_copies_added 2, lane_multiplier_m 3, slack 8.6 mm2) and every DFlash figure at m = 3 (13,052 tok/s x12 in the atlas, 2.265 tokens a step, block 3), since the multiplier is the DFlash lever",
-  "2": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the 'Power caps the reticle' bullet (7,442 / 4,689 AR; 11,925 / 4,731 DFlash); s11.3 capped-rate table and the 'MAC energy that fits' bullets (593.6 W before any MAC, -0.50 pJ/MAC, 8,102 tok/s with free MACs); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (7,442 x18, 4,689 x17, 11,925 x9, 549.5 W x23); configs/hardware/power_scenarios.json memory.die_share (10.19 pJ/bit) -- not adoptable: no measured part exists",
-  "3": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the 'Power caps the reticle' bullet (7,442 / 4,689 AR; 11,925 / 4,731 DFlash); s11.3 capped-rate table and the 'MAC energy that fits' bullets (593.6 W before any MAC, -0.50 pJ/MAC, 8,102 tok/s with free MACs); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (7,442 x18, 4,689 x17, 11,925 x9, 549.5 W x23); plus the machine's framing everywhere: 'single reticle' / one 815 mm2 die becomes a two-die package (2 x die area, 2 x leakage), the cooling reference moves from H200 SXM (549.5 W a die, 700 W package) to B200 HGX / GB200 (374.6 / 474.6 W a die, 1,000 / 1,200 W package), the iso-area comparison (docs/ARCH_SPEC_QWEN3.md iso-area rows, results/roofline/iso_area/qwen3_8b.json) is no longer one reticle each side, and 6 stacks split 3 + 3",
-  "4": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the 'Power caps the reticle' bullet (7,442 / 4,689 AR; 11,925 / 4,731 DFlash); s11.3 capped-rate table and the 'MAC energy that fits' bullets (593.6 W before any MAC, -0.50 pJ/MAC, 8,102 tok/s with free MACs); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (7,442 x18, 4,689 x17, 11,925 x9, 549.5 W x23); also the per-user batch-1 rate 8,910 tok/s itself (a DVFS point runs slower by f)",
+  "1": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); for the lane-copy trades additionally the area ledger (results/arch/qwen3_budget.json area: lane_copies_added, lane_multiplier_m, slack_mm2 a die) and every DFlash figure at the design lane multiplier (results/speculative/dflash_step_timing.json rom['8192/fp8/m5']: block, tokens a step, tokens/s), since the multiplier is the DFlash lever",
+  "2": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); configs/hardware/power_scenarios.json memory.die_share -- not adoptable: no measured part exists",
+  "4": "docs/ARCH_SPEC_QWEN3.md s11.2 table rows 'ROM, batch 1' and 'ROM, DFlash' (mJ/token, die W, package W, wall W, capped tok/s) and the power-cap bullet (capped AR and DFlash rates, scenarios B / A); s11.3 capped-rate table and the 'MAC energy that fits' bullets; s11.5 (the lever evidence note); docs/ARCHITECTURE_ATLAS.html every Qwen3 cap figure (capped rates, per-die W, the two-die class's per-die limit); also the per-user batch-1 design rate itself (a DVFS point runs slower by f)",
   "sensitivity": "none (a sensitivity is not adoptable under the FP8-KV rule)"
  },
+ "superseded_levers": {
+  "3_two_die_package": "DROPPED 2026-09-28: the superseded single-reticle study's family 3 (two_die_striped_kv, two_die_striped_kv_plus_kv_sram, two_die_unstriped_kv) priced a second die as a lever. The O4 baseline IS a two-reticle package (tensor-parallel 2 over UCIe, every die streaming its own KV heads from its own 4 stacks, no KV crossing the link), so there is no second-die lever left to price; its inputs (UCIe link energy, PHY area, hop latency, exchange bytes) are now the baseline's own (configs/hardware/power_scenarios.json die.link_j_per_bit.ucie and design_points.qwen3.ucie_exchange, tools/arch_budget_qwen3.ucie_link / UCIE_PHY_MM2). The rejected layer-pipeline split of the two dies is results/arch/qwen3_budget.json layer_pipeline_alternative."
+ },
  "not_evaluated": {
-  "stacked_sram_die": "a hybrid-bonded SRAM die over the logic (3D V-Cache class) could hold a whole 8K user KV (604 MB) off the reticle area, but no source gives the thermal derating of a cache die stacked on a ~550 W logic die, and the only shipping part (AMD 3D V-Cache, ISSCC 2022 doi:10.1109/ISSCC42614.2022.9731565: 'expands Zen3's on-die L3 Cache from 32MB to 96MB') is a ~100 W-class CPU; its die area was not verifiable. Not priced.",
+  "stacked_sram_die": "a hybrid-bonded SRAM die over the logic (3D V-Cache class) could hold a whole 8K user KV (604 MB, 302 MB a die) off the reticle area, but no source gives the thermal derating of a cache die stacked on a logic die at the baseline per-die power (hundreds of W), and the only shipping part (AMD 3D V-Cache, ISSCC 2022 doi:10.1109/ISSCC42614.2022.9731565: 'expands Zen3's on-die L3 Cache from 32MB to 96MB') is a ~100 W-class CPU; its die area was not verifiable. Not priced.",
   "hbm_controller_measured": "no measured host PHY or controller energy per bit exists in a loadable source (see hbm_controller.note); the record gives the requirement instead (hbm_die_share_needed_for_target)",
   "kv_int4": "4-bit KV is a SENSITIVITY only (user rule); it is in the record as sensitivity_kv_int4 and not a lever",
   "web_search_budget": "the session's web-search quota was exhausted during this work; sources were loaded by direct URL/DOI. A measured HBM3 PHY paper (ISSCC/VLSI), Intel's UCIe test chip, SC'25 Table 3's L2 row and a macro-level N5/N6 SRAM density remain to be fetched."

@@ -6,19 +6,19 @@
   "results/gpu/blackwell_dependency_latency.json": "78fccad39c375636028c3389b5d78e022814432b5216ddbd8f07eb3881d35d26",
   "results/gpu/blackwell_gather_designs.json": "717e6cfc4ca04056844cf57385212853eace6d63abc3222e630ed05ff367078e",
   "results/rtl/hdc_package_tp_campaign.json": "15814bf8112c36d6dbab63fce050146f41506299927057c10c316983493879c6",
-  "results/arch/arch_budget_v41.json": "91e4cc4d61342bfebba157385c4fd625d981d90a3042e40a03c1438742da2f14",
-  "results/arch/v41_lanes.json": "b646e109e6994c467f9961b0801c2cfdf5fb0ffdf7a82a062e93a91014a2511a",
-  "results/arch/v41_rack.json": "3dd209bc5b2fe38c40cd57c15837dd63989e464f0a6f7550e8def0cc2f3558f6"
+  "results/arch/arch_budget_v41.json": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef",
+  "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
+  "results/arch/v41_rack.json": "ef80a30627853bc625e439855eef397a0087e0716ead18cd435f996b70516b20"
  },
  "ladder": {
-  "T_us": 142.676,
-  "tokens_s_per_user": 7008.864184990315,
+  "T_us": 141.862,
+  "tokens_s_per_user": 7049.079994455792,
   "collective_latency_us": 15.301,
-  "collective_exposed_bytes_us": 4.769,
-  "pipeline_hops_us": 11.002,
+  "collective_exposed_bytes_us": 4.793,
+  "pipeline_hops_us": 12.339,
   "stage_hops": 27,
   "collectives": 209,
-  "overlap_assumed_tokens_s_per_user": 7322.939822717542,
+  "overlap_assumed_tokens_s_per_user": 7374.411010518603,
   "source": "results/arch/v41_lanes.json design_point['1048576'] (design-point model, collective tails measured in the RTL stage bench with the adopted levers, 209 ns rack-cable tier)"
  },
  "v41_spec_budget": {
@@ -188,7 +188,7 @@
     "note": "same graph priced at 2.37 us per collective + 0.79 us per stage handoff; NCCL 2.27: 1066 us; NCCL ring: 2320 us; SoL floor: 315 us"
    },
    "ot": {
-    "value": 31.1,
+    "value": 32.4,
     "unit": "us",
     "evidence": "model, normative basis",
     "refs": [
@@ -196,13 +196,13 @@
      "r-sue",
      "r-ualink"
     ],
-    "note": "adopted design point, collective tails measured in the RTL stage bench with the adopted levers: collectives 15.3 us + exposed collective bytes 4.8 us + hops 11.0 us (27 stage hops on the 209 ns cable tier); 22% of the 142.7 us token. Specification widths (this branch's budget): 38.3 us of 202.7 us"
+    "note": "adopted design point, collective tails measured in the RTL stage bench with the adopted levers: collectives 15.3 us + exposed collective bytes 4.8 us + hops 12.3 us (27 stage hops on the 209 ns cable tier); 23% of the 141.9 us token. Specification widths (this branch's budget): 38.3 us of 202.7 us"
    },
-   "ratio": 17,
+   "ratio": 16,
    "ratio_vs": {
     "sol_floor": 10,
-    "nccl_2_27": 34,
-    "nccl_ring": 75
+    "nccl_2_27": 33,
+    "nccl_ring": 72
    }
   },
   {
@@ -485,7 +485,7 @@
   "on_chip": "77-208x (dependent handoff and all-unit gather: RTL cycles vs measured Blackwell)",
   "cross_package": "7.9-13.4x against the GPU speed-of-light floor and best measured kernel; 28-62x against NCCL",
   "stage_hop": "3.6x (point-to-point hop vs NVLink remote store)",
-  "per_token_v41": "10x vs the GPU floor, 17x vs the best kernel, 34-75x vs NCCL",
+  "per_token_v41": "10x vs the GPU floor, 16x vs the best kernel, 33-72x vs NCCL",
   "statement": "The order-of-magnitude synchronisation advantage is an ON-CHIP property (a compiled schedule replaces L2 fences: ~80-200x). Across packages both machines pay SerDes and FEC physics; there the advantage narrows to ~8-13x against the best GPU kernel and its speed-of-light floor (fixed-function one-shot endpoints, no software, one link crossing), and ~28-62x against shipped NCCL."
  },
  "references": {

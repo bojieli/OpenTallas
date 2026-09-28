@@ -39,6 +39,25 @@ quantiser (atlas: "Pending - Qwen3-8B weight and KV formats"), so ``q35`` is a
 concrete, data-free (round-to-nearest with per-group MSE-optimal clipping)
 realisation of the stated point, not the Taalas format.
 
+``w8`` is the O4 INT8 weight contract (docs/ARCH_QWEN3_O4_RTL_SPEC.md section
+3.1, C0-C6), which unlike the group formats scales AFTER the sum: signed
+symmetric INT8 codes in [-128, 127] with no zero point and one BF16 scale per
+output row (per vocabulary row for the embedding and the lm_head), quantised
+offline by round-to-nearest-even with per-row MSE clipping (_rtn_mse at 8 bits,
+the whole row one group), so the codes are clamped at quantisation and the
+datapath never saturates; in the contract arithmetic q/k/v and gate/up quantise
+the norm-folded matrices.  A matvec forms every INT8 x BF16 product exactly in
+FP32, sums them in the golden K-split order (the same chunk + pairwise-tree
+kernel as BF16 weights, codes in place of weights), then makes ONE binary32 RNE
+multiply of the finished FP32 sum by the row's scale (int8_mv_t).  The result
+stays FP32: it is rounded only where the golden already rounds (the next
+matvec's input, q and the probabilities before attention, FP8 at the KV write).
+The norm fold's 1/rms follows the scale (C4); the embedding row is code x scale,
+exact in FP32 (C5); the lm_head's argmax compares scaled logits (C6).  Modes
+``g_contract_w8`` (BF16 KV), ``e_full_w8`` (FP8 KV) and ``b_w8`` (the GPU
+arithmetic with the same codes and scales, the scale applied to the FP32 GEMM
+output) run it.
+
 KV formats (``--kv``): ``bf16``; ``fp8`` = golden to_fp8: per-element FP8 E4M3
 (bias 7, max 448 saturating, subnormals, RNE), NO scale, applied to K after
 q/k-norm and RoPE and to V.
@@ -453,8 +472,59 @@ def quantize(w, fmt):
     return codes, scales, bits
 
 
+_HAD = {}
+
+
+def hadamard_blocks(x, n):
+    """x [..., K] -> each block of n channels times the Sylvester Hadamard H_n / sqrt(n)
+    (n a power of two, so for n = 4,096 the scale 1/64 is exact).  FP32 matmul with
+    TF32 off."""
+    key = (n, x.device)
+    if key not in _HAD:
+        h = torch.ones((1, 1), dtype=F32)
+        while h.shape[0] < n:
+            h = torch.cat([torch.cat([h, h], 1), torch.cat([h, -h], 1)], 0)
+        _HAD[key] = (h / math.sqrt(n)).to(x.device)
+    K = x.shape[-1]
+    return (x.reshape(*x.shape[:-1], K // n, n) @ _HAD[key]).reshape(x.shape)
+
+
 def dequant(codes, scales, g=128):
     return codes.to(F32) * scales.to(F32).repeat_interleave(g, dim=1)
+
+
+# -- the O4 INT8 per-channel contract (docs/ARCH_QWEN3_O4_RTL_SPEC.md section 3.1) --------
+W8_FORMATS = ("w8",)
+
+
+def quantize_w8(w):
+    """C0/C1: w [N, K] -> (codes int8 [N, K], scales BF16 [N, 1], bits/param).  Signed
+    symmetric INT8, no zero point, one BF16 scale per output row: _rtn_mse at 8 bits with
+    the whole row as one group, s = bf16(amax x r / 127) with r from linspace(0.5, 1, 21)
+    by the row's squared error, q = clamp(round-half-even(w / s), -128, 127)."""
+    N, K = w.shape
+    codes = torch.empty((N, K), dtype=torch.int8, device=w.device)
+    scales = torch.empty((N, 1), dtype=BF16, device=w.device)
+    rows = max(1, (1 << 24) // K)
+    for r0 in range(0, N, rows):
+        q, s, _ = _rtn_mse(w[r0:r0 + rows].to(F32)[:, None, :], 8)
+        codes[r0:r0 + rows] = q[:, 0, :].to(torch.int8)
+        scales[r0:r0 + rows] = s[:, 0, :].to(BF16)
+    return codes, scales, 8.0 + 16.0 / K
+
+
+def int8_mv_t(x, qT, sT, S):
+    """C2 + C3, the contract matvec: x [T, K] FP32 (rounded to BF16 here, the golden's
+    matvec input), qT [K, N] INT8 codes (K-major), sT [1, N] BF16 row scales, K-split S.
+    T = the chunk + pairwise-tree sum of the exact INT8 x BF16 products in FP32 (the
+    golden's matvec order, codes in place of weights); y = fl32(T x s), one RNE multiply
+    after the whole sum, canonical +0.  Returns FP32 [T, N], not rounded to BF16."""
+    xb = to_bf16(x)
+    if HAVE_TRITON and x.is_cuda:
+        t = chunk_tree_dot_t(xb.t().contiguous()[None], qT[None], S)[0]
+    else:
+        t = _chunk_tree_dot_ref(xb, qT.t(), S)
+    return mul(t, sT.to(F32).reshape(1, -1))
 
 
 # -- the model --------------------------------------------------------------------
@@ -469,6 +539,10 @@ MODES = {
     "e_full": ("contract", "q35", "fp8"),
     "f_contract_kvfp8": ("contract", "bf16", "fp8"),      # everything but the weight format
     "e_full_w4": ("contract", "w4", "fp8"),
+    # the O4 INT8 per-channel contract (W8_FORMATS): scale after the FP32 sum
+    "b_w8": ("gpu", "w8", "bf16"),
+    "g_contract_w8": ("contract", "w8", "bf16"),
+    "e_full_w8": ("contract", "w8", "fp8"),
 }
 
 
@@ -508,11 +582,41 @@ class Qwen3:
         self.wfile = None
         if wfile is not None:
             self.wfile = wfile if isinstance(wfile, dict) else torch.load(wfile, map_location="cpu")
-            assert self.wfile["fold"] == (arith == "contract"), "GPTQ file was built for the other norm placement"
+            assert self.wfile["fold"] or arith != "contract", "GPTQ file was built for the other norm placement"
             self.wfmt = self.wfile["fmt"]
-        sd = load_state(path, self.device)
-        self.embed = sd.pop("model.embed_tokens.weight").cpu()      # gathered on the host: 1.2 GB less GPU
-        self.norm = sd.pop("model.norm.weight")
+        # A weight file built on the norm-folded matrices (tools/qwen3_weight_format_search.py)
+        # also runs in the GPU arithmetic, with the RMSNorm weight replaced by its "pre"
+        # vector (an input channel scale, AWQ) or by ones.  It may carry transformed
+        # companions of the matrices: "embed" (the rotated embedding table), "norm" (the
+        # final norm weight, ones when folded into lm_head), "pre" ({"<i>.qkv"|"<i>.gu": the
+        # FP32 input channel scale applied before the product}) and "down_had" (the +-1
+        # signs of the online randomised Hadamard applied to the down projection input).
+        fold_w = self.wfile["fold"] if self.wfile is not None else arith == "contract"
+        extra = self.wfile or {}
+        pre = extra.get("pre") or {}
+        self.down_had = extra.get("down_had")
+        self.down_had_block = extra.get("down_had_block", 4096)
+        # per-output-channel scale applied once to the FP32 dot product of the integer
+        # codes and the activations (y_n = s_n * sum_k q_nk x_k), not per element
+        self.post_scale = bool(extra.get("post_scale"))
+        if self.down_had is not None:
+            self.down_had = self.down_had.to(self.device).to(F32)
+        # With a weight file the matrices come from it: keep the snapshot on the host.
+        sd = load_state(path, self.device if self.wfile is None else "cpu")
+        self.embed = sd.pop("model.embed_tokens.weight")
+        self.embed_q = None
+        if self.wfmt in W8_FORMATS:
+            # C5: the embedding is INT8 rows with one BF16 scale a vocabulary row
+            q, s_, b = quantize_w8(self.embed.to(self.device))
+            self.embed_q, self.embed_s = q.cpu(), s_.cpu()
+            self.bits["embedding"] = [b]
+            del q, s_
+        self.embed = self.embed.cpu()                                # gathered on the host: 1.2 GB less GPU
+        self.norm = sd.pop("model.norm.weight").to(self.device)
+        if extra.get("embed") is not None:
+            self.embed = extra["embed"].cpu()
+        if extra.get("norm") is not None:
+            self.norm = extra["norm"].to(self.device).to(BF16)
         lm = sd.pop("lm_head.weight")
         self.layers = []
         for i in range(self.L):
@@ -522,10 +626,20 @@ class Qwen3:
             qw, kw, vw = g("self_attn.q_proj.weight"), g("self_attn.k_proj.weight"), g("self_attn.v_proj.weight")
             ow = g("self_attn.o_proj.weight")
             gw, uw, dw = g("mlp.gate_proj.weight"), g("mlp.up_proj.weight"), g("mlp.down_proj.weight")
-            lay = dict(qn=g("self_attn.q_norm.weight").to(F32), kn=g("self_attn.k_norm.weight").to(F32))
-            if arith == "contract":
+            lay = dict(qn=g("self_attn.q_norm.weight").to(self.device).to(F32),
+                       kn=g("self_attn.k_norm.weight").to(self.device).to(F32))
+            ln1, ln2 = ln1.to(self.device), ln2.to(self.device)
+            if fold_w:
+                if arith != "contract":
+                    one = torch.ones_like(ln1)
+                    lay["ln1"] = pre[f"{i}.qkv"].to(self.device).to(BF16) if f"{i}.qkv" in pre else one
+                    lay["ln2"] = pre[f"{i}.gu"].to(self.device).to(BF16) if f"{i}.gu" in pre else one
+                else:
+                    for kk, nm in ((f"{i}.qkv", "pre_qkv"), (f"{i}.gu", "pre_gu")):
+                        if kk in pre:
+                            lay[nm] = pre[kk].to(self.device).to(F32)
                 # NORM FOLD (8a91421a:282-296): W' = bf16(W diag(w)) for q,k,v and gate,up
-                fold = lambda m, w: (m.to(F32) * w.to(F32)[None, :]).to(BF16)
+                fold = lambda m, w: (m.to(F32) * w.to(m.device).to(F32)[None, :]).to(BF16)
                 qkv = torch.cat([fold(qw, ln1), fold(kw, ln1), fold(vw, ln1)], 0)
                 gu = torch.cat([fold(gw, ln2), fold(uw, ln2)], 0)
             else:
@@ -552,9 +666,19 @@ class Qwen3:
         if self.wfile is not None:
             codes, scales, bits = self.wfile["w"][key]
             self.bits.setdefault(name, []).append(bits)
-            W = {"q": codes.to(self.device), "s": scales.to(self.device), "N": N}
+            if scales is None:          # an unquantised (e.g. rotated) BF16 matrix
+                W = {"w": codes.to(self.device).to(BF16).contiguous(), "N": N}
+            else:
+                W = {"q": codes.to(self.device), "s": scales.to(self.device), "N": N}
+                if self.post_scale:
+                    assert scales.shape[1] == 1, "post-accumulation scale needs one scale per row"
+                    W["post"] = True
         elif self.wfmt == "bf16":
             W = {"w": m.contiguous(), "N": N}
+        elif self.wfmt in W8_FORMATS:
+            codes, scales, bits = quantize_w8(m)
+            self.bits.setdefault(name, []).append(bits)
+            W = {"q": codes, "s": scales, "N": N, "post": True}
         else:
             codes, scales, bits = quantize(m, self.wfmt)
             self.bits.setdefault(name, []).append(bits)
@@ -563,13 +687,24 @@ class Qwen3:
             W = {k: (v.t().contiguous() if torch.is_tensor(v) else v) for k, v in W.items()}
         return W
 
+    def had_down(self, m):
+        """The online randomised Hadamard of the down projection input (identity unless
+        the weight file carries down_had): blocks of 4,096 channels, m -> (m * signs)
+        H_4096 / 64, in FP32 (a proposed datapath unit; the golden has none)."""
+        if self.down_had is None:
+            return m
+        return hadamard_blocks(m.to(F32) * self.down_had, self.down_had_block).to(m.dtype)
+
     # -- matrix products --------------------------------------------------------
     def mv(self, x, W):
         """Contract matvec: x [T, K] FP32 -> [T, N] FP32 (golden mv: BF16 input, split_for order)."""
         wT = W.get("w", W.get("q"))
         K, N = wT.shape
         S = split_for(N, K, self.groups)
-        return chunk_tree_dot_t(to_bf16(x).t().contiguous()[None], wT[None], S, W.get("s"))[0]
+        if W.get("post"):
+            return int8_mv_t(x, wT, W["s"], S)
+        g = K // W["s"].shape[0] if "s" in W else 128
+        return chunk_tree_dot_t(to_bf16(x).t().contiguous()[None], wT[None], S, W.get("s"), group=g)[0]
 
     def lin(self, x, W):
         """GPU linear: BF16 x [T, K] -> BF16 [T, N] (FP32 accumulation)."""
@@ -577,10 +712,23 @@ class Qwen3:
             return Fn.linear(x, W["w"])
         out = []
         rows = max(1, (1 << 26) // W["q"].shape[1])
+        if W.get("post"):
+            # per-channel INT8: the FP32 GEMM of the codes, then the row scale on its output
+            for r0 in range(0, W["q"].shape[0], rows):
+                y = Fn.linear(x.to(F32), W["q"][r0:r0 + rows].to(F32)) * W["s"][r0:r0 + rows, 0].to(F32)
+                out.append(y.to(BF16))
+            return torch.cat(out, -1)
         for r0 in range(0, W["q"].shape[0], rows):
-            wd = dequant(W["q"][r0:r0 + rows], W["s"][r0:r0 + rows])
+            wd = dequant(W["q"][r0:r0 + rows], W["s"][r0:r0 + rows], g=W["q"].shape[1] // W["s"].shape[1])
             out.append(Fn.linear(x.to(F32), wd).to(BF16))
         return torch.cat(out, -1)
+
+    def embed_rows(self, tokens):
+        """The token rows in FP32: BF16 rows, or (w8, C5) code x scale, exact in FP32."""
+        t = tokens.cpu()
+        if self.embed_q is None:
+            return self.embed[t].to(self.device).to(F32)
+        return self.embed_q[t].to(self.device).to(F32) * self.embed_s[t].to(self.device).to(F32)
 
     def kv_round(self, t):
         if self.kvfmt == "fp8":
@@ -647,7 +795,7 @@ class Qwen3:
 
     def _forward_gpu(self, tokens, cache):
         B, T = tokens.shape
-        x = self.embed[tokens.cpu()].to(self.device)                        # [B, T, H]
+        x = self.embed_rows(tokens).to(BF16)                                # [B, T, H]
         qpos = self._qpos(cache, T)
         fr = qpos.to(F32)[..., None] * self.inv_freq
         emb = torch.cat([fr, fr], -1)[:, None]                              # [B, 1, T, HD]
@@ -675,7 +823,7 @@ class Qwen3:
             h = self._rms_hf(x, lay["ln2"])
             gu = self.lin(h, lay["gu"])
             gt, up = gu.split([self.FF, self.FF], -1)
-            x = x + self.lin(Fn.silu(gt) * up, lay["down"])
+            x = x + self.lin(self.had_down(Fn.silu(gt) * up), lay["down"])
         cache["lens"] = [l + T for l in cache["lens"]]
         return self._rms_hf(x, self.norm)
 
@@ -683,7 +831,7 @@ class Qwen3:
     def _forward_contract(self, tokens, cache):
         B, T = tokens.shape
         dev = self.device
-        x = self.embed[tokens.cpu()].to(self.device).to(F32).reshape(B * T, self.H)
+        x = self.embed_rows(tokens).reshape(B * T, self.H)
         qpos = self._qpos(cache, T)
         cos, sin = rope_tables_g(qpos.cpu().numpy().reshape(-1), self.HD, self.theta, dev)
         cos, sin = cos.view(B, 1, T, -1), sin.view(B, 1, T, -1)
@@ -692,7 +840,7 @@ class Qwen3:
         grp = self.NH // self.KV
         for i, lay in enumerate(self.layers):
             r = rstd_g(x, self.eps)[:, None]
-            qkv = mul(self.mv(x, lay["qkv"]), r)
+            qkv = mul(self.mv(mul(x, lay["pre_qkv"]) if "pre_qkv" in lay else x, lay["qkv"]), r)
             q, k, v = qkv.split([self.NH * self.HD, self.KV * self.HD, self.KV * self.HD], -1)
             q = rmsnorm_g(q.reshape(B, T, self.NH, self.HD), lay["qn"], self.eps).transpose(1, 2)   # [B, NH, T, HD]
             k = rmsnorm_g(k.reshape(B, T, self.KV, self.HD), lay["kn"], self.eps).transpose(1, 2)
@@ -706,9 +854,9 @@ class Qwen3:
             attn = attn.reshape(B, self.NH, T, self.HD).transpose(1, 2).reshape(B * T, -1)
             x = add(x, self.mv(attn, lay["o"]))
             r = rstd_g(x, self.eps)[:, None]
-            gu = mul(self.mv(x, lay["gu"]), r)
+            gu = mul(self.mv(mul(x, lay["pre_gu"]) if "pre_gu" in lay else x, lay["gu"]), r)
             gt, up = gu.split([self.FF, self.FF], -1)
-            x = add(x, self.mv(mul(silu_g(gt), up), lay["down"]))
+            x = add(x, self.mv(self.had_down(mul(silu_g(gt), up)), lay["down"]))
         cache["lens"] = [l + T for l in cache["lens"]]
         return rmsnorm_g(x, self.norm.to(F32), self.eps).view(B, T, self.H)
 

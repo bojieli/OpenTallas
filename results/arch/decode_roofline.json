@@ -4,39 +4,39 @@
  "inputs": {
   "qwen3_budget": {
    "from": "worktree:results/arch/qwen3_budget.json",
-   "sha256": "bcf27f58ad18b4f4793ae8563945212228bbb09f129e7336139a42f23de2fd8a"
+   "sha256": "4cd7f5ff3c1c5a89a47a9957f385d5bb94ceb184cfa9fcdb2df124b5447bf6f2"
   },
-  "iso_qwen": {
-   "from": "b42f8606:results/roofline/iso_area/qwen3_8b.json",
-   "sha256": "26bc5acadb614dc14cce25cab9f2c3913215625f418cd828e39d7d55db1d141e"
+  "gpu_qwen": {
+   "from": "worktree:results/arch/qwen_gpu_calibration.json",
+   "sha256": "6ae77c9ccad72c915cb8903ee2c61843265248b9dbbdce96a2f88a7c63676ee9"
   },
   "sync": {
    "from": "worktree:results/arch/sync_cost_table.json",
-   "sha256": "477feba5a222d1abba8b87fa6bada52824f006c63ed67a22f11322ddfad14f51"
+   "sha256": "2ebcd3b320deaed72479c0e845aaeaacc546d26b5c358794f1810994ec5df273"
   },
   "v41_lanes": {
    "from": "worktree:results/arch/v41_lanes.json",
-   "sha256": "b646e109e6994c467f9961b0801c2cfdf5fb0ffdf7a82a062e93a91014a2511a"
+   "sha256": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6"
   },
   "v41_hbm_best": {
    "from": "worktree:results/arch/v41_hbm_best.json",
-   "sha256": "3e28dea3d2112929133f4ddc284c5761186bc466e44c62b63b26bfef234f3ee6"
+   "sha256": "c1650c6f87751fb2a072ff4356d2575ea4bf1787c1df709975c0e9bec234e795"
   },
   "v41_ladder": {
    "from": "worktree:results/arch/v41_latency_ladder.json",
-   "sha256": "db61454979559fdb4f1e0ebd436f05d40482ce523890036550b4b6261545420a"
+   "sha256": "43ebef09b314aa84e00457924a66ce00900a2d56adda1831bafa15556fbde2a5"
   },
   "v41_budget": {
    "from": "worktree:results/arch/arch_budget_v41.json",
-   "sha256": "91e4cc4d61342bfebba157385c4fd625d981d90a3042e40a03c1438742da2f14"
+   "sha256": "2223e9e39e6c17962ec69c362e399950fba926f1610265b792bc4b1bc5a4b7ef"
   },
   "v41_switched": {
    "from": "worktree:results/arch/v41_hbm_switched.json",
-   "sha256": "e343c93a06209e6df97d37d21eecb95fdafbc8ccfb0a325cf273f78592bb0b33"
+   "sha256": "186e387495977d227d6720b617ae44e731084fac4eed0dc872a0349e789ebde0"
   },
   "power": {
    "from": "worktree:results/arch/power_scenarios.json",
-   "sha256": "170d69c78e901ffc4d862bcee8586ec47546c29b8416393aa330e53395dfece4"
+   "sha256": "0374612a8aeb4f5789ef5cd9fe869817dd32e3c363d5416301bc464f4309f128"
   },
   "idle_floor": {
    "from": "worktree:results/roofline/gpu_clocked_idle_floor.json",
@@ -165,7 +165,7 @@
   "x": "off-chip memory bandwidth devoted to the user, sustained (TB/s)",
   "y": "tokens/s for one user"
  },
- "ladder_definition": "S0 GPU application or shipped-library baseline, modeled where a same-model measurement is unavailable; S1 same GPUs, idealised runtime (software gap); S2 specialised HBM accelerator at no more silicon and HBM bandwidth than S1 (specialisation); S3 a specialised ROM accelerator at equal logic area. Qwen3-8B adds S1f (the ROM's 3.5-bit weight format). Qwen S2 has B200-class bandwidth while S3 has six stacks; the matched six-stack HBM/ROM comparison is separate. The order is part of the definition: the factors are not independent (ROM without specialisation is not a meaningful machine). Each step keeps or reduces the silicon and bandwidth of the step before it. V4.1 S2-to-S3 also changes die count, topology and HBM allocation, so its multiplier is not an isolated ROM effect. S2-S3 are conditional on the design's open gates (clock; V4.1 collectives at their bench-measured tails with the adopted levers).",
+ "ladder_definition": "S0 GPU application or shipped-library baseline, modeled where a same-model measurement is unavailable; S1 same GPUs, idealised runtime (software gap); S2 specialised HBM accelerator at no more silicon and HBM bandwidth than S1 (specialisation); S3 a specialised ROM accelerator at equal logic area. Qwen3-8B adds S1f (the ROM's 8-bit weight width). For Qwen3-8B every rung has two reticle-class dies and eight HBM3E stacks. The order is part of the definition: the factors are not independent (ROM without specialisation is not a meaningful machine). Each step keeps or reduces the silicon and bandwidth of the step before it. V4.1 S2-to-S3 also changes die count, topology and HBM allocation, so its multiplier is not an isolated ROM effect. S2-S3 are conditional on the design's open gates (clock; V4.1 collectives at their bench-measured tails with the adopted levers).",
  "models": {
   "qwen3": {
    "title": "Qwen3-8B, 8K context, FP8 KV, one user",
@@ -180,7 +180,7 @@
    "bytes_per_token": {
     "weights_bf16_plus_kv": 15740200000.0,
     "weights_fp8_plus_kv": 8172080000.0,
-    "weights_rom35_plus_kv": 3915020000.0,
+    "weights_w8_plus_kv": 8175180000.0,
     "kv_fp8": 603980000.0
    },
    "gpu_model": {
@@ -199,8 +199,8 @@
      "nccl_2_27": 1566.74,
      "nccl_ring": 929.138
     },
-    "tp8_rom35_tok_s": 2538.78,
-    "kv_floor_rom_tok_s": 8940.7
+    "tp8_w8_tok_s": 2538.78,
+    "kv_floor_rom_tok_s": 11920.9
    },
    "points": [
     {
@@ -211,7 +211,7 @@
      "evidence": "measured",
      "family": "gpu",
      "spec": false,
-     "basis": "this machine, MATH-500, short context (iso_qwen local_gpu_rtx_pro_6000)"
+     "basis": "this machine, MATH-500, short context (qwen_gpu_calibration local_gpu_rtx_pro_6000)"
     },
     {
      "key": "rtx_fp8",
@@ -237,11 +237,21 @@
      "key": "h200_bf16",
      "label": "H200, BF16",
      "x": 4.32,
-     "y": 133.269,
+     "y": 133.273,
      "evidence": "calibrated",
      "family": "gpu",
      "spec": false,
-     "basis": "NIM H200 two-point fit, shape-adjusted to Qwen3-8B at 8K (iso_qwen gpu_calibration)"
+     "basis": "NIM H200 two-point fit, shape-adjusted to Qwen3-8B at 8K (qwen_gpu_calibration)"
+    },
+    {
+     "key": "h200_fp8",
+     "label": "H200, FP8",
+     "x": 4.32,
+     "y": 217.413,
+     "evidence": "calibrated",
+     "family": "gpu",
+     "spec": false,
+     "basis": "same current-tree NIM H200 two-point fit, shape-adjusted to Qwen3-8B at 8K"
     },
     {
      "key": "b200_bf16",
@@ -274,14 +284,14 @@
      "basis": "bandwidth roof at 0.90; 220 measured all-SM boundaries overlapped"
     },
     {
-     "key": "b200_ideal_rom35",
-     "label": "B200 idealised, 3.5-bit",
+     "key": "b200_ideal_w8",
+     "label": "B200 idealised, 8-bit",
      "x": 7.2,
-     "y": 1839.07,
+     "y": 880.714,
      "evidence": "modelled",
      "family": "gpu",
      "spec": false,
-     "basis": "as above at the ROM's weight format (byte-proportional; no GPU has shown it: on an H20 AWQ-INT4 ran 0.96x FP8)"
+     "basis": "as above at the ROM's 8-bit weights (FP8 on a B200; byte-proportional)"
     },
     {
      "key": "nvl72_tp8_bf16",
@@ -296,62 +306,52 @@
     {
      "key": "hdc_bf16",
      "label": "HDC-HBM, BF16",
-     "x": 5.4,
-     "y": 343.1,
+     "x": 7.2,
+     "y": 457.4,
      "evidence": "modelled",
      "family": "hbm",
      "spec": false,
-     "basis": "one reticle, 6 HBM3E stacks at 0.90 (qwen3_budget hbm_comparator)"
+     "basis": "two reticles, 8 HBM3E stacks at 0.90 (qwen3_budget hbm_comparator)"
     },
     {
-     "key": "hdc_rom35",
-     "label": "HDC-HBM, 3.5-bit",
-     "x": 5.4,
-     "y": 1379.3,
+     "key": "hdc_w8",
+     "label": "HDC-HBM, 8-bit (S2)",
+     "x": 7.2,
+     "y": 880.7,
      "evidence": "modelled",
      "family": "hbm",
      "spec": false,
-     "basis": "same machine at the ROM's weight format"
+     "basis": "the iso-area comparator: the ROM package's silicon and stacks, the ROM's INT8 weights streamed"
     },
     {
-     "key": "hdc_rom35_dflash",
+     "key": "hdc_w8_dflash",
      "label": "HDC-HBM + DFlash",
-     "x": 5.4,
-     "y": 3762.4,
+     "x": 7.2,
+     "y": 2650.6,
      "evidence": "modelled",
      "family": "hbm",
      "spec": true,
-     "basis": "block 8, tau 3.30 measured at that block on real Qwen3-8B (264 prompt turns); serial draft + verify + commit"
-    },
-    {
-     "key": "hdc_matched",
-     "label": "S2: HDC core at B200 bandwidth",
-     "x": 7.2,
-     "y": 1839.07,
-     "evidence": "modelled",
-     "family": "hbm",
-     "spec": false,
-     "basis": "specialised core on a B200-sized package (8 stacks, 7.2 TB/s), 3.5-bit weights, 220 x 4.8 ns handoffs"
+     "basis": "block 16, tau 3.66 measured at that block on real Qwen3-8B (264 prompt turns); serial draft + verify + commit"
     },
     {
      "key": "rom",
-     "label": "ROM reticle",
-     "x": 5.4,
-     "y": 8910.2,
+     "label": "ROM package",
+     "x": 7.2,
+     "y": 10967.9,
      "evidence": "calibrated",
      "family": "rom",
      "spec": false,
-     "basis": "RTL-calibrated sequencer model at spec widths, 123,301 cycles at 1.099 GHz; KV-bound (qwen3_budget power_production)"
+     "basis": "RTL-calibrated sequencer model at spec widths on both dies' 12,288 groups, 100,169 cycles at 1.099 GHz with the UCIe exchanges; compute-bound (qwen3_budget power_production)"
     },
     {
      "key": "rom_dflash",
-     "label": "ROM + DFlash (m=3)",
-     "x": 5.4,
-     "y": 13052.1,
+     "label": "ROM + DFlash (m=5)",
+     "x": 7.2,
+     "y": 18719.9,
      "evidence": "modelled",
      "family": "rom",
      "spec": true,
-     "basis": "block 3, tau 2.27 measured at that block; serial draft + verify + commit; three MAC copies per weight read in the freed SRAM; conditional on the lane copies"
+     "basis": "block 5, tau 2.86 measured at that block; serial draft + verify + commit; 5 MAC copies per weight read; conditional on the lane copies"
     }
    ],
    "roofs": [
@@ -361,9 +361,9 @@
      "bytes_per_token": 15740200000.0
     },
     {
-     "key": "roof_rom35",
-     "label": "weights 3.5-bit + KV",
-     "bytes_per_token": 3915020000.0
+     "key": "roof_w8",
+     "label": "weights 8-bit + KV",
+     "bytes_per_token": 8175180000.0
     },
     {
      "key": "roof_kv",
@@ -385,9 +385,9 @@
      "key": "rom_sweep",
      "family": "rom",
      "label": "ROM weight sweep",
-     "y": 19027.4,
+     "y": 28541.0,
      "evidence": "modelled",
-     "basis": "57,740 cycles: one weight per lane per cycle"
+     "basis": "38,493 cycles: one weight per lane per cycle on both dies' lanes"
     },
     {
      "key": "ours_onchip",
@@ -473,11 +473,11 @@
     ],
     [
      "b200_ideal_bf16",
-     "b200_ideal_rom35",
+     "b200_ideal_w8",
      "format"
     ],
     [
-     "hdc_matched",
+     "hdc_w8",
      "rom",
      "ROM"
     ]
@@ -506,33 +506,33 @@
      },
      {
       "step": "S1f",
-      "label": "same, weights at the ROM's 3.5-bit format",
-      "value": 1839.07,
+      "label": "same, weights at the ROM's 8-bit width",
+      "value": 880.714,
       "unit": "tok/s",
       "evidence": "modelled",
-      "basis": "byte-proportional; not demonstrated on a GPU",
-      "matching": "same GPU, weight format matched to the ROM",
-      "multiplier": 4.02046
+      "basis": "byte-proportional (FP8 weights on a B200; the INT8 scales included)",
+      "matching": "same GPU, weight width matched to the ROM",
+      "multiplier": 1.92536
      },
      {
       "step": "S2",
-      "label": "specialised HBM core, same bandwidth",
-      "value": 1839.07,
+      "label": "specialised HBM core, same package",
+      "value": 880.7,
       "unit": "tok/s",
       "evidence": "modelled (RTL-calibrated handoff)",
-      "basis": "bandwidth roof; 220 handoffs at 4.8 ns (RTL)",
-      "matching": "<= B200 logic area, = B200 HBM bandwidth, 3.5-bit",
-      "multiplier": 1.0
+      "basis": "the iso-area comparator: bandwidth roof; 220 handoffs at 4.8 ns (RTL) are off the roof",
+      "matching": "two reticles, 8 stacks (= B200), 8-bit weights",
+      "multiplier": 0.999984
      },
      {
       "step": "S3",
       "label": "same core, weights in ROM",
-      "value": 8910.2,
+      "value": 10967.9,
       "unit": "tok/s",
       "evidence": "calibrated model",
-      "basis": "RTL-calibrated sequencer model; KV-bound on 6 stacks",
-      "matching": "one reticle + 6 stacks for KV (less than S2)",
-      "multiplier": 4.84495
+      "basis": "RTL-calibrated sequencer model with the UCIe exchanges; compute-bound",
+      "matching": "two reticles + 8 stacks for KV (= S2)",
+      "multiplier": 12.4536
      }
     ],
     "energy": [
@@ -558,33 +558,33 @@
      },
      {
       "step": "S1f",
-      "label": "idealised, 3.5-bit",
-      "value": 374.646,
+      "label": "idealised, 8-bit",
+      "value": 782.32,
       "unit": "mJ/token",
       "evidence": "modelled",
       "basis": "draw held at 689 W",
       "matching": "same GPU",
-      "multiplier": 4.02046
+      "multiplier": 1.92536
      },
      {
       "step": "S2",
-      "label": "HDC-HBM, 3.5-bit (iso-area, 6 stacks)",
-      "value": 560.372,
+      "label": "HDC-HBM, 8-bit (iso-area, 8 stacks)",
+      "value": 1284.19,
       "unit": "mJ/token",
       "evidence": "modelled (power scenario B)",
       "basis": "package energy, scenario B (derived production lane); HBM path 13.64 pJ/bit (10.19 on the die, 3.45 in the stacks), so S1f->S2 mixes a measured GPU draw with a conservative model",
-      "matching": "one reticle, 6 stacks",
-      "multiplier": 0.668566
+      "matching": "two reticles, 8 stacks",
+      "multiplier": 0.609195
      },
      {
       "step": "S3",
-      "label": "ROM reticle",
-      "value": 88.116,
+      "label": "ROM package",
+      "value": 96.494,
       "unit": "mJ/token",
       "evidence": "modelled (power scenario B)",
       "basis": "same power model as S2: the matched-format ratio",
-      "matching": "one reticle, 6 stacks",
-      "multiplier": 6.35948
+      "matching": "two reticles, 8 stacks",
+      "multiplier": 13.3085
      }
     ],
     "aggregate": [
@@ -610,23 +610,23 @@
      },
      {
       "step": "S2",
-      "label": "HDC-HBM, 3.5-bit, batch 128",
-      "value": 8573.5,
+      "label": "HDC-HBM, 8-bit, batch 128",
+      "value": 10857.6,
       "unit": "tok/s",
       "evidence": "modelled",
       "basis": "qwen3_budget power_production",
-      "matching": "6 stacks (0.75x the B200's KV bandwidth)",
-      "multiplier": 0.719197
+      "matching": "8 stacks",
+      "multiplier": 0.910802
      },
      {
       "step": "S3",
-      "label": "ROM reticle, batch 128",
-      "value": 8940.7,
+      "label": "ROM package, batch 128",
+      "value": 11920.9,
       "unit": "tok/s",
       "evidence": "modelled",
-      "basis": "KV-bound: 5.4 TB/s / 604 MB",
-      "matching": "6 stacks",
-      "multiplier": 1.04283
+      "basis": "KV-bound: 7.2 TB/s / 604 MB",
+      "matching": "8 stacks",
+      "multiplier": 1.09793
      }
     ]
    },
@@ -646,24 +646,24 @@
      "evidence": "bound"
     },
     {
-     "machine": "HDC-HBM, 3.5-bit",
-     "ar": 1379.3,
-     "spec": 3762.4,
-     "tau": 3.2956,
-     "evidence": "modelled"
-    },
-    {
-     "machine": "HDC-HBM, BF16",
-     "ar": 343.1,
-     "spec": 1030.0,
+     "machine": "HDC-HBM, 8-bit",
+     "ar": 880.7,
+     "spec": 2650.6,
      "tau": 3.6559,
      "evidence": "modelled"
     },
     {
-     "machine": "ROM reticle (m = 3 lane copies)",
-     "ar": 8910.2,
-     "spec": 13052.1,
-     "tau": 2.2654,
+     "machine": "HDC-HBM, BF16",
+     "ar": 457.4,
+     "spec": 1373.4,
+     "tau": 3.6559,
+     "evidence": "modelled"
+    },
+    {
+     "machine": "ROM package (m = 5)",
+     "ar": 10967.9,
+     "spec": 18719.9,
+     "tau": 2.8591,
      "evidence": "modelled"
     }
    ]
@@ -739,11 +739,11 @@
      "key": "gpu_mtp_bound",
      "label": "B200 set + MTP, bound",
      "x": 360.0,
-     "y": 9397.06,
+     "y": 6859.86,
      "evidence": "bound",
      "family": "gpu",
      "spec": true,
-     "basis": "tau x AR (tau 5.0): free draft and verify; an upper bound"
+     "basis": "tau x AR (tau 3.65): free draft and verify; an upper bound"
     },
     {
      "key": "v4pro_b300",
@@ -769,17 +769,17 @@
      "key": "hbm_mtp",
      "label": "HBM comparator + MTP (G=96)",
      "x": 345.6,
-     "y": 11977.9,
+     "y": 8743.84,
      "evidence": "modelled",
      "family": "hbm",
      "spec": true,
-     "basis": "DSpark gamma 5, tau 5.0, m = 6"
+     "basis": "DSpark gamma 5, tau 3.65, m = 6"
     },
     {
      "key": "rom_ar",
      "label": "ROM array",
-     "x": 34.9019,
-     "y": 7008.86,
+     "x": 59.6412,
+     "y": 7049.08,
      "evidence": "modelled, C7 bench tails",
      "family": "rom",
      "spec": false,
@@ -788,12 +788,12 @@
     {
      "key": "rom_mtp",
      "label": "ROM array + MTP",
-     "x": 34.9019,
-     "y": 21669.9,
+     "x": 59.6412,
+     "y": 15890.5,
      "evidence": "modelled, C7 bench tails",
      "family": "rom",
      "spec": true,
-     "basis": "DSpark gamma 5, tau 5.0"
+     "basis": "DSpark gamma 5, tau 3.65"
     }
    ],
    "roofs": [
@@ -834,7 +834,7 @@
      "key": "rom_chain",
      "family": "rom",
      "label": "ROM compiled chain",
-     "y": 13094.1,
+     "y": 13078.7,
      "evidence": "modelled",
      "basis": "compute chain + control of the design point's headline token"
     },
@@ -842,9 +842,9 @@
      "key": "ours_sync",
      "family": "rom",
      "label": "ROM array sync",
-     "y": 32183.3,
+     "y": 30832.8,
      "evidence": "model, normative basis",
-     "basis": "15.3 us collectives + 4.8 us measured exposed collective bytes + 11.00 us stage hops (209 ns cable tier)"
+     "basis": "15.3 us collectives + 4.8 us measured exposed collective bytes + 12.34 us stage hops (209 ns cable tier)"
     }
    ],
    "curves": [
@@ -984,35 +984,35 @@
      "pts": [
       [
        14.4,
-       1629.43
+       1189.49
       ],
       [
        28.8,
-       2948.45
+       2152.37
       ],
       [
        57.6,
-       5165.6
+       3770.89
       ],
       [
        86.4,
-       6618.62
+       4831.59
       ],
       [
        115.2,
-       7841.7
+       5724.44
       ],
       [
        172.8,
-       9566.29
+       6983.39
       ],
       [
        230.4,
-       10734.3
+       7836.04
       ],
       [
        345.6,
-       11977.9
+       8743.84
       ]
      ]
     }
@@ -1069,12 +1069,12 @@
      {
       "step": "S3",
       "label": "equal-area specialised ROM array",
-      "value": 7008.86,
+      "value": 7049.08,
       "unit": "tok/s",
       "evidence": "modelled, C7 bench tails",
       "basis": "ROM array design point, collective tails measured in the RTL stage bench with the adopted levers (gate C7 partly recovered, not met; full overlap would give the conditional point); open gate: 1.087 GHz clock",
       "matching": "equal logic area (188 x 328.9 mm2); die count, topology, HBM allocation and weight placement all differ",
-      "multiplier": 1.95758
+      "multiplier": 1.96881
      }
     ],
     "energy": [
@@ -1111,12 +1111,12 @@
      {
       "step": "S3",
       "label": "ROM array",
-      "value": 2.41184,
+      "value": 2.39831,
       "unit": "J/token",
       "evidence": "modelled, C7 bench tails",
       "basis": "the same power model and boundary (power_scenarios deepseek_v41_design_point); KV from HBM",
       "matching": "",
-      "multiplier": 2.77875
+      "multiplier": 2.79442
      }
     ],
     "aggregate": [
@@ -1153,12 +1153,12 @@
      {
       "step": "S3",
       "label": "ROM array, fill batch (28 users)",
-      "value": 140250.0,
+      "value": 197374.0,
       "unit": "tok/s",
       "evidence": "modelled, C7 bench tails",
-      "basis": "per user 5,009 tok/s, bound by its busiest pipeline stage; at the 866 users held 161,307",
+      "basis": "per user 7,049 tok/s, bound by its busiest pipeline stage; at the 866 users held 272,818",
       "matching": "",
-      "multiplier": 4.12683
+      "multiplier": 5.80769
      }
     ]
    },
@@ -1173,22 +1173,22 @@
     {
      "machine": "50 x B200, best kernel (bound: tau x AR)",
      "ar": 1879.41,
-     "spec": 9397.06,
-     "tau": 5.0,
+     "spec": 6859.86,
+     "tau": 3.65,
      "evidence": "bound"
     },
     {
      "machine": "HBM comparator",
      "ar": 3580.38,
-     "spec": 11977.9,
-     "tau": 5.0,
+     "spec": 8743.84,
+     "tau": 3.65,
      "evidence": "modelled"
     },
     {
      "machine": "ROM array",
-     "ar": 7008.86,
-     "spec": 21669.9,
-     "tau": 5.0,
+     "ar": 7049.08,
+     "spec": 15890.5,
+     "tau": 3.65,
      "evidence": "modelled, C7 bench tails"
     }
    ],
@@ -1198,9 +1198,9 @@
      "gpu_s1": 1880.83,
      "gpu_sol": 3032.27,
      "hbm_ar": 3580.38,
-     "hbm_mtp": 11977.9,
+     "hbm_mtp": 8743.84,
      "rom_ar": 7285.67,
-     "rom_mtp": 22532.3,
+     "rom_mtp": 16448.5,
      "bytes_per_token": {
       "weights": 13033800000.0,
       "kv": 52379136,
@@ -1211,8 +1211,8 @@
   }
  },
  "captions": {
-  "qwen3": "Figure 8-R1. Qwen3-8B decode roofline for one user (8K context, FP8 KV, batch 1). Diagonals are bandwidth roofs, tokens/s = bandwidth / bytes per token, for BF16 and for the ROM's 3.5-bit weights (each with FP8 KV); the dashed orange diagonal is the KV-only roof a ROM design lives under, because its weights never cross the memory interface. Dotted horizontals are ceilings: one GPU's on-chip synchronisation (220 all-SM boundaries at the measured 1.0 \u00b5s), the ROM weight sweep, and our compiled handoffs (4.8 ns, RTL; off scale). The grey curve is B200 tensor parallelism on an NVL72 slice (TP \u2264 8, the KV-head limit) with 73 all-reduces at the best measured GB200 kernel, the band spanning the speed-of-light floor to NCCL 2.27. Arrows are the attribution ladder: software (measured B200 to its idealised roof), weight format (to the ROM's 3.5-bit), specialisation (\u00d71.00: on one die both machines are on the same roof) and ROM. Sources: DFlash Table 3 [DFlash]; local RTX PRO 6000 measurement; H200 calibrated on NIM; results/arch/qwen3_budget.json; results/arch/sync_cost_table.json [Shen et al.; NCCL 2.27]; tools/decode_roofline_figure.py.",
+  "qwen3": "Figure 8-R1. Qwen3-8B decode roofline for one user (8K context, FP8 KV, batch 1). Diagonals are bandwidth roofs, tokens/s = bandwidth / bytes per token, for BF16 and for the ROM's 8-bit weights (each with FP8 KV); the dashed orange diagonal is the KV-only roof a ROM design lives under, because its weights never cross the memory interface. Dotted horizontals are ceilings: one GPU's on-chip synchronisation (220 all-SM boundaries at the measured 1.0 \u00b5s), the ROM weight sweep, and our compiled handoffs (4.8 ns, RTL; off scale). The grey curve is B200 tensor parallelism on an NVL72 slice (TP \u2264 8, the KV-head limit) with 73 all-reduces at the best measured GB200 kernel, the band spanning the speed-of-light floor to NCCL 2.27. Arrows are the attribution ladder: software (measured B200 to its idealised roof), weight format (to the ROM's 8-bit), specialisation (\u00d71.00: on the same two-reticle, eight-stack package both machines are on the same roof) and ROM. The B200, the HBM comparator and the ROM package have the same silicon and stacks. Sources: DFlash Table 3 [DFlash]; local RTX PRO 6000 measurement; H200 calibrated on NIM; results/arch/qwen3_budget.json; results/arch/sync_cost_table.json [Shen et al.; NCCL 2.27]; tools/decode_roofline_figure.py.",
   "v41": "Figure 8-R2. DeepSeek-V4.1-Flash decode roofline for one user (1M context, batch 1). The diagonal is the bandwidth roof for the checkpoint's own weight dtypes plus KV and index reads (13.2 GB per token); the dashed orange diagonal is the KV-only roof of the ROM array. GPU points are modelled on measured primitives: the weight/KV stream over N B200s plus the 209 collectives of the array's graph at the best measured GB200 all-reduce (2.37 \u00b5s), the band spanning the speed-of-light floor (1.40 \u00b5s) to NCCL 2.27 (~5 \u00b5s); no on-chip boundaries or compute are charged, so the GPU curve is optimistic for this graph. A different GPU mapping could change the 209-collective graph. It flattens at the synchronisation ceiling: 72 GPUs add 2% over the iso-area set. The blue curve is the specialised HBM comparator against its tensor-group span G, which peaks at G = 96 on the validated switched fabric. The ROM array leaves the weight roof and is bound by its compiled chain. The only published V4-class batch-1 GPU figure is V4-Pro (49 B active) with DSpark on 8 B300s [LMSYS]; no V4.1-Flash figure exists. ROM rates carry the collective tails measured in the RTL stage bench with the adopted levers (rack gate C7 partly recovered, not met) and are conditional on the 1.087 GHz clock. Sources: results/arch/v41_lanes.json, v41_hbm_switched.json, v41_latency_ladder.json, arch_budget_v41.json, sync_cost_table.json; tools/decode_roofline_figure.py."
  },
- "findings": "Why GPUs plateau. A GPU's per-user rate is bounded twice: by the bandwidth roof of the devices serving the user (tokens/s <= bandwidth / bytes per token) and by a synchronisation ceiling that more devices cannot raise. On one B200, the Qwen3-8B modeled 8K roof is 457 tok/s at BF16; the cited 230-tok/s application point has no verified 8K context match. Spreading it over an NVL72 slice (TP8, the largest split its 8 KV heads allow) raises the roof eightfold but adds 73 dependent all-reduces, so the idealised rate stops at 2,241. DeepSeek-V4.1-Flash never reaches its roof on GPUs under the modeled collective graph: its 209 collectives per token at the best measured GB200 kernel (2.37 us) cap it near 2,019 tok/s however many GPUs are added (1,879 on 50 B200s, 1,920 on all 72 of an NVL72; 3,029 even at the speed-of-light collective floor). The specialised HBM accelerator raises the synchronisation ceiling, not the roof: with compiled handoffs (4.8 ns on chip against 1.0 us) and in-switch reduction it reaches 3,580 tok/s on V4.1 at roughly matched HBM bandwidth (346 against 360 TB/s), 1.91x the best-kernel GPU; on a single die at the same modeled bandwidth roof, this model assigns no added rate to the specialised HBM core (1.00x on Qwen3-8B). ROM removes the weight term: the design leaves the weights-plus-KV roof for the KV-only roof, 8,941 tok/s on six stacks for Qwen3-8B at 8K, where the ROM reticle sits (8,910, 4.8x the same core streaming 3.5-bit weights at the B200's bandwidth); for V4.1 it is bound by its compiled chain and reaches 7,009 tok/s, 2.0x the equal-area HBM array (21,670 with MTP); this V4.1 step also changes topology and HBM allocation. End to end, S0 -> S3 is 39x for Qwen3-8B (illustrative because S0 context is unverified; 4.0x is the modeled format step) and a modeled 7.6x for V4.1 at 1M; the steps are ordered by definition and S2-S3 are conditional on the design's open gates. The same roofline shows where ROM does not help: at 8K and a full batch, aggregate throughput is KV-bound on every machine, and the B200's eight stacks out-stream the ROM reticle's six (11,921 against 8,941 tok/s)."
+ "findings": "Why GPUs plateau. A GPU's per-user rate is bounded twice: by the bandwidth roof of the devices serving the user (tokens/s <= bandwidth / bytes per token) and by a synchronisation ceiling that more devices cannot raise. On one B200, the Qwen3-8B modeled 8K roof is 457 tok/s at BF16; the cited 230-tok/s application point has no verified 8K context match. Spreading it over an NVL72 slice (TP8, the largest split its 8 KV heads allow) raises the roof eightfold but adds 73 dependent all-reduces, so the idealised rate stops at 2,241. DeepSeek-V4.1-Flash never reaches its roof on GPUs under the modeled collective graph: its 209 collectives per token at the best measured GB200 kernel (2.37 us) cap it near 2,019 tok/s however many GPUs are added (1,879 on 50 B200s, 1,920 on all 72 of an NVL72; 3,029 even at the speed-of-light collective floor). The specialised HBM accelerator raises the synchronisation ceiling, not the roof: with compiled handoffs (4.8 ns on chip against 1.0 us) and in-switch reduction it reaches 3,580 tok/s on V4.1 at roughly matched HBM bandwidth (346 against 360 TB/s), 1.91x the best-kernel GPU; on Qwen3-8B, whose specialised HBM core is the B200's own silicon and stacks (two reticles, eight stacks), this model assigns it no added rate on the same bandwidth roof (1.00x). ROM removes the weight term: the design leaves the weights-plus-KV roof for the KV-only roof, 11,921 tok/s on eight stacks for Qwen3-8B at 8K; the two-reticle ROM package runs under it at 10,968 tok/s, bound by its compiled chain, 12.5x the same package streaming its 8-bit weights; for V4.1 it is bound by its compiled chain and reaches 7,049 tok/s, 2.0x the equal-area HBM array (15,890 with MTP); this V4.1 step also changes topology and HBM allocation. End to end, S0 -> S3 is 48x for Qwen3-8B (illustrative because S0 context is unverified; 1.9x is the modeled format step) and a modeled 7.6x for V4.1 at 1M; the steps are ordered by definition and S2-S3 are conditional on the design's open gates. The same roofline shows where ROM does not help: at 8K and a full batch, aggregate throughput is KV-bound on every machine, and the B200 and the ROM package stream the KV from the same eight stacks (11,921 and 11,921 tok/s)."
 }

@@ -109,8 +109,8 @@ def test_scenario_a_is_hotter_than_b_and_the_die_power_is_self_consistent(rec):
         assert a["energy_per_token_mj"] > b["energy_per_token_mj"]
         assert a["capped_rate"] <= b["capped_rate"]
         static = sum(a["die_static_w"].values())
-        assert a["die_w_at_design_rate"] == pytest.approx(static + a["die_dynamic_mj_per_token"] / 1e3 * a["design_rate_tokens_s"],
-                                                          rel=1e-4)
+        assert a["die_w_at_design_rate"] == pytest.approx(static + a["die_dynamic_mj_per_token"] / 1e3 *
+                                                          a["design_rate_tokens_s"] / a["dies_per_package"], rel=1e-4)
     for ctx in ("1048576", "200000"):
         for k, a in A["deepseek_v41_rom_array"]["per_context"][ctx].items():
             b = B["deepseek_v41_rom_array"]["per_context"][ctx][k]
@@ -154,13 +154,13 @@ def test_cooling_limits_come_from_shipping_packages_less_their_stacks(cfg):
 def test_every_point_is_capped_per_class_and_liquid_never_caps_lower(rec):
     for s in P.SCENARIOS:
         body = rec["scenarios"][s]
-        pts = list(body["qwen3_8b_rom_8k"].values()) + [p for c in body["deepseek_v41_rom_array"]["per_context"].values()
-                                                        for p in c.values()]
-        for p in pts:
+        pts = [(p, "air") for p in body["qwen3_8b_rom_8k"].values()] + [
+            (p, P.V41_COOLING) for c in body["deepseek_v41_rom_array"]["per_context"].values() for p in c.values()]
+        for p, base in pts:
             cc = p["cooling_classes"]
             assert set(cc) == set(P.COOLING_CLASSES)
             assert cc["liquid"]["capped_rate"] >= cc["air"]["capped_rate"]
-            assert p["capped_rate"] == cc["air"]["capped_rate"]
+            assert p["capped_rate"] == cc[p.get("cooling_class", base)]["capped_rate"]
             for c in cc.values():
                 assert c["die_w_at_cap"] <= c["die_limit_w"] * (1 + 1e-6)
                 assert c["package_w_at_cap"] <= c["package_limit_w"] * (1 + 1e-6)
@@ -174,7 +174,7 @@ def test_design_point_rows_price_the_measured_headline(rec):
     ln = json.loads((ROOT / "results/arch/v41_lanes.json").read_text())
     for s in P.SCENARIOS:
         dp = rec["scenarios"][s]["deepseek_v41_design_point"]
-        assert dp["mtp_tau"] == 5.0
+        assert dp["mtp_tau"] == 3.65
         for c in ("1048576", "200000"):
             p = dp["per_context"][c]
             assert p["ar_batch1"]["design_rate_tokens_s"] == pytest.approx(ln["design_point"][c]["ar"], rel=1e-5)

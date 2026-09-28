@@ -28,6 +28,11 @@ Design-point re-derivation (2026-09-28):
     (tools/v41_collective_exposure.mtp_hop_term, lever 5; record mtp_hop_split); the one-position hop keeps split20.
 *   A saturated point holds at most the users the HBM holds after the capacity reserve (arch_budget_v41.point_batch).
 *   The adopted split (R-L9) is kept unless another gains more than SPLIT_TOLERANCE.
+*   Stage rebalancing (tools/v41_stage_rebalance.py, record results/arch/v41_stage_rebalance.json): layer 20's
+    index-key cache is split by position range over two helper groups upstream of its stage (S13, S12), each engaged
+    only for a user whose context has reached its engage position; split_mutation runs after the on-die wire and
+    before the lane pricing, so its ring hops take the lanes and the measured stage-hop tail and its switched legs the
+    same residual (rebalance_mutation).
 
 Rack model gaps (closed here; results/arch/v41_rack.json gates C8 / C10):
 *   The draft is conditioned on the inputs of target layers 37-39 at every verified position (DSpark
@@ -174,12 +179,22 @@ def conditioning_s(stage):
     return pay / (2 * stage * LANE_NET_BPS) + pay / UCIE_BPS
 
 
+def rebalance_mutation(hop_term=None):
+    """The adopted stage rebalancing (tools/v41_stage_rebalance.ADOPTED; none: an empty plan).  hop_term: the measured
+    stage-hop exposure term its switched legs carry; default this record's adopted-lever term."""
+    import v41_stage_rebalance as SR
+    if hop_term is None and OUT.exists():
+        hop_term = json.loads(OUT.read_text()).get("collective_exposure", {}).get("levers", {}).get("terms", {}).get("hop")
+    return SR.split_mutation(SR.active_plan(), hop_term)
+
+
 def design_point(split=None):
     """The adopted design point: the ladder's top with the chosen lane split (this tool's record, best_split if
     adopted else the rack's).  Returns sp, muts (without the lane pricing), hz, the split, its lane mutation and the
     draft-conditioning seconds of that split."""
     sp, muts, hz = _ladder_top()
     muts = list(muts) + [wire_mutation(sp=sp)]           # registered on-die traversals (ASAP7 routed-wire model)
+    muts.append(rebalance_mutation())                    # the adopted scan split (after the wire, before the lanes)
     if split is None:
         rec = json.loads(OUT.read_text())
         split = rec["best_split"] if rec["best_adopted"] else rec["rack_split_result"]
@@ -232,8 +247,9 @@ def build():
     E = A._env()
     sp, muts, hz = _ladder_top()
     WIRE = wire_mutation(sp=sp)
+    REB = rebalance_mutation()           # the adopted stage rebalancing; its switched legs' term is set below
     muts_pre_wire = list(muts)
-    muts = list(muts) + [WIRE]           # the adopted point carries its registered on-die traversals
+    muts = list(muts) + [WIRE, REB]      # the adopted point carries its registered on-die traversals
     rec = dict(schema=SCHEMA, tool="tools/arch_lanes_v41.py", lanes_per_package=LANES, lane_net_Bps=LANE_NET_BPS,
                rack_split=RACK_SPLIT, basis=__doc__.split("Rack study conflicts")[1].strip())
     # the ladder's top without per-link bytes (as priced before), for reference
@@ -297,6 +313,7 @@ def build():
     lev_camp = json.loads(VX.LEVERS_CAMPAIGN.read_text())
     dump_mtp = VX.dump_on_path(U, A, sp, list(muts) + [ml], hz, positions=U.GAMMA + 1)
     lev = VX.recommended_exposure(dump, camp, lev_camp, dump_mtp=dump_mtp)
+    REB.hop_term = lev["terms"]["hop"]                   # the switched legs' surrogate tail: this point's hop term
     lx = [CX.mutation(lev["terms"])] + ([CX.consumer_mutation(tuple(lev["consumers"]))] if lev["consumers"] else [])
     exp = {str(c): LX.evaluate(sp, c, muts + [ml] + lx, hz=hz, draft_extra_s=cond) for c in CONTEXTS}
     rec["design_point"] = {c: dict(ar=v["ar"], mtp=v["mtp"], T_us=v["T_us"], verify_us=v["verify_us"],
@@ -308,10 +325,10 @@ def build():
     lx_pre = [CX.mutation({k: v for k, v in lev["terms"].items() if k != "hop_mtp"})] + lx[1:]
     wsens = {}
     for wm_ in WIRE_SENSITIVITIES:
-        ms_ = muts_pre_wire + [wire_mutation(wm_, sp=sp), ml] + lx
+        ms_ = muts_pre_wire + [wire_mutation(wm_, sp=sp), REB, ml] + lx
         wsens[wm_] = {str(c): {k: v for k, v in LX.evaluate(sp, c, ms_, hz=hz, draft_extra_s=cond).items()
                                if k in ("ar", "mtp", "T_us", "verify_us")} for c in CONTEXTS}
-    pre = {str(c): LX.evaluate(sp, c, muts_pre_wire + [ml] + lx, hz=hz, draft_extra_s=cond) for c in CONTEXTS}
+    pre = {str(c): LX.evaluate(sp, c, muts_pre_wire + [REB, ml] + lx, hz=hz, draft_extra_s=cond) for c in CONTEXTS}
     geo = WIRE.geometry
     import v41_die_assembly as DA
     rec["on_die_wire"] = dict(

@@ -8,7 +8,8 @@ ingest the KV.  Designs:
   * v41_rom -- DeepSeek-V4.1-Flash ROM array: 188 dies, 28 stages of a 4-die tensor group, 4 HBM3E stacks per
     layer die, replicate-on-write of the owner layers' compressed rows (results/arch/v41_rack.json), 1M / 200K;
   * v41_hbm -- its HBM comparator (results/arch/v41_hbm_switched.json headline);
-  * qwen_rom / qwen_hbm -- Qwen3-8B single reticle at 8K, FP8 KV in 6 HBM3E stacks, and the same core on HBM.
+  * qwen_rom / qwen_hbm -- the Qwen3-8B two-reticle package at 8K (8-bit weights, every layer split across both
+    dies), FP8 KV in its 8 HBM3E stacks, and the same package with its weights on HBM.
 
 The model, in order:
   1. BYTES: per user sent over the wire (owner rows 288 + 68 B, window rings 528 B) and written into HBM after
@@ -327,8 +328,9 @@ def qwen_design(q: Qwen, dr, eng, design, dec_rate, context=8192, gpu="h200"):
     cap_B = q.stacks * 22.5e9
     return dict(design=design, context=context, gpu=f"1 x {gpu.upper()}", prefill_flops=fl, gpu_prefill_s=t_pf,
                 kv_bytes_fp8=B, kv_bytes_bf16_on_wire=2 * B,
-                link=dict(path="PCIe Gen5 x16 endpoint on the reticle behind the host PCIe switch shared with one "
-                               "ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1)", goodput_Bps=link),
+                link=dict(path="PCIe Gen5 x16 endpoint on die 0 of the package behind the host PCIe switch shared "
+                               "with one ConnectX-7 400G (ARCH_SPEC_QWEN3 R-P1); die 1's KV heads cross the "
+                               "package's UCIe link (4.2 TB/s, ~80x the endpoint)", goodput_Bps=link),
                 stream=dict(pace_Bps_needed=2 * B / t_pf, exposed_last_layer_s=2 * t_tail),
                 burst_s_bf16=t_burst, burst_s_fp8=t_burst_fp8,
                 hbm_share_at_link_rate=link / q.hbm_Bps,
@@ -338,7 +340,7 @@ def qwen_design(q: Qwen, dr, eng, design, dec_rate, context=8192, gpu="h200"):
                 wire_format="BF16 NHD pages (vLLM native); the engine rounds to FP8. FP8 on the wire halves the "
                             "bytes but must be cast from FP32 with RNE for bit-identity (ARCH_SPEC_QWEN3 R-P5)",
                 capacity=dict(users_no_efficiency=int(cap_B // B), users_at_0p9=int(0.9 * cap_B // B),
-                              note="atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 users held apply the same 0.9"))
+                              note="0.9 x stacks x 22.5 GB / 604 MB of FP8 KV a user at 8K; the V4.1 users held apply the same 0.9"))
 
 
 def sustained(m: V41, q: Qwen, rates, dr, v41_agg, qwen_agg):
@@ -375,18 +377,20 @@ def build():
     dec = dict(v41_rom={c: lanes["design_point"][c]["ar"] for c in ("1048576", "200000")},
                v41_hbm={c: hs[c]["ar"]["hbm"] for c in ("1048576", "200000")})
     qb = q.budget["batch"]["per_context"]["8192"]
-    q_rom_b1 = 8910.0      # atlas headline (calibrated model); the budget's own batch-1 row is below
-    q_hbm_b1 = q.budget["hbm_comparator"]["8192"]["rom_format_3.5b"]["tokens_s"]
-    qwen_agg = next(r["total_tokens_s"] for r in qb["rom"] if r["batch"] == 2 and r["lane_multiplier"] == 1)
+    pp = q.budget["power_production"]["scenarios"]["B_proposed_production"]
+    q_rom_b1 = pp["rom"]["ar_batch1"]["tokens_s"]            # the package's autoregressive design rate
+    q_hbm_b1 = q.budget["hbm_comparator"]["8192"]["rom_format_int8"]["tokens_s"]
+    q_m = q.budget["area"]["lane_multiplier_m"]        # the package's lane multiplier: batch 2 is KV-bound at it
+    qwen_agg = next(r["total_tokens_s"] for r in qb["rom"] if r["batch"] == 2 and r["lane_multiplier"] == q_m)
     rec = dict(schema=SCHEMA, tool="tools/arch_prefill.py", policy="GPU prefill for every prompt (cold and agent "
                "turns); the decode chips ingest the KV (user decision)", citations=CITE, gpu_calibration=rates,
                dense_gpu_calibration=dr, ingest_engine=eng,
                decode_rates=dict(v41_rom=dec["v41_rom"], v41_hbm=dec["v41_hbm"], qwen_rom_b1=q_rom_b1,
-                                 qwen_hbm_b1_3p5bit=q_hbm_b1,
+                                 qwen_hbm_b1_int8=q_hbm_b1,
                                  sources=["results/arch/v41_lanes.json design_point",
                                           "results/arch/v41_hbm_switched.json ratios_batch1",
-                                          "atlas headline 8,910 (Qwen ROM)",
-                                          "results/arch/qwen3_budget.json hbm_comparator 8192 rom_format_3.5b"]),
+                                          "results/arch/qwen3_budget.json power_production B rom.ar_batch1 (Qwen ROM)",
+                                          "results/arch/qwen3_budget.json hbm_comparator 8192 rom_format_int8"]),
                assumptions=dict(ep_layer_floor_s=EP_LAYER_FLOOR_S, indexer_eff_sensitivity=INDEXER_EFF_SENS,
                                 fence_s=FENCE_S, gpu_chunk=GPU_CHUNK,
                                 window_rings="shipped (40 x 128 x 528 B = 2.70 MB), not re-derived by replay"))

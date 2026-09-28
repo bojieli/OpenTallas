@@ -3688,13 +3688,13 @@
  "mtp": {
   "tau_points": [
    {
-    "tau": 5.0,
-    "gamma": 7,
-    "label": "LMSYS SGLang ~5",
-    "grade": "published",
-    "source": "LMSYS Org, https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ (2026-07-06): 'accept length ~5 at batch size 1 on DeepSeek-V4-Pro, TP=8, B300'",
-    "model": "DeepSeek-V4-Pro",
-    "workload": "not stated by the source"
+    "tau": 3.65,
+    "gamma": 5,
+    "label": "V4.1-Flash on-policy greedy (measured)",
+    "grade": "measured",
+    "model": "DeepSeek-V4.1-Flash",
+    "workload": "36 prompts x 9 workloads (acceptance_tau prompt set)",
+    "source": "results/speculative/v41_flash_dspark_onpolicy_greedy.json headline.tau: DeepSeek-V4.1-Flash DSpark gamma 5, greedy, on-policy exact replay, 36 prompts x 9 workloads, 95% CI 3.50-3.84"
    },
    {
     "tau": 3.266,
@@ -3715,11 +3715,20 @@
     "workload": "880 prompts, temperature 1.0, up to 2,048 output tokens (vLLM blog); mix not named"
    },
    {
+    "tau": 3.5,
+    "gamma": 5,
+    "label": "V4.1-Flash published band, low (3.5)",
+    "grade": "published",
+    "model": "DeepSeek-V4.1-Flash",
+    "source": "results/speculative/acceptance_tau.json: InferenceX 3.51 / 4.07, vLLM PR #57432 3.82-3.89"
+   },
+   {
     "tau": 4.1,
-    "gamma": 7,
-    "label": "4.1 (previous default, sensitivity)",
-    "grade": "decision",
-    "source": "user decision 2026-09-26, superseded 2026-09-27 by the LMSYS ~5 headline"
+    "gamma": 5,
+    "label": "V4.1-Flash published band, high (4.1)",
+    "grade": "published",
+    "model": "DeepSeek-V4.1-Flash",
+    "source": "results/speculative/acceptance_tau.json: InferenceX 3.51 / 4.07, vLLM PR #57432 3.82-3.89"
    }
   ],
   "rom": {
@@ -3728,16 +3737,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 400.7977978065761,
       "draft_us": 23.545347302487905,
       "cycle_us": 424.34314510906404,
-      "tokens_s_per_user": 11782.916862519147,
+      "tokens_s_per_user": 8601.529309638978,
       "ar_tokens_s_per_user": 5531.647084402795,
-      "speedup": 2.1300919387541235,
+      "speedup": 1.5549671152905105,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -3773,9 +3782,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 400.7977978065761,
+      "draft_us": 23.545347302487905,
+      "cycle_us": 424.34314510906404,
+      "tokens_s_per_user": 8248.041803763403,
+      "ar_tokens_s_per_user": 5531.647084402795,
+      "speedup": 1.4910643571278865,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 400.7977978065761,
       "draft_us": 23.545347302487905,
@@ -3788,16 +3812,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 490.62374020984504,
       "draft_us": 29.68282074068936,
       "cycle_us": 520.3065609505344,
-      "tokens_s_per_user": 9609.719298687358,
+      "tokens_s_per_user": 7015.09508804177,
       "ar_tokens_s_per_user": 5531.647084402795,
-      "speedup": 1.7372256675201174,
+      "speedup": 1.2681747372896854,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -3833,9 +3857,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 490.62374020984504,
+      "draft_us": 29.68282074068936,
+      "cycle_us": 520.3065609505344,
+      "tokens_s_per_user": 6726.80350908115,
+      "ar_tokens_s_per_user": 5531.647084402795,
+      "speedup": 1.216057967264082,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 490.62374020984504,
       "draft_us": 29.68282074068936,
@@ -3850,16 +3889,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 244.84432039229915,
       "draft_us": 15.65844252916603,
       "cycle_us": 260.50276292146515,
-      "tokens_s_per_user": 19193.654393244844,
+      "tokens_s_per_user": 14011.367707068735,
       "ar_tokens_s_per_user": 5531.647084402795,
-      "speedup": 3.469790118636431,
+      "speedup": 2.5329467866045943,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -3895,9 +3934,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 244.84432039229915,
+      "draft_us": 15.65844252916603,
+      "cycle_us": 260.50276292146515,
+      "tokens_s_per_user": 13435.55807527139,
+      "ar_tokens_s_per_user": 5531.647084402795,
+      "speedup": 2.4288530830455017,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 244.84432039229915,
       "draft_us": 15.65844252916603,
@@ -3910,16 +3964,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 290.2072975616014,
       "draft_us": 18.932254675731482,
       "cycle_us": 309.1395522373329,
-      "tokens_s_per_user": 16173.925218606111,
+      "tokens_s_per_user": 11806.96540958246,
       "ar_tokens_s_per_user": 5531.647084402795,
-      "speedup": 2.923889570650777,
+      "speedup": 2.134439386575067,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -3955,9 +4009,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 290.2072975616014,
+      "draft_us": 18.932254675731482,
+      "cycle_us": 309.1395522373329,
+      "tokens_s_per_user": 11321.747653024278,
+      "ar_tokens_s_per_user": 5531.647084402795,
+      "speedup": 2.0467226994555436,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 290.2072975616014,
       "draft_us": 18.932254675731482,
@@ -3974,16 +4043,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 424.8940222187564,
       "draft_us": 23.545347302487905,
       "cycle_us": 448.4393695212443,
-      "tokens_s_per_user": 11149.779300907547,
+      "tokens_s_per_user": 8139.338889662508,
       "ar_tokens_s_per_user": 5417.685767461598,
-      "speedup": 2.058033592105447,
+      "speedup": 1.5023645222369761,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -4019,9 +4088,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 424.8940222187564,
+      "draft_us": 23.545347302487905,
+      "cycle_us": 448.4393695212443,
+      "tokens_s_per_user": 7804.845510635282,
+      "ar_tokens_s_per_user": 5417.685767461598,
+      "speedup": 1.4406235144738129,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 424.8940222187564,
       "draft_us": 23.545347302487905,
@@ -4034,16 +4118,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 522.6727280806942,
       "draft_us": 29.68282074068936,
       "cycle_us": 552.3555488213835,
-      "tokens_s_per_user": 9052.140438652244,
+      "tokens_s_per_user": 6608.062520216138,
       "ar_tokens_s_per_user": 5417.685767461598,
-      "speedup": 1.6708500321334685,
+      "speedup": 1.219720523457432,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -4079,9 +4163,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 522.6727280806942,
+      "draft_us": 29.68282074068936,
+      "cycle_us": 552.3555488213835,
+      "tokens_s_per_user": 6336.498307056571,
+      "ar_tokens_s_per_user": 5417.685767461598,
+      "speedup": 1.169595022493428,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 522.6727280806942,
       "draft_us": 29.68282074068936,
@@ -4096,16 +4195,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 248.64699515928305,
       "draft_us": 15.65844252916603,
       "cycle_us": 264.30543768844905,
-      "tokens_s_per_user": 18917.50712255026,
+      "tokens_s_per_user": 13809.780199461691,
       "ar_tokens_s_per_user": 5417.685767461598,
-      "speedup": 3.491805899147575,
+      "speedup": 2.5490183063777296,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -4141,9 +4240,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 248.64699515928305,
+      "draft_us": 15.65844252916603,
+      "cycle_us": 264.30543768844905,
+      "tokens_s_per_user": 13242.254985785185,
+      "ar_tokens_s_per_user": 5417.685767461598,
+      "speedup": 2.4442641294033027,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 248.64699515928305,
       "draft_us": 15.65844252916603,
@@ -4156,16 +4270,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 295.1911900313998,
       "draft_us": 18.932254675731482,
       "cycle_us": 314.1234447071313,
-      "tokens_s_per_user": 15917.309211547969,
+      "tokens_s_per_user": 11619.635724430018,
       "ar_tokens_s_per_user": 5417.685767461598,
-      "speedup": 2.9380273967062998,
+      "speedup": 2.144759999595599,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -4201,9 +4315,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 295.1911900313998,
+      "draft_us": 18.932254675731482,
+      "cycle_us": 314.1234447071313,
+      "tokens_s_per_user": 11142.116448083578,
+      "ar_tokens_s_per_user": 5417.685767461598,
+      "speedup": 2.05661917769441,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 295.1911900313998,
       "draft_us": 18.932254675731482,
@@ -4220,16 +4349,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 523.7384313181882,
       "draft_us": 23.545347302487905,
       "cycle_us": 547.283778620676,
-      "tokens_s_per_user": 9136.028136265142,
+      "tokens_s_per_user": 6669.300539473554,
       "ar_tokens_s_per_user": 4933.094756135517,
-      "speedup": 1.8519871577374922,
+      "speedup": 1.3519506251483693,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -4265,9 +4394,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 523.7384313181882,
+      "draft_us": 23.545347302487905,
+      "cycle_us": 547.283778620676,
+      "tokens_s_per_user": 6395.2196953856,
+      "ar_tokens_s_per_user": 4933.094756135517,
+      "speedup": 1.2963910104162446,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 523.7384313181882,
       "draft_us": 23.545347302487905,
@@ -4280,16 +4424,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 654.43174354694,
       "draft_us": 29.68282074068936,
       "cycle_us": 684.1145642876293,
-      "tokens_s_per_user": 7308.717371346298,
+      "tokens_s_per_user": 5335.3636810827975,
       "ar_tokens_s_per_user": 4933.094756135517,
-      "speedup": 1.4815684134702887,
+      "speedup": 1.0815449418333107,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -4325,9 +4469,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 654.43174354694,
+      "draft_us": 29.68282074068936,
+      "cycle_us": 684.1145642876293,
+      "tokens_s_per_user": 5116.102159942408,
+      "ar_tokens_s_per_user": 4933.094756135517,
+      "speedup": 1.037097889429202,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 654.43174354694,
       "draft_us": 29.68282074068936,
@@ -4342,16 +4501,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 266.7788437885299,
       "draft_us": 15.65844252916603,
       "cycle_us": 282.4372863176959,
-      "tokens_s_per_user": 17703.045037671884,
+      "tokens_s_per_user": 12923.222877500475,
       "ar_tokens_s_per_user": 4933.094756135517,
-      "speedup": 3.588628622155249,
+      "speedup": 2.619698894173332,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -4387,9 +4546,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 266.7788437885299,
+      "draft_us": 15.65844252916603,
+      "cycle_us": 282.4372863176959,
+      "tokens_s_per_user": 12392.13152637032,
+      "ar_tokens_s_per_user": 4933.094756135517,
+      "speedup": 2.512040035508675,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 266.7788437885299,
       "draft_us": 15.65844252916603,
@@ -4402,16 +4576,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 317.2348509416326,
       "draft_us": 18.932254675731482,
       "cycle_us": 336.1671056173641,
-      "tokens_s_per_user": 14873.555194573844,
+      "tokens_s_per_user": 10857.695292038907,
       "ar_tokens_s_per_user": 4933.094756135517,
-      "speedup": 3.0150556455610182,
+      "speedup": 2.2009906212595434,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -4447,9 +4621,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 317.2348509416326,
+      "draft_us": 18.932254675731482,
+      "cycle_us": 336.1671056173641,
+      "tokens_s_per_user": 10411.488636201691,
+      "ar_tokens_s_per_user": 4933.094756135517,
+      "speedup": 2.110538951892713,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 317.2348509416326,
       "draft_us": 18.932254675731482,
@@ -4468,16 +4657,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 2654.9651575430707,
       "draft_us": 393.27362426017044,
       "cycle_us": 3048.238781803241,
-      "tokens_s_per_user": 1640.2914462764493,
+      "tokens_s_per_user": 1197.4127557818078,
       "ar_tokens_s_per_user": 945.8483901198591,
-      "speedup": 1.7342012350082758,
+      "speedup": 1.2659669015560413,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -4513,9 +4702,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 2654.9651575430707,
+      "draft_us": 393.27362426017044,
+      "cycle_us": 3048.238781803241,
+      "tokens_s_per_user": 1148.2040123935144,
+      "ar_tokens_s_per_user": 945.8483901198591,
+      "speedup": 1.213940864505793,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 2654.9651575430707,
       "draft_us": 393.27362426017044,
@@ -4528,16 +4732,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 3262.36357327615,
       "draft_us": 530.1296270131076,
       "cycle_us": 3792.4932002892574,
-      "tokens_s_per_user": 1318.3939260902682,
+      "tokens_s_per_user": 962.4275660458958,
       "ar_tokens_s_per_user": 945.8483901198591,
-      "speedup": 1.3938744727611152,
+      "speedup": 1.017528365115614,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -4573,9 +4777,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 3262.36357327615,
+      "draft_us": 530.1296270131076,
+      "cycle_us": 3792.4932002892574,
+      "tokens_s_per_user": 922.8757482631877,
+      "ar_tokens_s_per_user": 945.8483901198591,
+      "speedup": 0.9757121309327805,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 3262.36357327615,
       "draft_us": 530.1296270131076,
@@ -4590,16 +4809,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 2576.369687874651,
       "draft_us": 391.3798077601965,
       "cycle_us": 2967.749495634848,
-      "tokens_s_per_user": 1684.778316820309,
+      "tokens_s_per_user": 1229.8881712788257,
       "ar_tokens_s_per_user": 945.8483901198591,
-      "speedup": 1.78123506305996,
+      "speedup": 1.300301596033771,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -4635,9 +4854,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 2576.369687874651,
+      "draft_us": 391.3798077601965,
+      "cycle_us": 2967.749495634848,
+      "tokens_s_per_user": 1179.3448217742164,
+      "ar_tokens_s_per_user": 945.8483901198591,
+      "speedup": 1.2468645441419721,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 2576.369687874651,
       "draft_us": 391.3798077601965,
@@ -4650,16 +4884,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 3157.4864498213333,
       "draft_us": 527.233314253521,
       "cycle_us": 3684.719764074854,
-      "tokens_s_per_user": 1356.9552965055354,
+      "tokens_s_per_user": 990.5773664490408,
       "ar_tokens_s_per_user": 945.8483901198591,
-      "speedup": 1.4346435545907947,
+      "speedup": 1.04728979485128,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -4695,9 +4929,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 3157.4864498213333,
+      "draft_us": 527.233314253521,
+      "cycle_us": 3684.719764074854,
+      "tokens_s_per_user": 949.8687075538747,
+      "ar_tokens_s_per_user": 945.8483901198591,
+      "speedup": 1.0042504882135561,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 3157.4864498213333,
       "draft_us": 527.233314253521,
@@ -4714,16 +4963,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 2679.061381955252,
       "draft_us": 393.27362426017044,
       "cycle_us": 3072.3350062154223,
-      "tokens_s_per_user": 1627.426693340686,
+      "tokens_s_per_user": 1188.0214861387008,
       "ar_tokens_s_per_user": 941.7970760113858,
-      "speedup": 1.728001429175186,
+      "speedup": 1.2614410432978858,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -4759,9 +5008,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 2679.061381955252,
+      "draft_us": 393.27362426017044,
+      "cycle_us": 3072.3350062154223,
+      "tokens_s_per_user": 1139.1986853384801,
+      "ar_tokens_s_per_user": 941.7970760113858,
+      "speedup": 1.20960100042263,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 2679.061381955252,
       "draft_us": 393.27362426017044,
@@ -4774,16 +5038,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 3294.412561146997,
       "draft_us": 530.1296270131076,
       "cycle_us": 3824.5421881601046,
-      "tokens_s_per_user": 1307.346017904794,
+      "tokens_s_per_user": 954.3625930704997,
       "ar_tokens_s_per_user": 941.7970760113858,
-      "speedup": 1.3881398139836538,
+      "speedup": 1.0133420642080673,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -4819,9 +5083,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 3294.412561146997,
+      "draft_us": 530.1296270131076,
+      "cycle_us": 3824.5421881601046,
+      "tokens_s_per_user": 915.1422125333559,
+      "ar_tokens_s_per_user": 941.7970760113858,
+      "speedup": 0.9716978697885577,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 3294.412561146997,
       "draft_us": 530.1296270131076,
@@ -4836,16 +5115,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 2580.9176522030293,
       "draft_us": 391.3798077601965,
       "cycle_us": 2972.297459963226,
-      "tokens_s_per_user": 1682.2004080513063,
+      "tokens_s_per_user": 1228.0062978774536,
       "ar_tokens_s_per_user": 941.7970760113858,
-      "speedup": 1.7861601515855305,
+      "speedup": 1.3038969106574374,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -4881,9 +5160,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 2580.9176522030293,
+      "draft_us": 391.3798077601965,
+      "cycle_us": 2972.297459963226,
+      "tokens_s_per_user": 1177.5402856359144,
+      "ar_tokens_s_per_user": 941.7970760113858,
+      "speedup": 1.2503121061098714,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 2580.9176522030293,
       "draft_us": 391.3798077601965,
@@ -4896,16 +5190,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 3162.9869804609098,
       "draft_us": 527.233314253521,
       "cycle_us": 3690.220294714431,
-      "tokens_s_per_user": 1354.9326600261752,
+      "tokens_s_per_user": 989.1008418191078,
       "ar_tokens_s_per_user": 941.7970760113858,
-      "speedup": 1.4386673037513178,
+      "speedup": 1.050227131738462,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -4941,9 +5235,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 3162.9869804609098,
+      "draft_us": 527.233314253521,
+      "cycle_us": 3690.220294714431,
+      "tokens_s_per_user": 948.4528620183227,
+      "ar_tokens_s_per_user": 941.7970760113858,
+      "speedup": 1.0070671126259225,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 3162.9869804609098,
       "draft_us": 527.233314253521,
@@ -4960,16 +5269,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 2777.9057910546926,
       "draft_us": 393.27362426017044,
       "cycle_us": 3171.179415314863,
-      "tokens_s_per_user": 1576.700446481536,
+      "tokens_s_per_user": 1150.991325931521,
       "ar_tokens_s_per_user": 925.9844816192578,
-      "speedup": 1.7027288013772963,
+      "speedup": 1.242992025005426,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -5005,9 +5314,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 2777.9057910546926,
+      "draft_us": 393.27362426017044,
+      "cycle_us": 3171.179415314863,
+      "tokens_s_per_user": 1103.690312537075,
+      "ar_tokens_s_per_user": 925.9844816192578,
+      "speedup": 1.1919101609641072,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 2777.9057910546926,
       "draft_us": 393.27362426017044,
@@ -5020,16 +5344,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 1,
       "verify_us": 3426.1715766132406,
       "draft_us": 530.1296270131076,
       "cycle_us": 3956.301203626348,
-      "tokens_s_per_user": 1263.8067079971051,
+      "tokens_s_per_user": 922.5788968378868,
       "ar_tokens_s_per_user": 925.9844816192578,
-      "speedup": 1.3648249329050328,
+      "speedup": 0.996322201020674,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -5065,9 +5389,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 1,
+      "verify_us": 3426.1715766132406,
+      "draft_us": 530.1296270131076,
+      "cycle_us": 3956.301203626348,
+      "tokens_s_per_user": 884.6646955979736,
+      "ar_tokens_s_per_user": 925.9844816192578,
+      "speedup": 0.955377453033523,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 1,
       "verify_us": 3426.1715766132406,
       "draft_us": 530.1296270131076,
@@ -5082,16 +5421,16 @@
      {
       "gamma": 5,
       "positions": 6,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 2599.0495008322778,
       "draft_us": 391.3798077601965,
       "cycle_us": 2990.4293085924746,
-      "tokens_s_per_user": 1672.0007343538855,
+      "tokens_s_per_user": 1220.5605360783366,
       "ar_tokens_s_per_user": 925.9844816192578,
-      "speedup": 1.8056466037422982,
+      "speedup": 1.318122020731878,
       "distinct_experts": 34.62270569242537
      },
      {
@@ -5127,9 +5466,24 @@
      {
       "gamma": 5,
       "positions": 6,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 2599.0495008322778,
+      "draft_us": 391.3798077601965,
+      "cycle_us": 2990.4293085924746,
+      "tokens_s_per_user": 1170.40051404772,
+      "ar_tokens_s_per_user": 925.9844816192578,
+      "speedup": 1.263952622619609,
+      "distinct_experts": 34.62270569242537
+     },
+     {
+      "gamma": 5,
+      "positions": 6,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 2599.0495008322778,
       "draft_us": 391.3798077601965,
@@ -5142,16 +5496,16 @@
      {
       "gamma": 7,
       "positions": 8,
-      "tau": 5.0,
-      "tau_label": "LMSYS SGLang ~5",
-      "tau_grade": "published",
+      "tau": 3.65,
+      "tau_label": "V4.1-Flash on-policy greedy (measured)",
+      "tau_grade": "measured",
       "lane_mult": 6,
       "verify_us": 3185.0306413711432,
       "draft_us": 527.233314253521,
       "cycle_us": 3712.2639556246645,
-      "tokens_s_per_user": 1346.886983191002,
+      "tokens_s_per_user": 983.2274977294314,
       "ar_tokens_s_per_user": 925.9844816192578,
-      "speedup": 1.4545459561435814,
+      "speedup": 1.0618185479848146,
       "distinct_experts": 45.45544894854402
      },
      {
@@ -5187,9 +5541,24 @@
      {
       "gamma": 7,
       "positions": 8,
+      "tau": 3.5,
+      "tau_label": "V4.1-Flash published band, low (3.5)",
+      "tau_grade": "published",
+      "lane_mult": 6,
+      "verify_us": 3185.0306413711432,
+      "draft_us": 527.233314253521,
+      "cycle_us": 3712.2639556246645,
+      "tokens_s_per_user": 942.8208882337015,
+      "ar_tokens_s_per_user": 925.9844816192578,
+      "speedup": 1.018182169300507,
+      "distinct_experts": 45.45544894854402
+     },
+     {
+      "gamma": 7,
+      "positions": 8,
       "tau": 4.1,
-      "tau_label": "4.1 (previous default, sensitivity)",
-      "tau_grade": "decision",
+      "tau_label": "V4.1-Flash published band, high (4.1)",
+      "tau_grade": "published",
       "lane_mult": 6,
       "verify_us": 3185.0306413711432,
       "draft_us": 527.233314253521,
@@ -5979,10 +6348,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 11782.916862519147,
+       "V4.1-Flash on-policy greedy (measured)": 8601.529309638978,
        "vLLM survival, geometric interior": 7696.601294597507,
        "vLLM survival, linear interior": 8955.016815514551,
-       "4.1 (previous default, sensitivity)": 9661.9918272657
+       "V4.1-Flash published band, low (3.5)": 8248.041803763403,
+       "V4.1-Flash published band, high (4.1)": 9661.9918272657
       }
      },
      {
@@ -5994,10 +6364,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 15485.1163111878,
+       "V4.1-Flash on-policy greedy (measured)": 11304.134907167094,
        "vLLM survival, geometric interior": 10114.87797446787,
        "vLLM survival, linear interior": 11768.688396502726,
-       "4.1 (previous default, sensitivity)": 12697.795375173995
+       "V4.1-Flash published band, low (3.5)": 10839.58141783146,
+       "V4.1-Flash published band, high (4.1)": 12697.795375173995
       }
      },
      {
@@ -6009,10 +6380,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 17165.28157406998,
+       "V4.1-Flash on-policy greedy (measured)": 12530.655549071085,
        "vLLM survival, geometric interior": 11212.36192418251,
        "vLLM survival, linear interior": 13045.613996293185,
-       "4.1 (previous default, sensitivity)": 14075.530890737382
+       "V4.1-Flash published band, low (3.5)": 12015.697101848986,
+       "V4.1-Flash published band, high (4.1)": 14075.530890737382
       }
      },
      {
@@ -6024,10 +6396,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 17664.339078836634,
+       "V4.1-Flash on-policy greedy (measured)": 12894.967527550742,
        "vLLM survival, geometric interior": 11538.34628629609,
        "vLLM survival, linear interior": 13424.89769991584,
-       "4.1 (previous default, sensitivity)": 14484.758044646038
+       "V4.1-Flash published band, low (3.5)": 12365.037355185643,
+       "V4.1-Flash published band, high (4.1)": 14484.758044646038
       }
      },
      {
@@ -6039,10 +6412,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 19193.654393244844,
+       "V4.1-Flash on-policy greedy (measured)": 14011.367707068735,
        "vLLM survival, geometric interior": 12537.295049667531,
        "vLLM survival, linear interior": 14587.17733886608,
-       "4.1 (previous default, sensitivity)": 15738.79660246077
+       "V4.1-Flash published band, low (3.5)": 13435.55807527139,
+       "V4.1-Flash published band, high (4.1)": 15738.79660246077
       }
      }
     ],
@@ -6064,10 +6438,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 11149.779300907547,
+       "V4.1-Flash on-policy greedy (measured)": 8139.338889662508,
        "vLLM survival, geometric interior": 7283.0358393528095,
        "vLLM survival, linear interior": 8473.832268689735,
-       "4.1 (previous default, sensitivity)": 9142.819026744188
+       "V4.1-Flash published band, low (3.5)": 7804.845510635282,
+       "V4.1-Flash published band, high (4.1)": 9142.819026744188
       }
      },
      {
@@ -6079,10 +6454,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 14936.814364652291,
+       "V4.1-Flash on-policy greedy (measured)": 10903.874486196173,
        "vLLM survival, geometric interior": 9756.727142990878,
        "vLLM survival, linear interior": 11351.97891713574,
-       "4.1 (previous default, sensitivity)": 12248.187779014877
+       "V4.1-Flash published band, low (3.5)": 10455.770055256604,
+       "V4.1-Flash published band, high (4.1)": 12248.187779014877
       }
      },
      {
@@ -6094,10 +6470,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 16725.070237732954,
+       "V4.1-Flash on-policy greedy (measured)": 12209.301273545057,
        "vLLM survival, geometric interior": 10924.815879287167,
        "vLLM survival, linear interior": 12711.053380677045,
-       "4.1 (previous default, sensitivity)": 13714.557594941023
+       "V4.1-Flash published band, low (3.5)": 11707.54916641307,
+       "V4.1-Flash published band, high (4.1)": 13714.557594941023
       }
      },
      {
@@ -6109,10 +6486,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 17318.225358648393,
+       "V4.1-Flash on-policy greedy (measured)": 12642.304511813329,
        "vLLM survival, geometric interior": 11312.26480426913,
        "vLLM survival, linear interior": 13161.85127257278,
-       "4.1 (previous default, sensitivity)": 14200.944794091682
+       "V4.1-Flash published band, low (3.5)": 12122.757751053876,
+       "V4.1-Flash published band, high (4.1)": 14200.944794091682
       }
      },
      {
@@ -6124,10 +6502,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 18917.50712255026,
+       "V4.1-Flash on-policy greedy (measured)": 13809.780199461691,
        "vLLM survival, geometric interior": 12356.915652449832,
        "vLLM survival, linear interior": 14377.3054131382,
-       "4.1 (previous default, sensitivity)": 15512.355840491215
+       "V4.1-Flash published band, low (3.5)": 13242.254985785185,
+       "V4.1-Flash published band, high (4.1)": 15512.355840491215
       }
      }
     ],
@@ -6149,10 +6528,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 9136.028136265142,
+       "V4.1-Flash on-policy greedy (measured)": 6669.300539473554,
        "vLLM survival, geometric interior": 5967.653578608391,
        "vLLM survival, linear interior": 6943.381383561508,
-       "4.1 (previous default, sensitivity)": 7491.5430717374165
+       "V4.1-Flash published band, low (3.5)": 6395.2196953856,
+       "V4.1-Flash published band, high (4.1)": 7491.5430717374165
       }
      },
      {
@@ -6164,10 +6544,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 13013.51669247227,
+       "V4.1-Flash on-policy greedy (measured)": 9499.867185504758,
        "vLLM survival, geometric interior": 8500.429103522887,
        "vLLM survival, linear interior": 9890.272686278926,
-       "4.1 (previous default, sensitivity)": 10671.083687827262
+       "V4.1-Flash published band, low (3.5)": 9109.46168473059,
+       "V4.1-Flash published band, high (4.1)": 10671.083687827262
       }
      },
      {
@@ -6179,10 +6560,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 15061.710702009244,
+       "V4.1-Flash on-policy greedy (measured)": 10995.048812466748,
        "vLLM survival, geometric interior": 9838.30943055244,
        "vLLM survival, linear interior": 11446.900133527026,
-       "4.1 (previous default, sensitivity)": 12350.60277564758
+       "V4.1-Flash published band, low (3.5)": 10543.19749140647,
+       "V4.1-Flash published band, high (4.1)": 12350.60277564758
       }
      },
      {
@@ -6194,10 +6576,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 15948.977070250668,
+       "V4.1-Flash on-policy greedy (measured)": 11642.753261282987,
        "vLLM survival, geometric interior": 10417.871822287736,
        "vLLM survival, linear interior": 12121.222573390507,
-       "4.1 (previous default, sensitivity)": 13078.161197605546
+       "V4.1-Flash published band, low (3.5)": 11164.283949175468,
+       "V4.1-Flash published band, high (4.1)": 13078.161197605546
       }
      },
      {
@@ -6209,10 +6592,11 @@
       "rom_read_bytes_per_cycle": 348546.75,
       "rom_read_ok": true,
       "tokens_s_per_user": {
-       "LMSYS SGLang ~5": 17703.045037671884,
+       "V4.1-Flash on-policy greedy (measured)": 12923.222877500475,
        "vLLM survival, geometric interior": 11563.629018607275,
        "vLLM survival, linear interior": 13454.314228630632,
-       "4.1 (previous default, sensitivity)": 14516.496930890944
+       "V4.1-Flash published band, low (3.5)": 12392.13152637032,
+       "V4.1-Flash published band, high (4.1)": 14516.496930890944
       }
      }
     ],
@@ -6365,7 +6749,7 @@
  "batch": {
   "8192": {
    "ctx": 8192,
-   "tau": 5.0,
+   "tau": 3.65,
    "gamma": 5,
    "mtp_lane_mult": 2,
    "rows": {
@@ -6388,9 +6772,9 @@
        "clock": 0.2972893970578985
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 15485.1163111878,
-      "mtp_aggregate_tokens_s": 15485.1163111878,
-      "mtp_energy_j_per_token": 0.22052949873575967,
+      "mtp_tokens_s_per_user": 11304.134907167094,
+      "mtp_aggregate_tokens_s": 11304.134907167094,
+      "mtp_energy_j_per_token": 0.302095203747616,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 303.91222953347545,
       "draft_us": 18.978467541080168,
@@ -6414,9 +6798,9 @@
        "clock": 0.14864469852894924
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 15485.1163111878,
-      "mtp_aggregate_tokens_s": 30970.2326223756,
-      "mtp_energy_j_per_token": 0.11433074675925313,
+      "mtp_tokens_s_per_user": 11304.134907167094,
+      "mtp_aggregate_tokens_s": 22608.269814334188,
+      "mtp_energy_j_per_token": 0.15661746131404541,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 303.91222953347545,
       "draft_us": 18.978467541080168,
@@ -6440,9 +6824,9 @@
        "clock": 0.07432234926447462
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 15485.1163111878,
-      "mtp_aggregate_tokens_s": 61940.4652447512,
-      "mtp_energy_j_per_token": 0.061231370770999854,
+      "mtp_tokens_s_per_user": 11304.134907167094,
+      "mtp_aggregate_tokens_s": 45216.539628668375,
+      "mtp_energy_j_per_token": 0.0838785900972601,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 303.91222953347545,
       "draft_us": 18.978467541080168,
@@ -6466,9 +6850,9 @@
        "clock": 0.03716117463223731
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 15485.1163111878,
-      "mtp_aggregate_tokens_s": 123880.9304895024,
-      "mtp_energy_j_per_token": 0.034681682776873224,
+      "mtp_tokens_s_per_user": 11304.134907167094,
+      "mtp_aggregate_tokens_s": 90433.07925733675,
+      "mtp_energy_j_per_token": 0.04750915448886743,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 303.91222953347545,
       "draft_us": 18.978467541080168,
@@ -6492,9 +6876,9 @@
        "clock": 0.018580587316118655
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 15485.1163111878,
-      "mtp_aggregate_tokens_s": 247761.8609790048,
-      "mtp_energy_j_per_token": 0.021406838779809912,
+      "mtp_tokens_s_per_user": 11304.134907167094,
+      "mtp_aggregate_tokens_s": 180866.1585146735,
+      "mtp_energy_j_per_token": 0.029324436684671114,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 303.91222953347545,
       "draft_us": 18.978467541080168,
@@ -6518,9 +6902,9 @@
        "clock": 0.010617478466353516
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 15485.1163111878,
-      "mtp_aggregate_tokens_s": 433583.2567132584,
-      "mtp_energy_j_per_token": 0.015717619923925633,
+      "mtp_tokens_s_per_user": 11304.134907167094,
+      "mtp_aggregate_tokens_s": 316515.7774006786,
+      "mtp_energy_j_per_token": 0.021530986197158403,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 303.91222953347545,
       "draft_us": 18.978467541080168,
@@ -6544,9 +6928,9 @@
        "clock": 0.010267213953001125
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 14023.232869714426,
-      "mtp_aggregate_tokens_s": 448743.4518308616,
-      "mtp_energy_j_per_token": 0.015412849071529521,
+      "mtp_tokens_s_per_user": 10236.959994891531,
+      "mtp_aggregate_tokens_s": 327582.719836529,
+      "mtp_energy_j_per_token": 0.021113491878807567,
       "distinct_experts_verify": 40.081725915981224,
       "verify_us": 337.5726962635484,
       "draft_us": 18.978467541080168,
@@ -6570,9 +6954,9 @@
        "clock": 0.006338004158255693
       },
       "distinct_experts_ar": 11.90625,
-      "mtp_tokens_s_per_user": 9216.954445003576,
-      "mtp_aggregate_tokens_s": 589885.0844802288,
-      "mtp_energy_j_per_token": 0.013318927907216848,
+      "mtp_tokens_s_per_user": 6728.37674485261,
+      "mtp_aggregate_tokens_s": 430616.111670567,
+      "mtp_energy_j_per_token": 0.01824510672221486,
       "distinct_experts_verify": 75.9797415392441,
       "verify_us": 523.500073481812,
       "draft_us": 18.978467541080168,
@@ -6596,9 +6980,9 @@
        "clock": 0.004460431597434992
       },
       "distinct_experts_ar": 29.0770343542099,
-      "mtp_tokens_s_per_user": 5475.606282914722,
-      "mtp_aggregate_tokens_s": 700877.6042130844,
-      "mtp_energy_j_per_token": 0.012103877604619964,
+      "mtp_tokens_s_per_user": 3997.192586527747,
+      "mtp_aggregate_tokens_s": 511640.65107555164,
+      "mtp_energy_j_per_token": 0.016580654252904063,
       "distinct_experts_verify": 133.0040221634104,
       "verify_us": 894.1624234687913,
       "draft_us": 18.978467541080168,
@@ -6622,9 +7006,9 @@
        "clock": 0.00357284652675792
       },
       "distinct_experts_ar": 50.74520755872304,
-      "mtp_tokens_s_per_user": 3077.757391155014,
-      "mtp_aggregate_tokens_s": 787905.8921356836,
-      "mtp_energy_j_per_token": 0.011284926561678978,
+      "mtp_tokens_s_per_user": 2246.76289554316,
+      "mtp_aggregate_tokens_s": 575171.301259049,
+      "mtp_energy_j_per_token": 0.015458803509149292,
       "distinct_experts_verify": 222.50358902672596,
       "verify_us": 1605.581029698438,
       "draft_us": 18.978467541080168,
@@ -6648,9 +7032,9 @@
        "clock": 0.0032410315183363137
       },
       "distinct_experts_ar": 94.78448779927447,
-      "mtp_tokens_s_per_user": 1655.8441490773278,
-      "mtp_aggregate_tokens_s": 847792.2043275918,
-      "mtp_energy_j_per_token": 0.010605600173642392,
+      "mtp_tokens_s_per_user": 1208.7662288264492,
+      "mtp_aggregate_tokens_s": 618888.309159142,
+      "mtp_energy_j_per_token": 0.014528219415948484,
       "distinct_experts_verify": 316.080492819665,
       "verify_us": 3000.629387936205,
       "draft_us": 18.978467541080168,
@@ -6674,9 +7058,9 @@
        "clock": 0.003215405672630359
       },
       "distinct_experts_ar": 169.57643280662984,
-      "mtp_tokens_s_per_user": 831.0951090834174,
-      "mtp_aggregate_tokens_s": 851041.3917014194,
-      "mtp_energy_j_per_token": 0.010218418610063732,
+      "mtp_tokens_s_per_user": 606.6994296308947,
+      "mtp_aggregate_tokens_s": 621260.2159420361,
+      "mtp_energy_j_per_token": 0.013997833712416072,
       "distinct_experts_verify": 371.79613900629744,
       "verify_us": 5997.180146981759,
       "draft_us": 18.978467541080168,
@@ -6702,9 +7086,9 @@
        "clock": 0.9155660940028846
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1666.7828155168843,
-      "mtp_aggregate_tokens_s": 1666.7828155168843,
-      "mtp_energy_j_per_token": 1.824213563515591,
+      "mtp_tokens_s_per_user": 1216.7514553273256,
+      "mtp_aggregate_tokens_s": 1216.7514553273256,
+      "mtp_energy_j_per_token": 2.498922689747385,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2607.7056700752382,
       "draft_us": 392.08527656315437,
@@ -6728,9 +7112,9 @@
        "clock": 0.4577830470014423
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1666.7828155168843,
-      "mtp_aggregate_tokens_s": 3333.5656310337686,
-      "mtp_energy_j_per_token": 1.3046577413658373,
+      "mtp_tokens_s_per_user": 1216.7514553273256,
+      "mtp_aggregate_tokens_s": 2433.5029106546513,
+      "mtp_energy_j_per_token": 1.787202385432654,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2607.7056700752382,
       "draft_us": 392.08527656315437,
@@ -6754,9 +7138,9 @@
        "clock": 0.22889152350072114
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1666.7828155168843,
-      "mtp_aggregate_tokens_s": 6667.131262067537,
-      "mtp_energy_j_per_token": 1.0448798302909603,
+      "mtp_tokens_s_per_user": 1216.7514553273256,
+      "mtp_aggregate_tokens_s": 4867.0058213093025,
+      "mtp_energy_j_per_token": 1.4313422332752883,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2607.7056700752382,
       "draft_us": 392.08527656315437,
@@ -6780,9 +7164,9 @@
        "clock": 0.11444576175036057
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1666.7828155168843,
-      "mtp_aggregate_tokens_s": 13334.262524135074,
-      "mtp_energy_j_per_token": 0.914990874753522,
+      "mtp_tokens_s_per_user": 1216.7514553273256,
+      "mtp_aggregate_tokens_s": 9734.011642618605,
+      "mtp_energy_j_per_token": 1.2534121571966055,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2607.7056700752382,
       "draft_us": 392.08527656315437,
@@ -6806,9 +7190,9 @@
        "clock": 0.057222880875180286
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1666.7828155168843,
-      "mtp_aggregate_tokens_s": 26668.52504827015,
-      "mtp_energy_j_per_token": 0.8500463969848031,
+      "mtp_tokens_s_per_user": 1216.7514553273256,
+      "mtp_aggregate_tokens_s": 19468.02328523721,
+      "mtp_energy_j_per_token": 1.164447119157264,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2607.7056700752382,
       "draft_us": 392.08527656315437,
@@ -6832,9 +7216,9 @@
        "clock": 0.032698789071531585
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1666.7828155168843,
-      "mtp_aggregate_tokens_s": 46669.91883447276,
-      "mtp_energy_j_per_token": 0.8222130493696375,
+      "mtp_tokens_s_per_user": 1216.7514553273256,
+      "mtp_aggregate_tokens_s": 34069.04074916512,
+      "mtp_energy_j_per_token": 1.1263192457118323,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2607.7056700752382,
       "draft_us": 392.08527656315437,
@@ -6858,9 +7242,9 @@
        "clock": 0.028689962777183352
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1516.933026836335,
-      "mtp_aggregate_tokens_s": 48541.85685876272,
-      "mtp_energy_j_per_token": 0.8043730401534713,
+      "mtp_tokens_s_per_user": 1107.3611095905246,
+      "mtp_aggregate_tokens_s": 35435.55550689679,
+      "mtp_energy_j_per_token": 1.1018808769225634,
       "distinct_experts_verify": 40.081725915981224,
       "verify_us": 2904.0391478801803,
       "draft_us": 392.08527656315437,
@@ -6884,9 +7268,9 @@
        "clock": 0.01882813730441592
       },
       "distinct_experts_ar": 11.90625,
-      "mtp_tokens_s_per_user": 950.6156268208434,
-      "mtp_aggregate_tokens_s": 60839.40011653398,
-      "mtp_energy_j_per_token": 0.6820540035319496,
+      "mtp_tokens_s_per_user": 693.9494075792157,
+      "mtp_aggregate_tokens_s": 44412.76208506981,
+      "mtp_energy_j_per_token": 0.9343205527834924,
       "distinct_experts_verify": 75.9797415392441,
       "verify_us": 4867.664152048246,
       "draft_us": 392.08527656315437,
@@ -6910,9 +7294,9 @@
        "clock": 0.015803626185298045
       },
       "distinct_experts_ar": 29.0770343542099,
-      "mtp_tokens_s_per_user": 593.1780077333917,
-      "mtp_aggregate_tokens_s": 75926.78498987414,
-      "mtp_energy_j_per_token": 0.5640482876830054,
+      "mtp_tokens_s_per_user": 433.01994564537597,
+      "mtp_aggregate_tokens_s": 55426.553042608124,
+      "mtp_energy_j_per_token": 0.7726688872369939,
       "distinct_experts_verify": 133.0040221634104,
       "verify_us": 8037.087644236173,
       "draft_us": 392.08527656315437,
@@ -6936,9 +7320,9 @@
        "clock": 0.012052588870422123
       },
       "distinct_experts_ar": 50.74520755872304,
-      "mtp_tokens_s_per_user": 368.16966003086753,
-      "mtp_aggregate_tokens_s": 94251.43296790209,
-      "mtp_energy_j_per_token": 0.4579069807830193,
+      "mtp_tokens_s_per_user": 268.7638518225333,
+      "mtp_aggregate_tokens_s": 68803.54606656852,
+      "mtp_energy_j_per_token": 0.6272698366890674,
       "distinct_experts_verify": 222.50358902672596,
       "verify_us": 13188.610100619195,
       "draft_us": 392.08527656315437,
@@ -6962,9 +7346,9 @@
        "clock": 0.010366676956747096
       },
       "distinct_experts_ar": 94.78448779927447,
-      "mtp_tokens_s_per_user": 255.33853959520386,
-      "mtp_aggregate_tokens_s": 130733.33227274437,
-      "mtp_energy_j_per_token": 0.3227080788396996,
+      "mtp_tokens_s_per_user": 186.39713390449882,
+      "mtp_aggregate_tokens_s": 95435.3325591034,
+      "mtp_energy_j_per_token": 0.442065861424246,
       "distinct_experts_verify": 316.080492819665,
       "verify_us": 19189.760879237125,
       "draft_us": 392.08527656315437,
@@ -6988,9 +7372,9 @@
        "clock": 0.009107364229456886
       },
       "distinct_experts_ar": 169.57643280662984,
-      "mtp_tokens_s_per_user": 200.51276304284312,
-      "mtp_aggregate_tokens_s": 205325.06935587135,
-      "mtp_energy_j_per_token": 0.1919140075888336,
+      "mtp_tokens_s_per_user": 146.37431702127546,
+      "mtp_aggregate_tokens_s": 149887.30062978607,
+      "mtp_energy_j_per_token": 0.2628959008066214,
       "distinct_experts_verify": 371.79613900629744,
       "verify_us": 24543.983251561716,
       "draft_us": 392.08527656315437,
@@ -7001,7 +7385,7 @@
   },
   "200000": {
    "ctx": 200000,
-   "tau": 5.0,
+   "tau": 3.65,
    "gamma": 5,
    "mtp_lane_mult": 2,
    "rows": {
@@ -7024,9 +7408,9 @@
        "clock": 0.3035428958128192
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 14936.814364652291,
-      "mtp_aggregate_tokens_s": 14936.814364652291,
-      "mtp_energy_j_per_token": 0.2293053867722739,
+      "mtp_tokens_s_per_user": 10903.874486196173,
+      "mtp_aggregate_tokens_s": 10903.874486196173,
+      "mtp_energy_j_per_token": 0.3141169681811971,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 315.7649307455325,
       "draft_us": 18.978467541080168,
@@ -7050,9 +7434,9 @@
        "clock": 0.1517714479064096
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 14936.814364652291,
-      "mtp_aggregate_tokens_s": 29873.628729304583,
-      "mtp_energy_j_per_token": 0.1192082813043992,
+      "mtp_tokens_s_per_user": 10903.874486196173,
+      "mtp_aggregate_tokens_s": 21807.748972392346,
+      "mtp_energy_j_per_token": 0.16329901548547834,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 315.7649307455325,
       "draft_us": 18.978467541080168,
@@ -7076,9 +7460,9 @@
        "clock": 0.0758857239532048
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 14936.814364652291,
-      "mtp_aggregate_tokens_s": 59747.257458609165,
-      "mtp_energy_j_per_token": 0.06415972857046187,
+      "mtp_tokens_s_per_user": 10903.874486196173,
+      "mtp_aggregate_tokens_s": 43615.49794478469,
+      "mtp_energy_j_per_token": 0.08789003913761896,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 315.7649307455325,
       "draft_us": 18.978467541080168,
@@ -7102,9 +7486,9 @@
        "clock": 0.0379428619766024
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 14936.814364652291,
-      "mtp_aggregate_tokens_s": 119494.51491721833,
-      "mtp_energy_j_per_token": 0.03663545220349318,
+      "mtp_tokens_s_per_user": 10903.874486196173,
+      "mtp_aggregate_tokens_s": 87230.99588956939,
+      "mtp_energy_j_per_token": 0.05018555096368929,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 315.7649307455325,
       "draft_us": 18.978467541080168,
@@ -7128,9 +7512,9 @@
        "clock": 0.0189714309883012
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 14936.814364652291,
-      "mtp_aggregate_tokens_s": 238989.02983443666,
-      "mtp_energy_j_per_token": 0.022873314020008848,
+      "mtp_tokens_s_per_user": 10903.874486196173,
+      "mtp_aggregate_tokens_s": 174461.99177913877,
+      "mtp_energy_j_per_token": 0.03133330687672445,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 315.7649307455325,
       "draft_us": 18.978467541080168,
@@ -7154,9 +7538,9 @@
        "clock": 0.010840817707600685
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 14936.814364652291,
-      "mtp_aggregate_tokens_s": 418230.80221026414,
-      "mtp_energy_j_per_token": 0.01697525479851556,
+      "mtp_tokens_s_per_user": 10903.874486196173,
+      "mtp_aggregate_tokens_s": 305308.48561349284,
+      "mtp_energy_j_per_token": 0.02325377369659666,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 315.7649307455325,
       "draft_us": 18.978467541080168,
@@ -7180,9 +7564,9 @@
        "clock": 0.010506833169431812
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 13502.626159732234,
-      "mtp_aggregate_tokens_s": 432084.0371114315,
-      "mtp_energy_j_per_token": 0.016674620440458726,
+      "mtp_tokens_s_per_user": 9856.91709660453,
+      "mtp_aggregate_tokens_s": 315421.34709134494,
+      "mtp_energy_j_per_token": 0.022841945808847568,
       "distinct_experts_verify": 40.081725915981224,
       "verify_us": 351.31986856416484,
       "draft_us": 18.978467541080168,
@@ -7206,9 +7590,9 @@
        "clock": 0.00659161661336345
       },
       "distinct_experts_ar": 11.90625,
-      "mtp_tokens_s_per_user": 8772.19002569829,
-      "mtp_aggregate_tokens_s": 561420.1616446906,
-      "mtp_energy_j_per_token": 0.014580804185046932,
+      "mtp_tokens_s_per_user": 6403.6987187597515,
+      "mtp_aggregate_tokens_s": 409836.7180006241,
+      "mtp_energy_j_per_token": 0.019973704363077986,
       "distinct_experts_verify": 75.9797415392441,
       "verify_us": 551.004625090567,
       "draft_us": 18.978467541080168,
@@ -7232,9 +7616,9 @@
        "clock": 0.004719352872488082
       },
       "distinct_experts_ar": 29.0770343542099,
-      "mtp_tokens_s_per_user": 5165.758549399908,
-      "mtp_aggregate_tokens_s": 661217.0943231882,
-      "mtp_energy_j_per_token": 0.013364531124547583,
+      "mtp_tokens_s_per_user": 3771.003741061932,
+      "mtp_aggregate_tokens_s": 482688.4788559273,
+      "mtp_energy_j_per_token": 0.0183075768829419,
       "distinct_experts_verify": 133.0040221634104,
       "verify_us": 948.9335926501258,
       "draft_us": 18.978467541080168,
@@ -7258,9 +7642,9 @@
        "clock": 0.0038302393544329735
       },
       "distinct_experts_ar": 50.74520755872304,
-      "mtp_tokens_s_per_user": 2883.7326825271994,
-      "mtp_aggregate_tokens_s": 738235.566726963,
-      "mtp_energy_j_per_token": 0.012544968702655349,
+      "mtp_tokens_s_per_user": 2105.124858244855,
+      "mtp_aggregate_tokens_s": 538911.9637106829,
+      "mtp_energy_j_per_token": 0.017184888633774452,
       "distinct_experts_verify": 222.50358902672596,
       "verify_us": 1714.885434024921,
       "draft_us": 18.978467541080168,
@@ -7284,9 +7668,9 @@
        "clock": 0.0035022357008553553
       },
       "distinct_experts_ar": 94.78448779927447,
-      "mtp_tokens_s_per_user": 1541.9114864692183,
-      "mtp_aggregate_tokens_s": 789458.6810722398,
-      "mtp_energy_j_per_token": 0.011871438698334038,
+      "mtp_tokens_s_per_user": 1125.5953851225293,
+      "mtp_aggregate_tokens_s": 576304.837182735,
+      "mtp_energy_j_per_token": 0.016262244792238412,
       "distinct_experts_verify": 316.080492819665,
       "verify_us": 3223.7498238534963,
       "draft_us": 18.978467541080168,
@@ -7310,9 +7694,9 @@
        "clock": 0.0034766098551494
       },
       "distinct_experts_ar": 169.57643280662984,
-      "mtp_tokens_s_per_user": 773.7064244566391,
-      "mtp_aggregate_tokens_s": 792275.3786435984,
-      "mtp_energy_j_per_token": 0.011484257134755359,
+      "mtp_tokens_s_per_user": 564.8056898533465,
+      "mtp_aggregate_tokens_s": 578361.0264098268,
+      "mtp_energy_j_per_token": 0.015731859088705974,
       "distinct_experts_verify": 371.79613900629744,
       "verify_us": 6443.421018816314,
       "draft_us": 18.978467541080168,
@@ -7338,9 +7722,9 @@
        "clock": 0.9195045706963807
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1660.0496942742377,
-      "mtp_aggregate_tokens_s": 1660.0496942742377,
-      "mtp_energy_j_per_token": 1.8294073561619293,
+      "mtp_tokens_s_per_user": 1211.8362768201935,
+      "mtp_aggregate_tokens_s": 1211.8362768201935,
+      "mtp_energy_j_per_token": 2.506037474194424,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2619.872749299418,
       "draft_us": 392.08527656315437,
@@ -7364,9 +7748,9 @@
        "clock": 0.45975228534819035
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1660.0496942742377,
-      "mtp_aggregate_tokens_s": 3320.0993885484754,
-      "mtp_energy_j_per_token": 1.3077442282158955,
+      "mtp_tokens_s_per_user": 1211.8362768201935,
+      "mtp_aggregate_tokens_s": 2423.672553640387,
+      "mtp_energy_j_per_token": 1.7914304496108158,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2619.872749299418,
       "draft_us": 392.08527656315437,
@@ -7390,9 +7774,9 @@
        "clock": 0.22987614267409517
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1660.0496942742377,
-      "mtp_aggregate_tokens_s": 6640.198777096951,
-      "mtp_energy_j_per_token": 1.0469126642428788,
+      "mtp_tokens_s_per_user": 1211.8362768201935,
+      "mtp_aggregate_tokens_s": 4847.345107280774,
+      "mtp_energy_j_per_token": 1.434126937319012,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2619.872749299418,
       "draft_us": 392.08527656315437,
@@ -7416,9 +7800,9 @@
        "clock": 0.11493807133704759
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1660.0496942742377,
-      "mtp_aggregate_tokens_s": 13280.397554193902,
-      "mtp_energy_j_per_token": 0.9164968822563702,
+      "mtp_tokens_s_per_user": 1211.8362768201935,
+      "mtp_aggregate_tokens_s": 9694.690214561548,
+      "mtp_energy_j_per_token": 1.25547518117311,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2619.872749299418,
       "draft_us": 392.08527656315437,
@@ -7442,9 +7826,9 @@
        "clock": 0.057469035668523794
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1660.0496942742377,
-      "mtp_aggregate_tokens_s": 26560.795108387803,
-      "mtp_energy_j_per_token": 0.851288991263116,
+      "mtp_tokens_s_per_user": 1211.8362768201935,
+      "mtp_aggregate_tokens_s": 19389.380429123095,
+      "mtp_energy_j_per_token": 1.1661493031001589,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2619.872749299418,
       "draft_us": 392.08527656315437,
@@ -7468,9 +7852,9 @@
        "clock": 0.032839448953442166
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1660.0496942742377,
-      "mtp_aggregate_tokens_s": 46481.39143967866,
-      "mtp_energy_j_per_token": 0.8233427522660071,
+      "mtp_tokens_s_per_user": 1211.8362768201935,
+      "mtp_aggregate_tokens_s": 33931.41575096542,
+      "mtp_energy_j_per_token": 1.127866783926037,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2619.872749299418,
       "draft_us": 392.08527656315437,
@@ -7494,9 +7878,9 @@
        "clock": 0.02883010664238699
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1510.5759954454015,
-      "mtp_aggregate_tokens_s": 48338.43185425285,
-      "mtp_energy_j_per_token": 0.8055023751074931,
+      "mtp_tokens_s_per_user": 1102.7204766751431,
+      "mtp_aggregate_tokens_s": 35287.05525360458,
+      "mtp_energy_j_per_token": 1.1034279111061551,
       "distinct_experts_verify": 40.081725915981224,
       "verify_us": 2917.9103907026442,
       "draft_us": 392.08527656315437,
@@ -7520,9 +7904,9 @@
        "clock": 0.01896609389383673
       },
       "distinct_experts_ar": 11.90625,
-      "mtp_tokens_s_per_user": 945.6704782303289,
-      "mtp_aggregate_tokens_s": 60522.91060674105,
-      "mtp_energy_j_per_token": 0.6831820506877551,
+      "mtp_tokens_s_per_user": 690.33944910814,
+      "mtp_aggregate_tokens_s": 44181.72474292096,
+      "mtp_energy_j_per_token": 0.9358658228599384,
       "distinct_experts_verify": 75.9797415392441,
       "verify_us": 4895.1687036569965,
       "draft_us": 392.08527656315437,
@@ -7546,9 +7930,9 @@
        "clock": 0.015939973026948346
       },
       "distinct_experts_ar": 29.0770343542099,
-      "mtp_tokens_s_per_user": 589.3485325893276,
-      "mtp_aggregate_tokens_s": 75436.61217143394,
-      "mtp_energy_j_per_token": 0.5651756909397028,
+      "mtp_tokens_s_per_user": 430.2244287902092,
+      "mtp_aggregate_tokens_s": 55068.726885146774,
+      "mtp_energy_j_per_token": 0.7742132752598666,
       "distinct_experts_verify": 133.0040221634104,
       "verify_us": 8091.858813417504,
       "draft_us": 392.08527656315437,
@@ -7572,9 +7956,9 @@
        "clock": 0.012188130838187169
       },
       "distinct_experts_ar": 50.74520755872304,
-      "mtp_tokens_s_per_user": 365.23010078886387,
-      "mtp_aggregate_tokens_s": 93498.90580194915,
-      "mtp_energy_j_per_token": 0.45903406209016223,
+      "mtp_tokens_s_per_user": 266.6179735758706,
+      "mtp_aggregate_tokens_s": 68254.20123542288,
+      "mtp_energy_j_per_token": 0.6288137836851537,
       "distinct_experts_verify": 222.50358902672596,
       "verify_us": 13297.914504945691,
       "draft_us": 392.08527656315437,
@@ -7598,9 +7982,9 @@
        "clock": 0.010504225967754462
       },
       "distinct_experts_ar": 94.78448779927447,
-      "mtp_tokens_s_per_user": 252.46192548948798,
-      "mtp_aggregate_tokens_s": 129260.50585061785,
-      "mtp_energy_j_per_token": 0.3238382124978417,
+      "mtp_tokens_s_per_user": 184.29720560732622,
+      "mtp_aggregate_tokens_s": 94360.16927095102,
+      "mtp_energy_j_per_token": 0.44361398972307087,
       "distinct_experts_verify": 316.080492819665,
       "verify_us": 19412.881315154416,
       "draft_us": 392.08527656315437,
@@ -7624,9 +8008,9 @@
        "clock": 0.009244913240464251
       },
       "distinct_experts_ar": 169.57643280662984,
-      "mtp_tokens_s_per_user": 196.98759168099926,
-      "mtp_aggregate_tokens_s": 201715.29388134324,
-      "mtp_energy_j_per_token": 0.1930441412469757,
+      "mtp_tokens_s_per_user": 143.80094192712946,
+      "mtp_aggregate_tokens_s": 147252.16453338056,
+      "mtp_energy_j_per_token": 0.2644440291054461,
       "distinct_experts_verify": 371.79613900629744,
       "verify_us": 24990.22412339629,
       "draft_us": 392.08527656315437,
@@ -7637,7 +8021,7 @@
   },
   "1048576": {
    "ctx": 1048576,
-   "tau": 5.0,
+   "tau": 3.65,
    "gamma": 5,
    "mtp_lane_mult": 2,
    "rows": {
@@ -7660,9 +8044,9 @@
        "clock": 0.33336072136336903
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 13013.51669247227,
-      "mtp_aggregate_tokens_s": 13013.51669247227,
-      "mtp_energy_j_per_token": 0.2659032921186499,
+      "mtp_tokens_s_per_user": 9499.867185504758,
+      "mtp_aggregate_tokens_s": 9499.867185504758,
+      "mtp_energy_j_per_token": 0.36425108509404097,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 365.2374302947656,
       "draft_us": 18.978467541080168,
@@ -7686,9 +8070,9 @@
        "clock": 0.16668036068168451
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 13013.51669247227,
-      "mtp_aggregate_tokens_s": 26027.03338494454,
-      "mtp_energy_j_per_token": 0.139534681287232,
+      "mtp_tokens_s_per_user": 9499.867185504758,
+      "mtp_aggregate_tokens_s": 18999.734371009516,
+      "mtp_energy_j_per_token": 0.19114339902360547,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 365.2374302947656,
       "draft_us": 18.978467541080168,
@@ -7712,9 +8096,9 @@
        "clock": 0.08334018034084226
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 13013.51669247227,
-      "mtp_aggregate_tokens_s": 52054.06676988908,
-      "mtp_energy_j_per_token": 0.07635037587152307,
+      "mtp_tokens_s_per_user": 9499.867185504758,
+      "mtp_aggregate_tokens_s": 37999.46874201903,
+      "mtp_energy_j_per_token": 0.10458955598838775,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 365.2374302947656,
       "draft_us": 18.978467541080168,
@@ -7738,9 +8122,9 @@
        "clock": 0.04167009017042113
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 13013.51669247227,
-      "mtp_aggregate_tokens_s": 104108.13353977817,
-      "mtp_energy_j_per_token": 0.04475822316366859,
+      "mtp_tokens_s_per_user": 9499.867185504758,
+      "mtp_aggregate_tokens_s": 75998.93748403806,
+      "mtp_energy_j_per_token": 0.061312634470778886,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 365.2374302947656,
       "draft_us": 18.978467541080168,
@@ -7764,9 +8148,9 @@
        "clock": 0.020835045085210564
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 13013.51669247227,
-      "mtp_aggregate_tokens_s": 208216.26707955633,
-      "mtp_energy_j_per_token": 0.02896214680974135,
+      "mtp_tokens_s_per_user": 9499.867185504758,
+      "mtp_aggregate_tokens_s": 151997.87496807612,
+      "mtp_energy_j_per_token": 0.03967417371197445,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 365.2374302947656,
       "draft_us": 18.978467541080168,
@@ -7790,9 +8174,9 @@
        "clock": 0.011905740048691753
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 13013.51669247227,
-      "mtp_aggregate_tokens_s": 364378.4673892236,
-      "mtp_energy_j_per_token": 0.022192399800915395,
+      "mtp_tokens_s_per_user": 9499.867185504758,
+      "mtp_aggregate_tokens_s": 265996.2811941332,
+      "mtp_energy_j_per_token": 0.030400547672486837,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 365.2374302947656,
       "draft_us": 18.978467541080168,
@@ -7816,9 +8200,9 @@
        "clock": 0.011571017027236848
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 11714.431248221774,
-      "mtp_aggregate_tokens_s": 374861.79994309676,
-      "mtp_energy_j_per_token": 0.0218914700495441,
+      "mtp_tokens_s_per_user": 8551.534811201895,
+      "mtp_aggregate_tokens_s": 273649.1139584606,
+      "mtp_energy_j_per_token": 0.029988315136361788,
       "distinct_experts_verify": 40.081725915981224,
       "verify_us": 407.8454980491391,
       "draft_us": 18.978467541080168,
@@ -7842,9 +8226,9 @@
        "clock": 0.007653215779667399
       },
       "distinct_experts_ar": 11.90625,
-      "mtp_tokens_s_per_user": 7321.354252961495,
-      "mtp_aggregate_tokens_s": 468566.6721895357,
-      "mtp_energy_j_per_token": 0.01979661991753199,
+      "mtp_tokens_s_per_user": 5344.588604661891,
+      "mtp_aggregate_tokens_s": 342053.670698361,
+      "mtp_energy_j_per_token": 0.02711865742127669,
       "distinct_experts_verify": 75.9797415392441,
       "verify_us": 663.9552940614942,
       "draft_us": 18.978467541080168,
@@ -7868,9 +8252,9 @@
        "clock": 0.005779659693041459
       },
       "distinct_experts_ar": 29.0770343542099,
-      "mtp_tokens_s_per_user": 4188.612173656724,
-      "mtp_aggregate_tokens_s": 536142.3582280606,
-      "mtp_energy_j_per_token": 0.01857982991873225,
+      "mtp_tokens_s_per_user": 3057.6868867694084,
+      "mtp_aggregate_tokens_s": 391383.9215064843,
+      "mtp_energy_j_per_token": 0.025451821806482526,
       "distinct_experts_verify": 133.0040221634104,
       "verify_us": 1174.734340592914,
       "draft_us": 18.978467541080168,
@@ -7894,9 +8278,9 @@
        "clock": 0.004889900002111163
       },
       "distinct_experts_ar": 50.74520755872304,
-      "mtp_tokens_s_per_user": 2287.947523886588,
-      "mtp_aggregate_tokens_s": 585714.5661149665,
-      "mtp_energy_j_per_token": 0.01776000902768997,
+      "mtp_tokens_s_per_user": 1670.2016924372092,
+      "mtp_aggregate_tokens_s": 427571.63326392556,
+      "mtp_energy_j_per_token": 0.024328779489986258,
       "distinct_experts_verify": 222.50358902672596,
       "verify_us": 2166.3863399114907,
       "draft_us": 18.978467541080168,
@@ -7920,9 +8304,9 @@
        "clock": 0.004584768027997931
       },
       "distinct_experts_ar": 94.78448779927447,
-      "mtp_tokens_s_per_user": 1199.7614511325496,
-      "mtp_aggregate_tokens_s": 614277.8629798654,
-      "mtp_energy_j_per_token": 0.017114441977026242,
+      "mtp_tokens_s_per_user": 875.8258593267611,
+      "mtp_aggregate_tokens_s": 448422.8399753017,
+      "mtp_energy_j_per_token": 0.02344444106441951,
       "distinct_experts_verify": 316.080492819665,
       "verify_us": 4148.516658494271,
       "draft_us": 18.978467541080168,
@@ -7946,9 +8330,9 @@
        "clock": 0.0045591421822919875
       },
       "distinct_experts_ar": 169.57643280662984,
-      "mtp_tokens_s_per_user": 601.54477982152,
-      "mtp_aggregate_tokens_s": 615981.8545372365,
-      "mtp_energy_j_per_token": 0.01672726041344754,
+      "mtp_tokens_s_per_user": 439.12768926970955,
+      "mtp_aggregate_tokens_s": 449666.7538121826,
+      "mtp_energy_j_per_token": 0.022914055360887045,
       "distinct_experts_verify": 371.79613900629744,
       "verify_us": 8292.95468809783,
       "draft_us": 18.978467541080168,
@@ -7974,9 +8358,9 @@
        "clock": 0.9352065107469355
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1633.2234092842689,
-      "mtp_aggregate_tokens_s": 1633.2234092842689,
-      "mtp_energy_j_per_token": 1.8505992617492057,
+      "mtp_tokens_s_per_user": 1192.2530887775163,
+      "mtp_aggregate_tokens_s": 1192.2530887775163,
+      "mtp_energy_j_per_token": 2.535067481848227,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2669.3452488486514,
       "draft_us": 392.08527656315437,
@@ -8000,9 +8384,9 @@
        "clock": 0.46760325537346775
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1633.2234092842689,
-      "mtp_aggregate_tokens_s": 3266.4468185685378,
-      "mtp_energy_j_per_token": 1.3203676283191785,
+      "mtp_tokens_s_per_user": 1192.2530887775163,
+      "mtp_aggregate_tokens_s": 2384.5061775550325,
+      "mtp_energy_j_per_token": 1.8087227785194226,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2669.3452488486514,
       "draft_us": 392.08527656315437,
@@ -8026,9 +8410,9 @@
        "clock": 0.23380162768673388
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1633.2234092842689,
-      "mtp_aggregate_tokens_s": 6532.8936371370755,
-      "mtp_energy_j_per_token": 1.055251811604165,
+      "mtp_tokens_s_per_user": 1192.2530887775163,
+      "mtp_aggregate_tokens_s": 4769.012355110065,
+      "mtp_energy_j_per_token": 1.44555042685502,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2669.3452488486514,
       "draft_us": 392.08527656315437,
@@ -8052,9 +8436,9 @@
        "clock": 0.11690081384336694
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1633.2234092842689,
-      "mtp_aggregate_tokens_s": 13065.787274274151,
-      "mtp_energy_j_per_token": 0.922693903246658,
+      "mtp_tokens_s_per_user": 1192.2530887775163,
+      "mtp_aggregate_tokens_s": 9538.02471022013,
+      "mtp_energy_j_per_token": 1.263964251022819,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2669.3452488486514,
       "draft_us": 392.08527656315437,
@@ -8078,9 +8462,9 @@
        "clock": 0.05845040692168347
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1633.2234092842689,
-      "mtp_aggregate_tokens_s": 26131.574548548302,
-      "mtp_energy_j_per_token": 0.8564149490679046,
+      "mtp_tokens_s_per_user": 1192.2530887775163,
+      "mtp_aggregate_tokens_s": 19076.04942044026,
+      "mtp_energy_j_per_token": 1.1731711631067185,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2669.3452488486514,
       "draft_us": 392.08527656315437,
@@ -8104,9 +8488,9 @@
        "clock": 0.03340023252667627
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1633.2234092842689,
-      "mtp_aggregate_tokens_s": 45730.25545995953,
-      "mtp_energy_j_per_token": 0.828009682991296,
+      "mtp_tokens_s_per_user": 1192.2530887775163,
+      "mtp_aggregate_tokens_s": 33383.08648577046,
+      "mtp_energy_j_per_token": 1.1342598397141042,
       "distinct_experts_verify": 34.62270569242537,
       "verify_us": 2669.3452488486514,
       "draft_us": 392.08527656315437,
@@ -8130,9 +8514,9 @@
        "clock": 0.029390501333465147
       },
       "distinct_experts_ar": 6.0,
-      "mtp_tokens_s_per_user": 1485.2126451199892,
-      "mtp_aggregate_tokens_s": 47526.804643839656,
-      "mtp_energy_j_per_token": 0.8101691502799199,
+      "mtp_tokens_s_per_user": 1084.2052309375922,
+      "mtp_aggregate_tokens_s": 34694.56739000295,
+      "mtp_energy_j_per_token": 1.1098207538081095,
       "distinct_experts_verify": 40.081725915981224,
       "verify_us": 2974.4360201876243,
       "draft_us": 392.08527656315437,
@@ -8156,9 +8540,9 @@
        "clock": 0.01952512749736909
       },
       "distinct_experts_ar": 11.90625,
-      "mtp_tokens_s_per_user": 925.8908365165375,
-      "mtp_aggregate_tokens_s": 59257.0135370584,
-      "mtp_energy_j_per_token": 0.6878482814251633,
+      "mtp_tokens_s_per_user": 675.9003106570724,
+      "mtp_aggregate_tokens_s": 43257.61988205263,
+      "mtp_energy_j_per_token": 0.9422579197604977,
       "distinct_experts_verify": 75.9797415392441,
       "verify_us": 5008.119372627899,
       "draft_us": 392.08527656315437,
@@ -8182,9 +8566,9 @@
        "clock": 0.016498326086707888
       },
       "distinct_experts_ar": 29.0770343542099,
-      "mtp_tokens_s_per_user": 574.0696304017188,
-      "mtp_aggregate_tokens_s": 73480.91269142,
-      "mtp_energy_j_per_token": 0.569841649459602,
+      "mtp_tokens_s_per_user": 419.0708301932547,
+      "mtp_aggregate_tokens_s": 53641.066264736604,
+      "mtp_energy_j_per_token": 0.7806049992597289,
       "distinct_experts_verify": 133.0040221634104,
       "verify_us": 8317.659561360308,
       "draft_us": 392.08527656315437,
@@ -8208,9 +8592,9 @@
        "clock": 0.012746143626060231
       },
       "distinct_experts_ar": 50.74520755872304,
-      "mtp_tokens_s_per_user": 353.56926471435884,
-      "mtp_aggregate_tokens_s": 90513.73176687586,
-      "mtp_energy_j_per_token": 0.46369988450130706,
+      "mtp_tokens_s_per_user": 258.10556324148195,
+      "mtp_aggregate_tokens_s": 66075.02418981938,
+      "mtp_energy_j_per_token": 0.6352053212346672,
       "distinct_experts_verify": 222.50358902672596,
       "verify_us": 13749.41541083227,
       "draft_us": 392.08527656315437,
@@ -8234,9 +8618,9 @@
        "clock": 0.011074282884707182
       },
       "distinct_experts_ar": 94.78448779927447,
-      "mtp_tokens_s_per_user": 241.19943547572944,
-      "mtp_aggregate_tokens_s": 123494.11096357348,
-      "mtp_energy_j_per_token": 0.328518760081391,
+      "mtp_tokens_s_per_user": 176.0755878972825,
+      "mtp_aggregate_tokens_s": 90150.70100340864,
+      "mtp_energy_j_per_token": 0.45002569874163173,
       "distinct_experts_verify": 316.080492819665,
       "verify_us": 20337.648149795226,
       "draft_us": 392.08527656315437,
@@ -8260,9 +8644,9 @@
        "clock": 0.009814970157416976
       },
       "distinct_experts_ar": 169.57643280662984,
-      "mtp_tokens_s_per_user": 183.6085786513518,
-      "mtp_aggregate_tokens_s": 188015.18453898423,
-      "mtp_energy_j_per_token": 0.19772468883052507,
+      "mtp_tokens_s_per_user": 134.0342624154868,
+      "mtp_aggregate_tokens_s": 137251.0847134585,
+      "mtp_energy_j_per_token": 0.27085573812400693,
       "distinct_experts_verify": 371.79613900629744,
       "verify_us": 26839.757792677814,
       "draft_us": 392.08527656315437,
@@ -8400,8 +8784,8 @@
    "200000": {
     "rom_ar": 5417.685767461598,
     "hbm_ar": 941.7970760113858,
-    "rom_mtp": 14936.814364652291,
-    "hbm_mtp": 1660.0496942742377,
+    "rom_mtp": 10903.874486196173,
+    "hbm_mtp": 1211.8362768201935,
     "ratio_user_mtp": 8.997811581286767,
     "ratio_user_ar": 5.752497969526613,
     "ratio_energy_b1_gated": 72.00593491074368,
@@ -8411,9 +8795,9 @@
    "1048576": {
     "rom_ar": 4933.094756135517,
     "hbm_ar": 925.9844816192578,
-    "rom_mtp": 13013.51669247227,
-    "hbm_mtp": 1633.2234092842689,
-    "ratio_user_mtp": 7.9679954490581375,
+    "rom_mtp": 9499.867185504758,
+    "hbm_mtp": 1192.2530887775163,
+    "ratio_user_mtp": 7.967995449058138,
     "ratio_user_ar": 5.32740543071421,
     "ratio_energy_b1_gated": 39.69822506534546,
     "ratio_aggregate_b64": 4.844763425134369,
@@ -8436,9 +8820,9 @@
    "1048576": 4528.307796532298
   },
   "required_mtp_m2_headline_tau": {
-   "8192": 14132.254354322908,
-   "200000": 13674.155411894246,
-   "1048576": 12044.541800135727
+   "8192": 10316.545678655722,
+   "200000": 9982.133450682799,
+   "1048576": 8792.515514099081
   },
   "hbm_ar": {
    "8192": 932.8481983877914,
@@ -8447,7 +8831,7 @@
   }
  },
  "power": {
-  "cooling_limit_w_per_die": 374.56,
+  "cooling_limit_w_per_die": 474.56,
   "cooling_limit_w_per_die_by_class": {
    "air": 374.56,
    "liquid": 474.56
@@ -8470,8 +8854,8 @@
    "m1": {
     "block_mm2": 99.53563112,
     "clock_w_active": 8.747340566272282,
-    "active_die_dynamic_w_b1": 256.197331963071,
-    "saturated_die_dynamic_w": 433.13059085752593,
+    "active_die_dynamic_w_b1": 145.67539902464534,
+    "saturated_die_dynamic_w": 234.4482375827335,
     "average_die": {
      "active_dynamic_w_b1": 44.41381324244121,
      "saturated_dynamic_w": 58.796829081285445
@@ -8480,8 +8864,8 @@
    "m2": {
     "block_mm2": 199.07126224,
     "clock_w_active": 17.494681132544564,
-    "active_die_dynamic_w_b1": 264.9446725293433,
-    "saturated_die_dynamic_w": 450.6252719900705,
+    "active_die_dynamic_w_b1": 154.42273959091764,
+    "saturated_die_dynamic_w": 251.94291871527807,
     "average_die": {
      "active_dynamic_w_b1": 53.161153808713486,
      "saturated_dynamic_w": 76.29151021383001
@@ -8491,23 +8875,23 @@
   "hottest_die": {
    "basis": "power_scenarios.v41_hottest_die (scenario B inputs): the hottest die's work over the layer-die mean, applied to the array-average dynamic power",
    "batch1": {
-    "die": "14",
-    "factor": 6.937887961153391
+    "die": "9",
+    "factor": 3.839125323706697
    },
    "saturated": {
-    "die": "14",
-    "factor": 7.3665637692592485,
+    "die": "9",
+    "factor": 3.9874299557653607,
     "batch": 512
    }
   },
-  "worst_case_die_w": 572.4616710403907,
-  "margin": 0.6542970803954008,
+  "worst_case_die_w": 373.7793177655983,
+  "margin": 1.2696261602617684,
   "margin_by_class": {
-   "air": 0.6542970803954008,
-   "liquid": 0.8289812646103198
+   "air": 1.002088618062306,
+   "liquid": 1.2696261602617684
   },
   "wall_factor": 1.2404214559386975,
-  "provisioned_wall_w_per_die": 852.1124873532252,
+  "provisioned_wall_w_per_die": 556.3726626510918,
   "provisioning_rule": "1.2 x worst case / (VR x PSU) x (1 + CDU + fans): technology.json power.rack_overheads",
   "requirement": "per-die power <= the cooling limit at every batch with stage clock gating: an idle stage's clock tree gated (ICG at the block boundaries), its ROM macros and engines quiescent; the worst case is the saturated array (every die busy)",
   "note": "ASAP7 unit areas; the analytical design's 48 W/die clock term charges all 525 mm2 of logic at 1 GHz ungated and is the upper bound if nothing gates"
@@ -8891,7 +9275,7 @@
    }
   },
   {
-   "step": "5 MTP m = 2, tau 5, on step 3",
+   "step": "5 MTP m = 2, tau 3.65, on step 3",
    "levers": [
     "osm",
     "chain_all",
@@ -8902,17 +9286,17 @@
    "8192": {
     "verify_us": 242.4303175568382,
     "draft_us": 18.978467541080168,
-    "tokens_s_per_user": 19127.130704987987
+    "tokens_s_per_user": 13962.80541464123
    },
    "200000": {
     "verify_us": 247.9869477918706,
     "draft_us": 18.978467541080168,
-    "tokens_s_per_user": 18729.01774098401
+    "tokens_s_per_user": 13672.182950918326
    },
    "1048576": {
     "verify_us": 272.6579699735146,
     "draft_us": 18.978467541080168,
-    "tokens_s_per_user": 17144.634060857974
+    "tokens_s_per_user": 12515.582864426322
    }
   }
  ],
@@ -9033,19 +9417,19 @@
   },
   "ladder_mtp_m2_headline_tau": {
    "8192": {
-    "overlap_assumed": 19127.130704987987,
-    "measured_exposure": 18774.844736540443
+    "overlap_assumed": 13962.80541464123,
+    "measured_exposure": 13705.636657674522
    },
    "200000": {
-    "overlap_assumed": 18729.01774098401,
-    "measured_exposure": 18391.11460868932
+    "overlap_assumed": 13672.182950918326,
+    "measured_exposure": 13425.513664343205
    },
    "1048576": {
-    "overlap_assumed": 17144.634060857974,
-    "measured_exposure": 16861.049881405877
+    "overlap_assumed": 12515.582864426322,
+    "measured_exposure": 12308.56641342629
    }
   },
-  "tau": 5.0
+  "tau": 3.65
  },
  "hc_mtp_sizing": {
   "rows": [
@@ -9055,13 +9439,13 @@
     "hc_area_m2_mm2": 4.787367936000001,
     "six_position_cycles": 846.0,
     "step5": {
-     "tokens_s_per_user": 17498.718663574877,
+     "tokens_s_per_user": 12774.06462440966,
      "verify_us": 266.756739483417,
      "hc_on_path": 45,
      "hc_ops": 80
     },
     "spec": {
-     "tokens_s_per_user": 14573.584466113241,
+     "tokens_s_per_user": 10638.716660262666,
      "verify_us": 324.10802649380116,
      "hc_on_path": 42,
      "hc_ops": 80
@@ -9073,13 +9457,13 @@
     "hc_area_m2_mm2": 9.574735872000002,
     "six_position_cycles": 486.0,
     "step5": {
-     "tokens_s_per_user": 18513.96680820826,
+     "tokens_s_per_user": 13515.19576999203,
      "verify_us": 251.087912711002,
      "hc_on_path": 45,
      "hc_ops": 80
     },
     "spec": {
-     "tokens_s_per_user": 14936.814364652291,
+     "tokens_s_per_user": 10903.874486196173,
      "verify_us": 315.7649307455325,
      "hc_on_path": 0,
      "hc_ops": 80
@@ -9091,13 +9475,13 @@
     "hc_area_m2_mm2": 11.968419840000001,
     "six_position_cycles": 414.0,
     "step5": {
-     "tokens_s_per_user": 18729.01774098401,
+     "tokens_s_per_user": 13672.182950918326,
      "verify_us": 247.9869477918706,
      "hc_on_path": 32,
      "hc_ops": 80
     },
     "spec": {
-     "tokens_s_per_user": 14936.814364652291,
+     "tokens_s_per_user": 10903.874486196173,
      "verify_us": 315.7649307455325,
      "hc_on_path": 0,
      "hc_ops": 80
@@ -9109,13 +9493,13 @@
     "hc_area_m2_mm2": 14.362103808000002,
     "six_position_cycles": 366.0,
     "step5": {
-     "tokens_s_per_user": 18833.82617568509,
+     "tokens_s_per_user": 13748.693108250116,
      "verify_us": 246.5013108830786,
      "hc_on_path": 32,
      "hc_ops": 80
     },
     "spec": {
-     "tokens_s_per_user": 14936.814364652291,
+     "tokens_s_per_user": 10903.874486196173,
      "verify_us": 315.7649307455325,
      "hc_on_path": 0,
      "hc_ops": 80
@@ -9127,13 +9511,13 @@
     "hc_area_m2_mm2": 19.149471744000003,
     "six_position_cycles": 306.0,
     "step5": {
-     "tokens_s_per_user": 18912.69848239445,
+     "tokens_s_per_user": 13806.269892147948,
      "verify_us": 245.39417101467248,
      "hc_on_path": 2,
      "hc_ops": 80
     },
     "spec": {
-     "tokens_s_per_user": 14936.814364652291,
+     "tokens_s_per_user": 10903.874486196173,
      "verify_us": 315.7649307455325,
      "hc_on_path": 0,
      "hc_ops": 80

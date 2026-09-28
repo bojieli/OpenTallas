@@ -1,6 +1,7 @@
 # DeepSeek-V4.1-Flash architecture specification: requirement, budget, block specs
 
-Status: specification and budget, 2026-09-27 (re-derived on the unified budget model). This document works
+Status: specification and budget, 2026-09-28 (re-derived on the unified budget model; MTP at the measured
+V4.1-Flash τ, liquid cooling baseline). This document works
 top-down. It sets the performance requirement first, derives a per-block specification from it, and records the
 gap to the RTL as built. It covers the ROM array (packaging option (b)) and the HBM comparator.
 
@@ -19,9 +20,9 @@ overlapped reductions (a collective's bytes stream behind its producer). Plain o
 row. The target context is **1M** (user decision 2026-09-27: the default of most agent APIs); 200K is the
 secondary point and 8K the tertiary one (§8.3). At batch 1 the ROM array must reach at least **4,599 tokens/s per
 user without MTP at 1M** (4,837 at 200K), which is the report's DAG re-priced at the baseline. The budgeted design
-delivers **4,933 without MTP and 13,014 with DSpark MTP at 1M** (5,418 and 14,937 at 200K) at the headline
-τ = 5.0. The HBM comparator at equal total logic area delivers 926 without MTP and 1,672 with it at 1M (942 and
-1,682 at 200K). Every figure below comes from the budget model at its current spec, not from silicon; the
+delivers **4,933 without MTP and 9,500 with DSpark MTP at 1M** (5,418 and 10,904 at 200K) at the headline
+τ = 3.65, the value measured on V4.1-Flash itself. The HBM comparator at equal total logic area delivers 926
+without MTP and 1,221 with it at 1M (942 and 1,228 at 200K). Every figure below comes from the budget model at its current spec, not from silicon; the
 adopted design point built on this spec is in `docs/ARCH_V41_RACK.md` and the atlas.
 
 ## 1. Requirement
@@ -46,11 +47,12 @@ from 40.3 to 26.4 µs per token and hide the collectives' 3.3 µs of bytes.
 
 Speculation is reported with and without MTP, on both machines:
 
-- τ, the accepted tokens per verify cycle including the bonus token, headlines at **5.0** (user decision
-  2026-09-27): the LMSYS/SGLang measurement, accept length ~5 at batch 1 on DeepSeek-V4-Pro (not V4.1-Flash,
-  workload not stated).
-- The sensitivities are 3.27 and 3.80 (derived from vLLM survival, `results/roofline/speculative/
-  hdc_design_faithful.json`) and 4.1, the previous default.
+- τ, the accepted tokens per verify cycle including the bonus token, headlines at **3.65** (user decision
+  2026-09-28): the measured V4.1-Flash τ = 3.65 (DSpark at γ = 5, greedy, on-policy exact replay on the model's own output, 95% CI 3.50–3.84; `results/speculative/v41_flash_dspark_onpolicy_greedy.json`), read by `tools/arch_budget_v41.py` (`TAU_HEADLINE`) from that record.
+  It replaces the earlier 5.0 (LMSYS/SGLang, DeepSeek-V4-Pro, workload not stated).
+- The sensitivity band is the published V4.1-Flash range **3.5–4.1** (InferenceX 3.51 / 4.07, vLLM PR #57432
+  GSM8K greedy 3.82–3.89; `results/speculative/acceptance_tau.json`); the V4-Pro-derived 3.27 / 3.80 (vLLM
+  survival, `results/roofline/speculative/hdc_design_faithful.json`) are kept as further points.
 - DSpark's configured block is γ = 5, so a verify pass carries **6 positions**.
 
 ## 2. Workload: one token, from the model graph
@@ -463,30 +465,35 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
 12. **Power (requirement).** Per-die power must stay at or below the die's cooling limit at every batch, with
     stage clock gating: an idle stage's clock tree gated at its block boundaries, and its ROM macros and engines
     quiescent. The limit is the per-class limit of a die in a two-die package (`configs/hardware/
-    power_scenarios.json` cooling classes: a shipping package's rating less its own stacks, per die): **374.6 W
-    air**, 474.6 W liquid. The former 0.5 W/mm² × 815 mm² rule (407.5 W, an A100 module rating over its die) is
+    power_scenarios.json` cooling classes: a shipping package's rating less its own stacks, per die): **474.6 W
+    liquid, the V4.1 baseline** (user decision 2026-09-28), with 374.6 W air as the sensitivity. The former 0.5 W/mm² × 815 mm² rule (407.5 W, an A100 module rating over its die) is
     withdrawn. **The check is the hottest die, not the average:** the placement cuts the layers at equal ROM
-    bytes, so the stage that holds layer 20 (an uncapped index scan over every key of the context) does 6.9×
-    the mean layer die's work at batch 1 and 7.4× at saturation (`power_scenarios.v41_hottest_die`). From
+    bytes, so the stages that hold the uncapped index scans carry far more than the mean. With the adopted stage
+    rebalancing (layer 20's keys split over S14, S13 and S12; `tools/v41_stage_rebalance.py`) the hottest die is
+    S9, layer 14's scan: 3.8× the mean layer die's work at batch 1 and 4.0× at saturation
+    (`power_scenarios.v41_hottest_die`; 6.9× and 7.4× on S14 before the split). From
     `results/arch/arch_budget_v41.json` `power`, at 1M (hottest die; the array average in parentheses):
 
     | per die | m = 1 | m = 2 (MTP) |
     |---|---|---|
     | block area (ASAP7) | 99.5 mm² | 199.1 mm² |
     | active clock of the blocks | 8.7 W | 17.5 W |
-    | dynamic while its stage holds the token, batch 1 | 256.2 W (44.4) | 264.9 W (53.2) |
-    | dynamic at the saturated batch (every die busy) | 433.1 W (58.8) | 450.6 W (76.3) |
+    | dynamic while its stage holds the token, batch 1 | 145.7 W (44.4) | 154.4 W (53.2) |
+    | dynamic at the saturated batch (every die busy) | 234.4 W (58.8) | 251.9 W (76.3) |
 
     Static power on the validated inputs is 98.8 W per die: leakage 54.5 W (0.10 W/mm² of logic, 0.0067 W/mm² of
     ROM array; `technology.json` power.static_leakage_w_per_mm2), HBM idle 11.2 W (4 stacks), always-on SerDes
     30.6 W and UCIe idle 2.5 W. With the HBM interface at its worst-case traffic (34.2 W) the worst case is
-    **572.5 W for the hottest die, over the air limit (0.65×) and over liquid (0.83×)**; provisioned at 1.2 ×
-    worst case through the wall chain it is 852.1 W. At the specification's widths the saturated rate is the
-    stage-mean bound, so this hottest-die figure is an upper bound; at the adopted design point, whose
-    operating points are bound by the busiest stage, the hottest die draws 450 W at batch 1 and 490-533 W
-    saturated (production lane, `results/arch/power_scenarios.json`): liquid at batch 1 and the fill, over
-    liquid with MTP and at saturation. The requirement therefore also asks for a placement balanced in time,
-    not bytes (spread the index scan, or place the scan layers by time). Without gating, the analytical design charges a 48 W/die clock term on all
+    **373.8 W for the hottest die, within liquid (0.79× of 474.6 W) and at the air limit (1.00×)**; provisioned
+    at 1.2 × worst case through the wall chain it is 556.4 W. At the specification's widths the saturated rate
+    is the stage-mean bound, so this hottest-die figure is an upper bound; at the adopted design point, whose
+    operating points are bound by the busiest stage, the hottest die draws 383 W at batch 1 and the fill, 455 W
+    at batch 1 with MTP (a head die, the draft), 426 W at the fill with MTP and 461 / 471 W saturated without /
+    with MTP at 1M (production lane, `results/arch/power_scenarios.json`): **within liquid at every operating
+    point over 200K–1M, over air at every 1M point** (`results/arch/v41_stage_rebalance.json`
+    `cooling_sweep`). That is the placement balanced in time, not bytes, that this requirement asks for: the
+    index scans are spread by the stage rebalancing (the ratio-2 scans of layers 2, 8 and 14 only in MTP
+    verify passes, where their home dies would otherwise exceed liquid). Without gating, the analytical design charges a 48 W/die clock term on all
     525 mm² of logic, which is the upper bound if nothing gates. Stage gating is also what keeps batch-1 energy
     at 36.0 mJ per token at 1M instead of 362 mJ (19.6 against 317 mJ at 200K; §8).
 
@@ -539,29 +546,29 @@ m ≥ B it therefore charges routed experts one sweep. That assumes the m MAC la
 positions that use *different* experts, which they cannot. The routed term should be (U/k) × max(1, share/m)
 sweeps, as `price()` does here. At m = 1 the two agree: the remodel charges 6 sweeps, this model 6.0×.
 
-**The MTP design point** at 200K, B = 6, τ = 5.0. An m-way core makes every engine m times wider; the ROM read
-width does not change.
+**The MTP design point** at 200K, B = 6, τ = 3.65 (measured). An m-way core makes every engine m times wider;
+the ROM read width does not change.
 
-| m | block area, mm² | verify, µs | draft, µs | tok/s at τ = 5.0 (sensitivities 3.27 – 3.8 – 4.1) |
+| m | block area, mm² | verify, µs | draft, µs | tok/s at τ = 3.65 (published band 3.5 – 4.1) |
 |---|---|---|---|---|
-| 1 | 99.5 | 424.9 | 23.5 | 11,150 |
-| **2 (design)** | **199** | **315.8** | **19.0** | **14,937** (9,757 – 11,352 – 12,248) |
-| 3 | 298.5 | 281.7 | 17.2 | 16,725 |
-| 4 | 398 (exceeds 329) | 271.9 | 16.8 | 17,318 |
-| 6 | 597 | 248.6 | 15.7 | 18,918 |
+| 1 | 99.5 | 424.9 | 23.5 | 8,139 |
+| **2 (design)** | **199** | **315.8** | **19.0** | **10,904** (10,456 – 12,248) |
+| 3 | 298.5 | 281.7 | 17.2 | 12,209 |
+| 4 | 398 (exceeds 329) | 271.9 | 16.8 | 12,642 |
+| 6 | 597 | 248.6 | 15.7 | 13,810 |
 
 m = 2 is the knee: m = 3 buys 12% for 50% more area. The draft chain is 3 DSpark stages over a 5-row block
 plus 5 dependent argmax steps over the 129,280-row vocabulary (lm_head row, rank-256 Markov bias, argmax, one
 group collective). At m = 2 it is **19.0 µs, 6% of the cycle**.
 
-With and without MTP, both machines, at τ = 5.0 (baseline; plain (b) in the last row):
+With and without MTP, both machines, at τ = 3.65 (baseline; plain (b) in the last row):
 
 | | 200K, no MTP | 200K, with MTP | 1M, no MTP | 1M, with MTP |
 |---|---|---|---|---|
-| ROM array (baseline; m = 2) | 5,418 | 14,937 | 4,933 | **13,014** |
-| HBM comparator (iso logic area; m = 6) | 942 | 1,682 | 926 | 1,672 |
+| ROM array (baseline; m = 2) | 5,418 | 10,904 | 4,933 | **9,500** |
+| HBM comparator (iso logic area; m = 6) | 942 | 1,228 | 926 | 1,221 |
 | ROM : HBM | 5.75× | 8.9× | 5.33× | **7.8×** |
-| ROM array, plain (b) (m = 2) | 4,933 | 13,674 | 4,528 | 12,045 |
+| ROM array, plain (b) (m = 2) | 4,933 | 9,982 | 4,528 | 8,793 |
 
 ## 8. Batch: rate per user, throughput and energy (one model with §7)
 
@@ -579,13 +586,13 @@ their union across users and positions, and KV and index keys are per user.
 
 | batch | ROM tok/s/user | ROM array tok/s | ROM mJ/token (gated) | ROM + MTP tok/s/user | HBM tok/s/user | HBM array tok/s | HBM mJ/token (gated) | HBM + MTP tok/s/user |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 4,933 | 4,933 | 36.0 | 13,014 | 926 | 926 | 1,430 | 1,633 |
-| 8 | 4,933 | 39,465 | 29.8 | 13,014 | 926 | 7,408 | 1,397 | 1,633 |
-| 28 | 4,933 | 138,127 | 29.2 | 13,014 | 926 | 25,928 | 1,393 | 1,633 |
-| 64 | 3,357 | 214,877 | 27.4 | 7,321 | 693 | 44,352 | 828 | 926 |
-| 128 | 2,223 | 284,532 | 27.1 | 4,189 | 410 | 52,489 | 723 | 574 |
-| 256 | 1,314 | 336,305 | 26.6 | 2,288 | 265 | 67,941 | 561 | 354 |
-| 1,024 | 352 | 360,704 | 26.1 | 602 | 86 | 88,231 | 415 | 184 |
+| 1 | 4,933 | 4,933 | 36.0 | 9,500 | 926 | 926 | 1,430 | 1,192 |
+| 8 | 4,933 | 39,465 | 29.8 | 9,500 | 926 | 7,408 | 1,397 | 1,192 |
+| 28 | 4,933 | 138,127 | 29.2 | 9,500 | 926 | 25,928 | 1,393 | 1,192 |
+| 64 | 3,357 | 214,877 | 27.4 | 5,345 | 693 | 44,352 | 828 | 676 |
+| 128 | 2,223 | 284,532 | 27.1 | 3,058 | 410 | 52,489 | 723 | 419 |
+| 256 | 1,314 | 336,305 | 26.6 | 1,670 | 265 | 67,941 | 561 | 258 |
+| 1,024 | 352 | 360,704 | 26.1 | 439 | 86 | 88,231 | 415 | 134 |
 
 The HBM MTP column uses m = 2 here, the batch model's single design point; §7 gives HBM at m = 6.
 
@@ -593,9 +600,9 @@ The HBM MTP column uses m = 2 here, the batch model's single design point; §7 g
 
 | batch | ROM tok/s/user | ROM array tok/s | ROM mJ/token (gated) | ROM + MTP tok/s/user | HBM tok/s/user | HBM array tok/s | HBM mJ/token (gated) | HBM + MTP tok/s/user |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 5,418 | 5,418 | 19.6 | 14,937 | 942 | 942 | 1,413 | 1,660 |
-| 64 | 3,898 | 249,484 | 11.6 | 8,772 | 713 | 45,660 | 812 | 946 |
-| 1,024 | 462 | 473,018 | 10.4 | 774 | 91 | 93,672 | 400 | 197 |
+| 1 | 5,418 | 5,418 | 19.6 | 10,904 | 942 | 942 | 1,413 | 1,212 |
+| 64 | 3,898 | 249,484 | 11.6 | 6,404 | 713 | 45,660 | 812 | 690 |
+| 1,024 | 462 | 473,018 | 10.4 | 565 | 91 | 93,672 | 400 | 144 |
 
 Batch-1 energy per token without gating at 1M: ROM 362 mJ (clock 333 mJ), HBM 2,327 mJ (weights 1,367 mJ); at
 200K 317 mJ (clock 304) and 2,296 mJ. Every die clocks every cycle while only one layer group works, so
@@ -612,12 +619,12 @@ specification's widths; the adopted design point's aggregates are higher (see th
 **Reconciliation with the design point (internal note).** At 200K and 1,024 users the specification/budget model
 gives an aggregate of 473K tokens/s (`arch_budget_v41.json` `batch['200000']`, batch 1,024; previously ~450K
 at τ 4.1 on the retired spec model), while the adopted design point gives 436K (`results/arch/v41_lanes.json`
-`energy['200000']['sat1024']['rom']['aggregate_tokens_s']`; 161K at 1M with the 866 users held, against 359K
+`energy['200000']['sat1024']['rom']['aggregate_tokens_s']`; 273K at 1M with the 866 users held, against 359K
 here). They are two machines priced by the same model, not two measurements of one, and they now differ in
 their occupancy bound: these spec rows use the stage mean, while the design point's operating points are bound
-by the busiest pipeline stage (`arch_budget_v41.stage_bound`: the stage holding layer 20's uncapped index scan
-carries 3.4× the mean stage's work at 1M, 2.0× at 200K), which is why its saturated aggregates are the lower
-ones. The design point is the spec after the adopted latency-ladder rungs
+by the busiest pipeline stage (`arch_budget_v41.stage_bound`: with the adopted stage rebalancing the busiest
+stage is S9, layer 14's scan, at 2.3× the mean stage's work at 1M batch 1 and 2.6× saturated, and S14 at 2.0× at
+200K; before the split, S14 carried 3.4× at 1M), which is why its saturated aggregates are the lower ones. The design point is the spec after the adopted latency-ladder rungs
 (`results/arch/v41_latency_ladder.json`: the pooled block-dot / BF16 engines of `arch_utilization_v41.unified`
 with the pools widened ×2 inside the envelope (`widths_x2`, the R-L8 pools), the 1.087 GHz clock, the
 four-wide lm_head engine, the split index scan, the shorter sequencer gap and the fast-FP formulas), with the
@@ -630,7 +637,7 @@ atlas quotes only the design point.
 
 | ROM : HBM | 200K | 1M |
 |---|---|---|
-| per-user rate, with MTP (τ = 5.0) | 9.00× | **7.97×** |
+| per-user rate, with MTP (τ = 3.65) | 9.00× | **7.97×** |
 | per-user rate, without MTP | 5.75× | **5.33×** |
 | energy per token, batch 1, gated | 72.0× | **39.7×** |
 | array throughput, batch 64 | 5.46× | **4.84×** |
@@ -666,8 +673,8 @@ Requirements:
   stream (dense weights, window rows) is issued that far ahead across every dependency point.
 - **Routed-expert fetch.** The hard part. The expert ids exist only after the router's top-6, so a layer's
   28.2 MB per die of expert bytes is exposed: first access plus bytes, **8.8 µs per layer on the critical
-  path**. With MTP the fetch is the union (34.6 experts at B = 6), which caps HBM's speculative gain at 1.8×
-  (γ = 5, τ = 5.0, m = 6).
+  path**. With MTP the fetch is the union (34.6 experts at B = 6), which caps HBM's speculative gain at 1.3×
+  (γ = 5, τ = 3.65, m = 6).
 - **Controller.** Refresh-aware REFpb with at least 64-beat queues per pseudo-channel, or all-bank refresh
   with at least 512 beats. Request issue must never let a refreshing channel stall words that do not touch
   it, and each stream uses at least 8 pseudo-channels (§6 item 11; `results/rtl/hdc_hbm_campaign.json`
@@ -763,7 +770,7 @@ section prices the further levers, each added to the previous, on the spec's wid
 | 4a | + attention on one package, spec widths | 144.5 | 7,114 / 6,922 / 6,086 | 99.5 mm² |
 | 4b | + attention on one package, attention/indexer/weight engines ×2 | 126.7 | 8,151 / 7,893 / 6,824 | 180 mm² |
 | 4c | the same engines ×2, attention kept on the four-die group | 132.9 | 7,629 / 7,524 / 7,020 | 180 mm² |
-| 5 | MTP m = 2, τ = 5.0, on step 3 | 267.0 per cycle | **19,127 / 18,729 / 17,145** | 199 mm² |
+| 5 | MTP m = 2, τ = 3.65, on step 3 | 267.0 per cycle | **13,963 / 13,672 / 12,516** | 199 mm² |
 
 1. **Reductions off the critical path (−4.7 µs).** The attention softmax becomes online: exp streams behind
    the scores with a running-max rescale, as the release's own sparse-attention kernel does in 64-row blocks
@@ -793,9 +800,9 @@ section prices the further levers, each added to the previous, on the spec's wid
      reduction is already the one-shot engine's first level. The next lever is in-network reduction, which
      removes the package-pair round trip, or a shorter pair link. The substrate module is +12.5% but not
      shippable (the packaging agent's study).
-5. **MTP on top (×2.6).** On step 3 the m = 2 core verifies 6 positions in 248.0 µs plus a 19.0 µs draft per
-   cycle. At τ = 5.0 that is **17,145 tok/s per user at 1M** (18,729 at 200K), against 13,014 (14,937) with MTP
-   on the spec alone.
+5. **MTP on top (×1.9).** On step 3 the m = 2 core verifies 6 positions in 248.0 µs plus a 19.0 µs draft per
+   cycle. At the measured τ = 3.65 that is **12,516 tok/s per user at 1M** (13,672 at 200K), against 9,500
+   (10,904) with MTP on the spec alone.
 
 Levers 1-3 are the integration requirements for `ot_hdc_core_v41x`:
 - lever 1 is a golden/ISA/RTL contract change;

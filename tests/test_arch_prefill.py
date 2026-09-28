@@ -68,4 +68,4 @@ def test_late_bind_frees_the_slot(rec):
 
 
 def test_qwen_capacity_explains_the_atlas_figure(rec):
-    assert rec["qwen_cold"][0]["capacity"]["users_at_0p9"] == 201
+    assert rec["qwen_cold"][0]["capacity"]["users_at_0p9"] == 268      # 0.9 x 8 stacks x 22.5 GB / 604 MB

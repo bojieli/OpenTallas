@@ -7,7 +7,7 @@
   "results/rtl/v41x_real_core_collective_stage.json": "9242cc82986229b1bd9e002d6ea8040e4061387da0461e9937d87a0c8e86a316",
   "results/rtl/v41_stage_collective_campaign.json": "f8b1c0f33a26b3bd8022ab865f2dec319050c289309b40046e68d5782267f188",
   "results/rtl/v41_collective_levers_campaign.json": "13b6db536711b226b7616b5c3a50c2c9511a8ff73a1f21082043b4966b1263bd",
-  "results/arch/v41_lanes.json": "b646e109e6994c467f9961b0801c2cfdf5fb0ffdf7a82a062e93a91014a2511a"
+  "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6"
  },
  "real_core": {
   "142": {
@@ -379,32 +379,32 @@
      "added_cycles_per_all_reduce": 54,
      "added_us_per_token": 2.583,
      "1048576": {
-      "ar_now": 7009,
-      "ar_if_unpriced": 6884,
-      "mtp_now": 21670,
-      "mtp_if_unpriced": 21414
+      "ar_now": 7049,
+      "ar_if_unpriced": 6923,
+      "mtp_now": 15890,
+      "mtp_if_unpriced": 15702
      },
      "200000": {
       "ar_now": 7286,
       "ar_if_unpriced": 7151,
-      "mtp_now": 22532,
-      "mtp_if_unpriced": 22255
+      "mtp_now": 16449,
+      "mtp_if_unpriced": 16246
      }
     },
     "consumer_after_rank0_last_reduced": {
      "added_cycles_per_all_reduce": 77,
      "added_us_per_token": 3.684,
      "1048576": {
-      "ar_now": 7009,
-      "ar_if_unpriced": 6832,
-      "mtp_now": 21670,
-      "mtp_if_unpriced": 21306
+      "ar_now": 7049,
+      "ar_if_unpriced": 6871,
+      "mtp_now": 15890,
+      "mtp_if_unpriced": 15623
      },
      "200000": {
       "ar_now": 7286,
       "ar_if_unpriced": 7095,
-      "mtp_now": 22532,
-      "mtp_if_unpriced": 22139
+      "mtp_now": 16449,
+      "mtp_if_unpriced": 16161
      }
     }
    }

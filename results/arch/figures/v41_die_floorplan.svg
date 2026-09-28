@@ -205,13 +205,13 @@
 <text x="765.6" y="230">KV/key streamers: 0.1</text>
 <text x="749.6" y="249" font-weight="bold">total 806 of 815 mm2 (+9)</text>
 <text x="749.6" y="271" font-weight="bold">Die power, scenario B (W)</text>
-<text x="749.6" y="286">ar_batch1: 448 (tiles 0.48, phy_hbm 5.59 W/mm2)</text>
-<text x="749.6" y="300">mtp_batch1: 512 (tiles 1.03, phy_hbm 2.93 W/mm2)</text>
-<text x="749.6" y="314">fill28_mtp: 498 (tiles 1.00, phy_hbm 2.84 W/mm2)</text>
-<text x="749.6" y="328">saturated_batch1024_mtp: 531 (tiles 1.09, phy_hbm 3.09 W/mm2)</text>
+<text x="749.6" y="286">ar_batch1: 382 (tiles 0.45, phy_hbm 4.09 W/mm2)</text>
+<text x="749.6" y="300">mtp_batch1: 454 (tiles 1.24, phy_serdes 1.89 W/mm2)</text>
+<text x="749.6" y="314">fill28_mtp: 425 (tiles 0.84, phy_serdes 2.42 W/mm2)</text>
+<text x="749.6" y="328">saturated_batch1024_mtp: 470 (tiles 0.97, phy_serdes 2.53 W/mm2)</text>
 <text x="749.6" y="350" font-weight="bold">On-die wire per token (1M, charged)</text>
 <text x="749.6" y="365">ASAP7 routed fit: 21.1 us</text>
-<text x="749.6" y="379">150 ps/mm: 5.6 us (token 127.8 us)</text>
+<text x="749.6" y="379">150 ps/mm: 5.6 us (token 126.9 us)</text>
 <text x="749.6" y="401" font-weight="bold">Long wires (mm; cycles ASAP7 / 150 ps/mm)</text>
 <text x="749.6" y="416" fill="#c0392b">1. spine to farthest tile (matvec / scan in and out): 23.2 mm, 20 / 5</text>
 <text x="749.6" y="430" fill="#7a2a74">2. spine to UCIe-level collective: 14.9 mm, 13 / 4</text>

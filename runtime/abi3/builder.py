@@ -318,31 +318,10 @@ class DeploymentBuilder:
                 f"amendment A18 extent axis {extent_axis} is outside the "
                 f"rank-{rank} view it is declared on"
             )
-        # A LOOP_INDUCTION term names a loop whose induction value resolves the
-        # view's address.  If that loop is not OPEN where the view is built, the
-        # operator reading the view will be issued outside it and the resolver
-        # refuses at run time -- ``view N: loop M is not active``.  The hazard is
-        # named in ``open_loop_stack``'s own docstring, which notes that static
-        # admission does not catch it; nothing enforced it, so it was caught only
-        # by executing.  Measured: the shipped DeepSeek-V4.1 ROM wafer and ROM
-        # array deployments both refuse in prefill on view 1097 naming loop 1076,
-        # a TENSOR.EMBED_LOOKUP issued at program position 6 whose term names a
-        # loop whose body is 239..495 -- and no loop covers position 6 at all.
-        # Refusing here turns that into a build error at the emission site.
-        open_loops = {loop for loop, _ in self._loop_stack}
-        for term in dynamic:
-            if int(term.kind) != int(SelectorKind.LOOP_INDUCTION):
-                continue
-            if int(term.index) not in open_loops:
-                raise BuildError(
-                    f"a view is being built with a LOOP_INDUCTION term naming "
-                    f"loop {int(term.index)}, which is not open here. Open loops "
-                    f"are {sorted(open_loops)}. A term naming a closed loop "
-                    f"builds and admits, then refuses at run time with "
-                    f"'loop {int(term.index)} is not active': either open that "
-                    f"loop around the operator that reads this view, or do not "
-                    f"give the view the term"
-                )
+        # Views are descriptors and may be declared before the program that
+        # uses them.  A LOOP_INDUCTION term must be live when an instruction
+        # reads the view, not when the descriptor is created.  Check that at
+        # emission below; the verifier independently checks the final program.
         for axis in range(MAX_RANK):
             payload[f"dim{axis}"] = dims[axis] if axis < rank else 0
             payload[f"stride{axis}"] = strides[axis] if axis < rank else 0
@@ -868,6 +847,39 @@ class DeploymentBuilder:
         return self.name(key, pid) if key else pid
 
     # -- instructions ----------------------------------------------------
+    def _check_loop_terms_live(self, descriptor_id: int, index: int) -> None:
+        """Check a view when its operator is issued, after loops have opened."""
+        if descriptor_id == NO_ID or not 0 <= descriptor_id < len(self.table):
+            return
+        payload = self.table[descriptor_id].payload
+        if "input_view_0" not in payload:
+            return
+        live = {loop_id for loop_id, _ in self._loop_stack}
+        for slot in (
+            "input_view_0",
+            "input_view_1",
+            "input_view_2",
+            "input_view_3",
+            "output_view_0",
+            "output_view_1",
+        ):
+            view_id = int(payload.get(slot, NO_ID))
+            if view_id == NO_ID:
+                continue
+            if not 0 <= view_id < len(self.table):
+                continue
+            view = self.table[view_id].payload
+            for term in range(int(view.get("dynamic_term_count", 0))):
+                if int(view[f"term{term}_kind"]) != int(SelectorKind.LOOP_INDUCTION):
+                    continue
+                loop_id = int(view[f"term{term}_index"])
+                if loop_id not in live:
+                    raise BuildError(
+                        f"instruction {index}: {slot}={view_id} term{term} "
+                        f"induces on loop {loop_id}, which is not open here "
+                        f"(open: {sorted(live) if live else 'none'})"
+                    )
+
     def emit(
         self,
         major: Major,
@@ -893,6 +905,7 @@ class DeploymentBuilder:
         if signal_event_id != NO_ID:
             flags |= int(InstructionFlag.SIGNAL_RELEASE)
         index = len(self.instructions)
+        self._check_loop_terms_live(descriptor_id, index)
         self.instructions.append(
             Instruction(
                 major=int(major),
@@ -919,10 +932,9 @@ class DeploymentBuilder:
     def open_loop_stack(self) -> tuple[tuple[int, int], ...]:
         """The loops open at this point, outermost first, as (loop id, setup index).
 
-        A backend that attaches a LOOP_INDUCTION term to a view needs to know
-        which loops are actually open where the view is built: a term naming a
-        loop that is not open is refused by both the view resolver and
-        ``runtime.sim.memory``, and static admission does not catch it.
+        A backend that attaches a LOOP_INDUCTION term to a view can inspect
+        this stack before issuing an operator.  The builder checks liveness on
+        emission, and the verifier checks it again during admission.
         """
         return tuple(self._loop_stack)
 

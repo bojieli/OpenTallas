@@ -295,7 +295,8 @@ def build():
             mtp = k.endswith("_mtp")
             mb = A.fill_machine(lanes["energy"][str(ctx)][k].get("batch", 1024)).microbatch
             hd = PS.v41_hottest_die(pcfg, "B_proposed_production", A, E, ctx, mb, U.GAMMA + 1 if mtp else 1,
-                                    (U.GAMMA + 1) / U.TAU if mtp else 1.0, ovh if mtp else 0.0)
+                                    (U.GAMMA + 1) / U.TAU if mtp else 1.0, ovh if mtp else 0.0,
+                                    batch=lanes["energy"][str(ctx)][k].get("batch", 1024))
             avg[f"{ctx}/{k}"] = r["dynamic_j"] * r["aggregate_tokens_s"] / U.LAYER_DIES
             hot_f[f"{ctx}/{k}"] = dict(factor=hd["hottest_over_layer_mean"], hottest_die=hd["hottest"])
             dyns[f"{ctx}/{k}"] = avg[f"{ctx}/{k}"] * hd["hottest_over_layer_mean"]

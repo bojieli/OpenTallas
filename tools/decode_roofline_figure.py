@@ -44,10 +44,11 @@ specialisation is not a meaningful machine), so a multiplier is only defined at 
 rung.  Every step keeps or REDUCES the silicon and memory bandwidth of the step
 before it.  The V4.1 S2-to-S3 multiplier is a whole-design comparison, not an
 isolated ROM weight-store effect.
-Qwen3-8B needs one extra rung, S1f, because the ROM stores the HC1-class 3.5-bit
-format: S1f re-prices the idealised GPU at that weight format. Qwen S2 has
-B200-class bandwidth and S3 has six stacks; the matched six-stack HBM/ROM
-comparison is reported separately. Steps S2 and S3 are conditional on the
+Qwen3-8B needs one extra rung, S1f, because the ROM stores 8-bit weights (INT8
+per output channel): S1f re-prices the idealised GPU at that weight width (FP8 on
+a B200). For Qwen3-8B every rung from S0 to S3 has the same silicon and memory:
+two reticle-class dies and eight HBM3E stacks (the B200 package, the iso-area HBM
+comparator, and the ROM package, whose stacks hold only the KV). Steps S2 and S3 are conditional on the
 design's open gates (the 1.087 GHz clock for V4.1; its collectives are priced with the tails the RTL stage
 bench measured with the adopted collective levers, rack gate C7 partly recovered, not met).
 
@@ -82,8 +83,8 @@ SCHEMA = "opentallas.decode-roofline.v1"
 SOURCES = {
     # Qwen3 top-down spec + production power
     "qwen3_budget": (None, "results/arch/qwen3_budget.json"),
-    # Qwen3 iso-area study + GPU calibration + local RTX PRO 6000
-    "iso_qwen": ("b42f86065977850499995c874f2b630aa1aa5bf0", "results/roofline/iso_area/qwen3_8b.json"),   # NOT on main: pinned
+    # Current Qwen3 GPU calibration + local RTX PRO 6000 measurement
+    "gpu_qwen": (None, "results/arch/qwen_gpu_calibration.json"),
     # validated synchronisation costs
     "sync": (None, "results/arch/sync_cost_table.json"),
     # V4.1 design-point model: the headline (bench-measured collective tails with the adopted levers), best HBM comparator, ladder, spec budget
@@ -209,13 +210,13 @@ def ladder(steps: list[dict]) -> list[dict]:
 
 
 def build_qwen(src: dict) -> dict:
-    qb, iq, sy = src["qwen3_budget"], src["iso_qwen"], src["sync"]
+    qb, iq, sy = src["qwen3_budget"], src["gpu_qwen"], src["sync"]
     eff = CITED["hbm_efficiency"]["value"]
     b200 = CITED["b200_hbm_Bps"]["value"] * eff
     hdc = qb["hbm_design"]["stacks"] * qb["hbm_design"]["stack_bytes_s"] * qb["hbm_design"]["efficiency"]
     cmp8k = qb["hbm_comparator"]["8192"]
     W = {"bf16": cmp8k["bf16"]["bytes_per_token"], "fp8": cmp8k["fp8"]["bytes_per_token"],
-         "rom35": cmp8k["rom_format_3.5b"]["bytes_per_token"]}
+         "w8": cmp8k["rom_format_int8"]["bytes_per_token"]}
     kv = qb["requirements"]["kv_hbm"]["bytes_per_token"]
     t_dep = next(r for r in sy["rows"] if r["event"].startswith("On-chip all-unit gather"))["gpu"]["value"] * 1e-9
     t_dep_ours = next(r for r in sy["rows"] if r["event"].startswith("On-chip all-unit gather"))["ot"]["value"] * 1e-9
@@ -232,60 +233,64 @@ def build_qwen(src: dict) -> dict:
     qd = qb["dflash"]   # the serial draft + verify + commit step at the measured per-block acceptance
     rom_blk, rom_tau = qd["block_design_point"], qd["tau_design_point"]
     rom_df = pp["rom"][f"dflash_block{rom_blk}"]["tokens_s"]
-    hdc_bf16 = qb["hbm_comparator"]["8192"]["bf16"]["tokens_s"]
-    hdc_35 = qb["hbm_comparator"]["8192"]["rom_format_3.5b"]["tokens_s"]
-    h35, hbf = qd["hbm"]["rom_format_3.5b"], qd["hbm"]["bf16"]
-    hdc_35_df, hdc_bf16_df = h35["tokens_s"], hbf["tokens_s"]
+    m = qb["area"]["lane_multiplier_m"]
+    hdc_bf16 = cmp8k["bf16"]["tokens_s"]
+    hdc_w8 = cmp8k["rom_format_int8"]["tokens_s"]
+    hw8, hbf = qd["hbm"]["rom_format_int8"], qd["hbm"]["bf16"]
+    hdc_w8_df, hdc_bf16_df = hw8["tokens_s"], hbf["tokens_s"]
     auto = iq["contexts"]["8192"]["autoregressive"]
     loc = iq["local_gpu_rtx_pro_6000"]["concurrency_1"]
     dfl = CITED["dflash_b200"]["value"]
     s1 = g("bf16", 1)
-    s1f = g("rom35", 1)
-    s2 = rate(max(W["rom35"] / b200, n_dep * t_dep_ours))  # specialised core at the B200's bandwidth
+    s1f = g("w8", 1)
+    s2 = hdc_w8                     # the iso-area HBM comparator: the same package, bytes-bound at 8 stacks
     tp8 = {t: g("bf16", 8, t) for t in tc}
-    tp8_35 = g("rom35", 8)
+    tp8_w8 = g("w8", 8)
     rom_sweep_ceiling = qb["budget"]["ceiling_tokens_s"]
     kv_floor = hdc / kv
     tau = hbf["tokens_per_step"]   # block 16, the bound's tau
+    chain = qb["as_built_calibrated"]["8192"]["cycles"]
+    sweep = qb["budget"]["weight_sweep_ideal_cycles"]
 
     points = [
         # key, label, x (TB/s), y, evidence, family, spec, basis
         dict(key="rtx_bf16", label="RTX PRO 6000, BF16", x=CITED["rtx6000_Bps"]["value"] * eff / 1e12, y=loc["bf16"]["ar_tok_s"],
-             evidence="measured", family="gpu", spec=False, basis="this machine, MATH-500, short context (iso_qwen local_gpu_rtx_pro_6000)"),
+             evidence="measured", family="gpu", spec=False, basis="this machine, MATH-500, short context (qwen_gpu_calibration local_gpu_rtx_pro_6000)"),
         dict(key="rtx_fp8", label="RTX PRO 6000, FP8", x=CITED["rtx6000_Bps"]["value"] * eff / 1e12, y=loc["fp8"]["ar_tok_s"],
              evidence="measured", family="gpu", spec=False, basis="this machine, MATH-500, short context"),
         dict(key="rtx_bf16_dflash", label="RTX PRO 6000 + DFlash", x=CITED["rtx6000_Bps"]["value"] * eff / 1e12, y=loc["bf16"]["dflash_tok_s"],
              evidence="measured", family="gpu", spec=True, basis=f"tau {loc['bf16']['dflash_tau']:.2f}; host-bound on a loaded host"),
         dict(key="h200_bf16", label="H200, BF16", x=CITED["h200_hbm_Bps"]["value"] * eff / 1e12, y=auto["h200_bf16"]["tok_s"],
-             evidence="calibrated", family="gpu", spec=False, basis="NIM H200 two-point fit, shape-adjusted to Qwen3-8B at 8K (iso_qwen gpu_calibration)"),
+             evidence="calibrated", family="gpu", spec=False, basis="NIM H200 two-point fit, shape-adjusted to Qwen3-8B at 8K (qwen_gpu_calibration)"),
+        dict(key="h200_fp8", label="H200, FP8", x=CITED["h200_hbm_Bps"]["value"] * eff / 1e12, y=auto["h200_fp8"]["tok_s"],
+             evidence="calibrated", family="gpu", spec=False, basis="same current-tree NIM H200 two-point fit, shape-adjusted to Qwen3-8B at 8K"),
         dict(key="b200_bf16", label="B200, SGLang, BF16", x=b200 / 1e12, y=dfl["ar"], evidence="cited", family="gpu", spec=False,
              basis=CITED["dflash_b200"]["source"]),
         dict(key="b200_dflash", label="B200 + DFlash", x=b200 / 1e12, y=dfl["dflash"], evidence="cited", family="gpu", spec=True,
              basis=f"same source; tau {dfl['tau']} (MATH-500), not the per-block measured tau of our designs"),
         dict(key="b200_ideal_bf16", label="B200 idealised, BF16", x=b200 / 1e12, y=s1, evidence="modelled", family="gpu", spec=False,
              basis="bandwidth roof at 0.90; 220 measured all-SM boundaries overlapped"),
-        dict(key="b200_ideal_rom35", label="B200 idealised, 3.5-bit", x=b200 / 1e12, y=s1f, evidence="modelled", family="gpu", spec=False,
-             basis="as above at the ROM's weight format (byte-proportional; no GPU has shown it: on an H20 AWQ-INT4 ran 0.96x FP8)"),
+        dict(key="b200_ideal_w8", label="B200 idealised, 8-bit", x=b200 / 1e12, y=s1f, evidence="modelled", family="gpu", spec=False,
+             basis="as above at the ROM's 8-bit weights (FP8 on a B200; byte-proportional)"),
         dict(key="nvl72_tp8_bf16", label="NVL72 slice, TP8, BF16", x=8 * b200 / 1e12, y=tp8["best_kernel"], evidence="modelled", family="gpu", spec=False,
              basis=f"TP8 (8 KV heads: the largest legal split), {n_coll} all-reduces at the best measured kernel 2.37 us"),
         dict(key="hdc_bf16", label="HDC-HBM, BF16", x=hdc / 1e12, y=hdc_bf16, evidence="modelled", family="hbm", spec=False,
-             basis="one reticle, 6 HBM3E stacks at 0.90 (qwen3_budget hbm_comparator)"),
-        dict(key="hdc_rom35", label="HDC-HBM, 3.5-bit", x=hdc / 1e12, y=hdc_35, evidence="modelled", family="hbm", spec=False,
-             basis="same machine at the ROM's weight format"),
-        dict(key="hdc_rom35_dflash", label="HDC-HBM + DFlash", x=hdc / 1e12, y=hdc_35_df, evidence="modelled", family="hbm", spec=True,
-             basis=f"block {h35['block']}, tau {h35['tokens_per_step']:.2f} measured at that block on real Qwen3-8B "
+             basis="two reticles, 8 HBM3E stacks at 0.90 (qwen3_budget hbm_comparator)"),
+        dict(key="hdc_w8", label="HDC-HBM, 8-bit (S2)", x=hdc / 1e12, y=hdc_w8, evidence="modelled", family="hbm", spec=False,
+             basis="the iso-area comparator: the ROM package's silicon and stacks, the ROM's INT8 weights streamed"),
+        dict(key="hdc_w8_dflash", label="HDC-HBM + DFlash", x=hdc / 1e12, y=hdc_w8_df, evidence="modelled", family="hbm", spec=True,
+             basis=f"block {hw8['block']}, tau {hw8['tokens_per_step']:.2f} measured at that block on real Qwen3-8B "
                    "(264 prompt turns); serial draft + verify + commit"),
-        dict(key="hdc_matched", label="S2: HDC core at B200 bandwidth", x=b200 / 1e12, y=s2, evidence="modelled", family="hbm", spec=False,
-             basis="specialised core on a B200-sized package (8 stacks, 7.2 TB/s), 3.5-bit weights, 220 x 4.8 ns handoffs"),
-        dict(key="rom", label="ROM reticle", x=hdc / 1e12, y=rom_ar, evidence="calibrated", family="rom", spec=False,
-             basis="RTL-calibrated sequencer model at spec widths, 123,301 cycles at 1.099 GHz; KV-bound (qwen3_budget power_production)"),
-        dict(key="rom_dflash", label="ROM + DFlash (m=3)", x=hdc / 1e12, y=rom_df, evidence="modelled", family="rom", spec=True,
-             basis=f"block {rom_blk}, tau {rom_tau:.2f} measured at that block; serial draft + verify + commit; three MAC "
-                   "copies per weight read in the freed SRAM; conditional on the lane copies"),
+        dict(key="rom", label="ROM package", x=hdc / 1e12, y=rom_ar, evidence="calibrated", family="rom", spec=False,
+             basis=f"RTL-calibrated sequencer model at spec widths on both dies' 12,288 groups, {chain:,} cycles at "
+                   "1.099 GHz with the UCIe exchanges; compute-bound (qwen3_budget power_production)"),
+        dict(key="rom_dflash", label=f"ROM + DFlash (m={m})", x=hdc / 1e12, y=rom_df, evidence="modelled", family="rom", spec=True,
+             basis=f"block {rom_blk}, tau {rom_tau:.2f} measured at that block; serial draft + verify + commit; {m} MAC "
+                   "copies per weight read; conditional on the lane copies"),
     ]
     roofs = [
         dict(key="roof_bf16", label="weights BF16 + KV", bytes_per_token=W["bf16"]),
-        dict(key="roof_rom35", label="weights 3.5-bit + KV", bytes_per_token=W["rom35"]),
+        dict(key="roof_w8", label="weights 8-bit + KV", bytes_per_token=W["w8"]),
         dict(key="roof_kv", label="KV only (ROM)", bytes_per_token=kv, rom=True),
     ]
     ceilings = [
@@ -293,7 +298,7 @@ def build_qwen(src: dict) -> dict:
              y=1.0 / (n_dep * t_dep), evidence="model on measured primitive",
              basis=f"{n_dep} all-SM boundaries x {t_dep*1e9:.0f} ns (GB202 measured)"),
         dict(key="rom_sweep", family="rom", label="ROM weight sweep", y=rom_sweep_ceiling, evidence="modelled",
-             basis="57,740 cycles: one weight per lane per cycle"),
+             basis=f"{sweep:,} cycles: one weight per lane per cycle on both dies' lanes"),
         dict(key="ours_onchip", family="rom", label="our on-chip sync", y=1.0 / (n_dep * t_dep_ours),
              evidence="RTL-derived", basis=f"{n_dep} x {t_dep_ours*1e9:.1f} ns"),
     ]
@@ -304,37 +309,39 @@ def build_qwen(src: dict) -> dict:
              lo=[(n * b200 / 1e12, g("bf16", n, "nccl_2_27")) for n in (1, 2, 4, 8)],
              hi=[(n * b200 / 1e12, g("bf16", n, "sol_floor")) for n in (1, 2, 4, 8)]),
     ]
-    arrows = [("b200_bf16", "b200_ideal_bf16", "software"), ("b200_ideal_bf16", "b200_ideal_rom35", "format"),
-              ("hdc_matched", "rom", "ROM")]
+    arrows = [("b200_bf16", "b200_ideal_bf16", "software"), ("b200_ideal_bf16", "b200_ideal_w8", "format"),
+              ("hdc_w8", "rom", "ROM")]
 
     # ---- ladders
     m_draw = CITED["b200_decode_draw_w"]["value"]
+    same = "2 reticles of logic, 8 HBM3E stacks (7.2 TB/s sustained)"
     per_user = ladder([
         dict(key="S0", label="B200, SGLang, BF16 weights", value=dfl["ar"], unit="tok/s", evidence="cited",
-             basis=CITED["dflash_b200"]["source"], matching="2 reticles of logic, 8 HBM3E stacks (7.2 TB/s sustained)"),
+             basis=CITED["dflash_b200"]["source"], matching=same),
         dict(key="S1", label="same B200, idealised runtime", value=s1, unit="tok/s", evidence="modelled on measured primitives",
              basis="bandwidth roof at 0.90 with 220 measured all-SM boundaries overlapped (GPU-optimistic)", matching="same GPU"),
-        dict(key="S1f", label="same, weights at the ROM's 3.5-bit format", value=s1f, unit="tok/s", evidence="modelled",
-             basis="byte-proportional; not demonstrated on a GPU", matching="same GPU, weight format matched to the ROM"),
-        dict(key="S2", label="specialised HBM core, same bandwidth", value=s2, unit="tok/s", evidence="modelled (RTL-calibrated handoff)",
-             basis="bandwidth roof; 220 handoffs at 4.8 ns (RTL)", matching="<= B200 logic area, = B200 HBM bandwidth, 3.5-bit"),
+        dict(key="S1f", label="same, weights at the ROM's 8-bit width", value=s1f, unit="tok/s", evidence="modelled",
+             basis="byte-proportional (FP8 weights on a B200; the INT8 scales included)", matching="same GPU, weight width matched to the ROM"),
+        dict(key="S2", label="specialised HBM core, same package", value=s2, unit="tok/s", evidence="modelled (RTL-calibrated handoff)",
+             basis="the iso-area comparator: bandwidth roof; 220 handoffs at 4.8 ns (RTL) are off the roof",
+             matching="two reticles, 8 stacks (= B200), 8-bit weights"),
         dict(key="S3", label="same core, weights in ROM", value=rom_ar, unit="tok/s", evidence="calibrated model",
-             basis="RTL-calibrated sequencer model; KV-bound on 6 stacks", matching="one reticle + 6 stacks for KV (less than S2)"),
+             basis="RTL-calibrated sequencer model with the UCIe exchanges; compute-bound", matching="two reticles + 8 stacks for KV (= S2)"),
     ])
     energy = ladder([
         dict(key="S0", label="B200, SGLang, BF16", value=m_draw / dfl["ar"] * 1e3, unit="mJ/token", evidence="measured draw / cited rate",
              basis="689 W measured B200 decode draw [arXiv:2609.11133] / 230 tok/s [DFlash]; different workloads", matching=""),
         dict(key="S1", label="idealised runtime, BF16", value=m_draw / s1 * 1e3, unit="mJ/token", evidence="modelled",
              basis="draw held at the measured 689 W", matching="same GPU"),
-        dict(key="S1f", label="idealised, 3.5-bit", value=m_draw / s1f * 1e3, unit="mJ/token", evidence="modelled",
+        dict(key="S1f", label="idealised, 8-bit", value=m_draw / s1f * 1e3, unit="mJ/token", evidence="modelled",
              basis="draw held at 689 W", matching="same GPU"),
-        dict(key="S2", label="HDC-HBM, 3.5-bit (iso-area, 6 stacks)", value=pp["hbm_comparator"]["rom35_batch1"]["energy_per_token_mj"],
+        dict(key="S2", label="HDC-HBM, 8-bit (iso-area, 8 stacks)", value=pp["hbm_comparator"]["batch1"]["energy_per_token_mj"],
              unit="mJ/token", evidence="modelled (power scenario B)",
              basis="package energy, scenario B (derived production lane); HBM path 13.64 pJ/bit (10.19 on the die, 3.45 in the stacks), so S1f->S2 mixes a measured GPU draw with a conservative model",
-             matching="one reticle, 6 stacks"),
-        dict(key="S3", label="ROM reticle", value=pp["rom"]["ar_batch1"]["energy_per_token_mj"], unit="mJ/token",
+             matching="two reticles, 8 stacks"),
+        dict(key="S3", label="ROM package", value=pp["rom"]["ar_batch1"]["energy_per_token_mj"], unit="mJ/token",
              evidence="modelled (power scenario B)", basis="same power model as S2: the matched-format ratio",
-             matching="one reticle, 6 stacks"),
+             matching="two reticles, 8 stacks"),
     ])
     kv_bound_b200 = b200 / kv
     aggregate = ladder([
@@ -342,25 +349,25 @@ def build_qwen(src: dict) -> dict:
              basis="no measured Qwen3-8B 8K fill-batch B200 figure in the repository", matching=""),
         dict(key="S1", label="B200, KV-stream bound", value=kv_bound_b200, unit="tok/s", evidence="bound",
              basis="weights amortised over the batch; 7.2 TB/s / 604 MB of FP8 KV per token", matching="8 stacks"),
-        dict(key="S2", label="HDC-HBM, 3.5-bit, batch 128", value=pp["hbm_comparator"]["rom35_batch128"]["tokens_s"], unit="tok/s",
-             evidence="modelled", basis="qwen3_budget power_production", matching="6 stacks (0.75x the B200's KV bandwidth)"),
-        dict(key="S3", label="ROM reticle, batch 128", value=pp["rom"]["batch128"]["tokens_s"], unit="tok/s",
-             evidence="modelled", basis="KV-bound: 5.4 TB/s / 604 MB", matching="6 stacks"),
+        dict(key="S2", label="HDC-HBM, 8-bit, batch 128", value=pp["hbm_comparator"]["batch128"]["tokens_s"], unit="tok/s",
+             evidence="modelled", basis="qwen3_budget power_production", matching="8 stacks"),
+        dict(key="S3", label="ROM package, batch 128", value=pp["rom"]["batch128"]["tokens_s"], unit="tok/s",
+             evidence="modelled", basis="KV-bound: 7.2 TB/s / 604 MB", matching="8 stacks"),
     ])
     spec_rows = [
         dict(machine="B200, SGLang (measured)", ar=dfl["ar"], spec=dfl["dflash"], tau=dfl["tau"], evidence="cited"),
         dict(machine="B200 idealised, BF16 (bound: tau x AR)", ar=s1, spec=tau * s1, tau=tau, evidence="bound"),
-        dict(machine="HDC-HBM, 3.5-bit", ar=hdc_35, spec=hdc_35_df, tau=h35["tokens_per_step"], evidence="modelled"),
+        dict(machine="HDC-HBM, 8-bit", ar=hdc_w8, spec=hdc_w8_df, tau=hw8["tokens_per_step"], evidence="modelled"),
         dict(machine="HDC-HBM, BF16", ar=hdc_bf16, spec=hdc_bf16_df, tau=hbf["tokens_per_step"], evidence="modelled"),
-        dict(machine="ROM reticle (m = 3 lane copies)", ar=rom_ar, spec=rom_df, tau=rom_tau, evidence="modelled"),
+        dict(machine=f"ROM package (m = {m})", ar=rom_ar, spec=rom_df, tau=rom_tau, evidence="modelled"),
     ]
     return dict(
         title="Qwen3-8B, 8K context, FP8 KV, one user",
         x_range=[1.0, 100.0], y_range=[50.0, 1.0e6],
         bytes_per_token={"weights_bf16_plus_kv": W["bf16"], "weights_fp8_plus_kv": W["fp8"],
-                         "weights_rom35_plus_kv": W["rom35"], "kv_fp8": kv},
+                         "weights_w8_plus_kv": W["w8"], "kv_fp8": kv},
         gpu_model=dict(n_dep=n_dep, t_dep_ns=t_dep * 1e9, n_coll_tp=n_coll, t_coll_us={k: v[0] for k, v in GPU_COLLECTIVE_US.items()},
-                       tp8_bf16_tok_s=tp8, tp8_rom35_tok_s=tp8_35, kv_floor_rom_tok_s=kv_floor),
+                       tp8_bf16_tok_s=tp8, tp8_w8_tok_s=tp8_w8, kv_floor_rom_tok_s=kv_floor),
         points=points, roofs=roofs, ceilings=ceilings, curves=curves, arrows=arrows,
         ladders=dict(per_user=per_user, energy=energy, aggregate=aggregate), speculation=spec_rows,
     )
@@ -558,16 +565,17 @@ FINDINGS = (
     "speed-of-light collective floor). "
     "The specialised HBM accelerator raises the synchronisation ceiling, not the roof: with compiled handoffs (4.8 ns "
     "on chip against 1.0 us) and in-switch reduction it reaches {v_s2:,.0f} tok/s on V4.1 at roughly matched "
-    "HBM bandwidth ({v_x_s2:.0f} against {v_x_s1:.0f} TB/s), {v_m2:.2f}x the best-kernel GPU; on a "
-    "single die at the same modeled bandwidth roof, this model assigns no added rate to the specialised HBM core ({q_m2:.2f}x on Qwen3-8B). "
+    "HBM bandwidth ({v_x_s2:.0f} against {v_x_s1:.0f} TB/s), {v_m2:.2f}x the best-kernel GPU; on Qwen3-8B, whose "
+    "specialised HBM core is the B200's own silicon and stacks (two reticles, eight stacks), this model assigns it no "
+    "added rate on the same bandwidth roof ({q_m2:.2f}x). "
     "ROM removes the weight term: the design leaves the weights-plus-KV roof for the KV-only roof, {q_kvroof:,.0f} tok/s "
-    "on six stacks for Qwen3-8B at 8K, where the ROM reticle sits ({q_s3:,.0f}, {q_m3:.1f}x the same core streaming "
-    "3.5-bit weights at the B200's bandwidth); for V4.1 it is bound by its compiled chain and reaches {v_s3:,.0f} tok/s, "
+    "on eight stacks for Qwen3-8B at 8K; the two-reticle ROM package runs under it at {q_s3:,.0f} tok/s, bound by its "
+    "compiled chain, {q_m3:.1f}x the same package streaming its 8-bit weights; for V4.1 it is bound by its compiled chain and reaches {v_s3:,.0f} tok/s, "
     "{v_m3:.1f}x the equal-area HBM array ({v_s3_mtp:,.0f} with MTP); this V4.1 step also changes topology and HBM allocation. End to end, S0 -> S3 is {q_tot:.0f}x for Qwen3-8B "
     "(illustrative because S0 context is unverified; {q_fmt:.1f}x is the modeled format step) and a modeled {v_tot:.1f}x for V4.1 at 1M; the steps are ordered by definition and "
     "S2-S3 are conditional on the design's open gates. The same roofline shows where ROM does not help: at 8K and a full "
-    "batch, aggregate throughput is KV-bound on every machine, and the B200's eight stacks out-stream the ROM reticle's six "
-    "({q_agg_b200:,.0f} against {q_agg_rom:,.0f} tok/s)."
+    "batch, aggregate throughput is KV-bound on every machine, and the B200 and the ROM package stream the KV from the "
+    "same eight stacks ({q_agg_b200:,.0f} and {q_agg_rom:,.0f} tok/s)."
 )
 
 
@@ -651,9 +659,9 @@ LABEL_POS = {
     "qwen3": {
         "rtx_bf16": (-9, 4, "end"), "rtx_fp8": (-9, 4, "end"), "rtx_bf16_dflash": (-9, 4, "end"),
         "h200_bf16": (-9, 4, "end"), "b200_bf16": (9, 12, "start"), "b200_dflash": (9, 4, "start"),
-        "b200_ideal_bf16": (9, 4, "start"), "b200_ideal_rom35": (9, -8, "start"), "hdc_matched": (9, 10, "start"),
-        "nvl72_tp8_bf16": (-9, -8, "end"), "hdc_bf16": (-9, 4, "end"), "hdc_rom35": (-9, 4, "end"),
-        "hdc_rom35_dflash": (-9, 4, "end"), "rom": (-11, 4, "end"), "rom_dflash": (-11, 4, "end"),
+        "b200_ideal_bf16": (9, 4, "start"), "b200_ideal_w8": (9, -8, "start"),
+        "nvl72_tp8_bf16": (-9, -8, "end"), "hdc_bf16": (-9, 4, "end"), "hdc_w8": (-9, 10, "end"),
+        "hdc_w8_dflash": (-9, 4, "end"), "rom": (-11, 4, "end"), "rom_dflash": (-11, 4, "end"),
     },
     "v41": {
         "gpu_s0": (9, 12, "start"), "gpu_s1": (9, -6, "start"), "gpu_nvl72": (-2, 20, "end"),
@@ -839,14 +847,15 @@ def render_table(title: str, rows: list[dict]) -> str:
 CAPTIONS = {
     "qwen3": (
         "Figure 8-R1. Qwen3-8B decode roofline for one user (8K context, FP8 KV, batch 1). "
-        "Diagonals are bandwidth roofs, tokens/s = bandwidth / bytes per token, for BF16 and for the ROM's 3.5-bit weights "
+        "Diagonals are bandwidth roofs, tokens/s = bandwidth / bytes per token, for BF16 and for the ROM's 8-bit weights "
         "(each with FP8 KV); the dashed orange diagonal is the KV-only roof a ROM design lives under, because its weights "
         "never cross the memory interface. Dotted horizontals are ceilings: one GPU's on-chip synchronisation (220 all-SM "
         "boundaries at the measured 1.0 µs), the ROM weight sweep, and our compiled handoffs (4.8 ns, RTL; off scale). "
         "The grey curve is B200 tensor parallelism on an NVL72 slice (TP ≤ 8, the KV-head limit) with 73 all-reduces at "
         "the best measured GB200 kernel, the band spanning the speed-of-light floor to NCCL 2.27. Arrows are the "
-        "attribution ladder: software (measured B200 to its idealised roof), weight format (to the ROM's 3.5-bit), "
-        "specialisation (×1.00: on one die both machines are on the same roof) and ROM. Sources: DFlash Table 3 [DFlash]; "
+        "attribution ladder: software (measured B200 to its idealised roof), weight format (to the ROM's 8-bit), "
+        "specialisation (×1.00: on the same two-reticle, eight-stack package both machines are on the same roof) and ROM. "
+        "The B200, the HBM comparator and the ROM package have the same silicon and stacks. Sources: DFlash Table 3 [DFlash]; "
         "local RTX PRO 6000 measurement; H200 calibrated on NIM; results/arch/qwen3_budget.json; results/arch/sync_cost_table.json "
         "[Shen et al.; NCCL 2.27]; tools/decode_roofline_figure.py."
     ),
@@ -901,7 +910,7 @@ def build() -> dict:
         "ladder_definition": (
             "S0 GPU application or shipped-library baseline, modeled where a same-model measurement is unavailable; S1 same GPUs, idealised runtime (software gap); S2 specialised HBM accelerator "
             "at no more silicon and HBM bandwidth than S1 (specialisation); S3 a specialised ROM accelerator at equal logic area. Qwen3-8B adds "
-            "S1f (the ROM's 3.5-bit weight format). Qwen S2 has B200-class bandwidth while S3 has six stacks; the matched six-stack HBM/ROM comparison is separate. The order is part of "
+            "S1f (the ROM's 8-bit weight width). For Qwen3-8B every rung has two reticle-class dies and eight HBM3E stacks. The order is part of "
             "the definition: the factors are not independent (ROM without specialisation is not a meaningful machine). "
             "Each step keeps or reduces the silicon and bandwidth of the step before it. V4.1 S2-to-S3 also changes die count, topology and HBM allocation, so its multiplier is not an isolated ROM effect. "
             "S2-S3 are conditional on the design's open gates (clock; V4.1 collectives at their bench-measured tails with the adopted levers)."

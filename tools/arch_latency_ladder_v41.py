@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Push the DeepSeek-V4.1-Flash per-user rate further: attribute the remaining critical path of the recommended
 design (docs/ARCH_SPEC_V41.md 13) at 1M (primary, user decision 2026-09-27) and 200K, and price every REALISTIC
-microarchitecture / implementation lever as a cumulative ladder, with and without MTP (DSpark, tau 5.0), next to
+microarchitecture / implementation lever as a cumulative ladder, with and without MTP (DSpark, measured tau 3.65), next to
 the BEST HBM comparator at iso total logic area.  Model work only: the budget model (tools/arch_budget_v41.py) and
 the utilisation study (tools/arch_utilization_v41.py) are imported, never edited.
 
@@ -450,8 +450,9 @@ def build():
         for gamma in (3, 5, 7):
             ok = area(sp, m) <= ENVELOPE_MM2
             row = dict(m=m, gamma=gamma, area_mm2=area(sp, m), fits=ok,
-                       tau_note="tau 5.0 is LMSYS's DSpark measurement (published, V4-Pro); at gamma 3 it is capped "
-                                "at 4; gamma 7 uses the same 5.0 (no measurement of a longer block's gain)")
+                       tau_note=f"tau {TAU:g} is the measured V4.1-Flash DSpark acceptance at gamma 5; at gamma 3 "
+                                f"it is capped at 4; gamma 7 uses the same {TAU:g} (no measurement of a longer block's "
+                                "gain)")
             for ctx in CONTEXTS:
                 r = evaluate(sp, ctx, muts, hz=hz, m=m, gamma=gamma)
                 row[str(ctx)] = dict(mtp=r["mtp"], verify_us=r["verify_us"], draft_us=r["draft_us"])

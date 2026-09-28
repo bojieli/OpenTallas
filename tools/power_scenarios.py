@@ -24,10 +24,11 @@ and two checks bind -- the die against its share and the package (dies + our sta
 design point the record gives energy per token by component, die power against each class's limit and the rate each
 class allows:
 
-* Qwen3-8B ROM reticle, 8K context, FP8 KV: autoregressive batch 1 and DFlash at the best block of the serial
+* Qwen3-8B ROM package (two reticles over UCIe, every layer split across both dies, 8-bit weights, 8 HBM3E stacks
+  for the KV), 8K context, FP8 KV: autoregressive batch 1 and DFlash at the best block of the serial
   draft + verify + commit step (results/speculative/dflash_step_timing.json: tau, tokens per step, step cycles with
   the draft phase, and the drafter's MACs are read from that record, see dflash_point);
-* DeepSeek-V4.1 ROM array at 1M and 200K: batch 1 without and with MTP (gamma 5, tau 5.0) and the saturated batch,
+* DeepSeek-V4.1 ROM array at 1M and 200K: batch 1 without and with MTP (gamma 5, the measured tau) and the saturated batch,
   on the specification widths (deepseek_v41_rom_array) and on the adopted design point (deepseek_v41_design_point,
   which adds the 28-user fill and the saturated batch with MTP);
 * the best switched HBM comparator of results/arch/v41_hbm_switched.json (99 dies in 50 two-die packages, 4 HBM3E
@@ -39,8 +40,9 @@ class allows:
 
 The die's power is static (leakage + clock + HBM idle, and on the V4.1 machines the always-on links) plus dynamic
 energy per token x rate, so the cooling-capped rate is (cooling - static) / dynamic energy per token -- per die for
-the V4.1 array (see v41_points).  The top-level cooling_limit_w / capped_rate / binds of each point are the AIR class;
-cooling_classes carries both.
+the V4.1 array (see v41_points).  The top-level cooling_limit_w / capped_rate / binds use the liquid design class for
+both the Qwen3-8B package (design_points.qwen3.cooling_class) and both V4.1 machines (V41_COOLING); air is a
+sensitivity carried beside it in cooling_classes.
 
 Always-on links (both V4.1 machines, the same rule): a 112G PAM4 lane transmits idle symbols when it carries no data,
 so its power is static, and a UCIe link idles at its idle share.  The ROM array charges the rack's die-side lanes
@@ -72,6 +74,7 @@ OUT = ROOT / "results/arch/power_scenarios.json"
 DFLASH_REC = ROOT / "results/speculative/dflash_step_timing.json"   # the Qwen3 DFlash operating point (single source)
 SCHEMA = "opentallas.power-scenarios-result.v1"
 SCENARIOS = ("A_measured_implementation", "B_proposed_production")
+V41_COOLING = "liquid"      # user decision 2026-09-28: both V4.1 machines are liquid-cooled; air is a sensitivity
 
 
 def dflash_point(qdp, rec_path=DFLASH_REC):
@@ -96,10 +99,12 @@ def dflash_point(qdp, rec_path=DFLASH_REC):
                 lane_copies_on=min(m, B) - 1, **macs)
 
 
-def load_cfg(path=CFG):
+def load_cfg(path=CFG, resolve_dflash=True):
+    """The config; resolve_dflash reads the Qwen3 DFlash operating point from its record (tools/arch_budget_qwen3
+    imports with resolve_dflash=False, because tools/dflash_step_timing.py imports it to WRITE that record)."""
     cfg = json.loads(Path(path).read_text())
     q = cfg["design_points"]["qwen3"]
-    if "from_record" in q["dflash"]:
+    if resolve_dflash and "from_record" in q["dflash"]:
         q["dflash"] = dflash_point(q)
     return cfg
 
@@ -194,12 +199,14 @@ def _class_caps(cfg, n, static_w, dyn_w_per_rate, stk_w_per_rate, design_rate, l
     return out
 
 
-# -- Qwen3-8B ROM reticle -----------------------------------------------------------------------------------------------
+# -- Qwen3-8B ROM package -----------------------------------------------------------------------------------------------
 def _qwen_areas(dp, copies_on):
+    """Logic, clocked logic, ROM and SRAM mm2 of the WHOLE package (area_mm2 holds package totals)."""
     a = dp["area_mm2"]
     m = a["lane_multiplier_m"]
     copies = a["lane_copy"] * (m - 1)
-    logic = a["compute"] + a["interconnect"] + a["overhead"] + a["hbm_phy"] + a["stream_unit_spill"] + copies
+    logic = a["compute"] + a["interconnect"] + a["overhead"] + a["hbm_phy"] + a.get("ucie_phy", 0.0) + \
+        a["stream_unit_spill"] + copies
     clocked = logic - copies * (1 - copies_on / max(1, m - 1))
     return dict(logic=logic, clocked_logic=clocked, rom=a["rom"] + a["drafter_rom"], sram=a["sram"])
 
@@ -215,8 +222,11 @@ def _die_static(cfg, ar, clock, stacks):
 
 
 def qwen_point(cfg, scenario, key, hbm_die_pj=None):
-    """One Qwen3 ROM-reticle step on scenario `scenario`: energy by component (per emitted token), die power at
-    the design rate, the cooling-limited rate.  `hbm_die_pj` overrides the die's HBM share (sensitivity)."""
+    """One Qwen3 ROM-package step on scenario `scenario`: energy by component (per emitted token, the whole package:
+    both dies and their stacks), each die's power at the design rate, the cooling-limited rate.  The package is
+    dies_per_package reticles splitting every layer (tensor-parallel): both dies carry the same work, so each die
+    dissipates 1/n of the package's die-side power and is checked against the per-die limit of its package class.
+    `hbm_die_pj` overrides the die's HBM share (sensitivity)."""
     import arch_budget_qwen3 as QB
     dp = cfg["design_points"]["qwen3"]
     pt = dp[key]
@@ -234,15 +244,21 @@ def qwen_point(cfg, scenario, key, hbm_die_pj=None):
         mac_w, mac_a = n * wl["weight_macs"], n * wl["attention_macs"]
     kvb = pt["users"] * kv_per_user * ((1 + QB.DRAFTER_LAYERS / Q["L"]) if dr else 1)
     sweeps = 1 if dr else math.ceil(n / dp["area_mm2"]["lane_multiplier_m"])
-    wbytes = sweeps * wl["bytes"]["weights_rom_format"] + (QB.DRAFTER_PARAMS * 3.5 / 8 if dr else 0)
+    # Weight format (design point): weight_bits / drafter_weight_bits a weight, weight_scale_bytes of scales read
+    # with every sweep of the target, the weight MAC lane weight_mac_format; hbm_weight_bytes (optional, per point)
+    # are weights read from the KV stacks instead of ROM (an option of results/arch/qwen3_8bit_design.json).
+    wbits, dbits = dp["weight_bits"], dp["drafter_weight_bits"]
+    wbytes = sweeps * (wl["weight_macs"] * wbits / 8 + dp.get("weight_scale_bytes", 0)) + \
+        (QB.DRAFTER_PARAMS * dbits / 8 if dr else 0)
+    hbm_w = pt.get("hbm_weight_bytes", 0)
     d = cfg["die"]
     hb = hbm_split(cfg)
     die_pj = hb["die"] if hbm_die_pj is None else hbm_die_pj
     stack_pj = hb["total"] - die_pj
     sram, dlv = val(d["sram_j_per_byte"]), val(d["operand_delivery_j_per_byte"])
     toks = pt["tokens_per_step"]
-    dyn = dict(   # joules per STEP, die-side dynamic
-        mac_weights=mac_w * mac_pj(cfg, scenario, "qwen3", "w4a8") * 1e-12,
+    dyn = dict(   # joules per STEP, die-side dynamic, both dies
+        mac_weights=mac_w * mac_pj(cfg, scenario, "qwen3", dp["weight_mac_format"]) * 1e-12,
         mac_attention=mac_a * mac_pj(cfg, scenario, "qwen3", "bf16") * 1e-12,
         weight_read_and_delivery=wbytes * (val(d["rom_read_j_per_byte"]) + dlv),
         kv_ring_sram_and_delivery=kvb * (2 * sram + dlv),
@@ -251,28 +267,39 @@ def qwen_point(cfg, scenario, key, hbm_die_pj=None):
         * (val(d["stream_fp32_op_j"]) + 12 * sram),
         hbm_controller_phy_io=kvb * 8 * die_pj * 1e-12,
     )
-    st = _die_static(cfg, _qwen_areas(dp, pt["lane_copies_on"]), clock, dp["hbm_stacks"])
+    if hbm_w:
+        dyn["hbm_weight_read"] = hbm_w * (8 * die_pj * 1e-12 + 2 * sram + dlv)
+    n_pkg = dp["dies_per_package"]
+    if n_pkg > 1:   # the TP-2 exchanges over UCIe, both directions: a step's bytes (tools/arch_budget_qwen3.tp_exchanges:
+        # the FP32 partials of every slot, the argmax gathers, the embedding rows; the draft's own with DFlash)
+        nbytes = QB.tp_exchanges(clock, n)["bytes_per_direction"]
+        if dr:
+            nbytes += QB.tp_exchanges(clock, n, "draft")["bytes_per_direction"]
+        dyn["ucie_exchange"] = nbytes * 2 * 8 * val(d["link_j_per_bit"]["ucie"])
+    ar = _qwen_areas(dp, pt["lane_copies_on"])
+    st = _die_static(cfg, ar, clock, dp["hbm_stacks"])       # the package's static watts
     static_w = sum(st.values())
     t = pt["step_cycles"] / clock
     rate = toks / t
     dyn_tok = sum(dyn.values()) / toks
-    stack_tok = kvb * 8 * stack_pj * 1e-12 / toks
-    die_w = static_w + dyn_tok * rate
-    n_pkg = dp["dies_per_package"]
-    cool = cooling_w(cfg, "air", n_pkg)
-    ar = _qwen_areas(dp, pt["lane_copies_on"])
-    classes = _class_caps(cfg, n_pkg, static_w, dyn_tok, kvb * 8 * hb["stack_high"] * 1e-12 / toks, rate, ar["logic"])
-    cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
+    stack_tok = (kvb + hbm_w) * 8 * stack_pj * 1e-12 / toks
+    stk_hi_tok = (kvb + hbm_w) * 8 * hb["stack_high"] * 1e-12 / toks
+    die_w = (static_w + dyn_tok * rate) / n_pkg
+    cls = dp.get("cooling_class", "air")        # the design point's cooling class (Qwen O4: liquid, user decision)
+    cool = cooling_w(cfg, cls, n_pkg)
+    classes = _class_caps(cfg, n_pkg, static_w / n_pkg, dyn_tok / n_pkg, stk_hi_tok / n_pkg, rate, ar["logic"] / n_pkg)
+    cap = {k: classes[cls][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
     comp = {k: v / toks * 1e3 for k, v in dyn.items()}
     comp.update({k.replace("_w", ""): v / rate * 1e3 for k, v in st.items()})
     return dict(design_rate_tokens_s=rate, step_cycles=pt["step_cycles"], tokens_per_step=toks,
+                dies_per_package=n_pkg,
                 energy_per_token_mj=(dyn_tok + static_w / rate + stack_tok) * 1e3,
                 die_energy_per_token_mj=(dyn_tok + static_w / rate) * 1e3,
                 die_dynamic_mj_per_token=dyn_tok * 1e3, stack_energy_per_token_mj=stack_tok * 1e3,
-                die_components_mj_per_token=comp, die_static_w=st, die_w_at_design_rate=die_w,
-                stacks_w_at_design_rate=stack_tok * rate + 0.0,
-                stacks_w_high=kvb * 8 * hb["stack_high"] * 1e-12 / toks * rate,
-                cooling_limit_w=cool, die_over_cooling=die_w / cool, cooling_classes=classes, **cap)
+                die_components_mj_per_token=comp, die_static_w={k: v / n_pkg for k, v in st.items()},
+                package_static_w=st, die_w_at_design_rate=die_w, package_dies_w_at_design_rate=die_w * n_pkg,
+                stacks_w_at_design_rate=stack_tok * rate + 0.0, stacks_w_high=stk_hi_tok * rate,
+                cooling_class=cls, cooling_limit_w=cool, die_over_cooling=die_w / cool, cooling_classes=classes, **cap)
 
 
 # -- DeepSeek-V4.1 ROM array ------------------------------------------------------------------------------------------
@@ -316,16 +343,18 @@ def _v41_energy(cfg, scenario, V, E, ctx, users, positions, hbm_die_pj=None, wei
 
 PLACEMENT = ROOT / "results/arch/v41_die_placement.json"
 ROUTED_OPS = ("ffn.experts_w13", "ffn.experts_w2", "ffn.experts_swiglu")
+DRAFT_EXPERTS_PER_TOKEN = 3     # DSpark drafter: 128-expert top-3 MoE per stage (arch_budget_v41.draft_cost_s)
 
 
-def v41_die_workloads(V, c, ctx, G=4):
+def v41_die_workloads(V, c, ctx, G=4, mtp=False, batch=1):
     """Per-DIE op lists of the V4.1 ROM array: each layer die (stage s of results/arch/v41_die_placement.json, tensor
     group G) and a head die.  A layer's routed experts are split over the stages that hold its bytes, in the
     placement's fractions (the experts are ~all of a layer's stored bytes); every other op of the layer (attention,
     indexer, KV, hyper-connections, router, shared expert, combine, Engram) and its collectives run on the stage where
     the layer starts (its attention and KV owner, tools/v41_rack_design.placement) -- the conservative assignment for
     that stage.  Within a stage an op runs at its die share ('tp' = 1/G, 'rep' = every die), KV-SRAM rows are read by
-    every die (the rows are all-gathered), as tools/arch_budget_v41.token_workload's die share.  Returns
+    every die (the rows are all-gathered), as tools/arch_budget_v41.token_workload's die share.  A split index scan
+    (tools/v41_stage_rebalance.active_plan) moves its scan and select shares to the helper stages.  Returns
     {stage: [(op, weight)]} and {stage: collective payload bytes per die}, with 'head' for a head die."""
     P_ = json.loads(PLACEMENT.read_text())
     frac, start = {}, {}
@@ -339,6 +368,7 @@ def v41_die_workloads(V, c, ctx, G=4):
         lops, _meta = V.ops_of_layer(c, L, ctx)
         tot = sum(f for _, f in frac[L])
         for o in lops:
+            o["_layer"] = L
             if o["name"] in ROUTED_OPS:
                 for s_, f in frac[L]:
                     ops[s_].append((o, f / tot))
@@ -347,7 +377,8 @@ def v41_die_workloads(V, c, ctx, G=4):
         coll[start[L]] += sum(p for _, _, p in V.collectives_of_layer(c, L, G))
     ops["head"] = [(o, 1.0) for o in V.head_ops(c)]
     coll["head"] = 0.0
-    return ops, coll
+    import v41_stage_rebalance as SR           # a split index scan's shares on its helper stages (the active plan)
+    return SR.die_work_split(ops, coll, ctx, mtp=mtp, batch=batch)
 
 
 def _die_energy(cfg, scenario, V, E, die_ops, coll_B, users, positions, hbm_die_pj=None, G=4):
@@ -380,18 +411,39 @@ def _die_energy(cfg, scenario, V, E, die_ops, coll_B, users, positions, hbm_die_
 
 
 def v41_hottest_die(cfg, scenario, V, E, ctx, users, positions, mtp_factor, draft_overhead, hbm_die_pj=None,
-                    window=None):
+                    window=None, batch=1):
     """The HOTTEST die's dynamic joules per emitted token by component, and every die's total, for one operating
     point: layer dies per stage (v41_die_workloads) and the head die (LM head + argmax per position, plus, with MTP,
-    the draft: draft_overhead x the layer dies' verify work, on the 4 head dies).  mtp_factor = (gamma + 1) / tau
+    the draft priced from the drafter's own ops, on the 4 head dies).  mtp_factor = (gamma + 1) / tau
     with MTP, else 1.  window: {die: factor} -- the die's power is its joules per token x rate x factor (batch 1:
     the pass time over the die's active window; saturated: 1); the hottest die is the one with the most power."""
-    ops, coll = v41_die_workloads(V, E["c"], ctx)
+    ops, coll = v41_die_workloads(V, E["c"], ctx, mtp=positions > 1, batch=batch)
     per = {s: {k: v * mtp_factor for k, v in _die_energy(cfg, scenario, V, E, o, coll[s], users, positions,
                                                          hbm_die_pj).items()} for s, o in ops.items()}
+    draft_proxy = None
     if draft_overhead:
+        # the draft on a head die, priced from the drafter's own work (arch_budget_v41.draft_cost_s): 3 DSpark stages
+        # over gamma rows with WINDOW-ONLY attention -- priced as layer 0's ops, the sliding-window layer, whose
+        # ops with the routed experts at the drafter's top-3 of the target's top-6 -- then gamma Markov steps (an
+        # lm_head row, the rank-256 bias, argmax); one draft per verify pass, so per emitted token / tau.  The former
+        # proxy (draft_overhead x every layer die's verify energy) is kept as draft_proxy: it charged the target's
+        # context-dependent index scans to a drafter that does not scan the context.
+        gamma = max(1, positions - 1)
+        tau = positions / mtp_factor
+        c = E["c"]
+        l0, _ = V.ops_of_layer(c, 0, ctx)
+        topk = DRAFT_EXPERTS_PER_TOKEN / c["experts_per_token"]      # the drafter's top-3 against the target's top-6
+        e_stage = _die_energy(cfg, scenario, V, E, [(o, 3.0 * (topk if o["name"] in ROUTED_OPS else 1.0)) for o in l0],
+                              0.0, users, gamma, hbm_die_pj)
+        markov = dict(name="draft.markov_bias", sub="head", cls="weight", macs=2 * c["vocab_size"] * 256, fmt="bf16",
+                      bytes=dict(rom=2 * c["vocab_size"] * 256 * 2, kv_sram=0, kv_hbm=0, idx=0, engram=0), elems=0,
+                      fn="none", chain=0, share="tp", topk=None)
+        e_step = _die_energy(cfg, scenario, V, E, [(o, 1.0) for o in V.head_ops(c)] + [(markov, 1.0)], 0.0, users, 1,
+                             hbm_die_pj)
+        draft_j = (gamma * sum(e_stage.values()) + gamma * sum(e_step.values())) / tau
         layer_total = 4 * sum(sum(v.values()) for s, v in per.items() if s != "head")
-        per["head"]["draft"] = draft_overhead * layer_total / 4
+        draft_proxy = draft_overhead * layer_total / 4
+        per["head"]["draft"] = draft_j
     tot = {str(s): sum(v.values()) for s, v in per.items()}
     win = {s: (window or {}).get(s, 1.0) for s in tot}
     hot = max(tot, key=lambda s: tot[s] * win[s])
@@ -399,7 +451,8 @@ def v41_hottest_die(cfg, scenario, V, E, ctx, users, positions, mtp_factor, draf
     return dict(hottest=hot, hottest_components_j_per_token=per[hot if hot == "head" else int(hot)],
                 hottest_j_per_token=tot[hot], hottest_window_factor=win[hot], die_j_per_token=tot,
                 window_factor=win, layer_die_mean_j_per_token=sum(layer) / len(layer),
-                hottest_over_layer_mean=tot[hot] / (sum(layer) / len(layer)))
+                hottest_over_layer_mean=tot[hot] / (sum(layer) / len(layer)),
+                head_draft_j_per_token=per["head"].get("draft"), head_draft_proxy_j_per_token=draft_proxy)
 
 
 def v41_links_static():
@@ -471,7 +524,7 @@ def _dp_rates(ctx):
 
 def v41_design_points(cfg, scenario, hbm_die_pj=None):
     """The same pricing on the DESIGN-POINT model (tools/arch_budget_v41.py workload; rates of
-    results/arch/v41_lanes.json design_point; MTP at the design point's tau 5.0, gamma 5)."""
+    results/arch/v41_lanes.json design_point; MTP at the design point's measured tau, gamma 5)."""
     import arch_budget_v41 as V
     lad = json.loads(V41_LADDER.read_text())
     return v41_points(cfg, scenario, hbm_die_pj, V=V, rates=_dp_rates, tau=lad["tau"], gamma=lad["gamma"])
@@ -487,12 +540,12 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
     static_w = sum(st.values())
     links = v41_links_static()["rom"]
     n_pkg = dp["dies_per_package"]
-    cool = cooling_w(cfg, "air", n_pkg)
+    cool = cooling_w(cfg, V41_COOLING, n_pkg)
     ad = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]
     logic_mm2 = ad["total_mm2"] - ad["rom_mm2"] - ad["sram_mm2"]
     ld, stages, dies = dp["layer_dies"], dp["stages"], dp["dies"]
     g, ovh = gamma or dp["mtp"]["gamma"], dp["mtp"]["draft_overhead"]
-    tau = tau or dp["mtp"]["tau"]
+    tau = tau or V.TAU_HEADLINE           # the measured V4.1-Flash tau (arch_budget_v41, from its record)
     out = {}
     for ctx in dp["contexts"]:
         rt = rates(ctx)
@@ -535,13 +588,13 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
             if p["window"] > 1 and not wf:
                 wf = {s: p["window"] for s in [str(i) for i in range(stages)] + ["head"]}
             hd = v41_hottest_die(cfg, scenario, V, E, ctx, p["users"], p["pos"], (g + 1) / tau if p["mtp"] else 1.0,
-                                 ovh if p["mtp"] else 0.0, hbm_die_pj, window=wf)
+                                 ovh if p["mtp"] else 0.0, hbm_die_pj, window=wf, batch=p.get("batch", 1))
             hot_j = hd["hottest_j_per_token"] * hd["hottest_window_factor"]
             die_w = static_w + hot_j * p["rate"]
             avg_die_w = static_w + e_dyn * p["per_die"] * p["rate"]
             stk_die = p["stk_hi"] * p["per_die"] * hot_j / max(1e-30, e_dyn * p["per_die"])   # stacks scale with the die
             classes = _class_caps(cfg, n_pkg, static_w, hot_j, stk_die, p["rate"], logic_mm2)
-            cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
+            cap = {k: classes[V41_COOLING][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
             # whole-array energy per token: dynamic + stacks + the static of every die over the time a token
             # holds the array (idle dies' clock gated: leakage + HBM idle only; active dies clock too)
             active = min(dies, ld) if (k.startswith("sat") or k.startswith("fill")) else ld / stages
@@ -603,7 +656,7 @@ def v41_hbm_comparator(cfg, scenario, hbm_die_pj=None):
     assert links["dies"] == dies, "comparator die count differs between its record and its link charge"
     st["links_always_on_w"] = links["serdes_w_per_die"] + links["ucie_idle_w_per_die"]
     static_w = sum(st.values())
-    cool = cooling_w(cfg, "air", n_pkg)
+    cool = cooling_w(cfg, V41_COOLING, n_pkg)
     grid = {str(ctx): {r["G"]: r for r in cf["grid"]} for ctx, cf in sw["configs"][sw["headline_config"]].items()}
     out = {}
     for ctx, rows in sw["energy"].items():
@@ -627,7 +680,7 @@ def v41_hbm_comparator(cfg, scenario, hbm_die_pj=None):
             e_dyn = sum(dyn.values())
             die_w = static_w + e_dyn * per_die * rate
             classes = _class_caps(cfg, n_pkg, static_w, e_dyn * per_die, stk_hi * per_die, rate, logic)
-            cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
+            cap = {k: classes[V41_COOLING][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
             arr_static = (dies * (st["leakage_w"] + st["hbm_idle_w"]) + active * st["clock_w"] + links["array_w"]) / rate
             res[key] = dict(design_rate_tokens_s=rate, tokens_s_per_user=h["tokens_s_per_user"], batch=bt,
                             tensor_group=G, stages=stages, lane_mult=h.get("m"),
@@ -678,7 +731,7 @@ def build(cfg_path=CFG):
                                                                     V41_SWITCHED, DFLASH_REC,
                                                                     ROOT / "configs/hardware/technology.json")},
                hbm_split_pj_per_bit=hb,
-               mac_pj={s: dict(qwen3_w4a8=mac_pj(cfg, s, "qwen3", "w4a8"), qwen3_bf16=mac_pj(cfg, s, "qwen3", "bf16"),
+               mac_pj={s: dict(qwen3_w8=mac_pj(cfg, s, "qwen3", "fp8"), qwen3_bf16=mac_pj(cfg, s, "qwen3", "bf16"),
                                v41_fp4=mac_pj(cfg, s, "v41", "fp4"), v41_fp8=mac_pj(cfg, s, "v41", "fp8"),
                                v41_bf16=mac_pj(cfg, s, "v41", "bf16"), v41_fp32=mac_pj(cfg, s, "v41", "fp32"))
                        for s in SCENARIOS + ("B_gpu_tensor_sensitivity",)},
@@ -703,17 +756,8 @@ def build(cfg_path=CFG):
     rec["sensitivities"]["B_hbm_die_gh200_8p23"] = dict(
         qwen3_8b_rom_8k={k: qwen_point(cfg, "B_proposed_production", k, hbm_die_pj=gh) for k in ("ar_batch1", "dflash")},
         deepseek_v41_rom_array=v41_points(cfg, "B_proposed_production", hbm_die_pj=gh))
-    # an undemonstrated single-die liquid package at GB200's module rating: what liquid would buy the Qwen reticle
-    hyp = json.loads(json.dumps(cfg))
-    hyp["cooling"]["references"]["single_die_liquid_1200w"] = cfg["cooling"]["sensitivity_references"]["single_die_liquid_1200w"]
-    hyp["cooling"]["classes"]["liquid"]["1"] = ["single_die_liquid_1200w"]
-    for s in SCENARIOS:
-        rec["sensitivities"][f"{s[0]}_qwen_single_die_liquid_1200w"] = dict(
-            qwen3_8b_rom_8k={k: qwen_point(hyp, s, k) for k in ("ar_batch1", "dflash")},
-            deepseek_v41_rom_array=dict(per_context={}))
     rec["cooling_limits_w"] = cooling_limits(cfg)
     rec["cooling_withdrawn"] = cfg["cooling"]["withdrawn"]
-    rec["was"] = cfg["design_points"]["qwen3"]["was"]
     rec["summary"] = summary(rec)
     return rec
 

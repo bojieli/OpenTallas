@@ -122,12 +122,12 @@ def test_power_map_reprices_the_scenarios(rec):
             # (power_scenarios v41_links_static), so they differ only by the map's static re-pricing
             assert abs(v["die_w"] - v["scenario_hottest_die_w"]) < 10
             assert add["serdes_w"] + add["ucie_idle_w"] > 10
-    # the map is the HOTTEST die (at 1M the stage holding layer 20's uncapped index scan): scenario B needs liquid
-    # at batch 1 and exceeds even liquid with MTP or at saturation; scenario A fails everywhere
+    # the map is the HOTTEST die of each point (at 1M, with the adopted stage rebalancing: the stage holding layer 14's
+    # scan, S14 with MTP, a head die at batch 1 with MTP): scenario B fits the LIQUID limit (the V4.1 baseline cooling,
+    # user decision 2026-09-28) at every point and the air limit at none; scenario A fails everywhere
     B = PM["points"]["B_proposed_production"]
-    assert all(v["hottest_die"] == B["ar_batch1"]["hottest_die"] for v in B.values())
-    assert not B["ar_batch1"]["within_air_die_limit"] and B["ar_batch1"]["within_liquid_die_limit"]
-    assert not B["saturated_batch1024_mtp"]["within_liquid_die_limit"]
+    assert B["mtp_batch1"]["hottest_die"] == "head" and B["ar_batch1"]["hottest_die"] == "9"
+    assert all(v["within_liquid_die_limit"] and not v["within_air_die_limit"] for v in B.values())
     assert all(not v["within_air_die_limit"] for v in PM["points"]["A_measured_implementation"].values())
     v = rec["verdict"]["criteria"]["power"]["cooling_by_point"]
     assert set(v) == set(B) and set(v.values()) <= {"air", "liquid", "neither"}

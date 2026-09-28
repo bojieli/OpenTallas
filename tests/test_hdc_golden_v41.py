@@ -59,6 +59,24 @@ def test_engram_tables_match_the_release_layout():
     assert len(ids) == 24 and np.all(ids >= t.offsets[0]) and np.all(ids < t.offsets[0] + t.primes[0].reshape(-1))
 
 
+def test_engram_decode_uses_each_32_column_scale_at_full_width():
+    # The released 256-column row has eight independent UE8M0 scales; the
+    # reduced fixture has only one and could not catch a first-column-only read.
+    codes = np.full((2, 256), 0x38, dtype=np.uint8)  # E4M3 value 1.0
+    exps = np.array([[0, 1, -1, 2, -2, 3, -3, 4], [4, 3, 2, 1, 0, -1, -2, -3]], dtype=np.int32)
+    got = G.decode_engram_rows(codes, exps, np.array([1, 0, 1]))
+    assert got.shape == (3, 256)
+    for out_row, source in enumerate((1, 0, 1)):
+        for block in range(8):
+            assert np.array_equal(got[out_row, block * 32:(block + 1) * 32],
+                                  np.full(32, 2.0 ** int(exps[source, block]), dtype=F))
+
+    reduced = G.decode_engram_rows(codes[:, :32], exps[:, :1], np.array([1, 0]))
+    assert np.array_equal(reduced[0], np.full(32, 16.0, dtype=F))
+    with pytest.raises(ValueError, match="row width"):
+        G.decode_engram_rows(codes, exps[:, :1], np.array([0]))
+
+
 @needs_checkpoint
 def test_golden_reproduces_the_oracle_tokens_in_the_release_decode_order():
     prompt, expected = G.prompt_and_expected()

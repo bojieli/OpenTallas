@@ -1,0 +1,57 @@
+HB cyc=100000 node=1 st=0 pc=0 running=0 pend=0 rx_st=0 tx_st=0 jobs=0
+HB cyc=100000 node=0 st=6 pc=963 running=1 pend=0 rx_st=0 tx_st=0 jobs=0
+HEARTBEAT cycle=100000 finished=0
+HB cyc=200000 node=1 st=0 pc=0 running=0 pend=0 rx_st=0 tx_st=0 jobs=0
+HB cyc=200000 node=0 st=6 pc=1903 running=1 pend=0 rx_st=0 tx_st=0 jobs=0
+HEARTBEAT cycle=200000 finished=0
+HB cyc=300000 node=1 st=6 pc=870 running=1 pend=0 rx_st=0 tx_st=0 jobs=0
+HB cyc=300000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=1
+HEARTBEAT cycle=300000 finished=0
+HB cyc=400000 node=1 st=6 pc=1856 running=1 pend=0 rx_st=0 tx_st=0 jobs=0
+HB cyc=400000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=1
+HEARTBEAT cycle=400000 finished=0
+ABTOK pos=0 cycle=423090 qe_issues=368,365 qrom_reads=19488,17120 qgate_wait=52864,39420 qgate_low=66226,50326
+TOK user=0 pos=0 token=2815 cycle=423090
+HB cyc=500000 node=1 st=0 pc=1976 running=0 pend=0 rx_st=0 tx_st=0 jobs=1
+HB cyc=500000 node=0 st=6 pc=654 running=1 pend=0 rx_st=0 tx_st=0 jobs=1
+HEARTBEAT cycle=500000 finished=0
+HB cyc=600000 node=1 st=0 pc=1976 running=0 pend=0 rx_st=0 tx_st=0 jobs=1
+HB cyc=600000 node=0 st=6 pc=1576 running=1 pend=0 rx_st=0 tx_st=0 jobs=1
+HEARTBEAT cycle=600000 finished=0
+HB cyc=700000 node=1 st=6 pc=567 running=1 pend=0 rx_st=0 tx_st=0 jobs=1
+HB cyc=700000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=2
+HEARTBEAT cycle=700000 finished=0
+HB cyc=800000 node=1 st=6 pc=1553 running=1 pend=0 rx_st=0 tx_st=0 jobs=1
+HB cyc=800000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=2
+HEARTBEAT cycle=800000 finished=0
+ABTOK pos=1 cycle=854039 qe_issues=739,730 qrom_reads=39168,34240 qgate_wait=107210,77529 qgate_low=134076,99188
+TOK user=0 pos=1 token=3537 cycle=854039
+HB cyc=900000 node=1 st=0 pc=1976 running=0 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=900000 node=0 st=6 pc=363 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HEARTBEAT cycle=900000 finished=0
+HB cyc=1000000 node=1 st=0 pc=1976 running=0 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=1000000 node=0 st=6 pc=1378 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HEARTBEAT cycle=1000000 finished=0
+HB cyc=1100000 node=1 st=6 pc=276 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=1100000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=3
+HEARTBEAT cycle=1100000 finished=0
+HB cyc=1200000 node=1 st=6 pc=1251 running=1 pend=0 rx_st=0 tx_st=0 jobs=2
+HB cyc=1200000 node=0 st=0 pc=2017 running=0 pend=0 rx_st=0 tx_st=0 jobs=3
+HEARTBEAT cycle=1200000 finished=0
+ABTOK pos=2 cycle=1283915 qe_issues=1110,1095 qrom_reads=58848,51360 qgate_wait=162534,115093 qgate_low=202953,147550
+TOK user=0 pos=2 token=2047 cycle=1283915
+NODE node=1 busy=636266 side_wait=0 tx_wait=0 starved=647644 jobs=3 state_mismatch=0
+HBM_NODE node=1 q_bad=0 q_words=51360 q_reads=665760 q_fault=0 idx_records=3 idx_writes=36 idx_read_stalls=0 idx_writer_stalls=0 idx_refresh=99135
+NODE node=0 busy=647009 side_wait=0 tx_wait=0 starved=636901 jobs=3 state_mismatch=0
+HBM_NODE node=0 q_bad=0 q_words=58848 q_reads=793056 q_fault=0 idx_records=3 idx_writes=36 idx_read_stalls=0 idx_writer_stalls=0 idx_refresh=123474
+IDXHBM_USERS read=1 wrote=1
+HDC41_ARRAY nodes=2 users=1 generated=1 mismatches=0 logit_mismatch=0 lm_head_checks=3 state_mismatch=0 total_cycles=1283915
+USERS_DONE 1
+LINK_STALLS 102
+PASS
+- /home/ubuntu/otab_wab/rtl/test/tb_hdc_v41x_array.sv:867: Verilog $finish
+ABNODE node=0 qe_issues=1110 qrom_reads=58848 qgate_wait=162534 qgate_low=202953
+ABNODE node=1 qe_issues=1095 qrom_reads=51360 qgate_wait=115093 qgate_low=147550
+ABWHBM node=0 sector_reads=793056 activates=38044 row_hits=755012 row_conflicts=8559 refreshes=2189 req_backpressure_cycles=0 rd_lat_sum_ps=58158328448 rd_lat_max_ps=545777 fetched=58848 consumed=58848 fault_why=0
+ABWHBM node=1 sector_reads=665760 activates=34330 row_hits=631430 row_conflicts=7872 refreshes=2599 req_backpressure_cycles=0 rd_lat_sum_ps=49646896940 rd_lat_max_ps=534612 fetched=51360 consumed=51360 fault_why=0
+ABPROBE_DONE whbm=1

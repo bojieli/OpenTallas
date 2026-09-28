@@ -24,8 +24,9 @@ def test_fold_is_rank_order_left_to_right():
 
 
 @needs_checkpoint
-def test_tensor_split_golden_generates_the_oracle_tokens():
-    model = G.Model(P.GR, 4)
+@pytest.mark.parametrize("tp", [2, 4])
+def test_tensor_split_golden_generates_the_oracle_tokens(tp):
+    model = G.Model(P.GR, tp)
     prompt, expected = G.prompt_and_expected()
     cache = [[] for _ in range(model.layers)]
     seq, gen = list(prompt), []
@@ -38,13 +39,14 @@ def test_tensor_split_golden_generates_the_oracle_tokens():
 
 
 @needs_checkpoint
-def test_isa_group_is_bit_exact_with_the_tensor_split_golden():
-    model = G.Model(P.GR, 4)
+@pytest.mark.parametrize("tp", [2, 4])
+def test_isa_group_is_bit_exact_with_the_tensor_split_golden(tp):
+    model = G.Model(P.GR, tp)
     prompt, expected = G.prompt_and_expected()
     cache = [[] for _ in range(model.layers)]
     for pos, tok in enumerate(prompt[:-1]):
         model.decode_token(tok, pos, cache)
-    lays = P.tp_layouts(model, 4)
+    lays = P.tp_layouts(model, tp)
     grp = P.TPGroup(lays, [l.kv_image(cache) for l in lays])
     got = grp.run([P.build_program(l) for l in lays], prompt[-1], len(prompt) - 1)
     ref = model.decode_token(prompt[-1], len(prompt) - 1, [list(c) for c in cache])

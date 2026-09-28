@@ -18,10 +18,12 @@ footprints. Each input carries its evidence class, and the gaps are named.
 but only if the logic places at 0.68 utilisation or better <!-- figure: 0.68 src="results/arch/v41_die_assembly.json#ledger.sensitivities.break_even_utilisation" name="break-even placement utilisation" -->,
 and the MTP lane multiplier (m = 2) is what fills it. Every long wire closes timing once it is pipelined, and
 the design point now charges the latency that costs: **21.1 µs** <!-- figure: 21.1 src="results/arch/v41_die_assembly.json#long_wires.by_model.asap7_routed_fit.exposed_us_per_token" name="on-die wire us per token, ASAP7 fit" -->
-of the 142.7 µs token at 1M on the ASAP7 routed-wire model, which takes the headline from 8,185 to **7,009** tokens/s per user <!-- figure: 7,009 src="results/arch/v41_die_assembly.json#long_wires.by_model.asap7_routed_fit.rate" name="1M rate with ASAP7 on-die wire charged" -->.
-Power does **not** close at every operating point: checked at the hottest die, the stage that holds layer
-20's uncapped index scan, scenario B needs liquid cooling at batch 1 and the fill and exceeds even the liquid
-limit with MTP and at saturation; scenario A fails everywhere. IR closes only with a denser top grid than the
+of the 142.7 µs token at 1M on the ASAP7 routed-wire model, which takes the headline from 8,246 to **7,049** tokens/s per user <!-- figure: 7,049 src="results/arch/v41_die_assembly.json#long_wires.by_model.asap7_routed_fit.rate" name="1M rate with ASAP7 on-die wire charged" -->.
+Power closes on **liquid**, the V4.1 baseline cooling (user decision 2026-09-28), at every operating point:
+checked at the hottest die, with the adopted stage rebalancing spreading layer 20's index scan over S14, S13 and
+S12 (and the ratio-2 scans of layers 2, 8 and 14 in MTP verify passes; `results/arch/v41_stage_rebalance.json`),
+scenario B stays within 474.6 W per die everywhere and exceeds the 374.6 W air limit (the sensitivity) everywhere;
+scenario A fails everywhere. IR closes only with a denser top grid than the
 repository's die grid. The clock closes only as regional trees with mesochronous crossings.
 
 ## 1. The problem
@@ -234,9 +236,9 @@ SerDes strip is on the package's outer edge. There are 48 tiles, each ROM | lane
   now charged in the design point: 21.1 µs of the 142.7 µs token at 1M (14.8%) on the ASAP7 routed-wire model,
   5.6 µs <!-- figure: 5.6 src="results/arch/v41_die_assembly.json#long_wires.by_model.tech_global_wire.exposed_us_per_token" name="on-die wire us per token, 150 ps/mm" -->
   on the 150 ps/mm technology entry and 8.9 µs at its 250 ps/mm high end.
-- **Effect on the headline.** The 1M per-user rate is 7,009 tokens/s (21,670 with MTP) with the wire on the
-  ASAP7 fit, the headline, and 7,828 <!-- figure: 7,828 src="results/arch/v41_die_assembly.json#long_wires.by_model.tech_global_wire.rate" name="1M rate at 150 ps/mm on-die wire" -->
-  on 150 ps/mm (7,631 at 250 ps/mm); without any on-die wire it would be 8,185
+- **Effect on the headline.** The 1M per-user rate is 7,049 tokens/s (15,890 with MTP at the measured
+  τ = 3.65) with the wire on the ASAP7 fit, the headline, and 7,882 <!-- figure: 7,882 src="results/arch/v41_die_assembly.json#long_wires.by_model.tech_global_wire.rate" name="1M rate at 150 ps/mm on-die wire" -->
+  on 150 ps/mm (7,682 at 250 ps/mm); without any on-die wire it would be 8,246
   (`results/arch/v41_lanes.json` `on_die_wire`). At 200K the same wire takes 8,568 to 7,286.
 - **What overlaps.** Nothing that is charged: the DAG exposes every charged traversal (exposed = charged in
   full, 21.05 µs), because the token is one dependency chain and every traversal sits on an edge of it. Only
@@ -251,51 +253,53 @@ SerDes strip is on the package's outer edge. There are 48 tiles, each ROM | lane
 ### 4.4 Power map and hot spots (hottest layer die, 1M)
 
 Every point is the **hottest die** (`tools/power_scenarios.v41_hottest_die`): each layer die's own operators at
-its die share, in the placement's stages. At 1M it is a die of stage 14, which holds layer 20: an uncapped index
-scan that reads 1,048,576 keys, 17.8 MB per token per die from HBM. It does 6.9× the mean layer die's work at
-batch 1. The saturated points run the 866 users the HBM holds after the 0.9 capacity reserve.
+its die share, in the placement's stages, with the adopted stage rebalancing's scan shares on the helper stages. At
+1M the hottest die is a die of S9, which holds layer 14's uncapped index scan (layer 20's, which made S14 the
+hottest at 6.9× the mean before the rebalancing, is now split over S14, S13 and S12), except at the fill and the
+saturated batch with MTP (S14) and at batch 1 with MTP, where it is a head die (the draft, priced from the
+drafter's own ops). The saturated points run the 866 users the HBM holds after the 0.9 capacity reserve.
 
-| point | scenario B die W | tiles W/mm² | hottest region W/mm² | cooling | scenario A die W | A tiles W/mm² |
-|---|---:|---:|---:|---|---:|---:|
-| batch 1 | 448 | 0.48 | HBM PHY 5.59 | liquid | 2,401 | 7.43 |
-| batch 1 + MTP | 512 | 1.03 | HBM PHY 2.93 | neither | 6,134 | 21.02 |
-| 28-user fill | 448 | 0.48 | HBM PHY 5.59 | liquid | 2,401 | 7.43 |
-| fill + MTP | 498 | 1.00 | HBM PHY 2.84 | neither | 5,916 | 20.26 |
-| saturated (866 users) | 488 | 0.53 | HBM PHY 6.36 | neither | 2,735 | 8.51 |
-| saturated + MTP | **531** <!-- figure: 531 src="results/arch/v41_die_assembly.json#power.points.B_proposed_production.saturated_batch1024_mtp.die_w" name="scenario B worst die W" --> | 1.09 | HBM PHY 3.09 | neither | 6,538 | 22.44 |
+| point | hottest die | scenario B die W | tiles W/mm² | hottest region W/mm² | cooling (liquid baseline; air a sensitivity) | scenario A die W | A tiles W/mm² |
+|---|---|---:|---:|---:|---|---:|---:|
+| batch 1 | S9 | 382 | 0.45 | HBM PHY 4.09 | liquid | 2,044 | 6.36 |
+| batch 1 + MTP | head | 454 | 1.24 | SerDes PHY 1.89 | liquid | 5,166 | 17.70 |
+| 28-user fill | S9 | 382 | 0.45 | HBM PHY 4.09 | liquid | 2,044 | 6.36 |
+| fill + MTP | S14 | 425 | 0.84 | SerDes PHY 2.42 | liquid | 4,643 | 15.84 |
+| saturated (866 users) | S9 | 459 | 0.55 | HBM PHY 5.47 | liquid | 2,757 | 8.72 |
+| saturated + MTP | S14 | **470** <!-- figure: 470 src="results/arch/v41_die_assembly.json#power.points.B_proposed_production.saturated_batch1024_mtp.die_w" name="scenario B worst die W" --> | 0.97 | SerDes PHY 2.53 | liquid | 5,521 | 18.93 |
 
-The die limits are 374.6 W (air) and 474.6 W (liquid): a two-die shipping package's rating less its stacks,
-per die. The only published per-mm² reference is H200's die average, 0.675 W/mm².
+The die limits are 474.6 W (liquid, the V4.1 baseline) and 374.6 W (air, the sensitivity): a two-die shipping
+package's rating less its stacks, per die. The only published per-mm² reference is H200's die average, 0.675 W/mm².
 
 - **How this map compares with the scenarios.** The map runs 1.4 W below `power_scenarios`' hottest-die figure
   at every point (it re-prices the clock at 1.087 GHz). Before this change both were the average over the
   layer dies (the earlier 218-350 W); the array average is still 192-286 W.
 - **Scenario B**, the proposed production MAC energies:
-  - **Air is not enough at 1M.** The hottest die needs liquid cooling at batch 1 and at the 28-user fill, and
-    exceeds even the liquid limit with MTP and at saturation; it must be rate-capped there, or its layers
-    re-placed by time rather than bytes. This reverses the earlier verdict (air at every point), which
-    averaged the scan's energy over all 112 layer dies.
+  - **Liquid at every point, air at none at 1M.** With the adopted stage rebalancing the hottest die fits the
+    474.6 W liquid limit at every operating point from 200K to 1M (`results/arch/v41_stage_rebalance.json`
+    `cooling_sweep`); before it, the stage holding layer 20's scan exceeded liquid with MTP and at saturation
+    (490-533 W). The 374.6 W air limit, the sensitivity, is exceeded at every 1M point.
   - **The engine tiles stay near 1 W/mm²** at every point.
-  - **The HBM PHY strips are the hot spots: 2.8-6.4 W/mm².** The HBM figure places the die's whole share of
-    the HBM path energy (10.19 pJ/b) on the PHY macros, the pessimistic placement, and on this die that share
-    is the index scan's.
+  - **The PHY strips are the hot spots: 1.9-5.5 W/mm².** The HBM figure places the die's whole share of the HBM
+    path energy (10.19 pJ/b) on the PHY macros, the pessimistic placement, and on these dies that share is the
+    index scan's; with MTP the SerDes PHY (the always-on lanes) is the hottest region.
   - No committed source gives a sustainable hot-spot flux (`configs/hardware/power_scenarios.json`: "none
     found"), so the flux is flagged, not failed; the die totals fail.
-- **Scenario A**, the measured ASAP7 MAC at 11.5 pJ, **fails at every point** (the 1M rate is capped at 702
-  tokens/s with air and 1,013 with liquid).
+- **Scenario A**, the measured ASAP7 MAC at 11.5 pJ, **fails at every point** (the 1M rate is capped at 1,211
+  tokens/s with liquid and 839 with air).
 
 ### 4.5 IR drop of the die grid
 
 | scenario B point | tile current density | drop (VDD + VSS) | budget | M8/M9 coverage per net to close |
 |---|---:|---:|---:|---:|
-| batch 1 | 0.69 A/mm² | 28 mV | 35 mV | 2.0% |
-| batch 1 + MTP | 1.47 A/mm² | 60 mV | 35 mV | 4.3% |
-| saturated + MTP | 1.56 A/mm² | **64 mV** <!-- figure: 64 src="results/arch/v41_die_assembly.json#ir_drop.points.B_proposed_production.saturated_batch1024_mtp.drop_mv" name="scenario B worst IR drop mV" --> | 35 mV | 4.5% |
+| batch 1 | 0.64 A/mm² | 26 mV | 35 mV | 1.9% |
+| batch 1 + MTP (head die) | 1.77 A/mm² | 72 mV | 35 mV | 5.2% |
+| saturated + MTP | 1.39 A/mm² | **57 mV** <!-- figure: 57 src="results/arch/v41_die_assembly.json#ir_drop.points.B_proposed_production.saturated_batch1024_mtp.drop_mv" name="scenario B saturated + MTP IR drop mV" --> | 35 mV | 4.1% |
 
 - **What closes it.** The repository's die grid gives each net 2.5% of M8 and M9. On ASAP7's thin top metals
-  (13.9 Ω/□ effective per net) it fails every MTP point of the hottest die. A 4.5% grid closes it.
-- **Current per bump.** Per VDD bump the current is 12.6 mA at the worst point, and the die draws about 760 A.
-- **Scenario A** drops 434-1,312 mV, which no grid fixes.
+  (13.9 Ω/□ effective per net) it fails every MTP point of the hottest die. A 5.2% grid closes it.
+- **Current per bump.** Per VDD bump the current is 14 mA at the worst point, and the die draws about 650 A.
+- **Scenario A** drops 372-1,107 mV, which no grid fixes.
 - **Scope.** A production N5 stack's thick top metal and redistribution layer lower the sheet resistance by an
   order of magnitude, so this is an ASAP7 statement, not an N5 one.
 - **Not modelled.** The local M1-M6 grid, the interposer and package, and transient droop are not modelled.
@@ -323,16 +327,17 @@ per die. The only published per-mm² reference is H200's die average, 0.675 W/mm
 |---|---|---|
 | area | conditional | placement utilisation ≥ 0.68 at m = 2 (assumed 0.70); m = 1 or the N5 credit leave > 150 mm² |
 | long-wire timing | closes by pipelining; latency charged | 21.1 µs per 1M token in the headline (ASAP7 fit; 5.6 µs at 150 ps/mm) |
-| power | not at every point | hottest die, B: liquid at batch 1 and the fill, over liquid with MTP and saturated (worst 531 W vs 374.6 air / 474.6 liquid); A fails |
-| IR | closes with a denser grid | 64 mV vs 35 mV at 2.5% M8/M9 coverage; 4.5% closes it |
+| power | closes on liquid (the V4.1 baseline) | hottest die, B, with the adopted stage rebalancing: within liquid at every point (worst 470 W vs 474.6 liquid), over the 374.6 W air sensitivity at every 1M point; A fails |
+| IR | closes with a denser grid | 72 mV vs 35 mV at 2.5% M8/M9 coverage (batch 1 + MTP, a head die); 5.2% closes it |
 | clock | regional trees only | one tree's skew is 0.8-3.0 periods |
 
 **Top risks**, in order of consequence:
 
-1. **The hottest die.** The stage that holds layer 20's uncapped index scan does 6.9× the mean layer die's
-   work at batch 1 at 1M, so its die exceeds the air limit at every point and the liquid limit with MTP and
-   at saturation; it also binds the filled pipeline's throughput. Re-placing the index-scan layers by time,
-   or spreading the scan over more dies, is the lever.
+1. **The hottest die.** The index-scan stages carry several times the mean layer die's work. The adopted stage
+   rebalancing spreads layer 20's scan over S14, S13 and S12 (and, in MTP verify passes, the ratio-2 scans of
+   layers 2, 8 and 14 to the stage upstream of each), which keeps the hottest die within the liquid limit at
+   every point, with 3-4 W of margin at the tightest (saturated with MTP at 1M, 471 W on `power_scenarios`), and
+   no longer lets S14 bind the filled pipeline; air is exceeded at every 1M point.
 2. **Area rests on one assumed number.** At 0.60 utilisation the die is 50 mm² over, and at the routed blocks'
    median it is 309 mm² over. The MTP lane multiplier fills the die. This is the first physical fact the next
    route must establish.

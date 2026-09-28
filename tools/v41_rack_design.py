@@ -40,7 +40,13 @@ CTX = 1048576                 # primary context (user decision 2026-09-27)
 FILL = 28                     # pipeline-fill batch: one user per stage keeps the batch-1 rate
 DIES, PKG_DIES, G = 188, 2, 4
 STAGES = 28
-POSITIONS, TAU = 6, 5.0          # DSpark verify pass: 6 positions, 5.0 accepted tokens (spec headline)
+def _tau():
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import arch_budget_v41 as _AB
+    return _AB.TAU_HEADLINE
+
+
+POSITIONS, TAU = 6, _tau()       # DSpark verify pass: 6 positions; accepted tokens = the measured V4.1-Flash tau
 INGEST_NICS, NIC_BPS = 2, 50e9   # two 400G NICs on the host tray (prefill KV ingest), 50 GB/s each
 HBM_STACKS_PER_LAYER_DIE = 4
 SHELVES_PER_SIDE = 3              # 2N: side A carries the provisioned load on its shelves (N+1 inside each), B mirrors
@@ -797,9 +803,15 @@ def weight_estimate(el):
 # ---------------------------------------------------------------------------------------------------------
 # 6. conflicts and comparison
 # ---------------------------------------------------------------------------------------------------------
+def switched_one_way_s():
+    """One switched traversal between two packages: port hop (full KP4) + 250 ns switch + port hop + ~2.4 m of cable
+    (PHYS); the Engram path's leg, and the helper exchange of tools/v41_stage_rebalance.py."""
+    return 2 * _v("ethernet_hop_s") + _v("switch_latency_s") + 2 * 1.2 * _v("twinax_ns_per_m") * 1e-9
+
+
 def critical_paths(pl, links):
     """Latency of the switched and ring paths that touch the token (analytical, from PHYS)."""
-    sw = 2 * _v("ethernet_hop_s") + _v("switch_latency_s") + 2 * 1.2 * _v("twinax_ns_per_m") * 1e-9
+    sw = switched_one_way_s()
     ring_hop = max(l["latency_s"] for l in links["stage_links"])
     gather_read = 396e-9                     # budget engram.port_cycles at 1 GHz: 13 KB in 256-bit beats
     ser = 24 * 264 / (LANES["switch"] * lane_budget()["lane_net_Bps"])   # 24 rows into one 4-lane port
@@ -924,7 +936,9 @@ def conflicts(pl, links, tr, pwr, el, draft_sram, gates):
         finding=("72 table dies must receive the token id and return 48 rows to S%d (layer 1) and S%d (layer 14); "
                  "direct cables would need ~36 ports on the consumers. One 51.2T switch carries it OFF the stage path: "
                  "layer 1's gather completes %.2f us after the argmax against the spec's 3.57 us slack (margin %.2f us); "
-                 "layer 14's slack is ~%.0f us. No token-path collective or stage hop crosses the switch."
+                 "layer 14's slack is ~%.0f us. No tensor-group collective or stage hop crosses the switch; the one "
+                 "token-path use is the stage rebalancing's index query to layer 20's helper groups (S13, S12) for "
+                 "users past 650K / 900K positions (2,176 B per package per position; tools/v41_stage_rebalance.py)."
                  % (pl["engram_consumers"][1], pl["engram_consumers"][14], ep["engram_l1_s"] * 1e6,
                     3.57 - ep["engram_l1_s"] * 1e6, ep["engram_l14_slack_s"] * 1e6))))
     hh = pl["counts"]["head_hbm_stacks_per_die"]

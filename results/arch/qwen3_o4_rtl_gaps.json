@@ -99,7 +99,38 @@
   }
  },
  "o4_file_check": {
-  "present": false
+  "present": true,
+  "has_o4": true,
+  "mismatches": {
+   "ar_tokens_s": [
+    11007.4,
+    10391.6
+   ],
+   "ar_step_cycles": [
+    99809,
+    105724
+   ],
+   "plain_cycles": [
+    121479,
+    123903
+   ],
+   "step_cycles": [
+    167386,
+    189758
+   ],
+   "verify_cycles": [
+    143183,
+    163071
+   ],
+   "draft_cycles": [
+    24193,
+    26677
+   ],
+   "dflash_tokens_s": [
+    18765.7,
+    16553.3
+   ]
+  }
  },
  "requirements": {
   "clock_hz": 1098640000.0,
@@ -748,7 +779,7 @@
   {
    "id": "G14",
    "block": "Quality harness 8-bit mode",
-   "current": "no 8-bit mode; the quantised kernel scales every product (w = code x scale)",
+   "current": "w8 mode (g_contract_w8, e_full_w8): codes x BF16 summed in the golden K-split order, one scale multiply after the sum; 0 of the 960 section 3.2 outputs differ from the contract (the group formats still scale every product); the 8-bit quality verdict is not yet run",
    "required": "a per-channel INT8 mode that scales after the chunk-tree sum, bit-exact with G13; the 8-bit quality verdict (<= 2% perplexity, <= 1 MMLU point) and DFlash acceptance at 8 bits",
    "size": "S",
    "owner": "Claude"
@@ -756,7 +787,7 @@
   {
    "id": "G15",
    "block": "Timing and performance models",
-   "current": "hdc_timing.ShapeLayout fixed at tp = 1; O4 prices the TP pair as one 12,288-group engine with BF16 partials; DFlash on the spec chain",
+   "current": "O4 priced per die (qwen3_8bit_design): calibrated replay of one die's TP-2 slice at 6,144 groups, 73 FP32-partial exchanges (1,407 cycles) + embedding handoff, 5-cycle scale stage, golden K-splits; the verify at m = 5 on the spec chain (a calibrated-core estimate beside it)",
    "required": "per-die TP-2 replay at 6,144 groups with the scale stage and FP32 partials; verify at m = 5 on the calibrated core",
    "size": "M",
    "owner": "Claude"

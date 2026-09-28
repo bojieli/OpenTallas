@@ -2,7 +2,6 @@
 """DFlash on the Qwen3-8B designs: measured acceptance per block and a serial draft/verify/commit step.
 
     python3 tools/dflash_step_timing.py [--out results/speculative/dflash_step_timing.json]
-    python3 tools/dflash_step_timing.py --make-basis <qwen3_budget.json of the atlas lineage>
 
 Replaces two approximations of the atlas's speculative figures (atlas 8.6, Table 8-16; the model is
 tools/arch_budget_qwen3.py at 74359092, ``tokens_per_step()`` and ``rom_block_sweep()`` and
@@ -29,15 +28,17 @@ tools/arch_budget_qwen3.py at 74359092, ``tokens_per_step()`` and ``rom_block_sw
    COMMIT  the accept unit's prefix-AND over B-1 compares, the bonus token, the next step's DYN banks
            (CTL ACCEPT/TOKX/DYN/END at the spec's 1-cycle issue gap); rollback is a commit pointer.
 
-   HBM comparator (the same core, 131,072 MAC lanes, weights and KV on six HBM3E stacks): each phase
+   HBM comparator (the same two-reticle core, 196,608 MAC lanes, weights and KV on its 8 HBM3E stacks): each phase
    is max(bytes / bandwidth, MACs / lanes, its chain latency), as the atlas's batch model prices a
    step.  The draft phase re-reads the shared lm_head (the drafter has none of its own), which the atlas
    model left out, and the verify's MACs are capped by the lanes, which it reported but did not apply.
 
-The hardware basis (clock, the per-layer stage chain, KV stream cycles, lanes, lane multiplier) is the
-atlas lineage's results/arch/qwen3_budget.json at 74359092 (identical in every field used here at
-5e12dc08), pinned as results/speculative/dflash_timing_basis.json because that lineage is not on main.
-The tool first reproduces the atlas's own sweep from the basis (legacy check), then re-prices it.
+The hardware basis (clock, the per-layer stage chain with the UCIe exchanges, KV stream cycles, lanes, lane
+multiplier) is the Qwen3-8B ROM package of tools/arch_budget_qwen3.py (``timing_basis()``: two reticles, every
+layer split across both dies, 8-bit weights, 12,288 groups, 8 HBM3E stacks, m = 5), computed afresh.  The
+serial-step arithmetic itself was validated against the earlier atlas lineage's own sweep: that lineage's
+basis stays pinned as results/speculative/dflash_timing_basis.json (74359092, a single reticle; not a design),
+and the legacy checks reproduce its sweep from it before the package is priced.
 """
 from __future__ import annotations
 
@@ -137,13 +138,29 @@ class Machine:
         self.head_macs = V * H
         self.kvproj_mv = mv_cycles(2 * KV * HD, H, self.groups)
         self.fc_mv = mv_cycles(DFLASH_FC[0], DFLASH_FC[1], self.groups)
+        # TP-2 (the two-reticle package): the chain is one die's slice; the fc and K/V projections are the die's
+        # slices (the fc at the golden's K-split), and every pass adds its serial UCIe exchanges
+        self.tp = basis.get("tp")
+        if self.tp:
+            self.kvproj_mv = self.tp["kvproj_mv"]
+            self.fc_mv = self.tp["fc_mv"]
 
-    # ROM reticle -------------------------------------------------------------------------------------
+    def exchanges(self, slots, phase="target"):
+        """Serial UCIe exchange cycles of one pass under TP-2 (tools/arch_budget_qwen3.tp_exchanges); 0 on one die."""
+        t = self.tp
+        if not t:
+            return 0
+        H = self.q["H"]
+        per = t["hop_cycles"] + slots * H * t["partial_bytes"] / t["link_bytes_per_cycle"] + t["reduce_add_cycles"]
+        n, rows = (2 * self.q["L"] + 1, slots) if phase == "target" else (2 * DRAFTER_LAYERS + 2, 1)
+        return math.ceil(n * per + t["hop_cycles"] + rows * t["emb_row_bytes"] / t["link_bytes_per_cycle"])
+
+    # ROM package -------------------------------------------------------------------------------------
     def verify(self, B, m):
-        """rom_token(slots=B, m) of the atlas model, target KV only."""
+        """rom_token(slots=B, m) of the budget model, target KV only, with the pass's UCIe exchanges under TP-2."""
         c = self.comp
         comp = c["latency"] + c["control"] + math.ceil(B / m) * c["weights"] + math.ceil(B / m) * c["attention"] \
-            + B * c["elementwise"]
+            + B * c["elementwise"] + self.exchanges(B)
         return dict(compute=comp, kv=self.kv_cycles, cycles=max(comp, self.kv_cycles))
 
     def draft(self, B, m, ctx_positions=None):
@@ -155,7 +172,7 @@ class Machine:
             + B * ly["elementwise"] + math.ceil(p / m) * self.kvproj_mv
         final_norm = self.norm + math.ceil(B * self.q["H"] / self.su_width)
         head = math.ceil((B - 1) / m) * self.head_mv + self.me_res + self.argmax
-        comp = fc + DRAFTER_LAYERS * per_layer + final_norm + head
+        comp = fc + DRAFTER_LAYERS * per_layer + final_norm + head + self.exchanges(B, "draft")
         kv = self.kv_cycles * DRAFTER_LAYERS / self.q["L"]
         return dict(compute=comp, kv=kv, cycles=max(comp, kv),
                     parts=dict(fc=fc, layers=DRAFTER_LAYERS * per_layer, final_norm=final_norm, lm_head=head,
@@ -214,12 +231,13 @@ class Machine:
         """One step on the HBM comparator.  fix=False is the atlas's dflash_budget pricing (one byte-bound
         read of target + drafter weights + both KVs, no lm_head re-read, no MAC cap), for the check."""
         hb = self.b["hbm_design"]
+        lanes = hb.get("lanes", self.lanes)
         bw = hb["stacks"] * hb["stack_bytes_s"] * hb["efficiency"]
         wmacs = self.wl["weight_macs"]
         kvd = self.kv_bytes * DRAFTER_LAYERS / self.q["L"]
         if B == 1:
-            t = max((wmacs * bpp + self.kv_bytes) / bw, (wmacs + self.wl["attention_macs"]) / (self.lanes * self.clock),
-                    (self.comp["latency"] + self.comp["control"]) / self.clock)
+            t = max((wmacs * bpp + self.kv_bytes) / bw, (wmacs + self.wl["attention_macs"]) / (lanes * self.clock),
+                    (self.comp["latency"] + self.comp["control"] + self.exchanges(1)) / self.clock)
             return dict(seconds=t, draft_s=0.0, verify_s=t, commit_s=0.0)
         if not fix:
             t = ((wmacs + DRAFTER_PARAMS) * bpp + self.kv_bytes + kvd) / bw
@@ -227,15 +245,15 @@ class Machine:
         d = self.draft(B, 1)
         draft_bytes = (DRAFTER_PARAMS + self.head_macs) * bpp + kvd
         draft_macs = self.draft_macs(B, self.ctx)
-        t_d = max(draft_bytes / bw, draft_macs / (self.lanes * self.clock), d["parts"]["chain_latency_only"] / self.clock)
+        t_d = max(draft_bytes / bw, draft_macs / (lanes * self.clock), d["parts"]["chain_latency_only"] / self.clock)
         ver_bytes = wmacs * bpp + self.kv_bytes
         ver_macs = B * (wmacs + self.wl["attention_macs"])
-        t_v = max(ver_bytes / bw, ver_macs / (self.lanes * self.clock),
-                  (self.comp["latency"] + self.comp["control"]) / self.clock)
+        t_v = max(ver_bytes / bw, ver_macs / (lanes * self.clock),
+                  (self.comp["latency"] + self.comp["control"] + self.exchanges(1)) / self.clock)
         t_c = self.commit(B) / self.clock
-        bind = {"draft": "bytes" if t_d == draft_bytes / bw else "macs" if t_d == draft_macs / (self.lanes * self.clock)
+        bind = {"draft": "bytes" if t_d == draft_bytes / bw else "macs" if t_d == draft_macs / (lanes * self.clock)
                 else "latency",
-                "verify": "bytes" if t_v == ver_bytes / bw else "macs" if t_v == ver_macs / (self.lanes * self.clock)
+                "verify": "bytes" if t_v == ver_bytes / bw else "macs" if t_v == ver_macs / (lanes * self.clock)
                 else "latency"}
         return dict(seconds=t_d + t_v + t_c, draft_s=t_d, verify_s=t_v, commit_s=t_c, binding=bind)
 
@@ -261,12 +279,26 @@ def acceptance(acc: dict) -> dict:
     return out
 
 
-def evaluate(basis: dict, acc: dict) -> dict:
+def design_basis() -> dict:
+    """The package's timing basis (tools/arch_budget_qwen3.timing_basis)."""
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import arch_budget_qwen3 as QB
+    return QB.timing_basis()
+
+
+def evaluate(basis: dict, acc: dict, legacy: dict | None = None) -> dict:
     tau = acceptance(acc)
     m_max = basis["lane_multiplier_m"]
+    legacy = legacy if legacy is not None else json.loads(BASIS.read_text())
+    braw = json.dumps(basis, sort_keys=True, default=float).encode()
     res = dict(schema="opentallas.dflash-step-timing.v1", tool="tools/dflash_step_timing.py",
-               drafter=DRAFTER, basis=dict(path=str(BASIS.relative_to(ROOT)), source=basis["source"],
-                                           source_sha256=basis["source_sha256"]),
+               drafter=DRAFTER, basis=dict(source=basis["source"], sha256=hashlib.sha256(braw).hexdigest(),
+                                           groups=basis["rom_design"]["groups"], lanes=basis["rom_design"]["lanes"],
+                                           dies=basis["rom_design"].get("dies"),
+                                           lane_multiplier_m=m_max, hbm_stacks=basis["hbm_design"]["stacks"],
+                                           legacy_check_basis=str(BASIS.relative_to(ROOT)),
+                                           legacy_check_source=legacy["source"]),
                acceptance=dict(path=str(ACCEPT.relative_to(ROOT)),
                                central="primary workloads, cycle-weighted (the convention of the atlas's pooled 4.1)",
                                band="mean of the primary workloads' tau (each workload weighted equally)",
@@ -282,7 +314,6 @@ def evaluate(basis: dict, acc: dict) -> dict:
                     continue
                 t = tau[B]
                 s = mc.serial_step(B, m)
-                leg = mc.legacy_step(B, m)
                 row = dict(block=B, tokens_per_step=t["direct"], tokens_per_step_truncated=t["truncated"],
                            tokens_per_step_band=t["direct_mean_of_workloads"],
                            step_cycles=round(s["cycles"]), draft_cycles=round(s["draft"]),
@@ -290,8 +321,6 @@ def evaluate(basis: dict, acc: dict) -> dict:
                            tokens_s=round(t["direct"] * mc.clock / s["cycles"], 1),
                            tokens_s_band=round(t["direct_mean_of_workloads"] * mc.clock / s["cycles"], 1),
                            speedup=round(t["direct"] * plain / s["cycles"], 3),
-                           legacy_step_cycles=round(leg),
-                           tokens_s_legacy_timing_measured_tau=round(t["direct"] * mc.clock / leg, 1),
                            tokens_s_serial_timing_truncated_tau=round(t["truncated"] * mc.clock / s["cycles"], 1),
                            **mc.step_macs(B, ctx))
                 if B > 1:
@@ -303,26 +332,30 @@ def evaluate(basis: dict, acc: dict) -> dict:
             res["rom"][f"{ctx}/fp8/m{m}"] = dict(context=ctx, kv_format="fp8", lane_multiplier=m,
                                                  plain_cycles=plain, plain_tokens_s=round(mc.clock / plain, 1),
                                                  sweep=rows, best=best)
-        # legacy check: the atlas's own sweep from the basis
-        if ctx in (8192, 2048):
-            for m in sorted({1, m_max}):
-                key = f"{ctx}/fp8/m{m}"
-                want = basis["legacy_dflash"]["rom"][key]["sweep"]
-                got = [dict(block=B, step_cycles=round(mc.legacy_step(B, m)),
-                            tokens_s=round(legacy_tokens_per_step(B) * mc.clock / mc.legacy_step(B, m), 1))
-                       for B in (1, 2, 3, 4, 5, 6, 8, 12, 16)]
-                ok = all(g["step_cycles"] == w["step_cycles"] and abs(g["tokens_s"] - w["tokens_s"]) < 0.11
-                         for g, w in zip(got, want))
-                res["checks"][f"legacy_rom_sweep_reproduced/{key}"] = ok
+        # legacy check: the earlier atlas lineage's own sweep from its pinned basis (the step arithmetic's check)
+        lmc = Machine(legacy, ctx, "fp8")
+        for m in sorted({1, legacy["lane_multiplier_m"]}):
+            key = f"{ctx}/fp8/m{m}"
+            want = legacy["legacy_dflash"]["rom"][key]["sweep"]
+            got = [dict(block=B, step_cycles=round(lmc.legacy_step(B, m)),
+                        tokens_s=round(legacy_tokens_per_step(B) * lmc.clock / lmc.legacy_step(B, m), 1))
+                   for B in (1, 2, 3, 4, 5, 6, 8, 12, 16)]
+            ok = all(g["step_cycles"] == w["step_cycles"] and abs(g["tokens_s"] - w["tokens_s"]) < 0.11
+                     for g, w in zip(got, want))
+            res["checks"][f"legacy_rom_sweep_reproduced/{key}"] = ok
         if ctx == 8192:
             for fmt, bpp in (("bf16", 2), ("fp8", 1), ("rom_format_3.5b", 3.5 / 8)):
+                legacy_b16 = legacy["legacy_dflash"]["hbm"][fmt]
+                res["checks"][f"legacy_hbm_block16_reproduced/{fmt}"] = abs(
+                    LEGACY_TAU_CENTRAL / lmc.hbm_step(16, bpp, fix=False)["seconds"] -
+                    legacy_b16["tokens_s_at_tau_central"]) < 0.11
+            for fmt, bpp in basis["hbm_weight_bytes_per_mac"].items():
                 p = mc.hbm_step(1, bpp)
                 rows = []
                 for B in BLOCKS:
                     if B not in tau or B == 1:
                         continue
                     s = mc.hbm_step(B, bpp)
-                    legacy = mc.hbm_step(B, bpp, fix=False)
                     t = tau[B]
                     rows.append(dict(block=B, tokens_per_step=t["direct"],
                                      tokens_per_step_band=t["direct_mean_of_workloads"],
@@ -332,26 +365,24 @@ def evaluate(basis: dict, acc: dict) -> dict:
                                      tokens_s=round(t["direct"] / s["seconds"], 1),
                                      tokens_s_band=round(t["direct_mean_of_workloads"] / s["seconds"], 1),
                                      speedup=round(t["direct"] * p["seconds"] / s["seconds"], 3),
-                                     tokens_s_legacy_pricing_measured_tau=round(t["direct"] / legacy["seconds"], 1),
                                      **mc.step_macs(B, ctx)))
                 best = max(rows, key=lambda r: r["tokens_s"])
                 b16 = next(r for r in rows if r["block"] == 16)
-                legacy_b16 = basis["legacy_dflash"]["hbm"][fmt]
-                res["hbm"][fmt] = dict(context=ctx, plain_tokens_s=round(1 / p["seconds"], 1), sweep=rows, best=best,
-                                       block16=b16, legacy_block16_tokens_s_at_tau_4_1=legacy_b16["tokens_s_at_tau_central"])
-                res["checks"][f"legacy_hbm_block16_reproduced/{fmt}"] = abs(
-                    LEGACY_TAU_CENTRAL / mc.hbm_step(16, bpp, fix=False)["seconds"] - legacy_b16["tokens_s_at_tau_central"]) < 0.11
+                res["hbm"][fmt] = dict(context=ctx, weight_bytes_per_mac=bpp, plain_tokens_s=round(1 / p["seconds"], 1),
+                                       sweep=rows, best=best, block16=b16)
     res["checks"]["all"] = all(v for k, v in res["checks"].items())
     res["notes"] = [
         "Tokens per step are measured at BF16 on a GPU (results/speculative/dflash_block_acceptance.json), not in the "
-        "deployment arithmetic (3.5-bit ROM weights, FP8 KV).",
+        "deployment arithmetic (INT8 per-channel ROM weights, FP8 KV).",
         "Blocks below 16 run the block-16 drafter out of its training distribution; the direct runs measure that.",
         "The draft phase projects B new context positions (an upper bound: the last step committed tau of them).",
         "DRAFT and VERIFY are serial; each overlaps its own KV stream with its compute, as the atlas's rom_token does. "
         "Only one KV layer is buffered (the ring of the atlas's area ledger), so neither phase's stream runs ahead "
         "into the other.",
         "The HBM comparator's draft re-reads the shared lm_head (151,936 x 4096) at the weight format, and each "
-        "phase is capped by the 131,072 MAC lanes.",
+        "phase is capped by the package's MAC lanes.",
+        "Both dies split every layer (tensor-parallel 2): the chain carries the 73 UCIe exchanges a token (the "
+        "control component), once a step for all of its slots; the drafter's layers are split the same way.",
     ]
     return res
 
@@ -360,15 +391,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--acceptance", type=Path, default=ACCEPT)
-    ap.add_argument("--make-basis", type=Path, default=None,
-                    help="write the pinned basis from an atlas-lineage results/arch/qwen3_budget.json")
-    ap.add_argument("--basis-source", default="74359092:results/arch/qwen3_budget.json")
     args = ap.parse_args()
-    if args.make_basis:
-        BASIS.write_text(json.dumps(make_basis(args.make_basis, args.basis_source), indent=1) + "\n")
-        print(f"wrote {BASIS}")
-        return
-    basis = json.loads(BASIS.read_text())
+    basis = design_basis()
     acc = json.loads(args.acceptance.read_text())
     res = evaluate(basis, acc)
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -379,14 +403,12 @@ def main():
         for r in v["sweep"]:
             print(f"  B={r['block']:>2} tau {r['tokens_per_step']:.3f} (trunc {r['tokens_per_step_truncated']:.3f}) "
                   f"step {r['step_cycles']:>8} = draft {r['draft_cycles']:>7} + verify {r['verify_cycles']:>7} + "
-                  f"{r['commit_cycles']:>2}  -> {r['tokens_s']:>8} tok/s (band {r['tokens_s_band']}); "
-                  f"legacy timing {r['tokens_s_legacy_timing_measured_tau']}")
+                  f"{r['commit_cycles']:>2}  -> {r['tokens_s']:>8} tok/s (band {r['tokens_s_band']})")
     for f, v in res["hbm"].items():
-        print(f"HBM {f}: plain {v['plain_tokens_s']}; atlas block16 at tau 4.1 {v['legacy_block16_tokens_s_at_tau_4_1']}")
+        print(f"HBM {f}: plain {v['plain_tokens_s']}")
         for r in v["sweep"]:
             print(f"  B={r['block']:>2} tau {r['tokens_per_step']:.3f} step {r['step_us']} us (draft {r['draft_us']}, "
-                  f"verify {r['verify_us']}) {r['binding']} -> {r['tokens_s']} tok/s (band {r['tokens_s_band']}); "
-                  f"legacy pricing {r['tokens_s_legacy_pricing_measured_tau']}")
+                  f"verify {r['verify_us']}) {r['binding']} -> {r['tokens_s']} tok/s (band {r['tokens_s_band']})")
 
 
 if __name__ == "__main__":

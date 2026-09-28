@@ -36,11 +36,12 @@ module tb_hdc_package_tp #(
     parameter integer BPC = 3600,        // UCIe bytes per cycle per die pair and direction
     parameter integer CDEPTH = 16,       // collective receive FIFO words
     parameter integer KVHALF = 256,      // KV words of the K half (one die)
-    parameter integer KVLAYER = 64       // KV words per layer within a half
+    parameter integer KVLAYER = 64,      // KV words per layer within a half
+    parameter integer WROM_WORDS = 16384 // words reserved per die in the testbench
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12, DAW = 6, TAGW = 32;
-    localparam integer WROM_WORDS = 16384, CROM_WORDS = 4096;
+    localparam integer CROM_WORDS = 4096;
     localparam integer KVW = 1024;
     localparam integer VM_ELEMS = 4096, PROG_WORDS = 4096;
     localparam integer FLIT = 512, XWORDS = 8, MAXU = 16;
@@ -155,6 +156,8 @@ module tb_hdc_package_tp #(
                 wire vw_su_we, vw_rd_we; wire [AW-1:0] vw_su_addr, vw_rd_addr;
                 wire [G-1:0] vw_me_we; wire [G*AW-1:0] vw_me_addr;
                 wire [G*W-1:0] vw_me_mask; wire [G*W*32-1:0] vw_me_data; wire [31:0] vw_su_data, vw_rd_data;
+                wire vw_mx_we; wire [AW-1:0] vw_mx_addr;
+                wire [W-1:0] vw_mx_mask; wire [W*32-1:0] vw_mx_data;
                 wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
                 wire [31:0] cycles;
                 wire core_start, core_done, core_fault;
@@ -177,6 +180,7 @@ module tb_hdc_package_tp #(
                     .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q),
                     .vc_re(vc_re), .vc_addr(vc_addr), .vc_q(vc_q),
                     .vw_me_we(vw_me_we), .vw_me_addr(vw_me_addr), .vw_me_mask(vw_me_mask), .vw_me_data(vw_me_data),
+                    .vw_mx_we(vw_mx_we), .vw_mx_addr(vw_mx_addr), .vw_mx_mask(vw_mx_mask), .vw_mx_data(vw_mx_data),
                     .vw_su_we(vw_su_we), .vw_su_addr(vw_su_addr), .vw_su_data(vw_su_data),
                     .vw_rd_we(vw_rd_we), .vw_rd_addr(vw_rd_addr), .vw_rd_data(vw_rd_data),
                     .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
@@ -219,7 +223,11 @@ module tb_hdc_package_tp #(
                 always @(posedge clk) begin
                     if (prog_re) prog_q <= prog[prog_base + prog_addr];
                     if (desc_re) desc_q <= desc[desc_addr];
-                    if (wrom_re) wrom_q <= wrom[d*WROM_WORDS + wrom_addr[13:0]];
+                    if (wrom_re) begin
+                        if (wrom_addr >= WROM_WORDS)
+                            $fatal(1, "weight ROM address %0d exceeds die capacity %0d", wrom_addr, WROM_WORDS);
+                        wrom_q <= wrom[d*WROM_WORDS + wrom_addr];
+                    end
                     if (crom_re) crom_q <= crom[d*CROM_WORDS + crom_addr[11:0]];
                     for (q = 0; q < G; q = q + 1)
                         if (kv_re) kv_q[q*W*32 +: W*32] <= kv[kv_raddr[q*AW +: AW] + kv_base];
@@ -233,6 +241,9 @@ module tb_hdc_package_tp #(
                         if (vw_me_we[q])
                             for (l = 0; l < W; l = l + 1)
                                 if (vw_me_mask[q*W + l]) vm[{vw_me_addr[q*AW +: 8], 4'b0} + l] <= vw_me_data[32*(q*W + l) +: 32];
+                    if (vw_mx_we)
+                        for (l = 0; l < W; l = l + 1)
+                            if (vw_mx_mask[l]) vm[{vw_mx_addr[7:0], 4'b0} + l] <= vw_mx_data[32*l +: 32];
                     if (vw_su_we) vm[vw_su_addr[11:0]] <= vw_su_data;
                     if (vw_rd_we) vm[vw_rd_addr[11:0]] <= vw_rd_data;
                     // package controller: received flits into every die, sent ones from die 0

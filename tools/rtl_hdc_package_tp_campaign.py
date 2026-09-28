@@ -242,7 +242,8 @@ def pkg_sources():
             ALLREDUCE, SEQ, TB, HARNESS]
 
 
-def run_pkg(scratch: Path, img: Path, lp: dict, nodes: int, users: int, fewer: tuple, lat_sel) -> list:
+def run_pkg(scratch: Path, img: Path, lp: dict, nodes: int, users: int, fewer: tuple, lat_sel,
+            wrom_words: int = 16384) -> list:
     lat = {None: lp["lat_cycles"], "low": lp["lat_cycles_range"][0], "high": lp["lat_cycles_range"][1]}[lat_sel]
     tag = f"n{nodes}_u{users}_l{lat}"
     obj = scratch / f"obj_{tag}"
@@ -250,9 +251,10 @@ def run_pkg(scratch: Path, img: Path, lp: dict, nodes: int, users: int, fewer: t
     kv_words = exp["kv_elems"] // 16
     sh(["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
         "-Wno-BLKSEQ", "--top-module", "tb_hdc_package_tp", f"-GNODES={nodes}", f"-GUSERS={users}",
-        f"-GD={TP}", f"-GLAT={lat}", f"-GBPC={lp['bytes_per_cycle']}", f"-GKVHALF={kv_words // 2}",
+        f"-GD={TP}", f"-GLAT={lat}", f"-GBPC={lp['bytes_per_cycle']}", f"-GWROM_WORDS={wrom_words}",
+        f"-GKVHALF={kv_words // 2}",
         f"-GKVLAYER={kv_words // 2 // 4}", "-Mdir", str(obj), f"-I{core.ISA_SVH.parent}",
-        *map(str, pkg_sources()[:-1]), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"])
+        *map(str, pkg_sources()[:-1]), str(HARNESS), "-CFLAGS", "-O1", "-j", os.environ.get("HDC_TP_BUILD_JOBS", "8")])
     out = []
     for active in (users, *fewer):
         txt = sh([str(obj / "Vtb_hdc_package_tp"), f"+DIR={img}", "+NGEN=3", f"+NUSERS={active}"])

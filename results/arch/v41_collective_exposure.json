@@ -428,7 +428,7 @@
   "200000": {
    "overlap_assumed": {
     "ar": 7623.114245459769,
-    "mtp": 22386.73939883795,
+    "mtp": 16342.319761151706,
     "T_us": 131.17998337694956,
     "verify_us": 208.56914922182227,
     "breakdown_us": {
@@ -444,7 +444,7 @@
    },
    "measured_exposure": {
     "ar": 6803.031294686293,
-    "mtp": 20025.129825857402,
+    "mtp": 14618.344772875904,
     "T_us": 146.99329705878014,
     "verify_us": 234.9089157333058,
     "breakdown_us": {
@@ -461,35 +461,35 @@
   },
   "1048576": {
    "overlap_assumed": {
-    "ar": 7322.939822717542,
-    "mtp": 21535.272708791596,
-    "T_us": 136.55717842959143,
-    "verify_us": 217.3998759927506,
+    "ar": 7374.411010518603,
+    "mtp": 15861.546631486066,
+    "T_us": 135.60405008259437,
+    "verify_us": 215.3389176837145,
     "breakdown_us": {
-     "compute_chain": 74.845,
+     "compute_chain": 74.935,
      "weight_sweep": 8.548,
-     "kv_sweep": 5.634,
+     "kv_sweep": 3.297,
      "collective_latency": 15.301,
      "collective_bytes": 0.525,
-     "pipeline_hops": 8.668,
+     "pipeline_hops": 9.89,
      "control": 1.983,
-     "on_die_wire": 21.052
+     "on_die_wire": 21.124
     }
    },
    "measured_exposure": {
-    "ar": 6561.435594060711,
-    "mtp": 19341.087958926302,
-    "T_us": 152.40567184796896,
-    "verify_us": 243.7396425042349,
+    "ar": 6591.5488400846925,
+    "mtp": 14148.193301972044,
+    "T_us": 151.70941219744512,
+    "verify_us": 243.20611419854424,
     "breakdown_us": {
-     "compute_chain": 74.809,
+     "compute_chain": 74.899,
      "weight_sweep": 8.548,
-     "kv_sweep": 5.634,
+     "kv_sweep": 3.297,
      "collective_latency": 15.561,
-     "collective_bytes": 12.503,
-     "pipeline_hops": 12.393,
+     "collective_bytes": 12.55,
+     "pipeline_hops": 13.824,
      "control": 1.969,
-     "on_die_wire": 20.99
+     "on_die_wire": 21.062
     }
    }
   }

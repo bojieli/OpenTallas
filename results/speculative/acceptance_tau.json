@@ -14644,6 +14644,147 @@
      },
      "note": "grep of pdftotext output for MTP|accept|speculat|nextn|draft: no acceptance rate, accept length or speedup number anywhere. Local README.md also has none."
     }
+   },
+   {
+    "id": "INFX_V41",
+    "url": "https://github.com/SemiAnalysisAI/InferenceX/blob/main/inferencex-e2e/infx/golden_al_distribution/dsv41flash_dspark.yaml",
+    "fetched": "2026-09-28",
+    "quote": "# Acceptance Length (AL) measured with SPEED-Bench Qualitative coding. # model: deepseek-ai/DeepSeek-V4.1-Flash | image: vllm/vllm-openai:deepseekv41-flash-0909 | TP: 4 # temperature: 1.0 | output_len: 4096 # method: dspark | draft_sample_method: probabilistic | rejection_sample_method: block # enable_adaptive_verification: false # key = num_speculative_tokens; AL includes the target verification token. thinking_off: ... 5: 4.07 thinking_on: ... 5: 3.51",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "hardware": "B300 runner, vLLM TP4 (image deepseekv41-flash-0909)",
+    "workload": "SPEED-Bench Qualitative coding (80 prompts), output_len 4096",
+    "gamma": 5,
+    "sampling": "temperature 1.0, probabilistic draft sampling, block rejection",
+    "numbers": {
+     "tau_thinking_off_by_k": {
+      "1": 1.88,
+      "2": 2.62,
+      "3": 3.27,
+      "4": 3.73,
+      "5": 4.07
+     },
+     "tau_thinking_on_by_k": {
+      "1": 1.81,
+      "2": 2.43,
+      "3": 2.9,
+      "4": 3.26,
+      "5": 3.51
+     },
+     "note": "Committed golden AL curve (InferenceX PR #2964, 2026-09-10); several vLLM/SGLang PRs inject 3.51 as a synthetic target. The 0909 image predates vLLM PR #57432 (2026-09-17), which raised V4.1 DSpark acceptance ~20% on the SM100 FlashInfer path, so these may be understated if that path was taken."
+    }
+   },
+   {
+    "id": "VLLM_57432",
+    "url": "https://github.com/vllm-project/vllm/pull/57432",
+    "fetched": "2026-09-28",
+    "quote": "Validation on 4x GB200 with FlashInfer 0.6.18.post1, DeepSeek-V4.1-Flash (dba1be0a40aa45a94ad051997016db3960a90277), DSpark length 5 and full decode graphs. ... Full GSM8K: 1,319 identical 5-shot chat prompts per pair, greedy, seed 123, thinking off, 1,024-token output cap. | DEP4 | 3.1823 -> 3.8248 (+20.2%) | TP4 | 3.2075 -> 3.8879 (+21.2%) | (Acceptance before -> fixed (including bonus)) ... MegaAttention measured 3.8437 acceptance on the DEP cohort.",
+    "model": "DeepSeek-V4.1-Flash (same revision as this repo) + DSpark",
+    "hardware": "4x GB200, vLLM (merged PR, maintainer)",
+    "workload": "GSM8K test 1,319 prompts, 5-shot chat, thinking off",
+    "gamma": 5,
+    "sampling": "greedy",
+    "numbers": {
+     "tau_DEP4": 3.8248,
+     "tau_TP4": 3.8879,
+     "tau_megaattention": 3.8437,
+     "tau_before_fix": [
+      3.1823,
+      3.2075
+     ],
+     "note": "Concurrency not stated. Short-context (<=1,024 output tokens)."
+    }
+   },
+   {
+    "id": "SGL_38929",
+    "url": "https://github.com/sgl-project/sglang/pull/38929",
+    "fetched": "2026-09-28",
+    "quote": "P TP/EP8 on eight B300 GPUs, D TP/EP4 on four B300 GPUs ...; static DSpark block size 5 ... Full GSM8K test split ... Temperature 0, thinking disabled, concurrency 8, output cap 16384. Draft acceptance rate 66.2904%; output tokens per verify step 4.31748.",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "hardware": "B300, SGLang PD-disaggregated P8/D4",
+    "workload": "GSM8K test 1,319, thinking off",
+    "gamma": 5,
+    "sampling": "greedy",
+    "numbers": {
+     "tau": 4.31748,
+     "note": "closed PR; 4.317 = 1 + 5 x 0.663 (bonus included)"
+    }
+   },
+   {
+    "id": "VLLM_56797_AGENTIC",
+    "url": "https://github.com/vllm-project/vllm/issues/56797 (comment by CyFeng16, 2026-09-15)",
+    "fetched": "2026-09-28",
+    "quote": "We serve DeepSeek-V4.1-Flash with DSpark k=5 on 4x H200 (TP4, no EP), --max-num-seqs 16 ..., thinking on at reasoning_effort=max, on real agentic traffic. Over 48 h / 36,607 finished requests our counters give draft 58,236,774 and accepted 28,302,133, i.e. 48.6 % per-draft acceptance, or 1 + 0.486 x 5 = 3.43 mean acceptance length ... (mean prompt 61 K, mean output 1.1 K tokens)",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "hardware": "4x H200, vLLM TP4",
+    "workload": "production agentic traffic, thinking on, max effort",
+    "gamma": 5,
+    "sampling": "not stated",
+    "numbers": {
+     "tau": 3.43,
+     "note": "community comment; uncontrolled mix; batch up to 16"
+    }
+   },
+   {
+    "id": "TRTLLM_18853",
+    "url": "https://github.com/NVIDIA/TensorRT-LLM/pull/18853",
+    "fetched": "2026-09-28",
+    "quote": "acceptance_length.yaml reference 4.0738 (runs 4.024-4.112), formula (accepted + requests)/requests, max_draft_len: 5",
+    "model": "DeepSeek-V4-Flash (NVFP4) + DSpark (NOT V4.1)",
+    "hardware": "8x B200, TensorRT-LLM disaggregated DEP4",
+    "workload": "GSM8K, batch 128",
+    "gamma": 5,
+    "sampling": "not stated (lm-eval default, probably greedy)",
+    "numbers": {
+     "tau": 4.0738,
+     "note": "V4-Flash, not V4.1-Flash; CI reference value"
+    }
+   },
+   {
+    "id": "V41_ONPOLICY_MEASURED",
+    "url": "file:results/speculative/v41_flash_dspark_onpolicy_greedy.json",
+    "fetched": "2026-09-28",
+    "quote": "measured here: DSpark drafts along DeepSeek-V4.1-Flash's own greedy continuations (vendor model.py, layer-streamed)",
+    "model": "DeepSeek-V4.1-Flash + DSpark (revision dba1be0a)",
+    "hardware": "RTX PRO 6000 Blackwell (shared), torch kernel replacements",
+    "workload": "9 workloads x 4 prompts of this file's prompt set (reasoning in thinking mode, agentic/chat in chat mode), <=160 new tokens",
+    "gamma": 5,
+    "sampling": "greedy",
+    "numbers": {
+     "tau_pooled": 3.6487,
+     "tau_pooled_ci95": [
+      3.4995,
+      3.8412
+     ],
+     "cycles": 982,
+     "tau_equal_tokens_per_workload": 3.8231,
+     "tau_equal_tokens_per_workload_ci95": [
+      3.6564,
+      3.9896
+     ],
+     "per_class": {
+      "agentic": 4.6538,
+      "chat": 2.4577,
+      "reasoning": 3.6065
+     },
+     "per_workload": {
+      "agentic_bfcl": 5.339,
+      "agentic_json_mode": 5.7547,
+      "agentic_mind2web": 3.7619,
+      "agentic_swe_agent": 4.2093,
+      "agentic_tau_bench": 3.9841,
+      "chat_mt_bench": 2.4577,
+      "reasoning_aime25": 3.8232,
+      "reasoning_humaneval": 3.3,
+      "reasoning_math500": 3.7425
+     },
+     "survival_by_position": [
+      0.8187,
+      0.6497,
+      0.4969,
+      0.3778,
+      0.3055
+     ]
+    }
    }
   ],
   "derivations": [
@@ -14977,10 +15118,99 @@
     "tau": null,
     "arithmetic": "paper states MTP-1 verifies a static 2 tokens but gives no acceptance; if V3's 0.85-0.90 carried over, tau = 1.85-1.90 (assumption, not published for V4)",
     "grade": "derived"
+   },
+   {
+    "source_id": "V41_ONPOLICY_MEASURED",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "workload": "9-workload mix, pooled cycles",
+    "gamma": 5,
+    "per_position_conditional": [
+     0.8187,
+     0.7935,
+     0.7649,
+     0.7602,
+     0.8086
+    ],
+    "survival": [
+     0.8187,
+     0.6497,
+     0.4969,
+     0.3778,
+     0.3055
+    ],
+    "tau": 3.6487,
+    "arithmetic": "measured: committed tokens / cycles of an exact greedy speculative replay",
+    "grade": "measured"
+   },
+   {
+    "source_id": "V41_ONPOLICY_MEASURED",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "workload": "9-workload mix, equal tokens per workload",
+    "gamma": 5,
+    "per_position_conditional": [],
+    "survival": [],
+    "tau": 3.8231,
+    "arithmetic": "1 / mean over workloads of (cycles / committed token)",
+    "grade": "measured"
+   },
+   {
+    "source_id": "VLLM_57432",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "workload": "GSM8K greedy, thinking off",
+    "gamma": 5,
+    "per_position_conditional": [],
+    "survival": [],
+    "tau": 3.8879,
+    "arithmetic": "published TP4 acceptance incl. bonus (DEP4 3.8248)",
+    "grade": "published"
+   },
+   {
+    "source_id": "INFX_V41",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "workload": "SPEED-Bench coding, T=1.0, thinking off",
+    "gamma": 5,
+    "per_position_conditional": [],
+    "survival": [],
+    "tau": 4.07,
+    "arithmetic": "published AL incl. target token",
+    "grade": "published"
+   },
+   {
+    "source_id": "INFX_V41",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "workload": "SPEED-Bench coding, T=1.0, thinking on",
+    "gamma": 5,
+    "per_position_conditional": [],
+    "survival": [],
+    "tau": 3.51,
+    "arithmetic": "published AL incl. target token",
+    "grade": "published"
+   },
+   {
+    "source_id": "SGL_38929",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "workload": "GSM8K greedy, thinking off, c=8",
+    "gamma": 5,
+    "per_position_conditional": [],
+    "survival": [],
+    "tau": 4.3175,
+    "arithmetic": "published output tokens per verify step",
+    "grade": "published"
+   },
+   {
+    "source_id": "VLLM_56797_AGENTIC",
+    "model": "DeepSeek-V4.1-Flash + DSpark",
+    "workload": "production agentic, thinking on",
+    "gamma": 5,
+    "per_position_conditional": [],
+    "survival": [],
+    "tau": 3.43,
+    "arithmetic": "1 + 0.486 x 5 from the posted counters",
+    "grade": "published"
    }
   ],
   "gaps": [
-   "No number in any source is for DeepSeek-V4.1-Flash: its tech report and README describe DSpark (3 blocks, 5 draft positions, dspark_block_size 5) but publish no acceptance rate, accept length, or speedup.",
+   "Superseded 2026-09-28: V4.1-Flash-specific tau at the design gamma 5 now exists -- measured here (greedy, on-policy, 3.649 pooled, 95% CI [3.4995, 3.8412]) and published by third parties (vLLM PR #57432 GSM8K greedy 3.82-3.89 on the same revision; InferenceX T=1.0 coding 4.07 thinking-off / 3.51 thinking-on; production agentic thinking-on 3.43). DeepSeek itself still publishes no V4.1 acceptance figure (model card, tech report, API news).",
    "No DeepSeek-V4 per-position acceptance table exists in any fetched source; the only DeepSeek-V4 per-position data are two endpoint bounds in the vLLM blog (pos 1 >70%, pos 7 <10%; V4-Pro-0813, T=1.0).",
    "The DSpark paper publishes accepted length only for Qwen3-4B/8B/14B and Gemma4-12B targets (gamma=7, T=1.0); its DeepSeek-V4 section reports throughput/TPS gains and verify budgets (4-6 tokens), not tau.",
    "The only published DeepSeek-V4 accept length is LMSYS '~5' (V4-Pro, B300, batch 1), with workload, gamma and temperature not stated.",
@@ -14990,7 +15220,17 @@
    "Sampling differs across sources: vLLM and DSpark offline use T=1.0 (probabilistic); HF cards' serving example uses draft_sample_method greedy; LMSYS frontier runs T=0.7; V3 unstated. Greedy acceptance is typically higher than T=1.0.",
    "Served gamma differs: HF cards and vLLM use num_speculative_tokens 7 while dspark_block_size is 5 on V4-Pro-0813 and V4.1-Flash; DSpark paper production uses gamma=5; LMSYS mixed test uses block 6.",
    "The DSpark paper's per-domain 'overall acceptance rate' at threshold 0 (Qwen3-4B: math 76.9%, code 67.6%, chat 45.7%) could not be reconciled with Table 1 tau under a simple definition; not used."
-  ]
+  ],
+  "v41_flash_tau_record": {
+   "measured": "results/speculative/v41_flash_dspark_onpolicy_greedy.json",
+   "evidence_grades": [
+    "measured (this repo, greedy, on-policy, 36 prompts)",
+    "published-third-party (InferenceX golden, vLLM maintainer PR)",
+    "community-log (SGLang PR, production comment)"
+   ],
+   "design_tau_in_tools": 5.0,
+   "note": "tools/arch_utilization_v41.py TAU and tools/v41_rack_design.py TAU still carry the 2026-09-27 user decision (5.0, LMSYS V4-Pro); rates re-derived at the V4.1-Flash values are in the measured record under rederived_v41_mtp_rates."
+  }
  },
  "notes": {
   "lossless_followup_mind2web": {

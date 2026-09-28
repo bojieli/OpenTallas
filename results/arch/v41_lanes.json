@@ -7,15 +7,15 @@
   "tp": 32,
   "stage": 24
  },
- "basis": "(agent a84f863e, results/arch/v41_rack.json on its branch at 5aa3bba1):\n\nC8  A 2-die package has 90 lanes of 112G PAM4 (1.19 TB/s per direction, 13.18 GB/s net per lane,\n    technology.json).  The rack allocates TP 32 (each die 2 x 8 lanes to the two dies of the partner package,\n    105 GB/s per die pair), stage 24 out + 24 in, switch 4, spare 6.  Every collective's bytes are therefore priced\n    per PEER link: a one-shot all-reduce sends the die's whole partial to each peer (the remote ones in parallel on\n    their own lanes, 105 GB/s each at TP 32), an all-gather sends the die's quarter; the in-package peer is UCIe\n    (4.2 TB/s).  The bytes still chase their producer (overlapped reductions), so they cost time only where they\n    outlast it -- the DAG decides.  A stage hop's 41 KB residual crosses on the 2 packages' stage lanes in parallel.\n    The search: TP lanes t in multiples of 4 (2 peers x 2 dies), stage = (90 - 4 switch - 6 spare - t) / 2 each way.\nC4  SerDes static power: 84 always-on lanes per layer/head package at 0.728 W each (6.5 pJ/bit at 112 Gb/s) = 61 W\n    per package, 30.6 W per die; the 72 Engram table dies carry 1 lane each (2 per package, 0.728 W per die).  The\n    switched HBM comparator's SerDes is charged on its own fabric (tools/arch_hbm_switched_v41.serdes_w_per_die: the\n    lanes that carry 0.9 TB/s per direction per package).\nC10 The 4 head dies carry 4 HBM3E stacks each for the drafter's per-user state (+16 x 2.8 W).\n\nDesign-point re-derivation (2026-09-28):\n*   On-die wire: every registered traversal of the layer die (tools/v41_die_assembly.TRAVERSALS on its floorplan\n    distances) is charged on its node's edges in the DAG (wire_mutation), on the ASAP7 routed-wire model; the\n    150 ps/mm technology entry is a sensitivity and the no-wire point one ablation (record on_die_wire).\n*   The MTP verify pass's stage hop carries its own bench-measured tail at its best measured T1 split\n    (tools/v41_collective_exposure.mtp_hop_term, lever 5; record mtp_hop_split); the one-position hop keeps split20.\n*   A saturated point holds at most the users the HBM holds after the capacity reserve (arch_budget_v41.point_batch).\n*   The adopted split (R-L9) is kept unless another gains more than SPLIT_TOLERANCE.\n\nRack model gaps (closed here; results/arch/v41_rack.json gates C8 / C10):\n*   The draft is conditioned on the inputs of target layers 37-39 at every verified position (DSpark\n    dspark_target_layer_ids): 3 x 5,120 BF16 x 6 positions = 184 KB per verify step, which reach the head module\n    over the S27 -> H stage link behind the residual.  Priced on the MTP critical path as a head hop's bytes\n    (stage lanes of both packages + the UCIe half, the m_lanes rule) before the draft can start: draft_extra_s.\n*   At batch > 1 with MTP the drafts of different users overlap on the head group; the aggregate points carry\n    tools/arch_utilization_v41.draft_contention (conservative interference bound + unit throughput cap).\n*   Every aggregate point is capped by its busiest package link (tools/v41_rack_design.stage_link_demand: the\n    busiest stage's T1 link and UCIe link, and with MTP the head module's draft traffic): aggregate x\n    min(1, 1 / the highest utilisation).",
+ "basis": "(agent a84f863e, results/arch/v41_rack.json on its branch at 5aa3bba1):\n\nC8  A 2-die package has 90 lanes of 112G PAM4 (1.19 TB/s per direction, 13.18 GB/s net per lane,\n    technology.json).  The rack allocates TP 32 (each die 2 x 8 lanes to the two dies of the partner package,\n    105 GB/s per die pair), stage 24 out + 24 in, switch 4, spare 6.  Every collective's bytes are therefore priced\n    per PEER link: a one-shot all-reduce sends the die's whole partial to each peer (the remote ones in parallel on\n    their own lanes, 105 GB/s each at TP 32), an all-gather sends the die's quarter; the in-package peer is UCIe\n    (4.2 TB/s).  The bytes still chase their producer (overlapped reductions), so they cost time only where they\n    outlast it -- the DAG decides.  A stage hop's 41 KB residual crosses on the 2 packages' stage lanes in parallel.\n    The search: TP lanes t in multiples of 4 (2 peers x 2 dies), stage = (90 - 4 switch - 6 spare - t) / 2 each way.\nC4  SerDes static power: 84 always-on lanes per layer/head package at 0.728 W each (6.5 pJ/bit at 112 Gb/s) = 61 W\n    per package, 30.6 W per die; the 72 Engram table dies carry 1 lane each (2 per package, 0.728 W per die).  The\n    switched HBM comparator's SerDes is charged on its own fabric (tools/arch_hbm_switched_v41.serdes_w_per_die: the\n    lanes that carry 0.9 TB/s per direction per package).\nC10 The 4 head dies carry 4 HBM3E stacks each for the drafter's per-user state (+16 x 2.8 W).\n\nDesign-point re-derivation (2026-09-28):\n*   On-die wire: every registered traversal of the layer die (tools/v41_die_assembly.TRAVERSALS on its floorplan\n    distances) is charged on its node's edges in the DAG (wire_mutation), on the ASAP7 routed-wire model; the\n    150 ps/mm technology entry is a sensitivity and the no-wire point one ablation (record on_die_wire).\n*   The MTP verify pass's stage hop carries its own bench-measured tail at its best measured T1 split\n    (tools/v41_collective_exposure.mtp_hop_term, lever 5; record mtp_hop_split); the one-position hop keeps split20.\n*   A saturated point holds at most the users the HBM holds after the capacity reserve (arch_budget_v41.point_batch).\n*   The adopted split (R-L9) is kept unless another gains more than SPLIT_TOLERANCE.\n*   Stage rebalancing (tools/v41_stage_rebalance.py, record results/arch/v41_stage_rebalance.json): layer 20's\n    index-key cache is split by position range over two helper groups upstream of its stage (S13, S12), each engaged\n    only for a user whose context has reached its engage position; split_mutation runs after the on-die wire and\n    before the lane pricing, so its ring hops take the lanes and the measured stage-hop tail and its switched legs the\n    same residual (rebalance_mutation).\n\nRack model gaps (closed here; results/arch/v41_rack.json gates C8 / C10):\n*   The draft is conditioned on the inputs of target layers 37-39 at every verified position (DSpark\n    dspark_target_layer_ids): 3 x 5,120 BF16 x 6 positions = 184 KB per verify step, which reach the head module\n    over the S27 -> H stage link behind the residual.  Priced on the MTP critical path as a head hop's bytes\n    (stage lanes of both packages + the UCIe half, the m_lanes rule) before the draft can start: draft_extra_s.\n*   At batch > 1 with MTP the drafts of different users overlap on the head group; the aggregate points carry\n    tools/arch_utilization_v41.draft_contention (conservative interference bound + unit throughput cap).\n*   Every aggregate point is capped by its busiest package link (tools/v41_rack_design.stage_link_demand: the\n    busiest stage's T1 link and UCIe link, and with MTP the head module's draft traffic): aggregate x\n    min(1, 1 / the highest utilisation).",
  "ladder_top_overlap_assumed": {
   "1048576": {
-   "ar": 7310.427009446538,
-   "mtp": 23676.1778626569
+   "ar": 7361.721832342837,
+   "mtp": 17453.945037918198
   },
   "200000": {
    "ar": 7609.555532327167,
-   "mtp": 24709.416224427066
+   "mtp": 18037.87384383176
   }
  },
  "grid": [
@@ -26,16 +26,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 5093.994195088112,
-    "mtp": 7775.960803010868,
-    "T_us": 196.30960729485142,
-    "verify_us": 628.5353069570409,
+    "ar": 5118.847377807856,
+    "mtp": 5694.703972816248,
+    "T_us": 195.35647894785438,
+    "verify_us": 626.4743486480043,
     "collective_bytes_us": 62.478,
-    "hops_us": 6.767
+    "hops_us": 7.989
    },
    "200000": {
     "ar": 5237.455433870694,
-    "mtp": 7884.238815817572,
+    "mtp": 5755.494335546827,
     "T_us": 190.93241224220958,
     "verify_us": 619.7045801861113,
     "collective_bytes_us": 62.478,
@@ -49,16 +49,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 5667.859126321391,
-    "mtp": 10690.553333922337,
-    "T_us": 176.43346062643403,
-    "verify_us": 453.23058886004094,
+    "ar": 5698.6443267476125,
+    "mtp": 7838.645370956989,
+    "T_us": 175.48033227943705,
+    "verify_us": 451.1696305510042,
     "collective_bytes_us": 31.392,
-    "hops_us": 6.767
+    "hops_us": 7.989
    },
    "200000": {
     "ar": 5846.029647879862,
-    "mtp": 10896.286901686859,
+    "mtp": 7954.289438231407,
     "T_us": 171.0562655737921,
     "verify_us": 444.39986208911097,
     "collective_bytes_us": 31.392,
@@ -72,16 +72,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 5889.6454277889925,
-    "mtp": 10369.870933997898,
-    "T_us": 169.78950808850405,
-    "verify_us": 467.682600140543,
+    "ar": 5922.894115184337,
+    "mtp": 7602.50172003727,
+    "T_us": 168.83637974150702,
+    "verify_us": 465.62164183150657,
     "collective_bytes_us": 35.886,
-    "hops_us": 6.839
+    "hops_us": 8.06
    },
    "200000": {
     "ar": 6082.2695182317375,
-    "mtp": 10563.335243362515,
+    "mtp": 7711.234727654635,
     "T_us": 164.41231303586233,
     "verify_us": 458.8518733696132,
     "collective_bytes_us": 35.886,
@@ -95,16 +95,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 6239.265881889187,
-    "mtp": 13548.931566622232,
-    "T_us": 160.27526618199033,
-    "verify_us": 354.54931061497604,
+    "ar": 6276.5916500297,
+    "mtp": 9946.267527031807,
+    "T_us": 159.32213783499333,
+    "verify_us": 352.4883523059394,
     "collective_bytes_us": 15.163,
-    "hops_us": 6.839
+    "hops_us": 8.06
    },
    "200000": {
     "ar": 6455.858311914962,
-    "mtp": 13881.097662675451,
+    "mtp": 10133.201293753078,
     "T_us": 154.89807112934858,
     "verify_us": 345.71858384404624,
     "collective_bytes_us": 15.163,
@@ -118,16 +118,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 6382.092693069252,
-    "mtp": 12436.471350311434,
-    "T_us": 156.68841680816826,
-    "verify_us": 387.54696621196837,
+    "ar": 6421.15226344044,
+    "mtp": 9125.402815001804,
+    "T_us": 155.7352884611713,
+    "verify_us": 385.48600790293165,
     "collective_bytes_us": 22.406,
-    "hops_us": 6.919
+    "hops_us": 8.14
    },
    "200000": {
     "ar": 6608.895152639116,
-    "mtp": 12715.768319845665,
+    "mtp": 9282.510873487336,
     "T_us": 151.3112217555263,
     "verify_us": 378.7162394410383,
     "collective_bytes_us": 22.406,
@@ -141,16 +141,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 6479.908971602629,
-    "mtp": 15625.208684197454,
-    "T_us": 154.32315552307477,
-    "verify_us": 305.49939097211586,
+    "ar": 6520.1788016373075,
+    "mtp": 11480.342411615811,
+    "T_us": 153.37002717607777,
+    "verify_us": 303.4384326630795,
     "collective_bytes_us": 8.831,
-    "hops_us": 6.919
+    "hops_us": 8.14
    },
    "200000": {
     "ar": 6713.844382496762,
-    "mtp": 16068.645281758152,
+    "mtp": 11730.11105568345,
     "T_us": 148.9459604704328,
     "verify_us": 296.66866420118686,
     "collective_bytes_us": 8.831,
@@ -164,16 +164,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 6714.564969575314,
-    "mtp": 14105.850771117328,
-    "T_us": 148.9299760343593,
-    "verify_us": 339.9519386595682,
+    "ar": 6757.813912300304,
+    "mtp": 10357.49277891575,
+    "T_us": 147.9768476873623,
+    "verify_us": 337.8909803505316,
     "collective_bytes_us": 14.557,
-    "hops_us": 7.009
+    "hops_us": 8.231
    },
    "200000": {
     "ar": 6966.078909522188,
-    "mtp": 14466.248162869857,
+    "mtp": 10560.361158894995,
     "T_us": 143.55278098171746,
     "verify_us": 331.121211888638,
     "collective_bytes_us": 14.557,
@@ -187,16 +187,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 6612.550790098951,
-    "mtp": 17178.193256565486,
-    "T_us": 151.2275718921224,
-    "verify_us": 276.5557919911448,
+    "ar": 6654.4914518330215,
+    "mtp": 12629.506928355639,
+    "T_us": 150.27444354512525,
+    "verify_us": 274.494833682108,
     "collective_bytes_us": 5.645,
-    "hops_us": 7.009
+    "hops_us": 8.231
    },
    "200000": {
     "ar": 6856.341558174901,
-    "mtp": 17715.672338539855,
+    "mtp": 12932.440807134095,
     "T_us": 145.85037683948045,
     "verify_us": 267.72506522021536,
     "collective_bytes_us": 5.645,
@@ -210,16 +210,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 6954.060671496523,
-    "mtp": 15470.68141244718,
-    "T_us": 143.80087365340728,
-    "verify_us": 308.66441008813666,
+    "ar": 7000.4605102795795,
+    "mtp": 11366.077610922339,
+    "T_us": 142.84774530641025,
+    "verify_us": 306.6034517791001,
     "collective_bytes_us": 9.324,
-    "hops_us": 7.113
+    "hops_us": 8.335
    },
    "200000": {
     "ar": 7224.197551375217,
-    "mtp": 15905.268574631815,
+    "mtp": 11610.846059481224,
     "T_us": 138.4236786007655,
     "verify_us": 299.8336833172074,
     "collective_bytes_us": 9.324,
@@ -233,16 +233,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 6954.060671496523,
-    "mtp": 18366.814828103918,
-    "T_us": 143.80087365340728,
-    "verify_us": 257.702549134,
+    "ar": 7000.4605102795795,
+    "mtp": 13510.054692051808,
+    "T_us": 142.84774530641025,
+    "verify_us": 255.64159082496298,
     "collective_bytes_us": 9.324,
-    "hops_us": 7.113
+    "hops_us": 8.335
    },
    "200000": {
     "ar": 7224.197551375217,
-    "mtp": 18982.5805983768,
+    "mtp": 13857.283836815064,
     "T_us": 138.4236786007655,
     "verify_us": 248.87182236306964,
     "collective_bytes_us": 9.324,
@@ -256,16 +256,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7090.156119770426,
-    "mtp": 16603.775001595386,
-    "T_us": 141.04061788027022,
-    "verify_us": 286.5895631493602,
+    "ar": 7138.396178928473,
+    "mtp": 12204.281089518441,
+    "T_us": 140.0874895332732,
+    "verify_us": 284.5286048403232,
     "collective_bytes_us": 6.444,
-    "hops_us": 7.233
+    "hops_us": 8.454
    },
    "200000": {
     "ar": 7371.183618672088,
-    "mtp": 17105.384942702804,
+    "mtp": 12486.931008173047,
     "T_us": 135.66342282762847,
     "verify_us": 277.7588363784301,
     "collective_bytes_us": 6.444,
@@ -279,16 +279,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7090.156119770426,
-    "mtp": 19300.83798032307,
-    "T_us": 141.04061788027022,
-    "verify_us": 244.50933484828408,
+    "ar": 7138.396178928473,
+    "mtp": 14202.602582492516,
+    "T_us": 140.0874895332732,
+    "verify_us": 242.44837653924768,
     "collective_bytes_us": 6.444,
-    "hops_us": 7.233
+    "hops_us": 8.454
    },
    "200000": {
     "ar": 7371.183618672088,
-    "mtp": 19981.985610907308,
+    "mtp": 14586.849495962335,
     "T_us": 135.66342282762847,
     "verify_us": 235.678608077355,
     "collective_bytes_us": 6.444,
@@ -302,16 +302,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7169.121818623941,
-    "mtp": 17549.916637819657,
-    "T_us": 139.4870983224473,
-    "verify_us": 270.33244580241967,
+    "ar": 7218.446134021932,
+    "mtp": 12904.791494959585,
+    "T_us": 138.53396997545033,
+    "verify_us": 268.2714874933832,
     "collective_bytes_us": 4.751,
-    "hops_us": 7.372
+    "hops_us": 8.594
    },
    "200000": {
     "ar": 7456.57088416637,
-    "mtp": 18111.288779098002,
+    "mtp": 13221.240808741542,
     "T_us": 134.1099032698055,
     "verify_us": 261.50171903148976,
     "collective_bytes_us": 4.751,
@@ -325,16 +325,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7169.121818623941,
-    "mtp": 20041.475081799945,
-    "T_us": 139.4870983224473,
-    "verify_us": 234.91344199114167,
+    "ar": 7218.446134021932,
+    "mtp": 14752.143216226645,
+    "T_us": 138.53396997545033,
+    "verify_us": 232.85248368210534,
     "collective_bytes_us": 4.751,
-    "hops_us": 7.372
+    "hops_us": 8.594
    },
    "200000": {
     "ar": 7456.57088416637,
-    "mtp": 20776.897428133903,
+    "mtp": 15167.13512253775,
     "T_us": 134.1099032698055,
     "verify_us": 226.08271522021298,
     "collective_bytes_us": 4.751,
@@ -348,16 +348,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7228.818858955271,
-    "mtp": 18340.41341147941,
-    "T_us": 138.33518580440992,
-    "verify_us": 258.02630402752743,
+    "ar": 7278.970911539812,
+    "mtp": 13490.486706120491,
+    "T_us": 137.38205745741294,
+    "verify_us": 255.96534571849048,
     "collective_bytes_us": 3.434,
-    "hops_us": 7.537
+    "hops_us": 8.759
    },
    "200000": {
     "ar": 7521.172622614272,
-    "mtp": 18954.3805981698,
+    "mtp": 13836.697836663952,
     "T_us": 132.95799075176814,
     "verify_us": 249.19557725659726,
     "collective_bytes_us": 3.434,
@@ -371,16 +371,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7228.818858955271,
-    "mtp": 20628.429554254628,
-    "T_us": 138.33518580440992,
-    "verify_us": 227.7882525972024,
+    "ar": 7278.970911539812,
+    "mtp": 15187.894213929436,
+    "T_us": 137.38205745741294,
+    "verify_us": 225.72729428816626,
     "collective_bytes_us": 3.434,
-    "hops_us": 7.537
+    "hops_us": 8.759
    },
    "200000": {
     "ar": 7521.172622614272,
-    "mtp": 21408.397527182966,
+    "mtp": 15628.130194843565,
     "T_us": 132.95799075176814,
     "verify_us": 218.957525826274,
     "collective_bytes_us": 3.434,
@@ -394,16 +394,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7273.80533312317,
-    "mtp": 18996.62417632037,
-    "T_us": 137.47962094149526,
-    "verify_us": 248.57718151670372,
+    "ar": 7324.585734214474,
+    "mtp": 13976.978888888094,
+    "T_us": 136.52649259449828,
+    "verify_us": 246.51622320766708,
     "collective_bytes_us": 2.381,
-    "hops_us": 7.735
+    "hops_us": 8.957
    },
    "200000": {
     "ar": 7569.883696468729,
-    "mtp": 19656.102118109284,
+    "mtp": 14348.954546219777,
     "T_us": 132.10242588885342,
     "verify_us": 239.74645474577426,
     "collective_bytes_us": 2.381,
@@ -417,16 +417,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7273.80533312317,
-    "mtp": 21087.137231311874,
-    "T_us": 137.47962094149526,
-    "verify_us": 222.48389199114206,
+    "ar": 7324.585734214474,
+    "mtp": 15528.583730127059,
+    "T_us": 136.52649259449828,
+    "verify_us": 220.422933682106,
     "collective_bytes_us": 2.381,
-    "hops_us": 7.735
+    "hops_us": 8.957
    },
    "200000": {
     "ar": 7569.883696468729,
-    "mtp": 21902.864507049155,
+    "mtp": 15989.091090145883,
     "T_us": 132.10242588885342,
     "verify_us": 213.65316522021374,
     "collective_bytes_us": 2.381,
@@ -440,16 +440,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7306.759710456161,
-    "mtp": 19531.847928639974,
-    "T_us": 136.8595710857953,
-    "verify_us": 241.3258278370493,
+    "ar": 7358.002901465995,
+    "mtp": 14373.97189306033,
+    "T_us": 135.9064427387983,
+    "verify_us": 239.2648695280129,
     "collective_bytes_us": 1.519,
-    "hops_us": 7.977
+    "hops_us": 9.199
    },
    "200000": {
     "ar": 7605.582057232128,
-    "mtp": 20229.69308997288,
+    "mtp": 14767.6759556802,
     "T_us": 131.4823760331535,
     "verify_us": 232.4951010661204,
     "collective_bytes_us": 1.519,
@@ -463,16 +463,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7306.759710456161,
-    "mtp": 21414.867309884026,
-    "T_us": 136.8595710857953,
-    "verify_us": 218.81631621919058,
+    "ar": 7358.002901465995,
+    "mtp": 15772.073699886305,
+    "T_us": 135.9064427387983,
+    "verify_us": 216.75535791015452,
     "collective_bytes_us": 1.519,
-    "hops_us": 7.977
+    "hops_us": 9.199
    },
    "200000": {
     "ar": 7605.582057232128,
-    "mtp": 22256.653296440414,
+    "mtp": 16247.356906401503,
     "T_us": 131.4823760331535,
     "verify_us": 209.9855894482622,
     "collective_bytes_us": 1.519,
@@ -486,16 +486,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7329.033278994783,
-    "mtp": 19951.906303297208,
-    "T_us": 136.44364296530463,
-    "verify_us": 235.88771365955995,
+    "ar": 7380.590462860927,
+    "mtp": 14685.666662308902,
+    "T_us": 135.4905146183076,
+    "verify_us": 233.82675535052365,
     "collective_bytes_us": 0.801,
-    "hops_us": 8.279
+    "hops_us": 9.501
    },
    "200000": {
     "ar": 7629.717718957014,
-    "mtp": 20680.650370842395,
+    "mtp": 15096.874770714949,
     "T_us": 131.06644791266282,
     "verify_us": 227.05698688863131,
     "collective_bytes_us": 0.801,
@@ -509,16 +509,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7329.033278994783,
-    "mtp": 21520.92048917726,
-    "T_us": 136.44364296530463,
-    "verify_us": 217.6171630806626,
+    "ar": 7380.590462860927,
+    "mtp": 15850.881064884288,
+    "T_us": 135.4905146183076,
+    "verify_us": 215.55620477162654,
     "collective_bytes_us": 0.801,
-    "hops_us": 8.279
+    "hops_us": 9.501
    },
    "200000": {
     "ar": 7629.717718957014,
-    "mtp": 22371.23022858467,
+    "mtp": 16330.99806686681,
     "T_us": 131.06644791266282,
     "verify_us": 208.78643630973428,
     "collective_bytes_us": 0.801,
@@ -532,16 +532,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7322.939822717542,
-    "mtp": 20254.315697357215,
-    "T_us": 136.55717842959143,
-    "verify_us": 232.08361338483542,
+    "ar": 7374.411010518603,
+    "mtp": 14910.13006623634,
+    "T_us": 135.60405008259437,
+    "verify_us": 230.02265507579926,
     "collective_bytes_us": 0.525,
-    "hops_us": 8.668
+    "hops_us": 9.89
    },
    "200000": {
     "ar": 7623.114245459769,
-    "mtp": 21005.73419847408,
+    "mtp": 15334.18596488608,
     "T_us": 131.17998337694956,
     "verify_us": 223.25288661390695,
     "collective_bytes_us": 0.525,
@@ -555,16 +555,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7322.939822717542,
-    "mtp": 21535.272708791596,
-    "T_us": 136.55717842959143,
-    "verify_us": 217.3998759927506,
+    "ar": 7374.411010518603,
+    "mtp": 15861.546631486066,
+    "T_us": 135.60405008259437,
+    "verify_us": 215.3389176837145,
     "collective_bytes_us": 0.525,
-    "hops_us": 8.668
+    "hops_us": 9.89
    },
    "200000": {
     "ar": 7623.114245459769,
-    "mtp": 22386.73939883795,
+    "mtp": 16342.319761151706,
     "T_us": 131.17998337694956,
     "verify_us": 208.56914922182227,
     "collective_bytes_us": 0.525,
@@ -578,16 +578,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7304.80810985825,
-    "mtp": 20425.319307297577,
-    "T_us": 136.89613538929842,
-    "verify_us": 229.93359376160075,
+    "ar": 7356.023834965119,
+    "mtp": 15037.082491875075,
+    "T_us": 135.9430070423014,
+    "verify_us": 227.87263545256457,
     "collective_bytes_us": 0.346,
-    "hops_us": 9.186
+    "hops_us": 10.408
    },
    "200000": {
     "ar": 7603.467587559954,
-    "mtp": 21189.71898450291,
+    "mtp": 15468.494858687125,
     "T_us": 131.5189403366566,
     "verify_us": 221.10286699067228,
     "collective_bytes_us": 0.346,
@@ -601,16 +601,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7304.80810985825,
-    "mtp": 21442.21278489976,
-    "T_us": 136.89613538929842,
-    "verify_us": 218.32426767249896,
+    "ar": 7356.023834965119,
+    "mtp": 15792.393263210995,
+    "T_us": 135.9430070423014,
+    "verify_us": 216.2633093634629,
     "collective_bytes_us": 0.346,
-    "hops_us": 9.186
+    "hops_us": 10.408
    },
    "200000": {
     "ar": 7603.467587559954,
-    "mtp": 22286.19232558443,
+    "mtp": 16268.920397676635,
     "T_us": 131.5189403366566,
     "verify_us": 209.49354090157064,
     "collective_bytes_us": 0.346,
@@ -624,16 +624,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7274.5089462765045,
-    "mtp": 20432.683471421802,
-    "T_us": 137.4663234845364,
-    "verify_us": 229.72879580241738,
+    "ar": 7325.299206369631,
+    "mtp": 15042.550024507002,
+    "T_us": 136.5131951375394,
+    "verify_us": 227.66783749338126,
     "collective_bytes_us": 0.191,
-    "hops_us": 9.912
+    "hops_us": 11.134
    },
    "200000": {
     "ar": 7570.6457592049455,
-    "mtp": 21197.64476433881,
+    "mtp": 15474.280677967328,
     "T_us": 132.08912843189458,
     "verify_us": 220.89806903148886,
     "collective_bytes_us": 0.191,
@@ -647,16 +647,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7274.5089462765045,
-    "mtp": 21207.904525532067,
-    "T_us": 137.4663234845364,
-    "verify_us": 220.7839595092341,
+    "ar": 7325.299206369631,
+    "mtp": 15618.301141108785,
+    "T_us": 136.5131951375394,
+    "verify_us": 218.7230012001979,
     "collective_bytes_us": 0.191,
-    "hops_us": 9.912
+    "hops_us": 11.134
    },
    "200000": {
     "ar": 7570.6457592049455,
-    "mtp": 22033.18482963859,
+    "mtp": 16084.22492563617,
     "T_us": 132.08912843189458,
     "verify_us": 211.95323273830573,
     "collective_bytes_us": 0.191,
@@ -670,16 +670,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7224.4548585245775,
-    "mtp": 20208.33094889737,
-    "T_us": 138.41874848453634,
-    "verify_us": 232.27066008813208,
+    "ar": 7274.546166521231,
+    "mtp": 14875.994244008001,
+    "T_us": 137.46562013753928,
+    "verify_us": 230.20970177909592,
     "collective_bytes_us": 0.055,
-    "hops_us": 11.0
+    "hops_us": 12.222
    },
    "200000": {
     "ar": 7516.448614769907,
-    "mtp": 20956.278331644236,
+    "mtp": 15298.083182100292,
     "T_us": 133.0415534318945,
     "verify_us": 223.43993331720358,
     "collective_bytes_us": 0.055,
@@ -693,16 +693,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7224.4548585245775,
-    "mtp": 20763.317533282836,
-    "T_us": 138.41874848453634,
-    "verify_us": 225.65725236637635,
+    "ar": 7274.546166521231,
+    "mtp": 15288.064182289856,
+    "T_us": 137.46562013753928,
+    "verify_us": 223.59629405734032,
     "collective_bytes_us": 0.055,
-    "hops_us": 11.0
+    "hops_us": 12.222
    },
    "200000": {
     "ar": 7516.448614769907,
-    "mtp": 21553.71459432405,
+    "mtp": 15734.211653856555,
     "T_us": 133.0415534318945,
     "verify_us": 216.826525595448,
     "collective_bytes_us": 0.055,
@@ -716,16 +716,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 7133.783442168582,
-    "mtp": 19601.773535984106,
-    "T_us": 140.17807073997923,
-    "verify_us": 239.63548151670332,
+    "ar": 7182.621036231837,
+    "mtp": 14425.851051244399,
+    "T_us": 139.22494239298226,
+    "verify_us": 237.57452320766703,
     "collective_bytes_us": 0.0,
-    "hops_us": 12.814
+    "hops_us": 14.036
    },
    "200000": {
     "ar": 7418.349435054418,
-    "mtp": 20304.71424068967,
+    "mtp": 14822.44139570346,
     "T_us": 134.80087568733737,
     "verify_us": 230.80475474577455,
     "collective_bytes_us": 0.0,
@@ -739,16 +739,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 7133.783442168582,
-    "mtp": 19958.271665377717,
-    "T_us": 140.17807073997923,
-    "verify_us": 235.0792166520901,
+    "ar": 7182.621036231837,
+    "mtp": 14690.390771648004,
+    "T_us": 139.22494239298226,
+    "verify_us": 233.01825834305396,
     "collective_bytes_us": 0.0,
-    "hops_us": 12.814
+    "hops_us": 14.036
    },
    "200000": {
     "ar": 7418.349435054418,
-    "mtp": 20687.489294645948,
+    "mtp": 15101.867185091542,
     "T_us": 134.80087568733737,
     "verify_us": 226.24848988116156,
     "collective_bytes_us": 0.0,
@@ -762,16 +762,16 @@
    "spare": 6,
    "two_step": false,
    "1048576": {
-    "ar": 6953.805325258894,
-    "mtp": 18228.088640620088,
-    "T_us": 143.80615407331229,
-    "verify_us": 258.2756005643232,
+    "ar": 7000.201745224832,
+    "mtp": 13407.239548140411,
+    "T_us": 142.85302572631528,
+    "verify_us": 256.21464225528666,
     "collective_bytes_us": 0.0,
-    "hops_us": 16.442
+    "hops_us": 17.664
    },
    "200000": {
     "ar": 7223.921981893094,
-    "mtp": 18834.434130709928,
+    "mtp": 13749.136915418247,
     "T_us": 138.4289590206705,
     "verify_us": 249.44487379339324,
     "collective_bytes_us": 0.0,
@@ -785,16 +785,16 @@
    "spare": 6,
    "two_step": true,
    "1048576": {
-    "ar": 6953.805325258894,
-    "mtp": 18405.09081169512,
-    "T_us": 143.80615407331229,
-    "verify_us": 255.63763269647174,
+    "ar": 7000.201745224832,
+    "mtp": 13538.424534444657,
+    "T_us": 142.85302572631528,
+    "verify_us": 253.57667438743476,
     "collective_bytes_us": 0.0,
-    "hops_us": 16.442
+    "hops_us": 17.664
    },
    "200000": {
     "ar": 7223.921981893094,
-    "mtp": 19023.468941630523,
+    "mtp": 13887.13232739028,
     "T_us": 138.4289590206705,
     "verify_us": 246.80690592554186,
     "collective_bytes_us": 0.0,
@@ -814,7 +814,7 @@
    "stage": 16,
    "two_step": true
   },
-  "argmax_gain_over_adopted": 8.254605037061324e-05
+  "argmax_gain_over_adopted": 8.248597245796851e-05
  },
  "rack_split_result": {
   "tp": 32,
@@ -823,16 +823,16 @@
   "spare": 6,
   "two_step": false,
   "1048576": {
-   "ar": 7169.121818623941,
-   "mtp": 17549.916637819657,
-   "T_us": 139.4870983224473,
-   "verify_us": 270.33244580241967,
+   "ar": 7218.446134021932,
+   "mtp": 12904.791494959585,
+   "T_us": 138.53396997545033,
+   "verify_us": 268.2714874933832,
    "collective_bytes_us": 4.751,
-   "hops_us": 7.372
+   "hops_us": 8.594
   },
   "200000": {
    "ar": 7456.57088416637,
-   "mtp": 18111.288779098002,
+   "mtp": 13221.240808741542,
    "T_us": 134.1099032698055,
    "verify_us": 261.50171903148976,
    "collective_bytes_us": 4.751,
@@ -846,16 +846,16 @@
   "spare": 6,
   "two_step": true,
   "1048576": {
-   "ar": 7322.939822717542,
-   "mtp": 21535.272708791596,
-   "T_us": 136.55717842959143,
-   "verify_us": 217.3998759927506,
+   "ar": 7374.411010518603,
+   "mtp": 15861.546631486066,
+   "T_us": 135.60405008259437,
+   "verify_us": 215.3389176837145,
    "collective_bytes_us": 0.525,
-   "hops_us": 8.668
+   "hops_us": 9.89
   },
   "200000": {
    "ar": 7623.114245459769,
-   "mtp": 22386.73939883795,
+   "mtp": 16342.319761151706,
    "T_us": 131.17998337694956,
    "verify_us": 208.56914922182227,
    "collective_bytes_us": 0.525,
@@ -865,12 +865,12 @@
  "best_adopted": true,
  "design_point_overlap_assumed": {
   "1048576": {
-   "ar": 7322.939822717542,
-   "mtp": 21535.272708791596
+   "ar": 7374.411010518603,
+   "mtp": 15861.546631486066
   },
   "200000": {
    "ar": 7623.114245459769,
-   "mtp": 22386.73939883795
+   "mtp": 16342.319761151706
   }
  },
  "draft_conditioning": {
@@ -883,24 +883,24 @@
  },
  "design_point_no_levers": {
   "1048576": {
-   "ar": 6561.435594060711,
-   "mtp": 19341.087958926302,
-   "T_us": 152.40567184796896,
-   "verify_us": 243.7396425042349,
+   "ar": 6591.5488400846925,
+   "mtp": 14148.193301972044,
+   "T_us": 151.70941219744512,
+   "verify_us": 243.20611419854424,
    "breakdown_us": {
-    "compute_chain": 74.809,
+    "compute_chain": 74.899,
     "weight_sweep": 8.548,
-    "kv_sweep": 5.634,
+    "kv_sweep": 3.297,
     "collective_latency": 15.561,
-    "collective_bytes": 12.503,
-    "pipeline_hops": 12.393,
+    "collective_bytes": 12.55,
+    "pipeline_hops": 13.824,
     "control": 1.969,
-    "on_die_wire": 20.99
+    "on_die_wire": 21.062
    }
   },
   "200000": {
    "ar": 6803.031294686293,
-   "mtp": 20025.129825857402,
+   "mtp": 14618.344772875904,
    "T_us": 146.99329705878014,
    "verify_us": 234.9089157333058,
    "breakdown_us": {
@@ -917,24 +917,24 @@
  },
  "design_point": {
   "1048576": {
-   "ar": 7008.864184990315,
-   "mtp": 21669.895050703144,
-   "T_us": 142.67646991099198,
-   "verify_us": 215.95749509575452,
+   "ar": 7049.079994455792,
+   "mtp": 15890.455574630814,
+   "T_us": 141.86248429391,
+   "verify_us": 214.9202752960891,
    "breakdown_us": {
-    "compute_chain": 74.681,
+    "compute_chain": 74.771,
     "weight_sweep": 8.548,
-    "kv_sweep": 5.634,
+    "kv_sweep": 3.297,
     "collective_latency": 15.301,
-    "collective_bytes": 4.769,
-    "pipeline_hops": 11.002,
+    "collective_bytes": 4.793,
+    "pipeline_hops": 12.339,
     "control": 1.689,
-    "on_die_wire": 21.052
+    "on_die_wire": 21.124
    }
   },
   "200000": {
    "ar": 7285.665796379299,
-   "mtp": 22532.25361767204,
+   "mtp": 16448.545140900587,
    "T_us": 137.25581545299022,
    "verify_us": 207.12676832482612,
    "breakdown_us": {
@@ -1063,14 +1063,14 @@
   "attribution": {
    "1048576": {
     "ar": {
-     "exposed_us": 21.052437902483895,
+     "exposed_us": 21.124195032198706,
      "exposed_us_by_kind": {
       "reduce": 3.0174793008279654,
       "matvec": 10.340386384544614,
       "collective": 4.233670653173878,
       "kvscan": 1.766329346826126,
       "select": 0.883164673413063,
-      "hop": 0.6936522539098434,
+      "hop": 0.7654093836246547,
       "op": 0.11775528978840845
      },
      "on_path_nodes_by_kind": {
@@ -1079,22 +1079,22 @@
       "collective": 177,
       "kvscan": 48,
       "select": 96,
-      "hop": 29,
+      "hop": 32,
       "op": 8
      },
-     "exposed_cycles": 22883.999999999993,
-     "charged_in_full_us": 21.05243790248387,
-     "T_us": 142.67646991099198
+     "exposed_cycles": 22961.99999999999,
+     "charged_in_full_us": 21.124195032198685,
+     "T_us": 141.86248429391
     },
     "mtp_verify": {
-     "exposed_us": 20.989880404783804,
+     "exposed_us": 21.205151793928238,
      "exposed_us_by_kind": {
       "reduce": 2.980680772769088,
       "matvec": 10.266789328426858,
       "collective": 4.281508739650418,
       "kvscan": 1.766329346826126,
       "select": 0.883164673413063,
-      "hop": 0.6936522539098434,
+      "hop": 0.9089236430542773,
       "op": 0.11775528978840845
      },
      "on_path_nodes_by_kind": {
@@ -1103,12 +1103,12 @@
       "collective": 179,
       "kvscan": 48,
       "select": 96,
-      "hop": 29,
+      "hop": 38,
       "op": 8
      },
-     "exposed_cycles": 22815.999999999996,
-     "charged_in_full_us": 20.989880404783783,
-     "T_us": 215.95749509575452
+     "exposed_cycles": 23049.999999999993,
+     "charged_in_full_us": 21.205151793928216,
+     "T_us": 214.9202752960891
     }
    },
    "200000": {
@@ -1165,28 +1165,28 @@
   "sensitivities": {
    "tech_global_wire": {
     "1048576": {
-     "ar": 7827.615439943,
-     "mtp": 23122.957963687153,
-     "T_us": 127.75282685671667,
-     "verify_us": 201.45795507736008
+     "ar": 7881.750800289099,
+     "mtp": 16975.55840449568,
+     "T_us": 126.87536377873309,
+     "verify_us": 200.23766260060177
     },
     "200000": {
      "ar": 8175.940130266868,
-     "mtp": 24107.471034839826,
+     "mtp": 17598.453855433072,
      "T_us": 122.31009328187916,
      "verify_us": 192.6272283064312
     }
    },
    "tech_global_wire_high": {
     "1048576": {
-     "ar": 7630.998187126892,
-     "mtp": 22784.65045381287,
-     "T_us": 131.04445519158287,
-     "verify_us": 204.66862665049797
+     "ar": 7681.624823479803,
+     "mtp": 16723.124514138366,
+     "T_us": 130.18079156162128,
+     "verify_us": 203.48329277539534
     },
     "200000": {
      "ar": 7961.149508522228,
-     "mtp": 23739.970723617927,
+     "mtp": 17330.178628241087,
      "T_us": 125.61000128555845,
      "verify_us": 195.83789987956894
     }
@@ -1194,14 +1194,14 @@
   },
   "design_point_pre_wire": {
    "1048576": {
-    "ar": 8184.912902114869,
-    "mtp": 23720.38839967264,
-    "T_us": 122.1760099293926,
-    "verify_us": 196.0117729246442
+    "ar": 8245.935493229956,
+    "mtp": 17422.5242756394,
+    "T_us": 121.27186791856619,
+    "verify_us": 194.7215632445739
    },
    "200000": {
     "ar": 8567.550390932485,
-    "mtp": 24757.573617007536,
+    "mtp": 18073.0287404155,
     "T_us": 116.71947690653278,
     "verify_us": 187.18104615371553
    }
@@ -1237,8 +1237,8 @@
   "campaign": "results/rtl/v41_hop_batch_campaign.json",
   "campaign_binding_note": "not embedded: the campaign pins this record (its T1 background is derived from this design point), so its binding is read live (tools/v41_collective_exposure.campaign_binding) and recorded in results/arch/v41_hop_batch_sensitivity.json",
   "design_point_proportional_split_extrapolated": {
-   "1048576": 21699.79763777026,
-   "200000": 22564.585296715355
+   "1048576": 15915.633830688139,
+   "200000": 16472.14726660221
   },
   "note": "before this lever the verify pass's hop was the one-position residual extrapolated to 6 positions (model_extrapolated_exposed_cycles per hop); the bench measures the 6-position hop at the proportional split (proportional_tail_cycles) and at its best split (measured_tail_cycles); the headline now carries the measured best"
  },
@@ -1377,12 +1377,12 @@
   },
   "loss_no_levers": {
    "1048576": {
-    "ar": 0.10398886882757918,
-    "mtp": 0.10188794818323965
+    "ar": 0.10615928096728855,
+    "mtp": 0.10801931043174062
    },
    "200000": {
     "ar": 0.10757846785018432,
-    "mtp": 0.1054914487950458
+    "mtp": 0.1054914487950459
    }
   },
   "levers": {
@@ -1574,22 +1574,22 @@
   },
   "loss": {
    "1048576": {
-    "ar": 0.04288928290150462,
-    "mtp": -0.00625124853220882
+    "ar": 0.04411620339560274,
+    "mtp": -0.001822580345813396
    },
    "200000": {
     "ar": 0.044266481940953506,
-    "mtp": -0.006500018436880639
+    "mtp": -0.006500018436880417
    }
   },
   "recovered_share": {
    "1048576": {
-    "ar": 0.5875589052457335,
-    "mtp": 1.061354150747704
+    "ar": 0.584433852663372,
+    "mtp": 1.0168727270941529
    },
    "200000": {
     "ar": 0.5885191263125272,
-    "mtp": 1.0616165434367018
+    "mtp": 1.0616165434367004
    }
   },
   "note": "design_point is the headline (bench-measured tails with the adopted levers: a conditioned design-point model result, not measured chip throughput); design_point_no_levers is the ablation (measured exposure, no recovery); design_point_overlap_assumed is the conditional point that holds only if C7 is fully recovered.  With MTP the lever point can exceed the overlap-assumed one: the relay halves the bytes each T1 link carries, which the overlap-assumed point charges in full (tools/collective_exposure.py, tools/v41_collective_exposure.py)"
@@ -1657,9 +1657,9 @@
      "8": 1.182084961461198,
      "10": 1.1804215399980564,
      "11": 2.2250164490613504,
-     "12": 1.182084961461198,
-     "13": 1.1820752338503024,
-     "14": 7.130111093645868,
+     "12": 2.3278781619109576,
+     "13": 3.025783707733569,
+     "14": 4.142909327316521,
      "15": 1.1820752338503024,
      "16": 2.3630834540255963,
      "17": 1.18203632340672,
@@ -1674,30 +1674,30 @@
      "26": 1.182084961461198,
      "27": 1.1820849614611981
     },
-    "pass_T_us": 142.67646991099198,
+    "pass_T_us": 141.86248429391,
     "rom": {
-     "tokens_s_per_user": 7008.864184990315,
-     "aggregate_tokens_s": 7008.864184990315,
-     "dynamic_j": 0.03516376976763596,
-     "static_j": 2.1224442937824675,
-     "total_j": 2.1576080635501036,
+     "tokens_s_per_user": 7049.079994455792,
+     "aggregate_tokens_s": 7049.079994455792,
+     "dynamic_j": 0.035128149259380806,
+     "static_j": 2.110335505772262,
+     "total_j": 2.1454636550316426,
      "nonclock_j": 0.028920160215295976,
-     "clock_j": 0.006243609552339984
+     "clock_j": 0.006207989044084833
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.0050553936100023,
-      "stage_ucie": 0.0008085425723804828
+      "stage_t1": 0.005084400698858184,
+      "stage_ucie": 0.0008131818681604201
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 7008.864184990315,
+     "aggregate_tokens_s_uncapped": 7049.079994455792,
      "utilisation": {
-      "stage_t1": 0.0050553936100023,
-      "stage_ucie": 0.0008085425723804828
+      "stage_t1": 0.005084400698858184,
+      "stage_ucie": 0.0008131818681604201
      }
     },
     "draft_contention": null,
@@ -1711,9 +1711,9 @@
      "static_j": 3.6164378139730164,
      "total_j": 5.192964388410173
     },
-    "ratio_rate_per_user": 2.3900036407236622,
-    "ratio_energy_with_static": 2.4068154342479278,
-    "ratio_energy_dynamic": 44.83383280162871
+    "ratio_rate_per_user": 2.4037171224662495,
+    "ratio_energy_with_static": 2.4204392259134235,
+    "ratio_energy_dynamic": 44.879295029075664
    },
    "b1_mtp": {
     "batch": 1,
@@ -1721,21 +1721,21 @@
     "hbm_batch": null,
     "stage_busy_us": {
      "head": 1.4833495139457096,
-     "0": 4.592720716385795,
-     "9": 9.60537583782824,
-     "1": 7.160654307495623,
+     "0": 5.997212536712982,
+     "9": 8.202263962303261,
+     "1": 5.757542431970644,
      "2": 4.894465173079247,
      "3": 2.8318432242643716,
-     "4": 4.894572696321552,
-     "5": 7.167643318245444,
+     "4": 6.299064516648739,
+     "5": 5.764531442720465,
      "6": 2.8313056080528467,
      "7": 4.894626457942705,
-     "8": 2.8318432242643716,
+     "8": 4.236335044591558,
      "10": 2.8226499870472996,
      "11": 4.894626457942705,
-     "12": 2.8318432242643716,
-     "13": 2.831789462643219,
-     "14": 14.862035093372217,
+     "12": 5.171318978567532,
+     "13": 6.596205552666285,
+     "14": 8.76504297305703,
      "15": 2.831789462643219,
      "16": 5.191355061255337,
      "17": 2.831574416158609,
@@ -1750,34 +1750,34 @@
      "26": 2.8318432242643716,
      "27": 2.8318432242643716
     },
-    "pass_T_us": 215.95749509575452,
+    "pass_T_us": 214.9202752960891,
     "rom": {
-     "tokens_s_per_user": 21669.895050703144,
-     "aggregate_tokens_s": 21669.895050703144,
-     "dynamic_j": 0.017203736602944466,
-     "static_j": 0.6864788112966105,
-     "total_j": 0.703682547899555,
-     "nonclock_j": 0.013166070455814104,
-     "clock_j": 0.004037666147130361
+     "tokens_s_per_user": 15890.455574630814,
+     "aggregate_tokens_s": 15890.455574630814,
+     "dynamic_j": 0.023541898804617798,
+     "static_j": 0.9361546448723899,
+     "total_j": 0.9596965436770076,
+     "nonclock_j": 0.018035712953170007,
+     "clock_j": 0.00550618585144779
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.018756222876171458,
-      "stage_ucie": 0.002999806911658938,
-      "head_t1": 0.022449415945741347,
-      "head_ucie": 0.0009155840228851374
+      "stage_t1": 0.018840918245709038,
+      "stage_ucie": 0.003013352802886703,
+      "head_t1": 0.02255078825252082,
+      "head_ucie": 0.000919718422847908
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 21669.895050703144,
+     "aggregate_tokens_s_uncapped": 15890.455574630814,
      "utilisation": {
-      "stage_t1": 0.018756222876171458,
-      "stage_ucie": 0.002999806911658938,
-      "head_t1": 0.022449415945741347,
-      "head_ucie": 0.0009155840228851374
+      "stage_t1": 0.018840918245709038,
+      "stage_ucie": 0.003013352802886703,
+      "head_t1": 0.02255078825252082,
+      "head_ucie": 0.000919718422847908
      }
     },
     "draft_contention": null,
@@ -1785,15 +1785,15 @@
     "hbm": {
      "G": 48,
      "m": 6,
-     "tokens_s_per_user": 8631.933457027371,
-     "aggregate_tokens_s": 8631.933457027371,
-     "dynamic_j": 1.1663729620330245,
-     "static_j": 1.2286325019530755,
-     "total_j": 2.3950054639861
+     "tokens_s_per_user": 6301.311423629981,
+     "aggregate_tokens_s": 6301.311423629981,
+     "dynamic_j": 1.5977711808671569,
+     "static_j": 1.6830582218535284,
+     "total_j": 3.280829402720685
     },
-    "ratio_rate_per_user": 2.51043351510795,
-    "ratio_energy_with_static": 3.403531139339792,
-    "ratio_energy_dynamic": 67.79765285603109
+    "ratio_rate_per_user": 2.521769597839816,
+    "ratio_energy_with_static": 3.4186112520009977,
+    "ratio_energy_dynamic": 67.86925702669957
    },
    "fill28": {
     "batch": 28,
@@ -1813,9 +1813,9 @@
      "8": 1.182084961461198,
      "10": 1.1804215399980564,
      "11": 2.2250164490613504,
-     "12": 1.182084961461198,
-     "13": 1.1820752338503024,
-     "14": 7.130111093645868,
+     "12": 2.3278781619109576,
+     "13": 3.025783707733569,
+     "14": 4.142909327316521,
      "15": 1.1820752338503024,
      "16": 2.3630834540255963,
      "17": 1.18203632340672,
@@ -1830,30 +1830,30 @@
      "26": 1.182084961461198,
      "27": 1.1820849614611981
     },
-    "pass_T_us": 142.67646991099198,
+    "pass_T_us": 141.86248429391,
     "rom": {
-     "tokens_s_per_user": 5008.938184162819,
-     "aggregate_tokens_s": 140250.26915655893,
-     "dynamic_j": 0.03765666479321647,
-     "static_j": 0.10606698928130585,
-     "total_j": 0.1437236540745223,
+     "tokens_s_per_user": 7049.079994455792,
+     "aggregate_tokens_s": 197374.23984476217,
+     "dynamic_j": 0.035128149259380834,
+     "static_j": 0.07536912520615222,
+     "total_j": 0.11049727446553305,
      "nonclock_j": 0.028920160215296,
-     "clock_j": 0.008736504577920473
+     "clock_j": 0.006207989044084833
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.10116051556735228,
-      "stage_ucie": 0.016179271049900638
+      "stage_t1": 0.14236321956802916,
+      "stage_ucie": 0.022769092308491765
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 140250.26915655893,
+     "aggregate_tokens_s_uncapped": 197374.23984476217,
      "utilisation": {
-      "stage_t1": 0.10116051556735228,
-      "stage_ucie": 0.016179271049900638
+      "stage_t1": 0.14236321956802916,
+      "stage_ucie": 0.022769092308491765
      }
     },
     "draft_contention": null,
@@ -1867,9 +1867,9 @@
      "static_j": 0.35200608883971196,
      "total_j": 0.904723911657746
     },
-    "ratio_rate_per_user": 4.655044055976867,
-    "ratio_energy_with_static": 6.294885260770204,
-    "ratio_energy_dynamic": 14.677821996535432
+    "ratio_rate_per_user": 6.551044696867484,
+    "ratio_energy_with_static": 8.187748666506275,
+    "ratio_energy_dynamic": 15.734328009621313
    },
    "fill28_mtp": {
     "batch": 28,
@@ -1877,21 +1877,21 @@
     "hbm_batch": null,
     "stage_busy_us": {
      "head": 1.4833495139457096,
-     "0": 4.592720716385795,
-     "9": 9.60537583782824,
-     "1": 7.160654307495623,
+     "0": 5.997212536712982,
+     "9": 8.202263962303261,
+     "1": 5.757542431970644,
      "2": 4.894465173079247,
      "3": 2.8318432242643716,
-     "4": 4.894572696321552,
-     "5": 7.167643318245444,
+     "4": 6.299064516648739,
+     "5": 5.764531442720465,
      "6": 2.8313056080528467,
      "7": 4.894626457942705,
-     "8": 2.8318432242643716,
+     "8": 4.236335044591558,
      "10": 2.8226499870472996,
      "11": 4.894626457942705,
-     "12": 2.8318432242643716,
-     "13": 2.831789462643219,
-     "14": 14.862035093372217,
+     "12": 5.171318978567532,
+     "13": 6.596205552666285,
+     "14": 8.76504297305703,
      "15": 2.831789462643219,
      "16": 5.191355061255337,
      "17": 2.831574416158609,
@@ -1906,42 +1906,42 @@
      "26": 2.8318432242643716,
      "27": 2.8318432242643716
     },
-    "pass_T_us": 215.95749509575452,
+    "pass_T_us": 214.9202752960891,
     "rom": {
-     "tokens_s_per_user": 11576.375500334907,
-     "aggregate_tokens_s": 324138.5140093774,
-     "dynamic_j": 0.020724204835228518,
-     "static_j": 0.045893724911994366,
-     "total_j": 0.06661792974722289,
-     "nonclock_j": 0.013166070455814114,
-     "clock_j": 0.007558134379414403
+     "tokens_s_per_user": 13928.222149635922,
+     "aggregate_tokens_s": 389990.2201898058,
+     "dynamic_j": 0.02431762034365337,
+     "static_j": 0.0381443508713859,
+     "total_j": 0.06246197121503927,
+     "nonclock_j": 0.018035712953170017,
+     "clock_j": 0.006281907390483355
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.2805557755257165,
-      "stage_ucie": 0.04487114277134613,
-      "head_t1": 0.33579859560948394,
-      "head_ucie": 0.013695315271916208
+      "stage_t1": 0.462401711562817,
+      "stage_ucie": 0.07395496734426739,
+      "head_t1": 0.55345089602685,
+      "head_ucie": 0.02257211497521271
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 324138.5140093774,
+     "aggregate_tokens_s_uncapped": 389990.2201898058,
      "utilisation": {
-      "stage_t1": 0.2805557755257165,
-      "stage_ucie": 0.04487114277134613,
-      "head_t1": 0.33579859560948394,
-      "head_ucie": 0.013695315271916208
+      "stage_t1": 0.462401711562817,
+      "stage_ucie": 0.07395496734426739,
+      "head_t1": 0.55345089602685,
+      "head_ucie": 0.02257211497521271
      }
     },
     "draft_contention": {
      "isolated_draft_s": 1.477735564076344e-05,
-     "contended_draft_s": 1.5777134187969904e-05,
-     "contention_s": 9.997785472064638e-07,
-     "drafts_per_s": 64827.70280187547,
-     "drafts_in_flight": 1.0227953662030218,
+     "contended_draft_s": 1.6636650282781136e-05,
+     "contention_s": 1.8592946420176953e-06,
+     "drafts_per_s": 106846.63566843995,
+     "drafts_in_flight": 1.7775701115075644,
      "engine_work_per_draft_s": 6.6831801621335666e-06,
      "engine_work_by_unit_s": {
       "su": 1.1848263569457224e-06,
@@ -1957,20 +1957,20 @@
       "bf16": 1.3701940401646607e-06
      },
      "others_load_by_unit": {
-      "bf16": 0.15949747291403732,
-      "hc": 0.08281315169328815,
-      "sel": 0.005175821980830509,
-      "sfu": 0.013112082351437291,
-      "su": 0.08113999535156831,
-      "weight": 0.1687710716594177
+      "bf16": 0.26287786921226514,
+      "hc": 0.13648959110227837,
+      "sel": 0.008530599443892398,
+      "sfu": 0.02161085192452741,
+      "su": 0.13373195635149238,
+      "weight": 0.2781622736205345
      },
      "head_unit_load": {
-      "bf16": 0.16540478672566833,
-      "hc": 0.08588030545970624,
-      "sel": 0.00536751909123164,
-      "sfu": 0.013597715031120153,
-      "su": 0.08414518036458936,
-      "weight": 0.175021852091248
+      "bf16": 0.2726140865904972,
+      "hc": 0.14154476114310352,
+      "sel": 0.00884654757144397,
+      "sfu": 0.022411253847658057,
+      "su": 0.138684991771918,
+      "weight": 0.2884645800509246
      },
      "busiest_head_unit": "weight",
      "throughput_cap": 1.0,
@@ -1981,15 +1981,15 @@
     "hbm": {
      "G": 48,
      "m": 6,
-     "tokens_s_per_user": 1987.710227441109,
-     "aggregate_tokens_s": 55655.88636835106,
-     "dynamic_j": 0.48251953273896897,
-     "static_j": 0.19055439940007576,
-     "total_j": 0.6730739321390448
+     "tokens_s_per_user": 1451.0284660320096,
+     "aggregate_tokens_s": 40628.79704889627,
+     "dynamic_j": 0.660985661286259,
+     "static_j": 0.26103342383572026,
+     "total_j": 0.9220190851219793
     },
-    "ratio_rate_per_user": 5.823975416797963,
-    "ratio_energy_with_static": 10.103495180546394,
-    "ratio_energy_dynamic": 23.282897296920506
+    "ratio_rate_per_user": 9.598862100703037,
+    "ratio_energy_with_static": 14.761287022910675,
+    "ratio_energy_dynamic": 27.18134636306093
    },
    "sat1024": {
     "batch": 866,
@@ -2009,9 +2009,9 @@
      "8": 22.95621044218445,
      "10": 22.904644376827065,
      "11": 41.59866319467649,
-     "12": 22.95621044218445,
-     "13": 22.955908886246686,
-     "14": 191.73785288458726,
+     "12": 58.3939572846663,
+     "13": 79.97917811420773,
+     "14": 99.34796968311537,
      "15": 22.955908886246686,
      "16": 46.15116605588267,
      "17": 22.954702662495638,
@@ -2026,30 +2026,30 @@
      "26": 22.95621044218445,
      "27": 22.95621044218445
     },
-    "pass_T_us": 833.341835397279,
+    "pass_T_us": 788.0864121298109,
     "rom": {
-     "tokens_s_per_user": 186.2662232677822,
-     "aggregate_tokens_s": 161306.5493498994,
-     "dynamic_j": 0.03367921222085638,
-     "static_j": 0.09222144950271528,
-     "total_j": 0.12590066172357167,
+     "tokens_s_per_user": 315.03214635246917,
+     "aggregate_tokens_s": 272817.8387412383,
+     "dynamic_j": 0.03057439895956257,
+     "static_j": 0.05452694685936019,
+     "total_j": 0.08510134581892276,
      "nonclock_j": 0.026083134296686097,
-     "clock_j": 0.007596077924170285
+     "clock_j": 0.0044912646628764725
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.116348109666806,
-      "stage_ucie": 0.018608323533004394
+      "stage_t1": 0.19677960968635885,
+      "stage_ucie": 0.031472265877189244
      },
      "busiest_link": "stage_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 161306.5493498994,
+     "aggregate_tokens_s_uncapped": 272817.8387412383,
      "utilisation": {
-      "stage_t1": 0.116348109666806,
-      "stage_ucie": 0.018608323533004394
+      "stage_t1": 0.19677960968635885,
+      "stage_ucie": 0.031472265877189244
      }
     },
     "draft_contention": null,
@@ -2057,15 +2057,15 @@
     "hbm": {
      "G": 32,
      "m": null,
-     "tokens_s_per_user": 86.52050785588904,
-     "aggregate_tokens_s": 88597.00004443037,
-     "dynamic_j": 0.09798573151888755,
-     "static_j": 0.11970466262606497,
-     "total_j": 0.2176903941449525
+     "tokens_s_per_user": 103.37806434473042,
+     "aggregate_tokens_s": 83839.61018357637,
+     "dynamic_j": 0.1145678521024945,
+     "static_j": 0.12649717689261802,
+     "total_j": 0.2410650289951125
     },
-    "ratio_rate_per_user": 2.152856332952095,
-    "ratio_energy_with_static": 1.7290647337733218,
-    "ratio_energy_dynamic": 2.9093831196624116
+    "ratio_rate_per_user": 3.0473790387673048,
+    "ratio_energy_with_static": 2.832681747572438,
+    "ratio_energy_dynamic": 3.7471824794993003
    },
    "sat1024_mtp": {
     "batch": 866,
@@ -2073,21 +2073,21 @@
     "hbm_batch": null,
     "stage_busy_us": {
      "head": 45.10711000131423,
-     "0": 111.89721593043673,
-     "9": 266.1805107541098,
-     "1": 200.6375867923357,
+     "0": 155.33614151627043,
+     "9": 222.7842648896586,
+     "1": 157.24134092788455,
      "2": 122.64340840512878,
      "3": 67.79369773882296,
-     "4": 122.64521774075536,
-     "5": 200.75519360806302,
+     "4": 166.08414332658907,
+     "5": 157.3589477436119,
      "6": 67.78465106069008,
      "7": 122.64612240856864,
-     "8": 67.79369773882296,
+     "8": 111.23262332465666,
      "10": 67.63899954275078,
      "11": 122.64612240856864,
-     "12": 67.79369773882296,
-     "13": 67.79279307100967,
-     "14": 429.6873478559317,
+     "12": 140.15034071119928,
+     "13": 184.22080499815164,
+     "14": 241.11609156332625,
      "15": 67.79279307100967,
      "16": 131.82737508379498,
      "17": 67.7891743997565,
@@ -2102,42 +2102,42 @@
      "26": 67.79369773882296,
      "27": 67.79369773882296
     },
-    "pass_T_us": 2757.3324150380035,
+    "pass_T_us": 2573.708782858412,
     "rom": {
-     "tokens_s_per_user": 415.03443522524327,
-     "aggregate_tokens_s": 359419.8209050607,
-     "dynamic_j": 0.018286354561190963,
-     "static_j": 0.041388712948188834,
-     "total_j": 0.0596750675093798,
-     "nonclock_j": 0.01147014047411729,
-     "clock_j": 0.006816214087073673
+     "tokens_s_per_user": 539.2617579681142,
+     "aggregate_tokens_s": 467000.68240038696,
+     "dynamic_j": 0.020958514487696582,
+     "static_j": 0.031854179995769255,
+     "total_j": 0.05281269448346584,
+     "nonclock_j": 0.015712521197420948,
+     "clock_j": 0.0052459932902756325
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.3110932586999402,
-      "stage_ucie": 0.04975520464752936,
-      "head_t1": 0.37234906028673886,
-      "head_ucie": 0.015186000890125822
+      "stage_t1": 0.5537111026472534,
+      "stage_ucie": 0.08855868283020599,
+      "head_t1": 0.6627395579146903,
+      "head_ucie": 0.02702937804828541
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 359419.8209050607,
+     "aggregate_tokens_s_uncapped": 467000.68240038696,
      "utilisation": {
-      "stage_t1": 0.3110932586999402,
-      "stage_ucie": 0.04975520464752936,
-      "head_t1": 0.37234906028673886,
-      "head_ucie": 0.015186000890125822
+      "stage_t1": 0.5537111026472534,
+      "stage_ucie": 0.08855868283020599,
+      "head_t1": 0.6627395579146903,
+      "head_ucie": 0.02702937804828541
      }
     },
     "draft_contention": {
      "isolated_draft_s": 1.477735564076344e-05,
-     "contended_draft_s": 1.594739784294806e-05,
-     "contention_s": 1.1700422021846204e-06,
-     "drafts_per_s": 71883.96418101214,
-     "drafts_in_flight": 1.1463621753228286,
+     "contended_draft_s": 1.7262029726624796e-05,
+     "contention_s": 2.4846740858613554e-06,
+     "drafts_per_s": 127945.39243846216,
+     "drafts_in_flight": 2.2085971676574094,
      "engine_work_per_draft_s": 6.6831801621335666e-06,
      "engine_work_by_unit_s": {
       "su": 1.1848263569457224e-06,
@@ -2153,20 +2153,20 @@
       "bf16": 4.247601524510448e-05
      },
      "others_load_by_unit": {
-      "bf16": 0.1800121172595039,
-      "hc": 0.09511810349890765,
-      "sel": 0.005944881468681728,
-      "sfu": 0.015060366387327044,
-      "su": 0.09096843925713154,
-      "weight": 0.1938482467274957
+      "bf16": 0.3204013753115946,
+      "hc": 0.1692995540636118,
+      "sel": 0.010581222128975738,
+      "sfu": 0.026805762726738534,
+      "su": 0.16191361721453998,
+      "weight": 0.3450281336544406
      },
      "head_unit_load": {
-      "bf16": 0.18363597162401563,
-      "hc": 0.0952280666243399,
-      "sel": 0.005951754164021244,
-      "sfu": 0.015077777215520486,
-      "su": 0.09128518698994405,
-      "weight": 0.19407234874683385
+      "bf16": 0.32685142956346847,
+      "hc": 0.169495276091431,
+      "sel": 0.010593454755714438,
+      "sfu": 0.02683675204780991,
+      "su": 0.16247739264679967,
+      "weight": 0.3454270101095325
      },
      "busiest_head_unit": "weight",
      "throughput_cap": 1.0,
@@ -2177,15 +2177,15 @@
     "hbm": {
      "G": 48,
      "m": 6,
-     "tokens_s_per_user": 100.76431720488415,
-     "aggregate_tokens_s": 103182.66081780137,
-     "dynamic_j": 0.08690579091262948,
-     "static_j": 0.10278349013238776,
-     "total_j": 0.18968928104501726
+     "tokens_s_per_user": 92.14049445463753,
+     "aggregate_tokens_s": 74725.94100271104,
+     "dynamic_j": 0.12444918075482667,
+     "static_j": 0.14192493072272233,
+     "total_j": 0.26637411147754897
     },
-    "ratio_rate_per_user": 4.118863172380293,
-    "ratio_energy_with_static": 3.178702412279662,
-    "ratio_energy_dynamic": 4.752494031646373
+    "ratio_rate_per_user": 5.8526032572313005,
+    "ratio_energy_with_static": 5.043751584402557,
+    "ratio_energy_dynamic": 5.937881753398263
    }
   },
   "200000": {
@@ -2302,32 +2302,32 @@
     },
     "pass_T_us": 207.12676832482612,
     "rom": {
-     "tokens_s_per_user": 22532.25361767204,
-     "aggregate_tokens_s": 22532.25361767204,
-     "dynamic_j": 0.012994311680045712,
-     "static_j": 0.6602057675962699,
-     "total_j": 0.6732000792763156,
-     "nonclock_j": 0.009111175836524541,
-     "clock_j": 0.00388313584352117
+     "tokens_s_per_user": 16448.545140900587,
+     "aggregate_tokens_s": 16448.545140900587,
+     "dynamic_j": 0.017800426958966727,
+     "static_j": 0.9043914624606437,
+     "total_j": 0.9221918894196105,
+     "nonclock_j": 0.012481062789759644,
+     "clock_j": 0.005319364169207082
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.019502631174107332,
-      "stage_ucie": 0.0031191849328015752,
-      "head_t1": 0.023342795729951703,
-      "head_ucie": 0.0009520199042803832
+      "stage_t1": 0.019502631174107336,
+      "stage_ucie": 0.003119184932801576,
+      "head_t1": 0.023342795729951696,
+      "head_ucie": 0.000952019904280383
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 22532.25361767204,
+     "aggregate_tokens_s_uncapped": 16448.545140900587,
      "utilisation": {
-      "stage_t1": 0.019502631174107332,
-      "stage_ucie": 0.0031191849328015752,
-      "head_t1": 0.023342795729951703,
-      "head_ucie": 0.0009520199042803832
+      "stage_t1": 0.019502631174107336,
+      "stage_ucie": 0.003119184932801576,
+      "head_t1": 0.023342795729951696,
+      "head_ucie": 0.000952019904280383
      }
     },
     "draft_contention": null,
@@ -2335,15 +2335,15 @@
     "hbm": {
      "G": 48,
      "m": 6,
-     "tokens_s_per_user": 8631.933457027371,
-     "aggregate_tokens_s": 8631.933457027371,
-     "dynamic_j": 1.162318067413735,
-     "static_j": 1.2286325019530755,
-     "total_j": 2.3909505693668107
+     "tokens_s_per_user": 6301.311423629981,
+     "aggregate_tokens_s": 6301.311423629981,
+     "dynamic_j": 1.5922165307037468,
+     "static_j": 1.6830582218535284,
+     "total_j": 3.275274752557275
     },
     "ratio_rate_per_user": 2.610336806909492,
     "ratio_energy_with_static": 3.5516195600230205,
-    "ratio_energy_dynamic": 89.44822134739238
+    "ratio_energy_dynamic": 89.4482213473924
    },
    "fill28": {
     "batch": 28,
@@ -2458,32 +2458,32 @@
     },
     "pass_T_us": 207.12676832482612,
     "rom": {
-     "tokens_s_per_user": 20848.350292536106,
-     "aggregate_tokens_s": 583753.808191011,
-     "dynamic_j": 0.013307949222926035,
-     "static_j": 0.02548321498994217,
-     "total_j": 0.038791164212868205,
-     "nonclock_j": 0.009111175836524515,
-     "clock_j": 0.004196773386401518
+     "tokens_s_per_user": 15219.295713551359,
+     "aggregate_tokens_s": 426140.27997943806,
+     "dynamic_j": 0.0182300674286658,
+     "static_j": 0.03490851368485229,
+     "total_j": 0.05313858111351809,
+     "nonclock_j": 0.01248106278975961,
+     "clock_j": 0.00574900463890619
     },
     "link_cap": {
      "utilisation_uncapped": {
-      "stage_t1": 0.5052639390096709,
-      "stage_ucie": 0.08081020717549801,
-      "head_t1": 0.6047529080933546,
-      "head_ucie": 0.024664432330081913
+      "stage_t1": 0.5052639390096711,
+      "stage_ucie": 0.08081020717549804,
+      "head_t1": 0.6047529080933547,
+      "head_ucie": 0.024664432330081917
      },
      "busiest_link": "head_t1",
      "cap": 1.0,
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 583753.808191011,
+     "aggregate_tokens_s_uncapped": 426140.27997943806,
      "utilisation": {
-      "stage_t1": 0.5052639390096709,
-      "stage_ucie": 0.08081020717549801,
-      "head_t1": 0.6047529080933546,
-      "head_ucie": 0.024664432330081913
+      "stage_t1": 0.5052639390096711,
+      "stage_ucie": 0.08081020717549804,
+      "head_t1": 0.6047529080933547,
+      "head_ucie": 0.024664432330081917
      }
     },
     "draft_contention": {
@@ -2531,15 +2531,15 @@
     "hbm": {
      "G": 48,
      "m": 6,
-     "tokens_s_per_user": 1987.710227441109,
-     "aggregate_tokens_s": 55655.88636835106,
-     "dynamic_j": 0.4784646381196793,
-     "static_j": 0.19055439940007576,
-     "total_j": 0.6690190375197551
+     "tokens_s_per_user": 1451.0284660320096,
+     "aggregate_tokens_s": 40628.79704889627,
+     "dynamic_j": 0.6554310111228484,
+     "static_j": 0.26103342383572026,
+     "total_j": 0.9164644349585687
     },
     "ratio_rate_per_user": 10.488626563729744,
     "ratio_energy_with_static": 17.24668622597878,
-    "ratio_energy_dynamic": 35.95329604169309
+    "ratio_energy_dynamic": 35.9532960416931
    },
    "sat1024": {
     "batch": 1024,
@@ -2654,13 +2654,13 @@
     },
     "pass_T_us": 2820.378120917241,
     "rom": {
-     "tokens_s_per_user": 823.232362830026,
-     "aggregate_tokens_s": 842989.9395379466,
-     "dynamic_j": 0.010239105016424015,
-     "static_j": 0.017646620792986782,
-     "total_j": 0.027885725809410795,
-     "nonclock_j": 0.007332922710417631,
-     "clock_j": 0.0029061823060063836
+     "tokens_s_per_user": 600.959624865919,
+     "aggregate_tokens_s": 615382.655862701,
+     "dynamic_j": 0.014026171255375362,
+     "static_j": 0.024173453141077782,
+     "total_j": 0.03819962439645314,
+     "nonclock_j": 0.010045099603311822,
+     "clock_j": 0.0039810716520635395
     },
     "link_cap": {
      "utilisation_uncapped": {
@@ -2674,7 +2674,7 @@
      "t1_link_Bps": 171294117647.05884,
      "ucie_Bps": 4200000000000.0,
      "binds": false,
-     "aggregate_tokens_s_uncapped": 842989.9395379466,
+     "aggregate_tokens_s_uncapped": 615382.655862701,
      "utilisation": {
       "stage_t1": 0.7296439208103587,
       "stage_ucie": 0.11669678331011703,
@@ -2727,14 +2727,14 @@
     "hbm": {
      "G": 48,
      "m": 6,
-     "tokens_s_per_user": 100.76431720488415,
-     "aggregate_tokens_s": 103182.66081780137,
-     "dynamic_j": 0.08285089629333989,
-     "static_j": 0.10278349013238776,
-     "total_j": 0.18563438642572766
+     "tokens_s_per_user": 73.55795155956542,
+     "aggregate_tokens_s": 75323.342396995,
+     "dynamic_j": 0.11349437848402724,
+     "static_j": 0.14079930155121612,
+     "total_j": 0.25429368003524333
     },
-    "ratio_rate_per_user": 8.169879831132553,
-    "ratio_energy_with_static": 6.656968073718931,
+    "ratio_rate_per_user": 8.169879831132555,
+    "ratio_energy_with_static": 6.6569680737189305,
     "ratio_energy_dynamic": 8.091615054288738
    }
   }

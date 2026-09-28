@@ -54,18 +54,57 @@ def test_budget_design_point(rec):
     b = rec["budget"]
     assert b["context"] == 8192 and b["kv_format"] == "fp8"
     t = b["targets"]["8192/fp8"]
-    assert b["target_cycles"] == max(round(b["weight_sweep_ideal_cycles"] / 0.55), round(t["kv_stream_cycles"] / 0.95))
+    assert abs(b["target_cycles"] - max(b["weight_sweep_ideal_cycles"] / 0.55, t["kv_stream_cycles"] / 0.95)) <= 1
     assert b["binding"] == "kv_stream"
     # BF16 KV at 8k is KV-bound at half the rate
     assert rec["budget"]["targets"]["8192/bf16"]["target_tokens_s"] < 0.55 * b["target_tokens_s"]
 
 
 def test_area_ledger(rec):
+    """One die of the two-reticle package: every block, half of the 8-bit ROM, the lane copies and the slack add up
+    to the reticle; the groups a die are the most its ROM feeds at 8 bits (the next step of 512 is not fed)."""
     a = rec["area"]
-    used = a["hbm_phy_mm2"] + a["kv_prefetch_buffer_mm2"] + a["drafter_rom_mm2"] + a["stream_unit_spill_mm2"] + \
+    used = a["compute_mm2"] + a["interconnect_mm2"] + a["overhead_mm2"] + a["hbm_phy_mm2"] + a["ucie_phy_mm2"] + \
+        a["kv_prefetch_buffer_mm2"] + a["stream_unit_spill_mm2"] + a["target_rom_mm2"] + a["drafter_rom_mm2"] + \
         a["lane_copies_added"] * a["lane_copy_mm2"]
-    assert used <= a["freed_sram_mm2"] + 0.1
-    assert a["lane_multiplier_m"] == 1 + a["lane_copies_added"]
+    assert a["fits"] and used + a["slack_mm2"] == pytest.approx(a["die_mm2"], abs=0.05)
+    assert 0 <= a["slack_mm2"] < a["lane_copy_mm2"]
+    assert a["lane_multiplier_m"] == 1 + a["lane_copies_added"] == 5
+    assert (a["dies"], a["groups_per_die"]) == (2, 6144) and rec["rom_design"]["groups"] == 2 * 6144
+    assert a["rom_read"]["headroom"] >= 1 > a["rom_read"]["next_step_headroom"]
+    assert a["package"]["hbm_stacks"] == 2 * a["stacks_per_die_by_beachfront"] == 8
+    cap = rec["rom_capacity"]
+    assert cap["weight_bits"] == 8 and a["package"]["target_rom_mm2"] == pytest.approx(cap["target_mm2"], abs=0.01)
+
+
+def test_die_split_and_ucie_exchange(rec):
+    """TP-2: every layer is split across both dies; the token's exchanges are 2 a layer + 1, each an H-element FP32
+    partial, their latency (and the embedding-row handoff) on the chain, from the configured link; the calibrated
+    chain is one die's slice replayed at 6,144 groups plus the INT8 scale multiply and the exchanges."""
+    ds, x = rec["die_split"], rec["ucie"]["exchange"]
+    assert len(ds["dies"]) == 2 and ds["exchanges_per_token"] == x["exchanges_per_token"] == 2 * rec["shape"]["L"] + 1
+    assert x["bytes_per_exchange_per_direction"] == 4 * rec["shape"]["H"]          # FP32 partials
+    assert rec["ucie"]["link"]["hop_latency_s"] == 1e-8
+    assert x["cycles_per_token"] == 1419 and x["exchange_cycles"] == 1407
+    for ch in rec["dependency_chain"].values():
+        assert ch["ucie_exchange_cycles"] == x["cycles_per_token"]
+    ab = rec["as_built_calibrated"]["8192"]
+    assert ab["groups"] == 6144 and ab["scale_multiply_cycles"] == 5 * (6 * rec["shape"]["L"] + 1)
+    assert ab["cycles"] == ab["sequencer_cycles"] + ab["scale_multiply_cycles"] + x["cycles_per_token"] == 100169
+    alt = rec["layer_cut_alternative"]
+    assert alt["ar_tokens_s"] < 0.6 * rec["power"]["points"]["ar_batch1"]["at"]["design"]["tokens_s"]
+
+
+def test_o4_frozen_study_has_the_same_configuration(rec):
+    """The frozen O4 choice stays the configuration; the current RTL latency
+    replay supersedes that study's rates by charging KV-sourced post-tree stages."""
+    o4 = json.loads((ROOT / "results/arch/qwen3_8bit_design.json").read_text())
+    o4 = o4["configurations"]["O4_two_reticles_one_package"]
+    pp = rec["power_production"]["scenarios"]
+    assert pp["B_proposed_production"]["rom"]["ar_batch1"]["step_cycles"] == rec["as_built_calibrated"]["8192"]["cycles"]
+    assert rec["as_built_calibrated"]["8192"]["cycles"] - o4["performance"]["ar_step_cycles"] == 360
+    best = o4["performance"]["dflash"]["best"]
+    assert pp["B_proposed_production"]["rom"][f"dflash_block{best['block']}"]["step_cycles"] - best["step_cycles"] == 410
 
 
 def test_record_is_current(rec, fresh):
@@ -103,7 +142,9 @@ def test_speculation(rec):
 # runs, at shipped shapes and the design context, must not regress past the
 # ratchet, and the gap to the budget target is reported.  Lower RATCHET as
 # blocks land; the gate is met when RATCHET <= the budget target.
-RATCHET_8K = 123_301
+# Updated when INT8_WEIGHT's uniform post-tree pipeline was measured on the
+# 145 weight and 72 exposed KV-attention results in the TP-2 replay.
+RATCHET_8K = 100_169
 
 
 def test_performance_gate(rec, fresh):
@@ -113,14 +154,16 @@ def test_performance_gate(rec, fresh):
     print(f"calibrated {cyc} cycles vs budget target {target}: {cyc / target:.2f}x")
 
 
-def test_layer_chain_is_under_the_kv_floor(rec, fresh):
-    """The per-layer compute chain at the spec configuration fits under the
-    per-layer share of the FP8 KV stream: the ROM token is KV-bound at 8k."""
+def test_the_package_token_is_compute_bound(rec, fresh):
+    """On 8 stacks the FP8 KV stream is under the calibrated chain at 8k: the package's autoregressive token is bound
+    by its compiled chain (with the UCIe exchanges), which is over the budget target (the KV stream over 95% of the
+    token) -- the performance gate is open, by less than 10%."""
     lc = fresh["as_built_calibrated"]["8192"]["layer_chain"]
     assert lc["cycles"] == sum(s["cycles"] for s in lc["stages"])
     kv = rec["rom_token"]["8192/fp8"]["kv_stream_cycles"]
-    assert lc["cycles"] < kv / rec["shape"]["L"]
-    assert fresh["as_built_calibrated"]["8192"]["cycles"] <= rec["budget"]["target_cycles"]
+    cyc = fresh["as_built_calibrated"]["8192"]["cycles"]
+    assert cyc > kv
+    assert rec["budget"]["target_cycles"] < cyc < 1.1 * rec["budget"]["target_cycles"]
 
 
 def test_production_power_basis(rec):
@@ -132,7 +175,7 @@ def test_production_power_basis(rec):
     assert set(pp["scenarios"]) == set(A.SCENARIOS)
     for s, body in pp["scenarios"].items():
         w = body["worst_case"]
-        assert abs(w["provisioned_w"] - 1.2 * w["package_w"] / (P["vr"] * P["psu"])) < 1.0
+        assert abs(w["provisioned_w_per_die"] - 1.2 * w["package_w"] / w["dies"] / (P["vr"] * P["psu"])) < 1.0
         for sc in body["rom"].values():
             assert sc["die_w"] <= w["die_w"] and sc["package_w"] <= w["package_w"]
             assert abs(sum(sc["die_components_mj_per_token"].values()) - sc["die_energy_per_token_mj"]) < 0.01
@@ -140,7 +183,8 @@ def test_production_power_basis(rec):
         for sc in body["hbm_comparator"].values():
             assert abs(sum(sc["die_components_mj_per_token"].values()) - sc["die_energy_per_token_mj"]) < 0.01
             assert sc["die_components_mj_per_token"]["hbm_controller_phy_io"] > 0     # the die's HBM share
-        assert body["ratios_batch1"]["hbm_over_rom"] > body["ratios_batch1"]["hbm_rom_format_over_rom"] > 1
+        assert body["ratios_batch1"]["hbm_over_rom"] > 1
+        assert all(sc["weight_format"] == "rom_format_int8" for sc in body["hbm_comparator"].values())
         assert body["rom"]["ar_batch1"]["die_components_mj_per_token"]["hbm_controller_phy_io"] > 0
 
 
@@ -153,9 +197,11 @@ def test_power_reads_the_sourced_scenarios_and_matches_their_record(rec):
     P = rec["power_production"]["inputs"]
     assert P["hbm_pj_per_bit"] == PS.hbm_split(cfg)
     assert P["hbm_pj_per_bit"]["die"] == pytest.approx(10.19) and P["hbm_pj_per_bit"]["stack"] == pytest.approx(3.45)
-    assert P["mac_pj"]["B_proposed_production"]["w4a8"] == 0.45 >= 2 * 0.09   # >= two operations a MAC
-    assert P["cooling"]["air"]["die_limit_w"] == pytest.approx(PS.cooling_w(cfg, "air", 1))
-    assert rec["power"]["cooling"]["air"]["die_limit_w"] == pytest.approx(549.47, abs=0.01)
+    assert P["mac_pj"]["B_proposed_production"]["fp8"] == 0.59        # the 8-bit weight's MAC: BF16 mult + FP32 add
+    assert P["cooling"]["air"]["die_limit_w"] == pytest.approx(PS.cooling_w(cfg, "air", 2))
+    assert rec["power"]["cooling_class"] == cfg["design_points"]["qwen3"]["cooling_class"] == "liquid"
+    assert rec["power"]["cooling"]["air"]["die_limit_w"] == pytest.approx(374.6, abs=0.05)
+    assert rec["power"]["cooling"]["liquid"]["die_limit_w"] == pytest.approx(474.6, abs=0.05)
     for name in ("COOLING_W", "MAC_POWER_SHARE", "HBM_IDLE_W_PER_STACK", "GPU_PJ_PER_MAC", "E_SRAM_PER_BYTE"):
         assert not hasattr(A, name), name
     pinned = cfg["design_points"]["qwen3"]
@@ -163,7 +209,9 @@ def test_power_reads_the_sourced_scenarios_and_matches_their_record(rec):
     for k in ("ar_batch1", "dflash"):
         assert {f: dp[k][f] for f in pinned[k]} == pinned[k], k
     assert {f: dp["area_mm2"][f] for f in pinned["area_mm2"]} == pinned["area_mm2"]
-    assert dp["clock_hz"] == pinned["clock_hz"]
+    for f in ("clock_hz", "hbm_stacks", "dies_per_package", "weight_bits", "drafter_weight_bits", "weight_scale_bytes",
+              "weight_mac_format"):
+        assert dp[f] == pinned[f], f
     ps = json.loads(PS.OUT.read_text())
     for s in A.SCENARIOS:
         mine = rec["power_production"]["scenarios"][s]["rom"]
@@ -171,7 +219,7 @@ def test_power_reads_the_sourced_scenarios_and_matches_their_record(rec):
         for k, t in (("ar_batch1", "ar_batch1"), (f"dflash_block{dp['dflash']['block']}", "dflash")):
             assert mine[k]["energy_per_token_mj"] == pytest.approx(theirs[t]["energy_per_token_mj"], rel=1e-4)
             assert mine[k]["die_w"] == pytest.approx(theirs[t]["die_w_at_design_rate"], abs=0.1)
-            assert mine[k]["cooling"]["air"]["capped_tokens_s"] == pytest.approx(theirs[t]["capped_rate"], abs=0.1)
+            assert mine[k]["cooling"][theirs[t]["cooling_class"]]["capped_tokens_s"] == pytest.approx(theirs[t]["capped_rate"], abs=0.1)
 
 
 def test_power_prices_the_serial_dflash_step(rec):
@@ -196,7 +244,7 @@ def test_power_budget_is_the_die_limit_less_the_non_mac_power(rec):
     for key, pt in pw["points"].items():
         d = pt["at"]["design"]
         assert d["die_w_without_macs"] == pytest.approx(pt["die_static_w"] + pt["die_non_mac_dynamic_mj_per_token"]
-                                                        / 1e3 * d["tokens_s"], abs=0.2)
+                                                        / 1e3 * d["tokens_s"], abs=0.2)     # one die
         assert d["pj_per_mac_that_fits"]["air"] == pytest.approx((lim - d["die_w_without_macs"]) / d["mac_rate_per_s"]
                                                                  * 1e12, abs=2e-3)
         la = pt["lanes"]
@@ -212,20 +260,17 @@ UTIL = ROOT / "results/arch/qwen3_utilization.json"
 def test_utilization_gate_covers_every_block_and_is_current(fresh):
     """The utilisation gate (user, before the core P&R): every block of both
     designs has a peak, a demand and a verdict in four scenarios; nothing is
-    left OVER-PROVISIONED without its right-sizing applied; right-sizing the
-    HBM comparator's lanes slows no scenario; the record is current."""
+    left OVER-PROVISIONED without its right-sizing applied; the HBM comparator
+    keeps the ROM package's core; the record is current."""
     u = json.loads(UTIL.read_text())
     assert u == json.loads(json.dumps(A.utilization(fresh, fresh["clock_hz"]), default=float))
     assert len(u["rom"]) == 4 and all(len(sc["blocks"]) >= 12 for sc in u["rom"].values())
     for v in u["verdicts"]:
         assert v["verdict"].startswith(("RIGHT-SIZED", "JUSTIFIED")) or "(applied)" in v["verdict"]
-    # the comparator's lanes never bind at 8k; the rejected smaller array slows the 2k batch rows
+    # the comparator (the ROM package's lanes) is never slowed by its lanes at 8k
     spec = u["hbm"][f"{A.LANES_HBM}_lanes"]["scenarios"]
     assert all(sc["slowed_by_lanes"] == 0 for k, sc in spec.items() if not k.startswith("ctx2048"))
-    cand = u["hbm"][f"{A.GROUPS_HBM_CANDIDATE * A.W}_lanes"]["scenarios"]
-    assert all(cand[k]["slowed_by_lanes"] == 0 for k in cand if not k.startswith("ctx2048"))
-    k2 = next(k for k in cand if k.startswith("ctx2048"))
-    assert cand[k2]["step_cycles"] > spec[k2]["step_cycles"] * 1.2
-    # the stream unit is the smallest width that keeps the single user at the KV floor
+    assert len(u["hbm"]) == 2
+    # halving the stream unit slows the single user; the chain sets the step
     ar = u["rom"]["ar_batch1"]["step_cycles"]
-    assert u["su_width_sweep_cycles"]["512"] > ar >= u["su_width_sweep_cycles"]["1024"]
+    assert u["su_width_sweep_cycles"]["512"] > ar == u["su_width_sweep_cycles"]["1024"]

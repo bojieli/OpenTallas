@@ -9,7 +9,8 @@ arch_hbm_best_v41.py -> arch_lanes_v41.py -> arch_hbm_switched_v41.py -> v41_rac
 and its record results/arch/arch_budget_v41.json.  It carries the 2026-09-27 user decisions: the official
 checkpoint weight precision everywhere (FP8 per 32x32 block, FP4 routed experts, BF16 lm_head / router / compressor,
 _precision_fix), online softmax adopted and norm folding rejected (lever "osm"), the measured hyper-connection depth
-(126 cycles, 5,120 HC lanes per weight lane), MTP at tau 5.0 (LMSYS/SGLang; 3.27-3.80 and 4.1 as sensitivities),
+(126 cycles, 5,120 HC lanes per weight lane), MTP at the measured V4.1-Flash tau (TAU_HEADLINE, 3.65, read from
+results/speculative/v41_flash_dspark_onpolicy_greedy.json; the published 3.5-4.1 band as sensitivities),
 1M as the primary context and the validated static power terms.  Links: 4 HBM3E stacks per die, 130 ns light-FEC
 board hop, 209 ns rack-cable stage hop.  Timing: decode_critical_path's pinned pre-pipeline RTL constants (K, FADD 5;
 e6ba1efc).  Energy/power inputs: configs/hardware/technology.json.  The former split (a specification model here and
@@ -565,7 +566,8 @@ def stage_occupancy(g, units=None):
     """Busy (issue) seconds per pass on ONE die of each pipeline stage, by unit: the layer stages of the physical
     placement (results/arch/v41_die_placement.json, packed by ROM bytes) and the head group.  A layer's routed-expert
     matvecs split over the stages holding its bytes in the placement's fractions; every other node of the layer
-    (attention, indexer scan, KV, norms, router, shared expert) runs on the stage where the layer starts.  units: a
+    (attention, indexer scan, KV, norms, router, shared expert) runs on the stage where the layer starts, unless the
+    node carries exec_stage (a helper group's share of a split index scan, tools/v41_stage_rebalance.py).  units: a
     {work class: unit} map (pooled units); None keeps each node's own work class."""
     frac, start, _n = _placement_map()
     occ = {}
@@ -575,7 +577,9 @@ def stage_occupancy(g, units=None):
         L = nd.get("layer")
         w = nd.get("_work")
         u = (units or {}).get(w[0], w[0]) if w else "other"
-        if L is None or L not in start:
+        if nd.get("exec_stage") is not None:              # work moved off its layer's stage (v41_stage_rebalance)
+            parts = [(nd["exec_stage"], 1.0)]
+        elif L is None or L not in start:
             parts = [("head", 1.0)]
         elif name.endswith(EXPERT_NODES):
             tot = sum(f for _, f in frac[L])
@@ -1055,27 +1059,42 @@ def spec_area_mm2(spec, areas):
 
 
 # -- 6. MTP ------------------------------------------------------------------------------------------------------------------
-# User decision 2026-09-27: MTP headlines at tau = 5.0, the best third-party measurement of DeepSeek's DSpark --
-# LMSYS/SGLang accept length ~5 at batch 1 on DeepSeek-V4-PRO-DSpark (B300, TP8), NOT V4.1-Flash, workload not
-# stated.  The vLLM-derived 3.27 / 3.80 and the earlier 4.1 default are sensitivities.
-TAU_HEADLINE = 5.0
-TAU_HEADLINE_LABEL = "LMSYS SGLang ~5"
-TAU_HEADLINE_SOURCE = ("LMSYS Org, https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ (2026-07-06): 'accept length "
-                       "~5 at batch size 1 on DeepSeek-V4-Pro, TP=8, B300' -- V4-Pro, not V4.1-Flash; workload not stated")
+# User decision 2026-09-28: MTP headlines at the V4.1-Flash-SPECIFIC tau we measured -- DSpark (the checkpoint's
+# built-in drafter) at gamma 5, greedy, replayed exactly on the model's own continuations (on-policy), 36 prompts x 9
+# workloads, 982 speculative cycles: tau 3.649 pooled, 95% CI 3.50-3.84 (results/speculative/
+# v41_flash_dspark_onpolicy_greedy.json headline, tools/v41_dspark_onpolicy/).  ONE value, read from that record
+# (rounded to the published 3.65); every V4.1 tool takes it from here.  The published V4.1-Flash figures bound the
+# sensitivity band 3.5-4.1 (results/speculative/acceptance_tau.json: InferenceX 3.51 / 4.07, vLLM PR #57432 GSM8K
+# greedy 3.82-3.89).  The earlier 5.0 (LMSYS/SGLang, DeepSeek-V4-PRO, workload unstated) is withdrawn as the headline.
+V41_TAU_REC = ROOT / "results/speculative/v41_flash_dspark_onpolicy_greedy.json"
+_TAU_H = json.loads(V41_TAU_REC.read_text())["headline"]
+TAU_HEADLINE = round(_TAU_H["tau"], 2)
+TAU_CI95 = tuple(round(x, 2) for x in _TAU_H["ci95_stratified_prompt_bootstrap"])
+TAU_BAND = (3.5, 4.1)                       # published V4.1-Flash band (acceptance_tau.json deepseek_v4_family)
+TAU_HEADLINE_LABEL = "V4.1-Flash on-policy greedy (measured)"
+TAU_HEADLINE_SOURCE = ("results/speculative/v41_flash_dspark_onpolicy_greedy.json headline.tau: DeepSeek-V4.1-Flash "
+                       "DSpark gamma 5, greedy, on-policy exact replay, 36 prompts x 9 workloads, 95%% CI %.2f-%.2f"
+                       % TAU_CI95)
+
+
 def tau_points():
-    """tau (accepted tokens per verify cycle incl. the bonus token) as the design-faithful remodel carries them:
-    LMSYS/SGLang ~5 (published, V4-Pro, gamma 7) and the vLLM survival-derived 3.27 / 3.8."""
+    """tau (accepted tokens per verify cycle incl. the bonus token): the measured V4.1-Flash headline, the published
+    V4.1-Flash band's ends, and the design-faithful remodel's literature points (V4-Pro) as further sensitivities."""
     fa = json.loads(SPEC_FAITHFUL.read_text()) if SPEC_FAITHFUL.exists() else None
     out = []
     if fa:
         for t in fa["tau"]["v41"]:
             out.append(dict(tau=t["tau"], gamma=t["gamma"], label=t["label"], grade=t["grade"], source=t["source"],
                             model=t.get("model"), workload=t.get("workload")))
-    if not any(p["label"] == TAU_HEADLINE_LABEL for p in out):
-        out.insert(0, dict(tau=TAU_DEFAULT, gamma=7, label=TAU_HEADLINE_LABEL, grade="published",
-                           model="DeepSeek-V4-Pro", workload="not stated by the source", source=TAU_HEADLINE_SOURCE))
-    out.append(dict(tau=4.1, gamma=7, label="4.1 (previous default, sensitivity)", grade="decision",
-                    source="user decision 2026-09-26, superseded 2026-09-27 by the LMSYS ~5 headline"))
+    out = [p for p in out if p["label"] != "LMSYS SGLang ~5"]      # V4-Pro, withdrawn as the headline
+    out.insert(0, dict(tau=TAU_HEADLINE, gamma=5, label=TAU_HEADLINE_LABEL, grade="measured",
+                       model="DeepSeek-V4.1-Flash", workload="36 prompts x 9 workloads (acceptance_tau prompt set)",
+                       source=TAU_HEADLINE_SOURCE))
+    for t, lab in zip(TAU_BAND, ("low", "high")):
+        out.append(dict(tau=t, gamma=5, label=f"V4.1-Flash published band, {lab} ({t:g})", grade="published",
+                        model="DeepSeek-V4.1-Flash",
+                        source="results/speculative/acceptance_tau.json: InferenceX 3.51 / 4.07, vLLM PR #57432 "
+                               "3.82-3.89"))
     return out
 
 
@@ -1593,7 +1612,7 @@ def power_requirements(rec, req, areas):
     import power_scenarios as PS
     lims = PS.cooling_limits(PS.load_cfg())
     cool_cls = {cls: v["2"]["die_w"] for cls, v in lims.items()}
-    cool = cool_cls["air"]
+    cool = cool_cls[PS.V41_COOLING]                  # liquid baseline (user decision 2026-09-28); air a sensitivity
     stat = d["static_power"]["detail"]
     et = energy_terms(E["tech"])
     rows = {}
@@ -1609,7 +1628,7 @@ def power_requirements(rec, req, areas):
     pcfg = PS.load_cfg()
     hot_b1 = PS.v41_hottest_die(pcfg, "B_proposed_production", sys.modules[__name__], E, TARGET_CTX, 1, 1, 1.0, 0.0)
     hot_sat = PS.v41_hottest_die(pcfg, "B_proposed_production", sys.modules[__name__], E, TARGET_CTX,
-                                 fill_machine(sat["batch"]).microbatch, 1, 1.0, 0.0)
+                                 fill_machine(sat["batch"]).microbatch, 1, 1.0, 0.0, batch=sat["batch"])
     for m in (1, 2):
         blk = spec_area_mm2(req, areas)["total"] * m
         clk_w = et["clock"] * blk * clock

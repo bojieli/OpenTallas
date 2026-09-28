@@ -7,7 +7,7 @@ optimisation plan.  Model work only: every figure is the budget model's (tools/a
 The budget model (owned by the spec agent) is imported, never edited.  This tool:
 
 1. UTILISATION.  At batch 1, at the pipeline-fill batch (28 users: one per layer-group stage) and at saturation
-   (1,024 users), with and without MTP (DSpark gamma 5, m = 2, tau 5.0), at 200K (primary) and 1M:
+   (1,024 users), with and without MTP (DSpark gamma 5, m = 2, tau 3.65 measured), at 200K (primary) and 1M:
    * MFU per engine class (quantised weight block-dot, BF16, attention, indexer, hyper-connection): model MACs
      of the EMITTED tokens per second / the class's peak MACs per second, for the whole array (188 uniform dies,
      the spec as written) and for the layer dies only (28 groups x 4 = 112);
@@ -59,12 +59,11 @@ FILL = 28                     # layer-group stages: b <= 28 users ride one per s
 SAT = 1024                    # the nominal saturated batch; a point runs min(SAT, users held): A.point_batch
 POINTS = (("b1", 1), ("fill28", FILL), ("sat1024", SAT))
 CURVE = (1, 8, 28, 64, 128, 256, 1024)
-# MTP (user decision 2026-09-27): DSpark gamma 5 (6 verified positions), lane multiplier m = 2, tau = 5.0 --
-# LMSYS/SGLang accept length ~5 on DeepSeek-V4-Pro-DSpark at batch 1 (B300, TP8;
-# https://www.lmsys.org/blog/2026-07-06-dspark-sglang/), graded published, third-party, V4-Pro not V4.1-Flash,
-# workload unstated; the vLLM survival-derived band 3.27-3.80 is the sensitivity.
-TAU = 5.0
-TAU_BAND = (3.27, 3.80)
+# MTP: DSpark gamma 5 (6 verified positions), lane multiplier m = 2, tau = the measured V4.1-Flash value
+# (user decision 2026-09-28; arch_budget_v41.TAU_HEADLINE, read from results/speculative/
+# v41_flash_dspark_onpolicy_greedy.json); the published V4.1-Flash band 3.5-4.1 is the sensitivity.
+TAU = A.TAU_HEADLINE
+TAU_BAND = A.TAU_BAND
 GAMMA = 5
 MTP_M = 2
 LAYER_GROUPS = 28
@@ -193,6 +192,7 @@ def solve(spec, ctx, batch=1, positions=1, levers=(), muts=(), hbm=None):
     if muts:
         b.g.mb = b.mach.microbatch                         # lever mutations may need the pass size
         b.g.positions = positions                          # the MTP verify pass's hop tail (collective_exposure)
+        b.g.batch = batch                                  # the pass kind a stage-rebalance helper engages on
         for f in muts:
             f(b.g, spec)
         fin = b.g.solve(spec.chaining)
@@ -803,9 +803,8 @@ def build():
                precision_dependency=("weights at the spec's current checkpoint dtypes (docs/ARCH_SPEC_V41.md 2.1); a "
                                      "separate agent is auditing them -- every figure re-derives from the budget model"),
                mtp=dict(tau=TAU, tau_band=TAU_BAND, gamma=GAMMA, positions=GAMMA + 1, lane_mult=MTP_M,
-                        tau_source="LMSYS/SGLang DeepSeek-V4-Pro-DSpark batch 1 (B300, TP8), ~5 accepted; "
-                                   "https://www.lmsys.org/blog/2026-07-06-dspark-sglang/; published, third-party, "
-                                   "V4-Pro not V4.1-Flash, workload unstated; band 3.27-3.80 vLLM survival-derived"),
+                        tau_source=A.TAU_HEADLINE_SOURCE + "; band 3.5-4.1: published V4.1-Flash (InferenceX "
+                                   "3.51 / 4.07, vLLM PR #57432 3.82-3.89)"),
                die_classes=dict(dies=DIES, layer_dies=LAYER_DIES, layer_groups=LAYER_GROUPS, nonlayer_dies=NONLAYER_DIES,
                                 head_dies=HEAD_DIES,
                                 note="188 dies: 28 groups x 4 hold the 40 layers; 76 hold the Engram tables (202.8 GB), "
@@ -1092,7 +1091,7 @@ def design_point(rec, uni, muts, areas):
         out[str(ctx)] = row
     return dict(label="spec + chain ladder L1-3 + the adopted communication levers (" + ", ".join(rec["adopted_levers"])
                 + ") + pooled engines + per-unit concurrency across microbatches; non-layer dies right-sized; MTP m = "
-                  "2 at tau 5.0; operate at the 28-user pipeline fill",
+                  f"2 at tau {TAU:g}; operate at the 28-user pipeline fill",
                 block_area_layer_die_mm2=area_of(uni, areas, pooled=True)["total"],
                 block_area_layer_die_mtp_mm2=area_of(uni, areas, pooled=True, lm=MTP_M)["total"], rows=out)
 
