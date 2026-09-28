@@ -31,6 +31,7 @@ RTL = [ROOT / p for p in (
     "rtl/test/tb_hdc_v41x_fullshape_woa_exact.sv")]
 PAT = re.compile(r"WOA_PASS rows_per_group=(\d+) exact_rows=(\d+) bank_reads=(\d+) cycles=(\d+)")
 PRE_PAT = re.compile(r"PRELOAD_PASS issue_cycles=(\d+) write_cycles=(\d+)")
+VM_PAT = re.compile(r"VMREAD_PASS init_beats=(\d+) read_issue_beats=(\d+)")
 
 
 def sha(path: Path) -> str:
@@ -55,15 +56,20 @@ def bits(path: Path, n: int) -> np.ndarray:
 def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         layout_manifest: Path, rows: int, output: Path, banked: bool = False,
         macro: bool = False, rl: int = 2, shared: bool = False,
-        preloaded: bool = False, input_registered: bool = False) -> dict:
-    if rl not in (2, 3, 4):
-        raise ValueError('rl must be 2, 3 or 4')
-    if shared and rl not in (3, 4):
-        raise ValueError('shared store requires rl=3 or 4')
-    if preloaded and (not shared or rl not in (3, 4)):
-        raise ValueError('preloaded mode requires shared store and rl=3 or 4')
-    if input_registered and (not preloaded or rl != 4):
-        raise ValueError('input-registered store requires preloaded rl=4')
+        preloaded: bool = False, input_registered: bool = False,
+        vm_read: bool = False, read_out_registered: bool = False) -> dict:
+    if rl not in (2, 3, 4, 5):
+        raise ValueError('rl must be 2, 3, 4 or 5')
+    if shared and rl not in (3, 4, 5):
+        raise ValueError('shared store requires rl=3, 4 or 5')
+    if preloaded and (not shared or rl not in (3, 4, 5)):
+        raise ValueError('preloaded mode requires shared store and rl=3, 4 or 5')
+    if input_registered and (not preloaded or rl not in (4, 5)):
+        raise ValueError('input-registered store requires preloaded rl=4 or 5')
+    if read_out_registered and (not input_registered or rl != 5):
+        raise ValueError('bank-output-registered store requires input-registered rl=5')
+    if vm_read and not input_registered:
+        raise ValueError('VM read gate requires input-registered shared store')
     if rows < 16 or rows > 1024 or rows % 16:
         raise ValueError("rows must be a multiple of 16 in 16..1024")
     if image.stat().st_size != 33_554_432:
@@ -93,10 +99,13 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         sources = list(RTL)
         if input_registered:
             sources.insert(-2, ROOT / "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg.sv")
+        if read_out_registered:
+            sources.insert(-2, ROOT / "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_readreg.sv")
+            sources.insert(-2, ROOT / "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg_readreg.sv")
         command = [verilator, "--binary", "--timing", "-O0", "-Wno-fatal", "-Wno-WIDTH",
                    "-Wno-UNUSED", "-Wno-TIMESCALEMOD", "--top-module",
                    "tb_hdc_v41x_fullshape_woa_exact", *([f"-GXBANK={2 if macro else 1}"] if banked or macro else []),
-                   f"-GRL={rl}", *([f"-GSHARED={3 if input_registered else (2 if preloaded else 1)}"] if shared else []), "-Mdir", str(obj),
+                   f"-GRL={rl}", *([f"-GSHARED={5 if read_out_registered else (3 if input_registered else (2 if preloaded else 1))}"] if shared else []), "-Mdir", str(obj),
                    *map(str, sources), "-CFLAGS", "-O0", "-j", "4"]
         t0 = time.monotonic()
         build = subprocess.run(command, cwd=ROOT, capture_output=True, text=True,
@@ -114,8 +123,11 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
             raise RuntimeError("ME bench failed:\n" + sim.stdout[-3000:] + sim.stderr[-2000:])
         checked_rows, exact, reads, cycles = map(int, match.groups())
         pre_match = PRE_PAT.search(sim.stdout)
+        vm_match = VM_PAT.search(sim.stdout)
         if preloaded and (not pre_match or tuple(map(int,pre_match.groups())) != (128,128)):
             raise RuntimeError('preload coverage mismatch: '+sim.stdout[-1000:])
+        if vm_read and (not vm_match or tuple(map(int, vm_match.groups())) != (128,128)):
+            raise RuntimeError('VM read coverage mismatch: '+sim.stdout[-1000:])
         if checked_rows != rows or exact != rows * 2 or reads < rows * 128:
             raise RuntimeError("ME bench coverage mismatch: " + match.group(0))
         sim_sec = round(time.monotonic() - t1, 2)
@@ -136,9 +148,13 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
             "external_shared_store": shared,
             "preloaded_activation": preloaded,
             "input_registered_activation_store": input_registered,
+            "bank_output_registered": read_out_registered,
+            "four_bank_vm_read": vm_read,
             "vm_bank_rotation_quarters": 2 if preloaded else 0,
             "preload_issue_cycles": int(pre_match.group(1)) if pre_match else 0,
             "preload_write_cycles": int(pre_match.group(2)) if pre_match else 0,
+            "vm_init_beats": int(vm_match.group(1)) if vm_match else 0,
+            "vm_read_issue_beats": int(vm_match.group(2)) if vm_match else 0,
             "simulation_seconds": sim_sec, "memory_cap_bytes": 24 * 1024**3,
             "descriptor": {"g0": {"weight_base_word": 7680, "xbase": 0, "output_base_word": 0},
                            "g1": {"weight_base_word": 73216, "xbase": 4096, "output_base_word": 64},

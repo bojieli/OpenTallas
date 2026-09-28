@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.rtl.v41x_fullshape_woa_exact.v1",
+  "status": "pass",
+  "banked_activation_store": false,
+  "macro_activation_store": false,
+  "claim_scope": "TP4 rank-0 layer-0 wo_a groups 0 and 1, first 16 of 1024 rows per group, bit-exact raw FP32 ME outputs against checkpoint golden. Uses bank-major two-stage converter and input/bank-output-registered 16-macro SRAM; no VM controller, full-layer or chip-throughput claim.",
+  "rows_per_group": 16,
+  "exact_rows": 32,
+  "bank_read_cycles": 2084,
+  "simulation_cycles": 2325,
+  "build_seconds": 70.67,
+  "read_latency_cycles": 5,
+  "external_shared_store": true,
+  "preloaded_activation": true,
+  "input_registered_activation_store": true,
+  "bank_output_registered": true,
+  "four_bank_vm_read": false,
+  "vm_bank_rotation_quarters": 2,
+  "preload_issue_cycles": 128,
+  "preload_write_cycles": 128,
+  "vm_init_beats": 0,
+  "vm_read_issue_beats": 0,
+  "simulation_seconds": 13.33,
+  "memory_cap_bytes": 25769803776,
+  "descriptor": {
+    "g0": {
+      "weight_base_word": 7680,
+      "xbase": 0,
+      "output_base_word": 0
+    },
+    "g1": {
+      "weight_base_word": 73216,
+      "xbase": 4096,
+      "output_base_word": 64
+    },
+    "k": 4096,
+    "rows_per_full_group": 1024,
+    "splitj": false
+  },
+  "fixture_sha256": {
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/v41_200k_l0_wo_a_acc_rank0.f32le.bin": "12be81f72514fd6b140e7bf9eb3e709394ed1b470be682a3cc676bdbb1e051b8",
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/v41_200k_l0_wo_a_za_rank0.f32le.bin": "d0feb8ecb84c0e40b7409fc893d62883a8bfa4cf891f0aeb8874a9354e0659ea",
+    "/tmp/v41_fullshape_rank0_rom_images/wo_a.me.bin": "5cc5de8536d4efe889b38e5c8c593f63e0d66ffb9475ca6efa1e7c083af1bdf1",
+    "/tmp/opentallas-v41-fullshape-golden/results/rtl/hdc_v41x_fullshape_200k_l0_wo_a_vectors.json": "244eef6c0d0e69dae9987d4e0ec363efe18e3b72f8a741b92a25079ccafc692b",
+    "/tmp/v41_fullshape_rank0_rom_images/wo_a.me.json": "06446b317f4c3306d5fa0493a41a7045b5695d1b68e7811952213300d79294f5"
+  },
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2.sv": "49629f6e1b4d45f51f5b309d005ecd9e658e454a38badf6b81515b3c57a9754a",
+    "rtl/test/ot_hdc_v41x_fp32_bf16_preload64_pipe2_alias.sv": "e7b3405ed3b2110c617c87ed78071224bce235705b1f92cde1fac62d9ba09453",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv": "fce7c6df29e1be29ee2103f529c17debd7ba35f282dfb002e5cbaa009cb4fb67",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": "f5064de72493a39023c97bb1152d4ae54659091e25769e8c4323a5c0c382628b",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg.sv": "cf8c26327605cee2917ea70698ef292ef3666139355c21190a4a65ba94726567",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_readreg.sv": "090d8a48762c7a78221f3136f725bdff673c4db74f41e382f94b1fe819a5008b",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg_readreg.sv": "57960fe347b301a60428b8c5c6e913ca060f9d420170b8e9da1bb5acba206178",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
+    "rtl/test/tb_hdc_v41x_fullshape_woa_readreg_exact.sv": "137a2092db2ce8c7458a71f39326329051294b28d107f0dc0cc02b8a8aba547f",
+    "tools/rtl_hdc_v41x_fullshape_woa_exact.py": "16bff388cf3c8ef515d7221e2a3f0140723ced7d300db08957091ac2059dfcaf",
+    "tools/rtl_hdc_v41x_fullshape_woa_readreg_exact.py": "b7b6a7d3ff866f1cb19cc422623b09dd44352dc56ecc0c9959b1c1f6baf436de"
+  },
+  "converter_pipeline_cycles": 2,
+  "sram_input_register_cycles": 1,
+  "sram_bank_output_register_cycles": 1
+}
