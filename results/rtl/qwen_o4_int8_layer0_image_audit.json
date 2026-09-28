@@ -150,7 +150,7 @@
         }
       },
       "norm_fold": "FP32 weight times BF16 norm, before W8, for q/k/v/gate/up",
-      "producer_sha256": "ce1e699514eeb80344b68e6dbdbfeee2c85bbb8d4f75bf06e672b7350b26f606",
+      "producer_sha256": "eeb9cbfff631194e987c1120d58ea618158288c1acfec98abdcb602fe0defa5d",
       "quantization": "signed INT8 W8 full output row before TP slicing; BF16 row scale",
       "quantizer_sha256": "dcd3c740b599b5ae7b9663793fc2efc3bcc8a1d9f4d4982707e19958c7f7ee5b",
       "schema": "qwen3-8b-o4-int8-layer0-tp2.v1",
@@ -305,7 +305,7 @@
         }
       },
       "norm_fold": "FP32 weight times BF16 norm, before W8, for q/k/v/gate/up",
-      "producer_sha256": "ce1e699514eeb80344b68e6dbdbfeee2c85bbb8d4f75bf06e672b7350b26f606",
+      "producer_sha256": "eeb9cbfff631194e987c1120d58ea618158288c1acfec98abdcb602fe0defa5d",
       "quantization": "signed INT8 W8 full output row before TP slicing; BF16 row scale",
       "quantizer_sha256": "dcd3c740b599b5ae7b9663793fc2efc3bcc8a1d9f4d4982707e19958c7f7ee5b",
       "schema": "qwen3-8b-o4-int8-layer0-tp2.v1",

@@ -11,7 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import hdc_golden as G  # noqa: E402
 import hdc_program as P  # noqa: E402
-from hdc_qwen_int8_image import (Int8Layout, first_layer_tp2_matrices,
+from hdc_qwen_int8_image import (Int8Layout, first_layer_tp2_matrices, layer_tp2_matrices,
+                                  shipped_vocab_rows,
                                   write_first_layer_tp2_images, write_images)  # noqa: E402
 
 
@@ -127,3 +128,26 @@ def test_shipped_first_layer_audit_source_pins():
                         else "post_attention_layernorm.weight")
                 n = source_tensor(".".join(layer + [norm])).contiguous().view(torch.int16).numpy()
                 assert item["norm_sha256"] == hashlib.sha256(n.tobytes()).hexdigest()
+
+
+def test_last_layer_and_vocabulary_boundary_windows():
+    import torch
+    from safetensors import safe_open
+    import qwen3_deployment_quality as Q
+    try:
+        snapshot = Q.find_snapshot()
+    except FileNotFoundError:
+        pytest.skip('shipped Qwen3-8B checkpoint missing')
+    index = json.loads((snapshot / 'model.safetensors.index.json').read_text())['weight_map']
+    layers = [layer_tp2_matrices(snapshot, 35, die, rows_per_matrix=2) for die in (0, 1)]
+    for name in ('o', 'down'):
+        assert torch.equal(layers[0][name]['scales'], layers[1][name]['scales'])
+    assert layers[0]['q']['source'] == 'model.layers.35.self_attn.q_proj.weight'
+    for kind, die, start, key, global_row in (
+            ('embedding', None, 151935, 'model.embed_tokens.weight', 151935),
+            ('lm_head', 1, 75967, 'lm_head.weight', 151935)):
+        got = shipped_vocab_rows(snapshot, kind, start=start, count=1, die=die)
+        with safe_open(str(snapshot / index[key]), framework='pt', device='cpu') as sf:
+            ref, scale, _ = Q.quantize_w8(sf.get_slice(key)[global_row:global_row + 1].float())
+        assert got['global_start'] == global_row
+        assert torch.equal(got['codes'], ref) and torch.equal(got['scales'], scale)
