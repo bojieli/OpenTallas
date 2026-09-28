@@ -52,6 +52,13 @@ two groups, wide ingress, and 128,000 two-position segment readbacks.  Its
 16 outlines sum to 62,265 µm² and carry 13,104 *internal* signal pins;
 these counts are placement inputs, not die-level pins.  Local macro placement
 near the MAC lanes and a routed macro-bearing tile remain necessary.
+The ME adapter selects the original flat buffer with `XBANK=0` (the
+unchanged reduced default), the 64-bank register model with `XBANK=1`, and
+the grouped analytical SRAM model with `XBANK=2`.  Checkpoint-backed TP4
+rank-0 layer-0 `wo_a` runs pass all 2,048 raw FP32 output rows with the
+same 131,108 weight-bank reads and 133,259 cycles in both banked modes.
+This matches the flat gate's cycle count; the wide VM ingress is still tied
+off at the adapter, so no rate gain is yet implemented.
 
 ### Die-width replication constraint
 

@@ -65,6 +65,20 @@ def run(output: Path) -> dict:
             raise RuntimeError(f"he_slice: expected marker absent: {proc.stdout[-2000:]}")
         cases["he_slice_wide"] = {"status": "pass", "marker": marker,
                                   "stdout_sha256": hashlib.sha256(proc.stdout.encode()).hexdigest()}
+        top = "tb_v41x_he_xslice_macro_mask"
+        tb = ROOT / f"rtl/test/{top}.sv"
+        pins[str(tb.relative_to(ROOT))] = sha(tb)
+        binary = work / f"{top}.vvp"
+        subprocess.run(["iverilog", "-g2012", "-s", top, "-o", str(binary),
+                        str(HE_RTL), str(MACRO), str(tb)], check=True,
+                       capture_output=True, text=True)
+        proc = subprocess.run(["vvp", str(binary)], check=True,
+                              capture_output=True, text=True)
+        marker = "HE_XSLICE_MACRO_MASK_PASS lanes=8 read_before_write=1"
+        if marker not in proc.stdout:
+            raise RuntimeError(f"he_mask: expected marker absent: {proc.stdout[-2000:]}")
+        cases["he_slice_mask"] = {"status": "pass", "marker": marker,
+                                  "stdout_sha256": hashlib.sha256(proc.stdout.encode()).hexdigest()}
     record = {
         "schema": "opentallas.rtl.v41x_me_xbank_macro.v1",
         "status": "pass",
