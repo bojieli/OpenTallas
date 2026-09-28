@@ -4,6 +4,12 @@ Updated 2026-09-28 against the current integration branch. The goal is four **fu
 
 **Statuses:** `[x]` published and passed at the stated scope; `[~]` assigned/in progress; `[ ]` queued; `[!]` a measured blocker. Owner names below identify responsibility; their branch/worktree is the handoff location, not evidence until merged. The live assignment table below supersedes older agent activity descriptions. Completed agents resume only for a concrete, nonoverlapping critical-path task. Optional sweeps and superseded routes stay stopped. Root stopped the old DEPTH32 non-px collective detailed route (checkpoint retained), recovering about 30 GiB locally; large new gates run remotely with memory caps. The root agent integrates and pushes main. On every substantive merge, the owner of that item updates its gate, source-pinned record and next blocker here. Old campaign details belong in their records.
 
+## Latest integration and architecture decisions
+
+- [x] **Qwen integration:** full-token binding/core interface chain, shared HBM completion ordering, mixed-owner/region gates through `d48e8f53`, and safe compile tooling through `a4870d3b` integrated. Root reran 33 focused tests and `make check-figures`; full-shape exactness remains blocked. Experimental hierarchy RTL `a80d6a30` is excluded.
+- [~] **Approved DeepSeek L0 implementation:** actual HBM-backed window-only attention for the first layer, with generation-qualified descriptor lifecycle and source-bound VM/mode parameters. Later selected/remote KV remains separate. Core, attention and die owners coordinate sequential file edits.
+- [~] **Approved physical experiment:** one VM and one MP1 macro/register microblock with explicit placement/pin/PG and timing budgets; unchanged latency. The larger neighborhood envelope is not adopted. Clock-only fanout qualification requires library and clock evidence; the original strict failure stays immutable.
+
 ## Architecture-owned execution — current priority
 
 The user approved [the architecture ownership and verification contract](ARCHITECTURE_EXECUTION_CONTRACT.md). Root owns topology and all budgets. Agent proposals and measurements inform root decisions; agents do not independently change pipeline latency, replication, memory layout or physical partitioning.
