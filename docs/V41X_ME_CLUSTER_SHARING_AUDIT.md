@@ -56,9 +56,12 @@ same converter and store: `results/rtl/hdc_v41x_fullshape_woa_vmread_first16.jso
 passes 32/32 output rows and all 512 returned 512-bit VM words against the
 checkpoint. The slice is 384 KiB and initializes resident ACC before timed
 service. Its original VM read RTL is physically unclosed, so this establishes
-numeric and address order only. A bank-local ME output register also passes
-the first 16 rows/group at RL5, adding one cycle per group; its full-depth
-and physical gates remain pending. Thus two
+numeric and address order only. A bank-local ME output register passes the
+full 2048/2048 checkpoint rows at RL5 in
+`results/rtl/hdc_v41x_fullshape_woa_readreg_full1024.json`: 131349 cycles,
+128 preload issues, 131108 weight-bank reads, and one extra fill cycle per
+group versus RL4. The matching MP=1, eight-macro physical cut is still in
+progress. Thus two
 K4096 `wo_a` groups have a 128-cycle VM read-issue
 floor, plus VM read latency, conversion, store write and any barriers. The
 existing four-wide adapter consumes 2048 LOAD issue cycles for those two
