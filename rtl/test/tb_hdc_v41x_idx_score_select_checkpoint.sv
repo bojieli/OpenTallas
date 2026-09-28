@@ -10,7 +10,7 @@ module tb_hdc_v41x_idx_score_select_checkpoint;
     reg [IW-1:0] i_first_index=0;
     reg [NK-1:0] i_kv=0,i_ref=0,i_keep=0;
     reg [NK*136-1:0] i_key=0;
-    wire i_ready,score_v,score_ready,sel_ready,score_last;
+    wire i_ready,score_v,score_ready,sel_ready,score_last,ql_ready;
     wire [NK-1:0] score_kv,score_fault;
     wire [NK*16-1:0] score_val;
     wire [NK*IW-1:0] score_idx;
@@ -24,7 +24,7 @@ module tb_hdc_v41x_idx_score_select_checkpoint;
     assign score_ready=sel_ready && gate_ready;
 
     ot_hdc_v41x_idx_score_slice #(.NK(NK),.NB(NB),.IW(IW),.MD(64)) score (
-        .clk(clk),.rst_n(rst_n),.ql_v(ql_v),.ql_head(ql_head),
+        .clk(clk),.rst_n(rst_n),.ql_v(ql_v),.ql_ready(ql_ready),.ql_head(ql_head),
         .ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),
         .i_valid(i_valid),.i_ready(i_ready),.i_last(i_last),
         .i_first_index(i_first_index),.i_kv(i_kv),.i_ref(i_ref),
@@ -111,8 +111,8 @@ module tb_hdc_v41x_idx_score_select_checkpoint;
             end
             i_valid=0;
             if(gap_cycles<0) begin
-                wait(scores_seen==(case_no+1)*N);
-                repeat(2) @(negedge clk);
+                wait(ql_ready);
+                @(negedge clk);
             end else repeat(gap_cycles) @(negedge clk);
         end
         wait(selected==2*K);

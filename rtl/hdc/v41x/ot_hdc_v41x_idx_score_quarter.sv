@@ -7,6 +7,7 @@ module ot_hdc_v41x_idx_score_quarter #(
 ) (
     input wire clk,rst_n,
     input wire ql_v,
+    output wire ql_ready,
     input wire [7:0] ql_head,
     input wire [NB*128-1:0] ql_codes,
     input wire [NB*8-1:0] ql_sc,
@@ -25,10 +26,11 @@ module ot_hdc_v41x_idx_score_quarter #(
     output wire [4*NK*IW-1:0] o_index,
     output wire protocol_fault
 );
-    wire [3:0] sr,sv,sl;
+    wire [3:0] sr,sv,sl,qr;
     wire take=i_valid && i_ready;
     wire consume=o_valid && o_ready;
     assign i_ready=&sr;
+    assign ql_ready=&qr;
     assign o_valid=&sv;
     assign o_last=sl[0];
     assign protocol_fault=(|sv && !(&sv)) || ((&sv) && sl!={4{sl[0]}});
@@ -36,7 +38,7 @@ module ot_hdc_v41x_idx_score_quarter #(
     generate for(s=0;s<4;s=s+1) begin:g_slice
         localparam [IW-1:0] OFFSET=IW'(s*NK);
         ot_hdc_v41x_idx_score_slice #(.NK(NK),.NB(NB),.IH(IH),.IW(IW),.MD(MD)) u (
-            .clk(clk),.rst_n(rst_n),.ql_v(ql_v),.ql_head(ql_head),
+            .clk(clk),.rst_n(rst_n),.ql_v(ql_v),.ql_ready(qr[s]),.ql_head(ql_head),
             .ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),
             .i_valid(take),.i_ready(sr[s]),.i_last(i_last),
             .i_first_index(i_first_index+OFFSET),

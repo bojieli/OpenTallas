@@ -11,6 +11,7 @@ module ot_hdc_v41x_idx_score_slice #(
 ) (
     input wire clk, rst_n,
     input wire ql_v,
+    output wire ql_ready,
     input wire [7:0] ql_head,
     input wire [NB*128-1:0] ql_codes,
     input wire [NB*8-1:0] ql_sc,
@@ -40,6 +41,9 @@ module ot_hdc_v41x_idx_score_slice #(
     wire [NK*16-1:0] es;
     wire take=i_valid && i_ready;
     wire pop=o_valid && o_ready;
+    // Query SRAM is single-buffered. A new query may overwrite it only after
+    // all earlier score beats leave both the engine and metadata queue.
+    assign ql_ready=(count==0) && !ev && !i_valid;
     assign i_ready=er && count<MD;
     assign o_valid=ev && count!=0;
     assign o_last=meta[rd][IW+NK];
@@ -53,7 +57,7 @@ module ot_hdc_v41x_idx_score_slice #(
         assign o_score[g*16 +: 16]=meta[rd][g] ? 16'd0 : es[g*16 +: 16];
     end endgenerate
     ot_hdc_v41x_idx_engine #(.NK(NK),.IH(IH),.NB(NB),.FD(MD)) engine (
-        .clk(clk),.rst_n(rst_n),.ql_v(ql_v),.ql_head(ql_head),
+        .clk(clk),.rst_n(rst_n),.ql_v(ql_v && ql_ready),.ql_head(ql_head),
         .ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),
         .k_valid(take),.k_ready(er),.k_kv(i_kv),.k_keep(i_keep),.k_key(i_key),
         .o_valid(ev),.o_ready(pop),.o_kv(ekv),.o_score(es),.o_fault(ef),
@@ -73,4 +77,8 @@ module ot_hdc_v41x_idx_score_slice #(
             endcase
         end
     end
+`ifndef SYNTHESIS
+    always @(posedge clk) if(rst_n && ql_v && !ql_ready)
+        $fatal(1,"index score query overwrite while prior scores are in flight");
+`endif
 endmodule

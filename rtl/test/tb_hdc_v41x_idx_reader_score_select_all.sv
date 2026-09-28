@@ -115,6 +115,33 @@ module tb_hdc_v41x_idx_reader_score_select_all #(
             .mem_re(mem_re),.mem_raddr(mem_raddr),.mem_rdata(mem_rdata),
             .busy(sel_busy[z]));
     end endgenerate
+    reg [15:0] candidate_idx[0:31],candidate_val[0:31];
+    reg merge_go=0;
+    integer merge_sent=0,merged=0;
+    wire merge_ready,merge_valid,merge_last,merge_busy,merge_mem_we,merge_mem_re;
+    wire [3:0] merge_lv,merge_ninf;
+    wire [63:0] merge_value,merge_index;
+    wire [6:0] merge_mem_waddr,merge_mem_raddr;
+    wire [4*33-1:0] merge_mem_wdata;
+    reg [4*33-1:0] merge_mem_rdata;
+    reg [4*33-1:0] merge_mem[0:127];
+    always @(posedge clk) begin
+        if(merge_mem_we) merge_mem[merge_mem_waddr]<=merge_mem_wdata;
+        if(merge_mem_re) merge_mem_rdata<=merge_mem[merge_mem_raddr];
+    end
+    wire [63:0] merge_in_idx={candidate_idx[merge_sent+3],candidate_idx[merge_sent+2],
+                              candidate_idx[merge_sent+1],candidate_idx[merge_sent]};
+    wire [63:0] merge_in_val={candidate_val[merge_sent+3],candidate_val[merge_sent+2],
+                              candidate_val[merge_sent+1],candidate_val[merge_sent]};
+    ot_hdc_tselect #(.W(4),.VW(16),.IW(16),.K(8),.AW(7)) final_selector (
+        .clk(clk),.rst_n(rst_n),.in_valid(merge_go && merge_sent<32),
+        .in_ready(merge_ready),.in_last(merge_sent==28),.in_lv(4'hf),
+        .in_val(merge_in_val),.in_idx(merge_in_idx),.in_k(4'd8),
+        .out_valid(merge_valid),.out_last(merge_last),.out_lv(merge_lv),
+        .out_val(merge_value),.out_idx(merge_index),.out_ninf(merge_ninf),
+        .mem_we(merge_mem_we),.mem_waddr(merge_mem_waddr),.mem_wdata(merge_mem_wdata),
+        .mem_re(merge_mem_re),.mem_raddr(merge_mem_raddr),
+        .mem_rdata(merge_mem_rdata),.busy(merge_busy));
     genvar s,q;
     generate for(s=0;s<4;s=s+1) begin:g_stack
         ot_hdc_v41x_idx_range_pc_arb #(.NPC(NPC),.AW(AW),.LENW(LENW),
@@ -228,11 +255,11 @@ module tb_hdc_v41x_idx_reader_score_select_all #(
         j=0;
         for(i=0;i<16;i=i+1) j=j+int'(stream_beats[i*48 +:48]);
         if(j!=EXPECTED_SECTORS) $fatal(1,"sectors got=%0d expected=%0d",j,EXPECTED_SECTORS);
-        if(collect_fault || checked!=NKEYS || scored!=NKEYS ||
+        if(collect_fault || checked!=NKEYS || scored!=NKEYS || merged!=8 ||
            selected[0]!=8 || selected[1]!=8 || selected[2]!=8 || selected[3]!=8 ||
            received!=expected_beats)
-            $fatal(1,"final fault=%b checked=%0d scored=%0d selected=%0d,%0d,%0d,%0d received=%0d",collect_fault,checked,scored,selected[0],selected[1],selected[2],selected[3],received);
-        $display("V41X_READER_SCORE_SELECT_ALL_PASS n=%0d checked=%0d scored=%0d selected=%0d,%0d,%0d,%0d sectors=%0d cycles=%0d handoffs=%0d collector_stall=%0d stream_stall=%0d first_score=%0d last_score=%0d last_select=%0d",NKEYS,checked,scored,selected[0],selected[1],selected[2],selected[3],j,cycle,received,collector_stall_cycles,stream_stall_cycles,first_score,last_score,last_select);
+            $fatal(1,"final fault=%b checked=%0d scored=%0d selected=%0d,%0d,%0d,%0d merged=%0d received=%0d",collect_fault,checked,scored,selected[0],selected[1],selected[2],selected[3],merged,received);
+        $display("V41X_READER_SCORE_SELECT_ALL_PASS n=%0d checked=%0d scored=%0d selected=%0d,%0d,%0d,%0d merged=%0d sectors=%0d cycles=%0d handoffs=%0d collector_stall=%0d stream_stall=%0d first_score=%0d last_score=%0d last_select=%0d",NKEYS,checked,scored,selected[0],selected[1],selected[2],selected[3],merged,j,cycle,received,collector_stall_cycles,stream_stall_cycles,first_score,last_score,last_select);
         $finish;
         end
     end
@@ -256,6 +283,18 @@ module tb_hdc_v41x_idx_reader_score_select_all #(
             if(first_score<0) first_score<=cycle;
             last_score<=cycle;
         end
+        if(merge_go && merge_sent<32 && merge_ready) merge_sent<=merge_sent+4;
+        if(merge_valid) begin
+            hits=0;
+            for(integer mi=0;mi<4;mi=mi+1) if(merge_lv[mi]) begin
+                if(merged+hits>=8 || merge_index[16*mi +:16]!==16'(merged+hits) ||
+                   merge_value[16*mi +:16]!==16'd0)
+                    $fatal(1,"global merge index=%0d value=%h",merge_index[16*mi +:16],merge_value[16*mi +:16]);
+                hits=hits+1;
+            end
+            merged<=merged+hits;
+            if(merge_last) begin done<=1;last_select<=cycle;end
+        end
         for(integer sq=0;sq<4;sq=sq+1) if(sel_valid[sq]) begin
             hits=0;
             for(integer si=0;si<4;si=si+1) if(sel_lv[sq*4+si]) begin
@@ -264,9 +303,11 @@ module tb_hdc_v41x_idx_reader_score_select_all #(
                    sel_value[(sq*4+si)*16 +:16]!==16'd0)
                     $fatal(1,"selection q=%0d index=%0d value=%h",sq,sel_index[(sq*4+si)*16 +:16],sel_value[(sq*4+si)*16 +:16]);
                 hits=hits+1;
+                candidate_idx[sq*8+selected[sq]+hits-1]<=sel_index[(sq*4+si)*16 +:16];
+                candidate_val[sq*8+selected[sq]+hits-1]<=sel_value[(sq*4+si)*16 +:16];
             end
             selected[sq]<=selected[sq]+hits;
-            if(sel_last[sq] && sq==3) begin done<=1;last_select<=cycle;end
+            if(sel_last[sq] && sq==3) merge_go<=1;
         end
         if(out_valid && collector_ready) begin
             hits=0;

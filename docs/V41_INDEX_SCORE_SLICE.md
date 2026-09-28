@@ -45,10 +45,12 @@ representative slice route.
 The [real checkpoint score/select gate](../results/rtl/v41_idx_score_select_checkpoint.json)
 uses two reduced-shape layer indexer calls from the released checkpoint.
 All 80 BF16 scores and 16 top-8 indices/values match the golden under
-ready/valid stalls. A source-pinned turnaround sweep found that the current
-single query register requires two idle clock edges between the previous
-segment's last accepted key and the next query load. Zero or one edge
-corrupts an in-flight score. A double-buffered query register remains open.
+ready/valid stalls. The slice now exposes `ql_ready` and rejects any query
+load while an earlier score is still in flight. The checkpoint bench waits
+for this permission before loading the second query. A fixed-gap probe shows
+that the tested gaps from 0 through 40 clocks are unsafe for this case; 48 passes. The
+protocol, rather than that case-specific gap, controls query lifetime. A
+double-buffered query register remains open for overlapping segments.
 
 The [timed reader/score/select gate](../results/rtl/v41_idx_reader_score_select.json)
 joins the four-stack reader to one `NK=4`, 32-head × 128-dimension scorer
@@ -62,9 +64,49 @@ rate.
 The [all-quarter composition gate](../results/rtl/v41_idx_reader_score_select_all.json)
 uses the same timed reader and a bounded 64-key beat buffer to serialize all
 four quarters through one exact full-dimension `NK=4` scorer. Four separate
-W4 selectors choose the local top eight. All 1,040 keys and 2,210 HBM
-sectors are checked; all 1,040 scores and 32 local winners are exact for the
-all-zero fixture, including the 272-key final quarter. It takes 634 cycles,
-with 240 collector stall and 213 stream stall cycles. The final top-32 merge,
-checkpoint key image, shipped shape and routed physical path remain open.
+W4 selectors choose the local top eight; a bounded 32-candidate buffer and
+fifth W4 selector merge them into the global top eight. All 1,040 keys and
+2,210 HBM sectors are checked; all 1,040 scores, 32 local winners and eight
+global winners are exact for the all-zero fixture, including the 272-key
+final quarter. It takes 720 cycles, with 240 collector stall and 213 stream
+stall cycles. The checkpoint key image, shipped shape and routed physical path remain open.
 This bounded single-slice gate does not establish a production token rate.
+
+## Service and storage contract before replication
+
+The measured four-stack reader delivered 262,144 keys in 9,278 cycles
+(28.25 keys/cycle mean), or 557,056 32-byte sectors (60.04 sectors/cycle)
+with an always-ready sink. Its output is a 64-key burst, so its mean is not a
+per-cycle arrival bound. The N=1,040 combined gate observes 240 collector
+stall and 213 stream stall cycles with one 4-key/cycle score slice; its 720
+cycles include the local and global top-K tails. No wider reader/scorer
+composition has been measured.
+
+Each `NK=4` slice accepts one four-key beat per cycle with no sink stalls in
+the standalone test, first output at cycle 48. It contains 512 32-element
+FP4 dot units, equivalent to 16,384 logical FP4 MACs/cycle, plus 17,920
+query bits and a 64-entry score-metadata FIFO (2,240 bits at IW=30). It
+requires 2,176 key bits/cycle. Its query RAM is single-buffered: `ql_ready`
+permits a new query only after outstanding scores drain; violating that
+protocol is a simulation fault. The real-checkpoint two-query gate passes
+with this handshake, while fixed early reloads fault.
+
+The 64-key reader beat needs a 34,816-bit (4.25-KiB) staging buffer if a
+downstream slice cannot accept the whole beat. Eight slices would provide a
+nominal 32-key/cycle service (8,192 cycles for 262,144 keys) and need 17,408
+key bits/cycle, 4,096 dot units and 17.5 KiB of replicated query storage.
+Sixteen slices would provide 64 keys/cycle (4,096 scan cycles), with 34,816
+key bits/cycle, 8,192 dot units and 35 KiB of query storage. These are
+logical lower bounds before routing, bank conflicts, HBM timing, head-sum
+tails and selector service. The existing four-stack range streamers already
+reserve 2 MiB of reorder storage per die at the measured configuration.
+
+The proven selector evidence is separate: this gate has four local W4/K8
+selectors and a W4/K8 final merge. The wider candidate-selector campaign
+ingested 64 scores/cycle without input stall for N=262,144, then spent 8,270
+cycles in its tail (12,366 total), but that block and K configuration are
+not this local/global selector chain. A shipped top-K service rate needs the
+actual K, candidate format, finite queues and a same-controller integration
+gate. The measured reader and scorer imply that a 32-key/cycle assembly is
+the smallest *throughput candidate* at the current reader mean; only a
+physical and whole-layer schedule can justify allocating eight slices.

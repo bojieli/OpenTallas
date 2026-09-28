@@ -11,7 +11,7 @@ module tb_hdc_v41x_idx_score_slice;
     reg [IW-1:0] i_first_index=0;
     reg [NK-1:0] i_kv=0,i_ref=0,i_keep=0;
     reg [NK*NB*136-1:0] i_key=0;
-    wire i_ready,o_valid,o_last;
+    wire i_ready,o_valid,o_last,ql_ready;
     wire [NK-1:0] o_kv,o_fault;
     wire [NK*16-1:0] o_score;
     wire [NK*IW-1:0] o_index;
