@@ -416,7 +416,13 @@ Status is tracked per workstream in its own document:
 
 A workstream is complete only when it covers all three columns.
 
-## 7. DeepSeek-V4.1 core: cutting cycles per token
+## 7. DeepSeek-V4.1 core: historical cycle-cutting experiments
+
+The adopted implementation is `rtl/hdc/v41x/ot_hdc_core_v41x.sv` with the
+dedicated engines and HBM interfaces described in the architecture atlas.
+The experiments below are source-pinned predecessor measurements used to
+derive the arithmetic and timing questions; they are not the current chip
+hierarchy or a full-system throughput measurement.
 
 The V4.1 core (`rtl/hdc/v41/ot_hdc_core_v41.sv`, format `tools/hdc_isa_v41.py`,
 program `tools/hdc_program_v41.py`) decodes the reduced DeepSeek-V4.1-Flash

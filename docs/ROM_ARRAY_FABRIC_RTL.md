@@ -283,6 +283,20 @@ antenna, max-slew, max-cap and max-fanout violations.
 
 ## 10. The DeepSeek-V4.1 array
 
+The adopted array uses `rtl/test/tb_hdc_v41x_array.sv` with
+`rtl/hdc/v41x/ot_hdc_core_v41x.sv` and
+`tools/rtl_hdc_v41x_array_campaign.py`. Source-pinned reduced RTL runs cover
+complete two-package all-unit tokens with QE weight HBM and pooled index-key
+HBM, plus smaller switched five-package gates. The full switched all-unit run
+and attention KV HBM integration are still open. These gates do not establish
+the proposed rack clock or per-user rate.
+
+### Source-pinned reduced fabric campaign
+
+The campaign below is retained as a historical fabric and host-controller
+check. Its core, memory organization and timing do not represent the adopted
+V41x system.
+
 `rtl/test/tb_hdc_v41_array.sv` runs the reduced DeepSeek-V4.1 decode across
 several packages. It is a layer-range pipeline of V4.1 decode cores
 (`rtl/hdc/v41/ot_hdc_core_v41.sv`). Body package k holds a contiguous range of
