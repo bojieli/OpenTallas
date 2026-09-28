@@ -194,6 +194,22 @@ setup and hold WNS were +232.664 ps and +57.490 ps, and routed cell area
 was 641.797 µm². DRC and antenna counts remained zero. The result is still
 **not met**. The remaining transition paths need a stronger local drive or
 shorter wire before this slice can be declared closed.
+With a 25% slew-repair margin,
+`results/asap7_physical/v41x_die_karb_pc1_pipe_slewmargin_m9/physical.json`
+reaches detailed route at +213.576 ps setup, +56.998 ps hold and zero
+DRC/antenna errors. Two pins still exceed the 320 ps library transition
+limit, so this more aggressive 651.595 µm² slice is also **not met**.
+At a 40% repair margin, the slice has one remaining max-slew violation on
+`k_rsp_beat[0]` (361.25 ps against 320 ps); its detailed-route setup/hold
+WNS are +205.849/+57.227 ps and its standard-cell area is 661.436 µm²,
+as pinned in
+`results/asap7_physical/v41x_die_karb_pc1_pipe_slewmargin40_m9/physical.json`.
+That direct HBM-response-to-K output is absent from the actual grouped
+request slice: `ot_chip_v41x_hbm_karb_pc_local` leaves response selection to
+the group's registered receive path. The refactored four-PC RTL still passes
+the concurrent exact KV/index gate in
+`results/rtl/v41x_karb_group4_local_kv_gate.json`. A near-budget physical
+route of that request-only child is pending.
 
 Four adjacent local one-PC slices, a registered K ingress and grouped K
 response buffers pass the concurrent reduced KV/index gate, pinned in
@@ -209,7 +225,12 @@ run also stopped at the CTS hold-buffer cap, after 7,528 insertions, in
 A two-entry registered K input buffer now isolates its ready signal from the
 four local arbiters and passes the exact gate in
 `results/rtl/v41x_karb_group4_tailpipe_kv_gate.json`. Its physical run is
-pending. None of these four-PC cases yet fits the 17.2 µm budgeted band.
+recorded in
+`results/asap7_physical/v41x_die_karb_group4_tailpipe_m9/physical.json`:
+it also stops at the CTS hold-buffer cap, after 8,157 insertions with a
+−306 ps remaining hold path. A larger-buffer-cap sensitivity is under test;
+the standard flow has no four-PC routed result. None of these four-PC cases
+yet fits the 17.2 µm budgeted band.
 
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
