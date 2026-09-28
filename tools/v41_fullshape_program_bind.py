@@ -215,6 +215,13 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
     # The sparse pair fixture supports only this one token position. It does
     # not establish a production-size RoPE store or the corresponding port.
     blockers.append("sparse token-position RoPE fixture only; production RoPE storage/prefetch unproved")
+    instruction_trace = []
+    for pc, f in enumerate(program):
+        instruction_trace.append(dict(
+            pc=pc, unit=f["unit"], tag=f.get("_tag"),
+            reads=sorted(f.get("_reads", ())), writes=sorted(f.get("_writes", ())),
+            fields={k: v for k, v in f.items() if not k.startswith("_")},
+        ))
     return dict(schema="opentallas.v41x.fullshape.program_bind.v1",
                 status="runnable" if not blockers else "blocked", layer=0, rank=0,
                 layout_sha256=sha(layout_path), shard_sha256=sha(shard_path),
@@ -239,6 +246,7 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
                     ROOT / "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv")},
                 source_experts=list(selected), matrix_count=len(expected),
                 constant_count=len(names), instruction_count=len(program),
+                instruction_trace=instruction_trace,
                 qe_address_trace=trace, me_wo_a_trace=me_trace, blockers=blockers,
                 claim_boundary="Descriptor and source image address check; no RTL token or throughput verdict.")
 

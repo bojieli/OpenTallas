@@ -15,6 +15,11 @@ def test_current_layout_is_not_misreported_as_executable():
     record = B.bind(B.DEFAULT_LAYOUT, B.DEFAULT_SHARD)
     assert record["status"] == "blocked"
     assert record["matrix_count"] == 29
+    assert record["instruction_count"] == len(record["instruction_trace"]) == 111
+    assert [row["pc"] for row in record["instruction_trace"]] == list(range(111))
+    assert all(isinstance(row["fields"]["unit"], int) and
+               isinstance(row["reads"], list) and isinstance(row["writes"], list)
+               for row in record["instruction_trace"])
     assert record["source_experts"] == [110, 112, 141, 144, 357, 361]
     assert all(x["backed"] for x in record["qe_address_trace"])
     assert any("FP4 QE" in x for x in record["blockers"])
