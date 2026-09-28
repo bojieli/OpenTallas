@@ -37,6 +37,17 @@ complete scans, the 8-key offset crossings, local superblock boundaries and
 sampled one-million-key positions. A complete scan requires exactly `2*N`
 unique code sectors and `ceil(N/8)` unique scale sectors across the stacks.
 
+`ot_hdc_v41x_idx_shard_reader` uses this mapping to emit the existing
+64-key-quarter output interface from four disjoint HBM read ports. Its
+standalone gate checks every code byte, scale byte, valid bit, quarter last
+flag and key-refusal bit across 13 scans, including a local 1024-key boundary.
+It issues `2*N+ceil(N/8)` sector reads with no duplicate sector address.
+Request and output backpressure are exercised. In the short-latency fixture,
+the 1040-key scan takes 7,438 cycles for 2,210 sectors, or 0.297 sectors per
+cycle. The reader permits only one outstanding sector across all stacks, so
+this establishes the functional layout contract but no adopted bandwidth or
+end-to-end token result.
+
 ## Scheduler and collector required for a token gate
 
 For each output beat, form four quarter groups and intersect each group with
