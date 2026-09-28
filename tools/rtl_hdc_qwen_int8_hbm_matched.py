@@ -22,6 +22,7 @@ SRC = [*C.HDC, *C.PIPES,
        *(ROOT / f"rtl/rom/{x}.sv" for x in
          ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_rom_oneshot_allreduce", "ot_rom_tp_seq")),
        ROOT / "rtl/hdc/hbm/ot_hdc_qwen_int8_pc_window.sv",
+       ROOT / "rtl/hdc/hbm/ot_hdc_qwen_embed_row_hbm.sv",
        ROOT / "rtl/test/tb_hdc_package_tp_int8.sv"]
 HARNESS = ROOT / "rtl/test/hdc_package_tp_int8_harness.cpp"
 INPUTS = sorted(set([*SRC, HARNESS, Path(__file__), Path(REF.__file__),
@@ -29,6 +30,7 @@ INPUTS = sorted(set([*SRC, HARNESS, Path(__file__), Path(REF.__file__),
                      ROOT / "tools/hdc_golden.py", ROOT / "rtl/hdc/ot_hdc_isa.svh"]))
 SUMMARY = re.compile(r"PKG_TP nodes=(\d+) dies=(\d+) users=(\d+) generated=(\d+) steps_checked=(\d+) "
                      r"mismatches=(\d+) kv_mismatches=(\d+) vm_mismatches=(\d+) total_cycles=(\d+)")
+EMBED = re.compile(r"EMBED_HBM node=(\d+) die=(\d+) pc=(\d+) code_sectors=(\d+) scale_sectors=(\d+)")
 
 
 def sha(p):
@@ -63,12 +65,18 @@ def run_arm(work: Path, arm: int, jobs: int, ngen: int, skip_build: bool):
     names = ("nodes", "dies", "users", "generated", "steps_checked", "mismatches",
              "kv_mismatches", "vm_mismatches", "total_cycles")
     obs = dict(zip(names, map(int, m.groups()))) if m else {}
+    embed = [dict(zip(("node", "die", "pc", "code_sectors", "scale_sectors"),
+                      map(int, row))) for row in EMBED.findall(sim.stdout)]
     ok = (sim.returncode == 0 and "PASS" in sim.stdout and obs.get("nodes") == 1 and
           obs.get("dies") == 2 and obs.get("generated") == ngen and
           obs.get("steps_checked") == 16+ngen-1 and
-          all(obs.get(k) == 0 for k in ("mismatches", "kv_mismatches", "vm_mismatches")))
+          all(obs.get(k) == 0 for k in ("mismatches", "kv_mismatches", "vm_mismatches")) and
+          (arm == 0 or (len(embed) == 4 and
+                        sum(x["code_sectors"] for x in embed) > 0 and
+                        sum(x["scale_sectors"] for x in embed) > 0)))
     rec = {"status": "pass" if ok else "fail", "arm": arm_name, "W_HBM": arm,
-           "rtl": obs, "build_command": cmd, "binary_sha256": sha(binary),
+           "rtl": obs, "embedding_hbm_traffic": embed,
+           "build_command": cmd, "binary_sha256": sha(binary),
            "source_sha256": {str(p.relative_to(ROOT)): sha(p) for p in INPUTS},
            "image_sha256": {str(p.relative_to(img)): sha(p) for p in img.rglob("*.hex")},
            "stdout_tail": sim.stdout[-2000:], "stderr_tail": sim.stderr[-2000:]}
@@ -100,10 +108,11 @@ def combine(work: Path, output: Path):
     assert all(x["status"] == "pass" for x in (rom, hbm))
     assert rom["rtl"]["generated"] == hbm["rtl"]["generated"]
     data = {"schema": "opentallas.qwen-int8-hbm-matched.v1", "status": "pass",
-            "claim_boundary": "Reduced TP-2 scalar signed-INT8 two-die package, same ISA/images/core, weights supplied by ROM or a PC-local behavioural 32-byte-sector HBM model. Code and scale preload are serial per op. Not full O4 shape, HBM3E measured bandwidth, controller arbitration with KV, or P&R.",
+            "claim_boundary": "Reduced TP-2 scalar signed-INT8 two-die package, same ISA/images/core, matrix code, matrix scales, embedding row and embedding scale supplied by ROM or a PC-local behavioural 32-byte-sector HBM model. Preload is serial per op/token. Not full O4 shape, HBM3E measured bandwidth, controller arbitration with KV, or P&R.",
             "rom_cycles": rom["rtl"]["total_cycles"], "hbm_cycles": hbm["rtl"]["total_cycles"],
             "delta_cycles": hbm["rtl"]["total_cycles"]-rom["rtl"]["total_cycles"],
             "rom": rom["rtl"], "hbm": hbm["rtl"],
+            "embedding_hbm_traffic": hbm["embedding_hbm_traffic"],
             "source_sha256": rom["source_sha256"], "image_sha256": rom["image_sha256"],
             "binary_sha256": {"rom": rom["binary_sha256"], "hbm": hbm["binary_sha256"]}}
     output.parent.mkdir(parents=True, exist_ok=True)

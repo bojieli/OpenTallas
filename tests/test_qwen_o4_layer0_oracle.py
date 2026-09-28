@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -28,7 +29,14 @@ def test_oracle_sources_outputs_and_tp_collectives_are_pinned():
     assert record['status'] == 'ISA_golden_only'
     assert record['emitter_basis_commit'] == '7ed6bb26'
     for name, digest in record['emitter_source_sha256'].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
+        # The oracle is an immutable ISA-golden result from the full-shape
+        # branch. The deployment-quality tool has since changed for DFlash;
+        # validate the recorded source snapshot rather than silently repin a
+        # computation that has not been rerun.
+        source = (subprocess.check_output(['git', 'show', f'9a54ff9a:{name}'], cwd=ROOT)
+                  if name == 'tools/qwen3_deployment_quality.py'
+                  else (ROOT / name).read_bytes())
+        assert hashlib.sha256(source).hexdigest() == digest
     assert record['arithmetic'] == {'groups_per_die': 6144, 'su_width': 1024,
                                     'kv_format': 'fp8', 'weight_format': 'signed-int8-per-row-bf16-scale'}
     for name, digest in record['oracle_source_sha256'].items():

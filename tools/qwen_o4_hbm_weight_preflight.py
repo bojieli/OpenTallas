@@ -107,6 +107,21 @@ def evaluate() -> dict:
     resident_die = math.ceil(resident_pkg / Q.DIES)
     sector_addr_bits = math.ceil(math.log2(math.ceil(resident_die / SECTOR_BYTES)))
     stream_window_bytes = (1 << 11) * MATRIX_WORD_BYTES
+    # A gate/up K round has 64*8 full-width words and cannot be divided by
+    # the current ISA without changing the accumulator continuation. Price
+    # its 512-word staging bank only as a sensitivity: the KV ring's modeled
+    # density is a proxy, not a SRAM macro or routed result.
+    round_window_words = 512
+    round_window_bytes = round_window_words * MATRIX_WORD_BYTES
+    round_stream_bytes_per_cycle = bw_die / clock
+    round_prefetch_bytes_min = round_window_words * max(
+        0, MATRIX_WORD_BYTES - round_stream_bytes_per_cycle)
+    kv_buffer_bytes = wl["area"]["kv_prefetch_buffer_bytes"]
+    kv_buffer_mm2 = wl["area"]["kv_prefetch_buffer_mm2"]
+    round_window_proxy_mm2 = round_window_bytes / (kv_buffer_bytes / kv_buffer_mm2)
+    # A token looks up one embedding row. Until the TP-2 row layout is
+    # committed, use a conservative whole-hidden-row upper bound per die.
+    embed_upper_package = Q.DIES * (Q.Q["H"] + 2)
     return {
         "schema": "opentallas.qwen-o4-hbm-weight-preflight.v1",
         "status": "pass",
@@ -141,6 +156,25 @@ def evaluate() -> dict:
             "default_burst_length_field_bits": 5,
             "sectors_per_o4_int8_word": MATRIX_WORD_BYTES // SECTOR_BYTES,
             "note": "A full-width 2048-word window would be 192 MiB per die, still below the longest unchunked op's required lead. Split the ISA weight op into bounded chunks or add an internal stall, then use PC-local sector windows and buffered scale words; a WB parameter change alone is not an implementation."},
+        "staging_area_sensitivity": {
+            "minimum_indivisible_gate_up_round_words": round_window_words,
+            "code_window_bytes_per_die": round_window_bytes,
+            "code_window_mib_per_die": round_window_bytes / (1024 * 1024),
+            "sustained_hbm_bytes_per_core_cycle_per_die": round_stream_bytes_per_cycle,
+            "core_code_bytes_per_cycle": MATRIX_WORD_BYTES,
+            "minimum_starting_prefetch_mib_for_unstalled_round_with_perfect_streaming":
+            round_prefetch_bytes_min / (1024 * 1024),
+            "proxy_kv_buffer_bytes": kv_buffer_bytes,
+            "proxy_kv_buffer_mm2": kv_buffer_mm2,
+            "code_window_mm2_at_kv_buffer_density": round_window_proxy_mm2,
+            "status": "conditional_unpriced",
+            "boundary": "KV-buffer density is a budget proxy only. PC-local SRAM macro area, code/scale muxes, tag RAM, wiring, power and route are not measured; do not use the iso-area HBM headline as physically closed. Streaming within an uninterrupted K round saves little staging at this bandwidth. A substantially smaller buffer needs an exact FP32 accumulator continuation or a pipeline-wide stall, neither implemented."},
+        "embedding_traffic_sensitivity": {
+            "one_row_upper_bytes_per_die": Q.Q["H"] + 2,
+            "package_upper_bytes_per_token": embed_upper_package,
+            "fraction_of_rom_word_identical_weight_and_kv_traffic_upper":
+            embed_upper_package / exact_weight_and_kv,
+            "boundary": "Upper bound assumes a full hidden row on each TP-2 die. The exact row partition and HBM controller transaction count require the full-shape emitter; embedding bytes are excluded from the existing modeled matrix+KV rate."},
         "sector_roundtrip": sector_roundtrip(),
         "input_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in _PINNED},
     }
