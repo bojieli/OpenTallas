@@ -223,7 +223,8 @@ module ot_hdc_core_v41x #(
     output wire              win_blk_v,
     input  wire              win_blk_ready,
     output wire [AW-1:0]     win_blk_kvt_base,
-    output wire [NW-1:0]     win_blk_row,
+    output wire [NW-1:0]     win_blk_row,      // absolute HBM position
+    output wire [NW-1:0]     win_blk_kvt_row,  // local KVT row
     output wire [3:0]        win_blk_idx,
     output wire [AW-1:0]     win_blk_first_elem,
     output wire [255:0]      win_blk_codes,
@@ -401,6 +402,7 @@ module ot_hdc_core_v41x #(
     reg [1:0]    a_src, b_src, c_src, d_src, a_ind, dst, red, m2, e2, su_vec;
     reg [AW-1:0] a_base, a_so, a_si, a_ibase, b_base, b_so, b_si, c_base, c_so, c_si, d_base, d_so, d_si;
     reg [AW-1:0] o_base, o_so, o_si, o_row, r_base, r_so;
+    reg [NW-1:0] win_abs_row;
     reg          b_half, c_pair, a_rnd, a_relu, a_min, c_clip, rnd, red_sq, red_whole, red_tree, red_rnd;
     reg [2:0]    m1, qm, ad, sfu, e1;
     reg [31:0]   imm1, imm2, imm3;
@@ -660,6 +662,9 @@ module ot_hdc_core_v41x #(
         //: transposed-KV writes take the DYN value as a row, not an offset
         o_base <= `F(O_BASE) + ((`F(DST) == 2'd3) ? {AW{1'b0}} : `DY(O_D));
         o_row <= `DY(O_D); o_so <= `F(O_SO); o_si <= `F(O_SI);
+        // The local KVT row may saturate at window row 127 while the HBM
+        // ring tag must keep the absolute token position across wraps.
+        win_abs_row <= c_pos;
         red <= `F(RED); red_sq <= `F(RED_SQ); red_whole <= `F(RED_WHOLE); red_tree <= `F(RED_TREE); red_rnd <= `F(RED_RND);
         r_base <= `F(R_BASE); r_so <= `F(R_SO);
         imm1 <= `F(IMM1); imm2 <= `F(IMM2); imm3 <= `F(IMM3);
@@ -1029,16 +1034,19 @@ module ot_hdc_core_v41x #(
         .qr_re(qrom_re), .qr_addr(qrom_addr), .qr_q(qrom_q), .fault(qe_fault));
 
     generate if (FULL_SHAPE && KV_HBM) begin : g_packed_window_write
-        ot_hdc_v41x_window_kv_blocks #(.AW(AW), .POS_W(NW), .KVT_SH(13)) u_blocks (
+        ot_hdc_v41x_window_kv_blocks #(.AW(AW), .POS_W(NW), .KVT_SH(13),
+                                         .SEPARATE_ROWS(1)) u_blocks (
             .clk(clk), .rst_n(rst_n), .cap_v(win_capture_v),
             .cap_src_addr(win_capture_addr), .cap_codes(win_capture_codes),
             .cap_scale(win_capture_scale), .cap_ready(win_cap_ready),
             .cap_src_base(win_cap_src_base), .idle(win_idle),
             .issue(win_issue), .issue_src_base(a_base),
             .issue_kvt_base(o_base), .issue_row(o_row[NW-1:0]),
+            .issue_abs_row(win_abs_row),
             .issue_ready(win_issue_ready), .blk_v(win_blk_v),
             .blk_ready(win_blk_ready), .blk_kvt_base(win_blk_kvt_base),
-            .blk_row(win_blk_row), .blk_idx(win_blk_idx),
+            .blk_row(win_blk_row), .blk_kvt_row(win_blk_kvt_row),
+            .blk_idx(win_blk_idx),
             .blk_first_elem(win_blk_first_elem), .blk_codes(win_blk_codes),
             .blk_scale(win_blk_scale), .fault(win_fault));
     end else begin : g_no_packed_window_write
@@ -1046,7 +1054,8 @@ module ot_hdc_core_v41x #(
         assign win_cap_ready = 1'b0; assign win_fault = 1'b0;
         assign win_cap_src_base = '0;
         assign win_blk_v = 1'b0; assign win_blk_kvt_base = '0;
-        assign win_blk_row = '0; assign win_blk_idx = '0;
+        assign win_blk_row = '0; assign win_blk_kvt_row = '0;
+        assign win_blk_idx = '0;
         assign win_blk_first_elem = '0; assign win_blk_codes = '0;
         assign win_blk_scale = '0;
     end endgenerate
