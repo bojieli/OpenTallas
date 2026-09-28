@@ -69,7 +69,10 @@ bit-exact at 131,349 cycles for two groups, with 128 four-word preload
 issues and 131,108 weight-bank reads. It supplies the bank-major VM words
 from its checkpoint fixture. The integrated pipelined VM-to-RL5 exact
 first-16 replay at `b94b8783` also passes 32 rows, checking all 512 VM
-words and 128 preload beats. Full integrated replay is running. The
+words and 128 preload beats. Corrected measurement-window records exclude
+134 initialization/reset cycles and report 2,339 timed cycles, 14 more
+than the 2,325-cycle standalone RL5 first-16 gate; this finite VM/drain
+delta is scoped to that short run. Full integrated replay is running. The
 matching local MP=1 eight-macro placement has a measured **−676.67 ps**
 setup miss at 0.92 ns, with the worst path from `pre_e_r[11]` through
 preload write selection to SRAM `wd_in[81]`; hold is +43.99 ps and 2,297
