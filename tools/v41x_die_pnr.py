@@ -238,6 +238,16 @@ def karb_pc_local_fit_m9(height_um: float = 17.28, slew_margin_percent: int = 40
                           "scope": "one request-only PC child; group response and trunk omitted"}}
 
 
+def karb_pc_local_power_m9() -> dict:
+    """Within-band PC child with reserved M9 macro power access."""
+    c = karb_pc_local_fit_m9(height_um=17.01, slew_margin_percent=50)
+    c["args"] += ["--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_v41x_karb_pc_power.tcl"]
+    c["nickname"] = "codex_v41x_karb_pc_local_power_m9"
+    c["output"] = "results/asap7_physical/v41x_die_karb_pc_local_power_m9/physical.json"
+    c["floorplan"]["scope"] = "request-only PC child with full-height M8/M9 power access"
+    return c
+
+
 def karb_group4_m9(height_um: float = 30.24, outpipe: bool = False,
                    tailpipe: bool = False) -> dict:
     """Four adjacent PC slices with registered K ingress/return and local PHY pins."""
@@ -712,6 +722,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_pc_local_fit_m9": karb_pc_local_fit_m9,
          "karb_pc_local_budget_m9": lambda: karb_pc_local_fit_m9(height_um=17.01),
          "karb_pc_local_budget_slew50_m9": lambda: karb_pc_local_fit_m9(height_um=17.01, slew_margin_percent=50),
+         "karb_pc_local_power_m9": karb_pc_local_power_m9,
          "karb_group4_m9": karb_group4_m9,
          "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
          "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
