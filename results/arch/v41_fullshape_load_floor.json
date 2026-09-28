@@ -1,0 +1,57 @@
+{
+  "contract": {
+    "batch_one_dependency": "each next token follows terminal logits; all 40 wo_a nodes lie on the token DAG path",
+    "current_wo_a_descriptor": "invalid: splitj=8, xjs=2048 exceeds 8192-element ACC",
+    "fullshape_layers": 40,
+    "he_k_chunks_per_op": 2560,
+    "he_load_cycles_per_layer_if_unhidden": 5120,
+    "he_ops_per_layer": 2,
+    "me_activation_read_elements_per_cycle": 4,
+    "proposed_wo_a_k_per_op": 4096,
+    "proposed_wo_a_load_cycles_per_layer": 2048,
+    "proposed_wo_a_ops_per_layer": 2,
+    "tp_dies": 4
+  },
+  "limits": [
+    "The corrected two-operation wo_a program and exact image/token gate have not passed.",
+    "The wo_a mutation floors model issue time at 2048 cycles and retains its depth/control/wire; it does not establish a cycle-exact RTL schedule.",
+    "HE's two 2560-cycle LOADs may overlap other operators; the model prices no HE-load exposure yet.",
+    "Current HE KCMAX=128 and ME KMAX=512 defaults do not hold full-shape K=2560/4096; width/depth RTL gate is pending.",
+    "Current HCP HHW=8 differs from the design-point HW256/2048-lane geometry; a repacked image, exact bench and route are required.",
+    "MTP has no corrected six-position emitter or activation-load timing; no MTP result is reported.",
+    "GW4 is excluded until its exact stage record is integrated and source-pinned here, and four-word VM/CDMA and route close.",
+    "Sharded index delivery has not met the model's effective HBM bandwidth; no row is a delivered token rate."
+  ],
+  "points": {
+    "1048576": {
+      "gw1_depth128_exact_stage": {
+        "before_wo_load_ar_tok_s": 5032.84495509468,
+        "proposed_wo_load_ar_tok_s": 3667.905330818357,
+        "proposed_wo_load_critical_path_us": 272.635171796238,
+        "status": "conditional model sensitivity, not full-shape RTL throughput"
+      }
+    },
+    "200000": {
+      "gw1_depth128_exact_stage": {
+        "before_wo_load_ar_tok_s": 5152.299209138362,
+        "proposed_wo_load_ar_tok_s": 3730.946481340114,
+        "proposed_wo_load_critical_path_us": 268.02850295531744,
+        "status": "conditional model sensitivity, not full-shape RTL throughput"
+      }
+    }
+  },
+  "schema": "v41_fullshape_load_floor_v1",
+  "source_sha256": {
+    "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
+    "results/rtl/v41_collective_depth_campaign.json": "2c99155903830e712f1ca283a681dbecc464eadfac45960a8b577c499d887bd8",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "ee05869dc8287a2399049a0226b7980a6ac0dcaf08dd11a0bef3aa04a5a59f50",
+    "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a",
+    "tools/arch_lanes_v41.py": "1c5dde7d9041e25dc53fa90b9ea9b30c493dd690e6e776315735a7d948c76325",
+    "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+    "tools/hdc_replay_v41.py": "407d69d0d4b3d37143402dedfae13db3f5968b30e8bebd9df03dc2c56dc776be",
+    "tools/v41_fullshape_load_floor.py": "bac9376dcead7c9a3d3f8d9fa7b4b4ce6630b366e0ca999a135412a0e6d1d5e6",
+    "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303",
+    "tools/v41_tp_rowsplit_measured_reprice.py": "3645f7229832955d28a618ffc80d1227ddb5e18d05230a69276010114e45ea2a"
+  }
+}
