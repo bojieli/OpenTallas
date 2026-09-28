@@ -5,14 +5,14 @@
 // sweep requires all five results in parallel. Input partials are final K
 // accumulators from the base lanes plus four MAC-only copy lanes.
 module ot_hdc_qwen_m5_reduce_scale #(
-    parameter integer G = 4, W = 16
+    parameter integer G = 4, W = 16, N = 5
 ) (
     input  wire clk, rst_n, valid,
     input  wire [$clog2(G):0] split_log2,
-    input  wire [5*G*W*32-1:0] partial_sum,
+    input  wire [N*G*W*32-1:0] partial_sum,
     input  wire [G*W*16-1:0] row_scale_bf16,
     output wire out_valid,
-    output wire [5*G*W*32-1:0] result,
+    output wire [N*G*W*32-1:0] result,
     output wire fault
 );
     localparam integer LG = $clog2(G);
@@ -20,7 +20,7 @@ module ot_hdc_qwen_m5_reduce_scale #(
     assign vlevel[0] = valid;
     wire [LG:0] split_level [0:LG];
     assign split_level[0] = split_log2;
-    wire [5*G*W*32-1:0] level [0:LG];
+    wire [N*G*W*32-1:0] level [0:LG];
     assign level[0] = partial_sum;
     wire [LG:0] tree_fault;
     assign tree_fault[0] = 1'b0;
@@ -39,8 +39,8 @@ module ot_hdc_qwen_m5_reduce_scale #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) valid_pipe <= 0; else valid_pipe <= {valid_pipe[2:0],vlevel[l-1]};
         assign vlevel[l] = valid_pipe[3];
-        wire [5*(G>>l)*W-1:0] faults;
-        for (s=0;s<5;s=s+1) begin : g_slot
+        wire [N*(G>>l)*W-1:0] faults;
+        for (s=0;s<N;s=s+1) begin : g_slot
             for (p=0;p<(G>>l)*W;p=p+1) begin : g_pair
                 localparam integer group=p/W, lane=p%W;
                 wire [31:0] sum;
@@ -74,9 +74,9 @@ module ot_hdc_qwen_m5_reduce_scale #(
         end
         assign tree_fault[l] = |faults;
     end endgenerate
-    wire [4:0] scaled_valid;
-    wire [5*G*W-1:0] scale_fault;
-    generate for (s=0;s<5;s=s+1) begin : g_scale_slot
+    wire [N-1:0] scaled_valid;
+    wire [N*G*W-1:0] scale_fault;
+    generate for (s=0;s<N;s=s+1) begin : g_scale_slot
         reg [4:0] vv;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) vv<=0; else vv<={vv[3:0],vlevel[LG]};
