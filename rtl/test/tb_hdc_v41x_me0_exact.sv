@@ -1,7 +1,9 @@
 `timescale 1ns/1ps
 // Reduced real L0.router instruction: ME bank 0 from a timed HBM window,
 // other seven banks from the independent bank image, exact ISA row check.
-module tb_hdc_v41x_me0_exact;
+module tb_hdc_v41x_me0_exact #(
+    parameter integer XBANK=0
+);
     localparam W=16, G=4, MG=8, AW=24, BAW=17;
     reg clk=0;
     always #5 clk=~clk;
@@ -45,7 +47,7 @@ module tb_hdc_v41x_me0_exact;
         assign wb_q[lane*32+:32]=(!use_rom && lane%8==0) ? m0_p1[(lane/8)*32+:32] : bp1[lane*32+:32];
     end endgenerate
 
-    ot_hdc_v41x_me_adapt #(.W(W),.G(G),.MG(MG),.BAW(BAW)) u_me (
+    ot_hdc_v41x_me_adapt #(.W(W),.G(G),.MG(MG),.BAW(BAW),.XBANK(XBANK)) u_me (
         .clk(clk),.rst_n(rst_n),.go(go),.ready(ready),.idle(idle),
         .i_nout(16'd12),.i_tiles(16'd1),.i_k(16'd40),
         .i_wbase(24'd10100),.i_xbase(24'd0),.i_xjs(24'd0),

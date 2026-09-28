@@ -76,6 +76,7 @@ module ot_hdc_core_v41x #(
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
     parameter integer X_HE  = 1,
     parameter integer X_ME  = 0,           // ME weight ops -> the BF16/FP32 weight engine
+    parameter integer X_ME_XBANK = 0,     // banked activation SRAM inside the ME adapter
     parameter integer X_ATT = 0,           // ME KV-sourced attention ops -> the attention engine
     parameter integer X_IDX = 0,           // ME KV-sourced index-key ops -> the indexer engine
     parameter integer PIKH_HAW = FULL_SHAPE ? 30 : 28, // pooled index physical HBM sector address
@@ -848,7 +849,7 @@ module ot_hdc_core_v41x #(
     // engine 1: the BF16/FP32 weight engine (X_ME)
     generate if (X_ME != 0) begin : g_me_x
         ot_hdc_v41x_me_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .MG(MG), .BAW(MBAW),
-                                 .KMAX(FULL_SHAPE ? 5120 : 512)) u_mw (
+                                 .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
             .clk(clk), .rst_n(rst_n), .go(e_go[1]), .ready(e_ready[1]), .idle(e_idle[1]),
             .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase),
             .i_xjs(me_xjs), .i_split(me_split), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots),

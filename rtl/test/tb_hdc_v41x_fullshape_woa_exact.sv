@@ -1,7 +1,9 @@
 `timescale 1ns/1ps
 // Two TP4 wo_a local groups against the source-pinned rank-0 ROM image.
 // The runner supplies checkpoint ACC and raw FP32 pre-BF16 ZA as hex words.
-module tb_hdc_v41x_fullshape_woa_exact;
+module tb_hdc_v41x_fullshape_woa_exact #(
+    parameter integer XBANK=0
+);
     localparam W=16, G=4, MG=8, AW=30, BAW=18;
     localparam BASE0=7680, BASE1=73216, IMAGE_BYTES=33554432;
     reg clk=0;
@@ -27,7 +29,7 @@ module tb_hdc_v41x_fullshape_woa_exact;
     string dir;
     assign wb_q=bp1;
 
-    ot_hdc_v41x_me_adapt #(.W(W),.G(G),.MG(MG),.AW(AW),.BAW(BAW),.KMAX(5120)) u_me (
+    ot_hdc_v41x_me_adapt #(.W(W),.G(G),.MG(MG),.AW(AW),.BAW(BAW),.KMAX(5120),.XBANK(XBANK)) u_me (
         .clk(clk),.rst_n(rst_n),.go(go),.ready(ready),.idle(idle),
         .i_nout(16'(rows)),.i_tiles(16'(1)),.i_k(16'd4096),
         .i_wbase(AW'(op ? BASE1 : BASE0)),.i_xbase(AW'(op ? 4096 : 0)),

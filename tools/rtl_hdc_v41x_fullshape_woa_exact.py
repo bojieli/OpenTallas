@@ -23,6 +23,7 @@ RTL = [ROOT / p for p in (
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
     "rtl/test/tb_hdc_v41x_fullshape_woa_exact.sv")]
 PAT = re.compile(r"WOA_PASS rows_per_group=(\d+) exact_rows=(\d+) bank_reads=(\d+) cycles=(\d+)")
@@ -48,7 +49,7 @@ def bits(path: Path, n: int) -> np.ndarray:
 
 
 def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
-        layout_manifest: Path, rows: int, output: Path) -> dict:
+        layout_manifest: Path, rows: int, output: Path, banked: bool = False) -> dict:
     if rows < 16 or rows > 1024 or rows % 16:
         raise ValueError("rows must be a multiple of 16 in 16..1024")
     if image.stat().st_size != 33_554_432:
@@ -77,7 +78,7 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         verilator = str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator")
         command = [verilator, "--binary", "--timing", "-O0", "-Wno-fatal", "-Wno-WIDTH",
                    "-Wno-UNUSED", "-Wno-TIMESCALEMOD", "--top-module",
-                   "tb_hdc_v41x_fullshape_woa_exact", "-Mdir", str(obj),
+                   "tb_hdc_v41x_fullshape_woa_exact", *(["-GXBANK=1"] if banked else []), "-Mdir", str(obj),
                    *map(str, RTL), "-CFLAGS", "-O0", "-j", "4"]
         t0 = time.monotonic()
         build = subprocess.run(command, cwd=ROOT, capture_output=True, text=True,
@@ -103,6 +104,7 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         record = {
             "schema": "opentallas.rtl.v41x_fullshape_woa_exact.v1",
             "status": "pass",
+            "banked_activation_store": banked,
             "claim_scope": f"TP4 rank-0 layer-0 wo_a groups 0 and 1, first {rows} of 1024 rows "
                            "per group, bit-exact raw FP32 ME outputs against checkpoint golden. "
                            "No full-layer or chip-throughput claim.",
@@ -127,10 +129,11 @@ def main() -> None:
     ap.add_argument("--golden-manifest", type=Path, required=True)
     ap.add_argument("--layout-manifest", type=Path, required=True)
     ap.add_argument("--rows", type=int, default=16)
+    ap.add_argument("--banked", action="store_true")
     ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/hdc_v41x_fullshape_woa_exact.json")
     args = ap.parse_args()
     print(json.dumps(run(args.acc, args.za, args.image, args.golden_manifest,
-                         args.layout_manifest, args.rows, args.output), indent=2))
+                         args.layout_manifest, args.rows, args.output, args.banked), indent=2))
 
 
 if __name__ == "__main__":
