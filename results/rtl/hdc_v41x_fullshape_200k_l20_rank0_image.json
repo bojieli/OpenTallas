@@ -1401,5 +1401,17 @@
     "verification": "snapshot's content-addressed blob IDs and existence; full shard rehash not run"
   },
   "reproduction": "python3 tools/rtl_v41_fullshape_layer_campaign.py --steps golden --contexts 200000 --layers 0-20 --scratch SCRATCH; python3 tools/rtl_v41_fullshape_layer_campaign.py --steps images --contexts 200000 --layers 20 --rank 0 --scratch SCRATCH",
-  "scratch_path_at_generation": "/tmp/codex_v41_fullshape_golden/images/ctx200000_L20_r0"
+  "scratch_path_at_generation": "/tmp/codex_v41_fullshape_golden/images/ctx200000_L20_r0",
+  "companion_candidate_transient": {
+    "file": "ctx200000_cand.npz",
+    "shape": [
+      200000
+    ],
+    "dtype": "bool",
+    "npz_sha256": "1a73af8ab90338754d84c0fadf6a4c7aaa029584d96f4f3932f2c169b8ae41e4",
+    "golden_digest": "f56adf9bdd544b964cb2d755f8a7e5531e8dc21a9c4f750bbb3c489123b6c488",
+    "consumed_by_layer21": true,
+    "selection_count": 512,
+    "selection_sha256": "7020fe139974e096a816fed977fc873bbf3271174755974bcce0f2f89cc0f435"
+  }
 }
