@@ -26,3 +26,32 @@ def test_base_engine_width_matched_gather_record():
     assert rec["summary"]["y"]["measured_tail_cycles"] > rec["patterns"]["y"]["model_exposed"]
     wide_queue = next(case for case in rec["cases"] if case["case"] == "rowsplit_act_d64_q512")
     assert wide_queue["producer_stall_cycles"] == 0
+
+
+def test_adopted_die_engine_gather_record():
+    rec = json.loads((ROOT / "results/rtl/v41_tp_rowsplit_die_collectives.json").read_text())
+    assert rec["schema"] == "v41_tp_rowsplit_die_collectives_v1"
+    _check_pins(rec)
+    assert rec["die_contract"]["flit_bytes"] == 64
+    assert rec["die_contract"]["CL_DEPTH"] == 16
+    assert rec["die_contract"]["DMA_VM_words_per_cycle"] == 1
+    assert len(rec["cases"]) == 6
+    assert all(case["passed"] and case["mismatches"] == 0 and not any(case["faults"])
+               for case in rec["cases"])
+    for pattern in ("act", "y"):
+        adopted = next(case for case in rec["cases"] if case["pattern"] == pattern
+                       and case["order"] == "blocked" and case["rx_depth_words"] == 16)
+        assert rec["summary"][pattern]["measured_tail_cycles"] == adopted["exposed_tail_cycles"]
+        assert adopted["exposed_tail_cycles"] > rec["patterns"][pattern]["model_exposed"]
+
+
+def test_measured_ar_reprice_keeps_mtp_open():
+    rec = json.loads((ROOT / "results/arch/v41_tp_rowsplit_measured_reprice.json").read_text())
+    assert rec["schema"] == "v41_tp_rowsplit_measured_reprice_v1"
+    _check_pins(rec)
+    assert rec["measured_tail_cycles"] == {"act": 4948, "y": 1408}
+    for point in rec["points"].values():
+        ar = point["ar"]
+        assert ar["row_split_measured_gathers"] < ar["row_split_old_tail"]
+        assert ar["row_split_old_tail"] < ar["old_ksplit_model"]
+        assert "uncalibrated" in point["mtp"]["status"]
