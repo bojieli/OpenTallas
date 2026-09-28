@@ -58,6 +58,9 @@ module ot_hdc_core_vector_weight #(
     parameter integer INT8_WEIGHT = 0,
     parameter integer INT8_SCALE_WCS_BASE = 0,
     parameter integer INT8_EMBED = 0,
+    // Opt-in Qwen full-vocabulary encoding: two ME row-offset bits live just
+    // above the legacy 16-bit field in the otherwise unused ISA tail.
+    parameter integer QWEN_FULLSHAPE = 0,
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0 // element address of embedding row 0 in the program
 ) (
@@ -347,7 +350,10 @@ module ot_hdc_core_vector_weight #(
         me_k <= `F(ME_K) + dyn[`F(ME_D_K)];
         me_kindk <= (`F(ME_D_TILES) == 3'd6);        // DYN_TTILES: rounds of position tiles
         me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
-        me_amc <= `F(ME_AMC); me_row0 <= `F(ME_ROW0);
+        me_amc <= `F(ME_AMC);
+        me_row0 <= `F(ME_ROW0) |
+                   ((QWEN_FULLSHAPE != 0) ?
+                    ({{(NW-2){1'b0}}, ir[O_ME_ROW0+W_ME_ROW0+W_ME_AMC +: 2]} << 16) : '0);
         me_wbase <= `F(ME_WBASE) + dyn[`F(ME_D_WBASE)];
         me_ts <= `F(ME_TS); me_ks <= `F(ME_KS); me_js <= `F(ME_JS);
         me_xbase <= `F(ME_XBASE) + dyn[`F(ME_D_XBASE)];
@@ -384,7 +390,14 @@ module ot_hdc_core_vector_weight #(
     assign embed_scale_re = (INT8_EMBED != 0) && start && st == S_IDLE;
     assign embed_scale_addr = token;
     assign embed_code_re = (INT8_EMBED != 0) && (|(su_va_re & {SW{embed_active}}));
-    assign embed_code_addr = (su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES);
+    // The stream's element address is AW bits; token*HID wraps for vocab
+    // rows >= 2^(AW-log2(HID)). Recover the in-row offset from those low
+    // bits, then form the code-word address from the full NW-bit token.
+    assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+        ((tok_r * (HID / EMB_CODE_LANES)) +
+         (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+          EMB_CODE_LANES)) :
+        ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
     assign va_re = su_va_re & ~({SW{(INT8_EMBED != 0) && embed_active}});
     assign va_addr = su_va_addr;
     always @(posedge clk or negedge rst_n) begin
