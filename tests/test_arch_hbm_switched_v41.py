@@ -52,3 +52,21 @@ def test_rom_worst_die_is_the_hottest_die(rec):
 def test_kv_replicate_on_write_fits_the_stage_lanes(rec):
     kv = rec["kv_replicate_on_write"]
     assert kv["link_load_fraction"] < 0.5
+
+
+def test_comparator_pays_the_link_cap_and_drafter_rule(rec):
+    """The costs the ROM design point pays, on the comparator's own fabric: every aggregate is capped at its busiest
+    package link (the same rule as arch_lanes_v41.link_cap), and the drafter's inputs are priced where they would
+    cross a link (co-located on the comparator's G graph: 0 s, the separate-drafter placement as a sensitivity)."""
+    for ctx, rows in rec["energy"].items():
+        for k, v in rows.items():
+            lk = v["hbm_link_cap"]
+            assert lk["utilisation"] <= 1.0 + 1e-9
+            assert abs(v["hbm"]["aggregate_tokens_s"] - lk["aggregate_tokens_s_uncapped"] * lk["cap"]) < 1e-6 * \
+                v["hbm"]["aggregate_tokens_s"]
+            dc = v["hbm_draft_conditioning"]
+            if k.endswith("_mtp"):
+                assert dc["seconds"] == 0.0 and dc["separate_drafter_sensitivity_s"] > 0
+            else:
+                assert dc is None
+        assert rows["sat1024_mtp"]["hbm_link_cap"]["binds"]

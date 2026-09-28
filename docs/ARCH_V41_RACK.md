@@ -310,8 +310,10 @@ The relay halves the T1 words of its classes and forwards them over UCIe, doubli
   accounting), but the operating points are now first bound by their busiest pipeline stage
   (`arch_budget_v41.stage_bound`): the stage holding layer 20's uncapped index scan carries 3.4× the mean stage's
   work at 1M. The saturated aggregate with MTP is 359,420 tok/s at 1M (866 users) and 842,990 at 200K, and no link
-  binds (the head module's link at 37% at 1M). The HBM comparator's saturated rates are not link-checked, which
-  favours it.
+  binds (the head module's link at 37% at 1M). The HBM comparator's aggregates are capped by the same rule at its
+  own busiest package link (0.9 TB/s per package per direction on its switched fabric,
+  `results/arch/v41_hbm_switched.json` `energy.*.hbm_link_cap`): at 1M its fill with MTP runs at 89% of its
+  uncapped rate and its saturated points at 96% and 60% (with MTP).
 
 **C10 head-die draft KV: PASS; the routed head-die floorplan remains under K2.**
 

@@ -2768,7 +2768,7 @@
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "5.2–6.2× lower at a filled 28-user pipeline",
+     "text": "5.2–6.6× lower at a filled 28-user pipeline",
      "printed_value": "5.2",
      "status": "agrees"
     },
@@ -2786,7 +2786,7 @@
     },
     {
      "in": "Static power decides array energy at low batch",
-     "text": "5.2–6.2× at the fill",
+     "text": "5.2–6.6× at the fill",
      "printed_value": "5.2",
      "status": "agrees"
     }
@@ -2800,27 +2800,27 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 6.21907,
+   "record_value": 6.64382,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "5.2–6.2× lower",
-     "printed_value": "6.2",
+     "text": "5.2–6.6× lower",
+     "printed_value": "6.6",
      "status": "agrees"
     },
     {
      "in": "V4.1 energy per token, 1M, HBM ÷ ROM on one power model",
-     "text": "3.0× / 6.2×",
-     "printed_value": "6.2",
+     "text": "3.0× / 6.6×",
+     "printed_value": "6.6",
      "status": "agrees"
     },
     {
      "in": "Energy per token, 28-user fill, with MTP",
-     "text": "587 mJ: 6.2×",
-     "printed_value": "6.2",
+     "text": "627 mJ: 6.6×",
+     "printed_value": "6.6",
      "status": "agrees"
     }
    ]
@@ -2942,7 +2942,7 @@
    "printed": [
     {
      "in": "Aggregate throughput, 28 users, without / with MTP",
-     "text": "4.1× / 5.7×",
+     "text": "4.1× / 6.4×",
      "printed_value": "4.1",
      "status": "agrees"
     }
@@ -2956,15 +2956,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 5.70971,
+   "record_value": 6.40237,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Aggregate throughput, 28 users, without / with MTP",
-     "text": "4.1× / 5.7×",
-     "printed_value": "5.7",
+     "text": "4.1× / 6.4×",
+     "printed_value": "6.4",
      "status": "agrees"
     }
    ]
@@ -2998,15 +2998,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 5.70971,
+   "record_value": 6.40237,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Throughput per silicon is not the price of speed either",
-     "text": "(5.7× with MTP)",
-     "printed_value": "5.7",
+     "text": "(6.4× with MTP",
+     "printed_value": "6.4",
      "status": "agrees"
     }
    ]
@@ -3061,21 +3061,21 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.saturated_batch1024.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 2.55249,
+   "record_value": 2.6551,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Aggregate throughput, saturated (1M: the 866 users held; 200K: 1,024), without / with MTP",
-     "text": "2.6× / 4.3×",
-     "printed_value": "2.6",
+     "text": "2.7× / 7.1×",
+     "printed_value": "2.7",
      "status": "agrees"
     },
     {
      "in": "Total throughput, ROM vs HBM comparator as defined above",
-     "text": "6.5× / 2.6×",
-     "printed_value": "2.6",
+     "text": "7.2× / 2.7×",
+     "printed_value": "2.7",
      "status": "agrees"
     }
    ]
@@ -3088,21 +3088,21 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.200000.saturated_batch1024.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 6.47748,
+   "record_value": 7.17599,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Aggregate throughput, saturated (1M: the 866 users held; 200K: 1,024), without / with MTP",
-     "text": "6.5× / 10.0×",
-     "printed_value": "6.5",
+     "text": "7.2× / 16.7×",
+     "printed_value": "7.2",
      "status": "agrees"
     },
     {
      "in": "Total throughput, ROM vs HBM comparator as defined above",
-     "text": "6.5× / 2.6×",
-     "printed_value": "6.5",
+     "text": "7.2× / 2.7×",
+     "printed_value": "7.2",
      "status": "agrees"
     }
    ]
@@ -5832,7 +5832,7 @@
   "results/arch/power_scenarios.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "4e252ef3fca581de108209ffe3381a0ef77ab0c2a72ed579bf64336aeaa3b5fc",
+   "sha256": "170d69c78e901ffc4d862bcee8586ec47546c29b8416393aa330e53395dfece4",
    "schema": "opentallas.power-scenarios-result.v1",
    "tool": "tools/power_scenarios.py",
    "command": "python3 tools/power_scenarios.py",
@@ -5869,7 +5869,7 @@
      "field": "inputs",
      "key": "results/arch/v41_hbm_switched.json",
      "path": "results/arch/v41_hbm_switched.json",
-     "pinned": "08b3329c91af69ed65c8e2d5c387992f3007ccbbf1b4c1cb9c5b9708e85728c4",
+     "pinned": "e343c93a06209e6df97d37d21eecb95fdafbc8ccfb0a325cf273f78592bb0b33",
      "status": "current"
     },
     {
@@ -5906,7 +5906,7 @@
   "results/arch/decode_roofline.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "77f45b1f91a787a699066ba33b5d61c68fbba9d53e13edeaf28f2d790d091101",
+   "sha256": "5f36d8ec9550189f5e1fd8673a3815eb090b2834410afd729a2468f10ab7788e",
    "schema": "opentallas.decode-roofline.v1",
    "tool": "tools/decode_roofline_figure.py",
    "command": "python3 tools/decode_roofline_figure.py",
@@ -5965,14 +5965,14 @@
      "field": "inputs",
      "key": "v41_switched",
      "path": "results/arch/v41_hbm_switched.json",
-     "pinned": "08b3329c91af69ed65c8e2d5c387992f3007ccbbf1b4c1cb9c5b9708e85728c4",
+     "pinned": "e343c93a06209e6df97d37d21eecb95fdafbc8ccfb0a325cf273f78592bb0b33",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "power",
      "path": "results/arch/power_scenarios.json",
-     "pinned": "4e252ef3fca581de108209ffe3381a0ef77ab0c2a72ed579bf64336aeaa3b5fc",
+     "pinned": "170d69c78e901ffc4d862bcee8586ec47546c29b8416393aa330e53395dfece4",
      "status": "current"
     },
     {
@@ -6071,7 +6071,7 @@
   "results/arch/v41_hbm_switched.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "08b3329c91af69ed65c8e2d5c387992f3007ccbbf1b4c1cb9c5b9708e85728c4",
+   "sha256": "e343c93a06209e6df97d37d21eecb95fdafbc8ccfb0a325cf273f78592bb0b33",
    "schema": "opentallas.v41-hbm-switched.v1",
    "tool": "tools/arch_hbm_switched_v41.py",
    "command": "python3 tools/arch_hbm_switched_v41.py",

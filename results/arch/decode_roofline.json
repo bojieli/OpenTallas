@@ -32,11 +32,11 @@
   },
   "v41_switched": {
    "from": "worktree:results/arch/v41_hbm_switched.json",
-   "sha256": "08b3329c91af69ed65c8e2d5c387992f3007ccbbf1b4c1cb9c5b9708e85728c4"
+   "sha256": "e343c93a06209e6df97d37d21eecb95fdafbc8ccfb0a325cf273f78592bb0b33"
   },
   "power": {
    "from": "worktree:results/arch/power_scenarios.json",
-   "sha256": "4e252ef3fca581de108209ffe3381a0ef77ab0c2a72ed579bf64336aeaa3b5fc"
+   "sha256": "170d69c78e901ffc4d862bcee8586ec47546c29b8416393aa330e53395dfece4"
   },
   "idle_floor": {
    "from": "worktree:results/roofline/gpu_clocked_idle_floor.json",
@@ -1146,7 +1146,7 @@
       "value": 33985.0,
       "unit": "tok/s",
       "evidence": "modelled",
-      "basis": "per user 1,214 tok/s; at 811 users 63,196",
+      "basis": "per user 1,214 tok/s; at 811 users 60,753",
       "matching": "",
       "multiplier": null
      },

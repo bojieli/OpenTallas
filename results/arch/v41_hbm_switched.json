@@ -1184,6 +1184,20 @@
    "b1": {
     "batch": 1,
     "hbm_batch": 1,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 1.645996740740741e-05,
+     "stages": 1,
+     "users_per_pass": 1.0,
+     "passes_per_s": 3580.375802755708,
+     "utilisation_uncapped": 0.05893286901962909,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 3580.375802755708,
+     "utilisation": 0.05893286901962909
+    },
+    "hbm_draft_conditioning": null,
     "hbm": {
      "G": 96,
      "m": null,
@@ -1214,6 +1228,25 @@
    "b1_mtp": {
     "batch": 1,
     "hbm_batch": 1,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 9.875980444444462e-05,
+     "stages": 1,
+     "users_per_pass": 1.0,
+     "passes_per_s": 2395.572851888463,
+     "utilisation_uncapped": 0.2365863063849251,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 11977.864259442315,
+     "utilisation": 0.2365863063849251
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
     "hbm": {
      "G": 96,
      "m": 6,
@@ -1244,6 +1277,20 @@
    "fill28": {
     "batch": 28,
     "hbm_batch": 28,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.00046087908740740746,
+     "stages": 1,
+     "users_per_pass": 28.0,
+     "passes_per_s": 1213.7503956626733,
+     "utilisation_uncapped": 0.5593921746933926,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 33985.01107855485,
+     "utilisation": 0.5593921746933926
+    },
+    "hbm_draft_conditioning": null,
     "hbm": {
      "G": 96,
      "m": null,
@@ -1274,18 +1321,37 @@
    "fill28_mtp": {
     "batch": 28,
     "hbm_batch": 28,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.002765274524444446,
+     "stages": 1,
+     "users_per_pass": 28.0,
+     "passes_per_s": 405.49819990135467,
+     "utilisation_uncapped": 1.1213138418952975,
+     "cap": 0.8918109833637234,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 56769.74798618966,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
     "hbm": {
      "G": 96,
      "m": 6,
-     "tokens_s_per_user": 2027.4909995067735,
-     "aggregate_tokens_s": 56769.74798618966,
-     "switch_j": 0.16514077184701703,
-     "wall_j": 0.8561301057632252,
-     "dynamic_j": 0.3482002525704405,
-     "static_j": 0.17685189482332006,
-     "total_j": 0.5250521473937606,
-     "nonclock_j": 0.23378535450713533,
-     "clock_j": 0.11441489806330515
+     "tokens_s_per_user": 1808.1387420312342,
+     "aggregate_tokens_s": 50627.884776874555,
+     "switch_j": 0.18517463333333345,
+     "wall_j": 0.9248104495530238,
+     "dynamic_j": 0.3620803634245589,
+     "static_j": 0.19830647763080012,
+     "total_j": 0.560386841055359,
+     "nonclock_j": 0.23378535450713536,
+     "clock_j": 0.12829500891742354
     },
     "rom": {
      "tokens_s_per_user": 11576.375500334907,
@@ -1296,26 +1362,40 @@
      "switch_j": 0.003383327248285404,
      "wall_j": 0.08683106111990732
     },
-    "ratio_rate_per_user": 5.70970500147773,
-    "ratio_aggregate": 5.70970500147773,
-    "ratio_energy_with_static": 9.8597217944967,
-    "ratio_energy_chip_only": 7.881544043563565
+    "ratio_rate_per_user": 6.402371251295789,
+    "ratio_aggregate": 6.402371251295789,
+    "ratio_energy_with_static": 10.650686950329082,
+    "ratio_energy_chip_only": 8.411952205385367
    },
    "sat1024": {
     "batch": 866,
     "hbm_batch": 811,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.013349033567407373,
+     "stages": 1,
+     "users_per_pass": 811.0,
+     "passes_per_s": 77.92335429788399,
+     "utilisation_uncapped": 1.0402014722074309,
+     "cap": 0.9613522252356377,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 63195.84033558391,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": null,
     "hbm": {
      "G": 96,
      "m": null,
-     "tokens_s_per_user": 77.92335429788399,
-     "aggregate_tokens_s": 63195.84033558391,
-     "switch_j": 0.1483483715101607,
-     "wall_j": 0.4808894398804474,
-     "dynamic_j": 0.08046528134457298,
-     "static_j": 0.15886864462417524,
-     "total_j": 0.23933392596874822,
+     "tokens_s_per_user": 74.91179005209577,
+     "aggregate_tokens_s": 60753.46173224966,
+     "switch_j": 0.15431219444444405,
+     "wall_j": 0.49706399602725876,
+     "dynamic_j": 0.08115426996422029,
+     "static_j": 0.16525539802566622,
+     "total_j": 0.2464096679898865,
      "nonclock_j": 0.06332688859884804,
-     "clock_j": 0.01713839274572495
+     "clock_j": 0.01782738136537225
     },
     "rom": {
      "tokens_s_per_user": 186.2662232677822,
@@ -1326,26 +1406,45 @@
      "switch_j": 0.0067986493486251656,
      "wall_j": 0.16460307264223653
     },
-    "ratio_rate_per_user": 2.390377377181776,
-    "ratio_aggregate": 2.552486817064634,
-    "ratio_energy_with_static": 2.9215094965186754,
-    "ratio_energy_chip_only": 1.900974329223395
+    "ratio_rate_per_user": 2.4864740668758207,
+    "ratio_aggregate": 2.6551005449006917,
+    "ratio_energy_with_static": 3.019773495405055,
+    "ratio_energy_chip_only": 1.9571753207374336
    },
    "sat1024_mtp": {
     "batch": 866,
     "hbm_batch": 811,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.08009420140444472,
+     "stages": 1,
+     "users_per_pass": 811.0,
+     "passes_per_s": 20.80028061032302,
+     "utilisation_uncapped": 1.6659818644721784,
+     "cap": 0.6002466301257265,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 84345.13787485985,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
     "hbm": {
      "G": 96,
      "m": 6,
-     "tokens_s_per_user": 104.0014030516151,
-     "aggregate_tokens_s": 84345.13787485985,
-     "switch_j": 0.11115044964310075,
-     "wall_j": 0.40477530875206813,
-     "dynamic_j": 0.096137544876452,
-     "static_j": 0.11903279492999089,
-     "total_j": 0.2151703398064429,
-     "nonclock_j": 0.019128898111818244,
-     "clock_j": 0.07700864676463376
+     "tokens_s_per_user": 62.42649171007942,
+     "aggregate_tokens_s": 50627.88477687441,
+     "switch_j": 0.18517463333333398,
+     "wall_j": 0.6585459753845049,
+     "dynamic_j": 0.14742390702924216,
+     "static_j": 0.1983064776308007,
+     "total_j": 0.34573038466004286,
+     "nonclock_j": 0.019128898111818227,
+     "clock_j": 0.12829500891742393
     },
     "rom": {
      "tokens_s_per_user": 415.03443522524327,
@@ -1356,16 +1455,30 @@
      "switch_j": 0.003051213658459718,
      "wall_j": 0.0778070250118316
     },
-    "ratio_rate_per_user": 3.990661885775376,
-    "ratio_aggregate": 4.261298635118959,
-    "ratio_energy_with_static": 5.202297719139328,
-    "ratio_energy_chip_only": 3.605699143492752
+    "ratio_rate_per_user": 6.6483703289421205,
+    "ratio_aggregate": 7.099246245208232,
+    "ratio_energy_with_static": 8.463836977244204,
+    "ratio_energy_chip_only": 5.793548278863707
    }
   },
   "200000": {
    "b1": {
     "batch": 1,
     "hbm_batch": 1,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 1.645996740740741e-05,
+     "stages": 1,
+     "users_per_pass": 1.0,
+     "passes_per_s": 3580.375802755708,
+     "utilisation_uncapped": 0.05893286901962909,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 3580.375802755708,
+     "utilisation": 0.05893286901962909
+    },
+    "hbm_draft_conditioning": null,
     "hbm": {
      "G": 96,
      "m": null,
@@ -1396,6 +1509,25 @@
    "b1_mtp": {
     "batch": 1,
     "hbm_batch": 1,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 9.875980444444462e-05,
+     "stages": 1,
+     "users_per_pass": 1.0,
+     "passes_per_s": 2395.572851888463,
+     "utilisation_uncapped": 0.2365863063849251,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 11977.864259442315,
+     "utilisation": 0.2365863063849251
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
     "hbm": {
      "G": 96,
      "m": 6,
@@ -1426,6 +1558,20 @@
    "fill28": {
     "batch": 28,
     "hbm_batch": 28,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.00046087908740740746,
+     "stages": 1,
+     "users_per_pass": 28.0,
+     "passes_per_s": 1213.7503956626733,
+     "utilisation_uncapped": 0.5593921746933926,
+     "cap": 1.0,
+     "binds": false,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 33985.01107855485,
+     "utilisation": 0.5593921746933926
+    },
+    "hbm_draft_conditioning": null,
     "hbm": {
      "G": 96,
      "m": null,
@@ -1456,18 +1602,37 @@
    "fill28_mtp": {
     "batch": 28,
     "hbm_batch": 28,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.002765274524444446,
+     "stages": 1,
+     "users_per_pass": 28.0,
+     "passes_per_s": 405.49819990135467,
+     "utilisation_uncapped": 1.1213138418952975,
+     "cap": 0.8918109833637234,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 56769.74798618966,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
     "hbm": {
      "G": 96,
      "m": 6,
-     "tokens_s_per_user": 2027.4909995067735,
-     "aggregate_tokens_s": 56769.74798618966,
-     "switch_j": 0.16514077184701703,
-     "wall_j": 0.8511003274758882,
-     "dynamic_j": 0.344145357951151,
-     "static_j": 0.17685189482332006,
-     "total_j": 0.5209972527744711,
+     "tokens_s_per_user": 1808.1387420312342,
+     "aggregate_tokens_s": 50627.884776874555,
+     "switch_j": 0.18517463333333345,
+     "wall_j": 0.9197806712656866,
+     "dynamic_j": 0.3580254688052693,
+     "static_j": 0.19830647763080012,
+     "total_j": 0.5563319464360694,
      "nonclock_j": 0.2297304598878458,
-     "clock_j": 0.11441489806330515
+     "clock_j": 0.12829500891742354
     },
     "rom": {
      "tokens_s_per_user": 20848.350292536106,
@@ -1478,26 +1643,40 @@
      "switch_j": 0.0018786458456949797,
      "wall_j": 0.05044770500559322
     },
-    "ratio_rate_per_user": 10.282832475018568,
-    "ratio_aggregate": 10.282832475018568,
-    "ratio_energy_with_static": 16.870942441911385,
-    "ratio_energy_chip_only": 13.430822800663469
+    "ratio_rate_per_user": 11.530282388128802,
+    "ratio_aggregate": 11.530282388128802,
+    "ratio_energy_with_static": 18.232359057041524,
+    "ratio_energy_chip_only": 14.341718216632366
    },
    "sat1024": {
     "batch": 1024,
     "hbm_batch": 1024,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.016855006625185187,
+     "stages": 1,
+     "users_per_pass": 1024.0,
+     "passes_per_s": 65.72743531537212,
+     "utilisation_uncapped": 1.1078363576970278,
+     "cap": 0.9026603911779911,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 67304.89376294105,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": null,
     "hbm": {
      "G": 96,
      "m": null,
-     "tokens_s_per_user": 65.72743531537212,
-     "aggregate_tokens_s": 67304.89376294105,
-     "switch_j": 0.13929150580075644,
-     "wall_j": 0.4268677968175276,
-     "dynamic_j": 0.0556702505657838,
-     "static_j": 0.14916950222612288,
-     "total_j": 0.2048397527919067,
+     "tokens_s_per_user": 59.329552472899906,
+     "aggregate_tokens_s": 60753.4617322495,
+     "switch_j": 0.15431219444444444,
+     "wall_j": 0.467605587745973,
+     "dynamic_j": 0.05740556089420991,
+     "static_j": 0.16525539802566666,
+     "total_j": 0.22266095891987658,
      "nonclock_j": 0.03957817952883762,
-     "clock_j": 0.016092071036946185
+     "clock_j": 0.017827381365372295
     },
     "rom": {
      "tokens_s_per_user": 425.7484180968951,
@@ -1508,26 +1687,45 @@
      "switch_j": 0.0025154844883602803,
      "wall_j": 0.06168512491948734
     },
-    "ratio_rate_per_user": 6.477484113811488,
-    "ratio_aggregate": 6.477484113811488,
-    "ratio_energy_with_static": 6.920109140974976,
-    "ratio_energy_chip_only": 4.3385676511454125
+    "ratio_rate_per_user": 7.175992407685278,
+    "ratio_aggregate": 7.175992407685278,
+    "ratio_energy_with_static": 7.580524289385831,
+    "ratio_energy_chip_only": 4.71602616375039
    },
    "sat1024_mtp": {
     "batch": 1024,
     "hbm_batch": 1024,
+    "hbm_link_cap": {
+     "package_link_Bps": 900000000000.0,
+     "busy_s_per_pass": 0.10113003975111129,
+     "stages": 1,
+     "users_per_pass": 1024.0,
+     "passes_per_s": 16.530008437223664,
+     "utilisation_uncapped": 1.6716804103426341,
+     "cap": 0.5982004657188249,
+     "binds": true,
+     "basis": "package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)",
+     "aggregate_tokens_s_uncapped": 84633.64319858515,
+     "utilisation": 1.0
+    },
+    "hbm_draft_conditioning": {
+     "bytes_per_verify": 184320,
+     "seconds": 0.0,
+     "separate_drafter_sensitivity_s": 8.728e-07,
+     "basis": "co-located: the draft runs on the tensor group that holds layers 37-39 (stages = 1), whose replicated residual already holds the inputs; the ROM array's drafter sits on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"
+    },
     "hbm": {
      "G": 96,
      "m": 6,
-     "tokens_s_per_user": 82.65004218611831,
-     "aggregate_tokens_s": 84633.64319858515,
-     "switch_j": 0.11077155189931284,
-     "wall_j": 0.39631377258338124,
-     "dynamic_j": 0.0901007093033691,
-     "static_j": 0.1186270272738045,
-     "total_j": 0.20872773657717358,
-     "nonclock_j": 0.013354575219565446,
-     "clock_j": 0.07674613408380365
+     "tokens_s_per_user": 49.4412937274165,
+     "aggregate_tokens_s": 50627.884776874496,
+     "switch_j": 0.18517463333333367,
+     "wall_j": 0.6513833813754355,
+     "dynamic_j": 0.14164958413698914,
+     "static_j": 0.19830647763080034,
+     "total_j": 0.3399560617677895,
+     "nonclock_j": 0.013354575219565427,
+     "clock_j": 0.1282950089174237
     },
     "rom": {
      "tokens_s_per_user": 823.232362830026,
@@ -1538,10 +1736,10 @@
      "switch_j": 0.0013009249757687067,
      "wall_j": 0.036203747860926686
     },
-    "ratio_rate_per_user": 9.9604590760668,
-    "ratio_aggregate": 9.9604590760668,
-    "ratio_energy_with_static": 10.946760929442542,
-    "ratio_energy_chip_only": 7.485110411102613
+    "ratio_rate_per_user": 16.65070431548036,
+    "ratio_aggregate": 16.65070431548036,
+    "ratio_energy_with_static": 17.992153295224128,
+    "ratio_energy_chip_only": 12.191042259085187
    }
   }
  },
@@ -1560,16 +1758,16 @@
     "wall_w_per_package": 881.6009671007654
    },
    "fill28_mtp": {
-    "chip_w_per_package": 596.1415617430299,
-    "wall_w_per_package": 972.0458069513638
+    "chip_w_per_package": 567.4240083885486,
+    "wall_w_per_package": 936.423937608401
    },
    "sat1024": {
-    "chip_w_per_package": 302.49817144818945,
-    "wall_w_per_package": 607.8042452350627
+    "chip_w_per_package": 299.4048066935983,
+    "wall_w_per_package": 603.9671692224233
    },
    "sat1024_mtp": {
-    "chip_w_per_package": 362.97143955109743,
-    "wall_w_per_package": 682.8165845006429
+    "chip_w_per_package": 350.07196156866235,
+    "wall_w_per_package": 666.8157952408218
    }
   },
   "reference": {

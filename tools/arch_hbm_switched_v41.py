@@ -124,6 +124,61 @@ def run(cfg, sp, muts, hz, hb, hbm, static_die_w):
     return out
 
 
+def link_cap(sp, ctx, G, hbm, batch, mtp, m, muts, hz, aggregate_tokens_s):
+    """The comparator's busiest package link at an aggregate point, priced with the method the ROM design point uses
+    (tools/arch_lanes_v41.link_cap): the package-link bytes one pass puts on its package's switch link -- every
+    collective's bytes on the die's switch link (SwitchFabric.collective, less its in-package UCIe share) and every
+    stage hop's payload -- times the passes per second the aggregate needs, over the 0.9 TB/s per direction the
+    package link carries.  The aggregate is capped at 100% of that link (the period stretches), as on the ROM side.
+    The G graph's stages share the passes: each stage's packages carry its share of the pass's collectives."""
+    from dataclasses import replace as _r
+    hz_, prm = hz if isinstance(hz, tuple) else (hz, {})
+    pos = U.GAMMA + 1 if mtp else 1
+    with LX.clock(hz_), U.params(**prm):
+        s_ = _r(sp, lane_mult=m) if mtp else sp
+        r = HB.price_g(s_, ctx, G, hbm, batch=batch, positions=pos, levers=U.CHAIN_L3, muts=muts, keep=True)
+    b = r["_built"]
+    fab = HB.fabric_for(G, hbm["dies"])
+    mb = b.mach.microbatch
+    busy = 0.0
+    for nd in b.g.nodes.values():
+        if nd["kind"] == "collective":
+            n = nd["payload"] * mb
+            span = nd.get("span") or G
+            try:
+                c = fab.collective(nd["op"], n, span)
+            except NotImplementedError:
+                continue
+            busy += max(0.0, c["bytes_s"] - (n / fab.ucie_bw if c["algo"] != "in_package" else c["bytes_s"]))
+        elif nd["kind"] == "hop" and nd.get("hop_kind") in ("stage", "substage", "head", "return"):
+            busy += nd["payload"] * mb / fab.B
+    stages = max(1, b.mach.stages)
+    users = mb / pos
+    passes_s = aggregate_tokens_s / (users * (U.TAU if mtp else 1.0))
+    u = busy / stages * passes_s
+    return dict(package_link_Bps=fab.B, busy_s_per_pass=busy, stages=stages, users_per_pass=users,
+                passes_per_s=passes_s, utilisation_uncapped=u, cap=min(1.0, 1.0 / u) if u > 0 else 1.0,
+                binds=u > 1.0,
+                basis="package-link seconds per pass (collective bytes on the switch link + stage hops) / stages x "
+                      "passes per second; the ROM design point's rule (arch_lanes_v41.link_cap)")
+
+
+def draft_conditioning(G, hbm, stages):
+    """The drafter's inputs (DSpark target layers 37-39 at every verified position, arch_lanes_v41.conditioning_bytes)
+    priced with the ROM design point's rule: they cross a link only when the drafter runs on dies other than those
+    holding layers 37-39.  On the comparator's G graph the draft runs on the tensor group that holds the last layers
+    and their residual is replicated on every die after each all-reduce, so nothing crosses (0 s); the record also
+    prices the separate-drafter placement the ROM array uses (one switched traversal + the bytes on the package link)
+    as a sensitivity."""
+    fab = HB.fabric_for(G, hbm["dies"])
+    pay = LN.conditioning_bytes()
+    return dict(bytes_per_verify=pay, seconds=0.0,
+                separate_drafter_sensitivity_s=fab.alpha + pay / fab.B,
+                basis=("co-located: the draft runs on the tensor group that holds layers 37-39 (stages = "
+                       f"{stages}), whose replicated residual already holds the inputs; the ROM array's drafter sits "
+                       "on separate head dies, so its transfer is on its critical path (v41_lanes draft_conditioning)"))
+
+
 def _cooling_2die():
     """Per-die cooling limit of a two-die package by class (air / liquid), from the sourced power scenarios."""
     import power_scenarios as PS
@@ -184,6 +239,16 @@ def build():
                 bt = A.point_batch(ptag, bt, ctx, "hbm")
                 h = HB.evaluate_g(sp, ctx, G, hbm, bt, mtp, m, U.CHAIN_L3, HB.rung_muts(G, muts), hz)
                 h.update(batch=bt, mtp=mtp)
+                # the costs the ROM design point pays, on the comparator's own fabric: the busiest package link caps
+                # the aggregate (the period stretches), and the drafter's inputs where they must cross a link
+                lk = link_cap(sp, ctx, G, hbm, bt, mtp, m, HB.rung_muts(G, muts), hz, h["aggregate_tokens_s"])
+                lk["aggregate_tokens_s_uncapped"] = h["aggregate_tokens_s"]
+                if lk["cap"] < 1.0:
+                    h["aggregate_tokens_s"] *= lk["cap"]
+                    h["tokens_s_per_user"] *= lk["cap"]
+                    h["cycle_s"] /= lk["cap"]
+                lk["utilisation"] = lk["utilisation_uncapped"] * lk["cap"]
+                dc = draft_conditioning(G, hbm, h["stages"]) if mtp else None
                 e = HB.energy_point(sp, ctx, h, hb["dies"], h["stages"], LX.area(sp, m if mtp else 1),
                                     s_die * hb["dies"], hbm=hbm, m=m)
                 r = lanes["energy"][str(ctx)][k]["rom"]
@@ -191,7 +256,8 @@ def build():
                 r_sw = rom_switch_w / r["aggregate_tokens_s"]
                 h_wall = (e["total_j"] + h_sw) * wall
                 r_wall = (r["total_j"] + r_sw) * wall
-                rows[k] = dict(batch=lanes["energy"][str(ctx)][k].get("batch"), hbm_batch=bt,
+                rows[k] = dict(batch=lanes["energy"][str(ctx)][k].get("batch"), hbm_batch=bt, hbm_link_cap=lk,
+                               hbm_draft_conditioning=dc,
                                hbm=dict(G=G, m=m if mtp else None, tokens_s_per_user=h["tokens_s_per_user"],
                                         aggregate_tokens_s=h["aggregate_tokens_s"], switch_j=h_sw, wall_j=h_wall, **e),
                                rom=dict(tokens_s_per_user=r["tokens_s_per_user"],
