@@ -23,6 +23,7 @@ module ot_hdc_qwen_int8_pc_window #(
     input  wire clk, rst_n,
     input  wire load,
     input  wire [AW-1:0] op_base,
+    input  wire [AW-1:0] op_scale_base,
     input  wire [NW-1:0] op_words,
     input  wire [NW-1:0] op_nout,
     input  wire [HAW-1:0] code_base_sector, scale_base_sector,
@@ -59,6 +60,7 @@ module ot_hdc_qwen_int8_pc_window #(
     localparam [1:0] IDLE=0, CODE=1, SCALE=2, DONE=3;
     reg [1:0] state;
     reg [AW-1:0] base_r;
+    reg [AW-1:0] scale_base_r;
     reg [NW-1:0] words_r;
     reg [NW-1:0] scales_r;
     reg [31:0] issued [0:PCS-1];
@@ -81,7 +83,7 @@ module ot_hdc_qwen_int8_pc_window #(
                         rq_addr[q*HAW +: HAW] = code_base_sector +
                             ((base_r + issued[q]/SPC)*SECTORS + (issued[q]%SPC)*PCS + q);
                     else
-                        rq_addr[q*HAW +: HAW] = scale_base_sector + base_r + issued[q]*PCS + q;
+                        rq_addr[q*HAW +: HAW] = scale_base_sector + scale_base_r + issued[q]*PCS + q;
                     rq_tag[q*TAGW +: TAGW] = {(state == SCALE), issued[q][TAGW-2:0]};
                 end
                 if (issued[q] < ((state == CODE) ? code_count : (scales_r+PCS-1-q)/PCS)) all_issued = 1'b0;
@@ -92,7 +94,7 @@ module ot_hdc_qwen_int8_pc_window #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE; ready <= 0; fault <= 0;
-            base_r <= 0; words_r <= 0; scales_r <= 0;
+            base_r <= 0; scale_base_r <= 0; words_r <= 0; scales_r <= 0;
             for (p=0; p<PCS; p=p+1) begin issued[p]<=0; received[p]<=0; end
         end else begin
             if (load) begin
@@ -102,7 +104,7 @@ module ot_hdc_qwen_int8_pc_window #(
                          (op_nout+W-1)/W > SCALE_WORDS) fault <= 1;
                 else begin
                     fault <= 0; state <= CODE;
-                    base_r <= op_base; words_r <= op_words;
+                    base_r <= op_base; scale_base_r <= op_scale_base; words_r <= op_words;
                     scales_r <= (op_nout+W-1)/W;
                     for (p=0; p<PCS; p=p+1) begin issued[p]<=0; received[p]<=0; end
                 end
@@ -137,11 +139,11 @@ module ot_hdc_qwen_int8_pc_window #(
             if (scale_re) begin
                 if (!ready) fault <= 1;
                 else for (g=0; g<G; g=g+1) begin
-                    if (!scale_gre[g] || scale_addr[g*AW +: AW] < base_r ||
-                        scale_addr[g*AW +: AW] >= base_r + scales_r)
+                    if (!scale_gre[g] || scale_addr[g*AW +: AW] < scale_base_r ||
+                        scale_addr[g*AW +: AW] >= scale_base_r + scales_r)
                         scale_q[g*W*16 +: W*16] <= 0;
                     else begin
-                        off = scale_addr[g*AW +: AW] - base_r;
+                        off = scale_addr[g*AW +: AW] - scale_base_r;
                         scale_q[g*W*16 +: W*16] <= scale_bank[off%PCS][off/PCS];
                     end
                 end

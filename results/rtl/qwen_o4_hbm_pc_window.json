@@ -1,6 +1,6 @@
 {
   "build_stderr": "",
-  "claim_boundary": "Standalone bounded PC-local INT8 code/BF16-scale supply with exact 32-byte sector reconstruction and one-cycle synchronous core ports. Synthetic 2-word operation only; no same-program package token, full G6144 bandwidth, HBM controller or P&R claim.",
+  "claim_boundary": "Standalone bounded PC-local INT8 code/BF16-scale supply with exact 32-byte sector reconstruction, independent code/scale bases and one-cycle synchronous core ports. Synthetic 2-word operation only; no same-program package token, full G6144 bandwidth, HBM controller or P&R claim.",
   "configuration": {
     "groups": 4,
     "hbm_sector_address_bits": 28,
@@ -11,10 +11,10 @@
     "window_words": 2
   },
   "input_sha256": {
-    "rtl/hdc/hbm/ot_hdc_qwen_int8_pc_window.sv": "c2a6577f26b5b93e33d70d04a05c2a576790556163c7b38c9e604719101e51c9",
-    "rtl/hdc/ot_hdc_core_vector_weight.sv": "45b14966957351998b30f09f41e30217b93c858a6552ec6c92dda69d9eada082",
-    "rtl/test/tb_hdc_qwen_int8_pc_window.sv": "9de03ead845ae82e642367266d7ff42f85a09f37382eeda74e7269a99bfad857",
-    "tools/rtl_hdc_qwen_int8_pc_window.py": "d0cff3d619eba762bd952b82d31575c20adb81d8c7911a051dde508b6a3b055d"
+    "rtl/hdc/hbm/ot_hdc_qwen_int8_pc_window.sv": "75552e0606086839f159da6fcdff0574fc9916b8ff9942f3f4069e18b6219fc0",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "7eb165a19f7937b5cf1fb123c768f80ae1e24f49b86d17c7285bdfef5a90476e",
+    "rtl/test/tb_hdc_qwen_int8_pc_window.sv": "5c39960dc4cd94c7d1defff9c4950faaeb528e5e3f7aa3c7a962d2262d17fcae",
+    "tools/rtl_hdc_qwen_int8_pc_window.py": "c544e5cc79f04b4d39a8c3d5647651a719e237ad0aa1c4191371e8fdf1ac9937"
   },
   "observed": {
     "preload_cycles": 9,

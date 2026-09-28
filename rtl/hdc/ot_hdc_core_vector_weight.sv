@@ -56,6 +56,7 @@ module ot_hdc_core_vector_weight #(
     // INT8_WEIGHT replaces only matrix ROM products. The embedding stream
     // still reads BF16 until its own INT8 dequantisation path is integrated.
     parameter integer INT8_WEIGHT = 0,
+    parameter integer INT8_SCALE_WCS_BASE = 0,
     parameter integer INT8_EMBED = 0,
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0 // element address of embedding row 0 in the program
@@ -158,6 +159,7 @@ module ot_hdc_core_vector_weight #(
     output wire              wrom_su,
     output reg               wd_v,
     output wire [AW-1:0]     wd_wbase,
+    output wire [AW-1:0]     wd_sbase,
     output wire [NW-1:0]     wd_tiles, wd_k, wd_nout,
     input  wire              w_ok, emb_ok
 );
@@ -295,6 +297,7 @@ module ot_hdc_core_vector_weight #(
     assign kvd_jsh = me_jsh; assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
     assign kvd_kindk = me_kindk; assign kvd_pos = pos_r;
     assign wd_wbase = me_wbase; assign wd_tiles = me_tiles; assign wd_k = me_k;
+    assign wd_sbase = (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? me_wcs : me_wbase;
     assign wd_nout = me_nout; // useful BF16 row scales to preload from HBM
 
     // The chunked weight program divides lm_head into bounded streams. Fold
@@ -422,7 +425,7 @@ module ot_hdc_core_vector_weight #(
         assign me_wrom_q = wrom_q;
     end endgenerate
     ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW),
-                    .INT8_WEIGHT(INT8_WEIGHT)) u_me (
+                    .INT8_WEIGHT(INT8_WEIGHT), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE)) u_me (
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
