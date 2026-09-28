@@ -777,6 +777,7 @@
   "service_gates": {
     "hbm_comparator_weights": "blocked: tile qstream HAW24 and die wq_addr[23:0] truncate AW30; only W_STACK has a separate W model, no four-stack physical service or shared arbitration",
     "index": "blocked: opt-in IDX_SHARDED is not set by die; writer/reader paired image and PC timing needed",
+    "rom_weight_selection": "blocked: die does not forward W_HBM and tile defaults to W_HBM=1; ROM tile service must be integrated and die mode selectable",
     "rope": "partial: cache/mux connected; caller-supplied bases/reserved_end do not prove CKV/weight floor",
     "selected_ckv": "blocked: standalone DMA source exists, die C mux client tied off; remote die row delivery absent",
     "simultaneous_traffic": "blocked: index B vs KV/RoPE K arbiter exists, but C client absent and W weight model is physically separate; exact multi-client backpressure/timing unmeasured",

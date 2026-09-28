@@ -23,6 +23,7 @@ def test_current_200k_tail_and_weight_truncation_are_visible():
     assert rec["contexts"]["1048576"]["index_superblock_reserved_sectors_per_stack"] == 139264
     assert rec["comparator_weight_sectors_per_stack_if_even_stripe"] > (1 << 24)
     assert "wq_addr[23:0]" in rec["service_gates"]["hbm_comparator_weights"]
+    assert "tile defaults to W_HBM=1" in rec["service_gates"]["rom_weight_selection"]
 
 
 def test_strict_service_gate_remains_blocked():

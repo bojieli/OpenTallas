@@ -10,6 +10,8 @@ One ratio-1 layer die owns a quarter of the source rows. Index keys are assigned
 
 In the ROM candidate, on-die weights use no HBM weight region. In the comparator candidate, the model's 5.154 GB of weights per comparator die is provisionally divided equally among the four stacks, **40,268,784 sectors per stack**. This is a capacity reservation to expose the missing service; the current hardware has a separate W memory on stack 0 and cannot perform the proposed stripe.
 
+The die does not currently forward `W_HBM` to the tile, whose default is `W_HBM=1`. The ROM path therefore also needs a die-level mode binding to the tested ROM tile service before a matched die A/B can run.
+
 | Context | Mode | Stack 0 end | Each other stack end | Sector reserve verdict |
 |---|---|---:|---:|---|
 | 200K | ROM | 4,337,268 | 4,335,092 | fits one user |

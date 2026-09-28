@@ -36,6 +36,8 @@ def check_sources(src: dict[str, bytes]) -> None:
     )
     assert "parameter integer IDX_SHARDED = 0" in tile
     assert ".IDX_SHARDED(" not in die
+    assert "parameter integer W_HBM = 1" in tile
+    assert ".W_HBM(" not in die
     assert "localparam integer WIN_SECTORS = KV_USERS * 128 * 17" in die
     assert ".c_v(4'b0)" in die and "assign kv_ok = 1'b0" in die
     assert "wire [23:0] wq_addr" in die
@@ -135,6 +137,7 @@ def build() -> dict:
         "contexts": cases,
         "placement_status": "candidate_for_root_review_not_configured_in_die",
         "service_gates": {
+            "rom_weight_selection": "blocked: die does not forward W_HBM and tile defaults to W_HBM=1; ROM tile service must be integrated and die mode selectable",
             "index": "blocked: opt-in IDX_SHARDED is not set by die; writer/reader paired image and PC timing needed",
             "window": "partial: packed 17-sector client connected only on stack 0, prefetch/attention path incomplete",
             "selected_ckv": "blocked: standalone DMA source exists, die C mux client tied off; remote die row delivery absent",
