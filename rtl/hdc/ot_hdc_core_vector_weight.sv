@@ -56,7 +56,11 @@ module ot_hdc_core_vector_weight #(
     // INT8_WEIGHT replaces only matrix ROM products. The embedding stream
     // still reads BF16 until its own INT8 dequantisation path is integrated.
     parameter integer INT8_WEIGHT = 0,
+    parameter integer INT8_SCALE_WCS_BASE = 0,
     parameter integer INT8_EMBED = 0,
+    // Opt-in Qwen full-vocabulary encoding: two ME row-offset bits live just
+    // above the legacy 16-bit field in the otherwise unused ISA tail.
+    parameter integer QWEN_FULLSHAPE = 0,
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0 // element address of embedding row 0 in the program
 ) (
@@ -84,6 +88,7 @@ module ot_hdc_core_vector_weight #(
     output wire [AW-1:0]     int8_wrom_addr,
     input  wire [G*W*8-1:0] int8_wrom_q,
     output wire              scale_re,
+    output wire [G-1:0]      scale_gre,
     output wire [G*AW-1:0]   scale_addr,
     input  wire [G*W*16-1:0] scale_q,
     // Independent 8-bit embedding bank and one BF16 scale per token row.
@@ -157,7 +162,8 @@ module ot_hdc_core_vector_weight #(
     output wire              wrom_su,
     output reg               wd_v,
     output wire [AW-1:0]     wd_wbase,
-    output wire [NW-1:0]     wd_tiles, wd_k,
+    output wire [AW-1:0]     wd_sbase,
+    output wire [NW-1:0]     wd_tiles, wd_k, wd_nout,
     input  wire              w_ok, emb_ok
 );
     `include "ot_hdc_isa.svh"
@@ -294,6 +300,8 @@ module ot_hdc_core_vector_weight #(
     assign kvd_jsh = me_jsh; assign kvd_tiles = me_tiles; assign kvd_k = me_k; assign kvd_nout = me_nout;
     assign kvd_kindk = me_kindk; assign kvd_pos = pos_r;
     assign wd_wbase = me_wbase; assign wd_tiles = me_tiles; assign wd_k = me_k;
+    assign wd_sbase = (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? me_wcs : me_wbase;
+    assign wd_nout = me_nout; // useful BF16 row scales to preload from HBM
 
     // The chunked weight program divides lm_head into bounded streams. Fold
     // each completed chunk's argmax before issuing the next one. The final
@@ -342,7 +350,10 @@ module ot_hdc_core_vector_weight #(
         me_k <= `F(ME_K) + dyn[`F(ME_D_K)];
         me_kindk <= (`F(ME_D_TILES) == 3'd6);        // DYN_TTILES: rounds of position tiles
         me_wsrc <= `F(ME_WSRC); me_round <= `F(ME_ROUND); me_oen <= `F(ME_OEN); me_amax <= `F(ME_AMAX);
-        me_amc <= `F(ME_AMC); me_row0 <= `F(ME_ROW0);
+        me_amc <= `F(ME_AMC);
+        me_row0 <= `F(ME_ROW0) |
+                   ((QWEN_FULLSHAPE != 0) ?
+                    ({{(NW-2){1'b0}}, ir[O_ME_ROW0+W_ME_ROW0+W_ME_AMC +: 2]} << 16) : '0);
         me_wbase <= `F(ME_WBASE) + dyn[`F(ME_D_WBASE)];
         me_ts <= `F(ME_TS); me_ks <= `F(ME_KS); me_js <= `F(ME_JS);
         me_xbase <= `F(ME_XBASE) + dyn[`F(ME_D_XBASE)];
@@ -379,7 +390,14 @@ module ot_hdc_core_vector_weight #(
     assign embed_scale_re = (INT8_EMBED != 0) && start && st == S_IDLE;
     assign embed_scale_addr = token;
     assign embed_code_re = (INT8_EMBED != 0) && (|(su_va_re & {SW{embed_active}}));
-    assign embed_code_addr = (su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES);
+    // The stream's element address is AW bits; token*HID wraps for vocab
+    // rows >= 2^(AW-log2(HID)). Recover the in-row offset from those low
+    // bits, then form the code-word address from the full NW-bit token.
+    assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+        ((tok_r * (HID / EMB_CODE_LANES)) +
+         (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+          EMB_CODE_LANES)) :
+        ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
     assign va_re = su_va_re & ~({SW{(INT8_EMBED != 0) && embed_active}});
     assign va_addr = su_va_addr;
     always @(posedge clk or negedge rst_n) begin
@@ -420,7 +438,7 @@ module ot_hdc_core_vector_weight #(
         assign me_wrom_q = wrom_q;
     end endgenerate
     ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW),
-                    .INT8_WEIGHT(INT8_WEIGHT)) u_me (
+                    .INT8_WEIGHT(INT8_WEIGHT), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE)) u_me (
         .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
@@ -428,7 +446,7 @@ module ot_hdc_core_vector_weight #(
         .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax), .i_rmax(me_rmax), .i_mbase(me_mbase),
         .mx_we(vw_mx_we), .mx_addr(vw_mx_addr), .mx_mask(vw_mx_mask), .mx_data(vw_mx_data),
         .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(me_wrom_q),
-        .scale_re(scale_re), .scale_addr(scale_addr), .scale_q(scale_q),
+        .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
         .ov(me_ov), .o_we(vw_me_we), .o_addr(vw_me_addr), .o_mask(vw_me_mask), .o_data(vw_me_data),

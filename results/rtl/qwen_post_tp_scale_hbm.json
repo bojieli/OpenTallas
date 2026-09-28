@@ -1,0 +1,45 @@
+{
+  "binary_sha256": "7cc2972ce34663a8bb8c792f0f0e69428d21e40ab9acf31c09c124d82e3acc77",
+  "claim_boundary": "Real checkpoint layer-0 o/down post-TP BF16 scales materialized as 8192 64-bit CROM words per die fetched through 32 PC-local 32-byte-sector banks and read bit-exact in one cycle. Standalone supply gate only: no full layer/token, shared KV controller, placement, or throughput claim. Other CROM constants stay local.",
+  "image_sha256": {
+    "die0": {
+      "base": 535041,
+      "crom": "3721b9635f7928126620c2311fa317809c4276b5b4a46d166790eca40cca6ce1",
+      "extracted": "1d0112be605e3cb7e08a27c4f3a25bf533640819e9b9cfb17b22622114b34579",
+      "manifest": "37cbea2a5ac39e85370f637f4f00d838e421ab86168d1d89348eb50929885f8a",
+      "words": 8192
+    },
+    "die1": {
+      "base": 535041,
+      "crom": "3721b9635f7928126620c2311fa317809c4276b5b4a46d166790eca40cca6ce1",
+      "extracted": "1d0112be605e3cb7e08a27c4f3a25bf533640819e9b9cfb17b22622114b34579",
+      "manifest": "cfeed5851c63c84c8c20c0ea2dd3461f169f2c87257e954bf2acba1d324d0a58",
+      "words": 8192
+    }
+  },
+  "observed": {
+    "dies": 2,
+    "sectors_per_die": 2048,
+    "words_per_die": 8192
+  },
+  "runs": {
+    "die0": {
+      "status": "pass",
+      "stderr": "",
+      "stdout": "PASS Qwen CROM HBM words=8192 sectors=2048 exact prior to unowned-address fault\n- /tmp/opentallas-qwen-o4-hbm-scale-base/rtl/test/tb_hdc_qwen_post_tp_scale_hbm.sv:52: Verilog $finish\n"
+    },
+    "die1": {
+      "status": "pass",
+      "stderr": "",
+      "stdout": "PASS Qwen CROM HBM words=8192 sectors=2048 exact prior to unowned-address fault\n- /tmp/opentallas-qwen-o4-hbm-scale-base/rtl/test/tb_hdc_qwen_post_tp_scale_hbm.sv:52: Verilog $finish\n"
+    }
+  },
+  "schema": "opentallas.qwen-crom-region-hbm.v1",
+  "source_sha256": {
+    "rtl/hdc/hbm/ot_hdc_qwen_post_tp_scale_hbm.sv": "7996678416203fd71590997f135b8e220e8f849d59a8e9fb34b64a0c0c4d0a83",
+    "rtl/test/qwen_post_tp_scale_hbm_harness.cpp": "b3390b9ff487400ac9f06765663f9b429490cd4f124bb1524709d07ceb5f83cb",
+    "rtl/test/tb_hdc_qwen_post_tp_scale_hbm.sv": "4745e4763cfaa95e908cc5a89a162a8d886390d81712a35ac79feb3fd4ee21bd",
+    "tools/rtl_hdc_qwen_post_tp_scale_hbm.py": "0091c22c5b5fc1bbb3dea9555fea439c0c0531780a3eba755490195a09c8b00a"
+  },
+  "status": "pass"
+}

@@ -17,6 +17,12 @@
     "scale_word_bytes": 196608,
     "sector_bytes": 32
   },
+  "embedding_traffic_sensitivity": {
+    "boundary": "Upper bound assumes a full hidden row on each TP-2 die. The exact row partition and HBM controller transaction count require the full-shape emitter; embedding bytes are excluded from the existing modeled matrix+KV rate.",
+    "fraction_of_rom_word_identical_weight_and_kv_traffic_upper": 9.932385400302064e-07,
+    "one_row_upper_bytes_per_die": 4098,
+    "package_upper_bytes_per_token": 8196
+  },
   "existing_wstream_incompatibilities": {
     "default_burst_length_field_bits": 5,
     "default_hbm_sector_address_bits": 24,
@@ -30,13 +36,13 @@
     "weight_port": "BF16-only ot_hdc_core_whbm.wrom_q; O4 core has independent INT8 code and BF16 scale ports"
   },
   "input_sha256": {
-    "results/arch/qwen3_budget.json": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
     "rtl/hdc/hbm/ot_hdc_wstream.sv": "70393355dc96dc834fa5e94e75580756ce1a0276c3f9385f98dca7515526f81d",
-    "rtl/hdc/ot_hdc_core_vector_weight.sv": "d7fc20aa119b64662558ec3a12d67944ec4d344ed8a819c4571b246388842603",
-    "rtl/hdc/ot_hdc_matvec.sv": "803131c1b3e539c883fb74722c5a296f96eff2808f9089d52615c2437fda314c",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "ba360f77517f0be29b07ca281bcfac10ad123aa0413407ac10dac706fb3edb0c",
+    "rtl/hdc/ot_hdc_matvec.sv": "8d2b8fe92887e1b7475ea9a31ef24dbd49d76856f7dbfd5d8af81cb802241a53",
     "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
-    "tools/hdc_qwen_int8_image.py": "ce1e699514eeb80344b68e6dbdbfeee2c85bbb8d4f75bf06e672b7350b26f606",
-    "tools/qwen_o4_hbm_weight_preflight.py": "8a021c395014d760d9f7f2e1dee2e9b35c76159a5b62f9c790f38005d7b52051"
+    "tools/hdc_qwen_int8_image.py": "eeb9cbfff631194e987c1120d58ea618158288c1acfec98abdcb602fe0defa5d",
+    "tools/qwen_o4_hbm_weight_preflight.py": "df2ec2092c703cc670c7ecab56cd5c8cacc7d82bf92d5100d923ccb1f30b4021"
   },
   "matrix_traffic_per_die": [
     {
@@ -145,6 +151,19 @@
       "sectors": 6144,
       "sha256": "f45b39df1940217df1391f7a7c6bfca59462d66142d8786dd0f0ddfd774e888c"
     }
+  },
+  "staging_area_sensitivity": {
+    "boundary": "KV-buffer density is a budget proxy only. PC-local SRAM macro area, code/scale muxes, tag RAM, wiring, power and route are not measured; do not use the iso-area HBM headline as physically closed. Streaming within an uninterrupted K round saves little staging at this bandwidth. A substantially smaller buffer needs an exact FP32 accumulator continuation or a pipeline-wide stall, neither implemented.",
+    "code_window_bytes_per_die": 50331648,
+    "code_window_mib_per_die": 48.0,
+    "code_window_mm2_at_kv_buffer_density": 16.692695319366276,
+    "core_code_bytes_per_cycle": 98304,
+    "minimum_indivisible_gate_up_round_words": 512,
+    "minimum_starting_prefetch_mib_for_unstalled_round_with_perfect_streaming": 46.40001046748708,
+    "proxy_kv_buffer_bytes": 19297216.0,
+    "proxy_kv_buffer_mm2": 6.4,
+    "status": "conditional_unpriced",
+    "sustained_hbm_bytes_per_core_cycle_per_die": 3276.7785625864703
   },
   "status": "pass"
 }
