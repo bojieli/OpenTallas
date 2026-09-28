@@ -9,6 +9,7 @@
         "writes": 4
       },
       "passed": true,
+      "pipe": 0,
       "top": "tb_v41x_coll_transpose",
       "words": 1
     },
@@ -21,6 +22,7 @@
         "writes": 8
       },
       "passed": true,
+      "pipe": 0,
       "top": "tb_v41x_coll_transpose",
       "words": 2
     },
@@ -33,6 +35,7 @@
         "writes": 20
       },
       "passed": true,
+      "pipe": 0,
       "top": "tb_v41x_coll_transpose",
       "words": 5
     },
@@ -45,6 +48,7 @@
         "writes": 320
       },
       "passed": true,
+      "pipe": 0,
       "top": "tb_v41x_coll_transpose",
       "words": 80
     },
@@ -57,6 +61,7 @@
         "writes": 1064
       },
       "passed": true,
+      "pipe": 0,
       "top": "tb_v41x_coll_transpose",
       "words": 266
     },
@@ -68,6 +73,19 @@
         "writes": 320
       },
       "passed": true,
+      "pipe": 0,
+      "top": "tb_v41x_coll_dma_gw4",
+      "words": 80
+    },
+    {
+      "metrics": {
+        "cycles": 100,
+        "held": 9,
+        "words": 80,
+        "writes": 320
+      },
+      "passed": true,
+      "pipe": 1,
       "top": "tb_v41x_coll_dma_gw4",
       "words": 80
     },
@@ -79,6 +97,19 @@
         "writes": 1064
       },
       "passed": true,
+      "pipe": 0,
+      "top": "tb_v41x_coll_dma_gw4",
+      "words": 266
+    },
+    {
+      "metrics": {
+        "cycles": 311,
+        "held": 33,
+        "words": 266,
+        "writes": 1064
+      },
+      "passed": true,
+      "pipe": 1,
       "top": "tb_v41x_coll_dma_gw4",
       "words": 266
     },
@@ -91,6 +122,7 @@
         "writes": 1064
       },
       "passed": true,
+      "pipe": 0,
       "top": "tb_v41x_coll_gw4_backpressure",
       "words": 266
     }
@@ -104,20 +136,21 @@
     "VM_write_words_per_cycle": 4,
     "bank_commit_pipeline_cycles": 2,
     "blocked_COLL_v1": true,
+    "full_shape_transpose_OUT_PIPE": 1,
     "full_width_physical_route": "open"
   },
   "schema": "v41x_coll_gw4_gate_v1",
-  "scope": "exact standalone engine/transpose/DMA with synthetic words; no full-token, die route or physical VM claim",
+  "scope": "exact standalone engine/transpose/DMA with synthetic words; elastic and registered always-ready bank sinks; no full-token, die route or physical VM claim",
   "source_sha256": {
-    "rtl/chip/ot_chip_v41x_coll_dma.sv": "d95395dc2f07c52e1f659dd9d01d1394d96bcb1baf533129d27ae0204aaf50e1",
-    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "8ada5d8a681817dde3e8ff6c0a3f5c6a4acbe67e547dceb1c3c00174d01fac3e",
+    "rtl/chip/ot_chip_v41x_coll_dma.sv": "2e5f33b74ef8f59996287e82f86b9cf238380b5da432c5c903a0bd191e6eede3",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
     "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",
-    "rtl/test/tb_v41x_coll_dma_gw4.sv": "953eff1bba49ffd0da1c4956c5b1789a89ef0a20661b52747ef559dceb1f2df3",
+    "rtl/test/tb_v41x_coll_dma_gw4.sv": "1ddc953c51b6f8647d76531385dae36105e8f0a9744afa9a76890b02d490bb26",
     "rtl/test/tb_v41x_coll_gw4_backpressure.sv": "6c9451542be5f37e3a5428afed56f1038f4db35bcc64f0e1ca730981c13151e1",
     "rtl/test/tb_v41x_coll_transpose.sv": "c1dfc39af0c94416d38489f889fa8685d7d3865bf4d6b63095aebbe14ff0d612",
-    "tools/rtl_v41x_coll_gw4_gate.py": "91af2fdc569b8dc53305c3c5a361b7a9032b6d10e7444492439d160a29ca0413"
+    "tools/rtl_v41x_coll_gw4_gate.py": "13be064f7b75242dcc6f332c48e58b0bc0e22111ccdd1549b4737d2c90f607cf"
   },
   "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
 }

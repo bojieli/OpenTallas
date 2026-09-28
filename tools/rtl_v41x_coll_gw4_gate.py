@@ -26,11 +26,13 @@ SOURCES = [
 ]
 
 
-def run_case(scratch: Path, top: str, words: int, sources: list[str], pattern: str) -> dict:
-    mdir = scratch / f"{top}_{words}"
+def run_case(scratch: Path, top: str, words: int, sources: list[str], pattern: str, pipe: int = 0) -> dict:
+    mdir = scratch / f"{top}_{words}_p{pipe}"
     cmd = [str(VERILATOR), "--binary", "--timing", "-j", "4", "-Wno-fatal",
            "-Wno-TIMESCALEMOD", "--top-module", top, f"-GWORDS={words}",
            "--Mdir", str(mdir), *[str(ROOT / p) for p in sources]]
+    if pipe:
+        cmd.insert(cmd.index("--Mdir"), "-GPIPE=1")
     build = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if build.returncode:
         raise RuntimeError(f"{top}/{words} compile failed:\n{build.stderr[-4000:]}")
@@ -43,7 +45,7 @@ def run_case(scratch: Path, top: str, words: int, sources: list[str], pattern: s
     result = {k: int(v) for k, v in match.groupdict().items()}
     assert result["words"] == words
     assert result["writes"] == 4 * words
-    return {"top": top, "words": words, "passed": True, "metrics": result}
+    return {"top": top, "words": words, "pipe": pipe, "passed": True, "metrics": result}
 
 
 def run(scratch: Path) -> dict:
@@ -61,15 +63,17 @@ def run(scratch: Path) -> dict:
     for words in (80, 266):
         cases.append(run_case(scratch, "tb_v41x_coll_dma_gw4", words, dma,
                               r"CDMA_GW4_PASS words=(?P<words>\d+) committed=(?P<writes>\d+) held=(?P<held>\d+) cycles=(?P<cycles>\d+)"))
+        cases.append(run_case(scratch, "tb_v41x_coll_dma_gw4", words, dma,
+                              r"CDMA_GW4_PASS words=(?P<words>\d+) committed=(?P<writes>\d+) held=(?P<held>\d+) cycles=(?P<cycles>\d+)", pipe=1))
     cases.append(run_case(scratch, "tb_v41x_coll_gw4_backpressure", 266, backpressure,
                           r"GW4_BACKPRESSURE_PASS words=(?P<words>\d+) writes=(?P<writes>\d+) in_hold=(?P<in_hold>\d+) out_hold=(?P<out_hold>\d+) cycles=(?P<cycles>\d+)"))
     assert all(c["passed"] for c in cases)
     return {"schema": "v41x_coll_gw4_gate_v1", "verilator": version,
-            "scope": "exact standalone engine/transpose/DMA with synthetic words; no full-token, die route or physical VM claim",
+            "scope": "exact standalone engine/transpose/DMA with synthetic words; elastic and registered always-ready bank sinks; no full-token, die route or physical VM claim",
             "contract": {"N": 4, "FW": 512, "VM_bank": "word_address_low_2_bits",
                          "VM_write_words_per_cycle": 4, "VM_write_word_bits": 512,
                          "VM_write_bus_bits": 2048, "bank_commit_pipeline_cycles": 2,
-                         "full_width_physical_route": "open",
+                         "full_width_physical_route": "open", "full_shape_transpose_OUT_PIPE": 1,
                          "blocked_COLL_v1": True},
             "source_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in SOURCES},
             "cases": cases}

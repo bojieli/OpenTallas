@@ -7,6 +7,7 @@ module ot_chip_v41x_coll_dma #(
     parameter integer TAGW = 32,
     parameter integer N = 4,
     parameter integer GW = 1,
+    parameter integer VM_ALWAYS_READY = 0,
     parameter integer RB = (N > 1) ? $clog2(N) : 1
 ) (
     input wire clk, rst_n,
@@ -89,7 +90,7 @@ module ot_chip_v41x_coll_dma #(
     wire [4*FW-1:0] tr_data;
     wire tr_valid, tr_last;
     generate if (GW == 4) begin : g_transpose
-        ot_chip_v41x_coll_transpose #(.WA(WA), .FW(FW)) u_tr (
+        ot_chip_v41x_coll_transpose #(.WA(WA), .FW(FW), .OUT_PIPE(VM_ALWAYS_READY)) u_tr (
             .clk(clk), .rst_n(rst_n),
             .start(go && !busy && mode && !bad_command && !fault),
             .dst(dst), .n(n),

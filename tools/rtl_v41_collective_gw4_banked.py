@@ -65,6 +65,7 @@ def run(scratch: Path) -> dict:
                               PAIRWISE=1, GW=4, OUT_BP=1, PUSHW=1, QTX=2,
                               blocked_COLL_v1=True, bank_write_words_per_cycle=4,
                               bank_write_word_bits=512, bank_write_bus_bits=2048,
+                              full_shape_transpose_OUT_PIPE=1,
                               full_width_physical_route="open"),
                 verilator=subprocess.check_output([shutil.which("verilator"), "--version"], text=True).strip(),
                 source_sha256={p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths},

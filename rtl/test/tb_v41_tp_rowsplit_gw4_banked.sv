@@ -207,7 +207,7 @@ module tb_v41_stage_collective_px_gw4_bank #(
             wire [4*VWA-1:0] tr_addr;
             wire [4*FW-1:0] tr_data;
             integer accepted=0, rk=0, first=-1, lastc=-1;
-            ot_chip_v41x_coll_transpose #(.WA(VWA),.FW(FW)) u_tr (
+            ot_chip_v41x_coll_transpose #(.WA(VWA),.FW(FW),.OUT_PIPE(1)) u_tr (
                 .clk(clk),.rst_n(rst_n),
                 .start(rst_n && cyc == START + SKEW*s - 1),.dst(VWA'(DST)),.n(VWA'(WORDS)),
                 .in_ready(bank_in_ready[s]),.in_valid(ov[s]),

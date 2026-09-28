@@ -621,7 +621,8 @@ module ot_chip_v41x_die #(
         .out_valid(o_valid), .out_ready(o_ready), .out_data(o_data), .out_last(o_last),
         .out_rank(o_rank), .out_err(o_err),
         .fault(cl_fault), .fault_code(cl_code));
-    ot_chip_v41x_coll_dma #(.WA(VWA), .FW(CL_FW), .TAGW(CL_TAGW), .N(N_TP), .GW(CL_GW)) u_cdma (
+    ot_chip_v41x_coll_dma #(.WA(VWA), .FW(CL_FW), .TAGW(CL_TAGW), .N(N_TP), .GW(CL_GW),
+                            .VM_ALWAYS_READY(FULL_SHAPE)) u_cdma (
         .clk(clk), .rst_n(rn), .go(cmd_go), .mode(cmd_mode), .rnd(FULL_SHAPE ? core_coll_rnd : 1'b0),
         .tag(cmd_tag), .src(cmd_src), .n(cmd_n), .dst(cmd_dst),
         .busy(coll_busy), .fault(dma_fault), .words_out(), .words_in(),

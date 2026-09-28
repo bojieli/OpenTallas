@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_v41x_coll_dma_gw4 #(parameter integer WORDS=266);
+module tb_v41x_coll_dma_gw4 #(parameter integer WORDS=266, parameter integer PIPE=0);
     localparam integer FW=512, WA=12, SRC=2000, DST=101;
     reg clk=0,rst_n=0,go=0,started=0;
     always #5 clk=~clk;
@@ -13,7 +13,7 @@ module tb_v41x_coll_dma_gw4 #(parameter integer WORDS=266);
     wire [4*FW-1:0] vm_wdata4;
     wire [31:0] words_out,words_in;
     wire [7:0] e_tag;
-    wire vm_ready4=(cyc%47)<34;
+    wire vm_ready4=PIPE ? 1'b1 : (cyc%47)<34;
     wire o_valid=started && sent<WORDS;
     wire o_last=sent==WORDS-1;
     reg [4*FW-1:0] o_data;
@@ -30,7 +30,7 @@ module tb_v41x_coll_dma_gw4 #(parameter integer WORDS=266);
         end
     endfunction
     always @(*) for(integer r=0;r<4;r=r+1) o_data[r*FW+:FW]=payload(r,sent);
-    ot_chip_v41x_coll_dma #(.WA(WA),.FW(FW),.TAGW(8),.N(4),.GW(4)) dut (
+    ot_chip_v41x_coll_dma #(.WA(WA),.FW(FW),.TAGW(8),.N(4),.GW(4),.VM_ALWAYS_READY(PIPE)) dut (
         .clk(clk),.rst_n(rst_n),.go(go),.mode(1'b1),.rnd(1'b0),.tag(8'd7),
         .src(WA'(SRC)),.n(WA'(WORDS)),.dst(WA'(DST)),
         .busy(busy),.fault(fault),.words_out(words_out),.words_in(words_in),
@@ -77,7 +77,7 @@ module tb_v41x_coll_dma_gw4 #(parameter integer WORDS=266);
         for(integer r=0;r<4;r=r+1)
             for(integer k=0;k<WORDS;k=k+1)
                 if(!seen[DST+r*WORDS+k])$fatal(1,"missing rank=%0d idx=%0d",r,k);
-        if(held==0)$fatal(1,"DMA backpressure unexercised");
+        if(!PIPE && held==0)$fatal(1,"DMA backpressure unexercised");
         $display("CDMA_GW4_PASS words=%0d committed=%0d held=%0d cycles=%0d",WORDS,committed,held,cyc);
         $finish;
     end
