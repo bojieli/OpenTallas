@@ -303,7 +303,8 @@ def karb_group4_macro_m9() -> dict:
                  "--source", f"{pcdir}/ot_chip_v41x_hbm_karb_pc_local_bb.v"]
     args += ["--macro-view", f"ot_chip_v41x_hbm_karb_pc_local={pcdir}",
              "--macro-place-halo", "2", "2",
-             "--orfs-var", "VERILOG_DEFINES=-D HDC_KARB_MACRO"]
+             "--orfs-var", "VERILOG_DEFINES=-D HDC_KARB_MACRO",
+             "--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_v41x_karb_group4.tcl"]
     args[args.index("--die-area") + 3] = "1550"
     args[args.index("--core-area") + 3] = "1547.84"
     hook = [
