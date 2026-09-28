@@ -48,6 +48,15 @@
     "mac_lanes_per_group": 16,
     "scale_bits_per_active_group": 256
   },
+  "hbm_unpriced_boundary": [
+    "128 PC-local fair arbiters",
+    "35-bit return tags",
+    "source-lane-to-physical-PC rotation",
+    "controller",
+    "PHY",
+    "stack",
+    "prefetch storage"
+  ],
   "interpretation": [
     "same downstream arithmetic, clock, die outline, input/output constraints",
     "ROM macro output capture and common enable/reset fanout do not meet 0.92 ns in the direct unrepaired cut",
@@ -68,6 +77,7 @@
     "status": "INVALID_PLACEMENT"
   },
   "schema": "qwen_o4_scale_ingress_physical_v1",
+  "scope_correction": "The 256-bit source-capture register is a proposed wrapper boundary; production ot_hdc_matvec receives synchronous scale_q directly into fmul. This cut is not a measured production core path. A future added stage requires +1 cycle tag/valid/writeback alignment and bit-exact verification.",
   "source_base": "ae5277388ea1fa16380ef0472396f8d317fb925a",
   "source_sha256": {
     "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.lef": "d193a5f43f7ff2ecd56adf29ba388dfcf3d4d7ff8e8392da78fea78eb81015a5",
