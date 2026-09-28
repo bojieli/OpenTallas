@@ -249,7 +249,7 @@ module ot_hdc_v41x_me_adapt #(
     reg                 fl;
     integer s, p;
     always @(*) begin
-        n_we = 0; n_addr = 0; n_mask = 0; n_data = 0; fl = 1'b0;
+        n_we = 0; n_addr = 0; n_mask = 0; n_data = 0; fl = 1'b0; key = 0;
         b_idx = am_idx; b_val = am_val; b_key = am_key; b_any = am_any;
         for (s = 0; s < NC; s = s + 1) begin
             rho = ({5'd0, t_rg} << (LMG - plg)) + s;

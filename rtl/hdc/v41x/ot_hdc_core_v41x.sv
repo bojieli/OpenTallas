@@ -92,7 +92,7 @@ module ot_hdc_core_v41x #(
     parameter integer HBAW  = 16,          // HCP weight-bank word address
     // ME weight ops: ot_hdc_v41x_wgt_tile KIND 1 geometry
     parameter integer MG    = 8,           // chunk units (8 x MG BF16/FP32 MAC lanes)
-    parameter integer MBAW  = 17           // weight-bank word address
+    parameter integer MBAW  = FULL_SHAPE ? 18 : 17 // weight-bank word address
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -733,7 +733,8 @@ module ot_hdc_core_v41x #(
 
     // engine 1: the BF16/FP32 weight engine (X_ME)
     generate if (X_ME != 0) begin : g_me_x
-        ot_hdc_v41x_me_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .MG(MG), .BAW(MBAW)) u_mw (
+        ot_hdc_v41x_me_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .MG(MG), .BAW(MBAW),
+                                 .KMAX(FULL_SHAPE ? 5120 : 512)) u_mw (
             .clk(clk), .rst_n(rst_n), .go(e_go[1]), .ready(e_ready[1]), .idle(e_idle[1]),
             .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase),
             .i_xjs(me_xjs), .i_split(me_split), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots),
@@ -998,7 +999,7 @@ module ot_hdc_core_v41x #(
     generate
         if (X_HE != 0) begin : g_he_x
             ot_hdc_v41x_he_adapt #(.HW(HHW), .TL(HTL), .PMAX((MP > 1) ? 8 : 2), .BAW(HBAW), .AW(AW), .NW(NW),
-                                   .S(HS), .MP(MP)) u_he (
+                                   .KCMAX(FULL_SHAPE ? 2560 : 128), .S(HS), .MP(MP)) u_he (
                 .clk(clk), .rst_n(rst_n), .go(he_go), .ready(he_ready), .idle(he_idle),
                 .i_nout(he_nout), .i_k(he_k), .i_wbase(he_wbase), .i_xbase(he_xbase), .i_obase(he_obase),
                 .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),

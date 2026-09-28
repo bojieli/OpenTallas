@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.rtl.v41_fullshape_core_preflight.v1",
   "status": "pass",
-  "claim_scope": "Full-width ISA and core lint with X_ATT/X_IDX/X_SEL/X_EG disabled; no full-shape bit-exact layer or chip cycle measurement",
+  "claim_scope": "Full-width ISA and core lint with adopted ME/HE enabled, X_ATT/X_IDX/X_SEL/X_EG disabled; no full-shape bit-exact layer or chip cycle measurement",
   "full_layer_ready": false,
   "full_layer_blockers": [
     "The TP emitter now addresses attention's local rows 0..639, but die prefetch still needs 128 FP8 window rows (528 bytes each), up to 512 selected CKV FP4 rows (288 bytes each), and explicit selected source IDs",
@@ -22,13 +22,18 @@
     "top": "ot_hdc_core_v41x",
     "parameters": {
       "FULL_SHAPE": 1,
+      "X_ME": 1,
+      "X_HE": 1,
+      "MBAW": 18,
+      "ME_KMAX": 5120,
+      "HE_KCMAX": 2560,
       "X_ATT": 0,
       "X_IDX": 0,
       "X_SEL": 0,
       "X_EG": 0
     },
     "errors": [],
-    "warning_count": 539
+    "warning_count": 598
   },
   "source_sha256": {
     "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
@@ -59,7 +64,7 @@
     "rtl/hdc/v41/ot_hdc_v41_qe.sv": "57a05fd92b950bb6daa8e41918a336bee855e2758bd89880c7e00cde08cca6a7",
     "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
     "rtl/hdc/v41/ot_hdc_v41_xu.sv": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "5e415d3ae0231064f7df92cf0375fdbcfab1e69fbd0c9aab1d581600c8eab39a",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "e8df3028a3898fbad7eddb6f2616efb68495e51d2a542722be1ced81a6961819",
     "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "302db959961034636d8028ee8ccb4868acb8d7744591574abea0d68566184afd",
     "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "b96f2f75fd9d9bc26f4e0b03915958cccd13e3274e197679f09f68668ae3cca6",
     "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "8eb0873a911d875a85048fbad1c496b391f019396f4c626a616c95e6ff1d16b2",
@@ -71,7 +76,7 @@
     "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
-    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "5cf9f17b17f251555114ed7d47bc0d462a3a74f5cfb69fc3dd0fa24b9ebfb643",
     "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
     "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
     "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
@@ -90,6 +95,6 @@
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
     "tools/hdc_replay_v41.py": "407d69d0d4b3d37143402dedfae13db3f5968b30e8bebd9df03dc2c56dc776be",
-    "tools/rtl_v41_fullshape_core_preflight.py": "f08aa63fc0295f40708fc485fea49153ee63391afa1e250a9e209de67fd1ac95"
+    "tools/rtl_v41_fullshape_core_preflight.py": "2481aa87db468708b0df40d62695e4ef2800c3be7471e8d3a0d1d4361f1bf52a"
   }
 }
