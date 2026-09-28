@@ -1,7 +1,15 @@
 {
   "arms": {
     "hbm": {
-      "detailed_route": "running; no DRC or extracted timing verdict",
+      "detailed_route": "DRC 0; extracted timing fails 0.92 ns setup and hold",
+      "detailed_route_log_sha256": "02c78f8c81b85acf00b882fab2b468529a443e8190405a9dbb93988dd4b0c173",
+      "drc_violations": 0,
+      "drc_report_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "final_odb_sha256": "81808cbdf537b0486c9182fb45fc72def09c1f9276ec0fe3ddeecd38cf36cb11",
+      "final_spef_sha256": "d3f76f8a57d3f071f44c65dc848f8a1958955fb75594796744fca4e0a09fc1c3",
+      "routed_core_setup_wns_ps": -410.63,
+      "routed_core_hold_wns_ps": -11.77,
+      "routed_reset_removal_wns_ps": -15.43,
       "enable_to_capture_setup_slack_ps_grt": -982.41,
       "enable_to_capture_setup_slack_ps_placement": -816.65,
       "instances_at_global_placement": 38558,
@@ -63,6 +71,7 @@
   ],
   "interpretation": [
     "same downstream arithmetic, clock, die outline, input/output constraints",
+    "direct staged-HBM cut routes DRC-clean but misses extracted 0.92 ns core setup by 410.63 ps and core hold by 11.77 ps",
     "direct ROM global-route database fails check_placement and cannot support a legal routed timing claim",
     "ROM macro output capture and common enable/reset fanout do not meet 0.92 ns in the direct unrepaired cut",
     "HBM boundary excludes local HBM supply timing, area and power, so these figures do not compare whole chips",

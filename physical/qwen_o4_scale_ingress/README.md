@@ -60,8 +60,13 @@ output needs a direct capture register or an additional stage before the
 held scale register. Both require an exact latency check in the real core;
 reset needs a real distribution and deassertion constraint.
 The invalid direct ROM route was stopped after the placement check. The
-direct HBM route continues separately; `physical.json` records only the
-reached stages, with no routed timing or DRC claim.
+direct staged-HBM cut completed detailed route with **zero DRC violations**;
+extracted timing still misses the 0.92 ns clock by **410.63 ps** on an internal
+register path and has **−11.77 ps** core hold slack. Reset removal is
+**−15.43 ps** under the simple 184 ps external constraint. The source-pinned
+route log and final ODB/SPEF hashes are in `physical.json`. The HBM source
+remains an assumed staged 256-bit input, so this result does not time its
+controller, PHY, stack or prefetch.
 
 An exploratory rebuffer from the placed ROM database inserted 977 buffers
 over 577 nets and removed the enable from the worst reported path. It left
