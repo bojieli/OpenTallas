@@ -34,7 +34,15 @@ setup is +925.00 ps, while source hold is −112.58 ps. Group-enable setup is
 +934.12 ps and hold is −62.92 ps. The complete cut still misses 0.92 ns
 setup by 114.13 ps on an internal register path, core hold by 33.41 ps at
 the externally constrained completed-sum input, and reset removal by
-20.73 ps. The ROM detailed route remains active. The source-pinned
+20.73 ps. The ROM cut also completed detail routing, but it has **two M1
+metal-spacing violations** at one net and cell near (50.75, 101.75) µm,
+outside the macro outline. Extracted macro-to-raw-capture setup is **+0.33
+ps**, leaving almost no margin at the assumed 0.92 ns clock. Its source hold
+is +653.48 ps; group-enable setup is +993.95 ps and hold is −133.28 ps. The
+full ROM cut has −124.67 ps core setup, −110.93 ps core hold on the externally
+constrained ROM address input, and −30.86 ps reset removal. Moving or
+rerouting the offending local cell and timing the real input paths remain
+physical follow-ups. The source-pinned
 `results/physical_hdc/asap7/qwen_o4_scale_ingress/registered/physical.json`
 binds the measured paths, placement checks, DRC result, routed source report
 and final ODB/SPEF hashes. The staged-HBM source still excludes the controller,
