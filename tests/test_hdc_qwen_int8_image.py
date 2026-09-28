@@ -94,11 +94,19 @@ def test_shipped_first_layer_quantizes_full_rows_before_tp2_slice(tmp_path):
 
 def test_shipped_first_layer_audit_source_pins():
     import qwen3_deployment_quality as Q
+    import torch
+    from safetensors import safe_open
     try:
         snapshot = Q.find_snapshot()
     except FileNotFoundError:
         pytest.skip("shipped Qwen3-8B checkpoint missing")
     record = json.loads((ROOT / "results/rtl/qwen_o4_int8_layer0_image_audit.json").read_text())
+    index = json.loads((snapshot / "model.safetensors.index.json").read_text())["weight_map"]
+
+    def source_tensor(name):
+        with safe_open(str(snapshot / index[name]), framework="pt", device="cpu") as sf:
+            return sf.get_tensor(name)
+
     assert record["verdict"] == "PASS" and record["rows_per_source_matrix"] == 8
     assert record["shared_full_row_scales"] == {"o": True, "down": True}
     for die, manifest in enumerate(record["die_manifests"]):
@@ -109,3 +117,13 @@ def test_shipped_first_layer_audit_source_pins():
                            ("producer_sha256", ROOT / "tools/hdc_qwen_int8_image.py"),
                            ("quantizer_sha256", ROOT / "tools/qwen3_deployment_quality.py")):
             assert manifest[name] == hashlib.sha256(path.read_bytes()).hexdigest()
+        for item in manifest["matrices"].values():
+            lo, hi = item["selected_rows"]
+            source = source_tensor(item["source"])[lo:hi].contiguous().view(torch.int16).numpy()
+            assert item["source_rows_sha256"] == hashlib.sha256(source.tobytes()).hexdigest()
+            if item["norm_sha256"]:
+                layer = item["source"].split(".")[:3]
+                norm = ("input_layernorm.weight" if item["source"].split(".")[3] == "self_attn"
+                        else "post_attention_layernorm.weight")
+                n = source_tensor(".".join(layer + [norm])).contiguous().view(torch.int16).numpy()
+                assert item["norm_sha256"] == hashlib.sha256(n.tobytes()).hexdigest()
