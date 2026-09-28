@@ -108,9 +108,21 @@ module tb_hdc_package_tp_int8 #(
             wire [FLIT-1:0] c_wdata; reg [FLIT-1:0] c_rq;
             wire          pr_re; wire [7:0] pr_user; wire [NW-1:0] pr_pos; reg [NW-1:0] pr_q;
             wire [D-1:0]  s_done;
+            wire [D-1:0]  seq_starts;
             wire [D*NW-1:0] s_tok; wire [D*32-1:0] s_val;
             wire [D-1:0]  s_cbusy;
-            assign grp_done = &s_done;
+            // An HBM embedding preload delays seq_start after ctrl starts a
+            // token. Keep the preceding token's held done level from being
+            // mistaken for completion of the new token while it prefetches.
+            reg [D-1:0] hbm_started_mask=0;
+            assign grp_done = WEIGHT_HBM ? ((&hbm_started_mask) && (&s_done)) : (&s_done);
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) hbm_started_mask<=0;
+                else if (WEIGHT_HBM != 0) begin
+                    if (grp_done) hbm_started_mask<=0;
+                    else hbm_started_mask<=hbm_started_mask | seq_starts;
+                end
+            end
 
             // collective unit
             wire [D-1:0] cv, crd, cl, cm, rv, rl, re_, uf;
@@ -227,6 +239,7 @@ module tb_hdc_package_tp_int8 #(
                 reg pending_start=0;
                 reg [NW-1:0] seq_token_r=0, seq_pos_r=0;
                 wire seq_start = WEIGHT_HBM ? (pending_start && emb_ok) : start;
+                assign seq_starts[d]=seq_start;
                 always @(posedge clk or negedge rst_n) begin
                     if (!rst_n) pending_start<=0;
                     else if (WEIGHT_HBM != 0) begin

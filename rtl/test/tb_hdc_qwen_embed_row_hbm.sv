@@ -58,7 +58,10 @@ module tb_hdc_qwen_embed_row_hbm;
         if (code_q !== {hmem[17],hmem[16]} ||
             scale_q !== hmem[100][4*16 +: 16]) $fatal(1,"embedding token 4 mismatch");
         if (reads!=10) $fatal(1,"wrong HBM sector count %0d",reads);
-        $display("PASS Qwen embedding HBM rows: tokens 3/4, 10 sectors, exact codes/scales and stale-read drain");
+        code_re=1; code_addr=10; scale_re=1; scale_addr=5;
+        @(negedge clk); code_re=0; scale_re=0;
+        if (!fault) $fatal(1,"unowned embedding row read did not latch fault");
+        $display("PASS Qwen embedding HBM rows: tokens 3/4, 10 sectors, exact codes/scales, stale-read drain and unowned-row fault");
         $finish;
     end
     always @(posedge clk) if (rst_n) begin

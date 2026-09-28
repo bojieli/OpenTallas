@@ -11,10 +11,10 @@
   },
   "schema": "opentallas.qwen-embed-row-hbm.v1",
   "source_sha256": {
-    "rtl/hdc/hbm/ot_hdc_qwen_embed_row_hbm.sv": "efd3ed71e3eb7f9f19d9df96012e4f646647f1f57203ece0eb232d1d2d3b744f",
-    "rtl/test/tb_hdc_qwen_embed_row_hbm.sv": "3487f84765bb02f47c6c44d8befac11d65f39742bfb35c869ece6f38eb867c3b",
+    "rtl/hdc/hbm/ot_hdc_qwen_embed_row_hbm.sv": "0422988538f6bf8cdbb182e20490964454237922be9538de8c14133c1ca407c0",
+    "rtl/test/tb_hdc_qwen_embed_row_hbm.sv": "8e034b0a76695a3fee60ab2b30572e06fc89a3ae61aec22b3c4d8f87271c79ff",
     "tools/rtl_hdc_qwen_embed_row_hbm.py": "9e5574bd7571cc6e59bed0b9879647ae023831abc2580859f6db4c7031a23f51"
   },
   "status": "pass",
-  "stdout": "PASS Qwen embedding HBM rows: tokens 3/4, 10 sectors, exact codes/scales and stale-read drain"
+  "stdout": "PASS Qwen embedding HBM rows: tokens 3/4, 10 sectors, exact codes/scales, stale-read drain and unowned-row fault"
 }

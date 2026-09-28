@@ -77,7 +77,7 @@ module ot_hdc_qwen_embed_row_hbm #(
                 if (state==CODE || state==SCALE) fault<=1;
                 else begin
                     state<=CODE; prev_tok<=tok_r; prev_valid<=ready;
-                    tok_r<=token; bank_r<=~bank_r; fault<=0;
+                    tok_r<=token; bank_r<=~bank_r;
                     for (p=0;p<PCS;p=p+1) begin issued[p]<=0; received[p]<=0; end
                 end
             end else if (state==CODE || state==SCALE) begin
@@ -118,14 +118,20 @@ module ot_hdc_qwen_embed_row_hbm #(
                     off=code_addr-prev_tok*ROW_WORDS;
                     code_q<={code_bank[(!bank_r)*CODE_SECTORS+off*2+1],
                              code_bank[(!bank_r)*CODE_SECTORS+off*2]};
-                end else code_q<=0;
+                end else begin
+                    code_q<=0;
+                    fault<=1;
+                end
             end
             if (scale_re) begin
                 if (ready && scale_addr==tok_r)
                     scale_q<=scale_sector[bank_r][tok_r[3:0]*16 +: 16];
                 else if (prev_valid && scale_addr==prev_tok)
                     scale_q<=scale_sector[!bank_r][prev_tok[3:0]*16 +: 16];
-                else scale_q<=0;
+                else begin
+                    scale_q<=0;
+                    fault<=1;
+                end
             end
         end
     end
