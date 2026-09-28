@@ -45,15 +45,17 @@ def main() -> None:
         lane = (i * 13) % 32
         if i == 62:
             addr, lane = 7, 31
-        x = x_bits[i % len(x_bits)]
+        x0 = x_bits[i % len(x_bits)]
+        x1 = x_bits[(i + 2) % len(x_bits)]
+        x = x0 if lane < 16 else x1
         code = codes[addr, lane]
         signed = code if code < 128 else code - 256
         xvalue = struct.unpack(">f", struct.pack(">I", x << 16))[0]
         product = f32_bits(signed * xvalue)
         if signed == 0 or xvalue == 0:
             product = 0  # canonical +0, including negative zero inputs
-        word = (((((ce << 13) | addr) << 16 | x) << 5 | lane) << 32) | product
-        requests.append(f"{word:017x}")
+        word = ((((((ce << 13) | addr) << 16 | x1) << 16 | x0) << 5 | lane) << 32) | product
+        requests.append(f"{word:021x}")
 
     with tempfile.TemporaryDirectory(prefix="qwen-o4-rom-pipe-") as scratch:
         work = pathlib.Path(scratch)

@@ -7,7 +7,9 @@ bits are spare. It runs at the O4 0.92 ns target. The top-level lane selector
 keeps all 32 products live while bounding I/O pins; it is a probe-specific
 path, not the O4 reduction tree. The shard now registers the ROM output before
 INT8 decode, matching `ot_hdc_matvec`'s `mq_wrom` boundary. Request valid,
-BF16 activation, and lane select are delayed with their code word. The focused
+BF16 activation, and lane select are delayed with their code word. The two
+16-lane groups have independent BF16 activation inputs, matching the core's
+per-group vector-memory reads. The focused
 stream test (`python3 tools/rtl_qwen_o4_int8_shard_pipeline.py`) changes ROM
 address, selected lane and activation each cycle and checks 112 exact signed
 INT8 products, including 64 consecutive requests, with seven-edge response latency. The

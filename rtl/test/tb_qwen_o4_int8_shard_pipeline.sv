@@ -3,7 +3,7 @@ module tb_qwen_o4_int8_shard_pipeline;
     reg clk = 0, rst_n = 0, ce = 0;
     always #5 clk = ~clk;
     reg [12:0] addr = 0;
-    reg [15:0] x = 0;
+    reg [31:0] x = 0;
     reg [4:0] lane = 0;
     wire valid, fault;
     wire [31:0] product;
@@ -14,8 +14,9 @@ module tb_qwen_o4_int8_shard_pipeline;
         .product_out_valid(valid), .product(product), .product_fault(fault),
         .scaled_out_valid(), .scaled_result(), .scale_fault()
     );
-    // Request records: CE, ROM address, BF16 x, lane, expected FP32 product.
-    reg [66:0] req [0:127];
+    // Request records: CE, ROM address, two group BF16 activations, lane,
+    // expected FP32 product.
+    reg [82:0] req [0:127];
     reg [31:0] expected [0:6];
     reg expected_valid [0:6];
     integer i, j, checked = 0;

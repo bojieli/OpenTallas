@@ -9,7 +9,8 @@ module ot_qwen_o4_int8_shard #(
     input wire rst_n,
     input wire ce_in,
     input wire [12:0] addr_in,
-    input wire [15:0] x_bf16,
+    // One activation per 16-lane O4 group, as in ot_hdc_matvec.sv.
+    input wire [31:0] x_bf16,
     input wire [4:0] lane_sel,
     input wire scale_valid,
     input wire [31:0] completed_sum,
@@ -30,7 +31,7 @@ module ot_qwen_o4_int8_shard #(
     // have, and the current request's valid bit labels the previous word.
     reg [255:0] code_q;
     reg ce_q1, ce_q2;
-    reg [15:0] x_q1, x_q2;
+    reg [31:0] x_q1, x_q2;
     reg [4:0] lane_sel_q [0:6];
     integer stage;
     always @(posedge clk or negedge rst_n) begin
@@ -63,7 +64,7 @@ module ot_qwen_o4_int8_shard #(
         ot_hdc_qwen_int8_arith u_lane (
             .clk(clk), .rst_n(rst_n), .product_valid(ce_q2),
             .code_lo(code_q[8*i +: 4]), .code_hi(code_q[8*i+4 +: 4]),
-            .x_bf16(x_q2), .product_out_valid(valid[i]),
+            .x_bf16(x_q2[16*(i/16) +: 16]), .product_out_valid(valid[i]),
             .product(products[i]), .product_fault(faults[i]),
             .scale_valid((i == 0) ? scale_valid : 1'b0),
             .completed_sum(completed_sum), .row_scale_bf16(row_scale_bf16),
