@@ -276,6 +276,16 @@ module ot_hdc_core_v41x #(
     // per-unit activity (cycle accounting)
     output wire [4:0]        unit_busy,
     output reg  [2:0]        issue_unit,      // unit of the instruction issued this cycle (0: none)
+    // Full-shape collective request. The die samples fields on coll_go and
+    // keeps coll_busy high until its final destination write is complete.
+    output reg               coll_go,
+    output reg  [1:0]        coll_op,
+    output reg  [AW-1:0]     coll_src, coll_dst, coll_ibase,
+    output reg  [NW-1:0]     coll_n,
+    output reg  [11:0]       coll_k,
+    output reg  [7:0]        coll_seq,
+    output reg               coll_rnd,
+    input  wire              coll_busy, coll_fault,
     // QE weight-streaming handshake (W_HBM = 1 only)
     output reg               qd_v,            // shape of the LINQ op now waiting to issue
     output wire [AW-1:0]     qd_wbase,
@@ -297,7 +307,8 @@ module ot_hdc_core_v41x #(
 
     // -- sequencer -----------------------------------------------------------------------------
     localparam [3:0] S_IDLE = 0, S_DYN = 1, S_FETCH = 2, S_WAIT = 3, S_CAP = 4, S_DEC = 5,
-                     S_ISSUE = 6, S_GO = 7, S_ACC = 8, S_RST = 9;
+                     S_ISSUE = 6, S_GO = 7, S_ACC = 8, S_RST = 9,
+                     S_COLL_ARM = 10, S_COLL_WAIT = 11, S_COLL_HALT = 12;
     localparam integer SLW = (NSLOT > 1) ? $clog2(NSLOT) : 1;
     reg [3:0]  st;
     reg [PAW-1:0] pc;
@@ -401,16 +412,19 @@ module ot_hdc_core_v41x #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; pc <= 0; done <= 1'b0; prog_re <= 1'b0;
-            me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; he_go <= 1'b0; cycles <= 0;
+            me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; he_go <= 1'b0;
+            coll_go <= 1'b0; cycles <= 0;
             next_token <= 0;
             issue_unit <= 0; ds <= 0;
             tokx_v <= 1'b0; amax_v <= 1'b0; acc_v <= 1'b0; xu_rst_v <= 1'b0;
         end else begin
-            me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; he_go <= 1'b0; prog_re <= 1'b0;
+            me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; he_go <= 1'b0;
+            coll_go <= 1'b0; prog_re <= 1'b0;
             issue_unit <= 0; wrel_v <= 1'b0;
             tokx_v <= 1'b0; amax_v <= 1'b0; acc_v <= 1'b0; xu_rst_v <= 1'b0;
             if (st != S_IDLE) cycles <= cycles + 1;
-            case (st)
+            if (FULL_SHAPE && coll_fault) st <= S_COLL_HALT;
+            else case (st)
                 S_IDLE: if (start) begin
                     tok_r <= token; pos_r <= pos; pc <= entry; done <= 1'b0; cycles <= 0; ds <= 0;
                     st <= S_DYN;
@@ -442,6 +456,12 @@ module ot_hdc_core_v41x #(
                         end
                     end else if (d_skip) begin
                         pc <= pc + 1'b1; st <= S_FETCH;
+                    end else if (FULL_SHAPE && d_unit == 3'd6) begin
+                        // Dedicated VM port B is exclusive during a collective.
+                        // Drain every earlier engine before pulsing the request.
+                        if (waited && (&idles) && !coll_busy) begin
+                            coll_go <= 1'b1; issue_unit <= d_unit; st <= S_COLL_ARM;
+                        end
                     end else if (waited && unit_ready && q_gate && kv_gate) begin
                         wrel_v <= d_wrel;
                         me_go <= (d_unit == 3'd1); su_go <= (d_unit == 3'd2);
@@ -451,6 +471,11 @@ module ot_hdc_core_v41x #(
                     end
                 end
                 S_GO: begin pc <= pc + 1'b1; st <= S_FETCH; end
+                // Busy is registered in the die. Spend one full cycle here so
+                // a legal request cannot complete before busy has sampled go.
+                S_COLL_ARM: st <= S_COLL_WAIT;
+                S_COLL_WAIT: if (!coll_busy) begin pc <= pc + 1'b1; st <= S_FETCH; end
+                S_COLL_HALT: st <= S_COLL_HALT;
                 //: ACCEPT: a is registered; restore the hash history to slot a's snapshot
                 S_ACC: if (acc_done) begin xu_rst_v <= 1'b1; st <= S_RST; end
                 S_RST: begin pc <= pc + 1'b1; st <= S_FETCH; end
@@ -596,6 +621,11 @@ module ot_hdc_core_v41x #(
         xu_bf16 <= (`F(XU_D_N) != 0);
         he_nout <= `F(HE_NOUT); he_k <= `F(HE_K); he_wbase <= `F(HE_WBASE); he_xbase <= `F(HE_XBASE);
         he_obase <= `F(HE_OBASE);
+        if (FULL_SHAPE) begin
+            coll_op <= `F(COLL_OP); coll_src <= `F(COLL_SRC); coll_dst <= `F(COLL_DST);
+            coll_ibase <= `F(COLL_IBASE); coll_n <= `F(COLL_N); coll_k <= `F(COLL_K);
+            coll_seq <= `F(COLL_SEQ); coll_rnd <= `F(COLL_RND);
+        end
     end
     `undef F
     `undef DY
@@ -986,6 +1016,7 @@ module ot_hdc_core_v41x #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else if (start && st == S_IDLE) fault <= 1'b0;
-        else if (me_fault || su_fault || qe_fault || xu_fault || he_fault) fault <= 1'b1;
+        else if (me_fault || su_fault || qe_fault || xu_fault || he_fault ||
+                 (FULL_SHAPE && coll_fault)) fault <= 1'b1;
     end
 endmodule

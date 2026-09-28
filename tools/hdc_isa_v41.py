@@ -312,6 +312,10 @@ def emit_core_profiles():
         full_off, full_width = FULL_LAYOUT[name]
         lines.append(f"localparam integer O_{name.upper()} = FULL_SHAPE ? {full_off} : {off};")
         lines.append(f"localparam integer W_{name.upper()} = FULL_SHAPE ? {full_width} : {width};")
+    for name, _ in FULL_COLL_FIELDS:
+        full_off, full_width = FULL_LAYOUT[name]
+        lines.append(f"localparam integer O_{name.upper()} = {full_off};")
+        lines.append(f"localparam integer W_{name.upper()} = {full_width};")
     for key, slot in FULL_DYN.items():
         if isinstance(key, str):
             label = key
