@@ -1,6 +1,6 @@
 # OpenTallas task list
 
-Overall progress tracker for the four designs: Qwen3-8B ROM reticle, Qwen3-8B HBM comparator, DeepSeek-V4.1-Flash ROM array, DeepSeek-V4.1-Flash HBM comparator.
+Overall progress tracker for the four designs: Qwen3-8B ROM two-reticle package, Qwen3-8B HBM two-reticle comparator, DeepSeek-V4.1-Flash ROM array, DeepSeek-V4.1-Flash HBM comparator.
 
 Status: `[x]` done (on main, with a record), `[~]` in progress (owner and branch), `[ ]` open, `[!]` done but failed or blocked. Owners: **C** = Claude, **X** = Codex.
 
@@ -12,25 +12,16 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 
 ---
 
-## 1. Qwen3-8B on the ROM reticle (single reticle, by decision)
+## 1. Qwen3-8B on the ROM two-reticle package
 
 ### Architecture and model
-- [x] Top-down budget: the compute chain is at the KV floor, with 8,910 tok/s as the uncapped autoregressive target.
-- [x] Speculative decoding (DFlash).
-  - Acceptance is measured directly per block: τ = 2.265 at block 3.
-  - Draft, verify and commit run as serial steps.
-  - Design rate 13,052 tok/s.
-- [x] Power, from sourced inputs.
-  - Headline: DFlash on one reticle, 13,052 design rate, capped by cooling at 11,925 with the production lane (4,731 with the lane as built).
-  - Power levers were evaluated and not adopted, by decision.
-- [x] Prefill runs on the GPU.
-  - Time to first token is 143 ms at 8K.
-  - KV ingest RTL exists.
-- [~] **C `claude/qwen-weight-format`**: find a weight format that passes the quality bar (≤2% perplexity rise, ≤1 point on MMLU).
-  - The emulated 3.5-bit format fails, so every 3.5-bit figure has no quality-preserving format behind it yet.
-- [ ] **Decision (user):** choose the weight format, then re-derive the ROM area and budget at that bit width (R4).
+- [x] **Decision (user):** use 8-bit weights on two reticles in one package, split layers across UCIe, with eight HBM3E stacks and 6,144 lane groups per die. The HBM comparator also uses two reticles.
+- [~] **C:** re-baseline area, autoregressive and DFlash rates, cooling, GPU prefill and the iso-area HBM comparator for that decision. The published single-reticle 3.5-bit numbers are superseded.
+- [~] **C `claude/qwen-weight-format`**: validate the selected 8-bit format against the quality bar (≤2% perplexity rise, ≤1 point on MMLU); the emulated 3.5-bit format failed it.
+- [x] The earlier DFlash acceptance was measured per block in BF16; draft, verify and commit were serialized in that model. This is historical evidence, not a two-reticle rate.
+- [x] GPU prefill and KV ingest RTL exist for the earlier reduced vehicle; reprice time to first token for the two-reticle package.
 - [ ] Measure DFlash acceptance with the deployed arithmetic, not BF16.
-- [ ] Re-price the DFlash serial step on the RTL-calibrated core (it is currently priced on the specification chain).
+- [ ] Re-price DFlash and autoregressive serial steps on the two-reticle RTL-calibrated core, including the UCIe handoff.
 
 ### RTL, all on the reduced G4/SW16 vehicle
 - [x] Vector core with physical-HBM KV: an 18-step exact token run from an empty cache, with autonomous boot.
@@ -41,6 +32,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] Pressure gates, with the pressure absorbed by slack.
 - [x] SFU reciprocal saturation fix (golden and RTL).
 - [~] **X:** consecutive-token gate at 2047→2048 and 8K single-token gate are running; both await final source-pinned verdicts.
+- [ ] **X:** two-reticle 8-bit RTL integration: freeze the layer and HBM stack split, implement the 8-bit weight path and credit-controlled UCIe activation handoff, then prove the same program with and without DFlash. Current G4/SW16 gates are reduced single-core evidence.
 - [ ] **X:** queue-depth-2 pressure gate; its optional elaboration was stopped and no QD2 run is active.
 - [ ] 8K in RTL: correctness, area and timing are all unproven (R1).
 - [ ] Offered-load knee: KV-path headroom under sustained queue pressure (R1).
@@ -52,10 +44,8 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [~] **X:** G4/W4 full route and split-ingress G4/W4 route remain active in global-route hold repair; a separate command-arrival clock-tree sensitivity probe is active.
 - [ ] Whole-core route and compiled macros (R2).
 
-## 2. Qwen3-8B HBM comparator (iso-area, same core)
-- [x] Specification-model rate and energy ratios.
-  - The 6.5× figure is uncapped and autoregressive.
-  - The comparator's DFlash point is 3,762 tok/s.
+## 2. Qwen3-8B HBM comparator (two reticles, iso-area, same core)
+- [~] **C:** re-baseline the specification-model rate and energy ratios for the two-reticle 8-bit package. The old 6.5× and 3,762 tok/s values describe the superseded single-reticle model.
 - [x] Matched same-controller RTL gates (reduced vehicle): vector core +5.60%, scalar core +1.37%.
 - [~] **C `claude/roofline-rebaseline`**: iso-area record still uses τ 4.1 (Table 8-9); 19 stale figures in `ANALYTICAL_REPORT.md`.
 - [ ] Capped rate ratio: no record carries a cooling-capped ROM÷HBM ratio.
@@ -66,16 +56,17 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 ### Architecture and model
 - [x] Budget model unified: official checkpoint precision, τ 5.0 (third-party V4-Pro measurement), 4 HBM stacks per die, 209 ns cable hop.
 - [x] Design point with the collective levers.
-  - 8,185 / 8,568 tok/s per user at 1M / 200K; 23,756 / 24,797 with MTP.
+  - 7,009 / 7,286 tok/s per user at 1M / 200K; 21,670 / 22,532 with MTP.
   - This is a model result using bench-measured collective tails, not chip throughput.
 - [x] Power and rack.
   - Always-on link power is charged.
   - Aggregates are capped by link bandwidth.
-  - ROM uses 3.2× less energy per token than the HBM comparator at batch 1.
+  - ROM uses 2.8× less energy per token than the HBM comparator at batch 1 in the re-derived model.
+  - The hottest die needs liquid cooling at 1M batch 1 and fill, and exceeds liquid with MTP or at saturation.
   - Rack gates C4, C8 and C10 pass analytically.
 - [x] Prefill and ingest: time to first token is 4.77 s at 1M and 0.735 s at 200K; the GPU tier sizes the system.
 - [x] Whole-die assembly study (analytical).
-- [~] **C `claude/v41-rederive`**: re-derive the headline with four changes:
+- [x] **C `claude/v41-rederive`**: re-derived the headline with four changes:
   - charge on-die wire time;
   - check power on the hottest die;
   - apply the 0.9 capacity reserve;
@@ -120,12 +111,12 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 ## 4. DeepSeek-V4.1-Flash HBM comparator
 - [x] Best switched comparator derived: 99 dies with 4 stacks each.
 - [x] Priced by the same power model as the ROM design, including always-on links.
-- [ ] Link-bandwidth cap and drafter input transfer are not applied to the comparator (both favour it; the atlas says so).
+- [x] Link-bandwidth cap and drafter input transfer are applied to the comparator in the re-derived model.
 - [ ] **X:** full V4.1 HBM-only comparator die/array RTL is unbuilt and model-only today. The existing `W_HBM=1` reduced core and two-package bench cover QE weight reads, not the modeled 99-die comparator. Codex owns this target after the adopted die interface is validated.
   - Stream the ME, QE, expert and head weight families from HBM through bounded windows while sharing HBM with attention KV and pooled index keys; first gate one matched program and exact state, then integrate the switched array.
 
 ## 5. Cross-cutting
-- [x] Headline reproducibility bundle: 121 of 134 headlines bound to records, with a checker in `make check-figures` (R6).
+- [x] Headline reproducibility bundle: 187 of 200 headlines bound to records, with a checker in `make check-figures` (R6).
 - [ ] 13 unbound headlines.
   - Their records exist only on side branches, for example the Qwen iso-area record and the common-KV energy record.
 - [ ] 63 stale source pins in RTL campaign records.
