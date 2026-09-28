@@ -82,6 +82,8 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
         lay.qmat[(0, "shared", w)]["base"] = mats[f"shared.{w}"]["base_word"]
         lay.qmat[(0, "exp", 0, w)]["base"] = mats[f"exp{selected[0]}.{w}"]["expert_id_base"]
     lay.qmat[(0, "exp_stride")] = mats[f"exp{selected[0]}.w1"]["expert_stride_words"]
+    for w in ("w1", "w3", "w2"):
+        lay.qmat[(0, "exp_stride", w)] = mats[f"exp{selected[0]}.{w}"]["expert_stride_words"]
     lay.mat[(0, "gate")]["base"] = mats["gate"]["base_word"]
     lay.mat[(0, "wo_a")]["base"] = mats["wo_a"]["base_word"]
     lay.mat[(0, "attn", "fn")]["base"] = mats["hc_attn_fn"]["base_word"]

@@ -192,6 +192,9 @@ class ShapeLayout:
             self.qmat[(L, "exp", 0, "w2")] = q(D // tp if tp_exact else D,
                                                 s["moe_ff"] if tp_exact else self.ff_d, fp4=1)
             self.qmat[(L, "exp_stride")] = 1
+            if tp_exact:
+                for part in ("w1", "w3", "w2"):
+                    self.qmat[(L, "exp_stride", part)] = 1
             self.qmat[(L, "shared", "w13")] = q(2 * self.ff_d, D)
             if tp_exact:
                 self.qmat[(L, "shared", "w1")] = q(self.ff_d, D)
@@ -574,9 +577,11 @@ class ShapeBuilder(P.Builder):
             te = f"L{L}.shared" if shared else f"L{L}.experts"
             if shared:
                 w13, w2, ind = lay.qmat[(L, "shared", "w13")], lay.qmat[(L, "shared", "w2")], {}
+                ind2 = {}
             else:
                 w13, w2 = lay.qmat[(L, "exp", 0, "w13")], lay.qmat[(L, "exp", 0, "w2")]
                 ind = dict(qe_ind=1, qe_ibase=V_["EID"] + k, qe_istride=stride)
+                ind2 = dict(ind, qe_istride=lay.qmat[(L, "exp_stride", "w2")]) if self.tp_exact else ind
             gu = V_[f"GU{k}"]
             f = dict(su_nout=1, su_nin=ff, a_base=gu, a_si=1, a_min=1, imm3=0, c_base=gu + ff, c_si=1,
                      c_clip=1, sfu=I.SFU_SILU, e1=I.E1_MULC, rnd=1, dst=I.DST_VM, o_base=V_[f"ACT{k}"], o_si=1)
@@ -594,16 +599,18 @@ class ShapeBuilder(P.Builder):
                     return
                 kind = "shared" if shared else "exp"
                 key = (L, kind) if shared else (L, kind, 0)
-                self.linq(lay.qmat[(*key, "w1")], "XN", f"GU{k}", {"EID"}, set(), te, **ind)
+                ind_w1 = dict(ind, qe_istride=lay.qmat[(L, "exp_stride", "w1")]) if not shared else ind
+                ind_w3 = dict(ind, qe_istride=lay.qmat[(L, "exp_stride", "w3")]) if not shared else ind
+                self.linq(lay.qmat[(*key, "w1")], "XN", f"GU{k}", {"EID"}, set(), te, **ind_w1)
                 # The two output halves occupy one GU allocation. QE writes
                 # elements, so offset the second descriptor by ff elements.
                 self.linq(lay.qmat[(*key, "w3")], "XN", f"GU{k}", {"EID"}, set(), te,
-                          qe_obase=gu + ff, **ind)
+                          qe_obase=gu + ff, **ind_w3)
 
             return (project_gate_up,
                     activate,
                     lambda: self.linq(w2, f"ACTALL{k}" if self.tp_exact else f"ACT{k}",
-                                      f"E{k}", {"EID"}, set(), te, **ind))
+                                      f"E{k}", {"EID"}, set(), te, **ind2))
 
         sh = expert(m.k_exp)
         sh[0]()

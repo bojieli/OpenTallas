@@ -47,3 +47,19 @@ def test_expert_stride_must_match_placed_id(tmp_path):
     path.write_text(json.dumps(layout))
     with pytest.raises(ValueError, match="expert family w1"):
         B.bind(path, B.DEFAULT_SHARD)
+
+
+def test_w2_may_have_a_different_expert_stride(tmp_path):
+    layout = json.loads(B.DEFAULT_LAYOUT.read_text())
+    for expert in layout["selected_expert_ids"]:
+        item = layout["matrices"][f"exp{expert}.w2"]
+        item["expert_stride_words"] = 5760
+        item["base_word"] = item["expert_id_base"] + expert * 5760
+        item["geometry"]["base_word"] = item["base_word"]
+        item["geometry"]["end_word_exclusive"] = item["base_word"] + item["word_count"]
+    path = tmp_path / "layout.json"
+    path.write_text(json.dumps(layout))
+    record = B.bind(path, B.DEFAULT_SHARD)
+    assert record["status"] == "blocked"  # old 64-bank layout still cannot feed QE
+    assert {x["start_word"] for x in record["qe_address_trace"]
+            if x["matrix"] == "exp.w2" and x["expert_id"] == 110} == {1121600 + 110 * 5760}
