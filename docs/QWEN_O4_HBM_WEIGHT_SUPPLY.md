@@ -39,7 +39,9 @@ The newer reduced matrix-plus-embedding comparator sources the token's INT8 embe
 row and BF16 scale through HBM sectors before package start; the core's
 embedding ports then read only the row bank. Its standalone 5-sector row gate
 is source-pinned in `results/rtl/qwen_embed_row_hbm.json`. The all-weight
-package A/B verdict is pending; the historical matrix-only cycle delta above
+package A/B verdict is pending; the standalone gate covers two successive
+tokens and ignores a trailing read from the completed token while the next
+row is unavailable. The historical matrix-only cycle delta above
 is not evidence for its cycles.
 The shipped layer emitter also stores o/down post-TP BF16 row scales in
 CROM. Those weight-scale ranges must be mapped to HBM before a full-shape
