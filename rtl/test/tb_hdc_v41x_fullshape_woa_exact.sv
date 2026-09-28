@@ -2,7 +2,9 @@
 // Two TP4 wo_a local groups against the source-pinned rank-0 ROM image.
 // The runner supplies checkpoint ACC and raw FP32 pre-BF16 ZA as hex words.
 module tb_hdc_v41x_fullshape_woa_exact #(
-    parameter integer XBANK=0
+    parameter integer XBANK=0,
+    parameter integer RL=2,
+    parameter integer SHARED=0
 );
     localparam W=16, G=4, MG=8, AW=30, BAW=18;
     localparam BASE0=7680, BASE1=73216, IMAGE_BYTES=33554432;
@@ -23,13 +25,30 @@ module tb_hdc_v41x_fullshape_woa_exact #(
     reg [31:0] x [0:8191];
     reg [31:0] y [0:2047];
     reg [7:0] image [0:IMAGE_BYTES-1];
-    reg [8*MG*32-1:0] bp0=0, bp1=0;
+    reg [8*MG*32-1:0] bp0=0, bp1=0, bp2=0;
+    wire shared_wr_v;
+    wire [0:0] shared_wr_p;
+    wire [12:0] shared_wr_e;
+    wire [G*16-1:0] shared_wr_d;
+    wire [7:0] shared_rq_v;
+    wire [8*14-1:0] shared_rq_q;
+    wire [8*4-1:0] shared_rq_plg;
+    wire [8*MG*16-1:0] shared_rd_x;
+    reg [8*MG*16-1:0] shared_xr0=0;
     integer rows=16, op=0, checked=0, reads=0, cycles=0;
     integer fd, got_bytes;
     string dir;
-    assign wb_q=bp1;
+    assign wb_q=(RL==3) ? bp2 : bp1;
 
-    ot_hdc_v41x_me_adapt #(.W(W),.G(G),.MG(MG),.AW(AW),.BAW(BAW),.KMAX(5120),.XBANK(XBANK)) u_me (
+    generate if (SHARED != 0) begin : g_shared
+        ot_hdc_v41x_me_xbank_macro #(.MG(MG),.MP(1),.G(G),.KMAX(5120),.NBW(14),.EW(13)) u_store (
+            .clk(clk),.wr_v(shared_wr_v),.wr_p(shared_wr_p),.wr_e(shared_wr_e),.wr_d(shared_wr_d),
+            .pre_v(1'b0),.pre_p(1'b0),.pre_e(13'd0),.pre_d(1024'd0),.rd_rot(2'd0),
+            .rq_v(shared_rq_v),.rq_q(shared_rq_q),.rq_plg(shared_rq_plg),.rd_x(shared_rd_x));
+        always @(posedge clk) shared_xr0 <= shared_rd_x;
+    end endgenerate
+    ot_hdc_v41x_me_adapt #(.W(W),.G(G),.MG(MG),.AW(AW),.BAW(BAW),.KMAX(5120),
+                             .XBANK(XBANK),.RL(RL),.SHARED_XBANK(SHARED)) u_me (
         .clk(clk),.rst_n(rst_n),.go(go),.ready(ready),.idle(idle),
         .i_nout(16'(rows)),.i_tiles(16'(1)),.i_k(16'd4096),
         .i_wbase(AW'(op ? BASE1 : BASE0)),.i_xbase(AW'(op ? 4096 : 0)),
@@ -39,6 +58,9 @@ module tb_hdc_v41x_fullshape_woa_exact #(
         .i_xps(AW'(0)),.i_ops(AW'(0)),.cfg_xs(4'd0),
         .wb_re(wb_re),.wb_addr(wb_addr),.wb_q(wb_q),
         .x_re(x_re),.x_addr(x_addr),.x_q(x_q),
+        .shared_wr_v(shared_wr_v),.shared_wr_p(shared_wr_p),.shared_wr_e(shared_wr_e),
+        .shared_wr_d(shared_wr_d),.shared_rq_v(shared_rq_v),.shared_rq_q(shared_rq_q),
+        .shared_rq_plg(shared_rq_plg),.shared_xr0(shared_xr0),
         .ov(ov),.o_we(o_we),.o_addr(o_addr),.o_mask(o_mask),.o_data(o_data),
         .am_idx(),.am_val(),.am_any(),.fault(fault));
 
@@ -91,6 +113,7 @@ module tb_hdc_v41x_fullshape_woa_exact #(
             reads<=reads+1;
         end
         bp1<=bp0;
+        bp2<=bp1;
         if (ov) for (integer p=0;p<G;p++) if (o_we[p]) begin
             integer addr;
             addr=o_addr[p*AW+:AW];

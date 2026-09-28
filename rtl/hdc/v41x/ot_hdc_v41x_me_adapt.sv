@@ -36,7 +36,8 @@ module ot_hdc_v41x_me_adapt #(
     parameter integer BAW  = 17,           // weight bank word address
     parameter integer KMAX = 512,          // largest K
     parameter integer RL   = 2,
-    parameter integer XBANK = 0            // local SRAM-bank activation store; default keeps reduced gate
+    parameter integer XBANK = 0,           // local SRAM-bank activation store; default keeps reduced gate
+    parameter integer SHARED_XBANK = 0     // external registered store plus one registered multicast stage
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -68,6 +69,17 @@ module ot_hdc_v41x_me_adapt #(
     output reg  [MP*G-1:0]   x_re,
     output reg  [MP*G*AW-1:0] x_addr,
     input  wire [MP*G*32-1:0] x_q,
+    // Optional cluster store interface.  The external `shared_xr0` is the
+    // registered SRAM read followed by one registered multicast stage; RL=3
+    // is required.  Only lockstep adapters may connect to one shared store.
+    output wire                  shared_wr_v,
+    output wire [$clog2(MP+1)-1:0] shared_wr_p,
+    output wire [$clog2(KMAX+1)-1:0] shared_wr_e,
+    output wire [G*16-1:0]       shared_wr_d,
+    output wire [7:0]            shared_rq_v,
+    output wire [8*14-1:0]       shared_rq_q,
+    output wire [8*4-1:0]        shared_rq_plg,
+    input  wire [8*MG*MP*16-1:0] shared_xr0,
     output reg               ov,
     output reg  [MP*G-1:0]   o_we,
     output reg  [MP*G*AW-1:0] o_addr,
@@ -199,7 +211,19 @@ module ot_hdc_v41x_me_adapt #(
     localparam integer XBW = 8*MG*MP*16;
     wire [XBW-1:0] xr0;
     wire [XBW-1:0] xr_last;
-    generate if (XBANK != 0) begin : g_xbank
+    assign shared_rq_v=rq_v;
+    assign shared_rq_q=rq_q;
+    assign shared_rq_plg=rq_plg;
+    assign shared_wr_v=l2_v;
+    assign shared_wr_p=l2_p[$clog2(MP+1)-1:0];
+    assign shared_wr_e=l2_e[$clog2(KMAX+1)-1:0];
+    for (genvar sc=0;sc<G;sc=sc+1) begin : g_shared_round
+        wire [32:0] rb={1'b0,x_q[32*sc +:32]}+33'h7fff+{32'd0,x_q[32*sc+16]};
+        assign shared_wr_d[16*sc +:16]=rb[31:16];
+    end
+    generate if (SHARED_XBANK != 0) begin : g_shared_xbank
+        assign xr0=shared_xr0;
+    end else if (XBANK != 0) begin : g_xbank
         localparam integer EW = $clog2(KMAX+1);
         localparam integer PW = $clog2(MP+1);
         wire [G*16-1:0] wr_bf;
@@ -241,7 +265,14 @@ module ot_hdc_v41x_me_adapt #(
                 end
         assign xr0=xr_reg;
     end endgenerate
-    generate if (RL == 1) begin : g_xr1
+    generate if (SHARED_XBANK != 0 && RL >= 3) begin : g_xr_shared
+        reg [XBW-1:0] xr [1:RL-2];
+        for (genvar ri=1;ri<RL-1;ri=ri+1) begin : g_stage
+            if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+            else always @(posedge clk) xr[ri] <= xr[ri-1];
+        end
+        assign xr_last=xr[RL-2];
+    end else if (RL == 1) begin : g_xr1
         assign xr_last=xr0;
     end else begin : g_xr_more
         reg [XBW-1:0] xr [1:RL-1];
@@ -251,6 +282,10 @@ module ot_hdc_v41x_me_adapt #(
         end
         assign xr_last=xr[RL-1];
     end endgenerate
+`ifndef SYNTHESIS
+    initial if (SHARED_XBANK != 0 && RL < 3)
+        $fatal(1,"shared store requires RL>=3 including multicast register");
+`endif
     assign wb_re = rq_v;
     assign wb_addr = rq_a;
     ot_hdc_v41x_wgt_tile #(.KIND(1), .G(MG), .M(MP), .LB(LB), .PMIN_LG(PMIN_LG), .AW(BAW), .NBW(NBW), .RWW(RWW),
