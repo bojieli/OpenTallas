@@ -16,6 +16,13 @@ matrix arithmetic. An operation larger than `WIN_WORDS` faults rather than
 silently wrapping. The HBM controller, its KV arbitration, and timing remain
 outside this module.
 
+At full G=6,144, the abstract core boundary exposes 786,432 code bits and
+1,572,864 scale bits. These are internal lane-local connections, not a
+plausible stand-alone die pin interface. Physical implementation must place
+the PC sector banks and scale registers beside lane tiles, with hierarchy that
+keeps the wide word inside the die. The reduced RTL gate does not prove this
+placement or its timing.
+
 The reduced TP-2 gate sets `WIN_WORDS=4096`, enough for its largest unchanged
 weight operation. Its two arms are compiled from the same sources with only
 `WEIGHT_HBM=0/1`; the same image files supply both arms. The standalone PC
