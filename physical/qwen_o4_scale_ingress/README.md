@@ -59,7 +59,8 @@ first physical repair is a registered, locally fanned-out enable; the ROM
 output needs a direct capture register or an additional stage before the
 held scale register. Both require an exact latency check in the real core;
 reset needs a real distribution and deassertion constraint.
-Detailed route is still running separately; `physical.json` records only the
+The invalid direct ROM route was stopped after the placement check. The
+direct HBM route continues separately; `physical.json` records only the
 reached stages, with no routed timing or DRC claim.
 
 An exploratory rebuffer from the placed ROM database inserted 977 buffers
