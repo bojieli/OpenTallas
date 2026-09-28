@@ -58,6 +58,15 @@ def run(output: Path) -> dict:
         "status": status,
         "claim_scope": "Full-width ISA and core lint with X_ATT/X_IDX/X_SEL/X_EG disabled; "
                        "no full-shape bit-exact layer or chip cycle measurement",
+        "full_layer_ready": False,
+        "full_layer_blockers": [
+            "The TP emitter now addresses attention's local rows 0..639, but die prefetch still needs "
+            "128 FP8 window rows (528 bytes each), up to 512 selected CKV FP4 rows (288 bytes each), "
+            "and explicit selected source IDs",
+            "A checkpoint-backed rank-0 weight/KV input image exists, but the TP ISA has no placed "
+            "program image or bit-exact RTL shard yet; the 192-block QE lane is separately gated",
+            "Die collective and packed KV ports have no executed full-shape integration gate",
+        ],
         "program": {"layer": 0, "instructions": len(program), "collectives": len(collectives),
                     "encoded_words": len(words), "tp": replay.SHIPPED["tp"]},
         "lint": {"returncode": returncode, "memory_cap_bytes": 28 * 1024**3,

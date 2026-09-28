@@ -32,13 +32,13 @@
   "records": 38,
   "records_with_source_pins": 27,
   "pins_by_status": {
-   "current": 531,
+   "current": 525,
    "path-only": 3,
-   "stale": 104
+   "stale": 110
   },
   "findings_by_kind": {
    "commit-outside-head": 4,
-   "stale-pin": 104
+   "stale-pin": 110
   }
  },
  "headlines": [
@@ -6723,7 +6723,7 @@
      "key": "rtl/hdc/v41/ot_hdc_blockdot.sv",
      "path": "rtl/hdc/v41/ot_hdc_blockdot.sv",
      "pinned": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -6895,8 +6895,8 @@
     }
    ],
    "pin_counts": {
-    "current": 21,
-    "stale": 15
+    "current": 20,
+    "stale": 16
    },
    "commits": []
   },
@@ -9276,7 +9276,7 @@
      "key": "rtl/hdc/v41/ot_hdc_blockdot.sv",
      "path": "rtl/hdc/v41/ot_hdc_blockdot.sv",
      "pinned": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "provenance.source_sha256",
@@ -9728,8 +9728,8 @@
     }
    ],
    "pin_counts": {
-    "current": 66,
-    "stale": 8
+    "current": 65,
+    "stale": 9
    },
    "commits": [
     {
@@ -9871,7 +9871,7 @@
      "key": "rtl/hdc/v41/ot_hdc_blockdot.sv",
      "path": "rtl/hdc/v41/ot_hdc_blockdot.sv",
      "pinned": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -10228,7 +10228,7 @@
      "key": "tools/rtl_hdc_v41x_decode_campaign.py",
      "path": "tools/rtl_hdc_v41x_decode_campaign.py",
      "pinned": "529d2ec6aa866eb1444067999cc3d865460e6311895f2ac0de3eef1be30e1e9c",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -10246,8 +10246,8 @@
     }
    ],
    "pin_counts": {
-    "current": 57,
-    "stale": 14
+    "current": 55,
+    "stale": 16
    },
    "commits": [
     {
@@ -10333,7 +10333,7 @@
      "key": "rtl/hdc/v41/ot_hdc_blockdot.sv",
      "path": "rtl/hdc/v41/ot_hdc_blockdot.sv",
      "pinned": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -10851,12 +10851,12 @@
      "key": "tools/rtl_hdc_v41x_decode_campaign.py",
      "path": "tools/rtl_hdc_v41x_decode_campaign.py",
      "pinned": "529d2ec6aa866eb1444067999cc3d865460e6311895f2ac0de3eef1be30e1e9c",
-     "status": "current"
+     "status": "stale"
     }
    ],
    "pin_counts": {
-    "current": 69,
-    "stale": 15
+    "current": 67,
+    "stale": 17
    },
    "commits": [
     {
@@ -11411,6 +11411,12 @@
    "detail": "input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/v41/ot_hdc_blockdot.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41_decode_campaign.json",
+   "detail": "input_sha256[rtl/hdc/v41/ot_hdc_blockdot.sv] -> rtl/hdc/v41/ot_hdc_blockdot.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/v41/ot_hdc_core_v41.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41_decode_campaign.json",
@@ -11513,6 +11519,12 @@
    "detail": "source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41/ot_hdc_blockdot.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
+   "detail": "source_sha256[rtl/hdc/v41/ot_hdc_blockdot.sv] -> rtl/hdc/v41/ot_hdc_blockdot.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41/ot_hdc_v41_qe.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
@@ -11585,6 +11597,12 @@
    "detail": "source_sha256[tools/rtl_hdc_v41x_array_campaign.py] -> tools/rtl_hdc_v41x_array_campaign.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/rtl_hdc_v41x_decode_campaign.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
+   "detail": "source_sha256[tools/rtl_hdc_v41x_decode_campaign.py] -> tools/rtl_hdc_v41x_decode_campaign.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/ot_hdc_accept.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
@@ -11595,6 +11613,12 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
    "detail": "input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41/ot_hdc_blockdot.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
+   "detail": "input_sha256[rtl/hdc/v41/ot_hdc_blockdot.sv] -> rtl/hdc/v41/ot_hdc_blockdot.sv is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41/ot_hdc_v41_qe.sv",
@@ -11669,6 +11693,12 @@
    "detail": "input_sha256[tools/rtl_hdc_v41x_array_campaign.py] -> tools/rtl_hdc_v41x_array_campaign.py is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/rtl_hdc_v41x_decode_campaign.py",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
+   "detail": "input_sha256[tools/rtl_hdc_v41x_decode_campaign.py] -> tools/rtl_hdc_v41x_decode_campaign.py is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41x_egather_campaign.json:tools/hdc_golden.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_egather_campaign.json",
@@ -11727,6 +11757,12 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_whbm_pooled_multi.json",
    "detail": "provenance.source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41/ot_hdc_blockdot.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_whbm_pooled_multi.json",
+   "detail": "provenance.source_sha256[rtl/hdc/v41/ot_hdc_blockdot.sv] -> rtl/hdc/v41/ot_hdc_blockdot.sv is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41/ot_hdc_v41_qe.sv",
@@ -11810,6 +11846,7 @@
   "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:tools/hdc_golden.py",
   "stale-pin:results/rtl/hdc_qwen_vector_system_timed_g4sw16.json:tools/hdc_program.py",
   "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/ot_hdc_sfu.sv",
+  "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/v41/ot_hdc_blockdot.sv",
   "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/v41/ot_hdc_core_v41.sv",
   "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/v41/ot_hdc_engram_hash.sv",
   "stale-pin:results/rtl/hdc_v41_decode_campaign.json:rtl/hdc/v41/ot_hdc_isa_v41.svh",
@@ -11827,6 +11864,7 @@
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/hbm/ot_hdc_qstream.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/ot_hdc_accept.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/ot_hdc_sfu.sv",
+  "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41/ot_hdc_blockdot.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41/ot_hdc_v41_qe.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41/ot_hdc_v41_xu.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv",
@@ -11839,8 +11877,10 @@
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/hdc_isa_v41.py",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/hdc_program_v41.py",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/rtl_hdc_v41x_array_campaign.py",
+  "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/rtl_hdc_v41x_decode_campaign.py",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/ot_hdc_accept.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/ot_hdc_sfu.sv",
+  "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41/ot_hdc_blockdot.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41/ot_hdc_v41_qe.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41/ot_hdc_v41_xu.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv",
@@ -11853,6 +11893,7 @@
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/hdc_isa_v41.py",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/hdc_program_v41.py",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/rtl_hdc_v41x_array_campaign.py",
+  "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/rtl_hdc_v41x_decode_campaign.py",
   "stale-pin:results/rtl/hdc_v41x_egather_campaign.json:tools/hdc_golden.py",
   "stale-pin:results/rtl/hdc_v41x_egather_campaign.json:tools/hdc_golden_v41.py",
   "stale-pin:results/rtl/hdc_v41x_hcp_campaign.json:rtl/hdc/ot_hdc_sfu.sv",
@@ -11863,6 +11904,7 @@
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/hbm/ot_hdc_qstream.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/ot_hdc_accept.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/ot_hdc_sfu.sv",
+  "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41/ot_hdc_blockdot.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41/ot_hdc_v41_qe.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41/ot_hdc_v41_xu.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv",

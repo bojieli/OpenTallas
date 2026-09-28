@@ -11,7 +11,8 @@
 module tb_hdc_v41_blockdot #(
     parameter integer MAXB = 1 << 19,
     parameter integer MAXJ = 1 << 18,
-    parameter integer IL = 8
+    parameter integer IL = 8,
+    parameter integer CHUNK8 = 0
 ) (input wire clk);
     reg [543:0] blk [0:MAXB-1];
     reg [63:0]  job [0:MAXJ-1];
@@ -42,7 +43,8 @@ module tb_hdc_v41_blockdot #(
     wire        ov, fault;
     wire [15:0] y;
     wire [31:0] acc;
-    ot_hdc_blockdot #(.IL(IL)) dut (.clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last), .fp4(fp4),
+    ot_hdc_blockdot #(.IL(IL), .CHUNK8(CHUNK8)) dut (
+                                    .clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last), .fp4(fp4),
                                     .xq(xq), .xe(xe), .wq(wq), .we(we), .phase(phase), .ov(ov), .y(y),
                                     .acc(acc), .fault(fault));
 

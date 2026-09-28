@@ -557,6 +557,9 @@ module ot_hdc_core_v41x #(
             dyn[db + FDYN_CEIL_T0_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + 31) >> 5;
             dyn[db + FDYN_CEIL_T1_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns1 + 31) >> 5;
             dyn[db + FDYN_CEIL_T2_32] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) + ns2 + 31) >> 5;
+            dyn[db + FDYN_WINM1] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) - 1;
+            dyn[db + FDYN_WIN_ROW] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) * HDIM;
+            dyn[db + FDYN_WINM1_ROW] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) - 1) * HDIM;
         end
     end
 
@@ -938,6 +941,7 @@ module ot_hdc_core_v41x #(
     end endgenerate
 
     ot_hdc_v41_qe #(.AW(AW), .NW(NW), .BL(BL), .IL(IL), .NBMAX(FULL_SHAPE ? 192 : 32),
+                     .CHUNK8(FULL_SHAPE),
                      .QLB(QLB), .MP(MP)) u_qe (
         .clk(clk), .rst_n(rst_n), .go(qe_go), .ready(qe_ready), .idle(qe_idle),
         .i_mode(qe_mode), .i_fp4(qe_fp4), .i_unrounded(qe_unrounded),

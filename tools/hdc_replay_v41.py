@@ -75,7 +75,8 @@ def dyn_values(s, pos):
     nc1, nc2 = pos + 1, (pos + 1) >> 1
     ns1, ns2 = min(s["topk"], nc1), min(s["topk"], nc2)
     cap = s["scan_cap"] or nc1
-    return dict(WIN=win, NC1=nc1, NC2=nc2, NS1=ns1, NS2=ns2, T0=win, T1=win + ns1, T2=win + ns2,
+    return dict(WIN=win, WINM1=win - 1, WIN_ROW=win * s["hd"], WINM1_ROW=(win - 1) * s["hd"],
+                NC1=nc1, NC2=nc2, NS1=ns1, NS2=ns2, T0=win, T1=win + ns1, T2=win + ns2,
                 SC1=cdiv(nc1, tp), SC2=cdiv(nc2, tp), SCR=cdiv(min(nc1, cap), tp), NSL1=min(s["topk"], cdiv(nc1, tp)),
                 NSL2=min(s["topk"], cdiv(nc2, tp)), NSLR=min(s["topk"], cdiv(min(nc1, cap), tp)))
 
@@ -457,9 +458,12 @@ class ShapeBuilder(P.Builder):
         self.rmsnorm("KVA", hd, 0, "KVN", t)
         self.rope("KVN", V_["KVN"], 1, hd, table, DY["ROPE"], False, t)
         self.qdq(I.QE_QDQ8, "KVN", hd // 32, V_["KVQ"], {"KVQ"}, t)
-        self.kvt_write("KVQ", f"KT{L}", 0, DY["POS"], t)
+        # The full-shape attention adapter owns a bounded local 0..639 row
+        # window. Physical HBM ring slots and selected CKV IDs are mapped by
+        # the die prefetcher; neither is an adapter row number.
+        self.kvt_write("KVQ", f"KT{L}", 0, "WINM1" if self.tp_exact else DY["POS"], t)
         self.su({"KVQ"}, {f"KR{L}"}, t, su_nout=1, su_nin=hd, a_base=V_["KVQ"], a_si=1, dst=I.DST_KV,
-                o_base=0, o_d=DY["ROW"], o_si=1)
+                o_base=0, o_d="WINM1_ROW" if self.tp_exact else DY["ROW"], o_si=1)
         self.rope("Q", V_["Q"], hdd, hd, table, DY["ROPE"], False, t)
         if r > 0:
             src = max(x for x in KV_SRC if x <= L)
@@ -471,10 +475,10 @@ class ShapeBuilder(P.Builder):
             ta = f"L{L}.gather"
             self.su({f"CKV{src}", "SEL"}, {f"KT{L}"}, ta, su_nout=0, su_d_nout=nsel, su_nin=hd,
                     a_base=V_[f"CKV{src}"], a_so=hd, a_si=1, a_ind=I.IND_O, a_ibase=V_["SEL"], dst=I.DST_KVT,
-                    o_base=0, o_d=DY["POS1"])
+                    o_base=0, o_d="WIN" if self.tp_exact else DY["POS1"])
             self.su({f"CKV{src}", "SEL"}, {f"KR{L}"}, ta, su_nout=0, su_d_nout=nsel, su_nin=hd,
                     a_base=V_[f"CKV{src}"], a_so=hd, a_si=1, a_ind=I.IND_O, a_ibase=V_["SEL"], dst=I.DST_KV,
-                    o_base=0, o_d=DY["ROW1"], o_so=hd, o_si=1)
+                    o_base=0, o_d="WIN_ROW" if self.tp_exact else DY["ROW1"], o_so=hd, o_si=1)
         Tn = {0: "T0", 1: "T1", 2: "T2"}[r]
         if hook and P.ATTN_HOOK == "qkv":
             hook()
