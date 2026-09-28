@@ -59,5 +59,5 @@ def test_adopted_link_engine_and_banked_drain_are_exact_and_current():
         assert case["passed"] and case["mismatches"] == 0
         assert case["out_err"] == case["timeout"] == 0
         assert not any(case["faults"])
-    assert record["summary"]["act"]["banked_tail_cycles"] == 469
-    assert record["summary"]["y"]["banked_tail_cycles"] == 240
+    assert record["summary"]["act"]["banked_tail_cycles"] == 470
+    assert record["summary"]["y"]["banked_tail_cycles"] == 250

@@ -2,7 +2,7 @@
   "cases": [
     {
       "metrics": {
-        "cycles": 7,
+        "cycles": 8,
         "holds": 0,
         "stalls": 0,
         "words": 1,
@@ -14,7 +14,7 @@
     },
     {
       "metrics": {
-        "cycles": 8,
+        "cycles": 9,
         "holds": 0,
         "stalls": 0,
         "words": 2,
@@ -26,7 +26,7 @@
     },
     {
       "metrics": {
-        "cycles": 14,
+        "cycles": 15,
         "holds": 0,
         "stalls": 0,
         "words": 5,
@@ -38,9 +38,9 @@
     },
     {
       "metrics": {
-        "cycles": 112,
+        "cycles": 122,
         "holds": 26,
-        "stalls": 26,
+        "stalls": 35,
         "words": 80,
         "writes": 320
       },
@@ -50,9 +50,9 @@
     },
     {
       "metrics": {
-        "cycles": 378,
-        "holds": 104,
-        "stalls": 91,
+        "cycles": 408,
+        "holds": 102,
+        "stalls": 133,
         "words": 266,
         "writes": 1064
       },
@@ -62,8 +62,8 @@
     },
     {
       "metrics": {
-        "cycles": 115,
-        "held": 26,
+        "cycles": 125,
+        "held": 35,
         "words": 80,
         "writes": 320
       },
@@ -73,8 +73,8 @@
     },
     {
       "metrics": {
-        "cycles": 381,
-        "held": 91,
+        "cycles": 411,
+        "held": 133,
         "words": 266,
         "writes": 1064
       },
@@ -84,9 +84,9 @@
     },
     {
       "metrics": {
-        "cycles": 381,
-        "in_hold": 77,
-        "out_hold": 91,
+        "cycles": 424,
+        "in_hold": 117,
+        "out_hold": 133,
         "words": 266,
         "writes": 1064
       },
@@ -110,7 +110,7 @@
   "scope": "exact standalone engine/transpose/DMA with synthetic words; no full-token, die route or physical VM claim",
   "source_sha256": {
     "rtl/chip/ot_chip_v41x_coll_dma.sv": "d95395dc2f07c52e1f659dd9d01d1394d96bcb1baf533129d27ae0204aaf50e1",
-    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "b857ec83fbe8a4c006067f5bd6320f06f0fbcda3c1d1f09a406f5fcb6e377a9f",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "8ada5d8a681817dde3e8ff6c0a3f5c6a4acbe67e547dceb1c3c00174d01fac3e",
     "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",

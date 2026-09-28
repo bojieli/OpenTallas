@@ -4,13 +4,13 @@
       "add_lat": 3,
       "bytes_per_die": 17024,
       "case": "act_d256_q2_gw4_pairwise_bank",
-      "consumer_first_useful_cycle": 217,
-      "consumer_first_word_cycle": 217,
-      "consumer_last_word_cycle": 525,
+      "consumer_first_useful_cycle": 218,
+      "consumer_first_word_cycle": 218,
+      "consumer_last_word_cycle": 526,
       "data_lanes": 16,
-      "exposed_first_useful_cycles": 161,
-      "exposed_tail_cycles": 469,
-      "exposed_tail_ns": 431.4627414903404,
+      "exposed_first_useful_cycles": 162,
+      "exposed_tail_cycles": 470,
+      "exposed_tail_ns": 432.3827046918123,
       "faults": [
         0,
         0,
@@ -29,10 +29,10 @@
       "passed": true,
       "pattern": "act",
       "per_die_tail_cycles": {
-        "0": 469,
-        "1": 469,
-        "2": 469,
-        "3": 469
+        "0": 470,
+        "1": 470,
+        "2": 470,
+        "3": 470
       },
       "producer_actual_last_cycle": 362,
       "producer_delay_cycles": 306,
@@ -51,13 +51,13 @@
       "add_lat": 3,
       "bytes_per_die": 5120,
       "case": "y_d256_q2_gw4_pairwise_bank",
-      "consumer_first_useful_cycle": 287,
-      "consumer_first_word_cycle": 287,
-      "consumer_last_word_cycle": 366,
+      "consumer_first_useful_cycle": 288,
+      "consumer_first_word_cycle": 288,
+      "consumer_last_word_cycle": 376,
       "data_lanes": 16,
-      "exposed_first_useful_cycles": 161,
-      "exposed_tail_cycles": 240,
-      "exposed_tail_ns": 220.79116835326587,
+      "exposed_first_useful_cycles": 162,
+      "exposed_tail_cycles": 250,
+      "exposed_tail_ns": 229.9908003679853,
       "faults": [
         0,
         0,
@@ -76,10 +76,10 @@
       "passed": true,
       "pattern": "y",
       "per_die_tail_cycles": {
-        "0": 240,
-        "1": 240,
-        "2": 240,
-        "3": 240
+        "0": 250,
+        "1": 250,
+        "2": 250,
+        "3": 250
       },
       "producer_actual_last_cycle": 205,
       "producer_delay_cycles": 79,
@@ -138,7 +138,7 @@
   "scope": "exact 64B pairwise one-shot engine, adopted behavioural links and double-buffered transpose; bank sink accepts four words/cycle; no die token or route claim",
   "source_sha256": {
     "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
-    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "b857ec83fbe8a4c006067f5bd6320f06f0fbcda3c1d1f09a406f5fcb6e377a9f",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "8ada5d8a681817dde3e8ff6c0a3f5c6a4acbe67e547dceb1c3c00174d01fac3e",
     "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",
@@ -152,12 +152,12 @@
   },
   "summary": {
     "act": {
-      "banked_tail_cycles": 469,
+      "banked_tail_cycles": 470,
       "producer_stall_cycles": 305,
       "words_per_die": 266
     },
     "y": {
-      "banked_tail_cycles": 240,
+      "banked_tail_cycles": 250,
       "producer_stall_cycles": 78,
       "words_per_die": 80
     }

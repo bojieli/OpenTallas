@@ -9,7 +9,8 @@
 // through in_ready without dropping data.
 module ot_chip_v41x_coll_transpose #(
     parameter integer WA = 19,
-    parameter integer FW = 512
+    parameter integer FW = 512,
+    parameter integer WRITE_SEG = 16
 ) (
     input  wire clk, rst_n,
     input  wire start,
@@ -29,6 +30,9 @@ module ot_chip_v41x_coll_transpose #(
     reg active, wr_sel, rd_sel;
     reg [WA-1:0] n_r, received;
     reg [WA-1:0] rank_addr [0:3];
+    reg [WA-1:0] rank_addr_q [0:3];
+    reg [FW-1:0] in_data_q [0:3];
+    reg accept_q, slot_q, tile_end_q, last_q;
     reg [2:0] fill [0:1];
     reg tile_ready [0:1], tile_last [0:1];
     reg [1:0] drain_rank;
@@ -42,23 +46,35 @@ module ot_chip_v41x_coll_transpose #(
     wire take_out = out_valid && out_ready;
     assign out_last = out_valid && tile_last[rd_sel] && drain_rank == 2'd3;
 
-    genvar k, slot, rank, bank;
-    // Static cell addresses avoid a dynamic 2×4×4×FW write mux. Each rank
-    // address is a running counter, so the data write enable sees only two
-    // address bits rather than a full-width multiply/add chain.
+    genvar k, slot, rank, bank, seg;
+    // Static cells and one registered local write enable per WRITE_SEG bits
+    // avoid a shared 2048-bit data-path enable. Encode each enable with the
+    // segment's first data bit; decoding against the registered data bit gives
+    // the original enable, while making the registers functionally distinct.
+    // Identical keep-marked enable flops were merged by synthesis.
     generate for (slot = 0; slot < 2; slot = slot + 1) begin : g_slot
         for (rank = 0; rank < 4; rank = rank + 1) begin : g_rank
             for (bank = 0; bank < 4; bank = bank + 1) begin : g_bank
                 wire wr_cell = take_in && wr_sel == 1'(slot) && rank_addr[rank][1:0] == 2'(bank);
                 wire clear_cell = start || (take_out && drain_rank == 2'd3 && rd_sel == 1'(slot));
-                always @(posedge clk) if (wr_cell) begin
-                    tile[slot][rank][bank] <= in_data[rank*FW +: FW];
-                    tile_addr[slot][rank][bank] <= rank_addr[rank];
+                wire commit_cell;
+                for (seg = 0; seg < FW/WRITE_SEG; seg = seg + 1) begin : g_seg
+                    reg en_code;
+                    wire en_local = en_code ^ in_data_q[rank][seg*WRITE_SEG];
+                    always @(posedge clk or negedge rst_n)
+                        if (!rst_n) en_code <= 1'b0;
+                        else en_code <= wr_cell ^ in_data[rank*FW + seg*WRITE_SEG];
+                    always @(posedge clk) if (en_local)
+                        tile[slot][rank][bank][seg*WRITE_SEG +: WRITE_SEG] <=
+                            in_data_q[rank][seg*WRITE_SEG +: WRITE_SEG];
                 end
+                assign commit_cell = g_seg[0].en_local;
+                always @(posedge clk) if (commit_cell)
+                    tile_addr[slot][rank][bank] <= rank_addr_q[rank];
                 always @(posedge clk or negedge rst_n)
                     if (!rst_n) tile_mask[slot][rank][bank] <= 1'b0;
                     else if (clear_cell) tile_mask[slot][rank][bank] <= 1'b0;
-                    else if (wr_cell) tile_mask[slot][rank][bank] <= 1'b1;
+                    else if (commit_cell) tile_mask[slot][rank][bank] <= 1'b1;
             end
         end
     end endgenerate
@@ -74,16 +90,35 @@ module ot_chip_v41x_coll_transpose #(
         if (!rst_n) begin
             active <= 1'b0; wr_sel <= 1'b0; rd_sel <= 1'b0;
             n_r <= 0; received <= 0; drain_rank <= 0;
-            for (r = 0; r < 4; r = r + 1) rank_addr[r] <= 0;
+            accept_q <= 0; slot_q <= 0; tile_end_q <= 0; last_q <= 0;
+            for (r = 0; r < 4; r = r + 1) begin
+                rank_addr[r] <= 0;
+                rank_addr_q[r] <= 0;
+                in_data_q[r] <= 0;
+            end
             fill[0] <= 0; fill[1] <= 0;
             tile_ready[0] <= 0; tile_ready[1] <= 0;
             tile_last[0] <= 0; tile_last[1] <= 0;
             done <= 0; fault <= 0;
         end else begin
             done <= 0;
+            accept_q <= take_in;
+            // Unconditional capture avoids a single take_in clock-enable net
+            // driving all 2,048 data flops. Local valid/enable flops decide
+            // whether this pipeline beat commits to a tile one cycle later.
+            for (r = 0; r < 4; r = r + 1) begin
+                rank_addr_q[r] <= rank_addr[r];
+                in_data_q[r] <= in_data[r*FW +: FW];
+            end
+            if (take_in) begin
+                slot_q <= wr_sel;
+                tile_end_q <= fill[wr_sel] == 3 || in_last;
+                last_q <= in_last;
+            end
             if (start) begin
                 if (active || n == 0) fault <= 1;
                 else begin
+                    accept_q <= 0;
                     active <= 1; n_r <= n; received <= 0;
                     rank_addr[0] <= dst;
                     rank_addr[1] <= dst + n;
@@ -95,14 +130,16 @@ module ot_chip_v41x_coll_transpose #(
                     tile_last[0] <= 0; tile_last[1] <= 0;
                 end
             end else if (active) begin
+                if (accept_q && tile_end_q) begin
+                    tile_last[slot_q] <= last_q;
+                    tile_ready[slot_q] <= 1;
+                end
                 if (take_in) begin
                     for (r = 0; r < 4; r = r + 1)
                         rank_addr[r] <= rank_addr[r] + 1'b1;
                     received <= received + 1'b1;
                     if (in_last != (received == n_r - 1'b1)) fault <= 1;
                     if (fill[wr_sel] == 3 || in_last) begin
-                        tile_last[wr_sel] <= in_last;
-                        tile_ready[wr_sel] <= 1;
                         wr_sel <= ~wr_sel;
                     end else fill[wr_sel] <= fill[wr_sel] + 1'b1;
                 end
