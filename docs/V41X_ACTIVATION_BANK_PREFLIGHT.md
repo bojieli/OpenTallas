@@ -100,6 +100,10 @@ SRAM abstract, with bit-masked legacy writes and full-word preload.  Its
 At HW=256 and PMAX=8 the 256 slices would occupy about 0.996 mm² of these
 macro outlines, before wiring and whitespace.  This is a floorplan estimate
 for local memories, not a routed HCP or measured SRAM area.
+One such local slice has now been routed with the analytical macro abstract
+in ASAP7: 300 I/O pins had 4,516 available sites; the 0.92 ns run reports
+1,507.71 MHz routed Fmax, zero DRC, zero antenna violations, 29,971 µm of
+wire and 9,633 vias.  This characterises the local 128-bit bank port only.
 
 The two ME `wo_a` groups can be loaded once each through the existing four
 VM ports, as the corrected no-`splitj` program does.  The stand-alone xbank
