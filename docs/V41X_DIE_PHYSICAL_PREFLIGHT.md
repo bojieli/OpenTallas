@@ -234,6 +234,16 @@ and fanout violations. Its 4,882 routed cells occupy 578.680 µm² and have
 1.27256 GHz Fmax in the predictive ASAP7 view. The local slice is physically
 closed within the modeled height. The shared group response, K trunk and
 multi-PC clock/routing composition are still outside this result.
+The retained routed ODB and SPEF were probed at the same 0.92 ns TT corner
+in `results/asap7_physical/v41x_die_karb_pc_local_budget_slew50_m9/timing_probe/record.json`.
+Among 15 input/output path groups, the request outputs have extracted
+arrival times of 337.918 ps (`h_wstrb`), 313.662 ps (`h_wdata`), 270.387 ps
+(`h_addr`) and 301.937 ps (`h_v`), including propagated local clock. With
+the 184 ps output allowance, the worst request output leaves 398.083 ps for
+the external request trunk at 0.92 ns. The local `b_rdy` output is tighter:
+601.820 ps arrival and 134.180 ps margin. These are extracted path probes,
+not complete sequential Liberty arcs for a reusable hard macro; the group
+response and clock trunks still need extraction.
 The earlier unspecialized one-PC top also detailed-routed at 375 by 17.28 µm
 in `results/asap7_physical/v41x_die_karb_pc1_pipe_fit_slewmargin40_m9/physical.json`.
 It has +161.847 ps setup and +55.333 ps hold WNS with zero DRC and antenna
@@ -270,6 +280,20 @@ WNS −493 ps. Global routing showed persistent congestion through iteration
 ruled it out. Its `physical.json` is an incomplete-flow error record, with
 the CTS report and log retained beside it. This is evidence against simply
 raising the buffer limit, not a routed timing result.
+
+The four-child hard-macro composition uses the exact passing routed PC LEF
+at 375 by 17.01 µm. It synthesizes and places all four fixed macros at
+x=5.040, 390.000, 775.008 and 1160.016 µm inside a 1550 by 30.24 µm
+study floorplan, with a shared registered K ingress and response trunk. Its
+`results/asap7_physical/v41x_die_karb_group4_macro_m9/physical.json` is an
+incomplete-flow **error** record: the M6 power pins from the routed child
+have no legal shapes/vias under the extracted upper-layer obstructions, so
+OpenROAD stops at PDN-0233. The custom M6 macro grid also fails at that
+boundary. Power access must be reserved in the child's physical design
+before composition can proceed to pin placement, CTS or routing. The
+composition Liberty intentionally has no timing arcs, so even a later
+geometry route with this view cannot establish full-group frequency. This
+30.24 µm study floorplan also exceeds the modeled 17.2 µm strip budget.
 
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
