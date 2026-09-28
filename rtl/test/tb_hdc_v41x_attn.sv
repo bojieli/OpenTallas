@@ -13,6 +13,7 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer TD = 64;
     parameter integer NL = 4;
     parameter integer TROWS = 640;
+    parameter integer SRAM_MACRO = 0;
     parameter integer NJOBMAX = 2;
     parameter integer NKV = 1280;
     parameter integer NP = 320;
@@ -68,7 +69,8 @@ module tb_hdc_v41x_attn (input wire clk);
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
     reg pv_cr = 0;
     wire qk_iss, pv_iss;
-    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS)) dut (
+    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
+                        .SRAM_MACRO(SRAM_MACRO != 0)) dut (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),
         .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),

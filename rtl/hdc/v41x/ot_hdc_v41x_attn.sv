@@ -144,7 +144,8 @@ module ot_hdc_v41x_attn #(
     parameter integer NL = 4,          // row lanes (rows per cycle)
     parameter integer TROWS = 640,     // staging buffer rows
     parameter integer SC_CRED = 64,     // score-beat credits
-    parameter integer PV_CRED = 64     // pv-beat credits
+    parameter integer PV_CRED = 64,    // pv-beat credits
+    parameter bit SRAM_MACRO = 0       // ASAP7 packed-row staging macro boundary
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -374,25 +375,16 @@ module ot_hdc_v41x_attn #(
     endfunction
 
     // ================= staging buffer =================
-    reg [ROWW-1:0] sbuf [0:NL*DEPTH-1];
     genvar gl, gs, gk, gh;
-    generate
-        for (gl = 0; gl < NL; gl = gl + 1) begin : g_wr
-            always @(posedge clk)
-                if (kv_go && kv_m[gl]) sbuf[gl * DEPTH + wptr / NL] <= kv_w[gl*ROWW +: ROWW];
-        end
-    endgenerate
     // one read per sub-bank per cycle: q.k rows or a fill beat
     wire [AW-1:0] rd_addr = qk_go ? AW'(qk_row / NL) : AW'(fl_blk * FILLC + fl_cnt);
     wire [15:0]   rd_row0 = qk_go ? qk_row : (fl_blk * TD + fl_cnt * NL);
-    reg  [NL*ROWW-1:0] rd_q;
+    wire [NL*ROWW-1:0] rd_q;
     reg  [15:0]   rd_r0;
     reg  [BW-1:0] rd_bank;
-    generate
-        for (gl = 0; gl < NL; gl = gl + 1) begin : g_rd
-            always @(posedge clk) rd_q[gl*ROWW +: ROWW] <= sbuf[gl * DEPTH + rd_addr];
-        end
-    endgenerate
+    ot_hdc_v41x_attn_staging #(.D(D), .NL(NL), .TROWS(TROWS), .SRAM_MACRO(SRAM_MACRO)) u_stage (
+        .clk(clk), .wr_en({NL{kv_go}} & kv_m), .wr_addr(AW'(wptr / NL)), .wr_data(kv_w),
+        .rd_addr(rd_addr), .rd_data(rd_q));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin rd_qk <= 1'b0; rd_fill <= 1'b0; end
         else begin rd_qk <= qk_go; rd_fill <= fl_go && !qk_go; end

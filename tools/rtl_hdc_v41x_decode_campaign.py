@@ -77,14 +77,17 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
        [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt",
                                                  "ot_hdc_v41x_wgt_bdot", "ot_hdc_v41x_wgt_red", "ot_hdc_v41x_wgt_mac",
                                                  "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_me_adapt",
-                                                 "ot_hdc_v41x_attn_tile", "ot_hdc_v41x_attn", "ot_hdc_v41x_att_adapt",
+                                                 "ot_hdc_v41x_attn_tile", "ot_hdc_v41x_attn_staging",
+                                                 "ot_hdc_v41x_attn", "ot_hdc_v41x_att_adapt",
                                                  "ot_hdc_v41x_sel_lib", "ot_hdc_v41x_sel_slice", "ot_hdc_v41x_sel",
                                                  "ot_hdc_v41x_egather", "ot_hdc_v41x_xu_adapt",
                                                  "ot_hdc_v41x_idx_arith", "ot_hdc_v41x_idx", "ot_hdc_v41x_idx_kstream",
                                                  "ot_hdc_v41x_idx_hbm", "ot_hdc_v41x_idx_adapt",
                                                   "ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side",
                                                   "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec", "ot_hdc_v41x_su_adapt",
-                                                  "ot_hdc_core_v41x")])
+                                                  "ot_hdc_core_v41x")] +
+       [ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/"
+               "ot_sram_1r1w_256x256_m2_r2c2.v"])
 FASTFP = ROOT / "rtl/hdc/ot_hdc_fastfp.sv"
 DPI_SV = ROOT / "rtl/test/sim_hdc_v41x_fastfp_dpi.sv"
 DPI_WRAP = ROOT / "rtl/test/sim_hdc_v41x_fastfp_wrap.sv"

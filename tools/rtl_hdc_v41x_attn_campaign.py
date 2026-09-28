@@ -51,6 +51,8 @@ F = np.float32
 OUT = ROOT / "results/rtl/hdc_v41x_attn_campaign.json"
 RTL_TILE = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv"
 RTL_ENG = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn.sv"
+RTL_STAGE = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv"
+SRAM_MODEL = ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
 LIB = [ROOT / "rtl/hdc/ot_hdc_fastfp.sv"]
 TB_TILE = ROOT / "rtl/test/tb_hdc_v41x_attn_tile.sv"
 TB_ENG = ROOT / "rtl/test/tb_hdc_v41x_attn.sv"
@@ -485,11 +487,12 @@ def build_engine(scratch: Path, cfg: dict, counts: dict, extra: dict):
     cap = {("NJOBMAX" if k == "NJOB" else k): 1 << max(4, int(v - 1).bit_length()) for k, v in counts.items()}
     params = {"H": cfg["H"], "D": cfg["D"], "TD": cfg["TD"], "NL": cfg["NL"], "TROWS": cfg["TROWS"], **cap,
               **extra}
-    tag = "_".join(f"{k}{v}" for k, v in sorted(params.items())) + src_digest([RTL_TILE, RTL_ENG, *LIB, TB_ENG])
+    sources = [RTL_TILE, RTL_ENG, RTL_STAGE, SRAM_MODEL, *LIB]
+    tag = "_".join(f"{k}{v}" for k, v in sorted(params.items())) + src_digest([*sources, TB_ENG])
     obj = scratch / ("obj_" + hashlib.sha1(tag.encode()).hexdigest()[:12])
     exe = obj / "Vtb"
     if not exe.is_file():
-        verilator_build(TB_ENG, "tb_hdc_v41x_attn", [RTL_TILE, RTL_ENG, *LIB], obj, params, jobs=16)
+        verilator_build(TB_ENG, "tb_hdc_v41x_attn", sources, obj, params, jobs=16)
     return exe
 
 
@@ -705,7 +708,8 @@ def main():
     t0 = time.time()
     rec = {"schema": "hdc_v41x_attn_campaign/1", "tool": "tools/rtl_hdc_v41x_attn_campaign.py",
            "arith": V.ARITH, "spec": SPEC, "verilator": VERILATOR,
-           "sources": {str(p.relative_to(ROOT)): sha(p) for p in (RTL_TILE, RTL_ENG, *LIB, TB_TILE, TB_ENG,
+           "sources": {str(p.relative_to(ROOT)): sha(p) for p in (RTL_TILE, RTL_ENG, RTL_STAGE, SRAM_MODEL,
+                                                                  *LIB, TB_TILE, TB_ENG,
                                                                   ROOT / "tools/hdc_golden_v41.py",
                                                                   ROOT / "tools/hdc_golden.py",
                                                                   Path(__file__).resolve())}}
