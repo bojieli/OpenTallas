@@ -76,6 +76,14 @@ real-image gate for its 1,024 sectors in
 `results/rtl/qwen_head_norm_hbm.json`. That head source likewise awaits
 the full-token HBM arm and shared-controller service. Neither standalone
 gate changes the matrix-plus-embedding cycle record.
+The isolated `tb_hdc_qwen_layer0_tp2_postscale_ab` campaign now binds both
+arms to byte-identical real layer-0 program, matrix, scale, CROM and X images
+and the same ISA oracle (`qwen_layer0_postscale_ab_prepare.json`). Its
+`POST_SCALE_HBM=1` arm preloads this CROM range before the unchanged program
+starts, then reads that range through the HBM source while other CROM words
+stay local. The copied TB and C++ harness lint and link at G4 with Verilator
+5.050. The G6144 two-arm execution and its exact output/cycle verdict have
+not run, so no layer-0 timing delta is claimed.
 
 ## Full-shape memory ownership still to close
 
