@@ -4,7 +4,7 @@
   "claim_boundary": "One source-pinned ME matrix; no complete die ROM or token execution.",
   "source_image_manifest": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
   "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
-  "layout_tool_sha256": "cade27b18b00e0c19dda6369e1b8e095c15c4938042607993f5b8ab7ee717f2f",
+  "layout_tool_sha256": "033e76e1ffabb33307cb00c345abf1200d5d1d4d7003cca9d4b57be5e783d0b3",
   "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
   "source_sha256": {
     "tools/rtl_v41_fullshape_layer_campaign.py": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
@@ -215,6 +215,14 @@
   },
   "layer": 0,
   "rank": 0,
+  "source_experts_populated": [
+    110,
+    112,
+    141,
+    144,
+    357,
+    361
+  ],
   "matrices": {
     "gate": {
       "engine": "me",
@@ -224,14 +232,15 @@
       "ncols": 5120,
       "format": "BF16_as_FP32_bank_word",
       "source_weight_sha256": "4898f3acdfde40c057917f845ec8f241508015af4a1c04ed992b651e17f7f433",
+      "source_scale_sha256": null,
       "geometry": {
         "chunks": 8,
         "banks": 64,
-        "plg": 1,
-        "blocks_per_beat": 16,
-        "rows_per_group": 4,
-        "nbeat": 320,
-        "nrg": 24,
+        "plg": 3,
+        "blocks_per_beat": 64,
+        "rows_per_group": 1,
+        "nbeat": 80,
+        "nrg": 96,
         "word_count": 7680,
         "useful_bank_words": 491520,
         "padded_bank_words": 0,
@@ -239,7 +248,7 @@
         "base_word": 0,
         "end_word_exclusive": 7680
       },
-      "output_image_sha256": "24f3d75f7ad011a4a4128bd0bf0ea11b2ad7f4cd1774bcc14625f8610c9e5fc5",
+      "output_image_sha256": "8d456d9a7ccd8fe848af8891fa9d67e71713f4b6e3b984974d7ac3192b88fc1f",
       "output_image_bytes": 1966080,
       "expert_stride_words": null,
       "expert_id_base": null,

@@ -4,7 +4,7 @@
   "claim_boundary": "One source-pinned HE matrix; no complete die ROM or token execution.",
   "source_image_manifest": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
   "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
-  "layout_tool_sha256": "cade27b18b00e0c19dda6369e1b8e095c15c4938042607993f5b8ab7ee717f2f",
+  "layout_tool_sha256": "033e76e1ffabb33307cb00c345abf1200d5d1d4d7003cca9d4b57be5e783d0b3",
   "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
   "source_sha256": {
     "tools/rtl_v41_fullshape_layer_campaign.py": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
@@ -215,6 +215,14 @@
   },
   "layer": 0,
   "rank": 0,
+  "source_experts_populated": [
+    110,
+    112,
+    141,
+    144,
+    357,
+    361
+  ],
   "matrices": {
     "hc_attn_fn": {
       "engine": "he",
@@ -224,6 +232,7 @@
       "ncols": 20480,
       "format": "FP32_HCP_8bank",
       "source_weight_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+      "source_scale_sha256": null,
       "geometry": {
         "banks": 8,
         "hhw": 8,

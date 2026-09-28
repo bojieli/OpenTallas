@@ -4,7 +4,7 @@
   "claim_boundary": "One FP8 matrix bank-layout gate; not a complete die ROM image, ISA execution, or bit-exact token.",
   "source_image_manifest": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
   "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
-  "layout_tool_sha256": "cade27b18b00e0c19dda6369e1b8e095c15c4938042607993f5b8ab7ee717f2f",
+  "layout_tool_sha256": "033e76e1ffabb33307cb00c345abf1200d5d1d4d7003cca9d4b57be5e783d0b3",
   "capacity_budget_sha256": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
   "source_sha256": {
@@ -216,6 +216,14 @@
   },
   "layer": 0,
   "rank": 0,
+  "source_experts_populated": [
+    110,
+    112,
+    141,
+    144,
+    357,
+    361
+  ],
   "rom_capacity_bytes": 2714287356,
   "output_format": "address-major, 64 bank lanes per address, little-endian lane words; FP8: 32 code bytes plus scale byte, FP4: 16 packed code bytes plus scale byte",
   "matrices": {
@@ -245,6 +253,7 @@
       },
       "expert_stride_words": null,
       "expert_id_base": null,
+      "expert_family": null,
       "expert_ids_materialized": null,
       "all_experts_materialized": null,
       "expert_reserved_end_word_exclusive": null,

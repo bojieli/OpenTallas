@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.v41x.fullshape.weight_layout.v1",
-  "status": "one_constant_exact_readback",
-  "claim_boundary": "One source-pinned CROM tensor; no complete die CROM or token execution.",
+  "status": "one_matrix_exact_readback",
+  "claim_boundary": "One source-pinned ME matrix; no complete die ROM or token execution.",
   "source_image_manifest": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
   "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
   "layout_tool_sha256": "033e76e1ffabb33307cb00c345abf1200d5d1d4d7003cca9d4b57be5e783d0b3",
@@ -223,18 +223,39 @@
     357,
     361
   ],
-  "constants": {
-    "attn_norm": {
-      "engine": "crom",
-      "base_word": 0,
-      "word_count": 5120,
-      "format": "FP32_lo_plus_zero_hi",
-      "source_format": "BF16",
-      "source_tensor_sha256": "1e862a4492423ffe1663b101267ac4710ba72ec0cea51b1396ea5c9c0a1fa682",
-      "output_image_sha256": "62f21e446cfedf7cbe5ba9957f472e9a487c7ea16ee549eb33155d133ab866b0",
-      "output_image_bytes": 40960
+  "matrices": {
+    "wo_a": {
+      "engine": "me",
+      "base_word": 7680,
+      "word_count": 131072,
+      "nrows": 2048,
+      "ncols": 4096,
+      "format": "FP8_QDQ_then_BF16_as_FP32_bank_word",
+      "source_weight_sha256": "93d7dc91d01acf86c0a567d21247c209ac4f989a106f2bf21cc51797ce29f341",
+      "source_scale_sha256": "65fa2494808c0eeb7fb6a6e617f93de187a0969991e08a7817336937019cd4f4",
+      "geometry": {
+        "chunks": 8,
+        "banks": 64,
+        "plg": 3,
+        "blocks_per_beat": 64,
+        "rows_per_group": 1,
+        "nbeat": 64,
+        "nrg": 2048,
+        "word_count": 131072,
+        "useful_bank_words": 8388608,
+        "padded_bank_words": 0,
+        "image_bytes": 33554432,
+        "base_word": 7680,
+        "end_word_exclusive": 138752
+      },
+      "output_image_sha256": "5cc5de8536d4efe889b38e5c8c593f63e0d66ffb9475ca6efa1e7c083af1bdf1",
+      "output_image_bytes": 33554432,
+      "expert_stride_words": null,
+      "expert_id_base": null,
+      "expert_ids_materialized": null,
+      "all_experts_materialized": null
     }
   },
-  "matrix_coverage": "none",
-  "unplaced_note": "All other CROM entries, generated RoPE values, Engram token map, and ME/QE/HE weights remain unplaced."
+  "matrix_coverage": "one_matrix_only",
+  "unplaced_note": "All other matrices and constants remain unplaced."
 }

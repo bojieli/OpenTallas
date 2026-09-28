@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -26,7 +27,8 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def geometry(nrows: int, nblocks: int, chunks: int = 8, min_plg: int = 0) -> dict:
+def geometry(nrows: int, nblocks: int, chunks: int = 8,
+             min_plg: int = 0, fixed_plg: int | None = None) -> dict:
     """Choose an exact row layout minimizing padded bank words.
 
     The tile has 8*chunks 264-bit lane banks.  A segment uses 8*2**plg
@@ -35,7 +37,10 @@ def geometry(nrows: int, nblocks: int, chunks: int = 8, min_plg: int = 0) -> dic
     if nrows <= 0 or nblocks <= 0 or chunks <= 0 or chunks & (chunks - 1):
         raise ValueError("positive shape and power-of-two chunk count required")
     choices = []
-    for plg in range(min_plg, chunks.bit_length()):
+    candidates = (fixed_plg,) if fixed_plg is not None else range(min_plg, chunks.bit_length())
+    for plg in candidates:
+        if plg is None or plg < 0:
+            raise ValueError("invalid fixed segment level")
         p = 1 << plg
         if p > chunks:
             break
@@ -55,7 +60,13 @@ def pack_me_bf16(bits: np.ndarray, base_word: int = 0, chunks: int = 8) -> tuple
     if bits.dtype != np.uint16 or bits.ndim != 2 or base_word < 0:
         raise ValueError("ME source must be a BF16 uint16 matrix with nonnegative base")
     nrows, ncols = bits.shape
-    geom = geometry(nrows, ncols, chunks, min_plg=1)
+    # ot_hdc_v41x_me_adapt computes plg from K, not from a packing optimum:
+    # clamp(ceil(log2(ceil(K/8))), PMIN_LG=1, log2(MG)).
+    nch = (ncols + 7) // 8
+    plg = min(chunks.bit_length() - 1, max(1, (nch - 1).bit_length()))
+    geom = geometry(nrows, ncols, chunks, fixed_plg=plg)
+    if geom["plg"] != plg:
+        raise AssertionError("ME geometry differs from RTL adapter")
     image = np.zeros((geom["word_count"], geom["banks"]), dtype="<u4")
     touched = np.zeros(image.shape, dtype=np.bool_)
     for row in range(nrows):
@@ -79,6 +90,29 @@ def verify_me(image: np.ndarray, bits: np.ndarray, geom: dict) -> None:
             address, bank = bank_slot(row, term, geom, geom["base_word"])
             if image[address - geom["base_word"], bank] != np.uint32(bits[row, term]) << 16:
                 raise AssertionError(f"ME readback mismatch row={row} term={term}")
+
+
+def wo_a_fp8_to_bf16(codes: np.ndarray, scales: np.ndarray) -> np.ndarray:
+    """The released wo_a FP8 QDQ followed by the golden's BF16 RNE boundary."""
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    from tools import hdc_golden as G
+    from tools import hdc_golden_v41 as V
+
+    if codes.dtype != np.uint8 or scales.dtype != np.uint8 or codes.ndim != 2 or scales.ndim != 2:
+        raise ValueError("wo_a requires FP8 codes and UE8M0 bytes")
+    nrows, cols = codes.shape
+    if nrows % 32 or cols % 32 or scales.shape != (nrows // 32, cols // 32):
+        raise ValueError("wo_a 32x32 scale shape mismatch")
+    if np.any((codes == 0x7f) | (codes == 0xff)):
+        raise ValueError("wo_a contains E4M3 NaN code")
+    out = np.empty((nrows, cols), dtype=np.uint16)
+    for r in range(0, nrows, 32):
+        exponent = scales[r // 32].astype(np.int16) - 127
+        q = V.E4M3[codes[r:r + 32]].reshape(32, cols // 32, 32)
+        dense = (q * np.exp2(exponent).reshape(1, cols // 32, 1)).astype(np.float32)
+        out[r:r + 32] = (G.bits(G.to_bf16(dense.reshape(32, cols))) >> 16).astype(np.uint16)
+    return out
 
 
 def pack_he_fp32(bits: np.ndarray, base_word: int = 0, hhw: int = 8) -> tuple[np.ndarray, dict]:
@@ -225,7 +259,7 @@ def pack_from_manifest(manifest_path: Path, image_dir: Path, name: str, output: 
     fmt = (weight["format"], scale["format"])
     if fmt not in (("F8_E4M3", "F8_E8M0"), ("I8", "F8_E8M0")):
         raise ValueError("only exact FP8 E4M3 or packed FP4 E2M1 with UE8M0 scales are supported")
-    expert_match = re.fullmatch(r"exp(\d+)\.w[123]", name)
+    expert_match = re.fullmatch(r"exp(\d+)\.(w[123])", name)
     if fmt[0] == "I8" and expert_match is None:
         raise ValueError("packed FP4 is supported only for routed expert weights")
     inputs = {}
@@ -280,6 +314,7 @@ def pack_from_manifest(manifest_path: Path, image_dir: Path, name: str, output: 
         "source_sha256": manifest["source_sha256"],
         "checkpoint": manifest["checkpoint"],
         "layer": manifest["layer"], "rank": manifest["rank"],
+        "source_experts_populated": manifest.get("experts_populated"),
         "rom_capacity_bytes": CAPACITY_BYTES,
         "output_format": "address-major, 64 bank lanes per address, little-endian lane words; FP8: 32 code bytes plus scale byte, FP4: 16 packed code bytes plus scale byte",
         "matrices": {name: {
@@ -288,6 +323,7 @@ def pack_from_manifest(manifest_path: Path, image_dir: Path, name: str, output: 
             "format": format_name, "source_weight_sha256": weight["sha256"],
             "source_scale_sha256": scale["sha256"], "geometry": geom,
             "expert_stride_words": stride, "expert_id_base": base_word if stride is not None else None,
+            "expert_family": f"exp.{expert_match.group(2)}" if expert_match else None,
             "expert_ids_materialized": [expert_id] if expert_id is not None else None,
             "all_experts_materialized": False if expert_id is not None else None,
             "expert_reserved_end_word_exclusive": reserved_end_word if expert_id is not None else None,
@@ -354,6 +390,7 @@ def pack_constant_from_manifest(manifest_path: Path, image_dir: Path, name: str,
         "source_sha256": manifest["source_sha256"],
         "checkpoint": manifest["checkpoint"],
         "layer": manifest["layer"], "rank": manifest["rank"],
+        "source_experts_populated": manifest.get("experts_populated"),
         "constants": {name: {
             "engine": "crom", "base_word": base_word,
             "word_count": int(bits.size), "format": "FP32_lo_plus_zero_hi",
@@ -365,6 +402,38 @@ def pack_constant_from_manifest(manifest_path: Path, image_dir: Path, name: str,
     }
 
 
+def pack_pre0_constant(manifest_path: Path, output: Path, base_word: int) -> dict:
+    """The model-independent four-value HC initial state used by the builder."""
+    manifest = json.loads(manifest_path.read_text())
+    if base_word < 0 or base_word + 4 >= (1 << 30):
+        raise ValueError("pre0 CROM address outside A30")
+    words = np.zeros((4, 2), dtype="<u4")
+    words[0, 0] = 0x3f800000
+    output.parent.mkdir(parents=True, exist_ok=True)
+    words.tofile(output)
+    if np.fromfile(output, dtype="<u4").reshape(4, 2).tolist() != words.tolist():
+        raise AssertionError("pre0 CROM readback mismatch")
+    return {
+        "schema": SCHEMA, "status": "generated_constant_exact_readback",
+        "claim_boundary": "One generated CROM constant; no complete die CROM or token execution.",
+        "source_image_manifest": str(manifest_path),
+        "source_image_manifest_sha256": sha256(manifest_path),
+        "layout_tool_sha256": sha256(Path(__file__)),
+        "source_commit": manifest["source_commit"],
+        "source_sha256": manifest["source_sha256"],
+        "checkpoint": manifest["checkpoint"],
+        "layer": manifest["layer"], "rank": manifest["rank"],
+        "source_experts_populated": manifest.get("experts_populated"),
+        "constants": {"pre0": {
+            "engine": "crom", "base_word": base_word, "word_count": 4,
+            "format": "FP32_lo_plus_zero_hi",
+            "generated_rule": "hdc_program_v41.Layout: [1.0, 0.0, 0.0, 0.0]",
+            "output_image_sha256": sha256(output), "output_image_bytes": output.stat().st_size,
+        }},
+        "matrix_coverage": "none",
+    }
+
+
 def pack_unquantized_from_manifest(manifest_path: Path, image_dir: Path, name: str,
                                    engine: str, output: Path, base_word: int = 0) -> dict:
     """One source-pinned BF16 ME or FP32 HE matrix with exact bank readback."""
@@ -373,7 +442,8 @@ def pack_unquantized_from_manifest(manifest_path: Path, image_dir: Path, name: s
         raise ValueError("unrecognized input manifest schema")
     key = f"w.{name}"
     entry = manifest["files"].get(key)
-    required = "BF16" if engine == "me" else "F32" if engine == "he" else None
+    required = ("F8_E4M3" if name == "wo_a" and engine == "me" else
+                "BF16" if engine == "me" else "F32" if engine == "he" else None)
     if required is None or entry is None or entry["format"] != required:
         raise ValueError("missing or wrong-format ME/HE matrix")
     path = image_dir / f"{key}.bin"
@@ -383,7 +453,22 @@ def pack_unquantized_from_manifest(manifest_path: Path, image_dir: Path, name: s
     if int(np.prod(entry["shape"])) != raw.size:
         raise ValueError("ME/HE source byte shape mismatch")
     nrows, row_bytes = entry["shape"]
-    if engine == "me":
+    source_scale_sha = None
+    if engine == "me" and name == "wo_a":
+        scale_entry = manifest["files"].get("w.wo_a.scale")
+        scale_path = image_dir / "w.wo_a.scale.bin"
+        if (scale_entry is None or scale_entry["format"] != "F8_E8M0" or
+                not scale_path.is_file() or sha256(scale_path) != scale_entry["sha256"]):
+            raise ValueError("missing or wrong source-pinned wo_a scale")
+        codes = raw.reshape(nrows, row_bytes)
+        scales = np.fromfile(scale_path, dtype=np.uint8).reshape(scale_entry["shape"])
+        bits = wo_a_fp8_to_bf16(codes, scales)
+        image, geom = pack_me_bf16(bits, base_word)
+        verify_me(image, bits, geom)
+        width_per_address = geom["banks"] * 4
+        fmt = "FP8_QDQ_then_BF16_as_FP32_bank_word"
+        source_scale_sha = scale_entry["sha256"]
+    elif engine == "me":
         if row_bytes % 2:
             raise ValueError("odd BF16 row byte count")
         bits = np.frombuffer(raw.tobytes(), dtype="<u2").reshape(nrows, row_bytes // 2)
@@ -415,11 +500,13 @@ def pack_unquantized_from_manifest(manifest_path: Path, image_dir: Path, name: s
         "source_sha256": manifest["source_sha256"],
         "checkpoint": manifest["checkpoint"],
         "layer": manifest["layer"], "rank": manifest["rank"],
+        "source_experts_populated": manifest.get("experts_populated"),
         "matrices": {name: {
             "engine": engine, "base_word": base_word,
             "word_count": geom["word_count"], "nrows": nrows,
             "ncols": int(bits.shape[1]), "format": fmt,
             "source_weight_sha256": entry["sha256"],
+            "source_scale_sha256": source_scale_sha,
             "geometry": geom, "output_image_sha256": sha256(output),
             "output_image_bytes": output.stat().st_size,
             "expert_stride_words": None, "expert_id_base": None,
@@ -437,9 +524,13 @@ def combine_layout_records(paths: list[Path]) -> dict:
     inputs = [json.loads(path.read_text()) for path in paths]
     pinned = (inputs[0]["source_image_manifest_sha256"], inputs[0]["layer"], inputs[0]["rank"])
     matrices, constants, regions = {}, {}, []
+    expert_regions = {}
+    source_experts = inputs[0].get("source_experts_populated")
     for path, data in zip(paths, inputs):
         if data.get("schema") != SCHEMA or (data["source_image_manifest_sha256"], data["layer"], data["rank"]) != pinned:
             raise ValueError("incompatible source image or layout schema")
+        if data.get("source_experts_populated") != source_experts:
+            raise ValueError("different source expert coverage")
         for name, entry in data.get("matrices", {}).items():
             if name in matrices:
                 raise ValueError(f"duplicate matrix {name}")
@@ -453,7 +544,17 @@ def combine_layout_records(paths: list[Path]) -> dict:
                 bytes_per_bank = 4
             else:
                 bytes_per_bank = 32
-            regions.append((entry["engine"], start, end, bytes_per_bank, name))
+            family = entry.get("expert_family")
+            if family:
+                old = expert_regions.get(family)
+                descriptor = (entry["engine"], start, end, bytes_per_bank, family)
+                if old is None:
+                    expert_regions[family] = descriptor
+                    regions.append(descriptor)
+                elif old != descriptor:
+                    raise ValueError(f"expert family region mismatch: {family}")
+            else:
+                regions.append((entry["engine"], start, end, bytes_per_bank, name))
         for name, entry in data.get("constants", {}).items():
             if name in constants:
                 raise ValueError(f"duplicate constant {name}")
@@ -468,12 +569,22 @@ def combine_layout_records(paths: list[Path]) -> dict:
                          for engine, start, end, width, _ in regions)
     if reserved_bytes > CAPACITY_BYTES:
         raise ValueError("combined placement exceeds per-die ROM capacity")
+    coverage = {family: sorted({eid for entry in matrices.values()
+                                if entry.get("expert_family") == family
+                                for eid in entry["expert_ids_materialized"]})
+                for family in expert_regions}
+    token_selected = (source_experts is not None and
+                      all(coverage.get(f"exp.w{kind}") == sorted(source_experts)
+                          for kind in (1, 2, 3)))
     return {
         "schema": SCHEMA, "status": "partial_rank_layout_verified",
         "claim_boundary": "Source-pinned partial rank layout. Missing weights/constants and unmaterialized experts prevent full-layer/token claims.",
         "source_image_manifest_sha256": pinned[0], "layer": pinned[1], "rank": pinned[2],
         "source_records_sha256": {str(path): sha256(path) for path in paths},
         "matrices": matrices, "constants": constants,
+        "source_experts_populated": source_experts,
+        "expert_family_coverage": coverage,
+        "selected_expert_weights_complete": token_selected,
         "rom_capacity_bytes": CAPACITY_BYTES, "reserved_bytes": reserved_bytes,
         "regions": [dict(engine=engine, start_word=start, end_word_exclusive=end,
                          bytes_per_bank_word=width, name=name)
@@ -482,6 +593,95 @@ def combine_layout_records(paths: list[Path]) -> dict:
                                         for e in matrices.values()),
         "complete_die_image": False,
     }
+
+
+def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -> dict:
+    """Address-plan all supported weights of one token-selected layer-0 shard.
+
+    Routed experts occupy their absolute 0..383 IDs in three fixed-stride
+    regions.  Only the six selected IDs are materialized in this image.
+    Unsupported/absent inputs are listed so a consumer must fail closed.
+    """
+    manifest = json.loads(manifest_path.read_text())
+    if manifest.get("layer") != 0 or manifest.get("rank") != 0 or manifest.get("context") != 200000:
+        raise ValueError("assembler is pinned to 200K/L0/rank0")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    record_paths = []
+    qe_base = 0
+
+    def emit(name: str, engine: str, base: int) -> dict:
+        output = out_dir / f"{name}.{engine}.bin"
+        if engine == "qe":
+            data = pack_from_manifest(manifest_path, image_dir, name, output, base)
+        elif engine == "crom":
+            data = pack_constant_from_manifest(manifest_path, image_dir, name, output, base)
+        else:
+            data = pack_unquantized_from_manifest(manifest_path, image_dir, name, engine, output, base)
+        path = out_dir / f"{name}.{engine}.json"
+        path.write_text(json.dumps(data, indent=2) + "\n")
+        record_paths.append(path)
+        return data
+
+    dense_qe = ("wq_a", "wkv", "wq_b", "wo_b", "shared.w1", "shared.w3", "shared.w2")
+    for name in dense_qe:
+        entry = emit(name, "qe", qe_base)["matrices"][name]
+        qe_base += entry["word_count"]
+    for kind in ("w1", "w3", "w2"):
+        region_base = qe_base
+        stride = None
+        for expert_id in manifest["experts_populated"]:
+            name = f"exp{expert_id}.{kind}"
+            entry = emit(name, "qe", region_base)["matrices"][name]
+            if stride is None:
+                stride = entry["expert_stride_words"]
+            elif stride != entry["expert_stride_words"]:
+                raise ValueError("routed expert stride differs within family")
+        qe_base = region_base + 384 * stride
+    me_base = 0
+    for name in ("gate", "wo_a"):
+        entry = emit(name, "me", me_base)["matrices"][name]
+        me_base += entry["word_count"]
+    he_base = 0
+    for name in ("hc_attn_fn", "hc_ffn_fn"):
+        entry = emit(name, "he", he_base)["matrices"][name]
+        he_base += entry["word_count"]
+    crom_base = 0
+    constants = ("attn_norm", "ffn_norm", "q_norm", "kv_norm",
+                 "hc_attn_scale", "hc_attn_base", "hc_ffn_scale", "hc_ffn_base",
+                 "attn_sink", "gate.bias")
+    for name in constants:
+        entry = emit(name, "crom", crom_base)["constants"][name]
+        crom_base += entry["word_count"]
+    pre0_output = out_dir / "pre0.crom.bin"
+    pre0_data = pack_pre0_constant(manifest_path, pre0_output, crom_base)
+    pre0_path = out_dir / "pre0.crom.json"
+    pre0_path.write_text(json.dumps(pre0_data, indent=2) + "\n")
+    record_paths.append(pre0_path)
+    crom_base += 4
+    combined = combine_layout_records(record_paths)
+    known = {f"w.{name}" for name in (*dense_qe, "gate", "wo_a", "hc_attn_fn", "hc_ffn_fn", *constants)}
+    known |= {f"w.exp{eid}.{kind}" for eid in manifest["experts_populated"]
+              for kind in ("w1", "w3", "w2")}
+    missing = sorted(k for k in manifest["files"] if k.startswith("w.") and
+                     not k.endswith(".scale") and k not in known)
+    combined.update(
+        status="token_selected_partial_rank_layout",
+        claim_boundary="Every present source tensor and selected expert weight is placed; generated CROM/Engram/RoPE contracts and RTL binding still prevent token execution.",
+        source_commit=manifest["source_commit"],
+        source_sha256=manifest["source_sha256"],
+        checkpoint=manifest["checkpoint"],
+        source_image_manifest=str(manifest_path),
+        source_image_manifest_sha256=sha256(manifest_path),
+        layout_tool_sha256=sha256(Path(__file__)),
+        context=manifest["context"],
+        selected_expert_ids=list(manifest["experts_populated"]),
+        selected_expert_weights_complete=combined["selected_expert_weights_complete"],
+        unplaced_source_tensors=missing,
+        unplaced_generated=("rope_plain", "rope_yarn", "tmap"),
+        complete_die_image=False,
+        token_runnable=False,
+    )
+    return combined
 
 
 def main() -> None:
@@ -494,12 +694,18 @@ def main() -> None:
     one.add_argument("--me")
     one.add_argument("--he")
     one.add_argument("--combine-record", type=Path, nargs="+")
+    one.add_argument("--assemble-token-layer0", action="store_true")
     ap.add_argument("--output", type=Path)
+    ap.add_argument("--out-dir", type=Path)
     ap.add_argument("--record", type=Path, required=True)
     ap.add_argument("--base-word", type=int, default=0)
     ap.add_argument("--chunks", type=int, default=8)
     a = ap.parse_args()
-    if a.combine_record:
+    if a.assemble_token_layer0:
+        if not a.input_manifest or not a.image_dir or not a.out_dir:
+            ap.error("assembly requires --input-manifest, --image-dir and --out-dir")
+        record = assemble_token_layer0(a.input_manifest, a.image_dir, a.out_dir)
+    elif a.combine_record:
         record = combine_layout_records(a.combine_record)
     elif a.matrix:
         if not a.input_manifest or not a.image_dir or not a.output:
@@ -519,7 +725,12 @@ def main() -> None:
     a.record.parent.mkdir(parents=True, exist_ok=True)
     a.record.write_text(json.dumps(record, indent=2) + "\n")
     summary = {"status": record["status"]}
-    if a.combine_record:
+    if a.assemble_token_layer0:
+        summary.update(matrices=len(record["matrices"]), constants=len(record["constants"]),
+                       selected_experts=record["selected_expert_ids"],
+                       reserved_bytes=record["reserved_bytes"],
+                       unplaced=record["unplaced_source_tensors"])
+    elif a.combine_record:
         summary.update(matrices=list(record["matrices"]), constants=list(record["constants"]),
                        reserved_bytes=record["reserved_bytes"])
     elif a.matrix:

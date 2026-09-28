@@ -6,11 +6,11 @@
   "layer": 0,
   "rank": 0,
   "source_records_sha256": {
-    "results/rtl/hdc_v41x_fullshape_wq_a_layout.json": "3c942a37de793ee504508e0b22fd08e98777015626a80741e3999b75f1434b1b",
-    "results/rtl/hdc_v41x_fullshape_exp110_w1_layout.json": "ff86d2d530d355fb4fad19c43d8f956f88353e3f698b5c3f39d7017afaf880e3",
-    "results/rtl/hdc_v41x_fullshape_attn_norm_crom.json": "dae7a8fd7d181b141f22cef9cadb0d31fe6b3622577d255a3b14b00260b9a50f",
-    "results/rtl/hdc_v41x_fullshape_gate_me_layout.json": "b78339b08c857884bba0ef2b61d00a5ed5669ca164ad46e65b12f7831817c9e9",
-    "results/rtl/hdc_v41x_fullshape_hc_attn_fn_he_layout.json": "4bc08ff9a641e8187ec707c3f011a61bc06e34a55bbf2e637f76eef24a57baca"
+    "results/rtl/hdc_v41x_fullshape_wq_a_layout.json": "eb8bb6cdf6a989fdf8051eb7315f47a59c328f82f757948dbec473402b57962e",
+    "results/rtl/hdc_v41x_fullshape_exp110_w1_layout.json": "8b835ec50141d082aa33088907ee751585c3cc8042e420ff43f107585aeed61b",
+    "results/rtl/hdc_v41x_fullshape_attn_norm_crom.json": "41bc5690423f83c6acef9956e5b028c209cfce8911abc81f3cda0f4d45734e6a",
+    "results/rtl/hdc_v41x_fullshape_gate_me_layout.json": "8e8d1fae4245012665899c3cde7a27d2714edd9da7dad15a6068bc9222fb1789",
+    "results/rtl/hdc_v41x_fullshape_hc_attn_fn_he_layout.json": "63bd3bae5513d39538a68e9bd590397ab66d27791b15067cd37ecef00e7e8af1"
   },
   "matrices": {
     "wq_a": {
@@ -39,6 +39,7 @@
       },
       "expert_stride_words": null,
       "expert_id_base": null,
+      "expert_family": null,
       "expert_ids_materialized": null,
       "all_experts_materialized": null,
       "expert_reserved_end_word_exclusive": null,
@@ -71,6 +72,7 @@
       },
       "expert_stride_words": 1440,
       "expert_id_base": 800,
+      "expert_family": "exp.w1",
       "expert_ids_materialized": [
         110
       ],
@@ -87,14 +89,15 @@
       "ncols": 5120,
       "format": "BF16_as_FP32_bank_word",
       "source_weight_sha256": "4898f3acdfde40c057917f845ec8f241508015af4a1c04ed992b651e17f7f433",
+      "source_scale_sha256": null,
       "geometry": {
         "chunks": 8,
         "banks": 64,
-        "plg": 1,
-        "blocks_per_beat": 16,
-        "rows_per_group": 4,
-        "nbeat": 320,
-        "nrg": 24,
+        "plg": 3,
+        "blocks_per_beat": 64,
+        "rows_per_group": 1,
+        "nbeat": 80,
+        "nrg": 96,
         "word_count": 7680,
         "useful_bank_words": 491520,
         "padded_bank_words": 0,
@@ -102,7 +105,7 @@
         "base_word": 0,
         "end_word_exclusive": 7680
       },
-      "output_image_sha256": "24f3d75f7ad011a4a4128bd0bf0ea11b2ad7f4cd1774bcc14625f8610c9e5fc5",
+      "output_image_sha256": "8d456d9a7ccd8fe848af8891fa9d67e71713f4b6e3b984974d7ac3192b88fc1f",
       "output_image_bytes": 1966080,
       "expert_stride_words": null,
       "expert_id_base": null,
@@ -117,6 +120,7 @@
       "ncols": 20480,
       "format": "FP32_HCP_8bank",
       "source_weight_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+      "source_scale_sha256": null,
       "geometry": {
         "banks": 8,
         "hhw": 8,
@@ -146,6 +150,20 @@
       "output_image_bytes": 40960
     }
   },
+  "source_experts_populated": [
+    110,
+    112,
+    141,
+    144,
+    357,
+    361
+  ],
+  "expert_family_coverage": {
+    "exp.w1": [
+      110
+    ]
+  },
+  "selected_expert_weights_complete": false,
   "rom_capacity_bytes": 2714287356,
   "reserved_bytes": 607283200,
   "regions": [
@@ -182,7 +200,7 @@
       "start_word": 800,
       "end_word_exclusive": 553760,
       "bytes_per_bank_word": 17,
-      "name": "exp110.w1"
+      "name": "exp.w1"
     }
   ],
   "all_experts_materialized": false,

@@ -115,6 +115,7 @@ def test_me_he_bank_row_order_and_roundtrip():
     me = np.arange(8 * 32, dtype=np.uint16).reshape(8, 32)
     me_image, me_geom = W.pack_me_bf16(me, base_word=17)
     W.verify_me(me_image, me, me_geom)
+    assert me_geom["plg"] == 2  # RTL ME adapter: ceil(log2(ceil(32/8)))
     address, bank = W.bank_slot(7, 31, me_geom, 17)
     assert me_image[address - 17, bank] == np.uint32(me[7, 31]) << 16
     he = np.arange(3 * 64, dtype=np.uint32).reshape(3, 64)
@@ -122,3 +123,32 @@ def test_me_he_bank_row_order_and_roundtrip():
     W.verify_he(he_image, he, he_geom)
     assert he_geom["word_count"] == 3
     assert he_image[2, 7, 7] == he[2, 63]
+
+
+def test_me_full_gate_uses_rtl_selected_segment_level():
+    bits = np.zeros((96, 5120), dtype=np.uint16)
+    _, geom = W.pack_me_bf16(bits)
+    assert geom["plg"] == 3
+    assert geom["nbeat"] == 80 and geom["rows_per_group"] == 1
+
+
+def test_real_wo_a_fp8_to_bf16_matches_golden():
+    from tools import hdc_golden as G
+    from tools import hdc_golden_v41 as V
+
+    image_dir = Path("/tmp/codex_v41_fullshape_golden/images/ctx200000_L00_r0")
+    if not (image_dir / "w.wo_a.bin").is_file():
+        pytest.skip("source-pinned full-shape scratch image not present")
+    codes = np.fromfile(image_dir / "w.wo_a.bin", dtype=np.uint8).reshape(2048, 4096)[:32]
+    scales = np.fromfile(image_dir / "w.wo_a.scale.bin", dtype=np.uint8).reshape(64, 128)[:1]
+    ours = W.wo_a_fp8_to_bf16(codes, scales)
+    golden = G.to_bf16(V._blocked(codes, scales.astype(np.int32) - 127, "wo_a").dense())
+    assert np.array_equal(ours, (G.bits(golden) >> 16).astype(np.uint16))
+
+
+def test_generated_pre0_has_exact_low_half_and_zero_high(tmp_path: Path):
+    source = W.ROOT / "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json"
+    rec = W.pack_pre0_constant(source, tmp_path / "pre0.bin", 23)
+    words = np.fromfile(tmp_path / "pre0.bin", dtype="<u4").reshape(4, 2)
+    assert words.tolist() == [[0x3f800000, 0], [0, 0], [0, 0], [0, 0]]
+    assert rec["constants"]["pre0"]["base_word"] == 23
