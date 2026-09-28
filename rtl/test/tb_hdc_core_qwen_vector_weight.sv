@@ -18,7 +18,8 @@ module tb_hdc_core #(
     parameter integer SU_VEC = 1,            // the vector stream unit (0: the scalar one, SW = 1)
     parameter integer SW = 8,                // stream-unit lanes (tools/hdc_isa.py SU_WIDTH)
     parameter integer KV_BRIDGE = 0,         // mirror vector writes through packed sector/tail bridge
-    parameter integer WHBM = 0
+    parameter integer WHBM = 0,
+    parameter integer SYS_NPC = 4       // shared timed HBM pseudo-channels (KV and weights)
 ) (input wire clk);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
@@ -138,7 +139,7 @@ module tb_hdc_core #(
         .vw_mx_we(vw_mx_we), .vw_mx_addr(vw_mx_addr), .vw_mx_mask(vw_mx_mask), .vw_mx_data(vw_mx_data));
 
 `ifndef OT_HDC_MEMSYS
-    localparam integer SYS_LWIN=8,SYS_NPC=4,SYS_BK=16;
+    localparam integer SYS_LWIN=8,SYS_BK=16;
     localparam integer SYS_LBK=$clog2(SYS_BK);
     localparam integer WB=G*W*16, WS=WB/256, WBF=2, WNB=WBF*WS, LWINW=11, WWIN=1<<LWINW;
     localparam integer WBASE=1024, HMEM=131072, TAGWW=LWINW+1, TAGH=15;

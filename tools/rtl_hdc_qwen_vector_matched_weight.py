@@ -51,6 +51,8 @@ def sha(path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--steps", type=int, default=2, choices=range(2, 19))
+    ap.add_argument("--npc", type=int, default=4, choices=(1, 2, 4),
+                    help="pseudo-channels shared by KV and weight traffic in both arms")
     ap.add_argument("--workdir", type=Path, help="persistent scratch directory for this exact source")
     ap.add_argument("--reuse", action="store_true", help="reuse executables after source-hash validation")
     ap.add_argument("--output", type=Path,
@@ -61,8 +63,8 @@ def main():
     rec = {"schema": "opentallas.qwen-vector-matched-weight.v1",
            "configuration": {"groups": 4, "su_width": 16, "steps_executed": args.steps,
                              "weight_chunk_words": 1536, "clock_ps": 1000,
-                             "weight_rate_words_x256": TIMING.w_rate(dict(TIMING.WH,npc=4)),
-                             "kv_hbm_pseudo_channels": 4,
+                             "weight_rate_words_x256": TIMING.w_rate(dict(TIMING.WH,npc=args.npc)),
+                             "kv_hbm_pseudo_channels": args.npc,
                              "kv_hbm_model": "ot_hdc_hbm_model PC_RDY=1; modeled timing/refresh"},
            "claim_boundary": "Reduced Qwen vector behavioral RTL. Both modes run the same chunked ISA program, "
                              "vector controller and arithmetic, autonomous physical K boot, physical K/V sectors, "
@@ -113,22 +115,23 @@ print(*tokens)
             mode_obj = work / f"obj_{mode}"
             exe = mode_obj / "Vtb_hdc_core"
             manifest = work / f"source_sha256_{mode}.json"
-            mode_pins = dict(pins, mode=mode)
+            mode_pins = dict(pins, mode=mode, npc=args.npc)
             # The executable depends on RTL, TB, harness and ISA offsets. The
             # runner and oracle can be tightened without recompiling a binary
             # whose compiled inputs still have the exact same hashes.
             compiled_pins = {str(p.relative_to(ROOT)): sha(p) for p in [*SOURCES, BASE.ISA_SVH]}
             prior = json.loads(manifest.read_text()) if manifest.exists() else {}
             binary_reused = bool(args.reuse and exe.exists() and prior.get("mode") == mode and
+                                 prior.get("npc") == args.npc and
                                  all(prior.get(k) == v for k, v in compiled_pins.items()))
             if not binary_reused:
                 cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal",
                        "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-VARHIDDEN",
                        "-Wno-PINMISSING", "-Wno-TIMESCALEMOD", "--unroll-count", "65536",
                        "--top-module", "tb_hdc_core", "-GG=4", "-GSW=16", "-GKV_BRIDGE=0",
-                       f"-GWHBM={whbm}", "-Mdir", str(mode_obj), f"-I{BASE.ISA_SVH.parent}",
+                       f"-GWHBM={whbm}", f"-GSYS_NPC={args.npc}", "-Mdir", str(mode_obj), f"-I{BASE.ISA_SVH.parent}",
                        *map(str, SOURCES), "-CFLAGS", "-O1"]
-                build = subprocess.run(cmd, cwd=ROOT, env=dict(os.environ, MAKEFLAGS="-j8"),
+                build = subprocess.run(cmd, cwd=ROOT, env=dict(os.environ, MAKEFLAGS="-j2"),
                                        capture_output=True, text=True)
                 if build.returncode:
                     raise RuntimeError(f"{mode} build: " + (build.stdout + build.stderr)[-8000:])
