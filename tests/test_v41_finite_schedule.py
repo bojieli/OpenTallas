@@ -64,3 +64,11 @@ def test_stale_source_pin_is_rejected():
     m = deepcopy(witness())
     m["source_sha256"]["tools/v41_finite_schedule.py"] = "0" * 64
     assert any("source pin mismatch" in e for e in FS.audit(m)["errors"])
+
+
+def test_index_and_kv_on_same_stack_cannot_claim_independent_bandwidth():
+    m = witness()
+    for name, cls in (("index_stack0", "index_hbm"), ("kv_stack0", "kv_hbm")):
+        m["resources"][name] = dict(physical_id=name, capacity_per_cycle=32,
+                                    unit="32B_sector", classes=[cls], owner_die=0, stack_id=0)
+    assert any("same physical HBM stack" in e for e in FS.audit(m)["errors"])

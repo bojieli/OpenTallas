@@ -82,6 +82,7 @@ def audit(m: dict, root: Path = ROOT) -> dict:
         errors.append("resources: concrete physical resources required")
         resources = {}
     phys = {}
+    hbm_stack_phys = {}
     for name, r in resources.items():
         if not isinstance(r, dict):
             errors.append(f"resource {name}: malformed")
@@ -94,6 +95,18 @@ def audit(m: dict, root: Path = ROOT) -> dict:
         if pid in phys and phys[pid] != (cap, unit):
             errors.append(f"resource {name}: aliased physical capacity/unit disagrees")
         phys[pid] = (cap, unit)
+        if any(c.endswith("_hbm") for c in cls):
+            die, stack = r.get("owner_die"), r.get("stack_id")
+            if not isinstance(die, int) or not isinstance(stack, int):
+                errors.append(f"resource {name}: concrete HBM die/stack owner required")
+            else:
+                key = (die, stack)
+                if key in hbm_stack_phys and hbm_stack_phys[key] != pid:
+                    errors.append(f"resource {name}: same physical HBM stack assigned independent service pools")
+                hbm_stack_phys[key] = pid
+            evidence = r.get("sustained_service_record")
+            if scope in ("full_layer", "full_token") and evidence not in pins:
+                errors.append(f"resource {name}: source-pinned sustained HBM service record required")
     fragments = m.get("tensor_fragments")
     if not isinstance(fragments, list):
         errors.append("tensor_fragments: explicit list required")
