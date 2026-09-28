@@ -207,6 +207,23 @@ def karb_pc1_pipe_m9(slew_repair: bool = False) -> dict:
                           "scope": "one PC with NPC=1; excludes full 32-way K demux/response mux"}}
 
 
+def karb_group4_m9(height_um: float = 30.24) -> dict:
+    """Four adjacent PC slices with registered K ingress/return and local PHY pins."""
+    c = karb_bank4(height_um=height_um, high_layers=True)
+    args = c["args"].copy()
+    args[args.index("--top") + 1] = "ot_chip_v41x_hbm_karb_group4"
+    i = args.index("--source")
+    args[i + 1:i + 2] = ["rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
+                         "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+                         "--source", "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv"]
+    args += ["--param", "PIPE_OUT=1", "--param", "PIPE_RSP=1", "--max-transition-ns"]
+    args[args.index("--place-density") + 1] = "0.40"
+    name = "karb_group4_fit_m9" if height_um <= 17.28 else "karb_group4_m9"
+    return {"args": args, "nickname": f"codex_v41x_{name}",
+            "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
+            "floorplan": {**c["floorplan"], "scope": "four local PC slices and registered K group boundary"}}
+
+
 # ------------------------------------------------------------------------------------------------ physical tile
 MACRO_DIR = "physical/asap7_memory_macros"
 MACROS = {   # name: (width, height) um, from the compiler LEFs
@@ -585,6 +602,8 @@ CASES = {"karb_strip": karb_strip,
          "collective_fifo128": collective_fifo128,
          "karb_pc1_pipe_m9": karb_pc1_pipe_m9,
          "karb_pc1_pipe_slew_m9": lambda: karb_pc1_pipe_m9(slew_repair=True),
+         "karb_group4_m9": karb_group4_m9,
+         "karb_group4_fit_m9": lambda: karb_group4_m9(height_um=17.28),
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),

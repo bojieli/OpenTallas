@@ -171,6 +171,19 @@ def test_karb_single_pc_slew_repair_keeps_same_boundary_and_clock():
     assert repair["output"] != base["output"]
 
 
+def test_karb_group4_composes_four_local_slices_on_the_same_phy_windows():
+    flat = pnr.CASES["karb_bank4_m9"]()
+    group = pnr.CASES["karb_group4_m9"]()
+    assert group["floorplan"]["die_um"] == flat["floorplan"]["die_um"]
+    assert group["floorplan"]["pc_pin_span_um"] == flat["floorplan"]["pc_pin_span_um"]
+    args = group["args"]
+    assert args[args.index("--top") + 1] == "ot_chip_v41x_hbm_karb_group4"
+    assert {"NPC=4", "PIPE_OUT=1", "PIPE_RSP=1"} <= {
+        args[i + 1] for i, x in enumerate(args) if x == "--param"}
+    assert "--max-transition-ns" in args
+    assert group["output"] != flat["output"]
+
+
 def test_collective_fifo128_physical_case_is_the_measured_engine_configuration():
     case = pnr.CASES["collective_fifo128"]()
     args = case["args"]
