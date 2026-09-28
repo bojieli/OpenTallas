@@ -53,6 +53,7 @@ def main() -> None:
     core.PARAMS["fp"] = args.fp
     src = [core.VLT, *core.rtl_sources(True), ENGINE, LINK, TB, DRIVER,
            ROOT / "rtl/hdc/v41/ot_hdc_isa_v41.svh",
+           ROOT / "tools/hdc_isa_v41.py",
            ROOT / "tools/rtl_hdc_v41x_decode_campaign.py",
            ROOT / "tools/rtl_v41x_real_core_stage_images.py", Path(__file__)]
     manifest = {str(p.relative_to(ROOT)): sha(p) for p in src}
