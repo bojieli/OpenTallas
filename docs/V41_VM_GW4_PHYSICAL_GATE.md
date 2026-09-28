@@ -64,6 +64,14 @@ width can be carried through this isolated cut. The collective transpose and
 the SRAM macro pins remain outside it. The low-utilization floorplan reflects
 the artificial all-bus-I/O partition, not an integrated die pin budget.
 
+The actual bank-order transpose from collective commit `05ad9903` has a
+source-pinned [global-route checkpoint](../results/physical_abi3/asap7/chip/v41_coll_transpose_outpipe1/grt_checkpoint.json)
+at `OUT_PIPE=1`, 4 × 512 bits, 0.92 ns and 60% target utilization. Its 4,201
+pins fit 6,428 sites; global route reports +0.124 ns setup slack, +0.000148 ns
+hold slack and zero global-route violations. Detailed routing remains in
+progress, so this checkpoint cannot establish final DRC, antenna or timing
+closure. It also excludes the SRAM macros and DMA integration.
+
 The current die-assembly ledger allocates 983,040 bytes of vector memory at
 0.2805 mm² placed, while the full-shape four-bank VM contract above allocates
 2 MiB at 1.3237 mm² **macro-only**. If that ledger row is the complete resident
