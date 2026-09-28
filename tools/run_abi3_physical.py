@@ -924,8 +924,17 @@ def sdc_lines(
     lines = [
         f"set clk_period {period_lib:g}",
         f"create_clock -name core_clk -period $clk_period [get_ports {block['clock_port']}]",
+        *([f"create_clock -name ingress_clk -period $clk_period [get_ports {block['ingress_clock_port']}]"]
+          if block.get("ingress_clock_port") else []),
         "set non_clock_inputs [all_inputs -no_clocks]",
         f"set_input_delay [expr $clk_period * {block.get('io_delay_fraction', 0.2):g}] -clock core_clk $non_clock_inputs",
+        *(
+            [
+                f"set ingress_inputs [get_ports {{{' '.join(block['ingress_input_ports'])}}}]",
+                f"set_input_delay -min {block['ingress_input_delay_min_ns'] / view['time_unit_ns']:g} -clock ingress_clk $ingress_inputs",
+                f"set_input_delay -max {block['ingress_input_delay_max_ns'] / view['time_unit_ns']:g} -clock ingress_clk $ingress_inputs",
+            ] if block.get("ingress_clock_port") else []
+        ),
         f"set_output_delay [expr $clk_period * {block.get('io_delay_fraction', 0.2):g}] -clock core_clk [all_outputs]",
         f"set_load {load_lib:g} [all_outputs]",
         *signal_integrity_sdc_lines(constraints),
@@ -2665,6 +2674,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--source", action="append", default=[], help="RTL source, repeatable")
     parser.add_argument("--param", action="append", default=[], help="NAME=VALUE top parameter, repeatable")
     parser.add_argument("--clock-port", default="clk")
+    parser.add_argument("--ingress-clock-port", help="related, same-period ingress capture clock port")
+    parser.add_argument("--ingress-input-port", action="append", default=[],
+                        help="input port timed relative to ingress clock; repeat for each port")
+    parser.add_argument("--ingress-input-delay-min-ns", type=float,
+                        help="earliest ingress data arrival relative to ingress clock")
+    parser.add_argument("--ingress-input-delay-max-ns", type=float,
+                        help="latest ingress data arrival relative to ingress clock")
     parser.add_argument("--false-path-from", action="append", default=None)
     parser.add_argument(
         "--false-path-io",
@@ -3035,6 +3051,17 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.false_path_from is not None:
         block["false_path_from_ports"] = args.false_path_from
+    if args.ingress_clock_port:
+        if (not args.ingress_input_port or args.ingress_input_delay_min_ns is None or
+                args.ingress_input_delay_max_ns is None or
+                args.ingress_input_delay_min_ns < 0 or
+                args.ingress_input_delay_max_ns < args.ingress_input_delay_min_ns):
+            print("ingress clock requires input ports and 0 <= min delay <= max delay", file=sys.stderr)
+            return 2
+        block["ingress_clock_port"] = args.ingress_clock_port
+        block["ingress_input_ports"] = args.ingress_input_port
+        block["ingress_input_delay_min_ns"] = args.ingress_input_delay_min_ns
+        block["ingress_input_delay_max_ns"] = args.ingress_input_delay_max_ns
     if args.io_delay_fraction is not None:
         block["io_delay_fraction"] = args.io_delay_fraction
     if args.false_path_io:
@@ -3160,6 +3187,9 @@ def main(argv: list[str] | None = None) -> int:
             "description": block.get("description"),
             "parameters": block["parameters"],
             "clock_port": block["clock_port"],
+            **({k: block[k] for k in ("ingress_clock_port", "ingress_input_ports",
+                                         "ingress_input_delay_min_ns", "ingress_input_delay_max_ns")}
+               if block.get("ingress_clock_port") else {}),
             "false_path_from_ports": block["false_path_from_ports"],
             "io_delay_fraction": block.get("io_delay_fraction", 0.2),
             "false_path_io": bool(block.get("false_path_io", False)),

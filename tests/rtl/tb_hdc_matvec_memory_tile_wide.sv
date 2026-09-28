@@ -51,7 +51,7 @@ module tb_hdc_matvec_memory_tile_wide;
     if (wrom_re_b) wrom_q_b <= '0;
   end
   ot_hdc_matvec_memory_tile_wide #(.W(W),.G(G),.AW(AW),.NW(NW)) a (
-    .clk(clk),.rst_n(rst_n),.go(go),.ready(ready_a),.idle(idle_a),
+    .clk(clk),.ingress_clk(clk),.rst_n(rst_n),.go(go),.ready(ready_a),.idle(idle_a),
     .i_nout(NOUT[NW-1:0]),.i_tiles(8'd1),.i_k(8'd1),.i_wsrc(1'b1),
     .i_wbase(wbase),.i_ts(16'd0),.i_ks(16'd0),.i_js(16'd0),
     .i_xbase(xbase),.i_xks(16'd0),.i_xjs(16'd0),.i_xcs(16'd0),

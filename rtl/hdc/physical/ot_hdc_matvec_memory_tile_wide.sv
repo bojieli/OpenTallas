@@ -9,7 +9,7 @@ module ot_hdc_matvec_memory_tile_wide #(
     parameter integer AW = 16,
     parameter integer NW = 8
 ) (
-    input wire clk, rst_n, go,
+    input wire clk, ingress_clk, rst_n, go,
     output wire ready, idle,
     input wire [NW-1:0] i_nout, i_tiles, i_k,
     input wire i_wsrc,
@@ -67,20 +67,28 @@ module ot_hdc_matvec_memory_tile_wide #(
     reg [9:0] kv_load_addr_q, x_load_addr_q;
     reg [G*W*32-1:0] kv_load_data_q;
     reg [G*32-1:0] x_load_data_q;
-    always @(posedge clk or negedge rst_n) begin
+    // Source-synchronous ingress is captured by its own clock tree. The
+    // interface requires ingress_clk to have the same period and phase as clk;
+    // this is a physical clock-tree experiment, not an asynchronous CDC.
+    always @(posedge ingress_clk or negedge rst_n) begin
         if (!rst_n) begin
             kv_load_q <= 1'b0;
             x_load_q <= 1'b0;
-            kv_load_commit <= 1'b0;
-            x_load_commit <= 1'b0;
         end else begin
             kv_load_q <= kv_load;
             x_load_q <= x_load;
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            kv_load_commit <= 1'b0;
+            x_load_commit <= 1'b0;
+        end else begin
             kv_load_commit <= kv_load_q;
             x_load_commit <= x_load_q;
         end
     end
-    always @(posedge clk) begin
+    always @(posedge ingress_clk) begin
         kv_load_addr_q <= kv_load_addr;
         x_load_addr_q <= x_load_addr;
         kv_load_data_q <= kv_load_data;
