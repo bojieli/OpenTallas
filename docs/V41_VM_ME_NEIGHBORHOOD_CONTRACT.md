@@ -44,6 +44,10 @@ high-width service paths remain internal. External pins supply stimulus and
 observe full-width registered sinks, but are not interpreted as a die/package
 wire. The previous isolated min/max arrival assumption of 0.35/0.50 ns is
 superseded by actual registered producer-to-consumer placement in this gate.
+The neighborhood top at `c004b015` also registers ME read requests,
+rotation and consumer enables before the store. This exposes the same
+`rq_q` producer-to-store hold path that failed the local MP=1 cut and adds
+one explicit request fill edge to any finite schedule.
 Two clock-related fill cycles from converter and the selected RL5 alignment
 remain explicit in the token schedule; one beat/cycle may be credited only
 after the neighborhood itself sustains that service.
@@ -72,11 +76,16 @@ first-16 replay at `02c03b8a` also passes 32 rows, checking all 512 VM
 words and 128 preload beats. Corrected measurement-window records exclude
 134 initialization/reset cycles and report 2,339 timed cycles, 14 more
 than the 2,325-cycle standalone RL5 first-16 gate; this finite VM/drain
-delta is scoped to that short run. Full integrated replay is running. The
-matching local MP=1 eight-macro placement has a measured **−676.67 ps**
-setup miss at 0.92 ns, with the worst path from `pre_e_r[11]` through
-preload write selection to SRAM `wd_in[81]`; hold is +43.99 ps and 2,297
-pins fit 20,772 sites. The ME owner is adding a bank-local registered
-write command/data cut and will charge its additional fill cycle. The
-pipe2 converter detailed route and this complete neighborhood route are
-also separate prerequisites. No rate credit follows from this contract.
+delta is scoped to that short run. The initial matching MP=1 eight-macro
+placement missed setup by **676.67 ps** at 0.92 ns, with the worst path
+from `pre_e_r[11]` through preload write selection to SRAM `wd_in[81]`.
+The selected bank-local write stage fixes that setup cone functionally.
+The pipe2 converter detailed route and this complete neighborhood route
+are separate prerequisites. No rate credit follows from this contract.
+
+The selected bank-local write-stage full integration at `70013419` passes
+2,048/2,048 rows at 131,363 timed cycles, including 128 VM read issues
+and all 512 returned words. Its standalone MP=1 physical cut still fails
+CTS hold by 24.932 ps on `rq_q_r[45]` after 7,584 hold buffers, which is
+why the registered producer in the neighborhood is required. The full
+integration result did not contain that extra producer edge.
