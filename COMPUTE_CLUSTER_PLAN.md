@@ -5,6 +5,11 @@ the adopted architecture or promote any rate. TASKS.md owns execution status.
 
 ## Objective
 
+**Priority order:** minimize single-user decode latency first; optimize multiuser
+aggregate throughput only within the selected latency contract.
+[DEEPSEEK_V41_SINGLE_USER_DESIGN.md](DEEPSEEK_V41_SINGLE_USER_DESIGN.md) defines the
+top-down token-graph, placement, finite-resource scheduling and acceptance process.
+
 Maximize measured single-user decode performance within an explicit die/package
 count, area, memory capacity, power/cooling and arithmetic contract. Token rate is
 an output. Optimize AR first; evaluate MTP/DFlash separately with measured accepted

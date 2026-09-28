@@ -6,6 +6,8 @@ Updated 2026-09-28 against the current integration branch. The goal is four **fu
 
 ## Immediate architecture recovery priority
 
+**Primary design directive:** [single-user-first top-down design](DEEPSEEK_V41_SINGLE_USER_DESIGN.md). Root owns the operating-point/physical/arithmetic contract; placement and emitter owners bind integer ownership; schedule owner builds the complete finite-resource token trace. Rank RTL/fabric changes by exposed end-to-end latency reduction. Multiuser utilization and stage balancing are secondary and must preserve the selected single-user service contract.
+
 **Fabric review (2026-09-28):** [V41_FABRIC_DESIGN_PROPOSAL.md](docs/V41_FABRIC_DESIGN_PROPOSAL.md) defines the proposed weight-stationary hierarchy and acceptance order. Newly confirmed blockers: the 12-collective exact layer program differs from the fused benchmark; fractional stage placement omits split-expert return traffic; HBM clients need one shared service schedule. Prioritize the ownership manifest, executable packet trace, mixed-HBM layer and two-stage exact gate before any new rate claim. The pin problem has a routed local slice, but powered composition is still open.
 
 The objective is the highest demonstrated single-user rate within fixed hardware,

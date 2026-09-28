@@ -2,6 +2,8 @@
 
 This root-level file contains the complete analysis for easy review. The detailed design document is also available at [docs/V41_FABRIC_DESIGN_PROPOSAL.md](docs/V41_FABRIC_DESIGN_PROPOSAL.md).
 
+**Design priority clarified:** single-user decode latency comes first; multiuser throughput is secondary. See the [top-down design directive](DEEPSEEK_V41_SINGLE_USER_DESIGN.md) for the selection process and acceptance gates.
+
 Date: 2026-09-28. Baseline: main `fb1828b9`, plus explicitly identified candidate branch evidence below. **This is a proposal and blocker analysis, not a new throughput result.** Optimize measured single-user latency and sustainable multiuser throughput within the same physical die, storage and cooling budget. Do not select a target token rate and work backward from it.
 
 ## 1. Recommendation
