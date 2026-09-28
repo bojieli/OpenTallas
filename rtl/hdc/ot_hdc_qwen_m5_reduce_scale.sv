@@ -26,9 +26,12 @@ module ot_hdc_qwen_m5_reduce_scale #(
     assign tree_fault[0] = 1'b0;
     genvar l, s, p;
     generate for (l=1;l<=LG;l=l+1) begin : g_level
-        wire [LG:0] delayed_split;
-        ot_hdc_delay #(.W(LG+1), .D(3)) u_split (
-            .clk(clk), .rst_n(rst_n), .d(split_level[l-1]), .q(delayed_split));
+        reg [LG:0] split_d1, split_d2, delayed_split;
+        always @(posedge clk) begin
+            split_d1 <= split_level[l-1];
+            split_d2 <= split_d1;
+            delayed_split <= split_d2;
+        end
         reg [LG:0] split_q;
         always @(posedge clk) split_q <= delayed_split;
         assign split_level[l] = split_q;
@@ -40,16 +43,19 @@ module ot_hdc_qwen_m5_reduce_scale #(
         for (s=0;s<5;s=s+1) begin : g_slot
             for (p=0;p<(G>>l)*W;p=p+1) begin : g_pair
                 localparam integer group=p/W, lane=p%W;
-                wire [31:0] sum, held;
+                wire [31:0] sum;
                 wire bad;
                 ot_hdc_qadd u_add (
                     .clk(clk), .rst_n(rst_n), .v(vlevel[l-1] && (split_level[l-1] >= l)),
                     .a(level[l-1][((s*G+2*group)*W+lane)*32 +: 32]),
                     .b(level[l-1][((s*G+2*group+1)*W+lane)*32 +: 32]),
                     .y(sum), .fault(bad));
-                ot_hdc_delay #(.W(32), .D(3)) u_hold (
-                    .clk(clk), .rst_n(rst_n),
-                    .d(level[l-1][((s*G+group)*W+lane)*32 +: 32]), .q(held));
+                reg [31:0] h1, h2, held;
+                always @(posedge clk) begin
+                    h1 <= level[l-1][((s*G+group)*W+lane)*32 +: 32];
+                    h2 <= h1;
+                    held <= h2;
+                end
                 reg [31:0] q;
                 always @(posedge clk) q <= (delayed_split >= l) ? sum : held;
                 assign level[l][((s*G+group)*W+lane)*32 +: 32] = q;
@@ -58,10 +64,12 @@ module ot_hdc_qwen_m5_reduce_scale #(
             // Unused upper groups are only pass-throughs. The output mask
             // selects G >> split_log2 groups, as in ot_hdc_matvec.
             for (p=(G>>l)*W;p<G*W;p=p+1) begin : g_rest
-                ot_hdc_delay #(.W(32), .D(4)) u_hold (
-                    .clk(clk), .rst_n(rst_n),
-                    .d(level[l-1][((s*G*W)+p)*32 +: 32]),
-                    .q(level[l][((s*G*W)+p)*32 +: 32]));
+                reg [31:0] h1, h2, h3, h4;
+                always @(posedge clk) begin
+                    h1 <= level[l-1][((s*G*W)+p)*32 +: 32];
+                    h2 <= h1; h3 <= h2; h4 <= h3;
+                end
+                assign level[l][((s*G*W)+p)*32 +: 32] = h4;
             end
         end
         assign tree_fault[l] = |faults;
