@@ -8,7 +8,13 @@ the same waveform. A later compatibility commit made the split clock opt-in;
 it did **not** change this run's source pin.
 
 The retained [`cts.json`](cts.json) is a completed **post-CTS**, placement-
-estimated checkpoint, **not** a detailed-route verdict. It uses ASAP7 RVT
+estimated checkpoint, **not** a detailed-route verdict. The separately
+launched full route reached CTS on the same source and produced numerically
+identical CTS timing and area metrics. Its raw
+[`4_1_cts.json`](full_route_cts_artifacts/4_1_cts.json),
+[`4_1_cts.log`](full_route_cts_artifacts/4_1_cts.log), and
+[`4_cts_final.rpt`](full_route_cts_artifacts/4_cts_final.rpt) are retained.
+The checkpoint uses ASAP7 RVT
 TT, 0.7 V, 0 °C, a 1.5 ns period on both related clocks, 320 ps maximum
 transition, 60% slew-repair margin, and 15% target core utilization. The
 assumed source-synchronous ingress contract places `kv_load`, `x_load`, both
@@ -37,12 +43,11 @@ measurement establishes this contract.
 | Engineering verdict | **NOT_MET** | **NOT_MET** |
 
 Both buffer counts are **incomplete repair attempts**, so their difference
-is not evidence of hold-buffer savings at closure. During repair, the worst
-hold endpoint moved to `u_me.xcs_r[0]/D`, a core control input outside the
-split load-port contract. The endpoint was observed in the live CTS log;
-the driver cleaned that temporary log after producing `cts.json`. The
-final record contains the path slack and violation counts but not endpoint
-names. The final setup endpoint during CTS was `o_data[206]`.
+is not evidence of hold-buffer savings at closure. The retained full-route
+CTS timing report identifies the final worst hold path as `i_ojs[15]` to
+`u_me.ojs_r[15]` (−590.117 ps), a core control input outside the split
+load-port contract. The worst setup path is from `u_me.o_data[206]` to
+`o_data[206]` (−203.112 ps).
 
 **Fmax reporting caveat:** the source-pinned driver copied ORFS's aggregate
 `cts__timing__fmax` of 1,856.69 MHz, which is the faster ingress clock. The
