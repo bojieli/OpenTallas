@@ -141,3 +141,17 @@ def test_remote_rom_fragment_requires_explicit_local_mapping():
     m = two_expert_bank_witness()
     m["tensor_fragments"][1]["owner_cluster"] = 1
     assert any("not local to compute cluster" in e for e in FS.audit(m)["errors"])
+
+
+def test_full_scope_cannot_buy_rate_with_unbudgeted_area_or_power():
+    m = witness()
+    m["scope"] = "full_layer"
+    m["contract"].update(layer_id=0, area_limit_mm2_by_die={"0": 0.5},
+                         power_limit_w_by_die={"0": 1},
+                         fixed_area_mm2_by_die={"0": 0},
+                         fixed_power_w_by_die={"0": 0})
+    for resource in m["resources"].values():
+        resource.update(owner_die=0, area_mm2=1, idle_w=1, active_w=1)
+    errors = FS.audit(m)["errors"]
+    assert any("physical area exceeds limit" in e for e in errors)
+    assert any("simultaneous power exceeds cooling limit" in e for e in errors)

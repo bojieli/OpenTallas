@@ -82,6 +82,7 @@ def audit(m: dict, root: Path = ROOT) -> dict:
         errors.append("resources: concrete physical resources required")
         resources = {}
     phys = {}
+    phys_meta = {}
     hbm_stack_phys = {}
     for name, r in resources.items():
         if not isinstance(r, dict):
@@ -95,6 +96,16 @@ def audit(m: dict, root: Path = ROOT) -> dict:
         if pid in phys and phys[pid] != (cap, unit):
             errors.append(f"resource {name}: aliased physical capacity/unit disagrees")
         phys[pid] = (cap, unit)
+        if scope in ("full_layer", "full_token"):
+            die, area, idle, active = (r.get("owner_die"), r.get("area_mm2"),
+                                       r.get("idle_w"), r.get("active_w"))
+            if (not isinstance(die, int) or
+                any(not isinstance(x, (int, float)) or x < 0 for x in (area, idle, active))):
+                errors.append(f"resource {name}: concrete die, area and idle/active power required")
+            elif pid in phys_meta and phys_meta[pid] != (die, area, idle, active):
+                errors.append(f"resource {name}: aliased physical area/power disagrees")
+            else:
+                phys_meta[pid] = (die, area, idle, active)
         if any(c.endswith("_hbm") for c in cls):
             die, stack = r.get("owner_die"), r.get("stack_id")
             if not isinstance(die, int) or not isinstance(stack, int):
@@ -285,6 +296,7 @@ def audit(m: dict, root: Path = ROOT) -> dict:
             if dep not in by_id or by_id[dep].get("end_cycle", 10**18) > op.get("start_cycle", -1):
                 errors.append(f"operation {oid}: unmet dependency {dep}")
     peak = {}
+    power_events = defaultdict(list)
     for pid, steps in events.items():
         occ = 0
         for cycle, delta in sorted(steps, key=lambda x: (x[0], x[1])):
@@ -293,6 +305,40 @@ def audit(m: dict, root: Path = ROOT) -> dict:
             if occ > phys.get(pid, (0, None))[0] + 1e-9:
                 errors.append(f"physical resource {pid}: over capacity at cycle {cycle}")
                 break
+            if pid in phys_meta:
+                die, _area, _idle, active = phys_meta[pid]
+                power_events[die].append((cycle, pid, occ > 0, active))
+    die_area = defaultdict(float)
+    die_peak_power = defaultdict(float)
+    if scope in ("full_layer", "full_token"):
+        area_limits = contract.get("area_limit_mm2_by_die")
+        power_limits = contract.get("power_limit_w_by_die")
+        fixed_areas = contract.get("fixed_area_mm2_by_die")
+        fixed_powers = contract.get("fixed_power_w_by_die")
+        if not all(isinstance(x, dict) for x in (area_limits, power_limits, fixed_areas, fixed_powers)):
+            errors.append("contract: die area/power limits and fixed overheads required")
+        else:
+            for die, area, idle, _active in phys_meta.values():
+                die_area[die] += area
+            for die in set(d for d, *_ in phys_meta.values()):
+                key = str(die)
+                vals = [x.get(key) for x in (area_limits, power_limits, fixed_areas, fixed_powers)]
+                if any(not isinstance(v, (int, float)) or v < 0 for v in vals):
+                    errors.append(f"die {die}: concrete nonnegative area/power contract required")
+                    continue
+                die_area[die] += fixed_areas[key]
+                if die_area[die] > area_limits[key] + 1e-9:
+                    errors.append(f"die {die}: physical area exceeds limit")
+                static_power = fixed_powers[key] + sum(meta[2] for meta in phys_meta.values() if meta[0] == die)
+                active_by_pid = {}
+                die_peak_power[die] = static_power
+                for _cycle, pid, active_flag, active_w in sorted(power_events[die], key=lambda e: (e[0], e[2])):
+                    active_by_pid[pid] = active_w if active_flag else 0.0
+                    total = static_power + sum(active_by_pid.values())
+                    die_peak_power[die] = max(die_peak_power[die], total)
+                    if total > power_limits[key] + 1e-9:
+                        errors.append(f"die {die}: simultaneous power exceeds cooling limit")
+                        break
     queues = m.get("queues")
     if not isinstance(queues, dict):
         errors.append("queues: explicit queue ledger required")
@@ -324,6 +370,8 @@ def audit(m: dict, root: Path = ROOT) -> dict:
         "physical_reserved_fraction": {k: used[k] / (max_end * phys[k][0]) for k in used} if max_end else {},
         "useful_demand_by_class": dict(useful),
         "wait_cycles_by_kind": dict(wait_cycles),
+        "die_area_mm2": dict(die_area),
+        "die_peak_power_w": dict(die_peak_power),
         "claim_boundary": "A passing operator subset cannot establish full-layer/token rate; no physical timing or power is inferred.",
     }
 
