@@ -9,8 +9,9 @@
 // (round r, block kb, slot j) order -- the word address is simply
 // wbase + (r*nb + kb)*IL + j -- and BL ot_hdc_blockdot lanes each take block kb
 // of row (r*IL + j)*BL + l: an exact 32-term block dot, scaled by
-// 2^(e_w + e_x), accumulated over blocks in order on the lane's circulating
-// adder ring, BF16 out.  The ring's slot counter (`phase`) runs free, so the
+// 2^(e_w + e_x), accumulated sequentially in reduced mode or in contiguous
+// eight-block chunks plus a pairwise tree in full-shape mode, BF16 out. The
+// lane's slot counter (`phase`) runs free, so the
 // op starts its word stream on the cycle that lines slot 0 up with phase 0 and
 // then issues one word per cycle without a stall.  Results leave in slot
 // order: the k-th result is rows k*BL .. k*BL+BL-1, written as one masked word.
@@ -40,6 +41,7 @@ module ot_hdc_v41_qe #(
     parameter integer BL = 16,
     parameter integer IL = 8,
     parameter integer NBMAX = 32,
+    parameter integer CHUNK8 = 0,
     parameter integer QLB = 272,             // bits per lane in a weight word: 32 codes, 16-bit exponent
     parameter integer MP = 1                 // lane multiplier: positions per weight read
 ) (
@@ -233,7 +235,8 @@ module ot_hdc_v41_qe #(
     generate
         for (cp = 0; cp < MP; cp = cp + 1) begin : g_cp
             for (l = 0; l < BL; l = l + 1) begin : g_lane
-                ot_hdc_blockdot #(.IL(IL)) u_bd (.clk(clk), .rst_n(rst_n), .v(b_v), .first(b_first), .last(b_last),
+                ot_hdc_blockdot #(.IL(IL), .CHUNK8(CHUNK8), .MAX_BLOCKS(NBMAX)) u_bd (
+                    .clk(clk), .rst_n(rst_n), .v(b_v), .first(b_first), .last(b_last),
                     .fp4(b_fp4), .xq(b_xq[cp*256 +: 256]), .xe(b_xe[cp*10 +: 10]), .wq(b_w[QLB*l +: 256]),
                     .we(b_w[QLB*l + 256 +: 10]), .phase(ph[cp*BL + l]), .ov(l_ov[cp*BL + l]),
                     .y(l_y[16*(cp*BL + l) +: 16]), .acc(l_acc[32*(cp*BL + l) +: 32]), .fault(l_f[cp*BL + l]));

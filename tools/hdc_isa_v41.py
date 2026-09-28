@@ -150,6 +150,7 @@ FULL_DYN_KEYS = (
     "NSL1", "NSL2", "NSLR",
     ("ceil", "SC1", 16), ("ceil", "SC1", 8), ("ceil", "SC2", 16),
     ("ceil", "SCR", 16), ("ceil", "T0", 32), ("ceil", "T1", 32), ("ceil", "T2", 32),
+    "WINM1", "WIN_ROW", "WINM1_ROW",
 )
 # Existing numeric DYN selectors retain their reduced meanings. Symbolic
 # selectors from the shipped-shape emitter occupy additional full-mode slots.

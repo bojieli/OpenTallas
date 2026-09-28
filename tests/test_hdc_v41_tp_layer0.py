@@ -82,3 +82,34 @@ def test_sequential_blockdot_is_not_the_chunk8_contract():
     chunk8 = golden.csum(terms)
     assert sequential == np.float32(1)
     assert chunk8 == np.float32(0)
+
+
+def test_attention_uses_bounded_local_rows_at_both_contexts():
+    prog = replay.build_tp_layer0()
+    cur_kt = next(f for f in prog if f.get("_tag") == "L0.attn" and f.get("dst") == isa.DST_KVT)
+    cur_kr = next(f for f in prog if f.get("_tag") == "L0.attn" and f.get("dst") == isa.DST_KV)
+    assert cur_kt["o_d"] == "WINM1"
+    assert cur_kr["o_d"] == "WINM1_ROW"
+    # Layer 0 has no CKV selection. Later compressed-KV layers use WIN and
+    # WIN_ROW as the first local selected row, never the absolute position.
+    for position in (0, 199_999, 1_048_575):
+        dyn = replay.dyn_values(replay.SHIPPED, position)
+        win = min(position + 1, 128)
+        assert dyn["WINM1"] == win - 1
+        assert dyn["WIN_ROW"] == win * 512
+        assert dyn["WINM1_ROW"] == (win - 1) * 512
+        assert dyn["T0"] <= 640
+    encoded = isa.decode(isa.encode(full_shape=True, **cur_kt), full_shape=True)
+    assert encoded["o_d"] == isa.FULL_DYN["WINM1"]
+
+
+def test_compressed_layer_attention_stages_selected_rows_after_window():
+    # The exact TP layer-2 program is not yet emitted, but its attention
+    # composite already gives the die prefetcher bounded local row addresses.
+    builder = replay.ShapeBuilder(replay.ShapeLayout(replay.SHIPPED, tp_exact=True))
+    builder.attention(2)
+    fields = [item[0] for item in builder.prog]
+    assert any(f.get("dst") == isa.DST_KVT and f.get("o_d") == "WIN" for f in fields)
+    assert any(f.get("dst") == isa.DST_KV and f.get("o_d") == "WIN_ROW" for f in fields)
+    assert all(f.get("o_d") not in (isa.DYN["POS1"], isa.DYN["ROW1"])
+               for f in fields if f.get("dst") in (isa.DST_KVT, isa.DST_KV))

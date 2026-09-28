@@ -2,6 +2,12 @@
   "schema": "opentallas.rtl.v41_fullshape_core_preflight.v1",
   "status": "pass",
   "claim_scope": "Full-width ISA and core lint with X_ATT/X_IDX/X_SEL/X_EG disabled; no full-shape bit-exact layer or chip cycle measurement",
+  "full_layer_ready": false,
+  "full_layer_blockers": [
+    "The TP emitter now addresses attention's local rows 0..639, but die prefetch still needs 128 FP8 window rows (528 bytes each), up to 512 selected CKV FP4 rows (288 bytes each), and explicit selected source IDs",
+    "A checkpoint-backed rank-0 weight/KV input image exists, but the TP ISA has no placed program image or bit-exact RTL shard yet; the 192-block QE lane is separately gated",
+    "Die collective and packed KV ports have no executed full-shape integration gate"
+  ],
   "program": {
     "layer": 0,
     "instructions": 103,
@@ -22,7 +28,7 @@
       "X_EG": 0
     },
     "errors": [],
-    "warning_count": 526
+    "warning_count": 539
   },
   "source_sha256": {
     "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
@@ -33,13 +39,14 @@
     "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
     "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
     "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
-    "rtl/hdc/v41/ot_hdc_blockdot.sv": "54fd98b0ac5e4301472be5a4be4e4050981c827726ba8e75e047b69292941ae1",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "de168a33a74404c21f0de7ed4fd43f7732754d43eb16b66bb40f93e10f6d393c",
+    "rtl/hdc/v41/ot_hdc_chunk8_stack.sv": "0860ac77c1868da11452a7368afec9a2bf320744b09719e676c57160c6c4312b",
     "rtl/hdc/v41/ot_hdc_engram_hash.sv": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91",
     "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
     "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
     "rtl/hdc/v41/ot_hdc_fp4qdq.sv": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84",
     "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
-    "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh": "b618658a65128afc252638bd445885ee5b82a5a97ee22b52039b494be687c0c8",
+    "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh": "138edb11cd58f3d7d69cc9b8a383a86653c583198a87965a3de656ca22a069c4",
     "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
     "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
     "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282",
@@ -49,10 +56,10 @@
     "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
     "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "c3f6ef57f8d2025dd2d4170462ec55fa427f90bd5b0d04b0540bbbf4098f13f0",
     "rtl/hdc/v41/ot_hdc_v41_matvec.sv": "907b2979b89f324a32bf8de9b8b1ecc4281346cfce221c2d0123ca6cb2d8d8fc",
-    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "feb9339558535658dfb73998875f06a1be37ba3b184274de3657b6646afffe75",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "57a05fd92b950bb6daa8e41918a336bee855e2758bd89880c7e00cde08cca6a7",
     "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
     "rtl/hdc/v41/ot_hdc_v41_xu.sv": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "7b041eff5208f9e523f43816f299d2b388d5ea68665a704bafc512370b456fb0",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "5e415d3ae0231064f7df92cf0375fdbcfab1e69fbd0c9aab1d581600c8eab39a",
     "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "302db959961034636d8028ee8ccb4868acb8d7744591574abea0d68566184afd",
     "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "b96f2f75fd9d9bc26f4e0b03915958cccd13e3274e197679f09f68668ae3cca6",
     "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "8eb0873a911d875a85048fbad1c496b391f019396f4c626a616c95e6ff1d16b2",
@@ -81,8 +88,8 @@
     "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0",
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
-    "tools/hdc_isa_v41.py": "876def0cc9480c9646a0b97450337034c4090adea3af9fb12f6d062e383779c0",
-    "tools/hdc_replay_v41.py": "49fb9b3fa974581cc57dc2f7248b384b5492a007453a4940ebc10f4c8a776a57",
-    "tools/rtl_v41_fullshape_core_preflight.py": "34ecac3a29134cee21e6089cdaf209d915bb112555bfdb823c15408b3ff72f60"
+    "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
+    "tools/hdc_replay_v41.py": "6b189dd431ba5ddcff90ff8c1f2b2ffc999baa55d75588cf5320fd7dbe81d609",
+    "tools/rtl_v41_fullshape_core_preflight.py": "f08aa63fc0295f40708fc485fea49153ee63391afa1e250a9e209de67fd1ac95"
   }
 }

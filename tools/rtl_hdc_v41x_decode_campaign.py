@@ -66,7 +66,8 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
        [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
                                            "ot_hdc_reduce", "ot_hdc_accept")] +
        [ROOT / f"rtl/hdc/v41/{n}.sv" for n in ("ot_hdc_engram_tables_pkg", "ot_hdc_engram_hash", "ot_hdc_select",
-                                               "ot_hdc_blockdot", "ot_hdc_actquant", "ot_hdc_fp4qdq", "ot_hdc_fdiv",
+                                               "ot_hdc_blockdot", "ot_hdc_chunk8_stack", "ot_hdc_actquant",
+                                               "ot_hdc_fp4qdq", "ot_hdc_fdiv",
                                                "ot_hdc_fsqrt", "ot_hdc_softplus", "ot_hdc_sinkhorn_seq",
                                                "ot_hdc_sk_arith", "ot_hdc_sk_recip_rom", "ot_hdc_sinkhorn",
                                                "ot_hdc_sinkhorn_mc", "ot_hdc_v41_matvec",

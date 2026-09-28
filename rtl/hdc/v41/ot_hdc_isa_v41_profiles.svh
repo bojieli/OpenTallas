@@ -288,3 +288,6 @@ localparam integer FDYN_CEIL_SCR_16 = 45;
 localparam integer FDYN_CEIL_T0_32 = 46;
 localparam integer FDYN_CEIL_T1_32 = 47;
 localparam integer FDYN_CEIL_T2_32 = 48;
+localparam integer FDYN_WINM1 = 49;
+localparam integer FDYN_WIN_ROW = 50;
+localparam integer FDYN_WINM1_ROW = 51;

@@ -13,9 +13,10 @@
 // is rounded ONCE to binary32 (RNE) -- the golden's `.astype(F)` of its exact
 // float64 dot -- and scaled by 2^(xe + we) with a second rounding only where
 // the scaled value is subnormal, as np.ldexp on the binary32 does.  The
-// scaled block sums are accumulated sequentially from +0 in block order by
-// the qualified binary32 adder (ot_hdc_fadd), and the row result is rounded
-// to BF16 (RNE on the bits, as hdc_golden.to_bf16).
+// With CHUNK8=0, scaled block sums are accumulated sequentially from +0 in
+// block order by the qualified binary32 adder (ot_hdc_fadd). With CHUNK8=1,
+// each eight consecutive terms are accumulated sequentially, then the chunk
+// sums follow the golden's pairwise tree. Both round the row result to BF16.
 //
 // CIRCULATING ACCUMULATOR (as ot_hdc_matvec).  The lane holds IL rows in
 // flight: the running sum of slot s leaves the 5-cycle adder and comes back
@@ -38,7 +39,8 @@
 //   P2 shift, CSA 32 -> 7          P7 subnormal right shift
 //   P3 CSA 7 -> 2                  P8 subnormal round, pack
 //   P4 both CPAs, |sum|            adder at t+9 .. t+14; output at t+15
-// LATENCY = 15 cycles from the `last` block to `ov`.
+// Legacy LATENCY = 15 cycles from the `last` block to `ov`. CHUNK8 adds a
+// tree; its integrated latency is checked by the full-shape block-dot gate.
 // ---------------------------------------------------------------------------
 
 // Carry-save reduction of N W-bit operands (mod 2^W) to at most M, by levels of
@@ -114,7 +116,9 @@ module ot_hdc_v41_csa #(
 endmodule
 
 module ot_hdc_blockdot #(
-    parameter integer IL = 8
+    parameter integer IL = 8,
+    parameter integer CHUNK8 = 0,
+    parameter integer MAX_BLOCKS = 192
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -328,6 +332,30 @@ module ot_hdc_blockdot #(
         p8_y <= p7_sub ? {p7_s, 7'd0, tr} : p7_n;
     end
 
+    generate if (CHUNK8 != 0) begin : g_chunk8
+    // P8 is nine registered stages after the input. Carry the original row
+    // slot, not the live phase counter, into the eight-term reduction tree.
+    wire [PW-1:0] p8_slot;
+    ot_hdc_delay #(.W(PW), .D(9)) u_slot (.clk(clk), .rst_n(rst_n), .d(phase), .q(p8_slot));
+    wire chunk_ready, chunk_ov, chunk_fault;
+    wire [31:0] chunk_acc;
+    wire [15:0] chunk_y;
+    ot_hdc_chunk8_stack #(.IL(IL), .MAX_BLOCKS(MAX_BLOCKS)) u_stack (
+        .clk(clk), .rst_n(rst_n), .in_v(p8_v), .in_ready(chunk_ready),
+        .in_first(p8_first), .in_last(p8_last), .in_slot(p8_slot),
+        .in_term(p8_y), .in_fault(p8_f),
+        .out_v(chunk_ov), .out_acc(chunk_acc), .out_bf16(chunk_y), .out_fault(chunk_fault));
+    reg protocol_fault;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin ov <= 1'b0; fault <= 1'b0; protocol_fault <= 1'b0; end
+        else begin
+            protocol_fault <= protocol_fault | (p8_v && !chunk_ready);
+            ov <= chunk_ov;
+            fault <= (chunk_ov && (chunk_fault || protocol_fault)) || (p8_v && !chunk_ready);
+        end
+    end
+    always @(posedge clk) begin acc <= chunk_acc; y <= chunk_y; end
+    end else begin : g_legacy
     // -- sequential FP32 accumulation on a circulating ring of IL slots -----------------------------
     wire [31:0] fb, sum, hold;
     wire        fbf, holdf, addf;
@@ -360,4 +388,5 @@ module ot_hdc_blockdot #(
         acc <= sum;
         y <= rb[31:16];
     end
+    end endgenerate
 endmodule
