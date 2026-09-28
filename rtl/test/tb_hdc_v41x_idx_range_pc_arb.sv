@@ -3,7 +3,8 @@
 // prefix keys are dropped here; the separate quarter collector owns that
 // operation in the integrated four-stack path.
 module tb_hdc_v41x_idx_range_pc_arb #(
-    parameter integer NKEYS=1040, WB=32, GA=24, QUANTUM=1
+    parameter integer NKEYS=1040, WB=32, GA=24, QUANTUM=1,
+    parameter integer QD=64, RW=16
 );
     localparam integer NPC=32,AW=28,HW=20,NW=30,TAGW=16,LENW=4,BEATW=4,DW=256;
     reg clk=0,rst_n=0,cmd_v=0;
@@ -62,7 +63,7 @@ module tb_hdc_v41x_idx_range_pc_arb #(
         .o_rsp_v(vrsp),.o_rsp_rdy(rrsp),.o_rsp_tag(trsp),
         .o_rsp_beat(brsp),.o_rsp_data(drsp),.dbg_grants(grants));
     ot_hdc_v41x_idx_hbm #(.NPC(NPC),.AW(AW),.DW(DW),.MEM_WORDS(1),
-        .TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),.QD(64),.RQD(32),
+        .TAGW(TAGW),.LENW(LENW),.BEATW(BEATW),.QD(QD),.RQD(32),.RW(RW),
         .REFPB(3),.MEM_MODE(1)) hm (
         .clk(clk),.rst_n(rst_n),.req_v(hvreq),.req_rdy(hrreq),
         .req_addr(hareq),.req_len(hlreq),.req_tag(htreq),
@@ -157,8 +158,8 @@ module tb_hdc_v41x_idx_range_pc_arb #(
         end
         if(total_beats!=total_expected)
             $fatal(1,"range arb sectors=%0d expected=%0d",total_beats,total_expected);
-        $display("V41X_RANGE_ARB_PASS n=%0d wb=%0d ga=%0d quantum=%0d checked=%0d sectors=%0d cycles=%0d grants=%0d",
-                 NKEYS,WB,GA,QUANTUM,total_checked,total_beats,cycle,grants);
+        $display("V41X_RANGE_ARB_PASS n=%0d wb=%0d ga=%0d quantum=%0d qd=%0d rw=%0d checked=%0d sectors=%0d cycles=%0d grants=%0d",
+                 NKEYS,WB,GA,QUANTUM,QD,RW,total_checked,total_beats,cycle,grants);
         $display("V41X_RANGE_ARB_DIAG idle_pc_slots=%0d blocked_req_slots=%0d blocked_rsp_slots=%0d context_switches=%0d",
                  idle_pc_slots,blocked_req_slots,blocked_rsp_slots,context_switches);
         $display("V41X_RANGE_ARB_HBM act=%0d hit=%0d conf=%0d ref=%0d bp=%0d rd_lat_sum_ps=%0d rd_lat_max_ps=%0d",

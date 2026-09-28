@@ -83,9 +83,12 @@ module ot_hdc_v41x_idx_range_pc_arb #(
             dbg_grants<=dbg_grants+32'(grants);
             for(k=0;k<NPC;k=k+1)
                 if(has_req[k] && h_req_rdy[k]) begin
-                    if(selected[k]!=rr[k] || served[k]==QUANTUM-1) begin
+                    if(QUANTUM==1 || (selected[k]==rr[k] && served[k]==QUANTUM-1)) begin
                         rr[k]<=selected[k]+2'd1;
                         served[k]<=0;
+                    end else if(selected[k]!=rr[k]) begin
+                        rr[k]<=selected[k];
+                        served[k]<=16'd1;
                     end else served[k]<=served[k]+16'd1;
                 end
         end
