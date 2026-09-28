@@ -56,7 +56,7 @@ def run() -> dict:
     assert "rows=2 sectors=26 checked=1024 fault=5 errors=0" in proc.stdout, proc.stdout
     return {
         "status": "pass_standalone_reduced_gate",
-        "scope": "two 512-element selected CKV source rows, 9 sectors/row; no die integration or throughput claim",
+        "scope": "two 512-element selected CKV rows on distinct stacks; remote-die fabric delivery, die integration and throughput remain open",
         "contract": "opentallas.deepseek_v41.main_fp4_e2m1_s16_e4m3.row.v1",
         "rows_exact": 2,
         "elements_exact_fp8_and_fp32": 1024,
@@ -65,6 +65,8 @@ def run() -> dict:
         "unpublished_source_rejected": True,
         "window_local_row_rejected": True,
         "nonfinite_scale_rejected": True,
+        "placement": "16-row groups striped over 4 dies x 4 stacks; owner die/stack and local row derived from global source ID",
+        "remote_die_requires_fabric": True,
         "source_pins": {f: sha(ROOT / f) for f in FILES},
         "sim_stdout": proc.stdout.strip(),
     }

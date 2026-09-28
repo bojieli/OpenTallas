@@ -13,3 +13,4 @@ def test_exact_selected_row_gate_and_source_pins():
     assert record["unpublished_source_rejected"]
     assert record["window_local_row_rejected"]
     assert record["nonfinite_scale_rejected"]
+    assert record["remote_die_requires_fabric"]
