@@ -65,7 +65,10 @@ module ot_chip_v41x_rope_hbm_cache #(
         wire [HAW:0] end_addr = {1'b0, (pf_kind ? yarn_base[s*HAW +: HAW] :
                                                  plain_base[s*HAW +: HAW])} + last_offset;
         assign req_v[s] = state == ISSUE && phase[s] < 2;
-        assign req_addr[s*HAW +: HAW] = base[s] + HAW'(cache_pos * 2) + HAW'(phase[s]);
+        // Capture the position offset at prefetch acceptance. The K-port
+        // address path then has only the phase increment, not a wide
+        // position multiply and add after the cache-pos register.
+        assign req_addr[s*HAW +: HAW] = base[s] + HAW'(phase[s]);
         assign req_len[s*4 +: 4] = 4'd1;
         assign req_tag[s*TAGW +: TAGW] = TAGW'(phase[s]);
         assign rsp_rdy[s] = state == ISSUE || state == WAIT;
@@ -106,7 +109,8 @@ module ot_chip_v41x_rope_hbm_cache #(
                         issued<=0; received<=0;
                         for (i=0;i<4;i=i+1) begin
                             phase[i]<=0;
-                            base[i]<=pf_kind ? yarn_base[i*HAW +: HAW] : plain_base[i*HAW +: HAW];
+                            base[i]<=(pf_kind ? yarn_base[i*HAW +: HAW] :
+                                                 plain_base[i*HAW +: HAW]) + HAW'(pf_pos * 2);
                         end
                         state<=ISSUE;
                     end
