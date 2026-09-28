@@ -190,7 +190,7 @@ def ptile(nq: int = 2, nm: int = 0, np_: int = 2, util: float = 0.68, density: f
     for s in sources:
         args += ["--source", s]
     args += ["--param", f"NQ={nq}", "--param", f"NM={nm}", "--param", f"NP={np_}",
-             "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2", "--stages", "synth,pnr",
+             "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2", "--stages", "pnr",
              "--die-area", "0", "0", f"{die_w:g}", f"{die_h:g}",
              "--core-area", f"{margin:g}", f"{margin:g}", f"{die_w - margin:g}", f"{die_h - margin:g}",
              "--place-density", f"{density if density else min(0.95, util + 0.1):g}",
