@@ -30,6 +30,7 @@ INPUTS = sorted(set([*SRC, HARNESS, Path(__file__), Path(REF.__file__),
                      ROOT / "tools/hdc_golden.py", ROOT / "rtl/hdc/ot_hdc_isa.svh"]))
 SUMMARY = re.compile(r"PKG_TP nodes=(\d+) dies=(\d+) users=(\d+) generated=(\d+) steps_checked=(\d+) "
                      r"mismatches=(\d+) kv_mismatches=(\d+) vm_mismatches=(\d+) total_cycles=(\d+)")
+EMBED = re.compile(r"EMBED_HBM node=(\d+) die=(\d+) pc=(\d+) code_sectors=(\d+) scale_sectors=(\d+)")
 
 
 def sha(p):
@@ -64,12 +65,18 @@ def run_arm(work: Path, arm: int, jobs: int, ngen: int, skip_build: bool):
     names = ("nodes", "dies", "users", "generated", "steps_checked", "mismatches",
              "kv_mismatches", "vm_mismatches", "total_cycles")
     obs = dict(zip(names, map(int, m.groups()))) if m else {}
+    embed = [dict(zip(("node", "die", "pc", "code_sectors", "scale_sectors"),
+                      map(int, row))) for row in EMBED.findall(sim.stdout)]
     ok = (sim.returncode == 0 and "PASS" in sim.stdout and obs.get("nodes") == 1 and
           obs.get("dies") == 2 and obs.get("generated") == ngen and
           obs.get("steps_checked") == 16+ngen-1 and
-          all(obs.get(k) == 0 for k in ("mismatches", "kv_mismatches", "vm_mismatches")))
+          all(obs.get(k) == 0 for k in ("mismatches", "kv_mismatches", "vm_mismatches")) and
+          (arm == 0 or (len(embed) == 4 and
+                        sum(x["code_sectors"] for x in embed) > 0 and
+                        sum(x["scale_sectors"] for x in embed) > 0)))
     rec = {"status": "pass" if ok else "fail", "arm": arm_name, "W_HBM": arm,
-           "rtl": obs, "build_command": cmd, "binary_sha256": sha(binary),
+           "rtl": obs, "embedding_hbm_traffic": embed,
+           "build_command": cmd, "binary_sha256": sha(binary),
            "source_sha256": {str(p.relative_to(ROOT)): sha(p) for p in INPUTS},
            "image_sha256": {str(p.relative_to(img)): sha(p) for p in img.rglob("*.hex")},
            "stdout_tail": sim.stdout[-2000:], "stderr_tail": sim.stderr[-2000:]}
@@ -105,6 +112,7 @@ def combine(work: Path, output: Path):
             "rom_cycles": rom["rtl"]["total_cycles"], "hbm_cycles": hbm["rtl"]["total_cycles"],
             "delta_cycles": hbm["rtl"]["total_cycles"]-rom["rtl"]["total_cycles"],
             "rom": rom["rtl"], "hbm": hbm["rtl"],
+            "embedding_hbm_traffic": hbm["embedding_hbm_traffic"],
             "source_sha256": rom["source_sha256"], "image_sha256": rom["image_sha256"],
             "binary_sha256": {"rom": rom["binary_sha256"], "hbm": hbm["binary_sha256"]}}
     output.parent.mkdir(parents=True, exist_ok=True)

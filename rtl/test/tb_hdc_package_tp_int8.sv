@@ -274,6 +274,8 @@ module tb_hdc_package_tp_int8 #(
                         .rq_v(wrq_v),.rq_rdy(rq_rdy),.rq_addr(wrq_addr),.rq_tag(wrq_tag),
                         .rsp_v(rsp_v & {PC{emb_ok}}),.rsp_tag(rsp_tag),.rsp_data(rsp_data));
                     for (genvar pp=0; pp<PC; pp=pp+1) begin : g_pc
+                        integer embed_code_sector_reads=0;
+                        integer embed_scale_sector_reads=0;
                         always @(posedge clk) begin
                             rsp_v[pp] <= rq_v[pp] && rq_rdy[pp];
                             if (rq_v[pp] && rq_rdy[pp]) begin
@@ -285,16 +287,21 @@ module tb_hdc_package_tp_int8 #(
                                 else if (rq_addr[pp*HAW +: HAW] < EMB_CODE_REGION)
                                     rsp_data[pp*256 +: 256] <=
                                         matrix_scales[d*WROM_WORDS + rq_addr[pp*HAW +: HAW]-SCALE_REGION];
-                                else if (rq_addr[pp*HAW +: HAW] < EMB_SCALE_REGION)
+                                else if (rq_addr[pp*HAW +: HAW] < EMB_SCALE_REGION) begin
+                                    embed_code_sector_reads <= embed_code_sector_reads+1;
                                     rsp_data[pp*256 +: 256] <=
                                         embed_codes[d*EMB_WORDS + (rq_addr[pp*HAW +: HAW]-EMB_CODE_REGION)/2]
                                                    [((rq_addr[pp*HAW +: HAW]-EMB_CODE_REGION)%2)*256 +: 256];
-                                else
+                                end else begin
+                                    embed_scale_sector_reads <= embed_scale_sector_reads+1;
                                     for (integer u=0;u<16;u=u+1)
                                         rsp_data[pp*256+u*16 +: 16] <= embed_scales[d*EMB_ROWS +
                                             (rq_addr[pp*HAW +: HAW]-EMB_SCALE_REGION)*16+u];
+                                end
                             end
                         end
+                        final $display("EMBED_HBM node=%0d die=%0d pc=%0d code_sectors=%0d scale_sectors=%0d",
+                                       n,d,pp,embed_code_sector_reads,embed_scale_sector_reads);
                     end
                 end else begin : g_wrom
                     assign w_ok=1'b1;
