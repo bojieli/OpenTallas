@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.arch.v41_fullshape_rope_capacity_audit.v1",
+  "status": "replicated_full_position_crom_does_not_fit_1m_layer_die",
+  "claim_scope": "Capacity check for the current emitted CROM RoPE lookup contract. It does not price an HBM-backed table, procedural generator, cache, timing, power, or a new placement.",
+  "rope_head_dim": 64,
+  "cos_sin_format": "two IEEE binary32 values per adjacent pair",
+  "crom_bytes_per_position_per_table": 256,
+  "minimum_token_lookup_bytes_per_table": 256,
+  "min_layer_die_spare_bytes_after_adopted_placement": 71636243.8115449,
+  "contexts": {
+    "200000": {
+      "bytes_per_one_plain_or_yarn_table": 51200000,
+      "bytes_per_two_tables": 102400000,
+      "one_table_fits_min_spare": true,
+      "one_table_deficit_bytes": 0,
+      "two_table_deficit_bytes": 30763756.188455105
+    },
+    "1048576": {
+      "bytes_per_one_plain_or_yarn_table": 268435456,
+      "bytes_per_two_tables": 536870912,
+      "one_table_fits_min_spare": false,
+      "one_table_deficit_bytes": 196799212.1884551,
+      "two_table_deficit_bytes": 465234668.1884551
+    }
+  },
+  "source_sha256": {
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
+    "tools/hdc_replay_v41.py": "407d69d0d4b3d37143402dedfae13db3f5968b30e8bebd9df03dc2c56dc776be",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/v41_fullshape_rope_capacity_audit.py": "7097b2734facae37008a180a2d4ed4ecc17bdcc7fcd9de564e9e7feb16142aad"
+  }
+}
