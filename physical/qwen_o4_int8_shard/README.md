@@ -1,0 +1,44 @@
+# Qwen O4 signed-INT8 ROM shard physical probe
+
+This probe places one `ot_rom_8192x266_m8` analytical ASAP7 ROM abstract
+beside 32 signed-INT8 product lanes and one post-accumulation row-scale path.
+The first 256 ROM output bits provide 32 codes (two 16-lane O4 groups); ten
+bits are spare. It runs at the O4 0.92 ns target. The top-level lane selector
+keeps all 32 products live while bounding I/O pins; it is a probe-specific
+path, not the O4 reduction tree. The product-valid timing is not a functional
+token test.
+
+The source-pinned O4 design record requires 6,144 groups × 16 codes =
+98,304 code bytes read per die per cycle. If this 256-useful-bit macro were
+the building block, 3,072 macros would read concurrently. The target plus
+drafter has 9,243,527,168 weight bytes total; split equally, 4,621,763,584
+bytes per die. At 262,144 useful bytes per macro, that needs 17,631 macros
+per die. The compiler abstract area gives 257.24 mm² per die for these
+macros, versus 253.41 mm² per die in the O4 model for target and drafter ROM.
+This 3.83 mm² difference alone does not settle the design: banks, word
+selection, lane wires, spare bits, power, timing and placement still need a
+die floorplan. The macro LEF and Liberty are compiler **analytical views**;
+the bitcell was laid out, but the macro periphery and current were assumed.
+
+The probe uses Yosys 0.68 and OpenROAD v2.0-17598-ga008522d8, ASAP7 RVT TT
+at 0.7 V. It is a direct placement/route diagnostic with no PDN, DFT,
+antenna repair, formal equivalence or chip signoff. The physical record in
+`results/physical_hdc/asap7/qwen_o4_int8_shard/` states the exact reached
+stage, timing, DRC and source hashes. No full G=6144 tile or die route is
+implied by this shard.
+
+To replay the pilot, check out its source commit at
+`/tmp/opentallas-qwen-o4-physical-lane`, create
+`/tmp/qwen-o4-shard-route`, and run:
+
+```bash
+/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s physical/qwen_o4_int8_shard/synth.ys
+python3 physical/qwen_o4_int8_shard/prepare_mapped.py
+openroad -exit physical/qwen_o4_int8_shard/place_route.tcl
+openroad -exit physical/qwen_o4_int8_shard/detailed_route.tcl
+```
+
+The first command writes the mapped netlist in the scratch directory. The
+second only removes signed declarations for wires in that already-mapped
+Verilog; it makes no logic change. `place_route.tcl` writes the global-route
+database consumed by `detailed_route.tcl`.
