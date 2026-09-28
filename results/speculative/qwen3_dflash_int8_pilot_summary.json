@@ -1,8 +1,9 @@
 {
  "schema": "opentallas.qwen3-dflash-int8-acceptance-summary.v1",
+ "summary_tool_sha256": "113b77e0e2a0e28f863df04eb90963b88ca8bbce54f14230d9fd4b278c8cb817",
  "source_record": "results/speculative/qwen3_dflash_int8_drafter_pilot.json",
  "source_record_sha256": "c5d769f3ae6434ef33f94885e995986807ee8472b3d042b9c712c3d912af9f4b",
- "scope": "Bounded greedy acceptance of deployed signed-INT8/FP8 target and per-row INT8 drafter, on a subset of published prompts at 128 generated tokens. Not a TP-2 RTL timing or nine-workload production tau.",
+ "scope": "Bounded greedy acceptance of a signed-INT8/FP8 single-core target with a per-row INT8 drafter. Not a routed RTL throughput or nine-workload production tau.",
  "measurement": {
   "post_prefill_tokens": 912,
   "int8_verify_cycles": 326,
@@ -38,7 +39,7 @@
  "limitations": [
   "The paired BF16 reference is the prefix of a 2048-token BF16 run on the same prompts; target arithmetic can change the later greedy trajectory.",
   "DFlash's released block-16 drafter runs at block 5 outside its training distribution.",
-  "The INT8 drafter matvec uses the target's K-split and BF16 output boundary; its non-matrix operations are the released BF16 implementation, while an exact drafter RTL contract and full TP-2 path are pending.",
+  "The INT8 drafter matvec uses per-linear K-splits and BF16 output boundaries; its non-matrix operations are the released BF16 implementation. The exact drafter TP-2 matrix schedule and RTL are pending.",
   "The prompt subset excludes the longest agentic contexts and does not support replacing the nine-workload production tau."
  ]
 }

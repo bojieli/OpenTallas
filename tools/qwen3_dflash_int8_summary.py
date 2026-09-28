@@ -48,9 +48,16 @@ def summarize(raw, source_path, seed=42, reps=10000):
         m = measure(sample)
         boots.append((m["int8_tau"], m["int8_over_bf16_tau"]))
     boots = np.array(boots)
+    draft_w8 = raw.get("draft_weights") == "w8"
+    tp2_target = bool(raw.get("tp2_target"))
+    scope = ("Bounded greedy acceptance of a signed-INT8/FP8 " +
+             ("TP-2" if tp2_target else "single-core") + " target with a " +
+             ("per-row INT8" if draft_w8 else "released BF16") +
+             " drafter. Not a routed RTL throughput or nine-workload production tau.")
     result = {"schema": "opentallas.qwen3-dflash-int8-acceptance-summary.v1",
+              "summary_tool_sha256": sha(__file__),
               "source_record": str(source_path), "source_record_sha256": sha(source_path),
-              "scope": "Bounded greedy acceptance of deployed signed-INT8/FP8 target and per-row INT8 drafter, on a subset of published prompts at 128 generated tokens. Not a TP-2 RTL timing or nine-workload production tau.",
+              "scope": scope,
               "measurement": measure(rows),
               "ci95_prompt_bootstrap_stratified_by_workload": {
                   "seed": seed, "replicates": reps,
@@ -61,7 +68,8 @@ def summarize(raw, source_path, seed=42, reps=10000):
               "limitations": [
                   "The paired BF16 reference is the prefix of a 2048-token BF16 run on the same prompts; target arithmetic can change the later greedy trajectory.",
                   "DFlash's released block-16 drafter runs at block 5 outside its training distribution.",
-                  "The INT8 drafter matvec uses the target's K-split and BF16 output boundary; its non-matrix operations are the released BF16 implementation, while an exact drafter RTL contract and full TP-2 path are pending.",
+                  ("The INT8 drafter matvec uses per-linear K-splits and BF16 output boundaries; its non-matrix operations are the released BF16 implementation. The exact drafter TP-2 matrix schedule and RTL are pending."
+                   if draft_w8 else "The released BF16 drafter is not the O4 INT8 drafter; this run isolates target arithmetic only."),
                   "The prompt subset excludes the longest agentic contexts and does not support replacing the nine-workload production tau."]}
     return result
 
