@@ -5,16 +5,18 @@
     "no_levers": "old C7 exposure class transferred; sensitivity only",
     "overlap_assumed": "conditional ideal overlap; no new collective bench",
     "required_collective_bench": {
-      "activation_local_words": 34,
-      "note": "measure both gathers with the new quant and w2 producer schedule, including blocking COLL and queue backpressure",
-      "output_local_words": 10,
+      "activation_local_flits": 266,
+      "current_die_collective_flit_bytes": 64,
+      "note": "old gather bench used a 512-byte word, while the die uses 64-byte flits; measure both gathers at the die width with the new quant and w2 producer schedule, including blocking COLL and queue backpressure",
+      "output_local_flits": 80,
+      "previous_small_gather_word_bytes": 512,
       "previous_small_gather_words": 1,
       "source": "results/rtl/v41_stage_collective_campaign.json patterns.gather_router"
     }
   },
   "capacity": {
     "adopted_saturation_claim_valid": false,
-    "gate": "paired sharded writer and scanner with user offset, exact two-user scan and timing",
+    "gate": "paired sharded writer and scanner with user offset, exact two-user scan, parallel scan scheduler and route at modeled bandwidth; serial correctness reader cannot support the modeled scan rate",
     "model_striped_key_users": 866,
     "multiuser_key_address_isolation": false,
     "replicated_key_addressable_users": 481,
@@ -127,6 +129,6 @@
     "tools/collective_exposure.py": "cd6aad7745ec3d27b161e1dd4291e7b5ab812c4afc682bac85ef030a3184b67b",
     "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
     "tools/v41_collective_exposure.py": "73d0d79996fdde320373de36fde91bf29738aa4b607288c20dade749ef77f43c",
-    "tools/v41_tp_exact_reprice.py": "254b13558c98ce4529b8ccda69ab31360649beda2dd0134e4ddb42460cc6feca"
+    "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303"
   }
 }

@@ -109,10 +109,12 @@ def build():
                                  no_levers="old C7 exposure class transferred; sensitivity only",
                                  design_point="old all-gather-small lever tails transferred to two new all-gathers; uncalibrated",
                                  required_collective_bench=dict(
-                                     activation_local_words=34, output_local_words=10,
+                                     current_die_collective_flit_bytes=64,
+                                     activation_local_flits=266, output_local_flits=80,
                                      previous_small_gather_words=1,
+                                     previous_small_gather_word_bytes=512,
                                      source="results/rtl/v41_stage_collective_campaign.json patterns.gather_router",
-                                     note="measure both gathers with the new quant and w2 producer schedule, including blocking COLL and queue backpressure"),
+                                     note="old gather bench used a 512-byte word, while the die uses 64-byte flits; measure both gathers at the die width with the new quant and w2 producer schedule, including blocking COLL and queue backpressure"),
                                  adopted_rate_claim="pending exact two-gather collective RTL timing and full-shape bit-exact gate"),
                 capacity=dict(source="results/arch/v41_hbm_region_preflight.json",
                               model_striped_key_users=region["capacity"]["users_model_striped_keys"],
@@ -120,7 +122,7 @@ def build():
                               replicated_key_addressable_users=region["capacity"]["max_replicated_users_with_28_bit_key_window"],
                               multiuser_key_address_isolation=region["isolation"]["multiuser_key_address_isolation"],
                               adopted_saturation_claim_valid=False,
-                              gate="paired sharded writer and scanner with user offset, exact two-user scan and timing"))
+                              gate="paired sharded writer and scanner with user offset, exact two-user scan, parallel scan scheduler and route at modeled bandwidth; serial correctness reader cannot support the modeled scan rate"))
 
 
 def main():

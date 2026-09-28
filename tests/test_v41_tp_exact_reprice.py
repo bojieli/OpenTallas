@@ -30,9 +30,14 @@ def test_rowsplit_record_is_current_and_does_not_claim_a_measured_headline():
 
     assert "uncalibrated" in rec["calibration"]["design_point"]
     assert "pending" in rec["calibration"]["adopted_rate_claim"]
-    assert rec["calibration"]["required_collective_bench"]["activation_local_words"] == 34
+    bench = rec["calibration"]["required_collective_bench"]
+    assert bench["current_die_collective_flit_bytes"] == 64
+    assert bench["activation_local_flits"] == 266
+    assert bench["output_local_flits"] == 80
+    assert bench["previous_small_gather_word_bytes"] == 512
     assert rec["capacity"]["model_striped_key_users"] == 866
     assert rec["capacity"]["replicated_key_static_users"] == 551
     assert rec["capacity"]["replicated_key_addressable_users"] == 481
     assert rec["capacity"]["multiuser_key_address_isolation"] is False
     assert rec["capacity"]["adopted_saturation_claim_valid"] is False
+    assert "parallel scan scheduler" in rec["capacity"]["gate"]
