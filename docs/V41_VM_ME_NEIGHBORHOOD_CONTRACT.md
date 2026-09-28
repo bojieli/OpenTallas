@@ -64,7 +64,10 @@ operations require no extra macro ports. A concurrent core read or write
 must be scheduled or arbitrated explicitly; the scoped wo_a checkpoint
 gate does not prove such contention handling.
 
-The ME checkpoint gate at `5f11f91a` is a source-pinned first-16 RL5 pass;
-full 2,048-row replay and the integrated pipelined VM-to-RL5 exact replay
-are separate functional prerequisites. No rate credit follows from this
-contract alone.
+The MP=1 ME checkpoint gate at `c4591c26` passes all 2,048 wo_a rows
+bit-exact at 131,349 cycles for two groups, with 128 four-word preload
+issues and 131,108 weight-bank reads. It supplies the bank-major VM words
+from its checkpoint fixture. The integrated pipelined VM-to-RL5 exact
+replay, the local eight-macro route, the pipe2 converter detailed route,
+and this complete neighborhood route are separate prerequisites. No rate
+credit follows from this contract alone.
