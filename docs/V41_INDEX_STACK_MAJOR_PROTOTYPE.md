@@ -28,7 +28,7 @@ wholly within one stack's 16-key group.
 
 The standalone [record](../results/rtl/v41_idx_stack_major_ingest.json)
 checks 1,040 and 262,144 global keys and the bounded top-K union with ties.
-The ingress synthesizes to 557 Yosys generic cells and 58 reset flops. This
+The ingress synthesizes to 814 Yosys generic cells and 88 reset flops. This
 does not include score arithmetic, selector memories, HBM controller, or
 routing. Its 16-key beat interface is a local tile interface, not 8,704 new
 die-boundary pins.
