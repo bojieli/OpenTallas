@@ -25,10 +25,12 @@ RTL = [ROOT / p for p in (
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64.sv",
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
     "rtl/test/tb_hdc_v41x_fullshape_woa_exact.sv")]
 PAT = re.compile(r"WOA_PASS rows_per_group=(\d+) exact_rows=(\d+) bank_reads=(\d+) cycles=(\d+)")
+PRE_PAT = re.compile(r"PRELOAD_PASS issue_cycles=(\d+) write_cycles=(\d+)")
 
 
 def sha(path: Path) -> str:
@@ -52,11 +54,14 @@ def bits(path: Path, n: int) -> np.ndarray:
 
 def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         layout_manifest: Path, rows: int, output: Path, banked: bool = False,
-        macro: bool = False, rl: int = 2, shared: bool = False) -> dict:
+        macro: bool = False, rl: int = 2, shared: bool = False,
+        preloaded: bool = False) -> dict:
     if rl not in (2, 3):
         raise ValueError('rl must be 2 or 3')
     if shared and rl != 3:
         raise ValueError('shared store requires rl=3')
+    if preloaded and (not shared or rl != 3):
+        raise ValueError('preloaded mode requires shared store and rl=3')
     if rows < 16 or rows > 1024 or rows % 16:
         raise ValueError("rows must be a multiple of 16 in 16..1024")
     if image.stat().st_size != 33_554_432:
@@ -86,7 +91,7 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         command = [verilator, "--binary", "--timing", "-O0", "-Wno-fatal", "-Wno-WIDTH",
                    "-Wno-UNUSED", "-Wno-TIMESCALEMOD", "--top-module",
                    "tb_hdc_v41x_fullshape_woa_exact", *([f"-GXBANK={2 if macro else 1}"] if banked or macro else []),
-                   f"-GRL={rl}", *(["-GSHARED=1"] if shared else []), "-Mdir", str(obj),
+                   f"-GRL={rl}", *([f"-GSHARED={2 if preloaded else 1}"] if shared else []), "-Mdir", str(obj),
                    *map(str, RTL), "-CFLAGS", "-O0", "-j", "4"]
         t0 = time.monotonic()
         build = subprocess.run(command, cwd=ROOT, capture_output=True, text=True,
@@ -103,6 +108,9 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         if sim.returncode or not match:
             raise RuntimeError("ME bench failed:\n" + sim.stdout[-3000:] + sim.stderr[-2000:])
         checked_rows, exact, reads, cycles = map(int, match.groups())
+        pre_match = PRE_PAT.search(sim.stdout)
+        if preloaded and (not pre_match or tuple(map(int,pre_match.groups())) != (128,128)):
+            raise RuntimeError('preload coverage mismatch: '+sim.stdout[-1000:])
         if checked_rows != rows or exact != rows * 2 or reads < rows * 128:
             raise RuntimeError("ME bench coverage mismatch: " + match.group(0))
         sim_sec = round(time.monotonic() - t1, 2)
@@ -121,6 +129,10 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
             "simulation_cycles": cycles, "build_seconds": build_sec,
             "read_latency_cycles": rl,
             "external_shared_store": shared,
+            "preloaded_activation": preloaded,
+            "vm_bank_rotation_quarters": 2 if preloaded else 0,
+            "preload_issue_cycles": int(pre_match.group(1)) if pre_match else 0,
+            "preload_write_cycles": int(pre_match.group(2)) if pre_match else 0,
             "simulation_seconds": sim_sec, "memory_cap_bytes": 24 * 1024**3,
             "descriptor": {"g0": {"weight_base_word": 7680, "xbase": 0, "output_base_word": 0},
                            "g1": {"weight_base_word": 73216, "xbase": 4096, "output_base_word": 64},
@@ -144,11 +156,12 @@ def main() -> None:
     ap.add_argument("--macro", action="store_true")
     ap.add_argument("--rl", type=int, choices=(2, 3), default=2)
     ap.add_argument("--shared", action="store_true")
+    ap.add_argument("--preloaded", action="store_true")
     ap.add_argument("--output", type=Path, default=ROOT / "results/rtl/hdc_v41x_fullshape_woa_exact.json")
     args = ap.parse_args()
     print(json.dumps(run(args.acc, args.za, args.image, args.golden_manifest,
                          args.layout_manifest, args.rows, args.output, args.banked, args.macro,
-                         args.rl, args.shared), indent=2))
+                         args.rl, args.shared, args.preloaded), indent=2))
 
 
 if __name__ == "__main__":

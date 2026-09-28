@@ -35,21 +35,44 @@ module tb_hdc_v41x_fullshape_woa_exact #(
     wire [8*4-1:0] shared_rq_plg;
     wire [8*MG*16-1:0] shared_rd_x;
     reg [8*MG*16-1:0] shared_xr0=0;
+    reg pre_in_v=0;
+    reg [12:0] pre_in_e=0;
+    reg [2047:0] pre_in_d=0;
+    wire pre_out_v, pre_out_fault, pre_out_saturated;
+    wire [1:0] pre_out_p;
+    wire [12:0] pre_out_e;
+    wire [1023:0] pre_out_d;
+    integer preload_issues=0, preload_writes=0;
     integer rows=16, op=0, checked=0, reads=0, cycles=0;
     integer fd, got_bytes;
     string dir;
     assign wb_q=(RL==3) ? bp2 : bp1;
 
     generate if (SHARED != 0) begin : g_shared
+        if (SHARED == 2) begin : g_preload
+            ot_hdc_v41x_fp32_bf16_preload64 u_cv (
+                .clk(clk),.rst_n(rst_n),.in_v(pre_in_v),.in_p(2'd0),.in_e(pre_in_e),.in_d(pre_in_d),
+                .out_v(pre_out_v),.out_p(pre_out_p),.out_e(pre_out_e),.out_d(pre_out_d),
+                .out_fault(pre_out_fault),.out_saturated(pre_out_saturated));
+        end else begin : g_no_preload
+            assign pre_out_v=1'b0;
+            assign pre_out_p=2'd0;
+            assign pre_out_e=13'd0;
+            assign pre_out_d=1024'd0;
+            assign pre_out_fault=1'b0;
+            assign pre_out_saturated=1'b0;
+        end
         ot_hdc_v41x_me_xbank_macro #(.MG(MG),.MP(1),.G(G),.KMAX(5120),.NBW(14),.EW(13)) u_store (
-            .clk(clk),.wr_v(shared_wr_v),.wr_p(shared_wr_p),.wr_e(shared_wr_e),.wr_d(shared_wr_d),
-            .pre_v(1'b0),.pre_p(1'b0),.pre_e(13'd0),.pre_d(1024'd0),.rd_rot(2'd0),
+            .clk(clk),.wr_v(SHARED==2 ? 1'b0 : shared_wr_v),.wr_p(shared_wr_p),
+            .wr_e(shared_wr_e),.wr_d(shared_wr_d),
+            .pre_v(pre_out_v),.pre_p(pre_out_p[0]),.pre_e(pre_out_e),.pre_d(pre_out_d),
+            .rd_rot(SHARED==2 ? 2'd2 : 2'd0),
             .rq_v(shared_rq_v),.rq_q(shared_rq_q),.rq_plg(shared_rq_plg),.rd_x(shared_rd_x));
         always @(posedge clk) shared_xr0 <= shared_rd_x;
     end endgenerate
     ot_hdc_v41x_me_adapt #(.W(W),.G(G),.MG(MG),.AW(AW),.BAW(BAW),.KMAX(5120),
                              .XBANK(XBANK),.RL(RL),.SHARED_XBANK(SHARED)) u_me (
-        .clk(clk),.rst_n(rst_n),.go(go),.ready(ready),.idle(idle),
+        .clk(clk),.rst_n(rst_n),.go(go),.i_preloaded(SHARED==2),.ready(ready),.idle(idle),
         .i_nout(16'(rows)),.i_tiles(16'(1)),.i_k(16'd4096),
         .i_wbase(AW'(op ? BASE1 : BASE0)),.i_xbase(AW'(op ? 4096 : 0)),
         .i_xjs(AW'(0)),.i_split(2'd0),.i_round(1'b1),
@@ -79,6 +102,24 @@ module tb_hdc_v41x_fullshape_woa_exact #(
         rst_n=1;
         for (integer j=0;j<2;j++) begin
             op=j;
+            if (SHARED==2) begin
+                for(integer beat=0;beat<64;beat++) begin
+                    @(negedge clk);
+                    pre_in_v=1;
+                    pre_in_e=beat*64;
+                    // The real ACC base is 32 mod 64.  Four modulo-4 VM
+                    // banks therefore return physical quarters 2,3,0,1.
+                    // Keep this bank-major order through conversion and
+                    // restore logical order only on the xbank read.
+                    for(integer lane=0;lane<64;lane++)
+                        pre_in_d[lane*32+:32]=x[j*4096+beat*64+
+                            (((lane/16+2)%4)*16)+(lane%16)];
+                    preload_issues=preload_issues+1;
+                end
+                @(negedge clk); pre_in_v=0;
+                repeat(3) @(negedge clk);
+                if(pre_out_fault) $fatal(1,"preload conversion fault");
+            end
             @(negedge clk); go=1;
             @(negedge clk); go=0;
             wait(idle && checked == (j+1)*rows);
@@ -88,10 +129,12 @@ module tb_hdc_v41x_fullshape_woa_exact #(
             $fatal(1,"WOA_FAIL checked=%0d reads=%0d fault=%0d",checked,reads,fault);
         $display("WOA_PASS rows_per_group=%0d exact_rows=%0d bank_reads=%0d cycles=%0d",
                  rows,checked,reads,cycles);
+        $display("PRELOAD_PASS issue_cycles=%0d write_cycles=%0d",preload_issues,preload_writes);
         $finish;
     end
 
     always @(posedge clk) if (rst_n) begin
+        if (pre_out_v) preload_writes<=preload_writes+1;
         cycles<=cycles+1;
         if (cycles>300000) $fatal(1,"wo_a timeout checked=%0d op=%0d",checked,op);
         for (integer p=0;p<G;p++) if (x_re[p]) begin

@@ -42,6 +42,7 @@ module ot_hdc_v41x_me_adapt #(
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
+    input  wire              i_preloaded,    // complete selected K span is already in shared store
     output wire              ready,
     output reg               idle,
     input  wire [NW-1:0]     i_nout,
@@ -152,7 +153,10 @@ module ot_hdc_v41x_me_adapt #(
             d_v <= 1'b0;
             case (st)
                 A_IDLE: if (go) begin st <= A_SUB; sj <= 0; end
-                A_SUB: begin st <= A_LOAD; lp <= 0; le <= 0; got <= 0; end
+                A_SUB: begin
+                    st <= (SHARED_XBANK != 0 && i_preloaded) ? A_DESC : A_LOAD;
+                    lp <= 0; le <= 0; got <= 0;
+                end
                 A_LOAD: begin
                     x_re[G-1:0] <= {G{1'b1}};
                     l_v <= 1'b1;
