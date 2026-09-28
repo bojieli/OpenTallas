@@ -49,6 +49,16 @@ def derive() -> dict:
             "macro_read_cycle_ps": tt["breakdown"]["read_cycle_ps"],
             "macro_write_energy_fj": tt["write_energy_fj"],
             "four_64B_word_write_macro_energy_pj": banks * width_macros * tt["write_energy_fj"] / 1000,
+            "four_64B_word_read_macro_energy_pj": banks * width_macros * tt["read_energy_fj"] / 1000,
+        },
+        "separate_me_preload_phase": {
+            "fp32_elements_per_cycle": banks * word_bits // 32,
+            "bytes_per_cycle": banks * word_bits // 8,
+            "elements_per_activation_group": 4096,
+            "read_cycles_per_group_lower_bound": 4096 // (banks * word_bits // 32),
+            "read_cycles_two_groups_lower_bound": 2 * 4096 // (banks * word_bits // 32),
+            "port_rule": "one bank-local read per bank per cycle; no additional SRAM port; separate from collective writes",
+            "unimplemented": "tile has only scalar xb_re/raddr/rq; four-read interface, rotation and ME xbank 256B/cycle write are required",
         },
         "caveats": [
             "The macro compiler numbers are modeled abstracts, not routed SRAM transistor measurements.",

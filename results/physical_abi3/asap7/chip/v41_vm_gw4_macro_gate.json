@@ -19,11 +19,21 @@
     "words_per_bank": 8192
   },
   "scope": "macro-abstract capacity and one-read/one-write port lower bound; no integrated VM route",
+  "separate_me_preload_phase": {
+    "bytes_per_cycle": 256,
+    "elements_per_activation_group": 4096,
+    "fp32_elements_per_cycle": 64,
+    "port_rule": "one bank-local read per bank per cycle; no additional SRAM port; separate from collective writes",
+    "read_cycles_per_group_lower_bound": 64,
+    "read_cycles_two_groups_lower_bound": 128,
+    "unimplemented": "tile has only scalar xb_re/raddr/rq; four-read interface, rotation and ME xbank 256B/cycle write are required"
+  },
   "source": {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json",
     "sha256": "4749acc7f92350b8d1ec05baebec1a0f75de1bbc0cb8dee29eb63b5cd382eec3"
   },
   "timing_energy_model_tt": {
+    "four_64B_word_read_macro_energy_pj": 7.091086431122775,
     "four_64B_word_write_macro_energy_pj": 14.055285855122772,
     "macro_read_cycle_ps": 380.88584645675326,
     "macro_write_cycle_ps": 361.21765559723315,

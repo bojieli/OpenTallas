@@ -50,6 +50,28 @@ per-bank depth selection, clock distribution, and the 2,048-bit data path.
 Banking itself need not quadruple capacity: the same 2 MiB is partitioned into
 four banks, but it requires four independent write paths.
 
+## ME activation preload from the same banks
+
+In a separate ME-preload phase, the four independent read ports can supply
+four consecutive 64-byte VM words each cycle, or 64 FP32 elements / 256 bytes
+per cycle. A 4,096-element activation group therefore has a **64-cycle read
+floor**, and two groups have a **128-cycle read floor**, before latency and
+drain. The abstract gives a TT read cycle of 381 ps and modeled macro read
+energy of 7.09 pJ per four-word beat. No extra SRAM port or capacity is needed;
+the write and read bank resources serve distinct phases. The tile currently
+has only one 64-byte external-B read per cycle, so a four-read interface,
+bank-local registered output, and a 256-byte/cycle ME xbank ingest are still
+required. A direct 2,048-bit read-to-logical-order crossbar was tested as a
+quarter-width slice and failed pre-route 0.92 ns timing by 1.06 ns; its
+negative probe is in
+[`v41_vm_gr4_slice/synth_sta.json`](../results/physical_abi3/asap7/chip/v41_vm_gr4_slice/synth_sta.json).
+The ME xbank can instead retain physical VM bank order and latch the initial
+word-address modulo four. On term read, that two-bit rotation selects the
+corresponding xbank group. This removes the wide crossbar from the preload
+write path, but its xbank implementation and timing gate are separate work.
+The core and package controller must not request conflicting reads of the
+same bank during this blocking preload.
+
 ## Other vector-memory ports
 
 Blocking COLL makes the core idle while this DMA writes, so one independent
