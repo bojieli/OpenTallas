@@ -8,7 +8,7 @@ This appendix answers finding 6 and recommendation 6 of `docs/ARCHITECTURE_ATLAS
 
 - Headlines enumerated: 130 (264 printed occurrences in the atlas).
 - Bound to a record: 117, of which 3 are a ratio or an aggregate of record fields computed here. Unbound: 13 (Section B.5).
-- Printed occurrences that agree with their record under the written-precision rule: 245.
+- Printed occurrences that agree with their record under the written-precision rule: 247.
 - Headlines with a sensitivity range taken from the record's own variants: 14.
 - Records: 28, of which 20 pin their sources.
 
@@ -199,8 +199,8 @@ Sensitivity variants:
 |---|---|---|---|---|---|---|---|
 | `v41.agg_ratio_fill28_1m` | V4.1 aggregate throughput ROM / HBM at 1M, 28 users, without MTP | 6.7 | 1 | 6.74349 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rate_rom_over_hbm` |  | <!-- figure: 6.7 src="results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rate_rom_over_hbm" name="v41.agg_ratio_fill28_1m" -->
 | `v41.agg_ratio_fill28_1m_mtp` | V4.1 aggregate throughput ROM / HBM at 1M, 28 users, with MTP | 11.7 | 1 | 11.7474 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm` |  | <!-- figure: 11.7 src="results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm" name="v41.agg_ratio_fill28_1m_mtp" -->
-| `v41.agg_ratio_fill28_1m_s101` | §10.1 prose: V4.1 aggregate ROM / best HBM at the 28-user fill, 1M (same measure as Table 8-11) | 6.2 | 1 (disagreement) | 6.74349 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rate_rom_over_hbm` |  |
-| `v41.agg_ratio_fill28_1m_mtp_s101` | §10.1 prose: V4.1 aggregate ROM / best HBM at the 28-user fill, 1M, with MTP | 10.4 | 1 (disagreement) | 11.7474 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm` |  |
+| `v41.agg_ratio_fill28_1m_s101` | §10.1 prose: V4.1 aggregate ROM / best HBM at the 28-user fill, 1M (same measure as Table 8-11) | 6.7 | 1 | 6.74349 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rate_rom_over_hbm` |  | <!-- figure: 6.7 src="results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rate_rom_over_hbm" name="v41.agg_ratio_fill28_1m_s101" -->
+| `v41.agg_ratio_fill28_1m_mtp_s101` | §10.1 prose: V4.1 aggregate ROM / best HBM at the 28-user fill, 1M, with MTP | 11.7 | 1 | 11.7474 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm` |  | <!-- figure: 11.7 src="results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm" name="v41.agg_ratio_fill28_1m_mtp_s101" -->
 | `v41.agg_1024_200k` | V4.1 array aggregate throughput at 1,024 users, 200K (thousand tokens/s) | 891 | 1 | 890.818 | model | `results/arch/v41_lanes.json#energy.200000.sat1024.rom.aggregate_tokens_s x 0.001` |  | <!-- figure: 891 src="results/arch/v41_lanes.json#energy.200000.sat1024.rom.aggregate_tokens_s" scale="0.001" name="v41.agg_1024_200k" -->
 | `v41.users_200k` | Users held in four HBM3E stacks per die at 200K | 5,018 | 1 | 5018 | model | `results/arch/arch_budget_v41.json#capacity.200000.rom_users` |  | <!-- figure: 5,018 src="results/arch/arch_budget_v41.json#capacity.200000.rom_users" name="v41.users_200k" -->
 | `v41.agg_ratio_1024_1m` | Adopted design vs best comparator aggregate at 1,024 users, 1M | 10.8 | 2 | 10.7557 | model | `results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.saturated_batch1024.rate_rom_over_hbm` |  | <!-- figure: 10.8 src="results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.saturated_batch1024.rate_rom_over_hbm" name="v41.agg_ratio_1024_1m" -->
@@ -334,11 +334,6 @@ These figures are printed in the atlas and produced by no tracked record. They a
 ## B.6 Findings
 
 Everything below is known to the check. A new entry of any kind fails it; a value disagreement always fails unless named in `ACKNOWLEDGED_DISAGREEMENTS`.
-
-### acknowledged-disagreement (2)
-
-- `v41.agg_ratio_fill28_1m_mtp_s101`: atlas prints 10.4 (anchor 'Throughput per silicon is not the price of speed either'); record 11.7474
-- `v41.agg_ratio_fill28_1m_s101`: atlas prints 6.2 (anchor 'Throughput per silicon is not the price of speed either'); record 6.74349
 
 ### commit-outside-head (5)
 

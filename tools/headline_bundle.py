@@ -690,11 +690,11 @@ HEADLINES: list[dict[str, Any]] = [
     dict(id="v41.agg_ratio_fill28_1m_s101", section="DeepSeek-V4.1 batching", cls="model",
          claim="§10.1 prose: V4.1 aggregate ROM / best HBM at the 28-user fill, 1M (same measure as Table 8-11)",
          binding=B(PS, f"{POB}.1048576.fill28.rate_rom_over_hbm"),
-         printed=[at(S101B, "aggregate is 6.2× the best HBM array's")]),
+         printed=[at(S101B, "aggregate is 6.7× the best HBM array's")]),
     dict(id="v41.agg_ratio_fill28_1m_mtp_s101", section="DeepSeek-V4.1 batching", cls="model",
          claim="§10.1 prose: V4.1 aggregate ROM / best HBM at the 28-user fill, 1M, with MTP",
          binding=B(PS, f"{POB}.1048576.fill28_mtp.rate_rom_over_hbm"),
-         printed=[at(S101B, "(10.4× with MTP)")]),
+         printed=[at(S101B, "(11.6× with MTP)")]),
     dict(id="v41.agg_1024_200k", section="DeepSeek-V4.1 batching", cls="model",
          claim="V4.1 array aggregate throughput at 1,024 users, 200K (thousand tokens/s)",
          binding=B(LN, "energy.200000.sat1024.rom.aggregate_tokens_s", scale=0.001),
@@ -923,11 +923,6 @@ HEADLINES: list[dict[str, Any]] = [
 #: and recorded value.  Any movement of either fails.  These are for the atlas
 #: owner to correct; this tool never edits the atlas.
 ACKNOWLEDGED_DISAGREEMENTS: dict[tuple[str, str], str] = {
-    # §10.1 prose quotes the 28-user-fill aggregate ratio at 1M as 6.2x (10.4x
-    # with MTP); Table 8-11 prints 6.7x / 11.7x from the same field of
-    # results/arch/power_scenarios.json.  The prose is the stale one.
-    ("v41.agg_ratio_fill28_1m_s101", "aggregate is 6.2× the best HBM array's"): "6.74349",
-    ("v41.agg_ratio_fill28_1m_mtp_s101", "(10.4× with MTP)"): "11.7474",
 }
 
 

@@ -49,7 +49,14 @@ def test_a_lost_anchor_fails(monkeypatch):
 
 
 def test_acknowledged_disagreement_is_pinned_to_its_value(monkeypatch):
-    key = ("v41.agg_ratio_fill28_1m_s101", "aggregate is 6.2× the best HBM array's")
+    real = HB.atlas_blocks
+    monkeypatch.setattr(HB, "atlas_blocks", lambda text: [
+        b.replace("aggregate is 6.7× the best", "aggregate is 6.2× the best") for b in real(text)])
+    key = ("v41.agg_ratio_fill28_1m_s101", "aggregate is 6.7× the best HBM array's")
+    # Acknowledged at a value the record does not hold: still a failure.
     monkeypatch.setitem(HB.ACKNOWLEDGED_DISAGREEMENTS, key, "6.7")
-    bundle = HB.build()
-    assert "value-mismatch" in _kinds(bundle, "v41.agg_ratio_fill28_1m_s101")
+    assert "value-mismatch" in _kinds(HB.build(), "v41.agg_ratio_fill28_1m_s101")
+    # Acknowledged at exactly the recorded value: reported, not failed.
+    monkeypatch.setitem(HB.ACKNOWLEDGED_DISAGREEMENTS, key, "6.74349")
+    kinds = _kinds(HB.build(), "v41.agg_ratio_fill28_1m_s101")
+    assert "acknowledged-disagreement" in kinds and "value-mismatch" not in kinds

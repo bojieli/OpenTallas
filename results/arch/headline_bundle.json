@@ -19,7 +19,7 @@
   "derived_in_bundle": 3,
   "unbound": 13,
   "printed_occurrences": 264,
-  "occurrences_agreeing": 245,
+  "occurrences_agreeing": 247,
   "with_sensitivity_range": 14,
   "by_evidence_class": {
    "measured-RTL": 21,
@@ -38,7 +38,6 @@
    "stale": 53
   },
   "findings_by_kind": {
-   "acknowledged-disagreement": 2,
    "commit-outside-head": 5,
    "stale-pin": 53,
    "unbound": 13
@@ -2672,9 +2671,9 @@
    "printed": [
     {
      "in": "Throughput per silicon is not the price of speed either",
-     "text": "aggregate is 6.2× the best HBM array's",
-     "printed_value": "6.2",
-     "status": "disagrees-acknowledged"
+     "text": "aggregate is 6.7× the best HBM array's",
+     "printed_value": "6.7",
+     "status": "agrees"
     }
    ]
   },
@@ -2693,9 +2692,9 @@
    "printed": [
     {
      "in": "Throughput per silicon is not the price of speed either",
-     "text": "(10.4× with MTP)",
-     "printed_value": "10.4",
-     "status": "disagrees-acknowledged"
+     "text": "(11.7× with MTP)",
+     "printed_value": "11.7",
+     "status": "agrees"
     }
    ]
   },
@@ -8382,18 +8381,6 @@
   }
  },
  "findings": [
-  {
-   "key": "ack:v41.agg_ratio_fill28_1m_mtp_s101:(10.4× with MTP)",
-   "kind": "acknowledged-disagreement",
-   "headline": "v41.agg_ratio_fill28_1m_mtp_s101",
-   "detail": "atlas prints 10.4 (anchor 'Throughput per silicon is not the price of speed either'); record 11.7474"
-  },
-  {
-   "key": "ack:v41.agg_ratio_fill28_1m_s101:aggregate is 6.2× the best HBM array's",
-   "kind": "acknowledged-disagreement",
-   "headline": "v41.agg_ratio_fill28_1m_s101",
-   "detail": "atlas prints 6.2 (anchor 'Throughput per silicon is not the price of speed either'); record 6.74349"
-  },
   {
    "key": "commit-outside-head:results/arch/decode_roofline.json:results/roofline/iso_area/qwen3_8b.json",
    "kind": "commit-outside-head",
