@@ -27,3 +27,11 @@ four quarter groups in beat order. Duplicating all 16 streamers would also
 duplicate their ROB memory; the area and route cost must be measured before
 such an implementation is selected. No full-token or four-stack throughput
 claim follows from this single-range gate.
+
+`ot_hdc_v41x_idx_quarter_ranges` computes the 16 virtual ranges required by
+that next stage. For stack `s`, the count of assigned keys before global key
+`x` is `16*floor(x/64)+clamp((x mod 64)-16*s,0,16)`. Applying this rank to
+each quarter's start and end gives contiguous, disjoint local intervals;
+their first local key yields the superblock base and `cmd_skip`. The RTL
+geometry gate checks 16 contexts across 138 scan lengths, exhaustively
+checking ownership for lengths 1–128 and sampling the one-million-key case.
