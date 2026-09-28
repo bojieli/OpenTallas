@@ -55,8 +55,9 @@ module tb_hdc_v41x_idx_pool_kwr_sharded;
         run_case(0);run_case(7);run_case(15);run_case(16);
         run_case(31);run_case(32);run_case(47);run_case(48);
         run_case(63);run_case(64);run_case(127);run_case(1023);
-        if(dbg_keys!=12) errors=errors+1;
-        $display("V41XPOOLKWRSHARD checked=12 errors=%0d keys=%0d",errors,dbg_keys);
+        run_case(65535);run_case(262143);
+        if(dbg_keys!=14) errors=errors+1;
+        $display("V41XPOOLKWRSHARD checked=14 errors=%0d keys=%0d",errors,dbg_keys);
         if(errors) $fatal(1,"sharded writer mismatch");
         $finish;
     end
