@@ -76,15 +76,15 @@ The exact layer-0 builder emits 12 blocking collectives:
 
 The seven activation gathers contain BF16 values held in FP32 containers. The **471-cycle** candidate GW4 bench instead measures one proposed **266-word fused FP8-plus-scale descriptor**; its y gather takes 251 cycles. Those times cannot replace the emitted seven startups. The proposed packed descriptor still stores its codes inefficiently in VM containers and needs an actual packing/emission contract.
 
-**Design choice:** first time the unchanged executable sequence. Then overlap each expert's quantization and activation transfer with other ready work, using bounded descriptors and real destination space. Compare per-expert streaming with a fused descriptor that waits for all producers. Fusion is not automatically faster on the dependency path. Preserve per-expert BF16 w2 output rounding and ascending expert addition; preserve wo_b's `((r0+r1)+(r2+r3))` FP32 reduction before final rounding.
+**Design choice:** first time the unchanged executable sequence. Then overlap each expert's BF16 activation transfer with other ready work, using bounded descriptors and real destination space. Pre-transfer FP8 quantization is a separate core/ISA packing contract to evaluate. Compare per-expert streaming with a fused descriptor that waits for all producers. Fusion is not automatically faster on the dependency path. Preserve per-expert BF16 w2 output rounding and ascending expert addition; preserve wo_b's `((r0+r1)+(r2+r3))` FP32 reduction before final rounding.
 
 ### 3.3 Endpoint service limits matter more than advertised link bandwidth
 
 At 1.087 GHz, one 64-B VM word/cycle is **69.568 GB/s**; four write banks supply **278.272 GB/s**. The modeled T1 pair is about 171.3 GB/s and in-package UCIe is 4.2 TB/s/direction. Those link assumptions do not make the die's injection, receive, transpose or SRAM ports run that fast.
 
-The collective RTL carries 512 payload bits plus tag/control/parity: 547 logical bits, before any PHY framing. Its relay algorithm sends each source word once over T1 and, counting relay traffic, twice over outgoing UCIe per die. A gather writes four source streams into VM. Count each of these copies and writes.
+The collective RTL carries 512 payload bits plus tag/control/parity: 547 logical bits, before any PHY framing. For an n-word descriptor per source die, its relay algorithm sends n outgoing T1 records per die and 2n outgoing UCIe records per die: n of its own and n relayed from remote sources. A gather writes four source streams into VM. Count each of these copies and writes.
 
-The full candidate has 128 credits for each source/parity domain, not one aggregate FIFO. At actual one-record/cycle injection divided across two remote peers, minimum modeled round-trip latency alone implies roughly 140 in-flight records per peer. Relay and credit processing add latency. Deeper buffering must be selected from measured service and credit-return latency, then implemented in SRAM; it is not a substitute for bank throughput.
+The full candidate has 128 credits for each source/parity domain, not one aggregate FIFO. At maximum one-record/cycle injection divided across two remote peers, minimum modeled round-trip latency alone implies roughly 140 in-flight records per peer. Relay and credit processing add latency. Deeper buffering must be selected from measured service and credit-return latency, then implemented in SRAM; it is not a substitute for bank throughput.
 
 ### 3.4 HBM service is fragmented across independently optimistic models
 
@@ -130,7 +130,7 @@ Every job and packet needs unambiguous user, token position/epoch, layer, operat
 - Give relays real backpressure or admission credits. Current relay ports without ready need a documented reservation invariant.
 - Compare descriptor identity, mode, count and `last` across ranks and against the expected operation. Reject stale or mismatched traffic.
 - On fault, abort the entire participating group, reconcile credits, drain/invalidate old traffic and fence before tag reuse. One rank halting while peers wait is not recovery.
-- For stage feedback, complete and release the old transaction at the head before admitting the next token. Do not retain a chain of buffers around the ring while waiting for its own feedback.
+- For stage feedback, complete and release the old transaction at the head before admitting the next token for that same user. Do not retain a chain of buffers around the ring while waiting for its own feedback.
 - Use separate per-user state and speculative epochs; rollback must invalidate the affected KV/activation state without consuming another user's completion.
 
 These rules are proposed invariants. Validate the finite wait-for graph and adversarial backpressure, wrap, peer failure and two-user tests; do not call them a deadlock proof before verification.
