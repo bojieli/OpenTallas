@@ -18,10 +18,11 @@ import hdc_timing as TIMING  # noqa: E402
 
 TB = ROOT / "rtl/test/tb_hdc_core_qwen_vector_weight.sv"
 CORE = ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv"
+DYN_TTILES = ROOT / "rtl/hdc/ot_hdc_dyn_ttiles.sv"
 WSTREAM = ROOT / "rtl/hdc/hbm/ot_hdc_wstream.sv"
 ARB = ROOT / "rtl/hdc/hbm/ot_hdc_hbm_arb.sv"
 HBM = ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv"
-SOURCES = [*BASE.HDC[:-1], CORE, *BASE.PIPES, *BASE.BRIDGE_RTL, *TWO.KV, HBM, WSTREAM, ARB, TB, BASE.HARNESS]
+SOURCES = [*BASE.HDC[:-1], DYN_TTILES, CORE, *BASE.PIPES, *BASE.BRIDGE_RTL, *TWO.KV, HBM, WSTREAM, ARB, TB, BASE.HARNESS]
 INPUTS = [*SOURCES, BASE.ISA_SVH, ROOT / "tools/hdc_program.py",
           ROOT / "tools/hdc_golden.py", ROOT / "tools/hdc_isa.py",
           ROOT / "tools/hdc_timing.py", Path(__file__)]
