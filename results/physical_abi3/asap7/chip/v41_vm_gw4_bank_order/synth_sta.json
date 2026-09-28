@@ -19,7 +19,7 @@
     "status": "pass"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-28T11:06:07.264944+00:00",
+  "completed_at": "2026-09-28T11:06:56.659566+00:00",
   "corner": {
     "liberty": [
       {
@@ -81,21 +81,16 @@
     ],
     "top": "ot_v41_vm_gw4_bank_order"
   },
-  "elapsed_seconds": 2.849,
+  "elapsed_seconds": 3.689,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-28T11:06:04.415952+00:00",
+  "generated_at": "2026-09-28T11:06:52.970226+00:00",
   "git": {
-    "commit": "6784caab049049fcd69c369d063ee9a689794d2a",
+    "commit": "db4247e6a7d5fe673488c19b4126287057d22c93",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
-    "untracked_results": [
-      "results/physical_abi3/asap7/chip/v41_vm_gw4_slice/full2048_synth_sta.json"
-    ],
-    "worktree_dirty": true,
-    "worktree_status": [
-      " M docs/V41_VM_GW4_PHYSICAL_GATE.md",
-      "?? rtl/chip/physical/ot_v41_vm_gw4_bank_order.sv"
-    ]
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
   },
   "purpose": "characterization",
   "runner": {
@@ -115,11 +110,12 @@
       "10",
       "--stages",
       "synth,sta",
+      "--force",
       "--output",
       "results/physical_abi3/asap7/chip/v41_vm_gw4_bank_order/synth_sta.json"
     ],
     "driver": {
-      "commit": "6784caab049049fcd69c369d063ee9a689794d2a",
+      "commit": "db4247e6a7d5fe673488c19b4126287057d22c93",
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
       "path": "/tmp/opentallas-v41-vm-bank-physical/tools/run_abi3_physical.py",
