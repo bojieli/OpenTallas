@@ -25,6 +25,7 @@ def test_bound_program_preserves_separate_expert_packets_and_dependencies():
     assert rec["summary"]["collectives"] == 12
     assert rec["summary"]["all_collective_input_vm_words_per_die"] == 686
     assert rec["summary"]["all_collective_output_vm_words_per_die"] == 1784
+    assert rec["summary"]["four_vm_write_port_aggregate_output_floor_cycles"] == 446
     acts = [r for r in rows if r["unit"] == "COLL" and ".act" in r["tag"]]
     assert len(acts) == 7
     assert [r["collective"]["input_vm_words_per_die"] for r in acts] == [36] * 7

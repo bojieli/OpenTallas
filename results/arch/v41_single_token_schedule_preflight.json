@@ -321,6 +321,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 20,
         "input_vm_words_per_die": 20,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -334,7 +335,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 80,
         "op": "all_gather",
         "output_vm_words_per_die": 80,
         "rounded": false,
@@ -342,11 +342,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2641,
+      "incomplete_lower_bound_end_cycle": 2581,
       "incomplete_lower_bound_start_cycle": 2561,
       "issue_after_previous_pc": 8,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 80,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 20,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -379,6 +379,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 8,
         "input_vm_words_per_die": 8,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -392,7 +393,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 32,
         "op": "all_gather",
         "output_vm_words_per_die": 32,
         "rounded": false,
@@ -400,11 +400,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2673,
-      "incomplete_lower_bound_start_cycle": 2641,
+      "incomplete_lower_bound_end_cycle": 2589,
+      "incomplete_lower_bound_start_cycle": 2581,
       "issue_after_previous_pc": 9,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 32,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 8,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -439,8 +439,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2673,
-      "incomplete_lower_bound_start_cycle": 2673,
+      "incomplete_lower_bound_end_cycle": 2589,
+      "incomplete_lower_bound_start_cycle": 2589,
       "issue_after_previous_pc": 10,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -478,8 +478,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2674,
-      "incomplete_lower_bound_start_cycle": 2674,
+      "incomplete_lower_bound_end_cycle": 2590,
+      "incomplete_lower_bound_start_cycle": 2590,
       "issue_after_previous_pc": 11,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -518,8 +518,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2675,
-      "incomplete_lower_bound_start_cycle": 2675,
+      "incomplete_lower_bound_end_cycle": 2591,
+      "incomplete_lower_bound_start_cycle": 2591,
       "issue_after_previous_pc": 12,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -556,8 +556,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2676,
-      "incomplete_lower_bound_start_cycle": 2676,
+      "incomplete_lower_bound_end_cycle": 2592,
+      "incomplete_lower_bound_start_cycle": 2592,
       "issue_after_previous_pc": 13,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -594,8 +594,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2677,
-      "incomplete_lower_bound_start_cycle": 2677,
+      "incomplete_lower_bound_end_cycle": 2593,
+      "incomplete_lower_bound_start_cycle": 2593,
       "issue_after_previous_pc": 14,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -633,8 +633,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2678,
-      "incomplete_lower_bound_start_cycle": 2678,
+      "incomplete_lower_bound_end_cycle": 2594,
+      "incomplete_lower_bound_start_cycle": 2594,
       "issue_after_previous_pc": 15,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -673,8 +673,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2679,
-      "incomplete_lower_bound_start_cycle": 2679,
+      "incomplete_lower_bound_end_cycle": 2595,
+      "incomplete_lower_bound_start_cycle": 2595,
       "issue_after_previous_pc": 16,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -711,8 +711,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2680,
-      "incomplete_lower_bound_start_cycle": 2680,
+      "incomplete_lower_bound_end_cycle": 2596,
+      "incomplete_lower_bound_start_cycle": 2596,
       "issue_after_previous_pc": 17,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -749,8 +749,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2681,
-      "incomplete_lower_bound_start_cycle": 2681,
+      "incomplete_lower_bound_end_cycle": 2597,
+      "incomplete_lower_bound_start_cycle": 2597,
       "issue_after_previous_pc": 18,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -787,8 +787,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2682,
-      "incomplete_lower_bound_start_cycle": 2682,
+      "incomplete_lower_bound_end_cycle": 2598,
+      "incomplete_lower_bound_start_cycle": 2598,
       "issue_after_previous_pc": 19,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -823,8 +823,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2683,
-      "incomplete_lower_bound_start_cycle": 2683,
+      "incomplete_lower_bound_end_cycle": 2599,
+      "incomplete_lower_bound_start_cycle": 2599,
       "issue_after_previous_pc": 20,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -858,8 +858,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2684,
-      "incomplete_lower_bound_start_cycle": 2684,
+      "incomplete_lower_bound_end_cycle": 2600,
+      "incomplete_lower_bound_start_cycle": 2600,
       "issue_after_previous_pc": 21,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -895,8 +895,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2685,
-      "incomplete_lower_bound_start_cycle": 2685,
+      "incomplete_lower_bound_end_cycle": 2601,
+      "incomplete_lower_bound_start_cycle": 2601,
       "issue_after_previous_pc": 22,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -934,8 +934,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2686,
-      "incomplete_lower_bound_start_cycle": 2686,
+      "incomplete_lower_bound_end_cycle": 2602,
+      "incomplete_lower_bound_start_cycle": 2602,
       "issue_after_previous_pc": 23,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -971,8 +971,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2687,
-      "incomplete_lower_bound_start_cycle": 2687,
+      "incomplete_lower_bound_end_cycle": 2603,
+      "incomplete_lower_bound_start_cycle": 2603,
       "issue_after_previous_pc": 24,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1008,8 +1008,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2688,
-      "incomplete_lower_bound_start_cycle": 2688,
+      "incomplete_lower_bound_end_cycle": 2604,
+      "incomplete_lower_bound_start_cycle": 2604,
       "issue_after_previous_pc": 25,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1046,8 +1046,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2689,
-      "incomplete_lower_bound_start_cycle": 2689,
+      "incomplete_lower_bound_end_cycle": 2605,
+      "incomplete_lower_bound_start_cycle": 2605,
       "issue_after_previous_pc": 26,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1084,8 +1084,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2690,
-      "incomplete_lower_bound_start_cycle": 2690,
+      "incomplete_lower_bound_end_cycle": 2606,
+      "incomplete_lower_bound_start_cycle": 2606,
       "issue_after_previous_pc": 27,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1119,8 +1119,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2691,
-      "incomplete_lower_bound_start_cycle": 2691,
+      "incomplete_lower_bound_end_cycle": 2607,
+      "incomplete_lower_bound_start_cycle": 2607,
       "issue_after_previous_pc": 28,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1158,8 +1158,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2692,
-      "incomplete_lower_bound_start_cycle": 2692,
+      "incomplete_lower_bound_end_cycle": 2608,
+      "incomplete_lower_bound_start_cycle": 2608,
       "issue_after_previous_pc": 29,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1201,8 +1201,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2693,
-      "incomplete_lower_bound_start_cycle": 2693,
+      "incomplete_lower_bound_end_cycle": 2609,
+      "incomplete_lower_bound_start_cycle": 2609,
       "issue_after_previous_pc": 30,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1240,8 +1240,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2694,
-      "incomplete_lower_bound_start_cycle": 2694,
+      "incomplete_lower_bound_end_cycle": 2610,
+      "incomplete_lower_bound_start_cycle": 2610,
       "issue_after_previous_pc": 31,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1277,8 +1277,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2695,
-      "incomplete_lower_bound_start_cycle": 2695,
+      "incomplete_lower_bound_end_cycle": 2611,
+      "incomplete_lower_bound_start_cycle": 2611,
       "issue_after_previous_pc": 32,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1318,8 +1318,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 2696,
-      "incomplete_lower_bound_start_cycle": 2696,
+      "incomplete_lower_bound_end_cycle": 2612,
+      "incomplete_lower_bound_start_cycle": 2612,
       "issue_after_previous_pc": 33,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1358,8 +1358,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 3721,
-      "incomplete_lower_bound_start_cycle": 2697,
+      "incomplete_lower_bound_end_cycle": 3637,
+      "incomplete_lower_bound_start_cycle": 2613,
       "issue_after_previous_pc": 34,
       "known_component_floor_basis": "corrected wo_a adapter LOADs four FP32 elements/cycle per o-group",
       "known_component_floor_cycles": 1024,
@@ -1395,8 +1395,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 3722,
-      "incomplete_lower_bound_start_cycle": 2698,
+      "incomplete_lower_bound_end_cycle": 3638,
+      "incomplete_lower_bound_start_cycle": 2614,
       "issue_after_previous_pc": 35,
       "known_component_floor_basis": "corrected wo_a adapter LOADs four FP32 elements/cycle per o-group",
       "known_component_floor_cycles": 1024,
@@ -1433,8 +1433,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 3722,
-      "incomplete_lower_bound_start_cycle": 3722,
+      "incomplete_lower_bound_end_cycle": 3638,
+      "incomplete_lower_bound_start_cycle": 3638,
       "issue_after_previous_pc": 36,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1471,8 +1471,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 3723,
-      "incomplete_lower_bound_start_cycle": 3723,
+      "incomplete_lower_bound_end_cycle": 3639,
+      "incomplete_lower_bound_start_cycle": 3639,
       "issue_after_previous_pc": 37,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1508,6 +1508,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 80,
         "input_vm_words_per_die": 320,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -1521,7 +1522,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 320,
         "op": "all_reduce",
         "output_vm_words_per_die": 320,
         "rounded": true,
@@ -1529,11 +1529,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4044,
-      "incomplete_lower_bound_start_cycle": 3724,
+      "incomplete_lower_bound_end_cycle": 3720,
+      "incomplete_lower_bound_start_cycle": 3640,
       "issue_after_previous_pc": 38,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 320,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 80,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -1570,8 +1570,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4044,
-      "incomplete_lower_bound_start_cycle": 4044,
+      "incomplete_lower_bound_end_cycle": 3720,
+      "incomplete_lower_bound_start_cycle": 3720,
       "issue_after_previous_pc": 39,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1610,8 +1610,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4045,
-      "incomplete_lower_bound_start_cycle": 4045,
+      "incomplete_lower_bound_end_cycle": 3721,
+      "incomplete_lower_bound_start_cycle": 3721,
       "issue_after_previous_pc": 40,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1653,8 +1653,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4046,
-      "incomplete_lower_bound_start_cycle": 4046,
+      "incomplete_lower_bound_end_cycle": 3722,
+      "incomplete_lower_bound_start_cycle": 3722,
       "issue_after_previous_pc": 41,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1695,8 +1695,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4047,
-      "incomplete_lower_bound_start_cycle": 4047,
+      "incomplete_lower_bound_end_cycle": 3723,
+      "incomplete_lower_bound_start_cycle": 3723,
       "issue_after_previous_pc": 42,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1738,8 +1738,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4048,
-      "incomplete_lower_bound_start_cycle": 4048,
+      "incomplete_lower_bound_end_cycle": 3724,
+      "incomplete_lower_bound_start_cycle": 3724,
       "issue_after_previous_pc": 43,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1778,8 +1778,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6609,
-      "incomplete_lower_bound_start_cycle": 4049,
+      "incomplete_lower_bound_end_cycle": 6285,
+      "incomplete_lower_bound_start_cycle": 3725,
       "issue_after_previous_pc": 44,
       "known_component_floor_basis": "HE adapter copies one 8-element K chunk/cycle before the HCP command",
       "known_component_floor_cycles": 2560,
@@ -1817,8 +1817,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4050,
-      "incomplete_lower_bound_start_cycle": 4050,
+      "incomplete_lower_bound_end_cycle": 3726,
+      "incomplete_lower_bound_start_cycle": 3726,
       "issue_after_previous_pc": 45,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1858,8 +1858,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4051,
-      "incomplete_lower_bound_start_cycle": 4051,
+      "incomplete_lower_bound_end_cycle": 3727,
+      "incomplete_lower_bound_start_cycle": 3727,
       "issue_after_previous_pc": 46,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1902,8 +1902,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4052,
-      "incomplete_lower_bound_start_cycle": 4052,
+      "incomplete_lower_bound_end_cycle": 3728,
+      "incomplete_lower_bound_start_cycle": 3728,
       "issue_after_previous_pc": 47,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1948,8 +1948,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4053,
-      "incomplete_lower_bound_start_cycle": 4053,
+      "incomplete_lower_bound_end_cycle": 3729,
+      "incomplete_lower_bound_start_cycle": 3729,
       "issue_after_previous_pc": 48,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -1988,8 +1988,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4054,
-      "incomplete_lower_bound_start_cycle": 4054,
+      "incomplete_lower_bound_end_cycle": 3730,
+      "incomplete_lower_bound_start_cycle": 3730,
       "issue_after_previous_pc": 49,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2030,8 +2030,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4055,
-      "incomplete_lower_bound_start_cycle": 4055,
+      "incomplete_lower_bound_end_cycle": 3731,
+      "incomplete_lower_bound_start_cycle": 3731,
       "issue_after_previous_pc": 50,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2069,8 +2069,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4056,
-      "incomplete_lower_bound_start_cycle": 4056,
+      "incomplete_lower_bound_end_cycle": 3732,
+      "incomplete_lower_bound_start_cycle": 3732,
       "issue_after_previous_pc": 51,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2109,8 +2109,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4057,
-      "incomplete_lower_bound_start_cycle": 4057,
+      "incomplete_lower_bound_end_cycle": 3733,
+      "incomplete_lower_bound_start_cycle": 3733,
       "issue_after_previous_pc": 52,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2145,8 +2145,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 4058,
-      "incomplete_lower_bound_start_cycle": 4058,
+      "incomplete_lower_bound_end_cycle": 3734,
+      "incomplete_lower_bound_start_cycle": 3734,
       "issue_after_previous_pc": 53,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2181,6 +2181,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 36,
         "input_vm_words_per_die": 36,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -2194,7 +2195,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
         "rounded": false,
@@ -2202,11 +2202,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6753,
-      "incomplete_lower_bound_start_cycle": 6609,
+      "incomplete_lower_bound_end_cycle": 6321,
+      "incomplete_lower_bound_start_cycle": 6285,
       "issue_after_previous_pc": 54,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 144,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 36,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -2243,8 +2243,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6753,
-      "incomplete_lower_bound_start_cycle": 6753,
+      "incomplete_lower_bound_end_cycle": 6321,
+      "incomplete_lower_bound_start_cycle": 6321,
       "issue_after_previous_pc": 55,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2281,8 +2281,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6754,
-      "incomplete_lower_bound_start_cycle": 6754,
+      "incomplete_lower_bound_end_cycle": 6322,
+      "incomplete_lower_bound_start_cycle": 6322,
       "issue_after_previous_pc": 56,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2315,6 +2315,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 6,
         "input_vm_words_per_die": 6,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -2328,7 +2329,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 24,
         "op": "all_gather",
         "output_vm_words_per_die": 24,
         "rounded": false,
@@ -2336,11 +2336,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6779,
-      "incomplete_lower_bound_start_cycle": 6755,
+      "incomplete_lower_bound_end_cycle": 6329,
+      "incomplete_lower_bound_start_cycle": 6323,
       "issue_after_previous_pc": 57,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 24,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 6,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -2377,8 +2377,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6779,
-      "incomplete_lower_bound_start_cycle": 6779,
+      "incomplete_lower_bound_end_cycle": 6329,
+      "incomplete_lower_bound_start_cycle": 6329,
       "issue_after_previous_pc": 58,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2412,8 +2412,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6780,
-      "incomplete_lower_bound_start_cycle": 6780,
+      "incomplete_lower_bound_end_cycle": 6330,
+      "incomplete_lower_bound_start_cycle": 6330,
       "issue_after_previous_pc": 59,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2450,8 +2450,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6781,
-      "incomplete_lower_bound_start_cycle": 6781,
+      "incomplete_lower_bound_end_cycle": 6331,
+      "incomplete_lower_bound_start_cycle": 6331,
       "issue_after_previous_pc": 60,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2488,8 +2488,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6782,
-      "incomplete_lower_bound_start_cycle": 6782,
+      "incomplete_lower_bound_end_cycle": 6332,
+      "incomplete_lower_bound_start_cycle": 6332,
       "issue_after_previous_pc": 61,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2524,8 +2524,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6783,
-      "incomplete_lower_bound_start_cycle": 6783,
+      "incomplete_lower_bound_end_cycle": 6333,
+      "incomplete_lower_bound_start_cycle": 6333,
       "issue_after_previous_pc": 62,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2566,8 +2566,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6784,
-      "incomplete_lower_bound_start_cycle": 6784,
+      "incomplete_lower_bound_end_cycle": 6334,
+      "incomplete_lower_bound_start_cycle": 6334,
       "issue_after_previous_pc": 63,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2605,8 +2605,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6785,
-      "incomplete_lower_bound_start_cycle": 6785,
+      "incomplete_lower_bound_end_cycle": 6335,
+      "incomplete_lower_bound_start_cycle": 6335,
       "issue_after_previous_pc": 64,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2646,8 +2646,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6786,
-      "incomplete_lower_bound_start_cycle": 6786,
+      "incomplete_lower_bound_end_cycle": 6336,
+      "incomplete_lower_bound_start_cycle": 6336,
       "issue_after_previous_pc": 65,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2685,8 +2685,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6787,
-      "incomplete_lower_bound_start_cycle": 6787,
+      "incomplete_lower_bound_end_cycle": 6337,
+      "incomplete_lower_bound_start_cycle": 6337,
       "issue_after_previous_pc": 66,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2726,8 +2726,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6788,
-      "incomplete_lower_bound_start_cycle": 6788,
+      "incomplete_lower_bound_end_cycle": 6338,
+      "incomplete_lower_bound_start_cycle": 6338,
       "issue_after_previous_pc": 67,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2763,6 +2763,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 36,
         "input_vm_words_per_die": 36,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -2776,7 +2777,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
         "rounded": false,
@@ -2784,11 +2784,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6933,
-      "incomplete_lower_bound_start_cycle": 6789,
+      "incomplete_lower_bound_end_cycle": 6375,
+      "incomplete_lower_bound_start_cycle": 6339,
       "issue_after_previous_pc": 68,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 144,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 36,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -2825,8 +2825,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6933,
-      "incomplete_lower_bound_start_cycle": 6933,
+      "incomplete_lower_bound_end_cycle": 6375,
+      "incomplete_lower_bound_start_cycle": 6375,
       "issue_after_previous_pc": 69,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2864,8 +2864,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6934,
-      "incomplete_lower_bound_start_cycle": 6934,
+      "incomplete_lower_bound_end_cycle": 6376,
+      "incomplete_lower_bound_start_cycle": 6376,
       "issue_after_previous_pc": 70,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2905,8 +2905,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6935,
-      "incomplete_lower_bound_start_cycle": 6935,
+      "incomplete_lower_bound_end_cycle": 6377,
+      "incomplete_lower_bound_start_cycle": 6377,
       "issue_after_previous_pc": 71,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2944,8 +2944,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6936,
-      "incomplete_lower_bound_start_cycle": 6936,
+      "incomplete_lower_bound_end_cycle": 6378,
+      "incomplete_lower_bound_start_cycle": 6378,
       "issue_after_previous_pc": 72,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -2981,8 +2981,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6937,
-      "incomplete_lower_bound_start_cycle": 6937,
+      "incomplete_lower_bound_end_cycle": 6379,
+      "incomplete_lower_bound_start_cycle": 6379,
       "issue_after_previous_pc": 73,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3025,8 +3025,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6938,
-      "incomplete_lower_bound_start_cycle": 6938,
+      "incomplete_lower_bound_end_cycle": 6380,
+      "incomplete_lower_bound_start_cycle": 6380,
       "issue_after_previous_pc": 74,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3067,8 +3067,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6939,
-      "incomplete_lower_bound_start_cycle": 6939,
+      "incomplete_lower_bound_end_cycle": 6381,
+      "incomplete_lower_bound_start_cycle": 6381,
       "issue_after_previous_pc": 75,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3103,8 +3103,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6940,
-      "incomplete_lower_bound_start_cycle": 6940,
+      "incomplete_lower_bound_end_cycle": 6382,
+      "incomplete_lower_bound_start_cycle": 6382,
       "issue_after_previous_pc": 76,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3142,8 +3142,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 6941,
-      "incomplete_lower_bound_start_cycle": 6941,
+      "incomplete_lower_bound_end_cycle": 6383,
+      "incomplete_lower_bound_start_cycle": 6383,
       "issue_after_previous_pc": 77,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3178,6 +3178,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 36,
         "input_vm_words_per_die": 36,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -3191,7 +3192,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
         "rounded": false,
@@ -3199,11 +3199,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7086,
-      "incomplete_lower_bound_start_cycle": 6942,
+      "incomplete_lower_bound_end_cycle": 6420,
+      "incomplete_lower_bound_start_cycle": 6384,
       "issue_after_previous_pc": 78,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 144,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 36,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -3240,8 +3240,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7086,
-      "incomplete_lower_bound_start_cycle": 7086,
+      "incomplete_lower_bound_end_cycle": 6420,
+      "incomplete_lower_bound_start_cycle": 6420,
       "issue_after_previous_pc": 79,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3279,8 +3279,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7087,
-      "incomplete_lower_bound_start_cycle": 7087,
+      "incomplete_lower_bound_end_cycle": 6421,
+      "incomplete_lower_bound_start_cycle": 6421,
       "issue_after_previous_pc": 80,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3320,8 +3320,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7088,
-      "incomplete_lower_bound_start_cycle": 7088,
+      "incomplete_lower_bound_end_cycle": 6422,
+      "incomplete_lower_bound_start_cycle": 6422,
       "issue_after_previous_pc": 81,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3359,8 +3359,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7089,
-      "incomplete_lower_bound_start_cycle": 7089,
+      "incomplete_lower_bound_end_cycle": 6423,
+      "incomplete_lower_bound_start_cycle": 6423,
       "issue_after_previous_pc": 82,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3395,6 +3395,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 36,
         "input_vm_words_per_die": 36,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -3408,7 +3409,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
         "rounded": false,
@@ -3416,11 +3416,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7234,
-      "incomplete_lower_bound_start_cycle": 7090,
+      "incomplete_lower_bound_end_cycle": 6460,
+      "incomplete_lower_bound_start_cycle": 6424,
       "issue_after_previous_pc": 83,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 144,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 36,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -3457,8 +3457,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7234,
-      "incomplete_lower_bound_start_cycle": 7234,
+      "incomplete_lower_bound_end_cycle": 6460,
+      "incomplete_lower_bound_start_cycle": 6460,
       "issue_after_previous_pc": 84,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3496,8 +3496,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7235,
-      "incomplete_lower_bound_start_cycle": 7235,
+      "incomplete_lower_bound_end_cycle": 6461,
+      "incomplete_lower_bound_start_cycle": 6461,
       "issue_after_previous_pc": 85,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3537,8 +3537,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7236,
-      "incomplete_lower_bound_start_cycle": 7236,
+      "incomplete_lower_bound_end_cycle": 6462,
+      "incomplete_lower_bound_start_cycle": 6462,
       "issue_after_previous_pc": 86,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3576,8 +3576,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7237,
-      "incomplete_lower_bound_start_cycle": 7237,
+      "incomplete_lower_bound_end_cycle": 6463,
+      "incomplete_lower_bound_start_cycle": 6463,
       "issue_after_previous_pc": 87,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3612,6 +3612,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 36,
         "input_vm_words_per_die": 36,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -3625,7 +3626,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
         "rounded": false,
@@ -3633,11 +3633,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7382,
-      "incomplete_lower_bound_start_cycle": 7238,
+      "incomplete_lower_bound_end_cycle": 6500,
+      "incomplete_lower_bound_start_cycle": 6464,
       "issue_after_previous_pc": 88,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 144,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 36,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -3674,8 +3674,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7382,
-      "incomplete_lower_bound_start_cycle": 7382,
+      "incomplete_lower_bound_end_cycle": 6500,
+      "incomplete_lower_bound_start_cycle": 6500,
       "issue_after_previous_pc": 89,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3713,8 +3713,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7383,
-      "incomplete_lower_bound_start_cycle": 7383,
+      "incomplete_lower_bound_end_cycle": 6501,
+      "incomplete_lower_bound_start_cycle": 6501,
       "issue_after_previous_pc": 90,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3754,8 +3754,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7384,
-      "incomplete_lower_bound_start_cycle": 7384,
+      "incomplete_lower_bound_end_cycle": 6502,
+      "incomplete_lower_bound_start_cycle": 6502,
       "issue_after_previous_pc": 91,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3793,8 +3793,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7385,
-      "incomplete_lower_bound_start_cycle": 7385,
+      "incomplete_lower_bound_end_cycle": 6503,
+      "incomplete_lower_bound_start_cycle": 6503,
       "issue_after_previous_pc": 92,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3829,6 +3829,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 36,
         "input_vm_words_per_die": 36,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -3842,7 +3843,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
         "rounded": false,
@@ -3850,11 +3850,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7530,
-      "incomplete_lower_bound_start_cycle": 7386,
+      "incomplete_lower_bound_end_cycle": 6540,
+      "incomplete_lower_bound_start_cycle": 6504,
       "issue_after_previous_pc": 93,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 144,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 36,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -3891,8 +3891,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7530,
-      "incomplete_lower_bound_start_cycle": 7530,
+      "incomplete_lower_bound_end_cycle": 6540,
+      "incomplete_lower_bound_start_cycle": 6540,
       "issue_after_previous_pc": 94,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3930,8 +3930,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7531,
-      "incomplete_lower_bound_start_cycle": 7531,
+      "incomplete_lower_bound_end_cycle": 6541,
+      "incomplete_lower_bound_start_cycle": 6541,
       "issue_after_previous_pc": 95,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -3966,6 +3966,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 36,
         "input_vm_words_per_die": 36,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -3979,7 +3980,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 144,
         "op": "all_gather",
         "output_vm_words_per_die": 144,
         "rounded": false,
@@ -3987,11 +3987,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7676,
-      "incomplete_lower_bound_start_cycle": 7532,
+      "incomplete_lower_bound_end_cycle": 6578,
+      "incomplete_lower_bound_start_cycle": 6542,
       "issue_after_previous_pc": 96,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 144,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 36,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -4028,8 +4028,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7676,
-      "incomplete_lower_bound_start_cycle": 7676,
+      "incomplete_lower_bound_end_cycle": 6578,
+      "incomplete_lower_bound_start_cycle": 6578,
       "issue_after_previous_pc": 97,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4067,8 +4067,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7677,
-      "incomplete_lower_bound_start_cycle": 7677,
+      "incomplete_lower_bound_end_cycle": 6579,
+      "incomplete_lower_bound_start_cycle": 6579,
       "issue_after_previous_pc": 98,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4108,8 +4108,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7678,
-      "incomplete_lower_bound_start_cycle": 7678,
+      "incomplete_lower_bound_end_cycle": 6580,
+      "incomplete_lower_bound_start_cycle": 6580,
       "issue_after_previous_pc": 99,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4149,8 +4149,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7679,
-      "incomplete_lower_bound_start_cycle": 7679,
+      "incomplete_lower_bound_end_cycle": 6581,
+      "incomplete_lower_bound_start_cycle": 6581,
       "issue_after_previous_pc": 100,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4190,8 +4190,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7680,
-      "incomplete_lower_bound_start_cycle": 7680,
+      "incomplete_lower_bound_end_cycle": 6582,
+      "incomplete_lower_bound_start_cycle": 6582,
       "issue_after_previous_pc": 101,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4231,8 +4231,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7681,
-      "incomplete_lower_bound_start_cycle": 7681,
+      "incomplete_lower_bound_end_cycle": 6583,
+      "incomplete_lower_bound_start_cycle": 6583,
       "issue_after_previous_pc": 102,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4273,8 +4273,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 7682,
-      "incomplete_lower_bound_start_cycle": 7682,
+      "incomplete_lower_bound_end_cycle": 6584,
+      "incomplete_lower_bound_start_cycle": 6584,
       "issue_after_previous_pc": 103,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4313,6 +4313,7 @@
     },
     {
       "collective": {
+        "four_write_port_output_floor_cycles": 80,
         "input_vm_words_per_die": 80,
         "measured_stage_service": {
           "first_input_tx_after_issue": 3,
@@ -4326,7 +4327,6 @@
           "source_record": "results/rtl/v41_tp_layer0_collective_sequence.json",
           "source_record_sha256": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0"
         },
-        "one_write_port_output_floor_cycles": 320,
         "op": "all_gather",
         "output_vm_words_per_die": 320,
         "rounded": false,
@@ -4334,11 +4334,11 @@
       },
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 8003,
-      "incomplete_lower_bound_start_cycle": 7683,
+      "incomplete_lower_bound_end_cycle": 6665,
+      "incomplete_lower_bound_start_cycle": 6585,
       "issue_after_previous_pc": 104,
-      "known_component_floor_basis": "reference one-port 64-B VM output point; no startup, link or producer delay",
-      "known_component_floor_cycles": 320,
+      "known_component_floor_basis": "four 64-B VM output writes/cycle; no startup, link or producer delay",
+      "known_component_floor_cycles": 80,
       "missing_contract": [
         "first_last_real_producer_and_consumer_ready_cycles",
         "shared_physical_VM_read_write_ports_and_queue_events",
@@ -4375,8 +4375,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 8003,
-      "incomplete_lower_bound_start_cycle": 8003,
+      "incomplete_lower_bound_end_cycle": 6665,
+      "incomplete_lower_bound_start_cycle": 6665,
       "issue_after_previous_pc": 105,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4416,8 +4416,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 8004,
-      "incomplete_lower_bound_start_cycle": 8004,
+      "incomplete_lower_bound_end_cycle": 6666,
+      "incomplete_lower_bound_start_cycle": 6666,
       "issue_after_previous_pc": 106,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4460,8 +4460,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 8005,
-      "incomplete_lower_bound_start_cycle": 8005,
+      "incomplete_lower_bound_end_cycle": 6667,
+      "incomplete_lower_bound_start_cycle": 6667,
       "issue_after_previous_pc": 107,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4503,8 +4503,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 8006,
-      "incomplete_lower_bound_start_cycle": 8006,
+      "incomplete_lower_bound_end_cycle": 6668,
+      "incomplete_lower_bound_start_cycle": 6668,
       "issue_after_previous_pc": 108,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4549,8 +4549,8 @@
     {
       "first_last_readiness": "unknown",
       "first_last_result_cycles": null,
-      "incomplete_lower_bound_end_cycle": 8007,
-      "incomplete_lower_bound_start_cycle": 8007,
+      "incomplete_lower_bound_end_cycle": 6669,
+      "incomplete_lower_bound_start_cycle": 6669,
       "issue_after_previous_pc": 109,
       "known_component_floor_basis": "no source-pinned full-width completion service; zero only for a lower bound",
       "known_component_floor_cycles": 0,
@@ -4665,7 +4665,7 @@
     "tools/hdc_program_v41.py": "7031fa78094e67cec1329e27640c216f53c06d0f7d50db7844095982dfd06542",
     "tools/hdc_replay_v41.py": "91b2897effabca8ec33d203a7411d771baf943ef153e6fb8ef35bf8872209e00",
     "tools/v41_fullshape_program_bind.py": "8d83770ac80ba6c0a8f06c758ba5e6caced03f6cc3f0d9bd82f8e9c0cdba5b0a",
-    "tools/v41_single_token_schedule_preflight.py": "c0dec63118893f0aa4e059ebeedba54d06a80ae2de793c5b55ddf362383a3238"
+    "tools/v41_single_token_schedule_preflight.py": "6adee1f145cc419988efbde9a0a1f71a831a93ccec035af56b4b488be462f69a"
   },
   "status": "blocked_missing_finite_service_contract",
   "summary": {
@@ -4674,7 +4674,7 @@
     "bound_qe_accesses": 115,
     "collectives": 12,
     "component_floor_excludes": "RAW/WAR/WAW readiness, compute, link, shared HBM, physical ports, routing and state commit",
-    "component_floor_reference": "one 64-B VM output write/cycle; HE K-load and wo_a G4-load floors; all missing service zero",
+    "component_floor_reference": "GW4 four 64-B VM output writes/cycle; HE K-load and wo_a G4-load floors; all missing service zero",
     "expert_activation_input_vm_words": [
       36,
       36,
@@ -4684,15 +4684,15 @@
       36,
       36
     ],
+    "four_vm_write_port_aggregate_output_floor_cycles": 446,
     "instructions": 111,
-    "layer0_optimistic_component_floor_cycles": 8007,
+    "layer0_optimistic_component_floor_cycles": 6669,
     "me_wo_a_pcs": [
       35,
       36
     ],
     "measured_collective_source_ready": "synthetic_fixture_only",
     "measured_isolated_collective_blocked_service_cycles": 2780,
-    "one_vm_write_port_aggregate_output_floor_cycles": 1784,
     "separate_expert_activation_gathers": 7,
     "service_reservations_complete": false,
     "token_latency_cycles": null,

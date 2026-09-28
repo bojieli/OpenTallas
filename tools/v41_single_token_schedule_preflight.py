@@ -82,7 +82,7 @@ def missing_for(f: dict) -> list[str]:
 
 
 def component_floor(f: dict) -> tuple[int, str]:
-    """Optimistic component floor under the recorded one-write-port VM point."""
+    """Optimistic component floor under the measured GW4 VM contract."""
     if f["unit"] == I.UNIT_HE and f.get("he_k") == 2560:
         return 2560, "HE adapter copies one 8-element K chunk/cycle before the HCP command"
     if (f["unit"] == I.UNIT_ME and f.get("_tag") == "L0.out" and
@@ -91,7 +91,7 @@ def component_floor(f: dict) -> tuple[int, str]:
     if f["unit"] == I.UNIT_COLL:
         words = f["coll_n"] // 16
         out = 4 * words if f["coll_op"] == I.COLL_ALL_GATHER else words
-        return out, "reference one-port 64-B VM output point; no startup, link or producer delay"
+        return (out + 3) // 4, "four 64-B VM output writes/cycle; no startup, link or producer delay"
     return 0, "no source-pinned full-width completion service; zero only for a lower bound"
 
 
@@ -227,7 +227,7 @@ def build(binder_path: Path = BINDER) -> dict:
             row["collective"] = dict(op="all_gather" if gather else "all_reduce",
                                      input_vm_words_per_die=words,
                                      output_vm_words_per_die=4 * words if gather else words,
-                                     one_write_port_output_floor_cycles=4 * words if gather else words,
+                                     four_write_port_output_floor_cycles=((4 * words if gather else words) + 3) // 4,
                                      seq=f["coll_seq"], rounded=bool(f.get("coll_rnd")))
             row["collective"]["measured_stage_service"] = measured_coll[pc]
             last_coll = pc
@@ -273,11 +273,12 @@ def build(binder_path: Path = BINDER) -> dict:
                              measured_isolated_collective_blocked_service_cycles=sum(
                                  r["collective"]["measured_stage_service"]["service_cycles"] for r in coll),
                              measured_collective_source_ready="synthetic_fixture_only",
-                             one_vm_write_port_aggregate_output_floor_cycles=sum(r["collective"]["output_vm_words_per_die"] for r in coll),
+                             four_vm_write_port_aggregate_output_floor_cycles=sum(
+                                 r["collective"]["four_write_port_output_floor_cycles"] for r in coll),
                              bound_qe_accesses=len(binder["qe_address_trace"]),
                              me_wo_a_pcs=me_pcs, service_reservations_complete=False,
                              layer0_optimistic_component_floor_cycles=floor_ends[-1],
-                             component_floor_reference="one 64-B VM output write/cycle; HE K-load and wo_a G4-load floors; all missing service zero",
+                             component_floor_reference="GW4 four 64-B VM output writes/cycle; HE K-load and wo_a G4-load floors; all missing service zero",
                              component_floor_excludes="RAW/WAR/WAW readiness, compute, link, shared HBM, physical ports, routing and state commit",
                              token_latency_cycles=None),
                 known_external_hbm_demand=dict(
