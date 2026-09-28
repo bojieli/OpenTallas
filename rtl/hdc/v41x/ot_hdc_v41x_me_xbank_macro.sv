@@ -74,10 +74,13 @@ module ot_hdc_v41x_me_xbank_macro #(
         wire [NBW-1:0] beat = rq_q[(b%8)*NBW +:NBW];
         wire [LG-1:0] logical_src = ((beat << (3+plg)) + (b & ((8 << plg)-1))) & (LANES-1);
         wire [LG-1:0] src = ((((logical_src >> 4)+rd_rot)&3)<<4) | (logical_src&15);
-        reg [LG-1:0] src_q;
-        always @(posedge clk) src_q <= src;
+        // Every source keeps chain index c=b%8.  Select only among the eight
+        // lanes of this local macro; a dynamic c select would synthesize an
+        // unnecessary die-wide 16-macro crossbar.
+        reg [$clog2(MG)-1:0] src_u_q;
+        always @(posedge clk) src_u_q <= src >> 3;
         for (p=0;p<MP;p=p+1) begin : g_bpos
-            assign rd_x[(b*MP+p)*16 +:16] = q_bus[(p*8+(src_q%8))*128+(src_q/8)*16 +:16];
+            assign rd_x[(b*MP+p)*16 +:16] = q_bus[(p*8+(b%8))*128+src_u_q*16 +:16];
         end
     end endgenerate
 endmodule
