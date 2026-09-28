@@ -1,0 +1,64 @@
+{
+  "schema": "opentallas.rtl.hdc_v41x_me_bank_hbm_service.v1",
+  "status": "pass",
+  "claim_boundary": "First 1,024 bank addresses of each of the two real full-shape L0 wo_a ME operations, at the adopted eight independently skewed 256-bit bank ports and ML=2. Exact source FP32 values, finite 64-sector ring per bank, 8-10-cycle behavioural HBM response. No full 65,536-address op, arithmetic output, shared HBM contention, die hookup, P&R or chip throughput claim.",
+  "source_layout_commit": "5bae99aa",
+  "source_layout_manifest_sha256": "68539337b54bfae42482fecc4c3eeb8ea097be97e17a13d94e89db00e866d94e",
+  "source_weight_image_sha256": "5cc5de8536d4efe889b38e5c8c593f63e0d66ffb9475ca6efa1e7c083af1bdf1",
+  "source_weight_image_bytes": 33554432,
+  "source_sha256": {
+    "rtl/hdc/hbm/ot_hdc_v41x_me_bank_hbm_service.sv": "f5b3312d6a856e5a96b964af4138e491e726339e061ccc66ecbcef6072e4b2e9",
+    "rtl/test/tb_hdc_v41x_me_bank_hbm_service.sv": "021728a66bca35aa09020541dadf10455d64c69a700650931b7329071faed06d",
+    "tools/rtl_hdc_v41x_me_bank_hbm_service.py": "e693092682dc0a910715ccbb2421fc6c4941312324f30855610617c0c5ef9ac6"
+  },
+  "families_remaining": {
+    "qe": "16-lane current-core packed FP8/FP4 stream and ROM bridge owned by weight-layout agent; full comparator HBM stream integration open",
+    "he_hcp": "reduced HCP weight HBM gate exists; full-shape independent-bank service and die hookup open",
+    "crom": "stream constants remain ROM-served in adopted tile; HBM comparator source open",
+    "wrom_embedding_vector": "embedding/vector BF16 weight source remains ROM-served; HBM comparator source open",
+    "engram": "Engram table remains ROM-served; HBM comparator source open"
+  },
+  "operations": {
+    "wo_a_0": {
+      "rom_base_word": 7680,
+      "hbm_base_sector": 1048576,
+      "weight_bank_sector_bytes": 32,
+      "bank_count": 8,
+      "word_addresses_per_bank": 1024,
+      "source_word_start": 0,
+      "sector_image_sha256": "3642beeb116ca5d34596cc8335490489fd84b775c0b0da5f089af5aced04eaa0",
+      "sector_hex_sha256": "17bd55c71488c2c7cf5d9087241263bab4dbb37587a9758510183bb473a24f63",
+      "bank_reads_exact": 8192,
+      "fp32_values_exact": 65536,
+      "requests": 8192,
+      "responses": 8192,
+      "ready_after_cycles": 44,
+      "service_cycles": 1090,
+      "max_inflight_plus_resident_per_bank": 64,
+      "log_sha256": "126678a6e6d027516f26561fbfd699ac1e7a2504052c102d0a8bfc13949cb130"
+    },
+    "wo_a_1": {
+      "rom_base_word": 73216,
+      "hbm_base_sector": 2097152,
+      "weight_bank_sector_bytes": 32,
+      "bank_count": 8,
+      "word_addresses_per_bank": 1024,
+      "source_word_start": 65536,
+      "sector_image_sha256": "f909df61afa786ba2c5bd9278cf7538bb99f7e47b31494eeb8c516201ee1a01a",
+      "sector_hex_sha256": "d4e83d45b32d6e333dd0bb27386df18d7296fc6fab2a0d9bd9cbfebca8ebd70d",
+      "bank_reads_exact": 8192,
+      "fp32_values_exact": 65536,
+      "requests": 8192,
+      "responses": 8192,
+      "ready_after_cycles": 44,
+      "service_cycles": 1090,
+      "max_inflight_plus_resident_per_bank": 64,
+      "log_sha256": "126678a6e6d027516f26561fbfd699ac1e7a2504052c102d0a8bfc13949cb130"
+    }
+  },
+  "malformed_response_tag": {
+    "status": "faulted_before_consumption",
+    "fault_why": 2,
+    "log_sha256": "99c938da665507900ded36f885fca08c63a9d5bfec9324a45f9e7adb00fcad84"
+  }
+}
