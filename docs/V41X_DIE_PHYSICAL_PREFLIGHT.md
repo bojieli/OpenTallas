@@ -209,7 +209,16 @@ request slice: `ot_chip_v41x_hbm_karb_pc_local` leaves response selection to
 the group's registered receive path. The refactored four-PC RTL still passes
 the concurrent exact KV/index gate in
 `results/rtl/v41x_karb_group4_local_kv_gate.json`. A near-budget physical
-route of that request-only child is pending.
+route of that request-only child completed in
+`results/asap7_physical/v41x_die_karb_pc_local_fit_m9/physical.json`:
+at 375 by 17.28 µm, the 0.92 ns detailed route **passes** with +118.752 ps
+setup and +41.713 ps hold WNS, zero DRC/antenna/slew/cap/fanout
+violations, and 568.430 µm² of routed standard cells. Its Fmax is 1.24805
+GHz in this predictive ASAP7 view. This is one local request slice; it
+excludes the group response buffers, K trunk, clock distribution across
+adjacent slices and the full four-stack die. Its 17.28 µm height is 0.08 µm
+above the modeled streamer-and-staging band, so the die area budget still
+needs a composed placement or repricing.
 The earlier unspecialized one-PC top also detailed-routed at 375 by 17.28 µm
 in `results/asap7_physical/v41x_die_karb_pc1_pipe_fit_slewmargin40_m9/physical.json`.
 It has +161.847 ps setup and +55.333 ps hold WNS with zero DRC and antenna
