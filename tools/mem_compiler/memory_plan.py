@@ -50,19 +50,25 @@ def qwen_core_memories(kv_macro_note: str) -> list[dict]:
     ]
 
 
+def qwen_kv_stream_memories() -> list[dict]:
+    """Finite on-die buffers for KV that lives in HBM in both Qwen designs."""
+    return [
+        m("KV prefetch window", 256, 256, "1R1W per bank, concurrent", "HBM KV prefetch window",
+          "rtl/hdc/kv/ot_hdc_kv_stream.sv:109-114", "ot_sram_1r1w_256x256_m2_r2c2", replicas=4,
+          note="G = 4 banks; full KV capacity is in HBM"),
+        m("KV tail", 128, 256, "1R1W per bank, 16-bit lane mask", "open and previous K tile",
+          "rtl/hdc/kv/ot_hdc_kv_stream.sv:115-121", "ot_sram_1r1w_128x256_m1_r2c2", replicas=2),
+        m("flush / V write-combine FIFOs", 4, 280, "1R1W", "tail-to-HBM and V write combining",
+          "rtl/hdc/kv/ot_hdc_kv_stream.sv:538-582", RF),
+    ]
+
+
 def plan(index: dict) -> dict:
     macros = index["macros"]
     archs = {
         "hbm_comparator": {
             "description": "the Qwen decode core with KV (and, when its RTL lands, weights) streamed from HBM",
-            "memories": qwen_core_memories("") + [
-                m("KV prefetch window", 256, 256, "1R1W per bank, concurrent", "KV prefetch window",
-                  "rtl/hdc/kv/ot_hdc_kv_stream.sv:109-114", "ot_sram_1r1w_256x256_m2_r2c2", replicas=4,
-                  note="G = 4 banks"),
-                m("KV tail", 128, 256, "1R1W per bank, 16-bit lane mask", "open and previous K tile",
-                  "rtl/hdc/kv/ot_hdc_kv_stream.sv:115-121", "ot_sram_1r1w_128x256_m1_r2c2", replicas=2),
-                m("flush / V write-combine FIFOs", 4, 280, "1R1W", "tail->HBM and V write combining",
-                  "rtl/hdc/kv/ot_hdc_kv_stream.sv:538-582", RF),
+            "memories": qwen_core_memories("") + qwen_kv_stream_memories() + [
                 m("weight ROM", None, 1024, "1R", "weights", "HBM",
                   note="streamed from HBM; no on-die weight macro. The weight streamer's prefetch buffers have "
                        "no RTL on main yet, so they are not mapped"),
@@ -72,14 +78,13 @@ def plan(index: dict) -> dict:
                              "status": "external IP, not a compiler output; footprint only"}],
         },
         "qwen3_8b_rom_reticle": {
-            "description": "one die, weights in mask ROM, KV in on-die SRAM (reduced vehicle wrapper: "
-                           "rtl/hdc/ot_hdc_memsys.sv)",
-            "memories": qwen_core_memories("") + [
-                m("weight ROM", 49152, 1024, "1R", "BF16 weights (45,056 words used)", "rtl/hdc/ot_hdc_memsys.sv",
-                  "ot_rom_8192x266_m8", tiles_w=4, tiles_d=6, ecc_data_bits=256),
-                m("KV SRAM", 1024, 512, "4R (one per lane group) + 1W (32-bit element)", "KV cache (64 positions)",
-                  "rtl/test/tb_hdc_core.sv:72-78", "ot_sram_1r1w_1024x256_m2_r2c2", tiles_w=2, replicas=4,
-                  note="one replica per read port; every write goes to all replicas"),
+            "description": "one die, weights in mask ROM and KV in HBM through ot_hdc_kv_stream "
+                           "(rtl/chip/ot_chip_hdc_tile.sv)",
+            "status": "partial_adopted_tile_map_reduced_rom_capacity_proxy",
+            "memories": qwen_core_memories("") + qwen_kv_stream_memories() + [
+                m("weight ROM", 49152, 1024, "1R", "reduced BF16 weight-image capacity proxy",
+                  "rtl/chip/ot_chip_hdc_tile.sv:183", "ot_rom_8192x266_m8", tiles_w=4, tiles_d=6,
+                  ecc_data_bits=256, note="current tile has WSA=17; its production bank geometry remains open"),
             ],
         },
     }
