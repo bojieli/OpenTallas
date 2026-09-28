@@ -155,3 +155,89 @@ def test_full_scope_cannot_buy_rate_with_unbudgeted_area_or_power():
     errors = FS.audit(m)["errors"]
     assert any("physical area exceeds limit" in e for e in errors)
     assert any("simultaneous power exceeds cooling limit" in e for e in errors)
+
+
+def test_nonfinite_capacity_rate_and_power_cannot_buy_a_witness():
+    bad_capacity = witness()
+    bad_capacity["resources"]["dma_vm_write"]["capacity_per_cycle"] = float("nan")
+    assert any("physical_id, capacity" in e for e in FS.audit(bad_capacity)["errors"])
+
+    bad_rate = witness()
+    bad_rate["operations"][0]["reservations"][1]["rate"] = float("inf")
+    assert any("invalid reservation" in e for e in FS.audit(bad_rate)["errors"])
+
+    bad_power = witness()
+    bad_power["scope"] = "full_layer"
+    bad_power["resources"]["dma_vm_write"].update(owner_die=0, area_mm2=0,
+                                                       idle_w=0, active_w=float("nan"))
+    assert any("concrete die, area and idle/active power" in e
+               for e in FS.audit(bad_power)["errors"])
+
+
+def test_full_scope_referenced_empty_queue_is_not_evidence():
+    m = witness()
+    m["scope"] = "full_layer"
+    m["operations"][0]["kind"] = "collective"
+    m["operations"][0]["queue_ids"] = ["q0"]
+    m["queues"] = {"q0": {"depth": 1, "events": []}}
+    assert any("queue q0 has no bound events" in e for e in FS.audit(m)["errors"])
+
+
+def test_malformed_resource_reservation_queue_and_dependency_block_without_crash():
+    for edit, required in (
+        (lambda m: m["resources"]["dma_vm_write"].pop("physical_id"), "unbound class/resource"),
+        (lambda m: m["operations"][0]["reservations"].append(None), "reservation object"),
+        (lambda m: m["operations"][0].update(deps="bad"), "dependency list required"),
+        (lambda m: m["queues"].update(q0={"depth": 1, "events": [None]}), "cycle and nonzero integer delta"),
+    ):
+        m = witness()
+        edit(m)
+        assert any(required in e for e in FS.audit(m)["errors"])
+
+
+def test_queue_events_must_belong_to_declared_operation_and_interval():
+    m = witness()
+    m["scope"] = "full_layer"
+    op = m["operations"][0]
+    op["kind"] = "collective"
+    op["queue_ids"] = ["q0"]
+    m["queues"] = {"q0": {"depth": 2, "events": [
+        {"cycle": 0, "delta": 1, "op": "not_an_operation"},
+        {"cycle": op["end_cycle"] + 1, "delta": -1, "op": op["id"]},
+    ]}}
+    errors = FS.audit(m)["errors"]
+    assert any("event not bound" in e for e in errors)
+    assert any("outside operation interval" in e for e in errors)
+
+
+def test_full_clock_and_extra_tensor_must_be_concrete():
+    m = witness()
+    m["scope"] = "full_layer"
+    m["contract"]["clock_hz"] = float("nan")
+    assert any("finite positive clock_hz" in e for e in FS.audit(m)["errors"])
+
+    extra = two_expert_bank_witness()
+    extra["tensor_fragments"][0]["tensor_id"] = "unlisted_weight"
+    assert any("absent from tensor_specs" in e for e in FS.audit(extra)["errors"])
+
+
+def test_stage_record_must_match_selected_measured_case(tmp_path):
+    m = witness()
+    record = json.loads((ROOT / "results/rtl/v41_collective_depth_campaign.json").read_text())
+    selected = next(c for c in record["cases"] if c["case"] == "act_d128_q2_blocked_pairwise")
+    selected["exposed_tail_cycles"] -= 1
+    path = tmp_path / "bad_stage.json"
+    path.write_text(json.dumps(record))
+    m["source_sha256"] = {"bad_stage.json": hashlib.sha256(path.read_bytes()).hexdigest()}
+    m["operations"][0]["exact_stage_record"]["path"] = "bad_stage.json"
+    errors = FS.audit(m, root=tmp_path)["errors"]
+    assert any("stage interval or measured case mismatch" in e for e in errors)
+
+
+def test_malformed_manifest_shapes_block_without_exception():
+    assert FS.audit([])["status"] == "blocked"
+    for field, value in (("contract", []), ("operations", [None]),
+                         ("tensor_fragments", [None]), ("queues", {"q0": None})):
+        m = witness()
+        m[field] = value
+        assert FS.audit(m)["status"] == "blocked"
