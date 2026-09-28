@@ -1,14 +1,54 @@
 {
-  "base_commit": "7d98acd1d4f30c723c388aeaffcb50a0f7b4a57e",
-  "scope": "standalone core-side QDQ8 packed window KV block handoff",
+  "schema": "opentallas.rtl.v41x_window_kv_absolute.v1",
+  "status": "pass",
+  "claim_scope": "Standalone 16-block QDQ8 handoff; absolute HBM row and local KVT row remain distinct at window saturation. No full die/token or rate claim.",
+  "cases": [
+    {
+      "separate_rows": false,
+      "absolute_hbm_row": 12345,
+      "local_kvt_row": 12345,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 0,
+      "local_kvt_row": 0,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 127,
+      "local_kvt_row": 127,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 128,
+      "local_kvt_row": 127,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 129,
+      "local_kvt_row": 127,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 1048575,
+      "local_kvt_row": 127,
+      "blocks": 16,
+      "status": "pass"
+    }
+  ],
   "source_sha256": {
-    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "2a4b9d24b8d3f196906f0f136680894e7b4f724eb02bd525c04366d4233667f8",
-    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "e0b06dddd6c56094d8e9bfba57f7eb34c21e348dbdc5cee2a17b4c2e8a15c0a9",
-    "rtl/test/tb_hdc_v41x_window_kv_blocks.sv": "242c585019bfa05c52b9acd95cff17d989051801dfd1994e5b868938f55dfa6d"
-  },
-  "checks": {
-    "iverilog_handoff_tb": "PASS window KV exact block handoff",
-    "iverilog_qe_elaboration": "pass"
-  },
-  "integration_status": "not wired through core/die; no full-token or rate claim"
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "d2d7919362cc4533ff4b20ea89368a963e514503e824117eb319213c4be208d7",
+    "rtl/test/tb_hdc_v41x_window_kv_blocks.sv": "66ba413e1dc3ef364bbe70bb7954c73c9c89f125e7a6361610b3e6e2ff38477e",
+    "tools/rtl_v41x_window_kv_absolute_gate.py": "3942c7ad20d82040e8bcdb17005f83694f7bd00a8df02a317732b517b81afe30"
+  }
 }
