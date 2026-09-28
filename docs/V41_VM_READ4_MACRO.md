@@ -37,3 +37,14 @@ and structurally parameterized but not yet physically routed or exercised in
 the checkpoint operator. The selected ME converter/xbank pipeline and tile
 controller must be connected and exact-gated before the 128-cycle preload
 service can be credited to token rate.
+
+The first physical probe of the same three-depth-group slice is
+[`placed_failure.json`](../results/physical_abi3/asap7/chip/v41_vm_read4_slice/placed_failure.json).
+It places all 48 macro instances and fits 4,184 I/O pins into 33,272
+available sites, but its post-resize setup WNS is **−3.525 ns** at a 0.92 ns
+target. The worst path is a combinational write-address-to-fault output;
+another −3.372 ns path crosses the bank depth selector into the registered
+512-bit output. The flow stopped before CTS and routing. Registering incoming
+commands and fault status, and pipelining the bank-local depth selection,
+must be exact-gated and physically measured before the read service is
+claimed at the design clock.
