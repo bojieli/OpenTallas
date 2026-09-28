@@ -35,6 +35,8 @@ module ot_hdc_qwen_kv_pc_adapter #(
     output wire [PCS-1:0] pc_rsp_rdy,
     input wire [PCS*MTAGW-1:0] pc_rsp_tag,
     input wire [PCS*256-1:0] pc_rsp_data,
+    input wire [PCS-1:0] pc_wr_done_v,
+    input wire [PCS*MTAGW-1:0] pc_wr_done_tag,
     output reg fault
 );
     localparam integer KV_SECTORS=262144;
@@ -45,10 +47,21 @@ module ot_hdc_qwen_kv_pc_adapter #(
     wire [6:0] pc=addr[6:0];
     wire request_ok=page_valid && bridge_req_sector<KV_SECTORS &&
                     kv_base_sector[6:0]==0;
-    assign bridge_req_rdy=request_ok && pc_req_rdy[pc];
+    // The legacy half-sector RMW bridge remains in WRITE_REQ until ready.
+    // Its ready must mean the write reached HBM, not merely that the shared
+    // service accepted it; otherwise the next logical read can pass it.
+    reg wr_pending;
+    reg [6:0] wr_pc;
+    reg [TAGW-1:0] wr_tag;
+    wire wr_done=wr_pending && pc_wr_done_v[wr_pc];
+    wire wr_done_match=wr_done &&
+        pc_wr_done_tag[wr_pc*MTAGW +: TAGW]==wr_tag &&
+        bridge_req_v && bridge_req_we && bridge_req_tag==wr_tag;
+    assign bridge_req_rdy=bridge_req_we ? wr_done_match :
+                            (!wr_pending && request_ok && pc_req_rdy[pc]);
     always @(*) begin
         pc_req_v=0; pc_req_we=0; pc_req_addr=0; pc_req_tag=0; pc_req_data=0;
-        if (bridge_req_v && request_ok) begin
+        if (bridge_req_v && request_ok && !wr_pending) begin
             pc_req_v[pc]=1;
             pc_req_we[pc]=bridge_req_we;
             pc_req_addr[pc*HAW +: HAW]=addr;
@@ -63,7 +76,20 @@ module ot_hdc_qwen_kv_pc_adapter #(
         assign pc_rsp_rdy[q]=bridge_rsp_rdy[q];
     end
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) fault<=0;
-        else if (bridge_req_v && !request_ok) fault<=1;
+        if (!rst_n) begin
+            fault<=0; wr_pending<=0; wr_pc<=0; wr_tag<=0;
+        end else begin
+            if (bridge_req_v && !request_ok) fault<=1;
+            if (bridge_req_v && bridge_req_we && !wr_pending && request_ok &&
+                pc_req_rdy[pc]) begin
+                wr_pending<=1; wr_pc<=pc; wr_tag<=bridge_req_tag;
+            end
+            if (wr_done) begin
+                wr_pending<=0;
+                if (!wr_done_match) fault<=1;
+            end
+            if (|(pc_wr_done_v & ~(PCS'(1)<<wr_pc)) ||
+                (|pc_wr_done_v && !wr_pending)) fault<=1;
+        end
     end
 endmodule

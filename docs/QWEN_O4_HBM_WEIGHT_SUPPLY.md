@@ -214,11 +214,14 @@ bridge to the same physical PC fabric, adding the bound user/layer KV base.
 It checks every logical sector is inside the 262,144-sector layer page and
 uses the adopted 25-bit G=6,144 KV response tag without truncation. The
 bridge's half-sector read/modify/write logic and FP8 conversion stay as
-implemented; this adapter passes first/last-sector, return-tag and invalid
-page tests. The inherited bridge permits one logical request at a time, so
-it is a correctness path pending a bounded multi-outstanding scheduler and
-shared-controller timing gate. Its write completion must release the shared
-service credit after the PHY commits the sector.
+implemented. The adapter holds a physical write until the shared PC service
+returns its completion tag; request acceptance alone cannot advance the
+bridge to a following read. An integrated bridge, adapter and PC-arbiter gate
+delays write completion by five cycles and checks read-after-write bytes,
+the retained half-sector, the exact physical transaction count and tags.
+The inherited bridge permits one logical request at a time, so this is a
+correctness path pending a bounded multi-outstanding scheduler and
+shared-controller timing gate.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs

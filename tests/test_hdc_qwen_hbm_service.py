@@ -59,3 +59,16 @@ def test_packed_kv_bridge_maps_logical_words_into_shared_pc_page(tmp_path):
     run = subprocess.run(["vvp", str(image)], cwd=ROOT, capture_output=True,
                          text=True, check=True)
     assert "PASS Qwen packed-KV bridge PC map 32B sectors page=262144 tag=25" in run.stdout
+
+
+def test_packed_kv_write_waits_for_shared_pc_completion_before_read(tmp_path):
+    image = tmp_path / "kv_shared.vvp"
+    subprocess.run(["iverilog", "-g2012", "-s", "tb_hdc_qwen_kv_shared_service",
+                    "-o", str(image),
+                    "rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv",
+                    "rtl/hdc/hbm/ot_hdc_qwen_kv_pc_adapter.sv",
+                    "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv",
+                    "rtl/test/tb_hdc_qwen_kv_shared_service.sv"], cwd=ROOT, check=True)
+    run = subprocess.run(["vvp", str(image)], cwd=ROOT, capture_output=True,
+                         text=True, check=True)
+    assert "PASS Qwen shared KV RMW read-after-write" in run.stdout

@@ -16,6 +16,8 @@ module tb_hdc_qwen_kv_pc_adapter;
     wire [PCS*MTAGW-1:0] pc_req_tag;
     reg [PCS*MTAGW-1:0] pc_rsp_tag=0;
     reg [PCS*256-1:0] pc_rsp_data=0;
+    reg [PCS-1:0] pc_wr_done_v=0;
+    reg [PCS*MTAGW-1:0] pc_wr_done_tag=0;
     ot_hdc_qwen_kv_pc_adapter dut (.*);
     initial begin
         repeat(2) @(negedge clk); rst_n=1; page_valid=1; bridge_req_v=1;
@@ -40,6 +42,26 @@ module tb_hdc_qwen_kv_pc_adapter;
         #1;
         if (!pc_req_v[127] || pc_req_addr[127*HAW +: HAW] !== kv_base_sector+262143)
             $fatal(1,"last packed KV sector mapped outside layer page");
+        bridge_req_v=0;
+        @(negedge clk);
+        bridge_req_sector=1; bridge_req_we=1; bridge_req_v=1;
+        #1;
+        if (!pc_req_v[1] || bridge_req_rdy)
+            $fatal(1,"write issued without waiting for physical completion");
+        @(negedge clk);
+        #1;
+        if (pc_req_v[1] || bridge_req_rdy)
+            $fatal(1,"write issued twice while waiting for completion");
+        pc_wr_done_v[1]=1;
+        pc_wr_done_tag[1*MTAGW +: MTAGW]={7'd0,bridge_req_tag};
+        #1;
+        if (!bridge_req_rdy || fault)
+            $fatal(1,"matched write completion not returned to bridge");
+        @(negedge clk);
+        pc_wr_done_v=0; bridge_req_we=0;
+        #1;
+        if (fault || !bridge_req_rdy)
+            $fatal(1,"adapter did not drain completed write");
         bridge_req_sector=262144;
         @(negedge clk);
         #1;
