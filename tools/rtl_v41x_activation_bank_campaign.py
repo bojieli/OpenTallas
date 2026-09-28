@@ -30,6 +30,8 @@ CASES = (
      "v41x_me_xbank_l0_real.hex", "ME_DATA", r"ME_XBANK_PASS kmax=(\d+) lanes=(\d+) mp=(\d+) reads=(\d+) errors=0"),
     ("he_slice", "tb_v41x_he_xslice", "ot_hdc_v41x_he_xslice",
      "v41x_he_xslice_l0_real.hex", "HE_DATA", r"HE_XSLICE_PASS depth=(\d+) lanes=(\d+) reads=(\d+)"),
+    ("he_slice_wide", "tb_v41x_he_xslice_wide", "ot_hdc_v41x_he_xslice_wide",
+     "v41x_he_xslice_l0_real.hex", "HE_DATA", r"HE_XSLICE_WIDE_PASS preload_cycles=(\d+) reads=(\d+) errors=0"),
 )
 
 
@@ -63,6 +65,7 @@ def main() -> None:
             "me_two_group_wide": "same two real K4096 vectors, supplied as 64 BF16 elements/cycle",
             "me_random_segments": "L0.attn_norm and L0.ffn_norm, each 5120 BF16 elements",
             "he_slice": "golden h_in BF16 elements at 8*((r mod 10)*256+lane), r=0..79, lane=0..7",
+            "he_slice_wide": "same real HCP slice values supplied as 128-bit whole-word writes",
         },
         "cases": records,
         "sources_sha256": {str(p.relative_to(ROOT)): sha(p) for p in sorted(set(sources))},
@@ -72,6 +75,7 @@ def main() -> None:
         "latency_contract": "one registered SRAM read; ME tile RL=2 and HCP ML=2 unchanged",
         "limitations": ["Golden residuals are fixture values, not a complete ME or HCP computation.",
                         "G64 requires a distinct 64-element VM prefetch interface and is not RTL-integrated.",
+                        "HE wide slice ingress is not connected to VM or HCP adapter.",
                         "ASAP7 standard-cell routes do not establish SRAM macro area or timing."],
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)

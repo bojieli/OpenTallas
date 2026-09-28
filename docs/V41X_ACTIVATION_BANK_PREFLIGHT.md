@@ -63,7 +63,12 @@ change result-write geometry and is not an implementation of this proposal.
 To hide one HE LOAD within a 240-cycle 2,048-lane dot requires at
 least eleven eight-element chunks per cycle (88 FP32 VM elements, 352 bytes
 per cycle), or a coherent producer-side BF16 shadow buffer populated before
-the HCP command.  No such VM path is implemented yet.
+the HCP command.  A stand-alone 128-bit whole-word HE slice variant passes a
+real-data readback.  With four 512-bit VM words/cycle (64 FP32 elements, eight
+chunks), each of the eight HCP term banks can write one local eight-lane slice
+per cycle: 2,560 chunks take 320 issue cycles.  Eight VM words/cycle can write
+two distinct slices per term bank and take 160 cycles.  Neither VM path is
+integrated, and a whole-word write is required by the local SRAM macro.
 
 ## Gates and claim limits
 
@@ -71,8 +76,9 @@ the HCP command.  No such VM path is implemented yet.
 the 128-bit HE slice with BF16 data from the source-pinned 200K layer-0
 golden shard.  It checks both ME groups, all 8,192 BF16 readbacks, the exact
 2,048-cycle four-port LOAD count, the 128-cycle proposed wide preload,
-skewed per-chain tile requests, and 8,000
-HE slice readbacks.  These are memory-order and one-cycle read gates.  They do
+skewed per-chain tile requests, and 8,000 HE slice readbacks.  The HE
+whole-word variant separately checks an 80-cycle preload and 640 readbacks.
+These are memory-order and one-cycle read gates.  They do
 not exercise the ME/HCP arithmetic, whole layer, or multi-die execution.
 
 ASAP7 representative slice routes are run as **standard-cell memory**
