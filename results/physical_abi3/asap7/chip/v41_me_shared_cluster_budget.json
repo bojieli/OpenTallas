@@ -15,7 +15,9 @@
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.09368,
       "allocated_macro_bits": 8388608,
       "head_existing_plus_added_macro_area_mm2": 4.403676,
+      "head_with_vm_replacement_sensitivity_mm2": 5.446874,
       "layer_existing_plus_added_macro_area_mm2": 2.538145,
+      "layer_with_vm_replacement_sensitivity_mm2": 3.581343,
       "macro_count": 256,
       "max_adapters_per_store": 82,
       "one_store_read_output_bits_per_cycle": 2048,
@@ -32,7 +34,9 @@
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.18736,
       "allocated_macro_bits": 16777216,
       "head_existing_plus_added_macro_area_mm2": 5.39992,
+      "head_with_vm_replacement_sensitivity_mm2": 6.443118,
       "layer_existing_plus_added_macro_area_mm2": 3.534388,
+      "layer_with_vm_replacement_sensitivity_mm2": 4.577587,
       "macro_count": 512,
       "max_adapters_per_store": 41,
       "one_store_read_output_bits_per_cycle": 2048,
@@ -49,7 +53,9 @@
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.374719,
       "allocated_macro_bits": 33554432,
       "head_existing_plus_added_macro_area_mm2": 7.392407,
+      "head_with_vm_replacement_sensitivity_mm2": 8.435605,
       "layer_existing_plus_added_macro_area_mm2": 5.526876,
+      "layer_with_vm_replacement_sensitivity_mm2": 6.570074,
       "macro_count": 1024,
       "max_adapters_per_store": 21,
       "one_store_read_output_bits_per_cycle": 2048,
@@ -96,5 +102,14 @@
     "SRAM placement channels, macro depth waste and row-select logic",
     "non-wo_a expert scheduling and simultaneous users"
   ],
-  "scope": "ME wo_a lockstep output-row clusters; macro/port lower bound, no multicast route or rate credit"
+  "scope": "ME wo_a lockstep output-row clusters; macro/port lower bound, no multicast route or rate credit",
+  "vm_replacement_sensitivity": {
+    "gw4_vm_macro_only_mm2": 1.3236867072,
+    "minimum_replacement_delta_mm2": 1.043198,
+    "modeled_vector_memory_bytes": 983040,
+    "modeled_vector_memory_placed_mm2": 0.28048845,
+    "scope": "conditional: only if the modeled residual VM row is the complete resident full-shape VM allocation; ownership audit pending",
+    "vm_record_path": "results/physical_abi3/asap7/chip/v41_vm_gw4_macro_gate.json",
+    "vm_record_sha256": "192836a45b0ba4f23530a9d6df765f55caaeb799e4f2ac205175c634ef724860"
+  }
 }

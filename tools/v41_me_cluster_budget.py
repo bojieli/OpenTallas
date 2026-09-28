@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MACRO = ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json"
 ASSEMBLY = ROOT / "results/arch/v41_die_assembly.json"
+VM = ROOT / "results/physical_abi3/asap7/chip/v41_vm_gw4_macro_gate.json"
 OUTPUT = ROOT / "results/physical_abi3/asap7/chip/v41_me_shared_cluster_budget.json"
 
 
@@ -24,6 +25,8 @@ def derive() -> dict:
     m = json.loads(raw)
     assembly_raw = ASSEMBLY.read_bytes()
     assembly = json.loads(assembly_raw)
+    vm_raw = VM.read_bytes()
+    vm = json.loads(vm_raw)
     area_um2 = m["area"]["macro_area_um2"]
     tt = m["timing"]["tt"]
     clock_hz = 1.087e9
@@ -37,6 +40,10 @@ def derive() -> dict:
     write_macros_per_preload_cycle = 8
     existing_layer_sram_mm2 = assembly["ledger"]["layer"]["by_group_mm2"]["sram"]
     existing_head_sram_mm2 = assembly["ledger"]["head"]["by_group_mm2"]["sram"]
+    model_vm = next(r for r in assembly["ledger"]["layer"]["rows"]
+                    if r["block"] == "vector memory (residual, MTP positions)")
+    vm_macro_only_mm2 = vm["geometry"]["macro_only_area_mm2"]
+    conditional_vm_delta_mm2 = vm_macro_only_mm2 - model_vm["placed_mm2"]
     candidates = []
     for stores in (16, 32, 64):
         max_adapters_per_store = math.ceil(adapters / stores)
@@ -50,6 +57,8 @@ def derive() -> dict:
             "added_macro_only_area_mm2": round(added_macro_mm2, 6),
             "layer_existing_plus_added_macro_area_mm2": round(existing_layer_sram_mm2 + added_macro_mm2, 6),
             "head_existing_plus_added_macro_area_mm2": round(existing_head_sram_mm2 + added_macro_mm2, 6),
+            "layer_with_vm_replacement_sensitivity_mm2": round(existing_layer_sram_mm2 + added_macro_mm2 + conditional_vm_delta_mm2, 6),
+            "head_with_vm_replacement_sensitivity_mm2": round(existing_head_sram_mm2 + added_macro_mm2 + conditional_vm_delta_mm2, 6),
             "one_store_read_output_bits_per_cycle": 2048,
             "one_store_sink_bits_per_cycle_upper_bound": 2048 * max_adapters_per_store,
             "all_adapter_sink_bits_per_cycle": 2048 * adapters,
@@ -108,6 +117,15 @@ def derive() -> dict:
             "sha256": hashlib.sha256(assembly_raw).hexdigest(),
             "existing_layer_sram_mm2": existing_layer_sram_mm2,
             "existing_head_sram_mm2": existing_head_sram_mm2,
+        },
+        "vm_replacement_sensitivity": {
+            "scope": "conditional: only if the modeled residual VM row is the complete resident full-shape VM allocation; ownership audit pending",
+            "vm_record_path": str(VM.relative_to(ROOT)),
+            "vm_record_sha256": hashlib.sha256(vm_raw).hexdigest(),
+            "modeled_vector_memory_bytes": model_vm["bytes"],
+            "modeled_vector_memory_placed_mm2": model_vm["placed_mm2"],
+            "gw4_vm_macro_only_mm2": vm_macro_only_mm2,
+            "minimum_replacement_delta_mm2": round(conditional_vm_delta_mm2, 6),
         },
         "candidates": candidates,
         "not_included": [

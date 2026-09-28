@@ -64,6 +64,14 @@ width can be carried through this isolated cut. The collective transpose and
 the SRAM macro pins remain outside it. The low-utilization floorplan reflects
 the artificial all-bus-I/O partition, not an integrated die pin budget.
 
+The current die-assembly ledger allocates 983,040 bytes of vector memory at
+0.2805 mm² placed, while the full-shape four-bank VM contract above allocates
+2 MiB at 1.3237 mm² **macro-only**. If that ledger row is the complete resident
+VM allocation, replacement adds at least 1.0432 mm² before placement and
+wires. The [cluster budget](../results/physical_abi3/asap7/chip/v41_me_shared_cluster_budget.json)
+pins both records and carries this as a conditional sensitivity; tensor
+ownership must decide whether another ledger row covers the remaining VM.
+
 ## SRAM abstract and capacity
 
 The full-shape requirement is 454,848 resident FP32 elements per die, rounded
