@@ -28,6 +28,8 @@ def derive() -> dict:
     lanes_per_adapter = 64
     adapters = math.ceil(mac_lanes / lanes_per_adapter)
     macros_per_store = 16  # two positions, eight 128-bit banks per position
+    macro_bits_per_store = macros_per_store * m["capacity_bits"]
+    useful_bits_per_store = 2 * 4096 * 16  # two K4096 BF16 activation groups
     read_macros_per_cycle = 16
     write_macros_per_preload_cycle = 8
     existing_sram_mm2 = 3.41
@@ -39,6 +41,8 @@ def derive() -> dict:
             "shared_stores": stores,
             "max_adapters_per_store": max_adapters_per_store,
             "macro_count": stores * macros_per_store,
+            "allocated_macro_bits": stores * macro_bits_per_store,
+            "useful_activation_bits": stores * useful_bits_per_store,
             "added_macro_only_area_mm2": round(added_macro_mm2, 6),
             "existing_plus_added_macro_area_mm2": round(existing_sram_mm2 + added_macro_mm2, 6),
             "one_store_read_output_bits_per_cycle": 2048,
@@ -75,6 +79,9 @@ def derive() -> dict:
             "lanes_per_adapter": lanes_per_adapter,
             "adapters": adapters,
             "macros_per_store": macros_per_store,
+            "allocated_macro_bits_per_store": macro_bits_per_store,
+            "useful_activation_bits_per_store": useful_bits_per_store,
+            "macro_depth_utilization": useful_bits_per_store / macro_bits_per_store,
             "read_macros_per_cycle": read_macros_per_cycle,
             "write_macros_per_preload_cycle": write_macros_per_preload_cycle,
             "read_ports": "one 128-bit read per macro per cycle, all 16 macros for two-position 2048-bit tile payload",

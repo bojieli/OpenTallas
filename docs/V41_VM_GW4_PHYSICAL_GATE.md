@@ -122,7 +122,9 @@ to the existing 3.41 mm² SRAM allocation. At 32 stores the macro-only read
 energy if all stores run every 1.087 GHz cycle is 0.187 W; clock trees,
 multicast wires and consumers are excluded. The 16-macro read clock-to-Q is
 352 ps, leaving 540 ps of a 0.92 ns cycle for route, logic, and next-register
-setup. Sharing is justified only for the lockstep wo_a output-row schedule
+setup. Each store allocates 524,288 macro bits for two 4,096-element BF16
+groups totaling 131,072 useful bits: **25% depth utilization** under this
+macro geometry. Sharing is justified only for the lockstep wo_a output-row schedule
 shown by the exact ME gate; other matrices, sparse experts, and multi-user
 interleaving remain unverified. A routed cluster with converter and consumers
 is required before choosing one of these store counts.

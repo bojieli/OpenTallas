@@ -7,12 +7,14 @@
       "all_store_macro_leakage_w": 0.004981,
       "all_store_macro_read_energy_pj_per_active_cycle": 86.182022,
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.09368,
+      "allocated_macro_bits": 8388608,
       "existing_plus_added_macro_area_mm2": 4.406244,
       "macro_count": 256,
       "max_adapters_per_store": 82,
       "one_store_read_output_bits_per_cycle": 2048,
       "one_store_sink_bits_per_cycle_upper_bound": 167936,
-      "shared_stores": 16
+      "shared_stores": 16,
+      "useful_activation_bits": 2097152
     },
     {
       "added_macro_only_area_mm2": 1.992487,
@@ -21,12 +23,14 @@
       "all_store_macro_leakage_w": 0.009962,
       "all_store_macro_read_energy_pj_per_active_cycle": 172.364044,
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.18736,
+      "allocated_macro_bits": 16777216,
       "existing_plus_added_macro_area_mm2": 5.402487,
       "macro_count": 512,
       "max_adapters_per_store": 41,
       "one_store_read_output_bits_per_cycle": 2048,
       "one_store_sink_bits_per_cycle_upper_bound": 83968,
-      "shared_stores": 32
+      "shared_stores": 32,
+      "useful_activation_bits": 4194304
     },
     {
       "added_macro_only_area_mm2": 3.984975,
@@ -35,19 +39,23 @@
       "all_store_macro_leakage_w": 0.019925,
       "all_store_macro_read_energy_pj_per_active_cycle": 344.728087,
       "all_store_macro_read_power_w_if_all_active_at_1p087ghz": 0.374719,
+      "allocated_macro_bits": 33554432,
       "existing_plus_added_macro_area_mm2": 7.394975,
       "macro_count": 1024,
       "max_adapters_per_store": 21,
       "one_store_read_output_bits_per_cycle": 2048,
       "one_store_sink_bits_per_cycle_upper_bound": 43008,
-      "shared_stores": 64
+      "shared_stores": 64,
+      "useful_activation_bits": 8388608
     }
   ],
   "contract": {
     "adapters": 1302,
+    "allocated_macro_bits_per_store": 524288,
     "lanes_per_adapter": 64,
     "mac_lanes": 83328,
     "macro_clk_to_q_plus_next_setup_ps": 380.02787497245276,
+    "macro_depth_utilization": 0.25,
     "macro_read_energy_pj_per_tile_cycle": 5.386376,
     "macro_write_energy_pj_per_preload_cycle": 9.657388,
     "macros_per_store": 16,
@@ -57,6 +65,7 @@
     "read_ports": "one 128-bit read per macro per cycle, all 16 macros for two-position 2048-bit tile payload",
     "read_write_overlap": "1R1W physically possible; same-address semantics and schedule unresolved",
     "time_left_at_0p92ns_ps_before_route_and_logic": 539.9721250275472,
+    "useful_activation_bits_per_store": 131072,
     "write_macros_per_preload_cycle": 8,
     "write_ports": "one 128-bit write per macro per cycle, eight macros for one-position 1024-bit preload payload"
   },
