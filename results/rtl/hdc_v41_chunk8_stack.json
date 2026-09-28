@@ -1,0 +1,40 @@
+{
+  "arith": "chunk8",
+  "checkpoint_path": "models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors",
+  "checkpoint_sha256": "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d",
+  "order_sensitive_names": [
+    "directed_order",
+    "directed_len17",
+    "directed_len23",
+    "directed_len31",
+    "directed_len64",
+    "directed_len192",
+    "real_reduced_csum_call3_row0",
+    "real_reduced_csum_call5_row0",
+    "real_reduced_csum_call23_row0",
+    "real_reduced_csum_call24_row0",
+    "real_reduced_csum_call24_row3",
+    "real_reduced_csum_call24_row4",
+    "real_reduced_csum_call24_row6",
+    "real_reduced_csum_call24_row7"
+  ],
+  "real_checkpoint_qe_call": 25,
+  "real_composites_order_sensitive": 0,
+  "real_reduced_order_sensitive": 8,
+  "rows": 75,
+  "scope": "standalone block-term reducer; no QE/core/full-token integration or P&R",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/v41/ot_hdc_chunk8_stack.sv": "0860ac77c1868da11452a7368afec9a2bf320744b09719e676c57160c6c4312b",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/test/tb_hdc_chunk8_stack.sv": "08c83d6a47c8b992089f62cbf3525d463c8271cf0f465ac633f805a778e1defa",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/rtl_hdc_v41_blockdot_campaign.py": "e7cb86b9eeea0aae2ca46ba19d11bebef814415a7a5da70f73576860e0188955",
+    "tools/rtl_hdc_v41_chunk8_stack.py": "f44697767e199f587832e2b891e5a305000bc17e61ddab34d63a283c71e604fc"
+  },
+  "status": "PASS",
+  "stdout": "CHUNK8 rows=75 checked=75 errors=0 latency=31 cycles=8544\nPASS",
+  "terms": 8250
+}
