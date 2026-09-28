@@ -761,6 +761,29 @@ class Qwen3:
             h = self._forward_gpu(tokens, cache)
         return h[0] if single else h
 
+    def forward_with_features(self, tokens, cache, layer_ids):
+        """Return contract logits input and DFlash's selected post-layer features.
+
+        The layer IDs use the same zero-based decoder-layer convention as
+        DFlash's ``hidden_states[layer_id + 1]``.  The features are BF16 at the
+        drafter boundary, after the contract's FP32 residual update.
+        """
+        if self.arith != "contract":
+            raise ValueError("feature capture is defined for the contract target")
+        ids = tuple(int(i) for i in layer_ids)
+        if not ids or len(set(ids)) != len(ids) or min(ids) < 0 or max(ids) >= self.L:
+            raise ValueError("invalid DFlash target layer IDs")
+        self._capture_layer_ids = set(ids)
+        self._captured_layer_outputs = {i: [] for i in ids}
+        try:
+            h = self.forward(tokens, cache)
+            feat = torch.cat([torch.cat(self._captured_layer_outputs[i], dim=1)
+                              for i in ids], dim=-1)
+            return h, feat
+        finally:
+            del self._capture_layer_ids
+            del self._captured_layer_outputs
+
     def logits(self, h):
         if self.arith == "contract":
             return self.mv(h, self.lm)
@@ -857,6 +880,8 @@ class Qwen3:
             gu = mul(self.mv(mul(x, lay["pre_gu"]) if "pre_gu" in lay else x, lay["gu"]), r)
             gt, up = gu.split([self.FF, self.FF], -1)
             x = add(x, self.mv(self.had_down(mul(silu_g(gt), up)), lay["down"]))
+            if i in getattr(self, "_capture_layer_ids", ()):
+                self._captured_layer_outputs[i].append(x.view(B, T, self.H).to(BF16))
         cache["lens"] = [l + T for l in cache["lens"]]
         return rmsnorm_g(x, self.norm.to(F32), self.eps).view(B, T, self.H)
 
