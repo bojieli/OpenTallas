@@ -12,7 +12,7 @@ module tb_hdc_v41x_fullshape_woa_exact #(
     localparam integer VM_BASE_WORD=4642; // ACC element base 74272 / 16
     reg clk=0;
     always #5 clk=~clk;
-    reg rst_n=0, go=0;
+    reg rst_n=0, go=0, measure=0;
     wire ready, idle, ov, fault;
     wire [7:0] wb_re;
     wire [8*BAW-1:0] wb_addr;
@@ -184,6 +184,7 @@ module tb_hdc_v41x_fullshape_woa_exact #(
             @(negedge clk); vm_wr_v=0;
         end
         repeat (5) @(negedge clk);
+        measure=1;
         for (integer j=0;j<2;j++) begin
             op=j;
             if (SHARED>=2) begin
@@ -230,7 +231,7 @@ module tb_hdc_v41x_fullshape_woa_exact #(
 
     always @(posedge clk) if (rst_n) begin
         if (pre_out_v) preload_writes<=preload_writes+1;
-        cycles<=cycles+1;
+        if (measure) cycles<=cycles+1;
         if (cycles>300000) $fatal(1,"wo_a timeout checked=%0d op=%0d",checked,op);
         for (integer p=0;p<G;p++) if (x_re[p]) begin
             if (x_addr[p*AW+:AW]>=8192) $fatal(1,"x address %0d",x_addr[p*AW+:AW]);

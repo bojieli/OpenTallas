@@ -7,8 +7,8 @@
   "rows_per_group": 16,
   "exact_rows": 32,
   "bank_read_cycles": 2084,
-  "simulation_cycles": 2473,
-  "build_seconds": 49.15,
+  "simulation_cycles": 2339,
+  "build_seconds": 53.14,
   "read_latency_cycles": 5,
   "external_shared_store": true,
   "preloaded_activation": true,
@@ -20,7 +20,7 @@
   "preload_write_cycles": 128,
   "vm_init_beats": 128,
   "vm_read_issue_beats": 128,
-  "simulation_seconds": 9.7,
+  "simulation_seconds": 7.49,
   "memory_cap_bytes": 4294967296,
   "descriptor": {
     "g0": {
@@ -63,7 +63,7 @@
     "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_readreg.sv": "090d8a48762c7a78221f3136f725bdff673c4db74f41e382f94b1fe819a5008b",
     "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg_readreg.sv": "57960fe347b301a60428b8c5c6e913ca060f9d420170b8e9da1bb5acba206178",
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
-    "rtl/test/tb_hdc_v41x_fullshape_woa_vmread_pipe_rl5_exact.sv": "2ce3a0a88ad53b2a31a2ad5453f6097a39a08d96ceeb7557820c3c8fcc6ab4c8",
+    "rtl/test/tb_hdc_v41x_fullshape_woa_vmread_pipe_rl5_exact.sv": "557d7a3676c8da336101490d5107bb8bc59ca73aca99c9c44aa3b6cdc14dee32",
     "tools/rtl_hdc_v41x_fullshape_woa_exact.py": "16bff388cf3c8ef515d7221e2a3f0140723ced7d300db08957091ac2059dfcaf",
     "tools/rtl_hdc_v41x_fullshape_woa_vmread_pipe_rl5_exact.py": "ff7b343ec128dbb8193aeeb99fe87c6dac7299376c0bcc4d83302b7ae6ec881c"
   },
