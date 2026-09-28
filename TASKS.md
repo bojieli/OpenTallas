@@ -33,7 +33,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] SFU reciprocal saturation fix (golden and RTL).
 - [x] Consecutive-token 2047→2048 reduced-core gate: two exact tokens with timed physical HBM KV, zero logit/VM/KV/physical-byte mismatches and cross-token V reads (**X**).
 - [~] **X:** 8K single-token reduced-core gate is running and awaits a final source-pinned verdict.
-- [~] **X:** two-reticle INT8 RTL integration: freeze the layer and HBM stack split, implement signed INT8 × BF16 with per-output BF16 post-accumulation scaling and a credit-controlled UCIe activation handoff, then prove the same deployed program in autoregressive m=1 and DFlash verify m=5 modes. Current G4/SW16 gates are reduced single-core evidence. Claude supplies an advisory gap/performance audit; Codex owns core, testbench and integrated RTL.
+- [~] **X:** two-reticle INT8 RTL integration: a format-neutral, backpressured logical UCIe activation handoff is now being implemented. Next freeze the layer and HBM stack split, implement signed INT8 × BF16 with per-output BF16 post-accumulation scaling, and prove the same deployed program in autoregressive m=1 and DFlash verify m=5 modes. Current G4/SW16 gates are reduced single-core evidence. Claude supplies an advisory gap/performance audit; Codex owns core, testbench and integrated RTL.
 - [ ] **X:** queue-depth-2 pressure gate; its optional elaboration was stopped and no QD2 run is active.
 - [ ] 8K in RTL: correctness, area and timing are all unproven (R1).
 - [ ] Offered-load knee: KV-path headroom under sustained queue pressure (R1).
@@ -41,8 +41,9 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 
 ### Physical (ASAP7)
 - [x] Reduced W4/G2 matvec, ROM and SRAM tile routes clean at 1.5 ns (modelled macros).
-- [!] G4/W8 full route timed out during global-route hold repair after six hours; no detailed-route or extracted sign-off verdict. A limited-repair G4/W4 clock-tree diagnostic hit the buffer limit.
-- [~] **X:** G4/W4 full route and split-ingress G4/W4 route remain active in global-route hold repair; a separate command-arrival clock-tree sensitivity probe is active.
+- [!] G4/W8 and baseline G4/W4 full routes timed out during global-route hold repair after six hours; neither has detailed-route or extracted sign-off evidence. A limited-repair G4/W4 clock-tree diagnostic hit the buffer limit.
+- [!] Explicit-arrival G4/W4 CTS probe completed with setup and hold violations under an assumed 0.75–1.15 ns external input-arrival contract; this contract is not yet validated at the package boundary.
+- [~] **X:** split-ingress G4/W4 route remains active in global-route hold repair; a separate explicit-arrival full-route follow-up is active.
 - [ ] Whole-core route and compiled macros (R2).
 
 ## 2. Qwen3-8B HBM comparator (two reticles, iso-area, same core)
@@ -92,7 +93,8 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] Two-package array, all units.
 - [x] Two-user, all units.
 - [!] Five-package switched array (source57): FAIL on a router flag.
-- [~] **X:** corrected switched rerun (source316, three-token optimized prefix exact so far); the separate combined all-unit source972 binary is pinned and its two-user token replay is running.
+- [x] Corrected switched source316 O1-all and independent O1-rest runs both pass: five packages, two users, four exact tokens, zero logit/KV/VM/state mismatches; historical X_HE-only and behavioral memories (**X**).
+- [~] **X:** source316 O0 replay remains active; the separate combined all-unit source972 binary is pinned and its two-user token replay is running.
 - [~] **C `claude/v41x-matched-weight-ab`**: same program, weights from ROM vs from HBM; replaces the configuration-delta caveat for this bench point only.
 - [~] **C `claude/v41x-die-top`**: adopted V4.1x tile and die tops.
   - KV-HBM prefetch, shared-port arbitration and staging RTL exist on the branch, but exact-token validation is still pending, so this stays staged.
