@@ -68,6 +68,12 @@ The MP=1 ME checkpoint gate at `c4591c26` passes all 2,048 wo_a rows
 bit-exact at 131,349 cycles for two groups, with 128 four-word preload
 issues and 131,108 weight-bank reads. It supplies the bank-major VM words
 from its checkpoint fixture. The integrated pipelined VM-to-RL5 exact
-replay, the local eight-macro route, the pipe2 converter detailed route,
-and this complete neighborhood route are separate prerequisites. No rate
-credit follows from this contract alone.
+first-16 replay at `b94b8783` also passes 32 rows, checking all 512 VM
+words and 128 preload beats. Full integrated replay is running. The
+matching local MP=1 eight-macro placement has a measured **−676.67 ps**
+setup miss at 0.92 ns, with the worst path from `pre_e_r[11]` through
+preload write selection to SRAM `wd_in[81]`; hold is +43.99 ps and 2,297
+pins fit 20,772 sites. The ME owner is adding a bank-local registered
+write command/data cut and will charge its additional fill cycle. The
+pipe2 converter detailed route and this complete neighborhood route are
+also separate prerequisites. No rate credit follows from this contract.
