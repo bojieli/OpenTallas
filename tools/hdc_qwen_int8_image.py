@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reduced Qwen INT8 matrix and embedding images for the TP RTL address map.
+"""Qwen INT8 images for the reduced RTL and shipped TP-2 weight contract.
 
 This uses the deployed W8 quantizer. The reduced TP golden still has unfolded
 norms, so these images establish the code/scale layout, not an O4 token gate.
@@ -7,7 +7,9 @@ norms, so these images establish the code/scale layout, not an O4 token gate.
 import argparse
 import hashlib
 import json
+import tempfile
 from pathlib import Path
+from typing import Optional
 
 import numpy as np
 import torch
@@ -15,6 +17,150 @@ import torch
 import hdc_golden as G
 import hdc_program as P
 from qwen3_deployment_quality import quantize_w8
+
+
+def quantize_full_rows_then_partition(weight: torch.Tensor, *, die: int,
+                                      axis: str, norm: Optional[torch.Tensor] = None,
+                                      tp: int = 2):
+    """Quantize full output rows, then take one TP die's rows or columns.
+
+    The deployed W8 scale is chosen from every column of an output row. For
+    o/down (input-column split), quantizing the die slice would choose a
+    different scale and codes. q/k/v and gate/up first fold the appropriate
+    RMSNorm weight in FP32, exactly as Prep.layer in the quality harness does.
+    ``weight`` may contain a selected set of complete checkpoint rows: W8 is
+    independently quantized per output row, so this supports small exact tests.
+    """
+    if axis not in ("rows", "columns") or tp < 1 or not 0 <= die < tp:
+        raise ValueError((axis, die, tp))
+    if weight.ndim != 2 or weight.shape[{"rows": 0, "columns": 1}[axis]] % tp:
+        raise ValueError("TP axis must divide the complete matrix")
+    full = weight.to(torch.float32)
+    if norm is not None:
+        if norm.ndim != 1 or norm.numel() != full.shape[1]:
+            raise ValueError("norm length must equal the full input dimension")
+        full = full * norm.to(torch.float32)[None, :]
+    codes, scales, _ = quantize_w8(full)
+    if axis == "rows":
+        n = codes.shape[0] // tp
+        sl = slice(die * n, (die + 1) * n)
+        return codes[sl].contiguous(), scales[sl].contiguous()
+    k = codes.shape[1] // tp
+    return codes[:, die * k:(die + 1) * k].contiguous(), scales.contiguous()
+
+
+def first_layer_tp2_matrices(snapshot: Path, die: int, *, rows_per_matrix: Optional[int] = None):
+    """Stream the shipped checkpoint's layer-0 tensors into exact TP-2 W8 slices.
+
+    ``rows_per_matrix`` limits each source matrix to its first complete rows
+    for a quick image preflight; an unrestricted call emits the entire layer.
+    The returned arrays are row-major codes plus one BF16 scale per row. Their
+    mapping to ROM engine words belongs to the shipped-shape program emitter.
+    """
+    from safetensors import safe_open
+    snapshot = Path(snapshot)
+    idx = json.loads((snapshot / "model.safetensors.index.json").read_text())["weight_map"]
+
+    def get(key):
+        with safe_open(str(snapshot / idx[key]), framework="pt", device="cpu") as sf:
+            return sf.get_tensor(key)
+
+    p = "model.layers.0."
+    norms = {"input": get(p + "input_layernorm.weight"),
+             "post": get(p + "post_attention_layernorm.weight")}
+    specs = (("q", "self_attn.q_proj.weight", "rows", "input"),
+             ("k", "self_attn.k_proj.weight", "rows", "input"),
+             ("v", "self_attn.v_proj.weight", "rows", "input"),
+             ("o", "self_attn.o_proj.weight", "columns", None),
+             ("gate", "mlp.gate_proj.weight", "rows", "post"),
+             ("up", "mlp.up_proj.weight", "rows", "post"),
+             ("down", "mlp.down_proj.weight", "columns", None))
+    result = {}
+    for short, name, axis, norm_name in specs:
+        key = p + name
+        w = get(key)
+        full_shape = tuple(w.shape)
+        if rows_per_matrix is not None:
+            if rows_per_matrix < 1:
+                raise ValueError("rows_per_matrix must be positive")
+            # Row-split shards select global rows first. Column-split shards
+            # share the same complete rows and must share their BF16 scales.
+            if axis == "rows":
+                per_die = full_shape[0] // 2
+                lo = die * per_die
+                w = w[lo:lo + min(rows_per_matrix, per_die)]
+                # The row selection has happened; quantize its full columns.
+                q, s = quantize_full_rows_then_partition(w, die=0, axis="columns",
+                                                        norm=norms.get(norm_name), tp=1)
+                selected_rows = (lo, lo + len(w))
+            else:
+                w = w[:rows_per_matrix]
+                q, s = quantize_full_rows_then_partition(w, die=die, axis="columns", tp=2)
+                selected_rows = (0, len(w))
+        else:
+            q, s = quantize_full_rows_then_partition(w, die=die, axis=axis,
+                                                    norm=norms.get(norm_name), tp=2)
+            selected_rows = ((die * full_shape[0] // 2, (die + 1) * full_shape[0] // 2)
+                             if axis == "rows" else (0, full_shape[0]))
+        source_hash = hashlib.sha256(w.contiguous().view(torch.int16).numpy().tobytes()).hexdigest()
+        norm_hash = (hashlib.sha256(norms[norm_name].contiguous().view(torch.int16).numpy().tobytes()).hexdigest()
+                     if norm_name is not None else None)
+        result[short] = dict(codes=q, scales=s, source=key, full_shape=full_shape,
+                             selected_rows=selected_rows, tp_axis=axis,
+                             source_rows_sha256=source_hash, norm_sha256=norm_hash)
+    return result
+
+
+def write_first_layer_tp2_images(snapshot: Path, out: Path, *, die: int,
+                                  rows_per_matrix: Optional[int] = None):
+    """Write independently inspectable row-major W8 code/scale arrays."""
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    matrices = first_layer_tp2_matrices(snapshot, die, rows_per_matrix=rows_per_matrix)
+    manifest = dict(schema="qwen3-8b-o4-int8-layer0-tp2.v1", die=die, tp=2,
+                    checkpoint_snapshot=Path(snapshot).name,
+                    checkpoint_index_sha256=hashlib.sha256((Path(snapshot) / "model.safetensors.index.json").read_bytes()).hexdigest(),
+                    checkpoint_config_sha256=hashlib.sha256((Path(snapshot) / "config.json").read_bytes()).hexdigest(),
+                    producer_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                    quantizer_sha256=hashlib.sha256(Path(__file__).with_name("qwen3_deployment_quality.py").read_bytes()).hexdigest(),
+                    quantization="signed INT8 W8 full output row before TP slicing; BF16 row scale",
+                    norm_fold="FP32 weight times BF16 norm, before W8, for q/k/v/gate/up",
+                    complete_layer=rows_per_matrix is None, matrices={})
+    for name, item in matrices.items():
+        cp, sp = out / f"{name}_codes.npy", out / f"{name}_scale_bf16.npy"
+        np.save(cp, item["codes"].numpy())
+        np.save(sp, item["scales"].view(torch.int16).numpy().view(np.uint16))
+        manifest["matrices"][name] = dict(source=item["source"], full_shape=item["full_shape"],
+                                          selected_rows=item["selected_rows"], tp_axis=item["tp_axis"],
+                                          source_rows_sha256=item["source_rows_sha256"],
+                                          norm_sha256=item["norm_sha256"],
+                                          codes_shape=list(item["codes"].shape),
+                                          codes_sha256=hashlib.sha256(cp.read_bytes()).hexdigest(),
+                                          scales_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())
+    (out / "int8_layer0_tp2.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    return manifest
+
+
+def write_first_layer_tp2_audit(snapshot: Path, out: Path, *, rows: int = 8):
+    """Source-pinned two-die preflight for the first real checkpoint layer."""
+    with tempfile.TemporaryDirectory(prefix="qwen-o4-int8-layer0-") as tmp:
+        manifests = [write_first_layer_tp2_images(snapshot, Path(tmp) / f"die{d}",
+                                                   die=d, rows_per_matrix=rows)
+                     for d in (0, 1)]
+    shared_scales = {}
+    for name in ("o", "down"):
+        hashes = [m["matrices"][name]["scales_sha256"] for m in manifests]
+        shared_scales[name] = hashes[0] == hashes[1]
+    if not all(shared_scales.values()):
+        raise AssertionError("input-column TP split did not preserve shared full-row scales")
+    record = dict(schema="qwen3-8b-o4-int8-layer0-audit.v1", verdict="PASS",
+                  boundary="first-layer image quantization only; no full-shape token or RTL verdict",
+                  rows_per_source_matrix=rows, shared_full_row_scales=shared_scales,
+                  die_manifests=manifests)
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
+    return record
 
 
 class Int8Layout(P.Layout):
@@ -104,10 +250,31 @@ def write_images(layout, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--shipped-snapshot", type=Path,
+                        help="Emit shipped Qwen3-8B layer-0 TP2 row-major W8 arrays")
+    parser.add_argument("--rows-per-matrix", type=int,
+                        help="Preflight using this many complete rows per source matrix")
+    parser.add_argument("--audit-out", type=Path,
+                        help="Write a source-pinned two-die first-layer audit record")
     parser.add_argument("--tp", type=int, default=2)
     parser.add_argument("--die", type=int, default=0)
-    parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--out", type=Path)
     args = parser.parse_args()
+    if args.audit_out is not None:
+        if args.shipped_snapshot is None:
+            parser.error("--audit-out requires --shipped-snapshot")
+        print(json.dumps(write_first_layer_tp2_audit(args.shipped_snapshot, args.audit_out,
+                                                      rows=args.rows_per_matrix or 8), indent=2))
+        return
+    if args.out is None:
+        parser.error("--out is required unless --audit-out is supplied")
+    if args.shipped_snapshot is not None:
+        if args.tp != 2:
+            parser.error("shipped snapshot currently requires --tp 2")
+        print(json.dumps(write_first_layer_tp2_images(args.shipped_snapshot, args.out,
+                                                        die=args.die,
+                                                        rows_per_matrix=args.rows_per_matrix), indent=2))
+        return
     model = G.Model(P.GR, args.tp)
     print(write_images(Int8Layout(model, args.tp, args.die), args.out))
 
