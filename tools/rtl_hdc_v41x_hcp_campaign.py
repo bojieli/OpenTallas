@@ -97,8 +97,8 @@ def recording():
     rec = {}
     mv0, rs0 = G.matvec_c, G.rsqrt
 
-    def mv(w, x, split):
-        out = mv0(w, x, split)
+    def mv(w, x, split, **kwargs):
+        out = mv0(w, x, split, **kwargs)
         rec["raw"] = out
         return out
 
