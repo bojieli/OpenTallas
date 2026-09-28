@@ -68,6 +68,8 @@ module ot_chip_v41x_tile #(
     parameter integer X_ME  = 1,
     parameter integer X_ATT = 1,
     parameter integer X_IDX = 2,
+    parameter integer PIKH_HAW = 28,        // pooled-index physical HBM sector address
+    parameter integer IDX_SHARDED = 0,      // paired compact index-key layout
     parameter integer X_SEL = 1,
     parameter integer X_EG  = 1,
     parameter integer X_SU  = 1,
@@ -158,7 +160,7 @@ module ot_chip_v41x_tile #(
     // -- index-key HBM, four stacks x 32 pseudo-channels (ot_hdc_v41x_idx_hbm protocol) ---
     output wire [127:0]      kh_v,
     input  wire [127:0]      kh_rdy,
-    output wire [128*28-1:0] kh_addr,
+    output wire [128*PIKH_HAW-1:0] kh_addr,
     output wire [128*4-1:0]  kh_len,
     output wire [128*16-1:0] kh_tag,
     output wire [127:0]      kh_we,
@@ -260,14 +262,15 @@ module ot_chip_v41x_tile #(
     wire [1023:0] ww_q_data, ww_x_data;
     wire me_ov; wire [G*AW-1:0] me_oaddr; wire [G*W-1:0] me_omask; wire [G*W*32-1:0] me_odata;
     wire [127:0] pikh_req_v, pikh_req_rdy;
-    wire [128*28-1:0] pikh_req_addr; wire [128*4-1:0] pikh_req_len; wire [128*16-1:0] pikh_req_tag;
+    wire [128*PIKH_HAW-1:0] pikh_req_addr; wire [128*4-1:0] pikh_req_len; wire [128*16-1:0] pikh_req_tag;
     wire pikw_v, pikw_rdy; wire [3:0] pikw_stack_mask;
-    wire [27:0] pikw_csec, pikw_ssec; wire [511:0] pikw_codes; wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
+    wire [PIKH_HAW-1:0] pikw_csec, pikw_ssec; wire [511:0] pikw_codes; wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
 
     ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .AW(AW), .NW(NW), .INSTR_BITS(INSTR_BITS),
                        .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
                        .X_SEL(X_SEL), .X_EG(X_EG), .XSQ(XSQ), .XSW(XSW), .X_SU(X_SU), .SUN(SUN), .SUM(SUM),
-                       .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) u_core (
+                       .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW),
+                       .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -346,7 +349,7 @@ module ot_chip_v41x_tile #(
         .st_consumed(qs_consumed));
 
     // -- pooled index-key HBM bridge: four stacks, timed key-image writes -------------------
-    ot_hdc_v41x_idx_pool_hbm_bridge u_kb (
+    ot_hdc_v41x_idx_pool_hbm_bridge #(.AW(PIKH_HAW)) u_kb (
         .clk(clk), .rst_n(rst_n), .w_v(pikw_v), .w_rdy(pikw_rdy), .w_stack_mask(pikw_stack_mask),
         .w_csec(pikw_csec), .w_codes(pikw_codes), .w_ssec(pikw_ssec), .w_sslot(pikw_sslot),
         .w_scales(pikw_scales), .r_v(pikh_req_v), .r_rdy(pikh_req_rdy), .r_addr(pikh_req_addr),

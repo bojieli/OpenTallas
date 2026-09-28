@@ -78,6 +78,8 @@ module ot_hdc_core_v41x #(
     parameter integer X_ME  = 0,           // ME weight ops -> the BF16/FP32 weight engine
     parameter integer X_ATT = 0,           // ME KV-sourced attention ops -> the attention engine
     parameter integer X_IDX = 0,           // ME KV-sourced index-key ops -> the indexer engine
+    parameter integer PIKH_HAW = FULL_SHAPE ? 30 : 28, // pooled index physical HBM sector address
+    parameter integer IDX_SHARDED = 0,      // opt-in paired compact key writer and reader
     parameter integer X_SEL = 0,           // XU index-score SELECT -> the streaming-filter select
     parameter integer X_EG  = 0,           // XU EGATHER -> the per-bank Engram gather
     parameter integer XSQ   = 4,           // select: quarters
@@ -179,7 +181,7 @@ module ot_hdc_core_v41x #(
     // X_IDX=2 pooled indexer: four replicated HBM stacks and full K128 key updates
     output wire [127:0]      pikh_req_v,
     input  wire [127:0]      pikh_req_rdy,
-    output wire [128*28-1:0] pikh_req_addr,
+    output wire [128*PIKH_HAW-1:0] pikh_req_addr,
     output wire [128*4-1:0] pikh_req_len,
     output wire [128*16-1:0] pikh_req_tag,
     input  wire [127:0]      pikh_rsp_v,
@@ -190,9 +192,9 @@ module ot_hdc_core_v41x #(
     output wire              pikw_v,
     input  wire              pikw_rdy,
     output wire [3:0]        pikw_stack_mask,
-    output wire [27:0]       pikw_csec,
+    output wire [PIKH_HAW-1:0] pikw_csec,
     output wire [511:0]      pikw_codes,
-    output wire [27:0]       pikw_ssec,
+    output wire [PIKH_HAW-1:0] pikw_ssec,
     output wire [2:0]        pikw_sslot,
     output wire [31:0]       pikw_scales,
     // quantised weight ROM, Engram table ROM
@@ -863,7 +865,8 @@ module ot_hdc_core_v41x #(
             assign kwr_kv_wdata = kv_wdata;
         end
         if (X_IDX == 2) begin : g_pool
-            ot_hdc_v41x_idx_pool_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_idx (
+            ot_hdc_v41x_idx_pool_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP),
+                                           .HAW(PIKH_HAW), .SHARDED(IDX_SHARDED)) u_idx (
                 .clk(clk), .rst_n(rst_n), .go(e_go[3]), .ready(e_ready[3]), .idle(e_idle[3]), .cfg_ik_base(cfg_ik_base),
                 .i_nout(me_nout), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
                 .i_xcs(me_xcs), .i_hg(me_hg), .i_round(me_round), .i_obase(me_obase), .i_mmode(me_mmode),
@@ -876,7 +879,8 @@ module ot_hdc_core_v41x #(
                 .h_rsp_beat(pikh_rsp_beat), .h_rsp_data(pikh_rsp_data), .fault(f_eng),
                 .dbg_ops(), .dbg_elems(), .dbg_keys_streamed(), .dbg_hbm_beats(), .dbg_keys_scored(),
                 .dbg_headsums_fused());
-            ot_hdc_v41x_idx_pool_kwr #(.AW(AW), .NW(NW), .NL(KNL), .HAW(28)) u_kwr (
+            ot_hdc_v41x_idx_pool_kwr #(.AW(AW), .NW(NW), .NL(KNL), .HAW(PIKH_HAW),
+                                         .SHARDED(IDX_SHARDED)) u_kwr (
                 .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base), .su_go(su_go), .i_dst(dst), .i_obase(o_base),
                 .i_orow(o_row), .i_nout(su_nout), .i_kdim(su_nin), .kv_we(kwr_kv_we),
                 .kv_waddr(kwr_kv_waddr), .kv_wdata(kwr_kv_wdata), .w_v(pikw_v), .w_rdy(pikw_rdy),
