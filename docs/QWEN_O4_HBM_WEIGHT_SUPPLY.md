@@ -63,7 +63,8 @@ power and route are unpriced, so the iso-area HBM comparison remains
 conditional on their physical implementation.
 Streaming weight sectors during an uninterrupted 512-cycle gate/up K round
 barely changes this bound: the modeled four-stack die bandwidth provides
-about 3,312 bytes per core cycle against 98,304 bytes consumed, so at least
+about 3,277 bytes per core cycle at the Qwen budget's 1.09864 GHz against
+98,304 bytes consumed, so at least
 46.4 MiB must still be prefetched before the round. A much smaller buffer
 requires an exact FP32 accumulator continuation between K chunks or a
 pipeline-wide stall. Neither exists in the adopted matvec, and either must
