@@ -379,6 +379,26 @@ def synth_timeout_seconds() -> int:
     return value
 
 
+def orfs_num_cores() -> int | None:
+    """ORFS thread count, from ``OT_ORFS_NUM_CORES`` when set.
+
+    ORFS defaults ``NUM_CORES`` to the container's ``nproc``; on a shared worker
+    that oversubscribes the host when several routes run.  Unset keeps the ORFS
+    default, so no existing route moves.  The value is recorded under
+    ``runner.orfs_num_cores``.
+    """
+    raw = os.environ.get("OT_ORFS_NUM_CORES")
+    if not raw:
+        return None
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise SystemExit(f"OT_ORFS_NUM_CORES is not an integer: {raw!r}") from exc
+    if value <= 0:
+        raise SystemExit("OT_ORFS_NUM_CORES must be positive")
+    return value
+
+
 def run(cmd: list[str], *, cwd: Path | None = None, timeout: int = 7200) -> subprocess.CompletedProcess:
     proc = subprocess.run(
         cmd,
@@ -2147,6 +2167,7 @@ def run_pnr(
             "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; "
             "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
             "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base "
+            + (f"NUM_CORES={orfs_num_cores()} " if orfs_num_cores() else "")
             + goal,
         ]
         completed = run(cmd, timeout=timeout)
@@ -3228,6 +3249,7 @@ def main(argv: list[str] | None = None) -> int:
             "argv": ["tools/run_abi3_physical.py", *(argv if argv is not None else sys.argv[1:])],
             "source_root": str(ROOT),
             "driver": driver_identity(),
+            **({"orfs_num_cores": orfs_num_cores()} if orfs_num_cores() else {}),
         },
         "view": {
             "name": args.view,
