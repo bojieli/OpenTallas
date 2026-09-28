@@ -86,7 +86,10 @@ def compare(golden_dir: Path, rtl_dir: Path, context: int, layers: list[int],
     if context < 1 or not layers or layers != sorted(set(layers)) or any(x < 0 or x >= 36 for x in layers):
         raise ValueError('context and ordered layer list out of range')
     rows = []
+    previous_output = None
     for layer in layers:
+        die_inputs = []
+        die_outputs = []
         for die in range(2):
             golden = validate_golden(golden_dir, context, layer, die, root)
             gm, ga = read_shard(golden_dir, context, layer, die)
@@ -105,8 +108,16 @@ def compare(golden_dir: Path, rtl_dir: Path, context: int, layers: list[int],
                     raise ValueError(f'L{layer} D{die} {name}: dtype/shape mismatch')
                 if expected.tobytes() != actual.tobytes():
                     raise ValueError(f'L{layer} D{die} {name}: bit mismatch')
+            die_inputs.append(golden['array_sha256']['h_in'])
+            die_outputs.append(golden['array_sha256']['h_out'])
             rows.append({'layer': layer, 'die': die, 'cycles': rm['cycles'],
                          'matched_arrays': sorted(ga), 'rtl_source_sha256': rm['source_sha256']})
+        if len(set(die_inputs)) != 1 or len(set(die_outputs)) != 1:
+            raise ValueError(f'L{layer}: TP2 dies disagree on shared hidden state')
+        if previous_output is not None and layer == layers[layers.index(layer) - 1] + 1:
+            if die_inputs[0] != previous_output:
+                raise ValueError(f'L{layer}: golden input differs from preceding layer output')
+        previous_output = die_outputs[0]
     return {'status': 'bit_exact_supplied_shards', 'context': context, 'shards': rows,
             'claim_boundary': 'Layer-shard RTL outputs only; no full token, full model, or throughput pass.'}
 

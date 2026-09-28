@@ -20,7 +20,7 @@ def make_pair(tmp_path, bit_flip=False):
     pin = {'tools/hdc_program.py': hashlib.sha256(source.read_bytes()).hexdigest()}
     for die in (0, 1):
         arrays = {'h_in': np.arange(4096, dtype=np.float32),
-                  'h_out': np.arange(4096, dtype=np.float32) + die}
+                  'h_out': np.arange(4096, dtype=np.float32) + 1}
         identity = {'context': 128, 'layer': 0, 'die': die, 'tp': 2, 'position': 127}
         golden = dict(identity, schema='opentallas.qwen-o4-fullshape-shard.v1',
                       config_sha256=gate.sha(ROOT / gate.CONFIG),
@@ -61,6 +61,22 @@ def test_stale_source_pin_rejected(tmp_path):
     meta['source_sha256']['tools/hdc_program.py'] = '0' * 64
     path.write_text(json.dumps(meta))
     with pytest.raises(ValueError, match='stale source pin'):
+        gate.compare(golden, rtl, 128, [0], ROOT)
+
+
+def test_cross_die_hidden_state_disagreement_rejected(tmp_path):
+    golden, rtl = make_pair(tmp_path)
+    stem = 'ctx128_L00_D1'
+    with np.load(golden / (stem + '.npz')) as archive:
+        arrays = {name: archive[name].copy() for name in archive.files}
+    arrays['h_out'][0] += 1
+    np.savez(golden / (stem + '.npz'), **arrays)
+    np.savez(rtl / (stem + '.npz'), **arrays)
+    path = golden / (stem + '.json')
+    meta = json.loads(path.read_text())
+    meta['array_sha256']['h_out'] = gate.array_sha(arrays['h_out'])
+    path.write_text(json.dumps(meta))
+    with pytest.raises(ValueError, match='TP2 dies disagree'):
         gate.compare(golden, rtl, 128, [0], ROOT)
 
 
