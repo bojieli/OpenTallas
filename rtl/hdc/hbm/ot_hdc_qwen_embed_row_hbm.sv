@@ -1,7 +1,9 @@
 `timescale 1ns/1ps
 // Fetch the token's INT8 embedding row and BF16 row scale as 32-byte HBM
-// sectors before the package starts its core. Core reads then have the same
-// one-cycle latency as the embedding ROM. The HBM controller and its arbitration
+// sectors before the package starts its core. Two row banks retain the prior
+// token while the next row arrives: late reads can still contribute to the
+// previous token's result. Core reads have the same one-cycle ROM latency.
+// The HBM controller and its arbitration
 // with matrix weights/KV are external to this bounded row source.
 module ot_hdc_qwen_embed_row_hbm #(
     parameter integer AW = 24,
@@ -37,8 +39,10 @@ module ot_hdc_qwen_embed_row_hbm #(
         $fatal(1,"unsupported Qwen embedding HBM geometry");
     reg [1:0] state;
     reg [TW-1:0] tok_r;
-    reg [255:0] code_bank [0:CODE_SECTORS-1];
-    reg [255:0] scale_sector;
+    reg [TW-1:0] prev_tok;
+    reg bank_r, prev_valid;
+    reg [255:0] code_bank [0:2*CODE_SECTORS-1];
+    reg [255:0] scale_sector [0:1];
     reg [31:0] issued [0:PCS-1], received [0:PCS-1];
     integer p, s, off;
     reg all_done;
@@ -64,14 +68,16 @@ module ot_hdc_qwen_embed_row_hbm #(
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            state<=IDLE; tok_r<=0; ready<=0; fault<=0;
+            state<=IDLE; tok_r<=0; prev_tok<=0; bank_r<=0; prev_valid<=0;
+            ready<=0; fault<=0;
             for (p=0;p<PCS;p=p+1) begin issued[p]<=0; received[p]<=0; end
         end else begin
             if (load) begin
                 ready<=0;
                 if (state==CODE || state==SCALE) fault<=1;
                 else begin
-                    state<=CODE; tok_r<=token; fault<=0;
+                    state<=CODE; prev_tok<=tok_r; prev_valid<=ready;
+                    tok_r<=token; bank_r<=~bank_r; fault<=0;
                     for (p=0;p<PCS;p=p+1) begin issued[p]<=0; received[p]<=0; end
                 end
             end else if (state==CODE || state==SCALE) begin
@@ -84,8 +90,9 @@ module ot_hdc_qwen_embed_row_hbm #(
                                 ((state==CODE) ? (CODE_SECTORS+PCS-1-p)/PCS : 1)) fault<=1;
                         else begin
                             if (state==CODE)
-                                code_bank[rsp_tag[p*TAGW +: TAGW-1]*PCS+p] <= rsp_data[p*256 +: 256];
-                            else if (p==0) scale_sector<=rsp_data[p*256 +: 256];
+                                code_bank[bank_r*CODE_SECTORS+
+                                          rsp_tag[p*TAGW +: TAGW-1]*PCS+p] <= rsp_data[p*256 +: 256];
+                            else if (p==0) scale_sector[bank_r]<=rsp_data[p*256 +: 256];
                             received[p]<=received[p]+1;
                         end
                     end
@@ -96,25 +103,29 @@ module ot_hdc_qwen_embed_row_hbm #(
                     else begin state<=DONE; ready<=1; end
                 end
             end
-            // The prior token can leave a trailing synchronous read after
-            // package done. While the new row is being prefetched, the core
-            // is gated from starting; those old reads have no consumer.
-            if (code_re && ready) begin
-                // The scalar SU can leave its last read address asserted
-                // after package done, even after the next row becomes ready.
-                // Return zero for an out-of-row read, never alias another
-                // token's codes into the new row. A real consumer would fail
-                // the package's exact-state gate.
-                if (code_addr < tok_r*ROW_WORDS ||
-                    code_addr >= tok_r*ROW_WORDS+ROW_WORDS) code_q<=0;
-                else begin
+            // The prior token can still have a live synchronous read after
+            // package done. Prefer the new row when ready, otherwise serve
+            // the retained prior row by its full address. Never alias an
+            // unrelated row into either token.
+            if (code_re) begin
+                if (ready && code_addr >= tok_r*ROW_WORDS &&
+                    code_addr < tok_r*ROW_WORDS+ROW_WORDS) begin
                     off=code_addr-tok_r*ROW_WORDS;
-                    code_q<={code_bank[off*2+1],code_bank[off*2]};
-                end
+                    code_q<={code_bank[bank_r*CODE_SECTORS+off*2+1],
+                             code_bank[bank_r*CODE_SECTORS+off*2]};
+                end else if (prev_valid && code_addr >= prev_tok*ROW_WORDS &&
+                             code_addr < prev_tok*ROW_WORDS+ROW_WORDS) begin
+                    off=code_addr-prev_tok*ROW_WORDS;
+                    code_q<={code_bank[(!bank_r)*CODE_SECTORS+off*2+1],
+                             code_bank[(!bank_r)*CODE_SECTORS+off*2]};
+                end else code_q<=0;
             end
-            if (scale_re && ready) begin
-                if (scale_addr!=tok_r) scale_q<=0;
-                else scale_q<=scale_sector[tok_r[3:0]*16 +: 16];
+            if (scale_re) begin
+                if (ready && scale_addr==tok_r)
+                    scale_q<=scale_sector[bank_r][tok_r[3:0]*16 +: 16];
+                else if (prev_valid && scale_addr==prev_tok)
+                    scale_q<=scale_sector[!bank_r][prev_tok[3:0]*16 +: 16];
+                else scale_q<=0;
             end
         end
     end
