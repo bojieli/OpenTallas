@@ -16,6 +16,7 @@ def test_o4_hbm_address_and_controller_contract():
     assert gate["configuration"]["int8_word_bytes"] == 98_304
     assert gate["package"]["minimum_sector_address_bits"] >= 28
     assert not gate["existing_wstream_incompatibilities"]["default_hbm_sector_address_bits_sufficient_for_resident_layout"]
+    assert gate["existing_wstream_incompatibilities"]["minimum_prefetch_bytes_for_longest_unstalled_op_at_stated_hbm_bw"] > gate["existing_wstream_incompatibilities"]["default_window_bytes_if_scaled_to_full_o4_word"]
     assert gate["package"]["rom_word_identical_weight_and_kv_bytes_per_token"] > gate["package"]["model_hbm_bytes_per_token_including_kv"]
     assert gate["sector_roundtrip"]["code_endpoints"] == [-128, -1, 0, 1, 127]
 

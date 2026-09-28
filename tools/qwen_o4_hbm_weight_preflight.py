@@ -88,6 +88,15 @@ def evaluate() -> dict:
     bw_die = Q.HBM["stacks_per_die"] * Q.HBM["stack_bytes_s"] * Q.HBM["efficiency"]
     clock = wl["clock_hz"] if "clock_hz" in wl else Q.CLOCK[0]
     code_cycles_lower = math.ceil(streamed / (bw_die / clock))
+    bytes_per_cycle_die = bw_die / clock
+    largest = max(mats, key=lambda m: m["word_cycles"] / m["count"])
+    largest_words = largest["word_cycles"] // largest["count"]
+    # A matvec consumes one full word/cycle once issued. Even if HBM delivers
+    # continuously at the stated bandwidth, this many words must be ready
+    # before the longest unchunked op to avoid an underflow. This excludes
+    # HBM latency/refresh, so it is a lower bound on its buffer requirement.
+    prefetched_words_min = max(0, largest_words - math.floor(
+        largest_words * bytes_per_cycle_die / MATRIX_WORD_BYTES))
     model_scale = model_weight * (Q.hbm_weight_bytes_per_mac(Q.MATCHED_FMT) - 1)
     exact_weight_and_kv = Q.DIES * (streamed + scales) + kv_package
     package_extra = exact_weight_and_kv - model["bytes_per_token"]
@@ -125,9 +134,13 @@ def evaluate() -> dict:
             "default_hbm_sector_address_bits": 24,
             "default_hbm_sector_address_bits_sufficient_for_resident_layout": sector_addr_bits <= 24,
             "default_window_bytes_if_scaled_to_full_o4_word": stream_window_bytes,
+            "longest_unchunked_op": largest["name"],
+            "longest_unchunked_op_words": largest_words,
+            "minimum_prefetch_bytes_for_longest_unstalled_op_at_stated_hbm_bw":
+            prefetched_words_min * MATRIX_WORD_BYTES,
             "default_burst_length_field_bits": 5,
             "sectors_per_o4_int8_word": MATRIX_WORD_BYTES // SECTOR_BYTES,
-            "note": "A full-width 2048-word window would be 192 MiB per die. Use PC-local sector windows and buffered scale words; a WB parameter change alone is not an implementation."},
+            "note": "A full-width 2048-word window would be 192 MiB per die, still below the longest unchunked op's required lead. Split the ISA weight op into bounded chunks or add an internal stall, then use PC-local sector windows and buffered scale words; a WB parameter change alone is not an implementation."},
         "sector_roundtrip": sector_roundtrip(),
         "input_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in _PINNED},
     }
