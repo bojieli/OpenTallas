@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_hdc_qwen_hbm_service;
-    localparam NPC=128, NC=6, AW=32, CTAGW=17, PTAGW=20;
+    localparam NPC=128, NC=6, AW=32, CTAGW=24, PTAGW=27;
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0;
     reg [NPC*NC-1:0] c_req_v=0, c_req_we=0, c_rsp_rdy='1;
@@ -26,7 +26,7 @@ module tb_hdc_qwen_hbm_service;
             case(k) 0:pc=0; 1:pc=31; 2:pc=32; default:pc=127; endcase
             c_req_v[pc*NC + 5]=1;
             c_req_addr[(pc*NC+5)*AW +: AW]=32'(pc);
-            c_req_tag[(pc*NC+5)*CTAGW +: CTAGW]=17'(k+1);
+            c_req_tag[(pc*NC+5)*CTAGW +: CTAGW]=24'(k+1);
         end
         #1;
         for (integer k=0;k<4;k=k+1) begin
@@ -39,14 +39,14 @@ module tb_hdc_qwen_hbm_service;
         for (integer k=0;k<4;k=k+1) begin
             case(k) 0:pc=0; 1:pc=31; 2:pc=32; default:pc=127; endcase
             p_rsp_v[pc]=1;
-            p_rsp_tag[pc*PTAGW +: PTAGW]={3'd5,17'(k+1)};
+            p_rsp_tag[pc*PTAGW +: PTAGW]={3'd5,24'(k+1)};
             p_rsp_data[pc*256 +: 256]=256'(k+100);
         end
         #1;
         for (integer k=0;k<4;k=k+1) begin
             case(k) 0:pc=0; 1:pc=31; 2:pc=32; default:pc=127; endcase
             if (!c_rsp_v[pc*NC+5] ||
-                c_rsp_tag[(pc*NC+5)*CTAGW +: CTAGW] !== 17'(k+1) ||
+                c_rsp_tag[(pc*NC+5)*CTAGW +: CTAGW] !== 24'(k+1) ||
                 c_rsp_data[(pc*NC+5)*256 +: 256] !== 256'(k+100))
                 $fatal(1,"stack/PC response owner %0d",pc);
         end

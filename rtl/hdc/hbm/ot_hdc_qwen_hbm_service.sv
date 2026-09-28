@@ -9,7 +9,7 @@ module ot_hdc_qwen_hbm_service #(
     parameter integer PCS_PER_STACK=32,
     parameter integer NC=6,
     parameter integer AW=32,
-    parameter integer CTAGW=17,
+    parameter integer CTAGW=24, // source-lane[6:0] + source tag[16:0]
     parameter integer MAX_OUT=16,
     parameter integer NPC=STACKS*PCS_PER_STACK,
     parameter integer PTAGW=$clog2(NC)+CTAGW

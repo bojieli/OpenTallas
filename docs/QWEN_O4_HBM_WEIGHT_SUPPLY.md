@@ -181,6 +181,16 @@ keeps its 24-bit logical per-layer element address; the layer/user/page
 controller translates it to this physical address. The historical HAW28
 standalone sources were sufficient for their isolated image slices but cannot
 cover the physical capacity or a multiuser KV layout.
+An `ot_hdc_qwen_pc_lane_map` sits between each source's PC-local output and
+the shared service. It routes every request to physical PC `sector[6:0]` and
+returns responses to the original source bank by carrying that bank's 7-bit
+lane number in the tag. This is needed for independent matrix scale bases:
+gate/up scale base 456 sends source lanes 0 and 63 to physical PCs 72 and 7.
+The same rule covers an embedding scale sector selected by `token>>4`.
+The shared service therefore uses a 24-bit client tag (7 lane bits + 17
+source bits) and a 27-bit physical tag after its 3-bit client ID. Its
+lane-mapping RTL passes an out-of-order two-PC response test. Physical tag
+storage, cross-PC wiring and route are open implementation costs.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs
