@@ -117,6 +117,10 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
         base = f["qe_wbase"]
         _require(base in qe_regions, f"QE instruction {pc} points outside bound matrix regions: {base}")
         name, image = qe_regions[base]
+        _require(f["qe_nout"] == image["nrows"] and f["qe_nb"] * 32 == image["ncols"],
+                 f"QE PC {pc} logical matrix shape differs from {name} image")
+        _require(bool(f["qe_fp4"]) == image["format"].startswith("F4_"),
+                 f"QE PC {pc} numeric format differs from {name} image")
         count = f["qe_tiles"] * f["qe_nb"] * I.INTERLEAVE
         if f.get("qe_ind"):
             ids = selected
@@ -164,6 +168,20 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
         if (rows != group_rows or f.get("me_xjs", 0) or start != expected_start or
                 x != expected_x or output != expected_output):
             blockers.append(f"ME wo_a group {g} descriptor does not match selected image/activation")
+    for pc, f in enumerate(program):
+        if f["unit"] == I.UNIT_ME and f.get("_tag") == "L0.router" and not f.get("me_wsrc"):
+            gate = mats["gate"]
+            _require(f["me_wbase"] == gate["base_word"] and
+                     f["me_nout"] == gate["nrows"] and
+                     f["me_k"] * (1 << f["me_split"]) == gate["ncols"],
+                     f"ME gate descriptor/image mismatch at PC {pc}")
+        if f["unit"] == I.UNIT_HE and f.get("_tag") in ("L0.hc_attn", "L0.hc_ffn"):
+            name = "hc_attn_fn" if f["_tag"] == "L0.hc_attn" else "hc_ffn_fn"
+            image = mats[name]
+            _require(f["he_wbase"] == image["base_word"] and
+                     f["he_nout"] == image["nrows"] and
+                     f["he_k"] * R.HC_SPLIT == image["ncols"],
+                     f"HE {name} descriptor/image mismatch at PC {pc}")
     # This entry point begins with an already-loaded layer-0 state, so the
     # embedding token map and other layers' YaRN table are outside its scope.
     if "rope_plain" in layout["unplaced_generated"]:
