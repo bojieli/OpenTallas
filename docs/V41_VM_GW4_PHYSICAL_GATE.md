@@ -108,9 +108,11 @@ floor**, and two groups have a **128-cycle read floor**, before latency and
 drain. The abstract gives a TT read cycle of 381 ps and modeled macro read
 energy of 7.09 pJ per four-word beat. No extra SRAM port or capacity is needed;
 the write and read bank resources serve distinct phases. The tile currently
-has only one 64-byte external-B read per cycle, so a four-read interface,
-bank-local registered output, and a 256-byte/cycle ME xbank ingest are still
-required. A direct 2,048-bit read-to-logical-order crossbar was tested as a
+has only one 64-byte external-B read per cycle. A
+[standalone four-bank macro read module](V41_VM_READ4_MACRO.md) now supplies
+four registered 64-byte words/cycle in physical bank order; tile integration
+and a 256-byte/cycle ME xbank ingest remain required. A direct 2,048-bit
+read-to-logical-order crossbar was tested as a
 quarter-width slice and failed pre-route 0.92 ns timing by 1.06 ns; its
 negative probe is in
 [`v41_vm_gr4_slice/synth_sta.json`](../results/physical_abi3/asap7/chip/v41_vm_gr4_slice/synth_sta.json).
