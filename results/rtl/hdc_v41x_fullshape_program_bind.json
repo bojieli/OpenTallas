@@ -15,7 +15,7 @@
   ],
   "matrix_count": 29,
   "constant_count": 11,
-  "instruction_count": 110,
+  "instruction_count": 111,
   "qe_address_trace": [
     {
       "pc": 7,
@@ -45,7 +45,7 @@
       "backed": false
     },
     {
-      "pc": 37,
+      "pc": 38,
       "matrix": "wo_b",
       "expert_id": null,
       "start_word": 6240,
@@ -54,7 +54,7 @@
       "backed": false
     },
     {
-      "pc": 50,
+      "pc": 51,
       "matrix": "shared.w1",
       "expert_id": null,
       "start_word": 11360,
@@ -63,7 +63,7 @@
       "backed": false
     },
     {
-      "pc": 51,
+      "pc": 52,
       "matrix": "shared.w3",
       "expert_id": null,
       "start_word": 12800,
@@ -72,7 +72,7 @@
       "backed": false
     },
     {
-      "pc": 55,
+      "pc": 56,
       "matrix": "shared.w2",
       "expert_id": null,
       "start_word": 14240,
@@ -81,7 +81,7 @@
       "backed": false
     },
     {
-      "pc": 63,
+      "pc": 64,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 174080,
@@ -90,7 +90,7 @@
       "backed": false
     },
     {
-      "pc": 63,
+      "pc": 64,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 176960,
@@ -99,7 +99,7 @@
       "backed": false
     },
     {
-      "pc": 63,
+      "pc": 64,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 218720,
@@ -108,7 +108,7 @@
       "backed": false
     },
     {
-      "pc": 63,
+      "pc": 64,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 223040,
@@ -117,7 +117,7 @@
       "backed": false
     },
     {
-      "pc": 63,
+      "pc": 64,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 529760,
@@ -126,7 +126,7 @@
       "backed": false
     },
     {
-      "pc": 63,
+      "pc": 64,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 535520,
@@ -135,7 +135,7 @@
       "backed": false
     },
     {
-      "pc": 64,
+      "pc": 65,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 727040,
@@ -144,7 +144,7 @@
       "backed": false
     },
     {
-      "pc": 64,
+      "pc": 65,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 729920,
@@ -153,7 +153,7 @@
       "backed": false
     },
     {
-      "pc": 64,
+      "pc": 65,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 771680,
@@ -162,7 +162,7 @@
       "backed": false
     },
     {
-      "pc": 64,
+      "pc": 65,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 776000,
@@ -171,7 +171,7 @@
       "backed": false
     },
     {
-      "pc": 64,
+      "pc": 65,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 1082720,
@@ -180,7 +180,7 @@
       "backed": false
     },
     {
-      "pc": 64,
+      "pc": 65,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 1088480,
@@ -189,7 +189,7 @@
       "backed": false
     },
     {
-      "pc": 65,
+      "pc": 66,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 174080,
@@ -198,7 +198,7 @@
       "backed": false
     },
     {
-      "pc": 65,
+      "pc": 66,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 176960,
@@ -207,7 +207,7 @@
       "backed": false
     },
     {
-      "pc": 65,
+      "pc": 66,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 218720,
@@ -216,7 +216,7 @@
       "backed": false
     },
     {
-      "pc": 65,
+      "pc": 66,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 223040,
@@ -225,7 +225,7 @@
       "backed": false
     },
     {
-      "pc": 65,
+      "pc": 66,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 529760,
@@ -234,7 +234,7 @@
       "backed": false
     },
     {
-      "pc": 65,
+      "pc": 66,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 535520,
@@ -243,7 +243,7 @@
       "backed": false
     },
     {
-      "pc": 66,
+      "pc": 67,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 727040,
@@ -252,7 +252,7 @@
       "backed": false
     },
     {
-      "pc": 66,
+      "pc": 67,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 729920,
@@ -261,7 +261,7 @@
       "backed": false
     },
     {
-      "pc": 66,
+      "pc": 67,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 771680,
@@ -270,7 +270,7 @@
       "backed": false
     },
     {
-      "pc": 66,
+      "pc": 67,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 776000,
@@ -279,7 +279,7 @@
       "backed": false
     },
     {
-      "pc": 66,
+      "pc": 67,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 1082720,
@@ -288,7 +288,7 @@
       "backed": false
     },
     {
-      "pc": 66,
+      "pc": 67,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 1088480,
@@ -297,7 +297,7 @@
       "backed": false
     },
     {
-      "pc": 69,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 174080,
@@ -306,7 +306,7 @@
       "backed": false
     },
     {
-      "pc": 69,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 176960,
@@ -315,7 +315,7 @@
       "backed": false
     },
     {
-      "pc": 69,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 218720,
@@ -324,7 +324,7 @@
       "backed": false
     },
     {
-      "pc": 69,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 223040,
@@ -333,7 +333,7 @@
       "backed": false
     },
     {
-      "pc": 69,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 529760,
@@ -342,7 +342,7 @@
       "backed": false
     },
     {
-      "pc": 69,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 535520,
@@ -351,7 +351,7 @@
       "backed": false
     },
     {
-      "pc": 70,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 727040,
@@ -360,7 +360,7 @@
       "backed": false
     },
     {
-      "pc": 70,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 729920,
@@ -369,7 +369,7 @@
       "backed": false
     },
     {
-      "pc": 70,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 771680,
@@ -378,7 +378,7 @@
       "backed": false
     },
     {
-      "pc": 70,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 776000,
@@ -387,7 +387,7 @@
       "backed": false
     },
     {
-      "pc": 70,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 1082720,
@@ -396,7 +396,7 @@
       "backed": false
     },
     {
-      "pc": 70,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 1088480,
@@ -405,7 +405,7 @@
       "backed": false
     },
     {
-      "pc": 76,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 1280000,
@@ -414,7 +414,7 @@
       "backed": false
     },
     {
-      "pc": 76,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 1282880,
@@ -423,7 +423,7 @@
       "backed": false
     },
     {
-      "pc": 76,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 1324640,
@@ -432,7 +432,7 @@
       "backed": false
     },
     {
-      "pc": 76,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 1328960,
@@ -441,7 +441,7 @@
       "backed": false
     },
     {
-      "pc": 76,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 1635680,
@@ -450,7 +450,7 @@
       "backed": false
     },
     {
-      "pc": 76,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 1641440,
@@ -459,7 +459,7 @@
       "backed": false
     },
     {
-      "pc": 79,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 174080,
@@ -468,7 +468,7 @@
       "backed": false
     },
     {
-      "pc": 79,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 176960,
@@ -477,7 +477,7 @@
       "backed": false
     },
     {
-      "pc": 79,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 218720,
@@ -486,7 +486,7 @@
       "backed": false
     },
     {
-      "pc": 79,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 223040,
@@ -495,7 +495,7 @@
       "backed": false
     },
     {
-      "pc": 79,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 529760,
@@ -504,7 +504,7 @@
       "backed": false
     },
     {
-      "pc": 79,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 535520,
@@ -513,7 +513,7 @@
       "backed": false
     },
     {
-      "pc": 80,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 727040,
@@ -522,7 +522,7 @@
       "backed": false
     },
     {
-      "pc": 80,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 729920,
@@ -531,7 +531,7 @@
       "backed": false
     },
     {
-      "pc": 80,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 771680,
@@ -540,7 +540,7 @@
       "backed": false
     },
     {
-      "pc": 80,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 776000,
@@ -549,7 +549,7 @@
       "backed": false
     },
     {
-      "pc": 80,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 1082720,
@@ -558,7 +558,7 @@
       "backed": false
     },
     {
-      "pc": 80,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 1088480,
@@ -567,7 +567,7 @@
       "backed": false
     },
     {
-      "pc": 81,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 1280000,
@@ -576,7 +576,7 @@
       "backed": false
     },
     {
-      "pc": 81,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 1282880,
@@ -585,7 +585,7 @@
       "backed": false
     },
     {
-      "pc": 81,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 1324640,
@@ -594,7 +594,7 @@
       "backed": false
     },
     {
-      "pc": 81,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 1328960,
@@ -603,7 +603,7 @@
       "backed": false
     },
     {
-      "pc": 81,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 1635680,
@@ -612,7 +612,7 @@
       "backed": false
     },
     {
-      "pc": 81,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 1641440,
@@ -621,7 +621,7 @@
       "backed": false
     },
     {
-      "pc": 84,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 174080,
@@ -630,7 +630,7 @@
       "backed": false
     },
     {
-      "pc": 84,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 176960,
@@ -639,7 +639,7 @@
       "backed": false
     },
     {
-      "pc": 84,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 218720,
@@ -648,7 +648,7 @@
       "backed": false
     },
     {
-      "pc": 84,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 223040,
@@ -657,7 +657,7 @@
       "backed": false
     },
     {
-      "pc": 84,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 529760,
@@ -666,7 +666,7 @@
       "backed": false
     },
     {
-      "pc": 84,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 535520,
@@ -675,7 +675,7 @@
       "backed": false
     },
     {
-      "pc": 85,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 727040,
@@ -684,7 +684,7 @@
       "backed": false
     },
     {
-      "pc": 85,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 729920,
@@ -693,7 +693,7 @@
       "backed": false
     },
     {
-      "pc": 85,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 771680,
@@ -702,7 +702,7 @@
       "backed": false
     },
     {
-      "pc": 85,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 776000,
@@ -711,7 +711,7 @@
       "backed": false
     },
     {
-      "pc": 85,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 1082720,
@@ -720,7 +720,7 @@
       "backed": false
     },
     {
-      "pc": 85,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 1088480,
@@ -729,7 +729,7 @@
       "backed": false
     },
     {
-      "pc": 86,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 1280000,
@@ -738,7 +738,7 @@
       "backed": false
     },
     {
-      "pc": 86,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 1282880,
@@ -747,7 +747,7 @@
       "backed": false
     },
     {
-      "pc": 86,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 1324640,
@@ -756,7 +756,7 @@
       "backed": false
     },
     {
-      "pc": 86,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 1328960,
@@ -765,7 +765,7 @@
       "backed": false
     },
     {
-      "pc": 86,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 1635680,
@@ -774,7 +774,7 @@
       "backed": false
     },
     {
-      "pc": 86,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 1641440,
@@ -783,7 +783,7 @@
       "backed": false
     },
     {
-      "pc": 89,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 174080,
@@ -792,7 +792,7 @@
       "backed": false
     },
     {
-      "pc": 89,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 176960,
@@ -801,7 +801,7 @@
       "backed": false
     },
     {
-      "pc": 89,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 218720,
@@ -810,7 +810,7 @@
       "backed": false
     },
     {
-      "pc": 89,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 223040,
@@ -819,7 +819,7 @@
       "backed": false
     },
     {
-      "pc": 89,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 529760,
@@ -828,7 +828,7 @@
       "backed": false
     },
     {
-      "pc": 89,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 535520,
@@ -837,7 +837,7 @@
       "backed": false
     },
     {
-      "pc": 90,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 727040,
@@ -846,7 +846,7 @@
       "backed": false
     },
     {
-      "pc": 90,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 729920,
@@ -855,7 +855,7 @@
       "backed": false
     },
     {
-      "pc": 90,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 771680,
@@ -864,7 +864,7 @@
       "backed": false
     },
     {
-      "pc": 90,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 776000,
@@ -873,7 +873,7 @@
       "backed": false
     },
     {
-      "pc": 90,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 1082720,
@@ -882,7 +882,7 @@
       "backed": false
     },
     {
-      "pc": 90,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 1088480,
@@ -891,7 +891,7 @@
       "backed": false
     },
     {
-      "pc": 91,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 1280000,
@@ -900,7 +900,7 @@
       "backed": false
     },
     {
-      "pc": 91,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 1282880,
@@ -909,7 +909,7 @@
       "backed": false
     },
     {
-      "pc": 91,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 1324640,
@@ -918,7 +918,7 @@
       "backed": false
     },
     {
-      "pc": 91,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 1328960,
@@ -927,7 +927,7 @@
       "backed": false
     },
     {
-      "pc": 91,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 1635680,
@@ -936,7 +936,7 @@
       "backed": false
     },
     {
-      "pc": 91,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 1641440,
@@ -945,7 +945,7 @@
       "backed": false
     },
     {
-      "pc": 94,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 1280000,
@@ -954,7 +954,7 @@
       "backed": false
     },
     {
-      "pc": 94,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 1282880,
@@ -963,7 +963,7 @@
       "backed": false
     },
     {
-      "pc": 94,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 1324640,
@@ -972,7 +972,7 @@
       "backed": false
     },
     {
-      "pc": 94,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 1328960,
@@ -981,7 +981,7 @@
       "backed": false
     },
     {
-      "pc": 94,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 1635680,
@@ -990,7 +990,7 @@
       "backed": false
     },
     {
-      "pc": 94,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 1641440,
@@ -999,7 +999,7 @@
       "backed": false
     },
     {
-      "pc": 97,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 1280000,
@@ -1008,7 +1008,7 @@
       "backed": false
     },
     {
-      "pc": 97,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 1282880,
@@ -1017,7 +1017,7 @@
       "backed": false
     },
     {
-      "pc": 97,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 1324640,
@@ -1026,7 +1026,7 @@
       "backed": false
     },
     {
-      "pc": 97,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 1328960,
@@ -1035,7 +1035,7 @@
       "backed": false
     },
     {
-      "pc": 97,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 1635680,
@@ -1044,7 +1044,7 @@
       "backed": false
     },
     {
-      "pc": 97,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 1641440,
@@ -1055,187 +1055,154 @@
   ],
   "me_wo_a_trace": [
     {
-      "subop": 0,
+      "pc": 35,
+      "group": 0,
       "output_first_row": 0,
-      "output_last_row_exclusive": 256,
+      "output_last_row_exclusive": 1024,
+      "image_start_word": 7680,
+      "expected_image_start_word": 7680,
+      "image_end_word_exclusive": 73216,
       "x_first": 74272,
       "required_x_first": 74272,
-      "x_last_exclusive": 78368
+      "x_last_exclusive": 78368,
+      "output_first": 82464,
+      "required_output_first": 82464,
+      "rows": 1024,
+      "xjs": 0
     },
     {
-      "subop": 1,
-      "output_first_row": 256,
-      "output_last_row_exclusive": 512,
-      "x_first": 76320,
-      "required_x_first": 74272,
-      "x_last_exclusive": 80416
-    },
-    {
-      "subop": 2,
-      "output_first_row": 512,
-      "output_last_row_exclusive": 768,
-      "x_first": 78368,
-      "required_x_first": 74272,
-      "x_last_exclusive": 82464
-    },
-    {
-      "subop": 3,
-      "output_first_row": 768,
-      "output_last_row_exclusive": 1024,
-      "x_first": 80416,
-      "required_x_first": 74272,
-      "x_last_exclusive": 84512
-    },
-    {
-      "subop": 4,
+      "pc": 36,
+      "group": 1,
       "output_first_row": 1024,
-      "output_last_row_exclusive": 1280,
-      "x_first": 82464,
-      "required_x_first": 78368,
-      "x_last_exclusive": 86560
-    },
-    {
-      "subop": 5,
-      "output_first_row": 1280,
-      "output_last_row_exclusive": 1536,
-      "x_first": 84512,
-      "required_x_first": 78368,
-      "x_last_exclusive": 88608
-    },
-    {
-      "subop": 6,
-      "output_first_row": 1536,
-      "output_last_row_exclusive": 1792,
-      "x_first": 86560,
-      "required_x_first": 78368,
-      "x_last_exclusive": 90656
-    },
-    {
-      "subop": 7,
-      "output_first_row": 1792,
       "output_last_row_exclusive": 2048,
-      "x_first": 88608,
+      "image_start_word": 73216,
+      "expected_image_start_word": 73216,
+      "image_end_word_exclusive": 138752,
+      "x_first": 78368,
       "required_x_first": 78368,
-      "x_last_exclusive": 92704
+      "x_last_exclusive": 82464,
+      "output_first": 83488,
+      "required_output_first": 83488,
+      "rows": 1024,
+      "xjs": 0
     }
   ],
   "blockers": [
     "QE PC 7 wq_a expert=0: streams [0,3840) but image ends at 800",
     "QE PC 8 wkv expert=0: streams [800,2080) but image ends at 1120",
     "QE PC 14 wq_b expert=0: streams [1120,21600) but image ends at 6240",
-    "QE PC 37 wo_b expert=0: streams [6240,26720) but image ends at 11360",
-    "QE PC 50 shared.w1 expert=0: streams [11360,17760) but image ends at 12800",
-    "QE PC 51 shared.w3 expert=0: streams [12800,19200) but image ends at 14240",
-    "QE PC 55 shared.w2 expert=0: streams [14240,20000) but image ends at 15680",
-    "QE PC 63 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
-    "QE PC 63 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
-    "QE PC 63 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
-    "QE PC 63 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
-    "QE PC 63 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
-    "QE PC 63 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
-    "QE PC 64 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
-    "QE PC 64 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
-    "QE PC 64 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
-    "QE PC 64 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
-    "QE PC 64 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
-    "QE PC 64 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
-    "QE PC 65 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
-    "QE PC 65 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
-    "QE PC 65 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
-    "QE PC 65 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
-    "QE PC 65 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
-    "QE PC 65 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
-    "QE PC 66 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
-    "QE PC 66 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
-    "QE PC 66 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
-    "QE PC 66 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
-    "QE PC 66 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
-    "QE PC 66 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
-    "QE PC 69 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
-    "QE PC 69 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
-    "QE PC 69 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
-    "QE PC 69 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
-    "QE PC 69 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
-    "QE PC 69 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
-    "QE PC 70 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
-    "QE PC 70 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
-    "QE PC 70 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
-    "QE PC 70 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
-    "QE PC 70 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
-    "QE PC 70 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
-    "QE PC 76 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
-    "QE PC 76 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
-    "QE PC 76 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
-    "QE PC 76 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
-    "QE PC 76 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
-    "QE PC 76 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
-    "QE PC 79 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
-    "QE PC 79 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
-    "QE PC 79 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
-    "QE PC 79 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
-    "QE PC 79 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
-    "QE PC 79 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
-    "QE PC 80 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
-    "QE PC 80 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
-    "QE PC 80 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
-    "QE PC 80 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
-    "QE PC 80 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
-    "QE PC 80 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
-    "QE PC 81 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
-    "QE PC 81 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
-    "QE PC 81 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
-    "QE PC 81 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
-    "QE PC 81 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
-    "QE PC 81 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
-    "QE PC 84 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
-    "QE PC 84 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
-    "QE PC 84 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
-    "QE PC 84 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
-    "QE PC 84 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
-    "QE PC 84 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
-    "QE PC 85 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
-    "QE PC 85 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
-    "QE PC 85 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
-    "QE PC 85 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
-    "QE PC 85 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
-    "QE PC 85 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
-    "QE PC 86 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
-    "QE PC 86 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
-    "QE PC 86 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
-    "QE PC 86 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
-    "QE PC 86 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
-    "QE PC 86 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
-    "QE PC 89 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
-    "QE PC 89 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
-    "QE PC 89 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
-    "QE PC 89 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
-    "QE PC 89 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
-    "QE PC 89 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
-    "QE PC 90 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
-    "QE PC 90 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
-    "QE PC 90 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
-    "QE PC 90 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
-    "QE PC 90 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
-    "QE PC 90 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
-    "QE PC 91 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
-    "QE PC 91 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
-    "QE PC 91 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
-    "QE PC 91 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
-    "QE PC 91 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
-    "QE PC 91 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
-    "QE PC 94 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
-    "QE PC 94 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
-    "QE PC 94 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
-    "QE PC 94 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
-    "QE PC 94 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
-    "QE PC 94 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
-    "QE PC 97 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
-    "QE PC 97 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
-    "QE PC 97 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
-    "QE PC 97 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
-    "QE PC 97 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
-    "QE PC 97 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
-    "ME wo_a uses j*xjs; TP4 requires the same 4096-element activation for j=0..3 and the next for j=4..7",
+    "QE PC 38 wo_b expert=0: streams [6240,26720) but image ends at 11360",
+    "QE PC 51 shared.w1 expert=0: streams [11360,17760) but image ends at 12800",
+    "QE PC 52 shared.w3 expert=0: streams [12800,19200) but image ends at 14240",
+    "QE PC 56 shared.w2 expert=0: streams [14240,20000) but image ends at 15680",
+    "QE PC 64 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
+    "QE PC 64 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
+    "QE PC 64 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
+    "QE PC 64 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
+    "QE PC 64 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
+    "QE PC 64 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
+    "QE PC 65 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
+    "QE PC 65 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
+    "QE PC 65 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
+    "QE PC 65 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
+    "QE PC 65 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
+    "QE PC 65 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
+    "QE PC 66 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
+    "QE PC 66 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
+    "QE PC 66 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
+    "QE PC 66 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
+    "QE PC 66 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
+    "QE PC 66 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
+    "QE PC 67 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
+    "QE PC 67 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
+    "QE PC 67 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
+    "QE PC 67 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
+    "QE PC 67 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
+    "QE PC 67 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
+    "QE PC 70 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
+    "QE PC 70 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
+    "QE PC 70 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
+    "QE PC 70 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
+    "QE PC 70 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
+    "QE PC 70 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
+    "QE PC 71 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
+    "QE PC 71 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
+    "QE PC 71 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
+    "QE PC 71 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
+    "QE PC 71 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
+    "QE PC 71 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
+    "QE PC 77 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
+    "QE PC 77 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
+    "QE PC 77 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
+    "QE PC 77 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
+    "QE PC 77 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
+    "QE PC 77 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
+    "QE PC 80 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
+    "QE PC 80 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
+    "QE PC 80 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
+    "QE PC 80 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
+    "QE PC 80 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
+    "QE PC 80 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
+    "QE PC 81 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
+    "QE PC 81 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
+    "QE PC 81 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
+    "QE PC 81 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
+    "QE PC 81 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
+    "QE PC 81 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
+    "QE PC 82 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
+    "QE PC 82 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
+    "QE PC 82 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
+    "QE PC 82 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
+    "QE PC 82 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
+    "QE PC 82 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
+    "QE PC 85 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
+    "QE PC 85 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
+    "QE PC 85 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
+    "QE PC 85 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
+    "QE PC 85 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
+    "QE PC 85 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
+    "QE PC 86 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
+    "QE PC 86 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
+    "QE PC 86 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
+    "QE PC 86 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
+    "QE PC 86 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
+    "QE PC 86 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
+    "QE PC 87 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
+    "QE PC 87 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
+    "QE PC 87 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
+    "QE PC 87 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
+    "QE PC 87 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
+    "QE PC 87 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
+    "QE PC 90 exp.w1 expert=110: streams [174080,180480) but image ends at 175520",
+    "QE PC 90 exp.w1 expert=112: streams [176960,183360) but image ends at 178400",
+    "QE PC 90 exp.w1 expert=141: streams [218720,225120) but image ends at 220160",
+    "QE PC 90 exp.w1 expert=144: streams [223040,229440) but image ends at 224480",
+    "QE PC 90 exp.w1 expert=357: streams [529760,536160) but image ends at 531200",
+    "QE PC 90 exp.w1 expert=361: streams [535520,541920) but image ends at 536960",
+    "QE PC 91 exp.w3 expert=110: streams [727040,733440) but image ends at 728480",
+    "QE PC 91 exp.w3 expert=112: streams [729920,736320) but image ends at 731360",
+    "QE PC 91 exp.w3 expert=141: streams [771680,778080) but image ends at 773120",
+    "QE PC 91 exp.w3 expert=144: streams [776000,782400) but image ends at 777440",
+    "QE PC 91 exp.w3 expert=357: streams [1082720,1089120) but image ends at 1084160",
+    "QE PC 91 exp.w3 expert=361: streams [1088480,1094880) but image ends at 1089920",
+    "QE PC 92 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
+    "QE PC 92 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
+    "QE PC 92 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
+    "QE PC 92 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
+    "QE PC 92 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
+    "QE PC 92 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
+    "QE PC 95 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
+    "QE PC 95 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
+    "QE PC 95 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
+    "QE PC 95 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
+    "QE PC 95 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
+    "QE PC 95 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
+    "QE PC 98 exp.w2 expert=110: streams [1280000,1285760) but image ends at 1281440",
+    "QE PC 98 exp.w2 expert=112: streams [1282880,1288640) but image ends at 1284320",
+    "QE PC 98 exp.w2 expert=141: streams [1324640,1330400) but image ends at 1326080",
+    "QE PC 98 exp.w2 expert=144: streams [1328960,1334720) but image ends at 1330400",
+    "QE PC 98 exp.w2 expert=357: streams [1635680,1641440) but image ends at 1637120",
+    "QE PC 98 exp.w2 expert=361: streams [1641440,1647200) but image ends at 1642880",
     "generated layer-0 RoPE plain region missing"
   ],
   "claim_boundary": "Descriptor and source image address check; no RTL token or throughput verdict."

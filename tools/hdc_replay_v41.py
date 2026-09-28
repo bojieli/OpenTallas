@@ -541,7 +541,20 @@ class ShapeBuilder(P.Builder):
         to = f"L{L}.out"
         mat = lay.mat[(L, "wo_a")]
         zn = lay.ogr_d * s["o_rank"]
-        self.me(mat, V_["ACC"], V_["ZA"], {"ACC"}, {"ZA"}, to, me_xjs=zn, me_ots=1, me_ojs=2)
+        if self.tp_exact:
+            # Each local o-group consumes the same 8-head/4096-element slice
+            # for all 1024 output rows. The legacy j*xjs descriptor walks
+            # eight different slices, including beyond the rank's ACC span.
+            group_k = (s["heads"] // s["o_groups"]) * hd
+            group_rows = s["o_rank"]
+            group_words = group_rows * cdiv(group_k, 64)  # MG=8, plg=3 ME bank words
+            for g in range(lay.ogr_d):
+                part = self.lay.place(group_rows, group_k)
+                part["base"] = mat["base"] + g * group_words
+                self.me(part, V_["ACC"] + g * group_k, V_["ZA"] + g * group_rows,
+                        {"ACC"}, {"ZA"}, to)
+        else:
+            self.me(mat, V_["ACC"], V_["ZA"], {"ACC"}, {"ZA"}, to, me_xjs=zn, me_ots=1, me_ojs=2)
         self.bf16("ZA", zn, "ZA", to)
         self.linq(lay.qmat[(L, "wo_b")], "ZA", "YTMP" if self.tp_exact else "Y", set(), set(), to,
                   **({"qe_unrounded": 1} if self.tp_exact else {}))

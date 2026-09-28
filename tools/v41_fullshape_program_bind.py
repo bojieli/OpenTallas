@@ -136,26 +136,32 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
                                 f"but image ends at {image_end}")
     wo_a = [(pc, f) for pc, f in enumerate(program)
             if f["unit"] == I.UNIT_ME and f.get("_tag") == "L0.out" and f.get("me_wsrc") == 0]
-    _require(len(wo_a) == 1, "expected one grouped wo_a descriptor")
-    pc, f = wo_a[0]
+    _require(len(wo_a) == lay.ogr_d, "one wo_a descriptor required per local o-group")
     group_k = R.SHIPPED["heads"] // R.SHIPPED["o_groups"] * R.SHIPPED["hd"]
     group_rows = R.SHIPPED["o_rank"]
-    rows_per_subop = f["me_tiles"] * (lay.G >> f["me_split"]) * I.W_LANES
-    _require(rows_per_subop * I.INTERLEAVE == mats["wo_a"]["nrows"],
-             "wo_a sub-op output-row coverage differs from image")
+    group_words = mats["wo_a"]["word_count"] // lay.ogr_d
+    _require(group_words * lay.ogr_d == mats["wo_a"]["word_count"],
+             "wo_a image cannot be split by o-group")
     me_trace = []
-    for j in range(I.INTERLEAVE):
-        output_first = j * rows_per_subop
-        expected_group = output_first // group_rows
-        actual_x = f["me_xbase"] + j * f["me_xjs"]
-        required_x = f["me_xbase"] + expected_group * group_k
-        me_trace.append(dict(subop=j, output_first_row=output_first,
-                             output_last_row_exclusive=output_first + rows_per_subop,
-                             x_first=actual_x, required_x_first=required_x,
-                             x_last_exclusive=actual_x + group_k))
-    if any(x["x_first"] != x["required_x_first"] for x in me_trace):
-        blockers.append("ME wo_a uses j*xjs; TP4 requires the same 4096-element activation "
-                        "for j=0..3 and the next for j=4..7")
+    for g, (pc, f) in enumerate(wo_a):
+        rows = f["me_nout"]
+        start = f["me_wbase"]
+        x = f["me_xbase"]
+        output = f["me_obase"] * I.W_LANES
+        expected_start = mats["wo_a"]["base_word"] + g * group_words
+        expected_x = lay.vm.map["ACC"] + g * group_k
+        expected_output = lay.vm.map["ZA"] + g * group_rows
+        me_trace.append(dict(pc=pc, group=g, output_first_row=g * group_rows,
+                             output_last_row_exclusive=(g + 1) * group_rows,
+                             image_start_word=start, expected_image_start_word=expected_start,
+                             image_end_word_exclusive=start + group_words,
+                             x_first=x, required_x_first=expected_x,
+                             x_last_exclusive=x + group_k,
+                             output_first=output, required_output_first=expected_output,
+                             rows=rows, xjs=f.get("me_xjs", 0)))
+        if (rows != group_rows or f.get("me_xjs", 0) or start != expected_start or
+                x != expected_x or output != expected_output):
+            blockers.append(f"ME wo_a group {g} descriptor does not match selected image/activation")
     # This entry point begins with an already-loaded layer-0 state, so the
     # embedding token map and other layers' YaRN table are outside its scope.
     if "rope_plain" in layout["unplaced_generated"]:

@@ -18,9 +18,13 @@ def test_current_layout_is_not_misreported_as_executable():
     assert record["source_experts"] == [110, 112, 141, 144, 357, 361]
     assert any("wq_a" in x and "image ends" in x for x in record["blockers"])
     assert any("RoPE plain" in x for x in record["blockers"])
-    assert any("ME wo_a" in x for x in record["blockers"])
-    assert [x["required_x_first"] - record["me_wo_a_trace"][0]["required_x_first"]
-            for x in record["me_wo_a_trace"]] == [0, 0, 0, 0, 4096, 4096, 4096, 4096]
+    assert len(record["me_wo_a_trace"]) == 2
+    assert [x["image_start_word"] for x in record["me_wo_a_trace"]] == [7680, 73216]
+    assert [x["x_first"] for x in record["me_wo_a_trace"]] == [74272, 78368]
+    assert all(x["x_first"] == x["required_x_first"] and
+               x["output_first"] == x["required_output_first"] and
+               x["image_start_word"] == x["expected_image_start_word"] and
+               x["xjs"] == 0 for x in record["me_wo_a_trace"])
     # Gate and up have different QE base regions and disjoint VM outputs.
     pairs = [(x["matrix"], x["start_word"]) for x in record["qe_address_trace"]
              if x["expert_id"] == 110 and x["matrix"] in ("exp.w1", "exp.w3")]
