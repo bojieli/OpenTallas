@@ -46,16 +46,16 @@ def test_switched_combine_normalises_remote_paths(tmp_path):
     for path in (images, aa, bb):
         path.mkdir()
     man = dict(source_sha256={"x": "a"}, image_sha256={"x": "b"},
-               weight_equivalence={"pass_": True}, packages=5)
+               weight_equivalence={"pass_": True}, packages=5, steps_per_user=2)
     (images / "manifest.json").write_text(json.dumps(man))
     base = dict(source_sha256=man["source_sha256"], image_sha256=man["image_sha256"],
                 verilator_version="Verilator 5.050", **{"pass": True},
-                result={"total_cycles": 100}, checks={"exact": True})
+                result={"total_cycles": 100, "lm_head_steps_checked": 8}, checks={"exact": True})
     for scratch, root, whbm in ((aa, "/src/a", 0), (bb, "/remote/src/b", 1)):
         rec = dict(base, whbm=whbm,
                    build_command=["verilator", "-Mdir", str(scratch / "obj"),
                                   root + "/rtl/test/tb_hdc_v41x_array.sv",
-                                  f"+define+HDC_W_HBM={whbm}"],
+                                  f"+define+HDC_W_HBM={whbm}", "-j", str(10 + 6 * whbm)],
                    run_command=["stdbuf", "-oL", str(scratch / "obj/Vtop"),
                                 "+DIR=" + str(scratch / "images/cfg_b3_h2_switch_stall"),
                                 "+ROMS=" + str(scratch / "images/roms"), "+NUSERS=2"])

@@ -167,8 +167,12 @@ def combine(images, arm_a, arm_b, output):
         source_file = next(x for x in rec["build_command"]
                            if x.endswith("/rtl/test/tb_hdc_v41x_array.sv"))
         source_root = str(Path(source_file).parents[2])
-        return [x.replace(str(scratch), "ARM").replace(source_root, "SOURCE")
-                for x in rec["build_command"]]
+        cmd = [x.replace(str(scratch), "ARM").replace(source_root, "SOURCE")
+               for x in rec["build_command"]]
+        # Compilation parallelism is a host resource choice, not part of the
+        # elaborated design.  Preserve the actual job counts in each arm.
+        cmd[cmd.index("-j") + 1] = "JOBS"
+        return cmd
 
     def portable_run(rec, scratch):
         return [("+DIR=IMAGES/" + Path(x[5:]).name if x.startswith("+DIR=") else
@@ -180,6 +184,9 @@ def combine(images, arm_a, arm_b, output):
                    same_images=a["image_sha256"] == b["image_sha256"] == man["image_sha256"],
                    same_weight_words=man["weight_equivalence"]["pass_"],
                    same_verilator_version=a["verilator_version"] == b["verilator_version"],
+                   all_split_head_steps_checked=all(
+                       rec["result"].get("lm_head_steps_checked") == HP * USERS * man["steps_per_user"]
+                       for rec in (a, b)),
                    only_weight_source_diff=len(ca) == len(cb) and
                    [(x, y) for x, y in zip(ca, cb) if x != y] ==
                    [("+define+HDC_W_HBM=0", "+define+HDC_W_HBM=1")],
