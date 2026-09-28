@@ -37,3 +37,14 @@ def test_independent_scale_base_rotates_to_physical_pc(tmp_path):
     run = subprocess.run(["vvp", str(image)], cwd=ROOT, capture_output=True,
                          text=True, check=True)
     assert "PASS Qwen PC lane map scale_base=456 source_lanes=0,63 PCs=72,7" in run.stdout
+
+
+def test_full_token_sector_regions_fit_four_stacks(tmp_path):
+    image = tmp_path / "regions.vvp"
+    subprocess.run(["iverilog", "-g2012", "-s", "tb_hdc_qwen_hbm_regions",
+                    "-o", str(image),
+                    "rtl/hdc/hbm/ot_hdc_qwen_hbm_regions.sv",
+                    "rtl/test/tb_hdc_qwen_hbm_regions.sv"], cwd=ROOT, check=True)
+    run = subprocess.run(["vvp", str(image)], cwd=ROOT, capture_output=True,
+                         text=True, check=True)
+    assert "PASS Qwen HBM regions 36 layers 283 users 32-bit sectors" in run.stdout

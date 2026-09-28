@@ -181,6 +181,22 @@ keeps its 24-bit logical per-layer element address; the layer/user/page
 controller translates it to this physical address. The historical HAW28
 standalone sources were sufficient for their isolated image slices but cannot
 cover the physical capacity or a multiuser KV layout.
+`ot_hdc_qwen_hbm_regions` registers a concrete one-die region binding at
+stage start. The physical sector ranges do not overlap and each region starts
+on a 128-PC boundary: layer code `[0,109707264)`, head code
+`[109707264,119439360)`, 36 padded layer-scale pages
+`[119439360,119494656)`, head scales `[119494656,119499408)`, 36 Q/K
+norm pages starting `119499520`, 36 post-TP scale pages starting
+`119522560`, head final norm starting `119596288`, embedding codes starting
+`119597312`, embedding scales starting `139045120`, and packed KV pages
+starting `139054720`. A layer code page spans 992×3,072 sectors; each layer
+scale page reserves 1,536 sectors around 1,488 useful scales, preserving
+physical-PC alignment. A user KV page spans 36×262,144 sectors. The last
+sector for 283 full 8K users is `2809777791`, below the modeled four-stack
+capacity endpoint `2812500000`. This is an addressability ceiling before
+controller metadata, ECC, inactive regions and reserves; it is not a user
+capacity claim. Invalid stage or user IDs fault closed. The module and its
+0/35-stage, 0/282-user boundary test do not yet drive the HBM sources.
 An `ot_hdc_qwen_pc_lane_map` sits between each source's PC-local output and
 the shared service. It routes every request to physical PC `sector[6:0]` and
 returns responses to the original source bank by carrying that bank's 7-bit
