@@ -4,11 +4,11 @@ Overall progress tracker for the four designs: Qwen3-8B ROM reticle, Qwen3-8B HB
 
 Status: `[x]` done (on main, with a record), `[~]` in progress (owner and branch), `[ ]` open, `[!]` done but failed or blocked. Owners: **C** = Claude, **X** = Codex.
 
-Status as of main `a8276bdd` (2026-09-28). Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` and its records; this file is a tracker, not evidence.
+Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` and its records; this file is a tracker, not evidence.
 
-**The paper** is `docs/ARCHITECTURE_ATLAS.html`, published at https://claude.ai/artifact/7iEmv5Y9jr2iEaBn2vKDuw.
+**The paper** is `docs/ARCHITECTURE_ATLAS.html`, available from the current main branch at https://github.com/bojieli/OpenTallas/blob/main/docs/ARCHITECTURE_ATLAS.html.
 
-**The review** is `docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md` (untracked). Its findings are cross-referenced as R1–R6.
+**The review** is the local, untracked `docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md`. Its findings are cross-referenced as R1–R6; the memo is not available from main.
 
 ---
 
@@ -40,15 +40,16 @@ Status as of main `a8276bdd` (2026-09-28). Figures are quoted from `docs/ARCHITE
 - [x] Two tokens at positions 254/255.
 - [x] Pressure gates, with the pressure absorbed by slack.
 - [x] SFU reciprocal saturation fix (golden and RTL).
-- [~] **X:** consecutive-token gate at 2047→2048; queue-depth-2 pressure gate; 8K launcher.
+- [~] **X:** consecutive-token gate at 2047→2048 and 8K single-token gate are running; both await final source-pinned verdicts.
+- [ ] **X:** queue-depth-2 pressure gate; its optional elaboration was stopped and no QD2 run is active.
 - [ ] 8K in RTL: correctness, area and timing are all unproven (R1).
 - [ ] Offered-load knee: KV-path headroom under sustained queue pressure (R1).
 - [ ] Coupled bounded-buffer schedule across consecutive tokens at 8K (R1).
 
 ### Physical (ASAP7)
 - [x] Reduced W4/G2 matvec, ROM and SRAM tile routes clean at 1.5 ns (modelled macros).
-- [!] G4/W4 and G4/W8 tiles fail at the clock-tree stage.
-- [~] **X:** split ingress clock experiment; G4/W8 route.
+- [!] G4/W8 full route timed out during global-route hold repair after six hours; no detailed-route or extracted sign-off verdict. A limited-repair G4/W4 clock-tree diagnostic hit the buffer limit.
+- [~] **X:** G4/W4 full route and split-ingress G4/W4 route remain active in global-route hold repair; a separate command-arrival clock-tree sensitivity probe is active.
 - [ ] Whole-core route and compiled macros (R2).
 
 ## 2. Qwen3-8B HBM comparator (iso-area, same core)
@@ -99,11 +100,11 @@ Status as of main `a8276bdd` (2026-09-28). Figures are quoted from `docs/ARCHITE
 - [x] Two-package array, all units.
 - [x] Two-user, all units.
 - [!] Five-package switched array (source57): FAIL on a router flag.
-- [~] **X:** corrected switched rerun (source316, three-token prefix exact so far).
+- [~] **X:** corrected switched rerun (source316, three-token optimized prefix exact so far); the separate combined all-unit source972 build is being diagnosed before its token replay.
 - [~] **C `claude/v41x-matched-weight-ab`**: same program, weights from ROM vs from HBM; replaces the configuration-delta caveat for this bench point only.
 - [~] **C `claude/v41x-die-top`**: adopted V4.1x tile and die tops.
-  - The KV-HBM prefetch is a stub, so this stays staged.
-  - Open fixes: an arbiter with the indexer, a separate KV region, write-through staging, the 2-bit `sgen` wrap, the `K_MEM` range, a maximum-descriptor test, and a nonzero-user-slice test.
+  - KV-HBM prefetch, shared-port arbitration and staging RTL exist on the branch, but exact-token validation is still pending, so this stays staged.
+  - Verify the separate KV region, write-through staging, generation-wrap protection, `K_MEM` range, maximum-descriptor case and nonzero-user-slice case in the final gate.
 - [ ] Die-top exact-token test. After it passes, the atlas statement "no V4.1x tile/die exists" changes (diff to Codex first).
 - [ ] Host integration for V4.1x; the `v41-rom` runtime target is historical.
 
