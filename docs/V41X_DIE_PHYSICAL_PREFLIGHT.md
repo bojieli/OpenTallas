@@ -187,6 +187,25 @@ response path omit the full 32-way composition, and its 30.24 µm strip is
 taller than the die budget. It proves a local route can reach detailed
 routing and leaves hierarchy, signal integrity and floorplan fit open.
 
+An explicit max-transition repair rerun reached detailed route in
+`results/asap7_physical/v41x_die_karb_pc1_pipe_slew_m9/physical.json`.
+It reduced max-slew violations from 39 to 15 without an RTL cycle change;
+setup and hold WNS were +232.664 ps and +57.490 ps, and routed cell area
+was 641.797 µm². DRC and antenna counts remained zero. The result is still
+**not met**. The remaining transition paths need a stronger local drive or
+shorter wire before this slice can be declared closed.
+
+Four adjacent local one-PC slices, a registered K ingress and grouped K
+response buffers pass the concurrent reduced KV/index gate, pinned in
+`results/rtl/v41x_karb_group4_kv_gate.json`. The first 1.5 mm by 30.24 µm
+composition passed synthesis and pin placement, but clock tree synthesis
+stopped at its hold-buffer cap after inserting 7,716 buffers; its record is
+`results/asap7_physical/v41x_die_karb_group4_m9/physical.json`. The group
+therefore has no routed timing verdict. A further registered K response
+output passes the exact gate in
+`results/rtl/v41x_karb_group4_outpipe_kv_gate.json`; its separate physical
+run is pending. Neither four-PC case fits the 17.2 µm budgeted band.
+
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
 `test_v41x_die_pnr` checks every port width, the LEF pin count and window
