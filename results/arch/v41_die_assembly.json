@@ -4088,7 +4088,7 @@
    },
    {
     "block": "tile, spine and die assembly (tools/chip_assembly level 2/3 for V4.1)",
-    "status": "halted by decision; flow reusable"
+    "status": "no V4.1 tile or die: the superseded wrappers were retired and assemble.py --arch v41_rom rejects the build until ot_hdc_core_v41x is integrated; the flow is reusable"
    },
    {
     "block": "ROM and SRAM macros",
@@ -4104,7 +4104,7 @@
    "route a 5-10 mm pipelined express link on M8/M9 (the spine <-> tile and spine <-> PHY wire) and re-fit the wire model beyond 3 mm",
    "charge the floorplan's on-die traversals in tools/arch_budget_v41.py (one edge per matvec broadcast, partial-sum return, collective and gather), then re-derive the design point",
    "decide m = 2 against the die area: at ASAP7 densities the MTP lane multiplier fills the die",
-   "run the V4.1 tile and spine through tools/chip_assembly (budgets, re-closure) and a die-level PDN/IR analysis on the tile abstracts",
+   "integrate ot_hdc_core_v41x into a V4.1 tile and die, then run them through tools/chip_assembly (budgets, re-closure) and a die-level PDN/IR analysis on the tile abstracts",
    "source a 112G SerDes lane area and an HBM3E PHY footprint (both assumed here)"
   ]
  },

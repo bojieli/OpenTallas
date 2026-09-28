@@ -308,9 +308,9 @@ Each record is reproduced by its command, from the sources it pins. `current` pi
 | `results/rtl/hdc_qwen_context_512.json` | yes | `python3 tools/rtl_hdc_qwen_context_ladder.py  (inferred; the record names no command)` | current 33, stale 3 | — |
 | `results/rtl/hdc_qwen_long_context_256_control.json` | yes | `python3 tools/rtl_hdc_qwen_long_context_stress.py  (inferred; the record names no command)` | current 33, stale 3 | — |
 | `results/rtl/hdc_qwen_matched_weight_single.json` | yes | `python3 tools/rtl_hdc_qwen_matched_weight.py  (inferred; the record names no command)` | current 26, stale 3 | — |
-| `results/rtl/hdc_v41x_whbm_pooled_multi.json` | yes | `not recorded` | current 73, stale 1 | 351aecd4 (outside HEAD) |
-| `results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json` | yes | `not recorded` | current 65, stale 6 | 6afcfba3 (outside HEAD) |
-| `results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json` | yes | `python3 tools/rtl_hdc_v41x_array_campaign.py --all-unit --only b2_p2p --scratch /tmp/codex_v41x_array_allunit/run --output /tmp/codex_v41x_array_allunit/result.json` | current 78, stale 6 | 39a0cd41 (outside HEAD), 8235c4fe |
+| `results/rtl/hdc_v41x_whbm_pooled_multi.json` | yes | `not recorded` | current 70, stale 4 | 351aecd4 (outside HEAD) |
+| `results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json` | yes | `not recorded` | current 62, stale 9 | 6afcfba3 (outside HEAD) |
+| `results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json` | yes | `python3 tools/rtl_hdc_v41x_array_campaign.py --all-unit --only b2_p2p --scratch /tmp/codex_v41x_array_allunit/run --output /tmp/codex_v41x_array_allunit/result.json` | current 74, stale 10 | 39a0cd41 (outside HEAD), 8235c4fe |
 | `results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json` | yes | `python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_matvec_memory_tile --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv --source rtl/hdc/ot_hdc_fpu.sv --source rtl/proto/ot_fp32_add_rne_pipe.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_matvec.sv --source rtl/dft/ot_rom_secded_dec.sv --source physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_bb.v --source physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v --source rtl/hdc/physical/ot_hdc_matvec_memory_tile.sv --clock-period-ns 1.5 --stages pnr --corner TT --core-utilization 15 --place-density 0.55 --macro-view ot_rom_8192x266_m8=physical/asap7_memory_macros/ot_rom_8192x266_m8 --macro-view ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 --macro-place-halo 5 5 --output results/physical_hdc/asap7/matvec_memory_tile_ingress/physical.json --nickname-tag hdc_mem_tile_ingress --max-transition-ns --slew-margin-percent 60 --nickname-tag hdc_mem_tile_ingress_slew60 --output results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json` | none | d9364a8e (outside HEAD) |
 | `results/dft/summary.json` | yes | `python3 tools/dft/summarize.py  (inferred; the record names no command)` | none | — |
 
@@ -346,7 +346,7 @@ Everything below is known to the check. A new entry of any kind fails it; a valu
 - `results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json`: provenance.source_snapshot_commit 6afcfba39b4d6e2b92252030b24986d26e36e4ce is not in HEAD's history
 - `results/rtl/hdc_v41x_whbm_pooled_multi.json`: provenance.execution_source_commit 351aecd4a1827eaccb2c4476282db4db1629d5a6 is not in HEAD's history
 
-### stale-pin (53)
+### stale-pin (63)
 
 - `results/rtl/hdc_qwen_context_512.json`: source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale
 - `results/rtl/hdc_qwen_context_512.json`: source_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale
@@ -367,10 +367,10 @@ Everything below is known to the check. A new entry of any kind fails it; a valu
 - `results/rtl/hdc_qwen_vector_system_timed_g4sw16.json`: input_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale
 - `results/rtl/hdc_qwen_vector_system_timed_g4sw16.json`: input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale
 - `results/rtl/hdc_v41_decode_campaign.json`: 15 pins, e.g. input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; input_sha256[rtl/hdc/v41/ot_hdc_core_v41.sv] -> rtl/hdc/v41/ot_hdc_core_v41.sv is stale; input_sha256[rtl/hdc/v41/ot_hdc_engram_hash.sv] -> rtl/hdc/v41/ot_hdc_engram_hash.sv is stale
-- `results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json`: 6 pins, e.g. source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; source_sha256[rtl/rom/ot_rom_fabric_router.sv] -> rtl/rom/ot_rom_fabric_router.sv is stale; source_sha256[rtl/rom/ot_rom_pkg_link.sv] -> rtl/rom/ot_rom_pkg_link.sv is stale
-- `results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json`: 6 pins, e.g. input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; input_sha256[rtl/rom/ot_rom_fabric_router.sv] -> rtl/rom/ot_rom_fabric_router.sv is stale; input_sha256[rtl/rom/ot_rom_pkg_link.sv] -> rtl/rom/ot_rom_pkg_link.sv is stale
+- `results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json`: 10 pins, e.g. source_sha256[rtl/hdc/hbm/ot_hdc_qstream.sv] -> rtl/hdc/hbm/ot_hdc_qstream.sv is stale; source_sha256[rtl/hdc/ot_hdc_accept.sv] -> rtl/hdc/ot_hdc_accept.sv is stale; source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale
+- `results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json`: 9 pins, e.g. input_sha256[rtl/hdc/ot_hdc_accept.sv] -> rtl/hdc/ot_hdc_accept.sv is stale; input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; input_sha256[rtl/hdc/v41x/ot_hdc_core_v41x.sv] -> rtl/hdc/v41x/ot_hdc_core_v41x.sv is stale
 - `results/rtl/hdc_v41x_egather_campaign.json`: input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale
 - `results/rtl/hdc_v41x_egather_campaign.json`: input_sha256[tools/hdc_golden_v41.py] -> tools/hdc_golden_v41.py is stale
 - `results/rtl/hdc_v41x_hcp_campaign.json`: 4 pins, e.g. input_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale; input_sha256[rtl/hdc/v41x/ot_hdc_v41x_hcp.sv] -> rtl/hdc/v41x/ot_hdc_v41x_hcp.sv is stale; input_sha256[tools/hdc_golden.py] -> tools/hdc_golden.py is stale
 - `results/rtl/hdc_v41x_sel_campaign.json`: tools[tools/hdc_golden_v41.py] -> tools/hdc_golden_v41.py is stale
-- `results/rtl/hdc_v41x_whbm_pooled_multi.json`: provenance.source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale
+- `results/rtl/hdc_v41x_whbm_pooled_multi.json`: 4 pins, e.g. provenance.source_sha256[rtl/hdc/hbm/ot_hdc_qstream.sv] -> rtl/hdc/hbm/ot_hdc_qstream.sv is stale; provenance.source_sha256[rtl/hdc/ot_hdc_accept.sv] -> rtl/hdc/ot_hdc_accept.sv is stale; provenance.source_sha256[rtl/hdc/ot_hdc_sfu.sv] -> rtl/hdc/ot_hdc_sfu.sv is stale

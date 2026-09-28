@@ -783,7 +783,7 @@ MISSING_ROUTES = [
     ("KV/key streamer", "routed 1,128 MHz, not closed"),
     ("Sinkhorn", "routed 152 MHz, a multicycle path by design; needs a multicycle-constrained route"),
     ("long-wire pipeline (spine <-> tiles, spine <-> PHY edges)", "express-link records exist only at 1-3 mm"),
-    ("tile, spine and die assembly (tools/chip_assembly level 2/3 for V4.1)", "halted by decision; flow reusable"),
+    ("tile, spine and die assembly (tools/chip_assembly level 2/3 for V4.1)", "no V4.1 tile or die: the superseded wrappers were retired and assemble.py --arch v41_rom rejects the build until ot_hdc_core_v41x is integrated; the flow is reusable"),
     ("ROM and SRAM macros", "abstract views from the compilers, no layout; the HBM3E PHY is an abstract"),
     ("power grid and IR sign-off", "no die-level PDN analysis has run on any design here"),
 ]
@@ -879,8 +879,8 @@ def verdict(Ll, Lh, F, W_, PM, IR, CK, sens):
             "charge the floorplan's on-die traversals in tools/arch_budget_v41.py (one edge per matvec broadcast, "
             "partial-sum return, collective and gather), then re-derive the design point",
             "decide m = 2 against the die area: at ASAP7 densities the MTP lane multiplier fills the die",
-            "run the V4.1 tile and spine through tools/chip_assembly (budgets, re-closure) and a die-level PDN/IR "
-            "analysis on the tile abstracts",
+            "integrate ot_hdc_core_v41x into a V4.1 tile and die, then run them through tools/chip_assembly "
+            "(budgets, re-closure) and a die-level PDN/IR analysis on the tile abstracts",
             "source a 112G SerDes lane area and an HBM3E PHY footprint (both assumed here)"])
 
 

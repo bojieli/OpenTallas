@@ -326,7 +326,7 @@ Missing routes, the prerequisites of rack step K2 (layer-die and head-die P&R):
 | KV/key streamer | 1,128 MHz, not closed |
 | Sinkhorn | 152 MHz; needs a multicycle-constrained route |
 | pipelined long wires (5-25 mm) | express-link records reach only 3 mm |
-| V4.1 tile, spine and die assembly (`tools/chip_assembly` levels 2-3) | halted by decision; the flow is reusable |
+| V4.1 tile, spine and die assembly (`tools/chip_assembly` levels 2-3) | no V4.1 tile or die: the wrappers around the superseded core were retired, and the build is rejected until `ot_hdc_core_v41x` is integrated; the flow is reusable |
 | ROM and SRAM macros, HBM3E PHY | abstract views only |
 | PDN / IR sign-off | none has run on any design here |
 
@@ -337,7 +337,7 @@ Next steps, in order:
 3. Charge the floorplan's traversals in `tools/arch_budget_v41.py` and re-derive the design point. Candidate
    levers are replicated vector sub-spines per half-die and collective engines placed at the tile rows.
 4. Decide m = 2 against the die area.
-5. Run the V4.1 tile and spine through `tools/chip_assembly` and a die-level PDN analysis on the abstracts.
+5. Integrate `ot_hdc_core_v41x` into a V4.1 tile and die, then run them through `tools/chip_assembly` and a die-level PDN analysis on the abstracts.
 6. Source a 112G SerDes lane area and an HBM3E PHY footprint.
 
 ## 7. Proposed atlas additions (not made here)
