@@ -1,0 +1,132 @@
+{
+  "cases": [
+    {
+      "add_lat": 3,
+      "bytes_per_die": 19456,
+      "case": "expert_act_d16_q2_blocked",
+      "consumer_first_useful_cycle": 213,
+      "consumer_first_word_cycle": 202,
+      "consumer_last_word_cycle": 830,
+      "data_lanes": 16,
+      "exposed_first_useful_cycles": 157,
+      "exposed_tail_cycles": 774,
+      "exposed_tail_ns": 712.0515179392823,
+      "faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "flit_overhead_bytes": 0,
+      "gather_words_per_cycle": 1,
+      "lever": "relay_add3",
+      "link_bytes_per_word": 512,
+      "mismatches": 0,
+      "model_exposed_cycles": 219.3410769230774,
+      "node": "L0.ffn.expert_act_allgather",
+      "order": "blocked",
+      "out_err": 0,
+      "passed": true,
+      "pattern": "expert_act",
+      "per_die_tail_cycles": {
+        "0": 774,
+        "1": 774,
+        "2": 774,
+        "3": 774
+      },
+      "producer_actual_last_cycle": 664,
+      "producer_delay_cycles": 608,
+      "producer_first_word_cycle": 56,
+      "producer_queue_max": 2,
+      "producer_ref_last_cycle": 56,
+      "producer_stall_cycles": 607,
+      "relay": 1,
+      "rx_depth_words": 16,
+      "skew_cycles": 0,
+      "timeout": 0,
+      "tx_queue_words": 2,
+      "words_per_die": 38
+    },
+    {
+      "add_lat": 3,
+      "bytes_per_die": 19456,
+      "case": "expert_act_d128_q64_blocked",
+      "consumer_first_useful_cycle": 213,
+      "consumer_first_word_cycle": 202,
+      "consumer_last_word_cycle": 364,
+      "data_lanes": 16,
+      "exposed_first_useful_cycles": 157,
+      "exposed_tail_cycles": 308,
+      "exposed_tail_ns": 283.3486660533579,
+      "faults": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "flit_overhead_bytes": 0,
+      "gather_words_per_cycle": 1,
+      "lever": "relay_add3",
+      "link_bytes_per_word": 512,
+      "mismatches": 0,
+      "model_exposed_cycles": 219.3410769230774,
+      "node": "L0.ffn.expert_act_allgather",
+      "order": "blocked",
+      "out_err": 0,
+      "passed": true,
+      "pattern": "expert_act",
+      "per_die_tail_cycles": {
+        "0": 305,
+        "1": 308,
+        "2": 305,
+        "3": 308
+      },
+      "producer_actual_last_cycle": 93,
+      "producer_delay_cycles": 37,
+      "producer_first_word_cycle": 56,
+      "producer_queue_max": 14,
+      "producer_ref_last_cycle": 56,
+      "producer_stall_cycles": 0,
+      "relay": 1,
+      "rx_depth_words": 128,
+      "skew_cycles": 0,
+      "timeout": 0,
+      "tx_queue_words": 64,
+      "words_per_die": 38
+    }
+  ],
+  "expert_count": 7,
+  "fused_words_per_die": 266,
+  "per_expert_words_per_die": 38,
+  "schema": "v41_w2_expert_stream_stage_v1",
+  "scope": "one expert's 38-word gather on stage RTL; producer timing stub and behavioural T1; no nonblocking COLL or ME overlap implemented",
+  "serial_v1_projection": {
+    "caveat": "seven isolated one-shot operations multiplied; seven-op full core program not run",
+    "depth16_qtx2_seven_isolated_tail_cycles": 5418,
+    "extra_cycles_before_me_drains": 470,
+    "same_contract_fused_tail_cycles": 4948
+  },
+  "source_sha256": {
+    "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
+    "results/rtl/v41_tp_rowsplit_die_collectives.json": "37c388dc6149b3b1c4c77bf1c7f99860d4640af7a557c8d24cf1b0d7757edc13",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/rom/ot_rom_oneshot_px.sv": "4a14585915d7c0ac0202d9c92cff6cc5bc4c918d63b43af81f0b7bd87a3da2ff",
+    "rtl/test/tb_v41_tp_rowsplit_px.sv": "95636769bc005b441f9f3f4b8eea9fdf19c83c9508f96fb8f33eb380159fdad4",
+    "tools/rtl_v41_collective_levers_campaign.py": "645c3bde4719ecc531f806475dd69e0fec6185aa8f9d294a2339afea6bb2aefa",
+    "tools/rtl_v41_stage_collective_campaign.py": "b1d8a57b03d2e54f2764418382921019b1ae8be16124c985e24935dd394739e6",
+    "tools/rtl_v41_tp_rowsplit_collectives.py": "419d2e3b58ab2e9f322fc2f3e94b1ea0ede5d27263e2ed4eee4d166b589bbe3f",
+    "tools/rtl_v41_w2_expert_stream_stage.py": "a08efdbc02c4390c3bc8743395ddbce5837b13f5dcee1aed11a11529ebe37d87"
+  },
+  "summary": {
+    "expert_act_d128_q64_blocked": {
+      "consumer_last_word_cycle": 364,
+      "producer_stall_cycles": 0,
+      "tail_cycles": 308
+    },
+    "expert_act_d16_q2_blocked": {
+      "consumer_last_word_cycle": 830,
+      "producer_stall_cycles": 607,
+      "tail_cycles": 774
+    }
+  }
+}
