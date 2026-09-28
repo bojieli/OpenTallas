@@ -38,10 +38,15 @@ is eight 128-bit bank writes per selected position/cycle, so it needs no extra
 SRAM port. It blocks narrow writes for that cycle; this phase exclusion is
 enforced in the wrapper. Macro TT read tCQ is 351.77 ps in the analytic view.
 
-The source VM candidate reads four 512-bit FP32 bank words per cycle. One
-registered 64-lane FP32→BF16 RNE converter accepts those 2048 bits in bank
+The source VM candidate reads four 512-bit FP32 bank words per cycle. A
+two-stage 64-lane FP32→BF16 RNE converter accepts those 2048 bits in bank
 order and produces 1024 BF16 bits, position, element offset and fault flags
-one cycle later. Thus two K4096 `wo_a` groups have a 128-cycle VM read-issue
+after two register stages, then accepts another beat the next cycle. The
+checkpoint-backed two-stage gate in
+`results/rtl/hdc_v41x_fullshape_woa_pipe2_full1024.json` passes 2048/2048
+raw FP32 outputs with 128 preload issues and writes, 131108 weight-bank reads
+and 131345 total cycles; its extra fill stage is hidden by the existing
+preload barrier. Thus two K4096 `wo_a` groups have a 128-cycle VM read-issue
 floor, plus VM read latency, conversion, store write and any barriers. The
 existing four-wide adapter consumes 2048 LOAD issue cycles for those two
 groups. The checkpoint-backed matched shared-adapter gate now measures the
@@ -64,6 +69,10 @@ whole cluster must prove lockstep requests and bound its 2048-bit fanout.
 The 3.41 mm² ledger already covers other memories and cannot absorb these
 stores silently.
 
-The local ME macro route and registered converter route characterize only
-their named cuts. Full die geometry, weight ROM bank placement and sustained
-cluster service remain open; no row in this audit licenses a token-rate claim.
+The direct one-stage converter and direct macro store have not closed a
+0.92-ns route. Their source-pinned route records describe the actual setup
+and hold failures. A two-stage converter and input-registered macro store
+are being routed as explicit alternatives. Their physical service cannot be
+assumed from their exact functional gates. Full die geometry, weight ROM bank
+placement and sustained cluster service remain open; no row in this audit
+licenses a token-rate claim.
