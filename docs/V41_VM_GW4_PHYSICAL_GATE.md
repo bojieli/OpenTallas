@@ -29,6 +29,13 @@ STA is **+0.214 ns WNS** at 0.92 ns, with 2,844 mapped standard cells and
 512.2 µm² standard-cell area for the quarter-width gate
 ([source-pinned record](../results/physical_abi3/asap7/chip/v41_vm_gw4_slice/synth_sta.json)).
 The pre-route result alone does not establish routed closure.
+The smallest 16-bit local write-control group also completed a standalone
+ASAP7 route with 25% I/O delay: 0.92 ns timing met (2.265 GHz extracted
+Fmax), 3,147 µm of routed wire, 7,717 vias, zero DRC and antenna violations,
+and no hold violations
+([routed group record](../results/physical_abi3/asap7/chip/v41_vm_gw4_slice/group16_io25_physical.json)).
+This proves the local register/control cut is routable; the group has only
+16 data bits and cannot establish timing for the full 2,048-bit path.
 
 The **actual full 4 × 512-bit distributor** was also synthesized. It fails
 pre-route timing at 0.92 ns by **1.498 ns**, because synthesis shares the
