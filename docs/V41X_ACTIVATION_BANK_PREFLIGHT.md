@@ -38,6 +38,21 @@ lanes.  The read takes the same one registered cycle as the adapter's former
 words per bank, or 10 KiB per position.  MTP with six positions needs 60 KiB
 at this boundary, with each position's banks local to its MAC lanes.
 
+`ot_hdc_v41x_me_xbank_macro` groups the eight `b=8u+c` banks of one position
+and one chain index `c` into one 128-bit SRAM word.  A tile request reads one
+row per `(position,c)`; all lanes active on that chain index use that row,
+including the 8/16/32/64-element segment cases.  This takes **16 one-read,
+one-write macros** for the two-position ME adapter, since both positions
+must be read on the same cycle.  The repository's analytical ASAP7
+`ot_sram_1r1w_128x256_m1_r2c2` abstract has a bit write mask, so the legacy
+four-element write writes one 16-bit slice without reading or rewriting the
+other slices.  The 64-element ingress writes one full 128-bit word in each of
+eight macros for the selected position.  The macro model checks the same
+two groups, wide ingress, and 128,000 two-position segment readbacks.  Its
+16 outlines sum to 62,265 µm² and carry 13,104 *internal* signal pins;
+these counts are placement inputs, not die-level pins.  Local macro placement
+near the MAC lanes and a routed macro-bearing tile remain necessary.
+
 `ot_hdc_v41x_he_xslice` is a local 128-bit by 80-word SRAM slice for eight
 HCP lanes at the design HW=256 and PMAX=8.  A full HCP has 32 slices in each
 of eight term banks, or 256 slices and 320 KiB of BF16 activation storage.
@@ -82,11 +97,12 @@ These are memory-order and one-cycle read gates.  They do
 not exercise the ME/HCP arithmetic, whole layer, or multi-die execution.
 
 ASAP7 representative slice routes are run as **standard-cell memory**
-characterisations because the currently pinned platform does not provide a
-matching 16x80 or 128x80 SRAM macro view.  Their area and timing cannot be
-extrapolated to a foundry SRAM macro or to the full lane array.  A macro LEF,
-liberty, and pin contract are required before claiming full HCP/ME physical
-closure.  Before placement, synthesis maps the 16x80 ME slice to 6,933 cells,
+characterisations.  Their area and timing cannot be extrapolated to a
+foundry SRAM macro or to the full lane array.  The repository does have an
+analytical 128x256 SRAM LEF/liberty/Verilog view, now used by the grouped ME
+prototype; it has not been routed inside the ME tile.  The full HCP slice
+still needs a macro mapping and physical gate.  Before placement, synthesis
+maps the 16x80 ME slice to 6,933 cells,
 861.9 µm² and -462 ps setup slack at 0.92 ns.  The 128x80 HE slice maps to
 6,960 µm² with -9,546 ps setup slack.  These negative standard-cell results
 are physical evidence that an SRAM macro is necessary, not a routed clock

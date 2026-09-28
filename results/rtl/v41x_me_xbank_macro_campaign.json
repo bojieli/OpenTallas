@@ -1,0 +1,33 @@
+{
+  "cases": {
+    "segments_mp2": {
+      "marker": "ME_XBANK_PASS kmax=5120 lanes=64 mp=2 reads=128000 errors=0",
+      "status": "pass",
+      "stdout_sha256": "3e811b9ea3863ced6ed8bf5f4ce5ca634e798d47e744e7bea8df89da9a33b752"
+    },
+    "two_group": {
+      "marker": "ME_TWO_GROUP_PASS load_cycles=2048 reads=8192 errors=0",
+      "status": "pass",
+      "stdout_sha256": "7937beb0d6316080995c7800d26f6b46192b3f01f4bf761172c23a3cee715db0"
+    },
+    "two_group_wide": {
+      "marker": "ME_TWO_GROUP_WIDE_PASS preload_cycles=128 reads=8192 errors=0",
+      "status": "pass",
+      "stdout_sha256": "a3857dfe05adb3729b63724ec8f55e380429ed254ff2a32eda5654063aff833d"
+    }
+  },
+  "claim_scope": "Analytical ASAP7 128x256 1R1W SRAM-model exact-order gate for two TP4 wo_a activation groups, wide preload, and both ME positions. No adapter, timing, foundry, or token-rate claim.",
+  "macro_instances_at_mp2": 16,
+  "macro_placement_area_um2": 62265.23136,
+  "macro_signal_pins_total_internal": 13104,
+  "schema": "opentallas.rtl.v41x_me_xbank_macro.v1",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": "ecaee605991960b514e042c25b2e4188bdf0fb3663fb8143ac6cf9c9c2ca5c5a",
+    "rtl/test/data/v41x_me_xbank_l0_real.hex": "210bd2c26cdf7ed09295f96abd94e8a3553c04b638aa947f0645d9f9b223d0e7",
+    "rtl/test/tb_v41x_me_two_group.sv": "efe70182a5a9f15b3340e956f8cf94dd39b845efca92f30810fe0694d4c01b49",
+    "rtl/test/tb_v41x_me_two_group_wide.sv": "d715d31ef2e598335870e5c3340ca2f6702335c742fe44e6f5a8e23d3c89c391",
+    "rtl/test/tb_v41x_me_xbank.sv": "28c46c4516234a00042c6f1cc47d2209ff045e14a7f3b28fd0a1d26abd2ea7bc"
+  },
+  "status": "pass"
+}
