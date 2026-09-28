@@ -71,6 +71,7 @@ def main() -> None:
             if not m:
                 raise RuntimeError(f"Verilator N{n} missing pass marker:\n{run.stdout[-4000:]}")
             keys, quantum, checked, got_sectors, cycles, stalled, req_stalls, out_stalls = map(int, m.groups())
+            print(run.stdout.strip(), flush=True)
             assert (keys, quantum, checked, got_sectors) == (n, 64, n, sectors(n))
             if n in (65, 1040):
                 assert cycles == {65: 82, 1040: 149}[n], (n, cycles)
@@ -80,7 +81,6 @@ def main() -> None:
                    "response_stall_cycles": out_stalls,
                    "build_wall_seconds": build_wall, "simulation_wall_seconds": sim_wall}
             rows.append(row)
-            print(run.stdout.strip(), flush=True)
     script = Path(__file__).resolve()
     rec = {
         "schema": "opentallas.hdc-v41x-idx-four-stack-verilator.v1",

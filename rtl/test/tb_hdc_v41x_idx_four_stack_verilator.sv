@@ -148,7 +148,7 @@ module tb_hdc_v41x_idx_four_stack_verilator #(
         expected_beats=(NKEYS-3*qs+15)/16;
     end
     always @(posedge clk) if(done) begin
-        if(finish_wait<3) finish_wait<=finish_wait+1'b1;
+        if(finish_wait<2) finish_wait<=finish_wait+1'b1;
         else begin
         for(i=0;i<16;i=i+1)
             if(count[i*30 +:30]!=0 && stream_keys[i*48 +:48] < count[i*30 +:30])
