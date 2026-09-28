@@ -19,6 +19,7 @@ SOURCES = (
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv",
     "rtl/chip/ot_chip_v41x_die.sv",
     "rtl/rom/ot_rom_pkg_ctrl_x.sv",
@@ -29,13 +30,14 @@ def build() -> dict:
     source_text = {p: (ROOT / p).read_text() for p in SOURCES}
     writer = source_text[SOURCES[2]]
     scanner = source_text[SOURCES[3]]
-    bridge = source_text[SOURCES[5]]
+    bridge = source_text[SOURCES[6]]
     budget = source_text[SOURCES[0]]
-    controller = source_text[SOURCES[7]]
-    die = source_text[SOURCES[6]]
+    controller = source_text[SOURCES[8]]
+    die = source_text[SOURCES[7]]
     assert re.search(r"assign\s+w_stack_mask\s*=\s*SHARDED\s*\?.*:\s*4'b1111", writer)
     assert "parameter integer AW=24, NW=16, NL=8, HAW=28, SHARDED=0" in writer
-    assert "ot_hdc_v41x_idx_shard_addr" not in scanner
+    assert "parameter integer SHARDED=0" in scanner
+    assert "ot_hdc_v41x_idx_shard_reader" in scanner
     assert re.search(r"for\s*\(s=0;s<4;s=s\+1\)", bridge)
     assert "(rows * CKV_ROW_B + rows * IDX_KEY_B) / 4" in budget
     assert "IDX_KEY_B = 68" in budget and "CKV_ROW_B = 288" in budget
@@ -81,8 +83,9 @@ def build() -> dict:
     return {
         "schema": "v41_hbm_region_preflight_v1",
         "status": "capacity_mismatch",
-        "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in sharded writer/address mapper not integrated; no throughput claim",
+        "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in serial sharded writer/reader has exact reduced roundtrip but no full-token or throughput claim",
         "sharding": {"writer_opt_in_available": True, "read_address_mapper_available": True,
+                     "correctness_reader_opt_in_available": True,
                      "read_scheduler_integrated": False, "multiuser_slice_integrated": False},
         "source_sha256": {p: hashlib.sha256(source_text[p].encode()).hexdigest() for p in SOURCES},
         "inputs": {"context": context, "tp_dies": tp_dies, "stacks_per_die": stacks,

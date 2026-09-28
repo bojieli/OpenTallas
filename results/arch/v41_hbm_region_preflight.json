@@ -43,8 +43,9 @@
     "unpacked_example_words": 58116276224
   },
   "schema": "v41_hbm_region_preflight_v1",
-  "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in sharded writer/address mapper not integrated; no throughput claim",
+  "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in serial sharded writer/reader has exact reduced roundtrip but no full-token or throughput claim",
   "sharding": {
+    "correctness_reader_opt_in_available": true,
     "multiuser_slice_integrated": false,
     "read_address_mapper_available": true,
     "read_scheduler_integrated": false,
@@ -52,11 +53,12 @@
   },
   "source_sha256": {
     "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
-    "rtl/chip/ot_chip_v41x_die.sv": "0b4ce00e5d997f42ba1cf07356f56a1e9b3c3232c7ef6d246bfae4485dc5552b",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "d117ce3dbf6522353f7a63584f16502872f96ca6f45b20f949bc5b533dbe8de7",
+    "rtl/chip/ot_chip_v41x_die.sv": "a76c93e7212b957785fa23e5b3546b876de57262b1d2cda5b63fc83d4b7ea6ee",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6a3ddc746cd5985d376bf893127877212034581e46defa893da59c3b2bb539e5",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "a4ce9d82f1489d14824b7ef5ebea200c31af86859a80fbad3bbe421f5790eafd",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420",
     "rtl/rom/ot_rom_pkg_ctrl_x.sv": "c82eb5893f70285932741c4111d817817aea27d0d36ba49103c31f2c8913a508",
     "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735"
   },
