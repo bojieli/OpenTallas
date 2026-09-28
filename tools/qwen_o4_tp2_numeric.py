@@ -141,11 +141,11 @@ def evaluate(snapshot: Path, rows: int = 128) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--snapshot", type=Path, default=Q.find_snapshot())
+    parser.add_argument("--snapshot", type=Path)
     parser.add_argument("--rows", type=int, default=128)
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
-    result = evaluate(args.snapshot, args.rows)
+    result = evaluate(args.snapshot or Q.find_snapshot(), args.rows)
     payload = json.dumps(result, indent=2, sort_keys=True) + "\n"
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
