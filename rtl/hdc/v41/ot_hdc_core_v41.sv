@@ -532,7 +532,8 @@ module ot_hdc_core_v41 #(
 
     ot_hdc_v41_qe #(.AW(AW), .NW(NW), .BL(BL), .IL(IL), .QLB(QLB), .MP(MP)) u_qe (
         .clk(clk), .rst_n(rst_n), .go(qe_go), .ready(qe_ready), .idle(qe_idle),
-        .i_mode(qe_mode), .i_fp4(qe_fp4), .i_xbase(qe_xbase), .i_nb(qe_nb), .i_nout(qe_nout), .i_tiles(qe_tiles),
+        .i_mode(qe_mode), .i_fp4(qe_fp4), .i_unrounded(1'b0),
+        .i_xbase(qe_xbase), .i_nb(qe_nb), .i_nout(qe_nout), .i_tiles(qe_tiles),
         .i_wbase(qe_wbase), .i_ind(qe_ind), .i_ibase(qe_ibase), .i_istride(qe_istride), .i_obase(qe_obase),
         .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
         .vi_re(vq_re), .vi_addr(vq_addr), .vi_q(vq_q),

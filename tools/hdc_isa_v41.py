@@ -120,10 +120,11 @@ FULL_D = 6              # 28 reduced DYN values + shipped-shape selectors
 # defined separately with the die owner before these fields drive RTL.
 UNIT_COLL = 6
 COLL_ALL_REDUCE_SUM, COLL_ALL_GATHER, COLL_TOPK_MERGE, COLL_ARGMAX_MERGE = range(4)
-FULL_COLL_FIELDS = [
+FULL_EXTRA_FIELDS = [
     ("coll_op", 2), ("coll_src", FULL_A), ("coll_dst", FULL_A),
     ("coll_n", FULL_N), ("coll_k", FULL_XU_K), ("coll_ibase", FULL_A),
     ("coll_seq", 8), ("coll_rnd", 1),
+    ("qe_unrounded", 1),  # send a LINQ FP32 partial to a later TP all-reduce
 ]
 
 A = 24   # address / stride width
@@ -245,7 +246,7 @@ def fields_for(*, full_shape=False):
              FULL_A if width == A else FULL_N if width == N else
              FULL_D if width == D else width)
             for name, width in FIELDS]
-    return widened + FULL_COLL_FIELDS
+    return widened + FULL_EXTRA_FIELDS
 
 
 def layout_for(*, full_shape=False):
@@ -312,7 +313,7 @@ def emit_core_profiles():
         full_off, full_width = FULL_LAYOUT[name]
         lines.append(f"localparam integer O_{name.upper()} = FULL_SHAPE ? {full_off} : {off};")
         lines.append(f"localparam integer W_{name.upper()} = FULL_SHAPE ? {full_width} : {width};")
-    for name, _ in FULL_COLL_FIELDS:
+    for name, _ in FULL_EXTRA_FIELDS:
         full_off, full_width = FULL_LAYOUT[name]
         lines.append(f"localparam integer O_{name.upper()} = {full_off};")
         lines.append(f"localparam integer W_{name.upper()} = {full_width};")

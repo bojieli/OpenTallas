@@ -64,3 +64,10 @@ def test_full_shape_collective_fields_round_trip():
         assert {name: decoded[name] for name in fields} == fields
     assert "coll_op" not in isa.LAYOUT
     assert max(offset + width for offset, width in isa.FULL_LAYOUT.values()) <= isa.FULL_INSTR_BITS
+
+
+def test_full_shape_can_keep_qe_partial_unrounded_for_reduce():
+    fields = dict(unit=isa.UNIT_QE, qe_mode=isa.QE_LINQ, qe_unrounded=1)
+    decoded = isa.decode(isa.encode(full_shape=True, **fields), full_shape=True)
+    assert decoded["qe_unrounded"] == 1
+    assert "qe_unrounded" not in isa.LAYOUT

@@ -361,7 +361,7 @@ module ot_hdc_core_v41x #(
     reg [31:0]   imm1, imm2, imm3;
     // QE
     reg [1:0]    qe_mode;
-    reg          qe_fp4, qe_ind;
+    reg          qe_fp4, qe_ind, qe_unrounded;
     reg [AW-1:0] qe_xbase, qe_wbase, qe_ibase, qe_istride, qe_obase;
     reg [7:0]    qe_nb;
     reg [NW-1:0] qe_nout, qe_tiles;
@@ -611,6 +611,7 @@ module ot_hdc_core_v41x #(
         r_base <= `F(R_BASE); r_so <= `F(R_SO);
         imm1 <= `F(IMM1); imm2 <= `F(IMM2); imm3 <= `F(IMM3);
         qe_mode <= `F(QE_MODE); qe_fp4 <= `F(QE_FP4); qe_ind <= `F(QE_IND);
+        qe_unrounded <= FULL_SHAPE ? `F(QE_UNROUNDED) : 1'b0;
         qe_xbase <= `F(QE_XBASE); qe_wbase <= `F(QE_WBASE); qe_ibase <= `F(QE_IBASE);
         qe_istride <= `F(QE_ISTRIDE); qe_obase <= `F(QE_OBASE) + `DY(QE_D_OBASE);
         qe_nb <= `F(QE_NB); qe_nout <= `F(QE_NOUT); qe_tiles <= `F(QE_TILES);
@@ -938,7 +939,8 @@ module ot_hdc_core_v41x #(
 
     ot_hdc_v41_qe #(.AW(AW), .NW(NW), .BL(BL), .IL(IL), .QLB(QLB), .MP(MP)) u_qe (
         .clk(clk), .rst_n(rst_n), .go(qe_go), .ready(qe_ready), .idle(qe_idle),
-        .i_mode(qe_mode), .i_fp4(qe_fp4), .i_xbase(qe_xbase), .i_nb(qe_nb), .i_nout(qe_nout), .i_tiles(qe_tiles),
+        .i_mode(qe_mode), .i_fp4(qe_fp4), .i_unrounded(qe_unrounded),
+        .i_xbase(qe_xbase), .i_nb(qe_nb), .i_nout(qe_nout), .i_tiles(qe_tiles),
         .i_wbase(qe_wbase), .i_ind(qe_ind), .i_ibase(qe_ibase), .i_istride(qe_istride), .i_obase(qe_obase),
         .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
         .vi_re(vq_re), .vi_addr(vq_addr), .vi_q(vq_q),

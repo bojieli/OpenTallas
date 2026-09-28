@@ -42,6 +42,7 @@ module ot_mtp_qe_m4 (
     output wire [3:0] w_we, output wire [4*24-1:0] w_addr, output wire [4*32-1:0] w_mask,
     output wire [4*1024-1:0] w_data, output wire qr_re, output wire [23:0] qr_addr, input wire [16*272-1:0] qr_q,
     output wire fault);
+    wire i_unrounded = 1'b0;
     ot_hdc_v41_qe #(.MP(4)) u (.*);
 endmodule
 

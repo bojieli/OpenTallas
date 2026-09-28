@@ -266,3 +266,5 @@ localparam integer O_COLL_SEQ = 1951;
 localparam integer W_COLL_SEQ = 8;
 localparam integer O_COLL_RND = 1959;
 localparam integer W_COLL_RND = 1;
+localparam integer O_QE_UNROUNDED = 1960;
+localparam integer W_QE_UNROUNDED = 1;

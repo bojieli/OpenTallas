@@ -50,6 +50,7 @@ module ot_hdc_v41_qe #(
     output reg               idle,
     input  wire [1:0]        i_mode,
     input  wire              i_fp4,
+    input  wire              i_unrounded,    // LINQ: preserve FP32 block-dot accumulator
     input  wire [AW-1:0]     i_xbase,
     input  wire [7:0]        i_nb,
     input  wire [NW-1:0]     i_nout,
@@ -91,7 +92,7 @@ module ot_hdc_v41_qe #(
     localparam integer PW = $clog2(IL);
     reg [2:0]    st;
     reg [1:0]    mode;
-    reg          fp4;
+    reg          fp4, unrounded;
     reg [AW-1:0] xbase, wbase, obase, ibase, istride, xps, ops;
     reg [2:0]    m;
     reg [7:0]    rd_b;                 // block of the slot being read
@@ -116,7 +117,8 @@ module ot_hdc_v41_qe #(
             vi_re <= 0; xr_re <= 0; qr_re <= 0;
             case (st)
                 S_IDLE: if (go) begin
-                    mode <= i_mode; fp4 <= i_fp4; xbase <= i_xbase; wbase <= i_wbase; obase <= i_obase;
+                    mode <= i_mode; fp4 <= i_fp4; unrounded <= i_unrounded;
+                    xbase <= i_xbase; wbase <= i_wbase; obase <= i_obase;
                     ibase <= i_ibase; istride <= i_istride; nb <= i_nb; nout <= i_nout; tiles <= i_tiles;
                     rd_n <= 0; got_n <= 0; wn <= 0; oc <= 0;
                     m <= (i_mode != LINQ || i_m == 3'd0) ? 3'd1 : i_m; xps <= i_xps; ops <= i_ops;
@@ -225,16 +227,16 @@ module ot_hdc_v41_qe #(
     end
     wire [MP*BL-1:0] l_ov, l_f;
     wire [MP*16*BL-1:0] l_y;
+    wire [MP*32*BL-1:0] l_acc;
     wire [PW-1:0] ph [0:MP*BL-1];
     genvar l, cp;
     generate
         for (cp = 0; cp < MP; cp = cp + 1) begin : g_cp
             for (l = 0; l < BL; l = l + 1) begin : g_lane
-                wire [31:0] acc_unused;
                 ot_hdc_blockdot #(.IL(IL)) u_bd (.clk(clk), .rst_n(rst_n), .v(b_v), .first(b_first), .last(b_last),
                     .fp4(b_fp4), .xq(b_xq[cp*256 +: 256]), .xe(b_xe[cp*10 +: 10]), .wq(b_w[QLB*l +: 256]),
                     .we(b_w[QLB*l + 256 +: 10]), .phase(ph[cp*BL + l]), .ov(l_ov[cp*BL + l]),
-                    .y(l_y[16*(cp*BL + l) +: 16]), .acc(acc_unused), .fault(l_f[cp*BL + l]));
+                    .y(l_y[16*(cp*BL + l) +: 16]), .acc(l_acc[32*(cp*BL + l) +: 32]), .fault(l_f[cp*BL + l]));
             end
         end
     endgenerate
@@ -272,7 +274,8 @@ module ot_hdc_v41_qe #(
                 w_addr[wp*AW +: AW] <= obase + oc * BL + wp * ops;
                 for (k = 0; k < 32; k = k + 1) begin
                     w_mask[wp*32 + k] <= (k < BL) && (oc * BL + k < nout);
-                    w_data[wp*1024 + 32*k +: 32] <= (k < BL) ? {l_y[16*(wp*BL + k) +: 16], 16'h0000} : 32'd0;
+                    w_data[wp*1024 + 32*k +: 32] <= (k < BL) ?
+                        (unrounded ? l_acc[32*(wp*BL + k) +: 32] : {l_y[16*(wp*BL + k) +: 16], 16'h0000}) : 32'd0;
                 end
             end else begin
                 w_addr[wp*AW +: AW] <= obase + {wb_i, 5'd0};
