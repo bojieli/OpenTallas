@@ -1,0 +1,81 @@
+{
+  "actual_instantiation": {
+    "die_default_ikh_slice_sectors": 262144,
+    "die_default_k_mem_sectors": 524288,
+    "die_default_key_users": 1,
+    "die_tile_idx_sharded": false,
+    "die_window_stack": 0,
+    "full_shape_die_instantiated_by_shipped_rtl_or_tb": false,
+    "full_shape_kv_ok_producible": false,
+    "full_shape_weight_hbm_uses_separate_dense_model": true,
+    "observed_die_instantiations": [
+      {
+        "full_shape_parameter": false,
+        "path": "rtl/test/tb_chip_v41x_die_smoke.sv"
+      }
+    ],
+    "rope_guard_proves_ckv_and_weight_region_floor": false,
+    "rope_reserved_end_supplied_externally": true,
+    "selected_ckv_mux_client_connected": false
+  },
+  "blocked": [
+    "No source-pinned full-shape die instantiation selects physical KEY_USERS, IKH_SLICE, K_MEM or IDX_SHARDED.",
+    "Selected compressed-KV client is tied off; its HBM base, stride, per-user placement and reserved_end are unspecified.",
+    "RoPE guard checks caller-provided reserved_end and known key/window floor only; CKV and comparator weight floors are unproven.",
+    "QE weight HBM uses a separate W-port dense array on W_STACK; combined physical stack capacity/overlap is unproven.",
+    "A compile-time 1M IKH_SLICE reserves that slice at 200K too unless a runtime compact user stride or remap is implemented."
+  ],
+  "contexts": {
+    "1048576": {
+      "both_rope_tables_sectors_per_stack": 4194304,
+      "current_key_slice_fits_one_user": false,
+      "ideal_ckv_sectors_per_user_per_stack": 589824,
+      "index_key_sectors_per_user_per_stack": {
+        "current_replicated": 557056,
+        "die_default_reserved_slice": 262144,
+        "opt_in_sharded_compact": 139264
+      },
+      "minimum_key_slice_sectors_for_current_replication": 557056,
+      "model_rom_users": 866,
+      "model_users_fit_optimistic_layout": false,
+      "optimistic_compact_sharded_sectors_at_model_users": 637468928,
+      "optimistic_compact_sharded_users_bound": 859,
+      "rows_per_die_per_user": 262144,
+      "usable_sectors_per_stack": 632812500,
+      "window_sectors_per_user_on_win_stack": 2176
+    },
+    "200000": {
+      "both_rope_tables_sectors_per_stack": 4194304,
+      "current_key_slice_fits_one_user": true,
+      "ideal_ckv_sectors_per_user_per_stack": 112500,
+      "index_key_sectors_per_user_per_stack": {
+        "current_replicated": 106352,
+        "die_default_reserved_slice": 262144,
+        "opt_in_sharded_compact": 26588
+      },
+      "minimum_key_slice_sectors_for_current_replication": 106352,
+      "model_rom_users": 4516,
+      "model_users_fit_optimistic_layout": false,
+      "optimistic_compact_sharded_sectors_at_model_users": 642142528,
+      "optimistic_compact_sharded_users_bound": 4449,
+      "rows_per_die_per_user": 50000,
+      "usable_sectors_per_stack": 632812500,
+      "window_sectors_per_user_on_win_stack": 2176
+    }
+  },
+  "schema": "v41_fullshape_region_preflight_v1",
+  "scope": "Static necessary bounds for one ratio-1 layer die, four HBM stacks; no full-shape die/token/throughput verdict",
+  "source_sha256": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+    "rtl/chip/ot_chip_v41x_die.sv": "ee02d399f0e3583bce8ac3032e11d4ce0e68d6b0ebfbdc30d183145fdc7ef61c",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "4db1866158de8b8bb377631a0ec6fda53e6eb512a84b81ee049788534d523f14",
+    "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": "18a90665039d2f6b87d312e11496c47262383c9801d9edbf60d34b7cd4f37dee",
+    "rtl/chip/ot_chip_v41x_rope_region_guard.sv": "239c4a1f6ffa3f62022d27da2ecdbf9e6d406e190c0e0ab253c56bf593f1fbcb",
+    "rtl/chip/ot_chip_v41x_tile.sv": "a72c011a4655f419327f683b49bf6368a2748a9cd2f928e2cc9be58528afd67b",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "4731fa1dfd492bdf792d87349e73f231f123752b674144663097d7a506e463eb",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6a3ddc746cd5985d376bf893127877212034581e46defa893da59c3b2bb539e5",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "a4ce9d82f1489d14824b7ef5ebea200c31af86859a80fbad3bbe421f5790eafd",
+    "rtl/test/tb_chip_v41x_die_smoke.sv": "6444b57c00cfc7ebc6b4a6a4a06b435df687d0f4a317b581137d68990c82ef47"
+  }
+}
