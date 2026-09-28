@@ -164,7 +164,7 @@ class ShapeLayout:
         self.mat, self.qmat = {}, {}
         for L in range(40):
             for wh in ("attn", "ffn"):
-                self.mat[(L, wh, "fn")] = dict(n=6 * hcn, k=hcn * D // HC_SPLIT)
+                self.mat[(L, wh, "fn")] = dict(base=0, n=6 * hcn, k=hcn * D // HC_SPLIT)
             self.mat[(L, "gate")] = self.place(s["n_exp"] // tp, D)
             if tp == 1:
                 self.mat[(L, "wo_a")] = self.place_wo_a()
@@ -183,10 +183,19 @@ class ShapeLayout:
             if L in IDX_SRC:
                 self.qmat[(L, "iwq_b")] = q(s["ih"] * s["ihd"], s["q_rank"])
             self.qmat[(L, "exp", 0, "w13")] = q(2 * self.ff_d, D, fp4=1)
+            if tp_exact:
+                # The shipped checkpoint has independently addressed gate (w1)
+                # and up (w3) tensors. A single w13 address would cross into
+                # another expert's reserved range after its first half.
+                self.qmat[(L, "exp", 0, "w1")] = q(self.ff_d, D, fp4=1)
+                self.qmat[(L, "exp", 0, "w3")] = q(self.ff_d, D, fp4=1)
             self.qmat[(L, "exp", 0, "w2")] = q(D // tp if tp_exact else D,
                                                 s["moe_ff"] if tp_exact else self.ff_d, fp4=1)
             self.qmat[(L, "exp_stride")] = 1
             self.qmat[(L, "shared", "w13")] = q(2 * self.ff_d, D)
+            if tp_exact:
+                self.qmat[(L, "shared", "w1")] = q(self.ff_d, D)
+                self.qmat[(L, "shared", "w3")] = q(self.ff_d, D)
             self.qmat[(L, "shared", "w2")] = q(D // tp if tp_exact else D,
                                                 s["moe_ff"] if tp_exact else self.ff_d)
             if L in ENGRAM:
@@ -266,7 +275,7 @@ class ShapeBuilder(P.Builder):
         t = f"L{L}.hc_{wh}"
         self.rms_r("SSX", s["hc"] * s["dim"], "RF", t)
         mat = self.lay.mat[(L, wh, "fn")]
-        self.emit(dict(unit=I.UNIT_HE, he_nout=mat["n"], he_k=mat["k"], he_wbase=0, he_xbase=V_["H"],
+        self.emit(dict(unit=I.UNIT_HE, he_nout=mat["n"], he_k=mat["k"], he_wbase=mat["base"], he_xbase=V_["H"],
                        he_obase=V_["MIX"], _macs=mat["n"] * mat["k"] * HC_SPLIT), {"H"}, {"MIX"}, t)
 
     def hc_mix_finish(self, L, wh):
@@ -566,7 +575,19 @@ class ShapeBuilder(P.Builder):
                     self.coll(I.COLL_ALL_GATHER, V_[f"ACT{k}"], V_[f"ACTALL{k}"], ff,
                               {f"ACT{k}"}, {f"ACTALL{k}"}, te + f".act{k}_gather")
 
-            return (lambda: self.linq(w13, "XN", f"GU{k}", {"EID"}, set(), te, **ind),
+            def project_gate_up():
+                if not self.tp_exact:
+                    self.linq(w13, "XN", f"GU{k}", {"EID"}, set(), te, **ind)
+                    return
+                kind = "shared" if shared else "exp"
+                key = (L, kind) if shared else (L, kind, 0)
+                self.linq(lay.qmat[(*key, "w1")], "XN", f"GU{k}", {"EID"}, set(), te, **ind)
+                # The two output halves occupy one GU allocation. QE writes
+                # elements, so offset the second descriptor by ff elements.
+                self.linq(lay.qmat[(*key, "w3")], "XN", f"GU{k}", {"EID"}, set(), te,
+                          qe_obase=gu + ff, **ind)
+
+            return (project_gate_up,
                     activate,
                     lambda: self.linq(w2, f"ACTALL{k}" if self.tp_exact else f"ACT{k}",
                                       f"E{k}", {"EID"}, set(), te, **ind))

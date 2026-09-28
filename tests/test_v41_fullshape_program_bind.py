@@ -1,0 +1,45 @@
+"""Fail-closed admission for the shipped layer-0 program and sparse images."""
+
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+import v41_fullshape_program_bind as B  # noqa: E402
+
+
+def test_current_layout_is_not_misreported_as_executable():
+    record = B.bind(B.DEFAULT_LAYOUT, B.DEFAULT_SHARD)
+    assert record["status"] == "blocked"
+    assert record["matrix_count"] == 29
+    assert record["source_experts"] == [110, 112, 141, 144, 357, 361]
+    assert any("wq_a" in x and "image ends" in x for x in record["blockers"])
+    assert any("RoPE plain" in x for x in record["blockers"])
+    assert any("ME wo_a" in x for x in record["blockers"])
+    assert [x["required_x_first"] - record["me_wo_a_trace"][0]["required_x_first"]
+            for x in record["me_wo_a_trace"]] == [0, 0, 0, 0, 4096, 4096, 4096, 4096]
+    # Gate and up have different QE base regions and disjoint VM outputs.
+    pairs = [(x["matrix"], x["start_word"]) for x in record["qe_address_trace"]
+             if x["expert_id"] == 110 and x["matrix"] in ("exp.w1", "exp.w3")]
+    assert set(pairs) == {("exp.w1", 174080), ("exp.w3", 727040)}
+
+
+def test_missing_selected_expert_fails_before_isa_emit(tmp_path):
+    layout = json.loads(B.DEFAULT_LAYOUT.read_text())
+    del layout["matrices"]["exp141.w2"]
+    path = tmp_path / "layout.json"
+    path.write_text(json.dumps(layout))
+    with pytest.raises(ValueError, match="exp141.w2"):
+        B.bind(path, B.DEFAULT_SHARD)
+
+
+def test_expert_stride_must_match_placed_id(tmp_path):
+    layout = json.loads(B.DEFAULT_LAYOUT.read_text())
+    layout["matrices"]["exp110.w1"]["expert_stride_words"] = 1
+    path = tmp_path / "layout.json"
+    path.write_text(json.dumps(layout))
+    with pytest.raises(ValueError, match="expert family w1"):
+        B.bind(path, B.DEFAULT_SHARD)
