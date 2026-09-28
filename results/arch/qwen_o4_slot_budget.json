@@ -1,0 +1,113 @@
+{
+  "area": {
+    "available_for_extra_slots_mm2_per_die": 235.65,
+    "die_envelope_mm2": 815.0,
+    "mac_copy_mm2_per_extra_slot_per_die": 51.91,
+    "reducer_scale_mm2_per_extra_slot_per_die": 44.665811
+  },
+  "best_fitting_linear_estimate": {
+    "block": 3,
+    "draft_cycles": 22704,
+    "slots": 3,
+    "step_cycles": 155403,
+    "tau": 2.2654,
+    "tokens_s": 16015.5,
+    "verify_cycles": 132691
+  },
+  "claim_boundary": "The m=3 point fits only a linear replication of a G2/W2 ASAP7 pre-layout tile. Neither m=3 nor m=5 has routed timing, power, full-die area or full-shape exact-token evidence. The serial step model omits additional reducer stalls and is not a measured rate. The m=5 design rate should remain conditional until physical closure or a validated time-multiplex schedule.",
+  "evidence_class": "conditional analytical area and timing; pre-layout G2/W2 area extrapolation",
+  "inputs_sha256": {
+    "results/arch/qwen3_budget.json": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
+    "results/arch/qwen_m5_area_latency_tradeoff.json": "88086fc2d7f186dd505e5f6f592faf91dcb05a3b9ee7b2f88aa07f49457fe192",
+    "results/physical_hdc/asap7/qwen_m5_reduce_g2w2_n1/physical.json": "c3d5b80d48898bfe861cf68e327476425832196e11cf6a94e879b916ea666a6b",
+    "results/physical_hdc/asap7/qwen_m5_reduce_g2w2_n5/physical.json": "961a4a09fb8c7877f7c7313efd716f11ef36e53fde46d2c649e3ad19acae5019",
+    "results/speculative/dflash_block_acceptance.json": "b1b92957d24db13ea7f80ce27bc526d17f8a81cc839498faeb5697681bd5e31c",
+    "tools/dflash_step_timing.py": "7a43daf9c4f7118176aa0229b77ed2b9da4e713516d9accd6b099f1f63b76a17",
+    "tools/qwen_o4_slot_budget.py": "40d6e302a02e0ff767bd6e83fbc78bcbc8b98a658baede44959184cbf22d6770"
+  },
+  "m5_design_rate_tokens_s": 18719.9,
+  "schema": "opentallas.qwen-o4-slot-budget.v1",
+  "scope": "8K FP8-KV Qwen3-8B O4 two-die ROM package, one die area ledger, batch-one serial DFlash model",
+  "slot_sweep": [
+    {
+      "added_mac_copy_mm2_per_die": 0.0,
+      "added_reducer_scale_mm2_per_die": 0.0,
+      "area_margin_mm2_per_die": 235.65,
+      "best_serial_model": {
+        "block": 1,
+        "draft_cycles": 0,
+        "step_cycles": 121839,
+        "tau": 1.0,
+        "tokens_s": 9017.1,
+        "verify_cycles": 121839
+      },
+      "combined_added_mm2_per_die": 0.0,
+      "fits_linear_tile_estimate": true,
+      "slots": 1
+    },
+    {
+      "added_mac_copy_mm2_per_die": 51.91,
+      "added_reducer_scale_mm2_per_die": 44.666,
+      "area_margin_mm2_per_die": 139.074,
+      "best_serial_model": {
+        "block": 2,
+        "draft_cycles": 21934,
+        "step_cycles": 149205,
+        "tau": 1.7361,
+        "tokens_s": 12783.4,
+        "verify_cycles": 127265
+      },
+      "combined_added_mm2_per_die": 96.576,
+      "fits_linear_tile_estimate": true,
+      "slots": 2
+    },
+    {
+      "added_mac_copy_mm2_per_die": 103.82,
+      "added_reducer_scale_mm2_per_die": 89.332,
+      "area_margin_mm2_per_die": 42.498,
+      "best_serial_model": {
+        "block": 3,
+        "draft_cycles": 22704,
+        "step_cycles": 155403,
+        "tau": 2.2654,
+        "tokens_s": 16015.5,
+        "verify_cycles": 132691
+      },
+      "combined_added_mm2_per_die": 193.152,
+      "fits_linear_tile_estimate": true,
+      "slots": 3
+    },
+    {
+      "added_mac_copy_mm2_per_die": 155.73,
+      "added_reducer_scale_mm2_per_die": 133.997,
+      "area_margin_mm2_per_die": -54.077,
+      "best_serial_model": {
+        "block": 4,
+        "draft_cycles": 23473,
+        "step_cycles": 161598,
+        "tau": 2.6256,
+        "tokens_s": 17850.4,
+        "verify_cycles": 138117
+      },
+      "combined_added_mm2_per_die": 289.727,
+      "fits_linear_tile_estimate": false,
+      "slots": 4
+    },
+    {
+      "added_mac_copy_mm2_per_die": 207.64,
+      "added_reducer_scale_mm2_per_die": 178.663,
+      "area_margin_mm2_per_die": -150.653,
+      "best_serial_model": {
+        "block": 5,
+        "draft_cycles": 24243,
+        "step_cycles": 167796,
+        "tau": 2.8591,
+        "tokens_s": 18719.9,
+        "verify_cycles": 143543
+      },
+      "combined_added_mm2_per_die": 386.303,
+      "fits_linear_tile_estimate": false,
+      "slots": 5
+    }
+  ]
+}
