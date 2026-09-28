@@ -927,10 +927,24 @@ def sdc_lines(
         *([f"create_clock -name ingress_clk -period $clk_period [get_ports {block['ingress_clock_port']}]"]
           if block.get("ingress_clock_port") else []),
         "set non_clock_inputs [all_inputs -no_clocks]",
-        f"set_input_delay [expr $clk_period * {block.get('io_delay_fraction', 0.2):g}] -clock core_clk $non_clock_inputs",
         *(
             [
                 f"set ingress_inputs [get_ports {{{' '.join(block['ingress_input_ports'])}}}]",
+                "set core_inputs [remove_from_collection $non_clock_inputs $ingress_inputs]",
+            ] if block.get("ingress_clock_port") else []
+        ),
+        f"set_input_delay [expr $clk_period * {block.get('io_delay_fraction', 0.2):g}] -clock core_clk "
+        f"${'core_inputs' if block.get('ingress_clock_port') else 'non_clock_inputs'}",
+        *(
+            [
+                f"set_input_delay -min {block['core_input_delay_min_ns'] / view['time_unit_ns']:g} -clock core_clk "
+                f"${'core_inputs' if block.get('ingress_clock_port') else 'non_clock_inputs'}",
+                f"set_input_delay -max {block['core_input_delay_max_ns'] / view['time_unit_ns']:g} -clock core_clk "
+                f"${'core_inputs' if block.get('ingress_clock_port') else 'non_clock_inputs'}",
+            ] if "core_input_delay_min_ns" in block else []
+        ),
+        *(
+            [
                 f"set_input_delay -min {block['ingress_input_delay_min_ns'] / view['time_unit_ns']:g} -clock ingress_clk $ingress_inputs",
                 f"set_input_delay -max {block['ingress_input_delay_max_ns'] / view['time_unit_ns']:g} -clock ingress_clk $ingress_inputs",
             ] if block.get("ingress_clock_port") else []
@@ -2707,6 +2721,10 @@ def build_parser() -> argparse.ArgumentParser:
                         help="earliest ingress data arrival relative to ingress clock")
     parser.add_argument("--ingress-input-delay-max-ns", type=float,
                         help="latest ingress data arrival relative to ingress clock")
+    parser.add_argument("--core-input-delay-min-ns", type=float,
+                        help="earliest non-clock input arrival relative to core clock")
+    parser.add_argument("--core-input-delay-max-ns", type=float,
+                        help="latest non-clock input arrival relative to core clock")
     parser.add_argument("--false-path-from", action="append", default=None)
     parser.add_argument(
         "--false-path-io",
@@ -3077,6 +3095,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.false_path_from is not None:
         block["false_path_from_ports"] = args.false_path_from
+    if args.core_input_delay_min_ns is not None or args.core_input_delay_max_ns is not None:
+        if (args.core_input_delay_min_ns is None or args.core_input_delay_max_ns is None or
+                args.core_input_delay_min_ns < 0 or
+                args.core_input_delay_max_ns < args.core_input_delay_min_ns):
+            print("core input arrivals require 0 <= min delay <= max delay", file=sys.stderr)
+            return 2
+        block["core_input_delay_min_ns"] = args.core_input_delay_min_ns
+        block["core_input_delay_max_ns"] = args.core_input_delay_max_ns
     if args.ingress_clock_port:
         if (not args.ingress_input_port or args.ingress_input_delay_min_ns is None or
                 args.ingress_input_delay_max_ns is None or
@@ -3213,6 +3239,8 @@ def main(argv: list[str] | None = None) -> int:
             "description": block.get("description"),
             "parameters": block["parameters"],
             "clock_port": block["clock_port"],
+            **({k: block[k] for k in ("core_input_delay_min_ns", "core_input_delay_max_ns")}
+               if "core_input_delay_min_ns" in block else {}),
             **({k: block[k] for k in ("ingress_clock_port", "ingress_input_ports",
                                          "ingress_input_delay_min_ns", "ingress_input_delay_max_ns")}
                if block.get("ingress_clock_port") else {}),
