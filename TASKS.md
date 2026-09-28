@@ -2,7 +2,32 @@
 
 Updated 2026-09-28 against the current integration branch. The goal is four **full-shape, bit-exact, source-pinned end-to-end** ROM/HBM results, with physical evidence for the implemented blocks and a rate model calibrated from those results. A reduced test, design-point model, or placed block cannot be promoted to a full-chip throughput claim. The paper is [`docs/ARCHITECTURE_ATLAS.html`](docs/ARCHITECTURE_ATLAS.html); this file tracks its remaining proof obligations.
 
-**Statuses:** `[x]` published and passed at the stated scope; `[~]` actively owned; `[ ]` queued; `[!]` a measured blocker. Owner names below are active Codex agents; their branch/worktree is the handoff location, not evidence until merged. The root agent integrates and pushes main. On every substantive merge, the owner of that item updates its gate, source-pinned record and next blocker here. Old campaign details belong in their records.
+**Statuses:** `[x]` published and passed at the stated scope; `[~]` assigned/in progress; `[ ]` queued; `[!]` a measured blocker. Owner names below identify responsibility; their branch/worktree is the handoff location, not evidence until merged. The user reset subagent service usage; ten critical-path owners resumed and the index owner continues its existing full-stack gates. Optional sweeps and superseded routes stay stopped. The root agent integrates and pushes main. On every substantive merge, the owner of that item updates its gate, source-pinned record and next blocker here. Old campaign details belong in their records.
+
+## Immediate architecture recovery priority
+
+The objective is the highest demonstrated single-user rate within fixed hardware,
+power and arithmetic constraints; no arbitrary token-rate target is adopted.
+[COMPUTE_CLUSTER_PLAN.md](COMPUTE_CLUSTER_PLAN.md) defines the proposed local
+sharing boundary, executable contract, experiments and ownership. This is a
+proposal to validate, not a claim that a new cluster is implemented.
+
+- [~] **Root: integration and architectural contract** — integrate completed exact
+  operator/local-route records; define concrete tensor/expert placement, all
+  storage and the finite shared-resource schedule before selecting cluster width.
+- [!] **Pooling must be physically realizable** — the model already shares
+  quantized weight/index MACs and BF16 weight/attention MACs, with an assumed 10%
+  operand-mux area. Require a real ROM-bank/activation-bank-to-cluster mapping,
+  routed multicast, conflict handling and complete memory ledger.
+- [ ] **Select clusters by measured end-to-end gain** — compare shared local
+  matrix tiles plus dedicated SFU/reduction/quantization pipelines; measure useful
+  and issued MAC work, all memory/link traffic and stall reasons at batch one.
+  Verify actual shared HBM weight/KV/index contention and exact TP rounding.
+- [!] **Additional capacity risks** — source-pinned branch audits report a 268.4
+  MB replicated 1M RoPE table versus 71.6 MB minimum ROM spare, and about 81 mm2
+  activation SRAM if the small ME slice is naively replicated. Production RoPE
+  storage/computation and shared activation-cluster topology must be costed;
+  sparse single-position fixtures establish arithmetic only.
 
 ## Current claim boundary and priority
 
