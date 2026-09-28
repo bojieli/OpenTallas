@@ -585,6 +585,7 @@ def combine_layout_records(paths: list[Path]) -> dict:
         "source_experts_populated": source_experts,
         "expert_family_coverage": coverage,
         "selected_expert_weights_complete": token_selected,
+        "expert_access_policy": "fail_closed_if_any_requested_id_lacks_w1_w3_or_w2",
         "rom_capacity_bytes": CAPACITY_BYTES, "reserved_bytes": reserved_bytes,
         "regions": [dict(engine=engine, start_word=start, end_word_exclusive=end,
                          bytes_per_bank_word=width, name=name)
@@ -592,6 +593,62 @@ def combine_layout_records(paths: list[Path]) -> dict:
         "all_experts_materialized": all(e.get("all_experts_materialized") is not False
                                         for e in matrices.values()),
         "complete_die_image": False,
+    }
+
+
+def validate_expert_access(layout: dict, requested_ids: list[int] | tuple[int, ...]) -> None:
+    """Fail before a token reads an unmaterialized routed-expert slot."""
+    requested = set(requested_ids)
+    if any(not isinstance(eid, int) or not 0 <= eid < 384 for eid in requested):
+        raise ValueError("invalid routed expert ID")
+    coverage = layout.get("expert_family_coverage", {})
+    for kind in ("w1", "w3", "w2"):
+        missing = requested - set(coverage.get(f"exp.{kind}", ()))
+        if missing:
+            raise ValueError(f"unmaterialized {kind} expert IDs: {sorted(missing)}")
+
+
+def derive_hbm_sector_map(layout: dict) -> dict:
+    """Map identical bank-image bytes to 256-bit HBM sectors, by ROM region.
+
+    This is an address/payload equivalence check.  The present weight-window
+    RTL cannot request a 34- or 66-sector QE word and must not be credited.
+    """
+    sector = 0
+    regions = []
+    for region in sorted((r for r in layout["regions"] if r["engine"] != "crom"),
+                         key=lambda r: (r["engine"], r["start_word"])):
+        banks = 8 if region["engine"] == "he" else 64
+        bytes_per_word = banks * region["bytes_per_bank_word"]
+        if bytes_per_word % 32:
+            raise ValueError("weight bank word is not sector aligned")
+        spw = bytes_per_word // 32
+        count = (region["end_word_exclusive"] - region["start_word"]) * spw
+        if sector + count >= (1 << 28):
+            raise ValueError("HBM sector address exceeds current HAW28")
+        regions.append(dict(**region, hbm_sector_base=sector,
+                            hbm_sector_end_exclusive=sector + count,
+                            sectors_per_word=spw))
+        sector += count
+    by_key = {(r["engine"], r["name"]): r for r in regions}
+    matrix_map = {}
+    for name, entry in layout["matrices"].items():
+        region_name = entry.get("expert_family") or name
+        region = by_key[(entry["engine"], region_name)]
+        offset = entry["base_word"] - region["start_word"]
+        hbase = region["hbm_sector_base"] + offset * region["sectors_per_word"]
+        matrix_map[name] = dict(hbm_sector_base=hbase,
+                                sectors_per_word=region["sectors_per_word"],
+                                sector_count=entry["word_count"] * region["sectors_per_word"],
+                                payload_sha256=entry["output_image_sha256"])
+        if entry["output_image_bytes"] != matrix_map[name]["sector_count"] * 32:
+            raise ValueError(f"{name}: ROM bytes do not match HBM sectors")
+    return {
+        "status": "same_payload_sector_map_only",
+        "claim_boundary": "HBM sectors hold byte-identical bank words, but full-shape HBM weight fetch RTL is not yet implemented; existing LENW4 window cannot request 34/66-sector QE words.",
+        "sector_bytes": 32, "hbm_sector_count_reserved": sector,
+        "hbm_bytes_reserved": sector * 32,
+        "regions": regions, "matrices": matrix_map,
     }
 
 
@@ -659,6 +716,7 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
     record_paths.append(pre0_path)
     crom_base += 4
     combined = combine_layout_records(record_paths)
+    validate_expert_access(combined, list(manifest["experts_populated"]))
     known = {f"w.{name}" for name in (*dense_qe, "gate", "wo_a", "hc_attn_fn", "hc_ffn_fn", *constants)}
     known |= {f"w.exp{eid}.{kind}" for eid in manifest["experts_populated"]
               for kind in ("w1", "w3", "w2")}
@@ -681,6 +739,7 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
         complete_die_image=False,
         token_runnable=False,
     )
+    combined["hbm_weight_layout"] = derive_hbm_sector_map(combined)
     return combined
 
 
@@ -695,13 +754,28 @@ def main() -> None:
     one.add_argument("--he")
     one.add_argument("--combine-record", type=Path, nargs="+")
     one.add_argument("--assemble-token-layer0", action="store_true")
+    one.add_argument("--derive-hbm-map", action="store_true")
     ap.add_argument("--output", type=Path)
     ap.add_argument("--out-dir", type=Path)
+    ap.add_argument("--input-layout", type=Path)
     ap.add_argument("--record", type=Path, required=True)
     ap.add_argument("--base-word", type=int, default=0)
     ap.add_argument("--chunks", type=int, default=8)
     a = ap.parse_args()
-    if a.assemble_token_layer0:
+    if a.derive_hbm_map:
+        if not a.input_layout:
+            ap.error("HBM map requires --input-layout")
+        layout = json.loads(a.input_layout.read_text())
+        record = {
+            "schema": "opentallas.v41x.fullshape.hbm_sector_map.v1",
+            "status": "same_payload_sector_map_only",
+            "source_layout_sha256": sha256(a.input_layout),
+            "source_image_manifest_sha256": layout["source_image_manifest_sha256"],
+            "source_commit": layout["source_commit"],
+            "layout_tool_sha256": sha256(Path(__file__)),
+            "hbm_weight_layout": derive_hbm_sector_map(layout),
+        }
+    elif a.assemble_token_layer0:
         if not a.input_manifest or not a.image_dir or not a.out_dir:
             ap.error("assembly requires --input-manifest, --image-dir and --out-dir")
         record = assemble_token_layer0(a.input_manifest, a.image_dir, a.out_dir)
@@ -725,7 +799,10 @@ def main() -> None:
     a.record.parent.mkdir(parents=True, exist_ok=True)
     a.record.write_text(json.dumps(record, indent=2) + "\n")
     summary = {"status": record["status"]}
-    if a.assemble_token_layer0:
+    if a.derive_hbm_map:
+        summary.update(sectors=record["hbm_weight_layout"]["hbm_sector_count_reserved"],
+                       matrices=len(record["hbm_weight_layout"]["matrices"]))
+    elif a.assemble_token_layer0:
         summary.update(matrices=len(record["matrices"]), constants=len(record["constants"]),
                        selected_experts=record["selected_expert_ids"],
                        reserved_bytes=record["reserved_bytes"],

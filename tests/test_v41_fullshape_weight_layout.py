@@ -152,3 +152,27 @@ def test_generated_pre0_has_exact_low_half_and_zero_high(tmp_path: Path):
     words = np.fromfile(tmp_path / "pre0.bin", dtype="<u4").reshape(4, 2)
     assert words.tolist() == [[0x3f800000, 0], [0, 0], [0, 0], [0, 0]]
     assert rec["constants"]["pre0"]["base_word"] == 23
+
+
+def test_sparse_token_expert_access_fails_closed():
+    layout = {"expert_family_coverage": {
+        "exp.w1": [110, 112], "exp.w3": [110, 112], "exp.w2": [110, 112]}}
+    W.validate_expert_access(layout, [110, 112])
+    with pytest.raises(ValueError, match="unmaterialized w1 expert IDs"):
+        W.validate_expert_access(layout, [113])
+    with pytest.raises(ValueError, match="invalid routed expert ID"):
+        W.validate_expert_access(layout, [384])
+    del layout["expert_family_coverage"]["exp.w2"]
+    with pytest.raises(ValueError, match="unmaterialized w2 expert IDs"):
+        W.validate_expert_access(layout, [110])
+
+
+def test_same_payload_hbm_sector_pitch_for_adopted_bank_words():
+    path = W.ROOT / "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json"
+    layout = json.loads(path.read_text())
+    hbm = W.derive_hbm_sector_map(layout)
+    assert hbm["matrices"]["wq_a"]["sectors_per_word"] == 66
+    assert hbm["matrices"]["exp110.w1"]["sectors_per_word"] == 34
+    assert hbm["matrices"]["gate"]["sectors_per_word"] == 8
+    assert hbm["matrices"]["hc_attn_fn"]["sectors_per_word"] == 8
+    assert hbm["hbm_bytes_reserved"] <= W.CAPACITY_BYTES
