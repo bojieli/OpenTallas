@@ -21,6 +21,8 @@ import hdc_isa_v41 as I  # noqa: E402
 
 DEFAULT_LAYOUT = ROOT / "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json"
 DEFAULT_SHARD = ROOT / "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json"
+DEFAULT_QE = ROOT / "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json"
+DEFAULT_ROPE = ROOT / "results/rtl/hdc_v41x_fullshape_rope_sparse_patch.json"
 
 
 def sha(path: Path) -> str:
@@ -32,17 +34,27 @@ def _require(cond: bool, message: str) -> None:
         raise ValueError(message)
 
 
-def bind(layout_path: Path, shard_path: Path) -> dict:
+def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
+         rope_path: Path = DEFAULT_ROPE) -> dict:
     layout = json.loads(layout_path.read_text())
     shard = json.loads(shard_path.read_text())
+    qe = json.loads(qe_path.read_text())
+    rope = json.loads(rope_path.read_text())
     _require(layout["layer"] == shard["layer"] == 0 and layout["rank"] == shard["rank"] == 0,
              "binder requires layer 0, rank 0")
     _require(sha(shard_path) == layout["source_image_manifest_sha256"], "source shard hash changed")
+    _require(sha(layout_path) == qe["other_engine_layout_sha256"] and
+             sha(shard_path) == qe["source_image_manifest_sha256"],
+             "QE stream was not packed from these source images")
     selected = tuple(shard["golden_shard"]["experts"])
     _require(selected == tuple(layout["selected_expert_ids"]), "selected expert sequence differs from golden")
     _require(layout["selected_expert_weights_complete"], "selected expert image is incomplete")
     _require(not layout["unplaced_source_tensors"], "checkpoint source tensor has no image")
-    mats, consts = layout["matrices"], layout["constants"]
+    _require(tuple(qe["selected_expert_ids"]) == selected,
+             "QE stream selected experts differ from golden")
+    mats = dict(layout["matrices"])
+    mats.update(qe["matrices"])
+    consts = layout["constants"]
     expected = {"wq_a", "wkv", "wq_b", "wo_b", "shared.w1", "shared.w3", "shared.w2",
                 "gate", "wo_a", "hc_attn_fn", "hc_ffn_fn"}
     expected |= {f"exp{e}.{w}" for e in selected for w in ("w1", "w3", "w2")}
@@ -52,11 +64,16 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
         item = mats[name]
         _require(item["word_count"] > 0 and item["base_word"] >= 0,
                  f"invalid matrix range: {name}")
-        _require(item["geometry"]["base_word"] == item["base_word"] and
-                 item["geometry"]["end_word_exclusive"] == item["base_word"] + item["word_count"],
-                 f"matrix geometry/base mismatch: {name}")
-        _require(item.get("output_image_sha256") and item.get("output_image_bytes", 0) > 0,
-                 f"matrix has no materialized image: {name}")
+        if item["engine"] == "qe":
+            _require(item["geometry"]["word_count"] == item["word_count"] and
+                     item.get("logical_stream_sha256") and item.get("image_bytes", 0) > 0,
+                     f"QE logical stream/geometry missing: {name}")
+        else:
+            _require(item["geometry"]["base_word"] == item["base_word"] and
+                     item["geometry"]["end_word_exclusive"] == item["base_word"] + item["word_count"],
+                     f"matrix geometry/base mismatch: {name}")
+            _require(item.get("output_image_sha256") and item.get("output_image_bytes", 0) > 0,
+                     f"matrix has no materialized image: {name}")
     for w in ("w1", "w3", "w2"):
         records = [mats[f"exp{e}.{w}"] for e in selected]
         family_base = records[0]["expert_id_base"]
@@ -69,7 +86,16 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
     names = ("attn_norm", "ffn_norm", "q_norm", "kv_norm", "attn_sink", "gate.bias",
              "hc_attn_scale", "hc_attn_base", "hc_ffn_scale", "hc_ffn_base", "pre0")
     _require(set(names) <= consts.keys(), "missing shipped layer constant")
-    bases = {"rope_plain": 0}
+    context = str(shard["context"])
+    _require(context in rope["contexts"] and rope["status"] == "exact_input_only",
+             "no exact sparse RoPE fixture for shard context")
+    rp = rope["contexts"][context]
+    rp_file = ROOT / rp["file"]
+    _require(sha(rp_file) == rp["sha256"] and rp["bytes"] == 256 and
+             rp["position"] == shard["position"] and
+             rp["crom_absolute_first_word"] == rp["crom_word_base"] + rp["position"] * 32,
+             "sparse RoPE patch does not match token position/address")
+    bases = {"rope_plain": rp["crom_word_base"]}
     for name in names:
         key = "L0." + ("gate_bias" if name == "gate.bias" else name)
         bases[key] = consts[name]["base_word"]
@@ -117,9 +143,11 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
         base = f["qe_wbase"]
         _require(base in qe_regions, f"QE instruction {pc} points outside bound matrix regions: {base}")
         name, image = qe_regions[base]
-        _require(f["qe_nout"] == image["nrows"] and f["qe_nb"] * 32 == image["ncols"],
+        _require(f["qe_nout"] == image["geometry"]["nout"] and
+                 f["qe_nb"] == image["geometry"]["nb"] and
+                 f["qe_tiles"] == image["geometry"]["tiles"],
                  f"QE PC {pc} logical matrix shape differs from {name} image")
-        _require(bool(f["qe_fp4"]) == image["format"].startswith("F4_"),
+        _require(bool(f["qe_fp4"]) == image["format"].startswith("FP4_"),
                  f"QE PC {pc} numeric format differs from {name} image")
         count = f["qe_tiles"] * f["qe_nb"] * I.INTERLEAVE
         if f.get("qe_ind"):
@@ -182,13 +210,28 @@ def bind(layout_path: Path, shard_path: Path) -> dict:
                      f["he_nout"] == image["nrows"] and
                      f["he_k"] * R.HC_SPLIT == image["ncols"],
                      f"HE {name} descriptor/image mismatch at PC {pc}")
-    # This entry point begins with an already-loaded layer-0 state, so the
-    # embedding token map and other layers' YaRN table are outside its scope.
-    if "rope_plain" in layout["unplaced_generated"]:
-        blockers.append("generated layer-0 RoPE plain region missing")
+    if qe["packed_requires_fp4_port_adapter"]:
+        blockers.append("packed FP4 QE words require a sector-to-16-lane port adapter; no exact RTL adapter gate")
+    # The sparse pair fixture supports only this one token position. It does
+    # not establish a production-size RoPE store or the corresponding port.
+    blockers.append("sparse token-position RoPE fixture only; production RoPE storage/prefetch unproved")
     return dict(schema="opentallas.v41x.fullshape.program_bind.v1",
                 status="runnable" if not blockers else "blocked", layer=0, rank=0,
                 layout_sha256=sha(layout_path), shard_sha256=sha(shard_path),
+                qe_stream_sha256=sha(qe_path), rope_patch_sha256=sha(rope_path),
+                rope_token_patch=dict(position=rp["position"], base_word=rp["crom_word_base"],
+                                      absolute_first_word=rp["crom_absolute_first_word"],
+                                      absolute_last_word=rp["crom_absolute_last_word"],
+                                      file=rp["file"], sha256=rp["sha256"],
+                                      claim_boundary="one-position input fixture only"),
+                resource_trace=dict(qe_logical_qrom_words=qe["logical_qrom_words"],
+                                    qe_direct_expanded_bytes=qe["logical_direct_bytes"],
+                                    qe_packed_physical_bytes=qe["physical_qe_bytes_reserved"],
+                                    other_engine_bytes=qe["other_engine_bytes_reserved"],
+                                    packed_die_bytes=qe["packed_die_bytes_reserved"],
+                                    rom_capacity_bytes=qe["rom_capacity_bytes"],
+                                    direct_expanded_fits_die=qe["direct_expanded_fits_die"],
+                                    packed_requires_fp4_port_adapter=qe["packed_requires_fp4_port_adapter"]),
                 source_sha256={str(p.relative_to(ROOT)): sha(p) for p in (
                     Path(__file__).resolve(), ROOT / "tools/hdc_replay_v41.py",
                     ROOT / "tools/hdc_isa_v41.py",
@@ -204,9 +247,11 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--layout", type=Path, default=DEFAULT_LAYOUT)
     p.add_argument("--shard", type=Path, default=DEFAULT_SHARD)
+    p.add_argument("--qe", type=Path, default=DEFAULT_QE)
+    p.add_argument("--rope", type=Path, default=DEFAULT_ROPE)
     p.add_argument("--output", type=Path)
     args = p.parse_args()
-    record = bind(args.layout, args.shard)
+    record = bind(args.layout, args.shard, args.qe, args.rope)
     out = json.dumps(record, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
