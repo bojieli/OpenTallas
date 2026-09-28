@@ -8,6 +8,7 @@ import json
 import re
 import subprocess
 import tempfile
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,6 +49,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--full", action="store_true", help="also run exact N262144 scan")
     parser.add_argument("--quantum", type=int, default=1)
+    parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args()
     rows = []
     with tempfile.TemporaryDirectory(prefix="v41-four-stack-") as td:
@@ -59,8 +61,10 @@ def main() -> None:
                 f"-Ptb_hdc_v41x_idx_four_stack_gate.QUANTUM={args.quantum}",
                 "-o", str(binary), *map(str, SOURCES),
             ], check=True, cwd=ROOT)
+            started = time.perf_counter()
             run = subprocess.run(["vvp", str(binary)], capture_output=True, text=True,
                                  timeout=7200 if args.full else 300, cwd=ROOT)
+            wall_seconds = round(time.perf_counter() - started, 3)
             if run.returncode:
                 raise RuntimeError(f"N{n} failed:\n{run.stdout}\n{run.stderr}")
             match = PAT.search(run.stdout)
@@ -71,6 +75,7 @@ def main() -> None:
             rows.append({
                 "keys": keys, "quantum": quantum, "checked": checked,
                 "sectors": sectors, "cycles": cycles,
+                "simulation_wall_seconds": wall_seconds,
                 "sector_per_cycle": round(sectors / cycles, 6),
                 "collector_empty_cycles": stalled,
                 "request_stall_cycles": req_stalls,
@@ -81,7 +86,7 @@ def main() -> None:
     rec = {
         "schema": "opentallas.hdc-v41x-idx-four-stack-gate.v1",
         "status": "pass",
-        "source_baseline": "194ee67bb3ea87d5134dd03c7e20253153bcb28e",
+        "source_baseline": "6e2b7ae38fe3019e38d2574ffad9df89538bd08a",
         "collector_source_commits": ["a1843d61", "c00a0141"],
         "configuration": {
             "stacks": 4, "quarter_contexts_per_stack": 4,
@@ -97,8 +102,8 @@ def main() -> None:
         "input_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [*SOURCES, script]},
     }
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(rec, indent=2) + "\n")
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(rec, indent=2) + "\n")
 
 
 if __name__ == "__main__":
