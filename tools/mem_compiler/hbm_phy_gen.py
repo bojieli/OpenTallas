@@ -203,9 +203,10 @@ V41X_WINDOW_SPAN_UM = (20.0, 195.0)     # K pins inside each pseudo-channel's (e
 V41X_W_SPAN_UM = (205.0, 360.0)         # W-port pins, windows 0..7 (one W pseudo-channel each)
 
 
-def v41x_pins(npc: int = 32, ktagw: int = 17, npc_w: int = 8, lwin: int = 10) -> tuple[list[Pin], dict]:
+def v41x_pins(npc: int = 32, ktagw: int = 17, npc_w: int = 8, lwin: int = 10,
+               k_aw: int = 28) -> tuple[list[Pin], dict]:
     """(the port list in declaration order, the (window, group) of every bit)."""
-    k = [("k_v", 1, "input"), ("k_rdy", 1, "output"), ("k_addr", 28, "input"), ("k_len", 4, "input"),
+    k = [("k_v", 1, "input"), ("k_rdy", 1, "output"), ("k_addr", k_aw, "input"), ("k_len", 4, "input"),
          ("k_tag", ktagw, "input"), ("k_we", 1, "input"), ("k_wdata", 256, "input"), ("k_wstrb", 32, "input"),
          ("k_wr_done", 1, "output"), ("kr_v", 1, "output"), ("kr_rdy", 1, "input"), ("kr_tag", ktagw, "output"),
          ("kr_beat", 4, "output"), ("kr_data", 256, "output")]
@@ -236,11 +237,11 @@ def v41x_pins(npc: int = 32, ktagw: int = 17, npc_w: int = 8, lwin: int = 10) ->
 
 
 def write_lef_v41x(w: float, h: float, plist: list[Pin], place: dict, npc: int,
-                   pitch: float) -> tuple[str, dict[str, Any]]:
+                   pitch: float, name: str = V41X) -> tuple[str, dict[str, Any]]:
     L = ["# OpenTallas tools/mem_compiler/hbm_phy_gen.py --variant v41x: HBM3E PHY + controller ABSTRACT for the",
          "# adopted V4.1 die (rtl/chip/ot_chip_v41x_hbm3e_phy.sv port list); controller-side pins only",
-         "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {V41X}",
-         f"  FOREIGN {V41X} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
+         "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}",
+         f"  FOREIGN {name} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
     win = w / npc
     cursor: dict[tuple[int, str], float] = {}
     pw, pl = 0.024, 0.192
@@ -273,7 +274,7 @@ def write_lef_v41x(w: float, h: float, plist: list[Pin], place: dict, npc: int,
     for layer in ("M1", "M2", "M3", "M4"):
         L += [f"    LAYER {layer} ;", f"    RECT 0 0 {w:.3f} {h:.3f} ;"]
     L += ["    LAYER M5 ;", f"    RECT 0 0 {w:.3f} {h - 0.4:.3f} ;"]
-    L += ["  END", f"END {V41X}", "", "END LIBRARY"]
+    L += ["  END", f"END {name}", "", "END LIBRARY"]
     return "\n".join(L) + "\n", {
         "signal_pins": sum(pp.width for pp in plist), "pin_pitch_um": pitch, "pin_layer": "M5",
         "pin_edge": "top (core-facing)", "pseudo_channel_window_um": round(win, 3),
@@ -287,13 +288,16 @@ def write_lef_v41x(w: float, h: float, plist: list[Pin], place: dict, npc: int,
                    "(tools/v41x_die_pnr.py karb_strip)"}
 
 
-def generate_v41x(out: Path | None, npc: int = 32) -> dict[str, Any]:
+def generate_v41x(out: Path | None, npc: int = 32, k_aw: int = 28) -> dict[str, Any]:
+    if k_aw not in (28, 30):
+        raise ValueError("K address width must be the reduced 28-bit or full packed 30-bit profile")
+    name = V41X if k_aw == 28 else f"{V41X}_aw30"
     area = tech("hbm.hbm3e.phy_area_mm2_per_stack")
     beach = tech("hbm.hbm3e.stack_beachfront_mm")
     w_um = asap7.snap_up(beach["value"] * 1000.0, asap7.METAL["width_snap_um"])
     h_um = asap7.snap_up(area["value"] * 1e6 / (beach["value"] * 1000.0), asap7.METAL["height_snap_um"])
-    plist, place = v41x_pins(npc)
-    lef, pin_info = write_lef_v41x(w_um, h_um, plist, place, npc, 0.192)
+    plist, place = v41x_pins(npc, k_aw=k_aw)
+    lef, pin_info = write_lef_v41x(w_um, h_um, plist, place, npc, 0.192, name=name)
     cal = asap7.calibration()
     energy = tech("energy.hbm_j_per_byte")
     per_corner = {}
@@ -311,14 +315,15 @@ def generate_v41x(out: Path | None, npc: int = 32) -> dict[str, Any]:
     sheet: dict[str, Any] = {
         "schema": "opentallas.hbm-phy-abstract.v1",
         "generator": f"tools/mem_compiler/hbm_phy_gen.py --variant v41x v{GENERATOR_VERSION}",
-        "kind": "hbm_phy_abstract", "name": V41X,
+        "kind": "hbm_phy_abstract", "name": name,
         "footprint": {"width_um": w_um, "height_um": h_um, "area_mm2": w_um * h_um / 1e6,
                       "basis": "the technology.json entries of ot_hbm3e_phy (beachfront 12.0 mm, 10 mm2 per stack); "
                                "results/arch/v41_die_assembly.json draws each PHY 12.0001 x 0.8335 mm"},
         "interface": {"port_list": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv: K, 32 pseudo-channel request / response "
                                    "ports (ot_hdc_v41x_idx_hbm protocol); W, the QE weight port (ot_hdc_hbm_model "
                                    "protocol, 8 response pseudo-channels); status",
-                      "parameters": {"NPC": npc, "KTAGW": 17, "NPC_W": 8, "LWIN": 10},
+                      "parameters": {"NPC": npc, "KTAGW": 17, "NPC_W": 8, "LWIN": 10,
+                                     **({"K_AW": k_aw} if k_aw != 28 else {})},
                       "controller_clock_mhz": {"value": 1087.0, "grade": "assumed",
                                                "note": "the die clock; min_period 900 ps"}},
         "pins": pin_info,
@@ -328,18 +333,18 @@ def generate_v41x(out: Path | None, npc: int = 32) -> dict[str, Any]:
                           "assumed, the port list is the adopted RTL's",
     }
     if out is not None:
-        d = out / V41X
+        d = out / name
         d.mkdir(parents=True, exist_ok=True)
-        (d / f"{V41X}.lef").write_text(lef)
+        (d / f"{name}.lef").write_text(lef)
         comment = ("HBM3E PHY + controller abstract for the adopted V4.1 die, controller-side boundary timing "
                    "only (assumed)")
         for c, t in per_corner.items():
-            (d / f"{V41X}_{c}.lib").write_text(write_liberty(V41X, t, plist, w_um * h_um, None, comment))
-        (d / f"{V41X}_bb.v").write_text(blackbox_verilog(V41X, plist, comment + "; functional model: "
+            (d / f"{name}_{c}.lib").write_text(write_liberty(name, t, plist, w_um * h_um, None, comment))
+        (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment + "; functional model: "
                                                          "rtl/chip/ot_chip_v41x_hbm3e_phy.sv"))
-        files = sorted(p.name for p in d.iterdir() if p.name != f"{V41X}.json")
+        files = sorted(p.name for p in d.iterdir() if p.name != f"{name}.json")
         sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
-        (d / f"{V41X}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
+        (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
     return sheet
 
 
@@ -347,11 +352,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=asap7.ROOT / "physical/asap7_memory_macros")
     ap.add_argument("--variant", choices=["v1", "v41x"], default="v1")
+    ap.add_argument("--k-aw", type=int, default=28, help="V4.1 K sector address width: 28 reduced or 30 full")
     args = ap.parse_args()
     if args.variant == "v41x":
-        s = generate_v41x(args.out)
+        s = generate_v41x(args.out, k_aw=args.k_aw)
         f = s["footprint"]
-        print(f"{V41X}: {f['width_um']:.1f} x {f['height_um']:.1f} um ({f['area_mm2']:.2f} mm2), "
+        print(f"{s['name']}: {f['width_um']:.1f} x {f['height_um']:.1f} um ({f['area_mm2']:.2f} mm2), "
               f"{s['pins']['signal_pins']} controller-side pins, {s['pins']['pseudo_channel_window_um']} um windows")
         return 0
     s = generate(args.out)

@@ -151,9 +151,11 @@ and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
 alignment. Its assumed boundary timing does not measure an HBM3E controller or
 PHY. The previous one-request-channel macro remains incompatible.
 This abstract and the current strip use 28-bit K sector addresses, as in the
-reduced die smoke. The full packed-KV placement needs 30 sector-address bits;
-the full-mode die hookup and a separately regenerated
-PHY view must be checked before this boundary supports the shipped context.
+reduced die smoke. The full packed-KV placement needs 30 sector-address bits.
+The generated `ot_hbm3e_phy_v41x_aw30` abstract matches the parameterized
+full-mode RTL port list and adds 64 K address pins. It has the same assumed
+footprint and boundary timing as the reduced view. Its route and full-mode die
+hookup still need checking before this boundary supports the shipped context.
 
 The same campaign builds a reduced-scale physical surrogate of the die:
 four adopted K arbiters and the adopted KV prefetch, four placed HBM interface

@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "tools/mem_compiler"))
 
 import v41x_die_pnr as pnr  # noqa: E402
+import hbm_phy_gen  # noqa: E402
 
 PHY_DIR = ROOT / "physical/asap7_memory_macros/ot_hbm3e_phy_v41x"
 DIE_PARAMS = {"NPC": 32, "KTAGW": 17, "NPC_W": 8, "LWIN": 10}   # ot_chip_v41x_die.sv g_hbm[s].u_hbm
@@ -38,6 +39,21 @@ def test_phy_abstract_matches_the_adopted_stack_interface():
     lef = (PHY_DIR / "ot_hbm3e_phy_v41x.lef").read_text()
     assert "SIZE 12000.096 BY 833.490" in lef                     # die assembly: 12.0001 x 0.8335 mm
     assert lef.count("\n  PIN ") == sum(w for _, w in bb.values()) + 2          # + VDD, VSS
+
+
+def test_full_k_address_phy_abstract_matches_full_mode(tmp_path):
+    sheet = hbm_phy_gen.generate_v41x(tmp_path, k_aw=30)
+    name = "ot_hbm3e_phy_v41x_aw30"
+    d = tmp_path / name
+    rtl = rtl_ports(ROOT / "rtl/chip/ot_chip_v41x_hbm3e_phy.sv", "ot_chip_v41x_hbm3e_phy",
+                    {**DIE_PARAMS, "K_AW": 30})
+    bb = rtl_ports(d / f"{name}_bb.v", name, {})
+    assert rtl == bb
+    assert rtl["k_addr"] == ("input", 32 * 30)
+    assert sheet["interface"]["parameters"]["K_AW"] == 30
+    lef = (d / f"{name}.lef").read_text()
+    assert lef.count("\n  PIN ") == sum(w for _, w in bb.values()) + 2
+    assert sheet["pins"]["signal_pins"] == 22237
 
 
 def test_karb_strip_windows_face_the_phy_windows():
