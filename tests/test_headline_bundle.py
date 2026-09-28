@@ -32,7 +32,7 @@ def test_an_edited_atlas_figure_fails(monkeypatch):
     real = HB.atlas_blocks
 
     def edited(text):
-        return [b.replace("8,185 tokens/s in the adopted design", "8,186 tokens/s in the adopted design")
+        return [b.replace("the adopted design decodes 8,185 tokens/s", "the adopted design decodes 8,186 tokens/s")
                 for b in real(text)]
 
     monkeypatch.setattr(HB, "atlas_blocks", edited)

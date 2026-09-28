@@ -14,19 +14,19 @@
   "third-party": "A figure published by someone else and carried into a record as a cited input."
  },
  "summary": {
-  "headlines": 130,
-  "bound": 117,
+  "headlines": 134,
+  "bound": 121,
   "derived_in_bundle": 3,
   "unbound": 13,
-  "printed_occurrences": 264,
-  "occurrences_agreeing": 247,
-  "with_sensitivity_range": 14,
+  "printed_occurrences": 296,
+  "occurrences_agreeing": 279,
+  "with_sensitivity_range": 16,
   "by_evidence_class": {
    "measured-RTL": 21,
    "measured-physical": 11,
    "measured-quality": 8,
    "measured-gpu": 6,
-   "model": 82,
+   "model": 86,
    "third-party": 2
   },
   "records": 28,
@@ -45,394 +45,9 @@
  },
  "headlines": [
   {
-   "id": "qwen.rate_8k",
-   "section": "Qwen3-8B rate",
-   "claim": "Qwen3-8B, one reticle, 8K, batch 1, per-user rate at specification widths (RTL-calibrated)",
-   "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s",
-   "derived": false,
-   "derivation": null,
-   "record_value": 8910.2,
-   "records": [
-    "results/arch/qwen3_budget.json"
-   ],
-   "printed": [
-    {
-     "in": "Mask-ROM weights beside the multipliers",
-     "text": "aim at 8,910 tokens/s",
-     "printed_value": "8,910",
-     "status": "agrees"
-    },
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "targets 8,910 tokens/s per Qwen3-8B user",
-     "printed_value": "8,910",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B, one reticle, 8K, per user, batch 1",
-     "text": "8,910 tok/s",
-     "printed_value": "8,910",
-     "status": "agrees"
-    },
-    {
-     "in": "S3 · specialized ROM accelerator",
-     "text": "8,910 calibrated",
-     "printed_value": "8,910",
-     "status": "agrees"
-    },
-    {
-     "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "targets 8,910 tokens/s per user",
-     "printed_value": "8,910",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM reticle, the core at specification widths",
-     "text": "8,910",
-     "printed_value": "8,910",
-     "status": "agrees"
-    },
-    {
-     "in": "Fast per-user decode is limited on today's accelerators",
-     "text": "targets 8,910 tokens/s at 8K",
-     "printed_value": "8,910",
-     "status": "agrees"
-    }
-   ],
-   "sensitivity": {
-    "variants": [
-     {
-      "label": "cooling cap, scenario B (production lane)",
-      "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 7442.41
-     },
-     {
-      "label": "cooling cap, scenario A (measured lane)",
-      "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 4689.36
-     },
-     {
-      "label": "KV in BF16 instead of FP8",
-      "binding": "results/arch/qwen3_budget.json#rom_token[\"8192/bf16\"].tokens_s",
-      "value": 4470.3
-     }
-    ],
-    "range": [
-     4470.3,
-     8910.2
-    ]
-   }
-  },
-  {
-   "id": "qwen.kv_floor",
-   "section": "Qwen3-8B rate",
-   "claim": "Qwen3-8B ideal FP8 KV bandwidth ceiling at 8K (tokens/s)",
-   "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s",
-   "derived": false,
-   "derivation": null,
-   "record_value": 8940.7,
-   "records": [
-    "results/arch/qwen3_budget.json"
-   ],
-   "printed": [
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "ideal 8,941-token/s FP8 KV bandwidth ceiling",
-     "printed_value": "8,941",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B, one reticle, 8K, per user, batch 1",
-     "text": "(8,941",
-     "printed_value": "8,941",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM reticle, budget target (KV stream",
-     "text": "8,494 / 8,941",
-     "printed_value": "8,941",
-     "status": "agrees"
-    }
-   ]
-  },
-  {
-   "id": "qwen.target",
-   "section": "Qwen3-8B rate",
-   "claim": "Qwen3-8B budget target (KV stream / 0.95)",
-   "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#budget.target_tokens_s",
-   "derived": false,
-   "derivation": null,
-   "record_value": 8493.7,
-   "records": [
-    "results/arch/qwen3_budget.json"
-   ],
-   "printed": [
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "above its 8,494 target",
-     "printed_value": "8,494",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B, one reticle, 8K, per user, batch 1",
-     "text": "8,494)",
-     "printed_value": "8,494",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM reticle, budget target (KV stream",
-     "text": "8,494 / 8,941",
-     "printed_value": "8,494",
-     "status": "agrees"
-    }
-   ]
-  },
-  {
-   "id": "qwen.chain_cycles",
-   "section": "Qwen3-8B rate",
-   "claim": "Qwen3-8B calibrated dependency chain per token at 8K (cycles)",
-   "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles",
-   "derived": false,
-   "derivation": null,
-   "record_value": 123301.0,
-   "records": [
-    "results/arch/qwen3_budget.json"
-   ],
-   "printed": [
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "Its 123,301-cycle dependency chain",
-     "printed_value": "123,301",
-     "status": "agrees"
-    },
-    {
-     "in": "The Qwen3 chain was cut to the KV floor",
-     "text": "174,856 → 123,301 cycles",
-     "printed_value": "123,301",
-     "status": "agrees"
-    }
-   ]
-  },
-  {
-   "id": "qwen.kv_stream_cycles",
-   "section": "Qwen3-8B rate",
-   "claim": "Qwen3-8B FP8 KV stream floor at 8K (cycles)",
-   "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles",
-   "derived": false,
-   "derivation": null,
-   "record_value": 122881.0,
-   "records": [
-    "results/arch/qwen3_budget.json"
-   ],
-   "printed": [
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "the 122,881-cycle KV stream floor",
-     "printed_value": "122,881",
-     "status": "agrees"
-    },
-    {
-     "in": "The Qwen3 chain was cut to the KV floor",
-     "text": "the 122,881-cycle FP8 KV stream",
-     "printed_value": "122,881",
-     "status": "agrees"
-    }
-   ]
-  },
-  {
-   "id": "qwen.spec_chain",
-   "section": "Qwen3-8B rate",
-   "claim": "Qwen3-8B token in the analytical (specification) chain",
-   "evidence_class": "model",
-   "binding": "results/arch/qwen3_budget.json#dependency_chain[\"8192/spec\"].tokens_s",
-   "derived": false,
-   "derivation": null,
-   "record_value": 7689.0,
-   "records": [
-    "results/arch/qwen3_budget.json"
-   ],
-   "printed": [
-    {
-     "in": "Same token in the analytical chain at specification widths",
-     "text": "7,689 tok/s",
-     "printed_value": "7,689",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM reticle, specification chain (three lane copies",
-     "text": "7,689",
-     "printed_value": "7,689",
-     "status": "agrees"
-    }
-   ]
-  },
-  {
-   "id": "qwen.cooling_limit_w",
-   "section": "Qwen3-8B power",
-   "claim": "Single-die package cooling limit (W per die)",
-   "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_limit_w",
-   "derived": false,
-   "derivation": null,
-   "record_value": 549.472,
-   "records": [
-    "results/arch/power_scenarios.json"
-   ],
-   "printed": [
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "exceeds the 549.5 W a shipping single-die package cools",
-     "printed_value": "549.5",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B, one reticle, 8K, per user, batch 1",
-     "text": "cooling cap at 549.5 W",
-     "printed_value": "549.5",
-     "status": "agrees"
-    }
-   ]
-  },
-  {
-   "id": "qwen.cap_B",
-   "section": "Qwen3-8B power",
-   "claim": "Qwen3-8B cooling-capped rate, scenario B (production lane)",
-   "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-   "derived": false,
-   "derivation": null,
-   "record_value": 7442.41,
-   "records": [
-    "results/arch/power_scenarios.json"
-   ],
-   "printed": [
-    {
-     "in": "Mask-ROM weights beside the multipliers",
-     "text": "cooling caps it at 7,442",
-     "printed_value": "7,442",
-     "status": "agrees"
-    },
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "power caps the reticle at 7,442 tokens/s",
-     "printed_value": "7,442",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B, one reticle, 8K, per user, batch 1",
-     "text": "cap 7,442",
-     "printed_value": "7,442",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
-     "text": "7,442 / 11,925",
-     "printed_value": "7,442",
-     "status": "agrees"
-    },
-    {
-     "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "power-capped to 7,442",
-     "printed_value": "7,442",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM die power-capped at 549.5 W, production lane",
-     "text": "7,442",
-     "printed_value": "7,442",
-     "status": "agrees"
-    },
-    {
-     "in": "Fast per-user decode is limited on today's accelerators",
-     "text": "power-capped to 7,442",
-     "printed_value": "7,442",
-     "status": "agrees"
-    }
-   ],
-   "sensitivity": {
-    "variants": [
-     {
-      "label": "production lane at 1.40 pJ/MAC (GPU tensor core)",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_lane_at_gpu_tensor_1p40pj.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 6448.73
-     },
-     {
-      "label": "older HBM die allocation (0.8)",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_old_hbm_allocation_die_0p8.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 8910.23
-     },
-     {
-      "label": "HBM die energy at the GH200 8.23 pJ/bit",
-      "binding": "results/arch/power_scenarios.json#sensitivities.B_hbm_die_gh200_8p23.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-      "value": 8605.35
-     }
-    ],
-    "range": [
-     6448.73,
-     8910.23
-    ]
-   }
-  },
-  {
-   "id": "qwen.cap_A",
-   "section": "Qwen3-8B power",
-   "claim": "Qwen3-8B cooling-capped rate, scenario A (measured ASAP7 lane)",
-   "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate",
-   "derived": false,
-   "derivation": null,
-   "record_value": 4689.36,
-   "records": [
-    "results/arch/power_scenarios.json"
-   ],
-   "printed": [
-    {
-     "in": "Mask-ROM weights beside the multipliers",
-     "text": "4,689 on our measured lane",
-     "printed_value": "4,689",
-     "status": "agrees"
-    },
-    {
-     "in": "Interactive and agentic use of language models",
-     "text": "4,689 on our measured lane",
-     "printed_value": "4,689",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B, one reticle, 8K, per user, batch 1",
-     "text": "/ 4,689",
-     "printed_value": "4,689",
-     "status": "agrees"
-    },
-    {
-     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
-     "text": "4,689 / 4,731",
-     "printed_value": "4,689",
-     "status": "agrees"
-    },
-    {
-     "in": "ROM die power-capped at 549.5 W, measured ASAP7 lane",
-     "text": "4,689",
-     "printed_value": "4,689",
-     "status": "agrees"
-    },
-    {
-     "in": "Fast per-user decode is limited on today's accelerators",
-     "text": "(4,689 on our measured lane)",
-     "printed_value": "4,689",
-     "status": "agrees"
-    }
-   ]
-  },
-  {
    "id": "qwen.dflash",
-   "section": "Qwen3-8B speculation",
-   "claim": "Qwen3-8B DFlash, three lane copies, block 3, serial draft + verify + commit (tokens/s)",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B headline: DFlash, three lane copies, block 3, serial draft + verify + commit, design rate (tokens/s)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m3\"].best.tokens_s",
    "derived": false,
@@ -443,20 +58,44 @@
    ],
    "printed": [
     {
-     "in": "Interactive and agentic use of language models",
-     "text": "and 13,052 with DFlash speculation",
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "a 13,052-token/s design rate",
      "printed_value": "13,052",
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B with DFlash, three lane copies, block 3",
-     "text": "13,052 tok/s",
+     "in": "Interactive and agentic use of language models",
+     "text": "a design rate of 13,052 tokens/s",
+     "printed_value": "13,052",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
+     "text": "13,052 tok/s (1.70×",
+     "printed_value": "13,052",
+     "status": "agrees"
+    },
+    {
+     "in": "The GPU comparisons in the attribution ladder separate software",
+     "text": "at a 13,052-token/s design rate",
      "printed_value": "13,052",
      "status": "agrees"
     },
     {
      "in": "ROM reticle, specification chain (three lane copies",
      "text": "13,052",
+     "printed_value": "13,052",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
+     "text": "13,052 / 8,910 tok/s",
+     "printed_value": "13,052",
+     "status": "agrees"
+    },
+    {
+     "in": "Fast per-user decode is limited on today's accelerators",
+     "text": "a 13,052-token/s design rate at 8K",
      "printed_value": "13,052",
      "status": "agrees"
     }
@@ -467,18 +106,183 @@
       "label": "equal-weighted tau 2.321 instead of pooled 2.265",
       "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m3\"].best.tokens_s_band",
       "value": 13370.7
+     },
+     {
+      "label": "cooling cap, scenario B (production lane)",
+      "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate",
+      "value": 11925.3
+     },
+     {
+      "label": "cooling cap, scenario A (lane as built)",
+      "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate",
+      "value": 4731.32
      }
     ],
     "range": [
-     13052.1,
+     4731.32,
      13370.7
     ]
    }
   },
   {
+   "id": "qwen.dflash_cap_B",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B DFlash cooling-capped rate at the single-die cooling limit, scenario B (production lane)",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 11925.3,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "11,925 tokens/s under the air/liquid cooling limit",
+     "printed_value": "11,925",
+     "status": "agrees"
+    },
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "capped at 11,925 tokens/s",
+     "printed_value": "11,925",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
+     "text": "cap 11,925 / 4,731",
+     "printed_value": "11,925",
+     "status": "agrees"
+    },
+    {
+     "in": "The GPU comparisons in the attribution ladder separate software",
+     "text": "capped by cooling at 11,925",
+     "printed_value": "11,925",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
+     "text": "11,925 / 7,442 and 4,731 / 4,689",
+     "printed_value": "11,925",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
+     "text": "7,442 / 11,925 (B)",
+     "printed_value": "11,925",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM die power-capped at 549.5 W, production lane",
+     "text": "11,925",
+     "printed_value": "11,925",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
+     "text": "cooling-capped at 11,925 on the production lane",
+     "printed_value": "11,925",
+     "status": "agrees"
+    },
+    {
+     "in": "Fast per-user decode is limited on today's accelerators",
+     "text": "11,925 tokens/s under the cooling limit",
+     "printed_value": "11,925",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "production lane at 1.40 pJ/MAC (GPU tensor core)",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_lane_at_gpu_tensor_1p40pj.qwen3_8b_rom_8k.dflash.capped_rate",
+      "value": 8521.17
+     },
+     {
+      "label": "older HBM die allocation (0.8)",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_old_hbm_allocation_die_0p8.qwen3_8b_rom_8k.dflash.capped_rate",
+      "value": 13052.1
+     },
+     {
+      "label": "HBM die energy at the GH200 8.23 pJ/bit",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_hbm_die_gh200_8p23.qwen3_8b_rom_8k.dflash.capped_rate",
+      "value": 13052.1
+     }
+    ],
+    "range": [
+     8521.17,
+     13052.1
+    ]
+   }
+  },
+  {
+   "id": "qwen.dflash_cap_A",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B DFlash cooling-capped rate at the single-die cooling limit, scenario A (lane as built, ASAP7)",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 4731.32,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "(4,731 with the lane as built)",
+     "printed_value": "4,731",
+     "status": "agrees"
+    },
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "4,731 with the lane as built",
+     "printed_value": "4,731",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
+     "text": "cap 11,925 / 4,731",
+     "printed_value": "4,731",
+     "status": "agrees"
+    },
+    {
+     "in": "The GPU comparisons in the attribution ladder separate software",
+     "text": "4,731 on the lane as built",
+     "printed_value": "4,731",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
+     "text": "11,925 / 7,442 and 4,731 / 4,689",
+     "printed_value": "4,731",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
+     "text": "4,689 / 4,731 (A)",
+     "printed_value": "4,731",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM die power-capped at 549.5 W, measured ASAP7 lane",
+     "text": "4,731",
+     "printed_value": "4,731",
+     "status": "agrees"
+    },
+    {
+     "in": "Fast per-user decode is limited on today's accelerators",
+     "text": "(4,731 with the lane as built)",
+     "printed_value": "4,731",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
    "id": "qwen.dflash_speedup",
-   "section": "Qwen3-8B speculation",
-   "claim": "Qwen3-8B DFlash speed-up over autoregressive (three lane copies)",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B DFlash speed-up over the plain chain (three lane copies)",
    "evidence_class": "model",
    "binding": "results/arch/qwen3_budget.json#dflash.rom[\"8192/fp8/m3\"].best.speedup",
    "derived": false,
@@ -489,8 +293,8 @@
    ],
    "printed": [
     {
-     "in": "Qwen3-8B with DFlash, three lane copies, block 3",
-     "text": "(1.70×)",
+     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
+     "text": "(1.70× the plain chain)",
      "printed_value": "1.70",
      "status": "agrees"
     },
@@ -503,62 +307,177 @@
    ]
   },
   {
-   "id": "qwen.dflash_cap_B",
-   "section": "Qwen3-8B speculation",
-   "claim": "Qwen3-8B DFlash cooling-capped rate, scenario B",
+   "id": "qwen.cooling_limit_w",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Single-die package cooling limit, air = liquid (W per die)",
    "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate",
+   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_limit_w",
    "derived": false,
    "derivation": null,
-   "record_value": 11925.3,
+   "record_value": 549.472,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
-     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
-     "text": "7,442 / 11,925",
-     "printed_value": "11,925",
+     "in": "Interactive and agentic use of language models",
+     "text": "exceeds the 549.5 W that a shipping single-die package cools",
+     "printed_value": "549.5",
      "status": "agrees"
     },
     {
-     "in": "ROM die power-capped at 549.5 W, production lane",
-     "text": "11,925",
-     "printed_value": "11,925",
+     "in": "Qwen3-8B headline: one reticle, 8K, per user, batch 1, DFlash",
+     "text": "cooling-capped at 549.5 W per die",
+     "printed_value": "549.5",
      "status": "agrees"
     }
    ]
   },
   {
-   "id": "qwen.dflash_cap_A",
-   "section": "Qwen3-8B speculation",
-   "claim": "Qwen3-8B DFlash cooling-capped rate, scenario A",
+   "id": "qwen.dflash_energy_B",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B reticle with DFlash at its design rate, energy per token, scenario B (mJ)",
    "evidence_class": "model",
-   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate",
+   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
    "derived": false,
    "derivation": null,
-   "record_value": 4731.32,
+   "record_value": 53.5833,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
-     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
-     "text": "4,689 / 4,731",
-     "printed_value": "4,731",
+     "in": "Interactive and agentic use of language models",
+     "text": "with DFlash spends 53.6 mJ per token",
+     "printed_value": "53.6",
      "status": "agrees"
     },
     {
-     "in": "ROM die power-capped at 549.5 W, measured ASAP7 lane",
-     "text": "4,731",
-     "printed_value": "4,731",
+     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
+     "text": "53.6 / 108 mJ",
+     "printed_value": "53.6",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle with DFlash (m = 3, block 3) at the serial step",
+     "text": "53.6 / 108.3 mJ",
+     "printed_value": "53.6",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "production lane at 1.40 pJ/MAC (GPU tensor core)",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_lane_at_gpu_tensor_1p40pj.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
+      "value": 67.9498
+     },
+     {
+      "label": "older HBM die allocation (0.8)",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_old_hbm_allocation_die_0p8.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
+      "value": 53.5833
+     },
+     {
+      "label": "HBM die energy at the GH200 8.23 pJ/bit",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_hbm_die_gh200_8p23.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
+      "value": 53.5833
+     },
+     {
+      "label": "scenario A (measured ASAP7 lane)",
+      "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
+      "value": 108.263
+     }
+    ],
+    "range": [
+     53.5833,
+     108.263
+    ]
+   }
+  },
+  {
+   "id": "qwen.dflash_energy_A",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B reticle with DFlash, energy per token, scenario A (mJ)",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.energy_per_token_mj",
+   "derived": false,
+   "derivation": null,
+   "record_value": 108.263,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "(108 mJ on our measured lane",
+     "printed_value": "108",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
+     "text": "53.6 / 108 mJ",
+     "printed_value": "108",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle with DFlash (m = 3, block 3) at the serial step",
+     "text": "53.6 / 108.3 mJ",
+     "printed_value": "108.3",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.dflash_die_power_B",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B die power with DFlash at its design rate, scenario B (W)",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.die_w_at_design_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 589.99,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
+     "text": "590 / 1,304 W",
+     "printed_value": "590",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.dflash_die_power_A",
+   "section": "Qwen3-8B headline (DFlash)",
+   "claim": "Qwen3-8B die power with DFlash at its design rate, scenario A (W)",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.die_w_at_design_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1303.68,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
+     "text": "590 / 1,304 W",
+     "printed_value": "1,304",
+     "status": "agrees"
+    },
+    {
+     "in": "Where the energy goes",
+     "text": "die at 1,304 W with DFlash",
+     "printed_value": "1,304",
      "status": "agrees"
     }
    ]
   },
   {
    "id": "qwen.tau_block3",
-   "section": "Qwen3-8B speculation",
+   "section": "Qwen3-8B headline (DFlash)",
    "claim": "DFlash acceptance tau at block 3, pooled over 264 prompt turns (BF16, GPU)",
    "evidence_class": "measured-quality",
    "binding": "results/speculative/dflash_block_acceptance.json#blocks.3.pooled.primary.tau_direct_cycle_weighted",
@@ -603,7 +522,7 @@
   },
   {
    "id": "qwen.tau_block16",
-   "section": "Qwen3-8B speculation",
+   "section": "Qwen3-8B headline (DFlash)",
    "claim": "DFlash acceptance tau at block 16, pooled",
    "evidence_class": "measured-quality",
    "binding": "results/speculative/dflash_block_acceptance.json#blocks.16.pooled.primary.tau_direct_cycle_weighted",
@@ -634,6 +553,370 @@
      4.6623
     ]
    }
+  },
+  {
+   "id": "qwen.rate_8k",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B without speculation: uncapped autoregressive design rate at specification widths (RTL-calibrated)",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 8910.2,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "the RTL-calibrated chain targets 8,910 tokens/s",
+     "printed_value": "8,910",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B without speculation, at specification widths",
+     "text": "8,910 tok/s (8,941; 8,494)",
+     "printed_value": "8,910",
+     "status": "agrees"
+    },
+    {
+     "in": "S3 · specialized ROM accelerator",
+     "text": "8,910 calibrated",
+     "printed_value": "8,910",
+     "status": "agrees"
+    },
+    {
+     "in": "The GPU comparisons in the attribution ladder separate software",
+     "text": "the calibrated model targets 8,910 tokens/s",
+     "printed_value": "8,910",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM reticle, the core at specification widths",
+     "text": "8,910",
+     "printed_value": "8,910",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
+     "text": "13,052 / 8,910 tok/s",
+     "printed_value": "8,910",
+     "status": "agrees"
+    },
+    {
+     "in": "Fast per-user decode is limited on today's accelerators",
+     "text": "at 8,910 tokens/s, is within 0.3%",
+     "printed_value": "8,910",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "cooling cap, scenario B (production lane)",
+      "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+      "value": 7442.41
+     },
+     {
+      "label": "cooling cap, scenario A (lane as built)",
+      "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+      "value": 4689.36
+     },
+     {
+      "label": "KV in BF16 instead of FP8",
+      "binding": "results/arch/qwen3_budget.json#rom_token[\"8192/bf16\"].tokens_s",
+      "value": 4470.3
+     }
+    ],
+    "range": [
+     4470.3,
+     8910.2
+    ]
+   }
+  },
+  {
+   "id": "qwen.kv_floor",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B ideal FP8 KV bandwidth ceiling at 8K (tokens/s)",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 8940.7,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "ideal FP8 KV bandwidth ceiling of 8,941 tokens/s",
+     "printed_value": "8,941",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B without speculation, at specification widths",
+     "text": "8,910 tok/s (8,941; 8,494)",
+     "printed_value": "8,941",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM reticle, budget target (KV stream",
+     "text": "8,494 / 8,941",
+     "printed_value": "8,941",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.target",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B budget target (KV stream / 0.95)",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#budget.target_tokens_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 8493.7,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "above its 8,494 target",
+     "printed_value": "8,494",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B without speculation, at specification widths",
+     "text": "8,910 tok/s (8,941; 8,494)",
+     "printed_value": "8,494",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM reticle, budget target (KV stream",
+     "text": "8,494 / 8,941",
+     "printed_value": "8,494",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.chain_cycles",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B calibrated dependency chain per token at 8K (cycles)",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles",
+   "derived": false,
+   "derivation": null,
+   "record_value": 123301.0,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "Its 123,301-cycle dependency chain",
+     "printed_value": "123,301",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
+     "text": "123,301-cycle calibrated chain",
+     "printed_value": "123,301",
+     "status": "agrees"
+    },
+    {
+     "in": "The Qwen3 chain was cut to the KV floor",
+     "text": "174,856 → 123,301 cycles",
+     "printed_value": "123,301",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.kv_stream_cycles",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B FP8 KV stream floor at 8K (cycles)",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles",
+   "derived": false,
+   "derivation": null,
+   "record_value": 122881.0,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "the 122,881-cycle KV stream floor",
+     "printed_value": "122,881",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B, 8K, FP8 KV, DFlash (m = 3, block 3) / autoregressive",
+     "text": "a 122,881-cycle KV stream",
+     "printed_value": "122,881",
+     "status": "agrees"
+    },
+    {
+     "in": "The Qwen3 chain was cut to the KV floor",
+     "text": "the 122,881-cycle FP8 KV stream",
+     "printed_value": "122,881",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.spec_chain",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B token in the analytical (specification) chain",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#dependency_chain[\"8192/spec\"].tokens_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 7689.0,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
+   "printed": [
+    {
+     "in": "Same token in the analytical chain at specification widths",
+     "text": "7,689 tok/s",
+     "printed_value": "7,689",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM reticle, specification chain (three lane copies",
+     "text": "7,689",
+     "printed_value": "7,689",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.cap_B",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B autoregressive cooling-capped rate, scenario B (production lane)",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 7442.41,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "Cooling caps this autoregressive rate at 7,442",
+     "printed_value": "7,442",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B without speculation, at specification widths",
+     "text": "cap 7,442 / 4,689",
+     "printed_value": "7,442",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
+     "text": "11,925 / 7,442 and 4,731 / 4,689",
+     "printed_value": "7,442",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
+     "text": "7,442 / 11,925 (B)",
+     "printed_value": "7,442",
+     "status": "agrees"
+    },
+    {
+     "in": "The GPU comparisons in the attribution ladder separate software",
+     "text": "(capped at 7,442 and 4,689)",
+     "printed_value": "7,442",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM die power-capped at 549.5 W, production lane",
+     "text": "7,442",
+     "printed_value": "7,442",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "production lane at 1.40 pJ/MAC (GPU tensor core)",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_lane_at_gpu_tensor_1p40pj.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+      "value": 6448.73
+     },
+     {
+      "label": "older HBM die allocation (0.8)",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_old_hbm_allocation_die_0p8.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+      "value": 8910.23
+     },
+     {
+      "label": "HBM die energy at the GH200 8.23 pJ/bit",
+      "binding": "results/arch/power_scenarios.json#sensitivities.B_hbm_die_gh200_8p23.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+      "value": 8605.35
+     }
+    ],
+    "range": [
+     6448.73,
+     8910.23
+    ]
+   }
+  },
+  {
+   "id": "qwen.cap_A",
+   "section": "Qwen3-8B autoregressive (uncapped target)",
+   "claim": "Qwen3-8B autoregressive cooling-capped rate, scenario A (lane as built, ASAP7)",
+   "evidence_class": "model",
+   "binding": "results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 4689.36,
+   "records": [
+    "results/arch/power_scenarios.json"
+   ],
+   "printed": [
+    {
+     "in": "Interactive and agentic use of language models",
+     "text": "autoregressive rate at 7,442 and 4,689",
+     "printed_value": "4,689",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B without speculation, at specification widths",
+     "text": "cap 7,442 / 4,689",
+     "printed_value": "4,689",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B cooling-capped rate at 549.5 W per die",
+     "text": "11,925 / 7,442 and 4,731 / 4,689",
+     "printed_value": "4,689",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
+     "text": "4,689 / 4,731 (A)",
+     "printed_value": "4,689",
+     "status": "agrees"
+    },
+    {
+     "in": "The GPU comparisons in the attribution ladder separate software",
+     "text": "(capped at 7,442 and 4,689)",
+     "printed_value": "4,689",
+     "status": "agrees"
+    },
+    {
+     "in": "ROM die power-capped at 549.5 W, measured ASAP7 lane",
+     "text": "4,689",
+     "printed_value": "4,689",
+     "status": "agrees"
+    }
+   ]
   },
   {
    "id": "qwen.hdc_hbm_rate",
@@ -671,7 +954,13 @@
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "that is 6.5× the same core",
+     "text": "it is 6.5× the same core",
+     "printed_value": "6.5",
+     "status": "agrees"
+    },
+    {
+     "in": "Mask-ROM weights beside the multipliers",
+     "text": "the two designs are 6.5× and 2.3×",
      "printed_value": "6.5",
      "status": "agrees"
     },
@@ -689,7 +978,7 @@
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "6.5× the same core on six HBM stacks",
+     "text": "that is 6.5× the same core on six HBM stacks",
      "printed_value": "6.5",
      "status": "agrees"
     },
@@ -886,7 +1175,7 @@
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "spends 88 mJ per token at batch 1",
+     "text": "88 and 123 mJ without speculation",
      "printed_value": "88",
      "status": "agrees"
     },
@@ -903,8 +1192,14 @@
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s under the power scenarios",
-     "text": "88.1 / 123 mJ",
+     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
+     "text": "88.1 / 123 mJ;",
+     "printed_value": "88.1",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
+     "text": "(88.1 / 123 mJ",
      "printed_value": "88.1",
      "status": "agrees"
     },
@@ -965,7 +1260,7 @@
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
-     "text": "(123 mJ on our measured lane)",
+     "text": "88 and 123 mJ without speculation",
      "printed_value": "123",
      "status": "agrees"
     },
@@ -982,8 +1277,14 @@
      "status": "agrees"
     },
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s under the power scenarios",
-     "text": "88.1 / 123 mJ",
+     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
+     "text": "88.1 / 123 mJ;",
+     "printed_value": "123",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
+     "text": "(88.1 / 123 mJ",
      "printed_value": "123",
      "status": "agrees"
     }
@@ -1171,8 +1472,14 @@
    ],
    "printed": [
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s under the power scenarios",
+     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
      "text": "637 / 947 W",
+     "printed_value": "637",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
+     "text": "637 / 947 W)",
      "printed_value": "637",
      "status": "agrees"
     }
@@ -1192,8 +1499,14 @@
    ],
    "printed": [
     {
-     "in": "Qwen3-8B reticle at 8,910 tok/s under the power scenarios",
+     "in": "Qwen3-8B reticle at 8,910 tok/s without speculation, power scenarios B / A",
      "text": "637 / 947 W",
+     "printed_value": "947",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle under the power scenarios, production lane / lane as built",
+     "text": "637 / 947 W)",
      "printed_value": "947",
      "status": "agrees"
     }
@@ -1446,13 +1759,13 @@
    "printed": [
     {
      "in": "Mask-ROM weights beside the multipliers",
-     "text": "8,185 tokens/s on DeepSeek-V4.1-Flash at 1M",
+     "text": "at 1M context gets 8,185 tokens/s",
      "printed_value": "8,185",
      "status": "agrees"
     },
     {
      "in": "Interactive and agentic use of language models",
-     "text": "8,185 tokens/s in the adopted design",
+     "text": "the adopted design decodes 8,185 tokens/s",
      "printed_value": "8,185",
      "status": "agrees"
     },
@@ -1985,7 +2298,7 @@
    "printed": [
     {
      "in": "Mask-ROM weights beside the multipliers",
-     "text": "2.3–6.5× model-specific HBM comparators",
+     "text": "the two designs are 6.5× and 2.3×",
      "printed_value": "2.3",
      "status": "agrees"
     },
@@ -3994,7 +4307,7 @@
   "results/arch/v41_rack.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "5f97a4671b682c50ac84085000f3e401f9e054806469124afa6cb61eb645c01c",
+   "sha256": "9a62600d8d756656a0f6572965d284980d0d675ab683589b1b189612f98ab83b",
    "schema": "v41_rack/1",
    "tool": "tools/v41_rack_design.py",
    "command": "python3 tools/v41_rack_design.py",

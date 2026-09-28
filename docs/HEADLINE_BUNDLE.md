@@ -6,10 +6,10 @@ This appendix answers finding 6 and recommendation 6 of `docs/ARCHITECTURE_ATLAS
 
 ## B.1 Coverage
 
-- Headlines enumerated: 130 (264 printed occurrences in the atlas).
-- Bound to a record: 117, of which 3 are a ratio or an aggregate of record fields computed here. Unbound: 13 (Section B.5).
-- Printed occurrences that agree with their record under the written-precision rule: 247.
-- Headlines with a sensitivity range taken from the record's own variants: 14.
+- Headlines enumerated: 134 (296 printed occurrences in the atlas).
+- Bound to a record: 121, of which 3 are a ratio or an aggregate of record fields computed here. Unbound: 13 (Section B.5).
+- Printed occurrences that agree with their record under the written-precision rule: 279.
+- Headlines with a sensitivity range taken from the record's own variants: 16.
 - Records: 28, of which 20 pin their sources.
 
 Written-precision rule (from `tools/check_prose_figures.py`): a printed figure agrees with its record when they differ by at most half of the last digit printed, so `2.3` agrees with 2.286 and `8,185` with 8,184.9.
@@ -22,7 +22,7 @@ Written-precision rule (from `tools/check_prose_figures.py`): a printed figure a
 | measured-physical | 11 | Read from an ASAP7 synthesis, place-and-route or DFT run of this repository's RTL (predictive 7 nm PDK; not silicon). |
 | measured-quality | 8 | Measured model quality or acceptance on real weights, on a GPU, under an emulation of the deployment arithmetic. |
 | measured-gpu | 6 | Measured by this project on GPU hardware (microbenchmarks, application runs). |
-| model | 82 | An analytical, specification, calibrated or design-point model evaluated by a repository tool; RTL-calibrated where stated. Not a measurement of a chip. |
+| model | 86 | An analytical, specification, calibrated or design-point model evaluated by a repository tool; RTL-calibrated where stated. Not a measurement of a chip. |
 | third-party | 2 | A figure published by someone else and carried into a record as a cited input. |
 
 No headline in the atlas is a measurement of fabricated silicon. Every rate of a full-size chip is `model`; the RTL and physical classes are reduced vehicles, blocks and tiles.
@@ -31,59 +31,54 @@ No headline in the atlas is a measurement of fabricated silicon. Every rate of a
 
 Printed: the atlas literal and how many places print it. Record value: what the bound field holds now. Range: the lowest and highest of the headline and the record's own variants (listed under each section), unit as in the claim.
 
-### Qwen3-8B rate
+### Qwen3-8B headline (DFlash)
 
 | Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
 |---|---|---|---|---|---|---|---|
-| `qwen.rate_8k` | Qwen3-8B, one reticle, 8K, batch 1, per-user rate at specification widths (RTL-calibrated) | 8,910 | 7 | 8910.2 | model | `results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s` | 4470.3 – 8910.2 | <!-- figure: 8,910 src="results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s" name="qwen.rate_8k" -->
-| `qwen.kv_floor` | Qwen3-8B ideal FP8 KV bandwidth ceiling at 8K (tokens/s) | 8,941 | 3 | 8940.7 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s` |  | <!-- figure: 8,941 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s" name="qwen.kv_floor" -->
-| `qwen.target` | Qwen3-8B budget target (KV stream / 0.95) | 8,494 | 3 | 8493.7 | model | `results/arch/qwen3_budget.json#budget.target_tokens_s` |  | <!-- figure: 8,494 src="results/arch/qwen3_budget.json#budget.target_tokens_s" name="qwen.target" -->
-| `qwen.chain_cycles` | Qwen3-8B calibrated dependency chain per token at 8K (cycles) | 123,301 | 2 | 123301 | model | `results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles` |  | <!-- figure: 123,301 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="qwen.chain_cycles" -->
-| `qwen.kv_stream_cycles` | Qwen3-8B FP8 KV stream floor at 8K (cycles) | 122,881 | 2 | 122881 | model | `results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles` |  | <!-- figure: 122,881 src="results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles" name="qwen.kv_stream_cycles" -->
-| `qwen.spec_chain` | Qwen3-8B token in the analytical (specification) chain | 7,689 | 2 | 7689 | model | `results/arch/qwen3_budget.json#dependency_chain["8192/spec"].tokens_s` |  | <!-- figure: 7,689 src="results/arch/qwen3_budget.json#dependency_chain['8192/spec'].tokens_s" name="qwen.spec_chain" -->
-
-Sensitivity variants:
-
-- `qwen.rate_8k`: cooling cap, scenario B (production lane): 7442.41; cooling cap, scenario A (measured lane): 4689.36; KV in BF16 instead of FP8: 4470.3
-
-### Qwen3-8B power
-
-| Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
-|---|---|---|---|---|---|---|---|
-| `qwen.cooling_limit_w` | Single-die package cooling limit (W per die) | 549.5 | 2 | 549.472 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_limit_w` |  | <!-- figure: 549.5 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_limit_w" name="qwen.cooling_limit_w" -->
-| `qwen.cap_B` | Qwen3-8B cooling-capped rate, scenario B (production lane) | 7,442 | 7 | 7442.41 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate` | 6448.73 – 8910.23 | <!-- figure: 7,442 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate" name="qwen.cap_B" -->
-| `qwen.cap_A` | Qwen3-8B cooling-capped rate, scenario A (measured ASAP7 lane) | 4,689 | 6 | 4689.36 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate` |  | <!-- figure: 4,689 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate" name="qwen.cap_A" -->
-| `qwen.die_power_B` | Qwen3-8B die power at the design rate, scenario B (W) | 637 | 1 | 636.601 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate` |  | <!-- figure: 637 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate" name="qwen.die_power_B" -->
-| `qwen.die_power_A` | Qwen3-8B die power at the design rate, scenario A (W) | 947 | 1 | 947.114 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate` |  | <!-- figure: 947 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate" name="qwen.die_power_A" -->
-| `qwen.provisioned_w` | Qwen3-8B package provisioned power at 1.2 times the saturated worst case, scenario B (W) | 1,608 | 1 | 1608.2 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.worst_case.provisioned_w` |  | <!-- figure: 1,608 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.worst_case.provisioned_w" name="qwen.provisioned_w" -->
-
-Sensitivity variants:
-
-- `qwen.cap_B`: production lane at 1.40 pJ/MAC (GPU tensor core): 6448.73; older HBM die allocation (0.8): 8910.23; HBM die energy at the GH200 8.23 pJ/bit: 8605.35
-
-### Qwen3-8B speculation
-
-| Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
-|---|---|---|---|---|---|---|---|
-| `qwen.dflash` | Qwen3-8B DFlash, three lane copies, block 3, serial draft + verify + commit (tokens/s) | 13,052 | 3 | 13052.1 | model | `results/arch/qwen3_budget.json#dflash.rom["8192/fp8/m3"].best.tokens_s` | 13052.1 – 13370.7 | <!-- figure: 13,052 src="results/arch/qwen3_budget.json#dflash.rom['8192/fp8/m3'].best.tokens_s" name="qwen.dflash" -->
-| `qwen.dflash_speedup` | Qwen3-8B DFlash speed-up over autoregressive (three lane copies) | 1.70 | 2 | 1.697 | model | `results/arch/qwen3_budget.json#dflash.rom["8192/fp8/m3"].best.speedup` |  | <!-- figure: 1.70 src="results/arch/qwen3_budget.json#dflash.rom['8192/fp8/m3'].best.speedup" name="qwen.dflash_speedup" -->
-| `qwen.dflash_cap_B` | Qwen3-8B DFlash cooling-capped rate, scenario B | 11,925 | 2 | 11925.3 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate` |  | <!-- figure: 11,925 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate" name="qwen.dflash_cap_B" -->
-| `qwen.dflash_cap_A` | Qwen3-8B DFlash cooling-capped rate, scenario A | 4,731 | 2 | 4731.32 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate` |  | <!-- figure: 4,731 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate" name="qwen.dflash_cap_A" -->
+| `qwen.dflash` | Qwen3-8B headline: DFlash, three lane copies, block 3, serial draft + verify + commit, design rate (tokens/s) | 13,052 | 7 | 13052.1 | model | `results/arch/qwen3_budget.json#dflash.rom["8192/fp8/m3"].best.tokens_s` | 4731.32 – 13370.7 | <!-- figure: 13,052 src="results/arch/qwen3_budget.json#dflash.rom['8192/fp8/m3'].best.tokens_s" name="qwen.dflash" -->
+| `qwen.dflash_cap_B` | Qwen3-8B DFlash cooling-capped rate at the single-die cooling limit, scenario B (production lane) | 11,925 | 9 | 11925.3 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate` | 8521.17 – 13052.1 | <!-- figure: 11,925 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.capped_rate" name="qwen.dflash_cap_B" -->
+| `qwen.dflash_cap_A` | Qwen3-8B DFlash cooling-capped rate at the single-die cooling limit, scenario A (lane as built, ASAP7) | 4,731 | 8 | 4731.32 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate` |  | <!-- figure: 4,731 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.capped_rate" name="qwen.dflash_cap_A" -->
+| `qwen.dflash_speedup` | Qwen3-8B DFlash speed-up over the plain chain (three lane copies) | 1.70 | 2 | 1.697 | model | `results/arch/qwen3_budget.json#dflash.rom["8192/fp8/m3"].best.speedup` |  | <!-- figure: 1.70 src="results/arch/qwen3_budget.json#dflash.rom['8192/fp8/m3'].best.speedup" name="qwen.dflash_speedup" -->
+| `qwen.cooling_limit_w` | Single-die package cooling limit, air = liquid (W per die) | 549.5 | 2 | 549.472 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_limit_w` |  | <!-- figure: 549.5 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.cooling_limit_w" name="qwen.cooling_limit_w" -->
+| `qwen.dflash_energy_B` | Qwen3-8B reticle with DFlash at its design rate, energy per token, scenario B (mJ) | 53.6 | 3 | 53.5833 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.energy_per_token_mj` | 53.5833 – 108.263 | <!-- figure: 53.6 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.energy_per_token_mj" name="qwen.dflash_energy_B" -->
+| `qwen.dflash_energy_A` | Qwen3-8B reticle with DFlash, energy per token, scenario A (mJ) | 108 | 3 | 108.263 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.energy_per_token_mj` |  | <!-- figure: 108 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.energy_per_token_mj" name="qwen.dflash_energy_A" -->
+| `qwen.dflash_die_power_B` | Qwen3-8B die power with DFlash at its design rate, scenario B (W) | 590 | 1 | 589.99 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.die_w_at_design_rate` |  | <!-- figure: 590 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.dflash.die_w_at_design_rate" name="qwen.dflash_die_power_B" -->
+| `qwen.dflash_die_power_A` | Qwen3-8B die power with DFlash at its design rate, scenario A (W) | 1,304 | 2 | 1303.68 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.die_w_at_design_rate` |  | <!-- figure: 1,304 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.dflash.die_w_at_design_rate" name="qwen.dflash_die_power_A" -->
 | `qwen.tau_block3` | DFlash acceptance tau at block 3, pooled over 264 prompt turns (BF16, GPU) | 2.265 | 2 | 2.2654 | measured-quality | `results/speculative/dflash_block_acceptance.json#blocks.3.pooled.primary.tau_direct_cycle_weighted` | 1.9704 – 2.8836 | <!-- figure: 2.265 src="results/speculative/dflash_block_acceptance.json#blocks.3.pooled.primary.tau_direct_cycle_weighted" name="qwen.tau_block3" -->
 | `qwen.tau_block16` | DFlash acceptance tau at block 16, pooled | 3.656 | 1 | 3.6559 | measured-quality | `results/speculative/dflash_block_acceptance.json#blocks.16.pooled.primary.tau_direct_cycle_weighted` | 3.6559 – 4.6623 | <!-- figure: 3.656 src="results/speculative/dflash_block_acceptance.json#blocks.16.pooled.primary.tau_direct_cycle_weighted" name="qwen.tau_block16" -->
 
 Sensitivity variants:
 
-- `qwen.dflash`: equal-weighted tau 2.321 instead of pooled 2.265: 13370.7
+- `qwen.dflash`: equal-weighted tau 2.321 instead of pooled 2.265: 13370.7; cooling cap, scenario B (production lane): 11925.3; cooling cap, scenario A (lane as built): 4731.32
+- `qwen.dflash_cap_B`: production lane at 1.40 pJ/MAC (GPU tensor core): 8521.17; older HBM die allocation (0.8): 13052.1; HBM die energy at the GH200 8.23 pJ/bit: 13052.1
+- `qwen.dflash_energy_B`: production lane at 1.40 pJ/MAC (GPU tensor core): 67.9498; older HBM die allocation (0.8): 53.5833; HBM die energy at the GH200 8.23 pJ/bit: 53.5833; scenario A (measured ASAP7 lane): 108.263
 - `qwen.tau_block3`: lowest workload: 1.9704; highest workload: 2.8836
 - `qwen.tau_block16`: equal-weighted mean of workloads: 4.6623
+
+### Qwen3-8B autoregressive (uncapped target)
+
+| Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
+|---|---|---|---|---|---|---|---|
+| `qwen.rate_8k` | Qwen3-8B without speculation: uncapped autoregressive design rate at specification widths (RTL-calibrated) | 8,910 | 7 | 8910.2 | model | `results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s` | 4470.3 – 8910.2 | <!-- figure: 8,910 src="results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s" name="qwen.rate_8k" -->
+| `qwen.kv_floor` | Qwen3-8B ideal FP8 KV bandwidth ceiling at 8K (tokens/s) | 8,941 | 3 | 8940.7 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s` |  | <!-- figure: 8,941 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.kv_bound_batch2.tokens_s" name="qwen.kv_floor" -->
+| `qwen.target` | Qwen3-8B budget target (KV stream / 0.95) | 8,494 | 3 | 8493.7 | model | `results/arch/qwen3_budget.json#budget.target_tokens_s` |  | <!-- figure: 8,494 src="results/arch/qwen3_budget.json#budget.target_tokens_s" name="qwen.target" -->
+| `qwen.chain_cycles` | Qwen3-8B calibrated dependency chain per token at 8K (cycles) | 123,301 | 3 | 123301 | model | `results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles` |  | <!-- figure: 123,301 src="results/arch/qwen3_budget.json#as_built_calibrated.8192.cycles" name="qwen.chain_cycles" -->
+| `qwen.kv_stream_cycles` | Qwen3-8B FP8 KV stream floor at 8K (cycles) | 122,881 | 3 | 122881 | model | `results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles` |  | <!-- figure: 122,881 src="results/arch/qwen3_budget.json#roofline_rom.8192.kv_hbm_read.cycles" name="qwen.kv_stream_cycles" -->
+| `qwen.spec_chain` | Qwen3-8B token in the analytical (specification) chain | 7,689 | 2 | 7689 | model | `results/arch/qwen3_budget.json#dependency_chain["8192/spec"].tokens_s` |  | <!-- figure: 7,689 src="results/arch/qwen3_budget.json#dependency_chain['8192/spec'].tokens_s" name="qwen.spec_chain" -->
+| `qwen.cap_B` | Qwen3-8B autoregressive cooling-capped rate, scenario B (production lane) | 7,442 | 6 | 7442.41 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate` | 6448.73 – 8910.23 | <!-- figure: 7,442 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.capped_rate" name="qwen.cap_B" -->
+| `qwen.cap_A` | Qwen3-8B autoregressive cooling-capped rate, scenario A (lane as built, ASAP7) | 4,689 | 6 | 4689.36 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate` |  | <!-- figure: 4,689 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.capped_rate" name="qwen.cap_A" -->
+
+Sensitivity variants:
+
+- `qwen.rate_8k`: cooling cap, scenario B (production lane): 7442.41; cooling cap, scenario A (lane as built): 4689.36; KV in BF16 instead of FP8: 4470.3
+- `qwen.cap_B`: production lane at 1.40 pJ/MAC (GPU tensor core): 6448.73; older HBM die allocation (0.8): 8910.23; HBM die energy at the GH200 8.23 pJ/bit: 8605.35
 
 ### Qwen3-8B ROM / HBM
 
 | Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
 |---|---|---|---|---|---|---|---|
 | `qwen.hdc_hbm_rate` | HDC-HBM: the same core on six HBM stacks at the ROM's 3.5-bit weights (tokens/s) | 1,379 | 1 | 1379.3 | model | `results/arch/qwen3_budget.json#hbm_comparator.8192["rom_format_3.5b"].tokens_s` |  | <!-- figure: 1,379 src="results/arch/qwen3_budget.json#hbm_comparator.8192['rom_format_3.5b'].tokens_s" name="qwen.hdc_hbm_rate" -->
-| `qwen.rom_over_hdc_hbm` | Qwen3-8B ROM / same core on six HBM stacks, per-user rate (derived from two calibrated rows) | 6.5 | 5 | 6.45994 | model | `(results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s) / (results/arch/qwen3_budget.json#hbm_comparator.8192["rom_format_3.5b"].tokens_s)` |  |
+| `qwen.rom_over_hdc_hbm` | Qwen3-8B ROM / same core on six HBM stacks, per-user rate (derived from two calibrated rows) | 6.5 | 6 | 6.45994 | model | `(results/arch/qwen3_budget.json#power.points.ar_batch1.at.design.tokens_s) / (results/arch/qwen3_budget.json#hbm_comparator.8192["rom_format_3.5b"].tokens_s)` |  |
 | `qwen.ladder_s3_over_s2` | Attribution ladder S3 / S2, Qwen3-8B | 4.84 | 1 | 4.84495 | model | `results/arch/decode_roofline.json#models.qwen3.ladders.per_user[step=S3].multiplier` |  | <!-- figure: 4.84 src="results/arch/decode_roofline.json#models.qwen3.ladders.per_user[step=S3].multiplier" name="qwen.ladder_s3_over_s2" -->
 | `qwen.ladder_s0` | Ladder S0: cited B200 SGLang Qwen3-8B batch-1 rate (context match unverified) | 230 | 1 | 230 | third-party | `results/arch/decode_roofline.json#models.qwen3.ladders.per_user[step=S0].value` |  | <!-- figure: 230 src="results/arch/decode_roofline.json#models.qwen3.ladders.per_user[step=S0].value" name="qwen.ladder_s0" -->
 | `qwen.ladder_s1` | Ladder S1: idealized maximum-fusion B200, BF16 | 457 | 1 | 457.428 | model | `results/arch/decode_roofline.json#models.qwen3.ladders.per_user[step=S1].value` |  | <!-- figure: 457 src="results/arch/decode_roofline.json#models.qwen3.ladders.per_user[step=S1].value" name="qwen.ladder_s1" -->
@@ -97,8 +92,8 @@ Sensitivity variants:
 
 | Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
 |---|---|---|---|---|---|---|---|
-| `qwen.energy_B` | Qwen3-8B ROM reticle energy per token at batch 1, scenario B (mJ) | 88 | 6 | 88.116 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj` | 88.116 – 122.965 | <!-- figure: 88 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj" name="qwen.energy_B" -->
-| `qwen.energy_A` | Qwen3-8B ROM reticle energy per token at batch 1, scenario A (mJ) | 123 | 4 | 122.965 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj` |  | <!-- figure: 123 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj" name="qwen.energy_A" -->
+| `qwen.energy_B` | Qwen3-8B ROM reticle energy per token at batch 1, scenario B (mJ) | 88 | 7 | 88.116 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj` | 88.116 – 122.965 | <!-- figure: 88 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj" name="qwen.energy_B" -->
+| `qwen.energy_A` | Qwen3-8B ROM reticle energy per token at batch 1, scenario A (mJ) | 123 | 5 | 122.965 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj` |  | <!-- figure: 123 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.energy_per_token_mj" name="qwen.energy_A" -->
 | `qwen.hbm_energy_B` | Same core on HBM at 3.5-bit weights, energy per token at batch 1, scenario B (mJ) | 560 | 4 | 560.372 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch1.energy_per_token_mj` |  | <!-- figure: 560 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch1.energy_per_token_mj" name="qwen.hbm_energy_B" -->
 | `qwen.hbm_energy_A` | Same core on HBM at 3.5-bit weights, energy per token at batch 1, scenario A (mJ) | 595 | 2 | 595.221 | model | `results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.hbm_comparator.rom35_batch1.energy_per_token_mj` |  | <!-- figure: 595 src="results/arch/qwen3_budget.json#power_production.scenarios.A_measured_implementation.hbm_comparator.rom35_batch1.energy_per_token_mj" name="qwen.hbm_energy_A" -->
 | `qwen.energy_ratio_B` | Qwen3-8B energy HBM / ROM at batch 1, same 3.5-bit weights, scenario B | 6.4 | 3 | 6.36 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.ratios_batch1.hbm_rom_format_over_rom` |  | <!-- figure: 6.4 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.ratios_batch1.hbm_rom_format_over_rom" name="qwen.energy_ratio_B" -->
@@ -109,6 +104,14 @@ Sensitivity variants:
 Sensitivity variants:
 
 - `qwen.energy_B`: production lane at 1.40 pJ/MAC (GPU tensor core): 97.2626; older HBM die allocation (0.8): 88.116; HBM die energy at the GH200 8.23 pJ/bit: 88.116; scenario A (measured ASAP7 lane): 122.965
+
+### Qwen3-8B power
+
+| Id | Claim | Printed | Places | Record value | Class | Bound to | Range |
+|---|---|---|---|---|---|---|---|
+| `qwen.die_power_B` | Qwen3-8B die power at the design rate, scenario B (W) | 637 | 2 | 636.601 | model | `results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate` |  | <!-- figure: 637 src="results/arch/power_scenarios.json#scenarios.B_proposed_production.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate" name="qwen.die_power_B" -->
+| `qwen.die_power_A` | Qwen3-8B die power at the design rate, scenario A (W) | 947 | 2 | 947.114 | model | `results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate` |  | <!-- figure: 947 src="results/arch/power_scenarios.json#scenarios.A_measured_implementation.qwen3_8b_rom_8k.ar_batch1.die_w_at_design_rate" name="qwen.die_power_A" -->
+| `qwen.provisioned_w` | Qwen3-8B package provisioned power at 1.2 times the saturated worst case, scenario B (W) | 1,608 | 1 | 1608.2 | model | `results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.worst_case.provisioned_w` |  | <!-- figure: 1,608 src="results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.worst_case.provisioned_w" name="qwen.provisioned_w" -->
 
 ### Qwen3-8B batching
 
