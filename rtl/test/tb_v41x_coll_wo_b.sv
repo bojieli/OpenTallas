@@ -11,7 +11,7 @@ module tb_v41x_coll_wo_b;
   wire [N*N-1:0] txv;
   wire [N*PW-1:0] txr;
   wire [2*N*N-1:0] co;
-  integer cyc=0, recv[0:3];
+  integer cyc=0, recv[0:3], first_out=-1, last_out=-1;
   genvar s,t;
   generate for(s=0;s<N;s=s+1) begin : die
     integer sent=0;
@@ -42,6 +42,10 @@ module tb_v41x_coll_wo_b;
       if(od[s*FW+:FW] !== expw[recv[s]] || ol[s] !== (recv[s]==3) || oe[s])
         $fatal(1,"wo_b rank=%0d word=%0d mismatch got=%h exp=%h",s,recv[s],od[s*FW+:FW],expw[recv[s]]);
       recv[s]=recv[s]+1;
+      if (s==0) begin
+        if (first_out<0) first_out=cyc;
+        last_out=cyc;
+      end
     end
   end endgenerate
   initial begin
@@ -55,7 +59,7 @@ module tb_v41x_coll_wo_b;
     wait(recv[0]==4 && recv[1]==4 && recv[2]==4 && recv[3]==4);
     repeat(3) @(posedge clk);
     if(|flt) $fatal(1,"wo_b fault %b",flt);
-    $display("WO_B_PASS 64_real_layer0_rows 4_ranks pairwise_exact skewed");
+    $display("WO_B_PASS 64_real_layer0_rows 4_ranks pairwise_exact skewed first=%0d last=%0d",first_out,last_out);
     $finish;
   end
   always @(posedge clk) begin cyc<=cyc+1; if(cyc>200) $fatal(1,"wo_b timeout"); end
