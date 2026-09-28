@@ -149,6 +149,32 @@ one source from bypassing another's measured queue. Current RTL sources
 preload independently and have no such arbiter. Their sector counts establish
 layout and exactness, not simultaneous service or a sustainable token rate.
 
+The first shared-service RTL is `ot_hdc_qwen_hbm_service`, which instantiates
+128 local PC arbiters as four groups of 32. For physical PC `p`, the stack is
+`p/32`, the local channel is `p%32`, and an accepted 32-byte sector address
+must have low seven bits equal to `p`. Each PC gives rotating priority to six
+traffic owners: matrix code and row scales, Q/K norm, o/down true scales,
+embedding, head final norm, and FP8 KV. Per-owner outstanding credits are
+finite (16 per PC by default); a prefixed response tag returns an out-of-order
+read to its owner, and a write completion releases a KV credit. A delayed
+response whose owner is backpressured holds the physical response. The PC
+slice passes fairness, credit, backpressure and write-completion checks;
+the 128-PC wrapper elaborates cleanly. This is an arbitration boundary,
+awaiting the region-map adapter, packed-KV sector packer, shared controller,
+finite client windows and source-matched token replay. It does not turn the
+earlier independent-bank cycle counts into a four-stack throughput result.
+The client ID order is 0 matrix code/scale, 1 Q/K norm, 2 o/down scales,
+3 embedding, 4 head final norm, and 5 KV. Code and scale use separate sector
+regions but one client credit pool; the CROM owners may be inactive on a
+given layer. The layer controller must supply a 0–35 stage ID for the KV page.
+With 4 KV heads and 128 dimensions per die, a full 8K stage holds
+8,388,608 FP8 bytes = 262,144 physical sectors; all 36 stages need 288 MiB
+of HBM per die for one user. The ~19.3 MiB on-die ring is staging, not that
+HBM residency. Physical KV sector `base + stage*262144 + (logical_addr>>5)`
+packs 32 logical E4M3 elements, with `logical_addr[4:0]` selecting the byte.
+Exact FP8 pack/unpack, writes and token read-after-write still need a shared
+controller gate.
+
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs
 48 MiB of code sectors per die. The current ISA cannot divide these K rounds
