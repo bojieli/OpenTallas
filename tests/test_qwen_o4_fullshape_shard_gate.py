@@ -81,7 +81,8 @@ def test_cross_die_hidden_state_disagreement_rejected(tmp_path):
 
 
 def test_preflight_names_first_missing_artifacts(tmp_path):
-    result = gate.preflight(tmp_path / 'golden', tmp_path / 'rtl', 128, [0], ROOT)
+    result = gate.preflight(tmp_path / 'golden', tmp_path / 'rtl', 128, [0], ROOT,
+                            tmp_path / 'missing-checkpoint')
     assert result['status'] == 'blocked'
     assert 'golden missing ctx128_L00_D0.json' in result['blockers']
     assert any('shipped checkpoint missing' in x for x in result['blockers'])

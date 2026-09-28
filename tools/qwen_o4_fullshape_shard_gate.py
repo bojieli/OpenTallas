@@ -123,7 +123,7 @@ def compare(golden_dir: Path, rtl_dir: Path, context: int, layers: list[int],
 
 
 def preflight(golden_dir: Path, rtl_dir: Path, context: int, layers: list[int],
-              root: Path = ROOT) -> dict:
+              root: Path = ROOT, checkpoint_dir: Path | None = None) -> dict:
     blockers = []
     for layer in layers:
         for die in range(2):
@@ -132,11 +132,19 @@ def preflight(golden_dir: Path, rtl_dir: Path, context: int, layers: list[int],
                 for suffix in ('.json', '.npz'):
                     if not (directory / (stem + suffix)).is_file():
                         blockers.append(f'{label} missing {stem + suffix}')
-    checkpoint_dir = root / 'build/models/qwen3-8b'
     lock = json.loads((root / LOCK).read_text())
+    if checkpoint_dir is None:
+        checkpoint_dir = (Path.home() / '.cache/huggingface/hub/models--Qwen--Qwen3-8B'
+                          / 'snapshots' / lock['revision'])
     for item in lock['expected_files']:
-        if item['path'].endswith('.safetensors') and not (checkpoint_dir / item['path']).is_file():
-            blockers.append(f"shipped checkpoint missing {item['path']}")
+        if item['path'].endswith('.safetensors'):
+            path = checkpoint_dir / item['path']
+            if not path.is_file():
+                blockers.append(f"shipped checkpoint missing {path}")
+            elif path.stat().st_size != item['size_bytes']:
+                blockers.append(f"shipped checkpoint size mismatch {path}")
+            elif path.is_symlink() and path.resolve().name != item['sha256']:
+                blockers.append(f"shipped checkpoint blob pin mismatch {path}")
     return {'status': 'blocked' if blockers else 'ready_to_compare', 'blockers': blockers,
             'claim_boundary': 'Preflight checks presence only; it does not validate bit exactness.'}
 
@@ -148,11 +156,13 @@ def main() -> None:
     ap.add_argument('--context', type=int, required=True)
     ap.add_argument('--layers', required=True, help='comma-separated layer numbers')
     ap.add_argument('--source-root', type=Path, default=ROOT)
+    ap.add_argument('--checkpoint-dir', type=Path, help='pinned Hugging Face snapshot directory')
     ap.add_argument('--preflight', action='store_true')
     ap.add_argument('--output', type=Path)
     args = ap.parse_args()
     layers = [int(x) for x in args.layers.split(',')]
-    result = (preflight(args.golden_dir, args.rtl_dir, args.context, layers, args.source_root)
+    result = (preflight(args.golden_dir, args.rtl_dir, args.context, layers, args.source_root,
+                        args.checkpoint_dir)
               if args.preflight else compare(args.golden_dir, args.rtl_dir, args.context, layers, args.source_root))
     if args.output:
         args.output.write_text(json.dumps(result, indent=2) + '\n')
