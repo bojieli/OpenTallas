@@ -3,18 +3,18 @@
   "status": "pass",
   "scope": "writer address/mask and one-hot HBM bridge; read scheduler and full token not covered",
   "layout": "16-key groups round-robin over 4 stacks, compact local groups, 68 B/key/stack placement",
-  "writer_cases": 14,
+  "writer_cases": 15,
   "bridge_records": 4,
   "bridge_sector_writes": 12,
   "bridge_reads": 8,
-  "writer_stdout": "V41XPOOLKWRSHARD checked=14 errors=0 keys=14",
+  "writer_stdout": "V41XPOOLKWRSHARD checked=15 errors=0 keys=15",
   "bridge_stdout": "V41XPOOLBRIDGESHARD records=4 writes=12 reads=8 errors=0",
   "sources": {
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "a4ce9d82f1489d14824b7ef5ebea200c31af86859a80fbad3bbe421f5790eafd",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
-    "rtl/test/tb_hdc_v41x_idx_pool_kwr_sharded.sv": "08ec59934b1463d40a1651e3c2e6f0547c4dbb17db122ffff3ec1c4b5b8e2308",
+    "rtl/test/tb_hdc_v41x_idx_pool_kwr_sharded.sv": "c29a7014242eb5ffa203f7a2154bb025e1712e7eac5efc34c9254333e8757206",
     "rtl/test/tb_hdc_v41x_idx_pool_bridge_sharded.sv": "4ac8fd21305cbc138b25a6a02328711ca1ede069be97b354507aae80bcf54784",
-    "tools/rtl_hdc_v41x_idx_shard_write_campaign.py": "ffb8f965c64297d22b80e2b34021e590405a8c45a5467ffc1364bfd0bbc41b50"
+    "tools/rtl_hdc_v41x_idx_shard_write_campaign.py": "85cc3855a0c39690f9a6158759f1c658f6c2c38b0e49917a8b12b69689d68bf5"
   }
 }

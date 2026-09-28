@@ -31,7 +31,7 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="v41_idx_shard_write_") as d:
         tmp = Path(d)
         writer = run_bench(tmp, "tb_hdc_v41x_idx_pool_kwr_sharded", [RTL, TB_WRITER],
-                           r"V41XPOOLKWRSHARD checked=14 errors=0 keys=14")
+                           r"V41XPOOLKWRSHARD checked=15 errors=0 keys=15")
         bridge = run_bench(tmp, "tb_hdc_v41x_idx_pool_bridge_sharded", [BRIDGE, HBM, TB_BRIDGE],
                            r"V41XPOOLBRIDGESHARD records=4 writes=12 reads=8 errors=0")
     src = [RTL, BRIDGE, HBM, TB_WRITER, TB_BRIDGE, Path(__file__).resolve()]
@@ -40,7 +40,7 @@ def main() -> None:
         "status": "pass",
         "scope": "writer address/mask and one-hot HBM bridge; read scheduler and full token not covered",
         "layout": "16-key groups round-robin over 4 stacks, compact local groups, 68 B/key/stack placement",
-        "writer_cases": 14,
+        "writer_cases": 15,
         "bridge_records": 4,
         "bridge_sector_writes": 12,
         "bridge_reads": 8,

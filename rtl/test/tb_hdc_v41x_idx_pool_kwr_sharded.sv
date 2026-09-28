@@ -3,6 +3,7 @@ module tb_hdc_v41x_idx_pool_kwr_sharded;
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0, su_go=0;
     reg [23:0] row=0;
+    reg [15:0] kd=32;
     reg [7:0] kv_we=0;
     reg [8*24-1:0] kv_waddr=0;
     reg [8*32-1:0] kv_wdata=0;
@@ -14,7 +15,7 @@ module tb_hdc_v41x_idx_pool_kwr_sharded;
     wire [31:0] w_scales,dbg_keys;
     ot_hdc_v41x_idx_pool_kwr #(.SHARDED(1)) dut (
         .clk(clk),.rst_n(rst_n),.cfg_ik_base(24'd0),.su_go(su_go),
-        .i_dst(2'd3),.i_obase(24'd0),.i_orow(row),.i_nout(16'd1),.i_kdim(16'd32),
+        .i_dst(2'd3),.i_obase(24'd0),.i_orow(row),.i_nout(16'd1),.i_kdim(kd),
         .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
         .w_v(w_v),.w_rdy(1'b1),.w_stack_mask(w_stack_mask),
         .w_csec(w_csec),.w_codes(w_codes),.w_ssec(w_ssec),
@@ -50,14 +51,40 @@ module tb_hdc_v41x_idx_pool_kwr_sharded;
             @(negedge clk);
         end
     endtask
+    task automatic run_k128(input integer r);
+        integer i,l,local_row,base;
+        begin
+            local_row=((r>>6)<<4)|(r&15);
+            base=(r>>4)*128*16+(r&15);
+            @(negedge clk);row=r;kd=128;su_go=1;
+            @(negedge clk);su_go=0;
+            for(i=0;i<128;i=i+8) begin
+                kv_we=8'hff;
+                for(l=0;l<8;l=l+1) begin
+                    kv_waddr[l*24 +:24]=base+16*(i+l);
+                    kv_wdata[l*32 +:32]=32'h3f80_0000;
+                end
+                @(negedge clk);
+            end
+            kv_we=0;wait(w_v);#1;
+            if(fault || w_stack_mask !== (4'b0001 << ((r>>4)&3)) ||
+               w_csec !== (1+(local_row>>6))*128+2*(local_row&63) ||
+               w_ssec !== (local_row>>3) || w_sslot !== (local_row&7)) errors=errors+1;
+            for(i=0;i<128;i=i+1)
+                if(w_codes[4*i +:4] !== 4'h6) errors=errors+1;
+            if(w_scales !== 32'h7d7d_7d7d) errors=errors+1;
+            @(negedge clk);kd=32;
+        end
+    endtask
     initial begin
         repeat(3) @(negedge clk); rst_n=1;
         run_case(0);run_case(7);run_case(15);run_case(16);
         run_case(31);run_case(32);run_case(47);run_case(48);
         run_case(63);run_case(64);run_case(127);run_case(1023);
         run_case(65535);run_case(262143);
-        if(dbg_keys!=14) errors=errors+1;
-        $display("V41XPOOLKWRSHARD checked=14 errors=%0d keys=%0d",errors,dbg_keys);
+        run_k128(65536);
+        if(dbg_keys!=15) errors=errors+1;
+        $display("V41XPOOLKWRSHARD checked=15 errors=%0d keys=%0d",errors,dbg_keys);
         if(errors) $fatal(1,"sharded writer mismatch");
         $finish;
     end
