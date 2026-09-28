@@ -75,10 +75,16 @@ stores silently.
 
 The direct one-stage converter and direct macro store have not closed a
 0.92-ns route. Their source-pinned route records describe the actual setup
-and hold failures. A two-stage converter and input-registered macro store
-are being routed as explicit alternatives. Their physical service cannot be
-assumed from their exact functional gates. The input-registered store's
-3323 pins fit 20772 sites; the converter's 3108 pins fit 18688 sites.
-These are local pin cuts, not a routed 41-tile multicast. Full die geometry, weight ROM bank
+and hold failures. The two-stage converter's completed global route has
+setup +8.4 ps and hold +15.8 ps at 0.92 ns, but its detailed route was
+stopped when the local host ran out of available memory; it is **not** a
+routed timing verdict (`results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2/physical.json`).
+The input-registered macro store has a negative
+physical verdict: post-place setup −371 ps and CTS hold −112 ps after 9507
+hold buffers, ending in RSZ-0060. Its wider bank-local path needs another
+microarchitecture revision (`results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg/physical.json`).
+Its 3323 pins fit 20772 sites, and the
+converter's 3108 pins fit 18688 sites. These are local pin cuts, not a routed
+41-tile multicast. Full die geometry, weight ROM bank
 placement and sustained cluster service remain open; no row in this audit
 licenses a token-rate claim.
