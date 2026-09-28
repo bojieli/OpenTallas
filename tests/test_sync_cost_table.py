@@ -76,3 +76,9 @@ def test_fec_codewords_follow_the_rack_traffic_table():
     bits = (cw["t1_bytes"] + cw["t2_bytes"]) * 8
     assert abs(cw["rs272"] - bits / 2570) <= 50 and abs(cw["rs544"] - bits / 5140) <= 50
     assert f"{cw['rs272']:,}" in rec["hop_decomposition"]["ber_tail"]["reading"]
+
+
+def test_dependent_handoff_carries_its_cycle_count():
+    ot = json.loads(S.OUT.read_text())["rows"][0]["ot"]
+    assert ot["cycles"] == S.HDC_ISSUE_CYCLES and ot["clock_hz"] == S.HDC_CLOCK_HZ
+    assert ot["value"] == round(ot["cycles"] / ot["clock_hz"] * 1e9, 1)

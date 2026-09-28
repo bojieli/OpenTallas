@@ -161,7 +161,10 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # 1293: the atlas's prefill, KV-ingest and time-to-first-token figures
     # (§6.7, §6.9, §6.11, §8.4 Table 8-T1, §8.7) bind to
     # results/arch/prefill_ingest.json and the budget records (118 -> 182).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1293
+    # 1307: ten unbound headlines bind (common-KV energy, Table 8-4 routed Fmax,
+    # the 5-cycle handoff, Table 10-1 at 128 users, the reduced Qwen3 token) and
+    # four split rows are added (182 -> 196).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1307
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

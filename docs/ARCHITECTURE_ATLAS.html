@@ -250,7 +250,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <caption>Table 2-1. Results summary. Evidence classes are defined in §8.1.</caption>
     <thead><tr><th>Result</th><th class="r">Value</th><th>Evidence</th><th>Section</th></tr></thead>
     <tbody>
-      <tr><td>Reduced Qwen3 token, bit-exact in logits, vector memory and KV (4 groups, 8-lane vector stream unit, 3-cycle FP units)</td><td class="r m">24,992 cycles</td><td><span class="tag rtl">RTL sim</span></td><td>§6.4, §8.2</td></tr>
+      <tr><td>Reduced Qwen3 token, bit-exact in logits, vector memory and KV (4 groups, 8-lane vector stream unit, 3-cycle FP units)</td><td class="r m">24,440 cycles</td><td><span class="tag rtl">RTL sim</span></td><td>§6.4, §8.2</td></tr>
       <tr><td>Full Qwen3-8B quality against vendor BF16 (WikiText-2 perplexity 2K / 8K; MMLU): arithmetic contract with FP8 KV · adding the 3.5-bit INT3/INT6 stand-in, GPTQ</td><td class="r m">−0.16% / −0.09%, −0.3 pt · +22.7% / +29.6%, −7.5 pt (threshold ≤2%, ≤1 pt)</td><td><span class="tag meas">measured</span></td><td>§6.5, §8.2</td></tr>
       <tr><td>Reduced DeepSeek-V4.1 token, 40 layers, bit-exact</td><td class="r m">344,109 cycles</td><td><span class="tag rtl">RTL sim</span></td><td>§8.2</td></tr>
       <tr><td>V4.1 blocks against their benches: Engram gather; top-512 select; hyper-connection projection</td><td class="r m">32.9 B/cycle (≥13.7) · 64 scores/cycle, tail 149 (≤181) · 2,048 lanes bit-exact</td><td><span class="tag rtl">RTL sim</span></td><td>§8.2</td></tr>
@@ -1067,7 +1067,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
       <tr><td>Qwen3 reduced W4/G2 matvec tile, registered ingress, one ROM and four SRAM macros</td><td>Accepted at 1.5 ns, 320 ps max slew: setup +83.7999 ps, hold +19.7745 ps; 0 slew, capacitance and fanout violations; DRC 0, antenna 0; 12,217.6 µm² standard cells, 63,846.9 µm² macros, 18,810 CTS hold buffers</td><td>Reduced tile with analytical SRAM and ROM macro views, ASAP7 typical; SLEW_MARGIN 60% against 45% on the same netlist and SDC costs +453.6 µm² cells, +4,224 µm wire, +23,293 vias and +242 hold buffers; not full-core or whole-die closure, no system clock claim; source d9364a8e, <code>results/physical_hdc/asap7/matvec_memory_tile_ingress_slew60/physical.json</code></td></tr>
       <tr><td>V4.1 Engram gather slice / assembler</td><td>1,656 / 1,179 MHz</td><td>Block route</td></tr>
       <tr><td>V4.1 indexer output tree</td><td>1,153 MHz</td><td>Block route</td></tr>
-      <tr><td>V4.1 select control</td><td>1,094 MHz; −14 ps at 0.9 ns</td><td>Route not yet accepted</td></tr>
+      <tr><td>V4.1 select control</td><td>1,087 MHz; −20 ps at 0.9 ns</td><td>Route not yet accepted</td></tr>
       <tr><td>Shared host interface</td><td>1,135 MHz; +19 ps at 0.9 ns</td><td>Block route</td></tr>
     </tbody>
   </table></div>
@@ -1583,7 +1583,7 @@ p code,li code,figcaption,.pending p,.note{overflow-wrap:anywhere}
     <tbody>
       <tr><td>Energy per step, HBM ÷ ROM, same reduced core and HBM KV (ASAP7 logic plus modeled memory)</td><td class="r m">5.7×</td><td class="r m">—</td><td><span class="tag spec">derived</span></td></tr>
       <tr><td>Energy per token at batch 1, ROM vs HBM (Qwen: same core; V4.1: best equal-logic-area HBM array, dies and stacks with static power, scenario B)</td><td class="r m">88.1 vs 560 mJ (6.4×; 13.2× against FP8 weights), scenario B; 123 vs 595 mJ (4.8×), scenario A</td><td class="r m">200K / 1M: 2.30 vs 6.68 J (2.9×) / 2.41 vs 6.70 J (2.8×); at the 28-user fill 128 vs 1,003 mJ (7.8×) / 197 vs 1,023 mJ (5.2×), design-point model</td><td><span class="tag spec">spec / design-point model</span>; KV from HBM on both</td></tr>
-      <tr><td>Energy per token at 128 users (V4.1: saturated, the users each machine holds), ROM vs HBM comparator as defined above</td><td class="r m">83.1 vs 89.2 mJ</td><td class="r m">200K / 1M: 68 vs 356 mJ (5.3×) / 174 vs 385 mJ (2.2×)</td><td><span class="tag spec">design-point model</span>, scenario B</td></tr>
+      <tr><td>Energy per token at 128 users (V4.1: saturated, the users each machine holds), ROM vs HBM comparator as defined above</td><td class="r m">88.8 vs 95.0 mJ</td><td class="r m">200K / 1M: 68 vs 356 mJ (5.3×) / 174 vs 385 mJ (2.2×)</td><td><span class="tag spec">design-point model</span>, scenario B</td></tr>
       <tr><td>Provisioned power at 1.2× the saturated worst case</td><td class="r m">1,608 W per package (scenario B; die power-capped at 549.5 W)</td><td class="r m">38.2 kW per rack (GB200 NVL72: 132 kW)</td><td><span class="tag spec">spec model</span></td></tr>
       <tr><td>Total throughput, ROM vs HBM comparator as defined above, 128 users (V4.1: saturated)</td><td class="r m">8,941 vs 8,573</td><td class="r m">adopted design vs best comparator, saturated (1,024 users at 200K; the 866 users held at 1M), 200K / 1M: 7.2× / 2.7×</td><td><span class="tag spec">spec model</span></td></tr>
       <tr><td>Reduced Qwen3 routed matrix-engine energy, pJ per MAC (ASAP7)</td><td class="r m">3.97</td><td class="r m">—</td><td><span class="tag meas">measured</span> block logic</td></tr>

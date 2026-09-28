@@ -14,33 +14,33 @@
   "third-party": "A figure published by someone else and carried into a record as a cited input."
  },
  "summary": {
-  "headlines": 200,
-  "bound": 187,
+  "headlines": 203,
+  "bound": 201,
   "derived_in_bundle": 5,
-  "unbound": 13,
-  "printed_occurrences": 388,
-  "occurrences_agreeing": 371,
+  "unbound": 2,
+  "printed_occurrences": 392,
+  "occurrences_agreeing": 389,
   "with_sensitivity_range": 26,
   "by_evidence_class": {
    "measured-RTL": 21,
-   "measured-physical": 11,
+   "measured-physical": 13,
    "measured-quality": 8,
    "measured-gpu": 6,
-   "model": 149,
+   "model": 150,
    "third-party": 5
   },
-  "records": 29,
-  "records_with_source_pins": 20,
+  "records": 37,
+  "records_with_source_pins": 27,
   "pins_by_status": {
    "commit-outside-head": 1,
-   "current": 531,
+   "current": 571,
    "path-only": 3,
    "stale": 63
   },
   "findings_by_kind": {
    "commit-outside-head": 5,
    "stale-pin": 63,
-   "unbound": 13
+   "unbound": 2
   }
  },
  "headlines": [
@@ -1128,7 +1128,7 @@
    "claim": "H200 FP8 Qwen3-8B batch-1, calibrated to NVIDIA NIM",
    "evidence_class": "model",
    "binding": null,
-   "unbound_reason": "results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main (last committed at b42f8606 on a side branch); no tracked record holds 217",
+   "unbound_reason": "results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main (last committed at b42f8606 on a side branch, where it holds 217.408); its tool tools/iso_area_qwen3.py does not run on main (qwen3_budget.json no longer carries dflash.tau_central), so it waits on the roofline re-baseline's iso-area port",
    "printed": [
     {
      "in": "Serving systems and hardware roadmaps, however",
@@ -1144,7 +1144,7 @@
    "claim": "HBM-class ceiling, (weights + KV) over six-stack bandwidth, and ROM / ceiling",
    "evidence_class": "model",
    "binding": null,
-   "unbound_reason": "bound only in results/roofline/iso_area/qwen3_8b.json, which is not on main",
+   "unbound_reason": "bound only in results/roofline/iso_area/qwen3_8b.json (contexts.8192.hbm_roofline_tok_s.w4 = 1532.51 at b42f8606), which is not on main (see qwen.h200_fp8)",
    "printed": [
     {
      "in": "HBM-class ceiling: (weights + KV)",
@@ -1605,16 +1605,48 @@
   {
    "id": "qwen.energy_b128_table10",
    "section": "Qwen3-8B batching",
-   "claim": "Table 10-1: Qwen3-8B energy per token at 128 users, ROM vs HBM (mJ)",
+   "claim": "Table 10-1: Qwen3-8B ROM energy per token at 128 users, scenario B (mJ)",
    "evidence_class": "model",
-   "binding": null,
-   "unbound_reason": "no tracked record holds 83.1 or 89.2; Table 8-26 prints 88.8 vs 95.0 for the same measure from results/arch/qwen3_budget.json -- the two tables disagree",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.rom.batch128.energy_per_token_mj",
+   "derived": false,
+   "derivation": null,
+   "record_value": 88.839,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
    "printed": [
     {
      "in": "Energy per token at 128 users (V4.1: saturated, the users each machine holds)",
-     "text": "83.1 vs 89.2 mJ",
-     "printed_value": "83.1",
-     "status": "unbound"
+     "text": "88.8 vs 95.0 mJ",
+     "printed_value": "88.8",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "qwen.energy_b128_hbm",
+   "section": "Qwen3-8B batching",
+   "claim": "Qwen3-8B same core on HBM (ROM weight format) energy per token at 128 users, scenario B (mJ)",
+   "evidence_class": "model",
+   "binding": "results/arch/qwen3_budget.json#power_production.scenarios.B_proposed_production.hbm_comparator.rom35_batch128.energy_per_token_mj",
+   "derived": false,
+   "derivation": null,
+   "record_value": 95.034,
+   "records": [
+    "results/arch/qwen3_budget.json"
+   ],
+   "printed": [
+    {
+     "in": "At large batch, energy per token is KV bytes",
+     "text": "88.8 vs 95.0 mJ",
+     "printed_value": "95.0",
+     "status": "agrees"
+    },
+    {
+     "in": "Energy per token at 128 users (V4.1: saturated, the users each machine holds)",
+     "text": "88.8 vs 95.0 mJ",
+     "printed_value": "95.0",
+     "status": "agrees"
     }
    ]
   },
@@ -3349,14 +3381,19 @@
    "section": "Synchronisation",
    "claim": "OpenTallas on-chip dependent handoff (cycles)",
    "evidence_class": "measured-RTL",
-   "binding": null,
-   "unbound_reason": "results/arch/sync_cost_table.json carries 4.8 ns and the phrase '5-cycle' only as note text; no record field holds the cycle count",
+   "binding": "results/arch/sync_cost_table.json#rows[0].ot.cycles",
+   "derived": false,
+   "derivation": null,
+   "record_value": 5.0,
+   "records": [
+    "results/arch/sync_cost_table.json"
+   ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
      "text": "a dependent handoff costs 5 cycles in RTL",
      "printed_value": "5",
-     "status": "unbound"
+     "status": "agrees"
     }
    ]
   },
@@ -3365,32 +3402,37 @@
    "section": "Energy cross-check",
    "claim": "Reduced Qwen3 step, common HBM KV: energy HBM weights / ROM weights (derived)",
    "evidence_class": "model",
-   "binding": null,
-   "unbound_reason": "results/physical_abi3/asap7/signoff/energy_common_kv.json, the record Figures 8-1/8-2 cite, is not on main (only on a side branch at 66434aa3); no tracked record holds 5.7 or 58.82/335.35",
+   "binding": "results/physical_abi3/asap7/signoff/energy_common_kv.json#hbm_over_rom",
+   "derived": false,
+   "derivation": null,
+   "record_value": 5.70131,
+   "records": [
+    "results/physical_abi3/asap7/signoff/energy_common_kv.json"
+   ],
    "printed": [
     {
      "in": "Interactive and agentic use of language models",
      "text": "gives a derived 5.7× energy ratio",
      "printed_value": "5.7",
-     "status": "unbound"
+     "status": "agrees"
     },
     {
      "in": "Energy per step, same core: HBM ÷ ROM (reduced Qwen3, ASAP7)",
      "text": "5.7×",
      "printed_value": "5.7",
-     "status": "unbound"
+     "status": "agrees"
     },
     {
      "in": "Finding: data movement, not arithmetic, dominates decode energy",
      "text": "(5.7×)",
      "printed_value": "5.7",
-     "status": "unbound"
+     "status": "agrees"
     },
     {
      "in": "The modeled operating energy is lower at the batch sizes",
      "text": "gives 5.7× lower energy",
      "printed_value": "5.7",
-     "status": "unbound"
+     "status": "agrees"
     }
    ]
   },
@@ -3399,14 +3441,19 @@
    "section": "Energy cross-check",
    "claim": "Reduced Qwen3 step energy with ROM weights, common HBM KV (uJ)",
    "evidence_class": "model",
-   "binding": null,
-   "unbound_reason": "energy_common_kv.json not on main (see energy.common_kv_ratio)",
+   "binding": "results/physical_abi3/asap7/signoff/energy_common_kv.json#rom_common_hbm_kv_j x 1e+06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 58.8197,
+   "records": [
+    "results/physical_abi3/asap7/signoff/energy_common_kv.json"
+   ],
    "printed": [
     {
      "in": "Finding: data movement, not arithmetic, dominates decode energy",
      "text": "the ROM-weight step is 58.82 µJ",
      "printed_value": "58.82",
-     "status": "unbound"
+     "status": "agrees"
     }
    ]
   },
@@ -3415,14 +3462,19 @@
    "section": "Energy cross-check",
    "claim": "Reduced Qwen3 step energy with HBM weights, common HBM KV (uJ)",
    "evidence_class": "model",
-   "binding": null,
-   "unbound_reason": "energy_common_kv.json not on main (see energy.common_kv_ratio)",
+   "binding": "results/physical_abi3/asap7/signoff/energy_common_kv.json#hbm_comparator_j x 1e+06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 335.349,
+   "records": [
+    "results/physical_abi3/asap7/signoff/energy_common_kv.json"
+   ],
    "printed": [
     {
      "in": "Finding: data movement, not arithmetic, dominates decode energy",
      "text": "versus 335.35 µJ",
      "printed_value": "335.35",
-     "status": "unbound"
+     "status": "agrees"
     }
    ]
   },
@@ -3458,14 +3510,19 @@
    "section": "RTL gates",
    "claim": "Reduced Qwen3 token, bit-exact in logits, vector memory and KV (cycles)",
    "evidence_class": "measured-RTL",
-   "binding": null,
-   "unbound_reason": "no tracked record under results/ holds 24,992 cycles",
+   "binding": "results/rtl/hdc_decode_campaign.json#single_step.cycles",
+   "derived": false,
+   "derivation": null,
+   "record_value": 24440.0,
+   "records": [
+    "results/rtl/hdc_decode_campaign.json"
+   ],
    "printed": [
     {
      "in": "Reduced Qwen3 token, bit-exact in logits",
-     "text": "24,992 cycles",
-     "printed_value": "24,992",
-     "status": "unbound"
+     "text": "24,440 cycles",
+     "printed_value": "24,440",
+     "status": "agrees"
     }
    ]
   },
@@ -4021,80 +4078,147 @@
   {
    "id": "phys.engram_fmax",
    "section": "Physical closure",
-   "claim": "V4.1 Engram gather slice / assembler routed Fmax (MHz)",
+   "claim": "V4.1 Engram gather slice routed Fmax at 0.9 ns (MHz)",
    "evidence_class": "measured-physical",
-   "binding": null,
-   "unbound_reason": "no tracked record field holds 1,656 or 1,179 MHz (the route directories carry slack, not a published Fmax field)",
+   "binding": "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_slice/physical.json#design.fmax_hz x 1e-06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1656.24,
+   "records": [
+    "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_slice/physical.json"
+   ],
    "printed": [
     {
      "in": "V4.1 Engram gather slice / assembler",
      "text": "1,656 / 1,179 MHz",
      "printed_value": "1,656",
-     "status": "unbound"
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "phys.engram_asm_fmax",
+   "section": "Physical closure",
+   "claim": "V4.1 Engram gather assembler routed Fmax at 0.9 ns (MHz)",
+   "evidence_class": "measured-physical",
+   "binding": "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_asm/physical.json#design.fmax_hz x 1e-06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1178.59,
+   "records": [
+    "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_asm/physical.json"
+   ],
+   "printed": [
+    {
+     "in": "V4.1 Engram gather slice / assembler",
+     "text": "1,656 / 1,179 MHz",
+     "printed_value": "1,179",
+     "status": "agrees"
     }
    ]
   },
   {
    "id": "phys.indexer_tree_fmax",
    "section": "Physical closure",
-   "claim": "V4.1 indexer output tree routed Fmax (MHz)",
+   "claim": "V4.1 indexer output tree (ot_hdc_v41x_idx_tail) routed Fmax at 0.9 ns (MHz)",
    "evidence_class": "measured-physical",
-   "binding": null,
-   "unbound_reason": "no tracked record field holds 1,153 MHz",
+   "binding": "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_tail/physical.json#design.fmax_hz x 1e-06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1152.98,
+   "records": [
+    "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_tail/physical.json"
+   ],
    "printed": [
     {
      "in": "V4.1 indexer output tree",
      "text": "1,153 MHz",
      "printed_value": "1,153",
-     "status": "unbound"
+     "status": "agrees"
     }
    ]
   },
   {
    "id": "phys.select_ctrl_fmax",
    "section": "Physical closure",
-   "claim": "V4.1 select control routed Fmax (MHz)",
+   "claim": "V4.1 select control (ot_hdc_tselect, W=16) routed Fmax at 0.9 ns, not closed (MHz)",
    "evidence_class": "measured-physical",
-   "binding": null,
-   "unbound_reason": "no tracked record field holds 1,094 MHz",
+   "binding": "results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json#design.fmax_hz x 1e-06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1087.1,
+   "records": [
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json"
+   ],
    "printed": [
     {
      "in": "V4.1 select control",
-     "text": "1,094 MHz",
-     "printed_value": "1,094",
-     "status": "unbound"
+     "text": "1,087 MHz",
+     "printed_value": "1,087",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "phys.select_ctrl_wns",
+   "section": "Physical closure",
+   "claim": "V4.1 select control routed setup WNS at 0.9 ns (ps)",
+   "evidence_class": "measured-physical",
+   "binding": "results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json#design.setup_wns_ns x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": -19.8823,
+   "records": [
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json"
+   ],
+   "printed": [
+    {
+     "in": "V4.1 select control",
+     "text": "−20 ps at 0.9 ns",
+     "printed_value": "-20",
+     "status": "agrees"
     }
    ]
   },
   {
    "id": "phys.host_if_fmax",
    "section": "Physical closure",
-   "claim": "Shared host interface routed Fmax (MHz)",
+   "claim": "Shared host interface routed Fmax at 0.9 ns (MHz)",
    "evidence_class": "measured-physical",
-   "binding": null,
-   "unbound_reason": "no tracked record field holds 1,135 MHz for the host interface",
+   "binding": "results/physical_abi3/asap7/host/ot_host_if/physical.json#design.fmax_hz x 1e-06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1135.07,
+   "records": [
+    "results/physical_abi3/asap7/host/ot_host_if/physical.json"
+   ],
    "printed": [
     {
      "in": "Shared host interface",
      "text": "1,135 MHz",
      "printed_value": "1,135",
-     "status": "unbound"
+     "status": "agrees"
     }
    ]
   },
   {
    "id": "phys.lane_copy_fmax",
    "section": "Physical closure",
-   "claim": "Qwen3 lane copy, 16 lanes, routed Fmax (GHz)",
+   "claim": "Qwen3 lane copy, 16 lanes, routed Fmax at 0.9 ns (GHz)",
    "evidence_class": "measured-physical",
-   "binding": null,
-   "unbound_reason": "no tracked record field holds the lane copy's ~1.2 GHz",
+   "binding": "results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json#design.fmax_hz x 1e-09",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1.20059,
+   "records": [
+    "results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json"
+   ],
    "printed": [
     {
      "in": "Qwen3 lane copy, 16 lanes",
      "text": "≈1.2 GHz",
      "printed_value": "1.2",
-     "status": "unbound"
+     "status": "agrees"
     }
    ]
   },
@@ -5906,7 +6030,7 @@
   "results/arch/decode_roofline.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "5f36d8ec9550189f5e1fd8673a3815eb090b2834410afd729a2468f10ab7788e",
+   "sha256": "3c4196cc7e3bb208db13f699625bbbbba72f5c7d5f63091807e862eed36534ca",
    "schema": "opentallas.decode-roofline.v1",
    "tool": "tools/decode_roofline_figure.py",
    "command": "python3 tools/decode_roofline_figure.py",
@@ -5930,7 +6054,7 @@
      "field": "inputs",
      "key": "sync",
      "path": "results/arch/sync_cost_table.json",
-     "pinned": "270f9c6000bf8a903ec8bdc515e48ae07c74f52a622b44dd01667e5feddbb1de",
+     "pinned": "477feba5a222d1abba8b87fa6bada52824f006c63ed67a22f11322ddfad14f51",
      "status": "current"
     },
     {
@@ -6082,7 +6206,7 @@
   "results/arch/sync_cost_table.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "270f9c6000bf8a903ec8bdc515e48ae07c74f52a622b44dd01667e5feddbb1de",
+   "sha256": "477feba5a222d1abba8b87fa6bada52824f006c63ed67a22f11322ddfad14f51",
    "schema": "opentallas.sync-cost-table.v1",
    "tool": "tools/sync_cost_table.py",
    "command": "python3 tools/sync_cost_table.py",
@@ -6151,6 +6275,227 @@
    "command": "./gather_designs 500 21 64 16  (steps, trials, GEMVs per trial, weight matrices)",
    "pins": [],
    "pin_counts": {},
+   "commits": []
+  },
+  "results/physical_abi3/asap7/signoff/energy_common_kv.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "9723cfdb3ded09a2d086390b5922be169ebece8048094b6f04406b9ab9b50e70",
+   "schema": "hdc-common-hbm-kv-energy-v1",
+   "tool": null,
+   "command": null,
+   "pins": [],
+   "pin_counts": {},
+   "commits": []
+  },
+  "results/rtl/hdc_decode_campaign.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "34c96b1f98e572238669aeba7068de149e190c3ca9ad34ed6943868b1b5797ea",
+   "schema": "opentallas.hdc-decode-campaign.v1",
+   "tool": null,
+   "command": null,
+   "pins": [
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_core.sv",
+     "path": "rtl/hdc/ot_hdc_core.sv",
+     "pinned": "4c7251434c8f1de9e46d8bfb823e492c370cda70ebd234bb6b0c60bfe54207b0",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_delay.sv",
+     "path": "rtl/hdc/ot_hdc_delay.sv",
+     "pinned": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_fastfp.sv",
+     "path": "rtl/hdc/ot_hdc_fastfp.sv",
+     "pinned": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+     "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+     "pinned": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_fpu.sv",
+     "path": "rtl/hdc/ot_hdc_fpu.sv",
+     "pinned": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_isa.svh",
+     "path": "rtl/hdc/ot_hdc_isa.svh",
+     "pinned": "3b26786e5f2942cf398c275736670d483ee9520468144db774a64207ebb6a3b4",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_matvec.sv",
+     "path": "rtl/hdc/ot_hdc_matvec.sv",
+     "pinned": "40adece4bf2dff683307a6c254ab24eb119a6fe9ab837d0cd82432e9cf3175fe",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_reduce.sv",
+     "path": "rtl/hdc/ot_hdc_reduce.sv",
+     "pinned": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_reduce_q.sv",
+     "path": "rtl/hdc/ot_hdc_reduce_q.sv",
+     "pinned": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_sfu.sv",
+     "path": "rtl/hdc/ot_hdc_sfu.sv",
+     "pinned": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_sfu_q.sv",
+     "path": "rtl/hdc/ot_hdc_sfu_q.sv",
+     "pinned": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_stream.sv",
+     "path": "rtl/hdc/ot_hdc_stream.sv",
+     "pinned": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_vreduce.sv",
+     "path": "rtl/hdc/ot_hdc_vreduce.sv",
+     "pinned": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_vstream.sv",
+     "path": "rtl/hdc/ot_hdc_vstream.sv",
+     "pinned": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/hdc/ot_hdc_vstream_lane.sv",
+     "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+     "pinned": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+     "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+     "pinned": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+     "path": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+     "pinned": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/test/hdc_core_harness.cpp",
+     "path": "rtl/test/hdc_core_harness.cpp",
+     "pinned": "63acef62116c11d3895783763f639978aafed1364ac2641bf04153fc6117751f",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/test/hdc_fastfp_equiv_harness.cpp",
+     "path": "rtl/test/hdc_fastfp_equiv_harness.cpp",
+     "pinned": "02c74b958724db2441ca82875338cd56994ff53d51163c0a13aa4a92b9395b33",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/test/hdc_mul_equiv_harness.cpp",
+     "path": "rtl/test/hdc_mul_equiv_harness.cpp",
+     "pinned": "971f651e9fd1f4376ad3bc2fde2a9040b5a3ff67b93caa0893557bc8633ceade",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/test/tb_hdc_core.sv",
+     "path": "rtl/test/tb_hdc_core.sv",
+     "pinned": "1014d627707bad1ed26236e0d75a63342a99e847de0b786c1b8d13533595e57a",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/test/tb_hdc_fastfp_equiv.sv",
+     "path": "rtl/test/tb_hdc_fastfp_equiv.sv",
+     "pinned": "86fff7542767007261b1b4a600349309c604293712d2fe7bbbb174d3f7897549",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/test/tb_hdc_mul_equiv.sv",
+     "path": "rtl/test/tb_hdc_mul_equiv.sv",
+     "pinned": "ffab4add0e3ec50686ab05f28bc2b3e5fe8aacbb3db43d72eb789040ac1eaa53",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "rtl/test/tb_hdc_sfu.sv",
+     "path": "rtl/test/tb_hdc_sfu.sv",
+     "pinned": "b38a4a13524d1a7746ed00fc8ab44d6ad130c983ca5a0db69ab10e67c57b1965",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "tools/hdc_golden.py",
+     "path": "tools/hdc_golden.py",
+     "pinned": "f69499aff8dde029e48ac1733ad571d9779317f13556fe72e4beb62d5061e5b1",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "tools/hdc_isa.py",
+     "path": "tools/hdc_isa.py",
+     "pinned": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "tools/hdc_program.py",
+     "path": "tools/hdc_program.py",
+     "pinned": "2823f851edf9fe6e5cb744e631421c853354ae7658437e3a2f111071442982b5",
+     "status": "current"
+    },
+    {
+     "field": "input_sha256",
+     "key": "tools/rtl_hdc_decode_campaign.py",
+     "path": "tools/rtl_hdc_decode_campaign.py",
+     "pinned": "77456cbed97c007d1503b10d8f57bbe0df78084818f25f74720df3e1d95a7f92",
+     "status": "current"
+    }
+   ],
+   "pin_counts": {
+    "current": 28
+   },
    "commits": []
   },
   "results/rtl/hdc_v41_decode_campaign.json": {
@@ -10417,6 +10762,204 @@
    "pin_counts": {},
    "commits": []
   },
+  "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_slice/physical.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "1cd18de22068b794ec458091a9a4af96c3893730cd0eba154c7de7b40b6480ef",
+   "schema": 1,
+   "tool": "tools/run_abi3_physical.py",
+   "command": "python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_v41x_egather_slice --clock-period-ns 0.9 --io-delay-fraction 0 --false-path-from rst_n --slew-margin-percent 40 --stages synth,pnr --source rtl/hdc/v41x/ot_hdc_v41x_egather.sv --false-path-io --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/hx_egs3/physical.json --keep-workdir /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/hx_egs3/work --force",
+   "pins": [
+    {
+     "field": "tools",
+     "key": "abc",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+     "pinned": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce",
+     "status": "current"
+    },
+    {
+     "field": "tools",
+     "key": "yosys",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+     "pinned": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+     "status": "current"
+    }
+   ],
+   "pin_counts": {
+    "current": 2
+   },
+   "commits": [
+    {
+     "field": "git.commit",
+     "commit": "0dc7a5b9a1ee635b44e0fcdbfebc75db8db3fad5",
+     "in_head_history": true
+    }
+   ]
+  },
+  "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_asm/physical.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "7dfaa883feb9564f7152eda21e7b074ecb4dec6265c6e227ce3f37388268bca5",
+   "schema": 1,
+   "tool": "tools/run_abi3_physical.py",
+   "command": "python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_v41x_egather_asm --clock-period-ns 0.9 --io-delay-fraction 0 --false-path-from rst_n --slew-margin-percent 40 --stages synth,pnr --source rtl/hdc/v41x/ot_hdc_v41x_egather.sv --false-path-io --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/hx_ega3/physical.json --keep-workdir /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/hx_ega3/work --force",
+   "pins": [
+    {
+     "field": "tools",
+     "key": "abc",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+     "pinned": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce",
+     "status": "current"
+    },
+    {
+     "field": "tools",
+     "key": "yosys",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+     "pinned": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+     "status": "current"
+    }
+   ],
+   "pin_counts": {
+    "current": 2
+   },
+   "commits": [
+    {
+     "field": "git.commit",
+     "commit": "0dc7a5b9a1ee635b44e0fcdbfebc75db8db3fad5",
+     "in_head_history": true
+    }
+   ]
+  },
+  "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_tail/physical.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "cab38a7245efd82a9f5b51fb9a53a62cfa50eba703085f91ae1b7052f63f7d66",
+   "schema": 1,
+   "tool": "tools/run_abi3_physical.py",
+   "command": "python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_v41x_idx_tail --source rtl/hdc/v41x/ot_hdc_v41x_idx.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_delay.sv --param NCH=4 --param NKT=1 --clock-period-ns 0.9 --io-delay-fraction 0 --false-path-from rst_n --stages synth,pnr --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/tail1/physical.json --force",
+   "pins": [
+    {
+     "field": "tools",
+     "key": "abc",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+     "pinned": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce",
+     "status": "current"
+    },
+    {
+     "field": "tools",
+     "key": "yosys",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+     "pinned": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+     "status": "current"
+    }
+   ],
+   "pin_counts": {
+    "current": 2
+   },
+   "commits": [
+    {
+     "field": "git.commit",
+     "commit": "eee9623b276cb6fc3a8c51376543429242bf7d2d",
+     "in_head_history": true
+    }
+   ]
+  },
+  "results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "5ecbbfe4b1ef145dc8e68e7323edf483c63638367c6441459267fc7c83943dd5",
+   "schema": 1,
+   "tool": "tools/run_abi3_physical.py",
+   "command": "python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_tselect --source rtl/hdc/v41/ot_hdc_tselect.sv --param W=16 --param VW=16 --param IW=16 --param K=512 --param AW=12 --clock-period-ns 0.9 --io-delay-fraction 0 --slew-margin-percent 20 --stages synth,pnr --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/phys_w16/physical.json",
+   "pins": [
+    {
+     "field": "tools",
+     "key": "abc",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+     "pinned": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce",
+     "status": "current"
+    },
+    {
+     "field": "tools",
+     "key": "yosys",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+     "pinned": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+     "status": "current"
+    }
+   ],
+   "pin_counts": {
+    "current": 2
+   },
+   "commits": [
+    {
+     "field": "git.commit",
+     "commit": "a732dfa4d5c55ef70cc077d3e6273f26b53daac8",
+     "in_head_history": true
+    }
+   ]
+  },
+  "results/physical_abi3/asap7/host/ot_host_if/physical.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "58e2a4554f76817949967ba8b7a08429c6c6b2befc417cf9a1455dc2752dba04",
+   "schema": 1,
+   "tool": "tools/run_abi3_physical.py",
+   "command": "python3 tools/run_abi3_physical.py --view asap7 --top ot_host_if --source rtl/host/ot_host_if.sv --clock-period-ns 0.9 --false-path-io --slew-margin-percent 40 --stages synth,pnr --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/phys_host2/physical.json --force",
+   "pins": [
+    {
+     "field": "tools",
+     "key": "abc",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+     "pinned": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce",
+     "status": "current"
+    },
+    {
+     "field": "tools",
+     "key": "yosys",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+     "pinned": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+     "status": "current"
+    }
+   ],
+   "pin_counts": {
+    "current": 2
+   },
+   "commits": [
+    {
+     "field": "git.commit",
+     "commit": "4710e83149d0574c1be276387f9b48c0a106c2e0",
+     "in_head_history": true
+    }
+   ]
+  },
+  "results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "0a60d799abf30fee74490b7da8139da73f1fc00cd3847585a3e5fec565fa0ef9",
+   "schema": 1,
+   "tool": "tools/run_abi3_physical.py",
+   "command": "python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_lane_copy --source-root /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/mp/src --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv --source rtl/hdc/ot_hdc_fpu.sv --source rtl/proto/ot_fp32_add_rne_pipe.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_lane_copy.sv --clock-period-ns 0.9 --false-path-io --core-utilization 25 --place-density 0.55 --slew-margin-percent 20 --stages synth,pnr --nickname-tag lc --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/mp/out_lc/physical.json --force",
+   "pins": [
+    {
+     "field": "tools",
+     "key": "abc",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+     "pinned": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce",
+     "status": "current"
+    },
+    {
+     "field": "tools",
+     "key": "yosys",
+     "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+     "pinned": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+     "status": "current"
+    }
+   ],
+   "pin_counts": {
+    "current": 2
+   },
+   "commits": []
+  },
   "results/arch/prefill_ingest.json": {
    "exists": true,
    "tracked": true,
@@ -10839,82 +11382,16 @@
    "detail": "provenance.source_sha256[rtl/hdc/v41x/ot_hdc_core_v41x.sv] -> rtl/hdc/v41x/ot_hdc_core_v41x.sv is stale"
   },
   {
-   "key": "unbound:energy.common_kv_hbm_uj",
-   "kind": "unbound",
-   "headline": "energy.common_kv_hbm_uj",
-   "detail": "energy_common_kv.json not on main (see energy.common_kv_ratio)"
-  },
-  {
-   "key": "unbound:energy.common_kv_ratio",
-   "kind": "unbound",
-   "headline": "energy.common_kv_ratio",
-   "detail": "results/physical_abi3/asap7/signoff/energy_common_kv.json, the record Figures 8-1/8-2 cite, is not on main (only on a side branch at 66434aa3); no tracked record holds 5.7 or 58.82/335.35"
-  },
-  {
-   "key": "unbound:energy.common_kv_rom_uj",
-   "kind": "unbound",
-   "headline": "energy.common_kv_rom_uj",
-   "detail": "energy_common_kv.json not on main (see energy.common_kv_ratio)"
-  },
-  {
-   "key": "unbound:phys.engram_fmax",
-   "kind": "unbound",
-   "headline": "phys.engram_fmax",
-   "detail": "no tracked record field holds 1,656 or 1,179 MHz (the route directories carry slack, not a published Fmax field)"
-  },
-  {
-   "key": "unbound:phys.host_if_fmax",
-   "kind": "unbound",
-   "headline": "phys.host_if_fmax",
-   "detail": "no tracked record field holds 1,135 MHz for the host interface"
-  },
-  {
-   "key": "unbound:phys.indexer_tree_fmax",
-   "kind": "unbound",
-   "headline": "phys.indexer_tree_fmax",
-   "detail": "no tracked record field holds 1,153 MHz"
-  },
-  {
-   "key": "unbound:phys.lane_copy_fmax",
-   "kind": "unbound",
-   "headline": "phys.lane_copy_fmax",
-   "detail": "no tracked record field holds the lane copy's ~1.2 GHz"
-  },
-  {
-   "key": "unbound:phys.select_ctrl_fmax",
-   "kind": "unbound",
-   "headline": "phys.select_ctrl_fmax",
-   "detail": "no tracked record field holds 1,094 MHz"
-  },
-  {
-   "key": "unbound:qwen.energy_b128_table10",
-   "kind": "unbound",
-   "headline": "qwen.energy_b128_table10",
-   "detail": "no tracked record holds 83.1 or 89.2; Table 8-26 prints 88.8 vs 95.0 for the same measure from results/arch/qwen3_budget.json -- the two tables disagree"
-  },
-  {
    "key": "unbound:qwen.h200_fp8",
    "kind": "unbound",
    "headline": "qwen.h200_fp8",
-   "detail": "results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main (last committed at b42f8606 on a side branch); no tracked record holds 217"
+   "detail": "results/roofline/iso_area/qwen3_8b.json, the record Table 8-9 cites, is not on main (last committed at b42f8606 on a side branch, where it holds 217.408); its tool tools/iso_area_qwen3.py does not run on main (qwen3_budget.json no longer carries dflash.tau_central), so it waits on the roofline re-baseline's iso-area port"
   },
   {
    "key": "unbound:qwen.hbm_class_ceiling",
    "kind": "unbound",
    "headline": "qwen.hbm_class_ceiling",
-   "detail": "bound only in results/roofline/iso_area/qwen3_8b.json, which is not on main"
-  },
-  {
-   "key": "unbound:rtl.qwen_reduced_token",
-   "kind": "unbound",
-   "headline": "rtl.qwen_reduced_token",
-   "detail": "no tracked record under results/ holds 24,992 cycles"
-  },
-  {
-   "key": "unbound:sync.handoff_cycles",
-   "kind": "unbound",
-   "headline": "sync.handoff_cycles",
-   "detail": "results/arch/sync_cost_table.json carries 4.8 ns and the phrase '5-cycle' only as note text; no record field holds the cycle count"
+   "detail": "bound only in results/roofline/iso_area/qwen3_8b.json (contexts.8192.hbm_roofline_tok_s.w4 = 1532.51 at b42f8606), which is not on main (see qwen.h200_fp8)"
   }
  ],
  "known_findings": [
@@ -10986,18 +11463,7 @@
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/ot_hdc_accept.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv",
-  "unbound:energy.common_kv_hbm_uj",
-  "unbound:energy.common_kv_ratio",
-  "unbound:energy.common_kv_rom_uj",
-  "unbound:phys.engram_fmax",
-  "unbound:phys.host_if_fmax",
-  "unbound:phys.indexer_tree_fmax",
-  "unbound:phys.lane_copy_fmax",
-  "unbound:phys.select_ctrl_fmax",
-  "unbound:qwen.energy_b128_table10",
   "unbound:qwen.h200_fp8",
-  "unbound:qwen.hbm_class_ceiling",
-  "unbound:rtl.qwen_reduced_token",
-  "unbound:sync.handoff_cycles"
+  "unbound:qwen.hbm_class_ceiling"
  ]
 }

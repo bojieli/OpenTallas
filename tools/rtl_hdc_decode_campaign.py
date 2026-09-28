@@ -197,7 +197,7 @@ def run(memsys: bool = False) -> dict:
         img_rom = rom_args(img, I.GROUPS)
         obj = s / "obj"
         subprocess.run([vl, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
-                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", *sup, "-Mdir", str(obj),
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-TIMESCALEMOD", "--top-module", "tb_hdc_core", *sup, "-Mdir", str(obj),
                         f"-I{ISA_SVH.parent}", *extra_def,
                         *map(str, HDC), *map(str, PIPES), *extra_rtl, str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
                        check=True, capture_output=True)
@@ -245,7 +245,7 @@ def run(memsys: bool = False) -> dict:
                        capture_output=True, env=env8)
         img8_rom = rom_args(img8, 8)
         subprocess.run([vl, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
-                        "-Wno-UNUSED", "-Wno-BLKSEQ", "--top-module", "tb_hdc_core", "-GG=8", *sup8, "-Mdir", str(obj8),
+                        "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-TIMESCALEMOD", "--top-module", "tb_hdc_core", "-GG=8", *sup8, "-Mdir", str(obj8),
                         f"-I{ISA_SVH.parent}", *extra_def,
                         *map(str, HDC), *map(str, PIPES), *extra_rtl, str(TB_CORE), str(HARNESS), "-CFLAGS", "-O1"],
                        check=True, capture_output=True)

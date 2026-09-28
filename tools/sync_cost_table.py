@@ -296,13 +296,14 @@ def build():
     gpu_tok = {k: LADDER["collectives"] * v + LADDER["stage_hops"] * remote_store_us
                for k, v in (("best_kernel", best_us), ("nccl_2_27", nccl227_us), ("nccl_ring", nccl_ring_us), ("sol", sol_us))}
 
-    def cell(value, unit, cls, refs, note=""):
-        return dict(value=value, unit=unit, evidence=cls, refs=refs, note=note)
+    def cell(value, unit, cls, refs, note="", **extra):
+        return dict(value=value, unit=unit, evidence=cls, refs=refs, note=note, **extra)
 
     rows = [
      dict(event="On-chip dependent handoff (one producer -> consumer)",
           gpu=cell(round(handoff), "ns", "measured", ["r-gpu-meas"], f"persistent-kernel flag handoff through L2 (PDL boundary {pdl:.0f} ns); GB202, not B200"),
-          ot=cell(round(hdc_ns, 1), "ns", "RTL simulation", ["r-rtl-tp"], f"{HDC_ISSUE_CYCLES}-cycle dependent issue at {HDC_CLOCK_HZ/1e9:.3f} GHz (routed units)"),
+          ot=cell(round(hdc_ns, 1), "ns", "RTL simulation", ["r-rtl-tp"], f"{HDC_ISSUE_CYCLES}-cycle dependent issue at {HDC_CLOCK_HZ/1e9:.3f} GHz (routed units)",
+                  cycles=HDC_ISSUE_CYCLES, clock_hz=HDC_CLOCK_HZ),
           ratio=round(handoff / hdc_ns)),
      dict(event="On-chip all-unit gather (every SM / lane -> next op)",
           gpu=cell(round(allsm), "ns", "measured", ["r-gpu-meas"], "best of 12 designs, bf16 vector delivered to all 188 SMs"),
