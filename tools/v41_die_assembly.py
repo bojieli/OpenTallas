@@ -493,6 +493,94 @@ def cycles(d_mm, m):
     return math.ceil(d_mm / m["reach_mm_per_cycle"]) if d_mm > 0 else 0
 
 
+# The on-die traversals the design-point DAG charges (tools/arch_lanes_v41.wire_mutation), each registered at its
+# per-cycle reach.  key -> (distance key, node rule, what, overlap / exposure justification).
+TRAVERSALS = {
+    "pool_operand_in": dict(dist="far_tile", nodes="matvec + kvscan (pool lanes), wire_in",
+                            what="spine (vector unit, chaining buffers) -> the farthest tile: the operand vector of "
+                                 "a matvec or of an attention / indexer scan (the pooled lanes live in the tiles)",
+                            exposure="latency on the operator's input edge: charged on every such node; the DAG "
+                                     "hides it only where the node is off the critical path"),
+    "pool_result_out": dict(dist="far_tile", nodes="matvec + kvscan (pool lanes), wire_out",
+                            what="the farthest tile -> spine: partial sums / scores back into the reducer tree",
+                            exposure="latency on the output edge; charged, exposed where on path"),
+    "spine_reduce": dict(dist="spine_half", nodes="reduce (in + out), select (in), hc.fn (in + out)",
+                         what="spine lanes -> the reducer / select / HC root at the spine's centre, and the result "
+                              "back along the spine (half the spine's length each way)",
+                         exposure="charged; the vector unit is one strip the core's height long"),
+    "collective_edge": dict(dist="collective_edge", nodes="collective, wire_in + wire_out",
+                            what="spine -> the one-shot engine at the UCIe / package-pair edge and back (the two "
+                                 "levels run in parallel: the longer is charged)",
+                            exposure="charged: the bench-measured tails (behavioural links) contain no on-die wire"),
+    "stage_hop_edge": dict(dist="serdes_edge", nodes="hop, wire_in (sender spine -> SerDes) + wire_out (SerDes -> "
+                                                     "receiver spine)",
+                           what="the residual from the sender's spine to its SerDes edge and from the receiver's "
+                                "SerDes edge to its spine",
+                           exposure="charged: the RTL hop tails start and end at the link endpoints"),
+    "kv_gather_request": dict(dist="hbm_request", nodes="op .gather, wire_in",
+                              what="the top-k indices from the select (spine) to the nearest HBM3E controller",
+                              exposure=("charged: a data-dependent address exists only after the select; the rows' "
+                                        "return PHY -> tile is shorter than the scan's operand broadcast charged "
+                                        "on the scan (far_tile >= hbm_to_tile), so it is covered there")),
+    "rom_to_lane_in_tile": dict(dist="in_tile", nodes="none",
+                                what="the farthest ROM macro -> its tile's lane column (weights never leave the tile)",
+                                exposure="HIDDEN: a static-address stream issued ahead of the activation"),
+    "kv_static_rows": dict(dist="hbm_to_tile", nodes="none",
+                           what="HBM3E PHY -> tiles for window rows, reuse-layer selections and index keys",
+                           exposure=("HIDDEN: static addresses, prefetched one layer ahead into the staging buffers "
+                                     "(docs/ARCH_SPEC_V41.md s6 item 4; arch_budget_v41 kv_state prefetch)")),
+}
+
+
+_GEOM = {}
+
+
+def traversal_geometry(sp):
+    """Traversal distances (mm) and cycles per wire model of the layer die built for pooled widths `sp` (the
+    floorplan depends on the widths only, not on any rate, so the design point can price its own wires)."""
+    import arch_budget_v41 as A
+    import arch_utilization_v41 as U
+    key = (sp.weight_macs, sp.bf16_macs, sp.su_lanes, sp.sfu_lanes, sp.hc_macs, sp.sel_lanes)
+    if key in _GEOM:
+        return _GEOM[key]
+    areas, asrc = A.unit_areas()
+    m1 = U.area_of(sp, areas, pooled=True, lm=1)
+    m2 = U.area_of(sp, areas, pooled=True, lm=2)
+    L = ledger("layer", dict(sp=sp), areas, asrc, m1, m2)
+    F = floorplan(L)
+    W, H = F["die_w_mm"], F["die_h_mm"]
+    xc, yc = F["spine"]["x"] + F["spine"]["w"] / 2, H / 2
+    core = F["core"]
+    tw, th = F["tiles"]["w_mm"], F["tiles"]["h_mm"]
+    phy_x = min(abs(0.27 * W - xc), abs(0.73 * W - xc))
+    dist = dict(
+        far_tile=max(abs(t["x"] - xc) + abs(t["y"] - yc) for t in F["tile_centres"]),
+        spine_half=(core["y1"] - core["y0"]) / 2,
+        collective_edge=max(core["x1"] - xc, xc - core["x0"]),
+        serdes_edge=xc - core["x0"],
+        hbm_request=phy_x + (yc - core["y0"]),
+        hbm_to_tile=(H / 2) + tw,
+        in_tile=tw / 2 + th / 2)
+    wm = wire_models(A._env()["clock"])
+    out = dict(distances_mm=dist, models={})
+    for name, m in wm.items():
+        if name == "fit_points":
+            continue
+        out["models"][name] = dict(ps_per_mm=m["ps_per_mm"], flop_overhead_ps=m["flop_overhead_ps"],
+                                   grade=m["grade"], source=m["source"])
+    assert dist["far_tile"] >= dist["hbm_to_tile"], "the gather's row return must be covered by the scan broadcast"
+    _GEOM[key] = out
+    return out
+
+
+def traversal_cycles(geo, model, clock_hz):
+    """{distance key: registered cycles} at clock_hz: the wire model's per-cycle reach = (period - flop overhead) /
+    ps per mm (the same rule as wire_models)."""
+    m = geo["models"][model]
+    reach = (1e12 / clock_hz - m["flop_overhead_ps"]) / m["ps_per_mm"]
+    return {k: (math.ceil(d / reach) if d > 0 else 0) for k, d in geo["distances_mm"].items()}
+
+
 def path_counts(dp):
     """On-path node kinds of the design point's critical path at 1M, batch 1 (the DAG the rates come from)."""
     import arch_latency_ladder_v41 as LX
@@ -510,59 +598,46 @@ def path_counts(dp):
 
 
 def long_wires(F, dp, clock_hz):
+    """The registered on-die traversals as the design point now charges them (tools/arch_lanes_v41.wire_mutation on
+    this floorplan's distances, results/arch/v41_lanes.json on_die_wire): per wire model, the traversal classes with
+    their length and cycles, the DAG-exposed microseconds per token (1M, batch 1), the same traversals charged in
+    full (every on-path node, the no-overlap bound) and the rate.  The ASAP7 routed-wire model is the headline's."""
     wm = wire_models(clock_hz)
-    W, H = F["die_w_mm"], F["die_h_mm"]
-    xc, yc = F["spine"]["x"] + F["spine"]["w"] / 2, H / 2
-    far = max(abs(t["x"] - xc) + abs(t["y"] - yc) for t in F["tiles_centres"]) if "tiles_centres" in F else \
-        max(abs(t["x"] - xc) + abs(t["y"] - yc) for t in F["tile_centres"])
-    tw, th = F["tiles"]["w_mm"], F["tiles"]["h_mm"]
-    core = F["core"]
-    paths = {
-        "rom_to_lane_in_tile": dict(mm=tw / 2 + th / 2, per_token=None,
-                                    what="farthest ROM macro -> the tile's lane column (weights never leave the "
-                                         "tile); a streaming path with static addresses, issued ahead of the "
-                                         "activation, so its latency is hidden and it is not charged per token"),
-        "activation_broadcast": dict(mm=far, kinds=("matvec",), traversals=1,
-                                     what="spine (vector unit) -> farthest tile: the matvec's input vector"),
-        "partial_sum_return": dict(mm=far, kinds=("matvec",), traversals=1,
-                                   what="farthest tile -> spine: the matvec's output (chunk sums into the R-ARITH tree)"),
-        "collective_to_ucie": dict(mm=(core["x1"] - xc) + 0.0, kinds=("collective",), traversals=2,
-                                   what="spine -> UCIe-level one-shot engine and back (in-package level)"),
-        "collective_to_serdes": dict(mm=(xc - core["x0"]), kinds=(), traversals=2,
-                                     what="spine -> package-pair one-shot engine and back; runs in parallel with the "
-                                          "UCIe level, so only the longer of the two is counted"),
-        "kv_gather": dict(mm=(H / 2) + abs(0.27 * W - xc) * 0 + tw, kinds=("kvscan", "op"), traversals=1,
-                          what="HBM PHY -> the tiles running attention/indexer (the request is issued ahead)"),
-        "stage_hop": dict(mm=(xc - core["x0"]), kinds=("hop",), traversals=2,
-                          what="SerDes edge -> spine (residual in) and spine -> SerDes (residual out)"),
-    }
     kinds, period_s = path_counts(dp)
     lanes = J(LANES)
-    T_us = lanes["design_point"][CTX]["T_us"]
+    ow = lanes["on_die_wire"]
+    geo = traversal_geometry(dp["sp"])
+    assert all(math.isclose(geo["distances_mm"][k], v) for k, v in ow["distances_mm"].items()), \
+        "v41_lanes.json on_die_wire was priced on another floorplan: regenerate tools/arch_lanes_v41.py"
+    head, pre = lanes["design_point"][CTX], ow["design_point_pre_wire"][CTX]
+    att = ow["attribution"][CTX]["ar"]
     res = {}
     for key, m in wm.items():
         if key == "fit_points":
             continue
-        rows, tot = {}, 0.0
-        for name, p in paths.items():
-            c = cycles(p["mm"], m)
-            row = dict(mm=p["mm"], cycles=c, ns=c / clock_hz * 1e9, what=p["what"])
-            if p.get("kinds") is not None:
-                if name == "collective_to_ucie":
-                    c = max(c, cycles(paths["collective_to_serdes"]["mm"], m))
-                    row["cycles_counted"] = c
-                n = sum(kinds.get(k, 0) for k in p["kinds"]) * p.get("traversals", 1)
-                row.update(on_path_events=n, us_per_token=n * c / clock_hz * 1e6)
-                tot += row["us_per_token"]
-            rows[name] = row
-        res[key] = dict(paths=rows, exposed_us_per_token=tot, token_us=T_us, fraction_of_token=tot / T_us,
-                        rate_if_exposed=1e6 / (T_us + tot), rate_design_point=lanes["design_point"][CTX]["ar"],
-                        in_tile_single_cycle=paths["rom_to_lane_in_tile"]["mm"] <= m["reach_mm_per_cycle"])
+        cyc = traversal_cycles(geo, key, clock_hz)
+        rows = {}
+        for name, t in TRAVERSALS.items():
+            rows[name] = dict(mm=geo["distances_mm"][t["dist"]], cycles=cyc[t["dist"]],
+                              ns=cyc[t["dist"]] / clock_hz * 1e9, what=t["what"], nodes=t["nodes"],
+                              exposure=t["exposure"], charged=t["nodes"] != "none")
+        if key == ow["model"]:
+            rate, rate_mtp, T_us = head["ar"], head["mtp"], head["T_us"]
+            exposed, full, by = att["exposed_us"], att["charged_in_full_us"], att["exposed_us_by_kind"]
+        else:
+            sv = ow["sensitivities"][key][CTX]
+            rate, rate_mtp, T_us = sv["ar"], sv["mtp"], sv["T_us"]
+            exposed, full, by = T_us - pre["T_us"], None, None
+        res[key] = dict(paths=rows, exposed_us_per_token=exposed, charged_in_full_us=full,
+                        exposed_us_by_node_kind=by, token_us=T_us, fraction_of_token=exposed / T_us,
+                        rate=rate, rate_mtp=rate_mtp, rate_pre_wire=pre["ar"], rate_mtp_pre_wire=pre["mtp"],
+                        in_tile_single_cycle=geo["distances_mm"]["in_tile"] <= m["reach_mm_per_cycle"])
     return dict(wire_models=wm, on_path_kinds=kinds, solve_period_us=period_s * 1e6, by_model=res,
-                budget_charges_on_die_wire_us=0.0,
-                budget_note="tools/decode_critical_path.py and tools/arch_budget_v41.py charge no on-die wire; the "
-                            "10 ns UCIe hop (technology.json links.rom_package_ucie.hop_latency_s) names 'on-die "
-                            "routing' but for the package-edge PHY only")
+                headline_model=ow["model"], on_path_nodes_by_kind=att["on_path_nodes_by_kind"],
+                budget_charges_on_die_wire_us=att["exposed_us"],
+                budget_note=("the design-point DAG (tools/arch_lanes_v41.wire_mutation) charges every registered "
+                             "traversal on its node's edges; the DAG exposes a traversal only where its node is on "
+                             "the critical path. The 10 ns UCIe hop covers the edge PHY only"))
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -591,16 +666,17 @@ def power_map(L, F, clock_hz):
     static["phy_serdes"] = static.get("phy_serdes", 0.0) + bud["serdes_always_on"]
     static["phy_ucie"] = static.get("phy_ucie", 0.0) + bud["ucie_idle"]
     comp_to_group = dict(mac="engine", weight_read_and_delivery="rom", kv_sram="sram", stream="vector",
-                         links="phy_serdes", hbm_controller_phy_io="phy_hbm")
+                         links="phy_serdes", hbm_controller_phy_io="phy_hbm", draft="engine")
     out = {}
     for sc in ("A_measured_implementation", "B_proposed_production"):
         dpnt = ps["scenarios"][sc]["deepseek_v41_design_point"]
         out[sc] = {}
-        for pt in ("ar_batch1", "mtp_batch1", "fill28_mtp", "saturated_batch1024", "saturated_batch1024_mtp"):
+        for pt in ("ar_batch1", "mtp_batch1", "fill28", "fill28_mtp", "saturated_batch1024", "saturated_batch1024_mtp"):
             p = dpnt["per_context"][CTX][pt]
-            per_die = 28 / 112 if pt in ("ar_batch1", "mtp_batch1") else 1 / 112
+            # the HOTTEST die (power_scenarios.v41_hottest_die): its own components, over its active window
+            per_die = p["hottest_die_window_factor"]
             dyn = {}
-            for c, e in p["die_components_j_per_token"].items():
+            for c, e in p["hottest_die_components_j_per_token"].items():
                 gname = comp_to_group[c]
                 dyn[gname] = dyn.get(gname, 0.0) + e * per_die * p["design_rate_tokens_s"]
             regions = {}
@@ -615,6 +691,8 @@ def power_map(L, F, clock_hz):
             hot = max((v for v in regions.values() if v["mm2"] >= 1.0), key=lambda v: v["w_per_mm2"])
             hot_name = [k for k, v in regions.items() if v is hot][0]
             out[sc][pt] = dict(regions=regions, die_w=total, scenario_hottest_die_w=p["hottest_die_w"],
+                               hottest_die=p["hottest_die"], batch=p.get("batch"),
+                               design_rate_tokens_s=p["design_rate_tokens_s"],
                                scenario_hottest_die_w_note="power_scenarios' die static carries leakage + clock + "
                                                            "HBM idle on the analytical 815 mm2 split at 1.034 GHz and "
                                                            "the always-on SerDes and UCIe idle (v41_links_static); "
@@ -807,12 +885,13 @@ def verdict(Ll, Lh, F, W_, PM, IR, CK, sens):
             f"({sens['n5_logic_credit']['whitespace_mm2']:+.0f} mm2); the MTP lane multiplier m = 2 is what fills "
             "the die, and 'inside the 328.9 mm2 envelope' compared standard-cell area with a placed-area envelope")))
     risks.append(dict(risk="long wires", detail=(
-        f"the budget charges no on-die wire; the floorplan's spine-to-tile, spine-to-PHY and HBM-to-tile "
-        f"traversals on the critical path add {wm['asap7_routed_fit']['exposed_us_per_token']:.1f} us per token on "
-        f"the ASAP7 routed-wire model ({100 * wm['asap7_routed_fit']['fraction_of_token']:.0f}% of the "
-        f"{wm['asap7_routed_fit']['token_us']:.1f} us token) and {wm['tech_global_wire']['exposed_us_per_token']:.1f}"
-        f" us on technology.json's 150 ps/mm; 1M rate {wm['asap7_routed_fit']['rate_if_exposed']:,.0f} / "
-        f"{wm['tech_global_wire']['rate_if_exposed']:,.0f} tok/s/user against {wm['tech_global_wire']['rate_design_point']:,.0f}")))
+        f"the design point now charges its registered on-die traversals: "
+        f"{wm['asap7_routed_fit']['exposed_us_per_token']:.1f} us per 1M token on the ASAP7 routed-wire model "
+        f"({100 * wm['asap7_routed_fit']['fraction_of_token']:.0f}% of the {wm['asap7_routed_fit']['token_us']:.1f} us "
+        f"token; {wm['tech_global_wire']['exposed_us_per_token']:.1f} us on technology.json's 150 ps/mm); the 1M rate "
+        f"is {wm['asap7_routed_fit']['rate']:,.0f} tok/s/user ({wm['tech_global_wire']['rate']:,.0f} at 150 ps/mm, "
+        f"{wm['asap7_routed_fit']['rate_pre_wire']:,.0f} with no wire); the levers are sub-spines and collective "
+        "engines at the tile rows")))
     risks.append(dict(risk="power (scenario A)", detail=(
         f"on the measured ASAP7 MAC energy the worst point draws {worst_A['die_w']:,.0f} W per die against the "
         f"{PM['cooling_reference']['air_die_w']} W air / {PM['cooling_reference']['liquid_die_w']} W liquid die "
@@ -837,7 +916,7 @@ def verdict(Ll, Lh, F, W_, PM, IR, CK, sens):
     return dict(
         area_closes_layer=Ll["fits"], area_closes_head=Lh["fits"],
         long_wire_timing=("closes with pipelining (every path is registered at the per-cycle reach); the latency "
-                          "cost is unbudgeted"), long_wire_fraction_asap7=wm["asap7_routed_fit"]["fraction_of_token"],
+                          "is charged in the design point"), long_wire_fraction_asap7=wm["asap7_routed_fit"]["fraction_of_token"],
         long_wire_fraction_tech=wm["tech_global_wire"]["fraction_of_token"],
         power_B_worst_w=worst_B["die_w"], power_B_within_air=worst_B["within_air_die_limit"],
         power_A_worst_w=worst_A["die_w"], power_A_within_air=worst_A["within_air_die_limit"],
@@ -847,28 +926,36 @@ def verdict(Ll, Lh, F, W_, PM, IR, CK, sens):
                       condition=f"placement utilisation >= {sens['break_even_utilisation']:.2f} at MTP m = 2 "
                                 f"(ledger assumes {Ll['placement_utilisation']:.2f}); m = 1 or the N5 logic credit "
                                 "leave > 150 mm2"),
-            long_wire_timing=dict(verdict="closes by pipelining; latency unbudgeted",
-                                  condition=f"{wm['tech_global_wire']['exposed_us_per_token']:.1f}-"
-                                            f"{wm['asap7_routed_fit']['exposed_us_per_token']:.1f} us per token "
-                                            "must be added to the budget or removed by floorplan levers"),
+            long_wire_timing=dict(verdict="closes by pipelining; latency charged in the design point",
+                                  condition=f"{wm['asap7_routed_fit']['exposed_us_per_token']:.1f} us per token "
+                                            f"(ASAP7 routed-wire model; {wm['tech_global_wire']['exposed_us_per_token']:.1f}"
+                                            " at 150 ps/mm) in the headline; floorplan levers would recover it"),
             power=dict(verdict=(("scenario B closes on air at every point" if worst_B["within_air_die_limit"] else
-                                 "scenario B closes on liquid, not on air at its worst point")
+                                 "scenario B closes on liquid, not on air at its worst point"
+                                 if worst_B["within_liquid_die_limit"] else
+                                 "scenario B exceeds both the air and the liquid die limit at its worst point")
                                 + "; scenario A fails"),
-                       condition=f"B worst {worst_B['die_w']:.0f} W vs air {PM['cooling_reference']['air_die_w']} / "
-                                 f"liquid {PM['cooling_reference']['liquid_die_w']} W; A worst {worst_A['die_w']:,.0f} W"),
+                       cooling_by_point={pt: ("air" if v["within_air_die_limit"] else "liquid"
+                                              if v["within_liquid_die_limit"] else "neither")
+                                         for pt, v in B.items()},
+                       condition=f"hottest die (power_scenarios.v41_hottest_die): B worst {worst_B['die_w']:.0f} W "
+                                 f"vs air {PM['cooling_reference']['air_die_w']} / liquid "
+                                 f"{PM['cooling_reference']['liquid_die_w']} W; A worst {worst_A['die_w']:,.0f} W"),
             ir=dict(verdict="closes with a denser top grid" if not ir_B["within_budget"] else "closes",
                     condition=f"B hot spot {ir_B['drop_mv']:.0f} mV vs {ir_B['budget_mv']:.0f} mV on the repository's "
                               f"2.5% M8/M9 grid; {100 * ir_B['m8m9_coverage_needed']:.1f}% coverage per net closes it"),
             clock=dict(verdict="closes only as regional trees with mesochronous crossings", condition=CK["verdict"])),
-        closes=("conditionally" if (area_ok and worst_B["within_liquid_die_limit"]) else "no"),
+        closes=("conditionally" if (area_ok and worst_B["within_liquid_die_limit"]) else
+                "not at every operating point" if area_ok else "no"),
         summary=("on the adopted design point the layer die closes CONDITIONALLY: on area only above the stated "
                  "placement utilisation (the MTP lane multiplier is what fills it), on power only in scenario B "
                  + ("(within the air limit at every point)" if worst_B["within_air_die_limit"] else
-                    "(liquid cooling at the saturated MTP point)")
+                    "(liquid cooling at its worst point)" if worst_B["within_liquid_die_limit"] else
+                    "(and there not at every operating point: the hottest die -- the stage that holds an uncapped "
+                    "index scan -- exceeds even the liquid limit at its worst point)")
                  + ", on IR only with a denser top grid than the "
                  "repository's die grid, on the clock only as regional trees, and on long-wire timing only by "
-                 "pipelining every spine/tile/PHY traversal -- which costs per-token latency the budget does not "
-                 "charge"),
+                 "pipelining every spine/tile/PHY traversal -- whose per-token latency the design point now charges"),
         top_risks=risks,
         missing_routes=[dict(block=a, status=b) for a, b in MISSING_ROUTES],
         next_physical_steps=[
@@ -876,8 +963,8 @@ def verdict(Ll, Lh, F, W_, PM, IR, CK, sens):
             "it fixes the placement utilisation this ledger assumes)",
             "route a 5-10 mm pipelined express link on M8/M9 (the spine <-> tile and spine <-> PHY wire) and "
             "re-fit the wire model beyond 3 mm",
-            "charge the floorplan's on-die traversals in tools/arch_budget_v41.py (one edge per matvec broadcast, "
-            "partial-sum return, collective and gather), then re-derive the design point",
+            "recover the charged on-die traversals with floorplan levers (vector sub-spines per half-die, collective "
+            "engines at the tile rows) and re-derive the design point",
             "decide m = 2 against the die area: at ASAP7 densities the MTP lane multiplier fills the die",
             "integrate ot_hdc_core_v41x into a V4.1 tile and die, then run them through tools/chip_assembly "
             "(budgets, re-closure) and a die-level PDN/IR analysis on the tile abstracts",
@@ -933,10 +1020,10 @@ def svg(F, L, W_, PM):
     far = max(F["tile_centres"], key=lambda t: abs(t["x"] - xc) + abs(t["y"] - yc))
     wa = W_["by_model"]["asap7_routed_fit"]["paths"]
     wt = W_["by_model"]["tech_global_wire"]["paths"]
-    wires = [(far["x"], far["y"], "activation_broadcast", "spine to farthest tile (matvec in/out)", "#c0392b"),
-             (F["core"]["x1"], yc + 0.6, "collective_to_ucie", "spine to UCIe-level collective", "#7a2a74"),
-             (F["core"]["x0"], yc - 0.6, "stage_hop", "spine to SerDes (stage hop, pair collective)", "#7a2323"),
-             (0.27 * Wd, F["core"]["y1"], "kv_gather", "HBM PHY to tiles (KV / index keys)", "#8a6d0d")]
+    wires = [(far["x"], far["y"], "pool_operand_in", "spine to farthest tile (matvec / scan in and out)", "#c0392b"),
+             (F["core"]["x1"], yc + 0.6, "collective_edge", "spine to UCIe-level collective", "#7a2a74"),
+             (F["core"]["x0"], yc - 0.6, "stage_hop_edge", "spine to SerDes (stage hop, pair collective)", "#7a2323"),
+             (0.27 * Wd, F["core"]["y1"], "kv_gather_request", "select to HBM controller (row gather)", "#8a6d0d")]
     for i, (x2, y2, key, _lab, col) in enumerate(wires, 1):
         o.append(f'<polyline points="{X(xc):.1f},{Y(yc):.1f} {X(x2):.1f},{Y(yc):.1f} {X(x2):.1f},{Y(y2):.1f}" '
                  f'fill="none" stroke="{col}" stroke-width="1.8" stroke-dasharray="6,3"/>')
@@ -970,7 +1057,7 @@ def svg(F, L, W_, PM):
         ly += 14
     wm = W_["by_model"]
     ly += 8
-    o.append(f'<text x="{lx}" y="{ly}" font-weight="bold">On-die wire per token (1M)</text>')
+    o.append(f'<text x="{lx}" y="{ly}" font-weight="bold">On-die wire per token (1M, charged)</text>')
     ly += 15
     o.append(f'<text x="{lx}" y="{ly}">ASAP7 routed fit: {wm["asap7_routed_fit"]["exposed_us_per_token"]:.1f} us</text>')
     ly += 14

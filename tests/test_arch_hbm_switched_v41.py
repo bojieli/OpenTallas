@@ -37,11 +37,36 @@ def test_same_wall_chain_and_switches_on_both_machines(rec):
     assert rec["alpha_s"] == pytest.approx(2 * 209e-9 + 250e-9)
 
 
-def test_rom_worst_die_under_the_cooling_limit(rec):
+def test_rom_worst_die_is_the_hottest_die(rec):
+    """The worst die is the HOTTEST die (the busiest stage's share of the work over the layer-die mean), not the
+    array average; since the uncapped index scan's stage carries several times the mean it exceeds the air class
+    at 1M saturation (power_scenarios states the per-point verdict)."""
     w = rec["rom_worst_die_w"]
-    assert w["total_w"] < min(w["cooling_limit_w"].values())      # air and liquid classes (power_scenarios)
+    for k, d in w["dynamic_w_by_point"].items():
+        f = w["hottest_die_factor_by_point"][k]["factor"]
+        assert f >= 1.0 and abs(d - w["average_die_dynamic_w_by_point"][k] * f) < 1e-6 * d
+    assert w["total_w"] == pytest.approx(w["static_w"] + w["dynamic_w"])
+    assert w["total_w"] > w["cooling_limit_w"]["air"]
 
 
 def test_kv_replicate_on_write_fits_the_stage_lanes(rec):
     kv = rec["kv_replicate_on_write"]
     assert kv["link_load_fraction"] < 0.5
+
+
+def test_comparator_pays_the_link_cap_and_drafter_rule(rec):
+    """The costs the ROM design point pays, on the comparator's own fabric: every aggregate is capped at its busiest
+    package link (the same rule as arch_lanes_v41.link_cap), and the drafter's inputs are priced where they would
+    cross a link (co-located on the comparator's G graph: 0 s, the separate-drafter placement as a sensitivity)."""
+    for ctx, rows in rec["energy"].items():
+        for k, v in rows.items():
+            lk = v["hbm_link_cap"]
+            assert lk["utilisation"] <= 1.0 + 1e-9
+            assert abs(v["hbm"]["aggregate_tokens_s"] - lk["aggregate_tokens_s_uncapped"] * lk["cap"]) < 1e-6 * \
+                v["hbm"]["aggregate_tokens_s"]
+            dc = v["hbm_draft_conditioning"]
+            if k.endswith("_mtp"):
+                assert dc["seconds"] == 0.0 and dc["separate_drafter_sensitivity_s"] > 0
+            else:
+                assert dc is None
+        assert rows["sat1024_mtp"]["hbm_link_cap"]["binds"]

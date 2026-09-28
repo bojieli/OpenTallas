@@ -319,6 +319,12 @@ class Graph:
                 parts["control"] = ctl
                 parts[n["issue_cat"]] = parts.get(n["issue_cat"], 0.0) + iss
             parts[n["depth_cat"]] = parts.get(n["depth_cat"], 0.0) + dep
+            # registered on-die wire (tools/arch_lanes_v41.wire_mutation): wire_in delays the node's inputs (its
+            # start and its last input alike), wire_out its result; both are pure latency on the node's edges
+            wi, wo = n.get("wire_in", 0.0), n.get("wire_out", 0.0)
+            if wi or wo:
+                s, f = s + wi, f + wi + wo
+                parts["on_die_wire"] = wi + wo
             fin[name], start[name], crit[name], contrib[name] = f, s, c, parts
         self.fin, self.crit, self.contrib = fin, crit, contrib
         return fin
@@ -1284,7 +1290,7 @@ class Built:
         cats = dict.fromkeys(CATS, 0.0)
         for n in path:
             for k_, v in g.contrib[n].items():
-                cats[k_] += v
+                cats[k_] = cats.get(k_, 0.0) + v
         occ = sum(n["issue"] for n in g.nodes.values() if n["kind"] not in ("collective", "hop"))
         occ_bound = occ * mach.slots / max(1, mach.stages)
         period = max(T, occ_bound)

@@ -56,7 +56,7 @@ BUDGET = ROOT / "results/arch/arch_budget_v41.json"
 CONTEXTS = (200000, 1048576)
 PRIMARY = 200000
 FILL = 28                     # layer-group stages: b <= 28 users ride one per stage at the batch-1 rate
-SAT = 1024                    # the budget's largest batch (capacity: 1,203 users at 1M, 6,272 at 200K)
+SAT = 1024                    # the nominal saturated batch; a point runs min(SAT, users held): A.point_batch
 POINTS = (("b1", 1), ("fill28", FILL), ("sat1024", SAT))
 CURVE = (1, 8, 28, 64, 128, 256, 1024)
 # MTP (user decision 2026-09-27): DSpark gamma 5 (6 verified positions), lane multiplier m = 2, tau = 5.0 --
@@ -179,25 +179,33 @@ def req_spec():
 
 # -- 1. operating points -------------------------------------------------------------------------------------------
 def solve(spec, ctx, batch=1, positions=1, levers=(), muts=(), hbm=None):
-    """price() on the budget model, then optional graph surgery (lever mutations) and a re-solve."""
+    """price() on the budget model, then optional graph surgery (lever mutations) and a re-solve.  The occupancy
+    bound is the BUSIEST pipeline stage's (A.stage_bound: the placement is packed by ROM bytes, not by time, and the
+    index-scan layers' stages carry several times the mean), not the stage mean price() sizes the specification on."""
     r = A.price(spec, ctx, batch=batch, positions=positions, keep=True, levers=levers, fill=True, hbm=hbm)
     b = r["_built"]
+    if not muts:
+        ob, busiest, imb = A.stage_bound(b.g, min(b.mach.slots, batch))
+        period = max(r["T_s"], ob)
+        r.update(occupancy_bound_stage_mean_s=r["occupancy_bound_s"], occupancy_bound_s=ob, busiest_stage=busiest,
+                 stage_imbalance=imb, period_s=period, tokens_s_per_user=1 / period, aggregate_tokens_s=batch / period,
+                 binding="critical_path" if r["T_s"] >= ob else "occupancy")
     if muts:
-        occ0 = sum(nd["issue"] for nd in b.g.nodes.values() if nd["kind"] not in ("collective", "hop"))
         b.g.mb = b.mach.microbatch                         # lever mutations may need the pass size
+        b.g.positions = positions                          # the MTP verify pass's hop tail (collective_exposure)
         for f in muts:
             f(b.g, spec)
         fin = b.g.solve(spec.chaining)
         T = fin[b.sink]
-        occ = sum(nd["issue"] for nd in b.g.nodes.values() if nd["kind"] not in ("collective", "hop"))
-        ob = r["occupancy_bound_s"] * occ / occ0 if occ0 else 0.0
+        ob, busiest, imb = A.stage_bound(b.g, min(b.mach.slots, batch))     # the busiest stage, after the muts
         period = max(T, ob)
         path = b.g.path(b.sink)
         cats = dict.fromkeys(D.CATS, 0.0)
         for n in path:
             for k_, v in b.g.contrib[n].items():
-                cats[k_] += v
-        r.update(T_s=T, occupancy_bound_s=ob, period_s=period, tokens_s_per_user=1 / period,
+                cats[k_] = cats.get(k_, 0.0) + v
+        r.update(T_s=T, occupancy_bound_s=ob, busiest_stage=busiest, stage_imbalance=imb, period_s=period,
+                 tokens_s_per_user=1 / period,
                  aggregate_tokens_s=batch / period, binding="critical_path" if T >= ob else "occupancy",
                  breakdown_us={k: v * 1e6 for k, v in cats.items()})
     return r
@@ -323,7 +331,8 @@ def op_point(spec, ctx, batch, mtp=False, levers=(), muts=(), tau=TAU, hbm=None,
         u_ = (units or SEPARATE_UNITS).get(k, k)
         unit_occ[u_] = unit_occ.get(u_, 0.0) + v
     busiest = max(unit_occ, key=unit_occ.get)
-    ob_conc = unit_occ[busiest] * slots / m.stages
+    # the busiest unit of the busiest STAGE (the placement's stages are not balanced in time: A.stage_bound)
+    ob_conc, _st, _imb = A.stage_bound(b.g, slots, units=(units or SEPARATE_UNITS), per_unit=True)
     period_conc = max(r["T_s"], ob_conc) + draft
     agg_conc = (tau if mtp else 1.0) / period_conc * batch
     head_frac = {k: slots * v / period / 1.0 for k, v in busy_head.items()}
@@ -353,6 +362,8 @@ def op_point(spec, ctx, batch, mtp=False, levers=(), muts=(), tau=TAU, hbm=None,
     out = dict(batch=batch, mtp=mtp, tau=tau if mtp else None, period_us=period * 1e6, verify_us=r["period_s"] * 1e6,
                draft_us=draft * 1e6, tokens_s_per_user=per_user, aggregate_tokens_s=agg, binding=r["binding"],
                microbatch=m.microbatch, breakdown_us=r["breakdown_us"], draft_extra_us=draft_extra_s * 1e6,
+               pass_T_us=r["T_s"] * 1e6,
+               stage_busy_us={str(s): sum(v.values()) * 1e6 for s, v in A.stage_occupancy(b.g).items()},
                draft_contention=dc,
                busy_fraction_layer_dies=frac, busy_fraction_head_dies=head_frac,
                mfu_array=mfu_array, mfu_layer_dies=mfu_layer, mfu_executed_array=mfu_exec,
@@ -558,11 +569,11 @@ def price_levers(spec, base_levers):
     with params(moe="expert_parallel"):
         for ctx in CONTEXTS:
             r1 = solve(spec, ctx, levers=base_levers)
-            r64 = solve(spec, ctx, batch=SAT, levers=base_levers)
+            r64 = solve(spec, ctx, batch=A.point_batch("sat", SAT, ctx), levers=base_levers)
             out["sensitivities"][f"expert_parallel_{ctx}"] = dict(
                 b1_tokens_s_per_user=r1["tokens_s_per_user"], sat_aggregate_tokens_s=r64["aggregate_tokens_s"])
     for ctx in CONTEXTS:
-        r64 = solve(spec, ctx, batch=SAT, levers=base_levers)
+        r64 = solve(spec, ctx, batch=A.point_batch("sat", SAT, ctx), levers=base_levers)
         out["sensitivities"][f"striped_{ctx}"] = dict(b1_tokens_s_per_user=base[ctx]["tokens_s_per_user"],
                                                       sat_aggregate_tokens_s=r64["aggregate_tokens_s"])
     # stage count vs per-stage width: the report DAG's packaging options (group 2 / 4 / 4-in-package)
@@ -822,6 +833,7 @@ def build():
         for cname, (lv, sp, _) in configs.items():
             rows = {}
             for tag, bt in POINTS:
+                bt = A.point_batch(tag, bt, ctx)
                 rows[tag] = op_point(sp, ctx, bt, levers=lv)
                 rows[tag + "_mtp"] = op_point(sp, ctx, bt, mtp=True, levers=lv)
             util[str(ctx)][cname] = rows
@@ -842,6 +854,7 @@ def build():
     for ctx in CONTEXTS:
         rows = {}
         for tag, bt in POINTS:
+            bt = A.point_batch(tag, bt, ctx, "hbm")
             rows[tag] = op_point(spec, ctx, bt, hbm=hbm_kw, dies=hb["dies"])
             rows[tag + "_mtp"] = op_point(spec, ctx, bt, mtp=True, hbm=hbm_kw, dies=hb["dies"])
         hbm_util[str(ctx)] = rows
@@ -901,8 +914,11 @@ def build():
                 "tokens_s_per_user"]) for ctx in CONTEXTS},
         d_split_note=("the pooled width 252,160 = 61.6 index keys/cycle x 4,096 MACs; the scan fits the pool only "
                       "with the idx split-chain mode (d_split); without it 64 keys/cycle would need 262,144"),
-        saturated={str(ctx): dict(spec=solve(spec, ctx, batch=SAT, levers=CHAIN_L3)["aggregate_tokens_s"],
-                                  pooled=solve(uni, ctx, batch=SAT, levers=CHAIN_L3, muts=[m_pool_idx])["aggregate_tokens_s"])
+        saturated={str(ctx): dict(spec=solve(spec, ctx, batch=A.point_batch("sat", SAT, ctx), levers=CHAIN_L3)[
+                                      "aggregate_tokens_s"],
+                                  pooled=solve(uni, ctx, batch=A.point_batch("sat", SAT, ctx), levers=CHAIN_L3,
+                                               muts=[m_pool_idx])["aggregate_tokens_s"],
+                                  batch=A.point_batch("sat", SAT, ctx))
                    for ctx in CONTEXTS},
         feasibility=unified.__doc__.strip())
     rec["marginal_widths_l3"] = marginal_widths(spec, CHAIN_L3)
@@ -1028,8 +1044,8 @@ def energy_with_static(spec, uni, muts, areas, hb, hbm_kw, stat, rs, eng_keep):
                         ("rom_spec", spec, (), (), SEPARATE_UNITS, None),
                         ("rom_design", uni, CHAIN_L3, muts, POOLED_UNITS, None),
                         ("hbm", spec, (), (), SEPARATE_UNITS, hbm_kw)):
-                    p = op_point(sp, ctx, bt, mtp=mtp, levers=lv, muts=mu, units=un, hbm=hbm,
-                                 dies=hb["dies"] if hbm else None)
+                    p = op_point(sp, ctx, A.point_batch(tag, bt, ctx, "hbm" if hbm else "rom"), mtp=mtp, levers=lv,
+                                 muts=mu, units=un, hbm=hbm, dies=hb["dies"] if hbm else None)
                     pooled = kind == "rom_design"
                     ar = area_of(sp, areas, pooled=pooled, lm=MTP_M if mtp else 1)["total"]
                     e = energy(sp, ctx, p, ar, ar if kind == "rom_spec" else eng_keep, 0.0, 0.0, hbm=hbm)
@@ -1064,8 +1080,10 @@ def design_point(rec, uni, muts, areas):
         row = {}
         for tag, bt in POINTS:
             for mtp in (False, True):
-                p = op_point(uni, ctx, bt, mtp=mtp, levers=CHAIN_L3, muts=muts, units=POOLED_UNITS)
+                p = op_point(uni, ctx, A.point_batch(tag, bt, ctx), mtp=mtp, levers=CHAIN_L3, muts=muts,
+                             units=POOLED_UNITS)
                 row[tag + ("_mtp" if mtp else "")] = dict(
+                    batch=A.point_batch(tag, bt, ctx),
                     tokens_s_per_user=p["tokens_s_per_user"], aggregate_tokens_s=p["aggregate_tokens_s"],
                     mfu_array=p["mfu_array"]["all"], mfu_layer_dies=p["mfu_layer_dies"]["all"],
                     busy_fraction_layer_dies=p["busy_fraction_layer_dies"], mbu_rom_port_array=p["mbu_rom_port_array"],

@@ -38,7 +38,9 @@ def test_recorded_batch1_point_reproduces(rec):
 def test_coordinator_estimates(rec):
     chk = rec["coordinator_check"]
     assert 0.0005 < chk["batch1_mfu"]["model"] < 0.002           # ~0.1%
-    assert 0.05 < chk["saturated_mfu"]["model"] < 0.12             # ~8%
+    # ~4% since the saturated point runs the users HELD at 1M (866 after the 0.9 capacity reserve) and is bound by
+    # its busiest pipeline stage (arch_budget_v41.stage_bound), not the stage mean
+    assert 0.02 < chk["saturated_mfu"]["model"] < 0.12
     # This is provisioned-port / macro capacity, not runtime utilisation.
     # The four-stack, pooled-engine design prices it at about 42%.
     assert chk["rom_read_39pct"]["provisioned_port_over_macro"] == pytest.approx(0.42, abs=0.02)

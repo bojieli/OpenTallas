@@ -185,9 +185,10 @@ class V41:
         c = self.budget["capacity"][str(n)]
         per_die = c["per_user_bytes_busiest_die"]
         return dict(per_user_bytes_busiest_die=per_die, rom_users=c["rom_users"], hbm_users=c["hbm_users"],
-                    rom_users_at_0p9_capacity=int(0.9 * self.stacks * self.stack_B // per_die),
-                    source="results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); "
-                           "technology.json efficiencies.hbm_capacity = 0.9 would give the second figure")
+                    rom_users_without_reserve=c.get("rom_users_without_reserve"),
+                    capacity_efficiency=c.get("capacity_efficiency"),
+                    source="results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json "
+                           "efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)")
 
 
 # ======================================================================================================
@@ -337,7 +338,7 @@ def qwen_design(q: Qwen, dr, eng, design, dec_rate, context=8192, gpu="h200"):
                 wire_format="BF16 NHD pages (vLLM native); the engine rounds to FP8. FP8 on the wire halves the "
                             "bytes but must be cast from FP32 with RNE for bit-identity (ARCH_SPEC_QWEN3 R-P5)",
                 capacity=dict(users_no_efficiency=int(cap_B // B), users_at_0p9=int(0.9 * cap_B // B),
-                              note="atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 962 applies no 0.9"))
+                              note="atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 users held apply the same 0.9"))
 
 
 def sustained(m: V41, q: Qwen, rates, dr, v41_agg, qwen_agg):

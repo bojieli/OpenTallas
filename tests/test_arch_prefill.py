@@ -40,7 +40,7 @@ def test_bytes_agree_with_the_rack_and_the_budget(rec, v41):
     assert r["bytes_sent"]["owner_rows"] == rack["ingest"]["bytes_sent_once_per_user"]
     assert r["bytes_written_hbm_replicated"] == pytest.approx(rack["replicated_bytes_per_user_1m"])
     assert r["busiest_stage_bytes"] == pytest.approx(rack["busiest_stage_bytes_per_user"])
-    assert r["capacity"]["rom_users"] == 962 and r["busiest_die_bytes"] == 93458432
+    assert r["capacity"]["rom_users"] == 866 and r["busiest_die_bytes"] == 93458432      # after the 0.9 reserve
     assert rec["v41_workload"]["sent_B_per_new_token"] == 890
 
 

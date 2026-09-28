@@ -141,7 +141,20 @@ def test_rom_and_comparator_dies_carry_four_stacks(rec):
     assert rec["hbm_comparator"]["hbm_stacks_per_die"] == 4
     hb = rec["hbm_comparator"]
     ctx = "200000"
-    assert rec["capacity"][ctx]["rom_users"] == int(4 * hb["stack_capacity_B"] // rec["capacity"][ctx]["per_user_bytes_busiest_die"])
+    # usable = technology.json efficiencies.hbm_capacity (0.9, the reserve the Qwen3 budget applies) x physical
+    cap = rec["capacity"][ctx]
+    assert cap["capacity_efficiency"] == 0.9
+    assert cap["rom_users"] == int(0.9 * 4 * hb["stack_capacity_B"] // cap["per_user_bytes_busiest_die"])
+    assert cap["rom_users_without_reserve"] == int(4 * hb["stack_capacity_B"] // cap["per_user_bytes_busiest_die"])
+    assert rec["capacity"]["1048576"]["rom_users"] == 866 and cap["rom_users"] == 4516
+
+
+def test_saturated_rows_beyond_the_users_held_are_flagged(rec):
+    for ctx, b in rec["batch"].items():
+        for mach in ("rom", "hbm"):
+            held = rec["capacity"][ctx][f"{mach}_users"]
+            for r in b["rows"][mach]:
+                assert r["fits_capacity"] == (r["batch"] <= held)
 
 
 def test_one_budget_model_carries_the_user_decisions(rec):
@@ -165,7 +178,13 @@ def test_one_budget_model_carries_the_user_decisions(rec):
     assert set(p["cooling_limit_w_per_die_by_class"]) == {"air", "liquid"}
     assert p["cooling_limit_w_per_die"] == p["cooling_limit_w_per_die_by_class"]["air"]
     assert p["cooling_limit_w_per_die"] < 407.5          # the withdrawn 0.5 W/mm2 x 815 mm2 rule
-    assert p["worst_case_die_w"] < p["cooling_limit_w_per_die"]
+    # the check is the HOTTEST die (the stage holding layer 20's uncapped index scan): at the specification's widths
+    # and its stage-mean saturated rate it is over the air limit, an upper bound (docs/ARCH_SPEC_V41.md s6 item 12)
+    hd = p["hottest_die"]
+    assert hd["batch1"]["factor"] > 1 and hd["saturated"]["factor"] > 1
+    for m in p["by_lane_mult"].values():
+        assert m["saturated_die_dynamic_w"] > m["average_die"]["saturated_dynamic_w"]
+    assert p["worst_case_die_w"] > p["cooling_limit_w_per_die"]
 
 
 def test_checkpoint_precision_prices_router_and_wo_a_as_released(rec):

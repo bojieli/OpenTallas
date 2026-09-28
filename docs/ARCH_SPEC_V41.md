@@ -454,29 +454,39 @@ Every block boundary is registered. Physical inputs from the full-chip effort:
     - **Prefetch:** window rows and reuse-layer selections have static addresses, so they are prefetched one
       layer ahead.
     - **Gathers:** an index-source layer's gather is exposed, and its first row is budgeted at 250 ns.
-    - **Capacity:** per-user state at 1M is 93.5 MB on the busiest die, so the stacks hold **962 users at
-      1M and 5,018 at 200K**. Batch is not capacity-limited below that, and the old 8,192-context admission
-      limit from on-die KV does not apply.
+    - **Capacity:** per-user state at 1M is 93.5 MB on the busiest die. After the 0.9 capacity reserve for
+      runtime workspace, allocator and safety (`technology.json` `efficiencies.hbm_capacity`, the reserve the
+      Qwen3 budget applies), the stacks hold **866 users at 1M and 4,516 at 200K** (962 and 5,018 without
+      it). A saturated operating point runs at most that many users (`arch_budget_v41.point_batch`); the old
+      8,192-context admission limit from on-die KV does not apply.
 
 12. **Power (requirement).** Per-die power must stay at or below the die's cooling limit at every batch, with
     stage clock gating: an idle stage's clock tree gated at its block boundaries, and its ROM macros and engines
     quiescent. The limit is the per-class limit of a die in a two-die package (`configs/hardware/
     power_scenarios.json` cooling classes: a shipping package's rating less its own stacks, per die): **374.6 W
     air**, 474.6 W liquid. The former 0.5 W/mm² × 815 mm² rule (407.5 W, an A100 module rating over its die) is
-    withdrawn. From `results/arch/arch_budget_v41.json` `power`, at 1M:
+    withdrawn. **The check is the hottest die, not the average:** the placement cuts the layers at equal ROM
+    bytes, so the stage that holds layer 20 (an uncapped index scan over every key of the context) does 6.9×
+    the mean layer die's work at batch 1 and 7.4× at saturation (`power_scenarios.v41_hottest_die`). From
+    `results/arch/arch_budget_v41.json` `power`, at 1M (hottest die; the array average in parentheses):
 
     | per die | m = 1 | m = 2 (MTP) |
     |---|---|---|
     | block area (ASAP7) | 99.5 mm² | 199.1 mm² |
     | active clock of the blocks | 8.7 W | 17.5 W |
-    | dynamic while its stage holds the token, batch 1 | 44.4 W | 53.2 W |
-    | dynamic at the saturated batch (every die busy) | 58.7 W | 76.2 W |
+    | dynamic while its stage holds the token, batch 1 | 256.2 W (44.4) | 264.9 W (53.2) |
+    | dynamic at the saturated batch (every die busy) | 433.1 W (58.8) | 450.6 W (76.3) |
 
     Static power on the validated inputs is 98.8 W per die: leakage 54.5 W (0.10 W/mm² of logic, 0.0067 W/mm² of
     ROM array; `technology.json` power.static_leakage_w_per_mm2), HBM idle 11.2 W (4 stacks), always-on SerDes
     30.6 W and UCIe idle 2.5 W. With the HBM interface at its worst-case traffic (34.2 W) the worst case is
-    **198.0 W per die, 1.9× under the air limit** (2.4× under liquid); provisioned at 1.2 × worst case through
-    the wall chain it is 294.8 W. Without gating, the analytical design charges a 48 W/die clock term on all
+    **572.5 W for the hottest die, over the air limit (0.65×) and over liquid (0.83×)**; provisioned at 1.2 ×
+    worst case through the wall chain it is 852.1 W. At the specification's widths the saturated rate is the
+    stage-mean bound, so this hottest-die figure is an upper bound; at the adopted design point, whose
+    operating points are bound by the busiest stage, the hottest die draws 450 W at batch 1 and 490-533 W
+    saturated (production lane, `results/arch/power_scenarios.json`): liquid at batch 1 and the fill, over
+    liquid with MTP and at saturation. The requirement therefore also asks for a placement balanced in time,
+    not bytes (spread the index scan, or place the scan layers by time). Without gating, the analytical design charges a 48 W/die clock term on all
     525 mm² of logic, which is the upper bound if nothing gates. Stage gating is also what keeps batch-1 energy
     at 36.0 mJ per token at 1M instead of 362 mJ (19.6 against 317 mJ at 200K; §8).
 
@@ -592,23 +602,28 @@ Batch-1 energy per token without gating at 1M: ROM 362 mJ (clock 333 mJ), HBM 2,
 **idle-stage clock gating is a requirement**. Gated, the ROM token at batch 1 is 36.0 mJ at 1M, **39.7× below
 HBM** (19.6 mJ and 72.0× at 200K).
 
-The pipeline keeps the batch-1 per-user rate up to 28 users. The spec's array then saturates at 361K tokens/s at
-1M (473K at 200K); the HBM comparator reaches 88K (94K) at 1,024 users. Per-user MTP gains shrink with batch,
+The pipeline keeps the batch-1 per-user rate up to 28 users at the stage-mean bound these rows use. The spec's
+array then saturates at 359K tokens/s at 1M with 512 users (the 1,024-user row, 361K, is beyond the 866 users
+the HBM holds after the 0.9 capacity reserve and is flagged `fits_capacity: false`) and 473K at 200K; the HBM
+comparator reaches 88K (94K) at 1,024 users. Per-user MTP gains shrink with batch,
 because the verify pass's extra positions compete for the lanes that other users' tokens use. These are the
 specification's widths; the adopted design point's aggregates are higher (see the reconciliation note below).
 
 **Reconciliation with the design point (internal note).** At 200K and 1,024 users the specification/budget model
 gives an aggregate of 473K tokens/s (`arch_budget_v41.json` `batch['200000']`, batch 1,024; previously ~450K
-at τ 4.1 on the retired spec model), while the adopted design point gives 891K (`results/arch/v41_lanes.json`
-`energy['200000']['sat1024']['rom']['aggregate_tokens_s']`; 689K at 1M against 361K here). They are two
-machines priced by the same model, not two measurements of one. The saturated batch is occupancy-bound, so it
-follows engine throughput, and the design point is the spec after the adopted latency-ladder rungs
+at τ 4.1 on the retired spec model), while the adopted design point gives 436K (`results/arch/v41_lanes.json`
+`energy['200000']['sat1024']['rom']['aggregate_tokens_s']`; 161K at 1M with the 866 users held, against 359K
+here). They are two machines priced by the same model, not two measurements of one, and they now differ in
+their occupancy bound: these spec rows use the stage mean, while the design point's operating points are bound
+by the busiest pipeline stage (`arch_budget_v41.stage_bound`: the stage holding layer 20's uncapped index scan
+carries 3.4× the mean stage's work at 1M, 2.0× at 200K), which is why its saturated aggregates are the lower
+ones. The design point is the spec after the adopted latency-ladder rungs
 (`results/arch/v41_latency_ladder.json`: the pooled block-dot / BF16 engines of `arch_utilization_v41.unified`
 with the pools widened ×2 inside the envelope (`widths_x2`, the R-L8 pools), the 1.087 GHz clock, the
 four-wide lm_head engine, the split index scan, the shorter sequencer gap and the fast-FP formulas), with the
 package's 112G lane split priced per collective and the RTL stage bench's measured collective tails with the
-adopted collective levers (`tools/arch_lanes_v41.py`; the saturated aggregates are occupancy-bound, so the levers
-leave them unchanged). The spec rows here are the width derivation at m = 1 without those levers; the
+adopted collective levers and the layer die's registered on-die wire (`tools/arch_lanes_v41.py`; the saturated
+aggregates are occupancy-bound, so the levers and the wire leave them unchanged). The spec rows here are the width derivation at m = 1 without those levers; the
 atlas quotes only the design point.
 
 ### 8.3 Target context: 1M

@@ -21,7 +21,7 @@ Steps:
     python3 tools/v41_collective_exposure.py --hop-batch [results/rtl/v41_hop_batch_campaign.json]
             (the adopted hop split at pipeline fills 1-28 against full payload per package, under the T1 load of
              the other users' collectives: results/arch/v41_hop_batch_sensitivity.json, a batch-sensitivity
-             record; the batch-1 headline is not changed)
+             record; its fill-1 MTP tail is the headline's verify-pass hop, lever 5 of recommended_exposure)
 
 The --levers rates are a CONDITIONED DESIGN-POINT MODEL RESULT: the analytical decode DAG with each streaming
 collective / stage hop re-priced from a bench-measured tail (RTL of the collective engine and behavioural links).
@@ -62,15 +62,18 @@ def campaign_binding(camp=None, path=CAMPAIGN):
     return dict(pinned=bool(pins), current=bool(pins) and not stale, stale=stale, source_sha256=pins)
 
 
-def dump_on_path(U, A, sp, muts, hz, ctx=1048576):
+def dump_on_path(U, A, sp, muts, hz, ctx=1048576, positions=1):
     """The design point's on-path collectives / stage hops at ctx, batch 1 (muts: the design point's mutations
-    including its lane pricing; hz: (Hz, params) as arch_latency_ladder_v41.rung_spec returns it)."""
+    including its lane pricing; hz: (Hz, params) as arch_latency_ladder_v41.rung_spec returns it).  positions > 1:
+    the MTP verify pass (gamma + 1 positions on the m-way core, as arch_latency_ladder_v41.evaluate prices it)."""
     import arch_latency_ladder_v41 as LX
+    from dataclasses import replace
     hzv, prm = hz
-    out = dict(clock_hz=hzv)
+    out = dict(clock_hz=hzv, positions=positions)
     with LX.clock(hzv), U.params(**prm):
         clk = A._env()["clock"]
-        r = U.solve(sp, ctx, levers=U.CHAIN_L3, muts=list(muts))
+        sp_ = replace(sp, lane_mult=U.MTP_M) if positions > 1 else sp
+        r = U.solve(sp_, ctx, positions=positions, levers=U.CHAIN_L3, muts=list(muts))
         b = r["_built"]
         g = b.g
         nodes = {}
@@ -82,9 +85,11 @@ def dump_on_path(U, A, sp, muts, hz, ctx=1048576):
             pf = max(g.fin[d] for d in nd["deps"]) if nd["deps"] else 0.0
             row = nodes.setdefault(key, dict(count=0, examples=[]))
             row["count"] += 1
+            wire = nd.get("wire_in", 0.0) + nd.get("wire_out", 0.0)       # registered on-die wire, charged apart
             row["examples"].append(dict(node=n, issue_cyc=nd["issue"] * clk, depth_cyc=nd["depth"] * clk,
                                         producer_window_cyc=max(g.nodes[d]["issue"] for d in nd["deps"]) * clk,
-                                        exposed_cyc=(g.fin[n] - pf) * clk, stream=nd["stream"]))
+                                        exposed_cyc=(g.fin[n] - pf - wire) * clk, wire_cyc=wire * clk,
+                                        stream=nd["stream"]))
             row["examples"] = sorted(row["examples"], key=lambda e: (-e["depth_cyc"], -e["exposed_cyc"]))[:3]
         out["on_path"] = nodes
         out["T_us"] = r["T_s"] * 1e6
@@ -261,7 +266,7 @@ def scenario_terms(camp, dump, over, scale):
     return derive_terms(c2, dump, scale)
 
 
-def recommended_exposure(dump, camp=None, lev=None):
+def recommended_exposure(dump, camp=None, lev=None, dump_mtp=None, hb=None):
     """The ADOPTED lever set (lever_scenarios 'recommended': levers 1-4) priced on `dump`: its exposure terms, its
     consumer early starts and the tails they come from.  tools/arch_lanes_v41.py prices the design point with it,
     tools/v41_collective_exposure.py --levers with the same function, so both read the one lever campaign."""
@@ -270,8 +275,38 @@ def recommended_exposure(dump, camp=None, lev=None):
     scen, picks = lever_scenarios(lev)
     _name, over, cons, scale, why = next(s for s in scen if s[0] == "recommended")
     terms, rows = scenario_terms(camp, dump, over, scale)
+    if dump_mtp is not None:          # lever 5: the MTP verify pass's hop at its best measured split
+        terms["hop_mtp"] = mtp_hop_term(dump_mtp, hb)
+        why += "; lever 5: the MTP verify pass's hop at its best bench-measured split"
     return dict(scenario="recommended", why=why, tails=over, consumers=list(cons), bytes_scale=scale,
                 picks=picks, terms=terms, per_pattern=rows)
+
+
+def mtp_hop_term(dump_mtp, hb=None, fill="1", scheme=None, cycles_key="tail_mean"):
+    """The MTP verify pass's stage hop priced from its own bench measurement (results/rtl/v41_hop_batch_campaign.json
+    'mtp' mode: the gamma + 1 = 6-position residual, 481 words, on the T1 + stage-lane split): the split with the
+    shortest measured tail at pipeline fill `fill` (1 = the batch-1 headline; no load, no victim delay) is adopted,
+    and its tail replaces the one-position residual the verify pass otherwise extrapolates.  residual = measured tail
+    - (max(0, bytes - window) + depth) at the verify pass's own hop node (dump_mtp: dump_on_path(..., positions=6)),
+    the same rule as derive_terms.  Measured splits only: no interpolation between them."""
+    hb = hb or json.loads(HOP_BATCH_CAMPAIGN.read_text())
+    sch = hb["summary"]["fills"]["mtp"]["per_fill"][fill]["schemes"]
+    splits = {k: v for k, v in sch.items() if re.fullmatch(r"split[0-9]+", k)}
+    best = scheme or min(splits, key=lambda k: (splits[k]["tail_mean"], k))
+    tail = sch[best][cycles_key]
+    ex = [e for k in ("substage_hop0", "hop") if k in dump_mtp["on_path"] for e in dump_mtp["on_path"][k]["examples"]]
+    e = max(ex, key=lambda x: x["depth_cyc"])
+    formula = max(0.0, e["issue_cyc"] - e["producer_window_cyc"]) + e["depth_cyc"]
+    clock = dump_mtp["clock_hz"]
+    proportional = f"split{hb['modes']['mtp']['adopted']}"
+    return dict(window="producer", window_s=e["producer_window_cyc"] / clock, residual_s=(tail - formula) / clock,
+                residual_cycles=tail - formula, from_pattern=f"hop_batch mtp {best} fill {fill}",
+                scheme=best, words=hb["modes"]["mtp"]["words"], measured_tail_cycles=tail,
+                model_node=e["node"], model_formula_cycles=formula,
+                model_extrapolated_exposed_cycles=e["exposed_cyc"],
+                tails_measured={k: v["tail_mean"] for k, v in sorted(splits.items())},
+                proportional_scheme=proportional, proportional_tail_cycles=sch[proportional]["tail_mean"],
+                full_payload_tail_cycles=sch["full"]["tail_mean"])
 
 
 def queue_area_totals(lev):
@@ -292,10 +327,14 @@ def lever_rates(camp, lev, lev_path, out):
     import arch_lanes_v41 as AL
     dp = AL.design_point()
     dump = dump_on_path(AL.U, AL.A, dp["sp"], list(dp["muts"]) + [dp["ml"]], dp["hz"])
+    dump_mtp = dump_on_path(AL.U, AL.A, dp["sp"], list(dp["muts"]) + [dp["ml"]], dp["hz"], positions=AL.U.GAMMA + 1)
+    hop_mtp = mtp_hop_term(dump_mtp)                     # lever 5 (the verify pass's hop), in every scenario
     scen, picks = lever_scenarios(lev)
     rows = {}
-    for name, over, cons, scale, why in scen:
+    for name, over, cons, scale, why in scen + [("mtp_hop_split", {}, (), {}, "lever 5 alone")]:
         terms, _ = scenario_terms(camp, dump, over, scale)
+        if name.startswith(("recommended", "mtp_hop_split")):
+            terms["hop_mtp"] = hop_mtp
         ev = design_point_rates(dp, terms, cons)
         rows[name] = dict(why=why, tails=over, consumers=list(cons), bytes_scale=scale,
                           residual_cycles={k: round(v["residual_cycles"], 2) for k, v in terms.items()},
@@ -366,14 +405,19 @@ def hop_batch_terms(hb, mode="ar"):
 def hop_batch_sensitivity(camp, lev, hb, hb_path, out):
     """Batch-sensitivity of the adopted hop split: the design point re-priced with, per fill, the hop term each
     scheme costs a user at that fill (hop tail + the delay imposed on its collectives by the hop behind it), in
-    place of the batch-1 stage_hop tail; every other lever as adopted.  The batch-1 headline is not changed."""
+    place of the batch-1 stage_hop tail, and the verify pass's hop at the adopted MTP split's effective cycles at
+    the same fill; every other lever as adopted.  At fill 1 this is the headline."""
     import arch_lanes_v41 as AL
     import arch_latency_ladder_v41 as LX
     dp = AL.design_point()
     dump = dump_on_path(AL.U, AL.A, dp["sp"], list(dp["muts"]) + [dp["ml"]], dp["hz"])
+    dump_mtp = dump_on_path(AL.U, AL.A, dp["sp"], list(dp["muts"]) + [dp["ml"]], dp["hz"], positions=AL.U.GAMMA + 1)
     scen, picks = lever_scenarios(lev)
     _name, over, cons, scale, _why = next(s for s in scen if s[0] == "recommended")
     terms0, _ = scenario_terms(camp, dump, over, scale)
+    hop_mtp0 = mtp_hop_term(dump_mtp, hb)                 # the headline's MTP hop (lever 5): best split at fill 1
+    ad_mtp = hop_mtp0["scheme"]
+    terms0["hop_mtp"] = hop_mtp0
     head = design_point_rates(dp, terms0, cons)
     headline = {ctx: dict(ar=r["measured_exposure"]["ar"], mtp=r["measured_exposure"]["mtp"])
                 for ctx, r in head.items()}
@@ -386,38 +430,41 @@ def hop_batch_sensitivity(camp, lev, hb, hb_path, out):
         for s, v in sch.items():
             o = dict(over, stage_hop=v["effective_hop_cycles"])
             terms, _ = scenario_terms(camp, dump, o, scale)
+            # the verify pass's hop: the adopted MTP split's effective cycles measured at this fill (6 positions)
+            terms["hop_mtp"] = mtp_hop_term(dump_mtp, hb, n, ad_mtp, "effective_hop_cycles")
             ev = design_point_rates(dp, terms, cons)
-            mt = mtp_terms.get(n, {}).get(s) or mtp_terms.get(n, {}).get(
-                s.replace(f"split{hb['modes']['ar']['adopted']}", f"split{hb['modes']['mtp']['adopted']}"))
             r = dict(ar_hop_term_cycles=v["effective_hop_cycles"], ar_tail_mean=v["tail_mean"],
                      ar_victim_delay_mean=v["victim_delay_mean"],
                      ar_token_cycles_vs_full=v["token_cycles_vs_full"],
+                     mtp_hop_term_cycles=terms["hop_mtp"]["measured_tail_cycles"],
                      rates={ctx: dict(ar=e["measured_exposure"]["ar"], mtp=e["measured_exposure"]["mtp"])
                             for ctx, e in ev.items()})
-            if mt:
-                # the 6-position verify pass measured directly (481-word hop, 6x collectives): its per-pass cycles
-                # against the no-load adopted split, applied to the headline MTP rate (tau / pass time)
-                d = mt["token_cycles_vs_batch1_split"] / clock
-                r.update(mtp_pass_cycles_vs_batch1_split=mt["token_cycles_vs_batch1_split"],
-                         mtp_pass_cycles_vs_full=mt["token_cycles_vs_full"],
-                         mtp_direct={ctx: LX.TAU / (LX.TAU / headline[ctx]["mtp"] + d) for ctx in headline})
             rows[s] = r
         fills[n] = rows
+    # every measured MTP split at every fill, against the adopted split at fill 1 (the headline's verify pass):
+    # its per-pass cycles applied to the headline MTP rate (tau / pass time)
+    base_mtp = mtp_terms["1"][ad_mtp]["token_cycles"]
+    mtp_direct = {n: {k: dict(pass_cycles=v["token_cycles"], pass_cycles_vs_adopted_batch1=v["token_cycles"] - base_mtp,
+                              pass_cycles_vs_full=v["token_cycles_vs_full"],
+                              rates={ctx: LX.TAU / (LX.TAU / headline[ctx]["mtp"] + (v["token_cycles"] - base_mtp)
+                                                    / clock) for ctx in headline})
+                      for k, v in sch.items()} for n, sch in mtp_terms.items()}
     ad_ar = f"split{hb['modes']['ar']['adopted']}"
-    ad_mtp = f"split{hb['modes']['mtp']['adopted']}"
     policy = {}
     for n, rows in fills.items():
         best = max(rows, key=lambda s: rows[s]["rates"]["1048576"]["ar"])
         policy[n] = dict(ar_best_scheme=best, ar_split_gain_vs_full_1m={
             ctx: rows[ad_ar]["rates"][ctx]["ar"] / rows["full"]["rates"][ctx]["ar"] - 1 for ctx in headline},
             mtp_best_scheme=hb["summary"]["fills"]["mtp"]["policy"][n],
-            mtp_split_gain_cycles_per_pass=hb["summary"]["fills"]["mtp"]["split_gain_cycles_per_token"][n])
+            mtp_adopted_gain_vs_full_cycles_per_pass=-mtp_terms[n][ad_mtp]["token_cycles_vs_full"],
+            mtp_adopted_gain_vs_proportional_cycles_per_pass=(
+                mtp_terms[n][f"split{hb['modes']['mtp']['adopted']}"]["token_cycles"] - mtp_terms[n][ad_mtp]["token_cycles"]))
     rel = (lambda q: str(q.relative_to(ROOT)) if q.resolve().is_relative_to(ROOT) else str(q))
-    rec = dict(schema="v41_hop_batch_sensitivity/1", tool="tools/v41_collective_exposure.py --hop-batch",
+    rec = dict(schema="v41_hop_batch_sensitivity/2", tool="tools/v41_collective_exposure.py --hop-batch",
                gate="C7 / O2 levers at batch > 1",
                result_kind=("batch-SENSITIVITY record: a conditioned design-point model result using bench-measured "
                             "hop tails and victim delays under the derived T1 load; NOT measured chip throughput; "
-                            "the batch-1 headline (results/arch/v41_lanes.json design_point) is unchanged"),
+                            "headline_batch1 equals results/arch/v41_lanes.json design_point"),
                campaign=rel(hb_path), campaign_binding=campaign_binding(hb, hb_path),
                lever_campaign=str(LEVERS_CAMPAIGN.relative_to(ROOT)),
                baseline_campaign=str(CAMPAIGN.relative_to(ROOT)),
@@ -427,14 +474,18 @@ def hop_batch_sensitivity(camp, lev, hb, hb_path, out):
                    "of the users running on the receiving module), from the 'ar' (one-position) mode;",
                    "that figure replaces the adopted stage_hop tail in lever_scenarios 'recommended' (every other "
                    "lever as adopted) and the design point is re-priced (design_point_rates): tok/s/user at 200K "
-                   "and 1M, without MTP ('ar') and with it ('mtp', the verify pass priced as the headline prices "
-                   "it, from the one-position hop term);",
-                   "mtp_direct: the 6-position verify pass measured in the 'mtp' mode (481-word hop, 6x collectives, "
-                   "T1 up to ~37% busy at fill 28): its per-pass cycles against the no-load adopted split added "
-                   "to the headline MTP pass time (tau / rate);",
+                   "and 1M, without MTP ('ar') and with it ('mtp'); the verify pass's hops carry the adopted MTP "
+                   "split's effective cycles measured at the same fill in the 'mtp' mode (481-word hop, 6x "
+                   "collectives), as the headline carries its fill-1 tail (lever 5, mtp_hop_term);",
+                   "mtp_direct: every measured MTP split at every fill, its per-pass cycles against the adopted "
+                   "split at fill 1 added to the headline MTP pass time (tau / rate);",
                    "victim delays are charged in full to the victim's token (every delayed collective assumed on "
                    "its critical path): conservative; the campaign also records the critical-path-only figure."],
-               headline_batch1=headline, adopted=dict(ar=ad_ar, mtp=ad_mtp),
+               headline_batch1=headline, adopted=dict(ar=ad_ar, mtp=ad_mtp,
+                                                      mtp_campaign_proportional=f"split{hb['modes']['mtp']['adopted']}",
+                                                      mtp_rule="the split with the shortest measured 6-position tail "
+                                                               "at fill 1 (mtp_hop_term)"),
+               mtp_direct=mtp_direct,
                measured_terms=dict(ar=ar_terms, mtp=mtp_terms, ar_no_load=ar_meta, mtp_no_load=mtp_meta),
                t1_busy=dict(ar={n: hb["summary"]["fills"]["ar"]["per_fill"][n]["t1_busy_fraction_max"]
                                 for n in fills},
@@ -445,8 +496,7 @@ def hop_batch_sensitivity(camp, lev, hb, hb_path, out):
                fills=fills, policy=policy)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1) + "\n")
-    print(json.dumps({n: {s: (round(v["rates"]["1048576"]["ar"]), round(v["rates"]["1048576"]["mtp"]),
-                              round(v.get("mtp_direct", {}).get("1048576", 0)))
+    print(json.dumps({n: {s: (round(v["rates"]["1048576"]["ar"]), round(v["rates"]["1048576"]["mtp"]))
                           for s, v in rows.items()} for n, rows in fills.items()}, indent=1))
 
 
@@ -460,7 +510,7 @@ def main():
     ap.add_argument("--levers-out", type=Path, default=LEVERS_OUT)
     ap.add_argument("--hop-batch", nargs="?", const=HOP_BATCH_CAMPAIGN, type=Path,
                     help="the adopted hop split's batch sensitivity from results/rtl/v41_hop_batch_campaign.json; "
-                         "writes --hop-batch-out (the batch-1 headline is not changed)")
+                         "writes --hop-batch-out")
     ap.add_argument("--hop-batch-out", type=Path, default=HOP_BATCH_OUT)
     a = ap.parse_args()
     camp = json.loads(a.campaign.read_text())

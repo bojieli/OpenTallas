@@ -684,7 +684,7 @@ def power(el, pl):
     table_static = table_leak + st["ucie_idle"] + 2 * serdes_lane_w / 2
     rows = B["batch"][str(CTX)]["rows"]["rom"]
     b1, fill = rows[0], next(r for r in rows if r["batch"] == FILL)
-    sat = max(rows, key=lambda r: r["mtp_aggregate_tokens_s"])
+    sat = max((r for r in rows if r.get("fits_capacity", True)), key=lambda r: r["mtp_aggregate_tokens_s"])
     dmac = mac_energy_delta_j()
     dmtp = dmac * POSITIONS / TAU
     n_ld = 116                                                       # 112 layer + 4 head dies
@@ -702,8 +702,10 @@ def power(el, pl):
         static = dict(layer_dies=112 * sw["layer_die"], head_dies=4 * sw["head_die"], table_dies=72 * sw["table_die"])
         # the worst die adds the HBM interface IDLE only (in static): the 13 pJ/b dynamic energy already carries the
         # I/O, so any separate 'hbm_interface_active_w' in the record is a double count (spec ef93dda0) -- excluded
-        die_worst = wd["static_w"] + wd["dynamic_w"]
-        worst_chips = static["layer_dies"] + static["head_dies"] + static["table_dies"] + 112 * wd["dynamic_w"]
+        die_worst = wd["static_w"] + wd["dynamic_w"]          # the HOTTEST die: package, tray and cooling checks
+        # the rack's chips sum every die: the array-average dynamic (the hottest die's excess is other dies' deficit)
+        avg_dyn = max((wd.get("average_die_dynamic_w_by_point") or dict(worst=wd["dynamic_w"])).values())
+        worst_chips = static["layer_dies"] + static["head_dies"] + static["table_dies"] + 112 * avg_dyn
         switch_w = _v("switch_tray_w")       # the physical switch; the per-port 1.1 kW is the ratio basis
         basis = ("design point: results/arch/v41_hbm_switched.json (energy, rom_worst_die_w) and results/arch/"
                  "v41_lanes.json static_w, utilisation agent b07a5745 on the spec's validated per-die terms")
@@ -772,7 +774,8 @@ def power(el, pl):
             spec_rule_w=(n_ld * pw["provisioned_wall_w_per_die"] +
                          72 * PROVISION_MARGIN * table_static * over / (vr * psu) +
                          PROVISION_MARGIN * infra_total * over / psu),
-            note="116 x the spec's 303 W provisioned per die + 72 table dies + infrastructure, each at 1.2 x wall"),
+            note=("116 x the spec's %.0f W provisioned per die (its HOTTEST die's worst case, charged to every die: an "
+                  "upper bound) + 72 table dies + infrastructure, each at 1.2 x wall" % pw["provisioned_wall_w_per_die"])),
         shelves=dict(shelf_w=shelf, n_plus_1_w=shelf_n1, per_side=SHELVES_PER_SIDE, count=2 * SHELVES_PER_SIDE,
                      side_capacity_w=SHELVES_PER_SIDE * shelf_n1,
                      redundancy="2N (sides A and B, %d shelves each), each shelf N+1 inside" % SHELVES_PER_SIDE,
@@ -1532,14 +1535,21 @@ def two_die_link_gate(pl, tr):
                         uncapped_utilisation=lk.get("utilisation_uncapped"),
                         aggregate_tokens_s=rt["sat_mtp"], aggregate_tokens_s_uncapped=lk.get("aggregate_tokens_s_uncapped"),
                         busiest_link=lk.get("busiest_link"), link_bound=bool(lk.get("binds")),
-                        note=("capped in the aggregate model (results/arch/v41_lanes.json energy sat1024_mtp link_cap): "
-                              "uncapped, 1,024 users with MTP would load the busiest stage's T1 link to %.0f%% and the "
-                              "head module's T1 link to %.0f%%, so the aggregate is held at %s tok/s (from %s) where "
-                              "the %s link runs at 100%%; not gated (the design point is the fill)"
-                              % (100 * lk["utilisation_uncapped"]["stage_t1"], 100 * lk["utilisation_uncapped"]["head_t1"],
-                                 f"{rt['sat_mtp']:,.0f}", f"{lk['aggregate_tokens_s_uncapped']:,.0f}",
-                                 {"head_t1": "head module's T1", "stage_t1": "busiest stage's T1"}.get(
-                                     lk["busiest_link"], lk["busiest_link"]))
+                        note=(("capped in the aggregate model (results/arch/v41_lanes.json energy sat1024_mtp link_cap): "
+                               "uncapped, the saturated point with MTP would load the busiest stage's T1 link to %.0f%% "
+                               "and the head module's T1 link to %.0f%%, so the aggregate is held at %s tok/s (from %s) "
+                               "where the %s link runs at 100%%; not gated (the design point is the fill)"
+                               % (100 * lk["utilisation_uncapped"]["stage_t1"], 100 * lk["utilisation_uncapped"]["head_t1"],
+                                  f"{rt['sat_mtp']:,.0f}", f"{lk['aggregate_tokens_s_uncapped']:,.0f}",
+                                  {"head_t1": "head module's T1", "stage_t1": "busiest stage's T1"}.get(
+                                      lk["busiest_link"], lk["busiest_link"])))
+                              if lk.get("binds") else
+                              ("not link-bound: the saturated point with MTP is bound first by its busiest pipeline "
+                               "stage (arch_budget_v41.stage_bound: the stage holding an uncapped index scan), which "
+                               "leaves the busiest stage's T1 link at %.0f%% and the head module's T1 link at %.0f%% "
+                               "at %s tok/s; not gated (the design point is the fill)"
+                               % (100 * lk["utilisation_uncapped"]["stage_t1"], 100 * lk["utilisation_uncapped"]["head_t1"],
+                                  f"{rt['sat_mtp']:,.0f}"))
                               if lk.get("utilisation_uncapped") else "no link cap in the lane record")),
         not_credited=("two-step all-reduce at the 6-position MTP payloads (would halve the all-reduce T1 bytes "
                       "again); the relay's measured tails are for one-shot 20 KB all-reduces"),
@@ -1677,8 +1687,9 @@ def draft_kv_gate(pl, draft_sram, alloc, fp):
             per_user_bytes=per_user, per_user_per_die_bytes=per_user_die,
             fill_users=FILL, fill_per_die_single_bytes=FILL * per_user_die, fill_per_die_double_bytes=2 * FILL * per_user_die,
             capacity_users=cap, capacity_hbm_per_die_bytes=cap * per_user_die,
-            sat1024_hbm_per_die_bytes=1024 * per_user_die,
-            sat1024_share_of_head_hbm=1024 * per_user_die / (HBM_STACKS_PER_LAYER_DIE * stack_B))
+            sat_users=min(1024, cap),
+            sat1024_hbm_per_die_bytes=min(1024, cap) * per_user_die,
+            sat1024_share_of_head_hbm=min(1024, cap) * per_user_die / (HBM_STACKS_PER_LAYER_DIE * stack_B))
     bf16 = ds["stages"] * ds["window_rows"] * 2 * ds["head_dim"] / G
     # read port against the model's draft-stage KV sweep (decode_critical_path kvscan: kv bytes x microbatch / rate)
     kvb_die = ds["window_rows"] * row / G
@@ -1737,7 +1748,8 @@ def draft_kv_gate(pl, draft_sram, alloc, fp):
                     bank_read_utilisation=lam / DRAFT_BANKS * bank_read_s,
                     readers_needed=lam * bank_read_s, concurrent_readers=DRAFT_BANKS,
                     slots_resident=FILL * 2, fits_slots=dc_["drafts_in_flight"] <= FILL * 2)
-    concurrency = dict(fill28_mtp=_conc(fdc, FILL), sat1024_mtp=_conc(sdc, 1024),
+    concurrency = dict(fill28_mtp=_conc(fdc, FILL),
+                       sat1024_mtp=_conc(sdc, ln["energy"][str(CTX)]["sat1024_mtp"].get("batch", 1024)),
                        bank_read_s_per_draft=bank_read_s,
                        basis=("head engines: tools/arch_utilization_v41.draft_contention (per-unit processor sharing "
                               "among the users' drafts and verify passes, conservative); SRAM: each draft reads 3 stage "
@@ -1787,12 +1799,13 @@ def draft_kv_gate(pl, draft_sram, alloc, fp):
                  "head die's %.1f mm2 of released engine area, so no ROM is displaced (the head die's 69 MB 'spare' "
                  "ROM is Engram spill). Interleaving a slot across a 28-macro bank reads a stage's window in %.1f "
                  "cycles against the model's %.1f (the 4-macro row read took %.0f: -%.0f tok/s at 1M). Beyond the "
-                 "fill, windows page to the head HBM: %.1f MB per die at 1,024 users, prefetch %.2f us under a %.1f us "
+                 "fill, windows page to the head HBM: %.1f MB per die at %s users, prefetch %.2f us under a %.1f us "
                  "draft. Unstaged HBM would cost %.0f-%.0f tok/s/user at 1M with MTP."
                  % (per_user / 1e3, per_user_die / 1e3, FILL * per_user_die / 1e6, 2 * FILL * per_user_die / 1e6,
                     fp["area"]["block_mm2"], alloc["head_released_engine_mm2"], sram_cyc, model_cyc, old_cyc,
                     r1["mtp_tokens_s_per_user"] - r1["one_row_per_slot_port"]["mtp_tokens_s_per_user"],
-                    1024 * per_user_die / 1e6, prefetch_s * 1e6, r1["draft_s"] * 1e6,
+                    sizing[str(CTX)]["sat1024_hbm_per_die_bytes"] / 1e6, f"{sizing[str(CTX)]['sat_users']:,}",
+                    prefetch_s * 1e6, r1["draft_s"] * 1e6,
                     r1["mtp_tokens_s_per_user"] - r1["hbm_backed_unstaged"]["hbm_budgeted_250ns"]["mtp_tokens_s_per_user"],
                     r1["mtp_tokens_s_per_user"] - r1["hbm_backed_unstaged"]["hbm_first_access_1us"]["mtp_tokens_s_per_user"])),
         closed_items=[

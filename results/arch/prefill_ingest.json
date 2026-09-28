@@ -54,8 +54,8 @@
    "200000": 3580.375802755708
   },
   "v41_rom": {
-   "1048576": 8184.912902114869,
-   "200000": 8567.550390932485
+   "1048576": 7008.864184990315,
+   "200000": 7285.665796379299
   }
  },
  "dense_gpu_calibration": {
@@ -102,7 +102,7 @@
    "burst_s_bf16": 0.024685611709709555,
    "burst_s_fp8": 0.012342805854854777,
    "capacity": {
-    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 962 applies no 0.9",
+    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 users held apply the same 0.9",
     "users_at_0p9": 201,
     "users_no_efficiency": 223
    },
@@ -136,7 +136,7 @@
    "burst_s_bf16": 0.024685611709709555,
    "burst_s_fp8": 0.012342805854854777,
    "capacity": {
-    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 962 applies no 0.9",
+    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 users held apply the same 0.9",
     "users_at_0p9": 201,
     "users_no_efficiency": 223
    },
@@ -170,7 +170,7 @@
    "burst_s_bf16": 0.024685611709709555,
    "burst_s_fp8": 0.012342805854854777,
    "capacity": {
-    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 962 applies no 0.9",
+    "note": "atlas's 201 = 0.9 x 6 x 22.5 GB / 604 MB; the V4.1 users held apply the same 0.9",
     "users_at_0p9": 201,
     "users_no_efficiency": 223
    },
@@ -204,18 +204,18 @@
  "schema": "opentallas.arch-prefill-ingest.v2",
  "slot_reservation": {
   "1048576": {
-   "late_bind_reserved_fraction": 0.0001963615434919738,
-   "session_decode_s": 48.69293284923064,
+   "late_bind_reserved_fraction": 5.4358595058748665e-05,
+   "session_decode_s": 175.92024697302037,
    "session_output_tokens": 32768,
-   "stream_reserved_fraction": 0.08900513208846998,
-   "users_held": 962
+   "stream_reserved_fraction": 0.026330599528908174,
+   "users_held": 866
   },
   "200000": {
-   "late_bind_reserved_fraction": 4.901687118793437e-05,
-   "session_decode_s": 37.66698498208753,
+   "late_bind_reserved_fraction": 2.3989457273469066e-05,
+   "session_decode_s": 76.96564122651046,
    "session_output_tokens": 32768,
-   "stream_reserved_fraction": 0.0191027582809722,
-   "users_held": 5018
+   "stream_reserved_fraction": 0.009440975980555485,
+   "users_held": 4516
   }
  },
  "sustained": {
@@ -249,75 +249,75 @@
    "by_batch": {
     "b1": {
      "1": {
-      "b200_needed": 0.3670428396876991,
-      "dgx_b200_needed": 0.045880354960962384,
-      "ingest_sent_Bps": 7284572.482882234,
-      "prompt_tok_s": 8184.912902114869,
-      "uplink_fraction_2x400G": 7.443300874020726e-05
+      "b200_needed": 0.31430431138485826,
+      "dgx_b200_needed": 0.03928803892310728,
+      "ingest_sent_Bps": 6237889.12464138,
+      "prompt_tok_s": 7008.864184990315,
+      "uplink_fraction_2x400G": 6.373810636463974e-05
      },
      "20": {
-      "b200_needed": 7.340856793753981,
-      "dgx_b200_needed": 0.9176070992192477,
-      "ingest_sent_Bps": 145691449.65764466,
-      "prompt_tok_s": 163698.25804229738,
-      "uplink_fraction_2x400G": 0.001488660174804145
+      "b200_needed": 6.286086227697166,
+      "dgx_b200_needed": 0.7857607784621458,
+      "ingest_sent_Bps": 124757782.49282762,
+      "prompt_tok_s": 140177.2836998063,
+      "uplink_fraction_2x400G": 0.001274762127292795
      },
      "4": {
-      "b200_needed": 1.4681713587507963,
-      "dgx_b200_needed": 0.18352141984384954,
-      "ingest_sent_Bps": 29138289.931528937,
-      "prompt_tok_s": 32739.651608459477,
-      "uplink_fraction_2x400G": 0.00029773203496082903
+      "b200_needed": 1.257217245539433,
+      "dgx_b200_needed": 0.15715215569242913,
+      "ingest_sent_Bps": 24951556.49856552,
+      "prompt_tok_s": 28035.45673996126,
+      "uplink_fraction_2x400G": 0.000254952425458559
      },
-     "decode_aggregate_tok_s": 8184.912902114869
+     "decode_aggregate_tok_s": 7008.864184990315
     },
     "fill28": {
      "1": {
-      "b200_needed": 10.277199511255574,
-      "dgx_b200_needed": 1.2846499389069468,
-      "ingest_sent_Bps": 203968029.52070254,
-      "prompt_tok_s": 229177.56125921634,
-      "uplink_fraction_2x400G": 0.002084124244725803
+      "b200_needed": 6.289359175084971,
+      "dgx_b200_needed": 0.7861698968856213,
+      "ingest_sent_Bps": 124822739.54933746,
+      "prompt_tok_s": 140250.26915655893,
+      "uplink_fraction_2x400G": 0.0012754258517826394
      },
      "20": {
-      "b200_needed": 205.5439902251115,
-      "dgx_b200_needed": 25.692998778138936,
-      "ingest_sent_Bps": 4079360590.414051,
-      "prompt_tok_s": 4583551.225184327,
-      "uplink_fraction_2x400G": 0.041682484894516064
+      "b200_needed": 125.7871835016994,
+      "dgx_b200_needed": 15.723397937712425,
+      "ingest_sent_Bps": 2496454790.9867487,
+      "prompt_tok_s": 2805005.3831311786,
+      "uplink_fraction_2x400G": 0.025508517035652784
      },
      "4": {
-      "b200_needed": 41.1087980450223,
-      "dgx_b200_needed": 5.138599755627787,
-      "ingest_sent_Bps": 815872118.0828102,
-      "prompt_tok_s": 916710.2450368654,
-      "uplink_fraction_2x400G": 0.008336496978903212
+      "b200_needed": 25.157436700339883,
+      "dgx_b200_needed": 3.1446795875424853,
+      "ingest_sent_Bps": 499290958.19734985,
+      "prompt_tok_s": 561001.0766262357,
+      "uplink_fraction_2x400G": 0.0051017034071305575
      },
-     "decode_aggregate_tok_s": 229177.56125921634
+     "decode_aggregate_tok_s": 140250.26915655893
     },
     "sat1024": {
      "1": {
-      "b200_needed": 30.90200453669285,
-      "dgx_b200_needed": 3.8627505670866062,
-      "ingest_sent_Bps": 613301412.1878233,
-      "prompt_tok_s": 689102.710323397,
-      "uplink_fraction_2x400G": 0.006266650442565952
+      "b200_needed": 7.233603416636592,
+      "dgx_b200_needed": 0.904200427079574,
+      "ingest_sent_Bps": 143562828.92141047,
+      "prompt_tok_s": 161306.5493498994,
+      "uplink_fraction_2x400G": 0.001466910148122824
      },
      "20": {
-      "b200_needed": 618.040090733857,
-      "dgx_b200_needed": 77.25501134173213,
-      "ingest_sent_Bps": 12266028243.756466,
-      "prompt_tok_s": 13782054.20646794,
-      "uplink_fraction_2x400G": 0.12533300885131904
+      "b200_needed": 144.67206833273184,
+      "dgx_b200_needed": 18.08400854159148,
+      "ingest_sent_Bps": 2871256578.4282093,
+      "prompt_tok_s": 3226130.986997988,
+      "uplink_fraction_2x400G": 0.029338202962456476
      },
      "4": {
-      "b200_needed": 123.6080181467714,
-      "dgx_b200_needed": 15.451002268346425,
-      "ingest_sent_Bps": 2453205648.751293,
-      "prompt_tok_s": 2756410.841293588,
-      "uplink_fraction_2x400G": 0.02506660177026381
+      "b200_needed": 28.93441366654637,
+      "dgx_b200_needed": 3.616801708318296,
+      "ingest_sent_Bps": 574251315.6856419,
+      "prompt_tok_s": 645226.1973995976,
+      "uplink_fraction_2x400G": 0.005867640592491296
      },
-     "decode_aggregate_tok_s": 689102.710323397
+     "decode_aggregate_tok_s": 161306.5493498994
     }
    },
    "flops_per_prompt_token_at_context": 56127440512.0,
@@ -328,75 +328,75 @@
    "by_batch": {
     "b1": {
      "1": {
-      "b200_needed": 0.26524071149615003,
-      "dgx_b200_needed": 0.033155088937018753,
-      "ingest_sent_Bps": 7625119.847929912,
-      "prompt_tok_s": 8567.550390932485,
-      "uplink_fraction_2x400G": 7.79126865193237e-05
+      "b200_needed": 0.22555515770295725,
+      "dgx_b200_needed": 0.028194394712869657,
+      "ingest_sent_Bps": 6484242.558777575,
+      "prompt_tok_s": 7285.665796379299,
+      "uplink_fraction_2x400G": 6.62553202930245e-05
      },
      "20": {
-      "b200_needed": 5.304814229923001,
-      "dgx_b200_needed": 0.6631017787403751,
-      "ingest_sent_Bps": 152502396.95859823,
-      "prompt_tok_s": 171351.0078186497,
-      "uplink_fraction_2x400G": 0.0015582537303864739
+      "b200_needed": 4.511103154059145,
+      "dgx_b200_needed": 0.5638878942573932,
+      "ingest_sent_Bps": 129684851.1755515,
+      "prompt_tok_s": 145713.31592758597,
+      "uplink_fraction_2x400G": 0.00132510640586049
      },
      "4": {
-      "b200_needed": 1.0609628459846001,
-      "dgx_b200_needed": 0.13262035574807501,
-      "ingest_sent_Bps": 30500479.391719647,
-      "prompt_tok_s": 34270.20156372994,
-      "uplink_fraction_2x400G": 0.0003116507460772948
+      "b200_needed": 0.902220630811829,
+      "dgx_b200_needed": 0.11277757885147863,
+      "ingest_sent_Bps": 25936970.2351103,
+      "prompt_tok_s": 29142.663185517195,
+      "uplink_fraction_2x400G": 0.000265021281172098
      },
-     "decode_aggregate_tok_s": 8567.550390932485
+     "decode_aggregate_tok_s": 7285.665796379299
     },
     "fill28": {
      "1": {
-      "b200_needed": 7.426739921892201,
-      "dgx_b200_needed": 0.9283424902365252,
-      "ingest_sent_Bps": 213503355.74203756,
-      "prompt_tok_s": 239891.4109461096,
-      "uplink_fraction_2x400G": 0.0021815552225410637
+      "b200_needed": 6.315544415682804,
+      "dgx_b200_needed": 0.7894430519603505,
+      "ingest_sent_Bps": 181558791.64577213,
+      "prompt_tok_s": 203998.64229862037,
+      "uplink_fraction_2x400G": 0.0018551489682046862
      },
      "20": {
-      "b200_needed": 148.53479843784405,
-      "dgx_b200_needed": 18.566849804730506,
-      "ingest_sent_Bps": 4270067114.840751,
-      "prompt_tok_s": 4797828.218922192,
-      "uplink_fraction_2x400G": 0.04363110445082127
+      "b200_needed": 126.31088831365608,
+      "dgx_b200_needed": 15.78886103920701,
+      "ingest_sent_Bps": 3631175832.9154425,
+      "prompt_tok_s": 4079972.8459724076,
+      "uplink_fraction_2x400G": 0.03710297936409372
      },
      "4": {
-      "b200_needed": 29.706959687568805,
-      "dgx_b200_needed": 3.7133699609461006,
-      "ingest_sent_Bps": 854013422.9681503,
-      "prompt_tok_s": 959565.6437844384,
-      "uplink_fraction_2x400G": 0.008726220890164255
+      "b200_needed": 25.262177662731215,
+      "dgx_b200_needed": 3.157772207841402,
+      "ingest_sent_Bps": 726235166.5830885,
+      "prompt_tok_s": 815994.5691944815,
+      "uplink_fraction_2x400G": 0.007420595872818745
      },
-     "decode_aggregate_tok_s": 239891.4109461096
+     "decode_aggregate_tok_s": 203998.64229862037
     },
     "sat1024": {
      "1": {
-      "b200_needed": 27.578621182858356,
-      "dgx_b200_needed": 3.4473276478572945,
-      "ingest_sent_Bps": 792828109.1306223,
-      "prompt_tok_s": 890818.1001467666,
-      "uplink_fraction_2x400G": 0.008101035677120824
+      "b200_needed": 13.4969772663129,
+      "dgx_b200_needed": 1.6871221582891125,
+      "ingest_sent_Bps": 388010078.3167863,
+      "prompt_tok_s": 435966.38013122056,
+      "uplink_fraction_2x400G": 0.003964646877837753
      },
      "20": {
-      "b200_needed": 551.5724236571671,
-      "dgx_b200_needed": 68.94655295714588,
-      "ingest_sent_Bps": 15856562182.612446,
-      "prompt_tok_s": 17816362.00293533,
-      "uplink_fraction_2x400G": 0.16202071354241648
+      "b200_needed": 269.939545326258,
+      "dgx_b200_needed": 33.74244316578225,
+      "ingest_sent_Bps": 7760201566.335726,
+      "prompt_tok_s": 8719327.60262441,
+      "uplink_fraction_2x400G": 0.07929293755675505
      },
      "4": {
-      "b200_needed": 110.31448473143342,
-      "dgx_b200_needed": 13.789310591429178,
-      "ingest_sent_Bps": 3171312436.522489,
-      "prompt_tok_s": 3563272.4005870665,
-      "uplink_fraction_2x400G": 0.0324041427084833
+      "b200_needed": 53.9879090652516,
+      "dgx_b200_needed": 6.74848863315645,
+      "ingest_sent_Bps": 1552040313.2671452,
+      "prompt_tok_s": 1743865.5205248822,
+      "uplink_fraction_2x400G": 0.01585858751135101
      },
-     "decode_aggregate_tok_s": 890818.1001467666
+     "decode_aggregate_tok_s": 435966.38013122056
     }
    },
    "flops_per_prompt_token_at_context": 38748604032.0,
@@ -404,7 +404,7 @@
   }
  },
  "switch_port_load": {
-  "engram_utilisation_fill_mtp": 0.10394054055044791,
+  "engram_utilisation_fill_mtp": 0.05124629906488256,
   "ingest_package_port_utilisation_2x400G": 0.37050066344279947,
   "ingest_package_port_utilisation_8x400G": 1.0,
   "requirement": "Engram gather in a strict-priority traffic class above KV ingest on the rack switch; ingest in a lower class so a burst cannot queue a token-path gather behind it"
@@ -429,16 +429,17 @@
    },
    "bytes_written_hbm_replicated": 7843682304.0,
    "capacity": {
-    "hbm_users": 907,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
     "per_user_bytes_busiest_die": 93458432.0,
-    "rom_users": 962,
-    "rom_users_at_0p9_capacity": 866,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 1048576,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.0001221760099293926,
+   "first_decode_step_s": 0.00014267646991099198,
    "gpu_prefill_s": 4.7572473147502645,
    "gpu_prefill_s_indexer_at_half_rate": 5.937471604683265,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -471,8 +472,8 @@
     "link_busy_fraction": 0.0020102585975708704,
     "pace_Bps_needed": 196738983.29776716
    },
-   "ttft_late_bind_s": 4.766942788075442,
-   "ttft_stream_s": 4.757481610871569
+   "ttft_late_bind_s": 4.766963288535423,
+   "ttft_stream_s": 4.75750211133155
   },
   {
    "burst": {
@@ -492,16 +493,17 @@
    },
    "bytes_written_hbm_replicated": 7843682304.0,
    "capacity": {
-    "hbm_users": 907,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
     "per_user_bytes_busiest_die": 93458432.0,
-    "rom_users": 962,
-    "rom_users_at_0p9_capacity": 866,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 1048576,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.0001221760099293926,
+   "first_decode_step_s": 0.00014267646991099198,
    "gpu_prefill_s": 3.359501267424382,
    "gpu_prefill_s_indexer_at_half_rate": 4.192959091990541,
    "gpu_rate_flops_per_gpu": 1772366222555136.0,
@@ -534,8 +536,8 @@
     "link_busy_fraction": 0.002846641972717432,
     "pace_Bps_needed": 278593733.2649233
    },
-   "ttft_late_bind_s": 3.369196740749559,
-   "ttft_stream_s": 3.3597355635456867
+   "ttft_late_bind_s": 3.3692172412095407,
+   "ttft_stream_s": 3.3597560640056683
   },
   {
    "burst": {
@@ -555,16 +557,17 @@
    },
    "bytes_written_hbm_replicated": 7843682304.0,
    "capacity": {
-    "hbm_users": 907,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
     "per_user_bytes_busiest_die": 93458432.0,
-    "rom_users": 962,
-    "rom_users_at_0p9_capacity": 866,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 1048576,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.0001221760099293926,
+   "first_decode_step_s": 0.00014267646991099198,
    "gpu_prefill_s": 2.3786236573751323,
    "gpu_prefill_s_indexer_at_half_rate": 2.9687358023416324,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -597,8 +600,8 @@
     "link_busy_fraction": 0.004020517195141741,
     "pace_Bps_needed": 393477966.5955343
    },
-   "ttft_late_bind_s": 2.3883191307003093,
-   "ttft_stream_s": 2.378857953496437
+   "ttft_late_bind_s": 2.388339631160291,
+   "ttft_stream_s": 2.3788784539564185
   },
   {
    "burst": {
@@ -618,16 +621,17 @@
    },
    "bytes_written_hbm_replicated": 7843682304.0,
    "capacity": {
-    "hbm_users": 907,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
     "per_user_bytes_busiest_die": 93458432.0,
-    "rom_users": 962,
-    "rom_users_at_0p9_capacity": 866,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 1048576,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.0001221760099293926,
+   "first_decode_step_s": 0.00014267646991099198,
    "gpu_prefill_s": 4.7572473147502645,
    "gpu_prefill_s_indexer_at_half_rate": 5.937471604683265,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -660,8 +664,8 @@
     "link_busy_fraction": 0.0005025646493927176,
     "pace_Bps_needed": 196738983.29776716
    },
-   "ttft_late_bind_s": 4.760922698760194,
-   "ttft_stream_s": 4.7574174359301376
+   "ttft_late_bind_s": 4.760943199220175,
+   "ttft_stream_s": 4.757437936390119
   },
   {
    "burst": {
@@ -681,16 +685,17 @@
    },
    "bytes_written_hbm_replicated": 1499728128.0,
    "capacity": {
-    "hbm_users": 4730,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
     "per_user_bytes_busiest_die": 17935168.0,
-    "rom_users": 5018,
-    "rom_users_at_0p9_capacity": 4516,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 200000,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.00011671947690653277,
+   "first_decode_step_s": 0.0001372558154529902,
    "gpu_prefill_s": 0.7334541370403164,
    "gpu_prefill_s_indexer_at_half_rate": 0.7846451694941851,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -723,8 +728,8 @@
     "link_busy_fraction": 0.0025174147404924884,
     "pace_Bps_needed": 246373087.1151486
    },
-   "ttft_late_bind_s": 0.7354272647732834,
-   "ttft_stream_s": 0.7336829766285979
+   "ttft_late_bind_s": 0.7354478011118298,
+   "ttft_stream_s": 0.7337035129671444
   },
   {
    "burst": {
@@ -744,16 +749,17 @@
    },
    "bytes_written_hbm_replicated": 1499728128.0,
    "capacity": {
-    "hbm_users": 4730,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
     "per_user_bytes_busiest_die": 17935168.0,
-    "rom_users": 5018,
-    "rom_users_at_0p9_capacity": 4516,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 200000,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.00011671947690653277,
+   "first_decode_step_s": 0.0001372558154529902,
    "gpu_prefill_s": 0.517955014729763,
    "gpu_prefill_s_indexer_at_half_rate": 0.5541054031857735,
    "gpu_rate_flops_per_gpu": 1772366222555136.0,
@@ -786,8 +792,8 @@
     "link_busy_fraction": 0.0035648042852212403,
     "pace_Bps_needed": 348878483.38388973
    },
-   "ttft_late_bind_s": 0.51992814246273,
-   "ttft_stream_s": 0.5181838543180446
+   "ttft_late_bind_s": 0.5199486788012765,
+   "ttft_stream_s": 0.5182043906565911
   },
   {
    "burst": {
@@ -807,16 +813,17 @@
    },
    "bytes_written_hbm_replicated": 1499728128.0,
    "capacity": {
-    "hbm_users": 4730,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
     "per_user_bytes_busiest_die": 17935168.0,
-    "rom_users": 5018,
-    "rom_users_at_0p9_capacity": 4516,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 200000,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.00011671947690653277,
+   "first_decode_step_s": 0.0001372558154529902,
    "gpu_prefill_s": 0.3667270685201582,
    "gpu_prefill_s_indexer_at_half_rate": 0.39232258474709253,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -849,8 +856,8 @@
     "link_busy_fraction": 0.005034829480984977,
     "pace_Bps_needed": 492746174.2302972
    },
-   "ttft_late_bind_s": 0.3687001962531252,
-   "ttft_stream_s": 0.3669559081084398
+   "ttft_late_bind_s": 0.36872073259167165,
+   "ttft_stream_s": 0.36697644444698624
   },
   {
    "burst": {
@@ -870,16 +877,17 @@
    },
    "bytes_written_hbm_replicated": 1499728128.0,
    "capacity": {
-    "hbm_users": 4730,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
     "per_user_bytes_busiest_die": 17935168.0,
-    "rom_users": 5018,
-    "rom_users_at_0p9_capacity": 4516,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 200000,
    "design": "v41_rom",
    "fence_s": 1e-05,
-   "first_decode_step_s": 0.00011671947690653277,
+   "first_decode_step_s": 0.0001372558154529902,
    "gpu_prefill_s": 0.7334541370403164,
    "gpu_prefill_s_indexer_at_half_rate": 0.7846451694941851,
    "gpu_rate_flops_per_gpu": 1251620144395776.0,
@@ -912,8 +920,8 @@
     "link_busy_fraction": 0.0006293536851231221,
     "pace_Bps_needed": 246373087.1151486
    },
-   "ttft_late_bind_s": 0.7342582263743657,
-   "ttft_stream_s": 0.733618889084195
+   "ttft_late_bind_s": 0.7342787627129121,
+   "ttft_stream_s": 0.7336394254227415
   },
   {
    "burst": {
@@ -933,11 +941,12 @@
    },
    "bytes_written_hbm_replicated": 7843682304.0,
    "capacity": {
-    "hbm_users": 907,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 811,
     "per_user_bytes_busiest_die": 93458432.0,
-    "rom_users": 962,
-    "rom_users_at_0p9_capacity": 866,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 866,
+    "rom_users_without_reserve": 962,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 1048576,
    "design": "v41_hbm",
@@ -996,11 +1005,12 @@
    },
    "bytes_written_hbm_replicated": 1499728128.0,
    "capacity": {
-    "hbm_users": 4730,
+    "capacity_efficiency": 0.9,
+    "hbm_users": 4228,
     "per_user_bytes_busiest_die": 17935168.0,
-    "rom_users": 5018,
-    "rom_users_at_0p9_capacity": 4516,
-    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+    "rom_users": 4516,
+    "rom_users_without_reserve": 5018,
+    "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
    },
    "context": 200000,
    "design": "v41_hbm",
@@ -1054,9 +1064,9 @@
    "new_tokens": 1024,
    "prefill_flops": 57507704209408.0,
    "resident": 1047552,
-   "ttft_prefix_cached_s": 0.008169110845293532,
-   "ttft_readback_layer_pipelined_s": 0.010550701465264411,
-   "ttft_readback_serial_s": 0.017723095978253913
+   "ttft_prefix_cached_s": 0.008189611305275131,
+   "ttft_readback_layer_pipelined_s": 0.01057120192524601,
+   "ttft_readback_serial_s": 0.017743596438235514
   },
   {
    "context_readback_bytes": 932290560,
@@ -1069,9 +1079,9 @@
    "new_tokens": 4096,
    "prefill_flops": 229897996337152.0,
    "resident": 1044480,
-   "ttft_prefix_cached_s": 0.023157088160768113,
-   "ttft_readback_layer_pipelined_s": 0.025531694644023537,
-   "ttft_readback_serial_s": 0.03268313674686667
+   "ttft_prefix_cached_s": 0.023177588620749714,
+   "ttft_readback_layer_pipelined_s": 0.025552195104005138,
+   "ttft_readback_serial_s": 0.03270363720684827
   },
   {
    "context_readback_bytes": 906772480,
@@ -1084,9 +1094,9 @@
    "new_tokens": 32768,
    "prefill_flops": 1829553977163776.0,
    "resident": 1015808,
-   "ttft_prefix_cached_s": 0.18317636183449812,
-   "ttft_readback_layer_pipelined_s": 0.1854857830417426,
-   "ttft_readback_serial_s": 0.19244166931655293
+   "ttft_prefix_cached_s": 0.1831968622944797,
+   "ttft_readback_layer_pipelined_s": 0.18550628350172418,
+   "ttft_readback_serial_s": 0.19246216977653452
   },
   {
    "context_readback_bytes": 179792000,
@@ -1099,9 +1109,9 @@
    "new_tokens": 1024,
    "prefill_flops": 39711775653888.0,
    "resident": 198976,
-   "ttft_prefix_cached_s": 0.008163654312270672,
-   "ttft_readback_layer_pipelined_s": 0.00861602266744476,
-   "ttft_readback_serial_s": 0.010000750386043885
+   "ttft_prefix_cached_s": 0.00818419065081713,
+   "ttft_readback_layer_pipelined_s": 0.008636559005991218,
+   "ttft_readback_serial_s": 0.010021286724590343
   },
   {
    "context_readback_bytes": 177057920,
@@ -1114,9 +1124,9 @@
    "new_tokens": 4096,
    "prefill_flops": 158714282115072.0,
    "resident": 195904,
-   "ttft_prefix_cached_s": 0.01604247449440787,
-   "ttft_readback_layer_pipelined_s": 0.0164878587128665,
-   "ttft_readback_serial_s": 0.017851634021319254
+   "ttft_prefix_cached_s": 0.016063010832954326,
+   "ttft_readback_layer_pipelined_s": 0.016508395051412956,
+   "ttft_readback_serial_s": 0.01787217035986571
   },
   {
    "context_readback_bytes": 151539840,
@@ -1129,9 +1139,9 @@
    "new_tokens": 32768,
    "prefill_flops": 1260084263387136.0,
    "resident": 167232,
-   "ttft_prefix_cached_s": 0.12629764823477616,
-   "ttft_readback_layer_pipelined_s": 0.12667784717722386,
-   "ttft_readback_serial_s": 0.1278460666576438
+   "ttft_prefix_cached_s": 0.1263181845733226,
+   "ttft_readback_layer_pipelined_s": 0.1266983835157703,
+   "ttft_readback_serial_s": 0.12786660299619027
   }
  ],
  "v41_workload": {
@@ -1139,11 +1149,12 @@
   "bytes": {
    "1048576": {
     "capacity": {
-     "hbm_users": 907,
+     "capacity_efficiency": 0.9,
+     "hbm_users": 811,
      "per_user_bytes_busiest_die": 93458432.0,
-     "rom_users": 962,
-     "rom_users_at_0p9_capacity": 866,
-     "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+     "rom_users": 866,
+     "rom_users_without_reserve": 962,
+     "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
     },
     "sent": {
      "owner_rows": 933232640,
@@ -1154,11 +1165,12 @@
    },
    "200000": {
     "capacity": {
-     "hbm_users": 4730,
+     "capacity_efficiency": 0.9,
+     "hbm_users": 4228,
      "per_user_bytes_busiest_die": 17935168.0,
-     "rom_users": 5018,
-     "rom_users_at_0p9_capacity": 4516,
-     "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB, no capacity efficiency); technology.json efficiencies.hbm_capacity = 0.9 would give the second figure"
+     "rom_users": 4516,
+     "rom_users_without_reserve": 5018,
+     "source": "results/arch/arch_budget_v41.json capacity (4 x 22.5 GB x technology.json efficiencies.hbm_capacity, the reserve the Qwen3 budget also applies)"
     },
     "sent": {
      "owner_rows": 178000000,
