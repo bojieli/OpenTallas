@@ -298,8 +298,9 @@ def hc_size(sp, muts, hzp, ctx=1048576, tol=0.002):
     return w
 
 
-def evaluate(sp, ctx, muts, hz=None, m=2, gamma=5, tau=TAU, hbm=None, extra=()):
-    """Batch-1 tokens/s per user without and with MTP (m-way core, gamma drafts, tau accepted)."""
+def evaluate(sp, ctx, muts, hz=None, m=2, gamma=5, tau=TAU, hbm=None, extra=(), draft_extra_s=0.0):
+    """Batch-1 tokens/s per user without and with MTP (m-way core, gamma drafts, tau accepted).  draft_extra_s:
+    seconds added to the draft on the MTP critical path (the conditioning transfer, tools/arch_lanes_v41.py)."""
     c = A._env()["c"]
     hz, prm = hz if isinstance(hz, tuple) else (hz, {})
     with clock(hz), U.params(**prm):
@@ -307,7 +308,7 @@ def evaluate(sp, ctx, muts, hz=None, m=2, gamma=5, tau=TAU, hbm=None, extra=()):
         ar = U.solve(sp, ctx, levers=U.CHAIN_L3, muts=muts, hbm=hbm)
         sm = replace(sp, lane_mult=m)
         v = U.solve(sm, ctx, positions=gamma + 1, levers=U.CHAIN_L3, muts=muts, hbm=hbm)
-        d = A.draft_cost_s(sm, ctx, gamma, c, hbm=hbm)["total_s"]
+        d = A.draft_cost_s(sm, ctx, gamma, c, hbm=hbm)["total_s"] + draft_extra_s
     t = min(tau, gamma + 1)
     return dict(ar=1 / ar["period_s"], mtp=t / (v["period_s"] + d), T_us=ar["T_s"] * 1e6,
                 verify_us=v["period_s"] * 1e6, draft_us=d * 1e6,

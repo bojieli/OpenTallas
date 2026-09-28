@@ -66,3 +66,13 @@ def test_per_token_row_reads_the_design_point_headline():
     row = next(r for r in rec["rows"] if r["event"].startswith("Per token, V4.1"))
     assert abs(row["ot"]["value"] - round(b["collective_latency"] + b["collective_bytes"] + b["pipeline_hops"], 1)) < 0.11
     assert abs(rec["ladder"]["T_us"] - ln["T_us"]) < 1e-2
+
+
+def test_fec_codewords_follow_the_rack_traffic_table():
+    rec = json.loads(S.OUT.read_text())
+    cw = rec["hop_decomposition"]["ber_tail"]["codewords_per_token"]
+    pt = json.loads(S.V41_RACK.read_text())["traffic"]["per_token"]
+    assert cw["t1_bytes"] == pt["T1_tp_trace"]["bytes"] and cw["t2_bytes"] == pt["T2_stage_hop"]["bytes"]
+    bits = (cw["t1_bytes"] + cw["t2_bytes"]) * 8
+    assert abs(cw["rs272"] - bits / 2570) <= 50 and abs(cw["rs544"] - bits / 5140) <= 50
+    assert f"{cw['rs272']:,}" in rec["hop_decomposition"]["ber_tail"]["reading"]

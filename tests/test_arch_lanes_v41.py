@@ -88,3 +88,34 @@ def test_campaign_record_binds_the_sources_on_disk(rec):
     assert b["pinned"] and b["current"], b["stale"]
     b = rec["collective_exposure"]["levers"]["campaign_binding"]
     assert b["pinned"] and b["current"], b["stale"]
+
+
+def test_mtp_carries_the_draft_conditioning_transfer(rec):
+    dc = rec["draft_conditioning"]
+    assert dc["bytes_per_verify"] == 3 * 5120 * 2 * 6
+    assert abs(dc["seconds"] - (dc["bytes_per_verify"] / dc["link_Bps"] + dc["bytes_per_verify"] / dc["ucie_Bps"])) < 1e-15
+    for c in ("1048576", "200000"):
+        assert abs(rec["energy"][c]["b1_mtp"]["draft_conditioning_us"] - dc["seconds"] * 1e6) < 1e-9
+        assert rec["energy"][c]["b1"]["draft_conditioning_us"] == 0.0
+
+
+def test_fill_drafts_share_the_head_group(rec):
+    for c in ("1048576", "200000"):
+        f = rec["energy"][c]["fill28_mtp"]
+        dc = f["draft_contention"]
+        assert dc["drafts_in_flight"] > 1.0 and dc["contended_draft_s"] > dc["isolated_draft_s"]
+        assert max(dc["head_unit_load"].values()) < 1.0 and dc["throughput_cap"] == 1.0
+        # a filled pipeline with contended drafts is slower per user than one user alone
+        assert f["rom"]["tokens_s_per_user"] < rec["design_point"][c]["mtp"]
+        assert rec["energy"][c]["b1_mtp"]["draft_contention"] is None
+
+
+def test_every_aggregate_is_capped_at_its_busiest_link(rec):
+    for c in ("1048576", "200000"):
+        for k, v in rec["energy"][c].items():
+            lk = v["link_cap"]
+            assert max(lk["utilisation"].values()) <= 1.0 + 1e-9, (c, k)
+            assert abs(v["rom"]["aggregate_tokens_s"] - lk["aggregate_tokens_s_uncapped"] * lk["cap"]) < 1e-6
+        sat = rec["energy"][c]["sat1024_mtp"]["link_cap"]
+        assert sat["binds"] and sat["busiest_link"] == "head_t1"
+        assert not rec["energy"][c]["fill28_mtp"]["link_cap"]["binds"]

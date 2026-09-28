@@ -179,3 +179,20 @@ def test_layer_collectives_match_the_design_point_dag():
     lc = rack.layer_collectives()
     for layer, rows in lc.items():
         assert {name: by for name, _, _, by in rows} == dag[layer], layer
+
+
+def test_rack_model_gaps_are_priced_not_open():
+    """C4: the power scenarios charge the same lanes on both machines; C8: saturation is capped at its busiest link;
+    C10: overlapping drafts and the draft conditioning are in the rate model."""
+    g = rack.build()["gates"]
+    xc = g["C4"]["power_scenarios_crosscheck"]
+    assert xc["status"].startswith("APPLIED") and xc["rom_serdes_matches_c4"] and xc["hbm_serdes_matches_switched"]
+    sat = g["C8"]["saturation"]
+    assert sat["link_bound"] and max(sat["uncapped_utilisation"].values()) > 1.0
+    assert max(sat["t1_utilisation"], sat["head_t1_utilisation"]) <= 1.0 + 1e-9
+    assert sat["aggregate_tokens_s"] < sat["aggregate_tokens_s_uncapped"]
+    c10 = g["C10"]
+    assert c10["conditioning"]["priced"] and len(c10["closed_items"]) == 2
+    fc = c10["concurrency"]["fill28_mtp"]
+    assert fc["drafts_in_flight"] > 1.0 and fc["contended_draft_s"] > fc["isolated_draft_s"]
+    assert fc["throughput_cap"] == 1.0 and fc["bank_read_utilisation"] < 1.0 and fc["fits_slots"]

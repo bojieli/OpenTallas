@@ -136,8 +136,8 @@ def design_point_rates(dp, terms, consumers=()):
     extra = [CX.mutation(terms)] + ([CX.consumer_mutation(tuple(consumers))] if consumers else [])
     out = {}
     for ctx in CONTEXTS:
-        e0 = LX.evaluate(dp["sp"], ctx, base, hz=dp["hz"])
-        e1 = LX.evaluate(dp["sp"], ctx, base + extra, hz=dp["hz"])
+        e0 = LX.evaluate(dp["sp"], ctx, base, hz=dp["hz"], draft_extra_s=dp.get("draft_extra_s", 0.0))
+        e1 = LX.evaluate(dp["sp"], ctx, base + extra, hz=dp["hz"], draft_extra_s=dp.get("draft_extra_s", 0.0))
         out[str(ctx)] = {k: dict(ar=e["ar"], mtp=e["mtp"], T_us=e["T_us"], verify_us=e["verify_us"],
                                  breakdown_us=e["breakdown_us"])
                          for k, e in (("overlap_assumed", e0), ("measured_exposure", e1))}

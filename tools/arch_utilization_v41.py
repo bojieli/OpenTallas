@@ -229,8 +229,60 @@ SEPARATE_UNITS = dict(weight="weight", bf16="bf16", att="att", idx="idx", su="su
 POOLED_UNITS = dict(SEPARATE_UNITS, idx="weight", att="bf16")
 
 
-def op_point(spec, ctx, batch, mtp=False, levers=(), muts=(), tau=TAU, hbm=None, dies=None, units=None):
-    """One operating point: rates, per-class busy fraction and MFU, MBU of ROM / HBM / links."""
+def draft_contention(d, busy_head, verify_s, batch, microbatch, units=None, tol=1e-12):
+    """Drafts of different users sharing the head group's engines (MTP at batch > 1).
+
+    Each user's draft runs on the head dies after its verify; with `batch` users cycling, drafts start at
+    lambda = batch / (verify + draft) per second, so N = lambda x draft are in flight, and the other users' verify
+    passes cross the head (lm_head rows, argmax) meanwhile.  On every pooled head unit u the OTHER users' load is
+    rho_u = (batch - 1) / cycle x (draft work on u) + (passes - 1) / cycle x (verify head work on u); the unit is
+    time-shared, so this draft's work w_u on it takes w_u / (1 - rho_u) (processor sharing): the contended draft is
+    d0 + sum_u w_u rho_u / (1 - rho_u), solved to a fixed point with the cycle.  Conservative against the per-unit
+    scoreboard: the slowdown is charged on every busy second, although the isolated draft's span already has idle
+    gaps (dependencies, collectives) that other users' work could fill.  Throughput: if any unit's total load
+    (every user's drafts + every verify pass) exceeds 1, the aggregate is capped by 1 / that load."""
+    u_ = units or SEPARATE_UNITS
+    d0 = d["total_s"] + d.get("extra_s", 0.0)
+    w = {}
+    for k, v in d["busy_s"].items():
+        w[u_.get(k, k)] = w.get(u_.get(k, k), 0.0) + v
+    vh = {}
+    for k, v in busy_head.items():
+        vh[u_.get(k, k)] = vh.get(u_.get(k, k), 0.0) + v
+    passes = batch / microbatch                              # head passes per verify cycle (one per microbatch)
+    unit_names = sorted(set(w) | set(vh))
+
+    def loads(cyc, others):
+        n_d, n_v = (batch - 1, passes - 1) if others else (batch, passes)
+        return {u: max(0.0, n_d) / cyc * w.get(u, 0.0) + max(0.0, n_v) / cyc * vh.get(u, 0.0) for u in unit_names}
+
+    D = d0
+    for _ in range(500):
+        rho = loads(verify_s + D, True)
+        D_new = d0 + sum(w.get(u, 0.0) * min(r, 0.99) / (1 - min(r, 0.99)) for u, r in rho.items())
+        if abs(D_new - D) < tol:
+            D = D_new
+            break
+        D = D_new
+    cyc = verify_s + D
+    rho = loads(cyc, True)
+    total = loads(cyc, False)
+    busiest = max(total, key=total.get)
+    return dict(isolated_draft_s=d0, contended_draft_s=D, contention_s=D - d0, drafts_per_s=batch / cyc,
+                drafts_in_flight=batch / cyc * D, engine_work_per_draft_s=sum(w.values()), engine_work_by_unit_s=w,
+                head_verify_work_per_pass_s=sum(vh.values()), head_verify_work_by_unit_s=vh,
+                others_load_by_unit=rho, head_unit_load=total, busiest_head_unit=busiest,
+                throughput_cap=min(1.0, 1.0 / total[busiest]) if total[busiest] > 0 else 1.0,
+                basis="per-unit processor sharing of the head group's pooled units among the users' drafts and "
+                      "verify passes (tools/arch_utilization_v41.draft_contention)")
+
+
+def op_point(spec, ctx, batch, mtp=False, levers=(), muts=(), tau=TAU, hbm=None, dies=None, units=None,
+             draft_extra_s=0.0, contention=False):
+    """One operating point: rates, per-class busy fraction and MFU, MBU of ROM / HBM / links.
+    draft_extra_s: seconds added to every draft (the draft-conditioning transfer, tools/arch_lanes_v41.py).
+    contention: MTP drafts of different users overlap on the head group (draft_contention); the period carries the
+    contended draft and the aggregate its throughput cap."""
     E = A._env()
     c, clock = E["c"], E["clock"]
     tot, _ = A.token_workload(c, ctx)
@@ -240,11 +292,6 @@ def op_point(spec, ctx, batch, mtp=False, levers=(), muts=(), tau=TAU, hbm=None,
     b = r["_built"]
     m = A.fill_machine(batch)
     mb = m.microbatch * pos
-    draft = A.draft_cost_s(sp, ctx, GAMMA, c, hbm=hbm)["total_s"] if mtp else 0.0
-    period = r["period_s"] + draft
-    per_user = (tau if mtp else 1.0) / period
-    agg = per_user * batch
-    slots = min(batch, m.stages)
     NL = c["num_layers"]
     # busy (issue) seconds per die per pass, by unit class, layer dies vs the head group
     busy_layer, busy_head = {}, {}
@@ -255,6 +302,19 @@ def op_point(spec, ctx, batch, mtp=False, levers=(), muts=(), tau=TAU, hbm=None,
         L = nd["layer"]
         tgt = busy_head if (L is not None and L >= NL) else busy_layer
         tgt[w[0]] = tgt.get(w[0], 0.0) + nd["issue"]
+    dc, cap = None, 1.0
+    if mtp:
+        dd = dict(A.draft_cost_s(sp, ctx, GAMMA, c, hbm=hbm), extra_s=draft_extra_s)
+        draft = dd["total_s"] + draft_extra_s
+        if contention and batch > 1:
+            dc = draft_contention(dd, busy_head, r["period_s"], batch, m.microbatch, units=units)
+            draft, cap = dc["contended_draft_s"], dc["throughput_cap"]
+    else:
+        draft = 0.0
+    period = (r["period_s"] + draft) / cap
+    per_user = (tau if mtp else 1.0) / period
+    agg = per_user * batch
+    slots = min(batch, m.stages)
     frac = {k: slots * v / (m.stages * period) for k, v in busy_layer.items()}
     # the budget model's occupancy bound serialises EVERY unit of a die (sum of issue); with two or more
     # microbatches in flight per stage and a per-unit scoreboard, units overlap and the bound is the busiest unit
@@ -292,7 +352,8 @@ def op_point(spec, ctx, batch, mtp=False, levers=(), muts=(), tau=TAU, hbm=None,
     link_token = link_bytes * (pos / (tau if mtp else 1.0))
     out = dict(batch=batch, mtp=mtp, tau=tau if mtp else None, period_us=period * 1e6, verify_us=r["period_s"] * 1e6,
                draft_us=draft * 1e6, tokens_s_per_user=per_user, aggregate_tokens_s=agg, binding=r["binding"],
-               microbatch=m.microbatch, breakdown_us=r["breakdown_us"],
+               microbatch=m.microbatch, breakdown_us=r["breakdown_us"], draft_extra_us=draft_extra_s * 1e6,
+               draft_contention=dc,
                busy_fraction_layer_dies=frac, busy_fraction_head_dies=head_frac,
                mfu_array=mfu_array, mfu_layer_dies=mfu_layer, mfu_executed_array=mfu_exec,
                concurrent_units=dict(busiest_unit=busiest, aggregate_tokens_s=agg_conc,

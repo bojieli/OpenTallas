@@ -14,11 +14,22 @@ C8  A 2-die package has 90 lanes of 112G PAM4 (1.19 TB/s per direction, 13.18 GB
     (4.2 TB/s).  The bytes still chase their producer (overlapped reductions), so they cost time only where they
     outlast it -- the DAG decides.  A stage hop's 41 KB residual crosses on the 2 packages' stage lanes in parallel.
     The search: TP lanes t in multiples of 4 (2 peers x 2 dies), stage = (90 - 4 switch - 6 spare - t) / 2 each way.
-C4  SerDes static power: 84 always-on lanes per layer/head package at ~0.56 W each (~5 pJ/bit at 112 Gb/s) = 47 W per
-    package, 23.5 W per die; the 72 Engram table dies carry ~1 lane-pair each (0.56 W per die).  The HBM comparator's
-    NVLink-class SerDes is charged the same way: 84 always-on 112G lanes per 2-die package at the same pJ/bit
-    (ASSUMED: its packages have the same edge and lane count), 23.5 W per die.
+C4  SerDes static power: 84 always-on lanes per layer/head package at 0.728 W each (6.5 pJ/bit at 112 Gb/s) = 61 W
+    per package, 30.6 W per die; the 72 Engram table dies carry 1 lane each (2 per package, 0.728 W per die).  The
+    switched HBM comparator's SerDes is charged on its own fabric (tools/arch_hbm_switched_v41.serdes_w_per_die: the
+    lanes that carry 0.9 TB/s per direction per package).
 C10 The 4 head dies carry 4 HBM3E stacks each for the drafter's per-user state (+16 x 2.8 W).
+
+Rack model gaps (closed here; results/arch/v41_rack.json gates C8 / C10):
+*   The draft is conditioned on the inputs of target layers 37-39 at every verified position (DSpark
+    dspark_target_layer_ids): 3 x 5,120 BF16 x 6 positions = 184 KB per verify step, which reach the head module
+    over the S27 -> H stage link behind the residual.  Priced on the MTP critical path as a head hop's bytes
+    (stage lanes of both packages + the UCIe half, the m_lanes rule) before the draft can start: draft_extra_s.
+*   At batch > 1 with MTP the drafts of different users overlap on the head group; the aggregate points carry
+    tools/arch_utilization_v41.draft_contention (conservative interference bound + unit throughput cap).
+*   Every aggregate point is capped by its busiest package link (tools/v41_rack_design.stage_link_demand: the
+    busiest stage's T1 link and UCIe link, and with MTP the head module's draft traffic): aggregate x
+    min(1, 1 / the highest utilisation).
 """
 from __future__ import annotations
 
@@ -45,7 +56,7 @@ RACK_SPLIT = dict(tp=32, stage=24)
 UCIE_BPS = 4.2e12
 LANE_W = 112e9 * 6.5e-12                           # 112 Gb/s x 6.5 pJ/b (technology.json energy.link_j_per_bit)
 ACTIVE_LANES_PKG = 84
-SERDES_W_DIE = ACTIVE_LANES_PKG * LANE_W / 2       # 23.52 W
+SERDES_W_DIE = ACTIVE_LANES_PKG * LANE_W / 2       # 30.58 W
 TABLE_SERDES_W_DIE = LANE_W                        # 2 lanes per table package
 
 
@@ -94,15 +105,52 @@ def _ladder_top():
     return LX.rung_spec(base, len(LX.LADDER))
 
 
+def conditioning_bytes():
+    """Draft conditioning per verify step: the inputs of the DSpark target layers (37-39) at every verified position,
+    BF16 (released config dspark_target_layer_ids; tools/v41_rack_design PHYS dspark_state)."""
+    import v41_rack_design as RK
+    c = A._env()["c"]
+    layers = RK.PHYS["dspark_state"]["value"]["target_layers"]
+    return len(layers) * c["hidden_size"] * 2 * (U.GAMMA + 1)
+
+
+def conditioning_s(stage):
+    """Seconds the conditioning bytes add before the draft can start: a head hop's bytes on the split's stage lanes
+    (both packages in parallel) plus the per-die half over UCIe (the m_lanes rule for a stage/head hop); the hop's
+    latency is already paid by the residual it rides behind."""
+    pay = conditioning_bytes()
+    return pay / (2 * stage * LANE_NET_BPS) + pay / UCIE_BPS
+
+
 def design_point(split=None):
     """The adopted design point: the ladder's top with the chosen lane split (this tool's record, best_split if
-    adopted else the rack's).  Returns sp, muts (without the lane pricing), hz, the split and its lane mutation."""
+    adopted else the rack's).  Returns sp, muts (without the lane pricing), hz, the split, its lane mutation and the
+    draft-conditioning seconds of that split."""
     sp, muts, hz = _ladder_top()
     if split is None:
         rec = json.loads(OUT.read_text())
         split = rec["best_split"] if rec["best_adopted"] else rec["rack_split_result"]
     split = dict(tp=split["tp"], stage=split["stage"], two_step=split["two_step"])
-    return dict(sp=sp, muts=list(muts), hz=hz, split=split, ml=m_lanes(split["tp"], split["stage"], split["two_step"]))
+    return dict(sp=sp, muts=list(muts), hz=hz, split=split, ml=m_lanes(split["tp"], split["stage"], split["two_step"]),
+                draft_extra_s=conditioning_s(split["stage"]))
+
+
+def rack_levers(lev):
+    """The rack's lever dict (tools/v41_rack_design._levers) from this tool's in-process levers."""
+    import v41_rack_design as RK
+    return RK._levers(dict(bytes_scale=lev["bytes_scale"], picks=lev["picks"]))
+
+
+def link_cap(point, dem, split, mtp):
+    """Busiest package link at the point's aggregate (tools/v41_rack_design.link_utilisation) and the factor that
+    caps the aggregate at 100% of it."""
+    import v41_rack_design as RK
+    cap_t1 = (split["tp"] // 4) * LANE_NET_BPS
+    pos = (U.GAMMA + 1) / U.TAU if mtp else 1.0
+    u = RK.link_utilisation(dem, point["aggregate_tokens_s"], pos, mtp, cap_t1, UCIE_BPS)
+    worst = max(u, key=u.get)
+    return dict(utilisation_uncapped=u, busiest_link=worst, cap=min(1.0, 1.0 / u[worst]),
+                t1_link_Bps=cap_t1, ucie_Bps=UCIE_BPS, binds=u[worst] > 1.0)
 
 
 def build():
@@ -119,7 +167,8 @@ def build():
         s = dict(s0, two_step=ts)
         row = dict(s)
         for ctx in CONTEXTS:
-            r = LX.evaluate(sp, ctx, muts + [m_lanes(s["tp"], s["stage"], ts)], hz=hz)
+            r = LX.evaluate(sp, ctx, muts + [m_lanes(s["tp"], s["stage"], ts)], hz=hz,
+                            draft_extra_s=conditioning_s(s["stage"]))
             row[str(ctx)] = dict(ar=r["ar"], mtp=r["mtp"], T_us=r["T_us"], verify_us=r["verify_us"],
                                  collective_bytes_us=r["breakdown_us"]["collective_bytes"],
                                  hops_us=r["breakdown_us"]["pipeline_hops"])
@@ -144,10 +193,16 @@ def build():
     import v41_collective_exposure as VX
     camp = json.loads(VX.CAMPAIGN.read_text())
     ml = m_lanes(chosen["tp"], chosen["stage"], chosen["two_step"])
+    cond = conditioning_s(chosen["stage"])
+    rec["draft_conditioning"] = dict(
+        bytes_per_verify=conditioning_bytes(), seconds=cond, stage_lanes=chosen["stage"],
+        link_Bps=2 * chosen["stage"] * LANE_NET_BPS, ucie_Bps=UCIE_BPS,
+        basis="3 target layers (37-39) x hidden x BF16 x gamma + 1 positions, a head hop's bytes on the stage lanes + "
+              "the UCIe half, on the MTP critical path before the draft starts (priced in every MTP rate here)")
     dump = VX.dump_on_path(U, A, sp, list(muts) + [ml], hz)
     terms, per_pattern = VX.derive_terms(camp, dump)
     xm = CX.mutation(terms)
-    ab = {str(c): LX.evaluate(sp, c, muts + [ml, xm], hz=hz) for c in CONTEXTS}
+    ab = {str(c): LX.evaluate(sp, c, muts + [ml, xm], hz=hz, draft_extra_s=cond) for c in CONTEXTS}
     rec["design_point_no_levers"] = {c: dict(ar=v["ar"], mtp=v["mtp"], T_us=v["T_us"], verify_us=v["verify_us"],
                                              breakdown_us=v["breakdown_us"]) for c, v in ab.items()}
     # the HEADLINE: the adopted collective levers (results/rtl/v41_collective_levers_campaign.json, levers 1-4 of
@@ -156,7 +211,7 @@ def build():
     lev_camp = json.loads(VX.LEVERS_CAMPAIGN.read_text())
     lev = VX.recommended_exposure(dump, camp, lev_camp)
     lx = [CX.mutation(lev["terms"])] + ([CX.consumer_mutation(tuple(lev["consumers"]))] if lev["consumers"] else [])
-    exp = {str(c): LX.evaluate(sp, c, muts + [ml] + lx, hz=hz) for c in CONTEXTS}
+    exp = {str(c): LX.evaluate(sp, c, muts + [ml] + lx, hz=hz, draft_extra_s=cond) for c in CONTEXTS}
     rec["design_point"] = {c: dict(ar=v["ar"], mtp=v["mtp"], T_us=v["T_us"], verify_us=v["verify_us"],
                                    breakdown_us=v["breakdown_us"]) for c, v in exp.items()}
     dpo, dpn, dpl = rec["design_point_overlap_assumed"], rec["design_point_no_levers"], rec["design_point"]
@@ -204,6 +259,13 @@ def build():
                                         "carries 4 lanes x 112G both ways per package",
                            source=ST["source"])
     ms = muts + [ml] + lx                                 # energy and aggregates at the headline (with the levers)
+    import v41_rack_design as RK
+    dem = RK.stage_link_demand(RK.placement(), rack_levers(lev), RK.residual_bytes())
+    rec["link_demand"] = dict(busiest_t1_stage=dem["busiest_t1_stage"], busiest_ucie_stage=dem["busiest_ucie_stage"],
+                              busiest_stage_bytes_per_position=dem["per_stage"][dem["busiest_t1_stage"]],
+                              busiest_ucie_stage_bytes_per_position=dem["per_stage"][dem["busiest_ucie_stage"]],
+                              head_module=dem["head_module"],
+                              source="tools/v41_rack_design.stage_link_demand (the C8 gate's accounting)")
     energy = {}
     for ctx in CONTEXTS:
         rows = {}
@@ -212,14 +274,30 @@ def build():
             for mtp in (False, True):
                 k = ptag + ("_mtp" if mtp else "")
                 with LX.clock(hz[0]), U.params(**hz[1]):
-                    r_ = U.op_point(sp, ctx, bt, mtp=mtp, levers=U.CHAIN_L3, muts=ms, units=U.POOLED_UNITS)
+                    r_ = U.op_point(sp, ctx, bt, mtp=mtp, levers=U.CHAIN_L3, muts=ms, units=U.POOLED_UNITS,
+                                    draft_extra_s=cond if mtp else 0.0, contention=True)
                 r_["cycle_s"] = r_["period_us"] * 1e-6
+                # the busiest package link caps the aggregate (the period stretches to keep it at 100%)
+                lk = link_cap(r_, dem, chosen, mtp)
+                lk["aggregate_tokens_s_uncapped"] = r_["aggregate_tokens_s"]
+                if lk["cap"] < 1.0:
+                    r_["aggregate_tokens_s"] *= lk["cap"]
+                    r_["tokens_s_per_user"] *= lk["cap"]
+                    r_["cycle_s"] /= lk["cap"]
+                lk["utilisation"] = {kk: vv * lk["cap"] for kk, vv in lk["utilisation_uncapped"].items()}
+                if r_.get("draft_contention"):
+                    # contention is solved at the uncapped rate: an upper bound on the head load once the link caps it
+                    r_["draft_contention"]["evaluated_at"] = ("the uncapped aggregate (the link cap applies after: an "
+                                                              "upper bound on the head load)" if lk["cap"] < 1.0
+                                                              else "the point's aggregate")
                 e_rom = HB.energy_point(sp, ctx, r_, U.LAYER_DIES, 28, LX.area(sp, U.MTP_M if mtp else 1),
                                         rom_static)
                 h = top[k]["hbm"]                            # board-mesh comparator (its static already inside)
                 h_total, h_static = h["total_j"], h["static_j"]
                 rows[k] = dict(rom=dict(tokens_s_per_user=r_["tokens_s_per_user"],
                                         aggregate_tokens_s=r_["aggregate_tokens_s"], **e_rom),
+                               link_cap=lk, draft_contention=r_.get("draft_contention"),
+                               draft_conditioning_us=r_["draft_extra_us"],
                                hbm=dict(G=h["G"], m=h["m"], tokens_s_per_user=h["tokens_s_per_user"],
                                         aggregate_tokens_s=h["aggregate_tokens_s"], dynamic_j=h["dynamic_j"],
                                         static_j=h_static, total_j=h_total),

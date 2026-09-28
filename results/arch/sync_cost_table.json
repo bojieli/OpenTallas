@@ -7,7 +7,8 @@
   "results/gpu/blackwell_gather_designs.json": "717e6cfc4ca04056844cf57385212853eace6d63abc3222e630ed05ff367078e",
   "results/rtl/hdc_package_tp_campaign.json": "15814bf8112c36d6dbab63fce050146f41506299927057c10c316983493879c6",
   "results/arch/arch_budget_v41.json": "d6acea1edc84ebc3a1db188c44872346f8f2152cea04fee2346e6066000212e2",
-  "results/arch/v41_lanes.json": "beb9db8926d2421cdee6b4718ac664a521b094e9d43714bca2ad1d0efa0050cf"
+  "results/arch/v41_lanes.json": "b1580c106713d33da0962870bdeb64606b6c5b9009b75890610c67720354474c",
+  "results/arch/v41_rack.json": "7022adc2f876f881e1b9aee66ebfd506c87203badc021ae987b13071880195ef"
  },
  "ladder": {
   "T_us": 122.176,
@@ -363,9 +364,11 @@
   "ber_tail": {
    "method": "random-symbol-error arithmetic on 10-bit symbols, P(codeword uncorrectable) = P(> t symbol errors); DFE bursts make it worse (LL-FEC Table 1)",
    "codewords_per_token": {
-    "rs272": 47000,
-    "rs544": 23500,
-    "basis": "T1 13.9 MB + T2 1.15 MB per token (results/arch/v41_rack.json traffic.per_token)"
+    "rs272": 52700,
+    "rs544": 26400,
+    "t1_bytes": 15784960.0,
+    "t2_bytes": 1146880,
+    "basis": "T1 15.8 MB + T2 1.15 MB per token (results/arch/v41_rack.json traffic.per_token, the corrected table: KV-rows all-gathers included)"
    },
    "rs272_t7": {
     "ber_1e_6": 6.7e-26,
@@ -379,7 +382,7 @@
     "ber_1e_4": 1.4e-18,
     "ber_2_4e_4": 8.2e-13
    },
-   "reading": "On the OIF MR-class on-module channel (raw BER <= 1e-6) the light code's retry probability per token is ~3e-21: nothing. On a CR-class cable at a compliant-limit raw BER near 2.4e-4 it would be ~2% of tokens retrying (47,000 x 4.2e-7), and under DFE bursts the LL-FEC spec needs raw BER <= 8.9e-9; hence the cable tier runs full RS(544,514), whose tail at 2.4e-4 is 2e-8 per token."
+   "reading": "On the OIF MR-class on-module channel (raw BER <= 1e-6) the light code's retry probability per token is ~4e-21: nothing. On a CR-class cable at a compliant-limit raw BER near 2.4e-4 it would be ~2% of tokens retrying (52,700 x 4.2e-7), and under DFE bursts the LL-FEC spec needs raw BER <= 8.9e-9; hence the cable tier runs full RS(544,514), whose tail at 2.4e-4 is 2e-8 per token."
   },
   "all_reduce_crossings": "A one-shot TP4 all-reduce across a package pair crosses the package link ONCE (each package sends its partial and both reduce in fixed order) plus two UCIe hops and the 20 KB serialisation (27 ns at the per-neighbour link rate). A two-step reduce-scatter/all-gather would cross it twice; the model picks one-shot, the RTL engine implements it."
  },

@@ -1041,7 +1041,17 @@ def draft_cost_s(spec, ctx, gamma, c, hbm=None):
         lm = max(lm, V * c["hidden_size"] * FP8 / 4 / hbm["bw_Bps"])
     argmax = V / 4 / max(1, spec.su_lanes) / clock
     step = lm + markov + argmax + 219e-9 + 60 / clock
-    return dict(stage_s=stage, stages=3, markov_step_s=step, total_s=3 * stage + gamma * step,
+    # engine work of one draft on one head die, by unit class (the issue time the draft occupies each unit; the
+    # span above also waits on collectives and dependencies): 3 stages of the layer-0 nodes, then gamma steps of
+    # lm_head row + Markov bias on the weight lanes and argmax on the stream unit
+    busy = {}
+    for n in l0:
+        w = b.g.nodes[n].get("_work")
+        if w:
+            busy[w[0]] = busy.get(w[0], 0.0) + 3 * b.g.nodes[n]["issue"]
+    busy["weight"] = busy.get("weight", 0.0) + gamma * (lm + markov)
+    busy["su"] = busy.get("su", 0.0) + gamma * argmax
+    return dict(stage_s=stage, stages=3, markov_step_s=step, total_s=3 * stage + gamma * step, busy_s=busy,
                 note="stage = layer-0 span of the DAG at microbatch gamma; step = lm_head + Markov + argmax + 219 ns")
 
 

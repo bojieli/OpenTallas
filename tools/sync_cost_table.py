@@ -41,6 +41,7 @@ V41_LANES = ROOT / "results/arch/v41_lanes.json"
 PSCEN_CFG = ROOT / "configs/hardware/power_scenarios.json"
 PSCEN = ROOT / "results/arch/power_scenarios.json"
 OUT = ROOT / "results/arch/sync_cost_table.json"
+V41_RACK = ROOT / "results/arch/v41_rack.json"       # the rack's per-token traffic table (links carrying FEC codewords)
 OUT_P = ROOT / "results/arch/power_assumptions.json"
 OUT_H = ROOT / "results/arch/figures/sync_cost_table.html"
 
@@ -230,6 +231,28 @@ REFS = {
 }
 
 
+BER_TAIL = dict(rs272_t7=dict(ber_1e_6=6.7e-26, ber_1e_5=6.5e-18, ber_1e_4=5.3e-10, ber_2_4e_4=4.2e-7),
+                rs544_t15=dict(ber_1e_6=2.2e-50, ber_1e_5=2.1e-34, ber_1e_4=1.4e-18, ber_2_4e_4=8.2e-13))
+
+
+def _e(x):
+    """One significant digit, exponent without a leading zero (3e-21)."""
+    return f"{x:.0e}".replace("e-0", "e-").replace("e+0", "e+")
+
+
+def codewords_per_token():
+    """FEC codewords one token puts on the package links: the T1 on-module TP bytes and the T2 stage-hop bytes of the
+    rack's corrected traffic table (results/arch/v41_rack.json traffic.per_token: every collective incl. the 40
+    KV-rows all-gathers, the adopted relay and stage-hop split), counted once in RS(272,257) codewords (2,570 payload
+    bits, the light code) and once in RS(544,514) codewords (5,140 payload bits, full KP4)."""
+    pt = json.loads(V41_RACK.read_text())["traffic"]["per_token"]
+    t1, t2 = pt["T1_tp_trace"]["bytes"], pt["T2_stage_hop"]["bytes"]
+    bits = (t1 + t2) * 8
+    return dict(rs272=int(round(bits / (257 * 10), -2)), rs544=int(round(bits / (514 * 10), -2)), t1_bytes=t1, t2_bytes=t2,
+                basis=f"T1 {t1 / 1e6:.1f} MB + T2 {t2 / 1e6:.2f} MB per token (results/arch/v41_rack.json "
+                      "traffic.per_token, the corrected table: KV-rows all-gathers included)")
+
+
 def sha_file(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
@@ -338,6 +361,7 @@ def build():
      dict(system="UCIe (advanced package)", per_hop="<2 ns PHY+adapter (spec); 3.5 ns FDI-to-FDI (measured)", end_to_end="-", fec="CRC + retry", refs=["r-ucie-tcpmt", "r-ucie-jssc26"], evidence="normative + measured"),
     ]
 
+    CW = codewords_per_token()
     hop_decomp = dict(
       on_module_light_fec_130ns=dict(phy_tx_rx_ns=[20, 60], fec_accumulate_ns=25.6, fec_decode_ns=[25, 50], pcs_alignment_ns=[3, 5],
         flight_ns=0.9, cdc_ns=4, endpoint_ns=5, total_ns=[89, 185], point_ns=130,
@@ -351,12 +375,14 @@ def build():
         normative_ceiling_ns=583.7, ceiling_basis="IEEE 802.3 RS-FEC 409.6 + PMA 92.16 + CR/KR PMD 81.92 ns per direction (Nicholl & Jones; Brown & Ran)"),
       ber_tail=dict(
         method="random-symbol-error arithmetic on 10-bit symbols, P(codeword uncorrectable) = P(> t symbol errors); DFE bursts make it worse (LL-FEC Table 1)",
-        codewords_per_token=dict(rs272=47000, rs544=23500, basis="T1 13.9 MB + T2 1.15 MB per token (results/arch/v41_rack.json traffic.per_token)"),
-        rs272_t7=dict(ber_1e_6=6.7e-26, ber_1e_5=6.5e-18, ber_1e_4=5.3e-10, ber_2_4e_4=4.2e-7),
-        rs544_t15=dict(ber_1e_6=2.2e-50, ber_1e_5=2.1e-34, ber_1e_4=1.4e-18, ber_2_4e_4=8.2e-13),
-        reading=("On the OIF MR-class on-module channel (raw BER <= 1e-6) the light code's retry probability per token is ~3e-21: nothing. "
-                 "On a CR-class cable at a compliant-limit raw BER near 2.4e-4 it would be ~2% of tokens retrying (47,000 x 4.2e-7), and under "
-                 "DFE bursts the LL-FEC spec needs raw BER <= 8.9e-9; hence the cable tier runs full RS(544,514), whose tail at 2.4e-4 is 2e-8 per token.")),
+        codewords_per_token=CW,
+        rs272_t7=BER_TAIL["rs272_t7"],
+        rs544_t15=BER_TAIL["rs544_t15"],
+        reading=("On the OIF MR-class on-module channel (raw BER <= 1e-6) the light code's retry probability per token is ~%s: nothing. "
+                 "On a CR-class cable at a compliant-limit raw BER near 2.4e-4 it would be ~%.0f%% of tokens retrying (%s x 4.2e-7), and under "
+                 "DFE bursts the LL-FEC spec needs raw BER <= 8.9e-9; hence the cable tier runs full RS(544,514), whose tail at 2.4e-4 is %s per token."
+                 % (_e(CW["rs272"] * BER_TAIL["rs272_t7"]["ber_1e_6"]), 100 * CW["rs272"] * BER_TAIL["rs272_t7"]["ber_2_4e_4"],
+                    f"{CW['rs272']:,.0f}", _e(CW["rs544"] * BER_TAIL["rs544_t15"]["ber_2_4e_4"])))),
       all_reduce_crossings=("A one-shot TP4 all-reduce across a package pair crosses the package link ONCE (each package sends its partial and both "
                             "reduce in fixed order) plus two UCIe hops and the 20 KB serialisation (27 ns at the per-neighbour link rate). A two-step "
                             "reduce-scatter/all-gather would cross it twice; the model picks one-shot, the RTL engine implements it."),
@@ -391,7 +417,8 @@ def build():
     )
 
     rec = dict(schema="opentallas.sync-cost-table.v1", tool="tools/sync_cost_table.py",
-               inputs={str(p.relative_to(ROOT)): sha_file(p) for p in (TECH, GPU_DEP, GPU_GATHER, RTL_TP, V41_BUDGET, V41_LANES)},
+               inputs={str(p.relative_to(ROOT)): sha_file(p) for p in (TECH, GPU_DEP, GPU_GATHER, RTL_TP, V41_BUDGET, V41_LANES,
+                                                                        V41_RACK)},
                ladder=LADDER, v41_spec_budget=spec, rows=rows, hpc_precedents=hpc, hop_decomposition=hop_decomp, values_checked=values_checked,
                narrowed_claim=claim, references={k: v for k, v in REFS.items()},
                caveats=["GPU on-chip primitives are measured on an RTX PRO 6000 Blackwell (GB202), not a B200.",

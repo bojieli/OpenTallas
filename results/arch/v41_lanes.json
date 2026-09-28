@@ -7,7 +7,7 @@
   "tp": 32,
   "stage": 24
  },
- "basis": "(agent a84f863e, results/arch/v41_rack.json on its branch at 5aa3bba1):\n\nC8  A 2-die package has 90 lanes of 112G PAM4 (1.19 TB/s per direction, 13.18 GB/s net per lane,\n    technology.json).  The rack allocates TP 32 (each die 2 x 8 lanes to the two dies of the partner package,\n    105 GB/s per die pair), stage 24 out + 24 in, switch 4, spare 6.  Every collective's bytes are therefore priced\n    per PEER link: a one-shot all-reduce sends the die's whole partial to each peer (the remote ones in parallel on\n    their own lanes, 105 GB/s each at TP 32), an all-gather sends the die's quarter; the in-package peer is UCIe\n    (4.2 TB/s).  The bytes still chase their producer (overlapped reductions), so they cost time only where they\n    outlast it -- the DAG decides.  A stage hop's 41 KB residual crosses on the 2 packages' stage lanes in parallel.\n    The search: TP lanes t in multiples of 4 (2 peers x 2 dies), stage = (90 - 4 switch - 6 spare - t) / 2 each way.\nC4  SerDes static power: 84 always-on lanes per layer/head package at ~0.56 W each (~5 pJ/bit at 112 Gb/s) = 47 W per\n    package, 23.5 W per die; the 72 Engram table dies carry ~1 lane-pair each (0.56 W per die).  The HBM comparator's\n    NVLink-class SerDes is charged the same way: 84 always-on 112G lanes per 2-die package at the same pJ/bit\n    (ASSUMED: its packages have the same edge and lane count), 23.5 W per die.\nC10 The 4 head dies carry 4 HBM3E stacks each for the drafter's per-user state (+16 x 2.8 W).",
+ "basis": "(agent a84f863e, results/arch/v41_rack.json on its branch at 5aa3bba1):\n\nC8  A 2-die package has 90 lanes of 112G PAM4 (1.19 TB/s per direction, 13.18 GB/s net per lane,\n    technology.json).  The rack allocates TP 32 (each die 2 x 8 lanes to the two dies of the partner package,\n    105 GB/s per die pair), stage 24 out + 24 in, switch 4, spare 6.  Every collective's bytes are therefore priced\n    per PEER link: a one-shot all-reduce sends the die's whole partial to each peer (the remote ones in parallel on\n    their own lanes, 105 GB/s each at TP 32), an all-gather sends the die's quarter; the in-package peer is UCIe\n    (4.2 TB/s).  The bytes still chase their producer (overlapped reductions), so they cost time only where they\n    outlast it -- the DAG decides.  A stage hop's 41 KB residual crosses on the 2 packages' stage lanes in parallel.\n    The search: TP lanes t in multiples of 4 (2 peers x 2 dies), stage = (90 - 4 switch - 6 spare - t) / 2 each way.\nC4  SerDes static power: 84 always-on lanes per layer/head package at 0.728 W each (6.5 pJ/bit at 112 Gb/s) = 61 W\n    per package, 30.6 W per die; the 72 Engram table dies carry 1 lane each (2 per package, 0.728 W per die).  The\n    switched HBM comparator's SerDes is charged on its own fabric (tools/arch_hbm_switched_v41.serdes_w_per_die: the\n    lanes that carry 0.9 TB/s per direction per package).\nC10 The 4 head dies carry 4 HBM3E stacks each for the drafter's per-user state (+16 x 2.8 W).\n\nRack model gaps (closed here; results/arch/v41_rack.json gates C8 / C10):\n*   The draft is conditioned on the inputs of target layers 37-39 at every verified position (DSpark\n    dspark_target_layer_ids): 3 x 5,120 BF16 x 6 positions = 184 KB per verify step, which reach the head module\n    over the S27 -> H stage link behind the residual.  Priced on the MTP critical path as a head hop's bytes\n    (stage lanes of both packages + the UCIe half, the m_lanes rule) before the draft can start: draft_extra_s.\n*   At batch > 1 with MTP the drafts of different users overlap on the head group; the aggregate points carry\n    tools/arch_utilization_v41.draft_contention (conservative interference bound + unit throughput cap).\n*   Every aggregate point is capped by its busiest package link (tools/v41_rack_design.stage_link_demand: the\n    busiest stage's T1 link and UCIe link, and with MTP the head module's draft traffic): aggregate x\n    min(1, 1 / the highest utilisation).",
  "ladder_top_overlap_assumed": {
   "1048576": {
    "ar": 8634.678265715687,
@@ -27,7 +27,7 @@
    "two_step": false,
    "1048576": {
     "ar": 5628.667151196621,
-    "mtp": 7997.867209588427,
+    "mtp": 7994.821400959112,
     "T_us": 177.66195320101775,
     "verify_us": 610.9327905948327,
     "collective_bytes_us": 64.746,
@@ -35,7 +35,7 @@
    },
    "200000": {
     "ar": 5804.343986940372,
-    "mtp": 8112.458904271628,
+    "mtp": 8109.325208119541,
     "T_us": 172.28475814837557,
     "verify_us": 602.1020638239032,
     "collective_bytes_us": 64.746,
@@ -50,7 +50,7 @@
    "two_step": true,
    "1048576": {
     "ar": 6337.705665518096,
-    "mtp": 11114.520784585928,
+    "mtp": 11108.639512478527,
     "T_us": 157.78580653259982,
     "verify_us": 435.62807249783464,
     "collective_bytes_us": 33.661,
@@ -58,7 +58,7 @@
    },
    "200000": {
     "ar": 6561.309038180589,
-    "mtp": 11337.065790332053,
+    "mtp": 11330.946704838732,
     "T_us": 152.40861147995767,
     "verify_us": 426.797345726905,
     "collective_bytes_us": 33.661,
@@ -73,7 +73,7 @@
    "two_step": false,
    "1048576": {
     "ar": 6616.301001807649,
-    "mtp": 10775.323443019957,
+    "mtp": 10769.530467927818,
     "T_us": 151.1418539946699,
     "verify_us": 449.78931587191033,
     "collective_bytes_us": 38.155,
@@ -81,7 +81,7 @@
    },
    "200000": {
     "ar": 6860.373476383674,
-    "mtp": 10984.364549919103,
+    "mtp": 10978.344690118774,
     "T_us": 145.76465894202784,
     "verify_us": 440.9585891009807,
     "collective_bytes_us": 38.155,
@@ -96,7 +96,7 @@
    "two_step": true,
    "1048576": {
     "ar": 7060.770038102112,
-    "mtp": 14249.483774790993,
+    "mtp": 14239.354834283715,
     "T_us": 141.62761208815596,
     "verify_us": 336.65602634634513,
     "collective_bytes_us": 17.431,
@@ -104,7 +104,7 @@
    },
    "200000": {
     "ar": 7339.427076684455,
-    "mtp": 14617.353740160417,
+    "mtp": 14606.695259479819,
     "T_us": 136.25041703551395,
     "verify_us": 327.8252995754154,
     "collective_bytes_us": 17.431,
@@ -119,7 +119,7 @@
    "two_step": false,
    "1048576": {
     "ar": 7250.250641682181,
-    "mtp": 13024.647111693726,
+    "mtp": 13015.748474404087,
     "T_us": 137.92626619705152,
     "verify_us": 369.6536819433364,
     "collective_bytes_us": 24.859,
@@ -127,7 +127,7 @@
    },
    "200000": {
     "ar": 7544.375764885753,
-    "mtp": 13331.312901330875,
+    "mtp": 13321.990443402208,
     "T_us": 132.54907114440942,
     "verify_us": 360.82295517240675,
     "collective_bytes_us": 24.859,
@@ -142,7 +142,7 @@
    "two_step": true,
    "1048576": {
     "ar": 7457.729748707065,
-    "mtp": 16565.06842002781,
+    "mtp": 16550.677207229623,
     "T_us": 134.0890637896028,
     "verify_us": 287.6061067034865,
     "collective_bytes_us": 9.813,
@@ -150,7 +150,7 @@
    },
    "200000": {
     "ar": 7769.291284579421,
-    "mtp": 17064.307229567043,
+    "mtp": 17049.035898958882,
     "T_us": 128.7118687369608,
     "verify_us": 278.77537993255646,
     "collective_bytes_us": 9.813,
@@ -165,7 +165,7 @@
    "two_step": false,
    "1048576": {
     "ar": 7682.908134592013,
-    "mtp": 14875.098283236122,
+    "mtp": 14862.848836803836,
     "T_us": 130.15904687152727,
     "verify_us": 321.89835477320753,
     "collective_bytes_us": 16.765,
@@ -173,7 +173,7 @@
    },
    "200000": {
     "ar": 8013.985891565788,
-    "mtp": 15276.43444021993,
+    "mtp": 15263.51537391467,
     "T_us": 124.78185181888536,
     "verify_us": 313.06762800227784,
     "collective_bytes_us": 16.765,
@@ -188,7 +188,7 @@
    "two_step": true,
    "1048576": {
     "ar": 7634.479353175485,
-    "mtp": 18332.740891624242,
+    "mtp": 18314.13851413798,
     "T_us": 130.9847016069354,
     "verify_us": 258.5022081047862,
     "collective_bytes_us": 6.381,
@@ -196,7 +196,7 @@
    },
    "200000": {
     "ar": 7961.307627484455,
-    "mtp": 18946.185901342044,
+    "mtp": 18926.318434573717,
     "T_us": 125.60750655429344,
     "verify_us": 249.67148133385615,
     "collective_bytes_us": 6.381,
@@ -211,7 +211,7 @@
    "two_step": false,
    "1048576": {
     "ar": 7998.084011589541,
-    "mtp": 16404.058899335116,
+    "mtp": 16388.26857051055,
     "T_us": 125.02994449057553,
     "verify_us": 290.5687339151833,
     "collective_bytes_us": 11.532,
@@ -219,7 +219,7 @@
    },
    "200000": {
     "ar": 8357.517940017944,
-    "mtp": 16893.49647533913,
+    "mtp": 16876.75031857657,
     "T_us": 119.65274943793337,
     "verify_us": 281.7380071442537,
     "collective_bytes_us": 11.532,
@@ -234,7 +234,7 @@
    "two_step": true,
    "1048576": {
     "ar": 7998.084011589541,
-    "mtp": 19697.38893106079,
+    "mtp": 19674.62632750804,
     "T_us": 125.02994449057553,
     "verify_us": 239.60687296104757,
     "collective_bytes_us": 11.532,
@@ -242,7 +242,7 @@
    },
    "200000": {
     "ar": 8357.517940017944,
-    "mtp": 20407.328290734633,
+    "mtp": 20382.896301547127,
     "T_us": 119.65274943793337,
     "verify_us": 230.7761461901186,
     "collective_bytes_us": 11.532,
@@ -257,7 +257,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8236.42733463931,
-    "mtp": 17684.85666354752,
+    "mtp": 17665.30635118708,
     "T_us": 121.4118645586026,
     "verify_us": 268.49388697640694,
     "collective_bytes_us": 7.794,
@@ -265,7 +265,7 @@
    },
    "200000": {
     "ar": 8618.113915932981,
-    "mtp": 18255.034925243486,
+    "mtp": 18234.204388061433,
     "T_us": 116.0346695059602,
     "verify_us": 259.66316020547737,
     "collective_bytes_us": 7.794,
@@ -280,7 +280,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8236.42733463931,
-    "mtp": 20777.274794551806,
+    "mtp": 20750.294677139467,
     "T_us": 121.4118645586026,
     "verify_us": 226.41365867533332,
     "collective_bytes_us": 7.794,
@@ -288,7 +288,7 @@
    },
    "200000": {
     "ar": 8618.113915932981,
-    "mtp": 21568.755087805002,
+    "mtp": 21539.681719914246,
     "T_us": 116.0346695059602,
     "verify_us": 217.58293190440475,
     "collective_bytes_us": 7.794,
@@ -303,7 +303,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8386.150142944713,
-    "mtp": 18763.79272087292,
+    "mtp": 18740.210909933576,
     "T_us": 119.24422803726002,
     "verify_us": 252.2367696294667,
     "collective_bytes_us": 5.487,
@@ -311,7 +311,7 @@
    },
    "200000": {
     "ar": 8782.173152215983,
-    "mtp": 19406.93034525393,
+    "mtp": 19381.705362008066,
     "T_us": 113.86703298461757,
     "verify_us": 243.40604285853698,
     "collective_bytes_us": 5.487,
@@ -326,7 +326,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8386.150142944713,
-    "mtp": 21640.18362056026,
+    "mtp": 21608.823760133808,
     "T_us": 119.24422803726002,
     "verify_us": 216.8177658181912,
     "collective_bytes_us": 5.487,
@@ -334,7 +334,7 @@
    },
    "200000": {
     "ar": 8782.173152215983,
-    "mtp": 22500.132140654223,
+    "mtp": 22466.232322666696,
     "T_us": 113.86703298461757,
     "verify_us": 207.98703904726264,
     "collective_bytes_us": 5.487,
@@ -349,7 +349,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8467.951497125361,
-    "mtp": 19672.29838573679,
+    "mtp": 19644.33431890964,
     "T_us": 118.09231551922241,
     "verify_us": 239.93062785457514,
     "collective_bytes_us": 4.17,
@@ -357,7 +357,7 @@
    },
    "200000": {
     "ar": 8871.924155876675,
-    "mtp": 20380.397745661674,
+    "mtp": 20350.38586468431,
     "T_us": 112.71512046657995,
     "verify_us": 231.09990108364616,
     "collective_bytes_us": 4.17,
@@ -372,7 +372,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8467.951497125361,
-    "mtp": 22328.759729849182,
+    "mtp": 22292.740371646807,
     "T_us": 118.09231551922241,
     "verify_us": 209.69257642425214,
     "collective_bytes_us": 4.17,
@@ -380,7 +380,7 @@
    },
    "200000": {
     "ar": 8871.924155876675,
-    "mtp": 23245.464019501775,
+    "mtp": 23206.42899575639,
     "T_us": 112.71512046657995,
     "verify_us": 200.8618496533234,
     "collective_bytes_us": 4.17,
@@ -395,7 +395,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8529.748516585976,
-    "mtp": 20431.899007929802,
+    "mtp": 20399.08913153576,
     "T_us": 117.23675065630762,
     "verify_us": 230.48150534375262,
     "collective_bytes_us": 3.117,
@@ -403,7 +403,7 @@
    },
    "200000": {
     "ar": 8939.781627089125,
-    "mtp": 21196.80046486661,
+    "mtp": 21161.490145665775,
     "T_us": 111.85955560366514,
     "verify_us": 221.65077857282392,
     "collective_bytes_us": 3.117,
@@ -418,7 +418,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8529.748516585976,
-    "mtp": 22870.515557798917,
+    "mtp": 22829.41423413152,
     "T_us": 117.23675065630762,
     "verify_us": 204.38821581819184,
     "collective_bytes_us": 3.117,
@@ -426,7 +426,7 @@
    },
    "200000": {
     "ar": 8939.781627089125,
-    "mtp": 23833.20185303291,
+    "mtp": 23788.570934004154,
     "T_us": 111.85955560366514,
     "verify_us": 195.557489047263,
     "collective_bytes_us": 3.117,
@@ -441,7 +441,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8575.101105885418,
-    "mtp": 21055.8205602047,
+    "mtp": 21017.54450107175,
     "T_us": 116.61670080060769,
     "verify_us": 223.23015166409866,
     "collective_bytes_us": 2.255,
@@ -449,7 +449,7 @@
    },
    "200000": {
     "ar": 8989.61203824202,
-    "mtp": 21869.080028003067,
+    "mtp": 21827.793020024958,
     "T_us": 111.23950574796518,
     "verify_us": 214.3994248931701,
     "collective_bytes_us": 2.255,
@@ -464,7 +464,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8575.101105885418,
-    "mtp": 23281.595986446155,
+    "mtp": 23234.809015861676,
     "T_us": 116.61670080060769,
     "verify_us": 200.52803096970675,
     "collective_bytes_us": 2.255,
@@ -472,7 +472,7 @@
    },
    "200000": {
     "ar": 8989.61203824202,
-    "mtp": 24279.955781513083,
+    "mtp": 24229.07452968547,
     "T_us": 111.23950574796518,
     "verify_us": 191.69730419877797,
     "collective_bytes_us": 2.255,
@@ -487,7 +487,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8605.794754505185,
-    "mtp": 21549.31696996,
+    "mtp": 21504.734055693436,
     "T_us": 116.20077268011697,
     "verify_us": 217.7920374866095,
     "collective_bytes_us": 1.537,
@@ -495,7 +495,7 @@
    },
    "200000": {
     "ar": 9023.350638989732,
-    "mtp": 22401.916576969204,
+    "mtp": 22353.73996680181,
     "T_us": 110.82357762747448,
     "verify_us": 208.961310715681,
     "collective_bytes_us": 1.537,
@@ -510,7 +510,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8605.794754505185,
-    "mtp": 23553.416977775003,
+    "mtp": 23500.166228456677,
     "T_us": 116.20077268011697,
     "verify_us": 198.0495457853575,
     "collective_bytes_us": 1.537,
@@ -518,7 +518,7 @@
    },
    "200000": {
     "ar": 9023.350638989732,
-    "mtp": 24575.737118097288,
+    "mtp": 24517.76911070391,
     "T_us": 110.82357762747448,
     "verify_us": 189.2188190144288,
     "collective_bytes_us": 1.537,
@@ -533,7 +533,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8622.047603391655,
-    "mtp": 21908.510338469514,
+    "mtp": 21856.462305322606,
     "T_us": 115.98173032663726,
     "verify_us": 213.98793721188508,
     "collective_bytes_us": 0.929,
@@ -541,7 +541,7 @@
    },
    "200000": {
     "ar": 9041.220574931696,
-    "mtp": 22790.351392510394,
+    "mtp": 22734.03444068985,
     "T_us": 110.60453527399476,
     "verify_us": 205.15721044095653,
     "collective_bytes_us": 0.929,
@@ -556,7 +556,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8622.047603391655,
-    "mtp": 23577.550266865917,
+    "mtp": 23517.280794490536,
     "T_us": 115.98173032663726,
     "verify_us": 197.83225869744547,
     "collective_bytes_us": 0.929,
@@ -564,7 +564,7 @@
    },
    "200000": {
     "ar": 9041.220574931696,
-    "mtp": 24602.01201946047,
+    "mtp": 24536.398543000123,
     "T_us": 110.60453527399476,
     "verify_us": 189.00153192651675,
     "collective_bytes_us": 0.929,
@@ -579,7 +579,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8622.244184071176,
-    "mtp": 22116.867718929992,
+    "mtp": 22055.72224814417,
     "T_us": 115.97908603045717,
     "verify_us": 211.83791758865055,
     "collective_bytes_us": 0.408,
@@ -587,7 +587,7 @@
    },
    "200000": {
     "ar": 9041.436734572535,
-    "mtp": 23015.90590188901,
+    "mtp": 22949.695778843085,
     "T_us": 110.60189097781465,
     "verify_us": 203.00719081772192,
     "collective_bytes_us": 0.408,
@@ -602,7 +602,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8622.244184071176,
-    "mtp": 23475.222283305262,
+    "mtp": 23406.347103902837,
     "T_us": 115.97908603045717,
     "verify_us": 198.75665037719384,
     "collective_bytes_us": 0.408,
@@ -610,7 +610,7 @@
    },
    "200000": {
     "ar": 9041.436734572535,
-    "mtp": 24490.619399429805,
+    "mtp": 24415.666619650794,
     "T_us": 110.60189097781465,
     "verify_us": 189.92592360626514,
     "collective_bytes_us": 0.408,
@@ -625,7 +625,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8584.613362331478,
-    "mtp": 22136.92150907244,
+    "mtp": 22064.309235368535,
     "T_us": 116.48748263817114,
     "verify_us": 211.63311962946716,
     "collective_bytes_us": 0.191,
@@ -633,7 +633,7 @@
    },
    "200000": {
     "ar": 9000.066706066587,
-    "mtp": 23037.62397941066,
+    "mtp": 22958.99312429901,
     "T_us": 111.11028758552864,
     "verify_us": 202.8023928585385,
     "collective_bytes_us": 0.191,
@@ -648,7 +648,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8584.613362331478,
-    "mtp": 23207.216929054972,
+    "mtp": 23127.426125376223,
     "T_us": 116.48748263817114,
     "verify_us": 201.21634221392895,
     "collective_bytes_us": 0.191,
@@ -656,7 +656,7 @@
    },
    "200000": {
     "ar": 9000.066706066587,
-    "mtp": 24199.07199708456,
+    "mtp": 24112.327820991955,
     "T_us": 111.11028758552864,
     "verify_us": 192.38561544300015,
     "collective_bytes_us": 0.191,
@@ -671,7 +671,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8514.993072720823,
-    "mtp": 21890.569201698465,
+    "mtp": 21802.924518491094,
     "T_us": 117.43990763817108,
     "verify_us": 214.17498391518168,
     "collective_bytes_us": 0.055,
@@ -679,7 +679,7 @@
    },
    "200000": {
     "ar": 8923.574817420014,
-    "mtp": 22770.937528327617,
+    "mtp": 22676.11678254392,
     "T_us": 112.06271258552862,
     "verify_us": 205.34425714425313,
     "collective_bytes_us": 0.055,
@@ -694,7 +694,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8514.993072720823,
-    "mtp": 22693.9010197722,
+    "mtp": 22599.71943930803,
     "T_us": 117.43990763817108,
     "verify_us": 206.0896350710714,
     "collective_bytes_us": 0.055,
@@ -702,7 +702,7 @@
    },
    "200000": {
     "ar": 8923.574817420014,
-    "mtp": 23641.46827581407,
+    "mtp": 23539.275239620132,
     "T_us": 112.06271258552862,
     "verify_us": 197.25890830014248,
     "collective_bytes_us": 0.055,
@@ -717,7 +717,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8389.315945182734,
-    "mtp": 21206.777309437664,
+    "mtp": 21098.53457829712,
     "T_us": 119.19922989361419,
     "verify_us": 221.53980534375287,
     "collective_bytes_us": 0.0,
@@ -725,7 +725,7 @@
    },
    "200000": {
     "ar": 8785.645076519375,
-    "mtp": 22031.96818059573,
+    "mtp": 21915.160948184726,
     "T_us": 113.82203484097172,
     "verify_us": 212.70907857282435,
     "collective_bytes_us": 0.0,
@@ -740,7 +740,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8389.315945182734,
-    "mtp": 21763.214038299062,
+    "mtp": 21649.23176957487,
     "T_us": 119.19922989361419,
     "verify_us": 215.51159935678504,
     "collective_bytes_us": 0.0,
@@ -748,7 +748,7 @@
    },
    "200000": {
     "ar": 8785.645076519375,
-    "mtp": 22633.1649865346,
+    "mtp": 22509.913860377364,
     "T_us": 113.82203484097172,
     "verify_us": 206.6808725858565,
     "collective_bytes_us": 0.0,
@@ -763,7 +763,7 @@
    "two_step": false,
    "1048576": {
     "ar": 8141.511637173916,
-    "mtp": 19653.02177491395,
+    "mtp": 19515.526308133107,
     "T_us": 122.82731322694765,
     "verify_us": 240.1799243913715,
     "collective_bytes_us": 0.0,
@@ -771,7 +771,7 @@
    },
    "200000": {
     "ar": 8514.252821065033,
-    "mtp": 20359.709175971628,
+    "mtp": 20212.184860538844,
     "T_us": 117.45011817430526,
     "verify_us": 231.34919762044257,
     "collective_bytes_us": 0.0,
@@ -786,7 +786,7 @@
    "two_step": true,
    "1048576": {
     "ar": 8141.511637173916,
-    "mtp": 19982.881231347033,
+    "mtp": 19840.7482291346,
     "T_us": 122.82731322694765,
     "verify_us": 235.9802898329751,
     "collective_bytes_us": 0.0,
@@ -794,7 +794,7 @@
    },
    "200000": {
     "ar": 8514.252821065033,
-    "mtp": 20713.93122967307,
+    "mtp": 20561.248195500448,
     "T_us": 117.45011817430526,
     "verify_us": 227.14956306204627,
     "collective_bytes_us": 0.0,
@@ -810,7 +810,7 @@
   "two_step": false,
   "1048576": {
    "ar": 8386.150142944713,
-   "mtp": 18763.79272087292,
+   "mtp": 18740.210909933576,
    "T_us": 119.24422803726002,
    "verify_us": 252.2367696294667,
    "collective_bytes_us": 5.487,
@@ -818,7 +818,7 @@
   },
   "200000": {
    "ar": 8782.173152215983,
-   "mtp": 19406.93034525393,
+   "mtp": 19381.705362008066,
    "T_us": 113.86703298461757,
    "verify_us": 243.40604285853698,
    "collective_bytes_us": 5.487,
@@ -833,7 +833,7 @@
   "two_step": true,
   "1048576": {
    "ar": 8622.047603391655,
-   "mtp": 23577.550266865917,
+   "mtp": 23517.280794490536,
    "T_us": 115.98173032663726,
    "verify_us": 197.83225869744547,
    "collective_bytes_us": 0.929,
@@ -841,7 +841,7 @@
   },
   "200000": {
    "ar": 9041.220574931696,
-   "mtp": 24602.01201946047,
+   "mtp": 24536.398543000123,
    "T_us": 110.60453527399476,
    "verify_us": 189.00153192651675,
    "collective_bytes_us": 0.929,
@@ -852,17 +852,25 @@
  "design_point_overlap_assumed": {
   "1048576": {
    "ar": 8622.047603391655,
-   "mtp": 23577.550266865917
+   "mtp": 23517.280794490536
   },
   "200000": {
    "ar": 9041.220574931696,
-   "mtp": 24602.01201946047
+   "mtp": 24536.398543000123
   }
+ },
+ "draft_conditioning": {
+  "bytes_per_verify": 184320,
+  "seconds": 5.43477551020408e-07,
+  "stage_lanes": 14,
+  "link_Bps": 368941176470.58826,
+  "ucie_Bps": 4200000000000.0,
+  "basis": "3 target layers (37-39) x hidden x BF16 x gamma + 1 positions, a head hop's bytes on the stage lanes + the UCIe half, on the MTP critical path before the draft starts (priced in every MTP rate here)"
  },
  "design_point_no_levers": {
   "1048576": {
    "ar": 7578.981495298372,
-   "mtp": 21005.94986438209,
+   "mtp": 20958.097237771664,
    "T_us": 131.9438503208315,
    "verify_us": 223.7939203331244,
    "breakdown_us": {
@@ -877,7 +885,7 @@
   },
   "200000": {
    "ar": 7905.41350038117,
-   "mtp": 21815.28744657373,
+   "mtp": 21763.680888491566,
    "T_us": 126.49559696678531,
    "verify_us": 214.96319356219576,
    "breakdown_us": {
@@ -894,7 +902,7 @@
  "design_point": {
   "1048576": {
    "ar": 8184.912902114869,
-   "mtp": 23817.724415076806,
+   "mtp": 23756.222412952255,
    "T_us": 122.1760099293926,
    "verify_us": 195.69381747276674,
    "breakdown_us": {
@@ -909,7 +917,7 @@
   },
   "200000": {
    "ar": 8567.550390932485,
-   "mtp": 24863.62688630105,
+   "mtp": 24796.612439077035,
    "T_us": 116.71947690653278,
    "verify_us": 186.86309070183813,
    "breakdown_us": {
@@ -1059,11 +1067,11 @@
   "loss_no_levers": {
    "1048576": {
     "ar": 0.12097661206173027,
-    "mtp": 0.1090698725430248
+    "mtp": 0.10882140580293698
    },
    "200000": {
     "ar": 0.12562541364157653,
-    "mtp": 0.11327222223460465
+    "mtp": 0.11300426383478246
    }
   },
   "levers": {
@@ -1232,21 +1240,21 @@
   "loss": {
    "1048576": {
     "ar": 0.05069963903989927,
-    "mtp": -0.01018656075344726
+    "mtp": -0.01016025707009871
    },
    "200000": {
     "ar": 0.052390070574380276,
-    "mtp": -0.010633880945738694
+    "mtp": -0.010605219654420184
    }
   },
   "recovered_share": {
    "1048576": {
     "ar": 0.5809137140158217,
-    "mtp": 1.0933948166981589
+    "mtp": 1.0933663464015317
    },
    "200000": {
     "ar": 0.5829659854983235,
-    "mtp": 1.0938789822955386
+    "mtp": 1.0938479601966657
    }
   },
   "note": "design_point is the headline (bench-measured tails with the adopted levers: a conditioned design-point model result, not measured chip throughput); design_point_no_levers is the ablation (measured exposure, no recovery); design_point_overlap_assumed is the conditional point that holds only if C7 is fully recovered.  With MTP the lever point can exceed the overlap-assumed one: the relay halves the bytes each T1 link carries, which the overlap-assumed point charges in full (tools/collective_exposure.py, tools/v41_collective_exposure.py)"
@@ -1262,6 +1270,38 @@
   "switch_basis": "13.0 W per Tb/s of port capacity (NVL72: 9 x 1.5 kW trays, ASSUMED, over 72 GPUs x 14.4 Tb/s); the ROM rack's off-path switch carries 4 lanes x 112G both ways per package",
   "source": "results/arch/arch_budget_v41.json power.static_w_per_die (validated inputs, cce817f3)"
  },
+ "link_demand": {
+  "busiest_t1_stage": 14,
+  "busiest_ucie_stage": 14,
+  "busiest_stage_bytes_per_position": {
+   "adopted_levers": {
+    "t1_link_bytes": 123552.0,
+    "ucie_bytes": 484512.0
+   },
+   "no_levers": {
+    "t1_link_bytes": 233632.0,
+    "ucie_bytes": 254112.0
+   },
+   "collectives": 14
+  },
+  "busiest_ucie_stage_bytes_per_position": {
+   "adopted_levers": {
+    "t1_link_bytes": 123552.0,
+    "ucie_bytes": 484512.0
+   },
+   "no_levers": {
+    "t1_link_bytes": 233632.0,
+    "ucie_bytes": 254112.0
+   },
+   "collectives": 14
+  },
+  "head_module": {
+   "t1_link_bytes_per_draft": 887280.0,
+   "ucie_bytes_per_draft": 887280.0,
+   "basis": "3 draft stages x the window-only layer's collectives (layer 0 class, 67.6 KB KV-rows gather) x 5 block rows, one-shot, no relay (the draft is priced without the levers)"
+  },
+  "source": "tools/v41_rack_design.stage_link_demand (the C8 gate's accounting)"
+ },
  "energy": {
   "1048576": {
    "b1": {
@@ -1274,6 +1314,24 @@
      "nonclock_j": 0.028920160215295976,
      "clock_j": 0.0053464968900465626
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.005903660748968281,
+      "stage_ucie": 0.0009442115523879713
+     },
+     "busiest_link": "stage_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 8184.912902114869,
+     "utilisation": {
+      "stage_t1": 0.005903660748968281,
+      "stage_ucie": 0.0009442115523879713
+     }
+    },
+    "draft_contention": null,
+    "draft_conditioning_us": 0.0,
     "hbm": {
      "G": 32,
      "m": null,
@@ -1289,14 +1347,36 @@
    },
    "b1_mtp": {
     "rom": {
-     "tokens_s_per_user": 23817.724415076806,
-     "aggregate_tokens_s": 23817.724415076806,
-     "dynamic_j": 0.01683962885850963,
-     "static_j": 0.6245736803433841,
-     "total_j": 0.6414133092018938,
+     "tokens_s_per_user": 23756.222412952255,
+     "aggregate_tokens_s": 23756.222412952255,
+     "dynamic_j": 0.01684913925931157,
+     "static_j": 0.6261906264700745,
+     "total_j": 0.643039765729386,
      "nonclock_j": 0.013166070455814104,
-     "clock_j": 0.003673558402695528
+     "clock_j": 0.0036830688034974694
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.020562028622227873,
+      "stage_ucie": 0.0032886213810698066,
+      "head_t1": 0.024610793776345653,
+      "head_ucie": 0.0010037343344078227
+     },
+     "busiest_link": "head_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 23756.222412952255,
+     "utilisation": {
+      "stage_t1": 0.020562028622227873,
+      "stage_ucie": 0.0032886213810698066,
+      "head_t1": 0.024610793776345653,
+      "head_ucie": 0.0010037343344078227
+     }
+    },
+    "draft_contention": null,
+    "draft_conditioning_us": 0.5434775510204081,
     "hbm": {
      "G": 48,
      "m": 6,
@@ -1306,9 +1386,9 @@
      "static_j": 1.2286325019530755,
      "total_j": 2.3950054639861
     },
-    "ratio_rate_per_user": 2.759257185386025,
-    "ratio_energy_with_static": 3.7339503711985476,
-    "ratio_energy_dynamic": 69.26357889672948
+    "ratio_rate_per_user": 2.7521322460626707,
+    "ratio_energy_with_static": 3.724505997338279,
+    "ratio_energy_dynamic": 69.22448346365444
    },
    "fill28": {
     "rom": {
@@ -1320,6 +1400,24 @@
      "nonclock_j": 0.028920160215296004,
      "clock_j": 0.0053464968900465626
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.16530250097111188,
+      "stage_ucie": 0.026437923466863196
+     },
+     "busiest_link": "stage_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 229177.56125921634,
+     "utilisation": {
+      "stage_t1": 0.16530250097111188,
+      "stage_ucie": 0.026437923466863196
+     }
+    },
+    "draft_contention": null,
+    "draft_conditioning_us": 0.0,
     "hbm": {
      "G": 32,
      "m": null,
@@ -1335,14 +1433,76 @@
    },
    "fill28_mtp": {
     "rom": {
-     "tokens_s_per_user": 23817.724415076806,
-     "aggregate_tokens_s": 666896.2836221505,
-     "dynamic_j": 0.016839628858509637,
-     "static_j": 0.02230620286940658,
-     "total_j": 0.03914583172791622,
-     "nonclock_j": 0.01316607045581411,
-     "clock_j": 0.003673558402695528
+     "tokens_s_per_user": 23479.836575053745,
+     "aggregate_tokens_s": 657435.4241015048,
+     "dynamic_j": 0.016892493396553496,
+     "static_j": 0.022627201471018127,
+     "total_j": 0.03951969486757162,
+     "nonclock_j": 0.013166070455814114,
+     "clock_j": 0.003726422940739381
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.5690385353637424,
+      "stage_ucie": 0.09101010062921952,
+      "head_t1": 0.681085037956409,
+      "head_ucie": 0.027777585861751584
+     },
+     "busiest_link": "head_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 657435.4241015048,
+     "utilisation": {
+      "stage_t1": 0.5690385353637424,
+      "stage_ucie": 0.09101010062921952,
+      "head_t1": 0.681085037956409,
+      "head_ucie": 0.027777585861751584
+     }
+    },
+    "draft_contention": {
+     "isolated_draft_s": 1.477735564076344e-05,
+     "contended_draft_s": 1.7254853784693038e-05,
+     "contention_s": 2.4774981439295976e-06,
+     "drafts_per_s": 131487.08482030098,
+     "drafts_in_flight": 2.268790423149825,
+     "engine_work_per_draft_s": 6.6831801621335666e-06,
+     "engine_work_by_unit_s": {
+      "su": 1.1848263569457224e-06,
+      "hc": 1.3247470101195952e-06,
+      "sfu": 2.0975160993560257e-07,
+      "weight": 2.6998003095396525e-06,
+      "bf16": 1.18125818746052e-06,
+      "sel": 8.27966881324747e-08
+     },
+     "head_verify_work_per_pass_s": 1.4833495139457095e-06,
+     "head_verify_work_by_unit_s": {
+      "su": 1.1315547378104875e-07,
+      "bf16": 1.3701940401646607e-06
+     },
+     "others_load_by_unit": {
+      "bf16": 0.3235014792019588,
+      "hc": 0.1679661538248555,
+      "sel": 0.010497884614053469,
+      "sfu": 0.026594641022268786,
+      "su": 0.16457256681940977,
+      "weight": 0.342310698287661
+     },
+     "head_unit_load": {
+      "bf16": 0.335483015468698,
+      "hc": 0.17418712248503535,
+      "sel": 0.010886695155314709,
+      "sfu": 0.02757962772679726,
+      "su": 0.17066784707198052,
+      "weight": 0.3549888722983151
+     },
+     "busiest_head_unit": "weight",
+     "throughput_cap": 1.0,
+     "basis": "per-unit processor sharing of the head group's pooled units among the users' drafts and verify passes (tools/arch_utilization_v41.draft_contention)",
+     "evaluated_at": "the point's aggregate"
+    },
+    "draft_conditioning_us": 0.5434775510204081,
     "hbm": {
      "G": 48,
      "m": 6,
@@ -1352,9 +1512,9 @@
      "static_j": 0.19055439940007576,
      "total_j": 0.6730739321390448
     },
-    "ratio_rate_per_user": 11.982493266002207,
-    "ratio_energy_with_static": 17.194012808752074,
-    "ratio_energy_dynamic": 28.65381041311581
+    "ratio_rate_per_user": 11.812504786112942,
+    "ratio_energy_with_static": 17.031354477671943,
+    "ratio_energy_dynamic": 28.564139195544417
    },
    "sat1024": {
     "rom": {
@@ -1366,6 +1526,24 @@
      "nonclock_j": 0.02603289962213368,
      "clock_j": 0.001778105208679011
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.497039940631833,
+      "stage_ucie": 0.07949488866290708
+     },
+     "busiest_link": "stage_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 689102.710323397,
+     "utilisation": {
+      "stage_t1": 0.497039940631833,
+      "stage_ucie": 0.07949488866290708
+     }
+    },
+    "draft_contention": null,
+    "draft_conditioning_us": 0.0,
     "hbm": {
      "G": 32,
      "m": null,
@@ -1381,14 +1559,76 @@
    },
    "sat1024_mtp": {
     "rom": {
-     "tokens_s_per_user": 1260.3885493592798,
-     "aggregate_tokens_s": 1290637.8745439025,
-     "dynamic_j": 0.013286012396462368,
-     "static_j": 0.011526024525342547,
-     "total_j": 0.024812036921804913,
+     "tokens_s_per_user": 942.6528929126425,
+     "aggregate_tokens_s": 965276.562342546,
+     "dynamic_j": 0.013925828239742345,
+     "static_j": 0.015411048372735695,
+     "total_j": 0.02933687661247804,
      "nonclock_j": 0.01138781732970723,
-     "clock_j": 0.0018981950667551375
+     "clock_j": 0.002538010910035115
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 1.1142665776444576,
+      "stage_ucie": 0.17821203144770298,
+      "head_t1": 1.3336711789534963,
+      "head_ucie": 0.054392863769083775
+     },
+     "busiest_link": "head_t1",
+     "cap": 0.7498100099791306,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": true,
+     "aggregate_tokens_s_uncapped": 1287361.5309155614,
+     "utilisation": {
+      "stage_t1": 0.8354882337030024,
+      "stage_ucie": 0.1336251650782033,
+      "head_t1": 0.9999999999999999,
+      "head_ucie": 0.0407843137254902
+     }
+    },
+    "draft_contention": {
+     "isolated_draft_s": 1.477735564076344e-05,
+     "contended_draft_s": 2.4329997373466314e-05,
+     "contention_s": 9.552641732702874e-06,
+     "drafts_per_s": 257472.30618311226,
+     "drafts_in_flight": 6.264300533175436,
+     "engine_work_per_draft_s": 6.6831801621335666e-06,
+     "engine_work_by_unit_s": {
+      "su": 1.1848263569457224e-06,
+      "hc": 1.3247470101195952e-06,
+      "sfu": 2.0975160993560257e-07,
+      "weight": 2.6998003095396525e-06,
+      "bf16": 1.18125818746052e-06,
+      "sel": 8.27966881324747e-08
+     },
+     "head_verify_work_per_pass_s": 5.335084372354752e-05,
+     "head_verify_work_by_unit_s": {
+      "su": 3.1103955841766326e-06,
+      "bf16": 5.024044813937089e-05
+     },
+     "others_load_by_unit": {
+      "bf16": 0.6449176446991515,
+      "hc": 0.34075257633220946,
+      "sel": 0.02129703602076309,
+      "sfu": 0.05395249125259983,
+      "su": 0.32587798195056467,
+      "weight": 0.6944449800834658
+     },
+     "head_unit_load": {
+      "bf16": 0.6578470053591515,
+      "hc": 0.3410856678046749,
+      "sel": 0.021317854237792182,
+      "sfu": 0.0540052307357402,
+      "su": 0.3269579631016868,
+      "weight": 0.6951238119310547
+     },
+     "busiest_head_unit": "weight",
+     "throughput_cap": 1.0,
+     "basis": "per-unit processor sharing of the head group's pooled units among the users' drafts and verify passes (tools/arch_utilization_v41.draft_contention)",
+     "evaluated_at": "the uncapped aggregate (the link cap applies after: an upper bound on the head load)"
+    },
+    "draft_conditioning_us": 0.5434775510204081,
     "hbm": {
      "G": 48,
      "m": 6,
@@ -1398,9 +1638,9 @@
      "static_j": 0.10278349013238776,
      "total_j": 0.18968928104501726
     },
-    "ratio_rate_per_user": 12.508282538118438,
-    "ratio_energy_with_static": 7.645050732546572,
-    "ratio_energy_dynamic": 6.541149316989172
+    "ratio_rate_per_user": 9.355026849394967,
+    "ratio_energy_with_static": 6.465898996361989,
+    "ratio_energy_dynamic": 6.24061918734662
    }
   },
   "200000": {
@@ -1414,6 +1654,24 @@
      "nonclock_j": 0.013168688845056009,
      "clock_j": 0.005107715668970377
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.0061796517034025875,
+      "stage_ucie": 0.0009883526130979715
+     },
+     "busiest_link": "stage_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 8567.550390932485,
+     "utilisation": {
+      "stage_t1": 0.0061796517034025875,
+      "stage_ucie": 0.0009883526130979715
+     }
+    },
+    "draft_contention": null,
+    "draft_conditioning_us": 0.0,
     "hbm": {
      "G": 32,
      "m": null,
@@ -1429,14 +1687,36 @@
    },
    "b1_mtp": {
     "rom": {
-     "tokens_s_per_user": 24863.62688630105,
-     "aggregate_tokens_s": 24863.62688630105,
-     "dynamic_j": 0.012630203935610877,
-     "static_j": 0.598300636643043,
-     "total_j": 0.6109308405786539,
+     "tokens_s_per_user": 24796.612439077035,
+     "aggregate_tokens_s": 24796.612439077035,
+     "dynamic_j": 0.012639714336412818,
+     "static_j": 0.5999175827697334,
+     "total_j": 0.6125572971061463,
      "nonclock_j": 0.009111175836524541,
-     "clock_j": 0.003519028099086334
+     "clock_j": 0.0035285384998882756
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.021462530777982845,
+      "stage_ucie": 0.003432644653166312,
+      "head_t1": 0.02568860926126735,
+      "head_ucie": 0.0010476922992830606
+     },
+     "busiest_link": "head_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 24796.612439077035,
+     "utilisation": {
+      "stage_t1": 0.021462530777982845,
+      "stage_ucie": 0.003432644653166312,
+      "head_t1": 0.02568860926126735,
+      "head_ucie": 0.0010476922992830606
+     }
+    },
+    "draft_contention": null,
+    "draft_conditioning_us": 0.5434775510204081,
     "hbm": {
      "G": 48,
      "m": 6,
@@ -1446,9 +1726,9 @@
      "static_j": 1.2286325019530755,
      "total_j": 2.3909505693668107
     },
-    "ratio_rate_per_user": 2.8804238366850754,
-    "ratio_energy_with_static": 3.913619039271581,
-    "ratio_energy_dynamic": 92.02686459690312
+    "ratio_rate_per_user": 2.8726602866580007,
+    "ratio_energy_with_static": 3.9032276338265506,
+    "ratio_energy_dynamic": 91.95762154729232
    },
    "fill28": {
     "rom": {
@@ -1460,6 +1740,24 @@
      "nonclock_j": 0.013168688845056002,
      "clock_j": 0.005107715668970377
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.17303024769527248,
+      "stage_ucie": 0.027673873166743204
+     },
+     "busiest_link": "stage_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 239891.4109461096,
+     "utilisation": {
+      "stage_t1": 0.17303024769527248,
+      "stage_ucie": 0.027673873166743204
+     }
+    },
+    "draft_contention": null,
+    "draft_conditioning_us": 0.0,
     "hbm": {
      "G": 32,
      "m": null,
@@ -1475,14 +1773,76 @@
    },
    "fill28_mtp": {
     "rom": {
-     "tokens_s_per_user": 24863.62688630105,
-     "aggregate_tokens_s": 696181.5528164294,
-     "dynamic_j": 0.012630203935610849,
-     "static_j": 0.021367879880108676,
-     "total_j": 0.033998083815719525,
+     "tokens_s_per_user": 24477.052842797282,
+     "aggregate_tokens_s": 685357.4795983239,
+     "dynamic_j": 0.012685781089045296,
+     "static_j": 0.021705349745431417,
+     "total_j": 0.034391130834476716,
      "nonclock_j": 0.009111175836524515,
-     "clock_j": 0.003519028099086334
+     "clock_j": 0.0035746052525207797
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.5932062710557606,
+      "stage_ucie": 0.09487540661575518,
+      "head_t1": 0.7100115203616769,
+      "head_ucie": 0.028957332595142903
+     },
+     "busiest_link": "head_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 685357.4795983239,
+     "utilisation": {
+      "stage_t1": 0.5932062710557606,
+      "stage_ucie": 0.09487540661575518,
+      "head_t1": 0.7100115203616769,
+      "head_ucie": 0.028957332595142903
+     }
+    },
+    "draft_contention": {
+     "isolated_draft_s": 1.477735564076344e-05,
+     "contended_draft_s": 1.7409867816177252e-05,
+     "contention_s": 2.6325121754138116e-06,
+     "drafts_per_s": 137071.49591966477,
+     "drafts_in_flight": 2.386396625327043,
+     "engine_work_per_draft_s": 6.6831801621335666e-06,
+     "engine_work_by_unit_s": {
+      "su": 1.1848263569457224e-06,
+      "hc": 1.3247470101195952e-06,
+      "sfu": 2.0975160993560257e-07,
+      "weight": 2.6998003095396525e-06,
+      "bf16": 1.18125818746052e-06,
+      "sel": 8.27966881324747e-08
+     },
+     "head_verify_work_per_pass_s": 1.4833495139457095e-06,
+     "head_verify_work_by_unit_s": {
+      "su": 1.1315547378104875e-07,
+      "bf16": 1.3701940401646607e-06
+     },
+     "others_load_by_unit": {
+      "bf16": 0.3372409674078537,
+      "hc": 0.17509987387818918,
+      "sel": 0.010943742117386824,
+      "sfu": 0.027724146697379954,
+      "su": 0.17156215724232562,
+      "weight": 0.35684903614465363
+     },
+     "head_unit_load": {
+      "bf16": 0.34973137360814455,
+      "hc": 0.1815850543921962,
+      "sel": 0.011349065899512262,
+      "sfu": 0.028750966945431063,
+      "su": 0.1779163112142636,
+      "weight": 0.3700656671129742
+     },
+     "busiest_head_unit": "weight",
+     "throughput_cap": 1.0,
+     "basis": "per-unit processor sharing of the head group's pooled units among the users' drafts and verify passes (tools/arch_utilization_v41.draft_contention)",
+     "evaluated_at": "the point's aggregate"
+    },
+    "draft_conditioning_us": 0.5434775510204081,
     "hbm": {
      "G": 48,
      "m": 6,
@@ -1492,9 +1852,9 @@
      "static_j": 0.19055439940007576,
      "total_j": 0.6690190375197551
     },
-    "ratio_rate_per_user": 12.50867784602054,
-    "ratio_energy_with_static": 19.678139542982834,
-    "ratio_energy_dynamic": 37.88257422911824
+    "ratio_rate_per_user": 12.314195753929367,
+    "ratio_energy_with_static": 19.453243359159075,
+    "ratio_energy_dynamic": 37.71660844225458
    },
    "sat1024": {
     "rom": {
@@ -1506,6 +1866,24 @@
      "nonclock_j": 0.01028142825189368,
      "clock_j": 0.001375473980983303
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 0.6425343696630035,
+      "stage_ucie": 0.102764776032931
+     },
+     "busiest_link": "stage_t1",
+     "cap": 1.0,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": false,
+     "aggregate_tokens_s_uncapped": 890818.1001467666,
+     "utilisation": {
+      "stage_t1": 0.6425343696630035,
+      "stage_ucie": 0.102764776032931
+     }
+    },
+    "draft_contention": null,
+    "draft_conditioning_us": 0.0,
     "hbm": {
      "G": 32,
      "m": null,
@@ -1521,14 +1899,76 @@
    },
    "sat1024_mtp": {
     "rom": {
-     "tokens_s_per_user": 1515.038431518883,
-     "aggregate_tokens_s": 1551399.3538753362,
-     "dynamic_j": 0.008912066365664656,
-     "static_j": 0.00958871341422794,
-     "total_j": 0.018500779779892597,
+     "tokens_s_per_user": 942.6528929126425,
+     "aggregate_tokens_s": 965276.562342546,
+     "dynamic_j": 0.009870933620452745,
+     "static_j": 0.015411048372735695,
+     "total_j": 0.02528198199318844,
      "nonclock_j": 0.007332922710417631,
-     "clock_j": 0.0015791436552470253
+     "clock_j": 0.0025380109100351135
     },
+    "link_cap": {
+     "utilisation_uncapped": {
+      "stage_t1": 1.3348708324097294,
+      "stage_ucie": 0.2134947305580322,
+      "head_t1": 1.5977135027903293,
+      "head_ucie": 0.06516164874125266
+     },
+     "busiest_link": "head_t1",
+     "cap": 0.6258944411833213,
+     "t1_link_Bps": 171294117647.05884,
+     "ucie_Bps": 4200000000000.0,
+     "binds": true,
+     "aggregate_tokens_s_uncapped": 1542235.3975817168,
+     "utilisation": {
+      "stage_t1": 0.8354882337030025,
+      "stage_ucie": 0.1336251650782033,
+      "head_t1": 1.0,
+      "head_ucie": 0.040784313725490205
+     }
+    },
+    "draft_contention": {
+     "isolated_draft_s": 1.477735564076344e-05,
+     "contended_draft_s": 3.384392791223121e-05,
+     "contention_s": 1.9066572271467773e-05,
+     "drafts_per_s": 308447.07951634336,
+     "drafts_in_flight": 10.439060723889373,
+     "engine_work_per_draft_s": 6.6831801621335666e-06,
+     "engine_work_by_unit_s": {
+      "su": 1.1848263569457224e-06,
+      "hc": 1.3247470101195952e-06,
+      "sfu": 2.0975160993560257e-07,
+      "weight": 2.6998003095396525e-06,
+      "bf16": 1.18125818746052e-06,
+      "sel": 8.27966881324747e-08
+     },
+     "head_verify_work_per_pass_s": 5.335084372354752e-05,
+     "head_verify_work_by_unit_s": {
+      "su": 3.1103955841766326e-06,
+      "bf16": 5.024044813937089e-05
+     },
+     "others_load_by_unit": {
+      "bf16": 0.772599457335577,
+      "hc": 0.40821530892177055,
+      "sel": 0.02551345680761066,
+      "sfu": 0.06463409057928034,
+      "su": 0.3903958188802063,
+      "weight": 0.8319322927072135
+     },
+     "head_unit_load": {
+      "bf16": 0.7880885932147355,
+      "hc": 0.4086143463693969,
+      "sel": 0.025538396648087307,
+      "sfu": 0.06469727150848785,
+      "su": 0.39168961640326655,
+      "weight": 0.8327455207548257
+     },
+     "busiest_head_unit": "weight",
+     "throughput_cap": 1.0,
+     "basis": "per-unit processor sharing of the head group's pooled units among the users' drafts and verify passes (tools/arch_utilization_v41.draft_contention)",
+     "evaluated_at": "the uncapped aggregate (the link cap applies after: an upper bound on the head load)"
+    },
+    "draft_conditioning_us": 0.5434775510204081,
     "hbm": {
      "G": 48,
      "m": 6,
@@ -1538,9 +1978,9 @@
      "static_j": 0.10278349013238776,
      "total_j": 0.18563438642572766
     },
-    "ratio_rate_per_user": 15.035465664282272,
-    "ratio_energy_with_static": 10.033868227948028,
-    "ratio_energy_dynamic": 9.296485561702942
+    "ratio_rate_per_user": 9.355026849394967,
+    "ratio_energy_with_static": 7.342556706026526,
+    "ratio_energy_dynamic": 8.393420468522997
    }
   }
  },

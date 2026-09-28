@@ -232,3 +232,22 @@ def test_rom_over_hbm_ratios_come_from_the_two_blocks(rec):
 def test_leakage_is_one_value_across_the_models(cfg):
     tech = json.loads((ROOT / "configs/hardware/technology.json").read_text())
     assert tech["power"]["static_leakage_w_per_mm2"]["logic"]["value"] == P.val(cfg["die"]["leakage_w_per_mm2"]["logic"]) == 0.1
+
+
+def test_both_v41_machines_charge_their_always_on_links(rec):
+    """The ROM array's die-side 112G lanes (the rack's gate C4) and the comparator's own fabric lanes, plus UCIe
+    idle on every die, are static power on both machines."""
+    lanes = json.loads(P.V41_LANES.read_text())["static_w"]
+    sw = json.loads(P.V41_SWITCHED.read_text())
+    for s in P.SCENARIOS:
+        rom = rec["scenarios"][s]["deepseek_v41_design_point"]
+        hbm = rec["scenarios"][s]["deepseek_v41_hbm_comparator"]
+        assert rom["links_always_on"]["serdes_w_array"] == pytest.approx(lanes["rom_serdes"], rel=1e-5)   # 6 s.f. record
+        assert hbm["links_always_on"]["serdes_w_per_die"] == pytest.approx(sw["hbm_static_w_per_die"]["serdes"], rel=1e-5)
+        assert hbm["links_always_on"]["dies"] == sw["dies"]
+        assert rom["die_static_w"]["links_always_on_w"] > 0 and hbm["die_static_w"]["links_always_on_w"] > 0
+        for body, links in ((rom, rom["links_always_on"]), (hbm, hbm["links_always_on"])):
+            for ctx, pts in body["per_context"].items():
+                for k, r in pts.items():
+                    assert r["array_links_always_on_j_per_token"] == pytest.approx(
+                        links["array_w"] / r["design_rate_tokens_s"], rel=1e-4)

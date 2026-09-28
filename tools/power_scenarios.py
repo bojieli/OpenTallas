@@ -37,9 +37,19 @@ class allows:
   priced at the same boundary: the logic dies plus their stacks; switches and the wall chain are outside it (they are
   in v41_hbm_switched.json energy.*.wall_j).
 
-The die's power is static (leakage + clock + HBM idle) plus dynamic energy per token x rate, so the cooling-capped
-rate is (cooling - static) / dynamic energy per token -- per die for the V4.1 array (see v41_points).  The top-level
-cooling_limit_w / capped_rate / binds of each point are the AIR class; cooling_classes carries both.
+The die's power is static (leakage + clock + HBM idle, and on the V4.1 machines the always-on links) plus dynamic
+energy per token x rate, so the cooling-capped rate is (cooling - static) / dynamic energy per token -- per die for
+the V4.1 array (see v41_points).  The top-level cooling_limit_w / capped_rate / binds of each point are the AIR class;
+cooling_classes carries both.
+
+Always-on links (both V4.1 machines, the same rule): a 112G PAM4 lane transmits idle symbols when it carries no data,
+so its power is static, and a UCIe link idles at its idle share.  The ROM array charges the rack's die-side lanes
+(results/arch/v41_lanes.json static_w.rom_serdes: 84 lanes per layer/head package, 2 per table package, 0.728 W a
+lane -- the rack's gate C4) and every die's UCIe idle (results/arch/arch_budget_v41.json power.static_w_per_die); the
+switched HBM comparator charges the lanes that carry its own fabric's 0.9 TB/s per package per direction
+(results/arch/v41_hbm_switched.json hbm_static_w_per_die.serdes, tools/arch_hbm_switched_v41.serdes_w_per_die) and
+the same UCIe idle per die.  The per-bit link energy of the dynamic term is kept on both (a conservative overlap with
+the always-on charge, the rack's C4 note).  The switch ASICs stay outside the boundary on both machines.
 """
 from __future__ import annotations
 
@@ -304,13 +314,38 @@ def _v41_energy(cfg, scenario, V, E, ctx, users, positions, hbm_die_pj=None, wei
     return dyn, bits * (hb["total"] - die_pj) * 1e-12, bits * hb["stack_high"] * 1e-12
 
 
+def v41_links_static():
+    """Always-on link watts of both V4.1 machines, from their records (see the module doc): per hottest die and per
+    machine.  ROM: a layer die's lanes (the budget's serdes_always_on, 84 lanes per package / 2) + UCIe idle; the
+    array = the rack's die-side lanes (v41_lanes static_w.rom_serdes) + every die's UCIe idle.  HBM comparator: its
+    fabric's lanes per die + the same UCIe idle, x its dies."""
+    sw = json.loads(V41_REC.read_text())["power"]["static_w_per_die"]
+    ln = json.loads(V41_LANES.read_text())["static_w"]
+    hs = json.loads(V41_SWITCHED.read_text())
+    dies_rom = json.loads(CFG.read_text())["design_points"]["v41"]["dies"]
+    return dict(
+        rom=dict(serdes_w_per_die=sw["serdes_always_on"], ucie_idle_w_per_die=sw["ucie_idle"],
+                 serdes_w_array=ln["rom_serdes"], ucie_idle_w_array=sw["ucie_idle"] * dies_rom,
+                 array_w=ln["rom_serdes"] + sw["ucie_idle"] * dies_rom, dies=dies_rom,
+                 source="results/arch/v41_lanes.json static_w.rom_serdes (4,944 die-side lanes x 0.728 W, rack gate "
+                        "C4); results/arch/arch_budget_v41.json power.static_w_per_die (serdes_always_on, ucie_idle)"),
+        hbm=dict(serdes_w_per_die=hs["hbm_static_w_per_die"]["serdes"], ucie_idle_w_per_die=sw["ucie_idle"],
+                 dies=hs["dies"], array_w=(hs["hbm_static_w_per_die"]["serdes"] + sw["ucie_idle"]) * hs["dies"],
+                 source="results/arch/v41_hbm_switched.json hbm_static_w_per_die.serdes (the lanes of 0.9 TB/s per "
+                        "package per direction, 0.728 W a lane, shared by 2 dies) and dies; UCIe idle as the ROM die"))
+
+
 def _v41_static(cfg, E, V, D):
     """Per-die static watts of an ACTIVE die: leakage over the die's whole logic and ROM area, clock over the
-    whole logic (ungated: the conservative end -- the populated blocks are 87 mm2 of 526), 5 stacks' idle."""
+    whole logic (ungated: the conservative end -- the populated blocks are 87 mm2 of 526), 5 stacks' idle, and a
+    layer die's always-on links (112G lanes + UCIe idle, v41_links_static)."""
     d = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]
     logic = d["total_mm2"] - d["rom_mm2"] - d["sram_mm2"]
     ar = dict(logic=logic, clocked_logic=logic, rom=d["rom_mm2"], sram=d["sram_mm2"])
-    return _die_static(cfg, ar, E["clock"], cfg["design_points"]["v41"]["hbm_stacks_per_die"])
+    st = _die_static(cfg, ar, E["clock"], cfg["design_points"]["v41"]["hbm_stacks_per_die"])
+    lk = v41_links_static()["rom"]
+    st["links_always_on_w"] = lk["serdes_w_per_die"] + lk["ucie_idle_w_per_die"]
+    return st
 
 
 def _spec_rates(ctx):
@@ -351,6 +386,7 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
     dp = cfg["design_points"]["v41"]
     st = _v41_static(cfg, E, V, D)
     static_w = sum(st.values())
+    links = v41_links_static()["rom"]
     n_pkg = dp["dies_per_package"]
     cool = cooling_w(cfg, "air", n_pkg)
     ad = E["designs"][D.ARRAY_DESIGN]["area_split_per_device"]
@@ -398,10 +434,11 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
             # holds the array (idle dies' clock gated: leakage + HBM idle only; active dies clock too)
             active = min(dies, ld) if (k.startswith("sat") or k.startswith("fill")) else ld / stages
             idle_static = st["leakage_w"] + st["hbm_idle_w"]
-            arr_static = (dies * idle_static + active * st["clock_w"]) / p["rate"]
+            arr_static = (dies * idle_static + active * st["clock_w"] + links["array_w"]) / p["rate"]
             res[k] = dict(design_rate_tokens_s=p["rate"], basis=p["basis"],
                           array_dynamic_j_per_token=e_dyn, stack_j_per_token=p["stk"],
                           array_static_j_per_token=arr_static,
+                          array_links_always_on_j_per_token=links["array_w"] / p["rate"],
                           energy_per_token_j=e_dyn + p["stk"] + arr_static,
                           die_components_j_per_token=p["dyn"],
                           hottest_die_w=die_w, die_over_cooling=die_w / cool,
@@ -409,7 +446,7 @@ def v41_points(cfg, scenario, hbm_die_pj=None, V=None, rates=_spec_rates, tau=No
                           hottest_die_stacks_w_high=p["stk_hi"] * p["per_die"] * p["rate"],
                           cooling_classes=classes, **cap)
         out[str(ctx)] = res
-    return dict(per_context=out, die_static_w=st, cooling_limit_w=cool, dies_per_package=n_pkg,
+    return dict(per_context=out, die_static_w=st, links_always_on=links, cooling_limit_w=cool, dies_per_package=n_pkg,
                 layer_dies=ld, stages=stages, dies=dies, mtp_tau=tau, mtp_gamma=g,
                 kv_in_hbm="every point charges the users' KV and index-key reads from attached HBM (die share "
                           "hbm_controller_phy_io + the stacks' share), as the HBM comparator does")
@@ -426,7 +463,8 @@ def v41_hbm_comparator(cfg, scenario, hbm_die_pj=None):
     component list (tools/arch_budget_v41 token_workload), the same MAC, SRAM, stream and link energies and the same
     HBM path split for KV and index keys; the weights are read from the die's stacks instead of ROM.  The die is the
     ROM die with its ROM array re-spent on logic (iso total logic area): leakage and ungated clock over the whole
-    non-SRAM area, 4 stacks idle.  Links are priced on the same collective bytes as the ROM array (tensor group 4),
+    non-SRAM area, 4 stacks idle, its fabric's always-on lanes and UCIe idle (v41_links_static).  Links are priced
+    on the same collective bytes as the ROM array (tensor group 4),
     which favours the comparator (its G-way all-reduces cross the switch); switches and the wall chain are outside
     the boundary on both machines."""
     import arch_budget_v41 as V
@@ -443,6 +481,9 @@ def v41_hbm_comparator(cfg, scenario, hbm_die_pj=None):
     logic = ad["total_mm2"] - ad["sram_mm2"]
     ar = dict(logic=logic, clocked_logic=logic, rom=0.0, sram=ad["sram_mm2"])
     st = _die_static(cfg, ar, E["clock"], stacks)
+    links = v41_links_static()["hbm"]
+    assert links["dies"] == dies, "comparator die count differs between its record and its link charge"
+    st["links_always_on_w"] = links["serdes_w_per_die"] + links["ucie_idle_w_per_die"]
     static_w = sum(st.values())
     cool = cooling_w(cfg, "air", n_pkg)
     grid = {str(ctx): {r["G"]: r for r in cf["grid"]} for ctx, cf in sw["configs"][sw["headline_config"]].items()}
@@ -469,18 +510,20 @@ def v41_hbm_comparator(cfg, scenario, hbm_die_pj=None):
             die_w = static_w + e_dyn * per_die * rate
             classes = _class_caps(cfg, n_pkg, static_w, e_dyn * per_die, stk_hi * per_die, rate, logic)
             cap = {k: classes["air"][k] for k in ("thermal_rate_limit", "capped_rate", "binds")}
-            arr_static = (dies * (st["leakage_w"] + st["hbm_idle_w"]) + active * st["clock_w"]) / rate
+            arr_static = (dies * (st["leakage_w"] + st["hbm_idle_w"]) + active * st["clock_w"] + links["array_w"]) / rate
             res[key] = dict(design_rate_tokens_s=rate, tokens_s_per_user=h["tokens_s_per_user"], batch=bt,
                             tensor_group=G, stages=stages, lane_mult=h.get("m"),
                             basis=("per user" if bt == 1 else "aggregate tokens/s of the machine")
                                   + (f", gamma {g}, tau {tau}" if mtp else ""),
                             array_dynamic_j_per_token=e_dyn, stack_j_per_token=stk, array_static_j_per_token=arr_static,
+                            array_links_always_on_j_per_token=links["array_w"] / rate,
                             energy_per_token_j=e_dyn + stk + arr_static, die_components_j_per_token=dyn,
                             hottest_die_w=die_w, die_over_cooling=die_w / cool,
                             hottest_die_stacks_w=stk * per_die * rate, hottest_die_stacks_w_high=stk_hi * per_die * rate,
                             cooling_classes=classes, **cap)
         out[ctx] = res
-    return dict(per_context=out, die_static_w=st, die_area_mm2=ar, cooling_limit_w=cool, dies_per_package=n_pkg,
+    return dict(per_context=out, die_static_w=st, links_always_on=links, die_area_mm2=ar, cooling_limit_w=cool,
+                dies_per_package=n_pkg,
                 dies=dies, packages=math.ceil(dies / n_pkg), stacks_per_die=stacks, mtp_tau=tau, mtp_gamma=g,
                 source=f"{V41_SWITCHED.relative_to(ROOT)} (headline fabric {sw['headline_config']}: rates, tensor "
                        "group, lane multiplier per point)")

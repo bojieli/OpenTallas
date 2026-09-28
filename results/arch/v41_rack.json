@@ -6786,8 +6786,8 @@
   "rates": {
    "b1": 8184.912902114869,
    "fill": 229177.56125921634,
-   "b1_mtp": 23817.724415076806,
-   "fill_mtp": 666896.2836221505,
+   "b1_mtp": 23756.222412952255,
+   "fill_mtp": 657435.4241015048,
    "source": "results/arch/v41_lanes.json energy[1048576] aggregate_tokens_s (design point with the levers)"
   },
   "rows": {
@@ -6796,52 +6796,52 @@
     "messages_per_token": 836,
     "Bps_b1": 267059171590.69403,
     "Bps_fill": 7477656804539.433,
-    "Bps_fill_mtp": 26111569592149.27,
+    "Bps_fill_mtp": 25741140339742.676,
     "capacity_Bps": 789600000000000.0,
-    "utilisation_fill_mtp": 0.03306936371852744
+    "utilisation_fill_mtp": 0.03260022839379771
    },
    "T1_tp_trace": {
     "bytes_per_token": 15784960.0,
     "messages_per_token": 1672,
     "Bps_b1": 129198522763.36713,
     "Bps_fill": 3617558637374.2793,
-    "Bps_fill_mtp": 12632317393349.16,
+    "Bps_fill_mtp": 12453110246430.346,
     "capacity_Bps": 39740235294117.65,
-    "utilisation_fill_mtp": 0.31787223452144475
+    "utilisation_fill_mtp": 0.3133627708609379
    },
    "T2_stage_hop": {
     "bytes_per_token": 1146880,
     "messages_per_token": 56,
     "Bps_b1": 9387112909.177502,
     "Bps_fill": 262839161456.97003,
-    "Bps_fill_mtp": 917820011712.6864,
+    "Bps_fill_mtp": 904799447032.2407,
     "capacity_Bps": 10699294117647.059,
-    "utilisation_fill_mtp": 0.08578323033468765
+    "utilisation_fill_mtp": 0.08456627484797288
    },
    "T2_token_return": {
     "bytes_per_token": 10240,
     "messages_per_token": 1,
     "Bps_b1": 83813508.11765626,
     "Bps_fill": 2346778227.2943754,
-    "Bps_fill_mtp": 8194821533.148985,
+    "Bps_fill_mtp": 8078566491.359291,
     "capacity_Bps": 368941176470.58826,
-    "utilisation_fill_mtp": 0.022211729283088764
+    "utilisation_fill_mtp": 0.021896624737421547
    },
    "T3_engram": {
     "bytes_per_token": 13888,
     "messages_per_token": 124,
     "Bps_b1": 113672070.3845713,
     "Bps_fill": 3182817970.7679963,
-    "Bps_fill_mtp": 11114226704.333313,
+    "Bps_fill_mtp": 10956555803.906038,
     "capacity_Bps": 105411764705.88235,
-    "utilisation_fill_mtp": 0.105436302440662
+    "utilisation_fill_mtp": 0.10394054055044791
    },
    "hbm_kv_index": {
     "bytes_per_token": 188317696,
     "messages_per_token": null,
     "Bps_b1": 1541363939686.9458,
     "Bps_fill": 43158190311234.48,
-    "Bps_fill_mtp": 150706045923223.1
+    "Bps_fill_mtp": 148568069202693.9
    },
    "T4_kv_ingest": {
     "bytes_per_user_1m": 933232640.0,
@@ -6913,8 +6913,8 @@
   "dynamic_w": {
    "b1": 280.4696038538643,
    "fill": 7853.148907908207,
-   "fill_mtp": 11230.285903316395,
-   "saturated_mtp": 17147.43080053413
+   "fill_mtp": 11105.723560295019,
+   "saturated_mtp": 13442.275611031238
   },
   "scenarios": {
    "b1": {
@@ -6928,14 +6928,14 @@
     "rack_input_w": 30891.546121352665
    },
    "fill_mtp": {
-    "dynamic_w": 11230.285903316395,
-    "chips_w": 26106.20969864539,
-    "rack_input_w": 35080.61931010133
+    "dynamic_w": 11105.723560295019,
+    "chips_w": 25981.647355624016,
+    "rack_input_w": 34926.10950721562
    },
    "saturated_mtp": {
-    "dynamic_w": 17147.43080053413,
-    "chips_w": 32023.35459586313,
-    "rack_input_w": 42420.37279850839
+    "dynamic_w": 13442.275611031238,
+    "chips_w": 28318.199406360236,
+    "rack_input_w": 37824.41880386639
    }
   },
   "wall_factor": 1.2404214559386975,
@@ -7086,7 +7086,7 @@
    "severity": "resolved-in-model",
    "item": "SerDes power in static power",
    "status": "PASS (analytical)",
-   "gate_finding": "84 always-on lanes per layer/head package (TP 52, stage 14 + 14, switch 4) and 2 per table package, 4,944 die-side lanes at 0.728 W = 3.60 kW, equal to the rack power's SerDes term; every T1/T2 lane is charged at both ends; the 312 switch-side lanes (227 W) sit inside the assumed switch tray; passive DACs draw nothing; spares are power-gated (+253 W if kept hot).",
+   "gate_finding": "84 always-on lanes per layer/head package (TP 52, stage 14 + 14, switch 4) and 2 per table package, 4,944 die-side lanes at 0.728 W = 3.60 kW, equal to the rack power's SerDes term; every T1/T2 lane is charged at both ends; the 312 switch-side lanes (227 W) sit inside the assumed switch tray; passive DACs draw nothing; spares are power-gated (+253 W if kept hot). The power-scenario record charges the same lanes (and UCIe idle) on the ROM array and the comparator's 2.46 kW of fabric lanes: 1M batch-1 energy 2.07 J vs 6.70 J (3.24x).",
    "finding": "84 always-on 112G lanes per layer/head package at ~0.73 W each = 61 W per package (31 W per die); table packages 1.46 W; 3.60 kW per rack. The rack power scenarios carry it as static. The utilisation record (results/arch/v41_lanes.json static_w) charges 3599 W of ROM SerDes in a ROM chip static total of 14876 W; batch-1 energy 1.852 J per token at 1M at the chips (the comparator's SerDes is charged on the same basis in results/arch/v41_hbm_switched.json)."
   },
   {
@@ -7106,8 +7106,8 @@
    "severity": "resolved-in-model",
    "item": "two-die package link bandwidth (T1 on-module TP link)",
    "status": "PASS (analytical)",
-   "gate_finding": "busiest layer stage S14: 123.6 KB per position on one T1 link and 484.5 KB on UCIe with the adopted relay (233.6 / 254.1 KB without levers). At the 28-user fill with MTP (800276 positions/s through every stage) T1 runs at 58% (109% without the relay) and UCIe at 9.2%; the head module's draft traffic at 69% of a T1 link; the relay's UCIe burst peaks at 40% of UCIe (bench). Batch 1 averages 0.59%; its in-window demand equals the fill's. Margin 1.45x.",
-   "finding": "a two-die package has 90 lanes = 1.19 TB/s per direction (1.687 TB/s is the four-die package's 128). R-L9 split: TP 52 lanes = 13 per die pair (171 GB/s per peer), stage 14 + 14, switch 4, spare 6. A 20 KB one-shot partial crosses a peer link in 120 ns; all-reduces whose payload would outlast a board flight run as a fixed-order reduce-scatter + all-gather (each peer receives n/2), bit-identical on every die. Priced on the lanes (collective bytes on their peer links, hops on the stage lanes): 8622 / 23578 tok/s/user at 1M without / with MTP, against 8386 / 18764 at the first rack split and 8,832 with overlap assumed."
+   "gate_finding": "busiest layer stage S14: 123.6 KB per position on one T1 link and 484.5 KB on UCIe with the adopted relay (233.6 / 254.1 KB without levers). At the 28-user fill with MTP (788923 positions/s through every stage) T1 runs at 57% (108% without the relay) and UCIe at 9.1%; the head module's draft traffic at 68% of a T1 link; the relay's UCIe burst peaks at 40% of UCIe (bench). Batch 1 averages 0.59%; its in-window demand equals the fill's. Margin 1.47x.",
+   "finding": "a two-die package has 90 lanes = 1.19 TB/s per direction (1.687 TB/s is the four-die package's 128). R-L9 split: TP 52 lanes = 13 per die pair (171 GB/s per peer), stage 14 + 14, switch 4, spare 6. A 20 KB one-shot partial crosses a peer link in 120 ns; all-reduces whose payload would outlast a board flight run as a fixed-order reduce-scatter + all-gather (each peer receives n/2), bit-identical on every die. Priced on the lanes (collective bytes on their peer links, hops on the stage lanes): 8622 / 23517 tok/s/user at 1M without / with MTP, against 8386 / 18740 at the first rack split and 8,832 with overlap assumed."
   },
   {
    "id": "C9",
@@ -7120,7 +7120,7 @@
    "severity": "resolved-in-model",
    "item": "head + DSpark draft KV: SRAM at the fill, HBM beyond it",
    "status": "PASS (analytical; routed head-die floorplan under K2)",
-   "finding": "Spec ruling (C10): the head dies carry 4 HBM3E stacks each, so users beyond the fill page their draft windows to HBM and all 29 stage modules stay identical. DSpark state = 3 stages x 128 window rows x 528 B = 203 KB per user (50.7 KB per head die, row-striped 4 ways), the same at 1M and 200K (window-only draft attention). The 28-user fill needs 1.42 MB per head die (2.84 double-buffered); 112 compiler macros (1.87 mm2 block) fit the right-sized head die's 64.8 mm2 of released engine area, so no ROM is displaced (the head die's 69 MB 'spare' ROM is Engram spill). Interleaving a slot across a 28-macro bank reads a stage's window in 20.9 cycles against the model's 31.5 (the 4-macro row read took 134: -32 tok/s at 1M). Beyond the fill, windows page to the head HBM: 51.9 MB per die at 1,024 users, prefetch 1.01 us under a 14.2 us draft. Unstaged HBM would cost 86-337 tok/s/user at 1M with MTP. Open: head-group occupancy at the fill with MTP: a draft takes 14.2 us and 28 run per 210 us verify cycle, so 1.9 drafts must overlap on the head dies' engines; the rate model prices one draft per user serially and does not check it (the 4 SRAM banks allow 4 concurrent readers); draft conditioning transport: 184 KB per verify (layers 37-39 inputs x 6 positions) over the S27 -> H hop is 0.50 us of serialisation (0.24% of the period) if not overlapped; unpriced; a routed head-die floorplan (K2) remains"
+   "finding": "Spec ruling (C10): the head dies carry 4 HBM3E stacks each, so users beyond the fill page their draft windows to HBM and all 29 stage modules stay identical. DSpark state = 3 stages x 128 window rows x 528 B = 203 KB per user (50.7 KB per head die, row-striped 4 ways), the same at 1M and 200K (window-only draft attention). The 28-user fill needs 1.42 MB per head die (2.84 double-buffered); 112 compiler macros (1.87 mm2 block) fit the right-sized head die's 64.8 mm2 of released engine area, so no ROM is displaced (the head die's 69 MB 'spare' ROM is Engram spill). Interleaving a slot across a 28-macro bank reads a stage's window in 20.9 cycles against the model's 31.5 (the 4-macro row read took 134: -32 tok/s at 1M). Beyond the fill, windows page to the head HBM: 51.9 MB per die at 1,024 users, prefetch 1.01 us under a 14.8 us draft. Unstaged HBM would cost 86-335 tok/s/user at 1M with MTP. Open: a routed head-die floorplan (K2) remains"
   },
   {
    "id": "C7",
@@ -7539,29 +7539,26 @@
    "passive_cables_w": 0.0,
    "dynamic_double_count_w": {
     "b1": 3.768925833034767,
-    "fill28_mtp": 368.50473470264353
+    "fill28_mtp": 363.27697798344457
    },
    "dynamic_note": "conservative overlap: the energy per token also charges each collective bit at 7.0 pJ (board + UCIe) x 4, on lanes already charged always-on; not removed",
    "spare_hot_sensitivity_w": 253.344,
    "power_scenarios_crosscheck": {
     "record": "results/arch/power_scenarios.json",
-    "rom_die_static_terms": [
-     "clock_w",
-     "hbm_idle_w",
-     "leakage_w"
-    ],
-    "omits_serdes": true,
-    "rom_j_per_token_1m_b1": 1.5734,
-    "hbm_j_per_token_1m_b1": 5.94474,
-    "ratio": 3.77827,
-    "rom_serdes_j_add": 0.4397399604882644,
-    "hbm_serdes_j_add": 0.6874654366296316,
+    "rom_serdes_w": 3599.23,
+    "rom_ucie_idle_w": 473.76,
+    "rom_serdes_matches_c4": true,
     "hbm_serdes_w": 2461.3875000000003,
-    "ratio_with_serdes": 3.2944581930712187,
-    "status": "NOT APPLIED here: it changes the published ROM:HBM energy ratio; owner tools/power_scenarios.py",
-    "note": "the rack power (this record) and results/arch/v41_hbm_switched.json charge always-on SerDes; tools/power_scenarios.py prices die static as leakage + clock + HBM idle only (and links per collective bit), so both machines' always-on lanes are missing there"
+    "hbm_links_w": 2710.87,
+    "hbm_dies": 99,
+    "hbm_serdes_matches_switched": true,
+    "rom_j_per_token_1m_b1": 2.07102,
+    "hbm_j_per_token_1m_b1": 6.70189,
+    "ratio": 3.23602,
+    "status": "APPLIED in tools/power_scenarios.py (always-on 112G lanes + UCIe idle on both machines)",
+    "note": "the rack power (this record), results/arch/v41_hbm_switched.json and results/arch/power_scenarios.json now charge the same always-on lanes: the ROM array's 4,944 die-side lanes (3.60 kW) and the comparator's fabric lanes (2.46 kW on 99 dies), plus UCIe idle on every die"
    },
-   "finding": "84 always-on lanes per layer/head package (TP 52, stage 14 + 14, switch 4) and 2 per table package, 4,944 die-side lanes at 0.728 W = 3.60 kW, equal to the rack power's SerDes term; every T1/T2 lane is charged at both ends; the 312 switch-side lanes (227 W) sit inside the assumed switch tray; passive DACs draw nothing; spares are power-gated (+253 W if kept hot)."
+   "finding": "84 always-on lanes per layer/head package (TP 52, stage 14 + 14, switch 4) and 2 per table package, 4,944 die-side lanes at 0.728 W = 3.60 kW, equal to the rack power's SerDes term; every T1/T2 lane is charged at both ends; the 312 switch-side lanes (227 W) sit inside the assumed switch tray; passive DACs draw nothing; spares are power-gated (+253 W if kept hot). The power-scenario record charges the same lanes (and UCIe idle) on the ROM array and the comparator's 2.46 kW of fabric lanes: 1M batch-1 energy 2.07 J vs 6.70 J (3.24x)."
   },
   "C8": {
    "gate": "C8",
@@ -7908,9 +7905,9 @@
    "rates": {
     "b1": 8184.912902114869,
     "fill": 229177.56125921634,
-    "b1_mtp": 23817.724415076806,
-    "fill_mtp": 666896.2836221505,
-    "sat_mtp": 1290637.8745439025,
+    "b1_mtp": 23756.222412952255,
+    "fill_mtp": 657435.4241015048,
+    "sat_mtp": 965276.562342546,
     "source": "results/arch/v41_lanes.json energy[1048576] aggregate_tokens_s (design point with the levers)"
    },
    "points": {
@@ -7958,40 +7955,40 @@
     },
     "fill28_mtp": {
      "adopted_levers": {
-      "t1_Bps": 98875643560.90073,
-      "t1_utilisation": 0.5772273147442692,
-      "ucie_Bps": 387743102604.40247,
-      "ucie_utilisation": 0.09231978633438154
+      "t1_Bps": 97472953822.30695,
+      "t1_utilisation": 0.5690385353637424,
+      "ucie_Bps": 382242422642.722,
+      "ucie_utilisation": 0.09101010062921952
      },
      "no_levers": {
-      "t1_Bps": 186969975042.25232,
-      "t1_utilisation": 1.0915142773757862,
-      "ucie_Bps": 203359618108.55032,
-      "ucie_utilisation": 0.048418956692511984
+      "t1_Bps": 184317543604.4193,
+      "t1_utilisation": 1.0760296158225027,
+      "ucie_Bps": 200474676587.1379,
+      "ucie_utilisation": 0.047732065854080456
      },
      "head_module": {
-      "drafts_per_s": 133379.2567244301,
-      "t1_utilisation": 0.6908862285060747,
-      "ucie_utilisation": 0.028177320692012463
+      "drafts_per_s": 131487.08482030098,
+      "t1_utilisation": 0.681085037956409,
+      "ucie_utilisation": 0.027777585861751584
      }
     },
     "sat1024_mtp": {
      "adopted_levers": {
-      "t1_Bps": 191353068810.77786,
-      "t1_utilisation": 1.1171023934695135,
-      "ucie_Bps": 750395445445.2183,
-      "ucie_utilisation": 0.1786655822488615
+      "t1_Bps": 143114219796.6555,
+      "t1_utilisation": 0.8354882337030024,
+      "ucie_Bps": 561225693328.4539,
+      "ucie_utilisation": 0.1336251650782033
      },
      "no_levers": {
-      "t1_Bps": 361841169486.52924,
-      "t1_utilisation": 2.1123969372496556,
-      "ucie_Bps": 393559885891.3202,
-      "ucie_utilisation": 0.09370473473602861
+      "t1_Bps": 270623392575.8564,
+      "t1_utilisation": 1.5798755747903703,
+      "ucie_Bps": 294346029371.9868,
+      "ucie_utilisation": 0.07008238794571114
      },
      "head_module": {
-      "drafts_per_s": 258127.5749087805,
-      "t1_utilisation": 1.3370653809430173,
-      "ucie_utilisation": 0.05453129396787208
+      "drafts_per_s": 193055.3124685092,
+      "t1_utilisation": 1.0,
+      "ucie_utilisation": 0.0407843137254902
      }
     }
    },
@@ -8000,15 +7997,26 @@
     "utilisation": 0.3975314285714286,
     "source": "results/rtl/v41_collective_levers_campaign.json claim_boundary: with the receive-side relay at most 3 x 512 B per cycle leave a die on UCIe (40% of its 3,864 B/cycle)"
    },
-   "worst_gated_utilisation": 0.6908862285060747,
-   "margin": 1.447416316521943,
+   "worst_gated_utilisation": 0.681085037956409,
+   "margin": 1.4682454381915264,
    "saturation": {
-    "t1_utilisation": 1.1171023934695135,
-    "ucie_utilisation": 0.1786655822488615,
-    "note": "reported, not gated: at 1,024 users with MTP the busiest stage's T1 link would run at 112% of its rate; the saturated aggregate is then link-bound, which the budget model's occupancy bound does not check"
+    "t1_utilisation": 0.8354882337030024,
+    "ucie_utilisation": 0.1336251650782033,
+    "head_t1_utilisation": 1.0,
+    "uncapped_utilisation": {
+     "stage_t1": 1.1142665776444576,
+     "stage_ucie": 0.17821203144770298,
+     "head_t1": 1.3336711789534963,
+     "head_ucie": 0.054392863769083775
+    },
+    "aggregate_tokens_s": 965276.562342546,
+    "aggregate_tokens_s_uncapped": 1287361.5309155614,
+    "busiest_link": "head_t1",
+    "link_bound": true,
+    "note": "capped in the aggregate model (results/arch/v41_lanes.json energy sat1024_mtp link_cap): uncapped, 1,024 users with MTP would load the busiest stage's T1 link to 111% and the head module's T1 link to 133%, so the aggregate is held at 965,277 tok/s (from 1,287,362) where the head module's T1 link runs at 100%; not gated (the design point is the fill)"
    },
    "not_credited": "two-step all-reduce at the 6-position MTP payloads (would halve the all-reduce T1 bytes again); the relay's measured tails are for one-shot 20 KB all-reduces",
-   "finding": "busiest layer stage S14: 123.6 KB per position on one T1 link and 484.5 KB on UCIe with the adopted relay (233.6 / 254.1 KB without levers). At the 28-user fill with MTP (800276 positions/s through every stage) T1 runs at 58% (109% without the relay) and UCIe at 9.2%; the head module's draft traffic at 69% of a T1 link; the relay's UCIe burst peaks at 40% of UCIe (bench). Batch 1 averages 0.59%; its in-window demand equals the fill's. Margin 1.45x."
+   "finding": "busiest layer stage S14: 123.6 KB per position on one T1 link and 484.5 KB on UCIe with the adopted relay (233.6 / 254.1 KB without levers). At the 28-user fill with MTP (788923 positions/s through every stage) T1 runs at 57% (108% without the relay) and UCIe at 9.1%; the head module's draft traffic at 68% of a T1 link; the relay's UCIe burst peaks at 40% of UCIe (bench). Batch 1 averages 0.59%; its in-window demand equals the fill's. Margin 1.47x."
   },
   "C10": {
    "gate": "C10",
@@ -8078,50 +8086,50 @@
    },
    "rates": {
     "1048576": {
-     "mtp_tokens_s_per_user": 23817.724415076806,
-     "period_s": 0.00020992769556250977,
+     "mtp_tokens_s_per_user": 23756.222412952255,
+     "period_s": 0.00021047117311353018,
      "verify_s": 0.00019569381747276674,
-     "draft_s": 1.4233878089743032e-05,
+     "draft_s": 1.4777355640763445e-05,
      "one_row_per_slot_port": {
       "extra_s_per_verify": 2.830010301892072e-07,
-      "mtp_tokens_s_per_user": 23785.659250670404
+      "mtp_tokens_s_per_user": 23724.322520845326
      },
      "hbm_backed_unstaged": {
       "hbm_first_access_1us": {
        "extra_s_per_verify": 3.01408e-06,
-       "mtp_tokens_s_per_user": 23480.596922759447,
-       "loss": 0.014154479514590146
+       "mtp_tokens_s_per_user": 23420.82147164062,
+       "loss": 0.014118445916248556
       },
       "hbm_budgeted_250ns": {
        "extra_s_per_verify": 7.6408e-07,
-       "mtp_tokens_s_per_user": 23731.3487280217,
-       "loss": 0.003626529787221333
+       "mtp_tokens_s_per_user": 23670.291422960105,
+       "loss": 0.003617199254091097
       }
      },
-     "drafts_in_flight_at_fill": 1.8985040799160768
+     "drafts_in_flight_at_fill": 1.9659032247527177
     },
     "200000": {
-     "mtp_tokens_s_per_user": 24863.62688630105,
-     "period_s": 0.00020109696879158116,
+     "mtp_tokens_s_per_user": 24796.612439077035,
+     "period_s": 0.0002016404463426016,
      "verify_s": 0.00018686309070183813,
-     "draft_s": 1.4233878089743032e-05,
+     "draft_s": 1.4777355640763472e-05,
      "one_row_per_slot_port": {
       "extra_s_per_verify": 2.830010301892072e-07,
-      "mtp_tokens_s_per_user": 24828.685814310167
+      "mtp_tokens_s_per_user": 24761.859333596887
      },
      "hbm_backed_unstaged": {
       "hbm_first_access_1us": {
        "extra_s_per_verify": 3.01408e-06,
-       "mtp_tokens_s_per_user": 24496.469101511135,
-       "loss": 0.014766863517896578
+       "mtp_tokens_s_per_user": 24431.416638348655,
+       "loss": 0.014727648852262742
       },
       "hbm_budgeted_250ns": {
        "extra_s_per_verify": 7.6408e-07,
-       "mtp_tokens_s_per_user": 24769.51363292694,
-       "loss": 0.003785177995329403
+       "mtp_tokens_s_per_user": 24703.004870240457,
+       "loss": 0.0037750143922506973
       }
      },
-     "drafts_in_flight_at_fill": 1.9818726702234108
+     "drafts_in_flight_at_fill": 2.0519988199111556
     }
    },
    "paging": {
@@ -8129,21 +8137,72 @@
     "first_access_s": 1e-06,
     "prefetch_s": 1.01408e-06,
     "hidden_under_draft": true,
-    "sat1024_mtp_draft_passes_per_s": 258127.5749087805,
-    "sat1024_mtp_read_Bps_per_die": 13083970516.976265,
-    "sat1024_mtp_share_of_hbm": 0.0036344362547156292,
+    "sat1024_mtp_draft_passes_per_s": 193055.3124685092,
+    "sat1024_mtp_read_Bps_per_die": 9785587678.403793,
+    "sat1024_mtp_share_of_hbm": 0.0027182187995566094,
     "note": "beyond the fill a user's window is prefetched into the second buffer of its slot while the current user drafts, and written back after its verify"
    },
    "conditioning": {
     "bytes_per_verify": 184320,
-    "hop_serialisation_s": 4.995918367346938e-07,
-    "share_of_period": 0.0023798281374737967,
-    "note": "unpriced in the traffic and rate models: 3 x 5,120 BF16 target-layer inputs per verified position ride S25 -> S26 -> S27 -> H behind the residual"
+    "hop_serialisation_s": 5.43477551020408e-07,
+    "share_of_period": 0.0025821947156974842,
+    "priced": true,
+    "note": "priced on the MTP critical path (results/arch/v41_lanes.json draft_conditioning): 3 x 5,120 BF16 target-layer inputs per verified position ride S25 -> S26 -> S27 -> H behind the residual, and the draft starts once they land"
    },
-   "finding": "DSpark state = 3 stages x 128 window rows x 528 B = 203 KB per user (50.7 KB per head die, row-striped 4 ways), the same at 1M and 200K (window-only draft attention). The 28-user fill needs 1.42 MB per head die (2.84 double-buffered); 112 compiler macros (1.87 mm2 block) fit the right-sized head die's 64.8 mm2 of released engine area, so no ROM is displaced (the head die's 69 MB 'spare' ROM is Engram spill). Interleaving a slot across a 28-macro bank reads a stage's window in 20.9 cycles against the model's 31.5 (the 4-macro row read took 134: -32 tok/s at 1M). Beyond the fill, windows page to the head HBM: 51.9 MB per die at 1,024 users, prefetch 1.01 us under a 14.2 us draft. Unstaged HBM would cost 86-337 tok/s/user at 1M with MTP.",
+   "concurrency": {
+    "fill28_mtp": {
+     "users": 28,
+     "drafts_per_s": 131487.08482030098,
+     "drafts_in_flight": 2.268790423149825,
+     "isolated_draft_s": 1.477735564076344e-05,
+     "contended_draft_s": 1.7254853784693038e-05,
+     "head_unit_load": {
+      "bf16": 0.335483015468698,
+      "hc": 0.17418712248503535,
+      "sel": 0.010886695155314709,
+      "sfu": 0.02757962772679726,
+      "su": 0.17066784707198052,
+      "weight": 0.3549888722983151
+     },
+     "busiest_head_unit": "weight",
+     "throughput_cap": 1.0,
+     "bank_read_utilisation": 0.0018922113008046993,
+     "readers_needed": 0.007568845203218797,
+     "concurrent_readers": 4,
+     "slots_resident": 56,
+     "fits_slots": true
+    },
+    "sat1024_mtp": {
+     "users": 1024,
+     "drafts_per_s": 257472.30618311226,
+     "drafts_in_flight": 6.264300533175436,
+     "isolated_draft_s": 1.477735564076344e-05,
+     "contended_draft_s": 2.4329997373466314e-05,
+     "head_unit_load": {
+      "bf16": 0.6578470053591515,
+      "hc": 0.3410856678046749,
+      "sel": 0.021317854237792182,
+      "sfu": 0.0540052307357402,
+      "su": 0.3269579631016868,
+      "weight": 0.6951238119310547
+     },
+     "busiest_head_unit": "weight",
+     "throughput_cap": 1.0,
+     "bank_read_utilisation": 0.0037052460937114988,
+     "readers_needed": 0.014820984374845995,
+     "concurrent_readers": 4,
+     "slots_resident": 56,
+     "fits_slots": true
+    },
+    "bank_read_s_per_draft": 5.7563411749244316e-08,
+    "basis": "head engines: tools/arch_utilization_v41.draft_contention (per-unit processor sharing among the users' drafts and verify passes, conservative); SRAM: each draft reads 3 stage windows through one bank's 7,168-bit read port (20.9 cycles each), 4 banks serve 4 readers; slots: 28 user slots double-buffered"
+   },
+   "finding": "DSpark state = 3 stages x 128 window rows x 528 B = 203 KB per user (50.7 KB per head die, row-striped 4 ways), the same at 1M and 200K (window-only draft attention). The 28-user fill needs 1.42 MB per head die (2.84 double-buffered); 112 compiler macros (1.87 mm2 block) fit the right-sized head die's 64.8 mm2 of released engine area, so no ROM is displaced (the head die's 69 MB 'spare' ROM is Engram spill). Interleaving a slot across a 28-macro bank reads a stage's window in 20.9 cycles against the model's 31.5 (the 4-macro row read took 134: -32 tok/s at 1M). Beyond the fill, windows page to the head HBM: 51.9 MB per die at 1,024 users, prefetch 1.01 us under a 14.8 us draft. Unstaged HBM would cost 86-335 tok/s/user at 1M with MTP.",
+   "closed_items": [
+    "head-group occupancy at the fill with MTP: 2.3 drafts in flight share the head engines; the aggregate model prices it (per-unit processor sharing: a draft stretches from 14.78 to 17.25 us, the busiest head unit 'weight' at 35% load), and each draft holds a bank's read port for 58 ns, 0.2% of a bank",
+    "draft conditioning transport: 184 KB per verify (layers 37-39 inputs x 6 positions) over the S27 -> H hop, 0.54 us on the MTP critical path (0.26% of the period), priced in every MTP rate"
+   ],
    "open_items": [
-    "head-group occupancy at the fill with MTP: a draft takes 14.2 us and 28 run per 210 us verify cycle, so 1.9 drafts must overlap on the head dies' engines; the rate model prices one draft per user serially and does not check it (the 4 SRAM banks allow 4 concurrent readers)",
-    "draft conditioning transport: 184 KB per verify (layers 37-39 inputs x 6 positions) over the S27 -> H hop is 0.50 us of serialisation (0.24% of the period) if not overlapped; unpriced",
     "a routed head-die floorplan (K2) remains"
    ]
   }
@@ -8222,29 +8281,29 @@
        "1048576": {
         "overlap_assumed": {
          "ar": 8622.047603391655,
-         "mtp": 23577.550266865917
+         "mtp": 23517.280794490536
         },
         "measured_exposure_no_levers": {
          "ar": 7578.981495298372,
-         "mtp": 21005.94986438209
+         "mtp": 20958.097237771664
         },
         "with_adopted_levers": {
          "ar": 8184.912902114869,
-         "mtp": 23817.724415076806
+         "mtp": 23756.222412952255
         }
        },
        "200000": {
         "overlap_assumed": {
          "ar": 9041.220574931696,
-         "mtp": 24602.01201946047
+         "mtp": 24536.398543000123
         },
         "measured_exposure_no_levers": {
          "ar": 7905.41350038117,
-         "mtp": 21815.28744657373
+         "mtp": 21763.680888491566
         },
         "with_adopted_levers": {
          "ar": 8567.550390932485,
-         "mtp": 24863.62688630105
+         "mtp": 24796.612439077035
         }
        }
       },
@@ -8265,11 +8324,11 @@
        "recovered_share": {
         "1048576": {
          "ar": 0.5809137140158217,
-         "mtp": 1.0933948166981589
+         "mtp": 1.0933663464015317
         },
         "200000": {
          "ar": 0.5829659854983235,
-         "mtp": 1.0938789822955386
+         "mtp": 1.0938479601966657
         }
        }
       }
