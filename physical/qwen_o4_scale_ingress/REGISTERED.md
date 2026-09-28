@@ -28,12 +28,17 @@ cross-PC lane rotation and prefetch storage are outside this cut.
 | Analytical ROM macro area | 14629.499 µm² | 0 µm² |
 
 The registered data path resolves the measured source-capture and enable
-**setup** misses in the direct cut. The complete cut remains late in fault
-aggregation or FP32 multiplication and has hold misses at externally
-constrained inputs. The source-pinned
+**setup** misses in the direct cut. The staged-HBM cut has now completed
+detailed route with zero DRC violations. Its extracted source-to-raw-capture
+setup is +925.00 ps, while source hold is −112.58 ps. Group-enable setup is
++934.12 ps and hold is −62.92 ps. The complete cut still misses 0.92 ns
+setup by 114.13 ps on an internal register path, core hold by 33.41 ps at
+the externally constrained completed-sum input, and reset removal by
+20.73 ps. The ROM detailed route remains active. The source-pinned
 `results/physical_hdc/asap7/qwen_o4_scale_ingress/registered/physical.json`
-binds the measured paths and placement checks. Detailed route runs separately;
-until DRC and extraction finish, there is no routed timing result.
+binds the measured paths, placement checks, DRC result, routed source report
+and final ODB/SPEF hashes. The staged-HBM source still excludes the controller,
+PHY, stack and prefetch; its 184 ps arrival remains an assumed condition.
 
 The production matvec's synchronous scale word currently feeds `ot_hdc_fmul`
 directly. Before adding this stage, its actual scale-word producer, completed
