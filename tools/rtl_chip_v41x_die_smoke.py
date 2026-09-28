@@ -198,13 +198,14 @@ KVHBM = re.compile(r"KVHBM ops=(\d+) words=(\d+) sectors_written=(\d+) refetches
                    r"hold_cycles=(\d+) grants=(\d+) code=([01]+) att_issue=(\d+) att_held_cycles=(\d+)")
 
 
-def kvtest(scratch: Path) -> dict:
+def kvtest(scratch: Path, pipe_out: bool = False) -> dict:
     """The focused KV prefetch bench: gate, read-after-write, max descriptor, user slice, eviction, the shared
     K ports under indexer traffic, the region check, and the HBM KV region against the golden at the end."""
-    obj = scratch / "kvobj"
+    obj = scratch / ("kvobj_pipe" if pipe_out else "kvobj")
     obj.mkdir(parents=True, exist_ok=True)
     cmd = [VERILATOR, "--binary", "--timing", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-TIMESCALEMOD",
            "-Wno-BLKSEQ", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_kv_prefetch", "-Mdir", str(obj),
+           *(["-DHDC_KARB_PIPE_OUT"] if pipe_out else []),
            *map(str, KVTB_SOURCES), str(KVTB), "-j", "8"]
     b = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if b.returncode:
@@ -214,6 +215,7 @@ def kvtest(scratch: Path) -> dict:
     log = r.stdout + r.stderr
     m, c, k, g = KVPF.search(log), KVCASES.search(log), KEYS.search(log), REGION.search(log)
     rec = {"pass": "PASS" in log and r.returncode == 0 and all((m, c, k, g)),
+           "karb_pipe_out": pipe_out,
            "log_sha256": hashlib.sha256(log.encode()).hexdigest(), "log_tail": log[-1500:]}
     if m:
         rec["kv"] = dict(zip(("ops", "words_read", "word_mismatches", "min_hold_cycles", "held_ops", "raw_checks",
@@ -321,6 +323,7 @@ def main() -> int:
     ap.add_argument("--image-dir", type=Path, required=False)
     ap.add_argument("--scratch", type=Path, default=Path(os.environ.get("OT_SCRATCH", "/tmp")) / "v41x_die_smoke")
     ap.add_argument("--steps", default="lint,synth,kvtest,smoke")
+    ap.add_argument("--kv-pipe-out", action="store_true", help="run the KV/index gate with registered arbiter outputs")
     ap.add_argument("--obj", type=Path, help="the smoke's Verilator object directory (default <scratch>/obj)")
     ap.add_argument("--reuse-executable", action="store_true")
     ap.add_argument("--reference", type=Path, help="the adopted gate's record on the same images")
@@ -339,7 +342,7 @@ def main() -> int:
     if "synth" in steps:
         rec["synth"] = synth(a.scratch / "synth")
     if "kvtest" in steps:
-        rec["kvtest"] = kvtest(a.scratch)
+        rec["kvtest"] = kvtest(a.scratch, a.kv_pipe_out)
     if "smoke" in steps:
         rec["smoke"] = smoke(a.image_dir, a.obj or a.scratch / "obj", a.reuse_executable)
         rec["smoke"]["image_sha256"] = {n: sha(a.image_dir / n) for n in sorted(os.listdir(a.image_dir))

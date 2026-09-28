@@ -118,3 +118,12 @@ def test_karb_bank4_m9_is_an_independent_routing_sensitivity():
     assert m9["floorplan"] == base["floorplan"]
     assert m9["nickname"] != base["nickname"]
     assert m9["output"] != base["output"]
+
+
+def test_karb_bank4_pipe_m9_keeps_the_same_boundary():
+    direct = pnr.CASES["karb_bank4_m9"]()
+    piped = pnr.CASES["karb_bank4_pipe_m9"]()
+    assert piped["floorplan"] == direct["floorplan"]
+    assert [piped["args"][i + 1] for i, x in enumerate(piped["args"]) if x == "--param"] == ["NPC=4", "PIPE_OUT=1"]
+    assert piped["nickname"] != direct["nickname"]
+    assert piped["output"] != direct["output"]

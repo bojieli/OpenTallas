@@ -32,6 +32,11 @@
 // At the end the HBM KV region is compared with the golden (write-through).
 // ---------------------------------------------------------------------------
 module tb_chip_v41x_kv_prefetch;
+`ifdef HDC_KARB_PIPE_OUT
+    localparam integer KARB_PIPE_OUT = 1;
+`else
+    localparam integer KARB_PIPE_OUT = 0;
+`endif
     localparam integer G = 4, W = 16, SW = 8, SUN = 16, AW = 24, HAW = 28, NPC = 32;
     localparam integer STG = 1024, SAW = 10;
     localparam integer KEY_SECTORS = 1 << 18;          // index-key region [0, KEY_SECTORS)
@@ -92,7 +97,7 @@ module tb_chip_v41x_kv_prefetch;
         wire [NPC*HAW-1:0] h_addr; wire [NPC*4-1:0] h_len, r_beat; wire [NPC*(TAGW+1)-1:0] h_tag, r_tag;
         wire [NPC*256-1:0] h_wdata, r_data; wire [NPC*32-1:0] h_wstrb;
         wire [31:0] kg, bg, ct;
-        ot_chip_v41x_hbm_karb #(.NPC(NPC), .AW(HAW), .TAGW(TAGW)) u_arb (
+        ot_chip_v41x_hbm_karb #(.NPC(NPC), .AW(HAW), .TAGW(TAGW), .PIPE_OUT(KARB_PIPE_OUT)) u_arb (
             .clk(clk), .rst_n(rst_n),
             .b_v(b_v), .b_rdy(b_rdy), .b_addr(b_addr), .b_len(b_len), .b_tag(b_tag), .b_we(b_we), .b_wdata(b_wdata),
             .b_wstrb(b_wstrb), .b_wr_done(b_wr_done), .b_rsp_v(b_rsp_v), .b_rsp_rdy({NPC{1'b1}}),
