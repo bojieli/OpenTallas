@@ -523,10 +523,11 @@ module ot_hdc_matvec #(
     endfunction
     localparam integer NL = G * W;
     localparam integer LV = $clog2(NL);
+    localparam integer AN = 1 << LV;             // pad non-power-of-two lane counts with invalid leaves
     //: The key is an invertible function of the value, so the tree carries only
     //: the key and recovers the value at the end (half the tree's wiring).
     localparam integer CW = 1 + 32 + NW;            // {valid, key, row}
-    wire [CW*NL-1:0] alv [0:LV];
+    wire [CW*AN-1:0] alv [0:LV];
     reg  [LV:0] tv;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) tv <= 0;
@@ -551,8 +552,11 @@ module ot_hdc_matvec #(
                 c <= {r_mask[e], okey(res[32*e +: 32]), row};
             assign alv[0][CW*e +: CW] = c;
         end
+        for (e = NL; e < AN; e = e + 1) begin : g_leaf_pad
+            assign alv[0][CW*e +: CW] = {CW{1'b0}};
+        end
         for (lv = 1; lv <= LV; lv = lv + 1) begin : g_alvl
-            for (e = 0; e < (NL >> lv); e = e + 1) begin : g_node
+            for (e = 0; e < (AN >> lv); e = e + 1) begin : g_node
                 wire [CW-1:0] x0 = alv[lv-1][CW*(2*e) +: CW];
                 wire [CW-1:0] x1 = alv[lv-1][CW*(2*e+1) +: CW];
                 wire          x0_wins = x0[CW-1] && (!x1[CW-1] || x0[CW-2 -: 32] > x1[CW-2 -: 32] ||
@@ -561,8 +565,8 @@ module ot_hdc_matvec #(
                 always @(posedge clk) c <= x0_wins ? x0 : x1;
                 assign alv[lv][CW*e +: CW] = c;
             end
-            if ((NL >> lv) < NL) begin : g_pad
-                assign alv[lv][CW*NL-1 : CW*(NL >> lv)] = 0;
+            if ((AN >> lv) < AN) begin : g_pad
+                assign alv[lv][CW*AN-1 : CW*(AN >> lv)] = 0;
             end
         end
     endgenerate
