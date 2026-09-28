@@ -87,6 +87,13 @@ only 11.904 µm between bank strips and 16–24 µm above/below blocks, and rout
 may force a larger outline. No macro orientation or coordinate is approved
 until the pin-access/PG and wire-delay checks pass.
 
+This exploratory 1.21 mm² outline is 4.33× the 0.279324 mm² SRAM outline
+within it; the difference is reserved for corridors, converter, capture
+registers, clock and power. It must be charged to die area if this topology
+is adopted. The pilot still contains only 384 KiB of the required 2 MiB VM,
+so this outline cannot be scaled to full capacity by treating the blank
+space as free.
+
 ## Cycle timing acceptance budget at 0.92 ns
 
 The table separates measured source arcs from **proposed** engineering
