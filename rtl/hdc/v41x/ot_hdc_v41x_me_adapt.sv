@@ -269,7 +269,17 @@ module ot_hdc_v41x_me_adapt #(
                 end
         assign xr0=xr_reg;
     end endgenerate
-    generate if (SHARED_XBANK != 0 && RL >= 3) begin : g_xr_shared
+    // The input-registered SRAM adds one request edge before its registered
+    // read.  Reuse that edge as one of the tile latency stages; otherwise the
+    // activation would arrive one beat after the weight on RL=4.
+    generate if (SHARED_XBANK == 3 && RL >= 4) begin : g_xr_shared_inreg
+        reg [XBW-1:0] xr [1:RL-3];
+        for (genvar ri=1;ri<RL-2;ri=ri+1) begin : g_stage
+            if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+            else always @(posedge clk) xr[ri] <= xr[ri-1];
+        end
+        assign xr_last=xr[RL-3];
+    end else if (SHARED_XBANK != 0 && RL >= 3) begin : g_xr_shared
         reg [XBW-1:0] xr [1:RL-2];
         for (genvar ri=1;ri<RL-1;ri=ri+1) begin : g_stage
             if (ri==1) always @(posedge clk) xr[ri] <= xr0;
@@ -289,6 +299,8 @@ module ot_hdc_v41x_me_adapt #(
 `ifndef SYNTHESIS
     initial if (SHARED_XBANK != 0 && RL < 3)
         $fatal(1,"shared store requires RL>=3 including multicast register");
+    initial if (SHARED_XBANK == 3 && RL < 4)
+        $fatal(1,"input-registered shared store requires RL>=4");
 `endif
     assign wb_re = rq_v;
     assign wb_addr = rq_a;

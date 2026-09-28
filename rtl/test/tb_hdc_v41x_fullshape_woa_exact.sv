@@ -25,7 +25,7 @@ module tb_hdc_v41x_fullshape_woa_exact #(
     reg [31:0] x [0:8191];
     reg [31:0] y [0:2047];
     reg [7:0] image [0:IMAGE_BYTES-1];
-    reg [8*MG*32-1:0] bp0=0, bp1=0, bp2=0;
+    reg [8*MG*32-1:0] bp0=0, bp1=0, bp2=0, bp3=0;
     wire shared_wr_v;
     wire [0:0] shared_wr_p;
     wire [12:0] shared_wr_e;
@@ -46,10 +46,10 @@ module tb_hdc_v41x_fullshape_woa_exact #(
     integer rows=16, op=0, checked=0, reads=0, cycles=0;
     integer fd, got_bytes;
     string dir;
-    assign wb_q=(RL==3) ? bp2 : bp1;
+    assign wb_q=(RL==4) ? bp3 : ((RL==3) ? bp2 : bp1);
 
     generate if (SHARED != 0) begin : g_shared
-        if (SHARED == 2) begin : g_preload
+        if (SHARED >= 2) begin : g_preload
             ot_hdc_v41x_fp32_bf16_preload64 u_cv (
                 .clk(clk),.rst_n(rst_n),.in_v(pre_in_v),.in_p(2'd0),.in_e(pre_in_e),.in_d(pre_in_d),
                 .out_v(pre_out_v),.out_p(pre_out_p),.out_e(pre_out_e),.out_d(pre_out_d),
@@ -62,17 +62,25 @@ module tb_hdc_v41x_fullshape_woa_exact #(
             assign pre_out_fault=1'b0;
             assign pre_out_saturated=1'b0;
         end
-        ot_hdc_v41x_me_xbank_macro #(.MG(MG),.MP(1),.G(G),.KMAX(5120),.NBW(14),.EW(13)) u_store (
-            .clk(clk),.wr_v(SHARED==2 ? 1'b0 : shared_wr_v),.wr_p(shared_wr_p),
-            .wr_e(shared_wr_e),.wr_d(shared_wr_d),
-            .pre_v(pre_out_v),.pre_p(pre_out_p[0]),.pre_e(pre_out_e),.pre_d(pre_out_d),
-            .rd_rot(SHARED==2 ? 2'd2 : 2'd0),
-            .rq_v(shared_rq_v),.rq_q(shared_rq_q),.rq_plg(shared_rq_plg),.rd_x(shared_rd_x));
+        if (SHARED == 3) begin : g_inreg
+            ot_hdc_v41x_me_xbank_macro_inreg #(.MG(MG),.MP(1),.G(G),.KMAX(5120),.NBW(14),.EW(13)) u_store (
+                .clk(clk),.wr_v(1'b0),.wr_p(shared_wr_p),.wr_e(shared_wr_e),.wr_d(shared_wr_d),
+                .pre_v(pre_out_v),.pre_p(pre_out_p[0]),.pre_e(pre_out_e),.pre_d(pre_out_d),
+                .rd_rot(2'd2),.rq_v(shared_rq_v),.rq_q(shared_rq_q),
+                .rq_plg(shared_rq_plg),.rd_x(shared_rd_x));
+        end else begin : g_direct
+            ot_hdc_v41x_me_xbank_macro #(.MG(MG),.MP(1),.G(G),.KMAX(5120),.NBW(14),.EW(13)) u_store (
+                .clk(clk),.wr_v(SHARED==2 ? 1'b0 : shared_wr_v),.wr_p(shared_wr_p),
+                .wr_e(shared_wr_e),.wr_d(shared_wr_d),
+                .pre_v(pre_out_v),.pre_p(pre_out_p[0]),.pre_e(pre_out_e),.pre_d(pre_out_d),
+                .rd_rot(SHARED==2 ? 2'd2 : 2'd0),
+                .rq_v(shared_rq_v),.rq_q(shared_rq_q),.rq_plg(shared_rq_plg),.rd_x(shared_rd_x));
+        end
         always @(posedge clk) shared_xr0 <= shared_rd_x;
     end endgenerate
     ot_hdc_v41x_me_adapt #(.W(W),.G(G),.MG(MG),.AW(AW),.BAW(BAW),.KMAX(5120),
                              .XBANK(XBANK),.RL(RL),.SHARED_XBANK(SHARED)) u_me (
-        .clk(clk),.rst_n(rst_n),.go(go),.i_preloaded(SHARED==2),.ready(ready),.idle(idle),
+        .clk(clk),.rst_n(rst_n),.go(go),.i_preloaded(SHARED>=2),.ready(ready),.idle(idle),
         .i_nout(16'(rows)),.i_tiles(16'(1)),.i_k(16'd4096),
         .i_wbase(AW'(op ? BASE1 : BASE0)),.i_xbase(AW'(op ? 4096 : 0)),
         .i_xjs(AW'(0)),.i_split(2'd0),.i_round(1'b1),
@@ -102,7 +110,7 @@ module tb_hdc_v41x_fullshape_woa_exact #(
         rst_n=1;
         for (integer j=0;j<2;j++) begin
             op=j;
-            if (SHARED==2) begin
+            if (SHARED>=2) begin
                 for(integer beat=0;beat<64;beat++) begin
                     @(negedge clk);
                     pre_in_v=1;
@@ -157,6 +165,7 @@ module tb_hdc_v41x_fullshape_woa_exact #(
         end
         bp1<=bp0;
         bp2<=bp1;
+        bp3<=bp2;
         if (ov) for (integer p=0;p<G;p++) if (o_we[p]) begin
             integer addr;
             addr=o_addr[p*AW+:AW];

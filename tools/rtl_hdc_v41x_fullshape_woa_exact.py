@@ -55,13 +55,15 @@ def bits(path: Path, n: int) -> np.ndarray:
 def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         layout_manifest: Path, rows: int, output: Path, banked: bool = False,
         macro: bool = False, rl: int = 2, shared: bool = False,
-        preloaded: bool = False) -> dict:
-    if rl not in (2, 3):
-        raise ValueError('rl must be 2 or 3')
-    if shared and rl != 3:
-        raise ValueError('shared store requires rl=3')
-    if preloaded and (not shared or rl != 3):
-        raise ValueError('preloaded mode requires shared store and rl=3')
+        preloaded: bool = False, input_registered: bool = False) -> dict:
+    if rl not in (2, 3, 4):
+        raise ValueError('rl must be 2, 3 or 4')
+    if shared and rl not in (3, 4):
+        raise ValueError('shared store requires rl=3 or 4')
+    if preloaded and (not shared or rl not in (3, 4)):
+        raise ValueError('preloaded mode requires shared store and rl=3 or 4')
+    if input_registered and (not preloaded or rl != 4):
+        raise ValueError('input-registered store requires preloaded rl=4')
     if rows < 16 or rows > 1024 or rows % 16:
         raise ValueError("rows must be a multiple of 16 in 16..1024")
     if image.stat().st_size != 33_554_432:
@@ -88,11 +90,14 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         os.symlink(image.resolve(), tmp / "wo_a.me.bin")
         obj = tmp / "obj"
         verilator = str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator")
+        sources = list(RTL)
+        if input_registered:
+            sources.insert(-2, ROOT / "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg.sv")
         command = [verilator, "--binary", "--timing", "-O0", "-Wno-fatal", "-Wno-WIDTH",
                    "-Wno-UNUSED", "-Wno-TIMESCALEMOD", "--top-module",
                    "tb_hdc_v41x_fullshape_woa_exact", *([f"-GXBANK={2 if macro else 1}"] if banked or macro else []),
-                   f"-GRL={rl}", *([f"-GSHARED={2 if preloaded else 1}"] if shared else []), "-Mdir", str(obj),
-                   *map(str, RTL), "-CFLAGS", "-O0", "-j", "4"]
+                   f"-GRL={rl}", *([f"-GSHARED={3 if input_registered else (2 if preloaded else 1)}"] if shared else []), "-Mdir", str(obj),
+                   *map(str, sources), "-CFLAGS", "-O0", "-j", "4"]
         t0 = time.monotonic()
         build = subprocess.run(command, cwd=ROOT, capture_output=True, text=True,
                                timeout=600, preexec_fn=cap_memory)
@@ -116,7 +121,7 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
         sim_sec = round(time.monotonic() - t1, 2)
         fixture_sha = {str(p): sha(p) for p in
                        (acc, za, image, golden_manifest, layout_manifest)}
-        source_sha = {str(p.relative_to(ROOT)): sha(p) for p in (*RTL, Path(__file__))}
+        source_sha = {str(p.relative_to(ROOT)): sha(p) for p in (*sources, Path(__file__))}
         record = {
             "schema": "opentallas.rtl.v41x_fullshape_woa_exact.v1",
             "status": "pass",
@@ -130,6 +135,7 @@ def run(acc: Path, za: Path, image: Path, golden_manifest: Path,
             "read_latency_cycles": rl,
             "external_shared_store": shared,
             "preloaded_activation": preloaded,
+            "input_registered_activation_store": input_registered,
             "vm_bank_rotation_quarters": 2 if preloaded else 0,
             "preload_issue_cycles": int(pre_match.group(1)) if pre_match else 0,
             "preload_write_cycles": int(pre_match.group(2)) if pre_match else 0,
