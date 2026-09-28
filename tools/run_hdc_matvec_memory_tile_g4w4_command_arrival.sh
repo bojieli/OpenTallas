@@ -3,6 +3,16 @@
 # This is a timing-contract sensitivity probe, not a production IO spec.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+core_inputs=(
+  rst_n go
+  i_nout i_tiles i_k i_wsrc i_wbase i_ts i_ks i_js
+  i_xbase i_xks i_xjs i_xcs i_jsh i_split i_wcs i_round
+  i_obase i_ots i_ojs i_mmode i_oen i_amax i_rmax i_mbase
+)
+core_args=()
+for port in "${core_inputs[@]}"; do
+  core_args+=(--core-input-port "$port")
+done
 python3 tools/run_abi3_physical.py \
   --view asap7 --top ot_hdc_matvec_memory_tile_wide --param W=4 --param SEPARATE_INGRESS_CLOCK=1 \
   --source rtl/hdc/ot_hdc_delay.sv \
@@ -22,6 +32,7 @@ python3 tools/run_abi3_physical.py \
   --ingress-input-port kv_load_addr --ingress-input-port x_load_addr \
   --ingress-input-port kv_load_data --ingress-input-port x_load_data \
   --ingress-input-delay-min-ns 0.75 --ingress-input-delay-max-ns 1.15 \
+  "${core_args[@]}" \
   --core-input-delay-min-ns 0.75 --core-input-delay-max-ns 1.15 \
   --max-transition-ns --slew-margin-percent 60 \
   --core-utilization 15 --place-density 0.55 \
