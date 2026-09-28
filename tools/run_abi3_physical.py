@@ -341,6 +341,20 @@ def flow_timeout_seconds() -> int:
     return value
 
 
+def tns_end_percent() -> int:
+    """ORFS repair_timing TNS target; allow explicit limited-repair routes."""
+    import os
+
+    raw = os.environ.get("OT_TNS_END_PERCENT", "100")
+    try:
+        value = int(raw)
+    except ValueError:
+        raise FlowError(f"OT_TNS_END_PERCENT={raw!r} is not an integer") from None
+    if not 0 <= value <= 100:
+        raise FlowError(f"OT_TNS_END_PERCENT={value} must be between 0 and 100")
+    return value
+
+
 def synth_timeout_seconds() -> int:
     """The Yosys wall-clock ceiling, overridable for a genuinely large block.
 
@@ -1940,7 +1954,7 @@ def orfs_config_lines(
             "export SYNTH_MEMORY_MAX_BITS = "
             + str(synth_memory_max_bits() if memory_max_bits == "current" else memory_max_bits)]),
         "export LEC_CHECK = 0",
-        "export TNS_END_PERCENT = 100",
+        f"export TNS_END_PERCENT = {tns_end_percent()}",
         # ORFS repairs hold under GLOBAL-ROUTE-ESTIMATED parasitics and the finish
         # check measures it under RCX-EXTRACTED ones, so repairing to exactly zero
         # leaves the extraction gap as a violation.  Measured on the G2 cluster at
@@ -2193,6 +2207,8 @@ def run_pnr(
             "synth_memory_max_bits": synth_memory_max_bits(),
             "place_density": place_density,
             "clock_period_ns": clock_period_ns,
+            "flow_timeout_seconds": flow_timeout_seconds(),
+            "tns_end_percent": tns_end_percent(),
             "sdc_clock_period_library_units": period_lib,
             **({"signal_integrity_constraints": constraints} if constraints else {}),
             "metrics": {
@@ -2307,6 +2323,8 @@ def run_pnr(
         "synth_memory_max_bits": synth_memory_max_bits(),
         "place_density": place_density,
         "clock_period_ns": clock_period_ns,
+        "flow_timeout_seconds": flow_timeout_seconds(),
+        "tns_end_percent": tns_end_percent(),
         "sdc_clock_period_library_units": period_lib,
         **({"signal_integrity_constraints": constraints} if constraints else {}),
         **({"memory_macros": memory_macros} if memory_macros else {}),
