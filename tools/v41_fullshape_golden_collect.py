@@ -50,7 +50,7 @@ def snapshot_pin(snapshot: Path) -> dict:
 
 
 def collect(scratch: Path, contexts: list[int], snapshot: Path, source_root: Path = ROOT,
-            annotate_shards: bool = False) -> dict:
+            annotate_shards: bool = False, replica_dir: Path | None = None) -> dict:
     checkpoint = snapshot_pin(snapshot)
     source_files = ["tools/rtl_v41_fullshape_layer_campaign.py", "tools/v41_fullshape_golden_collect.py",
                     "tools/v41_fullshape_shard_compare.py", "tools/hdc_golden_v41.py", "tools/hdc_golden.py",
@@ -136,6 +136,26 @@ def collect(scratch: Path, contexts: list[int], snapshot: Path, source_root: Pat
             "next_token": head["next_token"], "logits_sha256": head["logits_sha256"],
             "terminal_margin": head["margin"], "scratch_schema": "ctx{context}_L{layer:02d}.json/.npz",
         }
+        if replica_dir is not None and (replica_dir / f"ctx{context}_L39.json").exists():
+            other = validate_golden_chain(replica_dir, context, list(range(40)), source_root)["layers"]
+            for primary, repeat in zip(rows, other):
+                if (primary["input_sha256"], primary["output_sha256"]) != (
+                        repeat["input_sha256"], repeat["output_sha256"]):
+                    raise ValueError(f"context {context} layer {primary['layer']}: independent run mismatch")
+                a = json.loads((scratch / f"ctx{context}_L{primary['layer']:02d}.json").read_text())
+                b = json.loads((replica_dir / f"ctx{context}_L{primary['layer']:02d}.json").read_text())
+                for key in ("trace_sha256", "experts", "appended_rows", "ctx_out"):
+                    if a[key] != b[key]:
+                        raise ValueError(f"context {context} layer {primary['layer']}: {key} repeat mismatch")
+            heads = [json.loads(path.read_text())["head"] for path in
+                     replica_dir.glob(f"golden_ctx{context}_*.json") if "head" in json.loads(path.read_text())]
+            if len(heads) != 1 or (heads[0]["next_token"], heads[0]["logits_sha256"]) != (
+                    head["next_token"], head["logits_sha256"]):
+                raise ValueError(f"context {context}: independent terminal head mismatch")
+            out["contexts"][str(context)]["independent_replication"] = {
+                "status": "bit_exact", "layers": 40, "next_token": head["next_token"],
+                "logits_sha256": head["logits_sha256"],
+                "method": "second sequential golden run from layer 0 in separate scratch"}
     return out
 
 
@@ -147,9 +167,11 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--annotate-shards", action="store_true",
                         help="add token-history and checkpoint pins to each validated shard JSON")
+    parser.add_argument("--replica-dir", type=Path,
+                        help="validate an independent full 40-layer golden run when present")
     args = parser.parse_args()
     record = collect(args.scratch, [int(x) for x in args.contexts.split(",")], args.snapshot,
-                     annotate_shards=args.annotate_shards)
+                     annotate_shards=args.annotate_shards, replica_dir=args.replica_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(record, indent=2) + "\n")
     print(json.dumps({"status": record["status"], "contexts": list(record["contexts"]),
