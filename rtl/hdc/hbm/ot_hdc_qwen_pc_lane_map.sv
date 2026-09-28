@@ -7,7 +7,7 @@
 module ot_hdc_qwen_pc_lane_map #(
     parameter integer PCS=128,
     parameter integer AW=32,
-    parameter integer TAGW=17,
+    parameter integer TAGW=25,
     parameter integer LW=$clog2(PCS),
     parameter integer MTAGW=TAGW+LW
 ) (

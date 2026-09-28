@@ -16,7 +16,7 @@ module tb_hdc_qwen_pc_lane_map;
     reg [P*256-1:0] p_rsp_data=0;
     wire [P*TAGW-1:0] s_rsp_tag, s_wr_done_tag;
     wire fault;
-    ot_hdc_qwen_pc_lane_map dut (.*);
+    ot_hdc_qwen_pc_lane_map #(.TAGW(TAGW),.MTAGW(MTAGW)) dut (.*);
     initial begin
         repeat(2) @(negedge clk); rst_n=1;
         // Real compact gate/up scale base 456 rotates source lane 0 to PC72.

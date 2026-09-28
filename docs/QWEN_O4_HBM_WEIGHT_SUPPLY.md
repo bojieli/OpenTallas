@@ -203,10 +203,22 @@ returns responses to the original source bank by carrying that bank's 7-bit
 lane number in the tag. This is needed for independent matrix scale bases:
 gate/up scale base 456 sends source lanes 0 and 63 to physical PCs 72 and 7.
 The same rule covers an embedding scale sector selected by `token>>4`.
-The shared service therefore uses a 24-bit client tag (7 lane bits + 17
-source bits) and a 27-bit physical tag after its 3-bit client ID. Its
+The adopted G=6,144 KV streamer needs a 25-bit source tag
+(`1+LWIN+$clog2(G)+3`, with LWIN=8). The shared service therefore uses a
+32-bit client tag (7 lane bits + 25 source bits) and a 35-bit physical tag
+after its 3-bit client ID. Elaboration rejects a narrower full-shape tag. Its
 lane-mapping RTL passes an out-of-order two-PC response test. Physical tag
 storage, cross-PC wiring and route are open implementation costs.
+`ot_hdc_qwen_kv_pc_adapter` maps the existing exact FP8 logical-word sector
+bridge to the same physical PC fabric, adding the bound user/layer KV base.
+It checks every logical sector is inside the 262,144-sector layer page and
+uses the adopted 25-bit G=6,144 KV response tag without truncation. The
+bridge's half-sector read/modify/write logic and FP8 conversion stay as
+implemented; this adapter passes first/last-sector, return-tag and invalid
+page tests. The inherited bridge permits one logical request at a time, so
+it is a correctness path pending a bounded multi-outstanding scheduler and
+shared-controller timing gate. Its write completion must release the shared
+service credit after the PHY commits the sector.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs

@@ -9,7 +9,7 @@ module ot_hdc_qwen_hbm_service #(
     parameter integer PCS_PER_STACK=32,
     parameter integer NC=6,
     parameter integer AW=32,
-    parameter integer CTAGW=24, // source-lane[6:0] + source tag[16:0]
+    parameter integer CTAGW=32, // source-lane[6:0] + worst-case KV tag[24:0]
     parameter integer MAX_OUT=16,
     parameter integer NPC=STACKS*PCS_PER_STACK,
     parameter integer PTAGW=$clog2(NC)+CTAGW
@@ -41,7 +41,9 @@ module ot_hdc_qwen_hbm_service #(
     input wire [NPC*PTAGW-1:0] p_wr_done_tag,
     output wire [NPC-1:0] pc_fault
 );
-    initial if (STACKS!=4 || PCS_PER_STACK!=32 || NPC!=128 || AW<32)
+    localparam integer KV_TAGW=1+8+$clog2(6144)+3;
+    initial if (STACKS!=4 || PCS_PER_STACK!=32 || NPC!=128 || AW<32 ||
+                CTAGW<7+KV_TAGW || PTAGW<$clog2(NC)+CTAGW)
         $fatal(1,"Qwen O4 shared HBM service requires four 32-PC stacks");
     for (genvar p=0;p<NPC;p=p+1) begin : g_pc
         wire local_fault;
