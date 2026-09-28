@@ -50,6 +50,7 @@ module ot_rom_oneshot_die_px #(
     parameter integer ADD_LAT  = 3,            // 3: ot_hdc_fp32_add_fast, 5: ot_fp32_add_rne_pipe
     parameter integer PAIRWISE = 0,            // full-shape wo_b: ((r0+r1)+(r2+r3))
     parameter integer GW       = 1,            // gather words emitted per cycle (divides N)
+    parameter integer OUT_BP   = 0,            // GW=N gather may hold output until out_ready
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
     parameter integer RB       = (N > 1) ? $clog2(N) : 1
@@ -78,6 +79,7 @@ module ot_rom_oneshot_die_px #(
     input  wire [N*PW-1:0]   rl_rx_rec,
     // result
     output wire              out_valid,
+    input  wire              out_ready,
     output wire [GW*FW-1:0]  out_data,
     output wire              out_last,
     output wire [RB-1:0]     out_rank,
@@ -175,6 +177,8 @@ module ot_rom_oneshot_die_px #(
     reg  [15:0]   inflight;
     reg           s0_v, s0_mode, s0_last;
     reg  [FW-1:0] s0_d [0:N-1];
+    reg              go_v, go_last;
+    wire g_stall = (OUT_BP != 0) && (GW == N) && go_v && !out_ready;
     wire all_ne = &nonempty;
     wire g_first = s0_v && s0_mode;                     // beat 0 of the index in the head registers
     wire g_idle = !g_busy && !g_first;
@@ -182,7 +186,7 @@ module ot_rom_oneshot_die_px #(
     wire g_free = g_idle || (g_busy && g_cnt == E - 1) || (g_first && E == 1);
     wire pop_red = all_ne && g_idle && !head_mode;
     wire pop_gat = all_ne && head_mode && inflight == 0 && g_free && !(s0_v && !s0_mode);
-    assign pop = pop_red || pop_gat;
+    assign pop = (pop_red || pop_gat) && !g_stall;
     generate
         for (g = 0; g < N; g = g + 1) begin : g_cr
             for (q = 0; q < 2; q = q + 1) begin : g_p
@@ -216,7 +220,7 @@ module ot_rom_oneshot_die_px #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s0_v <= 1'b0; s0_mode <= 1'b0; s0_last <= 1'b0;
-        end else begin
+        end else if (!g_stall) begin
             s0_v <= pop;
             if (pop) begin s0_mode <= head_mode; s0_last <= head_last; end
         end
@@ -326,7 +330,6 @@ module ot_rom_oneshot_die_px #(
     end endgenerate
 
     // -- all-gather: GW words per beat, E beats per index, back to back ------------------------------
-    reg              go_v, go_last;
     reg [GW*FW-1:0]  go_d;
     reg [RB-1:0]     go_rank;
     wire [EB-1:0]    beat = g_busy ? g_cnt : {EB{1'b0}};
@@ -338,19 +341,21 @@ module ot_rom_oneshot_die_px #(
         if (!rst_n) begin
             g_busy <= 1'b0; g_cnt <= 0; go_v <= 1'b0; go_last <= 1'b0; go_rank <= 0; inflight <= 0;
         end else begin
-            go_v <= 1'b0;
-            if (g_busy || g_first) begin
-                go_v <= 1'b1;
-                go_d <= beat_d;
-                go_rank <= beat * GW;
-                go_last <= s0_last && beat == E - 1;
-                if (g_busy) begin
-                    // the last beat; a new index popped this cycle starts its beat 0 next cycle via g_first
-                    if (g_cnt == E - 1) g_busy <= 1'b0;
-                    else g_cnt <= g_cnt + 1'b1;
-                end else if (E > 1) begin
-                    g_busy <= 1'b1;
-                    g_cnt <= 1;
+            if (!g_stall) begin
+                go_v <= 1'b0;
+                if (g_busy || g_first) begin
+                    go_v <= 1'b1;
+                    go_d <= beat_d;
+                    go_rank <= beat * GW;
+                    go_last <= s0_last && beat == E - 1;
+                    if (g_busy) begin
+                        // the last beat; a new index popped this cycle starts its beat 0 next cycle via g_first
+                        if (g_cnt == E - 1) g_busy <= 1'b0;
+                        else g_cnt <= g_cnt + 1'b1;
+                    end else if (E > 1) begin
+                        g_busy <= 1'b1;
+                        g_cnt <= 1;
+                    end
                 end
             end
             inflight <= inflight + (pop_red ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);

@@ -180,9 +180,11 @@ module ot_chip_v41x_tile #(
     input  wire              xa_re,
     input  wire [VM_AW-5:0]  xa_raddr,
     output reg  [511:0]      xa_rq,
-    input  wire              xb_we,
-    input  wire [VM_AW-5:0]  xb_waddr,
-    input  wire [511:0]      xb_wdata,
+    // Collective port B: four static word-address-low2 banks in full shape;
+    // the reduced die uses lane 0 only. The core is blocked during COLL.
+    input  wire [3:0]        xb_we4,
+    input  wire [4*(VM_AW-4)-1:0] xb_waddr4,
+    input  wire [4*512-1:0] xb_wdata4,
     input  wire              xb_re,
     input  wire [VM_AW-5:0]  xb_raddr,
     output reg  [511:0]      xb_rq,
@@ -421,7 +423,10 @@ module ot_chip_v41x_tile #(
         // external word ports (package controller, collective DMA)
         for (e = 0; e < 16; e = e + 1) begin
             if (xa_we) vm[{xa_waddr, 4'(e)}] <= xa_wdata[32*e +: 32];
-            if (xb_we) vm[{xb_waddr, 4'(e)}] <= xb_wdata[32*e +: 32];
+            for (integer b = 0; b < 4; b = b + 1)
+                if (xb_we4[b])
+                    vm[{xb_waddr4[b*(VM_AW-4) +: (VM_AW-4)], 4'(e)}] <=
+                        xb_wdata4[b*512 + 32*e +: 32];
             if (xa_re) xa_rq[32*e +: 32] <= vm[{xa_raddr, 4'(e)}];
             if (xb_re) xb_rq[32*e +: 32] <= vm[{xb_raddr, 4'(e)}];
         end

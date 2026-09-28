@@ -128,9 +128,9 @@ module ot_chip_v41x_die #(
     parameter integer N_TP    = 4,
     parameter integer PKG_DIES = 2,
     parameter integer CL_LANES = 16,
-    // Full-shape gathers need enough per-parity credits to cover the T1
-    // round trip.  Keep the reduced die's qualified 16-word configuration.
-    parameter integer CL_DEPTH = FULL_SHAPE ? 128 : 16,
+    // GW4 requires 256 receive words to cover the T1 credit round trip.
+    // The reduced one-word interface retains its qualified 16-word depth.
+    parameter integer CL_DEPTH = FULL_SHAPE ? 256 : 16,
     parameter integer CL_RELAY = 1,
     parameter integer CL_ADD_LAT = 3,
     parameter integer CL_TAGW = 32,
@@ -318,6 +318,7 @@ module ot_chip_v41x_die #(
     wire [255:0] win_blk_codes;
     wire [7:0] win_blk_scale;
     wire xa_we, xa_re, xb_we, xb_re; wire [VWA-1:0] xa_waddr, xa_raddr, xb_waddr, xb_raddr;
+    wire [3:0] xb_we4; wire [4*VWA-1:0] xb_waddr4; wire [4*512-1:0] xb_wdata4;
     wire [511:0] xa_wdata, xa_rq, xb_wdata, xb_rq;
     localparam integer COLL_AW = FULL_SHAPE ? 30 : 24;
     localparam integer COLL_NW = FULL_SHAPE ? 21 : 16;
@@ -355,7 +356,8 @@ module ot_chip_v41x_die #(
         .kh_wdata(kh_wdata), .kh_wstrb(kh_wstrb), .kh_wr_done(kh_wr_done),
         .kr_v(kr_v), .kr_rdy(kr_rdy), .kr_tag(kr_tag), .kr_beat(kr_beat), .kr_data(kr_data),
         .xa_we(xa_we), .xa_waddr(xa_waddr), .xa_wdata(xa_wdata), .xa_re(xa_re), .xa_raddr(xa_raddr), .xa_rq(xa_rq),
-        .xb_we(xb_we), .xb_waddr(xb_waddr), .xb_wdata(xb_wdata), .xb_re(xb_re), .xb_raddr(xb_raddr), .xb_rq(xb_rq),
+        .xb_we4(xb_we4), .xb_waddr4(xb_waddr4), .xb_wdata4(xb_wdata4),
+        .xb_re(xb_re), .xb_raddr(xb_raddr), .xb_rq(xb_rq),
         .coll_go(core_coll_go), .coll_op(core_coll_op), .coll_src(core_coll_src), .coll_dst(core_coll_dst),
         .coll_ibase(core_coll_ibase), .coll_n(core_coll_n), .coll_k(core_coll_k), .coll_seq(core_coll_seq),
         .coll_rnd(core_coll_rnd), .coll_busy(coll_busy), .coll_fault(die_coll_fault),
@@ -551,6 +553,13 @@ module ot_chip_v41x_die #(
         .core_busy(ctrl_busy), .tok_valid(tok_valid), .tok_user(tok_user), .tok_pos(tok_pos), .tok_id(tok_id),
         .users_done(users_done), .proto_fault(proto_fault));
 
+`ifndef SYNTHESIS
+    // The full-shape four-bank collective reserves the VM while COLL blocks
+    // the core. The package controller must not inject a concurrent VM access.
+    always @(posedge clk) if (rn && FULL_SHAPE && coll_busy && (xa_we || xa_re))
+        $fatal(1, "package-controller VM access overlaps blocking COLL");
+`endif
+
     // -- fabric router: package controller, UCIe, board link ----------------------------------------
     wire [2:0] r_in_valid, r_in_ready, r_in_last, r_out_valid, r_out_ready, r_out_last;
     wire [3*FLIT-1:0] r_in_data, r_out_data;
@@ -576,7 +585,9 @@ module ot_chip_v41x_die #(
 
     // -- one-shot collective engine + DMA ----------------------------------------------------------
     wire e_valid, e_ready, e_last, e_mode; wire [CL_FW-1:0] e_data; wire [CL_TAGW-1:0] e_tag;
-    wire o_valid, o_last, o_err, cl_fault; wire [CL_FW-1:0] o_data; wire [CL_RB-1:0] o_rank; wire [2:0] cl_code;
+    localparam integer CL_GW = FULL_SHAPE ? 4 : 1;
+    wire o_valid, o_ready, o_last, o_err, cl_fault;
+    wire [CL_GW*CL_FW-1:0] o_data; wire [CL_RB-1:0] o_rank; wire [2:0] cl_code;
     wire [N_TP-1:0] tx_valid, tx_ready, rx_valid; wire [CL_PW-1:0] tx_rec; wire [N_TP*CL_PW-1:0] rx_rec;
     wire [2*N_TP-1:0] cr_in, cr_out;
     wire dma_fault;
@@ -600,22 +611,25 @@ module ot_chip_v41x_die #(
     wire [VWA-1:0] cmd_n = FULL_SHAPE ? VWA'(core_coll_n >> 4) : coll_n;
     ot_rom_oneshot_die_px #(.N(N_TP), .RANK(RANK), .LANES(CL_LANES), .TAGW(CL_TAGW), .DEPTH(CL_DEPTH),
                             .PKG_DIES(PKG_DIES), .RELAY(CL_RELAY), .ADD_LAT(CL_ADD_LAT),
-                            .PAIRWISE(FULL_SHAPE), .GW(1)) u_coll (
+                            .PAIRWISE(FULL_SHAPE), .GW(CL_GW), .OUT_BP(FULL_SHAPE)) u_coll (
         .clk(clk), .rst_n(rn),
         .in_valid(e_valid), .in_ready(e_ready), .in_data(e_data), .in_last(e_last), .in_mode(e_mode), .in_tag(e_tag),
         .tx_valid(tx_valid), .tx_rec(tx_rec), .tx_ready(tx_ready), .cr_in(cr_in),
         .rx_valid(rx_valid), .rx_rec(rx_rec), .cr_out(cr_out),
         .rl_tx_valid(ucie_rl_tx_valid), .rl_tx_rec(ucie_rl_tx_rec),
         .rl_rx_valid(ucie_rl_rx_valid), .rl_rx_rec(ucie_rl_rx_rec),
-        .out_valid(o_valid), .out_data(o_data), .out_last(o_last), .out_rank(o_rank), .out_err(o_err),
+        .out_valid(o_valid), .out_ready(o_ready), .out_data(o_data), .out_last(o_last),
+        .out_rank(o_rank), .out_err(o_err),
         .fault(cl_fault), .fault_code(cl_code));
-    ot_chip_v41x_coll_dma #(.WA(VWA), .FW(CL_FW), .TAGW(CL_TAGW), .N(N_TP)) u_cdma (
+    ot_chip_v41x_coll_dma #(.WA(VWA), .FW(CL_FW), .TAGW(CL_TAGW), .N(N_TP), .GW(CL_GW)) u_cdma (
         .clk(clk), .rst_n(rn), .go(cmd_go), .mode(cmd_mode), .rnd(FULL_SHAPE ? core_coll_rnd : 1'b0),
         .tag(cmd_tag), .src(cmd_src), .n(cmd_n), .dst(cmd_dst),
         .busy(coll_busy), .fault(dma_fault), .words_out(), .words_in(),
-        .vm_re(xb_re), .vm_raddr(xb_raddr), .vm_rq(xb_rq), .vm_we(xb_we), .vm_waddr(xb_waddr), .vm_wdata(xb_wdata),
+        .vm_re(xb_re), .vm_raddr(xb_raddr), .vm_rq(xb_rq), .vm_we(xb_we),
+        .vm_waddr(xb_waddr), .vm_wdata(xb_wdata), .vm_ready4(1'b1),
+        .vm_we4(xb_we4), .vm_waddr4(xb_waddr4), .vm_wdata4(xb_wdata4),
         .e_valid(e_valid), .e_ready(e_ready), .e_data(e_data), .e_last(e_last), .e_mode(e_mode), .e_tag(e_tag),
-        .o_valid(o_valid), .o_data(o_data), .o_last(o_last), .o_rank(o_rank),
+        .o_valid(o_valid), .o_ready(o_ready), .o_data(o_data), .o_last(o_last), .o_rank(o_rank),
         .o_err(o_err), .engine_fault(cl_fault));
     // per-destination ports: self (unused), the in-package peer (UCIe), the partner package (T1)
     assign ucie_ctx_rec = tx_rec;

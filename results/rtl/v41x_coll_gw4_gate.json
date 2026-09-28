@@ -1,0 +1,123 @@
+{
+  "cases": [
+    {
+      "metrics": {
+        "cycles": 7,
+        "holds": 0,
+        "stalls": 0,
+        "words": 1,
+        "writes": 4
+      },
+      "passed": true,
+      "top": "tb_v41x_coll_transpose",
+      "words": 1
+    },
+    {
+      "metrics": {
+        "cycles": 8,
+        "holds": 0,
+        "stalls": 0,
+        "words": 2,
+        "writes": 8
+      },
+      "passed": true,
+      "top": "tb_v41x_coll_transpose",
+      "words": 2
+    },
+    {
+      "metrics": {
+        "cycles": 14,
+        "holds": 0,
+        "stalls": 0,
+        "words": 5,
+        "writes": 20
+      },
+      "passed": true,
+      "top": "tb_v41x_coll_transpose",
+      "words": 5
+    },
+    {
+      "metrics": {
+        "cycles": 112,
+        "holds": 26,
+        "stalls": 26,
+        "words": 80,
+        "writes": 320
+      },
+      "passed": true,
+      "top": "tb_v41x_coll_transpose",
+      "words": 80
+    },
+    {
+      "metrics": {
+        "cycles": 378,
+        "holds": 104,
+        "stalls": 91,
+        "words": 266,
+        "writes": 1064
+      },
+      "passed": true,
+      "top": "tb_v41x_coll_transpose",
+      "words": 266
+    },
+    {
+      "metrics": {
+        "cycles": 115,
+        "held": 26,
+        "words": 80,
+        "writes": 320
+      },
+      "passed": true,
+      "top": "tb_v41x_coll_dma_gw4",
+      "words": 80
+    },
+    {
+      "metrics": {
+        "cycles": 381,
+        "held": 91,
+        "words": 266,
+        "writes": 1064
+      },
+      "passed": true,
+      "top": "tb_v41x_coll_dma_gw4",
+      "words": 266
+    },
+    {
+      "metrics": {
+        "cycles": 381,
+        "in_hold": 77,
+        "out_hold": 91,
+        "words": 266,
+        "writes": 1064
+      },
+      "passed": true,
+      "top": "tb_v41x_coll_gw4_backpressure",
+      "words": 266
+    }
+  ],
+  "contract": {
+    "FW": 512,
+    "N": 4,
+    "VM_bank": "word_address_low_2_bits",
+    "VM_write_bus_bits": 2048,
+    "VM_write_word_bits": 512,
+    "VM_write_words_per_cycle": 4,
+    "bank_commit_pipeline_cycles": 2,
+    "blocked_COLL_v1": true,
+    "full_width_physical_route": "open"
+  },
+  "schema": "v41x_coll_gw4_gate_v1",
+  "scope": "exact standalone engine/transpose/DMA with synthetic words; no full-token, die route or physical VM claim",
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_coll_dma.sv": "d95395dc2f07c52e1f659dd9d01d1394d96bcb1baf533129d27ae0204aaf50e1",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "ac6f7c6dbcaa8e87677dacb613395b21f0766d6d078a109003ff1c69fd25f98c",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",
+    "rtl/test/tb_v41x_coll_dma_gw4.sv": "953eff1bba49ffd0da1c4956c5b1789a89ef0a20661b52747ef559dceb1f2df3",
+    "rtl/test/tb_v41x_coll_gw4_backpressure.sv": "6c9451542be5f37e3a5428afed56f1038f4db35bcc64f0e1ca730981c13151e1",
+    "rtl/test/tb_v41x_coll_transpose.sv": "c1dfc39af0c94416d38489f889fa8685d7d3865bf4d6b63095aebbe14ff0d612",
+    "tools/rtl_v41x_coll_gw4_gate.py": "91af2fdc569b8dc53305c3c5a361b7a9032b6d10e7444492439d160a29ca0413"
+  },
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+}

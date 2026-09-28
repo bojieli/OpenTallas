@@ -49,7 +49,8 @@ EXTRA = [ROOT / p for p in ("rtl/hdc/hbm/ot_hdc_qstream.sv", "rtl/hdc/kv/ot_hdc_
                             "rtl/rom/ot_rom_pkg_ctrl_x.sv", "rtl/rom/ot_rom_fabric_router.sv",
                             "rtl/rom/ot_rom_oneshot_px.sv")]
 CHIP = [ROOT / f"rtl/chip/{n}.sv" for n in ("ot_chip_v41x_kv_prefetch", "ot_chip_v41x_hbm_karb",
-                                            "ot_chip_v41x_hbm3e_phy", "ot_chip_v41x_coll_dma", "ot_chip_v41x_tile",
+                                            "ot_chip_v41x_hbm3e_phy", "ot_chip_v41x_coll_transpose",
+                                            "ot_chip_v41x_coll_dma", "ot_chip_v41x_tile",
                                             "ot_chip_v41x_die")]
 KVTB = ROOT / "rtl/test/tb_chip_v41x_kv_prefetch.sv"
 KVTB_SOURCES = [ROOT / p for p in ("rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv", "rtl/hdc/kv/ot_hdc_hbm_model.sv",
