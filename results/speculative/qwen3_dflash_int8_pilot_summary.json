@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen3-dflash-int8-acceptance-summary.v1",
- "summary_tool_sha256": "f1a0ea675649e24763730e80e18b952b14cea748408c8d31a55cd3db55404acb",
+ "summary_tool_sha256": "2f22c935483ace7ffad481debd02a73581101ce377b011e318b848010996ecf6",
  "source_record": "results/speculative/qwen3_dflash_int8_drafter_pilot.json",
  "source_record_sha256": "c5d769f3ae6434ef33f94885e995986807ee8472b3d042b9c712c3d912af9f4b",
  "scope": "Bounded greedy acceptance of a signed-INT8/FP8 single-core target with a per-row INT8 drafter. Not a routed RTL throughput or nine-workload production tau.",

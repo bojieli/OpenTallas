@@ -40,3 +40,16 @@ def test_tp2_summary_reproduces_the_record_and_stays_scoped():
     assert "Not a routed RTL throughput" in saved["scope"]
     assert saved["measurement"]["post_prefill_tokens"] == 912
     assert saved["measurement"]["int8_verify_cycles"] == 327
+
+
+def test_full_length_reasoning_record_does_not_claim_a_two_prompt_ci():
+    path = SPEC / "qwen3_o4_tp2_int8_reasoning_2k.json"
+    rec = json.loads(path.read_text())
+    saved = json.loads((SPEC / "qwen3_o4_tp2_int8_reasoning_2k_summary.json").read_text())
+    assert rec["max_new"] == 2048 and len(rec["rows"]) == 2
+    assert {r["workload"] for r in rec["rows"]} == {"reasoning_math500", "reasoning_humaneval"}
+    assert all(r["tokens"] == 2048 and not r["greedy_mismatches"] for r in rec["rows"])
+    assert saved["measurement"]["post_prefill_tokens"] == 4094
+    assert saved["measurement"]["int8_verify_cycles"] == 1375
+    assert "reason" in saved["ci95_prompt_bootstrap_stratified_by_workload"]
+    assert summarize(rec, path)["measurement"] == saved["measurement"]

@@ -37,17 +37,22 @@ def summarize(raw, source_path, seed=42, reps=10000):
     by = defaultdict(list)
     for r in rows:
         by[r["workload"]].append(r)
-    rng = np.random.default_rng(seed)
-    boots = []
     names = sorted(by)
-    for _ in range(reps):
-        sample = []
-        for w in names:
-            items = by[w]
-            sample.extend(items[int(i)] for i in rng.integers(0, len(items), len(items)))
-        m = measure(sample)
-        boots.append((m["int8_tau"], m["int8_over_bf16_tau"]))
-    boots = np.array(boots)
+    ci = {"reason": "At least two prompts per workload are needed for a stratified prompt bootstrap."}
+    if min(map(len, by.values())) >= 2:
+        rng = np.random.default_rng(seed)
+        boots = []
+        for _ in range(reps):
+            sample = []
+            for w in names:
+                items = by[w]
+                sample.extend(items[int(i)] for i in rng.integers(0, len(items), len(items)))
+            m = measure(sample)
+            boots.append((m["int8_tau"], m["int8_over_bf16_tau"]))
+        boots = np.array(boots)
+        ci = {"seed": seed, "replicates": reps,
+              "int8_tau": np.quantile(boots[:, 0], [0.025, 0.975]).tolist(),
+              "int8_over_bf16_tau": np.quantile(boots[:, 1], [0.025, 0.975]).tolist()}
     draft_w8 = raw.get("draft_weights") == "w8"
     tp2_target = bool(raw.get("tp2_target"))
     scope = ("Bounded greedy acceptance of a signed-INT8/FP8 " +
@@ -59,10 +64,7 @@ def summarize(raw, source_path, seed=42, reps=10000):
               "source_record": str(source_path), "source_record_sha256": sha(source_path),
               "scope": scope,
               "measurement": measure(rows),
-              "ci95_prompt_bootstrap_stratified_by_workload": {
-                  "seed": seed, "replicates": reps,
-                  "int8_tau": np.quantile(boots[:, 0], [0.025, 0.975]).tolist(),
-                  "int8_over_bf16_tau": np.quantile(boots[:, 1], [0.025, 0.975]).tolist()},
+              "ci95_prompt_bootstrap_stratified_by_workload": ci,
               "sample": {"prompts": len(rows), "workloads": dict(sorted(Counter(r["workload"] for r in rows).items())),
                          "max_new_tokens": raw["max_new"], "block": raw["block"]},
               "limitations": [
