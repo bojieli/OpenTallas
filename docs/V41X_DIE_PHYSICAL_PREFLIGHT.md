@@ -204,7 +204,12 @@ stopped at its hold-buffer cap after inserting 7,716 buffers; its record is
 therefore has no routed timing verdict. A further registered K response
 output passes the exact gate in
 `results/rtl/v41x_karb_group4_outpipe_kv_gate.json`; its separate physical
-run is pending. Neither four-PC case fits the 17.2 µm budgeted band.
+run also stopped at the CTS hold-buffer cap, after 7,528 insertions, in
+`results/asap7_physical/v41x_die_karb_group4_outpipe_m9/physical.json`.
+A two-entry registered K input buffer now isolates its ready signal from the
+four local arbiters and passes the exact gate in
+`results/rtl/v41x_karb_group4_tailpipe_kv_gate.json`. Its physical run is
+pending. None of these four-PC cases yet fits the 17.2 µm budgeted band.
 
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
