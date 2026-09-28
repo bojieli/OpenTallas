@@ -163,14 +163,6 @@ V41_COMMON = [
     "rtl/hdc/ot_hdc_reduce.sv",
 ]
 BLOCKS.update({
-    "ot_hdc_v41_stream": Block(
-        "ot_hdc_v41_stream", V41_COMMON + [
-            "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_softplus.sv",
-            "rtl/hdc/v41/ot_hdc_v41_stream.sv"],
-        460.0, 460.0,
-        [(r"^(vm_|vi_|red_)", "W"), (r"^wrom_", "E"), (r"^(kv_|cr_)", "S")],
-        default_edge="N",
-        notes="V4.1 four-operand stream unit; 88.1k um2 of cells flat (routed at 848 MHz flat)"),
     "ot_hdc_v41_qe": Block(
         "ot_hdc_v41_qe", V41_COMMON + [
             "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/hdc/v41/ot_hdc_actquant.sv", "rtl/hdc/v41/ot_hdc_fp4qdq.sv",
@@ -178,33 +170,6 @@ BLOCKS.update({
         420.0, 420.0,
         [(r"^qr_", "N"), (r"^(vi_|xr_|w_)", "S")],
         notes="V4.1 quantised block-dot engine; 53.8k um2 of cells after synthesis"),
-    "ot_hdc_v41_xu": Block(
-        "ot_hdc_v41_xu", V41_COMMON + [
-            "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv", "rtl/hdc/v41/ot_hdc_engram_hash.sv",
-            "rtl/hdc/v41/ot_hdc_select.sv", "rtl/hdc/v41/ot_hdc_sk_arith.sv",
-            "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv", "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
-            "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv", "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",
-            "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_tselect.sv", "rtl/hdc/v41/ot_hdc_v41_xu.sv"],
-        480.0, 480.0,
-        [(r"^er_", "N"), (r"^(vr_|xr_|vw_|w_|cr_)", "S")],
-        orfs_extra={"SYNTH_HDL_FRONTEND": "slang"},   # package import inside the module
-        notes=("V4.1 select / Sinkhorn / Engram unit; the Sinkhorn (ot_hdc_sinkhorn_mc, the "
-               "configuration the decode campaign runs) is clocked by a divided clock (1/7)"),
-        extra_sdc=[
-            "# ot_hdc_sinkhorn_mc: the unit clock is a register output, one edge per 7 core cycles",
-            "set sk_q [get_pins -quiet {*sclk*/QN}]",
-            "if {[llength $sk_q] == 0} { set sk_q [get_pins -quiet {*sclk*/Q}] }",
-            "create_generated_clock -name sk_clk -source [get_ports clk] -divide_by 7 $sk_q",
-            "# the caller holds req / in_e until the unit is busy: 7 core cycles to the unit edge",
-            "set_multicycle_path -setup 7 -from [get_clocks clk] -to [get_clocks sk_clk]",
-            "set_multicycle_path -hold 6 -from [get_clocks clk] -to [get_clocks sk_clk]",
-        ]),
-    "ot_hdc_v41_hcproj": Block(
-        "ot_hdc_v41_hcproj", V41_COMMON + ["rtl/hdc/v41/ot_hdc_v41_hcproj.sv"],
-        160.0, 160.0,
-        [(r"^hr_", "N"), (r"^(x_|o_)", "W")],
-        default_edge="W",
-        notes="V4.1 hyper-connection projection (3 FP32 lanes)"),
 })
 
 
