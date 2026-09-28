@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import hdc_qwen_int8_image as image  # noqa: E402
 import hdc_qwen_vocab_rom as vocab  # noqa: E402
+import hdc_golden as G  # noqa: E402
 
 
 def test_last_lm_head_row_uses_last_engine_group():
@@ -48,3 +49,9 @@ def test_real_checkpoint_boundary_window_pins(tmp_path):
         for name, digest in meta['source_sha256'].items():
             assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
         assert meta['code_word_count'] == (64 if kind == 'embedding' else 4)
+        if kind == 'embedding':
+            lines = (out / 'vm_x_fp32.hex').read_text().splitlines()
+            assert lines[0] == '@1000' and len(lines) == 4097
+            code = source['codes'].numpy()[0].astype(np.float32)
+            scale = source['scales'].float().numpy()[0]
+            assert [int(x, 16) for x in lines[1:]] == list(map(int, G.bits(G.mul(code, scale))))

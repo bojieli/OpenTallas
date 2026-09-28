@@ -12,6 +12,7 @@ from pathlib import Path
 
 import numpy as np
 
+import hdc_golden as G
 from hdc_qwen_fullshape_placement import CONFIG, LOCK, GROUPS, matrix
 from hdc_qwen_int8_image import shipped_vocab_rows
 from hdc_qwen_layer0_rom import pinned_snapshot, word_hex
@@ -70,8 +71,20 @@ def write_window(snapshot: Path, out: Path, kind: str, start: int, count: int, d
         for address, value in sorted(scale.items()):
             lanes = [int(value)] if kind == 'embedding' else value
             stream.write(f'@{address:x}\n{word_hex(lanes, 16)}\n')
+    preload_path = None
+    if kind == 'embedding' and count == 1:
+        # The layer-only program starts with X already resident in VM. Decode
+        # one exact INT8 embedding row to a sparse FP32 element image for RTL.
+        x = G.mul(codes[0].view(np.int8).astype(np.float32),
+                  np.uint32(int(scales[0]) << 16).view(np.float32))
+        preload_path = out / 'vm_x_fp32.hex'
+        with preload_path.open('w') as stream:
+            stream.write('@1000\n')  # VM element base 4096
+            for bits in G.bits(x):
+                stream.write(f'{int(bits):08x}\n')
     pins = ('tools/hdc_qwen_vocab_rom.py', 'tools/hdc_qwen_int8_image.py',
-            'tools/qwen3_deployment_quality.py', 'tools/hdc_qwen_layer0_rom.py')
+            'tools/qwen3_deployment_quality.py', 'tools/hdc_qwen_layer0_rom.py',
+            'tools/hdc_golden.py')
     manifest = {'schema': 'opentallas.qwen-o4-vocab-rom-window.v1', 'kind': kind,
                 'die': die, 'local_start': start, 'global_start': source['global_start'],
                 'rows': count, 'complete': count == (151936 if kind == 'embedding' else 75968) and start == 0,
@@ -81,8 +94,9 @@ def write_window(snapshot: Path, out: Path, kind: str, start: int, count: int, d
                 'source_sha256': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in pins},
                 'geometry': geometry, 'code_word_count': len(code), 'scale_word_count': len(scale),
                 'default_unlisted_scale_bf16': '3f80',
+                'vm_x_element_base': 4096 if preload_path else None,
                 'image_sha256': {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
-                                 for path in (code_path, scale_path)},
+                                 for path in (code_path, scale_path, preload_path) if path is not None},
                 'claim_boundary': 'Checkpoint-quantized complete rows at full-shape addresses; no RTL token pass.'}
     (out / f'{kind}_window.json').write_text(json.dumps(manifest, indent=2) + '\n')
     return manifest
