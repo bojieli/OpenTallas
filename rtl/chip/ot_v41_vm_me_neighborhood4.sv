@@ -36,10 +36,20 @@ module ot_v41_vm_me_neighborhood4 #(
     wire [12:0] cv_e;
     wire [1023:0] cv_words;
     wire [1023:0] store_words;
+    reg [1:0] me_rd_rot_q;
+    reg [7:0] me_rq_v_q;
+    reg [111:0] me_rq_q_q;
+    reg [31:0] me_rq_plg_q;
+    reg [3:0] sink_ce_q;
     reg [12:0] e_delay [0:6];
     reg p_delay [0:6];
     integer i;
     always @(posedge clk) begin
+        me_rd_rot_q <= me_rd_rot;
+        me_rq_v_q <= me_rq_v;
+        me_rq_q_q <= me_rq_q;
+        me_rq_plg_q <= me_rq_plg;
+        sink_ce_q <= sink_ce;
         e_delay[0] <= vm_pre_e;
         p_delay[0] <= vm_pre_p;
         for (i=1;i<7;i=i+1) begin
@@ -64,8 +74,8 @@ module ot_v41_vm_me_neighborhood4 #(
     ot_hdc_v41x_me_xbank_macro_inreg_readreg_writepipe #(.MP(1)) u_store (
         .clk(clk),.wr_v(1'b0),.wr_p(1'b0),.wr_e(13'b0),.wr_d(64'b0),
         .pre_v(cv_v),.pre_p(cv_p),.pre_e(cv_e),.pre_d(cv_words),
-        .rd_rot(me_rd_rot),.rq_v(me_rq_v),.rq_q(me_rq_q),
-        .rq_plg(me_rq_plg),.rd_x(store_words)
+        .rd_rot(me_rd_rot_q),.rq_v(me_rq_v_q),.rq_q(me_rq_q_q),
+        .rq_plg(me_rq_plg_q),.rd_x(store_words)
     );
 
     genvar c;
@@ -73,6 +83,6 @@ module ot_v41_vm_me_neighborhood4 #(
         // Independent capture enables keep all four full-width consumers
         // observable through synthesis; they cannot collapse to one bank.
         always @(posedge clk)
-            if (sink_ce[c]) sink_data[c*1024 +:1024] <= store_words;
+            if (sink_ce_q[c]) sink_data[c*1024 +:1024] <= store_words;
     end endgenerate
 endmodule
