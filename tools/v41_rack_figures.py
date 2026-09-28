@@ -527,40 +527,41 @@ def fig_headsram(rec):
     out.append(R(x0, y0, bw, bh, "var(--code)", "var(--ink)", 1.2, 2))
     mw, mh = mc["width_um"] * sc, mc["height_um"] * sc
     halo = 5 * sc
-    per_col = (o["slots"] + 1) // 2
+    chan = a.get("bus_channel_um", 60.0)
+    per_col = o["macros"] // 8                     # four-macro rows per column
+    rows_per_bank = per_col // 2
     for col in range(2):
-        cx = x0 + col * (4 * (mw + halo) + 60 * sc)
+        cx = x0 + col * (4 * (mw + halo) + chan * sc)
         for r in range(per_col):
-            slot = col * per_col + r
-            if slot >= o["slots"]:
-                break
             cy = y0 + r * (mh + halo) + halo / 2
             for j in range(4):
                 out.append(R(cx + j * (mw + halo) + halo / 2, cy, mw, mh, "var(--hbm-soft)", "var(--hbm)", 0.6, 1))
-            out.append(T(cx + 4 * (mw + halo) + 3 if col == 1 else cx - 3, cy + mh / 2 + 3, "u%d" % slot, 7,
-                         "var(--muted)", "start" if col == 1 else "end", mono=True))
+            if r % rows_per_bank == 0:
+                out.append(T(cx + 4 * (mw + halo) + 3 if col == 1 else cx - 3, cy + mh / 2 + 3,
+                             "bank %d" % (2 * col + r // rows_per_bank), 7, "var(--muted)",
+                             "start" if col == 1 else "end", mono=True))
     chx = x0 + 4 * (mw + halo)
-    out.append(R(chx, y0, 60 * sc, bh, "var(--rom-soft)", "var(--rom)", 0.6, 0))
-    out.append(T(chx + 30 * sc, y0 + bh + 14, "bus channel", 8.5, "var(--rom)", "middle"))
+    out.append(R(chx, y0, chan * sc, bh, "var(--rom-soft)", "var(--rom)", 0.6, 0))
+    out.append(T(chx + chan * sc / 2, y0 + bh + 14, "bus channel", 8.5, "var(--rom)", "middle"))
     ex = x0 + bw + 95
     out.append(R(ex, y0 + bh / 2 - 40, 130, 80, "var(--rom-soft)", "var(--rom)", 1.2, 3))
     out.append(T(ex + 65, y0 + bh / 2 - 8, "drafter BF16", 10, anchor="middle", weight=600))
     out.append(T(ex + 65, y0 + bh / 2 + 8, "attention engine", 10, anchor="middle", weight=600))
     out.append(L(x0 + bw + 30, y0 + bh / 2 - 10, ex - 2, y0 + bh / 2 - 10, "var(--rom)", 2, arrow=True, mid="hsr"))
-    out.append(T(x0 + bw + 70, y0 + bh / 2 - 15, "rd 1,024 b", 8, "var(--rom)", "middle"))
+    out.append(T(x0 + bw + 70, y0 + bh / 2 - 15, "rd %s b" % f"{o['read_port_bits']:,}", 8, "var(--rom)", "middle"))
     out.append(L(ex - 2, y0 + bh / 2 + 12, x0 + bw + 30, y0 + bh / 2 + 12, "var(--hbm)", 2, arrow=True, mid="hsh"))
-    out.append(T(x0 + bw + 70, y0 + bh / 2 + 26, "wr 1,024 b", 8, "var(--hbm)", "middle"))
+    out.append(T(x0 + bw + 70, y0 + bh / 2 + 26, "wr %s b" % f"{o['write_port_bits']:,}", 8, "var(--hbm)", "middle"))
     out.append(R(ex, y0 + bh - 30, 130, 30, "var(--hbm-soft)", "var(--hbm)", 1, 3))
     out.append(T(ex + 65, y0 + bh - 11, "paging to 4 HBM3E", 9, anchor="middle"))
     out.append(L(x0 + 10, y0 + bh + 26, x0 + 10 + 1000 * sc, y0 + bh + 26, "var(--ink)", 1.2))
     out.append(T(x0 + 10, y0 + bh + 40, "1 mm", 8.5, "var(--muted)"))
     kx, ky = 720, 60
     t = fp["timing"]
-    rows = [("macros", "%d (4 per user slot, 28 slots)" % o["macros"]),
+    rows = [("macros", "%d (%d banks x %d; 28 slots)" % (o["macros"], o["banks"], o["macros_per_bank"])),
             ("capacity", "%.2f MB (need %.2f)" % (o["bytes"] / 1e6, o["needed_per_slot_bytes"] * o["slots"] / 1e6)),
             ("block", "%.2f x %.2f mm = %.2f mm2" % (a["block_w_mm"], a["block_h_mm"], a["block_mm2"])),
-            ("ROM displaced", "%.1f of %.0f MB spare" % (a["displaced_rom_bytes"] / 1e6, a["head_die_spare_rom_bytes"] / 1e6)),
-            ("ports", "1R1W, 1,024 b read + 1,024 b write"),
+            ("location", "%.0f mm2 released engine area" % a["head_released_engine_mm2"]),
+            ("ports", "1R1W, %s b read + %s b write" % (f"{o['read_port_bits']:,}", f"{o['write_port_bits']:,}")),
             ("macro fmax (ss)", "%.0f MHz vs %.0f MHz" % (t["fmax_ss_mhz"], t["clock_hz"] / 1e6)),
             ("read latency", "%d cycles (registered at macro)" % t["read_latency_cycles"]),
             ("block read", "%.0f cycles, %.2f nJ" % (fp["power"]["block_read_cycles"], fp["power"]["block_read_nj"])),
@@ -573,11 +574,14 @@ def fig_headsram(rec):
         out.append(T(kx + 275, yy, v, 9.5, anchor="end", weight=600, mono=True))
     cap = ("<b>Figure R-5. Head-die draft-KV memory (gate C10).</b> Each head die holds the 28-user fill's draft "
            "windows (3 blocks x 128 rows x 528 B per user, a quarter per die, double-buffered) in %d macros from "
-           "this repository's ASAP7 SRAM compiler (%s: 32 KB, 1R1W, 2 spare rows and columns). One 4-macro row per "
-           "user slot gives the drafter's attention a 1,024-bit read port and an independent write port. Users "
-           "beyond the fill page to the head die's 4 HBM3E stacks. Macro geometry and timing come from the "
-           "compiler's datasheet; the halo, the bus channel and the wire delay are estimates, and nothing here is "
-           "routed." % (o["macros"], mc["name"]))
+           "this repository's ASAP7 SRAM compiler (%s: 32 KB, 1R1W, 2 spare rows and columns), placed in the "
+           "right-sized head die's released engine area, so no ROM is displaced. Four banks of %d macros; a user "
+           "slot is interleaved across one bank, giving the drafter's attention a %s-bit read port (a stage's "
+           "window in %.0f cycles) and an independent write port, and four users can read at once. Users beyond "
+           "the fill page to the head die's 4 HBM3E stacks. Macro geometry and timing come from the compiler's "
+           "datasheet; the halo, the bus channel and the wire delay are estimates, and nothing here is routed."
+           % (o["macros"], mc["name"], o["macros_per_bank"], f"{o['read_port_bits']:,}",
+              fp["power"]["block_read_cycles"] + fp["timing"]["read_latency_cycles"]))
     return figure("rack-headsram", "0 0 1000 %d" % int(y0 + bh + 60), "".join(out), "Head-die draft-KV memory floorplan", cap)
 
 

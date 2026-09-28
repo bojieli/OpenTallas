@@ -176,6 +176,24 @@ PHYS = {
         source="Uptime Institute: above 20-25 kW per rack, direct liquid cooling and precision air become more economical; "
                "mean rack 8.4 kW (2020)", url="https://journal.uptimeinstitute.com/rack-density-is-rising/"),
     "tray_mass_kg": dict(value=(18, 25), grade="estimate", source="1OU liquid-cooled compute tray with 4 packages, cold plates, manifolds"),
+    # ---- DSpark drafter state (gate C10) -----------------------------------------------------------------
+    "dspark_state": dict(value=dict(stages=3, block_rows=5, window_rows=128, head_dim=512, compress_ratio=0,
+                                    target_layers=(37, 38, 39)), grade="published",
+        source="released DeepSeek-V4.1-Flash snapshot dba1be0a40aa45a94ad051997016db3960a90277: inference/config.json "
+               "n_mtp_layers 3, dspark_block_size 5, window_size 128, head_dim 512, compress_ratios[40:43] = [0, 0, 0], "
+               "dspark_target_layer_ids [37, 38, 39]; inference/model.py DSparkAttention.forward asserts "
+               "compress_ratio == 0 and keeps one [batch, window_size, head_dim] ring per stage (window_kv_cache): the "
+               "draft attends its 128-row window plus the block's own rows, never the compressed context, so the "
+               "state is context-independent (1M and 200K alike)"),
+    "window_row_bytes": dict(value=528, grade="spec",
+        source="the window row as stored and RTL-qualified: 512 E4M3 codes + 16 UE8M0 scales (tools/kv_ingest_ref.py; "
+               "tools/rtl_hdc_kv_ingest_campaign.py v41_win rows, 528 B); the DSpark prefill-KV reference holds the "
+               "same QDQ'd values as BF16 (1,024 B, docs/DEEPSEEK_V4_DSPARK_PREFILL_KV_EVIDENCE.md), a sensitivity"),
+    "bus_wire_pitch_um": dict(value=0.08, grade="estimate",
+        source="ASAP7 upper-metal (M8/M9-class) wire pitch 80 nm; four routing layers over the bus channel (ESTIMATE)"),
+    "ucie_relay_peak_bytes_per_cycle": dict(value=3 * 512, grade="measured",
+        source="results/rtl/v41_collective_levers_campaign.json claim_boundary: with the receive-side relay at most "
+               "3 x 512 B per cycle leave a die on UCIe (40% of its 3,864 B/cycle)"),
 }
 
 # published comparison systems (filled from cited sources; see compare())
@@ -431,48 +449,143 @@ def link_inventory(el):
 # ---------------------------------------------------------------------------------------------------------
 # 4. per-token traffic per link class
 # ---------------------------------------------------------------------------------------------------------
+WIN_ROW_B, CKV_ROW_B = 528, 288
+
+
+def _klass(L, modes):
+    """The budget's collective class of layer L (arch_budget_v41.json collectives_per_layer)."""
+    if L in (0, 1):
+        return "0"
+    if L == 20:
+        return "20"
+    if modes[L] == "full":
+        return "2"
+    if modes[L] == "reindex":
+        return "24"
+    return "3"
+
+
+def exposure_class(name, op):
+    """The measured pattern class a collective is priced by (tools/collective_exposure.exposure_class)."""
+    if name.endswith("rows_allgather"):
+        return "all_gather_rows"
+    if name.endswith(("topk_merge", "cand.merge")):
+        return "all_gather_select"
+    return "all_gather_small" if op == "all_gather" else "all_reduce"
+
+
+def layer_collectives():
+    """{layer: [(name, op, class, payload bytes per position)]} as the design-point DAG issues them
+    (tools/decode_critical_path v41_attention, kv_mode 'broadcast'): the budget's per-layer list with the KV-rows
+    all-gather's payload filled in -- the window's 128 x 528 B rows plus, on a compressed layer, the 512 selected
+    288-B rows (the budget record lists that collective at 0 B).  Sum over the 40 layers: 10,362,368 B per position,
+    the design-point DAG's 10,362,400 B less its 32-B argmax merge."""
+    B = json.loads(BUDGET.read_text())
+    cfg = json.loads(V41_CONFIG.read_text())
+    oc = cfg["metadata"]["operator_config"]
+    modes = [m["mode"] for m in cfg["metadata"]["csa2_layer_modes"]]
+    ratios = oc["compress_ratios"]
+    win, topk = oc["window_tokens"], oc["index_topk"]
+    out = {}
+    for L in range(cfg["num_layers"]):
+        rows = []
+        for name, kind, by in B["collectives_per_layer"][_klass(L, modes)]:
+            if name == "attn.rows_allgather":
+                by = win * WIN_ROW_B + (topk * CKV_ROW_B if ratios[L] else 0)
+            rows.append((name, kind, exposure_class(name, kind), by))
+        out[L] = rows
+    return out
+
+
+def _levers():
+    """The adopted collective levers (results/arch/v41_lanes.json collective_exposure.levers): the classes whose T1
+    bytes the receive-side relay halves, and the stage hop's T1 split words (results/rtl/
+    v41_collective_levers_campaign.json)."""
+    ln = json.loads(LANES_REC.read_text())
+    lv = (ln.get("collective_exposure") or {}).get("levers") or {}
+    scale = dict(lv.get("bytes_scale", {}))
+    camp = ROOT / "results/rtl/v41_collective_levers_campaign.json"
+    hop_t1_words = 0
+    if camp.exists() and lv.get("picks", {}).get("best_hop_split"):
+        hop_t1_words = json.loads(camp.read_text())["summary"]["patterns"]["stage_hop"]["t1_words_per_link"]
+    return dict(bytes_scale=scale, relayed=sorted(k for k, v in scale.items() if v < 1.0), hop_t1_words_per_link=hop_t1_words,
+                word_bytes=512, source="results/arch/v41_lanes.json collective_exposure.levers; "
+                                       "results/rtl/v41_collective_levers_campaign.json stage_hop")
+
+
+def die_link_bytes(colls, lev, resid):
+    """Bytes ONE die moves per position for a list of collectives (flat one-shot on the 4-die group, no two-step
+    credit): on EACH of its two T1 links (13 lanes to one die of the partner package) and on its UCIe link to its
+    package peer.  All-reduce: the whole partial to each peer; all-gather: the die's quarter.  Under the receive-side
+    relay (a relayed class) each T1 link carries half the words and the receiving die forwards them to its peer the
+    cycle they land, so the die's UCIe egress is its own partial plus the halves it forwards (2 x)."""
+    t1 = ucie = 0.0
+    for name, op, cls, by in colls:
+        n = by if op == "all_reduce" else by / G
+        s = lev["bytes_scale"].get(cls, 1.0) if lev else 1.0
+        t1 += n * s
+        ucie += n * (2.0 if s < 1.0 else 1.0)
+    return t1, ucie
+
+
+def hop_link_bytes(lev, resid):
+    """A stage hop into a module: each die needs the whole residual; half arrives on its 7 cable lanes and the rest
+    crosses UCIe from its package peer (the per-die halves scheme), and under the adopted split some words ride one
+    package's cables and cross to the other package over T1 (t1_words_per_link per T1 link)."""
+    t1 = (lev["hop_t1_words_per_link"] * lev["word_bytes"]) if lev else 0.0
+    return t1, resid / 2
+
+
+def _dp_rates():
+    """Design-point rates (results/arch/v41_lanes.json design_point and energy aggregates, with the levers)."""
+    ln = json.loads(LANES_REC.read_text())
+    e = ln["energy"][str(CTX)]
+    return dict(b1=e["b1"]["rom"]["aggregate_tokens_s"], fill=e["fill28"]["rom"]["aggregate_tokens_s"],
+                b1_mtp=e["b1_mtp"]["rom"]["aggregate_tokens_s"], fill_mtp=e["fill28_mtp"]["rom"]["aggregate_tokens_s"],
+                sat_mtp=e["sat1024_mtp"]["rom"]["aggregate_tokens_s"],
+                source="results/arch/v41_lanes.json energy[1048576] aggregate_tokens_s (design point with the levers)")
+
+
 def traffic(pl):
     B = json.loads(BUDGET.read_text())
     cfg = json.loads(V41_CONFIG.read_text())
     oc = cfg["metadata"]["operator_config"]
-    cpl = B["collectives_per_layer"]
-    modes = [m["mode"] for m in cfg["metadata"]["csa2_layer_modes"]]
-
-    def klass(L):
-        if L in (0, 1):
-            return "0"
-        if L == 20:
-            return "20"
-        if modes[L] == "full":
-            return "2"
-        if modes[L] == "reindex":
-            return "24"
-        return "3"
+    lc = layer_collectives()
     ar = ag = 0
     ar_b = ag_b = 0
+    rows_b = 0
     for L in range(cfg["num_layers"]):
-        for name, kind, by in cpl[klass(L)]:
-            if kind == "all_reduce":
+        for name, kind, cls, by in lc[L]:
+            if cls == "all_gather_rows":
+                ag += 1                                      # counted with the all-gathers; bytes kept apart
+                rows_b += by
+            elif kind == "all_reduce":
                 ar += 1
                 ar_b += by
             else:
                 ag += 1
                 ag_b += by
-    # flat one-shot on 4 dies: all-reduce -> each die sends its full partial to 3 peers (1 UCIe + 2 board);
-    # all-gather -> each die sends its quarter to 3 peers
-    ucie_b = ar_b * 4 * 1 + ag_b / 4 * 4 * 1
-    board_tp_b = ar_b * 4 * 2 + ag_b / 4 * 4 * 2
-    msgs_tp = (ar + ag) * 4 * 3
     hc, Dm = oc["hc_mult"], oc["hidden_size"]
     resid = hc * Dm * 2                                      # 4 x 5,120 BF16 residual stream
     stage_hops = STAGES - 1 + 1                              # 27 boundaries + S27 -> H
+    # T0 / T1 at the design point: every collective incl. the KV-rows all-gather, the adopted relay (relayed classes
+    # put half their words on each T1 link and twice on UCIe), and the stage-hop split's T1 words and UCIe halves
+    lev = _levers()
+    t1_die = ucie_die = 0.0
+    for L in range(cfg["num_layers"]):
+        a, b_ = die_link_bytes(lc[L], lev, resid)
+        t1_die += a
+        ucie_die += b_
+    h1, hu = hop_link_bytes(lev, resid)
+    board_tp_b = 4 * 2 * t1_die + stage_hops * 2 * h1    # 4 dies x 2 T1 links; the split crosses 2 links per hop
+    ucie_b = 4 * ucie_die + stage_hops * 4 * hu
     ret_b = Dm * 2                                           # H -> S0: the next token's embedding row (BF16)
     engram_rows = 2 * oc["engram_hash_columns"]
     engram_b = engram_rows * 264
     tokid_msgs = 72 + 4                                      # token-id multicast to table + head dies
     kv = B["workload"][str(CTX)]["totals"]["bytes"]
-    rate_b1 = B["batch"][str(CTX)]["rows"]["rom"][0]["ar_tokens_s_per_user"]
-    rate_mtp = B["batch"][str(CTX)]["rows"]["rom"][0]["mtp_tokens_s_per_user"]
+    rt = _dp_rates()
+    rate_b1, rate_mtp = rt["b1"], rt["b1_mtp"]
     per_token = {
         "T0_ucie": dict(bytes=ucie_b, messages=(ar + ag) * 4),
         "T1_tp_trace": dict(bytes=board_tp_b, messages=(ar + ag) * 8),
@@ -482,10 +595,16 @@ def traffic(pl):
         "hbm_kv_index": dict(bytes=kv["kv_hbm"] + kv["idx"], messages=None),
     }
     out = dict(collectives=dict(all_reduce=ar, all_gather=ag, all_reduce_bytes=ar_b, all_gather_bytes=ag_b,
+                                rows_allgather=cfg["num_layers"], rows_allgather_bytes=rows_b,
                                 spec_total=B["workload"][str(CTX)]["totals"]["collectives"],
-                                spec_payload_bytes=B["workload"][str(CTX)]["totals"]["collective_bytes"]),
-               per_token=per_token, residual_bytes=resid, stage_hops_per_token=stage_hops,
-               rates=dict(b1=rate_b1, fill=rate_b1 * FILL, b1_mtp=rate_mtp, fill_mtp=rate_mtp * FILL))
+                                spec_payload_bytes=B["workload"][str(CTX)]["totals"]["collective_bytes"],
+                                note=("all_reduce / all_gather: the budget's 209 token collectives; their bytes exclude "
+                                      "the 40 KV-rows all-gathers, which the budget lists at 0 B (the bytes-only "
+                                      "sensitivity serialises these bytes); rows_allgather_bytes: what the "
+                                      "design-point DAG issues for them (layer_collectives), carried on T0/T1")),
+               per_token=per_token, residual_bytes=resid, stage_hops_per_token=stage_hops, levers=lev,
+               whole_model_per_die_per_position=dict(t1_link_bytes=t1_die + stage_hops * h1 / 4, ucie_bytes=ucie_die + stage_hops * hu),
+               rates=dict(b1=rate_b1, fill=rt["fill"], b1_mtp=rate_mtp, fill_mtp=rt["fill_mtp"], source=rt["source"]))
     lb = lane_budget()
     link_caps = {"T0_ucie": _v("ucie_link_Bps") * 2 * (DIES // PKG_DIES),
                  "T1_tp_trace": lb["tp_package_Bps"] * 58,
@@ -495,8 +614,8 @@ def traffic(pl):
     rows = {}
     for k, v in per_token.items():
         r = dict(bytes_per_token=v["bytes"], messages_per_token=v["messages"])
-        for tag, rate, f in (("b1", rate_b1, 1.0), ("fill", rate_b1 * FILL, 1.0),
-                             ("fill_mtp", rate_mtp * FILL, POSITIONS / TAU)):
+        for tag, rate, f in (("b1", rate_b1, 1.0), ("fill", rt["fill"], 1.0),
+                             ("fill_mtp", rt["fill_mtp"], POSITIONS / TAU)):
             r[f"Bps_{tag}"] = v["bytes"] * rate * f
         if k in link_caps:
             r["capacity_Bps"] = link_caps[k]
@@ -706,7 +825,7 @@ def head_draft_sram():
                 note="capacity-only lower bound; banks, ports, margin, leakage and timing still require floorplanning")
 
 
-def conflicts(pl, links, tr, pwr, el, draft_sram):
+def conflicts(pl, links, tr, pwr, el, draft_sram, gates):
     B = json.loads(BUDGET.read_text())
     c = []
     L = links["stage_links"]
@@ -744,7 +863,8 @@ def conflicts(pl, links, tr, pwr, el, draft_sram):
     sw = lanes_rec.get("static_w", {})
     c.append(dict(
         id="C4", severity="resolved-in-model" if sw.get("rom_serdes") else "conflict",
-        item="SerDes power in static power",
+        item="SerDes power in static power", status="%s (analytical)" % gates["C4"]["verdict"],
+        gate_finding=gates["C4"]["finding"],
         finding=("%d always-on 112G lanes per layer/head package at ~%.2f W each = %.0f W per package (%.0f W per "
                  "die); table packages %.2f W; %.2f kW per rack. The rack power scenarios carry it as static. %s"
                  % (pwr["serdes"]["active_lanes_per_layer_pkg"], pwr["serdes"]["lane_w"], pwr["serdes"]["per_layer_pkg_w"],
@@ -778,7 +898,8 @@ def conflicts(pl, links, tr, pwr, el, draft_sram):
     lb = lane_budget()
     c.append(dict(
         id="C8", severity="resolved-in-model" if LANES_R_L9 else "conflict",
-        item="two-die package link bandwidth (T1 on-module TP link)",
+        item="two-die package link bandwidth (T1 on-module TP link)", status="%s (analytical)" % gates["C8"]["verdict"],
+        gate_finding=gates["C8"]["finding"],
         finding=("a two-die package has 90 lanes = %.2f TB/s per direction (1.687 TB/s is the four-die package's 128). "
                  "%s TP %d lanes = %d per die pair (%.0f GB/s per peer), stage %d + %d, switch %d, spare %d. A 20 KB "
                  "one-shot partial crosses a peer link in %.0f ns%s. %s"
@@ -803,32 +924,16 @@ def conflicts(pl, links, tr, pwr, el, draft_sram):
                  % (pl["engram_consumers"][1], pl["engram_consumers"][14], ep["engram_l1_s"] * 1e6,
                     3.57 - ep["engram_l1_s"] * 1e6, ep["engram_l14_slack_s"] * 1e6))))
     hh = pl["counts"]["head_hbm_stacks_per_die"]
-    alloc = draft_sram_allocation(pl, draft_sram)
-    fp = head_draft_floorplan(pl, draft_sram, alloc)
+    g10 = gates["C10"]
     c.append(dict(
-        id="C10", severity="gate" if hh else "conflict",
-        item="head + DSpark draft KV: SRAM reserve at the fill%s" % (", HBM beyond it" if hh else ", no HBM"),
-        finding=("three %d-token draft windows at %.0f B per entry and the %d-user fill require %.2f MB per head "
-                 "die with four-way striping, or %.2f MB with double buffering. At the assumed N5 SRAM density "
-                 "(%.3f um2 bitcell, %.0f%% array efficiency), double buffering needs at least %.2f mm2 per head "
-                 "die before banks and ports. %s"
-                 % (draft_sram["window_tokens"], draft_sram["entry_bytes"], draft_sram["users"],
-                    draft_sram["single_buffer_bytes_per_die"] / 1e6,
-                    draft_sram["double_buffer_bytes_per_die"] / 1e6, draft_sram["bitcell_um2"],
-                    100 * draft_sram["array_efficiency"], draft_sram["min_double_buffer_mm2_per_die"],
-                    ("Spec ruling (C10): the head dies carry %d HBM3E stacks each like the layer dies, so users beyond "
-                     "the fill page their draft windows to HBM and all 29 stage modules stay identical. Floorplan "
-                     "(head_draft_floorplan): %d compiler macros (ot_sram_1r1w_1024x256, 32 KB, 1R1W, repairable), one "
-                     "4-macro row per user slot = a 1,024-bit read port and an independent write port; a %.2f x %.2f "
-                     "mm block (%.2f mm2) that displaces %.1f MB of the head die's %.0f MB spare ROM; macro fmax "
-                     "%.0f MHz at ss, read registered at the macro (%d-cycle latency); %.1f mW leakage. The "
-                     "floorplan is analytical; a routed head-die floorplan remains."
-                     % (hh, fp["organisation"]["macros"], fp["area"]["block_w_mm"], fp["area"]["block_h_mm"],
-                        fp["area"]["block_mm2"], fp["area"]["displaced_rom_bytes"] / 1e6,
-                        fp["area"]["head_die_spare_rom_bytes"] / 1e6, fp["timing"]["fmax_ss_mhz"],
-                        fp["timing"]["read_latency_cycles"], fp["power"]["leakage_mw"]))
-                    if hh else "The floorplan reserves zero SRAM; allocate and route this state, or give packages "
-                               "56-57 HBM."))))
+        id="C10", severity=("resolved-in-model" if g10["verdict"] == "PASS" else "gate") if hh else "conflict",
+        item="head + DSpark draft KV: SRAM at the fill%s" % (", HBM beyond it" if hh else ", no HBM"),
+        status="%s (analytical; routed head-die floorplan under K2)" % g10["verdict"],
+        finding=(("Spec ruling (C10): the head dies carry %d HBM3E stacks each, so users beyond the fill page their "
+                  "draft windows to HBM and all 29 stage modules stay identical. %s Open: %s"
+                  % (hh, g10["finding"], "; ".join(g10["open_items"])))
+                 if hh else "The floorplan reserves zero SRAM; allocate and route this state, or give packages "
+                            "56-57 HBM.")))
     c.append(dict(
         id="C7", severity="gate",
         item="collective overlap and whole-system clock must be demonstrated",
@@ -969,9 +1074,26 @@ def kv_replication(pl):
               % (sum(v["decode_ring_bytes_per_token"] for v in rows.values()), window_b)))
 
 
+DRAFT_INTERLEAVE = 28        # macros one user slot is interleaved across (one bank): 28 x 256 b = 896 B per cycle
+DRAFT_BANKS = 4              # 4 banks x 28 macros = 112; 7 slots per bank; up to 4 users read concurrently
+
+
+def _head_released_mm2():
+    """Engine area the right-sized head die does not keep (results/arch/v41_utilization.json nonlayer_right_size):
+    the head die keeps the BF16 engine, vector unit and one-shot of a layer die's engine area; the rest is released
+    (the static-power model already removes its leakage)."""
+    rs = json.loads(UTIL.read_text())["nonlayer_right_size"]
+    return rs["engine_area_per_die_spec_mm2"] - rs["head_die_keeps_mm2"], rs
+
+
 def draft_sram_allocation(pl, draft_sram):
-    """Allocate the head-die draft-KV SRAM (C10): size with banking overhead, the ROM it displaces, the head die's
-    spare ROM, and the read port the draft attention needs.  Beyond the fill the windows live in the head HBM."""
+    """Allocate the head-die draft-KV SRAM (C10): size with banking overhead, WHERE it goes, the ROM it would
+    displace, and the read port the draft attention needs.  Beyond the fill the windows live in the head HBM.
+
+    Location: the right-sized head die releases engine area (_head_released_mm2), so the SRAM displaces no ROM.
+    The head die has NO spare ROM: its 69 MB after lm_head, embedding and drafter weights is filled by Engram spill
+    (results/arch/v41_die_placement.json die_table engram_spill_bytes), so the ROM alternative would re-spill the
+    displaced bytes onto the layer dies' remaining spare."""
     P = json.loads(PLACEMENT.read_text())
     die_mm2 = 815.0
     envelope = 328.9                                                # N5 compute envelope per die (spec section 9)
@@ -980,22 +1102,37 @@ def draft_sram_allocation(pl, draft_sram):
     alloc_mm2 = draft_sram["min_double_buffer_mm2_per_die"] * bank_overhead
     displaced = alloc_mm2 / rom_mm2_per_B
     spare = P["head_die_spare_bytes"]
+    head_spill = max(d.get("engram_spill_bytes", 0.0) for d in P["die_table"] if d["role"].startswith("head"))
+    sp = P["engram_spill"]
+    layer_spare_left = sp["layer_die_spare_total"] - sp["onto_layer_dies"]
+    released, _ = _head_released_mm2()
     block_window_die = draft_sram["window_tokens"] * draft_sram["entry_bytes"] / 4   # one block, one die's quarter
-    port_B_cycle = 128
+    port_B_cycle = DRAFT_INTERLEAVE * 256 / 8
     return dict(
-        capacity_bytes_per_die=draft_sram["double_buffer_bytes_per_die"], banks=16,
-        bank_bytes=draft_sram["double_buffer_bytes_per_die"] / 16,
+        capacity_bytes_per_die=draft_sram["double_buffer_bytes_per_die"], banks=DRAFT_BANKS,
+        bank_bytes=draft_sram["double_buffer_bytes_per_die"] / DRAFT_BANKS,
         min_mm2=draft_sram["min_double_buffer_mm2_per_die"], bank_overhead=bank_overhead, allocated_mm2=alloc_mm2,
-        rom_mm2_per_byte=rom_mm2_per_B, displaced_rom_bytes=displaced, head_die_spare_rom_bytes=spare,
-        fits=displaced <= spare,
+        location="released engine area of the right-sized head die",
+        head_released_engine_mm2=released, fits_released_area=alloc_mm2 <= released,
+        rom_mm2_per_byte=rom_mm2_per_B, displaced_rom_bytes=0.0,
+        rom_alternative=dict(displaced_rom_bytes=displaced, head_die_spare_rom_bytes=spare,
+                             head_die_engram_spill_bytes=head_spill, head_die_free_rom_bytes=spare - head_spill,
+                             respill_onto_layer_dies_bytes=4 * displaced, layer_die_spare_left_bytes=layer_spare_left,
+                             fits=4 * displaced <= layer_spare_left,
+                             note="the head die's spare ROM is occupied by Engram spill; displacing ROM re-spills "
+                                  "4 x the displaced bytes onto the layer dies' remaining spare"),
+        head_die_spare_rom_bytes=spare - head_spill,
+        fits=alloc_mm2 <= released,
         read_port_bytes_per_cycle=port_B_cycle, block_window_bytes_per_die=block_window_die,
         block_read_cycles=block_window_die / port_B_cycle,
-        placement=("16 banks of %.0f KB beside the drafter's BF16 attention engine; the window of one draft block "
-                   "(%.1f KB per die) streams in %.0f cycles on a %d B/cycle port; users beyond the 28-user fill page "
-                   "their windows to the head die's HBM (4 stacks, spec C10)"
-                   % (draft_sram["double_buffer_bytes_per_die"] / 16 / 1e3, block_window_die / 1e3,
-                      block_window_die / port_B_cycle, port_B_cycle)),
-        grade="estimate: capacity from the N5 bitcell (spec), overhead 1.5x assumed; floorplan and timing not run")
+        placement=("%d banks of %d macros (%.0f KB) in the head die's released engine area beside the drafter's "
+                   "BF16 attention engine; a user slot is interleaved across one bank's %d macros, so one draft "
+                   "block's window (%.1f KB per die) streams in %.1f cycles on a %d B/cycle port; users beyond the "
+                   "28-user fill page their windows to the head die's HBM (4 stacks, spec C10)"
+                   % (DRAFT_BANKS, DRAFT_INTERLEAVE, DRAFT_INTERLEAVE * 32768 / 1e3, DRAFT_INTERLEAVE,
+                      block_window_die / 1e3, block_window_die / port_B_cycle, port_B_cycle)),
+        grade="estimate: capacity from the N5 bitcell (spec), overhead 1.5x assumed; released area from the "
+              "utilisation record's right-sizing (ASSUMED ASAP7 engine-area scaling); floorplan and timing not run")
 
 
 DRAFT_MACRO = ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json"
@@ -1005,31 +1142,38 @@ def head_draft_floorplan(pl, draft_sram, alloc):
     """Gate C10: the head die's draft-KV memory built from this repository's ASAP7 SRAM compiler
     (tools/mem_compiler/sram_gen.py; macro ot_sram_1r1w_1024x256_m2_r2c2, 32 KB, 1R1W, row + column repair).
 
-    Organisation: one ROW per user slot of the 28-user fill; a row is 4 macros side by side, so a read is
-    4 x 256 = 1,024 bits = 128 B per cycle (the allocation's port) and the write port (new window rows) is
-    independent (1R1W).  A row holds 128 KB >= one slot's double-buffered windows (3 blocks x 128 rows x 528 B / 4
-    dies x 2).  Rows are stacked in two columns of 14 beside the drafter's BF16 attention engine."""
+    Organisation: 112 macros in 4 BANKS of 28; a bank holds 7 user slots of the 28-user fill, each slot
+    interleaved across all 28 of its macros (4 KB of each), so one read is 28 x 256 b = 7,168 b = 896 B per cycle
+    and up to 4 users (one per bank) read at once; the write port (new window rows, paging) is independent (1R1W).
+    A slot holds 128 KB >= its double-buffered windows (3 blocks x 128 rows x 528 B / 4 dies x 2).  Physically the
+    banks are two columns of 14 four-macro rows (a bank = 7 rows of one column) around a bus channel that carries
+    each column's 7,168-bit read bus and 1,024-bit write bus.  The earlier one-row-per-slot organisation (4 macros,
+    128 B per cycle) read a block's window in 132 cycles, longer than the model's draft-stage KV sweep."""
     m = json.loads(DRAFT_MACRO.read_text())
     ar, t = m["area"], m["timing"]
     f = json.loads(LADDER.read_text())["ladder"][-1]["clock_hz"]
     period_ps = 1e12 / f
     per_slot_B = draft_sram["double_buffer_bytes_per_die"] / FILL
     macro_B = m["capacity_bits"] / 8 if "capacity_bits" in m else 1024 * 256 / 8
-    wide = 4                                                       # 4 x 256 b = the 128 B/cycle read port
-    row_B = wide * macro_B
     slots = FILL
-    macros = slots * wide
+    wide = DRAFT_INTERLEAVE
+    macros = DRAFT_BANKS * DRAFT_INTERLEAVE
+    per_bank_slots = slots // DRAFT_BANKS
+    slot_B = wide * macro_B / per_bank_slots
     w_um, h_um = ar["macro_width_um"], ar["macro_height_um"]
     halo = 5.0                                                     # um keep-out between macros (ESTIMATE)
-    cols, rows_per_col = 2, math.ceil(slots / 2)
-    blk_w = cols * (wide * (w_um + halo)) + 60.0                   # + a 60 um channel for the read/write buses
+    cols, rows_per_col = 2, macros // (2 * 4)
+    rd_bits, wr_bits = wide * 256, 1024
+    chan_um = cols * (rd_bits + wr_bits) * _v("bus_wire_pitch_um") / 4        # 4 routing layers (ESTIMATE)
+    blk_w = cols * (4 * (w_um + halo)) + chan_um
     blk_h = rows_per_col * (h_um + halo)
-    mux_ps = 60.0                                                  # 28:1 slot select on the 1,024-bit bus (ESTIMATE)
+    mux_ps = 60.0                                                  # 2:1 bank select + slot decode (ESTIMATE)
     wire_ps_per_mm = 120.0                                         # repeated upper-metal wire (ESTIMATE)
     route_mm = 1.0
     ss = t["ss"]
     path_ps = ss["clk_to_q_ps"] + mux_ps + wire_ps_per_mm * route_mm + ss["setup_ps"]
     reads_per_block = alloc["block_window_bytes_per_die"] / (wide * 32)
+    released = alloc["head_released_engine_mm2"]
     return dict(
         macro=dict(name="ot_sram_1r1w_1024x256_m2_r2c2", source=str(DRAFT_MACRO.relative_to(ROOT)),
                    bytes=macro_B, width_um=w_um, height_um=h_um, area_um2=ar["macro_area_um2"],
@@ -1038,19 +1182,23 @@ def head_draft_floorplan(pl, draft_sram, alloc):
                    leakage_uw=t["tt"]["leakage_nw"] / 1e3, read_energy_pj=t["tt"]["read_energy_fj"] / 1e3,
                    write_energy_pj=t["tt"]["write_energy_fj"] / 1e3, repair="2 spare rows + 2 spare IO columns",
                    claim_boundary=m["claim_boundary"]),
-        organisation=dict(slots=slots, macros_per_slot=wide, macros=macros, bytes=macros * macro_B,
-                          slot_bytes=row_B, needed_per_slot_bytes=per_slot_B, fits=row_B >= per_slot_B,
-                          read_port_bits=wide * 256, write_port_bits=wide * 256, ports="1R1W per macro: one "
-                          "1,024-bit read port (the draft attention's window stream) and one 1,024-bit write port "
-                          "(new window rows from the draft pass and from the KV paging engine)"),
+        organisation=dict(slots=slots, banks=DRAFT_BANKS, macros_per_bank=wide, slots_per_bank=per_bank_slots,
+                          macros=macros, bytes=macros * macro_B, slot_bytes=slot_B, needed_per_slot_bytes=per_slot_B,
+                          fits=slot_B >= per_slot_B, read_port_bits=rd_bits, write_port_bits=wr_bits,
+                          concurrent_readers=DRAFT_BANKS,
+                          ports=("1R1W per macro: per bank one %s-bit read port (a slot interleaved across the bank's "
+                                 "%d macros: the draft attention's window stream) and a 1,024-bit write port (new "
+                                 "window rows from the draft pass and from the KV paging engine)"
+                                 % (f"{rd_bits:,}", wide))),
         area=dict(macros_mm2=macros * ar["macro_area_um2"] / 1e6, block_w_mm=blk_w / 1e3, block_h_mm=blk_h / 1e3,
-                  block_mm2=blk_w * blk_h / 1e6, vs_allocation_mm2=alloc["allocated_mm2"],
-                  displaced_rom_bytes=blk_w * blk_h / 1e6 / alloc["rom_mm2_per_byte"],
-                  head_die_spare_rom_bytes=alloc["head_die_spare_rom_bytes"],
-                  fits_spare_rom=blk_w * blk_h / 1e6 / alloc["rom_mm2_per_byte"] <= alloc["head_die_spare_rom_bytes"]),
-        placement=("two columns of 14 slot-rows (4 macros each) with a 60 um bus channel between them, abutting the "
-                   "drafter's BF16 attention engine on the die's core side; the paging engine to the head die's 4 "
-                   "HBM3E stacks enters on the write bus"),
+                  block_mm2=blk_w * blk_h / 1e6, bus_channel_um=chan_um, vs_allocation_mm2=alloc["allocated_mm2"],
+                  head_released_engine_mm2=released, fits_released_area=blk_w * blk_h / 1e6 <= released,
+                  displaced_rom_bytes=0.0,
+                  rom_alternative_displaced_bytes=blk_w * blk_h / 1e6 / alloc["rom_mm2_per_byte"],
+                  head_die_spare_rom_bytes=alloc["head_die_spare_rom_bytes"]),
+        placement=("two columns of 14 four-macro rows (a bank = 7 rows of one column) with a %.0f um bus channel "
+                   "between them, in the head die's released engine area abutting the drafter's BF16 attention "
+                   "engine; the paging engine to the head die's 4 HBM3E stacks enters on the write bus" % chan_um),
         timing=dict(clock_hz=f, period_ps=period_ps, fmax_ss_mhz=m["fmax_mhz"]["ss"],
                     macro_meets_clock=m["fmax_mhz"]["ss"] * 1e6 >= f,
                     read_path_ss_ps=path_ps, margin_required=0.15,
@@ -1058,12 +1206,12 @@ def head_draft_floorplan(pl, draft_sram, alloc):
                     pipeline="macro read registered at the macro, then one bus stage to the engine" if path_ps >
                              0.85 * period_ps else "single-cycle read into the engine's input register",
                     read_latency_cycles=2 if path_ps > 0.85 * period_ps else 1,
-                    basis="ss clk-to-q + 28:1 select (est.) + 1 mm repeated wire (est.) + setup"),
+                    basis="ss clk-to-q + 2:1 bank select (est.) + 1 mm repeated wire (est.) + setup"),
         power=dict(leakage_mw=macros * t["tt"]["leakage_nw"] / 1e6,
                    block_read_nj=reads_per_block * wide * t["tt"]["read_energy_fj"] / 1e6,
                    block_read_cycles=reads_per_block),
-        grade="compiler datasheet (analytical ASAP7 model) for the macros; halo, bus channel, select and wire delay "
-              "are ESTIMATES; no floorplan run")
+        grade="compiler datasheet (analytical ASAP7 model) for the macros; halo, bus channel (wire pitch, layers), "
+              "select and wire delay are ESTIMATES; no floorplan run")
 
 
 def demonstration_plan(lb):
@@ -1252,6 +1400,335 @@ def reprice_sensitivity(pl, links, tr, pwr):
                               note="the adopted ladder already priced the ring return; relocation validates that premise"))
 
 
+# ---------------------------------------------------------------------------------------------------------
+# 7. gates C4 (SerDes power), C8 (two-die link bandwidth), C10 (head-die draft KV): record-bound verdicts
+# ---------------------------------------------------------------------------------------------------------
+POWER_SCEN = ROOT / "results/arch/power_scenarios.json"
+
+
+def _layer_stages(pl):
+    """{layer: (start stage, [stages it touches])} from the placement groups."""
+    st = {}
+    for g in pl["groups"]:
+        for l in g["layers"]:
+            s0, touch = st.get(l["layer"], (g["stage"], []))
+            st[l["layer"]] = (s0, touch + [g["stage"]])
+    return st
+
+
+def two_die_link_gate(pl, tr):
+    """Gate C8: the two-die package's links against the design point's peak demand.
+
+    Per die and per position, on the busiest layer stage: every collective of the layers whose ATTENTION starts in
+    the stage (attention runs where the layer starts) plus the FFN collectives of every layer that touches it (an
+    upper bound: a split layer's router gather and combine are charged to both stages), the KV-rows all-gather
+    included, flat one-shot with NO two-step credit, plus the incoming stage hop.  T1 = one 13-lane link to one die
+    of the partner package; UCIe = the die's link to its package peer.  Demand = bytes x positions/s through the stage:
+    at the 28-user fill every stage holds a user, so a stage carries the aggregate rate; at batch 1 the stage is busy
+    for about 1/28 of the period and its in-window demand equals the fill's.  The head module is checked on the
+    draft's own collectives (3 stages of a window-only layer at the 5-row block, no relay).  Saturation is reported,
+    not gated: the occupancy bound of the budget model does not include the links."""
+    lc = layer_collectives()
+    lev = tr["levers"]
+    resid = tr["residual_bytes"]
+    ls = _layer_stages(pl)
+    lb = lane_budget()
+    cap_t1, cap_u = lb["tp_per_die_pair_Bps"], _v("ucie_link_Bps")
+    rt = _dp_rates()
+    pos_mtp = POSITIONS / TAU
+    per_stage = {}
+    for g in pl["groups"]:
+        s = g["stage"]
+        colls = []
+        for L, (s0, touch) in ls.items():
+            for c_ in lc[L]:
+                if (c_[0].startswith("attn.") and s0 == s) or (c_[0].startswith("ffn.") and s in touch):
+                    colls.append(c_)
+        row = {}
+        for tag, lv in (("adopted_levers", lev), ("no_levers", None)):
+            t1, u = die_link_bytes(colls, lv, resid)
+            h1, hu = hop_link_bytes(lv, resid)
+            row[tag] = dict(t1_link_bytes=t1 + h1, ucie_bytes=u + hu)
+        row["collectives"] = len(colls)
+        per_stage[s] = row
+    busiest = max(per_stage, key=lambda s: per_stage[s]["adopted_levers"]["t1_link_bytes"])
+    busiest_u = max(per_stage, key=lambda s: per_stage[s]["adopted_levers"]["ucie_bytes"])
+    # the head module: the draft (3 window-only stages at the 5-row block) once per verify cycle per user
+    ds = PHYS["dspark_state"]["value"]
+    draft_colls = [c_ for c_ in lc[0]]
+    d1, du = die_link_bytes(draft_colls, None, resid)
+    head = dict(t1_link_bytes_per_draft=ds["stages"] * ds["block_rows"] * d1,
+                ucie_bytes_per_draft=ds["stages"] * ds["block_rows"] * du,
+                basis="3 draft stages x the window-only layer's collectives (layer 0 class, 67.6 KB KV-rows gather) x "
+                      "5 block rows, one-shot, no relay (the draft is priced without the levers)")
+    points = {}
+    for tag, rate, pos in (("b1", rt["b1"], 1.0), ("b1_in_window", rt["b1"] * FILL, 1.0), ("fill28", rt["fill"], 1.0),
+                           ("fill28_mtp", rt["fill_mtp"], pos_mtp), ("sat1024_mtp", rt["sat_mtp"], pos_mtp)):
+        p = {}
+        for v in ("adopted_levers", "no_levers"):
+            t1 = per_stage[busiest][v]["t1_link_bytes"] * rate * pos
+            u = per_stage[busiest_u][v]["ucie_bytes"] * rate * pos
+            p[v] = dict(t1_Bps=t1, t1_utilisation=t1 / cap_t1, ucie_Bps=u, ucie_utilisation=u / cap_u)
+        if tag.endswith("mtp"):
+            drafts = rate / TAU
+            p["head_module"] = dict(drafts_per_s=drafts,
+                                    t1_utilisation=head["t1_link_bytes_per_draft"] * drafts / cap_t1,
+                                    ucie_utilisation=head["ucie_bytes_per_draft"] * drafts / cap_u)
+        points[tag] = p
+    f = json.loads(LADDER.read_text())["ladder"][-1]["clock_hz"]
+    u_cyc = cap_u / f
+    burst = _v("ucie_relay_peak_bytes_per_cycle") / u_cyc
+    fm = points["fill28_mtp"]
+    worst = max(fm["adopted_levers"]["t1_utilisation"], fm["adopted_levers"]["ucie_utilisation"],
+                fm["head_module"]["t1_utilisation"], fm["head_module"]["ucie_utilisation"], burst)
+    sat = points["sat1024_mtp"]["adopted_levers"]
+    verdict = "PASS" if worst <= 1.0 else "FAIL"
+    return dict(
+        gate="C8", verdict=verdict, evidence_class="analytical (record-bound); link rates from the lane record",
+        capacity=dict(t1_link_Bps=cap_t1, t1_lanes=lb["tp_lanes_per_die_pair"], ucie_Bps=cap_u,
+                      ucie_bytes_per_cycle=u_cyc),
+        levers=lev, per_stage=per_stage, busiest_t1_stage=busiest, busiest_ucie_stage=busiest_u, head_module=head,
+        rates=rt, points=points,
+        ucie_relay_burst=dict(peak_bytes_per_cycle=_v("ucie_relay_peak_bytes_per_cycle"), utilisation=burst,
+                              source=PHYS["ucie_relay_peak_bytes_per_cycle"]["source"]),
+        worst_gated_utilisation=worst, margin=1.0 / worst,
+        saturation=dict(t1_utilisation=sat["t1_utilisation"], ucie_utilisation=sat["ucie_utilisation"],
+                        note=("reported, not gated: at 1,024 users with MTP the busiest stage's T1 link would run at "
+                              "%.0f%% of its rate%s" % (100 * sat["t1_utilisation"],
+                                                        "; the saturated aggregate is then link-bound, which the "
+                                                        "budget model's occupancy bound does not check" if
+                                                        sat["t1_utilisation"] > 1.0 else ""))),
+        not_credited=("two-step all-reduce at the 6-position MTP payloads (would halve the all-reduce T1 bytes "
+                      "again); the relay's measured tails are for one-shot 20 KB all-reduces"),
+        finding=("busiest layer stage S%d: %.1f KB per position on one T1 link and %.1f KB on UCIe with the adopted "
+                 "relay (%.1f / %.1f KB without levers). At the 28-user fill with MTP (%.0f positions/s through every "
+                 "stage) T1 runs at %.0f%% (%.0f%% without the relay) and UCIe at %.1f%%; the head module's draft "
+                 "traffic at %.0f%% of a T1 link; the relay's UCIe burst peaks at %.0f%% of UCIe (bench). Batch 1 "
+                 "averages %.2f%%; its in-window demand equals the fill's. Margin %.2fx."
+                 % (busiest, per_stage[busiest]["adopted_levers"]["t1_link_bytes"] / 1e3,
+                    per_stage[busiest_u]["adopted_levers"]["ucie_bytes"] / 1e3,
+                    per_stage[busiest]["no_levers"]["t1_link_bytes"] / 1e3,
+                    per_stage[busiest_u]["no_levers"]["ucie_bytes"] / 1e3, rt["fill_mtp"] * pos_mtp,
+                    100 * fm["adopted_levers"]["t1_utilisation"], 100 * fm["no_levers"]["t1_utilisation"],
+                    100 * fm["adopted_levers"]["ucie_utilisation"], 100 * fm["head_module"]["t1_utilisation"],
+                    100 * burst, 100 * points["b1"]["adopted_levers"]["t1_utilisation"], 1.0 / worst)))
+
+
+def serdes_power_gate(pwr, pl):
+    """Gate C4: every board, cable and switch lane charged in the rack power at its always-on power.
+
+    A 112G PAM4 lane transmits continuously (idle symbols when there is no data), so its power is always-on: 6.5 pJ/b
+    x 112 Gb/s = 0.728 W per duplex lane (technology.json energy.link_j_per_bit.board_serdes_112g, published).  Each
+    link is charged at both ends: each package pays its own lanes."""
+    lane_w = pwr["serdes"]["lane_w"]
+    n_lh = G * STAGES // PKG_DIES + 2                              # 56 layer + 2 head packages
+    n_tb = (DIES - G * STAGES - G) // PKG_DIES                     # 36 table packages
+    host_nic_lanes = INGEST_NICS * 4                               # 2 x 400G = 8 x 100G-class lanes
+    classes = [
+        dict(link="T1 on-module board trace (TP)", lanes_per_package=LANES["tp"], packages=n_lh, charged=True,
+             ends="both packages of a stage module pay their 52 lanes"),
+        dict(link="T2 ring cable, forward (stage out)", lanes_per_package=LANES["stage_out"], packages=n_lh,
+             charged=True, ends="this package's end; the next module's stage-in lanes are the far end"),
+        dict(link="T2 ring cable, backward (stage in)", lanes_per_package=LANES["stage_in"], packages=n_lh,
+             charged=True, ends="this package's end of the previous module's cable"),
+        dict(link="T3 switch port (layer / head package)", lanes_per_package=LANES["switch"], packages=n_lh,
+             charged=True, ends="package end; the switch end is inside the switch tray"),
+        dict(link="T3 switch port (table package)", lanes_per_package=2, packages=n_tb, charged=True,
+             ends="package end; the switch end is inside the switch tray"),
+        dict(link="spare (lane sparing, debug)", lanes_per_package=LANES["spare"], packages=n_lh, charged=False,
+             ends="power-gated until a failed lane is spared in (sensitivity below)"),
+    ]
+    for c_ in classes:
+        c_["lanes"] = c_["lanes_per_package"] * c_["packages"]
+        c_["w"] = c_["lanes"] * lane_w if c_["charged"] else 0.0
+    charged_w = sum(c_["w"] for c_ in classes)
+    B = json.loads(BUDGET.read_text())
+    per_die_budget = B["power"]["static_w_per_die"]["serdes_always_on"]
+    active_pkg = sum(c_["lanes_per_package"] for c_ in classes[:4])
+    switch_lanes = n_lh * LANES["switch"] + n_tb * 2 + host_nic_lanes
+    # dynamic energy: the budget's energy per token ALSO charges the collective bytes at the board + UCIe pJ/bit
+    # (arch_budget_v41.energy_per_token links); on always-on lanes that is a second charge: conservative
+    tech = json.loads(TECH_ENERGY.read_text())["energy"]["link_j_per_bit"]
+    pj = tech["board_serdes_112g"]["value"] + tech["ucie_advanced"]["value"]
+    coll_b = B["workload"][str(CTX)]["totals"]["collective_bytes"]
+    link_j = coll_b * 8 * pj * 4
+    rt = _dp_rates()
+    dbl = {k: link_j * r * (POSITIONS / TAU if "mtp" in k else 1.0)
+           for k, r in (("b1", rt["b1"]), ("fill28_mtp", rt["fill_mtp"]))}
+    # cross-check: the power-scenario record's die static has no SerDes term on either machine
+    ps = json.loads(POWER_SCEN.read_text()) if POWER_SCEN.exists() else None
+    xc = None
+    if ps:
+        sb = ps["scenarios"]["B_proposed_production"]
+        rom_keys = sorted(sb["deepseek_v41_design_point"]["die_static_w"])
+        r1 = ps["rom_over_hbm"]["B_proposed_production"][str(CTX)]["ar_batch1"]
+        hs = json.loads(HBM_SWITCHED.read_text())
+        hbm_serdes_w = hs["hbm_static_w_per_die"]["serdes"] * hs["dies"]
+        rom_add = charged_w / r1["rom_tokens_s_per_user"]
+        hbm_add = hbm_serdes_w / r1["hbm_tokens_s_per_user"]
+        xc = dict(record=str(POWER_SCEN.relative_to(ROOT)), rom_die_static_terms=rom_keys,
+                  omits_serdes="serdes" not in " ".join(rom_keys),
+                  rom_j_per_token_1m_b1=r1["rom_energy_j"], hbm_j_per_token_1m_b1=r1["hbm_energy_j"],
+                  ratio=r1["energy_hbm_over_rom"], rom_serdes_j_add=rom_add, hbm_serdes_j_add=hbm_add,
+                  hbm_serdes_w=hbm_serdes_w,
+                  ratio_with_serdes=(r1["hbm_energy_j"] + hbm_add) / (r1["rom_energy_j"] + rom_add),
+                  status="NOT APPLIED here: it changes the published ROM:HBM energy ratio; owner tools/power_scenarios.py",
+                  note=("the rack power (this record) and results/arch/v41_hbm_switched.json charge always-on SerDes; "
+                        "tools/power_scenarios.py prices die static as leakage + clock + HBM idle only (and links "
+                        "per collective bit), so both machines' always-on lanes are missing there"))
+    ok = abs(charged_w - pwr["serdes"]["total_w"]) < 1.0 and abs(per_die_budget - active_pkg * lane_w / 2) < 0.01
+    return dict(
+        gate="C4", verdict="PASS" if ok else "FAIL", evidence_class="analytical (record-bound)",
+        lane_w=lane_w, lane_basis=PHYS["serdes_pj_per_bit"]["source"], classes=classes,
+        active_lanes_per_layer_package=active_pkg, die_side_lanes=sum(c_["lanes"] for c_ in classes if c_["charged"]),
+        charged_w=charged_w, rack_power_serdes_w=pwr["serdes"]["total_w"],
+        budget_serdes_w_per_die=per_die_budget,
+        link_ends=dict(t1_lanes=(STAGES + 1) * 2 * LANES["tp"] // 2, t1_lane_ends=(STAGES + 1) * 2 * LANES["tp"],
+                       t2_lanes=(STAGES + 1) * 2 * LANES["stage_out"], t2_lane_ends=(STAGES + 1) * 2 * 2 * LANES["stage_out"],
+                       note="every T1 and T2 lane has two ends and each end is charged by its own package"),
+        switch_side=dict(lanes=switch_lanes, w=switch_lanes * lane_w, switch_tray_w=_v("switch_tray_w"),
+                         within_tray=switch_lanes * lane_w <= _v("switch_tray_w"),
+                         note="the switch ASIC's own SerDes (%d lanes incl. the host's 2 x 400G) sit inside the "
+                              "assumed 1.5 kW switch tray; the NICs' inside the 900 W host" % switch_lanes),
+        passive_cables_w=0.0,
+        dynamic_double_count_w=dbl,
+        dynamic_note=("conservative overlap: the energy per token also charges each collective bit at %.1f pJ (board + "
+                      "UCIe) x 4, on lanes already charged always-on; not removed" % (pj * 1e12)),
+        spare_hot_sensitivity_w=n_lh * LANES["spare"] * lane_w,
+        power_scenarios_crosscheck=xc,
+        finding=("%d always-on lanes per layer/head package (TP %d, stage %d + %d, switch %d) and 2 per table package, "
+                 "%s die-side lanes at %.3f W = %.2f kW, equal to the rack power's SerDes term; every T1/T2 lane is "
+                 "charged at both ends; the %d switch-side lanes (%.0f W) sit inside the assumed switch tray; passive "
+                 "DACs draw nothing; spares are power-gated (+%.0f W if kept hot)."
+                 % (active_pkg, LANES["tp"], LANES["stage_out"], LANES["stage_in"], LANES["switch"],
+                    f"{sum(c_['lanes'] for c_ in classes if c_['charged']):,}", lane_w, charged_w / 1e3, switch_lanes,
+                    switch_lanes * lane_w, n_lh * LANES["spare"] * lane_w)))
+
+
+def draft_kv_gate(pl, draft_sram, alloc, fp):
+    """Gate C10: the DSpark drafter's per-user state, sized from the released model, allocated on the head dies,
+    and checked against the draft step's timing (read port vs the model's draft-stage KV sweep) and HBM paging."""
+    import arch_lanes_v41 as LN
+    import arch_budget_v41 as AB
+    ds = PHYS["dspark_state"]["value"]
+    row = PHYS["window_row_bytes"]["value"]
+    per_user = ds["stages"] * ds["window_rows"] * row
+    per_user_die = per_user / G
+    B = json.loads(BUDGET.read_text())
+    ln = json.loads(LANES_REC.read_text())
+    sp, _, hz = LN._ladder_top()
+    f = hz[0]
+    stack_B = 22.5e9
+    sizing = {}
+    for ctx in (1048576, 200000):
+        cap = B["capacity"][str(ctx)]["rom_users"]
+        sizing[str(ctx)] = dict(
+            per_user_bytes=per_user, per_user_per_die_bytes=per_user_die,
+            fill_users=FILL, fill_per_die_single_bytes=FILL * per_user_die, fill_per_die_double_bytes=2 * FILL * per_user_die,
+            capacity_users=cap, capacity_hbm_per_die_bytes=cap * per_user_die,
+            sat1024_hbm_per_die_bytes=1024 * per_user_die,
+            sat1024_share_of_head_hbm=1024 * per_user_die / (HBM_STACKS_PER_LAYER_DIE * stack_B))
+    bf16 = ds["stages"] * ds["window_rows"] * 2 * ds["head_dim"] / G
+    # read port against the model's draft-stage KV sweep (decode_critical_path kvscan: kv bytes x microbatch / rate)
+    kvb_die = ds["window_rows"] * row / G
+    model_cyc = kvb_die * ds["block_rows"] / sp.kv_bytes
+    lat = fp["timing"]["read_latency_cycles"]
+    sram_cyc = kvb_die / alloc["read_port_bytes_per_cycle"] + lat
+    old_cyc = kvb_die / 128.0 + lat
+    write_B = POSITIONS * ds["stages"] * row / G
+    rates = {}
+    hbm_bw, hbm_lat, hbm_lat_budget = AB.ROM_DIE_HBM_BPS, AB.HBM_LAT_S, AB.KV_GATHER_S_REQUIRED
+    for ctx in (1048576, 200000):
+        d = ln["design_point"][str(ctx)]
+        period = TAU / d["mtp"]
+        draft_s = period - d["verify_us"] * 1e-6
+        old_extra = ds["stages"] * max(0.0, old_cyc - model_cyc) / f
+        fb = {}
+        for tag, L_ in (("hbm_first_access_1us", hbm_lat), ("hbm_budgeted_250ns", hbm_lat_budget)):
+            extra = ds["stages"] * (L_ + kvb_die / hbm_bw)
+            fb[tag] = dict(extra_s_per_verify=extra, mtp_tokens_s_per_user=TAU / (period + extra),
+                           loss=1 - period / (period + extra))
+        rates[str(ctx)] = dict(
+            mtp_tokens_s_per_user=d["mtp"], period_s=period, verify_s=d["verify_us"] * 1e-6, draft_s=draft_s,
+            one_row_per_slot_port=dict(extra_s_per_verify=old_extra, mtp_tokens_s_per_user=TAU / (period + old_extra)),
+            hbm_backed_unstaged=fb,
+            drafts_in_flight_at_fill=FILL * draft_s / period)
+    e = ln["energy"][str(CTX)]
+    sat_passes = e["sat1024_mtp"]["rom"]["aggregate_tokens_s"] / TAU
+    prefetch_s = hbm_lat + per_user_die / hbm_bw
+    paging = dict(hbm_Bps_per_die=hbm_bw, first_access_s=hbm_lat, prefetch_s=prefetch_s,
+                  hidden_under_draft=prefetch_s < rates[str(CTX)]["draft_s"],
+                  sat1024_mtp_draft_passes_per_s=sat_passes,
+                  sat1024_mtp_read_Bps_per_die=sat_passes * per_user_die,
+                  sat1024_mtp_share_of_hbm=sat_passes * per_user_die / hbm_bw,
+                  note="beyond the fill a user's window is prefetched into the second buffer of its slot while the "
+                       "current user drafts, and written back after its verify")
+    # the draft's conditioning: the attention inputs of the target layers (37-39), BF16 per verified position, reach
+    # the head over the ring behind the residual; not in the traffic model
+    cfg = json.loads(V41_CONFIG.read_text())
+    cond_B = len(ds["target_layers"]) * cfg["hidden_size"] * 2 * POSITIONS
+    cond_s = cond_B / lane_budget()["stage_module_Bps"]
+    fits_area = fp["area"]["fits_released_area"] and alloc["fits_released_area"]
+    ok = fits_area and fp["organisation"]["fits"] and sram_cyc <= model_cyc and fp["timing"]["macro_meets_clock"]
+    r1 = rates[str(CTX)]
+    return dict(
+        gate="C10", verdict="PASS" if ok else "FAIL", evidence_class="analytical (record-bound); no routed floorplan",
+        state=dict(source=PHYS["dspark_state"]["source"], row_bytes=row, row_source=PHYS["window_row_bytes"]["source"],
+                   context_independent=sizing["1048576"]["per_user_bytes"] == sizing["200000"]["per_user_bytes"],
+                   bf16_sensitivity_per_user_per_die_bytes=bf16,
+                   bf16_fits_single_buffered=bf16 <= fp["organisation"]["slot_bytes"],
+                   bf16_fits_double_buffered=2 * bf16 <= fp["organisation"]["slot_bytes"]),
+        sizing=sizing,
+        allocation=dict(macros=fp["organisation"]["macros"], block_mm2=fp["area"]["block_mm2"],
+                        location=alloc["location"], released_mm2=alloc["head_released_engine_mm2"],
+                        fits=fits_area, displaced_rom_bytes=0.0,
+                        rom_alternative=dict(
+                            displaced_rom_bytes_per_head_die=fp["area"]["rom_alternative_displaced_bytes"],
+                            head_die_free_rom_bytes=alloc["rom_alternative"]["head_die_free_rom_bytes"],
+                            respill_onto_layer_dies_bytes=4 * fp["area"]["rom_alternative_displaced_bytes"],
+                            layer_die_spare_left_bytes=alloc["rom_alternative"]["layer_die_spare_left_bytes"],
+                            fits=4 * fp["area"]["rom_alternative_displaced_bytes"]
+                            <= alloc["rom_alternative"]["layer_die_spare_left_bytes"],
+                            note="if the block went into ROM instead: the head die has no free ROM (its 69 MB spare "
+                                 "holds Engram spill), so the displaced bytes re-spill onto the layer dies")),
+        port=dict(window_bytes_per_die_per_stage=kvb_die, model_kv_bytes_per_cycle=sp.kv_bytes,
+                  model_sweep_cycles=model_cyc, read_port_bytes_per_cycle=alloc["read_port_bytes_per_cycle"],
+                  sram_read_cycles=sram_cyc, meets_model=sram_cyc <= model_cyc, margin=model_cyc / sram_cyc,
+                  one_row_per_slot_cycles=old_cyc, write_bytes_per_verify_per_die=write_B,
+                  concurrent_readers=fp["organisation"]["concurrent_readers"],
+                  basis=("the model prices the draft stage's KV sweep as window bytes x 5 block rows / the design "
+                         "point's %.0f B per cycle; the SRAM reads the die's window quarter once per stage (the block's "
+                         "5 queries share each row)" % sp.kv_bytes)),
+        rates=rates, paging=paging,
+        conditioning=dict(bytes_per_verify=cond_B, hop_serialisation_s=cond_s,
+                          share_of_period=cond_s / r1["period_s"],
+                          note="unpriced in the traffic and rate models: 3 x 5,120 BF16 target-layer inputs per "
+                               "verified position ride S25 -> S26 -> S27 -> H behind the residual"),
+        finding=("DSpark state = 3 stages x 128 window rows x 528 B = %.0f KB per user (%.1f KB per head die, "
+                 "row-striped 4 ways), the same at 1M and 200K (window-only draft attention). The 28-user fill needs "
+                 "%.2f MB per head die (%.2f double-buffered); 112 compiler macros (%.2f mm2 block) fit the right-sized "
+                 "head die's %.1f mm2 of released engine area, so no ROM is displaced (the head die's 69 MB 'spare' "
+                 "ROM is Engram spill). Interleaving a slot across a 28-macro bank reads a stage's window in %.1f "
+                 "cycles against the model's %.1f (the 4-macro row read took %.0f: -%.0f tok/s at 1M). Beyond the "
+                 "fill, windows page to the head HBM: %.1f MB per die at 1,024 users, prefetch %.2f us under a %.1f us "
+                 "draft. Unstaged HBM would cost %.0f-%.0f tok/s/user at 1M with MTP."
+                 % (per_user / 1e3, per_user_die / 1e3, FILL * per_user_die / 1e6, 2 * FILL * per_user_die / 1e6,
+                    fp["area"]["block_mm2"], alloc["head_released_engine_mm2"], sram_cyc, model_cyc, old_cyc,
+                    r1["mtp_tokens_s_per_user"] - r1["one_row_per_slot_port"]["mtp_tokens_s_per_user"],
+                    1024 * per_user_die / 1e6, prefetch_s * 1e6, r1["draft_s"] * 1e6,
+                    r1["mtp_tokens_s_per_user"] - r1["hbm_backed_unstaged"]["hbm_budgeted_250ns"]["mtp_tokens_s_per_user"],
+                    r1["mtp_tokens_s_per_user"] - r1["hbm_backed_unstaged"]["hbm_first_access_1us"]["mtp_tokens_s_per_user"])),
+        open_items=[
+            ("head-group occupancy at the fill with MTP: a draft takes %.1f us and 28 run per %.0f us verify cycle, so "
+             "%.1f drafts must overlap on the head dies' engines; the rate model prices one draft per user serially "
+             "and does not check it (the 4 SRAM banks allow 4 concurrent readers)"
+             % (r1["draft_s"] * 1e6, r1["period_s"] * 1e6, r1["drafts_in_flight_at_fill"])),
+            ("draft conditioning transport: %.0f KB per verify (layers 37-39 inputs x 6 positions) over the S27 -> H "
+             "hop is %.2f us of serialisation (%.2f%% of the period) if not overlapped; unpriced"
+             % (cond_B / 1e3, cond_s * 1e6, 100 * cond_s / r1["period_s"])),
+            "a routed head-die floorplan (K2) remains"])
+
+
 def build():
     pl = placement()
     el = elevation("liquid", pl)
@@ -1269,11 +1746,15 @@ def build():
         traffic=tr, power=pwr, head_draft_sram=draft_sram,
         weight=weight_estimate(el), comparison=compare(pwr, el, pl))
     rec["paths"] = critical_paths(pl, links)
-    rec["conflicts"] = conflicts(pl, links, tr, pwr, el, draft_sram)
+    alloc = draft_sram_allocation(pl, draft_sram)
+    fp = head_draft_floorplan(pl, draft_sram, alloc)
+    gates = dict(C4=serdes_power_gate(pwr, pl), C8=two_die_link_gate(pl, tr), C10=draft_kv_gate(pl, draft_sram, alloc, fp))
+    rec["conflicts"] = conflicts(pl, links, tr, pwr, el, draft_sram, gates)
     rec["reprice_sensitivity"] = reprice_sensitivity(pl, links, tr, pwr)
     rec["kv_replication"] = kv_replication(pl)
-    rec["head_draft_sram_allocation"] = draft_sram_allocation(pl, draft_sram)
-    rec["head_draft_floorplan"] = head_draft_floorplan(pl, draft_sram, rec["head_draft_sram_allocation"])
+    rec["head_draft_sram_allocation"] = alloc
+    rec["head_draft_floorplan"] = fp
+    rec["gates"] = gates
     rec["demonstration_plan"] = demonstration_plan(lane_budget())
     return rec
 

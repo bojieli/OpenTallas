@@ -61,8 +61,9 @@ def test_unresolved_physical_conflicts_remain_explicit():
         assert sev["C4"] == "resolved-in-model" and sev["C8"] == "resolved-in-model"
     else:
         assert sev["C4"] == "conflict" and sev["C8"] == "conflict"
-    # overlap + whole-system clock, and the head-die draft SRAM floorplan, stay open gates
-    assert sev["C7"] == "gate" and sev["C10"] in ("gate", "conflict")
+    # overlap + whole-system clock stay an open gate; C10 closes analytically once the draft-KV gate passes
+    assert sev["C7"] == "gate"
+    assert sev["C10"] == ("resolved-in-model" if record["gates"]["C10"]["verdict"] == "PASS" else "gate")
     c7 = next(e for e in record["conflicts"] if e["id"] == "C7")
     assert c7["status"] == "NOT MET (measured)"              # the RTL stage bench measured the overlap (O2)
     o2 = next(s for s in record["demonstration_plan"]["overlap"]["steps"] if s["id"] == "O2")
@@ -91,8 +92,53 @@ def test_kv_replicate_on_write_matches_the_spec_capacity():
 
 
 def test_head_draft_sram_is_allocated_and_fits_spare_rom():
-    a = rack.build()["head_draft_sram_allocation"]
+    rec = rack.build()
+    a, fp = rec["head_draft_sram_allocation"], rec["head_draft_floorplan"]
     assert a["fits"] and a["allocated_mm2"] >= a["min_mm2"]
+    # the head die's "spare" ROM is Engram spill: the SRAM goes in released engine area and displaces no ROM
+    assert a["head_die_spare_rom_bytes"] < 1.0 and a["displaced_rom_bytes"] == 0.0
+    assert fp["area"]["fits_released_area"] and fp["organisation"]["fits"]
+    assert a["rom_alternative"]["fits"]            # the fallback re-spill would still fit the layer dies
+
+
+def test_c10_draft_kv_gate_is_sized_from_the_released_model_and_meets_the_draft_timing():
+    g = rack.build()["gates"]["C10"]
+    assert g["verdict"] == "PASS"
+    assert g["state"]["context_independent"]
+    for ctx in ("1048576", "200000"):
+        assert g["sizing"][ctx]["per_user_bytes"] == 3 * 128 * 528
+    assert g["port"]["meets_model"] and g["port"]["sram_read_cycles"] <= g["port"]["model_sweep_cycles"]
+    assert g["port"]["one_row_per_slot_cycles"] > g["port"]["model_sweep_cycles"]     # why the port was widened
+    assert g["paging"]["hidden_under_draft"]
+    r = g["rates"]["1048576"]
+    fb = r["hbm_backed_unstaged"]
+    assert fb["hbm_first_access_1us"]["mtp_tokens_s_per_user"] < fb["hbm_budgeted_250ns"]["mtp_tokens_s_per_user"] \
+        < r["mtp_tokens_s_per_user"]
+
+
+def test_c8_two_die_links_carry_the_fill_with_the_adopted_relay():
+    rec = rack.build()
+    g = rec["gates"]["C8"]
+    # the analytic per-layer collectives reproduce the design-point DAG's per-position payload (less the argmax merge)
+    lc = rack.layer_collectives()
+    assert sum(c[3] for L in lc for c in lc[L]) == 10362400 - 32
+    assert g["verdict"] == "PASS" and g["worst_gated_utilisation"] <= 1.0
+    fm = g["points"]["fill28_mtp"]
+    assert fm["adopted_levers"]["t1_utilisation"] < fm["no_levers"]["t1_utilisation"]
+    assert fm["adopted_levers"]["ucie_utilisation"] > fm["no_levers"]["ucie_utilisation"]   # relay forwards on UCIe
+    assert g["ucie_relay_burst"]["utilisation"] < 1.0
+    # the traffic table now carries the KV-rows all-gathers and the design-point rates
+    assert rec["traffic"]["collectives"]["rows_allgather_bytes"] > 0
+    assert rec["traffic"]["rates"]["b1"] == rec["gates"]["C8"]["rates"]["b1"]
+
+
+def test_c4_every_lane_is_charged():
+    rec = rack.build()
+    g = rec["gates"]["C4"]
+    assert g["verdict"] == "PASS"
+    assert abs(g["charged_w"] - rec["power"]["serdes"]["total_w"]) < 1.0
+    assert g["active_lanes_per_layer_package"] + rack.LANES["spare"] == 90
+    assert g["switch_side"]["within_tray"]
 
 
 def test_demonstration_plan_names_clock_and_overlap_gates():
@@ -114,3 +160,22 @@ def test_report_contains_generated_rack_figures_and_caveat():
         figure = (ROOT / f"results/arch/figures/v41_rack_{name}.html").read_text()
         svg = re.search(r"<svg.*?</svg>", figure, re.S).group(0)
         assert section.count(svg) == 1, name
+
+
+def test_layer_collectives_match_the_design_point_dag():
+    """The rack's per-layer collective payloads are the ones the design-point DAG issues (layer by layer)."""
+    import re
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import arch_lanes_v41 as L
+    sp, muts, hz = L._ladder_top()
+    with L.LX.clock(hz[0]), L.U.params(**hz[1]):
+        g = L.U.solve(sp, 1048576, levers=L.U.CHAIN_L3, muts=list(muts))["_built"].g
+    dag = {}
+    for n, nd in g.nodes.items():
+        m = re.match(r"^L(\d+)\.(.*)$", n)
+        if nd["kind"] == "collective" and m:
+            dag.setdefault(int(m.group(1)), {})[m.group(2)] = nd["payload"]
+    lc = rack.layer_collectives()
+    for layer, rows in lc.items():
+        assert {name: by for name, _, _, by in rows} == dag[layer], layer
