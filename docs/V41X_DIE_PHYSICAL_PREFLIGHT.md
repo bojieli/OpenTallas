@@ -295,6 +295,17 @@ composition Liberty intentionally has no timing arcs, so even a later
 geometry route with this view cannot establish full-group frequency. This
 30.24 µm study floorplan also exceeds the modeled 17.2 µm strip budget.
 
+A representative full-width, depth-128 one-shot collective FIFO/engine was
+also attempted at 0.92 ns with 16 lanes and 512-bit flits. The source-pinned
+partial record in `results/asap7_physical/v41x_collective_fifo128/physical.json`
+reports 1,268,591 synthesized cells and 176,184.631 µm² before layout. It
+completed power-grid and pin placement, but timing-driven global placement
+was stopped after reaching 17.5 GiB RSS on a 31 GiB VM shared with another
+route; only 3.3 GiB remained available. The retained placement log ends at
+iteration 442 with 1,685,961 nets left for timing repair. This is neither a
+placed nor routed timing result. The physical boundary needs FIFO SRAM macros
+or a narrower local block before an eight-engine die claim is credible.
+
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
 `test_v41x_die_pnr` checks every port width, the LEF pin count and window
