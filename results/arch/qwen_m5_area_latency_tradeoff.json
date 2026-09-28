@@ -1,0 +1,87 @@
+{
+  "area": {
+    "evidence_class": "ASAP7 pre-layout synthesis tile and linear die replication estimate",
+    "production_linear_replication": {
+      "added_slot_lanes_per_die": 393216,
+      "incremental_reducer_scale_mm2_per_die": 178.663243776,
+      "modeled_mac_only_copy_mm2_per_die": 207.64,
+      "modeled_slack_mm2_per_die": 28.01,
+      "uncovered_area_vs_slack_mm2": 150.653243776
+    },
+    "tile": {
+      "five_slot_area_um2": 9128.966,
+      "five_slot_cells": 67003,
+      "groups": 2,
+      "incremental_area_per_added_slot_lane_um2": 454.364125,
+      "incremental_four_slot_area_um2": 7269.826,
+      "lanes_per_group": 2,
+      "one_slot_area_um2": 1859.14,
+      "one_slot_cells": 13670,
+      "slots_baseline": 1,
+      "slots_verify": 5
+    },
+    "timing": {
+      "five_slot_prelayout_wns_ns": -2.8037288158820877,
+      "one_slot_prelayout_wns_ns": -0.34812941557599547,
+      "routed": false,
+      "target_period_ns": 0.92
+    }
+  },
+  "claim_boundary": "G2/W2 pre-layout area cannot prove full-die area; both tiles fail 0.92 ns pre-layout timing. The die conversion is linear replication only. No place and route, power or full m5 token gate.",
+  "one_tree_time_multiplex": {
+    "all_extra_exposed_step_cycles": 224460,
+    "all_extra_exposed_tokens_s": 13994.126454602156,
+    "baseline_model_tokens_s": 18719.9,
+    "baseline_step_cycles": 167796,
+    "claim_boundary": "The extra cycles are a reduction service lower bound. The rate assumes all extra engine cycles hit the serial chain; an integrated schedule must measure overlap. Drafter penalties omitted.",
+    "evidence_class": "analytical engine-busy-cycle lower bound and fully exposed rate sensitivity",
+    "matrix_ops": {
+      "attention_scores": {
+        "k_per_chunk": 1,
+        "minimum_extra_cycles_per_op": 1024,
+        "minimum_extra_cycles_total": 36864,
+        "reduction_demand_cycles": 1280,
+        "repetitions": 36,
+        "rounds": 32,
+        "sweep_cycles": 256
+      },
+      "down_projection": {
+        "k_per_chunk": 3,
+        "minimum_extra_cycles_per_op": 176,
+        "minimum_extra_cycles_total": 6336,
+        "reduction_demand_cycles": 440,
+        "repetitions": 36,
+        "rounds": 11,
+        "sweep_cycles": 264
+      },
+      "lm_head": {
+        "k_per_chunk": 4,
+        "minimum_extra_cycles_per_op": 792,
+        "minimum_extra_cycles_total": 792,
+        "reduction_demand_cycles": 3960,
+        "repetitions": 1,
+        "rounds": 99,
+        "sweep_cycles": 3168
+      },
+      "o_projection": {
+        "k_per_chunk": 1,
+        "minimum_extra_cycles_per_op": 352,
+        "minimum_extra_cycles_total": 12672,
+        "reduction_demand_cycles": 440,
+        "repetitions": 36,
+        "rounds": 11,
+        "sweep_cycles": 88
+      }
+    },
+    "minimum_additional_verify_engine_cycles": 56664
+  },
+  "source_sha256": {
+    "docs/ARCH_QWEN3_O4_RTL_SPEC.md": "177921f3f84e6c1e7da08ec7ef86bcf5364c44b15d720805168df47c75b08dd0",
+    "results/arch/qwen3_budget.json": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
+    "results/physical_hdc/asap7/qwen_m5_reduce_g2w2_n1/physical.json": "c3d5b80d48898bfe861cf68e327476425832196e11cf6a94e879b916ea666a6b",
+    "results/physical_hdc/asap7/qwen_m5_reduce_g2w2_n5/physical.json": "961a4a09fb8c7877f7c7313efd716f11ef36e53fde46d2c649e3ad19acae5019",
+    "results/speculative/dflash_step_timing.json": "d80f80368e940e442a42f4c90a84ed2c4b6dbf38191f92bb5b316b4fcd6cc2bc",
+    "rtl/hdc/ot_hdc_qwen_m5_reduce_scale.sv": "c1bf988fa675561ee3ec2e6249ee4aba40eca4b0110c7c0a60d05620167679ea",
+    "tools/qwen_m5_area_latency_tradeoff.py": "0fb59b3471a6894154dab26a1f3e4ec77531bd68010017558010312c7a0da390"
+  }
+}
