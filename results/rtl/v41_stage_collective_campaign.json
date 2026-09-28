@@ -409,7 +409,7 @@
   "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
   "rtl/test/tb_v41_stage_collective.sv": "9ecce59a8d5898b8c1da81106a2f134c35e08e106e692f7a0cf6ad4e6a83daf9",
   "tools/rtl_v41_stage_collective_campaign.py": "b1d8a57b03d2e54f2764418382921019b1ae8be16124c985e24935dd394739e6",
-  "tools/hdc_golden.py": "930415fe9e9e6d24d308b0fc72be89b3b3665539063e71abf74106a1a160e788"
+  "tools/hdc_golden.py": "f69499aff8dde029e48ac1733ad571d9779317f13556fe72e4beb62d5061e5b1"
  },
  "claim_boundary": "RTL of the one-shot engine (ot_rom_oneshot_die, unchanged) with behavioural links (flight ring + token-bucket rate + credit lane) and cycle-faithful producer / consumer stubs driven from the design point's producer timing and the weight array's row mapping; single clock (the plesiochronous crossing is gate K3 and sits inside the link latencies); no PHY, no FEC, no link errors or retries",
  "cases": [

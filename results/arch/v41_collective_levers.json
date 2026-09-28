@@ -1,7 +1,63 @@
 {
- "schema": "v41_collective_levers/2",
+ "schema": "v41_collective_levers/3",
  "tool": "tools/v41_collective_exposure.py --levers",
  "gate": "C7 / O2 levers",
+ "result_kind": "conditioned design-point model result using bench-measured collective tails; NOT measured chip throughput",
+ "conditions": {
+  "result_kind": "conditioned design-point model result using bench-measured collective tails; NOT measured chip throughput",
+  "contexts": [
+   200000,
+   1048576
+  ],
+  "batch": 1,
+  "clock_hz": 1087000000.0,
+  "lane_split": {
+   "tp": 52,
+   "stage": 14,
+   "two_step": true
+  },
+  "mtp": {
+   "tau": 5.0,
+   "gamma": 5,
+   "lane_multiplier": 2,
+   "tau_sensitivity_band": [
+    3.27,
+    3.8
+   ],
+   "tau_source": "tools/arch_utilization_v41.py TAU: LMSYS/SGLang accept length ~5 on DeepSeek-V4-Pro-DSpark at batch 1 (https://www.lmsys.org/blog/2026-07-06-dspark-sglang/), third-party, V4-Pro not V4.1-Flash"
+  },
+  "hbm_stacks_per_rom_die": 4,
+  "links_s": {
+   "ucie_hop": 1e-08,
+   "t1_board_hop": 1.3e-07,
+   "t2_rack_cable_stage_hop": 2.09e-07
+  },
+  "bench": {
+   "campaign": "results/rtl/v41_collective_levers_campaign.json",
+   "baseline": "results/rtl/v41_stage_collective_campaign.json",
+   "word_bytes": 512,
+   "simulator": "Verilator",
+   "links": "behavioural (flight ring + token-bucket rate + credit lane), single clock, no PHY / FEC / retries"
+  },
+  "queue_area": {
+   "kind": "ANALYTICAL estimate (bitcell area x overhead), not a compiled SRAM macro",
+   "bitcell_um2": 0.021,
+   "bitcell_source": "configs/hardware/technology.json nodes.N5.sram_hd_bitcell_um2",
+   "two_port_overhead": 2.5,
+   "two_port_overhead_status": "ASSUMPTION (1R1W register-file periphery and 8T cell)",
+   "flop_um2": 0.5,
+   "flop_status": "ASSUMPTION",
+   "die_mm2": 815.0
+  }
+ },
+ "derivation": [
+  "The design-point DAG (tools/arch_lanes_v41.design_point: the adopted latency-ladder rungs, the TP 52 / stage 14 lane split with two-step all-reduces) prices a collective as STREAMING from its producer's start.",
+  "tools/collective_exposure.expose_collectives re-prices every streaming collective and stage hop from its producer's LAST output: issue = max(0, bytes x bytes_scale - window) + residual, depth unchanged (hop + fold), where residual = bench-measured tail - that formula at the bench's design-point node.",
+  "Measured tails replace the nodes by class: allreduce_wo_b / allreduce_down -> every L*.attn.out_allreduce, L*.ffn.combine_allreduce (and the other all-reduce-class collectives: wo_a group reduce, combine a2a); gather_router -> L*.ffn.router_allgather and the other small all-gathers; gather_topk -> L*.attn.idx.topk_merge and cand.merge; gather_rows -> L*.attn.rows_allgather; stage_hop -> L*.substage_hop*, stage hops and head.hop.",
+  "bytes_scale = 0.5 on a class whose lever is the receive-side relay (each T1 link carries half the words).",
+  "Consumer early start (lever 4) marks hc_post after an all-reduce as streaming (issue overlaps the arrivals, depth after the last word).",
+  "tok/s/user = 1 / period of the re-solved DAG at batch 1 (arch_latency_ladder_v41.evaluate); with MTP, tau / (verify period at gamma + 1 positions on the m = 2 core + draft cost)."
+ ],
  "campaign": "results/rtl/v41_collective_levers_campaign.json",
  "baseline_campaign": "results/rtl/v41_stage_collective_campaign.json",
  "design_point_model": {
@@ -36,6 +92,7 @@
     "base_nobubble": 254
    },
    "queue_cost_per_die": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 1057536,
     "tx_queue_bits": 131072,
     "sram_KiB": 145.09375,
@@ -47,6 +104,7 @@
     "die_fraction": 0.00011174714110429447
    },
    "queue_cost_per_die_before": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 1057280,
     "tx_queue_bits": 131072,
     "sram_KiB": 145.0625,
@@ -69,6 +127,7 @@
     "base_nobubble": 254
    },
    "queue_cost_per_die": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 1057536,
     "tx_queue_bits": 131072,
     "sram_KiB": 145.09375,
@@ -80,6 +139,7 @@
     "die_fraction": 0.00011174714110429447
    },
    "queue_cost_per_die_before": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 1057280,
     "tx_queue_bits": 131072,
     "sram_KiB": 145.0625,
@@ -102,6 +162,7 @@
     "relay_gw1": 160
    },
    "queue_cost_per_die": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 264384,
     "tx_queue_bits": 65536,
     "sram_KiB": 40.2734375,
@@ -113,6 +174,7 @@
     "die_fraction": 7.904883435582822e-05
    },
    "queue_cost_per_die_before": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 33040,
     "tx_queue_bits": 65536,
     "sram_KiB": 12.033203125,
@@ -135,6 +197,7 @@
     "relay_gw1": 181
    },
    "queue_cost_per_die": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 264384,
     "tx_queue_bits": 65536,
     "sram_KiB": 40.2734375,
@@ -146,6 +209,7 @@
     "die_fraction": 7.904883435582822e-05
    },
    "queue_cost_per_die_before": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 132160,
     "tx_queue_bits": 65536,
     "sram_KiB": 24.1328125,
@@ -170,6 +234,7 @@
     "relay_gw1": 560
    },
    "queue_cost_per_die": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 2115072,
     "tx_queue_bits": 524288,
     "sram_KiB": 322.1875,
@@ -181,6 +246,7 @@
     "die_fraction": 0.00022781644171779143
    },
    "queue_cost_per_die_before": {
+    "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
     "rx_fifo_bits": 1057280,
     "tx_queue_bits": 524288,
     "sram_KiB": 193.0625,

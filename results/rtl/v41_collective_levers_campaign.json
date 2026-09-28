@@ -86,15 +86,19 @@
   "rtl/rom/ot_rom_oneshot_px.sv": "1a4e72d08b20a3b78824d4791a4750238a30ca736e1a5e567306b3029d7898bf",
   "rtl/test/tb_v41_stage_collective_px.sv": "1ef5ea0c7e6df525eeca7c1f585605037ac5860c0315aaa61d9972c7eefc6bae",
   "rtl/test/tb_v41_stage_hop_px.sv": "d5d6a445fc06da2b848eb7d759f4f5095dcf9a7da14e3807eee375d227afeedf",
-  "tools/rtl_v41_collective_levers_campaign.py": "2b3e04f9fa967ed7240419b5d13afbc04069426f0510cc6f2cc70872798dcd89",
+  "tools/rtl_v41_collective_levers_campaign.py": "645c3bde4719ecc531f806475dd69e0fec6185aa8f9d294a2339afea6bb2aefa",
   "tools/rtl_v41_stage_collective_campaign.py": "b1d8a57b03d2e54f2764418382921019b1ae8be16124c985e24935dd394739e6",
-  "tools/hdc_golden.py": "930415fe9e9e6d24d308b0fc72be89b3b3665539063e71abf74106a1a160e788"
+  "tools/hdc_golden.py": "f69499aff8dde029e48ac1733ad571d9779317f13556fe72e4beb62d5061e5b1"
  },
  "area_assumptions": {
   "bitcell_um2": 0.021,
   "rf_overhead": 2.5,
   "flop_um2": 0.5,
   "die_mm2": 815.0,
+  "kind": "ANALYTICAL (bitcell area x overhead), not a compiled SRAM macro",
+  "bitcell_source": "configs/hardware/technology.json nodes.N5.sram_hd_bitcell_um2",
+  "rf_overhead_status": "ASSUMPTION",
+  "flop_um2_status": "ASSUMPTION",
   "note": "receive FIFOs and producer queues as 1R1W register-file macros; head, delay-line and gather-output registers as flops"
  },
  "claim_boundary": "RTL of the lever engine (ot_rom_oneshot_die_px) with the O2 bench's behavioural links (flight ring + token-bucket rate + credit lane) and producer / consumer stubs; the relay channels are UCIe flight only (at most 3 x 512 B per cycle leave a die on UCIe, 40% of its 3,864 B/cycle); single clock, no PHY, no FEC, no retries",
@@ -2911,6 +2915,7 @@
     "min_rx_depth_words": 64,
     "min_tx_queue_words": 32,
     "queue_cost_per_die": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 1057536,
      "tx_queue_bits": 131072,
      "sram_KiB": 145.09375,
@@ -2922,6 +2927,7 @@
      "die_fraction": 0.00011174714110429447
     },
     "queue_cost_per_die_before": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 1057280,
      "tx_queue_bits": 131072,
      "sram_KiB": 145.0625,
@@ -3023,6 +3029,7 @@
     "min_rx_depth_words": 64,
     "min_tx_queue_words": 32,
     "queue_cost_per_die": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 1057536,
      "tx_queue_bits": 131072,
      "sram_KiB": 145.09375,
@@ -3034,6 +3041,7 @@
      "die_fraction": 0.00011174714110429447
     },
     "queue_cost_per_die_before": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 1057280,
      "tx_queue_bits": 131072,
      "sram_KiB": 145.0625,
@@ -3111,6 +3119,7 @@
     "min_rx_depth_words": 16,
     "min_tx_queue_words": 16,
     "queue_cost_per_die": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 264384,
      "tx_queue_bits": 65536,
      "sram_KiB": 40.2734375,
@@ -3122,6 +3131,7 @@
      "die_fraction": 7.904883435582822e-05
     },
     "queue_cost_per_die_before": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 33040,
      "tx_queue_bits": 65536,
      "sram_KiB": 12.033203125,
@@ -3199,6 +3209,7 @@
     "min_rx_depth_words": 16,
     "min_tx_queue_words": 16,
     "queue_cost_per_die": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 264384,
      "tx_queue_bits": 65536,
      "sram_KiB": 40.2734375,
@@ -3210,6 +3221,7 @@
      "die_fraction": 7.904883435582822e-05
     },
     "queue_cost_per_die_before": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 132160,
      "tx_queue_bits": 65536,
      "sram_KiB": 24.1328125,
@@ -3327,6 +3339,7 @@
     "min_rx_depth_words": 128,
     "min_tx_queue_words": 128,
     "queue_cost_per_die": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 2115072,
      "tx_queue_bits": 524288,
      "sram_KiB": 322.1875,
@@ -3338,6 +3351,7 @@
      "die_fraction": 0.00022781644171779143
     },
     "queue_cost_per_die_before": {
+     "estimate": "analytical: bits x N5 HD bitcell x 2.5 (assumed two-port overhead) + flops x 0.5 um2 (assumed); not a compiled macro",
      "rx_fifo_bits": 1057280,
      "tx_queue_bits": 524288,
      "sram_KiB": 193.0625,
