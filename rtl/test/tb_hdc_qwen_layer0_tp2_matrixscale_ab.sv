@@ -16,7 +16,7 @@ module tb_hdc_qwen_layer0_tp2_matrixscale_ab #(
     reg rst_n=0, start=0;
     integer cyc=0;
     wire [D-1:0] s_done, s_fault, core_fault, coll_fault;
-    wire [D-1:0] post_ready, post_fault, matrix_fault;
+    wire [D-1:0] post_ready, post_fault, matrix_fault, norm_ready, norm_fault;
     wire [D-1:0] cv, crdy, cl, cm, rv, rl, rerr;
     wire [D*FW-1:0] cd, rd;
     wire [D*32-1:0] ct;
@@ -74,7 +74,9 @@ module tb_hdc_qwen_layer0_tp2_matrixscale_ab #(
         wire [63:0] crom_q;
         reg [63:0] crom_local_q;
         reg crom_post_sel_q=0;
+        reg crom_norm_sel_q=0;
         wire [63:0] crom_post_q;
+        wire [63:0] crom_norm_q;
         wire kv_re, kv_we, va_re, vb_re, vc_re;
         wire [AW-1:0] kv_waddr, va_addr, vb_addr, vc_addr;
         reg [G*W*32-1:0] kv_q;
@@ -89,7 +91,42 @@ module tb_hdc_qwen_layer0_tp2_matrixscale_ab #(
         wire [W*32-1:0] vw_mx_data;
         wire me_ov;
         wire crom_post_hit = crom_addr>=535041 && crom_addr<543233;
-        assign crom_q = (POST_SCALE_HBM && crom_post_sel_q) ? crom_post_q : crom_local_q;
+        wire crom_norm_hit = crom_addr>=4096 && crom_addr<6656;
+        assign crom_q = (MATRIX_HBM && crom_norm_sel_q) ? crom_norm_q :
+                        (POST_SCALE_HBM && crom_post_sel_q) ? crom_post_q : crom_local_q;
+
+        if (MATRIX_HBM != 0) begin : g_norm_hbm
+            localparam integer PC=32, HAW=28, TAGW=8;
+            wire [PC-1:0] rq_v;
+            wire [PC*HAW-1:0] rq_addr;
+            wire [PC*TAGW-1:0] rq_tag;
+            reg [PC-1:0] rsp_v=0;
+            reg [PC*TAGW-1:0] rsp_tag=0;
+            reg [PC*256-1:0] rsp_data=0;
+            integer sectors=0, pp, jj, sector;
+            ot_hdc_qwen_post_tp_scale_hbm #(.PCS(PC),.TAGW(TAGW),
+                .ROWS_PER_SCALE(1280),.CROM_BASE(4096)) source (
+                .clk(clk),.rst_n(rst_n),.load(cyc==6),
+                .hbm_base_sector(28'h3000000),.ready(norm_ready[d]),.fault(norm_fault[d]),
+                .crom_re(crom_re && crom_norm_hit),.crom_addr(crom_addr),.crom_q(crom_norm_q),
+                .rq_v(rq_v),.rq_rdy({PC{1'b1}}),.rq_addr(rq_addr),.rq_tag(rq_tag),
+                .rsp_v(rsp_v),.rsp_tag(rsp_tag),.rsp_data(rsp_data));
+            always @(posedge clk) begin
+                rsp_v<=rq_v; rsp_tag<=rq_tag;
+                for (pp=0;pp<PC;pp=pp+1) if (rq_v[pp]) begin
+                    sector=rq_addr[pp*HAW +: HAW]-28'h3000000;
+                    if (sector<0 || sector>=640) $fatal(1,"qk-norm sector %0d",sector);
+                    for (jj=0;jj<4;jj=jj+1)
+                        rsp_data[pp*256+jj*64 +:64]<=constants[4096+sector*4+jj];
+                    sectors=sectors+1;
+                end
+            end
+            final $display("NORM_HBM die=%0d sectors=%0d",d,sectors);
+        end else begin : g_norm_rom
+            assign norm_ready[d]=1'b1;
+            assign norm_fault[d]=1'b0;
+            assign crom_norm_q=0;
+        end
         if (POST_SCALE_HBM != 0) begin : g_post_hbm
             localparam integer PC=32, HAW=28, TAGW=8;
             wire [PC-1:0] rq_v;
@@ -255,7 +292,9 @@ module tb_hdc_qwen_layer0_tp2_matrixscale_ab #(
             if (crom_re) begin
                 if (crom_addr >= CROM_WORDS) $fatal(1,"constant ROM address %0d",crom_addr);
                 crom_post_sel_q <= POST_SCALE_HBM && crom_post_hit;
-                if (!(POST_SCALE_HBM && crom_post_hit)) crom_local_q <= constants[crom_addr];
+                crom_norm_sel_q <= MATRIX_HBM && crom_norm_hit;
+                if (!(POST_SCALE_HBM && crom_post_hit) &&
+                    !(MATRIX_HBM && crom_norm_hit)) crom_local_q <= constants[crom_addr];
             end
             for (g=0;g<G;g=g+1) begin
                 if (kv_re) kv_q[g*W*32 +: W*32] <= kv[kv_raddr[g*AW +: AW]];
@@ -315,13 +354,16 @@ module tb_hdc_qwen_layer0_tp2_matrixscale_ab #(
     always @(posedge clk) begin
         cyc <= cyc+1;
         if (cyc==5) rst_n <= 1;
-        if (cyc>=7 && (&post_ready) && !started) begin start <= 1; started <= 1; end
+        if (cyc>=7 && (&post_ready) && (&norm_ready) && !started) begin
+            start <= 1; started <= 1;
+        end
         else start <= 0;
         if (cyc>8 && &s_done && !finished) begin
             finished <= 1;
-            if (|s_fault || |core_fault || |coll_fault || |post_fault || |matrix_fault)
-                $fatal(1,"layer0 fault seq=%b core=%b coll=%b post=%b matrix=%b",
-                    s_fault,core_fault,coll_fault,post_fault,matrix_fault);
+            if (|s_fault || |core_fault || |coll_fault || |post_fault ||
+                |matrix_fault || |norm_fault)
+                $fatal(1,"layer0 fault seq=%b core=%b coll=%b post=%b matrix=%b norm=%b",
+                    s_fault,core_fault,coll_fault,post_fault,matrix_fault,norm_fault);
             die[0].dump_result(); die[1].dump_result();
             $display("QWEN_LAYER0_TP2_MATRIXSCALE PASS dies=2 token=0 pos=0 matrix_hbm=%0d post_hbm=%0d cycles=%0d seq_fault=%b core_fault=%b coll_fault=%b post_fault=%b matrix_fault=%b",
                 MATRIX_HBM,POST_SCALE_HBM,cyc,s_fault,core_fault,coll_fault,post_fault,matrix_fault);

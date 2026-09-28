@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Source-matched real Qwen layer-0 ROM vs matrix/scale HBM campaign.
+"""Source-matched real Qwen layer-0 ROM vs trained-weight HBM campaign.
 
 The two arms use identical program, matrix code/scale, CROM and X images.
-The HBM arm sources matrix code, row scales and o/down post-TP scales from
-bounded PC windows. Embedding, other constants and KV are outside this gate.
+The HBM arm sources matrix code, row scales, Q/K norm and o/down post-TP
+scales from bounded PC windows. Embedding, RoPE and KV are outside this gate.
 """
 import argparse
 import hashlib
@@ -32,6 +32,7 @@ IMAGES = ("program.hex", "segments.hex", "matrix_int8.hex", "matrix_scale_bf16.h
 VECTORS = ("x_final", "t1_after_o_scale", "t1_after_down_scale", "k_pos0", "v_pos0")
 PASS = re.compile(r"QWEN_LAYER0_TP2_MATRIXSCALE PASS dies=2 token=0 pos=0 matrix_hbm=(\d+) post_hbm=(\d+) cycles=(\d+)")
 POST_TRAFFIC = re.compile(r"POST_SCALE_HBM die=(\d+) sectors=(\d+)")
+NORM_TRAFFIC = re.compile(r"NORM_HBM die=(\d+) sectors=(\d+)")
 MATRIX_TRAFFIC = re.compile(r"MATRIX_HBM die=(\d+) pc=(\d+) code_sectors=(\d+) scale_sectors=(\d+)")
 
 
@@ -107,6 +108,7 @@ def run_arm(work, arm_name, jobs, skip_build, image_hashes, oracle_hash, oracle_
     (work / f"sim_{arm_name}.log").write_text(cp.stdout + cp.stderr)
     match = PASS.search(cp.stdout)
     post_traffic = [(int(die), int(sectors)) for die, sectors in POST_TRAFFIC.findall(cp.stdout)]
+    norm_traffic = [(int(die), int(sectors)) for die, sectors in NORM_TRAFFIC.findall(cp.stdout)]
     matrix_traffic = [(int(die), int(pc), int(code), int(scale))
                       for die, pc, code, scale in MATRIX_TRAFFIC.findall(cp.stdout)]
     matrix_totals = {die: (sum(row[2] for row in matrix_traffic if row[0] == die),
@@ -129,11 +131,13 @@ def run_arm(work, arm_name, jobs, skip_build, image_hashes, oracle_hash, oracle_
               int(match.group(1)) == arm and int(match.group(2)) == arm and
               stable and all(v["mismatches"] == 0 for v in checks.values()) and
               (arm == 0 or (sorted(post_traffic) == [(0, 2048), (1, 2048)] and
+                            sorted(norm_traffic) == [(0, 640), (1, 640)] and
                             len(matrix_traffic) == 64 and
                             matrix_totals == {0: (3047424, 1472), 1: (3047424, 1472)})))
     data = {"status": "pass" if passed else "fail", "arm": arm_name,
             "cycles": int(match.group(3)) if match else None,
             "post_traffic": post_traffic, "matrix_traffic": matrix_traffic,
+            "norm_traffic": norm_traffic,
             "matrix_totals": matrix_totals,
             "checks": checks, "source_stable": stable, "source_sha256": start_sources,
             "image_sha256": image_hashes, "oracle_sha256": oracle_hash,
@@ -154,12 +158,13 @@ def combine(work, output):
     assert {k: v["actual_sha256"] for k, v in rom["checks"].items()} == \
            {k: v["actual_sha256"] for k, v in hbm["checks"].items()}
     result = {"schema": "opentallas.qwen-layer0-matrixscale-ab.v1", "status": "pass",
-              "claim_boundary": "Real checkpoint Qwen layer-0 TP-2 same-program/same-image matrix code, BF16 row scales and post-TP o/down true-scale source A/B only. Other constants, embedding and KV remain local. Behavioural independent 32-PC HBM sources, no shared controller, complete token, throughput or P&R claim.",
+              "claim_boundary": "Real checkpoint Qwen layer-0 TP-2 same-program/same-image matrix code, BF16 row scales, Q/K norm and post-TP o/down true-scale source A/B only. Embedding is preloaded; deterministic RoPE, other constants and KV remain local. Behavioural independent 32-PC HBM sources, no shared controller, complete token, throughput or P&R claim.",
               "rom_cycles": rom["cycles"], "hbm_cycles": hbm["cycles"],
               "delta_cycles": hbm["cycles"]-rom["cycles"],
               "source_sha256": rom["source_sha256"], "image_sha256": rom["image_sha256"],
               "oracle_sha256": rom["oracle_sha256"], "rom": rom["checks"], "hbm": hbm["checks"],
               "hbm_post_traffic": hbm["post_traffic"],
+              "hbm_norm_traffic": hbm["norm_traffic"],
               "hbm_matrix_totals": hbm["matrix_totals"]}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

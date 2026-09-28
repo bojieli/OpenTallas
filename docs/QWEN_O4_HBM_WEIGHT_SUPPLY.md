@@ -92,6 +92,11 @@ path connects `wd_v`, independent code/scale bases, count, useful row scales,
 real layer-0 descriptors require respectively 128/192, 88/256, 512/768 and
 264/256 code/scale words. A 512-code-word and 768-scale-word window therefore
 covers each complete K round without changing the ISA or FP32 accumulation.
+The same HBM arm also preloads the layer's trained Q/K norm constants at
+CROM addresses [4,096, 6,656), or 640 sectors per die, while the o/down
+true-scale source preloads 2,048 sectors. RoPE values are deterministic and
+remain local; this layer starts from an already prepared activation, so it
+does not exercise embedding.
 The PC response tag is 17 bits and a source fault reaches the package verdict;
 the local matrix read is disabled in the HBM arm. Both matrix and post-TP-scale
 HBM modes lint at reduced G=4 with Verilator 5.050. The real G=6,144 matrix
