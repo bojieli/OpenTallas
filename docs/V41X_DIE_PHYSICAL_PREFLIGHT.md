@@ -141,6 +141,9 @@ The `karb_bank4` case routes four local pseudo-channels in four adjacent PHY
 windows as a fallback physical partition. It uses `NPC=4`, which changes the
 address-to-channel hash, and cannot substitute for the 32-channel strip's
 functional or timing result.
+`karb_bank4_m9` keeps its same footprint and pins but allows M2–M9 routing,
+measuring whether the die's upper layers relieve congestion. Its result
+cannot be transferred to the original case's narrower routing stack.
 
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused

@@ -94,7 +94,7 @@ def karb_strip(height_um: float = 30.24) -> dict:
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM, "pc_pin_span_um": PC_PIN_SPAN}}
 
 
-def karb_bank4(height_um: float = 30.24) -> dict:
+def karb_bank4(height_um: float = 30.24, high_layers: bool = False) -> dict:
     """A four-PC local arbitration partition for a bounded physical route.
 
     This uses the real parameterized arbiter RTL with NPC=4. Its K address-to-PC
@@ -118,10 +118,13 @@ def karb_bank4(height_um: float = 30.24) -> dict:
             "--param", f"NPC={npc}", "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2",
             "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
             "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}", "--place-density", "0.60"]
+    if high_layers:
+        args += ["--routing-layers", "M2", "M9"]
     for r in regions:
         args += ["--pin-region", r]
-    return {"args": args, "nickname": "codex_v41x_karb_bank4",
-            "output": "results/asap7_physical/v41x_die_karb_bank4/physical.json",
+    return {"args": args, "nickname": "codex_v41x_karb_bank4_m9" if high_layers else "codex_v41x_karb_bank4",
+            "output": "results/asap7_physical/v41x_die_karb_bank4_m9/physical.json" if high_layers
+                      else "results/asap7_physical/v41x_die_karb_bank4/physical.json",
             "floorplan": {"die_um": [w, h], "npc": npc, "pc_window_um": PHY_PC_WINDOW_UM,
                           "pc_pin_span_um": PC_PIN_SPAN, "scope": "local bank characterization only"}}
 
@@ -496,6 +499,7 @@ def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_k
 CASES = {"karb_strip": karb_strip,
          "karb_strip_fit": lambda: karb_strip(height_um=17.28),
          "karb_bank4": karb_bank4,
+         "karb_bank4_m9": lambda: karb_bank4(high_layers=True),
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),

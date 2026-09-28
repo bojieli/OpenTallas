@@ -92,3 +92,13 @@ def test_karb_strip_fit_uses_the_floorplan_band_without_overwriting_the_wider_ca
     assert fit["floorplan"]["die_um"][1] <= 17.2 + 0.08 + 1e-9
     assert fit["nickname"] != wide["nickname"]
     assert fit["output"] != wide["output"]
+
+
+def test_karb_bank4_m9_is_an_independent_routing_sensitivity():
+    base = pnr.karb_bank4()
+    m9 = pnr.CASES["karb_bank4_m9"]()
+    args = m9["args"]
+    assert args[args.index("--routing-layers") + 1:args.index("--routing-layers") + 3] == ["M2", "M9"]
+    assert m9["floorplan"] == base["floorplan"]
+    assert m9["nickname"] != base["nickname"]
+    assert m9["output"] != base["output"]
