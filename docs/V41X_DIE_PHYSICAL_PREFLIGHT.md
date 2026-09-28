@@ -217,15 +217,23 @@ violations, and 568.430 µm² of routed standard cells. Its Fmax is 1.24805
 GHz in this predictive ASAP7 view. This is one local request slice; it
 excludes the group response buffers, K trunk, clock distribution across
 adjacent slices and the full four-stack die. Its 17.28 µm height is 0.08 µm
-above the modeled streamer-and-staging band, so the die area budget still
-needs a composed placement or repricing.
+above the modeled streamer-and-staging band. The following case tightens the
+local height, while composed group placement remains open.
+
 The 375 by 17.01 µm local-child sensitivity fits inside the 17.2 µm
 band height and completed detailed route, but
 `results/asap7_physical/v41x_die_karb_pc_local_budget_m9/physical.json`
 is **not met**: `h_wstrb[28]` has 326.74 ps slew against the 320 ps limit.
 Setup/hold WNS remain positive at +144.753/+66.322 ps, with zero
 DRC/antenna violations and 564.611 µm² of routed standard cells. A stronger
-slew-repair rerun is pending; the actual height constraint is not yet closed.
+slew-repair rerun **passes** in
+`results/asap7_physical/v41x_die_karb_pc_local_budget_slew50_m9/physical.json`:
+at the same 375 by 17.01 µm footprint, extracted setup/hold WNS are
++134.180/+66.181 ps at 0.92 ns, with zero DRC, antenna, slew, capacitance
+and fanout violations. Its 4,882 routed cells occupy 578.680 µm² and have
+1.27256 GHz Fmax in the predictive ASAP7 view. The local slice is physically
+closed within the modeled height. The shared group response, K trunk and
+multi-PC clock/routing composition are still outside this result.
 The earlier unspecialized one-PC top also detailed-routed at 375 by 17.28 µm
 in `results/asap7_physical/v41x_die_karb_pc1_pipe_fit_slewmargin40_m9/physical.json`.
 It has +161.847 ps setup and +55.333 ps hold WNS with zero DRC and antenna
