@@ -99,9 +99,13 @@ stores silently.
 The direct one-stage converter and direct macro store have not closed a
 0.92-ns route. Their source-pinned route records describe the actual setup
 and hold failures. The two-stage converter's completed global route has
-setup +8.4 ps and hold +15.8 ps at 0.92 ns, but its detailed route was
-stopped when the local host ran out of available memory; it is **not** a
-routed timing verdict (`results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2/physical.json`).
+setup +8.4 ps and hold +15.8 ps at 0.92 ns. Its detailed route was resumed
+on a host with more memory and completed with zero DRC and antenna
+violations; final SPEF extraction is complete, while routed setup and hold
+analysis remains active. The stage-bound continuation record is
+`results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2/route_continuation.json`;
+the earlier local interrupted-flow record remains at
+`results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2/physical.json`.
 The input-registered macro store has a negative
 physical verdict: post-place setup −371 ps and CTS hold −112 ps after 9507
 hold buffers, ending in RSZ-0060. Its wider bank-local path needs another
