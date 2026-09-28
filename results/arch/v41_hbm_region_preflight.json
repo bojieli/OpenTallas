@@ -1,0 +1,52 @@
+{
+  "capacity": {
+    "key_sectors_for_current_layout_users_per_stack": 306937856,
+    "key_sectors_for_model_users_per_stack": 482410496,
+    "key_sectors_per_user_per_stack_replicated": 557056,
+    "max_replicated_users_with_28_bit_key_window": 481,
+    "model_users_fit_current_layout": false,
+    "usable_bytes_per_stack": 20250000000,
+    "users_current_replicated_keys": 551,
+    "users_model_striped_keys": 866
+  },
+  "inputs": {
+    "capacity_efficiency": 0.9,
+    "ckv_bytes_per_row": 288,
+    "context": 1048576,
+    "key_bytes_per_row": 68,
+    "rows_per_die_per_user": 262144,
+    "stack_capacity_bytes": 22500000000,
+    "stacks_per_die": 4,
+    "tp_dies": 4,
+    "window_bytes_per_die_per_user": 135168
+  },
+  "per_stack_per_user_bytes": {
+    "ckv_striped": 18874368,
+    "key_replicated": 17825792,
+    "key_striped": 4456448,
+    "model_striped_keys": 23364608,
+    "rtl_replicated_keys": 36733952,
+    "window": 33792
+  },
+  "schema": "v41_hbm_region_preflight_v1",
+  "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; current replicated index-key writer; no throughput claim",
+  "source_sha256": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "rtl/chip/ot_chip_v41x_die.sv": "0b4ce00e5d997f42ba1cf07356f56a1e9b3c3232c7ef6d246bfae4485dc5552b",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "76a7658ee2e9a7ab063ec799412b94b200b60a7a4c8803c70fafd9875be9f21a",
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "c82eb5893f70285932741c4111d817817aea27d0d36ba49103c31f2c8913a508",
+    "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735"
+  },
+  "status": "capacity_mismatch",
+  "widths": {
+    "current_controller_user_id_bits": 8,
+    "current_index_sector_address_bits": 28,
+    "full_mode_header_idx_val_overlap_bits": 5,
+    "full_mode_header_pos_idx_overlap_bits": 5,
+    "full_mode_header_tok_addr_overlap_bits": 1,
+    "index_sector_bits_for_current_layout_users": 29,
+    "user_id_bits_for_current_layout_users": 10,
+    "user_id_bits_for_model_users": 10
+  }
+}
