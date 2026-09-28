@@ -69,3 +69,16 @@ def test_exact_tp_emitter_fails_closed_for_other_layers():
     lay = replay.ShapeLayout(replay.SHIPPED, tp_exact=True)
     with pytest.raises(ValueError, match="only layer 0"):
         replay.ShapeBuilder(lay).build([1], embed=False, head=False)
+
+
+def test_sequential_blockdot_is_not_the_chunk8_contract():
+    terms = np.zeros(64, dtype=np.float32)
+    terms[0] = np.float32(1e20)
+    terms[8] = np.float32(-1e20)
+    terms[9] = np.float32(1)
+    sequential = np.float32(0)
+    for term in terms:
+        sequential = golden.add(sequential, term)
+    chunk8 = golden.csum(terms)
+    assert sequential == np.float32(1)
+    assert chunk8 == np.float32(0)
