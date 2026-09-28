@@ -57,6 +57,7 @@ KVTB_SOURCES = [ROOT / p for p in ("rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv", "rtl/h
                                    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
                                    "rtl/chip/ot_chip_v41x_kv_prefetch.sv")]
 KV_GROUP_SOURCES = [ROOT / p for p in ("rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
+                                      "rtl/chip/ot_chip_v41x_hbm_karb_pc_local.sv",
                                       "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv")]
 TOOLS_ROOT = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/opentallas-tools"))
 VERILATOR = os.environ.get("OT_VERILATOR", str(TOOLS_ROOT / "verilator-5.050/bin/verilator"))

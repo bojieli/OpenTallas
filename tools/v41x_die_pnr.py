@@ -213,6 +213,29 @@ def karb_pc1_pipe_m9(slew_repair: bool = False, slew_margin: bool = False,
                           "scope": "one PC with NPC=1; excludes full 32-way K demux/response mux"}}
 
 
+def karb_pc_local_fit_m9() -> dict:
+    """The actual request-only PC child used in the exact four-PC group RTL."""
+    w, h = PHY_PC_WINDOW_UM, 17.28
+    m = 8 * ROW_UM
+    args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb_pc_local",
+            "--source", "rtl/chip/ot_chip_v41x_hbm_karb_pc_local.sv",
+            "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+            "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2",
+            "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
+            "--core-area", f"{m:g}", f"{m:g}", f"{w-m:g}", f"{h-m:g}",
+            "--place-density", "0.40", "--routing-layers", "M2", "M9",
+            "--max-transition-ns", "--slew-margin-percent", "40",
+            "--pin-region", "^h_.*=bottom:20-195",
+            "--pin-region", "^b_.*=top:20-195",
+            "--pin-region", "^k_(v|rdy|addr|len|tag|we|wdata|wstrb|wr_done).*=top:210-370",
+            "--pin-region", r"^(k_grants|b_grants|contended)\[\d+\]$=bottom:210-370",
+            "--pin-region", r"^(clk|rst_n)$=left:5-12"]
+    return {"args": args, "nickname": "codex_v41x_karb_pc_local_fit_m9",
+            "output": "results/asap7_physical/v41x_die_karb_pc_local_fit_m9/physical.json",
+            "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM,
+                          "scope": "one request-only PC child; group response and trunk omitted"}}
+
+
 def karb_group4_m9(height_um: float = 30.24, outpipe: bool = False,
                    tailpipe: bool = False) -> dict:
     """Four adjacent PC slices with registered K ingress/return and local PHY pins."""
@@ -221,6 +244,7 @@ def karb_group4_m9(height_um: float = 30.24, outpipe: bool = False,
     args[args.index("--top") + 1] = "ot_chip_v41x_hbm_karb_group4"
     i = args.index("--source")
     args[i + 1:i + 2] = ["rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
+                         "--source", "rtl/chip/ot_chip_v41x_hbm_karb_pc_local.sv",
                          "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
                          "--source", "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv"]
     # Yosys 0.68 hits an RTLIL duplicate-module assertion when `hierarchy`
@@ -640,6 +664,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_pc1_pipe_slewmargin_m9": lambda: karb_pc1_pipe_m9(slew_margin=True),
          "karb_pc1_pipe_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True),
          "karb_pc1_pipe_fit_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True, fit_height=True),
+         "karb_pc_local_fit_m9": karb_pc_local_fit_m9,
          "karb_group4_m9": karb_group4_m9,
          "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
          "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
