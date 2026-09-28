@@ -2,8 +2,7 @@
 
     python3 -m runtime.hdc targets
     python3 -m runtime.hdc generate --target qwen3-rom --chat "Reply with OK."
-    python3 -m runtime.hdc generate --target v41-rom --ids 0,3563,3745,418,170,16,3564,3582 --max-tokens 3
-    python3 -m runtime.hdc serve --target qwen3-rom --target v41-rom --port 8000
+    python3 -m runtime.hdc serve --target qwen3-rom --port 8000
 
 ``generate`` streams the tokens as the chip writes them, then prints the
 chip's counters.  ``serve`` starts the OpenAI-compatible endpoint

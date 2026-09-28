@@ -1,22 +1,22 @@
 """Targets of the hardwired-decode-core runtime: which chip, which model.
 
-Each target names the Verilator top that puts the host interface
+These reduced test vehicles name the Verilator top that puts the host interface
 (rtl/host/ot_host_if.sv) in front of one architecture's decode engine, the
 program/ROM image generator that personalises it, the Hugging Face tokenizer
 of the model it runs, and the physical records that give its modelled clock.
 
 The three architectures of docs/TOKEN_PIPELINE_OPTIMIZATION_PLAN.md section 6:
 
-* ``qwen3-rom``   Qwen3-8B ROM reticle: one decode core, weights in ROM, KV in
-                  SRAM with a slice per user (reduced Qwen3 vehicle).
-* ``v41-rom``     DeepSeek-V4.1 ROM die: the V4.1 decode core (reduced V4.1
-                  vehicle); one user's state at a time, cleared between users.
-* ``qwen3-array`` ROM array: the host interface fronts the SOURCE package of a
+* ``qwen3-rom``   Reduced Qwen ROM host vehicle: weights in ROM, KV in SRAM;
+                  the adopted physical tile instead streams KV from HBM.
+* ``v41-rom``     Source-pinned historical reduced V4.1 host vehicle. This is
+                  not the adopted V41x die or its HBM KV integration.
+* ``qwen3-array`` Reduced ROM array: the host interface fronts the SOURCE package of a
                   layer-per-package array of decode cores and package
                   controllers (ot_rom_pkg_ctrl) over package links; users run
                   as a batch through the package controllers' user contexts.
-* ``qwen3-hbm``   HBM comparator: the decode core with its KV cache streamed
-                  from HBM (ot_hdc_kv_stream + the HBM timing model).
+* ``qwen3-hbm``   Reduced KV-HBM host vehicle: KV streams from HBM while weights
+                  stay in ROM; the matched weight-HBM gate is separate.
 """
 
 from __future__ import annotations
@@ -93,13 +93,13 @@ class Target:
 
 TARGETS: dict[str, Target] = {
     "qwen3-rom": Target(
-        name="qwen3-rom", architecture="Qwen3-8B ROM reticle", model_id="qwen3-reduced-v1",
+        name="qwen3-rom", architecture="Reduced Qwen ROM host vehicle", model_id="qwen3-reduced-v1",
         top="tb_host_qwen", sources=tuple(_HDC + _PIPES + _HOST + ["rtl/test/tb_host_qwen.sv"]),
         images="qwen3", tokenizer_repo="Qwen/Qwen3-8B", vocab=4096, eos=(93, 91), ctx_max=64, slots=16, mode=0,
         chat="qwen3", physical=tuple(_HDC_PHYS), oracle=(1073, 382, 93),
-        status="host interface + one decode core, 16 user contexts (KV slices)"),
+        status="reduced host replay with KV SRAM; adopted tile uses HBM KV"),
     "v41-rom": Target(
-        name="v41-rom", architecture="DeepSeek-V4.1 ROM die", model_id="deepseek-v4.1-flash-reduced-v1",
+        name="v41-rom", architecture="Historical reduced V4.1 host vehicle", model_id="deepseek-v4.1-flash-reduced-v1",
         top="tb_host_v41", sources=tuple(_V41 + _HOST + ["rtl/test/tb_host_v41.sv"]),
         images="v41", tokenizer_repo="deepseek-ai/DeepSeek-V4.1-Flash", vocab=4040, eos=(1, 0), ctx_max=128,
         slots=16, mode=0, chat="deepseek-v41",
@@ -107,22 +107,22 @@ TARGETS: dict[str, Target] = {
             "ot_hdc_actquant", "ot_hdc_blockdot", "ot_hdc_engram_hash", "ot_hdc_fp4qdq", "ot_hdc_select_k512",
             "ot_hdc_softplus")]),                  # the Sinkhorn unit is a 7-cycle multicycle path (ot_hdc_sinkhorn_mc)
         verilator_flags=("-Wno-IMPORTSTAR",), oracle=(3118, 2400, 64),
-        status="host interface + the V4.1 decode core, one user's state at a time"),
+        status="historical replay only; adopted V41x die integration is separate"),
     "qwen3-array": Target(
-        name="qwen3-array", architecture="ROM array (package controllers + links)", model_id="qwen3-reduced-v1",
+        name="qwen3-array", architecture="Reduced Qwen ROM array host vehicle", model_id="qwen3-reduced-v1",
         top="tb_host_array", sources=tuple(_HDC + _PIPES + ["rtl/rom/ot_rom_pkg_link.sv", "rtl/rom/ot_rom_pkg_ctrl.sv"]
                                            + _HOST + ["rtl/test/tb_host_array.sv"]),
         images="qwen3-array", tokenizer_repo="Qwen/Qwen3-8B", vocab=4096, eos=(93, 91), ctx_max=64, slots=16,
         mode=1, chat="qwen3", physical=tuple(_HDC_PHYS + ["rom/ot_rom_pkg_ctrl"]), oracle=(1073, 382, 93),
         params={"NODES": 4},
-        status="host interface fronting package 0 of a 4-package layer-per-package array"),
+        status="reduced four-package host replay; current array integration is separate"),
     "qwen3-hbm": Target(
-        name="qwen3-hbm", architecture="HBM comparator (KV in HBM)", model_id="qwen3-reduced-v1",
+        name="qwen3-hbm", architecture="Reduced Qwen KV-HBM host vehicle", model_id="qwen3-reduced-v1",
         top="tb_host_hbm", sources=tuple(_HDC + _PIPES + ["rtl/hdc/kv/ot_hdc_kv_stream.sv",
                                                           "rtl/hdc/kv/ot_hdc_kv_walk.sv",
                                                           "rtl/hdc/kv/ot_hdc_hbm_model.sv"]
                                          + _HOST + ["rtl/test/tb_host_hbm.sv"]),
         images="qwen3", tokenizer_repo="Qwen/Qwen3-8B", vocab=4096, eos=(93, 91), ctx_max=64, slots=16, mode=0,
         chat="qwen3", physical=tuple(_HDC_PHYS + ["hdc/kv/ot_hdc_kv_stream"]), oracle=(1073, 382, 93),
-        status="host interface + the decode core with KV streamed from the HBM model; weights still in ROM"),
+        status="KV in HBM, weights in ROM; matched weight-HBM RTL gate is separate"),
 }
