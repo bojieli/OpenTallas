@@ -70,6 +70,7 @@ module ot_hdc_core_v41x #(
     parameter integer HS   = 8,            // HE K chunks (hdc_golden_v41.HC_SPLIT)
     parameter integer W_HBM = 0,
     parameter integer KV_HBM = 0,
+    parameter integer ME0_HBM = 0,       // selected re-specified ME weight op uses an HBM window
     parameter integer NSLOT = 1,           // position slots (1: the one-position core)
     parameter integer MP    = 1,           // lane multiplier of the ME, QE and HE
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
@@ -302,6 +303,17 @@ module ot_hdc_core_v41x #(
     output wire [7:0]        qd_nb,
     output wire [NW-1:0]     qd_tiles,
     input  wire              q_ok,
+    // Optional descriptor for one selected X_ME weight op. The array/die
+    // wrapper chooses a bounded interval and asserts m0_select for that op.
+    // The selected op waits until its window is complete; other ME ops keep
+    // their existing weight-bank path.
+    output reg               m0d_v,
+    output wire [AW-1:0]     m0d_wbase,
+    output wire [NW-1:0]     m0d_nout, m0d_tiles, m0d_k,
+    output wire [AW-1:0]     m0d_xjs,
+    output wire [1:0]        m0d_split,
+    input  wire              m0_select,
+    input  wire              m0_ok,
     // Attention KV prefetch handshake (KV_HBM = 1). The index-key engine has
     // its own pooled HBM path and does not use this descriptor.
     output reg               kvd_v,
@@ -496,7 +508,7 @@ module ot_hdc_core_v41x #(
                         if (waited && (&idles) && !coll_busy) begin
                             coll_go <= 1'b1; issue_unit <= d_unit; st <= S_COLL_ARM;
                         end
-                    end else if (waited && unit_ready && q_gate && kv_gate &&
+                    end else if (waited && unit_ready && q_gate && kv_gate && m0_gate &&
                                  (!(FULL_SHAPE && KV_HBM && d_unit == 3'd2 && dst == 2'd3) ||
                                   win_idle || (win_su_match && win_issue_ready))) begin
                         wrel_v <= d_wrel;
@@ -679,6 +691,20 @@ module ot_hdc_core_v41x #(
         else qd_v <= (W_HBM != 0) && (st == S_DEC) && c_unit == 3'd3 && ir[O_QE_MODE +: W_QE_MODE] == 2'd0 && pred_ok;
     end
     assign qd_wbase = qe_wbase; assign qd_nb = qe_nb; assign qd_tiles = qe_tiles;
+
+    wire m0_gate = (ME0_HBM == 0) || !(d_unit == 3'd1 && me_cls == MC_W && m0_select) ||
+                   (m0_ok && !m0d_v);
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) m0d_v <= 1'b0;
+        else m0d_v <= (ME0_HBM != 0) && (st == S_DEC) && c_unit == 3'd1 &&
+                      !ir[O_ME_WSRC] && pred_ok && !zero;
+    end
+    assign m0d_wbase = me_wbase;
+    assign m0d_nout = me_nout;
+    assign m0d_tiles = me_tiles;
+    assign m0d_k = me_k;
+    assign m0d_xjs = me_xjs;
+    assign m0d_split = me_split;
 
     // Only an attention-class ME op reads the window KV through the shared KV
     // port. The descriptor is emitted after decode captures its dynamic fields.

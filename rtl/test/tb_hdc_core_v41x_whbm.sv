@@ -53,6 +53,9 @@
 `ifndef HDC_HHW
 `define HDC_HHW 8
 `endif
+`ifndef HDC_ME0_HBM
+`define HDC_ME0_HBM 0
+`endif
 module tb_hdc_core_v41x_whbm #(
     parameter integer NPC = 8,
     parameter integer LWIN = 10,
@@ -105,6 +108,32 @@ module tb_hdc_core_v41x_whbm #(
     wire hrom_re; wire [AW-1:0] hrom_addr; reg [HS*HNL*32-1:0] hrom_q;
     wire [XSQ-1:0] vsl_re; wire [XSQ*AW-1:0] vsl_addr; reg [XSQ*XSW*32-1:0] vsl_q;
     wire [7:0] mb_re; wire [8*MBAW-1:0] mb_addr; reg [8*MG*32-1:0] mb_p [0:ML-1];
+    localparam integer M0_BASE = 10100, M0_WORDS = 36; // L0.router in this reduced program
+    wire m0d_v, m0_select, m0_ok;
+    wire [AW-1:0] m0d_wbase, m0d_xjs;
+    wire [NW-1:0] m0d_nout, m0d_tiles, m0d_k;
+    wire [1:0] m0d_split;
+    wire [MG*32-1:0] m0_q;
+    wire m0_fault;
+    wire [3:0] m0_fault_why;
+    wire [31:0] m0_sectors;
+    reg m0_active = 0, m0_issued = 0, m0_busy_seen = 0;
+    wire m0_begin = m0d_v && m0_select;
+    wire m0_release = m0_active && m0_busy_seen && !unit_busy[0];
+    assign m0_select = `HDC_ME0_HBM && m0d_wbase == M0_BASE &&
+                       m0d_nout == 12 && m0d_tiles == 1 && m0d_k == 40 &&
+                       m0d_xjs == 0 && m0d_split == 2;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            m0_active <= 0; m0_issued <= 0; m0_busy_seen <= 0;
+        end else begin
+            if (m0_begin) begin
+                m0_active <= 1; m0_issued <= 0; m0_busy_seen <= 0;
+            end else if (m0_release) m0_active <= 0;
+            if (m0_active && issue_unit == 1) m0_issued <= 1;
+            if (m0_issued && unit_busy[0]) m0_busy_seen <= 1;
+        end
+    end
     wire [7:0] hb_re; wire [8*HBAW-1:0] hb_addr; reg [8*HHW*32-1:0] hb_q;
     wire [HS-1:0] vh_re; wire [HS*AW-1:0] vh_addr; reg [HS*32-1:0] vh_q;
     wire ww_h_we; wire [AW-1:0] ww_h_addr; wire [31:0] ww_h_mask; wire [1023:0] ww_h_data;
@@ -252,7 +281,7 @@ module tb_hdc_core_v41x_whbm #(
         assign pikh_rsp_beat = 0; assign pikh_rsp_data = 0;
     end endgenerate
     reg [AW-1:0] cfg [0:15];                   // tools/hdc_images_v41x.py cfg.hex: [0] the index keys' KV word base
-    ot_hdc_core_v41x #(.SW(SW), .HS(HS), .W_HBM(1), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
+    ot_hdc_core_v41x #(.SW(SW), .HS(HS), .W_HBM(1), .ME0_HBM(`HDC_ME0_HBM), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
                        .X_SEL(`HDC_X_SEL), .X_EG(`HDC_X_EG), .XSQ(XSQ), .XSW(XSW),
                        .X_SU(`HDC_X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) dut (
@@ -269,6 +298,9 @@ module tb_hdc_core_v41x_whbm #(
         .pikw_csec(pikw_csec), .pikw_codes(pikw_codes), .pikw_ssec(pikw_ssec),
         .pikw_sslot(pikw_sslot), .pikw_scales(pikw_scales),
         .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
+        .m0d_v(m0d_v), .m0d_wbase(m0d_wbase), .m0d_nout(m0d_nout),
+        .m0d_tiles(m0d_tiles), .m0d_k(m0d_k), .m0d_xjs(m0d_xjs),
+        .m0d_split(m0d_split), .m0_select(m0_select), .m0_ok(m0_ok),
         .xs_vi_re(xs_vi_re), .xs_vi_addr(xs_vi_addr), .xs_vi_q(xs_vi_q), .xs_rd_re(xs_rd_re),
         .xs_rd_addr(xs_rd_addr), .xs_rd_src(xs_rd_src), .xs_rd_q(xs_rd_q), .xs_vm_we(xs_vm_we),
         .xs_vm_waddr(xs_vm_waddr), .xs_vm_wdata(xs_vm_wdata), .xs_kv_we(xs_kv_we), .xs_kv_waddr(xs_kv_waddr),
@@ -302,6 +334,72 @@ module tb_hdc_core_v41x_whbm #(
         .unit_busy(unit_busy), .issue_unit(issue_unit),
         .qd_v(qd_v), .qd_wbase(qd_wbase), .qd_nb(qd_nb), .qd_tiles(qd_tiles),
         .q_ok(q_ok), .wrel_v(wrel_v));
+
+    // First non-QE comparator path: bank 0 of the reduced L0.router ME op.
+    // The other seven ME banks remain on the independent ROM image in this
+    // incremental exact gate. A complete comparator must place every weight
+    // family on shared, bounded HBM ports with the KV and index traffic.
+    reg [31:0] m0_reads = 0, m0_bad = 0;
+    generate if (`HDC_ME0_HBM) begin : g_m0_hbm
+        wire hq_v, hq_rdy;
+        wire [23:0] hq_addr;
+        wire [3:0] hq_len;
+        wire [5:0] hq_tag;
+        wire [3:0] hr_v, hr_rdy;
+        wire [4*6-1:0] hr_tag;
+        wire [3:0] hr_beat;
+        wire [4*256-1:0] hr_data;
+        wire [6:0] fetched;
+        wire rd = m0_active && mb_re[0];
+        ot_hdc_v41x_weight_window #(.WB(MG*32), .SB(256), .WORDS(64),
+            .AW(MBAW), .HAW(24), .NPC(4), .LENW(4)) u_win (
+            .clk(clk), .rst_n(rst_n), .start(m0_begin), .release_window(m0_release),
+            .rom_base(MBAW'(M0_BASE)), .hbm_base(24'd0), .nwords(7'(M0_WORDS)),
+            .ready(m0_ok), .hq_v(hq_v), .hq_rdy(hq_rdy),
+            .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag),
+            .hr_v(hr_v), .hr_rdy(hr_rdy), .hr_tag(hr_tag), .hr_beat(hr_beat),
+            .hr_data(hr_data), .rom_re(rd), .rom_addr(mb_addr[0 +: MBAW]),
+            .rom_q(m0_q), .fault(m0_fault), .fault_why(m0_fault_why),
+            .fetched_words(fetched), .received_sectors(m0_sectors));
+        ot_hdc_hbm_model #(.NPC(4), .AW(24), .DW(256), .MEM_WORDS(64),
+            .TAGW(6), .LENW(4), .BEATW(1), .QD(32), .RQD(16),
+            .CLK_PS(CLK_PS), .PC_RDY(0)) u_hbm (
+            .clk(clk), .rst_n(rst_n), .req_v(hq_v), .req_rdy(hq_rdy),
+            .pc_room(), .req_we(1'b0), .req_addr(hq_addr), .req_len(hq_len),
+            .req_tag(hq_tag), .req_wdata(256'd0),
+            .rsp_v(hr_v), .rsp_rdy(hr_rdy), .rsp_tag(hr_tag),
+            .rsp_beat(hr_beat), .rsp_data(hr_data));
+        // Match the banked image's address map exactly: line a*8*MG+8*u is
+        // bank 0 lane u. This image is an oracle, never the delivered port.
+        reg loaded = 0;
+        always @(posedge clk) if (rst_n && !loaded) begin
+            for (integer a = 0; a < 64; a = a + 1)
+                for (integer u = 0; u < MG; u = u + 1)
+                    u_hbm.mem[a][32*u +: 32] = mbank[(M0_BASE+a)*8*MG + 8*u];
+            loaded <= 1;
+        end
+        reg check_v = 0;
+        reg [MG*32-1:0] expected;
+        always @(posedge clk) begin
+            if (check_v && m0_q !== expected) begin
+                if (m0_bad < 3) $display("M0_BAD addr=%0d got=%h expected=%h",
+                                         mb_addr[0 +: MBAW], m0_q, expected);
+                m0_bad <= m0_bad + 1;
+            end
+            check_v <= rd;
+            if (rd) begin
+                m0_reads <= m0_reads + 1;
+                for (integer u = 0; u < MG; u = u + 1)
+                    expected[32*u +: 32] <= mbank[32'(mb_addr[0 +: MBAW])*8*MG + 8*u];
+            end
+        end
+    end else begin : g_m0_rom
+        assign m0_ok = 1'b1;
+        assign m0_q = '0;
+        assign m0_fault = 1'b0;
+        assign m0_fault_why = '0;
+        assign m0_sectors = 0;
+    end endgenerate
 
     // The streamer's fetch-list and weight HBM are distinct from the index-key HBM.
     reg [15:0] qlead, qrate;
@@ -367,6 +465,13 @@ module tb_hdc_core_v41x_whbm #(
                      q_ops, q_words, q_bad, qs_fault, qs_why, qs_fetched, qs_consumed, reads);
         end
     endtask
+    task m0stats;
+        begin
+            if (`HDC_ME0_HBM)
+                $display("M0_HBM reads=%0d sectors=%0d bad=%0d fault=%0d why=%0d",
+                         m0_reads, m0_sectors, m0_bad, m0_fault, m0_fault_why);
+        end
+    endtask
 
     // synchronous-read memories
     integer l, q;
@@ -379,7 +484,10 @@ module tb_hdc_core_v41x_whbm #(
         // ME weight-tile banks: bank b = 8u + c answers chain position c's address ML cycles later
         for (q = 0; q < 8 * MG; q = q + 1)
             mb_p[0][32*q +: 32] <= mbank[32'(mb_addr[(q % 8)*MBAW +: MBAW]) * (8 * MG) + q];
-        for (l = 1; l < ML; l = l + 1) mb_p[l] <= mb_p[l-1];
+        for (l = 1; l < ML; l = l + 1)
+            for (q = 0; q < 8*MG; q = q + 1)
+                mb_p[l][32*q +: 32] <= (`HDC_ME0_HBM && m0_active && (q % 8 == 0)) ?
+                    m0_q[32*(q/8) +: 32] : mb_p[l-1][32*q +: 32];
         for (q = 0; q < 8; q = q + 1) if (hb_re[q]) hb_q[q*HHW*32 +: HHW*32] <= hbank[{hb_addr[q*HBAW +: HBAW], 3'(q)}];
         for (q = 0; q < HS; q = q + 1) if (vh_re[q]) vh_q[32*q +: 32] <= vm[vh_addr[q*AW +: 16]];
         if (ww_h_we) for (q = 0; q < 32; q = q + 1) if (ww_h_mask[q]) vm[ww_h_addr[15:0] + q] <= ww_h_data[32*q +: 32];
@@ -434,6 +542,15 @@ module tb_hdc_core_v41x_whbm #(
     wire [63:0] x_cnt_he, x_cnt_me, x_cnt_att, x_cnt_idx, x_cnt_su;
     wire [47:0] x_idx_ks, x_idx_hb, x_idx_sc, x_idx_hs;
     wire [31:0] x_idx_kw;
+`ifdef HDC_ME0_HBM_GATE
+    // The local simulator resolves hierarchical references in inactive generate
+    // branches. These optional debug counters do not enter the exact gate.
+    assign x_cnt_idx = 0;
+    assign x_cnt_he = 0; assign x_cnt_me = 0;
+    assign x_cnt_att = 0; assign x_cnt_su = 0;
+    assign x_idx_ks = 0; assign x_idx_hb = 0; assign x_idx_sc = 0;
+    assign x_idx_hs = 0; assign x_idx_kw = 0;
+`else
     generate
         if (`HDC_X_IDX == 2) begin : g_cnt_idx_pool
             assign x_cnt_idx = {dut.g_idx_x.g_pool.u_idx.dbg_ops, dut.g_idx_x.g_pool.u_idx.dbg_elems};
@@ -474,6 +591,7 @@ module tb_hdc_core_v41x_whbm #(
             assign x_cnt_su = 64'd0;
         end
     endgenerate
+`endif
     wire [63:0] x_cnt_sel, x_cnt_eg;
     wire [31:0] x_sel_reps;
     generate
@@ -620,7 +738,10 @@ module tb_hdc_core_v41x_whbm #(
                 $display("HDC41_MULTI steps=%0d generated=%0d mismatches=%0d total_cycles=%0d vm_mismatch=%0d kv_mismatch=%0d",
                          step + 1, n_gen, gen_bad, total_cycles, bad_vm, bad_kv);
                 qstats();
-                if (gen_bad == 0 && bad_vm == 0 && bad_kv == 0 && !qs_fault && q_bad == 0)
+                m0stats();
+                if (gen_bad == 0 && bad_vm == 0 && bad_kv == 0 && !qs_fault && q_bad == 0 &&
+                    (!`HDC_ME0_HBM || (m0_reads > 0 && m0_sectors == M0_WORDS &&
+                                      m0_bad == 0 && !m0_fault)))
                     $display("PASS"); else $display("FAIL");
                 $finish;
             end
@@ -636,8 +757,11 @@ module tb_hdc_core_v41x_whbm #(
             $display("UTIL me_busy=%0d su_busy=%0d qe_busy=%0d xu_busy=%0d he_busy=%0d all_idle=%0d", busy_me,
                      busy_su, busy_qe, busy_xu, busy_he, all_idle);
                 qstats();
+                m0stats();
                 if (next_token == expect_tok && !fault && bad_lg == 0 && bad_vm == 0 && bad_kv == 0 &&
-                    !qs_fault && q_bad == 0)
+                    !qs_fault && q_bad == 0 &&
+                    (!`HDC_ME0_HBM || (m0_reads > 0 && m0_sectors == M0_WORDS &&
+                                      m0_bad == 0 && !m0_fault)))
                 $display("PASS");
             else
                 $display("FAIL");
