@@ -29,14 +29,15 @@ that matrix until regenerated from the bound emitter.
 
 ## Port, capacity and cycle contract
 
-The candidate store has 16 analytical 1R1W SRAMs (8 chain banks × 2
-positions), each 128×256 bits and 3891.57696 µm² outline, or 0.062265 mm²
-per shared store. Eight chain banks each present one 128-bit read **per
-position** per cycle; this is 2048 BF16 bits total into one 64-lane, two
-position ME tile. The SRAM has one masked write port per bank. A wide preload
-is eight 128-bit bank writes per selected position/cycle, so it needs no extra
-SRAM port. It blocks narrow writes for that cycle; this phase exclusion is
-enforced in the wrapper. Macro TT read tCQ is 351.77 ps in the analytic view.
+The checkpoint-exact `wo_a` gate uses **MP=1**: eight analytical 1R1W SRAMs,
+each 128×256 bits and 3891.57696 µm² outline. Its shared store outline is
+0.031133 mm² and its read operand is 1024 BF16 bits/cycle. The separately
+routed **MP=2** candidate has 16 macros, a 0.062265 mm² outline and a
+2048-bit read operand; the MP=1 exact verdict does not validate that second
+position. Each macro has one masked write port. A wide preload writes eight
+128-bit banks per selected position per cycle; preload and narrow writes are
+mutually exclusive in the wrapper. Macro TT read tCQ is 351.77 ps in the
+analytic view.
 
 The source VM candidate reads four 512-bit FP32 bank words per cycle. A
 two-stage 64-lane FP32→BF16 RNE converter accepts those 2048 bits in bank
@@ -46,7 +47,7 @@ checkpoint-backed two-stage gate in
 `results/rtl/hdc_v41x_fullshape_woa_pipe2_full1024.json` passes 2048/2048
 raw FP32 outputs with 128 preload issues and writes, 131108 weight-bank reads
 and 131345 total cycles; its extra fill stage is hidden by the existing
-preload barrier. An input register on the 16-macro store is also checkpoint
+preload barrier. An input register on the MP=1 store is also checkpoint
 exact: `results/rtl/hdc_v41x_fullshape_woa_pipe2_inreg_full1024.json` passes
 2048/2048 rows in 131347 cycles. That RL4 boundary adds one fill cycle per
 group to the RL3 result while sustaining one read beat per cycle. A real
@@ -72,12 +73,13 @@ converter and store latency. This is **not a token-rate gain**: the TB supplies
 the four VM words and the actual controller/read selector, finite port
 schedule, 41-consumer multicast and full cluster route still need gates.
 
-At 83,328 BF16 MAC/cycle, one store per 64-MAC tile would imply about 1302
-stores and 81.07 mm² of SRAM outlines, incompatible with the design's 3.41
-mm² SRAM ledger. Even 16/32 stores add 0.996/1.992 mm² of outlines, before
+At 83,328 BF16 MAC/cycle, one **MP=2** store per 64-MAC tile would imply about
+1302 stores and 81.07 mm² of SRAM outlines, incompatible with the design's
+3.41 mm² SRAM ledger. Even 16/32 MP=2 stores add 0.996/1.992 mm² of outlines, before
 macro halos, queues, conversion, registered multicast, routing or energy.
-Sharing 32 stores among roughly 41 tiles each is only a candidate: the
+Sharing 32 MP=2 stores among roughly 41 tiles each is only a candidate: the
 whole cluster must prove lockstep requests and bound its 2048-bit fanout.
+The current MP=1 gate bounds only a 1024-bit operand for one position.
 The 3.41 mm² ledger already covers other memories and cannot absorb these
 stores silently.
 
