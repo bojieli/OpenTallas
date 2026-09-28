@@ -210,6 +210,12 @@ the group's registered receive path. The refactored four-PC RTL still passes
 the concurrent exact KV/index gate in
 `results/rtl/v41x_karb_group4_local_kv_gate.json`. A near-budget physical
 route of that request-only child is pending.
+The earlier unspecialized one-PC top also detailed-routed at 375 by 17.28 µm
+in `results/asap7_physical/v41x_die_karb_pc1_pipe_fit_slewmargin40_m9/physical.json`.
+It has +161.847 ps setup and +55.333 ps hold WNS with zero DRC and antenna
+violations, but one direct response output still exceeds the 320 ps slew
+limit by 10.20 ps. Its standard cells occupy 642.322 µm². The strip is
+0.08 µm above the modeled band, and this top is **not met**.
 
 Four adjacent local one-PC slices, a registered K ingress and grouped K
 response buffers pass the concurrent reduced KV/index gate, pinned in
