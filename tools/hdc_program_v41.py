@@ -1838,7 +1838,7 @@ class Machine:
             li = f["xu_layer"]
             L = self.m.engram.layer_ids[li]
             ids = self.eh[li] + f["xu_src"]          # the layer's table base in the Engram ROM
-            rows = G.to_bf16((V.E4M3[self.lay.ecodes[ids]] * np.exp2(self.lay.eexp[ids])[:, None]).astype(F))
+            rows = V.decode_engram_rows(self.lay.ecodes, self.lay.eexp, ids)
             self.vm[f["xu_dst"]:f["xu_dst"] + rows.size] = rows.reshape(-1)
 
 
