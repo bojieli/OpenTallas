@@ -174,6 +174,7 @@ module tb_hdc_package_tp_int8 #(
                 wire s_vre, s_vwe; wire [7:0] s_vraddr, s_vwaddr; wire [FLIT-1:0] s_vwdata; reg [FLIT-1:0] s_vrq;
 
                 wire int8_wrom_re, scale_re, embed_code_re, embed_scale_re;
+                wire [G-1:0] scale_gre;
                 wire [AW-1:0] int8_wrom_addr, embed_code_addr;
                 wire [G*AW-1:0] scale_addr;
                 wire [NW-1:0] embed_scale_addr;
@@ -195,7 +196,8 @@ module tb_hdc_package_tp_int8 #(
                     .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
                     .int8_wrom_re(int8_wrom_re), .int8_wrom_addr(int8_wrom_addr),
                     .int8_wrom_q(WEIGHT_HBM ? hbm_int8_q : int8_wrom_q),
-                    .scale_re(scale_re), .scale_addr(scale_addr), .scale_q(WEIGHT_HBM ? hbm_scale_q : scale_q),
+                    .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),
+                    .scale_q(WEIGHT_HBM ? hbm_scale_q : scale_q),
                     .embed_code_re(embed_code_re), .embed_code_addr(embed_code_addr), .embed_code_q(embed_code_q),
                     .embed_scale_re(embed_scale_re), .embed_scale_addr(embed_scale_addr), .embed_scale_q(embed_scale_q),
                     .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
@@ -235,7 +237,7 @@ module tb_hdc_package_tp_int8 #(
                         .code_base_sector(28'd0),.scale_base_sector(SCALE_REGION),
                         .ready(w_ok),.fault(hbm_fault),
                         .code_re(int8_wrom_re),.code_addr(int8_wrom_addr),.code_q(hbm_int8_q),
-                        .scale_re(scale_re),.scale_addr(scale_addr),.scale_q(hbm_scale_q),
+                        .scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr),.scale_q(hbm_scale_q),
                         .rq_v(rq_v),.rq_rdy(rq_rdy),.rq_addr(rq_addr),.rq_tag(rq_tag),
                         .rsp_v(rsp_v),.rsp_tag(rsp_tag),.rsp_data(rsp_data));
                     for (genvar pp=0; pp<PC; pp=pp+1) begin : g_pc
@@ -302,7 +304,8 @@ module tb_hdc_package_tp_int8 #(
                     end
                     if (scale_re && WEIGHT_HBM == 0)
                         for (q = 0; q < G; q = q + 1)
-                            scale_q[q*W*16 +: W*16] <= matrix_scales[d*WROM_WORDS + scale_addr[q*AW +: AW]];
+                            scale_q[q*W*16 +: W*16] <= scale_gre[q] ?
+                                matrix_scales[d*WROM_WORDS + scale_addr[q*AW +: AW]] : 0;
                     if (embed_code_re) embed_code_q <= embed_codes[d*EMB_WORDS + embed_code_addr];
                     if (embed_scale_re) embed_scale_q <= embed_scales[d*EMB_ROWS + embed_scale_addr];
                     if (crom_re) crom_q <= crom[d*CROM_WORDS + crom_addr[11:0]];

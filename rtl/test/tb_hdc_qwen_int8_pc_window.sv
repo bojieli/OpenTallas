@@ -6,6 +6,7 @@ module tb_hdc_qwen_int8_pc_window;
     reg [AW-1:0] op_base=5, code_addr=0;
     reg [15:0] op_words=2, op_nout=32;
     reg [G*AW-1:0] scale_addr=0;
+    reg [G-1:0] scale_gre={G{1'b1}};
     wire [G*W*8-1:0] code_q;
     wire [G*W*16-1:0] scale_q;
     wire ready, fault;
@@ -22,7 +23,7 @@ module tb_hdc_qwen_int8_pc_window;
         .clk(clk),.rst_n(rst_n),.load(load),.op_base(op_base),.op_words(op_words),.op_nout(op_nout),
         .code_base_sector(28'd100),.scale_base_sector(28'd1000),.ready(ready),.fault(fault),
         .code_re(code_re),.code_addr(code_addr),.code_q(code_q),
-        .scale_re(scale_re),.scale_addr(scale_addr),.scale_q(scale_q),
+        .scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr),.scale_q(scale_q),
         .rq_v(rq_v),.rq_rdy(rq_rdy),.rq_addr(rq_addr),.rq_tag(rq_tag),
         .rsp_v(rsp_v),.rsp_tag(rsp_tag),.rsp_data(rsp_data));
     initial begin
