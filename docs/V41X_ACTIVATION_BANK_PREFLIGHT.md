@@ -53,6 +53,23 @@ two groups, wide ingress, and 128,000 two-position segment readbacks.  Its
 these counts are placement inputs, not die-level pins.  Local macro placement
 near the MAC lanes and a routed macro-bearing tile remain necessary.
 
+### Die-width replication constraint
+
+The gate above is a 64-MAC `MG=8` slice.  The adopted MTP design-point
+ledger (`results/arch/v41_die_assembly.json`) prices **83,328 BF16 MACs per
+die** and **3.41 mm² total SRAM**.  Independent copies of this exact two-
+position macro store for 83,328/64 = 1,302 slices would occupy about
+**81.07 mm² of macro outlines** and provide 25.43 MiB of useful activation
+storage.  The die ledger does not include that replication.  This is an
+explicit area and routing mismatch, even though a single slice is exact.
+An implementable die needs a small number of shared activation banks with
+registered, physically local multicast to output-row MAC tiles, or a new
+area/power budget.  For scale only, 16 and 32 copies of the current abstract
+occupy 1.00 and 1.99 mm² respectively; each would drive roughly 81 or 41
+64-MAC slices.  Neither fanout, wire energy, nor timing is validated yet.
+The SRAM candidate is therefore a **bank and cluster boundary**, not an
+instruction to replicate one bank per 64 MACs.
+
 `ot_hdc_v41x_he_xslice` is a local 128-bit by 80-word SRAM slice for eight
 HCP lanes at the design HW=256 and PMAX=8.  A full HCP has 32 slices in each
 of eight term banks, or 256 slices and 320 KiB of BF16 activation storage.
