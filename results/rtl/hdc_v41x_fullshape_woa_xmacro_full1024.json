@@ -8,8 +8,8 @@
   "exact_rows": 2048,
   "bank_read_cycles": 131108,
   "simulation_cycles": 133259,
-  "build_seconds": 50.28,
-  "simulation_seconds": 531.63,
+  "build_seconds": 51.87,
+  "simulation_seconds": 537.03,
   "memory_cap_bytes": 25769803776,
   "descriptor": {
     "g0": {
@@ -42,7 +42,7 @@
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
     "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv": "fce7c6df29e1be29ee2103f529c17debd7ba35f282dfb002e5cbaa009cb4fb67",
-    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": "ca24e28657eb24fd00ded0e0a76847a82885202dcf2820302b4cc77915de0ebb",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": "f5064de72493a39023c97bb1152d4ae54659091e25769e8c4323a5c0c382628b",
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "ef826757ad9f836fc68717ed8da928797f6f4000260c45919e5f0735b1860873",
     "rtl/test/tb_hdc_v41x_fullshape_woa_exact.sv": "f769fc4a49e2f6d07aa5a18cddace632fdfb1a2b35fc1157225a10510710edce",
