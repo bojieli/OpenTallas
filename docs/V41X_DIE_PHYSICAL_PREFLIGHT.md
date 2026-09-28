@@ -41,6 +41,22 @@ simulation array contents and protocol timing. Its physical replacement needs
 the four PHY/controller macro views and a registered, timed interface; a route
 of the behavioural model would not measure the HBM PHY.
 
+The committed `ot_hbm3e_phy` macro view is **not that replacement**. Its
+blackbox has one scalar request channel and 32 response channels (9,209
+signal pins); the adopted `ot_chip_v41x_hbm3e_phy` has 32 independent K
+request channels, 32 K response channels and a separate QE weight W request
+and response interface. Its K interface alone has 19,840 bits (620 per
+pseudo-channel), and its W interface adds about 2,226 bits, before status.
+At the existing abstract's 0.192 µm signal-pin pitch, roughly 22.2k pins
+would span 4.26 mm of the 12 mm core-facing PHY edge. This is a pin-span
+estimate, not a timing or routability result. The LEF/Liberty/Verilog port
+contract therefore does
+not match. A wrapper cannot recover 32 simultaneous requests from the
+single-request macro without changing bandwidth and timing. The physical
+macro contract must be regenerated for the adopted interface, or the RTL
+must be changed to a bandwidth-proven narrower controller protocol and the
+exact-token plus saturation gates rerun.
+
 The committed ASAP7 macro library does contain single-port ROM views, but not
 drop-in views for the wide and multi-read tile arrays. In particular,
 `ot_rom_16384x266_m16` has a TT minimum period of **1,024.5 ps**, already
@@ -87,8 +103,10 @@ The route dependency order is:
    banked macro adapters and prove the same reduced exact-token record with
    those adapters. Freeze the read latency and all shared-port arbitration.
 2. Replace each simulation HBM stack with a hard PHY/controller abstract and
-   timed K/W bus boundaries. Route the HBM arbiter-to-PHY boundary with actual
-   pin positions, then the KV prefetch and pooled-key paths.
+   timed K/W bus boundaries that match the adopted 32-K-plus-W protocol.
+   Route the HBM arbiter-to-PHY boundary with actual pin positions, then the
+   KV prefetch and pooled-key paths. The existing single-request
+   `ot_hbm3e_phy` abstract cannot be substituted directly.
 3. Build a new 48-tile physical partition from the adopted `ot_chip_v41x_die`
    port list. Place the vector/HC/select spine, banks, four HBM PHY strips and
    links against the 31.8 × 25.63 mm die envelope in
