@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.v41x-die-hbm-karb-preflight.v1",
+  "source_commit": "1780702e95da7669ebb0acad0ed8f6577b19c47d",
+  "rtl_sha256": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
+  "top": "ot_chip_v41x_hbm_karb",
+  "parameters": {
+    "NPC": 32,
+    "AW": 28,
+    "TAGW": 16,
+    "LENW": 4,
+    "BEATW": 4,
+    "DW": 256
+  },
+  "clock_period_ns": 0.92,
+  "io_delay_fraction": 0.2,
+  "synthesis": {
+    "status": "pass",
+    "tool": "Yosys via ORFS ASAP7",
+    "flattened_io_bits": 40332,
+    "stdcell_count": 52812,
+    "stdcell_area_um2": 4847.56
+  },
+  "interpretation": "Standalone top has an artificial 40k-bit B/K/H channel boundary; do not use its area or I/O closure as a die result."
+}

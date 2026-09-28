@@ -64,6 +64,17 @@ source commit, setup/hold, congestion, DRC and area in
 stack's arbitration only. It does not validate the four-stack HBM PHY,
 cross-die wires, die clock or whole-chip power.
 
+The first ASAP7 synthesis of that exact default `NPC=32` top has **40,332
+flattened I/O bits**, 52,812 standard-cell instances and 4,847.56 µm² of
+standard-cell area (`v41-die-karb-route/orfs/logs/.../1_synth.json`, kept outside
+this tree). The I/O bits are the B/K/H request and response buses at an
+artificial standalone boundary. A pin planner sized by cell area alone may
+be infeasible or require a large low-utilisation floorplan. A routable physical
+partition should keep each pseudo-channel's B/H buses local beside the HBM
+PHY strip and cross region boundaries with registered narrower trunks. The
+standalone route is a pin and timing diagnostic, not an area estimate for the
+whole die.
+
 The route dependency order is:
 
 1. Replace the tile's behavioural ROM, VM and QE window arrays with explicit
