@@ -13,7 +13,7 @@ def test_every_stage_cut_rounds_to_whole_expert_without_exceeding_coarse_rom():
     assert record["status"] == "coarse_integer_candidate_not_executable"
     assert record["cut_count"] == 27
     assert len(record["layer_owners"]) == 40
-    assert record["min_per_die_headroom_bytes"] > 60_000_000
+    assert 4_000_000 < record["min_per_die_headroom_after_rounding_and_engram_spill_bytes"] < 5_000_000
     first = record["cuts"][0]
     assert (first["layer"], first["from_stage"], first["to_stage"],
             first["integer_expert_cut"]) == (1, 0, 1, 152)

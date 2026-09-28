@@ -63,8 +63,10 @@ def derive(config=CONFIG, placement=PLACEMENT):
                            routed_expert_candidate_owners=parts))
         start = end
     assert len(cuts) == 27 and sorted(x["to_stage"] for x in cuts) == list(range(1, 28))
-    headroom = [p["rom_bytes_per_die"] - st["bytes"] / p["group"] - delta[i] / p["group"]
-                for i, st in enumerate(p["stages"])]
+    headroom_before_spill = [p["rom_bytes_per_die"] - st["bytes"] / p["group"] - delta[i] / p["group"]
+                             for i, st in enumerate(p["stages"])]
+    headroom_after_spill = [x - p["die_table"][i * p["group"]]["engram_spill_bytes"]
+                            for i, x in enumerate(headroom_before_spill)]
     return dict(schema="opentallas.v41.stage_owner_preflight.v1",
                 status="coarse_integer_candidate_not_executable",
                 claim_boundary="Whole routed-expert ID candidate from coarse checkpoint bytes only; no tensor image, "
@@ -74,8 +76,9 @@ def derive(config=CONFIG, placement=PLACEMENT):
                                "tools/v41_stage_owner_preflight.py": digest(Path(__file__).resolve())},
                 stage_count=28, expert_count=n_experts, cut_count=len(cuts), cuts=cuts,
                 layer_owners=owners, per_die_rounding_delta_bytes=[x / p["group"] for x in delta],
-                per_die_headroom_after_rounding_bytes=headroom,
-                min_per_die_headroom_bytes=min(headroom),
+                per_die_headroom_after_rounding_before_engram_spill_bytes=headroom_before_spill,
+                per_die_headroom_after_rounding_and_engram_spill_bytes=headroom_after_spill,
+                min_per_die_headroom_after_rounding_and_engram_spill_bytes=min(headroom_after_spill),
                 missing_gates=["checkpoint tensor/scale/metadata placement by ROM address",
                                "program per stage and expert owner lookup for selected IDs",
                                "ordered cross-stage activation, expert-output and HC-state packets",
