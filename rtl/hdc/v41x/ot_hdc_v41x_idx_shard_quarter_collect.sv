@@ -105,7 +105,7 @@ module ot_hdc_v41x_idx_shard_quarter_collect (
                 if(o_ready) begin
                     o_valid<=0; filled<=0; o_kv<=0; o_last<=0;
                     o_key<=0; o_ref<=0;
-                    if((beat<<4)+30'd16>=qlen3) run<=0;
+                    if(beat==((qlen3-1'b1)>>4)) run<=0;
                     else beat<=beat+1'b1;
                 end
             end else if(filled==expect_mask) begin

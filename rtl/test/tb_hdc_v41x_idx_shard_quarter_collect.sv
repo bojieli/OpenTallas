@@ -20,6 +20,10 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
     integer s,q,j,i,physical,local_key,global_key,qlen,pos;
     reg [543:0] word;
     reg [31:0] scales;
+    reg stalled_prev=0;
+    reg [63:0] held_out_kv,held_out_ref;
+    reg [3:0] held_out_last;
+    reg [64*544-1:0] held_out_key;
     function automatic integer rank(input integer x,input integer stack);
         integer t;
         begin t=x%64-16*stack;if(t<0)t=0;if(t>16)t=16;rank=(x/64)*16+t;end
@@ -79,6 +83,13 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
         end
     endtask
     always @(posedge clk) if(rst_n && busy) begin
+        if(stalled_prev && (!o_valid || o_kv !== held_out_kv ||
+           o_ref !== held_out_ref || o_last !== held_out_last ||
+           o_key !== held_out_key)) $fatal(1,"output changed while stalled n=%0d",n);
+        stalled_prev=o_valid && !o_ready;
+        if(stalled_prev) begin
+            held_out_kv=o_kv;held_out_ref=o_ref;held_out_last=o_last;held_out_key=o_key;
+        end
         o_ready<=($random(seed)&3)!=0;
         for(integer a=0;a<16;a=a+1) begin
             if(i_valid[a] && i_ready[a]) begin
