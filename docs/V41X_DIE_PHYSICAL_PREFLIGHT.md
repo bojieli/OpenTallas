@@ -177,6 +177,16 @@ A 0.40-density retry and a single-pseudo-channel partition are under test.
 Even a pass with I/O paths excluded cannot establish the HBM PHY interface
 timing. The required 0.92 ns full-boundary route remains open.
 
+The first single-PC registered slice completed detailed route in
+`results/asap7_physical/v41x_die_karb_pc1_pipe_m9/physical.json`. With real
+I/O timing (one-fifth-cycle delay), its extracted setup WNS is +233.428 ps
+and hold WNS is +57.832 ps at 0.92 ns, with zero DRC and antenna violations.
+The routed standard cells occupy 639.566 µm². The engineering verdict is
+**not met** because 39 max-slew violations remain. Its `NPC=1` hash and
+response path omit the full 32-way composition, and its 30.24 µm strip is
+taller than the die budget. It proves a local route can reach detailed
+routing and leaves hierarchy, signal integrity and floorplan fit open.
+
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
 `test_v41x_die_pnr` checks every port width, the LEF pin count and window
