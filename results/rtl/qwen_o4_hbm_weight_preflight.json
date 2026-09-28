@@ -32,10 +32,10 @@
   "input_sha256": {
     "results/arch/qwen3_budget.json": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
     "rtl/hdc/hbm/ot_hdc_wstream.sv": "70393355dc96dc834fa5e94e75580756ce1a0276c3f9385f98dca7515526f81d",
-    "rtl/hdc/ot_hdc_core_vector_weight.sv": "8550fe4c7cc84461300729a9ccb766fa530c13fd589d225dc94beb513c10086f",
-    "rtl/hdc/ot_hdc_matvec.sv": "83c7b48b9031b8107611d825cac43d9dfb0be93b6573fcb806747595bfd5867f",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "d7fc20aa119b64662558ec3a12d67944ec4d344ed8a819c4571b246388842603",
+    "rtl/hdc/ot_hdc_matvec.sv": "803131c1b3e539c883fb74722c5a296f96eff2808f9089d52615c2437fda314c",
     "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
-    "tools/hdc_qwen_int8_image.py": "166d292992bc0157443b77ee62ed74f5ff57defabed833f96fd1c186c37b0924",
+    "tools/hdc_qwen_int8_image.py": "ce1e699514eeb80344b68e6dbdbfeee2c85bbb8d4f75bf06e672b7350b26f606",
     "tools/qwen_o4_hbm_weight_preflight.py": "8a021c395014d760d9f7f2e1dee2e9b35c76159a5b62f9c790f38005d7b52051"
   },
   "matrix_traffic_per_die": [
