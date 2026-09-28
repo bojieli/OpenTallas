@@ -32,13 +32,13 @@
   "records": 38,
   "records_with_source_pins": 27,
   "pins_by_status": {
-   "current": 510,
+   "current": 506,
    "path-only": 3,
-   "stale": 125
+   "stale": 129
   },
   "findings_by_kind": {
    "commit-outside-head": 4,
-   "stale-pin": 125
+   "stale-pin": 129
   }
  },
  "headlines": [
@@ -7862,7 +7862,7 @@
      "key": "rtl/test/tb_hdc_core_qwen_vector_weight.sv",
      "path": "rtl/test/tb_hdc_core_qwen_vector_weight.sv",
      "pinned": "ae70a1eaa863edc8a92be6a1f9d07e41e87d90975f1c34f0f584a4a1689f55ed",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -7908,8 +7908,8 @@
     }
    ],
    "pin_counts": {
-    "current": 31,
-    "stale": 9
+    "current": 30,
+    "stale": 10
    },
    "commits": []
   },
@@ -9695,7 +9695,7 @@
      "key": "rtl/test/tb_hdc_core_v41x_whbm.sv",
      "path": "rtl/test/tb_hdc_core_v41x_whbm.sv",
      "pinned": "f3faece40039f4895a10de6751bda15c59ece14949e405377f863ddf60923420",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "provenance.source_sha256",
@@ -9727,8 +9727,8 @@
     }
    ],
    "pin_counts": {
-    "current": 62,
-    "stale": 12
+    "current": 61,
+    "stale": 13
    },
    "commits": [
     {
@@ -9779,7 +9779,7 @@
      "key": "rtl/rom/ot_rom_pkg_ctrl_x.sv",
      "path": "rtl/rom/ot_rom_pkg_ctrl_x.sv",
      "pinned": "c82eb5893f70285932741c4111d817817aea27d0d36ba49103c31f2c8913a508",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -10245,8 +10245,8 @@
     }
    ],
    "pin_counts": {
-    "current": 54,
-    "stale": 17
+    "current": 53,
+    "stale": 18
    },
    "commits": [
     {
@@ -10731,7 +10731,7 @@
      "key": "rtl/rom/ot_rom_pkg_ctrl_x.sv",
      "path": "rtl/rom/ot_rom_pkg_ctrl_x.sv",
      "pinned": "c82eb5893f70285932741c4111d817817aea27d0d36ba49103c31f2c8913a508",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -10854,8 +10854,8 @@
     }
    ],
    "pin_counts": {
-    "current": 64,
-    "stale": 20
+    "current": 63,
+    "stale": 21
    },
    "commits": [
     {
@@ -11356,6 +11356,12 @@
    "detail": "source_sha256[rtl/hdc/ot_hdc_sfu_q.sv] -> rtl/hdc/ot_hdc_sfu_q.sv is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/test/tb_hdc_core_qwen_vector_weight.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
+   "detail": "source_sha256[rtl/test/tb_hdc_core_qwen_vector_weight.sv] -> rtl/test/tb_hdc_core_qwen_vector_weight.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_golden.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json",
@@ -11614,6 +11620,12 @@
    "detail": "source_sha256[rtl/rom/ot_rom_fabric_router.sv] -> rtl/rom/ot_rom_fabric_router.sv is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/rom/ot_rom_pkg_ctrl_x.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
+   "detail": "source_sha256[rtl/rom/ot_rom_pkg_ctrl_x.sv] -> rtl/rom/ot_rom_pkg_ctrl_x.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/rom/ot_rom_pkg_link.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
@@ -11714,6 +11726,12 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
    "detail": "input_sha256[rtl/rom/ot_rom_fabric_router.sv] -> rtl/rom/ot_rom_fabric_router.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/rom/ot_rom_pkg_ctrl_x.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
+   "detail": "input_sha256[rtl/rom/ot_rom_pkg_ctrl_x.sv] -> rtl/rom/ot_rom_pkg_ctrl_x.sv is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/rom/ot_rom_pkg_link.sv",
@@ -11878,6 +11896,12 @@
    "detail": "provenance.source_sha256[rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv] -> rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/test/tb_hdc_core_v41x_whbm.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_whbm_pooled_multi.json",
+   "detail": "provenance.source_sha256[rtl/test/tb_hdc_core_v41x_whbm.sv] -> rtl/test/tb_hdc_core_v41x_whbm.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:tools/hdc_program_v41.py",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_whbm_pooled_multi.json",
@@ -11926,6 +11950,7 @@
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_matvec.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_sfu.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/hdc/ot_hdc_sfu_q.sv",
+  "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:rtl/test/tb_hdc_core_qwen_vector_weight.sv",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_golden.py",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_isa.py",
   "stale-pin:results/rtl/hdc_qwen_vector_matched_weight_full_g4sw16.json:tools/hdc_program.py",
@@ -11969,6 +11994,7 @@
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/rom/ot_rom_fabric_router.sv",
+  "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/rom/ot_rom_pkg_ctrl_x.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/rom/ot_rom_pkg_link.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/test/tb_hdc_v41x_array.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:tools/hdc_golden.py",
@@ -11986,6 +12012,7 @@
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/rom/ot_rom_fabric_router.sv",
+  "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/rom/ot_rom_pkg_ctrl_x.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/rom/ot_rom_pkg_link.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/test/tb_hdc_v41x_array.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:tools/hdc_golden.py",
@@ -12013,6 +12040,7 @@
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+  "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/test/tb_hdc_core_v41x_whbm.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:tools/hdc_program_v41.py"
  ]
 }
