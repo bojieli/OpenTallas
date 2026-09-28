@@ -43,6 +43,8 @@ def test_matched_bandwidth_knee_requires_exact_shared_inputs(tmp_path, monkeypat
     result = gate.summarize(one, one_path, four, four_path)
     assert result["status"] == "pass"
     assert result["measurements"]["weight_completed_bytes"] == 166_000 * 32
+    assert result["measurements"]["useful_weight_bytes_consumed"] == 40_960 * 128
+    assert result["measurements"]["offered_weight_sectors_per_rom_cycle"] == 40_960 * 4 / 50_000
     assert result["measurements"]["delivered_fraction_of_peak"] > 0.98
 
     four["image_sha256"]["image"] = "different"

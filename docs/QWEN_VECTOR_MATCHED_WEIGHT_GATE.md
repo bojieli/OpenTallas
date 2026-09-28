@@ -27,3 +27,16 @@ The [18-step source-pinned record](../results/rtl/hdc_qwen_vector_matched_weight
 The HBM-weight mode used 27,683 more simulated core cycles (5.60% of the ROM-mode count) in this **reduced behavioral model with this chunked program**. It experienced 3,978 weight-window wait cycles, 2,947 embedding wait cycles, and 506 weight-request denial cycles at the shared arbiter. These counters overlap in time and should not be summed as an explanation of the cycle delta. The HBM controller completed 1,200 KV read sectors in either mode. At the HBM-weight terminal boundary, it had accepted 1,479,176 read sectors in total, scheduled 1,478,982, and delivered 1,478,858. The outstanding 194 queued sectors and 124 scheduled responses are weight prefetch pipeline state, not completed token traffic.
 
 Both modes use the same timed KV HBM path. The cycle comparison isolates weight source inside the tested vector controller and schedule; it does not measure Qwen3 8B production throughput, energy, or a physical ROM versus HBM chip. The model's four pseudo-channels, timing parameters, and weight-stream rate remain assumptions.
+
+## Deliberate shared-HBM bandwidth stress
+
+The [matched one-channel record](../results/rtl/hdc_qwen_vector_matched_weight_npc1_g4sw16.json) and [bandwidth comparison](../results/rtl/hdc_qwen_weight_bandwidth_bound_g4sw16.json) rerun the same two prompt steps with one timed pseudo-channel shared by KV and HBM weights. The four-channel record above is the reference. The source and 18 image hashes match between channel counts; within each count, the ROM and HBM arms use identical controller RTL, ISA, arithmetic, images, and KV-HBM traffic. Both counts produce tokens 3978 and 382 with zero token, logit, VM, KV, physical-byte, or delivered-weight mismatch.
+
+| Shared pseudo-channels | ROM core cycles | HBM-weight core cycles | HBM / ROM | Completed weight sectors | Weight wait cycles |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 4 | 50,950 | 53,592 | 1.052× | 166,843 | 1,251 |
+| 1 | 50,759 | 189,428 | 3.732× | 164,888 | 137,974 |
+
+Both HBM arms consume exactly 40,960 weight words, or 5,242,880 useful bytes. Their completed physical-sector counts differ because the two channel counts leave different speculative prefetch tails at the two-step stop. At one channel, 164,888 sectors (5,276,416 bytes) complete in 189,428 core cycles: 0.870 sector per cycle, or 89.1% of the behavioral controller's 0.977-sector-per-cycle burst ceiling. The useful weight demand in the one-channel ROM schedule is 3.228 sectors per cycle, above that one-channel ceiling. The one-channel HBM arm is therefore weight-supply bound in this test. Its 137,974 weight wait cycles are observed counters; they should not be added to the 157 embedding wait cycles to explain the total cycle difference because the waits can overlap.
+
+One pseudo-channel is deliberately just 1/256 of the modeled eight-stack package's channel count. This stress gate tests the shared controller's response to constrained weight supply; it is not a rate, power, energy, or bandwidth measurement for the adopted two-reticle INT8 Qwen package. The test uses reduced BF16-weight G4/SW16 arithmetic and two **prompt** steps. The full-shape INT8 HBM comparator has a separate code-word, scale, address-width, and physical-design gate.

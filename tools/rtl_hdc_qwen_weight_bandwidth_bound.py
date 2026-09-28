@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SECTOR_BYTES = 32
+WORD_BYTES = 128  # G4/SW16 reduced vector weight word in the tested RTL
 CLK_PS = 1000
 BURST_PS = 1024
 PCS_PER_STACK = 32
@@ -39,10 +40,11 @@ def summarize(raw, raw_path, reference, reference_path):
     hcy = hbm["summary"]["total_cycles"]
     sectors = hbm["weights"]["weight_completed_sectors"]
     weight_bytes = sectors * SECTOR_BYTES
+    useful_sectors = hbm["weights"]["weight_consumed"] * WORD_BYTES // SECTOR_BYTES
     peak_sectors_per_cycle = CLK_PS / BURST_PS
     ideal_weight_cycles = sectors / peak_sectors_per_cycle
     achieved_sectors_per_cycle = sectors / hcy
-    offered_sectors_per_rom_cycle = sectors / rcy
+    offered_sectors_per_rom_cycle = useful_sectors / rcy
     stalls = hbm["weights"]["weight_stall_cycles"] + hbm["weights"]["embedding_stall_cycles"]
     ref_rom, ref_hbm = reference["rom"], reference["hbm"]
     ref_hcy = ref_hbm["summary"]["total_cycles"]
@@ -94,6 +96,8 @@ def summarize(raw, raw_path, reference, reference_path):
             "weight_completed_sectors": sectors,
             "weight_completed_bytes": weight_bytes,
             "weight_words_consumed": hbm["weights"]["weight_consumed"],
+            "useful_weight_bytes_consumed": useful_sectors * SECTOR_BYTES,
+            "completed_weight_sectors_beyond_consumed_words": sectors - useful_sectors,
             "kv_completed_sectors": hbm["weights"]["kv_completed_sectors"],
             "peak_weight_sectors_per_cycle": peak_sectors_per_cycle,
             "offered_weight_sectors_per_rom_cycle": offered_sectors_per_rom_cycle,
@@ -112,6 +116,7 @@ def summarize(raw, raw_path, reference, reference_path):
             "hbm_over_rom": ref_hcy / ref_rom["summary"]["total_cycles"],
             "weight_completed_sectors": ref_hbm["weights"]["weight_completed_sectors"],
             "weight_completed_bytes": ref_hbm["weights"]["weight_completed_sectors"] * SECTOR_BYTES,
+            "useful_weight_bytes_consumed": ref_hbm["weights"]["weight_consumed"] * WORD_BYTES,
             "delivered_weight_sectors_per_hbm_cycle": ref_hbm["weights"]["weight_completed_sectors"] / ref_hcy,
             "delivered_fraction_of_peak": ref_hbm["weights"]["weight_completed_sectors"] /
                                           (ref_hcy * 4 * peak_sectors_per_cycle),
