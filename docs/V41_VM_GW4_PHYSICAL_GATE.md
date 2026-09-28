@@ -110,6 +110,23 @@ write row still advances once per 64-element beat.
 The core and package controller must not request conflicting reads of the
 same bank during this blocking preload.
 
+The downstream ME xbank is a separate 1R1W SRAM choice. The
+[`v41_me_shared_cluster_budget.json`](../results/physical_abi3/asap7/chip/v41_me_shared_cluster_budget.json)
+record pins its 128×256 macro and gives a bounded wo_a sharing sweep. With
+83,328 BF16 MAC lanes in 1,302 groups of 64, 16/32/64 shared stores imply at
+most 82/41/21 adapters reading each store's **2,048-bit tile payload per
+cycle**. Each store uses 16 macros, one 128-bit read from every macro per tile
+cycle, and eight 128-bit writes per 64-element preload cycle. Macro-only area
+added to the die is 0.996/1.992/3.985 mm² for 16/32/64 stores, *in addition*
+to the existing 3.41 mm² SRAM allocation. At 32 stores the macro-only read
+energy if all stores run every 1.087 GHz cycle is 0.187 W; clock trees,
+multicast wires and consumers are excluded. The 16-macro read clock-to-Q is
+352 ps, leaving 540 ps of a 0.92 ns cycle for route, logic, and next-register
+setup. Sharing is justified only for the lockstep wo_a output-row schedule
+shown by the exact ME gate; other matrices, sparse experts, and multi-user
+interleaving remain unverified. A routed cluster with converter and consumers
+is required before choosing one of these store counts.
+
 The same four-bank read phase can supply HE's 20,480-element activation:
 64 FP32 elements per cycle gives a **320-cycle read floor** before fill,
 transpose, and drain. After BF16 rounding, the eight HCP banks each receive
