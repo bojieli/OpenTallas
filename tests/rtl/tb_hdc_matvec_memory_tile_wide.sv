@@ -50,7 +50,13 @@ module tb_hdc_matvec_memory_tile_wide;
       x_q_b[j*32 +: 32] <= x_mem[j][x_addr_b[j*AW +: 10]];
     if (wrom_re_b) wrom_q_b <= '0;
   end
-  ot_hdc_matvec_memory_tile_wide #(.W(W),.G(G),.AW(AW),.NW(NW)) a (
+`ifdef INGRESS_SEPARATE
+  localparam integer SEPARATE_INGRESS_CLOCK=1;
+`else
+  localparam integer SEPARATE_INGRESS_CLOCK=0;
+`endif
+  ot_hdc_matvec_memory_tile_wide #(.W(W),.G(G),.AW(AW),.NW(NW),
+      .SEPARATE_INGRESS_CLOCK(SEPARATE_INGRESS_CLOCK)) a (
     .clk(clk),.ingress_clk(clk),.rst_n(rst_n),.go(go),.ready(ready_a),.idle(idle_a),
     .i_nout(NOUT[NW-1:0]),.i_tiles(8'd1),.i_k(8'd1),.i_wsrc(1'b1),
     .i_wbase(wbase),.i_ts(16'd0),.i_ks(16'd0),.i_js(16'd0),

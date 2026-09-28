@@ -3,7 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")/../.."
 run_dir=$(mktemp -d)
 trap 'rm -rf "$run_dir"' EXIT
-"$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" --binary --timing -DTILE_W4 \
+"$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" --binary --timing -DTILE_W4 -DINGRESS_SEPARATE \
   --top-module tb_hdc_matvec_memory_tile_wide -Wno-fatal -Wno-WIDTH -j 4 \
   --Mdir "$run_dir/obj" \
   rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv \
