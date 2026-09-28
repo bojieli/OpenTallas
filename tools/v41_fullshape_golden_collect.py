@@ -97,11 +97,25 @@ def collect(scratch: Path, contexts: list[int], snapshot: Path, source_root: Pat
             raise ValueError(f"context {context}: terminal logits digest mismatch")
         if int(np.argmax(logits)) != head["next_token"]:
             raise ValueError(f"context {context}: terminal argmax mismatch")
+        previous_context = None
         for row in rows:
             original = summary_rows[row["layer"]]
             if (row["input_sha256"], row["output_sha256"]) != (
                     original["input_sha256"], original["output_sha256"]):
                 raise ValueError(f"context {context} layer {row['layer']}: summary/shard mismatch")
+            if previous_context is not None:
+                incoming = original.get("ctx_in", {})
+                if incoming.get("sel") != previous_context.get("sel"):
+                    raise ValueError(f"context {context} layer {row['layer']}: index selection carry mismatch")
+                candidate = previous_context.get("cand_file")
+                if candidate is not None:
+                    with np.load(scratch / candidate, allow_pickle=False) as npz:
+                        cand = np.ascontiguousarray(np.asarray(npz["cand"], dtype=np.float32))
+                    if hashlib.sha256(cand.tobytes()).hexdigest() != incoming.get("cand_sha256"):
+                        raise ValueError(f"context {context} layer {row['layer']}: candidate carry mismatch")
+                elif incoming.get("cand_sha256") is not None:
+                    raise ValueError(f"context {context} layer {row['layer']}: unexpected candidate input")
+            previous_context = original.get("ctx_out", {})
             if annotate_shards:
                 path = scratch / f"ctx{context}_L{row['layer']:02d}.json"
                 shard = json.loads(path.read_text())
