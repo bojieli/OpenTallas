@@ -165,8 +165,18 @@ finite client windows and source-matched token replay. It does not turn the
 earlier independent-bank cycle counts into a four-stack throughput result.
 The client ID order is 0 matrix code/scale, 1 Q/K norm, 2 o/down scales,
 3 embedding, 4 head final norm, and 5 KV. Code and scale use separate sector
-regions but one client credit pool; the CROM owners may be inactive on a
-given layer. The layer controller must supply a 0–35 stage ID for the KV page.
+regions but one client credit pool; embedding code and row scale share client
+3. The CROM owners may be inactive on a given layer.
+The source-pinned mixed-client gate in
+`results/rtl/qwen_o4_hbm_mixed_service.json` binds the full-token regions and
+contends all six owners for physical PC 0 with two credits per owner. A finite
+controller accepts requests on two of every three cycles, returns reads after
+24–26 cycles, and delays the KV write completion. The gate returns all 24
+requests to their exact owner and sector, with 16 controller stalls, six
+backpressured response cycles and eight credit-blocked cycles. Its 74 cycles
+measure this synthetic contention case only; the actual four-stack controller,
+client windows and full-token rate are still unmeasured.
+The layer controller must supply a 0–35 stage ID for the KV page.
 With 4 KV heads and 128 dimensions per die, a full 8K stage holds
 8,388,608 FP8 bytes = 262,144 physical sectors; all 36 stages need 288 MiB
 of HBM per die for one user. The ~19.3 MiB on-die ring is staging, not that

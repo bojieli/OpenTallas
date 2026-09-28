@@ -1,8 +1,17 @@
 """Check finite shared-HBM service arbitration and response ownership."""
+import json
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_mixed_owner_four_stack_record_is_current():
+    from tools.rtl_hdc_qwen_hbm_mixed_service import run
+
+    current = run()
+    recorded = json.loads((ROOT / "results/rtl/qwen_o4_hbm_mixed_service.json").read_text())
+    assert current == recorded
 
 
 def test_pc_slice_fairness_credits_and_write_completion(tmp_path):
