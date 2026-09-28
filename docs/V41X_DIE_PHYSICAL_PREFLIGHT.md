@@ -297,6 +297,19 @@ composition Liberty intentionally has no timing arcs, so even a later
 geometry route with this view cannot establish full-group frequency. This
 30.24 µm study floorplan also exceeds the modeled 17.2 µm strip budget.
 
+A new one-PC child route reserves M7/M8/M9 power access during its own
+physical flow, resolving the prior M6-only power-grid design error. The
+source-pinned result in
+`results/asap7_physical/v41x_die_karb_pc_local_power_m9/physical.json`
+completes PDN, CTS and detailed routing inside the same 375 by 17.01 µm
+site. It has +132.516 ps setup, +65.966 ps hold, 1.26987 GHz path Fmax,
+4,886 cells / 579.672 µm² and zero DRC/antenna errors. Its engineering
+verdict is still **not met**: `h_wstrb[28]` has 337.19 ps transition against
+the 320 ps limit, the only max-slew violation. The routed child therefore
+cannot yet replace the old geometry view for a closure claim. A bounded
+slew-repair reroute, refreshed LEF/power access and then four-PC composition
+remain required.
+
 A representative full-width, depth-128 one-shot collective FIFO/engine was
 also attempted at 0.92 ns with 16 lanes and 512-bit flits. The source-pinned
 partial record in `results/asap7_physical/v41x_collective_fifo128/physical.json`
