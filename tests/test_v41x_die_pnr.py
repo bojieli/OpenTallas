@@ -70,3 +70,16 @@ def test_karb_strip_pin_regions_cover_every_port_once():
     for b in all_bits:
         hits = sum(1 for p in pats if p.search(b))
         assert hits == 1, (b, hits)
+
+
+def test_karb_bank4_is_a_separate_local_route_boundary():
+    case = pnr.karb_bank4()
+    args = case["args"]
+    assert args[args.index("--param") + 1] == "NPC=4"
+    assert case["floorplan"]["die_um"] == [1500.0, 30.24]
+    regions = [args[i + 1] for i, a in enumerate(args) if a == "--pin-region"]
+    karb = rtl_ports(ROOT / "rtl/chip/ot_chip_v41x_hbm_karb.sv", "ot_chip_v41x_hbm_karb", {"NPC": 4})
+    all_bits = [n if w == 1 else f"{n}[{i}]" for n, (_, w) in karb.items() for i in range(w)]
+    pats = [re.compile(r.rpartition("=")[0]) for r in regions]
+    for b in all_bits:
+        assert sum(1 for p in pats if p.search(b)) == 1, b

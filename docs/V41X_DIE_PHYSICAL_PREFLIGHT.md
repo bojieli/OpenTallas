@@ -130,6 +130,10 @@ It passed with all 40,332 pins, which removes the standalone square block's
 Global placement and routing are still running; this is no setup, hold, DRC,
 power or frequency verdict. The strip's wide single K request still spans its
 length, so routed timing remains the deciding check.
+The `karb_bank4` case routes four local pseudo-channels in four adjacent PHY
+windows as a fallback physical partition. It uses `NPC=4`, which changes the
+address-to-channel hash, and cannot substitute for the 32-channel strip's
+functional or timing result.
 
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused

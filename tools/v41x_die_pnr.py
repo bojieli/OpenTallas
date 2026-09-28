@@ -92,6 +92,38 @@ def karb_strip(height_um: float = 30.24) -> dict:
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM, "pc_pin_span_um": PC_PIN_SPAN}}
 
 
+def karb_bank4(height_um: float = 30.24) -> dict:
+    """A four-PC local arbitration partition for a bounded physical route.
+
+    This uses the real parameterized arbiter RTL with NPC=4. Its K address-to-PC
+    hash is the four-PC configuration, so it characterizes the local bank and
+    cannot replace the NPC=32 strip's functional or timing gate.
+    """
+    npc = 4
+    w, h = npc * PHY_PC_WINDOW_UM, height_um
+    m = 8 * ROW_UM
+    regions = []
+    for p in range(npc):
+        x0 = p * PHY_PC_WINDOW_UM
+        span = f"{x0 + PC_PIN_SPAN[0]:g}-{x0 + PC_PIN_SPAN[1]:g}"
+        regions.append(f"{pin_regex(karb_pc_pins(p, 'h'))}=bottom:{span}")
+        regions.append(f"{pin_regex(karb_pc_pins(p, 'b'))}=top:{span}")
+    k = r"^k_(v|rdy|we|wr_done|rsp_v|rsp_rdy)$|^k_(addr|len|tag|wdata|wstrb|rsp_tag|rsp_beat|rsp_data)\[\d+\]$"
+    regions.append(f"{k}=top:{w - 165:g}-{w - 5:g}")
+    regions.append(r"^(k_grants|b_grants|contended)\[\d+\]$" + f"=top:{w - 540:g}-{w - 370:g}")
+    regions.append(f"^(clk|rst_n)$=top:{w / 2 - 20:g}-{w / 2 + 20:g}")
+    args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb", "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+            "--param", f"NPC={npc}", "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2",
+            "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
+            "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}", "--place-density", "0.60"]
+    for r in regions:
+        args += ["--pin-region", r]
+    return {"args": args, "nickname": "codex_v41x_karb_bank4",
+            "output": "results/asap7_physical/v41x_die_karb_bank4/physical.json",
+            "floorplan": {"die_um": [w, h], "npc": npc, "pc_window_um": PHY_PC_WINDOW_UM,
+                          "pc_pin_span_um": PC_PIN_SPAN, "scope": "local bank characterization only"}}
+
+
 # ------------------------------------------------------------------------------------------------ physical tile
 MACRO_DIR = "physical/asap7_memory_macros"
 MACROS = {   # name: (width, height) um, from the compiler LEFs
@@ -460,6 +492,7 @@ def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_k
 
 
 CASES = {"karb_strip": karb_strip,
+         "karb_bank4": karb_bank4,
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),
