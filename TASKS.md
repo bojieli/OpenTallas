@@ -131,7 +131,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 - [x] HBM energy split: die share 10.19 pJ/bit, stack share 3.45 pJ/bit.
 - [x] Per-class cooling limits.
 - [ ] Measured HBM3E PHY and controller energy: no source found, so the die share takes no credit.
-- [~] **X:** `test_rom_collectives` record has stale RTL pins; the current-source rerun is underway after fixing its golden indexer callback signature.
+- [x] `test_rom_collectives`: current-source rerun passes all 11 MoE, 2 tensor all-reduce and 5 KV/argmax cases; 21 input hashes are refreshed and the golden indexer callback is repaired (**X**).
 - [ ] `test_hdc_package_tp`: its bench does not build on main.
 - [ ] `test_hdc_host_runtime`: 20 stale input pins in a historical target (**X**).
 - [ ] `runtime/abi3/builder.py`: LOOP_INDUCTION failures in `test_abi3_heterogeneous_batch_runner` (**X**).
