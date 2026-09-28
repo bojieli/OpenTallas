@@ -1,9 +1,7 @@
 `timescale 1ns/1ps
-// Retire the five final-slot result vectors from one shared matrix sweep.
-// result_last must be aligned to the post-scale result_valid beat. This
-// boundary serializes five argmax tokens for ot_hdc_qwen_dflash_step_ctrl.
-// A production lm_head also needs a running maximum across vocabulary chunks;
-// this block is only the final-chunk boundary and does not replace that scan.
+// Keep a running argmax for five slots across all lm_head result beats.
+// result_last must mark the final post-scale result_valid beat. The five
+// winners then serialize into ot_hdc_qwen_dflash_step_ctrl.
 module ot_hdc_qwen_m5_result_tokens #(
     parameter integer G=2, W=2, NW=16
 ) (
@@ -22,27 +20,37 @@ module ot_hdc_qwen_m5_result_tokens #(
     reg armed, sending, done_pending;
     reg [2:0] index;
     reg [5*NW-1:0] tokens;
-    wire [5*NW-1:0] winners;
+    wire [5*NW-1:0] selected_winners;
     function automatic [31:0] ordered_key(input [31:0] v);
         ordered_key = v[31] ? ~v : {1'b1,v[30:0]};
     endfunction
     genvar s;
     generate for (s=0;s<5;s=s+1) begin : g_slot
-        reg [31:0] best;
-        reg [NW-1:0] winner;
+        reg [31:0] beat_key, best_key;
+        reg [NW-1:0] beat_row, best_row;
+        reg seen;
+        wire beat_wins = !seen || beat_key>best_key ||
+                         (beat_key==best_key && beat_row<best_row);
         integer j;
         always @* begin
-            best=ordered_key(result[(s*NL)*32 +: 32]);
-            winner=row_base;
+            beat_key=ordered_key(result[(s*NL)*32 +: 32]);
+            beat_row=row_base;
             for (j=1;j<NL;j=j+1)
-                if (ordered_key(result[(s*NL+j)*32 +: 32]) > best) begin
-                    best=ordered_key(result[(s*NL+j)*32 +: 32]);
-                    winner=row_base+j;
+                if (ordered_key(result[(s*NL+j)*32 +: 32]) > beat_key) begin
+                    beat_key=ordered_key(result[(s*NL+j)*32 +: 32]);
+                    beat_row=row_base+j;
                 end
         end
-        assign winners[s*NW +: NW]=winner;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin seen<=0; best_key<=0; best_row<=0; end
+            else if (arm && !busy && !fault) seen<=0;
+            else if (result_valid && armed && beat_wins) begin
+                seen<=1; best_key<=beat_key; best_row<=beat_row;
+            end
+        end
+        assign selected_winners[s*NW +: NW]=beat_wins ? beat_row : best_row;
     end endgenerate
-    assign busy=armed || sending;
+    assign busy=armed || sending || done_pending;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             armed<=0; sending<=0; done_pending<=0; index<=0; tokens<=0;
@@ -55,10 +63,11 @@ module ot_hdc_qwen_m5_result_tokens #(
                 else armed<=1;
             end
             if (result_last && !result_valid) fault<=1;
+            if (result_valid && !armed) fault<=1;
             if (result_valid && result_last) begin
                 if (!armed || sending) fault<=1;
                 else begin
-                    tokens<=winners; index<=0; sending<=1; armed<=0;
+                    tokens<=selected_winners; index<=0; sending<=1; armed<=0;
                 end
             end
             if (sending) begin
