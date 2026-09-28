@@ -19,6 +19,19 @@ proposal to validate, not a claim that a new cluster is implemented.
   quantized weight/index MACs and BF16 weight/attention MACs, with an assumed 10%
   operand-mux area. Require a real ROM-bank/activation-bank-to-cluster mapping,
   routed multicast, conflict handling and complete memory ledger.
+- [!] **Discrete placement and expert imbalance** — the 28-stage placement cuts
+  cumulative layer bytes into fractions without tensor/expert ownership. The
+  budget scales expert time by those fractions although routed expert IDs may
+  concentrate in one stage. `v41_fullshape_emitter_binding` owns an integer
+  expert/tensor-fragment manifest and explicit boundary packets;
+  `v41_model_reprice` owns the resulting resource conflicts, observed/worst-case
+  stage service, and power. A byte-balanced placement alone cannot validate rate.
+- [!] **Physical ROM traffic** — `v41_fullshape_weight_layout` found that the
+  physical tile's weight word formats imply about 453,684 physical B/cycle for
+  the specified lanes versus 348,288 useful B/cycle; current reduced tile geometry
+  and truncated ROM addresses do not establish that full-shape read network.
+  Bind packed words, port counts, bank ownership and expansion to the same
+  executable cluster before a ROM bandwidth claim.
 - [ ] **Select clusters by measured end-to-end gain** — compare shared local
   matrix tiles plus dedicated SFU/reduction/quantization pipelines; measure useful
   and issued MAC work, all memory/link traffic and stall reasons at batch one.
