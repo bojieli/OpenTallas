@@ -127,8 +127,13 @@ module ot_chip_v41x_hbm_karb_group4 #(
         end
     genvar p;
     generate for (p = 0; p < 4; p = p + 1) begin : g_pc
+`ifdef HDC_KARB_MACRO
+        // The physical macro view has fixed adopted widths and no timing arcs.
+        ot_chip_v41x_hbm_karb_pc_local u_local (
+`else
         ot_chip_v41x_hbm_karb_pc_local #(.AW(AW), .TAGW(TAGW), .LENW(LENW),
                                          .BEATW(BEATW), .DW(DW)) u_local (
+`endif
             .clk(clk), .rst_n(rst_n),
             .b_v(b_v[p]), .b_rdy(b_rdy[p]), .b_addr(b_addr[p*AW +: AW]),
             .b_len(b_len[p*LENW +: LENW]), .b_tag(b_tag[p*TAGW +: TAGW]),
