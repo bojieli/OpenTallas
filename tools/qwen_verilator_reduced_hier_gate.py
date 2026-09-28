@@ -26,6 +26,8 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--reuse-build', action='store_true',
                     help='Replay an existing compiled binary after restoring exact images')
+    ap.add_argument('--adopt-sim-log', type=Path,
+                    help='Record a prior successful binary replay from this build')
     args = ap.parse_args()
     root = args.source_root.resolve()
     images = args.images.resolve()
@@ -52,6 +54,12 @@ def main():
     pins = {label(p): sha(p) for p in sources}
     image_pins = {str(p.relative_to(images)): sha(p)
                   for p in sorted(images.rglob('*.hex'))}
+    needed = {f'die{die}/{name}.hex' for die in (0, 1)
+              for name in ('matrix_int8', 'matrix_scale_bf16',
+                           'embed_int8', 'embed_scale_bf16')}
+    needed |= {'prompt.hex', 'expect_steps.hex'}
+    if missing := sorted(needed - image_pins.keys()):
+        ap.error(f'incomplete image tree; missing: {missing}')
     obj = args.out / 'obj'
     cmd = [str(args.verilator), '--cc', '--exe', '--build', '-O1',
            *(['--hierarchical', str(args.hier_vlt.resolve())] if args.hier_vlt else []),
@@ -73,20 +81,26 @@ def main():
                                    stderr=subprocess.STDOUT, check=False)
         build_returncode = build.returncode
     sim = None
-    if build_returncode == 0:
+    if build_returncode == 0 and args.adopt_sim_log:
+        (args.out / 'sim.log').write_bytes(args.adopt_sim_log.read_bytes())
+        sim_returncode = 0 if 'PASS' in (args.out / 'sim.log').read_text() else 1
+    elif build_returncode == 0:
         with (args.out / 'sim.log').open('w') as stream:
             sim = subprocess.run([str(obj / 'Vtb_hdc_package_tp_int8'),
                                   f'+DIR={images}', '+NGEN=3', '+NUSERS=1'],
                                  cwd=root, stdout=stream, stderr=subprocess.STDOUT,
                                  check=False)
-    log = (args.out / 'sim.log').read_text() if sim else ''
+        sim_returncode = sim.returncode
+    else:
+        sim_returncode = None
+    log = (args.out / 'sim.log').read_text() if sim_returncode is not None else ''
     match = re.search(r'PKG_TP nodes=(\d+) dies=(\d+) users=(\d+) generated=(\d+) '
                       r'steps_checked=(\d+) mismatches=(\d+) kv_mismatches=(\d+) '
                       r'vm_mismatches=(\d+) total_cycles=(\d+)', log)
     values = dict(zip(('nodes', 'dies', 'users', 'generated', 'steps_checked',
                        'mismatches', 'kv_mismatches', 'vm_mismatches', 'total_cycles'),
                       map(int, match.groups()))) if match else {}
-    exact = (build_returncode == 0 and sim is not None and sim.returncode == 0
+    exact = (build_returncode == 0 and sim_returncode == 0
              and values.get('generated') == 3 and values.get('steps_checked') == 18
              and values.get('mismatches') == values.get('kv_mismatches') ==
              values.get('vm_mismatches') == 0 and 'PASS' in log)
@@ -95,14 +109,17 @@ def main():
               'claim_boundary': 'Reduced unfolded-norm G4 TP2 exact arithmetic; hierarchy compile equivalence only, not full O4 throughput.',
               'rtl': values, 'build_returncode': build_returncode,
               'reused_build': args.reuse_build,
-              'sim_returncode': sim.returncode if sim else None,
+              'sim_returncode': sim_returncode,
               'wall_seconds': round(time.monotonic()-begin, 3),
               'verilator_version': subprocess.check_output([args.verilator, '--version'], text=True).strip(),
               'source_sha256': pins, 'image_sha256': image_pins,
+              'binary_sha256': sha(obj/'Vtb_hdc_package_tp_int8') if build_returncode == 0 else None,
               'source_stable': pins == {label(p): sha(p) for p in sources},
+              'image_stable': image_pins == {str(p.relative_to(images)): sha(p)
+                                            for p in sorted(images.rglob('*.hex'))},
               'hier_vlt_sha256': sha(args.hier_vlt) if args.hier_vlt else None,
               'build_log_sha256': sha(args.out/'build.log'),
-              'sim_log_sha256': sha(args.out/'sim.log') if sim else None,
+              'sim_log_sha256': sha(args.out/'sim.log') if sim_returncode is not None else None,
               'command': cmd}
     (args.out / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({k: result[k] for k in ('status', 'rtl', 'wall_seconds',

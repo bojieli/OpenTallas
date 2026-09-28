@@ -26,3 +26,30 @@ The JSON files contain exact commands, tool versions, source hashes, stable
 source checks and log hashes. The runner is
 `tools/qwen_verilator_frontend_probe.py`; hierarchy is selected by
 `tools/qwen_verilator_leaf_hierarchy.vlt`.
+
+## Reduced exact hierarchy replay
+
+`reduced-hier-8561-exact.json` records a separate compiled reduced G4 TP-2
+replay. It used all 27 matching RTL/harness/ISA source hashes from the earlier
+passing `8561a033` campaign and all 21 identical image hashes. The six
+original campaign generator/quality-tool pins are outside this compiled
+replay's source list; its frozen images preserve their generated values.
+Verilator 5.050 with the leaf hierarchy compiled the design and replayed all
+18 checked steps: generated tokens 1073, 382, 93; zero token, logit, KV and VM
+mismatches; 317,329 cycles, identical to the original flat reduced record.
+The first remote simulation lacked copied die image subdirectories and was
+discarded. The `--reuse-build --adopt-sim-log` mode pins the corrected binary
+and successful replay log; its 0.002-second `wall_seconds` is only the record
+adoption time, not compilation or simulation runtime. This proves reduced
+arithmetic equivalence of the hierarchy setting, not real G6144 layer0
+exactness or a full-model result.
+
+`reduced-flat-current.json` and `reduced-hier-current.json` are the matched
+comparison on the later frozen comparator source. Their 27 compiled source
+hashes, all 21 input image hashes and Verilator version match. Both builds
+replayed the same 18 steps and 317,329 cycles with zero token, logit, KV or VM
+mismatches. The hierarchical current-source binary was also first simulated
+before the remote die image subdirectories finished copying; that invalid
+attempt produced mismatches and was discarded. These records pin only the
+corrected replays and their binaries. Their `wall_seconds` values likewise
+measure record adoption after completed compilation and simulation.
