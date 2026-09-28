@@ -48,6 +48,23 @@ cycle. The reader permits only one outstanding sector across all stacks, so
 this establishes the functional layout contract but no adopted bandwidth or
 end-to-end token result.
 
+The paired roundtrip gate writes 65 distinct K32 rows through the actual
+sharded writer, write arbiter and four timed simulation HBM stacks, then reads
+them with this reader. It checks N=40 (`Qs=8`), N=65 (global row 63/64), and
+issues an N=1 read while the row-0 write is pending. Every byte and output
+flag matches; 195 sector writes and 227 sector reads commit, and the bridge
+records 18 read-stall cycles. This validates the paired compact layout at
+reduced shape. The reader is still serial and the full pooled adapter/token
+path has not yet been exercised.
+
+`ot_hdc_v41x_idx_pool_adapt` has an opt-in `SHARDED=1` selection for this
+reader. `SHARDED=0` keeps the replicated streamer and merge unchanged. The
+adapter's four-stack HBM request and response bus and its batch-facing
+`merge_*` interface are unchanged; the new reader supplies its own busy,
+fault and read counters. The per-user compact base-sector mapping remains an
+external array/die integration requirement, so this switch does not establish
+a multi-user token gate.
+
 ## Scheduler and collector required for a token gate
 
 For each output beat, form four quarter groups and intersect each group with

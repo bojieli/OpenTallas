@@ -9,7 +9,8 @@
 // the 64-key kmerge beat.  Production rate needs replicated tile slices.
 module ot_hdc_v41x_idx_pool_adapt #(
     parameter integer W=16, G=4, IL=8, AW=24, NW=16, MP=2,
-    parameter integer IH=32, NPC=32, HAW=28, HLENW=4, HTAGW=16, HBEATW=4
+    parameter integer IH=32, NPC=32, HAW=28, HLENW=4, HTAGW=16, HBEATW=4,
+    parameter integer SHARDED=0
 ) (
     input wire clk, rst_n, go,
     output wire ready,
@@ -177,48 +178,72 @@ module ot_hdc_v41x_idx_pool_adapt #(
 
     wire scan_cmd=st==A_START;
     wire [AW-1:0] ik_off=wbase-cfg_ik_base;
-    wire [29:0] qs={n[15:5],3'b000};
-    wire [29:0] l3=n-3*qs;
-    wire [3:0] ks_busy,sv,sr;
-    wire [4*16-1:0] skv;
-    wire [4*16*544-1:0] skey;
-    wire [4*48-1:0] ks_cnt,hb_cnt;
-    genvar s;
-    generate for(s=0;s<4;s=s+1) begin:g_stack
-        ot_hdc_v41x_idx_pool_replica #(.S(s),.NPC(NPC),.AW(HAW),.HW(HW),
-            .TAGW(HTAGW),.LENW(HLENW),.BEATW(HBEATW)) stream (
-            .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),.cmd_base((ik_off>>7)*17),
-            .cmd_nkeys(n),.busy(ks_busy[s]),
-            .req_v(h_req_v[s*NPC +: NPC]),.req_rdy(h_req_rdy[s*NPC +: NPC]),
-            .req_addr(h_req_addr[s*NPC*HAW +: NPC*HAW]),
-            .req_len(h_req_len[s*NPC*HLENW +: NPC*HLENW]),
-            .req_tag(h_req_tag[s*NPC*HTAGW +: NPC*HTAGW]),
-            .rsp_v(h_rsp_v[s*NPC +: NPC]),.rsp_rdy(h_rsp_rdy[s*NPC +: NPC]),
-            .rsp_tag(h_rsp_tag[s*NPC*HTAGW +: NPC*HTAGW]),
-            .rsp_beat(h_rsp_beat[s*NPC*HBEATW +: NPC*HBEATW]),
-            .rsp_data(h_rsp_data[s*NPC*256 +: NPC*256]),
-            .o_valid(sv[s]),.o_ready(sr[s]),.o_kv(skv[16*s +: 16]),
-            .o_key(skey[16*544*s +: 16*544]),
-            .cnt_keys_streamed(ks_cnt[48*s +: 48]),.cnt_hbm_beats(hb_cnt[48*s +: 48]));
-    end endgenerate
+    wire [3:0] ks_busy;
     wire merge_v,merge_r;
     wire [63:0] merge_kv,merge_ref;
     wire [3:0] merge_last;
     wire [64*544-1:0] merge_key;
     wire [47:0] merge_refcnt;
-    ot_hdc_v41x_idx_kmerge #(.NS(4),.FQ(4)) merge (
-        .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),.cmd_nkeys(n),
-        .i_valid(sv),.i_ready(sr),.i_kv(skv),.i_key(skey),
-        .o_valid(merge_v),.o_ready(merge_r),.o_kv(merge_kv),.o_last(merge_last),
-        .o_key(merge_key),.o_ref(merge_ref),.cnt_refused(merge_refcnt));
     reg [47:0] keys_sum,hb_sum;
-    always @* begin
-        keys_sum=0;hb_sum=0;
-        for(integer t=0;t<4;t=t+1) begin
-            keys_sum=keys_sum+ks_cnt[48*t +: 48];
-            hb_sum=hb_sum+hb_cnt[48*t +: 48];
+    wire shard_fault;
+    generate if(SHARDED != 0) begin:g_sharded
+        wire shard_busy;
+        wire [47:0] shard_keys,shard_beats;
+        // A per-user compact base sector must be supplied through the
+        // existing weight-base offset. Full multi-user slice geometry is a
+        // separate integration gate; no silent fourfold replication here.
+        ot_hdc_v41x_idx_shard_reader #(.NPC(NPC),.HAW(HAW),.TAGW(HTAGW),
+            .LENW(HLENW),.BEATW(HBEATW)) reader (
+            .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),
+            .cmd_base_sec(HAW'((ik_off>>7)*17)),.cmd_nkeys(30'(n)),
+            .busy(shard_busy),.fault(shard_fault),
+            .req_v(h_req_v),.req_rdy(h_req_rdy),.req_addr(h_req_addr),
+            .req_len(h_req_len),.req_tag(h_req_tag),
+            .rsp_v(h_rsp_v),.rsp_rdy(h_rsp_rdy),.rsp_tag(h_rsp_tag),
+            .rsp_beat(h_rsp_beat),.rsp_data(h_rsp_data),
+            .o_valid(merge_v),.o_ready(merge_r),.o_kv(merge_kv),
+            .o_last(merge_last),.o_key(merge_key),.o_ref(merge_ref),
+            .cnt_keys_streamed(shard_keys),.cnt_hbm_beats(shard_beats),
+            .cnt_refused(merge_refcnt));
+        assign ks_busy={3'b000,shard_busy};
+        always @* begin keys_sum=shard_keys;hb_sum=shard_beats;end
+    end else begin:g_replicated
+        wire [3:0] sv,sr;
+        wire [4*16-1:0] skv;
+        wire [4*16*544-1:0] skey;
+        wire [4*48-1:0] ks_cnt,hb_cnt;
+        genvar s;
+        for(s=0;s<4;s=s+1) begin:g_stack
+            ot_hdc_v41x_idx_pool_replica #(.S(s),.NPC(NPC),.AW(HAW),.HW(HW),
+                .TAGW(HTAGW),.LENW(HLENW),.BEATW(HBEATW)) stream (
+                .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),.cmd_base((ik_off>>7)*17),
+                .cmd_nkeys(n),.busy(ks_busy[s]),
+                .req_v(h_req_v[s*NPC +: NPC]),.req_rdy(h_req_rdy[s*NPC +: NPC]),
+                .req_addr(h_req_addr[s*NPC*HAW +: NPC*HAW]),
+                .req_len(h_req_len[s*NPC*HLENW +: NPC*HLENW]),
+                .req_tag(h_req_tag[s*NPC*HTAGW +: NPC*HTAGW]),
+                .rsp_v(h_rsp_v[s*NPC +: NPC]),.rsp_rdy(h_rsp_rdy[s*NPC +: NPC]),
+                .rsp_tag(h_rsp_tag[s*NPC*HTAGW +: NPC*HTAGW]),
+                .rsp_beat(h_rsp_beat[s*NPC*HBEATW +: NPC*HBEATW]),
+                .rsp_data(h_rsp_data[s*NPC*256 +: NPC*256]),
+                .o_valid(sv[s]),.o_ready(sr[s]),.o_kv(skv[16*s +: 16]),
+                .o_key(skey[16*544*s +: 16*544]),
+                .cnt_keys_streamed(ks_cnt[48*s +: 48]),.cnt_hbm_beats(hb_cnt[48*s +: 48]));
         end
-    end
+        ot_hdc_v41x_idx_kmerge #(.NS(4),.FQ(4)) merge (
+            .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),.cmd_nkeys(n),
+            .i_valid(sv),.i_ready(sr),.i_kv(skv),.i_key(skey),
+            .o_valid(merge_v),.o_ready(merge_r),.o_kv(merge_kv),.o_last(merge_last),
+            .o_key(merge_key),.o_ref(merge_ref),.cnt_refused(merge_refcnt));
+        assign shard_fault=1'b0;
+        always @* begin
+            keys_sum=0;hb_sum=0;
+            for(integer t=0;t<4;t=t+1) begin
+                keys_sum=keys_sum+ks_cnt[48*t +: 48];
+                hb_sum=hb_sum+hb_cnt[48*t +: 48];
+            end
+        end
+    end endgenerate
     assign dbg_keys_streamed=keys_sum;
     assign dbg_hbm_beats=hb_sum;
 
@@ -276,7 +301,7 @@ module ot_hdc_v41x_idx_pool_adapt #(
                 dbg_headsums_fused<=dbg_headsums_fused+IH;
                 if(b_fault) fault<=1;
             end
-            if(rd_bad || cfg_bad || qbad || b_protocol) fault<=1;
+            if(rd_bad || cfg_bad || qbad || b_protocol || shard_fault) fault<=1;
             idle <= (st==A_IDLE) && !go && !b_busy && !(|ks_busy) && !merge_v && !(|o_we);
         end
     end
