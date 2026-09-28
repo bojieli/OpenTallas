@@ -69,6 +69,7 @@ def build():
     DC.v41_moe = v41_moe_rowsplit
     try:
         points = {}
+        read_width_sensitivity = {}
         for ctx in (1_048_576, 200_000):
             points[str(ctx)] = {}
             for label, pair in tails.items():
@@ -84,6 +85,19 @@ def build():
                     "proposed_wo_load_ar_tok_s": priced["ar"],
                     "proposed_wo_load_critical_path_us": priced["T_us"],
                     "status": "conditional model sensitivity, not full-shape RTL throughput",
+                }
+            read_width_sensitivity[str(ctx)] = {}
+            for elements_per_cycle in (4, 8, 16):
+                cycles = 2 * (4096 // elements_per_cycle)
+                scenario = AL.LX.evaluate(point["sp"], ctx,
+                                          common + [measured_gather_mutation(gw1),
+                                                    wo_a_load_floor(cycles)],
+                                          hz=point["hz"], draft_extra_s=point["draft_extra_s"])
+                read_width_sensitivity[str(ctx)][str(elements_per_cycle)] = {
+                    "activation_load_cycles_per_layer": cycles,
+                    "conditional_ar_tok_s": scenario["ar"],
+                    "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+                            if elements_per_cycle > 4 else "current G4 adapter width plus corrected emitter and full-token gate",
                 }
     finally:
         DC.v41_moe = old_moe
@@ -111,6 +125,7 @@ def build():
             "batch_one_dependency": "each next token follows terminal logits; all 40 wo_a nodes lie on the token DAG path",
         },
         "points": points,
+        "me_read_width_sensitivity": read_width_sensitivity,
         "limits": [
             "The corrected two-operation wo_a program and exact image/token gate have not passed.",
             "The wo_a mutation floors model issue time at 2048 cycles and retains its depth/control/wire; it does not establish a cycle-exact RTL schedule.",
@@ -118,6 +133,7 @@ def build():
             "Current HE KCMAX=128 and ME KMAX=512 defaults do not hold full-shape K=2560/4096; width/depth RTL gate is pending.",
             "Current HCP HHW=8 differs from the design-point HW256/2048-lane geometry; a repacked image, exact bench and route are required.",
             "MTP has no corrected six-position emitter or activation-load timing; no MTP result is reported.",
+            "G8/G16 read-width sensitivities require additional VM read banks/ports and corresponding area, power and route; they are not measured RTL.",
             "GW4 is excluded until its exact stage record is integrated and source-pinned here, and four-word VM/CDMA and route close.",
             "Sharded index delivery has not met the model's effective HBM bandwidth; no row is a delivered token rate.",
         ],

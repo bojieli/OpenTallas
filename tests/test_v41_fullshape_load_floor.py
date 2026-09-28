@@ -31,6 +31,11 @@ def test_floor_changes_batch_one_token_path():
         assert row["proposed_wo_load_ar_tok_s"] < row["before_wo_load_ar_tok_s"]
         assert row["status"].startswith("conditional")
     assert "MTP has no corrected" in " ".join(rec["limits"])
+    for rows in rec["me_read_width_sensitivity"].values():
+        assert rows["4"]["conditional_ar_tok_s"] < rows["8"]["conditional_ar_tok_s"]
+        assert rows["8"]["conditional_ar_tok_s"] < rows["16"]["conditional_ar_tok_s"]
+        assert rows["4"]["activation_load_cycles_per_layer"] == 2048
+        assert rows["8"]["activation_load_cycles_per_layer"] == 1024
 
 
 def test_all_40_wo_a_nodes_are_on_batch_one_critical_path():

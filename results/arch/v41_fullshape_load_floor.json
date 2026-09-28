@@ -19,9 +19,46 @@
     "Current HE KCMAX=128 and ME KMAX=512 defaults do not hold full-shape K=2560/4096; width/depth RTL gate is pending.",
     "Current HCP HHW=8 differs from the design-point HW256/2048-lane geometry; a repacked image, exact bench and route are required.",
     "MTP has no corrected six-position emitter or activation-load timing; no MTP result is reported.",
+    "G8/G16 read-width sensitivities require additional VM read banks/ports and corresponding area, power and route; they are not measured RTL.",
     "GW4 is excluded until its exact stage record is integrated and source-pinned here, and four-word VM/CDMA and route close.",
     "Sharded index delivery has not met the model's effective HBM bandwidth; no row is a delivered token rate."
   ],
+  "me_read_width_sensitivity": {
+    "1048576": {
+      "16": {
+        "activation_load_cycles_per_layer": 512,
+        "conditional_ar_tok_s": 4627.216778198919,
+        "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+      },
+      "4": {
+        "activation_load_cycles_per_layer": 2048,
+        "conditional_ar_tok_s": 3667.905330818357,
+        "gate": "current G4 adapter width plus corrected emitter and full-token gate"
+      },
+      "8": {
+        "activation_load_cycles_per_layer": 1024,
+        "conditional_ar_tok_s": 4256.1617047936625,
+        "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+      }
+    },
+    "200000": {
+      "16": {
+        "activation_load_cycles_per_layer": 512,
+        "conditional_ar_tok_s": 4727.999068038911,
+        "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+      },
+      "4": {
+        "activation_load_cycles_per_layer": 2048,
+        "conditional_ar_tok_s": 3730.946481340114,
+        "gate": "current G4 adapter width plus corrected emitter and full-token gate"
+      },
+      "8": {
+        "activation_load_cycles_per_layer": 1024,
+        "conditional_ar_tok_s": 4341.279998762682,
+        "gate": "banked ME activation read, corrected two-op emitter, exact full-token gate, physical closure"
+      }
+    }
+  },
   "points": {
     "1048576": {
       "gw1_depth128_exact_stage": {
@@ -50,7 +87,7 @@
     "tools/arch_lanes_v41.py": "1c5dde7d9041e25dc53fa90b9ea9b30c493dd690e6e776315735a7d948c76325",
     "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
     "tools/hdc_replay_v41.py": "407d69d0d4b3d37143402dedfae13db3f5968b30e8bebd9df03dc2c56dc776be",
-    "tools/v41_fullshape_load_floor.py": "bac9376dcead7c9a3d3f8d9fa7b4b4ce6630b366e0ca999a135412a0e6d1d5e6",
+    "tools/v41_fullshape_load_floor.py": "c2c179e8ebb5220342c105c523a47d123dd91f8fbb9c379d8bbcfb7ca144c2d4",
     "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303",
     "tools/v41_tp_rowsplit_measured_reprice.py": "3645f7229832955d28a618ffc80d1227ddb5e18d05230a69276010114e45ea2a"
   }
