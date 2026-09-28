@@ -617,9 +617,10 @@ def power_map(L, F, clock_hz):
             out[sc][pt] = dict(regions=regions, die_w=total, scenario_hottest_die_w=p["hottest_die_w"],
                                scenario_hottest_die_w_note="power_scenarios' die static carries leakage + clock + "
                                                            "HBM idle on the analytical 815 mm2 split at 1.034 GHz and "
-                                                           "no SerDes/UCIe idle; this map re-prices static on the "
-                                                           "ledger's areas at 1.087 GHz and adds the always-on "
-                                                           "SerDes and UCIe idle of arch_budget_v41 power",
+                                                           "the always-on SerDes and UCIe idle (v41_links_static); "
+                                                           "this map re-prices static on the ledger's areas at "
+                                                           "1.087 GHz and charges the always-on SerDes and UCIe idle "
+                                                           "of arch_budget_v41 power",
                                hot_spot=hot_name, hot_spot_w_per_mm2=hot["w_per_mm2"],
                                core_hot_spot=core_name, core_hot_spot_w_per_mm2=core["w_per_mm2"],
                                die_avg_w_per_mm2=total / L["die_mm2"])
@@ -850,8 +851,8 @@ def verdict(Ll, Lh, F, W_, PM, IR, CK, sens):
                                   condition=f"{wm['tech_global_wire']['exposed_us_per_token']:.1f}-"
                                             f"{wm['asap7_routed_fit']['exposed_us_per_token']:.1f} us per token "
                                             "must be added to the budget or removed by floorplan levers"),
-            power=dict(verdict=("scenario B closes on liquid" + ("" if worst_B["within_air_die_limit"] else
-                                                                 ", not on air at its worst point")
+            power=dict(verdict=(("scenario B closes on air at every point" if worst_B["within_air_die_limit"] else
+                                 "scenario B closes on liquid, not on air at its worst point")
                                 + "; scenario A fails"),
                        condition=f"B worst {worst_B['die_w']:.0f} W vs air {PM['cooling_reference']['air_die_w']} / "
                                  f"liquid {PM['cooling_reference']['liquid_die_w']} W; A worst {worst_A['die_w']:,.0f} W"),
@@ -862,7 +863,9 @@ def verdict(Ll, Lh, F, W_, PM, IR, CK, sens):
         closes=("conditionally" if (area_ok and worst_B["within_liquid_die_limit"]) else "no"),
         summary=("on the adopted design point the layer die closes CONDITIONALLY: on area only above the stated "
                  "placement utilisation (the MTP lane multiplier is what fills it), on power only in scenario B "
-                 "(liquid cooling at the saturated MTP point), on IR only with a denser top grid than the "
+                 + ("(within the air limit at every point)" if worst_B["within_air_die_limit"] else
+                    "(liquid cooling at the saturated MTP point)")
+                 + ", on IR only with a denser top grid than the "
                  "repository's die grid, on the clock only as regional trees, and on long-wire timing only by "
                  "pipelining every spine/tile/PHY traversal -- which costs per-token latency the budget does not "
                  "charge"),

@@ -5,11 +5,11 @@
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
   "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
   "results/arch/v41_latency_ladder.json": "db61454979559fdb4f1e0ebd436f05d40482ce523890036550b4b6261545420a",
-  "results/arch/v41_lanes.json": "beb9db8926d2421cdee6b4718ac664a521b094e9d43714bca2ad1d0efa0050cf",
-  "results/arch/power_scenarios.json": "d2b0dc5dd685144aec347e0ade5eeb349a8f8183f478e2d1491055920fe69909",
+  "results/arch/v41_lanes.json": "b1580c106713d33da0962870bdeb64606b6c5b9009b75890610c67720354474c",
+  "results/arch/power_scenarios.json": "cf0b22256f097984467d50959f7be47b13dedc69f45e687818b3389822ad90b5",
   "results/arch/arch_budget_v41.json": "d6acea1edc84ebc3a1db188c44872346f8f2152cea04fee2346e6066000212e2",
-  "results/arch/v41_rack.json": "5f97a4671b682c50ac84085000f3e401f9e054806469124afa6cb61eb645c01c",
-  "results/arch/v41_collective_levers.json": "3ea58e40e1457871bcb2148af1cf0d8ac4f28fd97276814626d3033bc95575f7",
+  "results/arch/v41_rack.json": "7022adc2f876f881e1b9aee66ebfd506c87203badc021ae987b13071880195ef",
+  "results/arch/v41_collective_levers.json": "cf0e250b84c075df6d704003579c65c364d7914df2c57e16e5389cfcf83ec488",
   "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
   "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444",
   "results/physical_abi3/asap7/chip/blocks/ot_hdc_matvec.json": "4f7ef06d7a6b414601d1386d0fc43d9ad209212fe326a73ad13e4430d7536949",
@@ -787,7 +787,7 @@
      "group": "sram",
      "count": 1,
      "cell_area_mm2": 1.37919148416,
-     "placed_mm2": 1.5827061241599998,
+     "placed_mm2": 1.86553145856,
      "evidence": "analytical-macro (ASAP7 compiler)",
      "basis": "rack C10 floorplan: 112 x ot_sram_1r1w_1024x256_m2_r2c2, 1.50 x 1.06 mm",
      "record": "results/arch/v41_rack.json#head_draft_floorplan.area.block_mm2"
@@ -848,8 +848,8 @@
      "record": null
     }
    ],
-   "placed_total_mm2": 807.3674918488681,
-   "whitespace_mm2": 7.632508151131901,
+   "placed_total_mm2": 807.650317183268,
+   "whitespace_mm2": 7.349682816731956,
    "fits": true,
    "by_group_mm2": {
     "engine": 281.2792140617144,
@@ -857,7 +857,7 @@
     "control": 0.2173956542857143,
     "kv": 0.11848908571428572,
     "collective": 0.7963188571428571,
-    "sram": 3.1246070151599996,
+    "sram": 3.40743234956,
     "rom": 300.68888383469084,
     "phy_hbm": 40.00784006016,
     "phy_ucie": 6.8938128,
@@ -869,7 +869,7 @@
     "estimate": 48.404776050285726,
     "routed-not-closed": 18.318043714285714,
     "synthesis-only": 50.39642770285714,
-    "analytical-macro": 2.62790701516,
+    "analytical-macro": 2.91073234956,
     "derived": 300.68888383469084,
     "assumed": 139.50784006016,
     "published": 6.8938128
@@ -2945,8 +2945,8 @@
       }
      },
      "die_w": 866.3612793709013,
-     "scenario_hottest_die_w": 834.68,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "scenario_hottest_die_w": 867.776,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "engine",
      "hot_spot_w_per_mm2": 2.5999708303417255,
      "core_hot_spot": "engine",
@@ -2974,11 +2974,11 @@
        "dynamic_w": 0.0
       },
       "engine": {
-       "w": 2596.2215163644037,
+       "w": 2589.657513739404,
        "mm2": 281.2792140617144,
-       "w_per_mm2": 9.230051090070155,
+       "w_per_mm2": 9.206714838058446,
        "static_w": 54.11671438940355,
-       "dynamic_w": 2542.104801975
+       "dynamic_w": 2535.5407993500003
       },
       "kv": {
        "w": 0.022796707646000003,
@@ -2995,18 +2995,18 @@
        "dynamic_w": 0.0
       },
       "phy_hbm": {
-       "w": 38.55054308762448,
+       "w": 38.499796208874486,
        "mm2": 40.00784006016,
-       "w_per_mm2": 0.9635747150972367,
+       "w_per_mm2": 0.9623062917413722,
        "static_w": 18.897308388374483,
-       "dynamic_w": 19.65323469925
+       "dynamic_w": 19.6024878205
       },
       "phy_serdes": {
-       "w": 37.576092039825,
+       "w": 37.56695915145,
        "mm2": 18.0,
-       "w_per_mm2": 2.0875606688791666,
+       "w_per_mm2": 2.087053286191667,
        "static_w": 34.03911,
-       "dynamic_w": 3.5369820398250003
+       "dynamic_w": 3.5278491514500003
       },
       "phy_ucie": {
        "w": 3.846335113656,
@@ -3016,35 +3016,35 @@
        "dynamic_w": 0.0
       },
       "rom": {
-       "w": 19.897003214478367,
+       "w": 19.861589361978368,
        "mm2": 300.68888383469084,
-       "w_per_mm2": 0.0661713960314446,
+       "w_per_mm2": 0.06605362030243073,
        "static_w": 6.181937934978368,
-       "dynamic_w": 13.715065279500001
+       "dynamic_w": 13.679651427000001
       },
       "sram": {
-       "w": 0.19497294753359173,
+       "w": 0.19454459080859174,
        "mm2": 1.541900891,
-       "w_per_mm2": 0.12644972752246222,
+       "w_per_mm2": 0.12617191671925154,
        "static_w": 0.029079094378591748,
-       "dynamic_w": 0.165893853155
+       "dynamic_w": 0.16546549643
       },
       "vector": {
-       "w": 18.526710838824602,
+       "w": 18.516002996949602,
        "mm2": 74.74093048000002,
-       "w_per_mm2": 0.24787904993746604,
+       "w_per_mm2": 0.24773578383405748,
        "static_w": 14.379781319699603,
-       "dynamic_w": 4.146929519125
+       "dynamic_w": 4.13622167725
       }
      },
-     "die_w": 2730.711196417419,
-     "scenario_hottest_die_w": 2699.03,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "die_w": 2724.0407639741943,
+     "scenario_hottest_die_w": 2725.46,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "engine",
-     "hot_spot_w_per_mm2": 9.230051090070155,
+     "hot_spot_w_per_mm2": 9.206714838058446,
      "core_hot_spot": "engine",
-     "core_hot_spot_w_per_mm2": 9.230051090070155,
-     "die_avg_w_per_mm2": 3.3505658851747473,
+     "core_hot_spot_w_per_mm2": 9.206714838058446,
+     "die_avg_w_per_mm2": 3.342381305489809,
      "within_air_die_limit": false,
      "within_liquid_die_limit": false,
      "hot_spot_within_h200_average": false,
@@ -3067,11 +3067,11 @@
        "dynamic_w": 0.0
       },
       "engine": {
-       "w": 2596.2230411036894,
+       "w": 2560.1591451483323,
        "mm2": 281.2792140617144,
-       "w_per_mm2": 9.23005651080233,
+       "w_per_mm2": 9.10184264304229,
        "static_w": 54.11671438940355,
-       "dynamic_w": 2542.106326714286
+       "dynamic_w": 2506.0424307589287
       },
       "kv": {
        "w": 0.022796707646000003,
@@ -3088,18 +3088,18 @@
        "dynamic_w": 0.0
       },
       "phy_hbm": {
-       "w": 38.550554875517335,
+       "w": 38.27174173971377,
        "mm2": 40.00784006016,
-       "w_per_mm2": 0.9635750097368082,
+       "w_per_mm2": 0.956606047268844,
        "static_w": 18.897308388374483,
-       "dynamic_w": 19.653246487142855
+       "dynamic_w": 19.374433351339285
       },
       "phy_serdes": {
-       "w": 37.57609416128572,
+       "w": 37.52591631174107,
        "mm2": 18.0,
-       "w_per_mm2": 2.0875607867380954,
+       "w_per_mm2": 2.0847731284300597,
        "static_w": 34.03911,
-       "dynamic_w": 3.536984161285714
+       "dynamic_w": 3.4868063117410713
       },
       "phy_ucie": {
        "w": 3.846335113656,
@@ -3109,35 +3109,35 @@
        "dynamic_w": 0.0
       },
       "rom": {
-       "w": 19.89701144069265,
+       "w": 19.702440907299795,
        "mm2": 300.68888383469084,
-       "w_per_mm2": 0.06617142338933751,
+       "w_per_mm2": 0.06552434082708415,
        "static_w": 6.181937934978368,
-       "dynamic_w": 13.715073505714285
+       "dynamic_w": 13.52050297232143
       },
       "sram": {
-       "w": 0.1949730470357346,
+       "w": 0.19261957260180604,
        "mm2": 1.541900891,
-       "w_per_mm2": 0.1264497920545884,
+       "w_per_mm2": 0.12492344594008412,
        "static_w": 0.029079094378591748,
-       "dynamic_w": 0.16589395265714285
+       "dynamic_w": 0.1635404782232143
       },
       "vector": {
-       "w": 18.526713326128174,
+       "w": 18.46788237840496,
        "mm2": 74.74093048000002,
-       "w_per_mm2": 0.247879083216468,
+       "w_per_mm2": 0.2470919516227697,
        "static_w": 14.379781319699603,
-       "dynamic_w": 4.146932006428571
+       "dynamic_w": 4.088101058705357
       }
      },
-     "die_w": 2730.7127458790774,
-     "scenario_hottest_die_w": 2699.03,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "die_w": 2694.0641039828224,
+     "scenario_hottest_die_w": 2695.48,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "engine",
-     "hot_spot_w_per_mm2": 9.23005651080233,
+     "hot_spot_w_per_mm2": 9.10184264304229,
      "core_hot_spot": "engine",
-     "core_hot_spot_w_per_mm2": 9.23005651080233,
-     "die_avg_w_per_mm2": 3.3505677863546963,
+     "core_hot_spot_w_per_mm2": 9.10184264304229,
+     "die_avg_w_per_mm2": 3.305600127586285,
      "within_air_die_limit": false,
      "within_liquid_die_limit": false,
      "hot_spot_within_h200_average": false,
@@ -3224,8 +3224,8 @@
       }
      },
      "die_w": 2291.4698814276185,
-     "scenario_hottest_die_w": 2259.79,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "scenario_hottest_die_w": 2292.88,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "engine",
      "hot_spot_w_per_mm2": 7.4316216788864855,
      "core_hot_spot": "engine",
@@ -3253,11 +3253,11 @@
        "dynamic_w": 0.0
       },
       "engine": {
-       "w": 4973.840493675118,
+       "w": 3733.6061231304748,
        "mm2": 281.2792140617144,
-       "w_per_mm2": 17.682929434607374,
+       "w_per_mm2": 13.27366522828558,
        "static_w": 54.11671438940355,
-       "dynamic_w": 4919.723779285714
+       "dynamic_w": 3679.489408741071
       },
       "kv": {
        "w": 0.022796707646000003,
@@ -3274,18 +3274,18 @@
        "dynamic_w": 0.0
       },
       "phy_hbm": {
-       "w": 56.93212348123162,
+       "w": 47.34376302203519,
        "mm2": 40.00784006016,
-       "w_per_mm2": 1.4230241721528203,
+       "w_per_mm2": 1.1833621347926837,
        "static_w": 18.897308388374483,
-       "dynamic_w": 38.03481509285714
+       "dynamic_w": 28.44645463366071
       },
       "phy_serdes": {
-       "w": 40.88421514071429,
+       "w": 39.15860308475893,
        "mm2": 18.0,
-       "w_per_mm2": 2.2713452855952383,
+       "w_per_mm2": 2.175477949153274,
        "static_w": 34.03911,
-       "dynamic_w": 6.845105140714286
+       "dynamic_w": 5.119493084758928
       },
       "phy_ucie": {
        "w": 3.846335113656,
@@ -3295,35 +3295,35 @@
        "dynamic_w": 0.0
       },
       "rom": {
-       "w": 12.232861579978367,
+       "w": 10.707458160040868,
        "mm2": 300.68888383469084,
-       "w_per_mm2": 0.04068278622066922,
+       "w_per_mm2": 0.035609757246388554,
        "static_w": 6.181937934978368,
-       "dynamic_w": 6.050923644999999
+       "dynamic_w": 4.5255202250624995
       },
       "sram": {
-       "w": 0.3501327085214489,
+       "w": 0.2691969192553775,
        "mm2": 1.541900891,
-       "w_per_mm2": 0.22707860833673316,
+       "w_per_mm2": 0.1745876929098794,
        "static_w": 0.029079094378591748,
-       "dynamic_w": 0.32105361414285716
+       "dynamic_w": 0.2401178248767857
       },
       "vector": {
-       "w": 22.40531502327103,
+       "w": 20.382123643494246,
        "mm2": 74.74093048000002,
-       "w_per_mm2": 0.2997730277022238,
+       "w_per_mm2": 0.2727036379209691,
        "static_w": 14.379781319699603,
-       "dynamic_w": 8.025533703571428
+       "dynamic_w": 6.002342323794642
       }
      },
-     "die_w": 5126.389499533563,
-     "scenario_hottest_die_w": 5094.7,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "die_w": 3871.211625884788,
+     "scenario_hottest_die_w": 3872.62,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "engine",
-     "hot_spot_w_per_mm2": 17.682929434607374,
+     "hot_spot_w_per_mm2": 13.27366522828558,
      "core_hot_spot": "engine",
-     "core_hot_spot_w_per_mm2": 17.682929434607374,
-     "die_avg_w_per_mm2": 6.290048465685354,
+     "core_hot_spot_w_per_mm2": 13.27366522828558,
+     "die_avg_w_per_mm2": 4.749952915196059,
      "within_air_die_limit": false,
      "within_liquid_die_limit": false,
      "hot_spot_within_h200_average": false,
@@ -3412,8 +3412,8 @@
       }
      },
      "die_w": 218.3676841079014,
-     "scenario_hottest_die_w": 186.686,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "scenario_hottest_die_w": 219.782,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "phy_serdes",
      "hot_spot_w_per_mm2": 1.9434078038544444,
      "core_hot_spot": "engine",
@@ -3441,11 +3441,11 @@
        "dynamic_w": 0.0
       },
       "engine": {
-       "w": 163.75613735690357,
+       "w": 163.47303594440356,
        "mm2": 281.2792140617144,
-       "w_per_mm2": 0.5821835712359977,
+       "w_per_mm2": 0.5811770929811279,
        "static_w": 54.11671438940355,
-       "dynamic_w": 109.63942296750001
+       "dynamic_w": 109.35632155500001
       },
       "kv": {
        "w": 0.022796707646000003,
@@ -3462,18 +3462,18 @@
        "dynamic_w": 0.0
       },
       "phy_hbm": {
-       "w": 38.55054308762448,
+       "w": 38.499796208874486,
        "mm2": 40.00784006016,
-       "w_per_mm2": 0.9635747150972367,
+       "w_per_mm2": 0.9623062917413722,
        "static_w": 18.897308388374483,
-       "dynamic_w": 19.65323469925
+       "dynamic_w": 19.6024878205
       },
       "phy_serdes": {
-       "w": 37.576092039825,
+       "w": 37.56695915145,
        "mm2": 18.0,
-       "w_per_mm2": 2.0875606688791666,
+       "w_per_mm2": 2.087053286191667,
        "static_w": 34.03911,
-       "dynamic_w": 3.5369820398250003
+       "dynamic_w": 3.5278491514500003
       },
       "phy_ucie": {
        "w": 3.846335113656,
@@ -3483,35 +3483,35 @@
        "dynamic_w": 0.0
       },
       "rom": {
-       "w": 19.897003214478367,
+       "w": 19.861589361978368,
        "mm2": 300.68888383469084,
-       "w_per_mm2": 0.0661713960314446,
+       "w_per_mm2": 0.06605362030243073,
        "static_w": 6.181937934978368,
-       "dynamic_w": 13.715065279500001
+       "dynamic_w": 13.679651427000001
       },
       "sram": {
-       "w": 0.19497294753359173,
+       "w": 0.19454459080859174,
        "mm2": 1.541900891,
-       "w_per_mm2": 0.12644972752246222,
+       "w_per_mm2": 0.12617191671925154,
        "static_w": 0.029079094378591748,
-       "dynamic_w": 0.165893853155
+       "dynamic_w": 0.16546549643
       },
       "vector": {
-       "w": 18.526710838824602,
+       "w": 18.516002996949602,
        "mm2": 74.74093048000002,
-       "w_per_mm2": 0.24787904993746604,
+       "w_per_mm2": 0.24773578383405748,
        "static_w": 14.379781319699603,
-       "dynamic_w": 4.146929519125
+       "dynamic_w": 4.13622167725
       }
      },
-     "die_w": 298.24581740991795,
-     "scenario_hottest_die_w": 266.565,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "die_w": 297.856286179193,
+     "scenario_hottest_die_w": 299.271,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "phy_serdes",
-     "hot_spot_w_per_mm2": 2.0875606688791666,
+     "hot_spot_w_per_mm2": 2.087053286191667,
      "core_hot_spot": "engine",
-     "core_hot_spot_w_per_mm2": 0.5821835712359977,
-     "die_avg_w_per_mm2": 0.36594578823302815,
+     "core_hot_spot_w_per_mm2": 0.5811770929811279,
+     "die_avg_w_per_mm2": 0.36546783580269077,
      "within_air_die_limit": true,
      "within_liquid_die_limit": true,
      "hot_spot_within_h200_average": false,
@@ -3534,11 +3534,11 @@
        "dynamic_w": 0.0
       },
       "engine": {
-       "w": 163.756203117975,
+       "w": 162.2007893760107,
        "mm2": 281.2792140617144,
-       "w_per_mm2": 0.582183805028856,
+       "w_per_mm2": 0.5766540194485286,
        "static_w": 54.11671438940355,
-       "dynamic_w": 109.63948872857144
+       "dynamic_w": 108.08407498660715
       },
       "kv": {
        "w": 0.022796707646000003,
@@ -3555,18 +3555,18 @@
        "dynamic_w": 0.0
       },
       "phy_hbm": {
-       "w": 38.550554875517335,
+       "w": 38.27174173971377,
        "mm2": 40.00784006016,
-       "w_per_mm2": 0.9635750097368082,
+       "w_per_mm2": 0.956606047268844,
        "static_w": 18.897308388374483,
-       "dynamic_w": 19.653246487142855
+       "dynamic_w": 19.374433351339285
       },
       "phy_serdes": {
-       "w": 37.57609416128572,
+       "w": 37.52591631174107,
        "mm2": 18.0,
-       "w_per_mm2": 2.0875607867380954,
+       "w_per_mm2": 2.0847731284300597,
        "static_w": 34.03911,
-       "dynamic_w": 3.536984161285714
+       "dynamic_w": 3.4868063117410713
       },
       "phy_ucie": {
        "w": 3.846335113656,
@@ -3576,35 +3576,35 @@
        "dynamic_w": 0.0
       },
       "rom": {
-       "w": 19.89701144069265,
+       "w": 19.702440907299795,
        "mm2": 300.68888383469084,
-       "w_per_mm2": 0.06617142338933751,
+       "w_per_mm2": 0.06552434082708415,
        "static_w": 6.181937934978368,
-       "dynamic_w": 13.715073505714285
+       "dynamic_w": 13.52050297232143
       },
       "sram": {
-       "w": 0.1949730470357346,
+       "w": 0.19261957260180604,
        "mm2": 1.541900891,
-       "w_per_mm2": 0.1264497920545884,
+       "w_per_mm2": 0.12492344594008412,
        "static_w": 0.029079094378591748,
-       "dynamic_w": 0.16589395265714285
+       "dynamic_w": 0.1635404782232143
       },
       "vector": {
-       "w": 18.526713326128174,
+       "w": 18.46788237840496,
        "mm2": 74.74093048000002,
-       "w_per_mm2": 0.247879083216468,
+       "w_per_mm2": 0.2470919516227697,
        "static_w": 14.379781319699603,
-       "dynamic_w": 4.146932006428571
+       "dynamic_w": 4.088101058705357
       }
      },
-     "die_w": 298.24590789336287,
-     "scenario_hottest_die_w": 266.565,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "die_w": 296.1057482105004,
+     "scenario_hottest_die_w": 297.521,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "phy_serdes",
-     "hot_spot_w_per_mm2": 2.0875607867380954,
+     "hot_spot_w_per_mm2": 2.0847731284300597,
      "core_hot_spot": "engine",
-     "core_hot_spot_w_per_mm2": 0.582183805028856,
-     "die_avg_w_per_mm2": 0.36594589925565996,
+     "core_hot_spot_w_per_mm2": 0.5766540194485286,
+     "die_avg_w_per_mm2": 0.3633199364546017,
      "within_air_die_limit": true,
      "within_liquid_die_limit": true,
      "hot_spot_within_h200_average": false,
@@ -3691,8 +3691,8 @@
       }
      },
      "die_w": 343.0483765026182,
-     "scenario_hottest_die_w": 311.366,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "scenario_hottest_die_w": 344.462,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "phy_hbm",
      "hot_spot_w_per_mm2": 2.8332395612754095,
      "core_hot_spot": "engine",
@@ -3720,11 +3720,11 @@
        "dynamic_w": 0.0
       },
       "engine": {
-       "w": 266.30138746083213,
+       "w": 212.8108387527964,
        "mm2": 281.2792140617144,
-       "w_per_mm2": 0.9467510365071056,
+       "w_per_mm2": 0.7565821721405421,
        "static_w": 54.11671438940355,
-       "dynamic_w": 212.1846730714286
+       "dynamic_w": 158.69412436339286
       },
       "kv": {
        "w": 0.022796707646000003,
@@ -3741,18 +3741,18 @@
        "dynamic_w": 0.0
       },
       "phy_hbm": {
-       "w": 56.93212348123162,
+       "w": 47.34376302203519,
        "mm2": 40.00784006016,
-       "w_per_mm2": 1.4230241721528203,
+       "w_per_mm2": 1.1833621347926837,
        "static_w": 18.897308388374483,
-       "dynamic_w": 38.03481509285714
+       "dynamic_w": 28.44645463366071
       },
       "phy_serdes": {
-       "w": 40.88421514071429,
+       "w": 39.15860308475893,
        "mm2": 18.0,
-       "w_per_mm2": 2.2713452855952383,
+       "w_per_mm2": 2.175477949153274,
        "static_w": 34.03911,
-       "dynamic_w": 6.845105140714286
+       "dynamic_w": 5.119493084758928
       },
       "phy_ucie": {
        "w": 3.846335113656,
@@ -3762,36 +3762,36 @@
        "dynamic_w": 0.0
       },
       "rom": {
-       "w": 12.232861579978367,
+       "w": 10.707458160040868,
        "mm2": 300.68888383469084,
-       "w_per_mm2": 0.04068278622066922,
+       "w_per_mm2": 0.035609757246388554,
        "static_w": 6.181937934978368,
-       "dynamic_w": 6.050923644999999
+       "dynamic_w": 4.5255202250624995
       },
       "sram": {
-       "w": 0.3501327085214489,
+       "w": 0.2691969192553775,
        "mm2": 1.541900891,
-       "w_per_mm2": 0.22707860833673316,
+       "w_per_mm2": 0.1745876929098794,
        "static_w": 0.029079094378591748,
-       "dynamic_w": 0.32105361414285716
+       "dynamic_w": 0.2401178248767857
       },
       "vector": {
-       "w": 22.40531502327103,
+       "w": 20.382123643494246,
        "mm2": 74.74093048000002,
-       "w_per_mm2": 0.2997730277022238,
+       "w_per_mm2": 0.2727036379209691,
        "static_w": 14.379781319699603,
-       "dynamic_w": 8.025533703571428
+       "dynamic_w": 6.002342323794642
       }
      },
-     "die_w": 418.85039331927715,
-     "scenario_hottest_die_w": 387.169,
-     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and no SerDes/UCIe idle; this map re-prices static on the ledger's areas at 1.087 GHz and adds the always-on SerDes and UCIe idle of arch_budget_v41 power",
+     "die_w": 350.4163415071093,
+     "scenario_hottest_die_w": 351.831,
+     "scenario_hottest_die_w_note": "power_scenarios' die static carries leakage + clock + HBM idle on the analytical 815 mm2 split at 1.034 GHz and the always-on SerDes and UCIe idle (v41_links_static); this map re-prices static on the ledger's areas at 1.087 GHz and charges the always-on SerDes and UCIe idle of arch_budget_v41 power",
      "hot_spot": "phy_serdes",
-     "hot_spot_w_per_mm2": 2.2713452855952383,
+     "hot_spot_w_per_mm2": 2.175477949153274,
      "core_hot_spot": "engine",
-     "core_hot_spot_w_per_mm2": 0.9467510365071056,
-     "die_avg_w_per_mm2": 0.5139268629684383,
-     "within_air_die_limit": false,
+     "core_hot_spot_w_per_mm2": 0.7565821721405421,
+     "die_avg_w_per_mm2": 0.4299587012357169,
+     "within_air_die_limit": true,
      "within_liquid_die_limit": true,
      "hot_spot_within_h200_average": false,
      "core_hot_spot_within_h200_average": false
@@ -3858,23 +3858,23 @@
     },
     "mtp_batch1": {
      "hot_region": "engine",
-     "j_a_per_mm2": 13.185787271528794,
-     "drop_mv": 539.7372972837014,
+     "j_a_per_mm2": 13.152449768654924,
+     "drop_mv": 538.3726845132389,
      "budget_mv": 34.99999999999999,
      "within_budget": false,
-     "m8m9_coverage_needed": 0.3855266409169297,
-     "amps_per_vdd_bump": 0.10680487689938321,
-     "die_current_a": 3901.015994882028
+     "m8m9_coverage_needed": 0.38455191750945644,
+     "amps_per_vdd_bump": 0.10653484312610487,
+     "die_current_a": 3891.4868056774208
     },
     "fill28_mtp": {
      "hot_region": "engine",
-     "j_a_per_mm2": 13.1857950154319,
-     "drop_mv": 539.7376142669235,
+     "j_a_per_mm2": 13.00263234720327,
+     "drop_mv": 532.2401686099279,
      "budget_mv": 34.99999999999999,
      "within_budget": false,
-     "m8m9_coverage_needed": 0.3855268673335168,
-     "amps_per_vdd_bump": 0.10680493962499839,
-     "die_current_a": 3901.0182083986824
+     "m8m9_coverage_needed": 0.3801715490070914,
+     "amps_per_vdd_bump": 0.1053213220123465,
+     "die_current_a": 3848.6630056897466
     },
     "saturated_batch1024": {
      "hot_region": "engine",
@@ -3888,13 +3888,13 @@
     },
     "saturated_batch1024_mtp": {
      "hot_region": "engine",
-     "j_a_per_mm2": 25.26132776372482,
-     "drop_mv": 1034.0285712352272,
+     "j_a_per_mm2": 18.96237889755083,
+     "drop_mv": 776.1920411330087,
      "budget_mv": 34.99999999999999,
      "within_budget": false,
-     "m8m9_coverage_needed": 0.738591836596591,
-     "amps_per_vdd_bump": 0.204616754886171,
-     "die_current_a": 7323.413570762234
+     "m8m9_coverage_needed": 0.5544228865235777,
+     "amps_per_vdd_bump": 0.15359526907016172,
+     "die_current_a": 5530.302322692555
     }
    },
    "B_proposed_production": {
@@ -3910,23 +3910,23 @@
     },
     "mtp_batch1": {
      "hot_region": "engine",
-     "j_a_per_mm2": 0.8316908160514254,
-     "drop_mv": 34.043818847323664,
+     "j_a_per_mm2": 0.8302529899730399,
+     "drop_mv": 33.984963934413955,
      "budget_mv": 34.99999999999999,
      "within_budget": true,
-     "m8m9_coverage_needed": 0.02431701346237405,
-     "amps_per_vdd_bump": 0.006736695610016545,
-     "die_current_a": 426.06545344273997
+     "m8m9_coverage_needed": 0.024274974238867115,
+     "amps_per_vdd_bump": 0.0067250492187816225,
+     "die_current_a": 425.50898025598997
     },
     "fill28_mtp": {
      "hot_region": "engine",
-     "j_a_per_mm2": 0.831691150041223,
-     "drop_mv": 34.04383251861587,
+     "j_a_per_mm2": 0.8237914563550408,
+     "drop_mv": 33.720472279917374,
      "budget_mv": 34.99999999999999,
      "within_budget": true,
-     "m8m9_coverage_needed": 0.02431702322758277,
-     "amps_per_vdd_bump": 0.006736698315333906,
-     "die_current_a": 426.0655827048041
+     "m8m9_coverage_needed": 0.024086051628512416,
+     "amps_per_vdd_bump": 0.00667271079647583,
+     "die_current_a": 423.0082117292863
     },
     "saturated_batch1024": {
      "hot_region": "engine",
@@ -3940,13 +3940,13 @@
     },
     "saturated_batch1024_mtp": {
      "hot_region": "engine",
-     "j_a_per_mm2": 1.3525014807244367,
-     "drop_mv": 55.36229871951925,
+     "j_a_per_mm2": 1.0808316744864888,
+     "drop_mv": 44.241967111480484,
      "budget_mv": 34.99999999999999,
      "within_budget": false,
-     "m8m9_coverage_needed": 0.0395444990853709,
-     "amps_per_vdd_bump": 0.010955261993867937,
-     "die_current_a": 598.3577047418245
+     "m8m9_coverage_needed": 0.03160140507962892,
+     "amps_per_vdd_bump": 0.008754736563340559,
+     "die_current_a": 500.5947735815847
     }
    }
   },
@@ -3989,11 +3989,11 @@
   "long_wire_timing": "closes with pipelining (every path is registered at the per-cycle reach); the latency cost is unbudgeted",
   "long_wire_fraction_asap7": 0.13097366607119232,
   "long_wire_fraction_tech": 0.0352847303213526,
-  "power_B_worst_w": 418.85039331927715,
-  "power_B_within_air": false,
-  "power_A_worst_w": 5126.389499533563,
+  "power_B_worst_w": 350.4163415071093,
+  "power_B_within_air": true,
+  "power_A_worst_w": 3871.211625884788,
   "power_A_within_air": false,
-  "ir_B_worst_mv": 55.36229871951925,
+  "ir_B_worst_mv": 44.241967111480484,
   "ir_B_within_budget": false,
   "criteria": {
    "area": {
@@ -4005,12 +4005,12 @@
     "condition": "4.3-16.0 us per token must be added to the budget or removed by floorplan levers"
    },
    "power": {
-    "verdict": "scenario B closes on liquid, not on air at its worst point; scenario A fails",
-    "condition": "B worst 419 W vs air 374.56 / liquid 474.56 W; A worst 5,126 W"
+    "verdict": "scenario B closes on air at every point; scenario A fails",
+    "condition": "B worst 350 W vs air 374.56 / liquid 474.56 W; A worst 3,871 W"
    },
    "ir": {
     "verdict": "closes with a denser top grid",
-    "condition": "B hot spot 55 mV vs 35 mV on the repository's 2.5% M8/M9 grid; 4.0% coverage per net closes it"
+    "condition": "B hot spot 44 mV vs 35 mV on the repository's 2.5% M8/M9 grid; 3.2% coverage per net closes it"
    },
    "clock": {
     "verdict": "closes only as regional trees with mesochronous crossings",
@@ -4018,7 +4018,7 @@
    }
   },
   "closes": "conditionally",
-  "summary": "on the adopted design point the layer die closes CONDITIONALLY: on area only above the stated placement utilisation (the MTP lane multiplier is what fills it), on power only in scenario B (liquid cooling at the saturated MTP point), on IR only with a denser top grid than the repository's die grid, on the clock only as regional trees, and on long-wire timing only by pipelining every spine/tile/PHY traversal -- which costs per-token latency the budget does not charge",
+  "summary": "on the adopted design point the layer die closes CONDITIONALLY: on area only above the stated placement utilisation (the MTP lane multiplier is what fills it), on power only in scenario B (within the air limit at every point), on IR only with a denser top grid than the repository's die grid, on the clock only as regional trees, and on long-wire timing only by pipelining every spine/tile/PHY traversal -- which costs per-token latency the budget does not charge",
   "top_risks": [
    {
     "risk": "area",
@@ -4030,15 +4030,15 @@
    },
    {
     "risk": "power (scenario A)",
-    "detail": "on the measured ASAP7 MAC energy the worst point draws 5,126 W per die against the 374.56 W air / 474.56 W liquid die limits; the engine tiles run at 17.68 W/mm2"
+    "detail": "on the measured ASAP7 MAC energy the worst point draws 3,871 W per die against the 374.56 W air / 474.56 W liquid die limits; the engine tiles run at 13.27 W/mm2"
    },
    {
     "risk": "power (scenario B, saturated with MTP)",
-    "detail": "the worst production point is 419 W per die (over the air limit, within liquid); engine tiles 0.95 W/mm2 and the hottest region (phy_serdes) 2.27 W/mm2 against the H200 die average 0.675: the PHY strips, not the engines, are the thermal hot spots"
+    "detail": "the worst production point is 350 W per die (within the air limit, within liquid); engine tiles 0.76 W/mm2 and the hottest region (phy_serdes) 2.18 W/mm2 against the H200 die average 0.675: the PHY strips, not the engines, are the thermal hot spots"
    },
    {
     "risk": "IR / PDN",
-    "detail": "the repository's die grid (M8/M9 1 um at 40 um) on ASAP7's thin top metals drops 55 mV in the scenario-B hot spot against a 35 mV budget (needs 4.0% M8/M9 coverage per net); a production N5 stack's thick top metal and RDL change this by an order of magnitude, so it is an ASAP7 statement, not an N5 one"
+    "detail": "the repository's die grid (M8/M9 1 um at 40 um) on ASAP7's thin top metals drops 44 mV in the scenario-B hot spot against a 35 mV budget (needs 3.2% M8/M9 coverage per net); a production N5 stack's thick top metal and RDL change this by an order of magnitude, so it is an ASAP7 statement, not an N5 one"
    },
    {
     "risk": "clock",

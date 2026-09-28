@@ -116,9 +116,10 @@ def test_power_map_reprices_the_scenarios(rec):
             # the dynamic part is exactly power_scenarios' dynamic part
             dyn = sum(r["dynamic_w"] for r in v["regions"].values())
             assert math.isclose(dyn + 0, v["die_w"] - sum(r["static_w"] for r in v["regions"].values()))
-            # the map adds SerDes always-on and UCIe idle that power_scenarios' die static does not carry
-            assert v["die_w"] > v["scenario_hottest_die_w"]
-            assert v["die_w"] - v["scenario_hottest_die_w"] < add["serdes_w"] + add["ucie_idle_w"] + 10
+            # both the map and power_scenarios' die figure now charge the always-on SerDes and UCIe idle
+            # (power_scenarios v41_links_static), so they differ only by the map's static re-pricing
+            assert abs(v["die_w"] - v["scenario_hottest_die_w"]) < 10
+            assert add["serdes_w"] + add["ucie_idle_w"] > 10
     B = PM["points"]["B_proposed_production"]
     assert B["ar_batch1"]["within_air_die_limit"]
     assert all(not v["within_air_die_limit"] for v in PM["points"]["A_measured_implementation"].values())

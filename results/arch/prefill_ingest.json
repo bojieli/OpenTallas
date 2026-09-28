@@ -404,7 +404,7 @@
   }
  },
  "switch_port_load": {
-  "engram_utilisation_fill_mtp": 0.057608235694236246,
+  "engram_utilisation_fill_mtp": 0.10394054055044791,
   "ingest_package_port_utilisation_2x400G": 0.37050066344279947,
   "ingest_package_port_utilisation_8x400G": 1.0,
   "requirement": "Engram gather in a strict-priority traffic class above KV ingest on the rack switch; ingest in a lower class so a burst cannot queue a token-path gather behind it"

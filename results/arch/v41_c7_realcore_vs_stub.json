@@ -7,7 +7,7 @@
   "results/rtl/v41x_real_core_collective_stage.json": "9242cc82986229b1bd9e002d6ea8040e4061387da0461e9937d87a0c8e86a316",
   "results/rtl/v41_stage_collective_campaign.json": "f8b1c0f33a26b3bd8022ab865f2dec319050c289309b40046e68d5782267f188",
   "results/rtl/v41_collective_levers_campaign.json": "13b6db536711b226b7616b5c3a50c2c9511a8ff73a1f21082043b4966b1263bd",
-  "results/arch/v41_lanes.json": "beb9db8926d2421cdee6b4718ac664a521b094e9d43714bca2ad1d0efa0050cf"
+  "results/arch/v41_lanes.json": "b1580c106713d33da0962870bdeb64606b6c5b9009b75890610c67720354474c"
  },
  "real_core": {
   "142": {
@@ -381,14 +381,14 @@
      "1048576": {
       "ar_now": 8185,
       "ar_if_unpriced": 8015,
-      "mtp_now": 23818,
-      "mtp_if_unpriced": 23507
+      "mtp_now": 23756,
+      "mtp_if_unpriced": 23447
      },
      "200000": {
       "ar_now": 8568,
       "ar_if_unpriced": 8382,
-      "mtp_now": 24864,
-      "mtp_if_unpriced": 24525
+      "mtp_now": 24797,
+      "mtp_if_unpriced": 24458
      }
     },
     "consumer_after_rank0_last_reduced": {
@@ -397,14 +397,14 @@
      "1048576": {
       "ar_now": 8185,
       "ar_if_unpriced": 7945,
-      "mtp_now": 23818,
-      "mtp_if_unpriced": 23378
+      "mtp_now": 23756,
+      "mtp_if_unpriced": 23317
      },
      "200000": {
       "ar_now": 8568,
       "ar_if_unpriced": 8305,
-      "mtp_now": 24864,
-      "mtp_if_unpriced": 24383
+      "mtp_now": 24797,
+      "mtp_if_unpriced": 24317
      }
     }
    }

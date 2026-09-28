@@ -18,7 +18,7 @@ footprints. Each input carries its evidence class, and the gaps are named.
 but only if the logic places at 0.68 utilisation or better <!-- figure: 0.68 src="results/arch/v41_die_assembly.json#ledger.sensitivities.break_even_utilisation" name="break-even placement utilisation" -->,
 and the MTP lane multiplier (m = 2) is what fills it. Every long wire closes timing once it is pipelined, but
 the pipelining costs **4.3-16.0 µs per token** of latency that the budget does not charge. Power closes in
-scenario B (liquid cooling at the saturated MTP point) and fails in scenario A. IR closes only with a denser top
+scenario B (within the air die limit at every point) and fails in scenario A. IR closes only with a denser top
 grid than the repository's die grid. The clock closes only as regional trees with mesochronous crossings.
 
 ## 1. The problem
@@ -160,10 +160,10 @@ By evidence class, the placed area splits as follows:
 | published | 6.9 |
 | analytical-macro | 1.0 |
 
-**The head die** is the same die plus the rack's draft-window SRAM block (1.58 mm², rack C10). Its engines are
+**The head die** is the same die plus the rack's draft-window SRAM block (1.87 mm², rack C10). Its engines are
 unchanged, because the wide-head lever's 4 × spec BF16 engine equals the design point's m = 2 BF16 pool. It
-places **807.4 mm²** <!-- figure: 807.4 src="results/arch/v41_die_assembly.json#ledger.head.placed_total_mm2" name="head die placed total mm2" -->,
-with 7.6 mm² to spare.
+places **807.7 mm²** <!-- figure: 807.7 src="results/arch/v41_die_assembly.json#ledger.head.placed_total_mm2" name="head die placed total mm2" -->,
+with 7.3 mm² to spare.
 
 **Against the analytical split.**
 - The analytical design allots 289.4 mm² of ROM, 328.9 of compute, 65.2 of interconnect, 50.0 of HBM PHY (five
@@ -229,19 +229,20 @@ SerDes strip is on the package's outer edge. There are 48 tiles, each ROM | lane
 | point | scenario B die W | tiles W/mm² | hottest region W/mm² | scenario A die W | A tiles W/mm² |
 |---|---:|---:|---:|---:|---:|
 | batch 1 | 218 | 0.30 | SerDes 1.94 | 866 | 2.60 |
-| batch 1 + MTP | 298 | 0.58 | SerDes 2.09 | 2,731 | 9.23 |
+| batch 1 + MTP | 298 | 0.58 | SerDes 2.09 | 2,724 | 9.21 |
 | saturated (1,024) | 343 | 0.51 | HBM PHY 2.83 | 2,292 | 7.43 |
-| saturated + MTP | **419** <!-- figure: 419 src="results/arch/v41_die_assembly.json#power.points.B_proposed_production.saturated_batch1024_mtp.die_w" name="scenario B worst die W" --> | 0.95 | SerDes 2.27 | 5,126 | 17.68 |
+| saturated + MTP | **350** <!-- figure: 350 src="results/arch/v41_die_assembly.json#power.points.B_proposed_production.saturated_batch1024_mtp.die_w" name="scenario B worst die W" --> | 0.76 | SerDes 2.18 | 3,871 | 13.27 |
 
 The die limits are 374.6 W (air) and 474.6 W (liquid): a two-die shipping package's rating less its stacks,
 per die. The only published per-mm² reference is H200's die average, 0.675 W/mm².
 
-- **Why this map reads higher than the scenarios.** The map runs 31.7 W above `power_scenarios`' hottest-die
-  figure. It adds the always-on SerDes and UCIe idle, which that record's die static omits, and it re-prices
-  the clock at 1.087 GHz.
+- **How this map compares with the scenarios.** The map runs 1.4 W below `power_scenarios`' hottest-die
+  figure at every point. Both now charge the always-on SerDes and UCIe idle; the map re-prices the clock at
+  1.087 GHz.
 - **Scenario B**, the proposed production MAC energies:
   - **The engine tiles stay under 1 W/mm²** at every point.
-  - The saturated MTP point exceeds the air limit. The rack is liquid-cooled, so it closes.
+  - Every point is within the air limit. The worst, saturated with MTP, is 350 W, because the saturated MTP
+    rate is capped at its busiest package link (rack C8).
   - **The PHY strips, not the engines, are the thermal hot spots: 1.9-2.8 W/mm², three to four times the
     H200 average.** The SerDes figure is set by the assumed 0.40 mm² per lane (0.73 W per lane always on).
     The HBM figure places the whole die share of HBM energy on the PHY macros, which is the pessimistic
@@ -257,12 +258,12 @@ per die. The only published per-mm² reference is H200's die average, 0.675 W/mm
 |---|---:|---:|---:|---:|
 | batch 1 | 0.42 A/mm² | 17 mV | 35 mV | 1.2% |
 | batch 1 + MTP | 0.83 A/mm² | 34 mV | 35 mV | 2.4% |
-| saturated + MTP | 1.35 A/mm² | **55 mV** <!-- figure: 55 src="results/arch/v41_die_assembly.json#ir_drop.points.B_proposed_production.saturated_batch1024_mtp.drop_mv" name="scenario B worst IR drop mV" --> | 35 mV | 4.0% |
+| saturated + MTP | 1.08 A/mm² | **44 mV** <!-- figure: 44 src="results/arch/v41_die_assembly.json#ir_drop.points.B_proposed_production.saturated_batch1024_mtp.drop_mv" name="scenario B worst IR drop mV" --> | 35 mV | 3.2% |
 
 - **What closes it.** The repository's die grid gives each net 2.5% of M8 and M9. On ASAP7's thin top metals
-  (13.9 Ω/□ effective per net) it fails the saturated MTP point. A 4.0% grid closes it.
-- **Current per bump.** Per VDD bump the current is 11 mA, and the die draws about 600 A.
-- **Scenario A** drops 152-1,034 mV, which no grid fixes.
+  (13.9 Ω/□ effective per net) it fails the saturated MTP point. A 3.2% grid closes it.
+- **Current per bump.** Per VDD bump the current is 8.8 mA, and the die draws about 500 A.
+- **Scenario A** drops 152-776 mV, which no grid fixes.
 - **Scope.** A production N5 stack's thick top metal and redistribution layer lower the sheet resistance by an
   order of magnitude, so this is an ASAP7 statement, not an N5 one.
 - **Not modelled.** The local M1-M6 grid, the interposer and package, and transient droop are not modelled.
@@ -290,8 +291,8 @@ per die. The only published per-mm² reference is H200's die average, 0.675 W/mm
 |---|---|---|
 | area | conditional | placement utilisation ≥ 0.68 at m = 2 (assumed 0.70); m = 1 or the N5 credit leave > 150 mm² |
 | long-wire timing | closes by pipelining | 4.3-16.0 µs per token must enter the budget or be removed by floorplan levers |
-| power | B closes on liquid; A fails | B worst 419 W vs 374.6 air / 474.6 liquid; PHY strips 1.9-2.8 W/mm² |
-| IR | closes with a denser grid | 55 mV vs 35 mV at 2.5% M8/M9 coverage; 4.0% closes it |
+| power | B closes on air; A fails | B worst 350 W vs 374.6 air / 474.6 liquid; PHY strips 1.9-2.8 W/mm² |
+| IR | closes with a denser grid | 44 mV vs 35 mV at 2.5% M8/M9 coverage; 3.2% closes it |
 | clock | regional trees only | one tree's skew is 0.8-3.0 periods |
 
 **Top risks**, in order of consequence:

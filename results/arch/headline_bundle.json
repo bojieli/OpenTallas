@@ -33,7 +33,7 @@
   "records_with_source_pins": 20,
   "pins_by_status": {
    "commit-outside-head": 1,
-   "current": 540,
+   "current": 541,
    "path-only": 3,
    "stale": 53
   },
@@ -1901,7 +1901,7 @@
    "binding": "results/arch/v41_lanes.json#design_point.1048576.mtp",
    "derived": false,
    "derivation": null,
-   "record_value": 23817.7,
+   "record_value": 23756.2,
    "records": [
     "results/arch/v41_lanes.json"
    ],
@@ -1909,31 +1909,31 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "(23,818 with its native MTP",
-     "printed_value": "23,818",
+     "printed_value": "23,756",
      "status": "agrees"
     },
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "(23,818 / 24,864)",
-     "printed_value": "23,818",
+     "text": "(23,756 / 24,797)",
+     "printed_value": "23,756",
      "status": "agrees"
     },
     {
      "in": "The GPU comparisons in the attribution ladder separate software",
-     "text": "(23,818 and 24,864 with MTP",
-     "printed_value": "23,818",
+     "text": "(23,756 and 24,797 with MTP",
+     "printed_value": "23,756",
      "status": "agrees"
     },
     {
      "in": "ROM array, adopted design (top of the latency ladder",
-     "text": "23,818",
-     "printed_value": "23,818",
+     "text": "23,756",
+     "printed_value": "23,756",
      "status": "agrees"
     },
     {
      "in": "Rack gate C7: measured exposure, partly recovered",
      "text": "23,818 at 1M",
-     "printed_value": "23,818",
+     "printed_value": "23,756",
      "status": "agrees"
     }
    ],
@@ -1942,17 +1942,17 @@
      {
       "label": "without the levers",
       "binding": "results/arch/v41_lanes.json#design_point_no_levers.1048576.mtp",
-      "value": 21005.9
+      "value": 20958.1
      },
      {
       "label": "fully overlapped",
       "binding": "results/arch/v41_lanes.json#design_point_overlap_assumed.1048576.mtp",
-      "value": 23577.6
+      "value": 23517.3
      }
     ],
     "range": [
-     21005.9,
-     23817.7
+     20958.1,
+     23756.2
     ]
    }
   },
@@ -1964,7 +1964,7 @@
    "binding": "results/arch/v41_lanes.json#design_point.200000.mtp",
    "derived": false,
    "derivation": null,
-   "record_value": 24863.6,
+   "record_value": 24796.6,
    "records": [
     "results/arch/v41_lanes.json"
    ],
@@ -1972,19 +1972,19 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "8,568 and 24,864 at 200K",
-     "printed_value": "24,864",
+     "printed_value": "24,797",
      "status": "agrees"
     },
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "23,818 / 24,864",
-     "printed_value": "24,864",
+     "text": "23,756 / 24,797",
+     "printed_value": "24,797",
      "status": "agrees"
     },
     {
      "in": "ROM array, adopted design (top of the latency ladder",
-     "text": "24,864",
-     "printed_value": "24,864",
+     "text": "24,797",
+     "printed_value": "24,797",
      "status": "agrees"
     }
    ]
@@ -2075,27 +2075,27 @@
    "binding": "results/arch/v41_lanes.json#design_point_overlap_assumed.1048576.mtp",
    "derived": false,
    "derivation": null,
-   "record_value": 23577.6,
+   "record_value": 23517.3,
    "records": [
     "results/arch/v41_lanes.json"
    ],
    "printed": [
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "(23,578 / 24,602)",
-     "printed_value": "23,578",
+     "text": "(23,517 / 24,536)",
+     "printed_value": "23,517",
      "status": "agrees"
     },
     {
      "in": "ROM array, same design with every collective fully overlapped",
-     "text": "23,578",
-     "printed_value": "23,578",
+     "text": "23,517",
+     "printed_value": "23,517",
      "status": "agrees"
     },
     {
      "in": "Rack gate C7: measured exposure, partly recovered",
      "text": "the overlap-assumed 23,578",
-     "printed_value": "23,578",
+     "printed_value": "23,517",
      "status": "agrees"
     }
    ]
@@ -2108,21 +2108,21 @@
    "binding": "results/arch/v41_lanes.json#design_point_overlap_assumed.200000.mtp",
    "derived": false,
    "derivation": null,
-   "record_value": 24602.0,
+   "record_value": 24536.4,
    "records": [
     "results/arch/v41_lanes.json"
    ],
    "printed": [
     {
      "in": "DeepSeek-V4.1 array, adopted design, per user, batch 1",
-     "text": "23,578 / 24,602",
-     "printed_value": "24,602",
+     "text": "23,517 / 24,536",
+     "printed_value": "24,536",
      "status": "agrees"
     },
     {
      "in": "ROM array, same design with every collective fully overlapped",
-     "text": "24,602",
-     "printed_value": "24,602",
+     "text": "24,536",
+     "printed_value": "24,536",
      "status": "agrees"
     }
    ]
@@ -2340,7 +2340,7 @@
     },
     {
      "in": "Per-user rate, batch 1, without / with MTP (τ = 5.0)",
-     "text": "2.29× / 1.99×",
+     "text": "2.29× / 1.98×",
      "printed_value": "2.29",
      "status": "agrees"
     },
@@ -2408,7 +2408,7 @@
     },
     {
      "in": "Per-user rate, batch 1, without / with MTP (τ = 5.0)",
-     "text": "2.39× / 2.08×",
+     "text": "2.39× / 2.07×",
      "printed_value": "2.39",
      "status": "agrees"
     }
@@ -2445,7 +2445,7 @@
    "binding": "results/arch/v41_hbm_switched.json#ratios_batch1.1048576.mtp.ratio",
    "derived": false,
    "derivation": null,
-   "record_value": 1.98848,
+   "record_value": 1.98334,
    "records": [
     "results/arch/v41_hbm_switched.json"
    ],
@@ -2470,14 +2470,14 @@
     },
     {
      "in": "ROM ÷ best HBM (headline row)",
-     "text": "1.99×",
-     "printed_value": "1.99",
+     "text": "1.98×",
+     "printed_value": "1.98",
      "status": "agrees"
     },
     {
      "in": "Per-user rate, batch 1, without / with MTP (τ = 5.0)",
-     "text": "2.29× / 1.99×",
-     "printed_value": "1.99",
+     "text": "2.29× / 1.98×",
+     "printed_value": "1.98",
      "status": "agrees"
     }
    ],
@@ -2486,22 +2486,22 @@
      {
       "label": "comparator without NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.mtp) / (results/arch/v41_hbm_switched.json#configs.nvl_0p9.1048576.best_mtp.rate)",
-      "value": 2.26288
+      "value": 2.25703
      },
      {
       "label": "comparator at doubled package bandwidth with NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.mtp) / (results/arch/v41_hbm_switched.json#configs.nvl_1p8_nvls.1048576.best_mtp.rate)",
-      "value": 1.90744
+      "value": 1.90252
      },
      {
       "label": "comparator at doubled package bandwidth without NVLS",
       "binding": "(results/arch/v41_lanes.json#design_point.1048576.mtp) / (results/arch/v41_hbm_switched.json#configs.nvl_1p8.1048576.best_mtp.rate)",
-      "value": 2.1811
+      "value": 2.17547
      }
     ],
     "range": [
-     1.90744,
-     2.26288
+     1.90252,
+     2.25703
     ]
    }
   },
@@ -2513,7 +2513,7 @@
    "binding": "results/arch/v41_hbm_switched.json#ratios_batch1.200000.mtp.ratio",
    "derived": false,
    "derivation": null,
-   "record_value": 2.0758,
+   "record_value": 2.0702,
    "records": [
     "results/arch/v41_hbm_switched.json"
    ],
@@ -2526,14 +2526,14 @@
     },
     {
      "in": "ROM ÷ best HBM (headline row)",
-     "text": "2.08×",
-     "printed_value": "2.08",
+     "text": "2.07×",
+     "printed_value": "2.07",
      "status": "agrees"
     },
     {
      "in": "Per-user rate, batch 1, without / with MTP (τ = 5.0)",
-     "text": "2.39× / 2.08×",
-     "printed_value": "2.08",
+     "text": "2.39× / 2.07×",
+     "printed_value": "2.07",
      "status": "agrees"
     }
    ]
@@ -2588,7 +2588,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.rom_energy_j",
    "derived": false,
    "derivation": null,
-   "record_value": 1.5734,
+   "record_value": 2.07102,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2596,19 +2596,19 @@
     {
      "in": "Two deployment questions follow",
      "text": "spends 1.57 J per token at batch 1",
-     "printed_value": "1.57",
+     "printed_value": "2.07",
      "status": "agrees"
     },
     {
      "in": "Energy per token, batch 1 (both static-dominated)",
-     "text": "1.57 vs 5.94 J",
-     "printed_value": "1.57",
+     "text": "2.07 vs 6.70 J",
+     "printed_value": "2.07",
      "status": "agrees"
     },
     {
      "in": "Static power decides array energy at low batch",
      "text": "1.57 J per token",
-     "printed_value": "1.57",
+     "printed_value": "2.07",
      "status": "agrees"
     }
    ],
@@ -2617,12 +2617,12 @@
      {
       "label": "scenario A (measured lane)",
       "binding": "results/arch/power_scenarios.json#rom_over_hbm.A_measured_implementation.1048576.ar_batch1.rom_energy_j",
-      "value": 1.89008
+      "value": 2.3877
      }
     ],
     "range": [
-     1.5734,
-     1.89008
+     2.07102,
+     2.3877
     ]
    }
   },
@@ -2634,7 +2634,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.hbm_energy_j",
    "derived": false,
    "derivation": null,
-   "record_value": 5.94474,
+   "record_value": 6.70189,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2642,13 +2642,13 @@
     {
      "in": "Two deployment questions follow",
      "text": "against 5.94 J for the best HBM comparator",
-     "printed_value": "5.94",
+     "printed_value": "6.70",
      "status": "agrees"
     },
     {
      "in": "Energy per token, batch 1 (both static-dominated)",
-     "text": "1.57 vs 5.94 J",
-     "printed_value": "5.94",
+     "text": "2.07 vs 6.70 J",
+     "printed_value": "6.70",
      "status": "agrees"
     }
    ]
@@ -2661,7 +2661,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.ar_batch1.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 3.77827,
+   "record_value": 3.23602,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2669,25 +2669,25 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "and 3.8× lower at batch 1",
-     "printed_value": "3.8",
+     "printed_value": "3.2",
      "status": "agrees"
     },
     {
      "in": "V4.1 energy per token, 1M, HBM ÷ ROM on one power model",
-     "text": "3.8× / 8.0×",
-     "printed_value": "3.8",
+     "text": "3.2× / 7.5×",
+     "printed_value": "3.2",
      "status": "agrees"
     },
     {
      "in": "Energy per token, batch 1 (both static-dominated)",
-     "text": "5.94 J: 3.8×",
-     "printed_value": "3.8",
+     "text": "6.70 J: 3.2×",
+     "printed_value": "3.2",
      "status": "agrees"
     },
     {
      "in": "Static power decides array energy at low batch",
      "text": "3.8× less than the best HBM comparator",
-     "printed_value": "3.8",
+     "printed_value": "3.2",
      "status": "agrees"
     }
    ],
@@ -2696,12 +2696,12 @@
      {
       "label": "scenario A (measured lane)",
       "binding": "results/arch/power_scenarios.json#rom_over_hbm.A_measured_implementation.1048576.ar_batch1.energy_hbm_over_rom",
-      "value": 3.31278
+      "value": 2.93946
      }
     ],
     "range": [
-     3.31278,
-     3.77827
+     2.93946,
+     3.23602
     ]
    }
   },
@@ -2713,7 +2713,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.A_measured_implementation.1048576.ar_batch1.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 3.31278,
+   "record_value": 2.93946,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2721,7 +2721,7 @@
     {
      "in": "Table 8-11. ROM ÷ best HBM comparator, adopted ROM design",
      "text": "ratio at 1M is 3.3×",
-     "printed_value": "3.3",
+     "printed_value": "2.9",
      "status": "agrees"
     }
    ]
@@ -2734,7 +2734,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.mtp_batch1.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 3.93332,
+   "record_value": 3.30901,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2742,13 +2742,13 @@
     {
      "in": "V4.1 energy per token, 1M, HBM ÷ ROM on one power model",
      "text": "(3.9× / 10.1×)",
-     "printed_value": "3.9",
+     "printed_value": "3.3",
      "status": "agrees"
     },
     {
      "in": "Energy per token, batch 1, with MTP",
-     "text": "2.18 J: 3.9×",
-     "printed_value": "3.9",
+     "text": "2.40 J: 3.3×",
+     "printed_value": "3.3",
      "status": "agrees"
     }
    ]
@@ -2761,7 +2761,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 7.98198,
+   "record_value": 7.52541,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2769,25 +2769,25 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "8.0–10.1× lower at a filled 28-user pipeline",
-     "printed_value": "8.0",
+     "printed_value": "7.5",
      "status": "agrees"
     },
     {
      "in": "V4.1 energy per token, 1M, HBM ÷ ROM on one power model",
-     "text": "3.8× / 8.0×",
-     "printed_value": "8.0",
+     "text": "3.2× / 7.5×",
+     "printed_value": "7.5",
      "status": "agrees"
     },
     {
      "in": "Energy per token, 28-user fill: ROM vs HBM",
-     "text": "944 mJ: 8.0×",
-     "printed_value": "8.0",
+     "text": "1,023 mJ: 7.5×",
+     "printed_value": "7.5",
      "status": "agrees"
     },
     {
      "in": "Static power decides array energy at low batch",
      "text": "8.0–10.1× at the fill",
-     "printed_value": "8.0",
+     "printed_value": "7.5",
      "status": "agrees"
     }
    ]
@@ -2800,7 +2800,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 10.1054,
+   "record_value": 9.79239,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2808,19 +2808,19 @@
     {
      "in": "Interactive and agentic use of language models",
      "text": "8.0–10.1× lower",
-     "printed_value": "10.1",
+     "printed_value": "9.8",
      "status": "agrees"
     },
     {
      "in": "V4.1 energy per token, 1M, HBM ÷ ROM on one power model",
-     "text": "3.9× / 10.1×",
-     "printed_value": "10.1",
+     "text": "3.3× / 9.8×",
+     "printed_value": "9.8",
      "status": "agrees"
     },
     {
      "in": "Energy per token, 28-user fill, with MTP",
-     "text": "539 mJ: 10.1×",
-     "printed_value": "10.1",
+     "text": "587 mJ: 9.8×",
+     "printed_value": "9.8",
      "status": "agrees"
     }
    ]
@@ -2833,7 +2833,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.rom_energy_j x 1000",
    "derived": false,
    "derivation": null,
-   "record_value": 118.219,
+   "record_value": 135.992,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2841,19 +2841,19 @@
     {
      "in": "Two deployment questions follow",
      "text": "118 mJ against 944 mJ",
-     "printed_value": "118",
+     "printed_value": "136",
      "status": "agrees"
     },
     {
      "in": "Energy per token, 28-user fill: ROM vs HBM",
-     "text": "118 vs 944 mJ",
-     "printed_value": "118",
+     "text": "136 vs 1,023 mJ",
+     "printed_value": "136",
      "status": "agrees"
     },
     {
      "in": "Static power decides array energy at low batch",
      "text": "118 mJ at the 28-user fill",
-     "printed_value": "118",
+     "printed_value": "136",
      "status": "agrees"
     }
    ]
@@ -2866,7 +2866,7 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28.hbm_energy_j x 1000",
    "derived": false,
    "derivation": null,
-   "record_value": 943.626,
+   "record_value": 1023.39,
    "records": [
     "results/arch/power_scenarios.json"
    ],
@@ -2874,13 +2874,13 @@
     {
      "in": "Two deployment questions follow",
      "text": "118 mJ against 944 mJ",
-     "printed_value": "944",
+     "printed_value": "1,023",
      "status": "agrees"
     },
     {
      "in": "Energy per token, 28-user fill: ROM vs HBM",
-     "text": "118 vs 944 mJ",
-     "printed_value": "944",
+     "text": "136 vs 1,023 mJ",
+     "printed_value": "1,023",
      "status": "agrees"
     }
    ]
@@ -2893,15 +2893,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.200000.ar_batch1.rom_energy_j",
    "derived": false,
    "derivation": null,
-   "record_value": 1.48492,
+   "record_value": 1.96032,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Energy per token, batch 1 (both static-dominated)",
-     "text": "1.48 vs 5.92 J",
-     "printed_value": "1.48",
+     "text": "1.96 vs 6.68 J",
+     "printed_value": "1.96",
      "status": "agrees"
     }
    ]
@@ -2914,15 +2914,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.200000.ar_batch1.energy_hbm_over_rom",
    "derived": false,
    "derivation": null,
-   "record_value": 3.98995,
+   "record_value": 3.40858,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Energy per token, batch 1 (both static-dominated)",
-     "text": "5.92 J: 4.0×",
-     "printed_value": "4.0",
+     "text": "6.68 J: 3.4×",
+     "printed_value": "3.4",
      "status": "agrees"
     }
    ]
@@ -2942,7 +2942,7 @@
    "printed": [
     {
      "in": "Aggregate throughput, 28 users, without / with MTP",
-     "text": "6.7× / 11.7×",
+     "text": "6.7× / 11.6×",
      "printed_value": "6.7",
      "status": "agrees"
     }
@@ -2956,15 +2956,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 11.7474,
+   "record_value": 11.5807,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Aggregate throughput, 28 users, without / with MTP",
-     "text": "6.7× / 11.7×",
-     "printed_value": "11.7",
+     "text": "6.7× / 11.6×",
+     "printed_value": "11.6",
      "status": "agrees"
     }
    ]
@@ -2998,15 +2998,15 @@
    "binding": "results/arch/power_scenarios.json#rom_over_hbm.B_proposed_production.1048576.fill28_mtp.rate_rom_over_hbm",
    "derived": false,
    "derivation": null,
-   "record_value": 11.7474,
+   "record_value": 11.5807,
    "records": [
     "results/arch/power_scenarios.json"
    ],
    "printed": [
     {
      "in": "Throughput per silicon is not the price of speed either",
-     "text": "(11.7× with MTP)",
-     "printed_value": "11.7",
+     "text": "(11.6× with MTP)",
+     "printed_value": "11.6",
      "status": "agrees"
     }
    ]
@@ -3068,7 +3068,7 @@
    "printed": [
     {
      "in": "Aggregate throughput, 1,024 users, without / with MTP",
-     "text": "10.8× / 15.2×",
+     "text": "10.8× / 11.4×",
      "printed_value": "10.8",
      "status": "agrees"
     },
@@ -3095,7 +3095,7 @@
    "printed": [
     {
      "in": "Aggregate throughput, 1,024 users, without / with MTP",
-     "text": "13.2× / 18.3×",
+     "text": "13.2× / 11.4×",
      "printed_value": "13.2",
      "status": "agrees"
     },
@@ -3906,7 +3906,7 @@
    ],
    "printed": [
     {
-     "in": "DeepSeek-V4.1 two-package array, all units",
+     "in": "DeepSeek-V4.1 two-package array, all units (X_HE",
      "text": "1,283,915 cycles",
      "printed_value": "1,283,915",
      "status": "agrees"
@@ -4114,7 +4114,7 @@
   "results/arch/power_scenarios.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "d2b0dc5dd685144aec347e0ade5eeb349a8f8183f478e2d1491055920fe69909",
+   "sha256": "cf0b22256f097984467d50959f7be47b13dedc69f45e687818b3389822ad90b5",
    "schema": "opentallas.power-scenarios-result.v1",
    "tool": "tools/power_scenarios.py",
    "command": "python3 tools/power_scenarios.py",
@@ -4137,7 +4137,7 @@
      "field": "inputs",
      "key": "results/arch/v41_lanes.json",
      "path": "results/arch/v41_lanes.json",
-     "pinned": "beb9db8926d2421cdee6b4718ac664a521b094e9d43714bca2ad1d0efa0050cf",
+     "pinned": "b1580c106713d33da0962870bdeb64606b6c5b9009b75890610c67720354474c",
      "status": "current"
     },
     {
@@ -4151,7 +4151,7 @@
      "field": "inputs",
      "key": "results/arch/v41_hbm_switched.json",
      "path": "results/arch/v41_hbm_switched.json",
-     "pinned": "a220d55ee7b8795727288c35acfe234aa3b10b22fe1fe1185bf2dbb1e4a0247e",
+     "pinned": "f18e83e1adafc29d65c7002a16bc9a227471d9a10e6e098b409e975aea91cb67",
      "status": "current"
     },
     {
@@ -4188,7 +4188,7 @@
   "results/arch/decode_roofline.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "ba9b42ced32fa0c628ec05116253af50059b776475404649860dbeefc02b7649",
+   "sha256": "ce4c9f01e8d6a4d77d624f358a805f826607385fea11d758fe40ea8a9abc17d2",
    "schema": "opentallas.decode-roofline.v1",
    "tool": "tools/decode_roofline_figure.py",
    "command": "python3 tools/decode_roofline_figure.py",
@@ -4212,14 +4212,14 @@
      "field": "inputs",
      "key": "sync",
      "path": "results/arch/sync_cost_table.json",
-     "pinned": "4e013cc7d85917bc14f18993c1cb5f906c1eca4ccca625a35b376a2d800af227",
+     "pinned": "0120a02f2574f8b17b2fe21e31445fdd58f1e7a6514ea5a9e106fb4bc3f70b0e",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "v41_lanes",
      "path": "results/arch/v41_lanes.json",
-     "pinned": "beb9db8926d2421cdee6b4718ac664a521b094e9d43714bca2ad1d0efa0050cf",
+     "pinned": "b1580c106713d33da0962870bdeb64606b6c5b9009b75890610c67720354474c",
      "status": "current"
     },
     {
@@ -4247,14 +4247,14 @@
      "field": "inputs",
      "key": "v41_switched",
      "path": "results/arch/v41_hbm_switched.json",
-     "pinned": "a220d55ee7b8795727288c35acfe234aa3b10b22fe1fe1185bf2dbb1e4a0247e",
+     "pinned": "f18e83e1adafc29d65c7002a16bc9a227471d9a10e6e098b409e975aea91cb67",
      "status": "current"
     },
     {
      "field": "inputs",
      "key": "power",
      "path": "results/arch/power_scenarios.json",
-     "pinned": "d2b0dc5dd685144aec347e0ade5eeb349a8f8183f478e2d1491055920fe69909",
+     "pinned": "cf0b22256f097984467d50959f7be47b13dedc69f45e687818b3389822ad90b5",
      "status": "current"
     },
     {
@@ -4296,7 +4296,7 @@
   "results/arch/v41_lanes.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "beb9db8926d2421cdee6b4718ac664a521b094e9d43714bca2ad1d0efa0050cf",
+   "sha256": "b1580c106713d33da0962870bdeb64606b6c5b9009b75890610c67720354474c",
    "schema": "opentallas.v41-lanes.v1",
    "tool": "tools/arch_lanes_v41.py",
    "command": "python3 tools/arch_lanes_v41.py",
@@ -4307,7 +4307,7 @@
   "results/arch/v41_rack.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "9a62600d8d756656a0f6572965d284980d0d675ab683589b1b189612f98ab83b",
+   "sha256": "7022adc2f876f881e1b9aee66ebfd506c87203badc021ae987b13071880195ef",
    "schema": "v41_rack/1",
    "tool": "tools/v41_rack_design.py",
    "command": "python3 tools/v41_rack_design.py",
@@ -4353,7 +4353,7 @@
   "results/arch/v41_hbm_switched.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "a220d55ee7b8795727288c35acfe234aa3b10b22fe1fe1185bf2dbb1e4a0247e",
+   "sha256": "f18e83e1adafc29d65c7002a16bc9a227471d9a10e6e098b409e975aea91cb67",
    "schema": "opentallas.v41-hbm-switched.v1",
    "tool": "tools/arch_hbm_switched_v41.py",
    "command": "python3 tools/arch_hbm_switched_v41.py",
@@ -4364,7 +4364,7 @@
   "results/arch/sync_cost_table.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "4e013cc7d85917bc14f18993c1cb5f906c1eca4ccca625a35b376a2d800af227",
+   "sha256": "0120a02f2574f8b17b2fe21e31445fdd58f1e7a6514ea5a9e106fb4bc3f70b0e",
    "schema": "opentallas.sync-cost-table.v1",
    "tool": "tools/sync_cost_table.py",
    "command": "python3 tools/sync_cost_table.py",
@@ -4408,12 +4408,19 @@
      "field": "inputs",
      "key": "results/arch/v41_lanes.json",
      "path": "results/arch/v41_lanes.json",
-     "pinned": "beb9db8926d2421cdee6b4718ac664a521b094e9d43714bca2ad1d0efa0050cf",
+     "pinned": "b1580c106713d33da0962870bdeb64606b6c5b9009b75890610c67720354474c",
+     "status": "current"
+    },
+    {
+     "field": "inputs",
+     "key": "results/arch/v41_rack.json",
+     "path": "results/arch/v41_rack.json",
+     "pinned": "7022adc2f876f881e1b9aee66ebfd506c87203badc021ae987b13071880195ef",
      "status": "current"
     }
    ],
    "pin_counts": {
-    "current": 6
+    "current": 7
    },
    "commits": []
   },
