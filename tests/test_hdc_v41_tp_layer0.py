@@ -103,6 +103,48 @@ def test_attention_uses_bounded_local_rows_at_both_contexts():
     assert encoded["o_d"] == isa.FULL_DYN["WINM1"]
 
 
+def test_tp_layer0_constant_rom_bases_bind_and_fail_closed():
+    names = ("rope_plain", "L0.attn_norm", "L0.ffn_norm", "L0.q_norm", "L0.kv_norm",
+             "L0.attn_sink", "L0.gate_bias", "L0.hc_attn_scale", "L0.hc_attn_base",
+             "L0.hc_ffn_scale", "L0.hc_ffn_base")
+    bases = {name: (i + 1) * 1000 for i, name in enumerate(names)}
+    with pytest.raises(ValueError, match="CROM bases missing"):
+        replay.build_tp_layer0(constant_bases={"rope_plain": 1000})
+    with pytest.raises(ValueError, match="30-bit"):
+        replay.build_tp_layer0(constant_bases=bases | {"rope_plain": 1 << 30})
+    plain = replay.build_tp_layer0()
+    bound = replay.build_tp_layer0(constant_bases=bases)
+    assert len(plain) == len(bound) == 103
+    references = {
+        6: {"c_base": ("L0.attn_norm", 0)},
+        13: {"c_base": ("L0.q_norm", 0)},
+        17: {"c_base": ("L0.kv_norm", 0)},
+        18: {"b_base": ("rope_plain", 0), "d_base": ("rope_plain", 0)},
+        22: {"b_base": ("rope_plain", 0), "d_base": ("rope_plain", 0)},
+        24: {"c_base": ("L0.hc_attn_scale", 0), "d_base": ("L0.hc_attn_base", 0)},
+        25: {"c_base": ("L0.hc_attn_scale", 4), "d_base": ("L0.hc_attn_base", 4)},
+        26: {"c_base": ("L0.hc_attn_scale", 8), "d_base": ("L0.hc_attn_base", 8)},
+        32: {"a_base": ("L0.attn_sink", 0)},
+        34: {"b_base": ("rope_plain", 0), "d_base": ("rope_plain", 0)},
+        49: {"c_base": ("L0.ffn_norm", 0)},
+        57: {"d_base": ("L0.gate_bias", 0)},
+        67: {"c_base": ("L0.hc_ffn_scale", 0), "d_base": ("L0.hc_ffn_base", 0)},
+        68: {"c_base": ("L0.hc_ffn_scale", 4), "d_base": ("L0.hc_ffn_base", 4)},
+        69: {"c_base": ("L0.hc_ffn_scale", 8), "d_base": ("L0.hc_ffn_base", 8)},
+    }
+    for pc, fields in references.items():
+        for field, (name, offset) in fields.items():
+            assert bound[pc][field] == bases[name] + offset
+            assert plain[pc][field] == offset
+        decoded = isa.decode(isa.encode(full_shape=True, **bound[pc]), full_shape=True)
+        for field in fields:
+            assert decoded[field] == bound[pc][field]
+    for pc, (old, new) in enumerate(zip(plain, bound)):
+        for field, old_value in old.items():
+            if field not in references.get(pc, {}):
+                assert new[field] == old_value
+
+
 def test_compressed_layer_attention_stages_selected_rows_after_window():
     # The exact TP layer-2 program is not yet emitted, but its attention
     # composite already gives the die prefetcher bounded local row addresses.

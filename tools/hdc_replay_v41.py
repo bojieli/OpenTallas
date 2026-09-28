@@ -106,9 +106,19 @@ class ShapeLayout:
     def rname(self, name, j):
         return name
 
-    def __init__(self, s, tp_exact=False):
+    def __init__(self, s, tp_exact=False, constant_bases=None):
         self.s = s
         self.tp_exact = tp_exact
+        self.constant_bases = constant_bases
+        if constant_bases is not None:
+            required = {"rope_plain", "L0.attn_norm", "L0.ffn_norm", "L0.q_norm", "L0.kv_norm",
+                        "L0.attn_sink", "L0.gate_bias", "L0.hc_attn_scale", "L0.hc_attn_base",
+                        "L0.hc_ffn_scale", "L0.hc_ffn_base"}
+            missing = required - constant_bases.keys()
+            if missing:
+                raise ValueError(f"TP layer-0 CROM bases missing: {sorted(missing)}")
+            if any(not isinstance(v, int) or v < 0 or v >= 1 << 30 for v in constant_bases.values()):
+                raise ValueError("CROM bases must be nonnegative 30-bit word addresses")
         G = s["groups"]
         self.G = G
         hd, tp = s["hd"], s["tp"]
@@ -202,6 +212,12 @@ class ShapeLayout:
     def qplace(self, n, k, fp4=0):
         return dict(base=0, n=n, nb=k // 32, tiles=cdiv(n, BL * IL), fp4=fp4, macs=n * k)
 
+    def const(self, name):
+        """CROM word base; an unbound timing/ISA-only layout retains zero."""
+        if self.constant_bases is None:
+            return 0
+        return self.constant_bases[name]
+
 
 class ShapeBuilder(P.Builder):
     """hdc_program_v41.Builder with the reduced literals replaced by shape parameters."""
@@ -257,7 +273,8 @@ class ShapeBuilder(P.Builder):
         m, V_ = self.m, self.V
         Pn, PO, C = {"attn": ("PA", "POA", "CA"), "ffn": ("PF", "POF", "CF")}[wh]
         t = f"L{L}.hc_{wh}"
-        sc = bs = 0
+        sc = self.lay.const(f"L{L}.hc_{wh}_scale")
+        bs = self.lay.const(f"L{L}.hc_{wh}_base")
         common = dict(a_si=1, b_base=V_["RF"], m1=I.M1_AB, c_src=I.SRC_CLO, c_si=1, m2=I.M2_C,
                       d_src=I.SRC_CLO, d_si=1, ad=I.AD_D, dst=I.DST_VM, o_si=1, su_nout=1)
         self.su({"MIX", "RF"}, {Pn}, t, su_nin=4, a_base=V_["MIX"], c_base=sc, d_base=bs, sfu=I.SFU_SIGM,
@@ -332,8 +349,8 @@ class ShapeBuilder(P.Builder):
         rd = self.s["rd"]
         self.su({region}, {region}, tag, pred=pred, su_nout=nh, su_nin=rd,
                 a_base=base + hs - rd, a_so=hs, a_si=1, c_pair=1,
-                b_src=I.SRC_CLO, b_base=0, b_d=dynsel, b_si=1, b_half=1,
-                d_src=I.SRC_CHI, d_base=0, d_d=dynsel, d_si=1,
+                b_src=I.SRC_CLO, b_base=self.lay.const(table), b_d=dynsel, b_si=1, b_half=1,
+                d_src=I.SRC_CHI, d_base=self.lay.const(table), d_d=dynsel, d_si=1,
                 m1=I.M1_AB, qm=I.QM_ALT_PN if inverse else I.QM_ALT_NP, ad=I.AD_Q, rnd=1,
                 dst=I.DST_VM, o_base=base + hs - rd, o_so=hs, o_si=1)
 
@@ -453,9 +470,9 @@ class ShapeBuilder(P.Builder):
                       {"QAL"}, {"QA"}, t + ".q_a_gather")
             self.coll(I.COLL_ALL_GATHER, V_["KVAL"], V_["KVA"], hd // s["tp"],
                       {"KVAL"}, {"KVA"}, t + ".kv_gather")
-        self.rmsnorm("QA", s["q_rank"], 0, "QR", t)
+        self.rmsnorm("QA", s["q_rank"], lay.const(f"L{L}.q_norm"), "QR", t)
         self.linq(lay.qmat[(L, "wq_b")], "QR", "Q", set(), set(), t)
-        self.rmsnorm("KVA", hd, 0, "KVN", t)
+        self.rmsnorm("KVA", hd, lay.const(f"L{L}.kv_norm"), "KVN", t)
         self.rope("KVN", V_["KVN"], 1, hd, table, DY["ROPE"], False, t)
         self.qdq(I.QE_QDQ8, "KVN", hd // 32, V_["KVQ"], {"KVQ"}, t)
         # The full-shape attention adapter owns a bounded local 0..639 row
@@ -503,7 +520,8 @@ class ShapeBuilder(P.Builder):
                       {"S", f"KR{L}"}, {"ACC"}, tp_, me_xcs=IL * STR, me_wsrc=1, me_ts=1, me_ks=hd // W, me_js=0,
                       me_jsh=3, me_xks=1, me_xjs=STR, me_ots=1, me_ojs=hd // W, me_mmode=1, me_d_k=Tn,
                       me_hg=1, me_ogs=IL * hd // W)
-        self.su({"M", "Z"}, {"DEN"}, tsm, su_nout=1, su_nin=hdd, a_src=I.SRC_CLO, a_base=0,
+        self.su({"M", "Z"}, {"DEN"}, tsm, su_nout=1, su_nin=hdd, a_src=I.SRC_CLO,
+                a_base=lay.const(f"L{L}.attn_sink"),
                 a_si=1, b_base=V_["M"], b_si=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, c_base=V_["Z"], c_si=1,
                 e1=I.E1_ADDC, dst=I.DST_VM, o_base=V_["DEN"], o_si=1)
         self.su({"ACC", "DEN"}, {"ACC"}, tsm, su_nout=hdd, su_nin=hd, a_base=V_["ACC"], a_so=hd, a_si=1,
@@ -565,7 +583,7 @@ class ShapeBuilder(P.Builder):
             self.coll(I.COLL_ALL_GATHER, V_["SCL"], V_["SC"], m.n_exp // tp,
                       {"SCL"}, {"SC"}, t + ".router_gather")
         self.su({"SC"}, {"BI"}, t, su_nout=1, su_nin=m.n_exp, a_base=V_["SC"], a_si=1, d_src=I.SRC_CLO,
-                d_base=0, d_si=1, ad=I.AD_D, dst=I.DST_VM, o_base=V_["BI"], o_si=1)
+                d_base=lay.const(f"L{L}.gate_bias"), d_si=1, ad=I.AD_D, dst=I.DST_VM, o_base=V_["BI"], o_si=1)
         self.xu({"BI"}, {"EID"}, t, xu_op=I.XU_SEL, xu_src=V_["BI"], xu_dst=V_["EID"], xu_n=m.n_exp, xu_k=m.k_exp)
         self.su({"SC", "EID"}, {"TOT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1, a_ind=I.IND_I,
                 a_ibase=V_["EID"], red=I.RED_SEQ, r_base=V_["TOT"])
@@ -618,12 +636,12 @@ class ShapeBuilder(P.Builder):
                 self.engram(L)
             self.hc_mix_issue(L, "attn")
             self.hc_pre("PF", "X", f"L{L}.attn_norm", "SS")
-            self.rmsnorm("X", D, 0, "XN", f"L{L}.attn_norm", have_ss="SS")
+            self.rmsnorm("X", D, lay.const(f"L{L}.attn_norm"), "XN", f"L{L}.attn_norm", have_ss="SS")
             self.attention(L, hook=lambda: self.hc_mix_finish(L, "attn"))
             self.hc_post("Y", "POA", "CA", f"L{L}.hc_post")
             self.hc_mix_issue(L, "ffn")
             self.hc_pre("PA", "X", f"L{L}.ffn_norm", "SS")
-            self.rmsnorm("X", D, 0, "XN", f"L{L}.ffn_norm", have_ss="SS")
+            self.rmsnorm("X", D, lay.const(f"L{L}.ffn_norm"), "XN", f"L{L}.ffn_norm", have_ss="SS")
             self.moe(L, hook=lambda: self.hc_mix_finish(L, "ffn"))
             self.hc_post("YALL" if self.tp_exact else "Y", "POF", "CF", f"L{L}.hc_post")
         if head:
@@ -648,7 +666,7 @@ def build(shape, su_lanes=8, engram_inline=True, layers=None, embed=True, head=T
         I.SU_LANES = old
 
 
-def build_tp_layer0(shape=SHIPPED, su_lanes=8, embed=False, head=False):
+def build_tp_layer0(shape=SHIPPED, su_lanes=8, embed=False, head=False, constant_bases=None):
     """First exact TP=4 layer program; other layer types are fail closed.
 
     This is an ISA sequence, not the timing-model program. Its 12 blocking
@@ -660,7 +678,7 @@ def build_tp_layer0(shape=SHIPPED, su_lanes=8, embed=False, head=False):
     old = I.SU_LANES
     I.SU_LANES = su_lanes
     try:
-        return ShapeBuilder(ShapeLayout(shape, tp_exact=True)).build([0], embed, head)
+        return ShapeBuilder(ShapeLayout(shape, tp_exact=True, constant_bases=constant_bases)).build([0], embed, head)
     finally:
         I.SU_LANES = old
 
