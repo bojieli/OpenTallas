@@ -1,6 +1,9 @@
 `timescale 1ns/1ps
-module tb_hdc_qwen_post_tp_scale_hbm(input wire clk);
-    localparam integer PCS=32, TAGW=8, HAW=28, ROWS=4096, BASE=535041;
+module tb_hdc_qwen_post_tp_scale_hbm #(
+    parameter integer ROWS=4096,
+    parameter integer BASE=535041
+)(input wire clk);
+    localparam integer PCS=32, TAGW=8, HAW=28, SECTORS=ROWS/2;
     localparam [HAW-1:0] HBASE=28'h4000000;
     reg rst_n=0, load=0, crom_re=0;
     reg [23:0] crom_addr=0;
@@ -32,7 +35,7 @@ module tb_hdc_qwen_post_tp_scale_hbm(input wire clk);
             0: if (cycles==3) begin rst_n=1; load=1; state=1; end
             1: begin load=0; state=2; end
             2: if (ready) begin
-                if (fault || reads!=2048)
+                if (fault || reads!=SECTORS)
                     $fatal(1,"post-TP HBM preload fault=%0d sectors=%0d",fault,reads);
                 crom_re=1; crom_addr=BASE; i=0; state=3;
             end
@@ -45,7 +48,7 @@ module tb_hdc_qwen_post_tp_scale_hbm(input wire clk);
             4: begin
                 crom_re=0;
                 if (!fault) $fatal(1,"unowned CROM address did not latch fault");
-                $display("PASS Qwen post-TP scale HBM 8192 words 2048 sectors exact prior to unowned-address fault");
+                $display("PASS Qwen CROM HBM words=%0d sectors=%0d exact prior to unowned-address fault",2*ROWS,SECTORS);
                 $finish;
             end
         endcase
@@ -54,7 +57,7 @@ module tb_hdc_qwen_post_tp_scale_hbm(input wire clk);
         rsp_v<=rq_v; rsp_tag<=rq_tag;
         for (p=0;p<PCS;p=p+1) if (rq_v[p]) begin
             sec=rq_addr[p*HAW +: HAW]-HBASE;
-            if (sec<0 || sec>=2048) $fatal(1,"HBM sector out of region %0d",sec);
+            if (sec<0 || sec>=SECTORS) $fatal(1,"HBM sector out of region %0d",sec);
             for (j=0;j<4;j=j+1)
                 rsp_data[p*256+j*64 +:64]<=words[4*sec+j];
             reads=reads+1;

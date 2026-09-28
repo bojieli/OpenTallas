@@ -70,6 +70,12 @@ read timing. A read outside the owned range latches a fault. The record is
 for the two true-scale ranges; it has not yet been connected to the running
 G6144 layer-0 TB or a shared weight/KV controller. Other CROM constants
 remain local, and the all-weight layer/token comparison remains open.
+The full-token binding also materializes the lm-head final norm as 4,096
+64-bit CROM words at base zero. The same bounded source passes an independent
+real-image gate for its 1,024 sectors in
+`results/rtl/qwen_head_norm_hbm.json`. That head source likewise awaits
+the full-token HBM arm and shared-controller service. Neither standalone
+gate changes the matrix-plus-embedding cycle record.
 
 ## Full-shape memory ownership still to close
 
@@ -86,7 +92,7 @@ HBM capacity or traffic measurement.
 | --- | --- | --- |
 | Signed INT8 q/k/v, o, gate/up, down and lm-head codes; BF16 matrix row scales | PC-local sectors for the reduced matrices | Bind every layer, die, lm-head and complete-round chunk to code/scale addresses; share eight package stacks with KV. |
 | Embedding INT8 row and BF16 row scale | One token row per die through a two-bank HBM row source | Bind the checkpoint's full TP-2 embedding range, row ownership and 17-bit token IDs. |
-| O/down BF16 scales applied after TP reduction; other CROM weights, biases and norm constants | Local CROM in both reduced arms; real layer-0 scale source passes standalone | Connect the true-scale source to the exact layer program, then classify every other CROM range and fetch all weight-dependent ranges from HBM at the same arithmetic and rounding points. |
+| O/down BF16 scales applied after TP reduction; lm-head final norm; other CROM weights, biases and norm constants | Local CROM in both reduced arms; real layer-0 true scales and full-token head norm pass separate standalone HBM sources | Connect both sources to exact layer/head programs, then classify every other CROM range and fetch all weight-dependent ranges from HBM at the same arithmetic and rounding points. |
 | RoPE tables or angle constants and program/descriptor metadata | Local constant/program images | Price storage and access, including any HBM-resident portions, without silently omitting traffic. |
 | FP8 KV and scales, attention state and user/position metadata | Same local behavioural KV in both arms | Include actual HBM reads/writes, cache occupancy, four-stack-per-die arbitration with weights, and context limits. |
 | Activation/accumulator SRAM, masks, queues, double buffers and DFlash speculative state | Reduced VM and package state only | Bind finite capacity, ports, fill/drain and any HBM spills; count both producer work and accepted output. |
@@ -95,6 +101,24 @@ Qwen has no DeepSeek Engram or index table; those belong to the separate V4.1
 memory ledger. The proposed compute-cluster plan also requires a complete
 finite-resource schedule, local placement and routed memory views before an
 O4 rate or iso-area comparison can be promoted.
+
+The finite source budget for one active die is at least a 512-word, 48 MiB
+INT8 code window for an uninterrupted gate/up K round; the emitted layer-0
+matrix scale bank is 1,488 32-byte words in the compact full-token binding
+(47,616 bytes), while its code bank is 992 98,304-byte words. The head uses
+3,168 code words and 4,752 scale words, scheduled in seven complete-round
+chunks. A post-TP true-scale region adds 64 KiB per layer/die and the final
+head norm adds 32 KiB; the two-row embedding cache needs at least 8 KiB of
+codes plus scales per die at H=4096. These are logical storage and transfer
+bounds before macro depth waste, ECC, tags, ports or wire area.
+
+For a physical HBM-only arm, the four stacks on each die must share their
+32 PCs per stack among matrix codes, row scales, CROM ranges, embedding and
+FP8 KV. Each request therefore needs a source ID, region, sector address,
+operation generation and response tag; bounded per-PC credits must prevent
+one source from bypassing another's measured queue. Current RTL sources
+preload independently and have no such arbiter. Their sector counts establish
+layout and exactness, not simultaneous service or a sustainable token rate.
 
 For shipped shape, one indivisible qkv K round consumes 128 code words and
 one gate/up round consumes 512. A 512-word PC-local window therefore needs
