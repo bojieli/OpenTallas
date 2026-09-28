@@ -24,14 +24,19 @@ local row and explicit source ID. A full packed row is exposed for an eventual
 four-lane attention stream merger, while element reads return both the FP8
 code and its exact FP32 expansion to the existing core-style KV read port.
 
-The generated combinational decoder enumerates every finite E2M1-code and
-E4M3FN-scale pair using the exact-rational reference. Its output is finite
-E4M3FN with RNE saturation and canonical positive zero. A NaN scale poisons
-the row. `tools/rtl_v41_ckv_selected_campaign.py` checks that the generated
-decoder and fixtures are current, then runs a standalone RTL test against the
-golden: two 512-element selected rows on different stacks, 1,024 matching FP8
-and FP32 reads, 18 valid HBM sectors, rejection of unpublished, window-prefix,
-and poisoned source reads, plus a remote-die request without a local HBM read.
+The factored combinational decoder multiplies two short integer significands,
+then performs exact E4M3FN RNE and finite saturation. It canonicalizes signed
+zero. A NaN scale poisons the row. The exact-rational reference generates an
+exhaustive truth fixture for all 4,096 code/scale pairs; the RTL matches every
+FP8 result and FP32 expansion. Generic Yosys 0.68 synthesis reports 339 cells
+for one decoder (no placed area or timing claim).
+The source-pinned generic synthesis record is
+`results/rtl/v41x_ckv_decode_synth.json`.
+`tools/rtl_v41_ckv_selected_campaign.py` checks that fixtures are current and
+runs a standalone DMA test against the golden: two 512-element selected rows on
+different stacks, 1,024 matching FP8 and FP32 reads, 18 valid HBM sectors,
+rejection of unpublished, window-prefix, and poisoned source reads, plus a
+remote-die request without a local HBM read.
 The source-pinned record is
 `results/rtl/v41x_ckv_selected_dma.json`.
 
