@@ -58,8 +58,6 @@ def run(scratch: Path) -> dict:
         "rtl/rom/ot_rom_oneshot_px.sv",
         "rtl/hdc/ot_hdc_fastfp.sv",
         "rtl/proto/ot_fp32_add_rne_pipe.sv",
-        "rtl/chip/ot_chip_v41x_coll_dma.sv",
-        "rtl/chip/ot_chip_v41x_die.sv",
         "tools/hdc_golden.py",
         "results/arch/v41_lanes.json",
     )
@@ -78,11 +76,12 @@ def run(scratch: Path) -> dict:
     bits_per_record = 512 + 3 + 32
     return dict(
         schema="v41_collective_depth_campaign_v1",
-        scope="adopted-width one-shot engine and behavioural links; stage timing stub, not full token or P&R",
+        scope="one-shot engine and behavioural links; stage timing stub, die and DMA not instantiated; no full token or P&R claim",
         source_sha256={p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in pins},
         contract=dict(N=4, FLIT_BYTES=64, CL_LANES=16, RELAY=1, ADD_LAT=3,
                       PAIRWISE=1, GW=1, PUSHW=1, QTX=2, blocked_COLL_v1=True,
                       selected_full_shape_CL_DEPTH=128, reduced_CL_DEPTH=16,
+                      die_default_checked_by_test=True,
                       receive_fifo_bits_at_16=4 * 16 * bits_per_record,
                       receive_fifo_bits_at_128=4 * 128 * bits_per_record),
         link=link, cases=cases, summary=by_pattern,
