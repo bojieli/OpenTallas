@@ -213,9 +213,9 @@ def karb_pc1_pipe_m9(slew_repair: bool = False, slew_margin: bool = False,
                           "scope": "one PC with NPC=1; excludes full 32-way K demux/response mux"}}
 
 
-def karb_pc_local_fit_m9() -> dict:
+def karb_pc_local_fit_m9(height_um: float = 17.28) -> dict:
     """The actual request-only PC child used in the exact four-PC group RTL."""
-    w, h = PHY_PC_WINDOW_UM, 17.28
+    w, h = PHY_PC_WINDOW_UM, height_um
     m = 8 * ROW_UM
     args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb_pc_local",
             "--source", "rtl/chip/ot_chip_v41x_hbm_karb_pc_local.sv",
@@ -230,8 +230,9 @@ def karb_pc_local_fit_m9() -> dict:
             "--pin-region", "^k_(v|rdy|addr|len|tag|we|wdata|wstrb|wr_done).*=top:210-370",
             "--pin-region", r"^(k_grants|b_grants|contended)\[\d+\]$=bottom:210-370",
             "--pin-region", r"^(clk|rst_n)$=left:5-12"]
-    return {"args": args, "nickname": "codex_v41x_karb_pc_local_fit_m9",
-            "output": "results/asap7_physical/v41x_die_karb_pc_local_fit_m9/physical.json",
+    name = "karb_pc_local_budget_m9" if h <= 17.01 else "karb_pc_local_fit_m9"
+    return {"args": args, "nickname": f"codex_v41x_{name}",
+            "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM,
                           "scope": "one request-only PC child; group response and trunk omitted"}}
 
@@ -665,6 +666,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_pc1_pipe_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True),
          "karb_pc1_pipe_fit_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True, fit_height=True),
          "karb_pc_local_fit_m9": karb_pc_local_fit_m9,
+         "karb_pc_local_budget_m9": lambda: karb_pc_local_fit_m9(height_um=17.01),
          "karb_group4_m9": karb_group4_m9,
          "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
          "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
