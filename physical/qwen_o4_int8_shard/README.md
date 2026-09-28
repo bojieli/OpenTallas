@@ -5,8 +5,13 @@ beside 32 signed-INT8 product lanes and one post-accumulation row-scale path.
 The first 256 ROM output bits provide 32 codes (two 16-lane O4 groups); ten
 bits are spare. It runs at the O4 0.92 ns target. The top-level lane selector
 keeps all 32 products live while bounding I/O pins; it is a probe-specific
-path, not the O4 reduction tree. The product-valid timing is not a functional
-token test.
+path, not the O4 reduction tree. The shard now registers the ROM output before
+INT8 decode, matching `ot_hdc_matvec`'s `mq_wrom` boundary. Request valid,
+BF16 activation, and lane select are delayed with their code word. The focused
+stream test (`python3 tools/rtl_qwen_o4_int8_shard_pipeline.py`) changes ROM
+address, selected lane and activation each cycle and checks 112 exact signed
+INT8 products, including 64 consecutive requests, with seven-edge response latency. The
+test covers this bounded arithmetic path, not a complete token.
 
 The source-pinned O4 design record requires 6,144 groups × 16 codes =
 98,304 code bytes read per die per cycle. If this 256-useful-bit macro were
