@@ -39,6 +39,17 @@ vector memory, global preload tree, or a cluster scheduler. Any positive
 route is an operand-delivery gate, not a complete compute-cluster or token-rate
 result.
 
+The source-pinned four-consumer placement record is
+[`placed_failure.json`](../results/physical_abi3/asap7/chip/v41_me_cluster4_phy/placed_failure.json).
+It places all 16 macros, retains four full-width outputs and assigns 10,422
+pins to 22,852 sites, but post-resize setup misses the 0.92 ns target by
+0.501 ns. The worst path runs from an FP32 input through the one-stage
+converter's saturation reduction to its status register; the next converter
+data path misses by 0.276 ns. The flow stopped before CTS and route, so this
+record does not establish multicast timing or final physical cost. The ME
+owner is testing a two-stage converter and input-registered SRAM boundary;
+those changes require a new cluster gate if adopted.
+
 The checkpoint wo_a ACC base is 74,272 FP32 elements, 32 modulo 64. Its four
 physical VM banks naturally present each 64-element beat in the order
 `[logical 32:47, 48:63, 0:15, 16:31]`. The converter preserves that bank
