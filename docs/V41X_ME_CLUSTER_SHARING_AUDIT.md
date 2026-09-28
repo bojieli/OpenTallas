@@ -44,10 +44,16 @@ order and produces 1024 BF16 bits, position, element offset and fault flags
 one cycle later. Thus two K4096 `wo_a` groups have a 128-cycle VM read-issue
 floor, plus VM read latency, conversion, store write and any barriers. The
 existing four-wide adapter consumes 2048 LOAD issue cycles for those two
-groups. This is a **potential LOAD saving**, not measured token-rate gain.
-The converter's standalone real ACC gate and physical result are separate
-records. The full VM read selector, finite port schedule, multicast, and
-shared-adapter exact gate are still required.
+groups. The checkpoint-backed matched shared-adapter gate now measures the
+isolated LOAD saving: `results/rtl/hdc_v41x_fullshape_woa_preload_matched.json`
+binds the same source and fixtures for 2048/2048 exact raw FP32 rows,
+133261 cycles with four-wide LOAD versus 131345 cycles with bank-major
+64-wide preload, a reduction of 1916 cycles (1.44%) for this two-group op.
+Both arms make 131108 weight-bank reads. The wide arm issues and writes
+128 preload beats, rotates physical VM bank quarters by two, and charges its
+converter and store latency. This is **not a token-rate gain**: the TB supplies
+the four VM words and the actual controller/read selector, finite port
+schedule, 41-consumer multicast and full cluster route still need gates.
 
 At 83,328 BF16 MAC/cycle, one store per 64-MAC tile would imply about 1302
 stores and 81.07 mm² of SRAM outlines, incompatible with the design's 3.41
