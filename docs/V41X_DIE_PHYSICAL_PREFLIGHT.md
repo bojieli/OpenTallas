@@ -58,22 +58,28 @@ cannot validate the adopted capacity/area envelope.
 The first independent physical route is the die's 32-pseudo-channel
 `ot_chip_v41x_hbm_karb`, which arbitrates pooled index keys and attention KV
 against one HBM stack. This is real die-side control RTL with no behavioural
-memory array. Route at 920 ps with a 20% I/O delay allocation; record the
-source commit, setup/hold, congestion, DRC and area in
-`results/physical_abi3/asap7/chip/v41x_hbm_karb/physical.json`. It tests one
-stack's arbitration only. It does not validate the four-stack HBM PHY,
-cross-die wires, die clock or whole-chip power.
+memory array. The source-pinned 920 ps, 20%-I/O-delay ORFS attempt is recorded
+as **error** in `results/physical_abi3/asap7/chip/v41x_hbm_karb/physical.json`.
+It provides no routed setup, hold, congestion, DRC or power result.
 
 The first ASAP7 synthesis of that exact default `NPC=32` top has **40,332
 flattened I/O bits**, 52,812 standard-cell instances and 4,847.56 µm² of
 standard-cell area (`v41-die-karb-route/orfs/logs/.../1_synth.json`, kept outside
 this tree). The I/O bits are the B/K/H request and response buses at an
-artificial standalone boundary. A pin planner sized by cell area alone may
-be infeasible or require a large low-utilisation floorplan. A routable physical
-partition should keep each pseudo-channel's B/H buses local beside the HBM
-PHY strip and cross region boundaries with registered narrower trunks. The
-standalone route is a pin and timing diagnostic, not an area estimate for the
-whole die.
+artificial standalone boundary. The ORFS floorplan was 14,807.5 µm² die area
+with a 486.74 µm perimeter and 35.3% core utilisation; pre-placement setup
+WNS was −213.844 ps, which is not a routed timing result. Global placement
+completed, then OpenROAD pin placement failed with `PPL-0024`: **40,332 pins
+exceed 5,008 available positions; the required perimeter is 3,871.87 µm**,
+7.96× the generated perimeter. Enlarging a square block to that perimeter
+would require about 0.94 mm², leaving roughly 0.5% utilisation for the
+4,847.56 µm² of logic. That would be a misleading block-level area result.
+A routable physical partition should keep each pseudo-channel's B/H buses
+local beside the HBM PHY strip and cross region boundaries with registered
+narrower trunks. The standalone attempt is a pin and timing diagnostic, not
+an area estimate for the whole die. It tests one stack's arbitration boundary
+only; it does not validate the four-stack HBM PHY, cross-die wires, die clock
+or whole-chip power.
 
 The route dependency order is:
 
