@@ -133,8 +133,17 @@ module tb_chip_v41x_window_kv_prefetch;
         if (!fault || !fault_code[0]) begin
             $display("STALE ROW NOT REJECTED"); errors = errors + 1;
         end
-        $display("WINDOW_KV rows=%0d blocks=%0d reads=%0d writes=%0d stale_fault=%0d errors=%0d",
-                 st_rows, st_blocks, st_reads, st_writes, fault_code[0], errors);
+        // A third user has no reserved sector slice; reject before issuing.
+        user_id = 2;
+        @(negedge clk); blk_row = 0; blk_idx = 0; blk_codes = {32{8'h38}};
+        blk_scale = 8'h7f; blk_v = 1;
+        @(negedge clk); blk_v = 0;
+        @(negedge clk);
+        if (!fault_code[1] || st_writes != 96) begin
+            $display("UNRESERVED USER NOT REJECTED"); errors = errors + 1;
+        end
+        $display("WINDOW_KV rows=%0d blocks=%0d reads=%0d writes=%0d stale_fault=%0d region_fault=%0d errors=%0d",
+                 st_rows, st_blocks, st_reads, st_writes, fault_code[0], fault_code[1], errors);
         if (errors == 0 && st_rows == 3 && st_blocks == 48 && st_reads == 51 && st_writes == 96)
             $display("PASS");
         else $display("FAIL");

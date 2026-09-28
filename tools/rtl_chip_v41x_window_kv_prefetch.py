@@ -41,7 +41,7 @@ def run(output: Path = OUTPUT):
     values = {key: int(value) for key, value in fields.items()}
     assert values == {
         "rows": 3, "blocks": 48, "reads": 51, "writes": 96,
-        "stale_fault": 1, "errors": 0,
+        "stale_fault": 1, "region_fault": 1, "errors": 0,
     }, values
     result = {
         "status": "pass",
