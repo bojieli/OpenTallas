@@ -92,6 +92,7 @@ def export(golden_dir: Path, output_dir: Path, record: Path) -> dict:
                          "output_sha256": shard["output_sha256"],
                          "trace_sha256": shard["trace_sha256"]},
         "weight_image_wo_a_sha256": image["files"]["w.wo_a"]["sha256"],
+        "weight_image_wo_a_scale_sha256": image["files"]["w.wo_a.scale"]["sha256"],
         "checkpoint_revision": C.HF.name,
         "checkpoint_index_sha256": sha((C.HF / "model.safetensors.index.json").read_bytes()),
         "golden_model_init_sha256": init_pin,
