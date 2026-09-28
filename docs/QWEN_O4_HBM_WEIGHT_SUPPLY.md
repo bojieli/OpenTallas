@@ -47,6 +47,12 @@ source-pinned in `results/rtl/qwen_int8_scale_base.json`. A full-shape chunked
 emitter and package token gate using this mode are still pending. At 512 words
 and 32 PCs, each PC tracks 49,152 code sectors, so the response tag must be
 at least 17 bits including its code/scale selector.
+The source-pinned area sensitivity in
+`results/rtl/qwen_o4_hbm_weight_preflight.json` gives 16.7 mm² per die for
+48 MiB at the architecture budget's modeled KV-buffer density. This is only
+a density proxy. The PC bank macros, code/scale muxes, response tags, wiring,
+power and route are unpriced, so the iso-area HBM comparison remains
+conditional on their physical implementation.
 The source also needs an operation-drain protocol or double buffering before
 overlapping the next preload with current code and scale reads. Full-shape
 bit-exact timing and placement are therefore open.

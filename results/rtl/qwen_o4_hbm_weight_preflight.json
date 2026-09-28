@@ -30,13 +30,13 @@
     "weight_port": "BF16-only ot_hdc_core_whbm.wrom_q; O4 core has independent INT8 code and BF16 scale ports"
   },
   "input_sha256": {
-    "results/arch/qwen3_budget.json": "3c24f28e153fbab435d137525a23b6a7e45c9f55eec75bcb980f430399e733b1",
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
     "rtl/hdc/hbm/ot_hdc_wstream.sv": "70393355dc96dc834fa5e94e75580756ce1a0276c3f9385f98dca7515526f81d",
-    "rtl/hdc/ot_hdc_core_vector_weight.sv": "d7fc20aa119b64662558ec3a12d67944ec4d344ed8a819c4571b246388842603",
-    "rtl/hdc/ot_hdc_matvec.sv": "803131c1b3e539c883fb74722c5a296f96eff2808f9089d52615c2437fda314c",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "7eb165a19f7937b5cf1fb123c768f80ae1e24f49b86d17c7285bdfef5a90476e",
+    "rtl/hdc/ot_hdc_matvec.sv": "8d2b8fe92887e1b7475ea9a31ef24dbd49d76856f7dbfd5d8af81cb802241a53",
     "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
     "tools/hdc_qwen_int8_image.py": "ce1e699514eeb80344b68e6dbdbfeee2c85bbb8d4f75bf06e672b7350b26f606",
-    "tools/qwen_o4_hbm_weight_preflight.py": "8a021c395014d760d9f7f2e1dee2e9b35c76159a5b62f9c790f38005d7b52051"
+    "tools/qwen_o4_hbm_weight_preflight.py": "e7d3032d2cb912c5a0c5a0a579dd2e6e5c2d7448acdb355cf49583d6683df64b"
   },
   "matrix_traffic_per_die": [
     {
@@ -145,6 +145,16 @@
       "sectors": 6144,
       "sha256": "f45b39df1940217df1391f7a7c6bfca59462d66142d8786dd0f0ddfd774e888c"
     }
+  },
+  "staging_area_sensitivity": {
+    "boundary": "KV-buffer density is a budget proxy only. PC-local SRAM macro area, code/scale muxes, tag RAM, wiring, power and route are not measured; do not use the iso-area HBM headline as physically closed.",
+    "code_window_bytes_per_die": 50331648,
+    "code_window_mib_per_die": 48.0,
+    "code_window_mm2_at_kv_buffer_density": 16.692695319366276,
+    "minimum_indivisible_gate_up_round_words": 512,
+    "proxy_kv_buffer_bytes": 19297216.0,
+    "proxy_kv_buffer_mm2": 6.4,
+    "status": "conditional_unpriced"
   },
   "status": "pass"
 }

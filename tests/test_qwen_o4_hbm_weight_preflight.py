@@ -19,6 +19,11 @@ def test_o4_hbm_address_and_controller_contract():
     assert gate["existing_wstream_incompatibilities"]["minimum_prefetch_bytes_for_longest_unstalled_op_at_stated_hbm_bw"] > gate["existing_wstream_incompatibilities"]["default_window_bytes_if_scaled_to_full_o4_word"]
     assert gate["package"]["rom_word_identical_weight_and_kv_bytes_per_token"] > gate["package"]["model_hbm_bytes_per_token_including_kv"]
     assert gate["sector_roundtrip"]["code_endpoints"] == [-128, -1, 0, 1, 127]
+    area = gate["staging_area_sensitivity"]
+    assert area["code_window_bytes_per_die"] == 512 * 98_304
+    assert area["code_window_mib_per_die"] == 48
+    assert 16 < area["code_window_mm2_at_kv_buffer_density"] < 17
+    assert area["status"] == "conditional_unpriced"
 
 
 def test_padding_changes_with_actual_tiling():
