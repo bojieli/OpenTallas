@@ -98,6 +98,7 @@ module tb_chip_v41x_window_kv_prefetch;
         end
     endtask
     integer idx;
+    integer context_fault_seen = 0;
     reg [4223:0] expected_row;
     initial begin
         for (idx = 0; idx < BASE+COUNT; idx = idx + 1) mem[idx] = 0;
@@ -145,6 +146,17 @@ module tb_chip_v41x_window_kv_prefetch;
         check_elem(0, 32, 32'h40000000);
         if (mem[BASE+2176] !== {32{8'h38}}) errors = errors + 1;
         user_id = 0;
+        for (idx = 0; idx < 16; idx = idx + 1) push_block(1048575, idx);
+        fetch_row(1048575);
+        check_elem(1048575, 511, 32'h3f800000);
+        @(negedge clk); blk_row = 21'(1048576); blk_idx = 0;
+        blk_codes = {32{8'h38}}; blk_scale = 8'h7f; blk_v = 1;
+        @(negedge clk); blk_v = 0;
+        @(negedge clk);
+        context_fault_seen = fault_code[1] && st_writes == 128;
+        if (!context_fault_seen) begin
+            $display("1M BOUNDARY NOT REJECTED"); errors = errors + 1;
+        end
         @(negedge clk); prefetch_row = 0; prefetch_v = 1;
         @(negedge clk); prefetch_v = 0;
         @(negedge clk);
@@ -157,12 +169,12 @@ module tb_chip_v41x_window_kv_prefetch;
         blk_scale = 8'h7f; blk_v = 1;
         @(negedge clk); blk_v = 0;
         @(negedge clk);
-        if (!fault_code[1] || st_writes != 96) begin
+        if (!fault_code[1] || st_writes != 128) begin
             $display("UNRESERVED USER NOT REJECTED"); errors = errors + 1;
         end
-        $display("WINDOW_KV rows=%0d blocks=%0d reads=%0d writes=%0d stale_fault=%0d region_fault=%0d errors=%0d",
-                 st_rows, st_blocks, st_reads, st_writes, fault_code[0], fault_code[1], errors);
-        if (errors == 0 && st_rows == 4 && st_blocks == 48 && st_reads == 68 && st_writes == 96)
+        $display("WINDOW_KV rows=%0d blocks=%0d reads=%0d writes=%0d stale_fault=%0d region_fault=%0d context_fault=%0d errors=%0d",
+                 st_rows, st_blocks, st_reads, st_writes, fault_code[0], fault_code[1], context_fault_seen, errors);
+        if (errors == 0 && st_rows == 5 && st_blocks == 64 && st_reads == 85 && st_writes == 128)
             $display("PASS");
         else $display("FAIL");
         $finish;

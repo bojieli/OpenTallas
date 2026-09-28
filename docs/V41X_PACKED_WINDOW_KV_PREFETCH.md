@@ -24,7 +24,8 @@ bench and writes `results/rtl/chip_v41x_window_kv_prefetch.json`. It checks
 48 atomic block commits across three written rows and two users, one preloaded
 row restored by priming, 17 sectors per fetched row, exact FP32 values at a
 scale boundary, user-region separation,
-the HBM code and scale bytes, and eviction at the 128-row ring wrap. The
+the HBM code and scale bytes, the largest valid 1M-context position, rejection
+of position 1,048,576, and eviction at the 128-row ring wrap. The
 standalone row codec gate separately checks
 the exact deployed golden quantization and thousands of packed decode
 vectors.

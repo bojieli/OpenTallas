@@ -40,8 +40,8 @@ def run(output: Path = OUTPUT):
     fields = dict(part.split("=", 1) for part in stat.split()[1:])
     values = {key: int(value) for key, value in fields.items()}
     assert values == {
-        "rows": 4, "blocks": 48, "reads": 68, "writes": 96,
-        "stale_fault": 1, "region_fault": 1, "errors": 0,
+        "rows": 5, "blocks": 64, "reads": 85, "writes": 128,
+        "stale_fault": 1, "region_fault": 1, "context_fault": 1, "errors": 0,
     }, values
     result = {
         "status": "pass",
