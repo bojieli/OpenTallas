@@ -1,0 +1,1225 @@
+{
+  "schema": "opentallas.v41.stage_owner_preflight.v1",
+  "status": "coarse_integer_candidate_not_executable",
+  "claim_boundary": "Whole routed-expert ID candidate from coarse checkpoint bytes only; no tensor image, stage program, data-dependent schedule, inter-stage packet or bit-exact RTL proof.",
+  "source_sha256": {
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
+    "tools/v41_stage_owner_preflight.py": "b3202f16f1a66a52df98c55bde7db7e7ee2bfefd322330ee9e6f8b9b874095f1"
+  },
+  "stage_count": 28,
+  "expert_count": 384,
+  "cut_count": 27,
+  "cuts": [
+    {
+      "layer": 1,
+      "from_stage": 0,
+      "to_stage": 1,
+      "fluid_expert_cut": 151.77813885971054,
+      "integer_expert_cut": 152,
+      "earlier_expert_ids": [
+        0,
+        151
+      ],
+      "later_expert_ids": [
+        152,
+        383
+      ],
+      "earlier_stage_added_bytes": 4171131.4285716773
+    },
+    {
+      "layer": 2,
+      "from_stage": 1,
+      "to_stage": 2,
+      "fluid_expert_cut": 320.11865304281434,
+      "integer_expert_cut": 321,
+      "earlier_expert_ids": [
+        0,
+        320
+      ],
+      "later_expert_ids": [
+        321,
+        383
+      ],
+      "earlier_stage_added_bytes": 16569886.857142927
+    },
+    {
+      "layer": 4,
+      "from_stage": 2,
+      "to_stage": 3,
+      "fluid_expert_cut": 96.27533220753585,
+      "integer_expert_cut": 97,
+      "earlier_expert_ids": [
+        0,
+        96
+      ],
+      "later_expert_ids": [
+        97,
+        383
+      ],
+      "earlier_stage_added_bytes": 13624218.285713121
+    },
+    {
+      "layer": 5,
+      "from_stage": 3,
+      "to_stage": 4,
+      "fluid_expert_cut": 265.4771889832321,
+      "integer_expert_cut": 266,
+      "earlier_expert_ids": [
+        0,
+        265
+      ],
+      "later_expert_ids": [
+        266,
+        383
+      ],
+      "earlier_stage_added_bytes": 9829181.714287048
+    },
+    {
+      "layer": 7,
+      "from_stage": 4,
+      "to_stage": 5,
+      "fluid_expert_cut": 41.63386814795345,
+      "integer_expert_cut": 42,
+      "earlier_expert_ids": [
+        0,
+        41
+      ],
+      "later_expert_ids": [
+        42,
+        383
+      ],
+      "earlier_stage_added_bytes": 6883513.142860449
+    },
+    {
+      "layer": 8,
+      "from_stage": 5,
+      "to_stage": 6,
+      "fluid_expert_cut": 209.97438233105754,
+      "integer_expert_cut": 210,
+      "earlier_expert_ids": [
+        0,
+        209
+      ],
+      "later_expert_ids": [
+        210,
+        383
+      ],
+      "earlier_stage_added_bytes": 481628.5714263562
+    },
+    {
+      "layer": 9,
+      "from_stage": 6,
+      "to_stage": 7,
+      "fluid_expert_cut": 379.1762391067538,
+      "integer_expert_cut": 380,
+      "earlier_expert_ids": [
+        0,
+        379
+      ],
+      "later_expert_ids": [
+        380,
+        383
+      ],
+      "earlier_stage_added_bytes": 15487231.999999749
+    },
+    {
+      "layer": 11,
+      "from_stage": 7,
+      "to_stage": 8,
+      "fluid_expert_cut": 155.33291827147514,
+      "integer_expert_cut": 156,
+      "earlier_expert_ids": [
+        0,
+        155
+      ],
+      "later_expert_ids": [
+        156,
+        383
+      ],
+      "earlier_stage_added_bytes": 12541563.428573683
+    },
+    {
+      "layer": 12,
+      "from_stage": 8,
+      "to_stage": 9,
+      "fluid_expert_cut": 324.5347750471714,
+      "integer_expert_cut": 325,
+      "earlier_expert_ids": [
+        0,
+        324
+      ],
+      "later_expert_ids": [
+        325,
+        383
+      ],
+      "earlier_stage_added_bytes": 8746526.857147075
+    },
+    {
+      "layer": 14,
+      "from_stage": 9,
+      "to_stage": 10,
+      "fluid_expert_cut": 91.45157131428925,
+      "integer_expert_cut": 92,
+      "earlier_expert_ids": [
+        0,
+        91
+      ],
+      "later_expert_ids": [
+        92,
+        383
+      ],
+      "earlier_stage_added_bytes": 10310810.285720887
+    },
+    {
+      "layer": 15,
+      "from_stage": 10,
+      "to_stage": 11,
+      "fluid_expert_cut": 260.65342808998554,
+      "integer_expert_cut": 261,
+      "earlier_expert_ids": [
+        0,
+        260
+      ],
+      "later_expert_ids": [
+        261,
+        383
+      ],
+      "earlier_stage_added_bytes": 6515773.714294277
+    },
+    {
+      "layer": 17,
+      "from_stage": 11,
+      "to_stage": 12,
+      "fluid_expert_cut": 36.81010725470767,
+      "integer_expert_cut": 37,
+      "earlier_expert_ids": [
+        0,
+        36
+      ],
+      "later_expert_ids": [
+        37,
+        383
+      ],
+      "earlier_stage_added_bytes": 3570105.1428528503
+    },
+    {
+      "layer": 18,
+      "from_stage": 12,
+      "to_stage": 13,
+      "fluid_expert_cut": 206.01196403040393,
+      "integer_expert_cut": 207,
+      "earlier_expert_ids": [
+        0,
+        206
+      ],
+      "later_expert_ids": [
+        207,
+        383
+      ],
+      "earlier_stage_added_bytes": 18575708.57142664
+    },
+    {
+      "layer": 19,
+      "from_stage": 13,
+      "to_stage": 14,
+      "fluid_expert_cut": 375.2138208061002,
+      "integer_expert_cut": 376,
+      "earlier_expert_ids": [
+        0,
+        375
+      ],
+      "later_expert_ids": [
+        376,
+        383
+      ],
+      "earlier_stage_added_bytes": 14780672.000000035
+    },
+    {
+      "layer": 21,
+      "from_stage": 14,
+      "to_stage": 15,
+      "fluid_expert_cut": 150.78802448062464,
+      "integer_expert_cut": 151,
+      "earlier_expert_ids": [
+        0,
+        150
+      ],
+      "later_expert_ids": [
+        151,
+        383
+      ],
+      "earlier_stage_added_bytes": 3985275.4285891238
+    },
+    {
+      "layer": 22,
+      "from_stage": 15,
+      "to_stage": 16,
+      "fluid_expert_cut": 319.9898812563217,
+      "integer_expert_cut": 320,
+      "earlier_expert_ids": [
+        0,
+        319
+      ],
+      "later_expert_ids": [
+        320,
+        383
+      ],
+      "earlier_stage_added_bytes": 190238.85714755394
+    },
+    {
+      "layer": 24,
+      "from_stage": 16,
+      "to_stage": 17,
+      "fluid_expert_cut": 95.8499917935929,
+      "integer_expert_cut": 96,
+      "earlier_expert_ids": [
+        0,
+        95
+      ],
+      "later_expert_ids": [
+        96,
+        383
+      ],
+      "earlier_stage_added_bytes": 2820250.2857054635
+    },
+    {
+      "layer": 25,
+      "from_stage": 17,
+      "to_stage": 18,
+      "fluid_expert_cut": 265.0518485692884,
+      "integer_expert_cut": 266,
+      "earlier_expert_ids": [
+        0,
+        265
+      ],
+      "later_expert_ids": [
+        266,
+        383
+      ],
+      "earlier_stage_added_bytes": 17825853.714294083
+    },
+    {
+      "layer": 27,
+      "from_stage": 18,
+      "to_stage": 19,
+      "fluid_expert_cut": 41.2085277340105,
+      "integer_expert_cut": 42,
+      "earlier_expert_ids": [
+        0,
+        41
+      ],
+      "later_expert_ids": [
+        42,
+        383
+      ],
+      "earlier_stage_added_bytes": 14880185.14285279
+    },
+    {
+      "layer": 28,
+      "from_stage": 19,
+      "to_stage": 20,
+      "fluid_expert_cut": 210.11381588225498,
+      "integer_expert_cut": 211,
+      "earlier_expert_ids": [
+        0,
+        210
+      ],
+      "later_expert_ids": [
+        211,
+        383
+      ],
+      "earlier_stage_added_bytes": 16660828.571441682
+    },
+    {
+      "layer": 29,
+      "from_stage": 20,
+      "to_stage": 21,
+      "fluid_expert_cut": 379.31567265795206,
+      "integer_expert_cut": 380,
+      "earlier_expert_ids": [
+        0,
+        379
+      ],
+      "later_expert_ids": [
+        380,
+        383
+      ],
+      "earlier_stage_added_bytes": 12865792.000000114
+    },
+    {
+      "layer": 31,
+      "from_stage": 21,
+      "to_stage": 22,
+      "fluid_expert_cut": 155.47235182267258,
+      "integer_expert_cut": 156,
+      "earlier_expert_ids": [
+        0,
+        155
+      ],
+      "later_expert_ids": [
+        156,
+        383
+      ],
+      "earlier_stage_added_bytes": 9920123.42858901
+    },
+    {
+      "layer": 32,
+      "from_stage": 22,
+      "to_stage": 23,
+      "fluid_expert_cut": 324.37763997091866,
+      "integer_expert_cut": 325,
+      "earlier_expert_ids": [
+        0,
+        324
+      ],
+      "later_expert_ids": [
+        325,
+        383
+      ],
+      "earlier_stage_added_bytes": 11700766.857147714
+    },
+    {
+      "layer": 34,
+      "from_stage": 23,
+      "to_stage": 24,
+      "fluid_expert_cut": 100.53431913564083,
+      "integer_expert_cut": 101,
+      "earlier_expert_ids": [
+        0,
+        100
+      ],
+      "later_expert_ids": [
+        101,
+        383
+      ],
+      "earlier_stage_added_bytes": 8755098.285705617
+    },
+    {
+      "layer": 35,
+      "from_stage": 24,
+      "to_stage": 25,
+      "fluid_expert_cut": 269.7361759113363,
+      "integer_expert_cut": 270,
+      "earlier_expert_ids": [
+        0,
+        269
+      ],
+      "later_expert_ids": [
+        270,
+        383
+      ],
+      "earlier_stage_added_bytes": 4960061.714293971
+    },
+    {
+      "layer": 37,
+      "from_stage": 25,
+      "to_stage": 26,
+      "fluid_expert_cut": 45.59628644860745,
+      "integer_expert_cut": 46,
+      "earlier_expert_ids": [
+        0,
+        45
+      ],
+      "later_expert_ids": [
+        46,
+        383
+      ],
+      "earlier_stage_added_bytes": 7590073.142852816
+    },
+    {
+      "layer": 38,
+      "from_stage": 26,
+      "to_stage": 27,
+      "fluid_expert_cut": 214.79814322430454,
+      "integer_expert_cut": 215,
+      "earlier_expert_ids": [
+        0,
+        214
+      ],
+      "later_expert_ids": [
+        215,
+        383
+      ],
+      "earlier_stage_added_bytes": 3795036.5714111123
+    }
+  ],
+  "layer_owners": [
+    {
+      "layer": 0,
+      "dense_owner_stage": 0,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 0,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 1,
+      "dense_owner_stage": 0,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 0,
+          "expert_ids": [
+            0,
+            151
+          ]
+        },
+        {
+          "stage": 1,
+          "expert_ids": [
+            152,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 2,
+      "dense_owner_stage": 1,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 1,
+          "expert_ids": [
+            0,
+            320
+          ]
+        },
+        {
+          "stage": 2,
+          "expert_ids": [
+            321,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 3,
+      "dense_owner_stage": 2,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 2,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 4,
+      "dense_owner_stage": 2,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 2,
+          "expert_ids": [
+            0,
+            96
+          ]
+        },
+        {
+          "stage": 3,
+          "expert_ids": [
+            97,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 5,
+      "dense_owner_stage": 3,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 3,
+          "expert_ids": [
+            0,
+            265
+          ]
+        },
+        {
+          "stage": 4,
+          "expert_ids": [
+            266,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 6,
+      "dense_owner_stage": 4,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 4,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 7,
+      "dense_owner_stage": 4,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 4,
+          "expert_ids": [
+            0,
+            41
+          ]
+        },
+        {
+          "stage": 5,
+          "expert_ids": [
+            42,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 8,
+      "dense_owner_stage": 5,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 5,
+          "expert_ids": [
+            0,
+            209
+          ]
+        },
+        {
+          "stage": 6,
+          "expert_ids": [
+            210,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 9,
+      "dense_owner_stage": 6,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 6,
+          "expert_ids": [
+            0,
+            379
+          ]
+        },
+        {
+          "stage": 7,
+          "expert_ids": [
+            380,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 10,
+      "dense_owner_stage": 7,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 7,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 11,
+      "dense_owner_stage": 7,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 7,
+          "expert_ids": [
+            0,
+            155
+          ]
+        },
+        {
+          "stage": 8,
+          "expert_ids": [
+            156,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 12,
+      "dense_owner_stage": 8,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 8,
+          "expert_ids": [
+            0,
+            324
+          ]
+        },
+        {
+          "stage": 9,
+          "expert_ids": [
+            325,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 13,
+      "dense_owner_stage": 9,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 9,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 14,
+      "dense_owner_stage": 9,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 9,
+          "expert_ids": [
+            0,
+            91
+          ]
+        },
+        {
+          "stage": 10,
+          "expert_ids": [
+            92,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 15,
+      "dense_owner_stage": 10,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 10,
+          "expert_ids": [
+            0,
+            260
+          ]
+        },
+        {
+          "stage": 11,
+          "expert_ids": [
+            261,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 16,
+      "dense_owner_stage": 11,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 11,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 17,
+      "dense_owner_stage": 11,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 11,
+          "expert_ids": [
+            0,
+            36
+          ]
+        },
+        {
+          "stage": 12,
+          "expert_ids": [
+            37,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 18,
+      "dense_owner_stage": 12,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 12,
+          "expert_ids": [
+            0,
+            206
+          ]
+        },
+        {
+          "stage": 13,
+          "expert_ids": [
+            207,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 19,
+      "dense_owner_stage": 13,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 13,
+          "expert_ids": [
+            0,
+            375
+          ]
+        },
+        {
+          "stage": 14,
+          "expert_ids": [
+            376,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 20,
+      "dense_owner_stage": 14,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 14,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 21,
+      "dense_owner_stage": 14,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 14,
+          "expert_ids": [
+            0,
+            150
+          ]
+        },
+        {
+          "stage": 15,
+          "expert_ids": [
+            151,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 22,
+      "dense_owner_stage": 15,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 15,
+          "expert_ids": [
+            0,
+            319
+          ]
+        },
+        {
+          "stage": 16,
+          "expert_ids": [
+            320,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 23,
+      "dense_owner_stage": 16,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 16,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 24,
+      "dense_owner_stage": 16,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 16,
+          "expert_ids": [
+            0,
+            95
+          ]
+        },
+        {
+          "stage": 17,
+          "expert_ids": [
+            96,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 25,
+      "dense_owner_stage": 17,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 17,
+          "expert_ids": [
+            0,
+            265
+          ]
+        },
+        {
+          "stage": 18,
+          "expert_ids": [
+            266,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 26,
+      "dense_owner_stage": 18,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 18,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 27,
+      "dense_owner_stage": 18,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 18,
+          "expert_ids": [
+            0,
+            41
+          ]
+        },
+        {
+          "stage": 19,
+          "expert_ids": [
+            42,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 28,
+      "dense_owner_stage": 19,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 19,
+          "expert_ids": [
+            0,
+            210
+          ]
+        },
+        {
+          "stage": 20,
+          "expert_ids": [
+            211,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 29,
+      "dense_owner_stage": 20,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 20,
+          "expert_ids": [
+            0,
+            379
+          ]
+        },
+        {
+          "stage": 21,
+          "expert_ids": [
+            380,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 30,
+      "dense_owner_stage": 21,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 21,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 31,
+      "dense_owner_stage": 21,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 21,
+          "expert_ids": [
+            0,
+            155
+          ]
+        },
+        {
+          "stage": 22,
+          "expert_ids": [
+            156,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 32,
+      "dense_owner_stage": 22,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 22,
+          "expert_ids": [
+            0,
+            324
+          ]
+        },
+        {
+          "stage": 23,
+          "expert_ids": [
+            325,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 33,
+      "dense_owner_stage": 23,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 23,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 34,
+      "dense_owner_stage": 23,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 23,
+          "expert_ids": [
+            0,
+            100
+          ]
+        },
+        {
+          "stage": 24,
+          "expert_ids": [
+            101,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 35,
+      "dense_owner_stage": 24,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 24,
+          "expert_ids": [
+            0,
+            269
+          ]
+        },
+        {
+          "stage": 25,
+          "expert_ids": [
+            270,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 36,
+      "dense_owner_stage": 25,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 25,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 37,
+      "dense_owner_stage": 25,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 25,
+          "expert_ids": [
+            0,
+            45
+          ]
+        },
+        {
+          "stage": 26,
+          "expert_ids": [
+            46,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 38,
+      "dense_owner_stage": 26,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 26,
+          "expert_ids": [
+            0,
+            214
+          ]
+        },
+        {
+          "stage": 27,
+          "expert_ids": [
+            215,
+            383
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 39,
+      "dense_owner_stage": 27,
+      "routed_expert_candidate_owners": [
+        {
+          "stage": 27,
+          "expert_ids": [
+            0,
+            383
+          ]
+        }
+      ]
+    }
+  ],
+  "per_die_rounding_delta_bytes": [
+    1042782.8571429193,
+    3099688.8571428126,
+    -736417.1428574515,
+    -948759.1428565183,
+    -736417.1428566498,
+    -1600471.1428585232,
+    3751400.857143348,
+    -736417.1428565164,
+    -948759.1428566519,
+    391070.85714345286,
+    -948759.1428566524,
+    -736417.1428603567,
+    3751400.8571434477,
+    -948759.1428566515,
+    -2698849.142852728,
+    -948759.1428603925,
+    657502.8571394774,
+    3751400.857147155,
+    -736417.1428603232,
+    445160.85714722285,
+    -948759.1428603921,
+    -736417.1428527758,
+    445160.8571396759,
+    -736417.1428605244,
+    -948759.1428529115,
+    657502.8571397113,
+    -948759.1428604259,
+    -948759.1428527781
+  ],
+  "per_die_headroom_after_rounding_bytes": [
+    70593460.95440722,
+    68536554.95440733,
+    72372660.95440711,
+    72585002.95440714,
+    72372660.95440726,
+    73236714.95440723,
+    67884842.95440918,
+    72372660.95440523,
+    72585002.95440537,
+    71245172.95440908,
+    72585002.95440537,
+    72372660.95440906,
+    67884842.95440908,
+    72585002.95440918,
+    74335092.95439762,
+    72585002.95441292,
+    70978740.95441304,
+    67884842.95439774,
+    72372660.95441285,
+    71191082.95440531,
+    72585002.9544053,
+    72372660.95440531,
+    71191082.95441285,
+    72372660.95440543,
+    72585002.95440544,
+    70978740.95441282,
+    72585002.95441295,
+    72585002.95440531
+  ],
+  "min_per_die_headroom_bytes": 67884842.95439774,
+  "missing_gates": [
+    "checkpoint tensor/scale/metadata placement by ROM address",
+    "program per stage and expert owner lookup for selected IDs",
+    "ordered cross-stage activation, expert-output and HC-state packets",
+    "bit-exact two-stage then 28-stage execution with measured link cycles"
+  ]
+}
