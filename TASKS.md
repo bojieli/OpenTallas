@@ -57,9 +57,9 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
 ## 3. DeepSeek-V4.1-Flash on the ROM array
 
 ### Architecture and model
-- [x] Budget model unified: official checkpoint precision, τ 5.0 (third-party V4-Pro measurement), 4 HBM stacks per die, 209 ns cable hop.
+- [~] **C `claude/v41-rebalance`:** budget model uses official checkpoint precision, 4 HBM stacks per die and a 209 ns cable hop. The user selected V4.1-Flash on-policy MTP τ = 3.65 in place of the prior V4-Pro τ = 5.0; the new MTP record is pending merge.
 - [x] Design point with the collective levers.
-  - 7,009 / 7,286 tok/s per user at 1M / 200K; 21,670 / 22,532 with MTP.
+  - 7,009 / 7,286 tok/s per user at 1M / 200K without MTP. The old 21,670 / 22,532 MTP figures used superseded τ = 5.0 and must be re-derived at τ = 3.65.
   - This is a model result using bench-measured collective tails, not chip throughput.
 - [x] Power and rack.
   - Always-on link power is charged.
@@ -75,7 +75,7 @@ Status as of 2026-09-28. Figures are quoted from `docs/ARCHITECTURE_ATLAS.html` 
   - apply the 0.9 capacity reserve;
   - adopt the MTP hop split of about 200 words.
 - [~] **C `claude/v41-quality`**: full-model quality under the deployed arithmetic (R4). It is being relaunched under a 16 GiB memory cap.
-- [~] **C `claude/v41-mtp-tau`**: find or measure MTP acceptance specific to V4.1-Flash; the current τ 5.0 is from V4-Pro.
+- [~] **C `claude/v41-mtp-tau`**: pin the V4.1-Flash on-policy greedy acceptance record (τ = 3.65, reported 95% CI 3.50–3.84) and propagate it through the MTP budget and Atlas.
 - [ ] Unify the two V4.1 specification baselines' remaining inputs where records still differ.
 
 ### Collectives and rack (R5)
