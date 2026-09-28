@@ -16,10 +16,9 @@ def test_fullshape_high_token_and_instruction_row0(tmp_path):
     fields = dict(
         unit=I.UNIT_SU, su_nout=1, su_nin=128,
         a_src=I.SRC_ALT, a_base=0, a_d=I.DYN_EMBED, a_si=1,
-        dst=I.DST_VM, d_base=0, d_si=1, me_row0=0x2345, me_amc=1,
+        dst=I.DST_VM, d_base=0, d_si=1, me_row0=0x12345, me_amc=1,
     )
-    # The upper row bits start AFTER me_amc at bit 897.
-    instruction = I.encode(**fields) | (1 << 898)
+    instruction = F.encode_instruction(fields)
     (tmp_path / "program.hex").write_text(P.hexwords((instruction, I.encode(unit=I.UNIT_END)),
                                                          I.INSTR_BITS))
     binary = tmp_path / "sim.vvp"
