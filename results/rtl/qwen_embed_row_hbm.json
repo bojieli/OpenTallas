@@ -1,0 +1,17 @@
+{
+  "claim_boundary": "Reduced 128-code row, one BF16 scale, exact synchronous core read ports. HBM controller, package-level token exactness, full Qwen embedding and route are separate gates.",
+  "observed": {
+    "code_words": 2,
+    "scale_words": 1,
+    "sectors": 5,
+    "token": 3
+  },
+  "schema": "opentallas.qwen-embed-row-hbm.v1",
+  "source_sha256": {
+    "rtl/hdc/hbm/ot_hdc_qwen_embed_row_hbm.sv": "dedbece79a907a4298d3ee3f4988b838ab02d31771f87166212111c53984d5a7",
+    "rtl/test/tb_hdc_qwen_embed_row_hbm.sv": "74a769bd52a7b8f3aba0f4a62b4aa0ee09b0f4009223e6e2a1225697de2c19ea",
+    "tools/rtl_hdc_qwen_embed_row_hbm.py": "b9477bd876d24fd44503bd76f3fd8150c78b5ea5c1990d10240d410bf1786ad7"
+  },
+  "status": "pass",
+  "stdout": "PASS Qwen embedding HBM row: token 3, 5 sectors, exact 2 code words and scale"
+}

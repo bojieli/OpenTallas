@@ -22,6 +22,7 @@ SRC = [*C.HDC, *C.PIPES,
        *(ROOT / f"rtl/rom/{x}.sv" for x in
          ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_rom_oneshot_allreduce", "ot_rom_tp_seq")),
        ROOT / "rtl/hdc/hbm/ot_hdc_qwen_int8_pc_window.sv",
+       ROOT / "rtl/hdc/hbm/ot_hdc_qwen_embed_row_hbm.sv",
        ROOT / "rtl/test/tb_hdc_package_tp_int8.sv"]
 HARNESS = ROOT / "rtl/test/hdc_package_tp_int8_harness.cpp"
 INPUTS = sorted(set([*SRC, HARNESS, Path(__file__), Path(REF.__file__),
@@ -100,7 +101,7 @@ def combine(work: Path, output: Path):
     assert all(x["status"] == "pass" for x in (rom, hbm))
     assert rom["rtl"]["generated"] == hbm["rtl"]["generated"]
     data = {"schema": "opentallas.qwen-int8-hbm-matched.v1", "status": "pass",
-            "claim_boundary": "Reduced TP-2 scalar signed-INT8 two-die package, same ISA/images/core, weights supplied by ROM or a PC-local behavioural 32-byte-sector HBM model. Code and scale preload are serial per op. Not full O4 shape, HBM3E measured bandwidth, controller arbitration with KV, or P&R.",
+            "claim_boundary": "Reduced TP-2 scalar signed-INT8 two-die package, same ISA/images/core, matrix code, matrix scales, embedding row and embedding scale supplied by ROM or a PC-local behavioural 32-byte-sector HBM model. Preload is serial per op/token. Not full O4 shape, HBM3E measured bandwidth, controller arbitration with KV, or P&R.",
             "rom_cycles": rom["rtl"]["total_cycles"], "hbm_cycles": hbm["rtl"]["total_cycles"],
             "delta_cycles": hbm["rtl"]["total_cycles"]-rom["rtl"]["total_cycles"],
             "rom": rom["rtl"], "hbm": hbm["rtl"],

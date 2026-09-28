@@ -183,6 +183,9 @@ module tb_hdc_package_tp_int8 #(
                 wire [G*W*8-1:0] hbm_int8_q;
                 wire [G*W*16-1:0] hbm_scale_q;
                 wire wd_v, w_ok, hbm_fault;
+                wire emb_ok, emb_fault;
+                wire [511:0] hbm_embed_code_q;
+                wire [15:0] hbm_embed_scale_q;
                 wire [AW-1:0] wd_wbase, wd_sbase;
                 wire [NW-1:0] wd_tiles, wd_k, wd_nout;
                 reg [64*8-1:0] embed_code_q;
@@ -198,8 +201,10 @@ module tb_hdc_package_tp_int8 #(
                     .int8_wrom_q(WEIGHT_HBM ? hbm_int8_q : int8_wrom_q),
                     .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),
                     .scale_q(WEIGHT_HBM ? hbm_scale_q : scale_q),
-                    .embed_code_re(embed_code_re), .embed_code_addr(embed_code_addr), .embed_code_q(embed_code_q),
-                    .embed_scale_re(embed_scale_re), .embed_scale_addr(embed_scale_addr), .embed_scale_q(embed_scale_q),
+                    .embed_code_re(embed_code_re), .embed_code_addr(embed_code_addr),
+                    .embed_code_q(WEIGHT_HBM ? hbm_embed_code_q : embed_code_q),
+                    .embed_scale_re(embed_scale_re), .embed_scale_addr(embed_scale_addr),
+                    .embed_scale_q(WEIGHT_HBM ? hbm_embed_scale_q : embed_scale_q),
                     .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
                     .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q),
                     .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
@@ -216,20 +221,48 @@ module tb_hdc_package_tp_int8 #(
                     .kvd_nout(), .kvd_kindk(), .kvd_pos(), .kv_ok(1'b1),
                     .kv_write_drained(1'b1), .wd_v(wd_v), .wd_wbase(wd_wbase), .wd_sbase(wd_sbase),
                     .wd_tiles(wd_tiles), .wd_k(wd_k), .wd_nout(wd_nout),
-                    .w_ok(w_ok), .emb_ok(1'b1));
-                assign cfault_w[n*D + d] = core_fault | hbm_fault;
+                    .w_ok(w_ok), .emb_ok(emb_ok));
+                assign cfault_w[n*D + d] = core_fault | hbm_fault | emb_fault;
+
+                reg pending_start=0;
+                reg [NW-1:0] seq_token_r=0, seq_pos_r=0;
+                wire seq_start = WEIGHT_HBM ? (pending_start && emb_ok) : start;
+                always @(posedge clk or negedge rst_n) begin
+                    if (!rst_n) pending_start<=0;
+                    else if (WEIGHT_HBM != 0) begin
+                        if (start) begin pending_start<=1; seq_token_r<=token; seq_pos_r<=pos; end
+                        else if (seq_start) pending_start<=0;
+                    end
+                end
 
                 if (WEIGHT_HBM != 0) begin : g_whbm
                     localparam integer PC=2, HAW=28, HTAG=16;
                     localparam [HAW-1:0] SCALE_REGION=28'h1000000;
+                    localparam [HAW-1:0] EMB_CODE_REGION=28'h2000000;
+                    localparam [HAW-1:0] EMB_SCALE_REGION=28'h3000000;
                     wire [PC-1:0] rq_v;
                     wire [PC*HAW-1:0] rq_addr;
                     wire [PC*HTAG-1:0] rq_tag;
+                    wire [PC-1:0] wrq_v, erq_v;
+                    wire [PC*HAW-1:0] wrq_addr, erq_addr;
+                    wire [PC*HTAG-1:0] wrq_tag, erq_tag;
                     reg [PC-1:0] rsp_v=0;
                     reg [PC*HTAG-1:0] rsp_tag=0;
                     reg [PC*256-1:0] rsp_data=0;
                     wire [PC-1:0] rq_rdy = {PC{1'b1}};
+                    assign rq_v = emb_ok ? wrq_v : erq_v;
+                    assign rq_addr = emb_ok ? wrq_addr : erq_addr;
+                    assign rq_tag = emb_ok ? wrq_tag : erq_tag;
                     wire [NW-1:0] wd_words = wd_tiles*wd_k*8;
+                    ot_hdc_qwen_embed_row_hbm #(.AW(AW),.TW(NW),.HAW(HAW),.PCS(PC),
+                        .ROW_WORDS(EMB_WORDS/EMB_ROWS),.TAGW(HTAG)) embed_source (
+                        .clk(clk),.rst_n(rst_n),.load(start),.token(token),
+                        .code_base_sector(EMB_CODE_REGION),.scale_base_sector(EMB_SCALE_REGION),
+                        .ready(emb_ok),.fault(emb_fault),
+                        .code_re(embed_code_re),.code_addr(embed_code_addr),.code_q(hbm_embed_code_q),
+                        .scale_re(embed_scale_re),.scale_addr(embed_scale_addr),.scale_q(hbm_embed_scale_q),
+                        .rq_v(erq_v),.rq_rdy(rq_rdy),.rq_addr(erq_addr),.rq_tag(erq_tag),
+                        .rsp_v(rsp_v & {PC{!emb_ok}}),.rsp_tag(rsp_tag),.rsp_data(rsp_data));
                     ot_hdc_qwen_int8_pc_window #(.G(G),.W(W),.AW(AW),.HAW(HAW),.NW(NW),
                         .PCS(PC),.WIN_WORDS(4096),.SCALE_WORDS(128),.TAGW(HTAG)) source (
                         .clk(clk),.rst_n(rst_n),.load(wd_v),.op_base(wd_wbase),.op_scale_base(wd_sbase),
@@ -238,8 +271,8 @@ module tb_hdc_package_tp_int8 #(
                         .ready(w_ok),.fault(hbm_fault),
                         .code_re(int8_wrom_re),.code_addr(int8_wrom_addr),.code_q(hbm_int8_q),
                         .scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr),.scale_q(hbm_scale_q),
-                        .rq_v(rq_v),.rq_rdy(rq_rdy),.rq_addr(rq_addr),.rq_tag(rq_tag),
-                        .rsp_v(rsp_v),.rsp_tag(rsp_tag),.rsp_data(rsp_data));
+                        .rq_v(wrq_v),.rq_rdy(rq_rdy),.rq_addr(wrq_addr),.rq_tag(wrq_tag),
+                        .rsp_v(rsp_v & {PC{emb_ok}}),.rsp_tag(rsp_tag),.rsp_data(rsp_data));
                     for (genvar pp=0; pp<PC; pp=pp+1) begin : g_pc
                         always @(posedge clk) begin
                             rsp_v[pp] <= rq_v[pp] && rq_rdy[pp];
@@ -249,9 +282,17 @@ module tb_hdc_package_tp_int8 #(
                                     rsp_data[pp*256 +: 256] <=
                                         matrix_codes[d*WROM_WORDS + rq_addr[pp*HAW +: HAW]/2]
                                                     [(rq_addr[pp*HAW +: HAW]%2)*256 +: 256];
-                                else
+                                else if (rq_addr[pp*HAW +: HAW] < EMB_CODE_REGION)
                                     rsp_data[pp*256 +: 256] <=
                                         matrix_scales[d*WROM_WORDS + rq_addr[pp*HAW +: HAW]-SCALE_REGION];
+                                else if (rq_addr[pp*HAW +: HAW] < EMB_SCALE_REGION)
+                                    rsp_data[pp*256 +: 256] <=
+                                        embed_codes[d*EMB_WORDS + (rq_addr[pp*HAW +: HAW]-EMB_CODE_REGION)/2]
+                                                   [((rq_addr[pp*HAW +: HAW]-EMB_CODE_REGION)%2)*256 +: 256];
+                                else
+                                    for (integer u=0;u<16;u=u+1)
+                                        rsp_data[pp*256+u*16 +: 16] <= embed_scales[d*EMB_ROWS +
+                                            (rq_addr[pp*HAW +: HAW]-EMB_SCALE_REGION)*16+u];
                             end
                         end
                     end
@@ -260,11 +301,16 @@ module tb_hdc_package_tp_int8 #(
                     assign hbm_fault=1'b0;
                     assign hbm_int8_q=0;
                     assign hbm_scale_q=0;
+                    assign emb_ok=1'b1;
+                    assign emb_fault=1'b0;
+                    assign hbm_embed_code_q=0;
+                    assign hbm_embed_scale_q=0;
                 end
 
                 ot_rom_tp_seq #(.N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(DAW), .FW(FLIT), .TAGW(TAGW)) seq (
                     .clk(clk), .rst_n(rst_n),
-                    .start(start), .token(token), .pos(pos),
+                    .start(seq_start), .token(WEIGHT_HBM ? seq_token_r : token),
+                    .pos(WEIGHT_HBM ? seq_pos_r : pos),
                     .done(s_done[d]), .next_token(s_tok[d*NW +: NW]), .next_val(s_val[d*32 +: 32]),
                     .fault(sfault_w[n*D + d]), .coll_busy(s_cbusy[d]),
                     .core_start(core_start), .core_token(core_tok), .core_pos(core_pos), .core_done(core_done),
@@ -306,8 +352,10 @@ module tb_hdc_package_tp_int8 #(
                         for (q = 0; q < G; q = q + 1)
                             scale_q[q*W*16 +: W*16] <= scale_gre[q] ?
                                 matrix_scales[d*WROM_WORDS + scale_addr[q*AW +: AW]] : 0;
-                    if (embed_code_re) embed_code_q <= embed_codes[d*EMB_WORDS + embed_code_addr];
-                    if (embed_scale_re) embed_scale_q <= embed_scales[d*EMB_ROWS + embed_scale_addr];
+                    if (embed_code_re && WEIGHT_HBM == 0)
+                        embed_code_q <= embed_codes[d*EMB_WORDS + embed_code_addr];
+                    if (embed_scale_re && WEIGHT_HBM == 0)
+                        embed_scale_q <= embed_scales[d*EMB_ROWS + embed_scale_addr];
                     if (crom_re) crom_q <= crom[d*CROM_WORDS + crom_addr[11:0]];
                     for (q = 0; q < G; q = q + 1)
                         if (kv_re) kv_q[q*W*32 +: W*32] <= kv[kv_raddr[q*AW +: AW] + kv_base];
