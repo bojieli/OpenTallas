@@ -26,6 +26,8 @@ def test_code_and_scale_word_address_round_trip():
         scale_addr = tile * 8 + slot
         assert words[scale_addr][1][lane] == scales[row]
     assert all(np.all(words[i][0] == 0) for i in range(128, len(words)))
+    assert words[8][1][2] == 0x3F80  # padded row 130
+    assert np.all(words[-1][1] == 0x3F80)
 
 
 def test_raw_partial_scale_and_post_fold_program():

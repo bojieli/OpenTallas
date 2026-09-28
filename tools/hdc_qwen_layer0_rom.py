@@ -76,7 +76,7 @@ def engine_word_arrays(codes, scales, *, split, groups=GROUPS, raw_partial=False
     pad = np.zeros((rounds * per_round * W * IL, k), dtype=np.int8)
     pad[:n] = codes
     blk = pad.reshape(rounds, per_round, IL, W, split, kc)
-    spad = np.zeros(rounds * per_round * W * IL, dtype=np.uint16)
+    spad = np.full(rounds * per_round * W * IL, 0x3F80, dtype=np.uint16)
     spad[:n] = 0x3F80 if raw_partial else scales
     scale_rows = spad.reshape(-1, W)
     for addr in range(span):
@@ -86,7 +86,7 @@ def engine_word_arrays(codes, scales, *, split, groups=GROUPS, raw_partial=False
             code = blk[r, :, j, :, :, kk].transpose(0, 2, 1).reshape(-1).view(np.uint8)
         else:
             code = np.zeros(groups * W, dtype=np.uint8)
-        scale = scale_rows[addr] if addr < scale_count else np.zeros(W, dtype=np.uint16)
+        scale = scale_rows[addr] if addr < scale_count else np.full(W, 0x3F80, dtype=np.uint16)
         yield code, scale
 
 
