@@ -68,9 +68,13 @@ The actual bank-order transpose from collective commit `05ad9903` has a
 source-pinned [global-route checkpoint](../results/physical_abi3/asap7/chip/v41_coll_transpose_outpipe1/grt_checkpoint.json)
 at `OUT_PIPE=1`, 4 × 512 bits, 0.92 ns and 60% target utilization. Its 4,201
 pins fit 6,428 sites; global route reports +0.124 ns setup slack, +0.000148 ns
-hold slack and zero global-route violations. Detailed routing remains in
-progress, so this checkpoint cannot establish final DRC, antenna or timing
-closure. It also excludes the SRAM macros and DMA integration.
+hold slack and zero global-route violations. The completed
+[detailed-route record](../results/physical_abi3/asap7/chip/v41_coll_transpose_outpipe1/physical_u60.json)
+has +0.159 ns setup and +0.024 ns hold slack, zero DRC and antenna errors,
+but **does not meet physical acceptance**: 18 max-slew violations remain, the
+worst 421 ps against a 320 ps limit. A buffer-repair reroute is needed before
+this physical boundary can be credited. It excludes SRAM macros and DMA
+integration.
 
 The current die-assembly ledger allocates 983,040 bytes of vector memory at
 0.2805 mm² placed, while the full-shape four-bank VM contract above allocates
