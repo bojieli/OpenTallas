@@ -140,6 +140,15 @@ def test_karb_bank4_pipe_wide_pins_stay_inside_each_phy_pc_window():
     assert wide["nickname"] != narrow["nickname"]
 
 
+def test_karb_bank4_low_density_retries_the_same_wide_pin_boundary():
+    wide = pnr.CASES["karb_bank4_pipe_wide_m9"]()
+    low = pnr.CASES["karb_bank4_pipe_wide_lowdens_m9"]()
+    assert low["floorplan"] == wide["floorplan"]
+    assert low["args"][low["args"].index("--place-density") + 1] == "0.40"
+    assert wide["args"][wide["args"].index("--place-density") + 1] == "0.60"
+    assert low["nickname"] != wide["nickname"]
+
+
 def test_collective_fifo128_physical_case_is_the_measured_engine_configuration():
     case = pnr.CASES["collective_fifo128"]()
     args = case["args"]

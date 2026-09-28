@@ -95,7 +95,7 @@ def karb_strip(height_um: float = 30.24) -> dict:
 
 
 def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bool = False,
-               wide_pins: bool = False) -> dict:
+               wide_pins: bool = False, low_density: bool = False) -> dict:
     """A four-PC local arbitration partition for a bounded physical route.
 
     This uses the real parameterized arbiter RTL with NPC=4. Its K address-to-PC
@@ -119,7 +119,8 @@ def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bo
     args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb", "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
             "--param", f"NPC={npc}", "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2",
             "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
-            "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}", "--place-density", "0.60"]
+            "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}",
+            "--place-density", "0.40" if low_density else "0.60"]
     if high_layers:
         args += ["--routing-layers", "M2", "M9"]
     if pipe_out:
@@ -130,7 +131,9 @@ def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bo
         args += ["--false-path-io"]
     for r in regions:
         args += ["--pin-region", r]
-    if pipe_out and high_layers and wide_pins:
+    if pipe_out and high_layers and wide_pins and low_density:
+        name = "karb_bank4_pipe_wide_lowdens_m9"
+    elif pipe_out and high_layers and wide_pins:
         name = "karb_bank4_pipe_wide_m9"
     elif pipe_out and high_layers:
         name = "karb_bank4_pipe_m9"
@@ -540,6 +543,8 @@ CASES = {"karb_strip": karb_strip,
          "karb_bank4_m9": lambda: karb_bank4(high_layers=True),
          "karb_bank4_pipe_m9": lambda: karb_bank4(high_layers=True, pipe_out=True),
          "karb_bank4_pipe_wide_m9": lambda: karb_bank4(high_layers=True, pipe_out=True, wide_pins=True),
+         "karb_bank4_pipe_wide_lowdens_m9": lambda: karb_bank4(high_layers=True, pipe_out=True,
+                                                                  wide_pins=True, low_density=True),
          "collective_fifo128": collective_fifo128,
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
