@@ -213,7 +213,7 @@ def karb_pc1_pipe_m9(slew_repair: bool = False, slew_margin: bool = False,
                           "scope": "one PC with NPC=1; excludes full 32-way K demux/response mux"}}
 
 
-def karb_pc_local_fit_m9(height_um: float = 17.28) -> dict:
+def karb_pc_local_fit_m9(height_um: float = 17.28, slew_margin_percent: int = 40) -> dict:
     """The actual request-only PC child used in the exact four-PC group RTL."""
     w, h = PHY_PC_WINDOW_UM, height_um
     m = 8 * ROW_UM
@@ -224,13 +224,14 @@ def karb_pc_local_fit_m9(height_um: float = 17.28) -> dict:
             "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
             "--core-area", f"{m:g}", f"{m:g}", f"{w-m:g}", f"{h-m:g}",
             "--place-density", "0.40", "--routing-layers", "M2", "M9",
-            "--max-transition-ns", "--slew-margin-percent", "40",
+            "--max-transition-ns", "--slew-margin-percent", str(slew_margin_percent),
             "--pin-region", "^h_.*=bottom:20-195",
             "--pin-region", "^b_(v|rdy|addr|len|tag|we|wdata|wstrb|wr_done).*=top:20-195",
             "--pin-region", "^k_(v|rdy|addr|len|tag|we|wdata|wstrb|wr_done).*=top:210-370",
             "--pin-region", r"^(k_grants|b_grants|contended)\[\d+\]$=bottom:210-370",
             "--pin-region", r"^(clk|rst_n)$=left:5-12"]
-    name = "karb_pc_local_budget_m9" if h <= 17.01 else "karb_pc_local_fit_m9"
+    name = ("karb_pc_local_budget_slew50_m9" if h <= 17.01 and slew_margin_percent == 50 else
+            "karb_pc_local_budget_m9" if h <= 17.01 else "karb_pc_local_fit_m9")
     return {"args": args, "nickname": f"codex_v41x_{name}",
             "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM,
@@ -667,6 +668,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_pc1_pipe_fit_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True, fit_height=True),
          "karb_pc_local_fit_m9": karb_pc_local_fit_m9,
          "karb_pc_local_budget_m9": lambda: karb_pc_local_fit_m9(height_um=17.01),
+         "karb_pc_local_budget_slew50_m9": lambda: karb_pc_local_fit_m9(height_um=17.01, slew_margin_percent=50),
          "karb_group4_m9": karb_group4_m9,
          "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
          "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
