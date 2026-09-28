@@ -129,6 +129,17 @@ def test_karb_bank4_pipe_m9_keeps_the_same_boundary():
     assert piped["output"] != direct["output"]
 
 
+def test_karb_bank4_pipe_wide_pins_stay_inside_each_phy_pc_window():
+    narrow = pnr.CASES["karb_bank4_pipe_m9"]()
+    wide = pnr.CASES["karb_bank4_pipe_wide_m9"]()
+    assert wide["floorplan"]["die_um"] == narrow["floorplan"]["die_um"]
+    assert wide["floorplan"]["pc_pin_span_um"] == (10.0, 350.0)
+    assert wide["floorplan"]["pc_pin_span_um"][1] < wide["floorplan"]["pc_window_um"]
+    assert "--false-path-io" in wide["args"]
+    assert "--false-path-io" not in narrow["args"]
+    assert wide["nickname"] != narrow["nickname"]
+
+
 def test_collective_fifo128_physical_case_is_the_measured_engine_configuration():
     case = pnr.CASES["collective_fifo128"]()
     args = case["args"]

@@ -94,7 +94,8 @@ def karb_strip(height_um: float = 30.24) -> dict:
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM, "pc_pin_span_um": PC_PIN_SPAN}}
 
 
-def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bool = False) -> dict:
+def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bool = False,
+               wide_pins: bool = False) -> dict:
     """A four-PC local arbitration partition for a bounded physical route.
 
     This uses the real parameterized arbiter RTL with NPC=4. Its K address-to-PC
@@ -105,9 +106,10 @@ def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bo
     w, h = npc * PHY_PC_WINDOW_UM, height_um
     m = 8 * ROW_UM
     regions = []
+    pin_span = (10.0, 350.0) if wide_pins else PC_PIN_SPAN
     for p in range(npc):
         x0 = p * PHY_PC_WINDOW_UM
-        span = f"{x0 + PC_PIN_SPAN[0]:g}-{x0 + PC_PIN_SPAN[1]:g}"
+        span = f"{x0 + pin_span[0]:g}-{x0 + pin_span[1]:g}"
         regions.append(f"{pin_regex(karb_pc_pins(p, 'h'))}=bottom:{span}")
         regions.append(f"{pin_regex(karb_pc_pins(p, 'b'))}=top:{span}")
     k = r"^k_(v|rdy|we|wr_done|rsp_v|rsp_rdy)$|^k_(addr|len|tag|wdata|wstrb|rsp_tag|rsp_beat|rsp_data)\[\d+\]$"
@@ -122,14 +124,22 @@ def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bo
         args += ["--routing-layers", "M2", "M9"]
     if pipe_out:
         args += ["--param", "PIPE_OUT=1"]
+    if wide_pins:
+        # Characterize the new internal register boundary separately.  The
+        # original 0.2-T IO case above remains the external-timing gate.
+        args += ["--false-path-io"]
     for r in regions:
         args += ["--pin-region", r]
-    name = "karb_bank4_pipe_m9" if pipe_out and high_layers else (
-        "karb_bank4_m9" if high_layers else "karb_bank4")
+    if pipe_out and high_layers and wide_pins:
+        name = "karb_bank4_pipe_wide_m9"
+    elif pipe_out and high_layers:
+        name = "karb_bank4_pipe_m9"
+    else:
+        name = "karb_bank4_m9" if high_layers else "karb_bank4"
     return {"args": args, "nickname": f"codex_v41x_{name}",
             "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
             "floorplan": {"die_um": [w, h], "npc": npc, "pc_window_um": PHY_PC_WINDOW_UM,
-                          "pc_pin_span_um": PC_PIN_SPAN, "scope": "local bank characterization only"}}
+                          "pc_pin_span_um": pin_span, "scope": "local bank characterization only"}}
 
 
 def collective_fifo128() -> dict:
@@ -529,6 +539,7 @@ CASES = {"karb_strip": karb_strip,
          "karb_bank4": karb_bank4,
          "karb_bank4_m9": lambda: karb_bank4(high_layers=True),
          "karb_bank4_pipe_m9": lambda: karb_bank4(high_layers=True, pipe_out=True),
+         "karb_bank4_pipe_wide_m9": lambda: karb_bank4(high_layers=True, pipe_out=True, wide_pins=True),
          "collective_fifo128": collective_fifo128,
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
