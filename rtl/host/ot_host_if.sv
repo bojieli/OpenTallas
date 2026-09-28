@@ -43,7 +43,7 @@
 // Engines (MODE):
 //   0 step: the chip schedules every decode step of every running slot onto
 //     one decode core through its start/done handshake (ot_hdc_core,
-//     ot_hdc_core_v41), round robin over slots; `kv_base` is the running
+//     ot_hdc_core_v41x), round robin over slots; `kv_base` is the running
 //     slot's KV slice (slot * KVW), added to the core's KV addresses by the
 //     memory wrapper.  With ENG_CTX == 1 the core holds one user's state
 //     (the V4.1 core's persistent vector memory and Engram history, or a KV

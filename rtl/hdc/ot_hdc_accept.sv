@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // Speculative-decoding accept unit of the hardwired decode cores (model-
-// agnostic: V4.1 DSpark MTP in ot_hdc_core_v41, Qwen3 DFlash in ot_hdc_core).
+// agnostic: V4.1 MTP in ot_hdc_core_v41x, Qwen3 in ot_hdc_core).
 //
 // A speculative step runs NSLOT position slots: slot j sits at position
 // pos + j and carries token stok[j] -- stok[0] the pending token (the step's

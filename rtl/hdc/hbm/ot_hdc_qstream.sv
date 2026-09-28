@@ -8,7 +8,7 @@
 // (base, base + 1, ... -- the base plus an expert id times a stride for a routed
 // expert) and takes the word one cycle later, with no valid and no stall.
 // This engine keeps that contract with the words in HBM
-// (ot_hdc_core_v41 W_HBM = 1).
+// (ot_hdc_core_v41x W_HBM = 1).
 //
 // LAYOUT.  The HBM holds the quantised ROM in ROM order (routed experts at a
 // fixed stride, as in the ROM): an FP8 word as its 17 32-byte sectors, an FP4

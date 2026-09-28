@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Instruction set of the DeepSeek-V4.1 configuration of the hardwired decode core.
 
-The V4.1 core (rtl/hdc/v41/ot_hdc_core_v41.sv) is the reduced-Qwen3 core
-(tools/hdc_isa.py) with more units and a wider stream pipeline.  Its matrix-
-vector engine is the Qwen3 core's (exact BF16 lanes, ot_hdc_matvec's field
-semantics) with head groups added (ot_hdc_v41_matvec, below); the other units
-are:
+The adopted V4.1 core is rtl/hdc/v41x/ot_hdc_core_v41x.sv. It decodes this
+ISA and dispatches its operations to the dedicated weight, attention, index,
+stream, selection, Engram and hyper-connection engines. Shared ISA fields also
+support the reduced reference implementation. The instruction fields include:
 
 * The matrix engine's KV-sourced ops may take HEAD GROUPS (`me_hg`, H = 2^hg,
   ot_hdc_v41_matvec): the G lane groups form H head groups of G/H groups; head
