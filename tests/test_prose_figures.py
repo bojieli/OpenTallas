@@ -158,7 +158,10 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # every single-field headline it lists (112) to the record that produces it.
     # 1229: the Qwen DFlash headline (acb8d122) adds its energy and die-power
     # rows to the bundle (112 -> 118).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1229
+    # 1293: the atlas's prefill, KV-ingest and time-to-first-token figures
+    # (§6.7, §6.9, §6.11, §8.4 Table 8-T1, §8.7) bind to
+    # results/arch/prefill_ingest.json and the budget records (118 -> 182).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1293
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

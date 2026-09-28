@@ -14,22 +14,22 @@
   "third-party": "A figure published by someone else and carried into a record as a cited input."
  },
  "summary": {
-  "headlines": 134,
-  "bound": 121,
-  "derived_in_bundle": 3,
+  "headlines": 200,
+  "bound": 187,
+  "derived_in_bundle": 5,
   "unbound": 13,
-  "printed_occurrences": 296,
-  "occurrences_agreeing": 279,
-  "with_sensitivity_range": 16,
+  "printed_occurrences": 388,
+  "occurrences_agreeing": 371,
+  "with_sensitivity_range": 26,
   "by_evidence_class": {
    "measured-RTL": 21,
    "measured-physical": 11,
    "measured-quality": 8,
    "measured-gpu": 6,
-   "model": 86,
-   "third-party": 2
+   "model": 149,
+   "third-party": 5
   },
-  "records": 28,
+  "records": 29,
   "records_with_source_pins": 20,
   "pins_by_status": {
    "commit-outside-head": 1,
@@ -4095,6 +4095,1724 @@
      "text": "≈1.2 GHz",
      "printed_value": "1.2",
      "status": "unbound"
+    }
+   ]
+  },
+  {
+   "id": "cap.qwen_users_8k",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Qwen3-8B users held at 8K with FP8 KV in six HBM3E stacks after the 0.9 capacity reserve",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#qwen_cold[0].capacity.users_at_0p9",
+   "derived": false,
+   "derivation": null,
+   "record_value": 201.0,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "In the HBM capacity model, six 22.5 GB stacks hold 201 users",
+     "text": "hold 201 users at 8K",
+     "printed_value": "201",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "without the capacity reserve",
+      "binding": "results/arch/prefill_ingest.json#qwen_cold[0].capacity.users_no_efficiency",
+      "value": 223.0
+     }
+    ],
+    "range": [
+     201.0,
+     223.0
+    ]
+   }
+  },
+  {
+   "id": "cap.qwen_users_8k_noreserve",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Qwen3-8B users held at 8K without the capacity reserve",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#qwen_cold[0].capacity.users_no_efficiency",
+   "derived": false,
+   "derivation": null,
+   "record_value": 223.0,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "In the HBM capacity model, six 22.5 GB stacks hold 201 users",
+     "text": "(223 without it)",
+     "printed_value": "223",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "cap.v41_users_200k_s67",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 users held at 200K in four HBM3E stacks per layer die (§6.7 prose)",
+   "evidence_class": "model",
+   "binding": "results/arch/arch_budget_v41.json#capacity.200000.rom_users",
+   "derived": false,
+   "derivation": null,
+   "record_value": 5018.0,
+   "records": [
+    "results/arch/arch_budget_v41.json"
+   ],
+   "printed": [
+    {
+     "in": "In the HBM capacity model, six 22.5 GB stacks hold 201 users",
+     "text": "hold 5,018 users at 200K",
+     "printed_value": "5,018",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "with the 0.9 capacity reserve",
+      "binding": "results/arch/prefill_ingest.json#v41_workload.bytes[\"200000\"].capacity.rom_users_at_0p9_capacity",
+      "value": 4516.0
+     }
+    ],
+    "range": [
+     4516.0,
+     5018.0
+    ]
+   }
+  },
+  {
+   "id": "cap.v41_users_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 users held at 1M in four HBM3E stacks per layer die (§6.7 prose)",
+   "evidence_class": "model",
+   "binding": "results/arch/arch_budget_v41.json#capacity.1048576.rom_users",
+   "derived": false,
+   "derivation": null,
+   "record_value": 962.0,
+   "records": [
+    "results/arch/arch_budget_v41.json"
+   ],
+   "printed": [
+    {
+     "in": "In the HBM capacity model, six 22.5 GB stacks hold 201 users",
+     "text": "and 962 at 1M",
+     "printed_value": "962",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "with the 0.9 capacity reserve",
+      "binding": "results/arch/prefill_ingest.json#v41_workload.bytes[\"1048576\"].capacity.rom_users_at_0p9_capacity",
+      "value": 866.0
+     }
+    ],
+    "range": [
+     866.0,
+     962.0
+    ]
+   }
+  },
+  {
+   "id": "ttft.v41_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 array, cold 1M prompt: time to first token, one DGX B200 at the conservative calibrated rate, late-bound KV burst over two 400G uplinks (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].ttft_late_bind_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 4.76694,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "first token 4.77 s after submission",
+     "printed_value": "4.77",
+     "status": "agrees"
+    },
+    {
+     "in": "V4.1 array, cold 1M prompt 1 DGX B200 (8 B200)",
+     "text": "4.77 s (3.37)",
+     "printed_value": "4.77",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "optimistic calibrated GPU rate",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[1].ttft_late_bind_s",
+      "value": 3.3692
+     },
+     {
+      "label": "two DGX B200",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[2].ttft_late_bind_s",
+      "value": 2.38832
+     },
+     {
+      "label": "eight 400G uplinks",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[3].ttft_late_bind_s",
+      "value": 4.76092
+     },
+     {
+      "label": "HBM comparator, same prefill",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[8].ttft_late_bind_s",
+      "value": 4.7671
+     }
+    ],
+    "range": [
+     2.38832,
+     4.7671
+    ]
+   }
+  },
+  {
+   "id": "ttft.v41_1m_opt",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 cold 1M time to first token at the optimistic calibrated GPU rate (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[1].ttft_late_bind_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 3.3692,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "V4.1 array, cold 1M prompt 1 DGX B200 (8 B200)",
+     "text": "4.77 s (3.37)",
+     "printed_value": "3.37",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ttft.v41_1m_2dgx",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 cold 1M time to first token with two DGX B200 (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[2].ttft_late_bind_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 2.38832,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "(2.39 s at 1M)",
+     "printed_value": "2.39",
+     "status": "agrees"
+    },
+    {
+     "in": "cold 1M prompt, two prefill nodes",
+     "text": "2.39 s",
+     "printed_value": "2.39",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ttft.v41_1m_8x",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 cold 1M time to first token with eight 400G uplinks (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[3].ttft_late_bind_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 4.76092,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "cold 1M prompt, eight uplinks",
+     "text": "3.5 ms, package port 4.76 s",
+     "printed_value": "4.76",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ttft.v41_200k",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 cold 200K time to first token, one DGX B200, conservative rate (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[4].ttft_late_bind_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.735427,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "a 200K prompt takes 0.735 s",
+     "printed_value": "0.735",
+     "status": "agrees"
+    },
+    {
+     "in": "V4.1 array, cold 200K prompt",
+     "text": "0.735 s (0.520)",
+     "printed_value": "0.735",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "optimistic calibrated rate",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[5].ttft_late_bind_s",
+      "value": 0.519928
+     },
+     {
+      "label": "HBM comparator, same prefill",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[9].ttft_late_bind_s",
+      "value": 0.73559
+     }
+    ],
+    "range": [
+     0.519928,
+     0.73559
+    ]
+   }
+  },
+  {
+   "id": "ttft.v41_200k_opt",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 cold 200K time to first token, optimistic rate (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[5].ttft_late_bind_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.519928,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "V4.1 array, cold 200K prompt",
+     "text": "0.735 s (0.520)",
+     "printed_value": "0.520",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "prefill.v41_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "GPU prefill of a cold 1M-token V4.1 prompt on one DGX B200, conservative calibrated rate (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].gpu_prefill_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 4.75725,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "prompt in 4.8 s at the conservative",
+     "printed_value": "4.8",
+     "status": "agrees"
+    },
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "after a 4.76 s prefill",
+     "printed_value": "4.76",
+     "status": "agrees"
+    },
+    {
+     "in": "V4.1 array, cold 1M prompt 1 DGX B200 (8 B200)",
+     "text": "4.76 s (3.36)",
+     "printed_value": "4.76",
+     "status": "agrees"
+    },
+    {
+     "in": "cold 1M prompt, eight uplinks",
+     "text": "4.76 s",
+     "printed_value": "4.76",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "optimistic calibrated rate",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[1].gpu_prefill_s",
+      "value": 3.3595
+     },
+     {
+      "label": "indexer at half the calibrated rate",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[0].gpu_prefill_s_indexer_at_half_rate",
+      "value": 5.93747
+     }
+    ],
+    "range": [
+     3.3595,
+     5.93747
+    ]
+   }
+  },
+  {
+   "id": "prefill.v41_1m_opt",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "GPU prefill of a cold 1M-token V4.1 prompt, optimistic calibrated rate (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[1].gpu_prefill_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 3.3595,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "3.4 s at the optimistic one",
+     "printed_value": "3.4",
+     "status": "agrees"
+    },
+    {
+     "in": "V4.1 array, cold 1M prompt 1 DGX B200 (8 B200)",
+     "text": "4.76 s (3.36)",
+     "printed_value": "3.36",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "prefill.v41_1m_2dgx",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Cold 1M prefill on two DGX B200 (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[2].gpu_prefill_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 2.37862,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "cold 1M prompt, two prefill nodes",
+     "text": "2.38 s",
+     "printed_value": "2.38",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "prefill.v41_1m_indexer_share",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Lightning-indexer share of a cold 1M prompt's prefill FLOPs (%)",
+   "evidence_class": "model",
+   "binding": "(results/arch/prefill_ingest.json#v41_cold[0].prefill_flops.indexer x 100) / (results/arch/prefill_ingest.json#v41_cold[0].prefill_flops.total)",
+   "derived": true,
+   "derivation": null,
+   "record_value": 24.809,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "is 25% of its",
+     "printed_value": "25",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "prefill.v41_1m_flops",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Prefill FLOPs of a cold 1M V4.1 prompt (x 1e16)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].prefill_flops.total x 1e-16",
+   "derived": false,
+   "derivation": null,
+   "record_value": 4.76341,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "of its 4.8 × 10",
+     "printed_value": "4.8",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "prefill.v41_1m_indexer_half",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Cold 1M prefill with the indexer at half the calibrated rate (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].gpu_prefill_s_indexer_at_half_rate",
+   "derived": false,
+   "derivation": null,
+   "record_value": 5.93747,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "the prefill takes 5.9 s",
+     "printed_value": "5.9",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "prefill.v41_200k",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "GPU prefill of a cold 200K V4.1 prompt on one DGX B200, conservative rate (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[4].gpu_prefill_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.733454,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "A 200K prompt takes 0.73 s",
+     "printed_value": "0.73",
+     "status": "agrees"
+    },
+    {
+     "in": "V4.1 array, cold 200K prompt",
+     "text": "0.733 s (0.518)",
+     "printed_value": "0.733",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "optimistic calibrated rate",
+      "binding": "results/arch/prefill_ingest.json#v41_cold[5].gpu_prefill_s",
+      "value": 0.517955
+     }
+    ],
+    "range": [
+     0.517955,
+     0.733454
+    ]
+   }
+  },
+  {
+   "id": "prefill.v41_200k_opt",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "GPU prefill of a cold 200K V4.1 prompt, optimistic rate (s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[5].gpu_prefill_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.517955,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "V4.1 array, cold 200K prompt",
+     "text": "0.733 s (0.518)",
+     "printed_value": "0.518",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "prefill.qwen_8k_h200",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Qwen3-8B cold 8K prompt: GPU prefill on one H200, calibrated to NIM TTFT (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#qwen_cold[0].gpu_prefill_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 142.16,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "takes 142 ms of prefill",
+     "printed_value": "142",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle, cold 8K prompt, KV streamed during the prefill",
+     "text": "142 ms",
+     "printed_value": "142",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "one B200 (modelled from the H100 calibration)",
+      "binding": "results/arch/prefill_ingest.json#qwen_cold[1].gpu_prefill_s x 1000",
+      "value": 61.6837
+     }
+    ],
+    "range": [
+     61.6837,
+     142.16
+    ]
+   }
+  },
+  {
+   "id": "ttft.qwen_8k",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Qwen3-8B cold 8K prompt: time to first token, KV streamed during the prefill (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#qwen_cold[0].ttft_stream_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 142.968,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "first token in 143 ms on one H200",
+     "printed_value": "143",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle, cold 8K prompt, KV streamed during the prefill",
+     "text": "143 ms",
+     "printed_value": "143",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "late-bound BF16 pages",
+      "binding": "results/arch/prefill_ingest.json#qwen_cold[0].ttft_late_bind_s x 1000",
+      "value": 166.968
+     },
+     {
+      "label": "late-bound, FP8 on the wire",
+      "binding": "results/arch/prefill_ingest.json#qwen_cold[0].ttft_late_bind_fp8_wire_s x 1000",
+      "value": 154.625
+     },
+     {
+      "label": "one B200 (modelled)",
+      "binding": "results/arch/prefill_ingest.json#qwen_cold[1].ttft_stream_s x 1000",
+      "value": 62.4916
+     },
+     {
+      "label": "HBM comparator",
+      "binding": "results/arch/prefill_ingest.json#qwen_cold[2].ttft_stream_s x 1000",
+      "value": 143.581
+     }
+    ],
+    "range": [
+     62.4916,
+     166.968
+    ]
+   }
+  },
+  {
+   "id": "ingest.v41_sent_B_per_token",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Bytes sent from the GPUs per V4.1 context token (owner rows and index keys)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_workload.sent_B_per_new_token",
+   "derived": false,
+   "derivation": null,
+   "record_value": 890.0,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "The GPUs send 890 bytes",
+     "printed_value": "890",
+     "status": "agrees"
+    },
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "at 890 bytes per prompt token",
+     "printed_value": "890",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_row_B",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Compressed row plus index key per owner layer (B)",
+   "evidence_class": "model",
+   "binding": "results/arch/v41_rack.json#kv_replication.row_bytes",
+   "derived": false,
+   "derivation": null,
+   "record_value": 356.0,
+   "records": [
+    "results/arch/v41_rack.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "356-byte compressed row",
+     "printed_value": "356",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_rows_per_token",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Owner rows sent per context token (bytes per token / bytes per row)",
+   "evidence_class": "model",
+   "binding": "(results/arch/prefill_ingest.json#v41_workload.sent_B_per_new_token) / (results/arch/v41_rack.json#kv_replication.row_bytes)",
+   "derived": true,
+   "derivation": null,
+   "record_value": 2.5,
+   "records": [
+    "results/arch/prefill_ingest.json",
+    "results/arch/v41_rack.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "at 2.5 owner rows per token",
+     "printed_value": "2.5",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_sent_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "KV bytes sent for a cold 1M V4.1 prompt (GB)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].bytes_sent.total x 1e-09",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.935936,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "0.94 GB at 1M",
+     "printed_value": "0.94",
+     "status": "agrees"
+    },
+    {
+     "in": "V4.1 array, cold 1M prompt 1 DGX B200 (8 B200)",
+     "text": "0.94 GB",
+     "printed_value": "0.94",
+     "status": "agrees"
+    },
+    {
+     "in": "cold 1M prompt, two prefill nodes",
+     "text": "0.94 GB",
+     "printed_value": "0.94",
+     "status": "agrees"
+    },
+    {
+     "in": "cold 1M prompt, eight uplinks",
+     "text": "0.94 GB",
+     "printed_value": "0.94",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_sent_200k",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "KV bytes sent for a cold 200K V4.1 prompt (GB)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[4].bytes_sent.total x 1e-09",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.180703,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "V4.1 array, cold 200K prompt",
+     "text": "0.18 GB",
+     "printed_value": "0.18",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_written_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "KV bytes written into the array's HBM after switch multicast, cold 1M prompt (GB)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].bytes_written_hbm_replicated x 1e-09",
+   "derived": false,
+   "derivation": null,
+   "record_value": 7.84368,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Every prefill runs on GPUs; the decode chips ingest the KV.",
+     "text": "so 7.84 GB is written",
+     "printed_value": "7.84",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.qwen_bf16_bytes",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Qwen3-8B 8K KV on the wire as BF16 pages (GB)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#qwen_cold[0].kv_bytes_bf16_on_wire x 1e-09",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1.20796,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Qwen3-8B reticle, cold 8K prompt, KV streamed during the prefill",
+     "text": "1.21 GB",
+     "printed_value": "1.21",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.qwen_exposed_ms",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Qwen3-8B transfer exposed after the prefill when streamed layer by layer (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#qwen_cold[0].stream.exposed_last_layer_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.685711,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Late binding keeps the user slot free.",
+     "text": "leaving 0.7 ms exposed",
+     "printed_value": "0.7",
+     "status": "agrees"
+    },
+    {
+     "in": "Qwen3-8B reticle, cold 8K prompt, KV streamed during the prefill",
+     "text": "0.7 ms",
+     "printed_value": "0.7",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_burst_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Late-bound KV burst of a cold 1M prompt over two 400G uplinks, NIC-bound (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].burst.time_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 9.5633,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Late binding keeps the user slot free.",
+     "text": "9.6 ms at 1M",
+     "printed_value": "9.6",
+     "status": "agrees"
+    },
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "and a 9.6 ms KV burst",
+     "printed_value": "9.6",
+     "status": "agrees"
+    },
+    {
+     "in": "V4.1 array, cold 1M prompt 1 DGX B200 (8 B200)",
+     "text": "9.6 ms, NICs (2 × 400G)",
+     "printed_value": "9.6",
+     "status": "agrees"
+    },
+    {
+     "in": "cold 1M prompt, two prefill nodes",
+     "text": "9.6 ms",
+     "printed_value": "9.6",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_port_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Busiest package's switch-port time for a cold 1M burst (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].burst.package_port_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 3.54321,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Late binding keeps the user slot free.",
+     "text": "against 3.5 ms for the busiest",
+     "printed_value": "3.5",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_engine_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "RTL-measured ingest engine time on the busiest die for a cold 1M burst (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].burst.engine_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 3.07617,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Late binding keeps the user slot free.",
+     "text": "and 3.1 ms for the RTL-measured",
+     "printed_value": "3.1",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_burst_1m_8x",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Cold 1M burst over eight 400G uplinks, bound by the busiest package port (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[3].burst.time_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 3.54321,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill pod reaches the array through the rack switch",
+     "text": "the burst falls to 3.5 ms",
+     "printed_value": "3.5",
+     "status": "agrees"
+    },
+    {
+     "in": "cold 1M prompt, eight uplinks",
+     "text": "3.5 ms, package port",
+     "printed_value": "3.5",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.v41_burst_200k",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Late-bound KV burst of a cold 200K prompt over two 400G uplinks (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[4].burst.time_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 1.84641,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "V4.1 array, cold 200K prompt",
+     "text": "1.8 ms, NICs",
+     "printed_value": "1.8",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "ingest.port_util_2x",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Busiest package switch-port utilisation during a 1M burst at two uplinks (%)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#switch_port_load.ingest_package_port_utilisation_2x400G x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 37.0501,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill pod reaches the array through the rack switch",
+     "text": "at 37% of its rate",
+     "printed_value": "37",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "slot.late_bind_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Decode slot reserved for ingest with late binding, share of a 32,768-token session at 1M (%)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#slot_reservation[\"1048576\"].late_bind_reserved_fraction x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.0196362,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Late binding keeps the user slot free.",
+     "text": "0.02% of a 32,768-token session",
+     "printed_value": "0.02",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "slot.stream_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Decode slot reserved if the KV streams into a reserved slot during the prefill, 1M (%)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#slot_reservation[\"1048576\"].stream_reserved_fraction x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 8.90051,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Late binding keeps the user slot free.",
+     "text": "against 8.9% if the KV",
+     "printed_value": "8.9",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "gpu.mfu_conservative",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Calibrated B200 prefill rate as a share of dense FP8 peak, conservative (LMSYS GB200, BF16 attention) (%)",
+   "evidence_class": "third-party",
+   "binding": "results/arch/prefill_ingest.json#gpu_calibration.rates.conservative.b200_mfu_fp8_dense x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 27.8138,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill rates are calibrated from third-party measurements, not measured here",
+     "text": "the conservative rate, 28% of",
+     "printed_value": "28",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "gpu.mfu_optimistic",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Calibrated B200 prefill rate as a share of dense FP8 peak, optimistic (FP8 / NVFP4) (%)",
+   "evidence_class": "third-party",
+   "binding": "results/arch/prefill_ingest.json#gpu_calibration.rates.optimistic.b200_mfu_fp8_dense x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 39.3859,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill rates are calibrated from third-party measurements, not measured here",
+     "text": "(39% for the FP8/NVFP4",
+     "printed_value": "39",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "link.nic_gdr",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "ConnectX-7 400G GPUDirect RDMA goodput (Gb/s)",
+   "evidence_class": "third-party",
+   "binding": "results/arch/prefill_ingest.json#v41_cold[0].link.nic_goodput_Bps x 8e-09",
+   "derived": false,
+   "derivation": null,
+   "record_value": 391.47,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill rates are calibrated from third-party measurements, not measured here",
+     "text": "391 Gb/s",
+     "printed_value": "391",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_4k_new",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Agent-turn size, tokens appended (4K turn)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[1].new_tokens",
+   "derived": false,
+   "derivation": null,
+   "record_value": 4096.0,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "appends 4,096 tokens",
+     "printed_value": "4,096",
+     "status": "agrees"
+    },
+    {
+     "in": "The production descriptor carries ingested KV, not a prompt.",
+     "text": "before a 4,096-token turn",
+     "printed_value": "4,096",
+     "status": "agrees"
+    },
+    {
+     "in": "+4,096 tokens on 1M, prefix cached on the GPU",
+     "text": "+4,096 tokens",
+     "printed_value": "+4,096",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_32k_new",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Agent-turn size, tokens appended (32K turn)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[2].new_tokens",
+   "derived": false,
+   "derivation": null,
+   "record_value": 32768.0,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "one that appends 32,768 in",
+     "printed_value": "32,768",
+     "status": "agrees"
+    },
+    {
+     "in": "+32,768 tokens on 1M, prefix cached",
+     "text": "+32,768 tokens",
+     "printed_value": "+32,768",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_4k_ttft",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +4,096 on 1M, prefix cached on the GPU: time to first token (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[1].ttft_prefix_cached_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 23.1571,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "first token in 23.2 ms",
+     "printed_value": "23.2",
+     "status": "agrees"
+    },
+    {
+     "in": "The production descriptor carries ingested KV, not a prompt.",
+     "text": "only from 23.2 ms",
+     "printed_value": "23.2",
+     "status": "agrees"
+    },
+    {
+     "in": "+4,096 tokens on 1M, prefix cached on the GPU",
+     "text": "23.2 ms; 25.5 ms",
+     "printed_value": "23.2",
+     "status": "agrees"
+    }
+   ],
+   "sensitivity": {
+    "variants": [
+     {
+      "label": "KV read back from the array, pipelined by layer",
+      "binding": "results/arch/prefill_ingest.json#v41_turns[1].ttft_readback_layer_pipelined_s x 1000",
+      "value": 25.5317
+     },
+     {
+      "label": "KV read back serially",
+      "binding": "results/arch/prefill_ingest.json#v41_turns[1].ttft_readback_serial_s x 1000",
+      "value": 32.6831
+     }
+    ],
+    "range": [
+     23.1571,
+     32.6831
+    ]
+   }
+  },
+  {
+   "id": "turn.v41_4k_ttft_readback",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +4,096 on 1M with the KV read back from the array, pipelined by layer (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[1].ttft_readback_layer_pipelined_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 25.5317,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The production descriptor carries ingested KV, not a prompt.",
+     "text": "to 25.5 ms",
+     "printed_value": "25.5",
+     "status": "agrees"
+    },
+    {
+     "in": "+4,096 tokens on 1M, prefix cached on the GPU",
+     "text": "23.2 ms; 25.5 ms",
+     "printed_value": "25.5",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_4k_prefill",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +4,096 on 1M: GPU prefill (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[1].gpu_prefill_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 22.96,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "+4,096 tokens on 1M, prefix cached on the GPU",
+     "text": "23.0 ms",
+     "printed_value": "23.0",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_4k_sent",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +4,096 on 1M: KV sent (MB)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[1].new_bytes_sent x 1e-06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 6.3488,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "+4,096 tokens on 1M, prefix cached on the GPU",
+     "text": "6.3 MB",
+     "printed_value": "6.3",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_4k_ingest",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +4,096 on 1M: transfer (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[1].ingest_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.0648714,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "+4,096 tokens on 1M, prefix cached on the GPU",
+     "text": "0.06 ms",
+     "printed_value": "0.06",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_readback_bytes",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "KV read back from the array before a +4,096 turn on 1M (GB)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[1].context_readback_bytes x 1e-09",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.932291,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The production descriptor carries ingested KV, not a prompt.",
+     "text": "0.93 GB before",
+     "printed_value": "0.93",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_readback_serial",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Serial readback of that KV over two 400G uplinks (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[1].context_readback_serial_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 9.52605,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The production descriptor carries ingested KV, not a prompt.",
+     "text": "9.5 ms serially",
+     "printed_value": "9.5",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_32k_ttft",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +32,768 on 1M, prefix cached: time to first token (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[2].ttft_prefix_cached_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 183.176,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "Per-user rate governs a response once it has started",
+     "text": "32,768 in 183 ms",
+     "printed_value": "183",
+     "status": "agrees"
+    },
+    {
+     "in": "+32,768 tokens on 1M, prefix cached",
+     "text": "0.33 ms 183 ms",
+     "printed_value": "183",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_32k_prefill",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +32,768 on 1M: GPU prefill (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[2].gpu_prefill_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 182.719,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "+32,768 tokens on 1M, prefix cached",
+     "text": "183 ms 32 MB",
+     "printed_value": "183",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_32k_sent",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +32,768 on 1M: KV sent (MB)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[2].new_bytes_sent x 1e-06",
+   "derived": false,
+   "derivation": null,
+   "record_value": 31.8669,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "+32,768 tokens on 1M, prefix cached",
+     "text": "32 MB",
+     "printed_value": "32",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "turn.v41_32k_ingest",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "V4.1 agent turn +32,768 on 1M: transfer (ms)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#v41_turns[2].ingest_s x 1000",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.325612,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "+32,768 tokens on 1M, prefix cached",
+     "text": "0.33 ms",
+     "printed_value": "0.33",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.b200_tok_s_1m",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Prompt tokens per second one B200 prefills near a 1M context, conservative rate (thousands)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].b200_prompt_tok_s x 0.001",
+   "derived": false,
+   "derivation": null,
+   "record_value": 22.2996,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "one B200 prefills 22.3 K such",
+     "printed_value": "22.3",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.b200_tok_s_200k",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Prompt tokens per second one B200 prefills near a 200K context (thousands)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@200K\"].b200_prompt_tok_s x 0.001",
+   "derived": false,
+   "derivation": null,
+   "record_value": 32.301,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "and 32.3 K at 200K",
+     "printed_value": "32.3",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.dgx_fill_4",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "DGX B200 per V4.1 rack at the 28-user fill, 1M, four prompt tokens per output token",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"4\"].dgx_b200_needed",
+   "derived": false,
+   "derivation": null,
+   "record_value": 5.1386,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "needs 5.1 DGX B200 per rack",
+     "printed_value": "5.1",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.dgx_fill_20",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "DGX B200 per V4.1 rack at the 28-user fill, 1M, twenty prompt tokens per output token",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"20\"].dgx_b200_needed",
+   "derived": false,
+   "derivation": null,
+   "record_value": 25.693,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "needs 25.7",
+     "printed_value": "25.7",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.b200_fill_4",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "B200 per V4.1 rack at the 28-user fill, 1M, four prompt tokens per output token",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"4\"].b200_needed",
+   "derived": false,
+   "derivation": null,
+   "record_value": 41.1088,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "(41 to 206 B200s)",
+     "printed_value": "41",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.b200_fill_20",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "B200 per V4.1 rack at the 28-user fill, 1M, twenty prompt tokens per output token",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"20\"].b200_needed",
+   "derived": false,
+   "derivation": null,
+   "record_value": 205.544,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "(41 to 206 B200s)",
+     "printed_value": "206",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.dgx_sat_4",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "DGX B200 per V4.1 rack at 1,024 users, 1M, four prompt tokens per output token",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.sat1024[\"4\"].dgx_b200_needed",
+   "derived": false,
+   "derivation": null,
+   "record_value": 15.451,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "at 1,024 users, 15.5 and 77",
+     "printed_value": "15.5",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.dgx_sat_20",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "DGX B200 per V4.1 rack at 1,024 users, 1M, twenty prompt tokens per output token",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.sat1024[\"20\"].dgx_b200_needed",
+   "derived": false,
+   "derivation": null,
+   "record_value": 77.255,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "at 1,024 users, 15.5 and 77",
+     "printed_value": "77",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.uplink_fill_20",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Ingest share of two 400G uplinks at the 28-user fill, 1M, twenty prompt tokens per output token (%)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.fill28[\"20\"].uplink_fraction_2x400G x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 4.16825,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "4.2% of two 400G uplinks",
+     "printed_value": "4.2",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.uplink_sat_20",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Ingest share of two 400G uplinks at 1,024 users, 1M, twenty prompt tokens per output token (%)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"v41_rom@1M\"].by_batch.sat1024[\"20\"].uplink_fraction_2x400G x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 12.5333,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "13% at 1,024 users",
+     "printed_value": "13",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.qwen_agg",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Qwen3-8B reticle KV-bound aggregate decode rate the prefill tier must feed (tok/s)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"qwen_rom@8K\"].decode_aggregate_tok_s",
+   "derived": false,
+   "derivation": null,
+   "record_value": 8940.7,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "KV-bound 8,941 tokens/s",
+     "printed_value": "8,941",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.qwen_h200_4",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "H200 per Qwen3-8B reticle at four prompt tokens per output token",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"qwen_rom@8K\"].by_R[\"4\"].h200_needed",
+   "derived": false,
+   "derivation": null,
+   "record_value": 0.689584,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "needs 0.69 H200 at 4:1",
+     "printed_value": "0.69",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.qwen_h200_20",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "H200 per Qwen3-8B reticle at twenty prompt tokens per output token",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"qwen_rom@8K\"].by_R[\"20\"].h200_needed",
+   "derived": false,
+   "derivation": null,
+   "record_value": 3.44792,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "and 3.4 at 20:1",
+     "printed_value": "3.4",
+     "status": "agrees"
+    }
+   ]
+  },
+  {
+   "id": "tier.qwen_link_20",
+   "section": "Prefill, ingest and time to first token",
+   "claim": "Qwen3-8B KV ingest share of one 400G NIC at twenty prompt tokens per output token (%)",
+   "evidence_class": "model",
+   "binding": "results/arch/prefill_ingest.json#sustained[\"qwen_rom@8K\"].by_R[\"20\"].link_fraction x 100",
+   "derived": false,
+   "derivation": null,
+   "record_value": 26.9417,
+   "records": [
+    "results/arch/prefill_ingest.json"
+   ],
+   "printed": [
+    {
+     "in": "The GPU prefill tier scales with prompt tokens, not with users.",
+     "text": "uses 27% of one 400G NIC",
+     "printed_value": "27",
+     "status": "agrees"
     }
    ]
   }
@@ -8695,6 +10413,17 @@
    "schema": "opentallas.dft.summary.v1",
    "tool": "tools/dft/summarize.py",
    "command": "python3 tools/dft/summarize.py  (inferred; the record names no command)",
+   "pins": [],
+   "pin_counts": {},
+   "commits": []
+  },
+  "results/arch/prefill_ingest.json": {
+   "exists": true,
+   "tracked": true,
+   "sha256": "918cc1d67b354070d955bf80fa6851ad80265dea47af3fd8974e24b1325f1ca5",
+   "schema": "opentallas.arch-prefill-ingest.v2",
+   "tool": "tools/arch_prefill.py",
+   "command": "python3 tools/arch_prefill.py",
    "pins": [],
    "pin_counts": {},
    "commits": []
