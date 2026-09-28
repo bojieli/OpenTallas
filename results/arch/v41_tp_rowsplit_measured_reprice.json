@@ -1,4 +1,14 @@
 {
+  "index_scan_gate": {
+    "attained_fraction": 0.017232,
+    "cycles": 1026,
+    "measured_sectors_per_cycle": 2.153996,
+    "required_sectors_per_cycle": 125.0,
+    "scope": "exact tagged per-PC reader prototype; not the integrated full-token scan",
+    "sectors": 2210,
+    "source": "results/rtl/hdc_v41x_idx_shard_reader_pc.json",
+    "throughput_claim_valid": false
+  },
   "limits": [
     "stage bench has producer timing stubs and behavioural UCIe/T1, not a routed die",
     "one 64-byte VM write/cycle imposes a 1064-cycle minimum for the 266-flit four-rank activation gather; the old 219-cycle model exposure is physically unattainable at this port width",
@@ -6,7 +16,7 @@
     "local per-expert BF16 rounding and ordered sum are not separately timed",
     "other collective tails are inherited from prior campaigns",
     "MTP verifies six positions and needs its own 1596/480-flit gather bench",
-    "866-user sharded-key saturation awaits parallel scan scheduler, exact two-user scan and route"
+    "tagged sharded index reader is exact but delivers 2.154 of the modeled 125 sectors/cycle; parallel scan scheduler, exact multiuser isolation and route remain required for the 866-user headline"
   ],
   "measured_tail_cycles": {
     "act": 4948,
@@ -47,12 +57,13 @@
   "source_sha256": {
     "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6",
     "results/arch/v41_tp_exact_reprice.json": "c18c6e47100a93dbe7490d3b8f8673f10e6151e9c3755caaef8e8d8d3c24f876",
+    "results/rtl/hdc_v41x_idx_shard_reader_pc.json": "b86adbef20492be7778c5375dac13c4cfb78f8814e0568900dfd69fcb3fb1928",
     "results/rtl/v41_tp_rowsplit_die_collectives.json": "37c388dc6149b3b1c4c77bf1c7f99860d4640af7a557c8d24cf1b0d7757edc13",
     "tools/arch_lanes_v41.py": "1c5dde7d9041e25dc53fa90b9ea9b30c493dd690e6e776315735a7d948c76325",
     "tools/arch_latency_ladder_v41.py": "3243a74a0948a07f959200c3d12c9e8ce08dd12a45ce98f29313f533d12efdf5",
     "tools/collective_exposure.py": "cd6aad7745ec3d27b161e1dd4291e7b5ab812c4afc682bac85ef030a3184b67b",
     "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
     "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303",
-    "tools/v41_tp_rowsplit_measured_reprice.py": "ac8f54d3d3802ec8d8ea721d9798318dd2f450cf44278ef8ef7fac82de0b7363"
+    "tools/v41_tp_rowsplit_measured_reprice.py": "8d722eb6ae532d431e33a4e877e5d0e1fe2a71069e6e045ee11475ff328cd455"
   }
 }

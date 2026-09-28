@@ -23,6 +23,7 @@ from v41_tp_exact_reprice import v41_moe_rowsplit  # noqa: E402
 
 BENCH = ROOT / "results/rtl/v41_tp_rowsplit_die_collectives.json"
 SENSITIVITY = ROOT / "results/arch/v41_tp_exact_reprice.json"
+INDEX_READER = ROOT / "results/rtl/hdc_v41x_idx_shard_reader_pc.json"
 OUT = ROOT / "results/arch/v41_tp_rowsplit_measured_reprice.json"
 
 
@@ -50,6 +51,12 @@ def measured_gather_mutation(tails: dict[str, int]):
 def build():
     bench = json.loads(BENCH.read_text())
     sensitivity = json.loads(SENSITIVITY.read_text())
+    index_reader = json.loads(INDEX_READER.read_text())
+    assert index_reader["schema"] == "opentallas.hdc-v41x-idx-shard-reader-pc.v1"
+    assert index_reader["status"] == "pass_exact_below_bandwidth_target"
+    scan = index_reader["timed_1040_key_scan"]
+    assert scan["sectors"] == 2210 and scan["keys"] == 1040
+    assert scan["sectors_per_cycle"] < index_reader["target_sectors_per_cycle"]
     assert bench["schema"] == "v41_tp_rowsplit_die_collectives_v1"
     contract = bench["die_contract"]
     for key, value in dict(CL_LANES=16, flit_bytes=64, CL_DEPTH=16,
@@ -91,18 +98,26 @@ def build():
                "tools/arch_lanes_v41.py", "tools/arch_latency_ladder_v41.py",
                "tools/decode_critical_path.py", "tools/collective_exposure.py",
                "results/arch/v41_lanes.json", "results/arch/v41_tp_exact_reprice.json",
-               "results/rtl/v41_tp_rowsplit_die_collectives.json")
+               "results/rtl/v41_tp_rowsplit_die_collectives.json",
+               "results/rtl/hdc_v41x_idx_shard_reader_pc.json")
     pins = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in sources}
     return dict(schema="v41_tp_rowsplit_measured_reprice_v1", source_sha256=pins,
                 scope="batch-one per-user AR model with adopted-width gather stage RTL tails; MTP is an uncalibrated sensitivity; not full-shape chip throughput",
                 measured_tail_cycles=tails, points=points,
+                index_scan_gate=dict(source="results/rtl/hdc_v41x_idx_shard_reader_pc.json",
+                                     scope="exact tagged per-PC reader prototype; not the integrated full-token scan",
+                                     sectors=scan["sectors"], cycles=scan["cycles"],
+                                     measured_sectors_per_cycle=scan["sectors_per_cycle"],
+                                     required_sectors_per_cycle=index_reader["target_sectors_per_cycle"],
+                                     attained_fraction=index_reader["fraction_of_target"],
+                                     throughput_claim_valid=False),
                 limits=["stage bench has producer timing stubs and behavioural UCIe/T1, not a routed die",
                         "one 64-byte VM write/cycle imposes a 1064-cycle minimum for the 266-flit four-rank activation gather; the old 219-cycle model exposure is physically unattainable at this port width",
                         "full-shape TP layer and die exact-token simulation is pending",
                         "local per-expert BF16 rounding and ordered sum are not separately timed",
                         "other collective tails are inherited from prior campaigns",
                         "MTP verifies six positions and needs its own 1596/480-flit gather bench",
-                        "866-user sharded-key saturation awaits parallel scan scheduler, exact two-user scan and route"])
+                        "tagged sharded index reader is exact but delivers 2.154 of the modeled 125 sectors/cycle; parallel scan scheduler, exact multiuser isolation and route remain required for the 866-user headline"])
 
 
 def main():

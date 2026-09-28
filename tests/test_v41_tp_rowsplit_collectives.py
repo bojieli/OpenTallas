@@ -54,6 +54,10 @@ def test_measured_ar_reprice_keeps_mtp_open():
         pattern: bench["summary"][pattern]["measured_tail_cycles"] for pattern in ("act", "y")
     }
     assert rec["measured_tail_cycles"]["act"] >= 4 * 266
+    scan = rec["index_scan_gate"]
+    assert scan["sectors"] == 2210 and scan["cycles"] == 1026
+    assert scan["measured_sectors_per_cycle"] < scan["required_sectors_per_cycle"]
+    assert scan["attained_fraction"] < 0.02 and not scan["throughput_claim_valid"]
     for point in rec["points"].values():
         ar = point["ar"]
         assert ar["row_split_measured_gathers"] < ar["row_split_old_tail"]
