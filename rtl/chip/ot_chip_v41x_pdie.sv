@@ -136,7 +136,10 @@ module ot_chip_v41x_pdie #(
     parameter integer N_KEY   = 2,     // spine <-> each stack's key streamer
     parameter integer N_COLL  = 3,     // spine <-> the collective engines at the link edges
     parameter integer N_SER   = 3,     // spine <-> the SerDes edge (stage hop)
-    parameter integer STG     = 16     // KV staging words a slot (the die's KV_STG, reduced)
+    parameter integer STG     = 16,    // KV staging words a slot (the die's KV_STG, reduced)
+    parameter integer TILE_RT = 0      // 1: the four pinned tiles are the ROUTED physical tile
+                                       //    (ot_chip_v41x_ptile NQ = 2, NM = 0 at the tile slot, its
+                                       //    ORFS abstract); 0: the ot_pdie_tile_io placeholder
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -222,7 +225,26 @@ module ot_chip_v41x_pdie #(
         wire [RESW-1:0] res_t, res_s;
         ot_chip_v41x_pdie_src #(.W(OPW), .SEED(21 + t)) u_src (.clk(clk), .rst_n(rst_n), .q(op_s));
         ot_chip_v41x_pdie_trunk #(.W(OPW), .N(NT)) u_op (.clk(clk), .d(op_s), .q(op_t));
-        ot_pdie_tile_io u_tile (.clk(clk), .op_in(op_t), .res_out(res_t));
+        if (TILE_RT) begin : g_rt
+            // op_t: the tile's spine-edge inputs {s_x_*, s_o_cr, s_d_*} (361 of OPW bits);
+            // res_t: its results {r_*} (NQ = 2: 140 bits), with d_rdy and idle folded into bit 0
+            wire [1:0] r_v, r_f; wire [31:0] r_rg, r_bf; wire [7:0] r_tag; wire [63:0] r_y;
+            wire d_rdy, idle;
+            ot_chip_v41x_ptile u_tile (
+                .clk(clk), .rst_n(rst_n),
+                .s_d_v(op_t[0]), .s_d_rdy(d_rdy), .s_d_plg(op_t[4:1]), .s_d_nb(op_t[14:5]),
+                .s_d_nrows(op_t[30:15]), .s_d_wbase(op_t[50:31]), .s_d_ind(op_t[51]), .s_d_eid(op_t[60:52]),
+                .s_d_estride(op_t[80:61]), .s_d_fp4(op_t[81]), .s_d_tag(op_t[85:82]), .s_o_cr(op_t[86]),
+                .s_x_we(op_t[87]), .s_x_pos(op_t[90:88]), .s_x_addr(op_t[96:91]), .s_x_data(op_t[360:97]),
+                .r_v(r_v), .r_rg(r_rg), .r_tag(r_tag), .r_y(r_y), .r_bf(r_bf), .r_f(r_f),
+                .m_d_v(1'b0), .m_d_rdy(), .m_d_plg(4'd0), .m_d_nb(14'd0), .m_d_nrows(16'd0), .m_d_wbase(20'd0),
+                .m_d_ind(1'b0), .m_d_eid(9'd0), .m_d_estride(20'd0), .m_d_tag(4'd0), .m_o_cr(1'b0),
+                .m_x_we(1'b0), .m_x_pos(3'd0), .m_x_addr(9'd0), .m_x_data(128'd0),
+                .m_r_v(), .m_r_rg(), .m_r_tag(), .m_r_mask(), .m_r_y(), .m_r_bf(), .m_r_f(), .idle(idle));
+            assign res_t = {r_f, r_bf, r_y, r_tag, r_rg, r_v[1], r_v[0] ^ d_rdy ^ idle};
+        end else begin : g_ph
+            ot_pdie_tile_io u_tile (.clk(clk), .op_in(op_t), .res_out(res_t));
+        end
         ot_chip_v41x_pdie_trunk #(.W(RESW), .N(NT)) u_res (.clk(clk), .d(res_t), .q(res_s));
         ot_chip_v41x_pdie_sink #(.W(RESW)) u_snk (.clk(clk), .d(res_s), .o(fo[5 + t]));
     end endgenerate

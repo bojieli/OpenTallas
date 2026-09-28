@@ -26,7 +26,8 @@ source $::env(SCRIPTS_DIR)/util.tcl
 set m4 {}
 foreach inst [find_macros] {
   set master [[$inst getMaster] getName]
-  if {![string match "ot_pdie_tile_*" $master]} { dict set m4 $master 1 }
+  # tiles (the placeholders and the routed ot_chip_v41x_ptile abstract) bring their own grid (not modelled)
+  if {![string match "ot_pdie_tile_*" $master] && $master ne "ot_chip_v41x_ptile"} { dict set m4 $master 1 }
 }
 if {[llength [dict keys $m4]] > 0} {
   define_pdn_grid -macro -cells [dict keys $m4] -halo {2 2 2 2} -voltage_domains {CORE} -name {m4macros}

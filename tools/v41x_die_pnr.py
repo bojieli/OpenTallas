@@ -144,18 +144,28 @@ def pack_columns(items: list[tuple[str, str]], height: float, gap: float = 4.0) 
     return cols
 
 
-def ptile(nq: int = 2, nm: int = 0, np_: int = 2, util: float = 0.68, density: float | None = None) -> dict:
+def ptile(nq: int = 2, nm: int = 0, np_: int = 2, util: float = 0.68, density: float | None = None,
+          fit_um: tuple[float, float] | None = None) -> dict:
+    """fit_um (w, h): build the tile to fit that footprint (the die route's tile slot): the core height is the
+    slot's, the macro columns are packed to it, and the case fails if the width does not fit."""
     regs = (nq * 8 * 264 + 8 * 264 + nm * 8 * (272 + 128)
             + np_ * (106 + 274 + nq * 70 + nm * (107 + 141 + 221)))
     a_std = nq * QTILE_UM2 + nm * MTILE_UM2 + regs * FLOP_UM2
     a_lane = a_std / util
     side_a, side_b = ptile_macros(nq, nm)
-    height = max((a_lane / LANE_ASPECT) ** 0.5, max(MACROS[m][1] for _, m in side_a + side_b) + 8)
+    margin = 2.16
+    if fit_um:
+        core_h = snap(fit_um[1] - 2 * margin - 0.54, 0.27 * 4)
+        if core_h + 2 * margin > fit_um[1]:
+            core_h -= 1.08
+        height = core_h - 8.0
+    else:
+        height = max((a_lane / LANE_ASPECT) ** 0.5, max(MACROS[m][1] for _, m in side_a + side_b) + 8)
     cols_a, cols_b = pack_columns(side_a, height), pack_columns(side_b, height)
     col_h = max(sum(MACROS[m][1] + 4.0 for _, m in c) for c in cols_a + cols_b)
-    core_h = snap(max(height, col_h + 8.0), 0.27 * 4)
+    if not fit_um:
+        core_h = snap(max(height, col_h + 8.0), 0.27 * 4)
     lane_w = a_lane / core_h
-    margin = 2.16
     placements, x = [], margin + CHANNEL_UM
     for col in cols_a:
         y = margin + 4.0
@@ -172,6 +182,8 @@ def ptile(nq: int = 2, nm: int = 0, np_: int = 2, util: float = 0.68, density: f
             y += MACROS[m][1] + 4.0
         x += max(MACROS[m][0] for _, m in col) + CHANNEL_UM
     die_w, die_h = snap(x + margin), snap(core_h + 2 * margin, 0.27)
+    if fit_um and (die_w > fit_um[0] or die_h > fit_um[1]):
+        raise ValueError(f"tile {die_w} x {die_h} um does not fit the {fit_um[0]} x {fit_um[1]} um slot")
     tcl = ["# Macro placement of ot_chip_v41x_ptile (tools/v41x_die_pnr.py): ROM | lane column | ROM.",
            "proc ot_place {want x y orient} {",
            "  foreach inst [[ord::get_db_block] getInsts] {",
@@ -198,7 +210,7 @@ def ptile(nq: int = 2, nm: int = 0, np_: int = 2, util: float = 0.68, density: f
     for m in masters:
         args += ["--macro-view", f"{m}={MACRO_DIR}/{m}"]
     macro_area = sum(MACROS[m][0] * MACROS[m][1] for _, m in side_a + side_b)
-    tag = f"q{nq}m{nm}_u{int(round(util * 100))}"
+    tag = f"q{nq}m{nm}_u{int(round(util * 100))}" + ("_s4slot" if fit_um else "")
     return {"args": args, "nickname": f"claude_v41x_ptile_{tag}", "hook": ("PRE_MACRO_PLACE", "\n".join(tcl) + "\n"),
             "output": f"results/asap7_physical/v41x_tile_{tag}/physical.json",
             "floorplan": {"die_um": [die_w, die_h], "lane_region_um": [round(lane_x0, 3), margin,
@@ -214,6 +226,12 @@ PDIE_DIR = "physical/asap7_v41x_pdie_macros"
 S4 = 0.25                                         # linear scale of the reduced die
 TILE_CHANNEL_UM = 20.0                            # die-level channel between tiles (repeaters, pipeline flops)
 OPW, RESW, RECW, FLW = 380, 140, 547, 512
+
+
+def s4_tile_slot() -> tuple[float, float]:
+    """The reduced die's tile footprint (ot_pdie_tile_io), um."""
+    s = pdie_specs()["ot_pdie_tile_io"]
+    return s.width_um, s.height_um
 
 
 def die_assembly_rects() -> dict:
@@ -301,8 +319,52 @@ def write_pdie_views(out: Path | None = None) -> dict:
     return rec
 
 
+RT_TILE = "ot_chip_v41x_ptile"
+RT_TILE_DIR = f"{PDIE_DIR}/{RT_TILE}_q2s4"         # the routed tile_q2_s4slot's ORFS abstract (write_rt_tile_view)
+
+
+def ptile_ports(nq: int = 2, nm: int = 0) -> list[tuple[str, str, int]]:
+    """(direction, name, width) of ot_chip_v41x_ptile at NQ / NM, in declaration order."""
+    import re
+    text = (ROOT / "rtl/chip/ot_chip_v41x_ptile.sv").read_text()
+    body = text[text.index("module ot_chip_v41x_ptile"):]
+    ports = body[body.index(") (") + 3:body.index(");")]
+    env = {"NQ": nq, "NM": nm}
+    out = []
+    for m in re.finditer(r"(input|output)\s+(?:wire|reg)?\s*(?:\[([^\]]+):0\])?\s*(\w+)", ports):
+        w = eval(m.group(2), {}, env) + 1 if m.group(2) else 1
+        out.append((m.group(1), m.group(3), w))
+    return out
+
+
+def write_rt_tile_view(orfs_results: Path, out: Path | None = None) -> dict:
+    """The routed tile_q2_s4slot as a die-level hard macro: ORFS generate_abstract's LEF and timing model
+    (orfs_results = the kept work dir's results/asap7/<nickname>/base), plus a black-box stub."""
+    import hashlib
+    out = out or ROOT / RT_TILE_DIR
+    out.mkdir(parents=True, exist_ok=True)
+    lef, lib = orfs_results / f"{RT_TILE}.lef", orfs_results / f"{RT_TILE}_typ.lib"
+    (out / f"{RT_TILE}.lef").write_bytes(lef.read_bytes())
+    (out / f"{RT_TILE}_tt.lib").write_bytes(lib.read_bytes())
+    lines = [f"// Black box of the routed {RT_TILE} (NQ = 2, NM = 0; tools/v41x_die_pnr.py tile_q2_s4slot).",
+             f"(* blackbox *) module {RT_TILE} ("]
+    decl = []
+    for d, n, w in ptile_ports(2, 0):
+        decl.append(f"    {d} wire {'' if w == 1 else f'[{w - 1}:0] '}{n}")
+    lines += [",\n".join(decl), ");", "endmodule", ""]
+    (out / f"{RT_TILE}_bb.v").write_text("\n".join(lines))
+    rec = {"generator": "tools/v41x_die_pnr.py write_rt_tile_view", "source": "ORFS generate_abstract of the "
+           "routed tile_q2_s4slot (write_abstract_lef -bloat_occupied_layers, write_timing_model)",
+           "files": {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(out.iterdir())
+                     if f.name != "index.json"}}
+    (out / "index.json").write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+    return rec
+
+
 def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_key: int = 2, n_coll: int = 3,
-           n_ser: int = 3, stop: str | None = None) -> dict:
+           n_ser: int = 3, stop: str | None = None, tile_rt: bool = False) -> dict:
+    """tile_rt: the four pinned tiles are the routed physical tile (tile_q2_s4slot's abstract, pins on its
+    west edge, so mirrored relative to the placeholder: MY west of the spine, R0 east of it)."""
     fp = die_assembly_rects()
     k = 1000 * S4
     W, H = snap(fp["die_w_mm"] * k), snap(fp["die_h_mm"] * k, 0.27)
@@ -333,12 +395,15 @@ def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_k
     bk = 0
     for key, (x0, y0, x1, y1) in sorted(tiles.items()):
         west = x1 * k <= sx
+        orient = "R0" if west else "MY"
         if key in io:
-            inst = f"g_tio[{io.index(key)}].u_tile"
+            inst = f"g_tio[{io.index(key)}].{'g_rt' if tile_rt else 'g_ph'}.u_tile"
+            if tile_rt:
+                orient = "MY" if west else "R0"
         else:
             inst = f"g_tbk[{bk}].u_tile"
             bk += 1
-        place.append((inst, x0 * k + TILE_CHANNEL_UM / 2, y0 * k + TILE_CHANNEL_UM / 2, "R0" if west else "MY"))
+        place.append((inst, x0 * k + TILE_CHANNEL_UM / 2, y0 * k + TILE_CHANNEL_UM / 2, orient))
     coll = [r for r in fp["rects"] if r["cls"] == "collective"]
     ucie = next(r for r in fp["rects"] if r["cls"] == "phy_ucie")
     ser = next(r for r in fp["rects"] if r["cls"] == "phy_serdes")
@@ -362,12 +427,15 @@ def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_k
            "}"]
     tcl += [f"ot_place {{{i}}} {snap(x):g} {snap(y, 0.27):g} {o}" for i, x, y, o in place]
     srcs = ["rtl/chip/ot_chip_v41x_hbm_karb.sv", "rtl/chip/ot_chip_v41x_kv_prefetch.sv"]
-    srcs += [f"{PDIE_DIR}/{n}/{n}_bb.v" for n in specs] + ["rtl/chip/ot_chip_v41x_pdie.sv"]
+    srcs += [f"{PDIE_DIR}/{n}/{n}_bb.v" for n in specs]
+    if tile_rt:
+        srcs.append(f"{RT_TILE_DIR}/{RT_TILE}_bb.v")
+    srcs.append("rtl/chip/ot_chip_v41x_pdie.sv")
     args = ["--view", "asap7", "--top", "ot_chip_v41x_pdie"]
     for s_ in srcs:
         args += ["--source", s_]
     for n, v in (("N_FAR", n_far), ("N_FAR2", n_far2), ("N_MID", n_mid), ("N_NEAR", n_near), ("N_KEY", n_key),
-                 ("N_COLL", n_coll), ("N_SER", n_ser)):
+                 ("N_COLL", n_coll), ("N_SER", n_ser), ("TILE_RT", int(tile_rt))):
         args += ["--param", f"{n}={v}"]
     m = 2.16
     args += ["--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2", "--stages", "pnr",
@@ -377,9 +445,11 @@ def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_k
              "--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_v41x_pdie.tcl"]
     for n in specs:
         args += ["--macro-view", f"{n}={PDIE_DIR}/{n}"]
+    if tile_rt:
+        args += ["--macro-view", f"{RT_TILE}={RT_TILE_DIR}"]
     if stop:
         args += ["--pnr-stop-after", stop]
-    tag = f"s4_f{n_far}{n_far2}m{n_mid}n{n_near}k{n_key}c{n_coll}h{n_ser}"
+    tag = f"s4_f{n_far}{n_far2}m{n_mid}n{n_near}k{n_key}c{n_coll}h{n_ser}" + ("_rt" if tile_rt else "")
     return {"args": args, "nickname": f"claude_v41x_pdie_{tag}", "hook": ("PRE_MACRO_PLACE", "\n".join(tcl) + "\n"),
             "output": f"results/asap7_physical/v41x_die_{tag}/physical.json",
             "floorplan": {"die_um": [W, H], "scale": S4, "tile_channel_um": TILE_CHANNEL_UM,
@@ -391,9 +461,11 @@ def die_s4(n_far: int = 5, n_far2: int = 4, n_mid: int = 2, n_near: int = 1, n_k
 
 CASES = {"karb_strip": karb_strip,
          "die_s4": die_s4,
+         "die_s4_rt": lambda: die_s4(tile_rt=True),
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),
          "tile_q2_u75": lambda: ptile(2, 0, 2, 0.75),
-         "tile_q4m1_u68": lambda: ptile(4, 1, 2, 0.68)}
+         "tile_q4m1_u68": lambda: ptile(4, 1, 2, 0.68),
+         "tile_q2_s4slot": lambda: ptile(2, 0, 2, 0.68, fit_um=s4_tile_slot())}
 
 
 def main() -> int:
