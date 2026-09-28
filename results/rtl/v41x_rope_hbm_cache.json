@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.rtl.v41x_rope_hbm_cache.v1",
+  "status": "pass",
+  "claim_scope": "Standalone four-stack 256-bit K-port RoPE sector client, exact 200K plain/YaRN and 1M plain FP32 coefficients, cache hold/release, backpressure and reordered tagged replies. Not integrated with the die arbiter, RTL SU CROM mux, HBM PHY, or a routed physical view.",
+  "fills": 3,
+  "sectors_received": 24,
+  "cache_hits": 1,
+  "stalled_cycles": 6,
+  "reordered_responses": 12,
+  "simulation_cycles": 59,
+  "build_seconds": 2.54,
+  "memory_cap_bytes": 8589934592,
+  "fixtures": {
+    "plain200k": {
+      "position": 199999,
+      "kind": "plain",
+      "binary_sha256": "9745343dc1b7a72ee053530588f7a0df5c3e42c1f2587afbf64909946030eeb8",
+      "hex_sha256": "aad91d7c6f7374e9328b27934bdbdeb5034d0752ae8b4e125e868038d69328d3"
+    },
+    "plain1m": {
+      "position": 1048575,
+      "kind": "plain",
+      "binary_sha256": "2ac28a2edd08ec8b4ff10e17627de39b00ed01a86dcb3e6e5f7f8217d24e57c8",
+      "hex_sha256": "a873e2f2d406b93a251e3e2e907c3ed6bee4499f2312dd63a5c6c61cfce993fd"
+    },
+    "yarn200k": {
+      "position": 199999,
+      "kind": "yarn",
+      "binary_sha256": "95602eb440369a2d64d607c933342faabb2e50c74f4b5d61eda6ca4b85bde467",
+      "hex_sha256": "6be6a1d5967065c1ee980954af291325226cb3cc1aeb43ae5b447845d0e3e5e7"
+    }
+  },
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": "770ce2aff708ce1f38ffdc654998c72d480470b1b92d2c32e47199dda22e5cfb",
+    "rtl/test/tb_chip_v41x_rope_hbm_cache.sv": "4b3ae4809c3a58660a5235f9a31cf869e0addc25c166dbe536d06186480fa884",
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/rtl_v41x_rope_hbm_cache.py": "f18bb86cf38f1629cb315cc1b9136528def7880a3ba600708525ed170a5c6cf3"
+  }
+}

@@ -1,0 +1,656 @@
+{
+  "assumptions": {
+    "allocation": "one table per kind per physical layer die; no separate HBM port",
+    "attention_owner": "first placement stage containing each layer",
+    "capacity_reference": "1M striped-index preflight; other state/overhead outside that preflight is not established",
+    "cos_sin_format": "32 FP32 cos/sin pairs per position per table",
+    "per_token_fill": "256 bytes: two 32-byte sectors from each of four stacks; retained for all RoPE ops at that token position"
+  },
+  "scenarios": {
+    "1048576": {
+      "fleet_table_bytes": 31138512896,
+      "max_table_bytes_per_die": 536870912,
+      "min_capacity_users_with_striped_keys": 860,
+      "physical_table_copies": 116,
+      "single_table_bytes_per_die": 268435456,
+      "single_table_bytes_per_stack": 67108864,
+      "stages": [
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -117968256,
+          "sectors_per_stack": 4194304,
+          "stage": 0,
+          "table_bytes_per_die": 536870912,
+          "table_bytes_per_stack": 134217728,
+          "table_kinds": [
+            "plain",
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 860
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 1,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 2,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 3,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 4,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 5,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 6,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 7,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 8,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 9,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 10,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 11,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 12,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 13,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 14,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 15,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 16,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 17,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 18,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 19,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 20,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 21,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 22,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 23,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 24,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 25,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 26,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        },
+        {
+          "physical_dies": 4,
+          "room_at_model_866_users_bytes_per_stack": -50859392,
+          "sectors_per_stack": 2097152,
+          "stage": 27,
+          "table_bytes_per_die": 268435456,
+          "table_bytes_per_stack": 67108864,
+          "table_kinds": [
+            "yarn"
+          ],
+          "users_with_striped_keys_capacity_only": 863
+        }
+      ]
+    },
+    "200000": {
+      "fleet_table_bytes": 5939200000,
+      "max_table_bytes_per_die": 102400000,
+      "min_capacity_users_with_striped_keys": null,
+      "physical_table_copies": 116,
+      "single_table_bytes_per_die": 51200000,
+      "single_table_bytes_per_stack": 12800000,
+      "stages": [
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 800000,
+          "stage": 0,
+          "table_bytes_per_die": 102400000,
+          "table_bytes_per_stack": 25600000,
+          "table_kinds": [
+            "plain",
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 1,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 2,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 3,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 4,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 5,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 6,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 7,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 8,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 9,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 10,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 11,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 12,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 13,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 14,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 15,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 16,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 17,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 18,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 19,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 20,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 21,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 22,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 23,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 24,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 25,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 26,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        },
+        {
+          "physical_dies": 4,
+          "sectors_per_stack": 400000,
+          "stage": 27,
+          "table_bytes_per_die": 51200000,
+          "table_bytes_per_stack": 12800000,
+          "table_kinds": [
+            "yarn"
+          ]
+        }
+      ]
+    }
+  },
+  "schema": "opentallas.v41x.rope_hbm_capacity.v1",
+  "source_sha256": {
+    "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
+    "results/arch/v41_hbm_region_preflight.json": "27e10f8e90d71167fd447141eaf49f9b1436867fc98fd35fcc94f6058464eab8",
+    "tools/v41_rope_hbm_capacity.py": "7a21ee1fa0e5a1349f170a4e9b07da71a18d720db265f7cfe1eed2046f9d81e4"
+  },
+  "status": "capacity_only; physical region allocation and bandwidth arbitration pending"
+}
