@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Matched ROM/QE-HBM weight-source A/B on the all-unit switched V4.1x array.
 
-The three-package, two-user bench checks every token, logit, KV and VM state
+The five-package (three body plus two split-head), two-user bench checks every token, logit, KV and VM state
 against the same ISA pipeline and golden in both arms.  Memories are behavioural;
 this is a reduced-array cycle comparison, not a 99-die throughput measurement.
 """
@@ -87,7 +87,8 @@ def prepare(scratch):
                weight_equivalence=eq, isa_pipeline=recs,
                golden_tokens={str(u): [s["argmax"] for s in g["steps"]] for u, g in enumerate(gold)},
                packages=plan.n, users=USERS, prompt_tokens=PLEN, generated_tokens=NGEN,
-               steps_per_user=steps, program_instructions=[len(p) for p in progs])
+               steps_per_user=steps, program_instructions=[len(p) for p in progs],
+               verilator_makeflags="OPT_FAST=-O0 OPT_GLOBAL=-O0")
     (scratch / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
     return man
 
@@ -105,7 +106,7 @@ def build_cmd(obj, whbm, jobs):
             f"+define+HDC_W_HBM={whbm}", *map(str, core.rtl_sources(True)),
             *map(str, AC.BENCH_AUX_RTL), str(AC.LINK), str(AC.ROUTER), str(AC.CTRL),
             str(AC.TB), str(AC.HARNESS), "-CFLAGS", "-O1", "-MAKEFLAGS",
-            "OPT_FAST=-O1 OPT_GLOBAL=-O1", "-j", str(jobs)]
+            "OPT_FAST=-O0 OPT_GLOBAL=-O0", "-j", str(jobs)]
 
 
 def parse(log, whbm, man):
@@ -149,6 +150,8 @@ def arm(whbm, images, scratch, jobs):
                          binary_unchanged=sha(exe) == binary_sha)
     rec["pass"] = all(rec["checks"].values())
     rec.update(build=build, run=run, build_command=cmd, run_command=run_cmd,
+               verilator_version=subprocess.run(["verilator", "--version"], capture_output=True,
+                                                text=True, check=True).stdout.strip(),
                source_sha256=man["source_sha256"], image_sha256=man["image_sha256"],
                binary_sha256=binary_sha, build_log_sha256=sha(scratch/"build.log"),
                run_log_sha256=sha(scratch/"run.log"), host=os.uname().nodename)
@@ -165,6 +168,7 @@ def combine(images, arm_a, arm_b, output):
     matched = dict(same_sources=a["source_sha256"] == b["source_sha256"] == man["source_sha256"],
                    same_images=a["image_sha256"] == b["image_sha256"] == man["image_sha256"],
                    same_weight_words=man["weight_equivalence"]["pass_"],
+                   same_verilator_version=a["verilator_version"] == b["verilator_version"],
                    only_weight_source_diff=len(ca) == len(cb) and
                    [(x, y) for x, y in zip(ca, cb) if x != y] ==
                    [("+define+HDC_W_HBM=0", "+define+HDC_W_HBM=1")],
