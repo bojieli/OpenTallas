@@ -25,6 +25,7 @@ SOURCES = [
     CHIP / f"{n}.sv" for n in (
         "ot_chip_v41x_die", "ot_chip_v41x_tile", "ot_chip_v41x_hbm3e_phy",
         "ot_chip_v41x_window_row_codec", "ot_chip_v41x_window_kv_prefetch",
+        "ot_chip_v41x_window_block_guard",
         "ot_chip_v41x_kv_reqmux", "ot_chip_v41x_kv_prefetch",
         "ot_chip_v41x_hbm_karb", "ot_chip_v41x_coll_dma",
     )

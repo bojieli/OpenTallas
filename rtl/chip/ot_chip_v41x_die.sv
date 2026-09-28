@@ -279,9 +279,21 @@ module ot_chip_v41x_die #(
     // -- core step port: host or package controller ------------------------------------------
     wire c_start; wire [NW-1:0] c_token, c_pos; wire [AW-1:0] kv_base;
     wire [(FULL_SHAPE ? 10 : 8)-1:0] c_user;
+    reg [9:0] step_user;
+    reg capture_ctrl_user;
     wire t_start = host_mode ? host_start : c_start;
     wire [NW-1:0] t_token = host_mode ? host_token : c_token;
     wire [NW-1:0] t_pos = host_mode ? host_pos : c_pos;
+    // The controller registers core_user on the same edge as core_start.
+    // Capture that new value one edge later; host mode captures at start.
+    // QDQ8 block production follows the start edge by many core cycles.
+    always @(posedge clk or negedge rn)
+        if (!rn) begin step_user <= 0; capture_ctrl_user <= 0; end
+        else begin
+            capture_ctrl_user <= !host_mode && c_start;
+            if (host_mode && host_start) step_user <= host_user;
+            if (capture_ctrl_user) step_user <= 10'(c_user);
+        end
     wire t_fault, qs_fault, kb_busy;
     wire [31:0] kb_rs, kb_ws;
     assign kb_stalls = kb_rs + kb_ws;
@@ -301,7 +313,7 @@ module ot_chip_v41x_die #(
     wire win_blk_v, win_blk_ready;
     wire [9:0] win_blk_user;
     wire [AW-1:0] win_blk_kvt_base, win_blk_first_elem;
-    wire [NW-1:0] win_blk_row;
+    wire [NW-1:0] win_blk_row, win_blk_kvt_row;
     wire [3:0] win_blk_idx;
     wire [255:0] win_blk_codes;
     wire [7:0] win_blk_scale;
@@ -325,9 +337,10 @@ module ot_chip_v41x_die #(
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),
         .fault(t_fault), .acc_n(core_acc_n),
         .prime_v(host_prime_v), .prime_first(host_prime_first), .prime_cid(host_prime_cid),
-        .window_user(host_mode ? host_user : 10'(c_user)),
+        .window_user(step_user),
         .win_blk_v(win_blk_v), .win_blk_ready(win_blk_ready), .win_blk_user(win_blk_user),
-        .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row), .win_blk_idx(win_blk_idx),
+        .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row),
+        .win_blk_kvt_row(win_blk_kvt_row), .win_blk_idx(win_blk_idx),
         .win_blk_first_elem(win_blk_first_elem), .win_blk_codes(win_blk_codes), .win_blk_scale(win_blk_scale),
         .cfg_ik_base(cfg_ik_base), .cfg_me_xs(cfg_me_xs), .cfg_q_base(cfg_q_base), .cfg_q_lbase(cfg_q_lbase),
         .cfg_q_lead(cfg_q_lead), .cfg_q_rate(cfg_q_rate),
@@ -401,13 +414,12 @@ module ot_chip_v41x_die #(
         always @(posedge clk or negedge rn)
             if (!rn) step_pos <= '0;
             else if (t_start) step_pos <= t_pos;
-        wire [30:0] first_expected = {1'b0, win_blk_kvt_base} +
-            ({10'd0, win_blk_row} >> 4 << 13) +
-            ({27'd0, win_blk_idx} << 9) + {27'd0, win_blk_row[3:0]};
-        // Until the producer carries a distinct absolute HBM row and local
-        // KVT row, never let a saturated WINM1=127 alias later positions.
-        wire bad_block_addr = win_blk_row != step_pos || first_expected[30] ||
-            win_blk_first_elem != first_expected[29:0];
+        wire bad_block_addr;
+        ot_chip_v41x_window_block_guard #(.AW(AW), .POS_W(NW)) u_blk_guard (
+            .step_pos(step_pos), .blk_abs_row(win_blk_row),
+            .blk_kvt_row(win_blk_kvt_row), .blk_idx(win_blk_idx),
+            .kvt_base(win_blk_kvt_base), .first_elem(win_blk_first_elem),
+            .hbm_slot(), .expected_first(), .bad(bad_block_addr));
         reg unsupported_read;
         reg bad_block;
         always @(posedge clk or negedge rn)

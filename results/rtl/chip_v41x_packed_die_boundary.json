@@ -13,19 +13,20 @@
   "pass": true,
   "sources_sha256": {
     "rtl/chip/ot_chip_v41x_coll_dma.sv": "c6bd78193661693fa7942edd634cc120c57f828e7b663d484a77b3056ca82980",
-    "rtl/chip/ot_chip_v41x_die.sv": "2aee2418bf405d4614c4523b4b6919e40e4d09d51e34035a4630836377ebaa30",
+    "rtl/chip/ot_chip_v41x_die.sv": "b43c74af3db21fbe05fc01e89c3be01887a2c98b050e61b146eb42e4c939b7b4",
     "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "4db1866158de8b8bb377631a0ec6fda53e6eb512a84b81ee049788534d523f14",
     "rtl/chip/ot_chip_v41x_hbm_karb.sv": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
     "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
     "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
-    "rtl/chip/ot_chip_v41x_tile.sv": "40ac70fdeb076432772ab87de30d608eae63a42a49a3952c446861457c1da4a6",
+    "rtl/chip/ot_chip_v41x_tile.sv": "3c05f8360a9e4cee095f456f6d9e9ceaf5658ca5eef4d818640c7c4e5e8d734a",
+    "rtl/chip/ot_chip_v41x_window_block_guard.sv": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
     "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "85a449dfe4f8e22c69f2d21819f644c5508166c4113b3cbee67fcda30862e053",
     "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
     "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
     "rtl/rom/ot_rom_fabric_router.sv": "327b720da88dbdd08289d5e7f599a1c779b91459189a25c0629e7ca2e2a45c1c",
     "rtl/rom/ot_rom_oneshot_px.sv": "4a14585915d7c0ac0202d9c92cff6cc5bc4c918d63b43af81f0b7bd87a3da2ff",
     "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
-    "tools/rtl_chip_v41x_packed_die_boundary.py": "7a0e5c9c60226b33460a8ce1d20bc67bafc4d4426cfc90f876b1be1dc51884ef"
+    "tools/rtl_chip_v41x_packed_die_boundary.py": "08e5019a1af18d0fd9fd49f60bc2c8d2b7cceb74998c06553a3d0f17e628bad6"
   },
   "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
 }

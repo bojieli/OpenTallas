@@ -5,7 +5,9 @@ The full-shape die connects the core/tile's QDQ8 window block sideband to
 and its E8M0 scale to the 17-sector, 544-byte-pitch ring. The module waits
 for both HBM write completions before publishing that block. A 10-bit user
 tag comes from the host in host mode or from the package controller's
-registered `core_user`; the region reserves `KV_USERS * 2,176` sectors, after
+registered `core_user`. Host user is captured at start; controller user is
+captured one cycle after `core_start`, when its register has updated, and
+then held through block production. The region reserves `KV_USERS * 2,176` sectors, after
 the configured index-key region. `WIN_STACK` chooses the one stack carrying
 this small window ring. The full mode uses 30-bit K-port sector addresses;
 the reduced mode retains its existing scalar KV prefetch and 28-bit default.
@@ -15,12 +17,15 @@ forwarding it. A bad address sets sticky KV fault. The window DMA separately
 checks user capacity, context range, block order, HBM responses and stale
 ring tags. Unreserved users cannot alias user zero.
 
-The current full-shape emitter uses a saturated local `WINM1` row for the
-KVT write. At positions 128 and above, that row remains 127 and is not the
-absolute HBM ring position. The die checks each block row against the current
-step position and faults on that mismatch, so this unfinished producer
-contract cannot silently alias older window rows. The producer must supply
-both the absolute HBM row and the local KVT row before a long-context gate.
+The full-shape emitter uses a saturated local `WINM1` row for its KVT alias.
+At positions 128 and above, that row remains 127, while the HBM ring needs
+the absolute position. The producer now supplies both rows. The die checks
+the absolute row against the current step position and derives the KVT first
+element from the local row. The guard also rejects a local row that disagrees
+with `min(absolute_row, 127)`, out-of-range positions and address overflow.
+The source-pinned RTL gate at
+`results/rtl/chip_v41x_window_block_guard.json` covers 127/128/129, ring
+wrap, and the 1M limit.
 
 This is a **write-path and port-boundary milestone**. Full-shape scalar KVD
 reads fault and `kv_ok` stays low. The adopted attention job also needs up to
