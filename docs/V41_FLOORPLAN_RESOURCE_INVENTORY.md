@@ -55,3 +55,41 @@ Use the connectivity owner's region IDs: `ROM_MAC`, `VM`, `ATTENTION`,
 reserve HBM shoreline only with a matching physical endpoint interface. The
 interface graph supplies exact widths and cadence. The inventory supplies
 counts and memory geometry; neither alone proves fit or token latency.
+
+## Integer ROM-capacity check
+
+Run `python3 tools/v41_floorplan_rom_capacity.py` to regenerate
+`results/floorplan/v41_rom_capacity.json`. The adopted mean requirement is
+rounded up to **2,714,287,357 bytes**. This is not the worst-stage requirement.
+
+Using only the committed **predictive ASAP7 macro view geometry**, without
+process scaling:
+
+| Capacity-only allocation | Integer macro count | Macro area (mm2) |
+|---|---:|---:|
+| 16384 x 266, all bits available | 4,983 | 141.356 |
+| 8192 x 274, all bits available | 9,674 | 145.134 |
+| 8192 x 274, 264 useful bits/word | 10,041 | 150.640 |
+| 8192 x 274, 272 useful bits/word | 9,746 | 146.214 |
+| Repeat observed sixteen-macro/two-matrix occupancy | 13,552 | 203.313 |
+
+The arbitrary-mixture fractional density lower bound is 141.341 mm2. The
+first row is an integer homogeneous allocation, not a global integer optimum,
+and its macro minimum TT period is 1024.5 ps: it fails the 920 ps target before
+wire, capture-register or setup costs. The 8192 x 274 view has minimum period
+775.1 ps, but that alone does not close its complete read path.
+
+**ROM capacity alone does not rule out an 815 mm2 envelope in this predictive
+library.** This does not establish a usable complete die or even an exact
+rectangular bank placement. The witness-repetition row preserves measured
+local occupancy but is only a scenario; different matrices, tensor placement,
+port demands and expert boundaries may incur different overhead.
+
+The earlier 300.689 mm2 ROM ledger uses an **analytical N5 density model**.
+We explicitly do not subtract that figure and insert a predictive ASAP7 macro
+area into its total. There is no qualified process conversion or technology
+identity justifying that substitution. Likewise, spare bits in the local
+witness are not proven ECC; the actual witness has no ECC image generation.
+Complete expert binpacking, all tensor formats, bank-selection logic,
+registers, interconnect, halos, compute and the other die resources remain
+mandatory acceptance gates.
