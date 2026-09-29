@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MACRO_DIR = "physical/asap7_memory_macros"
 ROM = ("ot_rom_8192x274_m8", 125.712, 119.340)
 ACT_QE = ("ot_sram_1r1w_64x512_m1_r2c2", 171.288, 77.760)
-ACT_ME = ("ot_sram_1r1w_128x256_m1_r2c2", None, None)
+ACT_ME = ("ot_sram_1r1w_128x256_m1_r2c2", 94.824, 41.040)
 MARGIN = 2.16
 CH = 12.0          # capture/routing channel beside every ROM edge
 GAP = 4.0          # vertical gap between stacked ROMs
@@ -72,6 +72,39 @@ def qe_plan(logic_w: float = 150.0) -> dict:
             "pin_span_um": [round(x_sl, 3), round(x_sr + aw, 3)], "macros": macros,
             "sources": QE_SOURCES + [f"{MACRO_DIR}/{rom}/{rom}_bb.v", f"{MACRO_DIR}/{act}/{act}_bb.v",
                                      "rtl/chip/physical/ot_chip_v41x_qe_romac.sv"],
+            "macro_views": sorted({rom, act})}
+
+
+def me_plan(logic_w: float = 270.0) -> dict:
+    rom, rw, rh = ROM
+    act, aw, ah = ACT_ME
+    col_h = 4 * rh + 3 * GAP
+    die_h = snap(2 * MARGIN + 2 * 4.0 + col_h, 0.27)
+    x = MARGIN + CH
+    xa = x
+    x += rw + CH
+    x_sl = x
+    x += aw + CH
+    x_logic0 = x
+    x += logic_w + CH
+    x_sr = x
+    x += aw + CH
+    xb = x
+    x += rw + CH
+    die_w = snap(x + MARGIN - CH + 4.0, 0.054)
+    macros = []
+    for c in range(8):
+        macros.append({"inst": f"g_mc[{c}].u_rom", "master": rom, "x": xa if c < 4 else xb,
+                       "y": MARGIN + 4.0 + (c % 4) * (rh + GAP), "orient": "R0", "capture": True})
+    y0 = MARGIN + 4.0 + rh / 2 - ah / 2
+    for c in range(8):
+        macros.append({"inst": f"g_mc[{c}].u_act", "master": act, "x": x_sl if c < 4 else x_sr,
+                       "y": y0 + (c % 4) * (rh + GAP), "orient": "MY" if c < 4 else "R0", "capture": False})
+    return {"case": "me", "top": "ot_chip_v41x_me_romac", "die_um": [die_w, die_h],
+            "logic_region_um": [round(x_logic0, 3), MARGIN, round(x_logic0 + logic_w, 3), die_h - MARGIN],
+            "pin_span_um": [round(x_sl, 3), round(x_sr + aw, 3)], "macros": macros,
+            "sources": QE_SOURCES + ["rtl/hdc/v41x/ot_hdc_v41x_wgt_tops.sv", f"{MACRO_DIR}/{rom}/{rom}_bb.v",
+                                     f"{MACRO_DIR}/{act}/{act}_bb.v", "rtl/chip/physical/ot_chip_v41x_me_romac.sv"],
             "macro_views": sorted({rom, act})}
 
 
@@ -186,14 +219,14 @@ def argv(plan: dict, tag: str, keep: str, output: str) -> list[str]:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("case", choices=["qe"])
+    ap.add_argument("case", choices=["qe", "me"])
     ap.add_argument("--write-hook", action="store_true")
     ap.add_argument("--print", action="store_true")
     ap.add_argument("--tag", default="w2b_qe_romac")
     ap.add_argument("--keep", default="/tmp/w2b_qe_romac_work")
     ap.add_argument("--output", default="results/physical_abi3/asap7/chip/v41_w2_rommac/qe_romac_physical.json")
     a = ap.parse_args()
-    plan = qe_plan()
+    plan = qe_plan() if a.case == "qe" else me_plan()
     if a.write_hook:
         (ROOT / f"physical/abi3/v41_w2_{plan['case']}_romac_place.tcl").write_text(hook_tcl(plan))
     if a.print:
