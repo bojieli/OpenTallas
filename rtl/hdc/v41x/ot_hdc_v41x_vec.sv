@@ -58,8 +58,10 @@
 //
 // ORDER WITHOUT DRAINS (the checkpoint rule).  Ops overlap in the pipeline.
 // Elements must leave each variable-depth stage in emit order: the fetch, M1
-// and S (so also the writes), the reducer's time input (spanning ops) and its
-// result port (reducing ops).  For each checkpoint X the controller keeps
+// and S (so also the writes), the reducer's tap -- one multiplexer shared by
+// packed results and spanning items, so every reducing op arms T and a
+// spanning op checks it -- and its result port (reducing ops; a packed op's
+// R check covers T).  For each checkpoint X the controller keeps
 // cp_X, the remaining depth of the last vector emitted.  An op's first vector
 // may go only when its own depth d_X >= cp_X for every X.  So an op waits
 // only for a deeper op ahead of it, and only by the depth difference.
@@ -439,7 +441,9 @@ module ot_hdc_v41x_vec #(
             cpF <= emit ? a_dF : (cpF != 0) ? cpF - 10'd1 : 10'd0;
             cpM <= emit ? a_dM : (cpM != 0) ? cpM - 10'd1 : 10'd0;
             cpS <= emit ? a_dS : (cpS != 0) ? cpS - 10'd1 : 10'd0;
-            cpT <= (emit && a_span) ? a_dT : (cpT != 0) ? cpT - 10'd1 : 10'd0;
+            // T is the reducer's tap (one multiplexer for packed results and spanning items): every
+            // reducing op arms it, so a spanning op never reaches the tap before an older packed result
+            cpT <= (emit && a_red != RED_NONE) ? a_dT : (cpT != 0) ? cpT - 10'd1 : 10'd0;
             cpR <= (emit && a_red != RED_NONE) ? a_dR : (cpR != 0) ? cpR - 10'd1 : 10'd0;
             if (emit && !a_started) a_started <= 1'b1;
             if (emit && last_v) begin

@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -39,7 +40,7 @@ from typing import Any
 from . import macros as mc
 
 ROOT = Path(__file__).resolve().parents[2]
-CLOCK_PERIOD_NS = 1.0
+CLOCK_PERIOD_NS = float(os.environ.get("OT_CHIP_PERIOD_NS", "1.0"))   # hierarchical flow's clock (default 1.0 ns)
 
 
 # --------------------------------------------------------------------------
@@ -102,6 +103,10 @@ class Block:
     extra_sdc: list[str] = field(default_factory=list)   # block-internal constraints
     peak_gb: float = 10.0          # expected peak memory of its route
     orfs_extra: dict[str, Any] = field(default_factory=dict)   # extra ORFS config
+    # hard macros this block instantiates: (module, lef, liberty), repository-relative; blackboxed in synthesis
+    hard_macros: list[tuple] = field(default_factory=list)
+    max_layer: str = "M6"
+    pdn: str = "pdn_block.tcl"
 
     @property
     def core_area_um2(self) -> float:
@@ -170,6 +175,78 @@ BLOCKS.update({
         420.0, 420.0,
         [(r"^qr_", "N"), (r"^(vi_|xr_|w_)", "S")],
         notes="V4.1 quantised block-dot engine; 53.8k um2 of cells after synthesis"),
+})
+
+GPU_FP = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_fpu.sv",
+          "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/gpu/ot_gpu_tree.sv"]
+BLOCKS.update({
+    # W13: the replicated MMA macro of the GPU-organised HBM comparator's SM (32 lanes x 1 column + its
+    # 32-leaf tree); the SM holds 4 sub-partitions x 16 columns of it.  Harden with OT_CHIP_PERIOD_NS=0.92.
+    "ot_gpu_tc_col": Block(
+        "ot_gpu_tc_col", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 250.0, 250.0,
+        [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
+        params={"L": 32, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6},
+        record="results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l32_092/physical.json",
+        notes="exact tensor-core column: 32 BF16 x BF16 -> FP32 lanes, circulating IL-8 adders, 32-leaf tree",
+        peak_gb=16.0),
+    "ot_gpu_tc16": Block(
+        "ot_gpu_tc16", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 180.0, 180.0,
+        [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
+        default_edge="S", orfs_extra={"NUM_CORES": 6},
+        notes="V4.1 SM BF16 column: 16 exact lanes + 16-leaf tree (ot_gpu_tc_col L=16)", peak_gb=12.0),
+    "ot_gpu_bd_col": Block(
+        "ot_gpu_bd_col", GPU_FP + ["rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv"], 150.0, 150.0,
+        [(r"^(wq|we)$", "N"), (r"^(xq|xe)$", "W"), (r"^(ov|y|otag|fault)$", "E")],
+        params={"LB": 2, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6},
+        record="results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
+        notes="V4.1 SM block-dot column: 2 exact k32 FP8/FP4 lanes + tree", peak_gb=12.0),
+})
+
+_ABS = "results/physical_abi3/asap7/chip/abstracts"
+_MEM = "physical/asap7_memory_macros"
+
+
+def _sram(name):
+    return (name, f"{_MEM}/{name}/{name}.lef", f"{_MEM}/{name}/{name}_tt.lib")
+
+
+BLOCKS.update({
+    # W13: the hardened SM element of the Qwen HBM die: 64 ot_gpu_tc_col macros (4 sub-partitions x 16 columns),
+    # 16 x-store + 4 staging-ring SRAMs, the row-scale SRAM, and the glue (issue, decode, fragment buffers,
+    # combine trees, stacks, row-scale multipliers, bulk-copy tracker).  Routed over the column macros on M7-M9.
+    "ot_gpu_sm_q": Block(
+        "ot_gpu_sm_q",
+        GPU_FP + ["rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
+                  "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_xstore.sv", "rtl/gpu/ot_gpu_sm_q.sv",
+                  f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+                  f"{_MEM}/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"],
+        2200.0, 2500.0,
+        [(r"^(req_|rsp_|d_)", "N"), (r"^(xw_|sw_)", "W"), (r"^(rv|rrow|rdata|fault)$", "E")],
+        params={"NC": 16}, default_edge="S", place_density=0.55,
+        orfs_extra={"NUM_CORES": 12, "MACRO_PLACE_HALO": "6 6"},
+        hard_macros=[("ot_gpu_tc_col", f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col.lef",
+                      f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col_typ.lib"),
+                     _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_256x256_m2_r2c2")],
+        max_layer="M9", pdn="pdn_sm.tcl", notes="Qwen HBM SM element (tools/uarch_model.hbm_gpu_design('qwen'))", peak_gb=60.0),
+    # W13: the hardened SM element of the V4.1 HBM die: 32 block-dot + 32 BF16 column macros (4 x 8 each),
+    # 99 shallow x-store SRAMs (a whole 8-column fragment a cycle: group-slot issue), the 5-macro staging ring.
+    "ot_gpu_sm_v": Block(
+        "ot_gpu_sm_v",
+        GPU_FP + ["rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
+                  "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv",
+                  "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_sm_v.sv",
+                  f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+                  f"{_MEM}/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"],
+        1800.0, 1900.0,
+        [(r"^(req_|rsp_|d_)", "N"), (r"^xw_", "W"), (r"^(rv|rrow|rdata|fault)$", "E")],
+        params={"NC": 8}, default_edge="S", place_density=0.55,
+        orfs_extra={"NUM_CORES": 12, "MACRO_PLACE_HALO": "4 4"},
+        hard_macros=[("ot_gpu_tc16", f"{_ABS}/ot_gpu_tc16/ot_gpu_tc16.lef", f"{_ABS}/ot_gpu_tc16/ot_gpu_tc16_typ.lib"),
+                     ("ot_gpu_bd_col", f"{_ABS}/ot_gpu_bd_col/ot_gpu_bd_col.lef",
+                      f"{_ABS}/ot_gpu_bd_col/ot_gpu_bd_col_typ.lib"),
+                     _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_128x256_m1_r2c2")],
+        max_layer="M9", pdn="pdn_sm.tcl", notes="V4.1 HBM SM element (tools/uarch_model.hbm_gpu_design('v41'))",
+        peak_gb=60.0),
 })
 
 

@@ -960,15 +960,14 @@ def sdc_lines(
         f"create_clock -name core_clk -period $clk_period [get_ports {block['clock_port']}]",
         *([f"create_clock -name ingress_clk -period $clk_period [get_ports {block['ingress_clock_port']}]"]
           if block.get("ingress_clock_port") else []),
-        *([f"set_clock_uncertainty -setup {block['clock_uncertainty_ns'] / view['time_unit_ns']:g} [all_clocks]",
-           f"set_clock_uncertainty -hold {block['clock_hold_uncertainty_ns'] / view['time_unit_ns']:g} [all_clocks]"]
-          if block.get("clock_hold_uncertainty_ns") is not None and block.get("clock_uncertainty_ns") is not None
-          else []),
         *([f"set_clock_uncertainty -setup {block['clock_uncertainty_ns'] / view['time_unit_ns']:g} [get_clocks core_clk]"
            if block.get("clock_uncertainty_setup_only") else
+           f"set_clock_uncertainty -setup {block['clock_uncertainty_ns'] / view['time_unit_ns']:g} [all_clocks]"
+           if block.get("clock_uncertainty_hold_ns") is not None else
            f"set_clock_uncertainty {block['clock_uncertainty_ns'] / view['time_unit_ns']:g} [all_clocks]"]
-          if block.get("clock_uncertainty_ns") is not None and block.get("clock_hold_uncertainty_ns") is None
-          else []),
+          if block.get("clock_uncertainty_ns") is not None else []),
+        *([f"set_clock_uncertainty -hold {block['clock_uncertainty_hold_ns'] / view['time_unit_ns']:g} [all_clocks]"]
+          if block.get("clock_uncertainty_hold_ns") is not None else []),
         "set non_clock_inputs [all_inputs -no_clocks]",
         *([f"set core_inputs [get_ports {{{' '.join(block['core_input_ports'])}}}]"]
           if block.get("core_input_ports") else []),
@@ -2802,14 +2801,14 @@ def build_parser() -> argparse.ArgumentParser:
                         help="nonnegative clock uncertainty applied to all clocks (setup and hold) in the "
                              "source-pinned SDC; absent emits nothing. The value is recorded under "
                              "design.clock_uncertainty_ns")
+    parser.add_argument("--clock-uncertainty-hold-ns", type=float, default=None,
+                        help="with --clock-uncertainty-ns: a separate hold uncertainty on all clocks (the setup "
+                             "uncertainty is then emitted with -setup); project SDC policy 2026-09-29 is 0.060 "
+                             "setup / 0.025 hold; recorded under design.clock_uncertainty_hold_ns")
     parser.add_argument("--clock-uncertainty-setup-only", action="store_true",
                         help="with --clock-uncertainty-ns: emit set_clock_uncertainty -setup on core_clk only, "
                              "so hold is timed without it (the claude/w5-qwen-physical semantics of "
                              "--clock-uncertainty-ns); recorded under design.clock_uncertainty_setup_only")
-    parser.add_argument("--clock-hold-uncertainty-ns", type=float, default=None,
-                        help="with --clock-uncertainty-ns: time hold with this uncertainty instead (emits "
-                             "set_clock_uncertainty -setup <setup> and -hold <hold> on all clocks; the project "
-                             "policy is 60 ps setup / 25 ps hold); recorded under design.clock_hold_uncertainty_ns")
     parser.add_argument("--output-delay-min-ns", type=float, default=None,
                         help="set_output_delay -min on every output (with --output-delay-max-ns), after the "
                              "io-delay-fraction default; a negative value models a downstream capture flop "
@@ -3222,13 +3221,13 @@ def main(argv: list[str] | None = None) -> int:
         block["clock_uncertainty_ns"] = args.clock_uncertainty_ns
         if args.clock_uncertainty_setup_only:
             block["clock_uncertainty_setup_only"] = True
-        if args.clock_hold_uncertainty_ns is not None:
-            if args.clock_hold_uncertainty_ns < 0 or args.clock_uncertainty_setup_only:
-                print("--clock-hold-uncertainty-ns must be nonnegative and excludes --clock-uncertainty-setup-only",
+        if args.clock_uncertainty_hold_ns is not None:
+            if args.clock_uncertainty_hold_ns < 0 or args.clock_uncertainty_setup_only:
+                print("--clock-uncertainty-hold-ns must be nonnegative and excludes --clock-uncertainty-setup-only",
                       file=sys.stderr)
                 return 2
-            block["clock_hold_uncertainty_ns"] = args.clock_hold_uncertainty_ns
-    elif args.clock_uncertainty_setup_only or args.clock_hold_uncertainty_ns is not None:
+            block["clock_uncertainty_hold_ns"] = args.clock_uncertainty_hold_ns
+    elif args.clock_uncertainty_setup_only:
         print("--clock-uncertainty-setup-only needs --clock-uncertainty-ns", file=sys.stderr)
         return 2
     if (args.output_delay_min_ns is None) != (args.output_delay_max_ns is None):
@@ -3379,8 +3378,8 @@ def main(argv: list[str] | None = None) -> int:
                if block.get("clock_uncertainty_ns") is not None else {}),
             **({"clock_uncertainty_setup_only": True}
                if block.get("clock_uncertainty_setup_only") else {}),
-            **({"clock_hold_uncertainty_ns": block["clock_hold_uncertainty_ns"]}
-               if block.get("clock_hold_uncertainty_ns") is not None else {}),
+            **({"clock_uncertainty_hold_ns": block["clock_uncertainty_hold_ns"]}
+               if block.get("clock_uncertainty_hold_ns") is not None else {}),
             **({k: block[k] for k in ("output_delay_min_ns", "output_delay_max_ns")}
                if "output_delay_min_ns" in block else {}),
             "false_path_io": bool(block.get("false_path_io", False)),

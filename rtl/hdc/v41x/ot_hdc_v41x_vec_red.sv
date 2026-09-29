@@ -36,8 +36,8 @@
 // A packed result leaves at 26 + 3 lt after the retire; a spanning segment's
 // result leaves 26 + 3 lt + 3 L after its last vector retires.  Different taps
 // and different L merge at the result port.  The controller orders results
-// across ops there (checkpoint R), and orders spanning ops at the TIME input
-// (checkpoint T).
+// across ops there (checkpoint R), and orders every reducing op at the tap,
+// the TIME input of spanning ops (checkpoint T).
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_vred_op (
     input  wire        clk,

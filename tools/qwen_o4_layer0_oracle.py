@@ -23,7 +23,8 @@ import hdc_qwen_fullshape_isa as QI
 import hdc_qwen_fullshape_program as FP
 
 ROOT = Path(__file__).resolve().parents[1]
-GROUPS, W, IL = 6144, I.W_LANES, I.INTERLEAVE
+from hdc_qwen_fullshape_placement import GROUPS  # noqa: E402  (QWEN_O4_GROUPS)
+W, IL = I.W_LANES, I.INTERLEAVE
 VM, VM_ELEMS = FP.vm_map()
 
 

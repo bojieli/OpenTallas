@@ -244,29 +244,29 @@
     },
     "attention": {
      "element": "ot_hdc_v41x_attn_tile #(H=16, TD=32): 16 heads x 32 BF16 products per cycle, stationary banks; rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
-     "replicas": 80,
-     "rows_per_cycle": 5,
-     "products_per_cycle": 40960,
+     "replicas": 64,
+     "rows_per_cycle": 4,
+     "products_per_cycle": 32768,
      "ports_total": {
       "q_bits": 8192,
-      "kv_in_bits": 21200,
+      "kv_in_bits": 16960,
       "p_in_bits": 512,
-      "pv_out_bits": 40960
+      "pv_out_bits": 32768
      },
      "stationary_banks": 3,
      "area_element_um2": 260788,
      "area_basis": "ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
      "hardened": null,
-     "area_mm2": 20.863,
+     "area_mm2": 16.69,
      "ops": {
       "L20.attn.scores": {
-       "beats": 128,
+       "beats": 160,
        "positions": 1,
-       "issue": 128,
+       "issue": 160,
        "tile_latency": 33
       },
       "L20.attn.pv": {
-       "beats": 128,
+       "beats": 160,
        "p_words": 320,
        "pwords_per_cycle": 1,
        "positions": 1,
@@ -351,21 +351,18 @@
       }
      },
      "softmax_issue_vectors": 97,
-     "su_bcast_stages": 0,
-     "su_ret_stages": 0,
-     "softmax_chain_cycles": 413,
+     "su_bcast_stages": 4,
+     "su_ret_stages": 4,
+     "softmax_chain_cycles": 445,
      "measured": {
       "record": "results/rtl/v41x_su_softmax.json",
       "t640_n16_m8": 3280
      }
     }
    },
-   "hub_logic_mm2": 54.496,
+   "hub_logic_mm2": 50.323,
    "hub_avail_mm2": 233.7,
-   "discrepancies": [
-    "indexer: idx_macs 248832 is 15.188 NK=4 slices (not whole)",
-    "attention: att_macs 37184 is NL=4.539 rows/cycle (not whole)"
-   ]
+   "discrepancies": []
   },
   {
    "design": "proposal_w11_p1",
@@ -789,9 +786,9 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "5ad57439b27de015f65a291509245b0bff1cbeef199a95a0fb2197c16b2a4b42",
+  "tools/uarch_model.py": "476c16337afdcb86a528f92cc5fdc25518233876a232417a5b0610d7d5b5c95d",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "f8d647d83af611e2557323f55c60d93634ff8f541c8b035c0e42eacf82e769ec",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json": "d147f1c3fe358a6d79e3a59cc13048c99f0168f246c74b6065e82ea291be3955",
   "results/rtl/v41_full_attention_numeric/result.json": "883442f90d7a7430e1a2b019e23da9fd724aedd706fe1cbbd5c43c0c4a942fba",

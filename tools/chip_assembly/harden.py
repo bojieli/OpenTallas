@@ -115,8 +115,10 @@ def spec_for(block: fp.Block, sdc: str, ports: dict[str, Any] | None) -> cs.Case
         sdc=sdc,
         params=block.params,
         pin_groups=pin_groups(block, ports) if ports else [],
-        pdn_tcl=cs.TCL_DIR / "pdn_block.tcl",
-        max_layer="M6",
+        pdn_tcl=cs.TCL_DIR / block.pdn,
+        max_layer=block.max_layer,
+        macros=[cs.MacroView(n, orfs.ROOT / lef, orfs.ROOT / lib) for n, lef, lib in block.hard_macros],
+        blackboxes=[n for n, _, _ in block.hard_macros],
         place_density=block.place_density,
         extra={"SLEW_MARGIN": 40, "HOLD_SLACK_MARGIN": 5, "SETUP_SLACK_MARGIN": 15, **block.orfs_extra},
     )
