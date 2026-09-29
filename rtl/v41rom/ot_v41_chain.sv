@@ -31,41 +31,61 @@ module ot_v41_chain #(
     localparam integer SW = $clog2(NCH);
     reg [31:0] acc [0:NCH-1];
     reg [NCH-1:0] accf;
+    // input register: the chain slot's stored sum is read one cycle before the term meets the adder, so the
+    // adder's operand is a 4-way choice (+0, the sum leaving the adder now, the one that left a cycle ago, the
+    // stored sum) rather than a slot-wide read in front of the adder's first stage
+    reg          v_r, first_r, last_r, termf_r, accf_r;
+    reg [SW-1:0] slot_r;
+    reg [31:0]   term_r, acc_r;
+    reg [TW-1:0] tag_r;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) v_r <= 1'b0; else v_r <= v;
+    always @(posedge clk) begin
+        slot_r <= slot; first_r <= first; last_r <= last; term_r <= term; termf_r <= term_f; tag_r <= tag;
+        acc_r <= acc[slot]; accf_r <= accf[slot];
+    end
     reg [4:0] pv;
     reg [SW-1:0] ps [0:4];
     integer k;
     reg hazard;
     always @* begin
         hazard = 1'b0;
-        for (k = 0; k < 4; k = k + 1) if (pv[k] && ps[k] == slot) hazard = 1'b1;
+        for (k = 0; k < 4; k = k + 1) if (pv[k] && ps[k] == slot_r) hazard = 1'b1;
     end
     wire [31:0] sum;
     wire [1:0] err;
     wire sv;
     wire [31:0] a;
     wire af;
-    ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(term), .y(sum),
+    ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(v_r), .a(a), .b(term_r), .y(sum),
                                 .err(err), .valid_out(sv));
     wire [TW+2:0] dt;
-    ot_hdc_delay #(.W(TW + 3), .D(5)) u_t (.clk(clk), .rst_n(rst_n), .d({tag, last, af | term_f, 1'b0}), .q(dt));
+    ot_hdc_delay #(.W(TW + 3), .D(5)) u_t (.clk(clk), .rst_n(rst_n), .d({tag_r, last_r, af | termf_r, 1'b0}), .q(dt));
     wire d_last = dt[2];
     wire d_f = dt[1] | (err != 2'd0);
-    wire fwd = sv && !d_last && ps[4] == slot;       // the slot's previous sum is leaving the adder now
-    assign a = first ? 32'd0 : (fwd ? sum : acc[slot]);
-    assign af = first ? 1'b0 : (fwd ? d_f : accf[slot]);
+    // the slot's previous sum: leaving the adder now (5 cycles ago), or one cycle ago (not yet in acc_r)
+    reg          sp_v, sp_f;
+    reg [SW-1:0] sp_slot;
+    reg [31:0]   sp_val;
+    wire fwd5 = sv && !d_last && ps[4] == slot_r;
+    wire fwd6 = sp_v && sp_slot == slot_r;
+    assign a = first_r ? 32'd0 : (fwd5 ? sum : (fwd6 ? sp_val : acc_r));
+    assign af = first_r ? 1'b0 : (fwd5 ? d_f : (fwd6 ? sp_f : accf_r));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            pv <= 5'd0; fault <= 1'b0; accf <= '0;
+            pv <= 5'd0; fault <= 1'b0; accf <= '0; sp_v <= 1'b0;
         end else begin
-            pv <= {pv[3:0], v};
-            if (v && hazard) fault <= 1'b1;
+            pv <= {pv[3:0], v_r};
+            if (v_r && hazard) fault <= 1'b1;
             if (sv && !d_last) accf[ps[4]] <= d_f;
+            sp_v <= sv && !d_last;
         end
     end
     always @(posedge clk) begin
-        ps[0] <= slot;
+        ps[0] <= slot_r;
         for (k = 1; k < 5; k = k + 1) ps[k] <= ps[k-1];
         if (sv && !d_last) acc[ps[4]] <= sum;
+        sp_slot <= ps[4]; sp_val <= sum; sp_f <= d_f;
     end
     assign ov = sv && d_last;
     assign osum = sum;

@@ -7,7 +7,8 @@
 // An event {tree, level, value, final} at level l either pairs with the tree's held left operand of level l
 // (held + value, left first) or, if none is held, is held -- unless it is final, when it is promoted to
 // level l+1 by adding +0 (the golden's padding; x + 0 = x here, since no zero is -0).  Both go through the
-// adder, so every event at level l+1 leaves the adder in the order its level-l inputs entered it, and a
+// adder (operands registered first: 6 cycles per level), so every event at level l+1 leaves the adder in the
+// order its level-l inputs entered it, and a
 // promoted final can never overtake an in-flight sum of its own tree.  A final event at level LV leaves as
 // the segment's partial.  Base nodes queue in a QD-entry FIFO while the adder serves its own results first.
 // Adds per tree: (base nodes - 1) + at most LV promotions -- under one per cycle for any base-node rate the
@@ -80,11 +81,19 @@ module ot_v41_segtree #(
     wire promote = e_v && !top && !have[hidx] && e_f;
     wire hold = e_v && !top && !have[hidx] && !e_f;
     wire [PW-1:0] out_t = st[PW+LW+1 -: PW];
-    wire [31:0] add_a = pair ? held[hidx] : e_d;
-    wire [31:0] add_b = pair ? e_d : 32'd0;
-    ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(pair | promote), .a(add_a), .b(add_b),
+    // the operands are registered before the adder (the event select and the held-operand lookup would
+    // otherwise sit in front of the adder's first stage); an add takes 6 cycles from its decision
+    reg [31:0] add_a, add_b;
+    reg        add_v;
+    always @(posedge clk) begin
+        add_a <= pair ? held[hidx] : e_d;
+        add_b <= pair ? e_d : 32'd0;
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) add_v <= 1'b0; else add_v <= pair | promote;
+    ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(add_v), .a(add_a), .b(add_b),
                                 .y(sum), .err(err), .valid_out(sv));
-    ot_hdc_delay #(.W(PW + LW + 2), .D(5)) u_t (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(PW + LW + 2), .D(6)) u_t (.clk(clk), .rst_n(rst_n),
         .d({e_t, e_l + 1'b1, e_f, e_e | (pair && herr[hidx])}), .q(st));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
