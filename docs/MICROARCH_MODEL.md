@@ -106,8 +106,8 @@ Proposal at 1M context, busiest die = stage 14 (the layer-20 index scan):
 Calibrated 2026-09-29:
 - **Element fill:** 78 cycles, measured by W2's QE ROM/MAC exact bench (the formula gave 45–60).
 - **Long-crossing wire:** 0.76 ps/µm, from W3's real-technology channel runs (0.72–0.81 under load). The fit's 0.60 is unloaded.
-- **GPU grid sync:** 1.77 µs, measured on a V100 (L. Zhang et al., "A Study of Single and Multi-device Synchronization Methods in Nvidia GPUs", IPDPS 2020, Fig. 5).
-- **Still ASSUMED:** the 200-cycle hardware barrier.
+- **GPU grid sync:** 1.43 µs, measured on a V100 with 1 block/SM and 32 threads (L. Zhang et al., "A Study of Single and Multi-device Synchronization Methods in Nvidia GPUs", IPDPS 2020, Fig. 5). Sensitivities: 2.21 µs on V100 at 1,024 threads, 1.77 µs on P100. The earlier 1.77 µs "V100" was the P100 figure.
+- **Hardware barrier:** 30 cycles (Qwen die) and 40 cycles (V4.1 die) from last arrival to every SM released. Derived from the floorplan's wire stages and measured in RTL (`results/rtl/gpu_supply_barrier.json`). This replaces the ASSUMED 200. Reference: H800 SM-to-SM DSMEM latency is 181–213 cycles (Luo et al., arXiv 2501.12084, §7.1).
 
 - Calibrated against measurements: the as-built engines, the index reader's sector rate, the attention and softmax jobs, and the collective cycles.
 - Not yet calibrated against a routed element:
@@ -153,26 +153,76 @@ It also checks tile area against the 560 mm² tile array. The area model is cali
 
 ## GPU-organised HBM comparators (`--hbm`, `results/uarch/hbm_gpu.json`)
 
-At batch 1 an HBM die is bandwidth-bound, so the element count is sized to bandwidth: 32 SMs per Qwen die, 131k INT8 MAC/clk (W9). Three microarchitecture terms decide the token:
-- **Weight-supply fraction.** Bandwidth × latency must be in flight: 1.8 MB per die. The measured ROM-style QE adapter keeps about 7 words in flight and delivers 39 of 3,482 B/cycle.
-- **Global barriers.** Needed at every non-fusable dependent boundary on the critical path: 289 per Qwen die token, 629 per V4.1 token.
-- **The architecture's TP and collective terms.**
+Both HBM dies replicate a GPU organisation (AGENTS.md rule 3). `hbm_gpu_design()` sizes the element and its networks, and the RTL (`rtl/gpu/`) and floorplans (`results/floorplan/hbm_gpu/`) measure them.
+
+### The SM element
+
+The SM has four sub-partitions of an exact Tensor-Core-style MMA:
+- **Lanes.** Each lane is the ROM lane's exact datapath: a BF16 × BF16 → FP32 product feeding a circulating FP32 RNE adder that holds 8 slots.
+- **Chunk-to-lane mapping.** Lane j of the SM holds golden chunk g·L + j of its row.
+- **Trees.** A fixed pairwise FP32 tree per column (32 leaves in a sub-partition, then 4 across the SM) is the bottom of the golden tree. A streaming pairwise stack continues it over the row's groups, with the golden's +0 padding.
+- **Row placement.** A row's whole K and its whole tree stay inside one SM.
+
+| | Qwen3-8B die | DeepSeek-V4.1 die |
+|---|---|---|
+| Lanes | 128 INT8 (decoded exactly to BF16) | 8 block-dot (k32 FP8/FP4, exact, one rounding) + 64 BF16 |
+| Columns | 16 (DFlash block 16, batch ≤ 16) | 16 (MTP m + 1 = 7, batch ≤ 16) |
+| MAC/clk per SM | 2,048 | 5,120 |
+| Weight ingest | 128 B/clk | 128 B/clk |
+| SMEM | 384 KB x store + 128 KB staging + 64 KB scratch | 160 + 128 + 64 KB |
+| Area (logic at 50% density + SRAM) | 4.65 mm² | 3.22 mm² |
+| Measured drain (last weight line → last row result) | 65 cycles | 70 cycles |
+
+**Exactness (Icarus, every output bit against the golden):**
+- `results/rtl/gpu_sm_exact.json`: 9/9 cases.
+  - Qwen INT8 on 128 lanes: split = K (a pure tree), kc = 3, 4 and 32, split < lanes, and stream underflow. The golden is `hdc_golden.matvec`, then the BF16 row scale.
+  - V4.1 BF16 chunk-8 `csum` on 64 lanes: K = 512, 1,004 (tail and padding) and 5,120.
+- `results/rtl/gpu_sm_blockdot_exact.json`: 5/5 cases.
+  - V4.1 `linear_q` FP4 at K = 2,304 and 5,120.
+  - V4.1 `linear_q` FP8 at K = 544, 1,280 and 5,120.
+
+### Count, supply and barrier
+
+| Term | Qwen die | V4.1 die | Basis |
+|---|---|---|---|
+| SM count | 32 (minimum 28) | 32 | Smallest count within 0.5% of an unbounded array (fluid model), rounded to 8 per HBM stack quadrant |
+| Bulk copy in flight | 512 lines of 128 B per SM | same | Little's law gives 440. Measured in RTL, 512 reaches the SM's full share (102.5 of 102.4 B/clk) under ±50 ns jitter; 7 outstanding gives 1.6 B/clk |
+| SMEM staging | 128 KB/SM | 128 KB/SM | The fluid model's knee: 64 KB loses 0.7% on Qwen |
+| Global barriers per token | 181 | 329 | One per matrix op and one per attention layer (V4.1 also one per index top-k and one for the argmax). Heads are SM-local; norms and the router top-6 run redundantly on the replicated x. The earlier 289 and 629 counted those |
+| Barrier round trip | 30 cycles | 40 cycles | Floorplan: leaf 4.2 mm / trunk 6.6 mm (Qwen), 3.8 / 11.9 mm (V4.1). RTL bench: 32 SMs at 8 × 4 fan-in |
+| Boundary cost | 46 cycles | 56 cycles | Round trip plus the x-broadcast tail |
+| L2 | 4 slices × 2 MB | same | Holds x and result gather, TP staging and KV-write coalescing. Weights bypass L2: each SM's rows live in its own quadrant's stack |
+
+### Token
+
+The bulk copy prefetches the static weight stream through every boundary. A boundary is therefore exposed only when the SMEM staging cannot hide it (`stream_overlap`). The additive form (t_hbm + boundaries × barrier + tp) is kept as labelled no-prefetch rows.
 
 | Design | tok/s |
 |---|---:|
-| Qwen HBM ideal (8.18 GB at 7.2 TB/s) | 880 |
-| Qwen HBM, today's adapter | **10.5** |
-| Qwen HBM, GPU bulk-copy supply, hardware barrier network (200 cycles, ASSUMED) | **841** |
-| Qwen HBM, GPU grid sync (1.77 µs, V100 measured) | 607 |
-| V4.1 HBM published (no barrier cost) | 3,579 |
-| V4.1 HBM, today's adapter | **279** |
-| V4.1 HBM, GPU supply + hardware barrier | **2,520** |
-| V4.1 HBM, GPU grid sync (1.77 µs) | 718 |
+| Qwen HBM ideal (bandwidth only) | 880.7 |
+| **Qwen HBM, GPU die (prefetching bulk copy, measured barrier)** | **880.6** (112 cycles exposed per token) |
+| Qwen HBM, same, no prefetch | 873.8 |
+| Qwen HBM, ASSUMED 200-cycle barrier, no prefetch | 854.9 |
+| Qwen HBM, V100 grid sync 1.43 µs, with prefetch / without | 758.5 / 716.6 |
+| Qwen HBM, today's adapter | 10.5 |
+| V4.1 HBM published (additive, no barrier) | 3,579 |
+| **V4.1 HBM, GPU die (sweep under the chain, measured barrier)** | **3,882** (upper bound; see open item) |
+| V4.1 HBM, same, no prefetch | 3,390 |
+| V4.1 HBM, V100 grid sync, with prefetch | 1,404 |
 
 **Decisions:**
-1. The HBM weight path must be a GPU-style bulk-copy engine with at least 1.8 MB per die in flight. Today's adapter is 90× short of that.
-2. The comparator needs a hardware barrier network. Grid sync through L2 (1.77 µs measured on V100) would cost V4.1 5.0× and Qwen 1.45×.
-3. **The published V4.1 HBM figure of 3,579 omits synchronisation and must be restated.** A 200-cycle barrier gives 2,520; the barrier cost needs a cited or measured number.
+1. **The weight path is a TMA-style bulk-copy engine** (`rtl/gpu/ot_gpu_bulk_copy.sv`): 512 outstanding 128-B lines and a 128 KB staging ring per SM. Today's adapter is 64× short in flight.
+2. **A hardware barrier network**, a sense-reversing toggle tree with one register per node (`ot_gpu_barrier_node`), costs 30–40 cycles. Grid sync through L2 would cost Qwen 14% and V4.1 2.8×.
+3. **The Qwen HBM die is bandwidth-bound at 880.6 tok/s.** The barrier and SM terms are hidden under the stream.
+4. **The floorplans fit** (`results/floorplan/hbm_gpu/*.json`, legal, macro-placed SRAMs, 4 PHYs on 48 mm of the long edges):
+   - Qwen: 153 of 688 mm² core used.
+   - V4.1: 219 mm² including the 112.7 mm² dedicated-unit hub between the SM half-arrays.
+
+**Open:** the V4.1 chain (111.7 µs) was priced at die-pooled widths. On a 1/96 row slice an SM op is a row's K-chain:
+- measured 174 cycles for an 8-row FP8 K = 1,280 op;
+- measured 689 cycles for a 9-row K = 5,120 op, against about 180 cycles per op in the chain.
+
+Pricing the chain per SM op would lower the 3,882.
 
 ## Summary: what the model changed
 
@@ -180,5 +230,5 @@ At batch 1 an HBM die is bandwidth-bound, so the element count is sized to bandw
 |---|---:|---:|---|
 | V4.1 ROM, 1M | 4,933 (architecture) | 4,167 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
 | Qwen ROM, 8K | 10,874 (published) | 9,063 | G = 5,120 pruned; wires +12%; vector stream unit |
-| Qwen HBM, 8K | 881 | 841 | bulk-copy weight supply; hardware barrier |
-| V4.1 HBM, 1M | 3,579 | 2,520 | synchronisation cost; bulk-copy supply |
+| Qwen HBM, 8K | 881 | 880.6 | bulk-copy weight supply prefetching through boundaries; hardware barrier (30 cycles) |
+| V4.1 HBM, 1M | 3,579 | ≤ 3,882 (per-SM-op chain open) | hardware barrier (40 cycles); bulk-copy supply; SM op latency on row slices |
