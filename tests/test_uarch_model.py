@@ -64,6 +64,11 @@ def test_hbm_gpu_record_w13():
         assert d["barrier"]["source"].startswith("results/floorplan/hbm_gpu/")
         assert d["die_fit"]["fits"]
         assert d["sm_count"] == 32
+    # V4.1: the K-chain-aware chain with group-slot issue beats row-slot; speculation beats AR on both dies
+    assert r["v41_hbm_gpu_groupslot"]["tokens_s"] > r["v41_hbm_gpu_rowslot"]["tokens_s"]
+    sp = {x["design"]: x for x in rec["speculation"]}
+    assert sp["qwen_hbm_dflash_best"]["tokens_s"] > sp["qwen_hbm_ar"]["tokens_s"]
+    assert sp["v41_hbm_mtp"]["tokens_s"] > sp["v41_hbm_ar"]["tokens_s"]
 
 
 def test_hbm_gpu_floorplans_legal():

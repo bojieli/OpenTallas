@@ -21,7 +21,7 @@ module tb_gpu_sm_bd;
     wire rv; wire [RW-1:0] rrow; wire [NC*32-1:0] rdata; wire fault; wire arrive; wire released;
     reg release_in = 0;
     ot_gpu_sm_bd #(.SUB(SUB), .LBS(LBS), .NC(NC), .XDEPTH(XDEPTH), .RMAX(RMAX), .LEV(LEV)) dut (
-        .clk(clk), .rst_n(rst_n), .start(start), .op_rows(op_rows), .op_c(op_c), .op_g(op_g),
+        .clk(clk), .rst_n(rst_n), .start(start), .op_rows(op_rows), .op_c(op_c), .op_g(op_g), .op_gs(cfg[5][0]),
         .op_fp4(op_scale), .busy(busy), .w_valid(w_valid), .w_ready(w_ready), .w_data(w_data),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata),
         .fault(fault), .arrive(arrive), .release_in(release_in), .released(released));

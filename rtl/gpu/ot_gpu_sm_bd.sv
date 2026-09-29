@@ -32,6 +32,7 @@ module ot_gpu_sm_bd #(
     input  wire [$clog2(RMAX):0]   op_rows,
     input  wire [15:0]             op_c,        // blocks per chunk (8; fewer in a short tail op)
     input  wire [7:0]              op_g,
+    input  wire                    op_gs,       // group-slot issue (ot_gpu_issue)
     input  wire                    op_fp4,
     output wire                    busy,
     input  wire                    w_valid,
@@ -63,7 +64,7 @@ module ot_gpu_sm_bd #(
         if (!rst_n) fp4_q <= 1'b0;
         else if (start && !busy) fp4_q <= op_fp4;
     ot_gpu_issue #(.IL(IL), .RMAX(RMAX), .XDEPTH(XDEPTH)) u_issue (
-        .clk(clk), .rst_n(rst_n), .start(start), .op_rows(op_rows), .op_c(op_c), .op_g(op_g),
+        .clk(clk), .rst_n(rst_n), .start(start), .op_rows(op_rows), .op_c(op_c), .op_g(op_g), .op_gs(op_gs),
         .w_valid(w_valid), .w_ready(w_ready), .rdone(sv), .busy(busy), .iss_v(adv), .iss_row_ok(row_ok),
         .iss_slot(si), .iss_row(row_now), .iss_first(i_first), .iss_last(i_last), .iss_glast(i_glast),
         .xa(xa), .arrive(arrive), .release_in(release_in), .released(released));
