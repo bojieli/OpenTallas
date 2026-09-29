@@ -510,10 +510,13 @@ DEDICATED = dict(
 
 
 SU_OP_ACCEPT = 6          # measured: SU accept -> first emit per op (results/rtl/w11_su_spec.json, claude/w11-su)
-SU_FARTHEST_LANE_UM = 3500.0   # HUB_SU_VECTOR 6.15 x 12.42 mm: controller at the lane array's centre, farthest lane
-                                # ~3.5 mm (half the diagonal of the ~28 mm2 lane array, W11 estimate)
-SU_BCAST_STAGES_W1 = wire_cycles(SU_FARTHEST_LANE_UM, 1e12 / 920,
-                                 WIRE_PS_PER_UM_LOADED)   # = 4
+# SU placement (W11 SU worker derivation): lane array 11.96 mm2 as a square of side 3,458 um; controller at its
+# centre -> farthest lane (corner) 3,458 um Manhattan; results return to HUB_VM on the SU region's west edge,
+# farthest lane -> VM edge 3,458 + 392 um
+SU_FARTHEST_LANE_UM = 3458.0
+SU_RETURN_UM = 3850.0
+SU_BCAST_STAGES_W1 = wire_cycles(SU_FARTHEST_LANE_UM, 1e12 / 920, WIRE_PS_PER_UM_LOADED)   # = 4
+SU_RET_STAGES_W1 = wire_cycles(SU_RETURN_UM, 1e12 / 920, WIRE_PS_PER_UM_LOADED)            # = 5
 
 
 def _hardened_um2(rel):
@@ -838,7 +841,7 @@ def main(argv=None):
         # root decisions of 2026-09-29 (W11): 16 NK=4 index slices, NL=4 attention with the two-word loader;
         # single position and the MTP verify pass (6 positions, m = 1)
         w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2,
-                   su_bcast_stages=SU_BCAST_STAGES_W1)
+                   su_bcast_stages=SU_BCAST_STAGES_W1, su_ret_stages=SU_RET_STAGES_W1)
         for P in (1, 6):
             rows.append(dedicated_ledger(dict(w11, name=f"proposal_w11_p{P}"), a.ctx, positions=P))
         for r in rows:

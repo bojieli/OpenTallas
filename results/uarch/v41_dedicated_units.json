@@ -535,8 +535,8 @@
      },
      "softmax_issue_vectors": 97,
      "su_bcast_stages": 4,
-     "su_ret_stages": 4,
-     "softmax_chain_cycles": 445,
+     "su_ret_stages": 5,
+     "softmax_chain_cycles": 449,
      "measured": {
       "record": "results/rtl/v41x_su_softmax.json",
       "t640_n16_m8": 3280
@@ -715,8 +715,8 @@
      },
      "softmax_issue_vectors": 582,
      "su_bcast_stages": 4,
-     "su_ret_stages": 4,
-     "softmax_chain_cycles": 930,
+     "su_ret_stages": 5,
+     "softmax_chain_cycles": 934,
      "measured": {
       "record": "results/rtl/v41x_su_softmax.json",
       "t640_n16_m8": 3280
@@ -789,7 +789,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "c235cdbed1a7e44db264ba602f127ec2bdb8957df06a140331dda01595ff9db8",
+  "tools/uarch_model.py": "5ad57439b27de015f65a291509245b0bff1cbeef199a95a0fb2197c16b2a4b42",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/rtl_hdc_v41x_vec_campaign.py": "f8d647d83af611e2557323f55c60d93634ff8f541c8b035c0e42eacf82e769ec",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
