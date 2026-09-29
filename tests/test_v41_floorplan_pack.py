@@ -145,3 +145,10 @@ def test_orfs_record_confirms_placement():
     assert c["overlaps"] == 0 and c["outside_die"] == 0 and c["off_site_grid"] == 0
     assert c["insts"] == len(PACK["expanded_woa"]["instances"])
     assert rec["inputs_sha256"]["macros.tcl"] == PACK["expanded_woa"]["views_sha256"]["v41_pack_expanded_woa_macros.tcl"]
+
+
+def test_pdn_negative_records_preserved():
+    full = json.loads((ROOT / "results/floorplan/v41_pack_orfs_pdn_fulldie_expanded_woa.json").read_text())
+    assert full["verdict"].startswith("FAILED_OOM") and not full["pdn_generated"]
+    win = json.loads((ROOT / "results/floorplan/v41_pack_orfs_pdn_window_blocks_expanded_woa.json").read_text())
+    assert win["pdn"].startswith("status=PASS") and "PSM-0069" in win["psm"][0]

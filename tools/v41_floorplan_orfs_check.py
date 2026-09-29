@@ -47,8 +47,24 @@ def assumed_lef(name: str, w: float, h: float) -> str:
         "  END", f"END {name}", "END LIBRARY", ""])
 
 
-def prepare(variant: str, run: Path, pdn: bool, psm: bool, exclude: str = "") -> dict:
+def crop(B: dict, window: list[float]) -> dict:
+    """Keep the macros wholly inside a joint-grid-aligned window, re-origined to (0, 0)."""
+    x0, y0, x1, y1 = window
+    x0, y0 = PK.snap_dn(x0, PK.X_STEP), PK.snap_dn(y0, PK.Y_STEP)
+    x1, y1 = PK.snap_dn(x1, PK.X_STEP), PK.snap_dn(y1, PK.Y_STEP)
+    P = PK.Plan()
+    for m in B["P"].hard:
+        if m["x"] >= x0 and m["y"] >= y0 and m["x"] + m["w"] <= x1 and m["y"] + m["h"] <= y1:
+            P.add_hard(m["name"], m["master"], m["x"] - x0, m["y"] - y0, m["w"], m["h"], m["orient"], m["group"])
+    g = dict(B["geometry"], die_w_um=round(x1 - x0, 3), die_h_um=round(y1 - y0, 3), window=[x0, y0, x1, y1])
+    return dict(B, P=P, geometry=g)
+
+
+def prepare(variant: str, run: Path, pdn: bool, psm: bool, exclude: str = "", window=None,
+            tapcell: bool = False, pdn_tcl: str = f"{PLAT}/openRoad/pdn/BLOCKS_grid_strategy.tcl") -> dict:
     B = PK.build(variant)
+    if window:
+        B = crop(B, window)
     P = B["P"]
     g = B["geometry"]
     run.mkdir(parents=True, exist_ok=True)
@@ -170,6 +186,16 @@ foreach inst [$block getInsts] {{
 puts "OT_PINS classes=[dict size $classes] checked=$pins_checked off_track=$pins_off by_master=$off_by_master"
 puts "OT_TIME check_s=[expr {{[clock seconds]-$t0}}]"
 """
+    if tapcell:
+        tcl += f"""
+set ::env(TAP_CELL_NAME) TAPCELL_ASAP7_75t_R
+set ::env(MACRO_ROWS_HALO_X) 2
+set ::env(MACRO_ROWS_HALO_Y) 2
+if {{[catch {{source {PLAT}/openRoad/tapcell.tcl}} err]}} {{ puts "OT_TAPCELL status=FAIL err=$err" }} else {{
+  set nt 0; foreach i [$block getInsts] {{ if {{[string match TAPCELL* [[$i getMaster] getName]]}} {{ incr nt }} }}
+  puts "OT_TAPCELL status=PASS taps=$nt rows=[llength [$block getRows]]" }}
+if {{[catch {{check_placement -verbose}} err]}} {{ puts "OT_DPLCHECK status=FAIL err=$err" }} else {{ puts "OT_DPLCHECK status=PASS" }}
+"""
     if pdn:
         tcl += f"""
 set ::env(SCRIPTS_DIR) {FLOW}/scripts
@@ -180,7 +206,7 @@ set ::env(OBJECTS_DIR) /run
 set ::env(MACRO_ROWS_HALO_X) 2
 set ::env(MACRO_ROWS_HALO_Y) 2
 # Rows are cut around macros with the platform halo, as ORFS tapcell does.
-if {{[catch {{cut_rows -halo_width_x 2 -halo_width_y 2}} err]}} {{ puts "OT_CUTROWS status=FAIL err=$err" }} else {{ puts "OT_CUTROWS status=PASS rows=[llength [$block getRows]]" }}
+if {{!__TAPPED__ && [catch {{cut_rows -halo_width_x 2 -halo_width_y 2}} err]}} {{ puts "OT_CUTROWS status=FAIL err=$err" }} else {{ puts "OT_CUTROWS status=PASS rows=[llength [$block getRows]]" }}
 # Platform BLOCKS_grid_strategy.tcl, verbatim except that the macro element grid may exclude
 # masters (--pdn-exclude): the HBM PHY abstract's M4 power pins sit under its own M5 OBS (PDN-0006).
 set ot_exclude {{__EXCLUDE__}}
@@ -194,7 +220,7 @@ proc ot_find_macros_filtered {{}} {{
   }}
   return $out
 }}
-set pdn_src [read [open {PLAT}/openRoad/pdn/BLOCKS_grid_strategy.tcl]]
+set pdn_src [read [open __PDNTCL__]]
 set pdn_src [string map {{"[find_macros]" "[ot_find_macros_filtered]"}} $pdn_src]
 if {{[catch {{eval $pdn_src; pdngen}} err]}} {{
   puts "OT_PDN status=FAIL err=$err"
@@ -212,7 +238,7 @@ foreach net {VDD VSS} {
 }
 puts "OT_TIME psm_s=[expr {[clock seconds]-$t0}]"
 """
-    tcl = tcl.replace("__EXCLUDE__", exclude)
+    tcl = tcl.replace("__EXCLUDE__", exclude).replace("__TAPPED__", "1" if tapcell else "0").replace("__PDNTCL__", pdn_tcl)
     tcl += "exit\n"
     (run / "check.tcl").write_text(tcl)
     return B
@@ -235,14 +261,20 @@ def main():
     ap.add_argument("--pdn", action="store_true")
     ap.add_argument("--psm", action="store_true")
     ap.add_argument("--memory-gb", type=int, default=60)
+    ap.add_argument("--window", type=float, nargs=4, metavar=("X0", "Y0", "X1", "Y1"),
+                    help="check only the macros inside this window (um), with tapcells")
+    ap.add_argument("--tapcell", action="store_true")
+    ap.add_argument("--pdn-tcl", default=f"{PLAT}/openRoad/pdn/BLOCKS_grid_strategy.tcl",
+                    help="PDN script (container path); repo scripts are mounted at /src/tools/chip_assembly/tcl")
     ap.add_argument("--pdn-exclude", default="", help="space-separated master globs left out of the macro element grid")
     a = ap.parse_args()
     run = a.run_dir.resolve()
-    prepare(a.variant, run, a.pdn, a.psm, a.pdn_exclude)
+    prepare(a.variant, run, a.pdn, a.psm, a.pdn_exclude, a.window, a.tapcell, a.pdn_tcl)
     img = subprocess.run(["docker", "image", "inspect", IMAGE, "--format", "{{.Id}}"], capture_output=True,
                          text=True, check=True).stdout.strip()
     cmd = ["docker", "run", "--rm", f"--memory={a.memory_gb}g", "--name", f"ot_w1_fpcheck_{os.getpid()}",
-           "-v", f"{run}:/run", "-v", f"{PK.MACRO_DIR}:/work/macros:ro", IMAGE,
+           "-v", f"{run}:/run", "-v", f"{PK.MACRO_DIR}:/work/macros:ro",
+           "-v", f"{ROOT / 'tools/chip_assembly/tcl'}:/src/tools/chip_assembly/tcl:ro", IMAGE,
            "bash", "-c", f"/usr/bin/time -v {OPENROAD} -exit -no_init /run/check.tcl > /run/openroad.log 2>&1; echo rc=$?"]
     t = time.time()
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -253,7 +285,8 @@ def main():
     pins = tags.get("OT_PINS", [""])[0]
     pdn = tags.get("OT_PDN", [None])[0]
     psm = tags.get("OT_PSM", [])
-    rec = dict(schema="opentallas.v41.floorplan_orfs_check.v1", variant=a.variant, pdn_exclude=a.pdn_exclude,
+    rec = dict(schema="opentallas.v41.floorplan_orfs_check.v1", variant=a.variant, pdn_exclude=a.pdn_exclude, pdn_tcl=a.pdn_tcl, window=a.window, tapcell=a.tapcell,
+               tapcell_result=None,
                image=IMAGE, image_id=img, openroad=OPENROAD, wall_s=round(time.time() - t, 1),
                peak_rss_kb=peak, docker_rc=r.returncode, stdout_tail=r.stdout[-200:],
                inputs_sha256={n: hashlib.sha256((run / n).read_bytes()).hexdigest()
@@ -267,6 +300,9 @@ def main():
     c = rec["check"]
     rec["placement_legal"] = bool(c) and c.get("outside_die") == 0 and c.get("overlaps") == 0 and \
         c.get("not_firm") == 0 and c.get("off_site_grid") == 0
+    rec["tapcell_result"] = tags.get("OT_TAPCELL", [None])[0]
+    rec["dpl_check"] = tags.get("OT_DPLCHECK", [None])[0]
+    rec["cut_rows"] = tags.get("OT_CUTROWS", [None])[0]
     rec["pdn_generated"] = bool(pdn and pdn.startswith("status=PASS"))
     rec["power_grid_connected"] = bool(psm) and all("status=PASS" in x for x in psm)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")

@@ -53,7 +53,7 @@ Open items:
 ![packed floorplan](../results/floorplan/v41_pack_expanded_woa.svg)
 
 - **Edges.** Two HBM3E PHY abstracts (`ot_hbm3e_phy_v41x_aw30`, 12.0 × 0.833 mm) sit on each long edge, pins toward the core (R0 on the south edge, MX on the north). The east edge has 17 UCIe-A x64 modules (6.6 mm). The west edge has 45 SerDes lanes (18 mm). Neither link has a catalog LEF, so both are drawn as *assumed* rectangles from the ledger. Each PHY has a 216 µm service band with 12–13 KV-staging and queue SRAMs spread across its pseudo-channel windows.
-- **Hub**, 18.81 × 12.42 mm. From west to east it holds ATTENTION (BF16 pool, QE window SRAMs on the east edge), then the VM column (COLLECTIVE, then VM centred on the core, then GATHER), then SU/VECTOR, then HC. The areas are the analytical ASAP7 placed areas: 233.7 mm² reserved against 229 required. The die RTL does not instantiate these widths (D2, see [V41_DIE_ENGINE_PROFILE.md](V41_DIE_ENGINE_PROFILE.md)).
+- **Hub**, 18.81 × 12.42 mm. From west to east it holds ATTENTION (BF16 pool, QE window SRAMs on the east edge), then the VM column (COLLECTIVE, then VM centred on the core, then GATHER), then SU/VECTOR, then HC. The areas are the analytical ASAP7 placed areas: 233.7 mm² reserved against 229 required. The die RTL does not instantiate these widths (D2, see [V41_DIE_ENGINE_PROFILE.md](V41_DIE_ENGINE_PROFILE.md)). As elaborated, it has 1,536 block-dot and 32,864 BF16 MACs/cycle against the ledger's 1,059,840 and 166,656. COLLECTIVE still reserves the ledger's 8/2/4 area; D1 has since been accepted as 1/1/1, which frees about 0.5 mm².
 - **ROM/MAC.** There are 71 column pairs laid out as `[ROM R0 | 158.5 µm MAC strip | ROM MY]`. Every ROM output edge faces its strip, and the address edges face an 8.64 µm gap. The pair pitch is 418.61 µm and the row pitch 120.96 µm (1.62 µm vertical halo). A 32.4 µm spine corridor runs every 16 rows. Strips total 132.34 mm² against the 130.68 mm² block-dot and mux reservation. Slots fill nearest-to-VM first: ME, then dense QE, constants, Engram spill, and experts last. The 1,474 unused pair rows are the far corners.
 - **Grid.** Macro x is a multiple of 0.432 µm (0.054 site ∩ 0.048 M5 track). Macro y is a multiple of 2.16 µm (0.27 row ∩ 0.048 M4 track). Only R0 and MY are used, because MX would put the catalog M4 pins 12 nm off track. The core origin (10.8, 10.8) keeps the rows on the same grid.
 - **PDN reservation.** The platform grid is M1/M2 followpins, M5 straps at a 2.16 µm pitch and M6 straps at 4.32 µm. Channel capacity also assumes 25% of M8/M9 goes to a die-level grid. That share is an assumption until IR analysis exists.
@@ -89,7 +89,16 @@ The large hub (the analytical BF16 and SU pools) sets most of these distances. D
 - `cut_rows` with the platform 2 µm halo leaves 6,507,433 row segments.
 - The platform `BLOCKS_grid_strategy.tcl` pdngen fails with PDN-0006 on the HBM PHY. Its M4 power pins are blocked by its own M5 OBS.
 
-The PDN result without the PHY is in the ORFS record (`pdn`/`psm`). Standard cells, tapcells, routing and timing are out of scope because the die has no netlist.
+**PDN (partial, with the HBM PHY and assumed link abstracts excluded):**
+- **Full flat die: FAILED (OOM).** pdngen after `cut_rows` was killed at the 120 GB container limit (peak 125.6 GB, 1,992 s). A flat ASAP7 PDN for 815 mm² is infeasible, and die-level PDN needs hardened cluster abstracts (rung 4/5). Record: `results/floorplan/v41_pack_orfs_pdn_fulldie_expanded_woa.json`.
+- **1.7 × 1.7 mm ROM/MAC window (104 macros), platform strategy:**
+  - tapcell PASS (79,869 taps, 12,432 endcaps);
+  - `check_placement` PASS;
+  - pdngen PASS;
+  - **PSM-0069 FAIL**: the macro M4 VDD straps are unconnected, because the platform ElementGrid connects only M5-M6.
+  - Record: `v41_pack_orfs_pdn_window_blocks_expanded_woa.json`.
+- **Same window with `tools/chip_assembly/tcl/pdn_v41_rom_die.tcl`** (the platform strategy plus an ElementGrid M4-M5 connect): pdngen PASS (11.05 M shapes). Its PSM verdict is in `v41_pack_orfs_pdn_window_expanded_woa.json` if present. The run was frozen by the root halt, and anything missing there was not finished.
+- **The repo's `pdn_v41x_pdie.tcl`** fails PDN-0179 (M6 channel repair) on the same window.
 
 **HBM PHY abstract fix (W3, `tools/mem_compiler/hbm_phy_gen.py` `write_lef_v41x`).**
 - Snap each pseudo-channel window origin `wi*win+lo` to the 0.048 µm grid. The edge divided by 32 (375.003 µm) is not on the grid, which creates 24 pin phases.
