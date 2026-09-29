@@ -12,8 +12,9 @@
   "rtl/chip/ot_chip_v41x_hbm_karb.sv": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
   "rtl/test/tb_chip_v41x_karb_local_equiv.sv": "33110c58e969cf1febd35db13856b091ea6e642115f4ed4dcd03af28a7bad344",
-  "tools/rtl_chip_v41x_karb_local.py": "9380a5f6b44740af6f24348a1bb15ed372c30a107337dfa313ae05a60567cdf9",
+  "tools/rtl_chip_v41x_karb_local.py": "20326f937e6aeb09c1d7c87cb0d6f7d518f2f693b80f1870735de24a48d95e43",
   "rtl/test/tb_chip_v41x_kv_prefetch.sv": "925e1afca89dcda8924585852341eee6d5664fb81b8151a4fe347e588ecef04a",
+  "rtl/test/tb_chip_v41x_karb_local_hash.sv": "a45b30de74c4e7d83f2b52ae46af3d4c47280ada281b557044c221756bd327d0",
   "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
   "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
   "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
@@ -61,7 +62,7 @@
     "mono": 0,
     "local": 0
    },
-   "sim_seconds": 15.1,
+   "sim_seconds": 14.3,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -96,7 +97,7 @@
     "mono": 0,
     "local": 0
    },
-   "sim_seconds": 22.5,
+   "sim_seconds": 19.5,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -131,7 +132,7 @@
     "mono": 1024,
     "local": 1024
    },
-   "sim_seconds": 33.1,
+   "sim_seconds": 32.4,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -166,7 +167,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 35.5,
+   "sim_seconds": 34.8,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -201,7 +202,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 36.2,
+   "sim_seconds": 33.2,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -236,7 +237,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 32.7,
+   "sim_seconds": 31.8,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -271,7 +272,7 @@
     "mono": 1024,
     "local": 1024
    },
-   "sim_seconds": 29.1,
+   "sim_seconds": 26.1,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -306,7 +307,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 33.3,
+   "sim_seconds": 32.4,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -341,7 +342,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 35.2,
+   "sim_seconds": 36.4,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -376,7 +377,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 36.5,
+   "sim_seconds": 35.9,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -411,7 +412,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 34.1,
+   "sim_seconds": 33.9,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -446,7 +447,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 34.5,
+   "sim_seconds": 33.9,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -481,7 +482,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 37.8,
+   "sim_seconds": 37.0,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -516,7 +517,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 33.4,
+   "sim_seconds": 36.0,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -551,7 +552,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 34.2,
+   "sim_seconds": 35.8,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -586,7 +587,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 33.5,
+   "sim_seconds": 36.2,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -621,7 +622,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 35.1,
+   "sim_seconds": 34.5,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -656,7 +657,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 35.2,
+   "sim_seconds": 30.3,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -691,7 +692,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 31.7,
+   "sim_seconds": 26.5,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -726,7 +727,7 @@
     "mono": 0,
     "local": 0
    },
-   "sim_seconds": 15.6,
+   "sim_seconds": 15.1,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -761,7 +762,7 @@
     "mono": 0,
     "local": 0
    },
-   "sim_seconds": 20.0,
+   "sim_seconds": 18.2,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -796,7 +797,7 @@
     "mono": 1024,
     "local": 1024
    },
-   "sim_seconds": 26.8,
+   "sim_seconds": 24.3,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -831,7 +832,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 26.3,
+   "sim_seconds": 22.7,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -866,7 +867,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 30.0,
+   "sim_seconds": 28.2,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -901,7 +902,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 27.4,
+   "sim_seconds": 23.5,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -936,7 +937,7 @@
     "mono": 1024,
     "local": 1024
    },
-   "sim_seconds": 21.5,
+   "sim_seconds": 18.7,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -971,7 +972,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 27.7,
+   "sim_seconds": 26.2,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1006,7 +1007,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 27.8,
+   "sim_seconds": 28.2,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1041,7 +1042,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 27.3,
+   "sim_seconds": 24.3,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1076,7 +1077,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 29.2,
+   "sim_seconds": 24.9,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1111,7 +1112,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 27.2,
+   "sim_seconds": 27.6,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1146,7 +1147,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 24.7,
+   "sim_seconds": 29.3,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1181,7 +1182,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 24.9,
+   "sim_seconds": 23.4,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1216,7 +1217,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 24.5,
+   "sim_seconds": 24.7,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1251,7 +1252,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 22.7,
+   "sim_seconds": 27.5,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1286,7 +1287,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 23.6,
+   "sim_seconds": 24.5,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1321,7 +1322,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 22.2,
+   "sim_seconds": 25.1,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1356,7 +1357,7 @@
     "mono": 2048,
     "local": 2048
    },
-   "sim_seconds": 21.0,
+   "sim_seconds": 21.4,
    "pass": true,
    "k_rd_fence": 0
   }
@@ -1374,8 +1375,8 @@
     "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
     "PASS"
    ],
-   "sim_seconds": 2.7,
-   "log_sha256": "37f0da454f782a0c05e24482d3ad57750ab2c6d56dfead9d5038ac0278bda4b5"
+   "sim_seconds": 1.9,
+   "log_sha256": "196b249b755e8f0e17a08ffa1875a070b32b78d20bd750dd14ed64591ec3455c"
   },
   {
    "arbiter": "local",
@@ -1389,8 +1390,8 @@
     "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
     "PASS"
    ],
-   "sim_seconds": 2.7,
-   "log_sha256": "6ee2dff58b5a34e6efb10681c9739e5eaf76d6f96ccff1e5daff77340908ed7e"
+   "sim_seconds": 3.0,
+   "log_sha256": "a41841f636610e34b603c6de440b0f9b91728761576f792c350d486aef077dea"
   },
   {
    "arbiter": "local",
@@ -1404,10 +1405,14 @@
     "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
     "PASS"
    ],
-   "sim_seconds": 2.6,
-   "log_sha256": "aa871931d9e6917484a440cb9f73eb51996247c9b8e70a1b937eea9876316b25"
+   "sim_seconds": 2.8,
+   "log_sha256": "6a35c64264fa8ddfdcd6a8e9b4760f4d318d6eb2dd3cae35cbd9e085420a3858"
   }
  ],
+ "hash_steering_exhaustive": {
+  "summary": "KARB_HASH n=131072 got=131072 bad=0 multi=0 ingress_stalls=0",
+  "pass": true
+ },
  "pass": true,
  "added_uncontended_k_round_trip_cycles": [
   4

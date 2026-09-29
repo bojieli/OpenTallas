@@ -12,6 +12,8 @@ tools/run_abi3_physical.py so every record has the physical.json schema, source 
              request on the top edge in PC1's free span, the response in PC2's (the region centre).
   stack_ep   ot_chip_v41x_karb_stack_ep (NREG = 8), a compact block: K port on the top edge, the
              broadcast request on the bottom centre, regions 0-3 trunks bottom-left, 4-7 bottom-right.
+  *_band     slice / region in the current floorplan band height (17.28 um) instead of 64 um.
+  trunk_end / trunk_mid   the trunk cut at 11.4 mm (endpoint at the stack end) and 3.15 mm.
   trunk_far  rtl/chip/physical/ot_v41x_karb_trunk_cut.sv: the endpoint and the OUTERMOST region's K
              queues joined by the routed trunk.  The endpoint sits at the stack centre (6.0 mm along the
              12.0 mm PHY edge) and region 0's centre is at 0.75 mm, so the die is 5.4 mm x 64 um: K port
@@ -38,6 +40,7 @@ CLOCK_NS = 0.92
 UNCERTAINTY_NS = 0.06
 AW, TAGW, LENW, BEATW, DW = 30, 16, 4, 4, 256
 ENV_H = 64.0
+BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
 KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv"]
 
 
@@ -52,6 +55,8 @@ def common(top: str, sources: list[str], w: float, h: float, params: list[str] =
              "--io-delay-fraction", "0.2", "--stages", "synth,pnr",
              "--die-area", "0", "0", f"{w:g}", f"{h:g}", "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}",
              "--place-density", f"{density:g}"]
+    for hook in ("PRE_CTS", "PRE_GLOBAL_ROUTE"):
+        args += ["--step-tcl", f"{hook}={BUFFER_HOOK}"]
     return args
 
 
@@ -59,8 +64,8 @@ def span(x0: float, lo: float, hi: float) -> str:
     return f"{x0 + lo:g}-{x0 + hi:g}"
 
 
-def slice_case() -> dict:
-    w, h = PHY_PC_WINDOW_UM, ENV_H
+def slice_case(h: float = ENV_H, tag: str = "") -> dict:
+    w = PHY_PC_WINDOW_UM
     regions = [
         r"^(h_v|h_rdy|h_we|h_wr_done|r_v|r_rdy)$|^(h_addr|h_len|h_tag|h_wdata|h_wstrb|r_tag|r_beat|r_data)\[\d+\]$"
         + f"=bottom:{span(0, *PC_PIN_SPAN)}",
@@ -72,13 +77,13 @@ def slice_case() -> dict:
     args = common("ot_chip_v41x_karb_slice", ["rtl/chip/ot_chip_v41x_karb_slice.sv"], w, h, [f"AW={AW}"])
     for r in regions:
         args += ["--pin-region", r]
-    return {"args": args, "nickname": "w2a_karb_slice_aw30",
-            "output": "results/physical_abi3/asap7/chip/v41x_karb_local/slice_aw30/physical.json",
+    return {"args": args, "nickname": f"w2a_karb_slice_aw30{tag}",
+            "output": f"results/physical_abi3/asap7/chip/v41x_karb_local/slice_aw30{tag}/physical.json",
             "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": [200, 370]}}
 
 
-def region_case() -> dict:
-    w, h = 4 * PHY_PC_WINDOW_UM, ENV_H
+def region_case(h: float = ENV_H, tag: str = "") -> dict:
+    w = 4 * PHY_PC_WINDOW_UM
     regions = []
     for p in range(4):
         x0 = p * PHY_PC_WINDOW_UM
@@ -93,8 +98,8 @@ def region_case() -> dict:
     args = common("ot_chip_v41x_karb_region", srcs, w, h, [f"AW={AW}"])
     for r in regions:
         args += ["--pin-region", r]
-    return {"args": args, "nickname": "w2a_karb_region_aw30",
-            "output": "results/physical_abi3/asap7/chip/v41x_karb_local/region_aw30/physical.json",
+    return {"args": args, "nickname": f"w2a_karb_region_aw30{tag}",
+            "output": f"results/physical_abi3/asap7/chip/v41x_karb_local/region_aw30{tag}/physical.json",
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM, "pc_pin_span_um": PC_PIN_SPAN,
                           "trunk_request_top_um": [575, 745], "trunk_response_top_um": [950, 1120]}}
 
@@ -123,7 +128,7 @@ def stack_ep_case(w: float = 600.0) -> dict:
             "floorplan": {"die_um": [w, h]}}
 
 
-def trunk_case(length_um: float = 5400.0) -> dict:
+def trunk_case(length_um: float = 5400.0, tag: str = "_far") -> dict:
     w, h = length_um, ENV_H
     regions = [
         r"^(k_v|k_rdy|k_we|k_wr_done|k_rsp_v|k_rsp_rdy|clk|rst_n)$|^(k_addr|k_len|k_tag|k_wdata|k_wstrb|k_rsp_tag|"
@@ -136,13 +141,18 @@ def trunk_case(length_um: float = 5400.0) -> dict:
     args = common("ot_v41x_karb_trunk_cut", srcs, w, h)
     for r in regions:
         args += ["--pin-region", r]
-    return {"args": args, "nickname": "w2a_karb_trunk_far",
-            "output": "results/physical_abi3/asap7/chip/v41x_karb_local/trunk_far/physical.json",
+    return {"args": args, "nickname": f"w2a_karb_trunk{tag}",
+            "output": f"results/physical_abi3/asap7/chip/v41x_karb_local/trunk{tag}/physical.json",
             "floorplan": {"die_um": [w, h], "k_port_top_um": [w - 260, w - 10], "region_side_um": [20, 730],
                           "trunk_length_um": w - 750 / 2 - 135}}
 
 
-CASES = {"slice": slice_case, "region": region_case, "stack_ep": stack_ep_case, "trunk_far": trunk_case}
+BAND_H = 17.28   # the current floorplan's KV/key/staging band height (12,000 x 17.2 um), on the row grid
+CASES = {"slice": slice_case, "region": region_case, "stack_ep": stack_ep_case, "trunk_far": trunk_case,
+         # the existing band budget instead of the proposal's 64 um study envelope
+         "slice_band": lambda: slice_case(BAND_H, "_band"), "region_band": lambda: region_case(BAND_H, "_band"),
+         # endpoint at the stack end (outermost region at 11.25 mm) and a mid-distance region (2.25 mm)
+         "trunk_end": lambda: trunk_case(11400.0, "_end"), "trunk_mid": lambda: trunk_case(3150.0, "_mid")}
 
 
 def main() -> int:
@@ -153,9 +163,15 @@ def main() -> int:
     ap.add_argument("--work", type=Path, default=Path(os.environ.get("OT_V41PNR_WORK", "/home/ubuntu/w2/pnr")))
     ap.add_argument("--output")
     ap.add_argument("--stages")
+    ap.add_argument("--density", type=float, help="override the global placement density")
+    ap.add_argument("--abstract", action="store_true",
+                    help="after a kept route: ORFS do-generate_abstract (write_abstract_lef + write_timing_model) "
+                         "in <work>/<case>/orfs; prints the LEF/Liberty paths and digests")
     a = ap.parse_args()
     c = CASES[a.case]()
     args = list(c["args"])
+    if a.density:
+        args[args.index("--place-density") + 1] = f"{a.density:g}"
     if a.stages:
         args[args.index("--stages") + 1] = a.stages
     argv = [sys.executable, str(ROOT / "tools/run_abi3_physical.py"), *args, "--nickname-tag", c["nickname"],
@@ -166,8 +182,31 @@ def main() -> int:
         print(" ".join(x if len(x) < 200 else x[:80] + f"...<{len(x)} chars>" for x in argv))
     if a.run:
         (a.work / a.case).mkdir(parents=True, exist_ok=True)
-        return subprocess.run(argv, cwd=ROOT).returncode
+        rc = subprocess.run(argv, cwd=ROOT).returncode
+        if rc or not a.abstract:
+            return rc
+    if a.abstract:
+        return abstract(a.work / a.case / "orfs")
     return 0
+
+
+def abstract(orfs_dir: Path) -> int:
+    import hashlib
+    import re
+    nick = re.search(r"DESIGN_NICKNAME\s*=\s*(\S+)", (orfs_dir / "config.mk").read_text()).group(1)
+    top = re.search(r"DESIGN_NAME\s*=\s*(\S+)", (orfs_dir / "config.mk").read_text()).group(1)
+    cmd = ["docker", "run", "--rm", "-v", f"{ROOT}:/src:ro", "-v", f"{orfs_dir}:/work", "-w",
+           "/OpenROAD-flow-scripts/flow", "openroad/orfs:latest", "bash", "-lc",
+           "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
+           "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base do-generate_abstract"]
+    with (orfs_dir / "abstract.log").open("w") as log:
+        rc = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT).returncode
+    res = orfs_dir / "results/asap7" / nick / "base"
+    out = {}
+    for f in (res / f"{top}.lef", res / f"{top}_typ.lib"):
+        out[str(f)] = hashlib.sha256(f.read_bytes()).hexdigest() if f.is_file() else None
+    print(json.dumps({"returncode": rc, "abstracts": out}, indent=1))
+    return rc if all(out.values()) else (rc or 1)
 
 
 if __name__ == "__main__":

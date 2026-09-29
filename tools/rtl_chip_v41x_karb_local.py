@@ -46,6 +46,7 @@ SOURCES = (
     "rtl/test/tb_chip_v41x_karb_local_equiv.sv",
     "tools/rtl_chip_v41x_karb_local.py",
     "rtl/test/tb_chip_v41x_kv_prefetch.sv",
+    "rtl/test/tb_chip_v41x_karb_local_hash.sv",
     "rtl/chip/ot_chip_v41x_kv_prefetch.sv",
     "rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
     "rtl/hdc/kv/ot_hdc_hbm_model.sv",
@@ -288,6 +289,18 @@ def kv_bench(tmp: Path, local: int, fence: int) -> dict:
             "log_sha256": hashlib.sha256(log.encode()).hexdigest()}
 
 
+def hash_check(tmp: Path) -> dict:
+    """Exhaustive K steering at AW = 30: all 2^17 values of sector bits [18:2] (random bits above), one request
+    per cycle; each reaches the PC the monolithic arbiter picks, with its payload, and ingress never stalls."""
+    exe = tmp / "hash.vvp"
+    subprocess.run(["iverilog", "-g2012", "-s", "tb_chip_v41x_karb_local_hash", "-o", str(exe),
+                    str(ROOT / "rtl/test/tb_chip_v41x_karb_local_hash.sv"), *(str(ROOT / s) for s in KARB_RTL)],
+                   check=True, capture_output=True, text=True)
+    out = subprocess.run(["vvp", "-n", str(exe)], capture_output=True, text=True).stdout
+    line = next((ln for ln in out.splitlines() if ln.startswith("KARB_HASH")), "")
+    return {"summary": line, "pass": "PASS" in out.splitlines()}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
@@ -318,11 +331,13 @@ def main() -> int:
             return r
         with ThreadPoolExecutor(max_workers=a.jobs) as ex:
             kvf = [] if a.quick or a.no_kv else [ex.submit(kv_bench, tmp, l, f) for l, f in ((0, 1), (1, 1), (1, 0))]
+            hf = None if a.quick else ex.submit(hash_check, tmp)
             runs = list(ex.map(one, jobs))
             kv = [f.result() for f in kvf]
+            hc = hf.result() if hf else None
         for r in kv:
             print(json.dumps(r), flush=True)
-    ok = all(r["pass"] for r in runs) and all(r["pass"] for r in kv)
+    ok = all(r["pass"] for r in runs) and all(r["pass"] for r in kv) and (hc is None or hc["pass"])
     rec = {
         "record": "V4.1 local K arbitration partition: transaction equivalence against the monolithic arbiter",
         "proposal": "docs/V41_KARB_LOCAL_PARTITION_PROPOSAL.md (Codex 796726ad, main 2bdb0c4a)",
@@ -334,7 +349,7 @@ def main() -> int:
                              "both arms and equal to a sequential golden (K in acceptance order, B per PC in order, "
                              "masked writes); final memory image identical and golden. B and K address disjoint "
                              "regions, as index keys and KV do on the die. Cross-PC K response order may differ.",
-        "runs": runs, "kv_prefetch_bench": kv, "pass": ok,
+        "runs": runs, "kv_prefetch_bench": kv, "hash_steering_exhaustive": hc, "pass": ok,
         "added_uncontended_k_round_trip_cycles": sorted({r["first_k_latency_local"] - r["first_k_latency_mono"]
                                                          for r in runs if r["scenario"] == "k_single_read_idle"}),
     }
