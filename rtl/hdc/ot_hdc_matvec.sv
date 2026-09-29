@@ -647,17 +647,16 @@ module ot_hdc_matvec_part #(
                 pre_rmax, pre_j, pre_opend, pre_mbase, pre_sbase} = pre_tag;
         wire [G-1:0] pre_scale_active;
         genvar pg;
-        for (pg = 0; pg < G; pg = pg + 1) begin : g_scale_request_mask
+        for (pg = 0; pg < NPG; pg = pg + 1) begin : g_scale_request_mask
             // A group with no output rows cannot need a scale word. This also
             // drops the incomplete G % S tail in a K-split operation.
-            if (pg < NPG) begin : g_m
-                assign pre_scale_active[pg] = pre_vline[8+OD+XDD] && pre_last && !pre_wsrc &&
-                    ((gb + pg) < (GT >> pre_split)) &&
-                    (pre_mmode ? (pre_lb + (gb + pg)*W < pre_nout) :
-                                 (pre_nb + (gb + pg)*(W*IL) < pre_nout));
-            end else begin : g_z
-                assign pre_scale_active[pg] = 1'b0;
-            end
+            assign pre_scale_active[pg] = pre_vline[8+OD+XDD] && pre_last && !pre_wsrc &&
+                ((gb + pg) < (GT >> pre_split)) &&
+                (pre_mmode ? (pre_lb + (gb + pg)*W < pre_nout) :
+                             (pre_nb + (gb + pg)*(W*IL) < pre_nout));
+        end
+        if (NPG < G) begin : g_scale_request_pruned
+            assign pre_scale_active[G-1:NPG] = 0;
         end
         // pre_tag precedes a_tag by two cycles. The registered request becomes
         // visible to the synchronous ROM at the next edge, and scale_q is
@@ -674,23 +673,22 @@ module ot_hdc_matvec_part #(
                                          pre_sbase + (pre_nb >> LW) + (gb + sg) * IL;
         end
         genvar si;
-        for (si = 0; si < G*W; si = si + 1) begin : g_scale
+        for (si = 0; si < NPG*W; si = si + 1) begin : g_scale
             localparam integer GROUP = si / W;
             localparam integer LANE = si % W;
-            if (GROUP < NPG) begin : g_f
-                wire active_lane = ((gb + GROUP) < (GT >> raw_split)) &&
-                    (raw_mmode ? (raw_lb + (gb + GROUP)*W + LANE < raw_nout) :
-                                 (raw_nb + (gb + GROUP)*(W*IL) + LANE < raw_nout));
-                ot_hdc_fmul u_mul (
-                    .clk(clk), .rst_n(rst_n), .v(raw_v && raw_last && active_lane),
-                    .a(raw_res[32*si +: 32]),
-                    .b({raw_wsrc ? 16'h3F80 : scale_q[16*si +: 16], 16'd0}),
-                    .y(scaled[32*si +: 32]), .fault(scale_faults[si])
-                );
-            end else begin : g_p
-                assign scaled[32*si +: 32] = 32'd0;
-                assign scale_faults[si] = 1'b0;
-            end
+            wire active_lane = ((gb + GROUP) < (GT >> raw_split)) &&
+                (raw_mmode ? (raw_lb + (gb + GROUP)*W + LANE < raw_nout) :
+                             (raw_nb + (gb + GROUP)*(W*IL) + LANE < raw_nout));
+            ot_hdc_fmul u_mul (
+                .clk(clk), .rst_n(rst_n), .v(raw_v && raw_last && active_lane),
+                .a(raw_res[32*si +: 32]),
+                .b({raw_wsrc ? 16'h3F80 : scale_q[16*si +: 16], 16'd0}),
+                .y(scaled[32*si +: 32]), .fault(scale_faults[si])
+            );
+        end
+        if (NPG < G) begin : g_scale_pruned
+            assign scaled[G*W*32-1:NPG*W*32] = 0;
+            assign scale_faults[G*W-1:NPG*W] = 0;
         end
         assign res = scaled;
         assign result_tag = tag_d5;
