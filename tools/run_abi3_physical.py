@@ -960,6 +960,8 @@ def sdc_lines(
         f"create_clock -name core_clk -period $clk_period [get_ports {block['clock_port']}]",
         *([f"create_clock -name ingress_clk -period $clk_period [get_ports {block['ingress_clock_port']}]"]
           if block.get("ingress_clock_port") else []),
+        *([f"set_clock_uncertainty -setup {block['clock_uncertainty_ns'] / view['time_unit_ns']:g} [get_clocks core_clk]"]
+          if "clock_uncertainty_ns" in block else []),
         "set non_clock_inputs [all_inputs -no_clocks]",
         *([f"set core_inputs [get_ports {{{' '.join(block['core_input_ports'])}}}]"]
           if block.get("core_input_ports") else []),
@@ -2781,6 +2783,13 @@ def build_parser() -> argparse.ArgumentParser:
              "same clock domain, so only its internal register-to-register paths set closure; the "
              "value is recorded under design.io_delay_fraction",
     )
+    parser.add_argument(
+        "--clock-uncertainty-ns",
+        type=float,
+        default=None,
+        help="set_clock_uncertainty -setup on core_clk (hold is timed without it); absent emits nothing. The value "
+             "is recorded under design.clock_uncertainty_ns",
+    )
     parser.add_argument("--corner", default=None, help="corner name within the view")
     parser.add_argument("--clock-period-ns", type=float, required=True)
     parser.add_argument("--stages", default="synth,sta", help="comma list of synth,sta,pnr")
@@ -3181,6 +3190,8 @@ def main(argv: list[str] | None = None) -> int:
         block["ingress_input_delay_max_ns"] = args.ingress_input_delay_max_ns
     if args.io_delay_fraction is not None:
         block["io_delay_fraction"] = args.io_delay_fraction
+    if args.clock_uncertainty_ns is not None:
+        block["clock_uncertainty_ns"] = args.clock_uncertainty_ns
     if args.false_path_io:
         block["false_path_io"] = True
 
@@ -3319,6 +3330,8 @@ def main(argv: list[str] | None = None) -> int:
                if block.get("ingress_clock_port") else {}),
             "false_path_from_ports": block["false_path_from_ports"],
             "io_delay_fraction": block.get("io_delay_fraction", 0.2),
+            **({"clock_uncertainty_ns": block["clock_uncertainty_ns"]}
+               if "clock_uncertainty_ns" in block else {}),
             "false_path_io": bool(block.get("false_path_io", False)),
             "sources": [
                 {

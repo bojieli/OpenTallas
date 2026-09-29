@@ -27,7 +27,7 @@ module ot_qwen_g4_vm_skew_candidate (
  reg [11:0] word_a;
  reg [15:0] mask_a;
  always @* begin
-  bad=0;bre=0;bwe=0;
+  bad=0;bre=0;bwe=0;word_a=0;mask_a=0;b=0;j=0;
   for(i=0;i<8;i=i+1) begin bra[i]=0;bwa[i]=0;bwd[i]=0;bwm[i]=0;end
   for(i=0;i<4;i=i+1) begin
    if(re[i]) begin
