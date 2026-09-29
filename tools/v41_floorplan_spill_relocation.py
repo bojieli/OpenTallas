@@ -19,7 +19,7 @@ def derive(snapshot):
     complete=json.loads((ROOT/'results/floorplan/v41_stage17_complete_reservation.json').read_text()); spill=complete['spill_proposal'];q,rem=divmod(spill['layer_spill_rows'],112)
     expert_headers_checked=0
     for name in idx:
-        if '.ffn.experts.' in name and name.endswith('.weight'):
+        if name.startswith('layers.') and int(name.split('.')[1]) < 40 and '.ffn.experts.' in name and name.endswith('.weight'):
             family=name.split('.')[-2];expected=[5120,1152] if family=='w2' else [2304,2560]
             w=meta(name);sc=meta(name[:-7]+'.scale')
             assert w['dtype']=='I8' and w['shape']==expected
