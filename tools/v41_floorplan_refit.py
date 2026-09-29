@@ -10,9 +10,10 @@ What changes against W1's pack (results/floorplan/v41_pack_expanded_woa.json):
 * MAC strip of a pair column = the logic strip the placed pair was routed in (its die minus two ROMs, the
   capture channels and margins), for the FP8/FP4 pair; BF16-capable pairs (1,024 = 2,048 BF16 macros / 2) get
   their own columns at the BF16 pair's strip width.
-* Hub partitions sized from the microarchitecture model's area ledger (tools/uarch_model.py area_ledger,
-  results/uarch/v41_rom.json proposal: attention + indexer, stream unit + SFU) instead of the analytical
-  ledger; VM, collective, gather and HC keep W1's reservations.
+* Hub partitions sized from W11's dedicated-unit record (results/uarch/v41_dedicated_units.json, row
+  proposal_w11_p6: indexer + attention -> ATTENTION, stream unit -> SU_VECTOR; the stream unit is hardened,
+  indexer and attention are W11's element estimates until hardened) instead of the analytical ledger; VM,
+  collective, gather and HC keep W1's reservations.
 * Stage power gating (W14 model, main 76053c23): every gated region carries header/footer switch area
   SWITCH_FRACTION of its logic (ASSUMED, see SWITCH_BASIS); the VM (retention), the wake controller and the
   SerDes control form an always-on island in the hub's VM column (AON_MM2 ASSUMED for the controller and
@@ -66,17 +67,20 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--q-pair", type=Path, required=True)
     ap.add_argument("--bf-pair", type=Path, required=True)
-    ap.add_argument("--model", type=Path, default=ROOT / "results/uarch/v41_rom.json")
+    ap.add_argument("--hub", type=Path, default=ROOT / "results/uarch/v41_dedicated_units.json")
+    ap.add_argument("--hub-row", default="proposal_w11_p6")
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--svg-dir", type=Path, default=ROOT / "results/floorplan")
     a = ap.parse_args(argv)
     q = placed_strip(json.loads(a.q_pair.read_text()))
     b = placed_strip(json.loads(a.bf_pair.read_text()))
-    model = next(r for r in json.loads(a.model.read_text())["rows"] if r["design"] == "proposal")
-    ar = model["area"]
+    row = next(r for r in json.loads(a.hub.read_text())["rows"] if r["design"] == a.hub_row)
+    u = row["units"]
     g = 1 + SWITCH_FRACTION
-    hub = {"ATTENTION": (ar["attention"] + ar["indexer"]) * g,
-           "SU_VECTOR": (ar["su_lanes"] + ar["sfu_lanes"]) * g}
+    hub = {"ATTENTION": (u["indexer"]["area_mm2"] + u["attention"]["area_mm2"]) * g,
+           "SU_VECTOR": u["stream_unit"]["area_mm2"] * g}
+    hub_basis = {k: dict(area_mm2=u[k]["area_mm2"], hardened=bool(u[k].get("hardened")),
+                         replicas=u[k].get("replicas")) for k in ("indexer", "attention", "stream_unit")}
     P.REFIT = dict(strip_q_um=q["strip_um"] * g, strip_bf_um=b["strip_um"] * g, bf_pairs=BF16_PAIRS,
                    hub_mm2=hub, hub_scale={"HC": g, "GATHER": g}, hub_add_mm2={"VM": AON_MM2},
                    basis="W10 placed pairs + model hub + power switches + always-on island")
@@ -85,7 +89,8 @@ def main(argv=None):
     rec["refit"] = dict(
         q_pair=dict(record=str(a.q_pair), sha256=sha(a.q_pair), **q),
         bf16_pair=dict(record=str(a.bf_pair), sha256=sha(a.bf_pair), **b),
-        hub_mm2_from_model=hub, model_record_sha256=sha(a.model),
+        hub_mm2=hub, hub_units=hub_basis, hub_record=str(a.hub.relative_to(ROOT)), hub_row=a.hub_row,
+        hub_record_sha256=sha(a.hub),
         power_gating=dict(switch_fraction=SWITCH_FRACTION, basis=SWITCH_BASIS, always_on_island_mm2=AON_MM2,
                           always_on=["VM (state retention)", "wake controller (staggered 1 us wake)",
                                      "SerDes low-power-idle control (5 us pre-wake)"],
