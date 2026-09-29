@@ -1437,5 +1437,10 @@
   },
   "reading": "Both fence settings are transaction-exact here because the controller model never lets a burst pass an older same-sector burst when either is a write; the explicit fence (proposal default) serialises a K read behind every issued same-PC K write's wr_done and holds the in-order regional queue meanwhile, costing up to the max ratio above in drain time on mixed traffic. Without it the partition drains mixed traffic faster than the monolithic arbiter (K no longer blocks at the head of one busy PC). Adopting fence-off requires the real controller to guarantee same-sector write->read ordering (a controller contract, root decision)."
  },
- "historical": "superseded by results/rtl/chip_v41x_karb_pipe_equiv.json (adds the pipelined arm); sources pinned here are the pre-pipe revision (commit cf781fde)"
+ "historical": "superseded by results/rtl/chip_v41x_karb_pipe_equiv.json (adds the pipelined arm); sources pinned here are the pre-pipe revision (commit cf781fde)",
+ "landing_20260929": {
+  "integration_branch": "claude/land-frozen-20260929",
+  "action": "labelled_historical",
+  "reason": "already superseded on claude/w2-karb-local by results/rtl/chip_v41x_karb_pipe_equiv.json (its tb/tool pins were stale on the branch); the integration additionally changed rtl/chip/ot_chip_v41x_hbm_karb.sv. Not re-run; the pipe record covers the one-stage local arm too."
+ }
 }

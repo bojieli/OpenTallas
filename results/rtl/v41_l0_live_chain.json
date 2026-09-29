@@ -98,5 +98,10 @@
     "tools/v41_l0_live_chain_build.sh": "ff10be402eaa2a3661d20ee4a191c6383eafb3254cff5ccafb7a4066196e9daa",
     "tools/v41_l0_live_chain_files.txt": "694c88bedd024ebb1b6a7f73ce2e20168d3133587f585bbc059f4aec7bbfdbfe",
     "tools/v41_l0_live_chain.py": "09cc9509ecafdab1db75d39221a06f41420c125e60992862f113871cbe60bfd4"
+  },
+  "landing_20260929": {
+    "integration_branch": "claude/land-frozen-20260929",
+    "action": "labelled_pins_moved",
+    "reason": "partial_not_executed. Main advanced the die/tile/core RTL the bench pins (and the merge added opt-in die parameters and fixed main's duplicate core_fault/fault drivers in ot_chip_v41x_tile.sv); tools/v41_l0_live_chain.py was already past its pin on the branch. Nothing was executed, so nothing is re-run."
   }
 }

@@ -187,5 +187,23 @@
     "tools/hdc_program_v41.py": "7031fa78094e67cec1329e27640c216f53c06d0f7d50db7844095982dfd06542",
     "tools/hdc_images_v41x.py": "42989b07a65e85bf4406774d8b049f9e4d38ef0b259187f7a744fc97024ffcc3"
   },
-  "merged_runs": []
+  "merged_runs": [],
+  "landing_20260929": {
+    "integration_branch": "claude/land-frozen-20260929",
+    "action": "revalidated_by_rerun",
+    "changed_pin": {
+      "rtl/test/tb_chip_v41x_kv_prefetch.sv": "c0f7f72a968bd15e17f56db355748a17c468722d673ab493dc9483207d881eff"
+    },
+    "reason": "the merge added the opt-in KARB_LOCAL/KARB_FENCE parameters (claude/w2-karb-local) to the testbench; the define-selected arbiter arms are unchanged",
+    "command": "python3 tools/rtl_chip_v41x_die_smoke.py --steps kvtest --kv-group4 (Verilator 5.050), run with main dd0a01a6 testbench and with the merged testbench",
+    "result": {
+      "merged_tb_pass": true,
+      "main_tb_pass": true,
+      "merged_vs_main_tb_kv_and_log_identical": true,
+      "merged_log_sha256": "dc205af21bd2d5e0b78fb4e8b7b897b50663aa99d4ab18bf04ad1c112476cf17",
+      "this_record_kv_reproduced_at_integrated_rtl": true,
+      "note": null
+    },
+    "source_pins": "source_sha256 above still pins the record's own run; only the testbench pin moved"
+  }
 }

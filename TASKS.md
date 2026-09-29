@@ -40,12 +40,14 @@ Three historical array records now explicitly retain pre-shared-scheduler HBM mo
 - [!] Probability preload and serial KV refill are exposed latency; isolated replay/engine bandwidth gains do not remove them.
 - [!] Local physical power connectivity, complete PHY/package map, regional channel capacity and full-die clocks/PDN remain acceptance gates.
 - [ ] Calibrate end-to-end ROM/HBM rates only after exact connected execution and physical budgets agree.
+- [!] **Production L0 softmax scale is zero (KNOWN DEFECT, not fixed).** PC30 (`L0.softmax` scale + max) of `results/rtl/hdc_v41x_fullshape_l0_program.hex` is `M1_AIMM` with `imm1 = 0`, so the program multiplies every score by 0; it must be float32(512^-0.5) = `0x3d3504f3`. Source: the shape-only placeholder in `tools/hdc_replay_v41.py` softmax (`m1=I.M1_AIMM, imm1=0`); the same file leaves further `imm1=0` placeholders (Engram rsqrt/divimm and two more sites) that the binder does not patch. Found by `claude/w4-connected-l0`, whose live-chain gate patches the word locally. Pinned by the strict-xfail `tests/test_v41_l0_softmax_scale_defect.py`; regenerate the program with the real constants and remove the marker.
 
 ## Integration ledger for this publication
 
 - Prior main contains packed attention lifecycle, WINDOW source, compact-ROM core interfaces, stack tag-width fix and Qwen G4 runtime qualification.
 - New integrations: source-pinned floorplan inventory/connectivity; PV producer contract; opt-in WINDOW II1; full-shape weight fetch tile/die/PHY boundary and range tests.
 - Previous failed/limited records retain their original scope and source pins. New topology does not retroactively validate historical rates.
+- `claude/land-frozen-20260929` merges the frozen W1-W6/W8 workstream branches (all PARTIAL). Records whose pins the merge moved carry a `landing_20260929` block (refreshed by rerun, or labelled); the full list is `results/rtl/land_frozen_20260929_pin_ledger.json`. It also removes main's duplicate `core_fault` declaration and second `fault` driver in `rtl/chip/ot_chip_v41x_tile.sv`, which stopped the die from elaborating.
 
 ## Latest integration and architecture decisions
 

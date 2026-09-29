@@ -115,5 +115,10 @@
    "cts_hold": "hold repair inserted 23,158 cells (+10.8% area) and finished at -45.2 ps (worst endpoint in_data_q input path); 60 ps hold uncertainty + 20 ps margin on direct flop-to-flop / input paths"
   }
  },
- "verdict": "no closure: none of the three routes reached detailed route; no abstract produced"
+ "verdict": "no closure: none of the three routes reached detailed route; no abstract produced",
+ "landing_20260929": {
+  "integration_branch": "claude/land-frozen-20260929",
+  "action": "labelled_pins_moved",
+  "reason": "stopped (PARTIAL) physical runs; pins the branch packed VM variant (see results/rtl/v41_coll_vm_gw4_neighborhood.json landing block) and runner be101ec6. The unified runner emits byte-identical SDC for every committed be101ec6 argv; not re-run."
+ }
 }

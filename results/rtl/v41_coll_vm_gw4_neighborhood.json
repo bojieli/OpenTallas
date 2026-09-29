@@ -37,5 +37,22 @@
  ],
  "also": "tb_v41_vm_bank4_macro_pipe (3-group slice, rotations 2/3/0, depth carry, range/bank/collision faults) PASS on the packed-partial RTL",
  "latency_note": "no service stage added: transpose and VM keep their own registered edges (VM write commit 3 edges after its port, read fill 5 edges)",
- "all_pass": true
+ "all_pass": true,
+ "landing_20260929": {
+  "integration_branch": "claude/land-frozen-20260929",
+  "action": "revalidated_by_rerun_on_other_simulator",
+  "reason": "rtl/chip/ot_v41_vm_bank4_macro_pipe.sv was added on both main (04f4edde, pinned by 7 main records) and claude/w2-vmcoll (packed-partial variant, identical logic, an Icarus 11 workaround). The integration keeps main's file, so sources_sha256 above pins a variant not in the tree.",
+  "rerun": {
+   "simulator": "Verilator 5.050 --binary --timing",
+   "vm_bank4_macro_pipe_sha256": "a149e8877eae9919cd4539f14206eae431ac71e0c3a49ba1e0d8c16eda99a121",
+   "cases": [
+    "PASS coll->VM GW4 neighborhood G=1 NW=266 words=1084 beats=276 cycles=681",
+    "PASS coll->VM GW4 neighborhood G=1 NW=80 words=340 beats=86 cycles=248",
+    "PASS coll->VM GW4 neighborhood G=3 NW=266 words=1084 beats=356 cycles=761"
+   ],
+   "cycles_note": "cycles differ from the Icarus run by <=3 because the bench's random input stalls come from the simulator's $random",
+   "icarus_11_with_main_file": "FAIL: 1084 / 340 / 1084 mismatches (the stale continuous assign over the unpacked partial array the branch worked around); tb_v41_vm_bank4_macro_pipe alone still PASSes under Icarus",
+   "not_committed_as_a_new_verdict": "the Icarus verdict is not re-recorded; this block is the refresh evidence"
+  }
+ }
 }

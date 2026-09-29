@@ -43,5 +43,14 @@
   "trace_sha256": {
     "alone": "b8099645d6fde3ecb6ed507dc46819e881bf49050cf4583b551e0843cc8e4a66",
     "mixed": "53a9c181e7d71a197816573da6723262ecaf3fe10c59e2db6a9ae5d3f39d0571"
+  },
+  "landing_20260929": {
+    "integration_branch": "claude/land-frozen-20260929",
+    "action": "labelled_pins_moved",
+    "changed_pins": {
+      "rtl/chip/ot_chip_v41x_shared_hbm_model.sv": "cfca3ce2fe7e17148df625a5990fec3c9093c0d5c4c9a15c41b74bf584c487f7",
+      "rtl/chip/ot_chip_v41x_weight_pc_adapter.sv": "4f3c46b340fed66494d1284655bbe06c303c7367257e7d5678aae0a0a7bab922"
+    },
+    "reason": "claude/w4-qe-shared-stall made the weight adapter and shared HBM model geometry parameters opt-in (bit-identical at defaults per its handoff); this record was not re-run. Its focused test still passes on the integrated tree."
   }
 }
