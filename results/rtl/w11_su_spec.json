@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.rtl.w11_su_spec/1",
- "generated_at": "2026-09-29T16:27:14Z",
+ "generated_at": "2026-09-29T17:25:27Z",
  "contract": "Actual SU adapter: QK score -> exp score, sink denominator, post-PV divide.",
  "fixture": "tools/rtl_v41x_su_softmax_campaign.fixture",
  "heads": 16,
@@ -29,7 +29,11 @@
     "-fno-dfg"
    ],
    "max_rss_gib": 30.88,
-   "note": "max RSS of the largest single process (verilator or one g++)"
+   "note": "max RSS of the largest single process (verilator or one g++)",
+   "reused_from": {
+    "record": "results/rtl/w11_su_spec.json",
+    "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca"
+   }
   },
   "vec_N1024_M256": {
    "wall_s": 1825.1,
@@ -39,7 +43,11 @@
     "-fno-dfg"
    ],
    "max_rss_gib": 30.88,
-   "note": "max RSS of the largest single process (verilator or one g++)"
+   "note": "max RSS of the largest single process (verilator or one g++)",
+   "reused_from": {
+    "record": "results/rtl/w11_su_spec.json",
+    "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca"
+   }
   },
   "adapt_N16_M8": {
    "wall_s": 46.1,
@@ -49,7 +57,11 @@
     "-fno-dfg"
    ],
    "max_rss_gib": 0.84,
-   "note": "max RSS of the largest single process (verilator or one g++)"
+   "note": "max RSS of the largest single process (verilator or one g++)",
+   "reused_from": {
+    "record": "results/rtl/w11_su_spec.json",
+    "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca"
+   }
   },
   "vec_N16_M8": {
    "wall_s": 41.7,
@@ -59,7 +71,11 @@
     "-fno-dfg"
    ],
    "max_rss_gib": 0.84,
-   "note": "max RSS of the largest single process (verilator or one g++)"
+   "note": "max RSS of the largest single process (verilator or one g++)",
+   "reused_from": {
+    "record": "results/rtl/w11_su_spec.json",
+    "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca"
+   }
   }
  },
  "configs": {
@@ -124,7 +140,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 23.45,
+      "sim_wall_s": 20.65,
       "ops": [
        {
         "op": "scale+row max",
@@ -308,7 +324,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 24.35,
+      "sim_wall_s": 18.54,
       "ops": [
        {
         "op": "scale+row max",
@@ -492,7 +508,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 21.82,
+      "sim_wall_s": 17.38,
       "ops": [
        {
         "op": "scale+row max",
@@ -679,7 +695,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 27.16,
+      "sim_wall_s": 23.47,
       "ops": [
        {
         "op": "scale+row max",
@@ -863,7 +879,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 27.78,
+      "sim_wall_s": 21.3,
       "ops": [
        {
         "op": "scale+row max",
@@ -1047,7 +1063,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 27.09,
+      "sim_wall_s": 20.86,
       "ops": [
        {
         "op": "scale+row max",
@@ -1282,7 +1298,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 2.54,
+      "sim_wall_s": 1.4,
       "ops": [
        {
         "op": "scale+row max",
@@ -1466,7 +1482,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 2.02,
+      "sim_wall_s": 1.31,
       "ops": [
        {
         "op": "scale+row max",
@@ -1650,7 +1666,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 1.92,
+      "sim_wall_s": 1.41,
       "ops": [
        {
         "op": "scale+row max",
@@ -1837,7 +1853,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 4.02,
+      "sim_wall_s": 2.9,
       "ops": [
        {
         "op": "scale+row max",
@@ -2021,7 +2037,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 3.29,
+      "sim_wall_s": 3.05,
       "ops": [
        {
         "op": "scale+row max",
@@ -2205,7 +2221,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 2.99,
+      "sim_wall_s": 3.08,
       "ops": [
        {
         "op": "scale+row max",
@@ -2461,8 +2477,10 @@
   ]
  },
  "pass_": true,
- "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca",
- "git_dirty_tracked_files": [],
+ "git_head": "5affab643823b987f4012f543356fe32bd0d925b",
+ "git_dirty_tracked_files": [
+  "results/rtl/w11_su_checkpoint_fix.json"
+ ],
  "host": "ubuntu",
  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
  "input_sha256": {
@@ -2485,9 +2503,9 @@
   "rtl/test/tb_hdc_v41x_vec.sv": "c636a367b5d0192a03cc25252dbcd3d7d8ee2c7743bab90cc5a9c1bfd1ddab88",
   "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
   "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1",
-  "tools/w11_su_softmax_spec.py": "b32331ad834591b500fe70325033b508b69f2f5da5ad4a6bc9c5076dc6690d89",
+  "tools/w11_su_softmax_spec.py": "7170181fab354d52ce70d27d40158a2c916c2860ad811d23bd14576007b3a660",
   "tools/rtl_v41x_su_softmax_campaign.py": "935a56f9c93466ffbda5c29c2c8a24723dac372b88008ad8f8b5a94904bbe770",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "20195f05add07acdac3b25b473b0985c1e2898afca742b3fe753240a8ae2985c",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
