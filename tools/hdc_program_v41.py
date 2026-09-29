@@ -1950,16 +1950,10 @@ def qe_fetch_list(lay, prog, first):
     return ents
 
 
-def encode_list(ents):
-    """128-bit fetch-list words: [23:0] HBM sector base, [47:24] ROM word base,
-    [63:48] words (0 ends the list), [64] FP4, [66:65] predicate, [67] indexed,
-    [91:68] index element, [115:92] stride (words), [123:116] release group."""
-    out = []
-    for e in ents + [dict(hbm=0, rom=0, n=0, fp4=0, pred=0, ind=0, ibase=0, istride=0, grp=0)]:
-        assert e["hbm"] < 1 << 24 and e["n"] < 1 << 16 and e["grp"] < 1 << 8
-        out.append(e["hbm"] | e["rom"] << 24 | e["n"] << 48 | e["fp4"] << 64 | e["pred"] << 65 | e["ind"] << 67 |
-                   e["ibase"] << 68 | e["istride"] << 92 | e["grp"] << 116)
-    return out
+def encode_list(ents, profile="reduced"):
+    """Fetch ABI selected explicitly; reduced128 remains the default."""
+    from hdc_qstream_descriptor import encode_list as encode_fetch_list
+    return encode_fetch_list(ents, profile)
 
 
 def write_hbm_images(out, lay, prog):

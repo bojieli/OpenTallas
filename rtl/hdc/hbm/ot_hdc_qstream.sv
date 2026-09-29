@@ -43,12 +43,14 @@
 // address must be the list entry's next.
 // ---------------------------------------------------------------------------
 module ot_hdc_qstream #(
+    parameter integer FULL_SHAPE = 0,
+    parameter integer LIST_BITS = FULL_SHAPE ? 160 : 128,
     parameter integer BL     = 16,
     parameter integer QLB    = 272,      // bits per lane of a QE word (32 codes, 16-bit exponent)
     parameter integer SB     = 256,
-    parameter integer AW     = 24,
-    parameter integer HAW    = 24,
-    parameter integer NW     = 16,
+    parameter integer AW     = FULL_SHAPE ? 30 : 24,
+    parameter integer HAW    = FULL_SHAPE ? 30 : 24,
+    parameter integer NW     = FULL_SHAPE ? 21 : 16,
     parameter integer IL     = 8,
     parameter integer LWIN   = 10,
     parameter integer NPC    = 8,
@@ -68,7 +70,7 @@ module ot_hdc_qstream #(
     // fetch list (synchronous-read ROM)
     output reg               l_re,
     output reg  [LAW-1:0]    l_addr,
-    input  wire [127:0]      l_q,
+    input  wire [LIST_BITS-1:0] l_q,
     // vector-memory read of an expert id
     output reg               vi_re,
     output reg  [AW-1:0]     vi_addr,
@@ -113,6 +115,21 @@ module ot_hdc_qstream #(
     localparam integer WIN  = 1 << LWIN;
     localparam integer LS   = $clog2(SPW);
 
+    localparam integer DA=FULL_SHAPE ? 30 : 24;
+    localparam integer DN=FULL_SHAPE ? 21 : 16;
+    localparam integer O_ROM=DA, O_N=2*DA, O_FP4=2*DA+DN;
+    localparam integer O_PRED=O_FP4+1, O_IND=O_FP4+3;
+    localparam integer O_IBASE=O_FP4+4, O_STRIDE=O_IBASE+DA;
+    localparam integer O_GRP=O_STRIDE+DA, USED=O_GRP+8;
+    wire [63:0] desc_hbm_sum = 64'(cfg_base) + 64'(l_q[0 +: DA]);
+    wire [95:0] indirect_words = 96'(FULL_SHAPE ? vi_q : 32'(vi_q[AW-1:0])) * 96'(e_istride);
+    wire [95:0] indirect_rom = 96'(e_rom) + indirect_words;
+    wire [95:0] indirect_hbm = 96'(e_hbm) + indirect_words * (e_fp4 ? SPW4 : SPW);
+    reg descriptor_bad;
+    initial begin
+        if (FULL_SHAPE && (AW<DA || HAW<DA || NW<DN || LIST_BITS!=160))
+            $fatal(1,"full qstream profile requires AW/HAW>=30 NW>=21 LIST_BITS160");
+    end
     reg  [31:0] fp, cp, cons;
     reg  [WIN*SPW-1:0] vbits;
     reg  [WIN-1:0] sfp4;                            // the slot's word is FP4 (packed)
@@ -125,7 +142,7 @@ module ot_hdc_qstream #(
     reg  [7:0]    rel_cnt;
     reg  [HAW-1:0] e_hbm, a_hbm;
     reg  [AW-1:0] e_rom;
-    reg  [15:0]   e_n, e_i;
+    reg  [DN-1:0] e_n, e_i;
     reg           e_fp4, e_ind;
     reg  [1:0]    e_pred;
     reg  [AW-1:0] e_ibase, e_istride;
@@ -175,14 +192,14 @@ module ot_hdc_qstream #(
     wire [31:0]   occ = fp - cons;
     // op FIFO: the entries the walker has started, for the consumer's address check
     reg  [AW-1:0] of_rom [0:31];
-    reg  [15:0]   of_n [0:31];
+    reg  [DN-1:0] of_n [0:31];
     reg  [4:0]    of_wp, of_rp;
     reg  [5:0]    of_cnt;
     wire          of_pop;
     wire          of_push = (w_st == W_PUSH);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            w_st <= W_IDLE; l_re <= 1'b0; vi_re <= 1'b0; hq_v <= 1'b0; fp <= 0; rel_cnt <= 0; l_idx <= 0;
+            descriptor_bad <= 1'b0; w_st <= W_IDLE; l_re <= 1'b0; vi_re <= 1'b0; hq_v <= 1'b0; fp <= 0; rel_cnt <= 0; l_idx <= 0;
         end else begin
             l_re <= 1'b0; vi_re <= 1'b0;
             if (tok_start) rel_cnt <= 0;
@@ -193,10 +210,17 @@ module ot_hdc_qstream #(
                 W_LOAD: begin l_re <= 1'b1; l_addr <= l_idx; w_st <= W_LWAIT; end
                 W_LWAIT: w_st <= W_DEC;
                 W_DEC: begin
-                    e_hbm <= cfg_base + l_q[23:0]; e_rom <= l_q[47:24]; e_n <= l_q[63:48]; e_fp4 <= l_q[64];
-                    e_pred <= l_q[66:65]; e_ind <= l_q[67]; e_ibase <= l_q[91:68]; e_istride <= l_q[115:92];
-                    e_grp <= l_q[123:116];
-                    w_st <= (l_q[63:48] == 0) ? W_IDLE : W_REL;
+                    e_hbm <= desc_hbm_sum[HAW-1:0]; e_rom <= l_q[O_ROM +: DA];
+                    e_n <= l_q[O_N +: DN]; e_fp4 <= l_q[O_FP4];
+                    e_pred <= l_q[O_PRED +: 2]; e_ind <= l_q[O_IND];
+                    e_ibase <= l_q[O_IBASE +: DA]; e_istride <= l_q[O_STRIDE +: DA];
+                    e_grp <= l_q[O_GRP +: 8];
+                    if (FULL_SHAPE && ((|l_q[LIST_BITS-1:USED]) ||
+                        (desc_hbm_sum >> HAW)!=0 ||
+                        (64'(l_q[O_ROM +: DA])+64'(l_q[O_N +: DN]) > (64'd1<<AW)) ||
+                        (desc_hbm_sum+64'(l_q[O_N +: DN])*(l_q[O_FP4] ? SPW4 : SPW) > (64'd1<<HAW)))) begin
+                        descriptor_bad <= 1'b1; w_st <= W_IDLE;
+                    end else w_st <= (l_q[O_N +: DN] == 0) ? W_IDLE : W_REL;
                 end
                 W_REL: begin
                     if (!e_pred_ok) begin l_idx <= l_idx + 1'b1; w_st <= W_LOAD; end
@@ -205,9 +229,14 @@ module ot_hdc_qstream #(
                 end
                 W_IW1: w_st <= W_IW2;
                 W_IW2: begin
-                    e_rom <= e_rom + vi_q[AW-1:0] * e_istride;
-                    e_hbm <= e_hbm + vi_q[AW-1:0] * e_istride * (e_fp4 ? SPW4 : SPW);
-                    w_st <= W_PUSH;
+                    if (FULL_SHAPE &&
+                        (indirect_rom+64'(e_n) > (64'd1<<AW) ||
+                         indirect_hbm+64'(e_n)*(e_fp4 ? SPW4 : SPW) > (64'd1<<HAW))) begin
+                        descriptor_bad <= 1'b1; w_st <= W_IDLE;
+                    end else begin
+                        e_rom <= indirect_rom[AW-1:0];
+                        e_hbm <= indirect_hbm[HAW-1:0]; w_st <= W_PUSH;
+                    end
                 end
                 W_PUSH: begin e_i <= 0; e_g0 <= fp; la_iss <= 0; w_st <= W_REQ; end
                 W_REQ: if (hq_free && la_any) begin
@@ -330,7 +359,8 @@ module ot_hdc_qstream #(
     reg  [2:0]    tp;
     reg  [7:0]    a_nb;
     reg  [NW-1:0] a_tiles;
-    reg  [31:0]   a_n, a_nr, a_T, ann_end, op_start;
+    reg  [31:0]   a_n, a_T, ann_end, op_start;
+    reg [(FULL_SHAPE ? 48 : 32)-1:0] a_nr;
     reg           t_rdy, uncoverable;
     wire [31:0]   a_fast = a_nr >> 8;
     wire [31:0]   a_short = (a_fast >= a_n) ? 32'd0 : a_n - a_fast;
@@ -353,7 +383,7 @@ module ot_hdc_qstream #(
         end
     end
     // consumer check against the op FIFO
-    reg  [15:0] c_i;
+    reg  [DN-1:0] c_i;
     reg         addr_bad, underflow, overrun;
     assign of_pop = qr_re && (of_cnt != 0) && (c_i + 1'b1 == of_n[of_rp]);
     always @(posedge clk or negedge rst_n) begin
@@ -364,15 +394,15 @@ module ot_hdc_qstream #(
             if (qr_re) begin
                 if ($signed(cp - cons) <= 0) underflow <= 1'b1;
                 if (of_cnt == 0 || qr_addr != of_rom[of_rp] + c_i) addr_bad <= 1'b1;
-                c_i <= of_pop ? 16'd0 : c_i + 1'b1;
+                c_i <= of_pop ? DN'(0) : c_i + 1'b1;
             end
         end
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin fault <= 1'b0; fault_why <= 0; end
-        else if (underflow || addr_bad || overrun || uncoverable) begin
+        else if (underflow || addr_bad || overrun || uncoverable || descriptor_bad) begin
             fault <= 1'b1;
-            fault_why <= fault_why | {uncoverable, overrun, addr_bad, underflow};
+            fault_why <= fault_why | {uncoverable | descriptor_bad, overrun, addr_bad, underflow};
         end
     end
     reg  [31:0] n_req;
