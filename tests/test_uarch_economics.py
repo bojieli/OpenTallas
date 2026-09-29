@@ -101,3 +101,55 @@ def test_v41_ledger_matches_power_ledger_on_the_busiest_stage():
     led = U.v41_rom_ledger(g, mac_ops=1)
     assert abs(led["stage_die_energy_J"][pw["busiest_stage"]] * 1e6 - pw["energy_per_token_uJ"]) < 0.02
     assert abs(1.0 / max(led["stage_occupancy_s"].values()) - pw["saturated_tokens_s_per_stage"]) < 0.2
+
+
+LEV = ROOT / "results/uarch/economics_levers.json"
+
+
+def _lev():
+    return json.loads(LEV.read_text())
+
+
+def test_levers_record_is_source_pinned():
+    lv = _lev()
+    assert lv["schema"] == "opentallas.uarch.economics_levers.v1"
+    assert len(lv["source_sha256"]["tools/uarch_model.py"]) == 64
+
+
+def test_static_power_policies_only_ever_save_and_never_touch_the_token_path():
+    e, sp = _rec(), _lev()["static_power"]
+    summ = {r["design"]: r for r in e["summary"]}
+    for mode, name in (("ar", "V4.1 ROM AR"), ("mtp_m1", "V4.1 ROM MTP m = 1")):
+        for wk in ("wake_1us", "wake_c6_133us"):
+            blk = sp[mode][wk]
+            assert blk["wake_on_token_path_us"] == 0.0
+            assert blk["serdes_prewake_fits"]
+            for pt in ("batch1", "saturated"):
+                tot = [r["energy_mJ_per_token"] for r in blk[pt]]
+                assert all(b <= a + 1e-6 for a, b in zip(tot, tot[1:])), (mode, wk, pt)
+            # the ungated policy reproduces the economics section
+            assert abs(blk["batch1"][0]["energy_mJ_per_token"] - summ[name]["energy_mJ_b1"]) < 2.0
+            assert abs(blk["saturated"][0]["energy_mJ_per_token"] - summ[name]["energy_mJ_sat"]) < 2.0
+        # with a 1 us wake every non-busiest stage power-gates at saturation, and all 29 at batch 1
+        assert sp[mode]["wake_1us"]["batch1"][3]["stages_power_gated"] == 29
+        assert sp[mode]["wake_1us"]["saturated"][3]["stages_power_gated"] >= 27
+
+
+def test_adaptive_mtp_takes_the_better_mode_and_switches_near_twelve_users():
+    ad = _lev()["adaptive_mtp"]
+    for k, v in ad.items():
+        for r in v["rows"]:
+            assert r["aggregate_tokens_s"] == max(r["ar_aggregate_tokens_s"], r["mtp_aggregate_tokens_s"])
+        assert v["rows"][0]["mode"] == "MTP" and v["rows"][-1]["mode"] == "AR"
+    rom = ad["v41_rom"]
+    assert abs(rom["switch_users"] - rom["mtp_saturated"] / rom["ar_b1"]) < 0.01
+    assert 11 < rom["switch_users"] < 13
+
+
+def test_via_programmable_masks_bound_the_rom_nre():
+    rows = [r for r in _lev()["rom_masks"]["rows"] if r["design"].startswith("V4.1")]
+    full = next(r for r in rows if r["case"].startswith("full"))
+    via = [r for r in rows if r["case"].startswith("via")]
+    assert len(via) == 4
+    assert all(r["nre_usd"] < full["nre_usd"] / 5 for r in via)
+    assert all(r["usd_per_tokens_s_saturated_base_excluded"] <= r["usd_per_tokens_s_saturated"] for r in via)
