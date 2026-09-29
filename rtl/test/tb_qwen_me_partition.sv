@@ -236,21 +236,22 @@ module tb_qwen_me_partition;
              r_x_re, r_x_addr, r_ov, r_o_we, r_o_addr, r_o_mask, r_o_data, r_am_idx, r_am_val, r_am_any,
              r_mx_we, r_mx_addr, r_mx_mask, r_mx_data, r_progress, r_fault}) fail("unpruned != original", -1);
         // pruned monolithic == original on requests, writes, progress
-        if ({m_ready, m_wrom_re, m_wrom_addr, m_scale_re, m_scale_gre, m_kv_re, m_kv_addr, m_x_re, m_x_addr,
-             m_ov, m_o_we, m_o_mask, m_progress, m_fault} !==
+        // (==? : bits the reference has never assigned -- X after reset -- are don't-care)
+        if (!({m_ready, m_wrom_re, m_wrom_addr, m_scale_re, m_scale_gre, m_kv_re, m_kv_addr, m_x_re, m_x_addr,
+             m_ov, m_o_we, m_o_mask, m_progress, m_fault} ==?
             {r_ready, r_wrom_re, r_wrom_addr, r_scale_re, r_scale_gre, r_kv_re, r_kv_addr, r_x_re, r_x_addr,
-             r_ov, r_o_we, r_o_mask, r_progress, r_fault}) fail("pruned != original (requests/writes)", -1);
+             r_ov, r_o_we, r_o_mask, r_progress, r_fault})) fail("pruned != original (requests/writes)", -1);
         for (g = 0; g < GT; g = g + 1) begin
-            if (r_scale_gre[g] && m_scale_addr[g*AW +: AW] !== r_scale_addr[g*AW +: AW]) fail("pruned scale_addr", g);
-            if (r_o_we[g] && ({m_o_addr[g*AW +: AW], m_o_data[g*W*32 +: W*32]} !==
+            if (r_scale_gre[g] === 1'b1 && m_scale_addr[g*AW +: AW] !== r_scale_addr[g*AW +: AW]) fail("pruned scale_addr", g);
+            if (r_o_we[g] === 1'b1 && ({m_o_addr[g*AW +: AW], m_o_data[g*W*32 +: W*32]} !==
                               {r_o_addr[g*AW +: AW], r_o_data[g*W*32 +: W*32]})) fail("pruned result word", g);
         end
         // array vs pruned monolithic
         if (ZERO_WIRE) begin
-            if ({a_ready, a_idle, a_scale_re, a_scale_gre, a_ov, a_o_we, a_o_mask, a_am_idx, a_am_val, a_am_any,
-                 a_mx_we, a_mx_addr, a_mx_mask, a_mx_data, a_progress, a_fault} !==
+            if (!({a_ready, a_idle, a_scale_re, a_scale_gre, a_ov, a_o_we, a_o_mask, a_am_idx, a_am_val, a_am_any,
+                 a_mx_we, a_mx_addr, a_mx_mask, a_mx_data, a_progress, a_fault} ==?
                 {m_ready, m_idle, m_scale_re, m_scale_gre, m_ov, m_o_we, m_o_mask, m_am_idx, m_am_val, m_am_any,
-                 m_mx_we, m_mx_addr, m_mx_mask, m_mx_data, m_progress, m_fault}) fail("array != pruned (ports)", -1);
+                 m_mx_we, m_mx_addr, m_mx_mask, m_mx_data, m_progress, m_fault})) fail("array != pruned (ports)", -1);
             for (g = 0; g < NXC && g < GT; g = g + 1)
                 if (m_x_re[g] !== a_x_re[g] || (m_x_re[g] && m_x_addr[g*AW +: AW] !== a_x_addr[g*AW +: AW]))
                     fail("array x chunk port", g);
