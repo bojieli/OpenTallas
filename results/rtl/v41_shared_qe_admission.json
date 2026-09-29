@@ -1,0 +1,47 @@
+{
+  "status": "measured_fixed_rate_admission_failure",
+  "logical_matrix": "L0.wq_a",
+  "sectors": 65280,
+  "alone": {
+    "word_count": 3840,
+    "window_words": 1024,
+    "initial_window_ready_cycle": 2881,
+    "first_missing_word": 1679,
+    "available_words_at_consume_end": 2006,
+    "end_deficit_words": 1834,
+    "earliest_optimistic_unstalled_start": 17487,
+    "words_already_resident_at_that_start": 3352,
+    "final_word_cycle": 21326,
+    "fixed_rate_window_pass": false
+  },
+  "mixed": {
+    "word_count": 3840,
+    "window_words": 1024,
+    "initial_window_ready_cycle": 9073,
+    "first_missing_word": 1212,
+    "available_words_at_consume_end": 1554,
+    "end_deficit_words": 2286,
+    "earliest_optimistic_unstalled_start": 29173,
+    "words_already_resident_at_that_start": 3370,
+    "final_word_cycle": 33013,
+    "fixed_rate_window_pass": false
+  },
+  "scope": "Real descriptor shape; synthetic weight payload and sustained K traffic; optimistic unlimited completion capture; one stack",
+  "limits": [
+    "No actual QE numeric consumption",
+    "No complete production index/WINDOW trace",
+    "Service can change when consumer scheduling changes; this is a rejected prototype operating point, not universal impossibility"
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/chip/ot_chip_v41x_weight_pc_adapter.sv": "b260b3367389891fb2c25f1bc719d81ac73e8be3ba32969dae20e7db2adcc11f",
+    "rtl/chip/ot_chip_v41x_shared_hbm_model.sv": "f7ae842f2e90254478ee8dd060baf09eb5bab0701759f27b0b40bc6f2b9d3535",
+    "rtl/test/tb_v41_shared_qe_admission.sv": "c5b7fd92bae672411958c4853b889516e0b443c855a59aa351cefb9e172f647b",
+    "tools/v41_shared_qe_admission.py": "0f160b976a5639dcc4644162f6bc68cdc275ad5c71b667da4d4f16968148c6cc",
+    "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "81fa804534d548b7c1f77dc97b33b643d49fd78d63316a15592d920fcc1eca37"
+  },
+  "trace_sha256": {
+    "alone": "b8099645d6fde3ecb6ed507dc46819e881bf49050cf4583b551e0843cc8e4a66",
+    "mixed": "53a9c181e7d71a197816573da6723262ecaf3fe10c59e2db6a9ae5d3f39d0571"
+  }
+}
