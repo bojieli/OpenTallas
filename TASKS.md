@@ -1,6 +1,6 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-29. Last published baseline: `a99feb7f`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
+Updated 2026-09-29. Last published baseline: `86b85fc4`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
@@ -9,13 +9,13 @@ Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured block
 | Owner | Current work / next acceptance |
 | --- | --- |
 | Root | [~] [Physical floorplan](docs/V41_PHYSICAL_FLOORPLAN.md): geometric reservations, locality and dependency budgets; integrate agent evidence and publish. Macro fit remains unverified. |
-| floorplan_inventory | [~] ROM capacity screening complete; complete candidate stage17 payload exceeds logical capacity by7,408,140B; no proved spill receiver. Resolving exact dense partitions and compact wo_a representation before adoption. |
+| floorplan_inventory | [~] ROM capacity screening complete; complete candidate stage17 payload exceeds logical capacity by7,408,140B; no proved spill receiver. Resolved emitter-declared dense quarters still leave no proved receiver. Approved compact wo_a ME integration experiment; standalone exact decode passed, adoption/placement pending. |
 | floorplan_connectivity | [~] Approved opt-in L0 retained-stage reuse across QK/PV with new lifecycle generation and source-write invalidation; implementation coordinated with refill owner. |
 | ds_attention_elaboration | [~] Full-geometry real arithmetic on PVE2: All four standalone numeric cases pass; actual HBM-connected consumer integration now running. Synthetic inputs, not full token. |
 | qwen_execution_compile | [~] PVE1 G64 exact differential passed 56 cases; full-shape NW18/scale-base1 and checkpoint-backed core composition next. |
 | ds_physical_locality | [!] PVE3 VM/ME physical power and DRC pass. VM repaired cut now passes extracted setup/hold/electrical/PG at unchanged constraints; MP1 repair running. Source-pinned VM result integrated with buffer/area costs; complete VM still open. |
-| ds_window_integration | [~] II1 replay passed; approved opt-in eight outstanding refill requests per row under existing stage/scale barrier. Same-service exact and fault tests passed; producer option integrated, numeric composition pending. |
-| ds_fetch_integration | [~] Full-profile W hookup passed; approved opt-in common32-PC K/W timing owner, bounded queues and sector reservations; implementing contention/admission tests. Large-region service remains open. |
+| ds_window_integration | [~] Refill option integrated; now owns QE stallable weight-consumption boundary proposal, coordinating qstream/shared service owner. ROM arithmetic/timing must remain unchanged. |
+| ds_fetch_integration | [~] Full-profile W hookup passed; approved opt-in common32-PC K/W timing owner, bounded queues and sector reservations; shared8-descriptor burst composition passed exact data/Kwritecompletion; real3840-word admission failed under tested KV contention:1024window insufficient. Root approved explicit QE weight backpressure; service record forthcoming. Large-region service remains open. |
 | ds_pv_producer_budget | [~] Qwen finitebank audit rejected4modulobanks; approved8skewbanks candidate passes suppliedsynthetictraffic. Data replay/checkpointcoverage and route pending. |
 
 Additional active owners: `ds_softmax_composition` closes actual SU exp/SUM and post-PV divide; `fleet_route_recovery` preserved and stopped nonconverging karb strip GP, releasing48GiB onPVE2. Selector experiments retained. No route result inferred from stopped job.
