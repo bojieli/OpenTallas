@@ -12,7 +12,8 @@
 // tb_w15_link_unit's CRC fault test and the frame checks).
 // ---------------------------------------------------------------------------
 module ot_link_crc32 #(
-    parameter integer W = 64
+    parameter integer W          = 64,
+    parameter integer MASK_MAX_W = 8192
 ) (
     input  wire [W-1:0] d,
     output wire [31:0]  crc
@@ -42,10 +43,25 @@ module ot_link_crc32 #(
             init_term = c;
         end
     endfunction
-    localparam [32*W-1:0] M = masks(0);
-    localparam [31:0]     I0 = init_term(0);
     genvar i;
-    generate for (i = 0; i < 32; i = i + 1) begin : g_bit
-        assign crc[i] = (^(d & M[i*W +: W])) ^ I0[i];
+    generate if (W <= MASK_MAX_W) begin : g_par
+        localparam [32*W-1:0] M = masks(0);
+        localparam [31:0]     I0 = init_term(0);
+        for (i = 0; i < 32; i = i + 1) begin : g_bit
+            assign crc[i] = (^(d & M[i*W +: W])) ^ I0[i];
+        end
+    end else begin : g_ser
+        // very wide frames (the 1,024-lane Qwen engine's): the same CRC by its serial definition; elaborating
+        // 32 x W-bit masks is prohibitively slow in simulators.  Not a synthesis form (never hardened).
+        function automatic [31:0] ser(input [W-1:0] x);
+            integer b;
+            reg [31:0] c;
+            begin
+                c = 32'hFFFF_FFFF;
+                for (b = W - 1; b >= 0; b = b - 1) c = step0(c) ^ (x[b] ? POLY : 32'h0);
+                ser = c;
+            end
+        endfunction
+        assign crc = ser(d);
     end endgenerate
 endmodule
