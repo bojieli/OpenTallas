@@ -23,4 +23,4 @@ def test_source_trace_rejects_simple_modulo_banking():
     r=check(load_csv(p))
     assert r['cycles_examined']==5208
     assert len(r['problems'])==192
-    assert {x[1] for x in r['problems']}=={'vm_read_port'}
+    assert {x[1] for x in r['problems']}=={'vm_read_port','vm_write_port'}

@@ -106,8 +106,8 @@ The execution owner exported24 synthetic differential cases:22,080 group rows,
 frozen edges gives5,208 transaction cycles. This is **not a checkpoint trace**.
 The compressed trace is retained with its SHA in the result record.
 
-The candidate four modulo-word VM banks fails **192 read-port checks**: distinct
-words address the same single-read bank in one edge. Thus the current candidate
+The candidate four modulo-word VM banks fails **192 port checks (64 read,128 write)**: distinct
+words address the same single-port bank in one edge. Thus the current candidate
 cannot preserve the simulator's original cycle schedule. Code/scale depths and
 ports passed this supplied subset. No route is authorized on this incomplete VM cut.
 The root must choose trace-compatible skew/broadcast/replication or explicit stalls;
