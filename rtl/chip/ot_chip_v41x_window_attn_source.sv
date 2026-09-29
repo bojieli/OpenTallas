@@ -5,7 +5,7 @@
 // ordered packed beats. Selected FP4 CKV and remote rows are unsupported.
 module ot_chip_v41x_window_attn_source #(
     parameter integer POS_W=21, USER_W=10, SEC_W=30, HAW=30, TAGW=16,
-    parameter integer WIN_STACK=0
+    parameter integer WIN_STACK=0, STREAM_II1=0
 ) (
     input wire clk,rst_n,
     input wire [SEC_W-1:0] region_base_sector,region_sector_count,
@@ -119,6 +119,14 @@ module ot_chip_v41x_window_attn_source #(
         .m_wr_done(m_wr_done),.s_v(s_v),.s_rdy(s_rdy),
         .s_tag(s_tag),.s_beat(s_beat),.s_data(s_data));
 
+    generate if (STREAM_II1) begin : g_stream_ii1
+    ot_chip_v41x_window_stream #(.POS_W(POS_W),.USER_W(USER_W)) u_merge (
+ .clk(clk),.rst_n(rst_n),.start_v(issue_v && issue_ready),.start_ready(merge_start_ready),
+ .start_user(issue_user),.start_first(issue_first),.start_count(issue_count),
+ .req_v(wb_req_v),.req_ready(wb_req_ready),.req_user(wb_req_user),.req_first(wb_req_first),.req_mask(wb_req_m),
+ .rsp_v(wb_rsp_v),.rsp_user(wb_rsp_user),.rsp_first(wb_rsp_first),.rsp_mask(wb_rsp_m),.rsp_valid_mask(wb_rsp_lane_valid),.rsp_rows(wb_rsp_rows),.rsp_fault(wb_rsp_fault),
+ .kv_v(kv_v),.kv_ready(kv_ready),.kv_m(kv_m),.kv_w(kv_w),.done(merge_done),.fault(merge_fault));
+    end else begin : g_compat
     ot_chip_v41x_attn_row_merge #(.POS_W(POS_W),.USER_W(USER_W)) u_merge (
         .clk(clk),.rst_n(rst_n),.start_v(issue_v && issue_ready),
         .start_ready(merge_start_ready),.start_user(issue_user),
@@ -145,4 +153,5 @@ module ot_chip_v41x_window_attn_source #(
         .remote_rsp_row(2304'd0),.remote_fault(1'b0),
         .kv_v(kv_v),.kv_ready(kv_ready),.kv_m(kv_m),.kv_w(kv_w),
         .done(merge_done),.fault(merge_fault));
+    end endgenerate
 endmodule
