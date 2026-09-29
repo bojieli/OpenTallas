@@ -341,6 +341,8 @@ def evaluate(d: dict, ctx: int = 1048576):
                 nd["depth"] = 0.0
             elif d["use_measured_attention"] and name.endswith(".pv"):
                 nd["issue"] = 0.0      # the measured job covers scores + PV
+        elif k == "collective" and d.get("collective_latency_s") is not None:
+            nd["depth"] = d["collective_latency_s"] + (d["collective_cycles"] or 0) * cyc
         elif k == "collective" and d["collective_cycles"]:
             nd["depth"] = max(nd["depth"], d["collective_cycles"] * cyc)
     if d.get("su_layout_extra_cycles"):
@@ -1574,6 +1576,97 @@ def hbm_speculation_rows():
     return rows
 
 
+# ---------------------------------------------------------------------------------------------------------
+# Fabric sensitivity and GPU tiers (user request 2026-09-29)
+# ---------------------------------------------------------------------------------------------------------
+# Every multi-die design here assumes deterministic hardware collectives at link latency (a 668 ns switched
+# hop for V4.1, a ~17.5 ns UCIe exchange for the Qwen TP-2 pair).  The sweep re-prices each design as that latency
+# grows toward NCCL-class software collectives; the tiers put the designs beside what GPUs measurably do.
+GPU_CAL = json.loads((ROOT / "results/arch/qwen_gpu_calibration.json").read_text())
+GPU_FIT = GPU_CAL["fit"]              # t = fixed + seconds_per_weight_byte x bytes (H200 NIM fit, BF16/FP8 pair)
+H200_BW = 4.8e12
+B200_BW = 8.0e12                       # per GPU (NVIDIA B200 datasheet)
+NCCL_ALLREDUCE_S = 8e-6                # ASSUMED NCCL-class small-message all-reduce inside an 8-GPU NVLink node
+TIER1 = [
+    dict(tier=1, design="Qwen3-8B-class, H200, NIM FP8, AR", tokens_s=GPU_CAL["nim_h200"]["fp8_tok_s"],
+         source=GPU_CAL["nim_h200"]["source"]),
+    dict(tier=1, design="Qwen3-8B, RTX PRO 6000 (this lab), FP8 AR",
+         tokens_s=GPU_CAL["local_gpu_rtx_pro_6000"]["concurrency_1"]["fp8"]["ar_tok_s"],
+         source="results/gpu/qwen3_rtx_pro_6000_decode.json"),
+    dict(tier=1, design="Qwen3-8B, RTX PRO 6000 (this lab), FP8 DFlash",
+         tokens_s=GPU_CAL["local_gpu_rtx_pro_6000"]["concurrency_1"]["fp8"]["dflash_tok_s"],
+         source="results/gpu/qwen3_rtx_pro_6000_decode.json"),
+    dict(tier=1, design="DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers "
+                        "(relaxed acceptance)", tokens_s=368.0,
+         source="https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/"
+                "blog1_Pushing_Latency_Boundaries_Optimizing_DeepSeek-R1_Performance_on_NVIDIA_B200_GPUs.html"),
+]
+
+
+def gpu_tier2():
+    """GPU-calibrated projection: the H200-fitted per-byte and per-layer fixed costs, scaled to B200 bandwidth.
+    Qwen3-8B on one B200; V4.1 on an 8x B200 node (TP 8) adding NCCL-class collectives (5 per layer) and its
+    index-key reads.  Speculative gains use this lab's measured GPU DFlash ratio (Qwen) and the model's V4.1
+    MTP ratio on an HBM machine (1.94x)."""
+    s_per_B = GPU_FIT["seconds_per_weight_byte"] * H200_BW / B200_BW
+    fixed_layer = GPU_FIT["fixed_seconds_qwen"] / 36
+    q_bytes = GPU_FIT["qwen_fp8_weight_bytes"] + GPU_FIT["qwen_fp8_kv_bytes_8k"]
+    tq = GPU_FIT["fixed_seconds_qwen"] + s_per_B * q_bytes
+    loc = GPU_CAL["local_gpu_rtx_pro_6000"]["concurrency_1"]["fp8"]
+    q_spec = loc["dflash_tok_s"] / loc["ar_tok_s"]
+    v_bytes = 13.03e9 / 8 + 262144 * A.IDX_KEY_B * 4 * 38 / 8   # weights + 1M index keys (38 scanning layers)
+    tv = 40 * fixed_layer + s_per_B * v_bytes + 40 * 5 * NCCL_ALLREDUCE_S
+    return [dict(tier=2, design="Qwen3-8B on 1x B200, calibrated", tokens_s=round(1 / tq, 1),
+                 spec_tokens_s=round(q_spec / tq, 1),
+                 terms_us=dict(fixed=round(GPU_FIT["fixed_seconds_qwen"] * 1e6), bytes=round(s_per_B * q_bytes * 1e6))),
+            dict(tier=2, design="DeepSeek-V4.1-Flash on 8x B200, calibrated", tokens_s=round(1 / tv, 1),
+                 spec_tokens_s=round(1.94 / tv, 1),
+                 terms_us=dict(fixed=round(40 * fixed_layer * 1e6), bytes=round(s_per_B * v_bytes * 1e6),
+                               collectives=round(40 * 5 * NCCL_ALLREDUCE_S * 1e6)),
+                 check="DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)")]
+
+
+FABRIC_SWEEP_S = (0.15e-6, 0.668e-6, 1e-6, 2e-6, 5e-6, 10e-6)   # 0.15 us ~ the ROM array's own board/UCIe links
+                                                                # (arch-priced collective depth 145-165 cycles);
+                                                                # 0.668 us = the HBM comparator's NVL-class switch
+QWEN_UCIE_SWEEP_S = (17.5e-9, 100e-9, 500e-9, 1e-6, 5e-6)
+
+
+def fabric_sweep():
+    rows = []
+    # V4.1 ROM: re-solve the priced DAG with every collective's latency set to L (+ the measured engine cycles)
+    d = copy.deepcopy(PRESETS["proposal"])
+    r0 = evaluate(copy.deepcopy(d), 1048576)
+    r0.pop("_g", None)
+    rows.append(dict(design="v41_rom_ar", collective_latency_us="baseline (arch-priced links)",
+                     tokens_s=round(r0["tokens_s"], 1)))
+    for L in FABRIC_SWEEP_S:
+        r = evaluate(dict(d, collective_latency_s=L), 1048576)
+        r.pop("_g", None)
+        rows.append(dict(design="v41_rom_ar", collective_latency_us=L * 1e6, tokens_s=round(r["tokens_s"], 1)))
+    # V4.1 HBM: its fabric term is 125.9 us at the 668 ns hop, i.e. ~188 collectives on the path
+    base = [r for r in v41_hbm_rows() if r["design"] == "v41_hbm_gpu_groupslot"]
+    ncoll = V41_HBM_FABRIC_US["collective_latency"] / 0.668
+    for b in base:
+        for L in FABRIC_SWEEP_S:
+            T = b["T_us"] + ncoll * (L * 1e6 - 0.668)
+            rows.append(dict(design=b["design"], collective_latency_us=L * 1e6, tokens_s=round(1e6 / T, 1)))
+    # Qwen ROM and HBM: 73 serial UCIe exchanges per token on the TP-2 pair
+    import arch_budget_qwen3 as Q
+    clock = Q.clock_hz()
+    qr = qwen_eval(6144, 1024, pruned=True)
+    qh = [r for r in qwen_hbm_rows() if r["design"] == "qwen_hbm_gpu"][0]
+    for L in QWEN_UCIE_SWEEP_S:
+        add = 73 * (L - 19.27 / clock)
+        rows.append(dict(design="qwen_rom_ar_G6144", exchange_latency_us=L * 1e6,
+                         tokens_s=round(1 / (qr["cycles"] / clock + add), 1)))
+        rows.append(dict(design=qh["design"], exchange_latency_us=L * 1e6,
+                         tokens_s=round(1 / (qh["T_us"] * 1e-6 + add), 1)))
+    for r in rows:
+        print(r)
+    return rows
+
+
 def sweep(ctx: int):
     """Design-point search over the microarchitecture knobs that the evaluation shows binding."""
     rows = []
@@ -1604,8 +1697,20 @@ def main(argv=None):
     ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
     ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
+    ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
     a = ap.parse_args(argv)
+    if a.fabric:
+        t2 = gpu_tier2()
+        for r in TIER1 + t2:
+            print(r)
+        rows = fabric_sweep()
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.fabric.v1", tier1=TIER1, tier2=t2,
+                                                   sweep=rows, nccl_allreduce_s_assumed=NCCL_ALLREDUCE_S),
+                                              indent=1, default=str) + "\n")
+        return
     if a.dedicated:
         rows = [dedicated_ledger(copy.deepcopy(PRESETS[n]), a.ctx) for n in (a.preset or ("as_built", "proposal"))]
         # root decisions of 2026-09-29 (W11): 16 NK=4 index slices, NL=4 attention with the two-word loader;

@@ -1,0 +1,171 @@
+{
+ "schema": "opentallas.uarch.fabric.v1",
+ "tier1": [
+  {
+   "tier": 1,
+   "design": "Qwen3-8B-class, H200, NIM FP8, AR",
+   "tokens_s": 234.95,
+   "source": "https://docs.nvidia.com/nim/benchmarking/llm/1.0.0/performance.html"
+  },
+  {
+   "tier": 1,
+   "design": "Qwen3-8B, RTX PRO 6000 (this lab), FP8 AR",
+   "tokens_s": 151.4,
+   "source": "results/gpu/qwen3_rtx_pro_6000_decode.json"
+  },
+  {
+   "tier": 1,
+   "design": "Qwen3-8B, RTX PRO 6000 (this lab), FP8 DFlash",
+   "tokens_s": 390.3,
+   "source": "results/gpu/qwen3_rtx_pro_6000_decode.json"
+  },
+  {
+   "tier": 1,
+   "design": "DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance)",
+   "tokens_s": 368.0,
+   "source": "https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog1_Pushing_Latency_Boundaries_Optimizing_DeepSeek-R1_Performance_on_NVIDIA_B200_GPUs.html"
+  }
+ ],
+ "tier2": [
+  {
+   "tier": 2,
+   "design": "Qwen3-8B on 1x B200, calibrated",
+   "tokens_s": 298.9,
+   "spec_tokens_s": 770.6,
+   "terms_us": {
+    "fixed": 1464,
+    "bytes": 1881
+   }
+  },
+  {
+   "tier": 2,
+   "design": "DeepSeek-V4.1-Flash on 8x B200, calibrated",
+   "tokens_s": 271.8,
+   "spec_tokens_s": 527.2,
+   "terms_us": {
+    "fixed": 1627,
+    "bytes": 453,
+    "collectives": 1600
+   },
+   "check": "DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)"
+  }
+ ],
+ "sweep": [
+  {
+   "design": "v41_rom_ar",
+   "collective_latency_us": "baseline (arch-priced links)",
+   "tokens_s": 4166.8
+  },
+  {
+   "design": "v41_rom_ar",
+   "collective_latency_us": 0.15,
+   "tokens_s": 3751.7
+  },
+  {
+   "design": "v41_rom_ar",
+   "collective_latency_us": 0.668,
+   "tokens_s": 2785.0
+  },
+  {
+   "design": "v41_rom_ar",
+   "collective_latency_us": 1.0,
+   "tokens_s": 2389.5
+  },
+  {
+   "design": "v41_rom_ar",
+   "collective_latency_us": 2.0,
+   "tokens_s": 1673.6
+  },
+  {
+   "design": "v41_rom_ar",
+   "collective_latency_us": 5.0,
+   "tokens_s": 881.4
+  },
+  {
+   "design": "v41_rom_ar",
+   "collective_latency_us": 10.0,
+   "tokens_s": 492.7
+  },
+  {
+   "design": "v41_hbm_gpu_groupslot",
+   "collective_latency_us": 0.15,
+   "tokens_s": 4083.8
+  },
+  {
+   "design": "v41_hbm_gpu_groupslot",
+   "collective_latency_us": 0.668,
+   "tokens_s": 2919.7
+  },
+  {
+   "design": "v41_hbm_gpu_groupslot",
+   "collective_latency_us": 1.0,
+   "tokens_s": 2468.7
+  },
+  {
+   "design": "v41_hbm_gpu_groupslot",
+   "collective_latency_us": 2.0,
+   "tokens_s": 1684.8
+  },
+  {
+   "design": "v41_hbm_gpu_groupslot",
+   "collective_latency_us": 5.0,
+   "tokens_s": 862.8
+  },
+  {
+   "design": "v41_hbm_gpu_groupslot",
+   "collective_latency_us": 10.0,
+   "tokens_s": 475.9
+  },
+  {
+   "design": "qwen_rom_ar_G6144",
+   "exchange_latency_us": 0.0175,
+   "tokens_s": 9968.1
+  },
+  {
+   "design": "qwen_hbm_gpu",
+   "exchange_latency_us": 0.0175,
+   "tokens_s": 880.6
+  },
+  {
+   "design": "qwen_rom_ar_G6144",
+   "exchange_latency_us": 0.09999999999999999,
+   "tokens_s": 9403.6
+  },
+  {
+   "design": "qwen_hbm_gpu",
+   "exchange_latency_us": 0.09999999999999999,
+   "tokens_s": 875.9
+  },
+  {
+   "design": "qwen_rom_ar_G6144",
+   "exchange_latency_us": 0.5,
+   "tokens_s": 7377.7
+  },
+  {
+   "design": "qwen_hbm_gpu",
+   "exchange_latency_us": 0.5,
+   "tokens_s": 854.1
+  },
+  {
+   "design": "qwen_rom_ar_G6144",
+   "exchange_latency_us": 1.0,
+   "tokens_s": 5812.5
+  },
+  {
+   "design": "qwen_hbm_gpu",
+   "exchange_latency_us": 1.0,
+   "tokens_s": 828.3
+  },
+  {
+   "design": "qwen_rom_ar_G6144",
+   "exchange_latency_us": 5.0,
+   "tokens_s": 2155.0
+  },
+  {
+   "design": "qwen_hbm_gpu",
+   "exchange_latency_us": 5.0,
+   "tokens_s": 667.0
+  }
+ ],
+ "nccl_allreduce_s_assumed": 8e-06
+}

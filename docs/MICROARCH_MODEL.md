@@ -289,3 +289,46 @@ The lane multiplier m counts the positions that multiply one ROM weight word in 
 Removing the drafter frees about 12% of Qwen code ROM. Target-only banks are 10 per column at G = 6,144, and **G = 6,144 pruned then fits** (552.9 / 560 mm², 9,968 tok/s). The scale-ROM remap adds about 11 mm² of margin.
 
 The V4.1 draft cost is ASSUMED at 3/40 of an AR token (3 draft blocks of 40 layers). The HBM comparators' DFlash and MTP rows come from W13's SM model.
+
+## Fabric sensitivity and GPU tiers (`--fabric`, `results/uarch/fabric.json`)
+
+Every multi-die design here assumes deterministic hardware collectives at link latency:
+- **V4.1 ROM array:** direct UCIe/board links inside its TP-4 groups (the architecture prices 145–165 cycles, about 0.15 µs).
+- **V4.1 HBM comparator:** TP-96 through an NVL-class switch (0.668 µs).
+- **Qwen pair:** 73 UCIe exchanges per token (about 17.5 ns each).
+
+### Collective latency sweep (tok/s, single user, 1M context for V4.1, 8K for Qwen)
+
+| Collective / exchange latency | V4.1 ROM (AR) | V4.1 HBM (GPU org., AR) | Qwen ROM (AR, G = 6,144) | Qwen HBM (AR) |
+|---|---:|---:|---:|---:|
+| own baseline | **4,167** (~0.15 µs links) | **2,920** (0.668 µs switch) | **9,968** (17.5 ns UCIe) | **881** |
+| 0.1–0.15 µs | 3,752 | 4,084 | 9,404 | 876 |
+| 0.5–0.668 µs | 2,785 | 2,920 | 7,378 | 854 |
+| 1 µs | 2,390 | 2,469 | 5,813 | 828 |
+| 5 µs | 881 | 863 | 2,155 | 667 |
+| 10 µs | 493 | 476 | — | — |
+
+**At equal collective latency, V4.1 ROM and V4.1 HBM have almost the same single-user speed.** Both are latency-bound, not bandwidth-bound.
+- The ROM array's advantage (4,167 against 2,920) is structural. Its weights are local, so small TP-4 groups on direct links suffice.
+- The HBM machine must spread every matrix over 96 dies to reach its bandwidth, which needs a switched fabric.
+- Qwen ROM stays about 11× faster than Qwen HBM at every latency, because the Qwen HBM machine is bandwidth-bound.
+- Every headline depends strongly on deterministic hardware collectives. At NCCL-class latency (5–10 µs) both V4.1 designs fall to 500–900 tok/s.
+
+### GPU tiers
+
+| Tier | Design | tok/s AR | with speculation |
+|---|---|---:|---:|
+| 1 measured | Qwen3-8B-class, H200 NIM FP8 | 235 | — |
+| 1 measured | Qwen3-8B, RTX PRO 6000 (this lab) FP8 | 151 | 390 (DFlash) |
+| 1 measured | DeepSeek-R1 (V4.1-class anchor), 8× B200 TensorRT-LLM min-latency | — | 368 (3 MTP layers, relaxed acceptance) |
+| 2 calibrated | Qwen3-8B on 1× B200 (H200-fitted per-byte and per-layer costs scaled to 8 TB/s) | 299 | 771 |
+| 2 calibrated | DeepSeek-V4.1-Flash on 8× B200 (+ NCCL-class 8 µs all-reduce, ASSUMED, 5 per layer) | 272 | 527 |
+| 3 idealised HBM (OpenTallas control) | Qwen HBM / V4.1 HBM (sections above) | 881 / 2,920 | 2,671 / 5,673 |
+
+**Tier 2 matches tier 1 in order of magnitude.** V4.1 on 8× B200 projects 527 with MTP against DeepSeek-R1's measured 368, a larger model with lossy acceptance.
+
+Against GPUs (tier 2), the ROM designs are:
+- **Qwen:** about 33× in AR.
+- **V4.1:** about 15× in AR and 11× with MTP.
+
+Against the idealised HBM control (tier 3), the V4.1 ROM advantage is 1.4× in AR and about 1.07× with MTP, and it is structural (small TP groups on direct links).
