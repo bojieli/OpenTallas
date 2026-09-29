@@ -72,6 +72,7 @@ def main():
     ap.add_argument("--exe64", type=Path)
     ap.add_argument("--bcast", type=int, default=0)
     ap.add_argument("--ret", type=int, default=0)
+    ap.add_argument("--out", type=Path, help="default results/rtl/w11_su_checkpoint_<label>.json")
     args = ap.parse_args()
     C.BCAST, C.RET = args.bcast, args.ret
     args.scratch.mkdir(parents=True, exist_ok=True)
@@ -113,7 +114,7 @@ def main():
     rec["git_head"] = h.stdout.strip() if h.returncode == 0 else os.environ.get("OT_GIT_HEAD", "")
     rec["git_dirty_tracked_files"] = [x[3:] for x in d.stdout.splitlines()] if d.returncode == 0 else "unknown"
     rec["input_sha256"] = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCES}
-    out = ROOT / f"results/rtl/w11_su_checkpoint_{args.label}.json"
+    out = args.out or ROOT / f"results/rtl/w11_su_checkpoint_{args.label}.json"
     out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")
     print("wrote", out, "all_pass", rec["all_pass"], "reproduced", rec["hazard_reproduced"])
 
