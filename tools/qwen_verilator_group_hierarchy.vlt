@@ -1,0 +1,5 @@
+`verilator_config
+hier_block -module "ot_hdc_matvec_mac_group"
+hier_block -module "ot_hdc_matvec_reduce_bank"
+hier_block -module "ot_hdc_fmul"
+hier_block -module "ot_hdc_qadd"

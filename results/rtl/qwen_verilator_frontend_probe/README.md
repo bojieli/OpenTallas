@@ -53,3 +53,39 @@ before the remote die image subdirectories finished copying; that invalid
 attempt produced mismatches and was discarded. These records pin only the
 corrected replays and their binaries. Their `wall_seconds` values likewise
 measure record adoption after completed compilation and simulation.
+
+## Experimental group and reduction bank cuts
+
+The unmerged `ot_hdc_matvec_mac_group` cut keeps all logical W16 lanes and
+reuses a compiled 16-lane group. Its G4 reduced exact gate passed with the
+same 18 steps and 317,329 cycles. At G512, its front-end used 18,755,092 KiB
+and 907.850 s, versus 19,593,280 KiB and 951.141 s for the leaf-only cut:
+only 4.3% less peak RSS and 4.6% less wall time.
+
+The following experimental `ot_hdc_matvec_reduce_bank` cut keeps every
+pairwise FP32 add in the same order, the same valid/select controls and the
+same three-cycle held path plus one output register. At G6144/W16, the
+proposed geometry has 96 banks of 64 groups per level, 13 levels, 1,248 bank
+instances, 98,272 qadd lanes and a still-flat 3,145,728-bit parent level
+bus. Each bank has a 32,768-bit held/output bus and up to two 32,768-bit pair
+inputs. Non-power-of-two G6144 pair counts are exact: levels 6 and 7 have
+partial banks of 32 and 48 active groups; level 13 has no add groups.
+
+This banked version passed the G4 reduced 18-step gate and an independent
+pre-refactor versus candidate G4 complete-matvec split sweep. G64 front-end
+finished at 108.524 s / 1,582,936 KiB, worse than the group-only cut at that
+size. G512 compilation exceeded its separate 12 GiB cap: the hierarchical
+Verilator child received signal 9 after 293.859 s, with 12,497,484 KiB child
+maximum RSS. The preset <8 GiB acceptance target was missed. The banked
+cut remains experimental and does not support a G6144 compilation claim.
+The independent G64 W16 cycle-by-cycle split sweep was still running when
+this negative resource result was recorded; no G64 equivalence pass is
+claimed here.
+
+Integration note (claude/w0-codex-reconcile): the group/bank hierarchy refactor
+of `rtl/hdc/ot_hdc_matvec.sv` from Codex commit `a80d6a30` is NOT applied to
+production RTL. Its source is preserved verbatim as
+`results/rtl/qwen_matvec_bank_equivalence/ot_hdc_matvec_hier_experiment.sv.txt`
+for replay; the records above are historical (G4 exact, G512 Verilator above
+12 GiB). `tools/rtl_hdc_matvec_bank_equiv.py` expects that variant in place of
+the production module.

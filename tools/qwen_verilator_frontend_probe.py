@@ -30,6 +30,8 @@ def main():
     ap.add_argument('--unroll-limit', type=int, default=131072)
     ap.add_argument('--hier-vlt', type=Path,
                     help='Optional Verilator control file selecting hierarchy blocks')
+    ap.add_argument('--override-root', type=Path,
+                    help='Use isolated replacement RTL files without touching the frozen source')
     ap.add_argument('--emit-cc', action='store_true',
                     help='Run --cc front-end instead of --lint-only, without C++ compilation')
     ap.add_argument('--out', type=Path, required=True)
@@ -41,7 +43,13 @@ def main():
     spec = importlib.util.spec_from_file_location('qwen_layer0_runner_probe', args.runner)
     runner = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(runner)
-    sources = {str(p.relative_to(runner.ROOT)): sha(p) for p in runner.SOURCES}
+    override = args.override_root.resolve() if args.override_root else None
+    source_paths = [override / p.relative_to(runner.ROOT)
+                    if override and (override / p.relative_to(runner.ROOT)).exists() else p
+                    for p in runner.SOURCES]
+    sources = {str(p.relative_to(runner.ROOT)) if p.is_relative_to(runner.ROOT)
+               else 'override/' + str(p.relative_to(override)): sha(p)
+               for p in source_paths}
     command = runner.build_command(args.out / 'obj', 1, 1)
     command[0] = str(args.verilator)
     for flag in (('--exe', '--build') if args.emit_cc else ('--cc', '--exe', '--build')):
@@ -53,6 +61,11 @@ def main():
         command[command.index(flag) + 1] = str(value)
     command[command.index('-GG=6144')] = f'-GG={args.groups}'
     command = command[:command.index(str(runner.HARNESS))]
+    if override:
+        command = [str(override / Path(arg).relative_to(runner.ROOT))
+                   if arg.startswith(str(runner.ROOT)) and
+                   (override / Path(arg).relative_to(runner.ROOT)).exists() else arg
+                   for arg in command]
     if args.top == 'core':
         command[command.index('tb_hdc_qwen_layer0_tp2_postscale_ab')] = 'ot_hdc_core_vector_weight'
         command.remove('-GPOST_SCALE_HBM=1')
@@ -80,7 +93,9 @@ def main():
         'returncode': completed.returncode, 'wall_seconds': round(time.monotonic() - before, 3),
         'child_maxrss_kib': resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss,
         'source_sha256': sources, 'source_stable': sources ==
-            {str(p.relative_to(runner.ROOT)): sha(p) for p in runner.SOURCES},
+            {str(p.relative_to(runner.ROOT)) if p.is_relative_to(runner.ROOT)
+             else 'override/' + str(p.relative_to(override)): sha(p)
+             for p in source_paths},
         'frontend_log_sha256': sha(args.out / 'frontend.log'),
     }
     (args.out / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
