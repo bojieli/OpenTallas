@@ -92,7 +92,11 @@ module ot_hdc_core_v41x #(
     parameter integer SUN   = 16,          // light lanes (elements a cycle)
     parameter integer SUM   = 8,           // SFU lanes
     parameter integer SULV  = 7,           // reducer time levels, 1..7 (was 8: silently clamped to 7)
-    parameter integer SUBCAST = 0,         // broadcast-tree register stages, controller -> lanes (spec: see the vec header)
+    // SU wire stages (ot_hdc_v41x_vec BCAST_STAGES / RET_STAGES; 0 / 0 = no wire).  The spec die (N 1,024,
+    // M 256, W1 hub placement, 0.92 ns, 0.76 ps/um) is SUBCAST 4 (controller at the lane array's centre ->
+    // corner lane, 3,458 um) and SURET 5 (farthest lane -> HUB_VM, 3,850 um): results/rtl/w11_su_spec.json
+    // wire_stage_derivation
+    parameter integer SUBCAST = 0,         // broadcast-tree register stages, controller -> lanes
     parameter integer SURET = 0,           // return register stages, lanes / reducer -> vector memory
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
