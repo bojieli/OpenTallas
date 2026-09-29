@@ -53,3 +53,11 @@ Root authorizes implementation of the common timing-owner prototype and contenti
 K-only and W-only each completed 108,192 sectors. Contended 3-of-5 completed 78,307; contended 5-of-8 completed 86,219. All runs observed 2,373 refresh events and exact returned address patterns. These values are one stack, not a per-die sum. The measured mixed traffic is far below the ideal 31.25-sector ceiling, but is not a production address trace and cannot be substituted into the token model.
 
 The eight-descriptor burst ingress, reserved return buffers, writes, complete region-ledger integration and finite-production-trace admission remain unimplemented. This milestone establishes the timing-owner reservation mechanism only.
+
+## Bounded burst-service prototype
+
+`ot_chip_v41x_shared_hbm_model` is an opt-in standalone one-stack composition. It combines the W burst adapter and K requests behind the same 32-PC timing owner. It does not replace the adopted die's historical PHY. The test explicitly allocates K sectors [0,32768) and W [32768,65536) in one 65536-sector memory; overlapping allocation is rejected. No implicit high-address relocation occurs.
+
+The W adapter has eight descriptors and 16 reserved response sectors per PC: 16 KiB data plus 960 B word-tag/beat metadata. Credits are atomically reserved for each complete burst and released on downstream response consumption. Per-PC round-robin descriptor selection prevents continual low-slot reuse from starving older high-slot requests. K write completions come from the same timing model; W remains read-only. Common request queues remain 64 sectors/PC. Configuration must remain fixed while requests are outstanding.
+
+The source-pinned gate `results/rtl/v41_shared_weight_bursts.json` checks 256 alternating 17/9-sector words (3,328 sectors) under output backpressure, exactly reassembling every tagged beat without duplicate beats, and a K write/completion/read lifecycle. It passes in 1,711 cycles including drain. This test is synthetic and does not replay the full index/WINDOW traffic or fixed-rate QE consumption. The finite production admission test is still required before adoption.
