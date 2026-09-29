@@ -155,6 +155,16 @@ PRESETS["proposal"] = dict(PRESETS["spec_striped"], name="proposal", vm_read_ele
                            collective_w15="v41p17_r0d1024")
 PRESETS["proposal_whole"] = dict(PRESETS["proposal"], name="proposal_whole", row_split="whole")
 PRESETS["proposal_ksplit"] = dict(PRESETS["proposal"], name="proposal_ksplit", row_split="ksplit")
+# Distributed VM (root decision 2026-09-29): the VM is lane-group-local banks inside HUB_SU_VECTOR (128 groups of 8
+# lanes, element i in group i mod 128).  Register stages from the W1 hub geometry (results/floorplan/
+# v41_pack_expanded_woa.json), SU lane array 11.96 mm2 as a 3,458 um square abutting the HUB_VM strip and centred on
+# it, at 0.92 ns / 0.76 ps/um:
+#   x gather     farthest group -> VM port (west edge centre): 3,458 + 1,729 = 5,187 um      -> 6
+#   result scatter  VM port -> farthest group, the same run                                    -> 6
+#   collective write  HUB_COLLECTIVE centre -> VM port 3,774 um, then the scatter tree: 8,961 um -> 11
+#   SU results   reducer root at the array centre -> farthest group 3,458 um (element writes are local) -> 4
+VM_DIST = dict(vm_x_gather_stages=6, vm_ret_scatter_stages=6, vm_coll_write_stages=11, su_ret_stages=4)
+PRESETS["proposal_vmdist"] = dict(PRESETS["proposal"], name="proposal_vmdist", **VM_DIST)
 PRESETS["prop_vm256_measured"] = dict(PRESETS["prop_vm256"], name="prop_vm256_measured", su_lanes=16, sfu_lanes=8,
                                       att_macs=32768, use_measured_attention=True, idx_reader_Bpc=60 * 32,
                                       idx_macs=1024, collective_cycles=232)
@@ -301,6 +311,9 @@ def price_matvec(nd, name, d, clock, c):
     leaves = holding if d["return_leaf_elems"] is None else d["return_leaf_elems"]
     tree = math.ceil(math.log(max(2, leaves), d["return_fanin"]))
     wire = 2 * wire_cycles(d["bcast_um"][region], clock, d.get("wire_ps_per_um", WIRE_PS_PER_UM))
+    # distributed VM (W11, root 2026-09-29): x is gathered from the lane-group banks to the VM port, results are
+    # scattered back to them -- register stages from the hub geometry (VM_DIST below)
+    wire += d.get("vm_x_gather_stages", 0) + d.get("vm_ret_scatter_stages", 0)
     depth_c = d["elem_fill"] + wire + tree + adder_levels * FADD_PIPE
     return dict(key=key, fmt=fmt, K=K, rows=rows, words=words, holding=holding, region=region,
                 t_read=t_read, t_mac=t_mac, t_x=t_x, t_ret=t_ret, issue=issue_c, bind=bind,
@@ -353,6 +366,8 @@ def evaluate(d: dict, ctx: int = 1048576):
             nd["issue"] = 0.0          # the measured issue -> last commit latency includes the payload stream
         elif k == "collective" and d["collective_cycles"]:
             nd["depth"] = max(nd["depth"], d["collective_cycles"] * cyc)
+        if k == "collective" and d.get("vm_coll_write_stages"):
+            nd["depth"] += d["vm_coll_write_stages"] * cyc      # the collective DMA's write into the lane groups
     if d.get("su_layout_extra_cycles"):
         for name, nd in g.nodes.items():
             if name.endswith(".attn.exp"):
