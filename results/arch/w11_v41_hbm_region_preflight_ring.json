@@ -51,7 +51,7 @@
   "scope": "1M ratio-1 layer-20 die; keys in the W11 quarter-per-stack ring layout (each stack holds one position quarter: striped, not replicated); CKV and window as in the reference preflight",
   "source_sha256": {
     "results/rtl/w11_idx_ring_gate.json": "386e1e7c3705180aa409c849a1a1ab3f7f38ceeb580b9f8e995c0addeafc8b8e",
-    "rtl/chip/ot_chip_v41x_die.sv": "e6614aa917eaa140d068eeeb6dc5fbfd40363a98c44f26e39d2193e86b5983fb",
+    "rtl/chip/ot_chip_v41x_die.sv": "a6ca7221090dbc6050fe897bbc87dcad6d0e68e645963cd88617629ceec12aed",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "d3832452c0f1716756380a97df34582aa5acddc952c84453a1a23a05c6e8a77b",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "a2b148c335e07db4b7417bb48b7a86dd82f2cb88dc9c906b82aa12d717eb0047",
