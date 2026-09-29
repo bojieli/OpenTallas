@@ -31,13 +31,13 @@ ROM = ("ot_rom_8192x274_m8", 125.712, 119.340)
 MARGIN, CH, GAP = 2.16, 12.0, 4.0
 W1_HALF_STRIP_UM = 158.544 / 2
 W1_ROW_PITCH_UM = 120.96
-SOURCES = ["rtl/v41rom/ot_v41_rom_elem.sv", "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_chain.sv",
+SOURCES = ["rtl/v41rom/ot_v41_rom_elem_q.sv", "rtl/v41rom/ot_v41_rom_elem.sv", "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_chain.sv",
            "rtl/v41rom/ot_v41_segtree.sv", "rtl/v41rom/ot_v41_bf16_lanes.sv", "rtl/hdc/ot_hdc_fpu.sv",
            "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
            f"{MACRO_DIR}/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v"]
 
 
-def plan(logic_w: float, pair: bool = False) -> dict:
+def plan(logic_w: float, pair: bool = False, wrapped: bool = False) -> dict:
     """pair: a W1 pair column [ROM R0 | logic strip | ROM MY] sharing one front end (ot_v41_rom_elem NB = 2)."""
     rom, rw, rh = ROM
     die_h = W2.snap(2 * MARGIN + 2 * GAP + rh, 0.27)
@@ -45,22 +45,23 @@ def plan(logic_w: float, pair: bool = False) -> dict:
     x_logic0 = x_rom + rw + CH
     x_rom1 = x_logic0 + logic_w + CH
     die_w = W2.snap((x_rom1 + rw + CH if pair else x_logic0 + logic_w) + MARGIN, 0.054)
-    macros = [{"inst": "g_mac[0].u_rom", "master": ROM, "x": x_rom, "y": MARGIN + GAP, "orient": "R0",
+    pre = "u_e." if wrapped else ""
+    macros = [{"inst": f"{pre}g_mac[0].u_rom", "master": ROM, "x": x_rom, "y": MARGIN + GAP, "orient": "R0",
                "capture": True}]
     if pair:
-        macros.append({"inst": "g_mac[1].u_rom", "master": ROM, "x": x_rom1, "y": MARGIN + GAP, "orient": "MY",
+        macros.append({"inst": f"{pre}g_mac[1].u_rom", "master": ROM, "x": x_rom1, "y": MARGIN + GAP, "orient": "MY",
                        "capture": True})
     return {"case": "w10_elem_pair" if pair else "w10_elem", "top": "ot_v41_rom_elem", "die_um": [die_w, die_h],
             "logic_region_um": [round(x_logic0, 3), MARGIN, round(x_logic0 + logic_w, 3), die_h - MARGIN],
             "pin_span_um": [round(x_logic0, 3), round(x_logic0 + logic_w, 3)],
-            "macros": macros, "pair": pair,
+            "macros": macros, "pair": pair, "wrapped": wrapped,
             "sources": SOURCES, "macro_views": [rom],
             "w1_slot_um": [round((2 * rw if pair else rw) + (2 if pair else 1) * W1_HALF_STRIP_UM, 3), W1_ROW_PITCH_UM],
             "w1_slot_logic_um2": round(W1_HALF_STRIP_UM * W1_ROW_PITCH_UM, 1)}
 
 
 def hook_name(p: dict) -> str:
-    return "physical/abi3/v41_w10_elem_pair_place.tcl" if p["pair"] else "physical/abi3/v41_w10_elem_place.tcl"
+    return (f"physical/abi3/v41_w10_elem{'_pair' if p['pair'] else ''}{'_q' if p['wrapped'] else ''}_place.tcl")
 
 
 def hook_tcl(p: dict) -> str:
@@ -79,7 +80,9 @@ def hook_tcl(p: dict) -> str:
 
 def argv(p: dict, tag: str, keep: str, output: str, density: float, params=()) -> list[str]:
     w, h = p["die_um"]
-    a = ["tools/run_abi3_physical.py", "--view", "asap7", "--top", p["top"]]
+    top = "ot_v41_rom_elem_q" if p["wrapped"] else p["top"]      # an FP8/FP4 macro has no BF16 x port
+    params = [q for q in params if not (p["wrapped"] and q.startswith("BF16="))]
+    a = ["tools/run_abi3_physical.py", "--view", "asap7", "--top", top]
     for s in p["sources"]:
         a += ["--source", s]
     a += ["--clock-period-ns", "0.92", "--clock-uncertainty-ns", "0.06", "--io-delay-fraction", "0.2",
@@ -109,8 +112,10 @@ def main() -> None:
     ap.add_argument("--output", default="results/physical_abi3/asap7/chip/v41_w10_elem/elem_physical.json")
     ap.add_argument("--param", action="append", default=[], help="RTL parameter, e.g. BF16=1")
     ap.add_argument("--pair", action="store_true", help="a W1 macro pair sharing one front end (NB=2)")
+    ap.add_argument("--no-wrap", dest="wrap", action="store_false",
+                    help="FP8/FP4: harden ot_v41_rom_elem itself (with the unused BF16 x port) instead of ot_v41_rom_elem_q")
     a = ap.parse_args()
-    p = plan(a.logic_w, a.pair)
+    p = plan(a.logic_w, a.pair, wrapped=not any(q.startswith("BF16=1") for q in a.param) and a.wrap)
     if a.pair and "NB=2" not in a.param:
         a.param.append("NB=2")
     if a.write_hook:
