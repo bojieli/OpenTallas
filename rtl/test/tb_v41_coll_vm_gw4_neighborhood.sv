@@ -34,7 +34,7 @@ module tb_v41_coll_vm_gw4_neighborhood #(parameter integer NW=266, parameter int
     reg [FW-1:0] img [0:4*G*512-1];
     reg          imgv[0:4*G*512-1];
     task automatic gather(input integer desc, input integer d, input integer words);
-        integer i;
+        integer i; reg acc;
         begin
             @(negedge clk); start=1; dst=d; n=words; @(negedge clk); start=0;
             i=0;
@@ -42,11 +42,13 @@ module tb_v41_coll_vm_gw4_neighborhood #(parameter integer NW=266, parameter int
                 in_valid = ($urandom%5)!=0;
                 in_last = (i==words-1);
                 for (integer r=0;r<4;r=r+1) in_data[r*FW+:FW]=payload(desc,r,i);
-                @(posedge clk); #1;
-                if (in_valid && in_ready) begin
+                #2; acc = in_valid && in_ready;   // sampled before the capturing edge
+                @(posedge clk);
+                if (acc) begin
                     for (integer r=0;r<4;r=r+1) begin img[d+r*words+i]=payload(desc,r,i); imgv[d+r*words+i]=1; end
                     i=i+1;
                 end
+                if (cyc > 20000) $fatal(1,"gather stalled desc %0d at word %0d", desc, i);
                 @(negedge clk);
             end
             in_valid=0; in_last=0;
@@ -59,14 +61,14 @@ module tb_v41_coll_vm_gw4_neighborhood #(parameter integer NW=266, parameter int
     endtask
     // read-back: issue a beat per cycle, check with fixed 5-edge fill
     integer q_base [0:4095]; integer q_head=0, q_tail=0;
-    always @(posedge clk) if (rd_out_v) begin : chk
+    always @(negedge clk) if (rd_out_v) begin : chk
         integer base, delta, a;
         base=q_base[q_head]; q_head=q_head+1;
         if (rd_out_rot !== base[1:0]) begin errors=errors+1; $display("rot mismatch base %0d", base); end
         for (integer b=0;b<4;b=b+1) begin
             delta=(b-(base&3)+4)&3; a=base+delta;
             if (imgv[a] && rd_out_bank_words[b*FW+:FW] !== img[a]) begin
-                errors=errors+1; if (errors<10) $display("word %0d mismatch bank %0d", a, b);
+                errors=errors+1; if (errors<10) $display("word %0d mismatch bank %0d got %h exp %h", a, b, rd_out_bank_words[b*FW+:32], img[a][31:0]);
             end
             if (imgv[a]) reads_checked=reads_checked+1;
         end

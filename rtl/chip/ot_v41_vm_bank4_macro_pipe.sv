@@ -4,6 +4,9 @@
 // together; output is physical-bank order with a rotation tag. This variant
 // pipelines command/decode, local macro access and two levels of bank-local
 // output reduction. It adds fill latency but retains one beat/cycle issue.
+// W2: the bank-local partial ORs are one packed register per bank (Icarus 11
+// left a continuous assign over the former unpacked reg array stale when this
+// module is instantiated under a parent); logic is unchanged.
 module ot_v41_vm_bank4_macro_pipe #(
     parameter integer DEPTH_GROUPS = 16,
     parameter integer AW = 15
@@ -39,7 +42,7 @@ module ot_v41_vm_bank4_macro_pipe #(
         reg [8:0] rd_row_cmd_q,wr_row_cmd_q;
         reg [511:0] wr_data_cmd_q;
         wire [511:0] masked_word [0:15];
-        reg [511:0] partial_q [0:3];
+        reg [2047:0] partial_f;
 
         assign rd_bad[b] = rd_v && (rd_word >= CAP_WORDS);
         assign wr_bad[b] = wr_v[b] &&
@@ -117,11 +120,11 @@ module ot_v41_vm_bank4_macro_pipe #(
         end
         for (p=0;p<4;p=p+1) begin : g_partial
             always @(posedge clk)
-                partial_q[p] <= masked_word[4*p] | masked_word[4*p+1] |
+                partial_f[p*512 +: 512] <= masked_word[4*p] | masked_word[4*p+1] |
                                 masked_word[4*p+2] | masked_word[4*p+3];
         end
-        assign bank_word[b] = partial_q[0] | partial_q[1] |
-                              partial_q[2] | partial_q[3];
+        assign bank_word[b] = partial_f[0 +: 512] | partial_f[512 +: 512] |
+                              partial_f[1024 +: 512] | partial_f[1536 +: 512];
     end endgenerate
 
     always @(posedge clk) begin
