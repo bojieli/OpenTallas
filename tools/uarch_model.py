@@ -143,7 +143,7 @@ PRESETS = {
 PRESETS["prop_vm64"] = dict(PRESETS["spec_striped"], name="prop_vm64", vm_read_elems=64, vm_write_elems=128)
 PRESETS["prop_vm256"] = dict(PRESETS["spec_striped"], name="prop_vm256", vm_read_elems=256, vm_write_elems=512)
 PRESETS["proposal"] = dict(PRESETS["spec_striped"], name="proposal", vm_read_elems=64, vm_write_elems=128,
-                           bf16_stripe_macros=4096, collective_cycles=232, row_split="ksplit")
+                           bf16_stripe_macros=2048, collective_cycles=232, row_split="ksplit")
 PRESETS["proposal_whole"] = dict(PRESETS["proposal"], name="proposal_whole", row_split="whole")
 PRESETS["proposal_ksplit"] = dict(PRESETS["proposal"], name="proposal_ksplit", row_split="ksplit")
 PRESETS["prop_vm256_measured"] = dict(PRESETS["prop_vm256"], name="prop_vm256_measured", su_lanes=16, sfu_lanes=8,
@@ -193,6 +193,47 @@ def expected_max_load(balls: int, bins: int, trials: int = 4000, seed: int = 7) 
     return tot / trials
 
 
+def next_pow2(x: int) -> int:
+    return 1 << max(0, math.ceil(math.log2(max(1, x))))
+
+
+CHAIN_FLOOR = 8 * 5   # golden chunk sum = 8 sequential FP32 adds x adder latency 5: no stream round is shorter
+
+
+def striped_read(d, key, rows, K, fmt):
+    """Cycles to read `rows` x K of format `fmt` striped over the ROM field (W10-validated rules):
+    whole rows cost ceil(K / weights-per-word) words in one macro; a K split of s puts power-of-two-aligned runs
+    of golden chunks (next_pow2(ceil(C / s)) chunks) in each macro, exact under the golden csum padded tree;
+    an expert's split is chosen so ONE expert's tile covers the whole field (no tile collisions); every stream
+    round lasts at least the chunk-sum chain recurrence.  Returns (t_read, split, adder_levels, holding)."""
+    n = d["macros"]
+    if fmt == "bf16" and d.get("bf16_stripe_macros"):
+        n = min(n, d["bf16_stripe_macros"])
+    wpw = WEIGHTS_PER_WORD[fmt]
+    C = math.ceil(K / 256)
+    s = 1
+    seg_words = math.ceil(K / wpw)
+    unit_rows = EXPERT_ROWS[key] if key in EXPERT_ROWS else rows
+    if d.get("row_split", "whole") == "ksplit":
+        while s < C and unit_rows * s < n:
+            s *= 2
+        s = min(s, next_pow2(C))
+        if s > 1:
+            seg_words = math.ceil(min(K, next_pow2(math.ceil(C / s)) * 256) / wpw)
+    segs = rows * s
+    holding = min(n, segs)
+    if key in EXPERT_ROWS and EXPERT_ROWS[key] * s < n:
+        active = max(1, round(rows / EXPERT_ROWS[key]))
+        tiles = max(1, n // (EXPERT_ROWS[key] * s))
+        t = expected_max_load(active, tiles) * seg_words
+    else:
+        t = math.ceil(segs / n) * seg_words
+    if d.get("row_split") == "ksplit":
+        t = max(t, CHAIN_FLOOR)
+    al = math.ceil(math.log2(s)) if s > 1 else 0
+    return t, s, al, holding
+
+
 def price_matvec(nd, name, d, clock, c):
     key = node_key(name)
     if not key or key == "hc.fn":
@@ -208,32 +249,25 @@ def price_matvec(nd, name, d, clock, c):
     region = NODE_REGION[key]
     ksplit = 1
     adder_levels = 0
+    t_x = K / d["vm_read_elems"]
     if d["mapping"] == "striped":
-        n = d["macros"]
-        if fmt == "bf16" and d.get("bf16_stripe_macros"):
-            n = min(n, d["bf16_stripe_macros"])
-        seg_words = math.ceil(K / wpw)
-        if d.get("row_split", "whole") == "ksplit":
-            # split each row's K over s macros in power-of-two-aligned runs of golden chunks (8 blocks of 32 =
-            # 256 elements): exact under the golden csum's padded pairwise tree (W10 finding, f02e4600); the
-            # partials are added in the return tree in the same tree order (FP32 adders, one level per x2)
-            chunks = math.ceil(K / 256)
-            while ksplit < chunks and rows * ksplit < n:
-                ksplit *= 2
-            ksplit = min(ksplit, chunks)
-            seg_words = math.ceil(math.ceil(K / ksplit) / wpw)
-            adder_levels = math.ceil(math.log2(ksplit)) if ksplit > 1 else 0
-        segs = rows * ksplit
-        holding = min(n, segs)
-        if key in EXPERT_ROWS and segs < n:
-            # whole expert slices occupy tiles of e_rows x ksplit macros; the active experts land on tiles at
-            # random (static expert -> tile map, data-dependent routing): reads on a shared tile serialise
-            e_rows = EXPERT_ROWS[key] * ksplit
-            active = max(1, round(rows / EXPERT_ROWS[key]))
-            tiles = max(1, n // e_rows)
-            t_read = expected_max_load(active, tiles) * seg_words
+        if key == "a_proj":
+            # a_proj fuses FP8 (wq_a, wkv) with BF16 rows (index weights_proj when the layer scans; compressor
+            # wkv/wgate on KV-source layers), which stripe over the BF16 macros and need x in BF16 lane order:
+            # two sequential sub-phases and x streamed twice (W10 interim report)
+            L = nd["layer"]
+            mode, r = c["modes"][L], c["compress_ratios"][L]
+            bf_rows = ((c["index_heads"] if mode.get("scans_index") else 0)
+                       + ((2 if r == 2 else 1) * c["head_dim"] if L in c["kv_source_layer_ids"] else 0)) / 4
+            parts = [(max(1.0, rows - bf_rows), "fp8")] + ([(bf_rows, "bf16")] if bf_rows else [])
+            t_x *= len(parts)
         else:
-            t_read = math.ceil(segs / n) * seg_words
+            parts = [(rows, fmt)]
+        t_read, holding = 0.0, 0
+        for prow, pfmt in parts:
+            tr, ks, al, hd = striped_read(d, key, prow, K, pfmt)
+            t_read += tr
+            ksplit, adder_levels, holding = max(ksplit, ks), max(adder_levels, al), max(holding, hd)
     else:
         depth_rows = d["expert_fill_rows"] if region == "expert" else ROM_DEPTH
         holding = max(1, math.ceil(words / depth_rows))
@@ -245,7 +279,6 @@ def price_matvec(nd, name, d, clock, c):
     elif d["weight_macs_die"]:
         lanes_cap.append(macs / d["weight_macs_die"])
     t_mac = max(lanes_cap) if lanes_cap else 0.0
-    t_x = K / d["vm_read_elems"]
     t_ret = rows / d["vm_write_elems"]
     issue_c = max(t_read, t_mac, t_x, t_ret)
     bind = max((("rom_read", t_read), ("mac", t_mac), ("vm_read_x", t_x), ("vm_write_ret", t_ret)),
@@ -356,6 +389,10 @@ def area_ledger(d: dict):
         chunk_partials=(n * 8 * 32 * DFF_UM2) if striped else 0.0,   # 8 rows x FP32 chunk partial per element
         # K-split partials meet in the return tree: about one FP32 adder per macro pair (UNIT fp32_add_um2)
         return_adders=(n / 2 * UNIT["fp32_add_um2"]) if striped and d.get("row_split") == "ksplit" else 0.0,
+        # W10: a BF16 element completes 16 chunk sums a cycle: a 15-adder tree plus 128 chain registers (FP32);
+        # an FP4/FP8 element: one chain adder per block-dot lane plus 8 chain registers each
+        bf16_chain=(nb * (15 * UNIT["fp32_add_um2"] + 128 * 32 * DFF_UM2)) if striped else 0.0,
+        blockdot_chain=(n * 2 * (UNIT["fp32_add_um2"] + 8 * 32 * DFF_UM2)) if striped else 0.0,
         indexer=d["idx_macs"] / 32 * UNIT["blockdot_um2"],
         attention=d["att_macs"] * UNIT["mac_bf16_um2"],
         su_lanes=d["su_lanes"] * UNIT["su_light_lane_um2"],
@@ -365,7 +402,7 @@ def area_ledger(d: dict):
     )
     out = {k: v / 1e6 for k, v in out.items()}
     strip = out["blockdot_lanes"] + out["bf16_lanes"] + out["capture_regs"] + out["chunk_partials"] \
-        + out["return_adders"]
+        + out["return_adders"] + out["bf16_chain"] + out["blockdot_chain"]
     hub = out["indexer"] + out["attention"] + out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"]
     out["rom_field_strip_used_mm2"] = strip
     out["rom_field_strip_avail_mm2"] = FLOORPLAN["rom_field_strip_mm2"]
@@ -552,7 +589,7 @@ def sweep(ctx: int):
     rows = []
     base = PRESETS["proposal"]
     for vm in (16, 32, 64, 128, 256):
-        for nb in (256, 1024, 4096, None):
+        for nb in (1024, 2048, 3072, 4096):
             d = dict(base, name=f"sweep_vm{vm}_bf{nb or 'all'}", vm_read_elems=vm, vm_write_elems=2 * vm,
                      bf16_stripe_macros=nb)
             r = evaluate(d, ctx)
