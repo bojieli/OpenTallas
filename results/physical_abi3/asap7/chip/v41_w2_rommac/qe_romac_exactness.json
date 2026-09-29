@@ -1,0 +1,62 @@
+{
+  "activation_seed": 20260929,
+  "claim_scope": "Hardening candidate ot_chip_v41x_qe_romac (RL=3, unconditional per-macro capture, per-tag format, activation SRAMs, NP=2 spine pipes) produces every result of three back-to-back checkpoint ops (wq_a FP8, exp110.w1 paired FP4, wq_a) bit-identical and in order to the routed qtile RL=2 + pinned pair bank over the same bank images. Activations are seeded synthetic finite E4M3 blocks, not checkpoint activations.",
+  "fault_rows": 0,
+  "last_result_cycle": {
+    "dut": 24551,
+    "ref_with_format_drains": 24631
+  },
+  "latency_cycles": [
+    {
+      "dut_accept": 172,
+      "dut_accept_to_first_result": 79,
+      "dut_first": 251,
+      "fp4": 0,
+      "op": 0,
+      "ref_accept": 172,
+      "ref_accept_to_first_result": 73,
+      "ref_first": 245
+    },
+    {
+      "dut_accept": 173,
+      "dut_accept_to_first_result": 6478,
+      "dut_first": 6651,
+      "fp4": 1,
+      "op": 1,
+      "ref_accept": 6615,
+      "ref_accept_to_first_result": 73,
+      "ref_first": 6688
+    },
+    {
+      "dut_accept": 174,
+      "dut_accept_to_first_result": 17997,
+      "dut_first": 18171,
+      "fp4": 0,
+      "op": 2,
+      "ref_accept": 18178,
+      "ref_accept_to_first_result": 73,
+      "ref_first": 18251
+    }
+  ],
+  "latency_note": "dut_accept is the spine-edge handshake (NP=2 input stages + queue), results are counted at the spine edge (NP=2 output stages); the tile-internal cost of the capture-beside-macro read pipeline is RL 2 -> 3, one cycle per op, no throughput change.",
+  "rows": 1216,
+  "schema": "opentallas.rtl.v41x_qe_romac_exactness.v1",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "results/rtl/v41x_qe_local_tile_bank_l0.json": "1133dfd0fd30526dc420f34562c6073670186893dbcee61e8ddd7ef8490972e5",
+    "rtl/chip/ot_chip_v41x_qtile_pair_bank.sv": "647d9e2a956de1de49f7be71f27576f7c3a1dc3d15caceae922c2ba945e56b1b",
+    "rtl/chip/physical/ot_chip_v41x_qe_romac.sv": "a66ac84bea44e0ed2500ef193563b0bbe8174e9cd63401de71f9d3ef328b84af",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tops.sv": "71dd4783a7bcaebee39b19176d89b83c2bb9e21185f16796f90e3350d9e58f6a",
+    "rtl/test/tb_chip_v41x_qe_romac.sv": "a0744838fe28d3ce02b335759f4014e327728a8f5b62f345036baf308ff3faca",
+    "tools/rtl_v41x_qe_romac.py": "bba9d7b0e21bea3da16ed6dc407ca23bf95741b7660b961b6cae0a63ce6e6943"
+  },
+  "status": "pass"
+}
