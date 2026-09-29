@@ -770,6 +770,9 @@ def crossings(B: dict) -> dict:
         if f:
             add(f"VM (hub) -> farthest {grp} ROM/MAC strip", vm_c, f, bits, basis, led)
     coll = parts["COLLECTIVE"]
+    if REFIT and REFIT.get("xroot") in parts:
+        # the collective endpoint sits at the distributed VM's port (W15's measured die-centre placement)
+        coll = ("COLLECTIVE", vm_c[0], vm_c[1], 0.0, 0.0, 0.0)
     ucie = [m for m in P.hard if m["group"] == "UCIE"]
     ser = [m for m in P.hard if m["group"] == "SERDES"]
     cc = ctr(coll)
