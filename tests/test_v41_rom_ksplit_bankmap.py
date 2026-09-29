@@ -69,7 +69,8 @@ def test_busiest_die_every_word_once_and_record():
     keep = []
     dies = S.derive(SNAP, draws=2, seed=1, only=["layer_s01_r3"], keep=keep)
     die, d = keep[0], dies[0]
-    assert d["macros"] == 13798 and d["bf16_macros"] == S.BF16_MACROS and d["capacity_ok"]
+    assert d["macros"] == 13798 and d["pair_slots"] == 6899 and d["bf16_pair_slots"] == S.BF16_MACROS // 2
+    assert d["capacity_ok"]
     # every distinct region shape is a bijection (segment coverage and region disjointness are checked in derive)
     shapes = {}
     for rg in die.regions:

@@ -68,7 +68,12 @@ CHUNK_EL = 256
 IL = 8                              # chain registers per lane = units per sub-block
 FADD_REC = 5                        # ot_fp32_add_rne_pipe recurrence
 SLOTS = {"fp8": 1, "fp4": 2, "bf16": 16}
-EXPERT = {"w1": (576, 5120), "w3": (576, 5120), "w2": (1280, 2304)}
+EXPERT_ROWS = {"w1": (576, 5120), "w3": (576, 5120), "w2": (1280, 2304)}   # rank quarter (rows, K)
+# ADOPTED (root, 2026-09-29): W1 macro PAIRS share one element front end (ot_v41_rom_elem NB = 2) and hold one
+# segment structure for two rows.  The bank map therefore places "super rows" (rows 2R, 2R+1) on pair slots:
+# N macros -> floor(N / 2) pair slots, the BF16 subset likewise halved; words per macro are unchanged.
+PAIR = 2
+EXPERT = {k: (-(-r // PAIR), K) for k, (r, K) in EXPERT_ROWS.items()}
 TOPK, N_EXPERTS = 6, 384
 PHASE = {
     "attn.wq_a.weight": "a_proj", "attn.wkv.weight": "a_proj", "attn.indexer.weights_proj.weight": "a_proj",
@@ -283,7 +288,8 @@ def dense_matrices(entries: list[dict], layer: int) -> list[dict]:
             if e["split"] == "program_declared_output_row_quarter" or local in MODEL_QUARTER:
                 rows //= 4
             fmt = "bf16"
-        out.append(dict(tensor=e["tensor"], phase=PHASE[local], fmt=fmt, rows=rows, K=K))
+        out.append(dict(tensor=e["tensor"], phase=PHASE[local], fmt=fmt, rows=-(-rows // PAIR), K=K,
+                        real_rows=rows))
     return out
 
 
@@ -395,7 +401,8 @@ def expert_tiles(die: Die, ranges: list[dict]):
                     pos = (base + (rot + si * sp["rows"] + np.arange(sp["rows"])) % tile) % n
                     for rr in range(sp["rows"]):
                         if fam == "gu":
-                            t_name, row = ("w1", rr) if rr < 576 else ("w3", rr - 576)
+                            h1 = EXPERT["w1"][0]
+                            t_name, row = ("w1", rr) if rr < h1 else ("w3", rr - h1)
                         else:
                             t_name, row = "w2", rr
                         sids.append(len(die.segs))
@@ -503,8 +510,9 @@ def derive(snapshot: Path, draws: int, seed: int, only=None, keep=None):
             if only and name not in only:
                 continue
             w1 = by_die[name]
-            n = w1["macros"][M.WIDE]
-            die = Die(n, min(BF16_MACROS, n))
+            n_macros = w1["macros"][M.WIDE]
+            n = n_macros // PAIR
+            die = Die(n, min(BF16_MACROS, n_macros) // PAIR)
             expect, per_layer, res_by_layer = {}, [], {}
             for L in dense_layers:
                 mats = dense_matrices(dense[L], L)
@@ -529,7 +537,8 @@ def derive(snapshot: Path, draws: int, seed: int, only=None, keep=None):
                 ex.append(dict(layer=t["layer"], experts_owned=len(t["ids"]), **expert_stats(n, t, sd, rng, draws)))
             if keep is not None:
                 keep.append(die)
-            dies.append(dict(die=name, stage=stage, rank=rank, macros=n, bf16_macros=len(die.bf),
+            dies.append(dict(die=name, stage=stage, rank=rank, macros=n_macros, pair_slots=n,
+                             bf16_pair_slots=len(die.bf), rows_per_slot=PAIR,
                              dense_layers=dense_layers, segments=len(die.segs),
                              weight_words=int(sum(rg["words"] for rg in die.regions)),
                              max_address=max_addr, capacity_ok=bool(max_addr <= DEPTH and other <= free),
