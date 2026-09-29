@@ -341,6 +341,9 @@ def evaluate(d: dict, ctx: int = 1048576):
                 nd["depth"] = 0.0
             elif d["use_measured_attention"] and name.endswith(".pv"):
                 nd["issue"] = 0.0      # the measured job covers scores + PV
+        elif k == "collective" and d.get("collective_w15"):
+            nd["depth"] = w15_collective_s(d["collective_w15"], nd["op"], nd["payload"], nd.get("span") or 4)
+            nd["issue"] = 0.0          # the measured issue -> last commit latency includes the payload stream
         elif k == "collective" and d.get("collective_latency_s") is not None:
             nd["depth"] = d["collective_latency_s"] + (d["collective_cycles"] or 0) * cyc
         elif k == "collective" and d["collective_cycles"]:
@@ -1657,6 +1660,72 @@ FABRIC_SWEEP_S = (0.15e-6, 0.668e-6, 1e-6, 2e-6, 5e-6, 10e-6)   # 0.15 us ~ the 
 QWEN_UCIE_SWEEP_S = (17.5e-9, 100e-9, 500e-9, 1e-6, 5e-6)
 
 
+# W15 (results/rtl/w15_collectives.json): collectives MEASURED end to end in RTL on physical-link models --
+# per-die clocks, UCIe-A and 112G light-FEC link layers, floorplan wire stages, deterministic release.  Each
+# config's latency (issue -> last VM commit on the slowest die) is fitted as fixed + per-word x words-per-rank over
+# a 1..320-word payload sweep; a DAG collective is priced at its own payload (words = payload / 64 B for an
+# all-reduce, payload / span / 64 B per rank for an all-gather).
+W15_RECORD = ROOT / "results/rtl/w15_collectives.json"
+_W15 = {}
+
+
+def w15_record():
+    if "r" not in _W15:
+        _W15["r"] = json.loads(W15_RECORD.read_text())
+    return _W15["r"]
+
+
+def w15_collective_s(cfg, op, payload, span):
+    c = w15_record()["configs"]
+    rec = c.get(cfg + "_sweep") or c[cfg]
+    f = rec["fit"]["all_reduce" if op == "all_reduce" else "all_gather"]
+    words = math.ceil(payload / 64) if op == "all_reduce" else math.ceil(payload / max(1, span) / 64)
+    return (f["fixed_cycles"] + f["cycles_per_word"] * max(1, words)) / rec["clock_hz"]
+
+
+W15_V41 = (("v41_r1d256", "as-built placement (hub collective, edge PHYs 22/29 wire stages), relay, depth 256"),
+           ("v41_r0d256", "as-built placement, direct T1 (no relay), depth 256"),
+           ("v41_r0d1024", "as-built placement, direct T1, depth 1024"),
+           ("v41p17_r0d256", "W3 proposed placement (collective at the channel crossing, 17 stages), direct T1, "
+                             "depth 256"),
+           ("v41p17_r0d1024", "W3 proposed placement, direct T1, depth 1024"))
+W15_QWEN = (("q16d16", "host binding: 16 lanes, depth 16"), ("q16d128", "16 lanes, depth 128"),
+            ("q256d16", "256 lanes, depth 16"), ("q256d128", "256 lanes, depth 128"),
+            ("q1024", "1,024 lanes (UCIe rate), depth 16"))
+
+
+def w15_rows():
+    """Token rates with the W15-measured collectives in place of the assumed latencies."""
+    rows = []
+    if not W15_RECORD.exists():
+        return rows
+    cf = w15_record()["configs"]
+    d = copy.deepcopy(PRESETS["proposal"])
+    for cfg, what in W15_V41:
+        if cfg not in cf:
+            continue
+        r = evaluate(dict(d, collective_w15=cfg), 1048576)
+        r.pop("_g", None)
+        rows.append(dict(design="v41_rom_ar", w15_config=cfg, what=what, tokens_s=round(r["tokens_s"], 1),
+                         collective_latency_us=r["breakdown_us"].get("collective_latency"),
+                         T_us=round(r["T_us"], 3)))
+    import arch_budget_qwen3 as Q
+    clock = Q.clock_hz()
+    qr = qwen_eval(6144, 1024, pruned=True)
+    x = wire_cycles(27000.0, clock, WIRE_PS_PER_UM_LOADED) - 1
+    ucie_wire = round(QWEN_WIRE["ucie_wire_per_token"] * x / QWEN_WIRE["x_stages_extra"])
+    assumed = Q.tp_exchanges(clock)["exchange_cycles"] + ucie_wire     # 73 x 19.27 + the wire term
+    for cfg, what in W15_QWEN:
+        if cfg not in cf:
+            continue
+        meas = cf[cfg]["exchanges"]["token_exchange_cycles"]
+        cyc = qr["cycles"] - assumed + meas
+        rows.append(dict(design="qwen_rom_ar_G6144", w15_config=cfg, what=what, tokens_s=round(clock / cyc, 1),
+                         exchange_cycles_per_token_measured=meas, exchange_cycles_per_token_assumed=assumed,
+                         per_allreduce_cycles=cf[cfg]["exchanges"]["allreduce_cycles_mean"]))
+    return rows
+
+
 def fabric_sweep():
     rows = []
     # V4.1 ROM: re-solve the priced DAG with every collective's latency set to L (+ the measured engine cycles)
@@ -1687,6 +1756,8 @@ def fabric_sweep():
                          tokens_s=round(1 / (qr["cycles"] / clock + add), 1)))
         rows.append(dict(design=qh["design"], exchange_latency_us=L * 1e6,
                          tokens_s=round(1 / (qh["T_us"] * 1e-6 + add), 1)))
+    for r in w15_rows():
+        rows.append(dict(r, source="W15 measured (results/rtl/w15_collectives.json)"))
     for r in rows:
         print(r)
     return rows
