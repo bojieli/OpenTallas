@@ -1,6 +1,6 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-29. Last published baseline: `de0ea64f`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
+Updated 2026-09-29 09:40 UTC. **Root is now Claude (`claude-main`)**; Codex root stopped at 06:22 after `4a82ce47`. Active plan: [integrated floorplan and physical-composition plan](docs/INTEGRATED_PHYSICAL_PLAN.md) — workstreams W0-W7 cover Qwen3 ROM/HBM and V4.1 ROM/HBM floorplans, hardened clusters, die assembly, connected exact execution and reprice. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.**
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
