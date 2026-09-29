@@ -43,6 +43,7 @@ module ot_qwen_me_array #(
     parameter integer NWS = 0,
     parameter integer TWS = 0,
     parameter integer ORD = 0,
+    parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_hdc_matvec_part SCALE_LOCAL)
     parameter integer CODE_BANKS = 2,
     parameter integer KV_LOCAL = 0        // 1: tiles hold KV slices (ot_qwen_rom_tile); 0: global KV port
 ) (
@@ -111,7 +112,7 @@ module ot_qwen_me_array #(
     wire [NPT*W*32-1:0] t_lvl;
     wire              fab_fault;
     ot_qwen_me_spine #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
-        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD)) u_spine (
+        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL)) u_spine (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
@@ -202,7 +203,8 @@ module ot_qwen_me_spine #(
     parameter integer XVM = 0,
     parameter integer NWS = 0,
     parameter integer TWS = 0,
-    parameter integer ORD = 0
+    parameter integer ORD = 0,
+    parameter integer SCALE_LOCAL = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -275,7 +277,7 @@ module ot_qwen_me_spine #(
     reg                 range_fault;
     ot_hdc_matvec_part #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1),
         .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .PART(2), .GT(GT), .SMIN(SMIN), .TCUT(TCUT),
-        .XD(XD), .NX(NXC), .ORD(ORD)) u_top (
+        .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL)) u_top (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),

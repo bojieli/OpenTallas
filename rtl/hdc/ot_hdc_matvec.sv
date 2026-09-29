@@ -179,7 +179,12 @@ module ot_hdc_matvec_part #(
     parameter integer TCUT = 0,          // PART 2: t_in is split-tree level TCUT
     parameter integer XD = 0,            // PART 2: t_in's extra cycles over the monolithic timing
     parameter integer NX = G,            // x ports generated (PART 2: the chunk stream)
-    parameter integer ORD = 0            // extra result-write register stages
+    parameter integer ORD = 0,           // extra result-write register stages
+    // SCALE_LOCAL = 1: each result-port group holds only its own row scales
+    // (port-local scale ROM): word  wcs + round*IL + slot, where the program's
+    // wcs is the matrix's port-local base (sum of the earlier matrices'
+    // rounds*IL).  0: the dense image  wcs + round*(GT/S)*IL + q*IL + slot.
+    parameter integer SCALE_LOCAL = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -409,6 +414,9 @@ module ot_hdc_matvec_part #(
         if (!rst_n) e_v <= 1'b0;
         else e_v <= active;
     end
+    //: the element's round (SCALE_LOCAL scale addressing), beside the tag
+    reg [NW-1:0] e_t, s1_t, s1b_t, s2_t, s3_t;
+    always @(posedge clk) begin e_t <= t; s1_t <= e_t; s1b_t <= s1_t; s2_t <= s1b_t; s3_t <= s2_t; end
     always @(posedge clk) begin
         e_first <= (k == 0); e_last <= k_last;
         e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsrc_r; e_round <= round_r; e_mmode <= mmode_r;
@@ -626,6 +634,12 @@ module ot_hdc_matvec_part #(
         ot_hdc_vline #(.D(5)) u_v (.clk(clk), .rst_n(rst_n), .v(raw_v), .vd(vd));
         ot_hdc_delay #(.W(TW), .D(8+OD+XDD)) u_pretag (.clk(clk), .rst_n(rst_n),
             .d(s3_tag), .q(pre_tag));
+        wire [NW-1:0] pre_t;
+        if (SCALE_LOCAL != 0) begin : g_pret
+            ot_hdc_delay #(.W(NW), .D(8+OD+XDD)) u_pret (.clk(clk), .rst_n(rst_n), .d(s3_t), .q(pre_t));
+        end else begin : g_nopret
+            assign pre_t = {NW{1'b0}};
+        end
         ot_hdc_vline #(.D(8+OD+XDD)) u_prev (.clk(clk), .rst_n(rst_n),
             .v(s3_v), .vd(pre_vline));
         assign {pre_last, pre_oen, pre_amax, pre_wsrc, pre_mmode, pre_split,
@@ -655,8 +669,9 @@ module ot_hdc_matvec_part #(
         end
         always @(posedge clk) begin
             for (sg = 0; sg < NPG; sg = sg + 1)
-                scale_addr[sg*AW +: AW] <= pre_scale_active[sg] ?
-                    pre_sbase + (pre_nb >> LW) + (gb + sg) * IL : pre_sbase;
+                scale_addr[sg*AW +: AW] <= !pre_scale_active[sg] ? pre_sbase :
+                    (SCALE_LOCAL != 0) ? pre_sbase + pre_t * IL + pre_j :
+                                         pre_sbase + (pre_nb >> LW) + (gb + sg) * IL;
         end
         genvar si;
         for (si = 0; si < G*W; si = si + 1) begin : g_scale

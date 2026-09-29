@@ -149,14 +149,15 @@ module ot_qwen_rom_tile_logic #(
         if (!rst_n) code_sel_q <= {CODE_BANKS{1'b0}};
         else if (wrom_re) code_sel_q <= rom_ce;
     end
+    localparam integer PWB = 2 * W * 8;      // a group pair's slice of the code word (256 of the macro's 266 bits)
     generate
         for (p = 0; p < TG / 2; p = p + 1) begin : g_pair
-            wire [255:0] or_q [0:CODE_BANKS];
-            assign or_q[0] = 256'd0;
+            wire [PWB-1:0] or_q [0:CODE_BANKS];
+            assign or_q[0] = {PWB{1'b0}};
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
-                assign or_q[b+1] = or_q[b] | (rom_rd[(p*CODE_BANKS + b)*266 +: 256] & {256{code_sel_q[b]}});
+                assign or_q[b+1] = or_q[b] | (rom_rd[(p*CODE_BANKS + b)*266 +: PWB] & {PWB{code_sel_q[b]}});
             end
-            assign wrom_q[256*p +: 256] = or_q[CODE_BANKS];
+            assign wrom_q[PWB*p +: PWB] = or_q[CODE_BANKS];
         end
     endgenerate
 

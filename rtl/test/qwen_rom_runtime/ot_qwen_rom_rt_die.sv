@@ -24,6 +24,7 @@ module ot_qwen_rom_rt_die #(
     parameter integer NWS = 0,
     parameter integer TWS = 0,
     parameter integer ORD = 0,
+    parameter integer SCALE_LOCAL = 0,
     parameter integer D = 2
 ) (
     input  wire              clk,
@@ -125,7 +126,7 @@ module ot_qwen_rom_rt_die #(
         .SU_VEC(1),.SW(SW),.LV(LV),.KV_FP8(1),
         .INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.INT8_EMBED(0),.QWEN_FULLSHAPE(QWEN_FULLSHAPE),
         .ME_STALL(0),.ME_IDLE_GATE(ME_IDLE_GATE),
-        .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD)) core (
+        .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD),.SCALE_LOCAL(SCALE_LOCAL)) core (
         .clk(clk),.rst_n(rst_n),.start(core_start),.token(core_tok[NW-1:0]),.pos(core_pos[NW-1:0]),
         .done(core_done),.next_token(core_ntok_c),.next_val(core_nval),
         .cycles(core_cycles),.fault(core_fault),

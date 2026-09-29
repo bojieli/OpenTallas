@@ -24,7 +24,7 @@
 //
 //   qwen_rom_rt --stages FILE OUTDIR PRELOAD_X [max_cycles]
 //     FILE lines: <name> <die0 image dir> <die1 image dir> <kv_reset 0|1>
-// Compile-time: GROUPS, COUNTWIDTH, SWIDTH, SMAXB, TCUTL, NWSD, XVMD.
+// Compile-time: GROUPS, COUNTWIDTH, SWIDTH, SMAXB, TCUTL, NWSD, XVMD, SMINV, CBANKS.
 #include "Vdie.h"
 #include "Vcoll.h"
 #include "Vtile.h"
@@ -37,7 +37,7 @@
 #include <sys/resource.h>
 
 constexpr int D = 2, W = 16, H = 4096, TMAX = 8192, KVH = 4, HD = 128, X_BASE = 4096;
-constexpr int G = GROUPS, TG = 4, NT = G / TG, CB = 14, SW = SWIDTH, NXC = 1 << SMAXB, NXL = NXC / TG;
+constexpr int G = GROUPS, TG = 4, NT = G / TG, CB = CBANKS, SW = SWIDTH, NXC = 1 << SMAXB, NXL = NXC / TG;
 constexpr int LT = 2, TCUT = TCUTL, NPT = G >> TCUT, NWS_EXT = (NWSD > 0) ? NWSD - 1 : 0, XVM = XVMD;
 constexpr int WPG = W * 8 / 32;                 // code-image u32 words per group
 
@@ -74,13 +74,23 @@ struct DieMem {
     std::vector<uint64_t> desc, crom;
     size_t code_words = 0, scale_words = 0, crom_words = 0;
 };
+// SCALE_LOCAL (RT_SCALE_LOCAL=1): the stage's port-local scale images
+// (tools/qwen_rom_scale_local.py), NPORT images of scale_words words each.
+static bool scale_local() { const char* s = getenv("RT_SCALE_LOCAL"); return s && s[0] == '1'; }
+constexpr int NPORT = G >> SMINV;
 static void load_images(DieMem& m, const std::string& p) {
     m.prog = QwenHex::load(p + "/program.hex", 32);
     m.desc = as64(QwenHex::load(p + "/segments.hex", 2));
     m.codes = QwenHex::load(p + "/matrix_int8.hex", size_t(G) * WPG);
     m.code_words = m.codes.size() / (size_t(G) * WPG);
-    m.scales = QwenHex::load(p + "/matrix_scale_bf16.hex", 8);
-    m.scale_words = m.scales.size() / 8;
+    if (scale_local()) {
+        m.scales = QwenHex::load(p + "/matrix_scale_port.hex", 8);
+        m.scale_words = m.scales.size() / 8 / NPORT;
+        if (m.scale_words * 8 * NPORT != m.scales.size()) fatal("port-local scale image size");
+    } else {
+        m.scales = QwenHex::load(p + "/matrix_scale_bf16.hex", 8);
+        m.scale_words = m.scales.size() / 8;
+    }
     m.crom = as64(QwenHex::load(p + "/crom.hex", 2));
     m.crom_words = m.crom.size();
     if (m.prog.size() > 64 * 32 || m.desc.size() > 8) fatal("program/descriptor image exceeds bench memory");
@@ -400,8 +410,13 @@ int main(int argc, char** argv) {
                 if (r.vc[l]) t.vc_q[l] = r.vc_q[l];
             }
             if (me_en[d]) {
+                const bool sl = scale_local();
                 for (int g = 0; g < G; g++)
-                    if (r.sc[g]) for (int j = 0; j < 8; j++) t.scale_q[g * 8 + j] = m.scales[size_t(r.sc_addr[g]) * 8 + j];
+                    if (r.sc[g]) {
+                        if (sl && g >= NPORT) fatal("scale read beyond the port groups", g);
+                        size_t w = sl ? size_t(g) * m.scale_words + r.sc_addr[g] : size_t(r.sc_addr[g]);
+                        for (int j = 0; j < 8; j++) t.scale_q[g * 8 + j] = m.scales[w * 8 + j];
+                    }
                 // x chunk port: XVM extra vector-memory registers, then the spine's capture
                 if (XVM == 0) {
                     for (int c = 0; c < NXC; c++) if (r.vx[c]) t.vx_q[c] = r.vx_q[c];

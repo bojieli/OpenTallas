@@ -59,18 +59,21 @@ def main() -> None:
     ap.add_argument("--token-oracle", type=Path, required=True)
     ap.add_argument("--preload", type=Path, required=True)
     ap.add_argument("--verilator", default=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
-    ap.add_argument("--groups", type=int, default=5120)
+    ap.add_argument("--groups", type=int, default=6144)
     ap.add_argument("--count-width", type=int, default=18)
     ap.add_argument("--su-width", type=int, default=1024)
     ap.add_argument("--lv", type=int, default=3)
-    ap.add_argument("--smin", type=int, default=7)
-    ap.add_argument("--smax", type=int, default=10)
-    ap.add_argument("--tcut", type=int, default=7)
+    ap.add_argument("--smin", type=int, default=6)
+    ap.add_argument("--smax", type=int, default=11)
+    ap.add_argument("--tcut", type=int, default=6)
     ap.add_argument("--bd", type=int, required=True, help="instruction broadcast / x network stages")
     ap.add_argument("--xvm", type=int, default=1, help="extra vector-memory read registers (the conflict stage)")
     ap.add_argument("--nws", type=int, required=True, help="wire stages into each upper tree level")
     ap.add_argument("--tws", type=int, required=True, help="level-TCUT words to the spine top")
     ap.add_argument("--ord", type=int, default=2, help="result-write stages")
+    ap.add_argument("--scale-local", type=int, choices=(0, 1), default=0,
+                    help="port-local scale ROM (stage dirs from tools/qwen_rom_scale_local.py)")
+    ap.add_argument("--code-banks", type=int, default=10)
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--build-only", action="store_true")
@@ -101,13 +104,14 @@ def main() -> None:
     models = [
         ("die", "ot_qwen_rom_rt_die", [str(core_sv), *map(str, DIE_RTL)],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1",
-          f"-GSW={args.su_width}", f"-GLV={args.lv}", *spine]),
+          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", *spine]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          ["-GN=2", "-GLANES=16", "-GTAGW=32", "-GDEPTH=16", "-GLAT=11", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic", [*map(str, TILE_RTL)],
-         [f"-GGT={G}", f"-GNW={NW}", f"-GSMIN={args.smin}", "-GCODE_BANKS=14", "-GIREG=1",
+         [f"-GGT={G}", f"-GNW={NW}", f"-GSMIN={args.smin}", f"-GCODE_BANKS={args.code_banks}", "-GIREG=1",
           f"-GNREG={1 if args.nws > 0 else 0}", "-GKV_LOCAL=0"]),
     ]
+    (out / "build_params.json").write_text(json.dumps({p: params for p, _, _, params in models}, indent=1))
     for prefix, top, files, params in models:
         mdir = out / prefix
         if (mdir / f"V{prefix}__ALL.a").exists():
@@ -124,7 +128,7 @@ def main() -> None:
     binary = out / "qwen_rom_rt"
     run("link", ["g++", "-std=c++20", "-O2", "-pthread", f"-DGROUPS={G}", f"-DCOUNTWIDTH={NW}",
                  f"-DSWIDTH={args.su_width}", f"-DSMAXB={args.smax}", f"-DTCUTL={args.tcut}", f"-DNWSD={args.nws}",
-                 f"-DXVMD={args.xvm}", *sorted(includes), RR / "qwen_rom_rt.cpp", "-Wl,--start-group", *archives,
+                 f"-DXVMD={args.xvm}", f"-DCBANKS={args.code_banks}", f"-DSMINV={args.smin}", *sorted(includes), RR / "qwen_rom_rt.cpp", "-Wl,--start-group", *archives,
                  "-Wl,--end-group", f"{vroot}/include/verilated.cpp", f"{vroot}/include/verilated_threads.cpp",
                  "-o", binary])
     if args.build_only:
@@ -133,7 +137,7 @@ def main() -> None:
     stages = [line.split() for line in args.stages.read_text().splitlines() if line.strip()]
     stage_pins = {f"{n}/die{d}/{f}": sha(Path(p) / f) for n, d0, d1, _ in stages for d, p in enumerate((d0, d1))
                   for f in ("matrix_int8.hex", "matrix_scale_bf16.hex", "crom.hex", "program.hex", "segments.hex")}
-    env = dict(os.environ, RT_THREADS=str(args.threads))
+    env = dict(os.environ, RT_THREADS=str(args.threads), RT_SCALE_LOCAL=str(args.scale_local))
     t0 = time.monotonic()
     with open(out / "token.log", "w") as log:
         p = subprocess.run([str(binary), "--stages", str(args.stages), str(out), str(args.preload)], cwd=out,
@@ -169,7 +173,7 @@ def main() -> None:
         "schema": "opentallas.qwen-rom-rt-token-tp2.v1", "status": "pass" if good else "fail",
         "design_point": {"groups_per_die": G, "tiles_per_die": G // 4, "count_width": NW, "su_width": args.su_width,
                          "su_reducer_time_levels": args.lv, "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut,
-                         "pruned": True, "kv_fp8": True},
+                         "pruned": True, "kv_fp8": True, "scale_local": bool(args.scale_local)},
         "wire_stages": {"broadcast_and_x_network_bd": args.bd, "vm_conflict_register_xvm": args.xvm,
                         "upper_tree_level_nws": args.nws, "tree_to_spine_tws": args.tws, "result_write_ord": args.ord,
                         "engine_latency_added_xd_plus_ord": args.bd + (args.tcut - 2) * args.nws + args.tws + args.ord},
