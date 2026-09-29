@@ -37,7 +37,7 @@ proc ot_row_orient {block y dbu} {
 }
 set ot_macros {
     {g_mac[0].u_rom} 14.160 6.160 R0 1
-    {g_mac[1].u_rom} 283.872 6.160 MY 1
+    {g_mac[1].u_rom} 763.872 6.160 MY 1
 }
 set nfixed 0
 set nunused 0

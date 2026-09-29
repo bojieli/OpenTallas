@@ -61,7 +61,10 @@ def plan(logic_w: float, pair: bool = False, wrapped: bool = False) -> dict:
 
 
 def hook_name(p: dict) -> str:
-    return (f"physical/abi3/v41_w10_elem{'_pair' if p['pair'] else ''}{'_q' if p['wrapped'] else ''}_place.tcl")
+    """The hook fixes macro positions, which depend on the logic width for a pair: the width is in the name."""
+    lw = int(round(p["logic_region_um"][2] - p["logic_region_um"][0]))
+    return (f"physical/abi3/v41_w10_elem{'_pair' if p['pair'] else ''}{'_q' if p['wrapped'] else ''}"
+            f"{f'_lw{lw}' if p['pair'] else ''}_place.tcl")
 
 
 def hook_tcl(p: dict) -> str:
@@ -118,8 +121,8 @@ def main() -> None:
     p = plan(a.logic_w, a.pair, wrapped=not any(q.startswith("BF16=1") for q in a.param) and a.wrap)
     if a.pair and "NB=2" not in a.param:
         a.param.append("NB=2")
-    if a.write_hook:
-        (ROOT / hook_name(p)).write_text(hook_tcl(p))
+    if a.write_hook or a.print:
+        (ROOT / hook_name(p)).write_text(hook_tcl(p))      # the hook always matches the plan it is run with
     if a.print:
         print(json.dumps({"plan": p, "argv": argv(p, a.tag, a.keep, a.output, a.density, a.param)}, indent=1))
 
