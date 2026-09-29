@@ -36,7 +36,7 @@ Two ledgers accompany every design:
 | Spec widths, rows striped over every macro | **2,137** | VM read port: 4 elements/cycle, so 1,280 cycles per 5,120-wide projection | **no**: 184 of 132 mm² of strip |
 | + VM 64/128 elements, BF16 on every macro | 4,761 | | **no**: 184 mm² |
 | Striped whole rows, VM 64/128, BF16 lanes on 2,048 macros | 3,937 | whole-row reads (a BF16 row at K = 5,120 is 320 words in one macro) and expert tile collisions | yes: 104.8 mm² |
-| **Proposal:** the same with each row's K split over macros in golden-aligned chunk runs, FP32 adders in the return tree | **4,176** | fixed per-phase fill (compute chain), index scan | **yes**: 117.8 of 132 mm² strip, 51.8 of 233.7 mm² hub |
+| **Proposal:** the same with each row's K split over macros in golden-aligned chunk runs, FP32 adders in the return tree | **4,167** | fixed per-phase fill (compute chain), index scan | **yes**: 117.8 of 132 mm² strip, 51.8 of 233.7 mm² hub |
 | Proposal weight path with the dedicated units as built | 320 | index scan at 1,024 MACs: 2.6 ms; softmax at 16 lanes: 127 µs | |
 
 Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#sweep`) decide the physical design point.
@@ -71,6 +71,36 @@ Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#
    - **Attention probability loader:** the measured 609-cycle job against 141 cycles of issue.
 6. **After these, the fixed per-phase fill of the compute chain binds** (about 125 µs of 240 µs). The next levers are fewer serial phases per layer and shorter pipelines, not more MACs. This matches W8's finding of about 530 fill cycles per layer against a 229-cycle read floor.
 
+## Power ledger (V4.1 ROM busiest die, `power` in each row of `results/uarch/v41_rom.json`)
+
+Dynamic energy per token is summed from every priced node's work:
+- MACs by format;
+- ROM bytes;
+- x read from the VM, broadcast over the field (wire), and delivered into each holding element;
+- partial-sum return (wire) and result write into the VM;
+- stream-unit and SFU element ops;
+- the on-die share of HBM traffic (PHY and controller, 0.8 pJ/bit; the DRAM energy dissipates in the stack);
+- collective link bits.
+
+Clock and leakage come from the area ledger by class (logic, ROM, SRAM), plus HBM interface idle power. Constants are from `configs/hardware/technology.json`. Wire energy is 0.1 pJ/bit/mm (ASSUMED), with 0.4 as a sensitivity.
+
+Proposal at 1M context, busiest die = stage 14 (the layer-20 index scan):
+
+| | W |
+|---|---:|
+| Clock | 18.1 |
+| Leakage | 18.8 |
+| HBM interface idle | 11.2 |
+| Dynamic, single user (4,167 tok/s) | 1.5 |
+| Dynamic, saturated (stage occupancy bound, 77k tok/s) | 28.0 |
+| **Total, single user** | **49.6** |
+| **Total, saturated** | **76.0** (112.2 at 0.4 pJ/bit/mm wire) |
+| Liquid cooling limit | 474.56 |
+| HBM stack energy at saturation (dissipated in the stacks, not the die) | 136.5 |
+
+- **Power does not bind the V4.1 ROM die.** Energy per token on the busiest die is 363 µJ on-die plus 1,772 µJ in the stacks, dominated by index-key reads.
+- The architecture model's 396.6 W hottest die sizes static power from the analytical logic area, and includes MTP and 1,024-user batches. This ledger does not yet model MTP.
+
 ## Calibration and limits
 
 Calibrated 2026-09-29:
@@ -104,11 +134,13 @@ It also checks tile area against the 560 mm² tile array. The area model is cali
 | Architecture (G = 6,144, stream unit 1,024 wide, ideal wires) | 11,193 | 682 (no fit) |
 | + floorplan wires | 9,968 | 682 (no fit) |
 | + pruned logic | 9,968 | 583 (**no fit**) |
-| **G = 5,120, pruned, with wires** | **9,063** | **540 (fits)** |
+| G = 5,120, pruned, with wires (integer banks: 14 per column, 28 macros per tile; 10 port tiles) | 9,063 | 566.4 / 566.2 (**misses by 0.2**) |
 | G = 4,096, pruned | 8,383 | 496 (fits) |
 
 **Decisions:**
-- The largest group count that fits with wires is **5,120 groups with pruned logic**, giving 9,063 tok/s.
+- **Target G = 5,120 with pruned logic plus the exact per-port scale-ROM address remap**, which returns about 11 mm² of spine to the array. That gives 9,063 tok/s.
+- W12 found integer banking (28 macros per tile, not 26.4) and 40 port groups (10 port tiles). With those, G = 5,120 misses by 0.2 mm² without the remap.
+- The hardened tile area decides. If the margin is under 2%, fall back to **G = 4,608 pruned** (8,546 tok/s, about 12 mm² margin).
 - The published 10,874 assumes 6,144 groups, which do not fit, and free wires.
 - Two area levers could restore 6,144 groups, and both must be priced:
   - scale-ROM remap (11.8 → 0.77 mm², W5);
@@ -146,7 +178,7 @@ At batch 1 an HBM die is bandwidth-bound, so the element count is sized to bandw
 
 | Design | Previous figure | Microarchitecture model (fits die) | Largest lever |
 |---|---:|---:|---|
-| V4.1 ROM, 1M | 4,933 (architecture) | 4,176 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
+| V4.1 ROM, 1M | 4,933 (architecture) | 4,167 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
 | Qwen ROM, 8K | 10,874 (published) | 9,063 | G = 5,120 pruned; wires +12%; vector stream unit |
 | Qwen HBM, 8K | 881 | 841 | bulk-copy weight supply; hardware barrier |
 | V4.1 HBM, 1M | 3,579 | 2,520 | synchronisation cost; bulk-copy supply |

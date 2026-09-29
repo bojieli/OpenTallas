@@ -143,7 +143,11 @@ PRESETS = {
 PRESETS["prop_vm64"] = dict(PRESETS["spec_striped"], name="prop_vm64", vm_read_elems=64, vm_write_elems=128)
 PRESETS["prop_vm256"] = dict(PRESETS["spec_striped"], name="prop_vm256", vm_read_elems=256, vm_write_elems=512)
 PRESETS["proposal"] = dict(PRESETS["spec_striped"], name="proposal", vm_read_elems=64, vm_write_elems=128,
-                           bf16_stripe_macros=2048, collective_cycles=232, row_split="ksplit")
+                           bf16_stripe_macros=2048, collective_cycles=232, row_split="ksplit",
+                           # W11 decisions (2026-09-29): indexer = 16 NK=4 score slices, 64 keys/cycle (beat-aligned
+                           # with the reader; reader-bound); attention NL=4 tiles (32,768 products) + PWORDS=2
+                           # loader; SU per the RTL layout rule (+14 cycles/layer) with its own VM ports (~6 mm2)
+                           idx_macs=262144, att_macs=32768, su_layout_extra_cycles=14, su_vm_ports_mm2=6.0)
 PRESETS["proposal_whole"] = dict(PRESETS["proposal"], name="proposal_whole", row_split="whole")
 PRESETS["proposal_ksplit"] = dict(PRESETS["proposal"], name="proposal_ksplit", row_split="ksplit")
 PRESETS["prop_vm256_measured"] = dict(PRESETS["prop_vm256"], name="prop_vm256_measured", su_lanes=16, sfu_lanes=8,
@@ -339,6 +343,10 @@ def evaluate(d: dict, ctx: int = 1048576):
                 nd["issue"] = 0.0      # the measured job covers scores + PV
         elif k == "collective" and d["collective_cycles"]:
             nd["depth"] = max(nd["depth"], d["collective_cycles"] * cyc)
+    if d.get("su_layout_extra_cycles"):
+        for name, nd in g.nodes.items():
+            if name.endswith(".attn.exp"):
+                nd["issue"] += d["su_layout_extra_cycles"] * cyc
     if d["use_measured_attention"]:
         # the measured SU softmax chain replaces exp + den + normalize issue (they are one measured process)
         for name, nd in g.nodes.items():
@@ -371,7 +379,108 @@ def evaluate(d: dict, ctx: int = 1048576):
                 arch_T_us=arch["T_s"] * 1e6, arch_tokens_s=arch["tokens_s_per_user"],
                 breakdown_us={k_: round(v * 1e6, 3) for k_, v in sorted(cats.items(), key=lambda kv: -kv[1])},
                 critical_path_by_node_us={k_: round(v * 1e6, 3) for k_, v in top},
-                layer20_matvecs=mv)
+                layer20_matvecs=mv, _g=g)
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Power ledger (busiest layer die): dynamic energy per token from every priced node's work, network wire energy,
+# clock and leakage by area class, HBM interface idle; at the single-user rate and at pipeline saturation.
+# Constants: configs/hardware/technology.json (energy.*, power.*), except WIRE_J_PER_BIT_MM (below).
+# ---------------------------------------------------------------------------------------------------------
+TECH = json.loads((ROOT / "configs/hardware/technology.json").read_text())
+_E = TECH["energy"]
+_P = TECH["power"]
+E_MAC = {k: v["value"] for k, v in _E["mac_energy_j_per_op"].items()}
+E_ROM_B = _E["rom_read_j_per_byte"]["value"]
+E_SRAM_B = _E["sram_read_j_per_byte"]["value"]
+E_HBM_B = _E["hbm_j_per_byte"]["value"]
+E_DELIVER_B = _E["operand_delivery_j_per_byte"]["value"]
+E_LINK_BIT = 0.5 * (_E["link_j_per_bit"]["ucie_advanced"]["value"] + _E["link_j_per_bit"]["board_serdes_112g"]["value"])
+CLOCK_J_MM2 = _P["clock_energy_j_per_mm2_per_cycle"]["value"]
+LEAK = {k: v["value"] for k, v in _P["static_leakage_w_per_mm2"].items()}
+HBM_IDLE_W_STACK = _P["memory_interface_idle_w_per_stack"]["value"]
+E_HBM_IF_B = _P["memory_interface_active_j_per_bit"]["value"] * 8   # on-die PHY/controller share of an HBM byte;
+                                                                    # the rest of E_HBM_B dissipates in the stack
+COOLING_LIMIT_W = 474.56      # liquid, two-die package (results/arch/v41_hbm_switched.json rom_worst_die_w)
+WIRE_J_PER_BIT_MM = 0.1e-12   # ASSUMED: repeated RC global wire, C ~0.2 fF/um, 0.7 V, activity 0.5, x2 repeaters;
+                              # a 45 nm survey puts repeated RC wire at ~0.4 pJ/bit/mm (sensitivity row)
+SFU_OPS_PER_ELEM = 10         # ASSUMED FP32-op equivalents per exp/sigmoid/divide element
+BYTES_PER_WORD = {"fp4": 34, "fp8": 33, "bf16": 32, "fp32": 32}
+
+
+def power_ledger(d, g, clock, tokens_s, area, wire_j=WIRE_J_PER_BIT_MM):
+    stage_of = {}
+    stack_e = {}
+    per_layer = {}
+    occ_layer = {}
+    field_mm = FLOORPLAN["cols"] * 25.628 + 20.0          # broadcast tree wire length (column runs + trunk)
+    for name, nd in g.nodes.items():
+        L = nd["layer"]
+        if L is None or L < 0:
+            continue
+        e = 0.0
+        k = nd["kind"]
+        u = nd.get("_uarch")
+        if u:
+            macs = u["rows"] * u["K"]
+            e += macs * E_MAC["fp4" if u["fmt"] == "fp4" else "fp8" if u["fmt"] == "fp8" else "bf16"]
+            e += u["words"] * BYTES_PER_WORD[u["fmt"]] * E_ROM_B
+            xbits = u["K"] * (16 if u["fmt"] == "bf16" else 8)
+            e += xbits * field_mm * wire_j                              # x broadcast over the field
+            e += u["K"] * 4 * E_SRAM_B                                  # x read out of the VM
+            e += u["K"] * u["holding"] * E_DELIVER_B / 32               # x delivered into each holding element
+            e += u["rows"] * u["ksplit"] * 32 * (field_mm / FLOORPLAN["cols"] / 2 + 10.0) * wire_j  # partial return
+            e += u["rows"] * 4 * E_SRAM_B                               # result write into the VM
+        elif k == "matvec" and name.endswith("hc.fn"):
+            e += nd["sweep"]["macs"] * E_MAC["fp32"]
+        elif k in ("vector", "reduce") and nd.get("_work"):
+            cls, n_el = nd["_work"]
+            e += n_el * E_MAC["fp32"] * (SFU_OPS_PER_ELEM if cls == "sfu" else 1) + n_el * 4 * 2 * E_SRAM_B
+        elif k == "kvscan" and nd.get("_work"):
+            cls, macs = nd["_work"]
+            e += macs * (E_MAC["fp4"] if cls == "idx" else E_MAC["bf16"])
+            if name.endswith("idx.score"):
+                hb = int(nd["desc"].split()[2]) * A.IDX_KEY_B
+            elif name.endswith(".scores"):
+                hb = 640 * A.WIN_ROW_B / 4
+            else:
+                hb = 0
+            e += hb * E_HBM_IF_B
+            stack_e[L] = stack_e.get(L, 0.0) + hb * (E_HBM_B - E_HBM_IF_B)
+        elif k == "collective":
+            e += nd.get("payload", 0) * 8 * E_LINK_BIT
+        per_layer[L] = per_layer.get(L, 0.0) + e
+        if k not in ("collective", "hop"):
+            occ_layer[L] = occ_layer.get(L, 0.0) + nd["issue"]
+    lps = 40 / 28
+    stages = {}
+    occ = {}
+    for L, e in per_layer.items():
+        st = int(L / lps)
+        stages[st] = stages.get(st, 0.0) + e
+        occ[st] = occ.get(st, 0.0) + occ_layer.get(L, 0.0)
+    busiest = max(stages, key=stages.get)
+    e_tok = stages[busiest]
+    stack_tok = sum(v for L, v in stack_e.items() if int(L / lps) == busiest)
+    logic_mm2 = area["rom_field_strip_used_mm2"] + area["hub_logic_mm2"]
+    rom_mm2 = area["rom_macros"]
+    sram_mm2 = area["vm_ports"]
+    clock_w = CLOCK_J_MM2 * clock * (logic_mm2 + 0.15 * (rom_mm2 + sram_mm2))
+    leak_w = logic_mm2 * LEAK["logic"] + rom_mm2 * LEAK["rom_array"] + sram_mm2 * LEAK["sram_array"]
+    idle_w = 4 * HBM_IDLE_W_STACK
+    static_w = clock_w + leak_w + idle_w
+    sat_rate = 1.0 / max(occ.values())
+    out = dict(busiest_stage=busiest, energy_per_token_uJ=round(e_tok * 1e6, 2),
+               hbm_stack_energy_per_token_uJ=round(stack_tok * 1e6, 2),
+               hbm_stack_w_saturated=round(stack_tok / max(occ.values()), 1),
+               dynamic_w_single_user=round(e_tok * tokens_s, 1), dynamic_w_saturated=round(e_tok * sat_rate, 1),
+               saturated_tokens_s_per_stage=round(sat_rate, 1),
+               clock_w=round(clock_w, 1), leakage_w=round(leak_w, 1), hbm_idle_w=idle_w,
+               total_w_single_user=round(static_w + e_tok * tokens_s, 1),
+               total_w_saturated=round(static_w + e_tok * sat_rate, 1), cooling_limit_w=COOLING_LIMIT_W,
+               fits_cooling_saturated=bool(static_w + e_tok * sat_rate <= COOLING_LIMIT_W),
+               wire_j_per_bit_mm=wire_j)
+    return out
 
 
 UNIT = json.loads((ROOT / "results/arch/arch_budget_v41.json").read_text())["unit_areas_um2"]
@@ -409,7 +518,8 @@ def area_ledger(d: dict):
     out = {k: v / 1e6 for k, v in out.items()}
     strip = out["blockdot_lanes"] + out["bf16_lanes"] + out["capture_regs"] + out["chunk_partials"] \
         + out["return_adders"] + out["bf16_chain"] + out["blockdot_chain"]
-    hub = out["indexer"] + out["attention"] + out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"]
+    hub = out["indexer"] + out["attention"] + out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"] \
+        + d.get("su_vm_ports_mm2", 0.0)
     out["rom_field_strip_used_mm2"] = strip
     out["rom_field_strip_avail_mm2"] = FLOORPLAN["rom_field_strip_mm2"]
     out["hub_logic_mm2"] = hub
@@ -494,15 +604,23 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192):
                             if wires else 0)
     a = QWEN_AREA
     tiles = G / 4
-    macros_tile = a["code_macros"] / tiles
+    # integer banking (W12): a group-pair column holds its words in whole 4096-deep banks; 11 at G=6144,
+    # 14 at G=5120 (tools/qwen_o4_rom_placement.py QWEN_O4_GROUPS); other G scale the column words
+    banks = {6144: 11, 5120: 14}.get(G) or math.ceil(44480 * 6144 / G / 4096 * 1.04)
+    macros_tile = 2 * banks
+    # result-port groups = G / smallest split: 96 at G=6144 (S=64), 40 at G=5120 (S=128); their tiles sit in
+    # the spine, and fewer of them return spine area to the array (W12)
+    port_tiles = {6144: 24, 5120: 10}.get(G, 24)
     logic = a["logic_group_pruned_um2"] if pruned else a["logic_group_um2"]
     tile_um2 = macros_tile * a["macro_um2"] * a["macro_pack"] + 4 * (logic / a["util"]
                                                                      + a["kv_sram_group_um2"] * a["macro_pack"])
-    need_mm2 = (tiles - a["port_tiles"]) * tile_um2 / 1e6      # port tiles sit in the spine (W5)
+    need_mm2 = (tiles - port_tiles) * tile_um2 / 1e6          # port tiles sit in the spine (W5)
+    avail = a["array_mm2"] + (a["port_tiles"] - port_tiles) * tile_um2 / 1e6  # spine area freed by fewer ports
     return dict(G=G, su_width=su_width, wires=wires, pruned=pruned, ctx=ctx, cycles=cycles,
                 arch_cycles=r["cycles"], tokens_s=Q.CLOCK[0] / cycles, clock_hz=Q.CLOCK[0],
                 tile_um2=round(tile_um2), tiles=tiles, array_need_mm2=round(need_mm2, 1),
-                array_avail_mm2=a["array_mm2"], fits=need_mm2 <= a["array_mm2"],
+                array_avail_mm2=round(avail, 1), fits=need_mm2 <= avail, banks_per_column=banks,
+                port_tiles=port_tiles,
                 unit_busy=r["unit_busy"], stalls=r["sequencer_stalls"])
 
 
@@ -644,10 +762,14 @@ def main(argv=None):
         r["params"] = {k: v for k, v in d.items()}
         r["area"] = area_ledger(d)
         r["network"] = network_ledger(d, r["clock_hz"])
+        g = r.pop("_g")
+        r["power"] = power_ledger(d, g, r["clock_hz"], r["tokens_s"], r["area"])
+        r["power_wire_0p4"] = power_ledger(d, g, r["clock_hz"], r["tokens_s"], r["area"], wire_j=0.4e-12)
         rows.append(r)
         print(f"{n:22s} T={r['T_us']:9.1f} us  {r['tokens_s']:8.1f} tok/s   (arch {r['arch_tokens_s']:.0f})"
               f"  strip {r['area']['rom_field_strip_used_mm2']}/{r['area']['rom_field_strip_avail_mm2']}"
-              f"  hub {r['area']['hub_logic_mm2']}/{r['area']['hub_avail_mm2']}")
+              f"  hub {r['area']['hub_logic_mm2']}/{r['area']['hub_avail_mm2']}"
+              f"  P1 {r['power']['total_w_single_user']} W  Psat {r['power']['total_w_saturated']} W")
         print("   ", {k: v for k, v in list(r["breakdown_us"].items())[:6]})
         print("   top:", list(r["critical_path_by_node_us"].items())[:8])
     out = dict(schema="opentallas.uarch.v41_rom.v1", ctx=a.ctx, rows=rows)
