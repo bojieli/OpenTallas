@@ -306,6 +306,8 @@ def build(variant: str) -> dict:
         "SU_VECTOR": prof["soft"]["SU_VECTOR"]["mm2"],
         "HC": prof["soft"]["HC"]["mm2"],
     }
+    if REFIT and REFIT.get("hub_mm2"):
+        need_mm2.update(REFIT["hub_mm2"])          # hub parts sized from the model / hardened units
     hub_area = sum(need_mm2.values()) * 1e6 * HUB_SLACK
     core_w, core_h = core_x1 - core_x0, core_y1 - core_y0
     # Equal ROM/MAC ring depth d on all sides: (W - 2d)(H - 2d) = hub_area.
