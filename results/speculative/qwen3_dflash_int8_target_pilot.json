@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.qwen3-dflash-int8-acceptance.v1",
  "scope": "bounded deployed-arithmetic acceptance; no TP-2 RTL cycle or final DFlash rate claim",
- "source_commit": "f6dad1ec45f338c94fcc56662a947fc2776c9744",
+ "source_commit": "159e179c539c899c9299eb5825d7f2883996e960",
  "source_sha256": {
   "tools/qwen3_dflash_int8_acceptance.py": "fbf5b7e40c73ea166f7b6ff1cba7166f31b5183467008673d8cae1ad82ac127f",
   "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715"
