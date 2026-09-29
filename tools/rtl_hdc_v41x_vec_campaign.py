@@ -806,6 +806,8 @@ def read_hex(path):
 def build(N, M, obj: Path, pmax=4096):
     write_fields_svh()
     obj.mkdir(parents=True, exist_ok=True)
+    if os.environ.get("OT_REUSE_BUILD") and (obj / "Vtb").exists():
+        return obj / "Vtb", 0.0          # a bench built earlier from these sources (the record says so)
     cmd = [VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-UNOPTFLAT", *os.environ.get("OT_VFLAGS", "").split(), "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb",
            "-Mdir", str(obj),
@@ -1335,8 +1337,17 @@ def main():
             print("random", N, sum(x["pass_"] for x in rr[f"N{N}_M{M}"]), "/", len(rr[f"N{N}_M{M}"]), flush=True)
         if args.random1024 and "perf1024" in only:
             N, M = 1024, 256
-            rr[f"N{N}_M{M}"] = random_campaign(exe_for(N, M), N, M, list(range(1001, 1001 + args.random1024)), 40,
-                                               scratch)
+            # 16 ops: at N = 1,024 a 40-op random program outgrows the bench's 2^18-word vector memory;
+            # a seed whose program still does not fit is skipped and listed
+            fits, skipped = [], []
+            for sd in range(1001, 1001 + args.random1024):
+                try:
+                    random_program(np.random.default_rng(sd), N, M, 16, Alloc(64, (1 << VMA) - 64))
+                    fits.append(sd)
+                except AssertionError:
+                    skipped.append(sd)
+            rr[f"N{N}_M{M}"] = random_campaign(exe_for(N, M), N, M, fits, 16, scratch)
+            rec["random_N1024_skipped_seeds"] = skipped
             print("random", N, sum(x["pass_"] for x in rr[f"N{N}_M{M}"]), "/", len(rr[f"N{N}_M{M}"]), flush=True)
         rec["random"] = rr
     if "vehicle" in only:
@@ -1364,6 +1375,7 @@ def main():
         "unknown: run outside a git checkout (sources are pinned by sha256)"
     rec["verilator"] = VERILATOR
     rec["verilator_extra_flags"] = os.environ.get("OT_VFLAGS", "")
+    rec["reused_builds"] = bool(os.environ.get("OT_REUSE_BUILD"))
     out = Path(args.out) if args.out else OUT
     out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")
     print("wrote", out)
