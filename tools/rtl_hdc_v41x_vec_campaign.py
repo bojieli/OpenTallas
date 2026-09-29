@@ -574,7 +574,7 @@ def schedule(ops, mem0, N, M, chain=True):
 def rand_vals(rng, n, kind="any"):
     if kind == "exp":
         v = rng.uniform(-20, 20, n)
-    elif kind == "pos":
+    elif kind in ("pos", "posnz"):      # posnz: no sprinkled zeros (a divisor, an rsqrt operand)
         v = np.exp(rng.uniform(-8, 8, n))
     elif kind == "small":
         v = rng.uniform(-3, 3, n)
@@ -583,7 +583,7 @@ def rand_vals(rng, n, kind="any"):
     v = v.astype(F)
     # sprinkle exact zeros, BF16-exact values and ties
     z = rng.random(n)
-    v[z < 0.02] = F(0)
+    v[(z < 0.02) & (kind != "posnz")] = F(0)
     t = (z >= 0.02) & (z < 0.06)
     v[t] = G.to_bf16(v[t])
     return v
@@ -1116,7 +1116,7 @@ def depth_ops(N, rng, al, init):
     src = al.get(n)
     init.append((src, rand_vals(rng, n, "small")))
     pos = al.get(n)
-    init.append((pos, rand_vals(rng, n, "pos")))
+    init.append((pos, rand_vals(rng, n, "posnz")))
     idx = al.get(n)
     init.append((idx, ffrom(np.arange(n, dtype=np.uint32))))
     b = op_defaults()
@@ -1175,6 +1175,7 @@ def perf_chain_ext(exe, N, M, scratch, rng, nv=24, per=3):
     """Vector chaining behind an EXTERNAL producer: it writes one N-element vector every `per` cycles into a
     region that holds poison (NaN) until then; the consumer op (ch_src = EXT, lead 1, mul 1) reads each vector
     as soon as its credit arrives.  Latency = the consumer's emit of vector v - the producer's write of v."""
+    nv = min(nv, (1 << XBA) // N)       # the producer's data fits the bench's 2^XBA-word XB memory
     al = Alloc(64, (1 << VMA) - 64)
     X = al.get(nv * N)
     O = al.get(nv * N)
@@ -1208,7 +1209,7 @@ def perf_mix(exe, N, M, scratch, rng):
         a = al.get(n)
         init.append((a, rand_vals(rng, n, "small")))
         bb = al.get(n)
-        init.append((bb, rand_vals(rng, n, "pos")))
+        init.append((bb, rand_vals(rng, n, "posnz")))
         f = op_defaults()
         f.update(nout=1, nin=n, abase=a, asi=1, bbase=bb, bsi=1, dst=I.DST_VM, obase=al.get(n), osi=1, **kw)
         ops.append(f)
