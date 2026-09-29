@@ -44,6 +44,7 @@
 // ---------------------------------------------------------------------------
 module ot_hdc_qstream #(
     parameter integer FULL_SHAPE = 0,
+    parameter integer ALLOW_QE_STALL = 0, // opt-in word-credit issue, no average-rate guarantee
     parameter integer LIST_BITS = FULL_SHAPE ? 160 : 128,
     parameter integer BL     = 16,
     parameter integer QLB    = 272,      // bits per lane of a QE word (32 codes, 16-bit exponent)
@@ -83,6 +84,7 @@ module ot_hdc_qstream #(
     output reg               q_ok,
     // the QE's weight read port (fixed latency 1, no stall)
     input  wire              qr_re,
+    output wire              qr_issue_ready, // next registered read; excludes current qr_re credit
     input  wire [AW-1:0]     qr_addr,
     output reg  [BL*QLB-1:0] qr_q,
     // window SRAM: SPW banks of 2^LWIN sectors
@@ -331,6 +333,13 @@ module ot_hdc_qstream #(
         end
     end
     always @(posedge clk) if (f_take) sfp4[f_slot] <= e_fp4;
+    // QE registers qr_re. At this edge the old qr_re consumes one word;
+    // readiness is permission to register the *next* read, so exclude it.
+    // Do not double-issue the sole complete word when cp cannot advance.
+    wire next_descriptor_valid = (of_cnt != 0) &&
+        (!qr_re || (c_i + 1 < of_n[of_rp]) || (of_cnt > 1));
+    assign qr_issue_ready = !fault && next_descriptor_valid &&
+        ($signed(cp - cons) > (qr_re ? 1 : 0));
     assign win_re = qr_re;
     assign win_raddr = c_slot;
     reg          q_fp4;
@@ -376,10 +385,10 @@ module ot_hdc_qstream #(
             if (tp[1]) begin a_nr <= a_n * cfg_rate; op_start <= ann_end; ann_end <= ann_end + a_n; end
             if (tp[2]) begin
                 a_T <= (a_Tl < a_n) ? a_Tl : a_n;
-                uncoverable <= ((a_Tl < a_n) ? a_Tl : a_n) > WIN;
+                uncoverable <= !ALLOW_QE_STALL && (((a_Tl < a_n) ? a_Tl : a_n) > WIN);
                 t_rdy <= 1'b1;
             end
-            q_ok <= t_rdy && !qd_v && (tp == 0) && (cp - op_start >= a_T);
+            q_ok <= t_rdy && !qd_v && (tp == 0) && (ALLOW_QE_STALL ? (!fault && $signed(cp - op_start) > 0 && of_cnt != 0) : (cp - op_start >= a_T));
         end
     end
     // consumer check against the op FIFO

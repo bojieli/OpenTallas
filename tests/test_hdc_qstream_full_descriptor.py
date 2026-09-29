@@ -45,3 +45,12 @@ def test_actual_walker_descriptor(binary,tmp_path,case):
        f'+ROM={rom}',f'+COUNT={e["n"]}',f'+IBASE={e["ibase"]}'],cwd=tmp_path,capture_output=True,text=True,timeout=20)
     assert r.returncode==0,r.stdout+r.stderr
     assert ('QSTREAM_DESCRIPTOR_FAULT_PASS' if bad else 'QSTREAM_DESCRIPTOR_PASS') in r.stdout
+
+
+def test_registered_issue_credit_does_not_double_spend(tmp_path):
+    exe=tmp_path/'credit'
+    subprocess.run(['iverilog','-g2012','-s','tb_hdc_qstream_issue_credit','-o',str(exe),
+        str(ROOT/'rtl/hdc/hbm/ot_hdc_qstream.sv'),str(ROOT/'rtl/test/tb_hdc_qstream_issue_credit.sv')],check=True,capture_output=True)
+    r=subprocess.run(['vvp',str(exe)],capture_output=True,text=True,timeout=20)
+    assert r.returncode==0,r.stdout+r.stderr
+    assert 'QSTREAM_ISSUE_CREDIT_PASS' in r.stdout
