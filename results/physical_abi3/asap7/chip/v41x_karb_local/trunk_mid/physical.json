@@ -1,0 +1,221 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T11:07:05.496007+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 1705.873,
+    "block": "ot_v41x_karb_trunk_cut",
+    "cells": 12407,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/chip/physical/ot_v41x_karb_trunk_cut.sv",
+        "sha256": "7249ac944ea20fb6f6b1968f63b0d4a88e430bfa5d4a11ed7fd8160fe3a2958d",
+        "size_bytes": 3630
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+        "sha256": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528",
+        "size_bytes": 6172
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+        "sha256": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7",
+        "size_bytes": 4776
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_q2.sv",
+        "sha256": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47",
+        "size_bytes": 1470
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_qn.sv",
+        "sha256": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0",
+        "size_bytes": 1464
+      }
+    ],
+    "top": "ot_v41x_karb_trunk_cut"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n02:37, memory = 17951.20 (MB).\n    Completing 50% with 12930 violations.\n    elapsed time = 00:03:23, memory = 18479.30 (MB).\n    Completing 60% with 13502 violations.\n    elapsed time = 00:04:06, memory = 18552.79 (MB).\n    Completing 70% with 13577 violations.\n    elapsed time = 00:04:57, memory = 18665.98 (MB).\n    Completing 80% with 13525 violations.\n    elapsed time = 00:05:36, memory = 19011.18 (MB).\n    Completing 90% with 14445 violations.\n    elapsed time = 00:06:35, memory = 18830.16 (MB).\n    Completing 100% with 14250 violations.\n    elapsed time = 00:07:31, memory = 18831.86 (MB).\n[INFO DRT-0199]   Number of violations = 17450.\nViol/Layer          M1     M2     V2     M3     V3     M4     V4     M5     V5     M6     V6     M7\nCutSpcTbl            0      0      0      0     22      0     52      0   1343      0    132      0\nEOL                  0    558      0     57      0     77      0     11      0     23      0      1\nMetal Spacing      416    345      0    580      0     88      0    114      0    749      0      1\nRecheck              0    160      0    183      0    637      0   1334      0    866      0     20\nShort                1   1806      5     62      2     86    200    116    386   3552     34     22\neolKeepOut           0   2511      0    242      0    335      0     72      0    246      0      3\n[INFO DRT-0267] cpu time = 01:20:50, elapsed time = 00:07:33, memory = 18803.79 (MB), peak = 19337.14 (MB)\nTotal wire length = 2249112 um.\nTotal wire length on LAYER M1 = 0 um.\nTotal wire length on LAYER M2 = 1098120 um.\nTotal wire length on LAYER M3 = 241653 um.\nTotal wire length on LAYER M4 = 163914 um.\nTotal wire length on LAYER M5 = 10647 um.\nTotal wire length on LAYER M6 = 604271 um.\nTotal wire length on LAYER M7 = 130505 um.\nTotal wire length on LAYER M8 = 0 um.\nTotal wire length on LAYER M9 = 0 um.\nTotal wire length on LAYER Pad = 0 um.\nTotal number of vias = 742286.\nUp-via summary (total 742286):\n\n-----------------\n Active         0\n     M1    173113\n     M2    417908\n     M3     58490\n     M4     31446\n     M5     34043\n     M6     27286\n     M7         0\n     M8         0\n     M9         0\n-----------------\n       742286\n\n\n[INFO DRT-0195] Start 1st optimization iteration.\n    Completing 10% with 15910 violations.\n    elapsed time = 00:00:40, memory = 18744.43 (MB).\n    Completing 20% with 13677 violations.\n    elapsed time = 00:01:32, memory = 18958.39 (MB).\n    Completing 30% with 11180 violations.\n    elapsed time = 00:02:09, memory = 18649.36 (MB).\n    Completing 40% with 9857 violations.\n    elapsed time = 00:03:02, memory = 19127.09 (MB).\n    Completing 50% with 7687 violations.\n    elapsed time = 00:03:57, memory = 19043.50 (MB).\n    Completing 60% with 6471 violations.\n    elapsed time = 00:04:37, memory = 18985.36 (MB).\n    Completing 70% with 5030 violations.\n    elapsed time = 00:05:24, memory = 19211.15 (MB).\n    Completing 80% with 3475 violations.\n    elapsed time = 00:05:59, memory = 19019.58 (MB).\n\nElapsed time: 0:02.07[h:]min:sec. CPU time: user 1.92 sys 0.14 (99%). Peak memory: 234396KB.\nElapsed time: 0:04.72[h:]min:sec. CPU time: user 5.00 sys 0.79 (122%). Peak memory: 275520KB.\nElapsed time: 0:01.92[h:]min:sec. CPU time: user 1.76 sys 0.16 (99%). Peak memory: 224004KB.\nElapsed time: 0:01.94[h:]min:sec. CPU time: user 1.80 sys 0.13 (99%). Peak memory: 223108KB.\nElapsed time: 0:06.09[h:]min:sec. CPU time: user 5.91 sys 0.19 (99%). Peak memory: 293720KB.\nElapsed time: 0:17.54[h:]min:sec. CPU time: user 118.68 sys 0.54 (679%). Peak memory: 456164KB.\nElapsed time: 0:02.49[h:]min:sec. CPU time: user 2.28 sys 0.21 (100%). Peak memory: 280640KB.\nElapsed time: 1:25.43[h:]min:sec. CPU time: user 350.65 sys 14.47 (427%). Peak memory: 4734220KB.\nElapsed time: 0:15.33[h:]min:sec. CPU time: user 19.95 sys 3.03 (149%). Peak memory: 461456KB.\nElapsed time: 0:24.29[h:]min:sec. CPU time: user 27.72 sys 4.02 (130%). Peak memory: 1030412KB.\nElapsed time: 2:19.51[h:]min:sec. CPU time: user 200.16 sys 34.06 (167%). Peak memory: 1211636KB.\nElapsed time: 24:46.73[h:]min:sec. CPU time: user 1435.73 sys 443.17 (126%). Peak memory: 7167960KB.\nElapsed time: 15:01.80[h:]min:sec. CPU time: user 8995.10 sys 237.38 (1023%). Peak memory: 20113824KB.\nmake[1]: *** [Makefile:589: do-5_2_route] Error 247\nmake: *** [Makefile:589: /work/results/asap7/opentallas_ot_v41x_karb_trunk_cut_asap7_w2a_karb_trunk_mid/base/5_2_route.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T10:21:50.578739+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_v41x_karb_trunk_cut",
+      "--source",
+      "rtl/chip/physical/ot_v41x_karb_trunk_cut.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_q2.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_qn.sv",
+      "--clock-period-ns",
+      "0.92",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--die-area",
+      "0",
+      "0",
+      "3150",
+      "64",
+      "--core-area",
+      "1.08",
+      "1.08",
+      "3148.92",
+      "62.92",
+      "--place-density",
+      "0.6",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--pin-region",
+      "^(k_v|k_rdy|k_we|k_wr_done|k_rsp_v|k_rsp_rdy|clk|rst_n)$|^(k_addr|k_len|k_tag|k_wdata|k_wstrb|k_rsp_tag|k_rsp_beat|k_rsp_data|k_grants|b_grants|contended)\\[\\d+\\]$=top:2890-3140",
+      "--pin-region",
+      "^s_we$|^(s_kv|s_take|s_addr|s_len|s_tag|s_wdata|s_wstrb|s_kwd|s_bg|s_ct)\\[\\d+\\]$=bottom:20-730",
+      "--pin-region",
+      "^(s_krv|s_krdy|s_rtag|s_rbeat|s_rdata)\\[\\d+\\]$=top:20-730",
+      "--nickname-tag",
+      "w2a_karb_trunk_mid",
+      "--output",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/trunk_mid/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/w2/pnr2/trunk_mid",
+      "--force"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/w2/karb2/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "be101ec6a636d27985c9c2f68ff0f72bbaf30896bff5aaaddfe1d2be43b7518a",
+      "tree": "/home/ubuntu/w2/karb2"
+    },
+    "orfs_num_cores": 12,
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/home/ubuntu/w2/karb2"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 920.0,
+    "cell_area_um2": 1705.873,
+    "cell_count": 12407,
+    "cell_types_used": 26,
+    "chip_area_um2": 1705.87458,
+    "combinational_cell_count": 9538,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "3f4f3f2af2ca2138ebb255ccffff58472cb26b5b6d33f5c58cff7f02254a36a4",
+      "raw_netlist_sha256": "3f4f3f2af2ca2138ebb255ccffff58472cb26b5b6d33f5c58cff7f02254a36a4",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 847.535,
+    "sequential_cell_count": 2869,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

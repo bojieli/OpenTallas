@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// Transaction equivalence of ot_chip_v41x_hbm_karb_local (LOCAL = 1) against
+// Transaction equivalence of ot_chip_v41x_hbm_karb_local (LOCAL = 1) and the
+// pipelined ot_chip_v41x_hbm_karb_pipe (LOCAL = 2) against
 // the monolithic ot_chip_v41x_hbm_karb (LOCAL = 0).  One env per arbiter, each
 // with its own refresh-aware HBM model (ot_hdc_v41x_idx_hbm, the model inside
 // ot_chip_v41x_hbm3e_phy) preloaded identically, driven by the same trace
@@ -12,7 +13,7 @@
 // Plusargs: +trace=<dir> +log=<file> +seed=<n> +krdy=<percent> +brdy=<percent>
 // ---------------------------------------------------------------------------
 module tb_karb_env #(
-    parameter bit     LOCAL = 1'b0,
+    parameter integer LOCAL = 0,   // 0 monolithic, 1 local, 2 pipelined local
     parameter bit     FENCE = 1'b1,
     parameter integer NPC = 32,
     parameter integer AW = 28,
@@ -47,7 +48,18 @@ module tb_karb_env #(
     wire [NPC*AW-1:0] h_addr; wire [NPC*4-1:0] h_len, r_beat; wire [NPC*(TAGW+1)-1:0] h_tag, r_tag;
     wire [NPC*DW-1:0] h_wdata, r_data; wire [NPC*32-1:0] h_wstrb;
     wire [31:0] kg, bg, ct;
-    generate if (LOCAL) begin : g_dut
+    generate if (LOCAL == 2) begin : g_dut
+        ot_chip_v41x_hbm_karb_pipe #(.NPC(NPC), .AW(AW), .TAGW(TAGW), .K_RD_FENCE(FENCE)) u (
+            .clk(clk), .rst_n(rst_n), .b_v(b_v), .b_rdy(b_rdy), .b_addr(b_addr), .b_len(b_len), .b_tag(b_tag),
+            .b_we(b_we), .b_wdata(b_wdata), .b_wstrb(b_wstrb), .b_wr_done(b_wr_done), .b_rsp_v(b_rsp_v),
+            .b_rsp_rdy(b_rsp_rdy), .b_rsp_tag(b_rsp_tag), .b_rsp_beat(b_rsp_beat), .b_rsp_data(b_rsp_data),
+            .k_v(k_v), .k_rdy(k_rdy), .k_addr(k_addr), .k_len(k_len), .k_tag(k_tag), .k_we(k_we),
+            .k_wdata(k_wdata), .k_wstrb(k_wstrb), .k_wr_done(k_wr_done), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy),
+            .k_rsp_tag(k_rsp_tag), .k_rsp_beat(k_rsp_beat), .k_rsp_data(k_rsp_data),
+            .h_v(h_v), .h_rdy(h_rdy), .h_addr(h_addr), .h_len(h_len), .h_tag(h_tag), .h_we(h_we),
+            .h_wdata(h_wdata), .h_wstrb(h_wstrb), .h_wr_done(h_wr_done), .r_v(r_v), .r_rdy(r_rdy),
+            .r_tag(r_tag), .r_beat(r_beat), .r_data(r_data), .k_grants(kg), .b_grants(bg), .contended(ct));
+    end else if (LOCAL == 1) begin : g_dut
         ot_chip_v41x_hbm_karb_local #(.NPC(NPC), .AW(AW), .TAGW(TAGW), .K_RD_FENCE(FENCE)) u (
             .clk(clk), .rst_n(rst_n), .b_v(b_v), .b_rdy(b_rdy), .b_addr(b_addr), .b_len(b_len), .b_tag(b_tag),
             .b_we(b_we), .b_wdata(b_wdata), .b_wstrb(b_wstrb), .b_wr_done(b_wr_done), .b_rsp_v(b_rsp_v),
@@ -85,7 +97,7 @@ module tb_karb_env #(
         if (!$value$plusargs("krdy=%d", krdy)) krdy = 100;
         if (!$value$plusargs("brdy=%d", brdy)) brdy = 100;
         if (!$value$plusargs("log=%s", lfile)) lfile = "karb.log";
-        if (LOCAL) lfile = {lfile, ".local"}; else lfile = {lfile, ".mono"};
+        if (LOCAL == 2) lfile = {lfile, ".pipe"}; else if (LOCAL == 1) lfile = {lfile, ".local"}; else lfile = {lfile, ".mono"};
         $readmemh({tdir, "/k.hex"}, kt);
         $readmemh({tdir, "/b.hex"}, bt);
         $readmemh({tdir, "/init.hex"}, u_k.mem);
@@ -167,16 +179,17 @@ endmodule
 module tb_chip_v41x_karb_local_equiv #(parameter bit FENCE = 1'b1);
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0;
-    wire d0, d1;
-    tb_karb_env #(.LOCAL(1'b0)) e_mono  (.clk(clk), .rst_n(rst_n), .done(d0));
-    tb_karb_env #(.LOCAL(1'b1), .FENCE(FENCE)) e_local (.clk(clk), .rst_n(rst_n), .done(d1));
+    wire d0, d1, d2;
+    tb_karb_env #(.LOCAL(0)) e_mono  (.clk(clk), .rst_n(rst_n), .done(d0));
+    tb_karb_env #(.LOCAL(1), .FENCE(FENCE)) e_local (.clk(clk), .rst_n(rst_n), .done(d1));
+    tb_karb_env #(.LOCAL(2), .FENCE(FENCE)) e_pipe (.clk(clk), .rst_n(rst_n), .done(d2));
     integer tmo;
     initial begin
         if (!$value$plusargs("timeout=%d", tmo)) tmo = 400000;
         repeat (5) @(posedge clk); rst_n = 1;
         fork
-            begin wait (d0 && d1); repeat (4100) @(posedge clk); $display("DONE"); $finish; end
-            begin repeat (tmo) @(posedge clk); $display("TIMEOUT mono=%0d local=%0d", d0, d1); $finish; end
+            begin wait (d0 && d1 && d2); repeat (4100) @(posedge clk); $display("DONE"); $finish; end
+            begin repeat (tmo) @(posedge clk); $display("TIMEOUT mono=%0d local=%0d pipe=%0d", d0, d1, d2); $finish; end
         join_any
     end
 endmodule

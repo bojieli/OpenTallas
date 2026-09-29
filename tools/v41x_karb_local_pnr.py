@@ -147,12 +147,101 @@ def trunk_case(length_um: float = 5400.0, tag: str = "_far") -> dict:
                           "trunk_length_um": w - 750 / 2 - 135}}
 
 
+PIPE = ["rtl/chip/ot_chip_v41x_karb_pipe.sv", "rtl/chip/ot_chip_v41x_karb_slice.sv"]
+
+
+def pslice_case() -> dict:
+    c = slice_case()
+    w, h = PHY_PC_WINDOW_UM, ENV_H
+    regions = [
+        r"^(h_v|h_rdy|h_we|h_wr_done|r_v|r_rdy)$|^(h_addr|h_len|h_tag|h_wdata|h_wstrb|r_tag|r_beat|r_data)\[\d+\]$"
+        + f"=bottom:{span(0, *PC_PIN_SPAN)}",
+        r"^(b_v|b_rdy|b_we|b_wr_done|b_rsp_v|b_rsp_rdy)$|^(b_addr|b_len|b_tag|b_wdata|b_wstrb|b_rsp_tag|b_rsp_beat|"
+        r"b_rsp_data)\[\d+\]$" + f"=top:{span(0, *PC_PIN_SPAN)}",
+        r"^(kin_v|kin_we|k_pop|k_wr_done|ks_v|ks_cr|b_grant|contend|clk|rst_n)$|^(kin_addr|kin_len|kin_tag|kin_wdata|"
+        r"kin_wstrb|ks_tag|ks_beat|ks_data)\[\d+\]$" + f"=top:{200:g}-{370:g}",
+    ]
+    srcs = ["rtl/chip/ot_chip_v41x_karb_pslice.sv", "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
+    args = common("ot_chip_v41x_karb_pslice", srcs, w, h, [f"AW={AW}"])
+    for r in regions:
+        args += ["--pin-region", r]
+    return {"args": args, "nickname": "w2a_karb_pslice_aw30",
+            "output": "results/physical_abi3/asap7/chip/v41x_karb_local/pslice_aw30/physical.json",
+            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": [200, 370]}}
+
+
+def pregion_case() -> dict:
+    w, h = 4 * PHY_PC_WINDOW_UM, ENV_H
+    regions = []
+    for p in range(4):
+        x0 = p * PHY_PC_WINDOW_UM
+        regions.append(f"{pin_regex(karb_pc_pins(p, 'h', aw=AW))}=bottom:{span(x0, *PC_PIN_SPAN)}")
+        regions.append(f"{pin_regex(karb_pc_pins(p, 'b', aw=AW))}=top:{span(x0, *PC_PIN_SPAN)}")
+    regions.append(r"^(t_v|t_we|clk|rst_n)$|^(t_lpc|t_addr|t_len|t_tag|t_wdata|t_wstrb|kcr)\[\d+\]$"
+                   + f"=top:{span(PHY_PC_WINDOW_UM, 200, 370)}")
+    regions.append(r"^(s_v|s_cr|k_wr_done)$|^(s_tag|s_beat|s_data|b_grant_n|contend_n)\[\d+\]$"
+                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, 200, 370)}")
+    srcs = ["rtl/chip/ot_chip_v41x_karb_pregion.sv", "rtl/chip/ot_chip_v41x_karb_pslice.sv",
+            "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
+    # EPC: the outermost region's credits (2 * 6 + 2)
+    args = common("ot_chip_v41x_karb_pregion", srcs, w, h, [f"AW={AW}", "EPC=14"])
+    for r in regions:
+        args += ["--pin-region", r]
+    return {"args": args, "nickname": "w2a_karb_pregion_aw30",
+            "output": "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30/physical.json",
+            "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM, "pc_pin_span_um": PC_PIN_SPAN,
+                          "tap_top_um": [575, 745], "send_top_um": [950, 1120]}}
+
+
+def proot_case(w: float = 750.0) -> dict:
+    h = ENV_H
+    rw = TAGW + BEATW + DW
+    pins_l, pins_r = [], []
+    for g in range(8):
+        pins = [f"d_v[{g}]", f"s_v[{g}]", f"s_cr[{g}]", f"r_kwd[{g}]"] + bits("kcr", 4, 4 * g)
+        pins += bits("s_d", rw, g * rw) + bits("r_bg", 3, g * 3) + bits("r_ct", 3, g * 3)
+        (pins_l if g < 4 else pins_r).extend(pins)
+    regions = [
+        r"^(k_v|k_rdy|k_we|k_wr_done|k_rsp_v|k_rsp_rdy|clk|rst_n)$|^(k_addr|k_len|k_tag|k_wdata|k_wstrb|k_rsp_tag|"
+        r"k_rsp_beat|k_rsp_data|k_grants|b_grants|contended)\[\d+\]$" + f"=top:{20:g}-{w - 20:g}",
+        f"{pin_regex(pins_l)}=bottom:{10:g}-{w / 2 - 90:g}",
+        r"^d_we$|^(d_lpc|d_addr|d_len|d_tag|d_wdata|d_wstrb)\[\d+\]$" + f"=bottom:{w / 2 - 80:g}-{w / 2 + 80:g}",
+        f"{pin_regex(pins_r)}=bottom:{w / 2 + 90:g}-{w - 10:g}",
+    ]
+    srcs = ["rtl/chip/ot_chip_v41x_karb_proot.sv", *KARB]
+    epcs = "".join(f"{2 * hp + 2:02x}" for hp in (6, 4, 3, 1, 1, 3, 4, 6))   # region 7 .. region 0
+    args = common("ot_chip_v41x_karb_proot", srcs, w, h, [f"AW={AW}", f"EPCS=64'h{epcs}"])
+    for r in regions:
+        args += ["--pin-region", r]
+    return {"args": args, "nickname": "w2a_karb_proot_aw30",
+            "output": "results/physical_abi3/asap7/chip/v41x_karb_local/proot_aw30/physical.json",
+            "floorplan": {"die_um": [w, h], "epcs_region7_to_0": epcs}}
+
+
+def link_case(length_um: float = 1000.0) -> dict:
+    w, h = length_um + 20.0, ENV_H
+    regions = [r"^(d\[\d+\]|clk|rst_n)$=left", r"^q\[\d+\]$=right"]
+    srcs = ["rtl/chip/physical/ot_v41x_karb_link_cut.sv", "rtl/chip/ot_chip_v41x_karb_pipe.sv"]
+    args = common("ot_v41x_karb_link_cut", srcs, w, h)
+    args[args.index("--io-delay-fraction") + 1] = "0.7"
+    for r in regions:
+        args += ["--pin-region", r]
+    tag = f"{int(length_um)}"
+    return {"args": args, "nickname": f"w2a_karb_link_{tag}",
+            "output": f"results/physical_abi3/asap7/chip/v41x_karb_local/link_{tag}um/physical.json",
+            "floorplan": {"die_um": [w, h], "segment_um": length_um, "io_delay_fraction": 0.7,
+                          "note": "70% I/O delay pins both chain registers at their edge"}}
+
+
 BAND_H = 17.28   # the current floorplan's KV/key/staging band height (12,000 x 17.2 um), on the row grid
 CASES = {"slice": slice_case, "region": region_case, "stack_ep": stack_ep_case, "trunk_far": trunk_case,
          # the existing band budget instead of the proposal's 64 um study envelope
          "slice_band": lambda: slice_case(BAND_H, "_band"), "region_band": lambda: region_case(BAND_H, "_band"),
          # endpoint at the stack end (outermost region at 11.25 mm) and a mid-distance region (2.25 mm)
-         "trunk_end": lambda: trunk_case(11400.0, "_end"), "trunk_mid": lambda: trunk_case(3150.0, "_mid")}
+         "trunk_end": lambda: trunk_case(11400.0, "_end"), "trunk_mid": lambda: trunk_case(3150.0, "_mid"),
+         # the pipelined partition (ot_chip_v41x_hbm_karb_pipe)
+         "pslice": pslice_case, "pregion": pregion_case, "proot": proot_case,
+         "link_1000": link_case, "link_750": lambda: link_case(750.0), "link_1250": lambda: link_case(1250.0)}
 
 
 def main() -> int:
@@ -164,6 +253,7 @@ def main() -> int:
     ap.add_argument("--output")
     ap.add_argument("--stages")
     ap.add_argument("--density", type=float, help="override the global placement density")
+    ap.add_argument("--orfs-var", action="append", help="KEY=VALUE passed to run_abi3_physical --orfs-var")
     ap.add_argument("--abstract", action="store_true",
                     help="after a kept route: ORFS do-generate_abstract (write_abstract_lef + write_timing_model) "
                          "in <work>/<case>/orfs; prints the LEF/Liberty paths and digests")
@@ -172,6 +262,8 @@ def main() -> int:
     args = list(c["args"])
     if a.density:
         args[args.index("--place-density") + 1] = f"{a.density:g}"
+    for v in a.orfs_var or []:
+        args += ["--orfs-var", v]
     if a.stages:
         args[args.index("--stages") + 1] = a.stages
     argv = [sys.executable, str(ROOT / "tools/run_abi3_physical.py"), *args, "--nickname-tag", c["nickname"],

@@ -34,6 +34,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = (
+    "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv",
+    "rtl/chip/ot_chip_v41x_karb_proot.sv",
+    "rtl/chip/ot_chip_v41x_karb_pregion.sv",
+    "rtl/chip/ot_chip_v41x_karb_pslice.sv",
+    "rtl/chip/ot_chip_v41x_karb_pipe.sv",
     "rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
     "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
     "rtl/chip/ot_chip_v41x_karb_region.sv",
@@ -51,7 +56,9 @@ SOURCES = (
     "rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
     "rtl/hdc/kv/ot_hdc_hbm_model.sv",
 )
-KARB_RTL = ["rtl/chip/ot_chip_v41x_hbm_karb_local.sv", "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+KARB_RTL = ["rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv", "rtl/chip/ot_chip_v41x_karb_proot.sv",
+            "rtl/chip/ot_chip_v41x_karb_pregion.sv", "rtl/chip/ot_chip_v41x_karb_pslice.sv",
+            "rtl/chip/ot_chip_v41x_karb_pipe.sv", "rtl/chip/ot_chip_v41x_hbm_karb_local.sv", "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
             "rtl/chip/ot_chip_v41x_karb_region.sv", "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
             "rtl/chip/ot_chip_v41x_karb_slice.sv", "rtl/chip/ot_chip_v41x_karb_q2.sv",
             "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_hbm_karb.sv"]
@@ -204,13 +211,12 @@ def run_one(exe: Path, sc, work: Path, krdy: int, brdy: int):
                           f"+seed={sc['seed']}", f"+krdy={krdy}", f"+brdy={brdy}"],
                          capture_output=True, text=True, cwd=work)
     arms = {}
-    for arm in ("mono", "local"):
+    for arm in ("mono", "local", "pipe"):
         k, b, mem, meta = parse(work / f"log.{arm}")
         arms[arm] = {"k": k, "b": b, "mem": mem, "meta": meta, "errs": check_arm(sc, k, b, mem)}
-    ok = ("DONE" in out.stdout and not arms["mono"]["errs"] and not arms["local"]["errs"]
-          and arms["mono"]["k"] == arms["local"]["k"] and arms["mono"]["b"] == arms["local"]["b"]
-          and arms["mono"]["mem"] == arms["local"]["mem"])
-    m, l = arms["mono"]["meta"], arms["local"]["meta"]
+    same = all(arms["mono"][x] == arms[a][x] for a in ("local", "pipe") for x in ("k", "b", "mem"))
+    ok = "DONE" in out.stdout and same and not any(arms[a]["errs"] for a in arms)
+    m, l, pp = arms["mono"]["meta"], arms["local"]["meta"], arms["pipe"]["meta"]
     return {
         "scenario": sc["name"], "seed": sc["seed"], "k_requests": len(sc["k"]),
         "k_read_beats": sum(len(v) for v in sc["kexp"].values()),
@@ -219,14 +225,14 @@ def run_one(exe: Path, sc, work: Path, krdy: int, brdy: int):
         "k_rsp_ready_percent": krdy, "b_rsp_ready_percent": brdy,
         "stdout_tail": out.stdout.strip().splitlines()[-1:] if out.stdout else [],
         "mono_errors": arms["mono"]["errs"][:5], "local_errors": arms["local"]["errs"][:5],
-        "arms_identical": arms["mono"]["k"] == arms["local"]["k"] and arms["mono"]["b"] == arms["local"]["b"]
-                          and arms["mono"]["mem"] == arms["local"]["mem"],
-        "cycles_mono": m.get("CYCLES"), "cycles_local": l.get("CYCLES"),
+        "pipe_errors": arms["pipe"]["errs"][:5], "arms_identical": same,
+        "cycles_mono": m.get("CYCLES"), "cycles_local": l.get("CYCLES"), "cycles_pipe": pp.get("CYCLES"),
+        "first_k_latency_pipe": (pp["FIRST_K_RSP"] - pp["FIRST_K_ACC"]) if "FIRST_K_RSP" in pp else None,
         "first_k_latency_mono": (m["FIRST_K_RSP"] - m["FIRST_K_ACC"]) if "FIRST_K_RSP" in m else None,
         "first_k_latency_local": (l["FIRST_K_RSP"] - l["FIRST_K_ACC"]) if "FIRST_K_RSP" in l else None,
-        "k_wr_done_events": {"mono": m.get("KWD_EVENTS"), "local": l.get("KWD_EVENTS")},
-        "k_grants": {"mono": m.get("KGRANTS"), "local": l.get("KGRANTS")},
-        "b_grants": {"mono": m.get("BGRANTS"), "local": l.get("BGRANTS")},
+        "k_wr_done_events": {"mono": m.get("KWD_EVENTS"), "local": l.get("KWD_EVENTS"), "pipe": pp.get("KWD_EVENTS")},
+        "k_grants": {"mono": m.get("KGRANTS"), "local": l.get("KGRANTS"), "pipe": pp.get("KGRANTS")},
+        "b_grants": {"mono": m.get("BGRANTS"), "local": l.get("BGRANTS"), "pipe": pp.get("BGRANTS")},
         "sim_seconds": round(time.time() - t0, 1), "pass": ok,
     }
 
@@ -242,7 +248,21 @@ def scenarios(quick: bool):
         ("k_write_heavy", dict(seed=17, nk=512, nb=32, kwf=0.7, bwf=0.2, reuse=0.8), 90, 90),
     ] + [(f"mixed_random_{sd}", dict(seed=sd, nk=512, nb=64, kwf=0.25, bwf=0.25, reuse=0.5), 30 + sd % 70,
           20 + (sd * 7) % 80) for sd in range(100, 112)]
-    return s[:2] + s[3:4] if quick else s
+    s += [(f"k_idle_region_{g}", {}, 100, 100) for g in range(NPC // 4)]
+    return s[:2] + s[3:4] + [x for x in s if x[0] == "k_idle_region_0"] if quick else s
+
+
+def idle_region(g: int):
+    """One K read into an idle system, to a PC of region g (pc_of(addr) >> 2 == g)."""
+    sc = scenario(f"k_idle_region_{g}", 900 + g, 0, 0, 0, 0, 0)
+    rng = random.Random(900 + g)
+    while True:
+        a = rng.randrange(MEMW // 2, MEMW - 4) & ~3
+        if pc_of(a) >> 2 == g:
+            break
+    sc["k"] = [entry(0, 1, a, 0, 0, 0)]
+    sc["kexp"] = {0: [sc["mem"][a]]}
+    return sc
 
 
 def kv_like(seed: int):
@@ -284,7 +304,7 @@ def kv_bench(tmp: Path, local: int, fence: int) -> dict:
     log = r.stdout + r.stderr
     keep = [ln for ln in log.splitlines() if re.match(r"(KVPF|KEYS|REGION|PASS|FAIL|TIMEOUT|KVBAD|WRAPBAD|HBMBAD)", ln)]
     cyc = re.search(r"cycles?[= ](\d+)", log)
-    return {"arbiter": "local" if local else "monolithic", "k_rd_fence": fence if local else None,
+    return {"arbiter": ("monolithic", "local", "pipelined local")[local], "k_rd_fence": fence if local else None,
             "pass": "PASS" in keep and r.returncode == 0, "summary": keep, "sim_seconds": round(time.time() - t0, 1),
             "log_sha256": hashlib.sha256(log.encode()).hexdigest()}
 
@@ -322,15 +342,19 @@ def main() -> int:
 
         def one(j):
             fence, exe, name, kw, krdy, brdy = j
-            sc = kv_like(13) if kw is None else scenario(name, **kw)
+            if name.startswith("k_idle_region_"):
+                sc = idle_region(int(name.rsplit("_", 1)[1]))
+            else:
+                sc = kv_like(13) if kw is None else scenario(name, **kw)
             r = run_one(exe, sc, tmp / f"f{fence}_{name}", krdy, brdy)
             r["k_rd_fence"] = fence
             print(json.dumps({k: r[k] for k in ("scenario", "k_rd_fence", "pass", "cycles_mono", "cycles_local",
-                                                 "first_k_latency_mono", "first_k_latency_local",
-                                                 "mono_errors", "local_errors")}), flush=True)
+                                                 "cycles_pipe", "first_k_latency_mono", "first_k_latency_local",
+                                                 "first_k_latency_pipe", "mono_errors", "local_errors",
+                                                 "pipe_errors")}), flush=True)
             return r
         with ThreadPoolExecutor(max_workers=a.jobs) as ex:
-            kvf = [] if a.quick or a.no_kv else [ex.submit(kv_bench, tmp, l, f) for l, f in ((0, 1), (1, 1), (1, 0))]
+            kvf = [] if a.quick or a.no_kv else [ex.submit(kv_bench, tmp, l, f) for l, f in ((0, 1), (1, 1), (1, 0), (2, 1), (2, 0))]
             hf = None if a.quick else ex.submit(hash_check, tmp)
             runs = list(ex.map(one, jobs))
             kv = [f.result() for f in kvf]
@@ -352,6 +376,9 @@ def main() -> int:
         "runs": runs, "kv_prefetch_bench": kv, "hash_steering_exhaustive": hc, "pass": ok,
         "added_uncontended_k_round_trip_cycles": sorted({r["first_k_latency_local"] - r["first_k_latency_mono"]
                                                          for r in runs if r["scenario"] == "k_single_read_idle"}),
+        "pipe_added_uncontended_k_round_trip_cycles_by_region": {
+            r["scenario"].rsplit("_", 1)[1]: r["first_k_latency_pipe"] - r["first_k_latency_mono"]
+            for r in runs if r["scenario"].startswith("k_idle_region_") and r["k_rd_fence"] == 1},
     }
     if not a.quick:
         a.output.parent.mkdir(parents=True, exist_ok=True)
