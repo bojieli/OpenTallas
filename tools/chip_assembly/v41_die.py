@@ -464,6 +464,9 @@ def port_name(b: Bus, is_src: bool) -> str:
     return ("o_" if is_src else "i_") + re.sub(r"[^A-Za-z0-9]", "_", b.id)
 
 
+SPREAD_KINDS = ("hbm_svc",)
+
+
 def cluster_lef(c: Cluster, pins: dict[str, list[tuple[str, str, float]]], k: int, obs_top: int,
                 master: str) -> tuple[str, int]:
     """One placeholder abstract per INSTANCE (pins differ per instance): OBS M1..M<obs_top>, pins on
@@ -504,6 +507,17 @@ def cluster_lef(c: Cluster, pins: dict[str, list[tuple[str, str, float]]], k: in
         for g, st in zip(blocks, slots):
             for i, item in enumerate(g):
                 placed.append((item, (st + i) * pitch))
+        if c.kind in SPREAD_KINDS:
+            # the HBM service strip's data enters and leaves at its 32 pseudo-channel windows along the
+            # whole PHY edge: every bus is spread over the full edge (round-robin), never bunched at an end
+            order = []
+            queues = [list(g) for g in blocks]
+            while any(queues):
+                for q in queues:
+                    if q:
+                        order.append(q.pop(0))
+            step = tracks / len(order)
+            placed = [(item, (1 + int(i * step)) * pitch) for i, item in enumerate(order)]
         for (name, d, _), pos in placed:
             if e in ("E", "W"):
                 x0 = 0.0 if e == "W" else w - depth
@@ -669,14 +683,18 @@ mem done
 
 
 def run_case(work: Path, timeout: int, mem_gb: int) -> int:
-    cmd = ["docker", "run", "--rm", f"--memory={mem_gb}g", "-v", f"{work}:/work", "-w", "/work", ORFS_IMAGE,
-           "bash", "-lc", "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
-           "openroad -no_init -exit /work/run.tcl; chmod -R a+rwX /work"]
-    with (work / "grt.log").open("w") as log:
-        t0 = time.time()
-        p = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, timeout=timeout, check=False)
-        log.write(f"\nOT_ELAPSED {time.time() - t0:.1f}\n")
-    return p.returncode
+    """Routed run (run.tcl -> grt.log) then the no-net baseline (run_base.tcl -> base.log)."""
+    rc = 0
+    for script, logname in (("run.tcl", "grt.log"), ("run_base.tcl", "base.log")):
+        cmd = ["docker", "run", "--rm", f"--memory={mem_gb}g", "-v", f"{work}:/work", "-w", "/work", ORFS_IMAGE,
+               "bash", "-lc", "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
+               f"openroad -no_init -exit /work/{script}; chmod -R a+rwX /work"]
+        with (work / logname).open("w") as log:
+            t0 = time.time()
+            p = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, timeout=timeout, check=False)
+            log.write(f"\nOT_ELAPSED {time.time() - t0:.1f}\n")
+        rc = rc or p.returncode
+    return rc
 
 
 # ---------------------------------------------------------------------------------------------------
