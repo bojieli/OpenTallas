@@ -59,6 +59,13 @@ def issue_order(R, Gn, c, gs):
 LANE_SRC = ["rtl/gpu/ot_gpu_tree.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv", "rtl/gpu/ot_gpu_sm.sv",
             "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
             "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/test/tb_gpu_sm.sv"]
+SMQ_SRC = ["rtl/gpu/ot_gpu_tree.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
+           "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_xstore.sv", "rtl/gpu/ot_gpu_sm_q.sv",
+           "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
+           "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv",
+           "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+           "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+           "rtl/test/tb_gpu_sm_q.sv"]
 BD_SRC = ["rtl/gpu/ot_gpu_tree.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_bd_col.sv", "rtl/gpu/ot_gpu_sm_bd.sv",
           "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
           "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv",
@@ -109,7 +116,7 @@ def run_sim(exe, d, gap):
 # ---------------------------------------------------------------------------------------------------------
 # lane SM (Qwen INT8, V4.1 BF16)
 # ---------------------------------------------------------------------------------------------------------
-def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, gs=False, xdepth=96, rmax=256, lev=5, workdir=None,
+def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, gs=False, bench="sm", xdepth=96, rmax=256, lev=5, workdir=None,
               exe_cache={}):
     L = SUB * LS
     if fmt == "qwen_int8":
@@ -160,10 +167,17 @@ def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, gs=False, xd
     (d / "scale.hex").write_text("\n".join(f"{int(v):04x}" for v in bf16_bits(scale)) + "\n")
     (d / "cfg.hex").write_text("\n".join(f"{v:08x}" for v in (R, c, Gn, 1 if fmt == "qwen_int8" else 0,
                                                                 len(lines), int(gs), 0, 0)) + "\n")
-    params = dict(SUB=SUB, LS=LS, NC=NC, XDEPTH=xdepth, RMAX=rmax, LEV=lev, INT8=1 if fmt == "qwen_int8" else 0)
-    key = tuple(sorted(params.items()))
-    if key not in exe_cache:
-        exe_cache[key] = compile_tb(LANE_SRC, "tb_gpu_sm", params, tempfile.mkdtemp(prefix="gsm_build_", dir=workdir))
+    if bench == "sm_q":
+        assert fmt == "qwen_int8" and not gs
+        params = dict(SUB=SUB, LS=LS, NC=NC, XDEPTH=xdepth, RMAX=rmax, LEV=lev, NXM=max(1, SUB * LS * NC * 16 // 256 // 8))
+        key = ("q",) + tuple(sorted(params.items()))
+        if key not in exe_cache:
+            exe_cache[key] = compile_tb(SMQ_SRC, "tb_gpu_sm_q", params, tempfile.mkdtemp(prefix="gsmq_build_", dir=workdir))
+    else:
+        params = dict(SUB=SUB, LS=LS, NC=NC, XDEPTH=xdepth, RMAX=rmax, LEV=lev, INT8=1 if fmt == "qwen_int8" else 0)
+        key = tuple(sorted(params.items()))
+        if key not in exe_cache:
+            exe_cache[key] = compile_tb(LANE_SRC, "tb_gpu_sm", params, tempfile.mkdtemp(prefix="gsm_build_", dir=workdir))
     res, meta = run_sim(exe_cache[key], d, gap)
     mism = 0
     for r in range(R):
@@ -176,7 +190,7 @@ def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, gs=False, xd
             got = (v >> (32 * n)) & 0xFFFFFFFF
             if got != int(G.bits(gold[n][r])):
                 mism += 1
-    return dict(case=name, fmt=fmt, issue="group_slot" if gs else "row_slot", rows=R, K=K, chunk_len=c,
+    return dict(case=name, bench=bench, fmt=fmt, issue="group_slot" if gs else "row_slot", rows=R, K=K, chunk_len=c,
                 chunks=C, split=split, groups=Gn, lanes=L,
                 sub_partitions=SUB, cols=NC, stream_gap_pct=gap, weight_lines=len(lines), results=len(res),
                 mismatches=mism, exact=(mism == 0 and len(res) == R and not meta.get("timeout")

@@ -21,7 +21,8 @@ module ot_gpu_bulk_copy #(
     parameter integer DEPTH     = 1024,     // staging lines (128 KB)
     parameter integer MAX_OUT   = 512,      // outstanding reads (tracker entries)
     parameter integer AW        = 32,       // line address
-    parameter integer DQ        = 4         // descriptor queue
+    parameter integer DQ        = 4,        // descriptor queue
+    parameter integer SRAM_RING = 0         // 1: the ring is LINE_BITS/256 hard SRAM macros (1024 deep)
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -59,7 +60,6 @@ module ot_gpu_bulk_copy #(
     reg [AW-1:0] a_addr;
     reg [23:0]   a_left;
     // ---- staging ring ----
-    reg [LINE_BITS-1:0] ring [0:DEPTH-1];
     reg [DEPTH-1:0]     full;
     reg [TW:0]          alloc_p, cons_p;            // one extra bit: ring occupancy = alloc - cons
     wire [TW:0]         used = alloc_p - cons_p;
@@ -69,11 +69,52 @@ module ot_gpu_bulk_copy #(
     assign req_tag = alloc_p[TW-1:0];
     wire issue = req_v && req_ready;
     wire [TW-1:0] cslot = cons_p[TW-1:0];
-    assign s_valid = full[cslot];
-    assign s_data = ring[cslot];
-    wire pop = s_valid && s_ready;
-    assign idle = !act && (q_cnt == 0) && (outstanding == 0) && (used == 0);
     wire load = !act && (q_cnt != 0);
+    wire take;                                      // a line leaves the ring (to the output) this cycle
+    generate if (SRAM_RING == 0) begin : g_regs
+        reg [LINE_BITS-1:0] ring [0:DEPTH-1];
+        assign s_valid = full[cslot];
+        assign s_data = ring[cslot];
+        assign take = s_valid && s_ready;
+        always @(posedge clk) if (rsp_v) ring[rsp_tag] <= rsp_data;
+        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && (used == 0);
+    end else begin : g_sram
+        // hard macros: a one-cycle read into a two-entry output queue keeps one line a cycle
+        localparam integer NB = (LINE_BITS + 255) / 256;
+        wire [NB*256-1:0] rd;
+        wire [NB*256-1:0] wpad = {{(NB*256-LINE_BITS){1'b0}}, rsp_data};
+        reg [LINE_BITS-1:0] oq0, oq1;
+        reg [1:0] oq_n;
+        reg rd_v;
+        wire pop_o = s_valid && s_ready;
+        wire [1:0] after_pop = oq_n - (pop_o ? 1 : 0);
+        assign take = full[cslot] && (after_pop + (rd_v ? 1 : 0) < 2);
+        genvar mb;
+        for (mb = 0; mb < NB; mb = mb + 1) begin : g_mb
+            ot_sram_1r1w_1024x256_m2_r2c2 u_ring (
+                .clk(clk), .r_ce_in(take), .r_addr_in(cslot), .rd_out(rd[256*mb +: 256]),
+                .w_ce_in(rsp_v), .w_addr_in(rsp_tag), .wd_in(wpad[256*mb +: 256]), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        end
+        assign s_valid = oq_n != 0;
+        assign s_data = oq0;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin oq_n <= 0; rd_v <= 1'b0; end
+            else begin
+                rd_v <= take;
+                oq_n <= after_pop + (rd_v ? 1 : 0);
+            end
+        end
+        always @(posedge clk) begin
+            // shift on pop, then append the landing line
+            if (pop_o) oq0 <= oq1;
+            if (rd_v) begin
+                if (after_pop == 0) oq0 <= rd[LINE_BITS-1:0];
+                else oq1 <= rd[LINE_BITS-1:0];
+            end
+        end
+        assign idle = !act && (q_cnt == 0) && (outstanding == 0) && (used == 0) && (oq_n == 0) && !rd_v;
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             q_cnt <= 0; q_wp <= 0; q_rp <= 0; act <= 1'b0; a_addr <= 0; a_left <= 0;
@@ -92,14 +133,13 @@ module ot_gpu_bulk_copy #(
                 if (a_left == 1) act <= 1'b0;
             end
             if (issue) alloc_p <= alloc_p + 1'b1;
-            if (pop) cons_p <= cons_p + 1'b1;
+            if (take) cons_p <= cons_p + 1'b1;
             outstanding <= outstanding + (issue ? 1 : 0) - (rsp_v ? 1 : 0);
             if (rsp_v) full[rsp_tag] <= 1'b1;
-            if (pop) full[cslot] <= 1'b0;
+            if (take) full[cslot] <= 1'b0;
         end
     end
     always @(posedge clk) begin
         if (d_valid && d_ready) begin q_base[q_wp] <= d_base; q_len[q_wp] <= d_lines; end
-        if (rsp_v) ring[rsp_tag] <= rsp_data;
     end
 endmodule

@@ -65,8 +65,8 @@ module ot_gpu_sm_bd #(
         else if (start && !busy) fp4_q <= op_fp4;
     ot_gpu_issue #(.IL(IL), .RMAX(RMAX), .XDEPTH(XDEPTH)) u_issue (
         .clk(clk), .rst_n(rst_n), .start(start), .op_rows(op_rows), .op_c(op_c), .op_g(op_g), .op_gs(op_gs),
-        .w_valid(w_valid), .w_ready(w_ready), .rdone(sv), .busy(busy), .iss_v(adv), .iss_row_ok(row_ok),
-        .iss_slot(si), .iss_row(row_now), .iss_first(i_first), .iss_last(i_last), .iss_glast(i_glast),
+        .w_valid(w_valid), .x_rdy(1'b1), .w_ready(w_ready), .rdone(sv), .busy(busy), .iss_v(adv), .iss_row_ok(row_ok),
+        .iss_slot(si), .iss_row(row_now), .iss_first(i_first), .iss_last(i_last), .iss_glast(i_glast), .iss_rev_end(),
         .xa(xa), .arrive(arrive), .release_in(release_in), .released(released));
     reg [LB*NC*266-1:0] xmem [0:XDEPTH-1];
     always @(posedge clk) if (xw_en) xmem[xw_addr] <= xw_data;

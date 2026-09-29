@@ -5,7 +5,7 @@
 // takes one line per cycle whenever the staging has it.  Prints delivered lines over the measurement window
 // and checks that the stream arrives in order and intact.
 module tb_gpu_bulk_copy;
-    parameter integer DEPTH = 1024, MAX_OUT = 512, LAT = 550, JIT = 100, RATE_PPM = 808594, NLINES = 40000;
+    parameter integer SRAM_RING = 0, DEPTH = 1024, MAX_OUT = 512, LAT = 550, JIT = 100, RATE_PPM = 808594, NLINES = 40000;
     localparam integer TW = $clog2(DEPTH);
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
@@ -13,7 +13,7 @@ module tb_gpu_bulk_copy;
     wire req_v; wire [31:0] req_addr; wire [TW-1:0] req_tag;
     reg rsp_v; reg [TW-1:0] rsp_tag; reg [1023:0] rsp_data;
     wire s_valid; wire [1023:0] s_data; wire [$clog2(MAX_OUT+1)-1:0] outstanding; wire idle;
-    ot_gpu_bulk_copy #(.DEPTH(DEPTH), .MAX_OUT(MAX_OUT)) dut (
+    ot_gpu_bulk_copy #(.DEPTH(DEPTH), .MAX_OUT(MAX_OUT), .SRAM_RING(SRAM_RING)) dut (
         .clk(clk), .rst_n(rst_n), .d_valid(d_valid), .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines),
         .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr), .req_tag(req_tag),
         .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data),
