@@ -66,6 +66,13 @@ SMQ_SRC = ["rtl/gpu/ot_gpu_tree.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_
            "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
            "rtl/test/tb_gpu_sm_q.sv"]
+SMV_SRC = ["rtl/gpu/ot_gpu_tree.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
+           "rtl/gpu/ot_gpu_bd_col.sv", "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bulk_copy.sv",
+           "rtl/gpu/ot_gpu_sm_v.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+           "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv",
+           "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+           "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+           "rtl/test/tb_gpu_sm_v.sv"]
 BD_SRC = ["rtl/gpu/ot_gpu_tree.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_bd_col.sv", "rtl/gpu/ot_gpu_sm_bd.sv",
           "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
           "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv",
@@ -324,8 +331,121 @@ def bd_case(name, fmt, R, K, NC, rng=None, SUB=4, LBS=2, gap=0, gs=False, xdepth
         for n in range(NC):
             if ((v >> (32 * n)) & 0xFFFFFFFF) != int(G.bits(gold[n][r])):
                 mism += 1
-    return dict(case=name, fmt=fmt, issue="group_slot" if gs else "row_slot", rows=R, K=K, blocks=nb, chunk_len=c, chunks=C, active_lanes=LA, groups=Gn,
+    return dict(case=name, bench="sm_bd", fmt=fmt, issue="group_slot" if gs else "row_slot", rows=R, K=K, blocks=nb, chunk_len=c, chunks=C, active_lanes=LA, groups=Gn,
                 lanes=LB, sub_partitions=SUB, cols=NC, stream_gap_pct=gap, weight_lines=len(lines),
+                results=len(res), mismatches=mism,
+                exact=(mism == 0 and len(res) == R and not meta.get("timeout") and meta.get("fault", 1) == 0),
+                rtl=meta)
+
+
+def smv_case(name, fmt, R, K, NC, rng=None, gs=False, gap=0, SUB=4, LBS=2, LSB=16, xdepth=128, rmax=256, lev=4,
+             workdir=None, exe_cache={}):
+    """The V4.1 SM macro top (ot_gpu_sm_v): packed 136-B weight lines through its bulk copy and SRAM ring,
+    fragments from its per-cycle SRAM x store.  Goldens as bd_case (FP8/FP4 linear_q) and lane_case (BF16)."""
+    e4m3_codes, e2m1_codes = _codes()
+    LB, LF = SUB * LBS, SUB * LSB
+    XC = LB * 266 + LF * 16
+    X = [rng.standard_normal(K).astype(F) * F(rng.choice([0.1, 1.0, 8.0])) for _ in range(NC)]
+    c = 8
+    if fmt == "v41_bf16":
+        C = -(-K // 8)
+        LA = LF
+        w = G.to_bf16(rng.standard_normal((R, K)).astype(F) * F(0.02))
+        gold = [V.csum(G.mul(w, G.to_bf16(x)[None, :])) for x in X]
+        wb = bf16_bits(w).astype(np.int64)
+        xb = [bf16_bits(x) for x in X]
+    else:
+        fp4 = fmt == "v41_fp4"
+        nb = K // 32
+        C = -(-nb // c)
+        LA = LB if fp4 else LB // 2
+        if fp4:
+            mag = rng.integers(0, 8, size=(R, K))
+            wv = V.E2M1_VALUES[mag] * np.where(rng.random((R, K)) < 0.5, -1.0, 1.0)
+            wcode = e2m1_codes(wv.reshape(-1)).reshape(R, K)
+            we = rng.integers(-6, 0, size=(R, nb))
+        else:
+            cc = rng.integers(0, 256, size=(R, K))
+            cc = np.where((cc & 0x7F) == 0x7F, cc ^ 0x01, cc)
+            wv = V.E4M3[cc].astype(np.float64)
+            wcode = e4m3_codes(wv.reshape(-1)).reshape(R, K)
+            we = rng.integers(-14, -8, size=(R, nb))
+        wq = V.Q8(wv, we.astype(np.int64))
+        gold, xqs = [], []
+        for x in X:
+            xq, xe = V.quant_fp8(x)
+            terms = np.stack([np.ldexp((wq.q[:, b * 32:(b + 1) * 32] @ xq[b * 32:(b + 1) * 32]).astype(F),
+                                       wq.e[:, b] + xe[b]).astype(F) for b in range(nb)], axis=-1)
+            gold.append(V.csum(terms))
+            xqs.append((e4m3_codes(xq), xe))
+    Gn = -(-C // LA)
+    assert Gn * c <= xdepth, (Gn, c, xdepth)
+    lines = []
+    for r, g, t in issue_order(R, Gn, c, gs):
+        word = 0
+        for j in range(LA):
+            ch = g * LA + j
+            if fmt == "v41_bf16":
+                k = ch * c + t
+                if ch < C and k < K:
+                    word |= int(wb[r, k]) << (16 * j)
+            else:
+                b = ch * c + t
+                if ch < C and b < nb:
+                    codes = wcode[r, b * 32:(b + 1) * 32]
+                    if fp4:
+                        for i, cd in enumerate(codes):
+                            word |= (int(cd) & 0xF) << (128 * j + 4 * i)
+                    else:
+                        for i, cd in enumerate(codes):
+                            word |= (int(cd) & 0xFF) << (256 * j + 8 * i)
+                    word |= ((int(we[r, b]) + 127) & 0xFF) << (1024 + 8 * j)
+        lines.append(f"{word:0272x}")
+    xw = []
+    for a in range(xdepth):
+        g, t = divmod(a, c)
+        word = 0
+        for n in range(NC):
+            for j in range(LA):
+                ch = g * LA + j
+                if g >= Gn or ch >= C:
+                    continue
+                if fmt == "v41_bf16":
+                    k = ch * c + t
+                    if k < K:
+                        word |= int(xb[n][k]) << (n * XC + LB * 266 + 16 * j)
+                else:
+                    b = ch * c + t
+                    if b < nb:
+                        codes, xe = xqs[n]
+                        f = 0
+                        for i, cd in enumerate(codes[b * 32:(b + 1) * 32]):
+                            f |= (int(cd) & 0xFF) << (8 * i)
+                        f |= (int(xe[b]) & 0x3FF) << 256
+                        word |= f << (n * XC + 266 * j)
+        xw.append(f"{word:0{(NC * XC + 3) // 4}x}")
+    d = Path(tempfile.mkdtemp(prefix=f"gsmv_{name}_", dir=workdir))
+    (d / "lines.hex").write_text("\n".join(lines) + "\n")
+    (d / "x.hex").write_text("\n".join(xw) + "\n")
+    fmt_code = {"v41_bf16": 0, "v41_fp8": 1, "v41_fp4": 2}[fmt]
+    (d / "cfg.hex").write_text("\n".join(f"{v:08x}" for v in (R, c, Gn, fmt_code, len(lines), int(gs), 0, 0)) + "\n")
+    params = dict(SUB=SUB, LBS=LBS, LSB=LSB, NC=NC, XDEPTH=xdepth, RMAX=rmax, LEV=lev)
+    key = ("v",) + tuple(sorted(params.items()))
+    if key not in exe_cache:
+        exe_cache[key] = compile_tb(SMV_SRC, "tb_gpu_sm_v", params, tempfile.mkdtemp(prefix="gsmv_build_", dir=workdir))
+    res, meta = run_sim(exe_cache[key], d, gap)
+    mism = 0
+    for r in range(R):
+        h = res.get(r)
+        if h is None:
+            mism += NC
+            continue
+        v = int(h, 16)
+        for n in range(NC):
+            if ((v >> (32 * n)) & 0xFFFFFFFF) != int(G.bits(gold[n][r])):
+                mism += 1
+    return dict(case=name, bench="sm_v", fmt=fmt, issue="group_slot" if gs else "row_slot", rows=R, K=K,
+                chunk_len=c, chunks=C, active_lanes=LA, groups=Gn, cols=NC, weight_lines=len(lines),
                 results=len(res), mismatches=mism,
                 exact=(mism == 0 and len(res) == R and not meta.get("timeout") and meta.get("fault", 1) == 0),
                 rtl=meta)
@@ -346,7 +466,15 @@ def bd_campaign(args):
         (("fp4_k5120_gs_r2", "v41_fp4", 2, 5120, NC), dict(kw, gs=True)),
         (("fp8_k2048_gs_r3", "v41_fp8", 3, 2048, NC), dict(kw, gs=True, gap=25)),
     ]
-    return _run_specs(bd_case, specs, args.jobs, 20260930)
+    out = _run_specs(bd_case, specs, args.jobs, 20260930)
+    # the V4.1 SM macro top (ot_gpu_sm_v): packed lines through its bulk copy, per-cycle SRAM x store
+    specs_v = [
+        (("smv_fp8_k5120_gs_r1", "v41_fp8", 1, 5120, NC), dict(kw, gs=True)),
+        (("smv_fp4_k5120_gs_r2", "v41_fp4", 2, 5120, NC), dict(kw, gs=True)),
+        (("smv_bf16_k1004_gs_r3", "v41_bf16", 3, 1004, NC), dict(kw, gs=True)),
+        (("smv_fp8_k1280_rowslot", "v41_fp8", 9, 1280, NC), kw),
+    ]
+    return out + _run_specs(smv_case, specs_v, args.jobs, 20261001)
 
 
 def main(argv=None):
@@ -359,10 +487,10 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.which == "lanes":
         cases = lanes_campaign(a)
-        src = LANE_SRC
+        src = LANE_SRC + [x for x in SMQ_SRC if x not in LANE_SRC]
     else:
         cases = bd_campaign(a)
-        src = BD_SRC
+        src = BD_SRC + [x for x in SMV_SRC if x not in BD_SRC]
     for c in cases:
         print(f"{c['case']:22s} {c['fmt']:10s} R{c['rows']:3d} K{c['K']:5d} G{c['groups']:2d}  exact={c['exact']}"
               f"  mism={c['mismatches']}  {c['rtl']}")

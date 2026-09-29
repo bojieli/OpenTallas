@@ -181,7 +181,7 @@ BLOCKS.update({
     "ot_gpu_tc_col": Block(
         "ot_gpu_tc_col", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 250.0, 250.0,
         [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
-        params={"L": 32, "TAGW": 16}, default_edge="S",
+        params={"L": 32, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6},
         record="results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l32_092/physical.json",
         notes="exact tensor-core column: 32 BF16 x BF16 -> FP32 lanes, circulating IL-8 adders, 32-leaf tree",
         peak_gb=16.0),
