@@ -1,0 +1,1868 @@
+{
+ "schema": "opentallas.v41.rom_array_exactness.v1",
+ "verdict": "PASS",
+ "golden": "tools/hdc_golden_v41.py linear_q, HDC_V41_ARITH=chunk8",
+ "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+ "checkpoint_header_sha256": {
+  "model-00005-of-00048.safetensors": "c50a8acf025e565be36bf005ae712ad7518a8bcc1d2ed561e413970bbabc86e6"
+ },
+ "seed": 20260929,
+ "simulator": "verilator 5.050 (/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator)",
+ "params": {
+  "NSEG": 8,
+  "NCH": 16,
+  "XF_Q": 4,
+  "XF_BF": 8,
+  "BST": 2,
+  "RST": 1,
+  "LV": 5,
+  "RD": 16,
+  "root_D": 16,
+  "BF16": 1,
+  "NCHB": 8
+ },
+ "source_sha256": {
+  "rtl/v41rom/ot_v41_ret.sv": "26e1f9fede2282c0d5558bd32df55dfd3b59b2171a4ae5b05f6f76303781746d",
+  "rtl/v41rom/ot_v41_rom_array.sv": "c2feeeb1506d48df9d21e03f83aceae9ca5433f5f9aeb0ce49377f1d48bf4f7d",
+  "rtl/v41rom/ot_v41_rom_elem.sv": "3a5e9fa02d4388312dddeb4a8917dfba017d77f9a2747bc9be06212f87e60d23",
+  "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+  "rtl/v41rom/ot_v41_chain.sv": "d7c94cc2d12c65aafe22cba6c87c67b55c70616182fc5dc53bed824c7e0f3211",
+  "rtl/v41rom/ot_v41_segtree.sv": "72aeebcc593332b0c2d252f564b665b420aeca3c279adf02197abd49d4603417",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
+  "rtl/test/tb_v41_rom_array.sv": "6423aeab077367cd4d436aad3fbb8b2f942b039924e5b061de06ddbfbe97180a",
+  "tools/rtl_v41_rom_array.py": "f7dc8cd6b791953efc4c8e1517ca971a4d5b08b1dce77b5710bb8a9edeeab892",
+  "tools/v41_rom_ksplit_bankmap.py": "0754274b4f180b52e420e15c657a7b259de1f594f58c1ffb6f2f88869240887a",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+ },
+ "cases": [
+  {
+   "N": 2,
+   "case": "fp8_wq_a_whole_rows",
+   "XF": 4,
+   "model_depth": 83,
+   "model_prediction": 251,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 235,
+   "t_phase_pred": 168,
+   "t_rounds_scheduled": 168,
+   "fill": 67,
+   "words": 320,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     5120
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      2
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "fp8_wq_a_ksplit",
+   "XF": 4,
+   "model_depth": 88,
+   "model_prediction": 216,
+   "rows": 1,
+   "rows_out": 1,
+   "fp32_exact": 1,
+   "bf16_exact": 1,
+   "fault": 0,
+   "cycles_last_row": 204,
+   "t_phase_pred": 128,
+   "t_rounds_scheduled": 128,
+   "fill": 76,
+   "words": 160,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      64,
+      65
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "fp8_wq_b",
+   "XF": 4,
+   "model_depth": 88,
+   "model_prediction": 128,
+   "rows": 1,
+   "rows_out": 1,
+   "fp32_exact": 1,
+   "bf16_exact": 1,
+   "fault": 0,
+   "cycles_last_row": 106,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 66,
+   "words": 40,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     1024,
+     256
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      4096,
+      4097
+     ],
+     "cols": [
+      0,
+      1280
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "fp8_wo_b_kquarter",
+   "XF": 4,
+   "model_depth": 88,
+   "model_prediction": 128,
+   "rows": 1,
+   "rows_out": 1,
+   "fp32_exact": 1,
+   "bf16_exact": 1,
+   "fault": 0,
+   "cycles_last_row": 108,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 68,
+   "words": 64,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     1024,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wo_b",
+     "fmt": "fp8",
+     "rows": [
+      100,
+      101
+     ],
+     "cols": [
+      2048,
+      4096
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "fp4_expert_w1",
+   "XF": 4,
+   "model_depth": 88,
+   "model_prediction": 168,
+   "rows": 1,
+   "rows_out": 1,
+   "fp32_exact": 1,
+   "bf16_exact": 1,
+   "fault": 0,
+   "cycles_last_row": 140,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 60,
+   "words": 80,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w1",
+     "fmt": "fp4",
+     "rows": [
+      1728,
+      1729
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "fp8_wq_b_two_rows_per_element",
+   "XF": 4,
+   "model_depth": 83,
+   "model_prediction": 163,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 145,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 65,
+   "words": 160,
+   "segments_per_element": [
+    2,
+    2
+   ],
+   "split": {
+    "m0": [
+     1280
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      8000,
+      8004
+     ],
+     "cols": [
+      0,
+      1280
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "fp4_two_experts_w1_w3",
+   "XF": 4,
+   "model_depth": 88,
+   "model_prediction": 168,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 151,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 71,
+   "words": 160,
+   "segments_per_element": [
+    2,
+    2
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ],
+    "m1": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      1
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.301.w3",
+     "fmt": "fp4",
+     "rows": [
+      500,
+      501
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "bf16_router_gate",
+   "XF": 8,
+   "model_depth": 88,
+   "model_prediction": 344,
+   "rows": 1,
+   "rows_out": 1,
+   "fp32_exact": 1,
+   "bf16_exact": 1,
+   "fault": 0,
+   "cycles_last_row": 337,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 81,
+   "words": 320,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.gate",
+     "fmt": "bf16",
+     "rows": [
+      288,
+      289
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "bf16_compressor_wkv_ksplit",
+   "XF": 8,
+   "model_depth": 88,
+   "model_prediction": 344,
+   "rows": 1,
+   "rows_out": 1,
+   "fp32_exact": 1,
+   "bf16_exact": 1,
+   "fault": 0,
+   "cycles_last_row": 337,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 81,
+   "words": 320,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.compressor.wkv",
+     "fmt": "bf16",
+     "rows": [
+      384,
+      385
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "bf16_wkv_4096_whole_rows",
+   "XF": 8,
+   "model_depth": 83,
+   "model_prediction": 339,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 330,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 74,
+   "words": 512,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.compressor.wkv",
+     "fmt": "bf16",
+     "rows": [
+      130,
+      132
+     ],
+     "cols": [
+      512,
+      4608
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "bf16_indexer_wk",
+   "XF": 8,
+   "model_depth": 83,
+   "model_prediction": 123,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 118,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 78,
+   "words": 64,
+   "segments_per_element": [
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     512
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.indexer.wk",
+     "fmt": "bf16",
+     "rows": [
+      0,
+      2
+     ],
+     "cols": [
+      0,
+      512
+     ]
+    }
+   ]
+  },
+  {
+   "N": 2,
+   "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
+   "XF": 4,
+   "model_depth": 88,
+   "model_prediction": 152,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 136,
+   "t_phase_pred": 64,
+   "t_rounds_scheduled": 64,
+   "fill": 72,
+   "words": 112,
+   "segments_per_element": [
+    1,
+    3
+   ],
+   "split": {
+    "m0": [
+     2048,
+     256
+    ],
+    "m1": [
+     2048,
+     256
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w2",
+     "fmt": "fp4",
+     "rows": [
+      3840,
+      3841
+     ],
+     "cols": [
+      0,
+      2304
+     ]
+    },
+    {
+     "name": "layers.2.ffn.shared_experts.w2",
+     "fmt": "fp8",
+     "rows": [
+      3840,
+      3841
+     ],
+     "cols": [
+      0,
+      2304
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "fp8_wq_a_whole_rows",
+   "XF": 4,
+   "model_depth": 84,
+   "model_prediction": 252,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 244,
+   "t_phase_pred": 168,
+   "t_rounds_scheduled": 168,
+   "fill": 76,
+   "words": 640,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     5120
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      4
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "fp8_wq_a_ksplit",
+   "XF": 4,
+   "model_depth": 89,
+   "model_prediction": 217,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 214,
+   "t_phase_pred": 128,
+   "t_rounds_scheduled": 128,
+   "fill": 86,
+   "words": 320,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      64,
+      66
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "fp8_wq_b",
+   "XF": 4,
+   "model_depth": 89,
+   "model_prediction": 129,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 115,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 75,
+   "words": 80,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     1024,
+     256
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      4096,
+      4098
+     ],
+     "cols": [
+      0,
+      1280
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "fp8_wo_b_kquarter",
+   "XF": 4,
+   "model_depth": 94,
+   "model_prediction": 134,
+   "rows": 1,
+   "rows_out": 1,
+   "fp32_exact": 1,
+   "bf16_exact": 1,
+   "fault": 0,
+   "cycles_last_row": 114,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 74,
+   "words": 64,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     512,
+     512,
+     512,
+     512
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wo_b",
+     "fmt": "fp8",
+     "rows": [
+      100,
+      101
+     ],
+     "cols": [
+      2048,
+      4096
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "fp4_expert_w1",
+   "XF": 4,
+   "model_depth": 89,
+   "model_prediction": 169,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 149,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 69,
+   "words": 160,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w1",
+     "fmt": "fp4",
+     "rows": [
+      1728,
+      1730
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "fp8_wq_b_two_rows_per_element",
+   "XF": 4,
+   "model_depth": 84,
+   "model_prediction": 164,
+   "rows": 8,
+   "rows_out": 8,
+   "fp32_exact": 8,
+   "bf16_exact": 8,
+   "fault": 0,
+   "cycles_last_row": 156,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 76,
+   "words": 320,
+   "segments_per_element": [
+    2,
+    2,
+    2,
+    2
+   ],
+   "split": {
+    "m0": [
+     1280
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      8000,
+      8008
+     ],
+     "cols": [
+      0,
+      1280
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "fp4_two_experts_w1_w3",
+   "XF": 4,
+   "model_depth": 89,
+   "model_prediction": 169,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 166,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 86,
+   "words": 320,
+   "segments_per_element": [
+    2,
+    2,
+    2,
+    2
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ],
+    "m1": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      2
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.301.w3",
+     "fmt": "fp4",
+     "rows": [
+      500,
+      502
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "bf16_router_gate",
+   "XF": 8,
+   "model_depth": 89,
+   "model_prediction": 345,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 347,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 91,
+   "words": 640,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.gate",
+     "fmt": "bf16",
+     "rows": [
+      288,
+      290
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "bf16_compressor_wkv_ksplit",
+   "XF": 8,
+   "model_depth": 89,
+   "model_prediction": 345,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 347,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 91,
+   "words": 640,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.compressor.wkv",
+     "fmt": "bf16",
+     "rows": [
+      384,
+      386
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "bf16_wkv_4096_whole_rows",
+   "XF": 8,
+   "model_depth": 84,
+   "model_prediction": 340,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 339,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 83,
+   "words": 1024,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.compressor.wkv",
+     "fmt": "bf16",
+     "rows": [
+      130,
+      134
+     ],
+     "cols": [
+      512,
+      4608
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "bf16_indexer_wk",
+   "XF": 8,
+   "model_depth": 84,
+   "model_prediction": 124,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 127,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 87,
+   "words": 128,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     512
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.indexer.wk",
+     "fmt": "bf16",
+     "rows": [
+      0,
+      4
+     ],
+     "cols": [
+      0,
+      512
+     ]
+    }
+   ]
+  },
+  {
+   "N": 4,
+   "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
+   "XF": 4,
+   "model_depth": 89,
+   "model_prediction": 153,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 153,
+   "t_phase_pred": 64,
+   "t_rounds_scheduled": 64,
+   "fill": 89,
+   "words": 224,
+   "segments_per_element": [
+    1,
+    1,
+    3,
+    3
+   ],
+   "split": {
+    "m0": [
+     2048,
+     256
+    ],
+    "m1": [
+     2048,
+     256
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w2",
+     "fmt": "fp4",
+     "rows": [
+      3840,
+      3842
+     ],
+     "cols": [
+      0,
+      2304
+     ]
+    },
+    {
+     "name": "layers.2.ffn.shared_experts.w2",
+     "fmt": "fp8",
+     "rows": [
+      3840,
+      3842
+     ],
+     "cols": [
+      0,
+      2304
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "fp8_wq_a_whole_rows",
+   "XF": 4,
+   "model_depth": 85,
+   "model_prediction": 253,
+   "rows": 8,
+   "rows_out": 8,
+   "fp32_exact": 8,
+   "bf16_exact": 8,
+   "fault": 0,
+   "cycles_last_row": 255,
+   "t_phase_pred": 168,
+   "t_rounds_scheduled": 168,
+   "fill": 87,
+   "words": 1280,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     5120
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      8
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "fp8_wq_a_ksplit",
+   "XF": 4,
+   "model_depth": 90,
+   "model_prediction": 218,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 226,
+   "t_phase_pred": 128,
+   "t_rounds_scheduled": 128,
+   "fill": 98,
+   "words": 640,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      64,
+      68
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "fp8_wq_b",
+   "XF": 4,
+   "model_depth": 90,
+   "model_prediction": 130,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 126,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 86,
+   "words": 160,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     1024,
+     256
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      4096,
+      4100
+     ],
+     "cols": [
+      0,
+      1280
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "fp8_wo_b_kquarter",
+   "XF": 4,
+   "model_depth": 95,
+   "model_prediction": 135,
+   "rows": 2,
+   "rows_out": 2,
+   "fp32_exact": 2,
+   "bf16_exact": 2,
+   "fault": 0,
+   "cycles_last_row": 123,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 83,
+   "words": 128,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     512,
+     512,
+     512,
+     512
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wo_b",
+     "fmt": "fp8",
+     "rows": [
+      100,
+      102
+     ],
+     "cols": [
+      2048,
+      4096
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "fp4_expert_w1",
+   "XF": 4,
+   "model_depth": 90,
+   "model_prediction": 170,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 160,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 80,
+   "words": 320,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w1",
+     "fmt": "fp4",
+     "rows": [
+      1728,
+      1732
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "fp8_wq_b_two_rows_per_element",
+   "XF": 4,
+   "model_depth": 85,
+   "model_prediction": 165,
+   "rows": 16,
+   "rows_out": 16,
+   "fp32_exact": 16,
+   "bf16_exact": 16,
+   "fault": 0,
+   "cycles_last_row": 171,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 91,
+   "words": 640,
+   "segments_per_element": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ],
+   "split": {
+    "m0": [
+     1280
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      8000,
+      8016
+     ],
+     "cols": [
+      0,
+      1280
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "fp4_two_experts_w1_w3",
+   "XF": 4,
+   "model_depth": 90,
+   "model_prediction": 170,
+   "rows": 8,
+   "rows_out": 8,
+   "fp32_exact": 8,
+   "bf16_exact": 8,
+   "fault": 0,
+   "cycles_last_row": 188,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 108,
+   "words": 640,
+   "segments_per_element": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ],
+    "m1": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      4
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.301.w3",
+     "fmt": "fp4",
+     "rows": [
+      500,
+      504
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "fp4_six_experts_w1_plus_shared_fp8_split8",
+   "XF": 4,
+   "model_depth": 100,
+   "model_prediction": 180,
+   "rows": 7,
+   "rows_out": 7,
+   "fp32_exact": 7,
+   "bf16_exact": 7,
+   "fault": 0,
+   "cycles_last_row": 221,
+   "t_phase_pred": 80,
+   "t_rounds_scheduled": 80,
+   "fill": 141,
+   "words": 640,
+   "segments_per_element": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5
+   ],
+   "split": {
+    "m0": [
+     1024,
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "m1": [
+     1024,
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "m2": [
+     1024,
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "m3": [
+     1024,
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "m4": [
+     1024,
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "m5": [
+     1024,
+     1024,
+     1024,
+     1024,
+     1024
+    ],
+    "m6": [
+     1024,
+     1024,
+     1024,
+     1024,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.3.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      1
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.57.w1",
+     "fmt": "fp4",
+     "rows": [
+      64,
+      65
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.121.w1",
+     "fmt": "fp4",
+     "rows": [
+      128,
+      129
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.200.w1",
+     "fmt": "fp4",
+     "rows": [
+      192,
+      193
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.288.w1",
+     "fmt": "fp4",
+     "rows": [
+      256,
+      257
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.377.w1",
+     "fmt": "fp4",
+     "rows": [
+      320,
+      321
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.shared_experts.w1",
+     "fmt": "fp8",
+     "rows": [
+      32,
+      33
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "bf16_router_gate",
+   "XF": 8,
+   "model_depth": 90,
+   "model_prediction": 346,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 361,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 105,
+   "words": 1280,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.gate",
+     "fmt": "bf16",
+     "rows": [
+      288,
+      292
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "bf16_compressor_wkv_ksplit",
+   "XF": 8,
+   "model_depth": 90,
+   "model_prediction": 346,
+   "rows": 4,
+   "rows_out": 4,
+   "fp32_exact": 4,
+   "bf16_exact": 4,
+   "fault": 0,
+   "cycles_last_row": 361,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 105,
+   "words": 1280,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.compressor.wkv",
+     "fmt": "bf16",
+     "rows": [
+      384,
+      388
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "bf16_wkv_4096_whole_rows",
+   "XF": 8,
+   "model_depth": 85,
+   "model_prediction": 341,
+   "rows": 8,
+   "rows_out": 8,
+   "fp32_exact": 8,
+   "bf16_exact": 8,
+   "fault": 0,
+   "cycles_last_row": 350,
+   "t_phase_pred": 256,
+   "t_rounds_scheduled": 256,
+   "fill": 94,
+   "words": 2048,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.compressor.wkv",
+     "fmt": "bf16",
+     "rows": [
+      130,
+      138
+     ],
+     "cols": [
+      512,
+      4608
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "bf16_indexer_wk",
+   "XF": 8,
+   "model_depth": 85,
+   "model_prediction": 125,
+   "rows": 8,
+   "rows_out": 8,
+   "fp32_exact": 8,
+   "bf16_exact": 8,
+   "fault": 0,
+   "cycles_last_row": 138,
+   "t_phase_pred": 40,
+   "t_rounds_scheduled": 40,
+   "fill": 98,
+   "words": 256,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     512
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.indexer.wk",
+     "fmt": "bf16",
+     "rows": [
+      0,
+      8
+     ],
+     "cols": [
+      0,
+      512
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
+   "XF": 4,
+   "model_depth": 90,
+   "model_prediction": 154,
+   "rows": 8,
+   "rows_out": 8,
+   "fp32_exact": 8,
+   "bf16_exact": 8,
+   "fault": 0,
+   "cycles_last_row": 178,
+   "t_phase_pred": 64,
+   "t_rounds_scheduled": 64,
+   "fill": 114,
+   "words": 448,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    3,
+    3,
+    3,
+    3
+   ],
+   "split": {
+    "m0": [
+     2048,
+     256
+    ],
+    "m1": [
+     2048,
+     256
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w2",
+     "fmt": "fp4",
+     "rows": [
+      3840,
+      3844
+     ],
+     "cols": [
+      0,
+      2304
+     ]
+    },
+    {
+     "name": "layers.2.ffn.shared_experts.w2",
+     "fmt": "fp8",
+     "rows": [
+      3840,
+      3844
+     ],
+     "cols": [
+      0,
+      2304
+     ]
+    }
+   ]
+  }
+ ]
+}
