@@ -422,5 +422,13 @@
     "/tmp/qwen-fullshape-isa-rtl/rtl/rom/ot_rom_pkg_ctrl.sv",
     "/tmp/qwen-fullshape-isa-rtl/rtl/rom/ot_rom_oneshot_allreduce.sv",
     "/tmp/qwen-fullshape-isa-rtl/rtl/rom/ot_rom_tp_seq.sv"
-  ]
+  ],
+  "landing_20260929": {
+    "integration_branch": "claude/land-frozen-20260929",
+    "action": "labelled_pins_moved",
+    "changed_pins": {
+      "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f"
+    },
+    "reason": "claude/w6-qwen-hbm added opt-in ME_STALL/ME_IDLE_GATE parameters and two ports (me_mem_ok in, me_clk_en out) to ot_hdc_core_vector_weight; defaults tie the engine clock to clk. Not re-linted."
+  }
 }

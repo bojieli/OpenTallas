@@ -309,7 +309,6 @@ module ot_chip_v41x_tile #(
     wire [SUN/8-1:0] xs_res_we; wire [SUN/8*AW-1:0] xs_res_addr; wire [SUN/8*32-1:0] xs_res_data;
     wire core_fault;
     reg rope_read_fault;
-    assign fault = core_fault | rope_read_fault | qrom_rom_fault;
     wire rope_cache_match = rope_cache_valid && rope_cache_hold &&
                             rope_cache_kind == rope_pf_kind && rope_cache_pos == rope_pf_pos;
     wire [4*SUN-1:0] rope_bad_lane;
@@ -336,7 +335,6 @@ module ot_chip_v41x_tile #(
     wire [128*PIKH_HAW-1:0] pikh_req_addr; wire [128*4-1:0] pikh_req_len; wire [128*16-1:0] pikh_req_tag;
     wire pikw_v, pikw_rdy; wire [3:0] pikw_stack_mask;
     wire [PIKH_HAW-1:0] pikw_csec, pikw_ssec; wire [511:0] pikw_codes; wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
-    wire core_fault;
     reg idx_user_fault;
     reg [PIKH_HAW-1:0] idx_user_base_q;
     wire [PIKH_HAW:0] idx_slice_end={1'b0,idx_user_base_sec}+
@@ -349,7 +347,9 @@ module ot_chip_v41x_tile #(
                 (idx_user_base_sec[6:0]!=0 || idx_slice_end[PIKH_HAW]);
         end
     end
-    assign fault=core_fault || idx_user_fault;
+    // One fault output: core, RoPE read, QE ROM and per-user index-slice faults
+    // (main carried two drivers of fault and two core_fault declarations here).
+    assign fault = core_fault | rope_read_fault | qrom_rom_fault | idx_user_fault;
 
     ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .AW(AW), .NW(NW), .INSTR_BITS(INSTR_BITS),
                        .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),

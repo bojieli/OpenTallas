@@ -2,7 +2,8 @@
 // Experimental one-stack common timing owner. Opt-in separate module; not PHY RTL.
 // W addresses already relocated into the disjoint physical region. K owns writes.
 module ot_chip_v41x_shared_hbm_model #(
- parameter AW=30,KTAGW=17,WTAGW=10,MEM_WORDS=65536,WN=3,WD=5
+ parameter AW=30,KTAGW=17,WTAGW=10,MEM_WORDS=65536,WN=3,WD=5,
+ parameter W_ND=8,W_DEPTH=16,W_ROOM=16 // opt-in weight-adapter sweep; defaults qualified
 )(
  input wire clk,rst_n,input wire[AW-1:0] kbase,kcount,wbase,wcount,
  input wire[31:0] k_v,output wire[31:0] k_rdy,input wire[32*AW-1:0] k_addr,
@@ -26,7 +27,7 @@ module ot_chip_v41x_shared_hbm_model #(
  reg[31:0] last_w;
  wire[31:0] choose_w,k_ok;
  assign fault=bad||wb;
- ot_chip_v41x_weight_pc_adapter #(.AW(AW),.TAGW(WTAGW),.KTAGW(KTAGW)) u_w(
+ ot_chip_v41x_weight_pc_adapter #(.AW(AW),.TAGW(WTAGW),.KTAGW(KTAGW),.ND(W_ND),.DEPTH(W_DEPTH),.ROOM(W_ROOM)) u_w(
  .clk(clk),.rst_n(rst_n),.region_base(wbase),.region_count(wcount),
  .w_v(w_v&&ledger_ok&&!bad),.w_rdy(w_ready),.w_addr(w_addr),.w_len(w_len),.w_tag(w_tag),.w_room(w_room),
  .req_v(av),.req_rdy(ar),.req_addr(aa),.req_tag(at),

@@ -1,0 +1,199 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T10:33:26.078388+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 77.784,
+    "block": "ot_chip_v41x_karb_slice",
+    "cells": 805,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "AW": 30
+    },
+    "sources": [
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_slice.sv",
+        "sha256": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b",
+        "size_bytes": 5195
+      }
+    ],
+    "top": "ot_chip_v41x_karb_slice"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n% |  2.14e+26 |      \n     6910 |   0.1795 |  1.613832e+05 |   +0.06% |  3.16e+26 |      \n     6920 |   0.1792 |  1.614562e+05 |   +0.05% |  4.65e+26 |      \n     6930 |   0.1774 |  1.615426e+05 |   +0.05% |  6.85e+26 |      \n     6940 |   0.1784 |  1.616259e+05 |   +0.05% |  1.01e+27 |      \n     6950 |   0.1802 |  1.617308e+05 |   +0.06% |  1.49e+27 |      \n     6960 |   0.1827 |  1.618491e+05 |   +0.07% |  2.19e+27 |      \n     6970 |   0.1815 |  1.619579e+05 |   +0.07% |  3.23e+27 |      \n     6980 |   0.1794 |  1.620290e+05 |   +0.04% |  4.75e+27 |      \n     6990 |   0.1773 |  1.621223e+05 |   +0.06% |  7.00e+27 |      \n     7000 |   0.1791 |  1.622085e+05 |   +0.05% |  1.03e+28 |      \n     7010 |   0.1782 |  1.623492e+05 |   +0.09% |  1.52e+28 |      \n     7020 |   0.1815 |  1.624970e+05 |   +0.09% |  2.24e+28 |      \n     7030 |   0.1814 |  1.626401e+05 |   +0.09% |  3.30e+28 |      \n     7040 |   0.1811 |  1.627564e+05 |   +0.07% |  4.86e+28 |      \n     7050 |   0.1842 |  1.628570e+05 |   +0.06% |  7.15e+28 |      \n     7060 |   0.1836 |  1.629880e+05 |   +0.08% |  1.05e+29 |      \n     7070 |   0.1822 |  1.630925e+05 |   +0.06% |  1.55e+29 |      \n     7080 |   0.1815 |  1.631656e+05 |   +0.04% |  2.29e+29 |      \n     7090 |   0.1830 |  1.632606e+05 |   +0.06% |  3.37e+29 |      \n     7100 |   0.1828 |  1.633291e+05 |   +0.04% |  4.96e+29 |      \n     7110 |   0.1812 |  1.634011e+05 |   +0.04% |  7.31e+29 |      \n     7120 |   0.1793 |  1.635009e+05 |   +0.06% |  1.08e+30 |      \n     7130 |   0.1789 |  1.635870e+05 |   +0.05% |  1.59e+30 |      \n     7140 |   0.1811 |  1.636447e+05 |   +0.04% |  2.34e+30 |      \n     7150 |   0.1838 |  1.636890e+05 |   +0.03% |  3.44e+30 |      \n     7160 |   0.1826 |  1.637012e+05 |   +0.01% |  5.07e+30 |      \n     7170 |   0.1807 |  1.637325e+05 |   +0.02% |  7.47e+30 |      \n     7180 |   0.1809 |  1.637717e+05 |   +0.02% |  1.10e+31 |      \n     7190 |   0.1796 |  1.637976e+05 |   +0.02% |  1.62e+31 |      \n     7200 |   0.1825 |  1.638840e+05 |   +0.05% |  2.39e+31 |      \n     7210 |   0.1844 |  1.639532e+05 |   +0.04% |  3.52e+31 |      \n     7220 |   0.1810 |  1.640290e+05 |   +0.05% |  5.18e+31 |      \n     7230 |   0.1791 |  1.641227e+05 |   +0.06% |  7.63e+31 |      \n     7240 |   0.1831 |  1.641816e+05 |   +0.04% |  1.12e+32 |      \n[INFO GPL-1011] Original area (um^2): 177.74\n[INFO GPL-1012] Total routability artificial inflation: 690.78 (+388.65%)\n[INFO GPL-1013] Total timing-driven delta area: 143.59 (+80.79%)\n[INFO GPL-1014] Final placement area: 1012.11 (+469.44%)\n[ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.\nwrite_db /work/results/asap7/opentallas_ot_chip_v41x_karb_slice_asap7_w2a_karb_slice_aw30_band/base/3_3_place_gp-failed.odb\nError: global_place.tcl, 69 GPL-0305\n\nElapsed time: 0:01.80[h:]min:sec. CPU time: user 1.67 sys 0.12 (99%). Peak memory: 208872KB.\nElapsed time: 0:02.27[h:]min:sec. CPU time: user 2.12 sys 0.20 (102%). Peak memory: 229828KB.\nElapsed time: 0:01.80[h:]min:sec. CPU time: user 1.68 sys 0.13 (99%). Peak memory: 203836KB.\nElapsed time: 0:01.78[h:]min:sec. CPU time: user 1.64 sys 0.14 (99%). Peak memory: 204060KB.\nElapsed time: 0:01.91[h:]min:sec. CPU time: user 1.79 sys 0.12 (99%). Peak memory: 209764KB.\nElapsed time: 0:04.88[h:]min:sec. CPU time: user 13.98 sys 0.15 (289%). Peak memory: 220724KB.\nElapsed time: 0:01.90[h:]min:sec. CPU time: user 1.78 sys 0.12 (99%). Peak memory: 209756KB.\nElapsed time: 0:46.68[h:]min:sec. CPU time: user 173.76 sys 0.64 (373%). Peak memory: 394832KB.\nmake[1]: *** [Makefile:499: do-3_3_place_gp] Error 1\nmake: *** [Makefile:499: /work/results/asap7/opentallas_ot_chip_v41x_karb_slice_asap7_w2a_karb_slice_aw30_band/base/3_3_place_gp.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T10:32:10.894466+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_chip_v41x_karb_slice",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_slice.sv",
+      "--param",
+      "AW=30",
+      "--clock-period-ns",
+      "0.92",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--die-area",
+      "0",
+      "0",
+      "375",
+      "17.28",
+      "--core-area",
+      "1.08",
+      "1.08",
+      "373.92",
+      "16.2",
+      "--place-density",
+      "0.6",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--pin-region",
+      "^(h_v|h_rdy|h_we|h_wr_done|r_v|r_rdy)$|^(h_addr|h_len|h_tag|h_wdata|h_wstrb|r_tag|r_beat|r_data)\\[\\d+\\]$=bottom:20-195",
+      "--pin-region",
+      "^(b_v|b_rdy|b_we|b_wr_done|b_rsp_v|b_rsp_rdy)$|^(b_addr|b_len|b_tag|b_wdata|b_wstrb|b_rsp_tag|b_rsp_beat|b_rsp_data)\\[\\d+\\]$=top:20-195",
+      "--pin-region",
+      "^(k_v|k_take|k_we|k_wr_done|k_rsp_v|k_rsp_rdy|b_grant|contend|clk|rst_n)$|^(k_addr|k_len|k_tag|k_wdata|k_wstrb|k_rsp_tag|k_rsp_beat|k_rsp_data)\\[\\d+\\]$=top:200-370",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=0.45",
+      "--nickname-tag",
+      "w2a_karb_slice_aw30_band",
+      "--output",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/slice_aw30_band/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/w2/pnr2/slice_band",
+      "--force"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/w2/karb2/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "be101ec6a636d27985c9c2f68ff0f72bbaf30896bff5aaaddfe1d2be43b7518a",
+      "tree": "/home/ubuntu/w2/karb2"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/home/ubuntu/w2/karb2"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 920.0,
+    "cell_area_um2": 77.784,
+    "cell_count": 805,
+    "cell_types_used": 22,
+    "chip_area_um2": 77.7843,
+    "combinational_cell_count": 788,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "7ac85652eaab13ba1b9473d533952427895b4a2c4d2d11b3e1ff4e40fc31b63d",
+      "raw_netlist_sha256": "7ac85652eaab13ba1b9473d533952427895b4a2c4d2d11b3e1ff4e40fc31b63d",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 6.444,
+    "sequential_cell_count": 17,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

@@ -61,6 +61,20 @@ module ot_hdc_core_vector_weight #(
     // Opt-in Qwen full-vocabulary encoding: two ME row-offset bits live just
     // above the legacy 16-bit field in the otherwise unused ISA tail.
     parameter integer QWEN_FULLSHAPE = 0,
+    // ME_STALL = 1: an HBM weight supply may hold the matrix engine for a
+    // cycle (bounded within-round continuation).  The engine and its memory
+    // write enables are clocked only on edges where me_mem_ok was high during
+    // the preceding low phase (ot_hdc_cg), so a held cycle is an exact pause:
+    // no element, product or sum order changes.  The supply must hold its
+    // engine read-response registers on the same edges (me_clk_en).
+    // ME_STALL = 0 ties the enable high: the ROM core is unchanged.
+    parameter integer ME_STALL = 0,
+    // ME_IDLE_GATE = 1: also stop the engine clock while it is idle and no
+    // engine instruction waits in NEXT (unit clock gating).  An idle engine
+    // holds only registered, drained outputs; it is re-enabled on the edge an
+    // engine instruction reaches NEXT, before its go, so issue timing is
+    // unchanged.  0 keeps the engine clock free-running.
+    parameter integer ME_IDLE_GATE = 0,
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0 // element address of embedding row 0 in the program
 ) (
@@ -164,7 +178,9 @@ module ot_hdc_core_vector_weight #(
     output wire [AW-1:0]     wd_wbase,
     output wire [AW-1:0]     wd_sbase,
     output wire [NW-1:0]     wd_tiles, wd_k, wd_nout,
-    input  wire              w_ok, emb_ok
+    input  wire              w_ok, emb_ok,
+    input  wire              me_mem_ok,      // ME_STALL: every engine read presented now is served at the next edge
+    output wire              me_clk_en       // ME_STALL: this edge clocks the engine (pre-edge value)
 );
     `include "ot_hdc_isa.svh"
     localparam integer LW = $clog2(W);
@@ -226,7 +242,8 @@ module ot_hdc_core_vector_weight #(
     wire [15:0] su_progress, me_progress, su_rows;
     reg          d_chase_rows;
     reg          me_kindk;
-    wire unit_ready = (d_unit == 2'd1) ? me_ready :
+    wire me_en;
+    wire unit_ready = (d_unit == 2'd1) ? (me_ready && me_en) :
                       (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
     //: KV_HBM: a KV op waits for the streamer; never on the cycle its
     //: descriptor is announced, when kv_ok may still describe the previous op.
@@ -437,19 +454,38 @@ module ot_hdc_core_vector_weight #(
     end else begin : g_bf16_matrix_word
         assign me_wrom_q = wrom_q;
     end endgenerate
+    // -- engine clock enable (ME_STALL) ------------------------------------------
+    //: rst_n forces the enable so the gated registers see reset edges (see
+    //: ot_hdc_cg).  The enable is combinational from the supply's view of the
+    //: engine's registered requests; it never depends on me_go.
+    wire me_wake = (st == S_RUN) && nx_v && (d_unit == 2'd1);
+    assign me_en = !rst_n || (((ME_STALL == 0) || me_mem_ok) &&
+                              ((ME_IDLE_GATE == 0) || !me_idle || me_wake));
+    assign me_clk_en = me_en;
+    wire me_clk;
+    generate if (ME_STALL != 0 || ME_IDLE_GATE != 0) begin : g_me_cg
+        ot_hdc_cg u_me_cg (.clk(clk), .en(me_en), .gclk(me_clk));
+    end else begin : g_me_clk
+        assign me_clk = clk;
+    end endgenerate
+    wire [G-1:0] me_o_we;
+    wire         me_mx_we;
+    //: a held engine keeps its write strobes high; write once per engine edge
+    assign vw_me_we = me_o_we & {G{me_en}};
+    assign vw_mx_we = me_mx_we & me_en;
     ot_hdc_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW),
                     .INT8_WEIGHT(INT8_WEIGHT), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE)) u_me (
-        .clk(clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
+        .clk(me_clk), .rst_n(rst_n), .go(me_go), .ready(me_ready), .idle(me_idle),
         .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wsrc(me_wsrc), .i_wbase(me_wbase),
         .i_ts(me_ts), .i_ks(me_ks), .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
         .i_xcs(me_xcs), .i_jsh(me_jsh), .i_split(me_split), .i_wcs(me_wcs), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
         .i_mmode(me_mmode), .i_oen(me_oen), .i_amax(me_amax), .i_rmax(me_rmax), .i_mbase(me_mbase),
-        .mx_we(vw_mx_we), .mx_addr(vw_mx_addr), .mx_mask(vw_mx_mask), .mx_data(vw_mx_data),
+        .mx_we(me_mx_we), .mx_addr(vw_mx_addr), .mx_mask(vw_mx_mask), .mx_data(vw_mx_data),
         .wrom_re(me_wrom_re), .wrom_addr(me_wrom_addr), .wrom_q(me_wrom_q),
         .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
         .kv_re(kv_re), .kv_addr(kv_raddr), .kv_q(kv_q),
         .x_re(vx_re), .x_addr(vx_addr), .x_q(vx_q),
-        .ov(me_ov), .o_we(vw_me_we), .o_addr(vw_me_addr), .o_mask(vw_me_mask), .o_data(vw_me_data),
+        .ov(me_ov), .o_we(me_o_we), .o_addr(vw_me_addr), .o_mask(vw_me_mask), .o_data(vw_me_data),
         .am_idx(am_idx), .am_val(am_val), .am_any(am_any), .progress(me_progress), .fault(me_fault));
     assign me_oaddr = vw_me_addr;
     assign me_omask = vw_me_mask;
