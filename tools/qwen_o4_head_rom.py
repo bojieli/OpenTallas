@@ -19,7 +19,7 @@ from pathlib import Path
 
 import numpy as np
 
-from hdc_qwen_fullshape_placement import CONFIG, LOCK, matrix
+from hdc_qwen_fullshape_placement import CONFIG, GROUPS, LOCK, matrix
 from hdc_qwen_int8_image import shipped_vocab_rows
 from hdc_qwen_layer0_rom import engine_word_arrays, pinned_snapshot, word_hex
 
@@ -45,7 +45,7 @@ def emit(snapshot: Path, out: Path, die: int, window: int = 8192) -> dict:
         codes[start:start + count] = src['codes'].numpy().view(np.int8)
         scales[start:start + count] = src['scales'].view(torch.int16).numpy().view(np.uint16).reshape(-1)
     out.mkdir(parents=True, exist_ok=True)
-    per_round, kc = 6144 // geo['split'], geo['k_per_split']
+    per_round, kc = GROUPS // geo['split'], geo['k_per_split']
     code_count, scale_count = geo['rounds'] * kc * 8, geo['rounds'] * per_round * 8
     code_path, scale_path = out / 'matrix_int8.hex', out / 'matrix_scale_bf16.hex'
     with code_path.open('w') as cf, scale_path.open('w') as sf:
@@ -55,7 +55,7 @@ def emit(snapshot: Path, out: Path, die: int, window: int = 8192) -> dict:
             if addr < scale_count:
                 sf.write(word_hex(scale, 16) + '\n')
     manifest = {'schema': 'opentallas.qwen-o4-head-rom.v1', 'die': die, 'rows': ROWS, 'row0': die * ROWS,
-                'geometry': geo, 'code_words': code_count, 'scale_words': scale_count,
+                'geometry': geo, 'groups': GROUPS, 'code_words': code_count, 'scale_words': scale_count,
                 'code_base': 0, 'scale_base': 0, 'checkpoint_revision': Path(snapshot).name,
                 'checkpoint_lock_sha256': sha(LOCK), 'config_sha256': sha(CONFIG),
                 'source_sha256': {p: sha(ROOT / p) for p in PINS},
