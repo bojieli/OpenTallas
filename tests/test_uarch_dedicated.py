@@ -41,3 +41,14 @@ def test_two_word_loader_halves_pv_issue():
     one = _spec(att_pwords=1)["units"]["attention"]["ops"]["L20.attn.pv"]["issue"]
     two = _spec(att_pwords=2)["units"]["attention"]["ops"]["L20.attn.pv"]["issue"]
     assert (one, two) == (320, 160)
+
+
+def test_record_carries_the_w11_rows():
+    import json
+    rec = json.loads((ROOT / "results/uarch/v41_dedicated_units.json").read_text())
+    rows = {r["design"]: r for r in rec["rows"]}
+    p1, p6 = rows["proposal_w11_p1"], rows["proposal_w11_p6"]
+    assert p1["discrepancies"] == [] and p6["positions"] == 6
+    assert p6["units"]["indexer"]["ops"]["L20.attn.idx.score"]["issue"] == 24576
+    assert p6["units"]["attention"]["ops"]["L20.attn.pv"]["issue"] == 960
+    assert rec["source_sha256"]["tools/uarch_model.py"]

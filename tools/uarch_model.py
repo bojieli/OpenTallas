@@ -823,14 +823,28 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.dedicated:
         rows = [dedicated_ledger(copy.deepcopy(PRESETS[n]), a.ctx) for n in (a.preset or ("as_built", "proposal"))]
+        # root decisions of 2026-09-29 (W11): 16 NK=4 index slices, NL=4 attention with the two-word loader;
+        # single position and the MTP verify pass (6 positions, m = 1)
+        w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2)
+        for P in (1, 6):
+            rows.append(dedicated_ledger(dict(w11, name=f"proposal_w11_p{P}"), a.ctx, positions=P))
         for r in rows:
             print(f"{r['design']:14s} hub {r['hub_logic_mm2']:7.2f}/{r['hub_avail_mm2']} mm2  "
                   + "  ".join(f"{k}:{v['area_mm2'] if 'area_mm2' in v else '-'}" for k, v in r["units"].items())
                   + (f"  DISCREPANCIES {r['discrepancies']}" if r["discrepancies"] else ""))
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            import hashlib
+            pins = {q: hashlib.sha256((ROOT / q).read_bytes()).hexdigest() for q in (
+                "tools/uarch_model.py", "tools/arch_budget_v41.py", "tools/rtl_hdc_v41x_vec_campaign.py",
+                "results/arch/arch_budget_v41.json")}
+            for u in DEDICATED.values():
+                for k, q in u.items():
+                    if k.startswith(("hardened_record", "measured_record")) and (ROOT / q).exists():
+                        pins[q] = hashlib.sha256((ROOT / q).read_bytes()).hexdigest()
             Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.v41_dedicated.v1", ctx=a.ctx, rows=rows,
-                                                   elements=DEDICATED), indent=1, default=str) + "\n")
+                                                   elements=DEDICATED, source_sha256=pins), indent=1, default=str)
+                                   + "\n")
         return
     if a.hbm:
         rows = qwen_hbm_rows() + v41_hbm_rows()
