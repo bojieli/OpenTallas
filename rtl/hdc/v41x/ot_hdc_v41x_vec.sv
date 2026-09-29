@@ -111,7 +111,11 @@ module ot_hdc_v41x_vec #(
     parameter integer LV = 6,           // reducer time levels
     parameter integer AW = 24,
     parameter integer NW = 16,
-    parameter integer KVT_SH = 9
+    parameter integer KVT_SH = 9,
+    // VM_DIST (rtl/chip/ot_v41_vm_dist.sv): register stages of the result tree between the reducer and the
+    // lane-group banks.  A result is 'written' (the chaining protocol above) RES_LAT cycles after the reducer
+    // emits it, so cr_rseq, dbg_res and idle follow the tree's last stage.  0: the reducer drives the port.
+    parameter integer RES_LAT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -668,12 +672,50 @@ module ot_hdc_v41x_vec #(
     // =========================================================================================
     wire [7:0] red_seq;
     wire       red_lastres, red_ev, red_busy, red_f;
+    wire [N/8-1:0]    t_we;
+    wire [N/8*AW-1:0] t_addr;
+    wire [N/8*32-1:0] t_data;
+    wire [8:0]        t_meta;
+    wire              t_ev, tree_busy;
     ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9)) u_red (.clk(clk), .rst_n(rst_n),
         .v_in(retire && r_red != RED_NONE), .x_in(l_rox), .live_in(l_rov), .mx_in(r_red == RED_MAX),
         .sq_in(r_sq), .lt_in(r_lt), .span_in(r_span), .l_in(r_L), .last_in(r_wrap), .nres_in(r_nres),
         .rnd_in(r_rnd), .rbase_in(r_rbase), .rsh_in(r_rsh), .meta_in({r_seq, r_lastres}),
-        .o_we(res_we), .o_addr(res_addr), .o_data(res_data), .o_meta({red_seq, red_lastres}), .o_ev(red_ev),
+        .o_we(t_we), .o_addr(t_addr), .o_data(t_data), .o_meta(t_meta), .o_ev(t_ev),
         .busy(red_busy), .fault(red_f));
+    // the result tree (VM_DIST): RES_LAT registers, the result event travels with its data
+    generate if (RES_LAT == 0) begin : g_res_direct
+        assign res_we = t_we; assign res_addr = t_addr; assign res_data = t_data;
+        assign {red_seq, red_lastres} = t_meta; assign red_ev = t_ev; assign tree_busy = 1'b0;
+    end else begin : g_res_tree
+        reg [N/8-1:0]    p_we   [0:RES_LAT-1];
+        reg [N/8*AW-1:0] p_addr [0:RES_LAT-1];
+        reg [N/8*32-1:0] p_data [0:RES_LAT-1];
+        reg [8:0]        p_meta [0:RES_LAT-1];
+        reg [RES_LAT-1:0] p_ev;
+        reg [RES_LAT-1:0] p_live;
+        integer k;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin
+                p_ev <= 0; p_live <= 0;
+                for (k = 0; k < RES_LAT; k = k + 1) p_we[k] <= 0;
+            end else begin
+                p_we[0] <= t_we; p_ev[0] <= t_ev; p_live[0] <= t_ev || (|t_we);
+                for (k = 1; k < RES_LAT; k = k + 1) begin
+                    p_we[k] <= p_we[k-1]; p_ev[k] <= p_ev[k-1]; p_live[k] <= p_live[k-1];
+                end
+            end
+        end
+        always @(posedge clk) begin
+            p_addr[0] <= t_addr; p_data[0] <= t_data; p_meta[0] <= t_meta;
+            for (k = 1; k < RES_LAT; k = k + 1) begin
+                p_addr[k] <= p_addr[k-1]; p_data[k] <= p_data[k-1]; p_meta[k] <= p_meta[k-1];
+            end
+        end
+        assign res_we = p_we[RES_LAT-1]; assign res_addr = p_addr[RES_LAT-1]; assign res_data = p_data[RES_LAT-1];
+        assign {red_seq, red_lastres} = p_meta[RES_LAT-1]; assign red_ev = p_ev[RES_LAT-1];
+        assign tree_busy = |p_live;
+    end endgenerate
 
     assign dbg_emit = emit;
     assign dbg_eseq = a_seq;
@@ -696,7 +738,7 @@ module ot_hdc_v41x_vec #(
     // Status
     // =========================================================================================
     wire pipe_live = b_emit || bz_f || vp || bz_m || (|vml) || bz_s || (|vsl);
-    wire idle_c = (pst == 2'd0) && !a_v && !pipe_live && !red_busy;
+    wire idle_c = (pst == 2'd0) && !a_v && !pipe_live && !red_busy && !tree_busy;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin idle <= 1'b1; fault <= 1'b0; order_fault <= 1'b0; end
         else begin

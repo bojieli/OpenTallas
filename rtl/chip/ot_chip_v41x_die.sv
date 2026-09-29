@@ -106,6 +106,12 @@ module ot_chip_v41x_die #(
     parameter integer EROM_AW = 19,
     parameter integer CROM_AW = 15,
     parameter integer VM_AW   = FULL_SHAPE ? 19 : 16,
+    // opt-in distributed vector memory (ot_chip_v41x_tile VM_DIST; spec results/floorplan/v41_vm_dist_spec.json)
+    parameter integer VM_DIST = 0,
+    parameter integer X_GATHER_STAGES = 10,
+    parameter integer RET_SCATTER_STAGES = 10,
+    parameter integer SU_RES_STAGES = 7,
+    parameter integer COLL_WRITE_STAGES = 15,
     parameter integer LWIN    = 10,
     parameter integer LAW     = 12,
     parameter integer NPC_W   = 8,
@@ -435,7 +441,9 @@ module ot_chip_v41x_die #(
 
     ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
-                        .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW)) u_tile (
+                        .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW),
+                        .VM_DIST(VM_DIST), .X_GATHER_STAGES(X_GATHER_STAGES), .RET_SCATTER_STAGES(RET_SCATTER_STAGES),
+                        .SU_RES_STAGES(SU_RES_STAGES), .COLL_WRITE_STAGES(COLL_WRITE_STAGES)) u_tile (
         .clk(clk), .rst_n(rn),
         .start(t_start), .token(t_token), .pos(t_pos), .entry(host_mode ? host_entry : 14'd0),
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),

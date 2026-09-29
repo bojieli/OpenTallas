@@ -88,7 +88,18 @@ module ot_chip_v41x_tile #(
     parameter integer HROM_AW = 16,
     parameter integer EROM_AW = 19,
     parameter integer CROM_AW = 15,
-    parameter integer VM_AW   = FULL_SHAPE ? 19 : 16
+    parameter integer VM_AW   = FULL_SHAPE ? 19 : 16,
+    // DISTRIBUTED VM (rtl/chip/ot_v41_vm_dist.sv, spec results/floorplan/v41_vm_dist_spec.json): 1 replaces the
+    // flat vm array by SUN/8 lane-group banks (element e in group e mod SUN/8); the core adds the x-gather,
+    // result-scatter and SU result trees, this tile the collective write tree (COLL_WRITE_STAGES registers on
+    // port B's writes; the core sees coll_busy until they have landed).  The flat `vm` array then stays as the
+    // simulation image: loaded into the banks at the first edges, refreshed from them when the core's done
+    // rises.  0: the flat memory, bit- and cycle-identical to the tile before VM_DIST.
+    parameter integer VM_DIST = 0,
+    parameter integer X_GATHER_STAGES = 10,
+    parameter integer RET_SCATTER_STAGES = 10,
+    parameter integer SU_RES_STAGES = 7,
+    parameter integer COLL_WRITE_STAGES = 15
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -349,14 +360,17 @@ module ot_chip_v41x_tile #(
     end
     // One fault output: core, RoPE read, QE ROM and per-user index-slice faults
     // (main carried two drivers of fault and two core_fault declarations here).
-    assign fault = core_fault | rope_read_fault | qrom_rom_fault | idx_user_fault;
+    wire coll_wpend, vm_fault;           // VM_DIST: collective writes in flight; a distributed-VM port overflow
+    assign fault = core_fault | rope_read_fault | qrom_rom_fault | idx_user_fault | vm_fault;
 
     ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .AW(AW), .NW(NW), .INSTR_BITS(INSTR_BITS),
                        .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
                        .X_SEL(X_SEL), .X_EG(X_EG), .XSQ(XSQ), .XSW(XSW), .X_SU(X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW),
                        .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_MULTIUSER(IDX_MULTIUSER),
-                       .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS)) u_core (
+                       .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS),
+                       .VM_DIST(VM_DIST), .X_GATHER_STAGES(X_GATHER_STAGES),
+                       .RET_SCATTER_STAGES(RET_SCATTER_STAGES), .SU_RES_STAGES(SU_RES_STAGES)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(core_fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -366,7 +380,7 @@ module ot_chip_v41x_tile #(
         .rope_pf_fault(rope_pf_fault),
         .coll_go(coll_go), .coll_op(coll_op), .coll_src(coll_src), .coll_dst(coll_dst),
         .coll_ibase(coll_ibase), .coll_n(coll_n), .coll_k(coll_k), .coll_seq(coll_seq),
-        .coll_rnd(coll_rnd), .coll_busy(coll_busy), .coll_fault(coll_fault),
+        .coll_rnd(coll_rnd), .coll_busy(coll_busy || coll_wpend), .coll_fault(coll_fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .ewrom_re(ewrom_re), .ewrom_addr(ewrom_addr), .ewrom_q(ewrom_q),
@@ -477,6 +491,8 @@ module ot_chip_v41x_tile #(
         else if (start) rope_read_fault <= 1'b0;
         else if ((FULL_SHAPE && rope_pf_release && !rope_cache_match) || |rope_bad_lane)
             rope_read_fault <= 1'b1;
+    generate if (VM_DIST == 0) begin : g_vm_flat
+    assign coll_wpend = 1'b0; assign vm_fault = 1'b0;
     always @(posedge clk) begin
         if (prog_re) prog_q <= prog[prog_addr[PROG_AW-1:0]];
         if (wrom_re) wrom_q <= wrom[wrom_addr[WROM_AW-1:0]];
@@ -548,4 +564,163 @@ module ot_chip_v41x_tile #(
             if (xb_re) xb_rq[32*e +: 32] <= vm[{xb_raddr, 4'(e)}];
         end
     end
+    end else begin : g_vm_dist
+    // ---- ROM banks and SRAM other than the VM: the flat branch's statements for them -----------------
+    reg [4*SUN-1:0]    xs_was_vm;
+    reg [4*SUN*32-1:0] xs_rd_loc;
+    always @(posedge clk) begin
+        if (prog_re) prog_q <= prog[prog_addr[PROG_AW-1:0]];
+        if (wrom_re) wrom_q <= wrom[wrom_addr[WROM_AW-1:0]];
+        for (q = 0; q < SW; q = q + 1)
+            if (ewrom_re[q]) ewrom_q[q*G*W*16 +: G*W*16] <= wrom[ewrom_addr[q*AW +: WROM_AW]];
+        if (hrom_re) hrom_q <= hrom[hrom_addr[HROM_AW-1:0]];
+        for (q = 0; q < 8 * MG; q = q + 1)
+            mb_p[0][32*q +: 32] <= mbank[32'(mb_addr[(q % 8)*MBAW +: MBAW]) * (8 * MG) + q];
+        for (l = 1; l < ML; l = l + 1) mb_p[l] <= mb_p[l-1];
+        for (q = 0; q < 8; q = q + 1) if (hb_re[q]) hb_q[q*HHW*32 +: HHW*32] <= hbank[{hb_addr[q*HBAW +: HBAW], 3'(q)}];
+        if (erom_re) erom_q <= erom[erom_addr[EROM_AW-1:0]];
+        for (q = 0; q < 4*SW; q = q + 1) if (crom_re[q]) crom_q[64*q +: 64] <= crom[crom_addr[q*AW +: CROM_AW]];
+        if (xcrom_re) xcrom_q <= crom[xcrom_addr[CROM_AW-1:0]];
+        for (q = 0; q < 4*SUN; q = q + 1) if (xs_rd_re[q]) begin
+            xa = xs_rd_addr[q*AW +: AW];
+            xs_was_vm[q] <= xs_rd_src[2*q +: 2] == 2'd0;
+            case (xs_rd_src[2*q +: 2])
+                2'd0: ;
+                2'd1, 2'd2: begin
+                    if (FULL_SHAPE && rope_tagged[q])
+                        xs_rd_loc[32*q +: 32] <= rope_words[32*q +: 32];
+                    else if (xs_rd_src[2*q +: 2] == 2'd1)
+                        xs_rd_loc[32*q +: 32] <= crom[xa[CROM_AW-1:0]][31:0];
+                    else
+                        xs_rd_loc[32*q +: 32] <= crom[xa[CROM_AW-1:0]][63:32];
+                end
+                default: xs_rd_loc[32*q +: 32] <= {wrom[xa[6 +: WROM_AW]][16*xa[5:0] +: 16], 16'h0000};
+            endcase
+        end
+        if (l_re) l_q <= qlist[l_addr];
+        for (q = 0; q < SPW; q = q + 1) begin
+            if (qw_re) qw_q[q*256 +: 256] <= qwin[q][qw_raddr];
+            if (qw_we[q]) qwin[q][qw_waddr[q*LWIN +: LWIN]] <= qw_wdata[q*256 +: 256];
+        end
+    end
+
+    // ---- the collective write tree: port B's writes land COLL_WRITE_STAGES later -----------------------
+    wire [3:0]             cb_we4;
+    wire [4*(VM_AW-4)-1:0] cb_waddr4;
+    wire [4*512-1:0]       cb_wdata4;
+    wire                   cb_v;
+    ot_v41_vm_dist_pipe #(.W(4 + 4*(VM_AW-4) + 4*512), .D(COLL_WRITE_STAGES)) u_coll_tree (
+        .clk(clk), .rst_n(rst_n), .v(|xb_we4), .d({xb_we4, xb_waddr4, xb_wdata4}), .v_o(cb_v),
+        .d_o({cb_we4, cb_waddr4, cb_wdata4}), .pending(coll_wpend));
+
+    // ---- request lists (reads: stream unit first, then the tree clients; writes: the flat order) --------
+    localparam integer RX  = 5 * SUN;                                    // first tree read
+    localparam integer R_VX = RX, R_VS = R_VX + G, R_VI = R_VS + 4*SW, R_VQ = R_VI + SW, R_VR = R_VQ + 1,
+                       R_WQ = R_VR + 1, R_WX = R_WQ + 32, R_SL = R_WX + 32, R_VH = R_SL + XSQ*XSW,
+                       R_XI = R_VH + HS, R_XA = R_XI + 1, R_XB = R_XA + 16, NRD = R_XB + 16;
+    localparam integer W_H = 0, W_ME = W_H + 32, W_SU = W_ME + G*W, W_RD = W_SU + SW, W_XS = W_RD + SW,
+                       W_RS = W_XS + SUN, W_XE = W_RS + SUN/8, W_Q = W_XE + 1, W_X = W_Q + 32, W_AB = W_X + 32,
+                       NWR = W_AB + 16 * 5;
+    reg  [NRD-1:0] d_re; reg [NRD*VM_AW-1:0] d_ra; reg [NRD*3-1:0] d_rc;
+    wire [NRD*32-1:0] d_q;
+    reg  [NWR-1:0] d_we; reg [NWR*VM_AW-1:0] d_wa; reg [NWR*32-1:0] d_wd;
+    reg  [AW:0] ws;
+    integer r;
+    `define RD(ix, en, ad, kls) begin d_re[ix] = (en); d_ra[(ix)*VM_AW +: VM_AW] = VM_AW'(ad); d_rc[(ix)*3 +: 3] = 3'(kls); end
+    `define WR(i, en, ad, dat) begin ws = (AW+1)'(ad); d_we[i] = (en) && (ws < (1 << VM_AW)); \
+        d_wa[(i)*VM_AW +: VM_AW] = VM_AW'(ws); d_wd[(i)*32 +: 32] = (dat); end
+    integer cq, cl, ce;
+    always @(*) begin
+        d_re = 0; d_ra = 0; d_rc = 0; d_we = 0; d_wa = 0; d_wd = 0; ws = 0;
+        for (cq = 0; cq < SUN; cq = cq + 1) begin
+            for (cl = 0; cl < 4; cl = cl + 1)
+                `RD(4*cq + cl, xs_rd_re[4*cq + cl] && xs_rd_src[2*(4*cq + cl) +: 2] == 2'd0, xs_rd_addr[(4*cq + cl)*AW +: AW], cl)
+            `RD(4*SUN + cq, xs_vi_re[cq], xs_vi_addr[cq*AW +: AW], 4)
+        end
+        for (cq = 0; cq < G; cq = cq + 1) `RD(R_VX + cq, vx_re[cq], vx_addr[cq*AW +: AW], 5)
+        for (cq = 0; cq < 4*SW; cq = cq + 1) `RD(R_VS + cq, vs_re[cq], vs_addr[cq*AW +: AW], 5)
+        for (cq = 0; cq < SW; cq = cq + 1) `RD(R_VI + cq, vi_re[cq], vi_addr[cq*AW +: AW], 5)
+        `RD(R_VQ, vq_re, vq_addr, 5)
+        `RD(R_VR, vr_re, vr_addr, 5)
+        for (cq = 0; cq < 32; cq = cq + 1) `RD(R_WQ + cq, wqr_re, 32'(wqr_addr[VM_AW-1:0]) + cq, 5)
+        for (cq = 0; cq < 32; cq = cq + 1) `RD(R_WX + cq, wxr_re, 32'(wxr_addr[VM_AW-1:0]) + cq, 5)
+        for (cq = 0; cq < XSQ; cq = cq + 1)
+            for (cl = 0; cl < XSW; cl = cl + 1) `RD(R_SL + cq*XSW + cl, vsl_re[cq], 32'(vsl_addr[cq*AW +: VM_AW]) + cl, 5)
+        for (cq = 0; cq < HS; cq = cq + 1) `RD(R_VH + cq, vh_re[cq], vh_addr[cq*AW +: AW], 5)
+        `RD(R_XI, xi_re, xi_addr, 5)
+        for (ce = 0; ce < 16; ce = ce + 1) begin
+            `RD(R_XA + ce, xa_re, {xa_raddr, 4'(ce)}, 5)
+            `RD(R_XB + ce, xb_re, {xb_raddr, 4'(ce)}, 5)
+        end
+        // writes, in the flat memory's statement order
+        for (cq = 0; cq < 32; cq = cq + 1) `WR(W_H + cq, ww_h_we && ww_h_mask[cq], 32'(ww_h_addr[VM_AW-1:0]) + cq, ww_h_data[32*cq +: 32])
+        for (cq = 0; cq < G; cq = cq + 1)
+            for (cl = 0; cl < W; cl = cl + 1)
+                `WR(W_ME + cq*W + cl, vw_me_we[cq] && vw_me_mask[cq*W + cl], {vw_me_addr[cq*AW +: VM_AW-4], 4'b0} + cl,
+                    vw_me_data[32*(cq*W + cl) +: 32])
+        for (cq = 0; cq < SW; cq = cq + 1) `WR(W_SU + cq, vw_su_we[cq], vw_su_addr[cq*AW +: VM_AW], vw_su_data[32*cq +: 32])
+        for (cq = 0; cq < SW; cq = cq + 1) `WR(W_RD + cq, vw_rd_we[cq], vw_rd_addr[cq*AW +: VM_AW], vw_rd_data[32*cq +: 32])
+        for (cq = 0; cq < SUN; cq = cq + 1) `WR(W_XS + cq, xs_vm_we[cq], xs_vm_waddr[cq*AW +: VM_AW], xs_vm_wdata[32*cq +: 32])
+        for (cq = 0; cq < SUN/8; cq = cq + 1) `WR(W_RS + cq, xs_res_we[cq], xs_res_addr[cq*AW +: VM_AW], xs_res_data[32*cq +: 32])
+        `WR(W_XE, vw_xe_we, vw_xe_addr[VM_AW-1:0], vw_xe_data)
+        for (cq = 0; cq < 32; cq = cq + 1) `WR(W_Q + cq, ww_q_we && ww_q_mask[cq], 32'(ww_q_addr[VM_AW-1:0]) + cq, ww_q_data[32*cq +: 32])
+        for (cq = 0; cq < 32; cq = cq + 1) `WR(W_X + cq, ww_x_we && ww_x_mask[cq], 32'(ww_x_addr[VM_AW-1:0]) + cq, ww_x_data[32*cq +: 32])
+        for (ce = 0; ce < 16; ce = ce + 1) begin
+            `WR(W_AB + 5*ce, xa_we, {xa_waddr, 4'(ce)}, xa_wdata[32*ce +: 32])
+            for (cl = 0; cl < 4; cl = cl + 1)
+                `WR(W_AB + 5*ce + 1 + cl, cb_we4[cl], {cb_waddr4[cl*(VM_AW-4) +: (VM_AW-4)], 4'(ce)}, cb_wdata4[cl*512 + 32*ce +: 32])
+        end
+    end
+    `undef RD
+    `undef WR
+    reg bd_load = 1'b0, bd_dump = 1'b0;
+    ot_v41_vm_dist #(.NG(SUN / 8), .VMA(VM_AW), .NL(SUN), .NRD(NRD), .NWR(NWR), .WE0(W_XS)) u_vmd (
+        .clk(clk), .rst_n(rst_n), .rd_re(d_re), .rd_addr(d_ra), .rd_cls(d_rc), .rd_q(d_q),
+        .wr_we(d_we), .wr_addr(d_wa), .wr_data(d_wd), .bd_load(bd_load), .bd_dump(bd_dump), .fault(vm_fault));
+
+    // ---- read data: a port holds its last word between reads, as the flat memory's output registers do ---
+    reg [NRD-1:0]    live;
+    reg [NRD*32-1:0] hold;
+    always @(posedge clk) begin
+        live <= d_re;
+        for (r = 0; r < NRD; r = r + 1) if (live[r]) hold[r*32 +: 32] <= d_q[r*32 +: 32];
+    end
+    reg [NRD*32-1:0] rq;
+    always @(*) begin
+        for (r = 0; r < NRD; r = r + 1) rq[r*32 +: 32] = live[r] ? d_q[r*32 +: 32] : hold[r*32 +: 32];
+        for (cq = 0; cq < 4*SUN; cq = cq + 1) xs_rd_q[32*cq +: 32] = xs_was_vm[cq] ? rq[32*cq +: 32] : xs_rd_loc[32*cq +: 32];
+        xs_vi_q = rq[4*SUN*32 +: SUN*32];
+        vx_q = rq[R_VX*32 +: G*32];
+        vs_q = rq[R_VS*32 +: 4*SW*32];
+        vi_q = rq[R_VI*32 +: SW*32];
+        vq_q = rq[R_VQ*32 +: 32];
+        vr_q = rq[R_VR*32 +: 32];
+        wqr_q = rq[R_WQ*32 +: 1024];
+        wxr_q = rq[R_WX*32 +: 1024];
+        vsl_q = rq[R_SL*32 +: XSQ*XSW*32];
+        vh_q = rq[R_VH*32 +: HS*32];
+        xi_q = rq[R_XI*32 +: 32];
+        xa_rq = rq[R_XA*32 +: 512];
+        xb_rq = rq[R_XB*32 +: 512];
+    end
+    initial begin live = 0; hold = 0; xs_was_vm = 0; end
+
+    // ---- simulation image: vm -> banks at the first edges, banks -> vm when done rises -----------------
+    reg [1:0] bd_st = 2'd0;
+    reg done_q = 1'b0, dump_q = 1'b0;
+    integer bi;
+    always @(posedge clk) begin
+        if (bd_st == 2'd0) begin
+            for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) u_vmd.bd_img[bi] = vm[bi];
+            bd_st <= 2'd1;
+        end
+        bd_load <= (bd_st == 2'd0);
+        if (bd_st == 2'd1) bd_st <= 2'd2;
+        done_q <= done;
+        bd_dump <= done && !done_q;
+        dump_q <= bd_dump;
+        if (dump_q) for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) vm[bi] = u_vmd.bd_img[bi];
+    end
+    always @(posedge clk) if (vm_fault) $display("VMDIST_FAULT");
+    end endgenerate
 endmodule
