@@ -499,7 +499,7 @@ def main(argv=None):
                    golden="tools/hdc_golden_v41.py linear_q, HDC_V41_ARITH=chunk8",
                    checkpoint_revision=a.snapshot.name, checkpoint_header_sha256=ck.pins, seed=SEED,
                    simulator=f"verilator 5.050 ({VERILATOR})",
-                   params=dict(NSEG=NSEG, NCH=NCH, XF_Q=XF_Q, XF_BF=XF_BF, BST=2, RST=1, LV=5, RD=16, root_D=16, BF16=1, NCHB=8),
+                   params=dict(NSEG=NSEG, NCH=NCH, XF_Q=XF_Q, XF_BF=XF_BF, BST=2, RST=1, LV=5, RD=32, root_D=64, BF16=1, NCHB=8),
                    source_sha256={p: sha(ROOT / p) for p in srcs}, cases=out)
         a.output.parent.mkdir(parents=True, exist_ok=True)
         a.output.write_text(json.dumps(rec, indent=1) + "\n")

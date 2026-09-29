@@ -17,7 +17,8 @@ module ot_v41_rom_array #(
     parameter integer BST = 2,
     parameter integer RST = 1,
     parameter integer LV = 5,
-    parameter integer RD = 16,
+    parameter integer RD = 16,         // return-node FIFO depth
+    parameter integer ROOTD = 16,      // root combiner: pending partials and input queue (bench harness sizing)
     parameter integer BF16 = 0,
     parameter integer NB = 1,         // 2: elements are W1 macro pairs sharing one front end (N counts macros)
     parameter integer MTP = 0,        // 1: position-outer MTP (up to 6 positions)
@@ -157,7 +158,7 @@ module ot_v41_rom_array #(
         end
     end endgenerate
     wire rf;
-    ot_v41_ret_root u_root (.clk(clk), .rst_n(rst_n), .i_v(nv[L][0]), .i_t(nt[L][0]), .i_d(nd[L][0]),
+    ot_v41_ret_root #(.D(ROOTD), .QD(ROOTD)) u_root (.clk(clk), .rst_n(rst_n), .i_v(nv[L][0]), .i_t(nt[L][0]), .i_d(nd[L][0]),
         .i_e(ne[L][0]), .r_v(r_v), .r_row(r_row), .r_pos(r_pos), .r_fp32(r_fp32), .r_bf16(r_bf16), .r_e(r_e), .fault(rf));
     reg nf;
     integer k, m;
