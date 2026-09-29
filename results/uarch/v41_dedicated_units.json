@@ -125,15 +125,18 @@
       "result_bits": 1
      },
      "area_element_um2": {
-      "light": 4085,
+      "light": 7069,
       "sfu": 34451
      },
      "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
      "hardened": {
-      "light": null,
+      "light": {
+       "fmax_mhz": 1092.8,
+       "closed": true
+      },
       "sfu": null
      },
-     "area_mm2": 0.308,
+     "area_mm2": 0.332,
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 640,
@@ -178,7 +181,7 @@
      }
     }
    },
-   "hub_logic_mm2": 18.353,
+   "hub_logic_mm2": 18.377,
    "hub_avail_mm2": 233.7,
    "discrepancies": [
     "indexer: idx_macs 1024 is 0.062 NK=4 slices (not whole)"
@@ -307,15 +310,18 @@
       "result_bits": 16
      },
      "area_element_um2": {
-      "light": 4085,
+      "light": 7069,
       "sfu": 34451
      },
      "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
      "hardened": {
-      "light": null,
+      "light": {
+       "fmax_mhz": 1092.8,
+       "closed": true
+      },
       "sfu": null
      },
-     "area_mm2": 11.956,
+     "area_mm2": 14.249,
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -360,7 +366,7 @@
      }
     }
    },
-   "hub_logic_mm2": 50.323,
+   "hub_logic_mm2": 52.616,
    "hub_avail_mm2": 233.7,
    "discrepancies": []
   },
@@ -487,15 +493,18 @@
       "result_bits": 16
      },
      "area_element_um2": {
-      "light": 4085,
+      "light": 7069,
       "sfu": 34451
      },
      "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
      "hardened": {
-      "light": null,
+      "light": {
+       "fmax_mhz": 1092.8,
+       "closed": true
+      },
       "sfu": null
      },
-     "area_mm2": 11.956,
+     "area_mm2": 14.249,
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -540,7 +549,7 @@
      }
     }
    },
-   "hub_logic_mm2": 50.323,
+   "hub_logic_mm2": 52.616,
    "hub_avail_mm2": 233.7,
    "discrepancies": []
   },
@@ -667,15 +676,18 @@
       "result_bits": 16
      },
      "area_element_um2": {
-      "light": 4085,
+      "light": 7069,
       "sfu": 34451
      },
      "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
      "hardened": {
-      "light": null,
+      "light": {
+       "fmax_mhz": 1092.8,
+       "closed": true
+      },
       "sfu": null
      },
-     "area_mm2": 11.956,
+     "area_mm2": 14.249,
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -720,7 +732,7 @@
      }
     }
    },
-   "hub_logic_mm2": 50.323,
+   "hub_logic_mm2": 52.616,
    "hub_avail_mm2": 233.7,
    "discrepancies": []
   }
@@ -763,7 +775,7 @@
    "pv_out_bits_per_tile": 512,
    "area_est_um2": 260788.224,
    "area_basis": "ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
-   "hardened_record": "results/physical_abi3/asap7/hdc/v41x/w11/attn_tile_td32_nb4/physical.json",
+   "hardened_record": "results/physical_abi3/asap7/hdc/v41x/w11/attn_tile/physical.json",
    "hardened_scale": 1,
    "measured_record": "results/rtl/v41_full_attention_numeric/result.json",
    "measured_job_cycles_pwords1": 609,
@@ -779,19 +791,20 @@
    "area_est_light_um2": 4084.6590000000006,
    "area_est_sfu_um2": 34450.683,
    "area_basis": "ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the synthesis-only ot_hdc_v41_su_lane",
-   "hardened_record_light": "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024/physical.json",
-   "hardened_record_sfu": "results/physical_abi3/asap7/hdc/v41x/w11/vec_sfu1024/physical.json",
+   "hardened_record_light": "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json",
+   "hardened_record_sfu": "results/physical_abi3/asap7/hdc/v41x/w11/vec_sfu1024r/physical.json",
    "measured_record": "results/rtl/v41x_su_softmax.json",
    "measured_softmax_t640_n16_m8": 3280
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "476c16337afdcb86a528f92cc5fdc25518233876a232417a5b0610d7d5b5c95d",
+  "tools/uarch_model.py": "4c6417edace2c685f9b45bb11fb34f659b6f9254bf36398e5d071840503d7994",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json": "d147f1c3fe358a6d79e3a59cc13048c99f0168f246c74b6065e82ea291be3955",
   "results/rtl/v41_full_attention_numeric/result.json": "883442f90d7a7430e1a2b019e23da9fd724aedd706fe1cbbd5c43c0c4a942fba",
-  "results/rtl/v41x_su_softmax.json": "4937bac12f122b7f3a5120287ce27aeb211cbf57d0dab376ca4d0fc1849c2cc3"
+  "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json": "8d769cca3c2072c88e88e9769a3bd1873f6daf2e36b8358cad0a8cea9c8ae304",
+  "results/rtl/v41x_su_softmax.json": "e07463655922bcfb21c8364479b3632cf71705c116941994f63d20539b35bc75"
  }
 }
