@@ -20,7 +20,10 @@ from hdc_qwen_fullshape_placement import CONFIG, LOCK, GROUPS, matrix
 from hdc_qwen_layer0_rom import pinned_snapshot
 
 ROOT = Path(__file__).resolve().parents[1]
-LAYER_CODE_WORDS, LAYER_SCALE_WORDS = 992, 1488
+# Compact per-layer code/scale words at the die's group count (QWEN_O4_GROUPS)
+LAYER_CODE_WORDS, LAYER_SCALE_WORDS = {6144: (992, 1488), 5120: (1248, 1560)}[GROUPS]
+HEAD_PROGRAM_WORDS = {6144: 11, 5120: 12}[GROUPS]
+HEAD_CHUNKS = {6144: 7, 5120: 8}[GROUPS]
 LAYER_CROM_WORDS = 543233
 POST_SCALE_BASES = (535041, 539137)
 
@@ -109,7 +112,7 @@ def check_stage_isa(embed_words, embed_desc, layer, heads, rows):
     for die, profile in enumerate(heads):
         decoded = [QI.decode_instruction(int(word, 16)) for word in profile['program_hex']]
         me = [item for item in decoded if item['unit'] == I.UNIT_ME and not item['me_wsrc']]
-        if len(me) != 7 or me[0]['me_row0'] != 0:
+        if len(me) != HEAD_CHUNKS or me[0]['me_row0'] != 0:
             raise ValueError('head chunk or 18-bit row offset changed')
         if any(item['me_wbase'] != chunk['code_base'] or item['me_wcs'] != chunk['scale_base']
                or item['me_row0'] != chunk['first_row']
@@ -147,7 +150,7 @@ def binding(snapshot, out):
         files.append(write_hex(out, f'head_segments_d{die}',
                                (int(x, 16) for x in profile['descriptor_hex']), 64))
     files.append(write_final_norm(snapshot, out))
-    if (len(embed_words), layer['program_words'], heads[0]['program_words']) != (2, 33, 11):
+    if (len(embed_words), layer['program_words'], heads[0]['program_words']) != (2, 33, HEAD_PROGRAM_WORDS):
         raise ValueError('stage program word count changed')
     if QI.ROW_HIGH_OFFSET != 898 or QI.DESC_ROW_HIGH_OFFSET != 18:
         raise ValueError('18-bit row offset reserved bits changed')
@@ -183,7 +186,7 @@ def binding(snapshot, out):
                'tools/hdc_qwen_int8_image.py', 'tools/hdc_qwen_vocab_rom.py',
                'tools/hdc_program.py', 'tools/hdc_isa.py')
     manifest = {'schema': 'opentallas.qwen-o4-fulltoken-binding.v1',
-                'status': 'source_and_program_preflight', 'tp': 2, 'layers': 36,
+                'status': 'source_and_program_preflight', 'tp': 2, 'groups': GROUPS, 'layers': 36,
                 'stage_count': len(stages), 'checkpoint_revision': snapshot.name,
                 'checkpoint_lock_sha256': sha(LOCK), 'config_sha256': sha(CONFIG),
                 'checkpoint_index_sha256': sha(snapshot / 'model.safetensors.index.json'),

@@ -1,0 +1,2514 @@
+{
+ "schema": "opentallas.rtl.w11_su_spec/1",
+ "generated_at": "2026-09-29T17:25:27Z",
+ "contract": "Actual SU adapter: QK score -> exp score, sink denominator, post-PV divide.",
+ "fixture": "tools/rtl_v41x_su_softmax_campaign.fixture",
+ "heads": 16,
+ "head_dim": 512,
+ "reducer_levels": 7,
+ "clock_ghz": 1.034,
+ "model_issue": {
+  "vectors_H16_T640_N1024_M256": {
+   "scale+row max": 16,
+   "exp(s-max)+row sum": 48,
+   "sink denominator": 1,
+   "acc/den divide + BF16": 32
+  },
+  "depths": {
+   "linear_emit_to_write": 21,
+   "exp_in_S": 49,
+   "reducer": "26 + 3*log2(S/8) + 3*L (L = time levels when the row spans vectors)"
+  }
+ },
+ "builds": {
+  "adapt_N1024_M256": {
+   "wall_s": 1778.7,
+   "verilator_flags": [
+    "--unroll-count",
+    "4",
+    "-fno-dfg"
+   ],
+   "max_rss_gib": 30.88,
+   "note": "max RSS of the largest single process (verilator or one g++)",
+   "reused_from": {
+    "record": "results/rtl/w11_su_spec.json",
+    "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca"
+   }
+  },
+  "vec_N1024_M256": {
+   "wall_s": 1825.1,
+   "verilator_flags": [
+    "--unroll-count",
+    "4",
+    "-fno-dfg"
+   ],
+   "max_rss_gib": 30.88,
+   "note": "max RSS of the largest single process (verilator or one g++)",
+   "reused_from": {
+    "record": "results/rtl/w11_su_spec.json",
+    "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca"
+   }
+  },
+  "adapt_N16_M8": {
+   "wall_s": 46.1,
+   "verilator_flags": [
+    "--unroll-count",
+    "4",
+    "-fno-dfg"
+   ],
+   "max_rss_gib": 0.84,
+   "note": "max RSS of the largest single process (verilator or one g++)",
+   "reused_from": {
+    "record": "results/rtl/w11_su_spec.json",
+    "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca"
+   }
+  },
+  "vec_N16_M8": {
+   "wall_s": 41.7,
+   "verilator_flags": [
+    "--unroll-count",
+    "4",
+    "-fno-dfg"
+   ],
+   "max_rss_gib": 0.84,
+   "note": "max RSS of the largest single process (verilator or one g++)",
+   "reused_from": {
+    "record": "results/rtl/w11_su_spec.json",
+    "git_head": "807aeb5a08fd969fe6098333bb623b088276d6ca"
+   }
+  }
+ },
+ "configs": {
+  "N1024_M256": {
+   "N": 1024,
+   "M": 256,
+   "LV": 7,
+   "ports": {
+    "operand_read_streams": {
+     "streams": 4,
+     "words_per_stream": 1024,
+     "bits": 131072,
+     "addr_bits": 98304,
+     "note": "rd_addr / rd_q: A, B, C, D per lane, each 32 bits (VM, CROM lo/hi or WROM)"
+    },
+    "index_read": {
+     "words": 1024,
+     "bits": 32768,
+     "note": "vi_q: the gather index read (IND_I / IND_O)"
+    },
+    "element_write": {
+     "words": 1024,
+     "bits": 32768,
+     "note": "vm_we / vm_wdata"
+    },
+    "kv_write": {
+     "words": 1024,
+     "bits": 32768,
+     "note": "kv_we / kv_wdata (a separate KV SRAM port)"
+    },
+    "result_write": {
+     "words": 128,
+     "bits": 4096,
+     "note": "res_we / res_data: one per 8-lane chunk (N/8)"
+    },
+    "vm_banks_256b": {
+     "per_operand_stream": 128,
+     "all_four_operand_streams": 512,
+     "index_stream": 128,
+     "element_write": 128,
+     "result_write": 16,
+     "read_bits_per_cycle": 163840,
+     "write_bits_per_cycle": 36864,
+     "note": "the bench gives every lane and stream an independent one-cycle port; a banked VM needs every read stream's N words in distinct 256-bit banks each cycle (unit-stride rows), i.e. N*32/256 banks per stream.  The softmax chain uses A and B (VM) on op 0-3 and C (VM) on op 2; B is a broadcast per row (bso=1, bsi=0), so its N words hit one address."
+    },
+    "kv_banks_256b": 128,
+    "result_bits_per_cycle": 4096
+   },
+   "cases": {
+    "T128": {
+     "serial_adapt": {
+      "end_cycle": 375,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 360,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 20.65,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 12,
+         "last": 13,
+         "count": 2
+        },
+        "write": {
+         "first": 33,
+         "last": 34,
+         "count": 2
+        },
+        "result": {
+         "first": 71,
+         "last": 72,
+         "count": 2
+        },
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 1024,
+        "S": 128,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 4,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 59,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 59,
+        "first_emit_to_first_result": 59,
+        "last_write_to_last_result": 38
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 82,
+        "emit": {
+         "first": 88,
+         "last": 95,
+         "count": 8
+        },
+        "write": {
+         "first": 158,
+         "last": 165,
+         "count": 8
+        },
+        "result": {
+         "first": 196,
+         "last": 203,
+         "count": 8
+        },
+        "vectors": 8,
+        "layout_vectors": 8,
+        "vector_width": 256,
+        "S": 128,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 4,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 108,
+        "emit_span_cycles": 8,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 108,
+        "first_emit_to_first_result": 108,
+        "last_write_to_last_result": 38,
+        "accept_after_prev_done": 10,
+        "first_emit_after_prev_done": 16
+       },
+       {
+        "op": "sink denominator",
+        "accept": 213,
+        "emit": {
+         "first": 219,
+         "last": 219,
+         "count": 1
+        },
+        "write": {
+         "first": 289,
+         "last": 289,
+         "count": 1
+        },
+        "result": null,
+        "vectors": 1,
+        "layout_vectors": 1,
+        "vector_width": 256,
+        "S": 16,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 1,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 10,
+        "first_emit_after_prev_done": 16
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 291,
+        "emit": {
+         "first": 297,
+         "last": 328,
+         "count": 32
+        },
+        "write": {
+         "first": 334,
+         "last": 365,
+         "count": 32
+        },
+        "result": null,
+        "vectors": 32,
+        "layout_vectors": 32,
+        "vector_width": 256,
+        "S": 256,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 32,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 37,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       }
+      ],
+      "kv_written_words": 0,
+      "pass_": true
+     },
+     "serial_vec": {
+      "end_cycle": 371,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 356,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 18.54,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 11,
+         "last": 12,
+         "count": 2
+        },
+        "write": {
+         "first": 32,
+         "last": 33,
+         "count": 2
+        },
+        "result": {
+         "first": 70,
+         "last": 71,
+         "count": 2
+        },
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 1024,
+        "S": 128,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 4,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 59,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 59,
+        "first_emit_to_first_result": 59,
+        "last_write_to_last_result": 38
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 81,
+        "emit": {
+         "first": 86,
+         "last": 93,
+         "count": 8
+        },
+        "write": {
+         "first": 156,
+         "last": 163,
+         "count": 8
+        },
+        "result": {
+         "first": 194,
+         "last": 201,
+         "count": 8
+        },
+        "vectors": 8,
+        "layout_vectors": 8,
+        "vector_width": 256,
+        "S": 128,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 4,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 108,
+        "emit_span_cycles": 8,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 108,
+        "first_emit_to_first_result": 108,
+        "last_write_to_last_result": 38,
+        "accept_after_prev_done": 10,
+        "first_emit_after_prev_done": 15
+       },
+       {
+        "op": "sink denominator",
+        "accept": 211,
+        "emit": {
+         "first": 216,
+         "last": 216,
+         "count": 1
+        },
+        "write": {
+         "first": 286,
+         "last": 286,
+         "count": 1
+        },
+        "result": null,
+        "vectors": 1,
+        "layout_vectors": 1,
+        "vector_width": 256,
+        "S": 16,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 1,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 10,
+        "first_emit_after_prev_done": 15
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 288,
+        "emit": {
+         "first": 293,
+         "last": 324,
+         "count": 32
+        },
+        "write": {
+         "first": 330,
+         "last": 361,
+         "count": 32
+        },
+        "result": null,
+        "vectors": 32,
+        "layout_vectors": 32,
+        "vector_width": 256,
+        "S": 256,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 32,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 37,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       }
+      ],
+      "kv_written_words": 0,
+      "pass_": true
+     },
+     "chained": {
+      "end_cycle": 347,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 332,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 17.38,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 11,
+         "last": 12,
+         "count": 2
+        },
+        "write": {
+         "first": 32,
+         "last": 33,
+         "count": 2
+        },
+        "result": {
+         "first": 70,
+         "last": 71,
+         "count": 2
+        },
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 1024,
+        "S": 128,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 4,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 59,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 59,
+        "first_emit_to_first_result": 59,
+        "last_write_to_last_result": 38
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 72,
+        "emit": {
+         "first": 77,
+         "last": 84,
+         "count": 8
+        },
+        "write": {
+         "first": 147,
+         "last": 154,
+         "count": 8
+        },
+        "result": {
+         "first": 185,
+         "last": 192,
+         "count": 8
+        },
+        "vectors": 8,
+        "layout_vectors": 8,
+        "vector_width": 256,
+        "S": 128,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 4,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 0,
+         "ch_lead": 1,
+         "ch_mul": 64,
+         "w_rseq_en": 1,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 108,
+        "emit_span_cycles": 8,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 108,
+        "first_emit_to_first_result": 108,
+        "last_write_to_last_result": 38,
+        "accept_after_prev_done": 1,
+        "first_emit_after_prev_done": 6
+       },
+       {
+        "op": "sink denominator",
+        "accept": 193,
+        "emit": {
+         "first": 198,
+         "last": 198,
+         "count": 1
+        },
+        "write": {
+         "first": 268,
+         "last": 268,
+         "count": 1
+        },
+        "result": null,
+        "vectors": 1,
+        "layout_vectors": 1,
+        "vector_width": 256,
+        "S": 16,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 1,
+         "ch_lead": 1,
+         "ch_mul": 0,
+         "w_rseq_en": 1,
+         "w_rseq": 1
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 1,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 1,
+        "first_emit_after_prev_done": 6
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 198,
+        "emit": {
+         "first": 269,
+         "last": 300,
+         "count": 32
+        },
+        "write": {
+         "first": 306,
+         "last": 337,
+         "count": 32
+        },
+        "result": null,
+        "vectors": 32,
+        "layout_vectors": 32,
+        "vector_width": 256,
+        "S": 256,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 2,
+         "ch_lead": 1,
+         "ch_mul": 8,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 32,
+        "accept_to_first_emit": 71,
+        "emit_to_write": 37,
+        "accept_after_prev_done": -70,
+        "first_emit_after_prev_done": 1
+       }
+      ],
+      "schedule_reference_vm_mismatches": 0,
+      "kv_written_words": 0,
+      "pass_": true
+     }
+    },
+    "T640": {
+     "serial_adapt": {
+      "end_cycle": 431,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 416,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 23.47,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 12,
+         "last": 27,
+         "count": 16
+        },
+        "write": {
+         "first": 33,
+         "last": 48,
+         "count": 16
+        },
+        "result": {
+         "first": 80,
+         "last": 95,
+         "count": 16
+        },
+        "vectors": 16,
+        "layout_vectors": 16,
+        "vector_width": 1024,
+        "S": 1024,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 7,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 68,
+        "emit_span_cycles": 16,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 68,
+        "first_emit_to_first_result": 68,
+        "last_write_to_last_result": 47
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 97,
+        "emit": {
+         "first": 103,
+         "last": 150,
+         "count": 48
+        },
+        "write": {
+         "first": 173,
+         "last": 220,
+         "count": 48
+        },
+        "result": {
+         "first": 222,
+         "last": 267,
+         "count": 16
+        },
+        "vectors": 48,
+        "layout_vectors": 48,
+        "vector_width": 256,
+        "S": 256,
+        "span": true,
+        "time_levels": 2,
+        "tap_level": 5,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 117,
+        "emit_span_cycles": 48,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 117,
+        "first_emit_to_first_result": 119,
+        "last_write_to_last_result": 47,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       },
+       {
+        "op": "sink denominator",
+        "accept": 269,
+        "emit": {
+         "first": 275,
+         "last": 275,
+         "count": 1
+        },
+        "write": {
+         "first": 345,
+         "last": 345,
+         "count": 1
+        },
+        "result": null,
+        "vectors": 1,
+        "layout_vectors": 1,
+        "vector_width": 256,
+        "S": 16,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 1,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 347,
+        "emit": {
+         "first": 353,
+         "last": 384,
+         "count": 32
+        },
+        "write": {
+         "first": 390,
+         "last": 421,
+         "count": 32
+        },
+        "result": null,
+        "vectors": 32,
+        "layout_vectors": 32,
+        "vector_width": 256,
+        "S": 256,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 32,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 37,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       }
+      ],
+      "kv_written_words": 0,
+      "pass_": true
+     },
+     "serial_vec": {
+      "end_cycle": 427,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 412,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 21.3,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 11,
+         "last": 26,
+         "count": 16
+        },
+        "write": {
+         "first": 32,
+         "last": 47,
+         "count": 16
+        },
+        "result": {
+         "first": 79,
+         "last": 94,
+         "count": 16
+        },
+        "vectors": 16,
+        "layout_vectors": 16,
+        "vector_width": 1024,
+        "S": 1024,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 7,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 68,
+        "emit_span_cycles": 16,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 68,
+        "first_emit_to_first_result": 68,
+        "last_write_to_last_result": 47
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 96,
+        "emit": {
+         "first": 101,
+         "last": 148,
+         "count": 48
+        },
+        "write": {
+         "first": 171,
+         "last": 218,
+         "count": 48
+        },
+        "result": {
+         "first": 220,
+         "last": 265,
+         "count": 16
+        },
+        "vectors": 48,
+        "layout_vectors": 48,
+        "vector_width": 256,
+        "S": 256,
+        "span": true,
+        "time_levels": 2,
+        "tap_level": 5,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 117,
+        "emit_span_cycles": 48,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 117,
+        "first_emit_to_first_result": 119,
+        "last_write_to_last_result": 47,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       },
+       {
+        "op": "sink denominator",
+        "accept": 267,
+        "emit": {
+         "first": 272,
+         "last": 272,
+         "count": 1
+        },
+        "write": {
+         "first": 342,
+         "last": 342,
+         "count": 1
+        },
+        "result": null,
+        "vectors": 1,
+        "layout_vectors": 1,
+        "vector_width": 256,
+        "S": 16,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 1,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 344,
+        "emit": {
+         "first": 349,
+         "last": 380,
+         "count": 32
+        },
+        "write": {
+         "first": 386,
+         "last": 417,
+         "count": 32
+        },
+        "result": null,
+        "vectors": 32,
+        "layout_vectors": 32,
+        "vector_width": 256,
+        "S": 256,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 32,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 37,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       }
+      ],
+      "kv_written_words": 0,
+      "pass_": true
+     },
+     "chained": {
+      "end_cycle": 419,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 404,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 20.86,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 11,
+         "last": 26,
+         "count": 16
+        },
+        "write": {
+         "first": 32,
+         "last": 47,
+         "count": 16
+        },
+        "result": {
+         "first": 79,
+         "last": 94,
+         "count": 16
+        },
+        "vectors": 16,
+        "layout_vectors": 16,
+        "vector_width": 1024,
+        "S": 1024,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 7,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 68,
+        "emit_span_cycles": 16,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 68,
+        "first_emit_to_first_result": 68,
+        "last_write_to_last_result": 47
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 95,
+        "emit": {
+         "first": 100,
+         "last": 147,
+         "count": 48
+        },
+        "write": {
+         "first": 170,
+         "last": 217,
+         "count": 48
+        },
+        "result": {
+         "first": 219,
+         "last": 264,
+         "count": 16
+        },
+        "vectors": 48,
+        "layout_vectors": 48,
+        "vector_width": 256,
+        "S": 256,
+        "span": true,
+        "time_levels": 2,
+        "tap_level": 5,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 0,
+         "ch_lead": 2,
+         "ch_mul": 85,
+         "w_rseq_en": 1,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 117,
+        "emit_span_cycles": 48,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 117,
+        "first_emit_to_first_result": 119,
+        "last_write_to_last_result": 47,
+        "accept_after_prev_done": 1,
+        "first_emit_after_prev_done": 6
+       },
+       {
+        "op": "sink denominator",
+        "accept": 265,
+        "emit": {
+         "first": 270,
+         "last": 270,
+         "count": 1
+        },
+        "write": {
+         "first": 340,
+         "last": 340,
+         "count": 1
+        },
+        "result": null,
+        "vectors": 1,
+        "layout_vectors": 1,
+        "vector_width": 256,
+        "S": 16,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 1,
+         "ch_lead": 1,
+         "ch_mul": 0,
+         "w_rseq_en": 1,
+         "w_rseq": 1
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 1,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 1,
+        "first_emit_after_prev_done": 6
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 270,
+        "emit": {
+         "first": 341,
+         "last": 372,
+         "count": 32
+        },
+        "write": {
+         "first": 378,
+         "last": 409,
+         "count": 32
+        },
+        "result": null,
+        "vectors": 32,
+        "layout_vectors": 32,
+        "vector_width": 256,
+        "S": 256,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 2,
+         "ch_lead": 1,
+         "ch_mul": 8,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 32,
+        "accept_to_first_emit": 71,
+        "emit_to_write": 37,
+        "accept_after_prev_done": -70,
+        "first_emit_after_prev_done": 1
+       }
+      ],
+      "schedule_reference_vm_mismatches": 0,
+      "kv_written_words": 0,
+      "pass_": true
+     }
+    }
+   }
+  },
+  "N16_M8": {
+   "N": 16,
+   "M": 8,
+   "LV": 7,
+   "ports": {
+    "operand_read_streams": {
+     "streams": 4,
+     "words_per_stream": 16,
+     "bits": 2048,
+     "addr_bits": 1536,
+     "note": "rd_addr / rd_q: A, B, C, D per lane, each 32 bits (VM, CROM lo/hi or WROM)"
+    },
+    "index_read": {
+     "words": 16,
+     "bits": 512,
+     "note": "vi_q: the gather index read (IND_I / IND_O)"
+    },
+    "element_write": {
+     "words": 16,
+     "bits": 512,
+     "note": "vm_we / vm_wdata"
+    },
+    "kv_write": {
+     "words": 16,
+     "bits": 512,
+     "note": "kv_we / kv_wdata (a separate KV SRAM port)"
+    },
+    "result_write": {
+     "words": 2,
+     "bits": 64,
+     "note": "res_we / res_data: one per 8-lane chunk (N/8)"
+    },
+    "vm_banks_256b": {
+     "per_operand_stream": 2,
+     "all_four_operand_streams": 8,
+     "index_stream": 2,
+     "element_write": 2,
+     "result_write": 1,
+     "read_bits_per_cycle": 2560,
+     "write_bits_per_cycle": 576,
+     "note": "the bench gives every lane and stream an independent one-cycle port; a banked VM needs every read stream's N words in distinct 256-bit banks each cycle (unit-stride rows), i.e. N*32/256 banks per stream.  The softmax chain uses A and B (VM) on op 0-3 and C (VM) on op 2; B is a broadcast per row (bso=1, bsi=0), so its N words hit one address."
+    },
+    "kv_banks_256b": 2,
+    "result_bits_per_cycle": 64
+   },
+   "cases": {
+    "T128": {
+     "serial_adapt": {
+      "end_cycle": 1726,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 1711,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 1.4,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 12,
+         "last": 139,
+         "count": 128
+        },
+        "write": {
+         "first": 33,
+         "last": 160,
+         "count": 128
+        },
+        "result": {
+         "first": 78,
+         "last": 198,
+         "count": 16
+        },
+        "vectors": 128,
+        "layout_vectors": 128,
+        "vector_width": 16,
+        "S": 16,
+        "span": true,
+        "time_levels": 3,
+        "tap_level": 1,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 59,
+        "emit_span_cycles": 128,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 59,
+        "first_emit_to_first_result": 66,
+        "last_write_to_last_result": 38
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 200,
+        "emit": {
+         "first": 206,
+         "last": 461,
+         "count": 256
+        },
+        "write": {
+         "first": 276,
+         "last": 531,
+         "count": 256
+        },
+        "result": {
+         "first": 329,
+         "last": 569,
+         "count": 16
+        },
+        "vectors": 256,
+        "layout_vectors": 256,
+        "vector_width": 8,
+        "S": 8,
+        "span": true,
+        "time_levels": 4,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 108,
+        "emit_span_cycles": 256,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 108,
+        "first_emit_to_first_result": 123,
+        "last_write_to_last_result": 38,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       },
+       {
+        "op": "sink denominator",
+        "accept": 571,
+        "emit": {
+         "first": 577,
+         "last": 578,
+         "count": 2
+        },
+        "write": {
+         "first": 647,
+         "last": 648,
+         "count": 2
+        },
+        "result": null,
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 650,
+        "emit": {
+         "first": 656,
+         "last": 1679,
+         "count": 1024
+        },
+        "write": {
+         "first": 693,
+         "last": 1716,
+         "count": 1024
+        },
+        "result": null,
+        "vectors": 1024,
+        "layout_vectors": 1024,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 1024,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 37,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       }
+      ],
+      "kv_written_words": 0,
+      "pass_": true
+     },
+     "serial_vec": {
+      "end_cycle": 1722,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 1707,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 1.31,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 11,
+         "last": 138,
+         "count": 128
+        },
+        "write": {
+         "first": 32,
+         "last": 159,
+         "count": 128
+        },
+        "result": {
+         "first": 77,
+         "last": 197,
+         "count": 16
+        },
+        "vectors": 128,
+        "layout_vectors": 128,
+        "vector_width": 16,
+        "S": 16,
+        "span": true,
+        "time_levels": 3,
+        "tap_level": 1,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 59,
+        "emit_span_cycles": 128,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 59,
+        "first_emit_to_first_result": 66,
+        "last_write_to_last_result": 38
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 199,
+        "emit": {
+         "first": 204,
+         "last": 459,
+         "count": 256
+        },
+        "write": {
+         "first": 274,
+         "last": 529,
+         "count": 256
+        },
+        "result": {
+         "first": 327,
+         "last": 567,
+         "count": 16
+        },
+        "vectors": 256,
+        "layout_vectors": 256,
+        "vector_width": 8,
+        "S": 8,
+        "span": true,
+        "time_levels": 4,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 108,
+        "emit_span_cycles": 256,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 108,
+        "first_emit_to_first_result": 123,
+        "last_write_to_last_result": 38,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       },
+       {
+        "op": "sink denominator",
+        "accept": 569,
+        "emit": {
+         "first": 574,
+         "last": 575,
+         "count": 2
+        },
+        "write": {
+         "first": 644,
+         "last": 645,
+         "count": 2
+        },
+        "result": null,
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 647,
+        "emit": {
+         "first": 652,
+         "last": 1675,
+         "count": 1024
+        },
+        "write": {
+         "first": 689,
+         "last": 1712,
+         "count": 1024
+        },
+        "result": null,
+        "vectors": 1024,
+        "layout_vectors": 1024,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 1024,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 37,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       }
+      ],
+      "kv_written_words": 0,
+      "pass_": true
+     },
+     "chained": {
+      "end_cycle": 1714,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 1699,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 1.41,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 11,
+         "last": 138,
+         "count": 128
+        },
+        "write": {
+         "first": 32,
+         "last": 159,
+         "count": 128
+        },
+        "result": {
+         "first": 77,
+         "last": 197,
+         "count": 16
+        },
+        "vectors": 128,
+        "layout_vectors": 128,
+        "vector_width": 16,
+        "S": 16,
+        "span": true,
+        "time_levels": 3,
+        "tap_level": 1,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 59,
+        "emit_span_cycles": 128,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 59,
+        "first_emit_to_first_result": 66,
+        "last_write_to_last_result": 38
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 198,
+        "emit": {
+         "first": 203,
+         "last": 458,
+         "count": 256
+        },
+        "write": {
+         "first": 273,
+         "last": 528,
+         "count": 256
+        },
+        "result": {
+         "first": 326,
+         "last": 566,
+         "count": 16
+        },
+        "vectors": 256,
+        "layout_vectors": 256,
+        "vector_width": 8,
+        "S": 8,
+        "span": true,
+        "time_levels": 4,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 0,
+         "ch_lead": 1,
+         "ch_mul": 128,
+         "w_rseq_en": 1,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 108,
+        "emit_span_cycles": 256,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 108,
+        "first_emit_to_first_result": 123,
+        "last_write_to_last_result": 38,
+        "accept_after_prev_done": 1,
+        "first_emit_after_prev_done": 6
+       },
+       {
+        "op": "sink denominator",
+        "accept": 567,
+        "emit": {
+         "first": 572,
+         "last": 573,
+         "count": 2
+        },
+        "write": {
+         "first": 642,
+         "last": 643,
+         "count": 2
+        },
+        "result": null,
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 1,
+         "ch_lead": 1,
+         "ch_mul": 32768,
+         "w_rseq_en": 1,
+         "w_rseq": 1
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 1,
+        "first_emit_after_prev_done": 6
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 572,
+        "emit": {
+         "first": 644,
+         "last": 1667,
+         "count": 1024
+        },
+        "write": {
+         "first": 681,
+         "last": 1704,
+         "count": 1024
+        },
+        "result": null,
+        "vectors": 1024,
+        "layout_vectors": 1024,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 2,
+         "ch_lead": 2,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 1024,
+        "accept_to_first_emit": 72,
+        "emit_to_write": 37,
+        "accept_after_prev_done": -71,
+        "first_emit_after_prev_done": 1
+       }
+      ],
+      "schedule_reference_vm_mismatches": 0,
+      "kv_written_words": 0,
+      "pass_": true
+     }
+    },
+    "T640": {
+     "serial_adapt": {
+      "end_cycle": 3280,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 3265,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 2.9,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 12,
+         "last": 651,
+         "count": 640
+        },
+        "write": {
+         "first": 33,
+         "last": 672,
+         "count": 640
+        },
+        "result": {
+         "first": 119,
+         "last": 719,
+         "count": 16
+        },
+        "vectors": 640,
+        "layout_vectors": 640,
+        "vector_width": 16,
+        "S": 16,
+        "span": true,
+        "time_levels": 6,
+        "tap_level": 1,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 68,
+        "emit_span_cycles": 640,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 68,
+        "first_emit_to_first_result": 107,
+        "last_write_to_last_result": 47
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 721,
+        "emit": {
+         "first": 727,
+         "last": 2006,
+         "count": 1280
+        },
+        "write": {
+         "first": 797,
+         "last": 2076,
+         "count": 1280
+        },
+        "result": {
+         "first": 923,
+         "last": 2123,
+         "count": 16
+        },
+        "vectors": 1280,
+        "layout_vectors": 1280,
+        "vector_width": 8,
+        "S": 8,
+        "span": true,
+        "time_levels": 7,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 117,
+        "emit_span_cycles": 1280,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 117,
+        "first_emit_to_first_result": 196,
+        "last_write_to_last_result": 47,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       },
+       {
+        "op": "sink denominator",
+        "accept": 2125,
+        "emit": {
+         "first": 2131,
+         "last": 2132,
+         "count": 2
+        },
+        "write": {
+         "first": 2201,
+         "last": 2202,
+         "count": 2
+        },
+        "result": null,
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 2204,
+        "emit": {
+         "first": 2210,
+         "last": 3233,
+         "count": 1024
+        },
+        "write": {
+         "first": 2247,
+         "last": 3270,
+         "count": 1024
+        },
+        "result": null,
+        "vectors": 1024,
+        "layout_vectors": 1024,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 1024,
+        "accept_to_first_emit": 6,
+        "emit_to_write": 37,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 8
+       }
+      ],
+      "kv_written_words": 0,
+      "pass_": true
+     },
+     "serial_vec": {
+      "end_cycle": 3276,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 3261,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 3.05,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 11,
+         "last": 650,
+         "count": 640
+        },
+        "write": {
+         "first": 32,
+         "last": 671,
+         "count": 640
+        },
+        "result": {
+         "first": 118,
+         "last": 718,
+         "count": 16
+        },
+        "vectors": 640,
+        "layout_vectors": 640,
+        "vector_width": 16,
+        "S": 16,
+        "span": true,
+        "time_levels": 6,
+        "tap_level": 1,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 68,
+        "emit_span_cycles": 640,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 68,
+        "first_emit_to_first_result": 107,
+        "last_write_to_last_result": 47
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 720,
+        "emit": {
+         "first": 725,
+         "last": 2004,
+         "count": 1280
+        },
+        "write": {
+         "first": 795,
+         "last": 2074,
+         "count": 1280
+        },
+        "result": {
+         "first": 921,
+         "last": 2121,
+         "count": 16
+        },
+        "vectors": 1280,
+        "layout_vectors": 1280,
+        "vector_width": 8,
+        "S": 8,
+        "span": true,
+        "time_levels": 7,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 117,
+        "emit_span_cycles": 1280,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 117,
+        "first_emit_to_first_result": 196,
+        "last_write_to_last_result": 47,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       },
+       {
+        "op": "sink denominator",
+        "accept": 2123,
+        "emit": {
+         "first": 2128,
+         "last": 2129,
+         "count": 2
+        },
+        "write": {
+         "first": 2198,
+         "last": 2199,
+         "count": 2
+        },
+        "result": null,
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 2201,
+        "emit": {
+         "first": 2206,
+         "last": 3229,
+         "count": 1024
+        },
+        "write": {
+         "first": 2243,
+         "last": 3266,
+         "count": 1024
+        },
+        "result": null,
+        "vectors": 1024,
+        "layout_vectors": 1024,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 1,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 1024,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 37,
+        "accept_after_prev_done": 2,
+        "first_emit_after_prev_done": 7
+       }
+      ],
+      "kv_written_words": 0,
+      "pass_": true
+     },
+     "chained": {
+      "end_cycle": 3268,
+      "completed": true,
+      "first_accept_to_last_write_cycles": 3253,
+      "whole_vm_mismatches": 0,
+      "region_mismatches": {
+       "exp_scores": 0,
+       "maximum": 0,
+       "exp_sum": 0,
+       "denominator": 0,
+       "output_bf16": 0
+      },
+      "faults": 0,
+      "order_faults": 0,
+      "sim_wall_s": 3.08,
+      "ops": [
+       {
+        "op": "scale+row max",
+        "accept": 6,
+        "emit": {
+         "first": 11,
+         "last": 650,
+         "count": 640
+        },
+        "write": {
+         "first": 32,
+         "last": 671,
+         "count": 640
+        },
+        "result": {
+         "first": 118,
+         "last": 718,
+         "count": 16
+        },
+        "vectors": 640,
+        "layout_vectors": 640,
+        "vector_width": 16,
+        "S": 16,
+        "span": true,
+        "time_levels": 6,
+        "tap_level": 1,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 0,
+         "ch_seq": 0,
+         "ch_lead": 0,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 21,
+        "model_depth_emit_to_result": 68,
+        "emit_span_cycles": 640,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 21,
+        "last_emit_to_last_result": 68,
+        "first_emit_to_first_result": 107,
+        "last_write_to_last_result": 47
+       },
+       {
+        "op": "exp(s-max)+row sum",
+        "accept": 719,
+        "emit": {
+         "first": 724,
+         "last": 2003,
+         "count": 1280
+        },
+        "write": {
+         "first": 794,
+         "last": 2073,
+         "count": 1280
+        },
+        "result": {
+         "first": 920,
+         "last": 2120,
+         "count": 16
+        },
+        "vectors": 1280,
+        "layout_vectors": 1280,
+        "vector_width": 8,
+        "S": 8,
+        "span": true,
+        "time_levels": 7,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 0,
+         "ch_lead": 1,
+         "ch_mul": 128,
+         "w_rseq_en": 1,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 117,
+        "emit_span_cycles": 1280,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "last_emit_to_last_result": 117,
+        "first_emit_to_first_result": 196,
+        "last_write_to_last_result": 47,
+        "accept_after_prev_done": 1,
+        "first_emit_after_prev_done": 6
+       },
+       {
+        "op": "sink denominator",
+        "accept": 2121,
+        "emit": {
+         "first": 2126,
+         "last": 2127,
+         "count": 2
+        },
+        "write": {
+         "first": 2196,
+         "last": 2197,
+         "count": 2
+        },
+        "result": null,
+        "vectors": 2,
+        "layout_vectors": 2,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 1,
+         "ch_lead": 1,
+         "ch_mul": 65535,
+         "w_rseq_en": 1,
+         "w_rseq": 1
+        },
+        "model_depth_emit_to_write": 70,
+        "model_depth_emit_to_result": 96,
+        "emit_span_cycles": 2,
+        "accept_to_first_emit": 5,
+        "emit_to_write": 70,
+        "accept_after_prev_done": 1,
+        "first_emit_after_prev_done": 6
+       },
+       {
+        "op": "acc/den divide + BF16",
+        "accept": 2126,
+        "emit": {
+         "first": 2198,
+         "last": 3221,
+         "count": 1024
+        },
+        "write": {
+         "first": 2235,
+         "last": 3258,
+         "count": 1024
+        },
+        "result": null,
+        "vectors": 1024,
+        "layout_vectors": 1024,
+        "vector_width": 8,
+        "S": 8,
+        "span": false,
+        "time_levels": 0,
+        "tap_level": 0,
+        "chain": {
+         "w_idle": 0,
+         "ch_src": 1,
+         "ch_seq": 2,
+         "ch_lead": 2,
+         "ch_mul": 0,
+         "w_rseq_en": 0,
+         "w_rseq": 0
+        },
+        "model_depth_emit_to_write": 37,
+        "model_depth_emit_to_result": 63,
+        "emit_span_cycles": 1024,
+        "accept_to_first_emit": 72,
+        "emit_to_write": 37,
+        "accept_after_prev_done": -71,
+        "first_emit_after_prev_done": 1
+       }
+      ],
+      "schedule_reference_vm_mismatches": 0,
+      "kv_written_words": 0,
+      "pass_": true
+     }
+    }
+   }
+  }
+ },
+ "model_vector_check": {
+  "serial_adapt": [
+   {
+    "op": "scale+row max",
+    "model": 16,
+    "measured": 16,
+    "equal": true
+   },
+   {
+    "op": "exp(s-max)+row sum",
+    "model": 48,
+    "measured": 48,
+    "equal": true
+   },
+   {
+    "op": "sink denominator",
+    "model": 1,
+    "measured": 1,
+    "equal": true
+   },
+   {
+    "op": "acc/den divide + BF16",
+    "model": 32,
+    "measured": 32,
+    "equal": true
+   }
+  ],
+  "serial_vec": [
+   {
+    "op": "scale+row max",
+    "model": 16,
+    "measured": 16,
+    "equal": true
+   },
+   {
+    "op": "exp(s-max)+row sum",
+    "model": 48,
+    "measured": 48,
+    "equal": true
+   },
+   {
+    "op": "sink denominator",
+    "model": 1,
+    "measured": 1,
+    "equal": true
+   },
+   {
+    "op": "acc/den divide + BF16",
+    "model": 32,
+    "measured": 32,
+    "equal": true
+   }
+  ],
+  "chained": [
+   {
+    "op": "scale+row max",
+    "model": 16,
+    "measured": 16,
+    "equal": true
+   },
+   {
+    "op": "exp(s-max)+row sum",
+    "model": 48,
+    "measured": 48,
+    "equal": true
+   },
+   {
+    "op": "sink denominator",
+    "model": 1,
+    "measured": 1,
+    "equal": true
+   },
+   {
+    "op": "acc/den divide + BF16",
+    "model": 32,
+    "measured": 32,
+    "equal": true
+   }
+  ]
+ },
+ "pass_": true,
+ "git_head": "5affab643823b987f4012f543356fe32bd0d925b",
+ "git_dirty_tracked_files": [
+  "results/rtl/w11_su_checkpoint_fix.json"
+ ],
+ "host": "ubuntu",
+ "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+ "input_sha256": {
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "5a88f2536d8e4f1e54bc9ea6c969af33ed1ae4b4c914aae561cb6601715745a6",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "94d0d16aff5cb5d366fd189b64058c18f02aec242e1b414084eef5de1806eeb0",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "caa46eb92238986b91b67615df7a30a1f17b5b27ddee84284e06cd58f6a9b528",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "fa4f7bf762971004ffa7c7df253ef6789a9e0dd9c351ee3b71fc8d8d4150ae99",
+  "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": "50b064308d64bacd94be46ab6888c218749d4f75fe4007f73907740f1069dd1b",
+  "rtl/test/tb_hdc_v41x_su_softmax.sv": "9ef5ad577e72f7e710fc58b2c3359c9a8936b2a5c2c12227fc1b18549d92a4d5",
+  "rtl/test/tb_hdc_v41x_vec.sv": "c636a367b5d0192a03cc25252dbcd3d7d8ee2c7743bab90cc5a9c1bfd1ddab88",
+  "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
+  "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1",
+  "tools/w11_su_softmax_spec.py": "7170181fab354d52ce70d27d40158a2c916c2860ad811d23bd14576007b3a660",
+  "tools/rtl_v41x_su_softmax_campaign.py": "935a56f9c93466ffbda5c29c2c8a24723dac372b88008ad8f8b5a94904bbe770",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+  "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692"
+ }
+}

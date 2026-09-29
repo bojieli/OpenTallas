@@ -1,0 +1,1621 @@
+{
+ "schema": "opentallas.uarch.economics.v1",
+ "summary": [
+  {
+   "design": "Qwen ROM AR (G = 6,144)",
+   "tokens_s_b1": 9851.1,
+   "energy_mJ_b1": 86.529,
+   "sat_batch": 2,
+   "sat_aggregate_tokens_s": 11920.9,
+   "sat_per_user_tokens_s": 5960.5,
+   "energy_mJ_sat": 84.74,
+   "capacity_users": 268
+  },
+  {
+   "design": "Qwen HBM tier 3 AR",
+   "tokens_s_b1": 880.6,
+   "energy_mJ_b1": 982.788,
+   "sat_batch": 16,
+   "sat_aggregate_tokens_s": 6683.6,
+   "sat_per_user_tokens_s": 417.7,
+   "energy_mJ_sat": 133.053,
+   "capacity_users": 255
+  },
+  {
+   "design": "Qwen HBM tier 3 DFlash",
+   "tokens_s_b1": 2671.0,
+   "energy_mJ_b1": 358.12,
+   "sat_batch": 8,
+   "sat_aggregate_tokens_s": 7100.8,
+   "sat_per_user_tokens_s": 887.6,
+   "energy_mJ_sat": 129.123,
+   "capacity_users": 255
+  },
+  {
+   "design": "Qwen 1x B200 AR (tier 2)",
+   "tokens_s_b1": 331.0,
+   "energy_mJ_b1": 2081.44,
+   "sat_batch": 255,
+   "sat_aggregate_tokens_s": 7907.0,
+   "sat_per_user_tokens_s": 31.0,
+   "energy_mJ_sat": 87.14,
+   "capacity_users": 255
+  },
+  {
+   "design": "V4.1 ROM AR",
+   "tokens_s_b1": 3808.8,
+   "energy_mJ_b1": 3429.023,
+   "sat_batch": 32,
+   "sat_aggregate_tokens_s": 77021.9,
+   "sat_per_user_tokens_s": 2406.9,
+   "energy_mJ_sat": 208.432,
+   "capacity_users": 866
+  },
+  {
+   "design": "V4.1 ROM MTP m = 1",
+   "tokens_s_b1": 5856.5,
+   "energy_mJ_b1": 2243.349,
+   "sat_batch": 16,
+   "sat_aggregate_tokens_s": 50708.4,
+   "sat_per_user_tokens_s": 3169.3,
+   "energy_mJ_sat": 294.357,
+   "capacity_users": 866
+  },
+  {
+   "design": "V4.1 HBM tier 3 AR",
+   "tokens_s_b1": 2919.8,
+   "energy_mJ_b1": 3692.01,
+   "sat_batch": 16,
+   "sat_aggregate_tokens_s": 21791.8,
+   "sat_per_user_tokens_s": 1362.0,
+   "energy_mJ_sat": 913.166,
+   "capacity_users": 811
+  },
+  {
+   "design": "V4.1 HBM tier 3 MTP",
+   "tokens_s_b1": 5673.0,
+   "energy_mJ_b1": 2286.842,
+   "sat_batch": 4,
+   "sat_aggregate_tokens_s": 12122.1,
+   "sat_per_user_tokens_s": 3030.5,
+   "energy_mJ_sat": 1676.057,
+   "capacity_users": 811
+  },
+  {
+   "design": "V4.1 8x B200 AR (tier 2)",
+   "tokens_s_b1": 277.7,
+   "energy_mJ_b1": 19851.78,
+   "sat_batch": 839,
+   "sat_aggregate_tokens_s": 13018.3,
+   "sat_per_user_tokens_s": 15.5,
+   "energy_mJ_sat": 423.4,
+   "capacity_users": 839
+  }
+ ],
+ "qwen_rom": {
+  "design": "Qwen3-8B ROM package (AR, G = 6,144 pruned, 8K)",
+  "system": {
+   "packages": 1,
+   "dies": 2,
+   "stacks": 8
+  },
+  "ar": {
+   "tokens_s_b1": 9851.1,
+   "saturated_tokens_s": 11920.9,
+   "rows": [
+    {
+     "batch": 1,
+     "per_user_tokens_s": 9851.1,
+     "aggregate_tokens_s": 9851.1,
+     "per_user_ms_per_token": 0.1015,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 86.529,
+     "package_w": 852.4
+    },
+    {
+     "batch": 2,
+     "per_user_tokens_s": 5960.5,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 0.1678,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    },
+    {
+     "batch": 4,
+     "per_user_tokens_s": 2980.2,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 0.3355,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    },
+    {
+     "batch": 8,
+     "per_user_tokens_s": 1490.1,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 0.6711,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    },
+    {
+     "batch": 16,
+     "per_user_tokens_s": 745.1,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 1.3422,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    },
+    {
+     "batch": 32,
+     "per_user_tokens_s": 372.5,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 2.6844,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    },
+    {
+     "batch": 64,
+     "per_user_tokens_s": 186.3,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 5.3687,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    },
+    {
+     "batch": 128,
+     "per_user_tokens_s": 93.1,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 10.7374,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    },
+    {
+     "batch": 256,
+     "per_user_tokens_s": 46.6,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 21.4748,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    },
+    {
+     "batch": 268,
+     "per_user_tokens_s": 44.5,
+     "aggregate_tokens_s": 11920.9,
+     "per_user_ms_per_token": 22.4815,
+     "binding": "kv stream",
+     "energy_mJ_per_token": 84.74,
+     "package_w": 1010.2
+    }
+   ],
+   "sat_batch": 2
+  },
+  "bounds_tokens_s": {
+   "lanes": 20183.7,
+   "stream_unit": 101641.2,
+   "kv_stream": 11920.9
+  },
+  "binding": "kv_stream",
+  "unit_busy_cycles_per_die": {
+   "stream": 10809,
+   "weights": 35712,
+   "attn_scores": 6336,
+   "attn_pv": 9216,
+   "lm_head": 3168
+  },
+  "token_cycles": 111525,
+  "capacity_users": 268,
+  "capacity_basis": "8 HBM3E stacks x 22.5 GB x 0.90 over the FP8 KV of one 8K user (604.0 MB)",
+  "energy": {
+   "dynamic_mJ_per_token": 76.226,
+   "categories_mJ_per_token": {
+    "mac": 6.5895,
+    "rom": 2.3461,
+    "kv_on_die": 7.1451,
+    "stream": 0.6563,
+    "ucie": 0.0095,
+    "stack": 59.4799
+   },
+   "static_w": {
+    "clock": 40.55,
+    "leakage": 38.55,
+    "hbm_interface_idle": 22.4
+   },
+   "static_w_total": 101.5,
+   "area_mm2_per_die": {
+    "rom": 265.0,
+    "logic": 173.8,
+    "sram": 23.9
+   },
+   "basis": "the uarch constants (technology.json), 2 ops per MAC, both dies"
+  },
+  "note": "m = 1: batching reuses no weight word, so the lanes, the stream unit and the KV stream each cap the aggregate; the KV stream (each user's 604 MB of 8K FP8 KV per token over 8 stacks) binds first"
+ },
+ "qwen_hbm": {
+  "design": "Qwen3-8B HBM comparator, GPU organisation (tier 3, 8K)",
+  "system": {
+   "packages": 1,
+   "dies": 2,
+   "stacks": 8
+  },
+  "ar": {
+   "tokens_s_b1": 880.6,
+   "rows": [
+    {
+     "batch": 1,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 880.6,
+     "aggregate_tokens_s": 880.6,
+     "per_user_ms_per_token": 1.1356,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 982.788,
+     "package_w": 865.4
+    },
+    {
+     "batch": 2,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 820.0,
+     "aggregate_tokens_s": 1640.0,
+     "per_user_ms_per_token": 1.2195,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 529.596,
+     "package_w": 868.5
+    },
+    {
+     "batch": 4,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 720.8,
+     "aggregate_tokens_s": 2883.3,
+     "per_user_ms_per_token": 1.3873,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 303.0,
+     "package_w": 873.7
+    },
+    {
+     "batch": 8,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 580.4,
+     "aggregate_tokens_s": 4643.6,
+     "per_user_ms_per_token": 1.7228,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 189.702,
+     "package_w": 880.9
+    },
+    {
+     "batch": 16,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 417.7,
+     "aggregate_tokens_s": 6683.6,
+     "per_user_ms_per_token": 2.3939,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 133.053,
+     "package_w": 889.3
+    },
+    {
+     "batch": 32,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 208.9,
+     "aggregate_tokens_s": 6683.8,
+     "per_user_ms_per_token": 4.7877,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 133.053,
+     "package_w": 889.3
+    },
+    {
+     "batch": 64,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 104.4,
+     "aggregate_tokens_s": 6683.9,
+     "per_user_ms_per_token": 9.5753,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 133.053,
+     "package_w": 889.3
+    },
+    {
+     "batch": 128,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 52.2,
+     "aggregate_tokens_s": 6683.9,
+     "per_user_ms_per_token": 19.1505,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 133.053,
+     "package_w": 889.3
+    },
+    {
+     "batch": 255,
+     "block": 1,
+     "tau": 1.0,
+     "per_user_tokens_s": 26.2,
+     "aggregate_tokens_s": 6672.4,
+     "per_user_ms_per_token": 38.217,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 133.275,
+     "package_w": 889.3
+    }
+   ],
+   "saturated_tokens_s": 6683.9,
+   "sat_batch": 16
+  },
+  "dflash": {
+   "tokens_s_b1": 2671.0,
+   "rows": [
+    {
+     "batch": 1,
+     "block": 16,
+     "tau": 3.6559,
+     "per_user_tokens_s": 2671.0,
+     "aggregate_tokens_s": 2671.0,
+     "per_user_ms_per_token": 0.3744,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 358.12,
+     "package_w": 956.5
+    },
+    {
+     "batch": 2,
+     "block": 8,
+     "tau": 3.2956,
+     "per_user_tokens_s": 2268.7,
+     "aggregate_tokens_s": 4537.4,
+     "per_user_ms_per_token": 0.4408,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 209.129,
+     "package_w": 948.9
+    },
+    {
+     "batch": 4,
+     "block": 4,
+     "tau": 2.6256,
+     "per_user_tokens_s": 1620.3,
+     "aggregate_tokens_s": 6481.3,
+     "per_user_ms_per_token": 0.6172,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 144.417,
+     "package_w": 936.0
+    },
+    {
+     "batch": 8,
+     "block": 2,
+     "tau": 1.7361,
+     "per_user_tokens_s": 887.6,
+     "aggregate_tokens_s": 7100.8,
+     "per_user_ms_per_token": 1.1266,
+     "binding": "weight stream",
+     "energy_mJ_per_token": 129.123,
+     "package_w": 916.9
+    },
+    {
+     "batch": 16,
+     "block": 2,
+     "tau": 1.7361,
+     "per_user_tokens_s": 443.9,
+     "aggregate_tokens_s": 7102.8,
+     "per_user_ms_per_token": 2.2526,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 129.12,
+     "package_w": 917.1
+    },
+    {
+     "batch": 32,
+     "block": 2,
+     "tau": 1.7361,
+     "per_user_tokens_s": 222.0,
+     "aggregate_tokens_s": 7103.8,
+     "per_user_ms_per_token": 4.5046,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 129.118,
+     "package_w": 917.2
+    },
+    {
+     "batch": 64,
+     "block": 2,
+     "tau": 1.7361,
+     "per_user_tokens_s": 111.0,
+     "aggregate_tokens_s": 7104.3,
+     "per_user_ms_per_token": 9.0086,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 129.118,
+     "package_w": 917.3
+    },
+    {
+     "batch": 128,
+     "block": 2,
+     "tau": 1.7361,
+     "per_user_tokens_s": 55.5,
+     "aggregate_tokens_s": 7104.6,
+     "per_user_ms_per_token": 18.0165,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 129.117,
+     "package_w": 917.3
+    },
+    {
+     "batch": 255,
+     "block": 2,
+     "tau": 1.7361,
+     "per_user_tokens_s": 27.8,
+     "aggregate_tokens_s": 7086.5,
+     "per_user_ms_per_token": 35.984,
+     "binding": "weight re-stream + KV stream",
+     "energy_mJ_per_token": 129.43,
+     "package_w": 917.2
+    }
+   ],
+   "saturated_tokens_s": 7104.6,
+   "sat_batch": 8,
+   "note": "best block per batch (tau per block from results/speculative/dflash_block_acceptance.json); users x block positions share the 16 MMA columns, a pass per 16"
+  },
+  "capacity_users": 255,
+  "capacity_basis": "8 stacks x 22.5 GB x 0.90 less the INT8 weights, over 604 MB per user",
+  "energy": {
+   "static_w": {
+    "clock": 22.8,
+    "leakage": 24.1,
+    "hbm_interface_idle": 22.4
+   },
+   "static_w_total": 69.3,
+   "basis": "SM MACs (2 ops, BF16 lane) + the whole HBM path per byte (technology.json hbm_j_per_byte, die + stack) + SMEM staging write and read + stream elements; static: SM logic, SMEM + L2 SRAM, 4 HBM PHY + UCIe as logic, HBM interface idle"
+  }
+ },
+ "v41_rom": {
+  "design": "V4.1 ROM array (proposal, 1M context)",
+  "system": {
+   "packages": 94,
+   "dies": 188,
+   "layer_dies": 112,
+   "head_dies": 4,
+   "table_dies": 72,
+   "stacks": 464,
+   "src": "results/arch/v41_rack.json comparison[0] and logical.roles"
+  },
+  "ar": {
+   "tokens_s_b1": 3808.8,
+   "saturated_tokens_s": 77021.9,
+   "rows": [
+    {
+     "batch": 1,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 3808.8,
+     "per_user_ms_per_token": 0.2625,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 3429.023,
+     "system_w": 13061.0
+    },
+    {
+     "batch": 2,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 7617.6,
+     "per_user_ms_per_token": 0.2625,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 1734.954,
+     "system_w": 13216.0
+    },
+    {
+     "batch": 4,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 15235.3,
+     "per_user_ms_per_token": 0.2625,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 887.919,
+     "system_w": 13528.0
+    },
+    {
+     "batch": 8,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 30470.5,
+     "per_user_ms_per_token": 0.2625,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 464.402,
+     "system_w": 14151.0
+    },
+    {
+     "batch": 16,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 60941.1,
+     "per_user_ms_per_token": 0.2625,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 252.643,
+     "system_w": 15396.0
+    },
+    {
+     "batch": 32,
+     "per_user_tokens_s": 2406.9,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 0.4155,
+     "binding": "busiest stage occupancy",
+     "energy_mJ_per_token": 208.432,
+     "system_w": 16054.0
+    },
+    {
+     "batch": 64,
+     "per_user_tokens_s": 1203.5,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 0.8309,
+     "binding": "busiest stage occupancy",
+     "energy_mJ_per_token": 208.432,
+     "system_w": 16054.0
+    },
+    {
+     "batch": 128,
+     "per_user_tokens_s": 601.7,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 1.6619,
+     "binding": "busiest stage occupancy",
+     "energy_mJ_per_token": 208.432,
+     "system_w": 16054.0
+    },
+    {
+     "batch": 256,
+     "per_user_tokens_s": 300.9,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 3.3237,
+     "binding": "busiest stage occupancy",
+     "energy_mJ_per_token": 208.432,
+     "system_w": 16054.0
+    },
+    {
+     "batch": 512,
+     "per_user_tokens_s": 150.4,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 6.6475,
+     "binding": "busiest stage occupancy",
+     "energy_mJ_per_token": 208.432,
+     "system_w": 16054.0
+    },
+    {
+     "batch": 866,
+     "per_user_tokens_s": 88.9,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 11.2436,
+     "binding": "busiest stage occupancy",
+     "energy_mJ_per_token": 208.432,
+     "system_w": 16054.0
+    }
+   ],
+   "sat_batch": 32
+  },
+  "mtp_m1": {
+   "tokens_s_b1": 5856.5,
+   "saturated_tokens_s": 50708.4,
+   "rows": [
+    {
+     "batch": 1,
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 5856.5,
+     "per_user_ms_per_token": 0.1707,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 2243.349,
+     "system_w": 13138.0
+    },
+    {
+     "batch": 2,
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 11713.1,
+     "per_user_ms_per_token": 0.1707,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 1141.608,
+     "system_w": 13372.0
+    },
+    {
+     "batch": 4,
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 23426.2,
+     "per_user_ms_per_token": 0.1707,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 590.737,
+     "system_w": 13839.0
+    },
+    {
+     "batch": 8,
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 46852.4,
+     "per_user_ms_per_token": 0.1707,
+     "binding": "single-user chain",
+     "energy_mJ_per_token": 315.302,
+     "system_w": 14773.0
+    },
+    {
+     "batch": 16,
+     "per_user_tokens_s": 3169.3,
+     "aggregate_tokens_s": 50708.4,
+     "per_user_ms_per_token": 0.3155,
+     "binding": "busiest stage occupancy (verify pass)",
+     "energy_mJ_per_token": 294.357,
+     "system_w": 14926.0
+    },
+    {
+     "batch": 32,
+     "per_user_tokens_s": 1584.6,
+     "aggregate_tokens_s": 50708.4,
+     "per_user_ms_per_token": 0.6311,
+     "binding": "busiest stage occupancy (verify pass)",
+     "energy_mJ_per_token": 294.357,
+     "system_w": 14926.0
+    },
+    {
+     "batch": 64,
+     "per_user_tokens_s": 792.3,
+     "aggregate_tokens_s": 50708.4,
+     "per_user_ms_per_token": 1.2621,
+     "binding": "busiest stage occupancy (verify pass)",
+     "energy_mJ_per_token": 294.357,
+     "system_w": 14926.0
+    },
+    {
+     "batch": 128,
+     "per_user_tokens_s": 396.2,
+     "aggregate_tokens_s": 50708.4,
+     "per_user_ms_per_token": 2.5242,
+     "binding": "busiest stage occupancy (verify pass)",
+     "energy_mJ_per_token": 294.357,
+     "system_w": 14926.0
+    },
+    {
+     "batch": 256,
+     "per_user_tokens_s": 198.1,
+     "aggregate_tokens_s": 50708.4,
+     "per_user_ms_per_token": 5.0485,
+     "binding": "busiest stage occupancy (verify pass)",
+     "energy_mJ_per_token": 294.357,
+     "system_w": 14926.0
+    },
+    {
+     "batch": 512,
+     "per_user_tokens_s": 99.0,
+     "aggregate_tokens_s": 50708.4,
+     "per_user_ms_per_token": 10.097,
+     "binding": "busiest stage occupancy (verify pass)",
+     "energy_mJ_per_token": 294.357,
+     "system_w": 14926.0
+    },
+    {
+     "batch": 866,
+     "per_user_tokens_s": 58.6,
+     "aggregate_tokens_s": 50708.4,
+     "per_user_ms_per_token": 17.078,
+     "binding": "busiest stage occupancy (verify pass)",
+     "energy_mJ_per_token": 294.357,
+     "system_w": 14926.0
+    }
+   ],
+   "sat_batch": 16,
+   "tau": 3.649,
+   "positions": 6,
+   "verify_us": 603.4,
+   "draft_us": 19.7
+  },
+  "capacity_users": 866,
+  "capacity_basis": "results/arch/arch_budget_v41.json capacity[1048576].rom_users (KV + index keys of the busiest layer-20 group in its 4 HBM3E stacks per die, 90% usable)",
+  "energy": {
+   "dynamic_mJ_per_token_die": 21.56,
+   "stack_mJ_per_token": 19.325,
+   "categories_mJ_per_token": {
+    "mac": 2.6896,
+    "rom": 1.1415,
+    "xnet": 12.9066,
+    "units": 2.4058,
+    "hbm_if": 1.2559,
+    "stack": 19.3248,
+    "link": 1.1606
+   },
+   "static_w": {
+    "layer_dies": 9094.0,
+    "head_dies": 369.3,
+    "table_dies": 3441.5
+   },
+   "static_w_total": 12904.8,
+   "layer_die_static_w": {
+    "clock": 18.1,
+    "leakage": 18.8,
+    "hbm_interface_idle": 11.2,
+    "links": 33.096
+   },
+   "mtp_dynamic_mJ_per_token": 39.866,
+   "basis": "power_ledger terms on every stage x 4 TP dies (the uarch graph is one die, busiest-die macros for every layer); layer-die static = the ledger's clock + leakage + HBM interface idle, ungated, plus the rack's always-on SerDes and UCIe; head and Engram-table dies' static from results/arch/v41_rack.json power.static; HBM stack DRAM energy of the index and KV reads; stack background (refresh) power not charged"
+  },
+  "stage_occupancy_us": {
+   "0": 3.15,
+   "1": 6.36,
+   "2": 3.35,
+   "3": 1.67,
+   "4": 3.35,
+   "5": 6.36,
+   "6": 1.67,
+   "7": 3.35,
+   "8": 1.67,
+   "9": 8.32,
+   "10": 1.67,
+   "11": 3.35,
+   "12": 1.67,
+   "13": 1.67,
+   "14": 12.98,
+   "15": 1.67,
+   "16": 3.6,
+   "17": 1.67,
+   "18": 3.35,
+   "19": 1.93,
+   "20": 1.67,
+   "21": 3.35,
+   "22": 1.93,
+   "23": 3.35,
+   "24": 1.67,
+   "25": 3.6,
+   "26": 1.67,
+   "27": 1.67,
+   "28": 5.04
+  }
+ },
+ "v41_hbm": {
+  "design": "V4.1 HBM comparator, GPU organisation (tier 3, 96 dies, 1M)",
+  "system": {
+   "packages": 48,
+   "dies": 96,
+   "stacks": 384
+  },
+  "ar": {
+   "tokens_s_b1": 2919.8,
+   "rows": [
+    {
+     "batch": 1,
+     "per_user_tokens_s": 2919.8,
+     "aggregate_tokens_s": 2919.8,
+     "per_user_ms_per_token": 0.3425,
+     "binding": "chain (latency)",
+     "energy_mJ_per_token": 3692.01,
+     "system_w": 10780.0
+    },
+    {
+     "batch": 2,
+     "per_user_tokens_s": 2515.8,
+     "aggregate_tokens_s": 5031.5,
+     "per_user_ms_per_token": 0.3975,
+     "binding": "chain (latency)",
+     "energy_mJ_per_token": 2282.948,
+     "system_w": 11487.0
+    },
+    {
+     "batch": 4,
+     "per_user_tokens_s": 1970.4,
+     "aggregate_tokens_s": 7881.5,
+     "per_user_ms_per_token": 0.5075,
+     "binding": "chain (latency)",
+     "energy_mJ_per_token": 1572.718,
+     "system_w": 12395.0
+    },
+    {
+     "batch": 8,
+     "per_user_tokens_s": 1374.5,
+     "aggregate_tokens_s": 10995.7,
+     "per_user_ms_per_token": 0.7276,
+     "binding": "chain (latency)",
+     "energy_mJ_per_token": 1206.613,
+     "system_w": 13268.0
+    },
+    {
+     "batch": 16,
+     "per_user_tokens_s": 1362.0,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 0.7342,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 913.166,
+     "system_w": 19900.0
+    },
+    {
+     "batch": 32,
+     "per_user_tokens_s": 681.0,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 1.4684,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 913.166,
+     "system_w": 19900.0
+    },
+    {
+     "batch": 64,
+     "per_user_tokens_s": 340.5,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 2.9369,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 913.166,
+     "system_w": 19900.0
+    },
+    {
+     "batch": 128,
+     "per_user_tokens_s": 170.2,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 5.8738,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 913.166,
+     "system_w": 19900.0
+    },
+    {
+     "batch": 256,
+     "per_user_tokens_s": 85.1,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 11.7476,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 913.166,
+     "system_w": 19900.0
+    },
+    {
+     "batch": 512,
+     "per_user_tokens_s": 42.6,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 23.4951,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 913.166,
+     "system_w": 19900.0
+    },
+    {
+     "batch": 811,
+     "per_user_tokens_s": 26.7,
+     "aggregate_tokens_s": 21658.2,
+     "per_user_ms_per_token": 37.4453,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 918.632,
+     "system_w": 19896.0
+    }
+   ],
+   "saturated_tokens_s": 21791.8,
+   "sat_batch": 16
+  },
+  "mtp": {
+   "tokens_s_b1": 5673.0,
+   "rows": [
+    {
+     "batch": 1,
+     "per_user_tokens_s": 5673.0,
+     "aggregate_tokens_s": 5673.0,
+     "per_user_ms_per_token": 0.1763,
+     "binding": "chain (latency)",
+     "energy_mJ_per_token": 2286.842,
+     "system_w": 12973.0
+    },
+    {
+     "batch": 2,
+     "per_user_tokens_s": 5673.0,
+     "aggregate_tokens_s": 11346.0,
+     "per_user_ms_per_token": 0.1763,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1712.81,
+     "system_w": 19434.0
+    },
+    {
+     "batch": 4,
+     "per_user_tokens_s": 3030.5,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 0.33,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    },
+    {
+     "batch": 8,
+     "per_user_tokens_s": 1515.3,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 0.6599,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    },
+    {
+     "batch": 16,
+     "per_user_tokens_s": 757.6,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 1.3199,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    },
+    {
+     "batch": 32,
+     "per_user_tokens_s": 378.8,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 2.6398,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    },
+    {
+     "batch": 64,
+     "per_user_tokens_s": 189.4,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 5.2796,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    },
+    {
+     "batch": 128,
+     "per_user_tokens_s": 94.7,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 10.5592,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    },
+    {
+     "batch": 256,
+     "per_user_tokens_s": 47.4,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 21.1184,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    },
+    {
+     "batch": 512,
+     "per_user_tokens_s": 23.7,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 42.2368,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    },
+    {
+     "batch": 811,
+     "per_user_tokens_s": 14.9,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 66.9024,
+     "binding": "busiest resource per column pass",
+     "energy_mJ_per_token": 1676.057,
+     "system_w": 20317.0
+    }
+   ],
+   "saturated_tokens_s": 12122.1,
+   "sat_batch": 4,
+   "tau": 3.649,
+   "positions": 6
+  },
+  "capacity_users": 811,
+  "capacity_basis": "results/arch/arch_budget_v41.json capacity[1048576].hbm_users",
+  "occupancy_us_per_pass": {
+   "ar_8_users": 367.1,
+   "mtp_1_user": 275.3,
+   "dedicated_issue_per_user": 45.9
+  },
+  "energy": {
+   "static_w": {
+    "clock": 1067.9,
+    "leakage": 1192.7,
+    "hbm_interface_idle": 1075.2,
+    "links": 3177.2
+   },
+   "static_w_total": 6513.0,
+   "basis": "system MACs by format (2 ops), weights (routed union over the pass) and per-user KV + index keys over the whole HBM path, SMEM staging, the ROM array's dedicated-unit energy per token (same units), fabric bytes over two switch hops; static per die: SM + dedicated-unit logic, SMEM + L2, 4 PHY, HBM interface idle, links; the NVL-class switch itself not charged"
+  },
+  "note": "B <= 8 users ride the 8 MMA columns on one weight fetch (the chain re-priced with B columns: dedicated-unit issue repeats per user); beyond, column passes interleave and the busiest of SM time, dedicated-unit issue and the weight sweep bounds the step"
+ },
+ "gpu": {
+  "qwen": {
+   "design": "Qwen3-8B on 1x B200, FP8, 8K (tier 2)",
+   "system": {
+    "gpus": 1,
+    "packages": 1,
+    "dies": 2,
+    "stacks": 8
+   },
+   "rows": [
+    {
+     "batch": 1,
+     "per_user_tokens_s": 331.0,
+     "aggregate_tokens_s": 331.0,
+     "per_user_ms_per_token": 3.021,
+     "energy_mJ_per_token": 2081.44
+    },
+    {
+     "batch": 2,
+     "per_user_tokens_s": 318.9,
+     "aggregate_tokens_s": 637.7,
+     "per_user_ms_per_token": 3.136,
+     "energy_mJ_per_token": 1080.37
+    },
+    {
+     "batch": 4,
+     "per_user_tokens_s": 297.1,
+     "aggregate_tokens_s": 1188.3,
+     "per_user_ms_per_token": 3.3662,
+     "energy_mJ_per_token": 579.83
+    },
+    {
+     "batch": 8,
+     "per_user_tokens_s": 261.3,
+     "aggregate_tokens_s": 2090.7,
+     "per_user_ms_per_token": 3.8265,
+     "energy_mJ_per_token": 329.56
+    },
+    {
+     "batch": 16,
+     "per_user_tokens_s": 210.7,
+     "aggregate_tokens_s": 3370.5,
+     "per_user_ms_per_token": 4.7471,
+     "energy_mJ_per_token": 204.42
+    },
+    {
+     "batch": 32,
+     "per_user_tokens_s": 151.8,
+     "aggregate_tokens_s": 4857.1,
+     "per_user_ms_per_token": 6.5883,
+     "energy_mJ_per_token": 141.85
+    },
+    {
+     "batch": 64,
+     "per_user_tokens_s": 97.4,
+     "aggregate_tokens_s": 6231.3,
+     "per_user_ms_per_token": 10.2707,
+     "energy_mJ_per_token": 110.57
+    },
+    {
+     "batch": 128,
+     "per_user_tokens_s": 56.7,
+     "aggregate_tokens_s": 7258.1,
+     "per_user_ms_per_token": 17.6355,
+     "energy_mJ_per_token": 94.93
+    },
+    {
+     "batch": 255,
+     "per_user_tokens_s": 31.0,
+     "aggregate_tokens_s": 7907.0,
+     "per_user_ms_per_token": 32.2501,
+     "energy_mJ_per_token": 87.14
+    }
+   ],
+   "rows_at_tdp": [
+    {
+     "batch": 1,
+     "per_user_tokens_s": 331.0,
+     "aggregate_tokens_s": 331.0,
+     "per_user_ms_per_token": 3.021,
+     "energy_mJ_per_token": 3625.16
+    },
+    {
+     "batch": 2,
+     "per_user_tokens_s": 318.9,
+     "aggregate_tokens_s": 637.7,
+     "per_user_ms_per_token": 3.136,
+     "energy_mJ_per_token": 1881.62
+    },
+    {
+     "batch": 4,
+     "per_user_tokens_s": 297.1,
+     "aggregate_tokens_s": 1188.3,
+     "per_user_ms_per_token": 3.3662,
+     "energy_mJ_per_token": 1009.86
+    },
+    {
+     "batch": 8,
+     "per_user_tokens_s": 261.3,
+     "aggregate_tokens_s": 2090.7,
+     "per_user_ms_per_token": 3.8265,
+     "energy_mJ_per_token": 573.97
+    },
+    {
+     "batch": 16,
+     "per_user_tokens_s": 210.7,
+     "aggregate_tokens_s": 3370.5,
+     "per_user_ms_per_token": 4.7471,
+     "energy_mJ_per_token": 356.03
+    },
+    {
+     "batch": 32,
+     "per_user_tokens_s": 151.8,
+     "aggregate_tokens_s": 4857.1,
+     "per_user_ms_per_token": 6.5883,
+     "energy_mJ_per_token": 247.06
+    },
+    {
+     "batch": 64,
+     "per_user_tokens_s": 97.4,
+     "aggregate_tokens_s": 6231.3,
+     "per_user_ms_per_token": 10.2707,
+     "energy_mJ_per_token": 192.58
+    },
+    {
+     "batch": 128,
+     "per_user_tokens_s": 56.7,
+     "aggregate_tokens_s": 7258.1,
+     "per_user_ms_per_token": 17.6355,
+     "energy_mJ_per_token": 165.33
+    },
+    {
+     "batch": 255,
+     "per_user_tokens_s": 31.0,
+     "aggregate_tokens_s": 7907.0,
+     "per_user_ms_per_token": 32.2501,
+     "energy_mJ_per_token": 151.77
+    }
+   ],
+   "tokens_s_b1": 331.0,
+   "saturated_tokens_s": 7907.0,
+   "sat_batch": 255,
+   "dflash_b1": {
+    "reasoning_mix": 853.3,
+    "math_code": [
+     1390.3,
+     1688.2
+    ]
+   },
+   "calibration": {
+    "paper_line_fixed_ms": 4.4353,
+    "paper_line_per_user_us": 38.46,
+    "fitted_tokens_s": {
+     "1": 223.5,
+     "4": 871.6,
+     "8": 1686.7,
+     "16": 3167.9,
+     "32": 5647.7
+    },
+    "measured_tokens_s": {
+     "1": 230.0,
+     "4": 861.0,
+     "8": 1666.0,
+     "16": 3133.0,
+     "32": 5694.0
+    },
+    "per_user_increment_8k_us": 115.08,
+    "kv_8k_fp8_us": 115.08,
+    "rule": "step(B) = tier-2 step(1) + (B - 1) x max(the paper's fitted per-user increment, one 8K FP8 user's KV at the fitted B200 bytes rate); the paper's increment includes its own (shorter-context) KV, so the max is GPU-favourable"
+   },
+   "capacity_users": 255,
+   "capacity_basis": "180 GB x 0.90 less FP8 weights over 604 MB per user"
+  },
+  "v41": {
+   "design": "DeepSeek-V4.1-Flash on 8x B200, 1M (tier 2)",
+   "system": {
+    "gpus": 8,
+    "packages": 8,
+    "dies": 16,
+    "stacks": 64
+   },
+   "rows": [
+    {
+     "batch": 1,
+     "per_user_tokens_s": 277.7,
+     "aggregate_tokens_s": 277.7,
+     "per_user_ms_per_token": 3.6016,
+     "energy_mJ_per_token": 19851.78
+    },
+    {
+     "batch": 2,
+     "per_user_tokens_s": 265.1,
+     "aggregate_tokens_s": 530.2,
+     "per_user_ms_per_token": 3.7719,
+     "energy_mJ_per_token": 10395.27
+    },
+    {
+     "batch": 4,
+     "per_user_tokens_s": 243.5,
+     "aggregate_tokens_s": 973.8,
+     "per_user_ms_per_token": 4.1076,
+     "energy_mJ_per_token": 5660.22
+    },
+    {
+     "batch": 8,
+     "per_user_tokens_s": 210.1,
+     "aggregate_tokens_s": 1680.7,
+     "per_user_ms_per_token": 4.7599,
+     "energy_mJ_per_token": 3279.59
+    },
+    {
+     "batch": 16,
+     "per_user_tokens_s": 166.8,
+     "aggregate_tokens_s": 2669.4,
+     "per_user_ms_per_token": 5.9939,
+     "energy_mJ_per_token": 2064.9
+    },
+    {
+     "batch": 32,
+     "per_user_tokens_s": 121.7,
+     "aggregate_tokens_s": 3894.3,
+     "per_user_ms_per_token": 8.2171,
+     "energy_mJ_per_token": 1415.39
+    },
+    {
+     "batch": 64,
+     "per_user_tokens_s": 83.8,
+     "aggregate_tokens_s": 5366.1,
+     "per_user_ms_per_token": 11.9268,
+     "energy_mJ_per_token": 1027.2
+    },
+    {
+     "batch": 128,
+     "per_user_tokens_s": 56.7,
+     "aggregate_tokens_s": 7251.8,
+     "per_user_ms_per_token": 17.6508,
+     "energy_mJ_per_token": 760.09
+    },
+    {
+     "batch": 256,
+     "per_user_tokens_s": 37.4,
+     "aggregate_tokens_s": 9586.3,
+     "per_user_ms_per_token": 26.7048,
+     "energy_mJ_per_token": 574.99
+    },
+    {
+     "batch": 512,
+     "per_user_tokens_s": 23.1,
+     "aggregate_tokens_s": 11812.4,
+     "per_user_ms_per_token": 43.3443,
+     "energy_mJ_per_token": 466.63
+    },
+    {
+     "batch": 839,
+     "per_user_tokens_s": 15.5,
+     "aggregate_tokens_s": 13018.3,
+     "per_user_ms_per_token": 64.4478,
+     "energy_mJ_per_token": 423.4
+    }
+   ],
+   "tokens_s_b1": 277.7,
+   "saturated_tokens_s": 13018.3,
+   "sat_batch": 839,
+   "mtp_b1": 538.7,
+   "capacity_users": 839,
+   "per_user_state_bytes": 935936000.0,
+   "capacity_basis": "8 x 180 GB x 0.90 less the 510.3 GB checkpoint over each user's CKV + index keys (KV-owner layers 2, 8, 14, 20) and 40 windows"
+  },
+  "anchors": [
+   {
+    "tier": 1,
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 1 (DFlash paper Table 3)",
+    "batch": 1,
+    "aggregate_tokens_s": 230.0,
+    "per_user_tokens_s": 230.0,
+    "energy_mJ_per_token_at_689W": 2995.7,
+    "line_fit_tokens_s": 223.5
+   },
+   {
+    "tier": 1,
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 4 (DFlash paper Table 3)",
+    "batch": 4,
+    "aggregate_tokens_s": 861.0,
+    "per_user_tokens_s": 215.2,
+    "energy_mJ_per_token_at_689W": 800.2,
+    "line_fit_tokens_s": 871.6
+   },
+   {
+    "tier": 1,
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 8 (DFlash paper Table 3)",
+    "batch": 8,
+    "aggregate_tokens_s": 1666.0,
+    "per_user_tokens_s": 208.2,
+    "energy_mJ_per_token_at_689W": 413.6,
+    "line_fit_tokens_s": 1686.7
+   },
+   {
+    "tier": 1,
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 16 (DFlash paper Table 3)",
+    "batch": 16,
+    "aggregate_tokens_s": 3133.0,
+    "per_user_tokens_s": 195.8,
+    "energy_mJ_per_token_at_689W": 219.9,
+    "line_fit_tokens_s": 3167.9
+   },
+   {
+    "tier": 1,
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 32 (DFlash paper Table 3)",
+    "batch": 32,
+    "aggregate_tokens_s": 5694.0,
+    "per_user_tokens_s": 177.9,
+    "energy_mJ_per_token_at_689W": 121.0,
+    "line_fit_tokens_s": 5647.7
+   },
+   {
+    "tier": 1,
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x)",
+    "batch": 1,
+    "aggregate_tokens_s": 1175.0,
+    "per_user_tokens_s": 1175.0,
+    "energy_mJ_per_token_at_689W": 586.4
+   },
+   {
+    "tier": 1,
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x)",
+    "batch": 1,
+    "aggregate_tokens_s": 955.0,
+    "per_user_tokens_s": 955.0,
+    "energy_mJ_per_token_at_689W": 721.5
+   },
+   {
+    "tier": 1,
+    "design": "DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance)",
+    "batch": 1,
+    "aggregate_tokens_s": 368.0,
+    "per_user_tokens_s": 368.0,
+    "energy_mJ_per_token_at_689W": 14978.3
+   }
+  ],
+  "power": {
+   "decode_w": 689.0,
+   "tdp_w": 1200.0,
+   "source": "technology.json power.gpu_reference_power (measured decode 689 W; NVL72 TDP)"
+  }
+ },
+ "cost": [
+  {
+   "design": "Qwen ROM (AR, G = 6,144)",
+   "packages": 1,
+   "dies": 2,
+   "silicon_mm2": 1630.0,
+   "hbm_stacks": 8,
+   "rom_mask_sets": 2,
+   "hardware_usd_iso_package": 25000.0,
+   "component_usd_silicon_and_stacks": 6406,
+   "rom_nre_usd": {
+    "coding_layers_only": 3000000.0,
+    "full_mask_sets": 30000000.0
+   },
+   "rom_nre_per_system_usd": {
+    "coding_layers_only": 3000.0,
+    "full_mask_sets": 30000.0
+   },
+   "capex_per_system_usd": {
+    "low": 28000,
+    "high": 55000
+   },
+   "tokens_s_b1": 9851.1,
+   "tokens_s_saturated": 11920.9,
+   "usd_per_tokens_s_b1": {
+    "low": 2.84,
+    "high": 5.58
+   },
+   "usd_per_tokens_s_saturated": {
+    "low": 2.35,
+    "high": 4.61
+   },
+   "tokens_s_at_slo": 11920.9,
+   "usd_per_tokens_s_at_slo": {
+    "low": 2.35,
+    "high": 4.61
+   },
+   "modes": [
+    "Qwen ROM AR (G = 6,144)"
+   ]
+  },
+  {
+   "design": "Qwen HBM tier 3 (AR / DFlash)",
+   "packages": 1,
+   "dies": 2,
+   "silicon_mm2": 1630.0,
+   "hbm_stacks": 8,
+   "rom_mask_sets": 0,
+   "hardware_usd_iso_package": 25000.0,
+   "component_usd_silicon_and_stacks": 6406,
+   "rom_nre_usd": {
+    "coding_layers_only": 0.0,
+    "full_mask_sets": 0.0
+   },
+   "rom_nre_per_system_usd": {
+    "coding_layers_only": 0.0,
+    "full_mask_sets": 0.0
+   },
+   "capex_per_system_usd": {
+    "low": 25000,
+    "high": 25000
+   },
+   "tokens_s_b1": 2671.0,
+   "tokens_s_saturated": 7104.6,
+   "usd_per_tokens_s_b1": {
+    "low": 9.36,
+    "high": 9.36
+   },
+   "usd_per_tokens_s_saturated": {
+    "low": 3.52,
+    "high": 3.52
+   },
+   "tokens_s_at_slo": 7104.3,
+   "usd_per_tokens_s_at_slo": {
+    "low": 3.52,
+    "high": 3.52
+   },
+   "modes": [
+    "Qwen HBM tier 3 AR",
+    "Qwen HBM tier 3 DFlash"
+   ]
+  },
+  {
+   "design": "Qwen 1x B200 (tier 2, AR)",
+   "packages": 1,
+   "dies": 2,
+   "silicon_mm2": 1630.0,
+   "hbm_stacks": 8,
+   "rom_mask_sets": 0,
+   "hardware_usd_iso_package": 25000.0,
+   "component_usd_silicon_and_stacks": 6406,
+   "rom_nre_usd": {
+    "coding_layers_only": 0.0,
+    "full_mask_sets": 0.0
+   },
+   "rom_nre_per_system_usd": {
+    "coding_layers_only": 0.0,
+    "full_mask_sets": 0.0
+   },
+   "capex_per_system_usd": {
+    "low": 25000,
+    "high": 25000
+   },
+   "tokens_s_b1": 331.0,
+   "tokens_s_saturated": 7907.0,
+   "usd_per_tokens_s_b1": {
+    "low": 75.53,
+    "high": 75.53
+   },
+   "usd_per_tokens_s_saturated": {
+    "low": 3.16,
+    "high": 3.16
+   },
+   "tokens_s_at_slo": 4857.1,
+   "usd_per_tokens_s_at_slo": {
+    "low": 5.15,
+    "high": 5.15
+   },
+   "modes": [
+    "Qwen 1x B200 AR (tier 2)"
+   ]
+  },
+  {
+   "design": "V4.1 ROM array (AR / MTP m = 1)",
+   "packages": 94,
+   "dies": 188,
+   "silicon_mm2": 153220.0,
+   "hbm_stacks": 464,
+   "rom_mask_sets": 188,
+   "hardware_usd_iso_package": 2350000.0,
+   "component_usd_silicon_and_stacks": 498506,
+   "rom_nre_usd": {
+    "coding_layers_only": 282000000.0,
+    "full_mask_sets": 2820000000.0
+   },
+   "rom_nre_per_system_usd": {
+    "coding_layers_only": 282000.0,
+    "full_mask_sets": 2820000.0
+   },
+   "capex_per_system_usd": {
+    "low": 2632000,
+    "high": 5170000
+   },
+   "tokens_s_b1": 5856.5,
+   "tokens_s_saturated": 77021.9,
+   "usd_per_tokens_s_b1": {
+    "low": 449.42,
+    "high": 882.78
+   },
+   "usd_per_tokens_s_saturated": {
+    "low": 34.17,
+    "high": 67.12
+   },
+   "tokens_s_at_slo": 77021.9,
+   "usd_per_tokens_s_at_slo": {
+    "low": 34.17,
+    "high": 67.12
+   },
+   "modes": [
+    "V4.1 ROM AR",
+    "V4.1 ROM MTP m = 1"
+   ]
+  },
+  {
+   "design": "V4.1 HBM tier 3 (AR / MTP)",
+   "packages": 48,
+   "dies": 96,
+   "silicon_mm2": 78240.0,
+   "hbm_stacks": 384,
+   "rom_mask_sets": 0,
+   "hardware_usd_iso_package": 1200000.0,
+   "component_usd_silicon_and_stacks": 307499,
+   "rom_nre_usd": {
+    "coding_layers_only": 0.0,
+    "full_mask_sets": 0.0
+   },
+   "rom_nre_per_system_usd": {
+    "coding_layers_only": 0.0,
+    "full_mask_sets": 0.0
+   },
+   "capex_per_system_usd": {
+    "low": 1200000,
+    "high": 1200000
+   },
+   "tokens_s_b1": 5673.0,
+   "tokens_s_saturated": 21791.8,
+   "usd_per_tokens_s_b1": {
+    "low": 211.53,
+    "high": 211.53
+   },
+   "usd_per_tokens_s_saturated": {
+    "low": 55.07,
+    "high": 55.07
+   },
+   "tokens_s_at_slo": 21791.8,
+   "usd_per_tokens_s_at_slo": {
+    "low": 55.07,
+    "high": 55.07
+   },
+   "modes": [
+    "V4.1 HBM tier 3 AR",
+    "V4.1 HBM tier 3 MTP"
+   ]
+  },
+  {
+   "design": "V4.1 8x B200 (tier 2, AR)",
+   "packages": 8,
+   "dies": 16,
+   "silicon_mm2": 13040.0,
+   "hbm_stacks": 64,
+   "rom_mask_sets": 0,
+   "hardware_usd_iso_package": 200000.0,
+   "component_usd_silicon_and_stacks": 51250,
+   "rom_nre_usd": {
+    "coding_layers_only": 0.0,
+    "full_mask_sets": 0.0
+   },
+   "rom_nre_per_system_usd": {
+    "coding_layers_only": 0.0,
+    "full_mask_sets": 0.0
+   },
+   "capex_per_system_usd": {
+    "low": 200000,
+    "high": 200000
+   },
+   "tokens_s_b1": 277.7,
+   "tokens_s_saturated": 13018.3,
+   "usd_per_tokens_s_b1": {
+    "low": 720.2,
+    "high": 720.2
+   },
+   "usd_per_tokens_s_saturated": {
+    "low": 15.36,
+    "high": 15.36
+   },
+   "tokens_s_at_slo": 3894.3,
+   "usd_per_tokens_s_at_slo": {
+    "low": 51.36,
+    "high": 51.36
+   },
+   "modes": [
+    "V4.1 8x B200 AR (tier 2)"
+   ]
+  }
+ ],
+ "cost_inputs": {
+  "package_usd": 25000.0,
+  "package_basis": "iso-package: every two-reticle + 8-HBM3E CoWoS-L-class package (the ROM packages, the HBM comparator packages and a B200 alike) at the repository's B200 device price (configs/hardware/architectures.json NVIDIA-B200-x1 cost_per_device, graded assumed)",
+  "silicon_usd_per_mm2": 2.1633315305570577,
+  "silicon_basis": "technology_inputs.json wafer_cost_per_device (assumed) over the 46,225 mm2 wafer-scale device",
+  "hbm_stack_usd": 360.0,
+  "mask_set_usd": 15000000.0,
+  "rom_coding_fraction": 0.1,
+  "production_units": 1000
+ },
+ "mac_ops": 2,
+ "slo_tokens_s_per_user": 100.0,
+ "cost_rule": "best mode of each design at each point: b1 = its fastest single-user mode, saturated = its largest aggregate within the per-user state capacity; capex = packages at the iso-package price + ROM mask NRE / production units (low: coding layers only; high: full mask sets)",
+ "source_sha256": {
+  "tools/uarch_model.py": "f5b553b607a4dd1292835784122dd7318f6ee8e6882ee83037201a2035ed29d4",
+  "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+  "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+  "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+  "configs/hardware/architectures.json": "fd3b286eebe534f52547ff7fe9e23b1d9c3024e7afb72e15f8b1824511b7d04e",
+  "configs/hardware/technology_inputs.json": "ffdfebb683709790aafb33dc8e45b207072dd81cb111fcf5bd75429cebbd56f9",
+  "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+  "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+  "results/arch/v41_rack.json": "98ffbb563a56131b0b1f550ffbce499b6dffce085bf93bd3943712c225f10523",
+  "results/arch/qwen_gpu_calibration.json": "6ae77c9ccad72c915cb8903ee2c61843265248b9dbbdce96a2f88a7c63676ee9",
+  "results/arch/v41_hbm_region_preflight.json": "1e29595e85ec85424ca44587f7eb23dd75d5098a800e5063cd2db4c02213b434",
+  "results/speculative/dflash_block_acceptance.json": "b1b92957d24db13ea7f80ce27bc526d17f8a81cc839498faeb5697681bd5e31c",
+  "results/rtl/gpu_sm_exact.json": "5fb4cf5887208d4b0095ecf37e4d1ac59ff5413e6498d1186c91933c7d04043b",
+  "results/rtl/gpu_sm_blockdot_exact.json": "8e0de931aca545d4e6ecf7ea3c52984cac1b829500d296e8e3778268e908f071",
+  "results/rtl/gpu_supply_barrier.json": "7ae98d4bc918b9bef4734fb8f5770f42856bbb4660231d9d34904b9d45d0ee48",
+  "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6"
+ }
+}

@@ -4,6 +4,26 @@ Updated 2026-09-29 09:40 UTC. **Root is now Claude (`claude-main`)**; Codex root
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
+
+## Model-first build streams (2026-09-29, root: Claude): see docs/MICROARCH_MODEL.md and docs/INTEGRATED_PHYSICAL_PLAN.md
+
+Rule: every stream builds only what the microarchitecture model sizes, and stops and reports on any discrepancy.
+
+| Stream | Scope | Status | Top open risk |
+|---|---|---|---|
+| W10 | V4.1 ROM element and striped K-split bank map | [~] element exact 144/144 rows at N=2/4/8; pair-shared element adopted; placed runs p1/q1 pending; then fill cuts + position-outer MTP (m=1) + die re-fit | synthesised element ~40% over the model: strip fit (hub over-reserved, spare slots) |
+| W11 | V4.1 dedicated units (indexer 64 keys/cycle, attention NL=4 + 2-word loader, stream unit 1,024 lanes) | [~] ledger merged; hardened elements routing | index reader must reach the HBM rate; indexer 16 vs 32 slices under MTP |
+| W12 | Qwen ROM, AR only, G=6144 pruned + scale remap + 512-wide VM x port | [~] tile/spine RTL; tile P&R; runtime composition | tile placed area; 81-stage per-op wire latency |
+| W13 | GPU-organised HBM comparators (SM, bulk copy, hardware barrier) | [~] SM elements exact; hardening; die floorplans | HBM speculation model-only (causal block attention, KV rollback not built) |
+| W14 | Model economics: batch sweep, energy per token, cost | [~] | |
+| W15 | Deterministic hardware collectives, built and MEASURED end to end | [~] | every multi-die headline depends on it; the V4.1 ROM 4,167 tok/s assumes ~0.15 µs |
+
+User decisions (2026-09-29):
+- V4.1 ROM keeps MTP at m=1; Qwen ROM is AR only; HBM comparators keep speculation.
+- Headlines are qualified as pending until calibration.
+- Old K-arbiter until the die floorplan is redone.
+- Speed is claimed against GPUs (tiers 1 and 2), with the idealised HBM machine as the architectural control; energy, cost and batch are first-class.
+
 ## Current critical path and owners
 
 | Owner | Current work / next acceptance |

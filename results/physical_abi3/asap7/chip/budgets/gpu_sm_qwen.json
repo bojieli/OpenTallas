@@ -1,0 +1,106 @@
+{
+ "name": "gpu_sm_qwen",
+ "arch": "hbm_gpu_qwen",
+ "period_ps": 920.0,
+ "uncertainty_ps": 60.0,
+ "method": "W13: registered-boundary budget (tc_col registers every input and output); the SM glue owns the rest of each cycle",
+ "blocks": {
+  "ot_gpu_tc_col": {
+   "instance": "g_col[*].g_sub[*].u_tc",
+   "ports": {
+    "v": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "first": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "last": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "tag": {
+     "direction": "input",
+     "width": 16,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "w": {
+     "direction": "input",
+     "width": 512,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "x": {
+     "direction": "input",
+     "width": 512,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "ov": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "y": {
+     "direction": "output",
+     "width": 32,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "otag": {
+     "direction": "output",
+     "width": 16,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "fault": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 SM glue budget: every tc_col input lands in a register, every output leaves one"
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1,
+     "status": "static",
+     "internal_budget_ps": null,
+     "external_ps": null
+    }
+   }
+  }
+ },
+ "memories": {},
+ "violations": [],
+ "wire_model": null,
+ "tile_io_fraction": null,
+ "tile_netlist": null
+}

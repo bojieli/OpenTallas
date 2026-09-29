@@ -1,0 +1,235 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T15:43:14.351070+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 44670.708,
+    "block": "ot_qwen_rom_tile_logic",
+    "cells": 318083,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_ns": 0.06,
+    "clock_uncertainty_setup_only": true,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "CODE_BANKS": 12
+    },
+    "sources": [
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "size_bytes": 5251
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "size_bytes": 7751
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_matvec.sv",
+        "sha256": "6e61ade819a8fc13cee61711639a0980ae065f265e21495957dad774efca09a9",
+        "size_bytes": 45192
+      },
+      {
+        "path": "rtl/hdc/ot_qwen_me_array.sv",
+        "sha256": "d623a656b004d04d867813a964c6ec59d3e15aafc03108451ede15f143980b44",
+        "size_bytes": 18770
+      },
+      {
+        "path": "rtl/hdc/ot_qwen_rom_tile.sv",
+        "sha256": "d44afd3100040a78661b2cb040e4a9925d5bb06b5c710d985fad8ae3069f1ee3",
+        "size_bytes": 13064
+      }
+    ],
+    "top": "ot_qwen_rom_tile_logic"
+  },
+  "error": "FlowError: OpenSTA failed with exit 127:\n\n/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta: error while loading shared libraries: libfmt.so.8: cannot open shared object file: No such file or directory\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T15:23:20.055205+00:00",
+  "git": {
+    "commit": "ae7af75895070ce15a8be6b48733588d59d094c1",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_rom_tile_logic",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_matvec.sv",
+      "--source",
+      "rtl/hdc/ot_qwen_me_array.sv",
+      "--source",
+      "rtl/hdc/ot_qwen_rom_tile.sv",
+      "--clock-period-ns",
+      "0.910216",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-setup-only",
+      "--stages",
+      "synth,sta",
+      "--corner",
+      "TT",
+      "--nickname-tag",
+      "w12_tlogic_b12",
+      "--output",
+      "results/physical_hdc/asap7/qwen_o4_w12/tile_logic_b12/physical.json",
+      "--param",
+      "CODE_BANKS=12"
+    ],
+    "driver": {
+      "commit": "ae7af75895070ce15a8be6b48733588d59d094c1",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w12/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "8888a3fcda7bb1271550e4510d232d3fe17f44cd973a56d574213f97a1e59532",
+      "tree": "/tmp/claude-1000/wt/w12"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 910.216,
+    "cell_area_um2": 44670.708,
+    "cell_count": 318083,
+    "cell_types_used": 40,
+    "chip_area_um2": 44712.96714,
+    "combinational_cell_count": 259027,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "f05e6313384460135721c0d08f824f76bdcd691b86491d36e17726ed6595d727",
+      "raw_netlist_sha256": "f05e6313384460135721c0d08f824f76bdcd691b86491d36e17726ed6595d727",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 19630.0,
+    "sequential_cell_count": 59056,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.910216,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta: error while loading shared libraries: libfmt.so.8: cannot open shared object file: No such file or directory"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

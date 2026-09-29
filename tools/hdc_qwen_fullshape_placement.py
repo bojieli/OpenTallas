@@ -7,6 +7,7 @@ It does not emit weights, a program, or a golden/RTL shard verdict.
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import hdc_golden as G
@@ -16,14 +17,37 @@ import hdc_program as P
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / 'compiler/models/qwen3-8b/config.json'
 LOCK = ROOT / 'compiler/models/qwen3-8b/checkpoint_source.json'
-GROUPS, W, IL = 6144, I.W_LANES, I.INTERLEAVE
+# Lane groups per die.  6,144 is the published O4 die; the microarchitecture
+# model (tools/uarch_model.py, docs/MICROARCH_MODEL.md) chooses 5,120, which is
+# selected with QWEN_O4_GROUPS=5120 for every tool that imports this constant.
+GROUPS, W, IL = int(os.environ.get('QWEN_O4_GROUPS', '6144')), I.W_LANES, I.INTERLEAVE
 EMBED_CODES_PER_WORD = 64  # tools/hdc_qwen_int8_image.py separate embedding ROM
+
+
+def rtl_split(n, k, groups):
+    """K-split under the engine's tiling rule (rtl/hdc/ot_hdc_matvec.sv): a
+    round covers floor(G/S) tiles, fewest cycles, the smaller split on a tie.
+    hdc_golden.split_for prices a round as G/S fractional tiles; the two agree
+    whenever S divides G (every shipped matrix at G = 6,144) and differ at
+    G = 5,120, where split_for would pick S = 2,048 for o/down (2.5 tiles a
+    round) which the engine runs as 2.  arch_budget_qwen3.split_rounds is the
+    same rule."""
+    tiles = -(-n // (W * IL))
+    best = None
+    s = 1
+    while s <= groups:
+        if k % s == 0:
+            cycles = -(-tiles // (groups // s)) * (k // s) * IL
+            if best is None or cycles < best[0]:
+                best = (cycles, s)
+        s *= 2
+    return best[1]
 
 
 def matrix(base, name, n, k, groups=GROUPS):
     if n <= 0 or k <= 0 or groups <= 0 or k % W:
         raise ValueError(f'{name}: invalid matrix/group dimensions')
-    split = G.split_for(n, k, groups, W, IL)
+    split = rtl_split(n, k, groups)
     if groups % split:
         raise ValueError(f'{name}: K split {split} does not divide {groups} groups')
     kc = k // split
