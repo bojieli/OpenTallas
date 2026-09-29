@@ -23,3 +23,9 @@ The approved PG-orientation rerun adds POST_DETAIL_PLACE check_power_grid on VDD
 ## VM PG-corrected final result
 
 The follow-up completes with physical VDD/VSS connectivity, zero DRC/antenna/slew/cap violations. Extracted setup is +259.405ps, but hold is -6.831ps across18 violating endpoints, and7 clock outputs retain fanout33 against limit32. Verdict remains **NOT_MET**; no achieved operating frequency is claimed. All checks retain0.92ns period and60ps uncertainty. Remaining fixes must repair actual hold and clock-tree fanout, rather than weakening constraints. Its full die outline remains44,800um2 with5,170.65um2 macro and505.43um2 standard-cell area; those figures are this microblock only.
+
+## MP1 PG-corrected final result and next bounded repair
+
+The MP1 cut completes routing and physical VDD/VSS connectivity. Extracted setup is +402.886ps, hold is -3.357ps across7 endpoints. DRC, antenna, max slew, capacitance and fanout violations are all zero. It remains **NOT_MET** solely on hold. Together the cuts show that pin escape and row/rail orientation have workable implementations, but neither is timing-qualified yet.
+
+The next proposed implementation repair is a positive20ps hold-repair target, preserving the actual60ps uncertainty and0.92ns period. VM additionally needs clock leaf clustering below the existing32-fanout rule (candidate16 sinks per cluster). Those changes require architecture approval and measured clock-buffer/area/hold impact; no frequency claim or larger neighborhood follows from the present tests. The VM worst short path is rd_row_q[2] to SRAM address:257.06ps arrival versus263.89ps requirement, including the unchanged60ps clock reserve. No extra architectural cycle is justified by this small minimum-delay miss alone.
