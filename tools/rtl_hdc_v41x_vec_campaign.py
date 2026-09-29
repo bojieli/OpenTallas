@@ -807,7 +807,8 @@ def build(N, M, obj: Path, pmax=4096):
     write_fields_svh()
     obj.mkdir(parents=True, exist_ok=True)
     cmd = [VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
-           "-Wno-UNOPTFLAT", "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb", "-Mdir", str(obj),
+           "-Wno-UNOPTFLAT", *os.environ.get("OT_VFLAGS", "").split(), "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb",
+           "-Mdir", str(obj),
            f"-GN={N}", f"-GM={M}", f"-GPMAX={pmax}", f"-GVMA={VMA}", f"-GKVA={KVA}", f"-GCRA={CRA}", f"-GWRA={WRA}", f"-GXBA={XBA}", f"-I{ROOT / 'rtl/test'}",
            *map(str, LIB), *map(str, RTL), str(TB), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"]
     t0 = time.time()
@@ -1351,9 +1352,12 @@ def main():
     head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True)
     dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--untracked-files=no"],
                            capture_output=True, text=True)
-    rec["git_head"] = head.stdout.strip()
-    rec["git_dirty_tracked_files"] = [ln[3:] for ln in dirty.stdout.splitlines()]
+    # a remote run (rsync of the tree without .git) passes the commit it copied in OT_GIT_HEAD
+    rec["git_head"] = head.stdout.strip() if head.returncode == 0 else os.environ.get("OT_GIT_HEAD", "")
+    rec["git_dirty_tracked_files"] = [ln[3:] for ln in dirty.stdout.splitlines()] if dirty.returncode == 0 else \
+        "unknown: run outside a git checkout (sources are pinned by sha256)"
     rec["verilator"] = VERILATOR
+    rec["verilator_extra_flags"] = os.environ.get("OT_VFLAGS", "")
     out = Path(args.out) if args.out else OUT
     out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")
     print("wrote", out)
