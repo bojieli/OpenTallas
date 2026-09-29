@@ -10,6 +10,7 @@ module tb_v41_rom_array;
     parameter integer N = 4;
     parameter integer BF16 = 1;
     parameter integer XF = 4;
+    parameter integer NB = 1;
     localparam integer XBW = 546;
     localparam integer LEAD = 1;
     reg clk = 1'b0, rst_n = 1'b0;
@@ -24,7 +25,7 @@ module tb_v41_rom_array;
     wire r_v, r_e, busy, fault;
     wire [15:0] r_row, r_bf16;
     wire [31:0] r_fp32;
-    ot_v41_rom_array #(.N(N), .BF16(BF16), .XF(XF)) dut (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_e(cfg_e), .cfg_a(cfg_a),
+    ot_v41_rom_array #(.N(N), .BF16(BF16), .XF(XF), .NB(NB)) dut (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_e(cfg_e), .cfg_a(cfg_a),
         .cfg_d(cfg_d), .go(go), .go_bf(go_bf), .xb_v(bbeat[1063]), .xb_b(bbeat[1062:1060]), .xb_sv(bbeat[1059:1056]),
         .xb_u(bbeat[1055:1024]), .xb_d(bbeat[1023:0]), .xs_v(beat[545]), .xs_p(beat[544:537]), .xs_b(beat[536:534]),
         .xs_sv(beat[533:532]), .xs_q0(beat[531:276]), .xs_e0(beat[275:266]), .xs_q1(beat[265:10]),
@@ -65,10 +66,10 @@ module tb_v41_rom_array;
                     cyc, dut.g_el[0].u_e.go, dut.g_el[0].u_e.xs_v, dut.g_el[0].u_e.hit, dut.g_el[0].u_e.issue,
                     dut.g_el[0].u_e.f_cnt, dut.g_el[0].u_e.w_run, dut.g_el[0].u_e.n_run, dut.g_el[0].u_e.n_pair,
                     dut.g_el[0].u_e.n_b, dut.g_el[0].u_e.xs_p, dut.g_el[0].u_e.xs_b, dut.g_el[0].u_e.pv,
-                    dut.g_el[0].u_e.l0_v, dut.g_el[0].u_e.c0_v, dut.g_el[0].u_e.t_v);
-            if (trace && dut.g_el[0].u_e.c0_v) $display("C0 %0d slot? %08h tag=%0h", cyc, dut.g_el[0].u_e.c0_s, dut.g_el[0].u_e.c0_t);
-            if (trace && dut.g_el[0].u_e.b_v) $display("B0 %0d %08h tag=%0h", cyc, dut.g_el[0].u_e.b_val, dut.g_el[0].u_e.pr_t);
-            if (trace && dut.g_el[0].u_e.pv) $display("P0 %0d %08h row=%0d", cyc, dut.g_el[0].u_e.pval, dut.g_el[0].u_e.prow);
+                    dut.g_el[0].u_e.g_mac[0].l0_v, dut.g_el[0].u_e.g_mac[0].c0_v, dut.g_el[0].u_e.g_mac[0].t_v);
+            if (trace && dut.g_el[0].u_e.g_mac[0].c0_v) $display("C0 %0d slot? %08h tag=%0h", cyc, dut.g_el[0].u_e.g_mac[0].c0_s, dut.g_el[0].u_e.g_mac[0].c0_t);
+            if (trace && dut.g_el[0].u_e.g_mac[0].b_v) $display("B0 %0d %08h tag=%0h", cyc, dut.g_el[0].u_e.g_mac[0].b_val, dut.g_el[0].u_e.g_mac[0].pr_t);
+            if (trace && dut.g_el[0].u_e.pv[0]) $display("P0 %0d %08h row=%0d", cyc, dut.g_el[0].u_e.pval[31:0], dut.g_el[0].u_e.prow[15:0]);
             if (r_v) begin
                 $display("ROW %0d %08h %04h %0d %0d", r_row, r_fp32, r_bf16, r_e, cyc - 1);
                 got = got + 1;

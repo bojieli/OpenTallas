@@ -18,7 +18,8 @@ module ot_v41_rom_array #(
     parameter integer RST = 1,
     parameter integer LV = 5,
     parameter integer RD = 16,
-    parameter integer BF16 = 0
+    parameter integer BF16 = 0,
+    parameter integer NB = 1          // 2: elements are W1 macro pairs sharing one front end (N counts macros)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -92,26 +93,33 @@ module ot_v41_rom_array #(
     wire [28:0] nt [0:L][0:N-1];
     wire [31:0] nd [0:L][0:N-1];
     wire        ne [0:L][0:N-1];
-    wire [N-1:0] e_busy, e_fault;
+    wire [N/NB-1:0] e_busy, e_fault;
     wire [N-1:0] n_fault [0:L];
-    generate for (g = 0; g < N; g = g + 1) begin : g_el
-        wire pv, perr;
-        wire [31:0] pval;
-        wire [15:0] prow;
-        wire [4:0] pseg, pnseg;
-        ot_v41_rom_elem #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .INSTANCE($sformatf("e%0d", g))) u_e (
+    wire [N-1:0] e_busy_m, e_fault_m;
+    generate for (g = 0; g < N / NB; g = g + 1) begin : g_el
+        wire [NB-1:0] pv, perr;
+        wire [32*NB-1:0] pval;
+        wire [16*NB-1:0] prow;
+        wire [5*NB-1:0] pseg, pnseg;
+        ot_v41_rom_elem #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NB(NB),
+                          .INSTANCE($sformatf("e%0d", g))) u_e (
             .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v && cfg_e == g), .cfg_a(cfg_a), .cfg_d(cfg_d),
             .go(go_d[BST]), .go_bf(gb_d[BST]), .xb_v(bv_d[BST]), .xb_b(bb[BBW-1 -: 3]), .xb_sv(bb[BBW-4 -: 4]),
             .xb_u(bb[1055:1024]), .xb_d(bb[1023:0]), .xs_v(xv_d[BST]), .xs_p(xb[XBW-2 -: 8]), .xs_b(xb[XBW-10 -: 3]),
             .xs_sv(xb[XBW-13 -: 2]), .xs_q0(xb[XBW-15 -: 256]), .xs_e0(xb[XBW-271 -: 10]),
             .xs_q1(xb[XBW-281 -: 256]), .xs_e1(xb[9:0]),
             .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr),
-            .busy(e_busy[g]), .fault(e_fault[g]));
-        assign nv[0][g] = pv;
-        assign nt[0][g] = {prow, pseg, 3'd0, pnseg};
-        assign nd[0][g] = pval;
-        assign ne[0][g] = perr;
+            .busy(e_busy_m[g]), .fault(e_fault_m[g]));
+        genvar m;
+        for (m = 0; m < NB; m = m + 1) begin : g_m
+            assign nv[0][NB*g+m] = pv[m];
+            assign nt[0][NB*g+m] = {prow[16*m +: 16], pseg[5*m +: 5], 3'd0, pnseg[5*m +: 5]};
+            assign nd[0][NB*g+m] = pval[32*m +: 32];
+            assign ne[0][NB*g+m] = perr[m];
+        end
     end endgenerate
+    assign e_busy = e_busy_m[N/NB-1:0];
+    assign e_fault = e_fault_m[N/NB-1:0];
     generate for (l = 0; l < L; l = l + 1) begin : g_lv
         for (g = 0; g < (N >> (l + 1)); g = g + 1) begin : g_n
             wire ov, oe, of;

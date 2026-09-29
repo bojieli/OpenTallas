@@ -1,4 +1,4 @@
-# POST_MACRO_PLACE hook for the W10 V4.1 ROM-array element (tools/v41_w10_elem_pnr.py; hook body from tools/v41_w2_romac_pnr.py).
+# POST_MACRO_PLACE hook for the W2 V4.1 w10_elem_pair ROM/MAC neighborhood (tools/v41_w2_romac_pnr.py).
 # Places every macro FIRM on the joint site / M4-track grid, then FIXES each ROM output's capture flop
 # beside the pin it captures, in the orientation of its row (VDD/VSS rails align).
 set block [ord::get_db_block]
@@ -37,6 +37,7 @@ proc ot_row_orient {block y dbu} {
 }
 set ot_macros {
     {g_mac[0].u_rom} 14.160 6.160 R0 1
+    {g_mac[1].u_rom} 283.872 6.160 MY 1
 }
 set nfixed 0
 set nunused 0
@@ -80,4 +81,4 @@ foreach {name mx my orient capture} $ot_macros {
     }
 }
 puts "OT_W10_ELEM_PLACE macros=[expr {[llength $ot_macros]/5}] fixed_capture_flops=$nfixed"
-if {$nfixed + $nunused != 274 || $nunused > 2} { error "capture flop count $nfixed" }
+if {$nfixed + $nunused != 548 || $nunused > 4} { error "capture flop count $nfixed" }

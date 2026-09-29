@@ -37,20 +37,30 @@ SOURCES = ["rtl/v41rom/ot_v41_rom_elem.sv", "rtl/v41rom/ot_v41_bterm.sv", "rtl/v
            f"{MACRO_DIR}/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v"]
 
 
-def plan(logic_w: float) -> dict:
+def plan(logic_w: float, pair: bool = False) -> dict:
+    """pair: a W1 pair column [ROM R0 | logic strip | ROM MY] sharing one front end (ot_v41_rom_elem NB = 2)."""
     rom, rw, rh = ROM
     die_h = W2.snap(2 * MARGIN + 2 * GAP + rh, 0.27)
     x_rom = MARGIN + CH
     x_logic0 = x_rom + rw + CH
-    die_w = W2.snap(x_logic0 + logic_w + MARGIN, 0.054)
-    return {"case": "w10_elem", "top": "ot_v41_rom_elem", "die_um": [die_w, die_h],
+    x_rom1 = x_logic0 + logic_w + CH
+    die_w = W2.snap((x_rom1 + rw + CH if pair else x_logic0 + logic_w) + MARGIN, 0.054)
+    macros = [{"inst": "g_mac[0].u_rom", "master": ROM, "x": x_rom, "y": MARGIN + GAP, "orient": "R0",
+               "capture": True}]
+    if pair:
+        macros.append({"inst": "g_mac[1].u_rom", "master": ROM, "x": x_rom1, "y": MARGIN + GAP, "orient": "MY",
+                       "capture": True})
+    return {"case": "w10_elem_pair" if pair else "w10_elem", "top": "ot_v41_rom_elem", "die_um": [die_w, die_h],
             "logic_region_um": [round(x_logic0, 3), MARGIN, round(x_logic0 + logic_w, 3), die_h - MARGIN],
-            "pin_span_um": [round(x_logic0, 3), round(die_w - MARGIN, 3)],
-            "macros": [{"inst": "u_rom", "master": ROM, "x": x_rom, "y": MARGIN + GAP, "orient": "R0",
-                        "capture": True}],
+            "pin_span_um": [round(x_logic0, 3), round(x_logic0 + logic_w, 3)],
+            "macros": macros, "pair": pair,
             "sources": SOURCES, "macro_views": [rom],
-            "w1_slot_um": [round(rw + W1_HALF_STRIP_UM, 3), W1_ROW_PITCH_UM],
+            "w1_slot_um": [round((2 * rw if pair else rw) + (2 if pair else 1) * W1_HALF_STRIP_UM, 3), W1_ROW_PITCH_UM],
             "w1_slot_logic_um2": round(W1_HALF_STRIP_UM * W1_ROW_PITCH_UM, 1)}
+
+
+def hook_name(p: dict) -> str:
+    return "physical/abi3/v41_w10_elem_pair_place.tcl" if p["pair"] else "physical/abi3/v41_w10_elem_place.tcl"
 
 
 def hook_tcl(p: dict) -> str:
@@ -59,8 +69,9 @@ def hook_tcl(p: dict) -> str:
     t = t.replace('if {$ff eq {}} { error "capture flop missing on [$net getName]" }',
                   'if {$ff eq {}} { incr nunused; continue }')
     t = t.replace("set nfixed 0", "set nfixed 0\nset nunused 0")
-    t = t.replace(f"if {{$nfixed != {274 * sum(1 for m in p['macros'] if m['capture'])}}}",
-                  f"if {{$nfixed + $nunused != {274 * sum(1 for m in p['macros'] if m['capture'])} || $nunused > 2}}")
+    nm = sum(1 for m in p['macros'] if m['capture'])
+    t = t.replace(f"if {{$nfixed != {274 * nm}}}",
+                  f"if {{$nfixed + $nunused != {274 * nm} || $nunused > {2 * nm}}}")
     return t.replace("W2 V4.1 w10_elem ROM/MAC neighborhood (tools/v41_w2_romac_pnr.py)",
                      "W10 V4.1 ROM-array element (tools/v41_w10_elem_pnr.py; hook body from tools/v41_w2_romac_pnr.py)") \
             .replace("OT_W2_ROMAC_PLACE", "OT_W10_ELEM_PLACE")
@@ -77,7 +88,7 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float, params=()) -
           "--place-density", f"{density:g}", "--macro-place-halo", "2", "2",
           "--pin-region", f".*=bottom:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}",
           "--max-transition-ns", "0.32", "--slew-margin-percent", "40", "--hold-margin-ns", "0.02",
-          "--step-tcl", "POST_MACRO_PLACE=physical/abi3/v41_w10_elem_place.tcl",
+          "--step-tcl", f"POST_MACRO_PLACE={hook_name(p)}",
           "--step-tcl", "POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl",
           "--nickname-tag", tag, "--keep-workdir", keep, "--output", output]
     for m in p["macro_views"]:
@@ -97,10 +108,13 @@ def main() -> None:
     ap.add_argument("--keep", default="/tmp/claude-1000/w10out/w10_elem_work")
     ap.add_argument("--output", default="results/physical_abi3/asap7/chip/v41_w10_elem/elem_physical.json")
     ap.add_argument("--param", action="append", default=[], help="RTL parameter, e.g. BF16=1")
+    ap.add_argument("--pair", action="store_true", help="a W1 macro pair sharing one front end (NB=2)")
     a = ap.parse_args()
-    p = plan(a.logic_w)
+    p = plan(a.logic_w, a.pair)
+    if a.pair and "NB=2" not in a.param:
+        a.param.append("NB=2")
     if a.write_hook:
-        (ROOT / "physical/abi3/v41_w10_elem_place.tcl").write_text(hook_tcl(p))
+        (ROOT / hook_name(p)).write_text(hook_tcl(p))
     if a.print:
         print(json.dumps({"plan": p, "argv": argv(p, a.tag, a.keep, a.output, a.density, a.param)}, indent=1))
 

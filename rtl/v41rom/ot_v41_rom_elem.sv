@@ -35,14 +35,16 @@
 //                            [18:16] first segment, [21:19] last segment, [22] BF16 family (NSEG <= 8)
 //   cfg_a = 2NSEG            [2:0] sub-blocks - 1 (a class of u units spans ceil(u / 8) sub-blocks)
 //   segment [42]             BF16
+//   cfg_a = 2NSEG+1+s        (NB = 2) [15:0] the row of segment s on the second macro of the pair
 // ---------------------------------------------------------------------------
 module ot_v41_rom_elem #(
     parameter integer NSEG = 8,
     parameter integer NCH = 16,
     parameter integer XF = 4,
-    parameter integer LV = 4,
+    parameter integer LV = 5,
     parameter integer BF16 = 0,       // 1: the 16-lane BF16 path (ot_v41_bf16_lanes) and its x port
     parameter integer NCHB = 8,
+    parameter integer NB = 1,         // macros sharing this front end (2 = a W1 pair: one walker, x FIFO, configuration)
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -66,20 +68,20 @@ module ot_v41_rom_elem #(
     input  wire [3:0]   xb_sv,
     input  wire [31:0]  xb_u,
     input  wire [1023:0] xb_d,
-    output reg          pv,
-    output reg  [31:0]  pval,
-    output reg  [15:0]  prow,
-    output reg  [4:0]   pseg,
-    output reg  [4:0]   pnseg,
-    output reg          perr,
+    output wire [NB-1:0]    pv,
+    output wire [32*NB-1:0] pval,
+    output wire [16*NB-1:0] prow,
+    output wire [5*NB-1:0]  pseg,
+    output wire [5*NB-1:0]  pnseg,
+    output wire [NB-1:0]    perr,
     output wire         busy,
-    output reg          fault
+    output wire         fault
 );
     localparam integer SW = $clog2(NSEG);
     localparam integer HW = $clog2(NCH);
 
     // ---------------- configuration ----------------------------------------------------------------
-    reg [15:0] s_row [0:NSEG-1];
+    reg [15:0] s_row [0:NB*NSEG-1];      // row of segment s on macro m at [m * NSEG + s]
     reg [4:0]  s_idx [0:NSEG-1];
     reg [4:0]  s_n   [0:NSEG-1];
     reg        s_fp4 [0:NSEG-1];
@@ -112,8 +114,10 @@ module ot_v41_rom_elem #(
             c_s0[cfg_a[SW-1:0]] <= cfg_d[16 +: SW];
             c_s1[cfg_a[SW-1:0]] <= cfg_d[19 +: SW];
             c_bf[cfg_a[SW-1:0]] <= cfg_d[22];
-        end else begin
+        end else if ({27'd0, cfg_a} == 2 * NSEG) begin
             qlast <= cfg_d[2:0];
+        end else begin                          // 2NSEG+1+s: the row of segment s on the pair's second macro
+            s_row[NSEG + cfg_a[SW-1:0] - 1] <= cfg_d[15:0];
         end
     end
 
@@ -224,7 +228,9 @@ module ot_v41_rom_elem #(
     end
     wire issue = w_run && f_cnt != 0 && !hazard;
     wire pop = issue && w_cls_last;
-    wire c0_fault, c1_fault, t_fault, b_fault;
+    reg ffault;
+    wire [NB-1:0] bk_fault;
+    assign fault = ffault | (|bk_fault);
 
     // an FP8 segment whose first unit lacks the low chunk starts at half 1
     wire [SW-1:0] s0_first = c_s0[c_first];
@@ -235,7 +241,7 @@ module ot_v41_rom_elem #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            n_run <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= 5'd0; fault <= 1'b0;
+            n_run <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= 5'd0; ffault <= 1'b0;
         end else begin
             hz_v <= {hz_v[3:0], issue};
             if (go) begin
@@ -271,8 +277,7 @@ module ot_v41_rom_elem #(
                     end else bn_cnt <= bn_cnt + {4'd0, bnum};
                 end
                 if (pop) f_rd <= f_rd + 1'b1;
-                if ({1'b0, f_cnt} + {2'b0, npush} > XF + (pop ? 1 : 0) || c0_fault || c1_fault || t_fault || b_fault)
-                    fault <= 1'b1;
+                if ({1'b0, f_cnt} + {2'b0, npush} > XF + (pop ? 1 : 0)) ffault <= 1'b1;
             end
         end
     end
@@ -289,14 +294,7 @@ module ot_v41_rom_elem #(
         for (k = 1; k < 5; k = k + 1) hz_s[k] <= hz_s[k-1];
     end
 
-    // ---------------- ROM, capture at the pins, x alignment ------------------------------------------------
-    wire [273:0] rd;
-    ot_rom_8192x274_m8
-`ifndef SYNTHESIS
-        #(.INSTANCE(INSTANCE))
-`endif
-        u_rom (.clk(clk), .ce_in(issue), .addr_in(w_ptr[w_s]), .rd_out(rd));
-    reg [273:0] cap;
+    // ---------------- x alignment with the ROM read (issue -> ROM -> capture: 2 cycles) ---------------------
     reg         i1_v, i2_v;
     reg [255:0] i1_q0, i1_q1, i2_q0, i2_q1;
     reg [9:0]   i1_e0, i1_e1, i2_e0, i2_e1;
@@ -317,7 +315,6 @@ module ot_v41_rom_elem #(
                  !w_bf && (w_fp4 ? hv[0] : 1'b1), !w_bf && w_fp4 && hv[1], w_fp4};
         i1_bf <= w_bf;
         i2_bf <= i1_bf;
-        cap <= rd;
         i2_q0 <= i1_q0; i2_e0 <= i1_e0; i2_q1 <= i1_q1; i2_e1 <= i1_e1; i2_t <= i1_t;
     end
     wire t_fp4 = i2_t[0];
@@ -328,6 +325,19 @@ module ot_v41_rom_elem #(
             for (i = 0; i < 32; i = i + 1) nib[8*i +: 4] = c[4*i +: 4];
         end
     endfunction
+    wire [12:0] rom_addr = w_ptr[w_s];
+
+    // ---------------- per macro: ROM, capture at its pins, lanes, chains, pair adder, segment tree ------------
+    genvar mb;
+    generate for (mb = 0; mb < NB; mb = mb + 1) begin : g_mac
+    wire [273:0] rd;
+    ot_rom_8192x274_m8
+`ifndef SYNTHESIS
+        #(.INSTANCE(mb == 0 ? INSTANCE : $sformatf("%sb", INSTANCE)))
+`endif
+        u_rom (.clk(clk), .ce_in(issue), .addr_in(rom_addr), .rd_out(rd));
+    reg [273:0] cap;
+    always @(posedge clk) cap <= rd;
     wire [255:0] w0q = t_fp4 ? nib(cap[127:0]) : cap[255:0];
     wire [7:0]   w0e = t_fp4 ? cap[135:128] : cap[263:256];
     wire [255:0] w1q = nib(cap[263:136]);
@@ -343,7 +353,7 @@ module ot_v41_rom_elem #(
         .xq(i2_q0), .xe(i2_e0), .wq(w0q), .we(we0), .tag(i2_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
     ot_v41_bterm #(.TW(TW)) u_l1 (.clk(clk), .rst_n(rst_n), .v(i2_v && i2_t[1]), .fp4(1'b1),
         .xq(i2_q1), .xe(i2_e1), .wq(w1q), .we(we1), .tag(i2_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
-    wire c0_v, c1_v, c0_f, c1_f;
+    wire c0_v, c1_v, c0_f, c1_f, c0_fault, c1_fault, t_fault, b_fault;
     wire [31:0] c0_s, c1_s;
     wire [SW:0] c0_t, c1_t;   // {tree, final}
     ot_v41_chain #(.NCH(NCH), .TW(SW + 1)) u_c0 (.clk(clk), .rst_n(rst_n), .v(l0_v),
@@ -379,7 +389,7 @@ module ot_v41_rom_elem #(
     wire bf_v, bf_err, bf_final;
     wire [31:0] bf_val;
     wire [SW-1:0] bf_tree;
-    generate if (BF16 != 0) begin : g_bf
+    if (BF16 != 0) begin : g_bf
         ot_v41_bf16_lanes #(.NCHB(NCHB), .TRW(SW)) u_bf (.clk(clk), .rst_n(rst_n), .v(i2_v && i2_bf),
             .w(cap[255:0]), .x(i2_q0), .slot(i2_t[TW-HW +: $clog2(NCHB)]), .first(i2_t[5]), .last(i2_t[4]),
             .tree(i2_t[TW-HW-1 -: SW]), .final_i(i2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
@@ -387,7 +397,7 @@ module ot_v41_rom_elem #(
     end else begin : g_nobf
         assign bf_v = 1'b0; assign bf_val = 32'd0; assign bf_tree = '0; assign bf_final = 1'b0;
         assign bf_err = 1'b0; assign b_fault = 1'b0;
-    end endgenerate
+    end
     wire        b_v = q_v | bf_v;
     wire [31:0] b_val = bf_v ? bf_val : q_val;
     wire        b_err = bf_v ? bf_err : q_err;
@@ -401,16 +411,25 @@ module ot_v41_rom_elem #(
     ot_v41_segtree #(.NT(NSEG), .LV(LV)) u_tree (.clk(clk), .rst_n(rst_n), .in_v(b_v),
         .in_tree(b_tree), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .oval(t_val), .oerr(t_err), .fault(t_fault));
+    reg o_v, o_err;
+    reg [31:0] o_val;
+    reg [15:0] o_row;
+    reg [4:0] o_seg, o_n;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) pv <= 1'b0;
-        else pv <= t_v;
+        if (!rst_n) o_v <= 1'b0;
+        else o_v <= t_v;
     end
     always @(posedge clk) begin
-        pval <= t_val; prow <= s_row[t_tree]; pseg <= s_idx[t_tree]; pnseg <= s_n[t_tree]; perr <= t_err;
+        o_val <= t_val; o_row <= s_row[mb * NSEG + t_tree]; o_seg <= s_idx[t_tree]; o_n <= s_n[t_tree]; o_err <= t_err;
     end
+    assign pv[mb] = o_v; assign pval[32*mb +: 32] = o_val; assign prow[16*mb +: 16] = o_row;
+    assign pseg[5*mb +: 5] = o_seg; assign pnseg[5*mb +: 5] = o_n; assign perr[mb] = o_err;
+    assign bk_fault[mb] = c0_fault | c1_fault | t_fault | b_fault;
+    end endgenerate
     assign busy = w_run | i1_v | i2_v;
     // slot field of the tag is HW bits; BF16 chains use its low log2(NCHB) bits (words per round <= NCHB)
 endmodule
+
 
 // first live class
 module ot_v41_first #(parameter integer N = 4) (

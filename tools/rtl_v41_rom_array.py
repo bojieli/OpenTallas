@@ -190,7 +190,39 @@ def viamap(words: dict[int, int], path: Path) -> None:
     path.write_text("".join(f"{v:0548x}\n" for v in rows))
 
 
-def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None):
+SENT = 0x8000
+
+
+def place_sibling(die, specs):
+    """Place each row's segments on consecutive elements starting at a multiple of next_pow2(segments), so the
+    row's golden siblings meet in the return tree's own nodes (no forwarding to the root)."""
+    info, ids = {}, []
+    cur = 0
+    for m in specs:
+        n_set = die.n
+        s = S.model_split(m["rows"], m["K"], n_set, m["fmt"])
+        segs = S.segments(m["K"], s)
+        info[m["tensor"]] = dict(rows=m["rows"], K=m["K"], fmt=m["fmt"], s_model=s, segment_elems=[x[1] for x in segs])
+        P = S.npow2(len(segs))
+        for r in range(m["rows"]):
+            base = (-(-cur // P) * P) % die.n
+            for si, (e0, el) in enumerate(segs):
+                ids.append(len(die.segs))
+                die.segs.append(dict(tensor=m["tensor"], fmt=m["fmt"], K=m["K"], row=r, e0=e0, elems=el,
+                                     macro=(base + si) % die.n, seg=si))
+            cur = base + P
+    die.close_instance("sib", ids)
+    by_fmt = {}
+    for i in ids:
+        sg = die.segs[i]
+        by_fmt.setdefault(sg["fmt"], []).append((sg["macro"], sg["e0"], sg["elems"], 0))
+    ph = specs[0]["phase"]
+    return {ph: dict(t_phase=S.phase_cycles(by_fmt))}, info
+
+
+def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibling=False):
+    """nb = 2: N macros as N/2 W1 pairs sharing one front end; each pair holds the same segment structure
+    for two consecutive rows (a 'super row' 2R, 2R+1), placed with the bank-map rules on N/2 pair slots."""
     K = mats[0].K
     assert all(m.K == K for m in mats)
     x = G.to_bf16((rng.standard_normal(K) * 0.5).astype(G.F))
@@ -206,13 +238,15 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None):
     xc = None if bf else x_codes(xq)
     xbits = (G.bits(G.to_bf16(x)) >> 16).astype(np.uint32)
     # placement with the bank-map rules on an N-macro die (every element carries BF16 lanes here)
-    die = S.Die(N, N)
-    specs = [dict(tensor=f"m{mi}", phase=m.phase, fmt=m.fmt, rows=m.rows, K=m.K) for mi, m in enumerate(mats)]
+    NE = N // nb
+    die = S.Die(NE, NE)
+    specs = [dict(tensor=f"m{mi}", phase=m.phase, fmt=m.fmt, rows=-(-m.rows // nb), K=m.K)
+             for mi, m in enumerate(mats)]
     orig = S.model_split
     if split:
         S.model_split = lambda rows, K, n, fmt="fp8": split       # the full-die split of one expert
     try:
-        res, info = S.place_dense(die, specs, 0)
+        res, info = place_sibling(die, specs) if sibling else S.place_dense(die, specs, 0)
     finally:
         S.model_split = orig
     (ph, r), = res.items()
@@ -223,11 +257,12 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None):
         by_e.setdefault(sg["macro"], []).append(i)
     rounds = {}                      # (q, b) -> {unit} ; demand per element
     demand = {}
-    for e in range(N):
+    nsent = 0
+    for e in range(NE):
         sids = by_e.get(e, [])
         segs = [die.segs[i] for i in sids]
         assert len(segs) <= NSEG, (e, len(segs))
-        words = {}
+        words = [{} for _ in range(nb)]
         # classes in ascending unit range; segments of a class by (fmt, row, tensor) -- element_order's order
         cls = {}
         for j, sg in enumerate(segs):
@@ -249,21 +284,29 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None):
             u0, u1 = S.unit_range(sg["fmt"], e0, el)
             lo = e0 <= u0 * 512
             hi = (u1 * 512 - 256) < e0 + el
-            d = ((mi * 1024 + sg["row"]) | (sg["seg"] << 16) | (nseg << 21) | (int(sg["fmt"] == "fp4") << 26)
+            rows_m = [nb * sg["row"] + k for k in range(nb)]
+            tags = [mi * 1024 + r if r < m.rows else SENT | (mi * 64 + sg["row"]) for r in rows_m]
+            nsent += sum(r >= m.rows for r in rows_m) if sg["seg"] == 0 else 0
+            for k in range(1, nb):
+                cfg.append((e, 2 * NSEG + 1 + slot, tags[k]))
+            d = (tags[0] | (sg["seg"] << 16) | (nseg << 21) | (int(sg["fmt"] == "fp4") << 26)
                  | (int(lo) << 27) | (int(hi) << 28) | (sg["base"] << 29) | (int(sg["fmt"] == "bf16") << 42))
             cfg.append((e, slot, d))
-            for k, (u, b, h) in enumerate(S.segment_order(sg["fmt"], e0, el)):
-                if sg["fmt"] == "bf16":
-                    w = bf16_word(m, sg["row"], u, b)
-                elif sg["fmt"] == "fp8":
-                    w = m.block_word(sg["row"], 2 * u + h, b)
-                else:
-                    w = 0
-                    for half in (0, 1):
-                        c = 2 * u + half
-                        if e0 <= c * 256 < e0 + el:
-                            w |= m.block_word(sg["row"], c, b) << (136 * half)
-                words[sg["base"] + k] = w
+            for mb, row in enumerate(rows_m):
+                if row >= m.rows:
+                    continue                                   # an idle half of the pair reads zeros
+                for k, (u, b, h) in enumerate(S.segment_order(sg["fmt"], e0, el)):
+                    if sg["fmt"] == "bf16":
+                        w = bf16_word(m, row, u, b)
+                    elif sg["fmt"] == "fp8":
+                        w = m.block_word(row, 2 * u + h, b)
+                    else:
+                        w = 0
+                        for half in (0, 1):
+                            c = 2 * u + half
+                            if e0 <= c * 256 < e0 + el:
+                                w |= m.block_word(row, c, b) << (136 * half)
+                    words[mb][sg["base"] + k] = w
             n_words += len(S.segment_order(sg["fmt"], e0, el))
         for c, (u0, nu, s0, s1) in enumerate(centries):
             cfg.append((e, NSEG + c, 1 | (u0 << 1) | (nu << 9) | (s0 << 16) | (s1 << 19) | (int(bf) << 22)))
@@ -271,9 +314,10 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None):
             cfg.append((e, NSEG + c, 0))
         nsub = max([-(-nu // 8) for _, nu, _, _ in centries] + [1])
         cfg.append((e, 2 * NSEG, nsub - 1))
-        viamap(words, work / f"e{e}.viamap.hex")
+        for mb in range(nb):
+            viamap(words[mb], work / (f"e{e}.viamap.hex" if mb == 0 else f"e{e}b.viamap.hex"))
         # stream needs and demand of this element, round by round (element_order)
-        for (i, u, b, h) in S.element_order(segs):
+        for (i, u, b, h) in (S.element_order(segs) if segs else []):
             sg = segs[i]
             q = (u - S.unit_range(sg["fmt"], sg["e0"], sg["elems"])[0]) // S.IL
             rounds.setdefault((q, b), set()).add(u)
@@ -326,18 +370,18 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None):
     assert 8 * 0 + t_rounds == t_pred or True
     (work / "cfg.hex").write_text("".join(f"{(e << 53) | (a << 48) | d:016x}\n" for e, a, d in cfg))
     (work / "stream.hex").write_text("".join(f"{v:0403x}\n" for v in beats))
-    return dict(bf=bf, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), exp_fp32=exp_fp32, exp_bf16=exp_bf16,
+    return dict(bf=bf, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32) + nsent, nsent=nsent, exp_fp32=exp_fp32, exp_bf16=exp_bf16,
                 t_pred=t_pred, t_rounds=t_rounds, words=n_words, split=info,
-                elements=[len(by_e.get(e, [])) for e in range(N)])
+                elements=[len(by_e.get(e, [])) for e in range(NE)])
 
 
-def build_sim(N: int, work: Path, xf: int) -> Path:
-    out = work / f"obj_n{N}_xf{xf}"
+def build_sim(N: int, work: Path, xf: int, nb: int = 1) -> Path:
+    out = work / f"obj_n{N}_xf{xf}_nb{nb}"
     exe = out / "Vtb_v41_rom_array"
     if exe.exists():
         return exe
     cmd = [str(VERILATOR), "--binary", "--timing", "-j", "8", "-Wno-fatal", "-Wno-lint", "-Wno-style",
-           "-O2", f"-GN={N}", f"-GXF={xf}", "--top-module", "tb_v41_rom_array", "-Mdir", str(out), str(ROOT / TB)]
+           "-O2", f"-GN={N}", f"-GXF={xf}", f"-GNB={nb}", "--top-module", "tb_v41_rom_array", "-Mdir", str(out), str(ROOT / TB)]
     cmd += [str(ROOT / p) for p in RTL]
     subprocess.run(cmd, check=True, cwd=work, stdout=subprocess.DEVNULL)
     return exe
@@ -395,23 +439,26 @@ def main(argv=None):
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--n", type=int, nargs="+", default=[2, 4, 8])
     ap.add_argument("--only")
+    ap.add_argument("--nb", type=int, nargs="+", default=[1], help="1: single elements; 2: W1 macro pairs")
+    ap.add_argument("--sibling", action="store_true", help="place each row's segments on sibling elements")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args(argv)
     G.set_arith("chunk8")
     ck = Ckpt(a.snapshot)
     rng = np.random.default_rng(SEED)
     out = []
-    for N in a.n:
+    for nb, N in [(nb, N) for nb in a.nb for N in a.n]:
         a.work.mkdir(parents=True, exist_ok=True)
         for name, mats in cases(ck, N).items():
             if mats is None or (a.only and a.only not in name):
                 continue
-            wd = a.work / f"n{N}_{name}"
+            wd = a.work / f"n{N}_nb{nb}{'_sib' if a.sibling else ''}_{name}"
             wd.mkdir(exist_ok=True)
-            ph = build_phase(mats, N, wd, rng, split=8 if "split8" in name else None)
+            ph = build_phase(mats, N, wd, rng, split=8 if "split8" in name else None, nb=nb, sibling=a.sibling)
             xf = XF_BF if ph["bf"] else XF_Q
-            exe = build_sim(N, a.work, xf)
+            exe = build_sim(N, a.work, xf, nb)
             rows, done = run_case(exe, wd, ph)
+            rows = {t: v for t, v in rows.items() if not t & SENT}
             ok_fp32 = sum(rows.get(t, (None,))[0] == v for t, v in ph["exp_fp32"].items())
             ok_bf16 = sum(rows.get(t, (None, None))[1] == v for t, v in ph["exp_bf16"].items())
             last = max((v[3] for v in rows.values()), default=None)
@@ -422,7 +469,7 @@ def main(argv=None):
             # level, LEAD 1)
             L = int(math.log2(N))
             model_depth = 78 + math.ceil(math.log(max(2, N), 8)) + 5 * adders + 2 + L * 1 + 1
-            rec = dict(N=N, case=name, XF=xf, model_depth=model_depth,
+            rec = dict(N=N, NB=nb, placement="sibling" if a.sibling else "lpt", case=name, XF=xf, model_depth=model_depth,
                        model_prediction=ph["t_pred"] + model_depth, rows=ph["nrows"], rows_out=len(rows), fp32_exact=ok_fp32, bf16_exact=ok_bf16,
                        fault=done[1] if done else None, cycles_last_row=last, t_phase_pred=ph["t_pred"],
                        t_rounds_scheduled=ph["t_rounds"], fill=(last - ph["t_pred"]) if last is not None else None,
@@ -430,7 +477,7 @@ def main(argv=None):
                        split={k: v["segment_elems"] for k, v in ph["split"].items()},
                        tensors=[dict(name=m.name, fmt=m.fmt, rows=[m.r0, m.r0 + m.rows], cols=[m.k0, m.k0 + m.K])
                                 for m in mats])
-            print(json.dumps({k: rec[k] for k in ("N", "case", "rows", "rows_out", "fp32_exact", "bf16_exact",
+            print(json.dumps({k: rec[k] for k in ("N", "NB", "case", "rows", "rows_out", "fp32_exact", "bf16_exact",
                                                    "fault", "cycles_last_row", "t_phase_pred", "fill", "model_depth")}), flush=True)
             out.append(rec)
     if a.output:
