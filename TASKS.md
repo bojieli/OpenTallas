@@ -1,6 +1,6 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-29. Last published baseline: `8f6925ba`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
+Updated 2026-09-29. Last published baseline: `9ac1d9be`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
@@ -9,14 +9,21 @@ Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured block
 | Owner | Current work / next acceptance |
 | --- | --- |
 | Root | [~] [Physical floorplan](docs/V41_PHYSICAL_FLOORPLAN.md): geometric reservations, locality and dependency budgets; integrate agent evidence and publish. Macro fit remains unverified. |
-| floorplan_inventory | [~] ROM capacity/area screening complete; integer tensor placement and complete bank/logic fit remain open. |
+| floorplan_inventory | [~] ROM capacity screening complete; building exact integer tensor/expert bank placement for a worst-capacity adopted die. |
 | floorplan_connectivity | [x] Eleven-edge ledger complete; physical distance and service closure pending root placement. |
-| ds_attention_elaboration | [~] Full-geometry real arithmetic on PVE2: 128-row and mixed 640-row cases pass; remaining numeric cases and HBM-connected consumer integration running. Synthetic inputs, not full token. |
-| qwen_execution_compile | [~] PVE1 G64 reference compiled; fixed-kernel builds and runtime differential execution next. No G64 exact verdict yet. |
-| ds_physical_locality | [!] PVE3 VM/ME route had zero DRC but failed physical power connectivity. Row-orientation correction rerun active; early VM VDD check passes. Final closure pending. |
-| ds_window_integration | [x] Opt-in finite-credit replay II1 implemented and tested. [ ] Actual numeric consumer composition; serial refill remains exposed. |
-| ds_fetch_integration | [x] Full-profile tile/die W address and count hookup; actual PHY rejects overflow before aliasing. [ ] Shared K/W timing and large-region service. |
+| ds_attention_elaboration | [~] Full-geometry real arithmetic on PVE2: All four standalone numeric cases pass; actual HBM-connected consumer integration now running. Synthetic inputs, not full token. |
+| qwen_execution_compile | [~] PVE1 G64 exact differential passed 56 cases; full-shape NW18/scale-base1 and checkpoint-backed core composition next. |
+| ds_physical_locality | [!] PVE3 VM/ME physical power and DRC pass. Hold misses remain (6.831/3.357 ps), plus VM clock fanout33>32. Approved hold20ps/VM CTScluster16 repair running with unchanged constraints. |
+| ds_window_integration | [~] II1 replay passed; approved opt-in eight outstanding refill requests per row under existing stage/scale barrier. Same-service exact and fault tests next. |
+| ds_fetch_integration | [~] Full-profile W hookup passed; proposing shared per-PC K/W service accounting before implementation. Large-region service remains open. |
 | ds_pv_producer_budget | [x] Actual producer contract: scalar preload floor identified. [ ] Root decision on producer redesign after measured composed schedule. |
+
+## Latest integrated evidence
+
+- DeepSeek attention H16/D512/T640: four synthetic cases, 24,592 scores and 32,768 PV outputs exact; expected fault and negative-checker coverage. Not HBM/SU/full-token execution.
+- Qwen G64 simulator composition: 56 cases, 12,880 cycles, 956 writes exact against RTL; wrong-edge scheduling rejected. Not full-checkpoint execution.
+- Physical microblocks: pin/site/rail alignment resolved in both cuts; extracted hold and clock-fanout violations remain recorded as NOT_MET.
+- L0 dependency schedule distinguishes Q preload2,048 cycles and probability preload512 cycles at T128. Probability preload2,560 applies to T640. Unmeasured complete durations remain null.
 
 ## Current architecture blockers
 
