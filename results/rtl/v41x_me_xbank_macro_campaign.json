@@ -18,12 +18,12 @@
     "two_group": {
       "marker": "ME_TWO_GROUP_PASS load_cycles=2048 reads=8192 errors=0",
       "status": "pass",
-      "stdout_sha256": "915f991deaafc434bf121a88a59f97c0a58befec2a2283276e8ecabec76aff66"
+      "stdout_sha256": "fc53389c247c6c781b6670eb8389d137b01e8b46b0c0323ae3bf69119ba4f221"
     },
     "two_group_wide": {
       "marker": "ME_TWO_GROUP_WIDE_PASS preload_cycles=128 reads=8192 errors=0",
       "status": "pass",
-      "stdout_sha256": "7df4df1d460a582ba01aa43f1e61b1b839f7e70546fd3a9e51cf456a1f99cbef"
+      "stdout_sha256": "c0274c98e7c3f1d356009c184cb43e57a0ad31835fb796db524680cb1d9855c2"
     }
   },
   "claim_scope": "Analytical ASAP7 128x256 1R1W SRAM-model exact-order gate for two TP4 wo_a activation groups, wide preload, both ME positions and one wide HE activation slice. No HCP adapter, timing, foundry, or token-rate claim.",

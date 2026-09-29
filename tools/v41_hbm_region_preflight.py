@@ -53,8 +53,8 @@ def build() -> dict:
     assert "parameter integer USER_W       = 8" in controller
     assert "header[HDR_USER_HI +: UHIW]" in controller
     assert "output wire [USER_W-1:0]  core_user" in controller
-    # The adopted die still instantiates the controller at its reduced default.
-    assert ".MAXU(MAXU)" in die and ".USER_W(10)" not in die
+    # The adopted die sizes the controller user width by FULL_SHAPE.
+    assert ".MAXU(MAXU)" in die and ".USER_W(FULL_SHAPE ? 10 : 8)" in die
     assert "localparam integer KV_SECTORS  = 2 * ((KV_USERS << KV_AW) / 4)" in die
 
     tech = json.loads(source_text[SOURCES[1]])

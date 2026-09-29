@@ -10,9 +10,9 @@
   ],
   "program": {
     "layer": 0,
-    "instructions": 103,
+    "instructions": 111,
     "collectives": 12,
-    "encoded_words": 103,
+    "encoded_words": 111,
     "tp": 4
   },
   "lint": {
@@ -29,7 +29,7 @@
       "X_EG": 0
     },
     "errors": [],
-    "warning_count": 550
+    "warning_count": 568
   },
   "source_sha256": {
     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
@@ -41,7 +41,7 @@
     "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
     "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
     "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
-    "rtl/hdc/v41/ot_hdc_blockdot.sv": "de168a33a74404c21f0de7ed4fd43f7732754d43eb16b66bb40f93e10f6d393c",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
     "rtl/hdc/v41/ot_hdc_chunk8_stack.sv": "0860ac77c1868da11452a7368afec9a2bf320744b09719e676c57160c6c4312b",
     "rtl/hdc/v41/ot_hdc_engram_hash.sv": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91",
     "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
@@ -58,11 +58,11 @@
     "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
     "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "c3f6ef57f8d2025dd2d4170462ec55fa427f90bd5b0d04b0540bbbf4098f13f0",
     "rtl/hdc/v41/ot_hdc_v41_matvec.sv": "907b2979b89f324a32bf8de9b8b1ecc4281346cfce221c2d0123ca6cb2d8d8fc",
-    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "57a05fd92b950bb6daa8e41918a336bee855e2758bd89880c7e00cde08cca6a7",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
     "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
     "rtl/hdc/v41/ot_hdc_v41_xu.sv": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "68397c83f73244b9695ea9c8173d18791e1623a9acd6953b9fa668aada418e33",
-    "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "302db959961034636d8028ee8ccb4868acb8d7744591574abea0d68566184afd",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4b58c624046838efe7c0399c3d704c10a7798aca80a265379d550d88757c5341",
+    "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",
     "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "ed2a13a5fd91fa94ef02dc48098c16b3587e74047a67655c9b4533af9f777758",
     "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
     "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "8eb0873a911d875a85048fbad1c496b391f019396f4c626a616c95e6ff1d16b2",
@@ -72,9 +72,9 @@
     "rtl/hdc/v41x/ot_hdc_v41x_idx.sv": "a7efc680c563abca19a59f4b83c8f1f6a6d5c33390b46cdac4f354b7a9c44630",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv": "2372df2af1c5176c5275461c3a2944f4c2365c613f0b9f626b7cbf784bef81b5",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
-    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
     "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
     "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
     "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
@@ -93,7 +93,7 @@
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-    "tools/hdc_replay_v41.py": "407d69d0d4b3d37143402dedfae13db3f5968b30e8bebd9df03dc2c56dc776be",
+    "tools/hdc_replay_v41.py": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
     "tools/rtl_v41_fullshape_core_preflight.py": "04c6e8d37d026f476069ecfc544fc915e906a9e7a1c84034a751a3662503db1d"
   }
 }

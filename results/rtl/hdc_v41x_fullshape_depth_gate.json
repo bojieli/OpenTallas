@@ -9,7 +9,7 @@
   "max_me_bank_address": 131179,
   "max_he_bank_address": 10319,
   "simulation_cycles": 2964,
-  "build_seconds": 100.42,
+  "build_seconds": 318.96,
   "memory_cap_bytes": 25769803776,
   "source_sha256": {
     "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
@@ -23,11 +23,11 @@
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
     "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
-    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "5cf9f17b17f251555114ed7d47bc0d462a3a74f5cfb69fc3dd0fa24b9ebfb643",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
     "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173",
     "rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c",
     "rtl/test/tb_hdc_v41x_fullshape_depths.sv": "ccae75748ce90d288ad942b147928c7fc6c6e0914ed4b8e00a665ad7e346e6f3",
     "tools/rtl_hdc_v41x_fullshape_depth_gate.py": "527f060d33d964365b3ed4597425998ab400b996cd88562de444b6aeabc3f762",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "e8df3028a3898fbad7eddb6f2616efb68495e51d2a542722be1ced81a6961819"
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4b58c624046838efe7c0399c3d704c10a7798aca80a265379d550d88757c5341"
   }
 }
