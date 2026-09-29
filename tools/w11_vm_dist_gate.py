@@ -21,7 +21,7 @@ Parts (each run with VM_DIST = 0, the reference on the same programs, and VM_DIS
   die    the reduced V4.1 decode step through the die top (rtl/test/tb_chip_v41x_die_vmdist.sv: the smoke
          bench with the die's VM_DIST): token against the golden and every logit, the whole vector memory and
          the whole KV cache against the ISA model; cycles against VM_DIST = 0 on the same image.  Stage sets:
-         `spec` (this repo's spec record) and `model` (tools/uarch_model.VM_DIST).
+         `spec` (this repo's spec record) and `model` (tools/uarch_model.VM_DIST, as the spec record carries it).
 
 Writes results/rtl/w11_vm_dist_gate.json (a new record; an existing one is never overwritten).
     python3 tools/w11_vm_dist_gate.py --scratch DIR [--parts su,die] [--n1024]
@@ -46,7 +46,6 @@ sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_v41x_vec_campaign as C      # noqa: E402
 import w11_su_softmax_spec as SM           # noqa: E402
 import rtl_chip_v41x_die_smoke as ds       # noqa: E402
-import uarch_model as U                    # noqa: E402
 
 core = ds.core
 OUT = ROOT / "results/rtl/w11_vm_dist_gate.json"
@@ -73,10 +72,11 @@ def stage_sets():
     spec = json.loads(SPEC.read_text())["trees"]
     return {"spec": dict(X_GATHER_STAGES=spec["x_gather"]["stages"], RET_SCATTER_STAGES=spec["ret_scatter"]["stages"],
                          SU_RES_STAGES=spec["su_results"]["stages"], COLL_WRITE_STAGES=spec["coll_write"]["stages"]),
-            "model": dict(X_GATHER_STAGES=U.VM_DIST["vm_x_gather_stages"],
-                          RET_SCATTER_STAGES=U.VM_DIST["vm_ret_scatter_stages"],
-                          SU_RES_STAGES=U.VM_DIST["su_ret_stages"],
-                          COLL_WRITE_STAGES=U.VM_DIST["vm_coll_write_stages"])}
+            # tools/uarch_model.VM_DIST, as the spec record carries it (model_stages)
+            "model": dict(X_GATHER_STAGES=spec["x_gather"]["model_stages"],
+                          RET_SCATTER_STAGES=spec["ret_scatter"]["model_stages"],
+                          SU_RES_STAGES=spec["su_results"]["model_stages"],
+                          COLL_WRITE_STAGES=spec["coll_write"]["model_stages"])}
 
 
 def vmdist_fields(text: str):
@@ -335,8 +335,7 @@ def main() -> int:
                        ROOT / "tools/rtl_v41x_su_softmax_campaign.py", ROOT / "tools/rtl_chip_v41x_die_smoke.py",
                        ROOT / "tools/rtl_hdc_v41x_decode_campaign.py", ROOT / "tools/hdc_program_v41.py",
                        ROOT / "tools/hdc_images_v41x.py", ROOT / "tools/hdc_isa_v41.py",
-                       ROOT / "tools/hdc_golden_v41.py", ROOT / "tools/hdc_golden.py",
-                       ROOT / "tools/uarch_model.py"]), key=str)
+                       ROOT / "tools/hdc_golden_v41.py", ROOT / "tools/hdc_golden.py"]), key=str)
     rec.update(status="pass" if ok else "fail", wall_seconds=round(time.time() - t0),
                claim_boundary=("RTL simulation of the opt-in distributed vector memory: behavioural lane-group "
                                "bank models (ot_v41_vm_dist_bank: one row store with the macro's port shape; the "
