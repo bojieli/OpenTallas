@@ -212,8 +212,8 @@ The bulk copy prefetches the static weight stream through every boundary. A boun
 | Qwen HBM, ASSUMED 200-cycle barrier, no prefetch | 854.9 |
 | Qwen HBM, V100 grid sync 1.43 µs, with prefetch / without | 758.5 / 716.6 |
 | Qwen HBM, today's adapter | 10.5 |
-| **V4.1 HBM, GPU die, K-chain-aware, group-slot issue** | **2,981** |
-| V4.1 HBM, same, row-slot issue | 2,578 |
+| **V4.1 HBM, GPU die, K-chain-aware, group-slot issue (adopted)** | **2,981** |
+| V4.1 HBM, same, row-slot issue (sensitivity) | 2,578 |
 | V4.1 HBM, group-slot, V100 grid sync | 1,269 |
 | V4.1 HBM published (additive, pooled widths, no barrier) | 3,579 |
 | V4.1 HBM, pooled-width chain with prefetch (superseded upper bound) | 3,882 |
@@ -228,7 +228,7 @@ The bulk copy prefetches the static weight stream through every boundary. A boun
 
 Group-slot breakdown: SM matvecs 66.9 µs (row-slot: 119.3), dedicated units and stream unit 120.4, barriers 17.8, fabric 130.3.
 
-### Speculation on the SM design (`speculation` in the record)
+### Speculation on the SM design (`speculation` in the record): MODEL ONLY
 
 Verify positions ride the MMA columns: 16 are built, one weight fetch serves the whole block, and each column keeps its own golden order.
 
@@ -242,7 +242,7 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 
 - **Qwen:** a step streams the target's bytes plus the drafter's 1.05 B parameters (INT8, ASSUMED) and a re-read of the shared lm_head over the draft slots. tau is measured per block (`results/speculative/dflash_block_acceptance.json`).
 - **V4.1:** verify runs the matvecs once, on the columns. The dedicated units issue every position's work, which adds 229 µs. Collective bytes scale with positions. The draft is 3/40 of an AR token (ASSUMED, as in the ROM rows).
-- **RTL:** the column-parallel verify is built and exact per column. The other parts need units that are not easy for this workstream, so they were not built:
+- **RTL (user rule: build only if easy; root decision 2026-09-29): the speculation figures are model-only.** The column-parallel verify is built and exact per column. The other parts need units that are not easy for this workstream, so they were not built, and the token-level greedy check waits for a whole-die HBM RTL:
   - causal attention inside the verify block: the Qwen die's attention is not in the SM RTL, and V4.1 attention is W11's unit;
   - the KV commit and rollback pointer;
   - a token-level check against greedy non-speculative tokens, which needs a whole-die HBM RTL that does not exist.

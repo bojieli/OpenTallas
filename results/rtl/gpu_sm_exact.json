@@ -6,23 +6,24 @@
  "simulator": "icarus Icarus Verilog version 11.0 (stable) ()",
  "source_sha256": {
   "rtl/gpu/ot_gpu_tree.sv": "6973a40d35478320c25b032bef5ac57a4928cef02b9581602ea9c8d68338d142",
-  "rtl/gpu/ot_gpu_issue.sv": "201ca407420e959bddf010ff94b55f2767e9f68231a5537fecef601c7efe36ac",
+  "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
   "rtl/gpu/ot_gpu_stack.sv": "8df2167979baea3e9358a92a01a7ad595bf64d3ed8f44ccd9e6832c8a8e8c8a1",
   "rtl/gpu/ot_gpu_tc_col.sv": "219eb9de9c55cb3cf8247a3c574f9b47e28126db32c91e91c04e9d222b03fb02",
-  "rtl/gpu/ot_gpu_sm.sv": "6240abed4248fc41af85d67ee5b85e53206099ece7745003ca2450c123800083",
+  "rtl/gpu/ot_gpu_sm.sv": "d014595faf900e625ef994c7e4714e01fb533fb68863311b1fc89827c327492f",
   "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
   "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
   "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
   "rtl/test/tb_gpu_sm.sv": "89b89548496a077399e1441a12067b17aa918fdebb65c6391117592b39cbc89a",
-  "tools/rtl_gpu_sm_exact.py": "590962e408db1fc5a7fef92a2f77918f1d9b485780021ddf1c58bb9beb90be69",
+  "tools/rtl_gpu_sm_exact.py": "5ae4ce7be75d87baf07017b0e6e41c276cb7d4987176dc0710bf0f1516465f2c",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
  },
  "cases": [
   {
    "case": "q_kc1_tree",
+   "bench": "sm",
    "fmt": "qwen_int8",
    "issue": "row_slot",
    "rows": 16,
@@ -53,6 +54,7 @@
   },
   {
    "case": "q_kc4",
+   "bench": "sm",
    "fmt": "qwen_int8",
    "issue": "row_slot",
    "rows": 13,
@@ -83,6 +85,7 @@
   },
   {
    "case": "q_kc3_down",
+   "bench": "sm",
    "fmt": "qwen_int8",
    "issue": "row_slot",
    "rows": 9,
@@ -113,6 +116,7 @@
   },
   {
    "case": "q_kc32_gateup",
+   "bench": "sm",
    "fmt": "qwen_int8",
    "issue": "row_slot",
    "rows": 8,
@@ -143,6 +147,7 @@
   },
   {
    "case": "q_split64_pad",
+   "bench": "sm",
    "fmt": "qwen_int8",
    "issue": "row_slot",
    "rows": 8,
@@ -173,6 +178,7 @@
   },
   {
    "case": "q_kc1_gaps",
+   "bench": "sm",
    "fmt": "qwen_int8",
    "issue": "row_slot",
    "rows": 16,
@@ -203,6 +209,7 @@
   },
   {
    "case": "v_bf16_k512",
+   "bench": "sm",
    "fmt": "v41_bf16",
    "issue": "row_slot",
    "rows": 16,
@@ -233,6 +240,7 @@
   },
   {
    "case": "v_bf16_k1004_pad",
+   "bench": "sm",
    "fmt": "v41_bf16",
    "issue": "row_slot",
    "rows": 11,
@@ -263,6 +271,7 @@
   },
   {
    "case": "v_bf16_k5120",
+   "bench": "sm",
    "fmt": "v41_bf16",
    "issue": "row_slot",
    "rows": 8,
@@ -293,6 +302,7 @@
   },
   {
    "case": "v_bf16_k5120_gs_r1",
+   "bench": "sm",
    "fmt": "v41_bf16",
    "issue": "group_slot",
    "rows": 1,
@@ -323,6 +333,7 @@
   },
   {
    "case": "v_bf16_k1004_gs_r3",
+   "bench": "sm",
    "fmt": "v41_bf16",
    "issue": "group_slot",
    "rows": 3,
@@ -353,6 +364,7 @@
   },
   {
    "case": "q_kc4_gs_r2",
+   "bench": "sm",
    "fmt": "qwen_int8",
    "issue": "group_slot",
    "rows": 2,
@@ -379,6 +391,96 @@
     "stall_waits": 0,
     "released": 1,
     "drain_last_line_to_last_result": 65
+   }
+  },
+  {
+   "case": "smq_kc1_tree",
+   "bench": "sm_q",
+   "fmt": "qwen_int8",
+   "issue": "row_slot",
+   "rows": 16,
+   "K": 512,
+   "chunk_len": 1,
+   "chunks": 512,
+   "split": 512,
+   "groups": 4,
+   "lanes": 128,
+   "sub_partitions": 4,
+   "cols": 2,
+   "stream_gap_pct": 0,
+   "weight_lines": 64,
+   "results": 16,
+   "mismatches": 0,
+   "exact": true,
+   "rtl": {
+    "cycles_start_to_done": 257,
+    "first_result": 207,
+    "last_result": 254,
+    "lines": 64,
+    "consumed": 64,
+    "fault": 0,
+    "released": 1,
+    "drain_last_line_to_last_result": 66
+   }
+  },
+  {
+   "case": "smq_kc3_down",
+   "bench": "sm_q",
+   "fmt": "qwen_int8",
+   "issue": "row_slot",
+   "rows": 9,
+   "K": 768,
+   "chunk_len": 3,
+   "chunks": 256,
+   "split": 256,
+   "groups": 2,
+   "lanes": 128,
+   "sub_partitions": 4,
+   "cols": 2,
+   "stream_gap_pct": 0,
+   "weight_lines": 54,
+   "results": 9,
+   "mismatches": 0,
+   "exact": true,
+   "rtl": {
+    "cycles_start_to_done": 284,
+    "first_result": 217,
+    "last_result": 281,
+    "lines": 54,
+    "consumed": 54,
+    "fault": 0,
+    "released": 1,
+    "drain_last_line_to_last_result": 61
+   }
+  },
+  {
+   "case": "smq_kc32_gateup",
+   "bench": "sm_q",
+   "fmt": "qwen_int8",
+   "issue": "row_slot",
+   "rows": 8,
+   "K": 4096,
+   "chunk_len": 32,
+   "chunks": 128,
+   "split": 128,
+   "groups": 1,
+   "lanes": 128,
+   "sub_partitions": 4,
+   "cols": 2,
+   "stream_gap_pct": 0,
+   "weight_lines": 256,
+   "results": 8,
+   "mismatches": 0,
+   "exact": true,
+   "rtl": {
+    "cycles_start_to_done": 503,
+    "first_result": 493,
+    "last_result": 500,
+    "lines": 256,
+    "consumed": 256,
+    "fault": 0,
+    "released": 1,
+    "drain_last_line_to_last_result": 56
    }
   }
  ]
