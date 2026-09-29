@@ -19,3 +19,7 @@ The remote image is pinned to sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c
 Before composition: both microblocks require routed setup/hold, zero DRC/antenna, power connectivity, clock/data fanout/slew/cap checks, and actual local wire-delay evidence. A positive placement slack does not satisfy these gates.
 
 The approved PG-orientation rerun adds POST_DETAIL_PLACE check_power_grid on VDD/VSS. This early check reproduces PSM-0069 on the failed prior placement ODB, so broken power connectivity fails before another detailed route. The check is additional validation; no original constraint is relaxed.
+
+## VM PG-corrected final result
+
+The follow-up completes with physical VDD/VSS connectivity, zero DRC/antenna/slew/cap violations. Extracted setup is +259.405ps, but hold is -6.831ps across18 violating endpoints, and7 clock outputs retain fanout33 against limit32. Verdict remains **NOT_MET**; no achieved operating frequency is claimed. All checks retain0.92ns period and60ps uncertainty. Remaining fixes must repair actual hold and clock-tree fanout, rather than weakening constraints. Its full die outline remains44,800um2 with5,170.65um2 macro and505.43um2 standard-cell area; those figures are this microblock only.
