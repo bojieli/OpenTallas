@@ -65,8 +65,10 @@ def sha(p):
 
 
 def base_name(t):
-    t = t.split('\\')[-1] if '\\' in t else t
-    return t
+    parts = t.split('\\')
+    if parts[0].startswith('$paramod') and len(parts) > 1:
+        return parts[1]
+    return parts[-1]
 
 
 def elaborate(g, work):
@@ -74,7 +76,8 @@ def elaborate(g, work):
     cmd = ' '.join(['read_verilog -sv'] + CORE_SOURCES) + '; ' + \
         f'hierarchy -top {TOP} -chparam G {g} -chparam W {W} -chparam INT8_WEIGHT 1 ' \
         f'-chparam INT8_SCALE_WCS_BASE 1; proc; write_json {js}'
-    subprocess.run([YOSYS, '-q', '-p', cmd], cwd=ROOT, check=True, stdout=subprocess.DEVNULL)
+    if not js.exists():
+        subprocess.run([YOSYS, '-q', '-p', cmd], cwd=ROOT, check=True, stdout=subprocess.DEVNULL)
     data = json.loads(js.read_text())
     mods = data['modules']
     memo = {}
@@ -94,9 +97,11 @@ def elaborate(g, work):
                 acc['inst:' + bn] = acc.get('inst:' + bn, 0) + 1
             elif FF_TYPES.match(t):
                 acc['ff_bits'] = acc.get('ff_bits', 0) + int(cell['parameters']['WIDTH'], 2)
-            elif t.startswith('$mem'):
+            elif t in ('$mem', '$mem_v2'):
                 p = cell['parameters']
                 acc['mem_bits'] = acc.get('mem_bits', 0) + int(p['SIZE'], 2) * int(p['WIDTH'], 2)
+        for mem in m.get('memories', {}).values():
+            acc['mem_bits'] = acc.get('mem_bits', 0) + int(mem['size']) * int(mem['width'])
         memo[name] = acc
         return acc
 
@@ -112,7 +117,6 @@ def elaborate(g, work):
     def walk_kind(name, mult):
         m = mods[name]
         bn = base_name(name)
-        bn = re.sub(r'^\$paramod\$[0-9a-f]+', '', bn)
         kind_bits[bn] = kind_bits.get(bn, 0) + per_kind[name] * mult
         for cell in m['cells'].values():
             if cell['type'] in mods:
@@ -121,8 +125,18 @@ def elaborate(g, work):
     out = {k: v for k, v in total.items()}
     for k, v in kind_bits.items():
         out['ffbits:' + k] = v
-    js.unlink()
     return out
+
+
+class _Keep:
+    def __init__(self, path):
+        self.path = str(path)
+
+    def __enter__(self):
+        return self.path
+
+    def __exit__(self, *a):
+        return False
 
 
 def lg(g):
@@ -153,8 +167,12 @@ def evaluate(coef, g):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--output', type=Path, default=OUT)
+    ap.add_argument('--work', type=Path, default=None,
+                    help='keep the elaborated netlists here and reuse them (they must match the pinned sources)')
     args = ap.parse_args()
-    with tempfile.TemporaryDirectory() as work:
+    if args.work:
+        args.work.mkdir(parents=True, exist_ok=True)
+    with (tempfile.TemporaryDirectory() if args.work is None else _Keep(args.work)) as work:
         with ThreadPoolExecutor(4) as ex:
             res = dict(zip(FIT_G + (HOLDOUT_G,), ex.map(lambda g: elaborate(g, work), FIT_G + (HOLDOUT_G,))))
     keys = sorted(set().union(*[set(r) for r in res.values()]))
@@ -179,16 +197,27 @@ def main():
         argmax_leaves_instantiated=lanes, argmax_leaves_reachable=ports * W,
         basis='ot_hdc_matvec: tile q of a round lands on group q after the split tree; scale_gre, the '
               'fmul valid and o_we all require group < G >> split; every G = 6144 matrix has split >= 64')
+    # split-tree and argmax registers, from the RTL structure (ot_hdc_matvec g_lvl, argmax tree):
+    # each of LG levels holds lq (G*W*32) and a TA-deep u_hold line (G*W*32 each); the flop
+    # count is not fitted (it has clog2 and power-of-two padding terms) but read off the RTL.
+    LGd = lg(G_DIE)
+    TA = 3
+    word = W * 32
+    tree_inst = LGd * (TA + 1) * G_DIE * word
+    # reachable: at level l only indices below max(G >> l, G >> min_split) can carry a result
+    tree_reach = sum((TA + 1) * max(G_DIE >> l, ports) * word for l in range(1, LGd + 1))
+    tree = dict(levels=LGd, registers_per_level_per_word=TA + 1, word_bits=word,
+                flop_bits_instantiated=tree_inst, flop_bits_reachable=tree_reach,
+                basis='rtl/hdc/ot_hdc_matvec.sv g_lvl: lq and u_hold (ot_hdc_delay W = G*W*32, D = TA) per level')
     # pricing (pre-layout ASAP7 TT cell area; routed utilisation is applied by the floorplan)
-    ff_total = c.get('ff_bits') or 0
     priced = dict(
         bmul_mm2=c['inst:ot_hdc_bmul'] * ua['ot_hdc_bmul'] / 1e6,
         fadd_mm2=c['inst:ot_hdc_fadd'] * ua['ot_hdc_fadd'] / 1e6,
         qadd_mm2=c['inst:ot_hdc_qadd'] * ua['ot_hdc_qadd'] / 1e6,
         fmul_instantiated_mm2=c['inst:ot_hdc_fmul'] * ua['ot_hdc_fmul'] / 1e6,
         fmul_reachable_mm2=ports * W * ua['ot_hdc_fmul'] / 1e6,
-        core_flop_bits=ff_total,
-        core_flop_mm2_at_dff_bit=ff_total * dff_um2 / 1e6 if ff_total else None,
+        split_tree_flop_mm2_instantiated=tree_inst * dff_um2 / 1e6,
+        split_tree_flop_mm2_reachable=tree_reach * dff_um2 / 1e6,
         basis='results/floorplan/qwen_o4_unit_areas.json (yosys 0.68 + ABC -D 910 on ASAP7 RVT TT, '
               'pre-layout); flop bits from the elaborated netlist, including the units\' internal flops')
     budget = json.loads((ROOT / 'results/arch/qwen3_budget.json').read_text())
@@ -230,7 +259,7 @@ def main():
                     note='elaborated without optimisation: counts are what the RTL instantiates'),
         counts=counts,
         at_6144={k: v for k, v in c.items() if v is not None},
-        reachability=reach, priced=priced,
+        reachability=reach, split_tree_registers=tree, priced=priced,
         ledger_gaps=gaps)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(rec, indent=1) + '\n')

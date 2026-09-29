@@ -91,8 +91,8 @@ module tb_qwen_o4_g4_rommac;
     wire [AW-1:0] r_wrom_addr;
     wire [G-1:0] r_scale_gre;
     wire [G*AW-1:0] r_scale_addr;
-    reg  [G*W*8-1:0] r_wrom_q;
-    reg  [G*W*16-1:0] r_scale_q;
+    reg  [G*W*8-1:0] r_wrom_q = 0;
+    reg  [G*W*16-1:0] r_scale_q = 0;
     ot_hdc_matvec #(.W(W), .G(G), .IL(8), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1)) ref_me (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(r_ready), .idle(r_idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(1'b0),
@@ -163,7 +163,10 @@ module tb_qwen_o4_g4_rommac;
             {r_ready, r_idle, r_x_re, r_x_addr, r_ov, r_o_we, r_o_addr, r_o_mask, r_o_data,
              r_am_idx, r_am_val, r_am_any, r_mx_we, r_prog, r_fault}) begin
             mism <= mism + 1;
-            if (mism < 5) $display("MISMATCH cycle %0d o_we %b/%b ov %b/%b", cyc, d_o_we, r_o_we, d_ov, r_ov);
+            if (mism < 5) $display("MISMATCH cycle %0d rdy %b/%b x %b/%b o %b/%b am %b/%b prog %0d/%0d fault %b/%b",
+                cyc, {d_ready, d_idle}, {r_ready, r_idle}, d_x_addr === r_x_addr, 1'b1,
+                {d_o_data === r_o_data, d_o_addr === r_o_addr}, 2'b11, {d_am_idx === r_am_idx, d_am_val === r_am_val}, 2'b11,
+                d_prog, r_prog, d_fault, r_fault);
         end
         if (r_ov) results <= results + 1;
     end

@@ -984,6 +984,12 @@ def sdc_lines(
             ] if block.get("ingress_clock_port") else []
         ),
         f"set_output_delay [expr $clk_period * {block.get('io_delay_fraction', 0.2):g}] -clock core_clk [all_outputs]",
+        *(
+            [
+                f"set_output_delay -min {block['output_delay_min_ns'] / view['time_unit_ns']:g} -clock core_clk [all_outputs]",
+                f"set_output_delay -max {block['output_delay_max_ns'] / view['time_unit_ns']:g} -clock core_clk [all_outputs]",
+            ] if "output_delay_min_ns" in block else []
+        ),
         f"set_load {load_lib:g} [all_outputs]",
         *signal_integrity_sdc_lines(constraints),
         *(f"set_false_path -from [get_ports {port}]" for port in block["false_path_from_ports"]),
@@ -2790,6 +2796,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="set_clock_uncertainty -setup on core_clk (hold is timed without it); absent emits nothing. The value "
              "is recorded under design.clock_uncertainty_ns",
     )
+    parser.add_argument("--output-delay-min-ns", type=float, default=None,
+                        help="set_output_delay -min on every output (with --output-delay-max-ns); a "
+                             "negative value models a downstream capture flop whose clock arrives that "
+                             "much later than the ideal edge (the same tree's insertion delay)")
+    parser.add_argument("--output-delay-max-ns", type=float, default=None,
+                        help="set_output_delay -max on every output (with --output-delay-min-ns)")
     parser.add_argument("--corner", default=None, help="corner name within the view")
     parser.add_argument("--clock-period-ns", type=float, required=True)
     parser.add_argument("--stages", default="synth,sta", help="comma list of synth,sta,pnr")
@@ -3192,6 +3204,12 @@ def main(argv: list[str] | None = None) -> int:
         block["io_delay_fraction"] = args.io_delay_fraction
     if args.clock_uncertainty_ns is not None:
         block["clock_uncertainty_ns"] = args.clock_uncertainty_ns
+    if (args.output_delay_min_ns is None) != (args.output_delay_max_ns is None):
+        print("--output-delay-min-ns and --output-delay-max-ns go together", file=sys.stderr)
+        return 2
+    if args.output_delay_min_ns is not None:
+        block["output_delay_min_ns"] = args.output_delay_min_ns
+        block["output_delay_max_ns"] = args.output_delay_max_ns
     if args.false_path_io:
         block["false_path_io"] = True
 
@@ -3332,6 +3350,8 @@ def main(argv: list[str] | None = None) -> int:
             "io_delay_fraction": block.get("io_delay_fraction", 0.2),
             **({"clock_uncertainty_ns": block["clock_uncertainty_ns"]}
                if "clock_uncertainty_ns" in block else {}),
+            **({k: block[k] for k in ("output_delay_min_ns", "output_delay_max_ns")}
+               if "output_delay_min_ns" in block else {}),
             "false_path_io": bool(block.get("false_path_io", False)),
             "sources": [
                 {
