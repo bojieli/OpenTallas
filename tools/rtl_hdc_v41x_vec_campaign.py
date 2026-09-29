@@ -1304,6 +1304,7 @@ def main():
     ap.add_argument("--scratch", default=None)
     ap.add_argument("--only", default=None, help="comma list: sfu,random,vehicle,perf64,perf1024")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--random1024", type=int, default=0, help="also run this many random seeds at N = 1,024")
     args = ap.parse_args()
     scratch = Path(args.scratch or tempfile.mkdtemp(prefix="v41xvec_"))
     scratch.mkdir(parents=True, exist_ok=True)
@@ -1331,6 +1332,11 @@ def main():
         for N, M, seeds, nops in ((16, 8, range(1, 4 if args.quick else 25), 40),
                                   (64, 16, range(101, 103 if args.quick else 117), 40)):
             rr[f"N{N}_M{M}"] = random_campaign(exe_for(N, M), N, M, list(seeds), nops, scratch)
+            print("random", N, sum(x["pass_"] for x in rr[f"N{N}_M{M}"]), "/", len(rr[f"N{N}_M{M}"]), flush=True)
+        if args.random1024 and "perf1024" in only:
+            N, M = 1024, 256
+            rr[f"N{N}_M{M}"] = random_campaign(exe_for(N, M), N, M, list(range(1001, 1001 + args.random1024)), 40,
+                                               scratch)
             print("random", N, sum(x["pass_"] for x in rr[f"N{N}_M{M}"]), "/", len(rr[f"N{N}_M{M}"]), flush=True)
         rec["random"] = rr
     if "vehicle" in only:
