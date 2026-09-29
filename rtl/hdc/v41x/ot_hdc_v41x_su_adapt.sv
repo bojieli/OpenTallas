@@ -40,7 +40,9 @@ module ot_hdc_v41x_su_adapt #(
     parameter integer AW = 24,
     parameter integer NW = 16,
     parameter integer CLS_DRAIN = 0,
-    parameter integer KVT_SH = 9
+    parameter integer KVT_SH = 9,
+    parameter integer BCAST_STAGES = 0, // ot_hdc_v41x_vec: controller -> lane broadcast tree stages
+    parameter integer RET_STAGES = 0    // ot_hdc_v41x_vec: lane / reducer -> vector-memory write stages
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -159,7 +161,8 @@ module ot_hdc_v41x_su_adapt #(
     wire [15:0] cr_cnt, emitted;
     wire        retire_o, dbg_emit, dbg_ret, dbg_res;
     wire [7:0]  dbg_eseq, dbg_rseq, dbg_sseq;
-    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .AW(AW), .NW(NW), .KVT_SH(KVT_SH)) u_vec (
+    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .AW(AW), .NW(NW), .KVT_SH(KVT_SH), .BCAST_STAGES(BCAST_STAGES),
+                     .RET_STAGES(RET_STAGES)) u_vec (
         .clk(clk), .rst_n(rst_n), .go(v_go), .ready(v_ready), .idle(v_idle),
         .i_nout(nout), .i_nin(nin),
         .i_asrc(asrc), .i_bsrc(bsrc), .i_csrc(csrc), .i_dsrc(dsrc),
