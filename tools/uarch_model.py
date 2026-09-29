@@ -1692,6 +1692,648 @@ def fabric_sweep():
     return rows
 
 
+# ---------------------------------------------------------------------------------------------------------
+# Economics: batch, energy, cost (W14; user positioning decision 2026-09-29).  The paper claims single-user
+# speed against GPUs, makes energy per token and cost first-class, and reports aggregate throughput under
+# batching.  This section prices all four designs and the GPU tiers on the same three axes:
+#   batch    per-user tok/s, aggregate tok/s and per-user latency from batch 1 to the per-user state capacity;
+#   energy   J per token at batch 1 and at the saturated batch, whole system (all dies, HBM stacks, links);
+#   cost     die / package / stack / ROM mask-set counts and a dollar estimate per unit of throughput.
+# It calls the sections above and does not change them.  Every constant here cites its source; ASSUMED marks
+# the ones with none in the repository.
+# ---------------------------------------------------------------------------------------------------------
+ECON_BATCHES = (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024)
+ECON_SLO_TOKENS_S_PER_USER = 100.0   # ASSUMED illustrative interactivity floor for the "aggregate at an SLO" column
+MAC_OPS = 2                   # technology.json mac_energy_j_per_op is per OPERATION and a MAC is 2 of them (as
+                              # arch_budget_v41.energy_per_token).  power_ledger above charges 1 op per MAC: this
+                              # section uses 2 (the V4.1 ROM MAC energy is < 1% of its token either way)
+HBM_STACK_B = 22.5e9          # arch_budget_v41.hbm_comparator stack_capacity_B (HBM3E 24 GB class)
+HBM_CAP_EFF = 0.9             # technology.json efficiencies.hbm_capacity (runtime reserve)
+HBM_STACK_BPS = 1.0e12 * 0.9  # arch_budget_qwen3.HBM: 1.0 TB/s a stack, 0.90 sustained
+B200_HBM_B = 180e9            # DGX B200: 1,440 GB HBM3E over 8 GPUs (NVIDIA DGX B200 datasheet)
+B200_W_DECODE = TECH["power"]["gpu_reference_power"]["b200_measured_decode_w"]["value"]    # 689 W measured
+B200_W_TDP = TECH["power"]["gpu_reference_power"]["b200_tdp_nvl72_w"]["value"]             # 1,200 W published
+DFLASH_T3_B200 = {1: 230.0, 4: 861.0, 8: 1666.0, 16: 3133.0, 32: 5694.0}   # DFLASH_PAPER Table 3: B200 AR
+                              # baselines at concurrency 1..32 (aggregate tok/s, SGLang FA4, BF16, Math500)
+V41_ROM_SYSTEM = dict(packages=94, dies=188, layer_dies=112, head_dies=4, table_dies=72, stacks=464,
+                      src="results/arch/v41_rack.json comparison[0] and logical.roles")
+E_LINK = dict(ucie=TECH["energy"]["link_j_per_bit"]["ucie_advanced"]["value"],
+              board=TECH["energy"]["link_j_per_bit"]["board_serdes_112g"]["value"])
+V41_TP = 4                    # dies per pipeline stage (TP-4): the uarch graph is one die's work
+V41_STAGES = 28
+QWEN_ROM_AREA_DIE = dict(rom=265.0,                          # W12 integer placement, 34,669 macros (MICROARCH_MODEL)
+                         logic=6144 * 18063.0 / 1e6 + 12.8 + 4 * 10.0 + 10.0,   # pruned groups + SU spill +
+                                                             # 4 HBM PHY + UCIe PHY (arch_budget_qwen3 area constants)
+                         sram=6144 * 94.824 * 41.04 / 1e6)  # KV ring SRAM per group (QWEN_AREA kv_sram_group_um2)
+# ---- cost inputs (every dollar figure is ASSUMED in the repository or here) ----
+_ARCHS = json.loads((ROOT / "configs/hardware/architectures.json").read_text())
+_TIN = json.loads((ROOT / "configs/hardware/technology_inputs.json").read_text())["runtime_and_cost_assumptions"]
+
+
+def _arch_cost(name):
+    stack = [_ARCHS]
+    while stack:
+        o = stack.pop()
+        if isinstance(o, dict):
+            if o.get("name") == name and "cost_per_device" in o:
+                return o["cost_per_device"]
+            stack.extend(o.values())
+        elif isinstance(o, list):
+            stack.extend(o)
+    raise KeyError(name)
+
+
+COST = dict(
+    package_usd=_arch_cost("NVIDIA-B200-x1"),
+    package_basis="iso-package: every two-reticle + 8-HBM3E CoWoS-L-class package (the ROM packages, the HBM "
+                  "comparator packages and a B200 alike) at the repository's B200 device price "
+                  "(configs/hardware/architectures.json NVIDIA-B200-x1 cost_per_device, graded assumed)",
+    silicon_usd_per_mm2=_TIN["wafer_cost_per_device"] / TECH["wafer"]["area_mm2"]["value"],
+    silicon_basis="technology_inputs.json wafer_cost_per_device (assumed) over the 46,225 mm2 wafer-scale device",
+    hbm_stack_usd=360.0,      # ASSUMED: 24 GB x ~$15/GB HBM3E (2025 analyst estimates, TrendForce / Silicon Analysts;
+                              # no public spot price exists)
+    mask_set_usd=15e6,        # ASSUMED: a full 5 nm-class mask set, $5-15M+ (SemiAnalysis, "The Dark Side of the
+                              # Semiconductor Design Renaissance"); the upper end
+    rom_coding_fraction=0.10,  # ASSUMED low case: a ROM die's weights live in its coding (via/metal) layers, ~10% of a
+                              # full set; the base layers are shared by dies of one role
+    production_units=_TIN["production_units"],   # technology_inputs.json (assumed): NRE amortisation volume
+)
+
+
+def _curve(T1_s, sat_tok_s, cap, bound, extra=None):
+    """Batch sweep of a design whose users interleave on one machine: per-user rate is the single-user rate until
+    the machine's busiest resource saturates, then the saturated aggregate shared by the batch."""
+    rows = []
+    bs = [b for b in ECON_BATCHES if b <= cap] + ([cap] if cap not in ECON_BATCHES else [])
+    for B in sorted(set(bs)):
+        pu = min(1.0 / T1_s, sat_tok_s / B)
+        rows.append(dict(batch=B, per_user_tokens_s=round(pu, 1), aggregate_tokens_s=round(B * pu, 1),
+                         per_user_ms_per_token=round(1e3 / pu, 4),
+                         binding="single-user chain" if 1.0 / T1_s <= sat_tok_s / B else bound,
+                         **(extra(B) if extra else {})))
+    return rows
+
+
+def _sat_batch(rows):
+    top = max(r["aggregate_tokens_s"] for r in rows)
+    return next(r for r in rows if r["aggregate_tokens_s"] >= 0.999 * top)
+
+
+# ---- V4.1 ROM: the priced graph, per die, by energy category and stage occupancy ----
+def _v41_graph(d, positions=1):
+    """The proposal's priced graph; with positions > 1 the MTP verify pass at m = 1 (the issue scaling of
+    v41_verify_T, which returns only times)."""
+    r = evaluate(copy.deepcopy(d), 1048576)
+    g = r.pop("_g")
+    if positions > 1:
+        E = A._env()
+        clock, c = E["clock"], E["c"]
+        cyc = 1.0 / clock
+        p = positions
+        for name, nd in g.nodes.items():
+            k = nd["kind"]
+            u = nd.get("_uarch")
+            if u:
+                nd["issue"] = max(u["t_read"] * p, u["t_x"] * p, u["t_ret"] * p, u["t_mac"] * p) * cyc
+            elif k in ("vector", "reduce", "select", "collective"):
+                nd["issue"] *= p
+            elif k == "kvscan":
+                if name.endswith("idx.score"):
+                    n = int(nd["desc"].split()[2])
+                    rd = d["idx_reader_Bpc"] or (3.6e12 / clock)
+                    nd["issue"] = max(n * A.IDX_KEY_B / rd,
+                                      p * n * c["index_heads"] * c["index_head_dim"] / d["idx_macs"]) * cyc
+                else:
+                    nd["issue"] *= p
+            elif k == "matvec" and name.endswith("hc.fn"):
+                nd["issue"] *= p
+    return r, g
+
+
+def v41_rom_ledger(g, mac_ops=MAC_OPS, wire_j=WIRE_J_PER_BIT_MM):
+    """Per-layer (one die) energy by category and stage occupancy: power_ledger's terms, split so that a verify
+    pass can scale them (compute x positions, HBM once per pass).  With mac_ops=1 the busiest stage's on-die sum
+    equals power_ledger's energy_per_token_uJ (tests/test_uarch_economics.py)."""
+    field_mm = FLOORPLAN["cols"] * 25.628 + 20.0
+    lay, occ = {}, {}
+    for name, nd in g.nodes.items():
+        L = nd["layer"]
+        if L is None or L < 0:
+            continue
+        e = lay.setdefault(L, dict(mac=0.0, rom=0.0, xnet=0.0, units=0.0, hbm_if=0.0, stack=0.0, link=0.0))
+        k = nd["kind"]
+        u = nd.get("_uarch")
+        if u:
+            e["mac"] += u["rows"] * u["K"] * mac_ops * E_MAC["fp4" if u["fmt"] == "fp4" else "fp8" if u["fmt"] == "fp8"
+                                                             else "bf16"]
+            e["rom"] += u["words"] * BYTES_PER_WORD[u["fmt"]] * E_ROM_B
+            xbits = u["K"] * (16 if u["fmt"] == "bf16" else 8)
+            e["xnet"] += (xbits * field_mm * wire_j + u["K"] * 4 * E_SRAM_B + u["K"] * u["holding"] * E_DELIVER_B / 32
+                          + u["rows"] * u["ksplit"] * 32 * (field_mm / FLOORPLAN["cols"] / 2 + 10.0) * wire_j
+                          + u["rows"] * 4 * E_SRAM_B)
+        elif k == "matvec" and name.endswith("hc.fn"):
+            e["mac"] += nd["sweep"]["macs"] * mac_ops * E_MAC["fp32"]
+        elif k in ("vector", "reduce") and nd.get("_work"):
+            cls, n_el = nd["_work"]
+            e["units"] += n_el * E_MAC["fp32"] * (SFU_OPS_PER_ELEM if cls == "sfu" else 1) + n_el * 4 * 2 * E_SRAM_B
+        elif k == "kvscan" and nd.get("_work"):
+            cls, macs = nd["_work"]
+            e["units"] += macs * mac_ops * (E_MAC["fp4"] if cls == "idx" else E_MAC["bf16"])
+            hb = (int(nd["desc"].split()[2]) * A.IDX_KEY_B if name.endswith("idx.score")
+                  else 640 * A.WIN_ROW_B / 4 if name.endswith(".scores") else 0)
+            e["hbm_if"] += hb * E_HBM_IF_B
+            e["stack"] += hb * (E_HBM_B - E_HBM_IF_B)
+        elif k == "collective":
+            e["link"] += nd.get("payload", 0) * 8 * E_LINK_BIT
+        if k not in ("collective", "hop"):
+            occ[L] = occ.get(L, 0.0) + nd["issue"]
+    lps = 40 / V41_STAGES
+    st_e, st_o = {}, {}
+    for L in lay:
+        s = int(L / lps)
+        st_e[s] = st_e.get(s, 0.0) + sum(v for kk, v in lay[L].items() if kk != "stack")
+        st_o[s] = st_o.get(s, 0.0) + occ.get(L, 0.0)
+    cats = {kk: sum(x[kk] for x in lay.values()) for kk in ("mac", "rom", "xnet", "units", "hbm_if", "stack", "link")}
+    return dict(per_die_categories_J=cats, stage_die_energy_J=st_e, stage_occupancy_s=st_o)
+
+
+def v41_rom_economics():
+    d = copy.deepcopy(PRESETS["proposal"])
+    r1, g1 = _v41_graph(d, 1)
+    T1 = r1["T_us"] * 1e-6
+    led = v41_rom_ledger(g1)
+    area = area_ledger(d)
+    pw = power_ledger(d, g1, r1["clock_hz"], r1["tokens_s"], area)
+    rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())["power"]
+    link_static_die = rack["per_die"]["static_w"]["serdes_always_on"] + rack["per_die"]["static_w"]["ucie_idle"]
+    die_static = pw["clock_w"] + pw["leakage_w"] + pw["hbm_idle_w"] + link_static_die
+    static_w = dict(layer_dies=round(V41_ROM_SYSTEM["layer_dies"] * die_static, 1),
+                    head_dies=round(rack["static"]["head_dies"], 1), table_dies=round(rack["static"]["table_dies"], 1))
+    P_static = sum(static_w.values())
+    cats = {k: V41_TP * v for k, v in led["per_die_categories_J"].items()}      # all 4 dies of every stage
+    dyn_die = sum(v for k, v in cats.items() if k != "stack")
+    sat = 1.0 / max(led["stage_occupancy_s"].values())
+    cap = json.loads((ROOT / "results/arch/arch_budget_v41.json").read_text())["capacity"]["1048576"]["rom_users"]
+
+    def e_ar(B):
+        agg = min(B / T1, sat)
+        return dict(energy_mJ_per_token=round((dyn_die + cats["stack"] + P_static / agg) * 1e3, 3),
+                    system_w=round(P_static + (dyn_die + cats["stack"]) * agg, 0))
+    ar = _curve(T1, sat, cap, "busiest stage occupancy", e_ar)
+    # MTP m = 1: 6 positions per verify pass; compute terms x positions, HBM keys and rows once per pass
+    Tp, _ = v41_verify_T(d, V41_POSITIONS, 1)
+    Td = V41_DRAFT_FRACTION * T1
+    _, gv = _v41_graph(d, V41_POSITIONS)
+    ledv = v41_rom_ledger(gv)
+    head = max(ledv["stage_occupancy_s"])
+    occ_v = dict(ledv["stage_occupancy_s"])
+    occ_v[head] = occ_v[head] + Td                  # the draft runs on the head (+DSpark) dies (ASSUMED serial there)
+    step_sat = max(occ_v.values())
+    sat_m = V41_TAU / step_sat
+    step1 = Tp + Td
+    P = V41_POSITIONS
+    e_pass = sum(v * (1 if k in ("hbm_if", "stack") else P) for k, v in cats.items())
+    dyn_m = (e_pass + V41_DRAFT_FRACTION * (dyn_die + cats["stack"])) / V41_TAU
+
+    def e_m(B):
+        agg = min(B * V41_TAU / step1, sat_m)
+        return dict(energy_mJ_per_token=round((dyn_m + P_static / agg) * 1e3, 3),
+                    system_w=round(P_static + dyn_m * agg, 0))
+    mtp = _curve(step1 / V41_TAU, sat_m, cap, "busiest stage occupancy (verify pass)", e_m)
+    return dict(
+        design="V4.1 ROM array (proposal, 1M context)", system=V41_ROM_SYSTEM,
+        ar=dict(tokens_s_b1=round(1 / T1, 1), saturated_tokens_s=round(sat, 1), rows=ar,
+                sat_batch=_sat_batch(ar)["batch"]),
+        mtp_m1=dict(tokens_s_b1=round(V41_TAU / step1, 1), saturated_tokens_s=round(sat_m, 1), rows=mtp,
+                    sat_batch=_sat_batch(mtp)["batch"], tau=V41_TAU, positions=P, verify_us=round(Tp * 1e6, 1),
+                    draft_us=round(Td * 1e6, 1)),
+        capacity_users=cap, capacity_basis="results/arch/arch_budget_v41.json capacity[1048576].rom_users (KV + index "
+                                           "keys of the busiest layer-20 group in its 4 HBM3E stacks per die, 90% usable)",
+        energy=dict(dynamic_mJ_per_token_die=round(dyn_die * 1e3, 3), stack_mJ_per_token=round(cats["stack"] * 1e3, 3),
+                    categories_mJ_per_token={k: round(v * 1e3, 4) for k, v in cats.items()},
+                    static_w=static_w, static_w_total=round(P_static, 1),
+                    layer_die_static_w=dict(clock=pw["clock_w"], leakage=pw["leakage_w"], hbm_interface_idle=pw["hbm_idle_w"],
+                                            links=round(link_static_die, 3)),
+                    mtp_dynamic_mJ_per_token=round(dyn_m * 1e3, 3),
+                    basis="power_ledger terms on every stage x 4 TP dies (the uarch graph is one die, busiest-die "
+                          "macros for every layer); layer-die static = the ledger's clock + leakage + HBM interface "
+                          "idle, ungated, plus the rack's always-on SerDes and UCIe; head and Engram-table dies' "
+                          "static from results/arch/v41_rack.json power.static; HBM stack DRAM energy of the index "
+                          "and KV reads; stack background (refresh) power not charged"),
+        stage_occupancy_us={str(k): round(v * 1e6, 2) for k, v in sorted(led["stage_occupancy_s"].items())})
+
+
+# ---- Qwen3-8B ROM package (AR, G = 6,144 pruned, 8K) ----
+def _qwen_wl():
+    import arch_budget_qwen3 as Q
+    wl = json.loads((ROOT / "results/arch/qwen3_budget.json").read_text())["workload"]["8192"]
+    return wl, Q.kv_bytes(wl, Q.KV_FMT_SPEC)
+
+
+def _static_w(logic, rom, sram, clock, stacks):
+    return dict(clock=CLOCK_J_MM2 * clock * (logic + 0.15 * (rom + sram)),
+                leakage=logic * LEAK["logic"] + rom * LEAK["rom_array"] + sram * LEAK["sram_array"],
+                hbm_interface_idle=stacks * HBM_IDLE_W_STACK)
+
+
+def qwen_rom_economics():
+    import arch_budget_qwen3 as Q
+    q = qwen_eval(6144, 1024, pruned=True)
+    clock = q["clock_hz"]
+    ub = q["unit_busy"]
+    T1 = q["cycles"] / clock
+    wl, kvb = _qwen_wl()
+    lanes = ub["weights"] + ub["attn_scores"] + ub["attn_pv"] + ub["lm_head"]     # the ME lanes, per die
+    bounds = dict(lanes=clock / lanes, stream_unit=clock / ub["stream"],
+                  kv_stream=8 * HBM_STACK_BPS / kvb)                              # 8 stacks, each die its own heads
+    bind = min(bounds, key=bounds.get)
+    sat = bounds[bind]
+    cap = int(8 * HBM_STACK_B * HBM_CAP_EFF // kvb)
+    a = QWEN_ROM_AREA_DIE
+    st = {k: 2 * v for k, v in _static_w(a["logic"], a["rom"], a["sram"], clock, 4).items()}
+    P_static = sum(st.values())
+    macs = wl["weight_macs"] + wl["attention_macs"]
+    tpx = Q.tp_exchanges(clock)
+    cats = dict(mac=macs * MAC_OPS * E_MAC["bf16"],                 # the lane is an exact BF16 product of a decoded INT8
+                rom=wl["bytes"]["weights_rom_format"] * (E_ROM_B + E_DELIVER_B),
+                kv_on_die=kvb * (E_HBM_IF_B + E_DELIVER_B + 2 * E_SRAM_B),   # PHY/controller, ring SRAM, delivery
+                stream=wl["elementwise_total"] * (E_MAC["fp32"] + 2 * 4 * E_SRAM_B),
+                ucie=tpx["bytes_per_direction"] * 2 * 8 * E_LINK["ucie"],
+                stack=kvb * (E_HBM_B - E_HBM_IF_B))
+    dyn = sum(cats.values())
+
+    def e(B):
+        agg = min(B / T1, sat)
+        return dict(energy_mJ_per_token=round((dyn + P_static / agg) * 1e3, 3), package_w=round(P_static + dyn * agg, 1))
+    rows = _curve(T1, sat, cap, bind.replace("_", " "), e)
+    return dict(design="Qwen3-8B ROM package (AR, G = 6,144 pruned, 8K)",
+                system=dict(packages=1, dies=2, stacks=8),
+                ar=dict(tokens_s_b1=round(1 / T1, 1), saturated_tokens_s=round(sat, 1), rows=rows,
+                        sat_batch=_sat_batch(rows)["batch"]),
+                bounds_tokens_s={k: round(v, 1) for k, v in bounds.items()}, binding=bind,
+                unit_busy_cycles_per_die=ub, token_cycles=q["cycles"], capacity_users=cap,
+                capacity_basis="8 HBM3E stacks x 22.5 GB x 0.90 over the FP8 KV of one 8K user "
+                               f"({kvb / 1e6:.1f} MB)",
+                energy=dict(dynamic_mJ_per_token=round(dyn * 1e3, 3),
+                            categories_mJ_per_token={k: round(v * 1e3, 4) for k, v in cats.items()},
+                            static_w={k: round(v, 2) for k, v in st.items()}, static_w_total=round(P_static, 1),
+                            area_mm2_per_die={k: round(v, 1) for k, v in a.items()},
+                            basis="the uarch constants (technology.json), 2 ops per MAC, both dies"),
+                note="m = 1: batching reuses no weight word, so the lanes, the stream unit and the KV stream each cap "
+                     "the aggregate; the KV stream (each user's 604 MB of 8K FP8 KV per token over 8 stacks) binds first")
+
+
+
+# ---- HBM comparators (tier 3, the GPU-organised dies) ----
+def qwen_hbm_economics():
+    dq = hbm_gpu_design("qwen")
+    clock = dq["clock_hz"]
+    r = dq["hbm_Bpc"]
+    cols = dq["element"]["cols"]
+    ops = qwen_hbm_ops(dq["element"], dq["barrier"]["boundary_cycles"], dq["drain_cycles"])
+    ar_bytes = sum(b for b, _ in ops)
+    t_ar, _ = stream_overlap(ops, r, dq["sm_count"] * 128, dq["staging_kb_per_sm"] * 1024 * dq["sm_count"])
+    wl, kvb = _qwen_wl()
+    kv_die = kvb / 2
+    w_die = ar_bytes - kv_die
+    cap = int((8 * HBM_STACK_B * HBM_CAP_EFF - 2 * w_die) // kvb)
+    sa = dq["sm_area"]
+    n = dq["sm_count"]
+    st = {k: 2 * v for k, v in _static_w(n * sa["logic_mm2"] + 4 * 10.0 + 10.0, 0.0,
+                                         n * sa["sram_mm2"] + dq["l2"]["mm2"], clock, 4).items()}
+    P_static = sum(st.values())
+    macs = wl["weight_macs"] + wl["attention_macs"]
+    spec = {x["block"]: x for x in hbm_speculation_rows() if x["design"].startswith("qwen_hbm_dflash_b")}
+
+    def step(B, b, s1, draft):
+        passes = math.ceil(B * b / cols)
+        cyc = s1 + ((passes - 1) * (w_die + draft) + (B - 1) * kv_die) / r
+        byt = 2 * (passes * (w_die + draft) + B * kv_die)
+        e = (B * b * (macs + 2 * draft) * MAC_OPS * E_MAC["bf16"] + byt * E_HBM_B
+             + 2 * passes * (w_die + draft) * 2 * E_SRAM_B + B * b * wl["elementwise_total"] * (E_MAC["fp32"] + 8 * E_SRAM_B))
+        return cyc, e
+
+    def rows_for(pick):
+        out = []
+        for B in sorted(set([b for b in ECON_BATCHES if b <= cap] + [cap])):
+            cyc, e, tau, blk = pick(B)
+            t = cyc / clock
+            pu = tau / t
+            agg = B * pu
+            out.append(dict(batch=B, block=blk, tau=tau, per_user_tokens_s=round(pu, 1), aggregate_tokens_s=round(agg, 1),
+                            per_user_ms_per_token=round(1e3 / pu, 4),
+                            binding="weight stream" if B * blk <= cols else "weight re-stream + KV stream",
+                            energy_mJ_per_token=round((e / (B * tau) + P_static / agg) * 1e3, 3),
+                            package_w=round(P_static + e / t, 1)))
+        return out
+
+    def ar_pick(B):
+        c, e = step(B, 1, t_ar, 0.0)
+        return c, e, 1.0, 1
+
+    def df_pick(B):
+        best = None
+        for b, x in spec.items():
+            c, e = step(B, b, x["step_cycles"], x["draft_bytes_per_die"])
+            if best is None or x["tau"] / c > best[2] / best[0]:
+                best = (c, e, x["tau"], b)
+        return best
+    ar = rows_for(ar_pick)
+    df = rows_for(df_pick)
+    return dict(design="Qwen3-8B HBM comparator, GPU organisation (tier 3, 8K)", system=dict(packages=1, dies=2, stacks=8),
+                ar=dict(tokens_s_b1=ar[0]["per_user_tokens_s"], rows=ar, saturated_tokens_s=max(x["aggregate_tokens_s"] for x in ar),
+                        sat_batch=_sat_batch(ar)["batch"]),
+                dflash=dict(tokens_s_b1=df[0]["per_user_tokens_s"], rows=df,
+                            saturated_tokens_s=max(x["aggregate_tokens_s"] for x in df), sat_batch=_sat_batch(df)["batch"],
+                            note="best block per batch (tau per block from results/speculative/dflash_block_acceptance.json); "
+                                 "users x block positions share the 16 MMA columns, a pass per 16"),
+                capacity_users=cap, capacity_basis="8 stacks x 22.5 GB x 0.90 less the INT8 weights, over 604 MB per user",
+                energy=dict(static_w={k: round(v, 2) for k, v in st.items()}, static_w_total=round(P_static, 1),
+                            basis="SM MACs (2 ops, BF16 lane) + the whole HBM path per byte (technology.json "
+                                  "hbm_j_per_byte, die + stack) + SMEM staging write and read + stream elements; "
+                                  "static: SM logic, SMEM + L2 SRAM, 4 HBM PHY + UCIe as logic, HBM interface idle"))
+
+
+def _v41_weight_split():
+    E = A._env()
+    c = E["c"]
+    tot, _ = A.token_workload(c, 1048576)
+    routed = c["num_layers"] * c["experts_per_token"] * 3 * c["moe_intermediate_size"] * c["hidden_size"] * A.FP4
+    return tot, tot["bytes"]["rom"] - routed, routed, c
+
+
+def _v41_weight_bytes(tokens):
+    tot, dense, routed, c = _v41_weight_split()
+    U = A.distinct_experts(tokens, c["num_routed_experts"], c["experts_per_token"])
+    return dense + routed * U / c["experts_per_token"]
+
+
+def _v41_system_macs_j():
+    tot, *_ = _v41_weight_split()
+    fmt = lambda k: "w4a8" if k == "weight:fp4" else {"fp8": "fp8", "fp4": "fp4", "fp32": "fp32"}.get(k.split(":")[1], "bf16")  # noqa: E731
+    return sum(v * MAC_OPS * E_MAC[fmt(k)] for k, v in tot["macs"].items())
+
+
+def v41_hbm_economics(rom_units_j_per_token):
+    dv = hbm_gpu_design("v41")
+    clock = dv["clock_hz"]
+    sweep1 = 37.4                                       # us: the weight sweep of one token (v41_hbm_chain)
+    w1 = _v41_weight_bytes(1)
+    sweep = lambda toks: sweep1 * _v41_weight_bytes(toks) / w1   # noqa: E731
+    cols = dv["element"]["cols"]
+    cache = {}
+
+    def chain(P):
+        if P not in cache:
+            _, parts, _ = v41_hbm_chain(True, P)
+            cache[P] = parts
+        return cache[P]
+    issue1 = chain(2)["verify_extra_issue"]             # one more user's dedicated-unit issue (us)
+
+    def T(P, toks):
+        return max(sum(chain(P).values()), sweep(toks))
+
+    def occ(P, toks):
+        p = chain(P)
+        return max(p["sm_matvec"] + p["x_broadcast_fill"] + p["barrier"], P * issue1, sweep(toks))
+    tot, *_ = _v41_weight_split()
+    per_user_hbm = tot["bytes"]["kv_hbm"] + tot["bytes"]["idx"]
+    macs_j = _v41_system_macs_j()
+    coll_b = tot["collective_bytes"]
+    n = V41_HBM_DIES
+    sa = dv["sm_area"]
+    rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())["power"]["per_die"]["static_w"]
+    st1 = _static_w(dv["sm_count"] * sa["logic_mm2"] + dv["dedicated_units_footprint_mm2"] * GPU_LOGIC_UTIL + 40.0, 0.0,
+                    dv["sm_count"] * sa["sram_mm2"] + dv["l2"]["mm2"], clock, 4)
+    st1["links"] = rack["serdes_always_on"] + rack["ucie_idle"]      # ASSUMED: the same link class as a ROM layer die
+    st = {k: n * v for k, v in st1.items()}
+    P_static = sum(st.values())
+    cap = json.loads((ROOT / "results/arch/arch_budget_v41.json").read_text())["capacity"]["1048576"]["hbm_users"]
+
+    def energy(B, P, draft_frac):
+        """One step's dynamic energy: every column pass reads the union of ITS tokens' experts."""
+        toks = B * P
+        per = max(1, cols // P)
+        passes = math.ceil(B / per)
+        wb = passes * _v41_weight_bytes(min(B, per) * P)
+        e = (toks * macs_j + (wb + B * per_user_hbm) * E_HBM_B + wb * 2 * E_SRAM_B + toks * rom_units_j_per_token
+             + toks * coll_b * 8 * E_LINK["board"] * 2)          # ASSUMED: two switch hops at 112G SerDes energy
+        return e * (1 + draft_frac)
+
+    def rows(P, tau, draft_frac):
+        out = []
+        per = max(1, cols // P)                           # users per column pass
+        Td = draft_frac * T(1, 1)
+        for B in sorted(set([b for b in ECON_BATCHES if b <= cap] + [cap])):
+            if B <= per:
+                t = T(B * P, B * P) + Td
+            else:
+                t = max(T(per * P, per * P) + Td, math.ceil(B / per) * (occ(per * P, per * P) + Td))
+            t *= 1e-6
+            pu = tau / t
+            agg = B * pu
+            e = energy(B, P, draft_frac)
+            out.append(dict(batch=B, per_user_tokens_s=round(pu, 1), aggregate_tokens_s=round(agg, 1),
+                            per_user_ms_per_token=round(1e3 / pu, 4),
+                            binding="chain (latency)" if B <= per else "busiest resource per column pass",
+                            energy_mJ_per_token=round((e / (B * tau) + P_static / agg) * 1e3, 3),
+                            system_w=round(P_static + e / t, 0)))
+        return out
+    ar = rows(1, 1.0, 0.0)
+    mtp = rows(V41_POSITIONS, V41_TAU, V41_DRAFT_FRACTION)
+    return dict(design="V4.1 HBM comparator, GPU organisation (tier 3, 96 dies, 1M)",
+                system=dict(packages=n // 2, dies=n, stacks=4 * n),
+                ar=dict(tokens_s_b1=ar[0]["per_user_tokens_s"], rows=ar, saturated_tokens_s=max(x["aggregate_tokens_s"] for x in ar),
+                        sat_batch=_sat_batch(ar)["batch"]),
+                mtp=dict(tokens_s_b1=mtp[0]["per_user_tokens_s"], rows=mtp,
+                         saturated_tokens_s=max(x["aggregate_tokens_s"] for x in mtp), sat_batch=_sat_batch(mtp)["batch"],
+                         tau=V41_TAU, positions=V41_POSITIONS),
+                capacity_users=cap, capacity_basis="results/arch/arch_budget_v41.json capacity[1048576].hbm_users",
+                occupancy_us_per_pass=dict(ar_8_users=round(occ(8, 8), 1), mtp_1_user=round(occ(6, 6), 1),
+                                           dedicated_issue_per_user=round(issue1, 1)),
+                energy=dict(static_w={k: round(v, 1) for k, v in st.items()}, static_w_total=round(P_static, 1),
+                            basis="system MACs by format (2 ops), weights (routed union over the pass) and per-user "
+                                  "KV + index keys over the whole HBM path, SMEM staging, the ROM array's dedicated-"
+                                  "unit energy per token (same units), fabric bytes over two switch hops; static per die: "
+                                  "SM + dedicated-unit logic, SMEM + L2, 4 PHY, HBM interface idle, links; the NVL-class "
+                                  "switch itself not charged"),
+                note="B <= 8 users ride the 8 MMA columns on one weight fetch (the chain re-priced with B columns: "
+                     "dedicated-unit issue repeats per user); beyond, column passes interleave and the busiest of SM "
+                     "time, dedicated-unit issue and the weight sweep bounds the step")
+
+
+# ---- GPU tiers ----
+def _fit_line(pts):
+    xs = list(pts)
+    ts = [b / pts[b] for b in xs]
+    n = len(xs)
+    mx, mt = sum(xs) / n, sum(ts) / n
+    b = sum((x - mx) * (t - mt) for x, t in zip(xs, ts)) / sum((x - mx) ** 2 for x in xs)
+    a = mt - b * mx
+    return a, b, {x: round(x / (a + b * x), 1) for x in xs}
+
+
+def gpu_economics():
+    fixed = GPU_FIT["fixed_seconds_qwen"]
+    s_per_B = (1 / 230.0 - fixed) / (2 * GPU_FIT["qwen_fp8_weight_bytes"])
+    wl, kvb = _qwen_wl()
+    t1 = fixed + s_per_B * (GPU_FIT["qwen_fp8_weight_bytes"] + GPU_FIT["qwen_fp8_kv_bytes_8k"])
+    a, b, fitted = _fit_line(DFLASH_T3_B200)
+    inc = max(b, s_per_B * kvb)
+    capq = int((B200_HBM_B * HBM_CAP_EFF - GPU_FIT["qwen_fp8_weight_bytes"]) // kvb)
+
+    def q_rows(W):
+        out = []
+        for B in sorted(set([x for x in ECON_BATCHES if x <= capq] + [capq])):
+            t = t1 + (B - 1) * inc
+            out.append(dict(batch=B, per_user_tokens_s=round(1 / t, 1), aggregate_tokens_s=round(B / t, 1),
+                            per_user_ms_per_token=round(t * 1e3, 4),
+                            energy_mJ_per_token=round(W * t / B * 1e3, 2)))
+        return out
+    q = q_rows(B200_W_DECODE)
+    q_tdp = q_rows(B200_W_TDP)
+    # V4.1-Flash on 8x B200 (tier 2 form): weights read once a step (routed union over the batch), each user's
+    # index keys and KV, NCCL-class all-reduces
+    tot, dense, routed, c = _v41_weight_split()
+    fixed_layer = fixed / 36
+    idx_user = 262144 * A.IDX_KEY_B * 4 * 38                        # gpu_tier2's per-token index-key read
+    state_user = 0.0
+    for L in range(c["num_layers"]):
+        r = c["compress_ratios"][L]
+        if L in c["kv_source_layer_ids"] and r:
+            state_user += 1048576 // r * (A.CKV_ROW_B + A.IDX_KEY_B)
+        state_user += c["window_tokens"] * A.WIN_ROW_B
+    ckpt = json.loads((ROOT / "configs/models/candidates/deepseek-v4.1-flash.json").read_text())["checkpoint_bytes"]
+    capv = int((8 * B200_HBM_B * HBM_CAP_EFF - ckpt) // state_user)
+    v = []
+    for B in sorted(set([x for x in ECON_BATCHES if x <= capv] + [capv])):
+        t = (40 * fixed_layer + s_per_B * (_v41_weight_bytes(B) + B * idx_user) / 8 + 40 * 5 * NCCL_ALLREDUCE_S)
+        v.append(dict(batch=B, per_user_tokens_s=round(1 / t, 1), aggregate_tokens_s=round(B / t, 1),
+                      per_user_ms_per_token=round(t * 1e3, 4),
+                      energy_mJ_per_token=round(8 * B200_W_DECODE * t / B * 1e3, 2)))
+    t2 = {x["design"]: x for x in gpu_tier2()}
+    qs = t2["Qwen3-8B on 1x B200, FP8 weights, 8K, calibrated"]
+    vs = t2["DeepSeek-V4.1-Flash on 8x B200, calibrated"]
+    anchors = [dict(tier=1, design=f"Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency {B} (DFlash paper Table 3)",
+                    batch=B, aggregate_tokens_s=x, per_user_tokens_s=round(x / B, 1),
+                    energy_mJ_per_token_at_689W=round(B200_W_DECODE / x * 1e3, 1), line_fit_tokens_s=fitted[B])
+               for B, x in DFLASH_T3_B200.items()]
+    anchors += [dict(tier=1, design=x["design"], batch=1, aggregate_tokens_s=x["tokens_s"], per_user_tokens_s=x["tokens_s"],
+                     energy_mJ_per_token_at_689W=round(B200_W_DECODE * (8 if "8x B200" in x["design"] else 1)
+                                                      / x["tokens_s"] * 1e3, 1))
+                for x in TIER1 if "B200" in x["design"] and "concurrency" not in x["design"] and "AR (DFlash" not in x["design"]]
+    return dict(
+        qwen=dict(design="Qwen3-8B on 1x B200, FP8, 8K (tier 2)", system=dict(gpus=1, packages=1, dies=2, stacks=8),
+                  rows=q, rows_at_tdp=q_tdp, tokens_s_b1=q[0]["per_user_tokens_s"],
+                  saturated_tokens_s=max(x["aggregate_tokens_s"] for x in q), sat_batch=_sat_batch(q)["batch"],
+                  dflash_b1=dict(reasoning_mix=qs["spec_tokens_s_reasoning_mix"], math_code=qs["spec_tokens_s_math_code"]),
+                  calibration=dict(paper_line_fixed_ms=round(a * 1e3, 4), paper_line_per_user_us=round(b * 1e6, 2),
+                                   fitted_tokens_s=fitted, measured_tokens_s=DFLASH_T3_B200,
+                                   per_user_increment_8k_us=round(inc * 1e6, 2),
+                                   kv_8k_fp8_us=round(s_per_B * kvb * 1e6, 2),
+                                   rule="step(B) = tier-2 step(1) + (B - 1) x max(the paper's fitted per-user increment, "
+                                        "one 8K FP8 user's KV at the fitted B200 bytes rate); the paper's increment "
+                                        "includes its own (shorter-context) KV, so the max is GPU-favourable"),
+                  capacity_users=capq, capacity_basis="180 GB x 0.90 less FP8 weights over 604 MB per user"),
+        v41=dict(design="DeepSeek-V4.1-Flash on 8x B200, 1M (tier 2)", system=dict(gpus=8, packages=8, dies=16, stacks=64),
+                 rows=v, tokens_s_b1=v[0]["per_user_tokens_s"], saturated_tokens_s=max(x["aggregate_tokens_s"] for x in v),
+                 sat_batch=_sat_batch(v)["batch"], mtp_b1=vs["spec_tokens_s"], capacity_users=capv,
+                 per_user_state_bytes=state_user,
+                 capacity_basis="8 x 180 GB x 0.90 less the 510.3 GB checkpoint over each user's CKV + index keys "
+                                "(KV-owner layers 2, 8, 14, 20) and 40 windows"),
+        anchors=anchors, power=dict(decode_w=B200_W_DECODE, tdp_w=B200_W_TDP,
+                                    source="technology.json power.gpu_reference_power (measured decode 689 W; NVL72 TDP)"))
+
+
+# ---- cost ----
+def cost_row(name, system, rom_mask_sets, b1, sat, model_nre=True):
+    pk = system["packages"]
+    hw = pk * COST["package_usd"]
+    comp = system["dies"] * 815.0 * COST["silicon_usd_per_mm2"] + system["stacks"] * COST["hbm_stack_usd"]
+    nre_hi = rom_mask_sets * COST["mask_set_usd"]
+    nre_lo = rom_mask_sets * COST["mask_set_usd"] * COST["rom_coding_fraction"]
+    per_sys_hi = nre_hi / COST["production_units"]
+    per_sys_lo = nre_lo / COST["production_units"]
+    tot_lo, tot_hi = hw + per_sys_lo, hw + per_sys_hi
+    return dict(design=name, packages=pk, dies=system["dies"], silicon_mm2=system["dies"] * 815.0,
+                hbm_stacks=system["stacks"], rom_mask_sets=rom_mask_sets,
+                hardware_usd_iso_package=hw, component_usd_silicon_and_stacks=round(comp),
+                rom_nre_usd=dict(coding_layers_only=nre_lo, full_mask_sets=nre_hi),
+                rom_nre_per_system_usd=dict(coding_layers_only=per_sys_lo, full_mask_sets=per_sys_hi),
+                capex_per_system_usd=dict(low=round(tot_lo), high=round(tot_hi)),
+                tokens_s_b1=b1, tokens_s_saturated=sat,
+                usd_per_tokens_s_b1=dict(low=round(tot_lo / b1, 2), high=round(tot_hi / b1, 2)),
+                usd_per_tokens_s_saturated=dict(low=round(tot_lo / sat, 2), high=round(tot_hi / sat, 2)))
+
+
+def economics():
+    v41r = v41_rom_economics()
+    units_j = v41r["energy"]["categories_mJ_per_token"]["units"] * 1e-3
+    qr = qwen_rom_economics()
+    qh = qwen_hbm_economics()
+    vh = v41_hbm_economics(units_j)
+    gp = gpu_economics()
+
+    def pick(rows, B):
+        return next(x for x in rows if x["batch"] == B)
+    summary = []
+    for name, blk, rows_key in (("Qwen ROM AR (G = 6,144)", qr["ar"], "rows"), ("Qwen HBM tier 3 AR", qh["ar"], "rows"),
+                                ("Qwen HBM tier 3 DFlash", qh["dflash"], "rows"), ("Qwen 1x B200 AR (tier 2)", gp["qwen"], "rows"),
+                                ("V4.1 ROM AR", v41r["ar"], "rows"), ("V4.1 ROM MTP m = 1", v41r["mtp_m1"], "rows"),
+                                ("V4.1 HBM tier 3 AR", vh["ar"], "rows"), ("V4.1 HBM tier 3 MTP", vh["mtp"], "rows"),
+                                ("V4.1 8x B200 AR (tier 2)", gp["v41"], "rows")):
+        rows = blk[rows_key]
+        s = _sat_batch(rows)
+        summary.append(dict(design=name, tokens_s_b1=rows[0]["per_user_tokens_s"], energy_mJ_b1=rows[0]["energy_mJ_per_token"],
+                            sat_batch=s["batch"], sat_aggregate_tokens_s=s["aggregate_tokens_s"],
+                            sat_per_user_tokens_s=s["per_user_tokens_s"], energy_mJ_sat=s["energy_mJ_per_token"],
+                            capacity_users=rows[-1]["batch"]))
+    S = {x["design"]: x for x in summary}
+    R = {x["design"]: x for x in summary}
+    modes = dict(zip([x["design"] for x in summary],
+                     [qr["ar"]["rows"], qh["ar"]["rows"], qh["dflash"]["rows"], gp["qwen"]["rows"], v41r["ar"]["rows"],
+                      v41r["mtp_m1"]["rows"], vh["ar"]["rows"], vh["mtp"]["rows"], gp["v41"]["rows"]]))
+
+    def slo(names):
+        """Largest aggregate with every user at >= ECON_SLO_TOKENS_S_PER_USER, over the design's modes."""
+        best = 0.0
+        for n_ in names:
+            ok = [x["aggregate_tokens_s"] for x in modes[n_] if x["per_user_tokens_s"] >= ECON_SLO_TOKENS_S_PER_USER]
+            best = max([best] + ok)
+        return best or None
+    systems = (("Qwen ROM (AR, G = 6,144)", qr["system"], 2, ["Qwen ROM AR (G = 6,144)"]),
+               ("Qwen HBM tier 3 (AR / DFlash)", qh["system"], 0, ["Qwen HBM tier 3 AR", "Qwen HBM tier 3 DFlash"]),
+               ("Qwen 1x B200 (tier 2, AR)", gp["qwen"]["system"], 0, ["Qwen 1x B200 AR (tier 2)"]),
+               ("V4.1 ROM array (AR / MTP m = 1)", V41_ROM_SYSTEM, V41_ROM_SYSTEM["dies"], ["V4.1 ROM AR", "V4.1 ROM MTP m = 1"]),
+               ("V4.1 HBM tier 3 (AR / MTP)", vh["system"], 0, ["V4.1 HBM tier 3 AR", "V4.1 HBM tier 3 MTP"]),
+               ("V4.1 8x B200 (tier 2, AR)", gp["v41"]["system"], 0, ["V4.1 8x B200 AR (tier 2)"]))
+    cost = []
+    for name, system, masks, names in systems:
+        b1 = max(R[n_]["tokens_s_b1"] for n_ in names)
+        sat = max(x["aggregate_tokens_s"] for n_ in names for x in modes[n_])
+        c_ = cost_row(name, system, masks, b1, sat)
+        s_ = slo(names)
+        c_["tokens_s_at_slo"] = s_
+        c_["usd_per_tokens_s_at_slo"] = (dict(low=round(c_["capex_per_system_usd"]["low"] / s_, 2),
+                                              high=round(c_["capex_per_system_usd"]["high"] / s_, 2)) if s_ else None)
+        c_["modes"] = names
+        cost.append(c_)
+    return dict(summary=summary, qwen_rom=qr, qwen_hbm=qh, v41_rom=v41r, v41_hbm=vh, gpu=gp, cost=cost,
+                cost_inputs=COST, mac_ops=MAC_OPS, slo_tokens_s_per_user=ECON_SLO_TOKENS_S_PER_USER,
+                cost_rule="best mode of each design at each point: b1 = its fastest single-user mode, saturated = its "
+                          "largest aggregate within the per-user state capacity; capex = packages at the iso-package "
+                          "price + ROM mask NRE / production units (low: coding layers only; high: full mask sets)")
+
+
+ECON_SOURCES = ("tools/uarch_model.py", "tools/arch_budget_v41.py", "tools/arch_budget_qwen3.py",
+                "configs/hardware/technology.json", "configs/hardware/architectures.json",
+                "configs/hardware/technology_inputs.json", "results/arch/arch_budget_v41.json",
+                "results/arch/qwen3_budget.json", "results/arch/v41_rack.json", "results/arch/qwen_gpu_calibration.json",
+                "results/arch/v41_hbm_region_preflight.json", "results/speculative/dflash_block_acceptance.json",
+                "results/rtl/gpu_sm_exact.json", "results/rtl/gpu_sm_blockdot_exact.json",
+                "results/rtl/gpu_supply_barrier.json", "configs/models/candidates/deepseek-v4.1-flash.json")
+
+
 def sweep(ctx: int):
     """Design-point search over the microarchitecture knobs that the evaluation shows binding."""
     rows = []
@@ -1724,7 +2366,25 @@ def main(argv=None):
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
+    ap.add_argument("--economics", action="store_true", help="batch, energy and cost of every design and GPU tier")
     a = ap.parse_args(argv)
+    if a.economics:
+        import hashlib
+        ec = economics()
+        for r in ec["summary"]:
+            print(f"{r['design']:28s} b1 {r['tokens_s_b1']:9.1f} tok/s {r['energy_mJ_b1']:9.2f} mJ | sat B={r['sat_batch']:4d} "
+                  f"{r['sat_aggregate_tokens_s']:10.1f} tok/s ({r['sat_per_user_tokens_s']:8.1f}/user) "
+                  f"{r['energy_mJ_sat']:8.2f} mJ | cap {r['capacity_users']}")
+        for r in ec["cost"]:
+            print(f"{r['design']:32s} ${r['capex_per_system_usd']['low']:>12,}-{r['capex_per_system_usd']['high']:>12,}  "
+                  f"$/tok/s b1 {r['usd_per_tokens_s_b1']}  sat {r['usd_per_tokens_s_saturated']}  "
+                  f"slo {r['tokens_s_at_slo']} {r['usd_per_tokens_s_at_slo']}")
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            pins = {q: hashlib.sha256((ROOT / q).read_bytes()).hexdigest() for q in ECON_SOURCES}
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.economics.v1", **ec, source_sha256=pins),
+                                              indent=1, default=str) + "\n")
+        return
     if a.fabric:
         t2 = gpu_tier2()
         t3 = qwen_hbm_tau_sensitivity()
