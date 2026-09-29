@@ -32,12 +32,12 @@
 //                            [27] low half of its first unit present, [28] high half of its last unit
 //                            present, [41:29] base address
 //   cfg_a = NSEG .. 2NSEG-1  class c:   [0] valid, [8:1] first unit (pair / BF16 lane group), [15:9] units,
-//                            [17:16] first segment, [19:18] last segment, [20] BF16 family
+//                            [18:16] first segment, [21:19] last segment, [22] BF16 family (NSEG <= 8)
 //   cfg_a = 2NSEG            [2:0] sub-blocks - 1 (a class of u units spans ceil(u / 8) sub-blocks)
 //   segment [42]             BF16
 // ---------------------------------------------------------------------------
 module ot_v41_rom_elem #(
-    parameter integer NSEG = 4,
+    parameter integer NSEG = 8,
     parameter integer NCH = 16,
     parameter integer XF = 4,
     parameter integer LV = 4,
@@ -48,7 +48,7 @@ module ot_v41_rom_elem #(
     input  wire         clk,
     input  wire         rst_n,
     input  wire         cfg_v,
-    input  wire [3:0]   cfg_a,
+    input  wire [4:0]   cfg_a,
     input  wire [47:0]  cfg_d,
     input  wire         go,
     input  wire         go_bf,        // the phase's family: 0 = FP8/FP4 (shared FP8 x stream), 1 = BF16
@@ -96,7 +96,7 @@ module ot_v41_rom_elem #(
     reg [SW-1:0] c_s1 [0:NSEG-1];
     reg [2:0]  qlast;               // sub-blocks - 1
     always @(posedge clk) if (cfg_v) begin
-        if ({28'd0, cfg_a} < NSEG) begin
+        if ({27'd0, cfg_a} < NSEG) begin
             s_row[cfg_a[SW-1:0]]  <= cfg_d[15:0];
             s_idx[cfg_a[SW-1:0]]  <= cfg_d[20:16];
             s_n[cfg_a[SW-1:0]]    <= cfg_d[25:21];
@@ -105,13 +105,13 @@ module ot_v41_rom_elem #(
             s_hi[cfg_a[SW-1:0]]   <= cfg_d[28];
             s_base[cfg_a[SW-1:0]] <= cfg_d[41:29];
             s_bf[cfg_a[SW-1:0]]   <= cfg_d[42];
-        end else if ({28'd0, cfg_a} < 2 * NSEG) begin
+        end else if ({27'd0, cfg_a} < 2 * NSEG) begin
             c_v[cfg_a[SW-1:0]]  <= cfg_d[0];
             c_u0[cfg_a[SW-1:0]] <= cfg_d[8:1];
             c_nu[cfg_a[SW-1:0]] <= cfg_d[15:9];
             c_s0[cfg_a[SW-1:0]] <= cfg_d[16 +: SW];
-            c_s1[cfg_a[SW-1:0]] <= cfg_d[18 +: SW];
-            c_bf[cfg_a[SW-1:0]] <= cfg_d[20];
+            c_s1[cfg_a[SW-1:0]] <= cfg_d[19 +: SW];
+            c_bf[cfg_a[SW-1:0]] <= cfg_d[22];
         end else begin
             qlast <= cfg_d[2:0];
         end

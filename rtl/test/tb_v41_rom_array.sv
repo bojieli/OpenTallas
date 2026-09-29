@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Bench of ot_v41_rom_array (W10): tools/rtl_v41_rom_array.py writes, into +DIR=<dir>:
-//   cfg.hex     one line per configuration write: {element[7:0], addr[3:0], data[47:0]} (60 bits)
+//   cfg.hex     one line per configuration write: {element[7:0], addr[4:0], data[47:0]} (61 bits)
 //   stream.hex  one line per cycle from `go` + LEAD: {546-bit FP8/FP4 beat {v, p, b, sv, q0, e0, q1, e1},
 //               1,064-bit BF16 beat {v, b, sv[3:0], u[4x8], d[4x256]}} (0 = idle); +BF selects the BF16 family
 //   e<i>.viamap.hex   ROM via masks (loaded by the behavioural macro through +OT_ROM_DIR)
@@ -16,7 +16,7 @@ module tb_v41_rom_array;
     always #0.5 clk = ~clk;
     reg cfg_v = 1'b0, go = 1'b0;
     reg [7:0] cfg_e;
-    reg [3:0] cfg_a;
+    reg [4:0] cfg_a;
     reg [47:0] cfg_d;
     reg [XBW-1:0] beat = '0;
     reg [1063:0] bbeat = '0;       // {v, b, sv, u[31:0], d[1023:0]}
@@ -30,7 +30,7 @@ module tb_v41_rom_array;
         .xs_sv(beat[533:532]), .xs_q0(beat[531:276]), .xs_e0(beat[275:266]), .xs_q1(beat[265:10]),
         .xs_e1(beat[9:0]), .r_v(r_v), .r_row(r_row), .r_fp32(r_fp32), .r_bf16(r_bf16), .r_e(r_e),
         .busy(busy), .fault(fault));
-    reg [59:0] cfg [0:65535];
+    reg [60:0] cfg [0:65535];
     reg [XBW+1064-1:0] stream [0:65535];
     reg [8*1024-1:0] dir;
     integer ncfg, nst, nrows, i, cyc, got, fd;

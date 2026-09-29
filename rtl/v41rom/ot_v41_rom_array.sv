@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------
 module ot_v41_rom_array #(
     parameter integer N = 8,
-    parameter integer NSEG = 4,
+    parameter integer NSEG = 8,
     parameter integer NCH = 16,
     parameter integer XF = 4,
     parameter integer BST = 2,
@@ -24,7 +24,7 @@ module ot_v41_rom_array #(
     input  wire         rst_n,
     input  wire         cfg_v,
     input  wire [7:0]   cfg_e,
-    input  wire [3:0]   cfg_a,
+    input  wire [4:0]   cfg_a,
     input  wire [47:0]  cfg_d,
     input  wire         go,
     input  wire         go_bf,

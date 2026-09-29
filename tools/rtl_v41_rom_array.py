@@ -39,7 +39,7 @@ RTL = ["rtl/v41rom/ot_v41_ret.sv", "rtl/v41rom/ot_v41_rom_array.sv", "rtl/v41rom
        "rtl/hdc/ot_hdc_delay.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
        "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v"]
 TB = "rtl/test/tb_v41_rom_array.sv"
-NSEG, NCH = 4, 16
+NSEG, NCH = 8, 16
 XF_Q, XF_BF = 4, 8          # x FIFO depth: FP8/FP4 element, BF16-capable element
 LAYER = 2
 SEED = 20260929
@@ -190,7 +190,7 @@ def viamap(words: dict[int, int], path: Path) -> None:
     path.write_text("".join(f"{v:0548x}\n" for v in rows))
 
 
-def build_phase(mats: list[Mat], N: int, work: Path, rng):
+def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None):
     K = mats[0].K
     assert all(m.K == K for m in mats)
     x = G.to_bf16((rng.standard_normal(K) * 0.5).astype(G.F))
@@ -208,7 +208,13 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng):
     # placement with the bank-map rules on an N-macro die (every element carries BF16 lanes here)
     die = S.Die(N, N)
     specs = [dict(tensor=f"m{mi}", phase=m.phase, fmt=m.fmt, rows=m.rows, K=m.K) for mi, m in enumerate(mats)]
-    res, info = S.place_dense(die, specs, 0)
+    orig = S.model_split
+    if split:
+        S.model_split = lambda rows, K, n, fmt="fp8": split       # the full-die split of one expert
+    try:
+        res, info = S.place_dense(die, specs, 0)
+    finally:
+        S.model_split = orig
     (ph, r), = res.items()
     t_pred = r["t_phase"]
     cfg, n_words = [], 0
@@ -260,7 +266,7 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng):
                 words[sg["base"] + k] = w
             n_words += len(S.segment_order(sg["fmt"], e0, el))
         for c, (u0, nu, s0, s1) in enumerate(centries):
-            cfg.append((e, NSEG + c, 1 | (u0 << 1) | (nu << 9) | (s0 << 16) | (s1 << 18) | (int(bf) << 20)))
+            cfg.append((e, NSEG + c, 1 | (u0 << 1) | (nu << 9) | (s0 << 16) | (s1 << 19) | (int(bf) << 22)))
         for c in range(len(centries), NSEG):
             cfg.append((e, NSEG + c, 0))
         nsub = max([-(-nu // 8) for _, nu, _, _ in centries] + [1])
@@ -318,7 +324,7 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng):
             beats.append(v << 1064)
         t_rounds += rl
     assert 8 * 0 + t_rounds == t_pred or True
-    (work / "cfg.hex").write_text("".join(f"{(e << 52) | (a << 48) | d:015x}\n" for e, a, d in cfg))
+    (work / "cfg.hex").write_text("".join(f"{(e << 53) | (a << 48) | d:016x}\n" for e, a, d in cfg))
     (work / "stream.hex").write_text("".join(f"{v:0403x}\n" for v in beats))
     return dict(bf=bf, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), exp_fp32=exp_fp32, exp_bf16=exp_bf16,
                 t_pred=t_pred, t_rounds=t_rounds, words=n_words, split=info,
@@ -364,6 +370,13 @@ def cases(ck: Ckpt, N: int):
         "fp8_wq_b_two_rows_per_element": [Mat(ck, L + "attn.wq_b", "fp8", 2 * N, 1280, r0=8000, phase="wq_b")],
         "fp4_two_experts_w1_w3": [Mat(ck, L + f"ffn.experts.{E}.w1", "fp4", half, 5120, r0=0, phase="experts_gu"),
                                   Mat(ck, L + "ffn.experts.301.w3", "fp4", half, 5120, r0=500, phase="experts_gu")],
+        # six active experts + the shared expert in one phase, split 8 ways as the full die splits one
+        # expert (segments of 4 chunks): several classes and up to 7 segments per element (N = 8 only)
+        "fp4_six_experts_w1_plus_shared_fp8_split8": [
+            Mat(ck, L + f"ffn.experts.{e}.w1", "fp4", 1, 5120, r0=64 * i, phase="experts_gu")
+            for i, e in enumerate((3, 57, 121, 200, 288, 377))]
+            + [Mat(ck, L + "ffn.shared_experts.w1", "fp8", 1, 5120, r0=32, phase="experts_gu")]
+        if N >= 8 else None,
         "bf16_router_gate": [Mat(ck, L + "ffn.gate", "bf16", half, 5120, r0=96 * 3, phase="router")],
         "bf16_compressor_wkv_ksplit": [Mat(ck, L + "attn.compressor.wkv", "bf16", half, 5120, r0=384,
                                            phase="router")],
@@ -391,11 +404,11 @@ def main(argv=None):
     for N in a.n:
         a.work.mkdir(parents=True, exist_ok=True)
         for name, mats in cases(ck, N).items():
-            if a.only and a.only not in name:
+            if mats is None or (a.only and a.only not in name):
                 continue
             wd = a.work / f"n{N}_{name}"
             wd.mkdir(exist_ok=True)
-            ph = build_phase(mats, N, wd, rng)
+            ph = build_phase(mats, N, wd, rng, split=8 if "split8" in name else None)
             xf = XF_BF if ph["bf"] else XF_Q
             exe = build_sim(N, a.work, xf)
             rows, done = run_case(exe, wd, ph)
