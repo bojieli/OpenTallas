@@ -583,7 +583,7 @@ QWEN_AREA = dict(
 )
 
 
-def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192):
+def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter=False):
     import arch_budget_qwen3 as Q
     import hdc_timing as T
     Q.CLOCK[0] = Q.clock_hz()
@@ -606,7 +606,12 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192):
     tiles = G / 4
     # integer banking (W12): a group-pair column holds its words in whole 4096-deep banks; 11 at G=6144,
     # 14 at G=5120 (tools/qwen_o4_rom_placement.py QWEN_O4_GROUPS); other G scale the column words
-    banks = {6144: 11, 5120: 14}.get(G) or math.ceil(44480 * 6144 / G / 4096 * 1.04)
+    # USER DECISION 2026-09-29: the Qwen ROM die is AR only, so the DFlash drafter (fc + 5 layers) is not in ROM.
+    # Target-only column words: 38,880 at G=6144 (W5), 48,736 at G=5120 (W12); drafter adds 5,600 / 6,880.
+    words = (38880 * 6144 / G) + ((5600 * 6144 / G) if drafter else 0)
+    exact = {(6144, False): 38880, (6144, True): 44480, (5120, False): 48736, (5120, True): 55616}
+    words = exact.get((G, drafter), words * 1.02)          # other G: scaled, +2% tile padding
+    banks = math.ceil(words / 4096)
     macros_tile = 2 * banks
     # result-port groups = G / smallest split: 96 at G=6144 (S=64), 40 at G=5120 (S=128); their tiles sit in
     # the spine, and fewer of them return spine area to the array (W12)
@@ -616,7 +621,7 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192):
                                                                      + a["kv_sram_group_um2"] * a["macro_pack"])
     need_mm2 = (tiles - port_tiles) * tile_um2 / 1e6          # port tiles sit in the spine (W5)
     avail = a["array_mm2"] + (a["port_tiles"] - port_tiles) * tile_um2 / 1e6  # spine area freed by fewer ports
-    return dict(G=G, su_width=su_width, wires=wires, pruned=pruned, ctx=ctx, cycles=cycles,
+    return dict(G=G, su_width=su_width, wires=wires, pruned=pruned, ctx=ctx, drafter=drafter, cycles=cycles,
                 arch_cycles=r["cycles"], tokens_s=Q.CLOCK[0] / cycles, clock_hz=Q.CLOCK[0],
                 tile_um2=round(tile_um2), tiles=tiles, array_need_mm2=round(need_mm2, 1),
                 array_avail_mm2=round(avail, 1), fits=need_mm2 <= avail, banks_per_column=banks,
@@ -632,6 +637,8 @@ def qwen_rows():
     for G in (3072, 4096, 4608, 5120, 5632, 6144):
         for pr in (False, True):
             rows.append(qwen_eval(G, 1024, pruned=pr) | dict(design=f"qwen_G{G}{'_pruned' if pr else ''}"))
+    rows.append(qwen_eval(5120, 1024, pruned=True, drafter=True) | dict(design="qwen_G5120_pruned_with_drafter"))
+    rows.append(qwen_eval(6144, 1024, pruned=True, drafter=True) | dict(design="qwen_G6144_pruned_with_drafter"))
     for r in rows:
         print(f"{r['design']:28s} {r['tokens_s']:8.0f} tok/s  cycles {r['cycles']:>9}  array {r['array_need_mm2']:6.1f}"
               f"/{r['array_avail_mm2']}  fits={r['fits']}")
@@ -1080,6 +1087,83 @@ H_X_TAIL_B = 16 * 128 * 2     # the last SM's last row block (8 rows x 16 cols..
 X_BCAST_BPC = 256             # x broadcast network width (2,048 wires), root -> every SM, pipelined with release
 
 
+# ---------------------------------------------------------------------------------------------------------
+# Speculation (MTP / DFlash): verify p positions per step with m MAC lanes per weight word (docs/MICROARCH_MODEL.md)
+# ---------------------------------------------------------------------------------------------------------
+# m counts the positions that multiply one ROM weight word IN THE SAME CYCLE.  m = 1 runs the p positions through
+# the existing lanes one after another: the weight words are re-read (cheap) and only issue time multiplies, while
+# pipeline fill, wire stages and dependency latency are paid once per verify pass.  m >= 2 replicates every
+# element's lanes beside its macro (x13,798 on a V4.1 die), plus wider x broadcast and return.
+V41_TAU = 3.649        # DSpark gamma 5 (6 verified positions), results/speculative/v41_flash_dspark_onpolicy_greedy.json
+V41_POSITIONS = 6
+V41_DRAFT_FRACTION = 3 / 40   # ASSUMED: the 3 built-in draft blocks (mtp.0-2) ~ 3 of 40 layers of an AR token
+
+
+def v41_verify_T(d, p, lm, ctx=1048576):
+    """Verify-pass time of the V4.1 ROM design for p positions with lane multiplier lm."""
+    r = evaluate(copy.deepcopy(d), ctx)
+    g = r.pop("_g")
+    E = A._env()
+    clock, c = E["clock"], E["c"]
+    cyc = 1.0 / clock
+    rep = math.ceil(p / lm)
+    for name, nd in g.nodes.items():
+        k = nd["kind"]
+        u = nd.get("_uarch")
+        if u:
+            nd["issue"] = max(u["t_read"] * rep, u["t_x"] * p, u["t_ret"] * p, u["t_mac"] * rep) * cyc
+        elif k in ("vector", "reduce", "select", "collective"):
+            nd["issue"] *= p
+        elif k == "kvscan":
+            if name.endswith("idx.score"):
+                n = int(nd["desc"].split()[2])
+                by = n * A.IDX_KEY_B
+                macs = n * c["index_heads"] * c["index_head_dim"]
+                rd = d["idx_reader_Bpc"] or (3.6e12 / clock)
+                nd["issue"] = max(by / rd, p * macs / (d["idx_macs"] * lm)) * cyc   # keys read once per pass
+            else:
+                nd["issue"] *= rep
+        elif k == "matvec" and name.endswith("hc.fn"):
+            nd["issue"] *= rep
+    fin = g.solve(True)
+    return fin[[n for n in g.nodes if n.endswith("token.return")][0]], r["T_us"] * 1e-6
+
+
+def speculation_rows():
+    rows = []
+    d = copy.deepcopy(PRESETS["proposal"])
+    for lm in (1, 2, V41_POSITIONS):
+        Tp, T1 = v41_verify_T(d, V41_POSITIONS, lm)
+        Td = V41_DRAFT_FRACTION * T1
+        rate = V41_TAU / (Tp + Td)
+        extra_mm2 = (lm - 1) * (area_ledger(d)["blockdot_lanes"] + area_ledger(d)["bf16_lanes"])
+        rows.append(dict(design=f"v41_rom_mtp_m{lm}", positions=V41_POSITIONS, lane_mult=lm, tau=V41_TAU,
+                         ar_tokens_s=round(1 / T1, 1), verify_over_ar=round(Tp / T1, 3),
+                         tokens_s=round(rate, 1), speedup=round(rate * T1, 3),
+                         extra_lane_area_mm2=round(extra_mm2, 1),
+                         fits=bool(area_ledger(d)["rom_field_strip_used_mm2"] + extra_mm2
+                                   <= FLOORPLAN["rom_field_strip_mm2"])))
+    # Qwen ROM: the RTL-calibrated serial draft/verify/commit step (tools/dflash_step_timing.py) prices m = 1 and 5
+    q = json.loads((ROOT / "results/speculative/dflash_step_timing.json").read_text())["rom"]
+    for m in ("m1", "m5"):
+        blk = q[f"8192/fp8/{m}"]["blocks"] if "blocks" in q[f"8192/fp8/{m}"] else None
+        src = q[f"8192/fp8/{m}"]
+        best = None
+        for key in src:
+            if isinstance(src[key], list):
+                for b in src[key]:
+                    if best is None or b["tokens_s"] > best["tokens_s"]:
+                        best = b
+        rows.append(dict(design=f"qwen_rom_dflash_{m}", lane_mult=int(m[1:]), best_block=best["block"],
+                         tokens_s=best["tokens_s"], speedup=best["speedup"], ar_tokens_s=src["plain_tokens_s"],
+                         extra_lane_area_mm2=0.0 if m == "m1" else 178.66,
+                         drafter_rom_mm2=29.0, basis="results/speculative/dflash_step_timing.json (m=1 never beats "
+                         "AR: the Qwen token is lane-bound; weight issue is ~36% of the step)"))
+    for r in rows:
+        print(r)
+    return rows
+
+
 def sweep(ctx: int):
     """Design-point search over the microarchitecture knobs that the evaluation shows binding."""
     rows = []
@@ -1109,7 +1193,18 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
     ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
+    ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     a = ap.parse_args(argv)
+    if a.spec:
+        rows = speculation_rows()
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.speculation.v1", rows=rows,
+                                                   decisions=dict(v41_rom="MTP m=1 time-multiplexed",
+                                                                  qwen_rom="AR only (no drafter in ROM)",
+                                                                  hbm="DFlash / MTP on the SM design (W13)")),
+                                              indent=1, default=str) + "\n")
+        return
     if a.hbm:
         rows = qwen_hbm_rows() + v41_hbm_rows()
         dq = hbm_gpu_design("qwen")

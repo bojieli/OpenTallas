@@ -138,13 +138,9 @@ It also checks tile area against the 560 mm² tile array. The area model is cali
 | G = 4,096, pruned | 8,383 | 496 (fits) |
 
 **Decisions:**
-- **Target G = 5,120 with pruned logic plus the exact per-port scale-ROM address remap**, which returns about 11 mm² of spine to the array. That gives 9,063 tok/s.
-- W12 found integer banking (28 macros per tile, not 26.4) and 40 port groups (10 port tiles). With those, G = 5,120 misses by 0.2 mm² without the remap.
-- The hardened tile area decides. If the margin is under 2%, fall back to **G = 4,608 pruned** (8,546 tok/s, about 12 mm² margin).
-- The published 10,874 assumes 6,144 groups, which do not fit, and free wires.
-- Two area levers could restore 6,144 groups, and both must be priced:
-  - scale-ROM remap (11.8 → 0.77 mm², W5);
-  - a denser code macro, which the timing rejects today.
+- **User decision, 2026-09-29: the Qwen ROM die is AR only**, so the DFlash drafter is not in ROM.
+- With target-only banks (10 per column at G = 6,144; W12's integer placement: 34,669 macros, 265.0 mm²), **G = 6,144 pruned fits**: 552.9 / 560 mm², 9,968 tok/s. The scale-ROM remap adds about 11 mm² of margin.
+- The hardened tile area decides. If the margin is under 2%, fall back to G = 5,632 pruned (533.9 / 560 mm², 9,496 tok/s).
 
 **Build requirements the RTL lacks:**
 - the vector stream unit (the shipped scalar one deadlocks layer 0, W6);
@@ -229,6 +225,28 @@ Pricing the chain per SM op would lower the 3,882.
 | Design | Previous figure | Microarchitecture model (fits die) | Largest lever |
 |---|---:|---:|---|
 | V4.1 ROM, 1M | 4,933 (architecture) | 4,167 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
-| Qwen ROM, 8K | 10,874 (published) | 9,063 | G = 5,120 pruned; wires +12%; vector stream unit |
+| Qwen ROM, 8K | 10,874 (published) | 9,968 | AR only (no drafter ROM) lets G = 6,144 pruned fit; wires +12%; vector stream unit |
 | Qwen HBM, 8K | 881 | 880.6 | bulk-copy weight supply prefetching through boundaries; hardware barrier (30 cycles) |
 | V4.1 HBM, 1M | 3,579 | ≤ 3,882 (per-SM-op chain open) | hardware barrier (40 cycles); bulk-copy supply; SM op latency on row slices |
+
+## Speculation (`--spec`, `results/uarch/speculation.json`)
+
+The lane multiplier m counts the positions that multiply one ROM weight word in the same cycle.
+- **m = 1 (time-multiplexed):** issue time multiplies by the positions. Fill, wire stages and dependency latency are paid once per verify pass, so there are no new lanes.
+- **m ≥ 2:** replicates every element's lanes beside its macro, plus wider broadcast and return.
+
+| Design | Verify / AR time | tok/s | Speedup | Extra lane area | Decision (user, 2026-09-29) |
+|---|---:|---:|---:|---:|---|
+| V4.1 ROM MTP, 6 positions, m = 1 | 2.43× | **6,063** | **1.46×** | 0 | **adopted** |
+| V4.1 ROM MTP, m = 2 | 1.99× | 7,366 | 1.77× | 86.0 mm² (does not fit) | rejected |
+| V4.1 ROM MTP, m = 6 | 1.73× | 8,447 | 2.03× | 429.9 mm² | rejected |
+| Qwen ROM DFlash, m = 1 (best block = 1, i.e. AR) | — | 9,017 | 1.0× | 0 (+29 mm² drafter ROM) | **AR only** |
+| Qwen ROM DFlash, m = 5, block 5 | — | 18,720 | 2.08× | 178.7 mm² | rejected: does not fit |
+
+**Why the two ROM designs differ:**
+- **V4.1 tokens are latency-bound.** Fill is about half the token, so 6 positions share the expensive part.
+- **Qwen tokens are lane-bound.** Each extra position costs a whole weight sweep, and only 1.7–3.7 tokens are accepted.
+
+Removing the drafter frees about 12% of Qwen code ROM. Target-only banks are 10 per column at G = 6,144, and **G = 6,144 pruned then fits** (552.9 / 560 mm², 9,968 tok/s). The scale-ROM remap adds about 11 mm² of margin.
+
+The V4.1 draft cost is ASSUMED at 3/40 of an AR token (3 draft blocks of 40 layers). The HBM comparators' DFlash and MTP rows come from W13's SM model.
