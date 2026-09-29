@@ -1,8 +1,10 @@
 `timescale 1ns/1ps
 // Opt-in shared-service W ingress. 8 burst descriptors; 16 reserved return
 // sectors/PC. 32 physical PCs, 32B sectors. Not a QE service guarantee.
+// Opt-in sweep knobs (defaults are the qualified geometry): ND burst
+// descriptors, DEPTH return sectors/PC, ROOM free sectors/PC advertised as w_room.
 module ot_chip_v41x_weight_pc_adapter #(
- parameter AW=30,TAGW=10,KTAGW=17,ND=8,DEPTH=16
+ parameter AW=30,TAGW=10,KTAGW=17,ND=8,DEPTH=16,ROOM=16
 )(
  input wire clk,rst_n,
  input wire[AW-1:0] region_base,region_count,
@@ -27,12 +29,14 @@ module ot_chip_v41x_weight_pc_adapter #(
  reg[255:0] data[0:31][0:DEPTH-1];
  reg[TAGW+4:0] meta[0:31][0:DEPTH-1];
  integer need[0:31];integer slot,p,d,b; integer rd,rb,rpc,selected;
- reg[2:0] cursor[0:31];integer selected_slot[0:31];
+ localparam CW=(ND>1)?$clog2(ND):1;
+ reg[CW-1:0] cursor[0:31];integer selected_slot[0:31];
  reg fit;reg[63:0] finish_addr,finish_region;
  function automatic integer pc(input reg[AW-1:0] a);
  pc=((a>>2)^(a>>7)^(a>>12))&31;
  endfunction
- initial if(ND!=8||DEPTH!=16||TAGW+5>KTAGW) $fatal(1,"unsupported shared W geometry");
+ initial if(ND<2||(ND&(ND-1))!=0||DEPTH<16||(DEPTH&(DEPTH-1))!=0||ROOM<1||ROOM>DEPTH||TAGW+5>KTAGW)
+  $fatal(1,"unsupported shared W geometry");
  always @* begin
  slot=-1;for(d=0;d<ND;d=d+1) if(!active[d]&&slot<0) slot=d;
  for(p=0;p<32;p=p+1) need[p]=0;
@@ -59,7 +63,7 @@ module ot_chip_v41x_weight_pc_adapter #(
  end
  end
  generate for(genvar c=0;c<32;c=c+1) begin:g_pc
- assign w_room[c]=(DEPTH-reserved[c]>=16)&&!fault;
+ assign w_room[c]=(DEPTH-reserved[c]>=ROOM)&&!fault;
  assign rsp_rdy[c]=(count[c]<DEPTH);
  assign wr_v[c]=(count[c]!=0);
  assign wr_data[c*256+:256]=data[c][rp[c]];
@@ -75,7 +79,7 @@ module ot_chip_v41x_weight_pc_adapter #(
  end else begin
  // Full burst capacity reserved atomically; response consumption releases it.
  for(i=0;i<32;i=i+1) begin
- if(req_v[i]&&req_rdy[i]) cursor[i]<=3'(selected_slot[i]+1);
+ if(req_v[i]&&req_rdy[i]) cursor[i]<=CW'(selected_slot[i]+1);
  reserved[i]<=reserved[i]+((w_v&&w_rdy)?need[i]:0)-((wr_v[i]&&wr_rdy[i])?1:0);
  count[i]<=count[i]+((rsp_v[i]&&rsp_rdy[i])?1:0)-((wr_v[i]&&wr_rdy[i])?1:0);
  if(rsp_v[i]&&rsp_rdy[i]) begin
