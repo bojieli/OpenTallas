@@ -1,0 +1,1019 @@
+{
+  "schema": "opentallas.v41.floorplan_inventory.v1",
+  "source_commit": "8f6925bac509fd053f5fb681818350cf85b5b97a",
+  "status": "floorplan_input_inventory_not_die_fit_or_timing_proof",
+  "objective_order": [
+    "minimum_single_user_decode_latency",
+    "maximum_aggregate_throughput_by_filling_pipeline"
+  ],
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_die.sv": "bd4fe023f9386fdbf9c9ae5548750d3d3a19370599c354ff8e5ad6252629127f",
+    "rtl/chip/ot_chip_v41x_tile.sv": "ee8046f5f871bb6923a1781805ae691a009494c5f671c02d1639d10ff7edc856",
+    "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+    "results/arch/v41_die_assembly.json": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189",
+    "results/arch/v41_stage_owner_preflight.json": "8d7607de634470f58132eb36bb9100b369689a9b509dd299662a7f97fba47a1d",
+    "results/rtl/hdc_v41x_qtile_pair_bank.json": "8998d6a40c8ecef42e11ba8faa3f7f525156a0e326e0cc25dfaa4ca770d4c167",
+    "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
+    "docs/V41X_DIE_PHYSICAL_PREFLIGHT.md": "1374f292959bb745b2ab1346ae4c6ef2b67b18d02b29770bf698e2807acadb78"
+  },
+  "rtl_profile": {
+    "FULL_SHAPE": 1,
+    "W_HBM_default": 1,
+    "WINDOW_HBM_ATTENTION_default": 0,
+    "IDX_SHARDED_default": 0,
+    "AW": 30,
+    "NW": 21,
+    "INSTR_BITS": 2048,
+    "SW": 8,
+    "MG": 8,
+    "HHW": 8,
+    "SUN": 16,
+    "SUM": 8,
+    "VM_AW": 19,
+    "MBAW": 18
+  },
+  "rtl_instances": [
+    {
+      "region": "ROM_MAC",
+      "path": "u_tile.u_core",
+      "count": 1,
+      "qualification": "pooled core; width parameters SW8 MG8 HHW8 SUN16 SUM8 are executable defaults, not analytic full-throughput lane replication"
+    },
+    {
+      "region": "HBM_SERVICE",
+      "path": "g_hbm.u_hbm",
+      "count": 4,
+      "qualification": "behavioral HBM model; not physical controller/PHY implementation"
+    },
+    {
+      "region": "HBM_SERVICE",
+      "path": "g_hbm.u_arb",
+      "count": 4,
+      "qualification": "32 PC arbiter per stack"
+    },
+    {
+      "region": "COLLECTIVE",
+      "path": "u_coll",
+      "count": 1,
+      "qualification": "full-mode GW4 CL_DEPTH256; model ledger count8 differs"
+    },
+    {
+      "region": "COLLECTIVE",
+      "path": "u_cdma",
+      "count": 1,
+      "qualification": "blocking collective DMA"
+    },
+    {
+      "region": "COLLECTIVE",
+      "path": "u_ctrl",
+      "count": 1,
+      "qualification": "package controller; model count2 differs"
+    },
+    {
+      "region": "COLLECTIVE",
+      "path": "u_rtr",
+      "count": 1,
+      "qualification": "three-port router; model count4 differs"
+    },
+    {
+      "region": "HBM_SERVICE",
+      "path": "u_kv",
+      "count": 1,
+      "qualification": "element-mode service plus opt-in WINDOW packed path; do not treat as complete packed deployed cache"
+    },
+    {
+      "region": "ATTENTION",
+      "path": "window source and packed staging",
+      "count": 1,
+      "qualification": "WINDOW_HBM_ATTENTION opt-in; complete SRAM macro binding unknown"
+    },
+    {
+      "region": "INDEX",
+      "path": "u_tile.u_kb",
+      "count": 1,
+      "qualification": "four-stack bridge,128 PCs; IDX_SHARDED default0 needs explicit deployed configuration"
+    }
+  ],
+  "rtl_behavioral_memories": [
+    {
+      "id": "prog",
+      "kind": "rom",
+      "word_bits": 2048,
+      "logical_words": 16384,
+      "logical_bytes": 4194304,
+      "ports": "one instruction read",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "wrom",
+      "kind": "rom",
+      "word_bits": 1024,
+      "logical_words": 524288,
+      "logical_bytes": 67108864,
+      "ports": "matrix + eight embedding reads + vector element reads",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "hrom",
+      "kind": "rom",
+      "word_bits": 768,
+      "logical_words": 65536,
+      "logical_bytes": 6291456,
+      "ports": "projection and vector reads",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "hbank",
+      "kind": "rom",
+      "word_bits": 256,
+      "logical_words": 524288,
+      "logical_bytes": 16777216,
+      "ports": "eight banks",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "mbank",
+      "kind": "rom",
+      "word_bits": 32,
+      "logical_words": 16777216,
+      "logical_bytes": 67108864,
+      "ports": "eight banks x eight lanes, two-cycle read",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "erom",
+      "kind": "rom",
+      "word_bits": 264,
+      "logical_words": 524288,
+      "logical_bytes": 17301504,
+      "ports": "gather read",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "crom",
+      "kind": "rom",
+      "word_bits": 64,
+      "logical_words": 32768,
+      "logical_bytes": 262144,
+      "ports": "32 stream plus auxiliary/vector reads",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "qlist",
+      "kind": "rom",
+      "word_bits": 128,
+      "logical_words": 4096,
+      "logical_bytes": 65536,
+      "ports": "fetch list; descriptor widening pending tile integration",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "qwin",
+      "kind": "sram",
+      "word_bits": 256,
+      "logical_words": 17408,
+      "logical_bytes": 557056,
+      "ports": "17 QE stream window banks",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    },
+    {
+      "id": "vm",
+      "kind": "sram",
+      "word_bits": 32,
+      "logical_words": 524288,
+      "logical_bytes": 2097152,
+      "ports": "many internal accesses plus package and collective ports",
+      "physical_macro_binding": null,
+      "scope": "FULL_SHAPE=1 with unchanged default width/depth parameters; behavioral allocation, not deployed capacity"
+    }
+  ],
+  "memory_totals": {
+    "rom_logical_bytes": 179109888,
+    "sram_logical_bytes": 2654208,
+    "excludes": "internal engine staging, collectives, HBM queues, packed windows, replication and port emulation"
+  },
+  "macro_catalog": {
+    "ot_rom_1024x72_m8": {
+      "kind": "rom",
+      "width_um": 37.152,
+      "height_um": 20.52,
+      "area_um2": 762.359,
+      "capacity_bits": 73728,
+      "clk_to_q_ps": {
+        "ff": 283.0,
+        "ss": 455.8,
+        "tt": 350.1
+      },
+      "min_period_ps": {
+        "ff": 255.0,
+        "ss": 412.0,
+        "tt": 315.7
+      },
+      "spec": {
+        "bits": 72,
+        "mux": 8,
+        "name": "ot_rom_1024x72_m8",
+        "words": 1024
+      }
+    },
+    "ot_rom_16384x266_m16": {
+      "kind": "rom",
+      "width_um": 237.168,
+      "height_um": 119.61,
+      "area_um2": 28367.664,
+      "capacity_bits": 4358144,
+      "clk_to_q_ps": {
+        "ff": 903.1,
+        "ss": 1280.4,
+        "tt": 1050.4
+      },
+      "min_period_ps": {
+        "ff": 879.8,
+        "ss": 1252.1,
+        "tt": 1024.5
+      },
+      "spec": {
+        "bits": 266,
+        "mux": 16,
+        "name": "ot_rom_16384x266_m16",
+        "words": 16384
+      }
+    },
+    "ot_rom_4096x266_m8": {
+      "kind": "rom",
+      "width_um": 121.824,
+      "height_um": 62.91,
+      "area_um2": 7663.948,
+      "capacity_bits": 1089536,
+      "clk_to_q_ps": {
+        "ff": 487.5,
+        "ss": 739.2,
+        "tt": 585.8
+      },
+      "min_period_ps": {
+        "ff": 464.7,
+        "ss": 707.1,
+        "tt": 559.0
+      },
+      "spec": {
+        "bits": 266,
+        "mux": 8,
+        "name": "ot_rom_4096x266_m8",
+        "words": 4096
+      }
+    },
+    "ot_rom_4096x72_m8": {
+      "kind": "rom",
+      "width_um": 38.016,
+      "height_um": 62.91,
+      "area_um2": 2391.587,
+      "capacity_bits": 294912,
+      "clk_to_q_ps": {
+        "ff": 415.4,
+        "ss": 667.1,
+        "tt": 513.7
+      },
+      "min_period_ps": {
+        "ff": 392.6,
+        "ss": 635.0,
+        "tt": 486.8
+      },
+      "spec": {
+        "bits": 72,
+        "mux": 8,
+        "name": "ot_rom_4096x72_m8",
+        "words": 4096
+      }
+    },
+    "ot_rom_8192x104_m8": {
+      "kind": "rom",
+      "width_um": 52.272,
+      "height_um": 119.34,
+      "area_um2": 6238.14,
+      "capacity_bits": 851968,
+      "clk_to_q_ps": {
+        "ff": 584.5,
+        "ss": 933.4,
+        "tt": 721.2
+      },
+      "min_period_ps": {
+        "ff": 568.6,
+        "ss": 916.9,
+        "tt": 704.4
+      },
+      "spec": {
+        "bits": 104,
+        "mux": 8,
+        "name": "ot_rom_8192x104_m8",
+        "words": 8192
+      }
+    },
+    "ot_rom_8192x266_m8": {
+      "kind": "rom",
+      "width_um": 122.256,
+      "height_um": 119.34,
+      "area_um2": 14590.031,
+      "capacity_bits": 2179072,
+      "clk_to_q_ps": {
+        "ff": 650.4,
+        "ss": 999.3,
+        "tt": 787.2
+      },
+      "min_period_ps": {
+        "ff": 634.6,
+        "ss": 982.8,
+        "tt": 770.4
+      },
+      "spec": {
+        "bits": 266,
+        "mux": 8,
+        "name": "ot_rom_8192x266_m8",
+        "words": 8192
+      }
+    },
+    "ot_rom_8192x274_m8": {
+      "kind": "rom",
+      "width_um": 125.712,
+      "height_um": 119.34,
+      "area_um2": 15002.47,
+      "capacity_bits": 2244608,
+      "clk_to_q_ps": {
+        "ff": 655.2,
+        "ss": 1004.1,
+        "tt": 791.9
+      },
+      "min_period_ps": {
+        "ff": 639.3,
+        "ss": 987.6,
+        "tt": 775.1
+      },
+      "spec": {
+        "bits": 274,
+        "mux": 8,
+        "name": "ot_rom_8192x274_m8",
+        "words": 8192
+      }
+    },
+    "ot_sram_1r1w_1024x256_m2_r2c2": {
+      "kind": "sram",
+      "width_um": 174.744,
+      "height_um": 70.47,
+      "area_um2": 12314.21,
+      "capacity_bits": 262144,
+      "clk_to_q_ps": {
+        "ff": 450.7,
+        "ss": 691.8,
+        "tt": 544.8
+      },
+      "min_period_ps": {
+        "ff": 435.3,
+        "ss": 671.5,
+        "tt": 527.2
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 256,
+        "mux": 2,
+        "name": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "ports": "1r1w",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 1024
+      }
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+      "kind": "sram",
+      "width_um": 94.824,
+      "height_um": 41.04,
+      "area_um2": 3891.577,
+      "capacity_bits": 32768,
+      "clk_to_q_ps": {
+        "ff": 286.1,
+        "ss": 455.3,
+        "tt": 351.8
+      },
+      "min_period_ps": {
+        "ff": 272.9,
+        "ss": 435.2,
+        "tt": 335.7
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 256,
+        "mux": 1,
+        "name": "ot_sram_1r1w_128x256_m1_r2c2",
+        "ports": "1r1w",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 128
+      }
+    },
+    "ot_sram_1r1w_256x256_m2_r2c2": {
+      "kind": "sram",
+      "width_um": 172.8,
+      "height_um": 41.04,
+      "area_um2": 7091.712,
+      "capacity_bits": 65536,
+      "clk_to_q_ps": {
+        "ff": 337.7,
+        "ss": 511.4,
+        "tt": 405.1
+      },
+      "min_period_ps": {
+        "ff": 317.1,
+        "ss": 479.4,
+        "tt": 380.0
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 256,
+        "mux": 2,
+        "name": "ot_sram_1r1w_256x256_m2_r2c2",
+        "ports": "1r1w",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 256
+      }
+    },
+    "ot_sram_1r1w_512x128_m4_r2c2": {
+      "kind": "sram",
+      "width_um": 174.096,
+      "height_um": 29.7,
+      "area_um2": 5170.651,
+      "capacity_bits": 65536,
+      "clk_to_q_ps": {
+        "ff": 346.0,
+        "ss": 524.1,
+        "tt": 415.2
+      },
+      "min_period_ps": {
+        "ff": 318.0,
+        "ss": 480.3,
+        "tt": 380.9
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 128,
+        "mux": 4,
+        "name": "ot_sram_1r1w_512x128_m4_r2c2",
+        "ports": "1r1w",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 512
+      }
+    },
+    "ot_sram_1r1w_64x512_m1_r2c2": {
+      "kind": "sram",
+      "width_um": 171.288,
+      "height_um": 77.76,
+      "area_um2": 13319.355,
+      "capacity_bits": 32768,
+      "clk_to_q_ps": {
+        "ff": 305.6,
+        "ss": 460.4,
+        "tt": 365.6
+      },
+      "min_period_ps": {
+        "ff": 291.5,
+        "ss": 438.3,
+        "tt": 348.3
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 512,
+        "mux": 1,
+        "name": "ot_sram_1r1w_64x512_m1_r2c2",
+        "ports": "1r1w",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 64
+      }
+    },
+    "ot_sram_1rw_2048x128_m4": {
+      "kind": "sram",
+      "width_um": 118.8,
+      "height_um": 65.61,
+      "area_um2": 7794.468,
+      "capacity_bits": 262144,
+      "clk_to_q_ps": {
+        "ff": 415.5,
+        "ss": 647.5,
+        "tt": 506.0
+      },
+      "min_period_ps": {
+        "ff": 400.1,
+        "ss": 627.1,
+        "tt": 488.3
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 128,
+        "mux": 4,
+        "name": "ot_sram_1rw_2048x128_m4",
+        "ports": "1rw",
+        "spare_cols": 0,
+        "spare_rows": 0,
+        "words": 2048
+      }
+    },
+    "ot_sram_1rw_2048x128_m4_r2c2": {
+      "kind": "sram",
+      "width_um": 122.904,
+      "height_um": 66.15,
+      "area_um2": 8130.1,
+      "capacity_bits": 262144,
+      "clk_to_q_ps": {
+        "ff": 439.4,
+        "ss": 684.9,
+        "tt": 535.3
+      },
+      "min_period_ps": {
+        "ff": 416.7,
+        "ss": 652.8,
+        "tt": 508.5
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 128,
+        "mux": 4,
+        "name": "ot_sram_1rw_2048x128_m4_r2c2",
+        "ports": "1rw",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 2048
+      }
+    },
+    "ot_sram_1rw_256x64_m4_r2c2": {
+      "kind": "sram",
+      "width_um": 66.312,
+      "height_um": 17.82,
+      "area_um2": 1181.68,
+      "capacity_bits": 16384,
+      "clk_to_q_ps": {
+        "ff": 272.3,
+        "ss": 435.8,
+        "tt": 335.7
+      },
+      "min_period_ps": {
+        "ff": 243.4,
+        "ss": 390.1,
+        "tt": 300.1
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 64,
+        "mux": 4,
+        "name": "ot_sram_1rw_256x64_m4_r2c2",
+        "ports": "1rw",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 256
+      }
+    },
+    "ot_sram_2rw_512x64_m4_r2c2": {
+      "kind": "sram",
+      "width_um": 130.896,
+      "height_um": 34.83,
+      "area_um2": 4559.108,
+      "capacity_bits": 32768,
+      "clk_to_q_ps": {
+        "ff": 310.1,
+        "ss": 488.2,
+        "tt": 379.3
+      },
+      "min_period_ps": {
+        "ff": 282.1,
+        "ss": 444.4,
+        "tt": 345.0
+      },
+      "spec": {
+        "banks": 1,
+        "bits": 64,
+        "mux": 4,
+        "name": "ot_sram_2rw_512x64_m4_r2c2",
+        "ports": "2rw",
+        "spare_cols": 2,
+        "spare_rows": 2,
+        "words": 512
+      }
+    }
+  },
+  "validated_local_rom_witness": {
+    "macro": "ot_rom_8192x274_m8",
+    "count": 16,
+    "fp8_count": 8,
+    "paired_fp4_count": 8,
+    "total_macro_area_um2": 240039.52,
+    "operand_bits_per_cycle": 2112,
+    "whole_die_replication_count": null,
+    "evidence": "results/rtl/hdc_v41x_qtile_pair_bank.json",
+    "claim_boundary": "standalone exact bank mapping; physical qtile hookup, binpacking and route not proved"
+  },
+  "analytical_assembly_reference": {
+    "scope": "historical analytical m=2 width-scaled ledger; not implemented instance inventory",
+    "die_area_mm2": 815,
+    "die_long_mm": 31.8,
+    "die_short_mm": 25.628930817610062,
+    "placed_total_mm2": 805.7847857247081,
+    "whitespace_mm2": 9.215214275291942,
+    "rows": [
+      {
+        "block": "block-dot pool (FP8/FP4 weights + FP4 indexer)",
+        "group": "engine",
+        "count": 1,
+        "cell_area_mm2": 83.1623328,
+        "placed_mm2": 118.80333257142858,
+        "evidence": "routed-closed (unit) x width",
+        "basis": "529,920 MACs/cycle x m=2 at 78.5 um2/MAC (ot_hdc_blockdot / 32, closed 1195.7 MHz); replication of a routed unit, the pool itself is not routed",
+        "record": "results/physical_abi3/asap7/hdc/v41/ot_hdc_blockdot/physical.json",
+        "lanes": 1059840
+      },
+      {
+        "block": "BF16 pool (BF16 weights, wo_a, attention)",
+        "group": "engine",
+        "count": 1,
+        "cell_area_mm2": 84.886566912,
+        "placed_mm2": 121.26652416000002,
+        "evidence": "routed-closed (unit) x width",
+        "basis": "83,328 MACs/cycle x m=2 at 509 um2/MAC (mac_bf16_fp32_pipe_round_stage, closed 1040.3 MHz)",
+        "record": "results/physical_abi3/asap7/mac_bf16_fp32_pipe_round_stage/physical.json",
+        "lanes": 166656
+      },
+      {
+        "block": "pool operand muxes",
+        "group": "engine",
+        "count": 1,
+        "cell_area_mm2": 16.8048899712,
+        "placed_mm2": 24.00698567314286,
+        "evidence": "estimate",
+        "basis": "10% of the pooled engines (tools/arch_utilization_v41.area_of, ASSUMED, no routed block)",
+        "record": null
+      },
+      {
+        "block": "HC projection (FP32 lanes)",
+        "group": "engine",
+        "count": 1,
+        "cell_area_mm2": 11.968419840000001,
+        "placed_mm2": 17.09774262857143,
+        "evidence": "routed-not-closed (units)",
+        "basis": "5,120 FP32 lanes per weight lane x m=2 at fp32 add (closed) + fp32 mul (not closed); results/rtl/hdc_v41x_hcp_campaign.json bit-exact at 2,048 lanes, block only boundary-characterised",
+        "record": "results/physical_abi3/asap7/hdc/ot_hdc_fp32_mul_pipe/physical.json"
+      },
+      {
+        "block": "vector unit, light lanes",
+        "group": "vector",
+        "count": 1,
+        "cell_area_mm2": 16.730763264000004,
+        "placed_mm2": 23.901090377142864,
+        "evidence": "estimate",
+        "basis": "2,048 lanes x m=2 at 4085 um2 (ESTIMATE 1.5 x (2 fp32 mul + 3 fp32 add); no routed light lane)",
+        "record": null
+      },
+      {
+        "block": "vector unit, SFU lanes",
+        "group": "vector",
+        "count": 1,
+        "cell_area_mm2": 35.277499391999996,
+        "placed_mm2": 50.39642770285714,
+        "evidence": "synthesis-only",
+        "basis": "512 lanes x m=2 at 34451 um2 (ot_hdc_v41_su_lane, synthesis only)",
+        "record": "results/physical_abi3/asap7/hdc/v41/ot_hdc_v41_su_lane/physical.json"
+      },
+      {
+        "block": "streaming select (4 x 16 tselect)",
+        "group": "control",
+        "count": 1,
+        "cell_area_mm2": 0.07231639999999999,
+        "placed_mm2": 0.10330914285714285,
+        "evidence": "routed-not-closed",
+        "basis": "64 lanes of ot_hdc_tselect_w16 (routed 1,087 MHz, not closed)",
+        "record": "results/physical_abi3/asap7/hdc/v41/ot_hdc_tselect_w16/physical.json"
+      },
+      {
+        "block": "Sinkhorn units (one per verified position)",
+        "group": "vector",
+        "count": 6,
+        "cell_area_mm2": 0.1985484,
+        "placed_mm2": 0.28364057142857146,
+        "evidence": "routed-not-closed",
+        "basis": "6 x ot_hdc_sinkhorn (33,091 um2, 151.9 MHz, closed=False)",
+        "record": "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json"
+      },
+      {
+        "block": "sqrt(softplus)",
+        "group": "vector",
+        "count": 2,
+        "cell_area_mm2": 0.057366400000000005,
+        "placed_mm2": 0.08195200000000001,
+        "evidence": "routed-closed",
+        "basis": "2 x ot_hdc_softplus (28,683 um2, 1033.9 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41/ot_hdc_softplus/physical.json"
+      },
+      {
+        "block": "top-6 select",
+        "group": "control",
+        "count": 2,
+        "cell_area_mm2": 0.0009852580000000001,
+        "placed_mm2": 0.001407511428571429,
+        "evidence": "routed-closed",
+        "basis": "2 x ot_hdc_select_k6 (493 um2, 1618.1 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41/ot_hdc_select_k6/physical.json"
+      },
+      {
+        "block": "activation quantiser",
+        "group": "vector",
+        "count": 4,
+        "cell_area_mm2": 0.032027400000000004,
+        "placed_mm2": 0.045753428571428584,
+        "evidence": "routed-closed",
+        "basis": "4 x ot_hdc_actquant (8,007 um2, 1125.5 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41/ot_hdc_actquant/physical.json"
+      },
+      {
+        "block": "FP4 quantise/dequantise",
+        "group": "vector",
+        "count": 4,
+        "cell_area_mm2": 0.02244648,
+        "placed_mm2": 0.0320664,
+        "evidence": "routed-closed",
+        "basis": "4 x ot_hdc_fp4qdq (5,612 um2, 1121.5 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41/ot_hdc_fp4qdq/physical.json"
+      },
+      {
+        "block": "indexer head-sum",
+        "group": "engine",
+        "count": 4,
+        "cell_area_mm2": 0.069238,
+        "placed_mm2": 0.09891142857142857,
+        "evidence": "routed-closed",
+        "basis": "4 x ot_hdc_v41x_idx_hsum (17,310 um2, 1140.5 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_hsum/physical.json"
+      },
+      {
+        "block": "indexer key control",
+        "group": "kv",
+        "count": 4,
+        "cell_area_mm2": 0.0570196,
+        "placed_mm2": 0.08145657142857143,
+        "evidence": "routed-closed",
+        "basis": "4 x ot_hdc_v41x_idx_kctl (14,255 um2, 1114.6 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_kctl/physical.json"
+      },
+      {
+        "block": "indexer output tail",
+        "group": "engine",
+        "count": 4,
+        "cell_area_mm2": 0.00400232,
+        "placed_mm2": 0.005717600000000001,
+        "evidence": "routed-closed",
+        "basis": "4 x ot_hdc_v41x_idx_tail (1,001 um2, 1153.0 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_tail/physical.json"
+      },
+      {
+        "block": "KV / key streamer (one per stack)",
+        "group": "kv",
+        "count": 4,
+        "cell_area_mm2": 0.02592276,
+        "placed_mm2": 0.03703251428571429,
+        "evidence": "routed-not-closed",
+        "basis": "4 x ot_hdc_kv_stream (6,481 um2, 1128.0 MHz, closed=False)",
+        "record": "results/physical_abi3/asap7/hdc/kv/ot_hdc_kv_stream/physical.json"
+      },
+      {
+        "block": "one-shot collective engine (128 lanes)",
+        "group": "collective",
+        "count": 8,
+        "cell_area_mm2": 0.5268592,
+        "placed_mm2": 0.752656,
+        "evidence": "routed-not-closed",
+        "basis": "8 x ot_rom_oneshot_die_d32 (65,857 um2, 1005.9 MHz, closed=False)",
+        "record": "results/physical_abi3/asap7/rom/ot_rom_oneshot_die_d32/physical.json"
+      },
+      {
+        "block": "package controller",
+        "group": "control",
+        "count": 2,
+        "cell_area_mm2": 0.00688658,
+        "placed_mm2": 0.00983797142857143,
+        "evidence": "routed-closed",
+        "basis": "2 x ot_rom_pkg_ctrl (3,443 um2, 1162.0 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/rom/ot_rom_pkg_ctrl/physical.json"
+      },
+      {
+        "block": "fabric router",
+        "group": "control",
+        "count": 4,
+        "cell_area_mm2": 0.040413199999999996,
+        "placed_mm2": 0.05773314285714286,
+        "evidence": "routed-closed",
+        "basis": "4 x ot_rom_fabric_router (10,103 um2, 1194.9 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/rom/ot_rom_fabric_router/physical.json"
+      },
+      {
+        "block": "package link endpoint",
+        "group": "collective",
+        "count": 4,
+        "cell_area_mm2": 0.030564,
+        "placed_mm2": 0.04366285714285715,
+        "evidence": "routed-not-closed",
+        "basis": "4 x rom_pkg_link (7,641 um2, 1339.2 MHz, closed=False)",
+        "record": "results/physical_abi3/asap7/rom_pkg_link/physical.json"
+      },
+      {
+        "block": "Engram gather slices (spilled table rows)",
+        "group": "control",
+        "count": 24,
+        "cell_area_mm2": 0.02881032,
+        "placed_mm2": 0.0411576,
+        "evidence": "routed-closed",
+        "basis": "24 x ot_hdc_v41x_egather_slice (1,200 um2, 1656.2 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_slice/physical.json"
+      },
+      {
+        "block": "Engram gather assembler",
+        "group": "control",
+        "count": 1,
+        "cell_area_mm2": 0.0027651999999999998,
+        "placed_mm2": 0.003950285714285714,
+        "evidence": "routed-closed",
+        "basis": "1 x ot_hdc_v41x_egather_asm (2,765 um2, 1178.6 MHz, closed=True)",
+        "record": "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_asm/physical.json"
+      },
+      {
+        "block": "KV row staging buffer",
+        "group": "sram",
+        "count": 42,
+        "cell_area_mm2": 0.51719682,
+        "placed_mm2": 0.5947763429999999,
+        "evidence": "analytical-macro (ASAP7 compiler)",
+        "basis": "1,352 KB = 42 x ot_sram_1r1w_1024x256_m2_r2c2 (21.3 Mbit/mm2); spec s6 item 4 338 KB x 2 (prefetch) x 2 (design-point pools)",
+        "record": "physical/asap7_memory_macros/index.json#macros.ot_sram_1r1w_1024x256_m2_r2c2",
+        "bytes": 1352000.0
+      },
+      {
+        "block": "HBM request/beat queues",
+        "group": "sram",
+        "count": 8,
+        "cell_area_mm2": 0.09851367999999999,
+        "placed_mm2": 0.11329073199999998,
+        "evidence": "analytical-macro (ASAP7 compiler)",
+        "basis": "262 KB = 8 x ot_sram_1r1w_1024x256_m2_r2c2 (21.3 Mbit/mm2); spec s6 item 11: >= 64 beats x 32 pseudo-channels x 4 stacks",
+        "record": "physical/asap7_memory_macros/index.json#macros.ot_sram_1r1w_1024x256_m2_r2c2",
+        "bytes": 262144
+      },
+      {
+        "block": "vector memory (residual, MTP positions)",
+        "group": "sram",
+        "count": 30,
+        "cell_area_mm2": 0.243903,
+        "placed_mm2": 0.28048845,
+        "evidence": "analytical-macro (ASAP7 compiler)",
+        "basis": "983 KB = 30 x ot_sram_1rw_2048x128_m4_r2c2 (32.2 Mbit/mm2); 4 x 5,120 FP32 x 2 copies x 6 positions",
+        "record": "physical/asap7_memory_macros/index.json#macros.ot_sram_1rw_2048x128_m4_r2c2",
+        "bytes": 983040
+      },
+      {
+        "block": "engine chaining buffers",
+        "group": "sram",
+        "count": 4,
+        "cell_area_mm2": 0.049256839999999996,
+        "placed_mm2": 0.05664536599999999,
+        "evidence": "analytical-macro (ASAP7 compiler)",
+        "basis": "131 KB = 4 x ot_sram_1r1w_1024x256_m2_r2c2 (21.3 Mbit/mm2); vector-credit chaining (spec s6 item 10), 128 KB",
+        "record": "physical/asap7_memory_macros/index.json#macros.ot_sram_1r1w_1024x256_m2_r2c2",
+        "bytes": 131072
+      },
+      {
+        "block": "collective queues (adopted levers)",
+        "group": "sram",
+        "count": 1,
+        "cell_area_mm2": 0.49670000000000003,
+        "placed_mm2": 0.49670000000000003,
+        "evidence": "estimate",
+        "basis": "ANALYTICAL estimate (bitcell area x an assumed 2.5x two-port overhead + flops), not a compiled SRAM macro; one queue set per pattern per die, summed",
+        "record": "results/arch/v41_collective_levers.json#queue_area_per_die.with_levers_mm2"
+      },
+      {
+        "block": "mask-ROM array (weights at official precision)",
+        "group": "rom",
+        "count": 1,
+        "cell_area_mm2": 300.68888383469084,
+        "placed_mm2": 300.68888383469084,
+        "evidence": "derived (model density)",
+        "basis": "2.714 GB per die (checkpoint / 188) x SECDED 266/256 at 75.0 Mbit/mm2 (N5: 6T cell 0.021 um2 x ROM/SRAM 0.33 / array efficiency 0.52); holds 2.706 GB",
+        "record": "results/arch/v41_die_placement.json#rom_bytes_per_die",
+        "bytes": 2714287356.382979,
+        "held_bytes": 2705621847.8115554
+      },
+      {
+        "block": "HBM3E PHY + controller",
+        "group": "phy_hbm",
+        "count": 4,
+        "cell_area_mm2": 40.00784006016,
+        "placed_mm2": 40.00784006016,
+        "evidence": "assumed (abstract)",
+        "basis": "4 x ot_hbm3e_phy 12.0 x 0.833 mm (technology.json hbm.hbm3e phy_area_mm2_per_stack 10, assumed 8-15; beachfront 12 mm per stack)",
+        "record": "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json#footprint.area_mm2",
+        "beachfront_mm": 48.000384
+      },
+      {
+        "block": "UCIe-A modules (package peer)",
+        "group": "phy_ucie",
+        "count": 17,
+        "cell_area_mm2": 6.8938128,
+        "placed_mm2": 6.8938128,
+        "evidence": "published (module) x derived count",
+        "basis": "17 x64 modules at 32 GT/s (256 GB/s per direction each) for technology.json links.rom_package_ucie.bytes_s 4.2 TB/s; 388.8 x 1043 um each",
+        "record": null,
+        "beachfront_mm": 6.6096
+      },
+      {
+        "block": "112G PAM4 SerDes lanes",
+        "group": "phy_serdes",
+        "count": 45,
+        "cell_area_mm2": 18.0,
+        "placed_mm2": 18.0,
+        "evidence": "assumed",
+        "basis": "45 lanes per die (90 per two-die package, R-L9) x 0.4 mm2 (ASSUMED, band 0.25-0.6)",
+        "record": null,
+        "beachfront_mm": 18.0
+      },
+      {
+        "block": "overhead: PLLs, clock spine, PDN, DFT/scan, host, test",
+        "group": "overhead",
+        "count": 1,
+        "cell_area_mm2": 81.5,
+        "placed_mm2": 81.5,
+        "evidence": "assumed",
+        "basis": "technology.json floorplan.overhead_area_fraction 0.1 x 815.0 mm2 (sweep 0.06-0.15)",
+        "record": null
+      }
+    ],
+    "do_not_use_as_implemented_fit": true
+  },
+  "integer_weight_ownership_reference": {
+    "status": "coarse_integer_candidate_not_executable",
+    "stage_count": 28,
+    "minimum_headroom_bytes": 4914107.714276388,
+    "exact_physical_macro_packing": false
+  },
+  "partial_rom_image": {
+    "status": "token_selected_partial_rank_layout",
+    "rom_capacity_bytes": 2714287356,
+    "reserved_bytes": 1877530912,
+    "all_experts_materialized": false,
+    "complete_die_image": false,
+    "token_runnable": false
+  },
+  "unresolved_bindings": [
+    "Each final local engine replication count and matching placed area",
+    "Behavioral multiport memories to real macro banks, replication and arbitration",
+    "Complete ROM physical macro count with padding, scales, ECC and every expert",
+    "Packed window, compressed-KV staging, probability-bank allocation and queues",
+    "Per-region clocks, CDC, reset, DFT and PDN realization",
+    "HBM PHY/controller abstract matches 32PC stack protocol",
+    "Link endpoint implementation and physical placement; flit ports are not PHY macros",
+    "Actual per-stage complete integer tensor placement replaces mean capacity model"
+  ],
+  "discrepancies": [
+    {
+      "id": "D1",
+      "issue": "model8collectives_2controllers_4routers_vs_rtl1each",
+      "action": "root choose counts from executed schedule before allocation"
+    },
+    {
+      "id": "D2",
+      "issue": "model full lane count vs narrow executable width defaults",
+      "action": "bind selected width profile to area and throughput"
+    },
+    {
+      "id": "D3",
+      "issue": "model 2.714GBROM mean capacity not full physical image packing",
+      "action": "pack every stage with integer macros including padding/scales/ECC"
+    },
+    {
+      "id": "D4",
+      "issue": "many-ported behavioral memory cannot map one-for-one to single/dual-port SRAM",
+      "action": "banking and concurrency contract before floorplan count"
+    },
+    {
+      "id": "D5",
+      "issue": "HBM behavioral interfaces not PHY macro-compatible by default",
+      "action": "explicit endpoint budget and abstract regeneration"
+    },
+    {
+      "id": "D6",
+      "issue": "analytical 9.215mm2 remaining area is not routing margin proof",
+      "action": "recompute full die from local physical cuts and explicit channels"
+    }
+  ]
+}
