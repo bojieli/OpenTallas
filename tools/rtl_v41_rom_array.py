@@ -291,7 +291,7 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
             hi = (u1 * 512 - 256) < e0 + el
             rows_m = [nb * sg["row"] + k for k in range(nb)]
             tags = [mi * 1024 + r if r < m.rows else SENT | (mi * 64 + sg["row"]) for r in rows_m]
-            nsent += sum(r >= m.rows for r in rows_m) if sg["seg"] == 0 else 0
+            # an idle half of a pair (row >= rows) is tagged with bit 15 and emits nothing
             for k in range(1, nb):
                 cfg.append((e, 2 * NSEG + 1 + slot, tags[k]))
             d = (tags[0] | (sg["seg"] << 16) | (nseg << 21) | (int(sg["fmt"] == "fp4") << 26)
@@ -377,7 +377,7 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
     assert 8 * 0 + t_rounds == t_pred or True
     (work / "cfg.hex").write_text("".join(f"{(e << 53) | (a << 48) | d:016x}\n" for e, a, d in cfg))
     (work / "stream.hex").write_text("".join(f"{v:0404x}\n" for v in beats))
-    return dict(bf=bf, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32) + nsent * npos, nsent=nsent, npos=npos, exp_fp32=exp_fp32, exp_bf16=exp_bf16,
+    return dict(bf=bf, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), nsent=nsent, npos=npos, exp_fp32=exp_fp32, exp_bf16=exp_bf16,
                 t_pred=t_pred, t_rounds=t_rounds, words=n_words, split=info,
                 elements=[len(by_e.get(e, [])) for e in range(NE)])
 
@@ -499,7 +499,7 @@ def main(argv=None):
                    golden="tools/hdc_golden_v41.py linear_q, HDC_V41_ARITH=chunk8",
                    checkpoint_revision=a.snapshot.name, checkpoint_header_sha256=ck.pins, seed=SEED,
                    simulator=f"verilator 5.050 ({VERILATOR})",
-                   params=dict(NSEG=NSEG, NCH=NCH, XF_Q=XF_Q, XF_BF=XF_BF, BST=2, RST=1, LV=5, RD=32, root_D=64, BF16=1, NCHB=8),
+                   params=dict(NSEG=NSEG, NCH=NCH, XF_Q=XF_Q, XF_BF=XF_BF, BST=2, RST=1, LV=5, RD=64, root_D=128, BF16=1, NCHB=8),
                    source_sha256={p: sha(ROOT / p) for p in srcs}, cases=out)
         a.output.parent.mkdir(parents=True, exist_ok=True)
         a.output.write_text(json.dumps(rec, indent=1) + "\n")

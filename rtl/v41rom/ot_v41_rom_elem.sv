@@ -36,6 +36,7 @@
 //   cfg_a = 2NSEG            [2:0] sub-blocks - 1 (a class of u units spans ceil(u / 8) sub-blocks)
 //   segment [42]             BF16
 //   cfg_a = 2NSEG+1+s        (NB = 2) [15:0] the row of segment s on the second macro of the pair
+//                            (a row with bit 15 set is an idle half: that macro emits no partial for it)
 // ---------------------------------------------------------------------------
 module ot_v41_rom_elem #(
     parameter integer NSEG = 8,
@@ -459,7 +460,7 @@ module ot_v41_rom_elem #(
     wire [SW-1:0] t_seg = t_tree[SW-1:0];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) o_v <= 1'b0;
-        else o_v <= t_v;
+        else o_v <= t_v && !s_row[mb * NSEG + t_seg][15];   // row bit 15: an idle half of a pair emits nothing
     end
     always @(posedge clk) begin
         o_val <= t_val; o_row <= s_row[mb * NSEG + t_seg]; o_seg <= s_idx[t_seg]; o_n <= s_n[t_seg]; o_err <= t_err;

@@ -31,7 +31,7 @@ module tb_v41_rom_array;
     wire [2:0] r_pos;
     wire [31:0] r_fp32;
     ot_v41_rom_array #(.N(N), .BF16(BF16), .XF(XF), .NB(NB), .MTP(MTP), .EARLY(EARLY), .BYPASS(BYPASS),
-                      .RD(32), .ROOTD(64)) dut (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_e(cfg_e), .cfg_a(cfg_a),
+                      .RD(64), .ROOTD(128)) dut (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_e(cfg_e), .cfg_a(cfg_a),
         .cfg_d(cfg_d), .go(go), .go_bf(go_bf), .xb_v(bbeat[1063]), .xb_b(bbeat[1062:1060]), .xb_sv(bbeat[1059:1056]),
         .xb_u(bbeat[1055:1024]), .xb_d(bbeat[1023:0]), .xs_pos(qpos), .xb_pos(bpos), .r_pos(r_pos), .xs_v(beat[545]), .xs_p(beat[544:537]), .xs_b(beat[536:534]),
         .xs_sv(beat[533:532]), .xs_q0(beat[531:276]), .xs_e0(beat[275:266]), .xs_q1(beat[265:10]),
