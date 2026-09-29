@@ -45,6 +45,15 @@ def derive():
     usable = region["capacity"]["usable_bytes_per_stack"]
     per_user = region["per_stack_per_user_bytes"]["model_striped_keys"]
     assert usable // per_user == 866
+    # The actual packed-window writer uses WIN_STACK=0 and stores all 17
+    # sectors of each 128-row ring on that one stack. The earlier model's
+    # 33,792-B/stack window average is not an executable placement.
+    packed_window_bytes = 128 * 17 * 32
+    packed_window_stack_user = (region["per_stack_per_user_bytes"]["key_striped"] +
+                                region["per_stack_per_user_bytes"]["ckv_striped"] +
+                                packed_window_bytes)
+    other_stack_user = (region["per_stack_per_user_bytes"]["key_striped"] +
+                        region["per_stack_per_user_bytes"]["ckv_striped"])
     scenarios = {}
     for context in CONTEXTS:
         table_bytes = context * PAIRS_PER_POSITION * PAIR_BYTES
@@ -65,6 +74,8 @@ def derive():
             if context == 1_048_576:
                 row["users_with_striped_keys_capacity_only"] = (usable - per_stack) // per_user
                 row["room_at_model_866_users_bytes_per_stack"] = usable - 866 * per_user - per_stack
+                row["users_with_packed_window_stack_capacity_only"] = (usable - per_stack) // packed_window_stack_user
+                row["users_with_other_stack_capacity_only"] = (usable - per_stack) // other_stack_user
             stage_rows.append(row)
         scenarios[str(context)] = {
             "single_table_bytes_per_die": table_bytes,
@@ -74,6 +85,9 @@ def derive():
             "max_table_bytes_per_die": max(r["table_bytes_per_die"] for r in stage_rows),
             "min_capacity_users_with_striped_keys": min(
                 r.get("users_with_striped_keys_capacity_only", 10**9) for r in stage_rows
+            ) if context == 1_048_576 else None,
+            "min_capacity_users_with_current_packed_window": min(
+                r.get("users_with_packed_window_stack_capacity_only", 10**9) for r in stage_rows
             ) if context == 1_048_576 else None,
             "stages": stage_rows,
         }
@@ -91,6 +105,7 @@ def derive():
             "attention_owner": "first placement stage containing each layer",
             "per_token_fill": "256 bytes: two 32-byte sectors from each of four stacks; retained for all RoPE ops at that token position",
             "capacity_reference": "1M striped-index preflight; other state/overhead outside that preflight is not established",
+            "packed_window_placement": "current die WIN_STACK=0 stores 128*17*32=69,632 bytes/user on stack 0, zero on the other three; key and CKV bytes retain the model's striped assumptions",
         },
         "scenarios": scenarios,
     }
@@ -102,8 +117,9 @@ def main():
     million = record["scenarios"]["1048576"]
     assert million["physical_table_copies"] == 116
     assert million["stages"][0]["users_with_striped_keys_capacity_only"] == 860
+    assert million["stages"][0]["users_with_packed_window_stack_capacity_only"] == 859
     assert million["stages"][1]["users_with_striped_keys_capacity_only"] == 863
-    print(f"PASS: {million['physical_table_copies']} tables; 1M min {million['min_capacity_users_with_striped_keys']} users")
+    print(f"PASS: {million['physical_table_copies']} tables; 1M current packed-window capacity ceiling {million['min_capacity_users_with_current_packed_window']} users")
 
 
 if __name__ == "__main__":

@@ -9,6 +9,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import v41_fullshape_program_bind as B  # noqa: E402
+import hdc_replay_v41 as R  # noqa: E402
+import hdc_isa_v41 as I  # noqa: E402
 
 
 def test_current_layout_is_not_misreported_as_executable():
@@ -64,3 +66,41 @@ def test_w2_may_have_a_different_expert_stride(tmp_path):
     assert record["status"] == "blocked"  # physical FP4 port remains unimplemented
     assert {x["start_word"] for x in record["qe_address_trace"]
             if x["matrix"] == "exp.w2" and x["expert_id"] == 110} == {4_979_840 + 110 * 5760}
+
+
+def test_production_rope_has_blocking_prefetch_tagged_reads_and_su_drain():
+    record = B.bind(B.DEFAULT_LAYOUT, B.DEFAULT_SHARD, rope_mode="hbm_cache")
+    assert record["instruction_count"] == 113
+    assert record["rope_token_patch"] is None
+    assert record["rope_patch_sha256"] is None
+    rope = record["rope_hbm_table"]
+    assert rope["storage"] == "hbm_read_only_table"
+    assert rope["physical_region_base_sector"] is None
+    assert rope["full_table_image_sha256"] is None
+    assert (rope["prefetch_pc"], rope["su_read_pcs"], rope["release_pc"]) == (18, [19, 23, 35], 36)
+    instructions = record["instruction_trace"]
+    assert instructions[18]["fields"]["ctl"] == 5
+    assert instructions[18]["fields"]["ctl_lane"] == 0
+    assert instructions[18]["fields"]["ctl_slot"] == 0
+    assert instructions[36]["fields"]["ctl"] == 6
+    assert instructions[36]["fields"]["wait"] & 2  # SU is drained before release
+    for pc in rope["su_read_pcs"]:
+        f = instructions[pc]["fields"]
+        assert f["b_base"] == f["d_base"] == 2 << 28
+        assert f["b_d"] == f["d_d"] == 2  # DYN.ROPE = absolute position * 32
+    assert "full-position table image" in " ".join(record["blockers"])
+
+
+def test_unknown_rope_mode_fails_closed():
+    with pytest.raises(ValueError, match="unknown RoPE mode"):
+        B.bind(B.DEFAULT_LAYOUT, B.DEFAULT_SHARD, rope_mode="unverified")
+
+
+def test_yarn_rope_reads_use_distinct_cache_kind_tag():
+    lay = R.ShapeLayout(R.SHIPPED, tp_exact=True, rope_storage="hbm_cache")
+    builder = R.ShapeBuilder(lay)
+    builder.rope("Q", lay.vm.map["Q"], 1, 512, "rope_yarn", I.DYN["ROPE"], False, "probe")
+    fields = builder.prog[-1][0]
+    assert fields["b_base"] == fields["d_base"] == 3 << 28
+    assert fields["b_d"] == fields["d_d"] == I.DYN["ROPE"]
+    assert fields["b_half"] == fields["c_pair"] == 1

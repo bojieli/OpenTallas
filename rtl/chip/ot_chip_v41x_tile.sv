@@ -59,7 +59,7 @@ module ot_chip_v41x_tile #(
     parameter integer HHW   = 8,
     parameter integer HBAW  = 16,
     parameter integer MG    = 8,
-    parameter integer MBAW  = 17,
+    parameter integer MBAW  = FULL_SHAPE ? 18 : 17,
     parameter integer SUN   = 16,
     parameter integer SUM   = 8,
     parameter integer XSQ   = 4,
@@ -85,7 +85,7 @@ module ot_chip_v41x_tile #(
     parameter integer HROM_AW = 16,
     parameter integer EROM_AW = 19,
     parameter integer CROM_AW = 15,
-    parameter integer VM_AW   = 16
+    parameter integer VM_AW   = FULL_SHAPE ? 19 : 16
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -110,6 +110,16 @@ module ot_chip_v41x_tile #(
     input  wire [LAW-1:0]    cfg_q_lbase,
     input  wire [15:0]       cfg_q_lead,
     input  wire [15:0]       cfg_q_rate,
+    // W_HBM=0 QE ROM service. The request is sampled on clk; the external
+    // macro returns one compact word and its format on the following cycle.
+    // This logical 16-lane port is an execution boundary, not the 274-bit
+    // qtile physical-bank mapping.
+    output wire              qr_compact_re,
+    output wire [AW-1:0]     qr_compact_addr,
+    input  wire              qr_compact_valid,
+    input  wire              qr_compact_fp4,
+    input  wire [4351:0]     qr_compact_fp8,
+    input  wire [2303:0]     qr_compact_fp4_word,
     // -- KV port (served by the die) -------------------------------------------------------
     output wire              kv_re,
     output wire [4*AW-1:0]   kv_raddr,
@@ -117,6 +127,13 @@ module ot_chip_v41x_tile #(
     output wire [SW-1:0]     kv_we,
     output wire [SW*AW-1:0]  kv_waddr,
     output wire [SW*32-1:0]  kv_wdata,
+    input  wire              att_packed_kv_v,
+    output wire              att_packed_kv_ready,
+    input  wire [3:0]        att_packed_kv_m,
+    input  wire [4*((FULL_SHAPE ? 512 : 32)/32)*265-1:0] att_packed_kv_w,
+    input  wire              att_packed_kv_fault,
+    output wire              att_packed_issue,
+    output wire              att_packed_idle,
     output wire [SUN-1:0]    xs_kv_we,
     output wire [SUN*AW-1:0] xs_kv_waddr,
     // Packed QDQ8 window-row block handoff. The 10-bit user is package
@@ -146,6 +163,19 @@ module ot_chip_v41x_tile #(
     output wire              kvd_mmode,
     output wire [NW-1:0]     kvd_pos,
     input  wire              kv_ok,
+    // Read-only RoPE coefficients fetched through the die's shared K HBM port.
+    output wire              rope_pf_v,
+    input  wire              rope_pf_rdy,
+    output wire              rope_pf_kind,
+    output wire [NW-1:0]     rope_pf_pos,
+    input  wire              rope_pf_done,
+    output wire              rope_pf_release,
+    input  wire              rope_pf_fault,
+    input  wire              rope_cache_valid,
+    input  wire              rope_cache_hold,
+    input  wire              rope_cache_kind,
+    input  wire [NW-1:0]     rope_cache_pos,
+    input  wire [2047:0]     rope_cache_pairs,
     // -- QE weight HBM channel (ot_hdc_hbm_model protocol) ----------------------------------
     output wire              wq_v,
     input  wire              wq_rdy,
@@ -236,6 +266,21 @@ module ot_chip_v41x_tile #(
     wire wrom_re; wire [AW-1:0] wrom_addr; reg [G*W*16-1:0] wrom_q;
     wire [SW-1:0] ewrom_re; wire [SW*AW-1:0] ewrom_addr; reg [SW*G*W*16-1:0] ewrom_q;
     wire qrom_re; wire [AW-1:0] qrom_addr; wire [BL*QLB-1:0] qrom_q;
+    wire [BL*QLB-1:0] qrom_hbm_q, qrom_rom_q;
+    reg qrom_rom_pending, qrom_rom_fault;
+    assign qr_compact_re = (W_HBM == 0) && qrom_re;
+    assign qr_compact_addr = qrom_addr;
+    assign qrom_q = (W_HBM == 0) ? qrom_rom_q : qrom_hbm_q;
+    ot_hdc_v41x_qrom_compact_word u_qrom_decode (
+        .fp4(qr_compact_fp4), .fp8_word(qr_compact_fp8),
+        .fp4_word(qr_compact_fp4_word), .qe_word(qrom_rom_q));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin qrom_rom_pending <= 1'b0; qrom_rom_fault <= 1'b0; end
+        else if (W_HBM == 0) begin
+            qrom_rom_pending <= qrom_re;
+            if (qrom_rom_pending && !qr_compact_valid) qrom_rom_fault <= 1'b1;
+        end
+    end
     wire qd_v, q_ok, wrel_v; wire [AW-1:0] qd_wbase; wire [7:0] qd_nb; wire [NW-1:0] qd_tiles;
     wire hrom_re; wire [AW-1:0] hrom_addr; reg [HS*HNL*32-1:0] hrom_q;
     wire [XSQ-1:0] vsl_re; wire [XSQ*AW-1:0] vsl_addr; reg [XSQ*XSW*32-1:0] vsl_q;
@@ -258,6 +303,25 @@ module ot_chip_v41x_tile #(
     reg  [SUN*32-1:0] xs_vi_q; wire [4*SUN-1:0] xs_rd_re; wire [4*SUN*AW-1:0] xs_rd_addr; wire [8*SUN-1:0] xs_rd_src;
     reg  [4*SUN*32-1:0] xs_rd_q; wire [SUN*32-1:0] xs_vm_wdata;
     wire [SUN/8-1:0] xs_res_we; wire [SUN/8*AW-1:0] xs_res_addr; wire [SUN/8*32-1:0] xs_res_data;
+    wire core_fault;
+    reg rope_read_fault;
+    assign fault = core_fault | rope_read_fault | qrom_rom_fault;
+    wire rope_cache_match = rope_cache_valid && rope_cache_hold &&
+                            rope_cache_kind == rope_pf_kind && rope_cache_pos == rope_pf_pos;
+    wire [4*SUN-1:0] rope_bad_lane;
+    wire [4*SUN-1:0] rope_tagged;
+    wire [4*SUN*32-1:0] rope_words;
+    genvar rp;
+    generate for (rp = 0; rp < 4*SUN; rp = rp + 1) begin : g_rope_check
+        wire lane_bad;
+        ot_chip_v41x_rope_su_word #(.AW(AW), .PW(NW)) u_word (
+            .src(xs_rd_src[rp*2 +: 2]), .addr(xs_rd_addr[rp*AW +: AW]),
+            .cache_valid(rope_cache_valid), .cache_hold(rope_cache_hold),
+            .cache_kind(rope_cache_kind), .cache_pos(rope_cache_pos),
+            .cache_pairs(rope_cache_pairs), .is_rope(rope_tagged[rp]),
+            .bad(lane_bad), .data(rope_words[rp*32 +: 32]));
+        assign rope_bad_lane[rp] = FULL_SHAPE && xs_rd_re[rp] && lane_bad;
+    end endgenerate
     wire [SW-1:0] vw_su_we, vw_rd_we; wire [SW*AW-1:0] vw_su_addr, vw_rd_addr; wire [SW*32-1:0] vw_su_data, vw_rd_data;
     wire vw_xe_we, ww_q_we, ww_x_we;
     wire [AW-1:0] vw_xe_addr, ww_q_addr, ww_x_addr;
@@ -276,7 +340,11 @@ module ot_chip_v41x_tile #(
                        .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
-        .fault(fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
+        .fault(core_fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
+        .rope_pf_v(rope_pf_v), .rope_pf_rdy(rope_pf_rdy),
+        .rope_pf_kind(rope_pf_kind), .rope_pf_pos(rope_pf_pos),
+        .rope_pf_done(rope_pf_done), .rope_pf_release(rope_pf_release),
+        .rope_pf_fault(rope_pf_fault),
         .coll_go(coll_go), .coll_op(coll_op), .coll_src(coll_src), .coll_dst(coll_dst),
         .coll_ibase(coll_ibase), .coll_n(coll_n), .coll_k(coll_k), .coll_seq(coll_seq),
         .coll_rnd(coll_rnd), .coll_busy(coll_busy), .coll_fault(coll_fault),
@@ -306,6 +374,10 @@ module ot_chip_v41x_tile #(
         .crom_re(crom_re), .crom_addr(crom_addr), .crom_q(crom_q),
         .xcrom_re(xcrom_re), .xcrom_addr(xcrom_addr), .xcrom_q(xcrom_q),
         .kv_re(kv_re), .kv_raddr(kv_raddr), .kv_q(kv_q), .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
+        .att_packed_kv_v(att_packed_kv_v), .att_packed_kv_ready(att_packed_kv_ready),
+        .att_packed_kv_m(att_packed_kv_m), .att_packed_kv_w(att_packed_kv_w),
+        .att_packed_kv_fault(att_packed_kv_fault),
+        .att_packed_issue(att_packed_issue), .att_packed_idle(att_packed_idle),
         .win_blk_v(win_blk_v), .win_blk_ready(win_blk_ready),
         .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row),
         .win_blk_kvt_row(win_blk_kvt_row),
@@ -337,6 +409,7 @@ module ot_chip_v41x_tile #(
     wire xi_re; wire [AW-1:0] xi_addr; reg [31:0] xi_q;
     wire [SPW-1:0] qw_we; wire [SPW*LWIN-1:0] qw_waddr; wire [BL*QLB-1:0] qw_wdata;
     wire qw_re; wire [LWIN-1:0] qw_raddr; reg [BL*QLB-1:0] qw_q;
+    generate if (W_HBM != 0) begin : g_qstream
     ot_hdc_qstream #(.BL(BL), .QLB(QLB), .AW(AW), .HAW(24), .NW(NW), .LWIN(LWIN),
                      .NPC(NPC_W), .LENW(6), .BEATW(5), .LAW(LAW)) u_qs (
         .clk(clk), .rst_n(rst_n), .cfg_base(cfg_q_base), .cfg_lbase(cfg_q_lbase),
@@ -344,13 +417,26 @@ module ot_chip_v41x_tile #(
         .l_re(l_re), .l_addr(l_addr), .l_q(l_q), .vi_re(xi_re), .vi_addr(xi_addr),
         .vi_q(xi_q), .wrel_v(wrel_v), .qd_v(qd_v), .qd_nb(qd_nb),
         .qd_tiles(qd_tiles), .q_ok(q_ok), .qr_re(qrom_re), .qr_addr(qrom_addr),
-        .qr_q(qrom_q), .win_we(qw_we), .win_waddr(qw_waddr), .win_wdata(qw_wdata),
+        .qr_q(qrom_hbm_q), .win_we(qw_we), .win_waddr(qw_waddr), .win_wdata(qw_wdata),
         .win_re(qw_re), .win_raddr(qw_raddr), .win_q(qw_q),
         .hq_v(wq_v), .hq_rdy(wq_rdy), .hq_addr(wq_addr), .hq_len(wq_len),
         .hq_tag(wq_tag), .hq_room(wq_room), .hr_v(wr_v), .hr_rdy(wr_rdy),
         .hr_tag(wr_tag), .hr_beat(wr_beat), .hr_data(wr_data),
         .fault(qs_fault), .fault_why(qs_why), .st_fetched(qs_fetched),
         .st_consumed(qs_consumed));
+    end else begin : g_qrom_only
+        assign qrom_hbm_q = '0;
+        assign q_ok = 1'b1;
+        assign l_re = 1'b0; assign l_addr = '0;
+        assign xi_re = 1'b0; assign xi_addr = '0;
+        assign qw_we = '0; assign qw_waddr = '0; assign qw_wdata = '0;
+        assign qw_re = 1'b0; assign qw_raddr = '0;
+        assign wq_v = 1'b0; assign wq_addr = '0;
+        assign wq_len = '0; assign wq_tag = '0;
+        assign wr_rdy = '0;
+        assign qs_fault = 1'b0; assign qs_why = '0;
+        assign qs_fetched = '0; assign qs_consumed = '0;
+    end endgenerate
 
     // -- pooled index-key HBM bridge: four stacks, timed key-image writes -------------------
     ot_hdc_v41x_idx_pool_hbm_bridge #(.AW(PIKH_HAW)) u_kb (
@@ -366,6 +452,11 @@ module ot_chip_v41x_tile #(
     // -- synchronous-read memories (the port behaviour of rtl/test/tb_hdc_core_v41x_whbm.sv) --
     integer l, q, e;
     reg [AW:0] xa;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) rope_read_fault <= 1'b0;
+        else if (start) rope_read_fault <= 1'b0;
+        else if ((FULL_SHAPE && rope_pf_release && !rope_cache_match) || |rope_bad_lane)
+            rope_read_fault <= 1'b1;
     always @(posedge clk) begin
         if (prog_re) prog_q <= prog[prog_addr[PROG_AW-1:0]];
         if (wrom_re) wrom_q <= wrom[wrom_addr[WROM_AW-1:0]];
@@ -403,8 +494,14 @@ module ot_chip_v41x_tile #(
             xa = xs_rd_addr[q*AW +: AW];
             case (xs_rd_src[2*q +: 2])
                 2'd0: xs_rd_q[32*q +: 32] <= vm[xa[VM_AW-1:0]];
-                2'd1: xs_rd_q[32*q +: 32] <= crom[xa[CROM_AW-1:0]][31:0];
-                2'd2: xs_rd_q[32*q +: 32] <= crom[xa[CROM_AW-1:0]][63:32];
+                2'd1, 2'd2: begin
+                    if (FULL_SHAPE && rope_tagged[q])
+                        xs_rd_q[32*q +: 32] <= rope_words[32*q +: 32];
+                    else if (xs_rd_src[2*q +: 2] == 2'd1)
+                        xs_rd_q[32*q +: 32] <= crom[xa[CROM_AW-1:0]][31:0];
+                    else
+                        xs_rd_q[32*q +: 32] <= crom[xa[CROM_AW-1:0]][63:32];
+                end
                 default: xs_rd_q[32*q +: 32] <= {wrom[xa[6 +: WROM_AW]][16*xa[5:0] +: 16], 16'h0000};
             endcase
         end

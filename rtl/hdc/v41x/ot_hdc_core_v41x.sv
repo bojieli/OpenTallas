@@ -218,6 +218,14 @@ module ot_hdc_core_v41x #(
     output wire [MP*SW-1:0]  kv_we,
     output wire [MP*SW*AW-1:0] kv_waddr,
     output wire [MP*SW*32-1:0] kv_wdata,
+    // Full-shape attention receives stored-format rows from the die service.
+    input  wire              att_packed_kv_v,
+    output wire              att_packed_kv_ready,
+    input  wire [3:0]        att_packed_kv_m,
+    input  wire [4*(HDIM/32)*265-1:0] att_packed_kv_w,
+    input  wire              att_packed_kv_fault,
+    output wire              att_packed_issue,
+    output wire              att_packed_idle,
     // Full-shape window QDQ8 writes use an atomic packed block handoff.
     // Selected compressed KV still uses the scalar KV port above.
     output wire              win_blk_v,
@@ -325,6 +333,15 @@ module ot_hdc_core_v41x #(
     output wire [1:0]        kvd_hg,
     output wire              kvd_mmode,
     input  wire              kv_ok,
+    // Full-shape read-only RoPE cache: a blocking prefetch before SU RoPE
+    // and a release after its last dependent SU instruction.
+    output wire              rope_pf_v,
+    input  wire              rope_pf_rdy,
+    output wire              rope_pf_kind,
+    output wire [NW-1:0]     rope_pf_pos,
+    input  wire              rope_pf_done,
+    output wire              rope_pf_release,
+    input  wire              rope_pf_fault,
     output reg               wrel_v           // an instruction marked wrel issued
 );
     `include "ot_hdc_isa_v41_profiles.svh"
@@ -333,7 +350,8 @@ module ot_hdc_core_v41x #(
     // -- sequencer -----------------------------------------------------------------------------
     localparam [3:0] S_IDLE = 0, S_DYN = 1, S_FETCH = 2, S_WAIT = 3, S_CAP = 4, S_DEC = 5,
                      S_ISSUE = 6, S_GO = 7, S_ACC = 8, S_RST = 9,
-                     S_COLL_ARM = 10, S_COLL_WAIT = 11, S_COLL_HALT = 12;
+                     S_COLL_ARM = 10, S_COLL_WAIT = 11, S_COLL_HALT = 12,
+                     S_ROPE_WAIT = 13;
     localparam integer SLW = (NSLOT > 1) ? $clog2(NSLOT) : 1;
     reg [3:0]  st;
     reg [PAW-1:0] pc;
@@ -429,6 +447,13 @@ module ot_hdc_core_v41x #(
     wire [4:0] gos = {he_go, xu_go, qe_go, su_go, me_go};
     //: the wait mask names units whose in-flight work must have drained
     wire waited = ((d_wait & ~(idles & ~gos)) == 5'd0);
+    wire rope_ctl_ok = d_cslot < NSLOT && d_clane[2:1] == 2'b00;
+    assign rope_pf_v = FULL_SHAPE && st == S_ISSUE && d_unit == 3'd0 &&
+                       d_ctl == 3'd5 && waited && rope_ctl_ok;
+    assign rope_pf_kind = d_clane[0];
+    assign rope_pf_pos = NW'(dyn[d_cslot * NDYN + 4]);
+    assign rope_pf_release = FULL_SHAPE && st == S_ISSUE && d_unit == 3'd0 &&
+                             d_ctl == 3'd6 && waited && su_idle && rope_ctl_ok;
 
     // speculative-step registers (ot_hdc_accept): slot tokens, verify targets, ACCEPT
     wire [NSLOT*NW-1:0] stok, ttok;
@@ -470,7 +495,7 @@ module ot_hdc_core_v41x #(
             issue_unit <= 0; wrel_v <= 1'b0;
             tokx_v <= 1'b0; amax_v <= 1'b0; acc_v <= 1'b0; xu_rst_v <= 1'b0;
             if (st != S_IDLE) cycles <= cycles + 1;
-            if (FULL_SHAPE && coll_fault) st <= S_COLL_HALT;
+            if (FULL_SHAPE && (coll_fault || rope_pf_fault)) st <= S_COLL_HALT;
             else case (st)
                 S_IDLE: if (start) begin
                     tok_r <= token; pos_r <= pos; pc <= entry; done <= 1'b0; cycles <= 0; ds <= 0;
@@ -498,6 +523,20 @@ module ot_hdc_core_v41x #(
                                 3'd2: begin amax_v <= 1'b1; pc <= pc + 1'b1; st <= S_FETCH; end        // AMAX
                                 3'd3: begin pc <= pc + 1'b1; ds <= 0; st <= S_DYN; end                 // DYN
                                 3'd4: begin acc_v <= 1'b1; st <= S_ACC; end                          // ACCEPT
+                                3'd5: if (FULL_SHAPE) begin
+                                    if (!rope_ctl_ok) st <= S_COLL_HALT;
+                                    else if (rope_pf_rdy) st <= S_ROPE_WAIT;
+                                end else begin
+                                    done <= 1'b1; next_token <= acc_any ? acc_bonus : am_idx;
+                                    next_val <= am_val; st <= S_IDLE;
+                                end
+                                3'd6: if (FULL_SHAPE) begin
+                                    if (!rope_ctl_ok) st <= S_COLL_HALT;
+                                    else if (su_idle) begin pc <= pc + 1'b1; st <= S_FETCH; end
+                                end else begin
+                                    done <= 1'b1; next_token <= acc_any ? acc_bonus : am_idx;
+                                    next_val <= am_val; st <= S_IDLE;
+                                end
                                 default: begin                                                       // END
                                     done <= 1'b1; next_token <= acc_any ? acc_bonus : am_idx;
                                     next_val <= am_val; st <= S_IDLE;
@@ -527,6 +566,7 @@ module ot_hdc_core_v41x #(
                 // a legal request cannot complete before busy has sampled go.
                 S_COLL_ARM: st <= S_COLL_WAIT;
                 S_COLL_WAIT: if (!coll_busy) begin pc <= pc + 1'b1; st <= S_FETCH; end
+                S_ROPE_WAIT: if (rope_pf_done) begin pc <= pc + 1'b1; st <= S_FETCH; end
                 S_COLL_HALT: st <= S_COLL_HALT;
                 //: ACCEPT: a is registered; restore the hash history to slot a's snapshot
                 S_ACC: if (acc_done) begin xu_rst_v <= 1'b1; st <= S_RST; end
@@ -633,7 +673,8 @@ module ot_hdc_core_v41x #(
                          (c_unit == 3'd4 && `F(XU_OP) == 2'd0 && c_xu_n == 0);
     always @(posedge clk) if (st == S_DEC) begin
         d_unit <= c_unit; d_wait <= `F(WAIT); d_skip <= !pred_ok || zero; d_wrel <= `F(WREL);
-        d_ctl <= (NSLOT > 1) ? `F(CTL) : 3'd0; d_cslot <= `F(CTL_SLOT); d_clane <= `F(CTL_LANE);
+        d_ctl <= (FULL_SHAPE || NSLOT > 1) ? `F(CTL) : 3'd0;
+        d_cslot <= `F(CTL_SLOT); d_clane <= `F(CTL_LANE);
         mx_m <= `F(MX_M); mx_xps <= `F(MX_XPS); mx_ops <= `F(MX_OPS);
         if (c_unit == 3'd4) begin
             xu_tok <= (NSLOT > 1) ? stok[c_dslot * NW +: NW] : tok_r;
@@ -748,6 +789,8 @@ module ot_hdc_core_v41x #(
     always @(posedge clk or negedge rst_n) if (!rst_n) me_own <= 2'd0; else if (me_go) me_own <= me_eng;
     // per engine e (0 as built, 1 weight, 2 attention, 3 indexer): the as-built ME's port bundle
     wire [3:0]            e_go, e_ready, e_idle, e_fault, e_kv_re, e_ov;
+    assign att_packed_issue = (FULL_SHAPE != 0) && e_go[2];
+    assign att_packed_idle = e_idle[2];
     wire [4*AW-1:0]       e_wrom_addr_u;                     // (as built only)
     wire [4*G*AW-1:0]     e_kv_raddr;
     wire [4*MP*G-1:0]     e_vx_re, e_we;
@@ -804,7 +847,8 @@ module ot_hdc_core_v41x #(
 
     // engine 1: the BF16/FP32 weight engine (X_ME)
     generate if (X_ME != 0) begin : g_me_x
-        ot_hdc_v41x_me_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .MG(MG), .BAW(MBAW)) u_mw (
+        ot_hdc_v41x_me_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .MG(MG), .BAW(MBAW),
+                                 .KMAX(FULL_SHAPE ? 5120 : 512)) u_mw (
             .clk(clk), .rst_n(rst_n), .go(e_go[1]), .ready(e_ready[1]), .idle(e_idle[1]),
             .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase),
             .i_xjs(me_xjs), .i_split(me_split), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots),
@@ -830,19 +874,24 @@ module ot_hdc_core_v41x #(
     // engine 2: the attention engine (X_ATT)
     generate if (X_ATT != 0) begin : g_att_x
         ot_hdc_v41x_att_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .H(16), .D(HDIM), .TD(32),
-                                .NL(4), .TROWS(FULL_SHAPE ? 640 : 160), .NHMAX(FULL_SHAPE ? 16 : 32)) u_att (
+                                .NL(4), .TROWS(FULL_SHAPE ? 640 : 160), .NHMAX(FULL_SHAPE ? 16 : 32),
+                                .PACKED_KV(FULL_SHAPE != 0)) u_att (
             .clk(clk), .rst_n(rst_n), .go(e_go[2]), .ready(e_ready[2]), .idle(e_idle[2]),
             .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_ts(me_ts), .i_ks(me_ks),
             .i_js(me_js), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs), .i_xcs(me_xcs), .i_hg(me_hg),
             .i_ogs(me_ogs), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots), .i_ojs(me_ojs),
             .i_mmode(me_mmode), .i_oen(me_oen), .i_m(mx_m),
             .kv_re(e_kv_re[2]), .kv_addr(e_kv_raddr[2*G*AW +: G*AW]), .kv_q(kv_q),
+            .packed_kv_v(att_packed_kv_v), .packed_kv_ready(att_packed_kv_ready),
+            .packed_kv_m(att_packed_kv_m), .packed_kv_w(att_packed_kv_w),
+            .packed_kv_fault(att_packed_kv_fault),
             .x_re(e_vx_re[2*MP*G +: MP*G]), .x_addr(e_vx_addr[2*MP*G*AW +: MP*G*AW]), .x_q(vx_q),
             .o_we(e_we[2*MP*G +: MP*G]), .o_addr(e_addr[2*MP*G*AW +: MP*G*AW]), .o_mask(e_mask[2*MP*G*W +: MP*G*W]),
             .o_data(e_data[2*MP*G*W*32 +: MP*G*W*32]), .fault(e_fault[2]));
         assign e_ov[2] = 1'b0;
         assign e_am_idx[2*MP*NW +: MP*NW] = 0; assign e_am_val[2*MP*32 +: MP*32] = 0; assign e_am_any[2*MP +: MP] = 0;
     end else begin : g_att_n
+        assign att_packed_kv_ready = 1'b0;
         assign e_ready[2] = 1'b1; assign e_idle[2] = 1'b1; assign e_fault[2] = 1'b0; assign e_kv_re[2] = 1'b0;
         assign e_kv_raddr[2*G*AW +: G*AW] = 0; assign e_vx_re[2*MP*G +: MP*G] = 0;
         assign e_vx_addr[2*MP*G*AW +: MP*G*AW] = 0; assign e_ov[2] = 1'b0; assign e_we[2*MP*G +: MP*G] = 0;
@@ -1105,7 +1154,7 @@ module ot_hdc_core_v41x #(
     generate
         if (X_HE != 0) begin : g_he_x
             ot_hdc_v41x_he_adapt #(.HW(HHW), .TL(HTL), .PMAX((MP > 1) ? 8 : 2), .BAW(HBAW), .AW(AW), .NW(NW),
-                                   .S(HS), .MP(MP)) u_he (
+                                   .S(HS), .MP(MP), .KCMAX(FULL_SHAPE ? 2560 : 128)) u_he (
                 .clk(clk), .rst_n(rst_n), .go(he_go), .ready(he_ready), .idle(he_idle),
                 .i_nout(he_nout), .i_k(he_k), .i_wbase(he_wbase), .i_xbase(he_xbase), .i_obase(he_obase),
                 .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
@@ -1132,6 +1181,8 @@ module ot_hdc_core_v41x #(
         else if (start && st == S_IDLE) fault <= 1'b0;
         else if (me_fault || su_fault || qe_fault || xu_fault || he_fault ||
                  (FULL_SHAPE && KV_HBM && (win_fault || win_capture_fault)) ||
-                 (FULL_SHAPE && coll_fault)) fault <= 1'b1;
+                 (FULL_SHAPE && (coll_fault || rope_pf_fault ||
+                  (st == S_ISSUE && d_unit == 3'd0 &&
+                   (d_ctl == 3'd5 || d_ctl == 3'd6) && !rope_ctl_ok)))) fault <= 1'b1;
     end
 endmodule

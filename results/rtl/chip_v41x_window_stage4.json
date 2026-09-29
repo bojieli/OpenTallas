@@ -1,0 +1,27 @@
+{
+  "build_returncode": 0,
+  "claim": "Preloaded packed-window stage reads four exact rows per clock after the local bank-read pipeline; integrated HBM refill preserves exact rows and rejects poison. Full attention rate is not measured",
+  "diagnostics": "",
+  "integrated_build_returncode": 0,
+  "integrated_simulation_returncode": 0,
+  "integrated_stdout": "WINDOW_BANKED_PREFETCH_PASS fetched=4 sectors=68 rows_per_beat=4 users=2 poison=2",
+  "iverilog_version": "Icarus Verilog version 11.0 (stable) ()",
+  "lint_returncode": 0,
+  "pass": true,
+  "peak_rows_per_cycle": 4,
+  "requests": 8,
+  "simulation_returncode": 0,
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "4731fa1dfd492bdf792d87349e73f231f123752b674144663097d7a506e463eb",
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "rtl/test/tb_chip_v41x_window_banked_prefetch.sv": "9d994ade163ff46a92df3bd1201b0122ee22af4b3ece1ef9f9682df7230e9a49",
+    "rtl/test/tb_chip_v41x_window_stage4.sv": "25dad7a0eb0b95c66e6c7eba19118821bc25209774473c0e51c4c6b63014575b",
+    "tools/rtl_chip_v41x_window_stage4.py": "fabd032e6a5e46ed99f07903db8e6de9f07f19cfd9339e470ed81e2c07073d32"
+  },
+  "staged_rows": 7,
+  "stdout": "WINDOW_STAGE4_PASS requests=8 rows=7 peak_rows_per_cycle=4 users=2 wrap=1",
+  "users": 2,
+  "verilator_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "wrap": 1
+}

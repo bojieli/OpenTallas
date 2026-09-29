@@ -1,0 +1,35 @@
+{
+  "base_commit": "ddee7a29",
+  "current_integration_check": {
+    "boundary_record": "results/rtl/chip_v41x_packed_die_boundary.json",
+    "boundary_sha256": "baec93890e929c610a4beee593aecd058a58686032313a0738f11e9f05e026e2",
+    "generator": "tools/refresh_v41_packed_integration_evidence.py",
+    "generator_sha256": "c5619cec114d52519507f7f1d494495368e6b6d8aac22f1b0d7f5b64739d4c1f",
+    "scope": "standalone lifecycle/forwarding simulations plus separate header checks; no numerical engine or token claim"
+  },
+  "scope": "L0 descriptor lifecycle and QK/PV 128-row tagged beat replay; standalone service stimulus only, no HBM source or numeric engine claim",
+  "sources": {
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/chip/ot_chip_v41x_die.sv": "bd4fe023f9386fdbf9c9ae5548750d3d3a19370599c354ff8e5ad6252629127f",
+    "rtl/chip/ot_chip_v41x_tile.sv": "ee8046f5f871bb6923a1781805ae691a009494c5f671c02d1639d10ff7edc856",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4d2fc7666016345fe896d943dda5584519002e9140fe28bb229be8ebc4539a40",
+    "rtl/test/tb_v41x_attn_desc_lifecycle.sv": "f20dc5a5621144e740d743b62fd1ef6c00d9dc3e8d23d29d5bf0cde235d93a3c"
+  },
+  "status": "pass",
+  "tests": {
+    "backpressure_cycles": 3,
+    "generation_wrap": "allowed only with drained fence",
+    "negative_cases": [
+      "unsolicited stage",
+      "wrong stage generation",
+      "changed repeated S_DEC",
+      "undrained wrap",
+      "source fault",
+      "early engine idle"
+    ],
+    "pv_accepted_beats": 32,
+    "qk_accepted_beats": 32,
+    "staged_prefix_rows_pv": 4,
+    "staged_prefix_rows_qk": 128
+  }
+}

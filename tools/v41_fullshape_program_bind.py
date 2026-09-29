@@ -23,6 +23,8 @@ DEFAULT_LAYOUT = ROOT / "results/rtl/hdc_v41x_fullshape_token_selected_rom_layou
 DEFAULT_SHARD = ROOT / "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json"
 DEFAULT_QE = ROOT / "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json"
 DEFAULT_ROPE = ROOT / "results/rtl/hdc_v41x_fullshape_rope_sparse_patch.json"
+DEFAULT_ROPE_HBM = ROOT / "results/arch/v41_rope_hbm_capacity.json"
+DEFAULT_ROPE_CACHE = ROOT / "results/rtl/v41x_rope_hbm_cache.json"
 
 
 def sha(path: Path) -> str:
@@ -35,11 +37,11 @@ def _require(cond: bool, message: str) -> None:
 
 
 def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
-         rope_path: Path = DEFAULT_ROPE) -> dict:
+         rope_path: Path = DEFAULT_ROPE, rope_mode: str = "sparse_fixture") -> dict:
+    _require(rope_mode in ("sparse_fixture", "hbm_cache"), f"unknown RoPE mode {rope_mode}")
     layout = json.loads(layout_path.read_text())
     shard = json.loads(shard_path.read_text())
     qe = json.loads(qe_path.read_text())
-    rope = json.loads(rope_path.read_text())
     _require(layout["layer"] == shard["layer"] == 0 and layout["rank"] == shard["rank"] == 0,
              "binder requires layer 0, rank 0")
     _require(sha(shard_path) == layout["source_image_manifest_sha256"], "source shard hash changed")
@@ -87,19 +89,45 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
              "hc_attn_scale", "hc_attn_base", "hc_ffn_scale", "hc_ffn_base", "pre0")
     _require(set(names) <= consts.keys(), "missing shipped layer constant")
     context = str(shard["context"])
-    _require(context in rope["contexts"] and rope["status"] == "exact_input_only",
-             "no exact sparse RoPE fixture for shard context")
-    rp = rope["contexts"][context]
-    rp_file = ROOT / rp["file"]
-    _require(sha(rp_file) == rp["sha256"] and rp["bytes"] == 256 and
-             rp["position"] == shard["position"] and
-             rp["crom_absolute_first_word"] == rp["crom_word_base"] + rp["position"] * 32,
-             "sparse RoPE patch does not match token position/address")
-    bases = {"rope_plain": rp["crom_word_base"]}
+    if rope_mode == "sparse_fixture":
+        rope = json.loads(rope_path.read_text())
+        _require(context in rope["contexts"] and rope["status"] == "exact_input_only",
+                 "no exact sparse RoPE fixture for shard context")
+        rp = rope["contexts"][context]
+        rp_file = ROOT / rp["file"]
+        _require(sha(rp_file) == rp["sha256"] and rp["bytes"] == 256 and
+                 rp["position"] == shard["position"] and
+                 rp["crom_absolute_first_word"] == rp["crom_word_base"] + rp["position"] * 32,
+                 "sparse RoPE patch does not match token position/address")
+        rope_source = dict(storage="sparse_crom_fixture", position=rp["position"],
+                           base_word=rp["crom_word_base"],
+                           absolute_first_word=rp["crom_absolute_first_word"],
+                           absolute_last_word=rp["crom_absolute_last_word"],
+                           file=rp["file"], sha256=rp["sha256"],
+                           claim_boundary="one-position input fixture only")
+        bases = {"rope_plain": rp["crom_word_base"]}
+    else:
+        capacity = json.loads(DEFAULT_ROPE_HBM.read_text())
+        cache = json.loads(DEFAULT_ROPE_CACHE.read_text())
+        _require(context in capacity["scenarios"] and "plain" in
+                 capacity["scenarios"][context]["stages"][0]["table_kinds"],
+                 "no HBM plain table capacity at this context/stage")
+        fixture = cache["fixtures"]["plain200k" if int(context) == 200000 else "plain1m"]
+        _require(cache["status"] == "pass" and fixture["position"] == shard["position"],
+                 "HBM RoPE cache fixture does not match token position")
+        rope_source = dict(storage="hbm_read_only_table", kind="plain",
+                           position=shard["position"], pair_count=32, bytes_per_position=256,
+                           capacity_record_sha256=sha(DEFAULT_ROPE_HBM),
+                           cache_record_sha256=sha(DEFAULT_ROPE_CACHE),
+                           physical_region_base_sector=None, full_table_image_sha256=None,
+                           claim_boundary="HBM capacity plus one-position cache proof; full table image "
+                                          "and physical HBM region not yet bound")
+        bases = {"rope_plain": 0}
     for name in names:
         key = "L0." + ("gate_bias" if name == "gate.bias" else name)
         bases[key] = consts[name]["base_word"]
-    lay = R.ShapeLayout(R.SHIPPED, tp_exact=True, constant_bases=bases)
+    lay = R.ShapeLayout(R.SHIPPED, tp_exact=True, constant_bases=bases,
+                        rope_storage="hbm_cache" if rope_mode == "hbm_cache" else "crom_fixture")
     qnames = {"wq_a": (0, "wq_a"), "wkv": (0, "wkv"), "wq_b": (0, "wq_b"),
               "wo_b": (0, "wo_b")}
     for name, key in qnames.items():
@@ -212,9 +240,35 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
                      f"HE {name} descriptor/image mismatch at PC {pc}")
     if qe["packed_requires_fp4_port_adapter"]:
         blockers.append("packed FP4 QE words require a sector-to-16-lane port adapter; no exact RTL adapter gate")
-    # The sparse pair fixture supports only this one token position. It does
-    # not establish a production-size RoPE store or the corresponding port.
-    blockers.append("sparse token-position RoPE fixture only; production RoPE storage/prefetch unproved")
+    if rope_mode == "sparse_fixture":
+        blockers.append("sparse token-position RoPE fixture only; production RoPE storage/prefetch unproved")
+    else:
+        tagged = [pc for pc, f in enumerate(program) if f["unit"] == I.UNIT_SU and
+                  f.get("b_src") == I.SRC_CLO and f.get("d_src") == I.SRC_CHI and
+                  f.get("b_base", 0) >> 28 in (2, 3)]
+        paired_crom = [pc for pc, f in enumerate(program) if f["unit"] == I.UNIT_SU and
+                       f.get("b_src") == I.SRC_CLO and f.get("d_src") == I.SRC_CHI]
+        controls = [(pc, f) for pc, f in enumerate(program)
+                    if f["unit"] == I.UNIT_CTL and f.get("ctl") in (5, 6)]
+        _require(len(controls) == 2 and [f["ctl"] for _, f in controls] == [5, 6],
+                 "production RoPE requires one CTL5 prefetch and one CTL6 release")
+        pre_pc, pre = controls[0]
+        rel_pc, rel = controls[1]
+        _require(len(tagged) == 3 and paired_crom == tagged and
+                 pre_pc < min(tagged) <= max(tagged) < rel_pc,
+                 "production RoPE SU reads are not held between CTL5 and CTL6")
+        _require(pre.get("ctl_lane") == rel.get("ctl_lane") == 0 and
+                 pre.get("ctl_slot") == rel.get("ctl_slot") == 0 and
+                 rel.get("wait", 0) & (1 << (I.UNIT_SU - 1)),
+                 "production plain RoPE kind/position or SU drain mismatch")
+        _require(all(program[pc]["b_base"] == program[pc]["d_base"] == (2 << 28)
+                     and program[pc]["b_d"] == program[pc]["d_d"] == I.DYN["ROPE"]
+                     and program[pc]["su_nin"] == 64 and program[pc].get("b_half") == 1
+                     for pc in tagged), "production RoPE tag or position selector mismatch")
+        rope_source["prefetch_pc"] = pre_pc
+        rope_source["release_pc"] = rel_pc
+        rope_source["su_read_pcs"] = tagged
+        blockers.append("production HBM RoPE full-position table image and physical region not bound")
     instruction_trace = []
     for pc, f in enumerate(program):
         instruction_trace.append(dict(
@@ -225,12 +279,10 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
     return dict(schema="opentallas.v41x.fullshape.program_bind.v1",
                 status="runnable" if not blockers else "blocked", layer=0, rank=0,
                 layout_sha256=sha(layout_path), shard_sha256=sha(shard_path),
-                qe_stream_sha256=sha(qe_path), rope_patch_sha256=sha(rope_path),
-                rope_token_patch=dict(position=rp["position"], base_word=rp["crom_word_base"],
-                                      absolute_first_word=rp["crom_absolute_first_word"],
-                                      absolute_last_word=rp["crom_absolute_last_word"],
-                                      file=rp["file"], sha256=rp["sha256"],
-                                      claim_boundary="one-position input fixture only"),
+                qe_stream_sha256=sha(qe_path), rope_mode=rope_mode,
+                rope_patch_sha256=sha(rope_path) if rope_mode == "sparse_fixture" else None,
+                rope_token_patch=rope_source if rope_mode == "sparse_fixture" else None,
+                rope_hbm_table=rope_source if rope_mode == "hbm_cache" else None,
                 resource_trace=dict(qe_logical_qrom_words=qe["logical_qrom_words"],
                                     qe_direct_expanded_bytes=qe["logical_direct_bytes"],
                                     qe_packed_physical_bytes=qe["physical_qe_bytes_reserved"],
@@ -257,9 +309,10 @@ def main() -> None:
     p.add_argument("--shard", type=Path, default=DEFAULT_SHARD)
     p.add_argument("--qe", type=Path, default=DEFAULT_QE)
     p.add_argument("--rope", type=Path, default=DEFAULT_ROPE)
+    p.add_argument("--rope-mode", choices=("sparse_fixture", "hbm_cache"), default="sparse_fixture")
     p.add_argument("--output", type=Path)
     args = p.parse_args()
-    record = bind(args.layout, args.shard, args.qe, args.rope)
+    record = bind(args.layout, args.shard, args.qe, args.rope, args.rope_mode)
     out = json.dumps(record, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,18 @@
+{
+  "claim_scope": "One local qtile bank layout: 8 FP8 plus 8 paired-FP4 274-bit macros, 143360 checkpoint lane reads exact into 8x264 qtile operand in aligned and real qtile-skew schedules, with zero bank conflicts. No ptile hookup, complete die binpack, route or rate claim.",
+  "fp4_beats": 11520,
+  "fp8_beats": 6400,
+  "lane_reads": 143360,
+  "memory_cap_bytes": 3221225472,
+  "schema": "opentallas.rtl.v41x_qtile_pair_bank.v1",
+  "skew_lane_reads": 143360,
+  "source_sha256": {
+    "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
+    "results/rtl/v41x_qe_local_tile_bank_l0.json": "1133dfd0fd30526dc420f34562c6073670186893dbcee61e8ddd7ef8490972e5",
+    "rtl/chip/ot_chip_v41x_qtile_pair_bank.sv": "647d9e2a956de1de49f7be71f27576f7c3a1dc3d15caceae922c2ba945e56b1b",
+    "rtl/test/tb_chip_v41x_qtile_pair_bank.sv": "4c4359116ae2b171e3af5d13f8190907df978738e620e3012d455457e98f9559",
+    "tools/rtl_v41x_qtile_pair_bank.py": "89c8c34a43ebd82fa9ac2329ac0275cfcd2536af664411bb8b37869cb85a1df7",
+    "tools/v41_fullshape_qe_stream_image.py": "d16ec9ad3fe0a7be56d6af8af7ec36c773e6bc45b5fa60e04a80b3e5dbfbc5dd"
+  },
+  "status": "pass"
+}

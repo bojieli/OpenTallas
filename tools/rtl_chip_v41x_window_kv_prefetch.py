@@ -19,6 +19,7 @@ SOURCES = (
     "rtl/test/tb_chip_v41x_kv_reqmux.sv",
     "rtl/chip/ot_chip_v41x_hbm_karb.sv",
     "rtl/test/tb_chip_v41x_hbm_karb_wide.sv",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv",
 )
 OUTPUT = ROOT / "results/rtl/chip_v41x_window_kv_prefetch.json"
 
@@ -32,7 +33,7 @@ def run(output: Path = OUTPUT):
         binary = Path(temp) / "tb.vvp"
         build = subprocess.run(
             ["iverilog", "-g2012", "-s", "tb_chip_v41x_window_kv_prefetch",
-             "-o", str(binary), *(str(ROOT / p) for p in SOURCES[:3])],
+             "-o", str(binary), *(str(ROOT / p) for p in (*SOURCES[:3], SOURCES[8]))],
             capture_output=True, text=True, check=True,
         )
         sim = subprocess.run(["vvp", str(binary)], capture_output=True,

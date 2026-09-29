@@ -1,0 +1,46 @@
+{
+  "dependencies": {
+    "row_merger": "results/rtl/v41x_attn_row_merge.json",
+    "window_dma": "results/rtl/chip_v41x_window_kv_prefetch.json"
+  },
+  "scheduler": {
+    "boundary_positions": [
+      126,
+      127,
+      128,
+      129,
+      254,
+      1048575
+    ],
+    "jobs": 3,
+    "users": 2,
+    "window_rows": 6
+  },
+  "schema": "v41x_packed_attn_service/1",
+  "scope": "registered local WINDOW refill barrier and co-located WINDOW/merger boundary lint with interface-only attention-engine stub; separate window HBM and merger exact gates; no composed token or sustained HBM rate claim",
+  "sources": {
+    "rtl/chip/ot_chip_v41x_attn_row_merge.sv": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
+    "rtl/chip/ot_chip_v41x_packed_attn_service.sv": "279e7612ee397182cd03ce6bb6aeadac5dd43177fc4ccf0c1c26c01e52671d17",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "4731fa1dfd492bdf792d87349e73f231f123752b674144663097d7a506e463eb",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "17a627d2dbfea1c5e4116438b90076ab78d18377b0fba461474881217bcca724",
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "ed2a13a5fd91fa94ef02dc48098c16b3587e74047a67655c9b4533af9f777758",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "8eb0873a911d875a85048fbad1c496b391f019396f4c626a616c95e6ff1d16b2",
+    "rtl/test/ot_hdc_v41x_attn_service_lint_stub.sv": "f2107e720e5527bfa8df36b2024a689767baab4be55277f8c3007bff3a62c475",
+    "rtl/test/tb_chip_v41x_window_refill_schedule.sv": "d4e706c3e334e91dd4b03a363509f7b5256f335d19835682ef1846c6e21dd918",
+    "tools/rtl_v41x_packed_attn_service_gate.py": "cd30cccb1ad4dc2972fd376a32403869d0469f939ef71028ebba84544d71a4b7"
+  },
+  "status": "pass",
+  "window": {
+    "hbm_pitch_bytes_per_row": 544,
+    "hbm_pitch_bytes_per_user": 69632,
+    "payload_bytes_per_row": 528,
+    "sectors_per_row": 17,
+    "serialized_sector_requests_per_four_row_beat": 68,
+    "stage_payload_bytes": 67584,
+    "stage_rows": 128
+  }
+}

@@ -22,18 +22,19 @@
 // p.v is dots(bf16(p), kv^T) csum over the T rows in row order.
 //
 // SEQUENCE per op:
-//   LDKV  the op's KV words through the G read ports, into a row buffer
-//         (T rows x D BF16: the KV SRAM holds BF16 values);
+//   LDKV  in reduced mode, the op's KV words through the G read ports, into a
+//         BF16 row buffer. Full shape bypasses this step and consumes the
+//         die service's chronological stored-format rows directly;
 //   LDX   its x (q heads, or p rows) through the G x ports, BF16-rounded (RNE, as
 //         hdc_golden.to_bf16);
 //   JOBS  one engine job per H heads: q (the op's q heads, or zeros for p.v),
-//         the T rows re-encoded to the engine's STORED format (below), then the
+//         the T stored-format rows (re-encoded only in reduced mode), then the
 //         probabilities (the op's p, or zeros for q.k); the half of the job the op
 //         does not need is computed on zeros and discarded.  Results land in a
 //         local result buffer (credits returned at once);
 //   WR    the result words through the G masked write ports.
 //
-// STORED FORMAT (exact re-encode).  Every KV row the program writes is a
+// STORED FORMAT (exact reduced-mode re-encode). Every KV row the program writes is a
 // quantise-dequantise: window rows FP8 E4M3 x 2^e (UE8M0 per 32,
 // hdc_golden_v41.qdq_fp8), gathered compressed rows E2M1 x E4M3 scale per 16
 // (qdq_fp4_e4m3).  The adapter finds, per row, a stored word whose dequantised
@@ -60,7 +61,8 @@ module ot_hdc_v41x_att_adapt #(
     parameter integer TD    = 32,          // tile width
     parameter integer NL    = 4,           // rows per cycle
     parameter integer TROWS = 160,         // rows per job (>= the attention rows T_MAX)
-    parameter integer NHMAX = 32           // heads per op
+    parameter integer NHMAX = 32,          // heads per op
+    parameter bit PACKED_KV = 0            // full-shape die supplies stored rows
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -91,6 +93,13 @@ module ot_hdc_v41x_att_adapt #(
     output reg               kv_re,
     output reg  [G*AW-1:0]   kv_addr,
     input  wire [G*W*32-1:0] kv_q,
+    // Ordered packed KV rows from the die. A beat is four chronological rows
+    // in the engine's 265-bit/group stored format. Used only with PACKED_KV.
+    input  wire              packed_kv_v,
+    output wire              packed_kv_ready,
+    input  wire [NL-1:0]     packed_kv_m,
+    input  wire [NL*(D/32)*265-1:0] packed_kv_w,
+    input  wire              packed_kv_fault,
     // vector memory x reads (element), result writes (masked words)
     output reg  [MP*G-1:0]   x_re,
     output reg  [MP*G*AW-1:0] x_addr,
@@ -123,7 +132,6 @@ module ot_hdc_v41x_att_adapt #(
     wire [7:0]    c_nhd = IL << i_hg;
 
     // ---------------------------------------------------------------- buffers
-    reg [15:0] rowbuf [0:TROWS*D-1];                // [row][dim] BF16
     reg [15:0] xbuf   [0:NHMAX*TROWS-1];            // [head][k] BF16 (q dims or p rows)
     reg [31:0] obuf   [0:NHMAX*TROWS-1];            // [head][o] binary32 results
 
@@ -169,9 +177,11 @@ module ot_hdc_v41x_att_adapt #(
     wire [NT*H*32-1:0] pv_y;
     wire [NT*H-1:0] pv_f;
     reg          sc_cr, pv_cr;
+    wire kv_stream_v = PACKED_KV ? (kv_v && packed_kv_v) : kv_v;
+    assign packed_kv_ready = PACKED_KV && st == A_RUN && kv_v && kv_ready;
     ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS)) u_attn (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(T), .job_ready(job_ready),
-        .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
+        .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_stream_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
         .p_v(p_v), .p_w(p_w), .p_ready(p_ready), .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f),
         .pv_cr(pv_cr), .qk_iss(), .pv_iss());
@@ -189,221 +199,25 @@ module ot_hdc_v41x_att_adapt #(
     wire [NW-1:0] sc_need = (T + NL - 1) / NL;
     wire [7:0]   hb = jn * H;
     wire         q_go = q_v && q_ready;
-    wire         kv_go = kv_v && kv_ready;
+    wire         kv_go = kv_stream_v && kv_ready;
     wire         p_go = p_v && p_ready;
 
-    // stored-format encoders, one per row lane
-    genvar gr;
-    generate for (gr = 0; gr < NL; gr = gr + 1) begin : g_enc
-        reg [ROWW-1:0] wd;
-        reg            ok;
-        reg [16*D-1:0] row;
-        integer x;
-        always @(*) begin
-            for (x = 0; x < D; x = x + 1) row[16*x +: 16] = rowbuf[(ki + gr) * D + x];
-            {ok, wd} = encode_row(row);
-        end
-        assign kv_w[gr*ROWW +: ROWW] = wd;
-    end endgenerate
     wire [NL-1:0] enc_ok;
-    generate for (gr = 0; gr < NL; gr = gr + 1) begin : g_eok
-        assign enc_ok[gr] = g_enc[gr].ok || !kv_m[gr];
-    end endgenerate
-
-    // ---------------------------------------------------------------- sequencer
-    reg  [31:0] wc, wend;                           // result words
-    reg         efault;
-    integer b, l, hh2;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            st <= A_IDLE; kv_re <= 1'b0; x_re <= 0; l1_v <= 1'b0; l2_v <= 1'b0; o_we <= 0;
-            job_v <= 1'b0; q_v <= 1'b0; kv_v <= 1'b0; p_v <= 1'b0; sc_cr <= 1'b0; pv_cr <= 1'b0;
-            efault <= 1'b0;
-        end else begin
-            kv_re <= 1'b0; x_re <= 0; o_we <= 0;
-            l1_v <= 1'b0; l2_v <= l1_v; l2_c <= l1_c;
-            sc_cr <= sc_v; pv_cr <= pv_v;
-            case (st)
-                A_IDLE: if (go) begin
-                    st <= A_LDKV; lc <= 0; efault <= 1'b0;
-                    lend <= c_ntile * i_k;
-                end
-                A_LDKV: begin
-                    kv_re <= 1'b1;
-                    l1_v <= 1'b1; l1_c <= lc;
-                    lc <= lc + G;
-                    if (lc + G >= lend) begin st <= A_LDX; lc <= 0; lend <= nhd * kx; end
-                end
-                A_LDX: begin
-                    if (lc < lend) begin
-                        for (p = 0; p < G; p = p + 1) x_re[p] <= (lc + p < lend);
-                        l1_v <= 1'b1; l1_c <= lc;
-                        lc <= lc + G;
-                    end else if (!l1_v && !l2_v) begin
-                        st <= A_JOB; jn <= 0;
-                    end
-                end
-                A_JOB: begin
-                    job_v <= 1'b1;
-                    if (job_v && job_ready) begin
-                        job_v <= 1'b0; st <= A_RUN;
-                        qi <= 0; ki <= 0; pb <= 0; pw <= 0; nsc <= 0; npv <= 0;
-                        q_v <= 1'b1; kv_v <= 1'b1; p_v <= 1'b1;
-                    end
-                end
-                A_RUN: begin
-                    if (q_go) begin qi <= qi + 1'b1; if (qi + 1 == H) q_v <= 1'b0; end
-                    if (kv_go) begin ki <= ki + NL; if (ki + NL >= T) kv_v <= 1'b0; end
-                    if (p_go) begin
-                        if (pw + 1 == words_blk) begin
-                            pw <= 0; pb <= pb + 1'b1;
-                            if (pb + 1 == nblk) p_v <= 1'b0;
-                        end else pw <= pw + 1'b1;
-                    end
-                    if (kv_go && (enc_ok != {NL{1'b1}})) efault <= 1'b1;
-                    if (sc_v) nsc <= nsc + 1'b1;
-                    if (pv_v) npv <= npv + 1'b1;
-                    if ((nsc + sc_v == sc_need) && (npv + pv_v == DPT) && !q_v && !kv_v && !p_v) begin
-                        if (jn + 1 == nhd / H) begin
-                            st <= A_WR; wc <= 0; wend <= nhd * ((nout + W - 1) / W);
-                        end else begin
-                            jn <= jn + 1'b1; st <= A_JOB;
-                        end
-                    end
-                end
-                A_WR: begin
-                    for (p = 0; p < G; p = p + 1) o_we[p] <= (wc + p < wend) && oen_r;
-                    wc <= wc + G;
-                    if (wc + G >= wend) st <= A_IDLE;
-                end
-                default: st <= A_IDLE;
-            endcase
-        end
-    end
-    reg oen_r;
-    always @(posedge clk) begin
-        if (st == A_IDLE && go) begin
-            pv <= (i_ks != 1);
-            nout <= i_nout; kk <= i_k; ntile <= c_ntile; wb <= i_wbase; ts <= i_ts; ks <= i_ks;
-            xb <= i_xbase; xks <= i_xks; xjs <= i_xjs; xcs <= i_xcs; ogs <= i_ogs; ob <= i_obase;
-            ots <= i_ots; ojs <= i_ojs; nhd <= c_nhd; oen_r <= i_oen;
-            T <= (i_ks != 1) ? i_k : i_nout;
-            //: shapes the adapter serves: js = 0, mmode 1, the D-long axis D, one position, H | heads
-            bad <= (i_js != 0) || !i_mmode || !i_round || (i_m > 3'd1) ||
-                   (((i_ks != 1) ? i_nout : i_k) != D) || (((i_ks != 1) ? i_k : i_nout) > TROWS) ||
-                   ((c_nhd % H) != 0) || (c_nhd > NHMAX);
-        end
-        // load addresses
-        if (st == A_LDKV)
-            for (p = 0; p < G; p = p + 1) kv_addr[p*AW +: AW] <= kvw(lc + p);
-        if (st == A_LDX)
-            for (p = 0; p < G; p = p + 1) x_addr[p*AW +: AW] <= xel(lc + p);
-    end
-    // load captures (the data is on kv_q / x_q while l2_v)
-    reg l2_kv;                                      // the load in l2 is a KV load
-    reg l1_kv;
-    always @(posedge clk) begin
-        l1_kv <= (st == A_LDKV);
-        l2_kv <= l1_kv;
-    end
-    integer lq, ll;
-    always @(posedge clk) begin
-        if (l2_v && l2_kv) begin
-            for (lq = 0; lq < G; lq = lq + 1)
-                if (l2_c + lq < lend_kv)
-                    for (ll = 0; ll < W; ll = ll + 1) begin : cap
-                        reg [31:0] c, t, k, o;
-                        c = l2_c + lq; t = c / kk; k = c % kk; o = t * W + ll;
-                        if (!pv && o < T) rowbuf[o * D + k] <= kv_q[(lq*W + ll)*32 + 16 +: 16];
-                        if (pv && o < D) rowbuf[k * D + o] <= kv_q[(lq*W + ll)*32 + 16 +: 16];
-                    end
-        end
-        if (l2_v && !l2_kv)
-            for (lq = 0; lq < G; lq = lq + 1)
-                if (l2_c + lq < lend)
-                    xbuf[((l2_c + lq) / kx) * TROWS + (l2_c + lq) % kx] <= rne16(x_q[lq*32 +: 32]);
-    end
-    reg [31:0] lend_kv;
-    always @(posedge clk) if (st == A_IDLE && go) lend_kv <= c_ntile * i_k;
-
-    // engine stream words
-    integer qd, pj, ph;
-    always @(*) begin
-        for (qd = 0; qd < D; qd = qd + 1) q_w[qd*16 +: 16] = pv ? 16'd0 : xbuf[(hb + qi) * TROWS + qd];
-        for (pj = 0; pj < R; pj = pj + 1)
-            for (ph = 0; ph < H; ph = ph + 1)
-                p_w[(pj*H + ph)*16 +: 16] = (pv && (pb * TD + pw * R + pj < T)) ?
-                                            xbuf[(hb + ph) * TROWS + pb * TD + pw * R + pj] : 16'd0;
-        for (pj = 0; pj < NL; pj = pj + 1) kv_m[pj] = (ki + pj < T);
-    end
-
-    // results
-    integer sr, rh, tk;
-    always @(posedge clk) begin
-        if (st == A_RUN && sc_v && !pv)
-            for (sr = 0; sr < NL; sr = sr + 1)
-                if (sc_m[sr])
-                    for (rh = 0; rh < H; rh = rh + 1)
-                        obuf[(hb + rh) * TROWS + sc_row + sr] <= sc_y[(sr*H + rh)*32 +: 32];
-        if (st == A_RUN && pv_v && pv)
-            for (tk = 0; tk < NT; tk = tk + 1)
-                for (rh = 0; rh < H; rh = rh + 1)
-                    obuf[(hb + rh) * TROWS + tk * DPT + pv_c] <= pv_y[(tk*H + rh)*32 +: 32];
-    end
-    // activation counters (bench): ops run, and result values taken from the engine -- H scores per valid
-    // q.k row lane (q.k ops), NT x H pv values per final p.v beat (p.v ops)
-    reg [31:0] dbg_ops, dbg_elems;
-    integer sci;
-    reg [7:0] scn;
-    always @(*) begin
-        scn = 0;
-        for (sci = 0; sci < NL; sci = sci + 1) scn = scn + sc_m[sci];
-    end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin dbg_ops <= 0; dbg_elems <= 0; end
-        else begin
-            if (st == A_IDLE && go) dbg_ops <= dbg_ops + 1;
-            if (st == A_RUN && sc_v && !pv) dbg_elems <= dbg_elems + scn * H;
-            else if (st == A_RUN && pv_v && pv) dbg_elems <= dbg_elems + NT * H;
-        end
-    end
-    reg rfault;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) rfault <= 1'b0;
-        else if (st == A_IDLE && go) rfault <= 1'b0;
-        else if (st == A_RUN && ((sc_v && !pv && ((sc_f & {H{1'b1}} & mask_rows(sc_m)) != 0)) ||
-                                 (pv_v && pv && (pv_f != 0)))) rfault <= 1'b1;
-    end
-    function automatic [NL*H-1:0] mask_rows(input [NL-1:0] m);
-        integer a;
-        begin
-            for (a = 0; a < NL*H; a = a + 1) mask_rows[a] = m[a / H];
-        end
-    endfunction
-
-    // result writes: word c = (head hh, tile t) -> ob + t*ots + (hh/IL)*ogs + (hh%IL)*ojs
-    wire [NW-1:0] ntw = (nout + W - 1) / W;
-    integer wq, wl;
-    always @(posedge clk) begin
-        for (wq = 0; wq < G; wq = wq + 1) begin : wr
-            reg [31:0] c, hh, t;
-            c = wc + wq; hh = c / ntw; t = c % ntw;
-            o_addr[wq*AW +: AW] <= ob + t * ots + (hh / IL) * ogs + (hh % IL) * ojs;
-            for (wl = 0; wl < W; wl = wl + 1) begin
-                o_mask[wq*W + wl] <= (t * W + wl < nout);
-                o_data[(wq*W + wl)*32 +: 32] <= obuf[hh * TROWS + t * W + wl];
+    genvar gr;
+    generate if (!PACKED_KV) begin : g_local_kv
+        reg [15:0] rowbuf [0:TROWS*D-1];
+        for (gr = 0; gr < NL; gr = gr + 1) begin : g_enc
+            reg [ROWW-1:0] wd;
+            reg            ok;
+            reg [16*D-1:0] row;
+            integer x;
+            always @(*) begin
+                for (x = 0; x < D; x = x + 1) row[16*x +: 16] = rowbuf[(ki + gr) * D + x];
+                {ok, wd} = encode_row(row);
             end
+            assign kv_w[gr*ROWW +: ROWW] = wd;
+            assign enc_ok[gr] = ok || !kv_m[gr];
         end
-    end
-
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin idle <= 1'b1; fault <= 1'b0; end
-        else begin
-            idle <= (st == A_IDLE) && !go && !(|o_we);
-            fault <= (st != A_IDLE) && (bad || efault || rfault);
-        end
-    end
-
     // ================================================================ stored-format encoding
     // BF16 v / 2^e as an E4M3 code: {ok, code}
     function automatic [8:0] fp8_code(input [15:0] v, input integer e);
@@ -566,4 +380,210 @@ module ot_hdc_v41x_att_adapt #(
             encode_row = {okr, wd};
         end
     endfunction
+
+    end else begin : g_packed_kv
+        assign kv_w = packed_kv_w;
+        assign enc_ok = {NL{1'b1}};
+    end endgenerate
+
+    // ---------------------------------------------------------------- sequencer
+    reg  [31:0] wc, wend;                           // result words
+    reg         efault;
+    integer b, l, hh2;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            st <= A_IDLE; kv_re <= 1'b0; x_re <= 0; l1_v <= 1'b0; l2_v <= 1'b0; o_we <= 0;
+            job_v <= 1'b0; q_v <= 1'b0; kv_v <= 1'b0; p_v <= 1'b0; sc_cr <= 1'b0; pv_cr <= 1'b0;
+            efault <= 1'b0;
+        end else begin
+            kv_re <= 1'b0; x_re <= 0; o_we <= 0;
+            l1_v <= 1'b0; l2_v <= l1_v; l2_c <= l1_c;
+            sc_cr <= sc_v; pv_cr <= pv_v;
+            case (st)
+                A_IDLE: if (go) begin
+                    st <= PACKED_KV ? A_LDX : A_LDKV;
+                    lc <= 0; efault <= 1'b0;
+                    lend <= PACKED_KV ? c_nhd * ((i_ks != 1) ? i_k : D) : c_ntile * i_k;
+                end
+                A_LDKV: begin
+                    kv_re <= 1'b1;
+                    l1_v <= 1'b1; l1_c <= lc;
+                    lc <= lc + G;
+                    if (lc + G >= lend) begin st <= A_LDX; lc <= 0; lend <= nhd * kx; end
+                end
+                A_LDX: begin
+                    if (lc < lend) begin
+                        for (p = 0; p < G; p = p + 1) x_re[p] <= (lc + p < lend);
+                        l1_v <= 1'b1; l1_c <= lc;
+                        lc <= lc + G;
+                    end else if (!l1_v && !l2_v) begin
+                        st <= A_JOB; jn <= 0;
+                    end
+                end
+                A_JOB: begin
+                    job_v <= 1'b1;
+                    if (job_v && job_ready) begin
+                        job_v <= 1'b0; st <= A_RUN;
+                        qi <= 0; ki <= 0; pb <= 0; pw <= 0; nsc <= 0; npv <= 0;
+                        q_v <= 1'b1; kv_v <= 1'b1; p_v <= 1'b1;
+                    end
+                end
+                A_RUN: begin
+                    if (q_go) begin qi <= qi + 1'b1; if (qi + 1 == H) q_v <= 1'b0; end
+                    if (kv_go) begin ki <= ki + NL; if (ki + NL >= T) kv_v <= 1'b0; end
+                    if (p_go) begin
+                        if (pw + 1 == words_blk) begin
+                            pw <= 0; pb <= pb + 1'b1;
+                            if (pb + 1 == nblk) p_v <= 1'b0;
+                        end else pw <= pw + 1'b1;
+                    end
+                    if ((kv_go && (enc_ok != {NL{1'b1}} ||
+                                   (PACKED_KV && packed_kv_m != kv_m))) ||
+                        (PACKED_KV && packed_kv_fault)) efault <= 1'b1;
+                    if (sc_v) nsc <= nsc + 1'b1;
+                    if (pv_v) npv <= npv + 1'b1;
+                    if ((nsc + sc_v == sc_need) && (npv + pv_v == DPT) && !q_v && !kv_v && !p_v) begin
+                        if (jn + 1 == nhd / H) begin
+                            st <= A_WR; wc <= 0; wend <= nhd * ((nout + W - 1) / W);
+                        end else begin
+                            jn <= jn + 1'b1; st <= A_JOB;
+                        end
+                    end
+                end
+                A_WR: begin
+                    for (p = 0; p < G; p = p + 1) o_we[p] <= (wc + p < wend) && oen_r;
+                    wc <= wc + G;
+                    if (wc + G >= wend) st <= A_IDLE;
+                end
+                default: st <= A_IDLE;
+            endcase
+        end
+    end
+    reg oen_r;
+    always @(posedge clk) begin
+        if (st == A_IDLE && go) begin
+            pv <= (i_ks != 1);
+            nout <= i_nout; kk <= i_k; ntile <= c_ntile; wb <= i_wbase; ts <= i_ts; ks <= i_ks;
+            xb <= i_xbase; xks <= i_xks; xjs <= i_xjs; xcs <= i_xcs; ogs <= i_ogs; ob <= i_obase;
+            ots <= i_ots; ojs <= i_ojs; nhd <= c_nhd; oen_r <= i_oen;
+            T <= (i_ks != 1) ? i_k : i_nout;
+            //: shapes the adapter serves: js = 0, mmode 1, the D-long axis D, one position, H | heads
+            bad <= (i_js != 0) || !i_mmode || !i_round || (i_m > 3'd1) ||
+                   (((i_ks != 1) ? i_nout : i_k) != D) || (((i_ks != 1) ? i_k : i_nout) > TROWS) ||
+                   ((c_nhd % H) != 0) || (c_nhd > NHMAX);
+        end
+        // load addresses
+        if (st == A_LDKV)
+            for (p = 0; p < G; p = p + 1) kv_addr[p*AW +: AW] <= kvw(lc + p);
+        if (st == A_LDX)
+            for (p = 0; p < G; p = p + 1) x_addr[p*AW +: AW] <= xel(lc + p);
+    end
+    // load captures (the data is on kv_q / x_q while l2_v)
+    reg l2_kv;                                      // the load in l2 is a KV load
+    reg l1_kv;
+    always @(posedge clk) begin
+        l1_kv <= (st == A_LDKV);
+        l2_kv <= l1_kv;
+    end
+    generate if (!PACKED_KV) begin : g_local_capture
+        integer lq, ll;
+        always @(posedge clk) if (l2_v && l2_kv) begin
+            for (lq = 0; lq < G; lq = lq + 1)
+                if (l2_c + lq < lend_kv)
+                    for (ll = 0; ll < W; ll = ll + 1) begin : cap
+                        reg [31:0] c, t, k, o;
+                        c = l2_c + lq; t = c / kk; k = c % kk; o = t * W + ll;
+                        if (!pv && o < T) g_local_kv.rowbuf[o * D + k] <= kv_q[(lq*W + ll)*32 + 16 +: 16];
+                        if (pv && o < D) g_local_kv.rowbuf[k * D + o] <= kv_q[(lq*W + ll)*32 + 16 +: 16];
+                    end
+        end
+    end endgenerate
+    integer lq;
+    always @(posedge clk) begin
+        if (l2_v && !l2_kv)
+            for (lq = 0; lq < G; lq = lq + 1)
+                if (l2_c + lq < lend)
+                    xbuf[((l2_c + lq) / kx) * TROWS + (l2_c + lq) % kx] <= rne16(x_q[lq*32 +: 32]);
+    end
+    reg [31:0] lend_kv;
+    always @(posedge clk) if (st == A_IDLE && go) lend_kv <= c_ntile * i_k;
+
+    // engine stream words
+    integer qd, pj, ph;
+    always @(*) begin
+        for (qd = 0; qd < D; qd = qd + 1) q_w[qd*16 +: 16] = pv ? 16'd0 : xbuf[(hb + qi) * TROWS + qd];
+        for (pj = 0; pj < R; pj = pj + 1)
+            for (ph = 0; ph < H; ph = ph + 1)
+                p_w[(pj*H + ph)*16 +: 16] = (pv && (pb * TD + pw * R + pj < T)) ?
+                                            xbuf[(hb + ph) * TROWS + pb * TD + pw * R + pj] : 16'd0;
+        for (pj = 0; pj < NL; pj = pj + 1) kv_m[pj] = (ki + pj < T);
+    end
+
+    // results
+    integer sr, rh, tk;
+    always @(posedge clk) begin
+        if (st == A_RUN && sc_v && !pv)
+            for (sr = 0; sr < NL; sr = sr + 1)
+                if (sc_m[sr])
+                    for (rh = 0; rh < H; rh = rh + 1)
+                        obuf[(hb + rh) * TROWS + sc_row + sr] <= sc_y[(sr*H + rh)*32 +: 32];
+        if (st == A_RUN && pv_v && pv)
+            for (tk = 0; tk < NT; tk = tk + 1)
+                for (rh = 0; rh < H; rh = rh + 1)
+                    obuf[(hb + rh) * TROWS + tk * DPT + pv_c] <= pv_y[(tk*H + rh)*32 +: 32];
+    end
+    // activation counters (bench): ops run, and result values taken from the engine -- H scores per valid
+    // q.k row lane (q.k ops), NT x H pv values per final p.v beat (p.v ops)
+    reg [31:0] dbg_ops, dbg_elems;
+    integer sci;
+    reg [7:0] scn;
+    always @(*) begin
+        scn = 0;
+        for (sci = 0; sci < NL; sci = sci + 1) scn = scn + sc_m[sci];
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin dbg_ops <= 0; dbg_elems <= 0; end
+        else begin
+            if (st == A_IDLE && go) dbg_ops <= dbg_ops + 1;
+            if (st == A_RUN && sc_v && !pv) dbg_elems <= dbg_elems + scn * H;
+            else if (st == A_RUN && pv_v && pv) dbg_elems <= dbg_elems + NT * H;
+        end
+    end
+    reg rfault;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) rfault <= 1'b0;
+        else if (st == A_IDLE && go) rfault <= 1'b0;
+        else if (st == A_RUN && ((sc_v && !pv && ((sc_f & {H{1'b1}} & mask_rows(sc_m)) != 0)) ||
+                                 (pv_v && pv && (pv_f != 0)))) rfault <= 1'b1;
+    end
+    function automatic [NL*H-1:0] mask_rows(input [NL-1:0] m);
+        integer a;
+        begin
+            for (a = 0; a < NL*H; a = a + 1) mask_rows[a] = m[a / H];
+        end
+    endfunction
+
+    // result writes: word c = (head hh, tile t) -> ob + t*ots + (hh/IL)*ogs + (hh%IL)*ojs
+    wire [NW-1:0] ntw = (nout + W - 1) / W;
+    integer wq, wl;
+    always @(posedge clk) begin
+        for (wq = 0; wq < G; wq = wq + 1) begin : wr
+            reg [31:0] c, hh, t;
+            c = wc + wq; hh = c / ntw; t = c % ntw;
+            o_addr[wq*AW +: AW] <= ob + t * ots + (hh / IL) * ogs + (hh % IL) * ojs;
+            for (wl = 0; wl < W; wl = wl + 1) begin
+                o_mask[wq*W + wl] <= (t * W + wl < nout);
+                o_data[(wq*W + wl)*32 +: 32] <= obuf[hh * TROWS + t * W + wl];
+            end
+        end
+    end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin idle <= 1'b1; fault <= 1'b0; end
+        else begin
+            idle <= (st == A_IDLE) && !go && !(|o_we);
+            fault <= (st != A_IDLE) && (bad || efault || rfault);
+        end
+    end
+
 endmodule

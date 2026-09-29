@@ -17,6 +17,7 @@ module ot_chip_v41x_window_kv_prefetch #(
     parameter integer HAW = 30,
     parameter integer TAGW = 16,
     parameter integer USER_W = 10,
+    parameter bit BANKED_STAGE = 0,
     parameter integer WIN_STACK = 0,
     parameter integer WINDOW_SLOTS = 128,
     parameter integer MAX_CONTEXT = 1048576
@@ -58,6 +59,21 @@ module ot_chip_v41x_window_kv_prefetch #(
     output wire [4223:0]         packed_row,
     output wire [255:0]          packed_codes,
     output wire [7:0]            packed_scale,
+    // Optional registered four-bank row path.  It accepts one four-row
+    // request per cycle after the rows are staged.  The legacy packed_re
+    // combinational read is disabled when BANKED_STAGE=1.
+    input  wire                  bank_req_v,
+    output wire                  bank_req_ready,
+    input  wire [USER_W-1:0]     bank_req_user,
+    input  wire [POS_W-1:0]      bank_req_first,
+    input  wire [3:0]            bank_req_mask,
+    output wire                  bank_rsp_v,
+    output wire [USER_W-1:0]     bank_rsp_user,
+    output wire [POS_W-1:0]      bank_rsp_first,
+    output wire [3:0]            bank_rsp_mask,
+    output wire [3:0]            bank_rsp_valid_mask,
+    output wire [4*4224-1:0]    bank_rsp_rows,
+    output wire                  bank_rsp_fault,
     output reg                   fault,
     output reg  [4:0]            fault_code, // address, order, HBM response, read, poison
     output reg  [31:0]           st_rows_fetched,
@@ -112,14 +128,41 @@ module ot_chip_v41x_window_kv_prefetch #(
                     ((SEC_W+1)'(user_id) + 1'b1) * (SEC_W+1)'(REGION_SECTORS) ||
                     region_end[SEC_W] || addr_wide[SEC_W] ||
                     (addr_wide >= region_end);
-    wire [4223:0] read_row = stage[rslot];
-    assign packed_valid = stage_valid[pslot] && stage_tag[pslot] == packed_rrow &&
+    wire [4223:0] read_row = BANKED_STAGE ? '0 : stage[rslot];
+    assign packed_valid = !BANKED_STAGE && stage_valid[pslot] && stage_tag[pslot] == packed_rrow &&
                           stage_user[pslot] == packed_ruser &&
                           row_valid[pslot] && row_tag[pslot] == packed_rrow &&
                           row_user[pslot] == packed_ruser;
     assign packed_row = packed_valid ? stage[pslot] : '0;
     assign packed_codes = packed_valid ? stage[pslot][256*packed_ridx +: 256] : '0;
     assign packed_scale = packed_valid ? stage[pslot][4096+8*packed_ridx +: 8] : '0;
+    generate if (BANKED_STAGE) begin : g_bank_stage
+        wire fill_ok = state == FR_DONE && response && !response_poison &&
+            s_tag[WIN_STACK*TAGW +: TAGW] == TAGW'(sec) &&
+            s_beat[WIN_STACK*4 +: 4] == 0;
+        ot_chip_v41x_window_stage4 #(.POS_W(POS_W), .USER_W(USER_W),
+            .MAX_CONTEXT(MAX_CONTEXT)) u_stage4 (
+            .clk(clk), .rst_n(rst_n),
+            .inv_v((blk_v && blk_ready) || (prime_v && prime_ready) ||
+                   (prefetch_v && prefetch_ready)),
+            .inv_row((blk_v && blk_ready) ? blk_row :
+                     (prime_v && prime_ready) ? prime_row : prefetch_row),
+            .fill_v(fill_ok), .fill_user(user_id), .fill_row(row),
+            .fill_sector(sec), .fill_data(s_data[WIN_STACK*256 +: 256]),
+            .fill_last(sec == 5'd16),
+            .req_v(bank_req_v), .req_ready(bank_req_ready),
+            .req_user(bank_req_user), .req_first_row(bank_req_first),
+            .req_mask(bank_req_mask), .rsp_v(bank_rsp_v),
+            .rsp_user(bank_rsp_user), .rsp_first_row(bank_rsp_first),
+            .rsp_mask(bank_rsp_mask), .rsp_valid_mask(bank_rsp_valid_mask),
+            .rsp_rows(bank_rsp_rows), .rsp_fault(bank_rsp_fault));
+    end else begin : g_legacy_stage
+        assign bank_req_ready = 1'b0;
+        assign bank_rsp_v = 1'b0;
+        assign bank_rsp_user = '0; assign bank_rsp_first = '0;
+        assign bank_rsp_mask = '0; assign bank_rsp_valid_mask = '0;
+        assign bank_rsp_rows = 16896'h0; assign bank_rsp_fault = 1'b0;
+    end endgenerate
     function automatic poison_codes(input [255:0] c);
         integer z;
         begin
@@ -128,6 +171,17 @@ module ot_chip_v41x_window_kv_prefetch #(
                 if (c[8*z +: 7] == 7'h7f) poison_codes = 1'b1;
         end
     endfunction
+    function automatic poison_scales(input [127:0] s);
+        integer z;
+        begin
+            poison_scales = 1'b0;
+            for (z = 0; z < 16; z = z + 1)
+                if (s[8*z +: 8] == 8'hff) poison_scales = 1'b1;
+        end
+    endfunction
+    wire response_poison = (sec < 5'd16) ?
+        poison_codes(s_data[WIN_STACK*256 +: 256]) :
+        poison_scales(s_data[WIN_STACK*256 +: 128]);
     wire [31:0] decoded;
     wire dec_fault;
     // The codec is the same one used by the standalone exact-rational gate.
@@ -182,7 +236,7 @@ module ot_chip_v41x_window_kv_prefetch #(
             row_active <= 0; row_valid <= 0; stage_valid <= 0;
         end else begin
             if (re) begin
-                if (!kv_ok || rrow != active_row || ruser != active_user ||
+                if (BANKED_STAGE || !kv_ok || rrow != active_row || ruser != active_user ||
                     !row_valid[rslot] || row_tag[rslot] != rrow || row_user[rslot] != ruser) begin
                     fault <= 1'b1; fault_code[3] <= 1'b1;
                 end else if (dec_fault) begin
@@ -246,7 +300,7 @@ module ot_chip_v41x_window_kv_prefetch #(
                               ((SEC_W+1)'(prefetch_user) + 1'b1) * (SEC_W+1)'(REGION_SECTORS) ||
                             region_end[SEC_W]) begin
                             fault <= 1'b1; fault_code[0] <= 1'b1;
-                        end else if (!(stage_valid[prefetch_row[6:0]] &&
+                        end else if (BANKED_STAGE || !(stage_valid[prefetch_row[6:0]] &&
                             stage_tag[prefetch_row[6:0]] == prefetch_row &&
                             stage_user[prefetch_row[6:0]] == prefetch_user)) begin
                             stage_valid[prefetch_row[6:0]] <= 0;
@@ -274,9 +328,13 @@ module ot_chip_v41x_window_kv_prefetch #(
                     if (s_tag[WIN_STACK*TAGW +: TAGW] != TAGW'(sec) ||
                         s_beat[WIN_STACK*4 +: 4] != 0) begin
                         fault <= 1'b1; fault_code[2] <= 1'b1; state <= IDLE;
+                    end else if (response_poison) begin
+                        fault <= 1'b1; fault_code[4] <= 1'b1; state <= IDLE;
                     end else begin
-                        if (sec < 16) stage[slot][256*sec +: 256] <= s_data[WIN_STACK*256 +: 256];
-                        else stage[slot][4096 +: 128] <= s_data[WIN_STACK*256 +: 128];
+                        if (!BANKED_STAGE) begin
+                            if (sec < 16) stage[slot][256*sec +: 256] <= s_data[WIN_STACK*256 +: 256];
+                            else stage[slot][4096 +: 128] <= s_data[WIN_STACK*256 +: 128];
+                        end
                         st_sectors_read <= st_sectors_read + 1;
                         if (sec == 5'd16) begin
                             stage_tag[slot] <= row;

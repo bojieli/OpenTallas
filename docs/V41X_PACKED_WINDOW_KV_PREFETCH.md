@@ -47,3 +47,19 @@ parameterized to 30 bits in full mode and remains 28 bits by default. The
 SRAM boundary and measured scheduling before the modeled V4.1 throughput can
 be attributed to RTL. This gate establishes the window block write, packed
 HBM layout, validity barrier, and read result without making that rate claim.
+
+The optional `BANKED_STAGE=1` mode replaces the large combinational packed
+read with four local row banks indexed by absolute position modulo four.
+Each bank stores 32 tagged 528-byte rows. A registered bank read followed by
+a registered lane rotation returns four consecutive rows in absolute order,
+including across positions 127/128, with user and position checks per lane.
+Requests accept one four-row beat per clock after the rows have been staged;
+single-row requests use the low lane and the same synchronous path. Preloaded
+HBM sectors are checked for poisoned FP8 codes and E8M0 scales before a bank
+row becomes valid. `python -m tools.rtl_chip_v41x_window_stage4` records the
+preloaded read gate and an integrated HBM refill gate in
+`results/rtl/chip_v41x_window_stage4.json`. The integrated gate fetches four
+rows through the serialized 17-sector HBM port, checks all packed code and
+scale bytes, rejects a cross-user read and a poisoned scale. The reported
+four-row-per-clock rate is the staged read rate only; the HBM refill schedule
+and mixed window/compressed attention rate remain unmeasured.

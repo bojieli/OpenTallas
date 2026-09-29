@@ -106,10 +106,15 @@ class ShapeLayout:
     def rname(self, name, j):
         return name
 
-    def __init__(self, s, tp_exact=False, constant_bases=None):
+    def __init__(self, s, tp_exact=False, constant_bases=None, rope_storage="crom_fixture"):
         self.s = s
         self.tp_exact = tp_exact
         self.constant_bases = constant_bases
+        if rope_storage not in ("crom_fixture", "hbm_cache"):
+            raise ValueError(f"unknown RoPE storage mode {rope_storage}")
+        if rope_storage == "hbm_cache" and not tp_exact:
+            raise ValueError("HBM RoPE cache requires exact TP full-shape emission")
+        self.rope_storage = rope_storage
         if constant_bases is not None:
             required = {"rope_plain", "L0.attn_norm", "L0.ffn_norm", "L0.q_norm", "L0.kv_norm",
                         "L0.attn_sink", "L0.gate_bias", "L0.hc_attn_scale", "L0.hc_attn_base",
@@ -359,10 +364,15 @@ class ShapeBuilder(P.Builder):
 
     def rope(self, region, base, nh, hs, table, dynsel, inverse, tag, pred=0):
         rd = self.s["rd"]
+        # AW30 top bits 10/11 select the held HBM coefficient cache; lower
+        # bits remain absolute position*32 + pair. Ordinary CROM uses the
+        # source-pinned sparse fixture only in crom_fixture mode.
+        crom_base = ((2 + (table == "rope_yarn")) << 28 if self.lay.rope_storage == "hbm_cache"
+                     else self.lay.const(table))
         self.su({region}, {region}, tag, pred=pred, su_nout=nh, su_nin=rd,
                 a_base=base + hs - rd, a_so=hs, a_si=1, c_pair=1,
-                b_src=I.SRC_CLO, b_base=self.lay.const(table), b_d=dynsel, b_si=1, b_half=1,
-                d_src=I.SRC_CHI, d_base=self.lay.const(table), d_d=dynsel, d_si=1,
+                b_src=I.SRC_CLO, b_base=crom_base, b_d=dynsel, b_si=1, b_half=1,
+                d_src=I.SRC_CHI, d_base=crom_base, d_d=dynsel, d_si=1,
                 m1=I.M1_AB, qm=I.QM_ALT_PN if inverse else I.QM_ALT_NP, ad=I.AD_Q, rnd=1,
                 dst=I.DST_VM, o_base=base + hs - rd, o_so=hs, o_si=1)
 
@@ -485,6 +495,10 @@ class ShapeBuilder(P.Builder):
         self.rmsnorm("QA", s["q_rank"], lay.const(f"L{L}.q_norm"), "QR", t)
         self.linq(lay.qmat[(L, "wq_b")], "QR", "Q", set(), set(), t)
         self.rmsnorm("KVA", hd, lay.const(f"L{L}.kv_norm"), "KVN", t)
+        if lay.rope_storage == "hbm_cache":
+            # CTL5 is blocking until the exact position/kind pair is held.
+            # ctl_slot=0 selects the single full-shape position DYN bank.
+            self.ctl(5, t + ".rope_prefetch", slot=0, lane=int(table == "rope_yarn"))
         self.rope("KVN", V_["KVN"], 1, hd, table, DY["ROPE"], False, t)
         self.qdq(I.QE_QDQ8, "KVN", hd // 32, V_["KVQ"], {"KVQ"}, t)
         # The full-shape attention adapter owns a bounded local 0..639 row
@@ -539,6 +553,11 @@ class ShapeBuilder(P.Builder):
         self.su({"ACC", "DEN"}, {"ACC"}, tsm, su_nout=hdd, su_nin=hd, a_base=V_["ACC"], a_so=hd, a_si=1,
                 b_base=V_["DEN"], b_so=1, m1=I.M1_DIVB, rnd=1, dst=I.DST_VM, o_base=V_["ACC"], o_so=hd, o_si=1)
         self.rope("ACC", V_["ACC"], hdd, hd, table, DY["ROPE"], True, tsm)
+        if lay.rope_storage == "hbm_cache":
+            # CTL6 releases the one-entry cache only after every RoPE SU
+            # operand read has drained. The core also checks su_idle.
+            self.ctl(6, t + ".rope_release", slot=0, lane=int(table == "rope_yarn"),
+                     wait=1 << (I.UNIT_SU - 1))
         if hook and P.ATTN_HOOK == "pv":
             hook()
         to = f"L{L}.out"
@@ -707,7 +726,8 @@ def build(shape, su_lanes=8, engram_inline=True, layers=None, embed=True, head=T
         I.SU_LANES = old
 
 
-def build_tp_layer0(shape=SHIPPED, su_lanes=8, embed=False, head=False, constant_bases=None):
+def build_tp_layer0(shape=SHIPPED, su_lanes=8, embed=False, head=False, constant_bases=None,
+                    rope_storage="crom_fixture"):
     """First exact TP=4 layer program; other layer types are fail closed.
 
     This is an ISA sequence, not the timing-model program. Its 12 blocking
@@ -719,7 +739,8 @@ def build_tp_layer0(shape=SHIPPED, su_lanes=8, embed=False, head=False, constant
     old = I.SU_LANES
     I.SU_LANES = su_lanes
     try:
-        return ShapeBuilder(ShapeLayout(shape, tp_exact=True, constant_bases=constant_bases)).build([0], embed, head)
+        return ShapeBuilder(ShapeLayout(shape, tp_exact=True, constant_bases=constant_bases,
+                                       rope_storage=rope_storage)).build([0], embed, head)
     finally:
         I.SU_LANES = old
 
