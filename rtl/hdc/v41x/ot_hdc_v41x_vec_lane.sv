@@ -162,11 +162,9 @@ module ot_hdc_v41x_vec_lane #(
     // then one add / compare level (the liveness compares, the transposed-KV address, the gather index
     // address) instead of two adds feeding a three-input add.  Same cycle, same values: bit-exact.
     // Cost: 8 x 24-bit partials + 1 in-use bit, plus the fields F0 still reads (emit, no, ni, obase,
-    // aibase, aind, gsh, cpair, dst, srcs: 115 bits): 308 flops a lane.
-    // The offset load is NOT registered here: the bank loads from the tree's stage one cycle before the
-    // leaf would.  That is safe because the leaf's sums read a bank one cycle before F0 used to: the load
-    // lands >= 3 cycles before the op's first vector reaches the leaf, and >= 3 cycles after the last vector
-    // of the op two back (the same bank) has left it -- both one cycle earlier than with no leaf.
+    // aibase, aind, gsh, cpair, dst, srcs: 115 bits): 308 flops a lane, plus the two-cycle offset load
+    // below (242).  The offset load does not pass the leaf: it starts from the tree's stage (ld, ld_bank,
+    // ld_c), where the lane without a leaf would have loaded in one cycle.
     reg [AW-1:0] off0 [0:4];
     reg [AW-1:0] off1 [0:4];
     wire [CW-1:0] lid = {{(CW-11){1'b0}}, lane_id};
@@ -221,18 +219,55 @@ module ot_hdc_v41x_vec_lane #(
     end endgenerate
 
     // ---- offsets: two banks, loaded by the op set-up --------------------------------------------
-    integer s, k;
-    reg [AW-1:0] acc;
-    always @(posedge clk) begin
-        if (ld_e) begin
-            for (s = 0; s < 5; s = s + 1) begin
-                acc = {AW{1'b0}};
-                for (k = 0; k < LN; k = k + 1)
-                    if (lane_id[k]) acc = acc + ldc_e[(s*LN + k)*AW +: AW];
-                if (ldbank_e) off1[s] <= acc; else off0[s] <= acc;
+    // A lane's offset is the sum of the terms of its lane_id's set bits (LN terms).  LEAF = 0: in one cycle.
+    // LEAF = 1: over two -- the lower and upper halves of the terms are summed and registered, then added
+    // into the bank.  The load then lands one cycle later than the tree stage's ld: still >= 2 cycles before
+    // the op's first vector reaches the leaf (whose sums read the bank), and later still after the op two
+    // back (same bank) has left it.  Integer sums mod 2^AW: the same offsets.  Cost 5 x 2 x AW + 2 flops.
+    localparam integer LH = LN / 2;
+    generate if (LEAF == 0) begin : g_ld1
+        integer s, k;
+        reg [AW-1:0] acc;
+        always @(posedge clk) begin
+            if (ld_e) begin
+                for (s = 0; s < 5; s = s + 1) begin
+                    acc = {AW{1'b0}};
+                    for (k = 0; k < LN; k = k + 1)
+                        if (lane_id[k]) acc = acc + ldc_e[(s*LN + k)*AW +: AW];
+                    if (ldbank_e) off1[s] <= acc; else off0[s] <= acc;
+                end
             end
         end
-    end
+    end else begin : g_ld2
+        integer s, k;
+        reg [AW-1:0] lo, hi;
+        reg          ldp_v, ldp_bank;
+        reg [AW-1:0] ldp_lo [0:4];
+        reg [AW-1:0] ldp_hi [0:4];
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) ldp_v <= 1'b0;
+            else ldp_v <= ld_e;
+        end
+        always @(posedge clk) begin
+            if (ld_e) begin
+                ldp_bank <= ldbank_e;
+                for (s = 0; s < 5; s = s + 1) begin
+                    lo = {AW{1'b0}};
+                    hi = {AW{1'b0}};
+                    for (k = 0; k < LN; k = k + 1)
+                        if (lane_id[k]) begin
+                            if (k < LH) lo = lo + ldc_e[(s*LN + k)*AW +: AW];
+                            else        hi = hi + ldc_e[(s*LN + k)*AW +: AW];
+                        end
+                    ldp_lo[s] <= lo;
+                    ldp_hi[s] <= hi;
+                end
+            end
+            if (ldp_v)
+                for (s = 0; s < 5; s = s + 1)
+                    if (ldp_bank) off1[s] <= ldp_lo[s] + ldp_hi[s]; else off0[s] <= ldp_lo[s] + ldp_hi[s];
+        end
+    end endgenerate
 
     // ---- F0: liveness, addresses ------------------------------------------------------------------
     wire live0 = emit_e && lin_e && (ol_e < no_e) && (il_e < ni_e);
