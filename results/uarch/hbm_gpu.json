@@ -566,16 +566,21 @@
    "staging_kb_per_sm": 128,
    "sm_area": {
     "logic_um2": {
-     "mma_lanes": 1163392,
-     "blockdot": 0,
-     "tree": 802346,
+     "mma_lanes_and_trees": 1919283,
+     "blockdot_and_trees": 0,
      "stack": 32428,
      "row_scale": 12532,
      "simt": 149605,
      "x_operand_regs": 19110
     },
-    "logic_mm2": 2.179,
-    "footprint_logic_mm2": 4.359,
+    "logic_mm2": 2.133,
+    "hardened_columns": {
+     "lane_with_tree": 897.15,
+     "lane_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json",
+     "blockdot_with_tree": 2736.77,
+     "blockdot_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json"
+    },
+    "footprint_logic_mm2": 4.266,
     "sram_kb": {
      "x_store": 384.0,
      "staging": 128,
@@ -587,7 +592,7 @@
      "scratch": 2
     },
     "sram_mm2": 0.355,
-    "total_mm2": 4.714,
+    "total_mm2": 4.621,
     "macs_per_clk": 2048
    },
    "l2": {
@@ -605,11 +610,11 @@
     "mapping": "each SM's weight rows live in its own quadrant's stack: no weight byte crosses the die"
    },
    "die_fit": {
-    "sm_array_mm2": 150.85,
+    "sm_array_mm2": 147.87,
     "l2_mm2": 4.13,
     "dedicated_mm2": 0.0,
     "core_avail_mm2": 688.44,
-    "used_mm2": 154.98,
+    "used_mm2": 152.0,
     "fits": true
    }
   },
@@ -709,16 +714,21 @@
    "staging_kb_per_sm": 128,
    "sm_area": {
     "logic_um2": {
-     "mma_lanes": 270368,
-     "blockdot": 190151,
-     "tree": 199007,
+     "mma_lanes_and_trees": 459341,
+     "blockdot_and_trees": 175153,
      "stack": 9728,
      "row_scale": 6266,
      "simt": 149605,
      "x_operand_regs": 9854
     },
-    "logic_mm2": 0.835,
-    "footprint_logic_mm2": 1.67,
+    "logic_mm2": 0.81,
+    "hardened_columns": {
+     "lane_with_tree": 897.15,
+     "lane_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json",
+     "blockdot_with_tree": 2736.77,
+     "blockdot_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json"
+    },
+    "footprint_logic_mm2": 1.62,
     "sram_kb": {
      "x_store": 80.0,
      "staging": 128,
@@ -730,7 +740,7 @@
      "scratch": 2
     },
     "sram_mm2": 0.601,
-    "total_mm2": 2.271,
+    "total_mm2": 2.221,
     "macs_per_clk": 2560
    },
    "l2": {
@@ -758,11 +768,11 @@
    "dedicated_units_footprint_mm2": 112.7,
    "dedicated_units_source": "spec widths as in results/uarch/v41_rom.json proposal hub (W11 builds them)",
    "die_fit": {
-    "sm_array_mm2": 72.67,
+    "sm_array_mm2": 71.07,
     "l2_mm2": 4.13,
     "dedicated_mm2": 112.7,
     "core_avail_mm2": 688.44,
-    "used_mm2": 189.5,
+    "used_mm2": 187.9,
     "fits": true
    }
   }
