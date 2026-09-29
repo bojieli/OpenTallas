@@ -467,7 +467,8 @@ module ot_chip_v41x_tile #(
     // -- pooled index-key HBM bridge: four stacks, timed key-image writes -------------------
     generate if (IDX_RING != 0) begin : g_kb_ring
     // W11 ring layout: key writer (decode steps + boundary migration) and the K-port arbiter
-    ot_hdc_v41x_idx_ring_port #(.AW(PIKH_HAW), .RSB(IDX_RING_RSB), .RTAIL(IDX_RING_RTAIL), .READ_FENCE(1)) u_kb (
+    ot_hdc_v41x_idx_ring_port #(.AW(PIKH_HAW), .RSB(IDX_RING_RSB), .RTAIL(IDX_RING_RTAIL), .READ_FENCE(1),
+                                .WIDE_REC(1)) u_kb (
         .clk(clk), .rst_n(rst_n), .w_v(pikw_v), .w_rdy(pikw_rdy),
         .w_csec(pikw_csec), .w_codes(pikw_codes), .w_ssec(pikw_ssec), .w_sslot(pikw_sslot),
         .w_scales(pikw_scales), .r_v(pikh_req_v), .r_rdy(pikh_req_rdy), .r_addr(pikh_req_addr),

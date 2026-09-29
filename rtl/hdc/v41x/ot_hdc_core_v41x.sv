@@ -944,7 +944,9 @@ module ot_hdc_core_v41x #(
                 .dbg_ops(), .dbg_elems(), .dbg_keys_streamed(), .dbg_hbm_beats(), .dbg_keys_scored(),
                 .dbg_headsums_fused());
             ot_hdc_v41x_idx_pool_kwr #(.AW(AW), .NW(NW), .NL(KNL), .HAW(PIKH_HAW),
-                                         .SHARDED(IDX_SHARDED), .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS)) u_kwr (
+                                         .SHARDED(IDX_SHARDED), .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS),
+                                         .RING(IDX_RING), .RING_UBLK(IDX_RING_RSB*17 +
+                                             ((IDX_RING_RTAIL != 0) ? 1 + (IDX_RING_RTAIL + 63) / 64 : 0))) u_kwr (
                 .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base),
                 .i_user_base_sec(IDX_MULTIUSER ? idx_user_base_sec : PIKH_HAW'(0)),
                 .su_go(su_go), .i_dst(dst), .i_obase(o_base),

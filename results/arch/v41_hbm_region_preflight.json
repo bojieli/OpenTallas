@@ -26,6 +26,8 @@
   "isolation": {
     "multiuser_key_address_isolation": false,
     "reason": "writer and scanner accept an early physical user base and a standalone two-user gate passes, but the die still ties that base low and no full-token namespace gate exists",
+    "ring_layout_die_multiuser_opt_in": true,
+    "ring_layout_note": "this record prices the replicated key layout (the die default); the W11 ring layout's opt-in IDX_RING_MU keys the base from the user id: results/arch/w11_v41_hbm_region_preflight_ring.json",
     "standalone_two_user_key_address_isolation": true
   },
   "per_stack_per_user_bytes": {
@@ -56,10 +58,10 @@
   },
   "source_sha256": {
     "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
-    "rtl/chip/ot_chip_v41x_die.sv": "a6ca7221090dbc6050fe897bbc87dcad6d0e68e645963cd88617629ceec12aed",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "5d134aa4f4592e9bff55252613bc031a0cdfcaa5d2ab1b2b564d47b055bfa7ae",
+    "rtl/chip/ot_chip_v41x_die.sv": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "6e6ed8fe1927de57b531ab97345511939da3459672e90aef3ca6d7777216cd6e",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420",
     "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",

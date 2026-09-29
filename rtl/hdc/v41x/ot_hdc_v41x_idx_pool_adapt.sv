@@ -74,8 +74,13 @@ module ot_hdc_v41x_idx_pool_adapt #(
     wire [HAW:0] super_count_now=(local_keys_now+1023)>>10;
     wire [HAW:0] local_end_now={1'b0,local_base_now}+super_count_now*(HAW+1)'(2176);
     wire [HAW:0] physical_end_now={1'b0,i_user_base_sec}+local_end_now;
+    // RING: region r of the user is RING_UBLK blocks at user base + r x RING_UBLK (ot_hdc_v41x_idx_ring_ranges)
+    localparam integer RING_UBLK=RING_RSB*17+((RING_RTAIL!=0) ? 1+(RING_RTAIL+63)/64 : 0);
+    wire [HAW+8:0] ring_end_now=(HAW+9)'(i_user_base_sec)+
+        (HAW+9)'((HAW'((i_wbase-cfg_ik_base)>>7)+HAW'(1))*HAW'(RING_UBLK))*(HAW+9)'(128);
     wire bad_cfg_now=!i_fuse || (i_k!=32 && i_k!=128) || !i_mmode || ((IL<<i_hg)!=IH) ||
-        (i_user_base_sec[6:0]!=0) || physical_end_now[HAW] ||
+        (i_user_base_sec[6:0]!=0) ||
+        ((RING==0) ? physical_end_now[HAW] : (ring_end_now > (HAW+9)'(1)<<HAW)) ||
         (SHARDED && SLICE_SECTORS>0 && local_end_now>(HAW+1)'(SLICE_SECTORS));
     assign ready=st==A_IDLE;
 
@@ -215,7 +220,8 @@ module ot_hdc_v41x_idx_pool_adapt #(
         wire [4*48-1:0] ks_cnt,hb_cnt;
         reg r_bad;
         ot_hdc_v41x_idx_ring_ranges #(.HW(RHW),.UW(1),.RSB(RING_RSB),.RTAIL(RING_RTAIL)) geo (
-            .i_nkeys(RNW'(n)),.i_user(1'b0),.cfg_key_base_block(RHW'(key_base_sec>>7)),
+            .i_nkeys(RNW'(n)),.i_user(1'b0),
+            .cfg_key_base_block(RHW'(i_user_base_sec>>7)+RHW'(ik_off>>7)*RHW'(RING_UBLK)),
             .o_base1(r_base1),.o_skip(r_skip),.o_n1(r_n1),.o_base2(r_base2),.o_n2(r_n2),
             .o_user_base(),.o_fault(r_gfault));
         genvar s;

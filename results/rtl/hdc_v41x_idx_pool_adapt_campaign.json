@@ -269,7 +269,7 @@
  ],
  "limitation": "Four-stack constant zero/one tokens prove loader/replicated-image group selection/merge/pooled score/VM write coupling at MP1 and MP2, K32 and K128, for 4/6-key tails and 32-key scan. The selector rereads each key-group prefix; HBM bandwidth and tile replication remain unmeasured.",
  "sources": {
-  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "5d134aa4f4592e9bff55252613bc031a0cdfcaa5d2ab1b2b564d47b055bfa7ae",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv": "156c67e8101b2d10ebf69a771b6599b8f7c3a707688d14d110121652bf15f5c2",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv": "c3c4b2f36875e44daf75818b5355aad5ad3cb4803acd6b1c1d5fccf49070c37c",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv": "a2c4e44ff1d581b6d2e5cfe8e221e2c4553e4cbedd750e20819d6d7b29f30136",

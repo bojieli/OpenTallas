@@ -116,6 +116,11 @@ module ot_chip_v41x_die #(
                                        // the pooled adapter); regions are rings of IDX_RING_RSB super-blocks
     parameter integer IDX_RING_RSB = 1,   // + an IDX_RING_RTAIL-key tail at the legacy region base
     parameter integer IDX_RING_RTAIL = 0,
+    parameter integer IDX_RING_MU = 0,    // opt-in with IDX_RING: key the index-key user base from the step's
+                                          // 10-bit user id (host_user / the controller's core_user): user u's
+                                          // key slice is [u IKH_SLICE, (u+1) IKH_SLICE) sectors, its key region
+                                          // r at block u IKH_SLICE / 128 + r UBLK (UBLK = 17 IDX_RING_RSB + tail);
+                                          // 0: the key user base is tied low (one user)
     parameter bit WINDOW_RETAIN_L0 = 0, // opt-in single-use QK->PV packed-stage retention
     parameter bit WINDOW_HBM_ATTENTION = 0, // opt-in L0 WINDOW-only internal source
     parameter bit KARB_LOCAL = 0,  // opt-in: per-PC local K arbitration (ot_chip_v41x_hbm_karb_local)
@@ -376,6 +381,16 @@ module ot_chip_v41x_die #(
             if (capture_ctrl_user) step_user <= 10'(c_user);
         end
     wire t_fault, qs_fault, kb_busy;
+    // IDX_RING_MU: the step's index-key user base (sampled by the tile with the step's start); a user id
+    // at or past KEY_USERS faults (its slice would overlap the KV region)
+    wire [9:0] key_user = host_mode ? host_user : 10'(c_user);
+    wire [K_HAW-1:0] idx_key_user_base = (IDX_RING_MU != 0) ? K_HAW'(key_user) * K_HAW'(IKH_SLICE) : '0;
+    reg key_user_fault;
+    always @(posedge clk or negedge rn)
+        if (!rn) key_user_fault <= 1'b0;
+        else if (IDX_RING_MU != 0 && t_start && 32'(key_user) >= KEY_USERS) key_user_fault <= 1'b1;
+    initial if (IDX_RING_MU != 0 && (IDX_RING == 0 || IKH_SLICE % 128 != 0))
+        $fatal(1, "ot_chip_v41x_die: IDX_RING_MU needs IDX_RING and a block-aligned IKH_SLICE");
     wire [31:0] kb_rs, kb_ws;
     assign kb_stalls = kb_rs + kb_ws;
 
@@ -438,7 +453,7 @@ module ot_chip_v41x_die #(
     wire [7:0] core_coll_seq;
     wire die_coll_fault;
 
-    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
+    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL), .IDX_MULTIUSER(IDX_RING_MU), .IDX_KEY_SLICE_SECTORS((IDX_RING_MU != 0) ? IKH_SLICE : 0), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
                         .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW)) u_tile (
         .clk(clk), .rst_n(rn),
@@ -451,7 +466,7 @@ module ot_chip_v41x_die #(
         .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row),
         .win_blk_kvt_row(win_blk_kvt_row), .win_blk_idx(win_blk_idx),
         .win_blk_first_elem(win_blk_first_elem), .win_blk_codes(win_blk_codes), .win_blk_scale(win_blk_scale),
-        .cfg_ik_base(cfg_ik_base), .idx_user_base_sec('0), .cfg_me_xs(cfg_me_xs), .cfg_q_base(cfg_q_base), .cfg_q_lbase(cfg_q_lbase),
+        .cfg_ik_base(cfg_ik_base), .idx_user_base_sec(idx_key_user_base), .cfg_me_xs(cfg_me_xs), .cfg_q_base(cfg_q_base), .cfg_q_lbase(cfg_q_lbase),
         .cfg_q_lead(cfg_q_lead), .cfg_q_rate(cfg_q_rate),
         .qr_compact_re(qr_compact_re), .qr_compact_addr(qr_compact_addr),
         .qr_compact_valid(qr_compact_valid), .qr_compact_fp4(qr_compact_fp4),
@@ -959,7 +974,7 @@ module ot_chip_v41x_die #(
     reg [7:0] fault_r;
     always @(posedge clk or negedge rn)
         if (!rn) fault_r <= 8'd0;
-        else fault_r <= fault_r | {(|oor || |w_oor), kv_fault, rtr_overflow, die_coll_fault, proto_fault, qs_fault, 1'b0, t_fault};
+        else fault_r <= fault_r | {(|oor || |w_oor), kv_fault, rtr_overflow, die_coll_fault, proto_fault, qs_fault, 1'b0, t_fault | key_user_fault};
     assign kv_fault_code = kv_code;
     assign fault = fault_r;
 

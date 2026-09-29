@@ -47,7 +47,9 @@ def build() -> dict:
     assert "physical_csec" in writer and "key_base_sec" in scanner
     # The die still ties the tile's new per-user key base low.  This preflight
     # must not promote the standalone two-user gate to a full die claim.
-    assert ".idx_user_base_sec('0)" in die
+    # (W11: the ring layout's opt-in IDX_RING_MU keys it from the user id; the default still ties it low)
+    ring_mu = "(IDX_RING_MU != 0) ? K_HAW'(key_user) * K_HAW'(IKH_SLICE) : '0" in die
+    assert ".idx_user_base_sec('0)" in die or (ring_mu and ".idx_user_base_sec(idx_key_user_base)" in die)
     assert re.search(r"HDR_USER\s*=\s*32,\s*HDR_POS\s*=\s*40,\s*HDR_IDX\s*=\s*HDR_POS\s*\+\s*NW", controller)
     assert "HDR_USER_HI = HDR_ADDR + 16" in controller
     assert "parameter integer USER_W       = 8" in controller
@@ -122,7 +124,11 @@ def build() -> dict:
                      "max_replicated_users_with_28_bit_key_window": (1 << 28) // key_sectors_per_user},
         "isolation": {"multiuser_key_address_isolation": False,
                       "standalone_two_user_key_address_isolation": True,
-                      "reason": "writer and scanner accept an early physical user base and a standalone two-user gate passes, but the die still ties that base low and no full-token namespace gate exists"},
+                      "reason": "writer and scanner accept an early physical user base and a standalone two-user gate passes, but the die still ties that base low and no full-token namespace gate exists",
+                      "ring_layout_die_multiuser_opt_in": ring_mu,
+                      "ring_layout_note": ("this record prices the replicated key layout (the die default); the W11 ring layout's "
+                                           "opt-in IDX_RING_MU keys the base from the user id: "
+                                           "results/arch/w11_v41_hbm_region_preflight_ring.json") if ring_mu else None},
         "region_arithmetic": {"current_kv_sector_formula_uses_32_bit_integer": True,
                               "unpacked_example_users": users_model,
                               "unpacked_example_kv_aw": 26,

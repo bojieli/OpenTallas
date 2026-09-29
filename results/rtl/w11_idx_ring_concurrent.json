@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-idx-ring-concurrent.v1",
   "status": "pass",
-  "git_head": "15636e59818b4060dd9f222c12d515297e101e13",
+  "git_head": "0e424d5051ba9ddd0137176f45bef4f9ba3903a4",
   "simulator": "Verilator 4.038",
   "arbiter": "ot_hdc_v41x_idx_ring_port READ_FENCE=0: per pseudo-channel port the writer's request wins, the reader takes every other port-cycle; responses routed by tag bit 12",
   "cases": [
@@ -42,7 +42,7 @@
         "migrations": 6,
         "copied_sectors": 612
       },
-      "simulation_wall_seconds": 1.0
+      "simulation_wall_seconds": 2.3
     },
     {
       "name": "one_step",
@@ -81,7 +81,7 @@
         "migrations": 2,
         "copied_sectors": 204
       },
-      "simulation_wall_seconds": 1.4
+      "simulation_wall_seconds": 1.1
     },
     {
       "name": "one_step_migration",
@@ -120,7 +120,7 @@
         "migrations": 2,
         "copied_sectors": 204
       },
-      "simulation_wall_seconds": 1.0
+      "simulation_wall_seconds": 3.2
     },
     {
       "name": "two_steps",
@@ -159,7 +159,7 @@
         "migrations": 2,
         "copied_sectors": 204
       },
-      "simulation_wall_seconds": 1.0
+      "simulation_wall_seconds": 2.2
     }
   ],
   "summary": {
@@ -192,7 +192,7 @@
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "d3832452c0f1716756380a97df34582aa5acddc952c84453a1a23a05c6e8a77b",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "a2b148c335e07db4b7417bb48b7a86dd82f2cb88dc9c906b82aa12d717eb0047",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv": "3facd07fd27e0d099dfab9ee638c3ed83910716fc33b14852254f638a1fe4019",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv": "9bbb649dea5f5ff7a65fd1eef897b76e2774a6fbbcad91b1f3df4dd8a055ab15",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv": "85e919003fadf25e42cfbe641872fae703b490ef5d5abb0944396a5f06062ece",
     "rtl/test/tb_w11_idx_ring_concurrent.sv": "8c195e4d71830ff883921b9e232ba6735bd21954cdf767fc88ef15b89a9ca316",
     "rtl/test/w11_idx_ring_concurrent.cpp": "4565f76b4e067402a3b9924beef064f8cebd21acc49399d1639d61260015c542",

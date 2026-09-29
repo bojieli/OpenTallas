@@ -173,12 +173,12 @@ def main() -> int:
                            "writes from the core's writer placed by ot_hdc_v41x_idx_ring_port (decode step + "
                            "migration), scanned by the pooled adapter's ring readers and join, scored and selected; "
                            "bit-exact against the ISA model and token-identical to the replicated path on the same "
-                           "image. Regions are one-super-block rings (C = 1,024: the reduced vehicle's region "
-                           "size). The preloaded (golden-prefilled) keys are placed by the bench in ring layout. "
+                           "image. Regions are one-super-block rings (C = 1,024), named by the core's writer as "
+                           "(region base block, position) (ot_hdc_v41x_idx_pool_kwr RING = 1). The preloaded (golden-prefilled) keys are placed by the bench in ring layout. "
                            "The ring port holds reads while its writer is busy (READ_FENCE = 1, the legacy rule)."),
-        "limits": ["the core's writer (ot_hdc_v41x_idx_pool_kwr) names a key by (region block, row < 1,024): rings "
-                   "larger than one super-block need that writer to carry the row past 1,024",
-                   "single user (the die ties the key user base low)"],
+        "limits": ["one-super-block rings (C = 1,024) and one user (IDX_RING_MU = 0) in this gate; full ring "
+                   "capacity (C = 65,568) and two interleaved users are results/rtl/w11_die_idx_ring_mu_gate.json, "
+                   "ring slots past 1,024 and the wrap results/rtl/w11_idx_ring_naming.json"],
         "sources_sha256": pins,
     }
     if OUT.exists():

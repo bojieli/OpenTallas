@@ -7,9 +7,14 @@ pre-change content stops binding current sources.  This lists the records that w
 those files at BASE, the digests before and after, and the evidence that the default path
 (IDX_RING = 0) is unchanged: the die gate's replicated reference at position 7 runs cycle-identical
 to the adopted die smoke record.  Writes results/rtl/w11_die_ring_pin_ledger.json.
+
+--stage fullcap: the same ledger for the W11 full-capacity / multi-user edit (opt-in RING naming in
+ot_hdc_v41x_idx_pool_kwr, WIDE_REC in ot_hdc_v41x_idx_ring_port, IDX_RING_MU in the die) against
+its base 0e424d50; writes results/rtl/w11_die_ring_fullcap_pin_ledger.json.
 """
 from __future__ import annotations
 
+import argparse
 import glob
 import hashlib
 import json
@@ -48,7 +53,7 @@ def build() -> dict:
     moved = []
     for p in sorted(glob.glob(str(ROOT / "results/**/*.json"), recursive=True)):
         rel = str(Path(p).relative_to(ROOT))
-        if rel in (str(OUT.relative_to(ROOT)), DIE_GATE):
+        if rel in (str(OUT.relative_to(ROOT)), DIE_GATE) or "pin_ledger" in rel:
             continue
         try:
             d = json.loads(Path(p).read_text())
@@ -79,8 +84,25 @@ def build() -> dict:
     }
 
 
+STAGES = {"fullcap": ("0e424d50", FILES + ["rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+                                            "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv"],
+                       ROOT / "results/rtl/w11_die_ring_fullcap_pin_ledger.json",
+                       "pins moved by opt-in parameters (pool_kwr RING, ring_port WIDE_REC, die IDX_RING_MU; "
+                       "defaults unchanged); not re-run")}
+
+
 def main() -> None:
+    global BASE, FILES, OUT
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--stage", choices=sorted(STAGES))
+    a = ap.parse_args()
+    label = None
+    if a.stage:
+        BASE, FILES, OUT, label = STAGES[a.stage]
     rec = build()
+    if label:
+        rec["label"] = label
+        rec["stage"] = a.stage
     if OUT.exists():
         raise SystemExit(f"{OUT} exists; records are never overwritten")
     OUT.write_text(json.dumps(rec, indent=2) + "\n")

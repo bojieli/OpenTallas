@@ -15,6 +15,10 @@
 // quarter's stack and, every 32nd row, 48 keys migrate one stack down
 // (ot_hdc_v41x_idx_ring_kwr, user 0, region base B0).  A RFQ-deep record FIFO
 // decouples the core's writer from migrations.
+//   WIDE_REC = 1 (the die's ring path; ot_hdc_v41x_idx_pool_kwr RING = 1): the
+// record names the key directly -- region base block w_ssec / 128 (w_ssec a
+// multiple of 128) and position w_csec, any position the ring holds (C =
+// RSB x 1,024 + RTAIL slots), no 1,024-row limit.
 //
 // Arbitration, per pseudo-channel port: the writer's one request a cycle wins
 // the port it targets; the reader (the pooled adapter's four ring streams)
@@ -31,7 +35,8 @@
 module ot_hdc_v41x_idx_ring_port #(
     parameter integer NPC=32, AW=28, TAGW=16, LENW=4, BEATW=4,
     parameter integer RSB=1, RTAIL=0, RFQ=4, READ_FENCE=1,
-    parameter integer DIRECT=0      // 1: take (region block, count, key) commands on d_* instead of records
+    parameter integer DIRECT=0,     // 1: take (region block, count, key) commands on d_* instead of records
+    parameter integer WIDE_REC=0    // 1: records name (region base sector w_ssec, position w_csec)
 ) (
     input  wire clk, rst_n,
     // key records (the bridge's record interface)
@@ -146,7 +151,14 @@ module ot_hdc_v41x_idx_ring_port #(
             if (push && DIRECT != 0) begin
                 fq_b0[wp] <= d_base; fq_row[wp] <= d_n; fq_key[wp] <= d_key; wp <= wp + 1'b1;
             end
-            if (push && DIRECT == 0) begin
+            if (push && DIRECT == 0 && WIDE_REC != 0) begin
+                fq_b0[wp] <= HW'(w_ssec >> 7);
+                fq_row[wp] <= NW'(w_csec);
+                fq_key[wp] <= {w_scales, w_codes};
+                wp <= wp + 1'b1;
+                if (w_ssec[6:0] != 7'd0) fault <= 1'b1;   // a region starts on a block
+            end
+            if (push && DIRECT == 0 && WIDE_REC == 0) begin
                 fq_b0[wp] <= HW'(w_ssec >> 7);
                 fq_row[wp] <= NW'({w_ssec[6:0], w_sslot});
                 fq_key[wp] <= {w_scales, w_codes};
