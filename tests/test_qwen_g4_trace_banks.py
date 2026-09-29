@@ -15,3 +15,12 @@ def test_same_cycle_rw_not_assumed_safe():
 def test_depth_and_scale_ports_checked():
     r=check([{'cycle':1,'code_addr':8192,'scale_reads':[{'group':0,'addr':0},{'group':0,'addr':1}]}])
     assert {x[1] for x in r['problems']}=={'code_depth','scale_port'}
+
+def test_source_trace_rejects_simple_modulo_banking():
+    from pathlib import Path
+    from tools.qwen_g4_trace_banks import load_csv
+    p=Path(__file__).resolve().parents[1]/'results/contracts/qwen_g4_boundary_trace.csv.gz'
+    r=check(load_csv(p))
+    assert r['cycles_examined']==5208
+    assert len(r['problems'])==192
+    assert {x[1] for x in r['problems']}=={'vm_read_port'}

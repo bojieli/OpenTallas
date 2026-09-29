@@ -4,7 +4,7 @@ No stalls are inserted; conflicts disqualify unchanged-cycle composition.
 Schema each row: cycle, code_addr(null/int), scale_reads[{group,addr}],
 vm_reads[{group,addr(element)}], vm_writes[{group,addr(word),mask}].
 """
-import argparse,json
+import argparse,json,csv,gzip
 from collections import defaultdict
 
 def check(rows, vm_depth=1024):
@@ -42,8 +42,23 @@ def check(rows, vm_depth=1024):
             'cycles_examined':len(rows),'counts':dict(counts),'problems':problems,
             'claim':'Only supplied trace and proposed four single-read/single-write word banks; not RTL/arithmetic/physical verification.'}
 
+def load_csv(path):
+    opener=gzip.open if str(path).endswith('.gz') else open
+    with opener(path, 'rt') as f: raw=list(csv.DictReader(f))
+    grouped={}
+    for r in raw:
+        if int(r['edge'])==0: continue
+        key=(r['case'],r['cycle'])
+        x=grouped.setdefault(key,dict(cycle=len(grouped),code_addr=None,scale_reads=[],vm_reads=[],vm_writes=[]))
+        def n(k): return int(r[k],0)
+        if n('wrom_re'): x['code_addr']=n('wrom_addr')
+        if n('scale_re'): x['scale_reads'].append(dict(group=n('group'),addr=n('scale_addr')))
+        if n('x_re'): x['vm_reads'].append(dict(group=n('group'),addr=n('x_addr')))
+        if n('o_we'): x['vm_writes'].append(dict(group=n('group'),addr=n('o_addr'),mask=n('o_mask')))
+    return list(grouped.values())
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('trace');p.add_argument('--output');a=p.parse_args()
-    r=check(json.load(open(a.trace)));s=json.dumps(r,indent=2)+'\n'
+    r=check(load_csv(a.trace) if '.csv' in a.trace else json.load(open(a.trace)));s=json.dumps(r,indent=2)+'\n'
     if a.output:open(a.output,'w').write(s)
     else:print(s,end='')
