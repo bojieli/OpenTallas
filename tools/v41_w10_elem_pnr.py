@@ -55,6 +55,12 @@ def plan(logic_w: float) -> dict:
 
 def hook_tcl(p: dict) -> str:
     t = W2.hook_tcl(p)
+    # the element's words use 272 of the macro's 274 output bits: rd_out[273:272] have no capture flop
+    t = t.replace('if {$ff eq {}} { error "capture flop missing on [$net getName]" }',
+                  'if {$ff eq {}} { incr nunused; continue }')
+    t = t.replace("set nfixed 0", "set nfixed 0\nset nunused 0")
+    t = t.replace(f"if {{$nfixed != {274 * sum(1 for m in p['macros'] if m['capture'])}}}",
+                  f"if {{$nfixed + $nunused != {274 * sum(1 for m in p['macros'] if m['capture'])} || $nunused > 2}}")
     return t.replace("W2 V4.1 w10_elem ROM/MAC neighborhood (tools/v41_w2_romac_pnr.py)",
                      "W10 V4.1 ROM-array element (tools/v41_w10_elem_pnr.py; hook body from tools/v41_w2_romac_pnr.py)") \
             .replace("OT_W2_ROMAC_PLACE", "OT_W10_ELEM_PLACE")
