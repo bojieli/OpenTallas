@@ -10,6 +10,10 @@ The root agent owns the complete architecture: partitioning, tensor placement, s
 
 ## Current architectural decisions
 
+- **2026-09-29, method (binding, see AGENTS.md):**
+  - A unified microarchitecture analytical model sizes every block before RTL or place and route. It covers compute and communication intensity, port bytes, boundary bits, routing tracks, replicas and their multiplexer cost, slot fit, and token-latency share.
+  - The floorplan comes next. Then one hardened element sized to the full goal is replicated.
+  - HBM comparators replicate a GPU organisation; only the ROM designs are novel.
 - DeepSeek ROM weights remain near local digital MACs. Wide operand buses stay within explicitly placed local groups; partition crossings require budgeted interfaces.
 - Adopt bit-exact output-row splitting for expert/shared w2 and the specified fixed-order wo_b reduction. Arithmetic order is part of the interface.
 - HBM stores packed KV. Index, selected KV, window KV, RoPE and comparator weights require a complete region and shared-service ledger.
