@@ -171,11 +171,8 @@ def tile_spec(arch: str, work: Path) -> cs.CaseSpec:
 
 
 def die_spec(arch: str, work: Path) -> cs.CaseSpec:
-    if arch == "v41_rom":
-        raise NotImplementedError(
-            "The V4.1 die must use the adopted ot_hdc_core_v41x and live HBM "
-            "interfaces; the earlier die wrapper has been retired."
-        )
+    if arch in ("v41_rom", "v41_hbm"):
+        raise NotImplementedError("V4.1 dies are assembled by tools/chip_assembly/v41_die.py")
     prof = fp.tile_profile(arch)
     die = fp.die2x2(arch)
     tres = orfs.results_dir(BLOCK_WORK / f"tile_{arch}", f"chip_tile_{arch}")
@@ -339,7 +336,7 @@ def run_level(level: str, arch: str, work: Path, timeout: int) -> dict[str, Any]
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--level", required=True, choices=["tile", "die"])
-    ap.add_argument("--arch", required=True, choices=budgets.ARCHS)
+    ap.add_argument("--arch", required=True, choices=sorted(set(budgets.ARCHS) | {"v41_hbm"}))
     ap.add_argument("--work", required=True, type=Path)
     ap.add_argument("inputs", nargs="*", type=Path,
                     help="staged input directories (named so a remote runner copies them); unused here")
@@ -347,8 +344,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--record-only", action="store_true",
                     help="re-run the boundary report and rewrite the record of a finished run")
     args = ap.parse_args(argv)
-    if args.arch == "v41_rom":
-        ap.error("V4.1 chip assembly is pending migration to ot_hdc_core_v41x and live HBM interfaces")
+    if args.arch in ("v41_rom", "v41_hbm"):
+        # V4.1 dies are assembled from cluster abstracts by tools/chip_assembly/v41_die.py (bundled die
+        # floorplan + placement + global route); the V4.1 tile level belongs to the cluster hardening flow.
+        if args.level != "die":
+            ap.error("V4.1 tiles are hardened as clusters (W2); only --level die is assembled here")
+        from chip_assembly import v41_die  # noqa: E402
+        mode = "write" if args.write_only else ("record" if args.record_only else "run")
+        return v41_die.main([mode, "--arch", args.arch, "--work", str(args.work)])
     timeout = int(os.environ.get("OT_FLOW_TIMEOUT_SECONDS", "86400"))
     work = args.work.resolve()
     if args.write_only:
