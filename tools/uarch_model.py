@@ -768,6 +768,68 @@ QWEN_WIRE = dict(
     tree_extra_per_token=1728,  # split-tree compaction beyond the RTL's levels (o/down 1440 + qkv 252 + gu 36)
     ucie_wire_per_token=1898,   # farthest tile -> west UCIe and back, 13 stages each way, 146 crossings
 )
+# W12 floorplan (tools/qwen_rom_floorplan_w12.py, G=6144, one hardened tile replicated, VM and engine top at the
+# spine centre, 0.76 ps/um): per matrix-engine op the instruction/x broadcast, the tree levels above the tile and
+# the tree words' return to the spine are register stages of the RTL array (ot_qwen_me_array: BD, NWS, TWS, ORD).
+# They replace W5's x + conflict + write per-op terms and its per-token tree term; the UCIe crossing stays.
+QWEN_WIRE_W12 = dict(
+    bd=31,                    # instruction broadcast + x network, incl. the tile input register and XVM
+    xvm=1,                    # registered VM conflict stage (inside bd)
+    nws=4, tree_levels=4,     # four upper tree levels (3..6) inside a 16-tile block, 4 stages each
+    tws=30,                   # level-6 words -> spine top
+    ord=4,                    # result write -> VM
+    me_lat_extra=31 + 4 * 4 + 30 + 4,   # 81 cycles on every ME op's result
+)
+# Vector-memory x read (W12 gap): the engine's x chunk port reads S distinct elements at every K step (IL cycles,
+# x held across the slots) or every cycle (x varies with the slot, xjs != 0: the attention ops).  The W5 VM
+# (8 skew banks x 4 slices x 3 rows of ot_sram_1r1w_512x128) delivers 32 x 128 bits = 128 FP32 a cycle.
+VM_MACRO = dict(name="ot_sram_1r1w_512x128_m4_r2c2", um2=174.096 * 29.70, elems_per_read=4, words=512)
+VM_ELEMS_QWEN = 177808
+
+
+def vm_banking(read_elems):
+    """macros (and area) for a VM that reads `read_elems` FP32 a cycle and holds VM_ELEMS_QWEN"""
+    ports = math.ceil(read_elems / VM_MACRO["elems_per_read"])
+    depth = math.ceil(VM_ELEMS_QWEN / (ports * VM_MACRO["elems_per_read"]))
+    rows = math.ceil(depth / VM_MACRO["words"])
+    macros = ports * rows
+    return dict(read_elems=read_elems, macros=macros, area_mm2=round(macros * VM_MACRO["um2"] / 1e6, 3),
+                capacity_elems=macros * VM_MACRO["words"] * VM_MACRO["elems_per_read"])
+
+
+def qwen_x_read_stall(G, su_width, ctx, read_elems):
+    """Cycles a token adds when the engine's x reads are limited to `read_elems` a cycle (bandwidth bound,
+    fully exposed: the engine never stalls in the RTL, so any shortfall delays its issue)."""
+    import arch_budget_qwen3 as Q
+    import hdc_isa as I
+    import hdc_program as P
+    import hdc_timing as T
+    sw0 = I.SU_WIDTH
+    I.SU_WIDTH = su_width
+    try:
+        prog = P.build_program(Q.capped_layout(G, None, Q.die_shape()))
+    finally:
+        I.SU_WIDTH = sw0
+    d = T.dyn_values(ctx - 1, groups=G, H=Q.Q["H"], half=Q.Q["HD"] // 2, HD=Q.Q["HD"])
+    il = I.INTERLEAVE
+    stall = 0
+    per_op = []
+    for f in prog:
+        if f.get("unit") != I.UNIT_ME:
+            continue
+        f = {n: f.get(n, 0) for n, _ in I.FIELDS}
+        rounds, kk = T.me_loop(f, d, ctx - 1, G)
+        S = 1 << f["me_split"]
+        need = math.ceil(S / read_elems)
+        issue = rounds * kk * il
+        xc = rounds * kk * il * need if f["me_xjs"] else rounds * kk * max(il, need)
+        extra = max(0, xc - issue)
+        stall += extra
+        if extra:
+            per_op.append((f["me_wsrc"], S, rounds, kk, extra))
+    return stall, per_op
+
+
 QWEN_AREA = dict(
     array_mm2=560.0,          # tile array area after PHYs, UCIe, spine, corridors (W5: 1,225 x 0.4512 mm2 as
                               # instantiated, 1,470 x 0.3857 pruned)
@@ -783,7 +845,11 @@ QWEN_AREA = dict(
 )
 
 
-def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter=False):
+def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter=False, wire_model="w5",
+              x_read_elems=None):
+    """wire_model "w5": W5's per-op x/conflict/write terms plus per-token tree and UCIe terms; "w12": the W12
+    floorplan's per-op engine latency (QWEN_WIRE_W12, tree included) plus the UCIe term.  x_read_elems: the VM's
+    x-read width (None: unconstrained, as the RTL's per-group x ports); stalls are added per token."""
     import arch_budget_qwen3 as Q
     import hdc_timing as T
     Q.CLOCK[0] = Q.clock_hz()
@@ -793,15 +859,23 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter
     x_extra = wire_cycles(27000.0, Q.clock_hz(), WIRE_PS_PER_UM_LOADED) - 1
     wscale = x_extra / QWEN_WIRE["x_stages_extra"]
     try:
-        if wires:
+        if wires and wire_model == "w12":
+            T.K["me_lat"] = k0["me_lat"] + QWEN_WIRE_W12["me_lat_extra"]
+        elif wires:
             T.K["me_lat"] = k0["me_lat"] + x_extra + QWEN_WIRE["vm_conflict_reg"] \
                 + QWEN_WIRE["result_write_extra"]
         r = Q.as_built(ctx, groups=G, su_width=su_width)
     finally:
         T.K.clear()
         T.K.update(k0)
-    cycles = r["cycles"] + (round((QWEN_WIRE["tree_extra_per_token"] + QWEN_WIRE["ucie_wire_per_token"]) * wscale)
-                            if wires else 0)
+    if wires and wire_model == "w12":
+        per_token = round(QWEN_WIRE["ucie_wire_per_token"] * wscale)
+    elif wires:
+        per_token = round((QWEN_WIRE["tree_extra_per_token"] + QWEN_WIRE["ucie_wire_per_token"]) * wscale)
+    else:
+        per_token = 0
+    x_stall = qwen_x_read_stall(G, su_width, ctx, x_read_elems)[0] if x_read_elems else 0
+    cycles = r["cycles"] + per_token + x_stall
     a = QWEN_AREA
     tiles = G / 4
     # integer banking (W12): a group-pair column holds its words in whole 4096-deep banks; 11 at G=6144,
@@ -825,7 +899,8 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter
                 arch_cycles=r["cycles"], tokens_s=Q.CLOCK[0] / cycles, clock_hz=Q.CLOCK[0],
                 tile_um2=round(tile_um2), tiles=tiles, array_need_mm2=round(need_mm2, 1),
                 array_avail_mm2=round(avail, 1), fits=need_mm2 <= avail, banks_per_column=banks,
-                port_tiles=port_tiles,
+                port_tiles=port_tiles, wire_model=wire_model if wires else None, x_read_elems=x_read_elems,
+                x_read_stall_cycles=x_stall, vm_banking=vm_banking(x_read_elems) if x_read_elems else None,
                 unit_busy=r["unit_busy"], stalls=r["sequencer_stalls"])
 
 
@@ -839,6 +914,11 @@ def qwen_rows():
             rows.append(qwen_eval(G, 1024, pruned=pr) | dict(design=f"qwen_G{G}{'_pruned' if pr else ''}"))
     rows.append(qwen_eval(5120, 1024, pruned=True, drafter=True) | dict(design="qwen_G5120_pruned_with_drafter"))
     rows.append(qwen_eval(6144, 1024, pruned=True, drafter=True) | dict(design="qwen_G6144_pruned_with_drafter"))
+    # W12: the floorplan's per-op engine latency, and the VM x-read width (128 = the W5 VM; 512; 2,048)
+    rows.append(qwen_eval(6144, 1024, pruned=True, wire_model="w12") | dict(design="qwen_G6144_pruned_w12_wires"))
+    for xr in (128, 512, 2048):
+        rows.append(qwen_eval(6144, 1024, pruned=True, wire_model="w12", x_read_elems=xr)
+                    | dict(design=f"qwen_G6144_pruned_w12_wires_vm{xr}"))
     for r in rows:
         print(f"{r['design']:28s} {r['tokens_s']:8.0f} tok/s  cycles {r['cycles']:>9}  array {r['array_need_mm2']:6.1f}"
               f"/{r['array_avail_mm2']}  fits={r['fits']}")
