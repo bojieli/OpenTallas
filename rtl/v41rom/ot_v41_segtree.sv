@@ -16,7 +16,9 @@
 module ot_v41_segtree #(
     parameter integer NT = 4,
     parameter integer LV = 5,
-    parameter integer QD = 8
+    parameter integer QD = 8,
+    parameter integer EARLY = 0      // 1: a final node with nothing held above it and nothing of its tree in the
+                                     //    adder leaves at once instead of being promoted (+0) level by level
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -57,10 +59,23 @@ module ot_v41_segtree #(
     wire        e_e = sv ? (st[0] | err != 2'd0) : qe[qr];
     wire [31:0] e_d = sv ? sum : qv[qr];
     wire [PW+LW-1:0] hidx = e_t * LV + e_l;
-    wire top = e_l == LV[LW-1:0];
+    // trees' events inside the adder, and whether a tree holds anything above level e_l
+    reg [2:0] infl [0:NT-1];
+    reg above;
+    integer li, ti;
+    always @* begin
+        above = 1'b0;
+        for (li = 0; li < LV; li = li + 1)
+            if (li > e_l && have[e_t * LV + li]) above = 1'b1;
+    end
+    wire mine_out = sv;                               // the event leaving the adder now is e_t's own
+    wire idle_tree = infl[e_t] == (mine_out ? 3'd1 : 3'd0);
+    wire early = (EARLY != 0) && e_v && e_f && !have[hidx] && !above && idle_tree;
+    wire top = e_l == LV[LW-1:0] || early;
     wire pair = e_v && !top && have[hidx];
     wire promote = e_v && !top && !have[hidx] && e_f;
     wire hold = e_v && !top && !have[hidx] && !e_f;
+    wire [PW-1:0] out_t = st[PW+LW+1 -: PW];
     wire [31:0] add_a = pair ? held[hidx] : e_d;
     wire [31:0] add_b = pair ? e_d : 32'd0;
     ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(pair | promote), .a(add_a), .b(add_b),
@@ -70,11 +85,15 @@ module ot_v41_segtree #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             qr <= 0; qw <= 0; qc <= 0; have <= '0; herr <= '0; ov <= 1'b0; oerr <= 1'b0; fault <= 1'b0;
+            for (ti = 0; ti < NT; ti = ti + 1) infl[ti] <= 3'd0;
         end else begin
             if (in_v) qw <= qw + 1'b1;
             if (use_q) qr <= qr + 1'b1;
             qc <= qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
             if (in_v && qc == QD && !use_q) fault <= 1'b1;
+            for (ti = 0; ti < NT; ti = ti + 1)
+                infl[ti] <= infl[ti] + (((pair | promote) && e_t == ti) ? 3'd1 : 3'd0)
+                                     - ((sv && out_t == ti) ? 3'd1 : 3'd0);
             if (pair) have[hidx] <= 1'b0;
             if (hold) begin have[hidx] <= 1'b1; herr[hidx] <= e_e; end
             ov <= e_v && top;

@@ -19,9 +19,9 @@
 //   them; the arithmetic, and therefore the result, is the same.
 // ---------------------------------------------------------------------------
 package ot_v41_ret_pkg;
-    localparam integer TW = 16 + 5 + 3 + 5;   // {row, lo, k, nseg}
+    localparam integer TW = 3 + 16 + 5 + 3 + 5;   // {position, row, lo, k, nseg}
     function automatic [TW-1:0] norm(input [TW-1:0] t);
-        reg [15:0] row;
+        reg [18:0] row;
         reg [4:0] lo, n;
         reg [2:0] k;
         integer i;
@@ -38,70 +38,81 @@ package ot_v41_ret_pkg;
         complete = t[12:8] == 5'd0 && (6'd1 << t[7:5]) >= {1'b0, t[4:0]};
     endfunction
     function automatic sibling(input [TW-1:0] a, input [TW-1:0] b);
-        sibling = a[28:13] == b[28:13] && a[7:5] == b[7:5] && a[4:0] == b[4:0] &&
+        sibling = a[31:13] == b[31:13] && a[7:5] == b[7:5] && a[4:0] == b[4:0] &&
                   (a[12:8] ^ b[12:8]) == (5'd1 << a[7:5]);
     endfunction
     function automatic [TW-1:0] parent(input [TW-1:0] a, input [TW-1:0] b);
         reg [4:0] lo;
         begin
             lo = (a[12:8] < b[12:8]) ? a[12:8] : b[12:8];
-            parent = norm({a[28:13], lo, a[7:5] + 3'd1, a[4:0]});
+            parent = norm({a[31:13], lo, a[7:5] + 3'd1, a[4:0]});
         end
     endfunction
 endpackage
 
 module ot_v41_ret_node #(
     parameter integer D = 4,
-    parameter integer WAIT = 2
+    parameter integer WAIT = 2,
+    parameter integer BYPASS = 0     // 1: a forwarded partial leaves the next cycle (not through the 5-cycle add
+                                     //    alignment); it yields to an add result emerging that cycle
 ) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        a_v,
-    input  wire [28:0] a_t,
+    input  wire [31:0] a_t,
     input  wire [31:0] a_d,
     input  wire        a_e,
     input  wire        b_v,
-    input  wire [28:0] b_t,
+    input  wire [31:0] b_t,
     input  wire [31:0] b_d,
     input  wire        b_e,
     output wire        o_v,
-    output wire [28:0] o_t,
+    output wire [31:0] o_t,
     output wire [31:0] o_d,
     output wire        o_e,
     output reg         fault
 );
     import ot_v41_ret_pkg::*;
     localparam integer AW = $clog2(D);
-    reg [28:0] at [0:D-1], bt [0:D-1];
+    reg [31:0] at [0:D-1], bt [0:D-1];
     reg [31:0] ad [0:D-1], bd [0:D-1];
     reg        ae [0:D-1], be [0:D-1];
     reg [AW-1:0] ar, aw, br, bw;
     reg [AW:0] ac, bc;
     reg [4:0] aw8, bw8;
     wire ah = ac != 0, bh = bc != 0;
-    wire [28:0] ta = at[ar], tb = bt[br];
+    wire [31:0] ta = at[ar], tb = bt[br];
     wire add = ah && bh && sibling(ta, tb);
-    wire fwd_a = !add && ah && (complete(ta) || bh || aw8 >= WAIT || ac == D);
-    wire fwd_b = !add && !fwd_a && bh && (complete(tb) || aw8 >= WAIT || bw8 >= WAIT || bc == D);
+    reg [4:0] ap;                        // adds in the adder pipeline, by age
+    wire slot_free = (BYPASS == 0) || !ap[3];
+    wire fwd_a = !add && ah && slot_free && (complete(ta) || bh || aw8 >= WAIT || ac == D);
+    wire fwd_b = !add && !fwd_a && bh && slot_free && (complete(tb) || aw8 >= WAIT || bw8 >= WAIT || bc == D);
     wire pop_a = add || fwd_a, pop_b = add || fwd_b;
     wire [31:0] sum;
     wire [1:0] err;
     wire sv;
     ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(ad[ar]), .b(bd[br]),
                                 .y(sum), .err(err), .valid_out(sv));
-    wire [28:0] nt = add ? parent(ta, tb) : (fwd_a ? ta : tb);
+    wire [31:0] nt = add ? parent(ta, tb) : (fwd_a ? ta : tb);
     wire [31:0] fd = fwd_a ? ad[ar] : bd[br];
     wire fe = add ? (ae[ar] | be[br]) : (fwd_a ? ae[ar] : be[br]);
     wire [31:0] fdd;
-    wire [30:0] dt;
+    wire [33:0] dt;
     ot_hdc_delay #(.W(32), .D(5)) u_fd (.clk(clk), .rst_n(rst_n), .d(fd), .q(fdd));
-    ot_hdc_delay #(.W(31), .D(5)) u_dt (.clk(clk), .rst_n(rst_n), .d({nt, add, fe}), .q(dt));
+    ot_hdc_delay #(.W(34), .D(5)) u_dt (.clk(clk), .rst_n(rst_n), .d({nt, add, fe}), .q(dt));
     reg [4:0] vp;
+    reg        by_v, by_e;
+    reg [31:0] by_t;
+    reg [31:0] by_d;
+    always @(posedge clk) begin by_t <= nt; by_d <= fd; by_e <= fe; end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             ar <= 0; aw <= 0; br <= 0; bw <= 0; ac <= 0; bc <= 0; vp <= 0; aw8 <= 0; bw8 <= 0; fault <= 1'b0;
+            ap <= 5'd0; by_v <= 1'b0;
         end else begin
-            vp <= {vp[3:0], add | fwd_a | fwd_b};
+            ap <= {ap[3:0], add};
+            by_v <= (BYPASS != 0) && (fwd_a | fwd_b);
+            vp <= {vp[3:0], add | ((BYPASS == 0) && (fwd_a | fwd_b))};
             if (a_v) aw <= aw + 1'b1;
             if (b_v) bw <= bw + 1'b1;
             if (pop_a) ar <= ar + 1'b1;
@@ -117,10 +128,10 @@ module ot_v41_ret_node #(
         if (a_v) begin at[aw] <= norm(a_t); ad[aw] <= a_d; ae[aw] <= a_e; end
         if (b_v) begin bt[bw] <= norm(b_t); bd[bw] <= b_d; be[bw] <= b_e; end
     end
-    assign o_v = vp[4];
-    assign o_t = dt[30:2];
-    assign o_d = dt[1] ? sum : fdd;
-    assign o_e = dt[0] | (dt[1] && err != 2'd0);
+    assign o_v = vp[4] | by_v;
+    assign o_t = vp[4] ? dt[33:2] : by_t;
+    assign o_d = vp[4] ? (dt[1] ? sum : fdd) : by_d;
+    assign o_e = vp[4] ? (dt[0] | (dt[1] && err != 2'd0)) : by_e;
 endmodule
 
 module ot_v41_ret_root #(
@@ -130,11 +141,12 @@ module ot_v41_ret_root #(
     input  wire        clk,
     input  wire        rst_n,
     input  wire        i_v,
-    input  wire [28:0] i_t,
+    input  wire [31:0] i_t,
     input  wire [31:0] i_d,
     input  wire        i_e,
     output reg         r_v,
     output reg  [15:0] r_row,
+    output reg  [2:0]  r_pos,
     output reg  [31:0] r_fp32,
     output reg  [15:0] r_bf16,
     output reg         r_e,
@@ -143,14 +155,14 @@ module ot_v41_ret_root #(
     import ot_v41_ret_pkg::*;
     localparam integer QW = $clog2(QD);
     // input queue
-    reg [28:0] qt [0:QD-1];
+    reg [31:0] qt [0:QD-1];
     reg [31:0] qd [0:QD-1];
     reg        qe [0:QD-1];
     reg [QW-1:0] qr, qw;
     reg [QW:0] qc;
     // buffer
     reg        bv [0:D-1];
-    reg [28:0] bt [0:D-1];
+    reg [31:0] bt [0:D-1];
     reg [31:0] bd [0:D-1];
     reg        be [0:D-1];
     // adder
@@ -159,10 +171,10 @@ module ot_v41_ret_root #(
     wire sv;
     reg add;
     reg [31:0] add_a, add_b;
-    wire [29:0] st;
+    wire [32:0] st;
     // candidate: adder result first, else the queue head
     wire use_q = !sv && qc != 0;
-    wire [28:0] ct = sv ? st[29:1] : norm(qt[qr]);
+    wire [31:0] ct = sv ? st[32:1] : norm(qt[qr]);
     wire [31:0] cd = sv ? sum : qd[qr];
     wire        ce = sv ? (st[0] | err != 2'd0) : qe[qr];
     wire        cv = sv || qc != 0;
@@ -174,11 +186,11 @@ module ot_v41_ret_root #(
             if (!bv[k]) fr = k;
         end
     end
-    wire [28:0] pt = (hit >= 0) ? parent(bt[hit], ct) : 29'd0;
+    wire [31:0] pt = (hit >= 0) ? parent(bt[hit], ct) : 32'd0;
     ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(add_a), .b(add_b),
                                 .y(sum), .err(err), .valid_out(sv));
-    reg [29:0] tag_in;
-    ot_hdc_delay #(.W(30), .D(5)) u_t (.clk(clk), .rst_n(rst_n), .d(tag_in), .q(st));
+    reg [32:0] tag_in;
+    ot_hdc_delay #(.W(33), .D(5)) u_t (.clk(clk), .rst_n(rst_n), .d(tag_in), .q(st));
     wire [32:0] rb = {1'b0, cd} + 33'h7FFF + {32'd0, cd[16]};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -205,7 +217,7 @@ module ot_v41_ret_root #(
     end
     always @(posedge clk) begin
         if (i_v) begin qt[qw] <= i_t; qd[qw] <= i_d; qe[qw] <= i_e; end
-        r_row <= ct[28:13]; r_fp32 <= cd; r_bf16 <= rb[31:16]; r_e <= ce;
+        r_row <= ct[28:13]; r_pos <= ct[31:29]; r_fp32 <= cd; r_bf16 <= rb[31:16]; r_e <= ce;
         if (cv && !complete(ct) && hit >= 0) begin
             // left operand: lower lo
             if (bt[hit][12:8] < ct[12:8]) begin add_a <= bd[hit]; add_b <= cd; end

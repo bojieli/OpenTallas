@@ -3,6 +3,8 @@
 // and without the BF16 x port, which an FP8/FP4 macro never receives (W10, tools/v41_w10_elem_pnr.py).
 module ot_v41_rom_elem_q #(
     parameter integer NB = 1,
+    parameter integer MTP = 0,
+    parameter integer EARLY = 0,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -19,18 +21,20 @@ module ot_v41_rom_elem_q #(
     input  wire [9:0]   xs_e0,
     input  wire [255:0] xs_q1,
     input  wire [9:0]   xs_e1,
+    input  wire [2:0]   xs_pos,
     output wire [NB-1:0]    pv,
     output wire [32*NB-1:0] pval,
     output wire [16*NB-1:0] prow,
     output wire [5*NB-1:0]  pseg,
     output wire [5*NB-1:0]  pnseg,
     output wire [NB-1:0]    perr,
+    output wire [3*NB-1:0]  ppos,
     output wire         busy,
     output wire         fault
 );
-    ot_v41_rom_elem #(.BF16(0), .NB(NB), .INSTANCE(INSTANCE)) u_e (
+    ot_v41_rom_elem #(.BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .INSTANCE(INSTANCE)) u_e (
         .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_bf(1'b0),
         .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1),
-        .xs_e1(xs_e1), .xb_v(1'b0), .xb_b(3'd0), .xb_sv(4'd0), .xb_u(32'd0), .xb_d(1024'd0),
+        .xs_e1(xs_e1), .xs_pos(xs_pos), .xb_pos(3'd0), .ppos(ppos), .xb_v(1'b0), .xb_b(3'd0), .xb_sv(4'd0), .xb_u(32'd0), .xb_d(1024'd0),
         .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr), .busy(busy), .fault(fault));
 endmodule

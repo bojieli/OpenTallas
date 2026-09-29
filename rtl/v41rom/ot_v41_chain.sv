@@ -5,8 +5,9 @@
 // (chains) of different units through ONE pipelined binary32 adder (ot_fp32_add_rne_pipe,
 // LATENCY 5).  A term names its chain `slot`; `first` starts the chain from +0 (the add 0 + t is
 // performed, as the golden does), `last` makes the lane emit the chunk sum instead of storing it.
-// The issuer guarantees a slot is not presented again within 5 cycles (ot_v41_rom_elem checks
-// it at issue); a violation raises `fault`.  TW tag bits ride with the chain's last term.
+// A slot may be presented again 5 cycles after its previous term (the adder's latency): the sum leaving the
+// adder in that cycle is forwarded straight back as the operand.  Sooner is a violation and raises `fault`;
+// the issuer (ot_v41_rom_elem) never does it.  TW tag bits ride with the chain's last term.
 // ---------------------------------------------------------------------------
 module ot_v41_chain #(
     parameter integer NCH = 16,
@@ -36,19 +37,22 @@ module ot_v41_chain #(
     reg hazard;
     always @* begin
         hazard = 1'b0;
-        for (k = 0; k < 5; k = k + 1) if (pv[k] && ps[k] == slot) hazard = 1'b1;
+        for (k = 0; k < 4; k = k + 1) if (pv[k] && ps[k] == slot) hazard = 1'b1;
     end
-    wire [31:0] a = first ? 32'd0 : acc[slot];
-    wire af = first ? 1'b0 : accf[slot];
     wire [31:0] sum;
     wire [1:0] err;
     wire sv;
+    wire [31:0] a;
+    wire af;
     ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(term), .y(sum),
                                 .err(err), .valid_out(sv));
     wire [TW+2:0] dt;
     ot_hdc_delay #(.W(TW + 3), .D(5)) u_t (.clk(clk), .rst_n(rst_n), .d({tag, last, af | term_f, 1'b0}), .q(dt));
     wire d_last = dt[2];
     wire d_f = dt[1] | (err != 2'd0);
+    wire fwd = sv && !d_last && ps[4] == slot;       // the slot's previous sum is leaving the adder now
+    assign a = first ? 32'd0 : (fwd ? sum : acc[slot]);
+    assign af = first ? 1'b0 : (fwd ? d_f : accf[slot]);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             pv <= 5'd0; fault <= 1'b0; accf <= '0;
