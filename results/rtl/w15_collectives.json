@@ -5280,6 +5280,14 @@
      191,
      196
     ],
+    "10": [
+     342,
+     349
+    ],
+    "11": [
+     502,
+     509
+    ],
     "2": [
      223,
      229
@@ -5311,14 +5319,6 @@
     "9": [
      262,
      268
-    ],
-    "10": [
-     342,
-     349
-    ],
-    "11": [
-     502,
-     509
     ]
    },
    "parameters": {
@@ -6973,6 +6973,14 @@
      187,
      193
     ],
+    "10": [
+     204,
+     211
+    ],
+    "11": [
+     228,
+     232
+    ],
     "2": [
      344,
      349
@@ -7004,14 +7012,6 @@
     "9": [
      205,
      211
-    ],
-    "10": [
-     204,
-     211
-    ],
-    "11": [
-     228,
-     232
     ]
    },
    "parameters": {
@@ -7400,6 +7400,14 @@
      187,
      192
     ],
+    "10": [
+     263,
+     270
+    ],
+    "11": [
+     344,
+     352
+    ],
     "2": [
      204,
      210
@@ -7431,14 +7439,6 @@
     "9": [
      223,
      229
-    ],
-    "10": [
-     263,
-     270
-    ],
-    "11": [
-     344,
-     352
     ]
    },
    "parameters": {
@@ -7879,6 +7879,70 @@
    "release_guard_cycles": 1,
    "sum_issue_to_last_commit_cycles": 3690,
    "top": "tb_w15_v41_tp4"
+  }
+ },
+ "fixed_floor": {
+  "board_arrival_cycles": {
+   "max": 176,
+   "min": 168
+  },
+  "components": {
+   "codeword_serialisation": {
+    "grade": "derived (FEC block time)",
+    "ns": 1.87
+   },
+   "engine_startup_and_commit": {
+    "cycles": 12.6,
+    "note": "DMA read, engine head stage, transpose and VM commit (fit fixed term minus release delay)"
+   },
+   "flight": {
+    "grade": "derived",
+    "ns": 2.0
+   },
+   "link_layer_logic_cdc_and_phase": {
+    "note": "framer, CRC, deframe, two CDC FIFOs and clock-phase alignment (measured remainder of the worst arrival)",
+    "ns": 15.0
+   },
+   "release_margin": {
+    "cycles": 1,
+    "note": "deterministic release beyond the worst arrival (guard)"
+   },
+   "rs272_decode": {
+    "grade": "published (FEC processing)",
+    "ns": 45.1
+   },
+   "rx_afe_dsp": {
+    "grade": "ASSUMED",
+    "ns": 50.0
+   },
+   "rx_deskew": {
+    "grade": "ASSUMED",
+    "ns": 10.0
+   },
+   "tx_analog": {
+    "grade": "ASSUMED",
+    "ns": 3.0
+   },
+   "tx_pcs_fec_encode": {
+    "grade": "ASSUMED",
+    "ns": 3.7
+   },
+   "wire_hub_to_phy_both_ends": {
+    "cycles": 34,
+    "lever": "floorplan: put the link PHY (or the collective endpoint) nearer; 17 stages each way at the W3 channel-crossing placement",
+    "ns": 31.3
+   }
+  },
+  "config": "v41p17_r0d512_w32",
+  "fit_fixed_cycles": 189.55,
+  "fit_fixed_ns": 174.4,
+  "note": "Root 2026-09-29: no action yet; wire is the floorplan lever, FEC the link-code lever",
+  "release_delay_cycles": 177,
+  "summary": {
+   "fec_ns": 50.7,
+   "pcs_deskew_ns": 10.0,
+   "serdes_analog_and_flight_ns": 55,
+   "wire_ns": 31.3
   }
  },
  "git": {

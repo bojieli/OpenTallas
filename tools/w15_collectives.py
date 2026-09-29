@@ -582,7 +582,7 @@ def campaign(names, ncal, nmeas, out: Path):
                               "operands are the synthetic arithmetic stress fixture, not a model token.",
                git=git_state(), source_sha256=pins(), verilator=verilator_version(), verilator_flags=VFLAGS,
                links=dict(LINKS, board_stages=board_stages()), configs=cfgs)
-    for k in ("model_feed", "physical", "unit_checks", "unit_checks_source_sha256"):
+    for k in ("model_feed", "physical", "unit_checks", "unit_checks_source_sha256", "fixed_floor"):
         if k in old:
             rec[k] = old[k]
     out.parent.mkdir(parents=True, exist_ok=True)
