@@ -37,9 +37,11 @@ so each block's constraints, pins and power grid belong to this flow.
 
 The V4.1 tile and die exist as RTL around `rtl/hdc/v41x/ot_hdc_core_v41x.sv`
 (`rtl/chip/ot_chip_v41x_tile.sv`, `rtl/chip/ot_chip_v41x_die.sv`), with the
-HBM3E interfaces as the adopted gates' simulation timing models. They have no
-floorplan, macro views or route yet, so
-`tools/chip_assembly/assemble.py --arch v41_rom` still rejects the build.
+HBM3E interfaces as the adopted gates' simulation timing models. The V4.1 dies are assembled from cluster abstracts by
+`tools/chip_assembly/v41_die.py`, and `assemble.py --level die --arch v41_rom|v41_hbm` dispatches there.
+That flow is a bundled die-level floorplan and global route over placeholder clusters; see
+[V41_DIE_ASSEMBLY_RUNG5.md](V41_DIE_ASSEMBLY_RUNG5.md). It is partial: it has no detailed route, no extracted
+timing and no real cluster abstracts yet.
 
 Each level's grid is in `tools/chip_assembly/tcl/pdn_{block,tile,die}.tcl`.
 A child's power pins sit on the top layer it uses, and the parent drops vias
