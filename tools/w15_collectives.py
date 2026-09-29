@@ -173,7 +173,7 @@ def qwen_fixture(outdir: Path, lanes: int, H: int, seed: int = 20260929) -> dict
 # ---------------------------------------------------------------------------------------------------------------
 BUILD = Path(os.environ.get("W15_BUILD", "/tmp/claude-1000/w15b"))
 VEC = Path(os.environ.get("W15_VEC", "/tmp/claude-1000/w15v"))
-LINK_SRC = ["rtl/link/ot_link_afifo.sv", "rtl/link/ot_link_tx.sv", "rtl/link/ot_link_rx.sv",
+LINK_SRC = ["rtl/link/ot_link_afifo.sv", "rtl/link/ot_link_crc32.sv", "rtl/link/ot_link_tx.sv", "rtl/link/ot_link_rx.sv",
             "rtl/link/ot_link_chan_model.sv"]
 TB_SRC = {
     "tb_w15_v41_tp4": ["rtl/test/tb_w15_v41_tp4.sv", *LINK_SRC, "rtl/chip/ot_chip_v41x_coll_dma.sv",
@@ -192,6 +192,16 @@ CONFIGS = {
     "v41_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256), "l0"),
     "v41_r1d1024": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=1024), "l0"),
     "v41_r0d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024), "l0"),
+    # PROPOSED placement (W3 die assembly rung 5, claude/w3-v41-die-assembly 01ef74dc, docs/V41_DIE_ASSEMBLY_RUNG5.md:
+    # one collective at the transport-channel crossing; collective <-> UCIe / SerDes 14.62 mm): 17 stages at the
+    # model's loaded 0.76 ps/um, 14 at W3's measured loaded corridor reach (1.06-1.10 mm/cycle); RELAY=0 uses
+    # the direct T1 link to every partner-package die (option (b) is a full mesh)
+    "v41p17_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p17_r1d256": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p17_r0d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p14_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=14, X_WIRE=14), "l0"),
+    "v41p17_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "sweep"),
+    "v41p17_r0d1024_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep"),
     # payload sweep (bandwidth and the latency fit) on the same binaries
     "v41_r1d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256), "sweep"),
     "v41_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256), "sweep"),
@@ -201,6 +211,8 @@ CONFIGS = {
     "q16d16": ("tb_w15_qwen_tp2", dict(LANES=16, DEPTH=16), "q16"),
     "q16d128": ("tb_w15_qwen_tp2", dict(LANES=16, DEPTH=128), "q16"),
     "q256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
+    "q256d16": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
+    "q256d128": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
     "q1024": ("tb_w15_qwen_tp2", dict(LANES=1024, DEPTH=16, U_NL=1, U_T=0.95), "q1024"),
 }
 

@@ -93,26 +93,18 @@ module ot_link_rx #(
         assign dv = pv[DEC_STAGES-1]; assign dd = pd[DEC_STAGES-1];
     end endgenerate
 
-    function automatic [31:0] ot_link_crc32(input [NS*SW-1:0] d);
-        integer b;
-        reg [31:0] c;
-        begin
-            c = 32'hFFFF_FFFF;
-            for (b = NS * SW - 1; b >= 0; b = b - 1)
-                c = {c[30:0], 1'b0} ^ ((c[31] ^ d[b]) ? 32'h04C1_1DB7 : 32'h0);
-            ot_link_crc32 = c;
-        end
-    endfunction
 
     // ---- CRC stage ------------------------------------------------------------------------------------
     reg          cv;
     reg [NS*SW-1:0] cs;
+    wire [31:0]  dcrc;
+    ot_link_crc32 #(.W(NS * SW)) u_crc (.d(dd[NS*SW-1:0]), .crc(dcrc));
     always @(posedge rclk or negedge rrst_n) begin
         if (!rrst_n) begin
             cv <= 1'b0; fault_crc <= 1'b0;
         end else begin
-            cv <= dv && (ot_link_crc32(dd[NS*SW-1:0]) == dd[FRW-1 -: 32]);
-            if (dv && ot_link_crc32(dd[NS*SW-1:0]) != dd[FRW-1 -: 32]) fault_crc <= 1'b1;
+            cv <= dv && (dcrc == dd[FRW-1 -: 32]);
+            if (dv && dcrc != dd[FRW-1 -: 32]) fault_crc <= 1'b1;
         end
     end
     always @(posedge rclk) if (dv) cs <= dd[NS*SW-1:0];

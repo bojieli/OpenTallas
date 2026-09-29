@@ -197,7 +197,9 @@ module ot_link_tx #(
             end
         end
     end
-    always @(posedge lclk) if (fk == FRAME_CYCLES - 1) fd0 <= {ot_link_crc32(full_slots), full_slots};
+    wire [31:0] fcrc;
+    ot_link_crc32 #(.W(NS * SW)) u_crc (.d(full_slots), .crc(fcrc));
+    always @(posedge lclk) if (fk == FRAME_CYCLES - 1) fd0 <= {fcrc, full_slots};
 
     // ---- PCS / FEC encoder pipeline --------------------------------------------------------------------
     generate if (ENC_STAGES == 0) begin : g_noenc
@@ -219,14 +221,4 @@ module ot_link_tx #(
         assign f_valid = pv[ENC_STAGES-1]; assign f_data = pd[ENC_STAGES-1];
     end endgenerate
 
-    function automatic [31:0] ot_link_crc32(input [NS*SW-1:0] d);
-        integer b;
-        reg [31:0] c;
-        begin
-            c = 32'hFFFF_FFFF;
-            for (b = NS * SW - 1; b >= 0; b = b - 1)
-                c = {c[30:0], 1'b0} ^ ((c[31] ^ d[b]) ? 32'h04C1_1DB7 : 32'h0);
-            ot_link_crc32 = c;
-        end
-    endfunction
 endmodule
