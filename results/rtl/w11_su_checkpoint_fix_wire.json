@@ -1,11 +1,11 @@
 {
  "schema": "opentallas.rtl.w11_su_checkpoint/1",
- "label": "fix",
- "generated_at": "2026-09-29T21:12:38Z",
+ "label": "fix_wire",
+ "generated_at": "2026-09-29T21:12:44Z",
  "hazard": "a non-spanning reducing op followed by a spanning reducing op with a shallower tap: both items leave through the reducer's one tap; checkpoint T was armed by spanning ops only",
  "wire_stages": {
-  "BCAST_STAGES": 0,
-  "RET_STAGES": 0
+  "BCAST_STAGES": 4,
+  "RET_STAGES": 5
  },
  "cases": [
   {
@@ -35,7 +35,7 @@
     "tap_level": 1,
     "time_levels": 0,
     "vectors": 10,
-    "model_emit_to_result": 50
+    "model_emit_to_result": 59
    },
    "second": {
     "fields": {
@@ -56,7 +56,7 @@
     "tap_level": 0,
     "time_levels": 2,
     "vectors": 3,
-    "model_emit_to_result": 53
+    "model_emit_to_result": 62
    },
    "between": [],
    "chained": {
@@ -65,12 +65,12 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 89,
+    "cycles": 98,
     "pass_": true,
     "second_first_emit_after_first_last_emit": 4,
-    "first_last_result": 70,
+    "first_last_result": 79,
     "second_results": [
-     79
+     88
     ]
    },
    "idle": {
@@ -79,12 +79,12 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 142,
+    "cycles": 160,
     "pass_": true,
-    "second_first_emit_after_first_last_emit": 57,
-    "first_last_result": 70,
+    "second_first_emit_after_first_last_emit": 66,
+    "first_last_result": 79,
     "second_results": [
-     132
+     150
     ]
    },
    "whole_seed": {
@@ -93,7 +93,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1080,
+    "cycles": 1100,
     "pass_": true,
     "ops": 39
    }
@@ -125,7 +125,7 @@
     "tap_level": 1,
     "time_levels": 0,
     "vectors": 11,
-    "model_emit_to_result": 50
+    "model_emit_to_result": 59
    },
    "second": {
     "fields": {
@@ -146,7 +146,7 @@
     "tap_level": 0,
     "time_levels": 1,
     "vectors": 2,
-    "model_emit_to_result": 50
+    "model_emit_to_result": 59
    },
    "between": [],
    "chained": {
@@ -155,12 +155,12 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 86,
+    "cycles": 95,
     "pass_": true,
     "second_first_emit_after_first_last_emit": 4,
-    "first_last_result": 71,
+    "first_last_result": 80,
     "second_results": [
-     76
+     85
     ]
    },
    "idle": {
@@ -169,12 +169,12 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 139,
+    "cycles": 157,
     "pass_": true,
-    "second_first_emit_after_first_last_emit": 57,
-    "first_last_result": 71,
+    "second_first_emit_after_first_last_emit": 66,
+    "first_last_result": 80,
     "second_results": [
-     129
+     147
     ]
    },
    "whole_seed": {
@@ -183,7 +183,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 989,
+    "cycles": 1013,
     "pass_": true,
     "ops": 38
    }
@@ -215,7 +215,7 @@
     "tap_level": 3,
     "time_levels": 0,
     "vectors": 5,
-    "model_emit_to_result": 58
+    "model_emit_to_result": 67
    },
    "second": {
     "fields": {
@@ -236,7 +236,7 @@
     "tap_level": 1,
     "time_levels": 5,
     "vectors": 27,
-    "model_emit_to_result": 65
+    "model_emit_to_result": 74
    },
    "between": [
     {
@@ -258,7 +258,7 @@
      "tap_level": 0,
      "time_levels": 0,
      "vectors": 2,
-     "model_emit_to_result": 47
+     "model_emit_to_result": 56
     }
    ],
    "chained": {
@@ -267,12 +267,12 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 125,
+    "cycles": 134,
     "pass_": true,
     "second_first_emit_after_first_last_emit": 9,
-    "first_last_result": 73,
+    "first_last_result": 82,
     "second_results": [
-     115
+     124
     ]
    },
    "idle": {
@@ -281,12 +281,12 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 181,
+    "cycles": 199,
     "pass_": true,
-    "second_first_emit_after_first_last_emit": 65,
-    "first_last_result": 73,
+    "second_first_emit_after_first_last_emit": 74,
+    "first_last_result": 82,
     "second_results": [
-     171
+     189
     ]
    },
    "whole_seed": {
@@ -295,15 +295,15 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1300,
+    "cycles": 1309,
     "pass_": true,
     "ops": 36
    }
   }
  ],
  "builds": {
-  "N16": 191.89689230918884,
-  "N64": 736.0741374492645
+  "N16": 219.77447199821472,
+  "N64": 713.694696187973
  },
  "all_pass": true,
  "hazard_reproduced": false,
