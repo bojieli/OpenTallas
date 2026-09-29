@@ -33,9 +33,12 @@ def test_sources_pinned(rec):
 
 
 def test_small_n_exact(rec):
-    seen = {(s["ns"], s["nk"]) for s in rec["small_n"]}
-    assert {(4, 1), (2, 4)} <= seen
+    gated = [s for s in rec["small_n"] if s["runs"]]
+    assert {(4, 1), (2, 4)} <= {(s["ns"], s["nk"]) for s in gated}
     for s in rec["small_n"]:
+        if not s["runs"]:
+            assert s["exact"] is None and s["status"].startswith("not simulated")
+    for s in gated:
         assert s["exact"]
         for r in s["runs"]:
             assert r["errors"] == 0 and r["checked"] == s["keys"]
